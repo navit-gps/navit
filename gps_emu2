@@ -1,0 +1,40 @@
+#! /usr/bin/perl
+
+open(FILE,"<$ARGV[0]");
+read(FILE,$header,64);
+
+($magic,$version)=unpack("a8l",$header);
+
+#print "magic=$magic version=$version\n";
+
+select STDOUT; $| = 1;
+
+while (read(FILE,$record,64))
+{
+	($flags,$status,$mode,$hdop,$vdop,$pdop,$sats,$timestampl,$timestamph,$latitude,$longitude,$altitude,$speed,$direction)=unpack("SCCCCCCLLddddd",$record);
+
+
+	if ($mode == 3) {
+		($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime($timestampl); 
+		$datestring=sprintf("%02d.%02d.%d %02d:%02d:%02d",$mday,$mon+1,$year+1900,$hour,$min,$sec);	
+		$long_dir="E";
+		$lat_dir="N";
+		if ($longitude < 0) {
+			$long_dir="W";
+			$logitude=-$longitude;
+		}
+		if ($latitude < 0) {
+			$lat_dir="S";
+			$latitude=-$latitude;
+		}
+		$long_deg=int($longitude);
+		$lat_deg=int($latitude);
+		$long_gps=$long_deg*100+($longitude-$long_deg)*60;
+		$lat_gps=$lat_deg*100+($latitude-$lat_deg)*60;
+		$lastpos="$lat_gps $lat_dir $long_gps $long_dir";
+		printf("\$GPGGA,%02d%02d%02d,%s,%s,%s,%s,1,%d,%s,%s,M,,,,0000*0C\n",$hour,$min,$sec,$lat_gps,$lat_dir,$long_gps,$long_dir,$sats,$hdop,$altitude);
+		printf("\$GPVTG,%s,T,,M,,N,%s,K,*6A\n",$direction,$speed*1.852);
+		printf(STDERR "\$GPGGA,%02d%02d%02d,%s,%s,%s,%s,1,%d,%s,%s,M,,,,0000*0C\n",$hour,$min,$sec,$lat_gps,$lat_dir,$long_gps,$long_dir,$sats,$hdop,$altitude);
+		sleep(1);
+	}	
+}

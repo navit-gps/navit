@@ -1,0 +1,19 @@
+#! /bin/bash
+function send_data
+{
+	trap send_data SIGPIPE 
+	while read line
+	do
+		case $line in
+		\$GPVTG*)
+			echo "$line"
+			sleep 1	
+			;;
+		*)	
+			echo "$line"
+			;;
+		esac
+	done <track/all.txt >/tmp/gpsdata
+}
+
+send_data

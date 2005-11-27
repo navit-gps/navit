@@ -1,0 +1,2649 @@
+# DO NOT DELETE
+
+block.o: /usr/include/stdio.h /usr/include/features.h
+block.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+block.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+block.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+block.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+block.o: /usr/include/_G_config.h /usr/include/wchar.h
+block.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+block.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+block.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+block.o: /usr/include/string.h /usr/include/malloc.h /usr/include/assert.h
+block.o: file.h param.h block.h coord.h transform.h point.h data.h
+command.o: /usr/include/stdio.h /usr/include/features.h
+command.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+command.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+command.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+command.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+command.o: /usr/include/_G_config.h /usr/include/wchar.h
+command.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+command.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+command.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+command.o: /usr/include/string.h coord.h town.h street.h
+compass.o: /usr/include/math.h /usr/include/features.h
+compass.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+compass.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+compass.o: /usr/include/bits/mathcalls.h /usr/include/stdio.h
+compass.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+compass.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+compass.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+compass.o: /usr/include/_G_config.h /usr/include/wchar.h
+compass.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+compass.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+compass.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+compass.o: /opt/gnome/include/glib-2.0/glib.h
+compass.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+compass.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+compass.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+compass.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+compass.o: /opt/gnome/include/glib-2.0/glib/garray.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+compass.o: /usr/include/signal.h /usr/include/bits/sigset.h
+compass.o: /usr/include/bits/signum.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+compass.o: /opt/gnome/include/glib-2.0/glib/glist.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+compass.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+compass.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+compass.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+compass.o: /opt/gnome/include/glib-2.0/glib/grand.h
+compass.o: /opt/gnome/include/glib-2.0/glib/grel.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+compass.o: /opt/gnome/include/glib-2.0/glib/gutils.h point.h coord.h
+compass.o: graphics.h transform.h route.h vehicle.h container.h
+coord.o: coord.h
+country.o: /usr/include/string.h /usr/include/features.h
+country.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+country.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+country.o: /usr/include/stdio.h /usr/include/bits/types.h
+country.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+country.o: /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h
+country.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+country.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+country.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+country.o: /opt/gnome/include/glib-2.0/glib.h
+country.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+country.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+country.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+country.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+country.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+country.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+country.o: /opt/gnome/include/glib-2.0/glib/garray.h
+country.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+country.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+country.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+country.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+country.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+country.o: /usr/include/signal.h /usr/include/bits/sigset.h
+country.o: /usr/include/bits/signum.h
+country.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+country.o: /opt/gnome/include/glib-2.0/glib/glist.h
+country.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+country.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+country.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+country.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+country.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+country.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+country.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+country.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+country.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+country.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+country.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+country.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+country.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+country.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+country.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+country.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+country.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+country.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+country.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+country.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+country.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+country.o: /opt/gnome/include/glib-2.0/glib/grand.h
+country.o: /opt/gnome/include/glib-2.0/glib/grel.h
+country.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+country.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+country.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+country.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+country.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+country.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+country.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+country.o: /opt/gnome/include/glib-2.0/glib/gutils.h country.h
+cursor.o: /usr/include/stdio.h /usr/include/features.h
+cursor.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+cursor.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+cursor.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+cursor.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+cursor.o: /usr/include/_G_config.h /usr/include/wchar.h
+cursor.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+cursor.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+cursor.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+cursor.o: /usr/include/stdlib.h /usr/include/string.h /usr/include/unistd.h
+cursor.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+cursor.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+cursor.o: /usr/include/sys/types.h /usr/include/time.h /usr/include/math.h
+cursor.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+cursor.o: /usr/include/bits/mathcalls.h /opt/gnome/include/glib-2.0/glib.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+cursor.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+cursor.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+cursor.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/garray.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h
+cursor.o: /usr/include/bits/sigset.h /usr/include/bits/signum.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/glist.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/grand.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/grel.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+cursor.o: /opt/gnome/include/glib-2.0/glib/gutils.h coord.h transform.h
+cursor.o: point.h graphics.h statusbar.h menu.h vehicle.h container.h route.h
+data_window.o: /usr/include/malloc.h
+data_window.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+data_window.o: /usr/include/stdio.h /usr/include/features.h
+data_window.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+data_window.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+data_window.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+data_window.o: /usr/include/_G_config.h /usr/include/wchar.h
+data_window.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+data_window.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+data_window.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtk.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdk.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkcolor.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdktypes.h
+data_window.o: /opt/gnome/include/glib-2.0/glib.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+data_window.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gmacros.h
+data_window.o: /usr/include/limits.h
+data_window.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+data_window.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/garray.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+data_window.o: /usr/include/signal.h /usr/include/bits/sigset.h
+data_window.o: /usr/include/bits/signum.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/glist.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/grand.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/grel.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+data_window.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-attributes.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-font.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-coverage.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-types.h
+data_window.o: /opt/gnome/include/glib-2.0/glib-object.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gboxed.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gtype.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/genums.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gobject.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gvalue.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gparam.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gclosure.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gsignal.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gmarshal.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gparamspecs.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gsourceclosure.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gtypemodule.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gtypeplugin.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gvaluearray.h
+data_window.o: /opt/gnome/include/glib-2.0/gobject/gvaluetypes.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-break.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-item.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-context.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-fontmap.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-fontset.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-engine.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-glyph.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-enum-types.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-layout.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-glyph-item.h
+data_window.o: /opt/gnome/include/pango-1.0/pango/pango-tabs.h
+data_window.o: /opt/gnome/lib/gtk-2.0/include/gdkconfig.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkcursor.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkdisplay.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkevents.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkdnd.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkinput.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkdrawable.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkgc.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkrgb.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf-features.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf-loader.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf-enum-types.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkenumtypes.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkfont.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkimage.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkkeys.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkdisplaymanager.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkpango.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkpixbuf.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkpixmap.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkproperty.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkregion.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkscreen.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkselection.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkvisual.h
+data_window.o: /opt/gnome/include/gtk-2.0/gdk/gdkwindow.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccelgroup.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkenums.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccellabel.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtklabel.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkmisc.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkwidget.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkobject.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktypeutils.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktypebuiltins.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkdebug.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkadjustment.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkstyle.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtksettings.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkrc.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkobject.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkstate.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkrelationtype.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkwindow.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkbin.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcontainer.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenu.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenushell.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccelmap.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccessible.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atk.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkaction.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkcomponent.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkutil.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkdocument.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkeditabletext.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atktext.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkgobjectaccessible.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkhyperlink.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkhypertext.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkimage.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atknoopobject.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atknoopobjectfactory.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkobjectfactory.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkregistry.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkobjectfactory.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkrelation.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkrelationset.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkselection.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkstateset.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkstreamablecontent.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atktable.h
+data_window.o: /opt/gnome/include/atk-1.0/atk/atkvalue.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkalignment.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkaspectframe.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkframe.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkarrow.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkbindings.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkbox.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkbbox.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkbutton.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcalendar.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtksignal.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkmarshal.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrenderer.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcelleditable.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrenderertext.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrenderertoggle.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrendererpixbuf.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcheckbutton.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktogglebutton.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcheckmenuitem.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenuitem.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkitem.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkclipboard.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkselection.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkclist.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkhscrollbar.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkscrollbar.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkrange.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkvscrollbar.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcolorsel.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkdialog.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkvbox.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcolorseldialog.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcombo.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkhbox.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkctree.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkcurve.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkdrawingarea.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkdnd.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkeditable.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkentry.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkimcontext.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkeventbox.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkfilesel.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkfixed.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkfontsel.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkgamma.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkgc.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkhandlebox.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkhbbox.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkhpaned.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkpaned.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkhruler.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkruler.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkhscale.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkscale.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkhseparator.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkseparator.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkiconfactory.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkimage.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkimagemenuitem.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkimcontextsimple.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkimmulticontext.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkinputdialog.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkinvisible.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkitemfactory.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtklayout.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtklist.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtklistitem.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkliststore.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktreemodel.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktreesortable.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkmain.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenubar.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkmessagedialog.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtknotebook.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkoldeditable.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkoptionmenu.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkpixmap.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkplug.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtksocket.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkpreview.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkprogress.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkprogressbar.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkradiobutton.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkradiomenuitem.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkscrolledwindow.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkviewport.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkseparatormenuitem.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtksizegroup.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkspinbutton.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkstock.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkstatusbar.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktable.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktearoffmenuitem.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktext.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktextbuffer.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktexttagtable.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktexttag.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktextiter.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktextchild.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktextmark.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktextview.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktipsquery.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktoolbar.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktooltips.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktree.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktreednd.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeitem.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktreemodelsort.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeselection.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeview.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeviewcolumn.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtktreestore.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkvbbox.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkversion.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkvpaned.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkvruler.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkvscale.h
+data_window.o: /opt/gnome/include/gtk-2.0/gtk/gtkvseparator.h param.h
+data_window.o: data_window.h data_window_int.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtk.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdk.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkcolor.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdktypes.h
+destination.o: /opt/gnome/include/glib-2.0/glib.h
+destination.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+destination.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gmacros.h
+destination.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+destination.o: /usr/include/limits.h /usr/include/features.h
+destination.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+destination.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+destination.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+destination.o: /opt/gnome/include/glib-2.0/glib/garray.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+destination.o: /usr/include/signal.h /usr/include/bits/sigset.h
+destination.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+destination.o: /usr/include/bits/typesizes.h /usr/include/bits/signum.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+destination.o: /opt/gnome/include/glib-2.0/glib/glist.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+destination.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+destination.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+destination.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+destination.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+destination.o: /opt/gnome/include/glib-2.0/glib/grand.h
+destination.o: /opt/gnome/include/glib-2.0/glib/grel.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+destination.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-attributes.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-font.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-coverage.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-types.h
+destination.o: /opt/gnome/include/glib-2.0/glib-object.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gboxed.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gtype.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/genums.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gobject.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gvalue.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gparam.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gclosure.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gsignal.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gmarshal.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gparamspecs.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gsourceclosure.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gtypemodule.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gtypeplugin.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gvaluearray.h
+destination.o: /opt/gnome/include/glib-2.0/gobject/gvaluetypes.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-break.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-item.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-context.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-fontmap.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-fontset.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-engine.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-glyph.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-enum-types.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-layout.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-glyph-item.h
+destination.o: /opt/gnome/include/pango-1.0/pango/pango-tabs.h
+destination.o: /opt/gnome/lib/gtk-2.0/include/gdkconfig.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkcursor.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkdisplay.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkevents.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkdnd.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkinput.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkdrawable.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkgc.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkrgb.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf-features.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf-loader.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf-enum-types.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkenumtypes.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkfont.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkimage.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkkeys.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkdisplaymanager.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkpango.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkpixbuf.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkpixmap.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkproperty.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkregion.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkscreen.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkselection.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkvisual.h
+destination.o: /opt/gnome/include/gtk-2.0/gdk/gdkwindow.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccelgroup.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkenums.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccellabel.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtklabel.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkmisc.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkwidget.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkobject.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktypeutils.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktypebuiltins.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkdebug.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkadjustment.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkstyle.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtksettings.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkrc.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkobject.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkstate.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkrelationtype.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkwindow.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkbin.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcontainer.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenu.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenushell.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccelmap.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccessible.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atk.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkaction.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkcomponent.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkutil.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkdocument.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkeditabletext.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atktext.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkgobjectaccessible.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkhyperlink.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkhypertext.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkimage.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atknoopobject.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atknoopobjectfactory.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkobjectfactory.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkregistry.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkobjectfactory.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkrelation.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkrelationset.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkselection.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkstateset.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkstreamablecontent.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atktable.h
+destination.o: /opt/gnome/include/atk-1.0/atk/atkvalue.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkalignment.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkaspectframe.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkframe.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkarrow.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkbindings.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkbox.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkbbox.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkbutton.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcalendar.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtksignal.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkmarshal.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrenderer.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcelleditable.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrenderertext.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrenderertoggle.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrendererpixbuf.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcheckbutton.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktogglebutton.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcheckmenuitem.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenuitem.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkitem.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkclipboard.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkselection.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkclist.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkhscrollbar.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkscrollbar.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkrange.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkvscrollbar.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcolorsel.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkdialog.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkvbox.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcolorseldialog.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcombo.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkhbox.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkctree.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkcurve.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkdrawingarea.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkdnd.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkeditable.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkentry.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkimcontext.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkeventbox.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkfilesel.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkfixed.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkfontsel.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkgamma.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkgc.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkhandlebox.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkhbbox.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkhpaned.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkpaned.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkhruler.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkruler.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkhscale.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkscale.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkhseparator.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkseparator.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkiconfactory.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkimage.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkimagemenuitem.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkimcontextsimple.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkimmulticontext.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkinputdialog.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkinvisible.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkitemfactory.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtklayout.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtklist.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtklistitem.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkliststore.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktreemodel.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktreesortable.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkmain.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenubar.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkmessagedialog.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtknotebook.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkoldeditable.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkoptionmenu.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkpixmap.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkplug.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtksocket.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkpreview.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkprogress.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkprogressbar.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkradiobutton.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkradiomenuitem.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkscrolledwindow.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkviewport.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkseparatormenuitem.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtksizegroup.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkspinbutton.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkstock.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkstatusbar.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktable.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktearoffmenuitem.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktext.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktextbuffer.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktexttagtable.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktexttag.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktextiter.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktextchild.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktextmark.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktextview.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktipsquery.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktoolbar.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktooltips.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktree.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktreednd.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeitem.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktreemodelsort.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeselection.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeview.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeviewcolumn.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtktreestore.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkvbbox.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkversion.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkvpaned.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkvruler.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkvscale.h
+destination.o: /opt/gnome/include/gtk-2.0/gtk/gtkvseparator.h coord.h
+destination.o: transform.h point.h block.h data_window.h country.h town.h
+destination.o: street.h street_name.h gui/gtk/gtkeyboard.h cursor.h route.h
+destination.o: statusbar.h /usr/include/unistd.h
+destination.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+destination.o: destination.h container.h
+display.o: /usr/include/malloc.h
+display.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+display.o: /usr/include/math.h /usr/include/features.h
+display.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+display.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+display.o: /usr/include/bits/mathcalls.h display.h point.h graphics.h
+file.o: /usr/include/unistd.h /usr/include/features.h
+file.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+file.o: /usr/include/bits/posix_opt.h /usr/include/bits/types.h
+file.o: /usr/include/bits/wordsize.h
+file.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+file.o: /usr/include/bits/typesizes.h /usr/include/bits/confname.h
+file.o: /usr/include/string.h /usr/include/fcntl.h /usr/include/bits/fcntl.h
+file.o: /usr/include/sys/types.h /usr/include/time.h /usr/include/malloc.h
+file.o: /usr/include/sys/stat.h /usr/include/bits/stat.h
+file.o: /usr/include/sys/mman.h /usr/include/bits/mman.h
+file.o: /usr/include/dirent.h /usr/include/bits/dirent.h /usr/include/stdio.h
+file.o: /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h
+file.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+file.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+file.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+file.o: /opt/gnome/include/glib-2.0/glib.h
+file.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+file.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+file.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+file.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+file.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+file.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+file.o: /opt/gnome/include/glib-2.0/glib/garray.h
+file.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+file.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+file.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+file.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+file.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h
+file.o: /usr/include/bits/sigset.h /usr/include/bits/signum.h
+file.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+file.o: /opt/gnome/include/glib-2.0/glib/glist.h
+file.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+file.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+file.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+file.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+file.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+file.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+file.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+file.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+file.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+file.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+file.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+file.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+file.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+file.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+file.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+file.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+file.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+file.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+file.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+file.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+file.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+file.o: /opt/gnome/include/glib-2.0/glib/grand.h
+file.o: /opt/gnome/include/glib-2.0/glib/grel.h
+file.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+file.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+file.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+file.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+file.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+file.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+file.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+file.o: /opt/gnome/include/glib-2.0/glib/gutils.h file.h param.h
+graphics.o: /opt/gnome/include/glib-2.0/glib.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+graphics.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gmacros.h
+graphics.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+graphics.o: /usr/include/limits.h /usr/include/features.h
+graphics.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+graphics.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+graphics.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/garray.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+graphics.o: /usr/include/signal.h /usr/include/bits/sigset.h
+graphics.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+graphics.o: /usr/include/bits/typesizes.h /usr/include/bits/signum.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/glist.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+graphics.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/grand.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/grel.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+graphics.o: /opt/gnome/include/glib-2.0/glib/gutils.h /usr/include/string.h
+graphics.o: draw_info.h graphics.h map_data.h coord.h param.h block.h
+graphics.o: transform.h point.h poly.h town.h street.h container.h
+log.o: /usr/include/unistd.h /usr/include/features.h /usr/include/sys/cdefs.h
+log.o: /usr/include/gnu/stubs.h /usr/include/bits/posix_opt.h
+log.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+log.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+log.o: /usr/include/bits/typesizes.h /usr/include/bits/confname.h
+log.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+log.o: /usr/include/sys/types.h /usr/include/time.h /usr/include/stdio.h
+log.o: /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h
+log.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+log.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+log.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+log.o: /usr/include/string.h /usr/include/stdlib.h file.h param.h map_data.h
+log.o: log.h
+main.o: /usr/include/locale.h /usr/include/features.h
+main.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+main.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+main.o: /usr/include/bits/locale.h /usr/include/stdio.h
+main.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+main.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+main.o: /usr/include/_G_config.h /usr/include/wchar.h
+main.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+main.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+main.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h coord.h
+main.o: vehicle.h cursor.h speech.h route.h map.h
+main.o: /opt/gnome/include/glib-2.0/glib.h
+main.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+main.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+main.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+main.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+main.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+main.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+main.o: /opt/gnome/include/glib-2.0/glib/garray.h
+main.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+main.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+main.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+main.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+main.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h
+main.o: /usr/include/bits/sigset.h /usr/include/bits/signum.h
+main.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+main.o: /opt/gnome/include/glib-2.0/glib/glist.h
+main.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+main.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+main.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+main.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+main.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+main.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+main.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+main.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+main.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+main.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+main.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+main.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+main.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+main.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+main.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+main.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+main.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+main.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+main.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+main.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+main.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+main.o: /opt/gnome/include/glib-2.0/glib/grand.h
+main.o: /opt/gnome/include/glib-2.0/glib/grel.h
+main.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+main.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+main.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+main.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+main.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+main.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+main.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+main.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orbit-types.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-util.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orbit-config.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/util/basic_types.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-genrand.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core-types.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-types.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode-type.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any-type.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-pobj.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment-type.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb-type.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-object.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context-type.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/allocators.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-defs.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-basics.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-interface.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orbit.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/iop-defs.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-string.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object-type.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object.h
+main.o: /opt/gnome/include/glib-2.0/glib-object.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gboxed.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gtype.h
+main.o: /opt/gnome/include/glib-2.0/gobject/genums.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gobject.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gvalue.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gparam.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gclosure.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gsignal.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gmarshal.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gparamspecs.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gsourceclosure.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gtypemodule.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gtypeplugin.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gvaluearray.h
+main.o: /opt/gnome/include/glib-2.0/gobject/gvaluetypes.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-policy-type.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-small.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-defs.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-types.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/poa/orbit-adaptor.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-poa-type.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-current-type.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic.h
+main.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic-defs.h map_data.h
+main.o: transform.h point.h popup.h plugin.h compass.h container.h
+map-common.o: /usr/include/string.h /usr/include/features.h
+map-common.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+map-common.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h map.h
+map-common.o: /opt/gnome/include/glib-2.0/glib.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+map-common.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gmacros.h
+map-common.o: /usr/include/limits.h
+map-common.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+map-common.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/garray.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+map-common.o: /usr/include/signal.h /usr/include/bits/sigset.h
+map-common.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+map-common.o: /usr/include/bits/typesizes.h /usr/include/bits/signum.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/glist.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+map-common.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/grand.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/grel.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+map-common.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orbit-types.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-util.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orbit-config.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/util/basic_types.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-genrand.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core-types.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-types.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode-type.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any-type.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-pobj.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment-type.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb-type.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-object.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context-type.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/allocators.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-defs.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-basics.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-interface.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orbit.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/iop-defs.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-string.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object-type.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object.h
+map-common.o: /opt/gnome/include/glib-2.0/glib-object.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gboxed.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gtype.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/genums.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gobject.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gvalue.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gparam.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gclosure.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gsignal.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gmarshal.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gparamspecs.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gsourceclosure.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gtypemodule.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gtypeplugin.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gvaluearray.h
+map-common.o: /opt/gnome/include/glib-2.0/gobject/gvaluetypes.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-policy-type.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-small.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-defs.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-types.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/poa/orbit-adaptor.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-poa-type.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-current-type.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic.h
+map-common.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic-defs.h
+map-skelimpl.o: map.h /opt/gnome/include/glib-2.0/glib.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+map-skelimpl.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gmacros.h
+map-skelimpl.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+map-skelimpl.o: /usr/include/limits.h /usr/include/features.h
+map-skelimpl.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+map-skelimpl.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+map-skelimpl.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/garray.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+map-skelimpl.o: /usr/include/signal.h /usr/include/bits/sigset.h
+map-skelimpl.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+map-skelimpl.o: /usr/include/bits/typesizes.h /usr/include/bits/signum.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/glist.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+map-skelimpl.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/grand.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/grel.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orbit-types.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-util.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orbit-config.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/util/basic_types.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-genrand.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core-types.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-types.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode-type.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any-type.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-pobj.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment-type.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb-type.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-object.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context-type.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/allocators.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-defs.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-basics.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-interface.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orbit.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/iop-defs.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-string.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object-type.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/glib-object.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gboxed.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gtype.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/genums.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gobject.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gvalue.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gparam.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gclosure.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gsignal.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gmarshal.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gparamspecs.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gsourceclosure.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gtypemodule.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gtypeplugin.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gvaluearray.h
+map-skelimpl.o: /opt/gnome/include/glib-2.0/gobject/gvaluetypes.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-policy-type.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-small.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-defs.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-types.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/poa/orbit-adaptor.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-poa-type.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-current-type.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic.h
+map-skelimpl.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic-defs.h
+map-skels.o: /usr/include/string.h /usr/include/features.h
+map-skels.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+map-skels.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h map.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+map-skels.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+map-skels.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+map-skels.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/garray.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+map-skels.o: /usr/include/signal.h /usr/include/bits/sigset.h
+map-skels.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+map-skels.o: /usr/include/bits/typesizes.h /usr/include/bits/signum.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/glist.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+map-skels.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/grand.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/grel.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orbit-types.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-util.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orbit-config.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/util/basic_types.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-genrand.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core-types.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-types.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode-type.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any-type.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-pobj.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment-type.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb-type.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-object.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context-type.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/allocators.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-defs.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-basics.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-interface.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orbit.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/iop-defs.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-string.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object-type.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object.h
+map-skels.o: /opt/gnome/include/glib-2.0/glib-object.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gboxed.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gtype.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/genums.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gobject.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gvalue.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gparam.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gclosure.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gsignal.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gmarshal.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gparamspecs.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gsourceclosure.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gtypemodule.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gtypeplugin.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gvaluearray.h
+map-skels.o: /opt/gnome/include/glib-2.0/gobject/gvaluetypes.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-policy-type.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-small.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-defs.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-types.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/poa/orbit-adaptor.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-poa-type.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-current-type.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic.h
+map-skels.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic-defs.h
+map-srv.o: /usr/include/stdio.h /usr/include/features.h
+map-srv.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+map-srv.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+map-srv.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+map-srv.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+map-srv.o: /usr/include/_G_config.h /usr/include/wchar.h
+map-srv.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+map-srv.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+map-srv.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+map-srv.o: /usr/include/stdlib.h /usr/include/string.h /usr/include/ctype.h
+map-srv.o: /usr/include/endian.h /usr/include/bits/endian.h map.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+map-srv.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+map-srv.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+map-srv.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/garray.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+map-srv.o: /usr/include/signal.h /usr/include/bits/sigset.h
+map-srv.o: /usr/include/bits/signum.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/glist.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/grand.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/grel.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orbit-types.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-util.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orbit-config.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/util/basic_types.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-genrand.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core-types.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-types.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode-type.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any-type.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-pobj.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment-type.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb-type.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-object.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context-type.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/allocators.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-defs.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-basics.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-interface.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orbit.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/iop-defs.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-string.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object-type.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object.h
+map-srv.o: /opt/gnome/include/glib-2.0/glib-object.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gboxed.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gtype.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/genums.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gobject.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gvalue.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gparam.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gclosure.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gsignal.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gmarshal.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gparamspecs.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gsourceclosure.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gtypemodule.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gtypeplugin.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gvaluearray.h
+map-srv.o: /opt/gnome/include/glib-2.0/gobject/gvaluetypes.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-policy-type.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-small.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-defs.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-types.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/poa/orbit-adaptor.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-poa-type.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-current-type.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic.h
+map-srv.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic-defs.h coord.h
+map-srv.o: route.h transform.h point.h statusbar.h map-share.h main.h
+map-srv.o: /usr/include/math.h /usr/include/bits/huge_val.h
+map-srv.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+map-stubs.o: /usr/include/string.h /usr/include/features.h
+map-stubs.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+map-stubs.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h map.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+map-stubs.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+map-stubs.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+map-stubs.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/garray.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+map-stubs.o: /usr/include/signal.h /usr/include/bits/sigset.h
+map-stubs.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+map-stubs.o: /usr/include/bits/typesizes.h /usr/include/bits/signum.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/glist.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+map-stubs.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/grand.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/grel.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orbit-types.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-util.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orbit-config.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/util/basic_types.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-genrand.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core-types.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-types.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode-type.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any-type.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-pobj.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment-type.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb-type.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-object.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context-type.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/allocators.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-defs.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-basics.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-interface.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orbit.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/iop-defs.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-string.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object-type.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object.h
+map-stubs.o: /opt/gnome/include/glib-2.0/glib-object.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gboxed.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gtype.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/genums.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gobject.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gvalue.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gparam.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gclosure.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gsignal.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gmarshal.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gparamspecs.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gsourceclosure.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gtypemodule.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gtypeplugin.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gvaluearray.h
+map-stubs.o: /opt/gnome/include/glib-2.0/gobject/gvaluetypes.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-policy-type.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-small.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-defs.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-types.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/poa/orbit-adaptor.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-poa-type.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-current-type.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic.h
+map-stubs.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic-defs.h
+map_data.o: /usr/include/stdio.h /usr/include/features.h
+map_data.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+map_data.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+map_data.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+map_data.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+map_data.o: /usr/include/_G_config.h /usr/include/wchar.h
+map_data.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+map_data.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+map_data.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+map_data.o: /usr/include/stdlib.h /usr/include/string.h
+map_data.o: /opt/gnome/include/glib-2.0/glib.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+map_data.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+map_data.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+map_data.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/garray.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+map_data.o: /usr/include/signal.h /usr/include/bits/sigset.h
+map_data.o: /usr/include/bits/signum.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/glist.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/grand.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/grel.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+map_data.o: /opt/gnome/include/glib-2.0/glib/gutils.h file.h param.h block.h
+map_data.o: coord.h transform.h point.h map_data.h log.h
+mapclient.o: /usr/include/stdio.h /usr/include/features.h
+mapclient.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+mapclient.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+mapclient.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+mapclient.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+mapclient.o: /usr/include/_G_config.h /usr/include/wchar.h
+mapclient.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+mapclient.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+mapclient.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+mapclient.o: /usr/include/stdlib.h /usr/include/string.h map.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+mapclient.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+mapclient.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+mapclient.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/garray.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+mapclient.o: /usr/include/signal.h /usr/include/bits/sigset.h
+mapclient.o: /usr/include/bits/signum.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/glist.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/grand.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/grel.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orbit-types.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-util.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orbit-config.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/util/basic_types.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-genrand.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core-types.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-types.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode-type.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any-type.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-pobj.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment-type.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb-type.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-object.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context-type.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/allocators.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-defs.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-basics.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-interface.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orbit.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/iop-defs.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-string.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object-type.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object.h
+mapclient.o: /opt/gnome/include/glib-2.0/glib-object.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gboxed.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gtype.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/genums.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gobject.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gvalue.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gparam.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gclosure.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gsignal.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gmarshal.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gparamspecs.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gsourceclosure.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gtypemodule.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gtypeplugin.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gvaluearray.h
+mapclient.o: /opt/gnome/include/glib-2.0/gobject/gvaluetypes.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-policy-type.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-small.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-defs.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-types.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/poa/orbit-adaptor.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-poa-type.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-current-type.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic.h
+mapclient.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic-defs.h
+menu.o: /usr/include/stdio.h /usr/include/features.h /usr/include/sys/cdefs.h
+menu.o: /usr/include/gnu/stubs.h
+menu.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+menu.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+menu.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+menu.o: /usr/include/_G_config.h /usr/include/wchar.h
+menu.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+menu.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+menu.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+menu.o: /usr/include/string.h /usr/include/stdlib.h /usr/include/math.h
+menu.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+menu.o: /usr/include/bits/mathcalls.h /usr/include/time.h coord.h
+menu.o: data_window.h route.h cursor.h menu.h command.h transform.h point.h
+menu.o: street.h statusbar.h destination.h main.h container.h
+navigation.o: /usr/include/math.h /usr/include/features.h
+navigation.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+navigation.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+navigation.o: /usr/include/bits/mathcalls.h /usr/include/stdlib.h
+navigation.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h coord.h
+navigation.o: param.h block.h transform.h point.h route.h street.h
+navigation.o: street_name.h speech.h navigation.h data_window.h
+param.o: /usr/include/stdio.h /usr/include/features.h
+param.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+param.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+param.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+param.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+param.o: /usr/include/_G_config.h /usr/include/wchar.h
+param.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+param.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+param.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+param.o: /usr/include/string.h /usr/include/malloc.h param.h
+phrase.o: /usr/include/time.h /usr/include/bits/types.h
+phrase.o: /usr/include/features.h /usr/include/sys/cdefs.h
+phrase.o: /usr/include/gnu/stubs.h /usr/include/bits/wordsize.h
+phrase.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+phrase.o: /usr/include/bits/typesizes.h coord.h route.h speech.h
+plugin.o: /usr/include/stdio.h /usr/include/features.h
+plugin.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+plugin.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+plugin.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+plugin.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+plugin.o: /usr/include/_G_config.h /usr/include/wchar.h
+plugin.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+plugin.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+plugin.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+plugin.o: /usr/include/dlfcn.h /usr/include/bits/dlfcn.h plugin.h
+poly.o: /usr/include/stdlib.h /usr/include/features.h
+poly.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+poly.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+poly.o: /usr/include/assert.h coord.h map_data.h file.h param.h block.h
+poly.o: transform.h point.h poly.h display.h draw_info.h data_window.h
+poly.o: container.h
+popup.o: /usr/include/malloc.h
+popup.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+popup.o: /usr/include/string.h /usr/include/features.h
+popup.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+popup.o: /usr/include/stdio.h /usr/include/bits/types.h
+popup.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+popup.o: /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h
+popup.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+popup.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+popup.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+popup.o: /usr/include/assert.h /opt/gnome/include/gtk-2.0/gtk/gtk.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdk.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkcolor.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdktypes.h
+popup.o: /opt/gnome/include/glib-2.0/glib.h
+popup.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+popup.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+popup.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+popup.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+popup.o: /opt/gnome/include/glib-2.0/glib/garray.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h
+popup.o: /usr/include/bits/sigset.h /usr/include/bits/signum.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+popup.o: /opt/gnome/include/glib-2.0/glib/glist.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+popup.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+popup.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+popup.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+popup.o: /opt/gnome/include/glib-2.0/glib/grand.h
+popup.o: /opt/gnome/include/glib-2.0/glib/grel.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+popup.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-attributes.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-font.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-coverage.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-types.h
+popup.o: /opt/gnome/include/glib-2.0/glib-object.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gboxed.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gtype.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/genums.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gobject.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gvalue.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gparam.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gclosure.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gsignal.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gmarshal.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gparamspecs.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gsourceclosure.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gtypemodule.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gtypeplugin.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gvaluearray.h
+popup.o: /opt/gnome/include/glib-2.0/gobject/gvaluetypes.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-break.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-item.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-context.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-fontmap.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-fontset.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-engine.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-glyph.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-enum-types.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-layout.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-glyph-item.h
+popup.o: /opt/gnome/include/pango-1.0/pango/pango-tabs.h
+popup.o: /opt/gnome/lib/gtk-2.0/include/gdkconfig.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkcursor.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkdisplay.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkevents.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkdnd.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkinput.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkdrawable.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkgc.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkrgb.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf-features.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf-loader.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf-enum-types.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkenumtypes.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkfont.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkimage.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkkeys.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkdisplaymanager.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkpango.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkpixbuf.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkpixmap.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkproperty.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkregion.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkscreen.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkselection.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkvisual.h
+popup.o: /opt/gnome/include/gtk-2.0/gdk/gdkwindow.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccelgroup.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkenums.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccellabel.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtklabel.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkmisc.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkwidget.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkobject.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktypeutils.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktypebuiltins.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkdebug.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkadjustment.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkstyle.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtksettings.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkrc.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkobject.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkstate.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkrelationtype.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkwindow.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkbin.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcontainer.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenu.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenushell.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccelmap.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkaccessible.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atk.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkaction.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkcomponent.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkutil.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkdocument.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkeditabletext.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atktext.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkgobjectaccessible.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkhyperlink.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkhypertext.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkimage.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atknoopobject.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atknoopobjectfactory.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkobjectfactory.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkregistry.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkobjectfactory.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkrelation.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkrelationset.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkselection.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkstateset.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkstreamablecontent.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atktable.h
+popup.o: /opt/gnome/include/atk-1.0/atk/atkvalue.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkalignment.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkaspectframe.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkframe.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkarrow.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkbindings.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkbox.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkbbox.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkbutton.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcalendar.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtksignal.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkmarshal.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrenderer.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcelleditable.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrenderertext.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrenderertoggle.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcellrendererpixbuf.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcheckbutton.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktogglebutton.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcheckmenuitem.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenuitem.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkitem.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkclipboard.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkselection.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkclist.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkhscrollbar.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkscrollbar.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkrange.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkvscrollbar.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcolorsel.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkdialog.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkvbox.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcolorseldialog.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcombo.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkhbox.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkctree.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkcurve.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkdrawingarea.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkdnd.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkeditable.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkentry.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkimcontext.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkeventbox.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkfilesel.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkfixed.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkfontsel.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkgamma.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkgc.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkhandlebox.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkhbbox.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkhpaned.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkpaned.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkhruler.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkruler.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkhscale.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkscale.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkhseparator.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkseparator.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkiconfactory.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkimage.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkimagemenuitem.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkimcontextsimple.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkimmulticontext.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkinputdialog.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkinvisible.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkitemfactory.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtklayout.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtklist.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtklistitem.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkliststore.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktreemodel.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktreesortable.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkmain.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkmenubar.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkmessagedialog.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtknotebook.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkoldeditable.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkoptionmenu.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkpixmap.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkplug.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtksocket.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkpreview.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkprogress.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkprogressbar.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkradiobutton.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkradiomenuitem.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkscrolledwindow.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkviewport.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkseparatormenuitem.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtksizegroup.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkspinbutton.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkstock.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkstatusbar.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktable.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktearoffmenuitem.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktext.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktextbuffer.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktexttagtable.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktexttag.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktextiter.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktextchild.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktextmark.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktextview.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktipsquery.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktoolbar.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktooltips.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktree.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktreednd.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeitem.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktreemodelsort.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeselection.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeview.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktreeviewcolumn.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtktreestore.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkvbbox.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkversion.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkvpaned.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkvruler.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkvscale.h
+popup.o: /opt/gnome/include/gtk-2.0/gtk/gtkvseparator.h coord.h param.h
+popup.o: map_data.h block.h transform.h point.h display.h town.h street.h
+popup.o: poly.h log.h popup.h plugin.h vehicle.h route.h cursor.h statusbar.h
+popup.o: container.h
+profile.o: /usr/include/stdlib.h /usr/include/features.h
+profile.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+profile.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+profile.o: /usr/include/sys/time.h /usr/include/bits/types.h
+profile.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+profile.o: /usr/include/time.h /usr/include/bits/time.h
+profile.o: /usr/include/sys/select.h /usr/include/bits/select.h
+profile.o: /usr/include/bits/sigset.h
+route.o: /usr/include/stdio.h /usr/include/features.h
+route.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+route.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+route.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+route.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+route.o: /usr/include/_G_config.h /usr/include/wchar.h
+route.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+route.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+route.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+route.o: /usr/include/math.h /usr/include/bits/huge_val.h
+route.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+route.o: /usr/include/assert.h /usr/include/unistd.h
+route.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+route.o: /usr/include/sys/time.h /usr/include/time.h /usr/include/bits/time.h
+route.o: /usr/include/sys/select.h /usr/include/bits/select.h
+route.o: /usr/include/bits/sigset.h /opt/gnome/include/glib-2.0/glib.h
+route.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+route.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+route.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+route.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+route.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+route.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+route.o: /opt/gnome/include/glib-2.0/glib/garray.h
+route.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+route.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+route.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+route.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+route.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h
+route.o: /usr/include/bits/signum.h /opt/gnome/include/glib-2.0/glib/gcache.h
+route.o: /opt/gnome/include/glib-2.0/glib/glist.h
+route.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+route.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+route.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+route.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+route.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+route.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+route.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+route.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+route.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+route.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+route.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+route.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+route.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+route.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+route.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+route.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+route.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+route.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+route.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+route.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+route.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+route.o: /opt/gnome/include/glib-2.0/glib/grand.h
+route.o: /opt/gnome/include/glib-2.0/glib/grel.h
+route.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+route.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+route.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+route.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+route.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+route.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+route.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+route.o: /opt/gnome/include/glib-2.0/glib/gutils.h coord.h param.h map_data.h
+route.o: block.h transform.h point.h street.h street_data.h display.h route.h
+route.o: phrase.h navigation.h fib-1.0/fib.h
+search.o: /opt/gnome/include/glib-2.0/glib.h
+search.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+search.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+search.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+search.o: /opt/gnome/include/glib-2.0/glib/gmacros.h
+search.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+search.o: /usr/include/limits.h /usr/include/features.h
+search.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+search.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+search.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+search.o: /opt/gnome/include/glib-2.0/glib/garray.h
+search.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+search.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+search.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+search.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+search.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h
+search.o: /usr/include/bits/sigset.h /usr/include/bits/types.h
+search.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+search.o: /usr/include/bits/signum.h
+search.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+search.o: /opt/gnome/include/glib-2.0/glib/glist.h
+search.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+search.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+search.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+search.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+search.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+search.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+search.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+search.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+search.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+search.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+search.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+search.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+search.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+search.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+search.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+search.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+search.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+search.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+search.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+search.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+search.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+search.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+search.o: /opt/gnome/include/glib-2.0/glib/grand.h
+search.o: /opt/gnome/include/glib-2.0/glib/grel.h
+search.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+search.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+search.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+search.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+search.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+search.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+search.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+search.o: /opt/gnome/include/glib-2.0/glib/gutils.h /usr/include/stdlib.h
+search.o: /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h
+search.o: /usr/include/wchar.h /usr/include/bits/wchar.h /usr/include/gconv.h
+search.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+search.o: /usr/include/string.h search.h coord.h country.h town.h street.h
+search.o: street_name.h
+speech.o: /usr/include/sys/types.h /usr/include/features.h
+speech.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+speech.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+speech.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+speech.o: /usr/include/bits/typesizes.h /usr/include/time.h
+speech.o: /usr/include/sys/socket.h /usr/include/sys/uio.h
+speech.o: /usr/include/bits/uio.h /usr/include/bits/socket.h
+speech.o: /usr/include/limits.h
+speech.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+speech.o: /usr/include/bits/sockaddr.h /usr/include/asm/socket.h
+speech.o: /usr/include/asm/sockios.h /usr/include/netinet/in.h
+speech.o: /usr/include/stdint.h /usr/include/bits/wchar.h
+speech.o: /usr/include/bits/in.h /usr/include/endian.h
+speech.o: /usr/include/bits/endian.h /usr/include/bits/byteswap.h
+speech.o: /usr/include/arpa/inet.h /usr/include/unistd.h
+speech.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+speech.o: /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h
+speech.o: /usr/include/wchar.h /usr/include/gconv.h
+speech.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+speech.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+speech.o: /usr/include/stdlib.h /opt/gnome/include/glib-2.0/glib.h
+speech.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+speech.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gmacros.h
+speech.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+speech.o: /opt/gnome/include/glib-2.0/glib/garray.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h
+speech.o: /usr/include/bits/sigset.h /usr/include/bits/signum.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+speech.o: /opt/gnome/include/glib-2.0/glib/glist.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+speech.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+speech.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+speech.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+speech.o: /opt/gnome/include/glib-2.0/glib/grand.h
+speech.o: /opt/gnome/include/glib-2.0/glib/grel.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+speech.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+speech.o: ../speechd/src/clients/libspeechd.h speech.h
+street.o: /usr/include/assert.h /usr/include/features.h
+street.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+street.o: /usr/include/stdio.h
+street.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+street.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+street.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+street.o: /usr/include/_G_config.h /usr/include/wchar.h
+street.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+street.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+street.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+street.o: /usr/include/malloc.h /usr/include/unistd.h
+street.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+street.o: /opt/gnome/include/glib-2.0/glib.h
+street.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+street.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+street.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+street.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+street.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+street.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+street.o: /opt/gnome/include/glib-2.0/glib/garray.h
+street.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+street.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+street.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+street.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+street.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h
+street.o: /usr/include/bits/sigset.h /usr/include/bits/signum.h
+street.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+street.o: /opt/gnome/include/glib-2.0/glib/glist.h
+street.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+street.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+street.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+street.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+street.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+street.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+street.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+street.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+street.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+street.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+street.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+street.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+street.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+street.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+street.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+street.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+street.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+street.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+street.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+street.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+street.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+street.o: /opt/gnome/include/glib-2.0/glib/grand.h
+street.o: /opt/gnome/include/glib-2.0/glib/grel.h
+street.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+street.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+street.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+street.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+street.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+street.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+street.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+street.o: /opt/gnome/include/glib-2.0/glib/gutils.h container.h coord.h
+street.o: map_data.h file.h param.h block.h transform.h point.h route.h
+street.o: street.h street_data.h street_name.h display.h draw_info.h
+street.o: data_window.h data.h tree.h
+street_name.o: /usr/include/stdio.h /usr/include/features.h
+street_name.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+street_name.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+street_name.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+street_name.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+street_name.o: /usr/include/_G_config.h /usr/include/wchar.h
+street_name.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+street_name.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+street_name.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+street_name.o: /usr/include/ctype.h /usr/include/endian.h
+street_name.o: /usr/include/bits/endian.h /usr/include/string.h map_data.h
+street_name.o: street_name.h file.h param.h block.h coord.h transform.h
+street_name.o: point.h data.h tree.h
+test.o: /usr/include/stdio.h /usr/include/features.h /usr/include/sys/cdefs.h
+test.o: /usr/include/gnu/stubs.h
+test.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+test.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+test.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+test.o: /usr/include/_G_config.h /usr/include/wchar.h
+test.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+test.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+test.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+test.o: search.h map_data.h
+town.o: /usr/include/stdio.h /usr/include/features.h /usr/include/sys/cdefs.h
+town.o: /usr/include/gnu/stubs.h
+town.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+town.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+town.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+town.o: /usr/include/_G_config.h /usr/include/wchar.h
+town.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+town.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+town.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+town.o: /usr/include/string.h /usr/include/malloc.h display.h point.h coord.h
+town.o: data_window.h map_data.h town.h data.h tree.h block.h transform.h
+town.o: file.h param.h draw_info.h container.h util.h /usr/include/ctype.h
+town.o: /usr/include/endian.h /usr/include/bits/endian.h
+transform.o: /usr/include/assert.h /usr/include/features.h
+transform.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+transform.o: /usr/include/stdio.h
+transform.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+transform.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+transform.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+transform.o: /usr/include/_G_config.h /usr/include/wchar.h
+transform.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+transform.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+transform.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+transform.o: /usr/include/math.h /usr/include/bits/huge_val.h
+transform.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+transform.o: /usr/include/limits.h
+transform.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h coord.h
+transform.o: transform.h point.h
+tree.o: /usr/include/stdio.h /usr/include/features.h /usr/include/sys/cdefs.h
+tree.o: /usr/include/gnu/stubs.h
+tree.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+tree.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+tree.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+tree.o: /usr/include/_G_config.h /usr/include/wchar.h
+tree.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+tree.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+tree.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+tree.o: /usr/include/string.h file.h param.h map_data.h data.h tree.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gmacros.h
+tst.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+tst.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h /usr/include/limits.h
+tst.o: /usr/include/features.h /usr/include/sys/cdefs.h
+tst.o: /usr/include/gnu/stubs.h
+tst.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+tst.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+tst.o: /opt/gnome/include/glib-2.0/glib.h
+tst.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+tst.o: /opt/gnome/include/glib-2.0/glib/garray.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h
+tst.o: /usr/include/bits/sigset.h /usr/include/bits/types.h
+tst.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+tst.o: /usr/include/bits/signum.h /opt/gnome/include/glib-2.0/glib/gcache.h
+tst.o: /opt/gnome/include/glib-2.0/glib/glist.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+tst.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+tst.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+tst.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+tst.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+tst.o: /opt/gnome/include/glib-2.0/glib/grand.h
+tst.o: /opt/gnome/include/glib-2.0/glib/grel.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+tst.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+util.o: /usr/include/ctype.h /usr/include/features.h /usr/include/sys/cdefs.h
+util.o: /usr/include/gnu/stubs.h /usr/include/bits/types.h
+util.o: /usr/include/bits/wordsize.h
+util.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+util.o: /usr/include/bits/typesizes.h /usr/include/endian.h
+util.o: /usr/include/bits/endian.h
+vehicle.o: /usr/include/stdio.h /usr/include/features.h
+vehicle.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+vehicle.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+vehicle.o: /usr/include/bits/types.h /usr/include/bits/wordsize.h
+vehicle.o: /usr/include/bits/typesizes.h /usr/include/libio.h
+vehicle.o: /usr/include/_G_config.h /usr/include/wchar.h
+vehicle.o: /usr/include/bits/wchar.h /usr/include/gconv.h
+vehicle.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+vehicle.o: /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h
+vehicle.o: /usr/include/stdlib.h /usr/include/string.h /usr/include/unistd.h
+vehicle.o: /usr/include/bits/posix_opt.h /usr/include/bits/confname.h
+vehicle.o: /usr/include/fcntl.h /usr/include/bits/fcntl.h
+vehicle.o: /usr/include/sys/types.h /usr/include/time.h /usr/include/math.h
+vehicle.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+vehicle.o: /usr/include/bits/mathcalls.h /opt/gnome/include/glib-2.0/glib.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+vehicle.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gmacros.h /usr/include/limits.h
+vehicle.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+vehicle.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/garray.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h
+vehicle.o: /usr/include/signal.h /usr/include/bits/sigset.h
+vehicle.o: /usr/include/bits/signum.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gcache.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/glist.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/grand.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/grel.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+vehicle.o: /opt/gnome/include/glib-2.0/glib/gutils.h coord.h transform.h
+vehicle.o: point.h statusbar.h vehicle.h
+block.o: coord.h transform.h point.h
+display.o: point.h
+file.o: param.h
+map.o: /opt/gnome/include/glib-2.0/glib.h
+map.o: /opt/gnome/include/glib-2.0/glib/galloca.h
+map.o: /opt/gnome/include/glib-2.0/glib/gtypes.h
+map.o: /opt/gnome/lib/glib-2.0/include/glibconfig.h
+map.o: /opt/gnome/include/glib-2.0/glib/gmacros.h
+map.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+map.o: /usr/include/limits.h /usr/include/features.h /usr/include/sys/cdefs.h
+map.o: /usr/include/gnu/stubs.h
+map.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/limits.h
+map.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/float.h
+map.o: /opt/gnome/include/glib-2.0/glib/garray.h
+map.o: /opt/gnome/include/glib-2.0/glib/gasyncqueue.h
+map.o: /opt/gnome/include/glib-2.0/glib/gthread.h
+map.o: /opt/gnome/include/glib-2.0/glib/gerror.h
+map.o: /opt/gnome/include/glib-2.0/glib/gquark.h
+map.o: /opt/gnome/include/glib-2.0/glib/gbacktrace.h /usr/include/signal.h
+map.o: /usr/include/bits/sigset.h /usr/include/bits/types.h
+map.o: /usr/include/bits/wordsize.h /usr/include/bits/typesizes.h
+map.o: /usr/include/bits/signum.h /opt/gnome/include/glib-2.0/glib/gcache.h
+map.o: /opt/gnome/include/glib-2.0/glib/glist.h
+map.o: /opt/gnome/include/glib-2.0/glib/gmem.h
+map.o: /opt/gnome/include/glib-2.0/glib/gcompletion.h
+map.o: /opt/gnome/include/glib-2.0/glib/gconvert.h
+map.o: /opt/gnome/include/glib-2.0/glib/gdataset.h
+map.o: /opt/gnome/include/glib-2.0/glib/gdate.h
+map.o: /opt/gnome/include/glib-2.0/glib/gdir.h
+map.o: /opt/gnome/include/glib-2.0/glib/gfileutils.h
+map.o: /opt/gnome/include/glib-2.0/glib/ghash.h
+map.o: /opt/gnome/include/glib-2.0/glib/ghook.h
+map.o: /opt/gnome/include/glib-2.0/glib/giochannel.h
+map.o: /opt/gnome/include/glib-2.0/glib/gmain.h
+map.o: /opt/gnome/include/glib-2.0/glib/gslist.h
+map.o: /opt/gnome/include/glib-2.0/glib/gstring.h
+map.o: /opt/gnome/include/glib-2.0/glib/gunicode.h
+map.o: /opt/gnome/include/glib-2.0/glib/gmarkup.h
+map.o: /opt/gnome/include/glib-2.0/glib/gmessages.h
+map.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stdarg.h
+map.o: /opt/gnome/include/glib-2.0/glib/gnode.h
+map.o: /opt/gnome/include/glib-2.0/glib/gpattern.h
+map.o: /opt/gnome/include/glib-2.0/glib/gprimes.h
+map.o: /opt/gnome/include/glib-2.0/glib/gqsort.h
+map.o: /opt/gnome/include/glib-2.0/glib/gqueue.h
+map.o: /opt/gnome/include/glib-2.0/glib/grand.h
+map.o: /opt/gnome/include/glib-2.0/glib/grel.h
+map.o: /opt/gnome/include/glib-2.0/glib/gscanner.h
+map.o: /opt/gnome/include/glib-2.0/glib/gshell.h
+map.o: /opt/gnome/include/glib-2.0/glib/gspawn.h
+map.o: /opt/gnome/include/glib-2.0/glib/gstrfuncs.h
+map.o: /opt/gnome/include/glib-2.0/glib/gthreadpool.h
+map.o: /opt/gnome/include/glib-2.0/glib/gtimer.h
+map.o: /opt/gnome/include/glib-2.0/glib/gtree.h
+map.o: /opt/gnome/include/glib-2.0/glib/gutils.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orbit-types.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-util.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orbit-config.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/util/basic_types.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/util/orbit-genrand.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core-types.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-types.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode-type.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any-type.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-pobj.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment-type.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb-type.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-object.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context-type.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-typecode.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/allocators.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-defs.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-basics.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-interface.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orbit.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orb-core.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/iop-defs.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-orb.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-string.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-environment.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-any.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object-type.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-object.h
+map.o: /opt/gnome/include/glib-2.0/glib-object.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gboxed.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gtype.h
+map.o: /opt/gnome/include/glib-2.0/gobject/genums.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gobject.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gvalue.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gparam.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gclosure.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gsignal.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gmarshal.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gparamspecs.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gsourceclosure.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gtypemodule.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gtypeplugin.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gvaluearray.h
+map.o: /opt/gnome/include/glib-2.0/gobject/gvaluetypes.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-policy-type.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/corba-context.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/orb-core/orbit-small.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-defs.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/poa/poa-types.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/poa/orbit-adaptor.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-poa-type.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/poa/portableserver-current-type.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic.h
+map.o: /opt/gnome/include/orbit-2.0/orbit/dynamic/dynamic-defs.h
+transform.o: point.h
+util.o: /usr/include/ctype.h /usr/include/features.h /usr/include/sys/cdefs.h
+util.o: /usr/include/gnu/stubs.h /usr/include/bits/types.h
+util.o: /usr/include/bits/wordsize.h
+util.o: /usr/lib/gcc-lib/i586-suse-linux/3.3.3/include/stddef.h
+util.o: /usr/include/bits/typesizes.h /usr/include/endian.h
+util.o: /usr/include/bits/endian.h
