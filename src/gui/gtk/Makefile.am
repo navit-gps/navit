@@ -1,9 +1,9 @@
 AUTOMAKE_OPTIONS = no-exeext
 AM_CPPFLAGS = @PACKAGE_CFLAGS@ -I../..
 
-objdir=$(prefix)/dummy
+objdir=$(prefix)
 obj_PROGRAMS=gtk.o
-INSTALL_PROGRAM=$(INSTALL_DATA)
+INSTALL_PROGRAM=/bin/true
 
 gtk_o_SOURCES=gtkeyboard.c gui_gtk_menu.c gui_gtk_statusbar.c gui_gtk_toolbar.c gui_gtk_window.c
 

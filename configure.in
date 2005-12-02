@@ -5,7 +5,7 @@ AM_MAINTAINER_MODE
 
 AC_PROG_CC
 
-pkg_modules="glib-2.0 gtk+-2.0 ORBit-2.0"
+pkg_modules="glib-2.0 gtk+-2.0 ORBit-2.0 freetype2"
 PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
