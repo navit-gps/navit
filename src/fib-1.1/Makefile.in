@@ -1,0 +1,116 @@
+#	$Id: Makefile.in,v 1.1 2005-12-02 10:41:56 martin-s Exp $
+#
+
+SHELL = /bin/sh
+
+LIB = fib
+
+SRCS = fib.c
+OBJS = fib.o
+SOBJS = fib.so
+POBJS = fib.po
+
+INCS = fib.h
+
+TESTPROG = use
+TESTSRCS = use.c
+TESTOBJS = use.o
+
+REGRESS_PROG = fibtest fibtest2 tt
+
+DEBUG = -g -Wall -Werror
+#OPT = -O2
+PROFILE = -pg
+LIBOPTS = -DFH_STATS # -DNO_FREE
+
+srcdir = @srcdir@
+
+AFLAGS = -Wall -I$(srcdir) $(DEBUG) $(OPT) $(LIBOPTS) $(CFLAGS)
+
+MAJOR = 1
+ARNAME = lib$(LIB).a
+SONAME = lib$(LIB).so.$(MAJOR)
+PANAME = lib$(LIB)_p.a
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+LIBDIR = @libdir@
+LIBOWN = 0
+LIBGRP = 0
+LIBMOD = 0444
+INCDIR = @includedir@
+INCOWN = 0
+INCGRP = 0
+INCMOD = 0444
+
+all: $(ARNAME) $(SONAME) $(PANAME)
+
+$(ARNAME): $(OBJS)
+	$(AR) rc $@ $(OBJS)
+
+$(SONAME): $(SOBJS)
+	$(CC) -shared -o $@ $(SOBJS)
+
+$(PANAME): $(POBJS)
+	$(AR) rc $@ $(POBJS)
+
+$(TESTPROG): $(TESTOBJS) $(ARNAME)
+	$(CC) -static $(CFLAGS) -o $@ $(TESTOBJS) $(ARNAME) $(PROFILE)
+
+deepclean: clean
+	rm -f Makefile config.cache config.log config.status configure
+
+clean: regressclean
+	rm -f $(ARNAME) $(OBJS) $(SONAME) $(SOBJS) $(PANAME) $(POBJS)	\
+	    $(TESTPROG) $(TESTOBJS) .depend
+
+install: $(ARNAME) $(SONAME) $(PANAME)
+	mkdir -p -m 755 $(LIBDIR)
+	for i in $(ARNAME) $(SONAME) $(PANAME); do		\
+		cp $$i $(LIBDIR);				\
+		chown $(LIBOWN):$(LIBGRP) $(LIBDIR)/$$i;	\
+		chmod $(LIBMOD) $(LIBDIR)/$$i;			\
+	done
+	mkdir -p -m 755 $(INCDIR)
+	for i in $(INCS); do					\
+		cp $$i $(INCDIR);				\
+		chown $(INCOWN):$(INCGRP) $(INCDIR)/$$i;	\
+		chmod $(INCMOD) $(INCDIR)/$$i;			\
+	done
+
+depend:
+	mkdep $(AFLAGS) $(SRCS)
+
+$(srcdir)/configure: configure.in
+	cd $(srcdir) && autoconf
+
+Makefile: Makefile.in config.status
+	./config.status
+
+config.status: configure
+	./config.status --recheck
+
+regress: $(REGRESS_PROG)
+	@for i in $(REGRESS_PROG); do				\
+		echo Regression for $$i;			\
+		./$$i > regress.new;				\
+		diff $${i}.out regress.new;			\
+	done
+	rm regress.new
+
+regressclean:
+	rm -f $(REGRESS_PROG)
+
+.SUFFIXES:
+.SUFFIXES: .so .po .c .o
+.c.so:
+	$(CC) -fpic $(AFLAGS) -c $< -o $@
+
+.c.po:
+	$(CC) $(PROFILE) $(AFLAGS) -c $< -o $@
+
+.c.o:
+	$(CC) $(CPPFLAGS) $(AFLAGS) -c $< -o $@
+
+.c: $(ARNAME)
+	$(CC) $(CPPFLAGS) $(AFLAGS) -o $@ $< $(ARNAME)

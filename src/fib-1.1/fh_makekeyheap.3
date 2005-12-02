@@ -1,0 +1,84 @@
+.TH FH_MAKEKEYHEAP 3 "29 Mar 2000" "libfib"
+.SH NAME
+fh_makekeyheap \- make a Fibonacci key Heap
+.SH SYNOPSIS
+#include <fib.h>
+.PP
+struct fibheap *
+.PD 0
+.HP 8
+.BR fh_makekeyheap (void)
+.PD
+.PP
+struct fibheap_el *
+.PD 0
+.HP 8
+.BR fh_insertkey "(struct fibheap *heap, int key, void *data)"
+.PD
+.PP
+int
+.PD 0
+.HP 8
+.BR fh_minkey "(struct fibheap *heap)"
+.PD
+.PP
+void *
+.PD 0
+.HP 8
+.BR fh_replacekey "(struct fibheap *heap, struct fibheap_el *elem, int key)"
+.PD
+.PP
+void *
+.PD 0
+.HP 8
+.BR fh_replacekeydata "(struct fibheap *heap, struct fibheap_el *elem, int key, void *data)"
+.PD
+.SH DESCRIPTION
+The
+.B fh_makekeyheap
+function makes a Fibonacci heap which does ordering based on an
+integer key that is given in addition to the data.
+This menthod is useful so that you can eliminate the need to call
+a comparision function to order the data in the heap.
+.PP
+The pointer to the structure
+.B fibheap
+returned by
+.B fh_makekeyheap
+is an opaque structure.  The the pointer can only be passed to other
+functions in the
+.B libfib
+library.
+.PP
+The
+.B fh_insertkey
+function inserts the
+.B data
+element into the heap with a value of
+.BR key .
+The pointer returned can be used in calls to functions like
+.BR fh_delete (3)
+to delete the key from the heap before it gets extracted via
+.BR fh_extractmin (3).
+.SH RETURN VALUES
+The
+.B fh_makekeyheap
+function returns a pointer to a heap structure used to insert and extract
+data elements.
+.PP
+The
+.B fh_insertkey
+functions returns a pointer to a heap element structure which can be used
+to manimulate that data element in the heap.
+.PP
+The
+.B fh_minkey
+function returns the integer key of the data at the top of the heap.  If you would like to view the data, see
+.BR fh_min (3).
+.SH SEE ALSO
+.BR fh_extractmin (3)
+.SH AUTHORS
+This library and man page was writen by John-Mark Gurney <gurney_j@efn.org>.
+.SH BUGS
+A key heap does not provide a way for handling key collitions and deffering
+decission to a user provided function to resolve colissions.
