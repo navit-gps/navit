@@ -9,7 +9,7 @@ pkg_modules="glib-2.0 gtk+-2.0 ORBit-2.0 freetype2"
 PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
-AC_CHECK_HEADER(libspeechd.h, AC_DEFINE([HAVE_LIBSPEECHD],[],Define to 1 if you have the <libspeechd.h> header file.),  AC_MSG_WARN([*** no libspeechd.h -- Speech output disabled]))
+AC_CHECK_HEADER(libspeechd.h, AC_DEFINE([HAVE_LIBSPEECHD],[],Define to 1 if you have the <libspeechd.h> header file.) LIBS="$LIBS -lspeechd",  AC_MSG_WARN([*** no libspeechd.h -- Speech output disabled]))
 
 
 AC_CONFIG_SUBDIRS(src/fib-1.0)
