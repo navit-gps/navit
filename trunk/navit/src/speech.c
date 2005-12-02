@@ -1,5 +1,5 @@
 /* speechd simple client program
- * CVS revision: $Id: speech.c,v 1.2 2005-12-02 12:32:47 martin-s Exp $
+ * CVS revision: $Id: speech.c,v 1.3 2005-12-02 13:26:31 martin-s Exp $
  * Author: Tomas Cerha <cerha@brailcom.cz> */
 
 #include <sys/types.h>
@@ -27,7 +27,11 @@ speech_new(void) {
 	struct speech *this;
 	int sockfd;
 
+#ifdef SPD_FATAL
+	sockfd = spd_open("map","main",NULL);
+#else
 	sockfd = spd_init("map","main");
+#endif
 	if (sockfd == 0) 
 		return NULL;
 	this=g_new(struct speech,1);
