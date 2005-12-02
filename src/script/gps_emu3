@@ -1,0 +1,12 @@
+#! /bin/bash
+while read line
+do
+	if [ -n "$line" ]
+	then
+		echo $line
+	fi
+	if [ "${line#\$GPVTG}" != "$line" ]
+	then
+		sleep 1
+	fi
+done <$1

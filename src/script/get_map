@@ -1,0 +1,5 @@
+#! /bin/bash
+echo "/* XPM */" >map.xpm
+req="<MapRequest reqVer='100' format='jpeg' visibleRoutes='111111111' colorDepth='4'><Rect l='0' t='0' r='$1' b='$2'></Rect><Rect l='$3' t='$4' r='$5' b='$6'></Rect></MapRequest>"
+perl -e 'print (pack("a20",length($ARGV[0]))) ; print $ARGV[0]' "$req" |  netcat localhost 10371 | dd bs=20 skip=1 2>/dev/null | tail +2 >>map.xpm
+

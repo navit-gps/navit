@@ -1,0 +1,25 @@
+struct PointObj {
+	float lng;	/* degrees */
+	float lat;	/* degrees */
+	float height;	/* meters */
+};
+
+typedef sequence<PointObj> PointObjSequence;
+
+interface Mappel {
+	void		Test();
+};
+
+interface Map {
+        Map        mapString (in string  astring,
+                                out double anum);
+        void        doNothing  ();
+        oneway void doOneWay   (in string ignore);
+	void		PlaceFlag();
+	PointObj PointFromCoord(in string coord);
+	void		View(in PointObj where);
+	void		ViewAll(in PointObjSequence where);
+	void		Route(in PointObj src, in PointObj dst);
+	Mappel		Get();
+};
+
