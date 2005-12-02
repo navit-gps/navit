@@ -1,0 +1,26 @@
+Version 1.1 now supports increasing the key using the fh_replace*
+functions.  Previously it would simply return NULL when you tried to
+increase the key.  It also improves performance slightly by only calling
+checkcons when we are about to use it, at extract, instead of calling it
+on every insert.
+
+I have now fixed fh_union and it properly updates the minimum.
+
+Thanks to Ryan Earl for pointing out that in fh_consolidate, it is VERY
+time consuming to constantly malloc/free an array of pointers.  The array
+is small enough that simply reallocating when more pointers are needed
+is ok.
+
+Thanks to Thomas Eschbach and Wolfgang Guenther who have pointed out bugs
+with my code.  Wolfgang Guenther provided a fix which put in on the correct
+track for where the bug was.  They have also provided a few test programs
+that exhibited other bugs which I have now integrated into my source so
+that you can easily regress test the library.
+
+I have reciently completed a review of the code.  I have made a number
+of improvements with a few minor interface changes.  There is another
+improvement to the rh_replace* family of functions to help eliminate
+redundant code.
+
+I'm still planning on writing a type safe memory allocator for use with
+the code instead of using malloc to hopefully improve performance slightly.

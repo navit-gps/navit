@@ -1,5 +1,5 @@
 /* speechd simple client program
- * CVS revision: $Id: speech.c,v 1.1.1.1 2005-11-27 20:48:30 martin-s Exp $
+ * CVS revision: $Id: speech.c,v 1.1 2005-12-02 10:41:56 martin-s Exp $
  * Author: Tomas Cerha <cerha@brailcom.cz> */
 
 #include <sys/types.h>
