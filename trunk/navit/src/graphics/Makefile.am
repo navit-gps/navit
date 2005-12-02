@@ -1,0 +1,1 @@
+SUBDIRS=gtk_drawing_area
