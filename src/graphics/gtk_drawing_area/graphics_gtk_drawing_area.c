@@ -46,15 +46,18 @@ struct graphics_image_gra {
 static struct graphics_font *font_new(struct graphics *gr, int size)
 {
 	char *filename="/usr/X11R6/lib/X11/fonts/msttcorefonts/arial.ttf";
+	char *filename2="/usr/share/fonts/truetype/msttcorefonts/arial.ttf";
 	struct graphics_font *font=g_new(struct graphics_font, 1);
 	if (!gr->gra->library_init) {
 		FT_Init_FreeType( &gr->gra->library );
 		gr->gra->library_init=1;
 	}
 	if (FT_New_Face( gr->gra->library, filename, 0, &font->face )) {
-		g_warning("Failed to load '%s', no labelling", filename);
-		g_free(font);
-		return NULL;
+	    	if (FT_New_Face( gr->gra->library, filename2, 0, &font->face )) {
+			g_warning("Failed to load '%s', no labelling", filename);
+			g_free(font);
+			return NULL;
+		}
 	}
         FT_Set_Char_Size(font->face, 0, size, 300, 300);
 	return font;
