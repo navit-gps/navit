@@ -15,20 +15,30 @@ in real time from vector data.
 Maps:
 =====
 
-The best navigation system is useless without maps. Those two maps
+The best navigation system is useless without maps. Those three maps
 are known to work:
 
 	http://www.amazon.de/exec/obidos/ASIN/3829731280
-		(grosser Reiseplaner)
+		(Grosser Reiseplaner, detailed map of europe)
 	http://www.amazon.de/exec/obidos/ASIN/3934073697
-		(Telefonbuch Deutschland Map+Route)
+		(Telefonbuch Deutschland Map+Route,
+		  detailed map of germany, coarse map of europe)
+	http://www.amazon.de/exec/obidos/ASIN/3934073719
+		(Gelbe Seiten Map+Route, detailed map of germany,
+		  course map of europe)
 
-Once you got one of those you need to let NavIt know about it by
-setting the MAP_DATA environment variable to the directory of the
-map files:
+Installing the Maps:
+- Gelbe Seiten and Telefonbuch Deutschland
+unzip karten.zip from the map cd where the map should go (about 1.2 GB)
+export MAP_DATA=<path to where the map has been unzipped>/d7.map
 
-	export MAP_DATA=/home/navit/reiseplaner/travel/DE.map
-
+- Grosser Reiseplaner
+Compile unshield from http://synce.sourceforge.net/synce/unshield.php
+run "unshield x <path to your dvd>/travel/data2.cab" where the map
+should go (about 4.3 GB)
+export MAP_DATA=<path to where the map has been unshielded>/DIRMAP_MAP/DIE.map
+move smp4.smp from DIE.map to a higher directory, since it currently
+crashes the program.
 
 Subdirectories:
 ===============
