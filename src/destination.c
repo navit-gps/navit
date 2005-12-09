@@ -22,7 +22,7 @@ extern gint track_focus(gpointer data);
 
 GtkWidget *entry_country, *entry_postal, *entry_city, *entry_district;
 GtkWidget *entry_street, *entry_number;
-GtkWidget *listbox;
+GtkWidget *listbox, *current=NULL;
 int row_count=8;
 
 int selected;
@@ -54,7 +54,13 @@ static void
 select_row(GtkCList *clist, int row, int column, GdkEventButton *event, struct data_window *win)
 {
 	selected=row;
+	gchar *text;
 	printf("Selected %d\n", row);
+	
+	if(current==entry_country) {
+		gtk_clist_get_text(GTK_CLIST(clist),row,0,&text);
+		gtk_entry_set_text(GTK_ENTRY(entry_country),text);
+	}
 }
 
 int
@@ -426,6 +432,8 @@ void changed(GtkWidget *widget, struct search_param *search)
 	char *empty[9]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 	char *dash;
 
+	current=widget;
+    
 	gtk_clist_freeze(GTK_CLIST(listbox));
 	gtk_clist_clear(GTK_CLIST(listbox));
 	
@@ -548,7 +556,7 @@ int destination_address(struct container *co)
 #endif
 
 	window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	keyboard = build_keyboard(NULL, "/usr/local/share/gtkeyboard/DE.key");
+	keyboard = build_keyboard(NULL, "/usr/share/gtkeyboard/key/DE.key");
 	vbox = gtk_vbox_new(FALSE, 0);
 	table = gtk_table_new(3, 8, FALSE);
 
