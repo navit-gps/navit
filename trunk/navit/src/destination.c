@@ -55,11 +55,23 @@ select_row(GtkCList *clist, int row, int column, GdkEventButton *event, struct d
 {
 	selected=row;
 	gchar *text;
-	printf("Selected %d\n", row);
+	printf("Selected row %d, column %d\n", row, column);
 	
 	if(current==entry_country) {
 		gtk_clist_get_text(GTK_CLIST(clist),row,0,&text);
-		gtk_entry_set_text(GTK_ENTRY(entry_country),text);
+		gtk_entry_set_text(GTK_ENTRY(entry_country),g_strdup(text));
+	}
+	else if( current==entry_city) {
+		gtk_clist_get_text(GTK_CLIST(clist),row,5,&text);
+		gtk_entry_set_text(GTK_ENTRY(entry_city),g_strdup(text));
+	}
+	else if( current==entry_street) {
+		gtk_clist_get_text(GTK_CLIST(clist),row,4,&text);
+		gtk_entry_set_text(GTK_ENTRY(entry_street),g_strdup(text));
+	}
+	else if( current==entry_number) {
+		gtk_clist_get_text(GTK_CLIST(clist),row,8,&text);
+		gtk_entry_set_text(GTK_ENTRY(entry_number),g_strdup(text));
 	}
 }
 
