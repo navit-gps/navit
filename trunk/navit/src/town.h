@@ -23,5 +23,9 @@ struct map_data;
 
 void town_draw_block(struct block_info *blk_inf, unsigned char *start, unsigned char *end, void *data);
 int town_get_param(struct segment *seg, struct param_list *param, int count);
-int town_search_by_name(struct map_data *mdat, int country, const char *name, int partial, int (*func)(struct town *t, void *data), void *data);
+int town_search_by_postal_code(struct map_data *mdat, int country, const char *name, int partial, int (*func)(struct town *, void *data), void *data);
+int town_search_by_name(struct map_data *mdat, int country, const char *name, int partial, int (*func)(struct town *, void *data), void *data);
+int town_search_by_district(struct map_data *mdat, int country, const char *name, int partial, int (*func)(struct town *, void *data), void *data);
+int town_search_by_name_phon(struct map_data *mdat, int country, const char *name, int partial, int (*func)(struct town *, void *data), void *data);
+int town_search_by_district_phon(struct map_data *mdat, int country, const char *name, int partial, int (*func)(struct town *, void *data), void *data);
 void town_get_by_id(struct town *town, struct map_data *mdat, int country, int id);

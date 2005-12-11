@@ -1,7 +1,8 @@
 #include <ctype.h>
+#include "util.h"
 
 void
-strtoupper(unsigned char *dest, unsigned char *src)
+strtoupper(char *dest, const char *src)
 {
 	while (*src)
 		*dest++=toupper(*src++);
@@ -9,7 +10,7 @@ strtoupper(unsigned char *dest, unsigned char *src)
 }
 
 void
-strtolower(unsigned char *dest, unsigned char *src)
+strtolower(char *dest, const char *src)
 {
 	while (*src)
 		*dest++=tolower(*src++);

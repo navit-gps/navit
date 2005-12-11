@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include <assert.h>
 #include <unistd.h>
@@ -124,7 +125,7 @@ route_new(void)
 	return this;
 }
 
-void
+static void
 route_path_free(struct route *this)
 {
         struct route_path_segment *curr, *next;
@@ -229,7 +230,7 @@ route_get_destination(struct route *this)
 	return &this->dst->click.xy;
 }
 
-void
+static void
 route_street_foreach(struct block_info *blk_inf, unsigned char *p, unsigned char *end, void *data,
 			void(*func)(struct block_info *, struct street_info *, unsigned char **, unsigned char *, void *))
 {
@@ -283,7 +284,7 @@ route_get_point(struct route *this, struct coord3d *c)
 }
 
 
-struct route_point *
+static struct route_point *
 route_point_add(struct route *this, struct coord3d *f, int conn)
 {
 	int hashval;
@@ -331,7 +332,7 @@ route_points_free(struct route *this)
 	memset(this->hash, 0, sizeof(this->hash));
 }
 
-void
+static void
 route_segment_add(struct route *this, struct route_point *start, struct route_point *end, int len, struct street_str *str, int offset, int limit)
 {
 	struct route_segment *s;
@@ -353,7 +354,7 @@ route_segment_add(struct route *this, struct route_point *start, struct route_po
 	
 }
 
-void
+static void
 route_segments_free(struct route *this)
 {
 	struct route_segment *curr,*next;
@@ -391,19 +392,19 @@ route_display_points(struct route *this, struct container *co)
 #endif
 }
 
-int
+static int
 route_time(int type, int len)
 {
 	return len*36/speed_list[type & 0x3f];
 }
 
-int
+static int
 route_value(int type, int len)
 {
 	return route_time(type, len);
 }
 
-int
+static int
 route_get_height(int segid, struct coord *c)
 {
 	if (c->x == 0x141b53 && c->y == 0x5f2065 && (segid == 0x4fad2fa || segid == 0x4fad155)) 
@@ -415,7 +416,7 @@ route_get_height(int segid, struct coord *c)
 	return 0;
 }
 
-void
+static void
 route_process_street_graph(struct block_info *blk_inf, struct street_info *str_inf, unsigned char **p, unsigned char *end, void *data)
 {
 	struct route *this=data;
@@ -625,7 +626,7 @@ struct block_list {
 	struct block_list *next;
 };
 
-void
+static void
 route_process_street_block_graph(struct block_info *blk_inf, unsigned char *p, unsigned char *end, void *data)
 {
 	struct route *this=data;
@@ -647,7 +648,7 @@ route_process_street_block_graph(struct block_info *blk_inf, unsigned char *p, u
 #endif
 }
 
-void
+static void
 route_blocklist_free(struct route *this)
 {
 	struct block_list *curr,*next;
@@ -659,7 +660,7 @@ route_blocklist_free(struct route *this)
 	}
 }
 
-void
+static void
 route_build_graph(struct route *this, struct map_data *mdata, struct coord *c, int coord_count)
 {
 	struct coord rect[2];
@@ -718,7 +719,7 @@ route_build_graph(struct route *this, struct map_data *mdata, struct coord *c, i
 	}
 }
 
-void
+static void
 route_process_street3(struct block_info *blk_inf, struct street_info *str_inf, unsigned char **p, unsigned char *end, void *data)
 {
 	int flags=0;
@@ -791,7 +792,7 @@ route_process_street3(struct block_info *blk_inf, struct street_info *str_inf, u
 }
 
 
-void
+static void
 route_process_street_block(struct block_info *blk_inf, unsigned char *p, unsigned char *end, void *data)
 {
 	route_street_foreach(blk_inf, p, end, data, route_process_street3);
@@ -845,29 +846,6 @@ route_find_point_on_street(struct route_info *rt_inf)
 
 struct route_info *start,*end;
 int count;
-
-/* XPM */
-static char * flag_xpm[] = {
-"16 16 3 1",
-" 	c None",
-"+	c #000000",
-"@	c #FFFF00",
-"+++             ",
-"+@@++           ",
-"+@@@@+++        ",
-"+@@@@@@@++      ",
-"+@@@@@@@@@++    ",
-"+@@@@@@@@@@@++  ",
-"+@@@@@@@@@++    ",
-"+@@@@@@@++      ",
-"+@@@@+++        ",
-"+@@++           ",
-"+++             ",
-"+               ",
-"+               ",
-"+               ",
-"+               ",
-"+               "};
 
 void
 route_click(struct route *this, struct container *co, int x, int y)
@@ -948,7 +926,7 @@ route_trace(struct container *co)
 	trace=1-trace;
 }
 
-void
+static void
 route_data_free(void *t)
 {
 	route_blocklist_free(t);

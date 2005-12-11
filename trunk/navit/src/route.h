@@ -24,7 +24,7 @@ struct container;
 struct route_info;
 
 struct route *route_new(void);
-int route_destroy();
+int route_destroy(void *t);
 void route_mapdata_set(struct route *this, struct map_data *mdata);
 struct map_data* route_mapdata_get(struct route *this);
 void route_display_points(struct route *this, struct container *co);

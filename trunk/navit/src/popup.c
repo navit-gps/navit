@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <gtk/gtk.h>
 #include "coord.h"
-#include "param.h"
+#include "file.h"
 #include "map_data.h"
 #include "block.h"
 #include "display.h"
@@ -19,8 +19,9 @@
 #include "cursor.h"
 #include "statusbar.h"
 #include "container.h"
+#include "graphics.h"
 
-void
+static void
 popup_item_destroy_text(struct popup_item *item)
 {
 	g_free(item->text);
@@ -43,7 +44,7 @@ popup_item_new_text(struct popup_item **last, char *text, int priority)
 	return curr;
 }
 
-struct popup_item *
+static struct popup_item *
 popup_item_new_func(struct popup_item **last, char *text, int priority, void (*func)(struct popup_item *, void *), void *param)
 {
 	struct popup_item *curr=popup_item_new_text(last, text, priority);
@@ -52,7 +53,7 @@ popup_item_new_func(struct popup_item **last, char *text, int priority, void (*f
 	return curr;
 }
 
-struct popup_item *
+static struct popup_item *
 param_to_menu_new(char *name,struct param_list *plist, int c, int iso)
 {
 	struct popup_item *last, *curr, *ret;
@@ -79,7 +80,7 @@ param_to_menu_new(char *name,struct param_list *plist, int c, int iso)
 	return ret;
 }
 
-void
+static void
 popup_set_no_passing(struct popup_item *item, void *param)
 {
 	struct display_list *l=param;
@@ -95,7 +96,7 @@ popup_set_no_passing(struct popup_item *item, void *param)
 	log_write(log, seg->blk_inf.file, str, sizeof(*str));
 }
 
-void
+static void
 popup_set_destination(struct popup_item *item, void *param)
 {
 	struct popup_item *ref=param;
@@ -111,7 +112,7 @@ popup_set_destination(struct popup_item *item, void *param)
 
 extern void *vehicle;
 
-void
+static void
 popup_set_position(struct popup_item *item, void *param)
 {
 	struct popup_item *ref=param;
@@ -120,7 +121,8 @@ popup_set_position(struct popup_item *item, void *param)
 	vehicle_set_position(popup->co->vehicle, &popup->c);	
 }
 
-void
+#if 0
+static void
 popup_break_crossing(struct display_list *l)
 {
 	struct segment *seg=(struct segment *)(l->data);
@@ -134,15 +136,16 @@ popup_break_crossing(struct display_list *l)
 	str->limit=0x33;
 	log_write(log, seg->blk_inf.file, str, sizeof(*str));
 }
+#endif
 
-void
+static void
 popup_call_func(GtkObject *obj, void *parm)
 {
 	struct popup_item *curr=parm;
 	curr->func(curr, curr->param);
 }
 
-GtkWidget *
+static GtkWidget *
 popup_menu(struct popup_item *list)
 {
 	int min_prio,curr_prio;
@@ -175,7 +178,7 @@ popup_menu(struct popup_item *list)
 	return menu;
 }
 
-void
+static void
 popup_display_list_default(struct display_list *d, struct popup_item **popup_list)
 {
 	struct segment *seg;
@@ -224,7 +227,7 @@ popup_display_list_default(struct display_list *d, struct popup_item **popup_lis
 	}
 }
 
-void
+static void
 popup_display_list(struct container *co, struct popup *popup, struct popup_item **popup_list)
 {
 	GtkWidget *menu, *item;
@@ -243,7 +246,7 @@ popup_display_list(struct container *co, struct popup *popup, struct popup_item 
 	}	
 }
 
-void
+static void
 popup_destroy_items(struct popup_item *item)
 {
 	struct popup_item *next;
@@ -259,7 +262,7 @@ popup_destroy_items(struct popup_item *item)
 	}
 }
 
-void
+static void
 popup_destroy(GtkObject *obj, void *parm)
 {
 	struct popup *popup=parm;

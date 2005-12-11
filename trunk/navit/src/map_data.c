@@ -7,9 +7,9 @@
 #include "map_data.h"
 #include "log.h"
 
-static struct map_data *load_map(char *dirname)
+static struct map_data *load_map(char *dirname, int submap)
 {
-	int i,len=strlen(dirname);
+	int i,len=strlen(dirname),maybe_missing;
 	char *filename[file_end];
 	char file[len+16];
 	struct map_data *data=g_new0(struct map_data,1);
@@ -37,7 +37,9 @@ static struct map_data *load_map(char *dirname)
 			strcpy(file+len+1, filename[i]);
 			data->file[i]=file_create_caseinsensitive(file);
 			if (! data->file[i]) {
-				g_warning("Failed to load %s", file);
+				maybe_missing=(i == file_border_ply || i == file_height_ply || i == file_sea_ply);
+				if (! (submap && maybe_missing))
+					g_warning("Failed to load %s", file);
 			}
 		}
 	}
@@ -49,14 +51,13 @@ struct map_data *load_maps(char *map)
 	char *name;
 	void *hnd;
 	struct map_data *last,*ret;
-	int i;
 
 	if (! map)
 		map=getenv("MAP_DATA");
 	if (! map)
 		map="/opt/reiseplaner/travel/DE.map";
 	
-	ret=load_map(map);
+	ret=load_map(map, 0);
 	last=ret;
 	hnd=file_opendir(map);
 	if (hnd) {	
@@ -66,7 +67,7 @@ struct map_data *load_maps(char *map)
 				strcpy(next_name, map);
 				strcat(next_name, "/");
 				strcat(next_name, name);
-				last->next=load_map(next_name);
+				last->next=load_map(next_name, 1);
 				last=last->next;
 			}
 		}
