@@ -186,6 +186,7 @@ gui_gtk_menu_new(struct container *co, GtkWidget **widget)
 	item=gtk_menu_item_new_with_label("Goto");
 	gtk_menu_bar_append(GTK_MENU_BAR(menu), item);
 	{
+		menu2=gtk_menu_new();
 	}
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), menu2);
 
@@ -296,7 +297,7 @@ gui_gtk_menu_new(struct container *co, GtkWidget **widget)
 		GList *list;
 	
 		file=fopen("locations.txt","r");
-		while (fgets(buffer,8192,file)) {
+		while (file && fgets(buffer,8192,file)) {
 			dest=malloc(sizeof(*dest));
 			dest->co=co;
 			len=strlen(buffer)-1;
