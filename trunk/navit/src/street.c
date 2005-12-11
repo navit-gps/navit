@@ -66,11 +66,13 @@ street_draw_segment(struct container *co, struct segment *seg, unsigned char **p
 			else
 				label=name.name1;
 		}
+#if 0
 		if (str->nameid && name.townassoc < 0 ) {
 			char buffer[128];
 			sprintf(buffer,"-0x%x", -name.townassoc);
 			label=g_strdup(buffer);
 		}
+#endif
 		limit=0;
 		if (str->limit == 0x30)
 			limit=1;
