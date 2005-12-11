@@ -32,7 +32,7 @@ get_long(unsigned char **p) {
 static inline char *
 get_string(unsigned char **p)
 {
-        char *ret=*p;
+        char *ret=(char *)(*p);
         while (**p) (*p)++;
         (*p)++;
         return ret;

@@ -34,7 +34,7 @@ struct graphics
 	void (*draw_polygon)(struct graphics *gr, struct graphics_gc *gc, struct point *p, int count);
 	void (*draw_rectangle)(struct graphics *gr, struct graphics_gc *gc, struct point *p, int w, int h);
 	void (*draw_circle)(struct graphics *gr, struct graphics_gc *gc, struct point *p, int r);
-	void (*draw_text)(struct graphics *gr, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font, unsigned char *text, struct point *p, int dx, int dy);
+	void (*draw_text)(struct graphics *gr, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font, char *text, struct point *p, int dx, int dy);
 	void (*draw_image)(struct graphics *gr, struct graphics_gc *fg, struct point *p, struct graphics_image *img);
 	void (*draw_restore)(struct graphics *gr, struct point *p, int w, int h);
 

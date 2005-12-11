@@ -1,4 +1,4 @@
 #include <ctype.h>
 
-void strtoupper(unsigned char *dest, unsigned char *src);
-void strtolower(unsigned char *dest, unsigned char *src);
+void strtoupper(char *dest, const char *src);
+void strtolower(char *dest, const char *src);

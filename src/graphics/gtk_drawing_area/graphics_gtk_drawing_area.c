@@ -43,21 +43,31 @@ struct graphics_image_gra {
 };
 
 
+char *fontlist[]={
+	"/usr/X11R6/lib/X11/fonts/msttcorefonts/arial.ttf",
+	"/usr/X11R6/lib/X11/fonts/truetype/arial.ttf",
+	"/usr/share/fonts/truetype/msttcorefonts/arial.ttf",
+	NULL,
+};
+
 static struct graphics_font *font_new(struct graphics *gr, int size)
 {
-	char *filename="/usr/X11R6/lib/X11/fonts/msttcorefonts/arial.ttf";
-	char *filename2="/usr/share/fonts/truetype/msttcorefonts/arial.ttf";
+	char **filename=fontlist;
 	struct graphics_font *font=g_new(struct graphics_font, 1);
 	if (!gr->gra->library_init) {
 		FT_Init_FreeType( &gr->gra->library );
 		gr->gra->library_init=1;
 	}
-	if (FT_New_Face( gr->gra->library, filename, 0, &font->face )) {
-	    	if (FT_New_Face( gr->gra->library, filename2, 0, &font->face )) {
-			g_warning("Failed to load '%s', no labelling", filename);
-			g_free(font);
-			return NULL;
-		}
+
+	while (*filename) {	
+	    	if (!FT_New_Face( gr->gra->library, *filename, 0, &font->face ))
+			break;
+		filename++;
+	}
+	if (! *filename) {
+		g_warning("Failed to load font, no labelling");
+		g_free(font);
+		return NULL;
 	}
         FT_Set_Char_Size(font->face, 0, size, 300, 300);
 	return font;
@@ -105,7 +115,7 @@ gc_set_background(struct graphics_gc *gc, int r, int g, int b)
 	gc_set_color(gc, r, g, b, 0);
 }
 
-struct graphics_image *
+static struct graphics_image *
 image_new(struct graphics *gr, char *name)
 {
 	GdkPixbuf *pixbuf;
@@ -218,7 +228,7 @@ display_text_render_shadow(struct text_glyph *g)
 }
 
 static struct text_render *
-display_text_render(unsigned char *text, struct graphics_font *font, int dx, int dy, int x, int y)
+display_text_render(char *text, struct graphics_font *font, int dx, int dy, int x, int y)
 {
        	FT_GlyphSlot  slot = font->face->glyph;  // a small shortcut
 	FT_Matrix matrix;
@@ -318,7 +328,7 @@ display_text_free(struct text_render *text)
 }
 
 static void
-draw_text(struct graphics *gr, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font, unsigned char *text, struct point *p, int dx, int dy)
+draw_text(struct graphics *gr, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font, char *text, struct point *p, int dx, int dy)
 {
 	struct text_render *t;
 
@@ -356,6 +366,10 @@ overlay_draw(struct graphics_gra *parent, struct graphics_gra *overlay, int wind
 	int x,y;
 	int rowstride1,rowstride2;
 	int n_channels1,n_channels2;
+
+	if (! parent->drawable)
+		return;
+
 	pixbuf=gdk_pixbuf_get_from_drawable(NULL, overlay->drawable, NULL, 0, 0, 0, 0, overlay->width, overlay->height);
 	pixbuf2=gdk_pixbuf_new(gdk_pixbuf_get_colorspace(pixbuf), TRUE, gdk_pixbuf_get_bits_per_sample(pixbuf), 
 				gdk_pixbuf_get_width(pixbuf), gdk_pixbuf_get_height(pixbuf));
@@ -492,7 +506,8 @@ button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 	int y=event->y;
 	int button=event->button;
 	int border=16;
-	long map_x,map_y,scale,x_new,y_new;
+	long map_x,map_y,x_new,y_new;
+	unsigned long scale;
 
 	if (button == 3)
 		popup(co, x, y, button);

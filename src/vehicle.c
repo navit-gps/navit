@@ -30,13 +30,14 @@ struct vehicle {
 #ifdef HAVE_LIBGPS
 	struct gps_data_t *gps;
 #endif
-	void (*callback_func)();
+	void (*callback_func)(void *data);
 	void *callback_data;
 };
 
 struct vehicle *vehicle_last;
 
-int
+#if 0
+static int
 vehicle_timer(gpointer t)
 {
 	struct vehicle *this=t;	
@@ -50,6 +51,7 @@ vehicle_timer(gpointer t)
 	}
 	return TRUE;
 }
+#endif
 
 struct coord *
 vehicle_pos_get(struct vehicle *this)
@@ -81,7 +83,7 @@ vehicle_set_position(struct vehicle *this, struct coord *pos)
 		(*this->callback_func)(this->callback_data);
 }
 
-void
+static void
 vehicle_parse_gps(struct vehicle *this, char *buffer)
 {
 	char *p,*item[16];
@@ -233,7 +235,7 @@ vehicle_new(const char *url)
 {
 	struct vehicle *this;
 	GError *error=NULL;
-	int fd;
+	int fd=-1;
 	char *url_,*colon;
 #ifdef HAVE_LIBGPS
 	struct gps_data_t *gps=NULL;
@@ -284,13 +286,13 @@ vehicle_new(const char *url)
 }
 
 void
-vehicle_callback(struct vehicle *this, void (*func)(), void *data)
+vehicle_callback(struct vehicle *this, void (*func)(void *data), void *data)
 {
 	this->callback_func=func;
 	this->callback_data=data;
 }
 
-int
+void
 vehicle_destroy(struct vehicle *this)
 {
 	GError *error=NULL;
@@ -302,6 +304,4 @@ vehicle_destroy(struct vehicle *this)
 		gps_close(this->gps);
 #endif
 	g_free(this);
-
-	return 0;
 }

@@ -13,6 +13,8 @@
 #include "menu.h"
 #include "vehicle.h"
 #include "container.h"
+#include "cursor.h"
+#include "compass.h"
 
 
 #include "route.h"
@@ -24,9 +26,8 @@ struct cursor {
 };
 
 struct coord *
-cursor_pos_get(void *t)
+cursor_pos_get(struct cursor *this)
 {
-	struct cursor *this=t;
 	return vehicle_pos_get(this->co->vehicle);
 }
 
@@ -109,9 +110,6 @@ cursor_map_reposition_screen(struct cursor *this, struct coord *c, double *dir, 
 static void
 cursor_map_reposition(struct cursor *this, struct coord *c, double *dir)
 {
-	unsigned long scale;
-	long x,y;
-
 	if (this->co->flags->orient_north) {
 		graphics_set_view(this->co, &c->x, &c->y, NULL);
 	} else {
@@ -126,6 +124,7 @@ cursor_map_reposition_boundary(struct cursor *this, struct coord *c, double *dir
 	struct transformation *t=this->co->trans;
 
 	pnt_new.x=-1;
+	pnt_new.y=-1;
 	if (pnt->x < 0.1*t->width) {
 		pnt_new.x=0.8*t->width;
 		pnt_new.y=t->height/2;
@@ -153,9 +152,10 @@ cursor_map_reposition_boundary(struct cursor *this, struct coord *c, double *dir
 	return 0;
 }
 
-void
-cursor_update(struct cursor *this)
+static void
+cursor_update(void *t)
 {
+	struct cursor *this=t;
 	struct point pnt;
 	struct coord *pos;
 	struct vehicle *v=this->co->vehicle;
@@ -177,7 +177,6 @@ cursor_update(struct cursor *this)
 			transform(this->co->trans, pos, &pnt);
 		cursor_draw(this, &pnt, vehicle_speed_get(v), vehicle_dir_get(v));
 	}
-extern void compass_draw();
 	compass_draw(this->co->compass, this->co);
 }
 
