@@ -184,13 +184,13 @@ extern void compass_draw();
 extern void *vehicle;
 
 struct cursor *
-cursor_new(struct container *co)
+cursor_new(struct container *co, struct vehicle *v)
 {
 	struct cursor *this=g_new(struct cursor,1);
 	this->co=co;
 	this->cursor_gc=co->gra->gc_new(co->gra);
 	co->gra->gc_set_foreground(this->cursor_gc, 0x0000, 0x0000, 0xffff);
 	co->gra->gc_set_linewidth(this->cursor_gc, 2);
-	vehicle_callback(cursor_update, this);
+	vehicle_callback(v, cursor_update, this);
 	return this;
 }
