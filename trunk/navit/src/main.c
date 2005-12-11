@@ -1,5 +1,6 @@
 #include <locale.h>
 #include <stdio.h>
+#include <glib.h>
 #include "coord.h"
 #include "vehicle.h"
 #include "cursor.h"
@@ -33,6 +34,7 @@ int main(int argc, char **argv)
         CORBA_ORB orb;
         Map map_client = CORBA_OBJECT_NIL;
 	char *retval;
+	char *gps;
 	FILE *ior;
 
 	setenv("LC_NUMERIC","C",1);
@@ -46,12 +48,21 @@ int main(int argc, char **argv)
 	map_data_default=load_maps(NULL);
 	plugin_load();
 	co=gui_gtk_window(1300000,7000000,8192);
-	co->vehicle=vehicle_new("/tmp/gpsdata");
-	co->cursor=cursor_new(co);
+	
+	gps=getenv("GPSDATA");
+	if (gps) {
+		co->vehicle=vehicle_new(gps);
+		if (co->vehicle) {
+			co->cursor=cursor_new(co,co->vehicle);
+		}
+	} else {
+		g_warning("Environment-Variable GPSDATA not set - No gps tracking. Set it to file:filename or gpsd://host[:port]");
+	}
 	co->speech=speech_new();
 	speech_handle=co->speech;
 	co->route=route_new();
-	co->compass=compass_new(co);
+	if (co->vehicle)
+		co->compass=compass_new(co);
 	route_mapdata_set(co->route, co->map_data); 
 
 
