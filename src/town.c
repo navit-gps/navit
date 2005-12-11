@@ -14,7 +14,7 @@
 #include "container.h"
 #include "util.h"
 
-void
+static void
 town_get(struct town *town, unsigned char **p)
 {
 	town->id=get_long(p);
@@ -81,7 +81,8 @@ town_tree_process(int version, int leaf, unsigned char **s2, struct map_data *md
 	struct file *f=mdat->file[file_town_twn];
 	struct block_offset *blk_off;
 	struct town town;
-	unsigned char *p,*name;
+	unsigned char *p;
+	char *name;
 	int ret,i,debug=0;
 
 	country=get_short(s2);
@@ -133,7 +134,7 @@ town_tree_process(int version, int leaf, unsigned char **s2, struct map_data *md
 	return 0;
 }
 
-int
+static int
 town_search_by(struct map_data *mdat, char *ext, int country, const char *search, int partial, int (*func)(struct town *, void *data), void *data)
 {
 	struct town_search_priv priv_data;
@@ -151,9 +152,9 @@ town_search_by(struct map_data *mdat, char *ext, int country, const char *search
 }
 
 int
-town_search_by_postal_code(struct map_data *mdat, int country, unsigned char *name, int partial, int (*func)(struct town *, void *data), void *data)
+town_search_by_postal_code(struct map_data *mdat, int country, const char *name, int partial, int (*func)(struct town *, void *data), void *data)
 {
-	unsigned char uname[strlen(name)+1];
+	char uname[strlen(name)+1];
 	
 	strtoupper(uname, name);
 	return town_search_by(mdat, "b1", country, uname, partial, func, data);
@@ -163,34 +164,34 @@ town_search_by_postal_code(struct map_data *mdat, int country, unsigned char *na
 int
 town_search_by_name(struct map_data *mdat, int country, const char *name, int partial, int (*func)(struct town *, void *data), void *data)
 {
-	unsigned char uname[strlen(name)+1];
+	char uname[strlen(name)+1];
 	
 	strtolower(uname, (char *)name);
 	return town_search_by(mdat, "b2", country, uname, partial, func, data);
 }
 
 int
-town_search_by_district(struct map_data *mdat, int country, unsigned char *name, int partial, int (*func)(struct town *, void *data), void *data)
+town_search_by_district(struct map_data *mdat, int country, const char *name, int partial, int (*func)(struct town *, void *data), void *data)
 {
-	unsigned char uname[strlen(name)+1];
+	char uname[strlen(name)+1];
 	
 	strtoupper(uname, name);
 	return town_search_by(mdat, "b3", country, uname, partial, func, data);
 }
 
 int
-town_search_by_name_phon(struct map_data *mdat, int country, unsigned char *name, int partial, int (*func)(struct town *, void *data), void *data)
+town_search_by_name_phon(struct map_data *mdat, int country, const char *name, int partial, int (*func)(struct town *, void *data), void *data)
 {
-	unsigned char uname[strlen(name)+1];
+	char uname[strlen(name)+1];
 	
 	strtoupper(uname, name);
 	return town_search_by(mdat, "b4", country, uname, partial, func, data);
 }
 
 int
-town_search_by_district_phon(struct map_data *mdat, int country, unsigned char *name, int partial, int (*func)(struct town *, void *data), void *data)
+town_search_by_district_phon(struct map_data *mdat, int country, const char *name, int partial, int (*func)(struct town *, void *data), void *data)
 {
-	unsigned char uname[strlen(name)+1];
+	char uname[strlen(name)+1];
 	
 	strtoupper(uname, name);
 	return town_search_by(mdat, "b5", country, uname, partial, func, data);

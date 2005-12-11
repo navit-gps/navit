@@ -39,7 +39,7 @@ tree_compare_string(unsigned char *s1, unsigned char **s2_ptr)
 {
 	unsigned char *s2=*s2_ptr;
 	char s1_exp, s2_exp;
-	*s2_ptr+=strlen(s2)+1;
+	*s2_ptr+=strlen((char *)s2)+1;
 	for (;;) {
 		s1_exp=*s1++;
 		s2_exp=*s2++;
@@ -63,7 +63,7 @@ tree_compare_string_partial(unsigned char *s1, unsigned char **s2_ptr)
 {
 	unsigned char *s2=*s2_ptr;
 	char s1_exp, s2_exp;
-	*s2_ptr+=strlen(s2)+1;
+	*s2_ptr+=strlen((char *)s2)+1;
 	for (;;) {
 		s1_exp=*s1++;
 		s2_exp=*s2++;
@@ -85,7 +85,7 @@ tree_compare_string_partial(unsigned char *s1, unsigned char **s2_ptr)
 }
 
 
-int
+static int
 tree_search_h(struct file *file, unsigned int search)
 {
 	unsigned char *p=file->begin,*end;
@@ -126,7 +126,7 @@ tree_search_h(struct file *file, unsigned int search)
 	return 0;
 }
 
-int
+static int
 tree_search_v(struct file *file, int offset, int search)
 {
 	unsigned char *p=file->begin+offset;
@@ -159,7 +159,7 @@ tree_search_v(struct file *file, int offset, int search)
 /* 1=Abort */
 /* 2=Too high */
 
-int
+static int
 tree_search(int version, struct file *file, unsigned char *p, int (*tree_func)(int version, int leaf, unsigned char **, struct map_data *mdat, void *), struct map_data *mdat, void *data, int higher)
 {
 	unsigned char *end,*psav;
@@ -260,7 +260,7 @@ tree_search_map(struct map_data *mdat, int map, char *ext,
 		f_idx=file_create(filename);
 		version=1;
 		p=f_idx->begin;
-		if (!strncmp(p+4,"RootBlock",9)) {
+		if (!strncmp((char *)(p+4),"RootBlock",9)) {
 			p+=0x1000;
 			version=2;
 		}
