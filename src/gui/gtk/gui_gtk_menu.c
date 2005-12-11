@@ -36,60 +36,6 @@ struct destination {
 };
 
 static void
-menu_goto_abensberg(struct container *co)
-{
-	co->trans->center.x=1317000;
-	co->trans->center.y=6235000;   
-	co->trans->scale=2*16;
-	graphics_redraw(co);
-}
-
-static void
-menu_goto_regensburg(struct container *co)
-{
-	co->trans->center.x=(1339653+1341853)/2;
-	co->trans->center.y=(6272179+6269979)/2; 
-	co->trans->scale=4*16;
-	graphics_redraw(co);
-}
-
-static void
-menu_goto_problem(struct container *co)
-{
-#if 0	/* Crailsheim */
-	map->center_x=0x112e55;
-	map->center_y=0x60275a;
-	map->scale=4*16;
-	map_redraw(map);
-	route_click(map->route, map, 697, 31);
-	route_click(map->route, map, 71, 503);
-#endif
-
-#if 1	/* Abensberg */ 
-	co->trans->center.x=1317000;
-	co->trans->center.y=6235000;   
-	co->trans->scale=2*16;
-	graphics_redraw(co);
-	route_click(co->route, co, 196, 449);
-#endif
-
-#if 1	/* Neckarsulm */
-	co->trans->center.x=0xfa3ac;
-	co->trans->center.y=0x60289a;
-	co->trans->scale=2*16;
-	graphics_redraw(co);
-	route_click(co->route, co, 454, 274);
-
-	co->trans->center.x=0x1251ac;
-	co->trans->center.y=0x5f5eda;
-	co->trans->scale=512*16;
-	graphics_redraw(co);
-#endif
-
-	
-}
-
-static void
 menu_window_clone(struct container *co)
 {
 #if 0
@@ -240,20 +186,6 @@ gui_gtk_menu_new(struct container *co, GtkWidget **widget)
 	item=gtk_menu_item_new_with_label("Goto");
 	gtk_menu_bar_append(GTK_MENU_BAR(menu), item);
 	{
-		menu2=gtk_menu_new();
-		item2=gtk_menu_item_new_with_label("Abensberg");
-		gtk_menu_append (GTK_MENU(menu2), item2); 
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_goto_abensberg), this);
-
-		item2=gtk_menu_item_new_with_label("Regensburg");
-		gtk_menu_append (GTK_MENU(menu2), item2);
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_goto_regensburg), this);
-		item2=gtk_menu_item_new_with_label("Problem");
-		gtk_menu_append (GTK_MENU(menu2), item2);
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_goto_problem), this);
 	}
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), menu2);
 
