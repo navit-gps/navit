@@ -66,6 +66,9 @@ compass_draw(struct compass *comp, struct container *co)
 	int dx,dy;
 	char buffer[16];
 
+	if (! co->vehicle)
+		return;
+
 	vehicle_dir=vehicle_dir_get(co->vehicle);
 	comp->gr->draw_mode(comp->gr, draw_mode_begin);
 	p.x=0;
@@ -80,7 +83,7 @@ compass_draw(struct compass *comp, struct container *co)
 		pos=vehicle_pos_get(co->vehicle);	
 		dx=dest->x-pos->x;
 		dy=dest->y-pos->y;
-		dir=atan2(dx,dy)*180.0/M_PI;	
+		dir=atan2(dx,dy)*180.0/M_PI;
 		printf("dx %d dy %d dir=%f vehicle_dir=%f\n", dx, dy, dir, *vehicle_dir);
 		dir-=*vehicle_dir;
 		handle(comp->gr, comp->green, &p, 20, dir);

@@ -1,3 +1,4 @@
+#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,6 +6,9 @@
 #include <fcntl.h>
 #include <math.h>
 #include <glib.h>
+#ifdef HAVE_LIBGPS
+#include <gps.h>
+#endif
 #include "coord.h"
 #include "transform.h"
 #include "statusbar.h"
@@ -23,10 +27,14 @@ struct vehicle {
 	struct coord_d delta;
 
 	double speed_last;
+#ifdef HAVE_LIBGPS
+	struct gps_data_t *gps;
+#endif
+	void (*callback_func)();
+	void *callback_data;
 };
 
-void (*callback_func)();
-void *callback_data;
+struct vehicle *vehicle_last;
 
 int
 vehicle_timer(gpointer t)
@@ -37,48 +45,40 @@ vehicle_timer(gpointer t)
 		this->curr.y+=this->delta.y;	
 		this->current_pos.x=this->curr.x;
 		this->current_pos.y=this->curr.y;
-		if (callback_func)
-			(*callback_func)(callback_data);
+		if (this->callback_func)
+			(*this->callback_func)(this->callback_data);
 	}
 	return TRUE;
 }
 
 struct coord *
-vehicle_pos_get(void *t)
+vehicle_pos_get(struct vehicle *this)
 {
-	struct vehicle *this=t;
-
 	return &this->current_pos;
 }
 
 double *
-vehicle_speed_get(void *t)
+vehicle_speed_get(struct vehicle *this)
 {
-	struct vehicle *this=t;
-
 	return &this->speed;
 }
 
 double *
-vehicle_dir_get(void *t)
+vehicle_dir_get(struct vehicle *this)
 {
-	struct vehicle *this=t;
-
 	return &this->dir;
 }
 
 void
-vehicle_set_position(void *t, struct coord *pos)
+vehicle_set_position(struct vehicle *this, struct coord *pos)
 {
-	struct vehicle *this=t;
-
 	this->current_pos=*pos;
 	this->curr.x=this->current_pos.x;
 	this->curr.y=this->current_pos.y;
 	this->delta.x=0;
 	this->delta.y=0;
-	if (callback_func)
-		(*callback_func)(callback_data);
+	if (this->callback_func)
+		(*this->callback_func)(this->callback_data);
 }
 
 void
@@ -124,8 +124,8 @@ vehicle_parse_gps(struct vehicle *this, char *buffer)
 		this->curr.x=this->current_pos.x;
 		this->curr.y=this->current_pos.y;
 		this->timer_count=0;
-		if (callback_func)
-			(*callback_func)(callback_data);
+		if (this->callback_func)
+			(*this->callback_func)(this->callback_data);
 	}
 	if (!strncmp(buffer,"$GPVTG",6)) {
 		/* $GPVTG,143.58,T,,M,0.26,N,0.5,K*6A 
@@ -152,37 +152,125 @@ vehicle_parse_gps(struct vehicle *this, char *buffer)
 	}
 }
 
-gboolean
+static gboolean
 vehicle_track(GIOChannel *iochan, GIOCondition condition, gpointer t)
 {
 	struct vehicle *this=t;
 	GError *error=NULL;
 	char buffer[4096];
 	char *str,*tok;
-	int size;
+	gsize size;
 	
 	if (condition == G_IO_IN) {
-		g_io_channel_read_chars(iochan, buffer, 4096, &size, &error);
-		buffer[size]='\0';
-		str=buffer;
-		while ((tok=strtok(str, "\n"))) {
-			str=NULL;
-			vehicle_parse_gps(this, tok);
+#ifdef HAVE_LIBGPS
+		if (this->gps) {
+			vehicle_last=this;
+			gps_poll(this->gps);
+		} else {
+#else
+		{
+#endif
+			g_io_channel_read_chars(iochan, buffer, 4096, &size, &error);
+			buffer[size]='\0';
+			str=buffer;
+			while ((tok=strtok(str, "\n"))) {
+				str=NULL;
+				vehicle_parse_gps(this, tok);
+			}
 		}
+
 		return TRUE;
 	} 
 	return FALSE;
 }
 
-void *
-vehicle_new(char *file)
+#ifdef HAVE_LIBGPS
+static void
+vehicle_gps_callback(struct gps_data_t *data, char *buf, size_t len, int level)
+{
+	struct vehicle *this=vehicle_last;
+	double scale,speed;
+	if (data->set & SPEED_SET) {
+		this->speed_last=this->speed;
+		this->speed=data->fix.speed;
+		data->set &= ~SPEED_SET;
+	}
+	if (data->set & TRACK_SET) {
+		speed=this->speed+(this->speed-this->speed_last)/2;
+		this->dir=data->fix.track;
+		scale=transform_scale(this->current_pos.y);
+		this->delta.x=sin(M_PI*this->dir/180)*speed*scale/36;
+		this->delta.y=cos(M_PI*this->dir/180)*speed*scale/36;
+		data->set &= ~TRACK_SET;
+	}
+	if (data->set & LATLON_SET) {
+		this->lat=data->fix.latitude;
+		this->lng=data->fix.longitude;
+		transform_mercator(&this->lng, &this->lat, &this->current_pos);
+		this->curr.x=this->current_pos.x;
+		this->curr.y=this->current_pos.y;
+		if (this->callback_func)
+			(*this->callback_func)(this->callback_data);
+		data->set &= ~LATLON_SET;
+	}
+	if (data->set & ALTITUDE_SET) {
+		this->height=data->fix.altitude;
+		data->set &= ~ALTITUDE_SET;
+	}
+	if (data->set & SATELLITE_SET) {
+		this->sats=data->satellites;
+		data->set &= ~SATELLITE_SET;
+	}
+	if (data->set & STATUS_SET) {
+		this->qual=data->status;
+		data->set &= ~STATUS_SET;
+	}
+}
+#endif
+
+struct vehicle *
+vehicle_new(const char *url)
 {
 	struct vehicle *this;
 	GError *error=NULL;
 	int fd;
+	char *url_,*colon;
+#ifdef HAVE_LIBGPS
+	struct gps_data_t *gps=NULL;
+#endif
 
+	if (! strncmp(url,"file:",5)) {
+		fd=open(url+5,O_RDONLY|O_NDELAY);
+		if (fd < 0) {
+			g_warning("Failed to open %s", url);
+			return NULL;
+		}
+	} else if (! strncmp(url,"gpsd://",7)) {
+#ifdef HAVE_LIBGPS
+		url_=g_strdup(url);
+		colon=index(url_+7,':');
+		if (colon) {
+			*colon=0;
+			gps=gps_open(url_+7,colon+1);
+		} else
+			gps=gps_open(url+7,NULL);
+		g_free(url_);
+		if (! gps) {
+			g_warning("Failed to connect to %s", url);
+			return NULL;
+		}
+		gps_query(gps, "w+x\n");
+		gps_set_raw_hook(gps, vehicle_gps_callback);
+		fd=gps->gps_fd;
+#else
+		g_warning("No support for gpsd compiled in\n");
+		return NULL;
+#endif
+	}
 	this=g_new(struct vehicle,1);
-	fd=open(file,O_RDONLY|O_NDELAY);
+#ifdef HAVE_LIBGPS
+	this->gps=gps;
+#endif
 	this->iochan=g_io_channel_unix_new(fd);
 	g_io_channel_set_encoding(this->iochan, NULL, &error);
 	g_io_add_watch(this->iochan, G_IO_IN|G_IO_ERR|G_IO_HUP, vehicle_track, this);
@@ -196,20 +284,23 @@ vehicle_new(char *file)
 }
 
 void
-vehicle_callback(void (*func)(), void *data)
+vehicle_callback(struct vehicle *this, void (*func)(), void *data)
 {
-	callback_func=func;
-	callback_data=data;
+	this->callback_func=func;
+	this->callback_data=data;
 }
 
 int
-vehicle_destroy(void *t)
+vehicle_destroy(struct vehicle *this)
 {
-	struct vehicle *this=t;
 	GError *error=NULL;
 
 
 	g_io_channel_shutdown(this->iochan,0,&error);
+#ifdef HAVE_LIBGPS
+	if (this->gps)
+		gps_close(this->gps);
+#endif
 	g_free(this);
 
 	return 0;
