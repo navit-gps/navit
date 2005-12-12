@@ -90,6 +90,7 @@ static ModmapTable *ModmapTable_new(void);
 static void ModmapTable_destroy(ModmapTable * table);
 static int ModmapTable_insert(ModmapTable * table, KeyCode code, int slot);
 static int mask_name_to_slot_number(char *maskname);
+GtkWidget *build_keyboard(GtkWidget * input, char *filename);
 
 
 /* templates.h
@@ -151,6 +152,7 @@ static KEY *gtkeyboard_destroy_key(KEY * input);
 static KEY *gtkeyboard_new_key(const KeySym lower,
 			const KeySym upper,
 			const KeySym altgr, const char *alt);
+gint track_focus(gpointer data);
 
 
 
@@ -448,6 +450,7 @@ static void gtkeyboard_XEvent_common_setup(XKeyEvent * xev);
 /* PROTOTYPES - Most functions in build_keyboard.c are static and don't need
  * prototypes here.
  */
+int init_keyboard_stuff(char *input);
 static void keysym_callback(GtkWidget * emitter, gpointer data);
 static void capslock_toggle(GtkWidget * w, gpointer data);
 static void alt_toggle(GtkWidget * w, gpointer data);

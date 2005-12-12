@@ -50,6 +50,9 @@ char *fontlist[]={
 	NULL,
 };
 
+
+struct graphics * graphics_gtk_drawing_area_new(struct container *co, GtkWidget **widget);
+
 static struct graphics_font *font_new(struct graphics *gr, int size)
 {
 	char **filename=fontlist;

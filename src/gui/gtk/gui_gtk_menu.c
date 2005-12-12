@@ -18,6 +18,7 @@
 #include "destination.h"
 #include "main.h"
 #include "container.h"
+#include "gui_gtk.h"
 
 struct menu_gui {
         struct container *co;
@@ -44,7 +45,7 @@ menu_window_clone(struct container *co)
 #endif
 }
 
-gboolean
+static gboolean
 menu_window_command_key_press(GtkWidget *widget, GdkEventKey *event,
 	GtkWidget *win)
 {
@@ -157,7 +158,7 @@ menu_item(struct menu *me, GtkWidget *menu, char *name, void (*func)(struct cont
 		GTK_SIGNAL_FUNC (func), me);
 }
 
-int
+static int
 menu_clock_update(void *data)
 {
 	char buffer[16];
