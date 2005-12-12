@@ -8,7 +8,7 @@
 
 extern void container_init_gra(struct container *co);
 
-struct container *
+static struct container *
 container_new(GtkWidget **widget)
 {
 	struct container *co=g_new0(struct container, 1);

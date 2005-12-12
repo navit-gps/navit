@@ -15,6 +15,7 @@
 #include "destination.h"
 #include "main.h"
 #include "container.h"
+#include "graphics.h"
 
 void
 menu_route_do_update(struct container *co)

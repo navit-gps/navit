@@ -1,6 +1,8 @@
 #include <locale.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <glib.h>
+#include <gtk/gtk.h>
 #include "coord.h"
 #include "vehicle.h"
 #include "cursor.h"
@@ -30,12 +32,12 @@ extern void test(struct map_data *mdat);
 
 int main(int argc, char **argv)
 {
+#if 0
         CORBA_Environment ev;
         CORBA_ORB orb;
-        Map map_client = CORBA_OBJECT_NIL;
-	char *retval;
+	Map map_client = CORBA_OBJECT_NIL;
+#endif
 	char *gps;
-	FILE *ior;
 
 	setenv("LC_NUMERIC","C",1);
 	setlocale(LC_ALL,"");

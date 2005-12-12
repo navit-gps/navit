@@ -21,14 +21,14 @@ struct statusbar_gui {
 };
 
 
-void
+static void
 statusbar_destroy(struct statusbar *this)
 {
 	g_free(this->gui);
 	g_free(this);
 }
 
-void
+static void
 statusbar_mouse_update(struct statusbar *this, struct transformation *tr, struct point *p)
 {
 	struct coord c;
@@ -42,7 +42,7 @@ statusbar_mouse_update(struct statusbar *this, struct transformation *tr, struct
 	gtk_label_set_text(GTK_LABEL(this->gui->mouse), this->gui->mouse_text);
 }
 
-void
+static void
 statusbar_gps_update(struct statusbar *this, int sats, int qual, double lng, double lat, double height, double direction, double speed)
 {
 	char lat_c='N';
@@ -69,7 +69,7 @@ statusbar_gps_update(struct statusbar *this, int sats, int qual, double lng, dou
 	
 }
 
-void
+static void
 statusbar_route_update(struct statusbar *this, struct route *route)
 {
 	struct tm *eta_tm;

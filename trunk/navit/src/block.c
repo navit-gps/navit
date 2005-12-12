@@ -50,7 +50,7 @@ block_get_byindex(struct file *file, int idx, unsigned char **p_ret)
 	return block_get(p_ret);
 }
 
-int
+static int
 block_binarytree_walk(struct block **block, unsigned char **p, struct coord *c, int ign, struct block_info *blk_inf, struct transformation *t, 
 			void *data, void(*func)(struct block_info *, unsigned char *, unsigned char *, void *))
 {
@@ -108,7 +108,7 @@ block_binarytree_walk(struct block **block, unsigned char **p, struct coord *c, 
 	return ret;
 }
 
-void
+static void
 block_file_private_setup(struct file *file)
 {
 	int len;
@@ -131,7 +131,7 @@ block_file_private_setup(struct file *file)
 	}
 }
 
-void
+static void
 block_foreach_visible_linear(struct block_info *blk_inf, struct transformation *t, void *data, 
 			void(*func)(struct block_info *blk_inf, unsigned char *, unsigned char *, void *))
 {

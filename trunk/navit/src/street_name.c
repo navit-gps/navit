@@ -52,7 +52,7 @@ struct street_search_priv {
 	int last_res;
 };
 
-int street_name_compare(struct street_name_index *i1, struct street_name_index *i2, int partial)
+static int street_name_compare(struct street_name_index *i1, struct street_name_index *i2, int partial)
 {
 	char c1_u,c2_u;
 	int ret=0;

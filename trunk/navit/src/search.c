@@ -210,7 +210,7 @@ search_town_show(gpointer key, gpointer value, gpointer user_data)
 }
 
 
-GHashTable *
+static GHashTable *
 search_street_new(void)
 {
 	return g_hash_table_new_full(NULL, NULL, NULL, g_free);
