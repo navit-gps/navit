@@ -1,6 +1,9 @@
 #include <math.h>
+#include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "coord.h"
+#include "graphics.h"
 #include "param.h"
 #include "block.h"
 #include "route.h"
@@ -11,6 +14,26 @@
 #include "data_window.h"
 
 struct data_window *navigation_window;
+
+
+struct navigation_item {
+	char name1[128];
+	char name2[128];
+	int length;
+	int time;
+	int crossings_start;
+	int crossings_end;
+	int angle_start;
+	int angle_end;
+	int points;	
+	struct coord start;
+	struct coord end;
+};
+
+void navigation_goto(struct data_window *navigation_window, char **cols);
+int is_same_street(struct navigation_item *old, struct navigation_item *new);
+int maneuver_required(struct navigation_item *old, struct navigation_item *new, int *delta);
+void make_maneuver(struct navigation_item *old, struct navigation_item *new);
 
 static int
 road_angle(struct coord *c, int dir)
@@ -37,25 +60,10 @@ expand_str(char *str)
 		strcpy(str+len-4,"Strasse");
 }
 
-struct navigation_item {
-	char name1[128];
-	char name2[128];
-	int length;
-	int time;
-	int crossings_start;
-	int crossings_end;
-	int angle_start;
-	int angle_end;
-	int points;	
-	struct coord start;
-	struct coord end;
-};
-
 void
 navigation_goto(struct data_window *navigation_window, char **cols)
 {
 	extern struct container *co;
-	unsigned long scale;
 	long x,y;
 
 	printf("goto %s\n",cols[8]);
