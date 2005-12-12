@@ -49,7 +49,7 @@ menu_window_command_key_press(GtkWidget *widget, GdkEventKey *event,
 	GtkWidget *win)
 {
 	GtkWidget *text;
-	unsigned const char *t;
+	const char *t;
 	struct container *co;
 
 	if (! strcmp(event->string,"\r")) {
