@@ -19,7 +19,7 @@ poly_get_hdr(unsigned char **p,struct poly_hdr *poly_hdr)
 	poly_hdr->addr=*p;
 	poly_hdr->c=(struct coord *) (*p);
 	*p+=3*sizeof(struct coord);
-	poly_hdr->name=*p;
+	poly_hdr->name=(char *)(*p);
 	while (**p) {
 		(*p)++;
 	}
