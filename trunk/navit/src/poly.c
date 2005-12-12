@@ -12,6 +12,10 @@
 
 extern struct data_window poly_window;
 
+
+void poly_draw_segment(struct container *co, struct segment *seg, int disp, unsigned char **p, int limit);
+int poly_get_hdr(unsigned char **p,struct poly_hdr *poly_hdr);
+
 int 
 poly_get_hdr(unsigned char **p,struct poly_hdr *poly_hdr)
 {
