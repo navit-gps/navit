@@ -3,6 +3,7 @@
 #include "coord.h"
 #include "town.h"
 #include "street.h"
+#include "command.h"
 
 /* Phonetisch
 	"KLEIN " -> CL
@@ -31,7 +32,7 @@ struct tree_leaf {
 	unsigned char text[0];
 };
 
-int
+static int
 compare(char *s1, char *s2)
 {
 	char s1_exp, s2_exp;
@@ -96,6 +97,7 @@ compare(char *s1, char *s2)
 	}
 #endif
 }
+
 void
 command_goto(struct container *co, const char *arg)
 {
