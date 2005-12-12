@@ -14,6 +14,8 @@ struct graphics_image {
 	struct graphics_image_gra *gra;
 };
 
+void container_init_gra(struct container *co);
+
 void graphics_get_view(struct container *co, long *x, long *y, unsigned long *scale);
 void graphics_set_view(struct container *co, long *x, long *y, unsigned long *scale);
 void graphics_resize(struct container *co, int w, int h);

@@ -11,6 +11,7 @@
 #include "street.h"
 #include "transform.h"
 #include "container.h"
+#include "profile.h"
 
 
 #define GC_BACKGROUND 0
