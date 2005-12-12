@@ -32,6 +32,7 @@ struct tree_leaf {
 	unsigned char text[0];
 };
 
+#if 0
 static int
 compare(char *s1, char *s2)
 {
@@ -97,6 +98,7 @@ compare(char *s1, char *s2)
 	}
 #endif
 }
+#endif
 
 void
 command_goto(struct container *co, const char *arg)

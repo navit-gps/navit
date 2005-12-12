@@ -1,11 +1,14 @@
+#include <stdio.h>
+#include <string.h>
 #include <malloc.h>
 #include <math.h>
+#include <glib.h>
 #include "display.h"
 #include "graphics.h"
 
 struct graphics_image *icons;
 
-struct graphics_image *
+static struct graphics_image *
 get_icon(struct graphics *gr, char *name)
 {
 	struct graphics_image *curr=icons;

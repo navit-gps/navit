@@ -298,7 +298,7 @@ toolbar_button_leave (GtkButton *button, gpointer status)
 
 int tst_stat=1;
 
-void
+static void
 toolbar_button(GtkWidget *window, GtkWidget *toolbar, char **icon_data, char *text, void (*func)(GtkWidget *w, struct toolbar *tb), void *data)
 {
 	GtkWidget *icon;
@@ -306,7 +306,7 @@ toolbar_button(GtkWidget *window, GtkWidget *toolbar, char **icon_data, char *te
 	gtk_toolbar_append_item(GTK_TOOLBAR(toolbar), NULL, text, NULL, icon, GTK_SIGNAL_FUNC(func), data);
 }
 
-void
+static void
 toolbar_button_toggle(GtkWidget *window, GtkWidget *toolbar, char **icon_data, char *text, void (*func)(GtkWidget *w, struct toolbar *tb), void *data, int *flag)
 {
 	GtkWidget *icon,*item;

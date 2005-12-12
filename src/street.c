@@ -95,7 +95,7 @@ street_draw_segment(struct container *co, struct segment *seg, unsigned char **p
         *pos-=2*bytes;
 }
 
-void
+static void
 street_safety_check(struct street_str *str)
 {
 #if 0

@@ -2,6 +2,7 @@
 #include "coord.h"
 #include "route.h"
 #include "speech.h"
+#include "phrase.h"
 
 void
 phrase_route_calc(void *speech)

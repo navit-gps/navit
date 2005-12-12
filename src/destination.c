@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 #include <gtk/gtk.h>
 #include "coord.h"
@@ -16,6 +17,7 @@
 #include "destination.h"
 #include "coord.h"
 #include "container.h"
+#include "graphics.h"
 
 extern gint track_focus(gpointer data);
 
@@ -87,7 +89,7 @@ destination_set(struct container *co, enum destination_type type, char *text, st
 	return 0;
 }
 
-int
+static int
 get_position(struct search_param *search, struct coord *c)
 {
 	struct destination *dest;
@@ -101,9 +103,8 @@ get_position(struct search_param *search, struct coord *c)
 	return 0;
 }
 
-void button_map(GtkWidget *widget, struct container *co)
+static void button_map(GtkWidget *widget, struct container *co)
 {
-	unsigned long scale;
 	struct coord c;
 
 	if (!get_position(&search_param2, &c)) {
@@ -111,7 +112,7 @@ void button_map(GtkWidget *widget, struct container *co)
 	}
 }
 
-void button_destination(GtkWidget *widget, struct container *co)
+static void button_destination(GtkWidget *widget, struct container *co)
 {
 	struct coord c;
 
@@ -130,7 +131,7 @@ struct dest_town {
 	struct town town;
 };
 
-guint
+static guint
 destination_town_hash(gconstpointer key)
 {
 	const struct dest_town *hash=key;
@@ -138,7 +139,7 @@ destination_town_hash(gconstpointer key)
 	return g_direct_hash(hashkey);	
 }
 
-gboolean
+static gboolean
 destination_town_equal(gconstpointer a, gconstpointer b)
 {
 	const struct dest_town *t_a=a;	
@@ -151,13 +152,13 @@ destination_town_equal(gconstpointer a, gconstpointer b)
 	return FALSE;
 }
 
-GHashTable *
+static GHashTable *
 destination_town_new(void)
 {
 	return g_hash_table_new_full(destination_town_hash, destination_town_equal, NULL, g_free);
 }
 
-void
+static void
 destination_town_set(const struct dest_town *town, char **rows, int full)
 {
 	char country[32];
@@ -181,7 +182,7 @@ destination_town_set(const struct dest_town *town, char **rows, int full)
 	} 
 }
 
-void
+static void
 destination_town_show(gpointer key, gpointer value, gpointer user_data)
 {
 	struct dest_town *town=value;
@@ -202,13 +203,13 @@ destination_town_show(gpointer key, gpointer value, gpointer user_data)
 	}
 }
 
-GHashTable *
+static GHashTable *
 destination_country_new(void)
 {
 	return g_hash_table_new_full(NULL, NULL, NULL, g_free);
 }
 
-int
+static int
 destination_country_add(struct country *cou, void *data)
 {
 	struct search_param *search=data;
@@ -224,7 +225,7 @@ destination_country_add(struct country *cou, void *data)
 	return 0;
 }
 
-void
+static void
 destination_country_show(gpointer key, gpointer value, gpointer user_data)
 {
 	struct country *cou=value;
@@ -240,7 +241,7 @@ destination_country_show(gpointer key, gpointer value, gpointer user_data)
 	}
 }
 
-int
+static int
 destination_town_add(struct town *town, void *data)
 {
 	struct search_param *search=data;
@@ -292,7 +293,7 @@ destination_town_add(struct town *town, void *data)
 	return 0;
 }
 
-void
+static void
 destination_town_search(gpointer key, gpointer value, gpointer user_data)
 {
 	struct country *cou=value;
@@ -301,14 +302,14 @@ destination_town_search(gpointer key, gpointer value, gpointer user_data)
 	
 }
 
-GHashTable *
+static GHashTable *
 destination_street_new(void)
 {
 	return g_hash_table_new_full(NULL, NULL, NULL, g_free);
 }
 
 
-int
+static int
 destination_street_add(struct street_name *name, void *data)
 {
 	struct search_param *search=data;
@@ -354,7 +355,7 @@ check_number(int low, int high, int s_low, int s_high)
 	return 0;
 }
 
-void
+static void
 destination_street_show_common(gpointer key, gpointer value, gpointer user_data, int number)
 {
 	struct street_name *name=value;
@@ -417,19 +418,19 @@ destination_street_show_common(gpointer key, gpointer value, gpointer user_data,
 	}
 }
 
-void
+static void
 destination_street_show(gpointer key, gpointer value, gpointer user_data)
 {
 	destination_street_show_common(key, value, user_data, 0);
 }
 
-void
+static void
 destination_street_show_number(gpointer key, gpointer value, gpointer user_data)
 {
 	destination_street_show_common(key, value, user_data, 1);
 }
 
-void
+static void
 destination_street_search(gpointer key, gpointer value, gpointer user_data)
 {
 	const struct dest_town *town=value;
@@ -439,7 +440,7 @@ destination_street_search(gpointer key, gpointer value, gpointer user_data)
 
 
 
-void changed(GtkWidget *widget, struct search_param *search)
+static void changed(GtkWidget *widget, struct search_param *search)
 {
 	const char *str;
 	char *empty[9]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};

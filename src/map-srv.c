@@ -78,7 +78,7 @@ PortableServer_ServantBase__epv base_epv = {
 	NULL
 };
 
-PointObj
+static PointObj
 do_PointFromCoord(PortableServer_Servant _servant, const CORBA_char * coord, CORBA_Environment * ev)
 {
 	PointObj ret;
@@ -106,6 +106,7 @@ do_PointFromCoord(PortableServer_Servant _servant, const CORBA_char * coord, COR
 	return ret;
 }
 
+#if 0
 static void
 PointObj_to_coor(const PointObj *pnt, struct coord *c)
 {
@@ -114,13 +115,14 @@ PointObj_to_coor(const PointObj *pnt, struct coord *c)
 	lat=pnt->lat;
 	transform_mercator(&lng, &lat, c);
 }
+#endif
 
-void
+static void
 do_View(PortableServer_Servant _servant, const PointObj *pnt, CORBA_Environment * ev)
 {
+#if 0
 	unsigned long scale;
 	struct coord c;
-#if 0
 	GtkMap *map=global_map;
 
 	map_get_view(map, NULL, NULL, &scale);
@@ -130,7 +132,7 @@ do_View(PortableServer_Servant _servant, const PointObj *pnt, CORBA_Environment 
 }
 
 
-void
+static void
 do_Route(PortableServer_Servant _servant, const PointObj *src, const PointObj *dst, CORBA_Environment * ev)
 {
 #if 0
@@ -154,7 +156,7 @@ do_Route(PortableServer_Servant _servant, const PointObj *src, const PointObj *d
 POA_Mappel__epv mappel_epv = 	{
 };
 
-Mappel do_Get(PortableServer_Servant _servant, CORBA_Environment * ev)
+static Mappel do_Get(PortableServer_Servant _servant, CORBA_Environment * ev)
 {
 	Mappel retval=NULL;
 #if 0
@@ -227,7 +229,8 @@ CORBA_Object map_srv_start_object(CORBA_Environment * ev, struct container *co)
 	return the_map_client;
 }
 
-void map_srv_finish_object(CORBA_Environment * ev)
+#if 0
+static void map_srv_finish_object(CORBA_Environment * ev)
 {
 	CORBA_Object_release(the_map_client, ev);
 	if (ev->_major) {
@@ -250,7 +253,7 @@ void map_srv_finish_object(CORBA_Environment * ev)
 }
 
 
-void map_srv_finish_poa(CORBA_Environment * ev)
+static void map_srv_finish_poa(CORBA_Environment * ev)
 {
 	CORBA_Object_release((CORBA_Object) the_poa, ev);
 	if (ev->_major) {
@@ -259,4 +262,5 @@ void map_srv_finish_poa(CORBA_Environment * ev)
 	}
 	the_poa = 0;
 }
+#endif
 

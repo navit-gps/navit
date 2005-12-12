@@ -8,6 +8,8 @@
 #include "route.h"
 #include "vehicle.h"
 #include "container.h"
+#include "compass.h"
+#include "compass.h"
 
 struct compass {
 	struct graphics *gr;
