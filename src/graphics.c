@@ -11,6 +11,9 @@
 #include "street.h"
 #include "transform.h"
 #include "container.h"
+#include "plugin.h"
+#include "display.h"
+#include "data_window.h"
 #include "profile.h"
 
 
@@ -67,6 +70,10 @@ int color[][3]={
 	{0xe0e0, 0xe0e0, 0xffff},
 	{0x0000, 0x0000, 0xa0a0},
 };
+
+void graphics_draw(struct map_data *mdata, int file, struct container *co, int display, int limit, int limit2,
+	void(*func)(struct block_info *, unsigned char *, unsigned char *, void *));
+
 
 void
 container_init_gra(struct container *co)
