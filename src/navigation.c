@@ -30,11 +30,6 @@ struct navigation_item {
 	struct coord end;
 };
 
-void navigation_goto(struct data_window *navigation_window, char **cols);
-int is_same_street(struct navigation_item *old, struct navigation_item *new);
-int maneuver_required(struct navigation_item *old, struct navigation_item *new, int *delta);
-void make_maneuver(struct navigation_item *old, struct navigation_item *new);
-
 static int
 road_angle(struct coord *c, int dir)
 {
@@ -60,7 +55,7 @@ expand_str(char *str)
 		strcpy(str+len-4,"Strasse");
 }
 
-void
+static void
 navigation_goto(struct data_window *navigation_window, char **cols)
 {
 	extern struct container *co;
@@ -71,7 +66,7 @@ navigation_goto(struct data_window *navigation_window, char **cols)
 	graphics_set_view(co, &x, &y, NULL);
 }
 
-int
+static int
 is_same_street(struct navigation_item *old, struct navigation_item *new)
 {
 	if (strlen(old->name2) && !strcmp(old->name2, new->name2)) {
@@ -85,7 +80,7 @@ is_same_street(struct navigation_item *old, struct navigation_item *new)
 	return 0;
 }
 
-int
+static int
 maneuver_required(struct navigation_item *old, struct navigation_item *new, int *delta)
 {
 	if (is_same_street(old, new)) 
@@ -105,7 +100,7 @@ maneuver_required(struct navigation_item *old, struct navigation_item *new, int 
 int flag;
 extern void *speech_handle;
 
-void
+static void
 make_maneuver(struct navigation_item *old, struct navigation_item *new)
 {
 	

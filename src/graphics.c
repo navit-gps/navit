@@ -71,9 +71,6 @@ int color[][3]={
 	{0x0000, 0x0000, 0xa0a0},
 };
 
-void graphics_draw(struct map_data *mdata, int file, struct container *co, int display, int limit, int limit2,
-	void(*func)(struct block_info *, unsigned char *, unsigned char *, void *));
-
 
 void
 container_init_gra(struct container *co)
@@ -113,7 +110,7 @@ graphics_set_view(struct container *co, long *x, long *y, unsigned long *scale)
 	graphics_redraw(co);
 }
 
-void
+static void
 graphics_draw(struct map_data *mdata, int file, struct container *co, int display, int limit, int limit2,
 		  void(*func)(struct block_info *, unsigned char *, unsigned char *, void *))
 {
