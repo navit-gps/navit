@@ -1,18 +1,19 @@
+/*! A town description */
 struct town {
-	unsigned long id;
-	struct coord *c;
-	char *name;
-	char *district;
-	char *postal_code1;
-	unsigned char order;
-	unsigned char type;
-	unsigned short country;
-	unsigned long unknown2;
-	unsigned char size;
-	unsigned long street_assoc;
-	unsigned char unknown3;
-	char *postal_code2;
-	unsigned long unknown4;
+	unsigned long id; /*!< Identifier */
+	struct coord *c; /*!< Coordinates */
+	char *name; /*!< Name */
+	char *district; /*!< District */
+	char *postal_code1; /*!< Postal code */
+	unsigned char order; /*!< Order (Importance) */
+	unsigned char type; /*!< Type */
+	unsigned short country; /*!< Country */
+	unsigned long unknown2; /*!< Unknown */
+	unsigned char size; /*!< Size of town */
+	unsigned long street_assoc; /*!< Association to streets */
+	unsigned char unknown3; /*!< Unknown */
+	char *postal_code2; /*!< 2nd postal code */
+	unsigned long unknown4; /*!< Unknown */
 };
 
 struct block_info;

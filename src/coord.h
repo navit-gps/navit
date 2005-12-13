@@ -1,19 +1,22 @@
 #ifndef COORD_H
 #define COORD_H
 
+/*! A integer mercator coordinate */
 struct coord {
-	long x;
-	long y;
+	long x; /*!< X-Value */
+	long y; /*!< Y-Value */
 };
 
+//! A double mercator coordinate
 struct coord_d {
-	double x;
-	double y;
+	double x; /*!< X-Value */
+	double y; /*!< Y-Value */
 };
 
+//! A WGS84 coordinate
 struct coord_geo {
-	double lng;
-	double lat;
+	double lng; /*!< Longitude */
+	double lat; /*!< Latitude */
 };
 
 struct coord * coord_get(unsigned char **p);
