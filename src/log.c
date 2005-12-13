@@ -11,7 +11,8 @@ void
 log_write(char *message, struct file *file, void *data, int size)
 {
 	char log[4096];
-	unsigned char *l,*p=data;
+	char *l;
+	unsigned char *p=data;
 
 	int fd=open("log.txt",O_RDWR|O_CREAT|O_APPEND|O_SYNC, 0644);
 	sprintf(log,"# %s\n",message);
