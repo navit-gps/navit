@@ -1347,7 +1347,7 @@ static int file_exists(const char *filename)
  * returns: a timestamp for the 
  * constructed event 
  */
-static Time fake_timestamp()
+static Time fake_timestamp(void)
 {
 	int tint;
 	struct timeval tv;

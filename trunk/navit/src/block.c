@@ -112,7 +112,8 @@ static void
 block_file_private_setup(struct file *file)
 {
 	int len;
-	unsigned char *p,*str,*t;
+	unsigned char *p,*t;
+	char *str;
 	struct file_private *file_priv;
 
 	file_priv=malloc(sizeof(*file_priv));
