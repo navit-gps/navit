@@ -621,14 +621,14 @@ int destination_address(struct container *co)
 
 	search->map_data=co->map_data;
 	search->clist=listbox;
-	gtk_signal_connect(GTK_OBJECT(entry_country), "changed", GTK_SIGNAL_FUNC(changed), search);
-	gtk_signal_connect(GTK_OBJECT(entry_postal), "changed", GTK_SIGNAL_FUNC(changed), search);
-	gtk_signal_connect(GTK_OBJECT(entry_city), "changed", GTK_SIGNAL_FUNC(changed), search);
-	gtk_signal_connect(GTK_OBJECT(entry_district), "changed", GTK_SIGNAL_FUNC(changed), search);
-	gtk_signal_connect(GTK_OBJECT(entry_street), "changed", GTK_SIGNAL_FUNC(changed), search);
-	gtk_signal_connect(GTK_OBJECT(entry_number), "changed", GTK_SIGNAL_FUNC(changed), search);
-	gtk_signal_connect(GTK_OBJECT(button1), "clicked", GTK_SIGNAL_FUNC(button_map), co);
-	gtk_signal_connect(GTK_OBJECT(button2), "clicked", GTK_SIGNAL_FUNC(button_destination), co);
+	g_signal_connect(G_OBJECT(entry_country), "changed", G_CALLBACK(changed), search);
+	g_signal_connect(G_OBJECT(entry_postal), "changed", G_CALLBACK(changed), search);
+	g_signal_connect(G_OBJECT(entry_city), "changed", G_CALLBACK(changed), search);
+	g_signal_connect(G_OBJECT(entry_district), "changed", G_CALLBACK(changed), search);
+	g_signal_connect(G_OBJECT(entry_street), "changed", G_CALLBACK(changed), search);
+	g_signal_connect(G_OBJECT(entry_number), "changed", G_CALLBACK(changed), search);
+	g_signal_connect(G_OBJECT(button1), "clicked", G_CALLBACK(button_map), co);
+	g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(button_destination), co);
 	gtk_widget_grab_focus(entry_city);
 
 	gtk_container_add(GTK_CONTAINER(vbox), table);
@@ -636,7 +636,7 @@ int destination_address(struct container *co)
 	gtk_container_add(GTK_CONTAINER(window2), vbox);
 	handlerid = gtk_timeout_add(256, (GtkFunction) track_focus, NULL);
 
-	gtk_signal_connect(GTK_OBJECT(listbox), "select-row", GTK_SIGNAL_FUNC(select_row), NULL);
+	g_signal_connect(G_OBJECT(listbox), "select-row", G_CALLBACK(select_row), NULL);
 	
 	gtk_widget_show_all(window2);
 
