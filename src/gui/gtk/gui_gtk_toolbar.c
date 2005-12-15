@@ -259,7 +259,7 @@ static GtkWidget *
 xpm_to_widget(GtkWidget *draw, gchar **xpm_data)
 {
 	/* GtkWidget is the storage type for widgets */
-	GtkWidget *pixmapwid;
+	GtkWidget *imagewid;
 	GdkPixmap *pixmap;
 	GdkBitmap *mask;
 	GtkStyle *style;
@@ -274,26 +274,10 @@ xpm_to_widget(GtkWidget *draw, gchar **xpm_data)
 				   (gchar **)xpm_data );
 
 	/* a pixmap widget to contain the pixmap */
-	pixmapwid = gtk_pixmap_new(pixmap, mask);
-	gtk_widget_show(pixmapwid);
+	imagewid = gtk_image_new_from_pixmap(pixmap, mask);
+	gtk_widget_show(imagewid);
 
-	return(pixmapwid);
-}
-
-static void
-toolbar_button_leave (GtkButton *button, gpointer status)
-{
-  int *st=status,new_state=GTK_STATE_NORMAL;
-  g_return_if_fail (button != NULL);
-  g_return_if_fail (GTK_IS_BUTTON (button));
-
-  if (*st)
-	new_state=GTK_STATE_ACTIVE; 
-  if (GTK_WIDGET_STATE (button) != new_state)
-    {
-      gtk_widget_set_state (GTK_WIDGET (button), new_state);
-      gtk_widget_queue_draw (GTK_WIDGET (button));
-    }
+	return(imagewid);
 }
 
 int tst_stat=1;
@@ -302,19 +286,29 @@ static void
 toolbar_button(GtkWidget *window, GtkWidget *toolbar, char **icon_data, char *text, void (*func)(GtkWidget *w, struct toolbar *tb), void *data)
 {
 	GtkWidget *icon;
+	GtkToolItem *toolitem;
+	
 	icon=xpm_to_widget(window, icon_data);
-	gtk_toolbar_append_item(GTK_TOOLBAR(toolbar), NULL, text, NULL, icon, GTK_SIGNAL_FUNC(func), data);
+	toolitem=gtk_tool_button_new(icon,text);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar),toolitem,-1);
+	g_signal_connect(G_OBJECT(toolitem), "clicked", G_CALLBACK(func), data);
 }
 
 static void
 toolbar_button_toggle(GtkWidget *window, GtkWidget *toolbar, char **icon_data, char *text, void (*func)(GtkWidget *w, struct toolbar *tb), void *data, int *flag)
 {
-	GtkWidget *icon,*item;
+	GtkWidget *icon;
+	GtkToolItem *toggleitem;
+	
 	icon=xpm_to_widget(window, icon_data);
-	item=gtk_toolbar_append_item(GTK_TOOLBAR(toolbar), NULL, text, NULL, icon, GTK_SIGNAL_FUNC(func), data);
-	if (*flag)
-		gtk_widget_set_state(item, GTK_STATE_ACTIVE);
-	gtk_signal_connect(GTK_OBJECT(item), "leave", GTK_SIGNAL_FUNC(toolbar_button_leave), flag); 
+	toggleitem=gtk_toggle_tool_button_new();
+	gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(toggleitem),icon);
+	gtk_tool_button_set_label(GTK_TOOL_BUTTON(toggleitem),text);
+	gtk_toolbar_insert(GTK_TOOLBAR(toolbar),toggleitem,-1);
+	if(*flag)
+	    gtk_toggle_tool_button_set_active(GTK_TOGGLE_TOOL_BUTTON(toggleitem),TRUE);
+	    
+	g_signal_connect(G_OBJECT(toggleitem), "clicked", G_CALLBACK(func), data);
 }
 
 
@@ -328,9 +322,6 @@ gui_gtk_toolbar_new(struct container *co, GtkWidget **widget)
 	this->gui->co=co;
 
 	toolbar=gtk_toolbar_new();
-	gtk_toolbar_prepend_space(GTK_TOOLBAR(toolbar));
-	gtk_toolbar_prepend_space(GTK_TOOLBAR(toolbar));
-
 	window=(GtkWidget *)(co->win);
 
 	co->flags->track=1;

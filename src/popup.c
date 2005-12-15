@@ -165,8 +165,8 @@ popup_menu(struct popup_item *list)
 					submenu=popup_menu(curr->submenu);
 					gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), submenu);
 				} else if (curr->func) {
-					gtk_signal_connect(GTK_OBJECT(item), "activate",
-					 	GTK_SIGNAL_FUNC (popup_call_func), curr);
+					g_signal_connect(G_OBJECT(item), "activate",
+					 	G_CALLBACK (popup_call_func), curr);
 				}
 			}
 			if (curr->priority > curr_prio && curr->priority < min_prio)
@@ -303,7 +303,7 @@ popup(struct container *co, int x, int y, int button)
 
 
 	gtk_menu_popup (GTK_MENU(menu), NULL, NULL, NULL, NULL, button, gtk_get_current_event_time());
-	gtk_signal_connect(GTK_OBJECT(menu), "selection-done", GTK_SIGNAL_FUNC (popup_destroy), popup);
+	g_signal_connect(G_OBJECT(menu), "selection-done", G_CALLBACK (popup_destroy), popup);
 }
 
 

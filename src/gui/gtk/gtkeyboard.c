@@ -337,7 +337,7 @@ typedef struct {
 	GtkShadowType SHADOW_TYPE;
 	GtkPositionType PULLOFFS_SIDE;
 
-	GtkItemFactory *item_factory;	/* Cleaned */
+	GtkUIManager *uimanager;
 	GtkWidget *popup_menu;	/* Cleaned */
 	GdkCursor *cursor;
 	GtkStyle *style;
@@ -556,7 +556,7 @@ static void setup_default_opts_other(void)
 	GUI.deflt = (GtkStyle *) NULL;
 	GUI.xwindow = (Window) NULL;
 	GUI.popup_menu = (GtkWidget *) NULL;
-	GUI.item_factory = (GtkItemFactory *) NULL;
+	GUI.uimanager = (GtkUIManager *) NULL;
 
 	GUI.keyboard_elements.show_keyboard = ON;
 
@@ -669,17 +669,17 @@ static void destroy_key_widget_data(GtkObject *object, gpointer data)
 static void connect_destroy_signal(GtkWidget * widget, gpointer data)
 {
 #if 0
-	gtk_signal_connect_full(GTK_OBJECT(widget),
+	g_signal_connect_data(G_OBJECT(widget),
 				"destroy",
-				GTK_SIGNAL_FUNC(destroy_key_widget_data),
+				G_CALLBACK(destroy_key_widget_data),
 				(GtkCallbackMarshal)
 				gtk_signal_default_marshaller, data,
 				(GtkDestroyNotify) destroy_key_widget_data,
 				FALSE, TRUE);
 #endif
-	gtk_signal_connect(GTK_OBJECT(widget), 
+	g_signal_connect(G_OBJECT(widget), 
 				"destroy", 
-				GTK_SIGNAL_FUNC(destroy_key_widget_data),
+				G_CALLBACK(destroy_key_widget_data),
 				data);
 }				/* End connect_destroy_signal() */
 
@@ -997,54 +997,48 @@ GtkWidget *build_keyboard(GtkWidget * input, char *filename)
 
 			switch (key->lower_case) {
 			case XK_Caps_Lock:
-				gtk_signal_connect(GTK_OBJECT(button),
+				g_signal_connect(G_OBJECT(button),
 						   "clicked",
-						   GTK_SIGNAL_FUNC
-						   (capslock_toggle),
+						   G_CALLBACK(capslock_toggle),
 						   input);
 				/* Key unused in signalling */
 				key = gtkeyboard_destroy_key(key);
 				break;
 			case XK_Alt_L:
 			case XK_Alt_R:
-				gtk_signal_connect(GTK_OBJECT(button),
+				g_signal_connect(G_OBJECT(button),
 						   "clicked",
-						   GTK_SIGNAL_FUNC
-						   (alt_toggle), NULL);
+						   G_CALLBACK(alt_toggle), NULL);
 				/* Key unused in signalling */
 				key = gtkeyboard_destroy_key(key);
 				break;
 			case XK_Control_L:
 			case XK_Control_R:
-				gtk_signal_connect(GTK_OBJECT(button),
+				g_signal_connect(G_OBJECT(button),
 						   "clicked",
-						   GTK_SIGNAL_FUNC
-						   (control_toggle), NULL);
+						   G_CALLBACK(control_toggle), NULL);
 				/* Key unused in signalling */
 				key = gtkeyboard_destroy_key(key);
 				break;
 			case XK_Shift_L:
 			case XK_Shift_R:
-				gtk_signal_connect(GTK_OBJECT(button),
+				g_signal_connect(G_OBJECT(button),
 						   "clicked",
-						   GTK_SIGNAL_FUNC
-						   (shift_on), NULL);
+						   G_CALLBACK(shift_on), NULL);
 				/* Key unused in signalling */
 				key = gtkeyboard_destroy_key(key);
 				break;
 			case XK_Mode_switch:
-				gtk_signal_connect(GTK_OBJECT(button),
+				g_signal_connect(G_OBJECT(button),
 						   "clicked",
-						   GTK_SIGNAL_FUNC
-						   (alt_gr_toggle), NULL);
+						   G_CALLBACK(alt_gr_toggle), NULL);
 				/* Key unused in signalling */
 				key = gtkeyboard_destroy_key(key);
 				break;
 			default:
-				gtk_signal_connect(GTK_OBJECT(button),
+				g_signal_connect(G_OBJECT(button),
 						   "button_press_event",
-						   GTK_SIGNAL_FUNC
-						   (triple_callback), key);
+						   G_CALLBACK(triple_callback), key);
 				connect_destroy_signal(button, key);
 				break;
 			}	/* End switch */
@@ -1657,7 +1651,7 @@ static int mask_name_to_slot_number(char *maskname)
 	int y = 0;
 
 	for (y = 0; y < maskcount; y++) {
-		if (g_strcasecmp(maskname, masks[y]) == 0)
+		if (g_ascii_strcasecmp(maskname, masks[y]) == 0)
 			return y;
 	}			/* End for */
 

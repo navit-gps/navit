@@ -614,14 +614,14 @@ graphics_gtk_drawing_area_new(struct container *co, GtkWidget **widget)
 	this->gra->widget=draw;
 	this->gra->colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
 	gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK);
-	gtk_signal_connect(GTK_OBJECT(draw), "expose_event", GTK_SIGNAL_FUNC(expose), co); 
-        gtk_signal_connect(GTK_OBJECT(draw), "configure_event", GTK_SIGNAL_FUNC(configure), co);
+	g_signal_connect(G_OBJECT(draw), "expose_event", G_CALLBACK(expose), co); 
+        g_signal_connect(G_OBJECT(draw), "configure_event", G_CALLBACK(configure), co);
 #if 0
-        gtk_signal_connect(GTK_OBJECT(draw), "realize_event", GTK_SIGNAL_FUNC(realize), co);
+        g_signal_connect(G_OBJECT(draw), "realize_event", G_CALLBACK(realize), co);
 #endif
-	gtk_signal_connect(GTK_OBJECT(draw), "button_press_event", GTK_SIGNAL_FUNC(button_press), co);
-	gtk_signal_connect(GTK_OBJECT(draw), "button_release_event", GTK_SIGNAL_FUNC(button_release), co);
-	gtk_signal_connect(GTK_OBJECT(draw), "motion_notify_event", GTK_SIGNAL_FUNC(motion_notify), co);
+	g_signal_connect(G_OBJECT(draw), "button_press_event", G_CALLBACK(button_press), co);
+	g_signal_connect(G_OBJECT(draw), "button_release_event", G_CALLBACK(button_release), co);
+	g_signal_connect(G_OBJECT(draw), "motion_notify_event", G_CALLBACK(motion_notify), co);
 	*widget=draw;
 	return this;
 }

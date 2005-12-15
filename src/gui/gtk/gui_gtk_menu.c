@@ -54,8 +54,8 @@ menu_window_command_key_press(GtkWidget *widget, GdkEventKey *event,
 	struct container *co;
 
 	if (! strcmp(event->string,"\r")) {
-		text=gtk_object_get_data(GTK_OBJECT(win), "Input");
-		co=gtk_object_get_data(GTK_OBJECT(win), "Container");
+		text=g_object_get_data(G_OBJECT(win), "Input");
+		co=g_object_get_data(G_OBJECT(win), "Container");
 		t=gtk_entry_get_text(GTK_ENTRY(text));
 		if (!strncmp(t,"goto ",5)) {
 			command_goto(co, t+5);
@@ -78,10 +78,10 @@ menu_window_command(struct container *co)
 	gtk_box_pack_start(GTK_BOX(box), entry, 1, 1, 0);
 	gtk_box_pack_start(GTK_BOX(box), text, 1, 1, 0);
 	gtk_container_add(GTK_CONTAINER(win), box);	
-	gtk_object_set_data(GTK_OBJECT(win), "Container", co);
-	gtk_object_set_data(GTK_OBJECT(win), "Input", entry);
-	gtk_object_set_data(GTK_OBJECT(win), "Output", text);
-	gtk_signal_connect(GTK_OBJECT(win), "key-press-event", GTK_SIGNAL_FUNC(menu_window_command_key_press), win);
+	g_object_set_data(G_OBJECT(win), "Container", co);
+	g_object_set_data(G_OBJECT(win), "Input", entry);
+	g_object_set_data(G_OBJECT(win), "Output", text);
+	g_signal_connect(G_OBJECT(win), "key-press-event", G_CALLBACK(menu_window_command_key_press), win);
 	gtk_widget_show_all(win);
 }
 
@@ -153,9 +153,9 @@ menu_item(struct menu *me, GtkWidget *menu, char *name, void (*func)(struct cont
 {
 	GtkWidget *item;
 	item=gtk_menu_item_new_with_label(name);
-	gtk_menu_append (GTK_MENU(menu), item);
-	gtk_signal_connect_object(GTK_OBJECT(item), "activate",
-		GTK_SIGNAL_FUNC (func), me);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), item);
+	g_signal_connect_swapped(G_OBJECT(item), "activate",
+		G_CALLBACK(func), me);
 }
 
 static int
@@ -168,7 +168,7 @@ menu_clock_update(void *data)
 
 	sprintf(buffer,"%02d:%02d", now_tm->tm_hour, now_tm->tm_min);
 	gtk_label_set_text(GTK_LABEL(widget), buffer);
-	gtk_timeout_add((60-now_tm->tm_sec)*1000,menu_clock_update,widget);
+	g_timeout_add((60-now_tm->tm_sec)*1000,menu_clock_update,widget);
 	return FALSE;
 }
 
@@ -185,107 +185,107 @@ gui_gtk_menu_new(struct container *co, GtkWidget **widget)
 
 	menu=gtk_menu_bar_new();
 	item=gtk_menu_item_new_with_label("Goto");
-	gtk_menu_bar_append(GTK_MENU_BAR(menu), item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	{
 		menu2=gtk_menu_new();
 	}
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), menu2);
 
 	item=gtk_menu_item_new_with_label("Window");
-	gtk_menu_bar_append(GTK_MENU_BAR(menu), item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	{
 		menu2=gtk_menu_new();
 
 		item2=gtk_menu_item_new_with_label("Clone");
-		gtk_menu_append (GTK_MENU(menu2), item2); 
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_window_clone), this);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2); 
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (menu_window_clone), this);
 
 		item2=gtk_menu_item_new_with_label("Command");
-		gtk_menu_append (GTK_MENU(menu2), item2); 
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_window_command), this);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2); 
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (menu_window_command), this);
 
 		item2=gtk_menu_item_new_with_label("Visible Blocks");
-		gtk_menu_append (GTK_MENU(menu2), item2);
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_window_visible_blocks), co);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2);
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (menu_window_visible_blocks), co);
 
 		item2=gtk_menu_item_new_with_label("Visible Towns");
-		gtk_menu_append (GTK_MENU(menu2), item2);
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_window_visible_towns), co);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2);
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (menu_window_visible_towns), co);
 
 		item2=gtk_menu_item_new_with_label("Visible Polys");
-		gtk_menu_append (GTK_MENU(menu2), item2);
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_window_visible_polys), co);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2);
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (menu_window_visible_polys), co);
 
 
 		item2=gtk_menu_item_new_with_label("Visible Streets");
-		gtk_menu_append (GTK_MENU(menu2), item2);
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_window_visible_streets), co);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2);
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (menu_window_visible_streets), co);
 
 		menu_item(this, menu2, "Visible Points", menu_window_visible_points);
 
 		item2=gtk_menu_item_new_with_label("Exit");
-		gtk_menu_append (GTK_MENU(menu2), item2); 
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (exit), this);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2); 
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (exit), this);
 	}
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), menu2);
 
 	item=gtk_menu_item_new_with_label("Map");
-	gtk_menu_bar_append(GTK_MENU_BAR(menu), item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	{
 		menu2=gtk_menu_new();
 
 		item2=gtk_menu_item_new_with_label("Compare");
-		gtk_menu_append (GTK_MENU(menu2), item2); 
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_map_compare), this);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2); 
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (menu_map_compare), this);
 
 		item2=gtk_menu_item_new_with_label("Distances");
-		gtk_menu_append (GTK_MENU(menu2), item2); 
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_map_distances), this);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2); 
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (menu_map_distances), this);
 	}
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), menu2);
 
 	item=gtk_menu_item_new_with_label("Route");
-	gtk_menu_bar_append(GTK_MENU_BAR(menu), item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	{
 		menu2=gtk_menu_new();
 
 		item2=gtk_menu_item_new_with_label("Start");
-		gtk_menu_append (GTK_MENU(menu2), item2); 
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (route_start), co);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2); 
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (route_start), co);
 
 		item2=gtk_menu_item_new_with_label("Trace");
-		gtk_menu_append (GTK_MENU(menu2), item2); 
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (route_trace), co);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2); 
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (route_trace), co);
 
 		item2=gtk_menu_item_new_with_label("Update");
-		gtk_menu_append (GTK_MENU(menu2), item2); 
-		gtk_signal_connect_object(GTK_OBJECT(item2), "activate",
-			GTK_SIGNAL_FUNC (menu_route_update), this);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2); 
+		g_signal_connect_swapped(G_OBJECT(item2), "activate",
+			G_CALLBACK (menu_route_update), this);
 	}
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), menu2);
 
 	item=gtk_menu_item_new_with_label("Destinations");
-	gtk_menu_bar_append(GTK_MENU_BAR(menu), item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	menu2=gtk_menu_new();
 
 	item2=gtk_menu_item_new_with_label("Last Destinations");
-	gtk_menu_append (GTK_MENU(menu2), item2); 
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2); 
 	menu3=gtk_menu_new();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item2), menu3);
 
 	item2=gtk_menu_item_new_with_label("Address");
-	gtk_menu_append (GTK_MENU(menu2), item2); 
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu2), item2); 
 
 	{
 		FILE *file;
@@ -330,7 +330,7 @@ gui_gtk_menu_new(struct container *co, GtkWidget **widget)
 				list=gtk_container_get_children(GTK_CONTAINER(menu3));
 				while (list) {
 					item2=GTK_WIDGET(list->data);
-					gtk_label_get(GTK_LABEL(gtk_bin_get_child(GTK_BIN(item2))),&label);
+					label=g_strdup(gtk_label_get_text(GTK_LABEL(gtk_bin_get_child(GTK_BIN(item2)))));
 					if (!strcmp(label, tok)) {
 						menu3=gtk_menu_item_get_submenu(GTK_MENU_ITEM(item2));
 						break;
@@ -341,22 +341,22 @@ gui_gtk_menu_new(struct container *co, GtkWidget **widget)
 				if (! list) {
 					utf8=g_locale_to_utf8(tok,-1,NULL,NULL,NULL);
 					item2=gtk_menu_item_new_with_label(utf8);
-					gtk_menu_append (GTK_MENU(menu3), item2); 
+					gtk_menu_shell_append (GTK_MENU_SHELL(menu3), item2); 
 					g_free(utf8);
 				}
 				text=NULL;
 			}
-			gtk_signal_connect(GTK_OBJECT(item2), "activate",
-				GTK_SIGNAL_FUNC (menu_destination_selected), dest);
+			g_signal_connect(G_OBJECT(item2), "activate",
+				G_CALLBACK (menu_destination_selected), dest);
 		}
 	}
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), menu2);
 
 	item=gtk_menu_item_new();
 	clock=gtk_label_new(NULL);
-	gtk_menu_item_right_justify(GTK_MENU_ITEM(item));
+	gtk_menu_item_set_right_justified(GTK_MENU_ITEM(item),TRUE);
 	gtk_container_add(GTK_CONTAINER(item), clock);
-	gtk_menu_bar_append(GTK_MENU_BAR(menu), item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 	menu_clock_update(clock);
 	
 	*widget=menu;
