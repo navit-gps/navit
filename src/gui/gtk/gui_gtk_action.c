@@ -73,7 +73,7 @@ destination_action(GtkWidget *w, struct action *ac)
 static void     
 quit_action (GtkWidget *w, struct action *ac)
 {
-    gtk_main_quit();
+	gtk_main_quit();
 }
 
 static void
@@ -114,33 +114,33 @@ visible_points_action(GtkWidget *w, struct container *co)
 
 static GtkActionEntry entries[] = 
 {
-    { "DisplayMenuAction", NULL, "Display" },
-    { "RouteMenuAction", NULL, "Route" },
-    { "ZoomOutAction", GTK_STOCK_ZOOM_OUT, "ZoomOut", NULL, NULL, G_CALLBACK(zoom_out_action) },
-    { "ZoomInAction", GTK_STOCK_ZOOM_IN, "ZoomIn", NULL, NULL, G_CALLBACK(zoom_in_action) },
-    { "RefreshAction", GTK_STOCK_REFRESH, "Refresh", NULL, NULL, G_CALLBACK(refresh_action) },
-    { "DestinationAction", "flag_icon", "Destination", NULL, NULL, G_CALLBACK(destination_action) },
-    { "QuitAction", GTK_STOCK_QUIT, "_Quit", "<control>Q",NULL, G_CALLBACK (quit_action) }
+	{ "DisplayMenuAction", NULL, "Display" },
+	{ "RouteMenuAction", NULL, "Route" },
+	{ "ZoomOutAction", GTK_STOCK_ZOOM_OUT, "ZoomOut", NULL, NULL, G_CALLBACK(zoom_out_action) },
+	{ "ZoomInAction", GTK_STOCK_ZOOM_IN, "ZoomIn", NULL, NULL, G_CALLBACK(zoom_in_action) },
+	{ "RefreshAction", GTK_STOCK_REFRESH, "Refresh", NULL, NULL, G_CALLBACK(refresh_action) },
+	{ "DestinationAction", "flag_icon", "Destination", NULL, NULL, G_CALLBACK(destination_action) },
+	{ "QuitAction", GTK_STOCK_QUIT, "_Quit", "<control>Q",NULL, G_CALLBACK (quit_action) }
 };
 
 static guint n_entries = G_N_ELEMENTS (entries);
 
 static GtkToggleActionEntry toggleentries[] = 
 {
-    { "CursorAction", "cursor_icon","Cursor", NULL, NULL, G_CALLBACK(cursor_action),TRUE },
-    { "OrientationAction", "orientation_icon", "Orientation", NULL, NULL, G_CALLBACK(orient_north_action),TRUE }
+	{ "CursorAction", "cursor_icon","Cursor", NULL, NULL, G_CALLBACK(cursor_action),TRUE },
+	{ "OrientationAction", "orientation_icon", "Orientation", NULL, NULL, G_CALLBACK(orient_north_action),TRUE }
 };
 
 static guint n_toggleentries = G_N_ELEMENTS (toggleentries);
 
 static GtkActionEntry debug_entries[] = 
 {
-    { "DataMenuAction", NULL, "Data" },
-    { "VisibleBlocksAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_blocks_action) },
-    { "VisibleTownsAction", NULL, "VisibleTowns", NULL, NULL, G_CALLBACK(visible_towns_action) },
-    { "VisiblePolysAction", NULL, "VisiblePolys", NULL, NULL, G_CALLBACK(visible_polys_action) },
-    { "VisibleStreetsAction", NULL, "VisibleStreets", NULL, NULL, G_CALLBACK(visible_streets_action) },
-    { "VisiblePointsAction", NULL, "VisiblePoints", NULL, NULL, G_CALLBACK(visible_points_action) }
+	{ "DataMenuAction", NULL, "Data" },
+	{ "VisibleBlocksAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_blocks_action) },
+	{ "VisibleTownsAction", NULL, "VisibleTowns", NULL, NULL, G_CALLBACK(visible_towns_action) },
+	{ "VisiblePolysAction", NULL, "VisiblePolys", NULL, NULL, G_CALLBACK(visible_polys_action) },
+	{ "VisibleStreetsAction", NULL, "VisibleStreets", NULL, NULL, G_CALLBACK(visible_streets_action) },
+	{ "VisiblePointsAction", NULL, "VisiblePoints", NULL, NULL, G_CALLBACK(visible_points_action) }
 };
 
 static guint n_debug_entries = G_N_ELEMENTS (debug_entries);
@@ -248,7 +248,6 @@ register_my_stock_icons (void)
 {
 	GtkIconFactory *icon_factory;
 	GtkIconSet *icon_set; 
-	GtkIconSource *icon_source;
 	GdkPixbuf *pixbuf;
 	gint i;
 
@@ -271,8 +270,8 @@ register_my_stock_icons (void)
 static void
 action_add_widget (GtkUIManager *ui, GtkWidget *widget, GtkContainer *container)
 {
-    gtk_box_pack_start (GTK_BOX (container), widget, FALSE, FALSE, 0);
-    gtk_widget_show (widget);
+	gtk_box_pack_start (GTK_BOX (container), widget, FALSE, FALSE, 0);
+	gtk_widget_show (widget);
 }
 
 static char layout[] =
@@ -319,41 +318,38 @@ static char layout[] =
 void
 gui_gtk_actions_new(struct container *co, GtkWidget **vbox)
 {
-    GtkActionGroup      *base_group,*debug_group;
-    GtkUIManager        *menu_manager;
-    GError              *error;
+	GtkActionGroup      *base_group,*debug_group;
+	GtkUIManager        *menu_manager;
+	GError              *error;
 
-    struct action *this=g_new0(struct action, 1);
+	GtkWidget *toolbar;
 
-    this->gui=g_new0(struct action_gui, 1);
-    this->gui->co=co;
+	struct action *this=g_new0(struct action, 1);
 
-    register_my_stock_icons();
+	this->gui=g_new0(struct action_gui, 1);
+	this->gui->co=co;
 
-    base_group = gtk_action_group_new ("BaseActions");
-    debug_group = gtk_action_group_new ("DebugActions");
-    menu_manager = gtk_ui_manager_new ();
+	register_my_stock_icons();
 
-    /* Pack up our objects:
-     * vbox -> window
-     * actions -> action_group
-     * action_group -> menu_manager */
-    gtk_action_group_add_actions (base_group, entries, n_entries, this);
-    gtk_action_group_add_toggle_actions (base_group, toggleentries, n_toggleentries, this);
-    gtk_ui_manager_insert_action_group (menu_manager, base_group, 0);
+	base_group = gtk_action_group_new ("BaseActions");
+	debug_group = gtk_action_group_new ("DebugActions");
+	menu_manager = gtk_ui_manager_new ();
 
-    gtk_action_group_add_actions (debug_group, debug_entries, n_debug_entries, co);
-    gtk_ui_manager_insert_action_group (menu_manager, debug_group, 0);
-    
-    error = NULL;
-    gtk_ui_manager_add_ui_from_string (menu_manager, layout, strlen(layout), &error);
+	gtk_action_group_add_actions (base_group, entries, n_entries, this);
+	gtk_action_group_add_toggle_actions (base_group, toggleentries, n_toggleentries, this);
+	gtk_ui_manager_insert_action_group (menu_manager, base_group, 0);
 
-    if (error)
-    {
-	g_message ("building menus failed: %s", error->message);
-	g_error_free (error);
-    }
+	gtk_action_group_add_actions (debug_group, debug_entries, n_debug_entries, co);
+	gtk_ui_manager_insert_action_group (menu_manager, debug_group, 0);
 
-    g_signal_connect ( menu_manager, "add_widget", G_CALLBACK (action_add_widget), *vbox);
+	error = NULL;
+	gtk_ui_manager_add_ui_from_string (menu_manager, layout, strlen(layout), &error);
+
+	if (error) {
+		g_message ("building menus failed: %s", error->message);
+		g_error_free (error);
+	}
+
+	g_signal_connect ( menu_manager, "add_widget", G_CALLBACK (action_add_widget), *vbox);
 }
 
