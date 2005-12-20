@@ -119,8 +119,6 @@ static GtkActionEntry entries[] =
     { "ZoomOutAction", GTK_STOCK_ZOOM_OUT, "ZoomOut", NULL, NULL, G_CALLBACK(zoom_out_action) },
     { "ZoomInAction", GTK_STOCK_ZOOM_IN, "ZoomIn", NULL, NULL, G_CALLBACK(zoom_in_action) },
     { "RefreshAction", GTK_STOCK_REFRESH, "Refresh", NULL, NULL, G_CALLBACK(refresh_action) },
-    { "CursorAction", "cursor_icon","Cursor", NULL, NULL, G_CALLBACK(cursor_action) },
-    { "OrientationAction", "orientation_icon", "Orientation", NULL, NULL, G_CALLBACK(orient_north_action) },
     { "DestinationAction", "flag_icon", "Destination", NULL, NULL, G_CALLBACK(destination_action) },
     { "QuitAction", GTK_STOCK_QUIT, "_Quit", "<control>Q",NULL, G_CALLBACK (quit_action) }
 };
@@ -129,8 +127,8 @@ static guint n_entries = G_N_ELEMENTS (entries);
 
 static GtkToggleActionEntry toggleentries[] = 
 {
-    { "CursorAction", NULL,"Cursor", NULL, NULL, G_CALLBACK(cursor_action),TRUE },
-    { "OrientationAction", NULL, "Orientation", NULL, NULL, G_CALLBACK(orient_north_action),TRUE }
+    { "CursorAction", "cursor_icon","Cursor", NULL, NULL, G_CALLBACK(cursor_action),TRUE },
+    { "OrientationAction", "orientation_icon", "Orientation", NULL, NULL, G_CALLBACK(orient_north_action),TRUE }
 };
 
 static guint n_toggleentries = G_N_ELEMENTS (toggleentries);
@@ -139,10 +137,10 @@ static GtkActionEntry debug_entries[] =
 {
     { "DataMenuAction", NULL, "Data" },
     { "VisibleBlocksAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_blocks_action) },
-    { "VisibleTownsAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_towns_action) },
-    { "VisiblePolysAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_polys_action) },
-    { "VisibleStreetsAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_streets_action) },
-    { "VisiblePointsAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_points_action) }
+    { "VisibleTownsAction", NULL, "VisibleTowns", NULL, NULL, G_CALLBACK(visible_towns_action) },
+    { "VisiblePolysAction", NULL, "VisiblePolys", NULL, NULL, G_CALLBACK(visible_polys_action) },
+    { "VisibleStreetsAction", NULL, "VisibleStreets", NULL, NULL, G_CALLBACK(visible_streets_action) },
+    { "VisiblePointsAction", NULL, "VisiblePoints", NULL, NULL, G_CALLBACK(visible_points_action) }
 };
 
 static guint n_debug_entries = G_N_ELEMENTS (debug_entries);
@@ -260,19 +258,9 @@ register_my_stock_icons (void)
 	{
 		pixbuf = gdk_pixbuf_new_from_xpm_data(stock_icons[i].icon_xpm);
 		icon_set = gtk_icon_set_new_from_pixbuf (pixbuf);
+		g_object_unref(pixbuf);
 		gtk_icon_factory_add (icon_factory, stock_icons[i].stockid, icon_set);
 		gtk_icon_set_unref (icon_set);
-#if 0
-		icon_set = gtk_icon_set_new();
-		icon_source = gtk_icon_source_new();
-		gtk_icon_source_set_pixbuf(icon_source,pixbuf);
-		gtk_icon_set_add_source(icon_set, icon_source);
-		gtk_icon_source_set_state(icon_source,GTK_STATE_ACTIVE);
-		gtk_icon_set_add_source(icon_set, icon_source);
-		gtk_icon_source_free(icon_source);
-		gtk_icon_factory_add(icon_factory, stock_icons[i].stockid, icon_set);
-		gtk_icon_set_unref(icon_set);
-#endif
 	}
 
 	gtk_icon_factory_add_default(icon_factory); 
