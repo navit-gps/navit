@@ -4,6 +4,7 @@
 #include "gui_gtk.h"
 #include "container.h"
 #include "menu.h"
+#include "data_window.h"
 #include "coord.h"
 #include "destination.h"
 
@@ -75,9 +76,42 @@ quit_action (GtkWidget *w, struct action *ac)
     gtk_main_quit();
 }
 
+static void
+visible_blocks_action(GtkWidget *w, struct container *co)
+{
+	co->data_window[data_window_type_block]=data_window("Visible Blocks",co->win,NULL);
+	graphics_redraw(co);
+}
 
-/* Create a list of entries which are passed to the Action constructor. 
- * This is a huge convenience over building Actions by hand. */
+static void
+visible_towns_action(GtkWidget *w, struct container *co)
+{
+	co->data_window[data_window_type_town]=data_window("Visible Towns",co->win,NULL);
+	graphics_redraw(co);
+}
+
+static void
+visible_polys_action(GtkWidget *w, struct container *co)
+{
+	co->data_window[data_window_type_street]=data_window("Visible Polys",co->win,NULL);
+	graphics_redraw(co);
+}
+
+static void
+visible_streets_action(GtkWidget *w, struct container *co)
+{
+	co->data_window[data_window_type_street]=data_window("Visible Streets",co->win,NULL);
+	graphics_redraw(co);
+}
+
+static void
+visible_points_action(GtkWidget *w, struct container *co)
+{
+	co->data_window[data_window_type_point]=data_window("Visible Points",co->win,NULL);
+	graphics_redraw(co);
+}
+
+
 static GtkActionEntry entries[] = 
 {
     { "DisplayMenuAction", NULL, "Display" },
@@ -101,7 +135,19 @@ static GtkToggleActionEntry toggleentries[] =
 
 static guint n_toggleentries = G_N_ELEMENTS (toggleentries);
 
-/* XPM */
+static GtkActionEntry debug_entries[] = 
+{
+    { "DataMenuAction", NULL, "Data" },
+    { "VisibleBlocksAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_blocks_action) },
+    { "VisibleTownsAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_towns_action) },
+    { "VisiblePolysAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_polys_action) },
+    { "VisibleStreetsAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_streets_action) },
+    { "VisiblePointsAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_points_action) }
+};
+
+static guint n_debug_entries = G_N_ELEMENTS (debug_entries);
+
+
 static gchar * cursor_xpm[] = {
 "22 22 2 1",
 " 	c None",
@@ -130,7 +176,6 @@ static gchar * cursor_xpm[] = {
 "                      "};
 
 
-/* XPM */
 static gchar * north_xpm[] = {
 "22 22 2 1",
 " 	c None",
@@ -159,7 +204,6 @@ static gchar * north_xpm[] = {
 "                      "};
 
 
-/* XPM */
 static gchar * flag_xpm[] = {
 "22 22 2 1",
 " 	c None",
@@ -236,8 +280,6 @@ register_my_stock_icons (void)
 	g_object_unref(icon_factory);
 }
 
-/* Implement a handler for GtkUIManager's "add_widget" signal. The UI manager
- * will emit this signal whenever it needs you to place a new widget it has. */
 static void
 action_add_widget (GtkUIManager *ui, GtkWidget *widget, GtkContainer *container)
 {
@@ -256,10 +298,17 @@ static char layout[] =
 				<menuitem name=\"Quit\" action=\"QuitAction\" />\
 				<placeholder name=\"RouteMenuAdditions\" />\
 			</menu>\
+			<menu name=\"DataMenu\" action=\"DataMenuAction\">\
+				<menuitem name=\"Visible Blocks\" action=\"VisibleBlocksAction\" />\
+				<menuitem name=\"Visible Towns\" action=\"VisibleTownsAction\" />\
+				<menuitem name=\"Visible Polys\" action=\"VisiblePolysAction\" />\
+				<menuitem name=\"Visible Streets\" action=\"VisibleStreetsAction\" />\
+				<menuitem name=\"Visible Points\" action=\"VisiblePointsAction\" />\
+				<placeholder name=\"DataMenuAdditions\" />\
+			</menu>\
 			<menu name=\"RouteMenu\" action=\"RouteMenuAction\">\
 				<menuitem name=\"Refresh\" action=\"RefreshAction\" />\
 				<menuitem name=\"Destination\" action=\"DestinationAction\" />\
-				<menuitem name=\"Quit\" action=\"QuitAction\" />\
 				<placeholder name=\"RouteMenuAdditions\" />\
 			</menu>\
 		</menubar>\
@@ -282,9 +331,9 @@ static char layout[] =
 void
 gui_gtk_actions_new(struct container *co, GtkWidget **vbox)
 {
-    GtkActionGroup      *action_group;          /* Packing group for our Actions */
-    GtkUIManager        *menu_manager;          /* The magic widget! */
-    GError              *error;                 /* For reporting exceptions or errors */
+    GtkActionGroup      *base_group,*debug_group;
+    GtkUIManager        *menu_manager;
+    GError              *error;
 
     struct action *this=g_new0(struct action, 1);
 
@@ -293,18 +342,21 @@ gui_gtk_actions_new(struct container *co, GtkWidget **vbox)
 
     register_my_stock_icons();
 
-    action_group = gtk_action_group_new ("BaseActions");
+    base_group = gtk_action_group_new ("BaseActions");
+    debug_group = gtk_action_group_new ("DebugActions");
     menu_manager = gtk_ui_manager_new ();
 
     /* Pack up our objects:
      * vbox -> window
      * actions -> action_group
      * action_group -> menu_manager */
-    gtk_action_group_add_actions (action_group, entries, n_entries, this);
-    gtk_action_group_add_toggle_actions (action_group, toggleentries, n_toggleentries, this);
-    gtk_ui_manager_insert_action_group (menu_manager, action_group, 0);
+    gtk_action_group_add_actions (base_group, entries, n_entries, this);
+    gtk_action_group_add_toggle_actions (base_group, toggleentries, n_toggleentries, this);
+    gtk_ui_manager_insert_action_group (menu_manager, base_group, 0);
 
-    /* Read in the UI from our XML file */
+    gtk_action_group_add_actions (debug_group, debug_entries, n_debug_entries, co);
+    gtk_ui_manager_insert_action_group (menu_manager, debug_group, 0);
+    
     error = NULL;
     gtk_ui_manager_add_ui_from_string (menu_manager, layout, strlen(layout), &error);
 
@@ -314,8 +366,6 @@ gui_gtk_actions_new(struct container *co, GtkWidget **vbox)
 	g_error_free (error);
     }
 
-    /* This signal is necessary in order to place widgets from the UI manager
-     * into the vbox */
     g_signal_connect ( menu_manager, "add_widget", G_CALLBACK (action_add_widget), *vbox);
 }
 
