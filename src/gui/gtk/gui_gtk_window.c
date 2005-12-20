@@ -37,7 +37,7 @@ gui_gtk_window(int x, int y, int scale)
 {
 	GtkWidget *window,*map_widget;
 	GtkWidget *vbox;
-	GtkWidget *statusbar,*toolbar,*menu;
+	GtkWidget *statusbar;
 	struct container *co;
 
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -51,10 +51,12 @@ gui_gtk_window(int x, int y, int scale)
 
 	co->win=(struct window *) window;
 	co->statusbar=gui_gtk_statusbar_new(&statusbar);
-	co->toolbar=gui_gtk_toolbar_new(co, &toolbar);
-	co->menu=gui_gtk_menu_new(co, &menu);
+	gui_gtk_actions_new(co,&vbox);
+	
+/*
 	gtk_box_pack_start(GTK_BOX(vbox), menu, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(vbox), toolbar, FALSE, FALSE, 0);
+*/
 	gtk_box_pack_end(GTK_BOX(vbox), statusbar, FALSE, FALSE, 0);
 	gtk_box_pack_end(GTK_BOX(vbox), map_widget, TRUE, TRUE, 0);
 	gtk_container_add(GTK_CONTAINER(window), vbox);
@@ -63,5 +65,4 @@ gui_gtk_window(int x, int y, int scale)
 	container_init_gra(co);
 	return co;
 }
-
 
