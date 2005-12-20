@@ -146,7 +146,7 @@ static GtkActionEntry debug_entries[] =
 static guint n_debug_entries = G_N_ELEMENTS (debug_entries);
 
 
-static gchar * cursor_xpm[] = {
+static const char * cursor_xpm[] = {
 "22 22 2 1",
 " 	c None",
 ".	c #0000FF",
@@ -174,7 +174,7 @@ static gchar * cursor_xpm[] = {
 "                      "};
 
 
-static gchar * north_xpm[] = {
+static const char * north_xpm[] = {
 "22 22 2 1",
 " 	c None",
 ".	c #000000",
@@ -202,7 +202,7 @@ static gchar * north_xpm[] = {
 "                      "};
 
 
-static gchar * flag_xpm[] = {
+static const char * flag_xpm[] = {
 "22 22 2 1",
 " 	c None",
 "+	c #000000",
@@ -233,11 +233,11 @@ static gchar * flag_xpm[] = {
 
 static struct {
 	gchar *stockid;
-	gchar **icon_xpm;
+	const char **icon_xpm;
 } stock_icons[] = {
-	{"cursor_icon", &cursor_xpm },
-	{"orientation_icon", &north_xpm },
-	{"flag_icon", &flag_xpm }
+	{"cursor_icon", cursor_xpm },
+	{"orientation_icon", north_xpm },
+	{"flag_icon", flag_xpm }
 };
 
 static gint n_stock_icons = G_N_ELEMENTS (stock_icons);
@@ -321,8 +321,6 @@ gui_gtk_actions_new(struct container *co, GtkWidget **vbox)
 	GtkActionGroup      *base_group,*debug_group;
 	GtkUIManager        *menu_manager;
 	GError              *error;
-
-	GtkWidget *toolbar;
 
 	struct action *this=g_new0(struct action, 1);
 
