@@ -46,21 +46,13 @@ refresh_action(GtkWidget *w, struct action *ac)
 static void
 cursor_action(GtkWidget *w, struct action *ac)
 {
-	if (ac->gui->co->flags->track) {
-		ac->gui->co->flags->track=0;
-	} else {
-		ac->gui->co->flags->track=1;
-	}
+	ac->gui->co->flags->track=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
 }
 
 static void
 orient_north_action(GtkWidget *w, struct action *ac)
 {
-	if (ac->gui->co->flags->orient_north) {
-		ac->gui->co->flags->orient_north=0;
-	} else {
-		ac->gui->co->flags->orient_north=1;
-	}
+	ac->gui->co->flags->orient_north=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
 }
 
 static void
