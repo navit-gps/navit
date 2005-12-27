@@ -194,7 +194,7 @@ vehicle_gps_callback(struct gps_data_t *data, char *buf, size_t len, int level)
 	double scale,speed;
 	if (data->set & SPEED_SET) {
 		this->speed_last=this->speed;
-		this->speed=data->fix.speed;
+		this->speed=data->fix.speed*1.852;
 		data->set &= ~SPEED_SET;
 	}
 	if (data->set & TRACK_SET) {
