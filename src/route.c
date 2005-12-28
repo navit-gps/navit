@@ -603,7 +603,9 @@ route_find(struct route *this, struct route_info *rt_start, struct route_info *r
 		else
 			route_add_path_segment(this, 0, 0, &rt_end->pos.xy, &rt_end->line2.xy, -1, 0, 0);
 		route_add_path_segment(this, 0, 0, &rt_end->click.xy, &rt_end->pos.xy, -1, 0, 0);
+#if 0
 		printf("len %5.3f\n", len/1000);
+#endif
 		this->route_time_val=time/10;
 		time/=10;
 		this->route_len_val=len;
@@ -611,7 +613,9 @@ route_find(struct route *this, struct route_info *rt_start, struct route_info *r
 		time-=min*60;
 		hr=min/60;
 		min-=hr*60;
+#if 0
 		printf("time %02d:%02d:%02d\n", hr, min, time);
+#endif
 #if 1
 		navigation_path_description(this);
 #endif

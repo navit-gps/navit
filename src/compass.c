@@ -86,7 +86,9 @@ compass_draw(struct compass *comp, struct container *co)
 		dx=dest->x-pos->x;
 		dy=dest->y-pos->y;
 		dir=atan2(dx,dy)*180.0/M_PI;
+#if 0
 		printf("dx %d dy %d dir=%f vehicle_dir=%f\n", dx, dy, dir, *vehicle_dir);
+#endif
 		dir-=*vehicle_dir;
 		handle(comp->gr, comp->green, &p, 20, dir);
 		p.x=8;
