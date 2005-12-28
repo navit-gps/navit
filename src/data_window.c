@@ -20,7 +20,7 @@ data_window(char *name, struct window *parent, void(*callback)(struct data_windo
 			GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
 	gtk_container_add(GTK_CONTAINER(win->window), win->scrolled_window);
 
-	win->clist=NULL;
+	win->treeview=NULL;
 	win->callback=callback;
 	if (parent) 
 		gtk_window_set_transient_for(GTK_WINDOW((GtkWidget *)(win->window)), GTK_WINDOW(parent));
@@ -31,12 +31,12 @@ data_window(char *name, struct window *parent, void(*callback)(struct data_windo
 void
 data_window_begin(struct data_window *win)
 {
-	if (win && win->clist) {
-	       	gtk_clist_clear(GTK_CLIST(win->clist));
-		gtk_clist_freeze(GTK_CLIST(win->clist));
+	if (win && win->treeview) {
+		gtk_tree_view_set_model (GTK_TREE_VIEW (win->treeview), NULL);
 	}
 }
 
+#if 0
 static void 
 click_column(GtkCList *clist, int column)
 {
@@ -64,41 +64,61 @@ select_row(GtkCList *clist, int row, int column, GdkEventButton *event, struct d
 		win->callback(win, cols);
 	}
 }
+#endif
 
 void
 data_window_add(struct data_window *win, struct param_list *param, int count)
 {
 	int i;
-	char *column[count+1];
-	char *utf8;
-	if (! win->clist) {
-		for (i = 0 ; i < count ; i++) {
-			column[i]=param[i].name;
+	GtkCellRenderer *cell;
+	GtkTreeIter iter;
+	GtkListStore *liststore;
+	GType types[count];
+	gchar *utf8;
+
+	if (! win->treeview) {
+		win->treeview=gtk_tree_view_new();
+		gtk_tree_view_set_model (GTK_TREE_VIEW (win->treeview), NULL);
+		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(win->scrolled_window),win->treeview);
+		gtk_widget_show_all(GTK_WIDGET(win->window));
+		/* add column names to treeview */
+		for(i=0;i<count;i++) {
+			cell=gtk_cell_renderer_text_new();
+			gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (win->treeview),-1,param[i].name,
+					cell,"text",i, NULL);
 		}
-		win->clist=gtk_clist_new_with_titles(count, column);
-        	gtk_clist_clear(GTK_CLIST(win->clist));
-	        gtk_container_add(GTK_CONTAINER(win->scrolled_window), win->clist);  
-		gtk_clist_freeze(GTK_CLIST(win->clist));
-		gtk_signal_connect(GTK_OBJECT(win->clist), "click-column", GTK_SIGNAL_FUNC(click_column), NULL);
-		gtk_signal_connect(GTK_OBJECT(win->clist), "select-row", GTK_SIGNAL_FUNC(select_row), win);
-		gtk_widget_show_all(win->window);
 	}
-	for (i = 0 ; i < count ; i++) {
+
+	/* find data storage and create a new one if none is there */
+	if (gtk_tree_view_get_model(GTK_TREE_VIEW (win->treeview)) == NULL) {
+		for(i=0;i<count;i++) types[i]=G_TYPE_STRING;
+	    	liststore=gtk_list_store_newv(count,types);
+		gtk_tree_view_set_model (GTK_TREE_VIEW (win->treeview), GTK_TREE_MODEL(liststore));
+	}
+	else
+		liststore=GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW (win->treeview)));
+
+	gtk_list_store_append(liststore,&iter);
+
+	/* add data to data storage */
+	for(i=0;i<count;i++) {
 		utf8=g_locale_to_utf8(param[i].value,-1,NULL,NULL,NULL);
-		column[i]=utf8;
+		gtk_list_store_set(liststore,&iter,i,utf8,-1);
 	}
-	column[i]=NULL;
-	gtk_clist_append(GTK_CLIST(win->clist), column); 
-	for (i = 0 ; i < count ; i++) {
-		g_free(column[i]);
-	}
+
+#if 0
+		g_signal_connect(G_OBJECT(win->clist), "click-column", G_CALLBACK(click_column), NULL);
+		g_signal_connect(G_OBJECT(win->clist), "select-row", G_CALLBACK(select_row), win);
+#endif
 }
 
 void
 data_window_end(struct data_window *win)
 {
-	if (win && win->clist) {
+#if 0
+	if (win && win->treeview) {
 		gtk_clist_thaw(GTK_CLIST(win->clist));
 		gtk_clist_columns_autosize (GTK_CLIST(win->clist));
 	}
+#endif
 }
