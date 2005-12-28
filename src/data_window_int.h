@@ -2,6 +2,6 @@
 struct data_window {
 	GtkWidget *window;
 	GtkWidget *scrolled_window;	
-	GtkWidget *clist;
+	GtkWidget *treeview;
 	void(*callback)(struct data_window *, char **cols);
 };
