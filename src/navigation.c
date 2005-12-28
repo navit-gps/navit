@@ -161,8 +161,8 @@ make_maneuver(struct navigation_item *old, struct navigation_item *new)
 			strcpy(p," abbiegen");
 			param_list[9].value=command;
 			if (flag) {
-				printf("command='%s'\n", command);
 #if 0
+				printf("command='%s'\n", command);
 				speech_say(speech_handle, command);
 #endif
 				flag=0;
