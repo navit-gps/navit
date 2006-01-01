@@ -63,6 +63,7 @@ struct container {
 	struct cursor *cursor;
 	struct speech *speech;
 	struct vehicle *vehicle;
+	struct track *track;
         struct data_window *data_window[data_window_type_end];
 	struct map_flags *flags;
 	struct _GtkMap *map;
