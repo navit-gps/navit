@@ -1,6 +1,7 @@
 struct container;
 struct block_info;
 struct segment;
+struct street_coord_handle;
 
 struct street_header {
 	unsigned char order;
@@ -51,3 +52,5 @@ void street_bti_draw_block(struct block_info *blk_inf, unsigned char *start, uns
 int street_get_param(struct segment *seg, struct param_list *param, int count, int verbose);
 int street_bti_get_param(struct segment *seg, struct param_list *param, int count);
 void street_route_draw(struct container *co);
+int street_coord_handle_get(struct street_coord_handle *h, struct coord *c);
+
