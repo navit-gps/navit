@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <limits.h>
+#include <glib.h>
 #include "coord.h"
 #include "transform.h"
 
@@ -237,6 +238,7 @@ transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref
 {
 	int vx,vy,wx,wy;
 	int c1,c2;
+	int climit=1000000;
 	struct coord l;
 
 	vx=l1->x-l0->x;
@@ -256,7 +258,10 @@ transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref
 			*lpnt=*l1;
 		return transform_distance_sq(l1, ref);
 	}
-
+	while (c1 > climit || c2 > climit) {
+		c1/=256;
+		c2/=256;
+	}
 	l.x=l0->x+vx*c1/c2;
 	l.y=l0->y+vy*c1/c2;
 	if (lpnt)
@@ -291,6 +296,24 @@ is_visible(struct transformation *t, struct coord *c)
 	return 1;
 }
 
+int
+is_line_visible(struct transformation *t, struct coord *c)
+{
+	struct coord *r=t->rect;
+
+	assert(r[0].x <= r[1].x);
+	assert(r[0].y >= r[1].y);
+	if (MIN(c[0].x,c[1].x) > r[1].x)
+		return 0;
+	if (MAX(c[0].x,c[1].x) < r[0].x)
+		return 0;
+	if (MAX(c[0].y,c[1].y) < r[1].y)
+		return 0;
+	if (MIN(c[0].y,c[1].y) > r[0].y)
+		return 0;
+	return 1;
+}
+
 int 
 is_point_visible(struct transformation *t, struct coord *c)
 {
@@ -321,6 +344,32 @@ is_too_small(struct transformation *t, struct coord *c, int limit)
 		return 1;
 	}
 	return 0;	
+}
+
+
+void transform_limit_extend(struct coord *rect, struct coord *c)
+{
+	if (c->x < rect[0].x) rect[0].x=c->x;
+	if (c->x > rect[1].x) rect[1].x=c->x;
+	if (c->y < rect[1].y) rect[1].y=c->y;
+	if (c->y > rect[0].y) rect[0].y=c->y;
+}
+
+
+
+int
+transform_get_angle(struct coord *c, int dir)
+{
+	double angle;
+	int dx=c[1].x-c[0].x;
+	int dy=c[1].y-c[0].y;
+	angle=atan2(dx,dy);
+	angle*=180/M_PI;
+	if (dir == -1)
+		angle=angle-180;
+	if (angle < 0)
+		angle+=360;
+	return angle;
 }
 
 /*
@@ -361,3 +410,6 @@ e = the first eccentricity of the ellipsoid
 
 
 */
+
+
+

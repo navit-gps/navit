@@ -17,6 +17,7 @@
 #include "popup.h"
 #include "plugin.h"
 #include "compass.h"
+#include "track.h"
 #include "container.h"
 
 
@@ -51,6 +52,8 @@ int main(int argc, char **argv)
 	plugin_load();
 	co=gui_gtk_window(1300000,7000000,8192);
 	
+	co->route=route_new();
+	route_mapdata_set(co->route, co->map_data); 
 	gps=getenv("GPSDATA");
 	if (gps) {
 		co->vehicle=vehicle_new(gps);
@@ -62,10 +65,10 @@ int main(int argc, char **argv)
 	}
 	co->speech=speech_new();
 	speech_handle=co->speech;
-	co->route=route_new();
 	if (co->vehicle)
 		co->compass=compass_new(co);
-	route_mapdata_set(co->route, co->map_data); 
+	if (co->vehicle)
+		co->track=track_new(co->map_data);
 
 
 #if 0

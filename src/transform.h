@@ -15,6 +15,7 @@ struct transformation {
 
 int transform(struct transformation *t, struct coord *c, struct point *p);
 int is_visible(struct transformation *t, struct coord *c);
+int is_line_visible(struct transformation *t, struct coord *c);
 int is_too_small(struct transformation *t, struct coord *c, int limit);
 void transform_lng_lat(struct coord *c, struct coord_geo *g);
 void transform_reverse(struct transformation *t, struct point *p, struct coord *c);
@@ -32,6 +33,6 @@ void transform_set_angle(struct transformation *t,int angle);
 void transform_setup(struct transformation *t, int x, int y, int scale, int angle);
 void transform_setup_source_rect_limit(struct transformation *t, struct coord *center, int limit);
 void transform_geo_text(struct coord_geo *g, char *buffer);
-
+void transform_limit_extend(struct coord *rect, struct coord *c);
 
 #endif
