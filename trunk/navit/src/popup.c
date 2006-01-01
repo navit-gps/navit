@@ -290,6 +290,7 @@ popup(struct container *co, int x, int y, int button)
 	transform_lng_lat(&popup->c, &g);
 	strcpy(buffer,"Map Point ");
 	transform_geo_text(&g, buffer+strlen(buffer));
+	sprintf(buffer+strlen(buffer), " (0x%x,0x%x)", popup->c.x, popup->c.y);
 	descr=popup_item_new_text(&list,buffer, 0);
 	descr->param=popup;
 
