@@ -14,6 +14,8 @@
 #include "statusbar.h"
 #include "vehicle.h"
 
+#define INTERPOLATION_TIME 50
+
 struct vehicle {
 	GIOChannel *iochan;
 	int timer_count;
@@ -22,6 +24,7 @@ struct vehicle {
 	double lat,lng;
 	double height;
 	double dir,speed;
+	double time;
 	struct coord current_pos;
 	struct coord_d curr;
 	struct coord_d delta;
@@ -36,20 +39,22 @@ struct vehicle {
 
 struct vehicle *vehicle_last;
 
-#if 0
+#if INTERPOLATION_TIME
 static int
 vehicle_timer(gpointer t)
 {
 	struct vehicle *this=t;	
-	if (this->timer_count++ < 10) {
-		this->curr.x+=this->delta.x;
-		this->curr.y+=this->delta.y;	
-		this->current_pos.x=this->curr.x;
-		this->current_pos.y=this->curr.y;
-		if (this->callback_func)
-			(*this->callback_func)(this->callback_data);
-	}
-	return TRUE;
+/*	if (this->timer_count++ < 1000/INTERPOLATION_TIME) { */
+		if (this->delta.x || this->delta.y) {
+			this->curr.x+=this->delta.x;
+			this->curr.y+=this->delta.y;	
+			this->current_pos.x=this->curr.x;
+			this->current_pos.y=this->curr.y;
+			if (this->callback_func)
+				(*this->callback_func)(this->callback_data);
+		}
+/*	} */
+	return TRUE; 
 }
 #endif
 
@@ -148,8 +153,10 @@ vehicle_parse_gps(struct vehicle *this, char *buffer)
 
 		scale=transform_scale(this->current_pos.y);
 		speed=this->speed+(this->speed-this->speed_last)/2;
-		this->delta.x=sin(M_PI*this->dir/180)*speed*scale/36;
-		this->delta.y=cos(M_PI*this->dir/180)*speed*scale/36;
+#ifdef INTERPOLATION_TIME
+		this->delta.x=sin(M_PI*this->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
+		this->delta.y=cos(M_PI*this->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
+#endif
 		this->speed_last=this->speed;
 	}
 }
@@ -192,17 +199,28 @@ vehicle_gps_callback(struct gps_data_t *data, char *buf, size_t len, int level)
 {
 	struct vehicle *this=vehicle_last;
 	double scale,speed;
+#if INTERPOLATION_TIME
+	if (! (data->set & TIME_SET)) {
+		return;
+	}
+	data->set &= ~TIME_SET;
+	if (this->time == data->fix.time)
+		return;
+	this->time=data->fix.time;
+#endif
 	if (data->set & SPEED_SET) {
 		this->speed_last=this->speed;
-		this->speed=data->fix.speed*1.852;
+		this->speed=data->fix.speed*3.6;
 		data->set &= ~SPEED_SET;
 	}
 	if (data->set & TRACK_SET) {
 		speed=this->speed+(this->speed-this->speed_last)/2;
 		this->dir=data->fix.track;
 		scale=transform_scale(this->current_pos.y);
-		this->delta.x=sin(M_PI*this->dir/180)*speed*scale/36;
-		this->delta.y=cos(M_PI*this->dir/180)*speed*scale/36;
+#ifdef INTERPOLATION_TIME
+		this->delta.x=sin(M_PI*this->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
+		this->delta.y=cos(M_PI*this->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
+#endif
 		data->set &= ~TRACK_SET;
 	}
 	if (data->set & LATLON_SET) {
@@ -211,6 +229,7 @@ vehicle_gps_callback(struct gps_data_t *data, char *buf, size_t len, int level)
 		transform_mercator(&this->lng, &this->lat, &this->current_pos);
 		this->curr.x=this->current_pos.x;
 		this->curr.y=this->current_pos.y;
+		this->timer_count=0;
 		if (this->callback_func)
 			(*this->callback_func)(this->callback_data);
 		data->set &= ~LATLON_SET;
@@ -276,11 +295,15 @@ vehicle_new(const char *url)
 	this->iochan=g_io_channel_unix_new(fd);
 	g_io_channel_set_encoding(this->iochan, NULL, &error);
 	g_io_add_watch(this->iochan, G_IO_IN|G_IO_ERR|G_IO_HUP, vehicle_track, this);
-#if 0
-	g_timeout_add(100, vehicle_timer, this);
-#endif
 	this->current_pos.x=0x130000;
 	this->current_pos.y=0x600000;
+	this->curr.x=this->current_pos.x;
+	this->curr.y=this->current_pos.y;
+	this->delta.x=0;
+	this->delta.y=0;
+#if INTERPOLATION_TIME
+		g_timeout_add(INTERPOLATION_TIME, vehicle_timer, this);
+#endif
 	
 	return this;
 }
