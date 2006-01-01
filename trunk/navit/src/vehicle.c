@@ -14,7 +14,7 @@
 #include "statusbar.h"
 #include "vehicle.h"
 
-#define INTERPOLATION_TIME 50
+/* #define INTERPOLATION_TIME 50 */
 
 struct vehicle {
 	GIOChannel *iochan;
