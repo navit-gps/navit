@@ -120,7 +120,7 @@ static guint n_entries = G_N_ELEMENTS (entries);
 static GtkToggleActionEntry toggleentries[] = 
 {
 	{ "CursorAction", "cursor_icon","Cursor", NULL, NULL, G_CALLBACK(cursor_action),TRUE },
-	{ "OrientationAction", "orientation_icon", "Orientation", NULL, NULL, G_CALLBACK(orient_north_action),TRUE }
+	{ "OrientationAction", "orientation_icon", "Orientation", NULL, NULL, G_CALLBACK(orient_north_action),FALSE }
 };
 
 static guint n_toggleentries = G_N_ELEMENTS (toggleentries);
