@@ -49,8 +49,10 @@ static inline int street_get_coord(unsigned char **pos, int bytes, struct coord 
 		y|=(*p++) << 16;
 		y|=(*p++) << 24;
 	}
-	f->x=ref[0].x+x;
-	f->y=ref[1].y+y;         
+	if (f) {
+		f->x=ref[0].x+x;
+		f->y=ref[1].y+y;
+	}
 #if 0
 	printf("0x%x,0x%x + 0x%x,0x%x = 0x%x,0x%x", x, y, ref[0].x, ref[1].y, f->x, f->y);
 #endif
