@@ -42,6 +42,7 @@ tst_callback(struct street_str *str, void *handle, void *data)
 {
 	struct coord c[2];
 	int visible=0,count=0;
+	struct track *tr=data;
 	struct track_line *lines;
 	int debug_segid=0;
 	int debug=0;
@@ -52,7 +53,7 @@ tst_callback(struct street_str *str, void *handle, void *data)
 			printf("0x%lx,0x%lx ", c->x, c->y); 
 		c[1]=c[0];
 		while (! street_coord_handle_get(handle, &c[0])) {
-			if (is_line_visible(data, c)) {
+			if (is_line_visible(&tr->t, c)) {
 				visible=1;
 			}
 			c[1]=c[0];
@@ -67,8 +68,8 @@ tst_callback(struct street_str *str, void *handle, void *data)
 		street_coord_handle_get(handle, &c[0]);
 		count=0;
 		while (! street_coord_handle_get(handle, &c[1])) {
-			*last=lines;
-			last=&lines->next;
+			*(tr->last_ptr)=lines;
+			tr->last_ptr=&lines->next;
 			lines->segid=str->segid;
 			lines->linenum=count;
 			lines->c[0]=c[0];

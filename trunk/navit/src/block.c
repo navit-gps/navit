@@ -95,17 +95,15 @@ block_binarytree_walk(struct block **block, unsigned char **p, struct coord *c, 
 	if (val != -1) {
 		dx=c[1].x-c[0].x;
 		dy=c[0].y-c[1].y;
-		if (dx > 0 && dy > 0) {
-			if (dy > dx) {
-				ca[0].y=val;
-				cb[1].y=val+1;
-			} else {
-				ca[1].x=val;
-				cb[0].x=val+1;		
-			}
-			ret+=block_binarytree_walk(block, p, ca, ign, blk_inf, t, data, func);
-			ret+=block_binarytree_walk(block, p, cb, ign, blk_inf, t, data, func);
+		if (dy > dx) {
+			ca[0].y=val;
+			cb[1].y=val+1;
+		} else {
+			ca[1].x=val;
+			cb[0].x=val+1;		
 		}
+		ret+=block_binarytree_walk(block, p, ca, ign, blk_inf, t, data, func);
+		ret+=block_binarytree_walk(block, p, cb, ign, blk_inf, t, data, func);
 	}
 	return ret;
 }
@@ -187,6 +185,8 @@ block_foreach_visible(struct block_info *blk_inf, struct transformation *t, int 
 			dummy1=get_long(&p2);
         		dummy2=get_long(&p2); 
 			assert((dummy1 == -1 && dummy2 == -1) || i < 32) ;
+			if (block->c[0].x > block->c[1].x || block->c[1].y > block->c[0].y)
+				break;
 			count=block_binarytree_walk(&block, &p, block->c, 0, blk_inf, t, data, func);
 		}
 	}
