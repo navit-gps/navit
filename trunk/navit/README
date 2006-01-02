@@ -37,8 +37,6 @@ Compile unshield from http://synce.sourceforge.net/synce/unshield.php
 run "unshield x <path to your dvd>/travel/data2.cab" where the map
 should go (about 4.3 GB)
 export MAP_DATA=<path to where the map has been unshielded>/DIRMAP_MAP/DIE.map
-move smp4.smp from DIE.map to a higher directory, since it currently
-crashes the program.
 
 
 GPS Support:
