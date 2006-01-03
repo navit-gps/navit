@@ -79,7 +79,10 @@ compass_draw(struct compass *comp, struct container *co)
 	p.x=30;
 	p.y=30;
 	comp->gr->draw_circle(comp->gr, comp->white, &p, 50);
-	handle(comp->gr, comp->white, &p, 20, -*vehicle_dir);
+	if (co->flags->orient_north)
+		handle(comp->gr,comp->white, &p, 20,0);
+	else
+		handle(comp->gr, comp->white, &p, 20, -*vehicle_dir);
 	dest=route_get_destination(co->route);
 	if (dest) {
 		pos=vehicle_pos_get(co->vehicle);	
