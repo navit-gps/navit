@@ -32,8 +32,7 @@ struct popup_item *
 popup_item_new_text(struct popup_item **last, char *text, int priority)
 {
 	struct popup_item *curr;
-	curr=g_new(struct popup_item,1);
-	memset(curr, 0, sizeof(*curr));
+	curr=g_new0(struct popup_item,1);
 	curr->text=g_strdup(text);
 	curr->priority=priority;
 	curr->destroy=popup_item_destroy_text;

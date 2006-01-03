@@ -336,7 +336,7 @@ static void
 route_segment_add(struct route *this, struct route_point *start, struct route_point *end, int len, struct street_str *str, int offset, int limit)
 {
 	struct route_segment *s;
-	s=g_new(struct route_segment,1);
+	s=g_new0(struct route_segment,1);
 	s->start=start;
 	s->start_next=start->start;
 	start->start=s;

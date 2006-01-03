@@ -165,7 +165,7 @@ street_coord_handle_new(struct block_info *blk_inf, struct street_str *str)
 	struct street_str *str_curr;
 	int num;
 
-	ret=g_new(struct street_coord_handle,1);
+	ret=g_new0(struct street_coord_handle,1);
 
 	ret->end=p;
 	blk=block_get(&p);

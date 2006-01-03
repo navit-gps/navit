@@ -34,5 +34,6 @@ void transform_setup(struct transformation *t, int x, int y, int scale, int angl
 void transform_setup_source_rect_limit(struct transformation *t, struct coord *center, int limit);
 void transform_geo_text(struct coord_geo *g, char *buffer);
 void transform_limit_extend(struct coord *rect, struct coord *c);
+int transform_get_angle(struct coord *c, int dir);
 
 #endif

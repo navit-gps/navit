@@ -288,7 +288,7 @@ vehicle_new(const char *url)
 		return NULL;
 #endif
 	}
-	this=g_new(struct vehicle,1);
+	this=g_new0(struct vehicle,1);
 #ifdef HAVE_LIBGPS
 	this->gps=gps;
 #endif
