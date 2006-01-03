@@ -19,7 +19,7 @@
 #include "compass.h"
 #include "track.h"
 #include "container.h"
-
+#include "debug.h"
 
 void *speech_handle;
 
@@ -45,6 +45,7 @@ int main(int argc, char **argv)
 	setlocale(LC_NUMERIC,"C");
 	gtk_set_locale();
 	setlocale(LC_NUMERIC,"C");
+	debug_init();
 	gtk_init(&argc, &argv);
 	gdk_rgb_init();
 

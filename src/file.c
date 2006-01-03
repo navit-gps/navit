@@ -9,25 +9,26 @@
 #include <glib.h>
 #include "file.h"
 
+static struct file *file_list;
+
 struct file *
 file_create(char *name)
 {
-        int fd;
         struct stat stat;
 	struct file *file=malloc(sizeof(*file)+strlen(name)+1);
 
 	if (! file)
 		return file; 
-        fd=open(name, O_RDONLY);
-	if (fd < 0) {
+        file->fd=open(name, O_RDONLY);
+	if (file->fd < 0) {
 		free(file);
 		return NULL;
 	}
-        fstat(fd, &stat);
+        fstat(file->fd, &stat);
         file->size=stat.st_size;
 	file->name=(char *)file+sizeof(*file);
 	strcpy(file->name, name);
-        file->begin=mmap(NULL, file->size, PROT_READ|PROT_WRITE, MAP_PRIVATE, fd, 0);
+        file->begin=mmap(NULL, file->size, PROT_READ|PROT_WRITE, MAP_PRIVATE, file->fd, 0);
 	g_assert(file->begin != NULL);
 	if (file->begin == (void *)0xffffffff) {
 		perror("mmap");
@@ -35,16 +36,32 @@ file_create(char *name)
 	g_assert(file->begin != (void *)0xffffffff);
         file->end=file->begin+file->size;
 	file->private=NULL;
-        close(fd);
 
 	g_assert(file != NULL); 
+	file->next=file_list;
+	file_list=file;
         return file;
 }
 
 void
-file_set_readonly(struct file *file)
+file_remap_readonly(struct file *f)
 {
-	mprotect(file->begin, file->end-file->begin, PROT_READ);
+	void *begin;
+	munmap(f->begin, f->size);
+        begin=mmap(f->begin, f->size, PROT_READ, MAP_PRIVATE, f->fd, 0);
+	if (f->begin != begin)
+		printf("remap failed\n");
+}
+
+void
+file_remap_readonly_all(void)
+{
+	struct file *f=file_list;
+
+	while (f) {
+		file_remap_readonly(f);
+		f=f->next;
+	}
 }
 
 void *
@@ -110,6 +127,7 @@ file_create_caseinsensitive(char *name)
 void
 file_destroy(struct file *f)
 {
+        close(f->fd);
 	munmap(f->begin, f->size);
 	free(f);	
 }
