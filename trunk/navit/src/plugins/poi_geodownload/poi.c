@@ -283,7 +283,7 @@ load_poi(char *filename, char *icon)
 	int i;
 	MdbCatalogEntry *entry;
 	GPtrArray *catalog;
-	struct poi *new = g_new(struct poi, 1);
+	struct poi *new = g_new0(struct poi, 1);
 
 	new->filename = filename;
 	new->icon = icon;
@@ -295,7 +295,7 @@ load_poi(char *filename, char *icon)
 		if (!strcasecmp(entry->object_name, "_INDEXDATA")) {
 			if (load_poi_table(new, entry)) {
 				printf("%s invalid\n", filename);
-				free(new);
+				g_free(new);
 				new=NULL;
 			}
 		}
