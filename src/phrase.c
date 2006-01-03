@@ -21,6 +21,6 @@ phrase_route_calculated(void *speech, void *route)
 
         eta=route_get_eta(route);
 
-        speech_sayf(speech,"Die Route wurde berechnet. Geschätzte Ankunftszeit %d Uhr %d  Entfernung %4.0f Kilometer", eta->tm_hour,eta->tm_min,route_get_len(route)/1000);
+        speech_sayf(speech,"Die Route wurde berechnet, geschÃ¤tzte Ankunftszeit %d Uhr %d  Entfernung %4.0f Kilometer", eta->tm_hour,eta->tm_min,route_get_len(route)/1000);
 
 }

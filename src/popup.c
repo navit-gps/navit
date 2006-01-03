@@ -118,6 +118,7 @@ popup_set_position(struct popup_item *item, void *param)
 	struct popup_item *ref=param;
 	struct popup *popup=ref->param;
 	printf("Position %s\n", ref->text);
+	g_assert(popup->co->vehicle != NULL);
 	vehicle_set_position(popup->co->vehicle, &popup->c);	
 }
 

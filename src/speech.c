@@ -1,5 +1,5 @@
 /* speechd simple client program
- * CVS revision: $Id: speech.c,v 1.3 2005-12-02 13:26:31 martin-s Exp $
+ * CVS revision: $Id: speech.c,v 1.4 2006-01-03 21:37:48 martin-s Exp $
  * Author: Tomas Cerha <cerha@brailcom.cz> */
 
 #include <sys/types.h>
@@ -18,25 +18,24 @@
 #include "speech.h"
 
 struct speech {
-	int sockfd;
+#ifdef HAVE_LIBSPEECHD
+	SPDConnection *conn;
+#endif
 };
 
 struct speech *
 speech_new(void) {
 #ifdef HAVE_LIBSPEECHD
 	struct speech *this;
-	int sockfd;
+	SPDConnection *conn;
 
-#ifdef SPD_FATAL
-	sockfd = spd_open("map","main",NULL);
-#else
-	sockfd = spd_init("map","main");
-#endif
-	if (sockfd == 0) 
+	conn = spd_open("navit","main",NULL,SPD_MODE_SINGLE);
+	if (! conn) 
 		return NULL;
 	this=g_new(struct speech,1);
 	if (this) {
-		this->sockfd=sockfd;
+		this->conn=conn;
+		spd_set_punctuation(conn, SPD_PUNCT_NONE);
 	}
 	return this;
 #else
@@ -49,7 +48,7 @@ speech_say(struct speech *this, char *text) {
 #ifdef HAVE_LIBSPEECHD
 	int err;
 
-	err = spd_sayf(this->sockfd, 2, text);
+	err = spd_sayf(this->conn, SPD_MESSAGE, text);
 	if (err != 1)
 		return 1;
 #endif
@@ -72,7 +71,7 @@ speech_sayf(struct speech *this, char *format, ...) {
 int 
 speech_destroy(struct speech *this) {
 #ifdef HAVE_LIBSPEECHD
-	spd_close(this->sockfd);
+	spd_close(this->conn);
 	g_free(this);
 #endif
 	return 0;
