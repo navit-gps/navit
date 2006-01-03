@@ -97,18 +97,18 @@ maneuver_required(struct navigation_item *old, struct navigation_item *new, int 
 	return 1;
 }
 
-int flag;
+int flag,old_level;
 extern void *speech_handle;
 
 static void
 make_maneuver(struct navigation_item *old, struct navigation_item *new)
 {
 	
-	int delta;
+	int delta,navmode=1,add_dir,level;
 	struct param_list param_list[20];
 
-	char angle_old[30],angle_new[30],angle_delta[30],cross_roads[30],position[30];
-	char command[256],*p,*dir;
+	char angle_old[30],angle_new[30],angle_delta[30],cross_roads[30],position[30],distance[30];
+	char command[256],*p,*dir,*strength;
 
 	param_list[0].name="Name1 Old";
 	param_list[0].value=old->name1;
@@ -118,12 +118,13 @@ make_maneuver(struct navigation_item *old, struct navigation_item *new)
 	param_list[2].value=new->name1;
 	param_list[3].name="Name2 New";
 	param_list[3].value=new->name2;
-	param_list[4].name="Angle Old";
-	param_list[5].name="Angle New";
+	param_list[4].name="Angle\nOld";
+	param_list[5].name="Angle\nNew";
 	param_list[6].name="Delta";
-	param_list[7].name="Cross-Roads";
+	param_list[7].name="X-\nRoads";
 	param_list[8].name="Position";
-	param_list[9].name="Command";
+	param_list[9].name="Dist";
+	param_list[10].name="Command";
 	if (old->points) {
 		if (!maneuver_required(old, new, &delta)) {
 			old->length+=new->length;
@@ -142,32 +143,59 @@ make_maneuver(struct navigation_item *old, struct navigation_item *new)
 			param_list[7].value=cross_roads;
 			sprintf(position,"0x%lx,0x%lx", new->start.x, new->start.y);
 			param_list[8].value=position;
-			sprintf(command,"Dem Strassenverlauf %d Meter folgen, dann ", old->length);
-			p=command+strlen(command);
+			sprintf(distance,"%d", old->length);
+			param_list[9].value=distance;
+			add_dir=1;
 			dir="rechts";
 			if (delta < 0) {
 				dir="links";
 				delta=-delta;
 			}
 			if (delta < 45) {
-				strcpy(p,"leicht ");
+				strength="leicht ";
 			} else if (delta < 105) {
+				strength="";
 			} else if (delta < 165) {
-				strcpy(p,"scharf ");
+				strength="scharf ";
 			}
-			p+=strlen(p);
-			strcpy(p,dir);
-			p+=strlen(p);
-			strcpy(p," abbiegen");
-			param_list[9].value=command;
+			level=0;
+			if (navmode) {
+				if (old->length < 20) {
+					level=1;
+					sprintf(command,"Jetzt ");
+				} else if (old->length <= 200) {
+					level=2;
+					sprintf(command,"In %d Metern ", old->length);
+				} else if (old->length <= 500) {
+					level=3;
+					sprintf(command,"In Kürze ");
+				} else {
+					level=4;
+					sprintf(command,"Dem Strassenverlauf %d Meter folgen", old->length);
+					add_dir=0;
+				}
+			} else {
+				sprintf(command,"Dem Strassenverlauf %d Meter folgen, dann ", old->length);
+				add_dir=1;
+			}
+			if (add_dir) {
+				p=command+strlen(command);
+				strcpy(p,strength);
+				p+=strlen(p);
+				strcpy(p,dir);
+				p+=strlen(p);
+				strcpy(p," abbiegen");
+			}
+			param_list[10].value=command;
 			if (flag) {
-#if 0
-				printf("command='%s'\n", command);
-				speech_say(speech_handle, command);
-#endif
+				if (level != old_level) {
+					printf("command='%s'\n", command);
+					speech_say(speech_handle, command);
+					old_level=level;
+				}
 				flag=0;
 			}
-			data_window_add(navigation_window, param_list, 10);
+			data_window_add(navigation_window, param_list, 11);
 			*old=*new;
 		}
 	} else {
