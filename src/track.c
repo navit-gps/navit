@@ -115,6 +115,7 @@ track_free_lines(struct track *tr)
 		}
 		tl=next;
 	}
+	tr->lines=NULL;
 }
 
 static int
@@ -217,7 +218,7 @@ track_update(struct track *tr, struct coord *c, int angle)
 struct track *
 track_new(struct map_data *ma)
 {
-	struct track *this=g_new(struct track, 1);
+	struct track *this=g_new0(struct track, 1);
 	this->ma=ma;
 
 	return this;
