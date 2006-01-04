@@ -238,7 +238,7 @@ display_text_render(char *text, struct graphics_font *font, int dx, int dy, int 
 	FT_Vector pen;
 	FT_UInt  glyph_index;
 	int n,len=strlen(text);
-	struct text_render *ret=malloc(sizeof(*ret)+len*sizeof(struct text_glyph *));
+	struct text_render *ret=g_malloc(sizeof(*ret)+len*sizeof(struct text_glyph *));
 	struct text_glyph *curr;
 
 	ret->glyph_count=len;
@@ -262,7 +262,7 @@ display_text_render(char *text, struct graphics_font *font, int dx, int dy, int 
 		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT );
 		FT_Render_Glyph(font->face->glyph, ft_render_mode_normal );
         
-		curr=malloc(sizeof(*curr)+slot->bitmap.rows*slot->bitmap.pitch);
+		curr=g_malloc(sizeof(*curr)+slot->bitmap.rows*slot->bitmap.pitch);
 		ret->glyph[n]=curr;
 
 		curr->x=(x>>6)+slot->bitmap_left;
@@ -320,14 +320,11 @@ display_text_free(struct text_render *text)
 	i=text->glyph_count;
 	while (i-- > 0) {
 		if ((*gp)->shadow) {
-			gdk_image_destroy((*gp)->shadow);
-#if 0
-			free((*gp)->shadow->mem);
-#endif
+			g_object_unref((*gp)->shadow);
 		}
-		free(*gp++);
+		g_free(*gp++);
 	}
-	free(text);
+	g_free(text);
 }
 
 static void
