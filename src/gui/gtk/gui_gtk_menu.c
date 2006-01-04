@@ -299,7 +299,7 @@ gui_gtk_menu_new(struct container *co, GtkWidget **widget)
 	
 		file=fopen("locations.txt","r");
 		while (file && fgets(buffer,8192,file)) {
-			dest=malloc(sizeof(*dest));
+			dest=g_new0(struct destination,1);
 			dest->co=co;
 			len=strlen(buffer)-1;
 			while (len >= 0 && buffer[len] == '\n') {
