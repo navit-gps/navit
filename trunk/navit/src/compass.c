@@ -92,7 +92,8 @@ compass_draw(struct compass *comp, struct container *co)
 #if 0
 		printf("dx %d dy %d dir=%f vehicle_dir=%f\n", dx, dy, dir, *vehicle_dir);
 #endif
-		dir-=*vehicle_dir;
+		if (! co->flags->orient_north)
+			dir-=*vehicle_dir;
 		handle(comp->gr, comp->green, &p, 20, dir);
 		p.x=8;
 		p.y=72;
