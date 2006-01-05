@@ -9,6 +9,12 @@ read(FILE,$header,64);
 
 select STDOUT; $| = 1;
 
+$count=$ARGV[1];
+while ($count) {
+	read(FILE,$record,64);
+	$count--;
+}
+
 while (read(FILE,$record,64))
 {
 	($flags,$status,$mode,$hdop,$vdop,$pdop,$sats,$timestampl,$timestamph,$latitude,$longitude,$altitude,$speed,$direction)=unpack("SCCCCCCLLddddd",$record);

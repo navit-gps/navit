@@ -101,6 +101,51 @@ int flag,old_level;
 extern void *speech_handle;
 
 static void
+get_distance(char *dst, int dist)
+{
+	if (dist < 100) {
+		dist=(dist+5)/10;
+		dist*=10;
+		sprintf(dst,"%d meter", dist);
+		return;
+	}
+	if (dist < 250) {
+		dist=(dist+13)/25;
+		dist*=25;
+		sprintf(dst,"%d meter", dist);
+		return;
+	}
+	if (dist < 500) {
+		dist=(dist+25)/50;
+		dist*=50;
+		sprintf(dst,"%d meter", dist);
+		return;
+	}
+	if (dist < 1000) {
+		dist=(dist+50)/100;
+		dist*=100;
+		sprintf(dst,"%d meter", dist);
+		return;
+	}
+	if (dist < 5000) {
+		dist=(dist+50)/100;
+		if (dist % 10) 
+			sprintf(dst,"%d,%d kilometer", dist/10,dist%10);
+		else
+			sprintf(dst,"%d kilometer", dist/10);
+		return;
+	}
+	if (dist < 100000) {
+		dist=(dist+500)/1000;
+		sprintf(dst,"%d kilometer", dist);
+		return;
+	}
+	dist=(dist+5000)/10000;
+	dist*=10;
+	sprintf(dst,"%d kilometer", dist);
+}
+
+static void
 make_maneuver(struct navigation_item *old, struct navigation_item *new)
 {
 	
@@ -109,6 +154,7 @@ make_maneuver(struct navigation_item *old, struct navigation_item *new)
 
 	char angle_old[30],angle_new[30],angle_delta[30],cross_roads[30],position[30],distance[30];
 	char command[256],*p,*dir,*strength;
+	char dist[256];
 
 	param_list[0].name="Name1 Old";
 	param_list[0].value=old->name1;
@@ -157,6 +203,9 @@ make_maneuver(struct navigation_item *old, struct navigation_item *new)
 				strength="";
 			} else if (delta < 165) {
 				strength="scharf ";
+			} else {
+				printf("delta=%d\n", delta);
+				strength="unbekannt ";
 			}
 			level=0;
 			if (navmode) {
@@ -165,13 +214,15 @@ make_maneuver(struct navigation_item *old, struct navigation_item *new)
 					sprintf(command,"Jetzt ");
 				} else if (old->length <= 200) {
 					level=2;
-					sprintf(command,"In %d Metern ", old->length);
+					get_distance(dist, old->length);
+					sprintf(command,"In %sn ", dist);
 				} else if (old->length <= 500) {
 					level=3;
 					sprintf(command,"In Kürze ");
 				} else {
 					level=4;
-					sprintf(command,"Dem Strassenverlauf %d Meter folgen", old->length);
+					get_distance(dist, old->length);
+					sprintf(command,"Dem Strassenverlauf %s folgen", dist);
 					add_dir=0;
 				}
 			} else {
