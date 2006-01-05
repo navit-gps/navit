@@ -466,7 +466,7 @@ street_get_param(struct segment *seg, struct param_list *param, int count, int v
 	param_add_hex("Unknown3", str->unknown3, &param, &count);
 	param_add_hex("Type", str->type, &param, &count);
 	param_add_hex("Name-Id", str->nameid, &param, &count);
-	if (str->segid) {
+	if (str->segid && str->nameid) {
 		street_name_get_by_id(&name, seg->blk_inf.mdata, str->nameid);
 
 		param_add_hex("Len", name.len, &param, &count);
