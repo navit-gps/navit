@@ -1,7 +1,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
-#include <malloc.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
 #include <dirent.h>
@@ -15,19 +14,18 @@ struct file *
 file_create(char *name)
 {
         struct stat stat;
-	struct file *file=malloc(sizeof(*file)+strlen(name)+1);
+	struct file *file= g_new0(struct file,1);
 
 	if (! file)
 		return file; 
         file->fd=open(name, O_RDONLY);
 	if (file->fd < 0) {
-		free(file);
+		g_free(file);
 		return NULL;
 	}
         fstat(file->fd, &stat);
         file->size=stat.st_size;
-	file->name=(char *)file+sizeof(*file);
-	strcpy(file->name, name);
+	file->name = g_strdup(name);
         file->begin=mmap(NULL, file->size, PROT_READ|PROT_WRITE, MAP_PRIVATE, file->fd, 0);
 	g_assert(file->begin != NULL);
 	if (file->begin == (void *)0xffffffff) {
@@ -129,7 +127,8 @@ file_destroy(struct file *f)
 {
         close(f->fd);
 	munmap(f->begin, f->size);
-	free(f);	
+	g_free(f->name);
+	g_free(f);	
 }
 
 int

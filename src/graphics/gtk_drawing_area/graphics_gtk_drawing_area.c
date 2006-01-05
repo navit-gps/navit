@@ -195,7 +195,7 @@ display_text_render_shadow(struct text_glyph *g)
 	unsigned char *p, *pm=g->pixmap;
 	GdkImage *ret;
 
-	shadow=malloc(str*(g->h+2));
+	shadow=malloc(str*(g->h+2)); /* do not use g_malloc() here */
 	memset(shadow, 0, str*(g->h+2));
 	for (y = 0 ; y < h ; y++) {	
 		p=shadow+str*y;
