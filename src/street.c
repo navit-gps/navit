@@ -1,6 +1,5 @@
 #include <assert.h>
 #include <stdio.h>
-#include <malloc.h>
 #include <unistd.h>
 #include <glib.h>
 #include "container.h"
@@ -349,7 +348,7 @@ street_coord_get(struct block_info *blk_inf, struct street_str *str)
 	if (debug)			
 		printf("p=%p points=%d\n",p_sav, points);
 	p=p_sav;
-	ret=malloc(sizeof(struct street_coord)+points*sizeof(struct coord));
+	ret=g_malloc(sizeof(struct street_coord)+points*sizeof(struct coord));
 	ret->count=points;
 	c=ret->c;	
 	while (points) {

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include <malloc.h>
 #include <assert.h>
+#include <glib.h>
 #include "file.h"
 #include "block.h"
 #include "data.h"
@@ -116,9 +116,8 @@ block_file_private_setup(struct file *file)
 	char *str;
 	struct file_private *file_priv;
 
-	file_priv=malloc(sizeof(*file_priv));
+	file_priv=g_malloc0(sizeof(*file_priv));
 	file->private=file_priv;
-	memset(file_priv, 0, sizeof(*file_priv));
 
 	p=file->begin+0x0c;
 	while (*p) {

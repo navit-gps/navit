@@ -1,4 +1,3 @@
-#include <malloc.h>
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
@@ -61,19 +60,20 @@ param_to_menu_new(char *name,struct param_list *plist, int c, int iso)
 	ret=popup_item_new_text(NULL,name,1);
 	last=NULL;
 	for (i = 0 ; i < c ; i++) {
-		char name_buffer[strlen(plist[i].name)+strlen(plist[i].value)+2];
-		char *text=name_buffer;
+		char *name_buffer = g_strjoin(":",plist[i].name, plist[i].value,NULL);
+		char *text = name_buffer;
 
-		sprintf(name_buffer,"%s:%s", plist[i].name, plist[i].value);
 		if (iso) {
 			text=g_convert(name_buffer,-1,"utf-8","iso8859-1",NULL,NULL,NULL);
 			if (! text) {
 				printf("problem converting '%s'\n", name_buffer);
 			}
 		}
-		curr=popup_item_new_text(&last, text, i);
+		curr=popup_item_new_text(&last,text,i);
 		if (iso)
-			free(text);
+			g_free(text);
+		g_free(name_buffer);
+									
 	}
 	ret->submenu=last;
 	return ret;
@@ -194,17 +194,14 @@ popup_display_list_default(struct display_list *d, struct popup_item **popup_lis
 	if (d->type == 4) desc="Point";
 	seg=(struct segment *)(d->data);
 	if (seg) {
-		if (d->label && strlen(d->label)) {
-			item_text=malloc(strlen(desc)+strlen(d->label)+2);
-			strcpy(item_text, desc);
-			strcat(item_text," ");
-			strcat(item_text, d->label);	
-		} else {
-			item_text=desc;
-		}
+		if (d->label && strlen(d->label))
+			item_text=g_strjoin(" ",desc,d->label,NULL);
+		else
+			item_text=g_strdup(desc);
 		text=g_convert(item_text,-1,"utf-8","iso8859-1",NULL,NULL,NULL);
 		curr_item=popup_item_new_text(popup_list,text,1);
 		g_free(text);
+		g_free(item_text);
 
 		curr_item->submenu=param_to_menu_new("File", plist, file_get_param(seg->blk_inf.file, plist, 100), 1);
 		submenu=curr_item->submenu;
