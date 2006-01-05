@@ -17,7 +17,7 @@ static int sigsegv(void)
 	fprintf(f,"segmentation fault received\n");
 	t=time(NULL);
 	fprintf(f,"Time: %s", ctime(&t));
-	file_remap_readonly_all();
+	file_unmap_all();
 	fprintf(f,"dumping core\n");
 	fclose(f);	
 	abort();

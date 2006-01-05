@@ -55,12 +55,33 @@ void
 file_remap_readonly_all(void)
 {
 	struct file *f=file_list;
+	int limit=1000;
 
-	while (f) {
+	while (f && limit-- > 0) {
 		file_remap_readonly(f);
 		f=f->next;
 	}
 }
+
+void
+file_unmap(struct file *f)
+{
+	munmap(f->begin, f->size);
+}
+
+void
+file_unmap_all(void)
+{
+	struct file *f=file_list;
+	int limit=1000;
+
+	while (f && limit-- > 0) {
+		file_unmap(f);
+		f=f->next;
+	}
+}
+
+
 
 void *
 file_opendir(char *dir)
