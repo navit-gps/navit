@@ -1,6 +1,7 @@
 struct container;
 struct block_info;
 struct segment;
+struct transformation;
 struct street_coord_handle;
 
 struct street_header {
