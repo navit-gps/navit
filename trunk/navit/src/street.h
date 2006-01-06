@@ -50,7 +50,7 @@ void street_draw_block(struct block_info *blk_inf, unsigned char *start, unsigne
 struct street_coord *street_coord_get(struct block_info *blk_inf, struct street_str *str);
 struct street_coord_handle * street_coord_handle_new(struct block_info *blk_inf, struct street_str *str);
 void street_coord_handle_rewind(struct street_coord_handle *h);
-int street_coord_handle_get(struct street_coord_handle *h, struct coord *c);
+int street_coord_handle_get(struct street_coord_handle *h, struct coord *c, int count);
 void street_coord_handle_destroy(struct street_coord_handle *handle);
 void street_get_block(struct map_data *mdata, struct transformation *t, void (*callback)(void *data), void *data);
 int street_get_by_id(struct map_data *mdat, int id, struct block_info *res_blk_inf, struct street_str **res_str);
@@ -58,5 +58,4 @@ void street_bti_draw_block(struct block_info *blk_inf, unsigned char *start, uns
 int street_get_param(struct segment *seg, struct param_list *param, int count, int verbose);
 int street_bti_get_param(struct segment *seg, struct param_list *param, int count);
 void street_route_draw(struct container *co);
-int street_coord_handle_get(struct street_coord_handle *h, struct coord *c);
 

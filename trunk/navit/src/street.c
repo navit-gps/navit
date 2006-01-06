@@ -198,22 +198,27 @@ street_coord_handle_rewind(struct street_coord_handle *h)
 }
 
 int
-street_coord_handle_get(struct street_coord_handle *h, struct coord *c)
+street_coord_handle_get(struct street_coord_handle *h, struct coord *c, int count)
 {
 	unsigned char *n;
+	int ret=0;
 
-	if (h->p >= h->end) 
-		return 1;
-	if (h->status >= 4)
-		return 1;
-	n=h->p;
-	if (street_get_coord(&h->p, h->bytes, h->ref, c)) {
-		h->next=n;
-		h->status+=2;
-		if (h->status == 5)
-			return 1;
+	while (count > 0) {
+		if (h->p >= h->end) 
+			return ret;
+		if (h->status >= 4)
+			return ret;
+		n=h->p;
+		if (street_get_coord(&h->p, h->bytes, h->ref, c)) {
+			h->next=n;
+			h->status+=2;
+			if (h->status == 5)
+				return ret;
+		}
+		c++;
+		ret++;
 	}
-	return 0;
+	return ret;
 }
 
 void
@@ -390,7 +395,7 @@ street_get_block_process(struct block_info *blk_inf, unsigned char *p, unsigned 
 		h.p_rewind=h.p;
 		h.status_rewind=h.status;
 		param->callback(str, &h, param->data);
-		while (! h.next && street_coord_handle_get(&h, NULL));
+		while (! h.next && street_coord_handle_get(&h, NULL, 1));
 		h.p=h.next;
 		str++;
 	}
