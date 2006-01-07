@@ -217,6 +217,7 @@ street_coord_handle_get(struct street_coord_handle *h, struct coord *c, int coun
 		}
 		c++;
 		ret++;
+		count--;
 	}
 	return ret;
 }
