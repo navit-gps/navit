@@ -113,6 +113,8 @@ tree_search_h(struct file *file, unsigned int search)
 			if (tleaf->value == search)
 				return tleaf->match;
 			if (tleaf->value > search) {
+				if (debug)
+					printf("lower\n");
 				if (tleaf->lower)
 					last=tleaf->lower;
 				break;
@@ -291,6 +293,8 @@ tree_search_hv_map(struct map_data *mdat, int map, unsigned int search1, unsigne
 	int h,len,ret=0;
 	int debug=0;
 
+	if (debug)
+		printf("tree_search_hv_map(0x%x 0x%x)\n",search1, search2);
 	while (mdat && !ret) {
 		f_dat=mdat->file[map];
 		strcpy(filename, f_dat->name);
@@ -300,6 +304,8 @@ tree_search_hv_map(struct map_data *mdat, int map, unsigned int search1, unsigne
 		strcpy(filename+len-3,"v1");
 		f_idx_v=file_create(filename);
 		h=tree_search_h(f_idx_h, search1);
+		if (debug)
+			printf("h=0x%x\n", h);
 		if (h) {
 			ret=tree_search_v(f_idx_v, h, search2);
 			if (ret) {

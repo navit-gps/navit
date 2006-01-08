@@ -281,7 +281,7 @@ navigation_path_description(void *route)
 		if (id) {
 			if (id < 0)
 				id=-id;
-			street_get_by_id(mdata, id, &blk_inf, &str);
+			street_get_by_id(mdata, curr->country, id, &blk_inf, &str);
 			coord=street_coord_get(&blk_inf, str);
 			start=coord->c;
 			end=coord->c+coord->count-1;

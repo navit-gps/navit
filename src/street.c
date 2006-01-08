@@ -414,7 +414,7 @@ street_get_block(struct map_data *mdata, struct transformation *t, void (*callba
 }
 
 int
-street_get_by_id(struct map_data *mdat, int id, struct block_info *res_blk_inf, struct street_str **res_str)
+street_get_by_id(struct map_data *mdat, int country, int id, struct block_info *res_blk_inf, struct street_str **res_str)
 {
 	int debug=0;
 	int res,block,num;
@@ -424,7 +424,11 @@ street_get_by_id(struct map_data *mdat, int id, struct block_info *res_blk_inf, 
 	struct street_header_type hdr_type;
 	struct street_str *str;
 
-	if (tree_search_hv_map(mdat, file_street_str, (id >> 8) | 0x31000000, id & 0xff, &res, &mdat_res)) {
+	if (debug)
+		printf("street_get_by_id country 0x%x id %d\n", country, id);
+	if (tree_search_hv_map(mdat, file_street_str, (id >> 8) | (country << 24), id & 0xff, &res, &mdat_res)) {
+		if (debug)
+			printf("not found\n");
 		return 1;
 	}
 
