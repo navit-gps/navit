@@ -215,6 +215,7 @@ label_line(struct graphics *gr, struct graphics_gc *fg, struct graphics_gc *bg, 
 	int i,x,y,tl;
 	double dx,dy,l;
 	struct point p_t;
+	char *utf8;
 
 	tl=strlen(label)*400;
 	for (i = 0 ; i < count-1 ; i++) {
@@ -241,7 +242,9 @@ label_line(struct graphics *gr, struct graphics_gc *fg, struct graphics_gc *bg, 
 #if 0
 			printf("display_text: '%s', %d, %d, %d, %d %d\n", label, x, y, dx*0x10000/l, dy*0x10000/l, l);
 #endif
-			gr->draw_text(gr, fg, bg, font, label, &p_t, dx*0x10000/l, dy*0x10000/l);
+			utf8=g_convert(label, -1, "utf8", "iso8859-1", NULL, NULL, NULL);		
+			gr->draw_text(gr, fg, bg, font, utf8, &p_t, dx*0x10000/l, dy*0x10000/l);
+			g_free(utf8);
 		}
 	}	
 }
@@ -250,6 +253,7 @@ void
 display_labels(struct display_list *list, struct graphics *gr, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font)
 {
 	struct point p;
+	char *utf8;
 	while (list) {
 		if (list->label) {
 			switch (list->type) {
@@ -260,7 +264,9 @@ display_labels(struct display_list *list, struct graphics *gr, struct graphics_g
 			case 3:
 				p.x=list->p[0].x+3;
 				p.y=list->p[0].y+10;
-				gr->draw_text(gr, fg, bg, font, list->label, &p, 0x10000, 0);
+				utf8=g_convert(list->label, -1, "utf8", "iso8859-1", NULL, NULL, NULL);		
+				gr->draw_text(gr, fg, bg, font, utf8, &p, 0x10000, 0);
+				g_free(utf8);
 				break;
 			}
 		}
