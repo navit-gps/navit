@@ -53,7 +53,7 @@ void street_coord_handle_rewind(struct street_coord_handle *h);
 int street_coord_handle_get(struct street_coord_handle *h, struct coord *c, int count);
 void street_coord_handle_destroy(struct street_coord_handle *handle);
 void street_get_block(struct map_data *mdata, struct transformation *t, void (*callback)(void *data), void *data);
-int street_get_by_id(struct map_data *mdat, int id, struct block_info *res_blk_inf, struct street_str **res_str);
+int street_get_by_id(struct map_data *mdat, int country, int id, struct block_info *res_blk_inf, struct street_str **res_str);
 void street_bti_draw_block(struct block_info *blk_inf, unsigned char *start, unsigned char *end, void *data);
 int street_get_param(struct segment *seg, struct param_list *param, int count, int verbose);
 int street_bti_get_param(struct segment *seg, struct param_list *param, int count);

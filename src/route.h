@@ -1,5 +1,6 @@
 struct route_path_segment {
 	struct route_path_segment *next;
+	int country;
 	long segid;
 	int offset;
 	int dir;
