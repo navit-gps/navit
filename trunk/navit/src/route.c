@@ -79,6 +79,7 @@ struct route_segment {
 	struct route_point *start;
 	struct route_point *end;
 	struct street_str *str;
+	struct street_type *strt;
 	int limit;
 	int len;
 	int offset;
@@ -86,7 +87,7 @@ struct route_segment {
 
 struct street_info {
 	struct street_header *hdr;
-	struct street_type *typ;
+	struct street_type *strt;
 	struct street_str *str;
 	unsigned char *p;
 	int bytes;
@@ -153,10 +154,12 @@ route_mapdata_get(struct route *this)
 }
 
 static void
-route_add_path_segment(struct route *this, int segid, int offset, struct coord *start, struct coord *end, int dir, int len, int time)
+route_add_path_segment(struct route *this, int country, int segid, int offset, struct coord *start, struct coord *end, int dir, int len, int time)
 {
         struct route_path_segment *segment=g_new0(struct route_path_segment,1);
+
         segment->next=NULL;
+	segment->country=country;
         segment->segid=segid;
         segment->offset=offset;
 	segment->dir=dir;
@@ -246,7 +249,7 @@ route_street_foreach(struct block_info *blk_inf, unsigned char *p, unsigned char
 
 	str_inf.bytes=street_get_bytes(blk_inf->block);	
 	
-	str_inf.typ=(struct street_type *)p;
+	str_inf.strt=(struct street_type *)p;
 	p+=blk_inf->block->count*sizeof(struct street_type);  
 
 	str=(struct street_str *)p;
@@ -262,8 +265,8 @@ route_street_foreach(struct block_info *blk_inf, unsigned char *p, unsigned char
 		str_inf.str=str;
 		str_inf.p=p;
 		func(blk_inf, &str_inf, &p, end-4, data);
-		if (str_inf.include)
-			str_inf.typ++;
+		if (!str_inf.include)
+			str_inf.strt++;
 		str++;
 	}
 }
@@ -333,7 +336,7 @@ route_points_free(struct route *this)
 }
 
 static void
-route_segment_add(struct route *this, struct route_point *start, struct route_point *end, int len, struct street_str *str, int offset, int limit)
+route_segment_add(struct route *this, struct route_point *start, struct route_point *end, int len, struct street_str *str, struct street_type *strt, int offset, int limit)
 {
 	struct route_segment *s;
 	s=g_new0(struct route_segment,1);
@@ -345,12 +348,13 @@ route_segment_add(struct route *this, struct route_point *start, struct route_po
 	end->end=s;
 	s->len=len;
 	s->str=str;
+	s->strt=strt;
 	s->offset=offset;
 	s->limit=limit;
 	s->next=this->route_segments;
 	this->route_segments=s;
 	if (debug_route)
-		printf("l (0x%lx,0x%lx0x%x)-(0x%lx,0x%lx,0x%x)\n", start->c.xy.x, start->c.xy.y, start->c.h, end->c.xy.x, end->c.xy.y, end->c.h);
+		printf("l (0x%lx,0x%lx,0x%x)-(0x%lx,0x%lx,0x%x)\n", start->c.xy.x, start->c.xy.y, start->c.h, end->c.xy.x, end->c.xy.y, end->c.h);
 	
 }
 
@@ -452,7 +456,7 @@ route_process_street_graph(struct block_info *blk_inf, struct street_info *str_i
 		limit=0x30;
 
 	if (str_inf->str->limit != 0x33)
-		route_segment_add(this, s_pnt, e_pnt, len, str_inf->str, 0, limit);
+		route_segment_add(this, s_pnt, e_pnt, len, str_inf->str, str_inf->strt, 0, limit);
 	debug_route=0;
 	*p-=2*str_inf->bytes;
 }
@@ -561,21 +565,21 @@ route_find(struct route *this, struct route_info *rt_start, struct route_info *r
 	if (start2->value != -1) 
 		val2=start2->value+route_value(rt_start->str_inf.str->type, rt_start->seg2_len);
 
-	route_add_path_segment(this, 0, 0, &rt_start->click.xy, &rt_start->pos.xy, 1, 0, 0);
+	route_add_path_segment(this, 0, 0, 0, &rt_start->click.xy, &rt_start->pos.xy, 1, 0, 0);
 	type=rt_start->str_inf.str->type;
 	if (val1 < val2) {
 		ret=1;
 		start=start1;
 		slen=transform_distance(&rt_start->pos.xy, &rt_start->line1.xy);
-		route_add_path_segment(this, 0, 0, &rt_start->pos.xy, &rt_start->line1.xy, 1, slen, route_time(type, slen));
-		route_add_path_segment(this, rt_start->str_inf.str->segid, rt_start->offset, NULL, NULL, -1, rt_start->seg1_len, route_time(type, rt_start->seg1_len));
+		route_add_path_segment(this, 0, 0, 0, &rt_start->pos.xy, &rt_start->line1.xy, 1, slen, route_time(type, slen));
+		route_add_path_segment(this, rt_start->str_inf.strt->country, rt_start->str_inf.str->segid, rt_start->offset, NULL, NULL, -1, rt_start->seg1_len, route_time(type, rt_start->seg1_len));
 	}
 	else {
 		ret=2;
 		start=start2;
 		slen=transform_distance(&rt_start->pos.xy, &rt_start->line2.xy);
-		route_add_path_segment(this, 0, 0, &rt_start->pos.xy, &rt_start->line2.xy, 1, slen, route_time(type, slen));
-		route_add_path_segment(this, rt_start->str_inf.str->segid, -rt_start->offset, NULL, NULL, 1, rt_start->seg2_len, route_time(type, rt_start->seg2_len));
+		route_add_path_segment(this, 0, 0, 0, &rt_start->pos.xy, &rt_start->line2.xy, 1, slen, route_time(type, slen));
+		route_add_path_segment(this, rt_start->str_inf.strt->country, rt_start->str_inf.str->segid, -rt_start->offset, NULL, NULL, 1, rt_start->seg2_len, route_time(type, rt_start->seg2_len));
 	}
 
 	while (start->value) {
@@ -595,14 +599,14 @@ route_find(struct route *this, struct route_info *rt_start, struct route_info *r
 		len+=s->len;
 		seg_time=route_time(s->str->type, s->len);
 		time+=seg_time;
-		route_add_path_segment(this, s->str->segid, s->offset, NULL, NULL, dir, s->len, seg_time);
+		route_add_path_segment(this, s->strt->country, s->str->segid, s->offset, NULL, NULL, dir, s->len, seg_time);
 	}
 	if (s) {
 		if (s->start->c.xy.x == rt_end->seg1.xy.x && s->start->c.xy.y == rt_end->seg1.xy.y) 
-			route_add_path_segment(this, 0, 0, &rt_end->pos.xy, &rt_end->line1.xy, -1, 0, 0);
+			route_add_path_segment(this, 0, 0, 0, &rt_end->pos.xy, &rt_end->line1.xy, -1, 0, 0);
 		else
-			route_add_path_segment(this, 0, 0, &rt_end->pos.xy, &rt_end->line2.xy, -1, 0, 0);
-		route_add_path_segment(this, 0, 0, &rt_end->click.xy, &rt_end->pos.xy, -1, 0, 0);
+			route_add_path_segment(this, 0, 0, 0, &rt_end->pos.xy, &rt_end->line2.xy, -1, 0, 0);
+		route_add_path_segment(this, 0, 0, 0, &rt_end->click.xy, &rt_end->pos.xy, -1, 0, 0);
 #if 0
 		printf("len %5.3f\n", len/1000);
 #endif
@@ -957,8 +961,8 @@ route_do_start(struct route *this, struct route_info *rt_start, struct route_inf
 	seg1=route_point_add(this, &rt_end->seg1, 1);
 	pos=route_point_add(this, &rt_end->pos, 2);
 	seg2=route_point_add(this ,&rt_end->seg2, 1);
-	route_segment_add(this, seg1, pos, rt_end->seg1_len, rt_end->str_inf.str, rt_end->offset, 0);
-	route_segment_add(this, seg2, pos, rt_end->seg2_len, rt_end->str_inf.str, -rt_end->offset, 0);
+	route_segment_add(this, seg1, pos, rt_end->seg1_len, rt_end->str_inf.str, rt_end->str_inf.strt, rt_end->offset, 0);
+	route_segment_add(this, seg2, pos, rt_end->seg2_len, rt_end->str_inf.str, rt_end->str_inf.strt, -rt_end->offset, 0);
 
 	printf("flood\n");
 	route_flood(this, rt_end);
