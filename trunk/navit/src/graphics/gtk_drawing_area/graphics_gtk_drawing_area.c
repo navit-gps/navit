@@ -73,6 +73,7 @@ static struct graphics_font *font_new(struct graphics *gr, int size)
 		return NULL;
 	}
         FT_Set_Char_Size(font->face, 0, size, 300, 300);
+	FT_Select_Charmap(font->face, FT_ENCODING_UNICODE);
 	return font;
 }
 
@@ -237,10 +238,13 @@ display_text_render(char *text, struct graphics_font *font, int dx, int dy, int 
 	FT_Matrix matrix;
 	FT_Vector pen;
 	FT_UInt  glyph_index;
-	int n,len=strlen(text);
-	struct text_render *ret=g_malloc(sizeof(*ret)+len*sizeof(struct text_glyph *));
+	int n,len;
+	struct text_render *ret;
 	struct text_glyph *curr;
+	wchar_t wtext[1024];
 
+	len=mbstowcs(wtext, text, 1024);
+	ret=g_malloc(sizeof(*ret)+len*sizeof(struct text_glyph *));
 	ret->glyph_count=len;
 
 	matrix.xx = dx;
@@ -253,12 +257,13 @@ display_text_render(char *text, struct graphics_font *font, int dx, int dy, int 
 	x <<= 6;
 	y <<= 6;
 	FT_Set_Transform( font->face, &matrix, &pen );
+	
 
 
 	for ( n = 0; n < len; n++ )
 	{
 
-		glyph_index = FT_Get_Char_Index(font->face, text[n]);
+		glyph_index = FT_Get_Char_Index(font->face, wtext[n]);
 		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT );
 		FT_Render_Glyph(font->face->glyph, ft_render_mode_normal );
         
