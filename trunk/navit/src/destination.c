@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
 #include <gtk/gtk.h>
 #include "coord.h"
@@ -43,7 +44,7 @@ struct search_param {
 	int number_low, number_high;
 	GtkWidget *clist;
 	int count;
-} search_param2;
+} search_param2 = {};
 
 struct destination {
 	struct town *town;
@@ -442,7 +443,7 @@ destination_street_search(gpointer key, gpointer value, gpointer user_data)
 
 static void changed(GtkWidget *widget, struct search_param *search)
 {
-	const char *str;
+	char *str;
 	char *empty[9]={NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 	char *dash;
 
@@ -455,7 +456,8 @@ static void changed(GtkWidget *widget, struct search_param *search)
 
 	search->count=row_count;
 
-	str=gtk_entry_get_text(GTK_ENTRY(widget));
+	str=g_convert(gtk_entry_get_text(GTK_ENTRY(widget)),-1,"iso8859-1","utf-8",NULL,NULL,NULL);
+	/*FIXME free buffers with g_free() after search or when the dialog gets closed. */
 
 	if (widget == entry_country) {
 		if (search->country_hash) g_hash_table_destroy(search->country_hash);
@@ -473,9 +475,21 @@ static void changed(GtkWidget *widget, struct search_param *search)
 		search->street_hash=NULL;
 	}
 
+	if (widget != entry_number) {
+		gtk_entry_set_text(GTK_ENTRY(entry_number),"");
+		if (widget != entry_street) {
+			gtk_entry_set_text(GTK_ENTRY(entry_street),"");
+			if (widget != entry_city) {
+				gtk_entry_set_text(GTK_ENTRY(entry_city),"");
+			}
+		}
+	}
+
 	if (widget == entry_country) {
 		search->country_hash=destination_country_new();
-		search->country=str;
+		g_free(str);
+		if (search->country) g_free(search->country);
+		search->country = str = g_strdup(gtk_entry_get_text(GTK_ENTRY(widget)));
 		country_search_by_name(str, 1, destination_country_add, search);
 		country_search_by_car(str, 1, destination_country_add, search);
 		country_search_by_iso2(str, 1, destination_country_add, search);
@@ -483,8 +497,26 @@ static void changed(GtkWidget *widget, struct search_param *search)
 		g_hash_table_foreach(search->country_hash, destination_country_show, search);
 	}
 	if (widget == entry_city) {
+		int i;
+		for(i = 0 ;i < strlen(str); i++) {
+			char u = toupper(str[i]);
+
+			if (u == 'ä') str[i] = 'a';
+			if (u == 'ö') str[i] = 'o';
+			if (u == 'ü') str[i] = 'u';
+			if (u == 'ß') {
+				char *tmp;
+				str[i] = '\0';
+				tmp = g_strjoin(NULL, str, "ss", str[i+1], NULL);
+				g_free(str);
+				str = tmp;
+				i++;
+			}
+			printf("\"%s\"\n",str);
+		}
 		printf("Ort: '%s'\n", str);
 		if (strlen(str) > 1) {
+			if (search->town) g_free(search->town);
 			search->town=str;
 			search->town_hash=destination_town_new();
 			search->district_hash=destination_town_new();
@@ -494,6 +526,7 @@ static void changed(GtkWidget *widget, struct search_param *search)
 	}
 	if (widget == entry_street) {
 		printf("Street: '%s'\n", str);
+		if (search->street) g_free(search->street);
 		search->street=str;
 		search->street_hash=destination_street_new();
 		g_hash_table_foreach(search->town_hash, destination_street_search, search);
@@ -639,6 +672,8 @@ int destination_address(struct container *co)
 	g_signal_connect(G_OBJECT(listbox), "select-row", G_CALLBACK(select_row), NULL);
 	
 	gtk_widget_show_all(window2);
+
+	gtk_entry_set_text(GTK_ENTRY(entry_country),"Deutschland");
 
 	return 0;
 }
