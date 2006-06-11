@@ -33,12 +33,12 @@ int selected;
 
 struct search_param {
 	struct map_data *map_data;
-	const char *country;
+	char *country;
 	GHashTable *country_hash;
-	const char *town;
+	char *town;
 	GHashTable *town_hash;
 	GHashTable *district_hash;
-	const char *street;
+	char *street;
 	GHashTable *street_hash;
 	const char *number;
 	int number_low, number_high;
@@ -501,7 +501,7 @@ static void changed(GtkWidget *widget, struct search_param *search)
 		for(i = 0 ;i < strlen(str); i++) {
 			unsigned char u = str[i];
 
-			if (u  == 0xc4 || u == 0xe4) str[i] = 'a';
+			if (u == 0xc4 || u == 0xe4) str[i] = 'a';
 			if (u == 0xd6 || u == 0xf6) str[i] = 'o';
 			if (u == 0xdc || u == 0xfc) str[i] = 'u';
 			if (u == 0xdf) {
@@ -514,7 +514,7 @@ static void changed(GtkWidget *widget, struct search_param *search)
 			}
 			printf("\"%s\"\n",str);
 		}
-		printf("Ort: '%s'\n", str);
+		printf("Town: '%s'\n", str);
 		if (strlen(str) > 1) {
 			if (search->town) g_free(search->town);
 			search->town=str;
@@ -529,8 +529,10 @@ static void changed(GtkWidget *widget, struct search_param *search)
 		if (search->street) g_free(search->street);
 		search->street=str;
 		search->street_hash=destination_street_new();
-		g_hash_table_foreach(search->town_hash, destination_street_search, search);
-		g_hash_table_foreach(search->street_hash, destination_street_show, search);
+		if (search->town_hash)
+			g_hash_table_foreach(search->town_hash, destination_street_search, search);
+		if (search->street_hash)
+			g_hash_table_foreach(search->street_hash, destination_street_show, search);
 	}
 	if (widget == entry_number) {
 		char buffer[strlen(str)+1];
@@ -553,7 +555,8 @@ static void changed(GtkWidget *widget, struct search_param *search)
 				search->number_high=atoi(str);
 			}
 		}
-		g_hash_table_foreach(search->street_hash, destination_street_show_number, search);
+		if (search->street_hash)
+			g_hash_table_foreach(search->street_hash, destination_street_show_number, search);
 	}
 	while (search->count-- > 0) {
 		gtk_clist_append(GTK_CLIST(listbox), empty);
