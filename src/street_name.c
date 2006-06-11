@@ -54,7 +54,7 @@ struct street_search_priv {
 
 static int street_name_compare(struct street_name_index *i1, struct street_name_index *i2, int partial)
 {
-	char c1_u,c2_u;
+	unsigned char c1_u,c2_u;
 	int ret=0;
 	int debug=0;
 
