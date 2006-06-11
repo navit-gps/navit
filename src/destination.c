@@ -44,7 +44,7 @@ struct search_param {
 	int number_low, number_high;
 	GtkWidget *clist;
 	int count;
-} search_param2 = {};
+} search_param2;
 
 struct destination {
 	struct town *town;
@@ -499,15 +499,15 @@ static void changed(GtkWidget *widget, struct search_param *search)
 	if (widget == entry_city) {
 		int i;
 		for(i = 0 ;i < strlen(str); i++) {
-			char u = toupper(str[i]);
+			unsigned char u = str[i];
 
-			if (u == 'ä') str[i] = 'a';
-			if (u == 'ö') str[i] = 'o';
-			if (u == 'ü') str[i] = 'u';
-			if (u == 'ß') {
+			if (u  == 0xc4 || u == 0xe4) str[i] = 'a';
+			if (u == 0xd6 || u == 0xf6) str[i] = 'o';
+			if (u == 0xdc || u == 0xfc) str[i] = 'u';
+			if (u == 0xdf) {
 				char *tmp;
 				str[i] = '\0';
-				tmp = g_strjoin(NULL, str, "ss", str[i+1], NULL);
+				tmp = g_strjoin(NULL, str, "ss", str+i+1, NULL);
 				g_free(str);
 				str = tmp;
 				i++;
