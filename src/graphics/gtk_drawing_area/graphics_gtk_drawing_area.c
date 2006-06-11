@@ -47,6 +47,7 @@ char *fontlist[]={
 	"/usr/X11R6/lib/X11/fonts/msttcorefonts/arial.ttf",
 	"/usr/X11R6/lib/X11/fonts/truetype/arial.ttf",
 	"/usr/share/fonts/truetype/msttcorefonts/arial.ttf",
+	"/usr/share/fonts/ttf/arial.ttf",
 	NULL,
 };
 
