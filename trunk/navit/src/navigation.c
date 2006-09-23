@@ -241,7 +241,8 @@ make_maneuver(struct navigation_item *old, struct navigation_item *new)
 			if (flag) {
 				if (level != old_level) {
 					printf("command='%s'\n", command);
-					speech_say(speech_handle, command);
+					if (speech_handle)
+						speech_say(speech_handle, command);
 					old_level=level;
 				}
 				flag=0;
