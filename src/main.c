@@ -65,6 +65,8 @@ int main(int argc, char **argv)
 		g_warning("Environment-Variable GPSDATA not set - No gps tracking. Set it to file:filename or gpsd://host[:port]");
 	}
 	co->speech=speech_new();
+	if (! co->speech) 
+		g_warning("Can't connect to speechd, no speech output available");
 	speech_handle=co->speech;
 	if (co->vehicle)
 		co->compass=compass_new(co);
