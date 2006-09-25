@@ -7,7 +7,7 @@
 
 
 
-static int sigsegv(void)
+static void sigsegv(int sig)
 {
 	FILE *f;
 	time_t t;
