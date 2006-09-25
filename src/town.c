@@ -17,20 +17,20 @@
 static void
 town_get(struct town *town, unsigned char **p)
 {
-	town->id=get_long(p);
+	town->id=get_u32(p);
 	town->c=coord_get(p);
 	town->name=get_string(p);
 	town->district=get_string(p);
 	town->postal_code1=get_string(p);
-	town->order=get_char(p);
-	town->country=get_short(p);
-	town->type=get_char(p);
-	town->unknown2=get_long(p);
-	town->size=get_char(p);
-	town->street_assoc=get_long(p);
-	town->unknown3=get_char(p);
+	town->order=get_u8(p);
+	town->country=get_u16(p);
+	town->type=get_u8(p);
+	town->unknown2=get_u32(p);
+	town->size=get_u8(p);
+	town->street_assoc=get_u32(p);
+	town->unknown3=get_u8(p);
 	town->postal_code2=get_string(p);
-	town->unknown4=get_long(p);
+	town->unknown4=get_u32(p);
 }
 
 void
@@ -85,13 +85,13 @@ town_tree_process(int version, int leaf, unsigned char **s2, struct map_data *md
 	char *name;
 	int ret,i,debug=0;
 
-	country=get_short(s2);
+	country=get_u16(s2);
 	name=get_string(s2);
 	if (debug) {
 		printf("Country: 0x%x ", country);
 		printf("Town: '%s' ", name);
 	}
-	len=get_long(s2);
+	len=get_u32(s2);
 	
 	blk_off=(struct block_offset *)(*s2);
 	*s2+=len*4;
@@ -237,7 +237,7 @@ town_get_param(struct segment *seg, struct param_list *param, int count)
 	p=(unsigned char *)(seg->blk_inf.block);
 	p+=sizeof(*seg->blk_inf.block);
 	
-        param_add_hex("Block Unknown", get_long(&p), &param, &count);
+        param_add_hex("Block Unknown", get_u32(&p), &param, &count);
 	p=seg->data[0];
         param_add_hex("Address", p-seg->blk_inf.file->begin, &param, &count);
 	town_get(&town, &p);

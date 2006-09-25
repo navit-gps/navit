@@ -192,7 +192,7 @@ tree_search(int version, struct file *file, unsigned char *p, int (*tree_func)(i
 	}
 	while (p < end) {
 		psav=p;
-		high=get_long(&p);
+		high=get_u32(&p);
 		if (high == -1)
 			leaf=1;
 		res=tree_func(version, leaf, &p, mdat, data);

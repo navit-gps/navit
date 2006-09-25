@@ -72,8 +72,8 @@ block_binarytree_walk(struct block **block, unsigned char **p, struct coord *c, 
 		*block=block_get_byindex(blk_inf->file, (*block)->next, p);
 		*p-=20;
 	}
-	blk_num=get_long(p);
-        val=get_long(p); 
+	blk_num=get_u32(p);
+        val=get_u32(p); 
 
 	if (blk_num != -1)
 		ret++;
@@ -122,10 +122,10 @@ block_file_private_setup(struct file *file)
 	p=file->begin+0x0c;
 	while (*p) {
 		str=get_string(&p);
-		len=get_long(&p);
+		len=get_u32(&p);
 		t=p;
 		if (! strcmp(str,"binaryTree")) {
-			file_priv->binarytree=get_long(&t);
+			file_priv->binarytree=get_u32(&t);
 		}
 		p+=len;
 	}
@@ -173,7 +173,7 @@ block_foreach_visible(struct block_info *blk_inf, struct transformation *t, int 
 		int dummy1,dummy2,xy,i,count;
 		struct block *block=block_get_byindex(blk_inf->file, file_priv->binarytree, &p);
 		p2=p;
-		dummy1=get_long(&p2);
+		dummy1=get_u32(&p2);
 		if (block->count != -1 || dummy1 != -1) {
 			printf("ERROR2 0x%x\n", block->count);
 		}
@@ -181,8 +181,8 @@ block_foreach_visible(struct block_info *blk_inf, struct transformation *t, int 
 		p=p2;
 		for (i = 0 ; i < limit ; i++) {
 			p2=p;
-			dummy1=get_long(&p2);
-        		dummy2=get_long(&p2); 
+			dummy1=get_u32(&p2);
+        		dummy2=get_u32(&p2); 
 			assert((dummy1 == -1 && dummy2 == -1) || i < 32) ;
 			if (block->c[0].x > block->c[1].x || block->c[1].y > block->c[0].y)
 				break;
