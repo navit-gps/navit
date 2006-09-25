@@ -22,12 +22,12 @@ void
 street_name_get(struct street_name *name, unsigned char **p)
 {
 	unsigned char *start=*p;
-	name->len=get_short(p);
-	name->country=get_short(p);
-	name->townassoc=get_long(p);
+	name->len=get_u16(p);
+	name->country=get_u16(p);
+	name->townassoc=get_u32(p);
 	name->name1=get_string(p);
 	name->name2=get_string(p);
-	name->segment_count=get_long(p);
+	name->segment_count=get_u32(p);
 	name->segments=(struct street_name_segment *)(*p);
 	(*p)+=(sizeof (struct street_name_segment))*name->segment_count;
 	name->aux_len=name->len-(*p-start);
@@ -122,9 +122,9 @@ street_name_tree_process(int version, int leaf, unsigned char **s2, struct map_d
 
 	blk_off=(struct block_offset *)(*s2);
 	if (debug)
-		printf("0x%lx\n", get_long(s2));
+		printf("0x%x\n", get_u32(s2));
 	else
-		get_long(s2);
+		get_u32(s2);
 	struct street_name_index *i1=priv_data->search;
 	struct street_name_index *i2=(struct street_name_index *)(*s2);
 
@@ -220,14 +220,14 @@ street_name_get_info(struct street_name_info *inf, struct street_name *name)
 	
 	if (name->tmp_len <= 0)
 		return 0;
-	inf->len=get_short(&p);
+	inf->len=get_u16(&p);
 	inf->tag=*p++;	
-	inf->dist=get_long(&p);
-	inf->country=get_long(&p);
+	inf->dist=get_u32(&p);
+	inf->country=get_u32(&p);
 	inf->c=coord_get(&p);
-	inf->first=get_triple(&p);
-	inf->last=get_triple(&p);
-	inf->segment_count=get_long(&p);
+	inf->first=get_u24(&p);
+	inf->last=get_u24(&p);
+	inf->segment_count=get_u32(&p);
 	inf->segments=(struct street_segment *)p;
 	p+=sizeof(struct street_name_segment)*inf->segment_count;
 	inf->aux_len=name->tmp_data+name->tmp_len-p;
@@ -247,11 +247,11 @@ street_name_get_number_info(struct street_name_number_info *num, struct street_n
 
 	if (inf->tmp_len <= 0)
 		return 0;
-	num->len=get_short(&p);
+	num->len=get_u16(&p);
 	num->tag=*p++;	
 	num->c=coord_get(&p);
-	num->first=get_triple(&p);
-	num->last=get_triple(&p);
+	num->first=get_u24(&p);
+	num->last=get_u24(&p);
 	num->segment=(struct street_name_segment *)p;
 	inf->tmp_data+=num->len;
 	inf->tmp_len-=num->len;

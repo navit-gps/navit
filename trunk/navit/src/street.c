@@ -507,29 +507,29 @@ street_get_param(struct segment *seg, struct param_list *param, int count, int v
 				int tag;
 				int k, segs;
 				printf("\n");
-				printf("Len 0x%x\n",get_short(&stn));
+				printf("Len 0x%x\n",get_u16(&stn));
 				tag=*stn++;
 				printf("Tag 0x%x\n",tag);
 				if (tag == 0xc0 || tag == 0xd0 || tag == 0xe0) {
-					printf("DistAssoc 0x%lx\n",get_long(&stn));
-					printf("Country 0x%lx\n",get_long(&stn));
-					printf("X 0x%lx\n",get_long(&stn));
-					printf("Y 0x%lx\n",get_long(&stn));
-					printf("First %ld\n",get_triple(&stn));
-					printf("Last %ld\n",get_triple(&stn));
-					segs=get_long(&stn);
+					printf("DistAssoc 0x%lx\n",get_u32(&stn));
+					printf("Country 0x%lx\n",get_u32(&stn));
+					printf("X 0x%lx\n",get_u32(&stn));
+					printf("Y 0x%lx\n",get_u32(&stn));
+					printf("First %ld\n",get_u24(&stn));
+					printf("Last %ld\n",get_u24(&stn));
+					segs=get_u32(&stn);
 					printf("Segs 0x%x\n",segs);
 					for (k = 0 ; k < 0 ; k++) {
-						printf("SegId 0x%lx\n", get_long(&stn));
-						printf("Country 0x%lx\n",get_long(&stn));
+						printf("SegId 0x%lx\n", get_u32(&stn));
+						printf("Country 0x%lx\n",get_u32(&stn));
 					}
 				} else if (tag == 0x8f || tag == 0xaa || tag == 0xab || tag == 0xae || tag == 0xaf || tag == 0x9a || tag == 0x9e || tag == 0x9f) {
-					printf("X 0x%lx\n",get_long(&stn));
-					printf("Y 0x%lx\n",get_long(&stn));
-					printf("First %ld\n",get_triple(&stn));
-					printf("Last %ld\n",get_triple(&stn));
-					printf("SegId 0x%lx\n",get_long(&stn));
-					printf("Country 0x%lx\n",get_long(&stn));
+					printf("X 0x%lx\n",get_u32(&stn));
+					printf("Y 0x%lx\n",get_u32(&stn));
+					printf("First %ld\n",get_u24(&stn));
+					printf("Last %ld\n",get_u24(&stn));
+					printf("SegId 0x%lx\n",get_u32(&stn));
+					printf("Country 0x%lx\n",get_u32(&stn));
 				} else {
 					printf("Unknown tag 0x%x\n", tag);
 					break;
