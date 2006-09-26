@@ -17,7 +17,7 @@ struct street_type {
 } __attribute__((packed));
 
 struct street_str {
-        u32 segid;
+        s32 segid;
         u8  limit;           	/* 0x03,0x30=One Way,0x33=No Passing */
         u8  unknown2;
         u8  unknown3;
