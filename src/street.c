@@ -482,7 +482,7 @@ street_get_param(struct segment *seg, struct param_list *param, int count, int v
 		param_add_hex("Len", name.len, &param, &count);
 		param_add_hex("Country", name.country, &param, &count);
 		param_add_hex_sig("TownAssoc", name.townassoc, &param, &count);
-		printf("TownAssoc 0x%lx\n", name.townassoc+str->segid);
+		printf("TownAssoc 0x%x\n", name.townassoc+str->segid);
 		param_add_string("Name1", name.name1, &param, &count);
 		param_add_string("Name2", name.name2, &param, &count);
 		param_add_hex("Segments", name.segment_count, &param, &count);
