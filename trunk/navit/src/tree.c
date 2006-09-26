@@ -101,7 +101,7 @@ tree_search_h(struct file *file, unsigned int search)
 		p+=sizeof(*thdr);
 		end=p+thdr->size;
 		if (debug) {
-			printf("@0x%x\n", p-file->begin);
+			printf("@0x%lx\n", p-file->begin);
 		}
 		last=0;
 		while (p < end) {

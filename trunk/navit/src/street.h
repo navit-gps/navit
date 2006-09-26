@@ -1,3 +1,5 @@
+#include "types.h"
+
 struct container;
 struct block_info;
 struct segment;
@@ -15,27 +17,27 @@ struct street_type {
 } __attribute__((packed));
 
 struct street_str {
-        long segid;
-        unsigned char limit;           	/* 0x03,0x30=One Way,0x33=No Passing */
-        unsigned char unknown2;
-        unsigned char unknown3;
-        unsigned char type;
-        unsigned long nameid;
+        u32 segid;
+        u8  limit;           	/* 0x03,0x30=One Way,0x33=No Passing */
+        u8  unknown2;
+        u8  unknown3;
+        u8  type;
+        u32 nameid;
 };
 
 struct street_bti {
-	unsigned char unknown1;
-	unsigned long segid1;
-	unsigned long country1;
-	unsigned long segid2;
-	unsigned long country2;
-	unsigned char unknown5;
+	u8  unknown1;
+	u32 segid1;
+	u32 country1;
+	u32 segid2;
+	u32 country2;
+	u8  unknown5;
 	struct coord c;
 } __attribute__((packed));
 
 struct street_route {
 	struct street_route *next;
-	long segid;
+	u32 segid;
 	int offset;
 	struct coord c[2];
 };

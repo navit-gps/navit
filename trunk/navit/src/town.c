@@ -223,7 +223,7 @@ town_get_by_id(struct town *town, struct map_data *mdat, int country, int id)
 	printf("file %s block 0x%x offset 0x%x\n", f->name, block, offset);
 	blk=block_get_byindex(f, block, &p);
 	p=(unsigned char *)blk+offset;
-	printf("addr 0x%x\n", p-f->begin);
+	printf("addr 0x%lx\n", p-f->begin);
 	town_get(town, &p);
 }
 
