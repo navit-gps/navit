@@ -4,9 +4,9 @@ struct poly_hdr {
 	char *name;
 	unsigned char order;
 	unsigned char type;
-	unsigned long polys;
-	unsigned long *count;
-	unsigned long count_sum;
+	u32 polys;
+	u32 *count;
+	u32 count_sum;
 };
 
 void poly_draw_block(struct block_info *blk_inf, unsigned char *p, unsigned char *end, void *data);
