@@ -1,7 +1,9 @@
+#include "types.h"
+
 struct route_path_segment {
 	struct route_path_segment *next;
 	int country;
-	long segid;
+	s32 segid;
 	int offset;
 	int dir;
 	int time;
@@ -10,7 +12,7 @@ struct route_path_segment {
 };
 
 struct route_crossing {
-	long segid;
+	s32 segid;
 	int dir;
 };
 
@@ -34,7 +36,7 @@ void route_start(struct route *this, struct container *co);
 void route_set_position(struct route *this, struct coord *pos);
 void route_set_destination(struct route *this, struct coord *dst);
 struct coord *route_get_destination(struct route *this);
-struct route_path_segment *route_path_get(struct route *, int segid);
+struct route_path_segment *route_path_get(struct route *, s32 segid);
 struct route_path_segment *route_path_get_all(struct route *this);
 void route_trace(struct container *co);
 struct street_str *route_info_get_street(struct route_info *rt);

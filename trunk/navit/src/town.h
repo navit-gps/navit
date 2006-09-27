@@ -1,19 +1,21 @@
+#include "types.h"
+
 /*! A town description */
 struct town {
-	unsigned long id; /*!< Identifier */
+	u32 id; /*!< Identifier */
 	struct coord *c; /*!< Coordinates */
 	char *name; /*!< Name */
 	char *district; /*!< District */
 	char *postal_code1; /*!< Postal code */
-	unsigned char order; /*!< Order (Importance) */
-	unsigned char type; /*!< Type */
-	unsigned short country; /*!< Country */
-	unsigned long unknown2; /*!< Unknown */
-	unsigned char size; /*!< Size of town */
-	unsigned long street_assoc; /*!< Association to streets */
-	unsigned char unknown3; /*!< Unknown */
+	u8  order; /*!< Order (Importance) */
+	u8  type; /*!< Type */
+	u16 country; /*!< Country */
+	u32 unknown2; /*!< Unknown */
+	u8  size; /*!< Size of town */
+	u32 street_assoc; /*!< Association to streets */
+	u8  unknown3; /*!< Unknown */
 	char *postal_code2; /*!< 2nd postal code */
-	unsigned long unknown4; /*!< Unknown */
+	u32 unknown4; /*!< Unknown */
 };
 
 struct block_info;
