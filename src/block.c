@@ -12,14 +12,14 @@ struct file_private {
 };
 
 struct block_index_item {
-	unsigned long blocknum;
-	unsigned long blocks;
+	u32 blocknum;
+	u32 blocks;
 };
 
 struct block_index {
-	unsigned long blocks;
-        unsigned long size;
-        unsigned long next;      
+	u32 blocks;
+        u32 size;
+        u32 next;      
 	struct block_index_item list[0];
 };
 

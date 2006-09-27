@@ -1,10 +1,12 @@
 #ifndef COORD_H
 #define COORD_H
 
+#include "types.h"
+
 /*! A integer mercator coordinate */
 struct coord {
-	long x; /*!< X-Value */
-	long y; /*!< Y-Value */
+	s32 x; /*!< X-Value */
+	s32 y; /*!< Y-Value */
 };
 
 //! A double mercator coordinate
