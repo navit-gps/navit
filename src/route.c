@@ -154,7 +154,7 @@ route_mapdata_get(struct route *this)
 }
 
 static void
-route_add_path_segment(struct route *this, int country, int segid, int offset, struct coord *start, struct coord *end, int dir, int len, int time)
+route_add_path_segment(struct route *this, int country, s32 segid, int offset, struct coord *start, struct coord *end, int dir, int len, int time)
 {
         struct route_path_segment *segment=g_new0(struct route_path_segment,1);
 
@@ -199,7 +199,7 @@ route_path_get_all(struct route *this)
 }
 
 struct route_path_segment *
-route_path_get(struct route *this, int segid)
+route_path_get(struct route *this, s32 segid)
 {
 	struct route_path_segment *curr=this->path;
 
@@ -409,7 +409,7 @@ route_value(int type, int len)
 }
 
 static int
-route_get_height(int segid, struct coord *c)
+route_get_height(s32 segid, struct coord *c)
 {
 	if (c->x == 0x141b53 && c->y == 0x5f2065 && (segid == 0x4fad2fa || segid == 0x4fad155)) 
 		return 1;

@@ -27,9 +27,9 @@ struct street_str {
 
 struct street_bti {
 	u8  unknown1;
-	u32 segid1;
+	s32 segid1;
 	u32 country1;
-	u32 segid2;
+	s32 segid2;
 	u32 country2;
 	u8  unknown5;
 	struct coord c;
@@ -37,7 +37,7 @@ struct street_bti {
 
 struct street_route {
 	struct street_route *next;
-	u32 segid;
+	s32 segid;
 	int offset;
 	struct coord c[2];
 };

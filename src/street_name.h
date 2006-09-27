@@ -1,15 +1,16 @@
+#include "types.h"
 struct street_name_segment {
 	int segid;
 	int country;
 };
 
 struct street_name {
-	int len;
-	int country;
-	int townassoc;
+	u16 len;
+	u16 country;
+	u32 townassoc;
 	char *name1;
 	char *name2;
-	int segment_count;
+	u32 segment_count;
 	struct street_name_segment *segments;
 	int aux_len;
 	unsigned char *aux_data;
@@ -19,14 +20,14 @@ struct street_name {
 
 
 struct street_name_info {
-	int len;
+	u16 len;
 	int tag;
-	int dist;
-	int country;
+	u32 dist;
+	u32 country;
 	struct coord *c;
-	int first;
-	int last;
-	int segment_count;
+	u32 first;
+	u32 last;
+	u32 segment_count;
 	struct street_segment *segments;
 	int aux_len;
 	unsigned char *aux_data;
@@ -35,11 +36,11 @@ struct street_name_info {
 };
 
 struct street_name_number_info {
-	int len;
+	u16 len;
 	int tag;
 	struct coord *c;
-	int first;
-	int last;
+	u32 first;
+	u32 last;
 	struct street_name_segment *segment;
 };
 
