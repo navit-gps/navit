@@ -26,9 +26,9 @@ poly_get_hdr(unsigned char **p,struct poly_hdr *poly_hdr)
 	(*p)++;
 	poly_hdr->order=*(*p)++;
 	poly_hdr->type=*(*p)++;
-	poly_hdr->polys=*(unsigned long *)(*p); (*p)+=sizeof(unsigned long);
-	poly_hdr->count=(unsigned long *)(*p); (*p)+=poly_hdr->polys*sizeof(unsigned long);
-	poly_hdr->count_sum=*(unsigned long *)(*p); (*p)+=sizeof(unsigned long);
+	poly_hdr->polys=*(u32 *)(*p); (*p)+=sizeof(u32);
+	poly_hdr->count=(u32 *)(*p); (*p)+=poly_hdr->polys*sizeof(u32);
+	poly_hdr->count_sum=*(u32 *)(*p); (*p)+=sizeof(u32);
 	return 0;
 }
 

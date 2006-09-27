@@ -2,9 +2,9 @@
 #include "transform.h"
 
 struct block {
-	unsigned long blocks;
-	unsigned long size;
-	unsigned long next;
+	u32 blocks;
+	u32 size;
+	u32 next;
 	struct coord c[2];
 	int count;
 };
