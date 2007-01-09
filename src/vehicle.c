@@ -264,7 +264,6 @@ vehicle_new(const char *url)
 		fd=open(url+5,O_RDONLY|O_NDELAY);
 		if (fd < 0) {
 			g_warning("Failed to open %s", url);
-			return NULL;
 		}
 	} else if (! strncmp(url,"gpsd://",7)) {
 #ifdef HAVE_LIBGPS
@@ -278,23 +277,25 @@ vehicle_new(const char *url)
 		g_free(url_);
 		if (! gps) {
 			g_warning("Failed to connect to %s", url);
-			return NULL;
+		} else {
+			gps_query(gps, "w+x\n");
+			gps_set_raw_hook(gps, vehicle_gps_callback);
+			fd=gps->gps_fd;
 		}
-		gps_query(gps, "w+x\n");
-		gps_set_raw_hook(gps, vehicle_gps_callback);
-		fd=gps->gps_fd;
 #else
 		g_warning("No support for gpsd compiled in\n");
-		return NULL;
 #endif
 	}
 	this=g_new0(struct vehicle,1);
 #ifdef HAVE_LIBGPS
-	this->gps=gps;
+	if(gps)
+		this->gps=gps;
 #endif
-	this->iochan=g_io_channel_unix_new(fd);
-	g_io_channel_set_encoding(this->iochan, NULL, &error);
-	g_io_add_watch(this->iochan, G_IO_IN|G_IO_ERR|G_IO_HUP, vehicle_track, this);
+	if(fd !=-1) {
+		this->iochan=g_io_channel_unix_new(fd);
+		g_io_channel_set_encoding(this->iochan, NULL, &error);
+		g_io_add_watch(this->iochan, G_IO_IN|G_IO_ERR|G_IO_HUP, vehicle_track, this);
+	}
 	this->current_pos.x=0x130000;
 	this->current_pos.y=0x600000;
 	this->curr.x=this->current_pos.x;
@@ -312,7 +313,7 @@ void
 vehicle_callback(struct vehicle *this, void (*func)(void *data), void *data)
 {
 	this->callback_func=func;
-	this->callback_data=data;
+this->callback_data=data;
 }
 
 void
