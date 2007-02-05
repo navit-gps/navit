@@ -12,6 +12,7 @@
 #include "speech.h"
 #include "navigation.h"
 #include "data_window.h"
+#include "osd.h"
 
 struct data_window *navigation_window;
 
@@ -106,43 +107,43 @@ get_distance(char *dst, int dist)
 	if (dist < 100) {
 		dist=(dist+5)/10;
 		dist*=10;
-		sprintf(dst,"%d meter", dist);
+		sprintf(dst,gettext("%d meter"), dist);
 		return;
 	}
 	if (dist < 250) {
 		dist=(dist+13)/25;
 		dist*=25;
-		sprintf(dst,"%d meter", dist);
+		sprintf(dst,gettext("%d meter"), dist);
 		return;
 	}
 	if (dist < 500) {
 		dist=(dist+25)/50;
 		dist*=50;
-		sprintf(dst,"%d meter", dist);
+		sprintf(dst,gettext("%d meter"), dist);
 		return;
 	}
 	if (dist < 1000) {
 		dist=(dist+50)/100;
 		dist*=100;
-		sprintf(dst,"%d meter", dist);
+		sprintf(dst,gettext("%d meter"), dist);
 		return;
 	}
 	if (dist < 5000) {
 		dist=(dist+50)/100;
 		if (dist % 10) 
-			sprintf(dst,"%d,%d kilometer", dist/10,dist%10);
+			sprintf(dst,gettext("%d,%d kilometer"), dist/10,dist%10);
 		else
-			sprintf(dst,"%d kilometer", dist/10);
+			sprintf(dst,gettext("%d kilometer"), dist/10);
 		return;
 	}
 	if (dist < 100000) {
 		dist=(dist+500)/1000;
-		sprintf(dst,"%d kilometer", dist);
+		sprintf(dst,gettext("%d kilometer"), dist);
 		return;
 	}
 	dist=(dist+5000)/10000;
 	dist*=10;
-	sprintf(dst,"%d kilometer", dist);
+	sprintf(dst,gettext("%d kilometer"), dist);
 }
 
 static void
@@ -151,6 +152,9 @@ make_maneuver(struct navigation_item *old, struct navigation_item *new)
 	
 	int delta,navmode=1,add_dir,level;
 	struct param_list param_list[20];
+	
+	extern struct container *co;
+	char roadname[256];
 
 	char angle_old[30],angle_new[30],angle_delta[30],cross_roads[30],position[30],distance[30];
 	char command[256],*p,*dir,*strength;
@@ -192,53 +196,59 @@ make_maneuver(struct navigation_item *old, struct navigation_item *new)
 			sprintf(distance,"%d", old->length);
 			param_list[9].value=distance;
 			add_dir=1;
-			dir="rechts";
+			dir=gettext("rechts");
 			if (delta < 0) {
-				dir="links";
+				dir=gettext("links");
 				delta=-delta;
 			}
 			if (delta < 45) {
-				strength="leicht ";
+				strength=gettext("leicht ");
 			} else if (delta < 105) {
 				strength="";
 			} else if (delta < 165) {
-				strength="scharf ";
+				strength=gettext("scharf ");
 			} else {
+#ifdef DEBUG
 				printf("delta=%d\n", delta);
-				strength="unbekannt ";
+#endif
+				strength=gettext("unbekannt ");
 			}
 			level=0;
 			if (navmode) {
 				if (old->length < 20) {
 					level=1;
-					sprintf(command,"Jetzt ");
+					sprintf(command,gettext("Jetzt "));
 				} else if (old->length <= 200) {
 					level=2;
 					get_distance(dist, old->length);
-					sprintf(command,"In %sn ", dist);
+					sprintf(command,gettext("In %sn "), dist);
 				} else if (old->length <= 500) {
 					level=3;
-					sprintf(command,"In Kürze ");
+					sprintf(command,gettext("In Kürze "));
 				} else {
 					level=4;
 					get_distance(dist, old->length);
-					sprintf(command,"Dem Strassenverlauf %s folgen", dist);
+					sprintf(command,gettext("Dem Strassenverlauf %s folgen"), dist);
 					add_dir=0;
 				}
 			} else {
-				sprintf(command,"Dem Strassenverlauf %d Meter folgen, dann ", old->length);
+				sprintf(command,gettext("Dem Strassenverlauf %d Meter folgen, dann "), old->length);
 				add_dir=1;
 			}
 			if (add_dir) {
-				p=command+strlen(command);
+/*				p=command+strlen(command);
 				strcpy(p,strength);
 				p+=strlen(p);
 				strcpy(p,dir);
 				p+=strlen(p);
-				strcpy(p," abbiegen");
+				strcpy(p,gettext(" abbiegen"));*/
+				sprintf(command,gettext(" %s %s abbiegen"),strength,dir);
+				p=command+strlen(command);
 			}
 			param_list[10].value=command;
 			if (flag) {
+				sprintf(roadname,"%s %s",old->name1,old->name2);
+				osd_set_next_command(command,roadname);
 				if (level != old_level) {
 					printf("command='%s'\n", command);
 					if (speech_handle)
