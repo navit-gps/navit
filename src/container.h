@@ -54,6 +54,7 @@ struct container {
 	struct transformation *trans;
 	struct graphics *gra;
 	struct compass *compass;
+	struct osd *osd;
 	struct display_list *disp[display_end];
 	struct map_data *map_data;
 	struct menu *menu;

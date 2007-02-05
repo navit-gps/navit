@@ -182,6 +182,7 @@ cursor_update(void *t)
 		cursor_draw(this, &pnt, vehicle_speed_get(v), vehicle_dir_get(v));
 	}
 	compass_draw(this->co->compass, this->co);
+	osd_draw(this->co->osd, this->co);
 }
 
 extern void *vehicle;

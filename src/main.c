@@ -21,6 +21,8 @@
 #include "container.h"
 #include "debug.h"
 
+#include "osd.h"
+
 void *speech_handle;
 
 struct container *co;
@@ -49,6 +51,11 @@ int main(int argc, char **argv)
 	gtk_init(&argc, &argv);
 	gdk_rgb_init();
 
+// 	i18n basic support
+
+	bindtextdomain( "navit", "./locale" );
+	textdomain( "navit" );
+
 	map_data_default=load_maps(NULL);
 	plugin_load();
 	co=gui_gtk_window(1300000,7000000,8192);
@@ -62,14 +69,16 @@ int main(int argc, char **argv)
 			co->cursor=cursor_new(co,co->vehicle);
 		}
 	} else {
-		g_warning("Environment-Variable GPSDATA not set - No gps tracking. Set it to file:filename or gpsd://host[:port]");
+		g_warning(gettext("Environment-Variable GPSDATA not set - No gps tracking. Set it to file:filename or gpsd://host[:port]"));
 	}
 	co->speech=speech_new();
 	if (! co->speech) 
-		g_warning("Can't connect to speechd, no speech output available");
+		g_warning(gettext("Can't connect to speechd, no speech output available"));
 	speech_handle=co->speech;
 	if (co->vehicle)
 		co->compass=compass_new(co);
+	if (co->vehicle)
+		co->osd=osd_new(co);
 	if (co->vehicle)
 		co->track=track_new(co->map_data);
 

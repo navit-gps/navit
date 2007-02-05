@@ -606,23 +606,23 @@ int destination_address(struct container *co)
 #endif
 
 	window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	keyboard = build_keyboard(NULL, "/usr/share/gtkeyboard/key/DE.key");
+	keyboard = build_keyboard(NULL, gettext("/usr/share/gtkeyboard/key/DE.key"));
 	vbox = gtk_vbox_new(FALSE, 0);
 	table = gtk_table_new(3, 8, FALSE);
 
 	entry_country = gtk_entry_new();
-	label_country = gtk_label_new("Land");
+	label_country = gtk_label_new(gettext("Land"));
 	entry_postal = gtk_entry_new();
-	label_postal = gtk_label_new("PLZ");
+	label_postal = gtk_label_new(gettext("PLZ"));
 	entry_city = gtk_entry_new();
-	label_city = gtk_label_new("Ort");
+	label_city = gtk_label_new(gettext("Ort"));
 	entry_district = gtk_entry_new();
-	label_district = gtk_label_new("Ortsteil/Gemeinde");
+	label_district = gtk_label_new(gettext("Ortsteil/Gemeinde"));
 	hseparator1 = gtk_vseparator_new();
 	entry_street = gtk_entry_new();
-	label_street = gtk_label_new("Strasse");
+	label_street = gtk_label_new(gettext("Strasse"));
 	entry_number = gtk_entry_new();
-	label_number = gtk_label_new("Nummer");
+	label_number = gtk_label_new(gettext("Nummer"));
 	listbox = gtk_clist_new(9);
 	for (i=0 ; i < row_count ; i++) {
 		gtk_clist_append(GTK_CLIST(listbox), text);
@@ -631,8 +631,8 @@ int destination_address(struct container *co)
         gtk_clist_columns_autosize (GTK_CLIST(listbox));
 
 	hseparator2 = gtk_vseparator_new();
-	button1 = gtk_button_new_with_label("Karte");
-	button2 = gtk_button_new_with_label("Ziel");
+	button1 = gtk_button_new_with_label(gettext("Karte"));
+	button2 = gtk_button_new_with_label(gettext("Ziel"));
 
 	gtk_table_attach(GTK_TABLE(table), label_country,  0, 1,  0, 1,  0, GTK_FILL|GTK_EXPAND, 0, 0);
 	gtk_table_attach(GTK_TABLE(table), label_postal,   1, 2,  0, 1,  0, GTK_FILL|GTK_EXPAND, 0, 0);
@@ -676,7 +676,7 @@ int destination_address(struct container *co)
 	
 	gtk_widget_show_all(window2);
 
-	gtk_entry_set_text(GTK_ENTRY(entry_country),"Deutschland");
+	gtk_entry_set_text(GTK_ENTRY(entry_country),gettext("base_country"));
 
 	return 0;
 }

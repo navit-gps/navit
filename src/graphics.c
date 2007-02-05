@@ -308,7 +308,9 @@ graphics_redraw(struct container *co)
 	gra->gc_set_linewidth(gra->gc[GC_STREET_BIG2_B], bw[3]);
 	gra->gc_set_linewidth(gra->gc[GC_STREET_ROUTE], w[3]+7+w[3]/2);
 
+#ifdef DEBUG
 	profile_timer(NULL);
+#endif
 	graphics_draw(co->map_data, file_border_ply, co, display_rail, plimit, 48, poly_draw_block);
 	graphics_draw(co->map_data, file_woodland_ply, co, display_wood, plimit, 48, poly_draw_block);
 	graphics_draw(co->map_data, file_other_ply, co, display_other, plimit, 48, poly_draw_block);
@@ -322,9 +324,14 @@ graphics_redraw(struct container *co)
 	if (scale < 256) {
 		graphics_draw(co->map_data, file_rail_ply, co, display_rail, plimit, 48, poly_draw_block);
 	}
+#ifdef DEBUG
 	profile_timer("map_draw");
+#endif
 	plugin_call_draw(co);
+#ifdef DEBUG
 	profile_timer("plugin");
+#endif
+
 #if 0
 	draw_poly(map, &co->d_tunnel_ply, "Tunnel", 0, 11, plimit);
 #endif
@@ -364,8 +371,9 @@ graphics_redraw(struct container *co)
 	display_draw(disp[display_poi], gra, gra->gc[GC_BLACK], NULL); 
 
 
+#ifdef DEBUG
 	profile_timer("display_draw");
-
+#endif
 	if (scale < 2) {
 		display_labels(disp[display_street], gra, gra->gc[GC_TEXT_FG], gra->gc[GC_TEXT_BG], gra->font[1]);
 		display_labels(disp[display_street1], gra, gra->gc[GC_TEXT_FG], gra->gc[GC_TEXT_BG], gra->font[1]);
@@ -387,7 +395,9 @@ graphics_redraw(struct container *co)
 	for (i = display_town ; i < display_town+0x10 ; i++) 
 		display_draw(disp[i], gra, gra->gc[GC_BLACK], NULL); 
 	display_draw(disp[display_bti], gra, gra->gc[GC_BLACK], NULL); 
+#ifdef DEBUG
 	profile_timer("labels");
+#endif
 	gra->draw_mode(gra, draw_mode_end);
 	for (i = 0 ; i < data_window_type_end; i++) {
 		data_window_end(co->data_window[i]);	

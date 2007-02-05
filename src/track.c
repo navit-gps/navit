@@ -106,8 +106,9 @@ static void
 track_free_lines(struct track *tr)
 {
 	struct track_line *tl=tr->lines,*next;
+#ifdef DEBUG
 	printf("track_free_lines(tr=%p)\n", tr);
-
+#endif
 	while (tl) {
 		next=tl->next;
 		if (! tl->linenum) {
@@ -207,7 +208,7 @@ track_update(struct track *tr, struct coord *c, int angle)
 	tr->curr[1]=tm->c[1];
 	tr->last_out=tm->lpnt;
 
-	printf("pos 0x%lx,0x%lx value %d dist %d angle %d vs %d (%d)\n", c->x, c->y, tm->value, dist, angle, tm->angle, track_angle_delta(angle, tm->angle, 0));
+	// printf("pos 0x%lx,0x%lx value %d dist %d angle %d vs %d (%d)\n", c->x, c->y, tm->value, dist, angle, tm->angle, track_angle_delta(angle, tm->angle, 0));
 	g_assert(dist < 10000);
 #if 0
 	profile_timer("track_update end");
