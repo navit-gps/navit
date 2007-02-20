@@ -24,10 +24,10 @@ struct osd {
 void
 osd_set_next_command(char *new_command,char *new_road){
 	extern struct container *co;
-	struct osd *this=co->osd;
-	strcpy(this->command,new_command);
-	strcpy(this->road_name,new_road);
-	osd_draw(this, co);
+	// struct osd *this=co->osd;
+	strcpy(co->osd->command,new_command);
+	strcpy(co->osd->road_name,new_road);
+	osd_draw(co->osd, co);
 }
 
 void

@@ -46,6 +46,8 @@ enum data_window_type {
 
 struct map_flags {
 	int orient_north;
+	int tollfree;
+	int fixedpos_mode;
 	int track;
 };
 

@@ -153,7 +153,6 @@ make_maneuver(struct navigation_item *old, struct navigation_item *new)
 	int delta,navmode=1,add_dir,level;
 	struct param_list param_list[20];
 	
-	extern struct container *co;
 	char roadname[256];
 
 	char angle_old[30],angle_new[30],angle_delta[30],cross_roads[30],position[30],distance[30];
