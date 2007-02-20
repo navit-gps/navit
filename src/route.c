@@ -18,6 +18,7 @@
 #include "navigation.h"
 #include "fib-1.0/fib.h"
 #include "time.h"
+#include "container.h"
 
 /*	Node1:	4 */
 /*	Node2:  4 */
@@ -399,6 +400,23 @@ route_display_points(struct route *this, struct container *co)
 static int
 route_time(int type, int len)
 {
+	// The following is a quick hack to handle
+	// properly tolled road, at least in France.
+	extern struct container *co;
+	if((type==0x21)||(type==0x61)){
+		if(co->flags->tollfree){
+			// We don't allow tolled roads. We return the highest possible value.
+			return len*36;
+		} else {
+			type=1;
+		}
+	}
+	if(speed_list[type & 0x3f]<1 || speed_list[type & 0x3f]>150){
+		// The road here hasn't its speed correctly set up.
+		// I think it's best to assign it a high cost for the moment.
+		printf("Road type %x (%i) is unknown (speed %i, key %i), assigning high cost\n",type,type,speed_list[type & 0x3f],(type & 0x3f));
+		return len*36;
+	}
 	return len*36/speed_list[type & 0x3f];
 }
 

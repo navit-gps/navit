@@ -173,7 +173,7 @@ cursor_update(void *t)
 			cursor_map_reposition(this, pos, dir);
 			transform(this->co->trans, pos, &pnt);
 		}
-		if (pnt.x < 0 || pnt.y < 0 || pnt.x >= this->co->trans->width || pnt.y >= this->co->trans->height) {
+		if (pnt.x < 0 || pnt.y < 0 || pnt.x >= this->co->trans->width || pnt.y >= this->co->trans->height || this->co->flags->fixedpos_mode) {
 			cursor_map_reposition(this, pos, dir);
 			transform(this->co->trans, pos, &pnt);
 		}
