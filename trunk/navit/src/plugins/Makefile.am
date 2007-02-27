@@ -1,0 +1,2 @@
+SUBDIRS=poi_geodownload
+

@@ -27,4 +27,7 @@ src/gui/Makefile
 src/gui/gtk/Makefile
 src/graphics/Makefile
 src/graphics/gtk_drawing_area/Makefile
+src/plugins/Makefile
+src/plugins/poi_geodownload/Makefile
+src/plugins/poi_geodownload/libmdb/Makefile
 ])
