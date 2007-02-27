@@ -151,7 +151,7 @@ enum {
 #define IS_JET3(mdb) (mdb->f->jet_version==MDB_VER_JET3)
 
 /* hash to store registered backends */
-extern GHashTable	*mdb_backends;
+/* extern GHashTable	*mdb_backends; */
 
 /* forward declarations */
 typedef struct mdbindex MdbIndex;
