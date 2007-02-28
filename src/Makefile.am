@@ -5,6 +5,7 @@ fib-1.0 fib-1.0/Makefile.in: fib-1.0/Makefile.am
 	./configure
 
 AM_CPPFLAGS = @PACKAGE_CFLAGS@
+LDFLAGS = -Wl,--export-dynamic
 
 
 bin_PROGRAMS = navit
