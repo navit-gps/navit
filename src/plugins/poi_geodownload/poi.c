@@ -13,6 +13,8 @@ struct index_data {
 struct poi {
 	char *filename;
 	char *icon;
+	int type;
+	long pos;
 	MdbHandle *h;
 	MdbHandle *h_idx;
 	MdbTableDef *table;
@@ -31,6 +33,26 @@ struct poi_data {
 	int row;
 };
 
+struct text_poi {
+	double lng;
+	double lat;
+	char *name;
+};
+
+static int
+parse_text_poi(char *line, struct text_poi *ret)
+{
+	int rest;
+	if (sscanf(line, "\"%lf\";\"%lf\";\"%n",&ret->lng,&ret->lat,&rest) == 2) {
+		ret->name=line+rest;
+		if (strlen(ret->name)) {
+			ret->name[strlen(ret->name)-1]='\0';
+		}
+		printf("%f %f %s\n", ret->lng, ret->lat, ret->name);
+		return 1;
+	}
+	return 0;
+}
 
 static void
 print_col(MdbHandle *h, MdbColumn *col, char *buffer, int hex)
@@ -278,7 +300,7 @@ load_poi_table(struct poi *poi, MdbCatalogEntry *entry)
 }
 
 static void
-load_poi(char *filename, char *icon)
+load_poi(char *filename, char *icon, int type)
 {
 	int i;
 	MdbCatalogEntry *entry;
@@ -287,20 +309,23 @@ load_poi(char *filename, char *icon)
 
 	new->filename = filename;
 	new->icon = icon;
+	new->type = type;
 
-	new->h = mdb_open(filename, MDB_NOFLAGS);
-	catalog = mdb_read_catalog(new->h, MDB_TABLE);
-	for (i = 0; i < catalog->len; i++) {
-		entry = catalog->pdata[i];
-		if (!strcasecmp(entry->object_name, "_INDEXDATA")) {
-			if (load_poi_table(new, entry)) {
-				printf("%s invalid\n", filename);
-				g_free(new);
-				new=NULL;
+	if (type == 0) {
+		new->h = mdb_open(filename, MDB_NOFLAGS);
+		catalog = mdb_read_catalog(new->h, MDB_TABLE);
+		for (i = 0; i < catalog->len; i++) {
+			entry = catalog->pdata[i];
+			if (!strcasecmp(entry->object_name, "_INDEXDATA")) {
+				if (load_poi_table(new, entry)) {
+					printf("%s invalid\n", filename);
+					g_free(new);
+					new=NULL;
+				}
 			}
 		}
+		g_ptr_array_free(catalog, 1);
 	}
-	g_ptr_array_free(catalog, 1);
 	if (new) {
 		new->next = poi_list;
 		poi_list = new;
@@ -326,36 +351,60 @@ poi_info(struct display_list *list, struct popup_item **popup)
 	char *v;
 
 	popup_last = *popup;
-	printf("poi_info pg=%d row=%d\n", data->page, data->row);
-	load_row(poi, data->page, data->row);
 
 	popup_val_last = NULL;
 	sprintf(buffer,"File:%s", poi->filename);
 	popup_item_new_text(&popup_val_last, buffer, 1);
 	sprintf(buffer,"Icon:%s", poi->icon);
 	popup_item_new_text(&popup_val_last, buffer, 2);
-	sprintf(buffer,"Page:%d", data->page);
-	popup_item_new_text(&popup_val_last, buffer, 3);
-	sprintf(buffer,"Row:%d", data->row);
-	popup_item_new_text(&popup_val_last, buffer, 4);
-	for (j = 0; j < poi->table_col->len; j++) {
-		col = poi->table_col->pdata[j];
-#if 0
-		printf("start: %d type:%d\n", col->cur_value_start, col->col_type);
-#endif
-		sprintf(buffer, "%s:", col->name);
-		v = buffer + strlen(buffer);
-		if (!strcasecmp(col->name,"X") || !strcasecmp(col->name,"Y")) 
-			print_col(poi->h, col, v, 1);
-		else
-			print_col(poi->h, col, v, 0);
-#if 0
-		printf("%s\n", buffer);
-#endif
-		text=g_convert(buffer,-1,"utf-8","iso8859-1",NULL,NULL,NULL);
-		popup_item_new_text(&popup_val_last, buffer, j+10);
-		g_free(text);
+	if (poi->type == 0) {
+		printf("poi_info pg=%d row=%d\n", data->page, data->row);
+		load_row(poi, data->page, data->row);
+		sprintf(buffer,"Page:%d", data->page);
+		popup_item_new_text(&popup_val_last, buffer, 3);
+		sprintf(buffer,"Row:%d", data->row);
+		popup_item_new_text(&popup_val_last, buffer, 4);
+		for (j = 0; j < poi->table_col->len; j++) {
+			col = poi->table_col->pdata[j];
+	#if 0
+			printf("start: %d type:%d\n", col->cur_value_start, col->col_type);
+	#endif
+			sprintf(buffer, "%s:", col->name);
+			v = buffer + strlen(buffer);
+			if (!strcasecmp(col->name,"X") || !strcasecmp(col->name,"Y")) 
+				print_col(poi->h, col, v, 1);
+			else
+				print_col(poi->h, col, v, 0);
+	#if 0
+			printf("%s\n", buffer);
+	#endif
+			text=g_convert(buffer,-1,"utf-8","iso8859-1",NULL,NULL,NULL);
+			popup_item_new_text(&popup_val_last, buffer, j+10);
+			g_free(text);
+		}
+	}
+	if (poi->type == 1) {
+		FILE *f;
+		struct text_poi tpoi;
+		char line[1024];
 
+		f=fopen(poi->filename,"r");
+		fseek(f, data->row, SEEK_SET);
+		fgets(line, 1024, f);
+		if (strlen(line)) {
+			line[strlen(line)-1]='\0';
+		}
+		sprintf(buffer,"Pos:%d", data->row);
+		popup_item_new_text(&popup_val_last, buffer, 3);
+		if (parse_text_poi(line, &tpoi)) {
+			sprintf(buffer,"Name:%s", tpoi.name);
+			popup_item_new_text(&popup_val_last, buffer, 3);
+			sprintf(buffer,"Lat:%f", tpoi.lat);
+			popup_item_new_text(&popup_val_last, buffer, 3);
+			sprintf(buffer,"Lng:%f", tpoi.lng);
+			popup_item_new_text(&popup_val_last, buffer, 3);
+		}
+		fclose(f);
 	}
 	popup_item_new_text(&popup_last, "POI", 20)->submenu = popup_val_last;
 	*popup=popup_last;
@@ -366,8 +415,13 @@ draw_poi(struct poi *p, struct container *co, struct point *pnt)
 {
 	struct poi_data data;
 	data.poi=p;
-	data.page=p->h->cur_pg;
-	data.row=p->table->cur_row-1;
+	if (p->type == 0) {
+		data.page=p->h->cur_pg;
+		data.row=p->table->cur_row-1;
+	}
+	if (p->type == 1) {
+		data.row=p->pos;
+	}
 	display_add(&co->disp[display_poi], 5, 0, p->icon, 1, pnt, poi_info, &data, sizeof(data));
 }
 
@@ -390,29 +444,54 @@ plugin_draw(struct container *co)
 		printf("rect 0x%lx,0%lx-0x%lx,0x%lx\n", co->trans->rect[0].x, co->trans->rect[0].y, co->trans->rect[1].x, co->trans->rect[1].y);
 	}
 	while (p) {
-		if (use_index)
-			setup_idx_rect(co->trans->rect, idx, p->idx_size);
-		if (! use_index) {
-			printf("rewind %s %p\n", p->filename, p->table);
-			mdb_rewind_table(p->table);
-			while (mdb_fetch_row(p->table)) {
-				get_coord(p, &c);
-				if (transform(co->trans, &c, &pnt)) {
-					if (debug)
-						printf("coord 0x%lx,0x%lx pg %d row %d\n", c.x, c.y, p->h->cur_pg, p->table->cur_row);
-					draw_poi(p, co, &pnt);
+		if (p->type == 0) {
+			if (use_index)
+				setup_idx_rect(co->trans->rect, idx, p->idx_size);
+			if (! use_index) {
+				printf("rewind %s %p\n", p->filename, p->table);
+				mdb_rewind_table(p->table);
+				while (mdb_fetch_row(p->table)) {
+					get_coord(p, &c);
+					if (transform(co->trans, &c, &pnt)) {
+						if (debug)
+							printf("coord 0x%lx,0x%lx pg %d row %d\n", c.x, c.y, p->h->cur_pg, p->table->cur_row);
+						draw_poi(p, co, &pnt);
+					}
+				}
+			}  else {
+				memset(&p->chain, 0, sizeof(p->chain));
+				while (index_next(p, idx)) {
+					get_coord(p, &c);
+					if (transform(co->trans, &c, &pnt)) {
+						if (debug)
+							printf("coord 0x%lx,0x%lx pg %d row %d\n", c.x, c.y, p->h->cur_pg, p->table->cur_row);
+						draw_poi(p, co, &pnt);
+					}
 				}
 			}
-		}  else {
-			memset(&p->chain, 0, sizeof(p->chain));
-			while (index_next(p, idx)) {
-				get_coord(p, &c);
-				if (transform(co->trans, &c, &pnt)) {
-					if (debug)
-						printf("coord 0x%lx,0x%lx pg %d row %d\n", c.x, c.y, p->h->cur_pg, p->table->cur_row);
-					draw_poi(p, co, &pnt);
+		}
+		if (p->type == 1) {
+			FILE *f;
+			char line[1024];
+			struct text_poi tpoi;
+			f=fopen(p->filename, "r");
+			p->pos=ftell(f);
+			fgets(line, 1024, f);
+			while (!feof(f)) {
+				if (strlen(line)) {
+					line[strlen(line)-1]='\0';
 				}
+				if (parse_text_poi(line, &tpoi)) {
+					transform_mercator(&tpoi.lat,&tpoi.lng,&c);
+					printf("%ld %ld\n", c.x, c.y);
+					if (transform(co->trans, &c, &pnt)) {
+						draw_poi(p, co, &pnt);
+					}
+				}
+				p->pos=ftell(f);
+				fgets(line, 1024, f);
 			}
+			fclose(f);			
 		}
 		p = p->next;
 	}
@@ -425,50 +504,53 @@ int plugin_init(void)
 	plugin_register_draw(plugin_draw);
 	mdb_init();
 	load_poi("/home/martin/map/work/data/1/GEO00001.MDB",
-		 "/home/martin/map/work/data/1/_MCDNLDS.BMP");
+		 "/home/martin/map/work/data/1/_MCDNLDS.BMP",0);
 	load_poi("/home/martin/map/work/data/2/GEO00001.MDB",
-		 "/home/martin/map/work/data/2/_BURKING.BMP");
+		 "/home/martin/map/work/data/2/_BURKING.BMP",0);
 	load_poi("/home/martin/map/work/data/3/GEO00001.MDB",
-		 "/home/martin/map/work/data/3/_PIZZHUT.BMP");
+		 "/home/martin/map/work/data/3/_PIZZHUT.BMP",0);
 	load_poi("/home/martin/map/work/data/4/GEO00001.MDB",
-		 "/home/martin/map/work/data/4/_CHICKEN.BMP");
+		 "/home/martin/map/work/data/4/_CHICKEN.BMP",0);
 	load_poi("/home/martin/map/work/data/5/GEO00001.MDB",
-		 "/home/martin/map/work/data/5/_WIENERW.BMP");
+		 "/home/martin/map/work/data/5/_WIENERW.BMP",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/prog.mov/bahn.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/bahn.adr/BAHN.BMP");
+	     "/opt/reiseplaner/travel/prog.mov/bahn.adr/BAHN.BMP",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/prog.mov/cinmus.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/cinmus.adr/_Kinocen.bmp");
+	     "/opt/reiseplaner/travel/prog.mov/cinmus.adr/_Kinocen.bmp",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/prog.mov/fsight.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/fsight.adr/_sehensw.bmp");
+	     "/opt/reiseplaner/travel/prog.mov/fsight.adr/_sehensw.bmp",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/prog.mov/erlbns.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/erlbns.adr/_Freizei.bmp");
+	     "/opt/reiseplaner/travel/prog.mov/erlbns.adr/_Freizei.bmp",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/prog.mov/faehre.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/faehre.adr/_Faehren.bmp");
+	     "/opt/reiseplaner/travel/prog.mov/faehre.adr/_Faehren.bmp",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/prog.mov/fenter.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/fenter.adr/_casino.bmp");
+	     "/opt/reiseplaner/travel/prog.mov/fenter.adr/_casino.bmp",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/prog.mov/vhotel.adr/Geo00001.mdb",
-	     "/opt/reiseplaner/travel/prog.mov/vhotel.adr/Vhotel.bmp");
+	     "/opt/reiseplaner/travel/prog.mov/vhotel.adr/Vhotel.bmp",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/prog.mov/vgast.adr/Geo00001.mdb",
-	     "/opt/reiseplaner/travel/prog.mov/vgast.adr/Vgast.BMP");
+	     "/opt/reiseplaner/travel/prog.mov/vgast.adr/Vgast.BMP",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/address/p_ceu.adr/p_ceu.mdb",
-	     "/opt/reiseplaner/travel/address/p_ceu.adr/p_ceu.bmp");
+	     "/opt/reiseplaner/travel/address/p_ceu.adr/p_ceu.bmp",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/address/p_eeu.adr/p_eeu.mdb",
-	     "/opt/reiseplaner/travel/address/p_eeu.adr/P_eeu.bmp");
+	     "/opt/reiseplaner/travel/address/p_eeu.adr/P_eeu.bmp",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/address/p_heu.adr/p_heu.mdb",
-	     "/opt/reiseplaner/travel/address/p_heu.adr/P_heu.bmp");
+	     "/opt/reiseplaner/travel/address/p_heu.adr/P_heu.bmp",0);
 	load_poi
 	    ("/opt/reiseplaner/travel/address/p_ieu.adr/p_ieu.mdb",
-	     "/opt/reiseplaner/travel/address/p_ieu.adr/P_ieu.bmp");
+	     "/opt/reiseplaner/travel/address/p_ieu.adr/P_ieu.bmp",0);
+
+	load_poi
+	    ("/tmp/textpoi.csv","/tmp/textpoi.bmp",1);
 	return 0;
 }
