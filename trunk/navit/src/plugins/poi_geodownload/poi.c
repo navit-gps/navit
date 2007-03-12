@@ -7,12 +7,16 @@
 #include "plugin.h"
 
 
+#include <stdio.h>
+#include <sys/types.h>
+#include <dirent.h>
+
 struct index_data {
 	unsigned char data[15];
 };
 struct poi {
-	char *filename;
-	char *icon;
+	char filename[1024];
+	char icon[1024];
 	int type;
 	long pos;
 	MdbHandle *h;
@@ -39,17 +43,35 @@ struct text_poi {
 	char *name;
 };
 
+	char poipath[256];
+	char poibmp[256];
+
+
 static int
 parse_text_poi(char *line, struct text_poi *ret)
 {
 	int rest;
+	// This is for csv like files
 	if (sscanf(line, "\"%lf\";\"%lf\";\"%n",&ret->lng,&ret->lat,&rest) == 2) {
 		ret->name=line+rest;
 		if (strlen(ret->name)) {
 			ret->name[strlen(ret->name)-1]='\0';
 		}
-		printf("%f %f %s\n", ret->lng, ret->lat, ret->name);
 		return 1;
+	}
+	// This is for asc files
+	if (sscanf(line, "%lf , %lf , \"%n",&ret->lat,&ret->lng,&rest) == 2) {
+		ret->name=line+rest;
+		if (strlen(ret->name)) {
+			ret->name[strlen(ret->name)-1]='\0';
+		}
+		return 1;
+	}
+	if(line[0]==';'){
+		// 
+	} else if(strlen(line)<2){
+	} else {
+		printf("not matched : [%s]\n",line);
 	}
 	return 0;
 }
@@ -307,9 +329,29 @@ load_poi(char *filename, char *icon, int type)
 	GPtrArray *catalog;
 	struct poi *new = g_new0(struct poi, 1);
 
-	new->filename = filename;
-	new->icon = icon;
+       FILE *fp = fopen(filename,"r");
+       if( fp ) {
+	       fclose(fp);
+       } else {
+               printf("ERR : POI file %s does not exists!\n",filename);
+		exit(0);
+               return -1;
+       }
+
+
+       fp = fopen(icon,"r");
+       if( fp ) {
+	       fclose(fp);
+       } else {
+               printf("ERR : WARNING INCORRECT PICTURE! %s!\n",icon);
+		exit(0);
+               return -1;
+       }
+
+	strcpy(new->filename,filename);
+	strcpy(new->icon,icon);
 	new->type = type;
+
 
 	if (type == 0) {
 		new->h = mdb_open(filename, MDB_NOFLAGS);
@@ -405,6 +447,7 @@ poi_info(struct display_list *list, struct popup_item **popup)
 			popup_item_new_text(&popup_val_last, buffer, 3);
 		}
 		fclose(f);
+		printf("buffer : %s\n",buffer);
 	}
 	popup_item_new_text(&popup_last, "POI", 20)->submenu = popup_val_last;
 	*popup=popup_last;
@@ -432,13 +475,13 @@ plugin_draw(struct container *co)
 	struct point pnt;
 	struct poi *p;
 	struct index_data idx[2];
-	int use_index=1;
-	int debug=0;
+	int use_index=0;
+	int debug=1;
 
 	p = poi_list;
 
-	if (co->trans->scale > 256)
-		return;	
+ 	if (co->trans->scale > 1024)
+ 		return;	
 	if (debug) {
 		printf("scale=%ld\n", co->trans->scale);
 		printf("rect 0x%lx,0%lx-0x%lx,0x%lx\n", co->trans->rect[0].x, co->trans->rect[0].y, co->trans->rect[1].x, co->trans->rect[1].y);
@@ -474,8 +517,14 @@ plugin_draw(struct container *co)
 			FILE *f;
 			char line[1024];
 			struct text_poi tpoi;
-			f=fopen(p->filename, "r");
-			p->pos=ftell(f);
+			if(!(f=fopen(p->filename, "r"))){
+				printf("can't open poi file for drawing!\n");
+				exit(0);
+			}
+#if 0
+			printf("opened poi file %s for drawing!\n",p->filename);
+#endif
+ 			p->pos=ftell(f);
 			fgets(line, 1024, f);
 			while (!feof(f)) {
 				if (strlen(line)) {
@@ -483,7 +532,7 @@ plugin_draw(struct container *co)
 				}
 				if (parse_text_poi(line, &tpoi)) {
 					transform_mercator(&tpoi.lat,&tpoi.lng,&c);
-					printf("%ld %ld\n", c.x, c.y);
+// 					printf("%ld %ld\n", c.x, c.y);
 					if (transform(co->trans, &c, &pnt)) {
 						draw_poi(p, co, &pnt);
 					}
@@ -503,54 +552,73 @@ int plugin_init(void)
 {
 	plugin_register_draw(plugin_draw);
 	mdb_init();
-	load_poi("/home/martin/map/work/data/1/GEO00001.MDB",
-		 "/home/martin/map/work/data/1/_MCDNLDS.BMP",0);
-	load_poi("/home/martin/map/work/data/2/GEO00001.MDB",
-		 "/home/martin/map/work/data/2/_BURKING.BMP",0);
-	load_poi("/home/martin/map/work/data/3/GEO00001.MDB",
-		 "/home/martin/map/work/data/3/_PIZZHUT.BMP",0);
-	load_poi("/home/martin/map/work/data/4/GEO00001.MDB",
-		 "/home/martin/map/work/data/4/_CHICKEN.BMP",0);
-	load_poi("/home/martin/map/work/data/5/GEO00001.MDB",
-		 "/home/martin/map/work/data/5/_WIENERW.BMP",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/prog.mov/bahn.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/bahn.adr/BAHN.BMP",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/prog.mov/cinmus.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/cinmus.adr/_Kinocen.bmp",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/prog.mov/fsight.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/fsight.adr/_sehensw.bmp",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/prog.mov/erlbns.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/erlbns.adr/_Freizei.bmp",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/prog.mov/faehre.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/faehre.adr/_Faehren.bmp",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/prog.mov/fenter.adr/GEO00001.MDB",
-	     "/opt/reiseplaner/travel/prog.mov/fenter.adr/_casino.bmp",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/prog.mov/vhotel.adr/Geo00001.mdb",
-	     "/opt/reiseplaner/travel/prog.mov/vhotel.adr/Vhotel.bmp",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/prog.mov/vgast.adr/Geo00001.mdb",
-	     "/opt/reiseplaner/travel/prog.mov/vgast.adr/Vgast.BMP",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/address/p_ceu.adr/p_ceu.mdb",
-	     "/opt/reiseplaner/travel/address/p_ceu.adr/p_ceu.bmp",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/address/p_eeu.adr/p_eeu.mdb",
-	     "/opt/reiseplaner/travel/address/p_eeu.adr/P_eeu.bmp",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/address/p_heu.adr/p_heu.mdb",
-	     "/opt/reiseplaner/travel/address/p_heu.adr/P_heu.bmp",0);
-	load_poi
-	    ("/opt/reiseplaner/travel/address/p_ieu.adr/p_ieu.mdb",
-	     "/opt/reiseplaner/travel/address/p_ieu.adr/P_ieu.bmp",0);
+// 	load_poi("/home/martin/map/work/data/1/GEO00001.MDB",
+// 		 "/home/martin/map/work/data/1/_MCDNLDS.BMP",0);
+// 	load_poi("/home/martin/map/work/data/2/GEO00001.MDB",
+// 		 "/home/martin/map/work/data/2/_BURKING.BMP",0);
+// 	load_poi("/home/martin/map/work/data/3/GEO00001.MDB",
+// 		 "/home/martin/map/work/data/3/_PIZZHUT.BMP",0);
+// 	load_poi("/home/martin/map/work/data/4/GEO00001.MDB",
+// 		 "/home/martin/map/work/data/4/_CHICKEN.BMP",0);
+// 	load_poi("/home/martin/map/work/data/5/GEO00001.MDB",
+// 		 "/home/martin/map/work/data/5/_WIENERW.BMP",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/prog.mov/bahn.adr/GEO00001.MDB",
+// 	     "/opt/reiseplaner/travel/prog.mov/bahn.adr/BAHN.BMP",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/prog.mov/cinmus.adr/GEO00001.MDB",
+// 	     "/opt/reiseplaner/travel/prog.mov/cinmus.adr/_Kinocen.bmp",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/prog.mov/fsight.adr/GEO00001.MDB",
+// 	     "/opt/reiseplaner/travel/prog.mov/fsight.adr/_sehensw.bmp",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/prog.mov/erlbns.adr/GEO00001.MDB",
+// 	     "/opt/reiseplaner/travel/prog.mov/erlbns.adr/_Freizei.bmp",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/prog.mov/faehre.adr/GEO00001.MDB",
+// 	     "/opt/reiseplaner/travel/prog.mov/faehre.adr/_Faehren.bmp",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/prog.mov/fenter.adr/GEO00001.MDB",
+// 	     "/opt/reiseplaner/travel/prog.mov/fenter.adr/_casino.bmp",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/prog.mov/vhotel.adr/Geo00001.mdb",
+// 	     "/opt/reiseplaner/travel/prog.mov/vhotel.adr/Vhotel.bmp",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/prog.mov/vgast.adr/Geo00001.mdb",
+// 	     "/opt/reiseplaner/travel/prog.mov/vgast.adr/Vgast.BMP",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/address/p_ceu.adr/p_ceu.mdb",
+// 	     "/opt/reiseplaner/travel/address/p_ceu.adr/p_ceu.bmp",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/address/p_eeu.adr/p_eeu.mdb",
+// 	     "/opt/reiseplaner/travel/address/p_eeu.adr/P_eeu.bmp",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/address/p_heu.adr/p_heu.mdb",
+// 	     "/opt/reiseplaner/travel/address/p_heu.adr/p_heu.bmp",0);
+// 	load_poi
+// 	    ("/opt/reiseplaner/travel/address/p_ieu.adr/p_ieu.mdb",
+// 	     "/opt/reiseplaner/travel/address/p_ieu.adr/P_ieu.bmp",0);
 
-	load_poi
-	    ("/tmp/textpoi.csv","/tmp/textpoi.bmp",1);
+
+	struct dirent *lecture;
+	DIR *rep;
+	rep = opendir("./pois");
+	char fichier[256];
+	char ext[3];
+
+	printf("\nLoading ASC pois from ./pois..\n");
+	while ((lecture = readdir(rep))){
+		if (sscanf(lecture->d_name, "%[a-zA-Z_].%[a-zA-Z]",fichier,ext) == 2) {
+			if(!strcmp(ext,"asc")){
+				sprintf(poibmp,"./pois/%s.bmp",fichier);
+ 				sprintf(poipath,"./pois/%s.asc",fichier);
+				printf("Found poi file [%s] using icon [%s]\n",poipath,poibmp);
+
+				load_poi (poipath,poibmp,1);
+			}
+		}
+	}
+	closedir(rep);
+
 	return 0;
 }
