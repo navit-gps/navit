@@ -154,12 +154,11 @@ cursor_map_reposition_boundary(struct cursor *this, struct coord *c, double *dir
 }
 
 static void
-cursor_update(void *t)
+cursor_update(struct vehicle *v, void *t)
 {
 	struct cursor *this=t;
 	struct point pnt;
 	struct coord *pos;
-	struct vehicle *v=this->co->vehicle;
 	double *dir;
 
 	if (v) {
@@ -195,6 +194,6 @@ cursor_new(struct container *co, struct vehicle *v)
 	this->cursor_gc=co->gra->gc_new(co->gra);
 	co->gra->gc_set_foreground(this->cursor_gc, 0x0000, 0x0000, 0xffff);
 	co->gra->gc_set_linewidth(this->cursor_gc, 2);
-	vehicle_callback(v, cursor_update, this);
+	vehicle_callback_register(v, cursor_update, this);
 	return this;
 }

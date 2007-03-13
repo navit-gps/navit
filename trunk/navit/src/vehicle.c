@@ -16,6 +16,11 @@
 
 /* #define INTERPOLATION_TIME 50 */
 
+struct callback {
+	void (*func)(struct vehicle *, void *data);
+	void *data;
+};
+
 struct vehicle {
 	GIOChannel *iochan;
 	int timer_count;
@@ -33,8 +38,7 @@ struct vehicle {
 #ifdef HAVE_LIBGPS
 	struct gps_data_t *gps;
 #endif
-	void (*callback_func)(void *data);
-	void *callback_data;
+	GList *callbacks;
 };
 
 struct vehicle *vehicle_last;
@@ -58,6 +62,17 @@ vehicle_timer(gpointer t)
 }
 #endif
 
+static void
+vehicle_call_callbacks(struct vehicle *this)
+{
+	GList *item=g_list_first(this->callbacks);
+	while (item) {
+		struct callback *cb=item->data;
+		(*cb->func)(this, cb->data);
+		item=g_list_next(item);
+	}
+}
+
 struct coord *
 vehicle_pos_get(struct vehicle *this)
 {
@@ -76,6 +91,12 @@ vehicle_dir_get(struct vehicle *this)
 	return &this->dir;
 }
 
+double *
+vehicle_height_get(struct vehicle *this)
+{
+	return &this->height;
+}
+
 void
 vehicle_set_position(struct vehicle *this, struct coord *pos)
 {
@@ -84,8 +105,7 @@ vehicle_set_position(struct vehicle *this, struct coord *pos)
 	this->curr.y=this->current_pos.y;
 	this->delta.x=0;
 	this->delta.y=0;
-	if (this->callback_func)
-		(*this->callback_func)(this->callback_data);
+	vehicle_call_callbacks(this);
 }
 
 static void
@@ -131,8 +151,7 @@ vehicle_parse_gps(struct vehicle *this, char *buffer)
 		this->curr.x=this->current_pos.x;
 		this->curr.y=this->current_pos.y;
 		this->timer_count=0;
-		if (this->callback_func)
-			(*this->callback_func)(this->callback_data);
+		vehicle_call_callbacks(this);
 	}
 	if (!strncmp(buffer,"$GPVTG",6)) {
 		/* $GPVTG,143.58,T,,M,0.26,N,0.5,K*6A 
@@ -230,8 +249,7 @@ vehicle_gps_callback(struct gps_data_t *data, char *buf, size_t len, int level)
 		this->curr.x=this->current_pos.x;
 		this->curr.y=this->current_pos.y;
 		this->timer_count=0;
-		if (this->callback_func)
-			(*this->callback_func)(this->callback_data);
+		vehicle_call_callbacks(this);
 		data->set &= ~LATLON_SET;
 	}
 	if (data->set & ALTITUDE_SET) {
@@ -309,17 +327,28 @@ vehicle_new(const char *url)
 	return this;
 }
 
-void
-vehicle_callback(struct vehicle *this, void (*func)(void *data), void *data)
+void *
+vehicle_callback_register(struct vehicle *this, void (*func)(struct vehicle *, void *data), void *data)
 {
-	this->callback_func=func;
-this->callback_data=data;
+	struct callback *cb;
+	cb=g_new(struct callback, 1);
+	cb->func=func;
+	cb->data=data;
+	this->callbacks=g_list_prepend(this->callbacks, cb);
+	return cb;
+}
+
+void
+vehicle_callback_unregister(struct vehicle *this, void *handle)
+{
+	g_list_remove(this->callbacks, handle);
 }
 
 void
 vehicle_destroy(struct vehicle *this)
 {
 	GError *error=NULL;
+	GList *item=g_list_first(this->callbacks),*next;
 
 
 	g_io_channel_shutdown(this->iochan,0,&error);
@@ -327,5 +356,11 @@ vehicle_destroy(struct vehicle *this)
 	if (this->gps)
 		gps_close(this->gps);
 #endif
+	while (item) {
+		next=g_list_next(item);
+		vehicle_callback_unregister(this, item->data);
+		item=next;
+	}
+	g_list_free(this->callbacks);
 	g_free(this);
 }
