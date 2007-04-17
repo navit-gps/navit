@@ -79,10 +79,10 @@ vehicle_pos_get(struct vehicle *this)
 	return &this->current_pos;
 }
 
-double *
+double 
 vehicle_speed_get(struct vehicle *this)
 {
-	return &this->speed;
+	return this->speed;
 }
 
 double *
@@ -91,10 +91,10 @@ vehicle_dir_get(struct vehicle *this)
 	return &this->dir;
 }
 
-double *
+double 
 vehicle_height_get(struct vehicle *this)
 {
-	return &this->height;
+	return this->height;
 }
 
 void
