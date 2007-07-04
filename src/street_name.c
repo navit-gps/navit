@@ -54,7 +54,7 @@ struct street_search_priv {
 
 static int street_name_compare(struct street_name_index *i1, struct street_name_index *i2, int partial)
 {
-	unsigned char c1_u,c2_u;
+	char c1_u,c2_u;
 	int ret=0;
 	int debug=0;
 
@@ -122,7 +122,7 @@ street_name_tree_process(int version, int leaf, unsigned char **s2, struct map_d
 
 	blk_off=(struct block_offset *)(*s2);
 	if (debug)
-		printf("0x%x\n", get_u32(s2));
+		printf("0x%lx\n", get_u32(s2));
 	else
 		get_u32(s2);
 	struct street_name_index *i1=priv_data->search;
@@ -132,7 +132,7 @@ street_name_tree_process(int version, int leaf, unsigned char **s2, struct map_d
 		printf("Country %d %d\n",i1->country, i2->country);
 		printf("Town_Assoc 0x%lx 0x%lx\n",i1->town_assoc, i2->town_assoc);
 		printf("Name '%s' '%s'\n",i1->name, i2->name);
-		printf("Leaf Data 0x%x 0x%x %ld\n", blk_off->offset, blk_off->block, sizeof(*blk_off));
+		printf("Leaf Data 0x%x 0x%x %d\n", blk_off->offset, blk_off->block, sizeof(*blk_off));
 	}	
 	*s2+=sizeof(*i2)+strlen(i2->name)+1;
 	ret=street_name_compare(i1, i2, priv_data->partial);

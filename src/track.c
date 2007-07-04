@@ -1,3 +1,14 @@
+#include <glib.h>
+#include "track.h"
+#include "debug.h"
+#include "transform.h"
+#include "coord.h"
+#include "item.h"
+#include "route.h"
+#include "map.h"
+#include "mapset.h"
+
+#if 0
 #include <stdio.h>
 #include <glib.h>
 #include "coord.h"
@@ -6,89 +17,116 @@
 #include "profile.h"
 #include "track.h"
 
+#endif
+
+struct street_data {
+        struct item item;
+        int count;
+        int limit;
+        struct coord c[0];
+};
+
+
 
 struct track_line
 {
+	struct street_data *street;
+#if 0
 	long segid;
 	int linenum;
 	struct coord c[2];
 	struct coord lpnt;
 	int value;
-	int angle;
 	int dir;
+#endif
 	struct track_line *next;
+	int angle[0];
 };
 
+
 struct track {
-	struct map_data *ma;
+	struct mapset *ms;
+#if 0
 	struct transformation t;
+#endif
 	struct coord last_updated;
 	struct track_line *lines;
+#if 0
 	struct track_line **last_ptr;
+#endif
+	struct track_line *curr_line;
+	int pos;
 	struct coord curr[2];
 	struct coord last_in;
 	struct coord last_out;
 };
 
-int angle_factor=5;
+
+int angle_factor=10;
 int connected_pref=-10;
 int nostop_pref=10;
 
 
-struct track_line **last;
-
-static void
-tst_callback(struct street_str *str, void *handle, void *data)
+struct coord *
+track_get_pos(struct track *tr)
 {
-	struct coord c[2];
-	int visible=0,count=0;
-	struct track *tr=data;
-	struct track_line *lines;
-	int debug_segid=0;
-	int debug=0;
+	return &tr->last_out;
+}
 
-	/* printf("tst_callback id=0x%x ",str->segid < 0 ? -str->segid : str->segid); */
-	if (street_coord_handle_get(handle, &c[0], 1)) {
-		if (str->segid == debug_segid)
-			printf("0x%lx,0x%lx ", c->x, c->y); 
-		c[1]=c[0];
-		while (street_coord_handle_get(handle, &c[0], 1)) {
-			if (is_line_visible(&tr->t, c)) {
-				visible=1;
-			}
-			c[1]=c[0];
-			count++;
-			if (str->segid == debug_segid)
-				printf("0x%lx,0x%lx ", c->x, c->y); 
-		}
-	}
-	if (visible) {
-		lines=g_new(struct track_line, count);
-		street_coord_handle_rewind(handle);
-		street_coord_handle_get(handle, &c[0], 1);
-		count=0;
-		while (street_coord_handle_get(handle, &c[1], 1)) {
-			*(tr->last_ptr)=lines;
-			tr->last_ptr=&lines->next;
-			lines->segid=str->segid;
-			lines->linenum=count;
-			lines->c[0]=c[0];
-			lines->c[1]=c[1];
-			lines->angle=transform_get_angle(c,0);
-			lines->next=NULL;
-			lines++;
-			count++;
-			c[0]=c[1];	
-		}
-		if (debug)
-			printf("%d lines\n", count);
-	}		
-	/* printf("\n"); */
+int
+track_get_segment_pos(struct track *tr)
+{
+	return tr->pos;
+}
+
+struct street_data *
+track_get_street_data(struct track *tr)
+{
+	return tr->curr_line->street;
 }
 
 static void
-track_doupdate_lines(struct track *tr, struct coord *c)
+track_get_angles(struct track_line *tl)
 {
+	int i;
+	struct street_data *sd=tl->street;
+	for (i = 0 ; i < sd->count-1 ; i++) 
+		tl->angle[i]=transform_get_angle_delta(&sd->c[i], &sd->c[i+1], 0);
+}
+
+static void
+track_doupdate_lines(struct track *tr, struct coord *cc)
+{
+	int max_dist=1000;
+	struct map_selection *sel=route_rect(18, cc, cc, 0, max_dist);
+	struct mapset_handle *h;
+	struct map *m;
+	struct map_rect *mr;
+	struct item *item;
+	struct street_data *street;
+	struct track_line *tl;
+	struct coord c;
+
+	dbg(0,"enter\n");
+        h=mapset_open(tr->ms);
+        while ((m=mapset_next(h,1))) {
+		mr=map_rect_new(m, sel);
+		while ((item=map_rect_get_item(mr))) {
+			if (item->type >= type_street_0 && item->type <= type_ferry) {
+				street=street_get_data(item);
+				tl=g_malloc(sizeof(struct track_line)+(street->count-1)*sizeof(int));
+				tl->street=street;
+				track_get_angles(tl);
+				tl->next=tr->lines;
+				tr->lines=tl;
+			} else 
+				while (item_coord_get(item, &c, 1));
+                }  
+		map_rect_destroy(mr);
+        }
+        mapset_close(h);
+	dbg(0, "exit\n");
+#if 0
 
 	struct transformation t;
 
@@ -100,20 +138,20 @@ track_doupdate_lines(struct track *tr, struct coord *c)
 	profile_timer(NULL);
 	street_get_block(tr->ma,&t,tst_callback,tr);
 	profile_timer("end");
+#endif
 }
+
 
 static void
 track_free_lines(struct track *tr)
 {
 	struct track_line *tl=tr->lines,*next;
-#ifdef DEBUG
-	printf("track_free_lines(tr=%p)\n", tr);
-#endif
+	dbg(0,"enter(tr=%p)\n", tr);
+
 	while (tl) {
 		next=tl->next;
-		if (! tl->linenum) {
-			g_free(tl);
-		}
+		street_data_free(tl->street);
+		g_free(tl);
 		tl=next;
 	}
 	tr->lines=NULL;
@@ -156,71 +194,77 @@ track_is_connected(struct coord *c1, struct coord *c2)
 	return 0;
 }
 
-void
+int
 track_update(struct track *tr, struct coord *c, int angle)
 {
-	struct track_line *t,*tm;
+	struct track_line *t;
+	int i,value,min=0;
+	struct coord lpnt;
+#if 0
 	int min,dist;
 	int debug=0;
+#endif
+	dbg(1,"enter(%p,%p,%d)\n", tr, c, angle);
+	dbg(1,"c=0x%x,0x%x\n", c->x, c->y);
 
 	if (c->x == tr->last_in.x && c->y == tr->last_in.y) {
 		*c=tr->last_out;
-		return;
+		return 0;
 	}
-	if (transform_distance_sq(&tr->last_updated, c) > 250000 || !tr->lines) {
-		printf("update\n");
+	tr->last_in=*c;
+	if (!tr->lines || transform_distance_sq(&tr->last_updated, c) > 250000) {
+		dbg(1, "update\n");
 		track_free_lines(tr);
 		track_doupdate_lines(tr, c);
 		tr->last_updated=*c;
+		dbg(1,"update end\n");
 	}
-	profile_timer(NULL);
 		
 	t=tr->lines;
-	g_assert(t != NULL);
-
-	if (debug) printf("0x%lx,0x%lx (%d deg)\n", c->x, c->y, angle);
+	if (! t)
+		return 0;
+	tr->curr_line=NULL;
 	while (t) {
-		if (debug) printf("0x%lx 0x%lx,0x%lx - 0x%lx,0x%lx (%d deg) ", -t->segid, t->c[0].x, t->c[0].y, t->c[1].x, t->c[1].y, t->angle);
-		t->value=transform_distance_line_sq(&t->c[0], &t->c[1], c, &t->lpnt);
-		if (t->value < INT_MAX/2) 
-			 t->value += track_angle_delta(angle, t->angle, 0)*angle_factor;
-		if (track_is_connected(tr->curr, t->c))
-			t->value += connected_pref;
-		if (t->lpnt.x == tr->last_out.x && t->lpnt.y == tr->last_out.y)
-			t->value += nostop_pref;
-		if (debug) printf(" %d\n", t->value);
-		t=t->next;
-	}
-	t=tr->lines;
-	tm=t;
-	min=t->value;
-	while (t) {
-		if (t->value < min) {
-			min=t->value;
-			tm=t;	
+		struct street_data *sd=t->street;
+		for (i = 0; i < sd->count-1 ; i++) {
+			value=transform_distance_line_sq(&sd->c[i], &sd->c[i+1], c, &lpnt);
+			if (value < INT_MAX/2) 
+				value += track_angle_delta(angle, t->angle[i], 0)*angle_factor;
+			if (track_is_connected(tr->curr, &sd->c[i]))
+				value += connected_pref;
+			if (lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y)
+				value += nostop_pref;
+			if (! tr->curr_line || value < min) {
+				tr->curr_line=t;
+				tr->pos=i;
+				tr->curr[0]=sd->c[i];
+				tr->curr[1]=sd->c[i+1];
+				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, 
+					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], c, &lpnt),
+					track_angle_delta(angle, t->angle[i], 0)*angle_factor,
+					track_is_connected(tr->curr, &sd->c[i]) ? connected_pref : 0,
+					lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y ? nostop_pref : 0,
+					value
+				);
+				tr->last_out=lpnt;
+				min=value;
+			}
 		}
 		t=t->next;
 	}
-	dist=transform_distance_sq(&tm->lpnt, c);
-	if (debug) printf("dist=%d id=0x%lx\n", dist, tm->segid);
-	*c=tm->lpnt;
-	tr->curr[0]=tm->c[0];
-	tr->curr[1]=tm->c[1];
-	tr->last_out=tm->lpnt;
-
-	// printf("pos 0x%lx,0x%lx value %d dist %d angle %d vs %d (%d)\n", c->x, c->y, tm->value, dist, angle, tm->angle, track_angle_delta(angle, tm->angle, 0));
-	g_assert(dist < 10000);
-#if 0
-	profile_timer("track_update end");
-#endif
-	
+	dbg(0,"tr->curr_line=%p\n", tr->curr_line);
+	if (!tr->curr_line)
+		return 0;
+	dbg(0,"found 0x%x,0x%x\n", tr->last_out.x, tr->last_out.y);
+	*c=tr->last_out;
+	return 1;	
 }
 
 struct track *
-track_new(struct map_data *ma)
+track_new(struct mapset *ms)
 {
 	struct track *this=g_new0(struct track, 1);
-	this->ma=ma;
+	this->ms=ms;
 
 	return this;
 }

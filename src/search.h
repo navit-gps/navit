@@ -1,30 +1,45 @@
-enum search_param {
-	search_country,
-	search_postal,
-	search_town,
-	search_district,
-	search_street,
-	search_number
+#ifdef __cplusplus
+extern "C" {
+#endif
+struct search_list_country {
+        struct item item;
+        char *car;
+        char *iso2;
+        char *iso3;
+        char *name;
 };
 
-struct search_destination {
-	char *country_name;
-	char *country_car;
-	char *country_iso2;	
-	char *country_iso3;
-	char *town_postal;
-	char *town_name;
-	char *district;
-	char *street_name;
-	char *street_number;
-	struct country *country;
-	struct town *town;
-	struct street_name *street;
+struct search_list_town {
+	struct item item;
+        struct item itemt;
 	struct coord *c;
+	char *postal;
+        char *name;
 };
 
-struct search;
-struct map_data;
+struct search_list_street {
+	struct item item;
+	struct coord *c;
+        char *name;
+};
 
-void search_update(struct search *search, enum search_param what, char *val);
-struct search *search_new(struct map_data *mdat, char *country, char *postal, char *town, char *district, char *street, char *number, int (*func)(struct search_destination *dest, void *user_data), void *user_data);
+struct search_list_result {
+	struct coord *c;
+	struct search_list_country *country;
+	struct search_list_town *town;
+	struct search_list_street *street;
+};
+
+/* prototypes */
+struct attr;
+struct mapset;
+struct search_list;
+struct search_list_result;
+struct search_list *search_list_new(struct mapset *ms);
+void search_list_search(struct search_list *this_, struct attr *search_attr, int partial);
+struct search_list_result *search_list_get_result(struct search_list *this_);
+void search_list_destroy(struct search_list *this_);
+/* end of prototypes */
+#ifdef __cplusplus
+}
+#endif

@@ -1,5 +1,22 @@
+struct statusbar_methods;
+struct menu_methods;
+struct navit;
 
-struct statusbar *gui_gtk_statusbar_new(GtkWidget **widget);
-void gui_gtk_actions_new(struct container *co, GtkWidget **vbox);
-struct container * gui_gtk_window(int x, int y, int scale);
+struct gui_priv {
+	struct navit *nav;
+        GtkWidget *win;
+        GtkWidget *vbox;
+	GtkWidget *menubar;
+	GtkActionGroup *base_group;
+	GtkActionGroup *debug_group;
+	GtkActionGroup *dyn_group;
+	GtkUIManager *menu_manager;
+        void *statusbar;
+	int dyn_counter;
+};
+
+struct menu_priv *gui_gtk_menubar_new(struct gui_priv *gui, struct menu_methods *meth);
+struct menu_priv *gui_gtk_toolbar_new(struct gui_priv *gui, struct menu_methods *meth);
+struct statusbar_priv *gui_gtk_statusbar_new(struct gui_priv *gui, struct statusbar_methods *meth);
+struct menu_priv *gui_gtk_popup_new(struct gui_priv *gui, struct menu_methods *meth);
 

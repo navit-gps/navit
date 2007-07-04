@@ -1,5 +1,6 @@
 #include <malloc.h>
 #include <stdio.h>
+#include <string.h>
 #include <gtk/gtk.h>
 #include "param.h"
 #include "data_window.h"
@@ -36,7 +37,6 @@ data_window_begin(struct data_window *win)
 	}
 }
 
-#if 0
 static void 
 click_column(GtkCList *clist, int column)
 {
@@ -52,19 +52,30 @@ click_column(GtkCList *clist, int column)
 	gtk_clist_sort(clist);
 }
 
+		GValue value;
 static void 
-select_row(GtkCList *clist, int row, int column, GdkEventButton *event, struct data_window *win)
+select_row(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, struct data_window *win)
 {
 	int i;
 	if (win->callback) {
+		printf("callback\n");
+		
 		char *cols[20];
-		for (i=0;i<20;i++) {
-			gtk_clist_get_text(clist, row, i, &cols[i]);
+		GtkTreeIter iter;
+		GtkTreeModel *model;
+
+		model=gtk_tree_view_get_model(tree);
+		gtk_tree_model_get_iter(model, &iter, path);
+
+		for (i=0;i<gtk_tree_model_get_n_columns(model);i++) {
+			gtk_tree_model_get_value(model, &iter, i, &value);
+			cols[i]=g_strdup_value_contents(&value)+1;
+			cols[i][strlen(cols[i])-1]='\0';
+			g_value_unset(&value);
 		}	
 		win->callback(win, cols);
 	}
 }
-#endif
 
 void
 data_window_add(struct data_window *win, struct param_list *param, int count)
@@ -87,6 +98,10 @@ data_window_add(struct data_window *win, struct param_list *param, int count)
 			gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (win->treeview),-1,param[i].name,
 					cell,"text",i, NULL);
 		}
+#if 0
+		g_signal_connect(G_OBJECT(win->treeview), "click-column", G_CALLBACK(click_column), NULL);
+#endif
+		g_signal_connect(G_OBJECT(win->treeview), "row-activated", G_CALLBACK(select_row), win);
 	}
 
 	/* find data storage and create a new one if none is there */
@@ -106,19 +121,9 @@ data_window_add(struct data_window *win, struct param_list *param, int count)
 		gtk_list_store_set(liststore,&iter,i,utf8,-1);
 	}
 
-#if 0
-		g_signal_connect(G_OBJECT(win->clist), "click-column", G_CALLBACK(click_column), NULL);
-		g_signal_connect(G_OBJECT(win->clist), "select-row", G_CALLBACK(select_row), win);
-#endif
 }
 
 void
 data_window_end(struct data_window *win)
 {
-#if 0
-	if (win && win->treeview) {
-		gtk_clist_thaw(GTK_CLIST(win->clist));
-		gtk_clist_columns_autosize (GTK_CLIST(win->clist));
-	}
-#endif
 }

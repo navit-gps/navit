@@ -568,3 +568,49 @@ street_bti_get_param(struct segment *seg, struct param_list *param, int count)
 
 	return i-count;
 }
+
+struct street_data *
+street_get_data (struct item *item)
+{
+	struct coord c[1000];
+	int count=0;
+	struct street_data *ret;
+	struct attr attr;
+
+	while (count < 1000) {
+		if (!item_coord_get(item, &c[count], 1))
+			break;
+		count++;
+	}
+	g_assert(count < 1000);
+	ret=g_malloc(sizeof(struct street_data)+count*sizeof(struct coord));
+	ret->item=*item;
+	ret->count=count;
+	if (item_attr_get(item, attr_limit, &attr)) 
+		ret->limit=attr.u.num;
+	else
+		ret->limit=0;
+	memcpy(ret->c, c, count*sizeof(struct coord));
+
+	return ret;
+	
+}
+
+struct street_data *
+street_data_dup(struct street_data *orig)
+{
+	struct street_data *ret;
+	int size=sizeof(struct street_data)+orig->count*sizeof(struct coord);
+
+	ret=g_malloc(size);
+	memcpy(ret, orig, size);
+
+	return ret;
+}
+
+void
+street_data_free(struct street_data *sd)
+{
+	g_free(sd);
+}
+

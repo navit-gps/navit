@@ -1,68 +1,119 @@
 #include <stdio.h>
+#include <gdk/gdkkeysyms.h>
+#if !defined(GDK_Book) || !defined(GDK_Calendar)
+#include <X11/XF86keysym.h>
+#endif
 #include <gtk/gtk.h>
+#include "navit.h"
+#include "debug.h"
+#include "gui.h"
 #include "coord.h"
-#include "transform.h"
-#include "container.h"
+#include "point.h"
+#include "plugin.h"
+#include "graphics.h"
 #include "gui_gtk.h"
 
-
-extern void container_init_gra(struct container *co);
-
-static struct container *
-container_new(GtkWidget **widget)
-{
-	struct container *co=g_new0(struct container, 1);
-	extern struct map_data *map_data_default;
-	struct transformation *t=g_new0(struct transformation, 1);
-	struct map_flags *flags=g_new0(struct map_flags, 1);
-	struct graphics *gra;
-
-	co->map_data=map_data_default;	
-#if 1
-	extern struct graphics *graphics_gtk_drawing_area_new(struct container *co, GtkWidget **widget);
-	gra=graphics_gtk_drawing_area_new(co, widget);
-#else
-	extern struct graphics *graphics_gtk_gl_area_new(struct container *co, GtkWidget **widget);
-	gra=graphics_gtk_gl_area_new(co, widget);
+#ifndef GDK_Book
+#define GDK_Book XF86XK_Book
 #endif
-	co->gra=gra;
-	co->trans=t;	
-	co->flags=flags;
 
-	return co;
-}
+#ifndef GDK_Calendar
+#define GDK_Calendar XF86XK_Calendar
+#endif
 
-struct container *
-gui_gtk_window(int x, int y, int scale)
+static gboolean
+keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 {
-	GtkWidget *window,*map_widget;
-	GtkWidget *vbox;
-	GtkWidget *statusbar;
-	struct container *co;
-
-	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_default_size(GTK_WINDOW(window), 792, 547);
-	gtk_window_set_title(GTK_WINDOW(window), "Map");
-	gtk_widget_realize(window);
-	vbox = gtk_vbox_new(FALSE, 0);
-	co=container_new(&map_widget);
-	
-	transform_setup(co->trans, x, y, scale, 0);
-
-	co->win=(struct window *) window;
-	co->statusbar=gui_gtk_statusbar_new(&statusbar);
-	gui_gtk_actions_new(co,&vbox);
-	
-/*
-	gtk_box_pack_start(GTK_BOX(vbox), menu, FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(vbox), toolbar, FALSE, FALSE, 0);
-*/
-	gtk_box_pack_end(GTK_BOX(vbox), statusbar, FALSE, FALSE, 0);
-	gtk_box_pack_end(GTK_BOX(vbox), map_widget, TRUE, TRUE, 0);
-	gtk_container_add(GTK_CONTAINER(window), vbox);
-	
-	gtk_widget_show_all(window);
-	container_init_gra(co);
-	return co;
+	int w,h;
+	struct point p;
+	if (event->type != GDK_KEY_PRESS)
+		return FALSE;
+	dbg(1,"keypress 0x%x\n", event->keyval);
+        transform_get_size(navit_get_trans(this->nav), &w, &h);
+	switch (event->keyval) {
+	case GDK_KP_Enter:
+		gtk_menu_shell_select_first(this->menubar, TRUE);
+		break;
+	case GDK_Up:
+		p.x=w/2;
+		p.y=0;
+		navit_set_center_screen(this->nav, &p);
+		break;
+	case GDK_Down:
+		p.x=w/2;
+		p.y=h;
+		navit_set_center_screen(this->nav, &p);
+		break;
+	case GDK_Left:
+		p.x=0;
+		p.y=h/2;
+		navit_set_center_screen(this->nav, &p);
+		break;
+	case GDK_Right:
+		p.x=w;
+		p.y=h/2;
+		navit_set_center_screen(this->nav, &p);
+		break;
+	case GDK_Book:
+		navit_zoom_in(this->nav, 2);
+		break;
+	case GDK_Calendar:
+		navit_zoom_out(this->nav, 2);
+		break;
+	default:
+		return FALSE;
+	}
+	return TRUE;
 }
 
+static int
+gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra)
+{
+	GtkWidget *graphics;
+
+	graphics=graphics_get_data(gra, "gtk_widget");
+	if (! graphics)
+		return 1;
+	GTK_WIDGET_SET_FLAGS (graphics, GTK_CAN_FOCUS);
+	gtk_widget_set_sensitive(graphics, TRUE);
+	g_signal_connect(G_OBJECT(graphics), "key-press-event", G_CALLBACK(keypress), this);
+	gtk_box_pack_end(GTK_BOX(this->vbox), graphics, TRUE, TRUE, 0);
+	gtk_widget_show_all(graphics);
+	gtk_widget_grab_focus(graphics);
+
+	return 0;
+}
+
+struct gui_methods gui_gtk_methods = {
+	gui_gtk_menubar_new,
+	gui_gtk_toolbar_new,
+	gui_gtk_statusbar_new,
+	gui_gtk_popup_new,
+	gui_gtk_set_graphics,
+};
+
+static struct gui_priv *
+gui_gtk_new(struct navit *nav, struct gui_methods *meth, int w, int h) 
+{
+	struct gui_priv *this;
+
+	*meth=gui_gtk_methods;
+
+	this=g_new0(struct gui_priv, 1);
+	this->nav=nav;
+	this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	this->vbox = gtk_vbox_new(FALSE, 0);
+	gtk_window_set_default_size(GTK_WINDOW(this->win), w, h);
+	gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
+	gtk_widget_realize(this->win);
+	gtk_container_add(GTK_CONTAINER(this->win), this->vbox);
+	gtk_widget_show_all(this->win);
+
+	return this;
+}
+
+void
+plugin_init(void)
+{
+	plugin_register_gui_type("gtk", gui_gtk_new);
+}
