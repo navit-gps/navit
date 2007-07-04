@@ -8,59 +8,87 @@
 #include <glib.h>
 #include "coord.h"
 #include "transform.h"
+#include "projection.h"
+#include "point.h"
 #include "graphics.h"
 #include "statusbar.h"
 #include "menu.h"
 #include "vehicle.h"
-#include "container.h"
+#include "navit.h"
+#include "color.h"
 #include "cursor.h"
 #include "compass.h"
-#include "track.h"
+/* #include "track.h" */
 
+struct callback {
+        void (*func)(struct cursor *, void *data);
+        void *data;
+};
 
-#include "route.h"
 
 struct cursor {
-	struct container *co;
+	struct graphics *gra;
 	struct graphics_gc *cursor_gc;
+	struct transformation *trans;
 	struct point cursor_pnt;
+	struct callback offscreen_callback;
+	struct callback update_callback;
+	struct vehicle *v;
+	int dir;
+	struct coord pos;
+	void *vehicle_callback;
 };
 
 struct coord *
 cursor_pos_get(struct cursor *this)
 {
-	return vehicle_pos_get(this->co->vehicle);
+	return &this->pos;
+#if 0
+	return vehicle_pos_get(this->v);
+#endif
 }
 
+
+struct coord *
+cursor_pos_set(struct cursor *this, struct coord *pos)
+{
+	this->pos=*pos;
+#if 0
+	return vehicle_pos_get(this->v);
+#endif
+}
+
+
 static void
-cursor_draw(struct cursor *this, struct point *pnt, double *speed, double *dir)
+cursor_draw(struct cursor *this, struct point *pnt, int dir, int draw_dir)
 {
 	int x=this->cursor_pnt.x;
 	int y=this->cursor_pnt.y;
 	int r=12,lw=2;
 	double dx,dy;
 	double fac1,fac2;
-	int dir_i=*dir-this->co->trans->angle;
 	struct point cpnt[3];
-	struct graphics *gra=this->co->gra;
+	struct graphics *gra=this->gra;
 
 	if (pnt && x == pnt->x && y == pnt->y)
+		return;
+	if (!graphics_ready(gra))
 		return;
 	cpnt[0]=this->cursor_pnt;
 	cpnt[0].x-=r+lw;
 	cpnt[0].y-=r+lw;
-	gra->draw_restore(gra, &cpnt[0], (r+lw)*2, (r+lw)*2);
+	graphics_draw_restore(gra, &cpnt[0], (r+lw)*2, (r+lw)*2);
 	if (pnt) {
-		gra->draw_mode(gra, draw_mode_cursor);
+		graphics_draw_mode(gra, draw_mode_cursor);
 		this->cursor_pnt=*pnt;
 		x=pnt->x;
 		y=pnt->y;
 		cpnt[0].x=x;
 		cpnt[0].y=y;
-		gra->draw_circle(gra, this->cursor_gc, &cpnt[0], r*2);
-		if (*speed > 2.5) {
-			dx=sin(M_PI*dir_i/180);
-			dy=-cos(M_PI*dir_i/180);
+		graphics_draw_circle(gra, this->cursor_gc, &cpnt[0], r*2);
+		if (draw_dir) {
+			dx=sin(M_PI*dir/180.0);
+			dy=-cos(M_PI*dir/180.0);
 
 			fac1=0.7*r;
 			fac2=0.4*r;	
@@ -70,15 +98,16 @@ cursor_draw(struct cursor *this, struct point *pnt, double *speed, double *dir)
 			cpnt[1].y=y+dy*r;
 			cpnt[2].x=x-dx*fac1-dy*fac2;
 			cpnt[2].y=y-dy*fac1+dx*fac2;
-			gra->draw_lines(gra, this->cursor_gc, cpnt, 3);
+			graphics_draw_lines(gra, this->cursor_gc, cpnt, 3);
 		} else {
 			cpnt[1]=cpnt[0];
-			gra->draw_lines(gra, this->cursor_gc, cpnt, 2);
+			graphics_draw_lines(gra, this->cursor_gc, cpnt, 2);
 		}
-		gra->draw_mode(gra, draw_mode_end);
+		graphics_draw_mode(gra, draw_mode_end);
 	}
 }
 
+#if 0
 static void
 cursor_map_reposition_screen(struct cursor *this, struct coord *c, double *dir, int x_new, int y_new)
 {
@@ -153,47 +182,74 @@ cursor_map_reposition_boundary(struct cursor *this, struct coord *c, double *dir
 	return 0;
 }
 
-static void
-cursor_update(struct vehicle *v, void *t)
+#endif
+
+int
+cursor_get_dir(struct  cursor *this)
 {
-	struct cursor *this=t;
+	return this->dir;
+}
+
+static void
+cursor_update(struct vehicle *v, void *data)
+{
+	struct cursor *this=data;
 	struct point pnt;
 	struct coord *pos;
 	double *dir;
+	double *speed;
+	enum projection pro;
+	int border=10;
 
 	if (v) {
 		pos=vehicle_pos_get(v);	
 		dir=vehicle_dir_get(v);
-		track_update(this->co->track, pos, (int)(*dir));
-		if (this->co->flags->orient_north)
-			dir=0;
-		route_set_position(this->co->route, cursor_pos_get(this->co->cursor));
-		if (!transform(this->co->trans, pos, &pnt)) {
-			cursor_map_reposition(this, pos, dir);
-			transform(this->co->trans, pos, &pnt);
+		speed=vehicle_speed_get(v);
+		pro=vehicle_projection(v);
+		this->dir=*dir;
+		this->pos=*pos;
+		if (this->update_callback.func) 
+			(*this->update_callback.func)(this, this->update_callback.data);
+		if (!transform(this->trans, pro, &this->pos, &pnt) || !transform_within_border(this->trans, &pnt, border)) {
+			if (this->offscreen_callback.func) 
+				(*this->offscreen_callback.func)(this, this->offscreen_callback.data);
+			transform(this->trans, pro, &this->pos, &pnt);
 		}
-		if (pnt.x < 0 || pnt.y < 0 || pnt.x >= this->co->trans->width || pnt.y >= this->co->trans->height || this->co->flags->fixedpos_mode) {
-			cursor_map_reposition(this, pos, dir);
-			transform(this->co->trans, pos, &pnt);
-		}
-		if (cursor_map_reposition_boundary(this, pos, dir, &pnt))
-			transform(this->co->trans, pos, &pnt);
-		cursor_draw(this, &pnt, vehicle_speed_get(v), vehicle_dir_get(v));
+		cursor_draw(this, &pnt, *dir-transform_get_angle(this->trans, 0), *speed > 2.5);
 	}
+#if 0
 	compass_draw(this->co->compass, this->co);
-	osd_draw(this->co->osd, this->co);
+#endif
 }
-
-extern void *vehicle;
 
 struct cursor *
-cursor_new(struct container *co, struct vehicle *v)
+cursor_new(struct graphics *gra, struct vehicle *v, struct color *c, struct transformation *t)
 {
+	printf("cursor_new v=%p\n", v);
 	struct cursor *this=g_new(struct cursor,1);
-	this->co=co;
-	this->cursor_gc=co->gra->gc_new(co->gra);
-	co->gra->gc_set_foreground(this->cursor_gc, 0x0000, 0x0000, 0xffff);
-	co->gra->gc_set_linewidth(this->cursor_gc, 2);
-	vehicle_callback_register(v, cursor_update, this);
+	this->gra=gra;
+	this->trans=t;
+	this->cursor_gc=graphics_gc_new(gra);
+	this->v=v;
+	graphics_gc_set_foreground(this->cursor_gc, c);
+	graphics_gc_set_linewidth(this->cursor_gc, 2);
+	this->vehicle_callback=vehicle_callback_register(v, cursor_update, this);
 	return this;
 }
+
+void
+cursor_register_offscreen_callback(struct cursor *this, void (*func)(struct cursor *cursor, void *data), void *data)
+{
+	this->offscreen_callback.func=func;
+	this->offscreen_callback.data=data;
+}
+
+
+void
+cursor_register_update_callback(struct cursor *this, void (*func)(struct cursor *cursor, void *data), void *data)
+{
+	this->update_callback.func=func;
+	this->update_callback.data=data;
+}
+
+

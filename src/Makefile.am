@@ -1,24 +1,27 @@
-SUBDIRS=fib-1.0 gui graphics
+SUBDIRS=fib-1.0 data gui graphics xpm
 
 fib-1.0 fib-1.0/Makefile.in: fib-1.0/Makefile.am
 	cd fib-1.0
 	./configure
 
-AM_CPPFLAGS = @PACKAGE_CFLAGS@
-LDFLAGS = -Wl,--export-dynamic
+AM_CPPFLAGS = @NAVIT_CFLAGS@ @SPEECHD_CFLAGS@ @GTK2_CFLAGS@ -DMODULE=\"navit\"
 
 
 bin_PROGRAMS = navit
 
-navit_SOURCES = block.c command.c compass.c coord.c country.c cursor.c data_window.c debug.c destination.c \
-	display.c file.c graphics.c log.c main.c map-common.c map-skelimpl.c map-skels.c map-srv.c \
-	map-stubs.c map_data.c menu.c navigation.c osd.c param.c phrase.c plugin.c poly.c popup.c \
-	profile.c route.c search.c speech.c street.c street_name.c town.c transform.c tree.c track.c \
-	util.c vehicle.c block.h command.h compass.h config.h container.h coord.h country.h \
-	cursor.h data.h data_window.h data_window_int.h debug.h destination.h display.h draw_info.h \
-	file.h graphics.h gtkext.h log.h main.h map-share.h map.h map_data.h menu.h navigation.h \
-	osd.h param.h phrase.h plugin.h point.h poly.h popup.h route.h search.h speech.h statusbar.h \
-	street.h street_data.h street_name.h toolbar.h town.h transform.h tree.h track.h util.h vehicle.h
+#pkglib_DATA = navit.xml
+#EXTRA_DIST = navit.xml
 
-navit_LDADD = @PACKAGE_LIBS@ gui/gtk/gtk.o graphics/gtk_drawing_area/gtk_drawing_area.o -Lfib-1.0 -lfib
+navit_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c data_window.c debug.c \
+	file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
+	mapset.c maptype.c menu.c navit.c navigation.c param.c phrase.c plugin.c popup.c \
+	profile.c python.c route.c search.c speech.c transform.c track.c \
+	util.c vehicle.c xmlconfig.c attr.h attr_def.h callback.h color.h compass.h coord.h country.h \
+	cursor.h data.h data_window.h data_window_int.h debug.h destination.h draw_info.h \
+	file.h graphics.h gtkext.h gui.h item.h item_def.h log.h layout.h main.h map-share.h map.h\
+	map_data.h mapset.h maptype.h menu.h navigation.h navit.h \
+	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h search.h speech.h statusbar.h \
+	toolbar.h transform.h track.h util.h vehicle.h xmlconfig.h
+
+navit_LDADD = @NAVIT_LIBS@ @SPEECHD_LIBS@ @GTK2_LIBS@ -Lfib-1.0 -lfib
 

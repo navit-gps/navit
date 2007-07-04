@@ -7,10 +7,10 @@
 #include "transform.h"
 #include "route.h"
 #include "vehicle.h"
-#include "container.h"
-#include "compass.h"
+#include "navit.h"
 #include "compass.h"
 
+#if 0
 struct compass {
 	struct graphics *gr;
 	struct graphics_gc *bg;
@@ -83,6 +83,7 @@ compass_draw(struct compass *comp, struct container *co)
 		handle(comp->gr,comp->white, &p, 20,0);
 	else
 		handle(comp->gr, comp->white, &p, 20, -*vehicle_dir);
+#if 0 /* FIXME */
 	dest=route_get_destination(co->route);
 	if (dest) {
 		pos=vehicle_pos_get(co->vehicle);	
@@ -107,6 +108,7 @@ compass_draw(struct compass *comp, struct container *co)
 
 		comp->gr->draw_text(comp->gr, comp->green, NULL, comp->font, buffer, &p, 0x10000, 0);
 	}
+#endif
 	comp->gr->draw_mode(comp->gr, draw_mode_end);
 }
 
@@ -131,3 +133,4 @@ compass_new(struct container *co)
 	compass_draw(this, co);
 	return this;	
 }
+#endif
