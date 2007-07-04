@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	$Id: fib.c,v 1.1 2005-12-02 10:41:56 martin-s Exp $
+ *	$Id: fib.c,v 1.2 2007-07-04 22:44:39 martin-s Exp $
  *
  */
 
@@ -261,6 +261,8 @@ fh_replacekey(struct fibheap *h, struct fibheap_el *x, int key)
 	return ret;
 }
 
+#include <stdio.h>
+
 void *
 fh_replacekeydata(struct fibheap *h, struct fibheap_el *x, int key, void *data)
 {
@@ -277,6 +279,7 @@ fh_replacekeydata(struct fibheap *h, struct fibheap_el *x, int key, void *data)
 	 * requires O(lgn) time.
 	 */
 	if ((r = fh_comparedata(h, key, data, x)) > 0) {
+		printf("fh_comparedata r=%d key=%d data=%p\n", r, key, data);
 		/* XXX - bad code! */
 		abort();
 		fh_deleteel(h, x);

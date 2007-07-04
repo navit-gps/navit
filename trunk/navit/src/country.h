@@ -1,12 +1,7 @@
-struct country {
-	int id;
-	char *car;
-	char *iso2;
-	char *iso3;
-	char *name;
-};
-struct country * country_get_by_id(int id);
-int country_search_by_name(const char *name, int partial, int (*func)(struct country *cou, void *data), void *data);
-int country_search_by_car(const char *name, int partial, int (*func)(struct country *cou, void *data), void *data);
-int country_search_by_iso2(const char *name, int partial, int (*func)(struct country *cou, void *data), void *data);
-int country_search_by_iso3(const char *name, int partial, int (*func)(struct country *cou, void *data), void *data);
+/* prototypes */
+struct attr;
+struct country_search;
+struct item;
+struct country_search *country_search_new(struct attr *search, int partial);
+struct item *country_search_get_item(struct country_search *this);
+void country_search_destroy(struct country_search *this);

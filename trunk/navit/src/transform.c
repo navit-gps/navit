@@ -3,18 +3,93 @@
 #include <math.h>
 #include <limits.h>
 #include <glib.h>
+#include "config.h"
 #include "coord.h"
+#include "debug.h"
 #include "transform.h"
+#include "projection.h"
+#include "point.h"
+
+struct transformation {
+        int width;		/* Height of destination rectangle */
+        int height;		/* Width of destination rectangle */
+        long scale;		/* Scale factor */
+	int angle;		/* Rotation angle */
+	double cos_val,sin_val;	/* cos and sin of rotation angle */
+	enum projection pro;
+	struct coord_rect r;	/* Source rectangle */
+	struct coord center;	/* Center of source rectangle */
+};
+
+struct transformation *
+transform_new(void)
+{
+	struct transformation *this_;
+
+	this_=g_new0(struct transformation, 1);
+
+	return this_;
+}
+
+void
+transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g)
+{
+	double f;
+
+	switch (pro) {
+	case projection_mg:
+		g->lng=c->x/6371000.0/M_PI*180;
+		g->lat=atan(exp(c->y/6371000.0))/M_PI*360-90;
+		break;
+	case projection_garmin:
+		f=360.0/(1<<24);
+		g->lng=c->x*f;
+		g->lat=c->y*f;	
+		break;
+	default:
+		break;
+	}
+}
+
+void
+transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c)
+{
+	double f;
+
+	switch (pro) {
+	case projection_mg:
+		c->x=g->lng*6371000.0*M_PI/180;
+		c->y=log(tan(M_PI_4+g->lat*M_PI/360))*6371000.0;
+		break;
+	case projection_garmin:
+		f=360.0/(1<<24);
+		c->x=g->lng/f;
+		c->y=g->lat/f;	
+		break;
+	default:
+		break;
+	}
+}
 
 int
-transform(struct transformation *t, struct coord *c, struct point *p)
+transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p)
 {
+	struct coord c1;
+#ifdef AVOID_FLOAT
+	int xc,yc;
+#else
         double xc,yc;
-	int ret=0;
+#endif
+	int ret;
+	if (pro != t->pro) {
+		struct coord_geo g;
+		transform_to_geo(pro, c, &g);
+		transform_from_geo(t->pro, &g, &c1);
+		c=&c1;
+	}
         xc=c->x;
         yc=c->y;
-        if (xc >= t->rect[0].x && xc <= t->rect[1].x && yc >= t->rect[1].y && yc <= t->rect[0].y)
-                ret=1;
+	ret=coord_rect_contains(&t->r, c);
         xc-=t->center.x;
         yc-=t->center.y;
 	yc=-yc;
@@ -25,8 +100,13 @@ transform(struct transformation *t, struct coord *c, struct point *p)
 	  	xc=xcn;
 	  	yc=ycn;
 	}
+#ifdef AVOID_FLOAT
         xc=xc*16.0/(double)(t->scale);
         yc=yc*16.0/(double)(t->scale);
+#else
+        xc=xc*16/t->scale;
+        yc=yc*16/t->scale;
+#endif
 #if 0
 	{
 		double zc=yc;
@@ -77,6 +157,17 @@ transform_reverse(struct transformation *t, struct point *p, struct coord *c)
 	c->y=t->center.y+yc;
 }
 
+enum projection
+transform_get_projection(struct transformation *this_)
+{
+	return this_->pro;
+}
+
+void
+transform_set_projection(struct transformation *this_, enum projection pro)
+{
+	this_->pro=pro;
+}
 
 static int
 min4(int v1,int v2, int v3, int v4)
@@ -105,6 +196,45 @@ max4(int v1,int v2, int v3, int v4)
 }
 
 void
+transform_rect(struct transformation *this_, enum projection pro, struct coord_rect *r)
+{
+	struct coord_geo g;
+	if (0 && this_->pro == pro) {
+		*r=this_->r;
+	} else {
+		transform_to_geo(this_->pro, &this_->r.lu, &g);
+		transform_from_geo(pro, &g, &r->lu);
+		dbg(1,"%f,%f", g.lat, g.lng);
+		transform_to_geo(this_->pro, &this_->r.rl, &g);
+		dbg(1,": - %f,%f\n", g.lat, g.lng);
+		transform_from_geo(pro, &g, &r->rl);
+	}
+	dbg(1,"transform rect for %d is %d,%d - %d,%d\n", pro, r->lu.x, r->lu.y, r->rl.x, r->rl.y);
+}
+
+struct coord *
+transform_center(struct transformation *this_)
+{
+	return &this_->center;
+}
+
+int
+transform_contains(struct transformation *this_, enum projection pro, struct coord_rect *r)
+{
+	struct coord_geo g;
+	struct coord_rect r1;
+	if (this_->pro != pro) {
+		transform_to_geo(pro, &r->lu, &g);
+		transform_from_geo(this_->pro, &g, &r1.lu);
+		transform_to_geo(pro, &r->rl, &g);
+		transform_from_geo(this_->pro, &g, &r1.rl);
+		r=&r1;
+	}
+	return coord_rect_overlap(&this_->r, r);
+	
+}
+
+void
 transform_set_angle(struct transformation *t,int angle)
 {
         t->angle=angle;
@@ -112,11 +242,30 @@ transform_set_angle(struct transformation *t,int angle)
         t->sin_val=sin(M_PI*t->angle/180);
 }
 
-void
-transform_setup(struct transformation *t, int x, int y, int scale, int angle)
+int
+transform_get_angle(struct transformation *this_,int angle)
 {
-        t->center.x=x;
-        t->center.y=y;
+	return this_->angle;
+}
+
+void
+transform_set_size(struct transformation *t, int width, int height)
+{
+	t->width=width;
+	t->height=height;
+}
+
+void
+transform_get_size(struct transformation *t, int *width, int *height)
+{
+	*width=t->width;
+	*height=t->height;
+}
+
+void
+transform_setup(struct transformation *t, struct coord *c, int scale, int angle)
+{
+        t->center=*c;
         t->scale=scale;
 	transform_set_angle(t, angle);
 }
@@ -127,10 +276,10 @@ transform_setup_source_rect_limit(struct transformation *t, struct coord *center
 	t->center=*center;
 	t->scale=1;
 	t->angle=0;
-	t->rect[0].x=center->x-limit;
-	t->rect[1].x=center->x+limit;
-	t->rect[1].y=center->y-limit;
-	t->rect[0].y=center->y+limit;
+	t->r.lu.x=center->x-limit;
+	t->r.rl.x=center->x+limit;
+	t->r.rl.y=center->y-limit;
+	t->r.lu.y=center->y+limit;
 }
 
 void
@@ -151,27 +300,40 @@ transform_setup_source_rect(struct transformation *t)
 	for (i = 0 ; i < 4 ; i++) {
 		transform_reverse(t, &screen_pnt[i], &screen[i]);
 	}
-	t->rect[0].x=min4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
-	t->rect[1].x=max4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
-	t->rect[1].y=min4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
-	t->rect[0].y=max4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
+	t->r.lu.x=min4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
+	t->r.rl.x=max4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
+	t->r.rl.y=min4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
+	t->r.lu.y=max4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
 }
 
-int
+long
 transform_get_scale(struct transformation *t)
 {
-	return t->scale/16;
+	return t->scale;
 }
 
 void
-transform_lng_lat(struct coord *c, struct coord_geo *g)
+transform_set_scale(struct transformation *t, long scale)
 {
-	g->lng=c->x/6371000.0/M_PI*180;
-	g->lat=atan(exp(c->y/6371000.0))/M_PI*360-90;
-#if 0
-	printf("y=%d vs %f\n", c->y, log(tan(M_PI_4+*lat*M_PI/360))*6371020.0);
-#endif
+	t->scale=scale;
 }
+
+
+int
+transform_get_order(struct transformation *t)
+{
+	int scale=t->scale;
+	int order=0;
+        while (scale > 1) {
+                order++;
+                scale>>=1;
+        }
+        order=18-order;
+        if (order < 0)
+                order=0;
+	return order;
+}
+
 
 void
 transform_geo_text(struct coord_geo *g, char *buffer)
@@ -194,13 +356,6 @@ transform_geo_text(struct coord_geo *g, char *buffer)
 
 }
 
-void
-transform_mercator(double *lng, double *lat, struct coord *c)
-{
-	c->x=*lng*6371000.0*M_PI/180;
-	c->y=log(tan(M_PI_4+*lat*M_PI/360))*6371000.0;
-}
-
 double
 transform_scale(int y)
 {
@@ -208,17 +363,52 @@ transform_scale(int y)
 	struct coord_geo g;
 	c.x=0;
 	c.y=y;
-	transform_lng_lat(&c, &g);
+	transform_to_geo(projection_mg, &c, &g);
 	return 1/cos(g.lat/180*M_PI);
 }
+
+#ifdef AVOID_FLOAT
+static int
+tab_sqrt[]={14142,13379,12806,12364,12018,11741,11517,11333,11180,11051,10943,10850,10770,10701,10640,10587,10540,10499,10462,10429,10400,10373,10349,10327,10307,10289,10273,10257,10243,10231,10219,10208};
+#endif
 
 double
 transform_distance(struct coord *c1, struct coord *c2)
 {
+#ifndef AVOID_FLOAT 
 	double dx,dy,scale=transform_scale((c1->y+c2->y)/2);
 	dx=c1->x-c2->x;
 	dy=c1->y-c2->y;
 	return sqrt(dx*dx+dy*dy)/scale;
+#else
+	int dx,dy,f,scale=15539;
+	dx=c1->x-c2->x;
+	dy=c1->y-c2->y;
+	if (dx < 0)
+		dx=-dx;
+	if (dy < 0)
+		dy=-dy;
+	while (dx > 20000 || dy > 20000) {
+		dx/=10;
+		dy/=10;
+		scale/=10;
+	}
+	if (! dy)
+		return dx*10000/scale;
+	if (! dx)
+		return dy*10000/scale;
+	if (dx > dy) {
+		f=dx*8/dy-8;
+		if (f >= 32)
+			return dx*10000/scale;
+		return dx*tab_sqrt[f]/scale;
+	} else {
+		f=dy*8/dx-8;
+		if (f >= 32)
+			return dy*10000/scale;
+		return dy*tab_sqrt[f]/scale;
+	}
+#endif
 }
 
 int
@@ -269,6 +459,29 @@ transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref
 	return transform_distance_sq(&l, ref);
 }
 
+int
+transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, struct coord *lpnt, int *pos)
+{
+	int i,dist,distn;
+	struct coord lp;
+	if (count < 2)
+		return 0;
+	if (pos)
+		*pos=0;
+	dist=transform_distance_line_sq(&c[0], &c[1], ref, lpnt);
+	for (i=2 ; i < count ; i++) {
+		distn=transform_distance_line_sq(&c[i-1], &c[i], ref, &lp);
+		if (distn < dist) {
+			dist=distn;
+			if (lpnt)
+				*lpnt=lp;
+			if (pos)
+				*pos=i-1;
+		}
+	}
+	return dist;
+}
+
 
 void
 transform_print_deg(double deg)
@@ -279,19 +492,19 @@ transform_print_deg(double deg)
 int 
 is_visible(struct transformation *t, struct coord *c)
 {
-	struct coord *r=t->rect;
+	struct coord_rect *r=&t->r;
 
 	assert(c[0].x <= c[1].x);
 	assert(c[0].y >= c[1].y);
-	assert(r[0].x <= r[1].x);
-	assert(r[0].y >= r[1].y);
-	if (c[0].x > r[1].x)
+	assert(r->lu.x <= r->rl.x);
+	assert(r->lu.y >= r->rl.y);
+	if (c[0].x > r->rl.x)
 		return 0;
-	if (c[1].x < r[0].x)
+	if (c[1].x < r->lu.x)
 		return 0;
-	if (c[0].y < r[1].y)
+	if (c[0].y < r->rl.y)
 		return 0;
-	if (c[1].y > r[0].y)
+	if (c[1].y > r->lu.y)
 		return 0;
 	return 1;
 }
@@ -299,17 +512,17 @@ is_visible(struct transformation *t, struct coord *c)
 int
 is_line_visible(struct transformation *t, struct coord *c)
 {
-	struct coord *r=t->rect;
+	struct coord_rect *r=&t->r;
 
-	assert(r[0].x <= r[1].x);
-	assert(r[0].y >= r[1].y);
-	if (MIN(c[0].x,c[1].x) > r[1].x)
+	assert(r->lu.x <= r->rl.x);
+	assert(r->lu.y >= r->rl.y);
+	if (MIN(c[0].x,c[1].x) > r->rl.x)
 		return 0;
-	if (MAX(c[0].x,c[1].x) < r[0].x)
+	if (MAX(c[0].x,c[1].x) < r->lu.x)
 		return 0;
-	if (MAX(c[0].y,c[1].y) < r[1].y)
+	if (MAX(c[0].y,c[1].y) < r->rl.y)
 		return 0;
-	if (MIN(c[0].y,c[1].y) > r[0].y)
+	if (MIN(c[0].y,c[1].y) > r->lu.y)
 		return 0;
 	return 1;
 }
@@ -317,17 +530,17 @@ is_line_visible(struct transformation *t, struct coord *c)
 int 
 is_point_visible(struct transformation *t, struct coord *c)
 {
-	struct coord *r=t->rect;
+	struct coord_rect *r=&t->r;
 
-	assert(r[0].x <= r[1].x);
-	assert(r[0].y >= r[1].y);
-	if (c->x > r[1].x)
+	assert(r->lu.x <= r->rl.x);
+	assert(r->lu.y >= r->rl.y);
+	if (c->x > r->rl.x)
 		return 0;
-	if (c->x < r[0].x)
+	if (c->x < r->lu.x)
 		return 0;
-	if (c->y < r[1].y)
+	if (c->y < r->rl.y)
 		return 0;
-	if (c->y > r[0].y)
+	if (c->y > r->lu.y)
 		return 0;
 	return 1;
 }
@@ -346,30 +559,85 @@ is_too_small(struct transformation *t, struct coord *c, int limit)
 	return 0;	
 }
 
+#ifdef AVOID_FLOAT
+static int tab_atan[]={0,262,524,787,1051,1317,1584,1853,2126,2401,2679,2962,3249,3541,3839,4142,4452,4770,5095,5430,5774,6128,6494,6873,7265,7673,8098,8541,9004,9490,10000,10538};
 
-void transform_limit_extend(struct coord *rect, struct coord *c)
+static int
+atan2_int_lookup(int val)
 {
-	if (c->x < rect[0].x) rect[0].x=c->x;
-	if (c->x > rect[1].x) rect[1].x=c->x;
-	if (c->y < rect[1].y) rect[1].y=c->y;
-	if (c->y > rect[0].y) rect[0].y=c->y;
+	int len=sizeof(tab_atan)/sizeof(int);
+	int i=len/2;
+	int p=i-1;
+	for (;;) {
+		i>>=1;
+		if (val < tab_atan[p])
+			p-=i;
+		else
+			if (val < tab_atan[p+1])
+				return p+(p>>1);
+			else
+				p+=i;
+	}
 }
 
-
+static int
+atan2_int(int dx, int dy)
+{
+	int f,mul=1,add=0,ret;
+	if (! dx) {
+		return dy < 0 ? 180 : 0;
+	}
+	if (! dy) {
+		return dx < 0 ? -90 : 90;
+	}
+	if (dx < 0) {
+		dx=-dx;
+		mul=-1;
+	}
+	if (dy < 0) {
+		dy=-dy;
+		add=180*mul;
+		mul*=-1;
+	}
+	while (dx > 20000 || dy > 20000) {
+		dx/=10;
+		dy/=10;
+	}
+	if (dx > dy) {
+		ret=90-atan2_int_lookup(dy*10000/dx);
+	} else {
+		ret=atan2_int_lookup(dx*10000/dy);
+	}
+	return ret*mul+add;
+}
+#endif
 
 int
-transform_get_angle(struct coord *c, int dir)
+transform_get_angle_delta(struct coord *c1, struct coord *c2, int dir)
 {
+	int dx=c2->x-c1->x;
+	int dy=c2->y-c1->y;
+#ifndef AVOID_FLOAT 
 	double angle;
-	int dx=c[1].x-c[0].x;
-	int dy=c[1].y-c[0].y;
 	angle=atan2(dx,dy);
 	angle*=180/M_PI;
+#else
+	int angle;
+	angle=atan2_int(dx,dy);
+#endif
 	if (dir == -1)
 		angle=angle-180;
 	if (angle < 0)
 		angle+=360;
 	return angle;
+}
+
+int
+transform_within_border(struct transformation *this_, struct point *p, int border)
+{
+	if (p->x < border || p->x > this_->width-border || p->y < border || p->y > this_->height-border)
+		return 0;
+	return 1;
 }
 
 /*
@@ -410,6 +678,5 @@ e = the first eccentricity of the ellipsoid
 
 
 */
-
 
 

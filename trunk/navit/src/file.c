@@ -5,6 +5,7 @@
 #include <sys/mman.h>
 #include <dirent.h>
 #include <stdio.h>
+#include <wordexp.h>
 #include <glib.h>
 #include "file.h"
 
@@ -39,6 +40,15 @@ file_create(char *name)
 	file->next=file_list;
 	file_list=file;
         return file;
+}
+
+int
+file_exists(char *name)
+{
+	struct stat buf;
+	if (! stat(name, &buf))
+		return 1;
+	return 0;
 }
 
 void
@@ -151,6 +161,38 @@ file_destroy(struct file *f)
 	g_free(f->name);
 	g_free(f);	
 }
+
+struct file_wordexp {
+	wordexp_t we;
+};
+
+struct file_wordexp *
+file_wordexp_new(char *pattern)
+{
+	struct file_wordexp *ret=g_new(struct file_wordexp, 1);
+	wordexp(pattern, &ret->we, 0);	
+	return ret;
+}
+
+int
+file_wordexp_get_count(struct file_wordexp *wexp)
+{
+	return wexp->we.we_wordc;
+}
+
+char **
+file_wordexp_get_array(struct file_wordexp *wexp)
+{
+	return wexp->we.we_wordv;
+}
+
+void
+file_wordexp_destroy(struct file_wordexp *wexp)
+{
+	wordfree(&wexp->we);
+	g_free(wexp);
+}
+
 
 int
 file_get_param(struct file *file, struct param_list *param, int count)
