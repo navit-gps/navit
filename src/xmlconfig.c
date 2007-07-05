@@ -56,14 +56,14 @@ find_color(struct xmlstate *state, int required, struct color *color)
 }
 
 static int
-find_zoom(struct xmlstate *state, int required, int *min, int *max)
+find_order(struct xmlstate *state, int required, int *min, int *max)
 {
 	const char *value, *pos;
 	int ret;
 
 	*min=0;
 	*max=18;
-	value=find_attribute(state, "zoom", required);
+	value=find_attribute(state, "order", required);
 	if (! value)
 		return 0;
 	pos=index(value, '-');
@@ -240,7 +240,7 @@ xmlconfig_item(struct xmlstate *state)
 
 	if (! type)
 		return 0;
-	if (! find_zoom(state, 1, &min, &max))
+	if (! find_order(state, 1, &min, &max))
 		return 0;
 	state->element_object=itemtype_new(min, max);
 	if (! state->element_object)
