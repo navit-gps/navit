@@ -272,7 +272,7 @@ vehicle_gps_callback(struct gps_data_t *data, char *buf, size_t len, int level)
 {
 	// If data->fix.speed is NAN, then the drawing gets jumpy. 
 	if(isnan(data->fix.speed)){
-		return 0;
+		return;
 	}
 
 	struct vehicle *this=vehicle_last;
@@ -349,7 +349,7 @@ vehicle_open(struct vehicle *this)
 {
 	struct termios tio;
 	struct stat st;
-	int fd;
+	int fd=0;
 
 #ifdef HAVE_LIBGPS
 	struct gps_data_t *gps=NULL;
@@ -415,7 +415,6 @@ static gboolean
 vehicle_track(GIOChannel *iochan, GIOCondition condition, gpointer t)
 {
 	struct vehicle *this=t;
-	GError *error=NULL;
 	char *str,*tok;
 	gsize size;
 
@@ -513,7 +512,7 @@ vehicle_callback_register(struct vehicle *this, void (*func)(struct vehicle *, v
 void
 vehicle_callback_unregister(struct vehicle *this, void *handle)
 {
-	g_list_remove(this->callbacks, handle);
+	this->callbacks=g_list_remove(this->callbacks, handle);
 }
 
 

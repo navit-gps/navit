@@ -113,7 +113,7 @@ void plugin_call_init(struct plugin *pl);
 void plugin_unload(struct plugin *pl);
 void plugin_destroy(struct plugin *pl);
 struct plugins *plugins_new(void);
-void plugins_add_path(struct plugins *pls, char *path, int active, int lazy);
+void plugins_add_path(struct plugins *pls, const char *path, int active, int lazy);
 void plugins_init(struct plugins *pls);
 void plugins_destroy(struct plugins *pls);
 void *plugin_get_type(enum plugin_type type, const char *name);

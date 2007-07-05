@@ -25,7 +25,7 @@ char *file_readdir(void *hnd);
 void file_closedir(void *hnd);
 struct file *file_create_caseinsensitive(char *name);
 void file_destroy(struct file *f);
-struct file_wordexp *file_wordexp_new(char *pattern);
+struct file_wordexp *file_wordexp_new(const char *pattern);
 int file_wordexp_get_count(struct file_wordexp *wexp);
 char **file_wordexp_get_array(struct file_wordexp *wexp);
 void file_wordexp_destroy(struct file_wordexp *wexp);

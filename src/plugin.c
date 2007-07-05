@@ -110,7 +110,7 @@ plugins_new(void)
 }
 
 void
-plugins_add_path(struct plugins *pls, char *path, int active, int lazy)
+plugins_add_path(struct plugins *pls, const char *path, int active, int lazy)
 {
 	struct file_wordexp *we;
 	int i, count;

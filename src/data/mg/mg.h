@@ -271,6 +271,7 @@ struct map_rect_priv {
 int block_init(struct map_rect_priv *mr);
 int block_next(struct map_rect_priv *mr);
 int block_get_byindex(struct file *file, int idx, struct block_priv *blk);
+int block_next_lin(struct map_rect_priv *mr);
 
 int tree_search_hv(char *dirname, char *filename, unsigned int search1, unsigned int search2, int *result);
 int town_get(struct map_rect_priv *mr, struct town_priv *poly, struct item *item);

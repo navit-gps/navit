@@ -116,6 +116,7 @@ struct displaylist_handle *graphics_displaylist_open(struct displaylist *display
 struct displayitem *graphics_displaylist_next(struct displaylist_handle *dlh);
 void graphics_displaylist_close(struct displaylist_handle *dlh);
 struct displaylist *graphics_displaylist_new(void);
+void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, GList *layouts, struct route *route);
 struct item *graphics_displayitem_get_item(struct displayitem *di);
 char *graphics_displayitem_get_label(struct displayitem *di);
 int graphics_displayitem_within_dist(struct displayitem *di, struct point *p, int dist);
