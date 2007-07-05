@@ -114,7 +114,7 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, int w, int h)
 }
 
 static int gtk_argc;
-static char *gtk_argv[]={NULL};
+static char **gtk_argv={NULL};
 
 void
 plugin_init(void)

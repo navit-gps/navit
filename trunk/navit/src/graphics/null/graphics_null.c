@@ -57,11 +57,6 @@ gc_set_dashes(struct graphics_gc_priv *gc, unsigned char *dash_list, int n)
 }
 
 static void
-gc_set_color(struct graphics_gc_priv *gc, struct color *c, int fg)
-{
-}
-
-static void
 gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
 }
@@ -125,11 +120,6 @@ draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *
 
 static void
 draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, char *data)
-{
-}
-
-static void
-overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, int window)
 {
 }
 
