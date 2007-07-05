@@ -1,5 +1,5 @@
 include $(top_srcdir)/Makefile.inc
-SUBDIRS=fib-1.1 data gui graphics xpm
+SUBDIRS=binding data fib-1.1 gui graphics osd speech vehicle xpm
 
 AM_CPPFLAGS = -I$(top_srcdir)/src/fib-1.1 @NAVIT_CFLAGS@ @SPEECHD_CFLAGS@ -DMODULE=\"navit\"
 
