@@ -239,6 +239,37 @@ navit_set_destination(struct navit *this_, struct coord *c, char *description)
 struct navit *global_navit;
 
 static void
+navit_debug(struct navit *this_)
+{
+#if 0
+#include "attr.h"
+#include "item.h"
+#include "search.h"
+	struct attr attr;
+	struct search_list *sl;
+	struct search_list_result *res;
+
+	debug_level_set("data_mg:town_search_get_item",1);
+	debug_level_set("data_mg:town_search_compare",1);
+	debug_level_set("data_mg:tree_search_next",1);
+	sl=search_list_new(this_->mapsets->data);
+	attr.type=attr_country_all;
+	attr.u.str="Deu";
+	search_list_search(sl, &attr, 1);
+	while (res=search_list_get_result(sl)) {
+		printf("country result\n");
+	}
+	attr.type=attr_town_name;
+	attr.u.str="U";
+	search_list_search(sl, &attr, 1);
+	while (res=search_list_get_result(sl)) {
+		printf("town result\n");
+	}
+	search_list_destroy(sl);
+#endif
+}
+
+static void
 navit_show_roadbook(struct navigation *nav, void *data)
 {
 	struct navigation_list *list;
@@ -315,6 +346,7 @@ navit_init(struct navit *this_)
 		}
 	}
 	global_navit=this_;
+	navit_debug(this_);
 }
 
 void

@@ -42,6 +42,8 @@ if test "x$gtk2_pkgconfig" = "xyes"; then
 fi
 AC_SUBST(GTK2_CFLAGS)
 AC_SUBST(GTK2_LIBS)
+AM_CONDITIONAL(GUI_GTK, [test "x$gtk2_pkgconfig" = "xyes"])
+AM_CONDITIONAL(GRAPHICS_GTK_DRAWING_AREA, [test "x$gtk2_pkgconfig" = "xyes"])
 
 PKG_CHECK_MODULES(FREETYPE2, [freetype2], [freetype2_pkgconfig=yes], [freetype2_pkgconfig=no])
 if test "x$freetype2_pkgconfig" = "xyes"; then
@@ -57,9 +59,10 @@ fi
 AC_SUBST(IMLIB2_CFLAGS)
 AC_SUBST(IMLIB2_LIBS)
 
-AC_CHECK_HEADER(libspeechd.h, AC_DEFINE([HAVE_LIBSPEECHD],[],Define to 1 if you have the <libspeechd.h> header file.) SPEECHD_LIBS="-lspeechd",  AC_MSG_WARN([*** no libspeechd.h -- Speech output disabled]))
+AC_CHECK_HEADER(libspeechd.h, AC_DEFINE([HAVE_LIBSPEECHD],[],Define to 1 if you have the <libspeechd.h> header file.) SPEECHD_LIBS="-lspeechd" speechd=yes,  AC_MSG_WARN([*** no libspeechd.h -- Speech output disabled]))
 AC_SUBST(SPEECHD_CFLAGS)
 AC_SUBST(SPEECHD_LIBS)
+AM_CONDITIONAL(SPEECH_SPEECH_DISPATCHER, [test "x$speechd" = "xyes"])
 
 AC_CHECK_HEADER(
 	SDL/SDL.h,
@@ -106,14 +109,15 @@ AC_SUBST(OPENGL_CFLAGS)
 AC_SUBST(OPENGL_LIBS)
 
 AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$cegui" = "xyes" -a "x$opengl" = "xyes" ])
-AM_CONDITIONAL(GUI_GTK, [test "x$gtk2_pkgconfig" = "xyes"])
 AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$opengl" = "xyes"])
-AM_CONDITIONAL(GRAPHICS_GTK_DRAWING_AREA, [test "x$sdl" = "xyes"])
 
 if test x"${USE_LIBGPS}" = xyes
 then
-	AC_CHECK_HEADER(gps.h, AC_DEFINE([HAVE_LIBGPS],[],Define to 1 if you have the <gps.h> header file.) LIBS="$LIBS -lgps",  AC_MSG_WARN([*** no gps.h -- gpsd support disabled]))
+	AC_CHECK_HEADER(gps.h, AC_DEFINE([HAVE_LIBGPS],[],Define to 1 if you have the <gps.h> header file.) GPSD_LIBS="-lgps" gpsd=yes,  AC_MSG_WARN([*** no gps.h -- gpsd support disabled]))
 fi
+AC_SUBST(GPSD_CFLAGS)
+AC_SUBST(GPSD_LIBS)
+AM_CONDITIONAL(VEHICLE_GPSD, [test "x$gpsd" = "xyes"])
 
 PYTHON_LIB=""
 PYTHON_INC=""
@@ -153,17 +157,25 @@ LIBS="$LIBS -rdynamic"
 AC_OUTPUT([
 Makefile
 src/Makefile
+src/binding/Makefile
 src/data/Makefile
 src/data/mg/Makefile
 src/data/textfile/Makefile
 src/data/garmin_img/Makefile
 src/fib-1.1/Makefile
-src/gui/Makefile
-src/gui/gtk/Makefile
-src/gui/sdl/Makefile
 src/graphics/Makefile
 src/graphics/gtk_drawing_area/Makefile
 src/graphics/opengl/Makefile
 src/graphics/null/Makefile
+src/gui/Makefile
+src/gui/gtk/Makefile
+src/gui/sdl/Makefile
+src/osd/Makefile
+src/speech/Makefile
+src/speech/cmdline/Makefile
+src/speech/speech_dispatcher/Makefile
+src/vehicle/Makefile
+src/vehicle/file/Makefile
+src/vehicle/gpsd/Makefile
 src/xpm/Makefile
 ])

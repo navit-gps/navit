@@ -46,6 +46,7 @@ Navit read the current vehicle possition either directly from a file with
 	export GPSDATA=file:filename
 or from gpsd with
 	export GPSDATA=gpsd://host[:port]
+[now in navit.xml]
 
 
 Subdirectories:
