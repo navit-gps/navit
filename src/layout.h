@@ -28,7 +28,7 @@ struct element {
 
 
 struct itemtype { 
-	int zoom_min, zoom_max;
+	int order_min, order_max;
 	GList *type;
 	GList *elements;
 };
@@ -47,7 +47,7 @@ struct layout;
 struct layout *layout_new(const char *name);
 struct layer *layer_new(const char *name, int details);
 void layout_add_layer(struct layout *layout, struct layer *layer);
-struct itemtype *itemtype_new(int zoom_min, int zoom_max);
+struct itemtype *itemtype_new(int order_min, int order_max);
 void itemtype_add_type(struct itemtype *this, enum item_type type);
 void layer_add_itemtype(struct layer *layer, struct itemtype *itemtype);
 void itemtype_add_element(struct itemtype *itemtype, struct element *element);

@@ -391,7 +391,7 @@ xdisplay_draw_layer(GHashTable *display_list, struct graphics *gra, struct layer
 	itms=lay->itemtypes;
 	while (itms) {
 		itm=itms->data;
-		if (order >= itm->zoom_min && order <= itm->zoom_max) 
+		if (order >= itm->order_min && order <= itm->order_max) 
 			xdisplay_draw_elements(gra, display_list, itm);
 		itms=g_list_next(itms);
 	}

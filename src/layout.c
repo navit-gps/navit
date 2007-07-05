@@ -27,13 +27,13 @@ void layout_add_layer(struct layout *layout, struct layer *layer)
 	layout->layers = g_list_append(layout->layers, layer);
 }
 
-struct itemtype * itemtype_new(int zoom_min, int zoom_max)
+struct itemtype * itemtype_new(int order_min, int order_max)
 {
 	struct itemtype *itm;
 
 	itm = g_new0(struct itemtype, 1);
-	itm->zoom_min=zoom_min;
-	itm->zoom_max=zoom_max;
+	itm->order_min=order_min;
+	itm->order_max=order_max;
 	return itm;
 }
 
