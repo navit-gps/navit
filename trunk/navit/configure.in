@@ -148,8 +148,6 @@ fi
 AC_SUBST(PYTHON_LIB)
 AC_SUBST(PYTHON_INC)
 
-AC_CONFIG_SUBDIRS(src/fib-1.0)
-
 LIBS="$LIBS -rdynamic"
 
 AC_OUTPUT([
@@ -159,6 +157,7 @@ src/data/Makefile
 src/data/mg/Makefile
 src/data/textfile/Makefile
 src/data/garmin_img/Makefile
+src/fib-1.1/Makefile
 src/gui/Makefile
 src/gui/gtk/Makefile
 src/gui/sdl/Makefile
