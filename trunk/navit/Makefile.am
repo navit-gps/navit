@@ -1,5 +1,5 @@
+include $(top_srcdir)/Makefile.inc
 SUBDIRS=src
-pkglibplugdir=${pkglibdir}/plugins
-pkglib_DATA = README
+pkgdoc_DATA = README
 EXTRA_DIST = README
 
