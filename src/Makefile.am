@@ -1,3 +1,4 @@
+include $(top_srcdir)/Makefile.inc
 SUBDIRS=fib-1.1 data gui graphics xpm
 
 AM_CPPFLAGS = -Ifib-1.1 @NAVIT_CFLAGS@ @SPEECHD_CFLAGS@ -DMODULE=\"navit\"
@@ -5,7 +6,7 @@ AM_CPPFLAGS = -Ifib-1.1 @NAVIT_CFLAGS@ @SPEECHD_CFLAGS@ -DMODULE=\"navit\"
 
 bin_PROGRAMS = navit
 
-pkglib_DATA = navit.xml
+pkgdata_DATA = navit.xml
 EXTRA_DIST = navit.xml
 
 navit_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c data_window.c debug.c \
