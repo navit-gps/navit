@@ -49,7 +49,7 @@ cursor_pos_get(struct cursor *this)
 }
 
 
-struct coord *
+void
 cursor_pos_set(struct cursor *this, struct coord *pos)
 {
 	this->pos=*pos;

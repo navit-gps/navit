@@ -44,7 +44,6 @@ popup_set_destination(struct menu *menu, void *data1, void *data2)
 {
 	struct navit *nav=data1;
 	struct coord *c=data2;
-	struct route *route;
 	struct coord_geo g;
 	char buffer[1024];
 	char buffer_geo[1024];

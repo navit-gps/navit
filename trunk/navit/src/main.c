@@ -1,5 +1,6 @@
 #include <locale.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <glib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -33,7 +34,7 @@ static gchar *get_home_directory(void)
 	homedir = getenv("HOME");
 	if (!homedir)
 	{
-		struct passwd *p;
+//		struct passwd *p;
 
 // 		p = getpwuid(getuid());
 // 		if (p) homedir = p->pw_dir;

@@ -5,6 +5,7 @@
 #include "gui_gtk.h"
 #include "menu.h"
 #include "coord.h"
+#include "destination.h"
 
 struct menu_priv {
 	char *path;	
