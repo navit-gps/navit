@@ -280,6 +280,7 @@ int poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item
 int poly_get_byid(struct map_rect_priv *mr, struct poly_priv *poly, int id_hi, int id_lo, struct item *item);
 int street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *item);
 int street_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi, int id_lo, struct item *item);
+struct item * street_search_get_item(struct map_rect_priv *mr);
 void tree_search_init(char *dirname, char *filename, struct tree_search *ts, int offset);
 void tree_search_free(struct tree_search *ts);
 int tree_search_next(struct tree_search *ts, unsigned char **p, int dir);

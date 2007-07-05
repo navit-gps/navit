@@ -12,6 +12,7 @@
 #include "plugin.h"
 #include "graphics.h"
 #include "gui_gtk.h"
+#include "transform.h"
 
 #ifndef GDK_Book
 #define GDK_Book XF86XK_Book
@@ -32,7 +33,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
         transform_get_size(navit_get_trans(this->nav), &w, &h);
 	switch (event->keyval) {
 	case GDK_KP_Enter:
-		gtk_menu_shell_select_first(this->menubar, TRUE);
+		gtk_menu_shell_select_first(GTK_MENU_SHELL(this->menubar), TRUE);
 		break;
 	case GDK_Up:
 		p.x=w/2;
