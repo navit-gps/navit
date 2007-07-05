@@ -112,8 +112,16 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, int w, int h)
 	return this;
 }
 
+static int gtk_argc;
+static char *gtk_argv[]={NULL};
+
 void
 plugin_init(void)
 {
+	gtk_init(&gtk_argc, &gtk_argv);
+	gdk_rgb_init();
+	gtk_set_locale();
+
+
 	plugin_register_gui_type("gtk", gui_gtk_new);
 }

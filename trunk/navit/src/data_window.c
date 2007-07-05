@@ -1,14 +1,19 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
+#if 0
 #include <gtk/gtk.h>
+#endif
 #include "param.h"
 #include "data_window.h"
+#if 0
 #include "data_window_int.h"
+#endif
 
 struct data_window *
 data_window(char *name, struct window *parent, void(*callback)(struct data_window *, char **cols))
 {
+#if 0
 	struct data_window *win;
 
 	win=malloc(sizeof(*win));
@@ -27,16 +32,21 @@ data_window(char *name, struct window *parent, void(*callback)(struct data_windo
 		gtk_window_set_transient_for(GTK_WINDOW((GtkWidget *)(win->window)), GTK_WINDOW(parent));
 	gtk_widget_show_all(win->window);
 	return win;
+#endif
+	return NULL;
 }
 
 void
 data_window_begin(struct data_window *win)
 {
+#if 0
 	if (win && win->treeview) {
 		gtk_tree_view_set_model (GTK_TREE_VIEW (win->treeview), NULL);
 	}
+#endif
 }
 
+#if 0
 static void 
 click_column(GtkCList *clist, int column)
 {
@@ -76,10 +86,12 @@ select_row(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, stru
 		win->callback(win, cols);
 	}
 }
+#endif
 
 void
 data_window_add(struct data_window *win, struct param_list *param, int count)
 {
+#if 0
 	int i;
 	GtkCellRenderer *cell;
 	GtkTreeIter iter;
@@ -120,6 +132,7 @@ data_window_add(struct data_window *win, struct param_list *param, int count)
 		utf8=g_locale_to_utf8(param[i].value,-1,NULL,NULL,NULL);
 		gtk_list_store_set(liststore,&iter,i,utf8,-1);
 	}
+#endif
 
 }
 

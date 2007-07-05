@@ -3,7 +3,9 @@
 #include <glib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#ifdef USE_GTK_MAIN_LOOP
 #include <gtk/gtk.h>
+#endif
 #include "file.h"
 #include "debug.h"
 #include "navit.h"
@@ -49,7 +51,7 @@ int main(int argc, char **argv)
 {
 	GError *error = NULL;
 	char *config_file = NULL;
-#if 0
+#ifndef USE_GTK_MAIN_LOOP
 	GMainLoop *loop;
 #endif
 
@@ -58,11 +60,14 @@ int main(int argc, char **argv)
 	setenv("LC_NUMERIC","C",1);
 	setlocale(LC_ALL,"");
 	setlocale(LC_NUMERIC,"C");
-	gtk_set_locale();
 	setlocale(LC_NUMERIC,"C");
 	debug_init();
+#if 0
+	/* handled in gui/gtk */
+	gtk_set_locale();
 	gtk_init(&argc, &argv);
 	gdk_rgb_init();
+#endif
 
 #ifdef HAVE_PYTHON
 	python_init();
@@ -86,7 +91,7 @@ int main(int argc, char **argv)
 	if (main_loop_gui) {
 		gui_run_main_loop(main_loop_gui);
 	} else {
-#if 1
+#ifdef USE_GTK_MAIN_LOOP
 		gtk_main();
 #else
 		loop = g_main_loop_new (NULL, TRUE);

@@ -1,6 +1,6 @@
 SUBDIRS=libmdb
 AUTOMAKE_OPTIONS = no-exeext
-AM_CPPFLAGS = @PACKAGE_CFLAGS@ -I../.. -Ilibmdb/include -shared
+AM_CPPFLAGS = @PACKAGE_CFLAGS@ -I$(top_srcdir)/src -Ilibmdb/include -shared
 
 objdir=$(prefix)
 obj_PROGRAMS=plugin_poi_geodownload.so
