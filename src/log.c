@@ -17,7 +17,7 @@ log_write(char *message, struct file *file, void *data, int size)
 	int fd=open("log.txt",O_RDWR|O_CREAT|O_APPEND|O_SYNC, 0644);
 	sprintf(log,"# %s\n",message);
 	l=log+strlen(log);
-	sprintf(l, "%s 0x%lx ", file->name, p-file->begin);
+	sprintf(l, "%s 0x%x ", file->name, p-file->begin);
 	l=log+strlen(log);
 	while (size) {
 		sprintf(l,"%02x ", *p++);

@@ -137,7 +137,6 @@ gc_set_dashes(struct graphics_gc_priv *gc, unsigned char *dash_list, int n)
 	gdk_gc_set_line_attributes(gc->gc, 1, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
 }
 
-#if 0
 static void
 gc_set_color(struct graphics_gc_priv *gc, struct color *c, int fg)
 {
@@ -152,7 +151,6 @@ gc_set_color(struct graphics_gc_priv *gc, struct color *c, int fg)
 	else
 		gdk_gc_set_background(gc->gc, &gdkc);
 }
-#endif
 
 static void
 gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
@@ -449,7 +447,6 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 }
 #endif
 
-#if 0
 static void
 overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, int window)
 {
@@ -497,7 +494,6 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, int wi
                         0, 0, p->x, p->y, img->gra->width, img->gra->height);
 #endif
 }
-#endif
 
 static void
 draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
