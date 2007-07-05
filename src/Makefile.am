@@ -1,10 +1,6 @@
-SUBDIRS=fib-1.0 data gui graphics xpm
+SUBDIRS=fib-1.1 data gui graphics xpm
 
-fib-1.0 fib-1.0/Makefile.in: fib-1.0/Makefile.am
-	cd fib-1.0
-	./configure
-
-AM_CPPFLAGS = @NAVIT_CFLAGS@ @SPEECHD_CFLAGS@ -DMODULE=\"navit\"
+AM_CPPFLAGS = -Ifib-1.1 @NAVIT_CFLAGS@ @SPEECHD_CFLAGS@ -DMODULE=\"navit\"
 
 
 bin_PROGRAMS = navit
@@ -23,5 +19,5 @@ navit_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c data_wind
 	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h profile.h search.h speech.h statusbar.h \
 	toolbar.h transform.h track.h util.h vehicle.h xmlconfig.h
 
-navit_LDADD = @NAVIT_LIBS@ @SPEECHD_LIBS@ -Lfib-1.0 -lfib
+navit_LDADD = @NAVIT_LIBS@ @SPEECHD_LIBS@ -Lfib-1.1 -lfib
 

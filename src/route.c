@@ -18,7 +18,7 @@
 #include "track.h"
 #include "graphics.h"
 #include "transform.h"
-#include "fib-1.0/fib.h"
+#include "fib.h"
 
 static int speed_list[]={
 	10, /* street_0 */
