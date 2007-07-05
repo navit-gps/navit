@@ -12,6 +12,7 @@
 int debug_level=0;
 static GHashTable *debug_hash;
 
+#if 0
 static void sigsegv(int sig)
 {
 	FILE *f;
@@ -27,6 +28,7 @@ static void sigsegv(int sig)
 	fclose(f);	
 	abort();
 }
+#endif
 
 void
 debug_init(void)

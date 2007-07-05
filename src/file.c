@@ -167,7 +167,7 @@ struct file_wordexp {
 };
 
 struct file_wordexp *
-file_wordexp_new(char *pattern)
+file_wordexp_new(const char *pattern)
 {
 	struct file_wordexp *ret=g_new(struct file_wordexp, 1);
 	wordexp(pattern, &ret->we, 0);	

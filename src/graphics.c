@@ -14,8 +14,7 @@
 #include "profile.h"
 #include "mapset.h"
 #include "route.h"
-
-
+#include "util.h"
 #include "layout.h"
 
 struct graphics
