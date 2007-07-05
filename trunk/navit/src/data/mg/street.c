@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "debug.h"
 #include "mg.h"
 
@@ -511,9 +512,6 @@ street_name_numbers_coord_get(void *priv_data, struct coord *c, int count)
 static int
 street_name_numbers_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
-	struct map_rect_priv *mr=priv_data;
-	struct item *item;
-
 	attr->type=attr_type;
 	switch (attr_type) {
 	default:
