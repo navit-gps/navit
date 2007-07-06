@@ -39,7 +39,7 @@ struct navit {
 	struct cursor *cursor;
 	struct speech *speech;
 	struct vehicle *vehicle;
-	struct track *track;
+	struct tracking *tracking;
 	struct map_flags *flags;
 	int ready;
 	struct window *win;
@@ -283,67 +283,103 @@ navit_show_roadbook(struct navigation *nav, void *data)
 }
 
 void
+navit_add_menu_layouts(struct navit *this_, struct menu *men)
+{
+	menu_add(men, "Test", menu_type_menu, NULL, NULL, NULL);
+}
+
+void
+navit_add_menu_layout(struct navit *this_, struct menu *men)
+{
+	navit_add_menu_layouts(this_, menu_add(men, "Layout", menu_type_submenu, NULL, NULL, NULL));
+}
+
+void
+navit_add_menu_projections(struct navit *this_, struct menu *men)
+{
+	menu_add(men, "M&G", menu_type_menu, navit_projection_set, this_, (void *)projection_mg);
+	menu_add(men, "Garmin", menu_type_menu, navit_projection_set, this_, (void *)projection_garmin);
+}
+
+void
+navit_add_menu_projection(struct navit *this_, struct menu *men)
+{
+	navit_add_menu_projections(this_, menu_add(men, "Projection", menu_type_submenu, NULL, NULL, NULL));
+}
+
+void
+navit_add_menu_maps(struct navit *this_, struct mapset *ms, struct menu *men)
+{
+	struct mapset_handle *handle;
+	struct map *map;
+	struct menu *mmen;
+
+	handle=mapset_open(ms);
+	while ((map=mapset_next(handle,0))) {
+		char *s=g_strdup_printf("%s:%s", map_get_type(map), map_get_filename(map));
+		mmen=menu_add(men, s, menu_type_toggle, navit_map_toggle, this_, map);
+		menu_set_toggle(mmen, map_get_active(map));
+		g_free(s);
+	}
+	mapset_close(handle);
+}
+
+void
+navit_add_menu_former_destinationss(struct navit *this_, struct menu *men, struct route *route)
+{
+	struct coord c;
+	int pos,flag=0;
+	FILE *f;
+	char buffer[2048];
+
+	f=fopen("destination.txt", "r");
+	if (f) {
+		while (! feof(f) && fgets(buffer, 2048, f)) {
+			if ((pos=coord_parse(buffer, projection_mg, &c))) {
+				if (buffer[pos] && buffer[pos] != '\n' ) {
+					struct coord *cn=g_new(struct coord, 1);
+					*cn=c;
+					buffer[strlen(buffer)-1]='\0';
+					if (men)
+						menu_add(men, buffer+pos+1, menu_type_menu, navit_set_destination_menu, this_, cn);
+				}
+				flag=1;
+			}
+		}
+		fclose(f);
+		if (flag)
+			route_set_destination(route, &c);
+	}
+}
+
+void
+navit_add_menu_former_destinations(struct navit *this_, struct menu *men, struct route *route)
+{
+	navit_add_menu_former_destinationss(this_, men ? menu_add(men, "Former Destinations", menu_type_submenu, NULL, NULL, NULL) : NULL, route);
+}
+
+void
 navit_init(struct navit *this_)
 {
-	struct menu *mapmen,*men,*men2;
-	struct map *map;
-	struct mapset_handle *handle;
+	struct menu *men;
 	struct mapset *ms=this_->mapsets->data;
 
+	if (this_->route)
+		route_set_mapset(this_->route, ms);
+	if (this_->tracking)
+		tracking_set_mapset(this_->tracking, ms);
+	if (this_->navigation)
+		navigation_set_mapset(this_->navigation, ms);
 	if (this_->menubar) {
-		mapmen=menu_add(this_->menubar, "Map", menu_type_submenu, NULL, NULL, NULL);
-		// menu_add(map, "Test", menu_type_menu, NULL, NULL);
-		men=menu_add(mapmen, "Layout", menu_type_submenu, NULL, NULL, NULL);
-		menu_add(men, "Test", menu_type_menu, NULL, NULL, NULL);
-		men=menu_add(mapmen, "Projection", menu_type_submenu, NULL, NULL, NULL);
-		menu_add(men, "M&G", menu_type_menu, navit_projection_set, this_, (void *)projection_mg);
-		menu_add(men, "Garmin", menu_type_menu, navit_projection_set, this_, (void *)projection_garmin);
-		handle=mapset_open(ms);
-		while ((map=mapset_next(handle,0))) {
-			char *s=g_strdup_printf("%s:%s", map_get_type(map), map_get_filename(map));
-			men2=menu_add(mapmen, s, menu_type_toggle, navit_map_toggle, this_, map);
-			menu_set_toggle(men2, map_get_active(map));
-			g_free(s);
+		men=menu_add(this_->menubar, "Map", menu_type_submenu, NULL, NULL, NULL);
+		if (men) {
+			navit_add_menu_layout(this_, men);
+			navit_add_menu_projection(this_, men);
+			navit_add_menu_maps(this_, ms, men);
 		}
-		mapset_close(handle);
-	}
-	{
-		struct mapset *ms=this_->mapsets->data;
-		struct coord c;
-		int pos,flag=0;
-		FILE *f;
-
-		char buffer[2048];
-		this_->route=route_new(ms);
-		this_->navigation=navigation_new(ms);
-		dbg(0,"navigation_register_callback(%p, ... %p)\n", this_->navigation, this_);
-		navigation_register_callback(this_->navigation, navigation_mode_long, navit_show_roadbook, this_);
-#if 1
-		this_->track=track_new(ms);
-#endif
-		men=NULL;
-		if (this_->menubar) {
-			men=menu_add(this_->menubar, "Route", menu_type_submenu, NULL, NULL, NULL);
-			men=menu_add(men, "Former Destinations", menu_type_submenu, NULL, NULL, NULL);
-		}
-		f=fopen("destination.txt", "r");
-		if (f) {
-			while (! feof(f) && fgets(buffer, 2048, f)) {
-				if ((pos=coord_parse(buffer, projection_mg, &c))) {
-					if (buffer[pos] && buffer[pos] != '\n' ) {
-						struct coord *cn=g_new(struct coord, 1);
-						*cn=c;
-						buffer[strlen(buffer)-1]='\0';
-						if (men)
-							menu_add(men, buffer+pos+1, menu_type_menu, navit_set_destination_menu, this_, cn);
-					}
-					flag=1;
-				}
-			}
-			fclose(f);
-			if (flag)
-				route_set_destination(this_->route, &c);
-		}
+		men=menu_add(this_->menubar, "Route", menu_type_submenu, NULL, NULL, NULL);
+		if (men) 
+			navit_add_menu_former_destinations(this_, men, this_->route);
 	}
 	global_navit=this_;
 	navit_debug(this_);
@@ -409,13 +445,13 @@ navit_cursor_update(struct cursor *cursor, void *this__p)
 	struct coord *cursor_c=cursor_pos_get(cursor);
 	int dir=cursor_get_dir(cursor);
 
-	if (this_->track) {
+	if (this_->tracking) {
 		struct coord c=*cursor_c;
-		if (track_update(this_->track, &c, dir)) {
+		if (tracking_update(this_->tracking, &c, dir)) {
 			cursor_c=&c;
 			cursor_pos_set(cursor, cursor_c);
 			if (this_->route && this_->update_curr == 1)
-				route_set_position_from_track(this_->route, this_->track);
+				route_set_position_from_tracking(this_->route, this_->tracking);
 		}
 	} else {
 		if (this_->route && this_->update_curr == 1)
@@ -458,6 +494,24 @@ navit_vehicle_add(struct navit *this_, struct vehicle *v, struct color *c, int u
 	this_->cursor=cursor_new(this_->gra, v, c, this_->trans);
 	cursor_register_offscreen_callback(this_->cursor, navit_cursor_offscreen, this_);
 	cursor_register_update_callback(this_->cursor, navit_cursor_update, this_);
+}
+
+void
+navit_tracking_add(struct navit *this_, struct tracking *tracking)
+{
+	this_->tracking=tracking;
+}
+
+void
+navit_route_add(struct navit *this_, struct route *route)
+{
+	this_->route=route;
+}
+
+void
+navit_navigation_add(struct navit *this_, struct navigation *navigation)
+{
+	this_->navigation=navigation;
 }
 
 

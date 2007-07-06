@@ -7,6 +7,14 @@
 <navit gui="gtk" graphics="gtk_drawing_area" center="5031.51 N 735.83 E" zoom="8192" >
 	<vehicle name="Meins" enabled="no" source="gpsd://192.168.1.14" color="#0000ff"/>
 	<vehicle name="Deins" enabled="no" source="gpsd://somehost" color="#0000aa"/> 
+	<tracking>
+	</tracking>
+	<route>
+		<speed type="water_poly" value="80" />
+	</route>
+	<navigation>
+		<announce type="water_poly" value="10" units="s" />
+	</navigation>
 	<mapset>
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map" />
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp2.smp" />
