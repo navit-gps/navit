@@ -57,6 +57,12 @@ navigation_new(struct mapset *ms)
 	return ret;	
 }
 
+void
+navigation_set_mapset(struct navigation *this_, struct mapset *ms)
+{
+	this_->ms=ms;
+}
+
 struct navigation_itm {
 	char *name1;
 	char *name2;

@@ -1,15 +1,18 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <string.h>
-#include "xmlconfig.h"
-#include "navit.h"
-#include "vehicle.h"
+#include "coord.h"
+#include "layout.h"
 #include "mapset.h"
 #include "map.h"
-#include "layout.h"
-#include "projection.h"
-#include "coord.h"
+#include "navigation.h"
+#include "navit.h"
 #include "plugin.h"
+#include "projection.h"
+#include "route.h"
+#include "track.h"
+#include "vehicle.h"
+#include "xmlconfig.h"
 
 
 struct xmlstate {
@@ -172,6 +175,43 @@ xmlconfig_vehicle(struct xmlstate *state)
 		follow=convert_number(value);
 	
 	navit_vehicle_add(state->parent->element_object, state->element_object, &color, update, follow);
+	return 1;
+}
+
+static int
+xmlconfig_tracking(struct xmlstate *state)
+{
+	state->element_object = tracking_new(NULL);
+	navit_tracking_add(state->parent->element_object, state->element_object);
+	return 1;
+}
+
+static int
+xmlconfig_route(struct xmlstate *state)
+{
+	state->element_object = route_new(NULL);
+	navit_route_add(state->parent->element_object, state->element_object);
+	return 1;
+}
+
+static int
+xmlconfig_speed(struct xmlstate *state)
+{
+	return 1;
+}
+
+
+static int
+xmlconfig_navigation(struct xmlstate *state)
+{
+	state->element_object = navigation_new(NULL);
+	navit_navigation_add(state->parent->element_object, state->element_object);
+	return 1;
+}
+
+static int
+xmlconfig_announce(struct xmlstate *state)
+{
 	return 1;
 }
 
@@ -371,6 +411,11 @@ struct element_func {
 	{ "plugin", "plugins", xmlconfig_plugin},
 	{ "navit", NULL, xmlconfig_navit},
 	{ "vehicle", "navit", xmlconfig_vehicle},
+	{ "tracking", "navit", xmlconfig_tracking},
+	{ "route", "navit", xmlconfig_route},
+	{ "speed", "route", xmlconfig_speed},
+	{ "navigation", "navit", xmlconfig_navigation},
+	{ "announce", "navigation", xmlconfig_announce},
 	{ "mapset", "navit", xmlconfig_mapset},
 	{ "map",  "mapset", xmlconfig_map},
 	{ "layout", "navit", xmlconfig_layout},

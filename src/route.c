@@ -151,6 +151,12 @@ route_new(struct mapset *ms)
 	return this;
 }
 
+void
+route_set_mapset(struct route *this, struct mapset *ms)
+{
+	this->ms=ms;
+}
+
 struct mapset *
 route_get_mapset(struct route *this)
 {
@@ -204,21 +210,21 @@ route_set_position(struct route *this, struct coord *pos)
 }
 
 void
-route_set_position_from_track(struct route *this, struct track *track)
+route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 {
 	struct coord *c;
 	struct route_info *ret;
 
-	c=track_get_pos(track);
+	c=tracking_get_pos(tracking);
 	ret=g_new0(struct route_info, 1);
 	if (this->pos)
 		route_info_free(this->pos);
 	ret->c=*c;
 	ret->lp=*c;
-	ret->pos=track_get_segment_pos(track);
+	ret->pos=tracking_get_segment_pos(tracking);
 	ret->dist=0;
 	ret->dir=0;
-	ret->street=street_data_dup(track_get_street_data(track));
+	ret->street=street_data_dup(tracking_get_street_data(tracking));
 	this->pos=ret;
 	if (this->dst) 
 		route_path_update(this);

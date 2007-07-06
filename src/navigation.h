@@ -15,6 +15,7 @@ struct navigation;
 struct navigation_list;
 struct route;
 struct navigation *navigation_new(struct mapset *ms);
+void navigation_set_mapset(struct navigation *this_, struct mapset *ms);
 struct navigation_list *navigation_list_new(struct navigation *this_);
 char *navigation_list_get(struct navigation_list *this_, enum navigation_mode mode);
 void navigation_list_destroy(struct navigation_list *this_);
