@@ -11,9 +11,6 @@
 #include "debug.h"
 #include "navit.h"
 #include "gui.h"
-#ifdef HAVE_PYTHON
-#include "python.h"
-#endif
 #include "plugin.h"
 #include "xmlconfig.h"
 
@@ -70,9 +67,6 @@ int main(int argc, char **argv)
 	gdk_rgb_init();
 #endif
 
-#ifdef HAVE_PYTHON
-	python_init();
-#endif
 	if (argc > 1) 
 		config_file=argv[1];
 	else {
