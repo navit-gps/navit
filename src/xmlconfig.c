@@ -1,6 +1,7 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <string.h>
+#include "debug.h"
 #include "coord.h"
 #include "layout.h"
 #include "mapset.h"
@@ -121,6 +122,20 @@ xmlconfig_plugin(struct xmlstate *state)
 	active=find_boolean(state, "active", 1, 0);
 	lazy=find_boolean(state, "lazy", 1, 0);
 	plugins_add_path(state->parent->element_object, path, active, lazy);
+	return 1;
+}
+
+static int
+xmlconfig_debug(struct xmlstate *state)
+{
+	const char *name,*level;
+	name=find_attribute(state, "name", 1);
+	if (! name)
+		return 0;
+	level=find_attribute(state, "level", 1);
+	if (! level)
+		return 0;
+	debug_level_set(name, convert_number(level));
 	return 1;
 }
 
@@ -407,26 +422,27 @@ struct element_func {
 	char *parent;
 	int (*func)(struct xmlstate *state);
 } elements[] = {
-	{ "plugins", NULL, xmlconfig_plugins},
-	{ "plugin", "plugins", xmlconfig_plugin},
+	{ "debug", NULL, xmlconfig_debug},
 	{ "navit", NULL, xmlconfig_navit},
-	{ "vehicle", "navit", xmlconfig_vehicle},
-	{ "tracking", "navit", xmlconfig_tracking},
-	{ "route", "navit", xmlconfig_route},
-	{ "speed", "route", xmlconfig_speed},
-	{ "navigation", "navit", xmlconfig_navigation},
-	{ "announce", "navigation", xmlconfig_announce},
-	{ "mapset", "navit", xmlconfig_mapset},
-	{ "map",  "mapset", xmlconfig_map},
 	{ "layout", "navit", xmlconfig_layout},
 	{ "layer", "layout", xmlconfig_layer},
 	{ "item", "layer", xmlconfig_item},
-	{ "polygon", "item", xmlconfig_polygon},
-	{ "polyline", "item", xmlconfig_polyline},
 	{ "circle", "item", xmlconfig_circle},
-	{ "label", "item", xmlconfig_label},
 	{ "icon", "item", xmlconfig_icon},
 	{ "image", "item", xmlconfig_image},
+	{ "label", "item", xmlconfig_label},
+	{ "polygon", "item", xmlconfig_polygon},
+	{ "polyline", "item", xmlconfig_polyline},
+	{ "mapset", "navit", xmlconfig_mapset},
+	{ "map",  "mapset", xmlconfig_map},
+	{ "navigation", "navit", xmlconfig_navigation},
+	{ "announce", "navigation", xmlconfig_announce},
+	{ "tracking", "navit", xmlconfig_tracking},
+	{ "route", "navit", xmlconfig_route},
+	{ "speed", "route", xmlconfig_speed},
+	{ "vehicle", "navit", xmlconfig_vehicle},
+	{ "plugins", NULL, xmlconfig_plugins},
+	{ "plugin", "plugins", xmlconfig_plugin},
 	{},
 };
 
