@@ -156,7 +156,7 @@ calculate_dest_distance(struct navigation *this_)
 		itm->dest_time=time;
 		itm=itm->prev;
 	}
-	printf("len %d time %d\n", len, time);
+	dbg(1,"len %d time %d\n", len, time);
 }
 
 static int
@@ -304,6 +304,7 @@ navigation_update(struct navigation *this_, struct route *route)
 	struct navigation_itm *itm;
 	struct route_info *pos,*dst;
 	struct street_data *sd;
+	int *speedlist;
 	int len,end_flag=0;
 	void *p;
 
@@ -312,6 +313,7 @@ navigation_update(struct navigation *this_, struct route *route)
 	dst=route_get_dst(route);
 	if (! pos || ! dst)
 		return;
+	speedlist=route_get_speedlist(route);
 	this_->first=this_->last=NULL;
 	len=route_info_length(pos, dst, 0);
 	if (len == -1) {
@@ -321,7 +323,7 @@ navigation_update(struct navigation *this_, struct route *route)
 	sd=route_info_street(pos);
 	itm=navigation_itm_new(this_, &sd->item, route_info_point(pos, -1));
 	itm->length=len;
-	itm->time=route_time(&sd->item, len);
+	itm->time=route_time(speedlist, &sd->item, len);
 	rph=route_path_open(route);
 	while((s=route_path_get_segment(rph))) {
 		itm=navigation_itm_new(this_, route_path_segment_get_item(s),route_path_segment_get_start(s));
@@ -330,11 +332,11 @@ navigation_update(struct navigation *this_, struct route *route)
 	}
 	if (end_flag) {
 		len=route_info_length(NULL, dst, 0);
-		printf("end %d\n", len);
+		dbg(1, "end %d\n", len);
 		sd=route_info_street(dst);
 		itm=navigation_itm_new(this_, &sd->item, route_info_point(pos, 2));
 		itm->length=len;
-		itm->time=route_time(&sd->item, len);
+		itm->time=route_time(speedlist, &sd->item, len);
 	}
 	itm=navigation_itm_new(this_, NULL, NULL);
 	route_path_close(rph);

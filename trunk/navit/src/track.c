@@ -107,7 +107,7 @@ tracking_doupdate_lines(struct tracking *tr, struct coord *cc)
 	struct tracking_line *tl;
 	struct coord c;
 
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
         h=mapset_open(tr->ms);
         while ((m=mapset_next(h,1))) {
 		mr=map_rect_new(m, sel);
@@ -125,7 +125,7 @@ tracking_doupdate_lines(struct tracking *tr, struct coord *cc)
 		map_rect_destroy(mr);
         }
         mapset_close(h);
-	dbg(0, "exit\n");
+	dbg(1, "exit\n");
 #if 0
 
 	struct transformation t;
@@ -146,7 +146,7 @@ static void
 tracking_free_lines(struct tracking *tr)
 {
 	struct tracking_line *tl=tr->lines,*next;
-	dbg(0,"enter(tr=%p)\n", tr);
+	dbg(1,"enter(tr=%p)\n", tr);
 
 	while (tl) {
 		next=tl->next;
@@ -252,10 +252,10 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 		}
 		t=t->next;
 	}
-	dbg(0,"tr->curr_line=%p\n", tr->curr_line);
+	dbg(1,"tr->curr_line=%p\n", tr->curr_line);
 	if (!tr->curr_line)
 		return 0;
-	dbg(0,"found 0x%x,0x%x\n", tr->last_out.x, tr->last_out.y);
+	dbg(1,"found 0x%x,0x%x\n", tr->last_out.x, tr->last_out.y);
 	*c=tr->last_out;
 	return 1;	
 }

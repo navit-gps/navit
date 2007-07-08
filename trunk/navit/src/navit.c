@@ -519,6 +519,12 @@ navit_navigation_add(struct navit *this_, struct navigation *navigation)
 	this_->navigation=navigation;
 }
 
+void
+navit_set_speech(struct navit *this_, struct speech *speech)
+{
+	this_->speech=speech;
+}
+
 
 struct gui *
 navit_get_gui(struct navit *this_)
