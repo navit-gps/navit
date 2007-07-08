@@ -443,6 +443,8 @@ do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapset
 	struct attr attr;
 	struct coord_rect r;
 
+	if (! mapsets)
+		return;
 	sel.next=NULL;
 	sel.order[layer_town]=1*order;
 	sel.order[layer_street]=order;

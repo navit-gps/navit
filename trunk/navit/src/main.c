@@ -9,6 +9,7 @@
 #endif
 #include "file.h"
 #include "debug.h"
+#include "main.h"
 #include "navit.h"
 #include "gui.h"
 #include "plugin.h"
@@ -44,14 +45,34 @@ static gchar *get_home_directory(void)
 	return homedir;
 }
 
+static GList *navit;
+#ifndef USE_GTK_MAIN_LOOP
+static GMainLoop *loop;
+#endif
+
+void
+main_add_navit(struct navit *nav)
+{
+	navit=g_list_prepend(navit, nav);
+}
+
+void
+main_remove_navit(struct navit *nav)
+{
+	navit=g_list_remove(navit, nav);
+	if (! navit) {
+#ifdef USE_GTK_MAIN_LOOP
+		gtk_main_quit();
+#else
+		g_main_loop_quit(loop);
+#endif
+	}
+}
 
 int main(int argc, char **argv)
 {
 	GError *error = NULL;
 	char *config_file = NULL;
-#ifndef USE_GTK_MAIN_LOOP
-	GMainLoop *loop;
-#endif
 
 	signal(SIGCHLD, sigchld);
 
@@ -82,6 +103,10 @@ int main(int argc, char **argv)
 		g_error("Error parsing '%s': %s\n", config_file, error->message);
 	} else {
 		printf("Using '%s'\n", config_file);
+	}
+	if (! navit) {
+		printf("No instance has been created, exiting\n");
+		exit(1);
 	}
 	if (main_loop_gui) {
 		gui_run_main_loop(main_loop_gui);

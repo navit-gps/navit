@@ -8,6 +8,7 @@
 #include "gui.h"
 #include "map.h"
 #include "mapset.h"
+#include "main.h"
 #include "coord.h"
 #include "point.h"
 #include "transform.h"
@@ -141,6 +142,7 @@ navit_new(const char *ui, const char *graphics, struct coord *center, enum proje
 {
 	struct navit *this_=g_new0(struct navit, 1);
 
+	main_add_navit(this_);
 	this_->cursor_flag=1;
 	this_->trans=transform_new();
 	transform_set_projection(this_->trans, pro);
@@ -362,24 +364,27 @@ void
 navit_init(struct navit *this_)
 {
 	struct menu *men;
-	struct mapset *ms=this_->mapsets->data;
+	struct mapset *ms;
 
-	if (this_->route)
-		route_set_mapset(this_->route, ms);
-	if (this_->tracking)
-		tracking_set_mapset(this_->tracking, ms);
-	if (this_->navigation)
-		navigation_set_mapset(this_->navigation, ms);
-	if (this_->menubar) {
-		men=menu_add(this_->menubar, "Map", menu_type_submenu, NULL, NULL, NULL);
-		if (men) {
-			navit_add_menu_layout(this_, men);
-			navit_add_menu_projection(this_, men);
-			navit_add_menu_maps(this_, ms, men);
+	if (this_->mapsets) {
+		ms=this_->mapsets->data;
+		if (this_->route)
+			route_set_mapset(this_->route, ms);
+		if (this_->tracking)
+			tracking_set_mapset(this_->tracking, ms);
+		if (this_->navigation)
+			navigation_set_mapset(this_->navigation, ms);
+		if (this_->menubar) {
+			men=menu_add(this_->menubar, "Map", menu_type_submenu, NULL, NULL, NULL);
+			if (men) {
+				navit_add_menu_layout(this_, men);
+				navit_add_menu_projection(this_, men);
+				navit_add_menu_maps(this_, ms, men);
+			}
+			men=menu_add(this_->menubar, "Route", menu_type_submenu, NULL, NULL, NULL);
+			if (men) 
+				navit_add_menu_former_destinations(this_, men, this_->route);
 		}
-		men=menu_add(this_->menubar, "Route", menu_type_submenu, NULL, NULL, NULL);
-		if (men) 
-			navit_add_menu_former_destinations(this_, men, this_->route);
 	}
 	global_navit=this_;
 	navit_debug(this_);
@@ -548,6 +553,8 @@ navit_get_displaylist(struct navit *this_)
 void
 navit_destroy(struct navit *this_)
 {
+	/* TODO: destroy objects contained in this_ */
+	main_remove_navit(this_);
 	g_free(this_);
 }
 
