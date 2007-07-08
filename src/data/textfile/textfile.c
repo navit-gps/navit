@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include "debug.h"
 #include "plugin.h"
 #include "map.h"
 #include "maptype.h"
@@ -104,11 +105,11 @@ textfile_coord_rewind(void *priv_data)
 }
 
 static void
-parse_line(struct map_rect_priv *mr)
+parse_line(struct map_rect_priv *mr, int attr)
 {
 	int pos=0;
 	sscanf(mr->line,"%lf %c %lf %c %n",&mr->lat,&mr->lat_c,&mr->lng,&mr->lng_c,&pos);
-	if (pos < strlen(mr->line)) {
+	if (pos < strlen(mr->line) && attr) {
 		strcpy(mr->attrs, mr->line+pos);
 	}
 }
@@ -120,13 +121,13 @@ textfile_coord_get(void *priv_data, struct coord *c, int count)
 	struct coord_geo cg;
 	struct map_rect_priv *mr=priv_data;
 	int ret=0;
-	if (debug)
-		printf("textfile_coord_get %d\n",count);
+	dbg(1,"textfile_coord_get %d\n",count);
 	while (count--) {
 		if (contains_coord(mr->line) && mr->f && !feof(mr->f) && (!mr->item.id_hi || !mr->eoc)) {
-			parse_line(mr);
+			parse_line(mr, mr->item.id_hi);
 			lat=mr->lat;
 			lng=mr->lng;
+			dbg(1,"lat=%f lng=%f\n", lat, lng);
 			cg.lat=floor(lat/100);
 			lat-=cg.lat*100;
 			cg.lat+=lat/60;
@@ -136,6 +137,7 @@ textfile_coord_get(void *priv_data, struct coord *c, int count)
 			cg.lng+=lng/60;
 
 			transform_from_geo(projection_mg, &cg, c);
+			dbg(1,"c=0x%x,0x%x\n", c->x, c->y);
 			c++;
 			ret++;		
 			get_line(mr);
@@ -271,7 +273,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 			if (debug)
 				printf("map_rect_get_item_textfile: point found\n");
 			mr->attrs[0]='\0';
-			parse_line(mr);
+			parse_line(mr, 1);
 			mr->eoc=0;
 			mr->item.id_lo=mr->pos;
 		} else {
@@ -281,8 +283,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 			}
 			if ((p=index(mr->line,'\n'))) 
 				*p='\0';
-			if (debug)
-				printf("map_rect_get_item_textfile: line found\n");
+			dbg(1,"map_rect_get_item_textfile: line found\n");
 			if (! mr->line[0]) {
 				get_line(mr);
 				continue;

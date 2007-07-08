@@ -72,6 +72,7 @@ coord_rect_overlap(struct coord_rect *r1, struct coord_rect *r2)
 	g_assert(r1->lu.y >= r1->rl.y);
 	g_assert(r2->lu.x <= r2->rl.x);
 	g_assert(r2->lu.y >= r2->rl.y);
+	dbg(1,"0x%x,0x%x - 0x%x,0x%x vs 0x%x,0x%x - 0x%x,0x%x\n", r1->lu.x, r1->lu.y, r1->rl.x, r1->rl.y, r2->lu.x, r2->lu.y, r2->rl.x, r2->rl.y);
 	if (r1->lu.x > r2->rl.x)
 		return 0;
 	if (r1->rl.x < r2->lu.x)

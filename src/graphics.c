@@ -357,7 +357,9 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 					break;
 				case element_icon:
 					if (!img) {
-						img=graphics_image_new(gra, e->u.icon.src);
+						char *icon=g_strdup_printf("xpm/%s", e->u.icon.src);
+						img=graphics_image_new(gra, icon);
+						g_free(icon);
 						if (! img)
 							g_warning("failed to load icon '%s'\n", e->u.icon.src);
 					}
@@ -477,8 +479,10 @@ do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapset
 						
 				}
 				g_assert(count < max);
-				if (!transform_contains(t, pro, &r))
+				if (!transform_contains(t, pro, &r)) {
+					dbg(1,"not visible\n");
 					continue;
+				}
 				if (route && route_contains(route, item)) {
 					struct item ritem;
 					ritem=*item;
