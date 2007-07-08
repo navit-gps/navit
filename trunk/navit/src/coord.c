@@ -139,6 +139,8 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		str=co+1;
 		s=index(str,' ');
 	}
+	if (! s)
+		return 0;
 	while (*s == ' ') {
 		s++;
 	}
