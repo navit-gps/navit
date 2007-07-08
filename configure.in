@@ -108,15 +108,29 @@ AC_CHECK_HEADER(
 		[],
 		Define to 1 if you have the <GL/gl.h> header file.
 		)
-		OPENGL_LIBS="-lGL -lGLU -lGLC"
+		OPENGL_LIBS="-lGL -lGLU"
 		opengl=yes,
 	AC_MSG_WARN([*** no GL/gl.h -- opengl and SDL support disabled])
 )
 AC_SUBST(OPENGL_CFLAGS)
 AC_SUBST(OPENGL_LIBS)
 
-AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$cegui" = "xyes" -a "x$opengl" = "xyes" ])
-AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$opengl" = "xyes"])
+AC_CHECK_HEADER(
+	GL/glc.h,
+	AC_DEFINE(
+		[HAVE_GLC],
+		[],
+		Define to 1 if you have the <GL/glc.h> header file.
+		)
+		GLC_LIBS="-lGLC"
+		glc=yes,
+	AC_MSG_WARN([*** no GL/glc.h -- opengl and SDL support disabled])
+)
+AC_SUBST(GLC_CFLAGS)
+AC_SUBST(GLC_LIBS)
+
+AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$cegui" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
+AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
 
 if test x"${USE_LIBGPS}" = xyes
 then
