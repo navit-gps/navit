@@ -1,6 +1,6 @@
 
 /* speechd simple client program
- * CVS revision: $Id: speech_speech_dispatcher.c,v 1.2 2007-07-08 16:42:16 martin-s Exp $
+ * CVS revision: $Id: speech_speech_dispatcher.c,v 1.3 2007-07-08 20:41:35 martin-s Exp $
  * Author: Tomas Cerha <cerha@brailcom.cz> */
 
 #include <sys/types.h>
@@ -17,28 +17,12 @@
 #include "plugin.h"
 #include "speech.h"
 
-struct speech {
+struct speech_priv {
 	SPDConnection *conn;
 };
 
-struct speech *
-speech_new(void) {
-	struct speech *this;
-	SPDConnection *conn;
-
-	conn = spd_open("navit","main",NULL,SPD_MODE_SINGLE);
-	if (! conn) 
-		return NULL;
-	this=g_new(struct speech,1);
-	if (this) {
-		this->conn=conn;
-		spd_set_punctuation(conn, SPD_PUNCT_NONE);
-	}
-	return this;
-}
-
 static int 
-speech_say(struct speech *this, char *text) {
+speechd_say(struct speech_priv *this, const char *text) {
 	int err;
 
 	err = spd_sayf(this->conn, SPD_MESSAGE, text);
@@ -47,21 +31,37 @@ speech_say(struct speech *this, char *text) {
 	return 0;
 }
 
-static int
-speech_sayf(struct speech *this, char *format, ...) {
-	char buffer[8192];
-	va_list ap;
-	va_start(ap,format);
-	vsnprintf(buffer, 8192, format, ap);
-	return speech_say(this, buffer);
-}
-
 static void 
-speech_destroy(struct speech *this) {
+speechd_destroy(struct speech_priv *this) {
 	spd_close(this->conn);
 	g_free(this);
 }
+
+static struct speech_methods speechd_meth = {
+	speechd_destroy,
+	speechd_say,
+};
+
+static struct speech_priv *
+speechd_new(char *data, struct speech_methods *meth) {
+	struct speech_priv *this;
+	SPDConnection *conn;
+
+	conn = spd_open("navit","main",NULL,SPD_MODE_SINGLE);
+	if (! conn) 
+		return NULL;
+	this=g_new(struct speech_priv,1);
+	if (this) {
+		this->conn=conn;
+		*meth=speechd_meth;
+		spd_set_punctuation(conn, SPD_PUNCT_NONE);
+	}
+	return this;
+}
+
+
 void
 plugin_init(void)
 {
+	plugin_register_speech_type("speech_dispatcher", speechd_new);
 }

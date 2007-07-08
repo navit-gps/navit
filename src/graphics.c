@@ -213,11 +213,9 @@ xdisplay_free_list(gpointer key, gpointer value, gpointer user_data)
 	h=value;
 	l=h;
 	while (l) {
-#if 1
 		struct displayitem *di=l->data;
 		if (! di->displayed && di->item.type < type_line) 
-			dbg(0,"warning: item '%s' not displayed\n", item_to_name(di->item.type));
-#endif
+			dbg(1,"warning: item '%s' not displayed\n", item_to_name(di->item.type));
 		g_free(l->data);
 		l=g_list_next(l);
 	}
@@ -535,7 +533,7 @@ graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *maps
 #endif
 	
 	xdisplay_free(displaylist->dl);
-	dbg(0,"order=%d\n", order);
+	dbg(1,"order=%d\n", order);
 
 
 #if 0
