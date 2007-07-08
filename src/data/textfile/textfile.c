@@ -18,21 +18,12 @@
 static int map_id;
 
 static int
-contains_coord(char *line)
-{
-	return g_ascii_isdigit(line[0]);
-}
-
-static int debug=0;
-
-static int
 get_tag(char *line, char *name, int *pos, char *ret, char *name_ret)
 {
 	int len=0,quoted;
 	char *p,*e,*n;
 
-	if (debug)
-		printf("get_tag %s from %s\n", name, line); 
+	dbg(1,"get_tag %s from %s\n", name, line); 
 	if (name)
 		len=strlen(name);
 	if (pos) 
@@ -94,8 +85,7 @@ get_line(struct map_rect_priv *mr)
 static void
 map_destroy_textfile(struct map_priv *m)
 {
-	if (debug)
-		printf("map_destroy_textfile\n");
+	dbg(1,"map_destroy_textfile\n");
 	g_free(m);
 }
 
@@ -104,39 +94,27 @@ textfile_coord_rewind(void *priv_data)
 {
 }
 
-static void
+static int
 parse_line(struct map_rect_priv *mr, int attr)
 {
-	int pos=0;
-	sscanf(mr->line,"%lf %c %lf %c %n",&mr->lat,&mr->lat_c,&mr->lng,&mr->lng_c,&pos);
+	int pos;
+
+	pos=coord_parse(mr->line, projection_mg, &mr->c);
 	if (pos < strlen(mr->line) && attr) {
 		strcpy(mr->attrs, mr->line+pos);
 	}
+	return pos;
 }
 
 static int
 textfile_coord_get(void *priv_data, struct coord *c, int count)
 {
-	double lat,lng;
-	struct coord_geo cg;
 	struct map_rect_priv *mr=priv_data;
 	int ret=0;
 	dbg(1,"textfile_coord_get %d\n",count);
 	while (count--) {
-		if (contains_coord(mr->line) && mr->f && !feof(mr->f) && (!mr->item.id_hi || !mr->eoc)) {
-			parse_line(mr, mr->item.id_hi);
-			lat=mr->lat;
-			lng=mr->lng;
-			dbg(1,"lat=%f lng=%f\n", lat, lng);
-			cg.lat=floor(lat/100);
-			lat-=cg.lat*100;
-			cg.lat+=lat/60;
-
-			cg.lng=floor(lng/100);
-			lng-=cg.lng*100;
-			cg.lng+=lng/60;
-
-			transform_from_geo(projection_mg, &cg, c);
+		if (mr->f && !feof(mr->f) && (!mr->item.id_hi || !mr->eoc) && parse_line(mr, mr->item.id_hi)) {
+			*c=mr->c;
 			dbg(1,"c=0x%x,0x%x\n", c->x, c->y);
 			c++;
 			ret++;		
@@ -169,38 +147,31 @@ textfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {	
 	struct map_rect_priv *mr=priv_data;
 	char *str=NULL;
-	if (debug)
-		printf("textfile_attr_get mr=%p attrs='%s' ", mr, mr->attrs);
+	dbg(1,"textfile_attr_get mr=%p attrs='%s' ", mr, mr->attrs);
 	if (attr_type != mr->attr_last) {
-		if (debug)
-			printf("reset attr_pos\n");
+		dbg(1,"reset attr_pos\n");
 		mr->attr_pos=0;
 		mr->attr_last=attr_type;
 	}
 	if (attr_type == attr_any) {
-		if (debug)
-			printf("attr_any");
+		dbg(1,"attr_any");
 		if (get_tag(mr->attrs,NULL,&mr->attr_pos,mr->attr, mr->attr_name)) {
 			attr_type=attr_from_name(mr->attr_name);
-			if (debug)
-				printf("found attr '%s' 0x%x\n", mr->attr_name, attr_type);
+			dbg(1,"found attr '%s' 0x%x\n", mr->attr_name, attr_type);
 			attr->type=attr_type;
 			textfile_encode_attr(mr->attr, attr_type, attr);
 			return 1;
 		}
 	} else {
 		str=attr_to_name(attr_type);
-		if (debug)
-			printf("attr='%s' ",str);
+		dbg(1,"attr='%s' ",str);
 		if (get_tag(mr->attrs,str,&mr->attr_pos,mr->attr, NULL)) {
 			textfile_encode_attr(mr->attr, attr_type, attr);
-			if (debug)
-				printf("found\n");
+			dbg(1,"found\n");
 			return 1;
 		}
 	}
-	if (debug)
-		printf("not found\n");
+	dbg(1,"not found\n");
 	return 0;
 }
 
@@ -216,8 +187,7 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 {
 	struct map_rect_priv *mr;
 
-	if (debug)
-		printf("map_rect_new_textfile\n");
+	dbg(1,"map_rect_new_textfile\n");
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->m=map;
 	mr->sel=sel;
@@ -247,15 +217,13 @@ static struct item *
 map_rect_get_item_textfile(struct map_rect_priv *mr)
 {
 	char *p,type[SIZE];
-	if (debug)
-		printf("map_rect_get_item_textfile id_hi=%d line=%s", mr->item.id_hi, mr->line);
+	dbg(1,"map_rect_get_item_textfile id_hi=%d line=%s", mr->item.id_hi, mr->line);
 	if (!mr->f) {
 		return NULL;
 	}
 	for(;;) {
 		if (feof(mr->f)) {
-			if (debug)
-				printf("map_rect_get_item_textfile: eof\n");
+			dbg(1,"map_rect_get_item_textfile: eof\n");
 			if (mr->item.id_hi) {
 				return NULL;
 			}
@@ -263,26 +231,22 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 			fseek(mr->f, 0, SEEK_SET);
 			get_line(mr);
 		}
+		if ((p=index(mr->line,'\n'))) 
+			*p='\0';
 		if (mr->item.id_hi) {
-			if (!contains_coord(mr->line)) {
+			mr->attrs[0]='\0';
+			if (!parse_line(mr, 1)) {
 				get_line(mr);
 				continue;
 			}
-			if ((p=index(mr->line,'\n'))) 
-				*p='\0';
-			if (debug)
-				printf("map_rect_get_item_textfile: point found\n");
-			mr->attrs[0]='\0';
-			parse_line(mr, 1);
+			dbg(1,"map_rect_get_item_textfile: point found\n");
 			mr->eoc=0;
 			mr->item.id_lo=mr->pos;
 		} else {
-			if (contains_coord(mr->line)) {
+			if (parse_line(mr, 1)) {
 				get_line(mr);
 				continue;
 			}
-			if ((p=index(mr->line,'\n'))) 
-				*p='\0';
 			dbg(1,"map_rect_get_item_textfile: line found\n");
 			if (! mr->line[0]) {
 				get_line(mr);
@@ -291,14 +255,11 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 			mr->item.id_lo=mr->pos;
 			strcpy(mr->attrs, mr->line);
 			get_line(mr);
-			if (debug)
-				printf("mr=%p attrs=%s\n", mr, mr->attrs);
+			dbg(1,"mr=%p attrs=%s\n", mr, mr->attrs);
 		}
-		if (debug)
-			printf("get_attrs %s\n", mr->attrs);
+		dbg(1,"get_attrs %s\n", mr->attrs);
 		if (get_tag(mr->attrs,"type",NULL,type,NULL)) {
-			if (debug)
-				printf("type='%s'\n", type);
+			dbg(1,"type='%s'\n", type);
 			mr->item.type=item_from_name(type);
 			if (mr->item.type == type_none) 
 				printf("Warning: type '%s' unknown\n", type);
@@ -307,8 +268,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 			continue;
 		}
 		mr->attr_last=attr_none;
-		if (debug)
-			printf("return attr='%s'\n", mr->attrs);
+		dbg(1,"return attr='%s'\n", mr->attrs);
 		return &mr->item;
 	}
 }
@@ -334,8 +294,7 @@ static struct map_priv *
 map_new_textfile(struct map_methods *meth, char *filename, char **charset, enum projection *pro)
 {
 	struct map_priv *m;
-	if (debug)
-		printf("map_new_textfile %s\n",filename);	
+	dbg(1,"map_new_textfile %s\n",filename);	
 	*meth=map_methods_textfile;
 	*charset="iso8859-1";
 	*pro=projection_mg;
@@ -349,8 +308,7 @@ map_new_textfile(struct map_methods *meth, char *filename, char **charset, enum 
 void
 plugin_init(void)
 {
-	if (debug)
-		printf("textfile: plugin_init\n");
+	dbg(1,"textfile: plugin_init\n");
 	plugin_register_map_type("textfile", map_new_textfile);
 }
 

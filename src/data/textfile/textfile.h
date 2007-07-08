@@ -19,8 +19,7 @@ struct map_rect_priv {
 	char attrs[SIZE];
 	char attr[SIZE];
 	char attr_name[SIZE];
-	double lat,lng;
-	char lat_c,lng_c;
+	struct coord c;
 	int eoc;
 	struct map_priv *m;
 	struct item item;
