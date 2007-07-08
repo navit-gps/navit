@@ -98,7 +98,7 @@ destination_action(GtkWidget *w, struct navit *nav, void *dummy)
 static void     
 quit_action (GtkWidget *w, struct navit *nav, void *dummy)
 {
-	gtk_main_quit();
+	navit_destroy(nav);
 }
 
 static void
