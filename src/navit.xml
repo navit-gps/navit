@@ -10,7 +10,19 @@
 	<tracking>
 	</tracking>
 	<route>
-		<speed type="water_poly" value="80" />
+		<speed type="street_0,street_1_city" value="10" />
+		<speed type="street_2_city" value="30" />
+		<speed type="street_3_city" value="40" />
+		<speed type="street_4_city" value="50" />
+		<speed type="highway_city" value="80" />
+		<speed type="street_1_land" value="60" />
+		<speed type="street_2_land" value="65" />
+		<speed type="street_3_land" value="70" />
+		<speed type="street_4_land" value="80" />
+		<speed type="street_n_lanes" value="120" />
+		<speed type="highway_land" value="120" />
+		<speed type="ramp" value="40" />
+		<speed type="ferry" value="40" />
 	</route>
 	<navigation>
 		<announce type="water_poly" value="10" units="s" />

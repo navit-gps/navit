@@ -9,6 +9,7 @@ struct route_crossings {
 };
 
 /* prototypes */
+enum item_type;
 struct coord;
 struct displaylist;
 struct item;
@@ -27,6 +28,8 @@ void route_set_mapset(struct route *this, struct mapset *ms);
 struct mapset *route_get_mapset(struct route *this);
 struct route_info *route_get_pos(struct route *this);
 struct route_info *route_get_dst(struct route *this);
+int *route_get_speedlist(struct route *this);
+int route_set_speed(struct route *this, enum item_type type, int value);
 int route_contains(struct route *this, struct item *item);
 void route_set_position(struct route *this, struct coord *pos);
 void route_set_position_from_tracking(struct route *this, struct tracking *tracking);
@@ -40,7 +43,7 @@ struct item *route_path_segment_get_item(struct route_path_segment *s);
 int route_path_segment_get_length(struct route_path_segment *s);
 int route_path_segment_get_time(struct route_path_segment *s);
 void route_path_close(struct route_path_handle *h);
-int route_time(struct item *item, int len);
+int route_time(int *speedlist, struct item *item, int len);
 int route_info_length(struct route_info *pos, struct route_info *dst, int dir);
 struct street_data *street_get_data(struct item *item);
 struct street_data *street_data_dup(struct street_data *orig);

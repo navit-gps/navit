@@ -15,6 +15,7 @@ struct navigation;
 struct navit;
 struct point;
 struct route;
+struct speech;
 struct tracking;
 struct transformation;
 struct vehicle;
@@ -43,6 +44,7 @@ void navit_vehicle_add(struct navit *this_, struct vehicle *v, struct color *c, 
 void navit_tracking_add(struct navit *this_, struct tracking *tracking);
 void navit_route_add(struct navit *this_, struct route *route);
 void navit_navigation_add(struct navit *this_, struct navigation *navigation);
+void navit_set_speech(struct navit *this_, struct speech *speech);
 struct gui *navit_get_gui(struct navit *this_);
 struct transformation *navit_get_trans(struct navit *this_);
 struct route *navit_get_route(struct navit *this_);

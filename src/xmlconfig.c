@@ -11,6 +11,7 @@
 #include "plugin.h"
 #include "projection.h"
 #include "route.h"
+#include "speech.h"
 #include "track.h"
 #include "vehicle.h"
 #include "xmlconfig.h"
@@ -126,6 +127,22 @@ xmlconfig_plugin(struct xmlstate *state)
 }
 
 static int
+xmlconfig_speech(struct xmlstate *state)
+{
+	const char *type;
+	const char *data;
+	type=find_attribute(state, "type", 1);
+	if (! type)
+		return 0;
+	data=find_attribute(state, "data", 0);
+	state->element_object = speech_new(type, data);
+	if (! state->element_object)
+		return 0;
+	navit_set_speech(state->parent->element_object, state->element_object);
+	return 1;
+}
+
+static int
 xmlconfig_debug(struct xmlstate *state)
 {
 	const char *name,*level;
@@ -212,6 +229,28 @@ xmlconfig_route(struct xmlstate *state)
 static int
 xmlconfig_speed(struct xmlstate *state)
 {
+	const char *type;
+	const char *value;
+	int v;
+	enum item_type itype;
+	char *saveptr, *tok, *type_str, *str;
+
+	type=find_attribute(state, "type", 1);
+	if (! type)
+		return 0;
+	value=find_attribute(state, "value", 1);
+	if (! value)
+		return 0;
+	v=convert_number(value);
+	type_str=g_strdup(type);
+	str=type_str;
+	while ((tok=strtok_r(str, ",", &saveptr))) {
+		itype=item_from_name(tok);
+		route_set_speed(state->parent->element_object, itype, v);
+		str=NULL;
+	}
+	g_free(type_str);
+
 	return 1;
 }
 
@@ -437,6 +476,7 @@ struct element_func {
 	{ "map",  "mapset", xmlconfig_map},
 	{ "navigation", "navit", xmlconfig_navigation},
 	{ "announce", "navigation", xmlconfig_announce},
+	{ "speech", "navit", xmlconfig_speech},
 	{ "tracking", "navit", xmlconfig_tracking},
 	{ "route", "navit", xmlconfig_route},
 	{ "speed", "route", xmlconfig_speed},

@@ -20,6 +20,10 @@
 #include "transform.h"
 #include "fib.h"
 
+#define route_item_first type_street_0
+#define route_item_last type_ferry
+
+#if 0
 static int speed_list[]={
 	10, /* street_0 */
 	10, /* street_1_city */
@@ -36,6 +40,7 @@ static int speed_list[]={
 	40, /* ramp */
 	30, /* ferry */
 };
+#endif
 
 int debug_route=0;
 
@@ -105,7 +110,7 @@ struct route {
 
 	struct route_graph *graph;
 	struct route_path *path2;
-
+	int speedlist[route_item_last-route_item_first+1];
 };
 
 struct route_graph {
@@ -118,7 +123,7 @@ struct route_graph {
 static struct route_info * route_find_nearest_street(struct mapset *ms, struct coord *c);
 static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
 static void route_graph_update(struct route *this);
-static struct route_path *route_path_new(struct route_graph *this, struct route_info *pos, struct route_info *dst);
+static struct route_path *route_path_new(struct route_graph *this, struct route_info *pos, struct route_info *dst, int *speedlist);
 static void route_process_street_graph(struct route_graph *this, struct item *item);
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this);
@@ -175,6 +180,24 @@ route_get_dst(struct route *this)
 	return this->dst;
 }
 
+int *
+route_get_speedlist(struct route *this)
+{
+	return this->speedlist;
+}
+
+int
+route_set_speed(struct route *this, enum item_type type, int value)
+{
+	int idx=type-route_item_first;
+	if (idx > route_item_last-route_item_first || idx < 0) {
+		dbg(0,"street idx(%d) out of range [0,%d]", idx, route_item_last-route_item_first);
+		return 0;
+	}
+	this->speedlist[idx]=value;
+	return 1;
+}
+
 int
 route_contains(struct route *this, struct item *item)
 {
@@ -187,10 +210,10 @@ static void
 route_path_update(struct route *this)
 {
 	route_path_destroy(this->path2);
-	if (! this->graph || !(this->path2=route_path_new(this->graph, this->pos, this->dst))) {
+	if (! this->graph || !(this->path2=route_path_new(this->graph, this->pos, this->dst, this->speedlist))) {
 		profile(0,NULL);
 		route_graph_update(this);
-		this->path2=route_path_new(this->graph, this->pos, this->dst);
+		this->path2=route_path_new(this->graph, this->pos, this->dst, this->speedlist);
 		profile(1,"route_path_new");
 		profile(0,"end");
 	}
@@ -503,26 +526,26 @@ route_graph_destroy(struct route_graph *this)
 }
 
 int
-route_time(struct item *item, int len)
+route_time(int *speedlist, struct item *item, int len)
 {
-	int idx=(item->type-type_street_0);
-	if (idx >= sizeof(speed_list)/sizeof(int) || idx < 0) {
-		dbg(0,"street idx(%d) out of range [0,%d[", sizeof(speed_list)/sizeof(int));
+	int idx=(item->type-route_item_first);
+	if (idx > route_item_last-route_item_first || idx < 0) {
+		dbg(0,"street idx(%d) out of range [0,%d]", idx, route_item_last-route_item_first);
 		return len*36;
 	}
-	return len*36/speed_list[idx];
+	return len*36/speedlist[idx];
 }
 
 
 static int
-route_value(struct item *item, int len)
+route_value(int *speedlist, struct item *item, int len)
 {
 	int ret;
 	if (len < 0) {
 		printf("len=%d\n", len);
 	}
 	g_assert(len >= 0);
-	ret=route_time(item, len);
+	ret=route_time(speedlist, item, len);
 	dbg(1, "route_value(0x%x, %d)=%d\n", item->type, len, ret);
 	return ret;
 }
@@ -586,7 +609,7 @@ route_info_length(struct route_info *pos, struct route_info *dst, int dir)
 }
 
 static void
-route_graph_flood(struct route_graph *this, struct route_info *dst)
+route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedlist)
 {
 	struct route_graph_point *p_min,*end=NULL;
 	struct route_graph_segment *s;
@@ -600,14 +623,14 @@ route_graph_flood(struct route_graph *this, struct route_info *dst)
 	if (! (sd->limit & 2)) {
 		end=route_graph_get_point(this, &sd->c[0]);
 		g_assert(end != 0);
-		end->value=route_value(&sd->item, route_value(&sd->item, route_info_length(NULL, dst, -1)));
+		end->value=route_value(speedlist, &sd->item, route_info_length(NULL, dst, -1));
 		end->el=fh_insert(heap, end);
 	}
 
 	if (! (sd->limit & 1)) {
 		end=route_graph_get_point(this, &sd->c[sd->count-1]);
 		g_assert(end != 0);
-		end->value=route_value(&sd->item, route_value(&sd->item, route_info_length(NULL, dst, 1)));
+		end->value=route_value(speedlist, &sd->item, route_info_length(NULL, dst, 1));
 		end->el=fh_insert(heap, end);
 	}
 
@@ -622,7 +645,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst)
 		p_min->el=NULL;
 		s=p_min->start;
 		while (s) {
-			val=route_value(&s->item, s->len);
+			val=route_value(speedlist, &s->item, s->len);
 #if 0
 			val+=val*2*street_route_contained(s->str->segid);
 #endif
@@ -651,7 +674,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst)
 		}
 		s=p_min->end;
 		while (s) {
-			val=route_value(&s->item, s->len);
+			val=route_value(speedlist, &s->item, s->len);
 			new=min+val;
 			if (debug_route)
 				printf("end %d len %d vs %d (0x%x,0x%x)\n",new,val,s->start->value,s->start->c.x, s->start->c.y);
@@ -681,12 +704,15 @@ route_graph_flood(struct route_graph *this, struct route_info *dst)
 }
 
 static struct route_path *
-route_path_new(struct route_graph *this, struct route_info *pos, struct route_info *dst)
+route_path_new(struct route_graph *this, struct route_info *pos, struct route_info *dst, int *speedlist)
 {
 	struct route_graph_point *start1=NULL,*start2=NULL,*start;
 	struct route_graph_segment *s=NULL;
 	int len=0,segs=0;
-	int ilen,hr,min,sec,time=0,seg_time,seg_len;
+	int ilen,seg_time,seg_len;
+#if 0
+	int time=0,hr,min,sec
+#endif
 	unsigned int val1=0xffffffff,val2=0xffffffff;
 	struct street_data *sd=pos->street;
 	struct route_path *ret;
@@ -695,15 +721,15 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 		start1=route_graph_get_point(this, &sd->c[0]);
 		if (! start1)
 			return NULL;
-		val1=start1->value+route_value(&sd->item, route_info_length(pos, NULL, -1));
-		dbg(0,"start1: %d(route)+%d=%d\n", start1->value, val1-start1->value, val1);
+		val1=start1->value+route_value(speedlist, &sd->item, route_info_length(pos, NULL, -1));
+		dbg(1,"start1: %d(route)+%d=%d\n", start1->value, val1-start1->value, val1);
 	}
 	if (! (sd->limit & 2)) {
 		start2=route_graph_get_point(this, &sd->c[sd->count-1]);
 		if (! start2)
 			return NULL;
-		val2=start2->value+route_value(&sd->item, route_info_length(pos, NULL, 1));
-		dbg(0,"start2: %d(route)+%d=%d\n", start2->value, val2-start2->value, val2);
+		val2=start2->value+route_value(speedlist, &sd->item, route_info_length(pos, NULL, 1));
+		dbg(1,"start2: %d(route)+%d=%d\n", start2->value, val2-start2->value, val2);
 	}
 	if (start1 && (val1 < val2)) {
 		start=start1;
@@ -719,16 +745,18 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 	}
 	ret=g_new0(struct route_path, 1);	
 	ret->path_hash=item_hash_new();
-	dbg(0,"dir=%d\n", pos->dir);	
+	dbg(1,"dir=%d\n", pos->dir);	
 	while ((s=start->seg)) {
 		segs++;
 #if 0
 		printf("start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
 #endif
 		seg_len=s->len;
+#if 0
 		seg_time=route_time(&s->item, seg_len);
-		len+=seg_len;
 		time+=seg_time;
+#endif
+		len+=seg_len;
 		if (s->start == start) {
 			route_path_add_item(ret, &s->item, &s->start->c, &s->end->c, seg_len, seg_time);
 			start=s->end;
@@ -738,8 +766,8 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 		}
 	}
 	sd=dst->street;
-	dbg(0,"start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
-	dbg(0,"dst sd->limit=%d sd->c[0]=0x%x,0x%x sd->c[sd->count-1]=0x%x,0x%x\n", sd->limit, sd->c[0].x,sd->c[0].y, sd->c[sd->count-1].x, sd->c[sd->count-1].y);
+	dbg(1,"start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
+	dbg(1,"dst sd->limit=%d sd->c[0]=0x%x,0x%x sd->c[sd->count-1]=0x%x,0x%x\n", sd->limit, sd->c[0].x,sd->c[0].y, sd->c[sd->count-1].x, sd->c[sd->count-1].y);
 	if (start->c.x == sd->c[0].x && start->c.y == sd->c[0].y)
 		dst->dir=-1;
 	else if (start->c.x == sd->c[sd->count-1].x && start->c.y == sd->c[sd->count-1].y)
@@ -750,23 +778,29 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 		return NULL;
 	}
 	ilen=route_info_length(pos, NULL, 0);
+#if 0
 	time+=route_time(&pos->street->item, ilen);
+#endif
 	len+=ilen;
 
 	ilen=route_info_length(NULL, dst, 0);
+#if 0
 	time+=route_time(&dst->street->item, ilen);
+#endif
 	len+=ilen;
 
-	dbg(0, "%d segments\n", segs);
-	dbg(0, "len %5.3f\n", len/1000.0);
+	dbg(1, "%d segments\n", segs);
+#if 0
+	dbg(1, "len %5.3f\n", len/1000.0);
 	time/=10;
 	sec=time;
 	min=time/60;
 	time-=min*60;
 	hr=min/60;
 	min-=hr*60;
-	dbg(0, "time %02d:%02d:%02d (%d sec)\n", hr, min, time, sec);
-	dbg(0, "speed %f km/h\n", len/sec*3.6);
+	dbg(1, "time %02d:%02d:%02d (%d sec)\n", hr, min, time, sec);
+	dbg(1, "speed %f km/h\n", len/sec*3.6);
+#endif
 	return ret;
 }
 
@@ -806,7 +840,7 @@ route_graph_update(struct route *this)
 	profile(1,"graph_free");
 	this->graph=route_graph_build(this->ms, &this->pos->c, &this->dst->c);
 	profile(1,"route_graph_build");
-	route_graph_flood(this->graph, this->dst);
+	route_graph_flood(this->graph, this->dst, this->speedlist);
 	profile(1,"route_graph_flood");
 	this->version++;
 }
