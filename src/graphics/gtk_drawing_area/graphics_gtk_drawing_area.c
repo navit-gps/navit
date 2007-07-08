@@ -481,14 +481,14 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, int wi
 		}
 	}
 	if (window)
-		gdk_draw_pixmap(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], overlay->background, 0, 0, overlay->p.x, overlay->p.y, overlay->width, overlay->height);
+		gdk_draw_drawable(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], overlay->background, 0, 0, overlay->p.x, overlay->p.y, overlay->width, overlay->height);
 	else
-		gdk_draw_pixmap(overlay->background, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, overlay->p.x, overlay->p.y, 0, 0, overlay->width, overlay->height);
+		gdk_draw_drawable(overlay->background, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, overlay->p.x, overlay->p.y, 0, 0, overlay->width, overlay->height);
 	gdk_draw_pixbuf(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], pixbuf2, 0, 0, overlay->p.x, overlay->p.y, overlay->width, overlay->height, GDK_RGB_DITHER_NONE, 0, 0);
 	if (window)
-		gdk_draw_pixmap(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, overlay->p.x, overlay->p.y, overlay->p.x, overlay->p.y, overlay->width, overlay->height);
+		gdk_draw_drawable(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, overlay->p.x, overlay->p.y, overlay->p.x, overlay->p.y, overlay->width, overlay->height);
 #if 0
-	gdk_draw_pixmap(gr->gra->drawable,
+	gdk_draw_drawable(gr->gra->drawable,
                         gr->gra->widget->style->fg_gc[GTK_WIDGET_STATE(gr->gra->widget)],
                         img->gra->drawable,
                         0, 0, p->x, p->y, img->gra->width, img->gra->height);
@@ -499,7 +499,7 @@ static void
 draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
 {
 	GtkWidget *widget=gr->widget;
-	gdk_draw_pixmap(widget->window,
+	gdk_draw_drawable(widget->window,
                         widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
                         gr->drawable,
                         p->x, p->y, p->x, p->y, w, h);
@@ -531,7 +531,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 				overlay_draw(gr, overlay, 0);
 				overlay=overlay->next;
 			}
-			gdk_draw_pixmap(widget->window,
+			gdk_draw_drawable(widget->window,
                 	        widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
                 	        gr->drawable,
                 	        0, 0, 0, 0, gr->width, gr->height);
@@ -549,7 +549,7 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	if (! gra->visible)
 		return TRUE;
 	if (gra->drawable != NULL) {
-                gdk_pixmap_unref(gra->drawable);
+                g_object_unref(gra->drawable);
         }
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;
@@ -567,7 +567,7 @@ expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 	gra->visible=1;
 	if (! gra->drawable)
 		configure(widget, NULL, user_data);
-        gdk_draw_pixmap(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+        gdk_draw_drawable(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
                         gra->drawable, event->area.x, event->area.y,
                         event->area.x, event->area.y,
                         event->area.width, event->area.height);
