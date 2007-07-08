@@ -1,3 +1,4 @@
+modulebindingdir=$(pkglibdir)/binding
 moduledatadir=$(pkglibdir)/data
 modulegraphicsdir=$(pkglibdir)/graphics
 moduleguidir=$(pkglibdir)/gui

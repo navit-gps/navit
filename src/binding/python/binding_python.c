@@ -1,10 +1,10 @@
 #include "config.h"
-#ifdef HAVE_PYTHON
 #include <Python.h>
 #include <fcntl.h>
 #include "coord.h"
 #include "map.h"
 #include "mapset.h"
+#include "plugin.h"
 
 #if defined(MS_WINDOWS) || defined(__CYGWIN__)
 #define Obj_HEAD PyObject_HEAD_INIT(NULL);
@@ -137,7 +137,7 @@ map_rect_new_py(mapObject *self, PyObject *args)
 	if (!PyArg_ParseTuple(args, "O!:navit.map_rect_rect",&coord_rect_Type,&r))
 		return NULL;
 	ret=PyObject_NEW(map_rectObject, &map_rect_Type);
-	ret->mr=map_rect_new(self->m, r->r, NULL, 0);
+	ret->mr=map_rect_new(self->m, NULL);
 	return (PyObject *)ret;
 }
 
@@ -257,7 +257,8 @@ static PyMethodDef navitMethods[]={
 };
 
 
-void python_init(void)
+void
+plugin_init(void)
 {
 	int fd,size;
 	char buffer[65536];
@@ -278,4 +279,3 @@ void python_init(void)
 	Py_Finalize();
 	exit(0);
 }
-#endif

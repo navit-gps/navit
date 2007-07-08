@@ -8,9 +8,11 @@
 void
 phrase_route_calc(void *speech)
 {
+#if 0
 	if (! speech)
 		return;
 	speech_say(speech,"Die Route wird berechnet\n");	
+#endif
 }
 
 void
