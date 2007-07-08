@@ -7,9 +7,12 @@ extern "C" {
 struct plugin;
 
 enum plugin_type {
-	plugin_type_map,
-	plugin_type_gui,
 	plugin_type_graphics,
+	plugin_type_gui,
+	plugin_type_map,
+	plugin_type_osd,
+	plugin_type_speech,
+	plugin_type_vehicle,
 	plugin_type_last,
 };
 #endif

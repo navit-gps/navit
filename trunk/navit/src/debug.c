@@ -36,7 +36,7 @@ debug_init(void)
 #if 0
 	signal(SIGSEGV, sigsegv);
 #endif
-	debug_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	debug_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 }
 
 
@@ -48,12 +48,11 @@ debug_update_level(gpointer key, gpointer value, gpointer user_data)
 }
 
 void
-debug_level_set(char *name, int level)
+debug_level_set(const char *name, int level)
 {
 	debug_level=0;
-	g_hash_table_insert(debug_hash, name, (gpointer) level);
+	g_hash_table_insert(debug_hash, g_strdup(name), (gpointer) level);
 	g_hash_table_foreach(debug_hash, debug_update_level, NULL);	
-	debug_level_get(name);
 }
 
 int
