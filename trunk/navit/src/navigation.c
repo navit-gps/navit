@@ -87,6 +87,54 @@ road_angle(struct coord *c1, struct coord *c2, int dir)
 	return ret;
 }
 
+int
+round_distance(int dist)
+{
+	if (dist < 100) {
+		dist=(dist+5)/10;
+		return dist*10;
+	}
+	if (dist < 250) {
+		dist=(dist+13)/25;
+		return dist*25;
+	}
+	if (dist < 500) {
+		dist=(dist+25)/50;
+		return dist*50;
+	}
+	if (dist < 1000) {
+		dist=(dist+50)/100;
+		return dist*100;
+	}
+	if (dist < 5000) {
+		dist=(dist+50)/100;
+		return dist*100;
+	}
+	if (dist < 100000) {
+		dist=(dist+500)/1000;
+		return dist*1000;
+	}
+	dist=(dist+5000)/10000;
+	return dist*10000;
+}
+
+static char *
+get_distance(char *prefix, int dist, enum navigation_mode mode)
+{
+	if (mode == navigation_mode_long) 
+		return g_strdup_printf("%d m", dist);
+	if (dist < 1000) 
+		return g_strdup_printf(gettext("%s %d metern"), prefix, dist);
+	if (dist < 5000) {
+		int rem=(dist/100)%10;
+		if (rem)
+			return g_strdup_printf(gettext("%s %d,%d kilometern"), prefix, dist/1000, rem);
+	}
+	if ( dist == 1000) 
+		return g_strdup_printf(gettext("%s einem kilometer"), prefix);
+	return g_strdup_printf(gettext("%s %d kilometer"), prefix, dist/1000);
+}
+
 static struct navigation_itm *
 navigation_itm_new(struct navigation *this_, struct item *item, struct coord *start)
 {
@@ -240,10 +288,11 @@ make_maneuvers(struct navigation *this_)
 }
 
 static char *
-show_maneuver(struct navigation_itm *itm, struct navigation_command *cmd, int mode)
+show_maneuver(struct navigation_itm *itm, struct navigation_command *cmd, enum navigation_mode mode)
 {
 	char *dir="rechts",*strength="";
 	int distance=itm->dest_length-cmd->itm->dest_length;
+	char *d,*ret;
 	int delta=cmd->delta;
 	if (delta < 0) {
 		dir="links";
@@ -259,10 +308,13 @@ show_maneuver(struct navigation_itm *itm, struct navigation_command *cmd, int mo
 		dbg(0,"delta=%d\n", delta);
 		strength="unbekannt ";
 	}
+	d=get_distance("In", round_distance(distance), mode);
 	if (cmd->itm->next)
-		return g_strdup_printf("In %d m %s%s abbiegen", distance, strength, dir);
+		ret=g_strdup_printf("%s %s%s abbiegen", d, strength, dir);
 	else
-		return g_strdup_printf("In %d m haben Sie ihr Ziel erreicht", distance);
+		ret=g_strdup_printf("%s haben Sie ihr Ziel erreicht", d);
+	g_free(d);
+	return ret;
 }
 
 struct navigation_list *
@@ -354,10 +406,11 @@ navigation_destroy(struct navigation *this_)
 	g_free(this_);
 }
 
-struct callback *
-navigation_register_callback(struct navigation *this_, enum navigation_mode mode, void (*func)(struct navigation *nav, void *data), void *data)
+int
+navigation_register_callback(struct navigation *this_, enum navigation_mode mode, struct callback *cb)
 {
-	return callback_list_add_new(this_->callback, func, 1, &data);
+	callback_list_add(this_->callback, cb);
+	return 1;
 }
 
 void

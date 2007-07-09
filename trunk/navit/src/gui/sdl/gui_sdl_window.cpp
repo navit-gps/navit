@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "plugin.h"
 #include "graphics.h"
+#include "callback.h"
 #include "gui_sdl.h"
 
 #include "navigation.h"
@@ -186,7 +187,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
 	navig=navit_get_navigation(sdl_gui_navit);
 	if(navig){
 		printf("navig valid, registering callback\n");
-		navigation_register_callback(navig, navigation_mode_long, sdl_update_roadbook, sdl_gui_navit);
+		navigation_register_callback(navig, navigation_mode_long, callback_new((void (*)())sdl_update_roadbook, 1, (void **)&sdl_gui_navit));
 	} else {
 		printf("navig unvalid\n");
 	}

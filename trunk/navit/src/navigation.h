@@ -21,7 +21,7 @@ char *navigation_list_get(struct navigation_list *this_, enum navigation_mode mo
 void navigation_list_destroy(struct navigation_list *this_);
 void navigation_update(struct navigation *this_, struct route *route);
 void navigation_destroy(struct navigation *this_);
-struct callback *navigation_register_callback(struct navigation *this_, enum navigation_mode mode, void (*func)(struct navigation *nav, void *data), void *data);
+int navigation_register_callback(struct navigation *this_, enum navigation_mode mode, struct callback *cb);
 void navigation_unregister_callback(struct navigation *this_, struct callback *cb);
 /* end of prototypes */
 #ifdef __cplusplus

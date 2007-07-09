@@ -4,8 +4,9 @@
 	<plugin path="*/*/.libs/lib*.so" />
 	<plugin path="graphics/null/.libs/libgraphics_null.so" active="no" />
 </plugins>
+<debug name="navit:do_draw" level="0" />
 <navit gui="gtk" graphics="gtk_drawing_area" center="5031.51 N 735.83 E" zoom="8192" >
-	<vehicle name="Meins" enabled="no" source="gpsd://192.168.1.14" color="#0000ff"/>
+	<vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff"/>
 	<vehicle name="Deins" enabled="no" source="gpsd://somehost" color="#0000aa"/> 
 	<tracking>
 	</tracking>
@@ -27,11 +28,14 @@
 	<navigation>
 		<announce type="water_poly" value="10" units="s" />
 	</navigation>
+	<speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" />
 	<mapset>
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map" />
+		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp1.smp" />
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp2.smp" />
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp3.smp" />
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp4.smp" />
+		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp5.smp" />
 	</mapset>
 	<layout name="Tag">
 		<layer name="sea" details="0">
