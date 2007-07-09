@@ -5,6 +5,7 @@
 #include <glib.h>
 #include "debug.h"
 #include "navit.h"
+#include "callback.h"
 #include "gui.h"
 #include "map.h"
 #include "mapset.h"
@@ -50,6 +51,7 @@ struct navit {
 	int follow;
 	int update_curr;
 	int follow_curr;
+	struct callback *nav_speech_cb;
 };
 
 struct gui *
@@ -361,6 +363,21 @@ navit_add_menu_former_destinations(struct navit *this_, struct menu *men, struct
 }
 
 void
+navit_speak(struct navit *this_)
+{
+	struct navigation *nav=this_->navigation;
+	struct navigation_list *list;
+	char *text;
+	printf("navit=%p\n", this_);
+
+	list=navigation_list_new(nav);	
+	text=navigation_list_get(list, navigation_mode_speech);
+	printf("Hallo %s\n", text);
+
+	navigation_list_destroy(list);
+}
+
+void
 navit_init(struct navit *this_)
 {
 	struct menu *men;
@@ -385,6 +402,11 @@ navit_init(struct navit *this_)
 			if (men) 
 				navit_add_menu_former_destinations(this_, men, this_->route);
 		}
+	}
+	if (this_->navigation && this_->speech) {
+		printf("navit=%p navigation %p\n", this_, this_->navigation);
+		this_->nav_speech_cb=callback_new(navit_speak, 1, &this_);
+		navigation_register_callback(this_->navigation, navigation_mode_speech, this_->nav_speech_cb);
 	}
 	global_navit=this_;
 	navit_debug(this_);

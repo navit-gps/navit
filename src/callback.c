@@ -1,4 +1,5 @@
 #include <glib.h>
+#include "debug.h"
 #include "callback.h"
 
 struct callback {
@@ -21,7 +22,7 @@ callback_list_new(void)
 }
 
 struct callback *
-callback_list_add_new(struct callback_list *l, void (*func)(), int pcount, void **p)
+callback_new(void (*func)(), int pcount, void **p)
 {
 	struct callback *ret;
 	int i;
@@ -32,7 +33,23 @@ callback_list_add_new(struct callback_list *l, void (*func)(), int pcount, void 
 	for (i = 0 ; i < pcount ; i++) {
 		ret->p[i]=p[i];
 	}	
-	l->list=g_list_prepend(l->list, ret);
+	return ret;
+}
+
+void
+callback_list_add(struct callback_list *l, struct callback *cb)
+{
+	l->list=g_list_prepend(l->list, cb);
+}
+
+
+struct callback *
+callback_list_add_new(struct callback_list *l, void (*func)(), int pcount, void **p)
+{
+	struct callback *ret;
+	
+	ret=callback_new(func, pcount, p);	
+	callback_list_add(l, ret);
 	return ret;
 }
 
@@ -56,34 +73,35 @@ callback_list_call(struct callback_list *l, int pcount, void **p)
 	while (cbi) {
 		cb=cbi->data;
 		if (cb->pcount + pcount <= 8) {
+			dbg(1,"cb->pcount=%d %p pcount=%d %p\n", cb->pcount, cb->p[0], pcount, p[0]);
 			for (i = 0 ; i < cb->pcount ; i++) 
 				pf[i]=cb->p[i];
 			for (i = 0 ; i < pcount ; i++)
 				pf[i+cb->pcount]=p[i];
 			switch (cb->pcount+pcount) {
 			case 8:
-				cb->func(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7]);
+				cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5],pf[6],pf[7]);
 				break;
 			case 7:
-				cb->func(p[0],p[1],p[2],p[3],p[4],p[5],p[6]);
+				cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5],pf[6]);
 				break;
 			case 6:
-				cb->func(p[0],p[1],p[2],p[3],p[4],p[5]);
+				cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5]);
 				break;
 			case 5:
-				cb->func(p[0],p[1],p[2],p[3],p[4]);
+				cb->func(pf[0],pf[1],pf[2],pf[3],pf[4]);
 				break;
 			case 4:
-				cb->func(p[0],p[1],p[2],p[3]);
+				cb->func(pf[0],pf[1],pf[2],pf[3]);
 				break;
 			case 3:
-				cb->func(p[0],p[1],p[2]);
+				cb->func(pf[0],pf[1],pf[2]);
 				break;
 			case 2:
-				cb->func(p[0],p[1]);
+				cb->func(pf[0],pf[1]);
 				break;
 			case 1:
-				cb->func(p[0]);
+				cb->func(pf[0]);
 				break;
 			case 0:
 				cb->func();

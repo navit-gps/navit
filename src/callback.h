@@ -5,6 +5,8 @@ extern "C" {
 struct callback;
 struct callback_list;
 struct callback_list *callback_list_new(void);
+struct callback *callback_new(void (*func)(void), int pcount, void **p);
+void callback_list_add(struct callback_list *l, struct callback *cb);
 struct callback *callback_list_add_new(struct callback_list *l, void (*func)(void), int pcount, void **p);
 void callback_list_remove_destroy(struct callback_list *l, struct callback *cb);
 void callback_list_call(struct callback_list *l, int pcount, void **p);
