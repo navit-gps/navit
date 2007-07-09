@@ -266,6 +266,32 @@ xmlconfig_navigation(struct xmlstate *state)
 static int
 xmlconfig_announce(struct xmlstate *state)
 {
+	const char *type,*value;
+	char key[32];
+	int level[3];
+	int i;
+	enum item_type itype;
+	char *saveptr, *tok, *type_str, *str;
+
+	type=find_attribute(state, "type", 1);
+	if (! type)
+		return 0;
+	for (i = 0 ; i < 3 ; i++) {
+		sprintf(key,"level%d", i);
+		value=find_attribute(state, key, 0);
+		if (value) 
+			level[i]=convert_number(value);
+		else
+			level[i]=-1;
+	}
+	type_str=g_strdup(type);
+	str=type_str;
+	while ((tok=strtok_r(str, ",", &saveptr))) {
+		itype=item_from_name(tok);
+		navigation_set_announce(state->parent->element_object, itype, level);
+		str=NULL;
+	}
+	g_free(type_str);
 	return 1;
 }
 

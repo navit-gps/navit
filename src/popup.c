@@ -53,6 +53,20 @@ popup_set_destination(struct menu *menu, void *data1, void *data2)
 	navit_set_destination(nav, c, buffer);
 }
 
+static void
+popup_set_bookmark(struct menu *menu, void *data1, void *data2)
+{
+	struct navit *nav=data1;
+	struct coord *c=data2;
+	struct coord_geo g;
+	char buffer[1024];
+	char buffer_geo[1024];
+	transform_to_geo(transform_get_projection(navit_get_trans(nav)), c, &g);
+	transform_geo_text(&g, buffer_geo);	
+	sprintf(buffer,"Map Point %s", buffer_geo);
+	navit_add_bookmark(nav, c, buffer);
+}
+
 
 extern void *vehicle;
 
@@ -106,6 +120,7 @@ popup_show_attr_val(void *menu, struct attr *attr)
 {
 	char *attr_name=attr_to_name(attr->type);
 
+	printf("attr\n");
 	if (attr->type == attr_limit) 
 		popup_printf(menu, menu_type_menu, "%s: %d", attr_name, attr->u.num);
 	else 
@@ -216,5 +231,6 @@ popup(struct navit *nav, int button, struct point *p)
 	dbg(0,"%p %p\n", nav, &c);
 	popup_printf_cb(men, menu_type_menu, popup_set_position, nav, &c, "Set as position");
 	popup_printf_cb(men, menu_type_menu, popup_set_destination, nav, &c, "Set as destination");
+	popup_printf_cb(men, menu_type_menu, popup_set_bookmark, nav, &c, "Add as bookmark");
 	popup_display(nav, popup, p);
 }

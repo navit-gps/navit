@@ -16,12 +16,10 @@
 #include "item.h"
 #include "route.h"
 #include "track.h"
+#include "point.h"
 #include "graphics.h"
 #include "transform.h"
 #include "fib.h"
-
-#define route_item_first type_street_0
-#define route_item_last type_ferry
 
 #if 0
 static int speed_list[]={
@@ -189,12 +187,11 @@ route_get_speedlist(struct route *this)
 int
 route_set_speed(struct route *this, enum item_type type, int value)
 {
-	int idx=type-route_item_first;
-	if (idx > route_item_last-route_item_first || idx < 0) {
-		dbg(0,"street idx(%d) out of range [0,%d]", idx, route_item_last-route_item_first);
+	if (type < route_item_first || type > route_item_last) {
+		dbg(0,"street type %d out of range [%d,%d]", type, route_item_first, route_item_last);
 		return 0;
 	}
-	this->speedlist[idx]=value;
+	this->speedlist[type-route_item_first]=value;
 	return 1;
 }
 
@@ -528,12 +525,11 @@ route_graph_destroy(struct route_graph *this)
 int
 route_time(int *speedlist, struct item *item, int len)
 {
-	int idx=(item->type-route_item_first);
-	if (idx > route_item_last-route_item_first || idx < 0) {
-		dbg(0,"street idx(%d) out of range [0,%d]", idx, route_item_last-route_item_first);
+	if (item->type < route_item_first || item->type > route_item_last) {
+		dbg(0,"street type %d out of range [%d,%d]", item->type, route_item_first, route_item_last);
 		return len*36;
 	}
-	return len*36/speedlist[idx];
+	return len*36/speedlist[item->type-route_item_first];
 }
 
 
@@ -752,8 +748,8 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 		printf("start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
 #endif
 		seg_len=s->len;
+		seg_time=route_time(speedlist, &s->item, seg_len);
 #if 0
-		seg_time=route_time(&s->item, seg_len);
 		time+=seg_time;
 #endif
 		len+=seg_len;

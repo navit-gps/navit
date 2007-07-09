@@ -26,7 +26,11 @@
 		<speed type="ferry" value="40" />
 	</route>
 	<navigation>
-		<announce type="water_poly" value="10" units="s" />
+		<announce type="street_0,street_1_city" level0="10" level1="100" level2="200" unit="m" />
+		<announce type="street_2_city,street_3_city,street_4_city,ramp" level0="20" level1="200" level2="500" unit="m" />
+		<announce type="highway_city,street_1_land,street_2_land,street_3_land,street_4_land" level0="40" level1="400" level2="1000" unit="m" />
+		<announce type="street_n_lanes,highway_land" level0="100" level1="1000" level2="2000" unit="m" />
+
 	</navigation>
 	<speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" />
 	<mapset>

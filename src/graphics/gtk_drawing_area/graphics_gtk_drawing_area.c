@@ -184,10 +184,11 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 
 
 static struct graphics_image_priv *
-image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h)
+image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot)
 {
 	GdkPixbuf *pixbuf;
 	struct graphics_image_priv *ret;
+	const char *option;
 
 	pixbuf=gdk_pixbuf_new_from_file(name, NULL);
 	if (! pixbuf)
@@ -198,6 +199,18 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 	ret->h=gdk_pixbuf_get_height(pixbuf);
 	*w=ret->w;
 	*h=ret->h;
+	if (hot) {
+		option=gdk_pixbuf_get_option(pixbuf, "x_hot");
+		if (option) 
+			hot->x=atoi(option);
+		else
+			hot->x=ret->w/2-1;
+		option=gdk_pixbuf_get_option(pixbuf, "y_hot");
+		if (option) 
+			hot->y=atoi(option);
+		else
+			hot->y=ret->h/2-1;
+	}
 	return ret;
 }
 

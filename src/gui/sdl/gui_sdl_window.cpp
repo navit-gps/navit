@@ -12,10 +12,11 @@
 #include "gui.h"
 #include "coord.h"
 #include "plugin.h"
-#include "graphics.h"
 #include "callback.h"
+#include "point.h"
+#include "graphics.h"
 #include "gui_sdl.h"
-
+#include "item.h"
 #include "navigation.h"
 
 #include "CEGUI.h"

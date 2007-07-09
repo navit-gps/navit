@@ -8,6 +8,10 @@ struct route_crossings {
 	struct route_crossing crossing[0];
 };
 
+#define route_item_first type_street_0
+#define route_item_last type_ferry
+
+
 /* prototypes */
 enum item_type;
 struct coord;

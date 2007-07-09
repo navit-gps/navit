@@ -219,12 +219,12 @@ street_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		}
 		return 0;
 	case attr_label:
+		street->attr_next=attr_street_name;
 		nameid=L(street->str->nameid);
 		if (! nameid)
 			return 0;
 		if (! street->name.len)
 			street_name_get_by_id(&street->name,street->name_file,nameid);
-		street->attr_next=attr_street_name;
 		attr->u.str=street->name.name2;
 		if (attr->u.str && attr->u.str[0])
 			return 1;
@@ -233,22 +233,22 @@ street_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			return 1;
 		return 0;
 	case attr_street_name:
+		street->attr_next=attr_street_name_systematic;
 		nameid=L(street->str->nameid);
 		if (! nameid)
 			return 0;
 		if (! street->name.len)
 			street_name_get_by_id(&street->name,street->name_file,nameid);
 		attr->u.str=street->name.name2;
-		street->attr_next=attr_street_name_systematic;
 		return ((attr->u.str && attr->u.str[0]) ? 1:0);
 	case attr_street_name_systematic:
+		street->attr_next=attr_limit;
 		nameid=L(street->str->nameid);
 		if (! nameid)
 			return 0;
 		if (! street->name.len)
 			street_name_get_by_id(&street->name,street->name_file,nameid);
 		attr->u.str=street->name.name1;
-		street->attr_next=attr_limit;
 		return ((attr->u.str && attr->u.str[0]) ? 1:0);
 	case attr_limit:
 		if (street->str->type & 0x40) {
