@@ -223,21 +223,33 @@ navit_set_destination_menu(struct menu *menu, void *this__p, void *c_p)
 
 }
 
-void
-navit_set_destination(struct navit *this_, struct coord *c, char *description)
+static void
+navit_append_coord(char *file, struct coord *c, char *type, char *description)
 {
 	int fd;
 	char *buffer;
-	buffer=g_strdup_printf("0x%x 0x%x %s\n", c->x, c->y, description);
-	fd=open("destination.txt", O_RDWR|O_CREAT|O_APPEND, 0644);
+	buffer=g_strdup_printf("0x%x 0x%x type=%s label=\"%s\"\n", c->x, c->y, type, description);
+	fd=open(file, O_RDWR|O_CREAT|O_APPEND, 0644);
 	if (fd != -1)
 		write(fd, buffer, strlen(buffer));
 	close(fd);
 	g_free(buffer);
+}
+
+void
+navit_set_destination(struct navit *this_, struct coord *c, char *description)
+{
+	navit_append_coord("destination.txt", c, "former_destination", description);
 	if (this_->route) {
                 route_set_destination(this_->route, c);
                 navit_draw(this_);
         }
+}
+
+void
+navit_add_bookmark(struct navit *this_, struct coord *c, char *description)
+{
+	navit_append_coord("bookmark.txt", c, "bookmark", description);
 }
 
 struct navit *global_navit;
@@ -329,14 +341,19 @@ navit_add_menu_maps(struct navit *this_, struct mapset *ms, struct menu *men)
 }
 
 void
-navit_add_menu_former_destinationss(struct navit *this_, struct menu *men, struct route *route)
+navit_add_menu_destinations(struct navit *this_, char *file, struct menu *rmen, struct route *route)
 {
 	struct coord c;
 	int pos,flag=0;
 	FILE *f;
 	char buffer[2048];
-
-	f=fopen("destination.txt", "r");
+	char buffer2[2048];
+	char *s,*i,*n;
+	struct menu *men,*nmen;
+	GHashTable *h;
+	
+	h=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	f=fopen(file, "r");
 	if (f) {
 		while (! feof(f) && fgets(buffer, 2048, f)) {
 			if ((pos=coord_parse(buffer, projection_mg, &c))) {
@@ -344,22 +361,53 @@ navit_add_menu_former_destinationss(struct navit *this_, struct menu *men, struc
 					struct coord *cn=g_new(struct coord, 1);
 					*cn=c;
 					buffer[strlen(buffer)-1]='\0';
-					if (men)
-						menu_add(men, buffer+pos+1, menu_type_menu, navit_set_destination_menu, this_, cn);
+					s=buffer+pos+1;
+					if (!strncmp(s,"type=", 5)) {
+						i=index(s, '"');
+						if (i) {
+							s=i+1;
+							i=index(s, '"');
+							if (i)
+								*i='\0';
+						}
+					}
+					if (rmen) {
+						i=s;
+						n=s;
+						men=rmen;
+						while ((i=index(n, '/'))) {
+							strcpy(buffer2, s);
+							buffer2[i-s]='\0';
+							if (!(nmen=g_hash_table_lookup(h, buffer2))) {
+								nmen=menu_add(men, buffer2+(n-s), menu_type_submenu, NULL, NULL, NULL);
+								g_hash_table_insert(h, g_strdup(buffer2), nmen);
+							}
+							n=i+1;
+							men=nmen;
+						}
+						menu_add(men, n, menu_type_menu, navit_set_destination_menu, this_, cn);
+					}
 				}
 				flag=1;
 			}
 		}
 		fclose(f);
-		if (flag)
+		if (route && flag)
 			route_set_destination(route, &c);
 	}
+	g_hash_table_destroy(h);
 }
 
 void
 navit_add_menu_former_destinations(struct navit *this_, struct menu *men, struct route *route)
 {
-	navit_add_menu_former_destinationss(this_, men ? menu_add(men, "Former Destinations", menu_type_submenu, NULL, NULL, NULL) : NULL, route);
+	navit_add_menu_destinations(this_, "destination.txt", men ? menu_add(men, "Former Destinations", menu_type_submenu, NULL, NULL, NULL) : NULL, route);
+}
+
+void
+navit_add_menu_bookmarks(struct navit *this_, struct menu *men)
+{
+	navit_add_menu_destinations(this_, "bookmark.txt", men ? menu_add(men, "Bookmarks", menu_type_submenu, NULL, NULL, NULL) : NULL, NULL);
 }
 
 void
@@ -368,12 +416,10 @@ navit_speak(struct navit *this_)
 	struct navigation *nav=this_->navigation;
 	struct navigation_list *list;
 	char *text;
-	printf("navit=%p\n", this_);
 
 	list=navigation_list_new(nav);	
 	text=navigation_list_get(list, navigation_mode_speech);
-	printf("Hallo %s\n", text);
-
+	speech_say(this_->speech, text);
 	navigation_list_destroy(list);
 }
 
@@ -399,12 +445,13 @@ navit_init(struct navit *this_)
 				navit_add_menu_maps(this_, ms, men);
 			}
 			men=menu_add(this_->menubar, "Route", menu_type_submenu, NULL, NULL, NULL);
-			if (men) 
+			if (men) {
 				navit_add_menu_former_destinations(this_, men, this_->route);
+				navit_add_menu_bookmarks(this_, men);
+			}
 		}
 	}
 	if (this_->navigation && this_->speech) {
-		printf("navit=%p navigation %p\n", this_, this_->navigation);
 		this_->nav_speech_cb=callback_new(navit_speak, 1, &this_);
 		navigation_register_callback(this_->navigation, navigation_mode_speech, this_->nav_speech_cb);
 	}

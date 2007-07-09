@@ -38,7 +38,7 @@ struct graphics_methods {
 	struct graphics_gc_priv *(*gc_new)(struct graphics_priv *gr, struct graphics_gc_methods *meth);
 	void (*background_gc)(struct graphics_priv *gr, struct graphics_gc_priv *gc);
 	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h);
-	struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h);
+	struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot);
 	void *(*get_data)(struct graphics_priv *gr, char *type);
 	void (*register_resize_callback)(struct graphics_priv *gr, void (*callback)(void *data, int w, int h), void *data);
 	void (*register_button_callback)(struct graphics_priv *gr, void (*callback)(void *data, int pressed, int button, struct point *p), void *data);
@@ -77,6 +77,7 @@ struct graphics_image {
 	struct graphics_image_methods meth;
 	int width;
 	int height;
+	struct point hot;
 };
 
 /* prototypes */

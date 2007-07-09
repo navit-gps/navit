@@ -23,7 +23,14 @@ struct navigation {
 	struct navigation_command *cmd_last;
 	struct callback_list *callback_speech;
 	struct callback_list *callback;
+	int level_last;
+	struct item item_last;
+	int turn_around;
+	int distance_turn;
+	int distance_last;
+	int announce[route_item_last-route_item_first+1][3];
 };
+
 
 struct navigation_command {
 	struct navigation_itm *itm;
@@ -49,10 +56,20 @@ struct street_data {
 struct navigation *
 navigation_new(struct mapset *ms)
 {
+	int i,j;
 	struct navigation *ret=g_new(struct navigation, 1);
 	ret->ms=ms;
 	ret->callback=callback_list_new();
 	ret->callback_speech=callback_list_new();
+	ret->level_last=-2;
+	ret->distance_last=-2;
+	ret->distance_turn=50;
+
+	for (j = 0 ; j <= route_item_last-route_item_first ; j++) {
+		for (i = 0 ; i < 3 ; i++) {
+			ret->announce[j][i]=-1;
+		}
+	}
 
 	return ret;	
 }
@@ -61,6 +78,33 @@ void
 navigation_set_mapset(struct navigation *this_, struct mapset *ms)
 {
 	this_->ms=ms;
+}
+
+int
+navigation_set_announce(struct navigation *this_, enum item_type type, int *level)
+{
+	int i;
+	if (type < route_item_first || type > route_item_last) {
+		dbg(0,"street type %d out of range [%d,%d]", type, route_item_first, route_item_last);
+		return 0;
+	}
+	for (i = 0 ; i < 3 ; i++) 
+		this_->announce[type-route_item_first][i]=level[i];
+	return 1;
+}
+
+static int
+navigation_get_announce_level(struct navigation *this_, enum item_type type, int dist)
+{
+	int i;
+
+	if (type < route_item_first || type > route_item_last)
+		return -1;
+	for (i = 0 ; i < 3 ; i++) {
+		if (dist <= this_->announce[type-route_item_first][i])
+			return i;
+	}
+	return i;
 }
 
 struct navigation_itm {
@@ -87,7 +131,7 @@ road_angle(struct coord *c1, struct coord *c2, int dir)
 	return ret;
 }
 
-int
+static int
 round_distance(int dist)
 {
 	if (dist < 100) {
@@ -119,20 +163,29 @@ round_distance(int dist)
 }
 
 static char *
-get_distance(char *prefix, int dist, enum navigation_mode mode)
+get_distance(int dist, enum navigation_mode mode)
 {
 	if (mode == navigation_mode_long) 
 		return g_strdup_printf("%d m", dist);
 	if (dist < 1000) 
-		return g_strdup_printf(gettext("%s %d metern"), prefix, dist);
+		return g_strdup_printf(gettext("%d metern"), dist);
 	if (dist < 5000) {
 		int rem=(dist/100)%10;
 		if (rem)
-			return g_strdup_printf(gettext("%s %d,%d kilometern"), prefix, dist/1000, rem);
+			return g_strdup_printf(gettext("%d,%d kilometern"), dist/1000, rem);
 	}
 	if ( dist == 1000) 
-		return g_strdup_printf(gettext("%s einem kilometer"), prefix);
-	return g_strdup_printf(gettext("%s %d kilometer"), prefix, dist/1000);
+		return g_strdup_printf(gettext("einem kilometer"));
+	return g_strdup_printf(gettext("%d kilometer"), dist/1000);
+}
+
+static char *
+get_distance_fmt(char *fmt, int dist, enum navigation_mode mode)
+{
+	char *d=get_distance(dist, mode);
+	char *ret=g_strdup_printf(fmt, d);
+	g_free(d);
+	return ret;
 }
 
 static struct navigation_itm *
@@ -288,12 +341,14 @@ make_maneuvers(struct navigation *this_)
 }
 
 static char *
-show_maneuver(struct navigation_itm *itm, struct navigation_command *cmd, enum navigation_mode mode)
+show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum navigation_mode mode)
 {
 	char *dir="rechts",*strength="";
 	int distance=itm->dest_length-cmd->itm->dest_length;
 	char *d,*ret;
 	int delta=cmd->delta;
+	int level;
+	level=1;
 	if (delta < 0) {
 		dir="links";
 		delta=-delta;
@@ -308,7 +363,29 @@ show_maneuver(struct navigation_itm *itm, struct navigation_command *cmd, enum n
 		dbg(0,"delta=%d\n", delta);
 		strength="unbekannt ";
 	}
-	d=get_distance("In", round_distance(distance), mode);
+	distance=round_distance(distance);
+	if (mode == navigation_mode_speech) {
+		if (nav->turn_around) 
+			return g_strdup("Wenn möglich bitte wenden");
+		level=navigation_get_announce_level(nav, itm->item.type, distance);
+		dbg(0,"distance=%d level=%d type=0x%x\n", distance, level, itm->item.type);
+	}
+	switch(level) {
+	case 3:
+		ret=get_distance_fmt("Dem Strassenverlauf %s folgen", distance, mode);
+		return ret;
+	case 2:
+		d=g_strdup("Demnächst");
+		break;
+	case 1:
+		d=get_distance_fmt("In %s", distance, mode);
+		break;
+	case 0:
+		d=g_strdup("Jetzt");
+		break;
+	default:
+		d=g_strdup("Error");
+	}
 	if (cmd->itm->next)
 		ret=g_strdup_printf("%s %s%s abbiegen", d, strength, dir);
 	else
@@ -333,7 +410,7 @@ navigation_list_get(struct navigation_list *this_, enum navigation_mode mode)
 	if (!this_->cmd)
 		return NULL;
 	g_free(this_->str);
-	this_->str=show_maneuver(this_->itm, this_->cmd, mode);
+	this_->str=show_maneuver(this_->nav, this_->itm, this_->cmd, mode);
 	this_->itm=this_->cmd->itm;
 	this_->cmd=this_->cmd->next;
 
@@ -348,6 +425,44 @@ navigation_list_destroy(struct navigation_list *this_)
 	g_free(this_);
 }
 
+static void
+navigation_call_callbacks(struct navigation *this_, int force_speech)
+{
+	int distance, level;
+	void *p=this_;
+	callback_list_call(this_->callback, 1, &p);
+	distance=round_distance(this_->first->dest_length-this_->cmd_first->itm->dest_length);
+	level=navigation_get_announce_level(this_, this_->first->item.type, distance);
+	if (level < this_->level_last) {
+		dbg(0,"level %d < %d\n", level, this_->level_last);
+		this_->level_last=level;
+		force_speech=1;
+	}
+	if (!item_is_equal(this_->cmd_first->itm->item, this_->item_last)) {
+		dbg(0,"item different\n");
+		this_->item_last=this_->cmd_first->itm->item;
+		force_speech=1;
+	}
+	if (this_->turn_around) {
+		if (distance > this_->distance_turn) {
+			if (force_speech) {
+				this_->level_last=4;
+				return;
+			}
+			force_speech=1;
+			if (this_->distance_turn > 500)
+				this_->distance_turn*=2;
+			else
+				this_->distance_turn=500;
+		}
+	} else
+		this_->distance_turn=50;
+	if (force_speech) {
+		dbg(0,"distance=%d level=%d type=0x%x\n", distance, level, this_->first->item.type);
+		callback_list_call(this_->callback_speech, 1, &p);
+	}
+}
+
 void
 navigation_update(struct navigation *this_, struct route *route)
 {
@@ -358,7 +473,6 @@ navigation_update(struct navigation *this_, struct route *route)
 	struct street_data *sd;
 	int *speedlist;
 	int len,end_flag=0;
-	void *p;
 
 
 	pos=route_get_pos(route);
@@ -393,9 +507,13 @@ navigation_update(struct navigation *this_, struct route *route)
 	itm=navigation_itm_new(this_, NULL, NULL);
 	route_path_close(rph);
 	calculate_dest_distance(this_);
+	if (this_->first->dest_length > this_->distance_last && this_->distance_last >= 0) 
+		this_->turn_around=1;
+	else
+		this_->turn_around=0;
+	this_->distance_last=this_->first->dest_length;
 	make_maneuvers(this_);
-	p=this_;
-	callback_list_call(this_->callback, 1, &p);
+	navigation_call_callbacks(this_, FALSE);
 }
 
 void
@@ -409,12 +527,18 @@ navigation_destroy(struct navigation *this_)
 int
 navigation_register_callback(struct navigation *this_, enum navigation_mode mode, struct callback *cb)
 {
-	callback_list_add(this_->callback, cb);
+	if (mode == navigation_mode_speech)
+		callback_list_add(this_->callback_speech, cb);
+	else
+		callback_list_add(this_->callback, cb);
 	return 1;
 }
 
 void
-navigation_unregister_callback(struct navigation *this_, struct callback *cb)
+navigation_unregister_callback(struct navigation *this_, enum navigation_mode mode, struct callback *cb)
 {
-	callback_list_remove_destroy(this_->callback, cb);
+	if (mode == navigation_mode_speech)
+		callback_list_remove_destroy(this_->callback_speech, cb);
+	else
+		callback_list_remove_destroy(this_->callback, cb);
 }

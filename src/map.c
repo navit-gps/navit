@@ -163,9 +163,14 @@ map_search_new(struct map *m, struct item *item, struct attr *search_attr, int p
 	this->search_attr=*search_attr;
 	if (search_attr->type >= attr_country_all && search_attr->type <= attr_country_name)
 		this->priv=country_search_new(&this->search_attr, partial);
-	else
-		this->priv=m->meth.map_search_new(m->priv, item, search_attr, partial);
-
+	else {
+		if (m->meth.map_search_new)
+			this->priv=m->meth.map_search_new(m->priv, item, search_attr, partial);
+		else {
+			g_free(this);
+			this=NULL;
+		}
+	}
 	return this;
 }
 
