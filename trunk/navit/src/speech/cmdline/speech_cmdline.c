@@ -33,10 +33,8 @@ speechd_new(char *data, struct speech_methods *meth) {
 	if (! data)
 		return NULL;
 	this=g_new(struct speech_priv,1);
-	if (this) {
-		this->cmdline=g_strdup(data);
-		*meth=speechd_meth;
-	}
+	this->cmdline=g_strdup(data);
+	*meth=speechd_meth;
 	return this;
 }
 

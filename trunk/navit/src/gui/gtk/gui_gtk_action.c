@@ -1,7 +1,6 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include "navit.h"
-#include "graphics.h"
 #include "gui_gtk.h"
 #include "menu.h"
 #include "coord.h"

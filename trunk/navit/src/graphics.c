@@ -4,12 +4,12 @@
 #include "debug.h"
 #include "string.h"
 #include "draw_info.h"
+#include "point.h"
 #include "graphics.h"
 #include "map.h"
 #include "coord.h"
 #include "transform.h"
 #include "projection.h"
-#include "point.h"
 #include "plugin.h"
 #include "profile.h"
 #include "mapset.h"
@@ -128,7 +128,11 @@ graphics_image_new(struct graphics *gra, char *path)
 	struct graphics_image *this_;
 
 	this_=g_new0(struct graphics_image,1);
-	this_->priv=gra->meth.image_new(gra->priv, &this_->meth, path, &this_->width, &this_->height);
+	this_->priv=gra->meth.image_new(gra->priv, &this_->meth, path, &this_->width, &this_->height, &this_->hot);
+	if (! this_->priv) {
+		g_free(this_);
+		this_=NULL;
+	}
 	return this_;
 }
 
@@ -361,9 +365,11 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 						if (! img)
 							g_warning("failed to load icon '%s'\n", e->u.icon.src);
 					}
-					p.x=di->pnt[0].x - img->width/2;
-					p.y=di->pnt[0].y - img->height/2;
-					gra->meth.draw_image(gra->priv, gra->gc[0]->priv, &p, img->priv);
+					if (img) {
+						p.x=di->pnt[0].x - img->hot.x;
+						p.y=di->pnt[0].y - img->hot.y;
+						gra->meth.draw_image(gra->priv, gra->gc[0]->priv, &p, img->priv);
+					}
 					break;
 				case element_image:
 					printf("image: '%s'\n", di->label);
