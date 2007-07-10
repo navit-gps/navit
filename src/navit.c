@@ -286,11 +286,13 @@ navit_debug(struct navit *this_)
 }
 
 static void
-navit_show_roadbook(struct navigation *nav, void *data)
+navit_show_roadbook(struct navit *this_)
 {
+	struct navigation *nav=this_->navigation;
 	struct navigation_list *list;
 	char *str;
-	
+
+	dbg(0,"enter\n");	
 	list=navigation_list_new(nav);
 	while ((str=navigation_list_get(list, navigation_mode_long))) {
 		printf("%s\n", str);
@@ -449,11 +451,15 @@ navit_init(struct navit *this_)
 				navit_add_menu_former_destinations(this_, men, this_->route);
 				navit_add_menu_bookmarks(this_, men);
 			}
-		}
+		} else
+			navit_add_menu_former_destinations(this_, NULL, this_->route);
 	}
 	if (this_->navigation && this_->speech) {
 		this_->nav_speech_cb=callback_new(navit_speak, 1, &this_);
 		navigation_register_callback(this_->navigation, navigation_mode_speech, this_->nav_speech_cb);
+#if 0
+		navigation_register_callback(this_->navigation, navigation_mode_long, callback_new(navit_show_roadbook, 1, &this_));
+#endif
 	}
 	global_navit=this_;
 	navit_debug(this_);
