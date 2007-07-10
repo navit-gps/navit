@@ -14,6 +14,7 @@
 #include "navit.h"
 #include "callback.h"
 
+#define _(STRING)    gettext(STRING)
 
 struct navigation {
 	struct mapset *ms;
@@ -343,14 +344,14 @@ make_maneuvers(struct navigation *this_)
 static char *
 show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum navigation_mode mode)
 {
-	char *dir="rechts",*strength="";
+	char *dir=_("right"),*strength="";
 	int distance=itm->dest_length-cmd->itm->dest_length;
 	char *d,*ret;
 	int delta=cmd->delta;
 	int level;
 	level=1;
 	if (delta < 0) {
-		dir="links";
+		dir=_("left");
 		delta=-delta;
 	}
 	if (delta < 45) {
@@ -366,22 +367,22 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	distance=round_distance(distance);
 	if (mode == navigation_mode_speech) {
 		if (nav->turn_around) 
-			return g_strdup("Wenn möglich bitte wenden");
+			return g_strdup(_("When possible, please turn"));
 		level=navigation_get_announce_level(nav, itm->item.type, distance);
 		dbg(0,"distance=%d level=%d type=0x%x\n", distance, level, itm->item.type);
 	}
 	switch(level) {
 	case 3:
-		ret=get_distance_fmt("Dem Strassenverlauf %s folgen", distance, mode);
+		ret=get_distance_fmt(_("Follow the road %s"), distance, mode);
 		return ret;
 	case 2:
-		d=g_strdup("Demnächst");
+		d=g_strdup(_("Then"));
 		break;
 	case 1:
-		d=get_distance_fmt("In %s", distance, mode);
+		d=get_distance_fmt(_("In %s"), distance, mode);
 		break;
 	case 0:
-		d=g_strdup("Jetzt");
+		d=g_strdup(_("Now"));
 		break;
 	default:
 		d=g_strdup("Error");
