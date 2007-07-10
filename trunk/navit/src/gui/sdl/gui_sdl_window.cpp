@@ -60,7 +60,7 @@ struct navit *sdl_gui_navit;
 static int
 gui_sdl_set_graphics(struct gui_priv *this_, struct graphics *gra)
 {
-	printf("setting up the graphics\n");
+	dbg(1,"setting up the graphics\n");
 
 	DLid=(GLuint *)graphics_get_data(gra, "opengl_displaylist");
 	if (!DLid) 
@@ -70,7 +70,7 @@ gui_sdl_set_graphics(struct gui_priv *this_, struct graphics *gra)
 
 
 void drawCursor() {
-	printf("Pushing a cursor from GUI\n");
+	dbg(1,"Pushing a cursor from GUI\n");
                 int x=400;
                 int y=400;
                 float cursor_size=15.0f;
@@ -145,7 +145,7 @@ sdl_update_roadbook(struct navigation *nav, void *data)
 
 static int gui_run_main_loop(struct gui_priv *this_)
 {
-	printf("Entering main loop\n");
+	dbg(1,"Entering main loop\n");
 
 	bool must_quit = false;
 	
@@ -187,10 +187,10 @@ static int gui_run_main_loop(struct gui_priv *this_)
 	struct navigation *navig;
 	navig=navit_get_navigation(sdl_gui_navit);
 	if(navig){
-		printf("navig valid, registering callback\n");
+		dbg(1,"navig valid, registering callback\n");
 		navigation_register_callback(navig, navigation_mode_long, callback_new((void (*)())sdl_update_roadbook, 1, (void **)&sdl_gui_navit));
 	} else {
-		printf("navig unvalid\n");
+		dbg(1,"navig unvalid\n");
 	}
 
 
@@ -317,14 +317,14 @@ struct gui_methods gui_sdl_methods = {
 
 int init_GL() {
 
-	printf("init_GL()\n");
+	dbg(1,"init_GL()\n");
 //  	glClearColor(1.0,0.9,0.7,0);
 
 	// Blue sky
  	glClearColor(0.3,0.7,1.0,0);
 
 	if(VIEW_MODE==VM_2D){
-		printf("Switching to 2D view\n");
+		dbg(1,"Switching to 2D view\n");
 // 		myRoot->getChild("OSD/ViewMode")->setText("2D");
 		glMatrixMode( GL_PROJECTION );
 		glLoadIdentity();
@@ -334,7 +334,7 @@ int init_GL() {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	} else {
-		printf("Switching to 3D view\n");
+		dbg(1,"Switching to 3D view\n");
 // 		myRoot->getChild("OSD/ViewMode")->setText("3D");
 
 		// Dimensions de la fenetre de rendu 
@@ -642,26 +642,26 @@ static void init_sdlgui(void)
 static struct gui_priv *
 gui_sdl_new(struct navit *nav, struct gui_methods *meth, int w, int h) 
 {
-	printf("Begin SDL init\n");
+	dbg(1,"Begin SDL init\n");
 	struct gui_priv *this_;
 	sdl_gui_navit=nav;
 	
 	if(sdl_gui_navit){	
-		printf("*** VALID navit instance in gui\n");
+		dbg(1,"VALID navit instance in gui\n");
 	} else {
-		printf("*** Invalid navit instance in gui\n");
+		dbg(1,"Invalid navit instance in gui\n");
 	}
 	if(nav){	
-		printf("*** VALID source navit instance in gui\n");
+		dbg(1,"VALID source navit instance in gui\n");
 	} else {
-		printf("*** Invalid source navit instance in gui\n");
+		dbg(1,"Invalid source navit instance in gui\n");
 	}
 	
 	*meth=gui_sdl_methods;
 
 	this_=g_new0(struct gui_priv, 1);
 	init_sdlgui();
-	printf("End SDL init\n");
+	dbg(1,"End SDL init\n");
 
 	/*
  	this_->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -681,6 +681,6 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, int w, int h)
 void
 plugin_init(void)
 {
-	printf("registering sdl plugin\n");
+	dbg(1,"registering sdl plugin\n");
 	plugin_register_gui_type("sdl", gui_sdl_new);
 }
