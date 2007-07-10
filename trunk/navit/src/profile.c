@@ -25,7 +25,7 @@ profile_timer(int level, const char *module, const char *function, const char *f
 		     (curr.tv_sec-last[level].tv_sec)*1000;
 	
 		sprintf(buffer, "profile:%s", module);
-		debug_vprintf(1, buffer, function, fmt, ap); 
+		debug_vprintf(1, buffer, function, 1, fmt, ap); 
 		if (msec >= 100) 
 			debug_printf(1, buffer, function, 0, " %d msec\n", msec);
 		else {

@@ -3,7 +3,9 @@
 #include <string.h>
 #include <math.h>
 #include <glib.h>
+#include <libintl.h>
 #include "debug.h"
+#include "profile.h"
 #include "navigation.h"
 #include "coord.h"
 #include "item.h"
@@ -18,6 +20,7 @@
 
 struct navigation {
 	struct mapset *ms;
+	struct item_hash *hash;
 	struct navigation_itm *first;
 	struct navigation_itm *last;
 	struct navigation_command *cmd_first;
@@ -58,8 +61,9 @@ struct navigation *
 navigation_new(struct mapset *ms)
 {
 	int i,j;
-	struct navigation *ret=g_new(struct navigation, 1);
+	struct navigation *ret=g_new0(struct navigation, 1);
 	ret->ms=ms;
+	ret->hash=item_hash_new();
 	ret->callback=callback_list_new();
 	ret->callback_speech=callback_list_new();
 	ret->level_last=-2;
@@ -164,29 +168,60 @@ round_distance(int dist)
 }
 
 static char *
-get_distance(int dist, enum navigation_mode mode)
+get_distance(int dist, enum navigation_mode mode, int is_length)
 {
-	if (mode == navigation_mode_long) 
-		return g_strdup_printf("%d m", dist);
-	if (dist < 1000) 
-		return g_strdup_printf(gettext("%d metern"), dist);
+	if (mode == navigation_mode_long) {
+		if (is_length)
+			return g_strdup_printf("%d m", dist);
+		else
+			return g_strdup_printf("in %d m", dist);
+	}
+	if (dist < 1000) {
+		if (is_length)
+			return g_strdup_printf(_("%d meters"), dist);
+		else
+			return g_strdup_printf(_("in %d meters"), dist);
+	}
 	if (dist < 5000) {
 		int rem=(dist/100)%10;
-		if (rem)
-			return g_strdup_printf(gettext("%d,%d kilometern"), dist/1000, rem);
+		if (rem) {
+			if (is_length)
+				return g_strdup_printf(_("%d.%d kilometer"), dist/1000, rem);
+			else
+				return g_strdup_printf(_("in %d.%d kilometers"), dist/1000, rem);
+		}
 	}
-	if ( dist == 1000) 
-		return g_strdup_printf(gettext("einem kilometer"));
-	return g_strdup_printf(gettext("%d kilometer"), dist/1000);
+	if ( dist == 1000) {
+		if (is_length) 
+			return g_strdup_printf(_("one kilometer"));
+		else
+			return g_strdup_printf(_("in one kilometer"));
+	}
+	if (is_length) 
+		return g_strdup_printf(_("%d kilometer"), dist/1000);
+	else
+		return g_strdup_printf(_("in %d kilometern"), dist/1000);
 }
 
-static char *
-get_distance_fmt(char *fmt, int dist, enum navigation_mode mode)
+static void
+navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *end)
 {
-	char *d=get_distance(dist, mode);
-	char *ret=g_strdup_printf(fmt, d);
-	g_free(d);
-	return ret;
+	struct navigation_itm *itm;
+	struct navigation_command *cmd;
+	while (this_->first && this_->first != end) {
+		itm=this_->first;
+		this_->first=itm->next;
+		if (this_->first)
+			this_->first->prev=NULL;
+		if (this_->cmd_first->itm == itm) {
+			cmd=this_->cmd_first;
+			this_->cmd_first=cmd->next;
+			g_free(cmd);
+		}
+		g_free(itm);
+	}
+	if (! this_->first)
+		this_->last=NULL;
 }
 
 static struct navigation_itm *
@@ -199,6 +234,7 @@ navigation_itm_new(struct navigation *this_, struct item *item, struct coord *st
 	struct coord c[5];
 
 	if (item) {
+		item_hash_insert(this_->hash, item, ret);
 		mr=map_rect_new(item->map, NULL);
 		item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
 		if (item_attr_get(item, attr_street_name, &attr))
@@ -247,10 +283,17 @@ navigation_itm_new(struct navigation *this_, struct item *item, struct coord *st
 }
 
 static void
-calculate_dest_distance(struct navigation *this_)
+calculate_dest_distance(struct navigation *this_, int incr)
 {
 	int len=0, time=0;
-	struct navigation_itm *itm=this_->last;
+	struct navigation_itm *next,*itm=this_->last;
+	if (incr) {
+		itm=this_->first;
+		next=itm->next;
+		itm->dest_length=next->dest_length+itm->length;
+		itm->dest_time=next->dest_time+itm->time;
+		return;
+	}
 	while (itm) {
 		len+=itm->length;
 		time+=itm->time;
@@ -316,6 +359,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 	if (this_->cmd_last)
 		this_->cmd_last->next=ret;
 	this_->cmd_last=ret;
+
 	if (!this_->cmd_first)
 		this_->cmd_first=ret;
 	return ret;
@@ -348,21 +392,22 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	int distance=itm->dest_length-cmd->itm->dest_length;
 	char *d,*ret;
 	int delta=cmd->delta;
-	int level;
+	int level,i,pos[3];
+	char *arg[3],*str[3];
 	level=1;
 	if (delta < 0) {
 		dir=_("left");
 		delta=-delta;
 	}
 	if (delta < 45) {
-		strength="leicht ";
+		strength=_("easily ");
 	} else if (delta < 105) {
 		strength="";
 	} else if (delta < 165) {
-		strength="scharf ";
+		strength=_("strongly ");
 	} else {
 		dbg(0,"delta=%d\n", delta);
-		strength="unbekannt ";
+		strength=_("unknown ");
 	}
 	distance=round_distance(distance);
 	if (mode == navigation_mode_speech) {
@@ -373,24 +418,44 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	}
 	switch(level) {
 	case 3:
-		ret=get_distance_fmt(_("Follow the road %s"), distance, mode);
+		d=get_distance(distance, mode, 1);
+		ret=g_strdup_printf(_("Follow the road for the next %s"), d);
+		g_free(d);
 		return ret;
 	case 2:
-		d=g_strdup(_("Then"));
+		d=g_strdup(_("soon"));
 		break;
 	case 1:
-		d=get_distance_fmt(_("In %s"), distance, mode);
+		printf("get_distance\n");
+		d=get_distance(distance, mode, 0);
 		break;
 	case 0:
-		d=g_strdup(_("Now"));
+		d=g_strdup(_("now"));
 		break;
 	default:
-		d=g_strdup("Error");
+		d=g_strdup(_("error"));
 	}
-	if (cmd->itm->next)
-		ret=g_strdup_printf("%s %s%s abbiegen", d, strength, dir);
+	if (cmd->itm->next) {
+		for (i = 0 ; i < 3 ; i++) 
+			arg[i]=NULL;
+		pos[0]=atoi(_("strength_pos"));
+		str[0]=strength;
+		pos[1]=atoi(_("direction_pos"));
+		str[1]=dir;
+		pos[2]=atoi(_("distance_pos"));
+		str[2]=d;
+		
+		for (i = 0 ; i < 3 ; i++) {
+			if (pos[i] > 0 && pos[i] < 4) {
+				arg[pos[i]-1]=str[i];
+			} else
+				arg[i]=str[i];
+		}
+		
+		ret=g_strdup_printf(_("Turn %s%s %s"), arg[0], arg[1], arg[2]);
+	}
 	else
-		ret=g_strdup_printf("%s haben Sie ihr Ziel erreicht", d);
+		ret=g_strdup_printf(_("You have reached your destination %s"), d);
 	g_free(d);
 	return ret;
 }
@@ -434,6 +499,7 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 	callback_list_call(this_->callback, 1, &p);
 	distance=round_distance(this_->first->dest_length-this_->cmd_first->itm->dest_length);
 	level=navigation_get_announce_level(this_, this_->first->item.type, distance);
+	dbg(0,"level %d vs %d\n", level, this_->level_last);
 	if (level < this_->level_last) {
 		dbg(0,"level %d < %d\n", level, this_->level_last);
 		this_->level_last=level;
@@ -474,52 +540,64 @@ navigation_update(struct navigation *this_, struct route *route)
 	struct street_data *sd;
 	int *speedlist;
 	int len,end_flag=0;
+	int incr;
 
-
+	profile(0,NULL);
 	pos=route_get_pos(route);
 	dst=route_get_dst(route);
 	if (! pos || ! dst)
 		return;
 	speedlist=route_get_speedlist(route);
-	this_->first=this_->last=NULL;
 	len=route_info_length(pos, dst, 0);
 	if (len == -1) {
 		len=route_info_length(pos, NULL, 0);
 		end_flag=1;
 	}
 	sd=route_info_street(pos);
-	itm=navigation_itm_new(this_, &sd->item, route_info_point(pos, -1));
+	itm=item_hash_lookup(this_->hash, &sd->item);
+	navigation_destroy_itms_cmds(this_, itm);
+	if (itm) 
+		incr=1;
+	else {
+		itm=navigation_itm_new(this_, &sd->item, route_info_point(pos, -1));
+		incr=0;
+	}
 	itm->length=len;
 	itm->time=route_time(speedlist, &sd->item, len);
-	rph=route_path_open(route);
-	while((s=route_path_get_segment(rph))) {
-		itm=navigation_itm_new(this_, route_path_segment_get_item(s),route_path_segment_get_start(s));
-		itm->time=route_path_segment_get_time(s);
-		itm->length=route_path_segment_get_length(s);
+	if (!incr) {
+		printf("not on track\n");
+		rph=route_path_open(route);
+		while((s=route_path_get_segment(rph))) {
+			itm=navigation_itm_new(this_, route_path_segment_get_item(s),route_path_segment_get_start(s));
+			itm->time=route_path_segment_get_time(s);
+			itm->length=route_path_segment_get_length(s);
+		}
+		if (end_flag) {
+			len=route_info_length(NULL, dst, 0);
+			dbg(1, "end %d\n", len);
+			sd=route_info_street(dst);
+			itm=navigation_itm_new(this_, &sd->item, route_info_point(pos, 2));
+			itm->length=len;
+			itm->time=route_time(speedlist, &sd->item, len);
+		}
+		itm=navigation_itm_new(this_, NULL, NULL);
+		route_path_close(rph);
+		make_maneuvers(this_);
 	}
-	if (end_flag) {
-		len=route_info_length(NULL, dst, 0);
-		dbg(1, "end %d\n", len);
-		sd=route_info_street(dst);
-		itm=navigation_itm_new(this_, &sd->item, route_info_point(pos, 2));
-		itm->length=len;
-		itm->time=route_time(speedlist, &sd->item, len);
-	}
-	itm=navigation_itm_new(this_, NULL, NULL);
-	route_path_close(rph);
-	calculate_dest_distance(this_);
+	calculate_dest_distance(this_, incr);
 	if (this_->first->dest_length > this_->distance_last && this_->distance_last >= 0) 
 		this_->turn_around=1;
 	else
 		this_->turn_around=0;
 	this_->distance_last=this_->first->dest_length;
-	make_maneuvers(this_);
+	profile(0,"end");
 	navigation_call_callbacks(this_, FALSE);
 }
 
 void
 navigation_destroy(struct navigation *this_)
 {
+	item_hash_destroy(this_->hash);
 	callback_list_destroy(this_->callback);
 	callback_list_destroy(this_->callback_speech);
 	g_free(this_);
