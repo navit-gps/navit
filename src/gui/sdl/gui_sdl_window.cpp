@@ -18,6 +18,7 @@
 #include "gui_sdl.h"
 #include "item.h"
 #include "navigation.h"
+#include "debug.h"
 
 #include "CEGUI.h"
 
