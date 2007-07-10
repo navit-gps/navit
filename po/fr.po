@@ -1,0 +1,62 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-07-06 16:07+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/main.c:43
+msgid ""
+"Could not find home directory. Using current directory as home directory."
+msgstr ""
+
+#: src/main.c:86 src/main.c:90
+#, c-format
+msgid "Using '%s'\n"
+msgstr "Utilisation du fichier de configuration %s\n"
+
+#: src/main.c:88
+#, c-format
+msgid "Error parsing '%s': %s\n"
+msgstr ""
+
+#: src/navigation.c:241
+msgid "right"
+msgstr ""
+
+#: src/navigation.c:245
+msgid "left"
+msgstr ""
+
+#: src/navigation.c:249
+msgid "easily "
+msgstr ""
+
+#: src/navigation.c:253
+msgid "strongly "
+msgstr ""
+
+#: src/navigation.c:256
+msgid "unknown"
+msgstr ""
+
+#: src/navigation.c:259
+#, c-format
+msgid "In %d m, turn %s%s"
+msgstr ""
+
+#: src/navigation.c:261
+#, c-format
+msgid "In %d m, you have reach your destination"
+msgstr ""
