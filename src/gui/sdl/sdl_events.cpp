@@ -237,7 +237,7 @@ bool handleMouseEnters(const CEGUI::EventArgs& event)
 
 
 void handle_destination_change(){
-	printf("Called handle_destination_change\n");
+	dbg(1,"Called handle_destination_change\n");
 
 	using namespace CEGUI;
 	extern CEGUI::Window* myRoot;
@@ -250,7 +250,7 @@ void handle_destination_change(){
 
 	if (SDL_dest.current_search==SRCH_COUNTRY)
 	{	
-		printf("Starting a country search\n");
+		dbg(1,"Starting a country search\n");
 		Editbox* country_edit = static_cast<Editbox*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/CountryEditbox"));
 		String content=country_edit->getText();
 
@@ -281,7 +281,7 @@ void handle_destination_change(){
 		if(strlen(content.c_str())<4){
 
 		}  else {
-			printf("town searching for %s\n",content.c_str());
+			dbg(1,"town searching for %s\n",content.c_str());
 			search->attr.type=attr_town_name;
 			search->attr.u.str=(char *)content.c_str();
 
@@ -326,7 +326,7 @@ void handle_destination_change(){
 		if(strlen(content.c_str())<1){
 
 		}  else {
-			printf("street searching for %s\n",content.c_str());
+			dbg(1,"street searching for %s\n",content.c_str());
 			search->attr.type=attr_street_name;
 			search->attr.u.str=(char *)content.c_str();
 
@@ -407,11 +407,11 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 	}
 	struct search_param *search=&search_param;
 
- 	printf("search->nav=sdl_gui_navit;\n");
+ 	dbg(1,"search->nav=sdl_gui_navit;\n");
  	search->nav=sdl_gui_navit;
- 	printf("search->ms=navit_get_mapset(sdl_gui_navit);\n");
+ 	dbg(1,"search->ms=navit_get_mapset(sdl_gui_navit);\n");
  	search->ms=navit_get_mapset(sdl_gui_navit);
- 	printf("search->sl=search_list_new(search->ms);\n");
+ 	dbg(1,"search->sl=search_list_new(search->ms);\n");
  	search->sl=search_list_new(search->ms);
 
 	return true;
@@ -502,7 +502,7 @@ bool Handle_Virtual_Key_Down(const CEGUI::EventArgs& event){
 
 
 	if(senderID=="OK"){
-		printf("Validating : %s\n",content.c_str());
+		dbg(1,"Validating : %s\n",content.c_str());
 		myRoot->getChild("Navit/Keyboard")->hide();
 		return 0;
 	} else if(senderID=="BACK"){
