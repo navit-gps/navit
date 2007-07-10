@@ -54,7 +54,7 @@ msgstr "inconnu"
 #: src/navigation.c:259
 #, c-format
 msgid "In %d m, turn %s%s"
-msgstr "Dans %d m, tournez %s%"
+msgstr "Dans %d m, tournez %s%s"
 
 #: src/navigation.c:261
 #, c-format
