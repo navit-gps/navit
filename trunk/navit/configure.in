@@ -177,6 +177,14 @@ AM_CONDITIONAL(BINDING_PYTHON, [test "x$python" = "xyes"])
 
 LIBS="$LIBS -lm -rdynamic"
 
+PACKAGE=navit
+AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
+AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
+AC_SUBST(PACKAGE)
+AC_SUBST(VERSION)
+ALL_LINGUAS="fr de"
+AM_GNU_GETTEXT
+
 AC_OUTPUT([
 Makefile
 src/Makefile
@@ -202,4 +210,5 @@ src/vehicle/Makefile
 src/vehicle/file/Makefile
 src/vehicle/gpsd/Makefile
 src/xpm/Makefile
+po/Makefile
 ])
