@@ -15,6 +15,8 @@
 #include "plugin.h"
 #include "xmlconfig.h"
 
+#define _(STRING)    gettext(STRING)
+
 struct map_data *map_data_default;
 
 static void sigchld(int sig)
@@ -80,6 +82,10 @@ int main(int argc, char **argv)
 	setlocale(LC_ALL,"");
 	setlocale(LC_NUMERIC,"C");
 	setlocale(LC_NUMERIC,"C");
+
+        bindtextdomain( "navit", "/usr/share/locale" );
+	textdomain( "navit" );
+
 	debug_init();
 #if 0
 	/* handled in gui/gtk */
@@ -100,12 +106,12 @@ int main(int argc, char **argv)
 		}
 	}
 	if (!config_load(config_file, &error)) {
-		g_error("Error parsing '%s': %s\n", config_file, error->message);
+		g_error(_("Error parsing '%s': %s\n"), config_file, error->message);
 	} else {
-		printf("Using '%s'\n", config_file);
+		printf(_("Using '%s'\n"), config_file);
 	}
 	if (! navit) {
-		printf("No instance has been created, exiting\n");
+		printf(_("No instance has been created, exiting\n"));
 		exit(1);
 	}
 	if (main_loop_gui) {
