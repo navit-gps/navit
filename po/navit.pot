@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-06 16:07+0200\n"
+"POT-Creation-Date: 2007-07-10 22:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,47 +16,118 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.c:43
-msgid ""
-"Could not find home directory. Using current directory as home directory."
-msgstr ""
-
-#: src/main.c:86 src/main.c:90
-#, c-format
-msgid "Using '%s'\n"
-msgstr ""
-
-#: src/main.c:88
+#: ../src/main.c:109
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr ""
 
-#: src/navigation.c:241
+#: ../src/main.c:111
+#, c-format
+msgid "Using '%s'\n"
+msgstr ""
+
+#: ../src/main.c:114
+#, c-format
+msgid "No instance has been created, exiting\n"
+msgstr ""
+
+#: ../src/navigation.c:181
+#, c-format
+msgid "%d meters"
+msgstr ""
+
+#: ../src/navigation.c:183
+#, c-format
+msgid "in %d meters"
+msgstr ""
+
+#: ../src/navigation.c:189
+#, c-format
+msgid "%d.%d kilometer"
+msgstr ""
+
+#: ../src/navigation.c:191
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr ""
+
+#: ../src/navigation.c:196
+msgid "one kilometer"
+msgstr ""
+
+#: ../src/navigation.c:198
+msgid "in one kilometer"
+msgstr ""
+
+#: ../src/navigation.c:201
+#, c-format
+msgid "%d kilometer"
+msgstr ""
+
+#: ../src/navigation.c:203
+#, c-format
+msgid "in %d kilometern"
+msgstr ""
+
+#: ../src/navigation.c:391
 msgid "right"
 msgstr ""
 
-#: src/navigation.c:245
+#: ../src/navigation.c:399
 msgid "left"
 msgstr ""
 
-#: src/navigation.c:249
+#: ../src/navigation.c:403
 msgid "easily "
 msgstr ""
 
-#: src/navigation.c:253
+#: ../src/navigation.c:407
 msgid "strongly "
 msgstr ""
 
-#: src/navigation.c:256
-msgid "unknown"
+#: ../src/navigation.c:410
+msgid "unknown "
 msgstr ""
 
-#: src/navigation.c:259
-#, c-format
-msgid "In %d m, turn %s%s"
+#: ../src/navigation.c:415
+msgid "When possible, please turn"
 msgstr ""
 
-#: src/navigation.c:261
+#: ../src/navigation.c:422
 #, c-format
-msgid "In %d m, you have reach your destination"
+msgid "Follow the road for the next %s"
+msgstr ""
+
+#: ../src/navigation.c:426
+msgid "soon"
+msgstr ""
+
+#: ../src/navigation.c:433
+msgid "now"
+msgstr ""
+
+#: ../src/navigation.c:436
+msgid "error"
+msgstr ""
+
+#: ../src/navigation.c:441
+msgid "strength_pos"
+msgstr ""
+
+#: ../src/navigation.c:443
+msgid "direction_pos"
+msgstr ""
+
+#: ../src/navigation.c:445
+msgid "distance_pos"
+msgstr ""
+
+#: ../src/navigation.c:455
+#, c-format
+msgid "Turn %s%s %s"
+msgstr ""
+
+#: ../src/navigation.c:458
+#, c-format
+msgid "You have reached your destination %s"
 msgstr ""

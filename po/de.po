@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-10 22:19+0200\n"
+"POT-Creation-Date: 2007-07-10 22:55+0200\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Martin Schaller <martin-s@sourceforge.net>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -30,93 +30,103 @@ msgstr "Benutze '%s'\n"
 msgid "No instance has been created, exiting\n"
 msgstr "Es wurde keine Instanz erzeugt, Ende\n"
 
-#: ../src/navigation.c:177
+#: ../src/navigation.c:181
 #, c-format
 msgid "%d meters"
 msgstr "%d Meter"
 
-#: ../src/navigation.c:179
+#: ../src/navigation.c:183
 #, c-format
 msgid "in %d meters"
 msgstr "In %d metern"
 
-#: ../src/navigation.c:185
+#: ../src/navigation.c:189
 #, c-format
-msgid "%d,%d kilometer"
+msgid "%d.%d kilometer"
 msgstr "%d,%d Kilometer"
 
-#: ../src/navigation.c:187
+#: ../src/navigation.c:191
 #, c-format
-msgid "in %d,%d kilometers"
+msgid "in %d.%d kilometers"
 msgstr "In %d,%d Kilometern"
 
-#: ../src/navigation.c:192
+#: ../src/navigation.c:196
 msgid "one kilometer"
 msgstr "einen Kilometer"
 
-#: ../src/navigation.c:194
+#: ../src/navigation.c:198
 msgid "in one kilometer"
 msgstr "in einem Kilometer"
 
-#: ../src/navigation.c:197
+#: ../src/navigation.c:201
 #, c-format
 msgid "%d kilometer"
 msgstr "%d Kilometer"
 
-#: ../src/navigation.c:199
+#: ../src/navigation.c:203
 #, c-format
 msgid "in %d kilometern"
 msgstr "In %d Kilometern"
 
-#: ../src/navigation.c:387
+#: ../src/navigation.c:391
 msgid "right"
 msgstr "rechts"
 
-#: ../src/navigation.c:395
+#: ../src/navigation.c:399
 msgid "left"
 msgstr "links"
 
-#: ../src/navigation.c:399
+#: ../src/navigation.c:403
 msgid "easily "
 msgstr "leicht "
 
-#: ../src/navigation.c:403
+#: ../src/navigation.c:407
 msgid "strongly "
 msgstr "scharf "
 
-#: ../src/navigation.c:406
+#: ../src/navigation.c:410
 msgid "unknown "
 msgstr "unbekannt "
 
-#: ../src/navigation.c:411
+#: ../src/navigation.c:415
 msgid "When possible, please turn"
 msgstr "Wenn möglich bitte wenden"
 
-#: ../src/navigation.c:418
+#: ../src/navigation.c:422
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Dem Straßenverlauf %s folgen"
 
-#: ../src/navigation.c:422
+#: ../src/navigation.c:426
 msgid "soon"
 msgstr "Demnächst"
 
-#: ../src/navigation.c:428
+#: ../src/navigation.c:433
 msgid "now"
 msgstr "Jetzt"
 
-#: ../src/navigation.c:431
+#: ../src/navigation.c:436
 msgid "error"
 msgstr "fehler"
 
-#: ../src/navigation.c:436
-msgid "direction_pos"
+#: ../src/navigation.c:441
+msgid "strength_pos"
 msgstr "2"
 
-#: ../src/navigation.c:438
-msgid "strength_pos"
+#: ../src/navigation.c:443
+msgid "direction_pos"
+msgstr "3"
+
+#: ../src/navigation.c:445
+msgid "distance_pos"
 msgstr "1"
 
-#: ../src/navigation.c:440
-msgid "distance_pos"
-msgstr "0"
+#: ../src/navigation.c:455
+#, c-format
+msgid "Turn %s%s %s"
+msgstr "%s %s%s abbiegen"
+
+#: ../src/navigation.c:458
+#, c-format
+msgid "You have reached your destination %s"
+msgstr "%s haben Sie ihr Ziel erreicht"
