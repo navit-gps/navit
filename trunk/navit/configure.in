@@ -210,5 +210,6 @@ src/vehicle/Makefile
 src/vehicle/file/Makefile
 src/vehicle/gpsd/Makefile
 src/xpm/Makefile
+intl/Makefile
 po/Makefile
 ])
