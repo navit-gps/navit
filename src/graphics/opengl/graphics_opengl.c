@@ -11,6 +11,8 @@
 #include "color.h"
 #include "plugin.h"
 
+#include "debug.h"
+
 struct graphics_priv {
 #if 0
 	GdkEventButton button_event;
@@ -524,7 +526,7 @@ void SDL_print(char * label,int x, int y, int angle){
 static void
 draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
-	printf("******************************************* %s\n",text);
+	dbg(2,"%s\n",text);
 	SDL_print(text,p->x,p->y,0);
 
 #if 0
@@ -898,7 +900,7 @@ graphics_opengl_new(struct graphics_methods *meth)
 
 // 	draw=gtk_drawnig_area_new();
 	
-        printf("Creating the DL from driver\n");
+        dbg(1,"Creating the DL from driver\n");
         this->DLid = glGenLists(1);
 
 
