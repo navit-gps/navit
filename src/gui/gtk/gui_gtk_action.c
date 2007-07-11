@@ -6,6 +6,10 @@
 #include "coord.h"
 #include "destination.h"
 
+#define gettext_noop(String) String
+#define _(STRING)    gettext(STRING)
+#define _n(STRING)    gettext_noop(STRING)
+
 struct menu_priv {
 	char *path;	
 	GtkAction *action;
@@ -148,37 +152,37 @@ visible_points_action(GtkWidget *w, struct container *co)
 
 static GtkActionEntry entries[] = 
 {
-	{ "DisplayMenuAction", NULL, "Display" },
-	{ "RouteMenuAction", NULL, "Route" },
+	{ "DisplayMenuAction", NULL, gettext_noop("Display") },
+	{ "RouteMenuAction", NULL, _n("Route") },
 	{ "Map", NULL, "Map" },
-	{ "LayoutMenuAction", NULL, "Layout" },
-	{ "ZoomOutAction", GTK_STOCK_ZOOM_OUT, "ZoomOut", NULL, NULL, G_CALLBACK(zoom_out_action) },
-	{ "ZoomInAction", GTK_STOCK_ZOOM_IN, "ZoomIn", NULL, NULL, G_CALLBACK(zoom_in_action) },
-	{ "RefreshAction", GTK_STOCK_REFRESH, "Refresh", NULL, NULL, G_CALLBACK(refresh_action) },
-	{ "InfoAction", GTK_STOCK_INFO, "Info", NULL, NULL, G_CALLBACK(info_action) },
-	{ "DestinationAction", "flag_icon", "Destination", NULL, NULL, G_CALLBACK(destination_action) },
+	{ "LayoutMenuAction", NULL, _n("Layout") },
+	{ "ZoomOutAction", GTK_STOCK_ZOOM_OUT, _n("ZoomOut"), NULL, NULL, G_CALLBACK(zoom_out_action) },
+	{ "ZoomInAction", GTK_STOCK_ZOOM_IN, _n("ZoomIn"), NULL, NULL, G_CALLBACK(zoom_in_action) },
+	{ "RefreshAction", GTK_STOCK_REFRESH, _n("Refresh"), NULL, NULL, G_CALLBACK(refresh_action) },
+	{ "InfoAction", GTK_STOCK_INFO, _n("Info"), NULL, NULL, G_CALLBACK(info_action) },
+	{ "DestinationAction", "flag_icon", _n("Destination"), NULL, NULL, G_CALLBACK(destination_action) },
 	{ "Test", NULL, "Test", NULL, NULL, G_CALLBACK(destination_action) },
-	{ "QuitAction", GTK_STOCK_QUIT, "_Quit", "<control>Q",NULL, G_CALLBACK (quit_action) }
+	{ "QuitAction", GTK_STOCK_QUIT, _n("_Quit"), "<control>Q",NULL, G_CALLBACK (quit_action) }
 };
 
 static guint n_entries = G_N_ELEMENTS (entries);
 
 static GtkToggleActionEntry toggleentries[] = 
 {
-	{ "CursorAction", "cursor_icon","Cursor", NULL, NULL, G_CALLBACK(cursor_action),TRUE },
-	{ "OrientationAction", "orientation_icon", "Orientation", NULL, NULL, G_CALLBACK(orient_north_action),FALSE }
+	{ "CursorAction", "cursor_icon",_n("Cursor"), NULL, NULL, G_CALLBACK(cursor_action),TRUE },
+	{ "OrientationAction", "orientation_icon", _n("Orientation"), NULL, NULL, G_CALLBACK(orient_north_action),FALSE }
 };
 
 static guint n_toggleentries = G_N_ELEMENTS (toggleentries);
 
 static GtkActionEntry debug_entries[] = 
 {
-	{ "DataMenuAction", NULL, "Data" },
-	{ "VisibleBlocksAction", NULL, "VisibleBlocks", NULL, NULL, G_CALLBACK(visible_blocks_action) },
-	{ "VisibleTownsAction", NULL, "VisibleTowns", NULL, NULL, G_CALLBACK(visible_towns_action) },
-	{ "VisiblePolysAction", NULL, "VisiblePolys", NULL, NULL, G_CALLBACK(visible_polys_action) },
-	{ "VisibleStreetsAction", NULL, "VisibleStreets", NULL, NULL, G_CALLBACK(visible_streets_action) },
-	{ "VisiblePointsAction", NULL, "VisiblePoints", NULL, NULL, G_CALLBACK(visible_points_action) }
+	{ "DataMenuAction", NULL, _n("Data") },
+	{ "VisibleBlocksAction", NULL, _n("VisibleBlocks"), NULL, NULL, G_CALLBACK(visible_blocks_action) },
+	{ "VisibleTownsAction", NULL, _n("VisibleTowns"), NULL, NULL, G_CALLBACK(visible_towns_action) },
+	{ "VisiblePolysAction", NULL, _n("VisiblePolys"), NULL, NULL, G_CALLBACK(visible_polys_action) },
+	{ "VisibleStreetsAction", NULL, _n("VisibleStreets"), NULL, NULL, G_CALLBACK(visible_streets_action) },
+	{ "VisiblePointsAction", NULL, _n("VisiblePoints"), NULL, NULL, G_CALLBACK(visible_points_action) }
 };
 
 static guint n_debug_entries = G_N_ELEMENTS (debug_entries);
