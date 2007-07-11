@@ -191,16 +191,33 @@ get_distance(int dist, enum navigation_mode mode, int is_length)
 				return g_strdup_printf(_("in %d.%d kilometers"), dist/1000, rem);
 		}
 	}
-	if ( dist == 1000) {
+	switch (dist) {
+	case 1000:
 		if (is_length) 
 			return g_strdup_printf(_("one kilometer"));
 		else
 			return g_strdup_printf(_("in one kilometer"));
+	case 2000:
+		if (is_length) 
+			return g_strdup_printf(_("two kilometers"));
+		else
+			return g_strdup_printf(_("in two kilometers"));
+	case 3000:
+		if (is_length) 
+			return g_strdup_printf(_("three kilometers"));
+		else
+			return g_strdup_printf(_("in three kilometers"));
+	case 4000:
+		if (is_length) 
+			return g_strdup_printf(_("four kilometers"));
+		else
+			return g_strdup_printf(_("in four kilometers"));
+	default:
+		if (is_length) 
+			return g_strdup_printf(_("%d kilometers"), dist/1000);
+		else
+			return g_strdup_printf(_("in %d kilometers"), dist/1000);
 	}
-	if (is_length) 
-		return g_strdup_printf(_("%d kilometer"), dist/1000);
-	else
-		return g_strdup_printf(_("in %d kilometern"), dist/1000);
 }
 
 static void
@@ -498,33 +515,32 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 	void *p=this_;
 	callback_list_call(this_->callback, 1, &p);
 	distance=round_distance(this_->first->dest_length-this_->cmd_first->itm->dest_length);
-	level=navigation_get_announce_level(this_, this_->first->item.type, distance);
-	dbg(0,"level %d vs %d\n", level, this_->level_last);
-	if (level < this_->level_last) {
-		dbg(0,"level %d < %d\n", level, this_->level_last);
-		this_->level_last=level;
-		force_speech=1;
-	}
-	if (!item_is_equal(this_->cmd_first->itm->item, this_->item_last)) {
-		dbg(0,"item different\n");
-		this_->item_last=this_->cmd_first->itm->item;
-		force_speech=1;
-	}
 	if (this_->turn_around) {
 		if (distance > this_->distance_turn) {
-			if (force_speech) {
-				this_->level_last=4;
-				return;
-			}
+			this_->level_last=4;
+			level=4;
 			force_speech=1;
 			if (this_->distance_turn > 500)
 				this_->distance_turn*=2;
 			else
 				this_->distance_turn=500;
 		}
-	} else
+	} else {
 		this_->distance_turn=50;
+		level=navigation_get_announce_level(this_, this_->first->item.type, distance);
+		if (level < this_->level_last) {
+			dbg(0,"level %d < %d\n", level, this_->level_last);
+			this_->level_last=level;
+			force_speech=1;
+		}
+		if (!item_is_equal(this_->cmd_first->itm->item, this_->item_last)) {
+			dbg(0,"item different\n");
+			this_->item_last=this_->cmd_first->itm->item;
+			force_speech=1;
+		}
+	}
 	if (force_speech) {
+		this_->level_last=level;
 		dbg(0,"distance=%d level=%d type=0x%x\n", distance, level, this_->first->item.type);
 		callback_list_call(this_->callback_speech, 1, &p);
 	}
@@ -589,6 +605,7 @@ navigation_update(struct navigation *this_, struct route *route)
 		this_->turn_around=1;
 	else
 		this_->turn_around=0;
+	dbg(2,"turn_around=%d\n", this_->turn_around);
 	this_->distance_last=this_->first->dest_length;
 	profile(0,"end");
 	navigation_call_callbacks(this_, FALSE);
