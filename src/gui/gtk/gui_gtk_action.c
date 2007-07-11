@@ -150,18 +150,19 @@ visible_points_action(GtkWidget *w, struct container *co)
 }
 
 
+
 static GtkActionEntry entries[] = 
 {
 	{ "DisplayMenuAction", NULL, gettext_noop("Display") },
 	{ "RouteMenuAction", NULL, _n("Route") },
-	{ "Map", NULL, "Map" },
+	{ "Map", NULL, _n("Map") },
 	{ "LayoutMenuAction", NULL, _n("Layout") },
 	{ "ZoomOutAction", GTK_STOCK_ZOOM_OUT, _n("ZoomOut"), NULL, NULL, G_CALLBACK(zoom_out_action) },
 	{ "ZoomInAction", GTK_STOCK_ZOOM_IN, _n("ZoomIn"), NULL, NULL, G_CALLBACK(zoom_in_action) },
 	{ "RefreshAction", GTK_STOCK_REFRESH, _n("Refresh"), NULL, NULL, G_CALLBACK(refresh_action) },
 	{ "InfoAction", GTK_STOCK_INFO, _n("Info"), NULL, NULL, G_CALLBACK(info_action) },
 	{ "DestinationAction", "flag_icon", _n("Destination"), NULL, NULL, G_CALLBACK(destination_action) },
-	{ "Test", NULL, "Test", NULL, NULL, G_CALLBACK(destination_action) },
+	{ "Test", NULL, _n("Test"), NULL, NULL, G_CALLBACK(destination_action) },
 	{ "QuitAction", GTK_STOCK_QUIT, _n("_Quit"), "<control>Q",NULL, G_CALLBACK (quit_action) }
 };
 
@@ -468,6 +469,9 @@ gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, in
 		this->dyn_group = gtk_action_group_new ("DynamicActions");
 		register_my_stock_icons();
 		this->menu_manager = gtk_ui_manager_new ();
+		gtk_action_group_set_translation_domain(this->base_group,"navit");
+		gtk_action_group_set_translation_domain(this->debug_group,"navit");
+		gtk_action_group_set_translation_domain(this->menu_manager,"navit");
 		gtk_action_group_add_actions (this->base_group, entries, n_entries, this->nav);
 		gtk_action_group_add_toggle_actions (this->base_group, toggleentries, n_toggleentries, this->nav);
 		gtk_ui_manager_insert_action_group (this->menu_manager, this->base_group, 0);
