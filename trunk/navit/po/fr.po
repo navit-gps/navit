@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-06 16:07+0200\n"
+"POT-Creation-Date: 2007-07-11 14:06+0200\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: KaZeR <kazer@altern.org>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -15,47 +15,194 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.c:43
-msgid ""
-"Could not find home directory. Using current directory as home directory."
-msgstr "Impossible de trouver le répertoire de l'utilisateur. Utilisation de '.' à la place"
-
-#: src/main.c:86 src/main.c:90
-#, c-format
-msgid "Using '%s'\n"
-msgstr "Utilisation de '%s'\n"
-
-#: src/main.c:88
+#: ../src/main.c:108
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr "Erreur lors du traitement de '%s': %s\n"
 
-#: src/navigation.c:241
+#: ../src/main.c:110
+#, c-format
+msgid "Using '%s'\n"
+msgstr "Utilisation de '%s'\n"
+
+#: ../src/main.c:113
+#, c-format
+msgid "No instance has been created, exiting\n"
+msgstr ""
+
+#: ../src/navigation.c:181
+#, c-format
+msgid "%d meters"
+msgstr "%d mètres"
+
+#: ../src/navigation.c:183
+#, fuzzy, c-format
+msgid "in %d meters"
+msgstr "Dans %d m, tournez %s%s"
+
+#: ../src/navigation.c:189
+#, c-format
+msgid "%d.%d kilometer"
+msgstr "%d.%d kilomètres"
+
+#: ../src/navigation.c:191
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "dans %d.%d kilomètres"
+
+#: ../src/navigation.c:196
+msgid "one kilometer"
+msgstr "un kilomètre"
+
+#: ../src/navigation.c:198
+msgid "in one kilometer"
+msgstr "dans un kilomètre"
+
+#: ../src/navigation.c:201
+#, c-format
+msgid "%d kilometer"
+msgstr "%d kilomètres"
+
+#: ../src/navigation.c:203
+#, c-format
+msgid "in %d kilometern"
+msgstr "dans %s kilomètres"
+
+#: ../src/navigation.c:391
 msgid "right"
 msgstr "droite"
 
-#: src/navigation.c:245
+#: ../src/navigation.c:399
 msgid "left"
 msgstr "gauche"
 
-#: src/navigation.c:249
+#: ../src/navigation.c:403
 msgid "easily "
 msgstr "légérement"
 
-#: src/navigation.c:253
+#: ../src/navigation.c:407
 msgid "strongly "
 msgstr "fortement"
 
-#: src/navigation.c:256
-msgid "unknown"
+#: ../src/navigation.c:410
+#, fuzzy
+msgid "unknown "
 msgstr "inconnu"
 
-#: src/navigation.c:259
-#, c-format
-msgid "In %d m, turn %s%s"
-msgstr "Dans %d m, tournez %s%s"
+#: ../src/navigation.c:415
+msgid "When possible, please turn"
+msgstr "Dès que possible, tournez"
 
-#: src/navigation.c:261
+#: ../src/navigation.c:422
 #, c-format
-msgid "In %d m, you have reach your destination"
+msgid "Follow the road for the next %s"
+msgstr "Suivez la route sur les prochain %s"
+
+#: ../src/navigation.c:426
+msgid "soon"
+msgstr "bientôt"
+
+#: ../src/navigation.c:433
+#, fuzzy
+msgid "now"
+msgstr "inconnu"
+
+#: ../src/navigation.c:436
+msgid "error"
+msgstr "erreur"
+
+#: ../src/navigation.c:441
+msgid "strength_pos"
+msgstr ""
+
+#: ../src/navigation.c:443
+msgid "direction_pos"
+msgstr ""
+
+#: ../src/navigation.c:445
+msgid "distance_pos"
+msgstr ""
+
+#: ../src/navigation.c:455
+#, c-format
+msgid "Turn %s%s %s"
+msgstr "Tournez %s%s %s"
+
+#: ../src/navigation.c:458
+#, fuzzy, c-format
+msgid "You have reached your destination %s"
 msgstr "Dans %d m, vous êtes arrivé."
+
+#: ../src/gui/gtk/gui_gtk_action.c:155
+msgid "Display"
+msgstr "Affichage"
+
+#: ../src/gui/gtk/gui_gtk_action.c:156
+msgid "Route"
+msgstr "Route"
+
+#: ../src/gui/gtk/gui_gtk_action.c:158
+msgid "Layout"
+msgstr "Calques"
+
+#: ../src/gui/gtk/gui_gtk_action.c:159
+msgid "ZoomOut"
+msgstr "Zoom arrière"
+
+#: ../src/gui/gtk/gui_gtk_action.c:160
+msgid "ZoomIn"
+msgstr "Zoom Avant"
+
+#: ../src/gui/gtk/gui_gtk_action.c:161
+msgid "Refresh"
+msgstr "Rafraichir"
+
+#: ../src/gui/gtk/gui_gtk_action.c:162
+msgid "Info"
+msgstr "Info"
+
+#: ../src/gui/gtk/gui_gtk_action.c:163
+msgid "Destination"
+msgstr "Destination"
+
+#: ../src/gui/gtk/gui_gtk_action.c:165
+msgid "_Quit"
+msgstr "_Quitter"
+
+#: ../src/gui/gtk/gui_gtk_action.c:172
+msgid "Cursor"
+msgstr "Curseur"
+
+#: ../src/gui/gtk/gui_gtk_action.c:173
+msgid "Orientation"
+msgstr "Orientation"
+
+#: ../src/gui/gtk/gui_gtk_action.c:180
+msgid "Data"
+msgstr "Données"
+
+#: ../src/gui/gtk/gui_gtk_action.c:181
+msgid "VisibleBlocks"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:182
+msgid "VisibleTowns"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:183
+msgid "VisiblePolys"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:184
+msgid "VisibleStreets"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:185
+msgid "VisiblePoints"
+msgstr ""
+
+#~ msgid ""
+#~ "Could not find home directory. Using current directory as home directory."
+#~ msgstr ""
+#~ "Impossible de trouver le répertoire de l'utilisateur. Utilisation de '.' "
+#~ "à la place"
