@@ -147,7 +147,7 @@ msgstr "Calques"
 
 #: ../src/gui/gtk/gui_gtk_action.c:159
 msgid "ZoomOut"
-msgstr "Zoom arrière"
+msgstr "Zoom arriere"
 
 #: ../src/gui/gtk/gui_gtk_action.c:160
 msgid "ZoomIn"
