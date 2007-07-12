@@ -10,7 +10,8 @@ CSOURCES=../src/main.c \
 	../src/navit.c \
 	../src/country.c \
 	../src/gui/gtk/destination.c \
-	../src/gui/gtk/gui_gtk_action.c
+	../src/gui/gtk/gui_gtk_action.c \
+	../src/gui/sdl/gui_sdl_window.cpp
 
 
 MO-FILES = $(LANGUAGES:=.mo)
