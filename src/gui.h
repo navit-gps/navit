@@ -2,6 +2,8 @@ struct navit;
 struct gui_priv;
 struct menu_methods;
 struct statusbar_methods;
+struct datawindow_methods;
+struct callback;
 struct graphics;
 
 struct gui_methods {
@@ -11,6 +13,7 @@ struct gui_methods {
 	struct menu_priv *(*popup_new)(struct gui_priv *priv, struct menu_methods *meth);
 	int (*set_graphics)(struct gui_priv *priv, struct graphics *gra);
 	int (*run_main_loop)(struct gui_priv *priv);
+	struct datawindow_priv *(*datawindow_new)(struct gui_priv *priv, char *name, struct callback *click, struct callback *close, struct datawindow_methods *meth);
 };
 
 
@@ -20,6 +23,8 @@ struct gui {
 };
 
 /* prototypes */
+struct callback;
+struct datawindow;
 struct graphics;
 struct gui;
 struct menu;
@@ -30,6 +35,7 @@ struct statusbar *gui_statusbar_new(struct gui *gui);
 struct menu *gui_menubar_new(struct gui *gui);
 struct menu *gui_toolbar_new(struct gui *gui);
 struct menu *gui_popup_new(struct gui *gui);
+struct datawindow *gui_datawindow_new(struct gui *gui, char *name, struct callback *click, struct callback *close);
 int gui_set_graphics(struct gui *this_, struct graphics *gra);
 int gui_has_main_loop(struct gui *this_);
 int gui_run_main_loop(struct gui *this_);

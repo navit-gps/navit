@@ -2,6 +2,7 @@
 #include "gui.h"
 #include "statusbar.h"
 #include "menu.h"
+#include "data_window.h"
 #include "plugin.h"
 
 struct gui *
@@ -73,6 +74,21 @@ gui_popup_new(struct gui *gui)
 		return NULL;
 	this_=g_new0(struct menu, 1);
 	this_->priv=gui->meth.popup_new(gui->priv, &this_->meth);
+	if (! this_->priv) {
+		g_free(this_);
+		return NULL;
+	}
+	return this_;
+}
+
+struct datawindow *
+gui_datawindow_new(struct gui *gui, char *name, struct callback *click, struct callback *close)
+{
+	struct datawindow *this_;
+	if (! gui->meth.datawindow_new)
+		return NULL;
+	this_=g_new0(struct datawindow, 1);
+	this_->priv=gui->meth.datawindow_new(gui->priv, name, click, close, &this_->meth);
 	if (! this_->priv) {
 		g_free(this_);
 		return NULL;

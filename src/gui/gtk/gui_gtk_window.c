@@ -91,7 +91,17 @@ struct gui_methods gui_gtk_methods = {
 	gui_gtk_statusbar_new,
 	gui_gtk_popup_new,
 	gui_gtk_set_graphics,
+	NULL,
+	gui_gtk_datawindow_new,
 };
+
+gboolean
+gui_gtk_delete(GtkWidget *widget, GdkEvent *event, struct navit *nav)
+{
+	navit_destroy(nav);
+
+	return TRUE;
+}
 
 static struct gui_priv *
 gui_gtk_new(struct navit *nav, struct gui_methods *meth, int w, int h) 
@@ -103,6 +113,7 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, int w, int h)
 	this=g_new0(struct gui_priv, 1);
 	this->nav=nav;
 	this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	g_signal_connect(G_OBJECT(this->win), "delete-event", G_CALLBACK(gui_gtk_delete), nav);
 	this->vbox = gtk_vbox_new(FALSE, 0);
 	gtk_window_set_default_size(GTK_WINDOW(this->win), w, h);
 	gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
