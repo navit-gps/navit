@@ -227,6 +227,7 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 	while (t) {
 		struct street_data *sd=t->street;
 		for (i = 0; i < sd->count-1 ; i++) {
+			dbg(2, "%d: (0x%x,0x%x)-(0x%x,0x%x)\n", i, sd->c[i].x, sd->c[i].y, sd->c[i+1].x, sd->c[i+1].y);
 			value=transform_distance_line_sq(&sd->c[i], &sd->c[i+1], c, &lpnt);
 			if (value < INT_MAX/2) 
 				value += tracking_angle_delta(angle, t->angle[i], 0)*angle_factor;
@@ -239,7 +240,7 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 				tr->pos=i;
 				tr->curr[0]=sd->c[i];
 				tr->curr[1]=sd->c[i+1];
-				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, 
+				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
 					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], c, &lpnt),
 					tracking_angle_delta(angle, t->angle[i], 0)*angle_factor,
 					tracking_is_connected(tr->curr, &sd->c[i]) ? connected_pref : 0,

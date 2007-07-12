@@ -35,6 +35,7 @@ struct cursor {
 	struct callback update_callback;
 	struct vehicle *v;
 	int dir;
+	int speed;
 	struct coord pos;
 	void *vehicle_callback;
 };
@@ -190,6 +191,12 @@ cursor_get_dir(struct  cursor *this)
 	return this->dir;
 }
 
+int
+cursor_get_speed(struct cursor *this)
+{
+	return this->speed;
+}
+
 static void
 cursor_update(struct vehicle *v, void *data)
 {
@@ -207,6 +214,7 @@ cursor_update(struct vehicle *v, void *data)
 		speed=vehicle_speed_get(v);
 		pro=vehicle_projection(v);
 		this->dir=*dir;
+		this->speed=*speed;
 		this->pos=*pos;
 		if (this->update_callback.func) 
 			(*this->update_callback.func)(this, this->update_callback.data);

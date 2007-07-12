@@ -2,6 +2,7 @@
 #include <glib.h>
 #include "attr.h"
 #include "coord.h"
+#include "debug.h"
 #include "item.h"
 
 struct item_name {
@@ -114,13 +115,27 @@ item_hash_insert(struct item_hash *h, struct item *item, void *val)
 {
 	struct item *hitem=g_new(struct item, 1);
         *hitem=*item;
+	dbg(2,"inserting (0x%x,0x%x) into %p\n", item->id_hi, item->id_lo, h->h);
 	g_hash_table_insert(h->h, hitem, val);
+}
+
+int
+item_hash_remove(struct item_hash *h, struct item *item)
+{
+	gpointer key, value;
+	int ret;
+
+	dbg(2,"removing (0x%x,0x%x) from %p\n", item->id_hi, item->id_lo, h->h);
+	ret=g_hash_table_remove(h->h, item);
+	dbg(2,"ret=%d\n", ret);
+
+	return ret;
 }
 
 void *
 item_hash_lookup(struct item_hash *h, struct item *item)
 {
-	 return g_hash_table_lookup(h->h, item);
+	return g_hash_table_lookup(h->h, item);
 }
 
 

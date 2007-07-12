@@ -471,7 +471,7 @@ gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, in
 		this->menu_manager = gtk_ui_manager_new ();
 		gtk_action_group_set_translation_domain(this->base_group,"navit");
 		gtk_action_group_set_translation_domain(this->debug_group,"navit");
-		gtk_action_group_set_translation_domain(this->menu_manager,"navit");
+		gtk_action_group_set_translation_domain(this->dyn_group,"navit");
 		gtk_action_group_add_actions (this->base_group, entries, n_entries, this->nav);
 		gtk_action_group_add_toggle_actions (this->base_group, toggleentries, n_toggleentries, this->nav);
 		gtk_ui_manager_insert_action_group (this->menu_manager, this->base_group, 0);
