@@ -61,7 +61,7 @@ struct country country[]= {
 	{61 ,"RL",	"LB",	"LBN",	_n("Lebanon")},
 	{62 ,"AND",	"AD",	"AND",	_n("Andorra")},
 	{63 ,"SYR",	"SY",	"SYR",	_n("Syria")},
-	{66 ,"KSA",	"SA",	"SAU",	_n("Saudi Arabia-Arabien")},
+	{66 ,"KSA",	"SA",	"SAU",	_n("Saudi Arabia")},
 	{71 ,"LAR",	"LY",	"LYB",	_n("Libia")},
 	{72 ,"IL",	"IL",	"ISR",	_n("Israel")},
 	{73 ,"AUT",	"PS",	"PSE",	_n("Palestinia")},
