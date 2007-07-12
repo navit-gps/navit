@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-12 15:25+0200\n"
+"POT-Creation-Date: 2007-07-12 19:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,17 +16,17 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/main.c:109
+#: ../src/main.c:110
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr ""
 
-#: ../src/main.c:111
+#: ../src/main.c:112
 #, c-format
 msgid "Using '%s'\n"
 msgstr ""
 
-#: ../src/main.c:114
+#: ../src/main.c:115
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr ""
@@ -93,75 +93,347 @@ msgstr ""
 msgid "in %d kilometers"
 msgstr ""
 
-#: ../src/navigation.c:408
+#: ../src/navigation.c:423
 msgid "right"
 msgstr ""
 
-#: ../src/navigation.c:416
+#: ../src/navigation.c:431
 msgid "left"
 msgstr ""
 
-#: ../src/navigation.c:420
+#: ../src/navigation.c:435
 msgid "easily "
 msgstr ""
 
-#: ../src/navigation.c:424
+#: ../src/navigation.c:439
 msgid "strongly "
 msgstr ""
 
-#: ../src/navigation.c:427
+#: ../src/navigation.c:442
 msgid "unknown "
 msgstr ""
 
-#: ../src/navigation.c:432
+#: ../src/navigation.c:448
 msgid "When possible, please turn"
 msgstr ""
 
-#: ../src/navigation.c:439
+#: ../src/navigation.c:455
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr ""
 
-#: ../src/navigation.c:443
+#: ../src/navigation.c:459
 msgid "soon"
 msgstr ""
 
-#: ../src/navigation.c:450
+#: ../src/navigation.c:465
 msgid "now"
 msgstr ""
 
-#: ../src/navigation.c:453
+#: ../src/navigation.c:468
 msgid "error"
 msgstr ""
 
-#: ../src/navigation.c:458
+#: ../src/navigation.c:473
 msgid "strength_pos"
 msgstr ""
 
-#: ../src/navigation.c:460
+#: ../src/navigation.c:475
 msgid "direction_pos"
 msgstr ""
 
-#: ../src/navigation.c:462
+#: ../src/navigation.c:477
 msgid "distance_pos"
 msgstr ""
 
-#: ../src/navigation.c:472
+#: ../src/navigation.c:487
 #, c-format
 msgid "Turn %s%s %s"
 msgstr ""
 
-#: ../src/navigation.c:475
+#: ../src/navigation.c:490
 #, c-format
 msgid "You have reached your destination %s"
 msgstr ""
 
-#: ../src/navit.c:314 ../src/gui/gtk/gui_gtk_action.c:159
+#: ../src/navit.c:313 ../src/gui/gtk/gui_gtk_action.c:159
 msgid "Layout"
 msgstr ""
 
-#: ../src/navit.c:327
+#: ../src/navit.c:326
 msgid "Projection"
+msgstr ""
+
+#: ../src/country.c:23
+msgid "Czech Republic"
+msgstr ""
+
+#: ../src/country.c:24
+msgid "Slovakia"
+msgstr ""
+
+#: ../src/country.c:25
+msgid "San Marino"
+msgstr ""
+
+#: ../src/country.c:26
+msgid "Estonia"
+msgstr ""
+
+#: ../src/country.c:27
+msgid "Georgia"
+msgstr ""
+
+#: ../src/country.c:28
+msgid "Latvia"
+msgstr ""
+
+#: ../src/country.c:29
+msgid "Lithuania"
+msgstr ""
+
+#: ../src/country.c:30
+msgid "Moldova"
+msgstr ""
+
+#: ../src/country.c:31
+msgid "Russian Federation"
+msgstr ""
+
+#: ../src/country.c:32
+msgid "Ukraine"
+msgstr ""
+
+#: ../src/country.c:33
+msgid "Belarus"
+msgstr ""
+
+#: ../src/country.c:34
+msgid "Egypt"
+msgstr ""
+
+#: ../src/country.c:35
+msgid "Greece"
+msgstr ""
+
+#: ../src/country.c:36
+msgid "Netherlands"
+msgstr ""
+
+#: ../src/country.c:37
+msgid "Belgium"
+msgstr ""
+
+#: ../src/country.c:38
+msgid "France"
+msgstr ""
+
+#: ../src/country.c:39
+msgid "Spain"
+msgstr ""
+
+#: ../src/country.c:40
+msgid "Hungary"
+msgstr ""
+
+#: ../src/country.c:41
+msgid "Italy"
+msgstr ""
+
+#: ../src/country.c:42
+msgid "Romania"
+msgstr ""
+
+#: ../src/country.c:43
+msgid "Switzerland"
+msgstr ""
+
+#: ../src/country.c:44
+msgid "Austria"
+msgstr ""
+
+#: ../src/country.c:45
+msgid "United Kingdom"
+msgstr ""
+
+#: ../src/country.c:46
+msgid "Denmark"
+msgstr ""
+
+#: ../src/country.c:47
+msgid "Sweden"
+msgstr ""
+
+#: ../src/country.c:48
+msgid "Norway"
+msgstr ""
+
+#: ../src/country.c:49
+msgid "Poland"
+msgstr ""
+
+#: ../src/country.c:50
+msgid "Germany"
+msgstr ""
+
+#: ../src/country.c:51
+msgid "Gibraltar"
+msgstr ""
+
+#: ../src/country.c:52
+msgid "Portugal"
+msgstr ""
+
+#: ../src/country.c:53
+msgid "Luxembourg"
+msgstr ""
+
+#: ../src/country.c:54
+msgid "Ireland"
+msgstr ""
+
+#: ../src/country.c:55
+msgid "Iceland"
+msgstr ""
+
+#: ../src/country.c:56
+msgid "Albania"
+msgstr ""
+
+#: ../src/country.c:57
+msgid "Malta"
+msgstr ""
+
+#: ../src/country.c:58
+msgid "Cyprus"
+msgstr ""
+
+#: ../src/country.c:59
+msgid "Finland"
+msgstr ""
+
+#: ../src/country.c:60
+msgid "Bulgaria"
+msgstr ""
+
+#: ../src/country.c:61
+msgid "Lebanon"
+msgstr ""
+
+#: ../src/country.c:62
+msgid "Andorra"
+msgstr ""
+
+#: ../src/country.c:63
+msgid "Syria"
+msgstr ""
+
+#: ../src/country.c:64
+msgid "Saudi Arabia-Arabien"
+msgstr ""
+
+#: ../src/country.c:65
+msgid "Libia"
+msgstr ""
+
+#: ../src/country.c:66
+msgid "Israel"
+msgstr ""
+
+#: ../src/country.c:67
+msgid "Palestinia"
+msgstr ""
+
+#: ../src/country.c:68
+msgid "Liechtenstein"
+msgstr ""
+
+#: ../src/country.c:69
+msgid "Morocco"
+msgstr ""
+
+#: ../src/country.c:70
+msgid "Algeria"
+msgstr ""
+
+#: ../src/country.c:71
+msgid "Tunisia"
+msgstr ""
+
+#: ../src/country.c:72
+msgid "Serbia"
+msgstr ""
+
+#: ../src/country.c:73
+msgid "Jordan"
+msgstr ""
+
+#: ../src/country.c:74
+msgid "Croatia"
+msgstr ""
+
+#: ../src/country.c:75
+msgid "Slovenia"
+msgstr ""
+
+#: ../src/country.c:76
+msgid "Bosnia and Herzegovina"
+msgstr ""
+
+#: ../src/country.c:77
+msgid "Macedonia"
+msgstr ""
+
+#: ../src/country.c:78
+msgid "Turkey"
+msgstr ""
+
+#: ../src/country.c:79
+msgid "Monaco"
+msgstr ""
+
+#: ../src/country.c:80
+msgid "Azerbaijan"
+msgstr ""
+
+#: ../src/country.c:81
+msgid "Armenia"
+msgstr ""
+
+#: ../src/country.c:82
+msgid "Faroe Islands"
+msgstr ""
+
+#: ../src/country.c:83
+msgid "Western Sahara"
+msgstr ""
+
+#: ../src/country.c:84
+msgid "Svalbard and Jan Mayen"
+msgstr ""
+
+#: ../src/gui/gtk/destination.c:293
+msgid "Country"
+msgstr ""
+
+#: ../src/gui/gtk/destination.c:295
+msgid "Zip Code"
+msgstr ""
+
+#: ../src/gui/gtk/destination.c:297
+msgid "City"
+msgstr ""
+
+#: ../src/gui/gtk/destination.c:299
+msgid "District/Township"
+msgstr ""
+
+#: ../src/gui/gtk/destination.c:302
+msgid "Street"
+msgstr ""
+
+#: ../src/gui/gtk/destination.c:304
+msgid "Number"
 msgstr ""
 
 #: ../src/gui/gtk/gui_gtk_action.c:156

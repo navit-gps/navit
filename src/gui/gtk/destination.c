@@ -13,6 +13,10 @@
 
 #define COL_COUNT 8
 
+#define gettext_noop(String) String
+#define _(STRING)    gettext(STRING)
+#define _n(STRING)    gettext_noop(STRING)
+
 static struct search_param {
 	struct navit *nav;
 	struct mapset *ms;
@@ -286,18 +290,18 @@ int destination_address(struct navit *nav)
 	table = gtk_table_new(3, 8, FALSE);
 
 	search->entry_country = gtk_entry_new();
-	label_country = gtk_label_new("Land");
+	label_country = gtk_label_new(_("Country"));
 	search->entry_postal = gtk_entry_new();
-	label_postal = gtk_label_new("PLZ");
+	label_postal = gtk_label_new(_("Zip Code"));
 	search->entry_city = gtk_entry_new();
-	label_city = gtk_label_new("Ort");
+	label_city = gtk_label_new(_("City"));
 	search->entry_district = gtk_entry_new();
-	label_district = gtk_label_new("Ortsteil/Gemeinde");
+	label_district = gtk_label_new(_("District/Township"));
 	hseparator1 = gtk_vseparator_new();
 	search->entry_street = gtk_entry_new();
-	label_street = gtk_label_new("Strasse");
+	label_street = gtk_label_new(_("Street"));
 	search->entry_number = gtk_entry_new();
-	label_number = gtk_label_new("Nummer");
+	label_number = gtk_label_new(_("Number"));
  	search->treeview=gtk_tree_view_new();
 	search->listbox = gtk_scrolled_window_new (NULL, NULL);
         gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (search->listbox),
