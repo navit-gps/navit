@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-12 19:31+0200\n"
-"PO-Revision-Date: 2007-07-12 19:40+0100\n"
+"POT-Creation-Date: 2007-07-12 20:20+0200\n"
+"PO-Revision-Date: 2007-07-12 20:22+0100\n"
 "Last-Translator: KaZeR <kazer@altern.org>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
@@ -338,7 +338,7 @@ msgid "Syria"
 msgstr "Syrie"
 
 #: ../src/country.c:64
-msgid "Saudi Arabia-Arabien"
+msgid "Saudi Arabia"
 msgstr "Arabie Saoudite"
 
 #: ../src/country.c:65
@@ -422,6 +422,7 @@ msgid "Svalbard and Jan Mayen"
 msgstr ""
 
 #: ../src/gui/gtk/destination.c:293
+#: ../src/gui/sdl/gui_sdl_window.cpp:610
 msgid "Country"
 msgstr "Pays"
 
@@ -430,6 +431,7 @@ msgid "Zip Code"
 msgstr "Code postal"
 
 #: ../src/gui/gtk/destination.c:297
+#: ../src/gui/sdl/gui_sdl_window.cpp:611
 msgid "City"
 msgstr "Ville"
 
@@ -438,6 +440,7 @@ msgid "District/Township"
 msgstr "District"
 
 #: ../src/gui/gtk/destination.c:302
+#: ../src/gui/sdl/gui_sdl_window.cpp:612
 msgid "Street"
 msgstr "Rue"
 
@@ -458,10 +461,12 @@ msgid "Map"
 msgstr "Carte"
 
 #: ../src/gui/gtk/gui_gtk_action.c:160
+#: ../src/gui/sdl/gui_sdl_window.cpp:595
 msgid "ZoomOut"
 msgstr "Zoom Arrière"
 
 #: ../src/gui/gtk/gui_gtk_action.c:161
+#: ../src/gui/sdl/gui_sdl_window.cpp:592
 msgid "ZoomIn"
 msgstr "Zoom Avant"
 
@@ -516,6 +521,15 @@ msgstr ""
 #: ../src/gui/gtk/gui_gtk_action.c:186
 msgid "VisiblePoints"
 msgstr ""
+
+#: ../src/gui/sdl/gui_sdl_window.cpp:586
+msgid "RoadBook"
+msgstr ""
+
+#: ../src/gui/sdl/gui_sdl_window.cpp:598
+#, fuzzy
+msgid "Quit"
+msgstr "_Quitter"
 
 #~ msgid ""
 #~ "Could not find home directory. Using current directory as home directory."
