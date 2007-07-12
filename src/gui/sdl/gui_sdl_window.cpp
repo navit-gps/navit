@@ -56,6 +56,9 @@ CEGUI::Window* myRoot;
 #define MODULE "gui_sdl"
 GLuint * DLid;
 
+#define _(STRING)    gettext(STRING)
+
+
 struct navit *sdl_gui_navit;
 
 static int
@@ -580,10 +583,20 @@ static void init_sdlgui(void)
 		myRoot->getChild("OSD/DestinationButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(DialogWindowSwitch));
 
 		myRoot->getChild("OSD/RoadbookButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
+		myRoot->getChild("OSD/RoadbookButton")->setText(_("RoadBook"));
+
+		// this one is maybe not needed anymore
 		myRoot->getChild("Navit/RoadBook")->getChild("OSD/RoadbookButton2")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
+
 		myRoot->getChild("OSD/ZoomIn")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ZoomIn));
+		myRoot->getChild("OSD/ZoomIn")->setText(_("ZoomIn"));
+
 		myRoot->getChild("OSD/ZoomOut")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ZoomOut));
+		myRoot->getChild("OSD/ZoomOut")->setText(_("ZoomOut"));
+
 		myRoot->getChild("OSD/Quit")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ButtonQuit));
+		myRoot->getChild("OSD/Quit")->setText(_("Quit"));
+
 		myRoot->getChild("OSD/ViewMode")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ToggleView));
 
 		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/GO")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ButtonGo));
@@ -593,7 +606,11 @@ static void init_sdlgui(void)
 
 		myRoot->getChild("OSD/Scrollbar1")->subscribeEvent(Scrollbar::EventScrollPositionChanged, Event::Subscriber(MoveCamera));
 
-		
+		// Translation for StaticTexts (labels)
+		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Country")->setText(_("Country"));
+		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Town")->setText(_("City"));
+		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Street")->setText(_("Street"));
+
  		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
 
 		mcl->setSelectionMode(MultiColumnList::RowSingle) ;
