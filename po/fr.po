@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-07-12 19:31+0200\n"
-"PO-Revision-Date: 2007-07-12 15:05+0100\n"
+"PO-Revision-Date: 2007-07-12 19:40+0100\n"
 "Last-Translator: KaZeR <kazer@altern.org>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
@@ -163,7 +163,8 @@ msgstr "Tournez %s%s %s"
 msgid "You have reached your destination %s"
 msgstr "Dans %d m, vous êtes arrivé."
 
-#: ../src/navit.c:313 ../src/gui/gtk/gui_gtk_action.c:159
+#: ../src/navit.c:313
+#: ../src/gui/gtk/gui_gtk_action.c:159
 msgid "Layout"
 msgstr "Calques"
 
@@ -458,7 +459,7 @@ msgstr "Carte"
 
 #: ../src/gui/gtk/gui_gtk_action.c:160
 msgid "ZoomOut"
-msgstr "Zoom arriere"
+msgstr "Zoom Arrière"
 
 #: ../src/gui/gtk/gui_gtk_action.c:161
 msgid "ZoomIn"
@@ -521,3 +522,4 @@ msgstr ""
 #~ msgstr ""
 #~ "Impossible de trouver le répertoire de l'utilisateur. Utilisation de '.' "
 #~ "à la place"
+
