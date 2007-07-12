@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-12 19:31+0200\n"
+"POT-Creation-Date: 2007-07-12 20:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -329,7 +329,7 @@ msgid "Syria"
 msgstr ""
 
 #: ../src/country.c:64
-msgid "Saudi Arabia-Arabien"
+msgid "Saudi Arabia"
 msgstr ""
 
 #: ../src/country.c:65
@@ -412,7 +412,7 @@ msgstr ""
 msgid "Svalbard and Jan Mayen"
 msgstr ""
 
-#: ../src/gui/gtk/destination.c:293
+#: ../src/gui/gtk/destination.c:293 ../src/gui/sdl/gui_sdl_window.cpp:610
 msgid "Country"
 msgstr ""
 
@@ -420,7 +420,7 @@ msgstr ""
 msgid "Zip Code"
 msgstr ""
 
-#: ../src/gui/gtk/destination.c:297
+#: ../src/gui/gtk/destination.c:297 ../src/gui/sdl/gui_sdl_window.cpp:611
 msgid "City"
 msgstr ""
 
@@ -428,7 +428,7 @@ msgstr ""
 msgid "District/Township"
 msgstr ""
 
-#: ../src/gui/gtk/destination.c:302
+#: ../src/gui/gtk/destination.c:302 ../src/gui/sdl/gui_sdl_window.cpp:612
 msgid "Street"
 msgstr ""
 
@@ -448,11 +448,11 @@ msgstr ""
 msgid "Map"
 msgstr ""
 
-#: ../src/gui/gtk/gui_gtk_action.c:160
+#: ../src/gui/gtk/gui_gtk_action.c:160 ../src/gui/sdl/gui_sdl_window.cpp:595
 msgid "ZoomOut"
 msgstr ""
 
-#: ../src/gui/gtk/gui_gtk_action.c:161
+#: ../src/gui/gtk/gui_gtk_action.c:161 ../src/gui/sdl/gui_sdl_window.cpp:592
 msgid "ZoomIn"
 msgstr ""
 
@@ -506,4 +506,12 @@ msgstr ""
 
 #: ../src/gui/gtk/gui_gtk_action.c:186
 msgid "VisiblePoints"
+msgstr ""
+
+#: ../src/gui/sdl/gui_sdl_window.cpp:586
+msgid "RoadBook"
+msgstr ""
+
+#: ../src/gui/sdl/gui_sdl_window.cpp:598
+msgid "Quit"
 msgstr ""
