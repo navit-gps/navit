@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-11 23:37+0200\n"
+"POT-Creation-Date: 2007-07-12 15:25+0200\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Martin Schaller <martin-s@sourceforge.net>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -15,17 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/main.c:110
+#: ../src/main.c:109
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr "Fehler beim Parsen von '%s': %s\n"
 
-#: ../src/main.c:112
+#: ../src/main.c:111
 #, c-format
 msgid "Using '%s'\n"
 msgstr "Benutze '%s'\n"
 
-#: ../src/main.c:115
+#: ../src/main.c:114
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr "Es wurde keine Instanz erzeugt, Ende\n"
@@ -155,53 +155,82 @@ msgstr "%s %s%s abbiegen"
 msgid "You have reached your destination %s"
 msgstr "%s haben Sie ihr Ziel erreicht"
 
-#~ msgid "Display"
-#~ msgstr "Anzeige"
+#: ../src/navit.c:314 ../src/gui/gtk/gui_gtk_action.c:159
+msgid "Layout"
+msgstr "Layout"
 
-#~ msgid "Route"
-#~ msgstr "Route"
+#: ../src/navit.c:327
+msgid "Projection"
+msgstr "Projektion"
 
-#~ msgid "Layout"
-#~ msgstr "Layout"
+#: ../src/gui/gtk/gui_gtk_action.c:156
+msgid "Display"
+msgstr "Anzeige"
 
-#~ msgid "ZoomOut"
-#~ msgstr "Verkleinern"
+#: ../src/gui/gtk/gui_gtk_action.c:157
+msgid "Route"
+msgstr "Route"
 
-#~ msgid "ZoomIn"
-#~ msgstr "Vergrößern"
+#: ../src/gui/gtk/gui_gtk_action.c:158
+msgid "Map"
+msgstr "Karte"
 
-#~ msgid "Refresh"
-#~ msgstr "Aktualisieren"
+#: ../src/gui/gtk/gui_gtk_action.c:160
+msgid "ZoomOut"
+msgstr "Verkleinern"
 
-#~ msgid "Info"
-#~ msgstr "Info"
+#: ../src/gui/gtk/gui_gtk_action.c:161
+msgid "ZoomIn"
+msgstr "Vergrößern"
 
-#~ msgid "Destination"
-#~ msgstr "Ziel"
+#: ../src/gui/gtk/gui_gtk_action.c:162
+msgid "Refresh"
+msgstr "Aktualisieren"
 
-#~ msgid "_Quit"
-#~ msgstr "Beenden"
+#: ../src/gui/gtk/gui_gtk_action.c:163
+msgid "Info"
+msgstr "Info"
 
-#~ msgid "Cursor"
-#~ msgstr "Marke"
+#: ../src/gui/gtk/gui_gtk_action.c:164
+msgid "Destination"
+msgstr "Ziel"
 
-#~ msgid "Orientation"
-#~ msgstr "Orientierung"
+#: ../src/gui/gtk/gui_gtk_action.c:165
+msgid "Test"
+msgstr "Test"
 
-#~ msgid "Data"
-#~ msgstr "Daten"
+#: ../src/gui/gtk/gui_gtk_action.c:166
+msgid "_Quit"
+msgstr "Beenden"
 
-#~ msgid "VisibleBlocks"
-#~ msgstr "Sichtbare Blöcke"
+#: ../src/gui/gtk/gui_gtk_action.c:173
+msgid "Cursor"
+msgstr "Marke"
 
-#~ msgid "VisibleTowns"
-#~ msgstr "Sichtbare Städte"
+#: ../src/gui/gtk/gui_gtk_action.c:174
+msgid "Orientation"
+msgstr "Orientierung"
 
-#~ msgid "VisiblePolys"
-#~ msgstr "Sichtbare Polygone"
+#: ../src/gui/gtk/gui_gtk_action.c:181
+msgid "Data"
+msgstr "Daten"
 
-#~ msgid "VisibleStreets"
-#~ msgstr "Sichtbare Straßen"
+#: ../src/gui/gtk/gui_gtk_action.c:182
+msgid "VisibleBlocks"
+msgstr "Sichtbare Blöcke"
 
-#~ msgid "VisiblePoints"
-#~ msgstr "Sichtbare Punkte"
+#: ../src/gui/gtk/gui_gtk_action.c:183
+msgid "VisibleTowns"
+msgstr "Sichtbare Städte"
+
+#: ../src/gui/gtk/gui_gtk_action.c:184
+msgid "VisiblePolys"
+msgstr "Sichtbare Polygone"
+
+#: ../src/gui/gtk/gui_gtk_action.c:185
+msgid "VisibleStreets"
+msgstr "Sichtbare Straßen"
+
+#: ../src/gui/gtk/gui_gtk_action.c:186
+msgid "VisiblePoints"
+msgstr "Sichtbare Punkte"
