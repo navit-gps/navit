@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-10 22:55+0200\n"
-"PO-Revision-Date: 2007-07-11 16:35+0100\n"
+"POT-Creation-Date: 2007-07-12 15:25+0200\n"
+"PO-Revision-Date: 2007-07-12 16:47+0100\n"
 "Last-Translator: Michal Madej <mineque@quanteam.pl>\n"
 "Language-Team: Translators\n"
 "MIME-Version: 1.0\n"
@@ -17,17 +17,17 @@ msgstr ""
 "X-Poedit-Language: Polish\n"
 "X-Poedit-Country: POLAND\n"
 
-#: ../src/main.c:108
+#: ../src/main.c:109
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr "Błąd w trakcie przetwarzania '%s': %s\n"
 
-#: ../src/main.c:110
+#: ../src/main.c:111
 #, c-format
 msgid "Using '%s'\n"
 msgstr "Używam '%s'\n"
 
-#: ../src/main.c:113
+#: ../src/main.c:114
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr "Brak instancji Navit, kończe\n"
@@ -52,152 +52,189 @@ msgstr "%d.%d kilometra"
 msgid "in %d.%d kilometers"
 msgstr "za %d.%d kilometrów"
 
-#: ../src/navigation.c:196
+#: ../src/navigation.c:197
 msgid "one kilometer"
 msgstr "jeden kilometr"
 
-#: ../src/navigation.c:198
+#: ../src/navigation.c:199
 msgid "in one kilometer"
 msgstr "za kilometr"
 
-#: ../src/navigation.c:201
-#, c-format
-msgid "%d kilometer"
-msgstr "%d kilometr"
+#: ../src/navigation.c:202
+msgid "two kilometers"
+msgstr "dwa kilometry"
 
-#: ../src/navigation.c:203
+#: ../src/navigation.c:204
+msgid "in two kilometers"
+msgstr "za dwa kilometry"
+
+#: ../src/navigation.c:207
+msgid "three kilometers"
+msgstr "trzy kilometry"
+
+#: ../src/navigation.c:209
+msgid "in three kilometers"
+msgstr "za trzy kilometry"
+
+#: ../src/navigation.c:212
+msgid "four kilometers"
+msgstr "cztery kilometry"
+
+#: ../src/navigation.c:214
+msgid "in four kilometers"
+msgstr "za cztery kilometry"
+
+#: ../src/navigation.c:217
 #, c-format
-msgid "in %d kilometern"
+msgid "%d kilometers"
+msgstr "%d kilometrów"
+
+#: ../src/navigation.c:219
+#, c-format
+msgid "in %d kilometers"
 msgstr "za %d kilometrów"
 
-#: ../src/navigation.c:391
+#: ../src/navigation.c:408
 msgid "right"
 msgstr "w prawo"
 
-#: ../src/navigation.c:399
+#: ../src/navigation.c:416
 msgid "left"
 msgstr "w lewo"
 
-#: ../src/navigation.c:403
+#: ../src/navigation.c:420
 msgid "easily "
 msgstr "łatwo"
 
-#: ../src/navigation.c:407
+#: ../src/navigation.c:424
 msgid "strongly "
 msgstr "silnie"
 
-#: ../src/navigation.c:410
+#: ../src/navigation.c:427
 msgid "unknown "
 msgstr "nieznane"
 
-#: ../src/navigation.c:415
+#: ../src/navigation.c:432
 msgid "When possible, please turn"
 msgstr "Skręć gdy będzie możliwość"
 
-#: ../src/navigation.c:422
+#: ../src/navigation.c:439
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Podążaj drogą przez następne %s"
 
-#: ../src/navigation.c:426
+#: ../src/navigation.c:443
 msgid "soon"
 msgstr "wkrótce"
 
-#: ../src/navigation.c:433
+#: ../src/navigation.c:450
 msgid "now"
 msgstr "teraz"
 
-#: ../src/navigation.c:436
+#: ../src/navigation.c:453
 msgid "error"
 msgstr "błąd"
 
-#: ../src/navigation.c:441
+#: ../src/navigation.c:458
 msgid "strength_pos"
 msgstr "siła_pos"
 
-#: ../src/navigation.c:443
+#: ../src/navigation.c:460
 msgid "direction_pos"
 msgstr "kierunek_pos"
 
-#: ../src/navigation.c:445
+#: ../src/navigation.c:462
 msgid "distance_pos"
 msgstr "odległość_pos"
 
-#: ../src/navigation.c:455
+#: ../src/navigation.c:472
 #, c-format
 msgid "Turn %s%s %s"
 msgstr "Skręć %s%s %s"
 
-#: ../src/navigation.c:458
+#: ../src/navigation.c:475
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Dotarłeś do celu %s"
 
-#: ../src/gui/gtk/gui_gtk_action.c:155
+#: ../src/navit.c:314
+#: ../src/gui/gtk/gui_gtk_action.c:159
+msgid "Layout"
+msgstr "Układ kolorów"
+
+#: ../src/navit.c:327
+msgid "Projection"
+msgstr "Odwzorowanie"
+
+#: ../src/gui/gtk/gui_gtk_action.c:156
 msgid "Display"
 msgstr "Pokaż"
 
-#: ../src/gui/gtk/gui_gtk_action.c:156
+#: ../src/gui/gtk/gui_gtk_action.c:157
 msgid "Route"
 msgstr "Trasa"
 
 #: ../src/gui/gtk/gui_gtk_action.c:158
-msgid "Layout"
-msgstr "Układ"
+msgid "Map"
+msgstr "Mapa"
 
-#: ../src/gui/gtk/gui_gtk_action.c:159
+#: ../src/gui/gtk/gui_gtk_action.c:160
 msgid "ZoomOut"
 msgstr "Oddal"
 
-#: ../src/gui/gtk/gui_gtk_action.c:160
+#: ../src/gui/gtk/gui_gtk_action.c:161
 msgid "ZoomIn"
 msgstr "Zbliż"
 
-#: ../src/gui/gtk/gui_gtk_action.c:161
+#: ../src/gui/gtk/gui_gtk_action.c:162
 msgid "Refresh"
 msgstr "Odświerz"
 
-#: ../src/gui/gtk/gui_gtk_action.c:162
+#: ../src/gui/gtk/gui_gtk_action.c:163
 msgid "Info"
 msgstr "Info"
 
-#: ../src/gui/gtk/gui_gtk_action.c:163
+#: ../src/gui/gtk/gui_gtk_action.c:164
 msgid "Destination"
 msgstr "Cel"
 
 #: ../src/gui/gtk/gui_gtk_action.c:165
+msgid "Test"
+msgstr "Test"
+
+#: ../src/gui/gtk/gui_gtk_action.c:166
 msgid "_Quit"
 msgstr "Zakończ"
 
-#: ../src/gui/gtk/gui_gtk_action.c:172
+#: ../src/gui/gtk/gui_gtk_action.c:173
 msgid "Cursor"
 msgstr "Kursor"
 
-#: ../src/gui/gtk/gui_gtk_action.c:173
+#: ../src/gui/gtk/gui_gtk_action.c:174
 msgid "Orientation"
 msgstr "Orientacja"
 
-#: ../src/gui/gtk/gui_gtk_action.c:180
+#: ../src/gui/gtk/gui_gtk_action.c:181
 msgid "Data"
 msgstr "Dane"
 
-#: ../src/gui/gtk/gui_gtk_action.c:181
+#: ../src/gui/gtk/gui_gtk_action.c:182
 msgid "VisibleBlocks"
 msgstr "Widoczne bloki"
 
-#: ../src/gui/gtk/gui_gtk_action.c:182
+#: ../src/gui/gtk/gui_gtk_action.c:183
 msgid "VisibleTowns"
 msgstr "Widoczne miasta"
 
-#: ../src/gui/gtk/gui_gtk_action.c:183
+#: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "VisiblePolys"
 msgstr "Widoczne poly"
 
-#: ../src/gui/gtk/gui_gtk_action.c:184
+#: ../src/gui/gtk/gui_gtk_action.c:185
 msgid "VisibleStreets"
 msgstr "Widoczne ulice"
 
-#: ../src/gui/gtk/gui_gtk_action.c:185
+#: ../src/gui/gtk/gui_gtk_action.c:186
 msgid "VisiblePoints"
 msgstr "Widoczne punkty"
 
