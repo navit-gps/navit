@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-12 15:05+0200\n"
+"POT-Creation-Date: 2007-07-12 15:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -156,7 +156,7 @@ msgstr ""
 msgid "You have reached your destination %s"
 msgstr ""
 
-#: ../src/navit.c:314
+#: ../src/navit.c:314 ../src/gui/gtk/gui_gtk_action.c:159
 msgid "Layout"
 msgstr ""
 
@@ -164,10 +164,74 @@ msgstr ""
 msgid "Projection"
 msgstr ""
 
-#: ../src/navit.c:445
+#: ../src/gui/gtk/gui_gtk_action.c:156
+msgid "Display"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:157
+msgid "Route"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:158
 msgid "Map"
 msgstr ""
 
-#: ../src/navit.c:451
-msgid "Route"
+#: ../src/gui/gtk/gui_gtk_action.c:160
+msgid "ZoomOut"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:161
+msgid "ZoomIn"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:162
+msgid "Refresh"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:163
+msgid "Info"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:164
+msgid "Destination"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:165
+msgid "Test"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:166
+msgid "_Quit"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:173
+msgid "Cursor"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:174
+msgid "Orientation"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:181
+msgid "Data"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:182
+msgid "VisibleBlocks"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:183
+msgid "VisibleTowns"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:184
+msgid "VisiblePolys"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:185
+msgid "VisibleStreets"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_action.c:186
+msgid "VisiblePoints"
 msgstr ""
