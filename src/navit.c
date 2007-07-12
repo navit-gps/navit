@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <signal.h>
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -14,6 +15,7 @@
 #include "point.h"
 #include "transform.h"
 #include "projection.h"
+#include "param.h"
 #include "menu.h"
 #include "graphics.h"
 #include "cursor.h"
@@ -53,7 +55,10 @@ struct navit {
 	int follow;
 	int update_curr;
 	int follow_curr;
+	int pid;
 	struct callback *nav_speech_cb;
+	struct callback *roadbook_callback;
+	struct datawindow *roadbook_window;
 };
 
 struct gui *
@@ -145,8 +150,17 @@ struct navit *
 navit_new(const char *ui, const char *graphics, struct coord *center, enum projection pro, int zoom)
 {
 	struct navit *this_=g_new0(struct navit, 1);
+	FILE *f;
 
 	main_add_navit(this_);
+
+	f=popen("pidof /usr/bin/ipaq-sleep","r");
+	if (f) {
+		fscanf(f,"%d",&this_->pid);
+		dbg(1,"ipaq_sleep pid=%d\n", this_->pid);
+		pclose(f);
+	}
+
 	this_->cursor_flag=1;
 	this_->trans=transform_new();
 	transform_set_projection(this_->trans, pro);
@@ -287,21 +301,6 @@ navit_debug(struct navit *this_)
 #endif
 }
 
-static void
-navit_show_roadbook(struct navit *this_)
-{
-	struct navigation *nav=this_->navigation;
-	struct navigation_list *list;
-	char *str;
-
-	dbg(0,"enter\n");	
-	list=navigation_list_new(nav);
-	while ((str=navigation_list_get(list, navigation_mode_long))) {
-		printf("%s\n", str);
-	}
-	navigation_list_destroy(list);
-}
-
 void
 navit_add_menu_layouts(struct navit *this_, struct menu *men)
 {
@@ -427,6 +426,36 @@ navit_speak(struct navit *this_)
 	navigation_list_destroy(list);
 }
 
+static void
+navit_window_roadbook_update(struct navit *this_)
+{
+	struct navigation *nav=this_->navigation;
+	struct navigation_list *list;
+	char *str;
+	struct param_list param[1];
+
+	dbg(1,"enter\n");	
+	datawindow_mode(this_->roadbook_window, 1);
+	list=navigation_list_new(nav);
+	while ((str=navigation_list_get(list, navigation_mode_long_exact))) {
+		dbg(2, "Command='%s'\n", str);
+		param[0].name="Command";
+		param[0].value=str;
+		datawindow_add(this_->roadbook_window, param, 1);
+	}
+	navigation_list_destroy(list);
+	datawindow_mode(this_->roadbook_window, 0);
+}
+
+void
+navit_window_roadbook_new(struct navit *this_)
+{
+	this_->roadbook_callback=callback_new(navit_window_roadbook_update, 1, &this_);
+	navigation_register_callback(this_->navigation, navigation_mode_long, this_->roadbook_callback);
+	this_->roadbook_window=gui_datawindow_new(this_->gui, "Roadbook", NULL, NULL);
+}
+
+
 void
 navit_init(struct navit *this_)
 {
@@ -460,10 +489,12 @@ navit_init(struct navit *this_)
 		this_->nav_speech_cb=callback_new(navit_speak, 1, &this_);
 		navigation_register_callback(this_->navigation, navigation_mode_speech, this_->nav_speech_cb);
 #if 0
-		navigation_register_callback(this_->navigation, navigation_mode_long, callback_new(navit_show_roadbook, 1, &this_));
 #endif
 	}
 	global_navit=this_;
+#if 0
+	navit_window_roadbook_new(this_);
+#endif
 	navit_debug(this_);
 }
 
@@ -526,6 +557,11 @@ navit_cursor_update(struct cursor *cursor, void *this__p)
 	struct navit *this_=this__p;
 	struct coord *cursor_c=cursor_pos_get(cursor);
 	int dir=cursor_get_dir(cursor);
+	int speed=cursor_get_speed(cursor);
+
+	if (this_->pid && speed > 2)
+		kill(this_->pid, SIGWINCH);
+
 
 	if (this_->tracking) {
 		struct coord c=*cursor_c;

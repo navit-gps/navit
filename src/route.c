@@ -235,6 +235,7 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 	struct coord *c;
 	struct route_info *ret;
 
+	dbg(2,"enter\n");
 	c=tracking_get_pos(tracking);
 	ret=g_new0(struct route_info, 1);
 	if (this->pos)
@@ -245,9 +246,12 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 	ret->dist=0;
 	ret->dir=0;
 	ret->street=street_data_dup(tracking_get_street_data(tracking));
+	dbg(3,"c->x=0x%x, c->y=0x%x pos=%d item=(0x%x,0x%x)\n", c->x, c->y, ret->pos, ret->street->item.id_hi, ret->street->item.id_lo);
+	dbg(3,"street 0=(0x%x,0x%x) %d=(0x%x,0x%x)\n", ret->street->c[0].x, ret->street->c[0].y, ret->street->count-1, ret->street->c[ret->street->count-1].x, ret->street->c[ret->street->count-1].y);
 	this->pos=ret;
 	if (this->dst) 
 		route_path_update(this);
+	dbg(2,"ret\n");
 }
 
 struct map_selection *route_selection;
@@ -593,14 +597,19 @@ route_info_length(struct route_info *pos, struct route_info *dst, int dir)
 	struct coord *c,*l;
 	int ret=0;
 
+	dbg(2,"enter pos=%p dst=%p dir=%d\n", pos, dst, dir);
 	h=route_info_open(pos, dst, dir);
-	if (! h)
+	if (! h) {
+		dbg(2,"ret=-1\n");
 		return -1;
+	}
 	l=route_info_get(h);
 	while ((c=route_info_get(h))) {
+		dbg(3,"c=%p\n", c);
 		ret+=transform_distance(c, l);
 		l=c;
 	}
+	dbg(2,"ret=%d\n", ret);
 	return ret;
 }
 
@@ -726,6 +735,11 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 			return NULL;
 		val2=start2->value+route_value(speedlist, &sd->item, route_info_length(pos, NULL, 1));
 		dbg(1,"start2: %d(route)+%d=%d\n", start2->value, val2-start2->value, val2);
+	}
+	dbg(1,"val1=%d val2=%d\n", val1, val2);
+	if (val1 == val2) {
+		val1=start1->start->start->value;
+		val2=start2->end->end->value;
 	}
 	if (start1 && (val1 < val2)) {
 		start=start1;
@@ -991,7 +1005,7 @@ route_info_open(struct route_info *start, struct route_info *end, int dir)
 	struct route_info_handle *ret=g_new0(struct route_info_handle, 1);
 
 	struct route_info *curr;
-	dbg(1,"enter\n");
+	dbg(2,"enter start=%p end=%p dir=%d\n", start, end, dir);
 	ret->start=start;
 	ret->end=end;
 	if (start) 
@@ -1026,6 +1040,7 @@ route_info_open(struct route_info *start, struct route_info *end, int dir)
 
 	if (!dir)
 		dir=curr->dir;
+	dbg(2,"dir=%d\n", dir);
 	ret->dir=dir;
 	ret->curr=curr;
 	ret->pos=curr->pos;
@@ -1033,7 +1048,7 @@ route_info_open(struct route_info *start, struct route_info *end, int dir)
 		ret->pos++;
 		ret->endpos++;
 	}
-	dbg(1,"return %p\n",ret);
+	dbg(2,"ret=%p\n",ret);
 	return ret;
 }
 

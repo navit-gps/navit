@@ -3,6 +3,7 @@ extern "C" {
 #endif
 enum navigation_mode {
 	navigation_mode_long,
+	navigation_mode_long_exact,
 	navigation_mode_short,
 	navigation_mode_speech,
 };

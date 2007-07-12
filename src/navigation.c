@@ -225,8 +225,11 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 {
 	struct navigation_itm *itm;
 	struct navigation_command *cmd;
+	dbg(2,"enter this_=%p end=%p\n", this_, end);
 	while (this_->first && this_->first != end) {
 		itm=this_->first;
+		dbg(3,"destroying %p\n", itm);
+		item_hash_remove(this_->hash, &itm->item);
 		this_->first=itm->next;
 		if (this_->first)
 			this_->first->prev=NULL;
@@ -239,6 +242,9 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 	}
 	if (! this_->first)
 		this_->last=NULL;
+	if (! this_->first && end) 
+		dbg(0,"end wrong\n");
+	dbg(2,"ret\n");
 }
 
 static struct navigation_itm *
@@ -251,6 +257,7 @@ navigation_itm_new(struct navigation *this_, struct item *item, struct coord *st
 	struct coord c[5];
 
 	if (item) {
+		ret->item=*item;
 		item_hash_insert(this_->hash, item, ret);
 		mr=map_rect_new(item->map, NULL);
 		item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
@@ -258,7 +265,6 @@ navigation_itm_new(struct navigation *this_, struct item *item, struct coord *st
 			ret->name1=g_strdup(attr.u.str);
 		if (item_attr_get(item, attr_street_name_systematic, &attr))
 			ret->name2=g_strdup(attr.u.str);
-		ret->item=*item;
 		l=-1;
 		while (item_coord_get(item, &c[i], 1)) {
 			dbg(1, "coord %d 0x%x 0x%x\n", i, c[i].x ,c[i].y);
@@ -295,6 +301,7 @@ navigation_itm_new(struct navigation *this_, struct item *item, struct coord *st
 		this_->last->next=ret;
 		ret->prev=this_->last;
 	}
+	dbg(1,"ret=%p\n", ret);
 	this_->last=ret;
 	return ret;
 }
@@ -304,11 +311,19 @@ calculate_dest_distance(struct navigation *this_, int incr)
 {
 	int len=0, time=0;
 	struct navigation_itm *next,*itm=this_->last;
+	dbg(1, "enter this_=%p, incr=%d\n", this_, incr);
 	if (incr) {
+		if (itm)
+			dbg(2, "old values: (%p) time=%d lenght=%d\n", itm, itm->dest_length, itm->dest_time);
+		else
+			dbg(2, "old values: itm is null\n");
 		itm=this_->first;
 		next=itm->next;
+		dbg(2, "itm values: time=%d lenght=%d\n", itm->length, itm->time);
+		dbg(2, "next values: (%p) time=%d lenght=%d\n", next, next->dest_length, next->dest_time);
 		itm->dest_length=next->dest_length+itm->length;
 		itm->dest_time=next->dest_time+itm->time;
+		dbg(2, "new values: time=%d lenght=%d\n", itm->dest_length, itm->dest_time);
 		return;
 	}
 	while (itm) {
@@ -426,7 +441,8 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		dbg(0,"delta=%d\n", delta);
 		strength=_("unknown ");
 	}
-	distance=round_distance(distance);
+	if (mode != navigation_mode_long_exact) 
+		distance=round_distance(distance);
 	if (mode == navigation_mode_speech) {
 		if (nav->turn_around) 
 			return g_strdup(_("When possible, please turn"));
@@ -443,7 +459,6 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		d=g_strdup(_("soon"));
 		break;
 	case 1:
-		printf("get_distance\n");
 		d=get_distance(distance, mode, 0);
 		break;
 	case 0:
@@ -565,12 +580,15 @@ navigation_update(struct navigation *this_, struct route *route)
 		return;
 	speedlist=route_get_speedlist(route);
 	len=route_info_length(pos, dst, 0);
+	dbg(2,"len pos,dst = %d\n", len);
 	if (len == -1) {
 		len=route_info_length(pos, NULL, 0);
+		dbg(2,"len pos = %d\n", len);
 		end_flag=1;
 	}
 	sd=route_info_street(pos);
 	itm=item_hash_lookup(this_->hash, &sd->item);
+	dbg(2,"itm for item with id (0x%x,0x%x) is %p\n", sd->item.id_hi, sd->item.id_lo, itm);
 	navigation_destroy_itms_cmds(this_, itm);
 	if (itm) 
 		incr=1;
@@ -580,6 +598,7 @@ navigation_update(struct navigation *this_, struct route *route)
 	}
 	itm->length=len;
 	itm->time=route_time(speedlist, &sd->item, len);
+	dbg(2,"%p time = %d\n", itm, itm->time);
 	if (!incr) {
 		printf("not on track\n");
 		rph=route_path_open(route);
@@ -601,6 +620,7 @@ navigation_update(struct navigation *this_, struct route *route)
 		make_maneuvers(this_);
 	}
 	calculate_dest_distance(this_, incr);
+	dbg(2,"destination distance old=%d new=%d\n", this_->distance_last, this_->first->dest_length);
 	if (this_->first->dest_length > this_->distance_last && this_->distance_last >= 0) 
 		this_->turn_around=1;
 	else

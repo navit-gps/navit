@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-11 16:49+0200\n"
+"POT-Creation-Date: 2007-07-11 23:37+0200\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Martin Schaller <martin-s@sourceforge.net>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -15,17 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/main.c:109
+#: ../src/main.c:110
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr "Fehler beim Parsen von '%s': %s\n"
 
-#: ../src/main.c:111
+#: ../src/main.c:112
 #, c-format
 msgid "Using '%s'\n"
 msgstr "Benutze '%s'\n"
 
-#: ../src/main.c:114
+#: ../src/main.c:115
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr "Es wurde keine Instanz erzeugt, Ende\n"

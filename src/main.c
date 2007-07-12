@@ -66,7 +66,8 @@ main_remove_navit(struct navit *nav)
 #ifdef USE_GTK_MAIN_LOOP
 		gtk_main_quit();
 #else
-		g_main_loop_quit(loop);
+		if (loop)
+			g_main_loop_quit(loop);
 #endif
 	}
 }

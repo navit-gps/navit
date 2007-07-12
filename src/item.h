@@ -46,5 +46,7 @@ enum item_type item_from_name(char *name);
 char *item_to_name(enum item_type item);
 struct item_hash *item_hash_new(void);
 void item_hash_insert(struct item_hash *h, struct item *item, void *val);
+int item_hash_remove(struct item_hash *h, struct item *item);
 void *item_hash_lookup(struct item_hash *h, struct item *item);
 void item_hash_destroy(struct item_hash *h);
+/* end of prototypes */
