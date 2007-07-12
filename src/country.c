@@ -15,69 +15,73 @@ struct country {
 	char *name;
 };
 
+#define gettext_noop(String) String
+#define _(STRING)    gettext(STRING)
+#define _n(STRING)    gettext_noop(STRING)
+
 struct country country[]= {
-	{ 1 ,"CZ",	"CZ",	"CZE",	"Tschechische Republik"},
-	{ 2 ,"SK",	"SK",	"SVK",	"Slowakei"},
-	{ 7 ,"RSM",	"SM",	"SMR",	"San Marino"},
-	{11 ,"EST",	"EE",	"EST",	"Estland"},
-	{12 ,"GE",	"GE",	"GEO",	"Georgien"},
-	{13 ,"LV",	"LV",	"LVA",	"Lettland"},
-	{14 ,"LT",	"LT",	"LTU",	"Litauen"},
-	{15 ,"MD",	"MD",	"MDA",	"Moldawien"},
-	{16 ,"RUS",	"RU",	"RUS",	"Rußland"},
-	{17 ,"UA",	"UA",	"UKR",	"Ukraine"},
-	{18 ,"BY",	"BY",	"BLR",	"Weißrussland"},
-	{20 ,"ET",	"EG",	"EGY",	"Ägypten"},
-	{30 ,"GR",	"GR",	"GRC",	"Griechenland"},
-	{31 ,"NL",	"NL",	"NLD",	"Niederlande"},
-	{32 ,"B",	"BE",	"BEL",	"Belgien"},
-	{33 ,"F",	"FR",	"FRA",	"Frankreich"},
-	{34 ,"E",	"ES",	"ESP",	"Spanien"},
-	{36 ,"H",	"HU",	"HUN",	"Ungarn"},
-	{39 ,"I",	"IT",	"ITA",	"Italien"},
-	{40 ,"RO",	"RO",	"ROM",	"Rumänien"},
-	{41 ,"CH",	"CH",	"CHE",	"Schweiz"},
-	{43 ,"A",	"AT",	"AUT",	"Österreich"},
-	{44 ,"GB",	"GB",	"GBR",	"Grossbritannien"},
-	{45 ,"DK",	"DK",	"DNK",	"Dänemark"},
-	{46 ,"S",	"SE",	"SWE",	"Schweden"},
-	{47 ,"N",	"NO",	"NOR",	"Norwegen"},
-	{48 ,"PL",	"PL",	"POL",	"Polen"},
-	{49 ,"D",	"DE",	"DEU",	"Deutschland"},
-	{50 ,"GBZ",	"GI",	"GIB",	"Gibraltar"},
-	{51 ,"P",	"PT",	"PRT",	"Portugal"},
-	{52 ,"L",	"LU",	"LUX",	"Luxemburg"},
-	{53 ,"IRL",	"IE",	"IRL",	"Irland"},
-	{54 ,"IS",	"IS",	"ISL",	"Island"},
-	{55 ,"AL",	"AL",	"ALB",	"Albanien"},
-	{56 ,"M",	"MT",	"MLT",	"Malta"},
-	{57 ,"CY",	"CY",	"CYP",	"Zypern"},
-	{58 ,"FIN",	"FI",	"FIN",	"Finnland"},
-	{59 ,"BG",	"BG",	"BGR",	"Bulgarien"},
-	{61 ,"RL",	"LB",	"LBN",	"Libanon"},
-	{62 ,"AND",	"AD",	"AND",	"Andorra"},
-	{63 ,"SYR",	"SY",	"SYR",	"Syrien"},
-	{66 ,"KSA",	"SA",	"SAU",	"Saudi-Arabien"},
-	{71 ,"LAR",	"LY",	"LYB",	"Libyen"},
-	{72 ,"IL",	"IL",	"ISR",	"Israel"},
-	{73 ,"AUT",	"PS",	"PSE",	"Palästinensische Autonomiegebiete"},
-	{75 ,"FL",	"LI",	"LIE",	"Liechtenstein"},
-	{76 ,"MA",	"MA",	"MAR",	"Marokko"},
-	{77 ,"DZ",	"DZ",	"DZA",	"Algerien"},
-	{78 ,"TN",	"TN",	"TUN",	"Tunesien"},
-	{81 ,"SRB",	"RS",	"SRB",	"Serbien"},
-	{83 ,"HKJ",	"JO",	"JOR",	"Jordanien"},
-	{85 ,"NDH",	"HR",	"HRV",	"Kroatien"},
-	{86 ,"SLO",	"SI",	"SVN",	"Slowenien"},
-	{87 ,"BIH",	"BA",	"BIH",	"Bosnien und Herzegowina"},
-	{89 ,"MK",	"MK",	"MKD",	"Mazedonien"},
-	{90 ,"TR",	"TR",	"TUR",	"Türkei"},
-	{93 ,"MC",	"MC",	"MCO",	"Monaco"},
-	{94 ,"AZ",	"AZ",	"AZE",	"Aserbaidschan"},
-	{95 ,"ARM",	"AM",	"ARM",	"Armenien"},
-	{98 ,"FO",	"FO",	"FRO",	"Färöer"},
-	{99 ,"WSA",	"EH",	"ESH",	"Westsahara"},
-	{336 ,NULL,	"SJ",	"SJM",	"Svalbard und Jan Mayen"},
+	{ 1 ,"CZ",	"CZ",	"CZE",	_n("Czech Republic")},
+	{ 2 ,"SK",	"SK",	"SVK",	_n("Slovakia")},
+	{ 7 ,"RSM",	"SM",	"SMR",	_n("San Marino")},
+	{11 ,"EST",	"EE",	"EST",	_n("Estonia")},
+	{12 ,"GE",	"GE",	"GEO",	_n("Georgia")},
+	{13 ,"LV",	"LV",	"LVA",	_n("Latvia")},
+	{14 ,"LT",	"LT",	"LTU",	_n("Lithuania")},
+	{15 ,"MD",	"MD",	"MDA",	_n("Moldova")},
+	{16 ,"RUS",	"RU",	"RUS",	_n("Russian Federation")},
+	{17 ,"UA",	"UA",	"UKR",	_n("Ukraine")},
+	{18 ,"BY",	"BY",	"BLR",	_n("Belarus")},
+	{20 ,"ET",	"EG",	"EGY",	_n("Egypt")},
+	{30 ,"GR",	"GR",	"GRC",	_n("Greece")},
+	{31 ,"NL",	"NL",	"NLD",	_n("Netherlands")},
+	{32 ,"B",	"BE",	"BEL",	_n("Belgium")},
+	{33 ,"F",	"FR",	"FRA",	_n("France")},
+	{34 ,"E",	"ES",	"ESP",	_n("Spain")},
+	{36 ,"H",	"HU",	"HUN",	_n("Hungary")},
+	{39 ,"I",	"IT",	"ITA",	_n("Italy")},
+	{40 ,"RO",	"RO",	"ROM",	_n("Romania")},
+	{41 ,"CH",	"CH",	"CHE",	_n("Switzerland")},
+	{43 ,"A",	"AT",	"AUT",	_n("Austria")},
+	{44 ,"GB",	"GB",	"GBR",	_n("United Kingdom")},
+	{45 ,"DK",	"DK",	"DNK",	_n("Denmark")},
+	{46 ,"S",	"SE",	"SWE",	_n("Sweden")},
+	{47 ,"N",	"NO",	"NOR",	_n("Norway")},
+	{48 ,"PL",	"PL",	"POL",	_n("Poland")},
+	{49 ,"D",	"DE",	"DEU",	_n("Germany")},
+	{50 ,"GBZ",	"GI",	"GIB",	_n("Gibraltar")},
+	{51 ,"P",	"PT",	"PRT",	_n("Portugal")},
+	{52 ,"L",	"LU",	"LUX",	_n("Luxembourg")},
+	{53 ,"IRL",	"IE",	"IRL",	_n("Ireland")},
+	{54 ,"IS",	"IS",	"ISL",	_n("Iceland")},
+	{55 ,"AL",	"AL",	"ALB",	_n("Albania")},
+	{56 ,"M",	"MT",	"MLT",	_n("Malta")},
+	{57 ,"CY",	"CY",	"CYP",	_n("Cyprus")},
+	{58 ,"FIN",	"FI",	"FIN",	_n("Finland")},
+	{59 ,"BG",	"BG",	"BGR",	_n("Bulgaria")},
+	{61 ,"RL",	"LB",	"LBN",	_n("Lebanon")},
+	{62 ,"AND",	"AD",	"AND",	_n("Andorra")},
+	{63 ,"SYR",	"SY",	"SYR",	_n("Syria")},
+	{66 ,"KSA",	"SA",	"SAU",	_n("Saudi Arabia-Arabien")},
+	{71 ,"LAR",	"LY",	"LYB",	_n("Libia")},
+	{72 ,"IL",	"IL",	"ISR",	_n("Israel")},
+	{73 ,"AUT",	"PS",	"PSE",	_n("Palestinia")},
+	{75 ,"FL",	"LI",	"LIE",	_n("Liechtenstein")},
+	{76 ,"MA",	"MA",	"MAR",	_n("Morocco")},
+	{77 ,"DZ",	"DZ",	"DZA",	_n("Algeria")},
+	{78 ,"TN",	"TN",	"TUN",	_n("Tunisia")},
+	{81 ,"SRB",	"RS",	"SRB",	_n("Serbia")},
+	{83 ,"HKJ",	"JO",	"JOR",	_n("Jordan")},
+	{85 ,"NDH",	"HR",	"HRV",	_n("Croatia")},
+	{86 ,"SLO",	"SI",	"SVN",	_n("Slovenia")},
+	{87 ,"BIH",	"BA",	"BIH",	_n("Bosnia and Herzegovina")},
+	{89 ,"MK",	"MK",	"MKD",	_n("Macedonia")},
+	{90 ,"TR",	"TR",	"TUR",	_n("Turkey")},
+	{93 ,"MC",	"MC",	"MCO",	_n("Monaco")},
+	{94 ,"AZ",	"AZ",	"AZE",	_n("Azerbaijan")},
+	{95 ,"ARM",	"AM",	"ARM",	_n("Armenia")},
+	{98 ,"FO",	"FO",	"FRO",	_n("Faroe Islands")},
+	{99 ,"WSA",	"EH",	"ESH",	_n("Western Sahara")},
+	{336 ,NULL,	"SJ",	"SJM",	_n("Svalbard and Jan Mayen")},
 };
 
 
@@ -106,7 +110,7 @@ country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
                 }
                 return 0;
         case attr_label:
-		attr->u.str=country->name;
+		attr->u.str=gettext(country->name);
 		this->attr_next=attr_id;
 		return 1;
 	case attr_id:
@@ -126,7 +130,7 @@ country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		this->attr_next=attr_country_name;
 		return 1;
         case attr_country_name:
-		attr->u.str=country->name;
+		attr->u.str=gettext(country->name);
 		this->attr_next=attr_none;
 		return 1;
  	default:
@@ -188,7 +192,7 @@ country_search_get_item(struct country_search *this)
 		if (match(this, attr_country_iso3, this->country->iso3) ||
 		    match(this, attr_country_iso2, this->country->iso2) ||
 		    match(this, attr_country_car, this->country->car) ||
-		    match(this, attr_country_name, this->country->name)) {
+		    match(this, attr_country_name, gettext(this->country->name))) {
 			this->item.id_lo=this->country->id;
 			return &this->item;
 		}
