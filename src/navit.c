@@ -22,6 +22,8 @@
 #include "navigation.h"
 #include "track.h"
 
+#define _(STRING)    gettext(STRING)
+
 struct navit {
 	GList *mapsets;
 	GList *layouts;
@@ -309,7 +311,7 @@ navit_add_menu_layouts(struct navit *this_, struct menu *men)
 void
 navit_add_menu_layout(struct navit *this_, struct menu *men)
 {
-	navit_add_menu_layouts(this_, menu_add(men, "Layout", menu_type_submenu, NULL, NULL, NULL));
+	navit_add_menu_layouts(this_, menu_add(men, _("Layout"), menu_type_submenu, NULL, NULL, NULL));
 }
 
 void
@@ -322,7 +324,7 @@ navit_add_menu_projections(struct navit *this_, struct menu *men)
 void
 navit_add_menu_projection(struct navit *this_, struct menu *men)
 {
-	navit_add_menu_projections(this_, menu_add(men, "Projection", menu_type_submenu, NULL, NULL, NULL));
+	navit_add_menu_projections(this_, menu_add(men, _("Projection"), menu_type_submenu, NULL, NULL, NULL));
 }
 
 void
