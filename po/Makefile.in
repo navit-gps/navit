@@ -5,7 +5,10 @@ LANGUAGES=$(PO-FILES:.po=)
 LOCALEDIR=@LOCALEDIR@
 
 # If other files will be translated, they must be also here:
-CSOURCES=../src/main.c ../src/navigation.c
+CSOURCES=../src/main.c \
+	../src/navigation.c \
+	../src/navit.c \
+	../src/gui/gtk/gui_gtk_action.c
 
 
 MO-FILES = $(LANGUAGES:=.mo)
@@ -24,8 +27,8 @@ clean:
 distclean: clean
 	rm Makefile
 
-messages.pot: $(CSOURCES)
-	/usr/bin/xgettext -o navit.pot $(CSOURCES)
+navit.pot: $(CSOURCES)
+	/usr/bin/xgettext -k_ -k_n -o navit.pot $(CSOURCES)
 
 $(PO-FILES): navit.pot
 	test -e $@
