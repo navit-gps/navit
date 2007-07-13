@@ -3,6 +3,8 @@ AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 
+AC_GNU_SOURCE
+
 AC_PROG_CC
 if eval "test x$GCC = xyes"; then
         CFLAGS="$CFLAGS -Wall -Wcast-align -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wpointer-arith -Wreturn-type -D_GNU_SOURCE"
@@ -231,6 +233,7 @@ fi
 AC_SUBST(INTLIBS)
 AC_SUBST(MOFILES)
 AC_SUBST(POFILES)
+AM_GNU_GETTEXT_VERSION
 AM_GNU_GETTEXT
 
 LIBS="$LIBS -lm -rdynamic"
