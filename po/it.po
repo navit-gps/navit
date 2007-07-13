@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-10 22:55+0200\n"
+"POT-Creation-Date: 2007-07-13 20:34+0200\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Andrea GHENSI <andrea.ghensi@gmail.com>\n"
 "Language-Team: Andrea GHENSI <andrea.ghensi@gmail.com>\n"
@@ -15,18 +15,22 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ../src/main.c:89
+#, c-format
+msgid "Running from source directory\n"
+msgstr "Esecuzione dalla directory sorgente\n"
 
-#: ../src/main.c:108
+#: ../src/main.c:114
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr "Errore analizzando '%s': %s\n"
 
-#: ../src/main.c:110
+#: ../src/main.c:116
 #, c-format
 msgid "Using '%s'\n"
-msgstr "Uso '%s'\n"
+msgstr "Utilizzo il file di configurazione '%s'\n"
 
-#: ../src/main.c:113
+#: ../src/main.c:119
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr "Nessuna istanza creata, esco\n"
@@ -51,151 +55,459 @@ msgstr "%d.%d chilometri"
 msgid "in %d.%d kilometers"
 msgstr "tra %d.%d chilometri"
 
-#: ../src/navigation.c:196
+#: ../src/navigation.c:197
 msgid "one kilometer"
 msgstr "un chilometro"
 
-#: ../src/navigation.c:198
+#: ../src/navigation.c:199
 msgid "in one kilometer"
 msgstr "tra un chilometro"
 
-#: ../src/navigation.c:201
+#: ../src/navigation.c:202
+msgid "two kilometers"
+msgstr "due chilometri"
+
+#: ../src/navigation.c:204
+msgid "in two kilometers"
+msgstr "tra due chilometri"
+
+#: ../src/navigation.c:207
+msgid "three kilometers"
+msgstr "tre chilometri"
+
+#: ../src/navigation.c:209
+msgid "in three kilometers"
+msgstr "tra tre chilometri"
+
+#: ../src/navigation.c:212
+msgid "four kilometers"
+msgstr "quattro chilometri"
+
+#: ../src/navigation.c:214
+msgid "in four kilometers"
+msgstr "tra quattro chilometri"
+
+#: ../src/navigation.c:217
 #, c-format
-msgid "%d kilometer"
+msgid "%d kilometers"
 msgstr "%d chilometri"
 
-#: ../src/navigation.c:203
+#: ../src/navigation.c:219
 #, c-format
-msgid "in %d kilometern"
+msgid "in %d kilometers"
 msgstr "tra %d chilometri"
 
-#: ../src/navigation.c:391
+#: ../src/navigation.c:423
 msgid "right"
 msgstr "destra"
 
-#: ../src/navigation.c:399
+#: ../src/navigation.c:431
 msgid "left"
 msgstr "sinistra"
 
-#: ../src/navigation.c:403
+#: ../src/navigation.c:435
 msgid "easily "
 msgstr "di poco "
 
-#: ../src/navigation.c:407
+#: ../src/navigation.c:439
 msgid "strongly "
 msgstr "molto "
 
-#: ../src/navigation.c:410
+#: ../src/navigation.c:442
 msgid "unknown "
 msgstr "sconosciuto "
 
-#: ../src/navigation.c:415
+#: ../src/navigation.c:448
 msgid "When possible, please turn"
 msgstr "Appena possibile, svoltare"
 
-#: ../src/navigation.c:422
+#: ../src/navigation.c:455
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Seguire la strada per i prossimi %s"
 
-#: ../src/navigation.c:426
+#: ../src/navigation.c:459
 msgid "soon"
 msgstr "tra poco"
 
-#: ../src/navigation.c:433
+#: ../src/navigation.c:465
 msgid "now"
 msgstr "adesso"
 
-#: ../src/navigation.c:436
+#: ../src/navigation.c:468
 msgid "error"
 msgstr "errore"
 
-#: ../src/navigation.c:441
+#: ../src/navigation.c:473
 msgid "strength_pos"
-msgstr ""
+msgstr "forza_pos"
 
-#: ../src/navigation.c:443
+#: ../src/navigation.c:475
 msgid "direction_pos"
-msgstr ""
+msgstr "direzione_pos"
 
-#: ../src/navigation.c:445
+#: ../src/navigation.c:477
 msgid "distance_pos"
-msgstr ""
+msgstr "distanza_pos"
 
-#: ../src/navigation.c:455
+#: ../src/navigation.c:487
 #, c-format
 msgid "Turn %s%s %s"
 msgstr "Svoltare %s%s %s"
 
-#: ../src/navigation.c:458
+#: ../src/navigation.c:490
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Hai raggiunto la destinazione %s"
 
-#: ../src/gui/gtk/gui_gtk_action.c:155
+#: ../src/navit.c:316 ../src/gui/gtk/gui_gtk_action.c:159
+msgid "Layout"
+msgstr "Layout"
+
+#: ../src/navit.c:329
+msgid "Projection"
+msgstr "Proiezione"
+
+#: ../src/country.c:24
+msgid "Czech Republic"
+msgstr "Repubblica Ceca"
+
+#: ../src/country.c:25
+msgid "Slovakia"
+msgstr "Slovacchia"
+
+#: ../src/country.c:26
+msgid "San Marino"
+msgstr "San Marino"
+
+#: ../src/country.c:27
+msgid "Estonia"
+msgstr "Estonia"
+
+#: ../src/country.c:28
+msgid "Georgia"
+msgstr "Georgia"
+
+#: ../src/country.c:29
+msgid "Latvia"
+msgstr "Lettonia"
+
+#: ../src/country.c:30
+msgid "Lithuania"
+msgstr "Lituania"
+
+#: ../src/country.c:31
+msgid "Moldova"
+msgstr "Moldova"
+
+#: ../src/country.c:32
+msgid "Russian Federation"
+msgstr "Federazione Russa"
+
+#: ../src/country.c:33
+msgid "Ukraine"
+msgstr "Ucraina"
+
+#: ../src/country.c:34
+msgid "Belarus"
+msgstr "Bielorussia"
+
+#: ../src/country.c:35
+msgid "Egypt"
+msgstr "Egitto"
+
+#: ../src/country.c:36
+msgid "Greece"
+msgstr "Grecia"
+
+#: ../src/country.c:37
+msgid "Netherlands"
+msgstr "Olanda"
+
+#: ../src/country.c:38
+msgid "Belgium"
+msgstr "Belgio"
+
+#: ../src/country.c:39
+msgid "France"
+msgstr "Francia"
+
+#: ../src/country.c:40
+msgid "Spain"
+msgstr "Spagna"
+
+#: ../src/country.c:41
+msgid "Hungary"
+msgstr "Ungheria"
+
+#: ../src/country.c:42
+msgid "Italy"
+msgstr "Italia"
+
+#: ../src/country.c:43
+msgid "Romania"
+msgstr "Romania"
+
+#: ../src/country.c:44
+msgid "Switzerland"
+msgstr "Svizzera"
+
+#: ../src/country.c:45
+msgid "Austria"
+msgstr "Austria"
+
+#: ../src/country.c:46
+msgid "United Kingdom"
+msgstr "Regno Unito"
+
+#: ../src/country.c:47
+msgid "Denmark"
+msgstr "Danimarca"
+
+#: ../src/country.c:48
+msgid "Sweden"
+msgstr "Svezia"
+
+#: ../src/country.c:49
+msgid "Norway"
+msgstr "Norvegia"
+
+#: ../src/country.c:50
+msgid "Poland"
+msgstr "Polonia"
+
+#: ../src/country.c:51
+msgid "Germany"
+msgstr "Germania"
+
+#: ../src/country.c:52
+msgid "Gibraltar"
+msgstr "Gibilterra"
+
+#: ../src/country.c:53
+msgid "Portugal"
+msgstr "Portogallo"
+
+#: ../src/country.c:54
+msgid "Luxembourg"
+msgstr "Lussemburgo"
+
+#: ../src/country.c:55
+msgid "Ireland"
+msgstr "Irlanda"
+
+#: ../src/country.c:56
+msgid "Iceland"
+msgstr "Islanda"
+
+#: ../src/country.c:57
+msgid "Albania"
+msgstr "Albania"
+
+#: ../src/country.c:58
+msgid "Malta"
+msgstr "Malta"
+
+#: ../src/country.c:59
+msgid "Cyprus"
+msgstr "Cipro"
+
+#: ../src/country.c:60
+msgid "Finland"
+msgstr "Finlandia"
+
+#: ../src/country.c:61
+msgid "Bulgaria"
+msgstr "Bulgaria"
+
+#: ../src/country.c:62
+msgid "Lebanon"
+msgstr "Libano"
+
+#: ../src/country.c:63
+msgid "Andorra"
+msgstr "Andorra"
+
+#: ../src/country.c:64
+msgid "Syria"
+msgstr "Siria"
+
+#: ../src/country.c:65
+msgid "Saudi Arabia"
+msgstr "Arabia Saudita"
+
+#: ../src/country.c:66
+msgid "Libia"
+msgstr "Libia"
+
+#: ../src/country.c:67
+msgid "Israel"
+msgstr "Israele"
+
+#: ../src/country.c:68
+msgid "Palestinia"
+msgstr "Palestinia"
+
+#: ../src/country.c:69
+msgid "Liechtenstein"
+msgstr "Liechtenstein"
+
+#: ../src/country.c:70
+msgid "Morocco"
+msgstr "Marocco"
+
+#: ../src/country.c:71
+msgid "Algeria"
+msgstr "Algeria"
+
+#: ../src/country.c:72
+msgid "Tunisia"
+msgstr "Tunisia"
+
+#: ../src/country.c:73
+msgid "Serbia"
+msgstr "Serbia"
+
+#: ../src/country.c:74
+msgid "Jordan"
+msgstr "Giordania"
+
+#: ../src/country.c:75
+msgid "Croatia"
+msgstr "Croazia"
+
+#: ../src/country.c:76
+msgid "Slovenia"
+msgstr "Slovenia"
+
+#: ../src/country.c:77
+msgid "Bosnia and Herzegovina"
+msgstr "Bosnia - Herzegovina"
+
+#: ../src/country.c:78
+msgid "Macedonia"
+msgstr "Macedonia"
+
+#: ../src/country.c:79
+msgid "Turkey"
+msgstr "Turchia"
+
+#: ../src/country.c:80
+msgid "Monaco"
+msgstr "Principato di Monaco"
+
+#: ../src/country.c:81
+msgid "Azerbaijan"
+msgstr "Azerbaijan"
+
+#: ../src/country.c:82
+msgid "Armenia"
+msgstr "Armenia"
+
+#: ../src/country.c:83
+msgid "Faroe Islands"
+msgstr "Isole Faroe"
+
+#: ../src/country.c:84
+msgid "Western Sahara"
+msgstr "Sahara Occidentale"
+
+#: ../src/country.c:85
+msgid "Svalbard and Jan Mayen"
+msgstr "Svalbard e Jan Mayen"
+
+#: ../src/gui/gtk/destination.c:294
+msgid "Country"
+msgstr "Stato"
+
+#: ../src/gui/gtk/destination.c:296
+msgid "Zip Code"
+msgstr "Codice ZIP"
+
+#: ../src/gui/gtk/destination.c:298
+msgid "City"
+msgstr "Città"
+
+#: ../src/gui/gtk/destination.c:300
+msgid "District/Township"
+msgstr "Distretto"
+
+#: ../src/gui/gtk/destination.c:303
+msgid "Street"
+msgstr "Via"
+
+#: ../src/gui/gtk/destination.c:305
+msgid "Number"
+msgstr "Numero"
+
+#: ../src/gui/gtk/gui_gtk_action.c:156
 msgid "Display"
 msgstr "Visualizza"
 
-#: ../src/gui/gtk/gui_gtk_action.c:156
+#: ../src/gui/gtk/gui_gtk_action.c:157
 msgid "Route"
 msgstr "Percorso"
 
 #: ../src/gui/gtk/gui_gtk_action.c:158
-msgid "Layout"
-msgstr "Layout"
+msgid "Map"
+msgstr "Mappa"
 
-#: ../src/gui/gtk/gui_gtk_action.c:159
+#: ../src/gui/gtk/gui_gtk_action.c:160
 msgid "ZoomOut"
 msgstr "Zoom -"
 
-#: ../src/gui/gtk/gui_gtk_action.c:160
+#: ../src/gui/gtk/gui_gtk_action.c:161
 msgid "ZoomIn"
 msgstr "Zoom +"
 
-#: ../src/gui/gtk/gui_gtk_action.c:161
+#: ../src/gui/gtk/gui_gtk_action.c:162
 msgid "Refresh"
 msgstr "Aggiorna"
 
-#: ../src/gui/gtk/gui_gtk_action.c:162
+#: ../src/gui/gtk/gui_gtk_action.c:163
 msgid "Info"
 msgstr "Informazioni"
 
-#: ../src/gui/gtk/gui_gtk_action.c:163
+#: ../src/gui/gtk/gui_gtk_action.c:164
 msgid "Destination"
 msgstr "Destinazione"
 
 #: ../src/gui/gtk/gui_gtk_action.c:165
+msgid "Test"
+msgstr "Test"
+
+#: ../src/gui/gtk/gui_gtk_action.c:166
 msgid "_Quit"
 msgstr "_Esci"
 
-#: ../src/gui/gtk/gui_gtk_action.c:172
+#: ../src/gui/gtk/gui_gtk_action.c:173
 msgid "Cursor"
 msgstr "Cursore"
 
-#: ../src/gui/gtk/gui_gtk_action.c:173
+#: ../src/gui/gtk/gui_gtk_action.c:174
 msgid "Orientation"
 msgstr "Bussola"
 
-#: ../src/gui/gtk/gui_gtk_action.c:180
+#: ../src/gui/gtk/gui_gtk_action.c:181
 msgid "Data"
 msgstr "Dati"
 
-#: ../src/gui/gtk/gui_gtk_action.c:181
+#: ../src/gui/gtk/gui_gtk_action.c:182
 msgid "VisibleBlocks"
 msgstr "BlocchiVisibili"
 
-#: ../src/gui/gtk/gui_gtk_action.c:182
+#: ../src/gui/gtk/gui_gtk_action.c:183
 msgid "VisibleTowns"
 msgstr "CittàVisibili"
 
-#: ../src/gui/gtk/gui_gtk_action.c:183
+#: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "VisiblePolys"
 msgstr "PoligoniVisibili"
 
-#: ../src/gui/gtk/gui_gtk_action.c:184
+#: ../src/gui/gtk/gui_gtk_action.c:185
 msgid "VisibleStreets"
 msgstr "StradeVisibili"
 
-#: ../src/gui/gtk/gui_gtk_action.c:185
+#: ../src/gui/gtk/gui_gtk_action.c:186
 msgid "VisiblePoints"
 msgstr "PuntiVisibili"
