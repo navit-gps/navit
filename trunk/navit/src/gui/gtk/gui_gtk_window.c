@@ -95,7 +95,7 @@ struct gui_methods gui_gtk_methods = {
 	gui_gtk_datawindow_new,
 };
 
-gboolean
+static gboolean
 gui_gtk_delete(GtkWidget *widget, GdkEvent *event, struct navit *nav)
 {
 	navit_destroy(nav);

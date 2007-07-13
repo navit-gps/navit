@@ -2,6 +2,7 @@ struct statusbar_methods;
 struct menu_methods;
 struct datawindow_methods;
 struct navit;
+struct callback;
 
 struct gui_priv {
 	struct navit *nav;

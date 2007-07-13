@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <libintl.h>
 #include <gtk/gtk.h>
 #include "debug.h"
 #include "destination.h"

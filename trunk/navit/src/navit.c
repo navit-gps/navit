@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <glib.h>
+#include <libintl.h>
 #include "debug.h"
 #include "navit.h"
 #include "callback.h"
@@ -20,8 +21,10 @@
 #include "graphics.h"
 #include "cursor.h"
 #include "popup.h"
+#include "data_window.h"
 #include "route.h"
 #include "navigation.h"
+#include "speech.h"
 #include "track.h"
 
 #define _(STRING)    gettext(STRING)
@@ -447,7 +450,7 @@ navit_window_roadbook_update(struct navit *this_)
 	datawindow_mode(this_->roadbook_window, 0);
 }
 
-void
+static void
 navit_window_roadbook_new(struct navit *this_)
 {
 	this_->roadbook_callback=callback_new(navit_window_roadbook_update, 1, &this_);
