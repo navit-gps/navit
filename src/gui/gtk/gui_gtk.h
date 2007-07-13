@@ -1,3 +1,5 @@
+#include "coord.h"
+
 struct statusbar_methods;
 struct menu_methods;
 struct datawindow_methods;
@@ -7,6 +9,9 @@ struct callback;
 struct gui_priv {
 	struct navit *nav;
         GtkWidget *win;
+	GtkWidget *dialog_win;
+	GtkWidget *dialog_entry;
+	struct coord dialog_coord;
         GtkWidget *vbox;
 	GtkWidget *menubar;
 	GtkActionGroup *base_group;

@@ -1,4 +1,5 @@
 #include <glib.h>
+#include "debug.h"
 #include "gui.h"
 #include "statusbar.h"
 #include "menu.h"
@@ -94,6 +95,19 @@ gui_datawindow_new(struct gui *gui, char *name, struct callback *click, struct c
 		return NULL;
 	}
 	return this_;
+}
+
+int
+gui_add_bookmark(struct gui *gui, struct coord *c, char *description)
+{
+	int ret;
+	dbg(2,"enter\n");
+	if (! gui->meth.add_bookmark)
+		return 0;
+	ret=gui->meth.add_bookmark(gui->priv, c, description);
+	
+	dbg(2,"ret=%d\n", ret);
+	return ret;
 }
 
 int
