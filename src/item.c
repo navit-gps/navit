@@ -122,7 +122,6 @@ item_hash_insert(struct item_hash *h, struct item *item, void *val)
 int
 item_hash_remove(struct item_hash *h, struct item *item)
 {
-	gpointer key, value;
 	int ret;
 
 	dbg(2,"removing (0x%x,0x%x) from %p\n", item->id_hi, item->id_lo, h->h);

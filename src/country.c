@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <glib.h>
+#include <libintl.h>
 #include "debug.h"
 #include "attr.h"
 #include "item.h"

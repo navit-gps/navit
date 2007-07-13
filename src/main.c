@@ -4,6 +4,7 @@
 #include <glib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <libintl.h>
 #ifdef USE_GTK_MAIN_LOOP
 #include <gtk/gtk.h>
 #endif
