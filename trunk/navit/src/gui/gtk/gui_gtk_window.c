@@ -22,6 +22,8 @@
 #define GDK_Calendar XF86XK_Calendar
 #endif
 
+#define _(text) gettext(text)
+
 static gboolean
 keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 {
@@ -85,6 +87,47 @@ gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra)
 	return 0;
 }
 
+static void
+gui_gtk_add_bookmark_do(struct gui_priv *gui)
+{
+	navit_add_bookmark(gui->nav, &gui->dialog_coord, gtk_entry_get_text(GTK_ENTRY(gui->dialog_entry)));
+	gtk_widget_destroy(gui->dialog_win);
+}
+
+static int
+gui_gtk_add_bookmark(struct gui_priv *gui, struct coord *c, char *description)
+{
+        GtkWidget *button_ok,*button_cancel,*label,*vbox,*hbox;
+
+	gui->dialog_coord=*c;	
+	gui->dialog_win=gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	vbox=gtk_vbox_new(FALSE, 0);
+	gtk_container_add (GTK_CONTAINER (gui->dialog_win), vbox);
+	gtk_window_set_title(gui->dialog_win,_("Add Bookmark"));
+	gtk_window_set_transient_for(GTK_WINDOW(gui->dialog_win), GTK_WINDOW(gui->win));
+	gtk_window_set_modal(GTK_WINDOW(gui->dialog_win), TRUE);
+	label=gtk_label_new(_("Name"));
+	gtk_box_pack_start(vbox, label, TRUE, TRUE, 0);
+	gui->dialog_entry=gtk_entry_new();
+	gtk_entry_set_text(gui->dialog_entry, description);
+	gtk_box_pack_start(vbox, gui->dialog_entry, TRUE, TRUE, 0);
+	hbox=gtk_hbox_new(FALSE, 0);
+	button_ok = gtk_button_new_from_stock (GTK_STOCK_OK);
+	gtk_box_pack_start(hbox, button_ok, TRUE, TRUE, 10);
+	button_cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+	gtk_box_pack_start(hbox, button_cancel, TRUE, TRUE, 10);
+	gtk_box_pack_start(vbox, hbox, TRUE, TRUE, 10);
+	gtk_widget_show_all(gui->dialog_win);
+	GTK_WIDGET_SET_FLAGS (button_ok, GTK_CAN_DEFAULT);
+	gtk_widget_grab_default(button_ok);
+	g_signal_connect_swapped (G_OBJECT (button_cancel), "clicked", G_CALLBACK (gtk_widget_destroy), G_OBJECT (gui->dialog_win));
+	g_signal_connect_swapped (G_OBJECT (gui->dialog_entry), "activate", G_CALLBACK (gui_gtk_add_bookmark_do), gui);
+
+	g_signal_connect_swapped(G_OBJECT (button_ok), "clicked", G_CALLBACK (gui_gtk_add_bookmark_do), gui);
+
+	return 1;
+}
+
 struct gui_methods gui_gtk_methods = {
 	gui_gtk_menubar_new,
 	gui_gtk_toolbar_new,
@@ -93,6 +136,7 @@ struct gui_methods gui_gtk_methods = {
 	gui_gtk_set_graphics,
 	NULL,
 	gui_gtk_datawindow_new,
+	gui_gtk_add_bookmark,
 };
 
 static gboolean

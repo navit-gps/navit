@@ -85,6 +85,9 @@ int main(int argc, char **argv)
 	setlocale(LC_NUMERIC,"C");
 	setlocale(LC_NUMERIC,"C");
 
+	if (file_exists("navit.c")) {
+		printf(_("Running from source directory\n"));
+	}
         bindtextdomain( "navit", "/usr/share/locale" );
 	textdomain( "navit" );
 
