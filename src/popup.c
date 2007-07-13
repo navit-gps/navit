@@ -64,7 +64,8 @@ popup_set_bookmark(struct menu *menu, void *data1, void *data2)
 	transform_to_geo(transform_get_projection(navit_get_trans(nav)), c, &g);
 	transform_geo_text(&g, buffer_geo);	
 	sprintf(buffer,"Map Point %s", buffer_geo);
-	navit_add_bookmark(nav, c, buffer);
+	if (!gui_add_bookmark(navit_get_gui(nav), c, buffer)) 
+		navit_add_bookmark(nav, c, buffer);
 }
 
 
