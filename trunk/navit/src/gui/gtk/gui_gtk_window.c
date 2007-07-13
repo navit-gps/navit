@@ -3,6 +3,7 @@
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
+#include <libintl.h>
 #include <gtk/gtk.h>
 #include "navit.h"
 #include "debug.h"
@@ -103,20 +104,20 @@ gui_gtk_add_bookmark(struct gui_priv *gui, struct coord *c, char *description)
 	gui->dialog_win=gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	vbox=gtk_vbox_new(FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (gui->dialog_win), vbox);
-	gtk_window_set_title(gui->dialog_win,_("Add Bookmark"));
+	gtk_window_set_title(GTK_WINDOW(gui->dialog_win),_("Add Bookmark"));
 	gtk_window_set_transient_for(GTK_WINDOW(gui->dialog_win), GTK_WINDOW(gui->win));
 	gtk_window_set_modal(GTK_WINDOW(gui->dialog_win), TRUE);
 	label=gtk_label_new(_("Name"));
-	gtk_box_pack_start(vbox, label, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(vbox), label, TRUE, TRUE, 0);
 	gui->dialog_entry=gtk_entry_new();
-	gtk_entry_set_text(gui->dialog_entry, description);
-	gtk_box_pack_start(vbox, gui->dialog_entry, TRUE, TRUE, 0);
+	gtk_entry_set_text(GTK_ENTRY(gui->dialog_entry), description);
+	gtk_box_pack_start(GTK_BOX(vbox), gui->dialog_entry, TRUE, TRUE, 0);
 	hbox=gtk_hbox_new(FALSE, 0);
 	button_ok = gtk_button_new_from_stock (GTK_STOCK_OK);
-	gtk_box_pack_start(hbox, button_ok, TRUE, TRUE, 10);
+	gtk_box_pack_start(GTK_BOX(hbox), button_ok, TRUE, TRUE, 10);
 	button_cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
-	gtk_box_pack_start(hbox, button_cancel, TRUE, TRUE, 10);
-	gtk_box_pack_start(vbox, hbox, TRUE, TRUE, 10);
+	gtk_box_pack_start(GTK_BOX(hbox), button_cancel, TRUE, TRUE, 10);
+	gtk_box_pack_start(GTK_BOX(vbox), hbox, TRUE, TRUE, 10);
 	gtk_widget_show_all(gui->dialog_win);
 	GTK_WIDGET_SET_FLAGS (button_ok, GTK_CAN_DEFAULT);
 	gtk_widget_grab_default(button_ok);
