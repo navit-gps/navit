@@ -1,6 +1,5 @@
 #include "glib.h"
 #include <stdio.h>
-// #include <gtk/gtk.h>
 
 //  FIXME temporary fix for enum
 #include "projection.h"
@@ -22,10 +21,9 @@
 
 #include "CEGUI.h"
 
-
-// This is for 3d fonts
+// This is for 3d fonts. Needs QuesoGLC. Could probably (and should) be moved to graphics instead
+// since fonts here are handled by CEGUI
 #include "GL/glc.h"
-
 
 #include "sdl_events.h"
 
@@ -544,12 +542,37 @@ static void init_sdlgui(void)
 		CEGUI::DefaultResourceProvider* rp = static_cast<CEGUI::DefaultResourceProvider*>
 		(CEGUI::System::getSingleton().getResourceProvider());
 		
-		rp->setResourceGroupDirectory("schemes", "../datafiles/schemes/");
-		rp->setResourceGroupDirectory("imagesets", "../datafiles/imagesets/");
-		rp->setResourceGroupDirectory("fonts", "../datafiles/fonts/");
-		rp->setResourceGroupDirectory("layouts", "../datafiles/layouts/");
-		rp->setResourceGroupDirectory("looknfeels", "../datafiles/looknfeel/");
-		rp->setResourceGroupDirectory("lua_scripts", "../datafiles/lua_scripts/");
+
+		static char *datafiles_path[]={
+			"./gui/sdl/datafiles",
+			"/usr/share/navit/datafiles",
+			"/usr/local/share/navit/datafiles",
+			NULL,
+		};
+
+		char **filename=datafiles_path;
+
+		while (*filename) {	
+			if (FILE * file = fopen(*filename, "r"))
+			{
+				fclose(file);
+				break;
+			}
+			filename++;
+		}
+
+		if(*filename==NULL){
+			printf("Can't find the datafiles directory for CEGUI files. Navit will probably crash :)\n");
+		} else {
+			printf("Loading SDL datafiles from %s\n",*filename);
+		}
+
+		rp->setResourceGroupDirectory("schemes", g_strdup_printf("%s/schemes/",*filename));
+		rp->setResourceGroupDirectory("imagesets", g_strdup_printf("%s/imagesets/",*filename));
+		rp->setResourceGroupDirectory("fonts", g_strdup_printf("%s/fonts/",*filename));
+		rp->setResourceGroupDirectory("layouts", g_strdup_printf("%s/layouts/",*filename));
+		rp->setResourceGroupDirectory("looknfeels", g_strdup_printf("%s/looknfeel/",*filename));
+		rp->setResourceGroupDirectory("lua_scripts", g_strdup_printf("%s/lua_scripts/",*filename));
 
 
 		CEGUI::Imageset::setDefaultResourceGroup("imagesets");
