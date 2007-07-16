@@ -9,6 +9,7 @@
 #include "navit.h"
 #include "callback.h"
 #include "gui.h"
+#include "item.h"
 #include "map.h"
 #include "mapset.h"
 #include "main.h"
@@ -64,8 +65,7 @@ struct navit {
 	struct datawindow *roadbook_window;
 };
 
-struct gui *
-main_loop_gui;
+struct gui *main_loop_gui;
 
 
 void
@@ -458,6 +458,74 @@ navit_window_roadbook_new(struct navit *this_)
 	this_->roadbook_window=gui_datawindow_new(this_->gui, "Roadbook", NULL, NULL);
 }
 
+static void
+navit_window_items_new(struct navit *this_)
+{
+	struct datawindow *win;
+	struct map_selection sel;
+	struct coord c,*center;
+	struct mapset_handle *h;
+	struct map *m;
+	struct map_rect *mr;
+	struct item *item;
+	struct attr attr;
+	GHashTable *hash;
+	int idist,dist=100000;
+	enum item_type type1,type2,type3;
+	struct param_list param[4];
+	char distbuf[32];
+
+	param[0].name="Distance";
+	param[1].name="Direction";
+	param[2].name="Type";
+	param[3].name="Name";
+	sel.next=NULL;
+	sel.order[layer_town]=18;
+	sel.order[layer_street]=18;
+	sel.order[layer_poly]=18;
+	center=transform_center(this_->trans);
+	sel.rect.lu.x=center->x-dist;
+	sel.rect.lu.y=center->y+dist;
+	sel.rect.rl.x=center->x+dist;
+	sel.rect.rl.y=center->y-dist;
+	hash=g_hash_table_new(g_int_hash, g_int_equal);
+	type1=type_bookmark;
+	g_hash_table_insert(hash, &type1, 1);
+	type2=type_poi_camping;
+	g_hash_table_insert(hash, &type2, 1);
+	type3=type_roadbook;
+	g_hash_table_insert(hash, &type3, 1);
+	dbg(2,"0x%x,0x%x - 0x%x,0x%x\n", sel.rect.lu.x, sel.rect.lu.y, sel.rect.rl.x, sel.rect.rl.y);
+	win=gui_datawindow_new(this_->gui, "Itemlist", NULL, NULL);
+	h=mapset_open(navit_get_mapset(this_));
+        while ((m=mapset_next(h, 1))) {
+		dbg(2,"m=%p %s\n", m, map_get_filename(m));
+		mr=map_rect_new(m, &sel);
+		dbg(2,"mr=%p\n", mr);
+		while ((item=map_rect_get_item(mr))) {
+			if (item_coord_get(item, &c, 1)) {
+				if (coord_rect_contains(&sel.rect, &c) && g_hash_table_lookup(hash, &item->type)) {
+					if (! item_attr_get(item, attr_label, &attr)) 
+						attr.u.str=NULL;
+					idist=transform_distance(center, &c);	
+					param[0].value=distbuf;	
+					param[1].value="";
+					param[2].value=item_to_name(item->type);
+					sprintf(distbuf,"%d", idist/1000);
+					param[3].value=attr.u.str;
+					datawindow_add(win, param, 4);
+					/* printf("gefunden %s %s %d\n",item_to_name(item->type), attr.u.str, idist/1000); */
+				}
+				if (item->type >= type_line) 
+					while (item_coord_get(item, &c, 1));
+			}
+		}
+		map_rect_destroy(mr);	
+	}
+	mapset_close(h);
+	g_hash_table_destroy(hash);
+}
+
 
 void
 navit_init(struct navit *this_)
@@ -497,6 +565,7 @@ navit_init(struct navit *this_)
 	global_navit=this_;
 #if 0
 	navit_window_roadbook_new(this_);
+	navit_window_items_new(this_);
 #endif
 	navit_debug(this_);
 }
@@ -562,6 +631,7 @@ navit_cursor_update(struct cursor *cursor, void *this__p)
 	int dir=cursor_get_dir(cursor);
 	int speed=cursor_get_speed(cursor);
 
+
 	if (this_->pid && speed > 2)
 		kill(this_->pid, SIGWINCH);
 
@@ -607,7 +677,7 @@ navit_set_position(struct navit *this_, struct coord *c)
 }
 
 void
-navit_vehicle_add(struct navit *this_, struct vehicle *v, struct color *c, int update, int follow)
+navit_vehicle_add(struct navit *this_, struct vehicle *v, struct color *c, int update, int follow, int active)
 {
 	this_->vehicle=v;
 	this_->update_curr=this_->update=update;
