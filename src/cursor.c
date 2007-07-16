@@ -15,15 +15,12 @@
 #include "menu.h"
 #include "vehicle.h"
 #include "navit.h"
+#include "callback.h"
 #include "color.h"
 #include "cursor.h"
 #include "compass.h"
 /* #include "track.h" */
 
-struct callback {
-        void (*func)(struct cursor *, void *data);
-        void *data;
-};
 
 
 struct cursor {
@@ -31,13 +28,13 @@ struct cursor {
 	struct graphics_gc *cursor_gc;
 	struct transformation *trans;
 	struct point cursor_pnt;
-	struct callback offscreen_callback;
-	struct callback update_callback;
+	struct callback_list *offscreen_cbl;
+	struct callback_list *update_cbl;
 	struct vehicle *v;
+	struct callback *vehicle_cb;
 	int dir;
 	int speed;
 	struct coord pos;
-	void *vehicle_callback;
 };
 
 struct coord *
@@ -198,9 +195,8 @@ cursor_get_speed(struct cursor *this)
 }
 
 static void
-cursor_update(struct vehicle *v, void *data)
+cursor_update(struct cursor *this, struct vehicle *v)
 {
-	struct cursor *this=data;
 	struct point pnt;
 	struct coord *pos;
 	double *dir;
@@ -216,11 +212,9 @@ cursor_update(struct vehicle *v, void *data)
 		this->dir=*dir;
 		this->speed=*speed;
 		this->pos=*pos;
-		if (this->update_callback.func) 
-			(*this->update_callback.func)(this, this->update_callback.data);
+		callback_list_call_1(this->update_cbl, this);
 		if (!transform(this->trans, pro, &this->pos, &pnt) || !transform_within_border(this->trans, &pnt, border)) {
-			if (this->offscreen_callback.func) 
-				(*this->offscreen_callback.func)(this, this->offscreen_callback.data);
+			callback_list_call_1(this->offscreen_cbl, this);
 			transform(this->trans, pro, &this->pos, &pnt);
 		}
 		cursor_draw(this, &pnt, *dir-transform_get_angle(this->trans, 0), *speed > 2.5);
@@ -235,29 +229,25 @@ cursor_new(struct graphics *gra, struct vehicle *v, struct color *c, struct tran
 {
 	dbg(2,"enter gra=%p v=%p c=%p t=%p\n", gra, v, c, t);
 	struct cursor *this=g_new(struct cursor,1);
+	this->offscreen_cbl=callback_list_new();
+	this->update_cbl=callback_list_new();
 	this->gra=gra;
 	this->trans=t;
 	this->cursor_gc=graphics_gc_new(gra);
 	this->v=v;
 	graphics_gc_set_foreground(this->cursor_gc, c);
 	graphics_gc_set_linewidth(this->cursor_gc, 2);
-	this->vehicle_callback=vehicle_callback_register(v, cursor_update, this);
+	this->vehicle_cb=callback_new_1(callback_cast(cursor_update), this);
+	vehicle_callback_add(v, this->vehicle_cb);
 	dbg(2,"ret=%p\n", this);
 	return this;
 }
 
 void
-cursor_register_offscreen_callback(struct cursor *this, void (*func)(struct cursor *cursor, void *data), void *data)
+cursor_add_callback(struct cursor *this, int offscreen, struct callback *cb)
 {
-	this->offscreen_callback.func=func;
-	this->offscreen_callback.data=data;
+	if (offscreen)
+		callback_list_add(this->offscreen_cbl, cb);
+	else
+		callback_list_add(this->update_cbl, cb);
 }
-
-
-void
-cursor_register_update_callback(struct cursor *this, void (*func)(struct cursor *cursor, void *data), void *data)
-{
-	this->update_callback.func=func;
-	this->update_callback.data=data;
-}
-

@@ -17,6 +17,7 @@
 #endif
 #include "debug.h"
 #include "coord.h"
+#include "callback.h"
 #include "transform.h"
 #include "projection.h"
 #include "statusbar.h"
@@ -60,8 +61,10 @@ struct vehicle {
 #define BUFFER_SIZE 256
 	char buffer[BUFFER_SIZE];
 	int buffer_pos;
+
+	struct callback_list *cbl;
 	struct vehicle *child;
-	GList *callbacks;
+	struct callback *child_cb;
 
 	int magic;
 	int is_udp;
@@ -96,17 +99,6 @@ vehicle_projection(struct vehicle *this)
 	return projection_mg;
 }
 
-static void
-vehicle_call_callbacks(struct vehicle *this)
-{
-	GList *item=g_list_first(this->callbacks);
-	while (item) {
-		struct callback *cb=item->data;
-		(*cb->func)(this, cb->data);
-		item=g_list_next(item);
-	}
-}
-
 struct coord *
 vehicle_pos_get(struct vehicle *this)
 {
@@ -133,7 +125,7 @@ vehicle_set_position(struct vehicle *this, struct coord *pos)
 	this->curr.y=this->current_pos.y;
 	this->delta.x=0;
 	this->delta.y=0;
-	vehicle_call_callbacks(this);
+	callback_list_call_1(this->cbl, this);
 }
 
 static int
@@ -220,7 +212,7 @@ vehicle_parse_gps(struct vehicle *this, char *buffer)
 		this->curr.x=this->current_pos.x;
 		this->curr.y=this->current_pos.y;
 		this->timer_count=0;
-		vehicle_call_callbacks(this);
+		callback_list_call_1(this->cbl, this);
 		if (this->is_file) {
 			disable_watch(this);
 			g_timeout_add(1000, enable_watch_timer, this);
@@ -318,7 +310,7 @@ vehicle_gps_callback(struct gps_data_t *data, char *buf, size_t len, int level)
 		this->curr.x=this->current_pos.x;
 		this->curr.y=this->current_pos.y;
 		this->timer_count=0;
-		vehicle_call_callbacks(this);
+		callback_list_call_1(this->cbl, this);
 		data->set &= ~LATLON_SET;
 	}
 	if (data->set & ALTITUDE_SET) {
@@ -363,7 +355,7 @@ struct packet {
 			int y __attribute__ ((packed));
 			unsigned char speed;
 			unsigned char dir;
-		} pos __attribute__ ((packed)) ;
+		} pos;
 	} u;
 } __attribute__ ((packed)) ;
 
@@ -381,14 +373,13 @@ vehicle_udp_recv(struct vehicle *this)
 		this->current_pos.y=pkt.u.pos.y;
 		this->speed=pkt.u.pos.speed;
 		this->dir=pkt.u.pos.dir*2;
-		vehicle_call_callbacks(this);
+		callback_list_call_1(this->cbl, this);
 	}
 }
 
 static void
-vehicle_udp_update(struct vehicle *child, void *data)
+vehicle_udp_update(struct vehicle *this, struct vehicle *child)
 {
-	struct vehicle *this=(struct vehicle *)data;
 	struct coord *pos=&child->current_pos;
 	struct packet pkt;
 	int speed=child->speed;
@@ -405,7 +396,7 @@ vehicle_udp_update(struct vehicle *child, void *data)
 	this->current_pos=child->current_pos;
 	this->speed=child->speed;
 	this->dir=child->dir;
-	vehicle_call_callbacks(this);
+	callback_list_call_1(this->cbl, this);
 }
 
 static int
@@ -452,7 +443,8 @@ vehicle_udp_open(struct vehicle *this)
 		if (!this->child) {
 			dbg(3,"child=%s\n", child);
 			this->child=vehicle_new(child);
-			vehicle_callback_register(this->child, vehicle_udp_update, this);
+			this->child_cb=callback_new_1(callback_cast(vehicle_udp_update), this);
+			vehicle_callback_add(this->child, this->child_cb);
 		}
 	} else {
 		vehicle_udp_query(this);
@@ -603,6 +595,8 @@ vehicle_new(const char *url)
 {
 	struct vehicle *this;
 	this=g_new0(struct vehicle,1);
+
+	this->cbl=callback_list_new();
 	this->url=g_strdup(url);
 	this->fd=-1;
 
@@ -623,21 +617,16 @@ vehicle_new(const char *url)
 	return this;
 }
 
-void *
-vehicle_callback_register(struct vehicle *this, void (*func)(struct vehicle *, void *data), void *data)
+void
+vehicle_callback_add(struct vehicle *this, struct callback *cb)
 {
-	struct callback *cb;
-	cb=g_new(struct callback, 1);
-	cb->func=func;
-	cb->data=data;
-	this->callbacks=g_list_prepend(this->callbacks, cb);
-	return cb;
+	callback_list_add(this->cbl, cb);
 }
 
 void
-vehicle_callback_unregister(struct vehicle *this, void *handle)
+vehicle_callback_remove(struct vehicle *this, struct callback *cb)
 {
-	this->callbacks=g_list_remove(this->callbacks, handle);
+	callback_list_remove(this->cbl, cb);
 }
 
 
@@ -645,6 +634,7 @@ void
 vehicle_destroy(struct vehicle *this)
 {
 	vehicle_close(this);
+	callback_list_destroy(this->cbl);
 	g_free(this->url);
 	g_free(this);
 }
