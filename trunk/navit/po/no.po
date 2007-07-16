@@ -1,0 +1,132 @@
+# Norwegian translations for navit
+# Copyright (C) 2007
+# This file is distributed under the same license as the navit package.
+# Bendik Brenne <bendik@xplore.nu>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Navit 0.0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-07-14 00:40+0100\n"
+"PO-Revision-Date: 2007-07-14 00:40+0100\n"
+"Last-Translator: Bendik Brenne <bendik@xplore.nu>\n"
+"Language-Team: Bendik Brenne <bendik@xplore.nu>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/main.c:109
+#, c-format
+msgid "Error parsing '%s': %s\n"
+msgstr "Feil ved parsing av '%s': %s\n"
+
+#: ../src/main.c:111
+#, c-format
+msgid "Using '%s'\n"
+msgstr "Bruker '%s'\n"
+
+#: ../src/main.c:114
+#, c-format
+msgid "No instance has been created, exiting\n"
+msgstr "Ingen instans er blitt opprettet, avslutter\n"
+
+#: ../src/navigation.c:181
+#, c-format
+msgid "%d meters"
+msgstr "%d meter"
+
+#: ../src/navigation.c:183
+#, c-format
+msgid "in %d meters"
+msgstr "om %d meter"
+
+#: ../src/navigation.c:189
+#, c-format
+msgid "%d.%d kilometer"
+msgstr "%d,%d kilometer"
+
+#: ../src/navigation.c:191
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "om %d,%d kilometer"
+
+#: ../src/navigation.c:196
+msgid "one kilometer"
+msgstr "èn kilometer"
+
+#: ../src/navigation.c:198
+msgid "in one kilometer"
+msgstr "om en kilometer"
+
+#: ../src/navigation.c:201
+#, c-format
+msgid "%d kilometer"
+msgstr "%d kilometer"
+
+#: ../src/navigation.c:203
+#, c-format
+msgid "in %d kilometer"
+msgstr "Om %d kilometer"
+
+#: ../src/navigation.c:391
+msgid "right"
+msgstr "høyre"
+
+#: ../src/navigation.c:399
+msgid "left"
+msgstr "venstre"
+
+#: ../src/navigation.c:403
+msgid "easily "
+msgstr "slakk "
+
+#: ../src/navigation.c:407
+msgid "strongly "
+msgstr "skarp "
+
+#: ../src/navigation.c:410
+msgid "unknown "
+msgstr "ukjent "
+
+#: ../src/navigation.c:415
+msgid "When possible, please turn"
+msgstr "Når mulig, vennligst sving"
+
+#: ../src/navigation.c:422
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Følg veien de neste %s"
+
+#: ../src/navigation.c:426
+msgid "soon"
+msgstr "Snart"
+
+#: ../src/navigation.c:433
+msgid "now"
+msgstr "Nå"
+
+#: ../src/navigation.c:436
+msgid "error"
+msgstr "feil"
+
+#: ../src/navigation.c:441
+msgid "strength_pos"
+msgstr "2"
+
+#: ../src/navigation.c:443
+msgid "direction_pos"
+msgstr "3"
+
+#: ../src/navigation.c:445
+msgid "distance_pos"
+msgstr "1"
+
+#: ../src/navigation.c:455
+#, c-format
+msgid "Turn %s%s %s"
+msgstr "Sving %s%s %s"
+
+#: ../src/navigation.c:458
+#, c-format
+msgid "You have reached your destination %s"
+msgstr "Du har nådd ditt reisemål %s"
