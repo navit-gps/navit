@@ -147,20 +147,20 @@ msgstr "erreur"
 
 #: ../src/navigation.c:473
 msgid "strength_pos"
-msgstr ""
+msgstr "2"
 
 #: ../src/navigation.c:475
 msgid "direction_pos"
-msgstr ""
+msgstr "3"
 
 #: ../src/navigation.c:477
 msgid "distance_pos"
-msgstr ""
+msgstr "1"
 
 #: ../src/navigation.c:487
 #, c-format
 msgid "Turn %s%s %s"
-msgstr "Tournez %s%s %s"
+msgstr "%s Tournez %s%s"
 
 #: ../src/navigation.c:490
 #, fuzzy, c-format
