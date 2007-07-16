@@ -172,9 +172,9 @@ get_distance(int dist, enum navigation_mode mode, int is_length)
 {
 	if (mode == navigation_mode_long) {
 		if (is_length)
-			return g_strdup_printf("%d m", dist);
+			return g_strdup_printf(_("%d m"), dist);
 		else
-			return g_strdup_printf("in %d m", dist);
+			return g_strdup_printf(_("in %d m"), dist);
 	}
 	if (dist < 1000) {
 		if (is_length)
