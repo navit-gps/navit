@@ -30,6 +30,17 @@
 
 #define _(STRING)    gettext(STRING)
 
+struct navit_vehicle {
+	int update;
+	int update_curr;
+	int follow;
+	int follow_curr;
+	struct cursor *cursor;
+	struct vehicle *vehicle;
+	struct callback *offscreen_cb;
+	struct callback *update_cb;
+};
+
 struct navit {
 	GList *mapsets;
 	GList *layouts;
@@ -46,19 +57,16 @@ struct navit {
 	struct menu *menubar;
 	struct route *route;
 	struct navigation *navigation;
-	struct cursor *cursor;
 	struct speech *speech;
-	struct vehicle *vehicle;
 	struct tracking *tracking;
 	struct map_flags *flags;
 	int ready;
 	struct window *win;
 	struct displaylist *displaylist;
 	int cursor_flag;
-	int update;
-	int follow;
-	int update_curr;
-	int follow_curr;
+	GList *vehicles;
+	struct navit_vehicle *vehicle;
+	struct callback_list *vehicle_cbl;
 	int pid;
 	struct callback *nav_speech_cb;
 	struct callback *roadbook_callback;
@@ -453,7 +461,7 @@ navit_window_roadbook_update(struct navit *this_)
 static void
 navit_window_roadbook_new(struct navit *this_)
 {
-	this_->roadbook_callback=callback_new(navit_window_roadbook_update, 1, &this_);
+	this_->roadbook_callback=callback_new_1(callback_cast(navit_window_roadbook_update), this_);
 	navigation_register_callback(this_->navigation, navigation_mode_long, this_->roadbook_callback);
 	this_->roadbook_window=gui_datawindow_new(this_->gui, "Roadbook", NULL, NULL);
 }
@@ -490,11 +498,11 @@ navit_window_items_new(struct navit *this_)
 	sel.rect.rl.y=center->y-dist;
 	hash=g_hash_table_new(g_int_hash, g_int_equal);
 	type1=type_bookmark;
-	g_hash_table_insert(hash, &type1, 1);
+	g_hash_table_insert(hash, &type1, (void *)1);
 	type2=type_poi_camping;
-	g_hash_table_insert(hash, &type2, 1);
+	g_hash_table_insert(hash, &type2, (void *)1);
 	type3=type_roadbook;
-	g_hash_table_insert(hash, &type3, 1);
+	g_hash_table_insert(hash, &type3, (void *)1);
 	dbg(2,"0x%x,0x%x - 0x%x,0x%x\n", sel.rect.lu.x, sel.rect.lu.y, sel.rect.rl.x, sel.rect.rl.y);
 	win=gui_datawindow_new(this_->gui, "Itemlist", NULL, NULL);
 	h=mapset_open(navit_get_mapset(this_));
@@ -557,7 +565,7 @@ navit_init(struct navit *this_)
 			navit_add_menu_former_destinations(this_, NULL, this_->route);
 	}
 	if (this_->navigation && this_->speech) {
-		this_->nav_speech_cb=callback_new(navit_speak, 1, &this_);
+		this_->nav_speech_cb=callback_new_1(callback_cast(navit_speak), this_);
 		navigation_register_callback(this_->navigation, navigation_mode_speech, this_->nav_speech_cb);
 #if 0
 #endif
@@ -615,53 +623,56 @@ navit_toggle_cursor(struct navit *this_)
 }
 
 static void
-navit_cursor_offscreen(struct cursor *cursor, void *this__p)
+navit_cursor_offscreen(struct navit *this_, struct cursor *cursor)
 {
-	struct navit *this_=this__p;
-
-	if (this_->cursor_flag)
-		navit_set_center(this_, cursor_pos_get(cursor));
+	if (!this_->cursor_flag || !this_->vehicle || this_->vehicle->cursor != cursor)
+		return;
+	navit_set_center(this_, cursor_pos_get(cursor));
 }
 
 static void
-navit_cursor_update(struct cursor *cursor, void *this__p)
+navit_cursor_update(struct navit *this_, struct cursor *cursor)
 {
-	struct navit *this_=this__p;
 	struct coord *cursor_c=cursor_pos_get(cursor);
 	int dir=cursor_get_dir(cursor);
 	int speed=cursor_get_speed(cursor);
 
+	if (!this_->vehicle || this_->vehicle->cursor != cursor)
+		return;
+
+	cursor_c=cursor_pos_get(cursor);
+	dir=cursor_get_dir(cursor);
+	speed=cursor_get_speed(cursor);
 
 	if (this_->pid && speed > 2)
 		kill(this_->pid, SIGWINCH);
-
-
 	if (this_->tracking) {
 		struct coord c=*cursor_c;
 		if (tracking_update(this_->tracking, &c, dir)) {
 			cursor_c=&c;
 			cursor_pos_set(cursor, cursor_c);
-			if (this_->route && this_->update_curr == 1)
+			if (this_->route && this_->vehicle->update_curr == 1) 
 				route_set_position_from_tracking(this_->route, this_->tracking);
 		}
 	} else {
-		if (this_->route && this_->update_curr == 1)
+		if (this_->route && this_->vehicle->update_curr == 1)
 			route_set_position(this_->route, cursor_c);
 	}
-	if (this_->route && this_->update_curr == 1)
+	if (this_->route && this_->vehicle->update_curr == 1)
 		navigation_update(this_->navigation, this_->route);
 	if (this_->cursor_flag) {
-		if (this_->follow_curr == 1)
+		if (this_->vehicle->follow_curr == 1)
 			navit_set_center_cursor(this_, cursor_c, dir, 50, 80);
 	}
-	if (this_->follow_curr > 1)
-		this_->follow_curr--;
+	if (this_->vehicle->follow_curr > 1)
+		this_->vehicle->follow_curr--;
 	else
-		this_->follow_curr=this_->follow;
-	if (this_->update_curr > 1)
-		this_->update_curr--;
+		this_->vehicle->follow_curr=this_->vehicle->follow;
+	if (this_->vehicle->update_curr > 1)
+		this_->vehicle->update_curr--;
 	else
-		this_->update_curr=this_->update;
+		this_->vehicle->update_curr=this_->vehicle->update;
+	callback_list_call_2(this_->vehicle_cbl, this_, this_->vehicle->vehicle);
 }
 
 void
@@ -676,15 +687,39 @@ navit_set_position(struct navit *this_, struct coord *c)
 	navit_draw(this_);
 }
 
-void
-navit_vehicle_add(struct navit *this_, struct vehicle *v, struct color *c, int update, int follow, int active)
+struct navit_vehicle *
+navit_add_vehicle(struct navit *this_, struct vehicle *v, struct color *c, int update, int follow)
 {
-	this_->vehicle=v;
-	this_->update_curr=this_->update=update;
-	this_->follow_curr=this_->follow=follow;
-	this_->cursor=cursor_new(this_->gra, v, c, this_->trans);
-	cursor_register_offscreen_callback(this_->cursor, navit_cursor_offscreen, this_);
-	cursor_register_update_callback(this_->cursor, navit_cursor_update, this_);
+	struct navit_vehicle *nv=g_new0(struct navit_vehicle, 1);
+	nv->vehicle=v;
+	nv->update_curr=nv->update=update;
+	nv->follow_curr=nv->follow=follow;
+	nv->cursor=cursor_new(this_->gra, v, c, this_->trans);
+	nv->offscreen_cb=callback_new_1(callback_cast(navit_cursor_offscreen), this_);
+	cursor_add_callback(nv->cursor, 1, nv->offscreen_cb);
+	nv->update_cb=callback_new_1(callback_cast(navit_cursor_update), this_);
+	cursor_add_callback(nv->cursor, 0, nv->update_cb);
+
+	this_->vehicles=g_list_append(this_->vehicles, nv);
+	return nv;
+}
+
+void
+navit_add_vehicle_cb(struct navit *this_, struct callback *cb)
+{
+	callback_list_add(this_->vehicle_cbl, cb);
+}
+
+void
+navit_remove_vehicle_cb(struct navit *this_, struct callback *cb)
+{
+	callback_list_remove(this_->vehicle_cbl, cb);
+}
+
+void
+navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv)
+{
+	this_->vehicle=nv;
 }
 
 void
