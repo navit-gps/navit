@@ -6,7 +6,15 @@
 </plugins>
 <debug name="navit:do_draw" level="0" />
 <navit gui="gtk" graphics="gtk_drawing_area" center="5031.51 N 735.83 E" zoom="8192" >
+<!-- For SDL, use rather the following line
+<navit gui="sdl" graphics="opengl" center="5031.51 N 305.83 E" zoom="128" >
+-->
+	
 	<vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff"/>
+	<!-- For SDL, you should add follow="1" refresh="1" to have the view centered on your position
+	<vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1" refresh="1"/>
+	-->
+	
 	<vehicle name="Deins" enabled="no" source="gpsd://somehost" color="#0000aa"/> 
 	<tracking>
 	</tracking>
@@ -468,38 +476,27 @@
 				    <line color="#ff0000" width="5" />
 				    <line color="#ffff0a" width="3" />
 				    <text color="#000000" font="arial" size="12">
-				    </item>
-			    </layer>
-			    <layer name="label" details="0">
-				    <item type="town0" order="3-">
-					    <circle radius="3" />
-					    <text color="#000000" font="arial" size="12">
-					    </item>
-				    </layer>
-				    <layer name="poi" details="0">
-					    <item type="mcdonalds" order="3-">
-						    <icon src="mcdonalds.xpm" />
-					    </item>
-				    </layer>
-				    <layer name="wood" details="0">
-					    <item type="wood" order="1-">
-						    <polygon color="#8ec78d" />
-						    <polyline color="#8ec78d" />
-					    </item>
-				    </layer>
-				    -->
-			    </layout>
-			    <layout name="Nacht">
-			    </layout>
-		    </navit>
-		    <!--
-			<navit gui="sdl" graphics="gtk_drawing_area" center="5031.51 N 305.83 E" zoom="8192" >
-				<vehicle name="Meins" source="gpsd://localhost" color="#0000ff"/>
-				<vehicle name="Deins" source="gpsd://somehost" color="#0000aa"/> 
-				<mapset>
-					<map type="mg" enabled="yes" data="/nobackup/reiseplaner/DIRMAP_MAP/DIE.map" />
-					<map type="mg" enabled="yes" data="/nobackup/reiseplaner/DIRMAP_MAP/DIE.map/smp3.smp" />
-					<map type="mg" enabled="yes" data="/nobackup/reiseplaner/DIRMAP_MAP/DIE.map/smp4.smp" />
-				</mapset>
-			</navit>
--->
+			    </item>
+		    </layer>
+		    <layer name="label" details="0">
+			    <item type="town0" order="3-">
+				    <circle radius="3" />
+				    <text color="#000000" font="arial" size="12">
+			    </item>
+		    </layer>
+		    <layer name="poi" details="0">
+			    <item type="mcdonalds" order="3-">
+				    <icon src="mcdonalds.xpm" />
+			    </item>
+		    </layer>
+		    <layer name="wood" details="0">
+			    <item type="wood" order="1-">
+				    <polygon color="#8ec78d" />
+				    <polyline color="#8ec78d" />
+			    </item>
+		    </layer>
+		    -->
+	    </layout>
+	    <layout name="Nacht">
+	    </layout>
+</navit>
