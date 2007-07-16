@@ -54,12 +54,17 @@ callback_list_add_new(struct callback_list *l, void (*func)(), int pcount, void 
 }
 
 void
-callback_list_remove_destroy(struct callback_list *l, struct callback *cb)
+callback_list_remove(struct callback_list *l, struct callback *cb)
 {
 	l->list=g_list_remove(l->list, cb);
-	g_free(cb);
 }
 
+void
+callback_list_remove_destroy(struct callback_list *l, struct callback *cb)
+{
+	callback_list_remove(l, cb);
+	g_free(cb);
+}
 
 void
 callback_list_call(struct callback_list *l, int pcount, void **p)

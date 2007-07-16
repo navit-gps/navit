@@ -193,6 +193,7 @@ xmlconfig_vehicle(struct xmlstate *state)
 	const char *value;
 	struct color color;
 	int update=1, follow=0, active;
+	struct navit_vehicle *nv;
 
 	if (! s)
 		return 0;
@@ -206,8 +207,9 @@ xmlconfig_vehicle(struct xmlstate *state)
 	if ((value=find_attribute(state, "follow", 0)))
 		follow=convert_number(value);
 	active=find_boolean(state, "active", 1, 0);
-
-	navit_vehicle_add(state->parent->element_object, state->element_object, &color, update, follow, active);
+	nv=navit_add_vehicle(state->parent->element_object, state->element_object, &color, update, follow);
+	if (active)
+		navit_set_vehicle(state->parent->element_object, nv);
 	return 1;
 }
 
