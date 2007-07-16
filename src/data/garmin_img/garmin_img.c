@@ -9,7 +9,6 @@
 #include "maptype.h"
 #include "item.h"
 #include "attr.h"
-#include "layer.h"
 #include "coord.h"
 #include "transform.h"
 #include "projection.h"
