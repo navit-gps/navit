@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-12 15:25+0200\n"
+"POT-Creation-Date: 2007-07-14 09:45+0200\n"
 "PO-Revision-Date: 2007-07-12 20:12+0100\n"
 "Last-Translator: Michal Madej <mineque@quanteam.pl>\n"
 "Language-Team: Translators\n"
@@ -17,17 +17,22 @@ msgstr ""
 "X-Poedit-Language: Polish\n"
 "X-Poedit-Country: POLAND\n"
 
-#: ../src/main.c:110
+#: ../src/main.c:89
+#, c-format
+msgid "Running from source directory\n"
+msgstr ""
+
+#: ../src/main.c:114
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr "Błąd w trakcie przetwarzania '%s': %s\n"
 
-#: ../src/main.c:112
+#: ../src/main.c:116
 #, c-format
 msgid "Using '%s'\n"
 msgstr "Używam '%s'\n"
 
-#: ../src/main.c:115
+#: ../src/main.c:119
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr "Brak instancji Navit, kończe\n"
@@ -157,284 +162,284 @@ msgstr "Skręć %s%s %s"
 msgid "You have reached your destination %s"
 msgstr "Dotarłeś do celu %s"
 
-#: ../src/navit.c:313
-#: ../src/gui/gtk/gui_gtk_action.c:159
+#: ../src/navit.c:316 ../src/gui/gtk/gui_gtk_action.c:159
 msgid "Layout"
 msgstr "Układ kolorów"
 
-#: ../src/navit.c:326
+#: ../src/navit.c:329
 msgid "Projection"
 msgstr "Odwzorowanie"
 
-#: ../src/country.c:23
+#: ../src/country.c:24
 msgid "Czech Republic"
 msgstr "Republika Czeska"
 
-#: ../src/country.c:24
+#: ../src/country.c:25
 msgid "Slovakia"
 msgstr "Słowacja"
 
-#: ../src/country.c:25
+#: ../src/country.c:26
 msgid "San Marino"
 msgstr "San Marino"
 
-#: ../src/country.c:26
+#: ../src/country.c:27
 msgid "Estonia"
 msgstr "Estonia"
 
-#: ../src/country.c:27
+#: ../src/country.c:28
 msgid "Georgia"
 msgstr "Georgia"
 
-#: ../src/country.c:28
+#: ../src/country.c:29
 msgid "Latvia"
 msgstr "Łotwa"
 
-#: ../src/country.c:29
+#: ../src/country.c:30
 msgid "Lithuania"
 msgstr "Litwa"
 
-#: ../src/country.c:30
+#: ../src/country.c:31
 msgid "Moldova"
 msgstr "Mołdawia"
 
-#: ../src/country.c:31
+#: ../src/country.c:32
 msgid "Russian Federation"
 msgstr "Federacja Rosyjska"
 
-#: ../src/country.c:32
+#: ../src/country.c:33
 msgid "Ukraine"
 msgstr "Ukraina"
 
-#: ../src/country.c:33
+#: ../src/country.c:34
 msgid "Belarus"
 msgstr "Białoruś"
 
-#: ../src/country.c:34
+#: ../src/country.c:35
 msgid "Egypt"
 msgstr "Egipt"
 
-#: ../src/country.c:35
+#: ../src/country.c:36
 msgid "Greece"
 msgstr "Grecja"
 
-#: ../src/country.c:36
+#: ../src/country.c:37
 msgid "Netherlands"
 msgstr "Holandia"
 
-#: ../src/country.c:37
+#: ../src/country.c:38
 msgid "Belgium"
 msgstr "Belgia"
 
-#: ../src/country.c:38
+#: ../src/country.c:39
 msgid "France"
 msgstr "Francja"
 
-#: ../src/country.c:39
+#: ../src/country.c:40
 msgid "Spain"
 msgstr "Hiszpania"
 
-#: ../src/country.c:40
+#: ../src/country.c:41
 msgid "Hungary"
 msgstr "Węgry"
 
-#: ../src/country.c:41
+#: ../src/country.c:42
 msgid "Italy"
 msgstr "Włochy"
 
-#: ../src/country.c:42
+#: ../src/country.c:43
 msgid "Romania"
 msgstr "Rumunia"
 
-#: ../src/country.c:43
+#: ../src/country.c:44
 msgid "Switzerland"
 msgstr "Szwajcaria"
 
-#: ../src/country.c:44
+#: ../src/country.c:45
 msgid "Austria"
 msgstr "Austria"
 
-#: ../src/country.c:45
+#: ../src/country.c:46
 msgid "United Kingdom"
 msgstr "Zjednoczone Królestwo"
 
-#: ../src/country.c:46
+#: ../src/country.c:47
 msgid "Denmark"
 msgstr "Dania"
 
-#: ../src/country.c:47
+#: ../src/country.c:48
 msgid "Sweden"
 msgstr "Szwecja"
 
-#: ../src/country.c:48
+#: ../src/country.c:49
 msgid "Norway"
 msgstr "Norwegia"
 
-#: ../src/country.c:49
+#: ../src/country.c:50
 msgid "Poland"
 msgstr "Polska"
 
-#: ../src/country.c:50
+#: ../src/country.c:51
 msgid "Germany"
 msgstr "Niemcy"
 
-#: ../src/country.c:51
+#: ../src/country.c:52
 msgid "Gibraltar"
 msgstr "Gibraltar"
 
-#: ../src/country.c:52
+#: ../src/country.c:53
 msgid "Portugal"
 msgstr "Portugalia"
 
-#: ../src/country.c:53
+#: ../src/country.c:54
 msgid "Luxembourg"
 msgstr "Luksemburg"
 
-#: ../src/country.c:54
+#: ../src/country.c:55
 msgid "Ireland"
 msgstr "Irlandia"
 
-#: ../src/country.c:55
+#: ../src/country.c:56
 msgid "Iceland"
 msgstr "Islandia"
 
-#: ../src/country.c:56
+#: ../src/country.c:57
 msgid "Albania"
 msgstr "Albania"
 
-#: ../src/country.c:57
+#: ../src/country.c:58
 msgid "Malta"
 msgstr "Malta"
 
-#: ../src/country.c:58
+#: ../src/country.c:59
 msgid "Cyprus"
 msgstr "Cypr"
 
-#: ../src/country.c:59
+#: ../src/country.c:60
 msgid "Finland"
 msgstr "Finlandia"
 
-#: ../src/country.c:60
+#: ../src/country.c:61
 msgid "Bulgaria"
 msgstr "Bułgaria"
 
-#: ../src/country.c:61
+#: ../src/country.c:62
 msgid "Lebanon"
 msgstr "Liban"
 
-#: ../src/country.c:62
+#: ../src/country.c:63
 msgid "Andorra"
 msgstr "Andora"
 
-#: ../src/country.c:63
+#: ../src/country.c:64
 msgid "Syria"
 msgstr "Syria"
 
-#: ../src/country.c:64
-msgid "Saudi Arabia-Arabien"
+#: ../src/country.c:65
+#, fuzzy
+msgid "Saudi Arabia"
 msgstr "Arabia Saudyjska"
 
-#: ../src/country.c:65
+#: ../src/country.c:66
 msgid "Libia"
 msgstr "Libia"
 
-#: ../src/country.c:66
+#: ../src/country.c:67
 msgid "Israel"
 msgstr "Izrael"
 
-#: ../src/country.c:67
+#: ../src/country.c:68
 msgid "Palestinia"
 msgstr "Palestyna"
 
-#: ../src/country.c:68
+#: ../src/country.c:69
 msgid "Liechtenstein"
 msgstr "Lichtenstein"
 
-#: ../src/country.c:69
+#: ../src/country.c:70
 msgid "Morocco"
 msgstr "Maroko"
 
-#: ../src/country.c:70
+#: ../src/country.c:71
 msgid "Algeria"
 msgstr "Algeria"
 
-#: ../src/country.c:71
+#: ../src/country.c:72
 msgid "Tunisia"
 msgstr "Tunezja"
 
-#: ../src/country.c:72
+#: ../src/country.c:73
 msgid "Serbia"
 msgstr "Serbia"
 
-#: ../src/country.c:73
+#: ../src/country.c:74
 msgid "Jordan"
 msgstr "Jorndan"
 
-#: ../src/country.c:74
+#: ../src/country.c:75
 msgid "Croatia"
 msgstr "Chorwacja"
 
-#: ../src/country.c:75
+#: ../src/country.c:76
 msgid "Slovenia"
 msgstr "Słowenia"
 
-#: ../src/country.c:76
+#: ../src/country.c:77
 msgid "Bosnia and Herzegovina"
 msgstr "Bośnia i Hercegowina"
 
-#: ../src/country.c:77
+#: ../src/country.c:78
 msgid "Macedonia"
 msgstr "Macedonia"
 
-#: ../src/country.c:78
+#: ../src/country.c:79
 msgid "Turkey"
 msgstr "Turcja"
 
-#: ../src/country.c:79
+#: ../src/country.c:80
 msgid "Monaco"
 msgstr "Monako"
 
-#: ../src/country.c:80
+#: ../src/country.c:81
 msgid "Azerbaijan"
 msgstr "Azerbejdżan"
 
-#: ../src/country.c:81
+#: ../src/country.c:82
 msgid "Armenia"
 msgstr "Armenia"
 
-#: ../src/country.c:82
+#: ../src/country.c:83
 msgid "Faroe Islands"
 msgstr "Wyspy Faroe"
 
-#: ../src/country.c:83
+#: ../src/country.c:84
 msgid "Western Sahara"
 msgstr "Zachodnia Sahara"
 
-#: ../src/country.c:84
+#: ../src/country.c:85
 msgid "Svalbard and Jan Mayen"
 msgstr "Svalbard i Jan Mayen"
 
-#: ../src/gui/gtk/destination.c:293
+#: ../src/gui/gtk/destination.c:294
 msgid "Country"
 msgstr "Państwo"
 
-#: ../src/gui/gtk/destination.c:295
+#: ../src/gui/gtk/destination.c:296
 msgid "Zip Code"
 msgstr "Kod Pocztowy"
 
-#: ../src/gui/gtk/destination.c:297
+#: ../src/gui/gtk/destination.c:298
 msgid "City"
 msgstr "Miasto"
 
-#: ../src/gui/gtk/destination.c:299
+#: ../src/gui/gtk/destination.c:300
 msgid "District/Township"
 msgstr "Dzielnica/Okręg miejski"
 
-#: ../src/gui/gtk/destination.c:302
+#: ../src/gui/gtk/destination.c:303
 msgid "Street"
 msgstr "Ulica"
 
-#: ../src/gui/gtk/destination.c:304
+#: ../src/gui/gtk/destination.c:305
 msgid "Number"
 msgstr "Numer"
 
@@ -509,4 +514,3 @@ msgstr "Widoczne ulice"
 #: ../src/gui/gtk/gui_gtk_action.c:186
 msgid "VisiblePoints"
 msgstr "Widoczne punkty"
-

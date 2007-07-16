@@ -1,188 +1,182 @@
-# French translations for navit
-# Copyright (C) 2007
-# This file is distributed under the same license as the navit package.
-# 'KaZeR' <kazer@altern.org>
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Navit 0.0.1\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-07-14 09:45+0200\n"
-"PO-Revision-Date: 2007-07-12 20:22+0100\n"
-"Last-Translator: KaZeR <kazer@altern.org>\n"
-"Language-Team: KaZeR <kazer@altern.org>\n"
+"PO-Revision-Date: 2007-07-15 20:44-0600\n"
+"Last-Translator: Chris Eubank <cteubank@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Bookmarks: -1,-1,-1,23,-1,-1,-1,-1,-1,-1\n"
 
 #: ../src/main.c:89
 #, c-format
 msgid "Running from source directory\n"
-msgstr ""
+msgstr "Funcionamiento de directorio de fuente\n"
 
 #: ../src/main.c:114
 #, c-format
 msgid "Error parsing '%s': %s\n"
-msgstr "Erreur lors du traitement de '%s': %s\n"
+msgstr "Hay un Malfuncionamiento cuando leyendo '%s': %s\n"
 
 #: ../src/main.c:116
 #, c-format
 msgid "Using '%s'\n"
-msgstr "Utilisation de '%s'\n"
+msgstr "Usando '%s'\n"
 
 #: ../src/main.c:119
 #, c-format
 msgid "No instance has been created, exiting\n"
-msgstr ""
+msgstr "No ha creado caso. Muriendo.\n"
 
 #: ../src/navigation.c:181
 #, c-format
 msgid "%d meters"
-msgstr "%d mètres"
+msgstr "%d metros"
 
 #: ../src/navigation.c:183
-#, fuzzy, c-format
+#, c-format
 msgid "in %d meters"
-msgstr "Dans %d m, tournez %s%s"
+msgstr "después de %d metros"
 
 #: ../src/navigation.c:189
 #, c-format
 msgid "%d.%d kilometer"
-msgstr "%d.%d kilomètres"
+msgstr "%d.%d kilómetro"
 
 #: ../src/navigation.c:191
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "dans %d.%d kilomètres"
+msgstr "después de %d.%d kilómetros"
 
 #: ../src/navigation.c:197
 msgid "one kilometer"
-msgstr "un kilomètre"
+msgstr "un kilómetro"
 
 #: ../src/navigation.c:199
 msgid "in one kilometer"
-msgstr "dans un kilomètre"
+msgstr "después de un kilómetro"
 
 #: ../src/navigation.c:202
-#, fuzzy
 msgid "two kilometers"
-msgstr "un kilomètre"
+msgstr "dos kilómetros"
 
 #: ../src/navigation.c:204
-#, fuzzy
 msgid "in two kilometers"
-msgstr "dans un kilomètre"
+msgstr "después de dos kilómetros"
 
 #: ../src/navigation.c:207
-#, fuzzy
 msgid "three kilometers"
-msgstr "un kilomètre"
+msgstr "tres kilómetros"
 
 #: ../src/navigation.c:209
-#, fuzzy
 msgid "in three kilometers"
-msgstr "dans un kilomètre"
+msgstr "después de tres kilómetro"
 
 #: ../src/navigation.c:212
-#, fuzzy
 msgid "four kilometers"
-msgstr "un kilomètre"
+msgstr "cuatro kilómetros"
 
 #: ../src/navigation.c:214
-#, fuzzy
 msgid "in four kilometers"
-msgstr "dans un kilomètre"
+msgstr "después de cuatro kilómetros"
 
 #: ../src/navigation.c:217
-#, fuzzy, c-format
+#, c-format
 msgid "%d kilometers"
-msgstr "%d kilomètres"
+msgstr "%d kilómetros"
 
 #: ../src/navigation.c:219
-#, fuzzy, c-format
+#, c-format
 msgid "in %d kilometers"
-msgstr "dans %d kilomètres"
+msgstr "después de %d kilómetros"
 
 #: ../src/navigation.c:423
 msgid "right"
-msgstr "droite"
+msgstr "derecha"
 
 #: ../src/navigation.c:431
 msgid "left"
-msgstr "gauche"
+msgstr "izquerida"
 
 #: ../src/navigation.c:435
 msgid "easily "
-msgstr "légérement"
+msgstr "fácilmente"
 
 #: ../src/navigation.c:439
 msgid "strongly "
-msgstr "fortement"
+msgstr "fuertemente"
 
 #: ../src/navigation.c:442
-#, fuzzy
 msgid "unknown "
-msgstr "inconnu"
+msgstr "desconocido"
 
 #: ../src/navigation.c:448
 msgid "When possible, please turn"
-msgstr "Dès que possible, tournez"
+msgstr "Cuando es posible, doble a la"
 
 #: ../src/navigation.c:455
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Suivez la route sur les prochain %s"
+msgstr "Siga la calle para %s"
 
 #: ../src/navigation.c:459
 msgid "soon"
-msgstr "bientôt"
+msgstr "pronto"
 
 #: ../src/navigation.c:465
-#, fuzzy
 msgid "now"
-msgstr "inconnu"
+msgstr "ahora"
 
 #: ../src/navigation.c:468
 msgid "error"
-msgstr "erreur"
+msgstr "error"
 
 #: ../src/navigation.c:473
 msgid "strength_pos"
-msgstr ""
+msgstr "fuerza_pos"
 
 #: ../src/navigation.c:475
 msgid "direction_pos"
-msgstr ""
+msgstr "dirección_pos"
 
 #: ../src/navigation.c:477
 msgid "distance_pos"
-msgstr ""
+msgstr "distancia_pos"
 
 #: ../src/navigation.c:487
 #, c-format
 msgid "Turn %s%s %s"
-msgstr "Tournez %s%s %s"
+msgstr "Dobla %s%s %s"
 
 #: ../src/navigation.c:490
-#, fuzzy, c-format
+#, c-format
 msgid "You have reached your destination %s"
-msgstr "Dans %d m, vous êtes arrivé."
+msgstr "Has llegado a la destinación %s"
 
-#: ../src/navit.c:316 ../src/gui/gtk/gui_gtk_action.c:159
+#: ../src/navit.c:316
+#: ../src/gui/gtk/gui_gtk_action.c:159
 msgid "Layout"
-msgstr "Calques"
+msgstr "Diseño"
 
 #: ../src/navit.c:329
 msgid "Projection"
-msgstr "Projection"
+msgstr "Proyección"
 
 #: ../src/country.c:24
 msgid "Czech Republic"
-msgstr "République Tchèque"
+msgstr "República Checa"
 
 #: ../src/country.c:25
 msgid "Slovakia"
-msgstr "Slovaquie"
+msgstr "Eslovaquia"
 
 #: ../src/country.c:26
 msgid "San Marino"
@@ -190,104 +184,103 @@ msgstr "San Marino"
 
 #: ../src/country.c:27
 msgid "Estonia"
-msgstr "Estonie"
+msgstr "Estonia"
 
 #: ../src/country.c:28
 msgid "Georgia"
-msgstr "Géorgie"
+msgstr "Georgia"
 
 #: ../src/country.c:29
 msgid "Latvia"
-msgstr ""
+msgstr "Letonia"
 
 #: ../src/country.c:30
 msgid "Lithuania"
-msgstr "Lithuanie"
+msgstr "Lituania"
 
 #: ../src/country.c:31
 msgid "Moldova"
-msgstr "Moldavie"
+msgstr "Moldova"
 
 #: ../src/country.c:32
 msgid "Russian Federation"
-msgstr "Russie"
+msgstr "Federación de Rusia"
 
 #: ../src/country.c:33
 msgid "Ukraine"
-msgstr "Ukraine"
+msgstr "Ucrania"
 
 #: ../src/country.c:34
 msgid "Belarus"
-msgstr "Biélorussie"
+msgstr "Belarús"
 
 #: ../src/country.c:35
 msgid "Egypt"
-msgstr "Egypte"
+msgstr "Egipto"
 
 #: ../src/country.c:36
 msgid "Greece"
-msgstr "Grèce"
+msgstr "Grecia"
 
 #: ../src/country.c:37
 msgid "Netherlands"
-msgstr "Pays-Bas"
+msgstr "Países Bajos"
 
 #: ../src/country.c:38
 msgid "Belgium"
-msgstr "Belgique"
+msgstr "Bélgica"
 
 #: ../src/country.c:39
-#, fuzzy
 msgid "France"
-msgstr "France"
+msgstr "Francia"
 
 #: ../src/country.c:40
 msgid "Spain"
-msgstr "Espagne"
+msgstr "España"
 
 #: ../src/country.c:41
 msgid "Hungary"
-msgstr "Hongrie"
+msgstr "Hungría"
 
 #: ../src/country.c:42
 msgid "Italy"
-msgstr "Italie"
+msgstr "Italia"
 
 #: ../src/country.c:43
 msgid "Romania"
-msgstr "Roumanie"
+msgstr "Rumania"
 
 #: ../src/country.c:44
 msgid "Switzerland"
-msgstr "Suisse"
+msgstr "Suiza"
 
 #: ../src/country.c:45
 msgid "Austria"
-msgstr "Autriche"
+msgstr "Austria"
 
 #: ../src/country.c:46
 msgid "United Kingdom"
-msgstr "Royaume Uni"
+msgstr "Reino Unido"
 
 #: ../src/country.c:47
 msgid "Denmark"
-msgstr "Danemark"
+msgstr "Dinamarca"
 
 #: ../src/country.c:48
 msgid "Sweden"
-msgstr "Suède"
+msgstr "Suecia"
 
 #: ../src/country.c:49
 msgid "Norway"
-msgstr "Norvège"
+msgstr "Noruega"
 
 #: ../src/country.c:50
 msgid "Poland"
-msgstr "Pologne"
+msgstr "Polonia"
 
 #: ../src/country.c:51
 msgid "Germany"
-msgstr "Allemagne"
+msgstr "Alemania"
 
 #: ../src/country.c:52
 msgid "Gibraltar"
@@ -299,63 +292,63 @@ msgstr "Portugal"
 
 #: ../src/country.c:54
 msgid "Luxembourg"
-msgstr "Luxembourg"
+msgstr "Luxemburgo"
 
 #: ../src/country.c:55
 msgid "Ireland"
-msgstr "Irlande"
+msgstr "Irlanda"
 
 #: ../src/country.c:56
 msgid "Iceland"
-msgstr ""
+msgstr "Islandia"
 
 #: ../src/country.c:57
 msgid "Albania"
-msgstr "Albanie"
+msgstr "Albania"
 
 #: ../src/country.c:58
 msgid "Malta"
-msgstr ""
+msgstr "Malta"
 
 #: ../src/country.c:59
 msgid "Cyprus"
-msgstr "Chypre"
+msgstr "Chipre"
 
 #: ../src/country.c:60
 msgid "Finland"
-msgstr "Finlande"
+msgstr "Finlandia"
 
 #: ../src/country.c:61
 msgid "Bulgaria"
-msgstr "Bulgarie"
+msgstr "Bulgaria"
 
 #: ../src/country.c:62
 msgid "Lebanon"
-msgstr ""
+msgstr "Líbano"
 
 #: ../src/country.c:63
 msgid "Andorra"
-msgstr "Andorre"
+msgstr "Andorra"
 
 #: ../src/country.c:64
 msgid "Syria"
-msgstr "Syrie"
+msgstr "Siria"
 
 #: ../src/country.c:65
 msgid "Saudi Arabia"
-msgstr "Arabie Saoudite"
+msgstr "rabia Saudita"
 
 #: ../src/country.c:66
 msgid "Libia"
-msgstr "Lybie"
+msgstr "Libia"
 
 #: ../src/country.c:67
 msgid "Israel"
-msgstr "Israël"
+msgstr "Israel"
 
 #: ../src/country.c:68
 msgid "Palestinia"
-msgstr "Palestine"
+msgstr "Palestinia"
 
 #: ../src/country.c:69
 msgid "Liechtenstein"
@@ -363,170 +356,161 @@ msgstr "Liechtenstein"
 
 #: ../src/country.c:70
 msgid "Morocco"
-msgstr "Maroc"
+msgstr "Marruecos"
 
 #: ../src/country.c:71
 msgid "Algeria"
-msgstr "Algérie"
+msgstr "Argelia"
 
 #: ../src/country.c:72
 msgid "Tunisia"
-msgstr "Tunisie"
+msgstr "Túnez"
 
 #: ../src/country.c:73
 msgid "Serbia"
-msgstr "Serbie"
+msgstr "Serbia"
 
 #: ../src/country.c:74
 msgid "Jordan"
-msgstr "Jordanie"
+msgstr "Jordania"
 
 #: ../src/country.c:75
 msgid "Croatia"
-msgstr "Croatie"
+msgstr "Croacia"
 
 #: ../src/country.c:76
 msgid "Slovenia"
-msgstr "Slovénie"
+msgstr "CroaEslovenia"
 
 #: ../src/country.c:77
 msgid "Bosnia and Herzegovina"
-msgstr "Bosnie Herzégovine"
+msgstr "Bosnia y Herzegovina"
 
 #: ../src/country.c:78
 msgid "Macedonia"
-msgstr "Macédoine"
+msgstr "Macedonia"
 
 #: ../src/country.c:79
 msgid "Turkey"
-msgstr "Turquie"
+msgstr "Turquía"
 
 #: ../src/country.c:80
 msgid "Monaco"
-msgstr "Monaco"
+msgstr "Mónaco"
 
 #: ../src/country.c:81
 msgid "Azerbaijan"
-msgstr ""
+msgstr "Azerbaiyán"
 
 #: ../src/country.c:82
 msgid "Armenia"
-msgstr "Arménie"
+msgstr "Armenia"
 
 #: ../src/country.c:83
 msgid "Faroe Islands"
-msgstr ""
+msgstr "Islas Daroe"
 
 #: ../src/country.c:84
 msgid "Western Sahara"
-msgstr ""
+msgstr "Sahara Oeste"
 
 #: ../src/country.c:85
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "Svalbard y Jan Mayen"
 
 #: ../src/gui/gtk/destination.c:294
 msgid "Country"
-msgstr "Pays"
+msgstr "País"
 
 #: ../src/gui/gtk/destination.c:296
 msgid "Zip Code"
-msgstr "Code postal"
+msgstr "Código Postal"
 
 #: ../src/gui/gtk/destination.c:298
 msgid "City"
-msgstr "Ville"
+msgstr "Cuidad"
 
 #: ../src/gui/gtk/destination.c:300
 msgid "District/Township"
-msgstr "District"
+msgstr "distrito"
 
 #: ../src/gui/gtk/destination.c:303
 msgid "Street"
-msgstr "Rue"
+msgstr "Calle"
 
 #: ../src/gui/gtk/destination.c:305
 msgid "Number"
-msgstr "Numéro"
+msgstr "Numero"
 
 #: ../src/gui/gtk/gui_gtk_action.c:156
 msgid "Display"
-msgstr "Affichage"
+msgstr "Visualización"
 
 #: ../src/gui/gtk/gui_gtk_action.c:157
 msgid "Route"
-msgstr "Route"
+msgstr "Ruta"
 
 #: ../src/gui/gtk/gui_gtk_action.c:158
 msgid "Map"
-msgstr "Carte"
+msgstr "Mapa"
 
 #: ../src/gui/gtk/gui_gtk_action.c:160
 msgid "ZoomOut"
-msgstr "Zoom Arrière"
+msgstr "HagaPequeño"
 
 #: ../src/gui/gtk/gui_gtk_action.c:161
 msgid "ZoomIn"
-msgstr "Zoom Avant"
+msgstr "HagaGrande"
 
 #: ../src/gui/gtk/gui_gtk_action.c:162
 msgid "Refresh"
-msgstr "Rafraichir"
+msgstr "Restaure"
 
 #: ../src/gui/gtk/gui_gtk_action.c:163
 msgid "Info"
-msgstr "Info"
+msgstr "Información"
 
 #: ../src/gui/gtk/gui_gtk_action.c:164
 msgid "Destination"
-msgstr "Destination"
+msgstr "Destinación"
 
 #: ../src/gui/gtk/gui_gtk_action.c:165
 msgid "Test"
-msgstr ""
+msgstr "Probar"
 
 #: ../src/gui/gtk/gui_gtk_action.c:166
 msgid "_Quit"
-msgstr "_Quitter"
+msgstr "_Salir"
 
 #: ../src/gui/gtk/gui_gtk_action.c:173
 msgid "Cursor"
-msgstr "Curseur"
+msgstr "Puntero"
 
 #: ../src/gui/gtk/gui_gtk_action.c:174
 msgid "Orientation"
-msgstr "Orientation"
+msgstr "Orientación"
 
 #: ../src/gui/gtk/gui_gtk_action.c:181
 msgid "Data"
-msgstr "Données"
+msgstr "Datos"
 
 #: ../src/gui/gtk/gui_gtk_action.c:182
 msgid "VisibleBlocks"
-msgstr ""
+msgstr "BloquesDemostrados"
 
 #: ../src/gui/gtk/gui_gtk_action.c:183
 msgid "VisibleTowns"
-msgstr ""
+msgstr "CuidadosDemostrados"
 
 #: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "VisiblePolys"
-msgstr ""
+msgstr "PolysDemostrados"
 
 #: ../src/gui/gtk/gui_gtk_action.c:185
 msgid "VisibleStreets"
-msgstr ""
+msgstr "CallesDemostrados"
 
 #: ../src/gui/gtk/gui_gtk_action.c:186
 msgid "VisiblePoints"
-msgstr ""
+msgstr "PuntosDemostrados"
 
-#, fuzzy
-#~ msgid "Quit"
-#~ msgstr "_Quitter"
-
-#~ msgid ""
-#~ "Could not find home directory. Using current directory as home directory."
-#~ msgstr ""
-#~ "Impossible de trouver le répertoire de l'utilisateur. Utilisation de '.' "
-#~ "à la place"
