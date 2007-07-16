@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-13 20:34+0200\n"
+"POT-Creation-Date: 2007-07-16 20:31+0200\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Andrea GHENSI <andrea.ghensi@gmail.com>\n"
 "Language-Team: Andrea GHENSI <andrea.ghensi@gmail.com>\n"
@@ -34,6 +34,16 @@ msgstr "Utilizzo il file di configurazione '%s'\n"
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr "Nessuna istanza creata, esco\n"
+
+#: ../src/navigation.c:175
+#, fuzzy, c-format
+msgid "%d m"
+msgstr "%d metri"
+
+#: ../src/navigation.c:177
+#, fuzzy, c-format
+msgid "in %d m"
+msgstr "tra %d metri"
 
 #: ../src/navigation.c:181
 #, c-format
@@ -140,20 +150,20 @@ msgstr "errore"
 
 #: ../src/navigation.c:473
 msgid "strength_pos"
-msgstr "forza_pos"
+msgstr "2"
 
 #: ../src/navigation.c:475
 msgid "direction_pos"
-msgstr "direzione_pos"
+msgstr "3"
 
 #: ../src/navigation.c:477
 msgid "distance_pos"
-msgstr "distanza_pos"
+msgstr "1"
 
 #: ../src/navigation.c:487
 #, c-format
 msgid "Turn %s%s %s"
-msgstr "Svoltare %s%s %s"
+msgstr "%s, svoltare %s%s"
 
 #: ../src/navigation.c:490
 #, c-format
