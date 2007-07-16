@@ -62,7 +62,7 @@ struct tracking {
 };
 
 
-int angle_factor=10;
+int angle_factor=4;
 int connected_pref=-10;
 int nostop_pref=10;
 
@@ -172,12 +172,18 @@ tracking_angle_abs_diff(int a1, int a2, int full)
 }
 
 static int
-tracking_angle_delta(int a1, int a2, int dir)
+tracking_angle_delta(int vehicle_angle, int street_angle, int dir)
 {
-	if (! dir)
-		return tracking_angle_abs_diff(a1, a2, 180);
-	else
-		return tracking_angle_abs_diff(a1, a2, 360);
+	int full=180;
+	int ret;
+	if (dir) {
+		full=360;
+		if (dir < 0)
+			street_angle=(street_angle+180)%360;
+	}
+	ret=tracking_angle_abs_diff(vehicle_angle, street_angle, full);
+	
+	return ret*ret;
 }
 
 static int
@@ -226,11 +232,26 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 	tr->curr_line=NULL;
 	while (t) {
 		struct street_data *sd=t->street;
+		int dir;
+		switch(sd->limit & 3) {
+		case 0:
+			dir=0;
+			break;
+		case 1:
+			dir=1;
+			break;
+		case 2:
+			dir=-1;
+			break;
+		case 3:
+			t=t->next;
+			continue;
+		}
 		for (i = 0; i < sd->count-1 ; i++) {
 			dbg(2, "%d: (0x%x,0x%x)-(0x%x,0x%x)\n", i, sd->c[i].x, sd->c[i].y, sd->c[i+1].x, sd->c[i+1].y);
 			value=transform_distance_line_sq(&sd->c[i], &sd->c[i+1], c, &lpnt);
 			if (value < INT_MAX/2) 
-				value += tracking_angle_delta(angle, t->angle[i], 0)*angle_factor;
+				value += tracking_angle_delta(angle, t->angle[i], dir)*angle_factor;
 			if (tracking_is_connected(tr->curr, &sd->c[i]))
 				value += connected_pref;
 			if (lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y)
