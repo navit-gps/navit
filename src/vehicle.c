@@ -7,6 +7,10 @@
 #include <fcntl.h>
 #include <math.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <glib.h>
 #ifdef HAVE_LIBGPS
 #include <gps.h>
@@ -56,7 +60,13 @@ struct vehicle {
 #define BUFFER_SIZE 256
 	char buffer[BUFFER_SIZE];
 	int buffer_pos;
+	struct vehicle *child;
 	GList *callbacks;
+
+	int magic;
+	int is_udp;
+	int interval;
+	struct sockaddr_in rem;
 };
 
 struct vehicle *vehicle_last;
@@ -344,6 +354,114 @@ vehicle_close(struct vehicle *this)
 		close(this->fd);
 }
 
+struct packet {
+	int magic __attribute__ ((packed));
+	unsigned char type;
+	union {
+		struct {
+			int x __attribute__ ((packed));
+			int y __attribute__ ((packed));
+			unsigned char speed;
+			unsigned char dir;
+		} pos;
+	} u;
+} __attribute__ ((packed)) ;
+
+static void
+vehicle_udp_recv(struct vehicle *this)
+{
+	struct packet pkt;
+	int size;
+
+	dbg(2,"enter this=%p",this);
+	size=recv(this->fd, &pkt, sizeof(pkt), 0);
+	if (pkt.magic == this->magic) {
+		dbg(3,"magic 0x%x size=%d\n", pkt.magic, size);
+		this->current_pos.x=pkt.u.pos.x;
+		this->current_pos.y=pkt.u.pos.y;
+		this->speed=pkt.u.pos.speed;
+		this->dir=pkt.u.pos.dir*2;
+		vehicle_call_callbacks(this);
+	}
+}
+
+static void
+vehicle_udp_update(struct vehicle *child, void *data)
+{
+	struct vehicle *this=(struct vehicle *)data;
+	struct coord *pos=&child->current_pos;
+	struct packet pkt;
+	int speed=child->speed;
+	int dir=child->dir/2;
+	if (speed > 255)
+		speed=255;
+	pkt.magic=this->magic;
+	pkt.type=1;
+	pkt.u.pos.x=pos->x;
+	pkt.u.pos.y=pos->y;
+	pkt.u.pos.speed=speed;
+	pkt.u.pos.dir=dir;
+	sendto(this->fd, &pkt, sizeof(pkt), 0, (struct sockaddr *)&this->rem, sizeof(this->rem));
+	this->current_pos=child->current_pos;
+	this->speed=child->speed;
+	this->dir=child->dir;
+	vehicle_call_callbacks(this);
+}
+
+static int
+vehicle_udp_query(void *data)
+{
+	struct vehicle *this=(struct vehicle *)data;
+	struct packet pkt;
+	dbg(2,"enter this=%p\n", this);
+	pkt.magic=this->magic;
+	pkt.type=2;
+	sendto(this->fd, &pkt, 5, 0, (struct sockaddr *)&this->rem, sizeof(this->rem));
+	dbg(2,"ret=TRUE\n");
+	return TRUE;
+}
+
+static int
+vehicle_udp_open(struct vehicle *this)
+{
+	char *host,*child,*url,*colon;
+	int port;
+	url=g_strdup(this->url);
+	colon=index(url+6,':');
+	struct sockaddr_in lcl;
+
+	if (! colon || sscanf(colon+1,"%d/%i/%d", &port, &this->magic, &this->interval) != 3) {
+		g_warning("Wrong syntax in %s\n", this->url);
+		return 0;
+	}
+	host=url+6;
+	*colon='\0';
+	this->fd=socket(PF_INET, SOCK_DGRAM, 0);
+	this->is_udp=1;
+	memset(&lcl, 0, sizeof(lcl));
+	lcl.sin_family = AF_INET;
+
+	this->rem.sin_family = AF_INET;
+	inet_aton(host, &this->rem.sin_addr);
+	this->rem.sin_port=htons(port);
+
+	bind(this->fd, (struct sockaddr *)&lcl, sizeof(lcl));
+	child=index(colon+1,' ');
+	if (child) {
+		child++;
+		if (!this->child) {
+			dbg(3,"child=%s\n", child);
+			this->child=vehicle_new(child);
+			vehicle_callback_register(this->child, vehicle_udp_update, this);
+		}
+	} else {
+		vehicle_udp_query(this);
+		g_timeout_add(this->interval*1000, vehicle_udp_query, this);
+	}
+	g_free(url);
+	return 0;
+}
+
 static int
 vehicle_open(struct vehicle *this)
 {
@@ -404,6 +522,9 @@ vehicle_open(struct vehicle *this)
 		g_warning("No support for gpsd compiled in\n");
 		return 0;
 #endif
+	} else if (! strncmp(this->url,"udp://",6)) {
+		vehicle_udp_open(this);
+		fd=this->fd;
 	}
 	this->iochan=g_io_channel_unix_new(fd);
 	enable_watch(this);
@@ -428,6 +549,10 @@ vehicle_track(GIOChannel *iochan, GIOCondition condition, gpointer t)
 #else
 		{
 #endif
+			if (this->is_udp) {
+				vehicle_udp_recv(this);
+				return TRUE;
+			}
 			size=read(g_io_channel_unix_get_fd(iochan), this->buffer+this->buffer_pos, BUFFER_SIZE-this->buffer_pos-1);
 			if (size <= 0) {
 				vehicle_close(this);

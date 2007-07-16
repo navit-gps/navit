@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,6 +5,7 @@
 #include <fcntl.h>
 #include <math.h>
 #include <glib.h>
+#include "debug.h"
 #include "coord.h"
 #include "transform.h"
 #include "projection.h"
@@ -233,7 +233,7 @@ cursor_update(struct vehicle *v, void *data)
 struct cursor *
 cursor_new(struct graphics *gra, struct vehicle *v, struct color *c, struct transformation *t)
 {
-	printf("cursor_new v=%p\n", v);
+	dbg(2,"enter gra=%p v=%p c=%p t=%p\n", gra, v, c, t);
 	struct cursor *this=g_new(struct cursor,1);
 	this->gra=gra;
 	this->trans=t;
@@ -242,6 +242,7 @@ cursor_new(struct graphics *gra, struct vehicle *v, struct color *c, struct tran
 	graphics_gc_set_foreground(this->cursor_gc, c);
 	graphics_gc_set_linewidth(this->cursor_gc, 2);
 	this->vehicle_callback=vehicle_callback_register(v, cursor_update, this);
+	dbg(2,"ret=%p\n", this);
 	return this;
 }
 
@@ -259,5 +260,4 @@ cursor_register_update_callback(struct cursor *this, void (*func)(struct cursor 
 	this->update_callback.func=func;
 	this->update_callback.data=data;
 }
-
 
