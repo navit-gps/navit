@@ -363,7 +363,7 @@ struct packet {
 			int y __attribute__ ((packed));
 			unsigned char speed;
 			unsigned char dir;
-		} pos;
+		} pos __attribute__ ((packed)) ;
 	} u;
 } __attribute__ ((packed)) ;
 
@@ -374,7 +374,7 @@ vehicle_udp_recv(struct vehicle *this)
 	int size;
 
 	dbg(2,"enter this=%p",this);
-	size=recv(this->fd, &pkt, sizeof(pkt), 0);
+	size=recv(this->fd, &pkt, 15, 0);
 	if (pkt.magic == this->magic) {
 		dbg(3,"magic 0x%x size=%d\n", pkt.magic, size);
 		this->current_pos.x=pkt.u.pos.x;
@@ -401,7 +401,7 @@ vehicle_udp_update(struct vehicle *child, void *data)
 	pkt.u.pos.y=pos->y;
 	pkt.u.pos.speed=speed;
 	pkt.u.pos.dir=dir;
-	sendto(this->fd, &pkt, sizeof(pkt), 0, (struct sockaddr *)&this->rem, sizeof(this->rem));
+	sendto(this->fd, &pkt, 15, 0, (struct sockaddr *)&this->rem, sizeof(this->rem));
 	this->current_pos=child->current_pos;
 	this->speed=child->speed;
 	this->dir=child->dir;
