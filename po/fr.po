@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-16 13:58+0200\n"
+"POT-Creation-Date: 2007-07-17 12:46+0200\n"
 "PO-Revision-Date: 2007-07-16 13:54+0100\n"
 "Last-Translator: KaZeR <kazer@altern.org>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -34,6 +34,16 @@ msgstr "Utilisation de '%s'\n"
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr ""
+
+#: ../src/navigation.c:175
+#, fuzzy, c-format
+msgid "%d m"
+msgstr "%d mètres"
+
+#: ../src/navigation.c:177
+#, fuzzy, c-format
+msgid "in %d m"
+msgstr "Dans %d m, tournez %s%s"
 
 #: ../src/navigation.c:181
 #, c-format
@@ -130,7 +140,7 @@ msgstr "Dès que possible, tournez"
 #: ../src/navigation.c:455
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Suivez la route sur les prochain %s"
+msgstr "Suivez la route sur %s"
 
 #: ../src/navigation.c:459
 msgid "soon"
@@ -167,11 +177,11 @@ msgstr "%s Tournez %s%s"
 msgid "You have reached your destination %s"
 msgstr "Dans %d m, vous êtes arrivé."
 
-#: ../src/navit.c:316 ../src/gui/gtk/gui_gtk_action.c:159
+#: ../src/navit.c:327 ../src/gui/gtk/gui_gtk_action.c:159
 msgid "Layout"
 msgstr "Calques"
 
-#: ../src/navit.c:329
+#: ../src/navit.c:340
 msgid "Projection"
 msgstr "Projection"
 
