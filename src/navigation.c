@@ -438,16 +438,16 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	} else if (delta < 165) {
 		strength=_("strongly ");
 	} else {
-		dbg(0,"delta=%d\n", delta);
+		dbg(1,"delta=%d\n", delta);
 		strength=_("unknown ");
 	}
 	if (mode != navigation_mode_long_exact) 
 		distance=round_distance(distance);
 	if (mode == navigation_mode_speech) {
 		if (nav->turn_around) 
-			return g_strdup(_("When possible, please turn"));
+			return g_strdup(_("When possible, please turn around"));
 		level=navigation_get_announce_level(nav, itm->item.type, distance);
-		dbg(0,"distance=%d level=%d type=0x%x\n", distance, level, itm->item.type);
+		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, itm->item.type);
 	}
 	switch(level) {
 	case 3:
