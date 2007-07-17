@@ -127,6 +127,9 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 			case 0x15:
 				item->type=type_cemetery_poly;
 				break;
+			case 0x1b:
+				item->type=type_commercial_center;
+				break;
 			case 0x1e:
 				item->type=type_industry_poly;
 				break;
