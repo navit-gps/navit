@@ -149,6 +149,9 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 				item->type=type_sport_poly;
 				break;
 			case 0x3c:
+				item->type=type_golf_course;
+				break;
+			case 0x3c:
 				item->type=type_water_poly;
 				break;
 			case 0xbc:
