@@ -124,7 +124,7 @@ msgstr ""
 
 #: ../src/navigation.c:448
 msgid "When possible, please turn"
-msgstr "Dès que possible, tournez"
+msgstr "Dès que possible, faites demi-tour"
 
 #: ../src/navigation.c:455
 #, c-format
