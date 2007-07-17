@@ -11,6 +11,8 @@ struct datawindow_priv {
 	GtkWidget *window;
 	GtkWidget *scrolled_window;
 	GtkWidget *treeview;
+	GtkListStore *liststore;
+	GtkTreeModel *sortmodel;
 	struct callback *click, *close;
 };
 
@@ -26,7 +28,6 @@ gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, in
 	int i;
 	GtkCellRenderer *cell;
 	GtkTreeIter iter;
-	GtkListStore *liststore;
 	GType types[count];
 	gchar *utf8;
 
@@ -49,19 +50,31 @@ gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, in
 
 	/* find data storage and create a new one if none is there */
 	if (gtk_tree_view_get_model(GTK_TREE_VIEW (win->treeview)) == NULL) {
-		for(i=0;i<count;i++) types[i]=G_TYPE_STRING;
-	    	liststore=gtk_list_store_newv(count,types);
-		gtk_tree_view_set_model (GTK_TREE_VIEW (win->treeview), GTK_TREE_MODEL(liststore));
+		for(i=0;i<count;i++) {
+			if (! strcmp(param[i].name, "Distance")) 
+				types[i]=G_TYPE_INT;
+			else
+				types[i]=G_TYPE_STRING;
+		}
+	    	win->liststore=gtk_list_store_newv(count,types);
+		if (! strcmp(param[0].name, "Distance")) {
+			win->sortmodel=gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(win->liststore));
+			gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (win->sortmodel), 0, GTK_SORT_ASCENDING);
+			gtk_tree_view_set_model (GTK_TREE_VIEW (win->treeview), GTK_TREE_MODEL(win->sortmodel));
+		} else 
+			gtk_tree_view_set_model (GTK_TREE_VIEW (win->treeview), GTK_TREE_MODEL(win->liststore));
 	}
-	else
-		liststore=GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW (win->treeview)));
 
-	gtk_list_store_append(liststore,&iter);
+	gtk_list_store_append(win->liststore,&iter);
 
 	/* add data to data storage */
 	for(i=0;i<count;i++) {
-		utf8=g_locale_to_utf8(param[i].value,-1,NULL,NULL,NULL);
-		gtk_list_store_set(liststore,&iter,i,utf8,-1);
+		if (! strcmp(param[i].name, "Distance")) {
+			gtk_list_store_set(win->liststore,&iter,i,atoi(param[i].value),-1);
+		} else {
+			utf8=g_locale_to_utf8(param[i].value,-1,NULL,NULL,NULL);
+			gtk_list_store_set(win->liststore,&iter,i,utf8,-1);
+		}
 	}
 }
 

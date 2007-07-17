@@ -31,10 +31,12 @@
 #define _(STRING)    gettext(STRING)
 
 struct navit_vehicle {
+	char *name;
 	int update;
 	int update_curr;
 	int follow;
 	int follow_curr;
+	struct menu *menu;
 	struct cursor *cursor;
 	struct vehicle *vehicle;
 	struct callback *offscreen_cb;
@@ -164,6 +166,7 @@ navit_new(const char *ui, const char *graphics, struct coord *center, enum proje
 	FILE *f;
 
 	main_add_navit(this_);
+	this_->vehicle_cbl=callback_list_new();
 
 	f=popen("pidof /usr/bin/ipaq-sleep","r");
 	if (f) {
@@ -424,6 +427,42 @@ navit_add_menu_bookmarks(struct navit *this_, struct menu *men)
 	navit_add_menu_destinations(this_, "bookmark.txt", men ? menu_add(men, "Bookmarks", menu_type_submenu, NULL, NULL, NULL) : NULL, NULL);
 }
 
+static void
+navit_vehicle_toggle(struct menu *menu, void *this__p, void *nv_p)
+{
+	struct navit *this_=(struct navit *)this__p;
+	struct navit_vehicle *nv=(struct navit_vehicle *)nv_p;
+	if (menu_get_toggle(menu)) {
+		if (this_->vehicle && this_->vehicle != nv) 
+			menu_set_toggle(this_->vehicle->menu, 0);
+		this_->vehicle=nv;
+	} else {
+		if (this_->vehicle == nv) 
+			this_->vehicle=NULL;
+	}
+}
+
+void
+navit_add_menu_vehicles(struct navit *this_, struct menu *men)
+{
+	struct navit_vehicle *nv;
+	GList *l;
+	l=this_->vehicles;
+	while (l) {
+		nv=l->data;
+		nv->menu=menu_add(men, nv->name, menu_type_toggle, navit_vehicle_toggle, this_, nv);
+		menu_set_toggle(nv->menu, this_->vehicle == nv);
+		l=g_list_next(l);
+	}
+}
+
+void
+navit_add_menu_vehicle(struct navit *this_, struct menu *men)
+{
+	men=menu_add(men, "Vehicle", menu_type_submenu, NULL, NULL, NULL);
+	navit_add_menu_vehicles(this_, men);
+}
+
 void
 navit_speak(struct navit *this_)
 {
@@ -467,6 +506,34 @@ navit_window_roadbook_new(struct navit *this_)
 }
 
 static void
+get_direction(char *buffer, int angle, int mode)
+{
+	angle=angle%360;
+	switch (mode) {
+	case 0:
+		sprintf(buffer,"%d",angle);
+		break;
+	case 1:
+		if (angle < 69 || angle > 291)
+			*buffer++='N';
+		if (angle > 111 && angle < 249)
+			*buffer++='S';
+		if (angle > 22 && angle < 158)
+			*buffer++='E';
+		if (angle > 202 && angle < 338)
+			*buffer++='W';	
+		*buffer++='\0';
+		break;
+	case 2:
+		angle=(angle+15)/30;
+		if (! angle)
+			angle=12;
+		sprintf(buffer,"%d H", angle);
+		break;
+	}
+}
+
+static void
 navit_window_items_new(struct navit *this_)
 {
 	struct datawindow *win;
@@ -482,6 +549,7 @@ navit_window_items_new(struct navit *this_)
 	enum item_type type1,type2,type3;
 	struct param_list param[4];
 	char distbuf[32];
+	char dirbuf[32];
 
 	param[0].name="Distance";
 	param[1].name="Direction";
@@ -516,8 +584,9 @@ navit_window_items_new(struct navit *this_)
 					if (! item_attr_get(item, attr_label, &attr)) 
 						attr.u.str=NULL;
 					idist=transform_distance(center, &c);	
+					get_direction(dirbuf, transform_get_angle_delta(center, &c, 0), 2);
 					param[0].value=distbuf;	
-					param[1].value="";
+					param[1].value=dirbuf;
 					param[2].value=item_to_name(item->type);
 					sprintf(distbuf,"%d", idist/1000);
 					param[3].value=attr.u.str;
@@ -554,6 +623,7 @@ navit_init(struct navit *this_)
 			if (men) {
 				navit_add_menu_layout(this_, men);
 				navit_add_menu_projection(this_, men);
+				navit_add_menu_vehicle(this_, men);
 				navit_add_menu_maps(this_, ms, men);
 			}
 			men=menu_add(this_->menubar, "Route", menu_type_submenu, NULL, NULL, NULL);
@@ -573,8 +643,8 @@ navit_init(struct navit *this_)
 	global_navit=this_;
 #if 0
 	navit_window_roadbook_new(this_);
-	navit_window_items_new(this_);
 #endif
+	navit_window_items_new(this_);
 	navit_debug(this_);
 }
 
@@ -688,10 +758,11 @@ navit_set_position(struct navit *this_, struct coord *c)
 }
 
 struct navit_vehicle *
-navit_add_vehicle(struct navit *this_, struct vehicle *v, struct color *c, int update, int follow)
+navit_add_vehicle(struct navit *this_, struct vehicle *v, const char *name, struct color *c, int update, int follow)
 {
 	struct navit_vehicle *nv=g_new0(struct navit_vehicle, 1);
 	nv->vehicle=v;
+	nv->name=g_strdup(name);
 	nv->update_curr=nv->update=update;
 	nv->follow_curr=nv->follow=follow;
 	nv->cursor=cursor_new(this_->gra, v, c, this_->trans);
