@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-17 12:46+0200\n"
+"POT-Creation-Date: 2007-07-17 17:51+0200\n"
 "PO-Revision-Date: 2007-07-16 13:54+0100\n"
 "Last-Translator: KaZeR <kazer@altern.org>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -36,10 +36,12 @@ msgid "No instance has been created, exiting\n"
 msgstr ""
 
 #: ../src/navigation.c:175
+#, c-format
 msgid "%d m"
 msgstr "%d mètres"
 
 #: ../src/navigation.c:177
+#, fuzzy, c-format
 msgid "in %d m"
 msgstr "Dans %d m, tournez %s%s"
 
@@ -49,6 +51,7 @@ msgid "%d meters"
 msgstr "%d mètres"
 
 #: ../src/navigation.c:183
+#, fuzzy, c-format
 msgid "in %d meters"
 msgstr "Dans %d m, tournez %s%s"
 
@@ -95,10 +98,12 @@ msgid "in four kilometers"
 msgstr "dans quatre kilomètres"
 
 #: ../src/navigation.c:217
+#, c-format
 msgid "%d kilometers"
 msgstr "%d kilomètres"
 
 #: ../src/navigation.c:219
+#, c-format
 msgid "in %d kilometers"
 msgstr "dans %d kilomètres"
 
@@ -123,7 +128,7 @@ msgid "unknown "
 msgstr ""
 
 #: ../src/navigation.c:448
-msgid "When possible, please turn"
+msgid "When possible, please turn around"
 msgstr "Dès que possible, faites demi-tour"
 
 #: ../src/navigation.c:455
@@ -161,6 +166,7 @@ msgid "Turn %s%s %s"
 msgstr "%s Tournez %s%s"
 
 #: ../src/navigation.c:490
+#, fuzzy, c-format
 msgid "You have reached your destination %s"
 msgstr "Dans %d m, vous êtes arrivé."
 
@@ -515,4 +521,3 @@ msgstr ""
 #: ../src/gui/gtk/gui_gtk_action.c:186
 msgid "VisiblePoints"
 msgstr ""
-
