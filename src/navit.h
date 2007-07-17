@@ -4,6 +4,7 @@ extern "C" {
 extern struct gui *main_loop_gui;
 /* prototypes */
 enum projection;
+struct callback;
 struct color;
 struct coord;
 struct displaylist;
@@ -38,13 +39,17 @@ void navit_add_menu_maps(struct navit *this_, struct mapset *ms, struct menu *me
 void navit_add_menu_destinations(struct navit *this_, char *file, struct menu *rmen, struct route *route);
 void navit_add_menu_former_destinations(struct navit *this_, struct menu *men, struct route *route);
 void navit_add_menu_bookmarks(struct navit *this_, struct menu *men);
+void navit_add_menu_vehicles(struct navit *this_, struct menu *men);
+void navit_add_menu_vehicle(struct navit *this_, struct menu *men);
 void navit_speak(struct navit *this_);
 void navit_init(struct navit *this_);
 void navit_set_center(struct navit *this_, struct coord *center);
 void navit_set_center_screen(struct navit *this_, struct point *p);
 void navit_toggle_cursor(struct navit *this_);
 void navit_set_position(struct navit *this_, struct coord *c);
-struct navit_vehicle *navit_add_vehicle(struct navit *this_, struct vehicle *v, struct color *c, int update, int follow);
+struct navit_vehicle *navit_add_vehicle(struct navit *this_, struct vehicle *v, const char *name, struct color *c, int update, int follow);
+void navit_add_vehicle_cb(struct navit *this_, struct callback *cb);
+void navit_remove_vehicle_cb(struct navit *this_, struct callback *cb);
 void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 void navit_tracking_add(struct navit *this_, struct tracking *tracking);
 void navit_route_add(struct navit *this_, struct route *route);

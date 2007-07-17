@@ -23,7 +23,7 @@ static inline struct callback *callback_new_1(void (*func)(void), void *p1)
 static inline void callback_list_call_1(struct callback_list *l, void *p1)
 {
 	void *p[1];
-	p[0]=p;
+	p[0]=p1;
 	callback_list_call(l, 1, p);
 }
 
