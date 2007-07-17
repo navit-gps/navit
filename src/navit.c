@@ -643,8 +643,8 @@ navit_init(struct navit *this_)
 	global_navit=this_;
 #if 0
 	navit_window_roadbook_new(this_);
-#endif
 	navit_window_items_new(this_);
+#endif
 	navit_debug(this_);
 }
 
