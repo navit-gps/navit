@@ -13,6 +13,11 @@ void callback_list_remove_destroy(struct callback_list *l, struct callback *cb);
 void callback_list_call(struct callback_list *l, int pcount, void **p);
 void callback_list_destroy(struct callback_list *l);
 
+static inline struct callback *callback_new_0(void (*func)(void))
+{
+	return callback_new(func, 0, NULL);
+}
+
 static inline struct callback *callback_new_1(void (*func)(void), void *p1)
 {
 	void *p[1];
