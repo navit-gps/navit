@@ -36,12 +36,10 @@ msgid "No instance has been created, exiting\n"
 msgstr ""
 
 #: ../src/navigation.c:175
-#, fuzzy, c-format
 msgid "%d m"
 msgstr "%d mètres"
 
 #: ../src/navigation.c:177
-#, fuzzy, c-format
 msgid "in %d m"
 msgstr "Dans %d m, tournez %s%s"
 
@@ -51,7 +49,6 @@ msgid "%d meters"
 msgstr "%d mètres"
 
 #: ../src/navigation.c:183
-#, fuzzy, c-format
 msgid "in %d meters"
 msgstr "Dans %d m, tournez %s%s"
 
@@ -74,42 +71,34 @@ msgid "in one kilometer"
 msgstr "dans un kilomètre"
 
 #: ../src/navigation.c:202
-#, fuzzy
 msgid "two kilometers"
 msgstr "deux kilomètre"
 
 #: ../src/navigation.c:204
-#, fuzzy
 msgid "in two kilometers"
 msgstr "dans deux kilomètres"
 
 #: ../src/navigation.c:207
-#, fuzzy
 msgid "three kilometers"
 msgstr "trois kilomètres"
 
 #: ../src/navigation.c:209
-#, fuzzy
 msgid "in three kilometers"
 msgstr "dans trois kilomètres"
 
 #: ../src/navigation.c:212
-#, fuzzy
 msgid "four kilometers"
 msgstr "quatre kilomètres"
 
 #: ../src/navigation.c:214
-#, fuzzy
 msgid "in four kilometers"
 msgstr "dans quatre kilomètres"
 
 #: ../src/navigation.c:217
-#, fuzzy, c-format
 msgid "%d kilometers"
 msgstr "%d kilomètres"
 
 #: ../src/navigation.c:219
-#, fuzzy, c-format
 msgid "in %d kilometers"
 msgstr "dans %d kilomètres"
 
@@ -147,9 +136,8 @@ msgid "soon"
 msgstr "bientôt"
 
 #: ../src/navigation.c:465
-#, fuzzy
 msgid "now"
-msgstr "inconnu"
+msgstr "maintenant"
 
 #: ../src/navigation.c:468
 msgid "error"
@@ -173,7 +161,6 @@ msgid "Turn %s%s %s"
 msgstr "%s Tournez %s%s"
 
 #: ../src/navigation.c:490
-#, fuzzy, c-format
 msgid "You have reached your destination %s"
 msgstr "Dans %d m, vous êtes arrivé."
 
@@ -246,7 +233,6 @@ msgid "Belgium"
 msgstr "Belgique"
 
 #: ../src/country.c:39
-#, fuzzy
 msgid "France"
 msgstr "France"
 
@@ -530,12 +516,3 @@ msgstr ""
 msgid "VisiblePoints"
 msgstr ""
 
-#, fuzzy
-#~ msgid "Quit"
-#~ msgstr "_Quitter"
-
-#~ msgid ""
-#~ "Could not find home directory. Using current directory as home directory."
-#~ msgstr ""
-#~ "Impossible de trouver le répertoire de l'utilisateur. Utilisation de '.' "
-#~ "à la place"
