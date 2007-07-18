@@ -166,7 +166,7 @@ int tree_search_next(struct tree_search *ts, unsigned char **p, int dir)
 	}
 	tsn->low=tsn->high;
 	tsn->last=*p;
-	tsn->high=get_u32(p);
+	tsn->high=get_u32_unal(p);
 	dbg(1,"saving last3 %d %p\n", ts->curr_node, tsn->last);
 	if (*p < tsn->end)
 		return (tsn->low == 0xffffffff ? 1 : 0);
@@ -175,7 +175,7 @@ int tree_search_next(struct tree_search *ts, unsigned char **p, int dir)
 		dbg(1,"low 0x%x\n", tsn->low);
 		tsn=tree_search_enter(ts, tsn->low);
 		*p=tsn->p;
-		tsn->high=get_u32(p);
+		tsn->high=get_u32_unal(p);
 		ts->last_node=ts->curr_node;
 		dbg(1,"saving last4 %d 0x%x\n", ts->curr_node, tsn->last-ts->f->begin);
 		dbg(1,"high4=0x%x\n", tsn->high);
@@ -194,7 +194,7 @@ int tree_search_next_lin(struct tree_search *ts, unsigned char **p)
 		ts->nodes[ts->last_node].last=*p;
 	*p=tsn->last;
 	for (;;) {
-		high=get_u32(p);
+		high=get_u32_unal(p);
 		if (*p < tsn->end) {
 			ts->last_node=ts->curr_node;
 			while (high != 0xffffffff) {

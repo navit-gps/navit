@@ -185,11 +185,11 @@ town_search_compare(unsigned char **p, struct map_rect_priv *mr)
         int country, d;
         char *name;
 
-	country=get_u16(p);
+	country=get_u16_unal(p);
 	dbg(1,"country 0x%x ", country);
 	name=get_string(p);
 	dbg(1,"name '%s' ",name);
-	mr->search_blk_count=get_u32(p);
+	mr->search_blk_count=get_u32_unal(p);
 	mr->search_blk_off=(struct block_offset *)(*p);
 	dbg(1,"len %d ", mr->search_blk_count);
 	(*p)+=mr->search_blk_count*4;
