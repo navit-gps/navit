@@ -41,23 +41,46 @@ static void button_map(GtkWidget *widget, struct search_param *search)
 		navit_set_center(search->nav, c);
 }
 
+static char *description(struct search_param *search, GtkTreeIter *iter)
+{
+	char *desc,*car,*postal,*town,*street;
+	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), iter, 0, &car, -1);
+	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), iter, 1, &postal, -1);
+	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), iter, 2, &town, -1);
+	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), iter, 4, &street, -1);
+	if (search->attr.type == attr_town_name) 
+		desc=g_strdup_printf("%s-%s %s", car, postal, town);
+	else 
+		desc=g_strdup_printf("%s-%s %s, %s", car, postal, town, street);
+	return desc;
+}
+
 static void button_destination(GtkWidget *widget, struct search_param *search)
 {
 	struct coord *c=NULL;
 	GtkTreeIter iter;
-	char *desc,*car,*postal,*town,*street;
+	char *desc;
+
 	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (search->liststore2), &iter);
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, COL_COUNT, &c, -1);
 	if (c) {
-		gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, 0, &car, -1);
-		gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, 1, &postal, -1);
-		gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, 2, &town, -1);
-		gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, 4, &street, -1);
-		if (search->attr.type == attr_town_name) 
-			desc=g_strdup_printf("%s-%s %s", car, postal, town);
-		else 
-			desc=g_strdup_printf("%s-%s %s, %s", car, postal, town, street);
+		desc=description(search, &iter);
 		navit_set_destination(search->nav, c, desc);
+		g_free(desc);
+	}
+}
+
+static void button_bookmark(GtkWidget *widget, struct search_param *search)
+{
+	struct coord *c=NULL;
+	GtkTreeIter iter;
+	char *desc;
+
+	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (search->liststore2), &iter);
+	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, COL_COUNT, &c, -1);
+	if (c) {
+		desc=description(search, &iter);
+		navit_add_bookmark(search->nav, c, desc);
 		g_free(desc);
 	}
 }
@@ -109,7 +132,7 @@ static void changed(GtkWidget *widget, struct search_param *search)
 	if (widget == search->entry_city) {
 		dbg(0,"town\n");
 		search->attr.type=attr_town_name;
-		if (strlen(search->attr.u.str) < 2) 
+		if (strlen(search->attr.u.str) < 3) 
 			return;
 		set_columns(search, 1);
 	}
@@ -277,7 +300,7 @@ int destination_address(struct navit *nav)
 	GtkWidget *label_postal, *label_city, *label_district;
 	GtkWidget *label_street, *label_number;
 	GtkWidget *hseparator1,*hseparator2;
-	GtkWidget *button1,*button2;
+	GtkWidget *button1,*button2,*button3;
 	int i;
 	struct search_param *search=&search_param;
 
@@ -326,7 +349,8 @@ int destination_address(struct navit *nav)
 
 	hseparator2 = gtk_vseparator_new();
 	button1 = gtk_button_new_with_label("Karte");
-	button2 = gtk_button_new_with_label("Ziel");
+	button2 = gtk_button_new_with_label("Bookmark");
+	button3 = gtk_button_new_with_label("Ziel");
 
 	gtk_table_attach(GTK_TABLE(table), label_country,  0, 1,  0, 1,  0, GTK_FILL, 0, 0);
 	gtk_table_attach(GTK_TABLE(table), label_postal,   1, 2,  0, 1,  0, GTK_FILL, 0, 0);
@@ -347,7 +371,8 @@ int destination_address(struct navit *nav)
 	gtk_table_attach(GTK_TABLE(table), search->listbox,        0, 3,  4, 5,  GTK_FILL|GTK_EXPAND, GTK_FILL|GTK_EXPAND, 0, 0);
 
 	gtk_table_attach(GTK_TABLE(table), button1, 0, 1, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE(table), button2, 2, 3, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE(table), button2, 1, 2, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE(table), button3, 2, 3, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
 
 	g_signal_connect(G_OBJECT(search->entry_country), "changed", G_CALLBACK(changed), search);
 	g_signal_connect(G_OBJECT(search->entry_postal), "changed", G_CALLBACK(changed), search);
@@ -356,7 +381,8 @@ int destination_address(struct navit *nav)
 	g_signal_connect(G_OBJECT(search->entry_street), "changed", G_CALLBACK(changed), search);
 	g_signal_connect(G_OBJECT(search->entry_number), "changed", G_CALLBACK(changed), search);
 	g_signal_connect(G_OBJECT(button1), "clicked", G_CALLBACK(button_map), search);
-	g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(button_destination), search);
+	g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(button_bookmark), search);
+	g_signal_connect(G_OBJECT(button3), "clicked", G_CALLBACK(button_destination), search);
 
 	gtk_widget_grab_focus(search->entry_city);
 
