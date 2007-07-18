@@ -28,14 +28,14 @@ static void
 street_name_numbers_get(struct street_name_numbers *name_numbers, unsigned char **p)
 {
 	unsigned char *start=*p;
-	name_numbers->len=get_u16(p);
+	name_numbers->len=get_u16_unal(p);
 	name_numbers->tag=get_u8(p);
-	name_numbers->dist=get_u32(p);
-	name_numbers->country=get_u32(p);
+	name_numbers->dist=get_u32_unal(p);
+	name_numbers->country=get_u32_unal(p);
 	name_numbers->c=coord_get(p);
 	name_numbers->first=get_u24(p);
 	name_numbers->last=get_u24(p);
-	name_numbers->segment_count=get_u32(p);
+	name_numbers->segment_count=get_u32_unal(p);
 	name_numbers->segments=(struct street_name_segment *)(*p);
 	(*p)+=sizeof(struct street_name_segment)*name_numbers->segment_count;
 	name_numbers->aux_len=name_numbers->len-(*p-start);
@@ -49,7 +49,7 @@ static void
 street_name_number_get(struct street_name_number *name_number, unsigned char **p)
 {
 	unsigned char *start=*p;
-        name_number->len=get_u16(p);
+        name_number->len=get_u16_unal(p);
         name_number->tag=get_u8(p);
         name_number->c=coord_get(p);
         name_number->first=get_u24(p);
