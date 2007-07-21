@@ -90,6 +90,11 @@ info_action(GtkWidget *w, struct navit *nav, void *dummy)
 }
 
 
+static void
+route_clear_action(GtkWidget *w, struct navit *nav, void *dummy)
+{
+	navit_set_destination(nav, NULL, NULL);
+}
 
 static void
 destination_action(GtkWidget *w, struct navit *nav, void *dummy)
@@ -162,6 +167,7 @@ static GtkActionEntry entries[] =
 	{ "RefreshAction", GTK_STOCK_REFRESH, _n("Refresh"), NULL, NULL, G_CALLBACK(refresh_action) },
 	{ "InfoAction", GTK_STOCK_INFO, _n("Info"), NULL, NULL, G_CALLBACK(info_action) },
 	{ "DestinationAction", "flag_icon", _n("Destination"), NULL, NULL, G_CALLBACK(destination_action) },
+	{ "RouteClearAction", NULL, _n("Clear"), NULL, NULL, G_CALLBACK(route_clear_action) },
 	{ "Test", NULL, _n("Test"), NULL, NULL, G_CALLBACK(destination_action) },
 	{ "QuitAction", GTK_STOCK_QUIT, _n("_Quit"), "<control>Q",NULL, G_CALLBACK (quit_action) }
 };
@@ -334,6 +340,7 @@ static char layout[] =
 			<menu name=\"Route\" action=\"RouteMenuAction\">\
 				<menuitem name=\"Refresh\" action=\"RefreshAction\" />\
 				<menuitem name=\"Destination\" action=\"DestinationAction\" />\
+				<menuitem name=\"Clear\" action=\"RouteClearAction\" />\
 				<placeholder name=\"RouteMenuAdditions\" />\
 			</menu>\
 		</menubar>\

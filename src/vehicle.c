@@ -365,7 +365,7 @@ vehicle_udp_recv(struct vehicle *this)
 	struct packet pkt;
 	int size;
 
-	dbg(2,"enter this=%p",this);
+	dbg(2,"enter this=%p\n",this);
 	size=recv(this->fd, &pkt, 15, 0);
 	if (pkt.magic == this->magic) {
 		dbg(3,"magic 0x%x size=%d\n", pkt.magic, size);

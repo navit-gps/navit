@@ -198,7 +198,7 @@ route_set_speed(struct route *this, enum item_type type, int value)
 int
 route_contains(struct route *this, struct item *item)
 {
-	if (! this->path2 || !item_hash_lookup(this->path2->path_hash, item))
+	if (! this->path2 || !this->path2->path_hash || !item_hash_lookup(this->path2->path_hash, item))
 		return 0;
 	return 1;
 }
@@ -207,6 +207,8 @@ static void
 route_path_update(struct route *this)
 {
 	route_path_destroy(this->path2);
+	if (! this->pos || ! this->dst)
+		return;
 	if (! this->graph || !(this->path2=route_path_new(this->graph, this->pos, this->dst, this->speedlist))) {
 		profile(0,NULL);
 		route_graph_update(this);
@@ -332,9 +334,9 @@ route_set_destination(struct route *this, struct coord *dst)
 	profile(0,NULL);
 	if (this->dst)
 		route_info_free(this->dst);
-	this->dst=route_find_nearest_street(this->ms, dst);
-	if (! this->dst || ! this->pos)
-		return;
+	this->dst=NULL;
+	if (dst)
+		this->dst=route_find_nearest_street(this->ms, dst);
 	profile(1,"find_nearest_street");
 
 	route_graph_destroy(this->graph);
