@@ -35,6 +35,7 @@ struct cursor {
 	int dir;
 	int speed;
 	struct coord pos;
+	enum projection pro;
 };
 
 struct coord *
@@ -103,6 +104,14 @@ cursor_draw(struct cursor *this, struct point *pnt, int dir, int draw_dir)
 		}
 		graphics_draw_mode(gra, draw_mode_end);
 	}
+}
+
+void
+cursor_redraw(struct cursor *this)
+{
+	struct point pnt;
+	transform(this->trans, this->pro, &this->pos, &pnt);
+	cursor_draw(this, &pnt, this->dir-transform_get_angle(this->trans, 0), this->speed > 2.5);
 }
 
 #if 0
@@ -212,10 +221,11 @@ cursor_update(struct cursor *this, struct vehicle *v)
 		this->dir=*dir;
 		this->speed=*speed;
 		this->pos=*pos;
+		this->pro=pro;
 		callback_list_call_1(this->update_cbl, this);
 		if (!transform(this->trans, pro, &this->pos, &pnt) || !transform_within_border(this->trans, &pnt, border)) {
 			callback_list_call_1(this->offscreen_cbl, this);
-			transform(this->trans, pro, &this->pos, &pnt);
+			transform(this->trans, this->pro, &this->pos, &pnt);
 		}
 		cursor_draw(this, &pnt, *dir-transform_get_angle(this->trans, 0), *speed > 2.5);
 	}

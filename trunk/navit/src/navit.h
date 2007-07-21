@@ -36,7 +36,6 @@ void navit_add_menu_layout(struct navit *this_, struct menu *men);
 void navit_add_menu_projections(struct navit *this_, struct menu *men);
 void navit_add_menu_projection(struct navit *this_, struct menu *men);
 void navit_add_menu_maps(struct navit *this_, struct mapset *ms, struct menu *men);
-void navit_add_menu_destinations(struct navit *this_, char *file, struct menu *rmen, struct route *route);
 void navit_add_menu_former_destinations(struct navit *this_, struct menu *men, struct route *route);
 void navit_add_menu_bookmarks(struct navit *this_, struct menu *men);
 void navit_add_menu_vehicles(struct navit *this_, struct menu *men);

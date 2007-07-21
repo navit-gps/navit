@@ -73,6 +73,9 @@ struct navit {
 	struct callback *nav_speech_cb;
 	struct callback *roadbook_callback;
 	struct datawindow *roadbook_window;
+	struct menu *bookmarks;
+	GHashTable *bookmarks_hash;
+	struct menu *destinations;
 };
 
 struct gui *main_loop_gui;
@@ -99,8 +102,17 @@ navit_add_layout(struct navit *this_, struct layout *lay)
 void
 navit_draw(struct navit *this_)
 {
+	GList *l;
+	struct navit_vehicle *nv;
+
 	transform_setup_source_rect(this_->trans);
 	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layouts, this_->route);
+	l=this_->vehicles;
+	while (l) {
+		nv=l->data;
+		cursor_redraw(nv->cursor);
+		l=g_list_next(l);
+	}
 	this_->ready=1;
 }
 
@@ -175,6 +187,7 @@ navit_new(const char *ui, const char *graphics, struct coord *center, enum proje
 		pclose(f);
 	}
 
+	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	this_->cursor_flag=1;
 	this_->trans=transform_new();
 	transform_set_projection(this_->trans, pro);
@@ -242,44 +255,131 @@ navit_projection_set(struct menu *menu, void *this__p, void *pro_p)
 }
 
 static void
-navit_set_destination_menu(struct menu *menu, void *this__p, void *c_p)
+navit_add_menu_destinations(struct navit *this_, char *name, int offset, struct menu *rmen, GHashTable *h, void (*callback)(struct menu *menu, void *data1, void *data2))
 {
-	struct navit *this_=this__p;
-	struct coord *c=c_p;
-	if (this_->route) {
-                route_set_destination(this_->route, c);
-                navit_draw(this_);
-        }
+	char buffer2[2048];
+	char *i,*n;
+	struct menu *men,*nmen;
 
+	if (rmen) {
+		i=name;
+		n=name;
+		men=rmen;
+		while (h && (i=index(n, '/'))) {
+			strcpy(buffer2, name);
+			buffer2[i-name]='\0';
+			if (!(nmen=g_hash_table_lookup(h, buffer2))) {
+				nmen=menu_add(men, buffer2+(n-name), menu_type_submenu, NULL, NULL, NULL);
+				g_hash_table_insert(h, g_strdup(buffer2), nmen);
+			}
+			n=i+1;
+			men=nmen;
+		}
+		menu_add(men, n, menu_type_menu, callback, this_, (void *)offset);
+	}
+}
+
+
+static void
+navit_append_coord(struct navit *this_, char *file, struct coord *c, char *type, char *description, struct menu *rmen, GHashTable *h, void (*callback)(struct menu *menu, void *data1, void *data2))
+{
+	FILE *f;
+	int offset=0;
+	char *buffer;
+
+	f=fopen(file, "a");
+	if (f) {
+		offset=ftell(f);
+		if (c) 
+			fprintf(f,"0x%x 0x%x type=%s label=\"%s\"\n", c->x, c->y, type, description);
+		else
+			fprintf(f,"\n");
+		fclose(f);
+	}
+	if (c) {
+		buffer=g_strdup(description);
+		navit_add_menu_destinations(this_, buffer, offset, rmen, h, callback);
+		g_free(buffer);
+	}
+}
+
+static int
+parse_line(FILE *f, char *buffer, char **name, struct coord *c)
+{
+	int pos;
+	char *s,*i;
+	*name=NULL;
+	if (! fgets(buffer, 2048, f))
+		return -3;
+	pos=coord_parse(buffer, projection_mg, c);
+	if (! pos)
+		return -2;
+	if (!buffer[pos] || buffer[pos] == '\n') 
+		return -1;
+	buffer[strlen(buffer)-1]='\0';
+	s=buffer+pos+1;
+	if (!strncmp(s,"type=", 5)) {
+		i=index(s, '"');
+		if (i) {
+			s=i+1;
+			i=index(s, '"');
+			if (i) 
+				*i='\0';
+		}
+	}
+	*name=s;
+	return pos;
+}
+
+
+static void
+navit_set_destination_from_file(struct navit *this_, char *file, int bookmark, int offset)
+{
+	FILE *f;
+	char *name, *description, buffer[2048];
+	struct coord c;
+	
+	f=fopen(file, "r");
+	if (! f)
+		return;
+	fseek(f, offset, SEEK_SET);
+	if (parse_line(f, buffer, &name, &c) <= 0)
+		return;
+	if (bookmark) {
+		description=g_strdup_printf("Bookmark %s", name);
+		navit_set_destination(this_, &c, description);
+		g_free(description);
+	} else 
+		navit_set_destination(this_, &c, name);
 }
 
 static void
-navit_append_coord(char *file, struct coord *c, char *type, char *description)
+navit_set_destination_from_destination(struct menu *menu, void *this_p, void *offset_p)
 {
-	int fd;
-	char *buffer;
-	buffer=g_strdup_printf("0x%x 0x%x type=%s label=\"%s\"\n", c->x, c->y, type, description);
-	fd=open(file, O_RDWR|O_CREAT|O_APPEND, 0644);
-	if (fd != -1)
-		write(fd, buffer, strlen(buffer));
-	close(fd);
-	g_free(buffer);
+	navit_set_destination_from_file((struct navit *)this_p, "destination.txt", 0, (int)offset_p);
+}
+
+static void
+navit_set_destination_from_bookmark(struct menu *menu, void *this_p, void *offset_p)
+{
+	navit_set_destination_from_file((struct navit *)this_p, "bookmark.txt", 1, (int)offset_p);
 }
 
 void
 navit_set_destination(struct navit *this_, struct coord *c, char *description)
 {
-	navit_append_coord("destination.txt", c, "former_destination", description);
+	navit_append_coord(this_, "destination.txt", c, "former_destination", description, this_->destinations, NULL, navit_set_destination_from_destination);
 	if (this_->route) {
                 route_set_destination(this_->route, c);
                 navit_draw(this_);
         }
 }
 
+
 void
 navit_add_bookmark(struct navit *this_, struct coord *c, char *description)
 {
-	navit_append_coord("bookmark.txt", c, "bookmark", description);
+	navit_append_coord(this_,"bookmark.txt", c, "bookmark", description, this_->bookmarks, this_->bookmarks_hash, navit_set_destination_from_bookmark);
 }
 
 struct navit *global_navit;
@@ -357,74 +457,50 @@ navit_add_menu_maps(struct navit *this_, struct mapset *ms, struct menu *men)
 	mapset_close(handle);
 }
 
-void
-navit_add_menu_destinations(struct navit *this_, char *file, struct menu *rmen, struct route *route)
+static void
+navit_add_menu_destinations_from_file(struct navit *this_, char *file, struct menu *rmen, GHashTable *h, struct route *route, void (*callback)(struct menu *menu, void *data1, void *data2))
 {
-	struct coord c;
 	int pos,flag=0;
 	FILE *f;
 	char buffer[2048];
-	char buffer2[2048];
-	char *s,*i,*n;
-	struct menu *men,*nmen;
-	GHashTable *h;
+	struct coord c;
+	char *name;
+	int offset=0;
 	
-	h=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	f=fopen(file, "r");
 	if (f) {
-		while (! feof(f) && fgets(buffer, 2048, f)) {
-			if ((pos=coord_parse(buffer, projection_mg, &c))) {
-				if (buffer[pos] && buffer[pos] != '\n' ) {
-					struct coord *cn=g_new(struct coord, 1);
-					*cn=c;
-					buffer[strlen(buffer)-1]='\0';
-					s=buffer+pos+1;
-					if (!strncmp(s,"type=", 5)) {
-						i=index(s, '"');
-						if (i) {
-							s=i+1;
-							i=index(s, '"');
-							if (i)
-								*i='\0';
-						}
-					}
-					if (rmen) {
-						i=s;
-						n=s;
-						men=rmen;
-						while ((i=index(n, '/'))) {
-							strcpy(buffer2, s);
-							buffer2[i-s]='\0';
-							if (!(nmen=g_hash_table_lookup(h, buffer2))) {
-								nmen=menu_add(men, buffer2+(n-s), menu_type_submenu, NULL, NULL, NULL);
-								g_hash_table_insert(h, g_strdup(buffer2), nmen);
-							}
-							n=i+1;
-							men=nmen;
-						}
-						menu_add(men, n, menu_type_menu, navit_set_destination_menu, this_, cn);
-					}
-				}
+		while (! feof(f) && (pos=parse_line(f, buffer, &name, &c)) > -3) {
+			if (pos > 0) {
+				navit_add_menu_destinations(this_, name, offset, rmen, h, callback);
 				flag=1;
-			}
+			} else
+				flag=0;
+			offset=ftell(f);
 		}
 		fclose(f);
 		if (route && flag)
 			route_set_destination(route, &c);
 	}
-	g_hash_table_destroy(h);
 }
 
 void
 navit_add_menu_former_destinations(struct navit *this_, struct menu *men, struct route *route)
 {
-	navit_add_menu_destinations(this_, "destination.txt", men ? menu_add(men, "Former Destinations", menu_type_submenu, NULL, NULL, NULL) : NULL, route);
+	if (men)
+		this_->destinations=menu_add(men, "Former Destinations", menu_type_submenu, NULL, NULL, NULL);
+	else
+		this_->destinations=NULL;
+	navit_add_menu_destinations_from_file(this_, "destination.txt", this_->destinations, NULL, route, navit_set_destination_from_destination);
 }
 
 void
 navit_add_menu_bookmarks(struct navit *this_, struct menu *men)
 {
-	navit_add_menu_destinations(this_, "bookmark.txt", men ? menu_add(men, "Bookmarks", menu_type_submenu, NULL, NULL, NULL) : NULL, NULL);
+	if (men)
+		this_->bookmarks=menu_add(men, "Bookmarks", menu_type_submenu, NULL, NULL, NULL);
+	else
+		this_->bookmarks=NULL;
+	navit_add_menu_destinations_from_file(this_, "bookmark.txt", this_->bookmarks, this_->bookmarks_hash, NULL, navit_set_destination_from_bookmark);
 }
 
 static void
