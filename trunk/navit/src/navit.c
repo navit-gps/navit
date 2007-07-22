@@ -61,11 +61,11 @@ struct navit {
 	struct navigation *navigation;
 	struct speech *speech;
 	struct tracking *tracking;
-	struct map_flags *flags;
 	int ready;
 	struct window *win;
 	struct displaylist *displaylist;
 	int cursor_flag;
+	int tracking_flag;
 	GList *vehicles;
 	struct navit_vehicle *vehicle;
 	struct callback_list *vehicle_cbl;
@@ -189,11 +189,11 @@ navit_new(const char *ui, const char *graphics, struct coord *center, enum proje
 
 	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	this_->cursor_flag=1;
+	this_->tracking_flag=1;
 	this_->trans=transform_new();
 	transform_set_projection(this_->trans, pro);
 
 	transform_setup(this_->trans, center, zoom, 0);
-	/* this_->flags=g_new0(struct map_flags, 1); */
 	this_->displaylist=graphics_displaylist_new();
 	this_->gui=gui_new(this_, ui, 792, 547);
 	if (! this_->gui) {
@@ -573,7 +573,7 @@ navit_window_roadbook_update(struct navit *this_)
 	datawindow_mode(this_->roadbook_window, 0);
 }
 
-static void
+void
 navit_window_roadbook_new(struct navit *this_)
 {
 	this_->roadbook_callback=callback_new_1(callback_cast(navit_window_roadbook_update), this_);
@@ -768,6 +768,12 @@ navit_toggle_cursor(struct navit *this_)
 	this_->cursor_flag=1-this_->cursor_flag;
 }
 
+void
+navit_toggle_tracking(struct navit *this_)
+{
+	this_->tracking_flag=1-this_->tracking_flag;
+}
+
 static void
 navit_cursor_offscreen(struct navit *this_, struct cursor *cursor)
 {
@@ -792,7 +798,7 @@ navit_cursor_update(struct navit *this_, struct cursor *cursor)
 
 	if (this_->pid && speed > 2)
 		kill(this_->pid, SIGWINCH);
-	if (this_->tracking) {
+	if (this_->tracking && this_->tracking_flag) {
 		struct coord c=*cursor_c;
 		if (tracking_update(this_->tracking, &c, dir)) {
 			cursor_c=&c;

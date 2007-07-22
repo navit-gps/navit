@@ -67,54 +67,61 @@ callback_list_remove_destroy(struct callback_list *l, struct callback *cb)
 }
 
 void
+callback_call(struct callback *cb, int pcount, void **p)
+{
+	int i;
+	void *pf[8];
+	if (cb->pcount + pcount <= 8) {
+		dbg(1,"cb->pcount=%d %p pcount=%d %p\n", cb->pcount, cb->p[0], pcount, p[0]);
+		for (i = 0 ; i < cb->pcount ; i++) 
+			pf[i]=cb->p[i];
+		for (i = 0 ; i < pcount ; i++)
+			pf[i+cb->pcount]=p[i];
+		switch (cb->pcount+pcount) {
+		case 8:
+			cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5],pf[6],pf[7]);
+			break;
+		case 7:
+			cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5],pf[6]);
+			break;
+		case 6:
+			cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5]);
+			break;
+		case 5:
+			cb->func(pf[0],pf[1],pf[2],pf[3],pf[4]);
+			break;
+		case 4:
+			cb->func(pf[0],pf[1],pf[2],pf[3]);
+			break;
+		case 3:
+			cb->func(pf[0],pf[1],pf[2]);
+			break;
+		case 2:
+			cb->func(pf[0],pf[1]);
+			break;
+		case 1:
+			cb->func(pf[0]);
+			break;
+		case 0:
+			cb->func();
+			break;
+		}
+	} else {
+		g_warning("too many parameters for callback\n");
+	}
+}
+
+
+void
 callback_list_call(struct callback_list *l, int pcount, void **p)
 {
-	void *pf[8];
-	struct callback *cb;
 	GList *cbi;
-	int i;
+	struct callback *cb;
 
 	cbi=l->list;
 	while (cbi) {
 		cb=cbi->data;
-		if (cb->pcount + pcount <= 8) {
-			dbg(1,"cb->pcount=%d %p pcount=%d %p\n", cb->pcount, cb->p[0], pcount, p[0]);
-			for (i = 0 ; i < cb->pcount ; i++) 
-				pf[i]=cb->p[i];
-			for (i = 0 ; i < pcount ; i++)
-				pf[i+cb->pcount]=p[i];
-			switch (cb->pcount+pcount) {
-			case 8:
-				cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5],pf[6],pf[7]);
-				break;
-			case 7:
-				cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5],pf[6]);
-				break;
-			case 6:
-				cb->func(pf[0],pf[1],pf[2],pf[3],pf[4],pf[5]);
-				break;
-			case 5:
-				cb->func(pf[0],pf[1],pf[2],pf[3],pf[4]);
-				break;
-			case 4:
-				cb->func(pf[0],pf[1],pf[2],pf[3]);
-				break;
-			case 3:
-				cb->func(pf[0],pf[1],pf[2]);
-				break;
-			case 2:
-				cb->func(pf[0],pf[1]);
-				break;
-			case 1:
-				cb->func(pf[0]);
-				break;
-			case 0:
-				cb->func();
-				break;
-			}
-		} else {
-			g_warning("too many parameters for callback\n");
-		}
+		callback_call(cb, pcount, p);
 		cbi=g_list_next(cbi);
 	}
 	
