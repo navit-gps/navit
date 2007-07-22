@@ -1,6 +1,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
+#include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include "debug.h"
 #include "callback.h"
@@ -58,8 +59,10 @@ gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, in
 	if (! win->treeview) {
 		win->treeview=gtk_tree_view_new();
 		gtk_tree_view_set_model (GTK_TREE_VIEW (win->treeview), NULL);
-		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(win->scrolled_window),win->treeview);
+		gtk_container_add(GTK_CONTAINER(win->scrolled_window), win->treeview);
 		gtk_widget_show_all(GTK_WIDGET(win->window));
+		gtk_widget_grab_focus(GTK_WIDGET(win->treeview));
+		
 		/* add column names to treeview */
 		for(i=0;i<count;i++) {
 			if (param[i].name) {
@@ -122,6 +125,18 @@ gui_gtk_datawindow_delete(GtkWidget *widget, GdkEvent *event, struct datawindow_
 	return FALSE;
 }
 
+static gboolean
+keypress(GtkWidget *widget, GdkEventKey *event, struct datawindow_priv *win)
+{
+	if (event->type != GDK_KEY_PRESS)
+		return FALSE;
+	if (event->keyval == GDK_Cancel) {
+		gui_gtk_datawindow_delete(widget, event, win);
+		gtk_widget_destroy(win->window);
+	}
+	return FALSE;
+}
+
 
 static struct datawindow_methods gui_gtk_datawindow_meth = {
 	gui_gtk_datawindow_destroy,
@@ -142,9 +157,9 @@ gui_gtk_datawindow_new(struct gui_priv *gui, char *name, struct callback *click,
 
 	win->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (win->scrolled_window),
-			GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+			GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_container_add(GTK_CONTAINER(win->window), win->scrolled_window);
-
+	g_signal_connect(G_OBJECT(win->window), "key-press-event", G_CALLBACK(keypress), win);
 	win->treeview=NULL;
 	win->click=click;
 	win->close=close;
