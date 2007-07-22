@@ -27,9 +27,24 @@ static inline struct callback *callback_new_1(void (*func)(void), void *p1)
 	return callback_new(func, 1, p);
 }
 
+static inline struct callback *callback_new_2(void (*func)(void), void *p1, void *p2)
+{
+	void *p[2];
+	p[0]=p1;
+	p[1]=p2;
+	return callback_new(func, 2, p);
+}
+
 static inline void callback_call_0(struct callback *cb)
 {
 	callback_call(cb, 0, NULL);
+}
+
+static inline void callback_call_1(struct callback *cb, void *p1)
+{
+	void *p[1];
+	p[0]=p1;
+	callback_call(cb, 1, p);
 }
 
 static inline void callback_list_call_0(struct callback_list *l)

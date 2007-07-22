@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <gtk/gtk.h>
+#include "debug.h"
 #include "callback.h"
 #include "param.h"
 #include "data_window.h"
@@ -22,6 +23,29 @@ gui_gtk_datawindow_destroy(struct datawindow_priv *win)
 	return;
 }
 
+static GValue value;
+static void
+select_row(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, struct datawindow_priv *win)
+{
+	char *cols[20];
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	int i;
+
+	dbg(0,"win=%p\n", win);	
+
+	model=gtk_tree_view_get_model(tree);
+	gtk_tree_model_get_iter(model, &iter, path);
+
+	for (i=0;i<gtk_tree_model_get_n_columns(model);i++) {
+		gtk_tree_model_get_value(model, &iter, i, &value);
+		cols[i]=g_strdup_value_contents(&value)+1;
+		cols[i][strlen(cols[i])-1]='\0';
+		g_value_unset(&value);
+	}
+	callback_call_1(win->click, cols);
+}
+
 static void
 gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, int count)
 {
@@ -38,20 +62,22 @@ gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, in
 		gtk_widget_show_all(GTK_WIDGET(win->window));
 		/* add column names to treeview */
 		for(i=0;i<count;i++) {
-			cell=gtk_cell_renderer_text_new();
-			gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (win->treeview),-1,param[i].name,
+			if (param[i].name) {
+				cell=gtk_cell_renderer_text_new();
+				gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (win->treeview),-1,param[i].name,
 					cell,"text",i, NULL);
+			}
 		}
 #if 0
 		g_signal_connect(G_OBJECT(win->treeview), "click-column", G_CALLBACK(click_column), NULL);
-		g_signal_connect(G_OBJECT(win->treeview), "row-activated", G_CALLBACK(select_row), win);
 #endif
+		g_signal_connect(G_OBJECT(win->treeview), "row-activated", G_CALLBACK(select_row), win);
 	}
 
 	/* find data storage and create a new one if none is there */
 	if (gtk_tree_view_get_model(GTK_TREE_VIEW (win->treeview)) == NULL) {
 		for(i=0;i<count;i++) {
-			if (! strcmp(param[i].name, "Distance")) 
+			if (param[i].name && !strcmp(param[i].name, "Distance")) 
 				types[i]=G_TYPE_INT;
 			else
 				types[i]=G_TYPE_STRING;
@@ -69,7 +95,7 @@ gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, in
 
 	/* add data to data storage */
 	for(i=0;i<count;i++) {
-		if (! strcmp(param[i].name, "Distance")) {
+		if (param[i].name && !strcmp(param[i].name, "Distance")) {
 			gtk_list_store_set(win->liststore,&iter,i,atoi(param[i].value),-1);
 		} else {
 			utf8=g_locale_to_utf8(param[i].value,-1,NULL,NULL,NULL);
@@ -88,10 +114,12 @@ gui_gtk_datawindow_mode(struct datawindow_priv *win, int start)
 	}
 }
 
-static void
+static gboolean
 gui_gtk_datawindow_delete(GtkWidget *widget, GdkEvent *event, struct datawindow_priv *win)
 {
 	callback_call_0(win->close);
+
+	return FALSE;
 }
 
 

@@ -67,6 +67,7 @@ struct navit {
 	int cursor_flag;
 	int tracking_flag;
 	GList *vehicles;
+	GList *windows_items;
 	struct navit_vehicle *vehicle;
 	struct callback_list *vehicle_cbl;
 	int pid;
@@ -574,11 +575,19 @@ navit_window_roadbook_update(struct navit *this_)
 }
 
 void
+navit_window_roadbook_destroy(struct navit *this_)
+{
+	dbg(0, "enter\n");
+	navigation_unregister_callback(this_->navigation, navigation_mode_long, this_->roadbook_callback);
+	this_->roadbook_window=NULL;
+	this_->roadbook_callback=NULL;
+}
+void
 navit_window_roadbook_new(struct navit *this_)
 {
 	this_->roadbook_callback=callback_new_1(callback_cast(navit_window_roadbook_update), this_);
 	navigation_register_callback(this_->navigation, navigation_mode_long, this_->roadbook_callback);
-	this_->roadbook_window=gui_datawindow_new(this_->gui, "Roadbook", NULL, NULL);
+	this_->roadbook_window=gui_datawindow_new(this_->gui, "Roadbook", NULL, callback_new_1(callback_cast(navit_window_roadbook_destroy), this_));
 }
 
 static void
@@ -609,10 +618,32 @@ get_direction(char *buffer, int angle, int mode)
 	}
 }
 
-static void
-navit_window_items_new(struct navit *this_)
-{
+struct navit_window_items {
 	struct datawindow *win;
+	struct callback *click;
+	char *name;
+	int distance;
+	GHashTable *hash;
+	GList *list;
+};
+
+static void
+navit_window_items_click(struct navit *this_, struct navit_window_items *nwi, char **col)
+{
+	struct coord c;
+	char *description;
+
+	dbg(0,"enter col=%s,%s,%s,%s,%s\n", col[0], col[1], col[2], col[3], col[4]);
+	sscanf(col[4], "0x%x,0x%x", &c.x, &c.y);
+	dbg(0,"0x%x,0x%x\n", c.x, c.y);
+	description=g_strdup_printf("%s %s", nwi->name, col[3]);
+	navit_set_destination(this_, &c, description);
+	g_free(description);
+}
+
+static void
+navit_window_items_open(struct menu *men, struct navit *this_, struct navit_window_items *nwi)
+{
 	struct map_selection sel;
 	struct coord c,*center;
 	struct mapset_handle *h;
@@ -620,35 +651,40 @@ navit_window_items_new(struct navit *this_)
 	struct map_rect *mr;
 	struct item *item;
 	struct attr attr;
-	GHashTable *hash;
-	int idist,dist=100000;
-	enum item_type type1,type2,type3;
-	struct param_list param[4];
+	int idist,dist;
+	struct param_list param[5];
 	char distbuf[32];
 	char dirbuf[32];
-
+	char coordbuf[64];
+	
+	dbg(0, "distance=%d\n", nwi->distance);
+	if (nwi->distance == -1) 
+		dist=40000000;
+	else
+		dist=nwi->distance*1000;
 	param[0].name="Distance";
 	param[1].name="Direction";
 	param[2].name="Type";
 	param[3].name="Name";
+	param[4].name=NULL;
 	sel.next=NULL;
+#if 0
 	sel.order[layer_town]=18;
 	sel.order[layer_street]=18;
 	sel.order[layer_poly]=18;
+#else
+	sel.order[layer_town]=0;
+	sel.order[layer_street]=0;
+	sel.order[layer_poly]=0;
+#endif
 	center=transform_center(this_->trans);
 	sel.rect.lu.x=center->x-dist;
 	sel.rect.lu.y=center->y+dist;
 	sel.rect.rl.x=center->x+dist;
 	sel.rect.rl.y=center->y-dist;
-	hash=g_hash_table_new(g_int_hash, g_int_equal);
-	type1=type_bookmark;
-	g_hash_table_insert(hash, &type1, (void *)1);
-	type2=type_poi_camping;
-	g_hash_table_insert(hash, &type2, (void *)1);
-	type3=type_roadbook;
-	g_hash_table_insert(hash, &type3, (void *)1);
 	dbg(2,"0x%x,0x%x - 0x%x,0x%x\n", sel.rect.lu.x, sel.rect.lu.y, sel.rect.rl.x, sel.rect.rl.y);
-	win=gui_datawindow_new(this_->gui, "Itemlist", NULL, NULL);
+	nwi->click=callback_new_2(navit_window_items_click, this_, nwi);
+	nwi->win=gui_datawindow_new(this_->gui, nwi->name, nwi->click, NULL);
 	h=mapset_open(navit_get_mapset(this_));
         while ((m=mapset_next(h, 1))) {
 		dbg(2,"m=%p %s\n", m, map_get_filename(m));
@@ -656,17 +692,21 @@ navit_window_items_new(struct navit *this_)
 		dbg(2,"mr=%p\n", mr);
 		while ((item=map_rect_get_item(mr))) {
 			if (item_coord_get(item, &c, 1)) {
-				if (coord_rect_contains(&sel.rect, &c) && g_hash_table_lookup(hash, &item->type)) {
+				if (coord_rect_contains(&sel.rect, &c) && g_hash_table_lookup(nwi->hash, &item->type)) {
 					if (! item_attr_get(item, attr_label, &attr)) 
 						attr.u.str=NULL;
-					idist=transform_distance(center, &c);	
-					get_direction(dirbuf, transform_get_angle_delta(center, &c, 0), 2);
-					param[0].value=distbuf;	
-					param[1].value=dirbuf;
-					param[2].value=item_to_name(item->type);
-					sprintf(distbuf,"%d", idist/1000);
-					param[3].value=attr.u.str;
-					datawindow_add(win, param, 4);
+					idist=transform_distance(center, &c);
+					if (idist < dist) {
+						get_direction(dirbuf, transform_get_angle_delta(center, &c, 0), 1);
+						param[0].value=distbuf;	
+						param[1].value=dirbuf;
+						param[2].value=item_to_name(item->type);
+						sprintf(distbuf,"%d", idist/1000);
+						param[3].value=attr.u.str;
+						sprintf(coordbuf, "0x%x,0x%x", c.x, c.y);
+						param[4].value=coordbuf;
+						datawindow_add(nwi->win, param, 5);
+					}
 					/* printf("gefunden %s %s %d\n",item_to_name(item->type), attr.u.str, idist/1000); */
 				}
 				if (item->type >= type_line) 
@@ -676,9 +716,44 @@ navit_window_items_new(struct navit *this_)
 		map_rect_destroy(mr);	
 	}
 	mapset_close(h);
-	g_hash_table_destroy(hash);
 }
 
+struct navit_window_items *
+navit_window_items_new(char *name, int distance)
+{
+	struct navit_window_items *nwi=g_new0(struct navit_window_items, 1);
+	nwi->name=g_strdup(name);
+	nwi->distance=distance;
+	nwi->hash=g_hash_table_new(g_int_hash, g_int_equal);
+
+	return nwi;
+}
+
+void
+navit_window_items_add_item(struct navit_window_items *nwi, enum item_type type)
+{
+	nwi->list=g_list_prepend(nwi->list, (void *)type);
+	g_hash_table_insert(nwi->hash, &nwi->list->data, (void *)1);
+}
+
+void
+navit_add_window_items(struct navit *this_, struct navit_window_items *nwi)
+{
+	this_->windows_items=g_list_append(this_->windows_items, nwi);
+}
+
+void
+navit_add_menu_windows_items(struct navit *this_, struct menu *men)
+{
+	struct navit_window_items *nwi;
+	GList *l;
+	l=this_->windows_items;
+	while (l) {
+		nwi=l->data;
+		menu_add(men, nwi->name, menu_type_menu, navit_window_items_open, this_, nwi);
+		l=g_list_next(l);
+	}
+}
 
 void
 navit_init(struct navit *this_)
@@ -715,6 +790,12 @@ navit_init(struct navit *this_)
 		navigation_register_callback(this_->navigation, navigation_mode_speech, this_->nav_speech_cb);
 #if 0
 #endif
+	}
+	if (this_->menubar) {
+		men=menu_add(this_->menubar, "Data", menu_type_submenu, NULL, NULL, NULL);
+		if (men) {
+			navit_add_menu_windows_items(this_, men);
+		}
 	}
 	global_navit=this_;
 #if 0
