@@ -372,7 +372,7 @@ static char layout[] =
 				<toolitem name=\"Cursor\" action=\"CursorAction\"/>\
 				<toolitem name=\"Orientation\" action=\"OrientationAction\"/>\
 				<toolitem name=\"Destination\" action=\"DestinationAction\"/>\
-				<toolitem name=\"Info\" action=\"InfoAction\"/>\
+				<!-- <toolitem name=\"Info\" action=\"InfoAction\"/> -->\
 				<toolitem name=\"Roadbook\" action=\"RoadbookAction\"/>\
 				<toolitem name=\"Quit\" action=\"QuitAction\"/>\
 				<separator/>\
@@ -402,6 +402,8 @@ add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum men
 	*meth=menu_methods;
 	if (! strcmp(menu->path, "/ui/MenuBar") && !strcmp(name,"Route")) {
 		dynname=g_strdup("Route");
+	} else if (! strcmp(menu->path, "/ui/MenuBar") && !strcmp(name,"Data")) {
+		dynname=g_strdup("Data");
 	} else {
 		dynname=g_strdup_printf("%d", menu->gui->dyn_counter++);
 		if (type == menu_type_toggle)

@@ -215,6 +215,35 @@ xmlconfig_vehicle(struct xmlstate *state)
 }
 
 static int
+xmlconfig_window_items(struct xmlstate *state)
+{
+	int distance=-1;
+	enum item_type itype;
+	const char *name=find_attribute(state, "name", 1);
+	const char *value=find_attribute(state, "distance", 0);
+	const char *type=find_attribute(state, "type", 1);
+	char *tok,*str,*type_str,*saveptr;
+	if (! name || !type)
+		return 0;
+	if (value) 
+		distance=convert_number(value);
+	state->element_object = navit_window_items_new(name, distance);
+	type_str=g_strdup(type);
+	str=type_str;
+	while ((tok=strtok_r(str, ",", &saveptr))) {
+		itype=item_from_name(tok);
+		navit_window_items_add_item(state->element_object, itype);
+		str=NULL;
+	}
+	g_free(type_str);
+
+	navit_add_window_items(state->parent->element_object, state->element_object);
+
+	return 1;
+}
+
+
+static int
 xmlconfig_tracking(struct xmlstate *state)
 {
 	state->element_object = tracking_new(NULL);
@@ -511,6 +540,7 @@ struct element_func {
 	{ "route", "navit", xmlconfig_route},
 	{ "speed", "route", xmlconfig_speed},
 	{ "vehicle", "navit", xmlconfig_vehicle},
+	{ "window_items", "navit", xmlconfig_window_items},
 	{ "plugins", NULL, xmlconfig_plugins},
 	{ "plugin", "plugins", xmlconfig_plugin},
 	{},
