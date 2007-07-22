@@ -71,8 +71,15 @@ callback_call(struct callback *cb, int pcount, void **p)
 {
 	int i;
 	void *pf[8];
+	if (! cb)
+		return;
 	if (cb->pcount + pcount <= 8) {
-		dbg(1,"cb->pcount=%d %p pcount=%d %p\n", cb->pcount, cb->p[0], pcount, p[0]);
+		dbg(1,"cb->pcount=%d\n", cb->pcount);
+		if (cb->pcount && cb->p) 
+			dbg(1,"cb->p[0]=%p\n", cb->p[0]);
+		dbg(1,"pcount=%d\n", pcount);
+		if (pcount && p) 
+			dbg(1,"p[0]=%p\n", p[0]);
 		for (i = 0 ; i < cb->pcount ; i++) 
 			pf[i]=cb->p[i];
 		for (i = 0 ; i < pcount ; i++)
@@ -107,7 +114,7 @@ callback_call(struct callback *cb, int pcount, void **p)
 			break;
 		}
 	} else {
-		g_warning("too many parameters for callback\n");
+		g_warning("too many parameters for callback (%d+%d)\n", cb->pcount, pcount);
 	}
 }
 
