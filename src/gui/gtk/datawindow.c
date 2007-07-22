@@ -88,6 +88,12 @@ gui_gtk_datawindow_mode(struct datawindow_priv *win, int start)
 	}
 }
 
+static void
+gui_gtk_datawindow_delete(GtkWidget *widget, GdkEvent *event, struct datawindow_priv *win)
+{
+	callback_call_0(win->close);
+}
+
 
 static struct datawindow_methods gui_gtk_datawindow_meth = {
 	gui_gtk_datawindow_destroy,
@@ -116,6 +122,7 @@ gui_gtk_datawindow_new(struct gui_priv *gui, char *name, struct callback *click,
 	win->close=close;
 	if (gui) 
 		gtk_window_set_transient_for(GTK_WINDOW((GtkWidget *)(win->window)), GTK_WINDOW(gui->win));
+	g_signal_connect(G_OBJECT(win->window), "delete-event", G_CALLBACK(gui_gtk_datawindow_delete), win);
 	gtk_widget_show_all(win->window);
 	return win;
 	return NULL;
