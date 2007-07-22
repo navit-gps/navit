@@ -224,7 +224,7 @@ route_set_position(struct route *this, struct coord *pos)
 	if (this->pos)
 		route_info_free(this->pos);
 	this->pos=route_find_nearest_street(this->ms, pos);
-	dbg(0,"this->pos=%p\n", this->pos);
+	dbg(1,"this->pos=%p\n", this->pos);
 	if (! this->pos)
 		return;
 	if (this->dst) 

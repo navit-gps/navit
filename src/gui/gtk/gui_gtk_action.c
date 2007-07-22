@@ -46,9 +46,24 @@ refresh_action(GtkWidget *w, struct navit *nav, void *dummy)
 }
 
 static void
+roadbook_action(GtkWidget *w, struct navit *nav, void *dummy)
+{
+	navit_window_roadbook_new(nav);
+}
+
+static void
 cursor_action(GtkWidget *w, struct navit *nav, void *dummy)
 {
 	navit_toggle_cursor(nav);
+#if 0
+	ac->gui->co->flags->track=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
+#endif
+}
+
+static void
+tracking_action(GtkWidget *w, struct navit *nav, void *dummy)
+{
+	navit_toggle_tracking(nav);
 #if 0
 	ac->gui->co->flags->track=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
 #endif
@@ -165,6 +180,7 @@ static GtkActionEntry entries[] =
 	{ "ZoomOutAction", GTK_STOCK_ZOOM_OUT, _n("ZoomOut"), NULL, NULL, G_CALLBACK(zoom_out_action) },
 	{ "ZoomInAction", GTK_STOCK_ZOOM_IN, _n("ZoomIn"), NULL, NULL, G_CALLBACK(zoom_in_action) },
 	{ "RefreshAction", GTK_STOCK_REFRESH, _n("Refresh"), NULL, NULL, G_CALLBACK(refresh_action) },
+	{ "RoadbookAction", GTK_STOCK_JUSTIFY_FILL, _n("Roadbook"), NULL, NULL, G_CALLBACK(roadbook_action) },
 	{ "InfoAction", GTK_STOCK_INFO, _n("Info"), NULL, NULL, G_CALLBACK(info_action) },
 	{ "DestinationAction", "flag_icon", _n("Destination"), NULL, NULL, G_CALLBACK(destination_action) },
 	{ "RouteClearAction", NULL, _n("Clear"), NULL, NULL, G_CALLBACK(route_clear_action) },
@@ -177,6 +193,7 @@ static guint n_entries = G_N_ELEMENTS (entries);
 static GtkToggleActionEntry toggleentries[] = 
 {
 	{ "CursorAction", "cursor_icon",_n("Cursor"), NULL, NULL, G_CALLBACK(cursor_action),TRUE },
+	{ "TrackingAction", NULL ,_n("Tracking"), NULL, NULL, G_CALLBACK(tracking_action),TRUE },
 	{ "OrientationAction", "orientation_icon", _n("Orientation"), NULL, NULL, G_CALLBACK(orient_north_action),FALSE }
 };
 
@@ -325,7 +342,9 @@ static char layout[] =
 				<menuitem name=\"Zoom in\" action=\"ZoomInAction\" />\
 				<menuitem name=\"Zoom out\" action=\"ZoomOutAction\" />\
 				<menuitem name=\"Cursor\" action=\"CursorAction\"/>\
+				<menuitem name=\"Tracking\" action=\"TrackingAction\"/>\
 				<menuitem name=\"Orientation\" action=\"OrientationAction\"/>\
+				<menuitem name=\"Roadbook\" action=\"RoadbookAction\"/>\
 				<menuitem name=\"Quit\" action=\"QuitAction\" />\
 				<placeholder name=\"RouteMenuAdditions\" />\
 			</menu>\
@@ -354,6 +373,7 @@ static char layout[] =
 				<toolitem name=\"Orientation\" action=\"OrientationAction\"/>\
 				<toolitem name=\"Destination\" action=\"DestinationAction\"/>\
 				<toolitem name=\"Info\" action=\"InfoAction\"/>\
+				<toolitem name=\"Roadbook\" action=\"RoadbookAction\"/>\
 				<toolitem name=\"Quit\" action=\"QuitAction\"/>\
 				<separator/>\
 			</placeholder>\

@@ -10,8 +10,10 @@ void callback_list_add(struct callback_list *l, struct callback *cb);
 struct callback *callback_list_add_new(struct callback_list *l, void (*func)(void), int pcount, void **p);
 void callback_list_remove(struct callback_list *l, struct callback *cb);
 void callback_list_remove_destroy(struct callback_list *l, struct callback *cb);
+void callback_call(struct callback *cb, int pcount, void **p);
 void callback_list_call(struct callback_list *l, int pcount, void **p);
 void callback_list_destroy(struct callback_list *l);
+/* end of prototypes */
 
 static inline struct callback *callback_new_0(void (*func)(void))
 {
@@ -24,6 +26,17 @@ static inline struct callback *callback_new_1(void (*func)(void), void *p1)
 	p[0]=p1;
 	return callback_new(func, 1, p);
 }
+
+static inline void callback_call_0(struct callback *cb)
+{
+	callback_call(cb, 0, NULL);
+}
+
+static inline void callback_list_call_0(struct callback_list *l)
+{
+	callback_list_call(l, 0, NULL);
+}
+
 
 static inline void callback_list_call_1(struct callback_list *l, void *p1)
 {
@@ -41,7 +54,6 @@ static inline void callback_list_call_2(struct callback_list *l, void *p1, void 
 }
 
 #define callback_cast(x) (void (*)(void))(x)
-/* end of prototypes */
 #ifdef __cplusplus
 }
 #endif
