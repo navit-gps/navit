@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-17 17:51+0200\n"
+"POT-Creation-Date: 2007-08-03 14:49+0200\n"
 "PO-Revision-Date: 2007-07-16 13:54+0100\n"
 "Last-Translator: KaZeR <kazer@altern.org>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: ../src/main.c:89
 #, c-format
 msgid "Running from source directory\n"
-msgstr ""
+msgstr "Execution depuis le dossier source"
 
 #: ../src/main.c:114
 #, c-format
@@ -33,7 +33,7 @@ msgstr "Utilisation de '%s'\n"
 #: ../src/main.c:119
 #, c-format
 msgid "No instance has been created, exiting\n"
-msgstr ""
+msgstr "Pas d'instance créée, sortie"
 
 #: ../src/navigation.c:175
 #, c-format
@@ -125,7 +125,7 @@ msgstr "fortement "
 
 #: ../src/navigation.c:442
 msgid "unknown "
-msgstr ""
+msgstr "inconnu"
 
 #: ../src/navigation.c:448
 msgid "When possible, please turn around"
@@ -170,11 +170,11 @@ msgstr "%s Tournez %s%s"
 msgid "You have reached your destination %s"
 msgstr "Dans %d m, vous êtes arrivé."
 
-#: ../src/navit.c:327 ../src/gui/gtk/gui_gtk_action.c:159
+#: ../src/navit.c:428 ../src/gui/gtk/gui_gtk_action.c:179
 msgid "Layout"
 msgstr "Calques"
 
-#: ../src/navit.c:340
+#: ../src/navit.c:441
 msgid "Projection"
 msgstr "Projection"
 
@@ -200,7 +200,7 @@ msgstr "Géorgie"
 
 #: ../src/country.c:29
 msgid "Latvia"
-msgstr ""
+msgstr "Lettonie"
 
 #: ../src/country.c:30
 msgid "Lithuania"
@@ -308,7 +308,7 @@ msgstr "Irlande"
 
 #: ../src/country.c:56
 msgid "Iceland"
-msgstr ""
+msgstr "Islande"
 
 #: ../src/country.c:57
 msgid "Albania"
@@ -316,7 +316,7 @@ msgstr "Albanie"
 
 #: ../src/country.c:58
 msgid "Malta"
-msgstr ""
+msgstr "Malte"
 
 #: ../src/country.c:59
 msgid "Cyprus"
@@ -332,7 +332,7 @@ msgstr "Bulgarie"
 
 #: ../src/country.c:62
 msgid "Lebanon"
-msgstr ""
+msgstr "Liban"
 
 #: ../src/country.c:63
 msgid "Andorra"
@@ -408,7 +408,7 @@ msgstr "Monaco"
 
 #: ../src/country.c:81
 msgid "Azerbaijan"
-msgstr ""
+msgstr "Azerbaïdjan"
 
 #: ../src/country.c:82
 msgid "Armenia"
@@ -416,108 +416,120 @@ msgstr "Arménie"
 
 #: ../src/country.c:83
 msgid "Faroe Islands"
-msgstr ""
+msgstr "Îles Féroé"
 
 #: ../src/country.c:84
 msgid "Western Sahara"
-msgstr ""
+msgstr "Sahara"
 
 #: ../src/country.c:85
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "Spitzberg"
 
-#: ../src/gui/gtk/destination.c:294
+#: ../src/gui/gtk/destination.c:317
 msgid "Country"
 msgstr "Pays"
 
-#: ../src/gui/gtk/destination.c:296
+#: ../src/gui/gtk/destination.c:319
 msgid "Zip Code"
 msgstr "Code postal"
 
-#: ../src/gui/gtk/destination.c:298
+#: ../src/gui/gtk/destination.c:321
 msgid "City"
 msgstr "Ville"
 
-#: ../src/gui/gtk/destination.c:300
+#: ../src/gui/gtk/destination.c:323
 msgid "District/Township"
 msgstr "District"
 
-#: ../src/gui/gtk/destination.c:303
+#: ../src/gui/gtk/destination.c:326
 msgid "Street"
 msgstr "Rue"
 
-#: ../src/gui/gtk/destination.c:305
+#: ../src/gui/gtk/destination.c:328
 msgid "Number"
 msgstr "Numéro"
 
-#: ../src/gui/gtk/gui_gtk_action.c:156
+#: ../src/gui/gtk/gui_gtk_action.c:176
 msgid "Display"
 msgstr "Affichage"
 
-#: ../src/gui/gtk/gui_gtk_action.c:157
+#: ../src/gui/gtk/gui_gtk_action.c:177
 msgid "Route"
 msgstr "Route"
 
-#: ../src/gui/gtk/gui_gtk_action.c:158
+#: ../src/gui/gtk/gui_gtk_action.c:178
 msgid "Map"
 msgstr "Carte"
 
-#: ../src/gui/gtk/gui_gtk_action.c:160
+#: ../src/gui/gtk/gui_gtk_action.c:180
 msgid "ZoomOut"
 msgstr "Zoom Arrière"
 
-#: ../src/gui/gtk/gui_gtk_action.c:161
+#: ../src/gui/gtk/gui_gtk_action.c:181
 msgid "ZoomIn"
 msgstr "Zoom Avant"
 
-#: ../src/gui/gtk/gui_gtk_action.c:162
+#: ../src/gui/gtk/gui_gtk_action.c:182
 msgid "Refresh"
 msgstr "Rafraichir"
 
-#: ../src/gui/gtk/gui_gtk_action.c:163
+#: ../src/gui/gtk/gui_gtk_action.c:183
+msgid "Roadbook"
+msgstr "Carnet de route"
+
+#: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "Info"
 msgstr "Info"
 
-#: ../src/gui/gtk/gui_gtk_action.c:164
+#: ../src/gui/gtk/gui_gtk_action.c:185
 msgid "Destination"
 msgstr "Destination"
 
-#: ../src/gui/gtk/gui_gtk_action.c:165
-msgid "Test"
-msgstr ""
+#: ../src/gui/gtk/gui_gtk_action.c:186
+msgid "Clear"
+msgstr "Effacer"
 
-#: ../src/gui/gtk/gui_gtk_action.c:166
+#: ../src/gui/gtk/gui_gtk_action.c:187
+msgid "Test"
+msgstr "Test"
+
+#: ../src/gui/gtk/gui_gtk_action.c:188
 msgid "_Quit"
 msgstr "_Quitter"
 
-#: ../src/gui/gtk/gui_gtk_action.c:173
+#: ../src/gui/gtk/gui_gtk_action.c:195
 msgid "Cursor"
 msgstr "Curseur"
 
-#: ../src/gui/gtk/gui_gtk_action.c:174
+#: ../src/gui/gtk/gui_gtk_action.c:196
+msgid "Tracking"
+msgstr "Suivi"
+
+#: ../src/gui/gtk/gui_gtk_action.c:197
 msgid "Orientation"
 msgstr "Orientation"
 
-#: ../src/gui/gtk/gui_gtk_action.c:181
+#: ../src/gui/gtk/gui_gtk_action.c:204
 msgid "Data"
 msgstr "Données"
 
-#: ../src/gui/gtk/gui_gtk_action.c:182
+#: ../src/gui/gtk/gui_gtk_action.c:205
 msgid "VisibleBlocks"
-msgstr ""
+msgstr "VisibleBlocks"
 
-#: ../src/gui/gtk/gui_gtk_action.c:183
+#: ../src/gui/gtk/gui_gtk_action.c:206
 msgid "VisibleTowns"
-msgstr ""
+msgstr "VisibleTowns"
 
-#: ../src/gui/gtk/gui_gtk_action.c:184
+#: ../src/gui/gtk/gui_gtk_action.c:207
 msgid "VisiblePolys"
-msgstr ""
+msgstr "VisiblePolys"
 
-#: ../src/gui/gtk/gui_gtk_action.c:185
+#: ../src/gui/gtk/gui_gtk_action.c:208
 msgid "VisibleStreets"
-msgstr ""
+msgstr "VisibleStreets"
 
-#: ../src/gui/gtk/gui_gtk_action.c:186
+#: ../src/gui/gtk/gui_gtk_action.c:209
 msgid "VisiblePoints"
-msgstr ""
+msgstr "VisiblePoints"
