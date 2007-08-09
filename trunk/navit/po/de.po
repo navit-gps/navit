@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-07-22 18:20+0200\n"
+"POT-Creation-Date: 2007-08-03 14:49+0200\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Martin Schaller <martin-s@sourceforge.net>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -171,11 +171,11 @@ msgstr "%s %s%s abbiegen"
 msgid "You have reached your destination %s"
 msgstr "%s haben Sie ihr Ziel erreicht"
 
-#: ../src/navit.c:427 ../src/gui/gtk/gui_gtk_action.c:179
+#: ../src/navit.c:428 ../src/gui/gtk/gui_gtk_action.c:179
 msgid "Layout"
 msgstr "Layout"
 
-#: ../src/navit.c:440
+#: ../src/navit.c:441
 msgid "Projection"
 msgstr "Projektion"
 

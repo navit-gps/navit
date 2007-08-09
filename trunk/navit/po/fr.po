@@ -18,7 +18,7 @@ msgstr ""
 #: ../src/main.c:89
 #, c-format
 msgid "Running from source directory\n"
-msgstr "Execution depuis le dossier source"
+msgstr "Execution depuis le dossier source\n"
 
 #: ../src/main.c:114
 #, c-format
@@ -33,7 +33,7 @@ msgstr "Utilisation de '%s'\n"
 #: ../src/main.c:119
 #, c-format
 msgid "No instance has been created, exiting\n"
-msgstr "Pas d'instance créée, sortie"
+msgstr "Pas d'instance créée, sortie\n"
 
 #: ../src/navigation.c:175
 #, c-format
