@@ -7,14 +7,14 @@
 int block_lin_count,block_idx_count,block_active_count,block_mem,block_active_mem;
 
 struct block_index_item {
-	unsigned long blocknum;
-	unsigned long blocks;
+	unsigned int blocknum;
+	unsigned int blocks;
 };
 
 struct block_index {
-	unsigned long blocks;
-        unsigned long size;
-        unsigned long next;      
+	unsigned int blocks;
+        unsigned int size;
+        unsigned int next;      
 	struct block_index_item list[0];
 };
 
