@@ -445,7 +445,7 @@ street_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi,
 struct street_name_index {
 	int block;
         unsigned short country;
-        long town_assoc;
+        int town_assoc;
         char name[0];
 } __attribute__((packed));
 
