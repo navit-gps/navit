@@ -28,53 +28,62 @@ struct menu_priv {
 /* Create callbacks that implement our Actions */
 
 static void
-zoom_in_action(GtkWidget *w, struct navit *nav, void *dummy)
+zoom_in_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_zoom_in(nav, 2);
+	navit_zoom_in(gui->nav, 2);
 }
 
 static void
-zoom_out_action(GtkWidget *w, struct navit *nav, void *dummy)
+zoom_out_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_zoom_out(nav, 2);
+	navit_zoom_out(gui->nav, 2);
 }
 
 static void
-refresh_action(GtkWidget *w, struct navit *nav, void *dummy)
+refresh_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_draw(nav);
+	navit_draw(gui->nav);
 }
 
 static void
-roadbook_action(GtkWidget *w, struct navit *nav, void *dummy)
+roadbook_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_window_roadbook_new(nav);
+	navit_window_roadbook_new(gui->nav);
 }
 
 static void
-cursor_action(GtkWidget *w, struct navit *nav, void *dummy)
+cursor_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_toggle_cursor(nav);
+	navit_toggle_cursor(gui->nav);
 #if 0
 	ac->gui->co->flags->track=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
 #endif
 }
 
 static void
-tracking_action(GtkWidget *w, struct navit *nav, void *dummy)
+tracking_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_toggle_tracking(nav);
+	navit_toggle_tracking(gui->nav);
 #if 0
 	ac->gui->co->flags->track=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
 #endif
 }
 
 static void
-orient_north_action(GtkWidget *w, struct navit *nav, void *dummy)
+orient_north_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
 #if 0
 	ac->gui->co->flags->orient_north=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
 #endif
+}
+
+static void
+window_fullscreen_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
+{
+	if(gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w)))
+		gtk_window_fullscreen(GTK_WINDOW(gui->win));
+	else
+		gtk_window_unfullscreen(GTK_WINDOW(gui->win));
 }
 
 #include <stdlib.h>
@@ -82,7 +91,7 @@ orient_north_action(GtkWidget *w, struct navit *nav, void *dummy)
 #include "transform.h"
 
 static void
-info_action(GtkWidget *w, struct navit *nav, void *dummy)
+info_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
 	char buffer[512];
 	int mw,mh;
@@ -90,7 +99,7 @@ info_action(GtkWidget *w, struct navit *nav, void *dummy)
 	struct point p;
 	struct transformation *t;
 
-	t=navit_get_trans(nav);
+	t=navit_get_trans(gui->nav);
 	transform_get_size(t, &mw, &mh);
 	p.x=0;
 	p.y=0;
@@ -106,22 +115,22 @@ info_action(GtkWidget *w, struct navit *nav, void *dummy)
 
 
 static void
-route_clear_action(GtkWidget *w, struct navit *nav, void *dummy)
+route_clear_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_set_destination(nav, NULL, NULL);
+	navit_set_destination(gui->nav, NULL, NULL);
 }
 
 static void
-destination_action(GtkWidget *w, struct navit *nav, void *dummy)
+destination_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	destination_address(nav);
+	destination_address(gui->nav);
 }
 
 
 static void     
-quit_action (GtkWidget *w, struct navit *nav, void *dummy)
+quit_action (GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_destroy(nav);
+	navit_destroy(gui->nav);
 }
 
 static void
@@ -194,7 +203,8 @@ static GtkToggleActionEntry toggleentries[] =
 {
 	{ "CursorAction", "cursor_icon",_n("Cursor"), NULL, NULL, G_CALLBACK(cursor_action),TRUE },
 	{ "TrackingAction", NULL ,_n("Tracking"), NULL, NULL, G_CALLBACK(tracking_action),TRUE },
-	{ "OrientationAction", "orientation_icon", _n("Orientation"), NULL, NULL, G_CALLBACK(orient_north_action),FALSE }
+	{ "OrientationAction", "orientation_icon", _n("Orientation"), NULL, NULL, G_CALLBACK(orient_north_action),FALSE },
+	{ "FullscreenAction",GTK_STOCK_FULLSCREEN, _n("Fullscreen"), NULL, NULL, G_CALLBACK(window_fullscreen_action), FALSE }
 };
 
 static guint n_toggleentries = G_N_ELEMENTS (toggleentries);
@@ -345,6 +355,7 @@ static char layout[] =
 				<menuitem name=\"Tracking\" action=\"TrackingAction\"/>\
 				<menuitem name=\"Orientation\" action=\"OrientationAction\"/>\
 				<menuitem name=\"Roadbook\" action=\"RoadbookAction\"/>\
+				<menuitem name=\"Fullscreen\" action=\"FullscreenAction\"/>\
 				<menuitem name=\"Quit\" action=\"QuitAction\" />\
 				<placeholder name=\"RouteMenuAdditions\" />\
 			</menu>\
@@ -501,10 +512,10 @@ gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, in
 		gtk_action_group_set_translation_domain(this->base_group,"navit");
 		gtk_action_group_set_translation_domain(this->debug_group,"navit");
 		gtk_action_group_set_translation_domain(this->dyn_group,"navit");
-		gtk_action_group_add_actions (this->base_group, entries, n_entries, this->nav);
-		gtk_action_group_add_toggle_actions (this->base_group, toggleentries, n_toggleentries, this->nav);
+		gtk_action_group_add_actions (this->base_group, entries, n_entries, this);
+		gtk_action_group_add_toggle_actions (this->base_group, toggleentries, n_toggleentries, this);
 		gtk_ui_manager_insert_action_group (this->menu_manager, this->base_group, 0);
-		gtk_action_group_add_actions (this->debug_group, debug_entries, n_debug_entries, this->nav);
+		gtk_action_group_add_actions (this->debug_group, debug_entries, n_debug_entries, this);
 		gtk_ui_manager_insert_action_group (this->menu_manager, this->debug_group, 0);
 		gtk_ui_manager_add_ui_from_string (this->menu_manager, layout, strlen(layout), &error);
 		gtk_ui_manager_insert_action_group (this->menu_manager, this->dyn_group, 0);
