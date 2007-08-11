@@ -10,7 +10,6 @@
 #include "coord.h"
 
 // Theses are needed for searches
-#include "attr.h"
 #include "item.h"
 #include "search.h"
 
