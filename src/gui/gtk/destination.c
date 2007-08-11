@@ -7,9 +7,8 @@
 #include "debug.h"
 #include "destination.h"
 #include "navit.h"
-#include "attr.h"
-#include "coord.h"
 #include "item.h"
+#include "coord.h"
 #include "search.h"
 
 #define COL_COUNT 8

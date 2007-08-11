@@ -3,7 +3,6 @@
 #include <glib.h>
 #include <libintl.h>
 #include "debug.h"
-#include "attr.h"
 #include "item.h"
 #include "country.h"
 #include "search.h"
