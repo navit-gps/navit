@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <glib.h>
 #include <libintl.h>
+#include <math.h>
 #include "debug.h"
 #include "navit.h"
 #include "callback.h"
@@ -66,6 +67,7 @@ struct navit {
 	struct displaylist *displaylist;
 	int cursor_flag;
 	int tracking_flag;
+	int orient_north_flag;
 	GList *vehicles;
 	GList *windows_items;
 	struct navit_vehicle *vehicle;
@@ -855,6 +857,12 @@ navit_toggle_tracking(struct navit *this_)
 	this_->tracking_flag=1-this_->tracking_flag;
 }
 
+void
+navit_toggle_orient_north(struct navit *this_)
+{
+	this_->orient_north_flag=1-this_->orient_north_flag;
+}
+
 static void
 navit_cursor_update(struct navit *this_, struct cursor *cursor)
 {
@@ -863,7 +871,7 @@ navit_cursor_update(struct navit *this_, struct cursor *cursor)
 	int dir=cursor_get_dir(cursor);
 	int speed=cursor_get_speed(cursor);
 	enum projection pro;
-	int border=10;
+	int border=30;
 
 	if (!this_->vehicle || this_->vehicle->cursor != cursor)
 		return;
@@ -876,7 +884,10 @@ navit_cursor_update(struct navit *this_, struct cursor *cursor)
 	if (!transform(this_->trans, pro, cursor_c, &pnt) || !transform_within_border(this_->trans, &pnt, border)) {
 		if (!this_->cursor_flag)
 			return;
-		navit_set_center(this_, cursor_c);
+		if(this_->orient_north_flag)
+			navit_set_center_cursor(this_, cursor_c, 0, 50 - 30.*sin(M_PI*dir/180.), 50 + 30.*cos(M_PI*dir/180.));
+		else
+			navit_set_center_cursor(this_, cursor_c, dir, 50, 80);
 		transform(this_->trans, pro, cursor_c, &pnt);
 	}
 
