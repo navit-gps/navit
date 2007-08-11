@@ -28,7 +28,6 @@ struct cursor {
 	struct graphics_gc *cursor_gc;
 	struct transformation *trans;
 	struct point cursor_pnt;
-	struct callback_list *offscreen_cbl;
 	struct callback_list *update_cbl;
 	struct vehicle *v;
 	struct callback *vehicle_cb;
@@ -211,7 +210,6 @@ cursor_update(struct cursor *this, struct vehicle *v)
 	double *dir;
 	double *speed;
 	enum projection pro;
-	int border=10;
 
 	if (v) {
 		pos=vehicle_pos_get(v);	
@@ -223,10 +221,7 @@ cursor_update(struct cursor *this, struct vehicle *v)
 		this->pos=*pos;
 		this->pro=pro;
 		callback_list_call_1(this->update_cbl, this);
-		if (!transform(this->trans, pro, &this->pos, &pnt) || !transform_within_border(this->trans, &pnt, border)) {
-			callback_list_call_1(this->offscreen_cbl, this);
-			transform(this->trans, this->pro, &this->pos, &pnt);
-		}
+		transform(this->trans, pro, &this->pos, &pnt);
 		cursor_draw(this, &pnt, *dir-transform_get_angle(this->trans, 0), *speed > 2.5);
 	}
 #if 0
@@ -239,7 +234,9 @@ cursor_new(struct graphics *gra, struct vehicle *v, struct color *c, struct tran
 {
 	dbg(2,"enter gra=%p v=%p c=%p t=%p\n", gra, v, c, t);
 	struct cursor *this=g_new(struct cursor,1);
+#if 0
 	this->offscreen_cbl=callback_list_new();
+#endif
 	this->update_cbl=callback_list_new();
 	this->gra=gra;
 	this->trans=t;
@@ -254,10 +251,7 @@ cursor_new(struct graphics *gra, struct vehicle *v, struct color *c, struct tran
 }
 
 void
-cursor_add_callback(struct cursor *this, int offscreen, struct callback *cb)
+cursor_add_callback(struct cursor *this, struct callback *cb)
 {
-	if (offscreen)
-		callback_list_add(this->offscreen_cbl, cb);
-	else
-		callback_list_add(this->update_cbl, cb);
+	callback_list_add(this->update_cbl, cb);
 }

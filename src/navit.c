@@ -27,6 +27,7 @@
 #include "navigation.h"
 #include "speech.h"
 #include "track.h"
+#include "vehicle.h"
 
 #define _(STRING)    gettext(STRING)
 
@@ -39,7 +40,6 @@ struct navit_vehicle {
 	struct menu *menu;
 	struct cursor *cursor;
 	struct vehicle *vehicle;
-	struct callback *offscreen_cb;
 	struct callback *update_cb;
 };
 
@@ -856,19 +856,14 @@ navit_toggle_tracking(struct navit *this_)
 }
 
 static void
-navit_cursor_offscreen(struct navit *this_, struct cursor *cursor)
-{
-	if (!this_->cursor_flag || !this_->vehicle || this_->vehicle->cursor != cursor)
-		return;
-	navit_set_center(this_, cursor_pos_get(cursor));
-}
-
-static void
 navit_cursor_update(struct navit *this_, struct cursor *cursor)
 {
+	struct point pnt;
 	struct coord *cursor_c=cursor_pos_get(cursor);
 	int dir=cursor_get_dir(cursor);
 	int speed=cursor_get_speed(cursor);
+	enum projection pro;
+	int border=10;
 
 	if (!this_->vehicle || this_->vehicle->cursor != cursor)
 		return;
@@ -876,6 +871,14 @@ navit_cursor_update(struct navit *this_, struct cursor *cursor)
 	cursor_c=cursor_pos_get(cursor);
 	dir=cursor_get_dir(cursor);
 	speed=cursor_get_speed(cursor);
+	pro=vehicle_projection(this_->vehicle);
+
+	if (!transform(this_->trans, pro, cursor_c, &pnt) || !transform_within_border(this_->trans, &pnt, border)) {
+		if (!this_->cursor_flag)
+			return;
+		navit_set_center(this_, cursor_c);
+		transform(this_->trans, pro, cursor_c, &pnt);
+	}
 
 	if (this_->pid && speed > 2)
 		kill(this_->pid, SIGWINCH);
@@ -929,10 +932,8 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v, const char *name, stru
 	nv->update_curr=nv->update=update;
 	nv->follow_curr=nv->follow=follow;
 	nv->cursor=cursor_new(this_->gra, v, c, this_->trans);
-	nv->offscreen_cb=callback_new_1(callback_cast(navit_cursor_offscreen), this_);
-	cursor_add_callback(nv->cursor, 1, nv->offscreen_cb);
 	nv->update_cb=callback_new_1(callback_cast(navit_cursor_update), this_);
-	cursor_add_callback(nv->cursor, 0, nv->update_cb);
+	cursor_add_callback(nv->cursor, nv->update_cb);
 
 	this_->vehicles=g_list_append(this_->vehicles, nv);
 	return nv;
