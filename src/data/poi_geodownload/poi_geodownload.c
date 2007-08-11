@@ -22,13 +22,16 @@ struct map_priv
 	MdbIndex *idx;
 	int idx_size;
 	enum item_type type;
+	int name_col;
 };
 
 struct map_rect_priv
 {
 	struct item item;
 	struct map_priv *m;
+	enum attr_type attr_next;
 	int cidx;
+	char buffer[4096];
 };
 
 #if 0
@@ -61,9 +64,13 @@ struct poi_data {
 	char poibmp[256];
 
 
+#endif
+
 static void
 print_col(MdbHandle *h, MdbColumn *col, char *buffer, int hex)
 {
+	char *s;
+	dbg(1,"type=%d\n", col->col_type);
 	switch (col->col_type) {
 	case MDB_BOOL:
 		strcpy(buffer, mdb_pg_get_byte(h, col->cur_value_start) ? "True" : "False");
@@ -81,13 +88,19 @@ print_col(MdbHandle *h, MdbColumn *col, char *buffer, int hex)
 		sprintf(buffer, "%f", mdb_pg_get_double(h, col->cur_value_start));
 		break;
 	case MDB_TEXT:
-		sprintf(buffer, "%s", mdb_col_to_string (h, h->pg_buf, col-> cur_value_start,
-				 col->col_type, col->cur_value_len));
+		dbg(1,"pg_buf %p start %d len %d\n", h->pg_buf, col->cur_value_start, col->cur_value_len);
+		if (col->cur_value_len) {
+			s=mdb_col_to_string (h, h->pg_buf, col->cur_value_start, col->col_type, col->cur_value_len);
+			dbg(1,"s=%p\n", s);
+			sprintf(buffer, "%s", s);
+		}
 		break;
 	default:
 		sprintf(buffer, "unknown (%d)", col->col_type);
 	}
 }
+
+#if 0
 
 static void
 setup_idx_data(struct index_data *idx, struct coord *c, unsigned int geoflags, int size)
@@ -130,8 +143,10 @@ setup_idx_rect(struct coord *rect, struct index_data *idx, int size)
 	setup_idx_data(idx+1, r+1, 0xffffffff, size);
 }
 
+#endif
+
 static int
-load_row(struct poi *poi, int pg, int row)
+load_row(struct map_priv *poi, int pg, int row)
 {
 	int row_start, row_end, offset;
 	unsigned int num_fields, i;
@@ -141,13 +156,11 @@ load_row(struct poi *poi, int pg, int row)
 
 	fmt=poi->h->fmt;
 	mdb_read_pg(poi->h, pg);
-	if (debug)
-		printf("Page Type %d row_count_offset %d\n",poi->h->pg_buf[0], fmt->row_count_offset);
-	if (debug > 1) {
-		for (i = 0; i <= row; i++) {
-			offset=(fmt->row_count_offset + 2) + i * 2;
-			printf("row %d %d 0x%x\n", i, offset, mdb_pg_get_int16(poi->h, offset));
-		}
+	dbg(1, "enter poi=%p pg=%d row=%d\n", poi, pg, row);
+	dbg(1,"Page Type %d row_count_offset %d\n",poi->h->pg_buf[0], fmt->row_count_offset);
+	for (i = 0; i <= row; i++) {
+		offset=(fmt->row_count_offset + 2) + i * 2;
+		dbg(1,"row %d %d 0x%x\n", i, offset, mdb_pg_get_int16(poi->h, offset));
 	}
 	row_start = mdb_pg_get_int16(poi->h, (fmt->row_count_offset + 2) + row * 2);
 	if (row_start & 0x4000)
@@ -159,16 +172,18 @@ load_row(struct poi *poi, int pg, int row)
 	}
 
 	poi->h->cur_pos=row_start & 0x1fff;
-	poi->table->cur_row=row+1;
+	poi->table->cur_row=row;
 	num_fields = mdb_crack_row(poi->table, row_start & 0x1fff, row_end, fields);
-	if (debug)
-		printf("num_fields=%d\n", num_fields);
+	dbg(1,"num_fields=%d\n", num_fields);
 	for (i = 0; i < num_fields; i++) {
+		dbg(1,"i=%d/%d\n", i, num_fields);
 		poi->cols[i]->cur_value_start=fields[i].start;
 		poi->cols[i]->cur_value_len=fields[i].siz;
 	}
 	return 0;
 }
+
+#if 0
 
 static MdbIndexPage *
 index_next_row(MdbHandle *mdb, MdbIndex *idx, MdbIndexChain *chain)
@@ -295,6 +310,11 @@ load_poi_table(struct map_priv *m, MdbCatalogEntry *entry)
 	if (m->table_col->len < 4 || strcasecmp(m->cols[0]->name, "X") ||
 		strcasecmp(m->cols[1]->name, "Y") || strcasecmp(m->cols[3]->name, "GEOFLAGS")) 
 			return 1;
+	m->name_col=-1;
+	for (j = 0; j < m->table_col->len ; j++) {
+		if (!strcasecmp(m->cols[j]->name, "NAME"))
+			m->name_col=j;
+	}
 	for (j = 0; j < m->table->num_idxs; j++) {
 		idx = m->table->indices->pdata[j];
 		if (idx->num_keys == 3 && idx->key_col_num[0] == 1 &&
@@ -544,12 +564,60 @@ poi_geodownload_coord_get(void *priv_data, struct coord *c, int count)
 static void
 poi_geodownload_attr_rewind(void *priv_data)
 {
+	struct map_rect_priv *mr=priv_data;
+	mr->attr_next=attr_label;
 }
 
 static int
 poi_geodownload_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
+	struct map_rect_priv *mr=priv_data;
+	struct map_priv *m=mr->m;
+	MdbColumn *col;
+	char *v;
+	int j;
+
 	dbg(1,"enter\n");
+	attr->type=attr_type;
+	switch (attr_type) {
+	case attr_any:
+		while (mr->attr_next != attr_none) {
+			if (poi_geodownload_attr_get(mr, mr->attr_next, attr))
+				return 1;
+                }
+                return 0;
+	case attr_label:
+		mr->attr_next=attr_debug;
+		if (m->name_col == -1)
+			return 0;
+		col=m->cols[m->name_col];
+		if (col->cur_value_len) 
+			attr->u.str=mdb_col_to_string (m->h, m->h->pg_buf, col->cur_value_start, col->col_type, col->cur_value_len);
+		else
+			attr->u.str="";
+		return 1;
+	case attr_debug:
+		mr->attr_next=attr_none;
+		v=mr->buffer;
+		*v='\0';
+		for (j = 0; j < mr->m->table_col->len; j++) {
+			col = mr->m->table_col->pdata[j];
+			printf("start: %d type:%d\n", col->cur_value_start, col->col_type);
+			sprintf(v, "%s:", col->name);
+			v += strlen(v);
+			if (!strcasecmp(col->name,"X") || !strcasecmp(col->name,"Y")) 
+				print_col(mr->m->h, col, v, 1);
+			else
+				print_col(mr->m->h, col, v, 0);
+			v += strlen(v);
+			*v++='\n';
+			*v='\0';
+		}
+		attr->u.str=mr->buffer;
+		return 1;
+	default:
+		break;
+	}
 	return 0;
 }
 
@@ -589,15 +657,38 @@ static struct item *
 map_rect_get_item_poi_geodownload(struct map_rect_priv *mr)
 {
 	dbg(1,"enter\n");
-	if (mdb_fetch_row(mr->m->table))
+	if (mdb_fetch_row(mr->m->table)) {
+		mr->item.id_hi=mr->m->table->cur_phys_pg;
+		mr->item.id_lo=mr->m->table->cur_row-1;
+		poi_geodownload_attr_rewind(mr);
 		return &mr->item;
+	}
 	return NULL;
 }
 
 static struct item *
 map_rect_get_item_byid_poi_geodownload(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
-	return NULL;
+	char *v, buffer[4096];
+	int j;
+	MdbColumn *col;
+
+	dbg(1,"enter\n");
+	load_row(mr->m, id_hi, id_lo);
+	for (j = 0; j < mr->m->table_col->len; j++) {
+		col = mr->m->table_col->pdata[j];
+		printf("start: %d type:%d\n", col->cur_value_start, col->col_type);
+		sprintf(buffer, "%s:", col->name);
+		v = buffer + strlen(buffer);
+		if (!strcasecmp(col->name,"X") || !strcasecmp(col->name,"Y")) 
+			print_col(mr->m->h, col, v, 1);
+		else
+			print_col(mr->m->h, col, v, 0);
+		printf("%s\n", buffer);
+	}
+	dbg(1,"ret=%p\n", &mr->item);
+	poi_geodownload_attr_rewind(mr);
+	return &mr->item;
 }
 
 
@@ -630,10 +721,8 @@ map_new_poi_geodownload(struct map_methods *meth, char *filename, struct attr **
 	dbg(1,"attr_search\n");
 	attr=attr_search(attrs, NULL, attr_item_type);
 	dbg(1,"attr_search result %p\n", attr);
-	if (attr) {
+	if (attr) 
 		m->type=attr->u.item_type;
-		printf("type '%s'\n", item_to_name(m->type));
-	}
 		
 	
 	catalog = mdb_read_catalog(m->h, MDB_TABLE);
@@ -657,5 +746,6 @@ plugin_init(void)
 {
 	dbg(1,"plugin_init\n");
 	plugin_register_map_type("poi_geodownload", map_new_poi_geodownload);
+	mdb_init();
 }
 
