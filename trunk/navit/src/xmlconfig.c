@@ -50,7 +50,7 @@ static struct attr ** convert_to_attr(struct xmlstate *state)
 		attribute_value++;
 	}	
 	ret[count]=NULL;
-	dbg(0,"ret=%p\n", ret);
+	dbg(1,"ret=%p\n", ret);
 	return ret;
 }
 
