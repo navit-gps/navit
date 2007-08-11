@@ -4,6 +4,7 @@ extern "C" {
 extern struct gui *main_loop_gui;
 /* prototypes */
 enum projection;
+enum item_type;
 struct callback;
 struct color;
 struct coord;
@@ -42,6 +43,11 @@ void navit_add_menu_vehicles(struct navit *this_, struct menu *men);
 void navit_add_menu_vehicle(struct navit *this_, struct menu *men);
 void navit_speak(struct navit *this_);
 void navit_window_roadbook_new(struct navit *this_);
+void navit_window_roadbook_destroy(struct navit *this_);
+struct navit_window_items * navit_window_items_new(char *name, int distance);
+void navit_window_items_add_item(struct navit_window_items *nwi, enum item_type type);
+void navit_add_window_items(struct navit *this_, struct navit_window_items *nwi);
+void navit_add_menu_windows_items(struct navit *this_, struct menu *men);
 void navit_init(struct navit *this_);
 void navit_set_center(struct navit *this_, struct coord *center);
 void navit_set_center_screen(struct navit *this_, struct point *p);
