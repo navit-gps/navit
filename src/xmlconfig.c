@@ -28,6 +28,33 @@ struct xmlstate {
 } *xmlstate_root;
 
 
+static struct attr ** convert_to_attr(struct xmlstate *state)
+{
+	const gchar **attribute_name=state->attribute_names;
+	const gchar **attribute_value=state->attribute_values;
+	int count=0;
+	struct attr **ret;
+
+	while (*attribute_name) {
+		count++;
+		attribute_name++;
+	}
+	ret=g_new(struct attr, count+1);
+	attribute_name=state->attribute_names;
+	count=0;
+	while (*attribute_name) {
+		ret[count]=attr_new_from_text(*attribute_name,*attribute_value);
+		if (ret[count])
+			count++;
+		attribute_name++;
+		attribute_value++;
+	}	
+	ret[count]=NULL;
+	dbg(0,"ret=%p\n", ret);
+	return ret;
+}
+
+
 static const char * find_attribute(struct xmlstate *state, const char *attribute, int required)
 {
 	const gchar **attribute_name=state->attribute_names;
@@ -342,11 +369,13 @@ xmlconfig_mapset(struct xmlstate *state)
 static int
 xmlconfig_map(struct xmlstate *state)
 {
+	struct attr **attr;
 	const char *type=find_attribute(state, "type", 1);
 	const char *data=find_attribute(state, "data", 1);
 	if (! type || ! data)
 		return 0;
-	state->element_object = map_new(type, data);
+	attr=convert_to_attr(state);
+	state->element_object = map_new(type, data, attr);
 	if (! state->element_object)
 		return 0;
 	if (!find_boolean(state, "active", 1, 0))

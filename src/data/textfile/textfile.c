@@ -291,7 +291,7 @@ static struct map_methods map_methods_textfile = {
 };
 
 static struct map_priv *
-map_new_textfile(struct map_methods *meth, char *filename, char **charset, enum projection *pro)
+map_new_textfile(struct map_methods *meth, char *filename, struct attr **attrs, char **charset, enum projection *pro)
 {
 	struct map_priv *m;
 	dbg(1,"map_new_textfile %s\n",filename);	

@@ -1,4 +1,3 @@
-#include "attr.h"
 
 
 enum item_type {
@@ -8,6 +7,8 @@ enum item_type {
 #undef ITEM2
 #undef ITEM
 };
+
+#include "attr.h"
 
 #define item_is_equal_id(a,b) ((a).id_hi == (b).id_hi && (a).id_lo == (b).id_lo)
 #define item_is_equal(a,b) (item_is_equal_id(a,b) && (a).map == (b).map)

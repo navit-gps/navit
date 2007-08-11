@@ -2,7 +2,6 @@
 #include "debug.h"
 #include "map.h"
 #include "mapset.h"
-#include "attr.h"
 #include "coord.h"
 #include "item.h"
 #include "search.h"

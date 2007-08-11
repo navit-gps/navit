@@ -1,1 +1,1 @@
-SUBDIRS=mg textfile garmin_img
+SUBDIRS=mg textfile garmin_img poi_geodownload

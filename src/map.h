@@ -28,7 +28,7 @@ struct map;
 struct map_rect;
 struct map_search;
 struct map_selection;
-struct map *map_new(const char *type, const char *filename);
+struct map *map_new(const char *type, const char *filename, struct attr **attrs);
 char * map_convert_string(struct map *this, char *str);
 void map_convert_free(char *str);
 char *map_get_filename(struct map *this);

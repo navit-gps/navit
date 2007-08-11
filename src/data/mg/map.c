@@ -7,7 +7,7 @@
 #include "mg.h"
 
 
-struct map_priv * map_new_mg(struct map_methods *meth, char *dirname, char **charset, enum projection *pro);
+struct map_priv * map_new_mg(struct map_methods *meth, char *dirname, struct attr **attrs, char **charset, enum projection *pro);
 
 static int map_id;
 
@@ -259,7 +259,7 @@ static struct map_methods map_methods_mg = {
 };
 
 struct map_priv *
-map_new_mg(struct map_methods *meth, char *dirname, char **charset, enum projection *pro)
+map_new_mg(struct map_methods *meth, char *dirname, struct attr **attrs, char **charset, enum projection *pro)
 {
 	struct map_priv *m;
 	int i,maybe_missing,len=strlen(dirname);
