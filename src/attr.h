@@ -23,5 +23,7 @@ struct attr {
 
 enum attr_type attr_from_name(char *name);
 char * attr_to_name(enum attr_type attr);
+struct attr * attr_new_from_text(char *name, char *value);
+struct attr * attr_search(struct attr **attrs, struct attr *last, enum attr_type attr);
 
 #endif
