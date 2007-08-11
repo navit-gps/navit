@@ -55,26 +55,18 @@ static void
 cursor_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
 	navit_toggle_cursor(gui->nav);
-#if 0
-	ac->gui->co->flags->track=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
-#endif
 }
 
 static void
 tracking_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
 	navit_toggle_tracking(gui->nav);
-#if 0
-	ac->gui->co->flags->track=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
-#endif
 }
 
 static void
 orient_north_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-#if 0
-	ac->gui->co->flags->orient_north=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
-#endif
+	navit_toggle_orient_north(gui->nav);
 }
 
 static void

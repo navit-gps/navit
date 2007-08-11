@@ -53,6 +53,7 @@ void navit_set_center(struct navit *this_, struct coord *center);
 void navit_set_center_screen(struct navit *this_, struct point *p);
 void navit_toggle_cursor(struct navit *this_);
 void navit_toggle_tracking(struct navit *this_);
+void navit_toggle_orient_north(struct navit *this_);
 void navit_set_position(struct navit *this_, struct coord *c);
 struct navit_vehicle *navit_add_vehicle(struct navit *this_, struct vehicle *v, const char *name, struct color *c, int update, int follow);
 void navit_add_vehicle_cb(struct navit *this_, struct callback *cb);
