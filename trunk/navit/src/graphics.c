@@ -466,8 +466,10 @@ do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapset
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type < type_line) {
 				item_coord_get(item, &c, 1);
-				if (!transform(t, pro, &c, &pnt[0]))
+				if (!transform(t, pro, &c, &pnt[0])) {
+					dbg(1,"not visible\n");
 					continue;
+				}
 				count=1;
 			} else {
 				count=0;

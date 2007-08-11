@@ -253,6 +253,8 @@ src/data/Makefile
 src/data/mg/Makefile
 src/data/textfile/Makefile
 src/data/garmin_img/Makefile
+src/data/poi_geodownload/Makefile
+src/data/poi_geodownload/libmdb/Makefile
 src/fib-1.1/Makefile
 src/graphics/Makefile
 src/graphics/gtk_drawing_area/Makefile

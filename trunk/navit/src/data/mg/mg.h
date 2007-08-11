@@ -1,8 +1,8 @@
 #include <glib.h>
+#include "item.h"
 #include "attr.h"
 #include "coord.h"
 #include "data.h"
-#include "item.h"
 #include "map.h"
 #include "file.h"
 

@@ -694,7 +694,7 @@ navit_window_items_open(struct menu *men, struct navit *this_, struct navit_wind
 			if (item_coord_get(item, &c, 1)) {
 				if (coord_rect_contains(&sel.rect, &c) && g_hash_table_lookup(nwi->hash, &item->type)) {
 					if (! item_attr_get(item, attr_label, &attr)) 
-						attr.u.str=NULL;
+						attr.u.str="";
 					idist=transform_distance(center, &c);
 					if (idist < dist) {
 						get_direction(dirbuf, transform_get_angle_delta(center, &c, 0), 1);

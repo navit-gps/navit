@@ -1,6 +1,8 @@
 #ifndef ATTR_H
 #define ATTR_H
 
+enum item_type;
+
 enum attr_type {
 #define ATTR2(x,y) attr_##x=y,
 #define ATTR(x) attr_##x,
@@ -15,6 +17,7 @@ struct attr {
 		char *str;
 		int num;
 		struct item *item;
+		enum item_type item_type;
 	} u;
 };
 

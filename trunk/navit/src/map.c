@@ -26,10 +26,10 @@ struct map_rect {
 };
 
 struct map *
-map_new(const char *type, const char *filename)
+map_new(const char *type, const char *filename, struct attr **attrs)
 {
 	struct map *m;
-	struct map_priv *(*maptype_new)(struct map_methods *meth, const char *name, char **charset, enum projection *pro);
+	struct map_priv *(*maptype_new)(struct map_methods *meth, const char *name, struct attr *attrs, char **charset, enum projection *pro);
 
 	maptype_new=plugin_get_map_type(type);
 	if (! maptype_new)
@@ -39,7 +39,7 @@ map_new(const char *type, const char *filename)
 	m->active=1;
 	m->filename=g_strdup(filename);
 	m->type=g_strdup(type);
-	m->priv=maptype_new(&m->meth, filename, &m->charset, &m->projection);
+	m->priv=maptype_new(&m->meth, filename, attrs, &m->charset, &m->projection);
 	return m;
 }
 

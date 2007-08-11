@@ -1,7 +1,7 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 #include "debug.h"
-#include "attr.h"
+#include "item.h"
 #include "mapset.h"
 #include "map.h"
 
