@@ -884,7 +884,7 @@ navit_cursor_update(struct navit *this_, struct cursor *cursor)
 	if (!transform(this_->trans, pro, cursor_c, &pnt) || !transform_within_border(this_->trans, &pnt, border)) {
 		if (!this_->cursor_flag)
 			return;
-		if(this_->orient_north_flag)
+		if (this_->orient_north_flag)
 			navit_set_center_cursor(this_, cursor_c, 0, 50 - 30.*sin(M_PI*dir/180.), 50 + 30.*cos(M_PI*dir/180.));
 		else
 			navit_set_center_cursor(this_, cursor_c, dir, 50, 80);
