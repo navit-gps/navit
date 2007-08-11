@@ -50,7 +50,7 @@ attr_new_from_text(char *name, char *value)
 	struct attr *ret;
 
 	ret=g_new0(struct attr, 1);
-	dbg(0,"enter name='%s' value='%s'\n", name, value);
+	dbg(1,"enter name='%s' value='%s'\n", name, value);
 	attr=attr_from_name(name);
 	ret->type=attr;
 	switch (attr) {
@@ -58,7 +58,7 @@ attr_new_from_text(char *name, char *value)
 		ret->u.item_type=item_from_name(value);
 		break;
 	default:
-		dbg(0,"default\n");
+		dbg(1,"default\n");
 		g_free(ret);
 		ret=NULL;
 	}
@@ -68,15 +68,14 @@ attr_new_from_text(char *name, char *value)
 struct attr *
 attr_search(struct attr **attrs, struct attr *last, enum attr_type attr)
 {
-	dbg(0, "enter attrs=%p\n", attrs);
+	dbg(1, "enter attrs=%p\n", attrs);
 	while (*attrs) {
-		dbg(0,"*attrs=%p\n", *attrs);
+		dbg(1,"*attrs=%p\n", *attrs);
 		if ((*attrs)->type == attr) {
 			return *attrs;
 		}
 		attrs++;
 	}
-	exit(0);
 	return NULL;
 }
 
