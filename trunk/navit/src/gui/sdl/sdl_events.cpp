@@ -5,12 +5,12 @@
 
 //  FIXME temporary fix for enum
 #include "projection.h"
+#include "item.h"
 #include "navit.h"
 
 #include "coord.h"
 
 // Theses are needed for searches
-#include "item.h"
 #include "search.h"
 
 

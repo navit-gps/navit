@@ -4,7 +4,7 @@
 //  FIXME temporary fix for enum
 #include "projection.h"
 
-
+#include "item.h"
 #include "navit.h"
 #include "profile.h"
 #include "transform.h"
@@ -15,7 +15,6 @@
 #include "point.h"
 #include "graphics.h"
 #include "gui_sdl.h"
-#include "item.h"
 #include "navigation.h"
 #include "debug.h"
 
