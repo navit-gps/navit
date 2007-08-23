@@ -1,3 +1,4 @@
+SUBDIRS=include
 AUTOMAKE_OPTIONS = no-exeext
 AM_CPPFLAGS = @NAVIT_CFLAGS@ -Iinclude
 
