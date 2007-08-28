@@ -3,6 +3,7 @@
 #include "debug.h"
 #include "item.h"
 #include "mapset.h"
+#include "projection.h"
 #include "map.h"
 
 struct mapset {

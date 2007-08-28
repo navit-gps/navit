@@ -194,7 +194,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 
 
 static struct graphics_priv *
-graphics_null_new(struct graphics_methods *meth)
+graphics_null_new(struct graphics_methods *meth, struct attr **attrs)
 {
 	*meth=graphics_methods;
 	return &graphics_priv;

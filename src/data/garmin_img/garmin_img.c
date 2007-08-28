@@ -5,13 +5,13 @@
 #include <math.h>
 #include "plugin.h"
 #include "data.h"
+#include "projection.h"
 #include "map.h"
 #include "maptype.h"
 #include "item.h"
 #include "attr.h"
 #include "coord.h"
 #include "transform.h"
-#include "projection.h"
 #include <stdio.h>
 #include "attr.h"
 #include "coord.h"
@@ -1458,6 +1458,8 @@ map_rect_get_item_byid_garmin_img(struct map_rect_priv *mr, int id_hi, int id_lo
 }
 
 static struct map_methods map_methods_garmin_img = {
+	projection_garmin,
+	"iso8859-1",
 	map_destroy_garmin_img,
 	map_charset_garmin_img,
 	map_projection_garmin_img,
@@ -1468,13 +1470,17 @@ static struct map_methods map_methods_garmin_img = {
 };
 
 static struct map_priv *
-map_new_garmin_img(struct map_methods *meth, char *filename)
+map_new_garmin_img(struct map_methods *meth, struct attr **attrs)
 {
 	struct map_priv *m;
+	struct attr *data=attr_search(attrs, NULL, attr_data);
+	if (! data)
+		return NULL;
+
 	*meth=map_methods_garmin_img;
 	m=g_new(struct map_priv, 1);
 	m->id=++map_id;
-	m->filename=g_strdup(filename);
+	m->filename=g_strdup(data->u.str);
 	return m;
 }
 

@@ -5,6 +5,7 @@
 #include "coord.h"
 #include "item.h"
 #include "route.h"
+#include "projection.h"
 #include "map.h"
 #include "mapset.h"
 

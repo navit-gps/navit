@@ -1,5 +1,6 @@
 #include <glib.h>
 #include "debug.h"
+#include "projection.h"
 #include "map.h"
 #include "mapset.h"
 #include "coord.h"

@@ -2,10 +2,10 @@
 #include <string.h>
 #include "debug.h"
 #include "coord.h"
+#include "projection.h"
 #include "map.h"
 #include "maptype.h"
 #include "transform.h"
-#include "projection.h"
 #include "item.h"
 #include "plugin.h"
 #include "country.h"
@@ -13,11 +13,9 @@
 struct map {
 	struct map_methods meth;
 	struct map_priv *priv;
-	char *filename;
 	char *type;
-	char *charset;
+	char *filename;
 	int active;
-	enum projection projection;
 };
 
 struct map_rect {
@@ -26,10 +24,12 @@ struct map_rect {
 };
 
 struct map *
-map_new(const char *type, const char *filename, struct attr **attrs)
+map_new(const char *type, struct attr **attrs)
 {
 	struct map *m;
-	struct map_priv *(*maptype_new)(struct map_methods *meth, const char *name, struct attr *attrs, char **charset, enum projection *pro);
+	struct map_priv *(*maptype_new)(struct map_methods *meth, struct attr **attrs);
+	struct attr *data=attr_search(attrs, NULL, attr_data);
+
 
 	maptype_new=plugin_get_map_type(type);
 	if (! maptype_new)
@@ -37,9 +37,10 @@ map_new(const char *type, const char *filename, struct attr **attrs)
 
 	m=g_new0(struct map, 1);
 	m->active=1;
-	m->filename=g_strdup(filename);
 	m->type=g_strdup(type);
-	m->priv=maptype_new(&m->meth, filename, attrs, &m->charset, &m->projection);
+	if (data) 
+		m->filename=g_strdup(data->u.str);
+	m->priv=maptype_new(&m->meth, attrs);
 	return m;
 }
 
@@ -70,13 +71,13 @@ map_set_active(struct map *this, int active)
 int
 map_requires_conversion(struct map *this)
 {
-	return (this->charset != NULL);	
+	return (this->meth.charset != NULL);	
 }
 
 char *
 map_convert_string(struct map *this, char *str)
 {
-	return g_convert(str, -1,"utf-8",this->charset,NULL,NULL,NULL);
+	return g_convert(str, -1,"utf-8",this->meth.charset,NULL,NULL,NULL);
 }
 
 void
@@ -88,7 +89,7 @@ map_convert_free(char *str)
 enum projection
 map_projection(struct map *this)
 {
-	return this->projection;
+	return this->meth.pro;
 }
 
 void
