@@ -1,9 +1,9 @@
 #include <mdbtools.h>
 #include "debug.h"
 #include "coord.h"
+#include "projection.h"
 #include "map.h"
 #include "item.h"
-#include "projection.h"
 #include "plugin.h"
 
 
@@ -693,6 +693,8 @@ map_rect_get_item_byid_poi_geodownload(struct map_rect_priv *mr, int id_hi, int 
 
 
 static struct map_methods map_methods_poi_geodownload = {
+	projection_mg,
+	"iso8859-1",
 	map_destroy_poi_geodownload,
 	map_rect_new_poi_geodownload,
 	map_rect_destroy_poi_geodownload,
@@ -701,18 +703,20 @@ static struct map_methods map_methods_poi_geodownload = {
 };
 
 static struct map_priv *
-map_new_poi_geodownload(struct map_methods *meth, char *filename, struct attr **attrs, char **charset, enum projection *pro)
+map_new_poi_geodownload(struct map_methods *meth, struct attr **attrs)
 {
         struct map_priv *m;
-        dbg(1,"filename %s\n",filename);
 	MdbCatalogEntry *entry;
 	GPtrArray *catalog;
 	int i;
 	struct attr *attr;
-
+	struct attr *data=attr_search(attrs, NULL, attr_data);
+	char *filename;
+        if (! data)
+		return NULL;
+	filename=data->u.str;
+        dbg(1,"filename %s\n",filename);
         *meth=map_methods_poi_geodownload;
-        *charset="iso8859-1";
-        *pro=projection_mg;
 
         m=g_new(struct map_priv, 1);
         m->filename=g_strdup(filename);
