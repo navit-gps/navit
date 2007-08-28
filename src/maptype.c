@@ -1,4 +1,5 @@
 #include <glib.h>
+#include "projection.h"
 #include "map.h"
 #include "maptype.h"
 

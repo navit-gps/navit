@@ -891,7 +891,7 @@ static struct graphics_methods graphics_methods = {
 };
 
 static struct graphics_priv *
-graphics_opengl_new(struct graphics_methods *meth)
+graphics_opengl_new(struct graphics_methods *meth, struct attr **attrs)
 {
 	struct graphics_priv *this=g_new0(struct graphics_priv,1);
 	*meth=graphics_methods;

@@ -5,15 +5,18 @@
 #include "coord.h"
 #include "layout.h"
 #include "mapset.h"
+#include "projection.h"
 #include "map.h"
 #include "navigation.h"
 #include "navit.h"
 #include "plugin.h"
-#include "projection.h"
 #include "route.h"
 #include "speech.h"
 #include "track.h"
 #include "vehicle.h"
+#include "point.h"
+#include "graphics.h"
+#include "gui.h"
 #include "xmlconfig.h"
 
 
@@ -28,7 +31,7 @@ struct xmlstate {
 } *xmlstate_root;
 
 
-static struct attr ** convert_to_attr(struct xmlstate *state)
+static struct attr ** convert_to_attrs(struct xmlstate *state)
 {
 	const gchar **attribute_name=state->attribute_names;
 	const gchar **attribute_value=state->attribute_values;
@@ -39,7 +42,7 @@ static struct attr ** convert_to_attr(struct xmlstate *state)
 		count++;
 		attribute_name++;
 	}
-	ret=g_new(struct attr, count+1);
+	ret=g_new(struct attr *, count+1);
 	attribute_name=state->attribute_names;
 	count=0;
 	while (*attribute_name) {
@@ -186,7 +189,7 @@ xmlconfig_debug(struct xmlstate *state)
 static int
 xmlconfig_navit(struct xmlstate *state)
 {
-	const char *value,*gui,*graphics;
+	const char *value;
 	int zoom=0;
 	struct coord c;
 	enum projection pro=projection_mg;
@@ -201,15 +204,39 @@ xmlconfig_navit(struct xmlstate *state)
 		c.x=1300000;
 		c.y=7000000;
 	}
-	gui=find_attribute(state, "gui", 0);
-	if (! gui)
-		gui="gtk";
-	graphics=find_attribute(state, "graphics", 0);
-	if (! graphics)
-		graphics="gtk_drawing_area";
-	state->element_object = navit_new(gui, graphics, &c, pro, zoom);
+	state->element_object = navit_new(&c, pro, zoom);
 	if (! state->element_object)
 		return 0;
+	return 1;
+}
+
+static int
+xmlconfig_graphics(struct xmlstate *state)
+{
+	struct attr **attrs;
+	const char *type=find_attribute(state, "type", 1);
+	if (! type)
+		return 0;
+	attrs=convert_to_attrs(state);
+	state->element_object = graphics_new(type, attrs);
+	if (! state->element_object)
+		return 0;
+	navit_set_graphics(state->parent->element_object, state->element_object);
+	return 1;
+}
+
+static int
+xmlconfig_gui(struct xmlstate *state)
+{
+	struct attr **attrs;
+	const char *type=find_attribute(state, "type", 1);
+	if (! type)
+		return 0;
+	attrs=convert_to_attrs(state);
+	state->element_object = gui_new(state->parent->element_object, type, attrs);
+	if (! state->element_object)
+		return 0;
+	navit_set_gui(state->parent->element_object, state->element_object);
 	return 1;
 }
 
@@ -369,13 +396,12 @@ xmlconfig_mapset(struct xmlstate *state)
 static int
 xmlconfig_map(struct xmlstate *state)
 {
-	struct attr **attr;
+	struct attr **attrs;
 	const char *type=find_attribute(state, "type", 1);
-	const char *data=find_attribute(state, "data", 1);
-	if (! type || ! data)
+	if (! type)
 		return 0;
-	attr=convert_to_attr(state);
-	state->element_object = map_new(type, data, attr);
+	attrs=convert_to_attrs(state);
+	state->element_object = map_new(type, attrs);
 	if (! state->element_object)
 		return 0;
 	if (!find_boolean(state, "active", 1, 0))
@@ -551,6 +577,8 @@ struct element_func {
 } elements[] = {
 	{ "debug", NULL, xmlconfig_debug},
 	{ "navit", NULL, xmlconfig_navit},
+	{ "graphics", "navit", xmlconfig_graphics},
+	{ "gui", "navit", xmlconfig_gui},
 	{ "layout", "navit", xmlconfig_layout},
 	{ "layer", "layout", xmlconfig_layer},
 	{ "item", "layer", xmlconfig_item},

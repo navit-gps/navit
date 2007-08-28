@@ -680,7 +680,7 @@ static void init_sdlgui(void)
 }
 
 static struct gui_priv *
-gui_sdl_new(struct navit *nav, struct gui_methods *meth, int w, int h) 
+gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs) 
 {
 	dbg(1,"Begin SDL init\n");
 	struct gui_priv *this_;

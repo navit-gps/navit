@@ -11,6 +11,7 @@
 #include "debug.h"
 #include "profile.h"
 #include "coord.h"
+#include "projection.h"
 #include "map.h"
 #include "mapset.h"
 #include "item.h"
@@ -958,7 +959,6 @@ route_info_free(struct route_info *inf)
 
 
 #include "point.h"
-#include "projection.h"
 
 struct street_data *
 route_info_street(struct route_info *rinf)

@@ -11,13 +11,13 @@
 #include "callback.h"
 #include "gui.h"
 #include "item.h"
+#include "projection.h"
 #include "map.h"
 #include "mapset.h"
 #include "main.h"
 #include "coord.h"
 #include "point.h"
 #include "transform.h"
-#include "projection.h"
 #include "param.h"
 #include "menu.h"
 #include "graphics.h"
@@ -29,6 +29,7 @@
 #include "speech.h"
 #include "track.h"
 #include "vehicle.h"
+#include "color.h"
 
 #define _(STRING)    gettext(STRING)
 
@@ -38,6 +39,7 @@ struct navit_vehicle {
 	int update_curr;
 	int follow;
 	int follow_curr;
+	struct color c;
 	struct menu *menu;
 	struct cursor *cursor;
 	struct vehicle *vehicle;
@@ -83,6 +85,7 @@ struct navit {
 
 struct gui *main_loop_gui;
 
+static void navit_cursor_update(struct navit *this_, struct cursor *cursor);
 
 void
 navit_add_mapset(struct navit *this_, struct mapset *ms)
@@ -175,7 +178,7 @@ navit_zoom_out(struct navit *this_, int factor)
 }
 
 struct navit *
-navit_new(const char *ui, const char *graphics, struct coord *center, enum projection pro, int zoom)
+navit_new(struct coord *center, enum projection pro, int zoom)
 {
 	struct navit *this_=g_new0(struct navit, 1);
 	FILE *f;
@@ -198,39 +201,32 @@ navit_new(const char *ui, const char *graphics, struct coord *center, enum proje
 
 	transform_setup(this_->trans, center, zoom, 0);
 	this_->displaylist=graphics_displaylist_new();
-	this_->gui=gui_new(this_, ui, 792, 547);
-	if (! this_->gui) {
-		g_warning("failed to create gui '%s'", ui);
-		navit_destroy(this_);
-		return NULL;
-	}
+	return this_;
+}
+
+void
+navit_set_gui(struct navit *this_, struct gui *gui)
+{
+	this_->gui=gui;
 	if (gui_has_main_loop(this_->gui)) {
 		if (! main_loop_gui) {
 			main_loop_gui=this_->gui;
 		} else {
 			g_warning("gui with main loop already active, ignoring this instance");
-			navit_destroy(this_);
-			return NULL;
+			return;
 		}
 	}
 	this_->menubar=gui_menubar_new(this_->gui);
 	this_->toolbar=gui_toolbar_new(this_->gui);
 	this_->statusbar=gui_statusbar_new(this_->gui);
-	this_->gra=graphics_new(graphics);
-	if (! this_->gra) {
-		g_warning("failed to create graphics '%s'", graphics);
-		navit_destroy(this_);
-		return NULL;
-	}
+}
+
+void
+navit_set_graphics(struct navit *this_, struct graphics *gra)
+{
+	this_->gra=gra;
 	graphics_register_resize_callback(this_->gra, navit_resize, this_);
 	graphics_register_button_callback(this_->gra, navit_button, this_);
-	if (gui_set_graphics(this_->gui, this_->gra)) {
-		g_warning("failed to connect graphics '%s' to gui '%s'\n", graphics, ui);
-		navit_destroy(this_);
-		return NULL;
-	}
-	graphics_init(this_->gra);
-	return this_;
 }
 
 static void
@@ -721,7 +717,7 @@ navit_window_items_open(struct menu *men, struct navit *this_, struct navit_wind
 }
 
 struct navit_window_items *
-navit_window_items_new(char *name, int distance)
+navit_window_items_new(const char *name, int distance)
 {
 	struct navit_window_items *nwi=g_new0(struct navit_window_items, 1);
 	nwi->name=g_strdup(name);
@@ -762,7 +758,23 @@ navit_init(struct navit *this_)
 {
 	struct menu *men;
 	struct mapset *ms;
+	GList *l;
+	struct navit_vehicle *nv;
 
+	if (!this_->gui || !this_->gra || gui_set_graphics(this_->gui, this_->gra)) {
+		g_warning("failed to connect graphics to gui\n");
+		navit_destroy(this_);
+		return;
+	}
+	graphics_init(this_->gra);
+	l=this_->vehicles;
+	while (l) {
+		nv=l->data;
+		nv->cursor=cursor_new(this_->gra, nv->vehicle, &nv->c, this_->trans);
+		nv->update_cb=callback_new_1(callback_cast(navit_cursor_update), this_);
+		cursor_add_callback(nv->cursor, nv->update_cb);
+		l=g_list_next(l);
+	}
 	if (this_->mapsets) {
 		ms=this_->mapsets->data;
 		if (this_->route)
@@ -879,7 +891,7 @@ navit_cursor_update(struct navit *this_, struct cursor *cursor)
 	cursor_c=cursor_pos_get(cursor);
 	dir=cursor_get_dir(cursor);
 	speed=cursor_get_speed(cursor);
-	pro=vehicle_projection(this_->vehicle);
+	pro=vehicle_projection(this_->vehicle->vehicle);
 
 	if (!transform(this_->trans, pro, cursor_c, &pnt) || !transform_within_border(this_->trans, &pnt, border)) {
 		if (!this_->cursor_flag)
@@ -942,9 +954,7 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v, const char *name, stru
 	nv->name=g_strdup(name);
 	nv->update_curr=nv->update=update;
 	nv->follow_curr=nv->follow=follow;
-	nv->cursor=cursor_new(this_->gra, v, c, this_->trans);
-	nv->update_cb=callback_new_1(callback_cast(navit_cursor_update), this_);
-	cursor_add_callback(nv->cursor, nv->update_cb);
+	nv->c=*c;
 
 	this_->vehicles=g_list_append(this_->vehicles, nv);
 	return nv;

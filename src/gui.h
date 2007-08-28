@@ -25,6 +25,7 @@ struct gui {
 };
 
 /* prototypes */
+struct attr;
 struct callback;
 struct coord;
 struct datawindow;
@@ -33,7 +34,7 @@ struct gui;
 struct menu;
 struct navit;
 struct statusbar;
-struct gui *gui_new(struct navit *nav, const char *type, int w, int h);
+struct gui *gui_new(struct navit *nav, const char *type, struct attr **attrs);
 struct statusbar *gui_statusbar_new(struct gui *gui);
 struct menu *gui_menubar_new(struct gui *gui);
 struct menu *gui_toolbar_new(struct gui *gui);

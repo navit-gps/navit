@@ -149,12 +149,13 @@ gui_gtk_delete(GtkWidget *widget, GdkEvent *event, struct navit *nav)
 }
 
 static struct gui_priv *
-gui_gtk_new(struct navit *nav, struct gui_methods *meth, int w, int h) 
+gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs) 
 {
 	struct gui_priv *this;
+	int w=792, h=547;
 
 	*meth=gui_gtk_methods;
-
+	
 	this=g_new0(struct gui_priv, 1);
 	this->nav=nav;
 	this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);

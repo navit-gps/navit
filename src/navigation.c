@@ -12,6 +12,7 @@
 #include "route.h"
 #include "transform.h"
 #include "mapset.h"
+#include "projection.h"
 #include "map.h"
 #include "navit.h"
 #include "callback.h"

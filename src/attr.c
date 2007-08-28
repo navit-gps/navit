@@ -20,7 +20,7 @@ static struct attr_name attr_names[]={
 };
 
 enum attr_type
-attr_from_name(char *name)
+attr_from_name(const char *name)
 {
 	int i;
 
@@ -44,7 +44,7 @@ attr_to_name(enum attr_type attr)
 }
 
 struct attr *
-attr_new_from_text(char *name, char *value)
+attr_new_from_text(const char *name, const char *value)
 {
 	enum attr_type attr;
 	struct attr *ret;
@@ -56,6 +56,9 @@ attr_new_from_text(char *name, char *value)
 	switch (attr) {
 	case attr_item_type:
 		ret->u.item_type=item_from_name(value);
+		break;
+	case attr_data:
+		ret->u.str=value;
 		break;
 	default:
 		dbg(1,"default\n");

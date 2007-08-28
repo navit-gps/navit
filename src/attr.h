@@ -21,10 +21,13 @@ struct attr {
 	} u;
 };
 
-enum attr_type attr_from_name(char *name);
-char * attr_to_name(enum attr_type attr);
-struct attr * attr_new_from_text(char *name, char *value);
-struct attr * attr_search(struct attr **attrs, struct attr *last, enum attr_type attr);
+/* prototypes */
+enum attr_type;
+struct attr;
+enum attr_type attr_from_name(const char *name);
+char *attr_to_name(enum attr_type attr);
+struct attr *attr_new_from_text(const char *name, const char *value);
+struct attr *attr_search(struct attr **attrs, struct attr *last, enum attr_type attr);
 void attr_free(struct attr *attr);
-
+/* end of prototypes */
 #endif

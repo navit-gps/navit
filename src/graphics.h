@@ -82,6 +82,7 @@ struct graphics_image {
 
 /* prototypes */
 enum draw_mode_num;
+struct attr;
 struct color;
 struct displayitem;
 struct displaylist;
@@ -94,7 +95,7 @@ struct item;
 struct point;
 struct route;
 struct transformation;
-struct graphics *graphics_new(const char *type);
+struct graphics *graphics_new(const char *type, struct attr **attrs);
 void graphics_init(struct graphics *this_);
 void *graphics_get_data(struct graphics *this_, char *type);
 void graphics_register_resize_callback(struct graphics *this_, void (*callback)(void *data, int w, int h), void *data);
@@ -112,12 +113,12 @@ void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct 
 void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r);
 void display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label);
 int graphics_ready(struct graphics *this_);
+void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, GList *layouts, struct route *route);
 void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, GList *layouts, struct route *route);
 struct displaylist_handle *graphics_displaylist_open(struct displaylist *displaylist);
 struct displayitem *graphics_displaylist_next(struct displaylist_handle *dlh);
 void graphics_displaylist_close(struct displaylist_handle *dlh);
 struct displaylist *graphics_displaylist_new(void);
-void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, GList *layouts, struct route *route);
 struct item *graphics_displayitem_get_item(struct displayitem *di);
 char *graphics_displayitem_get_label(struct displayitem *di);
 int graphics_displayitem_within_dist(struct displayitem *di, struct point *p, int dist);
