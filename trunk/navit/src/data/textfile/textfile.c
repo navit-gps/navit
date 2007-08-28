@@ -5,13 +5,13 @@
 #include <math.h>
 #include "debug.h"
 #include "plugin.h"
+#include "projection.h"
 #include "map.h"
 #include "maptype.h"
 #include "item.h"
 #include "attr.h"
 #include "coord.h"
 #include "transform.h"
-#include "projection.h"
 
 #include "textfile.h"
 
@@ -283,6 +283,8 @@ map_rect_get_item_byid_textfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 }
 
 static struct map_methods map_methods_textfile = {
+	projection_mg,
+	"iso8859-1",
 	map_destroy_textfile,
 	map_rect_new_textfile,
 	map_rect_destroy_textfile,
@@ -291,17 +293,18 @@ static struct map_methods map_methods_textfile = {
 };
 
 static struct map_priv *
-map_new_textfile(struct map_methods *meth, char *filename, struct attr **attrs, char **charset, enum projection *pro)
+map_new_textfile(struct map_methods *meth, struct attr **attrs)
 {
 	struct map_priv *m;
-	dbg(1,"map_new_textfile %s\n",filename);	
+	struct attr *data=attr_search(attrs, NULL, attr_data);
+	if (! data)
+		return NULL;
+	dbg(1,"map_new_textfile %s\n", data->u.str);	
 	*meth=map_methods_textfile;
-	*charset="iso8859-1";
-	*pro=projection_mg;
 
 	m=g_new(struct map_priv, 1);
 	m->id=++map_id;
-	m->filename=g_strdup(filename);
+	m->filename=g_strdup(data->u.str);
 	return m;
 }
 

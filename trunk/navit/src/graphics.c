@@ -6,10 +6,10 @@
 #include "draw_info.h"
 #include "point.h"
 #include "graphics.h"
+#include "projection.h"
 #include "map.h"
 #include "coord.h"
 #include "transform.h"
-#include "projection.h"
 #include "plugin.h"
 #include "profile.h"
 #include "mapset.h"
@@ -31,16 +31,16 @@ struct displaylist {
 };
 
 struct graphics *
-graphics_new(const char *type)
+graphics_new(const char *type, struct attr **attrs)
 {
 	struct graphics *this_;
-	struct graphics_priv * (*new)(struct graphics_methods *meth);
+	struct graphics_priv * (*new)(struct graphics_methods *meth, struct attr **attrs);
 
 	new=plugin_get_graphics_type(type);
 	if (! new)
 		return NULL;	
 	this_=g_new0(struct graphics, 1);
-	this_->priv=(*new)(&this_->meth);
+	this_->priv=(*new)(&this_->meth, attrs);
 	return this_;
 }
 

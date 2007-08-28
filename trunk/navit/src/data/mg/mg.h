@@ -3,6 +3,7 @@
 #include "attr.h"
 #include "coord.h"
 #include "data.h"
+#include "projection.h"
 #include "map.h"
 #include "file.h"
 

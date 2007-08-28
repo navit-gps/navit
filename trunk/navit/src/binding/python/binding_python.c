@@ -2,6 +2,7 @@
 #include <Python.h>
 #include <fcntl.h>
 #include "coord.h"
+#include "projection.h"
 #include "map.h"
 #include "mapset.h"
 #include "plugin.h"
@@ -173,7 +174,7 @@ map_new_py(PyObject *self, PyObject *args)
 	if (!PyArg_ParseTuple(args, "ss:navit.map", &type, &filename))
 		return NULL;
 	ret=PyObject_NEW(mapObject, &map_Type);
-	ret->m=map_new(type,filename,NULL);
+	ret->m=map_new(type,NULL);
 	return (PyObject *)ret;
 }
 

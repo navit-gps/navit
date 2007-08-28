@@ -3,11 +3,10 @@
 #include "debug.h"
 #include "plugin.h"
 #include "maptype.h"
-#include "projection.h"
 #include "mg.h"
 
 
-struct map_priv * map_new_mg(struct map_methods *meth, char *dirname, struct attr **attrs, char **charset, enum projection *pro);
+struct map_priv * map_new_mg(struct map_methods *meth, struct attr **attrs);
 
 static int map_id;
 
@@ -248,6 +247,8 @@ map_search_get_item_mg(struct map_search_priv *ms)
 }
 
 static struct map_methods map_methods_mg = {
+	projection_mg,
+	"iso8859-1",
 	map_destroy_mg,
 	map_rect_new_mg,
 	map_rect_destroy_mg,
@@ -259,30 +260,31 @@ static struct map_methods map_methods_mg = {
 };
 
 struct map_priv *
-map_new_mg(struct map_methods *meth, char *dirname, struct attr **attrs, char **charset, enum projection *pro)
+map_new_mg(struct map_methods *meth, struct attr **attrs)
 {
 	struct map_priv *m;
-	int i,maybe_missing,len=strlen(dirname);
-	char filename[len+16];
+	int i,maybe_missing;
+	struct attr *data;
+	char *filename;
 	
 	*meth=map_methods_mg;
-	*charset="iso8859-1";
-	*pro=projection_mg;
+	data=attr_search(attrs, NULL, attr_data);
+	if (! data)
+		return NULL;
 
 	m=g_new(struct map_priv, 1);
 	m->id=++map_id;
-	m->dirname=g_strdup(dirname);
-	strcpy(filename, dirname);
-	filename[len]='/';
+	m->dirname=g_strdup(data->u.str);
 	for (i = 0 ; i < file_end ; i++) {
 		if (file[i]) {
-			strcpy(filename+len+1, file[i]);
+			filename=g_strdup_printf("%s/%s", data->u.str, file[i]);
 			m->file[i]=file_create_caseinsensitive(filename);
 			if (! m->file[i]) {
 				maybe_missing=(i == file_border_ply || i == file_height_ply || i == file_sea_ply);
 				if (! maybe_missing)
 					g_warning("Failed to load %s", filename);
 			}
+			g_free(filename);
 		}
 	}
 

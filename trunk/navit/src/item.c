@@ -53,7 +53,7 @@ struct item * item_new(char *type, int zoom)
 }
 
 enum item_type
-item_from_name(char *name)
+item_from_name(const char *name)
 {
 	int i;
 

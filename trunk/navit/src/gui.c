@@ -7,17 +7,17 @@
 #include "plugin.h"
 
 struct gui *
-gui_new(struct navit *nav, const char *type, int w, int h)
+gui_new(struct navit *nav, const char *type, struct attr **attrs)
 {
 	struct gui *this_;
-	struct gui_priv *(*guitype_new)(struct navit *nav, struct gui_methods *meth, int w, int h);
+	struct gui_priv *(*guitype_new)(struct navit *nav, struct gui_methods *meth, struct attr **attrs);
 
         guitype_new=plugin_get_gui_type(type);
         if (! guitype_new)
                 return NULL;
 
 	this_=g_new0(struct gui, 1);
-	this_->priv=guitype_new(nav, &this_->meth, w, h);
+	this_->priv=guitype_new(nav, &this_->meth, attrs);
 	return this_;
 }
 
