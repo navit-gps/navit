@@ -142,14 +142,29 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 			case 0x2d:
 				item->type=type_hospital_poly;
 				break;
+			case 0x2e:
+				item->type=type_hospital_poly;
+				break;
+			case 0x2f:
+				item->type=type_university;
+				break;
 			case 0x32:
 				item->type=type_park_poly;
 				break;
 			case 0x34:
 				item->type=type_sport_poly;
 				break;
+			case 0x35:
+				item->type=type_sport_poly;
+				break;
 			case 0x37:
 				item->type=type_golf_course;
+				break;
+			case 0x38:
+				item->type=type_national_park;
+				break;
+			case 0x39:
+				item->type=type_nature_park;
 				break;
 			case 0x3c:
 				item->type=type_water_poly;
