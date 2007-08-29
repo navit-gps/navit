@@ -387,12 +387,12 @@
 				<label label_size="9" />
 			</item>
 			<item type="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="12-">
-				<circle color="#000000" radius="3" label_size="5" />
+				<circle color="#000000" radius="3" label_size="7" />
 			</item>
 			<item type="district_label_1e3,district_label_2e3,district_label_5e3" order="11-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
-			<item type="town_label_1e,town_label_2e3,town_label_5e3" order="10-">
+			<item type="town_label_1e3,town_label_2e3,town_label_5e3" order="10-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
 			<item type="district_label_1e4,district_label_2e4,district_label_5e4" order="9-">
