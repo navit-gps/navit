@@ -44,6 +44,15 @@ graphics_new(const char *type, struct attr **attrs)
 	return this_;
 }
 
+struct graphics *
+graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h)
+{
+	struct graphics *this_;
+	this_=g_new0(struct graphics, 1);
+	this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, p, w, h);
+	return this_;
+}
+
 
 void
 graphics_init(struct graphics *this_)
@@ -158,6 +167,13 @@ void
 graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r)
 {
 	this_->meth.draw_circle(this_->priv, gc->priv, p, r);
+}
+
+
+void
+graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int w, int h)
+{
+	this_->meth.draw_rectangle(this_->priv, gc->priv, p, w, h);
 }
 
 

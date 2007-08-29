@@ -11,7 +11,7 @@ EXTRA_DIST = navit.xml
 
 navit_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c data_window.c debug.c \
 	file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
-	mapset.c maptype.c menu.c navit.c navigation.c param.c phrase.c plugin.c popup.c \
+	mapset.c maptype.c menu.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c \
 	profile.c route.c search.c speech.c transform.c track.c \
 	util.c vehicle.c xmlconfig.c attr.h attr_def.h callback.h color.h compass.h coord.h country.h \
 	cursor.h data.h data_window.h data_window_int.h debug.h destination.h draw_info.h \

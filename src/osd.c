@@ -1,3 +1,4 @@
+#if 0
 //#include <math.h>
 #include <stdio.h>
 #include <glib.h>
@@ -9,17 +10,6 @@
 #include "vehicle.h"
 #include "container.h"
 #include "osd.h"
-
-struct osd {
-	struct graphics *gr;
-	struct graphics_gc *bg;
-	struct graphics_gc *white;
-	struct graphics_gc *green;
-	struct graphics_font *font;
-
-	char command[256];
-	char road_name[256];	
-};
 
 void
 osd_set_next_command(char *new_command,char *new_road){
@@ -81,3 +71,30 @@ osd_new(struct container *co)
 	osd_draw(this, co);
 	return this;	
 }
+#endif
+
+#include <glib.h>
+#include "debug.h"
+#include "plugin.h"
+#include "osd.h"
+
+
+struct osd {
+	struct osd_methods meth;
+	struct osd_priv *priv;
+};
+
+struct osd *
+osd_new(struct navit *nav, const char *type, struct attr **attrs)
+{
+        struct osd *o;
+        struct osd_priv *(*new)(struct navit *nav, struct osd_methods *meth, struct attr **attrs);
+
+        new=plugin_get_osd_type(type);
+        if (! new)
+                return NULL;
+        o=g_new0(struct osd, 1);
+        o->priv=new(nav, &o->meth, attrs);
+        return o;
+}
+

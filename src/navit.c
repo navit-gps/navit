@@ -74,6 +74,7 @@ struct navit {
 	GList *windows_items;
 	struct navit_vehicle *vehicle;
 	struct callback_list *vehicle_cbl;
+	struct callback_list *init_cbl;
 	int pid;
 	struct callback *nav_speech_cb;
 	struct callback *roadbook_callback;
@@ -185,6 +186,7 @@ navit_new(struct coord *center, enum projection pro, int zoom)
 
 	main_add_navit(this_);
 	this_->vehicle_cbl=callback_list_new();
+	this_->init_cbl=callback_list_new();
 
 	f=popen("pidof /usr/bin/ipaq-sleep","r");
 	if (f) {
@@ -227,6 +229,12 @@ navit_set_graphics(struct navit *this_, struct graphics *gra)
 	this_->gra=gra;
 	graphics_register_resize_callback(this_->gra, navit_resize, this_);
 	graphics_register_button_callback(this_->gra, navit_button, this_);
+}
+
+struct graphics *
+navit_get_graphics(struct navit *this_)
+{
+	return this_->gra;
 }
 
 static void
@@ -817,6 +825,7 @@ navit_init(struct navit *this_)
 	navit_window_items_new(this_);
 #endif
 	navit_debug(this_);
+	callback_list_call_1(this_->init_cbl, this_);
 }
 
 void
@@ -970,6 +979,18 @@ void
 navit_remove_vehicle_cb(struct navit *this_, struct callback *cb)
 {
 	callback_list_remove(this_->vehicle_cbl, cb);
+}
+
+void
+navit_add_init_cb(struct navit *this_, struct callback *cb)
+{
+	callback_list_add(this_->init_cbl, cb);
+}
+
+void
+navit_remove_init_cb(struct navit *this_, struct callback *cb)
+{
+	callback_list_remove(this_->init_cbl, cb);
 }
 
 void
