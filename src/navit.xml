@@ -377,44 +377,44 @@
 			<item type="highway_exit_label" order="10-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
-			<item type="district_label_1e3,district_label_2e3" order="10-11">
+			<item type="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes" order="10-18">
+				<label label_size="8" />
+			</item>
+			<item type="street_2_city,street_2_land,street_3_city,street_3_land,ramp" order="11-18">
+				<label label_size="9" />
+			</item>
+			<item type="street_nopass,street_0,street_1_city,street_1_land" order="12-18">
+				<label label_size="9" />
+			</item>
+			<item type="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="12-">
+				<circle color="#000000" radius="3" label_size="5" />
+			</item>
+			<item type="district_label_1e3,district_label_2e3,district_label_5e3" order="11-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
-			<item type="district_label_5e3" order="10-">
-				<circle color="#000000" radius="3" label_size="10" />
-			</item>
-			<item type="town_label_5e1" order="10-">
-				<circle color="#000000" radius="3" label_size="10" />
-			</item>
-			<item type="town_label_1e3" order="10-">
-				<circle color="#000000" radius="3" label_size="10" />
-			</item>
-			<item type="town_label_5e3" order="6-7">
+			<item type="town_label_1e,town_label_2e3,town_label_5e3" order="10-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
-			<item type="town_label_5e3" order="8-10">
+			<item type="district_label_1e4,district_label_2e4,district_label_5e4" order="9-">
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+			<item type="town_label_1e4,town_label_2e4,town_label_5e4" order="8-">
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+			<item type="district_label_1e5,district_label_2e5,district_label_5e5" order="6-">
 				<circle color="#000000" radius="3" label_size="10" />
 			</item>
-			<item type="town_label_5e3" order="11">
+			<item type="town_label_1e5,town_label_2e5,town_label_5e5" order="4-">
+				<circle color="#000000" radius="3" label_size="10" />
+			</item>
+			<item type="district_label_1e6,district_label_2e6,district_label_5e6" order="3-">
 				<circle color="#000000" radius="3" label_size="15" />
 			</item>
-			<item type="town_label_1e4" order="5-6">
-				<circle color="#000000" radius="5" label_size="7" />
-			</item>
-			<item type="town_label_1e4" order="7-10">
-				<circle color="#000000" radius="5" label_size="10" />
-			</item>
-			<item type="town_label_1e4" order="11">
-				<circle color="#000000" radius="5" label_size="15" />
-			</item>
-			<item type="town_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,town_label_1e3,town_label_2e3,town_label_5e3,town_label_1e4,town_label_2e4,town_label_5e4,town_label_1e5,town_label_2e5,town_label_5e5,town_label_1e6,town_label_2e6,town_label_5e6,town_label_1e7,district_label,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2,district_label_1e3,district_label_2e3,district_label_5e3,district_label_1e4,district_label_2e4,district_label_5e4,district_label_1e5,district_label_2e5,district_label_5e5,district_label_1e6,district_label_2e6,district_label_5e6,district_label_1e7" order="2-">
+			<item type="town_label_1e6,town_label_2e6,town_label_5e6" order="2-">
 				<circle color="#000000" radius="3" label_size="15" />
 			</item>
-			<item type="town_label_1e5,town_label_2e5" order="2-">
-				<circle color="#000000" radius="3" label_size="10" />
-			</item>
-			<item type="town_label_1e5,town_label_5e5,town_label_1e6,town_label_2e6,town_label_5e6,town_label_1e7" order="0-">
-				<circle color="#000000" radius="3" label_size="10" />
+			<item type="town_label_1e7,district_label_1e7" order="1-">
+				<circle color="#000000" radius="3" label_size="15" />
 			</item>
 			<item type="poi_airport" order="0-">
 				<icon src="airport.xpm" />
@@ -459,47 +459,7 @@
 				<icon src="hospital.xpm" />
 			</item>
 		</layer>
-		<!--
-		    <layer name="sea" details="0">
-			    <item type="sea" order="0-">
-				    <polygon color="#82c8ea" />
-			    </item>
-		    </layer>
-		    <layer name="wood" details="0">
-			    <item type="wood" order="0-">
-				    <polygon color="#8ec78d" />
-			    </item>
-		    </layer>
-		    <layer name="highway" details="0">
-			    <item type="highway" order="0-">
-				    <line color="#ff0000" width="3" />
-				    <line color="#ffff0a" width="1" />
-			    </item>
-			    <item type="highway" order="2-5">
-				    <line color="#ff0000" width="5" />
-				    <line color="#ffff0a" width="3" />
-				    <text color="#000000" font="arial" size="12">
-			    </item>
-		    </layer>
-		    <layer name="label" details="0">
-			    <item type="town0" order="3-">
-				    <circle radius="3" />
-				    <text color="#000000" font="arial" size="12">
-			    </item>
-		    </layer>
-		    <layer name="poi" details="0">
-			    <item type="mcdonalds" order="3-">
-				    <icon src="mcdonalds.xpm" />
-			    </item>
-		    </layer>
-		    <layer name="wood" details="0">
-			    <item type="wood" order="1-">
-				    <polygon color="#8ec78d" />
-				    <polyline color="#8ec78d" />
-			    </item>
-		    </layer>
-		    -->
-	    </layout>
-	    <layout name="Nacht">
-	    </layout>
+	</layout>
+	<layout name="Nacht">
+	</layout>
 </navit>
