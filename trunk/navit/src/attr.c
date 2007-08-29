@@ -57,10 +57,15 @@ attr_new_from_text(const char *name, const char *value)
 	case attr_item_type:
 		ret->u.item_type=item_from_name(value);
 		break;
-	case attr_data:
-		ret->u.str=value;
-		break;
 	default:
+		if (attr >= attr_type_string_begin && attr <= attr_type_string_end) {
+			ret->u.str=value;
+			break;
+		}
+		if (attr >= attr_type_int_begin && attr <= attr_type_int_end) {
+			ret->u.num=atoi(value);
+			break;
+		}
 		dbg(1,"default\n");
 		g_free(ret);
 		ret=NULL;
