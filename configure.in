@@ -265,6 +265,7 @@ src/gui/Makefile
 src/gui/gtk/Makefile
 src/gui/sdl/Makefile
 src/osd/Makefile
+src/osd/core/Makefile
 src/speech/Makefile
 src/speech/cmdline/Makefile
 src/speech/speech_dispatcher/Makefile

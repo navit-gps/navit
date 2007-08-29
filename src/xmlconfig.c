@@ -18,6 +18,7 @@
 #include "graphics.h"
 #include "gui.h"
 #include "xmlconfig.h"
+#include "osd.h"
 
 
 struct xmlstate {
@@ -351,6 +352,18 @@ xmlconfig_navigation(struct xmlstate *state)
 }
 
 static int
+xmlconfig_osd(struct xmlstate *state)
+{
+	struct attr **attrs;
+	const char *type=find_attribute(state, "type", 1);
+	if (! type)
+		return 0;
+	attrs=convert_to_attrs(state);
+	state->element_object = osd_new(state->parent->element_object, type, attrs);
+	return 1;
+}
+
+static int
 xmlconfig_announce(struct xmlstate *state)
 {
 	const char *type,*value;
@@ -591,6 +604,7 @@ struct element_func {
 	{ "mapset", "navit", xmlconfig_mapset},
 	{ "map",  "mapset", xmlconfig_map},
 	{ "navigation", "navit", xmlconfig_navigation},
+	{ "osd", "navit", xmlconfig_osd},
 	{ "announce", "navigation", xmlconfig_announce},
 	{ "speech", "navit", xmlconfig_speech},
 	{ "tracking", "navit", xmlconfig_tracking},
