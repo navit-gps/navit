@@ -6,6 +6,7 @@
 
 #include "item.h"
 #include "navit.h"
+#include "vehicle.h"	
 #include "profile.h"
 #include "transform.h"
 #include "gui.h"
@@ -20,7 +21,7 @@
 
 #include "CEGUI.h"
 
-// This is for 3d fonts. Needs QuesoGLC. Could probably (and should) be moved to graphics instead
+// FIXME This is for 3d fonts. Needs QuesoGLC. Could probably (and should) be moved to graphics instead
 // since fonts here are handled by CEGUI
 #include "GL/glc.h"
 
@@ -90,6 +91,7 @@ void drawCursor() {
 static void
 sdl_update_roadbook(struct navigation *nav, void *data)
 {
+/*
 	using namespace CEGUI;
 	extern Window* myRoot;
 
@@ -135,13 +137,14 @@ sdl_update_roadbook(struct navigation *nav, void *data)
 		itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 		mcl->setItem(itemListbox, 4, mcl->getRowCount()-1);
 
-		*/
+		*/ /*
 		ListboxTextItem* itemListbox = new ListboxTextItem(str);
 		itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 		mcl->setItem(itemListbox, 0, mcl->getRowCount()-1);
 
 	}
 	navigation_list_destroy(list);
+*/
 }
 
 static int gui_run_main_loop(struct gui_priv *this_)
@@ -253,12 +256,11 @@ static int gui_run_main_loop(struct gui_priv *this_)
 
 		frames++;
 		if(SDL_GetTicks()-last_time_pulse>1000){
-			sprintf(fps,"%i",frames); // /(SDL_GetTicks()/1000));
+			sprintf(fps,"%i fps",frames); // /(SDL_GetTicks()/1000));
 			frames=0;
 			last_time_pulse = SDL_GetTicks();
 		}
-
-		myRoot->getChild("OSD/SpeedoMeter")->setText(fps);
+		myRoot->getChild("OSD/Altimeter")->setText(fps);
 
 		/*
 		glcRenderStyle(GLC_TEXTURE);
@@ -679,6 +681,13 @@ static void init_sdlgui(void)
 	
 }
 
+static void vehicle_callback_handler( struct navit *nav, struct vehicle *v){
+ 	double  speed=*vehicle_speed_get(v);
+	char buffer [50];
+	sprintf (buffer, "%02.02f km/h", speed);
+	myRoot->getChild("OSD/SpeedoMeter")->setText(buffer);
+}
+
 static struct gui_priv *
 gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs) 
 {
@@ -703,18 +712,11 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	init_sdlgui();
 	dbg(1,"End SDL init\n");
 
-	/*
- 	this_->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
- 	this_->vbox = gtk_vbox_new(FALSE, 0);
-	gtk_window_set_default_size(GTK_WINDOW(this_->win), w, h);
-	gtk_window_set_title(GTK_WINDOW(this_->win), "Navit");
-	gtk_widget_realize(this_->win);
-	gtk_container_add(GTK_CONTAINER(this_->win), this_->vbox);
-	gtk_widget_show_all(this_->win);
-	*/
+	//gui_sdl_window.cpp:710: error: invalid conversion from 'void (*)(vehicle*)' to 'void (*)()'
+	struct callback *cb=callback_new_0(callback_cast(vehicle_callback_handler));
+	navit_add_vehicle_cb(nav,cb);
 	this_->nav=nav;
 	
-
 	return this_;
 }
 
