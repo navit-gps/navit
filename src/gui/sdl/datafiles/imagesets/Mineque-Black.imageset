@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<Imageset Name="Mineque-Black" Imagefile="navit-skin-black-imageset.tga" NativeHorzRes="800" NativeVertRes="730" AutoScaled="true">
+<!--
+Imagefile - file with all textures inside
+NativeHorzRes, NativeVertRes - image size in pixels
+Image Name - name of texture we will further use in layout and looknfeel files
+XPos, YPos - position (X,Y) of texture parts in image file it's count for "d" corner as below
+    d____e
+     |       |
+     |____|
+    f        g
+-->
+<!-- Round panel parts --> 
+	<Image Name="ZoomOutButton" XPos="0" YPos="260" Width="62" Height="93" />
+	<Image Name="ZoomInButton" XPos="0" YPos="360" Width="92" Height="62" />
+	<Image Name="ViewModeSwitchButton" XPos="0" YPos="153" Width="98" Height="98" />
+<!-- Top panel parts -->
+	<Image Name="QuitButton" XPos="0" YPos="450" Width="29" Height="30" />
+	<Image Name="RouteButton" XPos="35" YPos="450" Width="36" Height="36" />
+	<Image Name="OptionsButton" XPos="75" YPos="450" Width="37" Height="25" />
+	<Image Name="SpeakerOffButton" XPos="115" YPos="450" Width="28" Height="36" />
+	<Image Name="SpeakerOnButton" XPos="145" YPos="450" Width="28" Height="36" />
+	<Image Name="SateliteImage" XPos="230" YPos="450" Width="30" Height="38" />
+	<Image Name="SateliteStrenghBarOn" XPos="180" YPos="450" Width="17" Height="32" />
+	<Image Name="SateliteStrenghBarOff" XPos="200" YPos="450" Width="17" Height="32" />
+	<Image Name="TopPanel" XPos="0" YPos="660" Width="800" Height="131" />
+	<Image Name="NavitAboutButton" XPos="0" YPos="500" Width="82" Height="25" />
+<!-- Right panel parts -->
+	<Image Name="RightPanel" XPos="635" YPos="127" Width="165" Height="600" />
+<!-- Navigation area -->
+	<Image Name="ArrowLeft" XPos="258" YPos="450" Width="39" Height="34" />
+	<Image Name="ArrowTop" XPos="316" YPos="450" Width="34" Height="39" />
+	<Image Name="ArrowRight" XPos="435" YPos="450" Width="39" Height="34" />
+	<Image Name="ArrowDown" XPos="275" YPos="450" Width="34" Height="39" />
+<!-- Bottom street panel part -->
+	<Image Name="BottomStreetPanel" XPos="0" YPos="0" Width="800" Height="50" />
+</Imageset>
