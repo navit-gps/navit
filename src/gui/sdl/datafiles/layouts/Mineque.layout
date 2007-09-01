@@ -2,6 +2,10 @@
 
 <GUILayout >
     <Window Type="DefaultWindow" Name="Navit" >
+	<Property Name="InheritsAlpha" Value="False" />
+	<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+	<Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+	    
         <Window Type="NavitGrey/RightPanel" Name="RightPanel" >
             <Property Name="TitlebarEnabled" Value="False" />
             <Property Name="UnifiedAreaRect" Value="{{0,635},{0,1},{0,165},{0,600}}" />
@@ -13,28 +17,27 @@
         <Window Type="NavitGrey/BottomStreetPanel" Name="BottomStreetPanel" >
             <Property Name="TitlebarEnabled" Value="False" />
             <Property Name="UnifiedAreaRect" Value="{{0,550},{0,1},{0,800},{0,50}}" />
-	</Window>
-	<Window Type="NavitGrey/ViewModeSwitchButton" Name="ViewModeSwitchButton" >
+    </Window>
+<!--     <Window Type="NavitGrey/ViewModeSwitchButton" Name="OSD/ViewMode" > -->
+	    <Window Type="TaharezLook/Button" Name="OSD/ViewMode" >
 		<Property Name="TitlebarEnabled" Value="False" />
 		<Property Name="UnifiedAreaRect" Value="{{0,502},{0,702},{0,98},{0,98}}" />
 	</Window>
 	<Window Type="NavitGrey/ZoomInButton" Name="ZoomInButton" >
 		<Property Name="TitlebarEnabled" Value="False" />
-		<Property Name="UnifiedAreaRect" Value="{{0,708},{0,445},{0,92},{0,62}}" />
+		<Property Name="UnifiedAreaRect" Value="{{0,707},{0,476},{0,800},{0,536}}" />
 	</Window>
 	<Window Type="NavitGrey/ZoomOutButton" Name="ZoomOuButton" >
 		<Property Name="TitlebarEnabled" Value="False" />
 		<Property Name="UnifiedAreaRect" Value="{{0,646},{0,507},{0,62},{0,93}}" />
 	</Window>
-	<Window Type="NavitGrey/SpeakerOffButton" Name="SpeakerOffButton" >
-		<Property Name="TitlebarEnabled" Value="False" />
-		<Property Name="UnifiedAreaRect" Value="{{0,},{0,0},{0,28},{0,36}}" />
-	</Window>
+	<!--
 	<Window Type="NavitGrey/SpeakerOnButton" Name="SpeakerOnButton" >
 		<Property Name="TitlebarEnabled" Value="False" />
 		<Property Name="UnifiedAreaRect" Value="{{0,},{0,0},{0,28},{0,36}}" />
 	</Window>
-	<Window Type="NavitGrey/QuitButton" Name="QuitButton" >
+	-->
+	<Window Type="NavitGrey/QuitButton" Name="OSD/Quit" >
 		<Property Name="TitlebarEnabled" Value="False" />
 		<Property Name="UnifiedAreaRect" Value="{{0,},{0,0},{0,29},{0,30}}" />
 	</Window>
@@ -42,7 +45,7 @@
 		<Property Name="TitlebarEnabled" Value="False" />
 		<Property Name="UnifiedAreaRect" Value="{{0,},{0,0},{0,36},{0,36}}" />
 	</Window>	
-	<Window Type="NavitGrey/OptionsButton" Name="OptionsButton" >
+<!--	<Window Type="NavitGrey/OptionsButton" Name="OptionsButton" >
 		<Property Name="TitlebarEnabled" Value="False" />
 		<Property Name="UnifiedAreaRect" Value="{{0,},{0,0},{0,37},{0,25}}" />
 	</Window>	
@@ -77,13 +80,16 @@
 	<Window Type="NavitGrey/ArrowDown" Name="ArrowDown" >
 		<Property Name="TitlebarEnabled" Value="False" />
 		<Property Name="UnifiedAreaRect" Value="{{0,},{0,0},{0,34},{0,39}}" />
+	</Window>-->
+
+	
+	<Window Type="NavitGrey/QuitButton" Name="SpeakerOffButton" >
+		<Property Name="TitlebarEnabled" Value="False" />
+		<Property Name="UnifiedAreaRect" Value="{{0,707},{0,476},{0,799},{0,536}}" />
 	</Window>
+	
 
-
-</Window>
-        <Property Name="InheritsAlpha" Value="False" />
-        <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-        <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+	
         <Window Type="TaharezLook/FrameWindow" Name="DestinationWindow" >
             <Property Name="Text" Value="Choose your destination" />
             <Property Name="Visible" Value="False" />
@@ -146,7 +152,8 @@
             </Window>
 
         </Window>
-        <Window Type="TaharezLook/StaticText" Name="Navit/Routing/Tips" >
+        
+	<Window Type="TaharezLook/StaticText" Name="Navit/Routing/Tips" >
             <Property Name="Font" Value="DejaVuSans-14" />
             <Property Name="Text" Value="No destination set." />
             <Property Name="Alpha" Value="0.7" />
@@ -220,18 +227,20 @@
                 <Property Name="UnifiedAreaRect" Value="{{0.10,0},{0.53,0},{0.15,0},{0.85,0}}" />
             </Window>
 
-
+<!--
 	    <Window Type="NavitGrey/ModeSwitchButton" Name="OSD/ViewMode" >
-             <Property Name="Text" Value="3D" /> -->
+             <Property Name="Text" Value="3D" />
 	    <Property Name="AlwaysOnTop" Value="True" />
             <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
             <Property Name="UnifiedAreaRect" Value="{{0,708},{0,508},{0,799},{0,599}}" />
         </Window>
+	
        <Window Type="NavitGrey/QuitButton" Name="OSD/Quit" >
             <Property Name="AlwaysOnTop" Value="True" />
             <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
             <Property Name="UnifiedAreaRect" Value="{{0,10},{0,10},{0,38},{0,40}}" />
         </Window>
+	-->
         <Window Type="TaharezLook/FrameWindow" Name="Navit/ProgressWindow" >
             <Property Name="Text" Value="Calculating the route" />
             <Property Name="Visible" Value="False" />
@@ -277,5 +286,7 @@
 		<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.80,0},{0.7,0},{0.95,0}}" />
 		</Window>
         </Window>
+<!-- 	<Window Type="NavitGrey/SpeakerOffButton" Name="SpeakerOffButton" > -->
     </Window>
+
 </GUILayout>
