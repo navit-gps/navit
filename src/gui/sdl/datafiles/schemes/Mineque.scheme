@@ -2,14 +2,21 @@
 <GUIScheme Name="TaharezLook">
 	<Imageset Name="TaharezLook" Filename="TaharezLook.imageset" /> 
 	<Imageset Name="Mineque-Black" Filename="Mineque-Black.imageset" /> 
-	<LookNFeel Filename="TaharezLook.looknfeel" />
 	<LookNFeel Filename="Mineque.looknfeel" />
+	<LookNFeel Filename="TaharezLook.looknfeel" />
 	<WindowRendererSet Filename="CEGUIFalagardWRBase" />
+
 	<FalagardMapping WindowType="NavitGrey/RightPanel"      TargetType="CEGUI/FrameWindow"  Renderer="Falagard/FrameWindow"       LookNFeel="NavitGrey/RightPanel" />
 	<FalagardMapping WindowType="NavitGrey/TopPanel"      TargetType="CEGUI/FrameWindow"  Renderer="Falagard/FrameWindow"       LookNFeel="NavitGrey/TopPanel" />
 	<FalagardMapping WindowType="NavitGrey/BottomStreetPanel"      TargetType="CEGUI/FrameWindow"  Renderer="Falagard/FrameWindow"       LookNFeel="NavitGrey/BottomStreetPanel" />
+	<FalagardMapping WindowType="NavitGrey/ZoomInButton"      TargetType="CEGUI/PushButton"  Renderer="Falagard/Button"       LookNFeel="NavitGrey/ZoomInButton" />
+	<FalagardMapping WindowType="NavitGrey/ZoomOutButton"      TargetType="CEGUI/PushButton"  Renderer="Falagard/Button"       LookNFeel="NavitGrey/ZoomOutButton" />
+	<FalagardMapping WindowType="NavitGrey/SpeakerOffButton"      TargetType="CEGUI/PushButton"  Renderer="Falagard/Button"       LookNFeel="NavitGrey/SpeakerOffButton" />
+	<FalagardMapping WindowType="NavitGrey/RouteButton"      TargetType="CEGUI/PushButton"  Renderer="Falagard/Button"       LookNFeel="NavitGrey/RouteButton" />
+	<FalagardMapping WindowType="NavitGrey/QuitButton"      TargetType="CEGUI/PushButton"  Renderer="Falagard/Button"       LookNFeel="NavitGrey/QuitButton" />
 
 	
+	<FalagardMapping WindowType="NavitGrey/ModeSwitchButton"      TargetType="CEGUI/PushButton"  Renderer="Falagard/Button"       LookNFeel="NavitGrey/ModeSwitchButton" />
 	
 	<FalagardMapping WindowType="NavitGrey/ViewModeSwitchButton"      TargetType="CEGUI/PushButton"  Renderer="Falagard/Button"       LookNFeel="NavitGrey/ViewModeSwitchButton" />
 	
