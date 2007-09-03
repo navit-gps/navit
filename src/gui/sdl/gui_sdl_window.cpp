@@ -18,6 +18,7 @@
 #include "gui_sdl.h"
 #include "navigation.h"
 #include "debug.h"
+#include "attr.h"
 
 #include "CEGUI.h"
 
@@ -476,7 +477,7 @@ void BuildKeyboard(){
 
 }
 
-static void init_sdlgui(void)
+static void init_sdlgui(char * skin_layout)
 {
 	SDL_Surface * screen;
 // 	atexit (SDL_Quit);
@@ -592,7 +593,9 @@ static void init_sdlgui(void)
 
 		CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
 
- 		myRoot = CEGUI::WindowManager::getSingleton().loadWindowLayout("navit.layout");
+		dbg(1,"Loading layout : %s\n",skin_layout);
+
+ 		myRoot = CEGUI::WindowManager::getSingleton().loadWindowLayout(skin_layout);
 
  		CEGUI::System::getSingleton().setGUISheet(myRoot);
 
@@ -709,7 +712,14 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	*meth=gui_sdl_methods;
 
 	this_=g_new0(struct gui_priv, 1);
-	init_sdlgui();
+
+	struct attr *data=attr_search(attrs, NULL, attr_skin);
+	if(data){
+		init_sdlgui(data->u.str);
+	} else {
+		g_warning("Warning, no sdl_skin set in navit. Using default one");
+		init_sdlgui("navit.layout");
+	}
 	dbg(1,"End SDL init\n");
 
 	//gui_sdl_window.cpp:710: error: invalid conversion from 'void (*)(vehicle*)' to 'void (*)()'
