@@ -1,6 +1,7 @@
 #ifdef __cplusplus
 extern "C" {
-#endif/* prototypes */
+#endif
+/* prototypes */
 enum projection;
 struct callback;
 struct coord;
