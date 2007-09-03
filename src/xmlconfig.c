@@ -277,7 +277,7 @@ xmlconfig_window_items(struct xmlstate *state)
 	const char *name=find_attribute(state, "name", 1);
 	const char *value=find_attribute(state, "distance", 0);
 	const char *type=find_attribute(state, "type", 1);
-	char *tok,*str,*type_str,*saveptr;
+	char *tok,*str,*type_str,*saveptr=NULL;
 	if (! name || !type)
 		return 0;
 	if (value) 
@@ -321,7 +321,7 @@ xmlconfig_speed(struct xmlstate *state)
 	const char *value;
 	int v;
 	enum item_type itype;
-	char *saveptr, *tok, *type_str, *str;
+	char *saveptr=NULL, *tok, *type_str, *str;
 
 	type=find_attribute(state, "type", 1);
 	if (! type)
@@ -371,7 +371,7 @@ xmlconfig_announce(struct xmlstate *state)
 	int level[3];
 	int i;
 	enum item_type itype;
-	char *saveptr, *tok, *type_str, *str;
+	char *saveptr=NULL, *tok, *type_str, *str;
 
 	type=find_attribute(state, "type", 1);
 	if (! type)
@@ -457,7 +457,7 @@ xmlconfig_item(struct xmlstate *state)
 	const char *type=find_attribute(state, "type", 1);
 	int min, max;
 	enum item_type itype;
-	char *saveptr, *tok, *type_str, *str;
+	char *saveptr=NULL, *tok, *type_str, *str;
 
 	if (! type)
 		return 0;

@@ -18,3 +18,4 @@ void vehicle_destroy(struct vehicle *this_);
 #ifdef __cplusplus
 }
 #endif
+

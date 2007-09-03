@@ -12,6 +12,7 @@
 #include "debug.h"
 #include "callback.h"
 #include "color.h"
+#include "vehicle.h"
 
 struct compass {
 	struct point p;
@@ -138,7 +139,7 @@ osd_compass_init(struct compass *this, struct navit *nav)
 	osd_compass_draw(this, NULL);
 }
 
-struct osd_priv *
+static struct osd_priv *
 osd_compass_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 {
 	struct compass *this=g_new0(struct compass, 1);
