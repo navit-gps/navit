@@ -717,7 +717,7 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	if(data){
 		init_sdlgui(data->u.str);
 	} else {
-		g_warning("Warning, no sdl_skin set in navit. Using default one");
+		g_warning("Warning, no skin set for <sdl> in navit.xml. Using default one");
 		init_sdlgui("navit.layout");
 	}
 	dbg(1,"End SDL init\n");
