@@ -92,7 +92,7 @@ void drawCursor() {
 static void
 sdl_update_roadbook(struct navigation *nav, void *data)
 {
-/*
+
 	using namespace CEGUI;
 	extern Window* myRoot;
 
@@ -108,11 +108,17 @@ sdl_update_roadbook(struct navigation *nav, void *data)
 	char *str;
 	
 	list=navigation_list_new(nav);
-	while ((str=navigation_list_get(list, navigation_mode_short))) {
 	
-// 		printf("SDL : %s\n", str);
+	char *text;
 
+	list=navigation_list_new(nav);	
+	text=navigation_list_get(list, navigation_mode_speech);
+
+	while ((str=navigation_list_get(list, navigation_mode_short))) {
+		/*	
+ 		printf("SDL : %s\n", str);
 		
+		/*
 		mcl->addRow();
 		/*
 		char from [256];
@@ -142,10 +148,10 @@ sdl_update_roadbook(struct navigation *nav, void *data)
 		ListboxTextItem* itemListbox = new ListboxTextItem(str);
 		itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 		mcl->setItem(itemListbox, 0, mcl->getRowCount()-1);
-
+	*/
 	}
-	navigation_list_destroy(list);
-*/
+// 	navigation_list_destroy(list);
+
 }
 
 static int gui_run_main_loop(struct gui_priv *this_)
@@ -193,7 +199,20 @@ static int gui_run_main_loop(struct gui_priv *this_)
 	navig=navit_get_navigation(sdl_gui_navit);
 	if(navig){
 		dbg(1,"navig valid, registering callback\n");
-		navigation_register_callback(navig, navigation_mode_long, callback_new((void (*)())sdl_update_roadbook, 1, (void **)&sdl_gui_navit));
+		/*
+		this_->roadbook_callback=callback_new_1(callback_cast(navit_window_roadbook_update), this_);
+
+		navigation_register_callback(this_->navigation,
+			navigation_mode_long,
+			this_->roadbook_callback
+		);
+
+		*/
+		navigation_register_callback(navig,
+			navigation_mode_long,
+// 			callback_new((void (*)())sdl_update_roadbook, 1, (void **)&sdl_gui_navit)
+			callback_new_1(callback_cast(sdl_update_roadbook), &sdl_gui_navit)
+		);
 	} else {
 		dbg(1,"navig unvalid\n");
 	}
@@ -261,7 +280,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
 			frames=0;
 			last_time_pulse = SDL_GetTicks();
 		}
-		myRoot->getChild("OSD/Altimeter")->setText(fps);
+		myRoot->getChild("OSD/Satellites")->setText(fps);
 
 		/*
 		glcRenderStyle(GLC_TEXTURE);
@@ -691,10 +710,14 @@ static void init_sdlgui(char * skin_layout)
 }
 
 static void vehicle_callback_handler( struct navit *nav, struct vehicle *v){
- 	double  speed=*vehicle_speed_get(v);
 	char buffer [50];
+ 	double  speed=*vehicle_speed_get(v);
 	sprintf (buffer, "%02.02f km/h", speed);
 	myRoot->getChild("OSD/SpeedoMeter")->setText(buffer);
+
+ 	double  height=*vehicle_height_get(v);
+	sprintf (buffer, "%.0f m", height);
+	myRoot->getChild("OSD/Altimeter")->setText(buffer);
 }
 
 static struct gui_priv *
