@@ -96,6 +96,7 @@ struct point;
 struct route;
 struct transformation;
 struct graphics *graphics_new(const char *type, struct attr **attrs);
+struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h);
 void graphics_init(struct graphics *this_);
 void *graphics_get_data(struct graphics *this_, char *type);
 void graphics_register_resize_callback(struct graphics *this_, void (*callback)(void *data, int w, int h), void *data);
@@ -111,6 +112,7 @@ void graphics_draw_restore(struct graphics *this_, struct point *p, int w, int h
 void graphics_draw_mode(struct graphics *this_, enum draw_mode_num mode);
 void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct point *p, int count);
 void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r);
+void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int w, int h);
 void display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label);
 int graphics_ready(struct graphics *this_);
 void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, GList *layouts, struct route *route);
