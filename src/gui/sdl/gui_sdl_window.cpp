@@ -584,7 +584,11 @@ static void init_sdlgui(char * skin_layout)
 		CEGUI::WindowManager::setDefaultResourceGroup("layouts");
 		CEGUI::ScriptModule::setDefaultResourceGroup("lua_scripts");
 
-		CEGUI::SchemeManager::getSingleton().loadScheme("TaharezLook.scheme");
+		char buffer [50];
+		sprintf (buffer, "%s.scheme", skin_layout);
+		dbg(1,"Loading scheme : %s\n",buffer);
+
+		CEGUI::SchemeManager::getSingleton().loadScheme(buffer);
 
 		CEGUI::FontManager::getSingleton().createFont("DejaVuSans-10.font");
 		CEGUI::FontManager::getSingleton().createFont("DejaVuSans-14.font");
@@ -593,9 +597,11 @@ static void init_sdlgui(char * skin_layout)
 
 		CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
 
-		dbg(1,"Loading layout : %s\n",skin_layout);
+		dbg(1,"Loading layout : %s\n",buffer);
 
- 		myRoot = CEGUI::WindowManager::getSingleton().loadWindowLayout(skin_layout);
+		sprintf (buffer, "%s.layout", skin_layout);
+
+		myRoot = CEGUI::WindowManager::getSingleton().loadWindowLayout(buffer);
 
  		CEGUI::System::getSingleton().setGUISheet(myRoot);
 
@@ -718,7 +724,7 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 		init_sdlgui(data->u.str);
 	} else {
 		g_warning("Warning, no skin set for <sdl> in navit.xml. Using default one");
-		init_sdlgui("navit.layout");
+		init_sdlgui("TaharezLook");
 	}
 	dbg(1,"End SDL init\n");
 
