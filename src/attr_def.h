@@ -1,3 +1,5 @@
+/* prototypes */
+
 /* common */
 ATTR2(none,0x00000000)
 ATTR(any)
@@ -21,6 +23,7 @@ ATTR(y)
 ATTR2(type_int_end,0x0002ffff)
 
 ATTR2(type_string_begin,0x00030000)
+ATTR(skin)
 ATTR(label)
 ATTR(data)
 ATTR(country_all)

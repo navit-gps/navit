@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
 #ifndef ATTR_H
 #define ATTR_H
 
@@ -30,4 +33,7 @@ struct attr *attr_new_from_text(const char *name, const char *value);
 struct attr *attr_search(struct attr **attrs, struct attr *last, enum attr_type attr);
 void attr_free(struct attr *attr);
 /* end of prototypes */
+#endif
+#ifdef __cplusplus
+}
 #endif
