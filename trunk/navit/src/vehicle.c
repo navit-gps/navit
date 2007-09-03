@@ -112,6 +112,11 @@ vehicle_speed_get(struct vehicle *this)
 }
 
 double *
+vehicle_height_get(struct vehicle *this)
+{
+	return &this->height;
+}
+double *
 vehicle_dir_get(struct vehicle *this)
 {
 	return &this->dir;
