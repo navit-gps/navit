@@ -100,7 +100,7 @@ sdl_update_roadbook(struct navigation *nav, void *data)
 		WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->show();
 	}
 
-	MultiColumnList* mcl = static_cast<MultiColumnList*>(myRoot->getChild("Navit/RoadBook")->getChild("Roadbook"));
+	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("Roadbook"));
 	mcl->resetList();
 
 
@@ -118,7 +118,7 @@ sdl_update_roadbook(struct navigation *nav, void *data)
 		/*	
  		printf("SDL : %s\n", str);
 		
-		/*
+		
 		mcl->addRow();
 		/*
 		char from [256];
@@ -156,6 +156,8 @@ sdl_update_roadbook(struct navigation *nav, void *data)
 
 static int gui_run_main_loop(struct gui_priv *this_)
 {
+
+	using namespace CEGUI;
 	dbg(1,"Entering main loop\n");
 
 	bool must_quit = false;
@@ -280,7 +282,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
 			frames=0;
 			last_time_pulse = SDL_GetTicks();
 		}
-		myRoot->getChild("OSD/Satellites")->setText(fps);
+		WindowManager::getSingleton().getWindow("OSD/Satellites")->setText(fps);
 
 		/*
 		glcRenderStyle(GLC_TEXTURE);
@@ -348,7 +350,7 @@ int init_GL() {
 
 	if(VIEW_MODE==VM_2D){
 		dbg(1,"Switching to 2D view\n");
-// 		myRoot->getChild("OSD/ViewMode")->setText("2D");
+// 		myRoot->getWindow("OSD/ViewMode")->setText("2D");
 		glMatrixMode( GL_PROJECTION );
 		glLoadIdentity();
 	
@@ -358,7 +360,7 @@ int init_GL() {
 		glLoadIdentity();
 	} else {
 		dbg(1,"Switching to 3D view\n");
-// 		myRoot->getChild("OSD/ViewMode")->setText("3D");
+// 		myRoot->getWindow("OSD/ViewMode")->setText("3D");
 
 		// Dimensions de la fenetre de rendu 
 		glViewport(0, 0, XRES, YRES);
@@ -392,16 +394,16 @@ bool ToggleView(const CEGUI::EventArgs& event)
 	VIEW_MODE=!VIEW_MODE;
 
 	if(VIEW_MODE==VM_2D){
- 		myRoot->getChild("OSD/ViewMode")->setText("2D");
+ 		CEGUI::WindowManager::getSingleton().getWindow("OSD/ViewMode")->setText("2D");
 	} else {
- 		myRoot->getChild("OSD/ViewMode")->setText("3D");
+ 		CEGUI::WindowManager::getSingleton().getWindow("OSD/ViewMode")->setText("3D");
 	}
 	init_GL();
 }
 
 bool MoveCamera(const CEGUI::EventArgs& event){
 	
-	CEGUI::Scrollbar * sb = static_cast<const CEGUI::Scrollbar *>(myRoot->getChild("OSD/Scrollbar1"));
+	CEGUI::Scrollbar * sb = static_cast<const CEGUI::Scrollbar *>(CEGUI::WindowManager::getSingleton().getWindow("OSD/Scrollbar1"));
 // 	printf("moving : %f\n",sb->getScrollPosition());
 	eyeZ=-sb->getScrollPosition();
 	if (eyeZ>-100){
@@ -410,8 +412,8 @@ bool MoveCamera(const CEGUI::EventArgs& event){
 }
 
 bool ShowKeyboard(const CEGUI::EventArgs& event){
-	myRoot->getChild("Navit/Keyboard")->getChild("Navit/Keyboard/Input")->setText("");
-	myRoot->getChild("Navit/Keyboard")->show();
+	CEGUI::WindowManager::getSingleton().getWindow("Navit/Keyboard/Input")->setText("");
+	CEGUI::WindowManager::getSingleton().getWindow("Navit/Keyboard")->show();
 }
 
 void Add_KeyBoard_key(char * key,int x,int y,int w){
@@ -420,7 +422,7 @@ void Add_KeyBoard_key(char * key,int x,int y,int w){
 	char button_name [5];
 	sprintf(button_name,"%s",key);
 	FrameWindow* wnd = (FrameWindow*)WindowManager::getSingleton().createWindow("TaharezLook/Button", button_name);
-	myRoot->getChild("Navit/Keyboard")->addChildWindow(wnd);
+	CEGUI::WindowManager::getSingleton().getWindow("Navit/Keyboard")->addChildWindow(wnd);
 	wnd->setPosition(UVector2(cegui_absdim(x), cegui_absdim( y)));
 	wnd->setSize(UVector2(cegui_absdim(w), cegui_absdim( 40)));
 	wnd->setText(key);
@@ -561,7 +563,7 @@ static void init_sdlgui(char * skin_layout)
 		SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 		
 		CEGUI::DefaultResourceProvider* rp = static_cast<CEGUI::DefaultResourceProvider*>
-		(CEGUI::System::getSingleton().getResourceProvider());
+		(System::getSingleton().getResourceProvider());
 		
 
 		static char *datafiles_path[]={
@@ -625,43 +627,43 @@ static void init_sdlgui(char * skin_layout)
  		CEGUI::System::getSingleton().setGUISheet(myRoot);
 
 	
-		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/CountryEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
- 		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/CountryEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
-		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/TownEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
- 		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/TownEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
-		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
- 		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/CountryEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
+ 		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/CountryEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/TownEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
+ 		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/TownEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/StreetEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
+ 		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/StreetEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
 
-		myRoot->getChild("OSD/DestinationButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(DialogWindowSwitch));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/DestinationButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(DialogWindowSwitch));
 
-		myRoot->getChild("OSD/RoadbookButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
-		myRoot->getChild("OSD/RoadbookButton")->setText(_("RoadBook"));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->setText(_("RoadBook"));
 
 		// this one is maybe not needed anymore
-		myRoot->getChild("Navit/RoadBook")->getChild("OSD/RoadbookButton2")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton2")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
 
-		myRoot->getChild("OSD/ZoomIn")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ZoomIn));
-		myRoot->getChild("OSD/ZoomIn")->setText(_("ZoomIn"));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/ZoomIn")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ZoomIn));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/ZoomIn")->setText(_("ZoomIn"));
 
-		myRoot->getChild("OSD/ZoomOut")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ZoomOut));
-		myRoot->getChild("OSD/ZoomOut")->setText(_("ZoomOut"));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/ZoomOut")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ZoomOut));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/ZoomOut")->setText(_("ZoomOut"));
 
-		myRoot->getChild("OSD/Quit")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ButtonQuit));
-		myRoot->getChild("OSD/Quit")->setText(_("Quit"));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/Quit")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ButtonQuit));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/Quit")->setText(_("Quit"));
 
-		myRoot->getChild("OSD/ViewMode")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ToggleView));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/ViewMode")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ToggleView));
 
-		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/GO")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ButtonGo));
-		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/KB")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ShowKeyboard));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/GO")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ButtonGo));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/KB")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ShowKeyboard));
 
-		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Listbox")->subscribeEvent(MultiColumnList::EventSelectionChanged, Event::Subscriber(ItemSelect));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Listbox")->subscribeEvent(MultiColumnList::EventSelectionChanged, Event::Subscriber(ItemSelect));
 
-		myRoot->getChild("OSD/Scrollbar1")->subscribeEvent(Scrollbar::EventScrollPositionChanged, Event::Subscriber(MoveCamera));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/Scrollbar1")->subscribeEvent(Scrollbar::EventScrollPositionChanged, Event::Subscriber(MoveCamera));
 
 		// Translation for StaticTexts (labels)
-		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Country")->setText(_("Country"));
-		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Town")->setText(_("City"));
-		myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Street")->setText(_("Street"));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Country")->setText(_("Country"));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Town")->setText(_("City"));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Street")->setText(_("Street"));
 
  		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
 
@@ -713,11 +715,11 @@ static void vehicle_callback_handler( struct navit *nav, struct vehicle *v){
 	char buffer [50];
  	double  speed=*vehicle_speed_get(v);
 	sprintf (buffer, "%02.02f km/h", speed);
-	myRoot->getChild("OSD/SpeedoMeter")->setText(buffer);
+	CEGUI::WindowManager::getSingleton().getWindow("OSD/SpeedoMeter")->setText(buffer);
 
  	double  height=*vehicle_height_get(v);
 	sprintf (buffer, "%.0f m", height);
-	myRoot->getChild("OSD/Altimeter")->setText(buffer);
+	CEGUI::WindowManager::getSingleton().getWindow("OSD/Altimeter")->setText(buffer);
 }
 
 static struct gui_priv *
