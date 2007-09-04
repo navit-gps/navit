@@ -90,12 +90,13 @@ void drawCursor() {
 
 
 static void
-sdl_update_roadbook(struct navigation *nav, void *data)
+sdl_update_roadbook(struct navigation *nav)
 {
+	printf("Called\n");
 
 	using namespace CEGUI;
 	extern Window* myRoot;
-
+	/*
 	if(! WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->isVisible()){
 		WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->show();
 	}
@@ -103,7 +104,7 @@ sdl_update_roadbook(struct navigation *nav, void *data)
 	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("Roadbook"));
 	mcl->resetList();
 
-
+	*/
 	struct navigation_list *list;
 	char *str;
 	
@@ -113,13 +114,12 @@ sdl_update_roadbook(struct navigation *nav, void *data)
 
 	list=navigation_list_new(nav);	
 	text=navigation_list_get(list, navigation_mode_speech);
-
 	while ((str=navigation_list_get(list, navigation_mode_short))) {
-		/*	
+			
  		printf("SDL : %s\n", str);
 		
 		
-		mcl->addRow();
+// 		mcl->addRow();
 		/*
 		char from [256];
 		char to [256];
@@ -149,7 +149,7 @@ sdl_update_roadbook(struct navigation *nav, void *data)
 		itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 		mcl->setItem(itemListbox, 0, mcl->getRowCount()-1);
 	*/
-	}
+	 }
 // 	navigation_list_destroy(list);
 
 }
@@ -200,7 +200,12 @@ static int gui_run_main_loop(struct gui_priv *this_)
 	struct navigation *navig;
 	navig=navit_get_navigation(sdl_gui_navit);
 	if(navig){
-		dbg(1,"navig valid, registering callback\n");
+		printf("navig valid, registering callback\n");
+
+// 		callback_new_1(void (*)())sdl_update_roadbook, sdl_gui);
+		callback_new_0((void (*)())sdl_update_roadbook);
+
+
 		/*
 		this_->roadbook_callback=callback_new_1(callback_cast(navit_window_roadbook_update), this_);
 
@@ -209,14 +214,14 @@ static int gui_run_main_loop(struct gui_priv *this_)
 			this_->roadbook_callback
 		);
 
-		*/
 		navigation_register_callback(navig,
 			navigation_mode_long,
 // 			callback_new((void (*)())sdl_update_roadbook, 1, (void **)&sdl_gui_navit)
 			callback_new_1(callback_cast(sdl_update_roadbook), &sdl_gui_navit)
 		);
+		*/
 	} else {
-		dbg(1,"navig unvalid\n");
+		printf("navig unvalid\n");
 	}
 
 
@@ -282,7 +287,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
 			frames=0;
 			last_time_pulse = SDL_GetTicks();
 		}
-		WindowManager::getSingleton().getWindow("OSD/Satellites")->setText(fps);
+ 		WindowManager::getSingleton().getWindow("OSD/Satellites")->setText(fps);
 
 		/*
 		glcRenderStyle(GLC_TEXTURE);
@@ -626,7 +631,17 @@ static void init_sdlgui(char * skin_layout)
 
  		CEGUI::System::getSingleton().setGUISheet(myRoot);
 
-	
+		try {
+
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/Quit")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ButtonQuit));
+// 		CEGUI::WindowManager::getSingleton().getWindow("OSD/Quit")->setText(_("Quit"));
+
+		CEGUI::WindowManager::getSingleton().getWindow("ZoomInButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ZoomIn));
+// 		CEGUI::WindowManager::getSingleton().getWindow("ZoomInButton")->setText(_("ZoomIn"));
+
+		CEGUI::WindowManager::getSingleton().getWindow("ZoomOutButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ZoomOut));
+// 		CEGUI::WindowManager::getSingleton().getWindow("ZoomOutButton")->setText(_("ZoomOut"));
+
 		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/CountryEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
  		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/CountryEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
 		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/TownEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
@@ -634,22 +649,7 @@ static void init_sdlgui(char * skin_layout)
 		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/StreetEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
  		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/StreetEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
 
-		CEGUI::WindowManager::getSingleton().getWindow("OSD/DestinationButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(DialogWindowSwitch));
-
-		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
-		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->setText(_("RoadBook"));
-
-		// this one is maybe not needed anymore
-		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton2")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
-
-		CEGUI::WindowManager::getSingleton().getWindow("OSD/ZoomIn")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ZoomIn));
-		CEGUI::WindowManager::getSingleton().getWindow("OSD/ZoomIn")->setText(_("ZoomIn"));
-
-		CEGUI::WindowManager::getSingleton().getWindow("OSD/ZoomOut")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ZoomOut));
-		CEGUI::WindowManager::getSingleton().getWindow("OSD/ZoomOut")->setText(_("ZoomOut"));
-
-		CEGUI::WindowManager::getSingleton().getWindow("OSD/Quit")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ButtonQuit));
-		CEGUI::WindowManager::getSingleton().getWindow("OSD/Quit")->setText(_("Quit"));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(DialogWindowSwitch));
 
 		CEGUI::WindowManager::getSingleton().getWindow("OSD/ViewMode")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ToggleView));
 
@@ -658,7 +658,6 @@ static void init_sdlgui(char * skin_layout)
 
 		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Listbox")->subscribeEvent(MultiColumnList::EventSelectionChanged, Event::Subscriber(ItemSelect));
 
-		CEGUI::WindowManager::getSingleton().getWindow("OSD/Scrollbar1")->subscribeEvent(Scrollbar::EventScrollPositionChanged, Event::Subscriber(MoveCamera));
 
 		// Translation for StaticTexts (labels)
 		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Country")->setText(_("Country"));
@@ -684,7 +683,26 @@ static void init_sdlgui(char * skin_layout)
 		mcl2->addColumn("Instruction",4, cegui_absdim(300.0));
 
  		BuildKeyboard();
+
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/Scrollbar1")->subscribeEvent(Scrollbar::EventScrollPositionChanged, Event::Subscriber(MoveCamera));
+
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->setText(_("RoadBook"));
+
+		// this one is maybe not needed anymore
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton2")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
+
+
 		
+
+
+		}
+		catch (CEGUI::Exception& e)
+		{
+			fprintf(stderr,"CEGUI Exception occured: \n%s\n", e.getMessage().c_str());
+			printf("Missing control!...\n");
+		}
+
 	}
 	catch (CEGUI::Exception& e)
 	{
@@ -715,11 +733,11 @@ static void vehicle_callback_handler( struct navit *nav, struct vehicle *v){
 	char buffer [50];
  	double  speed=*vehicle_speed_get(v);
 	sprintf (buffer, "%02.02f km/h", speed);
-	CEGUI::WindowManager::getSingleton().getWindow("OSD/SpeedoMeter")->setText(buffer);
+  	CEGUI::WindowManager::getSingleton().getWindow("OSD/SpeedoMeter")->setText(buffer);
 
  	double  height=*vehicle_height_get(v);
 	sprintf (buffer, "%.0f m", height);
-	CEGUI::WindowManager::getSingleton().getWindow("OSD/Altimeter")->setText(buffer);
+ 	CEGUI::WindowManager::getSingleton().getWindow("OSD/Altimeter")->setText(buffer);
 }
 
 static struct gui_priv *
