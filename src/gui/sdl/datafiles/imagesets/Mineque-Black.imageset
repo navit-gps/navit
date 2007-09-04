@@ -23,7 +23,7 @@ XPos, YPos - position (X,Y) of texture parts in image file it's count for "d" co
 	<Image Name="SateliteImage" XPos="230" YPos="450" Width="30" Height="38" />
 	<Image Name="SateliteStrenghBarOn" XPos="180" YPos="450" Width="17" Height="32" />
 	<Image Name="SateliteStrenghBarOff" XPos="200" YPos="450" Width="17" Height="32" />
-	<Image Name="TopPanel" XPos="0" YPos="660" Width="800" Height="131" />
+	<Image Name="TopPanel" XPos="0" YPos="53" Width="800" Height="64" />
 	<Image Name="NavitAboutButton" XPos="0" YPos="500" Width="82" Height="25" />
 <!-- Right panel parts -->
 	<Image Name="RightPanel" XPos="635" YPos="127" Width="165" Height="600" />
