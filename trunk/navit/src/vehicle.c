@@ -122,6 +122,18 @@ vehicle_dir_get(struct vehicle *this)
 	return &this->dir;
 }
 
+double *
+vehicle_quality_get(struct vehicle *this)
+{
+	return &this->qual;
+}
+
+int *
+vehicle_sats_get(struct vehicle *this)
+{
+	return &this->sats;
+}
+
 void
 vehicle_set_position(struct vehicle *this, struct coord *pos)
 {
