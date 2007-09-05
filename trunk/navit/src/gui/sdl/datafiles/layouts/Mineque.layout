@@ -1,166 +1,237 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <GUILayout >
+	<!-- The main window. Everything has to be a child of it. -->
 	<Window Type="DefaultWindow" Name="Navit" >
 		<Property Name="InheritsAlpha" Value="False" />
 		<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
 		<Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+		
+		<!-- Items for the Bottom Panel -->
+		<Window Type="NavitGrey/StaticImage" Name="BottomPanel" >
+			<Property Name="Image" Value="set:Mineque-Black  image:BottomStreetPanel" />
+			<Property Name="UnifiedAreaRect" Value="{{0,1},{0,550},{0,660},{0,600}}" />
+			<Property Name="ZOrderChangeEnabled" value="False" />
+		</Window>
+		
+		<!-- Items for the Right Panel -->
+		<Window Type="NavitGrey/StaticImage" Name="RightPanel" >
+			<Property Name="Image" Value="set:Mineque-Black  image:RightPanel" />
+			<Property Name="UnifiedAreaRect" Value="{{0,635},{0,0},{0,800},{0,600}}" />
+			<Property Name="ZOrderChangeEnabled" value="False" />
+		</Window>
+			
+		<Window Type="NavitGrey/ViewModeSwitchButton" Name="OSD/ViewMode" >
+			<Property Name="UnifiedAreaRect" Value="{{0,702},{0,502},{0,800},{0,600}}" />
+			<Property Name="ZOrderChangeEnabled" value="False" />
+		</Window>
+		<Window Type="NavitGrey/ZoomInButton" Name="ZoomInButton" >
+			<Property Name="UnifiedAreaRect" Value="{{0,707},{0,469},{0,800},{0,532}}" />
+			<Property Name="ZOrderChangeEnabled" value="False" />
+		</Window>
+		<Window Type="NavitGrey/ZoomOutButton" Name="ZoomOutButton" >
+			<Property Name="UnifiedAreaRect" Value="{{0,669},{0,507},{0,731},{0,600}}" />
+			<Property Name="ZOrderChangeEnabled" value="False" />
+		</Window>
 
-		<Window Type="TaharezLook/StaticText" Name="Navit/Routing/Tips" >
+		<Window Type="TaharezLook/StaticText" Name="OSD/SpeedoMeter" >
 			<Property Name="Font" Value="DejaVuSans-14" />
-			<Property Name="Text" Value="No destination set." />
-			<Property Name="Alpha" Value="0.7" />
-			<Property Name="Visible" Value="False" />
 			<Property Name="HorzFormatting" Value="WordWrapCentred" />
-			<Property Name="UnifiedAreaRect" Value="{{0.02,0},{0.88,0},{0.77,0},{0.98,0}}" />
+			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0,670},{0,100},{0,800},{0,130}}" />
+		</Window>
+		<Window Type="TaharezLook/StaticText" Name="OSD/Altimeter" >
+			<Property Name="Font" Value="DejaVuSans-14" />
+			<Property Name="HorzFormatting" Value="WordWrapCentred" />
+			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0,670},{0,132},{0,800},{0,162}}" />
+		</Window>
+		<Window Type="TaharezLook/LargeVerticalScrollbar" Name="OSD/Scrollbar1" >
+			<Property Name="PageSize" Value="0" />
+			<Property Name="OverlapSize" Value="0" />
+			<Property Name="DocumentSize" Value="2000" />
+			<Property Name="ScrollPosition" Value="0" />
+			<Property Name="UnifiedMaxSize" Value="{{0.03,0},{1,0}}" />
+			<Property Name="UnifiedMinSize" Value="{{0.01,0},{0.1,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0,750},{0,200},{0,770},{0,350}}" />
+		</Window>
+		<Window Type="TaharezLook/StaticText" Name="OSD/Satellites" >
+			<Property Name="Font" Value="DejaVuSans-12" />
+			<Property Name="HorzFormatting" Value="WordWrapCentred" />
+			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0,670},{0,164},{0,800},{0,194}}" />
 		</Window>
 
-	</Window>
+	
+		<!-- Items for the Top Panel -->
+		<Window Type="NavitGrey/StaticImage" Name="TopPanel" >
+			<Property Name="Image" Value="set:Mineque-Black  image:TopPanel" />
+			<Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{0,800},{0,64}}" />
+			<Property Name="ZOrderChangeEnabled" value="False" />
+		</Window>
+		<Window Type="NavitGrey/QuitButton" Name="OSD/Quit" >
+			<Property Name="UnifiedAreaRect" Value="{{0,8},{0,4},{0,37},{0,34}}" />
+			<Property Name="ZOrderChangeEnabled" value="False" />
+		</Window>
+		<Window Type="NavitGrey/RouteButton" Name="DestinationButton" >
+			<Property Name="UnifiedAreaRect" Value="{{0,152},{0,1},{0,188},{0,36}}" />
+			<Property Name="ZOrderChangeEnabled" value="False" />
+		</Window>	
+		<Window Type="NavitGrey/StaticImage" Name="SateliteImage" >
+			<Property Name="Image" Value="set:Mineque-Black  image:SateliteImage" />
+			<Property Name="UnifiedAreaRect" Value="{{0,672},{0,7},{0,702},{0,45}}" />
+			<Property Name="ZOrderChangeEnabled" value="False" />
+		</Window>	
+		
+		<Window Type="NavitGrey/OptionsButton" Name="OptionsButton" >
+			<Property Name="ZOrderChangeEnabled" value="False" />
+			<Property Name="UnifiedAreaRect" Value="{{0,79},{0,5},{0,116},{0,30}}" />
+		</Window>	
+		
+		
+		    <Window Type="NavitGrey/SpeakerButton" Name="SpeakerButton" >
+			    <Property Name="ZOrderChangeEnabled" value="False" />
+			    <Property Name="UnifiedAreaRect" Value="{{0,632},{0,9},{0,660},{0,45}}" />
+		    </Window>
+		    <Window Type="NavitGrey/StaticImage" Name="SateliteStrenghBar1" >
+			    <Property Name="Image" Value="set:Mineque-Black  image:SateliteStrenghBarOff" />
+			    <Property Name="UnifiedAreaRect" Value="{{0,707},{0,12},{0,724},{0,44}}" />
+		    </Window>		
+		    <Window Type="NavitGrey/StaticImage" Name="SateliteStrenghBar2" >
+			    <Property Name="Image" Value="set:Mineque-Black  image:SateliteStrenghBarOff" />
+			    <Property Name="UnifiedAreaRect" Value="{{0,722},{0,12},{0,739},{0,44}}" />
+		    </Window>	
+		    <Window Type="NavitGrey/StaticImage" Name="SateliteStrenghBar3" >
+			    <Property Name="Image" Value="set:Mineque-Black  image:SateliteStrenghBarOff" />
+			    <Property Name="UnifiedAreaRect" Value="{{0,737},{0,12},{0,754},{0,44}}" />
+		    </Window>
+		    <Window Type="NavitGrey/StaticImage" Name="SateliteStrenghBar4" >
+			    <Property Name="Image" Value="set:Mineque-Black  image:SateliteStrenghBarOff" />
+			    <Property Name="UnifiedAreaRect" Value="{{0,752},{0,12},{0,769},{0,44}}" />
+		    </Window>	
+		    <Window Type="NavitGrey/StaticImage" Name="SateliteStrenghBar5" >
+			    <Property Name="Image" Value="set:Mineque-Black  image:SateliteStrenghBarOff" />
+			    <Property Name="UnifiedAreaRect" Value="{{0,767},{0,12},{0,784},{0,44}}" />
+		    </Window>	
+		    <Window Type="NavitGrey/NavitAboutButton" Name="NavitAboutButton">
+			    <Property Name="ZOrderChangeEnabled" value="False" />
+			    <Property Name="UnifiedAreaRect" Value="{{0,361},{0,13},{0,443},{0,38}}" />
+		    </Window> 
 
-	<Window Type="TaharezLook/FrameWindow" Name="DestinationWindow" >
-		<Property Name="Text" Value="Choose your destination" />
-		<Property Name="Visible" Value="False" />
-		<Property Name="Alpha" Value="0.7" />
-		<Property Name="TitlebarEnabled" Value="True" />
-		<Property Name="UnifiedAreaRect" Value="{{0.001,0},{0.07,0},{0.8,0},{0.9,0}}" />
-		<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Country" >
-			<Property Name="Text" Value="Country :" />
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.05,0},{0.271871,0},{0.1,0}}" />
+		
+		<!-- The Destination window and its controls -->
+		<Window Type="TaharezLook/FrameWindow" Name="DestinationWindow" >
+			<Property Name="Text" Value="Choose your destination" />
+			<Property Name="Visible" Value="False" />
+			<Property Name="Alpha" Value="0.7" />
+			<Property Name="TitlebarEnabled" Value="True" />
+			<Property Name="UnifiedAreaRect" Value="{{0.001,0},{0.07,0},{0.8,0},{0.9,0}}" />
+			<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Country" >
+				<Property Name="Text" Value="Country :" />
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.05,0},{0.271871,0},{0.1,0}}" />
+			</Window>
+			<Window Type="TaharezLook/Editbox" Name="DestinationWindow/CountryEditbox" >
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.3,0},{0.05,0},{0.9,0},{0.1,0}}" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Town" >
+				<Property Name="Text" Value="Town : " />
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.11,0},{0.275,0},{0.16,0}}" />
+			</Window>
+			<Window Type="TaharezLook/Editbox" Name="DestinationWindow/TownEditbox" >
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.3,0},{0.11,0},{0.9,0},{0.16,0}}" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Street" >
+				<Property Name="Text" Value="Street : " />
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.17,0},{0.275,0},{0.22,0}}" />
+			</Window>
+			<Window Type="TaharezLook/Editbox" Name="DestinationWindow/StreetEditbox" >
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.3,0},{0.17,0},{0.9,0},{0.22,0}}" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Label1" >
+				<Property Name="Text" Value="Pick your choice :" />
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.23,0},{0.9,0},{0.28,0}}" />
+			</Window>
+			<Window Type="TaharezLook/MultiColumnList" Name="DestinationWindow/Listbox" >
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.29,0},{0.945,0},{0.905842,0}}" />
+			</Window>
+			<Window Type="TaharezLook/Button" Name="DestinationWindow/KB" >
+				<Property Name="Text" Value="Keyboard" />
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.54,0},{0.92,0},{0.70,0},{0.98,0}}" />
+			</Window>
+			<Window Type="TaharezLook/Button" Name="DestinationWindow/GO" >
+				<Property Name="Text" Value="Go!" />
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.72,0},{0.92,0},{0.97,0},{0.98,0}}" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Dest_x" >
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.92,0},{0.12,0},{0.98,0}}" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Dest_y" >
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.12,0},{0.92,0},{0.23,0},{0.98,0}}" />
+			</Window>
+			
 		</Window>
-		<Window Type="TaharezLook/Editbox" Name="DestinationWindow/CountryEditbox" >
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.3,0},{0.05,0},{0.9,0},{0.1,0}}" />
+		
+		<!-- The RoadBook window, which use the old skin -->
+		<Window Type="TaharezLook/FrameWindow" Name="Navit/RoadBook" >
+			<Property Name="Alpha" Value="0.85" />
+			<Property Name="Visible" Value="False" />
+			<Property Name="AlwaysOnTop" Value="True" />
+			<Property Name="Text" Value="Road Book" />
+			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.02,0},{0.99,0},{0.87,0}}" />
+			<Window Type="TaharezLook/MultiColumnList" Name="Roadbook" >
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.05,0},{0.99,0},{0.93,0}}" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="RoadBook/ETA" >
+				<Property Name="Font" Value="DejaVuSans-12" />
+				<Property Name="HorzFormatting" Value="WordWrapCentred" />
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.1,0},{0.94,0},{0.7,0},{0.99,0}}" />
+			</Window>
+			<Window Type="TaharezLook/Button" Name="OSD/RoadbookButton2" >
+				<Property Name="Text" Value="Close" />
+				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+				<Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.94,0},{0.99,0},{0.99,0}}" />
+			</Window>
 		</Window>
-		<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Town" >
-			<Property Name="Text" Value="Town : " />
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.11,0},{0.275,0},{0.16,0}}" />
+		<Window Type="TaharezLook/FrameWindow" Name="Navit/Keyboard" >
+			<Property Name="Alpha" Value="0.85" />
+			<Property Name="Visible" Value="False" />
+			<Property Name="AlwaysOnTop" Value="True" />
+			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.5,0},{0.99,0},{0.87,0}}" />
+			<Window Type="TaharezLook/StaticText" Name="Navit/Keyboard/Input" >
+				<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.80,0},{0.7,0},{0.95,0}}" />
+			</Window>
+        	</Window>
+	
+		<!-- These arrows will be used later, to move the map 
+		<Window Type="NavitGrey/ArrowLeft" Name="ArrowLeft" >
+			<Property Name="UnifiedAreaRect" Value="{{0,},{0,0},{0,39},{0,34}}" />
 		</Window>
-		<Window Type="TaharezLook/Editbox" Name="DestinationWindow/TownEditbox" >
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.3,0},{0.11,0},{0.9,0},{0.16,0}}" />
+		<Window Type="NavitGrey/ArrowTop" Name="ArrowTop" >
+			<Property Name="UnifiedAreaRect" Value="{{0,},{0,0},{0,34},{0,39}}" />
 		</Window>
-		<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Street" >
-			<Property Name="Text" Value="Street : " />
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.17,0},{0.275,0},{0.22,0}}" />
+		<Window Type="NavitGrey/ArrowRight" Name="ArrowRight" >
+			<Property Name="UnifiedAreaRect" Value="{{0,},{0,0},{0,39},{0,34}}" />
 		</Window>
-		<Window Type="TaharezLook/Editbox" Name="DestinationWindow/StreetEditbox" >
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.3,0},{0.17,0},{0.9,0},{0.22,0}}" />
+		<Window Type="NavitGrey/ArrowDown" Name="ArrowDown" >
+			<Property Name="TitlebarEnabled" Value="False" />
+			<Property Name="UnifiedAreaRect" Value="{{0,},{0,0},{0,34},{0,39}}" />
 		</Window>
-		<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Label1" >
-			<Property Name="Text" Value="Pick your choice :" />
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.23,0},{0.9,0},{0.28,0}}" />
-		</Window>
-		<Window Type="TaharezLook/MultiColumnList" Name="DestinationWindow/Listbox" >
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.29,0},{0.945,0},{0.905842,0}}" />
-		</Window>
-		<Window Type="TaharezLook/Button" Name="DestinationWindow/KB" >
-			<Property Name="Text" Value="Keyboard" />
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.54,0},{0.92,0},{0.70,0},{0.98,0}}" />
-		</Window>
-		<Window Type="TaharezLook/Button" Name="DestinationWindow/GO" >
-			<Property Name="Text" Value="Go!" />
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.72,0},{0.92,0},{0.97,0},{0.98,0}}" />
-		</Window>
-		<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Dest_x" >
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.92,0},{0.12,0},{0.98,0}}" />
-		</Window>
-		<Window Type="TaharezLook/StaticText" Name="DestinationWindow/Dest_y" >
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.12,0},{0.92,0},{0.23,0},{0.98,0}}" />
-		</Window>
-        </Window>
-
-        <Window Type="TaharezLook/StaticText" Name="Navit/Routing/CurrentRoadName" >
-            <Property Name="Font" Value="DejaVuSans-14" />
-            <Property Name="Alpha" Value="0.7" />
-            <Property Name="HorzFormatting" Value="WordWrapCentred" />
-            <Property Name="UnifiedAreaRect" Value="{{0.02,0},{0.001,0},{0.77,0},{0.07,0}}" />
-        </Window>
-        <Window Type="NavitGrey/RouteButton" Name="OSD/DestinationButton" >
-            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-            <Property Name="UnifiedAreaRect" Value="{{0,50},{0,10},{0,78},{0,40}}" />
-        </Window>
-        <Window Type="TaharezLook/StaticText" Name="OSD/SpeedoMeter" >
-            <Property Name="Font" Value="DejaVuSans-14" />
-            <Property Name="HorzFormatting" Value="WordWrapCentred" />
-            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-            <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.06,0},{0.99,0},{0.11,0}}" />
-        </Window>
-        <Window Type="TaharezLook/StaticText" Name="OSD/Altimeter" >
-            <Property Name="Font" Value="DejaVuSans-14" />
-            <Property Name="HorzFormatting" Value="WordWrapCentred" />
-            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-            <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.11,0},{0.99,0},{0.16,0}}" />
-        </Window>
-        <Window Type="TaharezLook/StaticText" Name="OSD/Satellites" >
-            <Property Name="Font" Value="DejaVuSans-12" />
-            <Property Name="HorzFormatting" Value="WordWrapCentred" />
-            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-            <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.16,0},{0.99,0},{0.21,0}}" />
-        </Window>
-        <Window Type="TaharezLook/StaticText" Name="OSD/Coords" >
-            <Property Name="Font" Value="DejaVuSans-12" />
-            <Property Name="HorzFormatting" Value="WordWrapCentred" />
-            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-            <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.21,0},{0.99,0},{0.26,0}}" />
-        </Window>
-        <Window Type="NavitGrey/ZoomOutButton" Name="OSD/ZoomOut" >
-            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-            <Property Name="UnifiedAreaRect" Value="{{0,670},{0,514},{0,734},{0,600}}" />
-        </Window>
-        <Window Type="NavitGrey/ZoomInButton" Name="OSD/ZoomIn" >
-            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-            <Property Name="UnifiedAreaRect" Value="{{0,707},{0,476},{0,800},{0,536}}" />
-        </Window>
-        <Window Type="TaharezLook/Button" Name="OSD/RoadbookButton" >
-            <Property Name="Text" Value="RoadBook" />
-            <Property Name="Visible" Value="False" />
-            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-            <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.36,0},{0.99,0},{0.41,0}}" />
-        </Window>
-        <Window Type="TaharezLook/StaticText" Name="OSD/ETA" >
-            <Property Name="Font" Value="DejaVuSans-12" />
-            <Property Name="Visible" Value="False" />
-            <Property Name="HorzFormatting" Value="WordWrapCentred" />
-            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-            <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.41,0},{0.99,0},{0.51,0}}" />
-        </Window>
-
-            <Window Type="TaharezLook/LargeVerticalScrollbar" Name="OSD/Scrollbar1" >
-                <Property Name="PageSize" Value="0" />
-                <Property Name="OverlapSize" Value="0" />
-                <Property Name="DocumentSize" Value="2000" />
-                <Property Name="ScrollPosition" Value="0" />
-                <Property Name="UnifiedMaxSize" Value="{{0.03,0},{1,0}}" />
-                <Property Name="UnifiedMinSize" Value="{{0.01,0},{0.1,0}}" />
-                <Property Name="UnifiedAreaRect" Value="{{0.10,0},{0.53,0},{0.15,0},{0.85,0}}" />
-            </Window>
-
-	    
-	    <Window Type="NavitGrey/ViewModeSwitchButton" Name="OSD/ViewMode" >
-		    <Property Name="UnifiedAreaRect" Value="{{0,702},{0,502},{0,800},{0,600}}" />
-	    </Window>
-	    <Window Type="NavitGrey/QuitButton" Name="QuitButton" >
-		    <Property Name="UnifiedAreaRect" Value="{{0,8},{0,4},{0,37},{0,34}}" />
-	    </Window>
-	    <Window Type="NavitGrey/RouteButton" Name="RouteButton" >
-		    <Property Name="UnifiedAreaRect" Value="{{0,152},{0,1},{0,188},{0,36}}" />
-	    </Window>	
-	    <Window Type="NavitGrey/ZoomInButton" Name="ZoomInButton" >
-		    <Property Name="UnifiedAreaRect" Value="{{0,707},{0,470},{0,800},{0,532}}" />
-	    </Window>
-	    <Window Type="NavitGrey/ZoomOutButton" Name="ZoomOuButton" >
-		    <Property Name="UnifiedAreaRect" Value="{{0,670},{0,507},{0,732},{0,600}}" />
-	    </Window>
-	    
-        </Window>
+		-->		
+		
+		
+	</Window> <!-- Navit window -->
 </GUILayout>
