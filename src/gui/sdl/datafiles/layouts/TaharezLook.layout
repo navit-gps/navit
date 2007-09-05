@@ -81,7 +81,7 @@
             <Property Name="HorzFormatting" Value="WordWrapCentred" />
             <Property Name="UnifiedAreaRect" Value="{{0.02,0},{0.001,0},{0.77,0},{0.07,0}}" />
         </Window>
-        <Window Type="TaharezLook/Button" Name="OSD/DestinationButton" >
+        <Window Type="TaharezLook/Button" Name="DestinationButton" >
             <Property Name="Text" Value="Destination" />
             <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
             <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.01,0},{0.99,0},{0.06,0}}" />
@@ -110,12 +110,12 @@
             <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
             <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.21,0},{0.99,0},{0.26,0}}" />
         </Window>
-        <Window Type="TaharezLook/Button" Name="OSD/ZoomIn" >
+	<Window Type="TaharezLook/Button" Name="ZoomInButton" >
             <Property Name="Text" Value="ZoomIn" />
             <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
             <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.26,0},{0.99,0},{0.31,0}}" />
         </Window>
-        <Window Type="TaharezLook/Button" Name="OSD/ZoomOut" >
+	<Window Type="TaharezLook/Button" Name="ZoomOutButton" >
             <Property Name="Text" Value="ZoomOut" />
             <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
             <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.31,0},{0.99,0},{0.36,0}}" />
