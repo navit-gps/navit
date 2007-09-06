@@ -42,12 +42,13 @@ struct vehicle {
 	int is_file;
 	int is_pipe;
 	int timer_count;
-	int qual;
-	int sats;
+	int status; // Do we have a fix? 0=no 1=yes, without DGPS 2=yes, with DGPS
+	int sats,sats_used;
 	struct coord_geo geo;
 	double height;
 	double dir,speed;
 	double time;
+	double pdop;
 	struct coord current_pos;
 	struct coord_d curr;
 	struct coord_d delta;
@@ -122,16 +123,28 @@ vehicle_dir_get(struct vehicle *this)
 	return &this->dir;
 }
 
-double *
-vehicle_quality_get(struct vehicle *this)
+int *
+vehicle_status_get(struct vehicle *this)
 {
-	return &this->qual;
+	return &this->status;
 }
 
 int *
 vehicle_sats_get(struct vehicle *this)
 {
 	return &this->sats;
+}
+
+int *
+vehicle_sats_used_get(struct vehicle *this)
+{
+	return &this->sats_used;
+}
+
+double *
+vehicle_pdop_get(struct vehicle *this)
+{
+	return &this->pdop;
 }
 
 void
@@ -220,7 +233,7 @@ vehicle_parse_gps(struct vehicle *this, char *buffer)
 		lng-=this->geo.lng*100;
 		this->geo.lng+=lng/60;
 
-		sscanf(item[6],"%d",&this->qual);
+		sscanf(item[6],"%d",&this->status);
 		sscanf(item[7],"%d",&this->sats);
 		sscanf(item[9],"%lf",&this->height);
 		
@@ -337,10 +350,15 @@ vehicle_gps_callback(struct gps_data_t *data, char *buf, size_t len, int level)
 	if (data->set & SATELLITE_SET) {
 		this->sats=data->satellites;
 		data->set &= ~SATELLITE_SET;
+		/* FIXME : the USED_SET check does not work yet. */
+		this->sats_used=data->satellites_used;
 	}
 	if (data->set & STATUS_SET) {
-		this->qual=data->status;
+		this->status=data->status;
 		data->set &= ~STATUS_SET;
+	}
+	if(data->set & PDOP_SET){
+		printf("pdop : %d\n",data->pdop);
 	}
 }
 #endif
