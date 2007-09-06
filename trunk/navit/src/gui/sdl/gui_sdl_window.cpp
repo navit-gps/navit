@@ -92,65 +92,55 @@ void drawCursor() {
 static void
 sdl_update_roadbook(struct navigation *nav)
 {
-	printf("Called\n");
 
 	using namespace CEGUI;
 	extern Window* myRoot;
-	/*
-	if(! WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->isVisible()){
-		WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->show();
+	
+	struct navigation_list *list;	
+	list=navigation_list_new(nav);
+
+	// First, update the 'Navigation Tip' on the main window
+
+	try {
+		WindowManager::getSingleton().getWindow("Navit/Routing/Tips")->setText(navigation_list_get(list, navigation_mode_speech));
+	}
+	catch (CEGUI::Exception& e)
+	{
+		fprintf(stderr,"CEGUI Exception occured: \n%s\n", e.getMessage().c_str());
+		printf("Missing control!...\n");
 	}
 
-	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("Roadbook"));
-	mcl->resetList();
+	// Then, update the whole roadbook	
+	try {
 
-	*/
-	struct navigation_list *list;
-	char *str;
-	
-	list=navigation_list_new(nav);
-	
-	char *text;
+		/* Currently we use the 'Navit' text to display the roadbook, until Mineque design a button for that 		
+		if(! WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->isVisible()){
+			WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->show();
+		}
+		*/
 
-	list=navigation_list_new(nav);	
-	text=navigation_list_get(list, navigation_mode_speech);
-	while ((str=navigation_list_get(list, navigation_mode_short))) {
-			
- 		printf("SDL : %s\n", str);
-		
-		
-// 		mcl->addRow();
-		/*
-		char from [256];
-		char to [256];
-	
-		sprintf(from,"%s %s",param[0].value,param[1].value);
-		ListboxTextItem* itemListbox = new ListboxTextItem(from);
-		sprintf(to,"%s %s",param[2].value,param[3].value);
+		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("Roadbook"));
+		mcl->resetList();
 
-		itemListbox = new ListboxTextItem(to);
-		itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-		mcl->setItem(itemListbox, 1, mcl->getRowCount()-1);
-	
-		itemListbox = new ListboxTextItem(param[9].value);
-		itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-		mcl->setItem(itemListbox, 2, mcl->getRowCount()-1);
-	
-		itemListbox = new ListboxTextItem(param[11].value);
-		itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-		mcl->setItem(itemListbox, 3, mcl->getRowCount()-1);
-	
-		itemListbox = new ListboxTextItem(param[10].value);
-		itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-		mcl->setItem(itemListbox, 4, mcl->getRowCount()-1);
+		char *str;	
 
-		*/ /*
-		ListboxTextItem* itemListbox = new ListboxTextItem(str);
-		itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-		mcl->setItem(itemListbox, 0, mcl->getRowCount()-1);
-	*/
-	 }
-// 	navigation_list_destroy(list);
+		list=navigation_list_new(nav);	
+		while ((str=navigation_list_get(list, navigation_mode_short))) {
+				
+// 			printf("SDL : %s\n", str);
+	 		mcl->addRow();
+
+			ListboxTextItem* itemListbox = new ListboxTextItem(str);
+			itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+			mcl->setItem(itemListbox, 0, mcl->getRowCount()-1);
+		}
+		navigation_list_destroy(list);
+	}
+	catch (CEGUI::Exception& e)
+	{
+		fprintf(stderr,"CEGUI Exception occured: \n%s\n", e.getMessage().c_str());
+		printf("Missing control!...\n");
+	}
 
 }
 
@@ -199,30 +189,11 @@ static int gui_run_main_loop(struct gui_priv *this_)
 
 	struct navigation *navig;
 	navig=navit_get_navigation(sdl_gui_navit);
-	if(navig){
-		printf("navig valid, registering callback\n");
 
-// 		callback_new_1(void (*)())sdl_update_roadbook, sdl_gui);
-		callback_new_0((void (*)())sdl_update_roadbook);
-
-
-		/*
-		this_->roadbook_callback=callback_new_1(callback_cast(navit_window_roadbook_update), this_);
-
-		navigation_register_callback(this_->navigation,
-			navigation_mode_long,
-			this_->roadbook_callback
-		);
-
-		navigation_register_callback(navig,
-			navigation_mode_long,
-// 			callback_new((void (*)())sdl_update_roadbook, 1, (void **)&sdl_gui_navit)
-			callback_new_1(callback_cast(sdl_update_roadbook), &sdl_gui_navit)
-		);
-		*/
-	} else {
-		printf("navig unvalid\n");
-	}
+	navigation_register_callback(navig,
+		navigation_mode_long,
+		callback_new_0((void (*)())sdl_update_roadbook)
+	);
 
 
 	while (!must_quit)
@@ -676,11 +647,7 @@ static void init_sdlgui(char * skin_layout)
  		MultiColumnList* mcl2 = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("Roadbook"));
 
 		mcl2->setSelectionMode(MultiColumnList::RowSingle) ;
-		mcl2->addColumn("From", 0, cegui_absdim(200.0));
-		mcl2->addColumn("To", 1, cegui_absdim(200.0));
-		mcl2->addColumn("Dist", 2, cegui_absdim(80.0));
-		mcl2->addColumn("ETA", 3, cegui_absdim(80.0));
-		mcl2->addColumn("Instruction",4, cegui_absdim(300.0));
+		mcl2->addColumn("Instructions", 0, cegui_absdim(700.0));
 
  		BuildKeyboard();
 
@@ -691,10 +658,6 @@ static void init_sdlgui(char * skin_layout)
 
 		// this one is maybe not needed anymore
 		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton2")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
-
-
-		
-
 
 		}
 		catch (CEGUI::Exception& e)
@@ -738,6 +701,49 @@ static void vehicle_callback_handler( struct navit *nav, struct vehicle *v){
  	double  height=*vehicle_height_get(v);
 	sprintf (buffer, "%.0f m", height);
  	CEGUI::WindowManager::getSingleton().getWindow("OSD/Altimeter")->setText(buffer);
+
+	int sats=*vehicle_sats_get(v);
+	int sats_used=*vehicle_sats_used_get(v);
+// 	printf(" sats : %i, used %i: \n",sats,sats_used);
+	// Sat image hardcoded for now. may break the TaharezSkin
+	// setProperty("Image", CEGUI::PropertyHelper::imageToString( yourImageSet->getImage( "yourImageName" ) ) );
+
+	try {
+		if(sats_used>1){
+			CEGUI::WindowManager::getSingleton().getWindow("SateliteStrenghBar1")->setProperty("Image","set:Mineque-Black image:SateliteStrenghBarOn");
+		} else {
+			CEGUI::WindowManager::getSingleton().getWindow("SateliteStrenghBar1")->setProperty("Image","set:Mineque-Black image:SateliteStrenghBarOff");
+		}
+	
+		if(sats_used>3){
+			CEGUI::WindowManager::getSingleton().getWindow("SateliteStrenghBar2")->setProperty("Image","set:Mineque-Black image:SateliteStrenghBarOn");
+		} else {
+			CEGUI::WindowManager::getSingleton().getWindow("SateliteStrenghBar2")->setProperty("Image","set:Mineque-Black image:SateliteStrenghBarOff");
+		}
+	
+		if(sats_used>5){
+			CEGUI::WindowManager::getSingleton().getWindow("SateliteStrenghBar3")->setProperty("Image","set:Mineque-Black image:SateliteStrenghBarOn");
+		} else {
+			CEGUI::WindowManager::getSingleton().getWindow("SateliteStrenghBar3")->setProperty("Image","set:Mineque-Black image:SateliteStrenghBarOff");
+		}
+	
+		if(sats_used>7){
+			CEGUI::WindowManager::getSingleton().getWindow("SateliteStrenghBar4")->setProperty("Image","set:Mineque-Black image:SateliteStrenghBarOn");
+		} else {
+			CEGUI::WindowManager::getSingleton().getWindow("SateliteStrenghBar4")->setProperty("Image","set:Mineque-Black image:SateliteStrenghBarOff");
+		}
+	
+		if(sats_used>8){
+			CEGUI::WindowManager::getSingleton().getWindow("SateliteStrenghBar5")->setProperty("Image","set:Mineque-Black image:SateliteStrenghBarOn");
+		} else {
+			CEGUI::WindowManager::getSingleton().getWindow("SateliteStrenghBar5")->setProperty("Image","set:Mineque-Black image:SateliteStrenghBarOff");
+		}
+	}
+	catch (CEGUI::Exception& e)
+	{
+		dbg(1,"Warning : you skin doesn't have the satellitebars. You should use Mineque's skin.");
+	}
+
 }
 
 static struct gui_priv *
@@ -773,6 +779,7 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 
 	//gui_sdl_window.cpp:710: error: invalid conversion from 'void (*)(vehicle*)' to 'void (*)()'
 	struct callback *cb=callback_new_0(callback_cast(vehicle_callback_handler));
+
 	navit_add_vehicle_cb(nav,cb);
 	this_->nav=nav;
 	
