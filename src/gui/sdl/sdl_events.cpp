@@ -39,16 +39,24 @@ void route_to(int x,int y){
 	using namespace CEGUI;
 	extern struct navit *sdl_gui_navit;
 
-	WindowManager::getSingleton().getWindow("DestinationWindow")->hide();
-	WindowManager::getSingleton().getWindow("Navit/Routing/Tips")->show();
-	WindowManager::getSingleton().getWindow("Navit/ProgressWindow")->show();
-// 	route_set_destination(co->route, &pos);
-	// I could have been using search->nav instead of sdl_gui_navit. is it better this way?
+	try {
+		WindowManager::getSingleton().getWindow("DestinationWindow")->hide();
+		WindowManager::getSingleton().getWindow("Navit/Routing/Tips")->show();
 
-	navit_set_destination(sdl_gui_navit, &pos, "FIXME");
-	WindowManager::getSingleton().getWindow("Navit/ProgressWindow")->hide();
-	WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->show();
-	WindowManager::getSingleton().getWindow("OSD/ETA")->show();
+// 		WindowManager::getSingleton().getWindow("Navit/ProgressWindow")->show();
+	// 	route_set_destination(co->route, &pos);
+		// I could have been using search->nav instead of sdl_gui_navit. is it better this way?
+	
+// 		WindowManager::getSingleton().getWindow("Navit/ProgressWindow")->hide();
+// 		WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->show();
+// 		WindowManager::getSingleton().getWindow("OSD/ETA")->show();
+	}
+	catch (CEGUI::Exception& e)
+	{
+		fprintf(stderr,"CEGUI Exception occured: \n%s\n", e.getMessage().c_str());
+		printf("Missing control!...\n");
+	}
+		navit_set_destination(sdl_gui_navit, &pos, "FIXME");
 
 }
 
@@ -71,17 +79,13 @@ bool handleItemSelect(int r)
 
 	if(SDL_dest.current_search==SRCH_COUNTRY){
 		country_edit->setText(item->getText());
-		// Need to record the country here 
+		// FIXME Need to record the country here so all searches are made by default in this country
 		twn_edit->activate();
 		SDL_dest.current_search=SRCH_TOWN;
 		myRoot->getChild("Navit/Keyboard")->getChild("Navit/Keyboard/Input")->setText("");
 
 	} else 	if(SDL_dest.current_search==SRCH_TOWN){
 		twn_edit->setText(item->getText());
-// 		SDL_dest.town_street_assoc=atoi(item_assoc->getText().c_str());
-// 		SDL_dest.town=atoi(itemid->getText().c_str());
-// 		printf(" town %s , id=%lx, assoc=%li\n",item->getText().c_str(),SDL_dest.town_street_assoc,SDL_dest.town_street_assoc);
-
 
 		ListboxItem * itemx = mcl->getItemAtGridReference(MCLGridRef(r,3));
 		ListboxItem * itemy = mcl->getItemAtGridReference(MCLGridRef(r,4));
