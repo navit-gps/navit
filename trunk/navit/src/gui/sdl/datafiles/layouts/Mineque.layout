@@ -13,6 +13,13 @@
 			<Property Name="UnifiedAreaRect" Value="{{0,1},{0,550},{0,660},{0,600}}" />
 			<Property Name="ZOrderChangeEnabled" value="False" />
 		</Window>
+		<Window Type="TaharezLook/StaticText" Name="Navit/Routing/Tips" >
+			<Property Name="Font" Value="DejaVuSans-14" />
+			<Property Name="Visible" Value="False" />
+			<Property Name="HorzFormatting" Value="WordWrapCentred" />
+			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0,60},{0,565},{0,600},{0,598}}" />
+		</Window>
 		
 		<!-- Items for the Right Panel -->
 		<Window Type="NavitGrey/StaticImage" Name="RightPanel" >
@@ -113,7 +120,8 @@
 			    <Property Name="Image" Value="set:Mineque-Black  image:SateliteStrenghBarOff" />
 			    <Property Name="UnifiedAreaRect" Value="{{0,767},{0,12},{0,784},{0,44}}" />
 		    </Window>	
-		    <Window Type="NavitGrey/NavitAboutButton" Name="NavitAboutButton">
+<!-- 		<Window Type="NavitGrey/NavitAboutButton" Name="NavitAboutButton"> -->
+		    <Window Type="NavitGrey/NavitAboutButton" Name="OSD/RoadbookButton">
 			    <Property Name="ZOrderChangeEnabled" value="False" />
 			    <Property Name="UnifiedAreaRect" Value="{{0,361},{0,13},{0,443},{0,38}}" />
 		    </Window> 
