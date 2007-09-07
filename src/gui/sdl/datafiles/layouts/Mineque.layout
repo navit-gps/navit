@@ -13,9 +13,9 @@
 			<Property Name="UnifiedAreaRect" Value="{{0,1},{0,550},{0,660},{0,600}}" />
 			<Property Name="ZOrderChangeEnabled" value="False" />
 		</Window>
-		<Window Type="TaharezLook/StaticText" Name="Navit/Routing/Tips" >
+		<Window Type="NavitGrey/StaticText" Name="Navit/Routing/Tips" >
 			<Property Name="Font" Value="DejaVuSans-14" />
-			<Property Name="Visible" Value="False" />
+			<Property Name="Visible" Value="True" />
 			<Property Name="HorzFormatting" Value="WordWrapCentred" />
 			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
 			<Property Name="UnifiedAreaRect" Value="{{0,60},{0,565},{0,600},{0,598}}" />
@@ -41,18 +41,36 @@
 			<Property Name="ZOrderChangeEnabled" value="False" />
 		</Window>
 
-		<Window Type="TaharezLook/StaticText" Name="OSD/SpeedoMeter" >
+		<Window Type="NavitGrey/StaticText" Name="OSD/SpeedoMeterLabel" >
+			<Property Name="Font" Value="DejaVuSans-12" />
+			<Property Name="Text" Value="Speed" />
+			<Property Name="HorzFormatting" Value="WordWrapCentred" />
+			<Property Name="UnifiedAreaRect" Value="{{0,670},{0,100},{0,800},{0,128}}" />
+		</Window>
+		<Window Type="NavitGrey/StaticText" Name="OSD/SpeedoMeter" >
 			<Property Name="Font" Value="DejaVuSans-14" />
 			<Property Name="HorzFormatting" Value="WordWrapCentred" />
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0,670},{0,100},{0,800},{0,130}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0,670},{0,120},{0,800},{0,150}}" />
 		</Window>
-		<Window Type="TaharezLook/StaticText" Name="OSD/Altimeter" >
+		<Window Type="NavitGrey/StaticText" Name="OSD/AltimeterLabel" >
+			<Property Name="Font" Value="DejaVuSans-12" />
+			<Property Name="Text" Value="Alt." />
+			<Property Name="HorzFormatting" Value="WordWrapCentred" />
+			<Property Name="UnifiedAreaRect" Value="{{0,670},{0,148},{0,800},{0,176}}" />
+		</Window>
+		<Window Type="NavitGrey/StaticText" Name="OSD/Altimeter" >
 			<Property Name="Font" Value="DejaVuSans-14" />
 			<Property Name="HorzFormatting" Value="WordWrapCentred" />
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0,670},{0,132},{0,800},{0,162}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0,670},{0,164},{0,800},{0,194}}" />
 		</Window>
+		<Window Type="NavitGrey/StaticText" Name="OSD/Satellites" >
+			<Property Name="Font" Value="DejaVuSans-12" />
+			<Property Name="HorzFormatting" Value="WordWrapCentred" />
+			<Property Name="UnifiedAreaRect" Value="{{0,670},{0,196},{0,800},{0,226}}" />
+		</Window>
+
+
+
 		<Window Type="TaharezLook/LargeVerticalScrollbar" Name="OSD/Scrollbar1" >
 			<Property Name="PageSize" Value="0" />
 			<Property Name="OverlapSize" Value="0" />
@@ -60,13 +78,7 @@
 			<Property Name="ScrollPosition" Value="0" />
 			<Property Name="UnifiedMaxSize" Value="{{0.03,0},{1,0}}" />
 			<Property Name="UnifiedMinSize" Value="{{0.01,0},{0.1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0,750},{0,200},{0,770},{0,350}}" />
-		</Window>
-		<Window Type="TaharezLook/StaticText" Name="OSD/Satellites" >
-			<Property Name="Font" Value="DejaVuSans-12" />
-			<Property Name="HorzFormatting" Value="WordWrapCentred" />
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0,670},{0,164},{0,800},{0,194}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0,770},{0,300},{0,790},{0,450}}" />
 		</Window>
 
 	
