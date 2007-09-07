@@ -1,9 +1,10 @@
 #include <glib.h>
+#include "item.h"
+#include "attr.h"
 #include "track.h"
 #include "debug.h"
 #include "transform.h"
 #include "coord.h"
-#include "item.h"
 #include "route.h"
 #include "projection.h"
 #include "map.h"
@@ -85,6 +86,21 @@ tracking_get_street_data(struct tracking *tr)
 {
 	return tr->curr_line->street;
 }
+
+int
+tracking_get_current_attr(struct tracking *_this, enum attr_type type, struct attr *attr)
+{
+	struct item *item=&_this->curr_line->street->item;
+	int result=0;
+	struct map_rect *mr=map_rect_new(item->map,NULL);
+	item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+	if (item_attr_get(item, attr_street_name, attr)){
+		result=1;
+	}
+	map_rect_destroy(mr);
+	return result;
+}
+
 
 static void
 tracking_get_angles(struct tracking_line *tl)
