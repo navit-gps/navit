@@ -100,6 +100,12 @@ navit_get_mapset(struct navit *this_)
 	return this_->mapsets->data;
 }
 
+struct tracking *
+navit_get_tracking(struct navit *this_)
+{
+	return this_->tracking;
+}
+
 void
 navit_add_layout(struct navit *this_, struct layout *lay)
 {
