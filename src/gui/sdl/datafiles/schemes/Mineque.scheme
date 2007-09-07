@@ -7,7 +7,7 @@
 	<WindowRendererSet Filename="CEGUIFalagardWRBase" />
 
 	<FalagardMapping WindowType="NavitGrey/StaticImage"      TargetType="DefaultWindow"  Renderer="Falagard/StaticImage"       LookNFeel="NavitGrey/StaticImage" />
-	<FalagardMapping WindowType="NavitGrey/StaticText"      TargetType="DefaultWindow"  Renderer="Falagard/StaticImage"       LookNFeel="NavitGrey/StaticText" />
+	<FalagardMapping WindowType="NavitGrey/StaticText"      TargetType="DefaultWindow"  Renderer="Falagard/StaticText"       LookNFeel="NavitGrey/StaticText" />
 
 	<FalagardMapping WindowType="NavitGrey/ZoomInButton"      TargetType="CEGUI/PushButton"  Renderer="Falagard/Button"       LookNFeel="NavitGrey/ZoomInButton" />
 	<FalagardMapping WindowType="NavitGrey/ZoomOutButton"      TargetType="CEGUI/PushButton"  Renderer="Falagard/Button"       LookNFeel="NavitGrey/ZoomOutButton" />

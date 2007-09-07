@@ -154,7 +154,6 @@
 		    </Layer>
 	    </StateImagery>
     </WidgetLook>
-    
 
     <WidgetLook name="NavitGrey/ViewModeSwitchButton">
 	    <PropertyDefinition name="NormalImage" initialValue="" redrawOnWrite="true" />
@@ -1279,6 +1278,7 @@
 	    </StateImagery>
     </WidgetLook>
 
+    <!-- this widget needs cleanup -->
     <WidgetLook name="NavitGrey/StaticText">
 	    <PropertyDefinition name="FrameColours" initialValue="tl:FFFFFFFF tr:FFFFFFFF bl:FFFFFFFF br:FFFFFFFF" redrawOnWrite="true" />
 	    <PropertyDefinition name="BackgroundColours" initialValue="tl:FFFFFFFF tr:FFFFFFFF bl:FFFFFFFF br:FFFFFFFF" redrawOnWrite="true" />
@@ -1442,17 +1442,17 @@
 	    <StateImagery name="Disabled" />
 	    <StateImagery name="EnabledFrame">
 		    <Layer>
-			    <Section look="TaharezLook/StaticShared" section="frame" />
+			    <Section look="NavitGrey/StaticShared" section="frame" />
 		    </Layer>
 	    </StateImagery>
 	    <StateImagery name="DisabledFrame">
 		    <Layer>
-			    <Section look="TaharezLook/StaticShared" section="frame" />
+			    <Section look="NavitGrey/StaticShared" section="frame" />
 		    </Layer>
 	    </StateImagery>
 	    <StateImagery name="WithFrameEnabledBackground">
 		    <Layer>
-			    <Section look="TaharezLook/StaticShared" section="background" />
+			    <Section look="NavitGrey/StaticShared" section="background" />
 		    </Layer>
 	    </StateImagery>
 	    <StateImagery name="WithFrameDisabledBackground">
