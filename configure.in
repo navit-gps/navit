@@ -264,6 +264,7 @@ src/graphics/null/Makefile
 src/gui/Makefile
 src/gui/gtk/Makefile
 src/gui/sdl/Makefile
+src/gui/sdl/datafiles/Makefile
 src/osd/Makefile
 src/osd/core/Makefile
 src/speech/Makefile
