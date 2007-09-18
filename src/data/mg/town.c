@@ -102,7 +102,7 @@ town_get_data(struct town_priv *twn, unsigned char **p)
 	twn->district=get_string(p);
 	twn->postal_code1=get_string(p);
 	twn->order=get_u8(p);			/* 1-15 (19) */
-	twn->country=get_u16(p);
+	twn->country=get_u16_unal(p);
 	twn->type=get_u8(p);
 	twn->unknown2=get_u32_unal(p);
 	twn->size=get_u8(p);
