@@ -1,153 +1,154 @@
-# German translations for navit
-# Copyright (C) 2007
-# This file is distributed under the same license as the navit package.
-# Martin Schaller <martin-s@sourceforge.net>, 2007.
+# translation of navit_cs.po to Čeština
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 #
+# Vaclav Cerny <vatoz@seznam.cz>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: Navit 0.0.2\n"
+"Project-Id-Version: navit_cs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-29 01:53+0200\n"
-"PO-Revision-Date: 2007-07-10 21:53+0200\n"
-"Last-Translator: Martin Schaller <martin-s@sourceforge.net>\n"
-"Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
+"POT-Creation-Date: 2007-09-18 21:27+0200\n"
+"PO-Revision-Date: 2007-09-22 10:34+0200\n"
+"Last-Translator: Vaclav Cerny <vatoz@seznam.cz>\n"
+"Language-Team: Čeština\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: ../src/main.c:89
 #, c-format
 msgid "Running from source directory\n"
-msgstr "Aufruf aus Quellverzeichnis\n"
+msgstr "Běží ze zdrojového adresáře\n"
 
 #: ../src/main.c:114
 #, c-format
 msgid "Error parsing '%s': %s\n"
-msgstr "Fehler beim Parsen von '%s': %s\n"
+msgstr "Chyba parsování '%s': %s\n"
 
 #: ../src/main.c:116
 #, c-format
 msgid "Using '%s'\n"
-msgstr "Benutze '%s'\n"
+msgstr "Používám '%s'\n"
 
 #: ../src/main.c:119
 #, c-format
 msgid "No instance has been created, exiting\n"
-msgstr "Es wurde keine Instanz erzeugt, Ende\n"
+msgstr "Nebyla vytvořena instance, končím\n"
 
 #: ../src/navigation.c:176
 #, c-format
 msgid "%d m"
-msgstr "%d Meter"
+msgstr "%d m"
 
 #: ../src/navigation.c:178
 #, c-format
 msgid "in %d m"
-msgstr "In %d metern"
+msgstr "za %d m"
 
 #: ../src/navigation.c:182
 #, c-format
 msgid "%d meters"
-msgstr "%d Meter"
+msgstr "%d metrů"
 
 #: ../src/navigation.c:184
 #, c-format
 msgid "in %d meters"
-msgstr "In %d metern"
+msgstr "za %d metrů"
 
 #: ../src/navigation.c:190
 #, c-format
 msgid "%d.%d kilometer"
-msgstr "%d,%d Kilometer"
+msgstr "%d.%d kilometrů"
 
 #: ../src/navigation.c:192
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "In %d,%d Kilometern"
+msgstr "za %d.%d kilometrů"
 
 #: ../src/navigation.c:198
 msgid "one kilometer"
-msgstr "einen Kilometer"
+msgstr "jeden kilometr "
 
 #: ../src/navigation.c:200
 msgid "in one kilometer"
-msgstr "in einem Kilometer"
+msgstr "za jeden kilometr "
 
 #: ../src/navigation.c:203
 msgid "two kilometers"
-msgstr "zwei Kilometer"
+msgstr "dva kilometry "
 
 #: ../src/navigation.c:205
 msgid "in two kilometers"
-msgstr "in zwei Kilometern"
+msgstr "za dva kilometry"
 
 #: ../src/navigation.c:208
 msgid "three kilometers"
-msgstr "drei Kilometer"
+msgstr "tři kilometry"
 
 #: ../src/navigation.c:210
 msgid "in three kilometers"
-msgstr "in drei Kilometern"
+msgstr "za tři kilometry"
 
 #: ../src/navigation.c:213
 msgid "four kilometers"
-msgstr "vier Kilometer"
+msgstr "čtyři kilometry "
 
 #: ../src/navigation.c:215
 msgid "in four kilometers"
-msgstr "in vier Kilometern"
+msgstr "za čtyři kilometry"
 
 #: ../src/navigation.c:218
 #, c-format
 msgid "%d kilometers"
-msgstr "%d Kilometer"
+msgstr "%d kilometrů"
 
 #: ../src/navigation.c:220
 #, c-format
 msgid "in %d kilometers"
-msgstr "In %d Kilometern"
+msgstr "za %d kilometrů"
 
 #: ../src/navigation.c:424
 msgid "right"
-msgstr "rechts"
+msgstr "vpravo"
 
 #: ../src/navigation.c:432
 msgid "left"
-msgstr "links"
+msgstr "vlevo"
 
 #: ../src/navigation.c:436
 msgid "easily "
-msgstr "leicht "
+msgstr "mírně"
 
 #: ../src/navigation.c:440
 msgid "strongly "
-msgstr "scharf "
+msgstr "silně"
 
 #: ../src/navigation.c:443
 msgid "unknown "
-msgstr "unbekannt "
+msgstr "neurčitě"
 
-#
 #: ../src/navigation.c:449
 msgid "When possible, please turn around"
-msgstr "Wenn möglich bitte wenden"
+msgstr "Až to bude možné, otočte se "
 
 #: ../src/navigation.c:456
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Dem Straßenverlauf %s folgen"
+msgstr "Pokračujte po další %s"
 
 #: ../src/navigation.c:460
 msgid "soon"
-msgstr "Demnächst"
+msgstr "brzy"
 
 #: ../src/navigation.c:466
 msgid "now"
-msgstr "Jetzt"
+msgstr "nyní"
 
 #: ../src/navigation.c:469
 msgid "error"
-msgstr "fehler"
+msgstr "chyba"
 
 #: ../src/navigation.c:474
 msgid "strength_pos"
@@ -164,28 +165,28 @@ msgstr "1"
 #: ../src/navigation.c:488
 #, c-format
 msgid "Turn %s%s %s"
-msgstr "%s %s%s abbiegen"
+msgstr "%s zabočte %s %s"
 
 #: ../src/navigation.c:491
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "%s haben Sie ihr Ziel erreicht"
+msgstr "Dorazili jste do cíle %s"
 
 #: ../src/navit.c:440 ../src/gui/gtk/gui_gtk_action.c:180
 msgid "Layout"
-msgstr "Layout"
+msgstr "Rozvržení"
 
 #: ../src/navit.c:453
 msgid "Projection"
-msgstr "Projektion"
+msgstr "Projekce"
 
 #: ../src/country.c:23
 msgid "Czech Republic"
-msgstr "Tschechische Republik"
+msgstr "Česká republika"
 
 #: ../src/country.c:24
 msgid "Slovakia"
-msgstr "Slowakei"
+msgstr "Slovensko"
 
 #: ../src/country.c:25
 msgid "San Marino"
@@ -193,103 +194,103 @@ msgstr "San Marino"
 
 #: ../src/country.c:26
 msgid "Estonia"
-msgstr "Estland"
+msgstr "Estonsko"
 
 #: ../src/country.c:27
 msgid "Georgia"
-msgstr "Georgien"
+msgstr "Gruzie"
 
 #: ../src/country.c:28
 msgid "Latvia"
-msgstr "Lettland"
+msgstr "Lotyšsko"
 
 #: ../src/country.c:29
 msgid "Lithuania"
-msgstr "Litauen"
+msgstr "Litva"
 
 #: ../src/country.c:30
 msgid "Moldova"
-msgstr "Moldawien"
+msgstr "Moldávie"
 
 #: ../src/country.c:31
 msgid "Russian Federation"
-msgstr "Rußland"
+msgstr "Ruská federace"
 
 #: ../src/country.c:32
 msgid "Ukraine"
-msgstr "Ukraine"
+msgstr "Ukrajina"
 
 #: ../src/country.c:33
 msgid "Belarus"
-msgstr "Weißrussland"
+msgstr "Bělorusko"
 
 #: ../src/country.c:34
 msgid "Egypt"
-msgstr "Ägypten"
+msgstr "Egypt"
 
 #: ../src/country.c:35
 msgid "Greece"
-msgstr "Griechenland"
+msgstr "Řecko"
 
 #: ../src/country.c:36
 msgid "Netherlands"
-msgstr "Niederlande"
+msgstr "Nizozemí"
 
 #: ../src/country.c:37
 msgid "Belgium"
-msgstr "Belgien"
+msgstr "Belgie"
 
 #: ../src/country.c:38
 msgid "France"
-msgstr "Frankreich"
+msgstr "Francie"
 
 #: ../src/country.c:39
 msgid "Spain"
-msgstr "Spanien"
+msgstr "Španělsko"
 
 #: ../src/country.c:40
 msgid "Hungary"
-msgstr "Ungarn"
+msgstr "Maďarsko"
 
 #: ../src/country.c:41
 msgid "Italy"
-msgstr "Italien"
+msgstr "Itálie"
 
 #: ../src/country.c:42
 msgid "Romania"
-msgstr "Rumänien"
+msgstr "Rumunsko"
 
 #: ../src/country.c:43
 msgid "Switzerland"
-msgstr "Schweiz"
+msgstr "Švýcarsko"
 
 #: ../src/country.c:44
 msgid "Austria"
-msgstr "Österreich"
+msgstr "Rakousko"
 
 #: ../src/country.c:45
 msgid "United Kingdom"
-msgstr "Grossbritannien"
+msgstr "Spojené království"
 
 #: ../src/country.c:46
 msgid "Denmark"
-msgstr "Dänemark"
+msgstr "Dánsko"
 
 #: ../src/country.c:47
 msgid "Sweden"
-msgstr "Schweden"
+msgstr "Švédsko"
 
 #: ../src/country.c:48
 msgid "Norway"
-msgstr "Norwegen"
+msgstr "Norsko"
 
 #: ../src/country.c:49
 msgid "Poland"
-msgstr "Polen"
+msgstr "Polsko"
 
 #: ../src/country.c:50
 msgid "Germany"
-msgstr "Deutschland"
+msgstr "Ňemecko"
 
 #: ../src/country.c:51
 msgid "Gibraltar"
@@ -297,15 +298,15 @@ msgstr "Gibraltar"
 
 #: ../src/country.c:52
 msgid "Portugal"
-msgstr "Portugal"
+msgstr "Portugalsko"
 
 #: ../src/country.c:53
 msgid "Luxembourg"
-msgstr "Luxemburg"
+msgstr "Lucembursko"
 
 #: ../src/country.c:54
 msgid "Ireland"
-msgstr "Irland"
+msgstr "Irsko"
 
 #: ../src/country.c:55
 msgid "Iceland"
@@ -313,7 +314,7 @@ msgstr "Island"
 
 #: ../src/country.c:56
 msgid "Albania"
-msgstr "Albanien"
+msgstr "Albánie"
 
 #: ../src/country.c:57
 msgid "Malta"
@@ -321,15 +322,15 @@ msgstr "Malta"
 
 #: ../src/country.c:58
 msgid "Cyprus"
-msgstr "Zypern"
+msgstr "Kypr"
 
 #: ../src/country.c:59
 msgid "Finland"
-msgstr "Finnland"
+msgstr "Finsko"
 
 #: ../src/country.c:60
 msgid "Bulgaria"
-msgstr "Bulgarien"
+msgstr "Bulharsko"
 
 #: ../src/country.c:61
 msgid "Lebanon"
@@ -337,205 +338,205 @@ msgstr "Libanon"
 
 #: ../src/country.c:62
 msgid "Andorra"
-msgstr "Andorra"
+msgstr "Andora"
 
 #: ../src/country.c:63
 msgid "Syria"
-msgstr "Syrien"
+msgstr "Sýrie"
 
-#
 #: ../src/country.c:64
 msgid "Saudi Arabia"
-msgstr "Saudi-Arabien"
+msgstr "Saudská Arábie"
 
 #: ../src/country.c:65
 msgid "Libia"
-msgstr "Libyen"
+msgstr "Libie"
 
 #: ../src/country.c:66
 msgid "Israel"
-msgstr "Israel"
+msgstr "Izrael"
 
 #: ../src/country.c:67
 msgid "Palestinia"
-msgstr "Palästinensische Autonomiegebiete"
+msgstr "Palestina"
 
 #: ../src/country.c:68
 msgid "Liechtenstein"
-msgstr "Lichtenstein"
+msgstr "Lichtenštejnsko"
 
 #: ../src/country.c:69
 msgid "Morocco"
-msgstr "Marokko"
+msgstr "Maroko"
 
 #: ../src/country.c:70
 msgid "Algeria"
-msgstr "Algerien"
+msgstr "Alžír"
 
 #: ../src/country.c:71
 msgid "Tunisia"
-msgstr "Tunesien"
+msgstr "Tunis"
 
 #: ../src/country.c:72
 msgid "Serbia"
-msgstr "Serbien"
+msgstr "Srbsko"
 
 #: ../src/country.c:73
 msgid "Jordan"
-msgstr "Jordanien"
+msgstr "Jordánsko"
 
 #: ../src/country.c:74
 msgid "Croatia"
-msgstr "Kroatien"
+msgstr "Chorvatsko"
 
 #: ../src/country.c:75
 msgid "Slovenia"
-msgstr "Slowenien"
+msgstr "Slovinsko"
 
 #: ../src/country.c:76
 msgid "Bosnia and Herzegovina"
-msgstr "Bosnien und Herzegowina"
+msgstr "Bosna a Hercegovina"
 
 #: ../src/country.c:77
 msgid "Macedonia"
-msgstr "Mazedonien"
+msgstr "Makedonie"
 
 #: ../src/country.c:78
 msgid "Turkey"
-msgstr "Türkei"
+msgstr "Turecko"
 
 #: ../src/country.c:79
 msgid "Monaco"
-msgstr "Monaco"
+msgstr "Monako"
 
 #: ../src/country.c:80
 msgid "Azerbaijan"
-msgstr "Aserbaidschan"
+msgstr "Azerbajdžán"
 
 #: ../src/country.c:81
 msgid "Armenia"
-msgstr "Armenien"
+msgstr "Arménie"
 
 #: ../src/country.c:82
 msgid "Faroe Islands"
-msgstr "Färöer"
+msgstr "Farské ostrovy"
 
 #: ../src/country.c:83
 msgid "Western Sahara"
-msgstr "Westsahara"
+msgstr "Západní Sahara"
 
 #: ../src/country.c:84
 msgid "Svalbard and Jan Mayen"
-msgstr "Svalbard und Jan Mayen"
+msgstr "Svalbard a Jan Mayen"
 
 #: ../src/gui/gtk/destination.c:316
 msgid "Country"
-msgstr "Land"
+msgstr "Země"
 
 #: ../src/gui/gtk/destination.c:318
 msgid "Zip Code"
-msgstr "PLZ"
+msgstr "PSČ"
 
 #: ../src/gui/gtk/destination.c:320
 msgid "City"
-msgstr "Ort"
+msgstr "Město"
 
 #: ../src/gui/gtk/destination.c:322
 msgid "District/Township"
-msgstr "Ortsteil/Gemeinde"
+msgstr "Kraj/Okres"
 
 #: ../src/gui/gtk/destination.c:325
 msgid "Street"
-msgstr "Straße"
+msgstr "Ulice"
 
 #: ../src/gui/gtk/destination.c:327
 msgid "Number"
-msgstr "Nummer"
+msgstr "Číslo"
 
 #: ../src/gui/gtk/gui_gtk_action.c:177
 msgid "Display"
-msgstr "Anzeige"
+msgstr "Zobrazit"
 
 #: ../src/gui/gtk/gui_gtk_action.c:178
 msgid "Route"
-msgstr "Route"
+msgstr "Trasa"
 
 #: ../src/gui/gtk/gui_gtk_action.c:179
 msgid "Map"
-msgstr "Karte"
+msgstr "Mapa"
 
 #: ../src/gui/gtk/gui_gtk_action.c:181
 msgid "ZoomOut"
-msgstr "Verkleinern"
+msgstr "Zmenšit"
 
 #: ../src/gui/gtk/gui_gtk_action.c:182
 msgid "ZoomIn"
-msgstr "Vergrößern"
+msgstr "Zvětšit"
 
 #: ../src/gui/gtk/gui_gtk_action.c:183
 msgid "Refresh"
-msgstr "Aktualisieren"
+msgstr "Obnovit"
 
 #: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "Roadbook"
-msgstr "Straßenliste"
+msgstr "Itinerář"
 
 #: ../src/gui/gtk/gui_gtk_action.c:185
 msgid "Info"
-msgstr "Info"
+msgstr "Informace"
 
 #: ../src/gui/gtk/gui_gtk_action.c:186
 msgid "Destination"
-msgstr "Ziel"
+msgstr "Cíl"
 
 #: ../src/gui/gtk/gui_gtk_action.c:187
 msgid "Clear"
-msgstr "Löschen"
+msgstr "Vyčistit"
 
 #: ../src/gui/gtk/gui_gtk_action.c:188
 msgid "Test"
-msgstr "Test"
+msgstr "Vyzkoušet"
 
 #: ../src/gui/gtk/gui_gtk_action.c:189
 msgid "_Quit"
-msgstr "Beenden"
+msgstr "_Konec"
 
 #: ../src/gui/gtk/gui_gtk_action.c:196
 msgid "Cursor"
-msgstr "Marke"
+msgstr "Kurzor"
 
 #: ../src/gui/gtk/gui_gtk_action.c:197
 msgid "Tracking"
-msgstr "Spurverfolgung"
+msgstr "Stopování"
 
 #: ../src/gui/gtk/gui_gtk_action.c:198
 msgid "Orientation"
-msgstr "Orientierung"
+msgstr "Orientace"
 
 #: ../src/gui/gtk/gui_gtk_action.c:199
 msgid "Fullscreen"
-msgstr ""
+msgstr "Celá obrazovka"
 
 #: ../src/gui/gtk/gui_gtk_action.c:206
 msgid "Data"
-msgstr "Daten"
+msgstr "Data"
 
 #: ../src/gui/gtk/gui_gtk_action.c:207
 msgid "VisibleBlocks"
-msgstr "Sichtbare Blöcke"
+msgstr "Viditelné bloky"
 
 #: ../src/gui/gtk/gui_gtk_action.c:208
 msgid "VisibleTowns"
-msgstr "Sichtbare Städte"
+msgstr "Viditelné města"
 
 #: ../src/gui/gtk/gui_gtk_action.c:209
 msgid "VisiblePolys"
-msgstr "Sichtbare Polygone"
+msgstr "Viditelné mnohoúhelníky"
 
 #: ../src/gui/gtk/gui_gtk_action.c:210
 msgid "VisibleStreets"
-msgstr "Sichtbare Straßen"
+msgstr "Viditelné silnice"
 
 #: ../src/gui/gtk/gui_gtk_action.c:211
 msgid "VisiblePoints"
-msgstr "Sichtbare Punkte"
+msgstr "Viditelné body"
+
