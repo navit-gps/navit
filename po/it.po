@@ -38,12 +38,12 @@ msgstr "Nessuna istanza creata, esco\n"
 #: ../src/navigation.c:176
 #, fuzzy, c-format
 msgid "%d m"
-msgstr "%d metri"
+msgstr "%d m"
 
 #: ../src/navigation.c:178
 #, fuzzy, c-format
 msgid "in %d m"
-msgstr "tra %d metri"
+msgstr "tra %d m"
 
 #: ../src/navigation.c:182
 #, c-format
@@ -130,7 +130,7 @@ msgstr "sconosciuto "
 #: ../src/navigation.c:449
 #, fuzzy
 msgid "When possible, please turn around"
-msgstr "Appena possibile, svoltare"
+msgstr "Appena possibile, invertire il senso di marcia"
 
 #: ../src/navigation.c:456
 #, c-format
@@ -357,7 +357,7 @@ msgstr "Israele"
 
 #: ../src/country.c:67
 msgid "Palestinia"
-msgstr "Palestinia"
+msgstr "Palestina"
 
 #: ../src/country.c:68
 msgid "Liechtenstein"
@@ -417,7 +417,7 @@ msgstr "Armenia"
 
 #: ../src/country.c:82
 msgid "Faroe Islands"
-msgstr "Isole Faroe"
+msgstr "Isole Faer Oer"
 
 #: ../src/country.c:83
 msgid "Western Sahara"
@@ -477,7 +477,7 @@ msgstr "Aggiorna"
 
 #: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "Roadbook"
-msgstr ""
+msgstr "Quaderno di viaggio"
 
 #: ../src/gui/gtk/gui_gtk_action.c:185
 msgid "Info"
@@ -489,7 +489,7 @@ msgstr "Destinazione"
 
 #: ../src/gui/gtk/gui_gtk_action.c:187
 msgid "Clear"
-msgstr ""
+msgstr "Pulisci"
 
 #: ../src/gui/gtk/gui_gtk_action.c:188
 msgid "Test"
@@ -505,7 +505,7 @@ msgstr "Cursore"
 
 #: ../src/gui/gtk/gui_gtk_action.c:197
 msgid "Tracking"
-msgstr ""
+msgstr "Tracking"
 
 #: ../src/gui/gtk/gui_gtk_action.c:198
 msgid "Orientation"
@@ -513,7 +513,7 @@ msgstr "Bussola"
 
 #: ../src/gui/gtk/gui_gtk_action.c:199
 msgid "Fullscreen"
-msgstr ""
+msgstr "Schermo intero"
 
 #: ../src/gui/gtk/gui_gtk_action.c:206
 msgid "Data"
