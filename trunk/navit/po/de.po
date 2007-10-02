@@ -514,7 +514,7 @@ msgstr "Orientierung"
 
 #: ../src/gui/gtk/gui_gtk_action.c:199
 msgid "Fullscreen"
-msgstr ""
+msgstr "Vollbild"
 
 #: ../src/gui/gtk/gui_gtk_action.c:206
 msgid "Data"
