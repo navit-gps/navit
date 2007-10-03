@@ -25,7 +25,12 @@ SUFFIXES = .po .mo
 all: @MOFILES@
 
 @POFILES@: navit.pot
-	$(MSGMERGE) --update --verbose -o $(top_builddir)/po/$@ $(top_srcdir)/po/$@ navit.pot
+	if test "$(top_srcdir)" != "$(top_builddir)"; then \
+		$(MSGMERGE) --verbose -o $(top_builddir)/po/$@ $(top_srcdir)/po/$@ navit.pot \
+	else \
+        	$(MSGMERGE) --update --verbose $@ navit.pot
+        fi; \
+
 
 navit.pot: $(POTFILES)
 	 $(XGETTEXT) --default-domain=navit \
