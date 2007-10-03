@@ -3,7 +3,7 @@ extern "C" {
 #endif
 
 #include <stdarg.h>
-int debug_level;
+extern int debug_level;
 #define dbg(level,fmt...) ({ if (debug_level >= level) debug_printf(level,MODULE,__PRETTY_FUNCTION__,1,fmt); })
 
 /* prototypes */
