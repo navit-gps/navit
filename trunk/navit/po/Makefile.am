@@ -53,3 +53,11 @@ install-data-local:  $(CATALOGS)
 			$(INSTALL_DATA) -m 644 $$n $(DESTDIR)$(datadir)/locale/$$l/LC_MESSAGES/navit.mo; \
 		fi; \
 	done
+
+uninstall-local:
+	for n in $(CATALOGS) __DuMmY ; do \
+		if test "$$n" -a "$$n" != "__DuMmY" ; then \
+			l=`basename $$n .mo`; \
+			rm -f $(DESTDIR)$(datadir)/locale/$$l/LC_MESSAGES/navit.mo; \
+		fi; \
+	done
