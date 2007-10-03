@@ -87,6 +87,40 @@ attr_search(struct attr **attrs, struct attr *last, enum attr_type attr)
 	return NULL;
 }
 
+int
+attr_data_size(struct attr *attr)
+{
+	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
+		return strlen(attr->u.str)+1;
+	}
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) {
+		return sizeof(attr->u.num);
+	}
+	return 0;
+}
+
+void *
+attr_data_get(struct attr *attr)
+{
+	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
+		return attr->u.str;
+	}
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) {
+		return &attr->u.num;
+	}
+}
+
+void
+attr_data_set(struct attr *attr, void *data)
+{
+	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
+		attr->u.str=data;
+	}
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) {
+		attr->u.num=*((int *)data);
+	}
+}
+
 void
 attr_free(struct attr *attr)
 {
