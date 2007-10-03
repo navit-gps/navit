@@ -37,3 +37,5 @@ maps/$(SAMPLE_MAP).txt: maps/$(SAMPLE_MAP).osm $(top_srcdir)/src/script/osm2navi
 	$(top_srcdir)/src/script/osm2navit <maps/$(SAMPLE_MAP).osm >maps/$(SAMPLE_MAP).txt.tmp
 	mv maps/$(SAMPLE_MAP).txt.tmp maps/$(SAMPLE_MAP).txt
 
+distclean-local:
+	rm -f maps/$(SAMPLE_MAP).osm
