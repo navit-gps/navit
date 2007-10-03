@@ -1,9 +1,11 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <glib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 #include <libintl.h>
 #ifdef USE_GTK_MAIN_LOOP
 #include <gtk/gtk.h>
@@ -77,6 +79,8 @@ int main(int argc, char **argv)
 {
 	GError *error = NULL;
 	char *config_file = NULL;
+	char *s;
+	int l;
 
 	signal(SIGCHLD, sigchld);
 
@@ -85,10 +89,41 @@ int main(int argc, char **argv)
 	setlocale(LC_NUMERIC,"C");
 	setlocale(LC_NUMERIC,"C");
 
-	if (file_exists("navit.c")) {
+	if (file_exists("navit.c") || file_exists("navit.o")) {
+		char buffer[PATH_MAX];
 		printf(_("Running from source directory\n"));
+		getcwd(buffer, PATH_MAX);
+		setenv("NAVIT_PREFIX", buffer, 0);
+		setenv("NAVIT_LIBDIR", buffer, 0);
+		setenv("NAVIT_SHAREDIR", buffer, 0);
+		setenv("NAVIT_LIBPREFIX", "*/.libs/", 0);
+		s=g_strdup_printf("%s/../locale", buffer);	
+		setenv("NAVIT_LOCALEDIR", s, 0);
+		g_free(s);
+	} else {
+		if (!getenv("NAVIT_PREFIX")) {
+			l=strlen(argv[0]);
+			if (l > 10 && !strcmp(argv[0]+l-10,"/bin/navit")) {
+				s=g_strdup(argv[0]);
+				s[l-10]='\0';
+				if (strcmp(s, PREFIX)) 
+					printf(_("setting '%s' to '%s'\n"), "NAVIT_PREFIX", s);
+				setenv("NAVIT_PREFIX", s, 0);
+				g_free(s);
+			} else 
+				setenv("NAVIT_PREFIX", PREFIX, 0);
+		}
+		s=g_strdup_printf("%s/share/locale", getenv("NAVIT_PREFIX"));
+		setenv("NAVIT_LOCALEDIR", s, 0);
+		g_free(s);
+		s=g_strdup_printf("%s/share/navit", getenv("NAVIT_PREFIX"));
+		setenv("NAVIT_SHAREDIR", s, 0);
+		g_free(s);
+		s=g_strdup_printf("%s/lib/navit", getenv("NAVIT_PREFIX"));
+		setenv("NAVIT_LIBDIR", s, 0);
+		g_free(s);
 	}
-        bindtextdomain( "navit", "/usr/share/locale" );
+        bindtextdomain( "navit", getenv("NAVIT_LOCALEDIR"));
 	textdomain( "navit" );
 
 	debug_init();
@@ -99,17 +134,40 @@ int main(int argc, char **argv)
 	gdk_rgb_init();
 #endif
 
+	config_file=NULL;
 	if (argc > 1) 
 		config_file=argv[1];
-	else {
+	if (! config_file) {
 		config_file=g_strjoin(NULL,get_home_directory(), "/.navit/navit.xml" , NULL);
 		if (!file_exists(config_file)) {
-			if (file_exists("navit.xml.local"))
-				config_file="navit.xml.local";
-			else
-				config_file="navit.xml";
+			g_free(config_file);
+			config_file=NULL;
+			}
+	}
+	if (! config_file) {
+		if (file_exists("navit.xml.local"))
+			config_file="navit.xml.local";
+	}
+	if (! config_file) {
+		if (file_exists("navit.xml"))
+			config_file="navit.xml";
+	}
+	if (! config_file) {
+		config_file=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml.local" , NULL);
+		if (!file_exists(config_file)) {
+			g_free(config_file);
+			config_file=NULL;
 		}
 	}
+	if (! config_file) {
+		config_file=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml" , NULL);
+		if (!file_exists(config_file)) {
+			g_free(config_file);
+			config_file=NULL;
+		}
+	}
+	if (! config_file) 
+		g_error(_("No config file navit.xml or navit.xml.local found\n"));
 	if (!config_load(config_file, &error)) {
 		g_error(_("Error parsing '%s': %s\n"), config_file, error->message);
 	} else {

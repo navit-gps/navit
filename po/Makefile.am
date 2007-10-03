@@ -6,22 +6,28 @@ CLEANFILES = $(CATALOGS) navit.pot
 EXTRA_DIST = @POFILES@
 
 POTFILES  = \
-	$(top_builddir)/src/main.c \
-	$(top_builddir)/src/navigation.c \
-	$(top_builddir)/src/navit.c \
-	$(top_builddir)/src/country.c \
-	$(top_builddir)/src/gui/gtk/destination.c \
-	$(top_builddir)/src/gui/gtk/gui_gtk_action.c
+	$(top_srcdir)/src/main.c \
+	$(top_srcdir)/src/navigation.c \
+	$(top_srcdir)/src/navit.c \
+	$(top_srcdir)/src/country.c \
+	$(top_srcdir)/src/gui/gtk/destination.c \
+	$(top_srcdir)/src/gui/gtk/gui_gtk_action.c
 
 
 SUFFIXES = .po .mo
 
 .po.mo: 
-	$(MSGFMT) --check --verbose --statistics --output-file=$@ $<
+	dir=`basename $@ .mo` ;\
+	$(MSGFMT) --check --verbose --statistics --output-file=$@ $< && \
+	mkdir -p ../locale/$$dir/LC_MESSAGES && \
+	cp $@ ../locale/$$dir/LC_MESSAGES/navit.mo
 
 all: @MOFILES@
 
 @POFILES@: navit.pot
+	if test "$(top_srcdir)" != "$(top_builddir)"; then \
+		cp $(top_srcdir)/po/$@ $(top_builddir)/po/$@; \
+	fi; \
 	$(MSGMERGE) --update --verbose $@ navit.pot
 
 navit.pot: $(POTFILES)

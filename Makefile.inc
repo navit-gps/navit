@@ -7,3 +7,4 @@ moduleosddir=$(pkglibdir)/osd
 modulevehicledir=$(pkglibdir)/vehicle
 pkgdocdir=$(pkgdatadir)
 xpmdir=$(pkgdatadir)/xpm
+mapsdir=$(pkgdatadir)/maps

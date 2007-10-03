@@ -4,6 +4,7 @@
 struct map_priv {
 	int id;
 	char *filename;
+	char *charset;
 };
 
 #define SIZE 512

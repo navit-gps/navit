@@ -12,6 +12,7 @@
 #include "attr.h"
 #include "coord.h"
 #include "transform.h"
+#include "file.h"
 
 #include "textfile.h"
 
@@ -297,14 +298,25 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs)
 {
 	struct map_priv *m;
 	struct attr *data=attr_search(attrs, NULL, attr_data);
+	struct attr *charset=attr_search(attrs, NULL, attr_charset);
+	struct file_wordexp *wexp;
+	char **wexp_data;
 	if (! data)
 		return NULL;
+
+	wexp=file_wordexp_new(data->u.str);
+	wexp_data=file_wordexp_get_array(wexp);
 	dbg(1,"map_new_textfile %s\n", data->u.str);	
 	*meth=map_methods_textfile;
 
-	m=g_new(struct map_priv, 1);
+	m=g_new0(struct map_priv, 1);
 	m->id=++map_id;
-	m->filename=g_strdup(data->u.str);
+	m->filename=g_strdup(wexp_data[0]);
+	if (charset) {
+		m->charset=g_strdup(charset->u.str);
+		meth->charset=m->charset;
+	}
+	file_wordexp_destroy(wexp);
 	return m;
 }
 
