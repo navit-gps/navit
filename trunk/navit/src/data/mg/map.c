@@ -114,7 +114,7 @@ map_rect_get_item_mg(struct map_rect_priv *mr)
 				return &mr->item;
 			break;
 		case file_border_ply:
-		/* case file_bridge_ply: */
+		case file_bridge_ply:
 		case file_build_ply: 
 		case file_golf_ply: 
 		/* case file_height_ply: */

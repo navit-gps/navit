@@ -209,7 +209,7 @@ if test x$enable_nls = xyes; then
   if test "$XGETTEXT" != "" -a "$HAVEGETTEXT" != ""; then
      PO=""
      if test "$LINGUAS" = ""; then
-           ling=` (cd po; /bin/ls *.po) `
+           ling=` (cd $srcdir/po; /bin/ls *.po) `
   	   for l in $ling; do
 	        lcode=`basename $l .po`
 	        LINGUAS="$LINGUAS$lcode "
