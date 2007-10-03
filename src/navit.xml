@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE navit SYSTEM "navit.dtd">
 <plugins>
-	<plugin path="*/*/.libs/lib*.so" />
-	<plugin path="graphics/null/.libs/libgraphics_null.so" active="no" />
+	<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}lib*.so" />
+	<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libgraphics_null.so" active="no" />
 </plugins>
 <debug name="navit:do_draw" level="0" />
-<navit center="5031.51 N 735.83 E" zoom="8192" >
+<navit center="4808 N 1134 E" zoom="256" >
 	<gui type="gtk" />
 	<graphics type="gtk_drawing_area" />
 <!-- For SDL, use rather the following lines
@@ -44,13 +44,18 @@
 
 	</navigation>
 	<speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" />
-	<mapset>
+<!-- If you have the reiseplaner maps installed, set enabled="yes" in the next line -->
+	<mapset enabled="no">
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map" />
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp1.smp" />
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp2.smp" />
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp3.smp" />
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp4.smp" />
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp5.smp" />
+	</mapset>
+<!-- If you dont want to use the sample map, set enabled="no" in the next line -->
+	<mapset enabled="yes">
+		<map type="textfile" enabled="yes" data="$NAVIT_SHAREDIR/maps/osm_bbox_11.3,47.9,11.7,48.2.txt" charset="utf-8"/>
 	</mapset>
 	<layout name="Tag">
 		<layer name="sea" details="0">
