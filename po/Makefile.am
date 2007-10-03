@@ -61,3 +61,14 @@ uninstall-local:
 			rm -f $(DESTDIR)$(datadir)/locale/$$l/LC_MESSAGES/navit.mo; \
 		fi; \
 	done
+
+distclean-local:
+	for n in $(CATALOGS) __DuMmY ; do \
+		if test "$$n" -a "$$n" != "__DuMmY" ; then \
+			l=`basename $$n .mo`; \
+			rm -f ../locale/$$l/LC_MESSAGES/navit.mo; \
+			if test "$(top_srcdir)" != "$(top_builddir)"; then \
+				rm -f $$l.po; \
+			fi;\
+		fi; \
+	done

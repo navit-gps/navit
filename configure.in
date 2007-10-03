@@ -252,6 +252,7 @@ src/binding/python/Makefile
 src/data/Makefile
 src/data/mg/Makefile
 src/data/textfile/Makefile
+src/data/binfile/Makefile
 src/data/garmin_img/Makefile
 src/data/poi_geodownload/Makefile
 src/data/poi_geodownload/libmdb/Makefile
