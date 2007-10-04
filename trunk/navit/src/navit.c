@@ -557,11 +557,13 @@ navit_speak(struct navit *this_)
 {
 	struct navigation *nav=this_->navigation;
 	struct navigation_list *list;
-	char *text;
+	struct item *item;
+	struct attr attr;
 
 	list=navigation_list_new(nav);	
-	text=navigation_list_get(list, navigation_mode_speech);
-	speech_say(this_->speech, text);
+	item=navigation_list_get_item(list);
+	if (item_attr_get(item, attr_navigation_speech, &attr)) 
+		speech_say(this_->speech, attr.u.str);
 	navigation_list_destroy(list);
 }
 
@@ -570,16 +572,19 @@ navit_window_roadbook_update(struct navit *this_)
 {
 	struct navigation *nav=this_->navigation;
 	struct navigation_list *list;
-	char *str;
+	struct item *item;
+	struct attr attr;
 	struct param_list param[1];
 
 	dbg(1,"enter\n");	
 	datawindow_mode(this_->roadbook_window, 1);
 	list=navigation_list_new(nav);
-	while ((str=navigation_list_get(list, navigation_mode_long_exact))) {
-		dbg(2, "Command='%s'\n", str);
+	while ((item=navigation_list_get_item(list))) {
+		attr.u.str=NULL;
+		item_attr_get(item, attr_navigation_long, &attr);
+		dbg(2, "Command='%s'\n", attr.u.str);
 		param[0].name="Command";
-		param[0].value=str;
+		param[0].value=attr.u.str;
 		datawindow_add(this_->roadbook_window, param, 1);
 	}
 	navigation_list_destroy(list);
@@ -590,7 +595,7 @@ void
 navit_window_roadbook_destroy(struct navit *this_)
 {
 	dbg(0, "enter\n");
-	navigation_unregister_callback(this_->navigation, navigation_mode_long, this_->roadbook_callback);
+	navigation_unregister_callback(this_->navigation, attr_navigation_long, this_->roadbook_callback);
 	this_->roadbook_window=NULL;
 	this_->roadbook_callback=NULL;
 }
@@ -598,7 +603,7 @@ void
 navit_window_roadbook_new(struct navit *this_)
 {
 	this_->roadbook_callback=callback_new_1(callback_cast(navit_window_roadbook_update), this_);
-	navigation_register_callback(this_->navigation, navigation_mode_long, this_->roadbook_callback);
+	navigation_register_callback(this_->navigation, attr_navigation_long, this_->roadbook_callback);
 	this_->roadbook_window=gui_datawindow_new(this_->gui, "Roadbook", NULL, callback_new_1(callback_cast(navit_window_roadbook_destroy), this_));
 	navit_window_roadbook_update(this_);
 }
@@ -832,7 +837,7 @@ navit_init(struct navit *this_)
 	}
 	if (this_->navigation && this_->speech) {
 		this_->nav_speech_cb=callback_new_1(callback_cast(navit_speak), this_);
-		navigation_register_callback(this_->navigation, navigation_mode_speech, this_->nav_speech_cb);
+		navigation_register_callback(this_->navigation, attr_navigation_speech, this_->nav_speech_cb);
 #if 0
 #endif
 	}

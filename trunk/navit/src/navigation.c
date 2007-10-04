@@ -46,8 +46,13 @@ struct navigation_command {
 struct navigation_list {
 	struct navigation *nav;
 	struct navigation_command *cmd;
+	struct navigation_command *cmd_next;
 	struct navigation_itm *itm;
+	struct navigation_itm *itm_next;
+	struct item item;
+#if 0
 	char *str;
+#endif
 };
 
 struct street_data {
@@ -169,9 +174,9 @@ round_distance(int dist)
 }
 
 static char *
-get_distance(int dist, enum navigation_mode mode, int is_length)
+get_distance(int dist, enum attr_type type, int is_length)
 {
-	if (mode == navigation_mode_long) {
+	if (type == attr_navigation_long) {
 		if (is_length)
 			return g_strdup_printf(_("%d m"), dist);
 		else
@@ -419,7 +424,7 @@ make_maneuvers(struct navigation *this_)
 }
 
 static char *
-show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum navigation_mode mode)
+show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum attr_type type)
 {
 	char *dir=_("right"),*strength="";
 	int distance=itm->dest_length-cmd->itm->dest_length;
@@ -442,9 +447,9 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		dbg(1,"delta=%d\n", delta);
 		strength=_("unknown ");
 	}
-	if (mode != navigation_mode_long_exact) 
+	if (type != attr_navigation_long_exact) 
 		distance=round_distance(distance);
-	if (mode == navigation_mode_speech) {
+	if (type == attr_navigation_speech) {
 		if (nav->turn_around) 
 			return g_strdup(_("When possible, please turn around"));
 		level=navigation_get_announce_level(nav, itm->item.type, distance);
@@ -452,7 +457,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	}
 	switch(level) {
 	case 3:
-		d=get_distance(distance, mode, 1);
+		d=get_distance(distance, type, 1);
 		ret=g_strdup_printf(_("Follow the road for the next %s"), d);
 		g_free(d);
 		return ret;
@@ -460,7 +465,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		d=g_strdup(_("soon"));
 		break;
 	case 1:
-		d=get_distance(distance, mode, 0);
+		d=get_distance(distance, type, 0);
 		break;
 	case 0:
 		d=g_strdup(_("now"));
@@ -493,34 +498,63 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	return ret;
 }
 
+static int
+navigation_list_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
+{
+	struct navigation_list *this_=priv_data;
+	switch(attr_type) {
+	case attr_navigation_short:
+	case attr_navigation_long:
+	case attr_navigation_long_exact:
+	case attr_navigation_speech:
+		attr->u.str=show_maneuver(this_->nav, this_->itm, this_->cmd, attr_type);
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+struct item_methods navigation_list_item_methods = {
+	NULL,
+	NULL,
+	NULL,
+	navigation_list_item_attr_get,
+};
+
+
+
 struct navigation_list *
 navigation_list_new(struct navigation *this_)
 {
 	struct navigation_list *ret=g_new0(struct navigation_list, 1);
 	ret->nav=this_;
-	ret->cmd=this_->cmd_first;
-	ret->itm=this_->first;
+	ret->cmd_next=this_->cmd_first;
+	ret->itm_next=this_->first;
+	ret->item.meth=&navigation_list_item_methods;
+	ret->item.priv_data=ret;
 	return ret;
 }
 
-char *
-navigation_list_get(struct navigation_list *this_, enum navigation_mode mode)
+struct item *
+navigation_list_get_item(struct navigation_list *this_)
 {
-	if (!this_->cmd)
+	if (!this_->cmd_next)
 		return NULL;
-	g_free(this_->str);
+	this_->cmd=this_->cmd_next;
+	this_->itm=this_->itm_next;
+#if 0
 	this_->str=show_maneuver(this_->nav, this_->itm, this_->cmd, mode);
-	this_->itm=this_->cmd->itm;
-	this_->cmd=this_->cmd->next;
+#endif
+	this_->itm_next=this_->cmd->itm;
+	this_->cmd_next=this_->cmd->next;
 
-	return this_->str;
+	return &this_->item;
 }
 
 
 void
 navigation_list_destroy(struct navigation_list *this_)
 {
-	g_free(this_->str);
 	g_free(this_);
 }
 
@@ -642,9 +676,9 @@ navigation_destroy(struct navigation *this_)
 }
 
 int
-navigation_register_callback(struct navigation *this_, enum navigation_mode mode, struct callback *cb)
+navigation_register_callback(struct navigation *this_, enum attr_type type, struct callback *cb)
 {
-	if (mode == navigation_mode_speech)
+	if (type == attr_navigation_speech)
 		callback_list_add(this_->callback_speech, cb);
 	else
 		callback_list_add(this_->callback, cb);
@@ -652,9 +686,9 @@ navigation_register_callback(struct navigation *this_, enum navigation_mode mode
 }
 
 void
-navigation_unregister_callback(struct navigation *this_, enum navigation_mode mode, struct callback *cb)
+navigation_unregister_callback(struct navigation *this_, enum attr_type type, struct callback *cb)
 {
-	if (mode == navigation_mode_speech)
+	if (type == attr_navigation_speech)
 		callback_list_remove_destroy(this_->callback_speech, cb);
 	else
 		callback_list_remove_destroy(this_->callback, cb);
