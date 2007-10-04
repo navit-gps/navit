@@ -16,6 +16,7 @@ int *vehicle_sats_get(struct vehicle *this_);
 int *vehicle_sats_used_get(struct vehicle *this_);
 double *vehicle_pdop_get(struct vehicle *this_);
 void vehicle_set_position(struct vehicle *this_, struct coord *pos);
+void vehicle_set_navit(struct vehicle *this_,struct navit *nav);
 struct vehicle *vehicle_new(const char *url);
 void vehicle_callback_add(struct vehicle *this_, struct callback *cb);
 void vehicle_callback_remove(struct vehicle *this_, struct callback *cb);

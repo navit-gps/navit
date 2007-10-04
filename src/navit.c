@@ -798,10 +798,12 @@ navit_init(struct navit *this_)
 	graphics_init(this_->gra);
 	l=this_->vehicles;
 	while (l) {
+		dbg(0,"parsed one vehicle\n");
 		nv=l->data;
 		nv->cursor=cursor_new(this_->gra, nv->vehicle, &nv->c, this_->trans);
 		nv->update_cb=callback_new_1(callback_cast(navit_cursor_update), this_);
 		cursor_add_callback(nv->cursor, nv->update_cb);
+		vehicle_set_navit(nv->vehicle, this_);
 		l=g_list_next(l);
 	}
 	if (this_->mapsets) {
