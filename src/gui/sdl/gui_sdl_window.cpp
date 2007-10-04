@@ -102,7 +102,9 @@ sdl_update_roadbook(struct navigation *nav)
 	// First, update the 'Navigation Tip' on the main window
 
 	try {
-		WindowManager::getSingleton().getWindow("Navit/Routing/Tips")->setText(navigation_list_get(list, navigation_mode_speech));
+		struct attr attr;
+		item_attr_get(navigation_list_get_item(list), attr_navigation_speech, &attr);
+		WindowManager::getSingleton().getWindow("Navit/Routing/Tips")->setText(attr.u.str);
 	}
 	catch (CEGUI::Exception& e)
 	{
@@ -122,15 +124,16 @@ sdl_update_roadbook(struct navigation *nav)
 		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("Roadbook"));
 		mcl->resetList();
 
-		char *str;	
+		item *item;
+		struct attr attr;
 
 		list=navigation_list_new(nav);	
-		while ((str=navigation_list_get(list, navigation_mode_short))) {
+		while ((item=navigation_list_get_item(list))) {
 				
 // 			printf("SDL : %s\n", str);
 	 		mcl->addRow();
-
-			ListboxTextItem* itemListbox = new ListboxTextItem(str);
+			item_attr_get(item, attr_navigation_short, &attr);
+			ListboxTextItem* itemListbox = new ListboxTextItem(attr.u.str);
 			itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 			mcl->setItem(itemListbox, 0, mcl->getRowCount()-1);
 		}
@@ -191,7 +194,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
 	navig=navit_get_navigation(sdl_gui_navit);
 
 	navigation_register_callback(navig,
-		navigation_mode_long,
+		attr_navigation_long,
 		callback_new_0((void (*)())sdl_update_roadbook)
 	);
 
