@@ -600,6 +600,7 @@ navit_window_roadbook_new(struct navit *this_)
 	this_->roadbook_callback=callback_new_1(callback_cast(navit_window_roadbook_update), this_);
 	navigation_register_callback(this_->navigation, navigation_mode_long, this_->roadbook_callback);
 	this_->roadbook_window=gui_datawindow_new(this_->gui, "Roadbook", NULL, callback_new_1(callback_cast(navit_window_roadbook_destroy), this_));
+	navit_window_roadbook_update(this_);
 }
 
 static void
