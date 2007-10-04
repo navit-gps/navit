@@ -21,9 +21,11 @@
 #include "transform.h"
 #include "projection.h"
 #include "statusbar.h"
+#include "navit.h"
 #include "vehicle.h"
 
 int vfd;
+
 
 static void disable_watch(struct vehicle *this);
 static void enable_watch(struct vehicle *this);
@@ -71,8 +73,11 @@ struct vehicle {
 	int is_udp;
 	int interval;
 	struct sockaddr_in rem;
+
+	struct navit *navit;
 };
 
+// FIXME : this is an ugly hack (dixit cp15 ;) )
 struct vehicle *vehicle_last;
 
 #if INTERPOLATION_TIME
@@ -165,6 +170,13 @@ enable_watch_timer(gpointer t)
 	enable_watch(this);
 	
 	return FALSE;
+}
+
+// FIXME Should this function be static ?
+void
+vehicle_set_navit(struct vehicle *this_,struct navit *nav) {
+	dbg(0,"vehicle_set_navit called\n");
+	this_->navit=nav;
 }
 
 static void
@@ -552,6 +564,8 @@ vehicle_open(struct vehicle *this)
 	} else if (! strncmp(this->url,"udp://",6)) {
 		vehicle_udp_open(this);
 		fd=this->fd;
+	} else if (! strncmp(this->url,"demo://",7)) {
+		dbg(0,"Creating a demo vehicle\n");
 	}
 	this->iochan=g_io_channel_unix_new(fd);
 	enable_watch(this);
@@ -566,7 +580,7 @@ vehicle_track(GIOChannel *iochan, GIOCondition condition, gpointer t)
 	char *str,*tok;
 	gsize size;
 
-	dbg(1,"enter condition=%d\n", condition);
+	dbg(0,"enter condition=%d\n", condition);
 	if (condition == G_IO_IN) {
 #ifdef HAVE_LIBGPS
 		if (this->gps) {
