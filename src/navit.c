@@ -384,8 +384,6 @@ navit_set_destination(struct navit *this_, struct coord *c, char *description)
 	navit_append_coord(this_, "destination.txt", c, "former_destination", description, this_->destinations, NULL, navit_set_destination_from_destination);
 	if (this_->route) {
                 route_set_destination(this_->route, c);
-		if (this_->navigation) 
-			navigation_update(this_->navigation, this_->route);
                 navit_draw(this_);
         }
 }
@@ -780,6 +778,20 @@ navit_init(struct navit *this_)
 
 	if (!this_->gui || !this_->gra || gui_set_graphics(this_->gui, this_->gra)) {
 		g_warning("failed to connect graphics to gui\n");
+		g_warning("It can be one of the following : \n");
+		g_warning("- You choosed a gui which doesn't exist or doesn't work");
+		g_warning("    -> Check the <plugin path> section of your navit.xml");
+		g_warning("- You choosed a graphics which doesn't exist or doesn't work");
+		g_warning("    -> Check the <plugin path> section of your navit.xml");
+		g_warning("- The graphics driver is not compatible with the gui");
+		g_warning("    -> Currently you can use :");
+		g_warning("		gtk_drawing_area graphic driver with gtk");
+		g_warning("		opengl graphic driver with sdl");
+		g_warning("		null graphic driver with both (but do you want that? :) )");
+		g_warning("");
+		g_warning(" The most common reason is that something went wrong when you compiled navit, and either :");
+		g_warning(" - the gui or graphics driver you want to use wasn't compiled, maybe because of a missing dependency");
+		g_warning(" - make install didn't install the library where it should have.");
 		navit_destroy(this_);
 		return;
 	}
