@@ -502,6 +502,58 @@ vehicle_udp_open(struct vehicle *this)
 }
 
 static int
+vehicle_demo_timer (struct vehicle *this)
+{
+// 	dbg(0,"Entering simulation loop\n");
+	if(!this->navit){
+		dbg(0,"vehicle->navit is not set. Can't simulate\n");
+		return 1;
+	}
+
+	// <cp15> Then check whether the route is set, if not return TRUE
+	struct route * vehicle_route=navit_get_route(this->navit);
+	if(vehicle_route){
+// 		dbg(0,"navit_get_route OK\n");
+	} else {
+		dbg(0,"navit_get_route NOK\n");
+		return 1;
+	}
+
+	
+	//<cp15> Then check whether a position is set. If not, there are two possibilities
+	//<cp15> - return TRUE, waiting for the user to set a  position
+	//<cp15> - Use the map center as position... Don't know what makes more sense
+
+	// <cp15> Then query the second point of the route_inf and move your position a bit towards this point
+	// <cp15> and return TRUE
+
+	// <cp15> Don't know whether it works in every case, since route_inf might contain only one point if you are exactly on a node
+
+
+	// <cp15> Usually you use route_info_open to query the points at the first (pos!=NULL) or last (dst!=NULL) route segment
+	struct route_info_handle *h;
+	struct route_info *pos;
+	h=route_info_open(NULL, pos, 0);
+
+	if (! h) {
+		dbg(0,"route_info_handle is null\n");
+		return 1;
+	}
+
+	struct coord *c;
+	while ((c=route_info_get(h))) {
+		dbg(0,"c=%lx,%lx\n", c->x,c->y);
+	}
+
+
+	// <cp15> But you have one problem here: If the first and the last route segment are the same (you are close to your destination), this will give no sensible results, since the last point will always be at the end of a segment
+	// <cp15> So try route_info_open(pos,dst) first: If it works, you are close to the destination, and the result will be as expected
+	// <cp15> If it doesn't work (segments are different) use route_info_open(pos, NULL)
+	dbg(0,"end of loop\n");
+	return 1;
+}
+
+static int
 vehicle_open(struct vehicle *this)
 {
 	struct termios tio;
@@ -566,6 +618,7 @@ vehicle_open(struct vehicle *this)
 		fd=this->fd;
 	} else if (! strncmp(this->url,"demo://",7)) {
 		dbg(0,"Creating a demo vehicle\n");
+		g_timeout_add(1000, vehicle_demo_timer, this);
 	}
 	this->iochan=g_io_channel_unix_new(fd);
 	enable_watch(this);
