@@ -5,6 +5,7 @@
 #include "coord.h"
 #include "graphics.h"
 #include "transform.h"
+#include "item.h"
 #include "route.h"
 #include "vehicle.h"
 #include "navit.h"

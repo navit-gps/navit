@@ -1,6 +1,7 @@
 #include <time.h>
 #include <glib.h>
 #include "coord.h"
+#include "item.h"
 #include "route.h"
 #include "speech.h"
 #include "phrase.h"

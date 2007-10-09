@@ -75,14 +75,6 @@ struct route_path_segment {
 	struct route_path_segment *next;
 };
 
-
-struct street_data {
-	struct item item;
-	int count;
-	int limit;
-	struct coord c[0];
-};
-
 struct route_info {
 	struct coord c;
 	struct coord lp;
@@ -126,7 +118,6 @@ static struct route_path *route_path_new(struct route_graph *this, struct route_
 static void route_process_street_graph(struct route_graph *this, struct item *item);
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this);
-
 
 static void
 route_path_destroy(struct route_path *this)
