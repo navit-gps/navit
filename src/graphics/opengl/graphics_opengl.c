@@ -57,18 +57,10 @@ graphics_destroy(struct graphics_priv *gr)
 {
 }
 
+int frame=0;
 
 // http://quesoglc.sourceforge.net/tutorial.php
-/*
-static char *fontlist[]={
-	"/usr/X11R6/lib/X11/fonts/msttcorefonts/arial.ttf",
-	"/usr/X11R6/lib/X11/fonts/truetype/arial.ttf",
-	"/usr/share/fonts/truetype/msttcorefonts/arial.ttf",
-	"/usr/share/fonts/ttf/arial.ttf",
-	"/usr/share/fonts/corefonts/arial.ttf",
-	NULL,
-};
-*/
+
 
 static void font_destroy(struct graphics_font_priv *font)
 {
@@ -277,7 +269,6 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 		}
 	}
 */
-
 }
 
 static void
@@ -320,188 +311,93 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 }
 
 
-#if 0
-struct text_glyph {
-	int x,y,w,h;
-	GdkImage *shadow;
-	unsigned char pixmap[0];		
-};
-
-struct text_render {
-	int x1,y1;
-	int x2,y2;
-	int x3,y3;
-	int x4,y4;
-	int glyph_count;
-	struct text_glyph *glyph[0];
-};
-
-static GdkImage *
-display_text_render_shadow(struct text_glyph *g)
-{
-	int mask0, mask1, mask2, x, y, w=g->w, h=g->h;
-	int str=(g->w+9)/8;
-	unsigned char *shadow;
-	unsigned char *p, *pm=g->pixmap;
-	GdkImage *ret;
-
-	shadow=malloc(str*(g->h+2)); /* do not use g_malloc() here */
-	memset(shadow, 0, str*(g->h+2));
-	for (y = 0 ; y < h ; y++) {	
-		p=shadow+str*y;
-		mask0=0x4000;
-		mask1=0xe000;
-		mask2=0x4000;
-		for (x = 0 ; x < w ; x++) {
-			if (pm[x+y*w]) {
-				p[0]|=(mask0 >> 8);
-				if (mask0 & 0xff) 
-					p[1]|=mask0;
-
-				p[str]|=(mask1 >> 8);
-				if (mask1 & 0xff) 
-					p[str+1]|=mask1;
-				p[str*2]|=(mask2 >> 8);
-				if (mask2 & 0xff) 
-					p[str*2+1]|=mask2;
-			}
-			mask0 >>= 1;
-			mask1 >>= 1;
-			mask2 >>= 1;
-			if (!((mask0 >> 8) | (mask1 >> 8) | (mask2 >> 8))) {
-				mask0<<=8;
-				mask1<<=8;
-				mask2<<=8;
-				p++;
-			}
-		}
-	}
-	ret=gdk_image_new_bitmap(gdk_visual_get_system(), shadow, g->w+2, g->h+2);
-	return ret;
-}
-
-static struct text_render *
-display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy, int x, int y)
-{
-
-       	FT_GlyphSlot  slot = font->face->glyph;  // a small shortcut
-	FT_Matrix matrix;
-	FT_Vector pen;
-	FT_UInt  glyph_index;
-	int n,len;
-	struct text_render *ret;
-	struct text_glyph *curr;
-	wchar_t wtext[1024];
-
-	len=mbstowcs(wtext, text, 1024);
-	ret=g_malloc(sizeof(*ret)+len*sizeof(struct text_glyph *));
-	ret->glyph_count=len;
-
-	matrix.xx = dx;
-	matrix.xy = dy;
-	matrix.yx = -dy;
-	matrix.yy = dx;
-
-	pen.x = 0 * 64;
-	pen.y = 0 * 64;
-	x <<= 6;
-	y <<= 6;
-	FT_Set_Transform( font->face, &matrix, &pen );
-	
-
-
-	for ( n = 0; n < len; n++ )
-	{
-
-		glyph_index = FT_Get_Char_Index(font->face, wtext[n]);
-		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT );
-		FT_Render_Glyph(font->face->glyph, ft_render_mode_normal );
-        
-		curr=g_malloc(sizeof(*curr)+slot->bitmap.rows*slot->bitmap.pitch);
-		ret->glyph[n]=curr;
-
-		curr->x=(x>>6)+slot->bitmap_left;
-		curr->y=(y>>6)-slot->bitmap_top;
-		curr->w=slot->bitmap.width;
-		curr->h=slot->bitmap.rows;
-		if (slot->bitmap.width && slot->bitmap.rows) {
-			memcpy(curr->pixmap, slot->bitmap.buffer, slot->bitmap.rows*slot->bitmap.pitch);
-			curr->shadow=display_text_render_shadow(curr);
-		}
-		else 
-			curr->shadow=NULL;
-#if 0
-		printf("height=%d\n", slot->metrics.height);	
-		printf("height2=%d\n", face->height);	
-		printf("bbox %d %d %d %d\n", face->bbox.xMin, face->bbox.yMin, face->bbox.xMax, face->bbox.yMax);
-#endif
-         	x += slot->advance.x;
-         	y -= slot->advance.y;
-	}
-	return ret;
-}
-
-static void
-display_text_draw(struct text_render *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg)
-{
-#if 0
-	int i;
-	struct text_glyph *g, **gp;
-
-	gp=text->glyph;
-	i=text->glyph_count;
-	while (i-- > 0)
-	{
-		g=*gp++;
-		if (g->shadow && bg) 
-			gdk_draw_image(gr->drawable, bg->gc, g->shadow, 0, 0, g->x-1, g->y-1, g->w+2, g->h+2);
-	}
-	gp=text->glyph;
-	i=text->glyph_count;
-	while (i-- > 0)
-	{
-		g=*gp++;
-		if (g->w && g->h) 
-			gdk_draw_gray_image(gr->drawable, fg->gc, g->x, g->y, g->w, g->h, GDK_RGB_DITHER_NONE, g->pixmap, g->w);
-	}
-#endif
-}
-
-static void
-display_text_free(struct text_render *text)
-{
-	int i;
-	struct text_glyph **gp;
-
-	gp=text->glyph;
-	i=text->glyph_count;
-	while (i-- > 0) {
-		if ((*gp)->shadow) {
-			g_object_unref((*gp)->shadow);
-		}
-		g_free(*gp++);
-	}
-	g_free(text);
-}
-
-#endif
 
 void SDL_print(char * label,int x, int y, int angle){
+
+
+
+
 	glPushMatrix();
-//  	glLoadIdentity();
 	glcRenderStyle(GLC_TRIANGLE);
-	glColor3f(0., 0., 0.);
-	glTranslatef(x, y, -10);
-  	glRotatef(180,1,0,0);
-  	glRotatef(angle,0,0,1);
-	glScalef(14, 14, 0.);
-// 	dbg(1,"rendering label : %s\n",label);
-// 	char *utf8;
-// 	utf8=g_locale_to_utf8(label,-1,NULL,NULL,NULL);
+	glColor4f(0,1,0,1);
+	glTranslatef(x, y, 1);
+    	glRotatef(180,1,0,0);
+//   	glRotatef(angle,0,0,1);
+
+	glScalef(20, 20, 20);
+	// FIXME : add some error checking : glcGetError()
 	glcRenderString(label);
 	glPopMatrix();
 
+	/*
+
+
+// 	glLoadIdentity();
+	frame++;
+	if(frame>400){
+		frame=0;
+	}
+ 	glPushMatrix();
+//  	glLoadIdentity();
+	glcRenderStyle(GLC_BITMAP);
+	glColor4f(1,0,0,1);
+	int xc=frame;
+	int yc=frame;
+	glTranslatef(x, y, -frame/10);
+// 	glTranslatef(frame/20, 1500, 0);
+	dbg(0,"Frame : %i\n",frame);
+    	glRotatef(frame,1,0,0);
+//   	glRotatef(angle,0,0,1);
+
+// 	glRotatef(frame,0,1,0);
+
+	float cursor_size=5.0f;
+	glColor4f(0.0f,0.0f,1.0f,0.75f);
+	glBegin(GL_TRIANGLES);
+		glVertex3f( 1, 1-cursor_size, 0.0f);
+		glVertex3f(1-cursor_size,1+cursor_size, 0.0f);
+		glVertex3f( 1+cursor_size,1+cursor_size, 0.0f);
+	glEnd();
+
+	
+ 	glScalef(20, 20, 20);
+// 	dbg(1,"rendering label : %s\n",label);
+// 	char *utf8;
+// 	utf8=g_locale_to_utf8(label,-1,NULL,NULL,NULL);
+	// FIXME : add some error checking : glcGetError()
+	glcRenderString("label");
+
+
+ 	glPopMatrix();
+
+#ifndef NAVIT__H
+#define NAVIT__H
+
+
 //   glFlush();
+/*
+
+		glPushMatrix();
+		glTranslatef(cx,cy,1);
+	//  	glColor4f( 0,0,0,1);
+	//  	glRasterPos2f( 1,1 );
+		glRotatef(angle,0.0,0.0,1.0);
+
+		glColor4f( gc->fr, gc->fg, gc->fb, gc->fa);
+
+		int linewidth=gc->linewidth;
+
+		glBegin( GL_POLYGON );
+				glVertex2f( -w/2,-linewidth/2 );
+				glVertex2f( -w/2-4,0 );
+				glVertex2f( -w/2,+linewidth/2 );
+				glVertex2f( +w/2,+linewidth/2 );
+				glVertex2f( +w/2+4,0 );
+				glVertex2f( +w/2,-linewidth/2 );
+				glVertex2f( -w/2,+linewidth/2 );
+		glEnd();
+*/
+
 
 }
 
