@@ -55,14 +55,6 @@ struct navigation_list {
 #endif
 };
 
-struct street_data {
-	struct item item;
-	int count;
-	int limit;
-	struct coord c[0];
-};
-
-
 struct navigation *
 navigation_new(struct mapset *ms)
 {
