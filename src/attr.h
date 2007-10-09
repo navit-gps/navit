@@ -1,3 +1,6 @@
+#ifndef NAVIT_ATTR_H
+#define NAVIT_ATTR_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -36,4 +39,6 @@ void attr_free(struct attr *attr);
 #endif
 #ifdef __cplusplus
 }
+#endif
+
 #endif
