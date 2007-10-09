@@ -360,11 +360,13 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 					if (e->u.circle.width > 1) 
 						gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
 					gra->meth.draw_circle(gra->priv, gc->priv, &di->pnt[0], e->u.circle.radius);
-					p.x=di->pnt[0].x+3;
-					p.y=di->pnt[0].y+10;
-					if (! gra->font[e->label_size])
-						gra->font[e->label_size]=graphics_font_new(gra, e->label_size*20);
-					gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->label_size]->priv, di->label, &p, 0x10000, 0);
+					if (e->label_size) {
+						p.x=di->pnt[0].x+3;
+						p.y=di->pnt[0].y+10;
+						if (! gra->font[e->label_size])
+							gra->font[e->label_size]=graphics_font_new(gra, e->label_size*20);
+						gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->label_size]->priv, di->label, &p, 0x10000, 0);
+					}
 					break;
 				case element_label:
 					if (di->label) {
@@ -504,7 +506,7 @@ do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapset
 				}
 				g_assert(count < max);
 				if (!transform_contains(t, pro, &r)) {
-					dbg(1,"not visible\n");
+					dbg(1,"poly not visible\n");
 					continue;
 				}
 				if (route && route_contains(route, item)) {

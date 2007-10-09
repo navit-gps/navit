@@ -22,15 +22,14 @@
 #include "projection.h"
 #include "statusbar.h"
 #include "navit.h"
+#include "item.h"
+#include "log.h"
 #include "vehicle.h"
 #include "item.h"
 #include "route.h"
 
-int vfd;
-
-
-static void disable_watch(struct vehicle *this);
-static void enable_watch(struct vehicle *this);
+static void disable_watch(struct vehicle *this_);
+static void enable_watch(struct vehicle *this_);
 
  /* #define INTERPOLATION_TIME 50 */
 
@@ -75,26 +74,27 @@ struct vehicle {
 	int is_udp;
 	int interval;
 	struct sockaddr_in rem;
+	struct log *nmea_log, *gpx_log, *textfile_log;
 
 	struct navit *navit;
 };
 
-// FIXME : this is an ugly hack (dixit cp15 ;) )
+// FIXME : this_ is an ugly hack (dixit cp15 ;) )
 struct vehicle *vehicle_last;
 
 #if INTERPOLATION_TIME
 static int
 vehicle_timer(gpointer t)
 {
-	struct vehicle *this=t;	
-/*	if (this->timer_count++ < 1000/INTERPOLATION_TIME) { */
-		if (this->delta.x || this->delta.y) {
-			this->curr.x+=this->delta.x;
-			this->curr.y+=this->delta.y;	
-			this->current_pos.x=this->curr.x;
-			this->current_pos.y=this->curr.y;
-			if (this->callback_func)
-				(*this->callback_func)(this, this->callback_data);
+	struct vehicle *this_=t;	
+/*	if (this_->timer_count++ < 1000/INTERPOLATION_TIME) { */
+		if (this_->delta.x || this_->delta.y) {
+			this_->curr.x+=this_->delta.x;
+			this_->curr.y+=this_->delta.y;	
+			this_->current_pos.x=this_->curr.x;
+			this_->current_pos.y=this_->curr.y;
+			if (this_->callback_func)
+				(*this_->callback_func)(this_, this_->callback_data);
 		}
 /*	} */
 	return TRUE; 
@@ -102,79 +102,79 @@ vehicle_timer(gpointer t)
 #endif
 
 enum projection
-vehicle_projection(struct vehicle *this)
+vehicle_projection(struct vehicle *this_)
 {
 	return projection_mg;
 }
 
 struct coord *
-vehicle_pos_get(struct vehicle *this)
+vehicle_pos_get(struct vehicle *this_)
 {
-	return &this->current_pos;
+	return &this_->current_pos;
 }
 
 double *
-vehicle_speed_get(struct vehicle *this)
+vehicle_speed_get(struct vehicle *this_)
 {
-	return &this->speed;
+	return &this_->speed;
 }
 
 double *
-vehicle_height_get(struct vehicle *this)
+vehicle_height_get(struct vehicle *this_)
 {
-	return &this->height;
+	return &this_->height;
 }
 double *
-vehicle_dir_get(struct vehicle *this)
+vehicle_dir_get(struct vehicle *this_)
 {
-	return &this->dir;
+	return &this_->dir;
 }
 
 int *
-vehicle_status_get(struct vehicle *this)
+vehicle_status_get(struct vehicle *this_)
 {
-	return &this->status;
+	return &this_->status;
 }
 
 int *
-vehicle_sats_get(struct vehicle *this)
+vehicle_sats_get(struct vehicle *this_)
 {
-	return &this->sats;
+	return &this_->sats;
 }
 
 int *
-vehicle_sats_used_get(struct vehicle *this)
+vehicle_sats_used_get(struct vehicle *this_)
 {
-	return &this->sats_used;
+	return &this_->sats_used;
 }
 
 double *
-vehicle_pdop_get(struct vehicle *this)
+vehicle_pdop_get(struct vehicle *this_)
 {
-	return &this->pdop;
+	return &this_->pdop;
 }
 
 void
-vehicle_set_position(struct vehicle *this, struct coord *pos)
+vehicle_set_position(struct vehicle *this_, struct coord *pos)
 {
-	this->current_pos=*pos;
-	this->curr.x=this->current_pos.x;
-	this->curr.y=this->current_pos.y;
-	this->delta.x=0;
-	this->delta.y=0;
-	callback_list_call_1(this->cbl, this);
+	this_->current_pos=*pos;
+	this_->curr.x=this_->current_pos.x;
+	this_->curr.y=this_->current_pos.y;
+	this_->delta.x=0;
+	this_->delta.y=0;
+	callback_list_call_1(this_->cbl, this_);
 }
 
 static int
 enable_watch_timer(gpointer t)
 {
-	struct vehicle *this=t;
-	enable_watch(this);
+	struct vehicle *this_=t;
+	enable_watch(this_);
 	
 	return FALSE;
 }
 
-// FIXME Should this function be static ?
+// FIXME Should this_ function be static ?
 void
 vehicle_set_navit(struct vehicle *this_,struct navit *nav) {
 	dbg(0,"vehicle_set_navit called\n");
@@ -182,7 +182,7 @@ vehicle_set_navit(struct vehicle *this_,struct navit *nav) {
 }
 
 static void
-vehicle_parse_gps(struct vehicle *this, char *buffer)
+vehicle_parse_gps(struct vehicle *this_, char *buffer)
 {
 	char *p,*item[16];
 	double lat,lng,scale,speed;
@@ -191,8 +191,10 @@ vehicle_parse_gps(struct vehicle *this, char *buffer)
 	unsigned char csum=0;
 
 	dbg(1, "buffer='%s' ", buffer);
-	write(vfd, buffer, len);
-	write(vfd, "\n", 1);
+	if (this_->nmea_log) {
+		log_write(this_->nmea_log, buffer, len);
+		log_write(this_->nmea_log, "\n", 1);
+	}
 	for (;;) {
 		if (len < 4) {
 			dbg(0, "too short\n");
@@ -238,28 +240,39 @@ vehicle_parse_gps(struct vehicle *this, char *buffer)
 		}
 
 		sscanf(item[2],"%lf",&lat);
-		this->geo.lat=floor(lat/100);
-		lat-=this->geo.lat*100;
-		this->geo.lat+=lat/60;
+		this_->geo.lat=floor(lat/100);
+		lat-=this_->geo.lat*100;
+		this_->geo.lat+=lat/60;
 
 		sscanf(item[4],"%lf",&lng);
-		this->geo.lng=floor(lng/100);
-		lng-=this->geo.lng*100;
-		this->geo.lng+=lng/60;
+		this_->geo.lng=floor(lng/100);
+		lng-=this_->geo.lng*100;
+		this_->geo.lng+=lng/60;
 
-		sscanf(item[6],"%d",&this->status);
-		sscanf(item[7],"%d",&this->sats);
-		sscanf(item[9],"%lf",&this->height);
-		
-		transform_from_geo(projection_mg, &this->geo, &this->current_pos);
+		sscanf(item[6],"%d",&this_->status);
+		sscanf(item[7],"%d",&this_->sats);
+		sscanf(item[9],"%lf",&this_->height);
+	
+		if (this_->gpx_log) {
+			char buffer[256];
+			sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\" />\n",this_->geo.lat,this_->geo.lng);
+			log_write(this_->gpx_log, buffer, strlen(buffer));
 			
-		this->curr.x=this->current_pos.x;
-		this->curr.y=this->current_pos.y;
-		this->timer_count=0;
-		callback_list_call_1(this->cbl, this);
-		if (this->is_file) {
-			disable_watch(this);
-			g_timeout_add(1000, enable_watch_timer, this);
+		}
+		if (this_->textfile_log) {
+			char buffer[256];
+			sprintf(buffer,"%f %f type=trackpoint\n",this_->geo.lng,this_->geo.lat);
+			log_write(this_->textfile_log, buffer, strlen(buffer));
+		}
+		transform_from_geo(projection_mg, &this_->geo, &this_->current_pos);
+			
+		this_->curr.x=this_->current_pos.x;
+		this_->curr.y=this_->current_pos.y;
+		this_->timer_count=0;
+		callback_list_call_1(this_->cbl, this_);
+		if (this_->is_file) {
+			disable_watch(this_);
+			g_timeout_add(1000, enable_watch_timer, this_);
 		}
 	}
 	if (!strncmp(buffer,"$GPVTG",6)) {
@@ -276,16 +289,16 @@ vehicle_parse_gps(struct vehicle *this, char *buffer)
 			if (! *p) break;
 				*p++='\0';
 		}
-		sscanf(item[1],"%lf",&this->dir);
-		sscanf(item[7],"%lf",&this->speed);
+		sscanf(item[1],"%lf",&this_->dir);
+		sscanf(item[7],"%lf",&this_->speed);
 
-		scale=transform_scale(this->current_pos.y);
-		speed=this->speed+(this->speed-this->speed_last)/2;
+		scale=transform_scale(this_->current_pos.y);
+		speed=this_->speed+(this_->speed-this_->speed_last)/2;
 #ifdef INTERPOLATION_TIME
-		this->delta.x=sin(M_PI*this->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
-		this->delta.y=cos(M_PI*this->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
+		this_->delta.x=sin(M_PI*this_->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
+		this_->delta.y=cos(M_PI*this_->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
 #endif
-		this->speed_last=this->speed;
+		this_->speed_last=this_->speed;
 	}
 	if (!strncmp(buffer,"$GPRMC",6)) {
 		/* $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A */
@@ -299,16 +312,16 @@ vehicle_parse_gps(struct vehicle *this, char *buffer)
 			if (! *p) break;
 			*p++='\0';
 		}
-		sscanf(item[8],"%lf",&this->dir);
-		sscanf(item[7],"%lf",&this->speed);
-		this->speed *= 1.852;
-		scale=transform_scale(this->current_pos.y);
-		speed=this->speed+(this->speed-this->speed_last)/2;
+		sscanf(item[8],"%lf",&this_->dir);
+		sscanf(item[7],"%lf",&this_->speed);
+		this_->speed *= 1.852;
+		scale=transform_scale(this_->current_pos.y);
+		speed=this_->speed+(this_->speed-this_->speed_last)/2;
 #ifdef INTERPOLATION_TIME
-		this->delta.x=sin(M_PI*this->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
-		this->delta.y=cos(M_PI*this->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
+		this_->delta.x=sin(M_PI*this_->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
+		this_->delta.y=cos(M_PI*this_->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
 #endif
-		this->speed_last=this->speed;
+		this_->speed_last=this_->speed;
 	}
 }
 
@@ -321,54 +334,54 @@ vehicle_gps_callback(struct gps_data_t *data, char *buf, size_t len, int level)
 		return;
 	}
 
-	struct vehicle *this=vehicle_last;
+	struct vehicle *this_=vehicle_last;
 	double scale,speed;
 #if INTERPOLATION_TIME
 	if (! (data->set & TIME_SET)) {
 		return;
 	}
 	data->set &= ~TIME_SET;
-	if (this->time == data->fix.time)
+	if (this_->time == data->fix.time)
 		return;
-	this->time=data->fix.time;
+	this_->time=data->fix.time;
 #endif
 	if (data->set & SPEED_SET) {
-		this->speed_last=this->speed;
-		this->speed=data->fix.speed*3.6;
+		this_->speed_last=this_->speed;
+		this_->speed=data->fix.speed*3.6;
 		data->set &= ~SPEED_SET;
 	}
 	if (data->set & TRACK_SET) {
-		speed=this->speed+(this->speed-this->speed_last)/2;
-		this->dir=data->fix.track;
-		scale=transform_scale(this->current_pos.y);
+		speed=this_->speed+(this_->speed-this_->speed_last)/2;
+		this_->dir=data->fix.track;
+		scale=transform_scale(this_->current_pos.y);
 #ifdef INTERPOLATION_TIME
-		this->delta.x=sin(M_PI*this->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
-		this->delta.y=cos(M_PI*this->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
+		this_->delta.x=sin(M_PI*this_->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
+		this_->delta.y=cos(M_PI*this_->dir/180)*speed*scale/3600*INTERPOLATION_TIME;
 #endif
 		data->set &= ~TRACK_SET;
 	}
 	if (data->set & LATLON_SET) {
-		this->geo.lat=data->fix.latitude;
-		this->geo.lng=data->fix.longitude;
-		transform_from_geo(projection_mg, &this->geo, &this->current_pos);
-		this->curr.x=this->current_pos.x;
-		this->curr.y=this->current_pos.y;
-		this->timer_count=0;
-		callback_list_call_1(this->cbl, this);
+		this_->geo.lat=data->fix.latitude;
+		this_->geo.lng=data->fix.longitude;
+		transform_from_geo(projection_mg, &this_->geo, &this_->current_pos);
+		this_->curr.x=this_->current_pos.x;
+		this_->curr.y=this_->current_pos.y;
+		this_->timer_count=0;
+		callback_list_call_1(this_->cbl, this_);
 		data->set &= ~LATLON_SET;
 	}
 	if (data->set & ALTITUDE_SET) {
-		this->height=data->fix.altitude;
+		this_->height=data->fix.altitude;
 		data->set &= ~ALTITUDE_SET;
 	}
 	if (data->set & SATELLITE_SET) {
-		this->sats=data->satellites;
+		this_->sats=data->satellites;
 		data->set &= ~SATELLITE_SET;
 		/* FIXME : the USED_SET check does not work yet. */
-		this->sats_used=data->satellites_used;
+		this_->sats_used=data->satellites_used;
 	}
 	if (data->set & STATUS_SET) {
-		this->status=data->status;
+		this_->status=data->status;
 		data->set &= ~STATUS_SET;
 	}
 	if(data->set & PDOP_SET){
@@ -379,20 +392,20 @@ vehicle_gps_callback(struct gps_data_t *data, char *buf, size_t len, int level)
 
 
 static void
-vehicle_close(struct vehicle *this)
+vehicle_close(struct vehicle *this_)
 {
 	GError *error=NULL;
 
 
-	g_io_channel_shutdown(this->iochan,0,&error);
+	g_io_channel_shutdown(this_->iochan,0,&error);
 #ifdef HAVE_LIBGPS
-	if (this->gps)
-		gps_close(this->gps);
+	if (this_->gps)
+		gps_close(this_->gps);
 #endif
-	if (this->file)
-		pclose(this->file);
-	if (this->fd != -1)
-		close(this->fd);
+	if (this_->file)
+		pclose(this_->file);
+	if (this_->fd != -1)
+		close(this_->fd);
 }
 
 struct packet {
@@ -409,25 +422,25 @@ struct packet {
 } __attribute__ ((packed)) ;
 
 static void
-vehicle_udp_recv(struct vehicle *this)
+vehicle_udp_recv(struct vehicle *this_)
 {
 	struct packet pkt;
 	int size;
 
-	dbg(2,"enter this=%p\n",this);
-	size=recv(this->fd, &pkt, 15, 0);
-	if (pkt.magic == this->magic) {
+	dbg(2,"enter this_=%p\n",this_);
+	size=recv(this_->fd, &pkt, 15, 0);
+	if (pkt.magic == this_->magic) {
 		dbg(3,"magic 0x%x size=%d\n", pkt.magic, size);
-		this->current_pos.x=pkt.u.pos.x;
-		this->current_pos.y=pkt.u.pos.y;
-		this->speed=pkt.u.pos.speed;
-		this->dir=pkt.u.pos.dir*2;
-		callback_list_call_1(this->cbl, this);
+		this_->current_pos.x=pkt.u.pos.x;
+		this_->current_pos.y=pkt.u.pos.y;
+		this_->speed=pkt.u.pos.speed;
+		this_->dir=pkt.u.pos.dir*2;
+		callback_list_call_1(this_->cbl, this_);
 	}
 }
 
 static void
-vehicle_udp_update(struct vehicle *this, struct vehicle *child)
+vehicle_udp_update(struct vehicle *this_, struct vehicle *child)
 {
 	struct coord *pos=&child->current_pos;
 	struct packet pkt;
@@ -435,69 +448,69 @@ vehicle_udp_update(struct vehicle *this, struct vehicle *child)
 	int dir=child->dir/2;
 	if (speed > 255)
 		speed=255;
-	pkt.magic=this->magic;
+	pkt.magic=this_->magic;
 	pkt.type=1;
 	pkt.u.pos.x=pos->x;
 	pkt.u.pos.y=pos->y;
 	pkt.u.pos.speed=speed;
 	pkt.u.pos.dir=dir;
-	sendto(this->fd, &pkt, 15, 0, (struct sockaddr *)&this->rem, sizeof(this->rem));
-	this->current_pos=child->current_pos;
-	this->speed=child->speed;
-	this->dir=child->dir;
-	callback_list_call_1(this->cbl, this);
+	sendto(this_->fd, &pkt, 15, 0, (struct sockaddr *)&this_->rem, sizeof(this_->rem));
+	this_->current_pos=child->current_pos;
+	this_->speed=child->speed;
+	this_->dir=child->dir;
+	callback_list_call_1(this_->cbl, this_);
 }
 
 static int
 vehicle_udp_query(void *data)
 {
-	struct vehicle *this=(struct vehicle *)data;
+	struct vehicle *this_=(struct vehicle *)data;
 	struct packet pkt;
-	dbg(2,"enter this=%p\n", this);
-	pkt.magic=this->magic;
+	dbg(2,"enter this_=%p\n", this_);
+	pkt.magic=this_->magic;
 	pkt.type=2;
-	sendto(this->fd, &pkt, 5, 0, (struct sockaddr *)&this->rem, sizeof(this->rem));
+	sendto(this_->fd, &pkt, 5, 0, (struct sockaddr *)&this_->rem, sizeof(this_->rem));
 	dbg(2,"ret=TRUE\n");
 	return TRUE;
 }
 
 static int
-vehicle_udp_open(struct vehicle *this)
+vehicle_udp_open(struct vehicle *this_)
 {
 	char *host,*child,*url,*colon;
 	int port;
-	url=g_strdup(this->url);
+	url=g_strdup(this_->url);
 	colon=index(url+6,':');
 	struct sockaddr_in lcl;
 
-	if (! colon || sscanf(colon+1,"%d/%i/%d", &port, &this->magic, &this->interval) != 3) {
-		g_warning("Wrong syntax in %s\n", this->url);
+	if (! colon || sscanf(colon+1,"%d/%i/%d", &port, &this_->magic, &this_->interval) != 3) {
+		g_warning("Wrong syntax in %s\n", this_->url);
 		return 0;
 	}
 	host=url+6;
 	*colon='\0';
-	this->fd=socket(PF_INET, SOCK_DGRAM, 0);
-	this->is_udp=1;
+	this_->fd=socket(PF_INET, SOCK_DGRAM, 0);
+	this_->is_udp=1;
 	memset(&lcl, 0, sizeof(lcl));
 	lcl.sin_family = AF_INET;
 
-	this->rem.sin_family = AF_INET;
-	inet_aton(host, &this->rem.sin_addr);
-	this->rem.sin_port=htons(port);
+	this_->rem.sin_family = AF_INET;
+	inet_aton(host, &this_->rem.sin_addr);
+	this_->rem.sin_port=htons(port);
 
-	bind(this->fd, (struct sockaddr *)&lcl, sizeof(lcl));
+	bind(this_->fd, (struct sockaddr *)&lcl, sizeof(lcl));
 	child=index(colon+1,' ');
 	if (child) {
 		child++;
-		if (!this->child) {
+		if (!this_->child) {
 			dbg(3,"child=%s\n", child);
-			this->child=vehicle_new(child);
-			this->child_cb=callback_new_1(callback_cast(vehicle_udp_update), this);
-			vehicle_callback_add(this->child, this->child_cb);
+			this_->child=vehicle_new(child);
+			this_->child_cb=callback_new_1(callback_cast(vehicle_udp_update), this_);
+			vehicle_callback_add(this_->child, this_->child_cb);
 		}
 	} else {
-		vehicle_udp_query(this);
-		g_timeout_add(this->interval*1000, vehicle_udp_query, this);
+		vehicle_udp_query(this_);
+		g_timeout_add(this_->interval*1000, vehicle_udp_query, this_);
 	}
 	g_free(url);
 	return 0;
@@ -600,15 +613,15 @@ vehicle_demo_timer (struct vehicle *this)
 
 		if(street->count){
 			dbg(1,"vehicle is at %lx,%lx (2)\n",current_pos->x,current_pos->y);
-			dbg(1,"street->c[0] = %lx, street->c[street->count-1]= %lx (2)\n",street->c[0],street->c[street->count-1]);
-			if((current_pos->x==street->c[i].x)&&(current_pos->y==street->c[i].y)){
+			dbg(1,"street->c[0] = %lx,%lx, street->c[street->count-1]= %lx,%lx count=%d\n",street->c[0].x,street->c[0].y, street->c[street->count-1].x, street->c[street->count-1].y, street->count);
+			if((current_pos->x==street->c[0].x)&&(current_pos->y==street->c[0].y)){
 				target->x=street->c[1].x;
 				target->y=street->c[1].y;
-				dbg(1,"Moving to : street->c[0]  (%lx,%lx)\n",street->c[0].x,street->c[0].y);
+				dbg(1,"Moving to : street->c[1]  (%lx,%lx)\n",street->c[1].x,street->c[1].y);
 			} else {
-				target->x=street->c[street->count-1].x;
-				target->y=street->c[street->count-1].y;
-				dbg(1,"Moving to : street->c[street->count-1]  (%lx,%lx)\n",street->c[street->count-1].x,street->c[street->count-1].y);
+				target->x=street->c[street->count-2].x;
+				target->y=street->c[street->count-2].y;
+				dbg(1,"Moving to : street->c[street->count-2]  (%lx,%lx)\n",street->c[street->count-2].x,street->c[street->count-2].y);
 			}
 			vehicle_set_position(this,target);
 		} else {
@@ -623,7 +636,7 @@ vehicle_demo_timer (struct vehicle *this)
 }
 
 static int
-vehicle_open(struct vehicle *this)
+vehicle_open(struct vehicle *this_)
 {
 	struct termios tio;
 	struct stat st;
@@ -633,15 +646,15 @@ vehicle_open(struct vehicle *this)
 	struct gps_data_t *gps=NULL;
 	char *url_,*colon;
 #endif
-	if (! strncmp(this->url,"file:",5)) {
-		fd=open(this->url+5,O_RDONLY|O_NDELAY);
+	if (! strncmp(this_->url,"file:",5)) {
+		fd=open(this_->url+5,O_RDONLY|O_NDELAY);
 		if (fd < 0) {
-			g_warning("Failed to open %s", this->url);
+			g_warning("Failed to open %s", this_->url);
 			return 0;
 		}
-		stat(this->url+5, &st);
+		stat(this_->url+5, &st);
 		if (S_ISREG (st.st_mode)) {
-			this->is_file=1;
+			this_->is_file=1;
 		} else {
 			tcgetattr(fd, &tio);
 			cfmakeraw(&tio);
@@ -651,46 +664,46 @@ vehicle_open(struct vehicle *this)
 			tio.c_cc[VTIME]=1;
 			tcsetattr(fd, TCSANOW, &tio);
 		}
-		this->fd=fd;
-	} else if (! strncmp(this->url,"pipe:",5)) {
-		this->file=popen(this->url+5, "r");
-		this->is_pipe=1;
-		if (! this->file) {
-			g_warning("Failed to open %s", this->url);
+		this_->fd=fd;
+	} else if (! strncmp(this_->url,"pipe:",5)) {
+		this_->file=popen(this_->url+5, "r");
+		this_->is_pipe=1;
+		if (! this_->file) {
+			g_warning("Failed to open %s", this_->url);
 			return 0;
 		}
-		fd=fileno(this->file);
-	} else if (! strncmp(this->url,"gpsd://",7)) {
+		fd=fileno(this_->file);
+	} else if (! strncmp(this_->url,"gpsd://",7)) {
 #ifdef HAVE_LIBGPS
-		url_=g_strdup(this->url);
+		url_=g_strdup(this_->url);
 		colon=index(url_+7,':');
 		if (colon) {
 			*colon=0;
 			gps=gps_open(url_+7,colon+1);
 		} else
-			gps=gps_open(this->url+7,NULL);
+			gps=gps_open(this_->url+7,NULL);
 		g_free(url_);
 		if (! gps) {
-			g_warning("Failed to connect to %s", this->url);
+			g_warning("Failed to connect to %s", this_->url);
 			return 0;
 		}
 		gps_query(gps, "w+x\n");
 		gps_set_raw_hook(gps, vehicle_gps_callback);
 		fd=gps->gps_fd;
-		this->gps=gps;
+		this_->gps=gps;
 #else
 		g_warning("No support for gpsd compiled in\n");
 		return 0;
 #endif
-	} else if (! strncmp(this->url,"udp://",6)) {
-		vehicle_udp_open(this);
-		fd=this->fd;
-	} else if (! strncmp(this->url,"demo://",7)) {
+	} else if (! strncmp(this_->url,"udp://",6)) {
+		vehicle_udp_open(this_);
+		fd=this_->fd;
+	} else if (! strncmp(this_->url,"demo://",7)) {
 		dbg(0,"Creating a demo vehicle\n");
-		g_timeout_add(1000, vehicle_demo_timer, this);
+		g_timeout_add(1000, vehicle_demo_timer, this_);
 	}
-	this->iochan=g_io_channel_unix_new(fd);
-	enable_watch(this);
+	this_->iochan=g_io_channel_unix_new(fd);
+	enable_watch(this_);
 	return 1;
 }
 
@@ -698,48 +711,48 @@ vehicle_open(struct vehicle *this)
 static gboolean
 vehicle_track(GIOChannel *iochan, GIOCondition condition, gpointer t)
 {
-	struct vehicle *this=t;
+	struct vehicle *this_=t;
 	char *str,*tok;
 	gsize size;
 
-	dbg(0,"enter condition=%d\n", condition);
+	dbg(1,"enter condition=%d\n", condition);
 	if (condition == G_IO_IN) {
 #ifdef HAVE_LIBGPS
-		if (this->gps) {
-			vehicle_last=this;
-			gps_poll(this->gps);
+		if (this_->gps) {
+			vehicle_last=this_;
+			gps_poll(this_->gps);
 		} else {
 #else
 		{
 #endif
-			if (this->is_udp) {
-				vehicle_udp_recv(this);
+			if (this_->is_udp) {
+				vehicle_udp_recv(this_);
 				return TRUE;
 			}
-			size=read(g_io_channel_unix_get_fd(iochan), this->buffer+this->buffer_pos, BUFFER_SIZE-this->buffer_pos-1);
+			size=read(g_io_channel_unix_get_fd(iochan), this_->buffer+this_->buffer_pos, BUFFER_SIZE-this_->buffer_pos-1);
 			if (size <= 0) {
-				vehicle_close(this);
-				vehicle_open(this);
+				vehicle_close(this_);
+				vehicle_open(this_);
 				return TRUE;
 			}
-			this->buffer_pos+=size;
-			this->buffer[this->buffer_pos]='\0';
-			dbg(1,"size=%d pos=%d buffer='%s'\n", size, this->buffer_pos, this->buffer);
-			str=this->buffer;
+			this_->buffer_pos+=size;
+			this_->buffer[this_->buffer_pos]='\0';
+			dbg(1,"size=%d pos=%d buffer='%s'\n", size, this_->buffer_pos, this_->buffer);
+			str=this_->buffer;
 			while ((tok=index(str, '\n'))) {
 				*tok++='\0';
 				dbg(1,"line='%s'\n", str);
-				vehicle_parse_gps(this, str);
+				vehicle_parse_gps(this_, str);
 				str=tok;
 			}
-			if (str != this->buffer) {
-				size=this->buffer+this->buffer_pos-str;
-				memmove(this->buffer, str, size+1);
-				this->buffer_pos=size;
-				dbg(1,"now pos=%d buffer='%s'\n", this->buffer_pos, this->buffer);
-			} else if (this->buffer_pos == BUFFER_SIZE-1) {
+			if (str != this_->buffer) {
+				size=this_->buffer+this_->buffer_pos-str;
+				memmove(this_->buffer, str, size+1);
+				this_->buffer_pos=size;
+				dbg(1,"now pos=%d buffer='%s'\n", this_->buffer_pos, this_->buffer);
+			} else if (this_->buffer_pos == BUFFER_SIZE-1) {
 				dbg(0,"overflow\n");
-				this->buffer_pos=0;
+				this_->buffer_pos=0;
 			}
 			
 		}
@@ -750,62 +763,83 @@ vehicle_track(GIOChannel *iochan, GIOCondition condition, gpointer t)
 }
 
 static void
-enable_watch(struct vehicle *this)
+enable_watch(struct vehicle *this_)
 {
-	this->watch=g_io_add_watch(this->iochan, G_IO_IN|G_IO_ERR|G_IO_HUP, vehicle_track, this);
+	this_->watch=g_io_add_watch(this_->iochan, G_IO_IN|G_IO_ERR|G_IO_HUP, vehicle_track, this_);
 }
 
 static void
-disable_watch(struct vehicle *this)
+disable_watch(struct vehicle *this_)
 {
-	g_source_remove(this->watch);
+	g_source_remove(this_->watch);
 }
 
 struct vehicle *
 vehicle_new(const char *url)
 {
-	struct vehicle *this;
-	this=g_new0(struct vehicle,1);
+	struct vehicle *this_;
+	this_=g_new0(struct vehicle,1);
 
-	this->cbl=callback_list_new();
-	this->url=g_strdup(url);
-	this->fd=-1;
+	this_->cbl=callback_list_new();
+	this_->url=g_strdup(url);
+	this_->fd=-1;
 
-	if (! vfd) {
-		vfd=open("vlog.txt", O_RDWR|O_APPEND|O_CREAT, 0644);
-	}
-	vehicle_open(this);
-	this->current_pos.x=0x130000;
-	this->current_pos.y=0x600000;
-	this->curr.x=this->current_pos.x;
-	this->curr.y=this->current_pos.y;
-	this->delta.x=0;
-	this->delta.y=0;
+	vehicle_open(this_);
+	this_->current_pos.x=0x130000;
+	this_->current_pos.y=0x600000;
+	this_->curr.x=this_->current_pos.x;
+	this_->curr.y=this_->current_pos.y;
+	this_->delta.x=0;
+	this_->delta.y=0;
 #if INTERPOLATION_TIME
-	g_timeout_add(INTERPOLATION_TIME, vehicle_timer, this);
+	g_timeout_add(INTERPOLATION_TIME, vehicle_timer, this_);
 #endif
 	
-	return this;
+	return this_;
 }
 
 void
-vehicle_callback_add(struct vehicle *this, struct callback *cb)
+vehicle_callback_add(struct vehicle *this_, struct callback *cb)
 {
-	callback_list_add(this->cbl, cb);
+	callback_list_add(this_->cbl, cb);
 }
 
 void
-vehicle_callback_remove(struct vehicle *this, struct callback *cb)
+vehicle_callback_remove(struct vehicle *this_, struct callback *cb)
 {
-	callback_list_remove(this->cbl, cb);
+	callback_list_remove(this_->cbl, cb);
 }
 
 
-void
-vehicle_destroy(struct vehicle *this)
+int
+vehicle_add_log(struct vehicle *this_, struct log *log, struct attr **attrs)
 {
-	vehicle_close(this);
-	callback_list_destroy(this->cbl);
-	g_free(this->url);
-	g_free(this);
+	struct attr *type;
+	type=attr_search(attrs, NULL, attr_type);
+	if (! type) 
+		return 1;
+	if (!strcmp(type->u.str,"nmea")) {
+		this_->nmea_log=log;
+	} else if (!strcmp(type->u.str,"gpx")) {
+		char *header="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gpx version=\"1.0\" creator=\"Navit http://navit.sourceforge.net\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.topografix.com/GPX/1/0\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd\">\n<trk>\n<trkseg>\n";
+		char *trailer="</trkseg>\n</trk>\n</gpx>\n";
+		this_->gpx_log=log;
+		log_set_header(log,header,strlen(header));
+		log_set_trailer(log,trailer,strlen(trailer));
+	} else if (!strcmp(type->u.str,"textfile")) {
+		char *header="type=track\n";
+		this_->textfile_log=log;
+		log_set_header(log,header,strlen(header));
+	} else
+		return 1;
+	return 0;
+}
+
+void
+vehicle_destroy(struct vehicle *this_)
+{
+	vehicle_close(this_);
+	callback_list_destroy(this_->cbl);
+	g_free(this_->url);
+	g_free(this_);
 }
