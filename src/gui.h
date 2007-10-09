@@ -1,3 +1,6 @@
+#ifndef NAVIT_GUI_H
+#define NAVIT_GUI_H
+
 struct navit;
 struct gui_priv;
 struct menu_methods;
@@ -45,3 +48,6 @@ int gui_set_graphics(struct gui *this_, struct graphics *gra);
 int gui_has_main_loop(struct gui *this_);
 int gui_run_main_loop(struct gui *this_);
 /* end of prototypes */
+
+#endif
+

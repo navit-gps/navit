@@ -1,3 +1,6 @@
+#ifndef NAVIT_PROFILE_H
+#define NAVIT_PROFILE_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -6,3 +9,6 @@ void profile_timer(int level, const char *module, const char *function, const ch
 #ifdef __cplusplus
 }
 #endif
+
+#endif
+

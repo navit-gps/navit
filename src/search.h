@@ -1,3 +1,6 @@
+#ifndef NAVIT_SEARCH_H
+#define NAVIT_SEARCH_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -43,3 +46,6 @@ void search_list_destroy(struct search_list *this_);
 #ifdef __cplusplus
 }
 #endif
+
+#endif
+

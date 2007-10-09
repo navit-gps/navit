@@ -1,5 +1,5 @@
-#ifndef POINT_H
-#define POINT_H
+#ifndef NAVIT_POINT_H
+#define NAVIT_POINT_H
 
 struct point {
 	int x;

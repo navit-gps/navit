@@ -1,3 +1,6 @@
+#ifndef NAVIT_NAVIT_H
+#define NAVIT_NAVIT_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -81,3 +84,6 @@ void navit_destroy(struct navit *this_);
 #ifdef __cplusplus
 }
 #endif
+
+#endif
+

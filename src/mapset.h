@@ -1,3 +1,6 @@
+#ifndef NAVIT_MAPSET_H
+#define NAVIT_MAPSET_H
+
 /* prototypes */
 struct attr;
 struct item;
@@ -14,3 +17,6 @@ void mapset_close(struct mapset_handle *msh);
 struct mapset_search *mapset_search_new(struct mapset *ms, struct item *item, struct attr *search_attr, int partial);
 struct item *mapset_search_get_item(struct mapset_search *this);
 void mapset_search_destroy(struct mapset_search *this);
+
+#endif
+
