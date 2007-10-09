@@ -3,6 +3,7 @@
 #include <time.h>
 #include <math.h>
 #include <gtk/gtk.h>
+#include "item.h"
 #include "coord.h"
 #include "route.h"
 #include "transform.h"
