@@ -1,3 +1,6 @@
+#ifndef NAVIT_ROUTE_H
+#define NAVIT_ROUTE_H
+
 struct route_crossing {
 	long segid;
 	int dir;
@@ -11,12 +14,22 @@ struct route_crossings {
 #define route_item_first type_street_0
 #define route_item_last type_ferry
 
-
 /* prototypes */
 enum item_type;
 struct coord;
 struct displaylist;
 struct item;
+
+#ifndef STREETDATA 
+#define STREETDATA 
+struct street_data {
+	struct item item;
+	int count;
+	int limit;
+	struct coord c[0];
+};
+#endif
+
 struct map_selection;
 struct mapset;
 struct route;
@@ -60,3 +73,6 @@ struct coord *route_info_get(struct route_info_handle *h);
 void route_info_close(struct route_info_handle *h);
 void route_draw(struct route *this, struct transformation *t, struct displaylist *dsp);
 /* end of prototypes */
+
+#endif
+

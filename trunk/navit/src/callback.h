@@ -1,3 +1,6 @@
+#ifndef NAVIT_CALLBACK_H
+#define NAVIT_CALLBACK_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -72,3 +75,6 @@ static inline void callback_list_call_2(struct callback_list *l, void *p1, void 
 #ifdef __cplusplus
 }
 #endif
+
+#endif
+

@@ -1,5 +1,5 @@
-#ifndef _TYPES_H_
-#define _TYPES_H_
+#ifndef NAVIT_TYPES_H
+#define NAVIT_TYPES_H
 #include <stdint.h>
 
 typedef int8_t s8;

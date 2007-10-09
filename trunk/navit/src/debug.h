@@ -1,3 +1,6 @@
+#ifndef NAVIT_DEBUG_H
+#define NAVIT_DEBUG_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,3 +20,6 @@ void debug_printf(int level, const char *module, const char *function, int prefi
 #ifdef __cplusplus
 }
 #endif
+
+#endif
+

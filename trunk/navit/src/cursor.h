@@ -1,3 +1,6 @@
+#ifndef NAVIT_CURSOR_H
+#define NAVIT_CURSOR_H
+
 /* prototypes */
 struct callback;
 struct color;
@@ -14,3 +17,5 @@ int cursor_get_speed(struct cursor *this);
 struct cursor *cursor_new(struct graphics *gra, struct vehicle *v, struct color *c, struct transformation *t);
 void cursor_add_callback(struct cursor *this, struct callback *cb);
 /* end of prototypes */
+
+#endif

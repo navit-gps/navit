@@ -1,3 +1,6 @@
+#ifndef NAVIT_LAYOUT_H
+#define NAVIT_LAYOUT_H
+
 #include "item.h"
 #include "color.h"
 
@@ -57,3 +60,6 @@ struct element *circle_new(struct color *color, int radius, int width, int label
 struct element *label_new(int label_size);
 struct element *icon_new(const char *src);
 struct element *image_new(void);
+
+#endif
+

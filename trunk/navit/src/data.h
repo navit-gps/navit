@@ -1,3 +1,6 @@
+#ifndef NAVIT_DATA_H
+#define NAVIT_DATA_H
+
 static inline unsigned char
 get_u8(unsigned char **p)
 {
@@ -58,4 +61,6 @@ get_string(unsigned char **p)
 }      
 
 #define L(x) ({ unsigned char *t=(unsigned char *)&(x); t[0] | (t[1] << 8) | (t[2] << 16) | (t[3] << 24); })
+
+#endif
 

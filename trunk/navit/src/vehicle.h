@@ -1,3 +1,6 @@
+#ifndef NAVIT_VEHICLE_H
+#define NAVIT_VEHICLE_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -24,5 +27,7 @@ void vehicle_destroy(struct vehicle *this_);
 /* end of prototypes */
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 

@@ -1,3 +1,5 @@
+#ifndef NAVIT_MAP_DATA_H
+#define NAVIT_MAP_DATA_H
 
 enum file_index {
 	file_border_ply=0,
@@ -28,3 +30,6 @@ struct block_info;
 
 void map_data_foreach(struct map_data *mdata, int file, struct transformation *t, int limit,
      void(*func)(struct block_info *, unsigned char *, unsigned char *, void *), void *data);
+
+#endif
+

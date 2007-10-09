@@ -1,3 +1,6 @@
+#ifndef NAVIT_NAVIGATION_H
+#define NAVIT_NAVIGATION_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,4 +26,6 @@ void navigation_unregister_callback(struct navigation *this_, enum attr_type typ
 /* end of prototypes */
 #ifdef __cplusplus
 }
+#endif
+
 #endif

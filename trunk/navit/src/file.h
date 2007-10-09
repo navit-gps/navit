@@ -1,3 +1,6 @@
+#ifndef NAVIT_FILE_H
+#define NAVIT_FILE_H
+
 #include "param.h"
 
 struct file {
@@ -31,3 +34,6 @@ char **file_wordexp_get_array(struct file_wordexp *wexp);
 void file_wordexp_destroy(struct file_wordexp *wexp);
 int file_get_param(struct file *file, struct param_list *param, int count);
 /* end of prototypes */
+
+#endif
+

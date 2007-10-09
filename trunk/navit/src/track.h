@@ -1,3 +1,6 @@
+#ifndef NAVIT_TRACK_H
+#define NAVIT_TRACK_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,4 +20,6 @@ void tracking_destroy(struct tracking *tr);
 /* end of prototypes */
 #ifdef __cplusplus
 }
+#endif
+
 #endif
