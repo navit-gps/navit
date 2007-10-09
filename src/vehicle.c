@@ -23,6 +23,8 @@
 #include "statusbar.h"
 #include "navit.h"
 #include "vehicle.h"
+#include "item.h"
+#include "route.h"
 
 int vfd;
 
@@ -504,52 +506,119 @@ vehicle_udp_open(struct vehicle *this)
 static int
 vehicle_demo_timer (struct vehicle *this)
 {
-// 	dbg(0,"Entering simulation loop\n");
+ 	dbg(1,"###### Entering simulation loop\n");
 	if(!this->navit){
-		dbg(0,"vehicle->navit is not set. Can't simulate\n");
+		dbg(1,"vehicle->navit is not set. Can't simulate\n");
 		return 1;
 	}
 
 	// <cp15> Then check whether the route is set, if not return TRUE
 	struct route * vehicle_route=navit_get_route(this->navit);
-	if(vehicle_route){
-// 		dbg(0,"navit_get_route OK\n");
-	} else {
-		dbg(0,"navit_get_route NOK\n");
+	if(!vehicle_route){
+		dbg(1,"navit_get_route NOK\n");
 		return 1;
 	}
 
-	
-	//<cp15> Then check whether a position is set. If not, there are two possibilities
-	//<cp15> - return TRUE, waiting for the user to set a  position
-	//<cp15> - Use the map center as position... Don't know what makes more sense
-
-	// <cp15> Then query the second point of the route_inf and move your position a bit towards this point
-	// <cp15> and return TRUE
-
-	// <cp15> Don't know whether it works in every case, since route_inf might contain only one point if you are exactly on a node
-
-
-	// <cp15> Usually you use route_info_open to query the points at the first (pos!=NULL) or last (dst!=NULL) route segment
 	struct route_info_handle *h;
 	struct route_info *pos;
+	dbg(2,"calling route_get_pos\n");
+	pos=route_get_pos(vehicle_route);
+
+	struct coord *current_pos=vehicle_pos_get(this);
+	dbg(1,"vehicle is at %lx,%lx\n",current_pos->x,current_pos->y);
+	if(!pos){
+		dbg(1,"Pos is NULL, can't continue\n");
+		return 1;
+	}
+	dbg(2,"opening the handle\n");
+	// Obtain end coordinates of current segment
 	h=route_info_open(NULL, pos, 0);
+	dbg(2,"handle opened\n");
 
 	if (! h) {
-		dbg(0,"route_info_handle is null\n");
+		dbg(1,"route_info_handle is null\n");
 		return 1;
 	}
 
-	struct coord *c;
+	struct coord *c,*target;
+	int i=0;
+	target=0;
 	while ((c=route_info_get(h))) {
-		dbg(0,"c=%lx,%lx\n", c->x,c->y);
+		i++;
+		dbg(1,"#%i: c=%lx,%lx\n", i,c->x,c->y);
+		if(!target){
+			target=c;
+			dbg(1,"moving toward #%i\n",i);
+		} else {
+			dbg(1,"target is not null, i keep the last destination choice\n");
+		}
 	}
 
+	if((target->x==current_pos->x)&&(target->y==current_pos->y)){
+		dbg(1,"Looks like we are already at the end of the segment\n");	
+		// There was only one point left on the segment.
+		// We have to find the next segment.
+		struct route_path_handle *rp=route_path_open(vehicle_route);
+		if(!rp){
+			dbg(1,"** rp is null!\n");
+			return 1;
+		}
 
-	// <cp15> But you have one problem here: If the first and the last route segment are the same (you are close to your destination), this will give no sensible results, since the last point will always be at the end of a segment
-	// <cp15> So try route_info_open(pos,dst) first: If it works, you are close to the destination, and the result will be as expected
-	// <cp15> If it doesn't work (segments are different) use route_info_open(pos, NULL)
-	dbg(0,"end of loop\n");
+		struct route_path_segment *seg=route_path_get_segment(rp);
+		if(!seg){
+			dbg(1,"********************** seg is null!\n");
+			return 1;
+		}
+		dbg(1,"seg=%p\n",seg);
+		// FIXME : following block can probably be removed
+		/*
+		seg=route_path_get_segment(rp);
+		if(!seg){
+			dbg(1,"******************* seg2 is null!\n");
+			return 1;
+		}
+		dbg(1,"seg (2) =%p\n",seg);
+		*/
+		struct item *item=route_path_segment_get_item(seg);
+		if(!item){
+			dbg(2,"** item is null!\n");
+			return 1;
+		} else {
+			dbg(2,"item->id_hi = %lx &  item->id_lo = %lx item = %lx and item->type = %lx\n",item->id_hi,item->id_lo,item,item->type);
+		}
+
+
+		struct map_rect *mr=map_rect_new(item->map,NULL);
+		struct item *item2=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+
+		struct street_data *street=street_get_data(item2);
+		if(!street){
+			dbg(1,"** street_data is null!\n");
+			return 1;
+		}
+		
+
+		if(street->count){
+			dbg(1,"vehicle is at %lx,%lx (2)\n",current_pos->x,current_pos->y);
+			dbg(1,"street->c[0] = %lx, street->c[street->count-1]= %lx (2)\n",street->c[0],street->c[street->count-1]);
+			if((current_pos->x==street->c[i].x)&&(current_pos->y==street->c[i].y)){
+				target->x=street->c[1].x;
+				target->y=street->c[1].y;
+				dbg(1,"Moving to : street->c[0]  (%lx,%lx)\n",street->c[0].x,street->c[0].y);
+			} else {
+				target->x=street->c[street->count-1].x;
+				target->y=street->c[street->count-1].y;
+				dbg(1,"Moving to : street->c[street->count-1]  (%lx,%lx)\n",street->c[street->count-1].x,street->c[street->count-1].y);
+			}
+			vehicle_set_position(this,target);
+		} else {
+			dbg(1,"BAD ! street->count = %i\n",street->count);
+		}
+	} else {	
+		dbg(1,"Looks like we can move\n");	
+		vehicle_set_position(this,target);
+	}
+		
 	return 1;
 }
 
