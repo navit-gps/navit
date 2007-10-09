@@ -1,5 +1,5 @@
-#ifndef COORD_H
-#define COORD_H
+#ifndef NAVIT_COORD_H
+#define NAVIT_COORD_H
 
 /*! A integer mercator coordinate */
 struct coord {

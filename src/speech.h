@@ -1,3 +1,6 @@
+#ifndef NAVIT_SPEECH_H
+#define NAVIT_SPEECH_H
+
 struct speech_priv;
 
 struct speech_methods {
@@ -11,3 +14,6 @@ int speech_say(struct speech *this_, const char *text);
 int speech_sayf(struct speech *this_, const char *format, ...);
 void speech_destroy(struct speech *this_);
 /* end of prototypes */
+
+#endif
+

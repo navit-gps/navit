@@ -1,3 +1,6 @@
+#ifndef NAVIT_STATUSBAR_H
+#define NAVIT_STATUSBAR_H
+
 struct route;
 struct statusbar_priv;
 struct point;
@@ -16,3 +19,6 @@ struct statusbar {
 };
 
 /* prototypes */
+
+#endif
+

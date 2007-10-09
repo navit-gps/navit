@@ -1,3 +1,5 @@
+#ifndef NAVIT_ITEM_H
+#define NAVIT_ITEM_H
 
 
 enum item_type {
@@ -51,3 +53,6 @@ int item_hash_remove(struct item_hash *h, struct item *item);
 void *item_hash_lookup(struct item_hash *h, struct item *item);
 void item_hash_destroy(struct item_hash *h);
 /* end of prototypes */
+
+#endif
+

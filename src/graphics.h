@@ -1,3 +1,6 @@
+#ifndef NAVIT_GRAPHICS_H
+#define NAVIT_GRAPHICS_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -128,3 +131,6 @@ int graphics_displayitem_within_dist(struct displayitem *di, struct point *p, in
 #ifdef __cplusplus
 }
 #endif
+
+#endif
+

@@ -1,3 +1,6 @@
+#ifndef NAVIT_MENU_H
+#define NAVIT_MENU_H
+
 enum menu_type {
 	menu_type_submenu,
 	menu_type_menu,
@@ -25,3 +28,6 @@ void menu_route_update(struct container *co);
 struct menu *menu_add(struct menu *menu, char *name, enum menu_type type, void (*callback)(struct menu *menu, void *data1, void *data2), void *data1, void *data2);
 void menu_set_toggle(struct menu *menu, int active);
 int menu_get_toggle(struct menu *menu);
+
+#endif
+

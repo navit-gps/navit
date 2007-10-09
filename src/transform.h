@@ -1,3 +1,6 @@
+#ifndef NAVIT_TRANSFORM_H
+#define NAVIT_TRANSFORM_H
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -44,4 +47,6 @@ int transform_within_border(struct transformation *this_, struct point *p, int b
 /* end of prototypes */
 #ifdef __cplusplus
 }
+#endif
+
 #endif
