@@ -14,17 +14,7 @@
 #include "debug.h"
 
 struct graphics_priv {
-#if 0
-	GdkEventButton button_event;
-#endif
 	int button_timeout;
-#if 0
-	GtkWidget *widget;
-	GdkDrawable *drawable;
-	GdkDrawable *background;
-	GdkColormap *colormap;
-	FT_Library library;
-#endif
 	struct point p;
 	int width;
 	int height;
@@ -58,9 +48,6 @@ struct graphics_gc_priv {
 };
 
 struct graphics_image_priv {
-#if 0
-	GdkPixbuf *pixbuf;
-#endif
 	int w;
 	int h;
 };
@@ -70,6 +57,9 @@ graphics_destroy(struct graphics_priv *gr)
 {
 }
 
+
+// http://quesoglc.sourceforge.net/tutorial.php
+/*
 static char *fontlist[]={
 	"/usr/X11R6/lib/X11/fonts/msttcorefonts/arial.ttf",
 	"/usr/X11R6/lib/X11/fonts/truetype/arial.ttf",
@@ -78,19 +68,7 @@ static char *fontlist[]={
 	"/usr/share/fonts/corefonts/arial.ttf",
 	NULL,
 };
-
-#if 0
-static char *fontlist_bd[]={
-	"/usr/X11R6/lib/X11/fonts/msttcorefonts/arialbd.ttf",
-	"/usr/X11R6/lib/X11/fonts/truetype/arialbd.ttf",
-	"/usr/share/fonts/truetype/msttcorefonts/arialbd.ttf",
-	"/usr/share/fonts/ttf/arialbd.ttf",
-	"/usr/share/fonts/corefonts/arialbd.ttf",
-	NULL,
-};
-#endif
-
-
+*/
 
 static void font_destroy(struct graphics_font_priv *font)
 {
@@ -152,6 +130,7 @@ gc_set_dashes(struct graphics_gc_priv *gc, unsigned char *dash_list, int n)
 	gdk_gc_set_line_attributes(gc->gc, 1, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
 #endif
 }
+
 
 static void
 gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
@@ -516,6 +495,9 @@ void SDL_print(char * label,int x, int y, int angle){
   	glRotatef(180,1,0,0);
   	glRotatef(angle,0,0,1);
 	glScalef(14, 14, 0.);
+// 	dbg(1,"rendering label : %s\n",label);
+// 	char *utf8;
+// 	utf8=g_locale_to_utf8(label,-1,NULL,NULL,NULL);
 	glcRenderString(label);
 	glPopMatrix();
 
@@ -902,6 +884,16 @@ graphics_opengl_new(struct graphics_methods *meth, struct attr **attrs)
 	
         dbg(1,"Creating the DL from driver\n");
         this->DLid = glGenLists(1);
+
+	// Initialize the fonts
+	int ctx = 0;
+	int font = 0;
+	ctx = glcGenContext();
+	glcContext(ctx);
+	font = glcNewFontFromFamily(glcGenFontID(), "Verdana");
+	glcFont(font);
+	glcStringType(GLC_UTF8_QSO);
+// 	glcFontFace(font, "Italic");
 
 
 /*

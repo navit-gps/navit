@@ -545,6 +545,7 @@ static void init_sdlgui(char * skin_layout)
 		(System::getSingleton().getResourceProvider());
 		
 
+		// FIXME This should maybe move to navit.xml
 		static char *datafiles_path[]={
 			"./gui/sdl/datafiles",
 			"/usr/share/navit/datafiles",
@@ -564,6 +565,7 @@ static void init_sdlgui(char * skin_layout)
 		}
 
 		if(*filename==NULL){
+			// FIXME Elaborate the possible solutions
 			printf("Can't find the datafiles directory for CEGUI files. Navit will probably crash :)\n");
 		} else {
 			printf("Loading SDL datafiles from %s\n",*filename);
@@ -676,22 +678,6 @@ static void init_sdlgui(char * skin_layout)
 		printf("quiting...\n");
 		exit(1);
 	}
-
-	char * fontname="/usr/share/fonts/corefonts/verdana.ttf";
-
-// 	printf("Gui initialized. Building fonts\n");
-
-
-	int ctx = 0;
-	int font = 0;
-	ctx = glcGenContext();
-	glcContext(ctx);
-	font = glcNewFontFromFamily(glcGenFontID(), "Arial");
-	glcFont(font);
-// 	glcFontFace(font, "Italic");
-
-// 	printf("Fonts built. Ready to rock!\n");
-
 	
 }
 
