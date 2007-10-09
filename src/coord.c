@@ -183,8 +183,11 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		args=sscanf(str, "%lf %lf%n", &lng, &lat, &ret);
 		if (args < 2)
 			return 0;
-		printf("str='%s' x=%f y=%f  c=%d\n", str, lng, lat, ret);
-		printf("rest='%s'\n", str+ret);
+		dbg(1,"str='%s' x=%f y=%f  c=%d\n", str, lng, lat, ret);
+		dbg(1,"rest='%s'\n", str+ret);
+		g.lng=lng;
+		g.lat=lat;
+		transform_from_geo(pro, &g, c_ret);
 	}
 	if (debug)
 		printf("rest='%s'\n", str+ret);

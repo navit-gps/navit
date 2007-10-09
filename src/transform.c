@@ -89,6 +89,7 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 	}
         xc=c->x;
         yc=c->y;
+	dbg(2,"0x%x, 0x%x - 0x%x,0x%x contains 0x%x,0x%x\n", t->r.lu.x, t->r.lu.y, t->r.rl.x, t->r.rl.y, c->x, c->y);
 	ret=coord_rect_contains(&t->r, c);
         xc-=t->center.x;
         yc-=t->center.y;

@@ -17,8 +17,9 @@
 #include "point.h"
 #include "graphics.h"
 #include "gui.h"
-#include "xmlconfig.h"
 #include "osd.h"
+#include "log.h"
+#include "xmlconfig.h"
 
 
 struct xmlstate {
@@ -268,6 +269,20 @@ xmlconfig_vehicle(struct xmlstate *state)
 		navit_set_vehicle(state->parent->element_object, nv);
 	return 1;
 }
+
+static int
+xmlconfig_log(struct xmlstate *state)
+{
+	struct attr **attrs;
+	attrs=convert_to_attrs(state);
+	state->element_object = log_new(attrs);
+	if (! state->element_object)
+		return 0;
+	if (vehicle_add_log(state->parent->element_object, state->element_object, attrs))
+		return 0;
+	return 1;
+}
+
 
 static int
 xmlconfig_window_items(struct xmlstate *state)
@@ -611,6 +626,7 @@ struct element_func {
 	{ "route", "navit", xmlconfig_route},
 	{ "speed", "route", xmlconfig_speed},
 	{ "vehicle", "navit", xmlconfig_vehicle},
+	{ "log", "vehicle", xmlconfig_log},
 	{ "window_items", "navit", xmlconfig_window_items},
 	{ "plugins", NULL, xmlconfig_plugins},
 	{ "plugin", "plugins", xmlconfig_plugin},

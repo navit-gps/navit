@@ -55,7 +55,6 @@ struct navit {
 	struct action *action;
 	struct transformation *trans;
 	struct compass *compass;
-	struct map_data *map_data;
 	struct menu *menu;
 	struct menu *toolbar;
 	struct statusbar *statusbar;
