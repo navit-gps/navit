@@ -11,6 +11,13 @@ struct route_crossings {
 	struct route_crossing crossing[0];
 };
 
+struct street_data {
+	struct item item;
+	int count;
+	int limit;
+	struct coord c[0];
+};
+
 #define route_item_first type_street_0
 #define route_item_last type_ferry
 
@@ -19,22 +26,12 @@ enum item_type;
 struct coord;
 struct displaylist;
 struct item;
-
-#ifndef STREETDATA 
-#define STREETDATA 
-struct street_data {
-	struct item item;
-	int count;
-	int limit;
-	struct coord c[0];
-};
-#endif
-
 struct map_selection;
 struct mapset;
 struct route;
 struct route_info;
 struct route_info_handle;
+struct route_path_coord_handle;
 struct route_path_handle;
 struct route_path_segment;
 struct street_data;
@@ -60,6 +57,9 @@ struct item *route_path_segment_get_item(struct route_path_segment *s);
 int route_path_segment_get_length(struct route_path_segment *s);
 int route_path_segment_get_time(struct route_path_segment *s);
 void route_path_close(struct route_path_handle *h);
+struct route_path_coord_handle *route_path_coord_open(struct route *this);
+struct coord *route_path_coord_get(struct route_path_coord_handle *h);
+void route_path_coord_close(struct route_path_coord_handle *h);
 int route_time(int *speedlist, struct item *item, int len);
 int route_info_length(struct route_info *pos, struct route_info *dst, int dir);
 struct street_data *street_get_data(struct item *item);

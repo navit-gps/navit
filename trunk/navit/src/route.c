@@ -496,6 +496,108 @@ route_path_close(struct route_path_handle *h)
 	g_free(h);
 }
 
+struct route_path_coord_handle {
+	struct route *route;
+	int pos;	/* -1 = Begin, 0 = Middle, 1 = End */
+	int dir;
+	int spos;
+	struct coord last;
+	struct route_info_handle *ri;
+	struct route_path_handle *rp;
+	struct street_data *street_data;
+};
+
+struct route_path_coord_handle *
+route_path_coord_open(struct route *this)
+{
+	struct route_path_coord_handle *ret;
+
+	if (! route_get_pos(this) || ! route_get_dst(this))
+		return NULL;
+
+	ret=g_new0(struct route_path_coord_handle, 1);
+	ret->route=this;
+	ret->ri=route_info_open(route_get_pos(this), route_get_dst(this), 0);
+	if (!ret->ri) {
+		ret->ri=route_info_open(route_get_pos(this), NULL, 0);
+		ret->pos=-1;
+	}
+	else
+		ret->pos=1;
+	return ret;
+}
+
+struct coord *
+route_path_coord_get(struct route_path_coord_handle *h)
+{
+	struct coord *c;
+	struct route_path_segment *seg;
+	struct item *item, *item2;
+	struct map_rect *mr;
+
+	switch(h->pos) {
+	case -1:
+		c=route_info_get(h->ri);
+		if (c) {
+			h->last=*c;
+			return c;
+		}
+		h->pos=0;
+		h->rp=route_path_open(h->route);
+	case 0:
+		if (! h->street_data) {
+			seg=route_path_get_segment(h->rp);
+			if (seg) {
+				item=route_path_segment_get_item(seg);
+				mr=map_rect_new(item->map,NULL);
+				item2=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+				h->street_data=street_get_data(item2);
+				map_rect_destroy(mr);
+				if (h->street_data->c[0].x == h->last.x && h->street_data->c[0].y == h->last.y) {
+					h->spos=1;
+					h->dir=1;
+				} else {
+					h->spos=h->street_data->count-2;
+					h->dir=-1;
+				}
+			}
+		}
+		if (h->street_data) {
+			c=&h->street_data->c[h->spos];
+			h->last=*c;
+			h->spos+=h->dir;
+			if (h->spos < 0 || h->spos >= h->street_data->count) {
+				street_data_free(h->street_data);
+				h->street_data=NULL;
+			}
+			return c;
+		}
+		h->pos=1;
+	case 1:	
+		c=route_info_get(h->ri);
+		if (c) {
+			h->last=*c;
+			return c;
+		}
+		h->pos=2;
+	default:
+		return NULL;
+	}
+
+}
+
+void
+route_path_coord_close(struct route_path_coord_handle *h)
+{
+	if (h->street_data)
+		street_data_free(h->street_data);	
+	if (h->rp)
+		route_path_close(h->rp);
+	if (h->ri)
+		route_info_close(h->ri);
+	g_free(h);
+}
+
 
 static void
 route_graph_free_segments(struct route_graph *this)
