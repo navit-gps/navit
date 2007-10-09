@@ -519,6 +519,8 @@ vehicle_udp_open(struct vehicle *this_)
 static int
 vehicle_demo_timer (struct vehicle *this)
 {
+	struct route_path_coord_handle *h;
+	struct coord *c;
  	dbg(1,"###### Entering simulation loop\n");
 	if(!this->navit){
 		dbg(1,"vehicle->navit is not set. Can't simulate\n");
@@ -532,106 +534,21 @@ vehicle_demo_timer (struct vehicle *this)
 		return 1;
 	}
 
-	struct route_info_handle *h;
-	struct route_info *pos;
-	dbg(2,"calling route_get_pos\n");
-	pos=route_get_pos(vehicle_route);
-
-	struct coord *current_pos=vehicle_pos_get(this);
-	dbg(1,"vehicle is at %lx,%lx\n",current_pos->x,current_pos->y);
-	if(!pos){
-		dbg(1,"Pos is NULL, can't continue\n");
+	h=route_path_coord_open(vehicle_route);
+	if (!h) {
+		dbg(1,"navit_path_coord_open NOK\n");
 		return 1;
 	}
-	dbg(2,"opening the handle\n");
-	// Obtain end coordinates of current segment
-	h=route_info_open(NULL, pos, 0);
-	dbg(2,"handle opened\n");
-
-	if (! h) {
-		dbg(1,"route_info_handle is null\n");
-		return 1;
+	c=route_path_coord_get(h);
+	dbg(1,"current pos=%p\n", c);
+	if (c) 
+		dbg(1,"current pos=0x%x,0x%x\n", c->x, c->y);
+	c=route_path_coord_get(h);
+	dbg(1,"next pos=%p\n", c);
+	if (c) {
+		dbg(1,"next pos=0x%x,0x%x\n", c->x, c->y);
+		vehicle_set_position(this,c);
 	}
-
-	struct coord *c,*target;
-	int i=0;
-	target=0;
-	while ((c=route_info_get(h))) {
-		i++;
-		dbg(1,"#%i: c=%lx,%lx\n", i,c->x,c->y);
-		if(!target){
-			target=c;
-			dbg(1,"moving toward #%i\n",i);
-		} else {
-			dbg(1,"target is not null, i keep the last destination choice\n");
-		}
-	}
-
-	if((target->x==current_pos->x)&&(target->y==current_pos->y)){
-		dbg(1,"Looks like we are already at the end of the segment\n");	
-		// There was only one point left on the segment.
-		// We have to find the next segment.
-		struct route_path_handle *rp=route_path_open(vehicle_route);
-		if(!rp){
-			dbg(1,"** rp is null!\n");
-			return 1;
-		}
-
-		struct route_path_segment *seg=route_path_get_segment(rp);
-		if(!seg){
-			dbg(1,"********************** seg is null!\n");
-			return 1;
-		}
-		dbg(1,"seg=%p\n",seg);
-		// FIXME : following block can probably be removed
-		/*
-		seg=route_path_get_segment(rp);
-		if(!seg){
-			dbg(1,"******************* seg2 is null!\n");
-			return 1;
-		}
-		dbg(1,"seg (2) =%p\n",seg);
-		*/
-		struct item *item=route_path_segment_get_item(seg);
-		if(!item){
-			dbg(2,"** item is null!\n");
-			return 1;
-		} else {
-			dbg(2,"item->id_hi = %lx &  item->id_lo = %lx item = %lx and item->type = %lx\n",item->id_hi,item->id_lo,item,item->type);
-		}
-
-
-		struct map_rect *mr=map_rect_new(item->map,NULL);
-		struct item *item2=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-
-		struct street_data *street=street_get_data(item2);
-		if(!street){
-			dbg(1,"** street_data is null!\n");
-			return 1;
-		}
-		
-
-		if(street->count){
-			dbg(1,"vehicle is at %lx,%lx (2)\n",current_pos->x,current_pos->y);
-			dbg(1,"street->c[0] = %lx,%lx, street->c[street->count-1]= %lx,%lx count=%d\n",street->c[0].x,street->c[0].y, street->c[street->count-1].x, street->c[street->count-1].y, street->count);
-			if((current_pos->x==street->c[0].x)&&(current_pos->y==street->c[0].y)){
-				target->x=street->c[1].x;
-				target->y=street->c[1].y;
-				dbg(1,"Moving to : street->c[1]  (%lx,%lx)\n",street->c[1].x,street->c[1].y);
-			} else {
-				target->x=street->c[street->count-2].x;
-				target->y=street->c[street->count-2].y;
-				dbg(1,"Moving to : street->c[street->count-2]  (%lx,%lx)\n",street->c[street->count-2].x,street->c[street->count-2].y);
-			}
-			vehicle_set_position(this,target);
-		} else {
-			dbg(1,"BAD ! street->count = %i\n",street->count);
-		}
-	} else {	
-		dbg(1,"Looks like we can move\n");	
-		vehicle_set_position(this,target);
-	}
-		
 	return 1;
 }
 
