@@ -190,6 +190,9 @@ while (<>) {
 		if ($tag{'name'} ne '') {
 			$oline.=' label="' . $tag{'name'} . '"';
 		}
+		if ($tag{'oneway'} eq 'true' || $tag{'oneway'} eq 'yes') {
+			$oline.=' limit=1';
+		}
 		$oline .= ' debug="way_id=' . $way_id . ' ';
 		while (($key,$value)=each(%tag)) {
 			$oline .= "$key='$value' ";
