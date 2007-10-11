@@ -319,12 +319,12 @@ void SDL_print(char * label,int x, int y, int angle){
 
 	glPushMatrix();
 	glcRenderStyle(GLC_TRIANGLE);
-	glColor4f(0,1,0,1);
+	glColor4f(0,0,0,1);
 	glTranslatef(x, y, 1);
     	glRotatef(180,1,0,0);
 //   	glRotatef(angle,0,0,1);
 
-	glScalef(20, 20, 20);
+	glScalef(14, 14, 14);
 	// FIXME : add some error checking : glcGetError()
 	glcRenderString(label);
 	glPopMatrix();
