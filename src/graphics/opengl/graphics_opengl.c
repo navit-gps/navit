@@ -318,7 +318,7 @@ void SDL_print(char * label,int x, int y, int angle){
 
 
 	glPushMatrix();
-	glcRenderStyle(GLC_TRIANGLE);
+	glcRenderStyle(GLC_TEXTURE);
 	glColor4f(0,0,0,1);
 	glTranslatef(x, y, 1);
     	glRotatef(180,1,0,0);
