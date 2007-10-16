@@ -42,7 +42,7 @@ plugin_load(struct plugin *pl)
 		g_warning("can't load '%s', already loaded\n", pl->name);
 		return 0;
 	}
-	mod=g_module_open(pl->name, pl->lazy ? G_MODULE_BIND_LAZY : 0);
+	mod=g_module_open(pl->name, G_MODULE_BIND_LOCAL | (pl->lazy ? G_MODULE_BIND_LAZY : 0));
 	if (! mod) {
 		g_warning("can't load '%s', Error '%s'\n", pl->name, g_module_error());
 		return 0;
