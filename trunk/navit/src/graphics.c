@@ -360,7 +360,7 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 					if (e->u.circle.width > 1) 
 						gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
 					gra->meth.draw_circle(gra->priv, gc->priv, &di->pnt[0], e->u.circle.radius);
-					if (e->label_size) {
+					if (di->label && e->label_size) {
 						p.x=di->pnt[0].x+3;
 						p.y=di->pnt[0].y+10;
 						if (! gra->font[e->label_size])
