@@ -94,7 +94,7 @@ AC_PREPROC_IFELSE(
 		[],
 		Define to 1 if you have the <CEGUI/CEGUI.h> header file.
 		)
-		CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer"
+		CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUISILLYImageCodec -lCEGUIExpatParser -lCEGUIFalagardWRBase"
 		CEGUI_CFLAGS="-I /usr/local/include/CEGUI -I /usr/include/CEGUI"
 		cegui=yes,
 	AC_MSG_WARN([*** no CEGUI/CEGUI.h -- SDL support disabled])
