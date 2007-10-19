@@ -101,7 +101,7 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 	  	xc=xcn;
 	  	yc=ycn;
 	}
-#ifdef AVOID_FLOAT
+#ifndef AVOID_FLOAT
         xc=xc*16.0/(double)(t->scale);
         yc=yc*16.0/(double)(t->scale);
 #else
