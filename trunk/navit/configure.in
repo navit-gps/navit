@@ -314,4 +314,5 @@ if  [ test x"$gtk2_pkgconfig" != xyes ] && [ test x"$sdl" != xyes ]
 	echo "Please install the dependency for at least gtk or sdl gui"
 	echo "For more details, see the wiki at http://navit.sf.net/wiki/"
 	echo "" 
+	exit 1
 fi
