@@ -782,20 +782,9 @@ navit_init(struct navit *this_)
 
 	if (!this_->gui || !this_->gra || gui_set_graphics(this_->gui, this_->gra)) {
 		g_warning("failed to connect graphics to gui\n");
-		g_warning("It can be one of the following : \n");
-		g_warning("- You choosed a gui which doesn't exist or doesn't work");
-		g_warning("    -> Check the <plugin path> section of your navit.xml");
-		g_warning("- You choosed a graphics which doesn't exist or doesn't work");
-		g_warning("    -> Check the <plugin path> section of your navit.xml");
-		g_warning("- The graphics driver is not compatible with the gui");
-		g_warning("    -> Currently you can use :");
-		g_warning("		gtk_drawing_area graphic driver with gtk");
-		g_warning("		opengl graphic driver with sdl");
-		g_warning("		null graphic driver with both (but do you want that? :) )");
-		g_warning("");
-		g_warning(" The most common reason is that something went wrong when you compiled navit, and either :");
-		g_warning(" - the gui or graphics driver you want to use wasn't compiled, maybe because of a missing dependency");
-		g_warning(" - make install didn't install the library where it should have.");
+		g_warning(" Please see http://navit.sourceforge.net/wiki/index.php/Failed_to_connect_graphics_to_gui\n");
+		g_warning(" for explanations and solutions\n");
+
 		navit_destroy(this_);
 		return;
 	}
