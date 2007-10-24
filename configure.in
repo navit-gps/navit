@@ -230,6 +230,7 @@ if test x$enable_nls = xyes; then
  done
 fi
 
+
 AC_SUBST(INTLIBS)
 AC_SUBST(MOFILES)
 AC_SUBST(POFILES)
@@ -278,3 +279,39 @@ src/xpm/Makefile
 intl/Makefile
 po/Makefile
 ])
+echo ""
+echo ""
+echo "Summary of your installation :"
+if test x"$gtk2_pkgconfig" = xyes
+	then
+	echo "GTK gui     : ENABLED"
+	else
+	echo "GTK gui     : DISABLED : you are missing a dependency"
+fi
+if test x"$sdl" = xyes
+	then
+	echo "SDL gui     : ENABLED"
+	else
+	echo "SDL gui     : DISABLED : you are missing a dependency"
+fi
+if test x"$gpsd" = xyes
+	then
+	echo "GPS support : ENABLED"
+	else
+	echo "GPS support : DISABLED"
+fi
+if test x"$speechd" = xyes
+	then
+	echo "SPEECHD     : ENABLED"
+	else
+	echo "SPEECHD     : DISABLED"
+fi
+if  [ test x"$gtk2_pkgconfig" != xyes ] && [ test x"$sdl" != xyes ]
+	then
+	echo ""
+	echo "" 
+	echo "*** WARNING! you have no gui that can be built! ***"
+	echo "Please install the dependency for at least gtk or sdl gui"
+	echo "For more details, see the wiki at http://navit.sf.net/wiki/"
+	echo "" 
+fi
