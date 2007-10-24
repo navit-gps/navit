@@ -395,7 +395,7 @@ bool ShowKeyboard(const CEGUI::EventArgs& event){
 	CEGUI::WindowManager::getSingleton().getWindow("Navit/Keyboard")->show();
 }
 
-void Add_KeyBoard_key(char * key,int x,int y,int w){
+void Add_KeyBoard_key(CEGUI::String key,int x,int y,int w){
 	
 	using namespace CEGUI;
 	char button_name [5];
