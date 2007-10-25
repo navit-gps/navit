@@ -552,53 +552,6 @@ int plugin_init(void)
 {
 	plugin_register_draw(plugin_draw);
 	mdb_init();
-// 	load_poi("/home/martin/map/work/data/1/GEO00001.MDB",
-// 		 "/home/martin/map/work/data/1/_MCDNLDS.BMP",0);
-// 	load_poi("/home/martin/map/work/data/2/GEO00001.MDB",
-// 		 "/home/martin/map/work/data/2/_BURKING.BMP",0);
-// 	load_poi("/home/martin/map/work/data/3/GEO00001.MDB",
-// 		 "/home/martin/map/work/data/3/_PIZZHUT.BMP",0);
-// 	load_poi("/home/martin/map/work/data/4/GEO00001.MDB",
-// 		 "/home/martin/map/work/data/4/_CHICKEN.BMP",0);
-// 	load_poi("/home/martin/map/work/data/5/GEO00001.MDB",
-// 		 "/home/martin/map/work/data/5/_WIENERW.BMP",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/prog.mov/bahn.adr/GEO00001.MDB",
-// 	     "/opt/reiseplaner/travel/prog.mov/bahn.adr/BAHN.BMP",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/prog.mov/cinmus.adr/GEO00001.MDB",
-// 	     "/opt/reiseplaner/travel/prog.mov/cinmus.adr/_Kinocen.bmp",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/prog.mov/fsight.adr/GEO00001.MDB",
-// 	     "/opt/reiseplaner/travel/prog.mov/fsight.adr/_sehensw.bmp",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/prog.mov/erlbns.adr/GEO00001.MDB",
-// 	     "/opt/reiseplaner/travel/prog.mov/erlbns.adr/_Freizei.bmp",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/prog.mov/faehre.adr/GEO00001.MDB",
-// 	     "/opt/reiseplaner/travel/prog.mov/faehre.adr/_Faehren.bmp",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/prog.mov/fenter.adr/GEO00001.MDB",
-// 	     "/opt/reiseplaner/travel/prog.mov/fenter.adr/_casino.bmp",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/prog.mov/vhotel.adr/Geo00001.mdb",
-// 	     "/opt/reiseplaner/travel/prog.mov/vhotel.adr/Vhotel.bmp",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/prog.mov/vgast.adr/Geo00001.mdb",
-// 	     "/opt/reiseplaner/travel/prog.mov/vgast.adr/Vgast.BMP",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/address/p_ceu.adr/p_ceu.mdb",
-// 	     "/opt/reiseplaner/travel/address/p_ceu.adr/p_ceu.bmp",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/address/p_eeu.adr/p_eeu.mdb",
-// 	     "/opt/reiseplaner/travel/address/p_eeu.adr/P_eeu.bmp",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/address/p_heu.adr/p_heu.mdb",
-// 	     "/opt/reiseplaner/travel/address/p_heu.adr/p_heu.bmp",0);
-// 	load_poi
-// 	    ("/opt/reiseplaner/travel/address/p_ieu.adr/p_ieu.mdb",
-// 	     "/opt/reiseplaner/travel/address/p_ieu.adr/P_ieu.bmp",0);
-
 
 	struct dirent *lecture;
 	DIR *rep;
