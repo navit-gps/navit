@@ -1,0 +1,412 @@
+#
+#
+#
+POINT
+0x0000 = label_unkn, Unknown label
+0x0100 = town_label_1e5, Megapolis (10M +)
+0x0200 = town_label_5e4, Megapolis (5-10M)
+0x0300 = town_label_2e4, Big City (2-5M)
+0x0400 = town_label_1e4, Big City (1-2M)
+0x0500 = town_label_5e3, Big City (0.5-1M)
+0x0600 = town_label_2e3, City (200-500k)
+0x0700 = town_label_1e3, City (100-200k)
+0x0800 = town_label_5e2, City (50-100k)
+0x0900 = town_label_2e2, City (20-50k)
+0x0a00 = town_label_1e2, City (10-20k)
+0x0b00 = town_label_5e1, Small City (5-10k)
+0x0c00 = town_label_2e1, Small City (2-5k)
+0x0d00 = town_label_1e1, Village (1-2k)
+0x0e00 = town_label_5e0, Village (500-1000)
+0x0f00 = town_label_2e0, Village (200-500)
+0x1000 = town_label_1e0, Village (100-200)
+0x1100 = town_label_0e0, Village (0-100)
+
+0x1200 = port_label, Port with services
+0x1300 = label_unkn, Unknown label2
+0x1400-0x14FF = country_label, Large Country Name
+0x1500-0x15FF = country_label, Country Name
+0x1c00 = poi_wreck, Unclassified Obstruction
+0x1c01 = poi_wreck, Wreck
+0x1c02 = poi_dangerous, submerged wreck, dangerous
+0x1c03 = poi_nondangerous,  submerged wreck, non-dangerous
+0x1c04 = poi_wreck, Wreck, cleared by wire drag
+0x1c05 = poi_rock, Obstruction, visible at high water
+0x1c06 = poi_rock, Obstruction, awash
+0x1c07 = poi_rock, Obstruction, submerged
+0x1c08 = poi_rock, Obstruction, cleared by wire drag
+0x1c09 = poi_rock, Rock, awash
+0x1c0a = poi_rock, Rock, submerged at low Water
+0x1c0b = poi_sounding, Sounding
+0x1d00 = poi_tide, Tide Prediction
+
+0x1e00-0x1e3f = district_label, District, Province, State Name
+0x1f00 = district_label_0e0, Region, District Name
+
+# Fixme if it has label how to change to highway_exit_with_label ??
+0x2000-0x203F = highway_exit, Exit
+0x2100-0x213F = highway_exit, Exit with Services
+0x2200-0x223F = highway_exit, Exit with Restroom
+0x2300-0x233F = highway_exit, Exit with Convinience Store
+0x2400-0x243F = highway_exit, Exit with Weight Station
+0x2500-0x253F = highway_exit, Exit with Toolbooth Booth
+0x2600-0x263F = highway_exit, Exit with Information
+0x2700-0x273F = highway_exit, Exit
+
+0x2800-0x283F = district_label_1e0, Region Name
+
+0x2900 = poi_public_utilities, Services
+
+0x2A00 = poi_dining, Dining(Other)
+0x2A01 = poi_dining, Dining(American)
+0x2A02 = poi_dining, Dining(Asian)
+0x2A03 = poi_dining, Dining(Barbecue)
+0x2A04 = poi_dining, Dining(Chinese)
+0x2A05 = poi_dining, Dining(Deli/Bakery)
+0x2A06 = poi_dining, Dining(International)
+0x2A07 = poi_fastfood, Fast Food
+0x2A08 = poi_dining, Dining(Italian)
+0x2A09 = poi_dining, Dining(Mexican)
+0x2A0A = poi_dining, Dining(Pizza)
+0x2A0B = poi_dining, Dining(Sea Food)
+0x2A0C = poi_dining, Dining(Steak/Grill)
+0x2A0D = poi_dining, Dining(Bagel/Donut)
+0x2A0E = poi_dining, Dining(Cafe/Diner)
+0x2A0F = poi_dining, Dining(French)
+0x2A10 = poi_dining, Dining(German)
+0x2A11 = poi_dining, Dining(British Isles)
+0x2A12 = poi_dining, Dining(Special Foods)
+
+0x2B00 = poi_hotel, Hotel(Other)
+0x2B01 = poi_hotel, Hotel/Motel
+0x2B02 = poi_hotel, Bed & Breakfast inn
+0x2B03 = poi_camp_rv, Camping/RV-Park
+0x2B04 = poi_resort, Resort
+
+0x2C00 = poi_attraction, Amusement Park
+0x2C01 = poi_attraction, Amusement Park
+0x2C02 = poi_museum_history, Museum/History
+0x2C03 = poi_library, Libraries
+0x2C04 = poi_landmark, Land Mark
+0x2C05 = poi_school, School
+0x2C06 = poi_park, Park
+0x2C07 = poi_zoo, Zoo
+0x2C08 = poi_stadium, Sportpark, Stadium,(point)
+0x2C09 = poi_fair, Fair, Conference(point)
+0x2C0A = poi_wine, Wine restaurant(point)
+0x2C0B = poi_worship, Place of Worship
+0x2C0C = poi_hotspring, Hot Spring
+
+0x2D00 = poi_theater, Theater
+0x2D01 = poi_theater, Theater
+0x2D02 = poi_bar, Bar
+0x2D03 = poi_cinema, Cinema
+0x2D04 = poi_casino, Casino
+0x2D05 = poi_golf, Golf
+0x2D06 = poi_skiing, Skiing Center
+0x2D07 = poi_bowling, Bowling
+0x2D08 = poi_icesport, Ice/Sporting
+0x2D09 = poi_swimming, Swimming
+0x2D0A = poi_sport, Sports(point)
+0x2D0B = poi_sailing, Sailing Airport
+
+0x2E00 = poi_shopping, Shoping general
+0x2E01 = poi_shop_department, Department Store
+0x2E02 = poi_shop_grocery, Grocery
+0x2E03 = poi_shop_merchandise, General Merchandiser
+0x2E04 = poi_mall, Shopping Center
+0x2E05 = poi_pharmacy, Pharmacy
+0x2E06 = poi_shopping, Convenience
+0x2E07 = poi_shop_apparel, Apparel
+0x2E08 = poi_shop_handg, House and Garden
+0x2E09 = poi_shop_furnish, Home Furnishing
+0x2E0a = poi_shop_retail, Special Retail
+0x2E0b = poi_shop_computer, Computer/Software
+
+0x2F00 = poi_service, generic service
+0x2F01 = poi_fuel, Fuel/Gas
+0x2F02 = poi_car_rent, Car Rental
+0x2F03 = poi_autoservice, Car Repair
+0x2F04 = poi_airport, Airport
+0x2F05 = poi_post, Post Office
+0x2F06 = poi_bank, Bank
+0x2F07 = poi_car_dealer_parts, Car Dealer(point)
+0x2F08 = poi_bus_station, Bus Station
+0x2F09 = poi_marina, Marina
+0x2F0A = poi_wrecker, Wrecker Service
+0x2F0B = poi_car_parking, Parking
+0x2F0C = poi_rest_room, Restroom
+0x2F0D = poi_auto_club, Automobile Club
+0x2F0E = poi_car_wash, Car Wash
+0x2F0F = poi_garmin, Garmin Dealer
+0x2F10 = poi_personal_service, Personal Service
+0x2F11 = poi_bussines_service, Business Service
+0x2F12 = poi_communication, Communication
+0x2F13 = poi_repair_service, Repair Service
+0x2F14 = poi_social_service, Social Service
+0x2F15 = poi_public_utilities, Utility
+0x2F16 = poi_truck_stop, Truck Stop
+0x2F17 = poi_bus_stop, Bus Stop
+
+0x3000 = poi_emergency, generic emergency/government
+0x3001 = poi_police, Police Station
+0x3002 = poi_hospital, Hospital
+0x3003 = poi_public_office, Public Office
+0x3004 = poi_justice, Justice
+0x3005 = poi_concert, Concert hall(point)
+0x3006 = poi_border_station, Border Station(point)
+0x3007 = poi_goverment_building, Goverment Building
+0x3008 = poi_firebrigade, FireFighters Station
+
+0x4000-0x403F = poi_golf, Golf
+0x4100-0x413F = poi_fish, Fish
+0x4200-0x423F = poi_wreck, Wreck
+0x4300-0x433F = poi_marina, Marina
+0x4400-0x443F = poi_fuel, Gas
+0x4500-0x453F = poi_restaurant, Restaurant
+0x4600-0x463F = poi_bar, Bar
+0x4700-0x473F = poi_boat_ramp, Boat Ramp
+0x4800-0x483F = poi_camping, Camping
+0x4900-0x493F = poi_park, Park
+0x4A00-0x4A3F = poi_picnic, Picnic Area
+0x4B00-0x4B3F = poi_hospital, Hospital
+0x4C00-0x4C3F = poi_information, Information
+0x4D00-0x4D3F = poi_car_parking, Parking
+0x4E00-0x4E3F = poi_restroom, Restroom
+0x4F00-0x4F3F = poi_shower, Shower
+0x5000-0x503F = poi_drinking_water, Drinking Water
+0x5100-0x513F = poi_telephone, Telephone
+0x5200-0x523F = poi_scenic_area, Scenic Area
+0x5300-0x533F = poi_skiing, Skiing
+0x5400-0x543F = poi_swimming, Swimming
+0x5500-0x553F = poi_dam, Dam
+
+0x5600-0x563F = poi_forbiden_area, Forbiden Area
+0x5700-0x573F = poi_danger_area, Danger Area
+0x5800-0x583F = poi_restricted_area, Restricted Area
+
+0x5900 = poi_airport, Generic Airport
+0x5901 = poi_airport, Large Airport
+0x5902 = poi_airport, Medium Airport
+0x5903 = poi_airport, Small Airport
+0x5904 = poi_heliport, Heliport
+0x5905-0x593F = poi_airport, Airport
+
+0x5a00 = poi_mark, Kilometer Pole
+0x5b00 = poi_mark, Kolokol
+0x5c00 = poi_diving, Diving Place
+
+0x5D00-0x5D3F = poi_daymark, Daymark,Green Square
+0x5E00-0x5E3F = poi_daymark, Daymark,Red Triangle
+
+0x6000 = poi_loudspeaker, LoudSpeaker
+0x6100 = poi_building, House
+
+0x6200 = poi_height, Height with point in feet one decimal place
+0x6300 = poi_height, Height without point in feet no decimal place
+0x6400 = poi_manmade_feature, Manmade Feature
+0x6401 = poi_bridge, Bridge
+0x6402 = poi_building, Building
+0x6403 = poi_cemetery, Cemetery
+0x6404 = poi_church, Church
+0x6405 = poi_civil, Civil
+0x6406 = poi_crossing, Crossing
+0x6407 = poi_dam, Dam
+0x6408 = poi_hospital, Hospital
+0x6409 = poi_levee, Levee
+0x640A = poi_locale, Locale
+0x640B = poi_military, Military
+0x640C = poi_mine, Mine
+0x640D = poi_oil_field, Oil Field
+0x640E = poi_park, Park
+0x640F = poi_post, Post
+0x6410 = poi_school, School
+0x6411 = poi_tower, Tower
+0x6412 = poi_trail, Trail
+0x6413 = poi_tunnel, Tunnel
+0x6414 = poi_drinking_water, Drink water
+0x6415 = town_ghost, Ghost Town
+0x6416 = poi_subdivision, Subdivision
+
+0x6500 = poi_water_feature, Water Feature
+0x6501 = poi_water_feature, Arroyo
+0x6502 = poi_water_feature, Sand Bar
+0x6503 = poi_bay, Bay
+0x6504 = poi_bend, Bend
+0x6505 = poi_water_feature, Canal
+0x6506 = poi_water_feature, Channel
+0x6507 = poi_cove, Cove
+0x6508 = poi_water_feature, Falls
+0x6509 = poi_water_feature, Geyser
+0x650A = poi_water_feature, Glacier
+0x650B = poi_marine, Harbour
+0x650C = poi_island, Island
+0x650D = poi_water_feature, Lake
+0x650E = poi_water_feature, Rapids
+0x650F = poi_water_feature, Reservoir
+0x6510 = poi_water_feature, Sea
+0x6511 = poi_water_feature, Spring
+0x6512 = poi_water_feature, Stream
+0x6513 = poi_water_feature, Swamp
+
+0x6600 = poi_land_feature, Land Feature
+0x6601 = poi_land_feature, Arch
+0x6602 = poi_land_feature, Area
+0x6603 = poi_land_feature, Basin
+0x6604 = poi_land_feature, Beach
+0x6605 = poi_land_feature, Bench
+0x6606 = poi_land_feature, Cape
+0x6607 = poi_land_feature, Cliff
+0x6608 = poi_land_feature, Crater
+0x6609 = poi_land_feature, Flat
+0x660A = poi_land_feature, Forest
+0x660B = poi_land_feature, Gap
+0x660C = poi_land_feature, Gut
+0x660D = poi_land_feature, Isthmus
+0x660E = poi_land_feature, Lava
+0x660F = poi_land_feature, Pillar
+0x6610 = poi_land_feature, Plain
+0x6611 = poi_land_feature, Range
+0x6612 = poi_land_feature, Reserve
+0x6613 = poi_land_feature, Ridge
+0x6614 = poi_land_feature, Rock
+0x6615 = poi_land_feature, Slope
+0x6616 = poi_land_feature, Summit
+0x6617 = poi_land_feature, Valley
+0x6618 = poi_land_feature, Woods
+
+# This are dublicated to 0x1700, 0x1800, 0x1900, 0x1A00, 0x1B00
+# fix them if you need them
+0x1600 = poi_marine_type, Beakon
+0x1601 = poi_marine_type, Fog Horn
+0x1602 = poi_marine_type, Radio Beacon
+0x1603 = poi_marine_type, Racon
+0x1604 = poi_marine_type, Day Beacon, red triangle
+0x1605 = poi_marine_type, Day Beacon, green square
+0x1606 = poi_marine_type, Day Beacon, white diamond
+0x1607 = poi_marine_type, unlit Navaid, white
+0x1608 = poi_marine_type, unlit Navaid, red
+0x1609 = poi_marine_type, unlit Navaid, green
+0x160a = poi_marine_type, unlit Navaid, black
+0x160b = poi_marine_type, unlit Navaid, yellow or amber
+0x160c = poi_marine_type, unlit Navaid, orange
+0x160d = poi_marine_type, unlit Navaid, multi colored
+0x160e = poi_marine_type, Navaid, unknown
+0x160f = poi_marine_type, lighted Navaid, white
+0x1610 = poi_marine_type, lighted Navaid, red
+0x1611 = poi_marine_type, lighted Navaid, green
+0x1612 = poi_marine_type, lighted Navaid, yellow or amber
+0x1613 = poi_marine_type, lighted Navaid, orange
+0x1614 = poi_marine_type, lighted Navaid, violet
+0x1615 = poi_marine_type, lighted Navaid, blue
+0x1616 = poi_marine_type, lighted Navaid, multi colored
+
+#
+# Street's are routable by:
+# ALL - by all
+# W	pedestrian
+# B	bycycle
+# M	motorcycle
+# C	car
+# T	truck
+# L	largetruck
+# this is probably, encoded into the map 
+
+POLYLINE
+0x00 = ALL, street_1_land, Road
+0x01 = MCTL, highway_land, Major HWY thick
+0x02 = MCTL, street_4_land, Principal HWY-thick
+0x03 = MCTL, street_2_land, Principal HWY-medium
+0x04 = MCTL, street_3_city, Arterial Road-medium
+0x05 = MCTL, street_4_city, Arterial Road-thick
+0x06 = MCTL, street_2_city, Road-thin
+0x07 = MCTL, street_1_city, Alley-thick
+0x08 = MCTL, ramp, Ramp
+0x09 = MCTL, ramp, Ramp highspeed
+0x0a = MCTL, street_0, Unpaved Road-thin
+0x0b = MCTL, ramp, Major HWY Connector-thick
+0x0c = MCTL, roundabout, Roundabout
+0x0d = MCTL, street_unkn, Reservation/Zapovednik?
+0x0e = MCTL, street_unkn, Unknown Element 0x0e
+0x0f = NONE, street_unkn, Unknown Element 0x0f
+0x10 = NONE, street_unkn, Unknown Element 0x10
+0x11 = NONE, street_unkn, Unknown Element 0x11
+0x12 = NONE, street_unkn, Unknown Element 0x12
+0x13 = NONE, street_unkn, Unknown Element 0x13 
+0x14 = NONE, rail, Railroad
+0x15 = NONE, water_line, Shoreline
+0x16 = W, street_nopass, Trail
+0x18 = NONE, water_line, Stream-thin
+0x19 = NONE, time_zone, Time-Zone
+0x1a = ALL, ferry, Ferry
+0x1b = ALL, ferry, Ferry
+0x1c = NONE, border_country, Political Boundary
+0x1d = NONE, border_country, County Boundary
+0x1e = NONE, border_country, Intl. Boundary
+0x1f = NONE, water_line, River
+0x20 = NONE, height_line_1, Land Contour (thin) Height in feet
+0x21 = NONE, height_line_2, Land Contour (medium) Height in feet
+0x22 = NONE, height_line_3, Land Contour (thick) Height in feet
+0x23 = NONE, depth_line_1, Depth Contour (thin) Depth in feet
+0x24 = NONE, depth_line_2, Depth Contour (medium) Depth in feet
+0x25 = NONE, depth_line_3, Depth Contour (thick) Depth in feet
+0x26 = NONE, water_line, Intermittent River
+0x27 = NONE, street_nopass, Airport Runway
+0x28 = NONE, pipeline, Pipeline
+0x29 = NONE, powerline, Powerline
+0x2a = NONE, marine_boundary, Marine Boundary (no line)
+0x2b = NONE, marine_hazard, Marine Hazard (no line)
+
+POLYGONE
+0x01 = town_poly, City (>200k)
+0x02 = town_poly, City (<200k)
+0x03 = town_poly, Village
+0x04 = military_zone, Military
+0x05 = parking_lot_poly, Parking Lot
+0x06 = parking_lot_poly, Parking Garage
+0x07 = airport_poly, Airport
+0x08 = commercial_center, Shopping Center
+0x09 = marine_poly, Marina
+0x0a = university, University/College
+0x0b = hospital_poly, Hospital
+0x0c = industry_poly, Industrial
+0x0d = area, Reservation
+0x0e = airport_poly, Airport Runway
+0x13 = area_unspecified, Man made area
+0x14 = park_poly, National park
+0x15 = park_poly, National park
+0x16 = park_poly, National park
+0x17 = park_poly, City Park
+0x18 = golf_course, Golf
+0x19 = sport_poly, Sport
+0x1a = cemetery_poly, Cemetery
+0x1e = park_poly, State Park
+0x1f = park_poly, State Park
+0x20 = park_poly, State Park
+0x28 = water_poly, Ocean
+0x29 = water_poly, Water Reservour
+0x32 = water_poly, Sea
+0x3b = water_poly, Water Reservour
+0x3c = water_poly, Lake (250-600 km2)
+0x3d = water_poly, Lake (77-250 km2)
+0x3e = water_poly, Lake (25-77 km2)
+0x3f = water_poly, Lake (11-25 km2)
+0x40 = water_poly, Lake (0.25-11 km2)
+0x41 = water_poly, Lake (<0.25 km2)
+0x42 = water_poly, Lake (>3.3k km2)
+0x43 = water_poly, Lake (1.1-3.3k km2)
+0x44 = water_poly, Lake (0.6-1.1k km2)
+0x45 = water_poly, Water Reservour
+0x46 = water_poly, River (>1km)
+0x47 = water_poly, River (200m-1km)
+0x48 = water_poly, River (40-200m)
+0x49 = water_poly, River (<40m)
+0x4a = area, Definition Area
+0x4b = area, Background
+0x4c = water_poly, Intermittent River/Lake
+0x4d = water_poly, Glaciers
+0x4e = plantation, Orchard or plantation
+0x4f = scrub, Scrub
+0x50 = wood, Woods
+0x51 = water_poly, Wetland
+0x52 = tundra, Tundra
+0x53 = flats, Flats
