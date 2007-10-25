@@ -60,12 +60,13 @@ graphics_destroy(struct graphics_priv *gr)
 {
 }
 
-static char *fontlist[]={
-	"/usr/X11R6/lib/X11/fonts/msttcorefonts/arial.ttf",
-	"/usr/X11R6/lib/X11/fonts/truetype/arial.ttf",
-	"/usr/share/fonts/truetype/msttcorefonts/arial.ttf",
-	"/usr/share/fonts/ttf/arial.ttf",
-	"/usr/share/fonts/corefonts/arial.ttf",
+static char *fontpaths[]={
+	"/usr/X11R6/lib/X11/fonts/msttcorefonts",
+	"/usr/X11R6/lib/X11/fonts/truetype",
+	"/usr/share/fonts/truetype",
+	"/usr/share/fonts/truetype/msttcorefonts",
+	"/usr/share/fonts/ttf",
+	"/usr/share/fonts/corefonts",
 	NULL,
 };
 
@@ -94,7 +95,9 @@ static struct graphics_font_methods font_methods = {
 
 static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, int size)
 {
-	char **filename=fontlist;
+	char **filename=fontpaths;
+	char fontpath [256];
+
 	struct graphics_font_priv *font=g_new(struct graphics_font_priv, 1);
 
 	*meth=font_methods;
@@ -103,9 +106,16 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 		FT_Init_FreeType( &gr->library );
 		gr->library_init=1;
 	}
-
-	while (*filename) {	
-	    	if (!FT_New_Face( gr->library, *filename, 0, &font->face ))
+	while (*filename) {
+		// Trying the Liberation font first
+		sprintf(fontpath,"%s/LiberationSans-Regular.ttf",*filename);
+		dbg(1,("font : %s\n",fontpath));
+	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
+			break;
+		//Fallback to arial.ttf, in the same path
+		sprintf(fontpath,"%s/arial.ttf",*filename);
+		dbg(1,("font : %s\n",fontpath));
+	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
 			break;
 		filename++;
 	}
