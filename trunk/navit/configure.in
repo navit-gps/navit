@@ -94,12 +94,52 @@ AC_PREPROC_IFELSE(
 		[],
 		Define to 1 if you have the <CEGUI/CEGUI.h> header file.
 		)
-		CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUISILLYImageCodec -lCEGUIExpatParser -lCEGUIFalagardWRBase"
 		CEGUI_CFLAGS="-I /usr/local/include/CEGUI -I /usr/include/CEGUI"
 		cegui=yes,
 	AC_MSG_WARN([*** no CEGUI/CEGUI.h -- SDL support disabled])
 	exit 1
 )
+# For CEGUI, we have to check the presence of some libraries.
+# The following are mandatory (used by navit)
+# If the user installed NavIt without, issue a warning and disable CEGUI
+AC_CHECK_LIB(CEGUIBase, main,
+	 [],
+	 [
+        echo "Error! Something is wrong with CEGUIBase."
+        exit -1
+        ])
+AC_CHECK_LIB(CEGUIOpenGLRenderer, OpenGLRendererdoRender,
+	 [],
+	 [
+        echo "Error! Something is wrong with CEGUIOpenGLRenderer."
+        #exit -1
+        ])
+AC_CHECK_LIB(CEGUIFalagardWRBase, main,
+	 [],
+	 [
+        echo "Error! Something is wrong with CEGUIFalagardWRBase."
+        exit -1
+        ])
+CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUIFalagardWRBase"
+
+# The following are optionnal, but we need to link against them if cegui was built with them
+AC_CHECK_LIB(CEGUISILLYImageCodec, main,
+	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUISILLYImageCodec"],
+	 [echo "CEGUISILLYImageCodec not found/not working, disabled."]
+)
+
+AC_CHECK_LIB(CEGUIExpatParser, main,
+	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIExpatParser"],
+	 [echo "CEGUIExpatParser not found/not working, disabled."]
+)
+
+AC_CHECK_LIB(CEGUIDevILImageCodec, main,
+	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIDevILImageCodec"],
+	 [echo "CEGUIDevILImageCodec not found/not working, disabled."]
+)
+
+echo "LIBS : $CEGUI_LIBS"
+
 AC_SUBST(CEGUI_CFLAGS)
 AC_SUBST(CEGUI_LIBS)
 
@@ -305,7 +345,7 @@ if test x"$gtk2_pkgconfig" = xyes
 fi
 if test x"$sdl" = xyes
 	then
-	echo "SDL gui     : ENABLED"
+	echo "SDL gui     : ENABLED, with $CEGUI_LIBS"
 	else
 	echo "SDL gui     : DISABLED : you are missing a dependency"
 fi
