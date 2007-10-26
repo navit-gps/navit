@@ -15,6 +15,7 @@ void handle_destination_change();
 
 bool DestinationEntryChange(const CEGUI::EventArgs& event);
 bool DialogWindowSwitch(const CEGUI::EventArgs& event);
+bool Switch_to_nGhost(const CEGUI::EventArgs& event);
 bool RoadBookSwitch(const CEGUI::EventArgs& event);
 bool ButtonGo(const CEGUI::EventArgs& event);
 bool ZoomIn(const CEGUI::EventArgs& event);

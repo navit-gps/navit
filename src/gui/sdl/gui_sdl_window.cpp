@@ -27,6 +27,7 @@
 #include "GL/glc.h"
 
 #include "sdl_events.h"
+#include "wmcontrol.h"
 
 #define VM_2D 0
 #define VM_3D 1
@@ -663,6 +664,7 @@ static void init_sdlgui(char * skin_layout,int fullscreen)
 		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
 		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->setText(_("RoadBook"));
 
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/nGhostButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(Switch_to_nGhost));
 		// this one is maybe not needed anymore
 		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton2")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
 

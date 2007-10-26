@@ -13,6 +13,8 @@
 // Theses are needed for searches
 #include "search.h"
 
+// Library for window switching (-> nGhost)
+#include "wmcontrol.h"
 
 
 struct sdl_destination{
@@ -421,6 +423,17 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 
 	return true;
 }
+
+bool Switch_to_nGhost(const CEGUI::EventArgs& event)
+{
+	printf("Switching to nGhost\n");
+	if (window_switch("Nanonymous")==EXIT_FAILURE)
+	{
+		popen("nghost","r");
+	}
+
+}
+
 
 bool RoadBookSwitch(const CEGUI::EventArgs& event)
 {
