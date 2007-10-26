@@ -398,9 +398,9 @@ bool ShowKeyboard(const CEGUI::EventArgs& event){
 void Add_KeyBoard_key(CEGUI::String key,int x,int y,int w){
 	
 	using namespace CEGUI;
-	char button_name [5];
-	sprintf(button_name,"%s",key);
-	FrameWindow* wnd = (FrameWindow*)WindowManager::getSingleton().createWindow("TaharezLook/Button", button_name);
+//	char button_name [5];
+//	sprintf(button_name,"%s",key);
+	FrameWindow* wnd = (FrameWindow*)WindowManager::getSingleton().createWindow("TaharezLook/Button", key);
 	CEGUI::WindowManager::getSingleton().getWindow("Navit/Keyboard")->addChildWindow(wnd);
 	wnd->setPosition(UVector2(cegui_absdim(x), cegui_absdim( y)));
 	wnd->setSize(UVector2(cegui_absdim(w), cegui_absdim( 40)));
@@ -477,7 +477,7 @@ void BuildKeyboard(){
 
 }
 
-static void init_sdlgui(char * skin_layout)
+static void init_sdlgui(char * skin_layout,int fullscreen)
 {
 	SDL_Surface * screen;
 // 	atexit (SDL_Quit);
@@ -521,7 +521,9 @@ static void init_sdlgui(char * skin_layout)
 		fprintf (stderr, "Can't set SDL: %s\n", SDL_GetError ());
 		exit (1);
 	}
-
+	if(fullscreen){
+		SDL_WM_ToggleFullScreen(screen);
+	}
 	SDL_ShowCursor (SDL_ENABLE);
 	SDL_EnableUNICODE (1);
 	SDL_EnableKeyRepeat (SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
@@ -756,14 +758,25 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	*meth=gui_sdl_methods;
 
 	this_=g_new0(struct gui_priv, 1);
+	int fullscreen=0;
 
-	struct attr *data=attr_search(attrs, NULL, attr_skin);
-	if(data){
-		init_sdlgui(data->u.str);
+	struct attr *fullscreen_setting=attr_search(attrs, NULL, attr_fullscreen);
+	if(fullscreen_setting){
+		fullscreen=1;
+		printf("fullscreen\n");
+	} else {
+		fullscreen=0;
+		printf("Normal screen\n");
+	}
+
+	struct attr *skin_setting=attr_search(attrs, NULL, attr_skin);
+	if(skin_setting){
+		init_sdlgui(skin_setting->u.str,fullscreen);
 	} else {
 		g_warning("Warning, no skin set for <sdl> in navit.xml. Using default one");
-		init_sdlgui("TaharezLook");
+		init_sdlgui("TaharezLook",fullscreen);
 	}
+
 	dbg(1,"End SDL init\n");
 
 	//gui_sdl_window.cpp:710: error: invalid conversion from 'void (*)(vehicle*)' to 'void (*)()'
