@@ -48,6 +48,7 @@ ATTR(phone)
 ATTR(entry_fee)
 ATTR(open_hours)
 ATTR(skin)
+ATTR(fullscreen)
 /* poi */
 ATTR(icon)
 ATTR(info_html)
