@@ -80,9 +80,8 @@ static struct {
 
 static gboolean envir_utf8;
 
-int window_switch() { /* {{{ */
+int window_switch(const char *windowName) { /* {{{ */
     int opt;
-    int action = 0;
     int ret = EXIT_SUCCESS;
     int missing_option = 1;
     Display *disp;
@@ -92,60 +91,20 @@ int window_switch() { /* {{{ */
     /* necessary to make g_get_charset() and g_locale_*() work */
     setlocale(LC_ALL, "");
     
-    /* make "--help" and "--version" work. I don't want to use
-     * getopt_long for portability reasons */
+    options.param_window=malloc(strlen(windowName));
+    strncpy(options.param_window,windowName,strlen(windowName));
 
-                options.param_window = "Amarok";
-                action = 'a';
-   
-       
     init_charset();
     
     if (! (disp = XOpenDisplay(NULL))) {
         fputs("Cannot open display.\n", stderr);
         return EXIT_FAILURE;
     }
-   
-    switch (action) {
-        case 'l':
-            ret = list_windows(disp);
-            break;
-        case 'd':
-            ret = list_desktops(disp);
-            break;
-        case 's':
-            ret = switch_desktop(disp);
-            break;
-        case 'm':
-            ret = wm_info(disp);
-            break;
-        case 'a': case 'c': case 'R': 
-        case 't': case 'e': case 'b': case 'N': case 'I': case 'T':
-            if (! options.param_window) {
-                fputs("No window was specified.\n", stderr);
-                return EXIT_FAILURE;
-            }
-            if (options.match_by_id) {
-                ret = action_window_pid(disp, action);
-            }
-            else {
-                ret = action_window_str(disp, action);
-            }
-            break;
-        case 'k':
-            ret = showing_desktop(disp);
-            break;
-        case 'o':
-            ret = change_viewport(disp);
-            break;
-        case 'n':
-            ret = change_number_of_desktops(disp);
-            break;
-        case 'g':
-            ret = change_geometry(disp);
-            break;
+    if (! options.param_window) {
+        fputs("No window was specified.\n", stderr);
+        return EXIT_FAILURE;
     }
-    
+        ret = action_window_str(disp, 'a');
     XCloseDisplay(disp);
     return ret;
 }
@@ -773,7 +732,7 @@ static int action_window_str (Display *disp, char mode) {/*{{{*/
         g_free(client_list);
 
         if (activate) {
-            return action_window(disp, activate, mode);
+		return action_window(disp, activate, mode);
         }
         else {
             return EXIT_FAILURE;
