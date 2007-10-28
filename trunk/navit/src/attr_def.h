@@ -1,19 +1,19 @@
 /* prototypes */
 
 /* common */
-ATTR2(none,0x00000000)
+ATTR2(0x00000000,none)
 ATTR(any)
 
-ATTR2(type_item_begin,0x00010000)
+ATTR2(0x00010000,type_item_begin)
 ATTR(town_streets_item)
 ATTR(street_name_item)
 ATTR(street_name_numbers_item)
 ATTR(street_item)
 ATTR(street_number_item)
 ATTR(item_type)
-ATTR2(type_item_end,0x0001ffff)
+ATTR2(0x0001ffff,type_item_end)
 
-ATTR2(type_int_begin,0x00020000)
+ATTR2(0x00020000,type_int_begin)
 ATTR(h)
 ATTR(id)
 ATTR(limit)
@@ -24,9 +24,9 @@ ATTR(flush_size)
 ATTR(flush_time)
 /* boolean */
 ATTR(overwrite)
-ATTR2(type_int_end,0x0002ffff)
+ATTR2(0x0002ffff,type_int_end)
 
-ATTR2(type_string_begin,0x00030000)
+ATTR2(0x00030000,type_string_begin)
 ATTR(type)
 ATTR(label)
 ATTR(data)
@@ -58,4 +58,4 @@ ATTR(navigation_short)
 ATTR(navigation_long)
 ATTR(navigation_long_exact)
 ATTR(navigation_speech)
-ATTR2(type_string_end,0x0003ffff)
+ATTR2(0x0003ffff,type_string_end)

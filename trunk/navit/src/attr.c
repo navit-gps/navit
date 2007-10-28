@@ -12,7 +12,7 @@ struct attr_name {
 
 
 static struct attr_name attr_names[]={
-#define ATTR2(x,y) ATTR(x)
+#define ATTR2(x,y) ATTR(y)
 #define ATTR(x) { attr_##x, #x },
 #include "attr_def.h"
 #undef ATTR2
