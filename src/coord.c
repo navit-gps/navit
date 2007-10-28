@@ -172,12 +172,14 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 			g.lng=floor(lng/100);
 			lng-=g.lng*100;
 			g.lng+=lng/60;
+			if (ns == 's' || ns == 'S')
+				g.lat=-g.lat;
+			if (ew == 'w' || ew == 'W')
+				g.lng=-g.lng;
 			transform_from_geo(pro, &g, c_ret);
 		}
-		if (debug) {
-			printf("str='%s' x=%f ns=%c y=%f ew=%c c=%d\n", str, lng, ns, lat, ew, ret);
-			printf("rest='%s'\n", str+ret);
-		}
+		dbg(3,"str='%s' x=%f ns=%c y=%f ew=%c c=%d\n", str, lng, ns, lat, ew, ret);
+		dbg(3,"rest='%s'\n", str+ret);
 	} else {
 		double lng, lat;
 		args=sscanf(str, "%lf %lf%n", &lng, &lat, &ret);
