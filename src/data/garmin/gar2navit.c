@@ -220,7 +220,7 @@ enum item_type g2n_get_type(struct gar2nav_conv *c, int type, unsigned short id)
 
 	while (def) {
 		if ((!def->maxid && def->id == id) || 
-				(def->id <= id && def->maxid))
+			(def->id <= id && id <= def->maxid))
 			return def->ntype;
 		def = def->next;
 	}
