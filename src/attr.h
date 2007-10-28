@@ -10,7 +10,7 @@ extern "C" {
 enum item_type;
 
 enum attr_type {
-#define ATTR2(x,y) attr_##x=y,
+#define ATTR2(x,y) attr_##y=x,
 #define ATTR(x) attr_##x,
 #include "attr_def.h"
 #undef ATTR2

@@ -466,7 +466,7 @@ transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, st
 	int i,dist,distn;
 	struct coord lp;
 	if (count < 2)
-		return 0;
+		return INT_MAX;
 	if (pos)
 		*pos=0;
 	dist=transform_distance_line_sq(&c[0], &c[1], ref, lpnt);

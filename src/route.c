@@ -443,7 +443,12 @@ struct route_path_handle {
 struct route_path_handle *
 route_path_open(struct route *this)
 {
-	struct route_path_handle *ret=g_new(struct route_path_handle, 1);
+	struct route_path_handle *ret;
+
+	if (! this->path2 || ! this->path2->path) 
+		return NULL;
+
+	ret=g_new(struct route_path_handle, 1);
 
 	ret->s=this->path2->path;	
 	return ret;

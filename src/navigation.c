@@ -629,10 +629,13 @@ navigation_update(struct navigation *this_, struct route *route)
 	if (!incr) {
 		printf("not on track\n");
 		rph=route_path_open(route);
-		while((s=route_path_get_segment(rph))) {
-			itm=navigation_itm_new(this_, route_path_segment_get_item(s),route_path_segment_get_start(s));
-			itm->time=route_path_segment_get_time(s);
-			itm->length=route_path_segment_get_length(s);
+		if (rph) {
+			while((s=route_path_get_segment(rph))) {
+				itm=navigation_itm_new(this_, route_path_segment_get_item(s),route_path_segment_get_start(s));
+				itm->time=route_path_segment_get_time(s);
+				itm->length=route_path_segment_get_length(s);
+			}
+			route_path_close(rph);
 		}
 		if (end_flag) {
 			len=route_info_length(NULL, dst, 0);
@@ -643,7 +646,6 @@ navigation_update(struct navigation *this_, struct route *route)
 			itm->time=route_time(speedlist, &sd->item, len);
 		}
 		itm=navigation_itm_new(this_, NULL, NULL);
-		route_path_close(rph);
 		make_maneuvers(this_);
 	}
 	calculate_dest_distance(this_, incr);
