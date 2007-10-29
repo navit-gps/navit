@@ -1,6 +1,9 @@
 #ifndef NAVIT_ITEM_H
 #define NAVIT_ITEM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 enum item_type {
 #define ITEM2(x,y) type_##y=x,
@@ -56,3 +59,6 @@ void item_hash_destroy(struct item_hash *h);
 
 #endif
 
+#ifdef __cplusplus
+}
+#endif
