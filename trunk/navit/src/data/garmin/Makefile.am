@@ -5,3 +5,17 @@ INCLUDES=-I$(top_srcdir)/src/data/garmin/libgarmin
 moduledata_LTLIBRARIES = libdata_garmin.la
 libdata_garmin_la_SOURCES = garmin.c garmin.h gar2navit.c gar2navit.h
 libdata_garmin_la_LIBADD = @LIBGARMIN_LIBS@
+nodist_libdata_garmin_la_SOURCES = g2nbuiltin.h
+
+gar2navit.l$(OBJEXT): g2nbuiltin.h
+
+CLEANFILES = g2nbuiltin.h
+
+noinst_PROGRAMS=gentypes
+gentypes_SOURCES=gentypes.c
+
+g2nbuiltin.h: gentypes garmintypes.txt
+	./gentypes garmintypes.txt g2nbuiltin.h
+
+EXTRA_DIST = garmintypes.txt
+
