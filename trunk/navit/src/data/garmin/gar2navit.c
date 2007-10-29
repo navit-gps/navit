@@ -249,7 +249,7 @@ int g2n_get_routable(struct gar2nav_conv *c, int type, unsigned short id)
 
 	while (def) {
 		if ((!def->maxid && def->id == id) || 
-				(def->id <= id && def->maxid))
+				(def->id <= id && id <= def->maxid))
 			return def->routable;
 		def = def->next;
 	}
@@ -272,7 +272,7 @@ char *g2n_get_descr(struct gar2nav_conv *c, int type, unsigned short id)
 	}
 	while (def) {
 		if ((!def->maxid && def->id == id) || 
-				(def->id <= id && def->maxid))
+				(def->id <= id && id <= def->maxid))
 			return def->descr;
 		def = def->next;
 	}
