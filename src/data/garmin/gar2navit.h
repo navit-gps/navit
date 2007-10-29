@@ -28,3 +28,4 @@ struct gar2nav_conv *g2n_conv_load(char *file);
 enum item_type g2n_get_type(struct gar2nav_conv *c, int type, unsigned short id);
 char *g2n_get_descr(struct gar2nav_conv *c, int type, unsigned short id);
 int g2n_get_routable(struct gar2nav_conv *c, int type, unsigned short id);
+struct gar2nav_conv *g2n_default_conv(void);

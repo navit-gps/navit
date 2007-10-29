@@ -25,6 +25,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include "plugin.h"
 #include "data.h"
 #include "projection.h"
@@ -564,6 +567,8 @@ gmap_rect_new(struct map_priv *map, struct map_selection *sel)
 	struct map_selection *ms = sel;
 	struct map_rect_priv *mr;
 
+	if (!map)
+		return NULL;
 	mr = calloc(1, sizeof(*mr));
 	if (!mr)
 		return mr;
@@ -630,6 +635,7 @@ gmap_new(struct map_methods *meth, struct attr **attrs)
 	struct map_priv *m;
 	struct attr *data;
 	char buf[PATH_MAX];
+	struct stat st;
 
 	data=attr_search(attrs, NULL, attr_data);
 	if (! data)
@@ -654,20 +660,15 @@ gmap_new(struct map_methods *meth, struct attr **attrs)
 		g_free(m);
 		return NULL;
 	}
+	m->conv = NULL;
 	snprintf(buf, sizeof(buf), "%s.types", m->filename);
-	dlog(1, "Looking for types in %s\n", buf); 
-	m->conv = g2n_conv_load(buf);
+	if (!stat(buf, &st)) {
+		dlog(1, "Loading custom types from %s\n", buf);
+		m->conv = g2n_conv_load(buf);
+	}
 	if (!m->conv) {
-		char *cp;
-		strcpy(buf, m->filename);
-		cp = strrchr(buf ,'/');
-		if (cp) {
-			cp ++;
-			*cp = '\0';
-			strcat(buf, "garmintypes.txt");
-			dlog(1, "Looking for types in %s\n", buf);
-			m->conv = g2n_conv_load(buf);
-		}
+		dlog(1, "Using builtin types\n");
+		m->conv = g2n_default_conv();
 	}
 	if (!m->conv) {
 		dlog(1, "Failed to load map types\n");
