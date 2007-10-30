@@ -7,175 +7,184 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-09-29 01:53+0200\n"
-"PO-Revision-Date: 2007-07-16 15:56+0100\n"
+"POT-Creation-Date: 2007-10-30 15:35+0100\n"
+"PO-Revision-Date: 2007-10-30 16:26+0100\n"
 "Last-Translator: Bendik Brenne <bendik@xplore.nu>\n"
 "Language-Team: Bendik Brenne <bendik@xplore.nu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../src/main.c:89
+#: ../src/main.c:94
 #, c-format
 msgid "Running from source directory\n"
 msgstr ""
 
-#: ../src/main.c:114
+#: ../src/main.c:110
+#, fuzzy, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "Bruker '%s'\n"
+
+#: ../src/main.c:170
+msgid "No config file navit.xml or navit.xml.local found\n"
+msgstr ""
+
+#: ../src/main.c:172
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr "Feil ved parsing av '%s': %s\n"
 
-#: ../src/main.c:116
+#: ../src/main.c:174
 #, c-format
 msgid "Using '%s'\n"
 msgstr "Bruker '%s'\n"
 
-#: ../src/main.c:119
+#: ../src/main.c:177
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr "Ingen instans er blitt opprettet, avslutter\n"
 
-#: ../src/navigation.c:176
+#: ../src/navigation.c:173
 #, fuzzy, c-format
 msgid "%d m"
 msgstr "%d meter"
 
-#: ../src/navigation.c:178
+#: ../src/navigation.c:175
 #, fuzzy, c-format
 msgid "in %d m"
 msgstr "om %d meter"
 
-#: ../src/navigation.c:182
+#: ../src/navigation.c:179
 #, c-format
 msgid "%d meters"
 msgstr "%d meter"
 
-#: ../src/navigation.c:184
+#: ../src/navigation.c:181
 #, c-format
 msgid "in %d meters"
 msgstr "om %d meter"
 
-#: ../src/navigation.c:190
+#: ../src/navigation.c:187
 #, c-format
 msgid "%d.%d kilometer"
 msgstr "%d,%d kilometer"
 
-#: ../src/navigation.c:192
+#: ../src/navigation.c:189
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "om %d,%d kilometer"
 
-#: ../src/navigation.c:198
+#: ../src/navigation.c:195
 msgid "one kilometer"
 msgstr "èn kilometer"
 
-#: ../src/navigation.c:200
+#: ../src/navigation.c:197
 msgid "in one kilometer"
 msgstr "om èn kilometer"
 
-#: ../src/navigation.c:203
+#: ../src/navigation.c:200
 msgid "two kilometers"
 msgstr "to kilometer"
 
-#: ../src/navigation.c:205
+#: ../src/navigation.c:202
 msgid "in two kilometers"
 msgstr "om to Kilometer"
 
-#: ../src/navigation.c:208
+#: ../src/navigation.c:205
 msgid "three kilometers"
 msgstr "tre kilometer"
 
-#: ../src/navigation.c:210
+#: ../src/navigation.c:207
 msgid "in three kilometers"
 msgstr "om tre kilometer"
 
-#: ../src/navigation.c:213
+#: ../src/navigation.c:210
 msgid "four kilometers"
 msgstr "fire kilometer"
 
-#: ../src/navigation.c:215
+#: ../src/navigation.c:212
 msgid "in four kilometers"
 msgstr "om fire kilometer"
 
-#: ../src/navigation.c:218
+#: ../src/navigation.c:215
 #, c-format
 msgid "%d kilometers"
 msgstr "%d kilometer"
 
-#: ../src/navigation.c:220
+#: ../src/navigation.c:217
 #, c-format
 msgid "in %d kilometers"
-msgstr "Om %d kilometer"
+msgstr "om %d kilometer"
 
-#: ../src/navigation.c:424
+#: ../src/navigation.c:421
 msgid "right"
 msgstr "høyre"
 
-#: ../src/navigation.c:432
+#: ../src/navigation.c:429
 msgid "left"
 msgstr "venstre"
 
-#: ../src/navigation.c:436
+#: ../src/navigation.c:433
 msgid "easily "
 msgstr "slakk "
 
-#: ../src/navigation.c:440
+#: ../src/navigation.c:437
 msgid "strongly "
 msgstr "skarp "
 
-#: ../src/navigation.c:443
+#: ../src/navigation.c:440
 msgid "unknown "
 msgstr "ukjent "
 
-#: ../src/navigation.c:449
+#: ../src/navigation.c:446
 #, fuzzy
 msgid "When possible, please turn around"
 msgstr "Når mulig, vennligst sving"
 
-#: ../src/navigation.c:456
+#: ../src/navigation.c:453
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Følg veien de neste %s"
 
-#: ../src/navigation.c:460
+#: ../src/navigation.c:457
 msgid "soon"
-msgstr "Snart"
+msgstr "snart"
+
+#: ../src/navigation.c:463
+msgid "now"
+msgstr "nå"
 
 #: ../src/navigation.c:466
-msgid "now"
-msgstr "Nå"
-
-#: ../src/navigation.c:469
 msgid "error"
 msgstr "feil"
 
-#: ../src/navigation.c:474
+#: ../src/navigation.c:471
 msgid "strength_pos"
 msgstr "2"
 
-#: ../src/navigation.c:476
+#: ../src/navigation.c:473
 msgid "direction_pos"
 msgstr "3"
 
-#: ../src/navigation.c:478
+#: ../src/navigation.c:475
 msgid "distance_pos"
 msgstr "1"
 
-#: ../src/navigation.c:488
+#: ../src/navigation.c:485
 #, c-format
 msgid "Turn %s%s %s"
 msgstr "Sving %s%s %s"
 
-#: ../src/navigation.c:491
+#: ../src/navigation.c:488
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Du har nådd ditt reisemål %s"
 
-#: ../src/navit.c:440 ../src/gui/gtk/gui_gtk_action.c:180
+#: ../src/navit.c:439 ../src/gui/gtk/gui_gtk_action.c:180
 msgid "Layout"
 msgstr "Layout"
 
-#: ../src/navit.c:453
+#: ../src/navit.c:452
 msgid "Projection"
 msgstr "Projeksjon"
 
@@ -478,7 +487,7 @@ msgstr "Oppdater"
 
 #: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "Roadbook"
-msgstr ""
+msgstr "Kjørebok"
 
 #: ../src/gui/gtk/gui_gtk_action.c:185
 msgid "Info"
@@ -490,7 +499,7 @@ msgstr "Destinasjon"
 
 #: ../src/gui/gtk/gui_gtk_action.c:187
 msgid "Clear"
-msgstr ""
+msgstr "Fjern"
 
 #: ../src/gui/gtk/gui_gtk_action.c:188
 msgid "Test"
@@ -506,7 +515,7 @@ msgstr "Markør"
 
 #: ../src/gui/gtk/gui_gtk_action.c:197
 msgid "Tracking"
-msgstr ""
+msgstr "Sporing"
 
 #: ../src/gui/gtk/gui_gtk_action.c:198
 msgid "Orientation"
@@ -514,7 +523,7 @@ msgstr "Orientering"
 
 #: ../src/gui/gtk/gui_gtk_action.c:199
 msgid "Fullscreen"
-msgstr ""
+msgstr "Fullskjerm"
 
 #: ../src/gui/gtk/gui_gtk_action.c:206
 msgid "Data"
