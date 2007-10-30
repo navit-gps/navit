@@ -108,7 +108,7 @@
 		</Window>	
 		
 		
-		    <Window Type="NavitGrey/SpeakerButton" Name="SpeakerButton" >
+		    <Window Type="NavitGrey/SpeakerButton" Name="OSD/nGhostButton" >
 			    <Property Name="ZOrderChangeEnabled" value="False" />
 			    <Property Name="UnifiedAreaRect" Value="{{0,632},{0,9},{0,660},{0,45}}" />
 		    </Window>
