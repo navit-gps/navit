@@ -103,7 +103,9 @@ AC_PREPROC_IFELSE(
 
 if test x"$sdl" = xyes
         then
- 
+# Save the LIBS into a temp var since AC_CHECK_LIB adds the lib into LIBS
+# and we want just to check and use CEGUI_LIBS
+libstemp="$LIBS" 
 # For CEGUI, we have to check the presence of some libraries.
 # The following are mandatory (used by navit)
 # If the user installed NavIt without, issue a warning and disable CEGUI
@@ -143,6 +145,7 @@ AC_CHECK_LIB(CEGUIDevILImageCodec, main,
 	 [echo "CEGUIDevILImageCodec not found/not working, disabled."]
 )
 
+LIBS="$libstemp"
 echo "LIBS : $CEGUI_LIBS"
 fi
 
