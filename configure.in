@@ -183,6 +183,12 @@ AC_CHECK_LIB(CEGUIExpatParser, main,
 	 $OPENGL_LIBS
 )
 
+AC_CHECK_LIB(CEGUITinyXMLParser, main,
+	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUITinyXMLParser"],
+	 [echo "CEGUITinyXMLParser not found/not working, disabled."],
+	 $OPENGL_LIBS
+)
+
 AC_CHECK_LIB(CEGUIDevILImageCodec, main,
 	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIDevILImageCodec"],
 	 [echo "CEGUIDevILImageCodec not found/not working, disabled."],
