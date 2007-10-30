@@ -28,7 +28,13 @@ AC_ARG_ENABLE(avoid-float, [  --enable-avoid-float              avoid floating p
 test x"${AVOID_FLOAT}" = xyes && AC_DEFINE(AVOID_FLOAT,[],Define to avoid floating point)
 
 AC_ARG_ENABLE(libgps, [  --disable-libgps             don't use libgps], USE_LIBGPS=$enableval, USE_LIBGPS=yes)
-
+AC_PATH_X
+if test x"$have_x" != xyes; then
+        echo "Can not find X"
+        exit -1
+fi
+X_CFLAGS="-I$x_includes"
+X_LIBS="-L$ac_x_libraries"
 
 PKG_CHECK_MODULES(NAVIT, [glib-2.0 gmodule-2.0])
 AC_SUBST(NAVIT_CFLAGS)
@@ -101,55 +107,6 @@ AC_PREPROC_IFELSE(
 	exit 1
 )
 
-if test x"$sdl" = xyes
-        then
-# For CEGUI, we have to check the presence of some libraries.
-# The following are mandatory (used by navit)
-# If the user installed NavIt without, issue a warning and disable CEGUI
-AC_CHECK_LIB(CEGUIBase,main
-	 [],
-	 [
-        echo "Error! Something is wrong with CEGUIBase."
-        exit -1
-        ])
-AC_CHECK_LIB(CEGUIOpenGLRenderer, OpenGLRendererdoRender,
-	 [],
-	 [
-        echo "Error! Something is wrong with CEGUIOpenGLRenderer."
-        #exit -1
-        ])
-#AC_CHECK_LIB(CEGUIFalagardWRBase,registerFactory,
-AC_CHECK_LIB(CEGUIFalagardWRBase,main,
-	 [],
-	 [
-        echo "Error! Something is wrong with CEGUIFalagardWRBase."
-        exit -1
-        ])
-CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUIFalagardWRBase"
-
-# The following are optionnal, but we need to link against them if cegui was built with them
-AC_SEARCH_LIBS(createImageCodec, CEGUISILLYImageCodec,
-	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUISILLYImageCodec"],
-	 [echo "CEGUISILLYImageCodec not found/not working, disabled."]
-)
-
-AC_SEARCH_LIBS(createParser,CEGUIExpatParser, 
-	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIExpatParser"],
-	 [echo "CEGUIExpatParser not found/not working, disabled."]
-)
-
-AC_SEARCH_LIBS(CEGUIDevILImageCodec, createImageCodec,
-	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIDevILImageCodec"],
-	 [echo "CEGUIDevILImageCodec not found/not working, disabled."]
-)
-
-LIBS="$libstemp"
-echo "LIBS : $CEGUI_LIBS"
-fi
-
-AC_SUBST(CEGUI_CFLAGS)
-AC_SUBST(CEGUI_LIBS)
-
 AC_CHECK_HEADER(
 	GL/gl.h,
 	AC_DEFINE(
@@ -157,7 +114,7 @@ AC_CHECK_HEADER(
 		[],
 		Define to 1 if you have the <GL/gl.h> header file.
 		)
-		OPENGL_LIBS="-lGL -lGLU"
+		OPENGL_LIBS="$X_LIBS -lGL -lGLU"
 		opengl=yes,
 	AC_MSG_WARN([*** no GL/gl.h -- opengl and SDL support disabled])
 )
@@ -177,6 +134,66 @@ AC_CHECK_HEADER(
 )
 AC_SUBST(GLC_CFLAGS)
 AC_SUBST(GLC_LIBS)
+
+if test x"$sdl" = xyes
+        then
+# Save the LIBS into a temp var since AC_CHECK_LIB adds the lib into LIBS
+# and we want just to check and use CEGUI_LIBS
+libstemp="$LIBS" 
+# For CEGUI, we have to check the presence of some libraries.
+# The following are mandatory (used by navit)
+# If the user installed NavIt without, issue a warning and disable CEGUI
+AC_CHECK_LIB(CEGUIBase, main,
+	 [],
+	 [
+        echo "Error! Something is wrong with CEGUIBase."
+        exit -1
+        ])
+AC_CHECK_LIB(CEGUIOpenGLRenderer, main,
+	 [],
+	 [
+        echo "Error! Something is wrong with CEGUIOpenGLRenderer."
+        #exit -1
+        ], $OPENGL_LIBS )
+AC_CHECK_LIB(CEGUIFalagardWRBase, main,
+	 [],
+	 [
+        echo "Error! Something is wrong with CEGUIFalagardWRBase."
+        exit -1
+        ], $OPENGL_LIBS)
+CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUIFalagardWRBase"
+
+# The following are optionnal, but we need to link against them if cegui was built with them
+AC_CHECK_LIB(CEGUISILLYImageCodec, main,
+	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUISILLYImageCodec"],
+	 [echo "CEGUISILLYImageCodec not found/not working, disabled."],
+	 $OPENGL_LIBS
+)
+
+AC_CHECK_LIB(CEGUIExpatParser, main,
+	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIExpatParser"],
+	 [echo "CEGUIExpatParser not found/not working, disabled."],
+	 $OPENGL_LIBS
+)
+
+AC_CHECK_LIB(CEGUIDevILImageCodec, main,
+	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIDevILImageCodec"],
+	 [echo "CEGUIDevILImageCodec not found/not working, disabled."],
+	 $OPENGL_LIBS
+)
+
+AC_CHECK_LIB(CEGUITGAImageCodec, main,
+	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUITGAImageCodec"],
+	 [echo "GUITGAImageCodec not found/not working, disabled."],
+	 $OPENGL_LIBS
+)
+
+LIBS="$libstemp"
+echo "LIBS : $CEGUI_LIBS"
+fi
+
+AC_SUBST(CEGUI_CFLAGS)
+AC_SUBST(CEGUI_LIBS)
 
 AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$cegui" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
 AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
