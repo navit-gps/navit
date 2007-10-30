@@ -164,9 +164,16 @@ AC_CHECK_LIB(CEGUIFalagardWRBase, main,
 CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUIFalagardWRBase"
 
 # The following are optionnal, but we need to link against them if cegui was built with them
-AC_CHECK_LIB(CEGUISILLYImageCodec, main,
+libssilly="$OPENGL_LIBS -lpng"
+AC_CHECK_LIB(CEGUISILLYImageCodec, createImageCodec,
 	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUISILLYImageCodec"],
 	 [echo "CEGUISILLYImageCodec not found/not working, disabled."],
+	 $libssilly
+)
+
+AC_CHECK_LIB(CEGUIXercesParser, main,
+	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIXercesParser"],
+	 [echo "CEGUIXercesParser not found/not working, disabled."],
 	 $OPENGL_LIBS
 )
 
