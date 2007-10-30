@@ -103,13 +103,10 @@ AC_PREPROC_IFELSE(
 
 if test x"$sdl" = xyes
         then
-# Save the LIBS into a temp var since AC_CHECK_LIB adds the lib into LIBS
-# and we want just to check and use CEGUI_LIBS
-libstemp="$LIBS" 
 # For CEGUI, we have to check the presence of some libraries.
 # The following are mandatory (used by navit)
 # If the user installed NavIt without, issue a warning and disable CEGUI
-AC_CHECK_LIB(CEGUIBase, main,
+AC_CHECK_LIB(CEGUIBase,main
 	 [],
 	 [
         echo "Error! Something is wrong with CEGUIBase."
@@ -121,7 +118,8 @@ AC_CHECK_LIB(CEGUIOpenGLRenderer, OpenGLRendererdoRender,
         echo "Error! Something is wrong with CEGUIOpenGLRenderer."
         #exit -1
         ])
-AC_CHECK_LIB(CEGUIFalagardWRBase, main,
+#AC_CHECK_LIB(CEGUIFalagardWRBase,registerFactory,
+AC_CHECK_LIB(CEGUIFalagardWRBase,main,
 	 [],
 	 [
         echo "Error! Something is wrong with CEGUIFalagardWRBase."
@@ -130,17 +128,17 @@ AC_CHECK_LIB(CEGUIFalagardWRBase, main,
 CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUIFalagardWRBase"
 
 # The following are optionnal, but we need to link against them if cegui was built with them
-AC_CHECK_LIB(CEGUISILLYImageCodec, main,
+AC_SEARCH_LIBS(createImageCodec, CEGUISILLYImageCodec,
 	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUISILLYImageCodec"],
 	 [echo "CEGUISILLYImageCodec not found/not working, disabled."]
 )
 
-AC_CHECK_LIB(CEGUIExpatParser, main,
+AC_SEARCH_LIBS(createParser,CEGUIExpatParser, 
 	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIExpatParser"],
 	 [echo "CEGUIExpatParser not found/not working, disabled."]
 )
 
-AC_CHECK_LIB(CEGUIDevILImageCodec, main,
+AC_SEARCH_LIBS(CEGUIDevILImageCodec, createImageCodec,
 	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIDevILImageCodec"],
 	 [echo "CEGUIDevILImageCodec not found/not working, disabled."]
 )
