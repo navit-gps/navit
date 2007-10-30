@@ -31,20 +31,20 @@ transform_new(void)
 	return this_;
 }
 
+static const double gar2geo_units = 360.0/(1<<24);
+static const double geo2gar_units = 1/(360.0/(1<<24));
+
 void
 transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g)
 {
-	double f;
-
 	switch (pro) {
 	case projection_mg:
 		g->lng=c->x/6371000.0/M_PI*180;
 		g->lat=atan(exp(c->y/6371000.0))/M_PI*360-90;
 		break;
 	case projection_garmin:
-		f=360.0/(1<<24);
-		g->lng=c->x*f;
-		g->lat=c->y*f;	
+		g->lng=c->x*gar2geo_units;
+		g->lat=c->y*gar2geo_units;
 		break;
 	default:
 		break;
@@ -54,17 +54,14 @@ transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g)
 void
 transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c)
 {
-	double f;
-
 	switch (pro) {
 	case projection_mg:
 		c->x=g->lng*6371000.0*M_PI/180;
 		c->y=log(tan(M_PI_4+g->lat*M_PI/360))*6371000.0;
 		break;
 	case projection_garmin:
-		f=360.0/(1<<24);
-		c->x=g->lng/f;
-		c->y=g->lat/f;	
+		c->x=g->lng*geo2gar_units;
+		c->y=g->lat*geo2gar_units;
 		break;
 	default:
 		break;
