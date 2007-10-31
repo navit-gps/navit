@@ -118,6 +118,18 @@ AC_CHECK_HEADER(
 		opengl=yes,
 	AC_MSG_WARN([*** no GL/gl.h -- opengl and SDL support disabled])
 )
+
+AC_CHECK_HEADER(
+	GL/glut.h,
+	AC_DEFINE(
+		[HAVE_GLUT],
+		[],
+		Define to 1 if you have the <GL/glut.h> header file.
+		)
+		glut=yes,
+	AC_MSG_WARN([*** no GL/glut.h -- opengl and SDL support disabled])
+)
+
 AC_SUBST(OPENGL_CFLAGS)
 AC_SUBST(OPENGL_LIBS)
 
@@ -209,7 +221,7 @@ AC_SUBST(CEGUI_CFLAGS)
 AC_SUBST(CEGUI_LIBS)
 
 AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$cegui" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
-AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
+AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$opengl" = "xyes" -a "x$glc" = "xyes"  -a "x$glut" = "xyes"])
 
 if test x"${USE_LIBGPS}" = xyes
 then
