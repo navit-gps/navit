@@ -159,7 +159,7 @@ AC_CHECK_LIB(CEGUIBase, main,
 	 [],
 	 [
         echo "Error! Something is wrong with CEGUIBase."
-        exit -1
+        #exit -1
         ])
 AC_CHECK_LIB(CEGUIOpenGLRenderer, main,
 	 [],
@@ -171,7 +171,7 @@ AC_CHECK_LIB(CEGUIFalagardWRBase, main,
 	 [],
 	 [
         echo "Error! Something is wrong with CEGUIFalagardWRBase."
-        exit -1
+        #exit -1
         ], $OPENGL_LIBS)
 CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUIFalagardWRBase"
 
