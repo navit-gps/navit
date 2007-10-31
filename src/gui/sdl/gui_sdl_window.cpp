@@ -213,7 +213,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
  			gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
 		}
   		
-/*
+
  		// FIXME This is to draw a ground. This is ugly and need to be fixed. Without it, we see the color of sky under the roads.
 		glColor4f(0.0f,0.7f,0.35f,1.0f);
 		glBegin(GL_POLYGON);
@@ -222,7 +222,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
 			glVertex3f( 1600,600*2, 0.0f);	
 			glVertex3f( 1600,-600*3, 0.0f);	
 		glEnd();
-*/
+
 
  		if(enable_timer)
  			profile(0,"graphics_redraw");
