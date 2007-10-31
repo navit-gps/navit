@@ -13,6 +13,18 @@
 
 #include "debug.h"
 
+#include <GL/glut.h>
+
+
+void CALLBACK tessBeginCB(GLenum which);
+void CALLBACK tessEndCB();
+void CALLBACK tessErrorCB(GLenum errorCode);
+void CALLBACK tessVertexCB(const GLvoid *data);
+void CALLBACK tessVertexCB2(const GLvoid *data);
+void CALLBACK tessCombineCB(const GLdouble newVertex[3], const GLdouble *neighborVertex[4],
+                            const GLfloat neighborWeight[4], GLdouble **outData);
+	
+
 struct graphics_priv {
 	int button_timeout;
 	struct point p;
@@ -271,6 +283,76 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 */
 }
 
+
+const char* getPrimitiveType(GLenum type)
+{
+    switch(type)
+    {
+    case 0x0000:
+        return "GL_POINTS"; 
+        break;
+    case 0x0001:
+        return "GL_LINES";
+        break;
+    case 0x0002:
+        return "GL_LINE_LOOP";
+        break;
+    case 0x0003:
+        return "GL_LINE_STRIP";
+        break;
+    case 0x0004:
+        return "GL_TRIANGLES";
+        break;
+    case 0x0005:
+        return "GL_TRIANGLE_STRIP";
+        break;
+    case 0x0006:
+        return "GL_TRIANGLE_FAN";
+        break;
+    case 0x0007:
+        return "GL_QUADS";
+        break;
+    case 0x0008:
+        return "GL_QUAD_STRIP";
+        break;
+    case 0x0009:
+        return "GL_POLYGON";
+        break;
+    }
+}
+
+void CALLBACK tessBeginCB(GLenum which)
+{
+    glBegin(which);
+
+    // DEBUG //
+    dbg(1,"glBegin( %s );\n",getPrimitiveType(which));
+}
+
+
+
+void CALLBACK tessEndCB()
+{
+    glEnd();
+
+    // DEBUG //
+    dbg(1,"glEnd();\n");
+}
+
+
+
+void CALLBACK tessVertexCB(const GLvoid *data)
+{
+    // cast back to double type
+    const GLdouble *ptr = (const GLdouble*)data;
+
+    glVertex3dv(ptr);
+
+    // DEBUG //
+    dbg(1,"  glVertex3d();\n");
+}
+
+
 static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
@@ -281,14 +363,70 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 		gdk_draw_polygon(gr->widget->window, gc->gc, TRUE, (GdkPoint *)p, count);
 #endif
 	int i;
+
+	/*
+	// OLD polygon code 
 	glColor4f( gc->fr, gc->fg, gc->fb, gc->fa);
-	glBegin( GL_POLYGON );
+	glBegin( GL_TRIANGLE_FAN );
+	glVertex2i(p[0].x, p[0].y);		
 	for (i = 0 ; i < count ; i++) {
 		glVertex2i(p[i].x, p[i].y);		
 	}
-	glVertex2i(p[0].x, p[0].y);		
 	glEnd();
 	
+	*/
+    GLuint id = glGenLists(1);  // create a display list
+    if(!id) return id;          // failed to create a list, return 0
+
+    GLUtesselator *tess = gluNewTess(); // create a tessellator
+    if(!tess) return 0;  // failed to create tessellation object, return 0
+
+    // define concave quad data (vertices only)
+    //  0    2
+    //  \ \/ /
+    //   \3 /
+    //    \/
+    //    1
+//     GLdouble quad1[4][3] = { {-1,3,0}, {0,0,0}, {1,3,0}, {0,2,0} };
+	     GLdouble quad1[count][3];
+	for (i = 0 ; i < count ; i++) {
+		quad1[i][0]=(GLdouble)(p[i].x);
+		quad1[i][1]=(GLdouble)(p[i].y);
+		quad1[i][2]=0;
+	}
+
+
+    // register callback functions
+    gluTessCallback(tess, GLU_TESS_BEGIN, (void (*)(void))tessBeginCB);
+    gluTessCallback(tess, GLU_TESS_END, (void (*)(void))tessEndCB);
+//     gluTessCallback(tess, GLU_TESS_ERROR, (void (*)(void))tessErrorCB);
+    gluTessCallback(tess, GLU_TESS_VERTEX, (void (*)(void))tessVertexCB);
+
+    // tessellate and compile a concave quad into display list
+    // gluTessVertex() takes 3 params: tess object, pointer to vertex coords,
+    // and pointer to vertex data to be passed to vertex callback.
+    // The second param is used only to perform tessellation, and the third
+    // param is the actual vertex data to draw. It is usually same as the second
+    // param, but It can be more than vertex coord, for example, color, normal
+    // and UV coords which are needed for actual drawing.
+    // Here, we are looking at only vertex coods, so the 2nd and 3rd params are
+    // pointing same address.
+    glNewList(id, GL_COMPILE);
+    glColor4f( gc->fr, gc->fg, gc->fb, gc->fa);
+    gluTessBeginPolygon(tess, 0);                   // with NULL data
+        gluTessBeginContour(tess);
+	for (i = 0 ; i < count ; i++) {
+            gluTessVertex(tess, quad1[i], quad1[i]);
+	}
+        gluTessEndContour(tess);
+    gluTessEndPolygon(tess);
+    glEndList();
+
+    gluDeleteTess(tess);        // delete after tessellation
+
+    glCallList(id);
+
+
 }
 
 static void
