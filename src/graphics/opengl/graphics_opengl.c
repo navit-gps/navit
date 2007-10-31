@@ -325,7 +325,6 @@ void CALLBACK tessBeginCB(GLenum which)
 {
     glBegin(which);
 
-    // DEBUG //
     dbg(1,"glBegin( %s );\n",getPrimitiveType(which));
 }
 
@@ -335,7 +334,6 @@ void CALLBACK tessEndCB()
 {
     glEnd();
 
-    // DEBUG //
     dbg(1,"glEnd();\n");
 }
 
@@ -348,7 +346,6 @@ void CALLBACK tessVertexCB(const GLvoid *data)
 
     glVertex3dv(ptr);
 
-    // DEBUG //
     dbg(1,"  glVertex3d();\n");
 }
 
@@ -356,39 +353,15 @@ void CALLBACK tessVertexCB(const GLvoid *data)
 static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-#if 0
-	if (gr->mode == draw_mode_begin || gr->mode == draw_mode_end)
-		gdk_draw_polygon(gr->drawable, gc->gc, TRUE, (GdkPoint *)p, count);
-	if (gr->mode == draw_mode_end || gr->mode == draw_mode_cursor)
-		gdk_draw_polygon(gr->widget->window, gc->gc, TRUE, (GdkPoint *)p, count);
-#endif
 	int i;
 
-	/*
-	// OLD polygon code 
-	glColor4f( gc->fr, gc->fg, gc->fb, gc->fa);
-	glBegin( GL_TRIANGLE_FAN );
-	glVertex2i(p[0].x, p[0].y);		
-	for (i = 0 ; i < count ; i++) {
-		glVertex2i(p[i].x, p[i].y);		
-	}
-	glEnd();
-	
-	*/
-    GLuint id = glGenLists(1);  // create a display list
-    if(!id) return id;          // failed to create a list, return 0
+	GLuint id = glGenLists(1);  // create a display list
+	if(!id) return id;          // failed to create a list, return 0
 
-    GLUtesselator *tess = gluNewTess(); // create a tessellator
-    if(!tess) return 0;  // failed to create tessellation object, return 0
+	GLUtesselator *tess = gluNewTess(); // create a tessellator
+	if(!tess) return 0;  // failed to create tessellation object, return 0
 
-    // define concave quad data (vertices only)
-    //  0    2
-    //  \ \/ /
-    //   \3 /
-    //    \/
-    //    1
-//     GLdouble quad1[4][3] = { {-1,3,0}, {0,0,0}, {1,3,0}, {0,2,0} };
-	     GLdouble quad1[count][3];
+	GLdouble quad1[count][3];
 	for (i = 0 ; i < count ; i++) {
 		quad1[i][0]=(GLdouble)(p[i].x);
 		quad1[i][1]=(GLdouble)(p[i].y);
@@ -396,36 +369,37 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 	}
 
 
-    // register callback functions
-    gluTessCallback(tess, GLU_TESS_BEGIN, (void (*)(void))tessBeginCB);
-    gluTessCallback(tess, GLU_TESS_END, (void (*)(void))tessEndCB);
-//     gluTessCallback(tess, GLU_TESS_ERROR, (void (*)(void))tessErrorCB);
-    gluTessCallback(tess, GLU_TESS_VERTEX, (void (*)(void))tessVertexCB);
-
-    // tessellate and compile a concave quad into display list
-    // gluTessVertex() takes 3 params: tess object, pointer to vertex coords,
-    // and pointer to vertex data to be passed to vertex callback.
-    // The second param is used only to perform tessellation, and the third
-    // param is the actual vertex data to draw. It is usually same as the second
-    // param, but It can be more than vertex coord, for example, color, normal
-    // and UV coords which are needed for actual drawing.
-    // Here, we are looking at only vertex coods, so the 2nd and 3rd params are
-    // pointing same address.
-    glNewList(id, GL_COMPILE);
-    glColor4f( gc->fr, gc->fg, gc->fb, gc->fa);
-    gluTessBeginPolygon(tess, 0);                   // with NULL data
-        gluTessBeginContour(tess);
-	for (i = 0 ; i < count ; i++) {
-            gluTessVertex(tess, quad1[i], quad1[i]);
-	}
-        gluTessEndContour(tess);
-    gluTessEndPolygon(tess);
-    glEndList();
-
-    gluDeleteTess(tess);        // delete after tessellation
-
-    glCallList(id);
-
+	// register callback functions
+	gluTessCallback(tess, GLU_TESS_BEGIN, (void (*)(void))tessBeginCB);
+	gluTessCallback(tess, GLU_TESS_END, (void (*)(void))tessEndCB);
+	//     gluTessCallback(tess, GLU_TESS_ERROR, (void (*)(void))tessErrorCB);
+	gluTessCallback(tess, GLU_TESS_VERTEX, (void (*)(void))tessVertexCB);
+	
+	// tessellate and compile a concave quad into display list
+	// gluTessVertex() takes 3 params: tess object, pointer to vertex coords,
+	// and pointer to vertex data to be passed to vertex callback.
+	// The second param is used only to perform tessellation, and the third
+	// param is the actual vertex data to draw. It is usually same as the second
+	// param, but It can be more than vertex coord, for example, color, normal
+	// and UV coords which are needed for actual drawing.
+	// Here, we are looking at only vertex coods, so the 2nd and 3rd params are
+	// pointing same address.
+	glNewList(id, GL_COMPILE);
+	glColor4f( gc->fr, gc->fg, gc->fb, gc->fa);
+	gluTessBeginPolygon(tess, 0);                   // with NULL data
+		gluTessBeginContour(tess);
+		for (i = 0 ; i < count ; i++) {
+		gluTessVertex(tess, quad1[i], quad1[i]);
+		}
+		gluTessEndContour(tess);
+	gluTessEndPolygon(tess);
+	glEndList();
+	
+	gluDeleteTess(tess);        // delete after tessellation
+	
+	// Actually display the polygon. 
+	// FIXME It would maybe be better to display them before calling swap_buffers
+	glCallList(id);
 
 }
 
