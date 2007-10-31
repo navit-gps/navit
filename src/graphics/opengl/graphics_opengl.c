@@ -424,93 +424,19 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 
 
 
-void SDL_print(char * label,int x, int y, double angle){
-
-
-
-
+void SDL_print(char * label,int x, int y, double angle)
+{
 	glPushMatrix();
 	glcRenderStyle(GLC_TEXTURE);
 	glColor4f(0,0,0,1);
 	glTranslatef(x, y, 1);
     	glRotatef(180,1,0,0);
-	//dbg(0,"angle : %d\n",angle);
    	glRotatef(angle,0,0,1);
 
 	glScalef(14, 14, 14);
 	// FIXME : add some error checking : glcGetError()
 	glcRenderString(label);
 	glPopMatrix();
-
-	/*
-
-
-// 	glLoadIdentity();
-	frame++;
-	if(frame>400){
-		frame=0;
-	}
- 	glPushMatrix();
-//  	glLoadIdentity();
-	glcRenderStyle(GLC_BITMAP);
-	glColor4f(1,0,0,1);
-	int xc=frame;
-	int yc=frame;
-	glTranslatef(x, y, -frame/10);
-// 	glTranslatef(frame/20, 1500, 0);
-	dbg(0,"Frame : %i\n",frame);
-    	glRotatef(frame,1,0,0);
-//   	glRotatef(angle,0,0,1);
-
-// 	glRotatef(frame,0,1,0);
-
-	float cursor_size=5.0f;
-	glColor4f(0.0f,0.0f,1.0f,0.75f);
-	glBegin(GL_TRIANGLES);
-		glVertex3f( 1, 1-cursor_size, 0.0f);
-		glVertex3f(1-cursor_size,1+cursor_size, 0.0f);
-		glVertex3f( 1+cursor_size,1+cursor_size, 0.0f);
-	glEnd();
-
-	
- 	glScalef(20, 20, 20);
-// 	dbg(1,"rendering label : %s\n",label);
-// 	char *utf8;
-// 	utf8=g_locale_to_utf8(label,-1,NULL,NULL,NULL);
-	// FIXME : add some error checking : glcGetError()
-	glcRenderString("label");
-
-
- 	glPopMatrix();
-
-#ifndef NAVIT__H
-#define NAVIT__H
-
-
-//   glFlush();
-/*
-
-		glPushMatrix();
-		glTranslatef(cx,cy,1);
-	//  	glColor4f( 0,0,0,1);
-	//  	glRasterPos2f( 1,1 );
-		glRotatef(angle,0.0,0.0,1.0);
-
-		glColor4f( gc->fr, gc->fg, gc->fb, gc->fa);
-
-		int linewidth=gc->linewidth;
-
-		glBegin( GL_POLYGON );
-				glVertex2f( -w/2,-linewidth/2 );
-				glVertex2f( -w/2-4,0 );
-				glVertex2f( -w/2,+linewidth/2 );
-				glVertex2f( +w/2,+linewidth/2 );
-				glVertex2f( +w/2+4,0 );
-				glVertex2f( +w/2,-linewidth/2 );
-				glVertex2f( -w/2,+linewidth/2 );
-		glEnd();
-*/
-
 
 }
 
@@ -520,24 +446,6 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 //	dbg(0,"%s : %i,%i, %f\n",text,dx,dy,(180*atan2(dx,dy)/3.14));
 	SDL_print(text,p->x,p->y,(180*atan2(dx,dy)/3.14)-90);
 
-#if 0
-	struct text_render *t;
-
-	if (! font)
-		return;
-	if (bg) {
-		gdk_gc_set_function(fg->gc, GDK_AND_INVERT);
-		gdk_gc_set_function(bg->gc, GDK_OR);
-	}
-
-	t=display_text_render(text, font, dx, dy, p->x, p->y);
-	display_text_draw(t, gr, fg, bg);
-	display_text_free(t);
-	if (bg) {
-		gdk_gc_set_function(fg->gc, GDK_COPY);
-        	gdk_gc_set_function(bg->gc, GDK_COPY);
-	}
-#endif
 }
 
 static void
