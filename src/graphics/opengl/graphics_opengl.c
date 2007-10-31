@@ -312,7 +312,7 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 
 
 
-void SDL_print(char * label,int x, int y, int angle){
+void SDL_print(char * label,int x, int y, double angle){
 
 
 
@@ -322,7 +322,8 @@ void SDL_print(char * label,int x, int y, int angle){
 	glColor4f(0,0,0,1);
 	glTranslatef(x, y, 1);
     	glRotatef(180,1,0,0);
-//   	glRotatef(angle,0,0,1);
+	//dbg(0,"angle : %d\n",angle);
+   	glRotatef(angle,0,0,1);
 
 	glScalef(14, 14, 14);
 	// FIXME : add some error checking : glcGetError()
@@ -404,8 +405,8 @@ void SDL_print(char * label,int x, int y, int angle){
 static void
 draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
-	dbg(2,"%s\n",text);
-	SDL_print(text,p->x,p->y,0);
+//	dbg(0,"%s : %i,%i, %f\n",text,dx,dy,(180*atan2(dx,dy)/3.14));
+	SDL_print(text,p->x,p->y,(180*atan2(dx,dy)/3.14)-90);
 
 #if 0
 	struct text_render *t;
