@@ -5,7 +5,7 @@ SAMPLE_MAP=osm_bbox_11.3,47.9,11.7,48.2
 
 AM_CPPFLAGS = -I$(top_srcdir)/src/fib-1.1 @NAVIT_CFLAGS@ -DPREFIX=\"@prefix@\" -DMODULE=\"navit\"
 
-bin_PROGRAMS = navit
+bin_PROGRAMS = navit osm2navit
 
 pkgdata_DATA = navit.xml
 
@@ -22,7 +22,11 @@ navit_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c data_wind
 	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h profile.h search.h speech.h statusbar.h \
 	transform.h track.h util.h vehicle.h xmlconfig.h
 
+osm2navit_SOURCES = osm2navit.c item.c debug.c
+
 navit_LDADD = @NAVIT_LIBS@ @GPSD_LIBS@ -Lfib-1.1 -lfib
+
+osm2navit_LDADD = @NAVIT_LIBS@  @ZLIB_LIBS@
 
 samplemap: maps/$(SAMPLE_MAP).txt
 
