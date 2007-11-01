@@ -178,6 +178,7 @@ static struct map_rect_priv *
 map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 {
 	struct map_rect_priv *mr;
+	struct tile *t;
 
 	dbg(1,"map_rect_new_binfile\n");
 	mr=g_new0(struct map_rect_priv, 1);
@@ -185,7 +186,14 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 	mr->sel=sel;
 	mr->item.id_hi=0;
 	mr->item.id_lo=0;
-	push_zipfile_tile(mr, map->eoc->zipecenn-1);
+	if (map->eoc) 
+		push_zipfile_tile(mr, map->eoc->zipecenn-1);
+	else {
+		t->start=(int *)(map->fi->begin);
+		t->end=(int *)(map->fi->end);
+		t->zipfile_num=0;
+		push_tile(mr, t);
+	}
 	mr->item.meth=&methods_binfile;
 	mr->item.priv_data=mr;
 	return mr;
@@ -254,7 +262,7 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 			r.lu.y=t->pos_coord[3];
 			r.rl.x=t->pos_coord[2];
 			r.rl.y=t->pos_coord[1];
-			if (!selection_contains(mr->sel, &r)) {
+			if (!mr->m->eoc || !selection_contains(mr->sel, &r)) {
 				continue;
 			}
 			dbg(1,"0x%x\n", t->pos_attr[5]);
@@ -270,7 +278,8 @@ static struct item *
 map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
 	struct tile *t;
-	push_zipfile_tile(mr, id_hi);
+	if (mr->m->eoc) 
+		push_zipfile_tile(mr, id_hi);
 	t=mr->t;
 	t->pos=t->start+id_lo;
 	mr->item.id_hi=id_hi;
