@@ -134,11 +134,16 @@ struct attr_bin debug_attr = {
 };
 char debug_attr_buffer[1024];
 
+struct attr_bin limit_attr = {
+	0, attr_limit
+};
+int limit_attr_value;
+
 static void
 pad_text_attr(struct attr_bin *a, char *buffer)
 {
 	int l;
-	l=strlen(buffer);
+	l=strlen(buffer)+1;
 	while (l % 4) 
 		buffer[l++]='\0';
 	a->len=l/4+1;
@@ -167,6 +172,17 @@ static int parse_tag(char *p)
 		strcpy(label_attr_buffer, v);
 		pad_text_attr(&label_attr, label_attr_buffer);
 		return 1;
+	}
+	if (! strcmp(k,"oneway")) {
+		if (! strcmp(v,"true") || !strcmp(v,"yes")) {
+			limit_attr_value=1;
+			limit_attr.len=2;
+		}
+		if (! strcmp(v,"-1")) {
+			limit_attr_value=2;
+			limit_attr.len=2;
+		}
+			
 	}
 	value_hash=g_hash_table_lookup(key_hash, k);
 	if (! value_hash)
@@ -314,6 +330,7 @@ parse_way(char *p)
 	item.type=type_street_unkn;
 	label_attr.len=0;
 	debug_attr.len=0;
+	limit_attr.len=0;
 	c=sscanf(p, "<way id=\"%d\"", &wayid);
 	if (c != 1)
 		return 0;
@@ -323,7 +340,7 @@ parse_way(char *p)
 }
 
 static void
-write_attr(FILE *out, struct attr_bin *attr, char *buffer)
+write_attr(FILE *out, struct attr_bin *attr, void *buffer)
 {
 	if (attr->len) {
 		fwrite(attr, sizeof(*attr), 1, out);
@@ -340,12 +357,15 @@ end_way(FILE *out)
 		alen+=label_attr.len+1;	
 	if (debug_attr.len)
 		alen+=debug_attr.len+1;	
+	if (limit_attr.len)
+		alen+=limit_attr.len+1;	
 	item.clen=coord_count*2;
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
 	fwrite(coord_buffer, coord_count*sizeof(struct coord), 1, out);
 	write_attr(out, &label_attr, label_attr_buffer);
 	write_attr(out, &debug_attr, debug_attr_buffer);
+	write_attr(out, &limit_attr, &limit_attr_value);
 }
 
 static int
@@ -356,13 +376,16 @@ parse_nd(char *p)
 	c=sscanf(p, "<nd ref=\"%d\"", &ndref);
 	if (c != 1)
 		return 0;
-#if 0
-	node_ref_way(ndref);
-#endif
 	ni=node_item_get(ndref);
-	if (ni) 
+	if (ni) {
+#if 0
 		coord_buffer[coord_count++]=ni->c;
-	else {
+#else
+		coord_buffer[coord_count].y=0;
+		coord_buffer[coord_count++].x=ndref;
+#endif
+		ni->ref_way++;
+	} else {
 		len=strlen(p);
 		if (len > 0 && p[len-1]=='\n')
 			p[len-1]='\0';	
@@ -375,6 +398,31 @@ parse_nd(char *p)
 	return 1;
 }
 
+static void
+save_buffer(char *filename, struct buffer *b)
+{	
+	FILE *f;
+	f=fopen(filename,"w+");
+	fwrite(b->base, b->size, 1, f);
+	fclose(f);
+}
+
+static void
+load_buffer(char *filename, struct buffer *b)
+{
+	FILE *f;
+	if (b->base) 
+		free(b->base);
+	b->malloced=0;
+	f=fopen(filename,"r");
+	fseek(f, 0, SEEK_END);
+	b->size=b->malloced=ftell(f);
+	fprintf(stderr,"reading %d bytes from %s\n", b->size, filename);
+	fseek(f, 0, SEEK_SET);
+	b->base=malloc(b->size);
+	fread(b->base, b->size, 1, f);
+	fclose(f);
+}
 
 static int
 phase1(FILE *in, FILE *out)
@@ -665,8 +713,60 @@ write_tile(char *key, struct tile_head *th, gpointer dummy)
 	fclose(f);
 }
 
+static void
+write_item_part(FILE *out, struct item_bin *orig, int first, int last)
+{
+	struct item_bin new;
+	struct coord *c=(struct coord *)(orig+1);
+	char *attr=(char *)(c+orig->clen/2);
+	int attr_len=orig->len-orig->clen-2;
+	processed_ways++;
+	new.type=orig->type;
+	new.clen=(last-first+1)*2;
+	new.len=new.clen+attr_len+2;
+#if 0
+	fprintf(stderr,"first %d last %d type 0x%x len %d clen %d attr_len %d\n", first, last, new.type, new.len, new.clen, attr_len);
+#endif
+	fwrite(&new, sizeof(new), 1, out);
+	fwrite(c+first, new.clen*4, 1, out);
+	fwrite(attr, attr_len*4, 1, out);
+}
+
 static int
-phase2(FILE *in)
+phase2(FILE *in, FILE *out)
+{
+	struct coord *c;
+	int i,ccount,last,ndref;
+	struct item_bin *ib;
+	struct node_item *ni;
+
+	processed_nodes=processed_ways=processed_relations=processed_tiles=0;
+	sig_alrm(0);
+	while ((ib=read_item(in))) {
+#if 0
+		fprintf(stderr,"type 0x%x len %d clen %d\n", ib->type, ib->len, ib->clen);
+#endif
+		ccount=ib->clen/2;
+		c=(struct coord *)(ib+1);
+		last=0;
+		for (i = 0 ; i < ccount ; i++) {
+			ndref=c[i].x;
+			ni=node_item_get(ndref);
+			c[i]=ni->c;
+			if (ni->ref_way > 1 && i != 0 && i != ccount-1 && ib->type >= type_street_nopass && ib->type <= type_ferry) {
+				write_item_part(out, ib, last, i);
+				last=i;
+			}
+		}
+		write_item_part(out, ib, last, ccount-1);
+	}
+	sig_alrm(0);
+	alarm(0);
+	return 0;
+}
+
+static int
+phase3(FILE *in)
 {
 	struct item_bin *ib;
 	struct tile_head *th;
@@ -903,7 +1003,7 @@ index_submap_add(char *tile)
 }
 
 static int
-phase3(FILE *out)
+phase4(FILE *out)
 {
 	struct zip_eoc eoc = {
 		0x06054b50,
@@ -962,22 +1062,35 @@ phase3(FILE *out)
 
 int main(int argc, char **argv)
 {
-	FILE *tmp;
+	FILE *tmp1,*tmp2;
 	char *map=g_strdup(attrmap);
 	build_attrmap(map);
-	tmp=fopen("tmpfile","w+");
+#if 1
+	tmp1=fopen("tmpfile1","w+");
 	fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
-	phase1(stdin,tmp);
-	fclose(tmp);
+	phase1(stdin,tmp1);
+	fclose(tmp1);
+#if 0
+	save_buffer("coords",&node_buffer);
+#endif
+#else
+	load_buffer("coords",&node_buffer);
+#endif
+	tmp1=fopen("tmpfile1","r");
+	tmp2=fopen("tmpfile2","w+");
+	fprintf(stderr,"PROGRESS: Phase 2: finding intersections\n");
+	phase2(tmp1,tmp2);
+	fclose(tmp2);
+	fclose(tmp1);
 	free(node_buffer.base);
 	node_buffer.base=NULL;
 	node_buffer.malloced=0;
 	node_buffer.size=0;
-	fprintf(stderr,"PROGRESS: Phase 2: generating tiles\n");
-	tmp=fopen("tmpfile","r");
-	phase2(tmp);
-	fclose(tmp);
-	fprintf(stderr,"PROGRESS: Phase 3: assembling map\n");
-	phase3(stdout);
+	fprintf(stderr,"PROGRESS: Phase 3: generating tiles\n");
+	tmp2=fopen("tmpfile2","r");
+	phase3(tmp2);
+	fclose(tmp2);
+	fprintf(stderr,"PROGRESS: Phase 4: assembling map\n");
+	phase4(stdout);
 	return 0;
 }
