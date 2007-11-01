@@ -361,6 +361,7 @@ src/data/Makefile
 src/data/mg/Makefile
 src/data/textfile/Makefile
 src/data/binfile/Makefile
+src/data/garmin/Makefile
 src/data/garmin_img/Makefile
 src/data/poi_geodownload/Makefile
 src/data/poi_geodownload/libmdb/Makefile
@@ -387,11 +388,6 @@ intl/Makefile
 po/Makefile
 ])
 
-if test -d src/data/garmin; then
-      if test "x$use_libgarmin" = "xyes"; then
-              AC_CONFIG_FILES([src/data/garmin/Makefile])
-      fi
-fi
 AC_OUTPUT
 
 
