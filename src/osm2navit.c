@@ -247,6 +247,18 @@ extend_buffer(struct buffer *b)
 	
 }
 
+int node_id_last;
+GHashTable *node_hash;
+
+static void
+node_buffer_to_hash(void)
+{
+	int i,count=node_buffer.size/sizeof(struct node_item);
+	struct node_item *ni=(struct node_item *)node_buffer.base;
+	for (i = 0 ; i < count ; i++) 
+		g_hash_table_insert(node_hash, ni[i].id, i);
+}
+
 static int parse_node(char *p)
 {
 	int c;
@@ -266,6 +278,16 @@ static int parse_node(char *p)
 	ni->c.x=lon*6371000.0*M_PI/180;
 	ni->c.y=log(tan(M_PI_4+lat*M_PI/360))*6371000.0;
 	node_buffer.size+=sizeof(struct node_item);
+	if (! node_hash) {
+		if (ni->id > node_id_last) {
+			node_id_last=ni->id;
+		} else {
+			fprintf(stderr,"INFO: Nodes out of sequence, adding hash\n");
+			node_hash=g_hash_table_new(NULL, NULL);
+			node_buffer_to_hash();
+		}
+	} else 
+		g_hash_table_insert(node_hash, ni->id, ni-(struct node_item *)node_buffer.base);
 	return 1;
 }
 
@@ -276,6 +298,11 @@ node_item_get(int id)
 	int count=node_buffer.size/sizeof(struct node_item);
 	int interval=count/4;
 	int p=count/2;
+	if (node_hash) {
+		int i;
+		i=g_hash_table_lookup(node_hash, id);
+		return ni+i;
+	}
 	while (ni[p].id != id) {
 #if 0
 		fprintf(stderr,"p=%d count=%d interval=%d id=%d ni[p].id=%d\n", p, count, interval, id, ni[p].id);
@@ -1047,14 +1074,19 @@ phase4(FILE *out)
 	}
 	th=g_hash_table_lookup(tile_hash, "");
 	write_zipmember(out, "index", 5, th);
+	processed_tiles++;
 	size+=th->total_size;
-	fprintf(stderr, "DEBUG: wrote %d bytes\n", size);
+	fprintf(stderr, "DEBUG: wrote %d bytes (zip files header)\n", (sizeof(struct zip_lfh)+maxlen)*dir_entries);
+	fprintf(stderr, "DEBUG: wrote %d bytes (zip files)\n", size);
 	fwrite(zipdir_buffer.base, zipdir_buffer.size, 1, out);
+	fprintf(stderr, "DEBUG: wrote %d bytes (zip directory)\n", zipdir_buffer.size);
 	eoc.zipenum=dir_entries;
 	eoc.zipecenn=dir_entries;
 	eoc.zipecsz=zipdir_buffer.size;
 	eoc.zipeofst=zipoffset;
+	fprintf(stderr, "DEBUG: wrote %d bytes (zip end of directory)\n", sizeof(eoc));
 	fwrite(&eoc, sizeof(eoc), 1, out);
+	fprintf(stderr, "DEBUG: overall size %d bytes\n", size+zipdir_buffer.size+sizeof(eoc));
 	sig_alrm(0);
 	alarm(0);
 	return 0;	
