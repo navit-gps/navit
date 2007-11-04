@@ -336,9 +336,9 @@ garmin_poi2item(struct map_rect_priv *mr, struct gobject *o, unsigned char otype
 	int subtype;
 
 	subtype = gar_object_subtype(o);
-	mr->item.id_hi = otype << 8 | subtype;
 	if (mr->mpriv->conv)
-		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POINT, mr->item.id_hi);
+		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POINT, 
+				(otype << 8) | subtype);
 	mr->item.meth = &methods_garmin_point;
 	return &mr->item;
 }
@@ -346,7 +346,6 @@ garmin_poi2item(struct map_rect_priv *mr, struct gobject *o, unsigned char otype
 static struct item *
 garmin_pl2item(struct map_rect_priv *mr, struct gobject *o, unsigned char otype)
 {
-	mr->item.id_hi = otype;
 	if (mr->mpriv->conv)
 		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POLYLINE, otype);
 	mr->item.meth = &methods_garmin_poly;
@@ -356,7 +355,6 @@ garmin_pl2item(struct map_rect_priv *mr, struct gobject *o, unsigned char otype)
 static struct item *
 garmin_pg2item(struct map_rect_priv *mr, struct gobject *o, unsigned char otype)
 {
-	mr->item.id_hi = otype;
 	if (mr->mpriv->conv)
 		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POLYGONE, otype);
 	mr->item.meth = &methods_garmin_poly;
@@ -388,14 +386,14 @@ static struct item *
 gmap_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
 	struct gobject *o;
-	o = mr->objs = gar_get_object(mr->mpriv->g, (void *)id_lo);
+	o = mr->objs = gar_get_object_by_id(mr->mpriv->g, id_hi, id_lo);
 	if (!o) {
 		dlog(1, "Can not find object\n");
 		return NULL;
 	}
 
-	mr->item.id_hi = (int)mr;
-	mr->item.id_lo = (int)o->gptr;
+	mr->item.id_hi = id_hi;
+	mr->item.id_lo = id_lo;
 	mr->item.priv_data = o;
 	mr->item.type = type_none;
 	o->priv_data = mr;
@@ -417,8 +415,8 @@ gmap_rect_get_item(struct map_rect_priv *mr)
 //	dlog(1, "gi:o=%p\n", o);
 	mr->cobj = mr->cobj->next;
 	if (o) {
-		mr->item.id_hi = (int)mr;
-		mr->item.id_lo = (int)o->gptr;
+		mr->item.id_hi = gar_object_mapid(o);
+		mr->item.id_lo = gar_object_index(o);
 		mr->item.priv_data = o;
 		mr->item.type = type_none;
 		o->priv_data = mr;
