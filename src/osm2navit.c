@@ -12,6 +12,8 @@
 #include "item.h"
 #include "zipfile.h"
 
+GHashTable *dedupe_ways_hash;
+
 
 static char *attrmap={
 	"amenity\n"
@@ -148,30 +150,40 @@ pad_text_attr(struct attr_bin *a, char *buffer)
 		buffer[l++]='\0';
 	a->len=l/4+1;
 }
-static int parse_tag(char *p)
+
+static int
+xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size)
 {
-	char *q, *k, *v;
+	int len=strlen(attribute);
+	char *pos,*i,s,attr[len+2];
+	strcpy(attr, attribute);
+	strcpy(attr+len, "=");
+	pos=strstr(xml, attr);
+	if (! pos)
+		return 0;
+	pos+=len+1;
+	s=*pos++;
+	if (! s)
+		return 0;
+	i=index(pos, s);
+	if (! i)
+		return 0;
+	if (i - pos > buffer_size)
+		return 0;
+	strncpy(buffer, pos, i-pos);
+	buffer[i-pos]='\0';
+	return 1;
+}
+
+
+static void
+add_tag(char *k, char *v)
+{
 	GHashTable *value_hash;
-	q=index(p, '"');
-	if (! q)
-		return 0;
-	k=q+1;
-	q=index(k, '"');
-	if (! q)
-		return 0;
-	*q++='\0';
-	q=index(q, '"');
-	if (! q)
-		return 0;
-	v=q+1;
-	q=index(v, '"');
-	if (! q)
-		return 0;
-	*q++='\0';
 	if (! strcmp(k,"name")) {
 		strcpy(label_attr_buffer, v);
 		pad_text_attr(&label_attr, label_attr_buffer);
-		return 1;
+		return;
 	}
 	if (! strcmp(k,"oneway")) {
 		if (! strcmp(v,"true") || !strcmp(v,"yes")) {
@@ -186,14 +198,27 @@ static int parse_tag(char *p)
 	}
 	value_hash=g_hash_table_lookup(key_hash, k);
 	if (! value_hash)
-		return 1;
+		return;
 	item.type=(enum item_type) g_hash_table_lookup(value_hash, v);
 	if (! item.type) {
 		item.type=type_street_unkn;
 		g_hash_table_insert(value_hash, v, (gpointer)item.type);
 	}
+}
+
+static int
+parse_tag(char *p)
+{
+	char k_buffer[1024];
+	char v_buffer[1024];
+	if (!xml_get_attribute(p, "k", k_buffer, 1024))
+		return 0;
+	if (!xml_get_attribute(p, "v", v_buffer, 1024))
+		return 0;
+	add_tag(k_buffer, v_buffer);
 	return 1;
 }
+
 
 struct buffer {
 	int malloced_step;
@@ -256,21 +281,17 @@ node_buffer_to_hash(void)
 	int i,count=node_buffer.size/sizeof(struct node_item);
 	struct node_item *ni=(struct node_item *)node_buffer.base;
 	for (i = 0 ; i < count ; i++) 
-		g_hash_table_insert(node_hash, ni[i].id, i);
+		g_hash_table_insert(node_hash, (gpointer)(ni[i].id), (gpointer)i);
 }
 
-static int parse_node(char *p)
+static void
+add_node(int id, double lat, double lon)
 {
-	int c;
-	double lat, lon;
 	struct node_item *ni;
-
 	if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced) 
 		extend_buffer(&node_buffer);
 	ni=(struct node_item *)(node_buffer.base+node_buffer.size);
-	c=sscanf(p, "<node id=\"%d\" lat=\"%lf\" lon=\"%lf\"",&ni->id,&lat,&lon);
-	if (c != 3)
-		return 0;
+	ni->id=id;
 	ni->ref_node=0;
 	ni->ref_way=0;
 	ni->ref_ref=0;
@@ -282,14 +303,30 @@ static int parse_node(char *p)
 		if (ni->id > node_id_last) {
 			node_id_last=ni->id;
 		} else {
-			fprintf(stderr,"INFO: Nodes out of sequence, adding hash\n");
+			fprintf(stderr,"INFO: Nodes out of sequence (new %d vs old %d), adding hash\n", ni->id, node_id_last);
 			node_hash=g_hash_table_new(NULL, NULL);
 			node_buffer_to_hash();
 		}
 	} else 
-		g_hash_table_insert(node_hash, ni->id, ni-(struct node_item *)node_buffer.base);
+		g_hash_table_insert(node_hash, (gpointer)(ni->id), (gpointer)(ni-(struct node_item *)node_buffer.base));
+}
+
+static int
+parse_node(char *p)
+{
+	char id_buffer[1024];
+	char lat_buffer[1024];
+	char lon_buffer[1024];
+	if (!xml_get_attribute(p, "id", id_buffer, 1024))
+		return 0;
+	if (!xml_get_attribute(p, "lat", lat_buffer, 1024))
+		return 0;
+	if (!xml_get_attribute(p, "lon", lon_buffer, 1024))
+		return 0;
+	add_node(atoi(id_buffer), atof(lat_buffer), atof(lon_buffer));
 	return 1;
 }
+
 
 static struct node_item *
 node_item_get(int id)
@@ -300,7 +337,7 @@ node_item_get(int id)
 	int p=count/2;
 	if (node_hash) {
 		int i;
-		i=g_hash_table_lookup(node_hash, id);
+		i=(int)(g_hash_table_lookup(node_hash, (gpointer)id));
 		return ni+i;
 	}
 	while (ni[p].id != id) {
@@ -350,19 +387,25 @@ node_ref_way(int id)
 
 int wayid;
 
-static int
-parse_way(char *p)
+static void
+add_way(int id)
 {
-	int c;
+	wayid=id;
+	coord_count=0;
 	item.type=type_street_unkn;
 	label_attr.len=0;
 	debug_attr.len=0;
 	limit_attr.len=0;
-	c=sscanf(p, "<way id=\"%d\"", &wayid);
-	if (c != 1)
-		return 0;
-	coord_count=0;
 	sprintf(debug_attr_buffer,"way_id=%d", wayid);
+}
+
+static int
+parse_way(char *p)
+{
+	char id_buffer[1024];
+	if (!xml_get_attribute(p, "id", id_buffer, 1024))
+		return 0;
+	add_way(atoi(id_buffer));
 	return 1;
 }
 
@@ -379,6 +422,12 @@ static void
 end_way(FILE *out)
 {
 	int alen=0;
+
+	if (dedupe_ways_hash) {
+		if (g_hash_table_lookup(dedupe_ways_hash, (gpointer)wayid))
+			return;
+		g_hash_table_insert(dedupe_ways_hash, (gpointer)wayid, (gpointer)1);
+	}
 	pad_text_attr(&debug_attr, debug_attr_buffer);
 	if (label_attr.len)
 		alen+=label_attr.len+1;	
@@ -395,35 +444,42 @@ end_way(FILE *out)
 	write_attr(out, &limit_attr, &limit_attr_value);
 }
 
-static int
-parse_nd(char *p)
+static void
+add_nd(char *p, int ref)
 {
-	int c,ndref,len;
+	int len;
 	struct node_item *ni;
-	c=sscanf(p, "<nd ref=\"%d\"", &ndref);
-	if (c != 1)
-		return 0;
-	ni=node_item_get(ndref);
+	ni=node_item_get(ref);
 	if (ni) {
 #if 0
 		coord_buffer[coord_count++]=ni->c;
 #else
 		coord_buffer[coord_count].y=0;
-		coord_buffer[coord_count++].x=ndref;
+		coord_buffer[coord_count++].x=ref;
 #endif
 		ni->ref_way++;
 	} else {
 		len=strlen(p);
 		if (len > 0 && p[len-1]=='\n')
 			p[len-1]='\0';	
-		fprintf(stderr,"WARNING: way %d: node %d not found (%s)\n",wayid,ndref,p);
+		fprintf(stderr,"WARNING: way %d: node %d not found (%s)\n",wayid,ref,p);
 	}
 	if (coord_count > 65536) {
 		fprintf(stderr,"ERROR: Overflow\n");
 		exit(1);
 	}
+}
+
+static int
+parse_nd(char *p)
+{
+	char ref_buffer[1024];
+	if (!xml_get_attribute(p, "ref", ref_buffer, 1024))
+		return 0;
+	add_nd(p, atoi(ref_buffer));
 	return 1;
 }
+
 
 static void
 save_buffer(char *filename, struct buffer *b)
@@ -1073,20 +1129,22 @@ phase4(FILE *out)
 		len--;
 	}
 	th=g_hash_table_lookup(tile_hash, "");
-	write_zipmember(out, "index", 5, th);
-	processed_tiles++;
-	size+=th->total_size;
-	fprintf(stderr, "DEBUG: wrote %d bytes (zip files header)\n", (sizeof(struct zip_lfh)+maxlen)*dir_entries);
-	fprintf(stderr, "DEBUG: wrote %d bytes (zip files)\n", size);
-	fwrite(zipdir_buffer.base, zipdir_buffer.size, 1, out);
-	fprintf(stderr, "DEBUG: wrote %d bytes (zip directory)\n", zipdir_buffer.size);
-	eoc.zipenum=dir_entries;
-	eoc.zipecenn=dir_entries;
-	eoc.zipecsz=zipdir_buffer.size;
-	eoc.zipeofst=zipoffset;
-	fprintf(stderr, "DEBUG: wrote %d bytes (zip end of directory)\n", sizeof(eoc));
-	fwrite(&eoc, sizeof(eoc), 1, out);
-	fprintf(stderr, "DEBUG: overall size %d bytes\n", size+zipdir_buffer.size+sizeof(eoc));
+	if (th) {
+		write_zipmember(out, "index", 5, th);
+		processed_tiles++;
+		size+=th->total_size;
+		fprintf(stderr, "DEBUG: wrote %d bytes (zip files header)\n", (sizeof(struct zip_lfh)+maxlen)*dir_entries);
+		fprintf(stderr, "DEBUG: wrote %d bytes (zip files)\n", size);
+		fwrite(zipdir_buffer.base, zipdir_buffer.size, 1, out);
+		fprintf(stderr, "DEBUG: wrote %d bytes (zip directory)\n", zipdir_buffer.size);
+		eoc.zipenum=dir_entries;
+		eoc.zipecenn=dir_entries;
+		eoc.zipecsz=zipdir_buffer.size;
+		eoc.zipeofst=zipoffset;
+		fprintf(stderr, "DEBUG: wrote %d bytes (zip end of directory)\n", sizeof(eoc));
+		fwrite(&eoc, sizeof(eoc), 1, out);
+		fprintf(stderr, "DEBUG: overall size %d bytes\n", size+zipdir_buffer.size+sizeof(eoc));
+	}
 	sig_alrm(0);
 	alarm(0);
 	return 0;	
