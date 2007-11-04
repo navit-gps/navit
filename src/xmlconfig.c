@@ -223,7 +223,7 @@ xmlconfig_graphics(struct xmlstate *state)
 	state->element_object = graphics_new(type, attrs);
 	if (! state->element_object)
 		return 0;
-	navit_set_graphics(state->parent->element_object, state->element_object);
+	navit_set_graphics(state->parent->element_object, state->element_object, type);
 	return 1;
 }
 
@@ -238,7 +238,7 @@ xmlconfig_gui(struct xmlstate *state)
 	state->element_object = gui_new(state->parent->element_object, type, attrs);
 	if (! state->element_object)
 		return 0;
-	navit_set_gui(state->parent->element_object, state->element_object);
+	navit_set_gui(state->parent->element_object, state->element_object, type);
 	return 1;
 }
 

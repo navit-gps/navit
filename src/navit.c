@@ -50,8 +50,10 @@ struct navit {
 	GList *mapsets;
 	GList *layouts;
 	struct gui *gui;
+	char *gui_type;
 	struct layout *layout_current;
 	struct graphics *gra;
+	char *gra_type;
 	struct action *action;
 	struct transformation *trans;
 	struct compass *compass;
@@ -212,9 +214,10 @@ navit_new(struct coord *center, enum projection pro, int zoom)
 }
 
 void
-navit_set_gui(struct navit *this_, struct gui *gui)
+navit_set_gui(struct navit *this_, struct gui *gui, char *type)
 {
 	this_->gui=gui;
+	this_->gui_type=g_strdup(type);
 	if (gui_has_main_loop(this_->gui)) {
 		if (! main_loop_gui) {
 			main_loop_gui=this_->gui;
@@ -229,9 +232,10 @@ navit_set_gui(struct navit *this_, struct gui *gui)
 }
 
 void
-navit_set_graphics(struct navit *this_, struct graphics *gra)
+navit_set_graphics(struct navit *this_, struct graphics *gra, char *type)
 {
 	this_->gra=gra;
+	this_->gra_type=g_strdup(type);
 	graphics_register_resize_callback(this_->gra, navit_resize, this_);
 	graphics_register_button_callback(this_->gra, navit_button, this_);
 }
@@ -780,8 +784,18 @@ navit_init(struct navit *this_)
 	GList *l;
 	struct navit_vehicle *nv;
 
-	if (!this_->gui || !this_->gra || gui_set_graphics(this_->gui, this_->gra)) {
-		g_warning("failed to connect graphics to gui\n");
+	if (!this_->gui) {
+		g_warning("failed to instantiate gui '%s'\n",this_->gui_type);
+		navit_destroy(this_);
+		return;
+	}
+	if (!this_->gra) {
+		g_warning("failed to instantiate gui '%s'\n",this_->gra_type);
+		navit_destroy(this_);
+		return;
+	}
+	if (gui_set_graphics(this_->gui, this_->gra)) {
+		g_warning("failed to connect graphics '%s' to gui '%s'\n", this_->gra_type, this_->gui_type);
 		g_warning(" Please see http://navit.sourceforge.net/wiki/index.php/Failed_to_connect_graphics_to_gui\n");
 		g_warning(" for explanations and solutions\n");
 
