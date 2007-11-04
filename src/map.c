@@ -41,6 +41,10 @@ map_new(const char *type, struct attr **attrs)
 	if (data) 
 		m->filename=g_strdup(data->u.str);
 	m->priv=maptype_new(&m->meth, attrs);
+	if (! m->priv) {
+		g_free(m);
+		m=NULL;
+	}
 	return m;
 }
 
