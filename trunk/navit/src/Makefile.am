@@ -28,18 +28,18 @@ navit_LDADD = @NAVIT_LIBS@ @GPSD_LIBS@ -Lfib-1.1 -lfib
 
 osm2navit_LDADD = @NAVIT_LIBS@  @ZLIB_LIBS@
 
-samplemap: maps/$(SAMPLE_MAP).txt
+samplemap: maps/$(SAMPLE_MAP).bin
 
-maps/$(SAMPLE_MAP).osm:
+maps/$(SAMPLE_MAP).osm.bz2:
 	echo "Downloading osm sample map"
 	mkdir -p maps
-	wget -O maps/$(SAMPLE_MAP).osm.tmp http://navit.sourceforge.net/maps/$(SAMPLE_MAP).osm
-	mv maps/$(SAMPLE_MAP).osm.tmp maps/$(SAMPLE_MAP).osm
+	wget -O maps/$(SAMPLE_MAP).osm.bz2.tmp http://navit.sourceforge.net/maps/$(SAMPLE_MAP).osm.bz2
+	mv maps/$(SAMPLE_MAP).osm.bz2.tmp maps/$(SAMPLE_MAP).osm.bz2
 
-maps/$(SAMPLE_MAP).txt: maps/$(SAMPLE_MAP).osm $(top_srcdir)/src/script/osm2navit
+maps/$(SAMPLE_MAP).bin: maps/$(SAMPLE_MAP).osm.bz2 $(top_srcdir)/src/osm2navit
 	echo "Converting osm sample map"
-	$(top_srcdir)/src/script/osm2navit <maps/$(SAMPLE_MAP).osm >maps/$(SAMPLE_MAP).txt.tmp
-	mv maps/$(SAMPLE_MAP).txt.tmp maps/$(SAMPLE_MAP).txt
+	bzcat maps/$(SAMPLE_MAP).osm.bz2 | $(top_srcdir)/src/osm2navit >maps/$(SAMPLE_MAP).bin.tmp
+	mv maps/$(SAMPLE_MAP).bin.tmp maps/$(SAMPLE_MAP).bin
 
 distclean-local:
-	rm -f maps/$(SAMPLE_MAP).osm maps/$(SAMPLE_MAP).txt
+	rm -f maps/$(SAMPLE_MAP).osm.bz2 maps/$(SAMPLE_MAP).bin

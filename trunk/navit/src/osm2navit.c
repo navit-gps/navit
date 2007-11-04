@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <getopt.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -307,8 +308,12 @@ add_node(int id, double lat, double lon)
 			node_hash=g_hash_table_new(NULL, NULL);
 			node_buffer_to_hash();
 		}
-	} else 
-		g_hash_table_insert(node_hash, (gpointer)(ni->id), (gpointer)(ni-(struct node_item *)node_buffer.base));
+	} else
+		if (!g_hash_table_lookup(node_hash, (gpointer)(ni->id))) 
+			g_hash_table_insert(node_hash, (gpointer)(ni->id), (gpointer)(ni-(struct node_item *)node_buffer.base));
+		else
+			node_buffer.size-=sizeof(struct node_item);
+
 }
 
 static int
@@ -1154,7 +1159,35 @@ int main(int argc, char **argv)
 {
 	FILE *tmp1,*tmp2;
 	char *map=g_strdup(attrmap);
+	int c;
+
+	while (1) {
+#if 0
+		int this_option_optind = optind ? optind : 1;
+#endif
+		int option_index = 0;
+		static struct option long_options[] = {
+			{"dedupe-ways", 0, 0, 'w'},
+			{0, 0, 0, 0}
+		};
+		c = getopt_long (argc, argv, "w", long_options, &option_index);
+		if (c == -1)
+			break;
+		switch (c) {
+		case 'w':
+			dedupe_ways_hash=g_hash_table_new(NULL, NULL);
+			break;
+		case '?':
+			exit(1);
+			break;
+		default:
+			printf("c=%d\n", c);
+		}	
+
+	}
 	build_attrmap(map);
+
+
 #if 1
 	tmp1=fopen("tmpfile1","w+");
 	fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
