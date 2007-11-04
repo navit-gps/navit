@@ -319,6 +319,11 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 	m->filename=g_strdup(wexp_data[0]);
 	dbg(0,"file_create %s\n", m->filename);
 	m->fi=file_create(m->filename);
+	if (! m->fi) {
+		dbg(0,"Failed to load %s\n", m->filename);
+		g_free(m);
+		return NULL;
+	}
 	file_wordexp_destroy(wexp);
 	magic=(int *)(m->fi->begin);
 	if (*magic == 0x04034b50) {
