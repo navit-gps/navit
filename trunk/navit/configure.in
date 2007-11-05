@@ -28,6 +28,10 @@ AC_ARG_ENABLE(avoid-float, [  --enable-avoid-float              avoid floating p
 test x"${AVOID_FLOAT}" = xyes && AC_DEFINE(AVOID_FLOAT,[],Define to avoid floating point)
 
 AC_ARG_ENABLE(libgps, [  --disable-libgps             don't use libgps], USE_LIBGPS=$enableval, USE_LIBGPS=yes)
+
+AC_ARG_ENABLE(samplemap, [  --disable-samplemap             don't build the samplemap], samplemap=$enableval, samplemap=yes)
+AM_CONDITIONAL(BUILD_SAMPLEMAP, [test "x$samplemap" = "xyes"])
+
 AC_PATH_X
 if test x"$have_x" != xyes; then
         echo "Can not find X"
@@ -430,6 +434,12 @@ if test "x$use_libgarmin" = "xyes"
 	echo "Garmin IMG  : ENABLED"
 	else
 	echo "Garmin IMG  : DISABLED (you don't have libgarmin)"
+fi
+if test "x$samplemap" = "xyes"
+	then
+	echo "Samplemap   : ENABLED"
+	else
+	echo "Samplemap   : DISABLED"
 fi
 if  [ test x"$gtk2_pkgconfig" != xyes ] && [ test x"$sdl" != xyes ]
 	then

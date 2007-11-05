@@ -1,9 +1,9 @@
 include $(top_srcdir)/Makefile.inc
-SUBDIRS=binding data fib-1.1 gui graphics osd speech vehicle xpm
-
 DIST_SUBDIRS=binding data fib-1.1 gui graphics osd speech vehicle xpm maps
-
-SAMPLE_MAP=osm_bbox_11.3,47.9,11.7,48.2
+SUBDIRS=binding data fib-1.1 gui graphics osd speech vehicle xpm
+if BUILD_SAMPLEMAP
+  SUBDIRS += maps
+endif
 
 AM_CPPFLAGS = -I$(top_srcdir)/src/fib-1.1 @NAVIT_CFLAGS@ -DPREFIX=\"@prefix@\" -DMODULE=\"navit\"
 BUILT_SOURCES=osm2navit
@@ -29,10 +29,3 @@ osm2navit_SOURCES = osm2navit.c item.c debug.c zipfile.h
 navit_LDADD = @NAVIT_LIBS@ @GPSD_LIBS@ -Lfib-1.1 -lfib
 
 osm2navit_LDADD = @NAVIT_LIBS@  @ZLIB_LIBS@
-
-samplemap:
-	make -C maps
-
-installsamplemap:
-	make -C maps install
-
