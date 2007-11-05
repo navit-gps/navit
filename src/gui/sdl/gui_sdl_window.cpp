@@ -226,7 +226,8 @@ static int gui_run_main_loop(struct gui_priv *this_)
 
  		if(enable_timer)
  			profile(0,"graphics_redraw");
- 		g_main_context_iteration (NULL, FALSE);
+ 		if (!g_main_context_iteration (NULL, FALSE))
+ 			sleep(1);
 // 		profile_timer("main context");
 
 	//	graphics_get_data(this_->gra,DLid);
