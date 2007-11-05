@@ -5,7 +5,7 @@
 # Vaclav Cerny <vatoz@seznam.cz>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: navit_cs\n"
+"Project-Id-Version: Navit 0.0.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-05 21:44+0100\n"
 "PO-Revision-Date: 2007-09-22 10:34+0200\n"
