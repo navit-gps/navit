@@ -178,7 +178,7 @@ static struct map_rect_priv *
 map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 {
 	struct map_rect_priv *mr;
-	struct tile *t;
+	struct tile t;
 
 	dbg(1,"map_rect_new_binfile\n");
 	mr=g_new0(struct map_rect_priv, 1);
@@ -189,10 +189,10 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 	if (map->eoc) 
 		push_zipfile_tile(mr, map->eoc->zipecenn-1);
 	else {
-		t->start=(int *)(map->fi->begin);
-		t->end=(int *)(map->fi->end);
-		t->zipfile_num=0;
-		push_tile(mr, t);
+		t.start=(int *)(map->fi->begin);
+		t.end=(int *)(map->fi->end);
+		t.zipfile_num=0;
+		push_tile(mr, &t);
 	}
 	mr->item.meth=&methods_binfile;
 	mr->item.priv_data=mr;
