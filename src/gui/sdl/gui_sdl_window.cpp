@@ -387,7 +387,7 @@ bool ToggleView(const CEGUI::EventArgs& event)
 bool MoveCamera(const CEGUI::EventArgs& event){
 	
 	CEGUI::Scrollbar * sb = static_cast<const CEGUI::Scrollbar *>(CEGUI::WindowManager::getSingleton().getWindow("OSD/Scrollbar1"));
-// 	printf("moving : %f\n",sb->getScrollPosition());
+ 	dbg(0,"moving : %f\n",sb->getScrollPosition());
 	eyeZ=-sb->getScrollPosition();
 	if (eyeZ>-100){
 		eyeZ=-100;
