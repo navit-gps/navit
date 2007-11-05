@@ -1155,6 +1155,9 @@ phase4(FILE *out)
 	return 0;	
 }
 
+#define TMPFILE1 "tmpfile1"
+#define TMPFILE2 "tmpfile2"
+
 int main(int argc, char **argv)
 {
 	FILE *tmp1,*tmp2;
@@ -1206,7 +1209,7 @@ int main(int argc, char **argv)
 
 
 #if 1
-	tmp1=fopen("tmpfile1","w+");
+	tmp1=fopen(TMPFILE1,"w+");
 	fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
 	phase1(stdin,tmp1);
 	fclose(tmp1);
@@ -1216,24 +1219,24 @@ int main(int argc, char **argv)
 #else
 	load_buffer("coords",&node_buffer);
 #endif
-	tmp1=fopen("tmpfile1","r");
-	tmp2=fopen("tmpfile2","w+");
+	tmp1=fopen(TMPFILE1,"r");
+	tmp2=fopen(TMPFILE2,"w+");
 	fprintf(stderr,"PROGRESS: Phase 2: finding intersections\n");
 	phase2(tmp1,tmp2);
 	fclose(tmp2);
 	fclose(tmp1);
 	if(!keep_tmpfiles)
-		remove(tmp1);
+		remove(TMPFILE1);
 	free(node_buffer.base);
 	node_buffer.base=NULL;
 	node_buffer.malloced=0;
 	node_buffer.size=0;
 	fprintf(stderr,"PROGRESS: Phase 3: generating tiles\n");
-	tmp2=fopen("tmpfile2","r");
+	tmp2=fopen(TMPFILE2,"r");
 	phase3(tmp2);
 	fclose(tmp2);
 	if(!keep_tmpfiles)
-		remove(tmp2);
+		remove(TMPFILE2);
 	fprintf(stderr,"PROGRESS: Phase 4: assembling map\n");
 	phase4(stdout);
 	return 0;
