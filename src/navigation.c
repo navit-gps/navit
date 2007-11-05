@@ -553,7 +553,7 @@ navigation_list_destroy(struct navigation_list *this_)
 static void
 navigation_call_callbacks(struct navigation *this_, int force_speech)
 {
-	int distance, level;
+	int distance, level = 0;
 	void *p=this_;
 	callback_list_call(this_->callback, 1, &p);
 	distance=round_distance(this_->first->dest_length-this_->cmd_first->itm->dest_length);

@@ -108,6 +108,7 @@ attr_data_get(struct attr *attr)
 	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) {
 		return &attr->u.num;
 	}
+	return NULL;
 }
 
 void
