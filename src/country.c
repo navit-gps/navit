@@ -99,40 +99,40 @@ struct country_search {
 static int
 country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
-        struct country_search *this=priv_data;
-	struct country *country=this->country;
+        struct country_search *this_=priv_data;
+	struct country *country=this_->country;
 
         attr->type=attr_type;
         switch (attr_type) {
         case attr_any:
-                while (this->attr_next != attr_none) {
-                        if (country_attr_get(this, this->attr_next, attr))
+                while (this_->attr_next != attr_none) {
+                        if (country_attr_get(this_, this_->attr_next, attr))
                                 return 1;
                 }
                 return 0;
         case attr_label:
 		attr->u.str=gettext(country->name);
-		this->attr_next=attr_country_id;
+		this_->attr_next=attr_country_id;
 		return 1;
 	case attr_country_id:
 		attr->u.num=country->id;
-		this->attr_next=country->car ? attr_country_car : attr_country_iso2;
+		this_->attr_next=country->car ? attr_country_car : attr_country_iso2;
 		return 1;
         case attr_country_car:
 		attr->u.str=country->car;
-		this->attr_next=attr_country_iso2;
+		this_->attr_next=attr_country_iso2;
 		return attr->u.str ? 1 : 0;
         case attr_country_iso2:
 		attr->u.str=country->iso2;
-		this->attr_next=attr_country_iso3;
+		this_->attr_next=attr_country_iso3;
 		return 1;
         case attr_country_iso3:
 		attr->u.str=country->iso3;
-		this->attr_next=attr_country_name;
+		this_->attr_next=attr_country_name;
 		return 1;
         case attr_country_name:
 		attr->u.str=gettext(country->name);
-		this->attr_next=attr_none;
+		this_->attr_next=attr_none;
 		return 1;
  	default:
                 return 0;
@@ -170,36 +170,36 @@ country_search_new(struct attr *search, int partial)
 }
 
 static int
-match(struct country_search *this, enum attr_type type, const char *name)
+match(struct country_search *this_, enum attr_type type, const char *name)
 {
 	int ret;
 	if (!name)
 		return 0;
-	if (this->search.type != type && this->search.type != attr_country_all)
+	if (this_->search.type != type && this_->search.type != attr_country_all)
 		return 0;
-	if (this->partial)
-		ret=(strncasecmp(this->search.u.str, name, this->len) == 0);
+	if (this_->partial)
+		ret=(strncasecmp(this_->search.u.str, name, this_->len) == 0);
 	else
-		ret=(strcasecmp(this->search.u.str, name) == 0);
+		ret=(strcasecmp(this_->search.u.str, name) == 0);
 	return ret;
 	
 }
 
 
 struct item *
-country_search_get_item(struct country_search *this)
+country_search_get_item(struct country_search *this_)
 {
 	for (;;) {
-		if (this->count >= sizeof(country)/sizeof(struct country))
+		if (this_->count >= sizeof(country)/sizeof(struct country))
 			return NULL;
-		this->country=&country[this->count++];
-		if ((this->search.type == attr_country_id && this->search.u.num == this->country->id) ||
-                    match(this, attr_country_iso3, this->country->iso3) ||
-		    match(this, attr_country_iso2, this->country->iso2) ||
-		    match(this, attr_country_car, this->country->car) ||
-		    match(this, attr_country_name, gettext(this->country->name))) {
-			this->item.id_lo=this->country->id;
-			return &this->item;
+		this_->country=&country[this_->count++];
+		if ((this_->search.type == attr_country_id && this_->search.u.num == this_->country->id) ||
+                    match(this_, attr_country_iso3, this_->country->iso3) ||
+		    match(this_, attr_country_iso2, this_->country->iso2) ||
+		    match(this_, attr_country_car, this_->country->car) ||
+		    match(this_, attr_country_name, gettext(this_->country->name))) {
+			this_->item.id_lo=this_->country->id;
+			return &this_->item;
 		}
 	}
 }
@@ -223,7 +223,7 @@ country_default(void)
 }
 
 void
-country_search_destroy(struct country_search *this)
+country_search_destroy(struct country_search *this_)
 {
-	g_free(this);
+	g_free(this_);
 }
