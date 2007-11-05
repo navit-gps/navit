@@ -225,7 +225,7 @@ AC_CHECK_LIB(CEGUIDevILImageCodec, main,
 	 $OPENGL_LIBS
 )
 
-AC_CHECK_LIB(CEGUITGAImageCodec, main,
+AC_CHECK_LIB(CEGUITGAImageCodec, createImageCodec,
 	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUITGAImageCodec"],
 	 [echo "GUITGAImageCodec not found/not working, disabled."],
 	 $OPENGL_LIBS
@@ -390,6 +390,7 @@ src/vehicle/Makefile
 src/vehicle/file/Makefile
 src/vehicle/gpsd/Makefile
 src/xpm/Makefile
+src/maps/Makefile
 intl/Makefile
 po/Makefile
 ])

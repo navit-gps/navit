@@ -28,18 +28,9 @@ navit_LDADD = @NAVIT_LIBS@ @GPSD_LIBS@ -Lfib-1.1 -lfib
 
 osm2navit_LDADD = @NAVIT_LIBS@  @ZLIB_LIBS@
 
-samplemap: maps/$(SAMPLE_MAP).bin
+samplemap:
+	make -C maps
 
-maps/$(SAMPLE_MAP).osm.bz2:
-	echo "Downloading osm sample map"
-	mkdir -p maps
-	wget -O maps/$(SAMPLE_MAP).osm.bz2.tmp http://navit.sourceforge.net/maps/$(SAMPLE_MAP).osm.bz2
-	mv maps/$(SAMPLE_MAP).osm.bz2.tmp maps/$(SAMPLE_MAP).osm.bz2
+installsamplemap:
+	make -C maps install
 
-maps/$(SAMPLE_MAP).bin: maps/$(SAMPLE_MAP).osm.bz2 $(top_srcdir)/src/osm2navit
-	echo "Converting osm sample map"
-	bzcat maps/$(SAMPLE_MAP).osm.bz2 | $(top_srcdir)/src/osm2navit >maps/$(SAMPLE_MAP).bin.tmp
-	mv maps/$(SAMPLE_MAP).bin.tmp maps/$(SAMPLE_MAP).bin
-
-distclean-local:
-	rm -f maps/$(SAMPLE_MAP).osm.bz2 maps/$(SAMPLE_MAP).bin
