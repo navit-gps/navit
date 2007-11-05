@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-10-30 15:35+0100\n"
+"POT-Creation-Date: 2007-11-05 21:44+0100\n"
 "PO-Revision-Date: 2007-10-30 16:26+0100\n"
 "Last-Translator: Bendik Brenne <bendik@xplore.nu>\n"
 "Language-Team: Bendik Brenne <bendik@xplore.nu>\n"
@@ -180,284 +180,284 @@ msgstr "Sving %s%s %s"
 msgid "You have reached your destination %s"
 msgstr "Du har nådd ditt reisemål %s"
 
-#: ../src/navit.c:439 ../src/gui/gtk/gui_gtk_action.c:180
+#: ../src/navit.c:449 ../src/gui/gtk/gui_gtk_action.c:180
 msgid "Layout"
 msgstr "Layout"
 
-#: ../src/navit.c:452
+#: ../src/navit.c:462
 msgid "Projection"
 msgstr "Projeksjon"
 
-#: ../src/country.c:23
+#: ../src/country.c:24
 msgid "Czech Republic"
 msgstr "Tsjekkia"
 
-#: ../src/country.c:24
+#: ../src/country.c:25
 msgid "Slovakia"
 msgstr "Slovakia"
 
-#: ../src/country.c:25
+#: ../src/country.c:26
 msgid "San Marino"
 msgstr "San Marino"
 
-#: ../src/country.c:26
+#: ../src/country.c:27
 msgid "Estonia"
 msgstr "Estland"
 
-#: ../src/country.c:27
+#: ../src/country.c:28
 msgid "Georgia"
 msgstr "Georgia"
 
-#: ../src/country.c:28
+#: ../src/country.c:29
 msgid "Latvia"
 msgstr "Latvia"
 
-#: ../src/country.c:29
+#: ../src/country.c:30
 msgid "Lithuania"
 msgstr "Litauen"
 
-#: ../src/country.c:30
+#: ../src/country.c:31
 msgid "Moldova"
 msgstr "Moldova"
 
-#: ../src/country.c:31
+#: ../src/country.c:32
 msgid "Russian Federation"
 msgstr "Russland"
 
-#: ../src/country.c:32
+#: ../src/country.c:33
 msgid "Ukraine"
 msgstr "Ukraina"
 
-#: ../src/country.c:33
+#: ../src/country.c:34
 msgid "Belarus"
 msgstr "Hvite-Russland"
 
-#: ../src/country.c:34
+#: ../src/country.c:35
 msgid "Egypt"
 msgstr "Egypt"
 
-#: ../src/country.c:35
+#: ../src/country.c:36
 msgid "Greece"
 msgstr "Hellas"
 
-#: ../src/country.c:36
+#: ../src/country.c:37
 msgid "Netherlands"
 msgstr "Nederland"
 
-#: ../src/country.c:37
+#: ../src/country.c:38
 msgid "Belgium"
 msgstr "Belgia"
 
-#: ../src/country.c:38
+#: ../src/country.c:39
 msgid "France"
 msgstr "Frankrike"
 
-#: ../src/country.c:39
+#: ../src/country.c:40
 msgid "Spain"
 msgstr "Spania"
 
-#: ../src/country.c:40
+#: ../src/country.c:41
 msgid "Hungary"
 msgstr "Ungarn"
 
-#: ../src/country.c:41
+#: ../src/country.c:42
 msgid "Italy"
 msgstr "Italia"
 
-#: ../src/country.c:42
+#: ../src/country.c:43
 msgid "Romania"
 msgstr "Romania"
 
-#: ../src/country.c:43
+#: ../src/country.c:44
 msgid "Switzerland"
 msgstr "Sveits"
 
-#: ../src/country.c:44
+#: ../src/country.c:45
 msgid "Austria"
 msgstr "Østerrike"
 
-#: ../src/country.c:45
+#: ../src/country.c:46
 msgid "United Kingdom"
 msgstr "Storbritannia"
 
-#: ../src/country.c:46
+#: ../src/country.c:47
 msgid "Denmark"
 msgstr "Danmark"
 
-#: ../src/country.c:47
+#: ../src/country.c:48
 msgid "Sweden"
 msgstr "Sverige"
 
-#: ../src/country.c:48
+#: ../src/country.c:49
 msgid "Norway"
 msgstr "Norge"
 
-#: ../src/country.c:49
+#: ../src/country.c:50
 msgid "Poland"
 msgstr "Polen"
 
-#: ../src/country.c:50
+#: ../src/country.c:51
 msgid "Germany"
 msgstr "Tyskland"
 
-#: ../src/country.c:51
+#: ../src/country.c:52
 msgid "Gibraltar"
 msgstr "Gibraltar"
 
-#: ../src/country.c:52
+#: ../src/country.c:53
 msgid "Portugal"
 msgstr "Portugal"
 
-#: ../src/country.c:53
+#: ../src/country.c:54
 msgid "Luxembourg"
 msgstr "Luxembourg"
 
-#: ../src/country.c:54
+#: ../src/country.c:55
 msgid "Ireland"
 msgstr "Irland"
 
-#: ../src/country.c:55
+#: ../src/country.c:56
 msgid "Iceland"
 msgstr "Island"
 
-#: ../src/country.c:56
+#: ../src/country.c:57
 msgid "Albania"
 msgstr "Albania"
 
-#: ../src/country.c:57
+#: ../src/country.c:58
 msgid "Malta"
 msgstr "Malta"
 
-#: ../src/country.c:58
+#: ../src/country.c:59
 msgid "Cyprus"
 msgstr "Kypros"
 
-#: ../src/country.c:59
+#: ../src/country.c:60
 msgid "Finland"
 msgstr "Finnland"
 
-#: ../src/country.c:60
+#: ../src/country.c:61
 msgid "Bulgaria"
 msgstr "Bulgaria"
 
-#: ../src/country.c:61
+#: ../src/country.c:62
 msgid "Lebanon"
 msgstr "Libanon"
 
-#: ../src/country.c:62
+#: ../src/country.c:63
 msgid "Andorra"
 msgstr "Andorra"
 
-#: ../src/country.c:63
+#: ../src/country.c:64
 msgid "Syria"
 msgstr "Syria"
 
-#: ../src/country.c:64
+#: ../src/country.c:65
 #, fuzzy
 msgid "Saudi Arabia"
 msgstr "Saudi-Arabia"
 
-#: ../src/country.c:65
+#: ../src/country.c:66
 msgid "Libia"
 msgstr "Libya"
 
-#: ../src/country.c:66
+#: ../src/country.c:67
 msgid "Israel"
 msgstr "Israel"
 
-#: ../src/country.c:67
+#: ../src/country.c:68
 msgid "Palestinia"
 msgstr "Palestina"
 
-#: ../src/country.c:68
+#: ../src/country.c:69
 msgid "Liechtenstein"
 msgstr "Lichtenstein"
 
-#: ../src/country.c:69
+#: ../src/country.c:70
 msgid "Morocco"
 msgstr "Marokko"
 
-#: ../src/country.c:70
+#: ../src/country.c:71
 msgid "Algeria"
 msgstr "Algeria"
 
-#: ../src/country.c:71
+#: ../src/country.c:72
 msgid "Tunisia"
 msgstr "Tunisia"
 
-#: ../src/country.c:72
+#: ../src/country.c:73
 msgid "Serbia"
 msgstr "Serbia"
 
-#: ../src/country.c:73
+#: ../src/country.c:74
 msgid "Jordan"
 msgstr "Jordan"
 
-#: ../src/country.c:74
+#: ../src/country.c:75
 msgid "Croatia"
 msgstr "Kroatia"
 
-#: ../src/country.c:75
+#: ../src/country.c:76
 msgid "Slovenia"
 msgstr "Slovenia"
 
-#: ../src/country.c:76
+#: ../src/country.c:77
 msgid "Bosnia and Herzegovina"
 msgstr "Bosnia and Herzegovina"
 
-#: ../src/country.c:77
+#: ../src/country.c:78
 msgid "Macedonia"
 msgstr "Makedonia"
 
-#: ../src/country.c:78
+#: ../src/country.c:79
 msgid "Turkey"
 msgstr "Tyrkia"
 
-#: ../src/country.c:79
+#: ../src/country.c:80
 msgid "Monaco"
 msgstr "Monaco"
 
-#: ../src/country.c:80
+#: ../src/country.c:81
 msgid "Azerbaijan"
 msgstr "Azerbaijan"
 
-#: ../src/country.c:81
+#: ../src/country.c:82
 msgid "Armenia"
 msgstr "Armenia"
 
-#: ../src/country.c:82
+#: ../src/country.c:83
 msgid "Faroe Islands"
 msgstr "Færøyene"
 
-#: ../src/country.c:83
+#: ../src/country.c:84
 msgid "Western Sahara"
 msgstr "Vest-Sahara"
 
-#: ../src/country.c:84
+#: ../src/country.c:85
 msgid "Svalbard and Jan Mayen"
 msgstr "Svalbard og Jan Mayen"
 
-#: ../src/gui/gtk/destination.c:316
+#: ../src/gui/gtk/destination.c:325
 msgid "Country"
 msgstr "Land"
 
-#: ../src/gui/gtk/destination.c:318
+#: ../src/gui/gtk/destination.c:327
 msgid "Zip Code"
 msgstr "Postnummer"
 
-#: ../src/gui/gtk/destination.c:320
+#: ../src/gui/gtk/destination.c:329
 msgid "City"
 msgstr "By"
 
-#: ../src/gui/gtk/destination.c:322
+#: ../src/gui/gtk/destination.c:331
 msgid "District/Township"
 msgstr "Distrikt/Kommune"
 
-#: ../src/gui/gtk/destination.c:325
+#: ../src/gui/gtk/destination.c:334
 msgid "Street"
 msgstr "Gate"
 
-#: ../src/gui/gtk/destination.c:327
+#: ../src/gui/gtk/destination.c:336
 msgid "Number"
 msgstr "Nummer"
 
@@ -489,62 +489,62 @@ msgstr "Oppdater"
 msgid "Roadbook"
 msgstr "Kjørebok"
 
-#: ../src/gui/gtk/gui_gtk_action.c:185
+#: ../src/gui/gtk/gui_gtk_action.c:186 ../src/gui/gtk/gui_gtk_action.c:188
 msgid "Info"
 msgstr "Info"
 
-#: ../src/gui/gtk/gui_gtk_action.c:186
+#: ../src/gui/gtk/gui_gtk_action.c:190
 msgid "Destination"
 msgstr "Destinasjon"
 
-#: ../src/gui/gtk/gui_gtk_action.c:187
+#: ../src/gui/gtk/gui_gtk_action.c:191
 msgid "Clear"
 msgstr "Fjern"
 
-#: ../src/gui/gtk/gui_gtk_action.c:188
+#: ../src/gui/gtk/gui_gtk_action.c:192
 msgid "Test"
 msgstr "Test"
 
-#: ../src/gui/gtk/gui_gtk_action.c:189
+#: ../src/gui/gtk/gui_gtk_action.c:193
 msgid "_Quit"
 msgstr "Avslutt"
 
-#: ../src/gui/gtk/gui_gtk_action.c:196
+#: ../src/gui/gtk/gui_gtk_action.c:200
 msgid "Cursor"
 msgstr "Markør"
 
-#: ../src/gui/gtk/gui_gtk_action.c:197
+#: ../src/gui/gtk/gui_gtk_action.c:201
 msgid "Tracking"
 msgstr "Sporing"
 
-#: ../src/gui/gtk/gui_gtk_action.c:198
+#: ../src/gui/gtk/gui_gtk_action.c:202
 msgid "Orientation"
 msgstr "Orientering"
 
-#: ../src/gui/gtk/gui_gtk_action.c:199
+#: ../src/gui/gtk/gui_gtk_action.c:204 ../src/gui/gtk/gui_gtk_action.c:206
 msgid "Fullscreen"
 msgstr "Fullskjerm"
 
-#: ../src/gui/gtk/gui_gtk_action.c:206
+#: ../src/gui/gtk/gui_gtk_action.c:214
 msgid "Data"
 msgstr "Data"
 
-#: ../src/gui/gtk/gui_gtk_action.c:207
+#: ../src/gui/gtk/gui_gtk_action.c:215
 msgid "VisibleBlocks"
 msgstr "Synlige blokker"
 
-#: ../src/gui/gtk/gui_gtk_action.c:208
+#: ../src/gui/gtk/gui_gtk_action.c:216
 msgid "VisibleTowns"
 msgstr "Synlige byer"
 
-#: ../src/gui/gtk/gui_gtk_action.c:209
+#: ../src/gui/gtk/gui_gtk_action.c:217
 msgid "VisiblePolys"
 msgstr "Synlige polygon"
 
-#: ../src/gui/gtk/gui_gtk_action.c:210
+#: ../src/gui/gtk/gui_gtk_action.c:218
 msgid "VisibleStreets"
 msgstr "Synlige gater"
 
-#: ../src/gui/gtk/gui_gtk_action.c:211
+#: ../src/gui/gtk/gui_gtk_action.c:219
 msgid "VisiblePoints"
 msgstr "Synlige punkt"
