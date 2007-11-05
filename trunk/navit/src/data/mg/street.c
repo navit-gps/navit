@@ -467,16 +467,21 @@ street_search_compare_do(struct map_rect_priv *mr, int country, int town_assoc, 
 	dbg(1,"enter");
 	dbg(1,"country 0x%x town_assoc 0x%x name '%s'\n", country, town_assoc, name);
 	d=(mr->search_item.id_hi & 0xffff)-country;
-	dbg(1,"country %d\n", d);
+	dbg(1,"country %d (%d vs %d)\n", d, mr->search_item.id_hi & 0xffff, country);
 	if (!d) {
-		d=mr->search_item.id_lo-town_assoc;
-		dbg(1,"assoc %d 0x%x-0x%x\n",d, mr->search_item.id_lo, town_assoc);
-		if (! d) {
+		if (mr->search_item.id_lo == town_assoc ) {
+			dbg(1,"town_assoc match (0x%x)\n", town_assoc);
 			if (mr->search_partial)
 				d=strncasecmp(mr->search_str, name, strlen(mr->search_str));
 			else
 				d=strcasecmp(mr->search_str, name);
 			dbg(1,"string %d\n", d);
+		} else {
+			if (town_assoc < mr->search_item.id_lo)
+				d=1;
+			else
+				d=-1;
+			dbg(1,"assoc %d 0x%x-0x%x\n",d, mr->search_item.id_lo, town_assoc);
 		}
 	}
 	dbg(1,"d=%d\n", d);
