@@ -23,10 +23,10 @@ ATTR(y)
 ATTR(flush_size)
 ATTR(flush_time)
 ATTR(zipfile_ref)
+ATTR(country_id)
 /* boolean */
 ATTR(overwrite)
 ATTR2(0x0002ffff,type_int_end)
-
 ATTR2(0x00030000,type_string_begin)
 ATTR(type)
 ATTR(label)

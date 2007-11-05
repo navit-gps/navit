@@ -121,7 +121,7 @@ popup_show_attr_val(void *menu, struct attr *attr)
 {
 	char *attr_name=attr_to_name(attr->type);
 
-	if (attr->type == attr_limit) 
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
 		popup_printf(menu, menu_type_menu, "%s: %d", attr_name, attr->u.num);
 	else 
 		popup_printf(menu, menu_type_menu, "%s: %s", attr_name, attr->u.str);

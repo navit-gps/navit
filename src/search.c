@@ -247,6 +247,8 @@ search_list_get_result(struct search_list *this_)
 				le->parent=NULL;
 			else {
 				leu=&this_->levels[level-1];
+				if (! leu->curr)
+					break;
 				le->parent=leu->curr->data;
 				leu->last=leu->curr;
 				leu->curr=g_list_next(leu->curr);
