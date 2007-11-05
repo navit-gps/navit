@@ -8,6 +8,7 @@
 #define SRCH_STREET 3
 #define SRCH_NUMBER 4
 
+
 bool handleItemSelect(int r);
 bool ItemSelect(const CEGUI::EventArgs& event);
 bool handleMouseEnters(const CEGUI::EventArgs& event);
