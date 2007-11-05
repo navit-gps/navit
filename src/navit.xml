@@ -5,6 +5,13 @@
 	<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libgraphics_null.so" active="no" />
 </plugins>
 <debug name="navit:do_draw" level="0" />
+<!--
+Center coordinates format:
+[D][D]DMM.ss[S][S]... N/S [D][D]DMM.ss[S][S]... E/W 
+[-][D]D.d[d]... [-][D][D]D.d[d]... 
+[-]0xX [-]0xX 
+Change to your home coordinates.
+-->
 <navit center="4808 N 1134 E" zoom="256" >
 	<gui type="gtk" />
 	<graphics type="gtk_drawing_area" />
