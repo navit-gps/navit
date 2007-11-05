@@ -8,6 +8,8 @@ struct statusbar_methods;
 struct menu_methods;
 struct navit;
 
+extern struct navit *sdl_gui_navit;
+
 struct gui_priv {
 /*
         GtkWidget *win;

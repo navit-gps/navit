@@ -8,7 +8,7 @@
 #define SRCH_STREET 3
 #define SRCH_NUMBER 4
 
-extern struct navit *sdl_gui_navit;
+
 
 bool handleItemSelect(int r);
 bool ItemSelect(const CEGUI::EventArgs& event);
