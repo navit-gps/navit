@@ -1,5 +1,5 @@
 include $(top_srcdir)/Makefile.inc
-SUBDIRS=binding data fib-1.1 gui graphics osd speech vehicle xpm
+SUBDIRS=binding data fib-1.1 gui graphics osd speech vehicle xpm maps
 
 SAMPLE_MAP=osm_bbox_11.3,47.9,11.7,48.2
 
