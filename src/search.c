@@ -63,6 +63,11 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 	struct search_list_level *le;
 	switch(search_attr->type) {
 	case attr_country_all:
+	case attr_country_id:
+	case attr_country_iso2:
+	case attr_country_iso3:
+	case attr_country_car:
+	case attr_country_name:
 		level=0;
 		break;
 	case attr_town_name:
@@ -79,7 +84,8 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 		this_->level=level;
 		le=&this_->levels[level];
 		le->attr=*search_attr;
-		le->attr.u.str=g_strdup(search_attr->u.str);
+		if (search_attr->type != attr_country_id)
+			le->attr.u.str=g_strdup(search_attr->u.str);
 		search_list_search_free(this_, level);
 		le->partial=partial;
 		if (level > 0) {

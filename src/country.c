@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <glib.h>
 #include <libintl.h>
 #include "debug.h"
@@ -111,7 +112,7 @@ country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
                 return 0;
         case attr_label:
 		attr->u.str=gettext(country->name);
-		this->attr_next=attr_id;
+		this->attr_next=attr_country_id;
 		return 1;
 	case attr_country_id:
 		attr->u.num=country->id;
@@ -201,6 +202,24 @@ country_search_get_item(struct country_search *this)
 			return &this->item;
 		}
 	}
+}
+
+static struct attr country_default_attr;
+static char iso2[3];
+
+struct attr *
+country_default(void)
+{
+	char *lang;
+	if (country_default_attr.u.str)
+		return &country_default_attr;
+	lang=getenv("LANG");
+	if (!lang || strlen(lang) < 5)
+		return NULL;
+	strncpy(iso2, lang+3, 2);
+	country_default_attr.type=attr_country_iso2;
+	country_default_attr.u.str=iso2;
+	return &country_default_attr;
 }
 
 void
