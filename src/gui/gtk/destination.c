@@ -36,7 +36,8 @@ static void button_map(GtkWidget *widget, struct search_param *search)
 {
 	struct coord *c=NULL;
 	GtkTreeIter iter;
-	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (search->liststore2), &iter);
+	if (!gtk_tree_model_get_iter_first (GTK_TREE_MODEL (search->liststore2), &iter))
+		return;
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, COL_COUNT, &c, -1);
 	if (c) 
 		navit_set_center(search->nav, c);
@@ -62,7 +63,8 @@ static void button_destination(GtkWidget *widget, struct search_param *search)
 	GtkTreeIter iter;
 	char *desc;
 
-	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (search->liststore2), &iter);
+	if (!gtk_tree_model_get_iter_first (GTK_TREE_MODEL (search->liststore2), &iter))
+		return;
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, COL_COUNT, &c, -1);
 	if (c) {
 		desc=description(search, &iter);
@@ -77,7 +79,8 @@ static void button_bookmark(GtkWidget *widget, struct search_param *search)
 	GtkTreeIter iter;
 	char *desc;
 
-	gtk_tree_model_get_iter_first (GTK_TREE_MODEL (search->liststore2), &iter);
+	if (!gtk_tree_model_get_iter_first (GTK_TREE_MODEL (search->liststore2), &iter))
+		return;
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, COL_COUNT, &c, -1);
 	if (c) {
 		desc=description(search, &iter);
