@@ -9,6 +9,8 @@
 #include "navit.h"
 #include "item.h"
 #include "coord.h"
+#include "track.h"
+#include "country.h"
 #include "search.h"
 
 #define COL_COUNT 8
@@ -302,6 +304,10 @@ int destination_address(struct navit *nav)
 	GtkWidget *button1,*button2,*button3;
 	int i;
 	struct search_param *search=&search_param;
+	struct attr search_attr, country_name, *country_attr;
+	struct tracking *tracking;
+	struct country_search *cs;
+	struct item *item;
 
 
 	search->nav=nav;
@@ -395,5 +401,14 @@ int destination_address(struct navit *nav)
 	gtk_widget_show_all(window2);
 	gtk_socket_steal(GTK_SOCKET(keyboard), spawn_xkbd("xkbd","-geometry 200x100"));
 
+	country_attr=country_default();
+	tracking=navit_get_tracking(nav);
+	if (tracking && tracking_get_current_attr(tracking, attr_country_id, &search_attr)) 
+		country_attr=&search_attr;
+	cs=country_search_new(country_attr, 0);
+	item=country_search_get_item(cs);
+	if (item && item_attr_get(item, attr_country_name, &country_name)) 
+		gtk_entry_set_text(GTK_ENTRY(search->entry_country), country_name.u.str);
+	country_search_destroy(cs);
 	return 0;
 }
