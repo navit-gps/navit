@@ -113,7 +113,7 @@ country_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		attr->u.str=gettext(country->name);
 		this->attr_next=attr_id;
 		return 1;
-	case attr_id:
+	case attr_country_id:
 		attr->u.num=country->id;
 		this->attr_next=country->car ? attr_country_car : attr_country_iso2;
 		return 1;
@@ -152,7 +152,10 @@ country_search_new(struct attr *search, int partial)
 {
 	struct country_search *ret=g_new(struct country_search, 1);
 	ret->search=*search;
-	ret->len=strlen(search->u.str);
+	if (search->type != attr_country_id)
+		ret->len=strlen(search->u.str);
+	else
+		ret->len=0;
 	ret->partial=partial;
 	ret->count=0;
 
@@ -189,7 +192,8 @@ country_search_get_item(struct country_search *this)
 		if (this->count >= sizeof(country)/sizeof(struct country))
 			return NULL;
 		this->country=&country[this->count++];
-		if (match(this, attr_country_iso3, this->country->iso3) ||
+		if ((this->search.type == attr_country_id && this->search.u.num == this->country->id) ||
+                    match(this, attr_country_iso3, this->country->iso3) ||
 		    match(this, attr_country_iso2, this->country->iso2) ||
 		    match(this, attr_country_car, this->country->car) ||
 		    match(this, attr_country_name, gettext(this->country->name))) {
