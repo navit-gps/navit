@@ -82,13 +82,17 @@ tracking_get_street_data(struct tracking *tr)
 int
 tracking_get_current_attr(struct tracking *_this, enum attr_type type, struct attr *attr)
 {
-	struct item *item=&_this->curr_line->street->item;
+	struct item *item;
 	int result=0;
+	if (! _this->curr_line || ! _this->curr_line->street)
+		return 0;
+	item=&_this->curr_line->street->item;
+	if (! item)
+		return 0;
 	struct map_rect *mr=map_rect_new(item->map,NULL);
 	item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-	if (item_attr_get(item, attr_street_name, attr)){
+	if (item_attr_get(item, type, attr))
 		result=1;
-	}
 	map_rect_destroy(mr);
 	return result;
 }
