@@ -187,7 +187,9 @@ int main(int argc, char **argv)
 			argv[0]);
 		return -1;
 	}
-	if (load_types_file(argv[1], argv[2]) < 0)
+	if (load_types_file(argv[1], argv[2]) < 0) {
 		unlink(argv[2]);
+		return -1;
+	}
 	return 0;
 }
