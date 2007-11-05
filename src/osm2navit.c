@@ -1160,7 +1160,7 @@ int main(int argc, char **argv)
 	FILE *tmp1,*tmp2;
 	char *map=g_strdup(attrmap);
 	int c;
-
+	int keep_tmpfiles=0;
 	while (1) {
 #if 0
 		int this_option_optind = optind ? optind : 1;
@@ -1168,14 +1168,31 @@ int main(int argc, char **argv)
 		int option_index = 0;
 		static struct option long_options[] = {
 			{"dedupe-ways", 0, 0, 'w'},
+			{"keep-tmpfiles", 0, 0, 'k'},
+			{"help", 0, 0, 'h'},
 			{0, 0, 0, 0}
 		};
 		c = getopt_long (argc, argv, "w", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
+		case 'h':
+			printf("\n");
+			printf("osm2navit - parse osm textfile and converts to NavIt binfile format\n\n");
+			printf("Usage :\n");
+			printf("bzcat planet.osm.bz2 | osm2navit >mymap.bin\n");
+			printf("Available switches :\n");
+			printf("-h (--help)          : this screen\n");
+			printf("-w (--dedupe-ways)   : ensure no duplicate ways. useful when using several input files\n");
+			printf("-k (--keep-tmpfiles) : do not delete tmp files after processing. useful to reuse them\n\n");
+			exit(1);
+			break;
 		case 'w':
 			dedupe_ways_hash=g_hash_table_new(NULL, NULL);
+			break;
+		case 'k':
+			printf("I will KEEP tmp files\n");
+			keep_tmpfiles=1;
 			break;
 		case '?':
 			exit(1);
@@ -1205,6 +1222,8 @@ int main(int argc, char **argv)
 	phase2(tmp1,tmp2);
 	fclose(tmp2);
 	fclose(tmp1);
+	if(!keep_tmpfiles)
+		remove(tmp1);
 	free(node_buffer.base);
 	node_buffer.base=NULL;
 	node_buffer.malloced=0;
@@ -1213,6 +1232,8 @@ int main(int argc, char **argv)
 	tmp2=fopen("tmpfile2","r");
 	phase3(tmp2);
 	fclose(tmp2);
+	if(!keep_tmpfiles)
+		remove(tmp2);
 	fprintf(stderr,"PROGRESS: Phase 4: assembling map\n");
 	phase4(stdout);
 	return 0;
