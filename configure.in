@@ -368,7 +368,6 @@ src/data/mg/Makefile
 src/data/textfile/Makefile
 src/data/binfile/Makefile
 src/data/garmin/Makefile
-src/data/garmin_img/Makefile
 src/data/poi_geodownload/Makefile
 src/data/poi_geodownload/libmdb/Makefile
 src/data/poi_geodownload/libmdb/include/Makefile
@@ -394,6 +393,7 @@ src/maps/Makefile
 intl/Makefile
 po/Makefile
 ])
+#src/data/garmin_img/Makefile
 
 AC_OUTPUT
 
