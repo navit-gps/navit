@@ -35,6 +35,7 @@ static struct search_param {
 } search_param;
 
 // extern "C" struct navit *global_navit;
+// 
 
 void route_to(int x,int y){
 	struct coord pos;
@@ -390,7 +391,6 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 {
 	using namespace CEGUI;
 
-// 	extern struct navit *sdl_gui_navit;
 
 	extern CEGUI::Window* myRoot;
 	const CEGUI::WindowEventArgs& we =  static_cast<const CEGUI::WindowEventArgs&>(event);

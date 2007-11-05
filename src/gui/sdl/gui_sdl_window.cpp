@@ -44,6 +44,8 @@ GLdouble upX=0;
 GLdouble upY=-1;
 GLdouble upZ=0;
 
+struct navit *sdl_gui_navit;
+
 #include <CEGUI/RendererModules/OpenGLGUIRenderer/openglrenderer.h>
 #include "CEGUIDefaultResourceProvider.h"
 CEGUI::OpenGLRenderer* renderer;
