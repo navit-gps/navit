@@ -405,37 +405,23 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 		
 		
 		// Code to get the current country and set it by default for the search
-		// FIXME : needs more work / testing
-		dbg(1,"Trying to find the current country\n");
-		struct tracking * tracking= navit_get_tracking(sdl_gui_navit);
-		if(tracking == NULL){
-			dbg(1,"Can't find the country for the current road. Falling back to $LANG\n");
-		} else {
-			dbg(1,"OK, trying to get attributes\n");
-// 			tracking_get_current_attr(tracking, attr_country_id, &attr);
-//			tracking_get_current_attr(struct tracking *_this, enum attr_type type, struct attr *attr)
-			struct attr attr,attr2;
-			tracking_get_current_attr(tracking,attr_country_id,&attr);
-			dbg(1,"OK, got attributes\n");
+		struct attr search_attr, country_name, *country_attr;
+		struct tracking *tracking;
+		struct country_search *cs;
+		struct item *item;
 
-			struct country_search *c_search=country_search_new(&attr, 0);
-			if(c_search){
-				dbg(1,"OK, got search\n");
-	
-				struct item *item=country_search_get_item(c_search);
-				if(item){
-					dbg(1,"OK, got item\n");
-					if(item_attr_get(item, attr_country_name, &attr2)){
-						dbg(1,"OK, got item_attr_get : %s\n",attr2.u.str);
-					}
-				} else {
-					dbg(1,"Item is null, fallback to LC_LANG\n");
-				}
-			}
-			
-   			country_search_destroy(c_search);
-		}
-		dbg(1,"Done with country selection\n");
+
+		Editbox* country_edit = static_cast<Editbox*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/CountryEditbox"));
+
+		country_attr=country_default();
+		tracking=navit_get_tracking(sdl_gui_navit);
+		if (tracking && tracking_get_current_attr(tracking, attr_country_id, &search_attr)) 
+			country_attr=&search_attr;
+		cs=country_search_new(country_attr, 0);
+		item=country_search_get_item(cs);
+		if (item && item_attr_get(item, attr_country_name, &country_name)) 
+			country_edit->setText(country_name.u.str);
+		country_search_destroy(cs);
 
 		/*
 		// This code should 'guess' your country based upon your locale settings.
