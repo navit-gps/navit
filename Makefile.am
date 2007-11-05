@@ -8,7 +8,13 @@ all-local:
 	@echo Navit build complete
 	@echo To build the sample map:
 	@echo make samplemap
+	@echo To install the sample map:
+	@echo make installsamplemap
 	@echo ------------------------
 
 samplemap:
 	make -C src samplemap
+
+installsamplemap:
+	make -C src installsamplemap
+
