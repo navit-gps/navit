@@ -1,10 +1,12 @@
 include $(top_srcdir)/Makefile.inc
-SUBDIRS=binding data fib-1.1 gui graphics osd speech vehicle xpm maps
+SUBDIRS=binding data fib-1.1 gui graphics osd speech vehicle xpm
+
+DIST_SUBDIRS=binding data fib-1.1 gui graphics osd speech vehicle xpm maps
 
 SAMPLE_MAP=osm_bbox_11.3,47.9,11.7,48.2
 
 AM_CPPFLAGS = -I$(top_srcdir)/src/fib-1.1 @NAVIT_CFLAGS@ -DPREFIX=\"@prefix@\" -DMODULE=\"navit\"
-
+BUILT_SOURCES=osm2navit
 bin_PROGRAMS = navit osm2navit
 
 pkgdata_DATA = navit.xml
