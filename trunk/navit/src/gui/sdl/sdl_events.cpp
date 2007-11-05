@@ -1,5 +1,6 @@
 #include "CEGUI.h"
 #include "sdl_events.h"
+#include "gui_sdl.h"
 
 #include <CEGUI/RendererModules/OpenGLGUIRenderer/openglrenderer.h>
 
@@ -7,11 +8,12 @@
 #include "projection.h"
 #include "item.h"
 #include "navit.h"
-
-#include "coord.h"
-
-// Theses are needed for searches
+#include "debug.h"
+#include "track.h"
 #include "search.h"
+#include "coord.h"
+#include "country.h"
+#include "string.h"
 
 // Library for window switching (-> nGhost)
 #include "wmcontrol.h"
@@ -244,7 +246,6 @@ bool handleMouseEnters(const CEGUI::EventArgs& event)
 
 
 void handle_destination_change(){
-	// dbg(1,"Called handle_destination_change\n");
 
 	using namespace CEGUI;
 	extern CEGUI::Window* myRoot;
@@ -390,7 +391,6 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 	using namespace CEGUI;
 
 	extern CEGUI::Window* myRoot;
-
 	const CEGUI::WindowEventArgs& we =  static_cast<const CEGUI::WindowEventArgs&>(event);
 	if(we.window->getParent()->getChild("DestinationWindow")->isVisible()){
 		we.window->getParent()->getChild("DestinationWindow")->hide();
@@ -400,13 +400,74 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 		Window* street_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox"));
 		street_edit->setText("");
 		town_edit->activate();
+		
+		
+		// Code to get the current country and set it by default for the search
+		// FIXME : needs more work / testing
+		dbg(1,"Trying to find the current country\n");
+		struct tracking * tracking= navit_get_tracking(sdl_gui_navit);
+		if(tracking == NULL){
+			dbg(1,"Can't find the country for the current road. Falling back to $LANG\n");
+		} else {
+			dbg(1,"OK, trying to get attributes\n");
+// 			tracking_get_current_attr(tracking, attr_country_id, &attr);
+//			tracking_get_current_attr(struct tracking *_this, enum attr_type type, struct attr *attr)
+			struct attr attr,attr2;
+			tracking_get_current_attr(tracking,attr_country_id,&attr);
+			dbg(1,"OK, got attributes\n");
+
+			struct country_search *c_search=country_search_new(&attr, 0);
+			if(c_search){
+				dbg(1,"OK, got search\n");
+	
+				struct item *item=country_search_get_item(c_search);
+				if(item){
+					dbg(1,"OK, got item\n");
+					if(item_attr_get(item, attr_country_name, &attr2)){
+						dbg(1,"OK, got item_attr_get : %s\n",attr2.u.str);
+					}
+				} else {
+					dbg(1,"Item is null, fallback to LC_LANG\n");
+				}
+			}
+			
+   			country_search_destroy(c_search);
+		}
+		dbg(1,"Done with country selection\n");
+
+		/*
+		// This code should 'guess' your country based upon your locale settings.
+		// useful if nothing else worked
+		char * lc_lang;
+		lc_lang = getenv ("LANG");
+		if (lc_lang!=NULL){
+			char lang_code [3];
+			strncpy(lang_code, lc_lang+3, 2);
+			lang_code[2]='\0';
+			dbg(0,"LC_LANG = %s -> %s\n",lc_lang,lang_code);
+
+			struct search_param *search=&search_param;
+			struct search_list_result *res;
+			search->attr.type=attr_country_iso2;
+			search->attr.u.str=lang_code;
+			dbg(0,"launching iso2 search\n");	
+			search_list_search(search->sl, &search->attr, 1);
+			dbg(0,"got result. ready to parse\n");
+ 			while((res=search_list_get_result(search->sl))) {
+ 				dbg(0," got country : \n",res->country->name);
+ 			}
+			dbg(0,"done parsing\n");
+		}
+
+		*/
+
 		SDL_dest.current_search=SRCH_COUNTRY;
 		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
 		mcl->resetList();
 		we.window->getParent()->getChild("DestinationWindow")->show();
 	}
 
-	extern struct navit *sdl_gui_navit;
+// 	extern struct navit *sdl_gui_navit;
 
 	if(sdl_gui_navit){	
 	} else {
