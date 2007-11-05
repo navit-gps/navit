@@ -11,9 +11,9 @@ $(SAMPLE_MAP).osm.bz2:
 	wget -O $(SAMPLE_MAP).osm.bz2.tmp http://navit.sourceforge.net/maps/$(SAMPLE_MAP).osm.bz2
 	mv $(SAMPLE_MAP).osm.bz2.tmp $(SAMPLE_MAP).osm.bz2
 
-$(SAMPLE_MAP).bin: $(SAMPLE_MAP).osm.bz2 $(top_srcdir)/src/osm2navit
+$(SAMPLE_MAP).bin: $(SAMPLE_MAP).osm.bz2 $(top_builddir)/src/osm2navit
 	echo "Converting osm sample map"
-	bzcat $(SAMPLE_MAP).osm.bz2 | $(top_srcdir)/src/osm2navit >$(SAMPLE_MAP).bin.tmp
+	bzcat $(SAMPLE_MAP).osm.bz2 | $(top_builddir)/src/osm2navit >$(SAMPLE_MAP).bin.tmp
 	mv $(SAMPLE_MAP).bin.tmp $(SAMPLE_MAP).bin
 
 distclean-local:
