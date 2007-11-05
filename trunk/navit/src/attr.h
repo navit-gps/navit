@@ -34,6 +34,9 @@ enum attr_type attr_from_name(const char *name);
 char *attr_to_name(enum attr_type attr);
 struct attr *attr_new_from_text(const char *name, const char *value);
 struct attr *attr_search(struct attr **attrs, struct attr *last, enum attr_type attr);
+int attr_data_size(struct attr *attr);
+void *attr_data_get(struct attr *attr);
+void attr_data_set(struct attr *attr, void *data);
 void attr_free(struct attr *attr);
 /* end of prototypes */
 #endif
