@@ -567,7 +567,7 @@ street_name_coord_get(void *priv_data, struct coord *c, int count)
 	struct street_name_numbers snns;
 	unsigned char *p=mr->street.name.aux_data;
 
-	dbg(0,"aux_data=%p\n", p);
+	dbg(1,"aux_data=%p\n", p);
 	if (count) {
 		street_name_numbers_get(&snns, &p);
 		*c=*(snns.c);
@@ -674,9 +674,11 @@ street_search_get_item(struct map_rect_priv *mr)
 		while ((leaf=tree_search_next(&mr->ts, &mr->search_p, dir)) != -1) {
 			dir=street_search_compare(&mr->search_p, mr);
 		}
+		dbg(1,"dir=%d mr->search_block=0x%x\n", dir, mr->search_block);
 		if (mr->search_block == -1)
 			return NULL;
-		dbg(1,"mr->search_block=0x%x\n", mr->search_block);
+		if (dir > 0)
+			mr->search_block++;
 		mr->search_blk_count=1;
 		block_get_byindex(mr->m->file[file_strname_stn], mr->search_block, &mr->b);
 		mr->b.p=mr->b.block_start+12;
@@ -684,31 +686,35 @@ street_search_get_item(struct map_rect_priv *mr)
 	dbg(1,"name id 0x%x\n", mr->b.p-mr->m->file[file_strname_stn]->begin);
 	if (! mr->search_blk_count)
 		return NULL;
-	if (mr->b.p >= mr->b.end) {
-		if (!block_next_lin(mr))
-			return NULL;
-		mr->b.p=mr->b.block_start+12;
-	}
-	while (mr->b.p < mr->b.end) {
-		last=mr->b.p;
-		street_name_get(&mr->street.name, &mr->b.p);
-		dir=street_search_compare_do(mr, mr->street.name.country, mr->street.name.townassoc, mr->street.name.name2);
-		dbg(1,"country 0x%x assoc 0x%x name1 '%s' name2 '%s' dir=%d\n", mr->street.name.country, mr->street.name.townassoc, mr->street.name.name1, mr->street.name.name2, dir);
-		if (dir < 0) {
-			mr->search_blk_count=0;
-			return NULL;
+	for (;;) {
+		if (mr->b.p >= mr->b.end) {
+			if (!block_next_lin(mr)) {
+				dbg(1,"end of blocks in %p, %p\n", mr->m->file[file_strname_stn]->begin, mr->m->file[file_strname_stn]->end);
+				return NULL;
+			}
+			mr->b.p=mr->b.block_start+12;
 		}
-		if (!dir) {
-			dbg(0,"result country 0x%x assoc 0x%x name1 '%s' name2 '%s' dir=%d aux_data=%p len=0x%x\n", mr->street.name.country, mr->street.name.townassoc, mr->street.name.name1, mr->street.name.name2, dir, mr->street.name.aux_data, mr->street.name.aux_len);
-			mr->item.type = type_street_name;
-			mr->item.id_hi=mr->street.name.country | (mr->current_file << 16) | 0x10000000;
-			mr->item.id_lo=last-mr->m->file[mr->current_file]->begin;
-			mr->item.meth=&street_name_meth;
-			mr->item.map=NULL;
-			mr->item.priv_data=mr;
-			return &mr->item;
+		while (mr->b.p < mr->b.end) {
+			last=mr->b.p;
+			street_name_get(&mr->street.name, &mr->b.p);
+			dir=street_search_compare_do(mr, mr->street.name.country, mr->street.name.townassoc, mr->street.name.name2);
+			dbg(1,"country 0x%x assoc 0x%x name1 '%s' name2 '%s' dir=%d\n", mr->street.name.country, mr->street.name.townassoc, mr->street.name.name1, mr->street.name.name2, dir);
+			if (dir < 0) {
+				dbg(1,"end of data\n");
+				mr->search_blk_count=0;
+				return NULL;
+			}
+			if (!dir) {
+				dbg(1,"result country 0x%x assoc 0x%x name1 '%s' name2 '%s' dir=%d aux_data=%p len=0x%x\n", mr->street.name.country, mr->street.name.townassoc, mr->street.name.name1, mr->street.name.name2, dir, mr->street.name.aux_data, mr->street.name.aux_len);
+				mr->item.type = type_street_name;
+				mr->item.id_hi=mr->street.name.country | (mr->current_file << 16) | 0x10000000;
+				mr->item.id_lo=last-mr->m->file[mr->current_file]->begin;
+				mr->item.meth=&street_name_meth;
+				mr->item.map=NULL;
+				mr->item.priv_data=mr;
+				return &mr->item;
+			}
 		}
 	}
-	return NULL;
 }
  
