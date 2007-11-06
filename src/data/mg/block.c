@@ -148,19 +148,25 @@ block_next_lin(struct map_rect_priv *mr)
 			mr->b.p=mr->file->begin+0x2000;
 		else
 			mr->b.p=mr->b.block_start+mr->b.b->blocks*512;
-		if (mr->b.p >= mr->file->end)
+		if (mr->b.p >= mr->file->end) {
+			dbg(1,"end of blocks %p vs %p\n", mr->b.p, mr->file->end);
 			return 0;
+		}
 		mr->b.block_start=mr->b.p;
 		mr->b.b=block_get(&mr->b.p);
 		mr->b.p_start=mr->b.p;
 		mr->b.end=mr->b.block_start+mr->b.b->size;
-		if (mr->b.b->count == -1)
+		if (mr->b.b->count == -1) {
+			dbg(1,"empty blocks\n");
 			return 0;
+		}
 		if (!mr->cur_sel || coord_rect_overlap(&mr->cur_sel->rect, &mr->b.b->r)) {
 			block_active_count++;
 			block_active_mem+=mr->b.b->blocks*512-sizeof(struct block *);
+			dbg(1,"block ok\n");
 			return 1;
 		}
+		dbg(2,"block not in cur_sel\n");
 	}
 }
 

@@ -197,12 +197,14 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
 		if (item->type != type_country_label)
 			return NULL;
 		tree_search_init(map->dirname, "town.b2", &mr->ts, 0x1000);
+		mr->current_file=file_town_twn;
 		break;
 	case attr_street_name:
 		if (item->type != type_town_streets)
 			return NULL;
 		dbg(1,"street_assoc=0x%x\n", item->id_lo);
 		tree_search_init(map->dirname, "strname.b1", &mr->ts, 0);
+		mr->current_file=file_strname_stn;
 		break;
 	default:
 		dbg(0,"unknown search\n");
@@ -213,8 +215,8 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
 	mr->search_country=item->id_lo;
 	mr->search_str=search->u.str;
 	mr->search_partial=partial;
-	mr->current_file=file_town_twn-1;
-	file_next(mr);
+	mr->file=mr->m->file[mr->current_file];
+	block_init(mr);
 	return (struct map_search_priv *)mr;
 }
 
