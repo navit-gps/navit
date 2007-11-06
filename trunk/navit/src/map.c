@@ -169,9 +169,11 @@ map_search_new(struct map *m, struct item *item, struct attr *search_attr, int p
 	if (search_attr->type >= attr_country_all && search_attr->type <= attr_country_name)
 		this->priv=country_search_new(&this->search_attr, partial);
 	else {
-		if (m->meth.map_search_new)
-			this->priv=m->meth.map_search_new(m->priv, item, search_attr, partial);
-		else {
+		if (m->meth.map_search_new) {
+			if (m->meth.charset) 
+				this->search_attr.u.str=g_convert(this->search_attr.u.str, -1,m->meth.charset,"utf-8",NULL,NULL,NULL);
+			this->priv=m->meth.map_search_new(m->priv, item, &this->search_attr, partial);
+		} else {
 			g_free(this);
 			this=NULL;
 		}
@@ -201,7 +203,10 @@ map_search_destroy(struct map_search *this)
 		return;
 	if (this->search_attr.type >= attr_country_all && this->search_attr.type <= attr_country_name)
 		country_search_destroy(this->priv);
-	else
+	else {
+		if (this->m->meth.charset) 
+				g_free(this->search_attr.u.str);
 		this->m->meth.map_search_destroy(this->priv);
+	}
 	g_free(this);
 }
