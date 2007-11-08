@@ -492,15 +492,18 @@ static int
 street_search_compare(unsigned char **p, struct map_rect_priv *mr)
 {
 	struct street_name_index *i;
+	int ret;
 
 	dbg(1,"enter\n");
 	i=(struct street_name_index *)(*p);
 	*p+=sizeof(*i)+strlen(i->name)+1;
-	mr->search_block=i->block;
 
 	dbg(1,"block 0x%x\n", i->block);
 	
-	return street_search_compare_do(mr, i->country, i->town_assoc, i->name);
+	ret=street_search_compare_do(mr, i->country, i->town_assoc, i->name);
+	if (ret <= 0)
+		mr->search_block=i->block;
+	return ret;
 }
 
 static void
@@ -677,8 +680,6 @@ street_search_get_item(struct map_rect_priv *mr)
 		dbg(1,"dir=%d mr->search_block=0x%x\n", dir, mr->search_block);
 		if (mr->search_block == -1)
 			return NULL;
-		if (dir > 0)
-			mr->search_block++;
 		mr->search_blk_count=1;
 		block_get_byindex(mr->m->file[file_strname_stn], mr->search_block, &mr->b);
 		mr->b.p=mr->b.block_start+12;
