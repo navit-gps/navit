@@ -1,15 +1,34 @@
 NavIT
 =====
 
-Navit is a open source (GPL) car navigation software for Linux systems
-based on the GTK+ toolkit.  Navit will display your position on a
-2D map, or as a 3D visualisation (planned) from GPS sensor data. Navit
-is also capable of providing precise route calculation, touch screen
-functionality and supports Points of Interest (POI).
+Navit is a open source (GPL) car navigation system with routing engine.
 
-Unlike other navigation systems, Navit maps are dynamically generated
-in real time from vector data.
+It's modular design is capable of using vector maps of various formats
+for routing and rendering of the displayed map. It's even possible to
+use multiple maps at a time.
 
+The GTK+ or SDL user interfaces are designed to work well with touch
+screen displays. Points of Interest of various formats are displayed
+on the map.
+
+The current vehicle position is either read from gpsd or directly from
+NMEA GPS sensors.
+
+The routing engine not only calculates an optimal route to your
+destination, but also generates directions and even speaks to you.
+
+Navit currently speaks 8 languages :
+- English
+- German
+- French
+- Polish
+- Italian
+- Spanish
+- Norwegian
+- Czech
+
+For help or more information, please refer to the wiki :
+ http://navit.sourceforge.net/wiki/
 
 
 Maps:
@@ -18,175 +37,29 @@ Maps:
 The best navigation system is useless without maps. Those three maps
 are known to work:
 
-	http://www.amazon.de/exec/obidos/ASIN/3829731280
-		(Grosser Reiseplaner, detailed map of europe)
-	http://www.amazon.de/exec/obidos/ASIN/3934073697
-		(Telefonbuch Deutschland Map+Route,
-		  detailed map of germany, coarse map of europe)
-	http://www.amazon.de/exec/obidos/ASIN/3934073719
-		(Gelbe Seiten Map+Route, detailed map of germany,
-		  coarse map of europe)
+- OpenStreetMaps : display, routing, but street name search isn't complete
+ (see http://navit.sourceforge.net/wiki/index.php/OpenStreetMaps)
 
-Installing the Maps:
-- Gelbe Seiten and Telefonbuch Deutschland
-unzip karten.zip from the map cd where the map should go (about 1.2 GB)
-export MAP_DATA=<path to where the map has been unzipped>/d7.map
+- Grosser Reiseplaner and compliant maps : full support
+ (see http://navit.sourceforge.net/wiki/index.php/European_maps)
 
-- Grosser Reiseplaner
-Compile unshield from http://synce.sourceforge.net/synce/unshield.php
-run "unshield x <path to your dvd>/travel/data2.cab" where the map
-should go (about 4.3 GB)
-export MAP_DATA=<path to where the map has been unshielded>/DIRMAP_MAP/DIE.map
+- Garmin maps : display, routing is being worked on
+ (see http://navit.sourceforge.net/wiki/index.php/Garmin_maps)
 
 
 GPS Support:
 ============
 
-Navit read the current vehicle possition either directly from a file with
-	export GPSDATA=file:filename
-or from gpsd with
-	export GPSDATA=gpsd://host[:port]
-[now in navit.xml]
-
-
-Subdirectories:
-===============
-
-fib-1.0
-	The library for Fibonacci heaps from 
-		http://resnet.uoregon.edu/~gurney_j/jmpc/fib.html
-	The Fibonacci heaps are used in the routing algorithm.
-
-graphics
-	The map layout functions.
-	As of now only the gtk_drawing_area is working.
-	We'll eventually move to cairo.	
-
-gui
-	The user interface. So far there are a lot of files still in
-	the main directory.
-
-plugins
-	Plugable modules. So far there is only one but we hope to
-	have more in the future.
-	- poi_geodownloads
-		Display POIs from www.geodownload.com
-		(depends on mdbtools.sf.net)
-
-
-Files in src:
-=============
-
-block.c:
-	Manages the blocks of the map. Each block of the map is
-	seperated into two sub blocks of half the size.
-
-command.c
-	Command line interface.
-
-compass.c
-	Displays the compass on the map.
-
-coord.c
-	Reads coordinates from the map.
-
-country.c
-	Lists all available countries and provides funtions to access
-	the corresponding data.
-
-cursor.c
-	Draws the vehicle possiton on the map.
-
-data_window.c
-	Displays informations about visible objects.
-
-destination.c
-	The destination selection dialog.
-
-display.c
-	Manages the display-list. The graphics driver is called from
-	here to display the map.
-
-file.c
-	Management of map data files.
-
-graphics.c
-	Generates the display-list.
-
-log.c
-	Logs local changes to the map datas. its possible to modify
-	the map without changing the original map data. The modified
-	data are stored in log.txt and reread at program start.
-
-main.c
-	Guess what?
-
-map_data.c
-	Manages the differnt map sources. There's an overview map of
-	europe and a detailed map of each country.
-
-menu.c
-	Callback functions for the gui menu.
-
-navigation.c
-	Generates directions to a destination ( not jet completed )
-
-param.c
-	Utility functions for data_window and and popup menu
-
-phrase.c
-	Assembles directions for the speech guide.
-
-plugin.c
-	Loads available pugins.
-
-poly.c
-	Generate display-list for polygons. ( cities, lakes, ... )
-
-popup.c
-	Popup-menu dialog
-
-profile.c
-	A simple timer for performance analysis.
-
-route.c
-	The routing algorithm. ( see below for a more detailed
-	description )
-
-search.c
-	Functions to search a place ( city, street, ... ) by name
-
-speech.c
-	Interface to speechd
-
-street.c
-	Generates a display-list for streets
-
-street_name.c
-	Reads street names from map datas.
-
-town.c
-	Generates a display-list for city names.
-
-transform.c
-
-	Coordinate transformation. The map uses a Mercator projection.
-
-tree.c
-	Manages search trees.
-
-util.c
-	Some utility functions for strings
-
-vehicle.c
-	Calculates the current vehicle possistion and direction.
-	Issues a cursor update if needed.
+Navit read the current vehicle position :
+- directly from a file
+- from gpsd (local or remote)
+- from udp server (friends tracking) (experimental)
 
 
 Routing algorithm
 =================
 
-NavIt uses a dykstra algorithm for routing. The routing starts at the
+NavIt uses a Dijkstra algorithm for routing. The routing starts at the
 destination by assigning a value to each point directly connected to
 destination point. The value represents the estimated time needed to
 pass this distance.
@@ -199,20 +72,4 @@ The search is repeated until the origin is found.
 
 Once the origin is reached, all that needs to be done is to follow the
 points with the lowest values to the destination.
-
-
-
-Plans:
-======
-
-- use ciaro to draw the map
-
-- get GPS data from gpsd
-
-- complete speech output (speech.c, phrase.c)
-
-- complete directions (navigation.c)
-
-- investigate problem with fib-1.1
-
 
