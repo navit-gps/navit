@@ -31,6 +31,7 @@ static char *attrmap={
 	"highway	tertiary	street_2_city\n"
 	"highway	secondary	street_3_city\n"
 	"highway	primary		street_4_city\n"
+	"highway	primary_link	ramp\n"
 	"highway	trunk		street_4_city\n"
 	"highway	trunk_link	ramp\n"
 	"highway	motorway	highway_city\n"
