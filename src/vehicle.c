@@ -737,15 +737,22 @@ vehicle_add_log(struct vehicle *this_, struct log *log, struct attr **attrs)
 		return 1;
 	if (!strcmp(type->u.str,"nmea")) {
 		this_->nmea_log=log;
+		if (this_->child) 
+			this_->child->nmea_log=log;
+		
 	} else if (!strcmp(type->u.str,"gpx")) {
 		char *header="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gpx version=\"1.0\" creator=\"Navit http://navit.sourceforge.net\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.topografix.com/GPX/1/0\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd\">\n<trk>\n<trkseg>\n";
 		char *trailer="</trkseg>\n</trk>\n</gpx>\n";
 		this_->gpx_log=log;
+		if (this_->child)
+			this_->child->gpx_log=log;
 		log_set_header(log,header,strlen(header));
 		log_set_trailer(log,trailer,strlen(trailer));
 	} else if (!strcmp(type->u.str,"textfile")) {
 		char *header="type=track\n";
 		this_->textfile_log=log;
+		if (this_->child)
+			this_->child->textfile_log=log;
 		log_set_header(log,header,strlen(header));
 	} else
 		return 1;
