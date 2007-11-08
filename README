@@ -38,13 +38,13 @@ The best navigation system is useless without maps. Those three maps
 are known to work:
 
 - OpenStreetMaps : display, routing, but street name search isn't complete
- (see http://navit.sourceforge.net/wiki/index.php/OpenStreetMaps)
+ (see http://navit.sourceforge.net/wiki/index.php/OpenStreetMaps )
 
 - Grosser Reiseplaner and compliant maps : full support
- (see http://navit.sourceforge.net/wiki/index.php/European_maps)
+ (see http://navit.sourceforge.net/wiki/index.php/European_maps )
 
 - Garmin maps : display, routing is being worked on
- (see http://navit.sourceforge.net/wiki/index.php/Garmin_maps)
+ (see http://navit.sourceforge.net/wiki/index.php/Garmin_maps )
 
 
 GPS Support:
