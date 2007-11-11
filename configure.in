@@ -110,7 +110,7 @@ AC_SUBST(SDL_CFLAGS)
 AC_SUBST(SDL_LIBS)
 
 #FIXME : the following does not seem to be parsed
-AC_PREPROC_IFELSE(
+AC_CHECK_HEADER(
 	CEGUI/CEGUI.h,
 	AC_DEFINE(
 		[HAVE_CEGUI],
@@ -120,7 +120,6 @@ AC_PREPROC_IFELSE(
 		CEGUI_CFLAGS="-I /usr/local/include/CEGUI -I /usr/include/CEGUI"
 		cegui=yes,
 	AC_MSG_WARN([*** no CEGUI/CEGUI.h -- SDL support disabled])
-	exit 1
 )
 
 AC_CHECK_HEADER(
@@ -163,7 +162,7 @@ AC_CHECK_HEADER(
 AC_SUBST(GLC_CFLAGS)
 AC_SUBST(GLC_LIBS)
 
-if test x"$sdl" = xyes
+if test x"$cegui" = xyes
         then
 # Save the LIBS into a temp var since AC_CHECK_LIB adds the lib into LIBS
 # and we want just to check and use CEGUI_LIBS
@@ -174,20 +173,20 @@ libstemp="$LIBS"
 AC_CHECK_LIB(CEGUIBase, main,
 	 [],
 	 [
-        echo "Error! Something is wrong with CEGUIBase."
-        #exit -1
+        echo "Error! Something is wrong with CEGUIBase. Do you have at least cegui-0.5?"
+        exit -1
         ])
 AC_CHECK_LIB(CEGUIOpenGLRenderer, main,
 	 [],
 	 [
-        echo "Error! Something is wrong with CEGUIOpenGLRenderer."
-        #exit -1
+        echo "Error! Something is wrong with CEGUIOpenGLRenderer. Do you have at least cegui-0.5? "
+        exit -1
         ], $OPENGL_LIBS )
 AC_CHECK_LIB(CEGUIFalagardWRBase, main,
 	 [],
 	 [
-        echo "Error! Something is wrong with CEGUIFalagardWRBase."
-        #exit -1
+        echo "Error! Something is wrong with CEGUIFalagardWRBase. Do you have at least cegui-0.5?"
+        exit -1
         ], $OPENGL_LIBS)
 CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUIFalagardWRBase"
 
@@ -243,7 +242,8 @@ AC_SUBST(CEGUI_CFLAGS)
 AC_SUBST(CEGUI_LIBS)
 
 AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$cegui" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
-AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$opengl" = "xyes" -a "x$glc" = "xyes"  -a "x$glut" = "xyes"])
+AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
+
 
 if test x"${USE_LIBGPS}" = xyes
 then
@@ -411,11 +411,17 @@ if test x"$gtk2_pkgconfig" = xyes
 	else
 	echo "GTK gui     : DISABLED : you are missing a dependency"
 fi
+# FIXME : maybe elaborate missing dependencies
 if test x"$sdl" = xyes
 	then
-	echo "SDL gui     : ENABLED, with $CEGUI_LIBS"
+	if test x"$cegui" = xyes
+	then
+		echo "SDL gui     : ENABLED, with $CEGUI_LIBS"
+		else
+		echo "SDL gui     : DISABLED : you are missing cegui-devel >= 0.5"
+	fi
 	else
-	echo "SDL gui     : DISABLED : you are missing a dependency"
+	echo "SDL gui     : DISABLED : you are missing a SDL dependency"
 fi
 if test x"$gpsd" = xyes
 	then
