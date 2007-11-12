@@ -14,32 +14,61 @@ static struct file *file_list;
 struct file *
 file_create(char *name)
 {
-        struct stat stat;
+	struct stat stat;
 	struct file *file= g_new0(struct file,1);
 
 	if (! file)
 		return file; 
-        file->fd=open(name, O_RDONLY);
+	file->fd=open(name, O_RDONLY);
 	if (file->fd < 0) {
 		g_free(file);
 		return NULL;
 	}
-        fstat(file->fd, &stat);
-        file->size=stat.st_size;
+	fstat(file->fd, &stat);
+	file->size=stat.st_size;
 	file->name = g_strdup(name);
-        file->begin=mmap(NULL, file->size, PROT_READ|PROT_WRITE, MAP_PRIVATE, file->fd, 0);
-	g_assert(file->begin != NULL);
-	if (file->begin == (void *)0xffffffff) {
-		perror("mmap");
-	}
-	g_assert(file->begin != (void *)0xffffffff);
-        file->end=file->begin+file->size;
-	file->private=NULL;
-
 	g_assert(file != NULL); 
 	file->next=file_list;
 	file_list=file;
-        return file;
+	return file;
+}
+
+int
+file_mmap(struct file *file)
+{
+	file->begin=mmap(NULL, file->size, PROT_READ|PROT_WRITE, MAP_PRIVATE, file->fd, 0);
+	g_assert(file->begin != NULL);
+	if (file->begin == (void *)0xffffffff) {
+		perror("mmap");
+		return 0;
+	}
+	g_assert(file->begin != (void *)0xffffffff);
+	file->end=file->begin+file->size;
+	return 1;
+}
+
+unsigned char *
+file_data_read(struct file *file, long long offset, int size)
+{
+	void *ret;
+	if (file->begin)
+		return file->begin+offset;
+	ret=g_malloc(size);
+	lseek(file->fd, offset, SEEK_SET);
+	if (read(file->fd, ret, size) != size) {
+		g_free(ret);
+		ret=NULL;
+	}
+	return ret;
+		
+}
+
+void
+file_data_free(struct file *file, unsigned char *data)
+{
+	if (file->begin && data >= file->begin && data < file->end)
+		return;
+	g_free(data);
 }
 
 int
@@ -56,7 +85,7 @@ file_remap_readonly(struct file *f)
 {
 	void *begin;
 	munmap(f->begin, f->size);
-        begin=mmap(f->begin, f->size, PROT_READ, MAP_PRIVATE, f->fd, 0);
+	begin=mmap(f->begin, f->size, PROT_READ, MAP_PRIVATE, f->fd, 0);
 	if (f->begin != begin)
 		printf("remap failed\n");
 }
@@ -156,7 +185,7 @@ file_create_caseinsensitive(char *name)
 void
 file_destroy(struct file *f)
 {
-        close(f->fd);
+	close(f->fd);
 	munmap(f->begin, f->size);
 	g_free(f->name);
 	g_free(f);	
