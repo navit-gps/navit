@@ -107,9 +107,17 @@ tree_search_hv(char *dirname, char *filename, unsigned int search_h, unsigned in
 	dbg(1,"enter(%s, %s, 0x%x, 0x%x, %p)\n",dirname, filename, search_h, search_v, result);
 	sprintf(buffer, "%s/%s.h1", dirname, filename);
 	f_idx_h=file_create_caseinsensitive(buffer);
+	if (! f_idx_h)
+		return 0;
+	file_mmap(f_idx_h);	
 	sprintf(buffer, "%s/%s.v1", dirname, filename);
 	f_idx_v=file_create_caseinsensitive(buffer);
 	dbg(1,"%p %p\n", f_idx_h, f_idx_v);
+	if (! f_idx_v) {
+		file_destroy(f_idx_h);
+		return 0;
+	}
+	file_mmap(f_idx_v);
 	if ((h=tree_search_h(f_idx_h, search_h))) {
 		dbg(1,"h=0x%x\n", h);
 		if ((v=tree_search_v(f_idx_v, h, search_v))) {
@@ -222,7 +230,10 @@ tree_search_init(char *dirname, char *filename, struct tree_search *ts, int offs
 	sprintf(buffer, "%s/%s", dirname, filename);
 	ts->f=file_create_caseinsensitive(buffer);
 	ts->curr_node=-1;
-	tree_search_enter(ts, offset);
+	if (ts->f) {
+		file_mmap(ts->f);
+		tree_search_enter(ts, offset);
+	}
 }
 
 void

@@ -12,22 +12,22 @@ static int map_id;
 
 static char *file[]={
 	[file_border_ply]="border.ply",
-        [file_bridge_ply]="bridge.ply",
-        [file_build_ply]="build.ply",
-        [file_golf_ply]="golf.ply",
-        [file_height_ply]="height.ply",
-        [file_natpark_ply]="natpark.ply",
-        [file_nature_ply]="nature.ply",
-        [file_other_ply]="other.ply",
-        [file_rail_ply]="rail.ply",
-        [file_sea_ply]="sea.ply",
-        [file_street_bti]="street.bti",
-        [file_street_str]="street.str",
-        [file_strname_stn]="strname.stn",
-        [file_town_twn]="town.twn",
-        [file_tunnel_ply]="tunnel.ply",
-        [file_water_ply]="water.ply",
-        [file_woodland_ply]="woodland.ply",
+	[file_bridge_ply]="bridge.ply",
+	[file_build_ply]="build.ply",
+	[file_golf_ply]="golf.ply",
+	[file_height_ply]="height.ply",
+	[file_natpark_ply]="natpark.ply",
+	[file_nature_ply]="nature.ply",
+	[file_other_ply]="other.ply",
+	[file_rail_ply]="rail.ply",
+	[file_sea_ply]="sea.ply",
+	[file_street_bti]="street.bti",
+	[file_street_str]="street.str",
+	[file_strname_stn]="strname.stn",
+	[file_town_twn]="town.twn",
+	[file_tunnel_ply]="tunnel.ply",
+	[file_water_ply]="water.ply",
+	[file_woodland_ply]="woodland.ply",
 };
 
 
@@ -285,7 +285,8 @@ map_new_mg(struct map_methods *meth, struct attr **attrs)
 				maybe_missing=(i == file_border_ply || i == file_height_ply || i == file_sea_ply);
 				if (! maybe_missing)
 					g_warning("Failed to load %s", filename);
-			}
+			} else
+				file_mmap(m->file[i]);
 			g_free(filename);
 		}
 	}
