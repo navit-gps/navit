@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-11-05 21:44+0100\n"
 "PO-Revision-Date: 2007-07-15 20:44-0600\n"
-"Last-Translator: Chris Eubank <cteubank@gmail.com>\n"
+"Last-Translator: Esteban Dauksis <edauksis@gmail.com>\n"
 "Language-Team: Chris Eubank <cteubank@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: ../src/main.c:94
 #, c-format
 msgid "Running from source directory\n"
-msgstr "Funcionamiento de directorio de fuente\n"
+msgstr "Ejecutando desde el directorio de las fuentes\n"
 
 #: ../src/main.c:110
 #, fuzzy, c-format
@@ -28,12 +28,12 @@ msgstr "Usando '%s'\n"
 
 #: ../src/main.c:170
 msgid "No config file navit.xml or navit.xml.local found\n"
-msgstr ""
+msgstr "No se ha encontrado navit.xml o navit.xml.local\n"
 
 #: ../src/main.c:172
 #, c-format
 msgid "Error parsing '%s': %s\n"
-msgstr "Hay un Malfuncionamiento cuando leyendo '%s': %s\n"
+msgstr "Error leyendo '%s': %s\n"
 
 #: ../src/main.c:174
 #, c-format
@@ -43,7 +43,7 @@ msgstr "Usando '%s'\n"
 #: ../src/main.c:177
 #, c-format
 msgid "No instance has been created, exiting\n"
-msgstr "No ha creado caso. Muriendo.\n"
+msgstr "No se ha creado una instancia, saliendo\n"
 
 #: ../src/navigation.c:173
 #, fuzzy, c-format
@@ -53,7 +53,7 @@ msgstr "%d metros"
 #: ../src/navigation.c:175
 #, fuzzy, c-format
 msgid "in %d m"
-msgstr "después de %d metros"
+msgstr "en %d metros"
 
 #: ../src/navigation.c:179
 #, c-format
@@ -63,7 +63,7 @@ msgstr "%d metros"
 #: ../src/navigation.c:181
 #, c-format
 msgid "in %d meters"
-msgstr "después de %d metros"
+msgstr "en %d metros"
 
 #: ../src/navigation.c:187
 #, c-format
@@ -73,7 +73,7 @@ msgstr "%d.%d kilómetro"
 #: ../src/navigation.c:189
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "después de %d.%d kilómetros"
+msgstr "en %d.%d kilómetros"
 
 #: ../src/navigation.c:195
 msgid "one kilometer"
@@ -81,7 +81,7 @@ msgstr "un kilómetro"
 
 #: ../src/navigation.c:197
 msgid "in one kilometer"
-msgstr "después de un kilómetro"
+msgstr "en un kilómetro"
 
 #: ../src/navigation.c:200
 msgid "two kilometers"
@@ -89,7 +89,7 @@ msgstr "dos kilómetros"
 
 #: ../src/navigation.c:202
 msgid "in two kilometers"
-msgstr "después de dos kilómetros"
+msgstr "en dos kilómetros"
 
 #: ../src/navigation.c:205
 msgid "three kilometers"
@@ -97,7 +97,7 @@ msgstr "tres kilómetros"
 
 #: ../src/navigation.c:207
 msgid "in three kilometers"
-msgstr "después de tres kilómetro"
+msgstr "en tres kilómetros"
 
 #: ../src/navigation.c:210
 msgid "four kilometers"
@@ -105,7 +105,7 @@ msgstr "cuatro kilómetros"
 
 #: ../src/navigation.c:212
 msgid "in four kilometers"
-msgstr "después de cuatro kilómetros"
+msgstr "en cuatro kilómetros"
 
 #: ../src/navigation.c:215
 #, c-format
@@ -115,7 +115,7 @@ msgstr "%d kilómetros"
 #: ../src/navigation.c:217
 #, c-format
 msgid "in %d kilometers"
-msgstr "después de %d kilómetros"
+msgstr "en %d kilómetros"
 
 #: ../src/navigation.c:421
 msgid "right"
@@ -127,11 +127,11 @@ msgstr "izquerida"
 
 #: ../src/navigation.c:433
 msgid "easily "
-msgstr "fácilmente"
+msgstr "suavemente"
 
 #: ../src/navigation.c:437
 msgid "strongly "
-msgstr "fuertemente"
+msgstr "brúscamente"
 
 #: ../src/navigation.c:440
 msgid "unknown "
@@ -140,12 +140,12 @@ msgstr "desconocido"
 #: ../src/navigation.c:446
 #, fuzzy
 msgid "When possible, please turn around"
-msgstr "Cuando es posible, doble a la"
+msgstr "Cuando sea posible, gire a la"
 
 #: ../src/navigation.c:453
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Siga la calle para %s"
+msgstr "Continue hasta %s"
 
 #: ../src/navigation.c:457
 msgid "soon"
@@ -174,12 +174,12 @@ msgstr "distancia_pos"
 #: ../src/navigation.c:485
 #, c-format
 msgid "Turn %s%s %s"
-msgstr "Dobla %s%s %s"
+msgstr "Gire %s%s %s"
 
 #: ../src/navigation.c:488
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "Has llegado a la destinación %s"
+msgstr "Ha llegado a su destino %s"
 
 #: ../src/navit.c:449 ../src/gui/gtk/gui_gtk_action.c:180
 msgid "Layout"
@@ -219,7 +219,7 @@ msgstr "Lituania"
 
 #: ../src/country.c:31
 msgid "Moldova"
-msgstr "Moldova"
+msgstr "Moldavia"
 
 #: ../src/country.c:32
 msgid "Russian Federation"
@@ -231,7 +231,7 @@ msgstr "Ucrania"
 
 #: ../src/country.c:34
 msgid "Belarus"
-msgstr "Belarús"
+msgstr "Bielorusia"
 
 #: ../src/country.c:35
 msgid "Egypt"
@@ -355,7 +355,7 @@ msgstr "Siria"
 
 #: ../src/country.c:65
 msgid "Saudi Arabia"
-msgstr "rabia Saudita"
+msgstr "Arabia Saudita"
 
 #: ../src/country.c:66
 msgid "Libia"
@@ -367,7 +367,7 @@ msgstr "Israel"
 
 #: ../src/country.c:68
 msgid "Palestinia"
-msgstr "Palestinia"
+msgstr "Palestina"
 
 #: ../src/country.c:69
 msgid "Liechtenstein"
@@ -399,11 +399,11 @@ msgstr "Croacia"
 
 #: ../src/country.c:76
 msgid "Slovenia"
-msgstr "CroaEslovenia"
+msgstr "Eslovenia"
 
 #: ../src/country.c:77
 msgid "Bosnia and Herzegovina"
-msgstr "Bosnia y Herzegovina"
+msgstr "Bosnia-Herzegovina"
 
 #: ../src/country.c:78
 msgid "Macedonia"
@@ -451,7 +451,7 @@ msgstr "Cuidad"
 
 #: ../src/gui/gtk/destination.c:331
 msgid "District/Township"
-msgstr "distrito"
+msgstr "Distrito"
 
 #: ../src/gui/gtk/destination.c:334
 msgid "Street"
@@ -459,7 +459,7 @@ msgstr "Calle"
 
 #: ../src/gui/gtk/destination.c:336
 msgid "Number"
-msgstr "Numero"
+msgstr "Número"
 
 #: ../src/gui/gtk/gui_gtk_action.c:177
 msgid "Display"
@@ -475,19 +475,19 @@ msgstr "Mapa"
 
 #: ../src/gui/gtk/gui_gtk_action.c:181
 msgid "ZoomOut"
-msgstr "HagaPequeño"
+msgstr "Alejar"
 
 #: ../src/gui/gtk/gui_gtk_action.c:182
 msgid "ZoomIn"
-msgstr "HagaGrande"
+msgstr "Aumentar"
 
 #: ../src/gui/gtk/gui_gtk_action.c:183
 msgid "Refresh"
-msgstr "Restaure"
+msgstr "Refrescar"
 
 #: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "Roadbook"
-msgstr ""
+msgstr "Guía"
 
 #: ../src/gui/gtk/gui_gtk_action.c:186 ../src/gui/gtk/gui_gtk_action.c:188
 msgid "Info"
@@ -495,11 +495,11 @@ msgstr "Información"
 
 #: ../src/gui/gtk/gui_gtk_action.c:190
 msgid "Destination"
-msgstr "Destinación"
+msgstr "Destino"
 
 #: ../src/gui/gtk/gui_gtk_action.c:191
 msgid "Clear"
-msgstr ""
+msgstr "Limpiar"
 
 #: ../src/gui/gtk/gui_gtk_action.c:192
 msgid "Test"
@@ -515,7 +515,7 @@ msgstr "Puntero"
 
 #: ../src/gui/gtk/gui_gtk_action.c:201
 msgid "Tracking"
-msgstr ""
+msgstr "Posicionando"
 
 #: ../src/gui/gtk/gui_gtk_action.c:202
 msgid "Orientation"
@@ -523,7 +523,7 @@ msgstr "Orientación"
 
 #: ../src/gui/gtk/gui_gtk_action.c:204 ../src/gui/gtk/gui_gtk_action.c:206
 msgid "Fullscreen"
-msgstr ""
+msgstr "Pantalla completa"
 
 #: ../src/gui/gtk/gui_gtk_action.c:214
 msgid "Data"
@@ -531,20 +531,20 @@ msgstr "Datos"
 
 #: ../src/gui/gtk/gui_gtk_action.c:215
 msgid "VisibleBlocks"
-msgstr "BloquesDemostrados"
+msgstr "BloquesVisibles"
 
 #: ../src/gui/gtk/gui_gtk_action.c:216
 msgid "VisibleTowns"
-msgstr "CuidadosDemostrados"
+msgstr "CuidadesVisibles"
 
 #: ../src/gui/gtk/gui_gtk_action.c:217
 msgid "VisiblePolys"
-msgstr "PolysDemostrados"
+msgstr "PoligonosVisibles"
 
 #: ../src/gui/gtk/gui_gtk_action.c:218
 msgid "VisibleStreets"
-msgstr "CallesDemostrados"
+msgstr "CallesVisibles"
 
 #: ../src/gui/gtk/gui_gtk_action.c:219
 msgid "VisiblePoints"
-msgstr "PuntosDemostrados"
+msgstr "PuntosVisibles"
