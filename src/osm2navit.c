@@ -15,54 +15,72 @@
 
 GHashTable *dedupe_ways_hash;
 
+int attr_debug_level=1;
 
 static char *attrmap={
-	"amenity\n"
-	"building\n"
-	"highway	cycleway	street_nopass\n"
-	"highway	footway		street_nopass\n"
-	"highway	steps		street_nopass\n"
-	"highway	cyclepath	street_nopass\n"
-	"highway	track		street_nopass\n"
-	"highway	service		street_nopass\n"
-	"highway	pedestrian	street_nopass\n"
-	"highway	residential	street_1_city\n"
-	"highway	unclassified	street_1_city\n"
-	"highway	tertiary	street_2_city\n"
-	"highway	secondary	street_3_city\n"
-	"highway	primary		street_4_city\n"
-	"highway	primary_link	ramp\n"
-	"highway	trunk		street_4_city\n"
-	"highway	trunk_link	ramp\n"
-	"highway	motorway	highway_city\n"
-	"highway	motorway_link	ramp\n"
-	"landuse	allotments	wood\n"
-	"landuse	cemetery	cemetery_poly\n"
-	"landuse	forest		wood\n"
-	"leisure	park		park_poly\n"
-	"natural	wood		wood\n"
-	"natural	water		water_poly\n"
-	"place		suburb		town_poly\n"
-	"railway	rail		rail\n"
-	"railway	subway		rail\n"
-	"railway	tram		rail\n"
-	"waterway	canal		water_line\n"
-	"waterway	river		water_line\n"
-	"waterway	weir		water_line\n"
-	"waterway	stream		water_line\n"
-	"waterway	drain		water_line\n"
+	"n	historic\n"
+	"n	amenity	hospital	poi_hospital\n"
+	"n	amenity	bank		poi_bank\n"
+	"n	place	suburb		district_label\n"
+	"n	place	town		town_label\n"
+	"w	amenity	place_of_worship	building_poly\n"
+	"w	building\n"
+	"w	highway	cycleway	street_nopass\n"
+	"w	highway	footway		street_nopass\n"
+	"w	highway	steps		street_nopass\n"
+	"w	highway	cyclepath	street_nopass\n"
+	"w	highway	track		street_nopass\n"
+	"w	highway	service		street_nopass\n"
+	"w	highway	pedestrian	street_nopass\n"
+	"w	highway	residential	street_1_city\n"
+	"w	highway	unclassified	street_1_city\n"
+	"w	highway	tertiary	street_2_city\n"
+	"w	highway	secondary	street_3_city\n"
+	"w	highway	pedestrian	street_nopass\n"
+	"w	highway	primary		street_4_city\n"
+	"w	highway	primary_link	ramp\n"
+	"w	highway	trunk		street_4_city\n"
+	"w	highway	trunk_link	ramp\n"
+	"w	highway	motorway	highway_city\n"
+	"w	highway	motorway_link	ramp\n"
+	"w	historic	town gate	building_poly\n"
+	"w	landuse	allotments	wood\n"
+	"w	landuse	cemetery	cemetery_poly\n"
+	"w	landuse	forest		wood\n"
+	"w	landuse	industrial	industry_poly\n"
+	"w	leisure	park		park_poly\n"
+	"w	natural	wood		wood\n"
+	"w	natural	water		water_poly\n"
+	"w	place		suburb		town_poly\n"
+	"w	place		town		town_poly\n"
+	"w	railway	rail		rail\n"
+	"w	railway	station		building_poly\n"
+	"w	railway	subway		rail\n"
+	"w	railway	tram		rail\n"
+	"w	waterway	canal		water_line\n"
+	"w	waterway	river		water_line\n"
+	"w	waterway	weir		water_line\n"
+	"w	waterway	stream		water_line\n"
+	"w	waterway	drain		water_line\n"
 };
 
-GHashTable *key_hash;
+GHashTable *way_key_hash;
+GHashTable *node_key_hash;
 
 static void
 build_attrmap_line(char *line)
 {
-	char *k=NULL,*v=NULL,*i=NULL,*p;
+	char *t=NULL,*k=NULL,*v=NULL,*i=NULL,*p;
 	gpointer *data;
-	GHashTable *value_hash;
-	k=line;
-	p=index(k,'\t');
+	GHashTable *key_hash,*value_hash;
+	t=line;
+	p=index(t,'\t');
+	if (p) {
+		while (*p == '\t')
+			*p++='\0';
+		k=p;
+		p=index(k,'\t');
+	}
 	if (p) {
 		while (*p == '\t')
 			*p++='\0';
@@ -74,10 +92,15 @@ build_attrmap_line(char *line)
 			*p++='\0';
 		i=p;
 	}
-	if (! i)
-		i="street_unkn";
-	if (! key_hash)
-		key_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	if (t[0] == 'w') {
+		if (! i)
+			i="street_unkn";
+		key_hash=way_key_hash;
+	} else {
+		if (! i)
+			i="point_unkn";
+		key_hash=node_key_hash;
+	}
 	value_hash=g_hash_table_lookup(key_hash, k);
 	if (! value_hash) {
 		value_hash=g_hash_table_new(g_str_hash, g_str_equal);
@@ -96,6 +119,8 @@ static void
 build_attrmap(char *map)
 {
 	char *p;
+	way_key_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	node_key_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	while (map) {
 		p=index(map,'\n');
 		if (p)
@@ -177,16 +202,20 @@ xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size)
 	return 1;
 }
 
+static int node_is_tagged;
 
 static void
 add_tag(char *k, char *v)
 {
 	GHashTable *value_hash;
-	if (! strcmp(k,"name")) {
-		strcpy(label_attr_buffer, v);
-		pad_text_attr(&label_attr, label_attr_buffer);
-		return;
-	}
+	enum item_type type;
+	int level=2;
+	if (! strcmp(k,"created_by"))
+		level=9;
+	if (! strcmp(k,"converted_by"))
+		level=8;
+	if (! strcmp(k,"layer"))
+		level=7;
 	if (! strcmp(k,"oneway")) {
 		if (! strcmp(v,"true") || !strcmp(v,"yes")) {
 			limit_attr_value=1;
@@ -196,16 +225,32 @@ add_tag(char *k, char *v)
 			limit_attr_value=2;
 			limit_attr.len=2;
 		}
-			
+		if (!in_way)
+			level=6;
 	}
-	value_hash=g_hash_table_lookup(key_hash, k);
+	if (! strcmp(k,"name")) {
+		strcpy(label_attr_buffer, v);
+		pad_text_attr(&label_attr, label_attr_buffer);
+	}
+	if (attr_debug_level >= level) {
+		sprintf(debug_attr_buffer+strlen(debug_attr_buffer), " %s=%s", k, v);
+		node_is_tagged=1;
+	}
+	if (level < 6) 
+		node_is_tagged=1;
+	if (in_way) 
+		value_hash=g_hash_table_lookup(way_key_hash, k);
+	else
+		value_hash=g_hash_table_lookup(node_key_hash, k);
 	if (! value_hash)
 		return;
-	item.type=(enum item_type) g_hash_table_lookup(value_hash, v);
-	if (! item.type) {
-		item.type=type_street_unkn;
+	type=(enum item_type) g_hash_table_lookup(value_hash, v);
+	if (!type) {
+		type=in_way ? type_street_unkn : type_point_unkn;
 		g_hash_table_insert(value_hash, v, (gpointer)item.type);
 	}
+	if (type != type_street_unkn && type != type_point_unkn)
+		item.type=type;
 }
 
 static int
@@ -242,6 +287,10 @@ struct coord {
 	int x;
 	int y;
 } coord_buffer[65536];
+
+#define IS_REF(c) ((c).x & (1 << 31))
+#define REF(c) ((c).y)
+#define SET_REF(c,ref) do { (c).x = 1 << 31; (c).y = ref ; } while(0)
 
 struct rect {
 	struct coord l,h;
@@ -286,12 +335,19 @@ node_buffer_to_hash(void)
 		g_hash_table_insert(node_hash, (gpointer)(ni[i].id), (gpointer)i);
 }
 
+static struct node_item *ni;
+static int node_id;
+
 static void
 add_node(int id, double lat, double lon)
 {
-	struct node_item *ni;
 	if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced) 
 		extend_buffer(&node_buffer);
+	node_is_tagged=0;
+	node_id=id;
+	item.type=type_point_unkn;
+	debug_attr.len=0;
+	sprintf(debug_attr_buffer,"node_id=%d", node_id);
 	ni=(struct node_item *)(node_buffer.base+node_buffer.size);
 	ni->id=id;
 	ni->ref_node=0;
@@ -312,8 +368,10 @@ add_node(int id, double lat, double lon)
 	} else
 		if (!g_hash_table_lookup(node_hash, (gpointer)(ni->id))) 
 			g_hash_table_insert(node_hash, (gpointer)(ni->id), (gpointer)(ni-(struct node_item *)node_buffer.base));
-		else
+		else {
 			node_buffer.size-=sizeof(struct node_item);
+			node_id=0;
+		}
 
 }
 
@@ -451,6 +509,25 @@ end_way(FILE *out)
 }
 
 static void
+end_node(FILE *out)
+{
+	int alen=0;
+	if (! node_is_tagged)
+		return;
+	pad_text_attr(&debug_attr, debug_attr_buffer);
+	if (label_attr.len)
+		alen+=label_attr.len+1;	
+	if (debug_attr.len)
+		alen+=debug_attr.len+1;	
+	item.clen=2;
+	item.len=item.clen+2+alen;
+	fwrite(&item, sizeof(item), 1, out);
+	fwrite(&ni->c, 1*sizeof(struct coord), 1, out);
+	write_attr(out, &label_attr, label_attr_buffer);
+	write_attr(out, &debug_attr, debug_attr_buffer);
+}
+
+static void
 add_nd(char *p, int ref)
 {
 	int len;
@@ -460,8 +537,8 @@ add_nd(char *p, int ref)
 #if 0
 		coord_buffer[coord_count++]=ni->c;
 #else
-		coord_buffer[coord_count].y=0;
-		coord_buffer[coord_count++].x=ref;
+		SET_REF(coord_buffer[coord_count], ref);
+		coord_count++;
 #endif
 		ni->ref_way++;
 	} else {
@@ -551,6 +628,7 @@ phase1(FILE *in, FILE *out)
 		} else if (!strncmp(p, "<member ",8)) {
 		} else if (!strncmp(p, "</node>",7)) {
 			in_node=0;
+			end_node(out);
 		} else if (!strncmp(p, "</way>",6)) {
 			in_way=0;
 			end_way(out);
@@ -839,12 +917,14 @@ phase2(FILE *in, FILE *out)
 		c=(struct coord *)(ib+1);
 		last=0;
 		for (i = 0 ; i < ccount ; i++) {
-			ndref=c[i].x;
-			ni=node_item_get(ndref);
-			c[i]=ni->c;
-			if (ni->ref_way > 1 && i != 0 && i != ccount-1 && ib->type >= type_street_nopass && ib->type <= type_ferry) {
-				write_item_part(out, ib, last, i);
-				last=i;
+			if (IS_REF(c[i])) {
+				ndref=REF(c[i]);
+				ni=node_item_get(ndref);
+				c[i]=ni->c;
+				if (ni->ref_way > 1 && i != 0 && i != ccount-1 && ib->type >= type_street_nopass && ib->type <= type_ferry) {
+					write_item_part(out, ib, last, i);
+					last=i;
+				}
 			}
 		}
 		write_item_part(out, ib, last, ccount-1);
@@ -1171,35 +1251,38 @@ int main(int argc, char **argv)
 #endif
 		int option_index = 0;
 		static struct option long_options[] = {
+			{"attr-debug-level", 1, 0, 'a'},
 			{"dedupe-ways", 0, 0, 'w'},
 			{"keep-tmpfiles", 0, 0, 'k'},
 			{"help", 0, 0, 'h'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "w", long_options, &option_index);
+		c = getopt_long (argc, argv, "a:hkw", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
 		case 'h':
+		case '?':
 			printf("\n");
 			printf("osm2navit - parse osm textfile and converts to NavIt binfile format\n\n");
 			printf("Usage :\n");
 			printf("bzcat planet.osm.bz2 | osm2navit >mymap.bin\n");
 			printf("Available switches :\n");
-			printf("-h (--help)          : this screen\n");
-			printf("-w (--dedupe-ways)   : ensure no duplicate ways. useful when using several input files\n");
-			printf("-k (--keep-tmpfiles) : do not delete tmp files after processing. useful to reuse them\n\n");
+			printf("-h (--help)             : this screen\n");
+			printf("-a (--attr-debug-level) : control which data is included in the debug attribute\n");
+			printf("-k (--keep-tmpfiles)    : do not delete tmp files after processing. useful to reuse them\n\n");
+			printf("-w (--dedupe-ways)      : ensure no duplicate ways or nodes. useful when using several input files\n");
 			exit(1);
 			break;
-		case 'w':
-			dedupe_ways_hash=g_hash_table_new(NULL, NULL);
+		case 'a':
+			attr_debug_level=atoi(optarg);
 			break;
 		case 'k':
 			printf("I will KEEP tmp files\n");
 			keep_tmpfiles=1;
 			break;
-		case '?':
-			exit(1);
+		case 'w':
+			dedupe_ways_hash=g_hash_table_new(NULL, NULL);
 			break;
 		default:
 			printf("c=%d\n", c);
