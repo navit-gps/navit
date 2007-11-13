@@ -109,17 +109,17 @@ fi
 AC_SUBST(SDL_CFLAGS)
 AC_SUBST(SDL_LIBS)
 
-#FIXME : the following does not seem to be parsed
-AC_CHECK_HEADER(
-	CEGUI/CEGUI.h,
-	AC_DEFINE(
-		[HAVE_CEGUI],
-		[],
-		Define to 1 if you have the <CEGUI/CEGUI.h> header file.
-		)
-		CEGUI_CFLAGS="-I /usr/local/include/CEGUI -I /usr/include/CEGUI"
-		cegui=yes,
-	AC_MSG_WARN([*** no CEGUI/CEGUI.h -- SDL support disabled])
+PKG_CHECK_MODULES(
+        [CEGUI],
+        [CEGUI-OPENGL >= 0.5.0],
+        [
+                AC_DEFINE(
+                        [HAVE_CEGUI],
+                        [],
+                        [Define to 1 if you have the @<:@CEGUI/CEGUI.h@:>@ header file.])
+                cegui=yes
+        ],
+        [AC_MSG_WARN([*** CEGUI not found -- SDL support disabled])]
 )
 
 AC_CHECK_HEADER(
@@ -161,82 +161,6 @@ AC_CHECK_HEADER(
 )
 AC_SUBST(GLC_CFLAGS)
 AC_SUBST(GLC_LIBS)
-
-if test x"$cegui" = xyes
-        then
-# Save the LIBS into a temp var since AC_CHECK_LIB adds the lib into LIBS
-# and we want just to check and use CEGUI_LIBS
-libstemp="$LIBS" 
-# For CEGUI, we have to check the presence of some libraries.
-# The following are mandatory (used by navit)
-# If the user installed NavIt without, issue a warning and disable CEGUI
-AC_CHECK_LIB(CEGUIBase, main,
-	 [],
-	 [
-        echo "Error! Something is wrong with CEGUIBase. Do you have at least cegui-0.5?"
-        exit -1
-        ])
-AC_CHECK_LIB(CEGUIOpenGLRenderer, main,
-	 [],
-	 [
-        echo "Error! Something is wrong with CEGUIOpenGLRenderer. Do you have at least cegui-0.5? "
-        exit -1
-        ], $OPENGL_LIBS )
-AC_CHECK_LIB(CEGUIFalagardWRBase, main,
-	 [],
-	 [
-        echo "Error! Something is wrong with CEGUIFalagardWRBase. Do you have at least cegui-0.5?"
-        exit -1
-        ], $OPENGL_LIBS)
-CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUIFalagardWRBase"
-
-# The following are optionnal, but we need to link against them if cegui was built with them
-libssilly="$OPENGL_LIBS -lpng"
-AC_CHECK_LIB(CEGUISILLYImageCodec, createImageCodec,
-	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUISILLYImageCodec"],
-	 [echo "CEGUISILLYImageCodec not found/not working, disabled."],
-	 $libssilly
-)
-
-AC_CHECK_LIB(CEGUIXercesParser, main,
-	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIXercesParser"],
-	 [echo "CEGUIXercesParser not found/not working, disabled."],
-	 $OPENGL_LIBS
-)
-
-AC_CHECK_LIB(CEGUIExpatParser, main,
-	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIExpatParser"],
-	 [echo "CEGUIExpatParser not found/not working, disabled."],
-	 $OPENGL_LIBS
-)
-
-AC_CHECK_LIB(CEGUILibxmlParser, main,
-	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUILibxmlParser"],
-	 [echo "CEGUILibxmlParser not found/not working, disabled."],
-	 $OPENGL_LIBS
-)
-
-AC_CHECK_LIB(CEGUITinyXMLParser, main,
-	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUITinyXMLParser"],
-	 [echo "CEGUITinyXMLParser not found/not working, disabled."],
-	 $OPENGL_LIBS
-)
-
-AC_CHECK_LIB(CEGUIDevILImageCodec, main,
-	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIDevILImageCodec"],
-	 [echo "CEGUIDevILImageCodec not found/not working, disabled."],
-	 $OPENGL_LIBS
-)
-
-AC_CHECK_LIB(CEGUITGAImageCodec, createImageCodec,
-	 [CEGUI_LIBS="$CEGUI_LIBS -lCEGUITGAImageCodec"],
-	 [echo "GUITGAImageCodec not found/not working, disabled."],
-	 $OPENGL_LIBS
-)
-
-LIBS="$libstemp"
-echo "LIBS : $CEGUI_LIBS"
-fi
 
 AC_SUBST(CEGUI_CFLAGS)
 AC_SUBST(CEGUI_LIBS)
