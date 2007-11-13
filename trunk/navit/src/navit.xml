@@ -91,7 +91,7 @@ Change to your home coordinates.
 			<item type="sport_poly" order="0-">
 				<polygon color="#4af04f" /> 
 			</item>
-			<item type="industry_poly" order="0-">
+			<item type="industry_poly,building_poly,place_poly" order="0-">
 				<polygon color="#e6e6e6" /> 
 			</item>
 			<item type="water_line" order="0-">
@@ -474,6 +474,9 @@ Change to your home coordinates.
 			</item>
 			<item type="poi_hospital" order="0-">
 				<icon src="hospital.xpm" />
+			</item>
+			<item type="point_unkn" order="0-">
+				<circle color="#8080ff" radius="3" />
 			</item>
 		</layer>
 	</layout>
