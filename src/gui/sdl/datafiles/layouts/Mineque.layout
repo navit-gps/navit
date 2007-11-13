@@ -74,6 +74,7 @@
 		<Window Type="TaharezLook/LargeVerticalScrollbar" Name="OSD/Scrollbar1" >
 			<Property Name="PageSize" Value="0" />
 			<Property Name="OverlapSize" Value="0" />
+			<Property Name="StepSize" Value="200" />
 			<Property Name="DocumentSize" Value="2000" />
 			<Property Name="ScrollPosition" Value="400" />
 			<Property Name="UnifiedMaxSize" Value="{{0.03,0},{1,0}}" />
