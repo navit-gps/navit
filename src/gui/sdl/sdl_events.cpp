@@ -259,11 +259,11 @@ void handle_destination_change(){
 
 	if (SDL_dest.current_search==SRCH_COUNTRY)
 	{	
-		// dbg(1,"Starting a country search\n");
 		Editbox* country_edit = static_cast<Editbox*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/CountryEditbox"));
 		String content=country_edit->getText();
 
 		mcl->resetList();
+		dbg(0,"Starting a country search : %s\n",content.c_str());
 
 		search->attr.type=attr_country_all;
 
@@ -392,6 +392,20 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 	using namespace CEGUI;
 
 
+	if(sdl_gui_navit){	
+	} else {
+		printf("*** Invalid navit instance in sdl_events\n");
+	}
+	struct search_param *search=&search_param;
+
+ 	// dbg(1,"search->nav=sdl_gui_navit;\n");
+ 	search->nav=sdl_gui_navit;
+ 	// dbg(1,"search->ms=navit_get_mapset(sdl_gui_navit);\n");
+ 	search->ms=navit_get_mapset(sdl_gui_navit);
+ 	// dbg(1,"search->sl=search_list_new(search->ms);\n");
+ 	search->sl=search_list_new(search->ms);
+
+
 	extern CEGUI::Window* myRoot;
 	const CEGUI::WindowEventArgs& we =  static_cast<const CEGUI::WindowEventArgs&>(event);
 	if(we.window->getParent()->getChild("DestinationWindow")->isVisible()){
@@ -402,6 +416,10 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 		Window* street_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox"));
 		street_edit->setText("");
 		town_edit->activate();
+
+		SDL_dest.current_search=SRCH_COUNTRY;
+		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
+		mcl->resetList();
 		
 		
 		// Code to get the current country and set it by default for the search
@@ -419,8 +437,10 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 			country_attr=&search_attr;
 		cs=country_search_new(country_attr, 0);
 		item=country_search_get_item(cs);
-		if (item && item_attr_get(item, attr_country_name, &country_name)) 
+		if (item && item_attr_get(item, attr_country_name, &country_name)){
 			country_edit->setText(country_name.u.str);
+			handle_destination_change();
+			}
 		country_search_destroy(cs);
 
 		/*
@@ -449,26 +469,9 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 
 		*/
 
-		SDL_dest.current_search=SRCH_COUNTRY;
-		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
-		mcl->resetList();
 		we.window->getParent()->getChild("DestinationWindow")->show();
 	}
 
-// 	extern struct navit *sdl_gui_navit;
-
-	if(sdl_gui_navit){	
-	} else {
-		printf("*** Invalid navit instance in sdl_events\n");
-	}
-	struct search_param *search=&search_param;
-
- 	// dbg(1,"search->nav=sdl_gui_navit;\n");
- 	search->nav=sdl_gui_navit;
- 	// dbg(1,"search->ms=navit_get_mapset(sdl_gui_navit);\n");
- 	search->ms=navit_get_mapset(sdl_gui_navit);
- 	// dbg(1,"search->sl=search_list_new(search->ms);\n");
- 	search->sl=search_list_new(search->ms);
 
 	return true;
 }
