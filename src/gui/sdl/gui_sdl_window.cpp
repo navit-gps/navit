@@ -60,9 +60,6 @@ GLuint * DLid;
 
 #define _(STRING)    gettext(STRING)
 
-
-// struct navit *sdl_gui_navit;
-
 static int
 gui_sdl_set_graphics(struct gui_priv *this_, struct graphics *gra)
 {
@@ -88,7 +85,6 @@ void drawCursor() {
                         glVertex3f( x+cursor_size,y+cursor_size, 0.0f);
                 glEnd();
                 glDisable(GL_BLEND);
-
  }
 
 
@@ -132,8 +128,6 @@ sdl_update_roadbook(struct navigation *nav)
 
 		list=navigation_list_new(nav);	
 		while ((item=navigation_list_get_item(list))) {
-				
-// 			printf("SDL : %s\n", str);
 	 		mcl->addRow();
 			item_attr_get(item, attr_navigation_short, &attr);
 			ListboxTextItem* itemListbox = new ListboxTextItem(attr.u.str);
@@ -144,8 +138,8 @@ sdl_update_roadbook(struct navigation *nav)
 	}
 	catch (CEGUI::Exception& e)
 	{
-		fprintf(stderr,"CEGUI Exception occured: \n%s\n", e.getMessage().c_str());
-		printf("Missing control!...\n");
+		dbg(0,"CEGUI Exception occured: \n%s\n", e.getMessage().c_str());
+		dbg(0,"Missing control!\n");
 	}
 
 }
@@ -170,21 +164,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
 	t=navit_get_trans(this_->nav);
 	transform_set_size(t, 800, 600);	
 	navit_draw(this_->nav);
-/*
-        glNewList(DLid,GL_COMPILE);
-                int x=400;
-                int y=400;
-                float cursor_size=15.0f;
-                glColor4f(1.0f,0.0f,0.0f,0.75f);
-                glEnable(GL_BLEND);
-                glBegin(GL_TRIANGLES);
-                        glVertex3f( x, y-cursor_size, 0.0f);
-                        glVertex3f(x-cursor_size,y+cursor_size, 0.0f);
-                        glVertex3f( x+cursor_size,y+cursor_size, 0.0f);
-                glEnd();
-                glDisable(GL_BLEND);
-        glEndList();
-*/
+
 	GLuint cursorDL;
 	cursorDL=glGenLists(1);
 	glNewList(cursorDL,GL_COMPILE);
@@ -214,9 +194,9 @@ static int gui_run_main_loop(struct gui_priv *this_)
 		if(VIEW_MODE==VM_3D){
  			gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
 		}
-  		
 
- 		// FIXME This is to draw a ground. This is ugly and need to be fixed. Without it, we see the color of sky under the roads.
+ 		// FIXME This is to draw a ground. This is ugly and need to be fixed.
+		// Without it, we see the color of sky under the roads.
 		glColor4f(0.0f,0.7f,0.35f,1.0f);
 		glBegin(GL_POLYGON);
 			glVertex3f( -800,-600*3, 0.0f);
@@ -230,7 +210,8 @@ static int gui_run_main_loop(struct gui_priv *this_)
  			profile(0,"graphics_redraw");
  		if (!g_main_context_iteration (NULL, FALSE))
  			sleep(1);
-// 		profile_timer("main context");
+ 		if(enable_timer)
+ 			profile(0,"main context");
 
 	//	graphics_get_data(this_->gra,DLid);
 		
@@ -266,14 +247,6 @@ static int gui_run_main_loop(struct gui_priv *this_)
 			last_time_pulse = SDL_GetTicks();
 		}
  		WindowManager::getSingleton().getWindow("OSD/Satellites")->setText(fps);
-
-		/*
-		glcRenderStyle(GLC_TEXTURE);
-		glColor3f(1, 0, 0);
-		glRotatef(180,1,0,0);
-		glScalef(64, 64, 0);
-		glcRenderString(fps);
-		*/
 
  		if(enable_timer)
  			profile(0,"fps");
@@ -326,7 +299,6 @@ struct gui_methods gui_sdl_methods = {
 int init_GL() {
 
 	dbg(1,"init_GL()\n");
-//  	glClearColor(1.0,0.9,0.7,0);
 
 	// Blue sky
  	glClearColor(0.3,0.7,1.0,0);
@@ -534,8 +506,6 @@ static void init_sdlgui(char * skin_layout,int fullscreen)
 
 	init_GL();
 	
-// 	sdl_audio_init();
-
 	try
 	{
 		renderer = new CEGUI::OpenGLRenderer(0,XRES,YRES);
