@@ -74,7 +74,6 @@ bool handleItemSelect(int r)
 
 	if(SDL_dest.current_search==SRCH_COUNTRY){
 		country_edit->setText(item->getText());
-		// FIXME Need to record the country here so all searches are made by default in this country
 		twn_edit->activate();
 		SDL_dest.current_search=SRCH_TOWN;
 		myRoot->getChild("Navit/Keyboard")->getChild("Navit/Keyboard/Input")->setText("");
@@ -118,53 +117,6 @@ bool handleItemSelect(int r)
 		myRoot->getChild("Navit/Keyboard")->getChild("Navit/Keyboard/Input")->setText("");
 
 
-		/*
-		ListboxItem * itemid = mcl->getItemAtGridReference(MCLGridRef(r,1));
-		int segment_id=atoi(itemid->getText().c_str());
-		printf("street seg id : %li\n",segment_id);
-
-		extern struct container *co;
-		struct block_info res_blk_inf;
-		struct street_str *res_str;
-		street_get_by_id(co->map_data, 33, segment_id,&res_blk_inf,&res_str );
-
-		struct street_coord * streetcoord;
-		streetcoord=street_coord_get(&res_blk_inf,res_str);
-
-		printf("Street coordinates : %i,%i\n",streetcoord->c->x,streetcoord->c->y);
-
-	 	char xbuff [256];
-		sprintf(xbuff,"%li",streetcoord->c->x);
-	 	char ybuff [256];
-		sprintf(ybuff,"%li",streetcoord->c->y);
-
-		Window* Dest_x = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Dest_x"));
-		Dest_x->setText(xbuff);
-
-		Window* Dest_y = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Dest_y"));
-		Dest_y->setText(ybuff);
-
-		struct street_name name;
-// 		printf("street_name_get_by_id returns : %i\n",street_name_get_by_id(&name, res_blk_inf.mdata, res_str->nameid));
-		street_name_get_by_id(&name, res_blk_inf.mdata, res_str->nameid);
-// 		printf("name1:%s / name2%s\n",name.name1,name.name2);
-
-		struct street_name_number_info num;
-		struct street_name_info inf;
-
-		SDL_dest.current_search=SRCH_NUMBER;
-		mcl->resetList();
-
-		while (street_name_get_info(&inf, &name)) {
-			while(street_name_get_number_info(&num,&inf)){
-// 				printf(" House Number : %i -> %i\n",num.first,num.last);
-				for(int i=num.first;i<=num.last;i+=2){
-					add_number_to_list(i,num.c->x,num.c->y);
-				}
-			}
-		}
-		*/
-// 		route_to(streetcoord->c->x,streetcoord->c->y);
 	} else if (SDL_dest.current_search==SRCH_NUMBER){
 
 		struct coord pos;
@@ -313,7 +265,6 @@ void handle_destination_change(){
 				sprintf(y,"%li",res->c->y);
 			
 				ListboxTextItem* yitem = new ListboxTextItem(y);
-// 				item->setSelectionBrushImage(&ImagesetManager::getSingleton().getImageset("TaharezLook")->getImage("MultiListSelectionBrush"));
 			
 				try
 				{
@@ -360,7 +311,6 @@ void handle_destination_change(){
 				sprintf(y,"%li",res->c->y);
 			
 				ListboxTextItem* yitem = new ListboxTextItem(y);
-// 				item->setSelectionBrushImage(&ImagesetManager::getSingleton().getImageset("TaharezLook")->getImage("MultiListSelectionBrush"));
 			
 				try
 				{
@@ -398,7 +348,7 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 
 	if(sdl_gui_navit){	
 	} else {
-		printf("*** Invalid navit instance in sdl_events\n");
+		dbg(0,"*** Invalid navit instance in sdl_events\n");
 	}
 
 
@@ -528,13 +478,6 @@ bool ZoomIn(const CEGUI::EventArgs& event)
 {
 	extern struct navit *sdl_gui_navit;
 	navit_zoom_in(sdl_gui_navit, 2);
-	/*
-	extern struct container *co;
-	struct transformation *t=co->trans;
-	if(t->scale>1){
-		t->scale/=2;
-	}
-	*/
 
 }
 
@@ -542,11 +485,6 @@ bool ZoomOut(const CEGUI::EventArgs& event)
 {
 	extern struct navit *sdl_gui_navit;
 	navit_zoom_out(sdl_gui_navit, 2);
-	/*
-	extern struct container *co;
-	struct transformation *t=co->trans;
-	t->scale*=2;
-	*/
 }
 
 bool ButtonQuit(const CEGUI::EventArgs& event)
