@@ -27,16 +27,6 @@ struct sdl_destination{
 } SDL_dest;
 
 
-static struct search_param {
-	struct navit *nav;
-	struct mapset *ms;
-	struct search_list *sl;
-	struct attr attr;
-} search_param;
-
-// extern "C" struct navit *global_navit;
-// 
-
 void route_to(int x,int y){
 	struct coord pos;
 	pos.x=x;
@@ -251,8 +241,22 @@ void handle_destination_change(){
 	using namespace CEGUI;
 	extern CEGUI::Window* myRoot;
 
-	struct search_param *search=&search_param;
+	static struct search_param {
+		struct navit *nav;
+		struct mapset *ms;
+		struct search_list *sl;
+		struct attr attr;
+ 	} search_param;
+
+ 	struct search_param *search=&search_param;
 	struct search_list_result *res;
+
+ 	// dbg(1,"search->nav=sdl_gui_navit;\n");
+ 	search->nav=sdl_gui_navit;
+ 	// dbg(1,"search->ms=navit_get_mapset(sdl_gui_navit);\n");
+ 	search->ms=navit_get_mapset(sdl_gui_navit);
+ 	// dbg(1,"search->sl=search_list_new(search->ms);\n");
+ 	search->sl=search_list_new(search->ms);
 
 	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
 
@@ -272,7 +276,7 @@ void handle_destination_change(){
 
 		search_list_search(search->sl, &search->attr, 1);
 		while((res=search_list_get_result(search->sl))) {
-			ListboxTextItem* itemListbox = new ListboxTextItem(res->country->name);
+			ListboxTextItem* itemListbox = new ListboxTextItem((CEGUI::utf8*)(res->country->name));
 			itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 
 			mcl->addRow(itemListbox,0);
@@ -296,7 +300,7 @@ void handle_destination_change(){
 
 			search_list_search(search->sl, &search->attr, 1);
 			while((res=search_list_get_result(search->sl))) {
-				ListboxTextItem* itemListbox = new ListboxTextItem(res->town->name);
+				ListboxTextItem* itemListbox = new ListboxTextItem((CEGUI::utf8*)(res->town->name));
 				itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 
 				mcl->addRow(itemListbox,0);
@@ -343,7 +347,7 @@ void handle_destination_change(){
 
 			search_list_search(search->sl, &search->attr, 1);
 			while((res=search_list_get_result(search->sl))) {
-				ListboxTextItem* itemListbox = new ListboxTextItem(res->street->name);
+				ListboxTextItem* itemListbox = new ListboxTextItem((CEGUI::utf8*)(res->street->name));
 				itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 
 				mcl->addRow(itemListbox,0);
@@ -396,14 +400,6 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 	} else {
 		printf("*** Invalid navit instance in sdl_events\n");
 	}
-	struct search_param *search=&search_param;
-
- 	// dbg(1,"search->nav=sdl_gui_navit;\n");
- 	search->nav=sdl_gui_navit;
- 	// dbg(1,"search->ms=navit_get_mapset(sdl_gui_navit);\n");
- 	search->ms=navit_get_mapset(sdl_gui_navit);
- 	// dbg(1,"search->sl=search_list_new(search->ms);\n");
- 	search->sl=search_list_new(search->ms);
 
 
 	extern CEGUI::Window* myRoot;
