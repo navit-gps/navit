@@ -83,6 +83,9 @@ struct navit {
 	struct menu *bookmarks;
 	GHashTable *bookmarks_hash;
 	struct menu *destinations;
+	struct point pressed, last, current;
+	int button_pressed,moved;
+	guint button_timeout, motion_timeout;
 };
 
 struct gui *main_loop_gui;
@@ -146,25 +149,100 @@ navit_resize(void *data, int w, int h)
 	navit_draw(this_);
 }
 
+static gboolean
+navit_popup(void *data)
+{
+	struct navit *this_=data;
+	popup(this_, 1, &this_->pressed);
+	this_->button_timeout=0;
+	return FALSE;
+}
+
 static void
 navit_button(void *data, int pressed, int button, struct point *p)
 {
 	struct navit *this_=data;
-	if (pressed && button == 1) {
-		int border=16;
-		if (! transform_within_border(this_->trans, p, border)) {
+	int border=16;
+
+	if (pressed) {
+		this_->pressed=*p;
+		this_->last=*p;
+		if (button == 1) {
+			this_->button_pressed=1;
+			this_->moved=0;
+			this_->button_timeout=g_timeout_add(500, navit_popup, data);
+		}
+		if (button == 2)
 			navit_set_center_screen(this_, p);
-		} else
+		if (button == 3)
 			popup(this_, button, p);
+		if (button == 4)
+			navit_zoom_in(this_, 2);
+		if (button == 5)
+			navit_zoom_out(this_, 2);
+	} else {
+		this_->button_pressed=0;
+		if (this_->button_timeout) {
+			g_source_remove(this_->button_timeout);	
+			this_->button_timeout=0;
+			if (! this_->moved && ! transform_within_border(this_->trans, p, border))
+				navit_set_center_screen(this_, p);
+				
+		}
+		if (this_->motion_timeout) {
+			g_source_remove(this_->motion_timeout);	
+			this_->motion_timeout=0;
+		}
+		if (this_->moved) {
+			struct point p;
+			transform_get_size(this_->trans, &p.x, &p.y);
+			p.x/=2;
+			p.y/=2;
+			p.x-=this_->last.x-this_->pressed.x;
+			p.y-=this_->last.y-this_->pressed.y;
+			navit_set_center_screen(this_, &p);
+		}
 	}
-	if (pressed && button == 2)
-		navit_set_center_screen(this_, p);
-	if (pressed && button == 3)
-		popup(this_, button, p);
-	if (pressed && button == 4)
-		navit_zoom_in(this_, 2);
-	if (pressed && button == 5)
-		navit_zoom_out(this_, 2);
+}
+
+
+static gboolean
+navit_motion_timeout(void *data)
+{
+	struct navit *this_=data;
+	int dx, dy;
+
+	dx=(this_->current.x-this_->last.x);
+	dy=(this_->current.y-this_->last.y);
+	if (dx || dy) {
+		this_->last=this_->current;
+		graphics_displaylist_move(this_->displaylist, dx, dy);
+		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layouts, this_->route);
+		this_->moved=1;
+	}
+	this_->motion_timeout=0;
+	return FALSE;
+}
+
+static void
+navit_motion(void *data, struct point *p)
+{
+	struct navit *this_=data;
+	int dx, dy;
+
+	if (this_->button_pressed) {
+		dx=(p->x-this_->pressed.x);
+		dy=(p->y-this_->pressed.y);
+		if (dx < -4 || dx > 4 || dy < -4 || dy > 4) {
+			if (this_->button_timeout) {
+				g_source_remove(this_->button_timeout);	
+				this_->button_timeout=0;
+			}
+			this_->current=*p;
+			if (! this_->motion_timeout)
+				this_->motion_timeout=g_timeout_add(100, navit_motion_timeout, data);
+		}
+	}
 }
 
 void
@@ -238,6 +316,7 @@ navit_set_graphics(struct navit *this_, struct graphics *gra, char *type)
 	this_->gra_type=g_strdup(type);
 	graphics_register_resize_callback(this_->gra, navit_resize, this_);
 	graphics_register_button_callback(this_->gra, navit_button, this_);
+	graphics_register_motion_callback(this_->gra, navit_motion, this_);
 }
 
 struct graphics *

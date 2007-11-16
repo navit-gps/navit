@@ -544,6 +544,24 @@ graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist,
 	if (route)
 		route_draw(route, trans, displaylist);
 	xdisplay_draw(displaylist->dl, gra, layouts, order);
+	gra->meth.draw_mode(gra->priv, draw_mode_end);
+}
+
+void
+graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy)
+{
+	struct displaylist_handle *dlh;
+	struct displayitem *di;
+	int i;
+
+	dlh=graphics_displaylist_open(displaylist);
+	while ((di=graphics_displaylist_next(dlh))) {
+		for (i = 0 ; i < di->count ; i++) {
+			di->pnt[i].x+=dx;
+			di->pnt[i].y+=dy;
+		}
+	}
+	graphics_displaylist_close(dlh);
 }
 
 
@@ -574,7 +592,6 @@ graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *maps
 	profile(1,"xdisplay_draw");
 	profile(0,"end");
   
-	gra->meth.draw_mode(gra->priv, draw_mode_end);
 #if 0
 	for (i = 0 ; i < data_window_type_end; i++) {
 		data_window_end(co->data_window[i]);	
