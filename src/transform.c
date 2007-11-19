@@ -354,6 +354,37 @@ transform_geo_text(struct coord_geo *g, char *buffer)
 
 }
 
+#define TWOPI (M_PI*2)
+#define GC2RAD(c) ((c) * TWOPI/(1<<24))
+#define minf(a,b) ((a) < (b) ? (a) : (b))
+
+static double
+transform_distance_garmin(struct coord *c1, struct coord *c2)
+{
+	static const int earth_radius = 6371*1000; //m change accordingly
+// static const int earth_radius  = 3960; //miles
+ 
+//Point 1 cords
+	float lat1  = GC2RAD(c1->y);
+	float long1 = GC2RAD(c1->x);
+
+//Point 2 cords
+	float lat2  = GC2RAD(c2->y);
+	float long2 = GC2RAD(c2->x);
+
+//Haversine Formula
+	float dlong = long2-long1;
+	float dlat  = lat2-lat1;
+
+	float sinlat  = sinf(dlat/2);
+	float sinlong = sinf(dlong/2);
+ 
+	float a=(sinlat*sinlat)+cosf(lat1)*cosf(lat2)*(sinlong*sinlong);
+	float c=2*asinf(minf(1,sqrt(a)));
+ 
+	return roundf(earth_radius*c);
+}
+
 double
 transform_scale(int y)
 {
@@ -371,8 +402,9 @@ tab_sqrt[]={14142,13379,12806,12364,12018,11741,11517,11333,11180,11051,10943,10
 #endif
 
 double
-transform_distance(struct coord *c1, struct coord *c2)
+transform_distance(enum projection pro, struct coord *c1, struct coord *c2)
 {
+	if (pro == projection_mg) {
 #ifndef AVOID_FLOAT 
 	double dx,dy,scale=transform_scale((c1->y+c2->y)/2);
 	dx=c1->x-c2->x;
@@ -407,6 +439,12 @@ transform_distance(struct coord *c1, struct coord *c2)
 		return dy*tab_sqrt[f]/scale;
 	}
 #endif
+	} else if (pro == projection_garmin) {
+		return transform_distance_garmin(c1, c2);
+	} else {
+		printf("Unknown projection: %d\n", pro);
+		return 0;
+	}
 }
 
 int
