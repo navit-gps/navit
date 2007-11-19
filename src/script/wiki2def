@@ -1,0 +1,37 @@
+#! /bin/bash
+rm -f item_def.h.wiki
+rm -f osmmap_def.h.wiki
+IFS="|"
+type="n"
+wget -O - "http://navit.sourceforge.net/wiki/index.php/Item_def.h?action=edit" |
+awk '/<textarea/,/<\/textarea/ { print $0 }' | 
+grep "^| " |
+sed -e 's/^| *//' -e 's/ *$//' -e 's/ *|/|/g' -e 's/| */|/g' -e 's/||/|/g' | 
+while read id item description osmtags dummy
+do
+	if [[ "$id" == colspan=* ]]
+	then
+		echo "/* $item */" >>item_def.h.wiki
+		continue
+	fi
+	if [[ -z "$id" ]]
+	then
+		echo "ITEM($item)" >>item_def.h.wiki
+	else
+		echo "ITEM2($id,$item)" >>item_def.h.wiki
+		if [ "$id" == "0x80000000" ]
+		then
+			type="w"
+		fi
+	fi
+	if [[ -n "$osmtags" ]]
+	then
+		for osmtag in $(echo "$osmtags" | sed 's/&lt;br\/&gt;/|/g')
+		do
+			key=${osmtag%%=*}
+			value=${osmtag##*=}
+			printf '"%s\t%s\t%s\t%s\\n"\n' $type $key $value $item >> osmmap_def.h.wiki
+		done
+	fi
+done
+exit 0
