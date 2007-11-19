@@ -28,9 +28,11 @@ struct sdl_destination{
 
 
 void route_to(int x,int y){
-	struct coord pos;
+	struct pcoord pos;
 	pos.x=x;
 	pos.y=y; 
+	/* FIXME: Get projection from list like x,y or use pcoord from search directly */
+	pos.pro = projection_mg;
 	using namespace CEGUI;
 	extern struct navit *sdl_gui_navit;
 

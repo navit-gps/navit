@@ -1,8 +1,16 @@
 #ifndef NAVIT_COORD_H
 #define NAVIT_COORD_H
+#include "projection.h"
 
 /*! A integer mercator coordinate */
 struct coord {
+	int x; /*!< X-Value */
+	int y; /*!< Y-Value */
+};
+
+/*! A integer mercator coordinate carrying its projection */
+struct pcoord {
+	enum projection pro;
 	int x; /*!< X-Value */
 	int y; /*!< Y-Value */
 };

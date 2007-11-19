@@ -193,7 +193,8 @@ xmlconfig_navit(struct xmlstate *state)
 {
 	const char *value;
 	int zoom=0;
-	struct coord c;
+	struct pcoord c;
+	struct coord co;
 	enum projection pro=projection_mg;
 
 	value=find_attribute(state, "zoom", 0);
@@ -202,11 +203,14 @@ xmlconfig_navit(struct xmlstate *state)
 	if (! zoom)
 		zoom=256;
 	value=find_attribute(state, "center", 0);
-	if (! value || ! coord_parse(value, pro, &c)) {
+	if (! value || ! coord_parse(value, pro, &co)) {
 		c.x=1300000;
 		c.y=7000000;
 	}
-	state->element_object = navit_new(&c, pro, zoom);
+	c.x = co.x;
+	c.y = co.y;
+	c.pro = pro;
+	state->element_object = navit_new(&c, zoom);
 	if (! state->element_object)
 		return 0;
 	return 1;

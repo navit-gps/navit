@@ -111,7 +111,7 @@ struct route_graph {
 	struct route_graph_point *hash[HASH_SIZE];
 };
 
-static struct route_info * route_find_nearest_street(struct mapset *ms, struct coord *c);
+static struct route_info * route_find_nearest_street(struct mapset *ms, struct pcoord *c);
 static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
 static void route_graph_update(struct route *this);
 static struct route_path *route_path_new(struct route_graph *this, struct route_info *pos, struct route_info *dst, int *speedlist);
@@ -211,7 +211,7 @@ route_path_update(struct route *this)
 }
 
 void
-route_set_position(struct route *this, struct coord *pos)
+route_set_position(struct route *this, struct pcoord *pos)
 {
 	if (this->pos)
 		route_info_free(this->pos);
@@ -248,6 +248,7 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 	dbg(2,"ret\n");
 }
 
+/* This is unused - check and remove from graphics.c too */
 struct map_selection *route_selection;
 
 struct map_selection *
@@ -321,7 +322,7 @@ route_free_selection(struct map_selection *sel)
 
 
 void
-route_set_destination(struct route *this, struct coord *dst)
+route_set_destination(struct route *this, struct pcoord *dst)
 {
 	profile(0,NULL);
 	if (this->dst)
@@ -1004,11 +1005,11 @@ street_data_free(struct street_data *sd)
 }
 
 static struct route_info *
-route_find_nearest_street(struct mapset *ms, struct coord *c)
+route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 {
 	struct route_info *ret=NULL;
 	int max_dist=1000;
-	struct map_selection *sel=route_rect(18, c, c, 0, max_dist);
+	struct map_selection *sel;
 	int dist,pos;
 	struct mapset_handle *h;
 	struct map *m;
@@ -1016,21 +1017,25 @@ route_find_nearest_street(struct mapset *ms, struct coord *c)
 	struct item *item;
 	struct coord lp, sc[1000];
 	struct street_data *sd;
+	struct coord c;
 
-        h=mapset_open(ms);
-        while ((m=mapset_next(h,1))) {
+	c.x = pc->x;
+	c.y = pc->y;
+	sel = route_rect(18, &c, &c, 0, max_dist);
+	h=mapset_open(ms);
+	while ((m=mapset_next(h,1))) {
 		mr=map_rect_new(m, sel);
-               while ((item=map_rect_get_item(mr))) {
+		while ((item=map_rect_get_item(mr))) {
 			if (item->type >= type_street_0 && item->type <= type_ferry) {
 				sd=street_get_data(item);
-				dist=transform_distance_polyline_sq(sd->c, sd->count, c, &lp, &pos);
+				dist=transform_distance_polyline_sq(sd->c, sd->count, &c, &lp, &pos);
 				if (!ret || dist < ret->dist) {
 					if (ret) {
 						street_data_free(ret->street);
 						g_free(ret);
 					}
 					ret=g_new(struct route_info, 1);
-					ret->c=*c;
+					ret->c=c;
 					ret->lp=lp;
 					ret->pos=pos;
 					ret->dist=dist;
@@ -1038,14 +1043,15 @@ route_find_nearest_street(struct mapset *ms, struct coord *c)
 					ret->street=sd;
 					dbg(1,"dist=%d id 0x%x 0x%x pos=%d\n", dist, item->id_hi, item->id_lo, pos);
 				} else 
-					street_data_free(sd);		
+					street_data_free(sd);
 			} else 
 				while (item_coord_get(item, &sc[0], 1));
-                }  
+		}  
 		map_rect_destroy(mr);
-        }
-        mapset_close(h);
-	
+	}
+	mapset_close(h);
+	map_selection_destroy(sel);
+
 	return ret;
 }
 
