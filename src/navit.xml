@@ -81,9 +81,11 @@ Change to your home coordinates.
 			<item type="water_poly" order="0-">
 				<polygon color="#82c8ea" /> 
 				<polyline color="#5096b8" /> 
+				<label label_size="5" /> 
 			</item>
 			<item type="park_poly" order="0-">
 				<polygon color="#7cc334" /> 
+				<label label_size="5" /> 
 			</item>
 			<item type="airport_poly" order="0-">
 				<polygon color="#a0a0a0" /> 
@@ -96,6 +98,7 @@ Change to your home coordinates.
 			</item>
 			<item type="water_line" order="0-">
 				<polyline color="#5096b8" width="1" /> 
+				<label label_size="5" /> 
 			</item>
 			<item type="rail" order="6-">
 				<polyline color="#808080" width="3" /> 
@@ -477,6 +480,313 @@ Change to your home coordinates.
 			</item>
 			<item type="point_unkn" order="0-">
 				<circle color="#8080ff" radius="3" />
+			</item>
+			<item type="poi_dining" order="0-">
+				<icon src="dining.xpm" />
+			</item>
+			<item type="poi_fastfood" order="0-">
+				<icon src="fastfood.xpm" />
+			</item>
+			<item type="poi_police" order="0-">
+				<icon src="police.xpm" />
+			</item>
+			<item type="poi_auto_club" order="0-">
+				<icon src="auto_club.xpm" />
+			</item>
+			<item type="poi_autoservice" order="0-">
+				<icon src="autoservice.xpm" />
+			</item>
+			<item type="poi_bank" order="0-">
+				<icon src="bank.xpm" />
+			</item>
+			<item type="poi_bay" order="0-">
+				<icon src="bay.xpm" />
+			</item>
+			<item type="poi_bend" order="0-">
+				<icon src="bend.xpm" />
+			</item>
+			<item type="poi_boat_ramp" order="0-">
+				<icon src="boat_ramp.xpm" />
+			</item>
+			<item type="poi_border_station" order="0-">
+				<icon src="border_station.xpm" />
+			</item>
+			<item type="poi_bowling" order="0-">
+				<icon src="bowling.xpm" />
+			</item>
+			<item type="poi_bus_station" order="0-">
+				<icon src="bus_station.xpm" />
+			</item>
+			<item type="poi_bus_stop" order="0-">
+				<icon src="bus_stop.xpm" />
+			</item>
+			<item type="poi_bussines_service" order="0-">
+				<icon src="bussines_service.xpm" />
+			</item>
+			<item type="poi_car_rent" order="0-">
+				<icon src="car_rent.xpm" />
+			</item>
+			<item type="poi_car_wash" order="0-">
+				<icon src="car_wash.xpm" />
+			</item>
+			<item type="poi_casino" order="0-">
+				<icon src="casino.xpm" />
+			</item>
+			<item type="poi_cemetery" order="0-">
+				<icon src="cemetery.xpm" />
+			</item>
+			<item type="poi_church" order="0-">
+				<icon src="church.xpm" />
+			</item>
+			<item type="poi_cinema" order="0-">
+				<icon src="cinema.xpm" />
+			</item>
+			<item type="poi_civil" order="0-">
+				<icon src="civil.xpm" />
+			</item>
+			<item type="poi_communication" order="0-">
+				<icon src="communication.xpm" />
+			</item>
+			<item type="poi_concert" order="0-">
+				<icon src="concert.xpm" />
+			</item>
+			<item type="poi_cove" order="0-">
+				<icon src="cove.xpm" />
+			</item>
+			<item type="poi_crossing" order="0-">
+				<icon src="crossing.xpm" />
+			</item>
+			<item type="poi_dam" order="0-">
+				<icon src="dam.xpm" />
+			</item>
+			<item type="poi_danger_area" order="0-">
+				<icon src="danger_area.xpm" />
+			</item>
+			<item type="poi_dangerous" order="0-">
+				<icon src="dangerous.xpm" />
+			</item>
+			<item type="poi_daymark" order="0-">
+				<icon src="daymark.xpm" />
+			</item>
+			<item type="poi_diving" order="0-">
+				<icon src="diving.xpm" />
+			</item>
+			<item type="poi_drinking_water" order="0-">
+				<icon src="drinking_water.xpm" />
+			</item>
+			<item type="poi_emergency" order="0-">
+				<icon src="emergency.xpm" />
+			</item>
+			<item type="poi_fair" order="0-">
+				<icon src="fair.xpm" />
+			</item>
+			<item type="poi_firebrigade" order="0-">
+				<icon src="firebrigade.xpm" />
+			</item>
+			<item type="poi_fish" order="0-">
+				<icon src="fish.xpm" />
+			</item>
+			<item type="poi_forbiden_area" order="0-">
+				<icon src="forbiden_area.xpm" />
+			</item>
+			<item type="poi_garmin" order="0-">
+				<icon src="garmin.xpm" />
+			</item>
+			<item type="poi_golf" order="0-">
+				<icon src="golf.xpm" />
+			</item>
+			<item type="poi_goverment_building" order="0-">
+				<icon src="goverment_building.xpm" />
+			</item>
+			<item type="poi_height" order="0-">
+				<icon src="height.xpm" />
+			</item>
+			<item type="poi_heliport" order="0-">
+				<icon src="heliport.xpm" />
+			</item>
+			<item type="poi_hotspring" order="0-">
+				<icon src="hotspring.xpm" />
+			</item>
+			<item type="poi_icesport" order="0-">
+				<icon src="icesport.xpm" />
+			</item>
+			<item type="poi_information" order="0-">
+				<icon src="information.xpm" />
+			</item>
+			<item type="poi_justice" order="0-">
+				<icon src="justice.xpm" />
+			</item>
+			<item type="poi_landmark" order="0-">
+				<icon src="landmark.xpm" />
+			</item>
+			<item type="poi_levee" order="0-">
+				<icon src="levee.xpm" />
+			</item>
+			<item type="poi_library" order="0-">
+				<icon src="library.xpm" />
+			</item>
+			<item type="poi_locale" order="0-">
+				<icon src="locale.xpm" />
+			</item>
+			<item type="poi_loudspeaker" order="0-">
+				<icon src="loudspeaker.xpm" />
+			</item>
+			<item type="poi_mall" order="0-">
+				<icon src="mall.xpm" />
+			</item>
+			<item type="poi_manmade_feature" order="0-">
+				<icon src="manmade_feature.xpm" />
+			</item>
+			<item type="poi_marine" order="0-">
+				<icon src="marine.xpm" />
+			</item>
+			<item type="poi_marine_type" order="0-">
+				<icon src="marine_type.xpm" />
+			</item>
+			<item type="poi_mark" order="0-">
+				<icon src="mark.xpm" />
+			</item>
+			<item type="poi_military" order="0-">
+				<icon src="military.xpm" />
+			</item>
+			<item type="poi_mine" order="0-">
+				<icon src="mine.xpm" />
+			</item>
+			<item type="poi_nondangerous" order="0-">
+				<icon src="nondangerous.xpm" />
+			</item>
+			<item type="poi_oil_field" order="0-">
+				<icon src="oil_field.xpm" />
+			</item>
+			<item type="poi_personal_service" order="0-">
+				<icon src="personal_service.xpm" />
+			</item>
+			<item type="poi_pharmacy" order="0-">
+				<icon src="pharmacy.xpm" />
+			</item>
+			<item type="poi_post" order="0-">
+				<icon src="post.xpm" />
+			</item>
+			<item type="poi_public_office" order="0-">
+				<icon src="public_office.xpm" />
+			</item>
+			<item type="poi_repair_service" order="0-">
+				<icon src="repair_service.xpm" />
+			</item>
+			<item type="poi_resort" order="0-">
+				<icon src="resort.xpm" />
+			</item>
+			<item type="poi_rest_room" order="0-">
+				<icon src="rest_room.xpm" />
+			</item>
+			<item type="poi_restaurant" order="0-">
+				<icon src="restaurant.xpm" />
+			</item>
+			<item type="poi_restricted_area" order="0-">
+				<icon src="restricted_area.xpm" />
+			</item>
+			<item type="poi_restroom" order="0-">
+				<icon src="restroom.xpm" />
+			</item>
+			<item type="poi_sailing" order="0-">
+				<icon src="sailing.xpm" />
+			</item>
+			<item type="poi_scenic_area" order="0-">
+				<icon src="scenic_area.xpm" />
+			</item>
+			<item type="poi_school" order="0-">
+				<icon src="school.xpm" />
+			</item>
+			<item type="poi_service" order="0-">
+				<icon src="service.xpm" />
+			</item>
+			<item type="poi_shop_apparel" order="0-">
+				<icon src="shop_apparel.xpm" />
+			</item>
+			<item type="poi_shop_computer" order="0-">
+				<icon src="shop_computer.xpm" />
+			</item>
+			<item type="poi_shop_department" order="0-">
+				<icon src="shop_department.xpm" />
+			</item>
+			<item type="poi_shop_furnish" order="0-">
+				<icon src="shop_furnish.xpm" />
+			</item>
+			<item type="poi_shop_grocery" order="0-">
+				<icon src="shop_grocery.xpm" />
+			</item>
+			<item type="poi_shop_handg" order="0-">
+				<icon src="shop_handg.xpm" />
+			</item>
+			<item type="poi_shop_merchandise" order="0-">
+				<icon src="shop_merchandise.xpm" />
+			</item>
+			<item type="poi_shop_retail" order="0-">
+				<icon src="shop_retail.xpm" />
+			</item>
+			<item type="poi_shower" order="0-">
+				<icon src="shower.xpm" />
+			</item>
+			<item type="poi_skiing" order="0-">
+				<icon src="skiing.xpm" />
+			</item>
+			<item type="poi_social_service" order="0-">
+				<icon src="social_service.xpm" />
+			</item>
+			<item type="poi_sounding" order="0-">
+				<icon src="sounding.xpm" />
+			</item>
+			<item type="poi_sport" order="0-">
+				<icon src="sport.xpm" />
+			</item>
+			<item type="poi_stadium" order="0-">
+				<icon src="stadium.xpm" />
+			</item>
+			<item type="poi_subdivision" order="0-">
+				<icon src="subdivision.xpm" />
+			</item>
+			<item type="poi_swimming" order="0-">
+				<icon src="swimming.xpm" />
+			</item>
+			<item type="poi_telephone" order="0-">
+				<icon src="telephone.xpm" />
+			</item>
+			<item type="poi_theater" order="0-">
+				<icon src="theater.xpm" />
+			</item>
+			<item type="poi_tide" order="0-">
+				<icon src="tide.xpm" />
+			</item>
+			<item type="poi_tower" order="0-">
+				<icon src="tower.xpm" />
+			</item>
+			<item type="poi_trail" order="0-">
+				<icon src="trail.xpm" />
+			</item>
+			<item type="poi_truck_stop" order="0-">
+				<icon src="truck_stop.xpm" />
+			</item>
+			<item type="poi_tunnel" order="0-">
+				<icon src="tunnel.xpm" />
+			</item>
+			<item type="poi_wine" order="0-">
+				<icon src="wine.xpm" />
+			</item>
+			<item type="poi_worship" order="0-">
+				<icon src="worship.xpm" />
+			</item>
+			<item type="poi_wrecker" order="0-">
+				<icon src="wrecker.xpm" />
+			</item>
+			<item type="poi_zoo" order="0-">
+				<icon src="zoo.xpm" />
+			</item>
+			<item type="poi_picnic" order="0-">
+				<icon src="picnic.xpm" />
+			</item>
+			<item type="flats,scrub,military_zone,marine_poly,plantation,tundra" order="0-">
+				<polygon color="#a0a0a0" />
+				<label label_size="5" /> 
 			</item>
 		</layer>
 	</layout>
