@@ -10,8 +10,8 @@ if eval "test x$GCC = xyes"; then
         CFLAGS="$CFLAGS -Wall -Wcast-align -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wpointer-arith -Wreturn-type -D_GNU_SOURCE"
 fi
 AC_PROG_CXX
-if eval "test x$G++ = xyes"; then
-        CFLAGS="$CFLAGS -Wall -Wcast-align -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wpointer-arith -Wreturn-type -D_GNU_SOURCE"
+if eval "test x$GXX = xyes"; then
+        CXXFLAGS="$CXXFLAGS -Wall -Wcast-align -Wmissing-prototypes -Wstrict-prototypes -Wpointer-arith -Wreturn-type -D_GNU_SOURCE"
 fi
 
 PKG_CHECK_EXISTS
