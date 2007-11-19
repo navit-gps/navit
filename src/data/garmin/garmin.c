@@ -146,6 +146,7 @@ garmin_object_label(struct gobject *o, struct attr *attr)
 		char *cp = mr->label;
 		if (*mr->label == '@' || *mr->label == '^')
 			cp++;
+		/* FIXME: If zoomlevel is high convert ^ in the string to spaces */
 		attr->u.str = cp;
 		return 1;
 	}
@@ -306,6 +307,9 @@ point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			break;
 	case attr_label:
 		attr->type = attr_label;
+		return garmin_object_label(g, attr);
+	case attr_street_name:
+		attr->type = attr_street_name;
 		return garmin_object_label(g, attr);
 	case attr_limit:
 		return 0;
