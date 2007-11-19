@@ -261,10 +261,12 @@ transform_get_size(struct transformation *t, int *width, int *height)
 }
 
 void
-transform_setup(struct transformation *t, struct coord *c, int scale, int angle)
+transform_setup(struct transformation *t, struct pcoord *c, int scale, int angle)
 {
-        t->center=*c;
-        t->scale=scale;
+	t->pro=c->pro;
+	t->center.x=c->x;
+	t->center.y=c->y;
+	t->scale=scale;
 	transform_set_angle(t, angle);
 }
 

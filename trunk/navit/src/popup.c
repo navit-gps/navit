@@ -43,14 +43,17 @@ static void
 popup_set_destination(struct menu *menu, void *data1, void *data2)
 {
 	struct navit *nav=data1;
-	struct coord *c=data2;
+	struct pcoord *pc=data2;
+	struct coord c;
 	struct coord_geo g;
 	char buffer[1024];
 	char buffer_geo[1024];
-	transform_to_geo(transform_get_projection(navit_get_trans(nav)), c, &g);
+	c.x = pc->x;
+	c.y = pc->y;
+	transform_to_geo(transform_get_projection(navit_get_trans(nav)), &c, &g);
 	transform_geo_text(&g, buffer_geo);	
 	sprintf(buffer,"Map Point %s", buffer_geo);
-	navit_set_destination(nav, c, buffer);
+	navit_set_destination(nav, pc, buffer);
 }
 
 static void
@@ -75,7 +78,7 @@ static void
 popup_set_position(struct menu *menu, void *data1, void *data2)
 {
 	struct navit *nav=data1;
-	struct coord *c=data2;
+	struct pcoord *c=data2;
 	dbg(0,"%p %p\n", nav, c);
 	navit_set_position(nav, c);
 }
@@ -211,7 +214,7 @@ popup_display(struct navit *nav, void *popup, struct point *p)
 	graphics_displaylist_close(dlh);
 }
 
-static struct coord c;
+static struct pcoord c;
 
 void
 popup(struct navit *nav, int button, struct point *p)
@@ -219,16 +222,20 @@ popup(struct navit *nav, int button, struct point *p)
 	void *popup,*men;
 	char buffer[1024];
 	struct coord_geo g;
+	struct coord co;
 
 	popup=gui_popup_new(navit_get_gui(nav));
-	transform_reverse(navit_get_trans(nav), p, &c);
-	men=popup_printf(popup, menu_type_submenu, "Point 0x%x 0x%x", c.x, c.y);
+	transform_reverse(navit_get_trans(nav), p, &co);
+	men=popup_printf(popup, menu_type_submenu, "Point 0x%x 0x%x", co.x, co.y);
 	popup_printf(men, menu_type_menu, "Screen %d %d", p->x, p->y);
-	transform_to_geo(transform_get_projection(navit_get_trans(nav)), &c, &g);
+	transform_to_geo(transform_get_projection(navit_get_trans(nav)), &co, &g);
 	transform_geo_text(&g, buffer);	
 	popup_printf(men, menu_type_menu, "%s", buffer);
 	popup_printf(men, menu_type_menu, "%f %f", g.lat, g.lng);
 	dbg(0,"%p %p\n", nav, &c);
+	c.pro = transform_get_projection(navit_get_trans(nav));
+	c.x = co.x;
+	c.y = co.y;
 	popup_printf_cb(men, menu_type_menu, popup_set_position, nav, &c, "Set as position");
 	popup_printf_cb(men, menu_type_menu, popup_set_destination, nav, &c, "Set as destination");
 	popup_printf_cb(men, menu_type_menu, popup_set_bookmark, nav, &c, "Add as bookmark");

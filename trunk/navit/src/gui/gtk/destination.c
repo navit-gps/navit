@@ -12,6 +12,7 @@
 #include "track.h"
 #include "country.h"
 #include "search.h"
+#include "projection.h"
 
 #define COL_COUNT 8
 
@@ -34,13 +35,17 @@ static struct search_param {
 
 static void button_map(GtkWidget *widget, struct search_param *search)
 {
-	struct coord *c=NULL;
+	struct pcoord *c=NULL;
+	struct coord co;
 	GtkTreeIter iter;
 	if (!gtk_tree_model_get_iter_first (GTK_TREE_MODEL (search->liststore2), &iter))
 		return;
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, COL_COUNT, &c, -1);
-	if (c) 
-		navit_set_center(search->nav, c);
+	if (c) {
+		co.x = c->x;
+		co.y = c->y;
+		navit_set_center(search->nav, &co);
+	}
 }
 
 static char *description(struct search_param *search, GtkTreeIter *iter)
@@ -59,7 +64,7 @@ static char *description(struct search_param *search, GtkTreeIter *iter)
 
 static void button_destination(GtkWidget *widget, struct search_param *search)
 {
-	struct coord *c=NULL;
+	struct pcoord *c=NULL;
 	GtkTreeIter iter;
 	char *desc;
 

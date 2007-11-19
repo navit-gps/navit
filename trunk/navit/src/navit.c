@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <signal.h>
 #include <string.h>
 #include <unistd.h>
@@ -264,7 +265,7 @@ navit_zoom_out(struct navit *this_, int factor)
 }
 
 struct navit *
-navit_new(struct coord *center, enum projection pro, int zoom)
+navit_new(struct pcoord *center, int zoom)
 {
 	struct navit *this_=g_new0(struct navit, 1);
 	FILE *f;
@@ -284,8 +285,6 @@ navit_new(struct coord *center, enum projection pro, int zoom)
 	this_->cursor_flag=1;
 	this_->tracking_flag=1;
 	this_->trans=transform_new();
-	transform_set_projection(this_->trans, pro);
-
 	transform_setup(this_->trans, center, zoom, 0);
 	this_->displaylist=graphics_displaylist_new();
 	return this_;
@@ -376,7 +375,7 @@ navit_add_menu_destinations(struct navit *this_, char *name, int offset, struct 
 
 
 static void
-navit_append_coord(struct navit *this_, char *file, struct coord *c, char *type, char *description, struct menu *rmen, GHashTable *h, void (*callback)(struct menu *menu, void *data1, void *data2))
+navit_append_coord(struct navit *this_, char *file, struct pcoord *c, char *type, char *description, struct menu *rmen, GHashTable *h, void (*callback)(struct menu *menu, void *data1, void *data2))
 {
 	FILE *f;
 	int offset=0;
@@ -386,7 +385,7 @@ navit_append_coord(struct navit *this_, char *file, struct coord *c, char *type,
 	if (f) {
 		offset=ftell(f);
 		if (c) 
-			fprintf(f,"0x%x 0x%x type=%s label=\"%s\"\n", c->x, c->y, type, description);
+			fprintf(f,"p=%u 0x%x 0x%x type=%s label=\"%s\"\n", c->pro, c->x, c->y, type, description);
 		else
 			fprintf(f,"\n");
 		fclose(f);
@@ -399,20 +398,29 @@ navit_append_coord(struct navit *this_, char *file, struct coord *c, char *type,
 }
 
 static int
-parse_line(FILE *f, char *buffer, char **name, struct coord *c)
+parse_line(FILE *f, char *buffer, char **name, struct pcoord *c)
 {
 	int pos;
 	char *s,*i;
+	struct coord co;
+	char *cp, *ep;
+	enum projection pro = projection_mg;
 	*name=NULL;
 	if (! fgets(buffer, 2048, f))
 		return -3;
-	pos=coord_parse(buffer, projection_mg, c);
-	if (! pos)
+	cp = buffer;
+	if (*cp == 'p') {
+		pro = strtol(cp+2, &ep, 10);
+		cp = ep;
+		cp += strcspn(cp, " \t");
+	}
+	pos=coord_parse(cp, pro, &co);
+	if (!pos)
 		return -2;
-	if (!buffer[pos] || buffer[pos] == '\n') 
+	if (!cp[pos] || cp[pos] == '\n') 
 		return -1;
-	buffer[strlen(buffer)-1]='\0';
-	s=buffer+pos+1;
+	cp[strlen(cp)-1]='\0';
+	s=cp+pos+1;
 	if (!strncmp(s,"type=", 5)) {
 		i=index(s, '"');
 		if (i) {
@@ -423,6 +431,9 @@ parse_line(FILE *f, char *buffer, char **name, struct coord *c)
 		}
 	}
 	*name=s;
+	c->x = co.x;
+	c->y = co.y;
+	c->pro = pro;
 	return pos;
 }
 
@@ -432,7 +443,7 @@ navit_set_destination_from_file(struct navit *this_, char *file, int bookmark, i
 {
 	FILE *f;
 	char *name, *description, buffer[2048];
-	struct coord c;
+	struct pcoord c;
 	
 	f=fopen(file, "r");
 	if (! f)
@@ -461,18 +472,18 @@ navit_set_destination_from_bookmark(struct menu *menu, void *this_p, void *offse
 }
 
 void
-navit_set_destination(struct navit *this_, struct coord *c, char *description)
+navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
 {
 	navit_append_coord(this_, "destination.txt", c, "former_destination", description, this_->destinations, NULL, navit_set_destination_from_destination);
 	if (this_->route) {
-                route_set_destination(this_->route, c);
-                navit_draw(this_);
-        }
+		route_set_destination(this_->route, c);
+		navit_draw(this_);
+	}
 }
 
 
 void
-navit_add_bookmark(struct navit *this_, struct coord *c, char *description)
+navit_add_bookmark(struct navit *this_, struct pcoord *c, char *description)
 {
 	navit_append_coord(this_,"bookmark.txt", c, "bookmark", description, this_->bookmarks, this_->bookmarks_hash, navit_set_destination_from_bookmark);
 }
@@ -564,7 +575,7 @@ navit_add_menu_destinations_from_file(struct navit *this_, char *file, struct me
 	int pos,flag=0;
 	FILE *f;
 	char buffer[2048];
-	struct coord c;
+	struct pcoord c;
 	char *name;
 	int offset=0;
 	
@@ -736,11 +747,13 @@ struct navit_window_items {
 static void
 navit_window_items_click(struct navit *this_, struct navit_window_items *nwi, char **col)
 {
-	struct coord c;
+	struct pcoord c;
 	char *description;
 
+	// FIXME
 	dbg(0,"enter col=%s,%s,%s,%s,%s\n", col[0], col[1], col[2], col[3], col[4]);
 	sscanf(col[4], "0x%x,0x%x", &c.x, &c.y);
+	c.pro = projection_mg;
 	dbg(0,"0x%x,0x%x\n", c.x, c.y);
 	description=g_strdup_printf("%s %s", nwi->name, col[3]);
 	navit_set_destination(this_, &c, description);
@@ -1004,6 +1017,7 @@ navit_cursor_update(struct navit *this_, struct cursor *cursor)
 {
 	struct point pnt;
 	struct coord *cursor_c=cursor_pos_get(cursor);
+	struct pcoord pc;
 	int dir=cursor_get_dir(cursor);
 	int speed=cursor_get_speed(cursor);
 	enum projection pro;
@@ -1017,6 +1031,7 @@ navit_cursor_update(struct navit *this_, struct cursor *cursor)
 	speed=cursor_get_speed(cursor);
 	pro=vehicle_projection(this_->vehicle->vehicle);
 
+	/* This transform is useless cursor and vehicle are in the same projection */
 	if (!transform(this_->trans, pro, cursor_c, &pnt) || !transform_within_border(this_->trans, &pnt, border)) {
 		if (!this_->cursor_flag)
 			return;
@@ -1038,8 +1053,12 @@ navit_cursor_update(struct navit *this_, struct cursor *cursor)
 				route_set_position_from_tracking(this_->route, this_->tracking);
 		}
 	} else {
-		if (this_->route && this_->vehicle->update_curr == 1)
-			route_set_position(this_->route, cursor_c);
+		if (this_->route && this_->vehicle->update_curr == 1) {
+			pc.pro = pro;
+			pc.x = cursor_c->x;
+			pc.y = cursor_c->y;
+			route_set_position(this_->route, &pc);
+		}
 	}
 	if (this_->route && this_->vehicle->update_curr == 1)
 		navigation_update(this_->navigation, this_->route);
@@ -1059,7 +1078,7 @@ navit_cursor_update(struct navit *this_, struct cursor *cursor)
 }
 
 void
-navit_set_position(struct navit *this_, struct coord *c)
+navit_set_position(struct navit *this_, struct pcoord *c)
 {
 	if (this_->route) {
 		route_set_position(this_->route, c);
