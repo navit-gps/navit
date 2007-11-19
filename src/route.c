@@ -667,7 +667,7 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 	if (item_coord_get(item, &l, 1)) {
 		s_pnt=route_graph_add_point(this,&l);
 		while (item_coord_get(item, &c, 1)) {
-			len+=transform_distance(&l, &c);
+			len+=transform_distance(map_projection(item->map), &l, &c);
 			l=c;
 		}
 		e_pnt=route_graph_add_point(this,&l);
@@ -697,6 +697,7 @@ route_info_length(struct route_info *pos, struct route_info *dst, int dir)
 	struct route_info_handle *h;
 	struct coord *c,*l;
 	int ret=0;
+	struct street_data *street;
 
 	dbg(2,"enter pos=%p dst=%p dir=%d\n", pos, dst, dir);
 	h=route_info_open(pos, dst, dir);
@@ -704,10 +705,11 @@ route_info_length(struct route_info *pos, struct route_info *dst, int dir)
 		dbg(2,"ret=-1\n");
 		return -1;
 	}
+	street = pos ? pos->street : dst->street;
 	l=route_info_get(h);
 	while ((c=route_info_get(h))) {
 		dbg(3,"c=%p\n", c);
-		ret+=transform_distance(c, l);
+		ret+=transform_distance(map_projection(street->item.map), c, l);
 		l=c;
 	}
 	dbg(2,"ret=%d\n", ret);

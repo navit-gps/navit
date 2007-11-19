@@ -99,7 +99,7 @@ compass_draw(struct compass *comp, struct container *co)
 		handle(comp->gr, comp->green, &p, 20, dir);
 		p.x=8;
 		p.y=72;
-		distance=transform_distance(pos, dest)/1000.0;
+		distance=transform_distance(projection_mg, pos, dest)/1000.0;
 		if (distance >= 100)
 			sprintf(buffer,"%.0f km", distance);
 		else if (distance >= 10)
