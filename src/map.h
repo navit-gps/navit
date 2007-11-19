@@ -50,6 +50,7 @@ void map_rect_destroy(struct map_rect *mr);
 struct map_search *map_search_new(struct map *m, struct item *item, struct attr *search_attr, int partial);
 struct item *map_search_get_item(struct map_search *this);
 void map_search_destroy(struct map_search *this);
+void map_selection_destroy(struct map_selection *sel);
 /* end of prototypes */
 
 #endif

@@ -210,3 +210,14 @@ map_search_destroy(struct map_search *this)
 	}
 	g_free(this);
 }
+
+void
+map_selection_destroy(struct map_selection *sel)
+{
+	struct map_selection *ms;
+	while (sel) {
+		ms = sel->next;
+		g_free(sel);
+		sel = ms;
+	}
+}

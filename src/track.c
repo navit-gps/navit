@@ -134,10 +134,11 @@ tracking_doupdate_lines(struct tracking *tr, struct coord *cc)
 				tr->lines=tl;
 			} else 
 				while (item_coord_get(item, &c, 1));
-                }  
+		}
 		map_rect_destroy(mr);
-        }
-        mapset_close(h);
+	}
+	mapset_close(h);
+	map_selection_destroy(sel);
 	dbg(1, "exit\n");
 #if 0
 

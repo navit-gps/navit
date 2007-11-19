@@ -143,8 +143,10 @@ search_list_town_new(struct item *item)
 	if (item_attr_get(item, attr_town_postal, &attr))
 		ret->postal=map_convert_string(item->map,attr.u.str);
 	if (item_coord_get(item, &c, 1)) {
-		ret->c=g_new(struct coord, 1);
-		*(ret->c)=c;
+		ret->c=g_new(struct pcoord, 1);
+		ret->c->x=c.x;
+		ret->c->y=c.y;
+		ret->c->pro = map_projection(item->map);
 	}
 	return ret;
 }
@@ -154,6 +156,8 @@ search_list_town_destroy(struct search_list_town *this_)
 {
 	map_convert_free(this_->name);
 	map_convert_free(this_->postal);
+	if (this_->c)
+		g_free(this_->c);
 	g_free(this_);
 }
 
@@ -168,8 +172,10 @@ search_list_street_new(struct item *item)
 	if (item_attr_get(item, attr_street_name, &attr))
 		ret->name=map_convert_string(item->map, attr.u.str);
 	if (item_coord_get(item, &c, 1)) {
-		ret->c=g_new(struct coord, 1);
-		*(ret->c)=c;
+		ret->c=g_new(struct pcoord, 1);
+		ret->c->x=c.x;
+		ret->c->y=c.y;
+		ret->c->pro = map_projection(item->map);
 	}
 	return ret;
 }
@@ -178,6 +184,8 @@ static void
 search_list_street_destroy(struct search_list_street *this_)
 {
 	map_convert_free(this_->name);
+	if (this_->c)
+		g_free(this_->c);
 	g_free(this_);
 }
 

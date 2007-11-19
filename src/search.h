@@ -5,29 +5,29 @@
 extern "C" {
 #endif
 struct search_list_country {
-        struct item item;
-        char *car;
-        char *iso2;
-        char *iso3;
-        char *name;
+	struct item item;
+	char *car;
+	char *iso2;
+	char *iso3;
+	char *name;
 };
 
 struct search_list_town {
 	struct item item;
-        struct item itemt;
-	struct coord *c;
+	struct item itemt;
+	struct pcoord *c;
 	char *postal;
-        char *name;
+	char *name;
 };
 
 struct search_list_street {
 	struct item item;
-	struct coord *c;
-        char *name;
+	struct pcoord *c;
+	char *name;
 };
 
 struct search_list_result {
-	struct coord *c;
+	struct pcoord *c;
 	struct search_list_country *country;
 	struct search_list_town *town;
 	struct search_list_street *street;

@@ -7,6 +7,7 @@ extern "C" {
 /* prototypes */
 enum projection;
 struct coord;
+struct pcoord;
 struct coord_geo;
 struct coord_rect;
 struct point;
@@ -25,7 +26,7 @@ void transform_set_angle(struct transformation *t, int angle);
 int transform_get_angle(struct transformation *this_, int angle);
 void transform_set_size(struct transformation *t, int width, int height);
 void transform_get_size(struct transformation *t, int *width, int *height);
-void transform_setup(struct transformation *t, struct coord *c, int scale, int angle);
+void transform_setup(struct transformation *t, struct pcoord *c, int scale, int angle);
 void transform_setup_source_rect_limit(struct transformation *t, struct coord *center, int limit);
 void transform_setup_source_rect(struct transformation *t);
 long transform_get_scale(struct transformation *t);
