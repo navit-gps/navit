@@ -211,7 +211,7 @@ popup_display(struct navit *nav, void *popup, struct point *p)
 	graphics_displaylist_close(dlh);
 }
 
-struct coord c;
+static struct coord c;
 
 void
 popup(struct navit *nav, int button, struct point *p)
