@@ -30,6 +30,14 @@ item_coord_get(struct item *it, struct coord *c, int count)
 	return it->meth->item_coord_get(it->priv_data, c, count);
 }
 
+int 
+item_coord_is_segment(struct item *it)
+{
+	if (it->meth->item_coord_is_segment)
+		return it->meth->item_coord_is_segment(it->priv_data);
+	return 0;
+}
+
 void
 item_attr_rewind(struct item *it)
 {

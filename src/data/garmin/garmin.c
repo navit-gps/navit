@@ -232,6 +232,17 @@ point_coord_get(void *priv_data, struct coord *c, int count)
 	return 1;
 }
 
+static int
+coord_is_segment(void *priv_data)
+{
+	struct gobject *g = priv_data;
+	struct map_rect_priv *mr = g->priv_data;
+
+	if (mr->last_coord == 0)
+		return 0;
+	return gar_is_object_dcoord_node(mr->gmap, g, mr->last_coord - 1);
+}
+
 static int 
 poly_coord_get(void *priv_data, struct coord *c, int count)
 {
@@ -355,6 +366,7 @@ static struct item_methods methods_garmin_poly = {
 	poly_coord_get,
 	attr_rewind,	// point_attr_rewind,
 	point_attr_get,	// poly_attr_get,
+	coord_is_segment,
 };
 
 static struct item *
