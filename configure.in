@@ -163,7 +163,7 @@ AC_SUBST(GLC_CFLAGS)
 AC_SUBST(GLC_LIBS)
 
 if test x"$cegui" = xyes 	 
-	         then 	 
+	        then 	 
 	 # Save the LIBS into a temp var since AC_CHECK_LIB adds the lib into LIBS 	 
 	 # and we want just to check and use CEGUI_LIBS 	 
 	 libstemp="$LIBS" 	 
@@ -415,8 +415,18 @@ fi
 if test x"$sdl" = xyes
 	then
 	if test x"$cegui" = xyes
-	then
-		echo "SDL gui     : ENABLED, with $CEGUI_LIBS"
+		then
+		if test x"$glut" = xyes
+			then
+			if test x"$glc" = xyes
+				then
+				echo "SDL gui     : ENABLED, with $CEGUI_LIBS"
+				else
+				echo "SDL gui     : DISABLED, you are missing quesoglc"
+				fi
+			else
+			echo "SDL gui     : DISABLED, your are missing glut"
+			fi
 		else
 		echo "SDL gui     : DISABLED : you are missing cegui-devel >= 0.5"
 	fi
