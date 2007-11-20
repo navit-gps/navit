@@ -301,6 +301,22 @@ point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 					rc = garmin_object_debug(g, attr);
 					if (rc)
 						return rc;
+				case 2:
+					mr->last_attr++;
+					attr->type = attr_street_name;
+					rc = garmin_object_label(g, attr);
+					if (rc)
+						return rc;
+				case 3:
+					mr->last_attr++;
+					attr->type = attr_flags;
+					attr->u.num = 0;
+					rc = gar_object_flags(g);
+					if (rc & F_ONEWAY)
+						attr->u.num |= AF_ONEWAY;
+					if (rc & F_SEGMENTED)
+						attr->u.num |= AF_SEGMENTED;
+					return 1;
 				default:
 					return 0;
 			}
@@ -312,7 +328,14 @@ point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		attr->type = attr_street_name;
 		return garmin_object_label(g, attr);
 	case attr_flags:
-		return 0;
+		attr->type = attr_flags;
+		attr->u.num = 0;
+		rc = gar_object_flags(g);
+		if (rc & F_ONEWAY)
+			attr->u.num |= AF_ONEWAY;
+		if (rc & F_SEGMENTED)
+			attr->u.num |= AF_SEGMENTED;
+		return 1;
 	default:
 		dlog(1, "Dont know about attribute %d[%04X]=%s yet\n", attr_type,attr_type, attr_to_name(attr_type));
 	}
