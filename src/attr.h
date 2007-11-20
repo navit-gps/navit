@@ -17,6 +17,13 @@ enum attr_type {
 #undef ATTR
 };
 
+#define AF_ONEWAY	(1<<0)
+#define AF_ONEWAYREV	(1<<1)
+#define AF_NOPASS	(AF_ONEWAY|AF_ONEWAYREV)
+#define AF_ONEWAYMASK	(AF_ONEWAY|AF_ONEWAYREV)
+#define AF_SEGMENTED	(1<<2)
+
+
 struct attr {
 	enum attr_type type;
 	union {

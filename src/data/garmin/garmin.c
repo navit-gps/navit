@@ -311,7 +311,7 @@ point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	case attr_street_name:
 		attr->type = attr_street_name;
 		return garmin_object_label(g, attr);
-	case attr_limit:
+	case attr_flags:
 		return 0;
 	default:
 		dlog(1, "Dont know about attribute %d[%04X]=%s yet\n", attr_type,attr_type, attr_to_name(attr_type));
@@ -507,6 +507,7 @@ garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel)
 		&& sel->order[layer_street]) {
 		// Get all roads 
 		flags = GO_GET_ROUTABLE;
+		sel = NULL;
 	} else if (sel)
 		flags = GO_GET_SORTED;
 

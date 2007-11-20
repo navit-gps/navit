@@ -242,7 +242,7 @@ street_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		attr->u.str=street->name.name2;
 		return ((attr->u.str && attr->u.str[0]) ? 1:0);
 	case attr_street_name_systematic:
-		street->attr_next=attr_limit;
+		street->attr_next=attr_flags;
 		nameid=L(street->str->nameid);
 		if (! nameid)
 			return 0;
@@ -250,13 +250,13 @@ street_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			street_name_get_by_id(&street->name,street->name_file,nameid);
 		attr->u.str=street->name.name1;
 		return ((attr->u.str && attr->u.str[0]) ? 1:0);
-	case attr_limit:
+	case attr_flags:
 		if (street->str->type & 0x40) {
-			attr->u.num=(street->str->limit & 0x30) ? 2:0;
-			attr->u.num|=(street->str->limit & 0x03) ? 1:0;
+			attr->u.num=(street->str->limit & 0x30) ? AF_ONEWAYREV:0;
+			attr->u.num|=(street->str->limit & 0x03) ? AF_ONEWAY:0;
 		} else {
-			attr->u.num=(street->str->limit & 0x30) ? 1:0;
-			attr->u.num|=(street->str->limit & 0x03) ? 2:0;
+			attr->u.num=(street->str->limit & 0x30) ? AF_ONEWAY:0;
+			attr->u.num|=(street->str->limit & 0x03) ? AF_ONEWAYREV:0;
 		}
 		street->attr_next=attr_country_id;
 		return 1;

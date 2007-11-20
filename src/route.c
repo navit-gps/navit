@@ -63,7 +63,7 @@ struct route_graph_segment {
 	struct route_graph_point *start;
 	struct route_graph_point *end;
 	struct item item;
-	int limit;
+	int flags;
 	int len;
 };
 
@@ -395,7 +395,7 @@ route_graph_free_points(struct route_graph *this)
 }
 
 static void
-route_graph_add_segment(struct route_graph *this, struct route_graph_point *start, struct route_graph_point *end, int len, struct item *item, int limit)
+route_graph_add_segment(struct route_graph *this, struct route_graph_point *start, struct route_graph_point *end, int len, struct item *item, int flags)
 {
 	struct route_graph_segment *s;
 	s=g_new0(struct route_graph_segment,1);
@@ -408,7 +408,7 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 	g_assert(len >= 0);
 	s->len=len;
 	s->item=*item;
-	s->limit=limit;
+	s->flags=flags;
 	s->next=this->route_segments;
 	this->route_segments=s;
 	if (debug_route)
@@ -673,7 +673,7 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 		}
 		e_pnt=route_graph_add_point(this,&l);
 		g_assert(len >= 0);
-		if (item_attr_get(item, attr_limit, &attr)) 
+		if (item_attr_get(item, attr_flags, &attr)) 
 			route_graph_add_segment(this, s_pnt, e_pnt, len, item, attr.u.num);
 		else
 			route_graph_add_segment(this, s_pnt, e_pnt, len, item, 0);
@@ -729,14 +729,14 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 	heap = fh_makeheap();   
 	fh_setcmp(heap, compare);
 
-	if (! (sd->limit & 2)) {
+	if (! (sd->flags & AF_ONEWAYREV)) {
 		end=route_graph_get_point(this, &sd->c[0]);
 		g_assert(end != 0);
 		end->value=route_value(speedlist, &sd->item, route_info_length(NULL, dst, -1));
 		end->el=fh_insert(heap, end);
 	}
 
-	if (! (sd->limit & 1)) {
+	if (! (sd->flags & AF_ONEWAY)) {
 		end=route_graph_get_point(this, &sd->c[sd->count-1]);
 		g_assert(end != 0);
 		end->value=route_value(speedlist, &sd->item, route_info_length(NULL, dst, 1));
@@ -761,7 +761,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 			new=min+val;
 			if (debug_route)
 				printf("begin %d len %d vs %d (0x%x,0x%x)\n",new,val,s->end->value, s->end->c.x, s->end->c.y);
-			if (new < s->end->value && !(s->limit & 1)) {
+			if (new < s->end->value && !(s->flags & AF_ONEWAY)) {
 				s->end->value=new;
 				s->end->seg=s;
 				if (! s->end->el) {
@@ -787,7 +787,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 			new=min+val;
 			if (debug_route)
 				printf("end %d len %d vs %d (0x%x,0x%x)\n",new,val,s->start->value,s->start->c.x, s->start->c.y);
-			if (new < s->start->value && !(s->limit & 2)) {
+			if (new < s->start->value && !(s->flags & AF_ONEWAYREV)) {
 				old=s->start->value;
 				s->start->value=new;
 				s->start->seg=s;
@@ -826,14 +826,14 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 	struct street_data *sd=pos->street;
 	struct route_path *ret;
 
-	if (! (sd->limit & 1)) {
+	if (! (sd->flags & AF_ONEWAY)) {
 		start1=route_graph_get_point(this, &sd->c[0]);
 		if (! start1)
 			return NULL;
 		val1=start1->value+route_value(speedlist, &sd->item, route_info_length(pos, NULL, -1));
 		dbg(1,"start1: %d(route)+%d=%d\n", start1->value, val1-start1->value, val1);
 	}
-	if (! (sd->limit & 2)) {
+	if (! (sd->flags & AF_ONEWAYREV)) {
 		start2=route_graph_get_point(this, &sd->c[sd->count-1]);
 		if (! start2)
 			return NULL;
@@ -881,7 +881,7 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 	}
 	sd=dst->street;
 	dbg(1,"start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
-	dbg(1,"dst sd->limit=%d sd->c[0]=0x%x,0x%x sd->c[sd->count-1]=0x%x,0x%x\n", sd->limit, sd->c[0].x,sd->c[0].y, sd->c[sd->count-1].x, sd->c[sd->count-1].y);
+	dbg(1,"dst sd->flags=%d sd->c[0]=0x%x,0x%x sd->c[sd->count-1]=0x%x,0x%x\n", sd->flags, sd->c[0].x,sd->c[0].y, sd->c[sd->count-1].x, sd->c[sd->count-1].y);
 	if (start->c.x == sd->c[0].x && start->c.y == sd->c[0].y)
 		dst->dir=-1;
 	else if (start->c.x == sd->c[sd->count-1].x && start->c.y == sd->c[sd->count-1].y)
@@ -976,10 +976,10 @@ street_get_data (struct item *item)
 	ret=g_malloc(sizeof(struct street_data)+count*sizeof(struct coord));
 	ret->item=*item;
 	ret->count=count;
-	if (item_attr_get(item, attr_limit, &attr)) 
-		ret->limit=attr.u.num;
+	if (item_attr_get(item, attr_flags, &attr)) 
+		ret->flags=attr.u.num;
 	else
-		ret->limit=0;
+		ret->flags=0;
 	memcpy(ret->c, c, count*sizeof(struct coord));
 
 	return ret;
@@ -1018,12 +1018,24 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 	struct coord lp, sc[1000];
 	struct street_data *sd;
 	struct coord c;
+	struct coord_geo g;
 
 	c.x = pc->x;
 	c.y = pc->y;
+	/*
+	 * This is not correct for two reasons:
+	 * - You may need to go back first
+	 * - Currently we allow mixing of mapsets
+	 */
 	sel = route_rect(18, &c, &c, 0, max_dist);
 	h=mapset_open(ms);
 	while ((m=mapset_next(h,1))) {
+		c.x = pc->x;
+		c.y = pc->y;
+		if (map_projection(m) != pc->pro) {
+			transform_to_geo(pc->pro, &c, &g);
+			transform_from_geo(map_projection(m), &g, &c);
+		}
 		mr=map_rect_new(m, sel);
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type >= type_street_0 && item->type <= type_ferry) {
