@@ -163,10 +163,10 @@ struct attr_bin debug_attr = {
 };
 char debug_attr_buffer[1024];
 
-struct attr_bin limit_attr = {
-	0, attr_limit
+struct attr_bin flags_attr = {
+	0, attr_flags
 };
-int limit_attr_value;
+int flags_attr_value;
 
 static void
 pad_text_attr(struct attr_bin *a, char *buffer)
@@ -218,12 +218,12 @@ add_tag(char *k, char *v)
 		level=7;
 	if (! strcmp(k,"oneway")) {
 		if (! strcmp(v,"true") || !strcmp(v,"yes")) {
-			limit_attr_value=1;
-			limit_attr.len=2;
+			flags_attr_value=AF_ONEWAY;
+			flags_attr.len=2;
 		}
 		if (! strcmp(v,"-1")) {
-			limit_attr_value=2;
-			limit_attr.len=2;
+			flags_attr_value=AF_ONEWAYREV;
+			flags_attr.len=2;
 		}
 		if (!in_way)
 			level=6;
@@ -459,7 +459,7 @@ add_way(int id)
 	item.type=type_street_unkn;
 	label_attr.len=0;
 	debug_attr.len=0;
-	limit_attr.len=0;
+	flags_attr.len=0;
 	sprintf(debug_attr_buffer,"way_id=%d", wayid);
 }
 
@@ -497,15 +497,15 @@ end_way(FILE *out)
 		alen+=label_attr.len+1;	
 	if (debug_attr.len)
 		alen+=debug_attr.len+1;	
-	if (limit_attr.len)
-		alen+=limit_attr.len+1;	
+	if (flags_attr.len)
+		alen+=flags_attr.len+1;	
 	item.clen=coord_count*2;
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
 	fwrite(coord_buffer, coord_count*sizeof(struct coord), 1, out);
 	write_attr(out, &label_attr, label_attr_buffer);
 	write_attr(out, &debug_attr, debug_attr_buffer);
-	write_attr(out, &limit_attr, &limit_attr_value);
+	write_attr(out, &flags_attr, &flags_attr_value);
 }
 
 static void
