@@ -14,7 +14,7 @@ struct route_crossings {
 struct street_data {
 	struct item item;
 	int count;
-	int limit;
+	int flags;
 	struct coord c[0];
 };
 
