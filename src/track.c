@@ -246,7 +246,7 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 	tr->curr_line=NULL;
 	while (t) {
 		struct street_data *sd=t->street;
-		int dir;
+		int dir = 0;
 		switch(sd->flags & AF_ONEWAYMASK) {
 		case 0:
 			dir=0;

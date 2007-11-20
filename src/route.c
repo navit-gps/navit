@@ -663,20 +663,47 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 	struct route_graph_point *s_pnt,*e_pnt;
 	struct coord c,l;
 	struct attr attr;
-
+	int flags = 0;
+	int segmented = 0;
 
 	if (item_coord_get(item, &l, 1)) {
-		s_pnt=route_graph_add_point(this,&l);
-		while (item_coord_get(item, &c, 1)) {
-			len+=transform_distance(map_projection(item->map), &l, &c);
-			l=c;
+		if (item_attr_get(item, attr_flags, &attr)) {
+			flags = attr.u.num;
+			if (flags & AF_SEGMENTED)
+				segmented = 1;
 		}
-		e_pnt=route_graph_add_point(this,&l);
-		g_assert(len >= 0);
-		if (item_attr_get(item, attr_flags, &attr)) 
-			route_graph_add_segment(this, s_pnt, e_pnt, len, item, attr.u.num);
-		else
-			route_graph_add_segment(this, s_pnt, e_pnt, len, item, 0);
+		s_pnt=route_graph_add_point(this,&l);
+		if (!segmented) {
+			while (item_coord_get(item, &c, 1)) {
+				len+=transform_distance(map_projection(item->map), &l, &c);
+				l=c;
+			}
+			e_pnt=route_graph_add_point(this,&l);
+			g_assert(len >= 0);
+			route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags);
+		} else {
+			int isseg,rc;
+			int sc = 0;
+			do {
+				isseg = item_coord_is_segment(item);
+				rc = item_coord_get(item, &c, 1);
+				if (rc) {
+					len+=transform_distance(map_projection(item->map), &l, &c);
+					l=c;
+					if (isseg) {
+						sc++;
+						e_pnt=route_graph_add_point(this,&l);
+						route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags);
+						s_pnt=route_graph_add_point(this,&l);
+						len = 0;
+					}
+				}
+			} while(rc);
+			e_pnt=route_graph_add_point(this,&l);
+			g_assert(len >= 0);
+			sc++;
+			route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags);
+		}
 	}
 }
 
