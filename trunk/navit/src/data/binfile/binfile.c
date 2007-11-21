@@ -72,9 +72,9 @@ binfile_coord_get(void *priv_data, struct coord *c, int count)
 	struct map_rect_priv *mr=priv_data;
 	struct tile *t=mr->t;
 	int ret=0;
-	dbg(1,"binfile_coord_get %d\n",count);
+	dbg(2,"binfile_coord_get %d\n",count);
 	while (count--) {
-		dbg(1,"%p vs %p\n", t->pos_coord, t->pos_attr_start);
+		dbg(2,"%p vs %p\n", t->pos_coord, t->pos_attr_start);
 		if (t->pos_coord >= t->pos_attr_start)
 			break;
 		c->x=*(t->pos_coord++);
@@ -156,6 +156,8 @@ zipfile_to_tile(struct file *f, struct zip_cd *cd, struct tile *t)
 	char buffer[1024];
 	struct zip_lfh *lfh;
 	char *zipfn;
+	dbg(1,"enter %p %p %p\n", f, cd, t);
+	dbg(1,"cd->zipofst=0x%x\n", cd->zipofst);
 	lfh=(struct zip_lfh *)(file_data_read(f,cd->zipofst,sizeof(struct zip_lfh)));
 	zipfn=(char *)(file_data_read(f,cd->zipofst+sizeof(struct zip_lfh), lfh->zipfnln));
 	strncpy(buffer, zipfn, lfh->zipfnln);
@@ -174,6 +176,7 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 	struct file *f=m->fi;
 	struct tile t;
 	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, sizeof(struct zip_cd)));
+	dbg(1,"enter %p %d\n", mr, zipfile);
 	t.zipfile_num=zipfile;
 	zipfile_to_tile(f, cd, &t);
 	file_data_free(f, (unsigned char *)cd);
@@ -192,6 +195,7 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 	mr->sel=sel;
 	mr->item.id_hi=0;
 	mr->item.id_lo=0;
+	dbg(1,"eoc->zipecenn=%d\n", map->eoc->zipecenn);
 	if (map->eoc) 
 		push_zipfile_tile(mr, map->eoc->zipecenn-1);
 	else {
