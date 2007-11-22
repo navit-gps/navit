@@ -10,14 +10,6 @@
 #include "plugin.h"
 #include "country.h"
 
-struct map {
-	struct map_methods meth;
-	struct map_priv *priv;
-	char *type;
-	char *filename;
-	int active;
-};
-
 struct map_rect {
 	struct map *m;
 	struct map_rect_priv *priv;
