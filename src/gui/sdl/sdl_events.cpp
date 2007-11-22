@@ -27,6 +27,14 @@ struct sdl_destination{
 } SDL_dest;
 
 
+static struct search_param { 	 
+	         struct navit *nav; 	 
+	         struct mapset *ms; 	 
+	         struct search_list *sl; 	 
+	         struct attr attr; 	 
+	 } search_param;
+
+
 void route_to(int x,int y){
 	struct pcoord pos;
 	pos.x=x;
@@ -194,23 +202,25 @@ void handle_destination_change(){
 
 	using namespace CEGUI;
 	extern CEGUI::Window* myRoot;
-
+	/*
 	static struct search_param {
 		struct navit *nav;
 		struct mapset *ms;
 		struct search_list *sl;
 		struct attr attr;
  	} search_param;
+*/
 
  	struct search_param *search=&search_param;
 	struct search_list_result *res;
-
+	/*
  	// dbg(1,"search->nav=sdl_gui_navit;\n");
  	search->nav=sdl_gui_navit;
  	// dbg(1,"search->ms=navit_get_mapset(sdl_gui_navit);\n");
  	search->ms=navit_get_mapset(sdl_gui_navit);
  	// dbg(1,"search->sl=search_list_new(search->ms);\n");
  	search->sl=search_list_new(search->ms);
+	*/
 
 	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
 
@@ -248,7 +258,7 @@ void handle_destination_change(){
 		if(strlen(content.c_str())<4){
 
 		}  else {
-			// dbg(1,"town searching for %s\n",content.c_str());
+			dbg(0,"town searching for %s\n",content.c_str());
 			search->attr.type=attr_town_name;
 			search->attr.u.str=(char *)content.c_str();
 
@@ -352,6 +362,15 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 	} else {
 		dbg(0,"*** Invalid navit instance in sdl_events\n");
 	}
+ 	struct search_param *search=&search_param;
+	struct search_list_result *res;
+
+ 	// dbg(1,"search->nav=sdl_gui_navit;\n");
+ 	search->nav=sdl_gui_navit;
+ 	// dbg(1,"search->ms=navit_get_mapset(sdl_gui_navit);\n");
+ 	search->ms=navit_get_mapset(sdl_gui_navit);
+ 	// dbg(1,"search->sl=search_list_new(search->ms);\n");
+ 	search->sl=search_list_new(search->ms);
 
 
 	extern CEGUI::Window* myRoot;
@@ -390,32 +409,6 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 			handle_destination_change();
 			}
 		country_search_destroy(cs);
-
-		/*
-		// This code should 'guess' your country based upon your locale settings.
-		// useful if nothing else worked
-		char * lc_lang;
-		lc_lang = getenv ("LANG");
-		if (lc_lang!=NULL){
-			char lang_code [3];
-			strncpy(lang_code, lc_lang+3, 2);
-			lang_code[2]='\0';
-			dbg(0,"LC_LANG = %s -> %s\n",lc_lang,lang_code);
-
-			struct search_param *search=&search_param;
-			struct search_list_result *res;
-			search->attr.type=attr_country_iso2;
-			search->attr.u.str=lang_code;
-			dbg(0,"launching iso2 search\n");	
-			search_list_search(search->sl, &search->attr, 1);
-			dbg(0,"got result. ready to parse\n");
- 			while((res=search_list_get_result(search->sl))) {
- 				dbg(0," got country : \n",res->country->name);
- 			}
-			dbg(0,"done parsing\n");
-		}
-
-		*/
 
 		we.window->getParent()->getChild("DestinationWindow")->show();
 	}
