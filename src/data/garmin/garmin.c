@@ -280,7 +280,6 @@ poly_coord_get(void *priv_data, struct coord *c, int count)
 //		dlog(1,"poly: x=%d y=%d\n", c->x, c->y);
 		c++;
 		total++;
-		total++;
 		mr->last_coord ++;
 	}
 	return total;
