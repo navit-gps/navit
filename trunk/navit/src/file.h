@@ -6,7 +6,7 @@
 struct file {
 	unsigned char *begin;
 	unsigned char *end;
-	unsigned long size;
+	long long size;
 	char *name;
 	int fd;
 	struct file *next;

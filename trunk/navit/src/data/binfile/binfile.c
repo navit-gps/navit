@@ -36,6 +36,7 @@ struct map_priv {
 	struct zip_cd *index_cd;
 	int cde_size;
 	struct zip_eoc *eoc;
+	int zip_members;
 };
 
 struct map_rect_priv {
@@ -134,6 +135,7 @@ static struct item_methods methods_binfile = {
 static void
 push_tile(struct map_rect_priv *mr, struct tile *t)
 {
+	g_assert(mr->tile_depth < 8);
 	mr->t=&mr->tiles[mr->tile_depth++];
 	*(mr->t)=*t;
 	mr->t->pos=mr->t->pos_next=mr->t->start;
@@ -195,9 +197,9 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 	mr->sel=sel;
 	mr->item.id_hi=0;
 	mr->item.id_lo=0;
-	dbg(1,"eoc->zipecenn=%d\n", map->eoc->zipecenn);
+	dbg(1,"zip_members=%d\n", map->zip_members);
 	if (map->eoc) 
-		push_zipfile_tile(mr, map->eoc->zipecenn-1);
+		push_zipfile_tile(mr, map->zip_members-1);
 	else {
 		unsigned char *d=file_data_read(map->fi, 0, map->fi->size);
 		t.start=(int *)d;
@@ -278,7 +280,7 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 			if (!mr->m->eoc || !selection_contains(mr->sel, &r)) {
 				continue;
 			}
-			dbg(1,"0x%x\n", t->pos_attr[5]);
+			dbg(1,"pushing zipfile %d from %d\n", t->pos_attr[5], t->zipfile_num);
 			push_zipfile_tile(mr, t->pos_attr[5]);
 			continue;
 				
@@ -317,6 +319,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 	struct map_priv *m;
 	struct attr *data=attr_search(attrs, NULL, attr_data);
 	struct file_wordexp *wexp;
+	struct zip_cd *first_cd;
 	char **wexp_data;
 	int *magic,cde_index_size;
 	if (! data)
@@ -342,14 +345,16 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 	if (*magic == 0x04034b50) {
 		cde_index_size=sizeof(struct zip_cd)+sizeof("index")-1;
 		m->eoc=(struct zip_eoc *)file_data_read(m->fi,m->fi->size-sizeof(struct zip_eoc), sizeof(struct zip_eoc));
+		printf("magic 0x%x\n", m->eoc->zipesig);
 		m->index_cd=(struct zip_cd *)file_data_read(m->fi,m->fi->size-sizeof(struct zip_eoc)-cde_index_size, cde_index_size);
-		printf("length %d\n", m->eoc->zipecsz);
-		printf("entries %d\n", m->eoc->zipecenn);
-		m->cde_size=(m->eoc->zipecsz-cde_index_size)/(m->eoc->zipecenn-1);
+		first_cd=(struct zip_cd *)file_data_read(m->fi,m->eoc->zipeofst, sizeof(struct zip_cd));
+		m->cde_size=sizeof(struct zip_cd)+first_cd->zipcfnl;
+		m->zip_members=(m->eoc->zipecsz-cde_index_size)/m->cde_size+1;
 		printf("cde_size %d\n", m->cde_size);
-		printf("length %d\n",m->cde_size*(m->eoc->zipecenn-1)+cde_index_size);
+		printf("members %d\n",m->zip_members);
 		printf("0x%x\n", m->eoc->zipesig);
 		printf("0x%x\n", m->index_cd->zipcensig);
+		file_data_free(m->fi, (unsigned char *)first_cd);
 	} else 
 		file_mmap(m->fi);
 	file_data_free(m->fi, (unsigned char *)magic);
