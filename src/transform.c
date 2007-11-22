@@ -11,9 +11,9 @@
 #include "point.h"
 
 struct transformation {
-        int width;		/* Height of destination rectangle */
-        int height;		/* Width of destination rectangle */
-        long scale;		/* Scale factor */
+	int width;		/* Height of destination rectangle */
+	int height;		/* Width of destination rectangle */
+	long scale;		/* Scale factor */
 	int angle;		/* Rotation angle */
 	double cos_val,sin_val;	/* cos and sin of rotation angle */
 	enum projection pro;
@@ -132,6 +132,86 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
         p->x=xc;
         p->y=yc;
         return ret;
+}
+
+int
+transform_array(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int uniq)
+{
+	struct coord c1;
+	int xcn, ycn; 
+	struct coord_geo g;
+#ifdef AVOID_FLOAT
+	int xc,yc;
+#else
+        double xc,yc;
+#endif
+	int i,j = 0;
+	for (i=0; i < count; i++) {
+		if (pro == t->pro) {
+			xc=c[i].x;
+			yc=c[i].y;
+		} else {
+			transform_to_geo(pro, &c[i], &g);
+			transform_from_geo(t->pro, &g, &c1);
+			xc=c1.x;
+			yc=c1.y;
+		}
+//		dbg(2,"0x%x, 0x%x - 0x%x,0x%x contains 0x%x,0x%x\n", t->r.lu.x, t->r.lu.y, t->r.rl.x, t->r.rl.y, c->x, c->y);
+//		ret=coord_rect_contains(&t->r, c);
+		xc-=t->center.x;
+		yc-=t->center.y;
+		yc=-yc;
+		if (t->angle) {
+			xcn=xc*t->cos_val+yc*t->sin_val;
+			ycn=-xc*t->sin_val+yc*t->cos_val;
+			xc=xcn;
+			yc=ycn;
+		}
+		xc=xc*16;
+		yc=yc*16;
+#ifndef AVOID_FLOAT
+		if (t->scale) {
+			xc=xc/(double)(t->scale);
+			yc=yc/(double)(t->scale);
+		}
+#else
+		if (t->scale) {
+			xc=xc/t->scale;
+			yc=yc/t->scale;
+		}
+#endif
+		yc+=t->height>>1;
+		xc+=t->width>>1;
+		if (xc < -0x8000)
+			xc=-0x8000;
+		if (xc > 0x7fff) {
+			xc=0x7fff;
+		}
+		if (yc < -0x8000)
+			yc=-0x8000;
+		if (yc > 0x7fff)
+			yc=0x7fff;
+		if (uniq) {
+			if (i) {
+				if (p[j].x != xc || p[j].y != yc) {
+					j++;
+					p[j].x=xc;
+					p[j].y=yc;
+				}
+			} else {
+				p[j].x=xc;
+				p[j].y=yc;
+			}
+		} else {
+			p[i].x=xc;
+			p[i].y=yc;
+		}
+	}
+
+	if (uniq)
+		return 1+j;
+
+	return count;
 }
 
 void

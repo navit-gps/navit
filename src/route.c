@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #if 0
 #include <math.h>
@@ -43,18 +44,16 @@ static int speed_list[]={
 
 int debug_route=0;
 
-
 struct route_graph_point {
 	struct route_graph_point *next;
 	struct route_graph_point *hash_next;
 	struct route_graph_segment *start;
 	struct route_graph_segment *end;
 	struct route_graph_segment *seg;
-	struct fibheap_el *el;	
+	struct fibheap_el *el;
 	int value;
 	struct coord c;
 };
-
 
 struct route_graph_segment {
 	struct route_graph_segment *next;
@@ -65,14 +64,16 @@ struct route_graph_segment {
 	struct item item;
 	int flags;
 	int len;
+	int offset;
 };
 
 struct route_path_segment {
+	struct route_path_segment *next;
 	struct item item;
 	int time;
 	int length;
-	struct coord c[2];
-	struct route_path_segment *next;
+	unsigned ncoords;
+	struct coord c[0];
 };
 
 struct route_info {
@@ -89,13 +90,14 @@ struct route_info {
 struct route_path {
 	struct route_path_segment *path;
 	struct route_path_segment *path_last;
+	/* XXX: path_hash is not necessery now */
 	struct item_hash *path_hash;
 };
-
 
 struct route {
 	int version;
 	struct mapset *ms;
+	struct map route_map;
 	struct route_info *pos;
 	struct route_info *dst;
 
@@ -111,6 +113,8 @@ struct route_graph {
 	struct route_graph_point *hash[HASH_SIZE];
 };
 
+#define HASHCOORD(c) ((((c)->x +(c)->y) * 2654435761UL) & (HASH_SIZE-1))
+
 static struct route_info * route_find_nearest_street(struct mapset *ms, struct pcoord *c);
 static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
 static void route_graph_update(struct route *this);
@@ -118,6 +122,13 @@ static struct route_path *route_path_new(struct route_graph *this, struct route_
 static void route_process_street_graph(struct route_graph *this, struct item *item);
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this);
+
+static enum projection route_projection(struct route *route)
+{
+	struct street_data *street;
+	street = route->pos ? route->pos->street : route->dst->street;
+	return map_projection(street->item.map);
+}
 
 static void
 route_path_destroy(struct route_path *this)
@@ -129,10 +140,10 @@ route_path_destroy(struct route_path *this)
 		item_hash_destroy(this->path_hash);
 		this->path_hash=NULL;
 	}
-	c=this->path;	
+	c=this->path;
 	while (c) {
 		n=c->next;
-		g_free(c);
+		free(c);
 		c=n;
 	}
 	g_free(this);
@@ -190,15 +201,16 @@ route_set_speed(struct route *this, enum item_type type, int value)
 int
 route_contains(struct route *this, struct item *item)
 {
-	if (! this->path2 || !this->path2->path_hash || !item_hash_lookup(this->path2->path_hash, item))
+	if (! this->path2 || !this->path2->path_hash)
 		return 0;
-	return 1;
+	return  (int)item_hash_lookup(this->path2->path_hash, item);
 }
 
 static void
 route_path_update(struct route *this)
 {
 	route_path_destroy(this->path2);
+	this->path2 = NULL;
 	if (! this->pos || ! this->dst)
 		return;
 	if (! this->graph || !(this->path2=route_path_new(this->graph, this->pos, this->dst, this->speedlist))) {
@@ -248,7 +260,7 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 	dbg(2,"ret\n");
 }
 
-/* This is unused - check and remove from graphics.c too */
+/* Used for debuging of route_rect, what routing sees */
 struct map_selection *route_selection;
 
 struct map_selection *
@@ -342,7 +354,7 @@ static struct route_graph_point *
 route_graph_get_point(struct route_graph *this, struct coord *c)
 {
 	struct route_graph_point *p=this->route_points;
-	int hashval=(c->x +  c->y) & (HASH_SIZE-1);
+	int hashval=HASHCOORD(c);
 	p=this->hash[hashval];
 	while (p) {
 		if (p->c.x == c->x && p->c.y == c->y) 
@@ -361,7 +373,7 @@ route_graph_add_point(struct route_graph *this, struct coord *f)
 
 	p=route_graph_get_point(this,f);
 	if (!p) {
-		hashval=(f->x +  f->y) & (HASH_SIZE-1);
+		hashval=HASHCOORD(f);
 		if (debug_route)
 			printf("p (0x%x,0x%x)\n", f->x, f->y);
 		p=g_new(struct route_graph_point,1);
@@ -395,10 +407,12 @@ route_graph_free_points(struct route_graph *this)
 }
 
 static void
-route_graph_add_segment(struct route_graph *this, struct route_graph_point *start, struct route_graph_point *end, int len, struct item *item, int flags)
+route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
+			struct route_graph_point *end, int len, struct item *item,
+			int flags, int offset)
 {
 	struct route_graph_segment *s;
-	s=g_new0(struct route_graph_segment,1);
+	s = calloc(1, sizeof(*s));
 	s->start=start;
 	s->start_next=start->start;
 	start->start=s;
@@ -409,28 +423,64 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 	s->len=len;
 	s->item=*item;
 	s->flags=flags;
+	s->offset = offset;
 	s->next=this->route_segments;
 	this->route_segments=s;
 	if (debug_route)
 		printf("l (0x%x,0x%x)-(0x%x,0x%x)\n", start->c.x, start->c.y, end->c.x, end->c.y);
-	
+}
+
+static int get_item_seg_coords(struct item *i, struct coord *c, int max,
+		struct route_graph_segment *rgs)
+{
+	struct map_rect *mr;
+	struct item *item;
+	int rc = 0, fs = 0, p = 0;
+	struct coord c1;
+	mr=map_rect_new(i->map, NULL);
+	if (!mr)
+		return 0;
+	item = map_rect_get_item_byid(mr, i->id_hi, i->id_lo);
+	if (item) {
+		do {
+			rc = item_coord_get(item, &c1, 1);
+			if (rc) {
+				if (!fs) {
+					if (c1.x == rgs->start->c.x &&
+						c1.y == rgs->start->c.y)
+						fs = 1;
+				}
+				if (fs) {
+					c[p++] = c1;
+					if (c1.x == rgs->end->c.x &&
+						c1.y == rgs->end->c.y)
+						break;
+				}
+			}
+		} while (rc);
+	}
+	map_rect_destroy(mr);
+	return p;
 }
 
 static void
-route_path_add_item(struct route_path *this, struct item *itm, struct coord *start, struct coord *end, int len, int time)
+route_path_add_item(struct route_path *this, struct route_graph_segment *rgs, int len, int time, int offset)
 {
-        struct route_path_segment *segment=g_new0(struct route_path_segment,1);
-	item_hash_insert(this->path_hash,  itm, (void *)1);
-	segment->item=*itm;
-        segment->next=NULL;
+	struct route_path_segment *segment;
+	int ccnt = 0;
+	struct coord ca[2048];
+
+	ccnt = get_item_seg_coords(&rgs->item, ca, 2047, rgs);
+	segment= calloc(1, sizeof(*segment) + sizeof(struct coord) * ccnt);
+	memcpy(segment->c, ca, ccnt * sizeof(struct coord));
+	segment->ncoords = ccnt;
+	item_hash_insert(this->path_hash,  &rgs->item, (void *)offset);
+	segment->item=rgs->item;
+	segment->next=NULL;
 	segment->length=len;
 	segment->time=time;
-        if (start)
-                segment->c[0]=*start;
-        if (end)
-                segment->c[1]=*end;
 	if (!this->path)
-        	this->path=segment;
+		this->path=segment;
 	if (this->path_last)
 		this->path_last->next=segment;
 	this->path_last=segment;
@@ -451,7 +501,7 @@ route_path_open(struct route *this)
 
 	ret=g_new(struct route_path_handle, 1);
 
-	ret->s=this->path2->path;	
+	ret->s=this->path2->path;
 	return ret;
 }
 
@@ -475,7 +525,7 @@ route_path_segment_get_start(struct route_path_segment *s)
 struct coord *
 route_path_segment_get_end(struct route_path_segment *s)
 {
-	return &s->c[1];
+	return &s->c[s->ncoords-1];
 }
 
 struct item *
@@ -612,7 +662,7 @@ route_graph_free_segments(struct route_graph *this)
 	curr=this->route_segments;
 	while (curr) {
 		next=curr->next;
-		g_free(curr);
+		free(curr);
 		curr=next;
 	}
 	this->route_segments=NULL;
@@ -665,6 +715,7 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 	struct attr attr;
 	int flags = 0;
 	int segmented = 0;
+	int offset = 1;
 
 	if (item_coord_get(item, &l, 1)) {
 		if (item_attr_get(item, attr_flags, &attr)) {
@@ -680,7 +731,7 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 			}
 			e_pnt=route_graph_add_point(this,&l);
 			g_assert(len >= 0);
-			route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags);
+			route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset);
 		} else {
 			int isseg,rc;
 			int sc = 0;
@@ -691,9 +742,9 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 					len+=transform_distance(map_projection(item->map), &l, &c);
 					l=c;
 					if (isseg) {
-						sc++;
 						e_pnt=route_graph_add_point(this,&l);
-						route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags);
+						route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset);
+						offset++;
 						s_pnt=route_graph_add_point(this,&l);
 						len = 0;
 					}
@@ -702,7 +753,7 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 			e_pnt=route_graph_add_point(this,&l);
 			g_assert(len >= 0);
 			sc++;
-			route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags);
+			route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset);
 		}
 	}
 }
@@ -884,9 +935,9 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 			return NULL;
 		}
 	}
-	ret=g_new0(struct route_path, 1);	
+	ret=g_new0(struct route_path, 1);
 	ret->path_hash=item_hash_new();
-	dbg(1,"dir=%d\n", pos->dir);	
+	dbg(1,"dir=%d\n", pos->dir);
 	while ((s=start->seg)) {
 		segs++;
 #if 0
@@ -899,10 +950,10 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 #endif
 		len+=seg_len;
 		if (s->start == start) {
-			route_path_add_item(ret, &s->item, &s->start->c, &s->end->c, seg_len, seg_time);
+			route_path_add_item(ret, s, seg_len, seg_time, s->offset);
 			start=s->end;
 		} else {
-			route_path_add_item(ret, &s->item, &s->end->c, &s->start->c, seg_len, seg_time);
+			route_path_add_item(ret, s, seg_len, seg_time, s->offset);
 			start=s->start;
 		}
 	}
@@ -954,17 +1005,15 @@ route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2)
 	struct map_rect *mr;
 	struct map *m;
 	struct item *item;
-	struct coord e;
 
 	sel=route_calc_selection(c1, c2);
-        h=mapset_open(ms);
-        while ((m=mapset_next(h,1))) {
+	h=mapset_open(ms);
+	while ((m=mapset_next(h,1))) {
 		mr=map_rect_new(m, sel);
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type >= type_street_0 && item->type <= type_ferry) {
 				route_process_street_graph(ret, item);
-			} else 
-				while (item_coord_get(item, &e, 1));
+			}
 		}
 		map_rect_destroy(mr);
         }
@@ -1261,8 +1310,6 @@ route_info_close(struct route_info_handle *h)
 }
 
 
-
-
 static int
 route_draw_route_info(struct route_info *pos, struct route_info *dst, struct transformation *t, struct displaylist *dsp)
 {
@@ -1272,6 +1319,8 @@ route_draw_route_info(struct route_info *pos, struct route_info *dst, struct tra
 	struct item item;
 	struct point pnt[100];
 	int count=0;
+	struct street_data *street;
+	enum projection pro = projection_mg;
 
 	item.id_lo=0;
 	item.id_hi=0;
@@ -1285,6 +1334,8 @@ route_draw_route_info(struct route_info *pos, struct route_info *dst, struct tra
 		dbg(1, "return 0\n");
 		return 0;
 	}
+	street = pos ? pos->street : dst->street;
+	pro = map_projection(street->item.map);
 	if (pos)
 		dbg(1, "pos=%p pos->dir=%d pos->pos=%d\n", pos, pos->dir, pos->pos);
 	c=route_info_get(h);
@@ -1292,12 +1343,12 @@ route_draw_route_info(struct route_info *pos, struct route_info *dst, struct tra
 	r.rl=*c;
 	while (c && count < 100) {
 		dbg(1,"c=%p (0x%x,0x%x)\n", c, c->x, c->y);
-		transform(t, projection_mg, c, &pnt[count++]);
+		transform(t, pro, c, &pnt[count++]);
 		coord_rect_extend(&r, c);
 		c=route_info_get(h);
 	
 	}
-	if (count && transform_contains(t, projection_mg, &r))
+	if (count && transform_contains(t, pro, &r))
 		display_add(dsp, &item, count, pnt, "Route");
 	route_info_close(h);
 	dbg(1, "return 1\n");
@@ -1344,3 +1395,136 @@ route_crossings_get(struct route *this, struct coord *c)
        return ret;
 }
 #endif
+
+
+struct map_rect_priv {
+	struct route *mpriv;
+	struct item item;
+	unsigned int last_coord;
+	struct route_path_segment *seg;
+};
+
+static void
+rm_coord_rewind(void *priv_data)
+{
+	struct map_rect_priv *mr = priv_data;
+	mr->last_coord = 0;
+}
+
+static void
+rm_attr_rewind(void *priv_data)
+{
+}
+
+static int
+rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
+{
+	return 0;
+}
+
+static int
+rm_coord_get(void *priv_data, struct coord *c, int count)
+{
+	struct map_rect_priv *mr = priv_data;
+	struct route_path_segment *seg = mr->seg;
+	int rc = 0,i;
+	for (i=0; i < count; i++) {
+		if (mr->last_coord >= seg->ncoords)
+			break;
+		if (i >= seg->ncoords)
+			break;
+		c[i] = seg->c[mr->last_coord++];
+		rc++;
+	}
+	return rc;
+}
+
+static struct item_methods methods_route_item = {
+	rm_coord_rewind,
+	rm_coord_get,
+	rm_attr_rewind,
+	rm_attr_get,
+};
+
+static void
+rm_destroy(struct map_priv *priv)
+{
+}
+
+static struct map_rect_priv * 
+rm_rect_new(struct map_priv *map, struct map_selection *sel)
+{
+	struct map_rect_priv * mr;
+	mr = calloc(1, sizeof(*mr));
+	if (!mr)
+		return mr;
+	mr->mpriv = (struct route *)map;
+	return mr;
+}
+
+static void
+rm_rect_destroy(struct map_rect_priv *mr)
+{
+	free(mr);
+}
+
+static struct item *
+rm_get_item(struct map_rect_priv *mr)
+{
+	struct route *r = mr->mpriv;
+	struct route_path_segment *seg = mr->seg;
+
+	if (!seg)
+		seg = r->path2->path;
+	else
+		seg = seg->next;
+	if (!seg)
+		return NULL;
+	mr->seg = seg;
+	mr->last_coord = 0;
+	mr->item = seg->item;
+	mr->item.priv_data = mr;
+	mr->item.type = type_street_route;
+	mr->item.meth = &methods_route_item;
+	return &mr->item;
+}
+
+static struct item *
+rm_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
+{
+	printf("%s called on Route map\n", __FUNCTION__);
+	return NULL;
+}
+
+static struct map_methods route_meth = {
+	projection_none,
+	NULL,
+	rm_destroy,
+	rm_rect_new,
+	rm_rect_destroy,
+	rm_get_item,
+	rm_get_item_byid,
+	NULL,
+	NULL,
+	NULL,
+};
+
+static void route_init_map(struct route *route)
+{
+	struct map *m = &route->route_map;
+	m->priv = (struct map_priv *)route;
+	m->type = "Route";
+	m->filename = NULL;
+	m->active = 0;
+	m->meth = route_meth;
+	m->meth.pro = route_projection(route);
+}
+
+struct map *route_get_map(struct route *route)
+{
+	if (route->pos && route->dst && route->path2) {
+		route_init_map(route);
+		return &route->route_map;
+	}
+	return NULL;
+}

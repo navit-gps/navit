@@ -450,20 +450,70 @@ xdisplay_draw(GHashTable *display_list, struct graphics *gra, GList *layouts, in
 extern void *route_selection;
 
 static void
+do_draw_map(struct displaylist *displaylist, struct transformation *t, struct map *m, struct map_selection *sel)
+{
+	enum projection pro;
+	struct map_rect *mr;
+	struct item *item;
+	struct coord c;
+	int i, conv,count,max=16384;
+	struct point pnt[max];
+	struct coord ca[max];
+	struct attr attr;
+	struct coord_rect r;
+
+	pro=map_projection(m);
+	conv=map_requires_conversion(m);
+	transform_rect(t, pro, &sel->rect);
+	if (route_selection)
+		mr=map_rect_new(m, route_selection);
+	else
+		mr=map_rect_new(m, sel);
+	while ((item=map_rect_get_item(mr))) {
+		if (item->type < type_line) {
+			item_coord_get(item, &c, 1);
+			if (!transform(t, pro, &c, &pnt[0])) {
+				dbg(1,"not visible\n");
+				continue;
+			}
+			count=1;
+		} else {
+			count = item_coord_get(item, ca, max);
+			if (count < 2)
+				continue;
+			r.lu=ca[0];
+			r.rl=ca[0];
+			for (i=1; i < count; i++) {
+				coord_rect_extend(&r, &ca[i]);
+			}
+			if (!transform_contains(t, pro, &r)) {
+				dbg(1,"poly not visible\n");
+				continue;
+			}
+			count = transform_array(t, pro, ca, pnt, count, 1);
+			if (count < 2)
+				continue;
+			g_assert(count < max);
+		}
+		if (!item_attr_get(item, attr_label, &attr))
+			attr.u.str=NULL;
+		if (conv && attr.u.str && attr.u.str[0]) {
+			char *str=map_convert_string(m, attr.u.str);
+			display_add(displaylist, item, count, pnt, str);
+			map_convert_free(str);
+		} else
+			display_add(displaylist, item, count, pnt, attr.u.str);
+	}
+	map_rect_destroy(mr);
+}
+
+static void
 do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapsets, int order, struct route *route)
 {
 	struct map_selection sel;
-	struct map_rect *mr;
-	struct item *item;
 	struct mapset *ms;
 	struct map *m;
-	enum projection pro;
 	struct mapset_handle *h;
-	struct coord c;
-	int conv,count,max=16384;
-	struct point pnt[max];
-	struct attr attr;
-	struct coord_rect r;
 
 	if (! mapsets)
 		return;
@@ -474,60 +524,14 @@ do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapset
 	ms=mapsets->data;
 	h=mapset_open(ms);
 	while ((m=mapset_next(h, 1))) {
-		pro=map_projection(m);
-		conv=map_requires_conversion(m);
-		transform_rect(t, pro, &sel.rect);
-		if (route_selection)
-			mr=map_rect_new(m, route_selection);
-		else
-			mr=map_rect_new(m, &sel);
-		while ((item=map_rect_get_item(mr))) {
-			if (item->type < type_line) {
-				item_coord_get(item, &c, 1);
-				if (!transform(t, pro, &c, &pnt[0])) {
-					dbg(1,"not visible\n");
-					continue;
-				}
-				count=1;
-			} else {
-				count=0;
-				while (count < max) {
-					if (!item_coord_get(item, &c, 1))
-						break;
-					if (! count) {
-						r.lu=c;
-						r.rl=c;
-					} else
-						coord_rect_extend(&r, &c);
-					transform(t, pro, &c, &pnt[count]);
-					if (! count || pnt[count].x != pnt[count-1].x || pnt[count].y != pnt[count-1].y)
-						count++;
-						
-				}
-				g_assert(count < max);
-				if (!transform_contains(t, pro, &r)) {
-					dbg(1,"poly not visible\n");
-					continue;
-				}
-				if (route && route_contains(route, item)) {
-					struct item ritem;
-					ritem=*item;
-					ritem.type=type_street_route;
-					display_add(displaylist, &ritem, count, pnt, NULL);
-				}
-			}
-			if (!item_attr_get(item, attr_label, &attr))
-				attr.u.str=NULL;
-			if (conv && attr.u.str && attr.u.str[0]) {
-				char *str=map_convert_string(m, attr.u.str);
-				display_add(displaylist, item, count, pnt, str);
-				map_convert_free(str);
-			} else
-				display_add(displaylist, item, count, pnt, attr.u.str);
-		}
-		map_rect_destroy(mr);
+		do_draw_map(displaylist, t, m, &sel);
 	}
 	mapset_close(h);
+	if (route) {
+		m = route_get_map(route);
+		if (m)
+			do_draw_map(displaylist, t, m, &sel);
+	}
 }
 
 int
