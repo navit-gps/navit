@@ -1,3 +1,6 @@
+#define _FILE_OFFSET_BITS 64
+#define _LARGEFILE_SOURCE
+#define _LARGEFILE64_SOURCE
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
@@ -19,7 +22,7 @@ file_create(char *name)
 
 	if (! file)
 		return file; 
-	file->fd=open(name, O_RDONLY);
+	file->fd=open(name, O_RDONLY|O_LARGEFILE);
 	if (file->fd < 0) {
 		g_free(file);
 		return NULL;
