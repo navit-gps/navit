@@ -72,6 +72,7 @@ struct route_info_handle *route_info_open(struct route_info *start, struct route
 struct coord *route_info_get(struct route_info_handle *h);
 void route_info_close(struct route_info_handle *h);
 void route_draw(struct route *this, struct transformation *t, struct displaylist *dsp);
+struct map *route_get_map(struct route *route);
 /* end of prototypes */
 
 #endif
