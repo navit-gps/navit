@@ -170,12 +170,12 @@ transform_array(struct transformation *t, enum projection pro, struct coord *c, 
 		xc=xc*16;
 		yc=yc*16;
 #ifndef AVOID_FLOAT
-		if (t->scale) {
+		if (t->scale!=1) {
 			xc=xc/(double)(t->scale);
 			yc=yc/(double)(t->scale);
 		}
 #else
-		if (t->scale) {
+		if (t->scale!=1) {
 			xc=xc/t->scale;
 			yc=yc/t->scale;
 		}

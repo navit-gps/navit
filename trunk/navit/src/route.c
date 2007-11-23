@@ -153,6 +153,10 @@ struct route *
 route_new(struct mapset *ms)
 {
 	struct route *this=g_new0(struct route, 1);
+	if (!this) {
+		printf("%s:Out of memory\n", __FUNCTION__);
+		return NULL;
+	}
 	this->ms=ms;
 	return this;
 }
@@ -244,6 +248,10 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 	dbg(2,"enter\n");
 	c=tracking_get_pos(tracking);
 	ret=g_new0(struct route_info, 1);
+	if (!ret) {
+		printf("%s:Out of memory\n", __FUNCTION__);
+		return;
+	}
 	if (this->pos)
 		route_info_free(this->pos);
 	ret->c=*c;
@@ -268,6 +276,10 @@ route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs)
 {
 	int dx,dy,sx=1,sy=1,d,m;
 	struct map_selection *sel=g_new(struct map_selection, 1);
+	if (!sel) {
+		printf("%s:Out of memory\n", __FUNCTION__);
+		return sel;
+	}
 	sel->order[layer_town]=0;
 	sel->order[layer_poly]=0;
 	sel->order[layer_street]=order;
@@ -377,6 +389,10 @@ route_graph_add_point(struct route_graph *this, struct coord *f)
 		if (debug_route)
 			printf("p (0x%x,0x%x)\n", f->x, f->y);
 		p=g_new(struct route_graph_point,1);
+		if (!p) {
+			printf("%s:Out of memory\n", __FUNCTION__);
+			return p;
+		}
 		p->hash_next=this->hash[hashval];
 		this->hash[hashval]=p;
 		p->next=this->route_points;
@@ -413,6 +429,10 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 {
 	struct route_graph_segment *s;
 	s = calloc(1, sizeof(*s));
+	if (!s) {
+		printf("%s:Out of memory\n", __FUNCTION__);
+		return;
+	}
 	s->start=start;
 	s->start_next=start->start;
 	start->start=s;
@@ -472,6 +492,10 @@ route_path_add_item(struct route_path *this, struct route_graph_segment *rgs, in
 
 	ccnt = get_item_seg_coords(&rgs->item, ca, 2047, rgs);
 	segment= calloc(1, sizeof(*segment) + sizeof(struct coord) * ccnt);
+	if (!segment) {
+		printf("%s:Out of memory\n", __FUNCTION__);
+		return;
+	}
 	memcpy(segment->c, ca, ccnt * sizeof(struct coord));
 	segment->ncoords = ccnt;
 	item_hash_insert(this->path_hash,  &rgs->item, (void *)offset);
@@ -500,7 +524,10 @@ route_path_open(struct route *this)
 		return NULL;
 
 	ret=g_new(struct route_path_handle, 1);
-
+	if (!ret) {
+		printf("%s:Out of memory\n", __FUNCTION__);
+		return ret;
+	}
 	ret->s=this->path2->path;
 	return ret;
 }
@@ -572,6 +599,10 @@ route_path_coord_open(struct route *this)
 		return NULL;
 
 	ret=g_new0(struct route_path_coord_handle, 1);
+	if (!ret) {
+		printf("%s:Out of memory\n", __FUNCTION__);
+		return ret;
+	}
 	ret->route=this;
 	ret->ri=route_info_open(route_get_pos(this), route_get_dst(this), 0);
 	if (!ret->ri) {
@@ -936,6 +967,10 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 		}
 	}
 	ret=g_new0(struct route_path, 1);
+	if (!ret) {
+		printf("%s:Out of memory\n", __FUNCTION__);
+		return ret;
+	}
 	ret->path_hash=item_hash_new();
 	dbg(1,"dir=%d\n", pos->dir);
 	while ((s=start->seg)) {
@@ -1006,6 +1041,10 @@ route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2)
 	struct map *m;
 	struct item *item;
 
+	if (!ret) {
+		printf("%s:Out of memory\n", __FUNCTION__);
+		return ret;
+	}
 	sel=route_calc_selection(c1, c2);
 	h=mapset_open(ms);
 	while ((m=mapset_next(h,1))) {
@@ -1123,6 +1162,10 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 						g_free(ret);
 					}
 					ret=g_new(struct route_info, 1);
+					if (!ret) {
+						printf("%s:Out of memory\n", __FUNCTION__);
+						return ret;
+					}
 					ret->c=c;
 					ret->lp=lp;
 					ret->pos=pos;
@@ -1132,8 +1175,7 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 					dbg(1,"dist=%d id 0x%x 0x%x pos=%d\n", dist, item->id_hi, item->id_lo, pos);
 				} else 
 					street_data_free(sd);
-			} else 
-				while (item_coord_get(item, &sc[0], 1));
+			}
 		}  
 		map_rect_destroy(mr);
 	}
@@ -1199,9 +1241,12 @@ struct route_info_handle *
 route_info_open(struct route_info *start, struct route_info *end, int dir)
 {
 	struct route_info_handle *ret=g_new0(struct route_info_handle, 1);
-
 	struct route_info *curr;
 	dbg(2,"enter start=%p end=%p dir=%d\n", start, end, dir);
+	if (!ret) {
+		printf("%s:Out of memory\n", __FUNCTION__);
+		return ret;
+	}
 	ret->start=start;
 	ret->end=end;
 	if (start) 
