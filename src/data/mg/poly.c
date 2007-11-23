@@ -127,17 +127,33 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 			case 0x15:
 				item->type=type_cemetery_poly;
 				break;
+			case 0x16:
+				item->type=type_place_poly;
+				break;
+			case 0x17:
+				item->type=type_museum_poly;
+				break;
+			case 0x19:
+				item->type=type_place_poly;
+				break;
 			case 0x1b:
 				item->type=type_commercial_center;
 				break;
 			case 0x1e:
 				item->type=type_industry_poly;
 				break;
+			case 0x23:
+				/* FIXME: what is this ?*/
+				item->type=type_place_poly;
+				break;
 			case 0x24:
 				item->type=type_parking_lot_poly;
 				break;
 			case 0x28:
 				item->type=type_airport_poly;
+				break;
+			case 0x29:
+				item->type=type_station_poly;
 				break;
 			case 0x2d:
 				item->type=type_hospital_poly;
@@ -146,6 +162,9 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 				item->type=type_hospital_poly;
 				break;
 			case 0x2f:
+				item->type=type_university;
+				break;
+			case 0x30:
 				item->type=type_university;
 				break;
 			case 0x32:
@@ -171,6 +190,10 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 				break;
 			case 0xbc:
 				item->type=type_water_line;
+				break;
+			case 0xc3:
+				/* FIXME: what is this ?*/
+				item->type=type_border_state;
 				break;
 			case 0xc6:
 				item->type=type_border_country;
