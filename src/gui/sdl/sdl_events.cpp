@@ -65,6 +65,48 @@ void route_to(int x,int y){
 
 }
 
+bool Handle_Virtual_Key_Down(const CEGUI::EventArgs& event){
+	
+	using namespace CEGUI;
+
+	extern CEGUI::Window* myRoot;
+
+	const CEGUI::WindowEventArgs& we =  static_cast<const CEGUI::WindowEventArgs&>(event);
+	String senderID = we.window->getName();
+
+	Window* editbox = myRoot->getChild("Navit/Keyboard")->getChild("Navit/Keyboard/Input");
+	String content=editbox->getText();
+
+
+	if(senderID=="OK"){
+		// dbg(1,"Validating : %s\n",content.c_str());
+		myRoot->getChild("Navit/Keyboard")->hide();
+		return 0;
+	} else if(senderID=="BACK"){
+		content=content.substr(0, content.length()-1);
+		editbox->setText(content);
+	} else {
+		content+=senderID;
+		editbox->setText(content);
+	}
+
+	Window* country_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/CountryEditbox"));
+	Window* town_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/TownEditbox"));
+	Window* street_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox"));
+
+	switch (SDL_dest.current_search) {
+		case SRCH_COUNTRY:
+			country_edit->setText(content);
+			break;
+		case SRCH_TOWN :
+			town_edit->setText(content);
+			break;
+		case SRCH_STREET :
+			street_edit->setText(content);
+			break;
+	}
+	handle_destination_change();
+}
 
 bool handleItemSelect(int r)
 {
@@ -142,7 +184,10 @@ bool handleItemSelect(int r)
 	return true;
 }
 
-
+bool route_clear(const CEGUI::EventArgs& event)
+{
+// 	navit_set_destination(gui->nav, NULL, NULL);
+}
 
 bool ItemSelect(const CEGUI::EventArgs& event)
 {
@@ -487,48 +532,6 @@ bool ButtonQuit(const CEGUI::EventArgs& event)
 	exit(0);
 }
 
-bool Handle_Virtual_Key_Down(const CEGUI::EventArgs& event){
-	
-	using namespace CEGUI;
-
-	extern CEGUI::Window* myRoot;
-
-	const CEGUI::WindowEventArgs& we =  static_cast<const CEGUI::WindowEventArgs&>(event);
-	String senderID = we.window->getName();
-
-	Window* editbox = myRoot->getChild("Navit/Keyboard")->getChild("Navit/Keyboard/Input");
-	String content=editbox->getText();
-
-
-	if(senderID=="OK"){
-		// dbg(1,"Validating : %s\n",content.c_str());
-		myRoot->getChild("Navit/Keyboard")->hide();
-		return 0;
-	} else if(senderID=="BACK"){
-		content=content.substr(0, content.length()-1);
-		editbox->setText(content);
-	} else {
-		content+=senderID;
-		editbox->setText(content);
-	}
-
-	Window* country_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/CountryEditbox"));
-	Window* town_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/TownEditbox"));
-	Window* street_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox"));
-
-	switch (SDL_dest.current_search) {
-		case SRCH_COUNTRY:
-			country_edit->setText(content);
-			break;
-		case SRCH_TOWN :
-			town_edit->setText(content);
-			break;
-		case SRCH_STREET :
-			street_edit->setText(content);
-			break;
-	}
-	handle_destination_change();
-}
 
 
 
