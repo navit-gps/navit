@@ -13,7 +13,7 @@ $(SAMPLE_MAP).osm.bz2:
 
 $(SAMPLE_MAP).bin: $(SAMPLE_MAP).osm.bz2 $(top_builddir)/src/osm2navit
 	echo "Converting osm sample map"
-	bzcat $(SAMPLE_MAP).osm.bz2 | $(top_builddir)/src/osm2navit --attr-debug-level=5 >$(SAMPLE_MAP).bin.tmp
+	bzcat $(SAMPLE_MAP).osm.bz2 | $(top_builddir)/src/osm2navit --attr-debug-level=5 $(SAMPLE_MAP).bin.tmp
 	mv $(SAMPLE_MAP).bin.tmp $(SAMPLE_MAP).bin
 
 distclean-local:
