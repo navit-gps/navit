@@ -231,7 +231,7 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 		this_->first=itm->next;
 		if (this_->first)
 			this_->first->prev=NULL;
-		if (this_->cmd_first->itm == itm) {
+		if (this_->cmd_first && this_->cmd_first->itm == itm) {
 			cmd=this_->cmd_first;
 			this_->cmd_first=cmd->next;
 			g_free(cmd);
