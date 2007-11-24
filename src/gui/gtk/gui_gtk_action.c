@@ -170,6 +170,12 @@ visible_points_action(GtkWidget *w, struct container *co)
 #endif
 }
 
+static void
+visible_routegraph_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
+{
+	navit_toggle_routegraph_display(gui->nav);
+}
+
 
 
 static GtkActionEntry entries[] = 
@@ -216,7 +222,8 @@ static GtkActionEntry debug_entries[] =
 	{ "VisibleTownsAction", NULL, _n("VisibleTowns"), NULL, NULL, G_CALLBACK(visible_towns_action) },
 	{ "VisiblePolysAction", NULL, _n("VisiblePolys"), NULL, NULL, G_CALLBACK(visible_polys_action) },
 	{ "VisibleStreetsAction", NULL, _n("VisibleStreets"), NULL, NULL, G_CALLBACK(visible_streets_action) },
-	{ "VisiblePointsAction", NULL, _n("VisiblePoints"), NULL, NULL, G_CALLBACK(visible_points_action) }
+	{ "VisiblePointsAction", NULL, _n("VisiblePoints"), NULL, NULL, G_CALLBACK(visible_points_action) },
+	{ "VisiblePointsAction", NULL, _n("RouteGraph"), NULL, NULL, G_CALLBACK(visible_routegraph_action) }
 };
 
 static guint n_debug_entries = G_N_ELEMENTS (debug_entries);

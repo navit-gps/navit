@@ -788,6 +788,9 @@ Change to your home coordinates.
 				<polygon color="#a0a0a0" />
 				<label label_size="5" /> 
 			</item>
+			<item type="rg_point" order="0-">
+				<circle color="#FF089C" radius="10"  />
+			</item>
 		</layer>
 	</layout>
 	<layout name="Nacht">
