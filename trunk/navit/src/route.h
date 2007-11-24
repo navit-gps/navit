@@ -73,6 +73,7 @@ struct coord *route_info_get(struct route_info_handle *h);
 void route_info_close(struct route_info_handle *h);
 void route_draw(struct route *this, struct transformation *t, struct displaylist *dsp);
 struct map *route_get_map(struct route *route);
+void route_toggle_routegraph_display(struct route *route);
 /* end of prototypes */
 
 #endif

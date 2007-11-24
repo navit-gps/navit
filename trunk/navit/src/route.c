@@ -94,10 +94,19 @@ struct route_path {
 	struct item_hash *path_hash;
 };
 
+#define RF_FASTEST	(1<<0)
+#define RF_SHORTEST	(1<<1)
+#define RF_AVOIDHW	(1<<2)
+#define RF_AVOIDPAID	(1<<3)
+#define RF_LOCKONROAD	(1<<4)
+#define RF_SHOWGRAPH	(1<<5)
+
+
 struct route {
 	int version;
 	struct mapset *ms;
 	struct map route_map;
+	unsigned flags;
 	struct route_info *pos;
 	struct route_info *dst;
 
@@ -365,7 +374,7 @@ route_set_destination(struct route *this, struct pcoord *dst)
 static struct route_graph_point *
 route_graph_get_point(struct route_graph *this, struct coord *c)
 {
-	struct route_graph_point *p=this->route_points;
+	struct route_graph_point *p;
 	int hashval=HASHCOORD(c);
 	p=this->hash[hashval];
 	while (p) {
@@ -1098,7 +1107,6 @@ street_get_data (struct item *item)
 	memcpy(ret->c, c, count*sizeof(struct coord));
 
 	return ret;
-	
 }
 
 struct street_data *
@@ -1130,7 +1138,7 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 	struct map *m;
 	struct map_rect *mr;
 	struct item *item;
-	struct coord lp, sc[1000];
+	struct coord lp;
 	struct street_data *sd;
 	struct coord c;
 	struct coord_geo g;
@@ -1447,6 +1455,9 @@ struct map_rect_priv {
 	struct item item;
 	unsigned int last_coord;
 	struct route_path_segment *seg;
+	int segsdone;
+	struct route_graph_point *point;
+	char *label;
 };
 
 static void
@@ -1491,6 +1502,50 @@ static struct item_methods methods_route_item = {
 	rm_attr_get,
 };
 
+static int
+rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
+{
+	struct map_rect_priv *mr = priv_data;
+	struct route_graph_point *p = mr->point;
+	char buf[1024];
+	switch (attr_type) {
+		case attr_any:
+		case attr_label:
+			attr->type = attr_label;
+			sprintf(buf, "x=%d y=%d", p->c.x, p->c.y);
+			if (mr->label)
+				free(mr->label);
+			mr->label=strdup(buf);
+			attr->u.str = mr->label;
+			return 1;
+		default:
+			return 0;
+	}
+}
+
+static int
+rp_coord_get(void *priv_data, struct coord *c, int count)
+{
+	struct map_rect_priv *mr = priv_data;
+	struct route_graph_point *p = mr->point;
+	int rc = 0,i;
+	for (i=0; i < count; i++) {
+		if (mr->last_coord >= 1)
+			break;
+		c[i] = p->c;
+		mr->last_coord++;
+		rc++;
+	}
+	return rc;
+}
+
+static struct item_methods methods_point_item = {
+	rm_coord_rewind,
+	rp_coord_get,
+	rm_attr_rewind,
+	rp_attr_get,
+};
+
 static void
 rm_destroy(struct map_priv *priv)
 {
@@ -1510,6 +1565,8 @@ rm_rect_new(struct map_priv *map, struct map_selection *sel)
 static void
 rm_rect_destroy(struct map_rect_priv *mr)
 {
+	if (mr->label)
+		free(mr->label);
 	free(mr);
 }
 
@@ -1519,14 +1576,47 @@ rm_get_item(struct map_rect_priv *mr)
 	struct route *r = mr->mpriv;
 	struct route_path_segment *seg = mr->seg;
 
+rep:
+	if (mr->segsdone) {
+		if (!(r->flags & RF_SHOWGRAPH))
+			return NULL;
+		else {
+			struct route_graph_point *p = mr->point;
+			if (!p)
+				p = r->graph->route_points;
+			else
+				p = p->next;
+			if (!p)
+				return NULL;
+			mr->point = p;
+			mr->last_coord = 0;
+			mr->item.id_hi = 0;
+			mr->item.id_lo = 0;
+			mr->item.map = NULL;
+//			mr->item = NULL;
+			mr->item.priv_data = mr;
+			mr->item.type = type_rg_point;
+			mr->item.meth = &methods_point_item;
+			return &mr->item;
+		}
+	}
+
+	/* FIXME: Generate items for segstart-dst/pos */
 	if (!seg)
 		seg = r->path2->path;
 	else
 		seg = seg->next;
-	if (!seg)
+	if (!seg) {
+		mr->segsdone = 1;
+		if (r->flags & RF_SHOWGRAPH)
+			goto rep;
 		return NULL;
+	}
 	mr->seg = seg;
 	mr->last_coord = 0;
+	mr->item.id_hi = 0;
+	mr->item.id_lo = 0;
+	mr->item.map = NULL;
 	mr->item = seg->item;
 	mr->item.priv_data = mr;
 	mr->item.type = type_street_route;
@@ -1554,7 +1644,8 @@ static struct map_methods route_meth = {
 	NULL,
 };
 
-static void route_init_map(struct route *route)
+static void 
+route_init_map(struct route *route)
 {
 	struct map *m = &route->route_map;
 	m->priv = (struct map_priv *)route;
@@ -1565,11 +1656,22 @@ static void route_init_map(struct route *route)
 	m->meth.pro = route_projection(route);
 }
 
-struct map *route_get_map(struct route *route)
+struct map *
+route_get_map(struct route *route)
 {
 	if (route->pos && route->dst && route->path2) {
 		route_init_map(route);
 		return &route->route_map;
 	}
 	return NULL;
+}
+
+void 
+route_toggle_routegraph_display(struct route *route)
+{
+	if (route->flags & RF_SHOWGRAPH) {
+		route->flags &= ~RF_SHOWGRAPH;
+	} else {
+		route->flags |= RF_SHOWGRAPH;
+	}
 }

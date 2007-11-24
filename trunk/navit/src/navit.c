@@ -1196,3 +1196,11 @@ navit_destroy(struct navit *this_)
 	g_free(this_);
 }
 
+void
+navit_toggle_routegraph_display(struct navit *nav)
+{
+	if (!nav->route)
+		return;
+	route_toggle_routegraph_display(nav->route);
+	navit_draw(nav);
+}
