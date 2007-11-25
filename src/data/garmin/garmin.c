@@ -313,10 +313,12 @@ point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 						return rc;
 				case 2:
 					mr->last_attr++;
-					attr->type = attr_street_name;
-					rc = garmin_object_label(g, attr);
-					if (rc)
-						return rc;
+					if (g->type == GO_POLYLINE) {
+						attr->type = attr_street_name;
+						rc = garmin_object_label(g, attr);
+						if (rc)
+							return rc;
+					}
 				case 3:
 					mr->last_attr++;
 					attr->type = attr_flags;
@@ -555,7 +557,7 @@ garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel)
 		printf("Looking level=%d for %f %f %f %f\n",
 			level, r.lulat, r.lulong, r.rllat, r.rllong);
 	}
-	gm = gar_find_subfiles(map->mpriv->g, sel ? &r : NULL);
+	gm = gar_find_subfiles(map->mpriv->g, sel ? &r : NULL, flags);
 	if (!gm) {
 		dlog(1, "Can not find map data\n");
 		return -1;
