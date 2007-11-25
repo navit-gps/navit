@@ -11,7 +11,7 @@ struct gui_priv {
         GtkWidget *win;
 	GtkWidget *dialog_win;
 	GtkWidget *dialog_entry;
-	struct coord dialog_coord;
+	struct pcoord dialog_coord;
         GtkWidget *vbox;
 	GtkWidget *menubar;
 	GtkActionGroup *base_group;

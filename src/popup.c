@@ -60,15 +60,18 @@ static void
 popup_set_bookmark(struct menu *menu, void *data1, void *data2)
 {
 	struct navit *nav=data1;
-	struct coord *c=data2;
+	struct pcoord *pc=data2;
+	struct coord c;
 	struct coord_geo g;
 	char buffer[1024];
 	char buffer_geo[1024];
-	transform_to_geo(transform_get_projection(navit_get_trans(nav)), c, &g);
-	transform_geo_text(&g, buffer_geo);	
+	c.x = pc->x;
+	c.y = pc->y;
+	transform_to_geo(pc->pro, &c, &g);
+	transform_geo_text(&g, buffer_geo);
 	sprintf(buffer,"Map Point %s", buffer_geo);
-	if (!gui_add_bookmark(navit_get_gui(nav), c, buffer)) 
-		navit_add_bookmark(nav, c, buffer);
+	if (!gui_add_bookmark(navit_get_gui(nav), pc, buffer)) 
+		navit_add_bookmark(nav, pc, buffer);
 }
 
 
