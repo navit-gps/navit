@@ -463,8 +463,11 @@ transform_distance_garmin(struct coord *c1, struct coord *c2)
  
 	float a=(sinlat*sinlat)+cosf(lat1)*cosf(lat2)*(sinlong*sinlong);
 	float c=2*asinf(minf(1,sqrt(a)));
- 
-	return roundf(earth_radius*c);
+#ifdef AVOID_FLOAT
+	return round(earth_radius*c);
+#else
+	return earth_radius*c;
+#endif
 }
 
 double
