@@ -27,7 +27,7 @@ msgstr "Utilisation de '%s'\n"
 
 #: ../src/main.c:170
 msgid "No config file navit.xml or navit.xml.local found\n"
-msgstr "Fichier de configuration navit.xml ou navit.xml.local non trouvé"
+msgstr "Fichier de configuration navit.xml ou navit.xml.local non trouvé\n"
 
 #: ../src/main.c:172
 #, c-format
