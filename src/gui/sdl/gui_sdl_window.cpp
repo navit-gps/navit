@@ -19,6 +19,8 @@
 #include "navigation.h"
 #include "debug.h"
 #include "attr.h"
+#include "track.h"
+
 
 #include "CEGUI.h"
 
@@ -99,12 +101,14 @@ sdl_update_roadbook(struct navigation *nav)
 	struct navigation_list *list;	
 	list=navigation_list_new(nav);
 
-	// First, update the 'Navigation Tip' on the main window
+	// First, ensure the navigation tip is visible. quick workaround for when resuming a destination
+	WindowManager::getSingleton().getWindow("Navit/Routing/Tips")->show();
 
+	// update the 'Navigation Tip' on the main window
 	try {
 		struct attr attr;
 		item_attr_get(navigation_list_get_item(list), attr_navigation_speech, &attr);
-		WindowManager::getSingleton().getWindow("Navit/Routing/Tips")->setText(attr.u.str);
+		WindowManager::getSingleton().getWindow("Navit/Routing/Tips")->setText((CEGUI::utf8*)(attr.u.str));
 	}
 	catch (CEGUI::Exception& e)
 	{
@@ -141,6 +145,21 @@ sdl_update_roadbook(struct navigation *nav)
 	{
 		dbg(0,"CEGUI Exception occured: \n%s\n", e.getMessage().c_str());
 		dbg(0,"Missing control!\n");
+	}
+
+}
+
+static void show_road_name(){
+	struct tracking *tracking;
+	struct attr road_name_attr;
+	tracking=navit_get_tracking(sdl_gui_navit);
+
+	using namespace CEGUI;
+	extern Window* myRoot;
+
+
+	if (tracking && tracking_get_current_attr(tracking, attr_label, &road_name_attr) ) {
+		WindowManager::getSingleton().getWindow("Navit/Routing/CurrentRoadName")->setText((CEGUI::utf8*)(road_name_attr.u.str));
 	}
 
 }
@@ -214,6 +233,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
  		if(enable_timer)
  			profile(0,"main context");
 
+		show_road_name();
 	//	graphics_get_data(this_->gra,DLid);
 		
 #if 0
