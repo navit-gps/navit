@@ -80,7 +80,7 @@ static void button_destination(GtkWidget *widget, struct search_param *search)
 
 static void button_bookmark(GtkWidget *widget, struct search_param *search)
 {
-	struct coord *c=NULL;
+	struct pcoord *c=NULL;
 	GtkTreeIter iter;
 	char *desc;
 

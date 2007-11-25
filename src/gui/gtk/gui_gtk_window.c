@@ -96,7 +96,7 @@ gui_gtk_add_bookmark_do(struct gui_priv *gui)
 }
 
 static int
-gui_gtk_add_bookmark(struct gui_priv *gui, struct coord *c, char *description)
+gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description)
 {
         GtkWidget *button_ok,*button_cancel,*label,*vbox,*hbox;
 
