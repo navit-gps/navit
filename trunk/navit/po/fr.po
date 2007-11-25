@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-11-05 21:44+0100\n"
+"POT-Creation-Date: 2007-11-25 15:41+0100\n"
 "PO-Revision-Date: 2007-07-16 13:54+0100\n"
 "Last-Translator: KaZeR <kazer@altern.org>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -27,7 +27,7 @@ msgstr "Utilisation de '%s'\n"
 
 #: ../src/main.c:170
 msgid "No config file navit.xml or navit.xml.local found\n"
-msgstr ""
+msgstr "Fichier de configuration navit.xml ou navit.xml.local non trouvé"
 
 #: ../src/main.c:172
 #, c-format
@@ -179,11 +179,11 @@ msgstr "%s Tournez %s%s"
 msgid "You have reached your destination %s"
 msgstr "Dans %d m, vous êtes arrivé."
 
-#: ../src/navit.c:449 ../src/gui/gtk/gui_gtk_action.c:180
+#: ../src/navit.c:548 ../src/gui/gtk/gui_gtk_action.c:186
 msgid "Layout"
 msgstr "Calques"
 
-#: ../src/navit.c:462
+#: ../src/navit.c:561
 msgid "Projection"
 msgstr "Projection"
 
@@ -435,114 +435,119 @@ msgstr "Sahara"
 msgid "Svalbard and Jan Mayen"
 msgstr "Spitzberg"
 
-#: ../src/gui/gtk/destination.c:325
+#: ../src/gui/gtk/destination.c:330
 msgid "Country"
 msgstr "Pays"
 
-#: ../src/gui/gtk/destination.c:327
+#: ../src/gui/gtk/destination.c:332
 msgid "Zip Code"
 msgstr "Code postal"
 
-#: ../src/gui/gtk/destination.c:329
+#: ../src/gui/gtk/destination.c:334
 msgid "City"
 msgstr "Ville"
 
-#: ../src/gui/gtk/destination.c:331
+#: ../src/gui/gtk/destination.c:336
 msgid "District/Township"
 msgstr "District"
 
-#: ../src/gui/gtk/destination.c:334
+#: ../src/gui/gtk/destination.c:339
 msgid "Street"
 msgstr "Rue"
 
-#: ../src/gui/gtk/destination.c:336
+#: ../src/gui/gtk/destination.c:341
 msgid "Number"
 msgstr "Numéro"
 
-#: ../src/gui/gtk/gui_gtk_action.c:177
+#: ../src/gui/gtk/gui_gtk_action.c:183
 msgid "Display"
 msgstr "Affichage"
 
-#: ../src/gui/gtk/gui_gtk_action.c:178
+#: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "Route"
 msgstr "Route"
 
-#: ../src/gui/gtk/gui_gtk_action.c:179
+#: ../src/gui/gtk/gui_gtk_action.c:185
 msgid "Map"
 msgstr "Carte"
 
-#: ../src/gui/gtk/gui_gtk_action.c:181
+#: ../src/gui/gtk/gui_gtk_action.c:187
 msgid "ZoomOut"
 msgstr "Zoom Arrière"
 
-#: ../src/gui/gtk/gui_gtk_action.c:182
+#: ../src/gui/gtk/gui_gtk_action.c:188
 msgid "ZoomIn"
 msgstr "Zoom Avant"
 
-#: ../src/gui/gtk/gui_gtk_action.c:183
+#: ../src/gui/gtk/gui_gtk_action.c:189
 msgid "Refresh"
 msgstr "Rafraichir"
 
-#: ../src/gui/gtk/gui_gtk_action.c:184
+#: ../src/gui/gtk/gui_gtk_action.c:190
 msgid "Roadbook"
 msgstr "Carnet de route"
 
-#: ../src/gui/gtk/gui_gtk_action.c:186 ../src/gui/gtk/gui_gtk_action.c:188
+#: ../src/gui/gtk/gui_gtk_action.c:192 ../src/gui/gtk/gui_gtk_action.c:194
 msgid "Info"
 msgstr "Info"
 
-#: ../src/gui/gtk/gui_gtk_action.c:190
+#: ../src/gui/gtk/gui_gtk_action.c:196
 msgid "Destination"
 msgstr "Destination"
 
-#: ../src/gui/gtk/gui_gtk_action.c:191
+#: ../src/gui/gtk/gui_gtk_action.c:197
 msgid "Clear"
 msgstr "Effacer"
 
-#: ../src/gui/gtk/gui_gtk_action.c:192
+#: ../src/gui/gtk/gui_gtk_action.c:198
 msgid "Test"
 msgstr "Test"
 
-#: ../src/gui/gtk/gui_gtk_action.c:193
+#: ../src/gui/gtk/gui_gtk_action.c:199
 msgid "_Quit"
 msgstr "_Quitter"
 
-#: ../src/gui/gtk/gui_gtk_action.c:200
+#: ../src/gui/gtk/gui_gtk_action.c:206
 msgid "Cursor"
 msgstr "Curseur"
 
-#: ../src/gui/gtk/gui_gtk_action.c:201
+#: ../src/gui/gtk/gui_gtk_action.c:207
 msgid "Tracking"
 msgstr "Suivi"
 
-#: ../src/gui/gtk/gui_gtk_action.c:202
+#: ../src/gui/gtk/gui_gtk_action.c:208
 msgid "Orientation"
 msgstr "Orientation"
 
-#: ../src/gui/gtk/gui_gtk_action.c:204 ../src/gui/gtk/gui_gtk_action.c:206
+#: ../src/gui/gtk/gui_gtk_action.c:210 ../src/gui/gtk/gui_gtk_action.c:212
 msgid "Fullscreen"
-msgstr ""
+msgstr "Plein écran"
 
-#: ../src/gui/gtk/gui_gtk_action.c:214
+#: ../src/gui/gtk/gui_gtk_action.c:220
 msgid "Data"
 msgstr "Données"
 
-#: ../src/gui/gtk/gui_gtk_action.c:215
+#: ../src/gui/gtk/gui_gtk_action.c:221
 msgid "VisibleBlocks"
 msgstr "VisibleBlocks"
 
-#: ../src/gui/gtk/gui_gtk_action.c:216
+#: ../src/gui/gtk/gui_gtk_action.c:222
 msgid "VisibleTowns"
 msgstr "VisibleTowns"
 
-#: ../src/gui/gtk/gui_gtk_action.c:217
+#: ../src/gui/gtk/gui_gtk_action.c:223
 msgid "VisiblePolys"
 msgstr "VisiblePolys"
 
-#: ../src/gui/gtk/gui_gtk_action.c:218
+#: ../src/gui/gtk/gui_gtk_action.c:224
 msgid "VisibleStreets"
 msgstr "VisibleStreets"
 
-#: ../src/gui/gtk/gui_gtk_action.c:219
+#: ../src/gui/gtk/gui_gtk_action.c:225
 msgid "VisiblePoints"
 msgstr "VisiblePoints"
+
+#: ../src/gui/gtk/gui_gtk_action.c:226
+#, fuzzy
+msgid "RouteGraph"
+msgstr "Route"
