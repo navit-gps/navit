@@ -373,20 +373,34 @@ navit_add_menu_destinations(struct navit *this_, char *name, int offset, struct 
 	}
 }
 
-
+static const char *
+navit_proj2str(enum projection pro)
+{
+	switch (pro) {
+		case projection_mg:
+			return "mg";
+		case projection_garmin:
+			return "garmin";
+		default:
+			return "";
+	}
+}
 static void
 navit_append_coord(struct navit *this_, char *file, struct pcoord *c, char *type, char *description, struct menu *rmen, GHashTable *h, void (*callback)(struct menu *menu, void *data1, void *data2))
 {
 	FILE *f;
 	int offset=0;
 	char *buffer;
+	const char *prostr;
 
 	f=fopen(file, "a");
 	if (f) {
 		offset=ftell(f);
-		if (c) 
-			fprintf(f,"p=%u 0x%x 0x%x type=%s label=\"%s\"\n", c->pro, c->x, c->y, type, description);
-		else
+		if (c) {
+			prostr = navit_proj2str(c->pro);
+			fprintf(f,"%s%s0x%x 0x%x type=%s label=\"%s\"\n",
+				 prostr, *prostr ? ":" : "", c->x, c->y, type, description);
+		} else
 			fprintf(f,"\n");
 		fclose(f);
 	}
@@ -403,17 +417,12 @@ parse_line(FILE *f, char *buffer, char **name, struct pcoord *c)
 	int pos;
 	char *s,*i;
 	struct coord co;
-	char *cp, *ep;
+	char *cp;
 	enum projection pro = projection_mg;
 	*name=NULL;
 	if (! fgets(buffer, 2048, f))
 		return -3;
 	cp = buffer;
-	if (*cp == 'p') {
-		pro = strtol(cp+2, &ep, 10);
-		cp = ep;
-		cp += strcspn(cp, " \t");
-	}
 	pos=coord_parse(cp, pro, &co);
 	if (!pos)
 		return -2;

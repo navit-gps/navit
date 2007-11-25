@@ -98,7 +98,7 @@ gui_datawindow_new(struct gui *gui, char *name, struct callback *click, struct c
 }
 
 int
-gui_add_bookmark(struct gui *gui, struct coord *c, char *description)
+gui_add_bookmark(struct gui *gui, struct pcoord *c, char *description)
 {
 	int ret;
 	dbg(2,"enter\n");

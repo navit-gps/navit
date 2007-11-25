@@ -116,6 +116,14 @@ coord_rect_extend(struct coord_rect *r, struct coord *c)
 	/* [Proj:][Ð]DMM.ss[S][S]... N/S [D][D]DMM.ss[S][S]... E/W */
 	/* [Proj:][-][D]D.d[d]... [-][D][D]D.d[d]... */
 	/* [Proj:][-]0xX [-]0xX */
+/*
+ * Currently supported:
+ * 	[Proj:]-0xX [-]0xX 
+ * 	- where Proj can be mg/garmin, defaults to mg
+ * 	[Proj:][D][D]Dmm.ss[S][S] N/S [D][D]DMM.ss[S][S]... E/W
+ * 	[Proj:][-][D]D.d[d]... [-][D][D]D.d[d]
+ * 	- where Proj can be geo
+ */
 
 int
 coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
@@ -123,7 +131,7 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 	int debug=0;
 	char *proj=NULL,*s,*co;
 	const char *str=c_str;
-	int args,ret;
+	int args,ret = 0;
 	struct coord_geo g;
 	struct coord c;
 	enum projection str_pro=projection_none;
@@ -138,6 +146,16 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		dbg(1,"projection=%s\n", proj);
 		str=co+1;
 		s=index(str,' ');
+		if (!strcmp(proj, "mg"))
+			str_pro = projection_mg;
+		else if (!strcmp(proj, "garmin"))
+			str_pro = projection_garmin;
+		else if (!strcmp(proj, "geo"))
+			str_pro = projection_none;
+		else {
+			dbg(0, "Unknown projection: %s\n", proj);
+			goto out;
+		}
 	}
 	if (! s)
 		return 0;
@@ -147,24 +165,24 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 	if (!strncmp(str, "0x", 2) || !strncmp(str,"-0x", 3)) {
 		args=sscanf(str, "%i %i%n",&c.x, &c.y, &ret);
 		if (args < 2)
-			return 0;
+			goto out;
 		dbg(1,"str='%s' x=0x%x y=0x%x c=%d\n", str, c.x, c.y, ret);
 		dbg(1,"rest='%s'\n", str+ret);
 
 		if (str_pro == projection_none) 
 			str_pro=projection_mg;
-		if (str_pro == projection_mg) {
-			*c_ret=c;
-		} else {
-			printf("help\n");
+		if (str_pro != pro) {
+			transform_to_geo(str_pro, &c, &g);
+			transform_from_geo(pro, &g, &c);
 		}
+		*c_ret=c;
 	} else if (*s == 'N' || *s == 'n' || *s == 'S' || *s == 's') {
 		dbg(1,"str='%s'\n", str);
 		double lng, lat;
 		char ns, ew;
 		args=sscanf(str, "%lf %c %lf %c%n", &lat, &ns, &lng, &ew, &ret);
 		if (args < 4)
-			return 0;
+			goto out;
 		if (str_pro == projection_none) {
 			g.lat=floor(lat/100);
 			lat-=g.lat*100;
@@ -184,7 +202,7 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		double lng, lat;
 		args=sscanf(str, "%lf %lf%n", &lng, &lat, &ret);
 		if (args < 2)
-			return 0;
+			goto out;
 		dbg(1,"str='%s' x=%f y=%f  c=%d\n", str, lng, lat, ret);
 		dbg(1,"rest='%s'\n", str+ret);
 		g.lng=lng;
@@ -198,6 +216,7 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		printf("args=%d\n", args);
 		printf("ret=%d delta=%d ret_str='%s'\n", ret, str-c_str, c_str+ret);
 	}
+out:
 	if (proj)
 		free(proj);
 	return ret;
