@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <wordexp.h>
 #include <glib.h>
+#include <zlib.h>
+#include "debug.h"
 #include "file.h"
 
 static struct file *file_list;
@@ -64,6 +66,58 @@ file_data_read(struct file *file, long long offset, int size)
 	}
 	return ret;
 		
+}
+
+static int
+uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen)
+{
+	z_stream stream;
+	int err;
+
+	stream.next_in = (Bytef*)source;
+	stream.avail_in = (uInt)sourceLen;
+	stream.next_out = dest;
+	stream.avail_out = (uInt)*destLen;
+
+	stream.zalloc = (alloc_func)0;
+	stream.zfree = (free_func)0;
+
+	err = inflateInit2(&stream, -MAX_WBITS);
+	if (err != Z_OK) return err;
+
+	err = inflate(&stream, Z_FINISH);
+	if (err != Z_STREAM_END) {
+	inflateEnd(&stream);
+	if (err == Z_NEED_DICT || (err == Z_BUF_ERROR && stream.avail_in == 0))
+		return Z_DATA_ERROR;
+		return err;
+	}
+	*destLen = stream.total_out;
+
+	err = inflateEnd(&stream);
+	return err;
+}
+
+unsigned char *
+file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp)
+{
+	void *ret;
+	char buffer[size];
+	uLongf destLen=size_uncomp;
+	
+	ret=g_malloc(size_uncomp);
+	lseek(file->fd, offset, SEEK_SET);
+	if (read(file->fd, buffer, size) != size) {
+		g_free(ret);
+		ret=NULL;
+	} else {
+		if (uncompress_int(ret, &destLen, (Bytef *)buffer, size) != Z_OK) {
+			dbg(0,"uncompress failed\n");
+			g_free(ret);
+			ret=NULL;
+		}
+	}
+	return ret;
 }
 
 void
