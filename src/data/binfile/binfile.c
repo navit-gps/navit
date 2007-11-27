@@ -152,7 +152,7 @@ pop_tile(struct map_rect_priv *mr)
 }
 
 
-static void
+static int
 zipfile_to_tile(struct file *f, struct zip_cd *cd, struct tile *t)
 {
 	char buffer[1024];
@@ -160,15 +160,27 @@ zipfile_to_tile(struct file *f, struct zip_cd *cd, struct tile *t)
 	char *zipfn;
 	dbg(1,"enter %p %p %p\n", f, cd, t);
 	dbg(1,"cd->zipofst=0x%x\n", cd->zipofst);
+	t->start=NULL;
 	lfh=(struct zip_lfh *)(file_data_read(f,cd->zipofst,sizeof(struct zip_lfh)));
 	zipfn=(char *)(file_data_read(f,cd->zipofst+sizeof(struct zip_lfh), lfh->zipfnln));
 	strncpy(buffer, zipfn, lfh->zipfnln);
 	buffer[lfh->zipfnln]='\0';
-	dbg(0,"0x%x '%s' %d\n", lfh->ziplocsig, buffer, sizeof(*cd)+cd->zipcfnl);
-	t->start=(int *)(file_data_read(f,cd->zipofst+sizeof(struct zip_lfh)+lfh->zipfnln, lfh->zipuncmp));
-	t->end=t->start+lfh->zipuncmp/4;
+	dbg(0,"0x%x '%s' %d %d,%d\n", lfh->ziplocsig, buffer, sizeof(*cd)+cd->zipcfnl, lfh->zipsize, lfh->zipuncmp);
+	switch (lfh->zipmthd) {
+	case 0:
+		t->start=(int *)(file_data_read(f,cd->zipofst+sizeof(struct zip_lfh)+lfh->zipfnln, lfh->zipuncmp));
+		t->end=t->start+lfh->zipuncmp/4;
+		break;
+	case 8:
+		t->start=(int *)(file_data_read_compressed(f,cd->zipofst+sizeof(struct zip_lfh)+lfh->zipfnln, lfh->zipsize, lfh->zipuncmp));
+		t->end=t->start+lfh->zipuncmp/4;
+		break;
+	default:
+		dbg(0,"Unknown compression method %d\n", lfh->zipmthd);
+	}
 	file_data_free(f, (unsigned char *)zipfn);
 	file_data_free(f, (unsigned char *)lfh);
+	return t->start != NULL;
 }
 
 static void
@@ -180,9 +192,9 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, sizeof(struct zip_cd)));
 	dbg(1,"enter %p %d\n", mr, zipfile);
 	t.zipfile_num=zipfile;
-	zipfile_to_tile(f, cd, &t);
+	if (zipfile_to_tile(f, cd, &t))
+		push_tile(mr, &t);
 	file_data_free(f, (unsigned char *)cd);
-	push_tile(mr, &t);
 }
 
 static struct map_rect_priv *
@@ -262,6 +274,8 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 	struct tile *t;
 	for (;;) {
 		t=mr->t;
+		if (! t)
+			return NULL;
 		t->pos=t->pos_next;
 		if (t->pos >= t->end) {
 			if (pop_tile(mr))
