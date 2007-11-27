@@ -166,10 +166,13 @@ int main(int argc, char **argv)
 			config_file=NULL;
 		}
 	}
-	if (! config_file) 
-		g_error(_("No config file navit.xml or navit.xml.local found\n"));
+	if (!config_file) {
+		printf(_("No config file navit.xml, navit.xml.local found\n"));
+		exit(1);
+	}
 	if (!config_load(config_file, &error)) {
-		g_error(_("Error parsing '%s': %s\n"), config_file, error->message);
+		printf(_("Error parsing '%s': %s\n"), config_file, error->message);
+		exit(1);
 	} else {
 		printf(_("Using '%s'\n"), config_file);
 	}
