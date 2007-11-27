@@ -26,6 +26,6 @@ navit_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c data_wind
 
 osm2navit_SOURCES = osm2navit.c item.c debug.c zipfile.h
 
-navit_LDADD = @NAVIT_LIBS@ @GPSD_LIBS@ -Lfib-1.1 -lfib
+navit_LDADD = @NAVIT_LIBS@ @GPSD_LIBS@ @ZLIB_LIBS@ -Lfib-1.1 -lfib
 
 osm2navit_LDADD = @NAVIT_LIBS@  @ZLIB_LIBS@
