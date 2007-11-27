@@ -19,6 +19,7 @@ struct param_list;
 struct file *file_create(char *name);
 int file_mmap(struct file *file);
 unsigned char *file_data_read(struct file *file, long long offset, int size);
+unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp);
 void file_data_free(struct file *file, unsigned char *data);
 int file_exists(char *name);
 void file_remap_readonly(struct file *f);

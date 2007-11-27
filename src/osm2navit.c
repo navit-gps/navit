@@ -355,13 +355,10 @@ struct node_item {
 	struct coord c;
 };
 
-struct buffer node_buffer = {
+static struct buffer node_buffer = {
 	64*1024*1024,
 };
 
-struct buffer zipdir_buffer = {
-	1024*1024,
-};
 
 static void
 extend_buffer(struct buffer *b)
@@ -533,6 +530,8 @@ end_way(FILE *out)
 {
 	int alen=0;
 
+	if (! out)
+		return;
 	if (dedupe_ways_hash) {
 		if (g_hash_table_lookup(dedupe_ways_hash, (gpointer)wayid))
 			return;
@@ -558,7 +557,7 @@ static void
 end_node(FILE *out)
 {
 	int alen=0;
-	if (! node_is_tagged || ! nodeid)
+	if (!out || ! node_is_tagged || ! nodeid)
 		return;
 	pad_text_attr(&debug_attr, debug_attr_buffer);
 	if (label_attr.len)
@@ -1150,7 +1149,7 @@ create_tile_hash_list(GList *list)
 	while (next) {
 		th=g_hash_table_lookup(tile_hash, next->data);
 		if (!th) {
-			fprintf(stderr,"No tile found for '%s'\n", next->data);
+			fprintf(stderr,"No tile found for '%s'\n", (char *)(next->data));
 		}
 		add_tile_hash(th);
 		next=g_list_next(next);
@@ -1301,8 +1300,10 @@ phase34(int phase, int maxnamelen, FILE *ways_in, FILE *nodes_in, FILE *tilesdir
 	sig_alrm(0);
 	if (phase == 3)
 		tile_hash=g_hash_table_new(g_str_hash, g_str_equal);
-	phase34_process_file(phase, ways_in);
-	phase34_process_file(phase, nodes_in);
+	if (ways_in)
+		phase34_process_file(phase, ways_in);
+	if (nodes_in)
+		phase34_process_file(phase, nodes_in);
 	fprintf(stderr,"read %d bytes\n", bytes_read);
 	if (phase == 3)
 		merge_tiles();
@@ -1320,28 +1321,41 @@ phase3(FILE *ways_in, FILE *nodes_in, FILE *tilesdir_out)
 	return phase34(3, 0, ways_in, nodes_in, tilesdir_out);
 }
 
-int
-dir_entries;
+static long long zipoffset;
+static int zipdir_size;
 
-static void
-add_zipdirentry(char *name, struct zip_cd *cd)
+static int
+compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level)
 {
-	int cd_size=sizeof(struct zip_cd)+strlen(name);
-	struct zip_cd *cdn;
-	if (zipdir_buffer.size + cd_size > zipdir_buffer.malloced) 
-		extend_buffer(&zipdir_buffer);
-	cdn=(struct zip_cd *)(zipdir_buffer.base+zipdir_buffer.size);
-	*cdn=*cd;
-	strcpy((char *)(cdn+1), name);
-	zipdir_buffer.size += cd_size;
-	dir_entries++;
+	z_stream stream;
+	int err;
+
+	stream.next_in = (Bytef*)source;
+	stream.avail_in = (uInt)sourceLen;
+	stream.next_out = dest;
+	stream.avail_out = (uInt)*destLen;
+	if ((uLong)stream.avail_out != *destLen) return Z_BUF_ERROR;
+
+	stream.zalloc = (alloc_func)0;
+	stream.zfree = (free_func)0;
+	stream.opaque = (voidpf)0;
+
+	err = deflateInit2(&stream, level, Z_DEFLATED, -15, 9, Z_DEFAULT_STRATEGY);
+	if (err != Z_OK) return err;
+
+	err = deflate(&stream, Z_FINISH);
+	if (err != Z_STREAM_END) {
+		deflateEnd(&stream);
+		return err == Z_OK ? Z_BUF_ERROR : err;
+	}
+	*destLen = stream.total_out;
+
+	err = deflateEnd(&stream);
+	return err;
 }
 
-long long zipoffset;
-int zipdir_size;
-
 static void
-write_zipmember(FILE *out, FILE *dir_out, char *name, int filelen, char *data, int data_size)
+write_zipmember(FILE *out, FILE *dir_out, char *name, int filelen, char *data, int data_size, int compression_level)
 {
 	struct zip_lfh lfh = {
 		0x04034b50,
@@ -1363,7 +1377,7 @@ write_zipmember(FILE *out, FILE *dir_out, char *name, int filelen, char *data, i
 		0x0a,
 		0x00,
 		0x0000,
-		0x0000,
+		0x0,
 		0xbe2a,
 		0x5d37,
 		0x0,
@@ -1378,16 +1392,31 @@ write_zipmember(FILE *out, FILE *dir_out, char *name, int filelen, char *data, i
 		zipoffset,
 	};
 	char filename[filelen+1];
-	int crc,len;
+	int error,crc,len,comp_size=data_size;
+	uLongf destlen=data_size+data_size/500+12;
+	char compbuffer[destlen];
 
 	crc=crc32(0, NULL, 0);
 	crc=crc32(crc, (unsigned char *)data, data_size);
+	if (compression_level) {
+		error=compress2_int((Byte *)compbuffer, &destlen, (Bytef *)data, data_size, compression_level);
+		if (error == Z_OK) {
+			if (destlen < data_size) {
+				data=compbuffer;
+				comp_size=destlen;
+			}
+		} else {
+			fprintf(stderr,"compress2 returned %d\n", error);
+		}
+	}
 	lfh.zipcrc=crc;
-	lfh.zipsize=data_size;
+	lfh.zipsize=comp_size;
 	lfh.zipuncmp=data_size;
+	lfh.zipmthd=compression_level ? 8:0;
 	cd.zipccrc=crc;
-	cd.zipcsiz=data_size;
+	cd.zipcsiz=comp_size;
 	cd.zipcunc=data_size;
+	cd.zipcmthd=compression_level ? 8:0;
 	strcpy(filename, name);
 	len=strlen(filename);
 	while (len < filelen) {
@@ -1396,15 +1425,15 @@ write_zipmember(FILE *out, FILE *dir_out, char *name, int filelen, char *data, i
 	filename[filelen]='\0';
 	fwrite(&lfh, sizeof(lfh), 1, out);
 	fwrite(filename, filelen, 1, out);
-	fwrite(data, data_size, 1, out);
-	zipoffset+=sizeof(lfh)+filelen+data_size;
+	fwrite(data, comp_size, 1, out);
+	zipoffset+=sizeof(lfh)+filelen+comp_size;
 	fwrite(&cd, sizeof(cd), 1, dir_out);
 	fwrite(filename, filelen, 1, dir_out);
 	zipdir_size+=sizeof(cd)+filelen;
 }
 
 static int
-process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, FILE *out, FILE *dir_out)
+process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, FILE *out, FILE *dir_out, int compression_level)
 {
 	struct tile_head *th;
 	char *slice_data,*zip_data;
@@ -1420,8 +1449,10 @@ process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, FILE *out
 		}
 		th=th->next;
 	}
-	fseek(ways_in, 0, SEEK_SET);
-	fseek(nodes_in, 0, SEEK_SET);
+	if (ways_in)
+		fseek(ways_in, 0, SEEK_SET);
+	if (nodes_in)
+		fseek(nodes_in, 0, SEEK_SET);
 	phase34(4, maxnamelen, ways_in, nodes_in, NULL);
 
 	th=tile_head_root;
@@ -1432,9 +1463,9 @@ process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, FILE *out
 				exit(1);
 			} else {
 				if (strlen(th->name))
-					write_zipmember(out, dir_out, th->name, maxnamelen, th->zip_data, th->total_size);
+					write_zipmember(out, dir_out, th->name, maxnamelen, th->zip_data, th->total_size, compression_level);
 				else
-					write_zipmember(out, dir_out, "index", sizeof("index")-1, th->zip_data, th->total_size);
+					write_zipmember(out, dir_out, "index", sizeof("index")-1, th->zip_data, th->total_size, compression_level);
 				zipfiles++;
 			}
 		}
@@ -1455,7 +1486,7 @@ cat(FILE *in, FILE *out)
 }
 
 static int
-phase4(FILE *ways_in, FILE *nodes_in, FILE *out, FILE *dir_out)
+phase4(FILE *ways_in, FILE *nodes_in, FILE *out, FILE *dir_out, int compression_level)
 {
 	int slice_size=1024*1024*1024;
 	int maxnamelen,size,slices;
@@ -1504,7 +1535,7 @@ phase4(FILE *ways_in, FILE *nodes_in, FILE *out, FILE *dir_out)
 			th->process=1;
 			th=th->next;
 		}
-		zipfiles+=process_slice(ways_in, nodes_in, size, maxnamelen, out, dir_out);
+		zipfiles+=process_slice(ways_in, nodes_in, size, maxnamelen, out, dir_out, compression_level);
 		slices++;
 	}
 	fseek(dir_out, 0, SEEK_SET);
@@ -1526,23 +1557,28 @@ usage(FILE *f)
 	fprintf(f,"osm2navit - parse osm textfile and converts to NavIt binfile format\n\n");
 	fprintf(f,"Usage :\n");
 	fprintf(f,"bzcat planet.osm.bz2 | osm2navit mymap.bin\n");
-	fprintf(f,"Available switches :\n");
-	fprintf(f,"-h (--help)             : this screen\n");
-	fprintf(f,"-a (--attr-debug-level) : control which data is included in the debug attribute\n");
-	fprintf(f,"-c (--dump-coordinates) : dump coordinates after phase 1\n");
-	fprintf(f,"-e (--end)		: end at specified phase\n");
-	fprintf(f,"-k (--keep-tmpfiles)    : do not delete tmp files after processing. useful to reuse them\n\n");
-	fprintf(f,"-s (--start)		: start at specified phase\n");
-	fprintf(f,"-w (--dedupe-ways)      : ensure no duplicate ways or nodes. useful when using several input files\n");
+	fprintf(f,"Available switches:\n");
+	fprintf(f,"-h (--help)              : this screen\n");
+	fprintf(f,"-N (--nodes-only)        : process only nodes\n");
+	fprintf(f,"-W (--ways-only)         : process only ways\n");
+	fprintf(f,"-a (--attr-debug-level)  : control which data is included in the debug attribute\n");
+	fprintf(f,"-c (--dump-coordinates)  : dump coordinates after phase 1\n");
+	fprintf(f,"-e (--end)               : end at specified phase\n");
+	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
+	fprintf(f,"-s (--start)             : start at specified phase\n");
+	fprintf(f,"-w (--dedupe-ways)       : ensure no duplicate ways or nodes. useful when using several input files\n");
+	fprintf(f,"-z (--compression-level) : set the compression level\n");
 	exit(1);
 }
 
 int main(int argc, char **argv)
 {
-	FILE *ways,*ways_split,*nodes,*tilesdir,*zipdir,*res;
+	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*tilesdir,*zipdir,*res;
 	char *map=g_strdup(attrmap);
 	int c,start=1,end=4,dump_coordinates=0;
 	int keep_tmpfiles=0;
+	int process_nodes=1, process_ways=1;
+	int compression_level=9;
 	char *result;
 	while (1) {
 #if 0
@@ -1551,19 +1587,25 @@ int main(int argc, char **argv)
 		int option_index = 0;
 		static struct option long_options[] = {
 			{"attr-debug-level", 1, 0, 'a'},
+			{"compression-level", 1, 0, 'z'},
 			{"dedupe-ways", 0, 0, 'w'},
 			{"end", 1, 0, 'e'},
 			{"help", 0, 0, 'h'},
 			{"keep-tmpfiles", 0, 0, 'k'},
+			{"nodes-only", 0, 0, 'N'},
 			{"start", 1, 0, 's'},
+			{"ways-only", 0, 0, 'W'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "a:ce:hks:w", long_options, &option_index);
+		c = getopt_long (argc, argv, "NWa:ce:hks:w", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
-		case 'h':
-			usage(stdout);
+		case 'N':
+			process_ways=0;
+			break;
+		case 'W':
+			process_nodes=0;
 			break;
 		case 'a':
 			attr_debug_level=atoi(optarg);
@@ -1574,6 +1616,9 @@ int main(int argc, char **argv)
 		case 'e':
 			end=atoi(optarg);
 			break;
+		case 'h':
+			usage(stdout);
+			break;
 		case 'k':
 			fprintf(stderr,"I will KEEP tmp files\n");
 			keep_tmpfiles=1;
@@ -1583,6 +1628,9 @@ int main(int argc, char **argv)
 			break;
 		case 'w':
 			dedupe_ways_hash=g_hash_table_new(NULL, NULL);
+			break;
+		case 'z':
+			compression_level=atoi(optarg);
 			break;
 		case '?':
 			usage(stderr);
@@ -1599,13 +1647,17 @@ int main(int argc, char **argv)
 
 
 	if (start == 1) {
-		ways=fopen64("ways.tmp","w+");
-		nodes=fopen64("nodes.tmp","w+");
+		if (process_ways)
+			ways=fopen64("ways.tmp","w+");
+		if (process_nodes)
+			nodes=fopen64("nodes.tmp","w+");
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
 		phase1(stdin,ways,nodes);
-		fclose(ways);
-		fclose(nodes);
+		if (ways)
+			fclose(ways);
+		if (nodes)
+			fclose(nodes);
 	}
 	if (end == 1 || dump_coordinates) 
 		save_buffer("coords.tmp",&node_buffer);
@@ -1614,15 +1666,18 @@ int main(int argc, char **argv)
 	if (start == 2) 
 		load_buffer("coords.tmp",&node_buffer);
 	if (start <= 2) {
-		ways=fopen64("ways.tmp","r");
-		ways_split=fopen64("ways_split.tmp","w+");
-		phase=2;
-		fprintf(stderr,"PROGRESS: Phase 2: finding intersections\n");
-		phase2(ways,ways_split);
-		fclose(ways_split);
-		fclose(ways);
-		if(!keep_tmpfiles)
-			remove("ways.tmp");
+		if (process_ways) {
+			ways=fopen64("ways.tmp","r");
+			ways_split=fopen64("ways_split.tmp","w+");
+			phase=2;
+			fprintf(stderr,"PROGRESS: Phase 2: finding intersections\n");
+			phase2(ways,ways_split);
+			fclose(ways_split);
+			fclose(ways);
+			if(!keep_tmpfiles)
+				remove("ways.tmp");
+		} else 
+			fprintf(stderr,"PROGRESS: Skipping Phase 2\n");
 	}
 	free(node_buffer.base);
 	node_buffer.base=NULL;
@@ -1633,28 +1688,36 @@ int main(int argc, char **argv)
 	if (start <= 3) {
 		phase=3;
 		fprintf(stderr,"PROGRESS: Phase 3: generating tiles\n");
-		ways_split=fopen64("ways_split.tmp","r");
-		nodes=fopen64("nodes.tmp","r");
+		if (process_ways)
+			ways_split=fopen64("ways_split.tmp","r");
+		if (process_nodes)
+			nodes=fopen64("nodes.tmp","r");
 		tilesdir=fopen64("tilesdir.tmp","w+");
 		phase3(ways_split,nodes,tilesdir);
 		fclose(tilesdir);
-		fclose(nodes);
-		fclose(ways_split);
+		if (nodes)
+			fclose(nodes);
+		if (ways_split)
+			fclose(ways_split);
 	}
 	if (end == 3)
 		exit(0);
 	if (start <= 4) {
 		phase=4;
 		fprintf(stderr,"PROGRESS: Phase 4: assembling map\n");
-		ways_split=fopen64("ways_split.tmp","r");
-		nodes=fopen64("nodes.tmp","r");
+		if (process_ways)
+			ways_split=fopen64("ways_split.tmp","r");
+		if (process_nodes)
+			nodes=fopen64("nodes.tmp","r");
 		res=fopen64(result,"w+");
 		zipdir=fopen64("zipdir.tmp","w+");
-		phase4(ways_split,nodes,res,zipdir);
+		phase4(ways_split,nodes,res,zipdir,compression_level);
 		fclose(zipdir);
 		fclose(res);
-		fclose(nodes);
-		fclose(ways_split);
+		if (nodes)
+			fclose(nodes);
+		if (ways_split)
+			fclose(ways_split);
 		if(!keep_tmpfiles) {
 			remove("nodes.tmp");
 			remove("ways_split.tmp");
