@@ -72,6 +72,7 @@ struct map_rect_priv {
 };
 
 int garmin_debug = 10;
+
 void 
 logfn(char *file, int line, int level, char *fmt, ...)
 {
@@ -554,12 +555,17 @@ garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel)
 		r.rllong = sel->rect.rl.x;
 		level = get_level(sel);
 //		level = nl2gl[level].g;
-		printf("Looking level=%d for %f %f %f %f\n",
+		dlog(2, "Looking level=%d for %f %f %f %f\n",
 			level, r.lulat, r.lulong, r.rllat, r.rllong);
 	}
 	gm = gar_find_subfiles(map->mpriv->g, sel ? &r : NULL, flags);
 	if (!gm) {
-		dlog(1, "Can not find map data\n");
+		if (sel) {
+			dlog(1, "Can not find map data for the area: %f %f %f %f\n",
+				r.lulat, r.lulong, r.rllat, r.rllong);
+		} else {
+			dlog(1, "Can not find map data\n");
+		}
 		return -1;
 	}
 #if 0
@@ -571,7 +577,7 @@ garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel)
 		level = el;
 	level = level - sl;
 	level = (gm->maxlevel - gm->minlevel) - level;
-	dlog(1, "sl=%d el=%d level=%d\n", sl, el, level);
+	dlog(3, "sl=%d el=%d level=%d\n", sl, el, level);
 #endif
 	sl = (18-gm->zoomlevels)/2;
 	el = sl + gm->zoomlevels;
@@ -581,7 +587,7 @@ garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel)
 		level = el;
 	level = level - sl;
 	level = gm->basebits + level;
-	dlog(1, "sl=%d el=%d level=%d\n", sl, el, level);
+	dlog(3, "sl=%d el=%d level=%d\n", sl, el, level);
 	map->gmap = gm;
 	glast = &map->objs;
 	while (*glast) {
@@ -596,7 +602,7 @@ garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel)
 		return -1;
 	}
 	map->cobj = map->objs;
-	dlog(1, "Loaded %d objects\n", rc);
+	dlog(2, "Loaded %d objects\n", rc);
 	return rc;
 }
 // Can not return NULL, navit segfaults
@@ -616,7 +622,7 @@ gmap_rect_new(struct map_priv *map, struct map_selection *sel)
 		return mr;
 	} else {
 		while (ms) {
-			dlog(1, "order town:%d street=%d poly=%d\n",
+			dlog(2, "order town:%d street=%d poly=%d\n",
 				ms->order[layer_town],
 				ms->order[layer_street],
 				ms->order[layer_poly]);
@@ -646,7 +652,7 @@ gmap_rect_destroy(struct map_rect_priv *mr)
 static void
 gmap_destroy(struct map_priv *m)
 {
-	dlog(1, "garmin_map_destroy\n");
+	dlog(5, "garmin_map_destroy\n");
 	if (m->g)
 		gar_free(m->g);
 	if (m->filename)
@@ -673,12 +679,21 @@ gmap_new(struct map_methods *meth, struct attr **attrs)
 {
 	struct map_priv *m;
 	struct attr *data;
+	struct attr *debug;
 	char buf[PATH_MAX];
 	struct stat st;
+	int dl = 1;
+	struct gar_config cfg;
 
 	data=attr_search(attrs, NULL, attr_data);
 	if (! data)
 		return NULL;
+	debug=attr_search(attrs, NULL, attr_debug);
+	if (debug) {
+		dl = atoi(debug->u.str);
+		if (!dl)
+			dl = 1;
+	}
 	m=g_new(struct map_priv, 1);
 	m->id=++map_id;
 	m->filename = strdup(data->u.str);
@@ -686,7 +701,11 @@ gmap_new(struct map_methods *meth, struct attr **attrs)
 		g_free(m);
 		return NULL;
 	}
-	m->g = gar_init(NULL, logfn);
+	memset(&cfg, 0, sizeof(struct gar_config));
+	cfg.opm = OPM_GPS;
+	cfg.debuglevel = dl;
+	garmin_debug = dl;
+	m->g = gar_init_cfg(NULL, logfn, &cfg);
 	if (!m->g) {
 		g_free(m->filename);
 		g_free(m);
