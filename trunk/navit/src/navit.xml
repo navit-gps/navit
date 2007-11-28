@@ -65,9 +65,9 @@ Change to your home coordinates.
 		<map type="binfile" enabled="yes" data="$NAVIT_SHAREDIR/maps/osm_bbox_11.3,47.9,11.7,48.2.bin"/>
 	</mapset>
 <!-- Sample mapset for garmin maps -->
-        <mapset enabled="no">
-                <map type="garmin" enabled="yes" data="/path/to/img"/>
-        </mapset>
+	<mapset enabled="no">
+		<map type="garmin" enabled="yes" data="/path/to/img" debug="4"/>
+	</mapset>
 
 	<layout name="Tag">
 		<layer name="sea" details="0">
