@@ -2,6 +2,7 @@
 #define _LARGEFILE_SOURCE
 #define _LARGEFILE64_SOURCE
 #include <glib.h>
+#include <assert.h>
 #include <malloc.h>
 #include <string.h>
 #include <signal.h>
@@ -365,6 +366,7 @@ extend_buffer(struct buffer *b)
 {
 	b->malloced+=b->malloced_step;
 	b->base=realloc(b->base, b->malloced);
+	assert(b->base != NULL);
 	
 }
 
@@ -632,6 +634,7 @@ load_buffer(char *filename, struct buffer *b)
 	fprintf(stderr,"reading %d bytes from %s\n", b->size, filename);
 	fseek(f, 0, SEEK_SET);
 	b->base=malloc(b->size);
+	assert(b->base != NULL);
 	fread(b->base, b->size, 1, f);
 	fclose(f);
 }
@@ -837,6 +840,7 @@ tile_extend(char *tile, struct item_bin *ib)
 		th=g_hash_table_lookup(tile_hash, tile);
 	if (! th) {
 		th=malloc(sizeof(*th)+strlen(tile)+1);
+		assert(th != NULL);
 		strcpy(th->subtiles, tile);
 		th->size=strlen(tile)+1;
 		th->total_size=0;
@@ -885,6 +889,7 @@ merge_tile(char *base, char *sub)
 		
 	} else {
 		thb=realloc(thb, sizeof(*thb)+ths->size+thb->size);
+		assert(thb != NULL);
 		memcpy(thb->subtiles+thb->size, ths->subtiles, ths->size);
 		thb->size+=ths->size;
 		thb->total_size+=ths->total_size;
@@ -1440,6 +1445,7 @@ process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, FILE *out
 	int zipfiles=0;
 
 	slice_data=malloc(size);
+	assert(slice_data != NULL);
 	zip_data=slice_data;
 	th=tile_head_root;
 	while (th) {
