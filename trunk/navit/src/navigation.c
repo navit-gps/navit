@@ -555,6 +555,8 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 {
 	int distance, level = 0;
 	void *p=this_;
+	if (!this_->cmd_first)
+		return;
 	callback_list_call(this_->callback, 1, &p);
 	distance=round_distance(this_->first->dest_length-this_->cmd_first->itm->dest_length);
 	if (this_->turn_around) {
