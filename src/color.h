@@ -2,7 +2,7 @@
 #define NAVIT_COLOR_H
 
 struct color {
-	int r,g,b;
+	int r,g,b,a;
 };
 
 #endif
