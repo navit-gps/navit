@@ -1,10 +1,6 @@
 #include <math.h>
 #include <glib.h>
 #include "config.h"
-#if 0
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#endif
 #include <GL/glc.h>
 #include "point.h"
 #include "graphics.h"
@@ -142,7 +138,8 @@ gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 	gc->fr=c->r/65535.0;
 	gc->fg=c->g/65535.0;
 	gc->fb=c->b/65535.0;
-	gc->fa=0;
+	gc->fa=c->a/65535.0;
+// 	printf("new alpha : %i\n",c->a);
 }
 
 static void
@@ -151,7 +148,7 @@ gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 	gc->br=c->r/65535.0;
 	gc->bg=c->g/65535.0;
 	gc->bb=c->b/65535.0;
-	gc->ba=0;
+	gc->ba=c->a/65535.0;
 }
 
 static struct graphics_gc_methods gc_methods = {
@@ -197,8 +194,6 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 static void
 draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	 // printf("draw_lines\n");
-// 	glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
 	 int i;
 /*
 	if (gr->mode == draw_mode_begin || gr->mode == draw_mode_end) 
