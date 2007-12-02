@@ -385,7 +385,7 @@ vehicle_gps_callback(struct gps_data_t *data, char *buf, size_t len, int level)
 		data->set &= ~STATUS_SET;
 	}
 	if(data->set & PDOP_SET){
-		printf("pdop : %d\n",data->pdop);
+		printf("pdop : %g\n",data->pdop);
 	}
 }
 #endif
@@ -617,7 +617,7 @@ vehicle_open(struct vehicle *this_)
 		fd=this_->fd;
 	} else if (! strncmp(this_->url,"demo://",7)) {
 		dbg(0,"Creating a demo vehicle\n");
-		g_timeout_add(1000, vehicle_demo_timer, this_);
+		g_timeout_add(1000, (GSourceFunc) vehicle_demo_timer, this_);
 	}
 	this_->iochan=g_io_channel_unix_new(fd);
 	enable_watch(this_);
