@@ -190,8 +190,10 @@ street_coord_get(void *priv_data, struct coord *c, int count)
 			c++;
 			ret++;
 			count--;
-		} else
+		} else {
+			street->more=0;
 			return ret;
+		}
 	}
 	return ret;
 }
@@ -306,7 +308,11 @@ static unsigned char limit[]={0,0,1,1,1,2,2,4,6,6,12,13,14,20,20,20,20,20,20};
 
 int
 street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *item)
-{
+{	
+	while (street->more) {
+		struct coord c;
+		street_coord_get(street, &c, 1);
+	}
 	if (mr->b.p == mr->b.p_start) {
 		street_get_data(street, &mr->b.p);
 		street->name_file=mr->m->file[file_strname_stn];
@@ -413,6 +419,7 @@ street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *it
 	street->p_rewind=street->p;
 	street->name.len=0;
 	street->attr_next=attr_label;
+	street->more=1;
 	return 1;
 }
 
