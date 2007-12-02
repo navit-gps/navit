@@ -22,6 +22,7 @@ struct map_rect_priv {
 	char attr_name[SIZE];
 	struct coord c;
 	int eoc;
+	int more;
 	struct map_priv *m;
 	struct item item;
 };

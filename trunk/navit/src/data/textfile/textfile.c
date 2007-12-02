@@ -123,6 +123,7 @@ textfile_coord_get(void *priv_data, struct coord *c, int count)
 			if (mr->item.id_hi)
 				mr->eoc=1;
 		} else {
+			mr->more=0;
 			break;
 		}
 	}
@@ -222,6 +223,10 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 	if (!mr->f) {
 		return NULL;
 	}
+	while (mr->more) {
+		struct coord c;
+		textfile_coord_get(mr, &c, 1);
+	}
 	for(;;) {
 		if (feof(mr->f)) {
 			dbg(1,"map_rect_get_item_textfile: eof\n");
@@ -269,6 +274,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 			continue;
 		}
 		mr->attr_last=attr_none;
+		mr->more=1;
 		dbg(1,"return attr='%s'\n", mr->attrs);
 		return &mr->item;
 	}
