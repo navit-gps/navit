@@ -159,6 +159,7 @@ struct street_priv {
 	int status_rewind;
 	struct coord *ref;
 	int bytes;
+	int more;
 	struct street_name name;
 	enum attr_type attr_next;
 	char debug[256];
