@@ -111,20 +111,20 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 	while (*filename) {
 		// Trying the Liberation font first
 		sprintf(fontpath,"%s/LiberationSans-Regular.ttf",*filename);
-		dbg(1,("font : %s\n",fontpath));
+		dbg(1,"font : %s\n",fontpath);
 	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
 			break;
 		//Fallback to arial.ttf, in the same path
 		sprintf(fontpath,"%s/arial.ttf",*filename);
-		dbg(1,("font : %s\n",fontpath));
+		dbg(1,"font : %s\n",fontpath);
 	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
 			break;
 		sprintf(fontpath,"%s/NcrBI4nh.ttf",*filename);
-		dbg(1,("font : %s\n",fontpath));
+		dbg(1,"font : %s\n",fontpath);
 	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
 			break;
 		sprintf(fontpath,"%s/luximbi.ttf",*filename);
-		dbg(1,("font : %s\n",fontpath));
+		dbg(1,"font : %s\n",fontpath);
 	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
 			break;
 		filename++;
