@@ -20,6 +20,7 @@
 #include "debug.h"
 #include "attr.h"
 #include "track.h"
+#include "menu.h"
 
 
 #include "CEGUI.h"
@@ -63,6 +64,19 @@ GLuint * DLid;
 
 #define _(STRING)    gettext(STRING)
 
+
+struct bookmark{
+	char * name;
+	struct callback *cb;
+	struct bookmark *next;
+} *bookmarks;
+
+struct former_dest{
+	char * name;
+	struct callback *cb;
+	struct former_dest *next;
+} *former_dests;
+
 static int
 gui_sdl_set_graphics(struct gui_priv *this_, struct graphics *gra)
 {
@@ -73,23 +87,6 @@ gui_sdl_set_graphics(struct gui_priv *this_, struct graphics *gra)
 		return 1;
 	return 0;
 }
-
-
-void drawCursor() {
-	dbg(1,"Pushing a cursor from GUI\n");
-                int x=400;
-                int y=400;
-                float cursor_size=15.0f;
-                glColor4f(0.0f,0.0f,1.0f,0.75f);
-                glEnable(GL_BLEND);
-                glBegin(GL_TRIANGLES);
-                        glVertex3f( x, y-cursor_size, 0.0f);
-                        glVertex3f(x-cursor_size,y+cursor_size, 0.0f);
-                        glVertex3f( x+cursor_size,y+cursor_size, 0.0f);
-                glEnd();
-                glDisable(GL_BLEND);
- }
-
 
 static void
 sdl_update_roadbook(struct navigation *nav)
@@ -168,7 +165,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
 {
 
 	using namespace CEGUI;
-	dbg(1,"Entering main loop\n");
+	dbg(0,"Entering main loop\n");
 
 	bool must_quit = false;
 	
@@ -184,12 +181,6 @@ static int gui_run_main_loop(struct gui_priv *this_)
 	t=navit_get_trans(this_->nav);
 	transform_set_size(t, 800, 600);	
 	navit_draw(this_->nav);
-
-	GLuint cursorDL;
-	cursorDL=glGenLists(1);
-	glNewList(cursorDL,GL_COMPILE);
-		drawCursor();
-	glEndList();
 
 	bool enable_timer=0;
 
@@ -234,14 +225,9 @@ static int gui_run_main_loop(struct gui_priv *this_)
  			profile(0,"main context");
 
 		show_road_name();
-	//	graphics_get_data(this_->gra,DLid);
-		
-#if 0
-		glCallList(*DLid);
-#endif
+
 		navit_draw_displaylist(sdl_gui_navit);
 
-		// glCallList(cursorDL);
 		inject_input(must_quit);
  		if(enable_timer)
  			profile(0,"inputs");
@@ -282,7 +268,111 @@ static int gui_run_main_loop(struct gui_priv *this_)
 
 }
 
+static struct menu_priv *
+add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum menu_type type, struct callback *cb);
 
+static struct menu_methods menu_methods = {
+	add_menu,
+};
+
+struct menu_priv {
+	char *path;	
+// 	GtkAction *action;
+	struct gui_priv *gui;
+	enum menu_type type;
+	struct callback *cb;
+	struct menu_priv *child;
+	struct menu_priv *sibling;
+	gulong handler_id;
+	guint merge_id;
+};
+
+#define MENU_BOOKMARK 2
+#define MENU_FORMER_DEST 3
+
+static struct menu_priv *
+add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum menu_type type, struct callback *cb)
+{
+	using namespace CEGUI;
+	*meth=menu_methods;
+	dbg(0,"callback : %s\n",name);
+
+	if(menu==(struct menu_priv *)(MENU_BOOKMARK)){
+		dbg(0,"Item is a bookmark\n");
+		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("Bookmarks/Listbox"));
+
+		ListboxTextItem* itemListbox = new ListboxTextItem((CEGUI::utf8*)(name));
+		itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+		mcl->addRow(itemListbox,0);
+
+		struct bookmark *newB = g_new0(struct bookmark, 1);
+		newB->name=g_strdup(name);
+		newB->cb=cb;
+		if (newB) {
+			newB->next = bookmarks;
+			bookmarks = newB;
+		}
+
+	}
+
+	if(menu==(struct menu_priv *)(MENU_FORMER_DEST)){
+		dbg(0,"Item is a former destination\n");
+		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("FormerDests/Listbox"));
+
+		ListboxTextItem* itemListbox = new ListboxTextItem((CEGUI::utf8*)(name));
+		itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+		mcl->addRow(itemListbox,0);
+
+		struct former_dest *newB = g_new0(struct former_dest, 1);
+		newB->name=g_strdup(name);
+		newB->cb=cb;
+		if (newB) {
+			newB->next = former_dests;
+			former_dests = newB;
+		}
+
+	}
+
+	if(!strcmp(name,"Bookmarks")){
+		dbg(0,"Menu is the bookmark menu!\n");
+		return (struct menu_priv *)MENU_BOOKMARK;
+	} else if(!strcmp(name,"Former Destinations")){
+		dbg(0,"Menu is the Former Destinations menu!\n");
+		return (struct menu_priv *)MENU_FORMER_DEST;
+	} else {
+		return (struct menu_priv *)1;
+	}
+}
+
+bool BookmarkGo(const char * name)
+{
+	dbg(0,"searching for bookmark %s\n",name);
+	bookmark * bookmark_search=bookmarks;
+	while ( bookmark_search ){
+		dbg(0,"-> %s\n",bookmark_search->name);
+		if(!strcmp(bookmark_search->name,name)){
+			dbg(0,"Got it :)\n");
+ 			 callback_call_0(bookmark_search->cb);
+		}
+		bookmark_search=bookmark_search->next;
+	}
+
+}
+
+bool FormerDestGo(const char * name)
+{
+	dbg(0,"searching for former_dest %s\n",name);
+	former_dest * former_dest_search=former_dests;
+	while ( former_dest_search ){
+		dbg(0,"-> %s\n",former_dest_search->name);
+		if(!strcmp(former_dest_search->name,name)){
+			dbg(0,"Got it :)\n");
+ 			callback_call_0(former_dest_search->cb);
+		}
+		former_dest_search=former_dest_search->next;
+	}
+
+}
 static struct menu_priv *
 gui_sdl_toolbar_new(struct gui_priv *this_, struct menu_methods *meth)
 {
@@ -298,7 +388,8 @@ gui_sdl_statusbar_new(struct gui_priv *gui, struct statusbar_methods *meth)
 static struct menu_priv *
 gui_sdl_menubar_new(struct gui_priv *this_, struct menu_methods *meth)
 {
-	return NULL; //gui_gtk_ui_new(this_, meth, "/ui/MenuBar", nav, 0);
+	*meth=menu_methods;
+	return (struct menu_priv *) 1; //gui_gtk_ui_new(this_, meth, "/ui/MenuBar", nav, 0);
 }
 
 static struct menu_priv *
@@ -528,29 +619,36 @@ static void init_sdlgui(char * skin_layout,int fullscreen)
 		CEGUI::WindowManager::getSingleton().getWindow("ZoomOutButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ZoomOut));
 // 		CEGUI::WindowManager::getSingleton().getWindow("ZoomOutButton")->setText(_("ZoomOut"));
 
-		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/CountryEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
- 		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/CountryEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
-		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/TownEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
- 		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/TownEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
-		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/StreetEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
- 		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/StreetEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
+		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/CountryEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
+ 		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/CountryEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
+		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/TownEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
+ 		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/TownEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
+		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/StreetEditbox")->subscribeEvent(Window::EventKeyUp, Event::Subscriber(DestinationEntryChange));
+ 		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/StreetEditbox")->subscribeEvent(Window::EventMouseButtonDown, Event::Subscriber(handleMouseEnters));
 
-		CEGUI::WindowManager::getSingleton().getWindow("DestinationButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(DialogWindowSwitch));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(DestinationWindowSwitch));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Address")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(AddressSearchSwitch));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Bookmark")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(BookmarkSelectionSwitch));
+		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/FormerDest")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(FormerDestSelectionSwitch));
+
 
 		CEGUI::WindowManager::getSingleton().getWindow("OSD/ViewMode")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ToggleView));
 
-		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/GO")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ButtonGo));
-		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/KB")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ShowKeyboard));
+		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/GO")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ButtonGo));
+		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/KB")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(ShowKeyboard));
 
-		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Listbox")->subscribeEvent(MultiColumnList::EventSelectionChanged, Event::Subscriber(ItemSelect));
+		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/Listbox")->subscribeEvent(MultiColumnList::EventSelectionChanged, Event::Subscriber(ItemSelect));
+		CEGUI::WindowManager::getSingleton().getWindow("Bookmarks/Listbox")->subscribeEvent(MultiColumnList::EventSelectionChanged, Event::Subscriber(BookmarkSelect));
+		CEGUI::WindowManager::getSingleton().getWindow("FormerDests/Listbox")->subscribeEvent(MultiColumnList::EventSelectionChanged, Event::Subscriber(FormerDestSelect));
 
 
 		// Translation for StaticTexts (labels)
-		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Country")->setText(_("Country"));
-		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Town")->setText(_("City"));
-		CEGUI::WindowManager::getSingleton().getWindow("DestinationWindow/Street")->setText(_("Street"));
+		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/Country")->setText(_("Country"));
+		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/Town")->setText(_("City"));
+		CEGUI::WindowManager::getSingleton().getWindow("AdressSearch/Street")->setText(_("Street"));
 
- 		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
+
+ 		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("AdressSearch/Listbox"));
 
 		mcl->setSelectionMode(MultiColumnList::RowSingle) ;
 		mcl->addColumn("Value", 0, cegui_absdim(200.0));
@@ -563,6 +661,16 @@ static void init_sdlgui(char * skin_layout,int fullscreen)
 
 		mcl2->setSelectionMode(MultiColumnList::RowSingle) ;
 		mcl2->addColumn("Instructions", 0, cegui_absdim(700.0));
+
+ 		MultiColumnList* mcl3 = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("Bookmarks/Listbox"));
+
+		mcl3->setSelectionMode(MultiColumnList::RowSingle) ;
+		mcl3->addColumn("Name", 0, cegui_absdim(700.0));
+
+ 		MultiColumnList* mcl4 = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("FormerDests/Listbox"));
+
+		mcl4->setSelectionMode(MultiColumnList::RowSingle) ;
+		mcl4->addColumn("Name", 0, cegui_absdim(700.0));
 
  		BuildKeyboard();
 
@@ -646,7 +754,7 @@ static void vehicle_callback_handler( struct navit *nav, struct vehicle *v){
 	}
 	catch (CEGUI::Exception& e)
 	{
-		dbg(1,"Warning : you skin doesn't have the satellitebars. You should use Mineque's skin.");
+		dbg(1,"Warning : you skin doesn't have the satellitebars. You should use Mineque's skin.\n");
 	}
 
 }

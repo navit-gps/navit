@@ -16,7 +16,12 @@ bool handleMouseEnters(const CEGUI::EventArgs& event);
 void handle_destination_change();
 
 bool DestinationEntryChange(const CEGUI::EventArgs& event);
-bool DialogWindowSwitch(const CEGUI::EventArgs& event);
+bool DestinationWindowSwitch(const CEGUI::EventArgs& event);
+bool BookmarkSelectionSwitch(const CEGUI::EventArgs& event);
+bool BookmarkSelect(const CEGUI::EventArgs& event);
+bool FormerDestSelectionSwitch(const CEGUI::EventArgs& event);
+bool FormerDestSelect(const CEGUI::EventArgs& event);
+bool AddressSearchSwitch(const CEGUI::EventArgs& event);
 bool Switch_to_nGhost(const CEGUI::EventArgs& event);
 bool RoadBookSwitch(const CEGUI::EventArgs& event);
 bool ButtonGo(const CEGUI::EventArgs& event);
