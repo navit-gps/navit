@@ -5,68 +5,121 @@
         <Property Name="InheritsAlpha" Value="False" />
         <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
         <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
-        <Window Type="TaharezLook/FrameWindow" Name="DestinationWindow" >
+	
+	<Window Type="TaharezLook/FrameWindow" Name="DestinationChoose" >
+		<Property Name="Text" Value="Choose your destination" />
+		<Property Name="Visible" Value="False" />
+		<Property Name="Alpha" Value="0.7" />
+		<Property Name="TitlebarEnabled" Value="True" />
+		<Property Name="UnifiedAreaRect" Value="{{0.001,0},{0.1,0},{0.8,0},{0.4,0}}" />
+		<Window Type="TaharezLook/Button" Name="DestinationWindow/Address" >
+			<Property Name="Text" Value="Search Address" />
+			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0.02,0},{0.2,0},{0.26,0},{0.8,0}}" />
+		</Window>
+		<Window Type="TaharezLook/Button" Name="DestinationWindow/Bookmark" >
+			<Property Name="Text" Value="Bookmark" />
+			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0.32,0},{0.2,0},{0.57,0},{0.8,0}}" />
+		</Window>
+		<Window Type="TaharezLook/Button" Name="DestinationWindow/FormerDest" >
+			<Property Name="Text" Value="FormerDest" />
+			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0.62,0},{0.2,0},{0.87,0},{0.8,0}}" />
+		</Window>
+
+	</Window>
+		
+	
+	<Window Type="TaharezLook/FrameWindow" Name="BookmarkSelection" >
+		<Property Name="Text" Value="Choose your destination" />
+		<Property Name="Visible" Value="False" />
+		<Property Name="Alpha" Value="0.7" />
+		<Property Name="TitlebarEnabled" Value="True" />
+		<Property Name="UnifiedAreaRect" Value="{{0.001,0},{0.07,0},{0.8,0},{0.9,0}}" />
+		<Window Type="TaharezLook/MultiColumnList" Name="Bookmarks/Listbox" >
+			<Property Name="Font" Value="DejaVuSans-14" />
+			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.29,0},{0.945,0},{0.905842,0}}" />
+		</Window>
+	</Window>
+	
+	<Window Type="TaharezLook/FrameWindow" Name="FormerDestSelection" >
+		<Property Name="Text" Value="Choose your destination" />
+		<Property Name="Visible" Value="False" />
+		<Property Name="Alpha" Value="0.7" />
+		<Property Name="TitlebarEnabled" Value="True" />
+		<Property Name="UnifiedAreaRect" Value="{{0.001,0},{0.07,0},{0.8,0},{0.9,0}}" />
+		<Window Type="TaharezLook/MultiColumnList" Name="FormerDests/Listbox" >
+			<Property Name="Font" Value="DejaVuSans-14" />
+			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.29,0},{0.945,0},{0.905842,0}}" />
+		</Window>
+	</Window>
+	
+	<Window Type="TaharezLook/FrameWindow" Name="AdressSearchWindow" >		
             <Property Name="Text" Value="Choose your destination" />
             <Property Name="Visible" Value="False" />
             <Property Name="Alpha" Value="0.7" />
             <Property Name="TitlebarEnabled" Value="True" />
             <Property Name="UnifiedAreaRect" Value="{{0.001,0},{0.07,0},{0.8,0},{0.9,0}}" />
-            <Window Type="TaharezLook/StaticText" Name="DestinationWindow/Country" >
+	    <Window Type="TaharezLook/StaticText" Name="AdressSearch/Country" >
                 <Property Name="Text" Value="Country :" />
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.05,0},{0.271871,0},{0.1,0}}" />
             </Window>
-            <Window Type="TaharezLook/Editbox" Name="DestinationWindow/CountryEditbox" >
+            <Window Type="TaharezLook/Editbox" Name="AdressSearch/CountryEditbox" >
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.3,0},{0.05,0},{0.9,0},{0.1,0}}" />
             </Window>
-            <Window Type="TaharezLook/StaticText" Name="DestinationWindow/Town" >
+	    <Window Type="TaharezLook/StaticText" Name="AdressSearch/Town" >
                 <Property Name="Text" Value="Town : " />
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.11,0},{0.275,0},{0.16,0}}" />
             </Window>
-            <Window Type="TaharezLook/Editbox" Name="DestinationWindow/TownEditbox" >
+	    <Window Type="TaharezLook/Editbox" Name="AdressSearch/TownEditbox" >
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.3,0},{0.11,0},{0.9,0},{0.16,0}}" />
             </Window>
-            <Window Type="TaharezLook/StaticText" Name="DestinationWindow/Street" >
+	    <Window Type="TaharezLook/StaticText" Name="AdressSearch/Street" >
                 <Property Name="Text" Value="Street : " />
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.17,0},{0.275,0},{0.22,0}}" />
             </Window>
-            <Window Type="TaharezLook/Editbox" Name="DestinationWindow/StreetEditbox" >
+	    <Window Type="TaharezLook/Editbox" Name="AdressSearch/StreetEditbox" >
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.3,0},{0.17,0},{0.9,0},{0.22,0}}" />
             </Window>
-            <Window Type="TaharezLook/StaticText" Name="DestinationWindow/Label1" >
+	    <Window Type="TaharezLook/StaticText" Name="AdressSearch/Label1" >
                 <Property Name="Text" Value="Pick your choice :" />
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.23,0},{0.9,0},{0.28,0}}" />
             </Window>
-            <Window Type="TaharezLook/MultiColumnList" Name="DestinationWindow/Listbox" >
+	    <Window Type="TaharezLook/MultiColumnList" Name="AdressSearch/Listbox" >
+		    <Property Name="Font" Value="DejaVuSans-14" />
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.29,0},{0.945,0},{0.905842,0}}" />
             </Window>
-            <Window Type="TaharezLook/Button" Name="DestinationWindow/KB" >
+	    <Window Type="TaharezLook/Button" Name="AdressSearch/KB" >
                 <Property Name="Text" Value="Keyboard" />
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.54,0},{0.92,0},{0.70,0},{0.98,0}}" />
             </Window>
-            <Window Type="TaharezLook/Button" Name="DestinationWindow/GO" >
+	    <Window Type="TaharezLook/Button" Name="AdressSearch/GO" >
                 <Property Name="Text" Value="Go!" />
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.72,0},{0.92,0},{0.97,0},{0.98,0}}" />
             </Window>
-            <Window Type="TaharezLook/StaticText" Name="DestinationWindow/Dest_x" >
+	    <Window Type="TaharezLook/StaticText" Name="AdressSearch/Dest_x" >
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.92,0},{0.12,0},{0.98,0}}" />
             </Window>
-            <Window Type="TaharezLook/StaticText" Name="DestinationWindow/Dest_y" >
+	    <Window Type="TaharezLook/StaticText" Name="AdressSearch/Dest_y" >
                 <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
                 <Property Name="UnifiedAreaRect" Value="{{0.12,0},{0.92,0},{0.23,0},{0.98,0}}" />
             </Window>
-
         </Window>
+	
         <Window Type="TaharezLook/StaticText" Name="Navit/Routing/Tips" >
             <Property Name="Font" Value="DejaVuSans-14" />
             <Property Name="Text" Value="No destination set." />

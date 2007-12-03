@@ -10,6 +10,10 @@ struct navit;
 
 extern struct navit *sdl_gui_navit;
 
+
+bool BookmarkGo(const char * name);
+bool FormerDestGo(const char * name);
+
 struct gui_priv {
 /*
         GtkWidget *win;
