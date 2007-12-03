@@ -45,7 +45,7 @@ void route_to(int x,int y){
 	extern struct navit *sdl_gui_navit;
 
 	try {
-		WindowManager::getSingleton().getWindow("DestinationWindow")->hide();
+		WindowManager::getSingleton().getWindow("AdressSearchWindow")->hide();
 		WindowManager::getSingleton().getWindow("Navit/Routing/Tips")->show();
 
 // 		WindowManager::getSingleton().getWindow("Navit/ProgressWindow")->show();
@@ -69,18 +69,15 @@ bool Handle_Virtual_Key_Down(const CEGUI::EventArgs& event){
 	
 	using namespace CEGUI;
 
-	extern CEGUI::Window* myRoot;
-
-	const CEGUI::WindowEventArgs& we =  static_cast<const CEGUI::WindowEventArgs&>(event);
+	const WindowEventArgs& we =  static_cast<const CEGUI::WindowEventArgs&>(event);
 	String senderID = we.window->getName();
 
-	Window* editbox = myRoot->getChild("Navit/Keyboard")->getChild("Navit/Keyboard/Input");
+	Window* editbox = WindowManager::getSingleton().getWindow("Navit/Keyboard/Input");
 	String content=editbox->getText();
 
 
 	if(senderID=="OK"){
-		// dbg(1,"Validating : %s\n",content.c_str());
-		myRoot->getChild("Navit/Keyboard")->hide();
+		WindowManager::getSingleton().getWindow("Navit/Keyboard")->hide();
 		return 0;
 	} else if(senderID=="BACK"){
 		content=content.substr(0, content.length()-1);
@@ -90,9 +87,9 @@ bool Handle_Virtual_Key_Down(const CEGUI::EventArgs& event){
 		editbox->setText(content);
 	}
 
-	Window* country_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/CountryEditbox"));
-	Window* town_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/TownEditbox"));
-	Window* street_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox"));
+	Window* country_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/CountryEditbox"));
+	Window* town_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/TownEditbox"));
+	Window* street_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/StreetEditbox"));
 
 	switch (SDL_dest.current_search) {
 		case SRCH_COUNTRY:
@@ -111,24 +108,23 @@ bool Handle_Virtual_Key_Down(const CEGUI::EventArgs& event){
 bool handleItemSelect(int r)
 {
 	using namespace CEGUI;
-	extern CEGUI::Window* myRoot;
 
-	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
+	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("AdressSearch/Listbox"));
 	
 	ListboxItem * item = mcl->getItemAtGridReference(MCLGridRef(r,0));
 	ListboxItem * itemid = mcl->getItemAtGridReference(MCLGridRef(r,1));
 	ListboxItem * item_assoc = mcl->getItemAtGridReference(MCLGridRef(r,2));
 
 
-	Window* country_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/CountryEditbox"));
-	Window* twn_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/TownEditbox"));
-	Window* street_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox"));
+	Window* country_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/CountryEditbox"));
+	Window* twn_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/TownEditbox"));
+	Window* street_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/StreetEditbox"));
 
 	if(SDL_dest.current_search==SRCH_COUNTRY){
 		country_edit->setText(item->getText());
 		twn_edit->activate();
 		SDL_dest.current_search=SRCH_TOWN;
-		myRoot->getChild("Navit/Keyboard")->getChild("Navit/Keyboard/Input")->setText("");
+		WindowManager::getSingleton().getWindow("Navit/Keyboard/Input")->setText("");
 
 	} else 	if(SDL_dest.current_search==SRCH_TOWN){
 		twn_edit->setText(item->getText());
@@ -136,37 +132,37 @@ bool handleItemSelect(int r)
 		ListboxItem * itemx = mcl->getItemAtGridReference(MCLGridRef(r,3));
 		ListboxItem * itemy = mcl->getItemAtGridReference(MCLGridRef(r,4));
 	
-		Window* Dest_x = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Dest_x"));
+		Window* Dest_x = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/Dest_x"));
 		Dest_x->setText(itemx->getText().c_str());
 
-		Window* Dest_y = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Dest_y"));
+		Window* Dest_y = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/Dest_y"));
 		Dest_y->setText(itemy->getText().c_str());
 
 		mcl->resetList();
 
 		SDL_dest.current_search=SRCH_STREET;
 		street_edit->activate();
-		myRoot->getChild("Navit/Keyboard")->getChild("Navit/Keyboard/Input")->setText("");
+		WindowManager::getSingleton().getWindow("Navit/Keyboard/Input")->setText("");
 
 	} else if(SDL_dest.current_search==SRCH_STREET){
 		street_edit->setText(item->getText());
 
-		myRoot->getChild("Navit/Keyboard")->hide();
+		WindowManager::getSingleton().getWindow("Navit/Keyboard")->hide();
 
 		ListboxItem * itemx = mcl->getItemAtGridReference(MCLGridRef(r,3));
 		ListboxItem * itemy = mcl->getItemAtGridReference(MCLGridRef(r,4));
 	
-		Window* Dest_x = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Dest_x"));
+		Window* Dest_x = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/Dest_x"));
 		Dest_x->setText(itemx->getText().c_str());
 
-		Window* Dest_y = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Dest_y"));
+		Window* Dest_y = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/Dest_y"));
 		Dest_y->setText(itemy->getText().c_str());
 
 		mcl->resetList();
 
 		SDL_dest.current_search=SRCH_STREET;
 
-		myRoot->getChild("Navit/Keyboard")->getChild("Navit/Keyboard/Input")->setText("");
+		WindowManager::getSingleton().getWindow("Navit/Keyboard/Input")->setText("");
 
 
 	} else if (SDL_dest.current_search==SRCH_NUMBER){
@@ -191,11 +187,41 @@ bool route_clear(const CEGUI::EventArgs& event)
 
 bool ItemSelect(const CEGUI::EventArgs& event)
 {
+	//FIXME maybe merge with handleItemSelect
 	using namespace CEGUI;
 
-	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
+	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("AdressSearch/Listbox"));
 	ListboxItem * item = mcl->getFirstSelectedItem();
 	handleItemSelect(mcl->getItemRowIndex(item));
+}
+
+bool BookmarkSelect(const CEGUI::EventArgs& event)
+{
+	using namespace CEGUI;
+	dbg(0,"1\n");
+	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("Bookmarks/Listbox"));
+	dbg(0,"2\n");
+	ListboxItem * item = mcl->getFirstSelectedItem();
+	if(item){
+		dbg(0,"item %s is at row %i\n",item->getText().c_str(),mcl->getItemRowIndex(item));
+		BookmarkGo(item->getText().c_str());
+	}
+	WindowManager::getSingleton().getWindow("BookmarkSelection")->hide();
+}
+
+bool FormerDestSelect(const CEGUI::EventArgs& event)
+{
+	using namespace CEGUI;
+	dbg(0,"1\n");
+	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("FormerDests/Listbox"));
+	dbg(0,"2\n");
+	ListboxItem * item = mcl->getFirstSelectedItem();
+	if(item){
+		dbg(0,"item %s is at row %i\n",item->getText().c_str(),mcl->getItemRowIndex(item));
+		FormerDestGo(item->getText().c_str());
+	}
+	WindowManager::getSingleton().getWindow("FormerDestSelection")->hide();
+	dbg(0,"hided\n");
 }
 
 bool handleMouseEnters(const CEGUI::EventArgs& event)
@@ -205,31 +231,28 @@ bool handleMouseEnters(const CEGUI::EventArgs& event)
 
 	// FIXME theses variables should be shared
 	extern CEGUI::OpenGLRenderer* renderer;
-	extern CEGUI::Window* myRoot;
 
 	using namespace CEGUI;
-	myRoot->getChild("Navit/Keyboard")->getChild("Navit/Keyboard/Input")->setText("");
-	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
+	WindowManager::getSingleton().getWindow("Navit/Keyboard/Input")->setText("");
+	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("AdressSearch/Listbox"));
 
 	String senderID = we.window->getName();
 
-	if (senderID == "DestinationWindow/CountryEditbox"){
+	if (senderID == "AdressSearch/CountryEditbox"){
 		// First, clean off the Street and Town Editbox
-		extern Window* myRoot;
-		Window* town_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/TownEditbox"));
+		Window* town_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/TownEditbox"));
 		town_edit->setText("");
-		Window* street_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox"));
+		Window* street_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/StreetEditbox"));
 		street_edit->setText("");
 		SDL_dest.current_search=SRCH_COUNTRY;
 
-	} else if (senderID == "DestinationWindow/TownEditbox"){
+	} else if (senderID == "AdressSearch/TownEditbox"){
 		// First, clean off the Street Editbox
-		extern Window* myRoot;
-		Window* street_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox"));
+		Window* street_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/StreetEditbox"));
 		street_edit->setText("");
 		SDL_dest.current_search=SRCH_TOWN;
 
-	} else if (senderID == "DestinationWindow/StreetEditbox"){
+	} else if (senderID == "AdressSearch/StreetEditbox"){
 		// First, make sure the user selected an entry in the town choice. If he hadn't, select the first for him.
   		if(SDL_dest.current_search==SRCH_TOWN){
 			if (mcl->getRowCount()>0)
@@ -246,33 +269,16 @@ bool handleMouseEnters(const CEGUI::EventArgs& event)
 void handle_destination_change(){
 
 	using namespace CEGUI;
-	extern CEGUI::Window* myRoot;
-	/*
-	static struct search_param {
-		struct navit *nav;
-		struct mapset *ms;
-		struct search_list *sl;
-		struct attr attr;
- 	} search_param;
-*/
 
  	struct search_param *search=&search_param;
 	struct search_list_result *res;
-	/*
- 	// dbg(1,"search->nav=sdl_gui_navit;\n");
- 	search->nav=sdl_gui_navit;
- 	// dbg(1,"search->ms=navit_get_mapset(sdl_gui_navit);\n");
- 	search->ms=navit_get_mapset(sdl_gui_navit);
- 	// dbg(1,"search->sl=search_list_new(search->ms);\n");
- 	search->sl=search_list_new(search->ms);
-	*/
 
-	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
+	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("AdressSearch/Listbox"));
 
 
 	if (SDL_dest.current_search==SRCH_COUNTRY)
 	{	
-		Editbox* country_edit = static_cast<Editbox*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/CountryEditbox"));
+		Editbox* country_edit = static_cast<Editbox*>(WindowManager::getSingleton().getWindow("AdressSearch/CountryEditbox"));
 		String content=country_edit->getText();
 
 		mcl->resetList();
@@ -294,7 +300,7 @@ void handle_destination_change(){
 	} else if (SDL_dest.current_search==SRCH_TOWN)
 	{	
 		
-		Editbox* town_edit = static_cast<Editbox*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/TownEditbox"));
+		Editbox* town_edit = static_cast<Editbox*>(WindowManager::getSingleton().getWindow("AdressSearch/TownEditbox"));
 		String content=town_edit->getText();
 
 
@@ -341,7 +347,7 @@ void handle_destination_change(){
 
 	} else if (SDL_dest.current_search==SRCH_STREET)
 	{	
-		Editbox* street_edit = static_cast<Editbox*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox"));
+		Editbox* street_edit = static_cast<Editbox*>(WindowManager::getSingleton().getWindow("AdressSearch/StreetEditbox"));
 		
 		String content=street_edit->getText();
 		if(strlen(content.c_str())<1){
@@ -382,9 +388,7 @@ void handle_destination_change(){
 
 	
 			}
-	
-// 			street_name_search(search->map_data, 33, SDL_dest.town_street_assoc, content.c_str(), 1, destination_street_add, search);
-		}
+			}
 	}
 
 }
@@ -398,7 +402,42 @@ bool DestinationEntryChange(const CEGUI::EventArgs& event)
 	return true;
 }
 
-bool DialogWindowSwitch(const CEGUI::EventArgs& event)
+bool DestinationWindowSwitch(const CEGUI::EventArgs& event)
+{
+	using namespace CEGUI;
+	if(WindowManager::getSingleton().getWindow("DestinationChoose")->isVisible()){
+		WindowManager::getSingleton().getWindow("DestinationChoose")->hide();
+	} else {
+		WindowManager::getSingleton().getWindow("AdressSearchWindow")->hide();
+		WindowManager::getSingleton().getWindow("BookmarkSelection")->hide();
+		WindowManager::getSingleton().getWindow("FormerDestSelection")->hide();
+		WindowManager::getSingleton().getWindow("DestinationChoose")->show();
+	}
+}
+
+bool BookmarkSelectionSwitch(const CEGUI::EventArgs& event)
+{
+	using namespace CEGUI;
+	if(WindowManager::getSingleton().getWindow("BookmarkSelection")->isVisible()){
+		WindowManager::getSingleton().getWindow("BookmarkSelection")->hide();
+	} else {
+		WindowManager::getSingleton().getWindow("DestinationChoose")->hide();
+		WindowManager::getSingleton().getWindow("BookmarkSelection")->show();
+	}
+}
+
+bool FormerDestSelectionSwitch(const CEGUI::EventArgs& event)
+{
+	using namespace CEGUI;
+	if(WindowManager::getSingleton().getWindow("FormerDestSelection")->isVisible()){
+		WindowManager::getSingleton().getWindow("FormerDestSelection")->hide();
+	} else {
+		WindowManager::getSingleton().getWindow("DestinationChoose")->hide();
+		WindowManager::getSingleton().getWindow("FormerDestSelection")->show();
+	}
+}
+
+bool AddressSearchSwitch(const CEGUI::EventArgs& event)
 {
 	using namespace CEGUI;
 
@@ -418,19 +457,18 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
  	search->sl=search_list_new(search->ms);
 
 
-	extern CEGUI::Window* myRoot;
 	const CEGUI::WindowEventArgs& we =  static_cast<const CEGUI::WindowEventArgs&>(event);
-	if(we.window->getParent()->getChild("DestinationWindow")->isVisible()){
-		we.window->getParent()->getChild("DestinationWindow")->hide();
+	if(WindowManager::getSingleton().getWindow("AdressSearchWindow")->isVisible()){
+		WindowManager::getSingleton().getWindow("AdressSearchWindow")->hide();
 	} else {
-		Window* town_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/TownEditbox"));
+		Window* town_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/TownEditbox"));
 		town_edit->setText("");
-		Window* street_edit = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/StreetEditbox"));
+		Window* street_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/StreetEditbox"));
 		street_edit->setText("");
 		town_edit->activate();
 
 		SDL_dest.current_search=SRCH_COUNTRY;
-		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
+		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("AdressSearch/Listbox"));
 		mcl->resetList();
 		
 		
@@ -441,7 +479,7 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 		struct item *item;
 
 
-		Editbox* country_edit = static_cast<Editbox*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/CountryEditbox"));
+		Editbox* country_edit = static_cast<Editbox*>(WindowManager::getSingleton().getWindow("AdressSearch/CountryEditbox"));
 
 		country_attr=country_default();
 		tracking=navit_get_tracking(sdl_gui_navit);
@@ -455,7 +493,8 @@ bool DialogWindowSwitch(const CEGUI::EventArgs& event)
 			}
 		country_search_destroy(cs);
 
-		we.window->getParent()->getChild("DestinationWindow")->show();
+		WindowManager::getSingleton().getWindow("AdressSearchWindow")->show();
+		SDL_dest.current_search=SRCH_TOWN;
 	}
 
 
@@ -476,14 +515,13 @@ bool Switch_to_nGhost(const CEGUI::EventArgs& event)
 bool RoadBookSwitch(const CEGUI::EventArgs& event)
 {
 	using namespace CEGUI;
-	extern CEGUI::Window* myRoot;
 
 // 	const CEGUI::WindowEventArgs& we =  static_cast<const CEGUI::WindowEventArgs&>(event);
-	if(myRoot->getChild("Navit/RoadBook")->isVisible()){
-		myRoot->getChild("Navit/RoadBook")->hide();
+	if(WindowManager::getSingleton().getWindow("Navit/RoadBook")->isVisible()){
+		WindowManager::getSingleton().getWindow("Navit/RoadBook")->hide();
 		WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->show();
 	} else {
-		myRoot->getChild("Navit/RoadBook")->show();
+		WindowManager::getSingleton().getWindow("Navit/RoadBook")->show();
 		WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->hide();
 	}
 	return true;
@@ -492,9 +530,8 @@ bool RoadBookSwitch(const CEGUI::EventArgs& event)
 bool ButtonGo(const CEGUI::EventArgs& event)
 {
 	using namespace CEGUI;
-	extern CEGUI::Window* myRoot;
 	
-	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("DestinationWindow/Listbox"));
+	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("AdressSearch/Listbox"));
 	// First, make sure the user selected an entry in the town choice. If he hadn't, select the first for him.
 	if(SDL_dest.current_search==SRCH_TOWN){
 		if (mcl->getRowCount()>0)
@@ -504,8 +541,8 @@ bool ButtonGo(const CEGUI::EventArgs& event)
 	}
 
 
-	Window* Dest_x = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Dest_x"));
-	Window* Dest_y = static_cast<Window*>(myRoot->getChild("DestinationWindow")->getChild("DestinationWindow/Dest_y"));
+	Window* Dest_x = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/Dest_x"));
+	Window* Dest_y = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/Dest_y"));
 	
 	extern struct navit *sdl_gui_navit;
  	route_to(atoi(Dest_x->getText().c_str()),atoi(Dest_y->getText().c_str()));
