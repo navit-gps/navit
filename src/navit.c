@@ -469,15 +469,15 @@ navit_set_destination_from_file(struct navit *this_, char *file, int bookmark, i
 }
 
 static void
-navit_set_destination_from_destination(struct navit *this_, int offset)
+navit_set_destination_from_destination(struct navit *this_, void *offset_p)
 {
-	navit_set_destination_from_file(this_, "destination.txt", 0, offset);
+	navit_set_destination_from_file(this_, "destination.txt", 0, (int)offset_p);
 }
 
 static void
-navit_set_destination_from_bookmark(struct menu *menu, void *this_p, void *offset_p)
+navit_set_destination_from_bookmark(struct navit *this_, void *offset_p)
 {
-	navit_set_destination_from_file((struct navit *)this_p, "bookmark.txt", 1, (int)offset_p);
+	navit_set_destination_from_file(this_, "bookmark.txt", 1, (int)offset_p);
 }
 
 void
