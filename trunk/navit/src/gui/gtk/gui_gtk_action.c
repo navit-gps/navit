@@ -4,6 +4,8 @@
 #include "gui_gtk.h"
 #include "menu.h"
 #include "coord.h"
+#include "callback.h"
+#include "debug.h"
 #include "destination.h"
 
 #define gettext_noop(String) String
@@ -15,10 +17,7 @@ struct menu_priv {
 	GtkAction *action;
 	struct gui_priv *gui;
 	enum menu_type type;
-	void (*callback)(struct menu *menu, void *data1, void *data2);
-	struct menu *callback_menu;
-	void *callback_data1;
-	void *callback_data2;
+	struct callback *cb;
 	struct menu_priv *child;
 	struct menu_priv *sibling;
 	gulong handler_id;
@@ -404,14 +403,14 @@ static char layout[] =
 static void
 activate(void *dummy, struct menu_priv *menu)
 {
-	if (menu->callback)
-		(*menu->callback)(menu->callback_menu, menu->callback_data1, menu->callback_data2);
+	if (menu->cb)
+		callback_call_0(menu->cb);
 }	
 
 static struct menu_methods menu_methods;
 
 static struct menu_priv *
-add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum menu_type type, void (*callback)(struct menu *data_menu, void *data1, void *data2), struct menu *data_menu, void *data1, void *data2)
+add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum menu_type type, struct callback *cb)
 {
 	struct menu_priv *ret;
 	char *dynname;
@@ -428,7 +427,7 @@ add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum men
 			ret->action=GTK_ACTION(gtk_toggle_action_new(dynname, name, NULL, NULL));
 		else
 			ret->action=gtk_action_new(dynname, name, NULL, NULL);
-		if (callback)
+		if (cb) 
 			ret->handler_id=g_signal_connect(ret->action, "activate", G_CALLBACK(activate), ret);
 		gtk_action_group_add_action(menu->gui->dyn_group, ret->action);
 		ret->merge_id=gtk_ui_manager_new_merge_id(menu->gui->menu_manager);
@@ -437,10 +436,7 @@ add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum men
 	ret->gui=menu->gui;
 	ret->path=g_strdup_printf("%s/%s", menu->path, dynname);
 	ret->type=type;
-	ret->callback=callback;
-	ret->callback_menu=data_menu;
-	ret->callback_data1=data1;
-	ret->callback_data2=data2;
+	ret->cb=cb;
 	ret->sibling=menu->child;
 	menu->child=ret;
 	g_free(dynname);
@@ -541,7 +537,7 @@ gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, in
 		gtk_widget_show (widget);
 	} else {
 		gtk_menu_popup(GTK_MENU(widget), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time ());
-		ret->handler_id=g_signal_connect(widget, "deactivate", G_CALLBACK(popup_deactivate), ret);
+		ret->handler_id=g_signal_connect(widget, "selection-done", G_CALLBACK(popup_deactivate), ret);
 	}
 	return ret;
 }

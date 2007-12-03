@@ -37,6 +37,14 @@ callback_new(void (*func)(), int pcount, void **p)
 }
 
 void
+callback_set_arg(struct callback *cb, int arg, void *p)
+{
+	if (arg < 0 || arg > cb->pcount)
+		return;
+	cb->p[arg]=p;
+}
+
+void
 callback_list_add(struct callback_list *l, struct callback *cb)
 {
 	l->list=g_list_prepend(l->list, cb);
