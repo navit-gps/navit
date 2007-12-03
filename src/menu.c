@@ -1,5 +1,6 @@
 #include <glib.h>
 #include "menu.h"
+#include "debug.h"
 
 void
 menu_route_do_update(struct container *co)
@@ -42,11 +43,13 @@ menu_add(struct menu *menu, char *name, enum menu_type type, struct callback *cb
 void
 menu_set_toggle(struct menu *menu, int active)
 {
-	(*menu->meth.set_toggle)(menu->priv, active);
+	if(*menu->meth.set_toggle){
+		(*menu->meth.set_toggle)(menu->priv, active);
+	}
 }
 
 int
 menu_get_toggle(struct menu *menu)
 {
-	return (*menu->meth.get_toggle)(menu->priv);
+	return ((*menu->meth.get_toggle) && (*menu->meth.get_toggle)(menu->priv));
 }
