@@ -39,8 +39,7 @@
 		<Property Name="UnifiedAreaRect" Value="{{0.001,0},{0.07,0},{0.8,0},{0.9,0}}" />
 		<Window Type="TaharezLook/MultiColumnList" Name="Bookmarks/Listbox" >
 			<Property Name="Font" Value="DejaVuSans-14" />
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.29,0},{0.945,0},{0.905842,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0.05,0},{0.15,0},{0.95,0},{0.9,0}}" />
 		</Window>
 	</Window>
 	
@@ -52,8 +51,7 @@
 		<Property Name="UnifiedAreaRect" Value="{{0.001,0},{0.07,0},{0.8,0},{0.9,0}}" />
 		<Window Type="TaharezLook/MultiColumnList" Name="FormerDests/Listbox" >
 			<Property Name="Font" Value="DejaVuSans-14" />
-			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Property Name="UnifiedAreaRect" Value="{{0.01,0},{0.29,0},{0.945,0},{0.905842,0}}" />
+			<Property Name="UnifiedAreaRect" Value="{{0.05,0},{0.15,0},{0.95,0},{0.9,0}}" />
 		</Window>
 	</Window>
 	

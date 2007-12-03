@@ -93,7 +93,6 @@ sdl_update_roadbook(struct navigation *nav)
 {
 
 	using namespace CEGUI;
-	extern Window* myRoot;
 	
 	struct navigation_list *list;	
 	list=navigation_list_new(nav);
@@ -152,7 +151,6 @@ static void show_road_name(){
 	tracking=navit_get_tracking(sdl_gui_navit);
 
 	using namespace CEGUI;
-	extern Window* myRoot;
 
 
 	if (tracking && tracking_get_current_attr(tracking, attr_label, &road_name_attr) ) {
@@ -414,8 +412,6 @@ int init_GL() {
  	glClearColor(0.3,0.7,1.0,0);
 
 	if(VIEW_MODE==VM_2D){
-		dbg(1,"Switching to 2D view\n");
-// 		myRoot->getWindow("OSD/ViewMode")->setText("2D");
 		glMatrixMode( GL_PROJECTION );
 		glLoadIdentity();
 	
@@ -424,8 +420,6 @@ int init_GL() {
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	} else {
-		dbg(1,"Switching to 3D view\n");
-// 		myRoot->getWindow("OSD/ViewMode")->setText("3D");
 
 		// Dimensions de la fenetre de rendu 
 		glViewport(0, 0, XRES, YRES);
