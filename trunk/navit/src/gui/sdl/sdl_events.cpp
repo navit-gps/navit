@@ -405,12 +405,14 @@ bool DestinationEntryChange(const CEGUI::EventArgs& event)
 bool DestinationWindowSwitch(const CEGUI::EventArgs& event)
 {
 	using namespace CEGUI;
+
+	WindowManager::getSingleton().getWindow("AdressSearchWindow")->hide();
+	WindowManager::getSingleton().getWindow("BookmarkSelection")->hide();
+	WindowManager::getSingleton().getWindow("FormerDestSelection")->hide();
+
 	if(WindowManager::getSingleton().getWindow("DestinationChoose")->isVisible()){
 		WindowManager::getSingleton().getWindow("DestinationChoose")->hide();
 	} else {
-		WindowManager::getSingleton().getWindow("AdressSearchWindow")->hide();
-		WindowManager::getSingleton().getWindow("BookmarkSelection")->hide();
-		WindowManager::getSingleton().getWindow("FormerDestSelection")->hide();
 		WindowManager::getSingleton().getWindow("DestinationChoose")->show();
 	}
 }
@@ -440,6 +442,8 @@ bool FormerDestSelectionSwitch(const CEGUI::EventArgs& event)
 bool AddressSearchSwitch(const CEGUI::EventArgs& event)
 {
 	using namespace CEGUI;
+	WindowManager::getSingleton().getWindow("DestinationChoose")->hide();
+	WindowManager::getSingleton().getWindow("AdressSearchWindow")->show();
 
 
 	if(sdl_gui_navit){	
@@ -458,45 +462,40 @@ bool AddressSearchSwitch(const CEGUI::EventArgs& event)
 
 
 	const CEGUI::WindowEventArgs& we =  static_cast<const CEGUI::WindowEventArgs&>(event);
-	if(WindowManager::getSingleton().getWindow("AdressSearchWindow")->isVisible()){
-		WindowManager::getSingleton().getWindow("AdressSearchWindow")->hide();
-	} else {
-		Window* town_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/TownEditbox"));
-		town_edit->setText("");
-		Window* street_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/StreetEditbox"));
-		street_edit->setText("");
-		town_edit->activate();
 
-		SDL_dest.current_search=SRCH_COUNTRY;
-		MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("AdressSearch/Listbox"));
-		mcl->resetList();
-		
-		
-		// Code to get the current country and set it by default for the search
-		struct attr search_attr, country_name, *country_attr;
-		struct tracking *tracking;
-		struct country_search *cs;
-		struct item *item;
+	Window* town_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/TownEditbox"));
+	town_edit->setText("");
+	Window* street_edit = static_cast<Window*>(WindowManager::getSingleton().getWindow("AdressSearch/StreetEditbox"));
+	street_edit->setText("");
+	town_edit->activate();
+
+	SDL_dest.current_search=SRCH_COUNTRY;
+	MultiColumnList* mcl = static_cast<MultiColumnList*>(WindowManager::getSingleton().getWindow("AdressSearch/Listbox"));
+	mcl->resetList();
+	
+	
+	// Code to get the current country and set it by default for the search
+	struct attr search_attr, country_name, *country_attr;
+	struct tracking *tracking;
+	struct country_search *cs;
+	struct item *item;
 
 
-		Editbox* country_edit = static_cast<Editbox*>(WindowManager::getSingleton().getWindow("AdressSearch/CountryEditbox"));
+	Editbox* country_edit = static_cast<Editbox*>(WindowManager::getSingleton().getWindow("AdressSearch/CountryEditbox"));
 
-		country_attr=country_default();
-		tracking=navit_get_tracking(sdl_gui_navit);
-		if (tracking && tracking_get_current_attr(tracking, attr_country_id, &search_attr)) 
-			country_attr=&search_attr;
-		cs=country_search_new(country_attr, 0);
-		item=country_search_get_item(cs);
-		if (item && item_attr_get(item, attr_country_name, &country_name)){
-			country_edit->setText(country_name.u.str);
-			handle_destination_change();
-			}
-		country_search_destroy(cs);
+	country_attr=country_default();
+	tracking=navit_get_tracking(sdl_gui_navit);
+	if (tracking && tracking_get_current_attr(tracking, attr_country_id, &search_attr)) 
+		country_attr=&search_attr;
+	cs=country_search_new(country_attr, 0);
+	item=country_search_get_item(cs);
+	if (item && item_attr_get(item, attr_country_name, &country_name)){
+		country_edit->setText(country_name.u.str);
+		handle_destination_change();
+		}
+	country_search_destroy(cs);
 
-		WindowManager::getSingleton().getWindow("AdressSearchWindow")->show();
-		SDL_dest.current_search=SRCH_TOWN;
-	}
-
+	SDL_dest.current_search=SRCH_TOWN;
 
 	return true;
 }
