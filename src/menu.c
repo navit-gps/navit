@@ -26,11 +26,11 @@ menu_route_update(struct container *co)
 }
 
 struct menu *
-menu_add(struct menu *menu, char *name, enum menu_type type, void (*callback)(struct menu *menu, void *data1, void *data2), void *data1, void *data2)
+menu_add(struct menu *menu, char *name, enum menu_type type, struct callback *cb)
 {
 	struct menu *this;
         this=g_new0(struct menu, 1);
-        this->priv=(*menu->meth.add)(menu->priv, &this->meth, name, type, callback, this, data1, data2);
+        this->priv=(*menu->meth.add)(menu->priv, &this->meth, name, type, cb);
 	if (! this->priv) {
 		g_free(this);
 		return NULL;

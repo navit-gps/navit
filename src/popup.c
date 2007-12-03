@@ -16,6 +16,7 @@
 #include "map.h"
 #include "graphics.h"
 #include "item.h"
+#include "callback.h"
 #include "route.h"
 
 #if 0
@@ -40,10 +41,8 @@ popup_set_no_passing(struct popup_item *item, void *param)
 #endif
 
 static void
-popup_set_destination(struct menu *menu, void *data1, void *data2)
+popup_set_destination(struct navit *nav, struct pcoord *pc)
 {
-	struct navit *nav=data1;
-	struct pcoord *pc=data2;
 	struct coord c;
 	struct coord_geo g;
 	char buffer[1024];
@@ -57,10 +56,8 @@ popup_set_destination(struct menu *menu, void *data1, void *data2)
 }
 
 static void
-popup_set_bookmark(struct menu *menu, void *data1, void *data2)
+popup_set_bookmark(struct navit *nav, struct pcoord *pc)
 {
-	struct navit *nav=data1;
-	struct pcoord *pc=data2;
 	struct coord c;
 	struct coord_geo g;
 	char buffer[1024];
@@ -78,12 +75,10 @@ popup_set_bookmark(struct menu *menu, void *data1, void *data2)
 extern void *vehicle;
 
 static void
-popup_set_position(struct menu *menu, void *data1, void *data2)
+popup_set_position(struct navit *nav, struct pcoord *pc)
 {
-	struct navit *nav=data1;
-	struct pcoord *c=data2;
-	dbg(0,"%p %p\n", nav, c);
-	navit_set_position(nav, c);
+	dbg(0,"%p %p\n", nav, pc);
+	navit_set_position(nav, pc);
 }
 
 #if 0
@@ -104,10 +99,10 @@ popup_break_crossing(struct display_list *l)
 #endif
 
 
-#define popup_printf(menu, type, fmt...) popup_printf_cb(menu, type, NULL, NULL, NULL, fmt)
+#define popup_printf(menu, type, fmt...) popup_printf_cb(menu, type, NULL, fmt)
 
 static void *
-popup_printf_cb(void *menu, enum menu_type type, void (*callback)(struct menu *menu, void *data1, void *data2), void *data1, void *data2, const char *fmt, ...)
+popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char *fmt, ...)
 {
 	gchar *str;
 	va_list ap;
@@ -116,7 +111,7 @@ popup_printf_cb(void *menu, enum menu_type type, void (*callback)(struct menu *m
 	va_start(ap, fmt);
 	str=g_strdup_vprintf(fmt, ap);
 	dbg(0,"%s\n", str);
-	ret=menu_add(menu, str, type, callback, data1, data2);
+	ret=menu_add(menu, str, type, cb);
 	va_end(ap);
 	g_free(str);
 	return ret;
@@ -239,8 +234,8 @@ popup(struct navit *nav, int button, struct point *p)
 	c.pro = transform_get_projection(navit_get_trans(nav));
 	c.x = co.x;
 	c.y = co.y;
-	popup_printf_cb(men, menu_type_menu, popup_set_position, nav, &c, "Set as position");
-	popup_printf_cb(men, menu_type_menu, popup_set_destination, nav, &c, "Set as destination");
-	popup_printf_cb(men, menu_type_menu, popup_set_bookmark, nav, &c, "Add as bookmark");
+	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_position), nav, &c), "Set as position");
+	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_destination), nav, &c), "Set as destination");
+	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_bookmark), nav, &c), "Add as bookmark");
 	popup_display(nav, popup, p);
 }
