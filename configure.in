@@ -42,7 +42,7 @@ fi
 X_CFLAGS="-I$x_includes"
 X_LIBS="-L$ac_x_libraries"
 
-PKG_CHECK_MODULES(NAVIT, [glib-2.0 gmodule-2.0])
+PKG_CHECK_MODULES(NAVIT, [glib-2.0 gmodule-2.0], [], AC_MSG_ERROR([glib-2.0 or gmodule-2.0 not found. Usually you need to install a package named glib2-devel or libglib2.0-dev]))
 AC_SUBST(NAVIT_CFLAGS)
 AC_SUBST(NAVIT_LIBS)
 
@@ -414,7 +414,7 @@ if test x"$gtk2_pkgconfig" = xyes
 	then
 	echo "GTK gui     : ENABLED"
 	else
-	echo "GTK gui     : DISABLED : you are missing a dependency"
+	echo "GTK gui     : DISABLED : you are missing a dependency. To fix this install a package named gtk2-devel or libgtk2.0-dev"
 fi
 # FIXME : maybe elaborate missing dependencies
 if test x"$sdl" = xyes
