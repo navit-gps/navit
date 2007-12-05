@@ -1,14 +1,11 @@
 #!/bin/sh
-if ! pkg-config --version >/dev/null
-then
-	echo "You need to install pkg-config"
-	exit 1
-fi
-
-if ! libtool --version >/dev/null
-then
-	echo "You need to install libtool"
-	exit 1
-fi
+for pkg in pkg-config libtool autoreconf automake aclocal autopoint:gettext
+do
+	if ! ${pkg%%:*} --version >/dev/null 
+	then
+		echo "You need to install ${pkg##*:}"
+		exit 1
+	fi
+done
 
 autoreconf --force --install -I m4
