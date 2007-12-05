@@ -33,6 +33,10 @@
 #include "color.h"
 
 #define _(STRING)    gettext(STRING)
+/**
+ * @defgroup navit the navit core instance
+ * @{
+ */
 
 struct navit_vehicle {
 	char *name;
@@ -246,6 +250,13 @@ navit_motion(void *data, struct point *p)
 	}
 }
 
+/**
+ * Change the current zoom level, zooming closer to the ground
+ *
+ * @param navit The navit instance
+ * @param factor The zoom factor, usually 2
+ * @returns nothing
+ */
 void
 navit_zoom_in(struct navit *this_, int factor)
 {
@@ -256,6 +267,13 @@ navit_zoom_in(struct navit *this_, int factor)
 	navit_draw(this_);
 }
 
+/**
+ * Change the current zoom level
+ *
+ * @param navit The navit instance
+ * @param factor The zoom factor, usually 2
+ * @returns nothing
+ */
 void
 navit_zoom_out(struct navit *this_, int factor)
 {
@@ -480,6 +498,14 @@ navit_set_destination_from_bookmark(struct navit *this_, void *offset_p)
 	navit_set_destination_from_file(this_, "bookmark.txt", 1, (int)offset_p);
 }
 
+/**
+ * Start the route computing to a given set of coordinates
+ *
+ * @param navit The navit instance
+ * @param c The coordinate to start routing to
+ * @param description A label which allows the user to later identify this destination in the former destinations selection
+ * @returns nothing
+ */
 void
 navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
 {
@@ -490,7 +516,14 @@ navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
 	}
 }
 
-
+/**
+ * Record the given set of coordinates as a bookmark
+ *
+ * @param navit The navit instance
+ * @param c The coordinate to store
+ * @param description A label which allows the user to later identify this bookmark
+ * @returns nothing
+ */
 void
 navit_add_bookmark(struct navit *this_, struct pcoord *c, char *description)
 {
@@ -499,6 +532,10 @@ navit_add_bookmark(struct navit *this_, struct pcoord *c, char *description)
 
 struct navit *global_navit;
 
+
+/**
+ * Deprecated
+ */
 static void
 navit_debug(struct navit *this_)
 {
@@ -1019,17 +1056,36 @@ navit_toggle_cursor(struct navit *this_)
 	this_->cursor_flag=1-this_->cursor_flag;
 }
 
+/**
+ * Toggle the tracking : automatic centering of the map on the main vehicle
+ *
+ * @param navit The navit instance
+ * @returns nothing
+ */
 void
 navit_toggle_tracking(struct navit *this_)
 {
 	this_->tracking_flag=1-this_->tracking_flag;
 }
 
+/**
+ * Toggle the north orientation : forces the map to be aimed at north
+ *
+ * @param navit The navit instance
+ * @returns nothing
+ */
 void
 navit_toggle_orient_north(struct navit *this_)
 {
 	this_->orient_north_flag=1-this_->orient_north_flag;
 }
+
+/**
+ * Toggle the cursor update : refresh the map each time the cursor has moved (instead of only when it reaches a border)
+ *
+ * @param navit The navit instance
+ * @returns nothing
+ */
 
 static void
 navit_cursor_update(struct navit *this_, struct cursor *cursor)
@@ -1096,6 +1152,14 @@ navit_cursor_update(struct navit *this_, struct cursor *cursor)
 	callback_list_call_2(this_->vehicle_cbl, this_, this_->vehicle->vehicle);
 }
 
+/**
+ * Set the position of the vehicle
+ *
+ * @param navit The navit instance
+ * @param c The coordinate to set as position
+ * @returns nothing
+ */
+
 void
 navit_set_position(struct navit *this_, struct pcoord *c)
 {
@@ -1108,6 +1172,17 @@ navit_set_position(struct navit *this_, struct pcoord *c)
 	navit_draw(this_);
 }
 
+/**
+ * Register a new vehicle
+ *
+ * @param navit The navit instance
+ * @param v The vehicle instance
+ * @param name Guess? :)
+ * @param c The color to use for the cursor, currently only used in GTK
+ * @param update Wether to refresh the map each time this vehicle position changes (instead of only when it reaches a border)
+ * @param follow Wether to center the map on this vehicle position
+ * @returns a vehicle instance
+ */
 struct navit_vehicle *
 navit_add_vehicle(struct navit *this_, struct vehicle *v, const char *name, struct color *c, int update, int follow)
 {
@@ -1223,3 +1298,5 @@ navit_toggle_routegraph_display(struct navit *nav)
 	route_toggle_routegraph_display(nav->route);
 	navit_draw(nav);
 }
+
+/** @} */
