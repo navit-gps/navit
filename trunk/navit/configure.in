@@ -39,11 +39,6 @@ if test x"$fastmath" = xyes; then
 	fi
 fi
 
-AC_PATH_X
-if test x"$have_x" != xyes; then
-        echo "Can not find X"
-        exit -1
-fi
 X_CFLAGS="-I$x_includes"
 X_LIBS="-L$ac_x_libraries"
 
@@ -281,7 +276,7 @@ if test "$cross_compiling" = no; then
 			py_ver=`$_PATH_PYTHON -c 'import sys; print sys.version[[:3]]'`
 			py_libdir="${py_prefix}/lib/python${py_ver}"
 			PYTHON_CFLAGS="-I${py_prefix}/include/python${py_ver}"
-			if test -f $py_libdir/config/Makefile ; then
+			if test -f $py_libdir/config/Makefile -a -f $py_prefix/include/python${py_ver}/Python.h; then
 				py_libs=`grep '^LIBS=' $py_libdir/config/Makefile | sed -e 's/^.*=//'`
 				py_libc=`grep '^LIBC=' $py_libdir/config/Makefile | sed -e 's/^.*=//'`
 				py_libm=`grep '^LIBM=' $py_libdir/config/Makefile | sed -e 's/^.*=//'`
@@ -293,7 +288,7 @@ if test "$cross_compiling" = no; then
 				python=yes
 				AC_MSG_RESULT($py_libdir)
 			else
-				AC_MSG_WARN([$py_libdir/config/Makefile missing, support for python disabled])
+				AC_MSG_WARN([$py_libdir/config/Makefile or $py_prefix/include/python${py_ver}/Python.h missing, support for python disabled])
 			fi
 		fi
 	fi
@@ -445,9 +440,9 @@ if test x"$sdl" = xyes
 fi
 if test x"$gpsd" = xyes
 	then
-	echo "GPS support : ENABLED"
+	echo "GPSD support: ENABLED"
 	else
-	echo "GPS support : DISABLED"
+	echo "GPSD support: DISABLED"
 fi
 if test x"$speechd" = xyes
 	then
