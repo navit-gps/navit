@@ -464,7 +464,7 @@ do_draw_map(struct displaylist *displaylist, struct transformation *t, struct ma
 
 	pro=map_projection(m);
 	conv=map_requires_conversion(m);
-	transform_rect(t, pro, &sel->rect);
+	transform_rect(t, pro, &sel->u.c_rect);
 	if (route_selection)
 		mr=map_rect_new(m, route_selection);
 	else

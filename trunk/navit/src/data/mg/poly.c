@@ -112,7 +112,7 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 			poly->poly_num++;
 			r.lu=poly->c[0];
 			r.rl=poly->c[1];
-			if (mr->cur_sel && (poly->order > mr->cur_sel->order[layer_poly]*3 || !coord_rect_overlap(&mr->cur_sel->rect, &r))) {
+			if (mr->cur_sel && (poly->order > mr->cur_sel->order[layer_poly]*3 || !coord_rect_overlap(&mr->cur_sel->u.c_rect, &r))) {
 				poly->subpoly_num_all+=poly->polys;
 				mr->b.p=poly->poly_next;
 				continue;

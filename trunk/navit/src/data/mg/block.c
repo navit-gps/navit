@@ -131,7 +131,7 @@ block_init(struct map_rect_priv *mr)
 		mr->b.bt.p=NULL;
 		mr->b.bt.block_count=0;
 	}
-	if (mr->cur_sel && !coord_rect_overlap(&mr->cur_sel->rect, &mr->b.b_rect)) 
+	if (mr->cur_sel && !coord_rect_overlap(&mr->cur_sel->u.c_rect, &mr->b.b_rect)) 
 		return 0;
 	return block_next(mr);
 }
@@ -160,7 +160,7 @@ block_next_lin(struct map_rect_priv *mr)
 			dbg(1,"empty blocks\n");
 			return 0;
 		}
-		if (!mr->cur_sel || coord_rect_overlap(&mr->cur_sel->rect, &mr->b.b->r)) {
+		if (!mr->cur_sel || coord_rect_overlap(&mr->cur_sel->u.c_rect, &mr->b.b->r)) {
 			block_active_count++;
 			block_active_mem+=mr->b.b->blocks*512-sizeof(struct block *);
 			dbg(1,"block ok\n");
@@ -223,7 +223,7 @@ block_next(struct map_rect_priv *mr)
 			mr->b.b=NULL;
 			if (blk_num != -1) {
 				block_mem+=8;
-				if (coord_rect_overlap(&mr->cur_sel->rect, &bt->r_curr)) {
+				if (coord_rect_overlap(&mr->cur_sel->u.c_rect, &bt->r_curr)) {
 					mr->b.b=block_get_byid(mr->file, blk_num, &mr->b.p);
 					mr->b.block_num=blk_num;
 					g_assert(mr->b.b != NULL);
