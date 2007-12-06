@@ -4,11 +4,15 @@
 struct map_priv;
 struct attr;
 #include "coord.h"
+#include "point.h"
 #include "layer.h"
 
 struct map_selection {
 	struct map_selection *next;
-	struct coord_rect rect;
+	union {
+		struct coord_rect c_rect;
+		struct point_rect p_rect;
+	} u;
 	int order[layer_end];		
 };
 

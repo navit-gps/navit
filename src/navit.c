@@ -851,11 +851,11 @@ navit_window_items_open(struct navit *this_, struct navit_window_items *nwi)
 	sel.order[layer_poly]=0;
 #endif
 	center=transform_center(this_->trans);
-	sel.rect.lu.x=center->x-dist;
-	sel.rect.lu.y=center->y+dist;
-	sel.rect.rl.x=center->x+dist;
-	sel.rect.rl.y=center->y-dist;
-	dbg(2,"0x%x,0x%x - 0x%x,0x%x\n", sel.rect.lu.x, sel.rect.lu.y, sel.rect.rl.x, sel.rect.rl.y);
+	sel.u.c_rect.lu.x=center->x-dist;
+	sel.u.c_rect.lu.y=center->y+dist;
+	sel.u.c_rect.rl.x=center->x+dist;
+	sel.u.c_rect.rl.y=center->y-dist;
+	dbg(2,"0x%x,0x%x - 0x%x,0x%x\n", sel.u.c_rect.lu.x, sel.u.c_rect.lu.y, sel.u.c_rect.rl.x, sel.u.c_rect.rl.y);
 	nwi->click=callback_new_2(callback_cast(navit_window_items_click), this_, nwi);
 	nwi->win=gui_datawindow_new(this_->gui, nwi->name, nwi->click, NULL);
 	h=mapset_open(navit_get_mapset(this_));
@@ -865,7 +865,7 @@ navit_window_items_open(struct navit *this_, struct navit_window_items *nwi)
 		dbg(2,"mr=%p\n", mr);
 		while ((item=map_rect_get_item(mr))) {
 			if (item_coord_get(item, &c, 1)) {
-				if (coord_rect_contains(&sel.rect, &c) && g_hash_table_lookup(nwi->hash, &item->type)) {
+				if (coord_rect_contains(&sel.u.c_rect, &c) && g_hash_table_lookup(nwi->hash, &item->type)) {
 					if (! item_attr_get(item, attr_label, &attr)) 
 						attr.u.str="";
 					idist=transform_distance(map_projection(item->map), center, &c);

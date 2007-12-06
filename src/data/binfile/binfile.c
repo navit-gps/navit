@@ -259,7 +259,7 @@ selection_contains(struct map_selection *sel, struct coord_rect *r)
 	if (! sel)
 		return 1;
 	while (sel) {
-		if (coord_rect_overlap(r, &sel->rect))
+		if (coord_rect_overlap(r, &sel->u.c_rect))
 			return 1;
 		sel=sel->next;
 	}

@@ -549,10 +549,10 @@ garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel)
 		flags = GO_GET_SORTED;
 
 	if (sel) {
-		r.lulat = sel->rect.lu.y;
-		r.lulong = sel->rect.lu.x;
-		r.rllat = sel->rect.rl.y;
-		r.rllong = sel->rect.rl.x;
+		r.lulat = sel->u.c_rect.lu.y;
+		r.lulong = sel->u.c_rect.lu.x;
+		r.rllat = sel->u.c_rect.rl.y;
+		r.rllong = sel->u.c_rect.rl.x;
 		level = get_level(sel);
 //		level = nl2gl[level].g;
 		dlog(2, "Looking level=%d for %f %f %f %f\n",
