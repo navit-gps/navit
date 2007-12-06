@@ -297,29 +297,29 @@ route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs)
 	dy=c1->y-c2->y;
 	if (dx < 0) {
 		sx=-1;
-		sel->rect.lu.x=c1->x;
-		sel->rect.rl.x=c2->x;
+		sel->u.c_rect.lu.x=c1->x;
+		sel->u.c_rect.rl.x=c2->x;
 	} else {
-		sel->rect.lu.x=c2->x;
-		sel->rect.rl.x=c1->x;
+		sel->u.c_rect.lu.x=c2->x;
+		sel->u.c_rect.rl.x=c1->x;
 	}
 	if (dy < 0) {
 		sy=-1;
-		sel->rect.lu.y=c2->y;
-		sel->rect.rl.y=c1->y;
+		sel->u.c_rect.lu.y=c2->y;
+		sel->u.c_rect.rl.y=c1->y;
 	} else {
-		sel->rect.lu.y=c1->y;
-		sel->rect.rl.y=c2->y;
+		sel->u.c_rect.lu.y=c1->y;
+		sel->u.c_rect.rl.y=c2->y;
 	}
 	if (dx*sx > dy*sy) 
 		d=dx*sx;
 	else
 		d=dy*sy;
 	m=d*rel/100+abs;	
-	sel->rect.lu.x-=m;
-	sel->rect.rl.x+=m;
-	sel->rect.lu.y+=m;
-	sel->rect.rl.y-=m;
+	sel->u.c_rect.lu.x-=m;
+	sel->u.c_rect.rl.x+=m;
+	sel->u.c_rect.lu.y+=m;
+	sel->u.c_rect.rl.y-=m;
 	sel->next=NULL;
 	return sel;
 }

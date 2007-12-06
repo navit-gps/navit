@@ -10,7 +10,6 @@
 #include "maptype.h"
 #include "item.h"
 #include "attr.h"
-#include "coord.h"
 #include "transform.h"
 #include "file.h"
 

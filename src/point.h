@@ -6,4 +6,8 @@ struct point {
 	int y;
 };
 
+struct point_rect {
+	struct point lu;
+	struct point rl;
+};
 #endif

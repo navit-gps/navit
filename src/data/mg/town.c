@@ -130,7 +130,7 @@ town_get(struct map_rect_priv *mr, struct town_priv *twn, struct item *item)
 		twn->cidx=0;
 		twn->aidx=0;
 		twn->attr_next=attr_label;
-		if (! mr->cur_sel || (twn->order <= limit[mr->cur_sel->order[layer_town]] && coord_rect_contains(&mr->cur_sel->rect,&twn->c))) {
+		if (! mr->cur_sel || (twn->order <= limit[mr->cur_sel->order[layer_town]] && coord_rect_contains(&mr->cur_sel->u.c_rect,&twn->c))) {
 			switch(twn->type) {
 			case 1:
 				size=twn->size;
