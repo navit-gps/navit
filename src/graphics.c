@@ -1,5 +1,6 @@
 #include <glib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "debug.h"
 #include "string.h"
@@ -377,7 +378,7 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 					break;
 				case element_icon:
 					if (!img) {
-						char *icon=g_strdup_printf("xpm/%s", e->u.icon.src);
+						char *icon=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/", e->u.icon.src, NULL);
 						img=graphics_image_new(gra, icon);
 						g_free(icon);
 						if (! img)
