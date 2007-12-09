@@ -225,7 +225,11 @@ add_tag(char *k, char *v)
 	int level=2;
 	if (! strcmp(k,"ele"))
 		level=9;
+	if (! strcmp(k,"time"))
+		level=9;
 	if (! strcmp(k,"created_by"))
+		level=9;
+	if (! strncmp(k,"tiger:",6))
 		level=9;
 	if (! strcmp(k,"converted_by") || ! strcmp(k,"source"))
 		level=8;
