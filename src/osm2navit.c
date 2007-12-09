@@ -223,6 +223,8 @@ add_tag(char *k, char *v)
 	GHashTable *value_hash;
 	enum item_type type;
 	int level=2;
+	if (! strcmp(k,"ele"))
+		level=9;
 	if (! strcmp(k,"created_by"))
 		level=9;
 	if (! strcmp(k,"converted_by") || ! strcmp(k,"source"))
