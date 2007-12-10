@@ -59,10 +59,10 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 		navit_set_center_screen(this->nav, &p);
 		break;
 	case GDK_Book:
-		navit_zoom_in(this->nav, 2);
+		navit_zoom_in(this->nav, 2, NULL);
 		break;
 	case GDK_Calendar:
-		navit_zoom_out(this->nav, 2);
+		navit_zoom_out(this->nav, 2, NULL);
 		break;
 	default:
 		return FALSE;
