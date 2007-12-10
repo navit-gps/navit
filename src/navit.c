@@ -89,7 +89,7 @@ struct navit {
 	GHashTable *bookmarks_hash;
 	struct menu *destinations;
 	struct point pressed, last, current;
-	int button_pressed,moved;
+	int button_pressed,moved,popped;
 	guint button_timeout, motion_timeout;
 };
 
@@ -160,6 +160,7 @@ navit_popup(void *data)
 	struct navit *this_=data;
 	popup(this_, 1, &this_->pressed);
 	this_->button_timeout=0;
+	this_->popped=1;
 	return FALSE;
 }
 
@@ -175,6 +176,7 @@ navit_button(void *data, int pressed, int button, struct point *p)
 		if (button == 1) {
 			this_->button_pressed=1;
 			this_->moved=0;
+			this_->popped=0;
 			this_->button_timeout=g_timeout_add(500, navit_popup, data);
 		}
 		if (button == 2)
@@ -235,7 +237,7 @@ navit_motion(void *data, struct point *p)
 	struct navit *this_=data;
 	int dx, dy;
 
-	if (this_->button_pressed) {
+	if (this_->button_pressed && !this_->popped) {
 		dx=(p->x-this_->pressed.x);
 		dy=(p->y-this_->pressed.y);
 		if (dx < -4 || dx > 4 || dy < -4 || dy > 4) {
