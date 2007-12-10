@@ -29,13 +29,13 @@ struct menu_priv {
 static void
 zoom_in_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_zoom_in(gui->nav, 2);
+	navit_zoom_in(gui->nav, 2, NULL);
 }
 
 static void
 zoom_out_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_zoom_out(gui->nav, 2);
+	navit_zoom_out(gui->nav, 2, NULL);
 }
 
 static void

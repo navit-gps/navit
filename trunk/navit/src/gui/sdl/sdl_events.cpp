@@ -553,14 +553,14 @@ bool ButtonGo(const CEGUI::EventArgs& event)
 bool ZoomIn(const CEGUI::EventArgs& event)
 {
 	extern struct navit *sdl_gui_navit;
-	navit_zoom_in(sdl_gui_navit, 2);
+	navit_zoom_in(sdl_gui_navit, 2, NULL);
 
 }
 
 bool ZoomOut(const CEGUI::EventArgs& event)
 {
 	extern struct navit *sdl_gui_navit;
-	navit_zoom_out(sdl_gui_navit, 2);
+	navit_zoom_out(sdl_gui_navit, 2, NULL);
 }
 
 bool ButtonQuit(const CEGUI::EventArgs& event)

@@ -182,9 +182,9 @@ navit_button(void *data, int pressed, int button, struct point *p)
 		if (button == 3)
 			popup(this_, button, p);
 		if (button == 4)
-			navit_zoom_in(this_, 2);
+			navit_zoom_in(this_, 2, p);
 		if (button == 5)
-			navit_zoom_out(this_, 2);
+			navit_zoom_out(this_, 2, p);
 	} else {
 		this_->button_pressed=0;
 		if (this_->button_timeout) {
@@ -255,15 +255,25 @@ navit_motion(void *data, struct point *p)
  *
  * @param navit The navit instance
  * @param factor The zoom factor, usually 2
+ * @param p The invariant point (if set to NULL, default to center)
  * @returns nothing
  */
 void
-navit_zoom_in(struct navit *this_, int factor)
+navit_zoom_in(struct navit *this_, int factor, struct point *p)
 {
+	struct coord c1, c2, *center;
 	long scale=transform_get_scale(this_->trans)/factor;
 	if (scale < 1)
 		scale=1;
+	if (p)
+		transform_reverse(this_->trans, p, &c1);
 	transform_set_scale(this_->trans, scale);
+	if (p) {
+		transform_reverse(this_->trans, p, &c2);
+		center = transform_center(this_->trans);
+		center->x += c1.x - c2.x;
+		center->y += c1.y - c2.y;
+	}
 	navit_draw(this_);
 }
 
@@ -272,13 +282,23 @@ navit_zoom_in(struct navit *this_, int factor)
  *
  * @param navit The navit instance
  * @param factor The zoom factor, usually 2
+ * @param p The invariant point (if set to NULL, default to center)
  * @returns nothing
  */
 void
-navit_zoom_out(struct navit *this_, int factor)
+navit_zoom_out(struct navit *this_, int factor, struct point *p)
 {
+	struct coord c1, c2, *center;
 	long scale=transform_get_scale(this_->trans)*factor;
+	if (p)
+		transform_reverse(this_->trans, p, &c1);
 	transform_set_scale(this_->trans,scale);
+	if (p) {
+		transform_reverse(this_->trans, p, &c2);
+		center = transform_center(this_->trans);
+		center->x += c1.x - c2.x;
+		center->y += c1.y - c2.y;
+	}
 	navit_draw(this_);
 }
 
