@@ -472,7 +472,7 @@ bool MoveCamera(const CEGUI::EventArgs& event){
 
 
 
-static void init_sdlgui(char * skin_layout,int fullscreen)
+static void init_sdlgui(char * skin_layout,int fullscreen,int tilt)
 {
 	SDL_Surface * screen;
 // 	atexit (SDL_Quit);
@@ -670,6 +670,12 @@ static void init_sdlgui(char * skin_layout,int fullscreen)
 
 		CEGUI::WindowManager::getSingleton().getWindow("OSD/Scrollbar1")->subscribeEvent(Scrollbar::EventScrollPositionChanged, Event::Subscriber(MoveCamera));
 
+		// FIXME : char (conf) -> int (init) -> char (property) = bad
+		char buffer[4];
+		sprintf (buffer,"%i",tilt);
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/Scrollbar1")->setProperty("ScrollPosition",buffer);
+		eyeZ=-tilt;
+
 		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->subscribeEvent(PushButton::EventClicked, Event::Subscriber(RoadBookSwitch));
 		CEGUI::WindowManager::getSingleton().getWindow("OSD/RoadbookButton")->setText(_("RoadBook"));
 
@@ -777,6 +783,7 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	int fullscreen=0;
 
 	struct attr *fullscreen_setting=attr_search(attrs, NULL, attr_fullscreen);
+	//FIXME currently, we only check if fullscreen is declared, but not its value
 	if(fullscreen_setting){
 		fullscreen=1;
 		printf("fullscreen\n");
@@ -785,13 +792,39 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 		printf("Normal screen\n");
 	}
 
+	int tilt=400;
+	struct attr *tilt_setting=attr_search(attrs, NULL, attr_tilt);
+	if(tilt_setting){
+		if(sscanf(tilt_setting->u.str,"%i",&tilt)){
+			dbg(0,"tilt set to %i\n",tilt);
+		} else {
+			dbg(0,"title was not recognized : %s\n",tilt_setting->u.str);
+		}
+	} else {
+		dbg(0,"tilt is not set\n");
+	}
+	
+	struct attr *view_mode_setting=attr_search(attrs, NULL, attr_view_mode);
+	if(view_mode_setting){
+		if(!strcmp(view_mode_setting->u.str,"2D")){
+			dbg(0,"View mode is 2D\n");
+			VIEW_MODE=VM_2D;
+		} else {
+			dbg(0,"view mode is something else : %s\n",view_mode_setting->u.str);
+		}
+		
+	} else {
+		dbg(0,"view_mode is not set\n");
+	}
+
 	struct attr *skin_setting=attr_search(attrs, NULL, attr_skin);
 	if(skin_setting){
-		init_sdlgui(skin_setting->u.str,fullscreen);
+		init_sdlgui(skin_setting->u.str,fullscreen,tilt);
 	} else {
 		g_warning("Warning, no skin set for <sdl> in navit.xml. Using default one");
-		init_sdlgui("TaharezLook",fullscreen);
+		init_sdlgui("TaharezLook",fullscreen,tilt);
 	}
+	
 
 	dbg(1,"End SDL init\n");
 

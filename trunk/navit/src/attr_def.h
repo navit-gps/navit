@@ -50,6 +50,8 @@ ATTR(entry_fee)
 ATTR(open_hours)
 ATTR(skin)
 ATTR(fullscreen)
+ATTR(view_mode)
+ATTR(tilt)
 /* poi */
 ATTR(icon)
 ATTR(info_html)
