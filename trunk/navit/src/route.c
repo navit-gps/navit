@@ -70,6 +70,7 @@ struct route_graph_segment {
 struct route_path_segment {
 	struct route_path_segment *next;
 	struct item item;
+	unsigned int offset;
 	int time;
 	int length;
 	unsigned ncoords;
@@ -101,7 +102,6 @@ struct route_path {
 #define RF_LOCKONROAD	(1<<4)
 #define RF_SHOWGRAPH	(1<<5)
 
-
 struct route {
 	int version;
 	struct mapset *ms;
@@ -127,7 +127,7 @@ struct route_graph {
 static struct route_info * route_find_nearest_street(struct mapset *ms, struct pcoord *c);
 static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
 static void route_graph_update(struct route *this);
-static struct route_path *route_path_new(struct route_graph *this, struct route_info *pos, struct route_info *dst, int *speedlist);
+static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, int *speedlist);
 static void route_process_street_graph(struct route_graph *this, struct item *item);
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this);
@@ -222,16 +222,28 @@ route_contains(struct route *this, struct item *item)
 static void
 route_path_update(struct route *this)
 {
-	route_path_destroy(this->path2);
-	this->path2 = NULL;
-	if (! this->pos || ! this->dst)
+	struct route_path *oldpath = NULL;
+	if (! this->pos || ! this->dst) {
+		route_path_destroy(this->path2);
+		this->path2 = NULL;
 		return;
-	if (! this->graph || !(this->path2=route_path_new(this->graph, this->pos, this->dst, this->speedlist))) {
+	}
+	/* the graph is destroyed when setting the destination */
+	if (this->graph && this->pos && this->dst && this->path2) {
+		// we can try to update
+		oldpath = this->path2;
+		this->path2 = NULL;
+	}
+	if (! this->graph || !(this->path2=route_path_new(this->graph, oldpath, this->pos, this->dst, this->speedlist))) {
 		profile(0,NULL);
 		route_graph_update(this);
-		this->path2=route_path_new(this->graph, this->pos, this->dst, this->speedlist);
+		this->path2=route_path_new(this->graph, oldpath, this->pos, this->dst, this->speedlist);
 		profile(1,"route_path_new");
 		profile(0,"end");
+	}
+	if (oldpath) {
+		/* Destroy what's left */
+		route_path_destroy(oldpath);
 	}
 }
 
@@ -364,7 +376,6 @@ route_set_destination(struct route *this, struct pcoord *dst)
 	if (dst)
 		this->dst=route_find_nearest_street(this->ms, dst);
 	profile(1,"find_nearest_street");
-
 	route_graph_destroy(this->graph);
 	this->graph=NULL;
 	route_path_update(this);
@@ -492,12 +503,47 @@ static int get_item_seg_coords(struct item *i, struct coord *c, int max,
 	return p;
 }
 
+static struct route_path_segment *
+route_extract_segment_from_path(struct route_path *path, struct item *item,
+						 int offset)
+{
+	struct route_path_segment *sp = NULL, *s;
+	s = path->path;
+	while (s) {
+		if (s->offset == offset && item_is_equal(s->item,*item)) {
+			if (sp) {
+				sp->next = s->next;
+				break;
+			} else {
+				path->path = s->next;
+				break;
+			}
+		}
+		sp = s;
+		s = s->next;
+	}
+	if (s)
+		item_hash_remove(path->path_hash, item);
+	return s;
+}
+
 static void
-route_path_add_item(struct route_path *this, struct route_graph_segment *rgs, int len, int time, int offset)
+route_path_add_item(struct route_path *this, struct route_path *oldpath,
+		struct route_graph_segment *rgs, int len, int time, int offset)
 {
 	struct route_path_segment *segment;
 	int ccnt = 0;
 	struct coord ca[2048];
+
+	if (oldpath) {
+		ccnt = (int)item_hash_lookup(oldpath->path_hash, &rgs->item);
+		if (ccnt) {
+			segment = route_extract_segment_from_path(oldpath,
+							 &rgs->item, offset);
+			if (segment)
+				goto linkold;
+		}
+	}
 
 	ccnt = get_item_seg_coords(&rgs->item, ca, 2047, rgs);
 	segment= calloc(1, sizeof(*segment) + sizeof(struct coord) * ccnt);
@@ -507,18 +553,19 @@ route_path_add_item(struct route_path *this, struct route_graph_segment *rgs, in
 	}
 	memcpy(segment->c, ca, ccnt * sizeof(struct coord));
 	segment->ncoords = ccnt;
-	item_hash_insert(this->path_hash,  &rgs->item, (void *)offset);
 	segment->item=rgs->item;
-	segment->next=NULL;
+	segment->offset = offset;
+linkold:
 	segment->length=len;
 	segment->time=time;
+	segment->next=NULL;
+	item_hash_insert(this->path_hash,  &rgs->item, (void *)offset);
 	if (!this->path)
 		this->path=segment;
 	if (this->path_last)
 		this->path_last->next=segment;
 	this->path_last=segment;
 }
-
 
 struct route_path_handle {
 	struct route_path_segment *s;
@@ -931,7 +978,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 }
 
 static struct route_path *
-route_path_new(struct route_graph *this, struct route_info *pos, struct route_info *dst, int *speedlist)
+route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, int *speedlist)
 {
 	struct route_graph_point *start1=NULL,*start2=NULL,*start;
 	struct route_graph_segment *s=NULL;
@@ -994,10 +1041,10 @@ route_path_new(struct route_graph *this, struct route_info *pos, struct route_in
 #endif
 		len+=seg_len;
 		if (s->start == start) {
-			route_path_add_item(ret, s, seg_len, seg_time, s->offset);
+			route_path_add_item(ret, oldpath, s, seg_len, seg_time, s->offset);
 			start=s->end;
 		} else {
-			route_path_add_item(ret, s, seg_len, seg_time, s->offset);
+			route_path_add_item(ret, oldpath, s, seg_len, seg_time, s->offset);
 			start=s->start;
 		}
 	}
