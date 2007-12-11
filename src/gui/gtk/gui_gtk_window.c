@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <gdk/gdkkeysyms.h>
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
@@ -153,12 +154,22 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 {
 	struct gui_priv *this;
 	int w=792, h=547;
+	char *cp = getenv("NAVIT_XID");
+	unsigned xid = 0;
+
+	if (cp) {
+		xid = strtol(cp, NULL, 0);
+	}
 
 	*meth=gui_gtk_methods;
-	
+
 	this=g_new0(struct gui_priv, 1);
 	this->nav=nav;
-	this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	if (!xid) 
+		this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	else
+		this->win = gtk_plug_new(xid);
+
 	g_signal_connect(G_OBJECT(this->win), "delete-event", G_CALLBACK(gui_gtk_delete), nav);
 	this->vbox = gtk_vbox_new(FALSE, 0);
 	gtk_window_set_default_size(GTK_WINDOW(this->win), w, h);
