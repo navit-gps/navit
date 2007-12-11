@@ -64,6 +64,7 @@ GLuint * DLid;
 
 #define _(STRING)    gettext(STRING)
 
+char  media_window_title[255], media_cmd[255];
 
 struct bookmark{
 	char * name;
@@ -815,6 +816,21 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 		
 	} else {
 		dbg(0,"view_mode is not set\n");
+	}
+
+	struct attr *media_cmd_setting=attr_search(attrs, NULL, attr_media_cmd);
+	if(media_cmd_setting){
+		dbg(0,"setting media_cmd to %s\n",media_cmd_setting->u.str);
+		strcpy(media_cmd,media_cmd_setting->u.str);
+	} else {
+//		strcpy(media_cmd_setting->u.str,media_window_title);
+	}
+
+	struct attr *media_window_title_setting=attr_search(attrs, NULL, attr_media_window_title);
+	if(media_window_title_setting){
+		strcpy(media_window_title,media_window_title_setting->u.str);
+	} else {
+//		strcpy(media_cmd_setting->u.str,media_window_title);
 	}
 
 	struct attr *skin_setting=attr_search(attrs, NULL, attr_skin);
