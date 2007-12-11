@@ -252,21 +252,10 @@ navit_motion(void *data, struct point *p)
 	}
 }
 
-/**
- * Change the current zoom level, zooming closer to the ground
- *
- * @param navit The navit instance
- * @param factor The zoom factor, usually 2
- * @param p The invariant point (if set to NULL, default to center)
- * @returns nothing
- */
-void
-navit_zoom_in(struct navit *this_, int factor, struct point *p)
+static void
+navit_scale(struct navit *this_, long scale, struct point *p)
 {
 	struct coord c1, c2, *center;
-	long scale=transform_get_scale(this_->trans)/factor;
-	if (scale < 1)
-		scale=1;
 	if (p)
 		transform_reverse(this_->trans, p, &c1);
 	transform_set_scale(this_->trans, scale);
@@ -280,6 +269,23 @@ navit_zoom_in(struct navit *this_, int factor, struct point *p)
 }
 
 /**
+ * Change the current zoom level, zooming closer to the ground
+ *
+ * @param navit The navit instance
+ * @param factor The zoom factor, usually 2
+ * @param p The invariant point (if set to NULL, default to center)
+ * @returns nothing
+ */
+void
+navit_zoom_in(struct navit *this_, int factor, struct point *p)
+{
+	long scale=transform_get_scale(this_->trans)/factor;
+	if (scale < 1)
+		scale=1;
+	navit_scale(this_, scale, p);
+}
+
+/**
  * Change the current zoom level
  *
  * @param navit The navit instance
@@ -290,18 +296,8 @@ navit_zoom_in(struct navit *this_, int factor, struct point *p)
 void
 navit_zoom_out(struct navit *this_, int factor, struct point *p)
 {
-	struct coord c1, c2, *center;
 	long scale=transform_get_scale(this_->trans)*factor;
-	if (p)
-		transform_reverse(this_->trans, p, &c1);
-	transform_set_scale(this_->trans,scale);
-	if (p) {
-		transform_reverse(this_->trans, p, &c2);
-		center = transform_center(this_->trans);
-		center->x += c1.x - c2.x;
-		center->y += c1.y - c2.y;
-	}
-	navit_draw(this_);
+	navit_scale(this_, scale, p);
 }
 
 struct navit *
