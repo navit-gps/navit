@@ -52,6 +52,8 @@ ATTR(skin)
 ATTR(fullscreen)
 ATTR(view_mode)
 ATTR(tilt)
+ATTR(media_window_title)
+ATTR(media_cmd)
 /* poi */
 ATTR(icon)
 ATTR(info_html)

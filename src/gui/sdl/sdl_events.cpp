@@ -502,10 +502,11 @@ bool AddressSearchSwitch(const CEGUI::EventArgs& event)
 
 bool Switch_to_nGhost(const CEGUI::EventArgs& event)
 {
-	printf("Switching to nGhost\n");
-	if (window_switch("Nanonymous")==EXIT_FAILURE)
+	extern char media_window_title[255], media_cmd[255];
+	dbg(0,"trying to switch to %s (%s)\n",media_window_title,media_cmd);
+	if (window_switch(media_window_title)==EXIT_FAILURE)
 	{
-		popen("nghost","r");
+		popen(media_cmd,"r");
 	}
 
 }

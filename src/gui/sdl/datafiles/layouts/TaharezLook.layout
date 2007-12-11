@@ -185,7 +185,7 @@
             <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.41,0},{0.99,0},{0.51,0}}" />
         </Window>
         <Window Type="TaharezLook/Button" Name="OSD/nGhostButton" >
-            <Property Name="Text" Value="nGhost" />
+            <Property Name="Text" Value="Media" />
             <Property Name="Visible" Value="True" />
             <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
             <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.51,0},{0.99,0},{0.56,0}}" />
