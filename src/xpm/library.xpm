@@ -1,0 +1,34 @@
+/* XPM */
+static char *library[] = {
+/* columns rows colors chars-per-pixel */
+"8 16 12 1",
+"  c black",
+". c gray25",
+"X c #464646",
+"o c #808080",
+"O c gray56",
+"+ c #BCBCBC",
+"@ c gray75",
+"# c gainsboro",
+"$ c #FBFBFB",
+"% c gray99",
+"& c gray100",
+"* c None",
+/* pixels */
+"***   * ",
+"** X&X  ",
+"* @&&.o ",
+" @&@ @& ",
+" .. &@@ ",
+" && @.& ",
+" && &o@ ",
+" && O@@ ",
+" && @.@ ",
+" && #&& ",
+" && &&& ",
+" && &&. ",
+" && &X *",
+" && X **",
+" &&  ***",
+".   ****"
+};
