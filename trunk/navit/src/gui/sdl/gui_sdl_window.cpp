@@ -420,6 +420,7 @@ int init_GL() {
 	
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/ViewMode")->setText("2D");
 	} else {
 
 		// Dimensions de la fenetre de rendu 
@@ -436,7 +437,7 @@ int init_GL() {
  		glMatrixMode(GL_MODELVIEW);
    		glLoadIdentity();
 // 		gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
-
+		CEGUI::WindowManager::getSingleton().getWindow("OSD/ViewMode")->setText("3D");
 	}
 
 	//Display list code
@@ -452,12 +453,6 @@ int init_GL() {
 bool ToggleView(const CEGUI::EventArgs& event)
 {
 	VIEW_MODE=!VIEW_MODE;
-
-	if(VIEW_MODE==VM_2D){
- 		CEGUI::WindowManager::getSingleton().getWindow("OSD/ViewMode")->setText("2D");
-	} else {
- 		CEGUI::WindowManager::getSingleton().getWindow("OSD/ViewMode")->setText("3D");
-	}
 	init_GL();
 }
 
