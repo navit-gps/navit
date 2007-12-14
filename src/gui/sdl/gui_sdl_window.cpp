@@ -519,7 +519,7 @@ static void init_sdlgui(char * skin_layout,int fullscreen,int tilt)
 	SDL_EnableUNICODE (1);
 	SDL_EnableKeyRepeat (SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
-	init_GL();
+// 	init_GL();
 	
 	try
 	{
@@ -693,7 +693,7 @@ static void init_sdlgui(char * skin_layout,int fullscreen,int tilt)
 		printf("quiting...\n");
 		exit(1);
 	}
-
+	init_GL();
 	// Force centering view on cursor
 // 	navit_toggle_cursor(gui->nav);
 	// Force refresh on gps update
