@@ -240,7 +240,7 @@ navit_motion(void *data, struct point *p)
 	if (this_->button_pressed && !this_->popped) {
 		dx=(p->x-this_->pressed.x);
 		dy=(p->y-this_->pressed.y);
-		if (dx < -4 || dx > 4 || dy < -4 || dy > 4) {
+		if (dx < -8 || dx > 8 || dy < -8 || dy > 8) {
 			if (this_->button_timeout) {
 				g_source_remove(this_->button_timeout);	
 				this_->button_timeout=0;
