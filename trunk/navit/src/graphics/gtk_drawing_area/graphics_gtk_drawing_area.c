@@ -110,7 +110,7 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 	}
 	while (*filename) {
 		// Trying the Liberation font first
-		sprintf(fontpath,"%s/LiberationSans-Regular.ttf",*filename);
+		sprintf(fontpath,"%s/LiberationMono-Regular.ttf",*filename);
 		dbg(1,"font : %s\n",fontpath);
 	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
 			break;
@@ -124,6 +124,10 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
 			break;
 		sprintf(fontpath,"%s/luximbi.ttf",*filename);
+		dbg(1,"font : %s\n",fontpath);
+	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
+			break;
+		sprintf(fontpath,"%s/DejaVuSans.ttf",*filename);
 		dbg(1,"font : %s\n",fontpath);
 	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
 			break;
