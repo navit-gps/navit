@@ -322,6 +322,12 @@ add_tag(char *k, char *v)
 		else
 			level=5;
 	}
+	if (! strcmp(k,"junction")) {
+		if (! strcmp(v,"roundabout")) {
+			flags_attr_value=AF_ONEWAY;
+			flags_attr.len=2;
+		}
+	}
 	if (! strcmp(k,"maxspeed")) {
 		level=5;
 	}
