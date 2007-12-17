@@ -232,6 +232,16 @@ struct attr_bin label_attr = {
 };
 char label_attr_buffer[1024];
 
+struct attr_bin street_name_attr = {
+	0, attr_street_name
+};
+char street_name_attr_buffer[1024];
+
+struct attr_bin street_name_systematic_attr = {
+	0, attr_street_name_systematic
+};
+char street_name_systematic_attr_buffer[1024];
+
 struct attr_bin debug_attr = {
 	0, attr_debug
 };
@@ -324,11 +334,20 @@ add_tag(char *k, char *v)
 	if (! strcmp(k,"note")) 
 		level=5;
 	if (! strcmp(k,"name")) {
+		if (in_way) {
+			strcpy(street_name_attr_buffer, v);
+			pad_text_attr(&street_name_attr, street_name_attr_buffer);
+		} else {
 		strcpy(label_attr_buffer, v);
 		pad_text_attr(&label_attr, label_attr_buffer);
+		}
 		level=5;
 	}
 	if (! strcmp(k,"ref")) {
+		if (in_way) {
+			strcpy(street_name_systematic_attr_buffer, v);
+			pad_text_attr(&street_name_systematic_attr, street_name_systematic_attr_buffer);
+		}
 		level=5;
 	}
 	if (! strcmp(k,"is_in")) {
@@ -459,6 +478,7 @@ add_node(int id, double lat, double lon)
 	node_is_tagged=0;
 	nodeid=id;
 	item.type=type_point_unkn;
+	label_attr.len=0;
 	debug_attr.len=0;
 	sprintf(debug_attr_buffer,"nodeid=%d", nodeid);
 	ni=(struct node_item *)(node_buffer.base+node_buffer.size);
@@ -569,7 +589,8 @@ add_way(int id)
 	wayid=id;
 	coord_count=0;
 	item.type=type_street_unkn;
-	label_attr.len=0;
+	street_name_attr.len=0;
+	street_name_systematic_attr.len=0;
 	debug_attr.len=0;
 	flags_attr.len=0;
 	sprintf(debug_attr_buffer,"wayid=%d", wayid);
@@ -607,8 +628,10 @@ end_way(FILE *out)
 		g_hash_table_insert(dedupe_ways_hash, (gpointer)wayid, (gpointer)1);
 	}
 	pad_text_attr(&debug_attr, debug_attr_buffer);
-	if (label_attr.len)
-		alen+=label_attr.len+1;	
+	if (street_name_attr.len)
+		alen+=street_name_attr.len+1;
+	if (street_name_systematic_attr.len)
+		alen+=street_name_systematic_attr.len+1;
 	if (debug_attr.len)
 		alen+=debug_attr.len+1;	
 	if (flags_attr.len)
@@ -617,7 +640,8 @@ end_way(FILE *out)
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
 	fwrite(coord_buffer, coord_count*sizeof(struct coord), 1, out);
-	write_attr(out, &label_attr, label_attr_buffer);
+	write_attr(out, &street_name_attr, street_name_attr_buffer);
+	write_attr(out, &street_name_systematic_attr, street_name_systematic_attr_buffer);
 	write_attr(out, &debug_attr, debug_attr_buffer);
 	write_attr(out, &flags_attr, &flags_attr_value);
 }

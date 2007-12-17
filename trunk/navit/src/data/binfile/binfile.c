@@ -110,6 +110,8 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	while (t->pos_attr < t->pos_next) {
 		size=*(t->pos_attr++);
 		type=t->pos_attr[0];
+		if (type == attr_street_name || type == attr_street_name_systematic)
+			type = attr_label;
 		if (type == attr_type || attr_type == attr_any) {
 			if (attr_type == attr_any) {
 				dbg(0,"pos %p attr %s size %d\n", t->pos_attr-1, attr_to_name(type), size);
