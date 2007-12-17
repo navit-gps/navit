@@ -133,7 +133,10 @@ int main(int argc, char **argv)
 	gtk_init(&argc, &argv);
 	gdk_rgb_init();
 #endif
-
+	s = getenv("NAVIT_WID");
+	if (s) {
+		setenv("SDL_WINDOWID", s, 0);
+	}
 	config_file=NULL;
 	if (argc > 1) 
 		config_file=argv[1];
