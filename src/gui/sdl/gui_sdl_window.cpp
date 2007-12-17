@@ -160,14 +160,19 @@ static void show_road_name(){
 
 }
 
+static gboolean gui_timeout_cb(gpointer data)
+{
+	return TRUE;
+}
+
 static int gui_run_main_loop(struct gui_priv *this_)
 {
-
+	GSource *timeout;
 	using namespace CEGUI;
 	dbg(0,"Entering main loop\n");
 
 	bool must_quit = false;
-	
+
 	// get "run-time" in seconds
 	double last_time_pulse = static_cast<double>(SDL_GetTicks());
 
@@ -178,7 +183,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
 
 
 	t=navit_get_trans(this_->nav);
-	transform_set_size(t, 800, 600);	
+	transform_set_size(t, 800, 600);
 	navit_draw(this_->nav);
 
 	bool enable_timer=0;
@@ -191,7 +196,9 @@ static int gui_run_main_loop(struct gui_priv *this_)
 		callback_new_0((void (*)())sdl_update_roadbook)
 	);
 
-
+	timeout = g_timeout_source_new(100);
+	g_source_set_callback(timeout, gui_timeout_cb, NULL, NULL);
+	g_source_attach(timeout, NULL);
 	while (!must_quit)
 	{
 		if(enable_timer)
@@ -218,8 +225,10 @@ static int gui_run_main_loop(struct gui_priv *this_)
 
  		if(enable_timer)
  			profile(0,"graphics_redraw");
- 		if (!g_main_context_iteration (NULL, FALSE))
- 			sleep(1);
+// 		if (!g_main_context_iteration (NULL, FALSE))
+ //			sleep(1);
+ 		g_main_context_iteration (NULL, TRUE);
+ 		//	sleep(1);
  		if(enable_timer)
  			profile(0,"main context");
 
@@ -263,7 +272,7 @@ static int gui_run_main_loop(struct gui_priv *this_)
 
 		SDL_GL_SwapBuffers();
 	}
-
+	g_source_destroy(timeout);
 
 }
 
