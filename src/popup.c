@@ -3,6 +3,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <libintl.h>
 #include <glib.h>
 #include "popup.h"
 #include "debug.h"
@@ -19,6 +20,7 @@
 #include "callback.h"
 #include "route.h"
 
+#define _(STRING)	gettext(STRING)
 #if 0
 static void
 popup_set_no_passing(struct popup_item *item, void *param)
@@ -224,8 +226,8 @@ popup(struct navit *nav, int button, struct point *p)
 
 	popup=gui_popup_new(navit_get_gui(nav));
 	transform_reverse(navit_get_trans(nav), p, &co);
-	men=popup_printf(popup, menu_type_submenu, "Point 0x%x 0x%x", co.x, co.y);
-	popup_printf(men, menu_type_menu, "Screen %d %d", p->x, p->y);
+	men=popup_printf(popup, menu_type_submenu, _("Point 0x%x 0x%x"), co.x, co.y);
+	popup_printf(men, menu_type_menu, _("Screen %d %d"), p->x, p->y);
 	transform_to_geo(transform_get_projection(navit_get_trans(nav)), &co, &g);
 	transform_geo_text(&g, buffer);	
 	popup_printf(men, menu_type_menu, "%s", buffer);
@@ -234,8 +236,8 @@ popup(struct navit *nav, int button, struct point *p)
 	c.pro = transform_get_projection(navit_get_trans(nav));
 	c.x = co.x;
 	c.y = co.y;
-	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_position), nav, &c), "Set as position");
-	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_destination), nav, &c), "Set as destination");
-	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_bookmark), nav, &c), "Add as bookmark");
+	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_position), nav, &c), _("Set as position"));
+	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_destination), nav, &c), _("Set as destination"));
+	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_bookmark), nav, &c), _("Add as bookmark"));
 	popup_display(nav, popup, p);
 }

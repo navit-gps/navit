@@ -671,7 +671,7 @@ void
 navit_add_menu_former_destinations(struct navit *this_, struct menu *men, struct route *route)
 {
 	if (men)
-		this_->destinations=menu_add(men, "Former Destinations", menu_type_submenu, NULL);
+		this_->destinations=menu_add(men, _("Former Destinations"), menu_type_submenu, NULL);
 	else
 		this_->destinations=NULL;
 	navit_add_menu_destinations_from_file(this_, "destination.txt", this_->destinations, NULL, route, callback_cast(navit_set_destination_from_destination));
@@ -681,7 +681,7 @@ void
 navit_add_menu_bookmarks(struct navit *this_, struct menu *men)
 {
 	if (men)
-		this_->bookmarks=menu_add(men, "Bookmarks", menu_type_submenu, NULL);
+		this_->bookmarks=menu_add(men, _("Bookmarks"), menu_type_submenu, NULL);
 	else
 		this_->bookmarks=NULL;
 	navit_add_menu_destinations_from_file(this_, "bookmark.txt", this_->bookmarks, this_->bookmarks_hash, NULL, callback_cast(navit_set_destination_from_bookmark));
@@ -719,7 +719,7 @@ navit_add_menu_vehicles(struct navit *this_, struct menu *men)
 void
 navit_add_menu_vehicle(struct navit *this_, struct menu *men)
 {
-	men=menu_add(men, "Vehicle", menu_type_submenu, NULL);
+	men=menu_add(men, _("Vehicle"), menu_type_submenu, NULL);
 	navit_add_menu_vehicles(this_, men);
 }
 
@@ -775,7 +775,7 @@ navit_window_roadbook_new(struct navit *this_)
 {
 	this_->roadbook_callback=callback_new_1(callback_cast(navit_window_roadbook_update), this_);
 	navigation_register_callback(this_->navigation, attr_navigation_long, this_->roadbook_callback);
-	this_->roadbook_window=gui_datawindow_new(this_->gui, "Roadbook", NULL, callback_new_1(callback_cast(navit_window_roadbook_destroy), this_));
+	this_->roadbook_window=gui_datawindow_new(this_->gui, _("Roadbook"), NULL, callback_new_1(callback_cast(navit_window_roadbook_destroy), this_));
 	navit_window_roadbook_update(this_);
 }
 
@@ -994,14 +994,14 @@ navit_init(struct navit *this_)
 		if (this_->navigation)
 			navigation_set_mapset(this_->navigation, ms);
 		if (this_->menubar) {
-			men=menu_add(this_->menubar, "Map", menu_type_submenu, NULL);
+			men=menu_add(this_->menubar, _("Map"), menu_type_submenu, NULL);
 			if (men) {
 				navit_add_menu_layout(this_, men);
 				navit_add_menu_projection(this_, men);
 				navit_add_menu_vehicle(this_, men);
 				navit_add_menu_maps(this_, ms, men);
 			}
-			men=menu_add(this_->menubar, "Route", menu_type_submenu, NULL);
+			men=menu_add(this_->menubar, _("Route"), menu_type_submenu, NULL);
 			if (men) {
 				navit_add_menu_former_destinations(this_, men, this_->route);
 				navit_add_menu_bookmarks(this_, men);
