@@ -9,6 +9,8 @@ struct vehicle_priv;
 struct vehicle_methods {
 	void (*destroy)(struct vehicle_priv *priv);
 	int (*position_attr_get)(struct vehicle_priv *priv, enum attr_type type, struct attr *attr);
+	int (*set_attr)(struct vehicle_priv *priv, struct attr *attr, struct attr **attrs);
+
 };
 
 /* prototypes */
