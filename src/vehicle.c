@@ -100,6 +100,8 @@ int
 vehicle_set_attr(struct vehicle *this_, struct attr *attr,
 		 struct attr **attrs)
 {
+	if (this_->meth.set_attr)
+		return this_->meth.set_attr(this_->priv, attr, attrs);
 	return 0;
 }
 
