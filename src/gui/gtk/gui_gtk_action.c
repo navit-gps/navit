@@ -222,7 +222,7 @@ static GtkActionEntry debug_entries[] =
 	{ "VisiblePolysAction", NULL, _n("VisiblePolys"), NULL, NULL, G_CALLBACK(visible_polys_action) },
 	{ "VisibleStreetsAction", NULL, _n("VisibleStreets"), NULL, NULL, G_CALLBACK(visible_streets_action) },
 	{ "VisiblePointsAction", NULL, _n("VisiblePoints"), NULL, NULL, G_CALLBACK(visible_points_action) },
-	{ "VisiblePointsAction", NULL, _n("RouteGraph"), NULL, NULL, G_CALLBACK(visible_routegraph_action) }
+	{ "VisibleRouteGraphAction", NULL, _n("RouteGraph"), NULL, NULL, G_CALLBACK(visible_routegraph_action) }
 };
 
 static guint n_debug_entries = G_N_ELEMENTS (debug_entries);
@@ -371,6 +371,7 @@ static char layout[] =
 				<menuitem name=\"Visible Polys\" action=\"VisiblePolysAction\" />\
 				<menuitem name=\"Visible Streets\" action=\"VisibleStreetsAction\" />\
 				<menuitem name=\"Visible Points\" action=\"VisiblePointsAction\" />\
+				<menuitem name=\"Visible Routegraph\" action=\"VisibleRouteGraphAction\" />\
 				<placeholder name=\"DataMenuAdditions\" />\
 			</menu>\
 			<menu name=\"Route\" action=\"RouteMenuAction\">\

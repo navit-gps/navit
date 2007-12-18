@@ -259,40 +259,28 @@ xmlconfig_gui(struct xmlstate *state)
 static int
 xmlconfig_vehicle(struct xmlstate *state)
 {
-	const char *s=find_attribute(state, "source", 1);
-	const char *value,*name;
-	struct color color;
-	int update=1, follow=0, active;
-	struct navit_vehicle *nv;
+	struct attr **attrs;
+	attrs=convert_to_attrs(state);
 
-	if (! s)
-		return 0;
-	if (! find_color(state, 1, &color))
-		return 0;
-	state->element_object = vehicle_new(s);
+	state->element_object = vehicle_new(attrs);
 	if (! state->element_object)
 		return 0;
-	if ((value=find_attribute(state, "update", 0)))
-		update=convert_number(value);
-	if ((value=find_attribute(state, "follow", 0)))
-		follow=convert_number(value);
-	active=find_boolean(state, "active", 1, 0);
-	name=find_attribute(state, "name", 0);
-	nv=navit_add_vehicle(state->parent->element_object, state->element_object, name, &color, update, follow);
-	if (active)
-		navit_set_vehicle(state->parent->element_object, nv);
+	navit_add_vehicle(state->parent->element_object, state->element_object, attrs);
 	return 1;
 }
 
 static int
 xmlconfig_log(struct xmlstate *state)
 {
+	struct attr attr;
 	struct attr **attrs;
 	attrs=convert_to_attrs(state);
 	state->element_object = log_new(attrs);
 	if (! state->element_object)
 		return 0;
-	if (vehicle_add_log(state->parent->element_object, state->element_object, attrs))
+	attr.type=attr_log;
+	attr.u.log=state->element_object;
+	if (vehicle_add_attr(state->parent->element_object, &attr, attrs))
 		return 0;
 	return 1;
 }
@@ -658,6 +646,7 @@ start_element (GMarkupParseContext *context,
 	struct xmlstate *new=NULL, **parent = user_data;
 	struct element_func *e=elements,*func=NULL;
 	const char *parent_name=NULL;
+	dbg(2,"name='%s'\n", element_name);
 	while (e->name) {
 		if (!g_ascii_strcasecmp(element_name, e->name)) {
 			func=e;
@@ -725,6 +714,7 @@ end_element (GMarkupParseContext *context,
 {
 	struct xmlstate *curr, **state = user_data;
 
+	dbg(2,"name='%s'\n", element_name);
 	curr=*state;
 	if(!g_ascii_strcasecmp("plugins", element_name) && curr->element_object) 
 		plugins_init(curr->element_object);

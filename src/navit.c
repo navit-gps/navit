@@ -44,14 +44,18 @@ struct navit_vehicle {
 	int update_curr;
 	int follow;
 	int follow_curr;
+	struct coord coord;
+	int dir;
+	int speed;
 	struct color c;
 	struct menu *menu;
 	struct cursor *cursor;
 	struct vehicle *vehicle;
-	struct callback *update_cb;
+	struct attr callback;
 };
 
 struct navit {
+	struct attr self;
 	GList *mapsets;
 	GList *layouts;
 	struct gui *gui;
@@ -95,7 +99,8 @@ struct navit {
 
 struct gui *main_loop_gui;
 
-static void navit_cursor_update(struct navit *this_, struct cursor *cursor);
+static void navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv);
+static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt);
 
 void
 navit_add_mapset(struct navit *this_, struct mapset *ms)
@@ -132,7 +137,7 @@ navit_draw(struct navit *this_)
 	l=this_->vehicles;
 	while (l) {
 		nv=l->data;
-		cursor_redraw(nv->cursor);
+		navit_vehicle_draw(this_, nv, NULL);
 		l=g_list_next(l);
 	}
 	this_->ready=1;
@@ -307,6 +312,8 @@ navit_new(struct pcoord *center, int zoom)
 	FILE *f;
 
 	main_add_navit(this_);
+	this_->self.type=attr_navit;
+	this_->self.u.navit=this_;
 	this_->vehicle_cbl=callback_list_new();
 	this_->init_cbl=callback_list_new();
 
@@ -977,12 +984,13 @@ navit_init(struct navit *this_)
 	graphics_init(this_->gra);
 	l=this_->vehicles;
 	while (l) {
-		dbg(0,"parsed one vehicle\n");
+		dbg(1,"parsed one vehicle\n");
 		nv=l->data;
-		nv->cursor=cursor_new(this_->gra, nv->vehicle, &nv->c, this_->trans);
-		nv->update_cb=callback_new_1(callback_cast(navit_cursor_update), this_);
-		cursor_add_callback(nv->cursor, nv->update_cb);
-		vehicle_set_navit(nv->vehicle, this_);
+		nv->cursor=cursor_new(this_->gra, &nv->c);
+		nv->callback.type=attr_callback;
+		nv->callback.u.callback=callback_new_2(callback_cast(navit_vehicle_update), this_, nv);
+		vehicle_add_attr(nv->vehicle, &nv->callback, NULL);
+		vehicle_set_attr(nv->vehicle, &this_->self, NULL);
 		l=g_list_next(l);
 	}
 	if (this_->mapsets) {
@@ -1106,68 +1114,90 @@ navit_toggle_orient_north(struct navit *this_)
  */
 
 static void
-navit_cursor_update(struct navit *this_, struct cursor *cursor)
+navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt)
 {
-	struct point pnt;
-	struct coord *cursor_c=cursor_pos_get(cursor);
-	struct pcoord pc;
-	int dir=cursor_get_dir(cursor);
-	int speed=cursor_get_speed(cursor);
+	struct point pnt2;
 	enum projection pro;
-	int border=30;
+	if (pnt) 
+		pnt2=*pnt;
+	else {
+		pro=transform_get_projection(this_->trans);
+		transform(this_->trans, pro, &nv->coord, &pnt2);
+	}
+#if 1
+	cursor_draw(nv->cursor, &pnt2, nv->dir-transform_get_angle(this_->trans, 0), nv->speed > 2, pnt == NULL);
+#else
+	cursor_draw(nv->cursor, &pnt2, nv->dir-transform_get_angle(this_->trans, 0), nv->speed > 2, 1);
+#endif
+}
 
-	if (!this_->vehicle || this_->vehicle->cursor != cursor)
+static void
+navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
+{
+	struct attr attr_dir, attr_speed, attr_pos;
+	struct pcoord cursor_pc;
+	struct point cursor_pnt, *pnt=&cursor_pnt;
+	enum projection pro;
+	int border=16;
+
+	if (! vehicle_position_attr_get(nv->vehicle, attr_position_direction, &attr_dir) ||
+	    ! vehicle_position_attr_get(nv->vehicle, attr_position_speed, &attr_speed) ||
+	    ! vehicle_position_attr_get(nv->vehicle, attr_position_coord_geo, &attr_pos))
 		return;
-
-	cursor_c=cursor_pos_get(cursor);
-	dir=cursor_get_dir(cursor);
-	speed=cursor_get_speed(cursor);
-	pro=vehicle_projection(this_->vehicle->vehicle);
-
-	/* This transform is useless cursor and vehicle are in the same projection */
-	if (!transform(this_->trans, pro, cursor_c, &pnt) || !transform_within_border(this_->trans, &pnt, border)) {
-		if (!this_->cursor_flag)
-			return;
-		if (this_->orient_north_flag)
-			navit_set_center_cursor(this_, cursor_c, 0, 50 - 30.*sin(M_PI*dir/180.), 50 + 30.*cos(M_PI*dir/180.));
-		else
-			navit_set_center_cursor(this_, cursor_c, dir, 50, 80);
-		transform(this_->trans, pro, cursor_c, &pnt);
+	nv->dir=*attr_dir.u.numd;
+	nv->speed=*attr_speed.u.numd;
+	pro=transform_get_projection(this_->trans);
+	transform_from_geo(pro, attr_pos.u.coord_geo, &nv->coord);
+	if (nv != this_->vehicle) {
+		navit_vehicle_draw(this_, nv, NULL);
+		return;
 	}
 
-	if (this_->pid && speed > 2)
-		kill(this_->pid, SIGWINCH);
 	if (this_->tracking && this_->tracking_flag) {
-		struct coord c=*cursor_c;
-		if (tracking_update(this_->tracking, &c, dir)) {
-			cursor_c=&c;
-			cursor_pos_set(cursor, cursor_c);
-			if (this_->route && this_->vehicle->update_curr == 1) 
+		if (tracking_update(this_->tracking, &nv->coord, nv->dir)) {
+			if (this_->route && nv->update_curr == 1) 
 				route_set_position_from_tracking(this_->route, this_->tracking);
 		}
 	} else {
-		if (this_->route && this_->vehicle->update_curr == 1) {
-			pc.pro = pro;
-			pc.x = cursor_c->x;
-			pc.y = cursor_c->y;
-			route_set_position(this_->route, &pc);
+		if (this_->route && nv->update_curr == 1) {
+			cursor_pc.pro = pro;
+			cursor_pc.x = nv->coord.x;
+			cursor_pc.y = nv->coord.y;
+			route_set_position(this_->route, &cursor_pc);
 		}
 	}
-	if (this_->route && this_->vehicle->update_curr == 1)
-		navigation_update(this_->navigation, this_->route);
-	if (this_->cursor_flag) {
-		if (this_->vehicle->follow_curr == 1)
-			navit_set_center_cursor(this_, cursor_c, dir, 50, 80);
+
+	if ((!transform(this_->trans, pro, &nv->coord, &cursor_pnt) || !transform_within_border(this_->trans, &cursor_pnt, border))) {
+		if (!this_->cursor_flag)
+			return;
+		if (nv->follow_curr != 1) {
+			if (this_->orient_north_flag)
+				navit_set_center_cursor(this_, &nv->coord, 0, 50 - 30.*sin(M_PI*nv->dir/180.), 50 + 30.*cos(M_PI*nv->dir/180.));
+			else
+				navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
+			pnt=NULL;
+		}
 	}
-	if (this_->vehicle->follow_curr > 1)
-		this_->vehicle->follow_curr--;
+
+	if (this_->pid && nv->speed > 2)
+		kill(this_->pid, SIGWINCH);
+	if (this_->route && nv->update_curr == 1)
+		navigation_update(this_->navigation, this_->route);
+	if (this_->cursor_flag && nv->follow_curr == 1) {
+		navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
+		pnt=NULL;
+	}
+	if (nv->follow_curr > 1)
+		nv->follow_curr--;
 	else
-		this_->vehicle->follow_curr=this_->vehicle->follow;
-	if (this_->vehicle->update_curr > 1)
-		this_->vehicle->update_curr--;
+		nv->follow_curr=nv->follow;
+	if (nv->update_curr > 1)
+		nv->update_curr--;
 	else
-		this_->vehicle->update_curr=this_->vehicle->update;
-	callback_list_call_2(this_->vehicle_cbl, this_, this_->vehicle->vehicle);
+		nv->update_curr=nv->update;
+	callback_list_call_2(this_->vehicle_cbl, this_, nv->vehicle);
+	if (pnt) 
+		navit_vehicle_draw(this_, nv, pnt);
 }
 
 /**
@@ -1202,16 +1232,24 @@ navit_set_position(struct navit *this_, struct pcoord *c)
  * @returns a vehicle instance
  */
 struct navit_vehicle *
-navit_add_vehicle(struct navit *this_, struct vehicle *v, const char *name, struct color *c, int update, int follow)
+navit_add_vehicle(struct navit *this_, struct vehicle *v, struct attr **attrs)
 {
 	struct navit_vehicle *nv=g_new0(struct navit_vehicle, 1);
+	struct attr *name,*update,*follow,*color,*active;
 	nv->vehicle=v;
-	nv->name=g_strdup(name);
-	nv->update_curr=nv->update=update;
-	nv->follow_curr=nv->follow=follow;
-	nv->c=*c;
-
+	if ((name=attr_search(attrs, NULL, attr_name)))
+		nv->name=g_strdup(name->u.str);
+	if ((update=attr_search(attrs, NULL, attr_update)))
+		nv->update_curr=nv->update=update->u.num;
+	if ((follow=attr_search(attrs, NULL, attr_follow)))
+		nv->follow_curr=nv->follow=follow->u.num;
+	if ((color=attr_search(attrs, NULL, attr_color))) {
+		nv->c=*(color->u.color);
+	}
 	this_->vehicles=g_list_append(this_->vehicles, nv);
+	if ((active=attr_search(attrs, NULL, attr_active)) && active->u.num) 
+		navit_set_vehicle(this_, nv);
+
 	return nv;
 }
 

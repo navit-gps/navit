@@ -712,16 +712,25 @@ static void init_sdlgui(char * skin_layout,int fullscreen,int tilt)
 
 static void vehicle_callback_handler( struct navit *nav, struct vehicle *v){
 	char buffer [50];
- 	double  speed=*vehicle_speed_get(v);
-	sprintf (buffer, "%02.02f km/h", speed);
+	struct attr attr;
+	int sats=0, sats_used=0;
+
+	if (vehicle_position_attr_get(v, attr_position_speed, &attr))
+		sprintf (buffer, "%02.02f km/h", *attr.u.numd);
+	else
+		strcpy (buffer, "N/A");
   	CEGUI::WindowManager::getSingleton().getWindow("OSD/SpeedoMeter")->setText(buffer);
 
- 	double  height=*vehicle_height_get(v);
-	sprintf (buffer, "%.0f m", height);
+	if (vehicle_position_attr_get(v, attr_position_speed, &attr))
+		sprintf (buffer, ".0f m", *attr.u.numd);
+	else
+		strcpy (buffer, "N/A");
  	CEGUI::WindowManager::getSingleton().getWindow("OSD/Altimeter")->setText(buffer);
 
-	int sats=*vehicle_sats_get(v);
-	int sats_used=*vehicle_sats_used_get(v);
+	if (vehicle_position_attr_get(v, attr_position_sats, &attr))
+		sats=attr.u.num;
+	if (vehicle_position_attr_get(v, attr_position_sats_used, &attr))
+		sats_used=attr.u.num;
 // 	printf(" sats : %i, used %i: \n",sats,sats_used);
 	// Sat image hardcoded for now. may break the TaharezSkin
 	// setProperty("Image", CEGUI::PropertyHelper::imageToString( yourImageSet->getImage( "yourImageName" ) ) );

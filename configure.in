@@ -397,6 +397,7 @@ src/speech/speech_dispatcher/Makefile
 src/vehicle/Makefile
 src/vehicle/file/Makefile
 src/vehicle/gpsd/Makefile
+src/vehicle/demo/Makefile
 src/xpm/Makefile
 src/maps/Makefile
 intl/Makefile
