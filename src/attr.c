@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include <glib.h>
 #include "debug.h"
 #include "item.h"
+#include "color.h"
 #include "attr.h"
 
 struct attr_name {
@@ -59,11 +61,32 @@ attr_new_from_text(const char *name, const char *value)
 		break;
 	default:
 		if (attr >= attr_type_string_begin && attr <= attr_type_string_end) {
-			ret->u.str=value;
+			ret->u.str=(char *)value;
 			break;
 		}
 		if (attr >= attr_type_int_begin && attr <= attr_type_int_end) {
 			ret->u.num=atoi(value);
+			break;
+		}
+		if (attr >= attr_type_color_begin && attr <= attr_type_color_end) {
+			struct color *color=g_new0(struct color, 1);
+			int r,g,b,a;
+			ret->u.color=color;
+			if(strlen(value)==7){
+				sscanf(value,"#%02x%02x%02x", &r, &g, &b);
+				color->r = (r << 8) | r;
+				color->g = (g << 8) | g;
+				color->b = (b << 8) | b;
+				color->a = (65535);
+			} else if(strlen(value)==9){
+				sscanf(value,"#%02x%02x%02x%02x", &r, &g, &b, &a);
+				color->r = (r << 8) | r;
+				color->g = (g << 8) | g;
+				color->b = (b << 8) | b;
+				color->a = (a << 8) | a;
+			} else {
+				dbg(0,"color %s has unknown format\n",value);
+			}
 			break;
 		}
 		dbg(1,"default\n");
@@ -125,5 +148,7 @@ attr_data_set(struct attr *attr, void *data)
 void
 attr_free(struct attr *attr)
 {
+	if (attr->type >= attr_type_color_begin && attr->type <= attr_type_color_end) 
+		g_free(attr->u.color);
 	g_free(attr);
 }

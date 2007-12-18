@@ -115,6 +115,12 @@ graphics_gc_new(struct graphics *gra)
 }
 
 void
+graphics_gc_destroy(struct graphics_gc *gc)
+{
+	gc->meth.gc_destroy(gc->priv);
+}
+
+void
 graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c)
 {
 	gc->meth.gc_set_foreground(gc->priv, c);
