@@ -1237,15 +1237,19 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v, struct attr **attrs)
 	struct navit_vehicle *nv=g_new0(struct navit_vehicle, 1);
 	struct attr *name,*update,*follow,*color,*active;
 	nv->vehicle=v;
+	nv->update=1;
+	nv->follow=0;
+	nv->name="Noname";
 	if ((name=attr_search(attrs, NULL, attr_name)))
 		nv->name=g_strdup(name->u.str);
 	if ((update=attr_search(attrs, NULL, attr_update)))
-		nv->update_curr=nv->update=update->u.num;
+		nv->update=nv->update=update->u.num;
 	if ((follow=attr_search(attrs, NULL, attr_follow)))
-		nv->follow_curr=nv->follow=follow->u.num;
-	if ((color=attr_search(attrs, NULL, attr_color))) {
+		nv->follow=nv->follow=follow->u.num;
+	if ((color=attr_search(attrs, NULL, attr_color))) 
 		nv->c=*(color->u.color);
-	}
+	nv->update_curr=nv->update;
+	nv->follow_curr=nv->follow;
 	this_->vehicles=g_list_append(this_->vehicles, nv);
 	if ((active=attr_search(attrs, NULL, attr_active)) && active->u.num) 
 		navit_set_vehicle(this_, nv);
