@@ -17,7 +17,7 @@ NMEA GPS sensors.
 The routing engine not only calculates an optimal route to your
 destination, but also generates directions and even speaks to you.
 
-Navit currently speaks 8 languages :
+Navit currently speaks 9 languages :
 - English
 - German
 - French
@@ -26,9 +26,10 @@ Navit currently speaks 8 languages :
 - Spanish
 - Norwegian
 - Czech
+- Finish
 
 For help or more information, please refer to the wiki :
- http://navit.sourceforge.net/wiki/
+ http://wiki.navit-project.org
 
 
 Maps:
@@ -38,13 +39,13 @@ The best navigation system is useless without maps. Those three maps
 are known to work:
 
 - OpenStreetMaps : display, routing, but street name search isn't complete
- (see http://navit.sourceforge.net/wiki/index.php/OpenStreetMaps )
+ (see http://wiki.navit-project.org/index.php/OpenStreetMaps )
 
 - Grosser Reiseplaner and compliant maps : full support
- (see http://navit.sourceforge.net/wiki/index.php/European_maps )
+ (see http://wiki.navit-project.org/index.php/European_maps )
 
 - Garmin maps : display, routing is being worked on
- (see http://navit.sourceforge.net/wiki/index.php/Garmin_maps )
+ (see http://wiki.navit-project.org/index.php/Garmin_maps )
 
 
 GPS Support:
