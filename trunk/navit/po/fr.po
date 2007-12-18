@@ -14,6 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=2; plural=n != 1;\n"
 
 #: ../src/main.c:94
 #, c-format
@@ -80,14 +81,14 @@ msgstr "dans %d.%d kilomètres"
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "un kilomètre"
-msgstr[1] "un kilomètre"
+msgstr[1] "%d kilomètres"
 
 #: ../src/navigation.c:195
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "dans un kilomètre"
-msgstr[1] "dans un kilomètre"
+msgstr[1] "dans %d kilomètres"
 
 #: ../src/navigation.c:398
 msgid "right"
@@ -132,9 +133,9 @@ msgstr "erreur"
 
 #. TRANSLATORS: The first argument is strength, the second direction and the third distance
 #: ../src/navigation.c:446
-#, fuzzy, c-format
+#, c-format
 msgid "Turn %1$s%2$s %3$s"
-msgstr "%s tournez %s%s"
+msgstr "%3$s tournez %1$s%2$s"
 
 #: ../src/navigation.c:449
 #, c-format
@@ -150,9 +151,8 @@ msgid "Projection"
 msgstr "Projection"
 
 #: ../src/navit.c:674
-#, fuzzy
 msgid "Former Destinations"
-msgstr "Destination"
+msgstr "Destinations précédentes"
 
 #: ../src/navit.c:684
 msgid "Bookmarks"
@@ -425,9 +425,8 @@ msgstr "Spitzberg"
 
 #: ../src/gui/gtk/destination.c:99 ../src/gui/gtk/destination.c:100
 #: ../src/gui/gtk/destination.c:101 ../src/gui/gtk/destination.c:102
-#, fuzzy
 msgid "Car"
-msgstr "Effacer"
+msgstr "Voiture"
 
 #: ../src/gui/gtk/destination.c:99
 msgid "Iso2"
@@ -443,9 +442,8 @@ msgstr "Pays"
 
 #: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
 #: ../src/gui/gtk/destination.c:102
-#, fuzzy
 msgid "Postal"
-msgstr "Portugal"
+msgstr "Code Postal"
 
 #: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
 #: ../src/gui/gtk/destination.c:102
@@ -454,7 +452,6 @@ msgstr ""
 
 #: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
 #: ../src/gui/gtk/destination.c:102
-#, fuzzy
 msgid "District"
 msgstr "District"
 
@@ -468,7 +465,6 @@ msgid "Number"
 msgstr "Numéro"
 
 #: ../src/gui/gtk/destination.c:326
-#, fuzzy
 msgid "Enter Destination"
 msgstr "Destination"
 
