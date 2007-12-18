@@ -96,10 +96,10 @@ static void button_bookmark(GtkWidget *widget, struct search_param *search)
 
 
 char **columns_text[] = {
-	(char *[]){"Car","Iso2","Iso3","Country",NULL},
-	(char *[]){"Car","Postal","Town","District",NULL},
-	(char *[]){"Car","Postal","Town","District","Street",NULL},
-	(char *[]){"Car","Postal","Town","District","Street","Number",NULL},
+	(char *[]){_n("Car"),_n("Iso2"),_n("Iso3"),_n("Country"),NULL},
+	(char *[]){_n("Car"),_n("Postal"),_n("Town"),_n("District"),NULL},
+	(char *[]){_n("Car"),_n("Postal"),_n("Town"),_n("District"),_n("Street"),NULL},
+	(char *[]){_n("Car"),_n("Postal"),_n("Town"),_n("District"),_n("Street"),_n("Number"),NULL},
 };
 
 static void set_columns(struct search_param *param, int mode)
@@ -119,7 +119,7 @@ static void set_columns(struct search_param *param, int mode)
 		printf("column_text=%p\n", column_text);
 		printf("*column_text=%s\n", *column_text);
 		GtkCellRenderer *cell=gtk_cell_renderer_text_new();
-		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (param->treeview),-1, *column_text, cell, "text", i, NULL);
+		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (param->treeview),-1, gettext(*column_text), cell, "text", i, NULL);
 		i++;
 		column_text++;
 	}
@@ -323,6 +323,7 @@ int destination_address(struct navit *nav)
 	search->sl=search_list_new(search->ms);
 
 	window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title(GTK_WINDOW(window2),_("Enter Destination"));
 	vbox = gtk_vbox_new(FALSE, 0);
 	table = gtk_table_new(3, 8, FALSE);
 
@@ -361,9 +362,9 @@ int destination_address(struct navit *nav)
 
 
 	hseparator2 = gtk_vseparator_new();
-	button1 = gtk_button_new_with_label("Karte");
-	button2 = gtk_button_new_with_label("Bookmark");
-	button3 = gtk_button_new_with_label("Ziel");
+	button1 = gtk_button_new_with_label(_("Map"));
+	button2 = gtk_button_new_with_label(_("Bookmark"));
+	button3 = gtk_button_new_with_label(_("Destination"));
 
 	gtk_table_attach(GTK_TABLE(table), label_country,  0, 1,  0, 1,  0, GTK_FILL, 0, 0);
 	gtk_table_attach(GTK_TABLE(table), label_postal,   1, 2,  0, 1,  0, GTK_FILL, 0, 0);

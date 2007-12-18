@@ -189,33 +189,10 @@ get_distance(int dist, enum attr_type type, int is_length)
 				return g_strdup_printf(_("in %d.%d kilometers"), dist/1000, rem);
 		}
 	}
-	switch (dist) {
-	case 1000:
-		if (is_length) 
-			return g_strdup_printf(_("one kilometer"));
-		else
-			return g_strdup_printf(_("in one kilometer"));
-	case 2000:
-		if (is_length) 
-			return g_strdup_printf(_("two kilometers"));
-		else
-			return g_strdup_printf(_("in two kilometers"));
-	case 3000:
-		if (is_length) 
-			return g_strdup_printf(_("three kilometers"));
-		else
-			return g_strdup_printf(_("in three kilometers"));
-	case 4000:
-		if (is_length) 
-			return g_strdup_printf(_("four kilometers"));
-		else
-			return g_strdup_printf(_("in four kilometers"));
-	default:
-		if (is_length) 
-			return g_strdup_printf(_("%d kilometers"), dist/1000);
-		else
-			return g_strdup_printf(_("in %d kilometers"), dist/1000);
-	}
+	if (is_length) 
+		return g_strdup_printf(ngettext("one kilometer","%d kilometers", dist/1000), dist/1000);
+	else
+		return g_strdup_printf(ngettext("in one kilometer","in %d kilometers", dist/1000), dist/1000);
 }
 
 static void
@@ -422,8 +399,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	int distance=itm->dest_length-cmd->itm->dest_length;
 	char *d,*ret;
 	int delta=cmd->delta;
-	int level,i,pos[3];
-	char *arg[3],*str[3];
+	int level;
 	level=1;
 	if (delta < 0) {
 		dir=_("left");
@@ -466,23 +442,8 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		d=g_strdup(_("error"));
 	}
 	if (cmd->itm->next) {
-		for (i = 0 ; i < 3 ; i++) 
-			arg[i]=NULL;
-		pos[0]=atoi(_("strength_pos"));
-		str[0]=strength;
-		pos[1]=atoi(_("direction_pos"));
-		str[1]=dir;
-		pos[2]=atoi(_("distance_pos"));
-		str[2]=d;
-		
-		for (i = 0 ; i < 3 ; i++) {
-			if (pos[i] > 0 && pos[i] < 4) {
-				arg[pos[i]-1]=str[i];
-			} else
-				arg[i]=str[i];
-		}
-		
-		ret=g_strdup_printf(_("Turn %s%s %s"), arg[0], arg[1], arg[2]);
+		/* TRANSLATORS: The first argument is strength, the second direction and the third distance */
+		ret=g_strdup_printf(_("Turn %1$s%2$s %3$s"), strength, dir, d);
 	}
 	else
 		ret=g_strdup_printf(_("You have reached your destination %s"), d);
