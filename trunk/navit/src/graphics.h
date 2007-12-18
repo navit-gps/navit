@@ -96,8 +96,6 @@ struct graphics_gc;
 struct graphics_image;
 struct item;
 struct point;
-struct route;
-struct transformation;
 struct graphics *graphics_new(const char *type, struct attr **attrs);
 struct graphics *graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h);
 void graphics_init(struct graphics *this_);
@@ -107,6 +105,7 @@ void graphics_register_button_callback(struct graphics *this_, void (*callback)(
 void graphics_register_motion_callback(struct graphics *this_, void (*callback)(void *data, struct point *p), void *data);
 struct graphics_font *graphics_font_new(struct graphics *gra, int size);
 struct graphics_gc *graphics_gc_new(struct graphics *gra);
+void graphics_gc_destroy(struct graphics_gc *gc);
 void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c);
 void graphics_gc_set_background(struct graphics_gc *gc, struct color *c);
 void graphics_gc_set_linewidth(struct graphics_gc *gc, int width);
@@ -118,9 +117,7 @@ void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct
 void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int w, int h);
 void display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label);
 int graphics_ready(struct graphics *this_);
-void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, GList *layouts, struct route *route);
 void graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy);
-void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, GList *layouts, struct route *route);
 struct displaylist_handle *graphics_displaylist_open(struct displaylist *displaylist);
 struct displayitem *graphics_displaylist_next(struct displaylist_handle *dlh);
 void graphics_displaylist_close(struct displaylist_handle *dlh);

@@ -31,6 +31,12 @@ struct attr {
 		int num;
 		struct item *item;
 		enum item_type item_type;
+		double * numd;
+		struct color *color;
+		struct coord_geo *coord_geo;
+		struct navit *navit;
+		struct callback *callback;
+		struct log *log;
 	} u;
 };
 

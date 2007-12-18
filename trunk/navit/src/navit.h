@@ -7,11 +7,9 @@ extern "C" {
 extern struct gui *main_loop_gui;
 /* prototypes */
 enum item_type;
-enum projection;
+struct attr;
 struct callback;
-struct color;
 struct coord;
-struct pcoord;
 struct displaylist;
 struct graphics;
 struct gui;
@@ -22,6 +20,7 @@ struct navigation;
 struct navit;
 struct navit_vehicle;
 struct navit_window_items;
+struct pcoord;
 struct point;
 struct route;
 struct speech;
@@ -65,7 +64,7 @@ void navit_toggle_cursor(struct navit *this_);
 void navit_toggle_tracking(struct navit *this_);
 void navit_toggle_orient_north(struct navit *this_);
 void navit_set_position(struct navit *this_, struct pcoord *c);
-struct navit_vehicle *navit_add_vehicle(struct navit *this_, struct vehicle *v, const char *name, struct color *c, int update, int follow);
+struct navit_vehicle *navit_add_vehicle(struct navit *this_, struct vehicle *v, struct attr **attrs);
 void navit_add_vehicle_cb(struct navit *this_, struct callback *cb);
 void navit_remove_vehicle_cb(struct navit *this_, struct callback *cb);
 void navit_add_init_cb(struct navit *this_, struct callback *cb);
@@ -82,7 +81,6 @@ struct navigation *navit_get_navigation(struct navit *this_);
 struct displaylist *navit_get_displaylist(struct navit *this_);
 void navit_destroy(struct navit *this_);
 void navit_toggle_routegraph_display(struct navit *nav);
-
 /* end of prototypes */
 #ifdef __cplusplus
 }
