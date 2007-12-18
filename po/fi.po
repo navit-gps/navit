@@ -1,0 +1,616 @@
+# Finnish translations for navit
+# Copyright (C) 2007
+# This file is distributed under the same license as the navit package.
+# Ossi Berg <o.berg@mail.com>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Navit 0.0.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-17 15:58+0300\n"
+"PO-Revision-Date: 2007-07-10 21:53+0200\n"
+"Last-Translator: Ossi Berg <o.berg@mail.com>\n"
+"Language-Team: Ossi Berg <o.berg@mail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=2; plural=n != 1;\n"
+
+#: ../src/country.c:24
+msgid "Czech Republic"
+msgstr "Tsekin tasavalta"
+
+#: ../src/country.c:25
+msgid "Slovakia"
+msgstr "Slovakia"
+
+#: ../src/country.c:26
+msgid "San Marino"
+msgstr "San Marino"
+
+#: ../src/country.c:27
+msgid "Estonia"
+msgstr "Viro"
+
+#: ../src/country.c:28
+msgid "Georgia"
+msgstr "Georgia"
+
+#: ../src/country.c:29
+msgid "Latvia"
+msgstr "Latvia"
+
+#: ../src/country.c:30
+msgid "Lithuania"
+msgstr "Liettua"
+
+#: ../src/country.c:31
+msgid "Moldova"
+msgstr "Moldova"
+
+#: ../src/country.c:32
+msgid "Russian Federation"
+msgstr "Venäjä"
+
+#: ../src/country.c:33
+msgid "Ukraine"
+msgstr "Ukraina"
+
+#: ../src/country.c:34
+msgid "Belarus"
+msgstr "Valko-Venäjä"
+
+#: ../src/country.c:35
+msgid "Egypt"
+msgstr "Egypti"
+
+#: ../src/country.c:36
+msgid "Greece"
+msgstr "Kreikka"
+
+#: ../src/country.c:37
+msgid "Netherlands"
+msgstr "Alankomaat"
+
+#: ../src/country.c:38
+msgid "Belgium"
+msgstr "Belgia"
+
+#: ../src/country.c:39
+msgid "France"
+msgstr "Ranska"
+
+#: ../src/country.c:40
+msgid "Spain"
+msgstr "Espanja"
+
+#: ../src/country.c:41
+msgid "Hungary"
+msgstr "Unkari"
+
+#: ../src/country.c:42
+msgid "Italy"
+msgstr "Italia"
+
+#: ../src/country.c:43
+msgid "Romania"
+msgstr "Romania"
+
+#: ../src/country.c:44
+msgid "Switzerland"
+msgstr "Sveitsi"
+
+#: ../src/country.c:45
+msgid "Austria"
+msgstr "Itävalta"
+
+#: ../src/country.c:46
+msgid "United Kingdom"
+msgstr "Iso-Britannia"
+
+#: ../src/country.c:47
+msgid "Denmark"
+msgstr "Tanska"
+
+#: ../src/country.c:48
+msgid "Sweden"
+msgstr "Ruotsi"
+
+#: ../src/country.c:49
+msgid "Norway"
+msgstr "Norja"
+
+#: ../src/country.c:50
+msgid "Poland"
+msgstr "Puola"
+
+#: ../src/country.c:51
+msgid "Germany"
+msgstr "Saksa"
+
+#: ../src/country.c:52
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+#: ../src/country.c:53
+msgid "Portugal"
+msgstr "Portugali"
+
+#: ../src/country.c:54
+msgid "Luxembourg"
+msgstr "Luxemburg"
+
+#: ../src/country.c:55
+msgid "Ireland"
+msgstr "Irlanti"
+
+#: ../src/country.c:56
+msgid "Iceland"
+msgstr "Islanti"
+
+#: ../src/country.c:57
+msgid "Albania"
+msgstr "Albania"
+
+#: ../src/country.c:58
+msgid "Malta"
+msgstr "Malta"
+
+#: ../src/country.c:59
+msgid "Cyprus"
+msgstr "Kypros"
+
+#: ../src/country.c:60
+msgid "Finland"
+msgstr "Suomi"
+
+#: ../src/country.c:61
+msgid "Bulgaria"
+msgstr "Bulgaria"
+
+#: ../src/country.c:62
+msgid "Lebanon"
+msgstr "Libanon"
+
+#: ../src/country.c:63
+msgid "Andorra"
+msgstr "Andorra"
+
+#: ../src/country.c:64
+msgid "Syria"
+msgstr "Syyria"
+
+#
+#: ../src/country.c:65
+msgid "Saudi Arabia"
+msgstr "Saudi-Arabia"
+
+#: ../src/country.c:66
+msgid "Libia"
+msgstr "Libya"
+
+#: ../src/country.c:67
+msgid "Israel"
+msgstr "Israel"
+
+#: ../src/country.c:68
+msgid "Palestinia"
+msgstr "Palestiina"
+
+#: ../src/country.c:69
+msgid "Liechtenstein"
+msgstr "Lichtenstein"
+
+#: ../src/country.c:70
+msgid "Morocco"
+msgstr "Marokko"
+
+#: ../src/country.c:71
+msgid "Algeria"
+msgstr "Algeria"
+
+#: ../src/country.c:72
+msgid "Tunisia"
+msgstr "Tunisia"
+
+#: ../src/country.c:73
+msgid "Serbia"
+msgstr "Serbia"
+
+#: ../src/country.c:74
+msgid "Jordan"
+msgstr "Jordania"
+
+#: ../src/country.c:75
+msgid "Croatia"
+msgstr "Kroatia"
+
+#: ../src/country.c:76
+msgid "Slovenia"
+msgstr "Slovenia"
+
+#: ../src/country.c:77
+msgid "Bosnia and Herzegovina"
+msgstr "Bosnia ja Hertsegovina"
+
+#: ../src/country.c:78
+msgid "Macedonia"
+msgstr "Makedonia"
+
+#: ../src/country.c:79
+msgid "Turkey"
+msgstr "Turkki"
+
+#: ../src/country.c:80
+msgid "Monaco"
+msgstr "Monaco"
+
+#: ../src/country.c:81
+msgid "Azerbaijan"
+msgstr "Azerbaizan"
+
+#: ../src/country.c:82
+msgid "Armenia"
+msgstr "Armenia"
+
+#: ../src/country.c:83
+msgid "Faroe Islands"
+msgstr "FÃ¤rsaaret"
+
+#: ../src/country.c:84
+msgid "Western Sahara"
+msgstr "LÃ¤nsi-Sahara"
+
+#: ../src/country.c:85
+msgid "Svalbard and Jan Mayen"
+msgstr "Svalbard ja Jan Mayen"
+
+#: ../src/gui/gtk/destination.c:99 ../src/gui/gtk/destination.c:100
+#: ../src/gui/gtk/destination.c:101 ../src/gui/gtk/destination.c:102
+msgid "Car"
+msgstr "Auto"
+
+#: ../src/gui/gtk/destination.c:99
+msgid "Iso2"
+msgstr "Iso2"
+
+#: ../src/gui/gtk/destination.c:99
+msgid "Iso3"
+msgstr "Iso3"
+
+#: ../src/gui/gtk/destination.c:99 ../src/gui/gtk/destination.c:331
+msgid "Country"
+msgstr "Maa"
+
+#
+#: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
+#: ../src/gui/gtk/destination.c:102
+msgid "Postal"
+msgstr "Postinumero"
+
+#: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
+#: ../src/gui/gtk/destination.c:102
+msgid "Town"
+msgstr "Paikkakunta"
+
+#
+#: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
+#: ../src/gui/gtk/destination.c:102
+msgid "District"
+msgstr "Alue"
+
+#: ../src/gui/gtk/destination.c:101 ../src/gui/gtk/destination.c:102
+#: ../src/gui/gtk/destination.c:340
+msgid "Street"
+msgstr "Katu"
+
+#: ../src/gui/gtk/destination.c:102 ../src/gui/gtk/destination.c:342
+msgid "Number"
+msgstr "Numero"
+
+#
+#: ../src/gui/gtk/destination.c:326
+msgid "Enter Destination"
+msgstr "Anna kohde"
+
+#: ../src/gui/gtk/destination.c:333
+msgid "Zip Code"
+msgstr "Postinumero"
+
+#: ../src/gui/gtk/destination.c:335
+msgid "City"
+msgstr "Kaupunki"
+
+#: ../src/gui/gtk/destination.c:337
+msgid "District/Township"
+msgstr "Maakunta"
+
+#: ../src/gui/gtk/destination.c:365 ../src/gui/gtk/gui_gtk_action.c:184
+#: ../src/navit.c:997
+msgid "Map"
+msgstr "Kartta"
+
+#: ../src/gui/gtk/destination.c:366
+msgid "Bookmark"
+msgstr "Kirjanmerkki"
+
+#: ../src/gui/gtk/destination.c:367 ../src/gui/gtk/gui_gtk_action.c:195
+msgid "Destination"
+msgstr "Kohde"
+
+#: ../src/gui/gtk/gui_gtk_action.c:182
+msgid "Display"
+msgstr "Näyttö"
+
+#: ../src/gui/gtk/gui_gtk_action.c:183 ../src/navit.c:1004
+msgid "Route"
+msgstr "Reitti"
+
+#: ../src/gui/gtk/gui_gtk_action.c:185 ../src/navit.c:603
+msgid "Layout"
+msgstr "Pohja"
+
+#: ../src/gui/gtk/gui_gtk_action.c:186
+msgid "ZoomOut"
+msgstr "Loitonna"
+
+#: ../src/gui/gtk/gui_gtk_action.c:187
+msgid "ZoomIn"
+msgstr "Lähennä"
+
+#: ../src/gui/gtk/gui_gtk_action.c:188
+msgid "Refresh"
+msgstr "Päivitä"
+
+#: ../src/gui/gtk/gui_gtk_action.c:189 ../src/navit.c:778
+msgid "Roadbook"
+msgstr "Ohjeistaja"
+
+#: ../src/gui/gtk/gui_gtk_action.c:191 ../src/gui/gtk/gui_gtk_action.c:193
+msgid "Info"
+msgstr "Info"
+
+#: ../src/gui/gtk/gui_gtk_action.c:196
+msgid "Clear"
+msgstr "Tyhjennä"
+
+#: ../src/gui/gtk/gui_gtk_action.c:197
+msgid "Test"
+msgstr "Testi"
+
+#: ../src/gui/gtk/gui_gtk_action.c:198
+msgid "_Quit"
+msgstr "Sulje"
+
+#: ../src/gui/gtk/gui_gtk_action.c:205
+msgid "Cursor"
+msgstr "Osoitin"
+
+#: ../src/gui/gtk/gui_gtk_action.c:206
+msgid "Tracking"
+msgstr "Reititys"
+
+#: ../src/gui/gtk/gui_gtk_action.c:207
+msgid "Orientation"
+msgstr "Asento"
+
+#: ../src/gui/gtk/gui_gtk_action.c:209 ../src/gui/gtk/gui_gtk_action.c:211
+msgid "Fullscreen"
+msgstr "Koko ruutu"
+
+#: ../src/gui/gtk/gui_gtk_action.c:219
+msgid "Data"
+msgstr "Tieto"
+
+#: ../src/gui/gtk/gui_gtk_action.c:220
+msgid "VisibleBlocks"
+msgstr "Näkyvät korttelit"
+
+#: ../src/gui/gtk/gui_gtk_action.c:221
+msgid "VisibleTowns"
+msgstr "Näkyvät paikkakunnat"
+
+#: ../src/gui/gtk/gui_gtk_action.c:222
+msgid "VisiblePolys"
+msgstr "Näkyvät monikulmio"
+
+#: ../src/gui/gtk/gui_gtk_action.c:223
+msgid "VisibleStreets"
+msgstr "Näkyvät kadut"
+
+#: ../src/gui/gtk/gui_gtk_action.c:224
+msgid "VisiblePoints"
+msgstr "Näkyvät pisteet"
+
+#: ../src/gui/gtk/gui_gtk_action.c:225
+msgid "RouteGraph"
+msgstr "Tiepiirros"
+
+#: ../src/main.c:94
+#, c-format
+msgid "Running from source directory\n"
+msgstr "Ajetaan lähdehakemistosta\n"
+
+#: ../src/main.c:110
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "asetetaan '%s' arvoon '%s'\n"
+
+#: ../src/main.c:170
+#, c-format
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr "Ei asetustiedostoita navit.xml tai navit.xml.local\n"
+
+#: ../src/main.c:174
+#, c-format
+msgid "Error parsing '%s': %s\n"
+msgstr "Virhe tulkitessa '%s': %s\n"
+
+#: ../src/main.c:177
+#, c-format
+msgid "Using '%s'\n"
+msgstr "Käytetään '%s'\n"
+
+#: ../src/main.c:180
+#, c-format
+msgid "No instance has been created, exiting\n"
+msgstr "Esimerkkiä ei tehty, lopetetaan\n"
+
+#: ../src/navigation.c:173
+#, c-format
+msgid "%d m"
+msgstr "%d m"
+
+#: ../src/navigation.c:175
+#, c-format
+msgid "in %d m"
+msgstr "%d m päästä"
+
+#: ../src/navigation.c:179
+#, c-format
+msgid "%d meters"
+msgstr "%d metriä"
+
+#: ../src/navigation.c:181
+#, c-format
+msgid "in %d meters"
+msgstr "%d metrin päästä"
+
+#: ../src/navigation.c:187
+#, c-format
+msgid "%d.%d kilometer"
+msgstr "%d,%d kilometri"
+
+#: ../src/navigation.c:189
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "%d,%d kilometrin päästä"
+
+#: ../src/navigation.c:193
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "yksi kilometri"
+msgstr[1] "%d kilometriä"
+
+#: ../src/navigation.c:195
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "Kilometrin päästä"
+msgstr[1] "%d kilometrin päästä"
+
+#: ../src/navigation.c:398
+msgid "right"
+msgstr "vasemmalle"
+
+#: ../src/navigation.c:405
+msgid "left"
+msgstr "oikealle"
+
+#: ../src/navigation.c:409
+msgid "easily "
+msgstr "loivasti "
+
+#: ../src/navigation.c:413
+msgid "strongly "
+msgstr "jyrkästi "
+
+#: ../src/navigation.c:416
+msgid "unknown "
+msgstr "tuntematon "
+
+#
+#: ../src/navigation.c:422
+msgid "When possible, please turn around"
+msgstr "Käänny ympäri"
+
+#: ../src/navigation.c:429
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Seuraa tätä tietä %s"
+
+#: ../src/navigation.c:433
+msgid "soon"
+msgstr "pian"
+
+#: ../src/navigation.c:439
+msgid "now"
+msgstr "nyt"
+
+#: ../src/navigation.c:442
+msgid "error"
+msgstr "virhe"
+
+#. TRANSLATORS: The first argument is strength, the second direction and the third distance
+#: ../src/navigation.c:446
+#, c-format
+msgid "Turn %1$s%2$s %3$s"
+msgstr "Käänny %3$s %1$s%2$s"
+
+#: ../src/navigation.c:449
+#, c-format
+msgid "You have reached your destination %s"
+msgstr "Olet saavuttanut kohteesi %s"
+
+#: ../src/navit.c:619
+msgid "Projection"
+msgstr "Projektio"
+
+#: ../src/navit.c:674
+msgid "Former Destinations"
+msgstr "Aiemmat kohteet"
+
+#: ../src/navit.c:684
+msgid "Bookmarks"
+msgstr "Kirjanmerkit"
+
+#: ../src/navit.c:722
+msgid "Vehicle"
+msgstr "Kulkuneuvo"
+
+#: ../src/popup.c:229
+#, c-format
+msgid "Point 0x%x 0x%x"
+msgstr "Piste 0x%x 0x%x"
+
+#: ../src/popup.c:230
+#, c-format
+msgid "Screen %d %d"
+msgstr "Ruutu %d %d"
+
+#: ../src/popup.c:239
+msgid "Set as position"
+msgstr "Aseta sijainniksi"
+
+#: ../src/popup.c:240
+msgid "Set as destination"
+msgstr "Aseta kohteeksi"
+
+#: ../src/popup.c:241
+msgid "Add as bookmark"
+msgstr "Lisää kirjanmerkiksi"
+
+#~ msgid "two kilometers"
+#~ msgstr "kaksi kilometriä"
+
+#~ msgid "in two kilometers"
+#~ msgstr "kahden kilometrin päästä"
+
+#~ msgid "three kilometers"
+#~ msgstr "kolme kilometriä"
+
+#~ msgid "in three kilometers"
+#~ msgstr "kolmen kilometrin päästä"
+
+#~ msgid "four kilometers"
+#~ msgstr "neljä kilometriä"
+
+#~ msgid "in four kilometers"
+#~ msgstr "neljän kilometrin päästä"
+
+#~ msgid "%d kilometers"
+#~ msgstr "%d kilometriä"
+
+#~ msgid "in %d kilometers"
+#~ msgstr "%d kilometrin päästä"
