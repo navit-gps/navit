@@ -443,6 +443,7 @@ transform_geo_text(struct coord_geo *g, char *buffer)
 static double
 transform_distance_garmin(struct coord *c1, struct coord *c2)
 {
+#ifdef USE_HALVESINE
 	static const int earth_radius = 6371*1000; //m change accordingly
 // static const int earth_radius  = 3960; //miles
  
@@ -467,6 +468,14 @@ transform_distance_garmin(struct coord *c1, struct coord *c2)
 	return round(earth_radius*c);
 #else
 	return earth_radius*c;
+#endif
+#else
+#define GMETER 2.3887499999999999
+	double dx,dy;
+	dx=c1->x-c2->x;
+	dy=c1->y-c2->y;
+	return sqrt(dx*dx+dy*dy)*GMETER;
+#undef GMETER
 #endif
 }
 
