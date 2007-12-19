@@ -4,6 +4,7 @@ AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 
 AC_GNU_SOURCE
+AC_USE_SYSTEM_EXTENSIONS
 
 AC_PROG_CC
 if eval "test x$GCC = xyes"; then
