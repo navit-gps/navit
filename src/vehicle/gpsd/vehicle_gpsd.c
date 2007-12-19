@@ -1,3 +1,4 @@
+#include <config.h>
 #include <gps.h>
 #include <string.h>
 #include <glib.h>
