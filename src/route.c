@@ -1414,10 +1414,11 @@ static int
 route_draw_route_info(struct route_info *pos, struct route_info *dst, struct transformation *t, struct displaylist *dsp)
 {
 	struct route_info_handle *h;
-	struct coord *c;
-	struct coord_rect r;
+	struct coord *cp;
 	struct item item;
-	struct point pnt[100];
+	int max=100;
+	struct coord c[max];
+	struct point pnt[max];
 	int count=0;
 	struct street_data *street;
 	enum projection pro = projection_mg;
@@ -1438,17 +1439,11 @@ route_draw_route_info(struct route_info *pos, struct route_info *dst, struct tra
 	pro = map_projection(street->item.map);
 	if (pos)
 		dbg(1, "pos=%p pos->dir=%d pos->pos=%d\n", pos, pos->dir, pos->pos);
-	c=route_info_get(h);
-	r.lu=*c;
-	r.rl=*c;
-	while (c && count < 100) {
-		dbg(1,"c=%p (0x%x,0x%x)\n", c, c->x, c->y);
-		transform(t, pro, c, &pnt[count++]);
-		coord_rect_extend(&r, c);
-		c=route_info_get(h);
-	
-	}
-	if (count && transform_contains(t, pro, &r))
+	while ((cp=route_info_get(h)) && count < max) 
+		c[count++]=*cp;
+	if (count)
+		count=transform(t, pro, c, pnt, count, 1);
+	if (count)
 		display_add(dsp, &item, count, pnt, "Route");
 	route_info_close(h);
 	dbg(1, "return 1\n");

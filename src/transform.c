@@ -6,19 +6,20 @@
 #include "config.h"
 #include "coord.h"
 #include "debug.h"
+#include "map.h"
 #include "transform.h"
 #include "projection.h"
 #include "point.h"
 
 struct transformation {
-	int width;		/* Height of destination rectangle */
-	int height;		/* Width of destination rectangle */
 	long scale;		/* Scale factor */
 	int angle;		/* Rotation angle */
 	double cos_val,sin_val;	/* cos and sin of rotation angle */
 	enum projection pro;
-	struct coord_rect r;	/* Source rectangle */
-	struct coord center;	/* Center of source rectangle */
+	struct map_selection *map_sel;
+	struct map_selection *screen_sel;
+	struct point screen_center;
+	struct coord map_center;	/* Center of source rectangle */
 };
 
 struct transformation *
@@ -69,73 +70,7 @@ transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c)
 }
 
 int
-transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p)
-{
-	struct coord c1;
-#ifdef AVOID_FLOAT
-	int xc,yc;
-#else
-        double xc,yc;
-#endif
-	int ret;
-	if (pro != t->pro) {
-		struct coord_geo g;
-		transform_to_geo(pro, c, &g);
-		transform_from_geo(t->pro, &g, &c1);
-		c=&c1;
-	}
-        xc=c->x;
-        yc=c->y;
-	dbg(2,"0x%x, 0x%x - 0x%x,0x%x contains 0x%x,0x%x\n", t->r.lu.x, t->r.lu.y, t->r.rl.x, t->r.rl.y, c->x, c->y);
-	ret=coord_rect_contains(&t->r, c);
-        xc-=t->center.x;
-        yc-=t->center.y;
-	yc=-yc;
-	if (t->angle) {
-	  	int xcn, ycn; 
-	  	xcn=xc*t->cos_val+yc*t->sin_val;
-	  	ycn=-xc*t->sin_val+yc*t->cos_val;
-	  	xc=xcn;
-	  	yc=ycn;
-	}
-#ifndef AVOID_FLOAT
-        xc=xc*16.0/(double)(t->scale);
-        yc=yc*16.0/(double)(t->scale);
-#else
-        xc=xc*16/t->scale;
-        yc=yc*16/t->scale;
-#endif
-#if 0
-	{
-		double zc=yc;
-		if (zc  < 10 && zc > 10)
-			zc=10;
-			return 0;
-		yc=300;
-		xc/=(-zc+1000.0)/1000.0;
-		yc/=(-zc+1000.0)/1000.0;
-		xc+=t->width/2;
-	}
-#else
-        yc+=t->height/2;
-        xc+=t->width/2;
-#endif
-	if (xc < -0x8000)
-		xc=-0x8000;
-	if (xc > 0x7fff) {
-		xc=0x7fff;
-	}
-	if (yc < -0x8000)
-		yc=-0x8000;
-	if (yc > 0x7fff)
-		yc=0x7fff;
-        p->x=xc;
-        p->y=yc;
-        return ret;
-}
-
-int
-transform_array(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int uniq)
+transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int flags)
 {
 	struct coord c1;
 	int xcn, ycn; 
@@ -146,6 +81,20 @@ transform_array(struct transformation *t, enum projection pro, struct coord *c, 
         double xc,yc;
 #endif
 	int i,j = 0;
+	if (flags & 1) {
+		if (count == 1) {
+			if (!map_selection_contains_point(t->map_sel, &c[0]))
+				return 0;
+		} else {
+			if (flags & 2) {
+				if (!map_selection_contains_polygon(t->map_sel, c, count))
+					return 0;
+			} else {
+				if (!map_selection_contains_polyline(t->map_sel, c, count))
+					return 0;
+			}
+		}
+	}
 	for (i=0; i < count; i++) {
 		if (pro == t->pro) {
 			xc=c[i].x;
@@ -158,8 +107,8 @@ transform_array(struct transformation *t, enum projection pro, struct coord *c, 
 		}
 //		dbg(2,"0x%x, 0x%x - 0x%x,0x%x contains 0x%x,0x%x\n", t->r.lu.x, t->r.lu.y, t->r.rl.x, t->r.rl.y, c->x, c->y);
 //		ret=coord_rect_contains(&t->r, c);
-		xc-=t->center.x;
-		yc-=t->center.y;
+		xc-=t->map_center.x;
+		yc-=t->map_center.y;
 		yc=-yc;
 		if (t->angle) {
 			xcn=xc*t->cos_val+yc*t->sin_val;
@@ -180,8 +129,8 @@ transform_array(struct transformation *t, enum projection pro, struct coord *c, 
 			yc=yc/t->scale;
 		}
 #endif
-		yc+=t->height>>1;
-		xc+=t->width>>1;
+		xc+=t->screen_center.x;
+		yc+=t->screen_center.y;
 		if (xc < -0x8000)
 			xc=-0x8000;
 		if (xc > 0x7fff) {
@@ -191,27 +140,13 @@ transform_array(struct transformation *t, enum projection pro, struct coord *c, 
 			yc=-0x8000;
 		if (yc > 0x7fff)
 			yc=0x7fff;
-		if (uniq) {
-			if (i) {
-				if (p[j].x != xc || p[j].y != yc) {
-					j++;
-					p[j].x=xc;
-					p[j].y=yc;
-				}
-			} else {
-				p[j].x=xc;
-				p[j].y=yc;
-			}
-		} else {
-			p[i].x=xc;
-			p[i].y=yc;
+		if (j == 0 || !(flags & 4) || p[j-1].x != xc || p[j-1].y != yc) {
+			p[j].x=xc;
+			p[j].y=yc;
+			j++;
 		}
 	}
-
-	if (uniq)
-		return 1+j;
-
-	return count;
+	return j;
 }
 
 void
@@ -220,8 +155,8 @@ transform_reverse(struct transformation *t, struct point *p, struct coord *c)
         int xc,yc;
 	xc=p->x;
 	yc=p->y;
-	xc-=t->width/2;
-	yc-=t->height/2;
+	xc-=t->screen_center.x;
+	yc-=t->screen_center.y;
 	xc=xc*t->scale/16;
 	yc=-yc*t->scale/16;
 	if (t->angle) {
@@ -231,8 +166,8 @@ transform_reverse(struct transformation *t, struct point *p, struct coord *c)
 	  	xc=xcn;
 	  	yc=ycn;
 	}
-	c->x=t->center.x+xc;
-	c->y=t->center.y+yc;
+	c->x=t->map_center.x+xc;
+	c->y=t->map_center.y+yc;
 }
 
 enum projection
@@ -273,43 +208,39 @@ max4(int v1,int v2, int v3, int v4)
 	return res;
 }
 
-void
-transform_rect(struct transformation *this_, enum projection pro, struct coord_rect *r)
+struct map_selection *
+transform_get_selection(struct transformation *this_, enum projection pro, int order)
 {
+
+	struct map_selection *ret,*curri,*curro;
 	struct coord_geo g;
-	if (0 && this_->pro == pro) {
-		*r=this_->r;
-	} else {
-		transform_to_geo(this_->pro, &this_->r.lu, &g);
-		transform_from_geo(pro, &g, &r->lu);
-		dbg(1,"%f,%f", g.lat, g.lng);
-		transform_to_geo(this_->pro, &this_->r.rl, &g);
-		dbg(1,": - %f,%f\n", g.lat, g.lng);
-		transform_from_geo(pro, &g, &r->rl);
+	int i;
+	
+	ret=map_selection_dup(this_->map_sel);
+	curri=this_->map_sel;
+	curro=ret;
+	while (curri) {
+		if (this_->pro != pro) {
+			transform_to_geo(this_->pro, &curri->u.c_rect.lu, &g);
+			transform_from_geo(pro, &g, &curro->u.c_rect.lu);
+			dbg(1,"%f,%f", g.lat, g.lng);
+			transform_to_geo(this_->pro, &curri->u.c_rect.rl, &g);
+			transform_from_geo(pro, &g, &curro->u.c_rect.rl);
+			dbg(1,": - %f,%f\n", g.lat, g.lng);
+		}
+		dbg(1,"transform rect for %d is %d,%d - %d,%d\n", pro, curro->u.c_rect.lu.x, curro->u.c_rect.lu.y, curro->u.c_rect.rl.x, curro->u.c_rect.rl.y);
+		for (i = 0 ; i < layer_end ; i++) 
+			curro->order[i]+=order;
+		curri=curri->next;
+		curro=curro->next;
 	}
-	dbg(1,"transform rect for %d is %d,%d - %d,%d\n", pro, r->lu.x, r->lu.y, r->rl.x, r->rl.y);
+	return ret;
 }
 
 struct coord *
 transform_center(struct transformation *this_)
 {
-	return &this_->center;
-}
-
-int
-transform_contains(struct transformation *this_, enum projection pro, struct coord_rect *r)
-{
-	struct coord_geo g;
-	struct coord_rect r1;
-	if (this_->pro != pro) {
-		transform_to_geo(pro, &r->lu, &g);
-		transform_from_geo(this_->pro, &g, &r1.lu);
-		transform_to_geo(pro, &r->rl, &g);
-		transform_from_geo(this_->pro, &g, &r1.rl);
-		r=&r1;
-	}
-	return coord_rect_overlap(&this_->r, r);
-	
+	return &this_->map_center;
 }
 
 void
@@ -327,28 +258,45 @@ transform_get_angle(struct transformation *this_,int angle)
 }
 
 void
+transform_set_screen_selection(struct transformation *t, struct map_selection *sel)
+{
+	map_selection_destroy(t->screen_sel);
+	t->screen_sel=map_selection_dup(sel);
+	if (sel) {
+		t->screen_center.x=(sel->u.p_rect.rl.x-sel->u.p_rect.lu.x)/2;
+		t->screen_center.y=(sel->u.p_rect.rl.y-sel->u.p_rect.lu.y)/2;
+	}
+}
+
+#if 0
+void
 transform_set_size(struct transformation *t, int width, int height)
 {
 	t->width=width;
 	t->height=height;
 }
+#endif
 
+#if 0
 void
 transform_get_size(struct transformation *t, int *width, int *height)
 {
 	*width=t->width;
 	*height=t->height;
 }
+#endif
 
 void
 transform_setup(struct transformation *t, struct pcoord *c, int scale, int angle)
 {
 	t->pro=c->pro;
-	t->center.x=c->x;
-	t->center.y=c->y;
+	t->map_center.x=c->x;
+	t->map_center.y=c->y;
 	t->scale=scale;
 	transform_set_angle(t, angle);
 }
+
+#if 0
 
 void
 transform_setup_source_rect_limit(struct transformation *t, struct coord *center, int limit)
@@ -361,6 +309,7 @@ transform_setup_source_rect_limit(struct transformation *t, struct coord *center
 	t->r.rl.y=center->y-limit;
 	t->r.lu.y=center->y+limit;
 }
+#endif
 
 void
 transform_setup_source_rect(struct transformation *t)
@@ -368,22 +317,39 @@ transform_setup_source_rect(struct transformation *t)
 	int i;
 	struct coord screen[4];
 	struct point screen_pnt[4];
-
-	screen_pnt[0].x=0;
-	screen_pnt[0].y=0;
-	screen_pnt[1].x=t->width;
-	screen_pnt[1].y=0;
-	screen_pnt[2].x=0;
-	screen_pnt[2].y=t->height;
-	screen_pnt[3].x=t->width;
-	screen_pnt[3].y=t->height;
-	for (i = 0 ; i < 4 ; i++) {
-		transform_reverse(t, &screen_pnt[i], &screen[i]);
+	struct point_rect *pr;
+	struct map_selection *ms,*msm,*next,**msm_last;
+	ms=t->map_sel;
+	while (ms) {
+		next=ms->next;
+		g_free(ms);
+		ms=next;
 	}
-	t->r.lu.x=min4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
-	t->r.rl.x=max4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
-	t->r.rl.y=min4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
-	t->r.lu.y=max4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
+	t->map_sel=NULL;
+	msm_last=&t->map_sel;
+	ms=t->screen_sel;
+	while (ms) {
+		msm=g_new0(struct map_selection, 1);
+		pr=&ms->u.p_rect;
+		screen_pnt[0].x=pr->lu.x;
+		screen_pnt[0].y=pr->lu.y;
+		screen_pnt[1].x=pr->rl.x;
+		screen_pnt[1].y=pr->lu.y;
+		screen_pnt[2].x=pr->lu.x;
+		screen_pnt[2].y=pr->rl.y;
+		screen_pnt[3].x=pr->rl.x;
+		screen_pnt[3].y=pr->rl.y;
+		for (i = 0 ; i < 4 ; i++) {
+			transform_reverse(t, &screen_pnt[i], &screen[i]);
+		}
+		msm->u.c_rect.lu.x=min4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
+		msm->u.c_rect.rl.x=max4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
+		msm->u.c_rect.rl.y=min4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
+		msm->u.c_rect.lu.y=max4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
+		*msm_last=msm;
+		msm_last=&msm->next;
+		ms=ms->next;
+	}
 }
 
 long
@@ -619,76 +585,6 @@ transform_print_deg(double deg)
 	printf("%2.0f:%2.0f:%2.4f", floor(deg), fmod(deg*60,60), fmod(deg*3600,60));
 }
 
-int 
-is_visible(struct transformation *t, struct coord *c)
-{
-	struct coord_rect *r=&t->r;
-
-	assert(c[0].x <= c[1].x);
-	assert(c[0].y >= c[1].y);
-	assert(r->lu.x <= r->rl.x);
-	assert(r->lu.y >= r->rl.y);
-	if (c[0].x > r->rl.x)
-		return 0;
-	if (c[1].x < r->lu.x)
-		return 0;
-	if (c[0].y < r->rl.y)
-		return 0;
-	if (c[1].y > r->lu.y)
-		return 0;
-	return 1;
-}
-
-int
-is_line_visible(struct transformation *t, struct coord *c)
-{
-	struct coord_rect *r=&t->r;
-
-	assert(r->lu.x <= r->rl.x);
-	assert(r->lu.y >= r->rl.y);
-	if (MIN(c[0].x,c[1].x) > r->rl.x)
-		return 0;
-	if (MAX(c[0].x,c[1].x) < r->lu.x)
-		return 0;
-	if (MAX(c[0].y,c[1].y) < r->rl.y)
-		return 0;
-	if (MIN(c[0].y,c[1].y) > r->lu.y)
-		return 0;
-	return 1;
-}
-
-int 
-is_point_visible(struct transformation *t, struct coord *c)
-{
-	struct coord_rect *r=&t->r;
-
-	assert(r->lu.x <= r->rl.x);
-	assert(r->lu.y >= r->rl.y);
-	if (c->x > r->rl.x)
-		return 0;
-	if (c->x < r->lu.x)
-		return 0;
-	if (c->y < r->rl.y)
-		return 0;
-	if (c->y > r->lu.y)
-		return 0;
-	return 1;
-}
-
-
-int
-is_too_small(struct transformation *t, struct coord *c, int limit)
-{
-	return 0;
-	if ((c[1].x-c[0].x) < limit*t->scale/16) {
-		return 1;
-	}
-	if ((c[0].y-c[1].y) < limit*t->scale/16) {
-		return 1;
-	}
-	return 0;	
-}
-
 #ifdef AVOID_FLOAT
 static int tab_atan[]={0,262,524,787,1051,1317,1584,1853,2126,2401,2679,2962,3249,3541,3839,4142,4452,4770,5095,5430,5774,6128,6494,6873,7265,7673,8098,8541,9004,9490,10000,10538};
 
@@ -765,9 +661,15 @@ transform_get_angle_delta(struct coord *c1, struct coord *c2, int dir)
 int
 transform_within_border(struct transformation *this_, struct point *p, int border)
 {
-	if (p->x < border || p->x > this_->width-border || p->y < border || p->y > this_->height-border)
-		return 0;
-	return 1;
+	struct map_selection *ms=this_->screen_sel;
+	while (ms) {
+		struct point_rect *r=&ms->u.p_rect;
+		if (p->x >= r->lu.x+border && p->x <= r->rl.x-border &&
+		    p->y >= r->lu.y+border && p->y <= r->rl.y-border)
+			return 1;
+		ms=ms->next;
+	}
+	return 0;
 }
 
 /*

@@ -41,39 +41,39 @@ map_new(const char *type, struct attr **attrs)
 }
 
 char *
-map_get_filename(struct map *this)
+map_get_filename(struct map *this_)
 {
-	return this->filename;
+	return this_->filename;
 }
 
 char *
-map_get_type(struct map *this)
+map_get_type(struct map *this_)
 {
-	return this->type;
+	return this_->type;
 }
 
 int
-map_get_active(struct map *this)
+map_get_active(struct map *this_)
 {
-	return this->active;
+	return this_->active;
 }
 
 void
-map_set_active(struct map *this, int active)
+map_set_active(struct map *this_, int active)
 {
-	this->active=active;
+	this_->active=active;
 }
 
 int
-map_requires_conversion(struct map *this)
+map_requires_conversion(struct map *this_)
 {
-	return (this->meth.charset != NULL);	
+	return (this_->meth.charset != NULL);	
 }
 
 char *
-map_convert_string(struct map *this, char *str)
+map_convert_string(struct map *this_, char *str)
 {
-	return g_convert(str, -1,"utf-8",this->meth.charset,NULL,NULL,NULL);
+	return g_convert(str, -1,"utf-8",this_->meth.charset,NULL,NULL,NULL);
 }
 
 void
@@ -83,9 +83,9 @@ map_convert_free(char *str)
 }
 
 enum projection
-map_projection(struct map *this)
+map_projection(struct map *this_)
 {
-	return this->meth.pro;
+	return this_->meth.pro;
 }
 
 void
@@ -152,64 +152,79 @@ struct map_search {
 struct map_search *
 map_search_new(struct map *m, struct item *item, struct attr *search_attr, int partial)
 {
-	struct map_search *this;
+	struct map_search *this_;
 	dbg(1,"enter(%p,%p,%p,%d)\n", m, item, search_attr, partial);
 	dbg(1,"0x%x 0x%x 0x%x\n", attr_country_all, search_attr->type, attr_country_name);
-	this=g_new0(struct map_search,1);
-	this->m=m;
-	this->search_attr=*search_attr;
+	this_=g_new0(struct map_search,1);
+	this_->m=m;
+	this_->search_attr=*search_attr;
 	if (search_attr->type >= attr_country_all && search_attr->type <= attr_country_name)
-		this->priv=country_search_new(&this->search_attr, partial);
+		this_->priv=country_search_new(&this_->search_attr, partial);
 	else {
 		if (m->meth.map_search_new) {
 			if (m->meth.charset) 
-				this->search_attr.u.str=g_convert(this->search_attr.u.str, -1,m->meth.charset,"utf-8",NULL,NULL,NULL);
-			this->priv=m->meth.map_search_new(m->priv, item, &this->search_attr, partial);
+				this_->search_attr.u.str=g_convert(this_->search_attr.u.str, -1,m->meth.charset,"utf-8",NULL,NULL,NULL);
+			this_->priv=m->meth.map_search_new(m->priv, item, &this_->search_attr, partial);
 		} else {
-			g_free(this);
-			this=NULL;
+			g_free(this_);
+			this_=NULL;
 		}
 	}
-	return this;
+	return this_;
 }
 
 struct item *
-map_search_get_item(struct map_search *this)
+map_search_get_item(struct map_search *this_)
 {
 	struct item *ret;
 
-	if (! this)
+	if (! this_)
 		return NULL;
-	if (this->search_attr.type >= attr_country_all && this->search_attr.type <= attr_country_name) 
-		return country_search_get_item(this->priv);
-	ret=this->m->meth.map_search_get_item(this->priv);
+	if (this_->search_attr.type >= attr_country_all && this_->search_attr.type <= attr_country_name) 
+		return country_search_get_item(this_->priv);
+	ret=this_->m->meth.map_search_get_item(this_->priv);
 	if (ret)
-		ret->map=this->m;
+		ret->map=this_->m;
 	return ret;
 }
 
 void
-map_search_destroy(struct map_search *this)
+map_search_destroy(struct map_search *this_)
 {
-	if (! this)
+	if (! this_)
 		return;
-	if (this->search_attr.type >= attr_country_all && this->search_attr.type <= attr_country_name)
-		country_search_destroy(this->priv);
+	if (this_->search_attr.type >= attr_country_all && this_->search_attr.type <= attr_country_name)
+		country_search_destroy(this_->priv);
 	else {
-		if (this->m->meth.charset) 
-				g_free(this->search_attr.u.str);
-		this->m->meth.map_search_destroy(this->priv);
+		if (this_->m->meth.charset) 
+				g_free(this_->search_attr.u.str);
+		this_->m->meth.map_search_destroy(this_->priv);
 	}
-	g_free(this);
+	g_free(this_);
+}
+
+struct map_selection *
+map_selection_dup(struct map_selection *sel)
+{
+	struct map_selection *next,**last;
+	struct map_selection *ret=NULL;
+	last=&ret;	
+	while (sel) {
+		next = g_new(struct map_selection, 1);
+		*next=*sel;
+		*last=next;
+		sel = sel->next;
+	}
+	return ret;
 }
 
 void
 map_selection_destroy(struct map_selection *sel)
 {
-	struct map_selection *ms;
+	struct map_selection *next;
 	while (sel) {
-		ms = sel->next;
+		next = sel->next;
 		g_free(sel);
-		sel = ms;
+		sel = next;
 	}
 }
