@@ -277,14 +277,13 @@ transform_set_size(struct transformation *t, int width, int height)
 }
 #endif
 
-#if 0
 void
 transform_get_size(struct transformation *t, int *width, int *height)
 {
-	*width=t->width;
-	*height=t->height;
+	struct coord_rect *r=&t->screen_sel->u.p_rect;
+	*width=r->rl.x-r->lu.y;
+	*height=r->rl.y-r->lu.y;
 }
-#endif
 
 void
 transform_setup(struct transformation *t, struct pcoord *c, int scale, int angle)
