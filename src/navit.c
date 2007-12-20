@@ -157,10 +157,8 @@ navit_resize(void *data, int w, int h)
 	struct navit *this_=data;
 	struct map_selection sel;
 	memset(&sel, 0, sizeof(sel));
-	sel.u.p_rect.lu.x=w/4;
-	sel.u.p_rect.lu.y=h/4;
-	sel.u.p_rect.rl.x=w*3/4;
-	sel.u.p_rect.rl.y=h*3/4;
+	sel.u.p_rect.rl.x=w;
+	sel.u.p_rect.rl.y=h;
 	transform_set_screen_selection(this_->trans, &sel);
 	navit_draw(this_);
 }
