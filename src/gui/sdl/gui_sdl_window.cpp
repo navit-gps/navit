@@ -21,6 +21,7 @@
 #include "attr.h"
 #include "track.h"
 #include "menu.h"
+#include "map.h"
 
 
 #include "CEGUI.h"
@@ -179,11 +180,13 @@ static int gui_run_main_loop(struct gui_priv *this_)
 	int frames=0;
 	char fps [12];
 
-	struct transformation *t;
+	struct map_selection sel;
 
-
-	t=navit_get_trans(this_->nav);
-	transform_set_size(t, 800, 600);
+	memset(&sel, 0, sizeof(sel));
+	sel.u.c_rect.rl.x=800;
+	sel.u.c_rect.rl.y=600;
+	
+	transform_set_screen_selection(navit_get_trans(this_->nav), &sel);
 	navit_draw(this_->nav);
 
 	bool enable_timer=0;

@@ -155,7 +155,13 @@ static void
 navit_resize(void *data, int w, int h)
 {
 	struct navit *this_=data;
-	transform_set_size(this_->trans, w, h);
+	struct map_selection sel;
+	memset(&sel, 0, sizeof(sel));
+	sel.u.p_rect.lu.x=w/4;
+	sel.u.p_rect.lu.y=h/4;
+	sel.u.p_rect.rl.x=w*3/4;
+	sel.u.p_rect.rl.y=h*3/4;
+	transform_set_screen_selection(this_->trans, &sel);
 	navit_draw(this_);
 }
 
@@ -207,7 +213,9 @@ navit_button(void *data, int pressed, int button, struct point *p)
 		}
 		if (this_->moved) {
 			struct point p;
+#if 0
 			transform_get_size(this_->trans, &p.x, &p.y);
+#endif
 			p.x/=2;
 			p.y/=2;
 			p.x-=this_->last.x-this_->pressed.x;
@@ -1050,6 +1058,7 @@ navit_set_center(struct navit *this_, struct coord *center)
 static void
 navit_set_center_cursor(struct navit *this_, struct coord *cursor, int dir, int xpercent, int ypercent)
 {
+#if 0
 	struct coord *c=transform_center(this_->trans);
 	int width, height;
 	struct point p;
@@ -1064,6 +1073,7 @@ navit_set_center_cursor(struct navit *this_, struct coord *cursor, int dir, int 
 	*c=cnew;
 	if (this_->ready)
 		navit_draw(this_);
+#endif
 		
 }
 
@@ -1122,7 +1132,7 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 		pnt2=*pnt;
 	else {
 		pro=transform_get_projection(this_->trans);
-		transform(this_->trans, pro, &nv->coord, &pnt2);
+		transform(this_->trans, pro, &nv->coord, &pnt2, 1, 0);
 	}
 #if 1
 	cursor_draw(nv->cursor, &pnt2, nv->dir-transform_get_angle(this_->trans, 0), nv->speed > 2, pnt == NULL);
@@ -1167,7 +1177,8 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		}
 	}
 
-	if ((!transform(this_->trans, pro, &nv->coord, &cursor_pnt) || !transform_within_border(this_->trans, &cursor_pnt, border))) {
+	if ((!transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 1) ||
+	     !transform_within_border(this_->trans, &cursor_pnt, border))) {
 		if (!this_->cursor_flag)
 			return;
 		if (nv->follow_curr != 1) {
