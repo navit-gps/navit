@@ -211,9 +211,7 @@ navit_button(void *data, int pressed, int button, struct point *p)
 		}
 		if (this_->moved) {
 			struct point p;
-#if 0
 			transform_get_size(this_->trans, &p.x, &p.y);
-#endif
 			p.x/=2;
 			p.y/=2;
 			p.x-=this_->last.x-this_->pressed.x;
@@ -1056,7 +1054,6 @@ navit_set_center(struct navit *this_, struct coord *center)
 static void
 navit_set_center_cursor(struct navit *this_, struct coord *cursor, int dir, int xpercent, int ypercent)
 {
-#if 0
 	struct coord *c=transform_center(this_->trans);
 	int width, height;
 	struct point p;
@@ -1071,8 +1068,6 @@ navit_set_center_cursor(struct navit *this_, struct coord *cursor, int dir, int 
 	*c=cnew;
 	if (this_->ready)
 		navit_draw(this_);
-#endif
-		
 }
 
 
