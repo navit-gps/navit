@@ -724,8 +724,8 @@ static void vehicle_callback_handler( struct navit *nav, struct vehicle *v){
 		strcpy (buffer, "N/A");
   	CEGUI::WindowManager::getSingleton().getWindow("OSD/SpeedoMeter")->setText(buffer);
 
-	if (vehicle_position_attr_get(v, attr_position_speed, &attr))
-		sprintf (buffer, ".0f m", *attr.u.numd);
+	if (vehicle_position_attr_get(v, attr_position_height, &attr))
+		sprintf (buffer, "%.f m", *attr.u.numd);
 	else
 		strcpy (buffer, "N/A");
  	CEGUI::WindowManager::getSingleton().getWindow("OSD/Altimeter")->setText(buffer);
