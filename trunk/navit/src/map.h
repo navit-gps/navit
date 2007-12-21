@@ -44,7 +44,7 @@ map_selection_contains_point(struct map_selection *sel, struct coord *c)
         while (curr) {
                 struct coord_rect *r=&curr->u.c_rect;
                 if (c->x >= r->lu.x && c->x <= r->rl.x &&
-                    c->y >= r->lu.y && c->y <= r->rl.y)
+                    c->y <= r->lu.y && c->y >= r->rl.y)
                         return 1;
                 curr=curr->next;
         }

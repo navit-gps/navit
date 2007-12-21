@@ -70,7 +70,7 @@ transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c)
 }
 
 int
-transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int flags)
+transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int unique)
 {
 	struct coord c1;
 	int xcn, ycn; 
@@ -81,20 +81,6 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
         double xc,yc;
 #endif
 	int i,j = 0;
-	if (flags & 1) {
-		if (count == 1) {
-			if (!map_selection_contains_point(t->map_sel, &c[0]))
-				return 0;
-		} else {
-			if (flags & 2) {
-				if (!map_selection_contains_polygon(t->map_sel, c, count))
-					return 0;
-			} else {
-				if (!map_selection_contains_polyline(t->map_sel, c, count))
-					return 0;
-			}
-		}
-	}
 	for (i=0; i < count; i++) {
 		if (pro == t->pro) {
 			xc=c[i].x;
@@ -140,7 +126,7 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 			yc=-0x8000;
 		if (yc > 0x7fff)
 			yc=0x7fff;
-		if (j == 0 || !(flags & 4) || p[j-1].x != xc || p[j-1].y != yc) {
+		if (j == 0 || !unique || p[j-1].x != xc || p[j-1].y != yc) {
 			p[j].x=xc;
 			p[j].y=yc;
 			j++;
@@ -280,8 +266,8 @@ transform_set_size(struct transformation *t, int width, int height)
 void
 transform_get_size(struct transformation *t, int *width, int *height)
 {
-	struct coord_rect *r=&t->screen_sel->u.p_rect;
-	*width=r->rl.x-r->lu.y;
+	struct point_rect *r=&t->screen_sel->u.p_rect;
+	*width=r->rl.x-r->lu.x;
 	*height=r->rl.y-r->lu.y;
 }
 
