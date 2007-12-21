@@ -481,14 +481,25 @@ do_draw_map(struct displaylist *displaylist, struct transformation *t, struct ma
 			dbg(1,"poly from map has only %d points\n", count);
 			continue;
 		}
-		count=transform(t, pro, ca, pnt, count, 
-			item->type < type_line ? 1 : (item->type < type_area ? 5 : 7));
-		if (!count) {
-			dbg(1,"not visible\n");
-			continue;
+		if (item->type < type_line) {
+			if (! map_selection_contains_point(sel, &ca[0])) {
+				dbg(1,"point not visible\n");
+				continue;
+			}
+		} else if (item->type < type_area) {
+			if (! map_selection_contains_polyline(sel, ca, count)) {
+				dbg(1,"polyline not visible\n");
+				continue;
+			}
+		} else {
+			if (! map_selection_contains_polygon(sel, ca, count)) {
+				dbg(1,"polygon not visible\n");
+				continue;
+			}
 		}
 		if (count == max) 
 			dbg(0,"point count overflow\n", count);
+		count=transform(t, pro, ca, pnt, count, 1);
 		if (item->type >= type_line && count < 2) {
 			dbg(1,"poly from transform has only %d points\n", count);
 			continue;
