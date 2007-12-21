@@ -1143,6 +1143,9 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	enum projection pro;
 	int border=16;
 
+	if (! this_->ready)
+		return;
+
 	if (! vehicle_position_attr_get(nv->vehicle, attr_position_direction, &attr_dir) ||
 	    ! vehicle_position_attr_get(nv->vehicle, attr_position_speed, &attr_speed) ||
 	    ! vehicle_position_attr_get(nv->vehicle, attr_position_coord_geo, &attr_pos))
@@ -1170,8 +1173,8 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		}
 	}
 
-	if ((!transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 1) ||
-	     !transform_within_border(this_->trans, &cursor_pnt, border))) {
+	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0);
+	if (!transform_within_border(this_->trans, &cursor_pnt, border)) {
 		if (!this_->cursor_flag)
 			return;
 		if (nv->follow_curr != 1) {
