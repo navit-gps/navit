@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-17 15:58+0300\n"
+"POT-Creation-Date: 2007-12-24 21:15+0100\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Ossi Berg <o.berg@mail.com>\n"
 "Language-Team: Ossi Berg <o.berg@mail.com>\n"
@@ -15,6 +15,166 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=n != 1;\n"
+
+#: ../src/main.c:94
+#, c-format
+msgid "Running from source directory\n"
+msgstr "Ajetaan lähdehakemistosta\n"
+
+#: ../src/main.c:110
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "asetetaan '%s' arvoon '%s'\n"
+
+#: ../src/main.c:173
+#, c-format
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr "Ei asetustiedostoita navit.xml tai navit.xml.local\n"
+
+#: ../src/main.c:177
+#, c-format
+msgid "Error parsing '%s': %s\n"
+msgstr "Virhe tulkitessa '%s': %s\n"
+
+#: ../src/main.c:180
+#, c-format
+msgid "Using '%s'\n"
+msgstr "Käytetään '%s'\n"
+
+#: ../src/main.c:183
+#, c-format
+msgid "No instance has been created, exiting\n"
+msgstr "Esimerkkiä ei tehty, lopetetaan\n"
+
+#: ../src/navigation.c:173
+#, c-format
+msgid "%d m"
+msgstr "%d m"
+
+#: ../src/navigation.c:175
+#, c-format
+msgid "in %d m"
+msgstr "%d m päästä"
+
+#: ../src/navigation.c:179
+#, c-format
+msgid "%d meters"
+msgstr "%d metriä"
+
+#: ../src/navigation.c:181
+#, c-format
+msgid "in %d meters"
+msgstr "%d metrin päästä"
+
+#: ../src/navigation.c:187
+#, c-format
+msgid "%d.%d kilometer"
+msgstr "%d,%d kilometri"
+
+#: ../src/navigation.c:189
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "%d,%d kilometrin päästä"
+
+#: ../src/navigation.c:193
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "yksi kilometri"
+msgstr[1] "%d kilometriä"
+
+#: ../src/navigation.c:195
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "Kilometrin päästä"
+msgstr[1] "%d kilometrin päästä"
+
+#: ../src/navigation.c:398
+msgid "right"
+msgstr "vasemmalle"
+
+#: ../src/navigation.c:405
+msgid "left"
+msgstr "oikealle"
+
+#: ../src/navigation.c:409
+msgid "easily "
+msgstr "loivasti "
+
+#: ../src/navigation.c:413
+msgid "strongly "
+msgstr "jyrkästi "
+
+#: ../src/navigation.c:416
+msgid "unknown "
+msgstr "tuntematon "
+
+#
+#: ../src/navigation.c:422
+msgid "When possible, please turn around"
+msgstr "Käänny ympäri"
+
+#: ../src/navigation.c:429
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Seuraa tätä tietä %s"
+
+#: ../src/navigation.c:433
+msgid "soon"
+msgstr "pian"
+
+#: ../src/navigation.c:439
+msgid "now"
+msgstr "nyt"
+
+#: ../src/navigation.c:442
+msgid "error"
+msgstr "virhe"
+
+#. TRANSLATORS: The first argument is strength, the second direction and the third distance
+#: ../src/navigation.c:446
+#, c-format
+msgid "Turn %1$s%2$s %3$s"
+msgstr "Käänny %3$s %1$s%2$s"
+
+#: ../src/navigation.c:449
+#, c-format
+msgid "You have reached your destination %s"
+msgstr "Olet saavuttanut kohteesi %s"
+
+#: ../src/navit.c:614 ../src/gui/gtk/gui_gtk_action.c:185
+msgid "Layout"
+msgstr "Pohja"
+
+#: ../src/navit.c:630
+msgid "Projection"
+msgstr "Projektio"
+
+#: ../src/navit.c:685
+msgid "Former Destinations"
+msgstr "Aiemmat kohteet"
+
+#: ../src/navit.c:695
+msgid "Bookmarks"
+msgstr "Kirjanmerkit"
+
+#: ../src/navit.c:733
+msgid "Vehicle"
+msgstr "Kulkuneuvo"
+
+#: ../src/navit.c:789 ../src/gui/gtk/gui_gtk_action.c:189
+msgid "Roadbook"
+msgstr "Ohjeistaja"
+
+#: ../src/navit.c:1009 ../src/gui/gtk/destination.c:365
+#: ../src/gui/gtk/gui_gtk_action.c:184
+msgid "Map"
+msgstr "Kartta"
+
+#: ../src/navit.c:1016 ../src/gui/gtk/gui_gtk_action.c:183
+msgid "Route"
+msgstr "Reitti"
 
 #: ../src/country.c:24
 msgid "Czech Republic"
@@ -325,11 +485,6 @@ msgstr "Kaupunki"
 msgid "District/Township"
 msgstr "Maakunta"
 
-#: ../src/gui/gtk/destination.c:365 ../src/gui/gtk/gui_gtk_action.c:184
-#: ../src/navit.c:997
-msgid "Map"
-msgstr "Kartta"
-
 #: ../src/gui/gtk/destination.c:366
 msgid "Bookmark"
 msgstr "Kirjanmerkki"
@@ -342,14 +497,6 @@ msgstr "Kohde"
 msgid "Display"
 msgstr "Näyttö"
 
-#: ../src/gui/gtk/gui_gtk_action.c:183 ../src/navit.c:1004
-msgid "Route"
-msgstr "Reitti"
-
-#: ../src/gui/gtk/gui_gtk_action.c:185 ../src/navit.c:603
-msgid "Layout"
-msgstr "Pohja"
-
 #: ../src/gui/gtk/gui_gtk_action.c:186
 msgid "ZoomOut"
 msgstr "Loitonna"
@@ -361,10 +508,6 @@ msgstr "Lähennä"
 #: ../src/gui/gtk/gui_gtk_action.c:188
 msgid "Refresh"
 msgstr "Päivitä"
-
-#: ../src/gui/gtk/gui_gtk_action.c:189 ../src/navit.c:778
-msgid "Roadbook"
-msgstr "Ohjeistaja"
 
 #: ../src/gui/gtk/gui_gtk_action.c:191 ../src/gui/gtk/gui_gtk_action.c:193
 msgid "Info"
@@ -426,170 +569,20 @@ msgstr "Näkyvät pisteet"
 msgid "RouteGraph"
 msgstr "Tiepiirros"
 
-#: ../src/main.c:94
-#, c-format
-msgid "Running from source directory\n"
-msgstr "Ajetaan lähdehakemistosta\n"
+#~ msgid "Point 0x%x 0x%x"
+#~ msgstr "Piste 0x%x 0x%x"
 
-#: ../src/main.c:110
-#, c-format
-msgid "setting '%s' to '%s'\n"
-msgstr "asetetaan '%s' arvoon '%s'\n"
+#~ msgid "Screen %d %d"
+#~ msgstr "Ruutu %d %d"
 
-#: ../src/main.c:170
-#, c-format
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "Ei asetustiedostoita navit.xml tai navit.xml.local\n"
+#~ msgid "Set as position"
+#~ msgstr "Aseta sijainniksi"
 
-#: ../src/main.c:174
-#, c-format
-msgid "Error parsing '%s': %s\n"
-msgstr "Virhe tulkitessa '%s': %s\n"
+#~ msgid "Set as destination"
+#~ msgstr "Aseta kohteeksi"
 
-#: ../src/main.c:177
-#, c-format
-msgid "Using '%s'\n"
-msgstr "Käytetään '%s'\n"
-
-#: ../src/main.c:180
-#, c-format
-msgid "No instance has been created, exiting\n"
-msgstr "Esimerkkiä ei tehty, lopetetaan\n"
-
-#: ../src/navigation.c:173
-#, c-format
-msgid "%d m"
-msgstr "%d m"
-
-#: ../src/navigation.c:175
-#, c-format
-msgid "in %d m"
-msgstr "%d m päästä"
-
-#: ../src/navigation.c:179
-#, c-format
-msgid "%d meters"
-msgstr "%d metriä"
-
-#: ../src/navigation.c:181
-#, c-format
-msgid "in %d meters"
-msgstr "%d metrin päästä"
-
-#: ../src/navigation.c:187
-#, c-format
-msgid "%d.%d kilometer"
-msgstr "%d,%d kilometri"
-
-#: ../src/navigation.c:189
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "%d,%d kilometrin päästä"
-
-#: ../src/navigation.c:193
-#, c-format
-msgid "one kilometer"
-msgid_plural "%d kilometers"
-msgstr[0] "yksi kilometri"
-msgstr[1] "%d kilometriä"
-
-#: ../src/navigation.c:195
-#, c-format
-msgid "in one kilometer"
-msgid_plural "in %d kilometers"
-msgstr[0] "Kilometrin päästä"
-msgstr[1] "%d kilometrin päästä"
-
-#: ../src/navigation.c:398
-msgid "right"
-msgstr "vasemmalle"
-
-#: ../src/navigation.c:405
-msgid "left"
-msgstr "oikealle"
-
-#: ../src/navigation.c:409
-msgid "easily "
-msgstr "loivasti "
-
-#: ../src/navigation.c:413
-msgid "strongly "
-msgstr "jyrkästi "
-
-#: ../src/navigation.c:416
-msgid "unknown "
-msgstr "tuntematon "
-
-#
-#: ../src/navigation.c:422
-msgid "When possible, please turn around"
-msgstr "Käänny ympäri"
-
-#: ../src/navigation.c:429
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "Seuraa tätä tietä %s"
-
-#: ../src/navigation.c:433
-msgid "soon"
-msgstr "pian"
-
-#: ../src/navigation.c:439
-msgid "now"
-msgstr "nyt"
-
-#: ../src/navigation.c:442
-msgid "error"
-msgstr "virhe"
-
-#. TRANSLATORS: The first argument is strength, the second direction and the third distance
-#: ../src/navigation.c:446
-#, c-format
-msgid "Turn %1$s%2$s %3$s"
-msgstr "Käänny %3$s %1$s%2$s"
-
-#: ../src/navigation.c:449
-#, c-format
-msgid "You have reached your destination %s"
-msgstr "Olet saavuttanut kohteesi %s"
-
-#: ../src/navit.c:619
-msgid "Projection"
-msgstr "Projektio"
-
-#: ../src/navit.c:674
-msgid "Former Destinations"
-msgstr "Aiemmat kohteet"
-
-#: ../src/navit.c:684
-msgid "Bookmarks"
-msgstr "Kirjanmerkit"
-
-#: ../src/navit.c:722
-msgid "Vehicle"
-msgstr "Kulkuneuvo"
-
-#: ../src/popup.c:229
-#, c-format
-msgid "Point 0x%x 0x%x"
-msgstr "Piste 0x%x 0x%x"
-
-#: ../src/popup.c:230
-#, c-format
-msgid "Screen %d %d"
-msgstr "Ruutu %d %d"
-
-#: ../src/popup.c:239
-msgid "Set as position"
-msgstr "Aseta sijainniksi"
-
-#: ../src/popup.c:240
-msgid "Set as destination"
-msgstr "Aseta kohteeksi"
-
-#: ../src/popup.c:241
-msgid "Add as bookmark"
-msgstr "Lisää kirjanmerkiksi"
+#~ msgid "Add as bookmark"
+#~ msgstr "Lisää kirjanmerkiksi"
 
 #~ msgid "two kilometers"
 #~ msgstr "kaksi kilometriä"
