@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-18 12:58+0100\n"
+"POT-Creation-Date: 2007-12-24 21:15+0100\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Martin Schaller <martin-s@sourceforge.net>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -15,6 +15,166 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=n != 1;\n"
+
+#: ../src/main.c:94
+#, c-format
+msgid "Running from source directory\n"
+msgstr "Aufruf aus Quellverzeichnis\n"
+
+#: ../src/main.c:110
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "setze '%s' auf '%s'\n"
+
+#: ../src/main.c:173
+#, c-format
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr "Keine Konfigurationsdatei navit.xml, navit.xml.local gefunden\n"
+
+#: ../src/main.c:177
+#, c-format
+msgid "Error parsing '%s': %s\n"
+msgstr "Fehler beim Parsen von '%s': %s\n"
+
+#: ../src/main.c:180
+#, c-format
+msgid "Using '%s'\n"
+msgstr "Benutze '%s'\n"
+
+#: ../src/main.c:183
+#, c-format
+msgid "No instance has been created, exiting\n"
+msgstr "Es wurde keine Instanz erzeugt, Ende\n"
+
+#: ../src/navigation.c:173
+#, c-format
+msgid "%d m"
+msgstr "%d Meter"
+
+#: ../src/navigation.c:175
+#, c-format
+msgid "in %d m"
+msgstr "In %d metern"
+
+#: ../src/navigation.c:179
+#, c-format
+msgid "%d meters"
+msgstr "%d Meter"
+
+#: ../src/navigation.c:181
+#, c-format
+msgid "in %d meters"
+msgstr "In %d metern"
+
+#: ../src/navigation.c:187
+#, c-format
+msgid "%d.%d kilometer"
+msgstr "%d,%d Kilometer"
+
+#: ../src/navigation.c:189
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "In %d,%d Kilometern"
+
+#: ../src/navigation.c:193
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "einen Kilometer"
+msgstr[1] "%d Kilometer"
+
+#: ../src/navigation.c:195
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "In einem Kilometer"
+msgstr[1] "In %d Kilometern"
+
+#: ../src/navigation.c:398
+msgid "right"
+msgstr "rechts"
+
+#: ../src/navigation.c:405
+msgid "left"
+msgstr "links"
+
+#: ../src/navigation.c:409
+msgid "easily "
+msgstr "leicht "
+
+#: ../src/navigation.c:413
+msgid "strongly "
+msgstr "scharf "
+
+#: ../src/navigation.c:416
+msgid "unknown "
+msgstr "unbekannt "
+
+#
+#: ../src/navigation.c:422
+msgid "When possible, please turn around"
+msgstr "Wenn möglich bitte wenden"
+
+#: ../src/navigation.c:429
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Dem Straßenverlauf %s folgen"
+
+#: ../src/navigation.c:433
+msgid "soon"
+msgstr "Demnächst"
+
+#: ../src/navigation.c:439
+msgid "now"
+msgstr "Jetzt"
+
+#: ../src/navigation.c:442
+msgid "error"
+msgstr "fehler"
+
+#. TRANSLATORS: The first argument is strength, the second direction and the third distance
+#: ../src/navigation.c:446
+#, c-format
+msgid "Turn %1$s%2$s %3$s"
+msgstr "%3$s %1$s%2$s abbiegen"
+
+#: ../src/navigation.c:449
+#, c-format
+msgid "You have reached your destination %s"
+msgstr "%s haben Sie ihr Ziel erreicht"
+
+#: ../src/navit.c:614 ../src/gui/gtk/gui_gtk_action.c:185
+msgid "Layout"
+msgstr "Layout"
+
+#: ../src/navit.c:630
+msgid "Projection"
+msgstr "Projektion"
+
+#: ../src/navit.c:685
+msgid "Former Destinations"
+msgstr "Frühere Ziele"
+
+#: ../src/navit.c:695
+msgid "Bookmarks"
+msgstr "Lesezeichen"
+
+#: ../src/navit.c:733
+msgid "Vehicle"
+msgstr "Fahrzeug"
+
+#: ../src/navit.c:789 ../src/gui/gtk/gui_gtk_action.c:189
+msgid "Roadbook"
+msgstr "Straßenliste"
+
+#: ../src/navit.c:1009 ../src/gui/gtk/destination.c:365
+#: ../src/gui/gtk/gui_gtk_action.c:184
+msgid "Map"
+msgstr "Karte"
+
+#: ../src/navit.c:1016 ../src/gui/gtk/gui_gtk_action.c:183
+msgid "Route"
+msgstr "Route"
 
 #: ../src/country.c:24
 msgid "Czech Republic"
@@ -325,11 +485,6 @@ msgstr "Ort"
 msgid "District/Township"
 msgstr "Ortsteil/Gemeinde"
 
-#: ../src/gui/gtk/destination.c:365 ../src/gui/gtk/gui_gtk_action.c:184
-#: ../src/navit.c:997
-msgid "Map"
-msgstr "Karte"
-
 #: ../src/gui/gtk/destination.c:366
 msgid "Bookmark"
 msgstr "Lesezeichen"
@@ -342,14 +497,6 @@ msgstr "Ziel"
 msgid "Display"
 msgstr "Anzeige"
 
-#: ../src/gui/gtk/gui_gtk_action.c:183 ../src/navit.c:1004
-msgid "Route"
-msgstr "Route"
-
-#: ../src/gui/gtk/gui_gtk_action.c:185 ../src/navit.c:603
-msgid "Layout"
-msgstr "Layout"
-
 #: ../src/gui/gtk/gui_gtk_action.c:186
 msgid "ZoomOut"
 msgstr "Verkleinern"
@@ -361,10 +508,6 @@ msgstr "Vergrößern"
 #: ../src/gui/gtk/gui_gtk_action.c:188
 msgid "Refresh"
 msgstr "Aktualisieren"
-
-#: ../src/gui/gtk/gui_gtk_action.c:189 ../src/navit.c:778
-msgid "Roadbook"
-msgstr "Straßenliste"
 
 #: ../src/gui/gtk/gui_gtk_action.c:191 ../src/gui/gtk/gui_gtk_action.c:193
 msgid "Info"
@@ -426,170 +569,20 @@ msgstr "Sichtbare Punkte"
 msgid "RouteGraph"
 msgstr "Route-Graph"
 
-#: ../src/main.c:94
-#, c-format
-msgid "Running from source directory\n"
-msgstr "Aufruf aus Quellverzeichnis\n"
+#~ msgid "Point 0x%x 0x%x"
+#~ msgstr "Punkt 0x%x 0x%x"
 
-#: ../src/main.c:110
-#, c-format
-msgid "setting '%s' to '%s'\n"
-msgstr "setze '%s' auf '%s'\n"
+#~ msgid "Screen %d %d"
+#~ msgstr "Bildschirm %d %d"
 
-#: ../src/main.c:170
-#, c-format
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "Keine Konfigurationsdatei navit.xml, navit.xml.local gefunden\n"
+#~ msgid "Set as position"
+#~ msgstr "Als Position setzen"
 
-#: ../src/main.c:174
-#, c-format
-msgid "Error parsing '%s': %s\n"
-msgstr "Fehler beim Parsen von '%s': %s\n"
+#~ msgid "Set as destination"
+#~ msgstr "Als Ziel setzen"
 
-#: ../src/main.c:177
-#, c-format
-msgid "Using '%s'\n"
-msgstr "Benutze '%s'\n"
-
-#: ../src/main.c:180
-#, c-format
-msgid "No instance has been created, exiting\n"
-msgstr "Es wurde keine Instanz erzeugt, Ende\n"
-
-#: ../src/navigation.c:173
-#, c-format
-msgid "%d m"
-msgstr "%d Meter"
-
-#: ../src/navigation.c:175
-#, c-format
-msgid "in %d m"
-msgstr "In %d metern"
-
-#: ../src/navigation.c:179
-#, c-format
-msgid "%d meters"
-msgstr "%d Meter"
-
-#: ../src/navigation.c:181
-#, c-format
-msgid "in %d meters"
-msgstr "In %d metern"
-
-#: ../src/navigation.c:187
-#, c-format
-msgid "%d.%d kilometer"
-msgstr "%d,%d Kilometer"
-
-#: ../src/navigation.c:189
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "In %d,%d Kilometern"
-
-#: ../src/navigation.c:193
-#, c-format
-msgid "one kilometer"
-msgid_plural "%d kilometers"
-msgstr[0] "einen Kilometer"
-msgstr[1] "%d Kilometer"
-
-#: ../src/navigation.c:195
-#, c-format
-msgid "in one kilometer"
-msgid_plural "in %d kilometers"
-msgstr[0] "In einem Kilometer"
-msgstr[1] "In %d Kilometern"
-
-#: ../src/navigation.c:398
-msgid "right"
-msgstr "rechts"
-
-#: ../src/navigation.c:405
-msgid "left"
-msgstr "links"
-
-#: ../src/navigation.c:409
-msgid "easily "
-msgstr "leicht "
-
-#: ../src/navigation.c:413
-msgid "strongly "
-msgstr "scharf "
-
-#: ../src/navigation.c:416
-msgid "unknown "
-msgstr "unbekannt "
-
-#
-#: ../src/navigation.c:422
-msgid "When possible, please turn around"
-msgstr "Wenn möglich bitte wenden"
-
-#: ../src/navigation.c:429
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "Dem Straßenverlauf %s folgen"
-
-#: ../src/navigation.c:433
-msgid "soon"
-msgstr "Demnächst"
-
-#: ../src/navigation.c:439
-msgid "now"
-msgstr "Jetzt"
-
-#: ../src/navigation.c:442
-msgid "error"
-msgstr "fehler"
-
-#. TRANSLATORS: The first argument is strength, the second direction and the third distance
-#: ../src/navigation.c:446
-#, c-format
-msgid "Turn %1$s%2$s %3$s"
-msgstr "%3$s %1$s%2$s abbiegen"
-
-#: ../src/navigation.c:449
-#, c-format
-msgid "You have reached your destination %s"
-msgstr "%s haben Sie ihr Ziel erreicht"
-
-#: ../src/navit.c:619
-msgid "Projection"
-msgstr "Projektion"
-
-#: ../src/navit.c:674
-msgid "Former Destinations"
-msgstr "Frühere Ziele"
-
-#: ../src/navit.c:684
-msgid "Bookmarks"
-msgstr "Lesezeichen"
-
-#: ../src/navit.c:722
-msgid "Vehicle"
-msgstr "Fahrzeug"
-
-#: ../src/popup.c:229
-#, c-format
-msgid "Point 0x%x 0x%x"
-msgstr "Punkt 0x%x 0x%x"
-
-#: ../src/popup.c:230
-#, c-format
-msgid "Screen %d %d"
-msgstr "Bildschirm %d %d"
-
-#: ../src/popup.c:239
-msgid "Set as position"
-msgstr "Als Position setzen"
-
-#: ../src/popup.c:240
-msgid "Set as destination"
-msgstr "Als Ziel setzen"
-
-#: ../src/popup.c:241
-msgid "Add as bookmark"
-msgstr "Als Lesezeichen aufnehmen"
+#~ msgid "Add as bookmark"
+#~ msgstr "Als Lesezeichen aufnehmen"
 
 #~ msgid "two kilometers"
 #~ msgstr "zwei Kilometer"
