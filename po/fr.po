@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-18 14:12+0100\n"
+"POT-Creation-Date: 2007-12-24 21:15+0100\n"
 "PO-Revision-Date: 2007-12-17 11:36+0100\n"
 "Last-Translator: KaZeR <kazer@altern.org>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -77,7 +77,7 @@ msgid "in %d.%d kilometers"
 msgstr "dans %d.%d kilomètres"
 
 #: ../src/navigation.c:193
-#,  c-format
+#, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "un kilomètre"
@@ -142,36 +142,36 @@ msgstr "%3$s tournez %1$s%2$s"
 msgid "You have reached your destination %s"
 msgstr "Vous êtes arrivé à votre destination %s"
 
-#: ../src/navit.c:603 ../src/gui/gtk/gui_gtk_action.c:185
+#: ../src/navit.c:614 ../src/gui/gtk/gui_gtk_action.c:185
 msgid "Layout"
 msgstr "Calques"
 
-#: ../src/navit.c:619
+#: ../src/navit.c:630
 msgid "Projection"
 msgstr "Projection"
 
-#: ../src/navit.c:674
+#: ../src/navit.c:685
 msgid "Former Destinations"
 msgstr "Destinations précédentes"
 
-#: ../src/navit.c:684
+#: ../src/navit.c:695
 msgid "Bookmarks"
 msgstr ""
 
-#: ../src/navit.c:722
+#: ../src/navit.c:733
 msgid "Vehicle"
 msgstr ""
 
-#: ../src/navit.c:778 ../src/gui/gtk/gui_gtk_action.c:189
+#: ../src/navit.c:789 ../src/gui/gtk/gui_gtk_action.c:189
 msgid "Roadbook"
 msgstr "Carnet de route"
 
-#: ../src/navit.c:997 ../src/gui/gtk/destination.c:365
+#: ../src/navit.c:1009 ../src/gui/gtk/destination.c:365
 #: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "Map"
 msgstr "Carte"
 
-#: ../src/navit.c:1004 ../src/gui/gtk/gui_gtk_action.c:183
+#: ../src/navit.c:1016 ../src/gui/gtk/gui_gtk_action.c:183
 msgid "Route"
 msgstr "Route"
 
