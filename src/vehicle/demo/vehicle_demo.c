@@ -92,6 +92,7 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 	dbg(1, "current pos=%p\n", pos);
 	if (pos) {
 		dbg(1, "current pos=0x%x,0x%x\n", pos->x, pos->y);
+		dbg(1, "last pos=0x%x,0x%x\n", priv->last.x, priv->last.y);
 		if (priv->last.x == pos->x && priv->last.y == pos->y) {
 			dbg(1, "endless loop\n");
 		}

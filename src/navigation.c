@@ -265,7 +265,7 @@ navigation_itm_new(struct navigation *this_, struct item *item, struct coord *st
 			ret->angle_start=a2;
 			ret->angle_end=a1;
 		}
-		dbg(1,"i=%d a1 %d a2 %d '%s' '%s'\n", i, a1, a2, ret->name1, ret->name2);
+		dbg(1,"i=%d dir=%d a1 %d a2 %d '%s' '%s'\n", i, dir, a1, a2, ret->name1, ret->name2);
 		map_rect_destroy(mr);
 	}
 	if (start)
@@ -349,6 +349,7 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 		*delta+=360;
 	if (*delta > 180)
 		*delta-=360;
+	dbg(1,"delta=%d-%d=%d\n", new->angle_start, old->angle_end, *delta);
 	if (*delta < 20 && *delta >-20) {
 		dbg(1, "maneuver_required: delta(%d) < 20: no\n", *delta);
 		return 0;
@@ -455,6 +456,7 @@ static int
 navigation_list_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
 	struct navigation_list *this_=priv_data;
+	attr->type=attr_type;
 	switch(attr_type) {
 	case attr_navigation_short:
 	case attr_navigation_long:
@@ -462,7 +464,20 @@ navigation_list_item_attr_get(void *priv_data, enum attr_type attr_type, struct 
 	case attr_navigation_speech:
 		attr->u.str=show_maneuver(this_->nav, this_->itm, this_->cmd, attr_type);
 		return 1;
+	case attr_length:
+		attr->u.num=this_->itm->dest_length-this_->cmd->itm->dest_length;
+		return 1;
+	case attr_time:
+		attr->u.num=(this_->itm->dest_time-this_->cmd->itm->dest_time)/10;
+		return 1;
+	case attr_destination_length:
+		attr->u.num=this_->itm->dest_length;
+		return 1;
+	case attr_destination_time:
+		attr->u.num=this_->itm->dest_time/10;
+		return 1;
 	default:
+		attr->type=attr_none;
 		return 0;
 	}
 }
