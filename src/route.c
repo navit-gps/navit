@@ -73,6 +73,7 @@ struct route_path_segment {
 	unsigned int offset;
 	int time;
 	int length;
+	int dir;
 	unsigned ncoords;
 	struct coord c[0];
 };
@@ -529,7 +530,7 @@ route_extract_segment_from_path(struct route_path *path, struct item *item,
 
 static void
 route_path_add_item(struct route_path *this, struct route_path *oldpath,
-		struct route_graph_segment *rgs, int len, int time, int offset)
+		struct route_graph_segment *rgs, int len, int time, int offset, int dir)
 {
 	struct route_path_segment *segment;
 	int ccnt = 0;
@@ -558,6 +559,7 @@ route_path_add_item(struct route_path *this, struct route_path *oldpath,
 linkold:
 	segment->length=len;
 	segment->time=time;
+	segment->dir=dir;
 	segment->next=NULL;
 	item_hash_insert(this->path_hash,  &rgs->item, (void *)offset);
 	if (!this->path)
@@ -599,16 +601,25 @@ route_path_get_segment(struct route_path_handle *h)
 	return ret;
 }
 
+static struct coord *
+route_path_segment_get_helper(struct route_path_segment *s, int dir)
+{
+	if (s->dir == dir)
+		return &s->c[0];
+	else
+		return &s->c[s->ncoords-1];
+}
+
 struct coord *
 route_path_segment_get_start(struct route_path_segment *s)
 {
-	return &s->c[0];
+	return route_path_segment_get_helper(s, 1);
 }
 
 struct coord *
 route_path_segment_get_end(struct route_path_segment *s)
 {
-	return &s->c[s->ncoords-1];
+	return route_path_segment_get_helper(s, -1);
 }
 
 struct item *
@@ -1041,10 +1052,10 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 #endif
 		len+=seg_len;
 		if (s->start == start) {
-			route_path_add_item(ret, oldpath, s, seg_len, seg_time, s->offset);
+			route_path_add_item(ret, oldpath, s, seg_len, seg_time, s->offset, 1);
 			start=s->end;
 		} else {
-			route_path_add_item(ret, oldpath, s, seg_len, seg_time, s->offset);
+			route_path_add_item(ret, oldpath, s, seg_len, seg_time, s->offset, -1);
 			start=s->start;
 		}
 	}
