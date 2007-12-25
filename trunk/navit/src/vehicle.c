@@ -1,5 +1,6 @@
-#include <glib.h>
+#include <stdio.h>
 #include <string.h>
+#include <glib.h>
 #include "config.h"
 #include "debug.h"
 #include "coord.h"
@@ -13,14 +14,28 @@ struct vehicle {
 	struct vehicle_priv *priv;
 	struct vehicle_methods meth;
 	struct callback_list *cbl;
-	struct log *nmea_log, *gpx_log, *textfile_log;
+	struct log *nmea_log, *gpx_log;
 };
+
+static void
+vehicle_log_textfile(struct vehicle *this_, struct log *log)
+{
+	struct attr pos_attr;
+	char buffer[256];
+	if (!this_->meth.position_attr_get)
+		return;
+	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
+		return;
+	sprintf(buffer,"%f %f type=trackpoint\n", pos_attr.u.coord_geo->lng, pos_attr.u.coord_geo->lat);
+	log_write(log, buffer, strlen(buffer));
+}
 
 static int
 vehicle_add_log(struct vehicle *this_, struct log *log,
 		struct attr **attrs)
 {
 	struct attr *type;
+	struct callback *cb;
 	type = attr_search(attrs, NULL, attr_type);
 	if (!type)
 		return 1;
@@ -35,8 +50,9 @@ vehicle_add_log(struct vehicle *this_, struct log *log,
 		log_set_trailer(log, trailer, strlen(trailer));
 	} else if (!strcmp(type->u.str, "textfile")) {
 		char *header = "type=track\n";
-		this_->textfile_log = log;
 		log_set_header(log, header, strlen(header));
+		cb=callback_new_2(callback_cast(vehicle_log_textfile), this_, log);
+		callback_list_add(this_->cbl, cb);
 	} else
 		return 1;
 	return 0;
@@ -54,7 +70,7 @@ vehicle_new(struct attr **attrs)
 						 struct attr ** attrs);
 	char *type, *colon;
 
-	dbg(0, "enter\n");
+	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	if (!source) {
 		dbg(0, "no source\n");
@@ -65,7 +81,7 @@ vehicle_new(struct attr **attrs)
 	colon = index(type, ':');
 	if (colon)
 		*colon = '\0';
-	dbg(0, "source='%s' type='%s'\n", source->u.str, type);
+	dbg(1, "source='%s' type='%s'\n", source->u.str, type);
 
 	vehicletype_new = plugin_get_vehicle_type(type);
 	if (!vehicletype_new) {
@@ -81,7 +97,7 @@ vehicle_new(struct attr **attrs)
 		g_free(this_);
 		return NULL;
 	}
-	dbg(0, "leave\n");
+	dbg(1, "leave\n");
 
 	return this_;
 }

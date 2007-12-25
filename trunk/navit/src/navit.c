@@ -756,7 +756,7 @@ navit_window_roadbook_update(struct navit *this_)
 	struct navigation_list *list;
 	struct item *item;
 	struct attr attr;
-	struct param_list param[1];
+	struct param_list param[5];
 
 	dbg(1,"enter\n");	
 	datawindow_mode(this_->roadbook_window, 1);
@@ -765,9 +765,30 @@ navit_window_roadbook_update(struct navit *this_)
 		attr.u.str=NULL;
 		item_attr_get(item, attr_navigation_long, &attr);
 		dbg(2, "Command='%s'\n", attr.u.str);
-		param[0].name="Command";
-		param[0].value=attr.u.str;
-		datawindow_add(this_->roadbook_window, param, 1);
+		param[0].name=_("Command");
+		param[0].value=g_strdup(attr.u.str);
+
+		item_attr_get(item, attr_length, &attr);
+		dbg(2, "Length=%d\n", attr.u.num);
+		param[1].name=_("Length");
+		param[1].value=g_strdup_printf("%d m",attr.u.num);
+
+		item_attr_get(item, attr_time, &attr);
+		dbg(2, "Time=%d\n", attr.u.num);
+		param[2].name=_("Time");
+		param[2].value=g_strdup_printf("%d:%d",attr.u.num / 60, attr.u.num % 60);
+
+		item_attr_get(item, attr_destination_length, &attr);
+		dbg(2, "Destlength=%d\n", attr.u.num);
+		param[3].name=_("Destination Length");
+		param[3].value=g_strdup_printf("%d m",attr.u.num);
+
+		item_attr_get(item, attr_destination_time, &attr);
+		dbg(2, "Desttime=%d\n", attr.u.num);
+		param[4].name=_("Destination Time");
+		param[4].value=g_strdup_printf("%d:%d",attr.u.num / 60, attr.u.num % 60);
+
+		datawindow_add(this_->roadbook_window, param, 5);
 	}
 	navigation_list_destroy(list);
 	datawindow_mode(this_->roadbook_window, 0);
@@ -1158,7 +1179,6 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		navit_vehicle_draw(this_, nv, NULL);
 		return;
 	}
-
 	if (this_->tracking && this_->tracking_flag) {
 		if (tracking_update(this_->tracking, &nv->coord, nv->dir)) {
 			if (this_->route && nv->update_curr == 1) 
