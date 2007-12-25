@@ -18,6 +18,25 @@ struct vehicle {
 };
 
 static void
+vehicle_log_nmea(struct vehicle *this_, struct log *log)
+{
+}
+
+static void
+vehicle_log_gpx(struct vehicle *this_, struct log *log)
+{
+	struct attr pos_attr;
+	char buffer[256];
+	if (!this_->meth.position_attr_get)
+		return;
+	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
+		return;
+	sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\" />\n", pos_attr.u.coord_geo->lat, pos_attr.u.coord_geo->lng);
+	log_write(log, buffer, strlen(buffer));
+}
+
+
+static void
 vehicle_log_textfile(struct vehicle *this_, struct log *log)
 {
 	struct attr pos_attr;
@@ -40,21 +59,21 @@ vehicle_add_log(struct vehicle *this_, struct log *log,
 	if (!type)
 		return 1;
 	if (!strcmp(type->u.str, "nmea")) {
-		this_->nmea_log = log;
+		cb=callback_new_2(callback_cast(vehicle_log_nmea), this_, log);
 	} else if (!strcmp(type->u.str, "gpx")) {
 		char *header =
 		    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gpx version=\"1.0\" creator=\"Navit http://navit.sourceforge.net\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.topografix.com/GPX/1/0\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd\">\n<trk>\n<trkseg>\n";
 		char *trailer = "</trkseg>\n</trk>\n</gpx>\n";
-		this_->gpx_log = log;
 		log_set_header(log, header, strlen(header));
 		log_set_trailer(log, trailer, strlen(trailer));
+		cb=callback_new_2(callback_cast(vehicle_log_gpx), this_, log);
 	} else if (!strcmp(type->u.str, "textfile")) {
 		char *header = "type=track\n";
 		log_set_header(log, header, strlen(header));
 		cb=callback_new_2(callback_cast(vehicle_log_textfile), this_, log);
-		callback_list_add(this_->cbl, cb);
 	} else
 		return 1;
+	callback_list_add(this_->cbl, cb);
 	return 0;
 }
 
