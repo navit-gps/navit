@@ -184,6 +184,48 @@ map_rect_destroy_mg(struct map_rect_priv *mr)
 	g_free(mr);
 }
 
+static char *
+map_search_mg_convert_special(char *str)
+{
+	char *ret,*c=g_malloc(strlen(str)*2+1);
+
+	ret=c;
+	for (;;) {
+		switch ((unsigned char)(*str)) {
+		case 0xc4:
+			*c++='A';
+			break;
+		case 0xd6:
+			*c++='O';
+			break;
+		case 0xdc:
+			*c++='U';
+			break;
+		case 0xdf:
+			*c++='s';
+			*c++='s';
+			break;
+		case 0xe4:
+			*c++='a';
+			break;
+		case 0xf6:
+			*c++='o';
+			break;
+		case 0xfc:
+			*c++='u';
+			break;
+		default:
+			dbg(1,"0x%x\n", *str);
+			*c++=*str;
+			break;
+		}
+		if (! *str)
+			return ret;
+		str++;
+	}
+}
+
+
 static struct map_search_priv *
 map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, int partial)
 {
@@ -198,6 +240,7 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
 			return NULL;
 		tree_search_init(map->dirname, "town.b2", &mr->ts, 0x1000);
 		mr->current_file=file_town_twn;
+		mr->search_str=map_search_mg_convert_special(search->u.str);
 		break;
 	case attr_street_name:
 		if (item->type != type_town_streets)
@@ -205,6 +248,7 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
 		dbg(1,"street_assoc=0x%x\n", item->id_lo);
 		tree_search_init(map->dirname, "strname.b1", &mr->ts, 0);
 		mr->current_file=file_strname_stn;
+		mr->search_str=g_strdup(search->u.str);
 		break;
 	default:
 		dbg(0,"unknown search\n");
@@ -213,7 +257,6 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
 	}
 	mr->search_item=*item;
 	mr->search_country=item->id_lo;
-	mr->search_str=search->u.str;
 	mr->search_partial=partial;
 	mr->file=mr->m->file[mr->current_file];
 	block_init(mr);
@@ -227,6 +270,7 @@ map_search_destroy_mg(struct map_search_priv *ms)
 
 	if (! mr)
 		return;
+	g_free(mr->search_str);
 	tree_search_free(&mr->ts);
 	g_free(mr);
 }
