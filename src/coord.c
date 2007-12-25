@@ -163,7 +163,7 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		s++;
 	}
 	if (!strncmp(str, "0x", 2) || !strncmp(str,"-0x", 3)) {
-		args=sscanf(str, "%i %i%n",&c.x, &c.y, &ret);
+		args=sscanf(str, "%x %x%n",&c.x, &c.y, &ret);
 		if (args < 2)
 			goto out;
 		dbg(1,"str='%s' x=0x%x y=0x%x c=%d\n", str, c.x, c.y, ret);
