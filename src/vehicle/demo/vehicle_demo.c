@@ -10,6 +10,7 @@
 #include "vehicle.h"
 
 struct vehicle_priv {
+	int interval;
 	struct callback_list *cbl;
 	struct navit *navit;
 	struct coord_geo geo;
@@ -70,8 +71,7 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 	struct coord *c, *pos, ci;
 	int slen, len, dx, dy;
 
-	priv->speed = 40;
-	len = priv->speed / 3.6;
+	len = (priv->speed * priv->interval / 1000)/ 3.6;
 	dbg(1, "###### Entering simulation loop\n");
 	if (!priv->navit) {
 		dbg(1, "vehicle->navit is not set. Can't simulate\n");
@@ -134,12 +134,19 @@ vehicle_demo_new(struct vehicle_methods
 		 *cbl, struct attr **attrs)
 {
 	struct vehicle_priv *ret;
+	struct attr *interval,*speed;
 
 	dbg(1, "enter\n");
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->cbl = cbl;
+	ret->interval=1000;
+	ret->speed=40;
+	if ((speed=attr_search(attrs, NULL, attr_speed)))
+		ret->speed=speed->u.num;
+	if ((interval=attr_search(attrs, NULL, attr_interval)))
+		ret->interval=speed->u.num;
 	*meth = vehicle_demo_methods;
-	g_timeout_add(1000, (GSourceFunc) vehicle_demo_timer, ret);
+	g_timeout_add(ret->interval, (GSourceFunc) vehicle_demo_timer, ret);
 	return ret;
 }
 
