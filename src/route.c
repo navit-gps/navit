@@ -699,7 +699,7 @@ route_path_coord_get(struct route_path_coord_handle *h)
 		h->pos=0;
 		h->rp=route_path_open(h->route);
 	case 0:
-		if (! h->street_data) {
+		if (! h->street_data && h->rp) {
 			seg=route_path_get_segment(h->rp);
 			if (seg) {
 				item=route_path_segment_get_item(seg);
