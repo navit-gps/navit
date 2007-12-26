@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-24 21:15+0100\n"
+"POT-Creation-Date: 2007-12-26 11:26+0100\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Ossi Berg <o.berg@mail.com>\n"
 "Language-Team: Ossi Berg <o.berg@mail.com>\n"
@@ -90,55 +90,55 @@ msgid_plural "in %d kilometers"
 msgstr[0] "Kilometrin päästä"
 msgstr[1] "%d kilometrin päästä"
 
-#: ../src/navigation.c:398
+#: ../src/navigation.c:399
 msgid "right"
 msgstr "vasemmalle"
 
-#: ../src/navigation.c:405
+#: ../src/navigation.c:406
 msgid "left"
 msgstr "oikealle"
 
-#: ../src/navigation.c:409
+#: ../src/navigation.c:410
 msgid "easily "
 msgstr "loivasti "
 
-#: ../src/navigation.c:413
+#: ../src/navigation.c:414
 msgid "strongly "
 msgstr "jyrkästi "
 
-#: ../src/navigation.c:416
+#: ../src/navigation.c:417
 msgid "unknown "
 msgstr "tuntematon "
 
 #
-#: ../src/navigation.c:422
+#: ../src/navigation.c:423
 msgid "When possible, please turn around"
 msgstr "Käänny ympäri"
 
-#: ../src/navigation.c:429
+#: ../src/navigation.c:430
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Seuraa tätä tietä %s"
 
-#: ../src/navigation.c:433
+#: ../src/navigation.c:434
 msgid "soon"
 msgstr "pian"
 
-#: ../src/navigation.c:439
+#: ../src/navigation.c:440
 msgid "now"
 msgstr "nyt"
 
-#: ../src/navigation.c:442
+#: ../src/navigation.c:443
 msgid "error"
 msgstr "virhe"
 
 #. TRANSLATORS: The first argument is strength, the second direction and the third distance
-#: ../src/navigation.c:446
+#: ../src/navigation.c:447
 #, c-format
 msgid "Turn %1$s%2$s %3$s"
 msgstr "Käänny %3$s %1$s%2$s"
 
-#: ../src/navigation.c:449
+#: ../src/navigation.c:450
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Olet saavuttanut kohteesi %s"
@@ -163,16 +163,39 @@ msgstr "Kirjanmerkit"
 msgid "Vehicle"
 msgstr "Kulkuneuvo"
 
-#: ../src/navit.c:789 ../src/gui/gtk/gui_gtk_action.c:189
+#: ../src/navit.c:768
+#, fuzzy
+msgid "Command"
+msgstr "Puola"
+
+#: ../src/navit.c:773
+msgid "Length"
+msgstr ""
+
+#: ../src/navit.c:778
+msgid "Time"
+msgstr ""
+
+#: ../src/navit.c:783
+#, fuzzy
+msgid "Destination Length"
+msgstr "Kohde"
+
+#: ../src/navit.c:788
+#, fuzzy
+msgid "Destination Time"
+msgstr "Kohde"
+
+#: ../src/navit.c:810 ../src/gui/gtk/gui_gtk_action.c:189
 msgid "Roadbook"
 msgstr "Ohjeistaja"
 
-#: ../src/navit.c:1009 ../src/gui/gtk/destination.c:365
+#: ../src/navit.c:1030 ../src/gui/gtk/destination.c:365
 #: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "Map"
 msgstr "Kartta"
 
-#: ../src/navit.c:1016 ../src/gui/gtk/gui_gtk_action.c:183
+#: ../src/navit.c:1037 ../src/gui/gtk/gui_gtk_action.c:183
 msgid "Route"
 msgstr "Reitti"
 

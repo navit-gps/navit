@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-24 21:15+0100\n"
+"POT-Creation-Date: 2007-12-26 11:26+0100\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Martin Schaller <martin-s@sourceforge.net>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -90,55 +90,55 @@ msgid_plural "in %d kilometers"
 msgstr[0] "In einem Kilometer"
 msgstr[1] "In %d Kilometern"
 
-#: ../src/navigation.c:398
+#: ../src/navigation.c:399
 msgid "right"
 msgstr "rechts"
 
-#: ../src/navigation.c:405
+#: ../src/navigation.c:406
 msgid "left"
 msgstr "links"
 
-#: ../src/navigation.c:409
+#: ../src/navigation.c:410
 msgid "easily "
 msgstr "leicht "
 
-#: ../src/navigation.c:413
+#: ../src/navigation.c:414
 msgid "strongly "
 msgstr "scharf "
 
-#: ../src/navigation.c:416
+#: ../src/navigation.c:417
 msgid "unknown "
 msgstr "unbekannt "
 
 #
-#: ../src/navigation.c:422
+#: ../src/navigation.c:423
 msgid "When possible, please turn around"
 msgstr "Wenn möglich bitte wenden"
 
-#: ../src/navigation.c:429
+#: ../src/navigation.c:430
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Dem Straßenverlauf %s folgen"
 
-#: ../src/navigation.c:433
+#: ../src/navigation.c:434
 msgid "soon"
 msgstr "Demnächst"
 
-#: ../src/navigation.c:439
+#: ../src/navigation.c:440
 msgid "now"
 msgstr "Jetzt"
 
-#: ../src/navigation.c:442
+#: ../src/navigation.c:443
 msgid "error"
 msgstr "fehler"
 
 #. TRANSLATORS: The first argument is strength, the second direction and the third distance
-#: ../src/navigation.c:446
+#: ../src/navigation.c:447
 #, c-format
 msgid "Turn %1$s%2$s %3$s"
 msgstr "%3$s %1$s%2$s abbiegen"
 
-#: ../src/navigation.c:449
+#: ../src/navigation.c:450
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "%s haben Sie ihr Ziel erreicht"
@@ -163,16 +163,36 @@ msgstr "Lesezeichen"
 msgid "Vehicle"
 msgstr "Fahrzeug"
 
-#: ../src/navit.c:789 ../src/gui/gtk/gui_gtk_action.c:189
+#: ../src/navit.c:768
+msgid "Command"
+msgstr "Kommando"
+
+#: ../src/navit.c:773
+msgid "Length"
+msgstr "Länge"
+
+#: ../src/navit.c:778
+msgid "Time"
+msgstr "Zeit"
+
+#: ../src/navit.c:783
+msgid "Destination Length"
+msgstr "Länge Ziel"
+
+#: ../src/navit.c:788
+msgid "Destination Time"
+msgstr "Zeit Ziel"
+
+#: ../src/navit.c:810 ../src/gui/gtk/gui_gtk_action.c:189
 msgid "Roadbook"
 msgstr "Straßenliste"
 
-#: ../src/navit.c:1009 ../src/gui/gtk/destination.c:365
+#: ../src/navit.c:1030 ../src/gui/gtk/destination.c:365
 #: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "Map"
 msgstr "Karte"
 
-#: ../src/navit.c:1016 ../src/gui/gtk/gui_gtk_action.c:183
+#: ../src/navit.c:1037 ../src/gui/gtk/gui_gtk_action.c:183
 msgid "Route"
 msgstr "Route"
 

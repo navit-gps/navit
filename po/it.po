@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-24 21:15+0100\n"
+"POT-Creation-Date: 2007-12-26 11:26+0100\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Andrea GHENSI <andrea.ghensi@gmail.com>\n"
 "Language-Team: Andrea GHENSI <andrea.ghensi@gmail.com>\n"
@@ -89,55 +89,55 @@ msgid_plural "in %d kilometers"
 msgstr[0] "tra un chilometro"
 msgstr[1] "tra un chilometro"
 
-#: ../src/navigation.c:398
+#: ../src/navigation.c:399
 msgid "right"
 msgstr "destra"
 
-#: ../src/navigation.c:405
+#: ../src/navigation.c:406
 msgid "left"
 msgstr "sinistra"
 
-#: ../src/navigation.c:409
+#: ../src/navigation.c:410
 msgid "easily "
 msgstr "di poco "
 
-#: ../src/navigation.c:413
+#: ../src/navigation.c:414
 msgid "strongly "
 msgstr "molto "
 
-#: ../src/navigation.c:416
+#: ../src/navigation.c:417
 msgid "unknown "
 msgstr "sconosciuto "
 
-#: ../src/navigation.c:422
+#: ../src/navigation.c:423
 #, fuzzy
 msgid "When possible, please turn around"
 msgstr "Appena possibile, invertire il senso di marcia"
 
-#: ../src/navigation.c:429
+#: ../src/navigation.c:430
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Seguire la strada per i prossimi %s"
 
-#: ../src/navigation.c:433
+#: ../src/navigation.c:434
 msgid "soon"
 msgstr "tra poco"
 
-#: ../src/navigation.c:439
+#: ../src/navigation.c:440
 msgid "now"
 msgstr "adesso"
 
-#: ../src/navigation.c:442
+#: ../src/navigation.c:443
 msgid "error"
 msgstr "errore"
 
 #. TRANSLATORS: The first argument is strength, the second direction and the third distance
-#: ../src/navigation.c:446
+#: ../src/navigation.c:447
 #, fuzzy, c-format
 msgid "Turn %1$s%2$s %3$s"
 msgstr "%s, svoltare %s%s"
 
-#: ../src/navigation.c:449
+#: ../src/navigation.c:450
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Hai raggiunto la destinazione %s"
@@ -163,16 +163,39 @@ msgstr ""
 msgid "Vehicle"
 msgstr ""
 
-#: ../src/navit.c:789 ../src/gui/gtk/gui_gtk_action.c:189
+#: ../src/navit.c:768
+#, fuzzy
+msgid "Command"
+msgstr "Polonia"
+
+#: ../src/navit.c:773
+msgid "Length"
+msgstr ""
+
+#: ../src/navit.c:778
+msgid "Time"
+msgstr ""
+
+#: ../src/navit.c:783
+#, fuzzy
+msgid "Destination Length"
+msgstr "Destinazione"
+
+#: ../src/navit.c:788
+#, fuzzy
+msgid "Destination Time"
+msgstr "Destinazione"
+
+#: ../src/navit.c:810 ../src/gui/gtk/gui_gtk_action.c:189
 msgid "Roadbook"
 msgstr "Quaderno di viaggio"
 
-#: ../src/navit.c:1009 ../src/gui/gtk/destination.c:365
+#: ../src/navit.c:1030 ../src/gui/gtk/destination.c:365
 #: ../src/gui/gtk/gui_gtk_action.c:184
 msgid "Map"
 msgstr "Mappa"
 
-#: ../src/navit.c:1016 ../src/gui/gtk/gui_gtk_action.c:183
+#: ../src/navit.c:1037 ../src/gui/gtk/gui_gtk_action.c:183
 msgid "Route"
 msgstr "Percorso"
 
