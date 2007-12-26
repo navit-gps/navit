@@ -330,8 +330,8 @@ static int
 maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *delta)
 {
 	dbg(1,"enter %p %p %p\n",old, new, delta);
-	if (new->item.type == type_ramp && old && (old->item.type == type_highway_land || old->item.type == type_highway_city)) {
-		dbg(1, "maneuver_required: new is ramp from highway: yes\n");
+	if (new->item.type != old->item.type && (new->item.type == type_ramp || old->item.type == type_ramp)) {
+		dbg(1, "maneuver_required: old or new is ramp\n");
 		return 1;
 	}
 	if (is_same_street2(old, new)) {

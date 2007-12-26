@@ -4,6 +4,8 @@
 #include <glib.h>
 #include "debug.h"
 #include "item.h"
+#include "coord.h"
+#include "transform.h"
 #include "color.h"
 #include "attr.h"
 
@@ -50,6 +52,8 @@ attr_new_from_text(const char *name, const char *value)
 {
 	enum attr_type attr;
 	struct attr *ret;
+	struct coord_geo *g;
+	struct coord c;
 
 	ret=g_new0(struct attr, 1);
 	dbg(1,"enter name='%s' value='%s'\n", name, value);
@@ -58,6 +62,12 @@ attr_new_from_text(const char *name, const char *value)
 	switch (attr) {
 	case attr_item_type:
 		ret->u.item_type=item_from_name(value);
+		break;
+	case attr_position_coord_geo:
+		g=g_new(struct coord_geo, 1);
+		ret->u.coord_geo=g;
+		coord_parse(value, projection_mg, &c);
+		transform_to_geo(projection_mg, &c, g);
 		break;
 	default:
 		if (attr >= attr_type_string_begin && attr <= attr_type_string_end) {
@@ -148,6 +158,8 @@ attr_data_set(struct attr *attr, void *data)
 void
 attr_free(struct attr *attr)
 {
+	if (attr->type == attr_position_coord_geo)
+		g_free(attr->u.coord_geo);
 	if (attr->type >= attr_type_color_begin && attr->type <= attr_type_color_end) 
 		g_free(attr->u.color);
 	g_free(attr);
