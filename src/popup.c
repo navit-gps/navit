@@ -120,14 +120,18 @@ popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char
 }
 
 static void
-popup_show_attr_val(void *menu, struct attr *attr)
+popup_show_attr_val(struct map *map, void *menu, struct attr *attr)
 {
 	char *attr_name=attr_to_name(attr->type);
+	char *str;
 
 	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
 		popup_printf(menu, menu_type_menu, "%s: %d", attr_name, attr->u.num);
-	else 
-		popup_printf(menu, menu_type_menu, "%s: %s", attr_name, attr->u.str);
+	else {
+		str=map_convert_string(map, attr->u.str);
+		popup_printf(menu, menu_type_menu, "%s: %s", attr_name, str);
+		map_convert_free(str);
+	}
 }
 
 #if 0
@@ -143,7 +147,7 @@ popup_show_attr(void *menu, struct item *item, enum attr_type attr_type)
 #endif
 
 static void
-popup_show_attrs(void *menu, struct item *item)
+popup_show_attrs(struct map *map, void *menu, struct item *item)
 {
 #if 0
 	popup_show_attr(menu, item, attr_debug);
@@ -157,7 +161,7 @@ popup_show_attrs(void *menu, struct item *item)
 	for (;;) {
 		memset(&attr, 0, sizeof(attr));
 		if (item_attr_get(item, attr_any, &attr)) 
-			popup_show_attr_val(menu, &attr);
+			popup_show_attr_val(map, menu, &attr);
 		else
 			break;
 	}
@@ -188,7 +192,7 @@ popup_show_item(void *popup, struct displayitem *di)
 		item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
 		dbg(1,"item=%p\n", item);
 		if (item) {
-			popup_show_attrs(menu_item, item);
+			popup_show_attrs(item->map, menu_item, item);
 		}
 		map_rect_destroy(mr);
 		menu_map=popup_printf(menu, menu_type_submenu, "Map");

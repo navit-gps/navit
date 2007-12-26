@@ -145,7 +145,7 @@ log_new(struct attr **attrs)
 	struct log *ret=g_new0(struct log, 1);
 	struct attr *data,*overwrite,*flush_size,*flush_time;
 
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 	data=attr_search(attrs, NULL, attr_data);
 	if (! data)
 		return NULL;
