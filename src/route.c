@@ -153,7 +153,7 @@ route_path_destroy(struct route_path *this)
 	c=this->path;
 	while (c) {
 		n=c->next;
-		free(c);
+		g_free(c);
 		c=n;
 	}
 	g_free(this);
@@ -449,7 +449,7 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 			int flags, int offset)
 {
 	struct route_graph_segment *s;
-	s = calloc(1, sizeof(*s));
+	s = g_new0(struct route_graph_segment, 1);
 	if (!s) {
 		printf("%s:Out of memory\n", __FUNCTION__);
 		return;
@@ -547,7 +547,7 @@ route_path_add_item(struct route_path *this, struct route_path *oldpath,
 	}
 
 	ccnt = get_item_seg_coords(&rgs->item, ca, 2047, rgs);
-	segment= calloc(1, sizeof(*segment) + sizeof(struct coord) * ccnt);
+	segment= g_malloc0(sizeof(*segment) + sizeof(struct coord) * ccnt);
 	if (!segment) {
 		printf("%s:Out of memory\n", __FUNCTION__);
 		return;
@@ -760,7 +760,7 @@ route_graph_free_segments(struct route_graph *this)
 	curr=this->route_segments;
 	while (curr) {
 		next=curr->next;
-		free(curr);
+		g_free(curr);
 		curr=next;
 	}
 	this->route_segments=NULL;
@@ -1421,59 +1421,6 @@ route_info_close(struct route_info_handle *h)
 }
 
 
-static int
-route_draw_route_info(struct route_info *pos, struct route_info *dst, struct transformation *t, struct displaylist *dsp)
-{
-	struct route_info_handle *h;
-	struct coord *cp;
-	struct item item;
-	int max=100;
-	struct coord c[max];
-	struct point pnt[max];
-	int count=0;
-	struct street_data *street;
-	enum projection pro = projection_mg;
-
-	item.id_lo=0;
-	item.id_hi=0;
-	item.map=NULL;
-	item.type=type_street_route;
-
-	dbg(1, "enter\n");
-	h=route_info_open(pos, dst, 0);
-	dbg(1,"h=%p\n", h);
-	if (! h) {
-		dbg(1, "return 0\n");
-		return 0;
-	}
-	street = pos ? pos->street : dst->street;
-	pro = map_projection(street->item.map);
-	if (pos)
-		dbg(1, "pos=%p pos->dir=%d pos->pos=%d\n", pos, pos->dir, pos->pos);
-	while ((cp=route_info_get(h)) && count < max) 
-		c[count++]=*cp;
-	if (count)
-		count=transform(t, pro, c, pnt, count, 1);
-	if (count)
-		display_add(dsp, &item, count, pnt, "Route");
-	route_info_close(h);
-	dbg(1, "return 1\n");
-	return 1;
-}
-
-void
-route_draw(struct route *this, struct transformation *t, struct displaylist *dsp)
-{
-	dbg(1,"enter\n");
-	if (! this->pos || ! this->dst)
-		return;
-	if (! route_draw_route_info(this->pos, this->dst, t, dsp)) {
-		route_draw_route_info(this->pos, NULL, t, dsp);
-		route_draw_route_info(NULL, this->dst, t, dsp);
-	}
-	dbg(1,"exit\n");
-}
-
 #if 0
 struct route_crossings *
 route_crossings_get(struct route *this, struct coord *c)
@@ -1504,6 +1451,9 @@ route_crossings_get(struct route *this, struct coord *c)
 
 
 struct map_rect_priv {
+	struct route_info_handle *ri;
+	int pos_next;
+	int pos;
 	struct route *mpriv;
 	struct item item;
 	unsigned int last_coord;
@@ -1536,15 +1486,40 @@ rm_coord_get(void *priv_data, struct coord *c, int count)
 {
 	struct map_rect_priv *mr = priv_data;
 	struct route_path_segment *seg = mr->seg;
+	struct coord *c1;
 	int rc = 0,i;
-	for (i=0; i < count; i++) {
-		if (mr->last_coord >= seg->ncoords)
-			break;
-		if (i >= seg->ncoords)
-			break;
-		c[i] = seg->c[mr->last_coord++];
-		rc++;
+	dbg(1,"pos=%d seg=%p\n", mr->pos, seg);
+	switch (mr->pos) {
+	case -1:
+		for (i=0; i < count; i++) {
+			if ((c1=route_info_get(mr->ri))) {
+				c[i]=*c1;
+				rc++;
+			}
+		}
+		break;
+	case 0:
+		for (i=0; i < count; i++) {
+			if (mr->last_coord >= seg->ncoords)
+				break;
+			if (i >= seg->ncoords)
+				break;
+			c[i] = seg->c[mr->last_coord++];
+			rc++;
+		}
+		break;
+	case 1:
+		for (i=0; i < count; i++) {
+			if ((c1=route_info_get(mr->ri))) {
+				c[i]=*c1;
+				rc++;
+			}
+		}
+		break;
+	default:
+		rc=0;
 	}
+	dbg(1,"return %d\n",rc);
 	return rc;
 }
 
@@ -1560,15 +1535,13 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
 	struct map_rect_priv *mr = priv_data;
 	struct route_graph_point *p = mr->point;
-	char buf[1024];
 	switch (attr_type) {
 		case attr_any:
 		case attr_label:
 			attr->type = attr_label;
-			sprintf(buf, "x=%d y=%d", p->c.x, p->c.y);
 			if (mr->label)
-				free(mr->label);
-			mr->label=strdup(buf);
+				g_free(mr->label);
+			mr->label=g_strdup_printf("x=%d y=%d", p->c.x, p->c.y);
 			attr->u.str = mr->label;
 			return 1;
 		default:
@@ -1607,20 +1580,28 @@ rm_destroy(struct map_priv *priv)
 static struct map_rect_priv * 
 rm_rect_new(struct map_priv *map, struct map_selection *sel)
 {
+	struct route *route=(struct route *)map;
 	struct map_rect_priv * mr;
-	mr = calloc(1, sizeof(*mr));
-	if (!mr)
-		return mr;
-	mr->mpriv = (struct route *)map;
+	dbg(1,"enter\n");
+	mr=g_new0(struct map_rect_priv, 1);
+	mr->mpriv = route;
+	mr->ri=route_info_open(route_get_pos(route), route_get_dst(route), 0);
+	mr->pos_next=1;
+	if (!mr->ri) {
+		mr->ri=route_info_open(route_get_pos(route), NULL, 0);
+		mr->pos_next=-1;
+	}
 	return mr;
 }
 
 static void
 rm_rect_destroy(struct map_rect_priv *mr)
 {
+	if (mr->ri)
+		route_info_close(mr->ri);
 	if (mr->label)
-		free(mr->label);
-	free(mr);
+		g_free(mr->label);
+	g_free(mr);
 }
 
 static struct item *
@@ -1628,6 +1609,7 @@ rm_get_item(struct map_rect_priv *mr)
 {
 	struct route *r = mr->mpriv;
 	struct route_path_segment *seg = mr->seg;
+	dbg(1,"enter\n", mr->pos);
 
 rep:
 	if (mr->segsdone) {
@@ -1654,12 +1636,27 @@ rep:
 		}
 	}
 
-	/* FIXME: Generate items for segstart-dst/pos */
-	if (!seg)
-		seg = r->path2->path;
-	else
-		seg = seg->next;
-	if (!seg) {
+	mr->pos=mr->pos_next;
+	switch(mr->pos) {
+	case -1:
+		mr->pos_next=0;
+		break;
+	case 0:
+		if (!seg)
+			seg = r->path2->path;
+		else
+			seg = seg->next;
+		if (seg) {
+			mr->item = seg->item;
+			break;
+		}
+		mr->pos=1;
+		route_info_close(mr->ri);
+		mr->ri=route_info_open(NULL, route_get_dst(r), 0);
+	case 1:
+		mr->pos_next=2;
+		break;
+	case 2:
 		mr->segsdone = 1;
 		if (r->flags & RF_SHOWGRAPH)
 			goto rep;
@@ -1670,7 +1667,6 @@ rep:
 	mr->item.id_hi = 0;
 	mr->item.id_lo = 0;
 	mr->item.map = NULL;
-	mr->item = seg->item;
 	mr->item.priv_data = mr;
 	mr->item.type = type_street_route;
 	mr->item.meth = &methods_route_item;
