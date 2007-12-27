@@ -550,8 +550,6 @@ graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist,
 {
 	int order=transform_get_order(trans);
 	gra->meth.draw_mode(gra->priv, draw_mode_begin);
-	if (route)
-		route_draw(route, trans, displaylist);
 	xdisplay_draw(displaylist->dl, gra, layouts, order);
 	gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
