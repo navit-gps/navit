@@ -5,8 +5,13 @@
 #include <gtk/gtk.h>
 #include "item.h"
 #include "coord.h"
+#include "debug.h"
+#include "vehicle.h"
+#include "callback.h"
 #include "route.h"
 #include "transform.h"
+#include "navit.h"
+#include "navigation.h"
 #include "gui_gtk.h"
 
 #include "statusbar.h"
@@ -20,6 +25,7 @@ struct statusbar_priv {
 	GtkWidget *gps;	
 	char route_text[128];
 	GtkWidget *route;
+	struct callback *vehicle_cb;
 };
 
 
@@ -73,24 +79,45 @@ statusbar_gps_update(struct statusbar_priv *this, int sats, int qual, double lng
 }
 
 static void
-statusbar_route_update(struct statusbar_priv *this, struct route *route)
+statusbar_route_update(struct statusbar_priv *this, struct navit *nav, struct vehicle *v)
 {
-#if 0 /* FIXME */
-	struct tm *eta_tm;
+	struct navigation *navig;
+	struct navigation_list *list;
+	struct item *item;
+	struct attr attr;
 	double route_len;
+	time_t eta;
+	struct tm *eta_tm;
+	char buffer[128];
 
-	eta_tm=route_get_eta(route);
-	route_len=route_get_len(route);
-	
-	sprintf(this->route_text,"Route %4.0fkm    %02d:%02d ETA",route_len/1000, eta_tm->tm_hour, eta_tm->tm_min);
-	gtk_label_set_text(GTK_LABEL(this->route), this->route_text);
-#endif
+	navig=navit_get_navigation(nav);
+	if (! navig)
+		return;
+	list=navigation_list_new(navig);
+	if (! list)
+		return;
+	item=navigation_list_get_item(list);
+	if (! item)
+		return;
+	if (!item_attr_get(item, attr_destination_length, &attr))
+		return;
+	route_len=attr.u.num;
+	if (!item_attr_get(item, attr_destination_time, &attr))
+		return;
+	eta=time(NULL)+attr.u.num;
+	eta_tm=localtime(&eta);
+	navigation_list_destroy(list);
+	sprintf(buffer,"Route %4.0fkm    %02d:%02d ETA",route_len/1000, eta_tm->tm_hour, eta_tm->tm_min);
+	if (strcmp(buffer, this->route_text)) {
+		strcpy(this->route_text, buffer);
+		gtk_label_set_text(GTK_LABEL(this->route), this->route_text);
+	}
 }
 
 static struct statusbar_methods methods = {
 	statusbar_destroy,
 	statusbar_mouse_update,
-	statusbar_route_update,
+	NULL,
 	statusbar_gps_update,
 };
 
@@ -121,6 +148,8 @@ gui_gtk_statusbar_new(struct gui_priv *gui, struct statusbar_methods *meth)
 
 	gtk_box_pack_end(GTK_BOX(gui->vbox), this->hbox, FALSE, FALSE, 0);
 	gtk_widget_show_all(this->hbox);
+	this->vehicle_cb=callback_new_1(callback_cast(statusbar_route_update), this);
+	navit_add_vehicle_cb(gui->nav, this->vehicle_cb);
 
 #if 0
 	*widget=this->gui->hbox;
