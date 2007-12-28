@@ -9,6 +9,7 @@ POTFILES  = \
 	$(top_srcdir)/src/main.c \
 	$(top_srcdir)/src/navigation.c \
 	$(top_srcdir)/src/navit.c \
+	$(top_srcdir)/src/popup.c \
 	$(top_srcdir)/src/country.c \
 	$(top_srcdir)/src/gui/gtk/destination.c \
 	$(top_srcdir)/src/gui/gtk/gui_gtk_action.c
