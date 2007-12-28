@@ -123,6 +123,8 @@ tracking_doupdate_lines(struct tracking *tr, struct coord *cc)
         h=mapset_open(tr->ms);
         while ((m=mapset_next(h,1))) {
 		mr=map_rect_new(m, sel);
+		if (! mr)
+			continue;
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type >= type_street_0 && item->type <= type_ferry) {
 				street=street_get_data(item);

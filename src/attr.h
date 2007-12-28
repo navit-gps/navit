@@ -37,6 +37,7 @@ struct attr {
 		struct navit *navit;
 		struct callback *callback;
 		struct log *log;
+		struct route *route;
 	} u;
 };
 

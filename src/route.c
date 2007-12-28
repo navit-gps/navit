@@ -21,26 +21,13 @@
 #include "point.h"
 #include "graphics.h"
 #include "transform.h"
+#include "plugin.h"
 #include "fib.h"
 
-#if 0
-static int speed_list[]={
-	10, /* street_0 */
-	10, /* street_1_city */
-	30, /* street_2_city */
-	40, /* street_3_city */
-	50, /* street_4_city */
-	80, /* highway_city */
-	60, /* street_1_land */
-	65, /* street_2_land */
-	70, /* street_3_land */
-	80, /* street_4_land */
-	120, /* street_n_lanes */
-	120, /* highway_land */
-	40, /* ramp */
-	30, /* ferry */
+
+struct map_priv {
+	struct route *route;
 };
-#endif
 
 int debug_route=0;
 
@@ -106,7 +93,6 @@ struct route_path {
 struct route {
 	int version;
 	struct mapset *ms;
-	struct map route_map;
 	unsigned flags;
 	struct route_info *pos;
 	struct route_info *dst;
@@ -253,6 +239,7 @@ route_set_position(struct route *this, struct pcoord *pos)
 {
 	if (this->pos)
 		route_info_free(this->pos);
+	this->pos=NULL;
 	this->pos=route_find_nearest_street(this->ms, pos);
 	dbg(1,"this->pos=%p\n", this->pos);
 	if (! this->pos)
@@ -276,6 +263,7 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 	}
 	if (this->pos)
 		route_info_free(this->pos);
+	this->pos=NULL;
 	ret->c=*c;
 	ret->lp=*c;
 	ret->pos=tracking_get_segment_pos(tracking);
@@ -646,113 +634,6 @@ route_path_close(struct route_path_handle *h)
 	g_free(h);
 }
 
-struct route_path_coord_handle {
-	struct route *route;
-	int pos;	/* -1 = Begin, 0 = Middle, 1 = End */
-	int dir;
-	int spos;
-	struct coord last;
-	struct route_info_handle *ri;
-	struct route_path_handle *rp;
-	struct street_data *street_data;
-};
-
-struct route_path_coord_handle *
-route_path_coord_open(struct route *this)
-{
-	struct route_path_coord_handle *ret;
-
-	if (! route_get_pos(this) || ! route_get_dst(this))
-		return NULL;
-
-	ret=g_new0(struct route_path_coord_handle, 1);
-	if (!ret) {
-		printf("%s:Out of memory\n", __FUNCTION__);
-		return ret;
-	}
-	ret->route=this;
-	ret->ri=route_info_open(route_get_pos(this), route_get_dst(this), 0);
-	if (!ret->ri) {
-		ret->ri=route_info_open(route_get_pos(this), NULL, 0);
-		ret->pos=-1;
-	}
-	else
-		ret->pos=1;
-	return ret;
-}
-
-struct coord *
-route_path_coord_get(struct route_path_coord_handle *h)
-{
-	struct coord *c;
-	struct route_path_segment *seg;
-	struct item *item, *item2;
-	struct map_rect *mr;
-
-	switch(h->pos) {
-	case -1:
-		c=route_info_get(h->ri);
-		if (c) {
-			h->last=*c;
-			return c;
-		}
-		h->pos=0;
-		h->rp=route_path_open(h->route);
-	case 0:
-		if (! h->street_data && h->rp) {
-			seg=route_path_get_segment(h->rp);
-			if (seg) {
-				item=route_path_segment_get_item(seg);
-				mr=map_rect_new(item->map,NULL);
-				item2=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-				h->street_data=street_get_data(item2);
-				map_rect_destroy(mr);
-				if (h->street_data->c[0].x == h->last.x && h->street_data->c[0].y == h->last.y) {
-					h->spos=1;
-					h->dir=1;
-				} else {
-					h->spos=h->street_data->count-2;
-					h->dir=-1;
-				}
-			}
-		}
-		if (h->street_data) {
-			c=&h->street_data->c[h->spos];
-			h->last=*c;
-			h->spos+=h->dir;
-			if (h->spos < 0 || h->spos >= h->street_data->count) {
-				street_data_free(h->street_data);
-				h->street_data=NULL;
-			}
-			return c;
-		}
-		h->pos=1;
-	case 1:	
-		c=route_info_get(h->ri);
-		if (c) {
-			h->last=*c;
-			return c;
-		}
-		h->pos=2;
-	default:
-		return NULL;
-	}
-
-}
-
-void
-route_path_coord_close(struct route_path_coord_handle *h)
-{
-	if (h->street_data)
-		street_data_free(h->street_data);	
-	if (h->rp)
-		route_path_close(h->rp);
-	if (h->ri)
-		route_info_close(h->ri);
-	g_free(h);
-}
-
-
 static void
 route_graph_free_segments(struct route_graph *this)
 {
@@ -1116,6 +997,8 @@ route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2)
 	h=mapset_open(ms);
 	while ((m=mapset_next(h,1))) {
 		mr=map_rect_new(m, sel);
+		if (! mr)
+			continue;
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type >= type_street_0 && item->type <= type_ferry) {
 				route_process_street_graph(ret, item);
@@ -1218,6 +1101,8 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 			transform_from_geo(map_projection(m), &g, &c);
 		}
 		mr=map_rect_new(m, sel);
+		if (! mr)
+			continue;
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type >= type_street_0 && item->type <= type_ferry) {
 				sd=street_get_data(item);
@@ -1454,11 +1339,10 @@ struct map_rect_priv {
 	struct route_info_handle *ri;
 	int pos_next;
 	int pos;
-	struct route *mpriv;
+	struct map_priv *mpriv;
 	struct item item;
 	unsigned int last_coord;
 	struct route_path_segment *seg;
-	int segsdone;
 	struct route_graph_point *point;
 	char *label;
 };
@@ -1575,22 +1459,40 @@ static struct item_methods methods_point_item = {
 static void
 rm_destroy(struct map_priv *priv)
 {
+	g_free(priv);
 }
 
 static struct map_rect_priv * 
-rm_rect_new(struct map_priv *map, struct map_selection *sel)
+rm_rect_new(struct map_priv *priv, struct map_selection *sel)
 {
-	struct route *route=(struct route *)map;
 	struct map_rect_priv * mr;
 	dbg(1,"enter\n");
+	if (! route_get_pos(priv->route))
+		return NULL;
+	if (! route_get_dst(priv->route))
+		return NULL;
+	if (! priv->route->path2)
+		return NULL;
 	mr=g_new0(struct map_rect_priv, 1);
-	mr->mpriv = route;
-	mr->ri=route_info_open(route_get_pos(route), route_get_dst(route), 0);
+	mr->mpriv = priv;
+	mr->ri=route_info_open(route_get_pos(priv->route), route_get_dst(priv->route), 0);
 	mr->pos_next=1;
 	if (!mr->ri) {
-		mr->ri=route_info_open(route_get_pos(route), NULL, 0);
+		mr->ri=route_info_open(route_get_pos(priv->route), NULL, 0);
 		mr->pos_next=-1;
 	}
+	return mr;
+}
+
+static struct map_rect_priv * 
+rp_rect_new(struct map_priv *priv, struct map_selection *sel)
+{
+	struct map_rect_priv * mr;
+	dbg(1,"enter\n");
+	if (! priv->route->graph || ! priv->route->graph->route_points)
+		return NULL;
+	mr=g_new0(struct map_rect_priv, 1);
+	mr->mpriv = priv;
 	return mr;
 }
 
@@ -1605,36 +1507,34 @@ rm_rect_destroy(struct map_rect_priv *mr)
 }
 
 static struct item *
+rp_get_item(struct map_rect_priv *mr)
+{
+	struct route *r = mr->mpriv->route;
+	struct route_graph_point *p = mr->point;
+
+	if (!p)
+		p = r->graph->route_points;
+	else
+		p = p->next;
+	if (!p)
+		return NULL;
+	mr->point = p;
+	mr->last_coord = 0;
+	mr->item.id_hi = 0;
+	mr->item.id_lo = 0;
+	mr->item.map = NULL;
+	mr->item.priv_data = mr;
+	mr->item.type = type_rg_point;
+	mr->item.meth = &methods_point_item;
+	return &mr->item;
+}
+
+static struct item *
 rm_get_item(struct map_rect_priv *mr)
 {
-	struct route *r = mr->mpriv;
+	struct route *r = mr->mpriv->route;
 	struct route_path_segment *seg = mr->seg;
 	dbg(1,"enter\n", mr->pos);
-
-rep:
-	if (mr->segsdone) {
-		if (!(r->flags & RF_SHOWGRAPH))
-			return NULL;
-		else {
-			struct route_graph_point *p = mr->point;
-			if (!p)
-				p = r->graph->route_points;
-			else
-				p = p->next;
-			if (!p)
-				return NULL;
-			mr->point = p;
-			mr->last_coord = 0;
-			mr->item.id_hi = 0;
-			mr->item.id_lo = 0;
-			mr->item.map = NULL;
-//			mr->item = NULL;
-			mr->item.priv_data = mr;
-			mr->item.type = type_rg_point;
-			mr->item.meth = &methods_point_item;
-			return &mr->item;
-		}
-	}
 
 	mr->pos=mr->pos_next;
 	switch(mr->pos) {
@@ -1657,9 +1557,6 @@ rep:
 		mr->pos_next=2;
 		break;
 	case 2:
-		mr->segsdone = 1;
-		if (r->flags & RF_SHOWGRAPH)
-			goto rep;
 		return NULL;
 	}
 	mr->seg = seg;
@@ -1676,12 +1573,12 @@ rep:
 static struct item *
 rm_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
-	printf("%s called on Route map\n", __FUNCTION__);
+	dbg(0,"called on Route map\n");
 	return NULL;
 }
 
 static struct map_methods route_meth = {
-	projection_none,
+	projection_mg,
 	NULL,
 	rm_destroy,
 	rm_rect_new,
@@ -1693,27 +1590,18 @@ static struct map_methods route_meth = {
 	NULL,
 };
 
-static void 
-route_init_map(struct route *route)
-{
-	struct map *m = &route->route_map;
-	m->priv = (struct map_priv *)route;
-	m->type = "Route";
-	m->filename = NULL;
-	m->active = 0;
-	m->meth = route_meth;
-	m->meth.pro = route_projection(route);
-}
-
-struct map *
-route_get_map(struct route *route)
-{
-	if (route->pos && route->dst && route->path2) {
-		route_init_map(route);
-		return &route->route_map;
-	}
-	return NULL;
-}
+static struct map_methods route_graph_meth = {
+	projection_mg,
+	NULL,
+	rm_destroy,
+	rp_rect_new,
+	rm_rect_destroy,
+	rp_get_item,
+	rm_get_item_byid,
+	NULL,
+	NULL,
+	NULL,
+};
 
 void 
 route_toggle_routegraph_display(struct route *route)
@@ -1723,4 +1611,44 @@ route_toggle_routegraph_display(struct route *route)
 	} else {
 		route->flags |= RF_SHOWGRAPH;
 	}
+}
+
+static struct map_priv *
+route_map_new_helper(struct map_methods *meth, struct attr **attrs, int graph)
+{
+	struct map_priv *ret;
+	struct attr *route_attr;
+
+	route_attr=attr_search(attrs, NULL, attr_route);
+	if (! route_attr)
+		return NULL;
+	ret=g_new0(struct map_priv, 1);
+	if (graph)
+		*meth=route_graph_meth;
+	else
+		*meth=route_meth;
+	ret->route=route_attr->u.route;
+
+	return ret;
+}
+
+static struct map_priv *
+route_map_new(struct map_methods *meth, struct attr **attrs)
+{
+	return route_map_new_helper(meth, attrs, 0);
+}
+
+static struct map_priv *
+route_graph_map_new(struct map_methods *meth, struct attr **attrs)
+{
+	return route_map_new_helper(meth, attrs, 1);
+}
+
+
+
+void
+route_init(void)
+{
+	plugin_register_map_type("route", route_map_new);
+	plugin_register_map_type("route_graph", route_graph_map_new);
 }
