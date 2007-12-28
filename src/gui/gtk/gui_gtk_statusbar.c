@@ -19,8 +19,6 @@
 struct statusbar_priv {
 	struct gui_priv *gui;
 	GtkWidget *hbox;
-	char mouse_text[128];
-	GtkWidget *mouse;
 	char gps_text[128];
 	GtkWidget *gps;	
 	char route_text[128];
@@ -33,22 +31,6 @@ static void
 statusbar_destroy(struct statusbar_priv *this)
 {
 	g_free(this);
-}
-
-static void
-statusbar_mouse_update(struct statusbar_priv *this, struct transformation *tr, struct point *p)
-{
-#if 0
-	struct coord c;
-	struct coord_geo g;
-	char buffer[128];
-
-	transform_reverse(tr, p, &c);
-	transform_lng_lat(&c, &g);
-	transform_geo_text(&g, buffer);
-	sprintf(this->mouse_text,"M: %s", buffer);
-	gtk_label_set_text(GTK_LABEL(this->mouse), this->mouse_text);
-#endif
 }
 
 static void
@@ -71,7 +53,7 @@ statusbar_gps_update(struct statusbar_priv *this, int sats, int qual, double lng
 	}
 	dir_idx=(direction+22.5)/45;
 	dir=dirs[dir_idx];
-	sprintf(this->gps_text,"GPS %2d/%1d %02.0f%07.4f%c %03.0f%07.4f%c %4.0fm %3.0f°%-2s %3.0fkm/h", sats, qual, floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c, height, direction, dir, speed);
+	sprintf(this->gps_text,"GPS %2d/%1d %02.0f%07.4f%c %03.0f%07.4f%c %4.0fm %3.0fÂ°%-2s %3.0fkm/h", sats, qual, floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c, height, direction, dir, speed);
 	utf8=g_locale_to_utf8(this->gps_text,-1,NULL,NULL,NULL);
 	gtk_label_set_text(GTK_LABEL(this->gps), utf8);
 	g_free(utf8);
@@ -89,6 +71,14 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *nav, struct ve
 	time_t eta;
 	struct tm *eta_tm;
 	char buffer[128];
+	char *utf8;
+	double lng, lat, direction=0, height=0, speed=0;
+	int sats=0, qual=0;
+	char lat_c='N';
+	char lng_c='E';
+	char *dirs[]={"N","NO","O","SO","S","SW","W","NW","N"};
+	char *dir;
+	int dir_idx;
 
 	navig=navit_get_navigation(nav);
 	if (! navig)
@@ -112,13 +102,38 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *nav, struct ve
 		strcpy(this->route_text, buffer);
 		gtk_label_set_text(GTK_LABEL(this->route), this->route_text);
 	}
+	if (!vehicle_position_attr_get(v, attr_position_coord_geo, &attr))
+		return;
+	lng=attr.u.coord_geo->lng;
+	lat=attr.u.coord_geo->lat;
+	if (lng < 0) {
+		lng=-lng;
+		lng_c='W';
+	}
+	if (lat < 0) {
+		lat=-lat;
+		lat_c='S';
+	}
+	if (vehicle_position_attr_get(v, attr_position_direction, &attr))
+		direction=*(attr.u.numd);
+	dir_idx=(direction+22.5)/45;
+	dir=dirs[dir_idx];
+	if (vehicle_position_attr_get(v, attr_position_height, &attr))
+		height=*(attr.u.numd);
+	if (vehicle_position_attr_get(v, attr_position_speed, &attr))
+		speed=*(attr.u.numd);
+	if (vehicle_position_attr_get(v, attr_position_sats_used, &attr))
+		sats=attr.u.num;
+	if (vehicle_position_attr_get(v, attr_position_qual, &attr))
+		qual=attr.u.num;
+	sprintf(this->gps_text,"GPS %2d/%1d %02.0f%07.4f%c %03.0f%07.4f%c %4.0fm %3.0fÂ°%-2s %3.0fkm/h", sats, qual, floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c, height, direction, dir, speed);
+	utf8=g_locale_to_utf8(this->gps_text,-1,NULL,NULL,NULL);
+	gtk_label_set_text(GTK_LABEL(this->gps), utf8);
+	g_free(utf8);
 }
 
 static struct statusbar_methods methods = {
 	statusbar_destroy,
-	statusbar_mouse_update,
-	NULL,
-	statusbar_gps_update,
 };
 
 struct statusbar_priv *
@@ -131,16 +146,12 @@ gui_gtk_statusbar_new(struct gui_priv *gui, struct statusbar_methods *meth)
 	*meth=methods;
 
 	this->hbox=gtk_hbox_new(FALSE, 1);
-	this->mouse=gtk_label_new("M: 0000.0000N 00000.0000E");
-	gtk_label_set_justify(GTK_LABEL(this->mouse),  GTK_JUSTIFY_LEFT);
-	utf8=g_locale_to_utf8("GPS 00/0 0000.0000N 00000.0000E 0000m 000°NO 000km/h",-1,NULL,NULL,NULL);
+	utf8=g_locale_to_utf8("GPS 00/0 0000.0000N 00000.0000E 0000m 000Â°NO 000km/h",-1,NULL,NULL,NULL);
 	this->gps=gtk_label_new(utf8);
 	g_free(utf8);
 	gtk_label_set_justify(GTK_LABEL(this->gps),  GTK_JUSTIFY_LEFT);
 	this->route=gtk_label_new("Route 0000km  0+00:00 ETA");
 	gtk_label_set_justify(GTK_LABEL(this->route),  GTK_JUSTIFY_LEFT);
-	gtk_box_pack_start(GTK_BOX(this->hbox), this->mouse, FALSE, FALSE, 2);
-	gtk_box_pack_start(GTK_BOX(this->hbox), gtk_vseparator_new(), TRUE, TRUE, 2);
 	gtk_box_pack_start(GTK_BOX(this->hbox), this->gps, TRUE, TRUE, 2);
 	gtk_box_pack_start(GTK_BOX(this->hbox), gtk_vseparator_new(), TRUE, TRUE, 2);
 	gtk_box_pack_start(GTK_BOX(this->hbox), this->route, TRUE, TRUE, 2);
@@ -150,10 +161,6 @@ gui_gtk_statusbar_new(struct gui_priv *gui, struct statusbar_methods *meth)
 	gtk_widget_show_all(this->hbox);
 	this->vehicle_cb=callback_new_1(callback_cast(statusbar_route_update), this);
 	navit_add_vehicle_cb(gui->nav, this->vehicle_cb);
-
-#if 0
-	*widget=this->gui->hbox;
-#endif
 	return this;
 }
 
