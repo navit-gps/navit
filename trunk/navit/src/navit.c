@@ -71,6 +71,8 @@ struct navit {
 	struct statusbar *statusbar;
 	struct menu *menubar;
 	struct route *route;
+	struct map *route_map;
+	struct map *route_graph_map;
 	struct navigation *navigation;
 	struct speech *speech;
 	struct tracking *tracking;
@@ -133,7 +135,7 @@ navit_draw(struct navit *this_)
 	struct navit_vehicle *nv;
 
 	transform_setup_source_rect(this_->trans);
-	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layouts, this_->route);
+	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layouts);
 	l=this_->vehicles;
 	while (l) {
 		nv=l->data;
@@ -146,9 +148,8 @@ navit_draw(struct navit *this_)
 void
 navit_draw_displaylist(struct navit *this_)
 {
-	if (this_->ready) {
-		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layouts, this_->route);
-	}
+	if (this_->ready) 
+		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layouts);
 }
 
 static void
@@ -233,7 +234,7 @@ navit_motion_timeout(void *data)
 	if (dx || dy) {
 		this_->last=this_->current;
 		graphics_displaylist_move(this_->displaylist, dx, dy);
-		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layouts, this_->route);
+		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layouts);
 		this_->moved=1;
 	}
 	this_->motion_timeout=0;
@@ -1020,6 +1021,10 @@ navit_init(struct navit *this_)
 	}
 	if (this_->mapsets) {
 		ms=this_->mapsets->data;
+		if (this_->route_map)
+			mapset_add(ms, this_->route_map);
+		if (this_->route_graph_map)
+			mapset_add(ms, this_->route_graph_map);
 		if (this_->route)
 			route_set_mapset(this_->route, ms);
 		if (this_->tracking)
@@ -1323,7 +1328,20 @@ navit_tracking_add(struct navit *this_, struct tracking *tracking)
 void
 navit_route_add(struct navit *this_, struct route *route)
 {
+	struct attr route_attr={.type=attr_route,.u.route=route};
+	struct attr data_attr={.type=attr_data,.u.str=""};
+	struct attr *attrs_route[]={&route_attr, &data_attr, NULL};
+	struct attr *attrs_route_graph[]={&route_attr, &data_attr, NULL};
 	this_->route=route;
+	this_->route_map=map_new("route",attrs_route);
+	this_->route_graph_map=map_new("route_graph",attrs_route_graph);
+	map_set_active(this_->route_graph_map, 0);
+}
+
+struct map *
+navit_get_route_map(struct navit *this_)
+{
+	return this_->route_map;
 }
 
 void
@@ -1375,15 +1393,6 @@ navit_destroy(struct navit *this_)
 	/* TODO: destroy objects contained in this_ */
 	main_remove_navit(this_);
 	g_free(this_);
-}
-
-void
-navit_toggle_routegraph_display(struct navit *nav)
-{
-	if (!nav->route)
-		return;
-	route_toggle_routegraph_display(nav->route);
-	navit_draw(nav);
 }
 
 /** @} */

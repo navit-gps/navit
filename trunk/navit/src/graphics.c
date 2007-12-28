@@ -475,6 +475,10 @@ do_draw_map(struct displaylist *displaylist, struct transformation *t, struct ma
 		mr=map_rect_new(m, route_selection);
 	else
 		mr=map_rect_new(m, sel);
+	if (! mr) {
+		map_selection_destroy(sel);
+		return;
+	}
 	while ((item=map_rect_get_item(mr))) {
 		count=item_coord_get(item, ca, item->type < type_line ? 1: max);
 		if (item->type >= type_line && count < 2) {
@@ -518,7 +522,7 @@ do_draw_map(struct displaylist *displaylist, struct transformation *t, struct ma
 }
 
 static void
-do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapsets, int order, struct route *route)
+do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapsets, int order)
 {
 	struct mapset *ms;
 	struct map *m;
@@ -532,11 +536,6 @@ do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapset
 		do_draw_map(displaylist, t, m, order);
 	}
 	mapset_close(h);
-	if (route) {
-		m = route_get_map(route);
-		if (m)
-			do_draw_map(displaylist, t, m, order);
-	}
 }
 
 int
@@ -546,7 +545,7 @@ graphics_ready(struct graphics *this_)
 }
 
 void
-graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, GList *layouts, struct route *route)
+graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, GList *layouts)
 {
 	int order=transform_get_order(trans);
 	gra->meth.draw_mode(gra->priv, draw_mode_begin);
@@ -573,7 +572,7 @@ graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy)
 
 
 void
-graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, GList *layouts, struct route *route)
+graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, GList *layouts)
 {
 	int order=transform_get_order(trans);
 
@@ -593,9 +592,9 @@ graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *maps
 	}
 #endif
 	profile(0,NULL);
-	do_draw(displaylist, trans, mapsets, order, route);
+	do_draw(displaylist, trans, mapsets, order);
 	profile(1,"do_draw");
-	graphics_displaylist_draw(gra, displaylist, trans, layouts, route);
+	graphics_displaylist_draw(gra, displaylist, trans, layouts);
 	profile(1,"xdisplay_draw");
 	profile(0,"end");
   
