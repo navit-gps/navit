@@ -29,14 +29,6 @@ struct map_methods {
 	struct item *		(*map_search_get_item)(struct map_search_priv *ms);
 };
 
-struct map {
-	struct map_methods meth;
-	struct map_priv *priv;
-	char *type;
-	char *filename;
-	int active;
-};
-
 static inline int
 map_selection_contains_point(struct map_selection *sel, struct coord *c)
 {

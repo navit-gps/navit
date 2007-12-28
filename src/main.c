@@ -137,6 +137,7 @@ int main(int argc, char **argv)
 	if (s) {
 		setenv("SDL_WINDOWID", s, 0);
 	}
+	route_init();
 	config_file=NULL;
 	if (argc > 1) 
 		config_file=argv[1];

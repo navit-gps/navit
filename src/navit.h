@@ -72,6 +72,7 @@ void navit_remove_init_cb(struct navit *this_, struct callback *cb);
 void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 void navit_tracking_add(struct navit *this_, struct tracking *tracking);
 void navit_route_add(struct navit *this_, struct route *route);
+struct map *navit_get_route_map(struct navit *this_);
 void navit_navigation_add(struct navit *this_, struct navigation *navigation);
 void navit_set_speech(struct navit *this_, struct speech *speech);
 struct gui *navit_get_gui(struct navit *this_);

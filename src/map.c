@@ -10,6 +10,15 @@
 #include "plugin.h"
 #include "country.h"
 
+
+struct map {
+	struct map_methods meth;
+	struct map_priv *priv;
+	char *type;
+	char *filename;
+	int active;
+};
+
 struct map_rect {
 	struct map *m;
 	struct map_rect_priv *priv;
@@ -106,6 +115,10 @@ map_rect_new(struct map *m, struct map_selection *sel)
 	mr=g_new0(struct map_rect, 1);
 	mr->m=m;
 	mr->priv=m->meth.map_rect_new(m->priv, sel);
+	if (! mr->priv) {
+		g_free(mr);
+		mr=NULL;
+	}
 
 	return mr;
 }

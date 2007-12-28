@@ -3,6 +3,7 @@
 #include "coord.h"
 #include "item.h"
 #include "navit.h"
+#include "map.h"
 #include "route.h"
 #include "callback.h"
 #include "transform.h"
@@ -67,9 +68,11 @@ struct vehicle_methods vehicle_demo_methods = {
 static int
 vehicle_demo_timer(struct vehicle_priv *priv)
 {
-	struct route_path_coord_handle *h=NULL;
-	struct coord *c, *pos=NULL, ci;
+	struct coord c, pos, ci;
 	int slen, len, dx, dy;
+	struct map *route_map=NULL;
+	struct map_rect *mr=NULL;
+	struct item *item=NULL;
 
 	len = (priv->speed * priv->interval / 1000)/ 3.6;
 	dbg(1, "###### Entering simulation loop\n");
@@ -77,38 +80,37 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 		dbg(1, "vehicle->navit is not set. Can't simulate\n");
 		return 1;
 	}
-	struct route *vehicle_route = navit_get_route(priv->navit);
-	if (vehicle_route) 
-		h = route_path_coord_open(vehicle_route);
-	if (h) 
-		pos = route_path_coord_get(h);
-	dbg(1, "current pos=%p\n", pos);
-	if (pos) {
+	route_map=navit_get_route_map(priv->navit);
+	if (route_map)
+		mr=map_rect_new(route_map, NULL);
+	if (mr) 
+		item=map_rect_get_item(mr);	
+	if (mr && item_coord_get(item, &pos, 1)) {
 		priv->position_set=0;
-		dbg(1, "current pos=0x%x,0x%x\n", pos->x, pos->y);
+		dbg(1, "current pos=0x%x,0x%x\n", pos.x, pos.y);
 		dbg(1, "last pos=0x%x,0x%x\n", priv->last.x, priv->last.y);
-		if (priv->last.x == pos->x && priv->last.y == pos->y) {
+		if (priv->last.x == pos.x && priv->last.y == pos.y) {
 			dbg(1, "endless loop\n");
 		}
-		priv->last = *pos;
-		for (;;) {
-			c = route_path_coord_get(h);
-			dbg(1, "next pos=%p\n", c);
-			if (!c)
-				break;
-			dbg(1, "next pos=0x%x,0x%x\n", c->x, c->y);
-			slen = transform_distance(projection_mg, pos, c);
+		priv->last = pos;
+		while (item) {
+			if (!item_coord_get(item, &c, 1)) {
+				item=map_rect_get_item(mr);
+				continue;
+			}
+			dbg(1, "next pos=0x%x,0x%x\n", c.x, c.y);
+			slen = transform_distance(projection_mg, &pos, &c);
 			dbg(1, "len=%d slen=%d\n", len, slen);
 			if (slen < len) {
 				len -= slen;
 				pos = c;
 			} else {
-				dx = c->x - pos->x;
-				dy = c->y - pos->y;
-				ci.x = pos->x + dx * len / slen;
-				ci.y = pos->y + dy * len / slen;
+				dx = c.x - pos.x;
+				dy = c.y - pos.y;
+				ci.x = pos.x + dx * len / slen;
+				ci.y = pos.y + dy * len / slen;
 				priv->direction =
-				    transform_get_angle_delta(pos, c, 0);
+				    transform_get_angle_delta(&pos, &c, 0);
 				dbg(1, "ci=0x%x,0x%x\n", ci.x, ci.y);
 				transform_to_geo(projection_mg, &ci,
 						 &priv->geo);
@@ -120,6 +122,8 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 		if (priv->position_set) 
 			callback_list_call_0(priv->cbl);
 	}
+	if (mr)
+		map_rect_destroy(mr);
 	return 1;
 }
 
