@@ -34,6 +34,7 @@ ATTR(destination_length)
 ATTR(destination_time)
 ATTR(speed)
 ATTR(interval)
+ATTR(position_qual)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
