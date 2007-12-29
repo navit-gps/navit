@@ -232,6 +232,7 @@ navigation_itm_new(struct navigation *this_, struct item *item, struct coord *st
 	struct coord c[5];
 
 	if (item) {
+		dbg(1, "start 0x%x 0x%x\n", start->x, start->y);
 		ret->item=*item;
 		item_hash_insert(this_->hash, item, ret);
 		mr=map_rect_new(item->map, NULL);
