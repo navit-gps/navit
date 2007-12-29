@@ -17,6 +17,7 @@ struct vehicle_priv {
 	struct navit *navit;
 	struct coord_geo geo;
 	struct coord last;
+	double config_speed;
 	double speed;
 	double direction;
 };
@@ -68,13 +69,13 @@ struct vehicle_methods vehicle_demo_methods = {
 static int
 vehicle_demo_timer(struct vehicle_priv *priv)
 {
-	struct coord c, pos, ci;
+	struct coord c, c2, pos, ci;
 	int slen, len, dx, dy;
 	struct map *route_map=NULL;
 	struct map_rect *mr=NULL;
 	struct item *item=NULL;
 
-	len = (priv->speed * priv->interval / 1000)/ 3.6;
+	len = (priv->config_speed * priv->interval / 1000)/ 3.6;
 	dbg(1, "###### Entering simulation loop\n");
 	if (!priv->navit) {
 		dbg(1, "vehicle->navit is not set. Can't simulate\n");
@@ -105,12 +106,20 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 				len -= slen;
 				pos = c;
 			} else {
-				dx = c.x - pos.x;
-				dy = c.y - pos.y;
-				ci.x = pos.x + dx * len / slen;
-				ci.y = pos.y + dy * len / slen;
-				priv->direction =
-				    transform_get_angle_delta(&pos, &c, 0);
+				if (item_coord_get(item, &c2, 1) || map_rect_get_item(mr)) {
+					dx = c.x - pos.x;
+					dy = c.y - pos.y;
+					ci.x = pos.x + dx * len / slen;
+					ci.y = pos.y + dy * len / slen;
+					priv->direction =
+					    transform_get_angle_delta(&pos, &c, 0);
+					priv->speed=priv->config_speed;
+				} else {
+					ci.x = pos.x;
+					ci.y = pos.y;
+					priv->speed=0;
+					dbg(0,"destination reached\n");
+				}
 				dbg(1, "ci=0x%x,0x%x\n", ci.x, ci.y);
 				transform_to_geo(projection_mg, &ci,
 						 &priv->geo);
@@ -141,9 +150,10 @@ vehicle_demo_new(struct vehicle_methods
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->cbl = cbl;
 	ret->interval=1000;
-	ret->speed=40;
-	if ((speed=attr_search(attrs, NULL, attr_speed)))
-		ret->speed=speed->u.num;
+	ret->config_speed=40;
+	if ((speed=attr_search(attrs, NULL, attr_speed))) {
+		ret->config_speed=speed->u.num;
+	}
 	if ((interval=attr_search(attrs, NULL, attr_interval)))
 		ret->interval=speed->u.num;
 	if ((position_coord_geo=attr_search(attrs, NULL, attr_position_coord_geo))) {
