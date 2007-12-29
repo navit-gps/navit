@@ -188,6 +188,12 @@ route_get_speedlist(struct route *this)
 }
 
 int
+route_get_path_set(struct route *this)
+{
+	return this->path2 != NULL;
+}
+
+int
 route_set_speed(struct route *this, enum item_type type, int value)
 {
 	if (type < route_item_first || type > route_item_last) {
