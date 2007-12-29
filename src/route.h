@@ -43,6 +43,7 @@ struct mapset *route_get_mapset(struct route *this);
 struct route_info *route_get_pos(struct route *this);
 struct route_info *route_get_dst(struct route *this);
 int *route_get_speedlist(struct route *this);
+int route_get_path_set(struct route *this);
 int route_set_speed(struct route *this, enum item_type type, int value);
 int route_contains(struct route *this, struct item *item);
 void route_set_position(struct route *this, struct pcoord *pos);

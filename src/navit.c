@@ -1168,6 +1168,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	struct point cursor_pnt, *pnt=&cursor_pnt;
 	enum projection pro;
 	int border=16;
+	int route_path_set=0;
 
 	if (! this_->ready)
 		return;
@@ -1184,6 +1185,8 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		navit_vehicle_draw(this_, nv, NULL);
 		return;
 	}
+	if (this_->route)
+		route_path_set=route_get_path_set(this_->route);
 	if (this_->tracking && this_->tracking_flag) {
 		if (tracking_update(this_->tracking, &nv->coord, nv->dir)) {
 			if (this_->route && nv->update_curr == 1) 
@@ -1197,7 +1200,6 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 			route_set_position(this_->route, &cursor_pc);
 		}
 	}
-
 	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0);
 	if (!transform_within_border(this_->trans, &cursor_pnt, border)) {
 		if (!this_->cursor_flag)
@@ -1219,6 +1221,8 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
 		pnt=NULL;
 	}
+	if (pnt && this_->route && !route_path_set && route_get_path_set(this_->route)) 
+		navit_draw(this_);
 	if (nv->follow_curr > 1)
 		nv->follow_curr--;
 	else
