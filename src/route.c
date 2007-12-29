@@ -1168,7 +1168,7 @@ route_info_point(struct route_info *rinf, int point)
 	switch(point) {
 	case -1:
 	case 2:
-		dir=point == 2 ? rinf->dir : -rinf->dir;
+		dir=(point == 2) ? rinf->dir : -rinf->dir;
 		if (dir > 0)
 			return &sd->c[sd->count-1];
 		else

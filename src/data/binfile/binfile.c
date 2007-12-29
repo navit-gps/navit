@@ -43,6 +43,9 @@ struct map_rect_priv {
 	int *start;
 	int *end;
 	enum attr_type attr_last;
+	int label;
+	unsigned int *street_name_attr;
+	unsigned int *street_name_systematic_attr;
         struct map_selection *sel;
         struct map_priv *m;
         struct item item;
@@ -110,8 +113,12 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	while (t->pos_attr < t->pos_next) {
 		size=*(t->pos_attr++);
 		type=t->pos_attr[0];
-		if (type == attr_street_name || type == attr_street_name_systematic)
-			type = attr_label;
+		if (type == attr_label) 
+			mr->label=1;
+		if (type == attr_street_name)
+			mr->street_name_attr=t->pos_attr;
+		if (type == attr_street_name_systematic)
+			mr->street_name_systematic_attr=t->pos_attr;
 		if (type == attr_type || attr_type == attr_any) {
 			if (attr_type == attr_any) {
 				dbg(0,"pos %p attr %s size %d\n", t->pos_attr-1, attr_to_name(type), size);
@@ -123,6 +130,12 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		} else {
 			t->pos_attr+=size;
 		}
+	}
+	if (!mr->label && (attr_type == attr_any || attr_type == attr_label) && (mr->street_name_attr || mr->street_name_systematic_attr)) {
+		mr->label=1;
+		attr->type=attr_label;
+		attr_data_set(attr, (mr->street_name_attr ? mr->street_name_attr : mr->street_name_systematic_attr) +1);
+		return 1;
 	}
 	return 0;
 }
@@ -286,6 +299,9 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 		}
 		mr->item.id_hi=t->zipfile_num;
 		mr->item.id_lo=t->pos-t->start;
+		mr->label=0;
+		mr->street_name_attr=NULL;
+		mr->street_name_systematic_attr=NULL;
 		setup_pos(mr);
 		if (mr->item.type == type_submap) {
 			struct coord_rect r;
@@ -315,6 +331,9 @@ map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 	t->pos=t->start+id_lo;
 	mr->item.id_hi=id_hi;
 	mr->item.id_lo=id_lo;
+	mr->label=0;
+	mr->street_name_attr=NULL;
+	mr->street_name_systematic_attr=NULL;
 	setup_pos(mr);
 	return &mr->item;
 }
