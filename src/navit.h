@@ -35,7 +35,7 @@ void navit_draw(struct navit *this_);
 void navit_draw_displaylist(struct navit *this_);
 void navit_zoom_in(struct navit *this_, int factor, struct point *p);
 void navit_zoom_out(struct navit *this_, int factor, struct point *p);
-struct navit *navit_new(struct pcoord *center, int zoom);
+struct navit *navit_new(struct attr **attrs);
 void navit_set_gui(struct navit *this_, struct gui *gui, char *type);
 void navit_set_graphics(struct navit *this_, struct graphics *gra, char *type);
 struct graphics *navit_get_graphics(struct navit *this_);
