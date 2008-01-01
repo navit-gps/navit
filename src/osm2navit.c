@@ -384,7 +384,7 @@ add_tag(char *k, char *v)
 		if (report)
 			fprintf(stderr,"Unknown %s %d value of '%s' '%s'\n", in_way ? "way" : "node", in_way ? wayid:nodeid, k, v);
 		type=in_way ? type_street_unkn : type_point_unkn;
-		g_hash_table_insert(value_hash, v, (gpointer)item.type);
+		g_hash_table_insert(value_hash, g_strdup(v), (gpointer)item.type);
 	}
 	if (type != type_street_unkn && type != type_point_unkn)
 		item.type=type;
