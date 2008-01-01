@@ -612,6 +612,13 @@ parse_way(char *p)
 	return 1;
 }
 
+static int
+parse_relation(char *p)
+{
+	debug_attr_buffer[0]='\0';
+	return 1;
+}
+
 static void
 write_attr(FILE *out, struct attr_bin *attr, void *buffer)
 {
@@ -770,6 +777,8 @@ phase1(FILE *in, FILE *out_ways, FILE *out_nodes)
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 		} else if (!strncmp(p, "<relation ",10)) {
 			in_relation=1;
+			if (!parse_relation(p)) 
+				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 			processed_relations++;
 		} else if (!strncmp(p, "<member ",8)) {
 		} else if (!strncmp(p, "</node>",7)) {
