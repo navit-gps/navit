@@ -144,7 +144,7 @@ callback_list_call_attr(struct callback_list *l, enum attr_type type, int pcount
 	cbi=l->list;
 	while (cbi) {
 		cb=cbi->data;
-		if (type == attr_any || cb->type == type)
+		if (type == attr_any || cb->type == attr_any || cb->type == type)
 			callback_call(cb, pcount, p);
 		cbi=g_list_next(cbi);
 	}
