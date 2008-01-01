@@ -311,9 +311,13 @@ navit_zoom_out(struct navit *this_, int factor, struct point *p)
 }
 
 struct navit *
-navit_new(struct pcoord *center, int zoom)
+navit_new(struct attr **attrs)
 {
 	struct navit *this_=g_new0(struct navit, 1);
+	struct pcoord center;
+	struct coord co;
+	enum projection pro=projection_mg;
+	int zoom = 256;
 	FILE *f;
 
 	main_add_navit(this_);
@@ -330,10 +334,33 @@ navit_new(struct pcoord *center, int zoom)
 	}
 
 	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+
+	
+	center.x=1300000;
+	center.y=7000000;
+	center.pro = pro;
+	for (;*attrs; attrs++) {
+	    switch((*attrs)->type) {
+		case attr_zoom:
+		    zoom = (*attrs)->u.num;
+		    break;
+		case attr_center:
+		    if (coord_parse((*attrs)->u.str, center.pro, &co)) {
+			center.x=co.x;
+			center.y=co.y;
+		    }
+		    break;
+		default:
+		    dbg(0, "Unexpected attribute %x\n",(*attrs)->type);
+		    break;
+	    }
+	}
+
+	dbg(0,"zoom=%d, coords x=%d, y=%d\n",zoom, center.x, center.y);
 	this_->cursor_flag=1;
 	this_->tracking_flag=1;
 	this_->trans=transform_new();
-	transform_setup(this_->trans, center, zoom, 0);
+	transform_setup(this_->trans, &center, zoom, 0);
 	this_->displaylist=graphics_displaylist_new();
 	return this_;
 }

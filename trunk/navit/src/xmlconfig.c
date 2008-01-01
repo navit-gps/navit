@@ -201,26 +201,10 @@ xmlconfig_debug(struct xmlstate *state)
 static int
 xmlconfig_navit(struct xmlstate *state)
 {
-	const char *value;
-	int zoom=0;
-	struct pcoord c;
-	struct coord co;
-	enum projection pro=projection_mg;
+	struct attr **attrs;
 
-	value=find_attribute(state, "zoom", 0);
-	if (value) 
-		zoom=convert_number(value);
-	if (! zoom)
-		zoom=256;
-	value=find_attribute(state, "center", 0);
-	if (! value || ! coord_parse(value, pro, &co)) {
-		c.x=1300000;
-		c.y=7000000;
-	}
-	c.x = co.x;
-	c.y = co.y;
-	c.pro = pro;
-	state->element_object = navit_new(&c, zoom);
+	attrs=convert_to_attrs(state);
+	state->element_object = navit_new(attrs);
 	if (! state->element_object)
 		return 0;
 	return 1;
