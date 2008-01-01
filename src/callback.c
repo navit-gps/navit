@@ -1,10 +1,12 @@
 #include <glib.h>
+#include "item.h"
 #include "debug.h"
 #include "callback.h"
 
 struct callback {
 	void (*func)();
 	int pcount;
+	enum attr_type type;
 	void *p[0];
 	
 };
@@ -22,7 +24,7 @@ callback_list_new(void)
 }
 
 struct callback *
-callback_new(void (*func)(), int pcount, void **p)
+callback_new_attr(void (*func)(), enum attr_type type, int pcount, void **p)
 {
 	struct callback *ret;
 	int i;
@@ -30,10 +32,17 @@ callback_new(void (*func)(), int pcount, void **p)
 	ret=g_malloc0(sizeof(struct callback)+pcount*sizeof(void *));
 	ret->func=func;
 	ret->pcount=pcount;
+	ret->type=type;
 	for (i = 0 ; i < pcount ; i++) {
 		ret->p[i]=p[i];
 	}	
 	return ret;
+}
+
+struct callback *
+callback_new(void (*func)(), int pcount, void **p)
+{
+	return callback_new_attr(func, attr_none, pcount, p);
 }
 
 void
@@ -126,9 +135,8 @@ callback_call(struct callback *cb, int pcount, void **p)
 	}
 }
 
-
 void
-callback_list_call(struct callback_list *l, int pcount, void **p)
+callback_list_call_attr(struct callback_list *l, enum attr_type type, int pcount, void **p)
 {
 	GList *cbi;
 	struct callback *cb;
@@ -136,10 +144,17 @@ callback_list_call(struct callback_list *l, int pcount, void **p)
 	cbi=l->list;
 	while (cbi) {
 		cb=cbi->data;
-		callback_call(cb, pcount, p);
+		if (type == attr_any || cb->type == type)
+			callback_call(cb, pcount, p);
 		cbi=g_list_next(cbi);
 	}
 	
+}
+
+void
+callback_list_call(struct callback_list *l, int pcount, void **p)
+{
+	callback_list_call_attr(l, attr_any, pcount, p);
 }
 
 
