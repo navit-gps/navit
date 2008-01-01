@@ -1132,7 +1132,18 @@ navit_toggle_tracking(struct navit *this_)
 void
 navit_toggle_orient_north(struct navit *this_)
 {
+	int dir = 0;
+
 	this_->orient_north_flag=1-this_->orient_north_flag;
+	if (this_->orient_north_flag) {
+		dir = 0;
+	} else {
+		if (this_->vehicle) {
+			dir = this_->vehicle->dir;
+		}
+	}
+	transform_set_angle(this_->trans, dir);
+	navit_draw(this_);
 }
 
 /**
