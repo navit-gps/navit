@@ -63,12 +63,6 @@ attr_new_from_text(const char *name, const char *value)
 	case attr_item_type:
 		ret->u.item_type=item_from_name(value);
 		break;
-	case attr_position_coord_geo:
-		g=g_new(struct coord_geo, 1);
-		ret->u.coord_geo=g;
-		coord_parse(value, projection_mg, &c);
-		transform_to_geo(projection_mg, &c, g);
-		break;
 	default:
 		if (attr >= attr_type_string_begin && attr <= attr_type_string_end) {
 			ret->u.str=(char *)value;
@@ -97,6 +91,13 @@ attr_new_from_text(const char *name, const char *value)
 			} else {
 				dbg(0,"color %s has unknown format\n",value);
 			}
+			break;
+		}
+		if (attr >= attr_type_coord_geo_start && attr <= attr_type_coord_geo_end) {
+			g=g_new(struct coord_geo, 1);
+			ret->u.coord_geo=g;
+			coord_parse(value, projection_mg, &c);
+			transform_to_geo(projection_mg, &c, g);
 			break;
 		}
 		dbg(1,"default\n");

@@ -99,6 +99,8 @@ struct route {
 
 	struct route_graph *graph;
 	struct route_path *path2;
+	struct map *map;
+	struct map *graph_map;
 	int speedlist[route_item_last-route_item_first+1];
 };
 
@@ -1648,6 +1650,31 @@ static struct map_priv *
 route_graph_map_new(struct map_methods *meth, struct attr **attrs)
 {
 	return route_map_new_helper(meth, attrs, 1);
+}
+
+static struct map *
+route_get_map_helper(struct route *this_, struct map **map, char *type)
+{
+	struct attr route_attr={.type=attr_route,.u.route=this_};
+	struct attr data_attr={.type=attr_data,.u.str=""};
+	struct attr *attrs_route[]={&route_attr, &data_attr, NULL};
+
+	if (! *map) 
+		*map=map_new(type,attrs_route);
+	return *map;
+}
+
+struct map *
+route_get_map(struct route *this_)
+{
+	return route_get_map_helper(this_, &this_->map, "route");
+}
+
+
+struct map *
+route_get_graph_map(struct route *this_)
+{
+	return route_get_map_helper(this_, &this_->graph_map, "route_graph");
 }
 
 

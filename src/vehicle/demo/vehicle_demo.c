@@ -71,17 +71,17 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 {
 	struct coord c, c2, pos, ci;
 	int slen, len, dx, dy;
+	struct route *route=NULL;
 	struct map *route_map=NULL;
 	struct map_rect *mr=NULL;
 	struct item *item=NULL;
 
 	len = (priv->config_speed * priv->interval / 1000)/ 3.6;
 	dbg(1, "###### Entering simulation loop\n");
-	if (!priv->navit) {
-		dbg(1, "vehicle->navit is not set. Can't simulate\n");
-		return 1;
-	}
-	route_map=navit_get_route_map(priv->navit);
+	if (priv->navit) 
+		route=navit_get_route(priv->navit);
+	if (route)
+		route_map=route_get_map(route);
 	if (route_map)
 		mr=map_rect_new(route_map, NULL);
 	if (mr) 

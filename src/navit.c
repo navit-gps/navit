@@ -71,8 +71,6 @@ struct navit {
 	struct statusbar *statusbar;
 	struct menu *menubar;
 	struct route *route;
-	struct map *route_map;
-	struct map *route_graph_map;
 	struct navigation *navigation;
 	struct speech *speech;
 	struct tracking *tracking;
@@ -316,9 +314,12 @@ navit_new(struct attr **attrs)
 	struct navit *this_=g_new0(struct navit, 1);
 	struct pcoord center;
 	struct coord co;
+	struct coord_geo g;
 	enum projection pro=projection_mg;
 	int zoom = 256;
 	FILE *f;
+	g.lat=53.13;
+	g.lng=11.70;
 
 	main_add_navit(this_);
 	this_->self.type=attr_navit;
@@ -336,25 +337,23 @@ navit_new(struct attr **attrs)
 	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
 	
-	center.x=1300000;
-	center.y=7000000;
-	center.pro = pro;
 	for (;*attrs; attrs++) {
 	    switch((*attrs)->type) {
 		case attr_zoom:
 		    zoom = (*attrs)->u.num;
 		    break;
 		case attr_center:
-		    if (coord_parse((*attrs)->u.str, center.pro, &co)) {
-			center.x=co.x;
-			center.y=co.y;
-		    }
+		    g=*((*attrs)->u.coord_geo);
 		    break;
 		default:
 		    dbg(0, "Unexpected attribute %x\n",(*attrs)->type);
 		    break;
 	    }
 	}
+	transform_from_geo(pro, &g, &co);
+	center.x=co.x;
+	center.y=co.y;
+	center.pro = pro;
 
 	dbg(0,"zoom=%d, coords x=%d, y=%d\n",zoom, center.x, center.y);
 	this_->cursor_flag=1;
@@ -1013,6 +1012,7 @@ navit_init(struct navit *this_)
 {
 	struct menu *men;
 	struct mapset *ms;
+	struct map *map;
 	GList *l;
 	struct navit_vehicle *nv;
 
@@ -1048,12 +1048,15 @@ navit_init(struct navit *this_)
 	}
 	if (this_->mapsets) {
 		ms=this_->mapsets->data;
-		if (this_->route_map)
-			mapset_add(ms, this_->route_map);
-		if (this_->route_graph_map)
-			mapset_add(ms, this_->route_graph_map);
-		if (this_->route)
+		if (this_->route) {
+			if ((map=route_get_map(this_->route)))
+				mapset_add(ms, map);
+			if ((map=route_get_graph_map(this_->route))) {
+				mapset_add(ms, map);
+				map_set_active(map, 0);
+			}
 			route_set_mapset(this_->route, ms);
+		}
 		if (this_->tracking)
 			tracking_set_mapset(this_->tracking, ms);
 		if (this_->navigation)
@@ -1370,20 +1373,7 @@ navit_tracking_add(struct navit *this_, struct tracking *tracking)
 void
 navit_route_add(struct navit *this_, struct route *route)
 {
-	struct attr route_attr={.type=attr_route,.u.route=route};
-	struct attr data_attr={.type=attr_data,.u.str=""};
-	struct attr *attrs_route[]={&route_attr, &data_attr, NULL};
-	struct attr *attrs_route_graph[]={&route_attr, &data_attr, NULL};
 	this_->route=route;
-	this_->route_map=map_new("route",attrs_route);
-	this_->route_graph_map=map_new("route_graph",attrs_route_graph);
-	map_set_active(this_->route_graph_map, 0);
-}
-
-struct map *
-navit_get_route_map(struct navit *this_)
-{
-	return this_->route_map;
 }
 
 void
