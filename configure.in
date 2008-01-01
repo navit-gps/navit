@@ -20,7 +20,21 @@ fi
 
 PKG_CHECK_EXISTS
 
-AC_DISABLE_STATIC
+AC_ARG_ENABLE(plugins, 	[  --disable-plugins          disable plugins], 
+			[
+				AC_DISABLE_SHARED
+				AC_ENABLE_STATIC
+			],
+			[
+				AC_ENABLE_SHARED
+				AC_DISABLE_STATIC
+				AC_DEFINE(
+					[HAVE_PLUGIN],
+					[],
+					Define to 1 if you have plugins.
+				)
+			]
+)
 AC_PROG_LIBTOOL
 
 AC_ARG_ENABLE(avoid-unaligned, [  --enable-avoid-unaligned          avoid unaligned accesses], AVOID_UNALIGNED=$enableval, AVOID_UNALIGNED=no)
