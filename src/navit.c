@@ -336,28 +336,37 @@ navit_new(struct attr **attrs)
 
 	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
-	
+	this_->cursor_flag=1;
+	this_->orient_north_flag=0;
+	this_->tracking_flag=1;
+
 	for (;*attrs; attrs++) {
-	    switch((*attrs)->type) {
+		switch((*attrs)->type) {
 		case attr_zoom:
-		    zoom = (*attrs)->u.num;
-		    break;
+			zoom=(*attrs)->u.num;
+			break;
 		case attr_center:
-		    g=*((*attrs)->u.coord_geo);
-		    break;
+			g=*((*attrs)->u.coord_geo);
+			break;
+		case attr_cursor:
+			this_->cursor_flag=!!(*attrs)->u.num;
+			break;
+		case attr_orientation:
+			this_->orient_north_flag=!!(*attrs)->u.num;
+			break;
+		case attr_tracking:
+			this_->tracking_flag=!!(*attrs)->u.num;
+			break;
 		default:
-		    dbg(0, "Unexpected attribute %x\n",(*attrs)->type);
-		    break;
-	    }
+			dbg(0, "Unexpected attribute %x\n",(*attrs)->type);
+			break;
+		}
 	}
 	transform_from_geo(pro, &g, &co);
 	center.x=co.x;
 	center.y=co.y;
 	center.pro = pro;
 
-	dbg(0,"zoom=%d, coords x=%d, y=%d\n",zoom, center.x, center.y);
-	this_->cursor_flag=1;
-	this_->tracking_flag=1;
 	this_->trans=transform_new();
 	transform_setup(this_->trans, &center, zoom, 0);
 	this_->displaylist=graphics_displaylist_new();
@@ -1174,6 +1183,56 @@ navit_toggle_orient_north(struct navit *this_)
 	}
 	transform_set_angle(this_->trans, dir);
 	navit_draw(this_);
+}
+
+int
+navit_set_attr(struct navit *this_, struct attr *attr)
+{
+	int dir = 0;
+
+	switch (attr->type) {
+	case attr_cursor:
+		this_->cursor_flag=!!attr->u.num;
+		break;
+	case attr_tracking:
+		this_->tracking_flag=!!attr->u.num;
+		break;
+	case attr_orientation:
+		this_->orient_north_flag=!!attr->u.num;
+		if (this_->orient_north_flag) {
+			dir = 0;
+		} else {
+			if (this_->vehicle) {
+				dir = this_->vehicle->dir;
+			}
+		}
+		transform_set_angle(this_->trans, dir);
+		navit_draw(this_);
+		break;
+	default:
+		return 0;
+	}
+	return 1;
+}
+
+int
+navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr)
+{
+	switch (type) {
+	case attr_cursor:
+		attr->u.num=this_->cursor_flag;
+		break;
+	case attr_tracking:
+		attr->u.num=this_->tracking_flag;
+		break;
+	case attr_orientation:
+		attr->u.num=this_->orient_north_flag;
+		break;
+	default:
+		return 0;
+	}
+	attr->type=type;
+	return 1;
 }
 
 /**
