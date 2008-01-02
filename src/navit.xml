@@ -12,7 +12,7 @@ Center coordinates format:
 [-]0xX [-]0xX 
 Change to your home coordinates.
 -->
-<navit center="4808 N 1134 E" zoom="256" >
+<navit center="4808 N 1134 E" zoom="256" tracking="1" cursor="1" orientation="0">
 	<gui type="gtk" />
 	<graphics type="gtk_drawing_area" />
 <!-- For SDL, use rather the following lines

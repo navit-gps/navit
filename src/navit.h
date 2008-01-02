@@ -7,6 +7,7 @@ extern "C" {
 extern struct gui *main_loop_gui;
 /* prototypes */
 enum item_type;
+enum attr_type;
 struct attr;
 struct callback;
 struct coord;
@@ -63,6 +64,8 @@ void navit_set_center_screen(struct navit *this_, struct point *p);
 void navit_toggle_cursor(struct navit *this_);
 void navit_toggle_tracking(struct navit *this_);
 void navit_toggle_orient_north(struct navit *this_);
+int navit_set_attr(struct navit *this_, struct attr *attr);
+int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr);
 void navit_set_position(struct navit *this_, struct pcoord *c);
 struct navit_vehicle *navit_add_vehicle(struct navit *this_, struct vehicle *v, struct attr **attrs);
 void navit_add_vehicle_cb(struct navit *this_, struct callback *cb);
