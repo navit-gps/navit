@@ -720,7 +720,7 @@ static void
 save_buffer(char *filename, struct buffer *b)
 {	
 	FILE *f;
-	f=fopen64(filename,"w+");
+	f=fopen64(filename,"wb+");
 	fwrite(b->base, b->size, 1, f);
 	fclose(f);
 }
@@ -732,7 +732,7 @@ load_buffer(char *filename, struct buffer *b)
 	if (b->base) 
 		free(b->base);
 	b->malloced=0;
-	f=fopen64(filename,"r");
+	f=fopen64(filename,"rb");
 	fseek(f, 0, SEEK_END);
 	b->size=b->malloced=ftell(f);
 	fprintf(stderr,"reading %d bytes from %s\n", b->size, filename);
@@ -1033,7 +1033,7 @@ write_tile(char *key, struct tile_head *th, gpointer dummy)
 #if 0
 	strcat(buffer,".bin");
 #endif
-	f=fopen64(buffer, "w+");
+	f=fopen64(buffer, "wb+");
 	while (th) {
 		fwrite(th->data, th->size, 1, f);
 		th=th->next;
@@ -1760,9 +1760,9 @@ int main(int argc, char **argv)
 
 	if (start == 1) {
 		if (process_ways)
-			ways=fopen64("ways.tmp","w+");
+			ways=fopen64("ways.tmp","wb+");
 		if (process_nodes)
-			nodes=fopen64("nodes.tmp","w+");
+			nodes=fopen64("nodes.tmp","wb+");
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
 		phase1(stdin,ways,nodes);
@@ -1779,8 +1779,8 @@ int main(int argc, char **argv)
 		load_buffer("coords.tmp",&node_buffer);
 	if (start <= 2) {
 		if (process_ways) {
-			ways=fopen64("ways.tmp","r");
-			ways_split=fopen64("ways_split.tmp","w+");
+			ways=fopen64("ways.tmp","rb");
+			ways_split=fopen64("ways_split.tmp","wb+");
 			phase=2;
 			fprintf(stderr,"PROGRESS: Phase 2: finding intersections\n");
 			phase2(ways,ways_split);
@@ -1801,10 +1801,10 @@ int main(int argc, char **argv)
 		phase=3;
 		fprintf(stderr,"PROGRESS: Phase 3: generating tiles\n");
 		if (process_ways)
-			ways_split=fopen64("ways_split.tmp","r");
+			ways_split=fopen64("ways_split.tmp","rb");
 		if (process_nodes)
-			nodes=fopen64("nodes.tmp","r");
-		tilesdir=fopen64("tilesdir.tmp","w+");
+			nodes=fopen64("nodes.tmp","rb");
+		tilesdir=fopen64("tilesdir.tmp","wb+");
 		phase3(ways_split,nodes,tilesdir);
 		fclose(tilesdir);
 		if (nodes)
@@ -1818,11 +1818,11 @@ int main(int argc, char **argv)
 		phase=4;
 		fprintf(stderr,"PROGRESS: Phase 4: assembling map\n");
 		if (process_ways)
-			ways_split=fopen64("ways_split.tmp","r");
+			ways_split=fopen64("ways_split.tmp","rb");
 		if (process_nodes)
-			nodes=fopen64("nodes.tmp","r");
-		res=fopen64(result,"w+");
-		zipdir=fopen64("zipdir.tmp","w+");
+			nodes=fopen64("nodes.tmp","rb");
+		res=fopen64(result,"wb+");
+		zipdir=fopen64("zipdir.tmp","wb+");
 		phase4(ways_split,nodes,res,zipdir,compression_level);
 		fclose(zipdir);
 		fclose(res);
