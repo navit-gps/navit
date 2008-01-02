@@ -1188,7 +1188,7 @@ navit_toggle_orient_north(struct navit *this_)
 int
 navit_set_attr(struct navit *this_, struct attr *attr)
 {
-	int dir = 0;
+	int dir=0, orient_old=0;
 
 	switch (attr->type) {
 	case attr_cursor:
@@ -1198,6 +1198,7 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 		this_->tracking_flag=!!attr->u.num;
 		break;
 	case attr_orientation:
+		orient_old=this_->orient_north_flag;
 		this_->orient_north_flag=!!attr->u.num;
 		if (this_->orient_north_flag) {
 			dir = 0;
@@ -1207,7 +1208,9 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 			}
 		}
 		transform_set_angle(this_->trans, dir);
-		navit_draw(this_);
+		if (orient_old != this_->orient_north_flag) {
+			navit_draw(this_);
+		}
 		break;
 	default:
 		return 0;
