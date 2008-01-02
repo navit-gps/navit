@@ -55,19 +55,37 @@ roadbook_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 static void
 cursor_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_toggle_cursor(gui->nav);
+	struct attr attr;
+
+	attr.type=attr_cursor;
+	attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
+	if(!navit_set_attr(gui->nav, &attr)) {
+		dbg(0, "Failed to set attr_cursor\n");
+	}
 }
 
 static void
 tracking_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_toggle_tracking(gui->nav);
+	struct attr attr;
+
+	attr.type=attr_tracking;
+	attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
+	if(!navit_set_attr(gui->nav, &attr)) {
+		dbg(0, "Failed to set attr_tracking\n");
+	}
 }
 
 static void
 orient_north_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_toggle_orient_north(gui->nav);
+	struct attr attr;
+
+	attr.type=attr_orientation;
+	attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
+	if(!navit_set_attr(gui->nav, &attr)) {
+		dbg(0, "Failed to set attr_orientation\n");
+	}
 }
 
 static void
