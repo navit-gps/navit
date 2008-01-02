@@ -4,6 +4,8 @@
 #include "gui_gtk.h"
 #include "menu.h"
 #include "coord.h"
+#include "item.h"
+#include "attr.h"
 #include "callback.h"
 #include "debug.h"
 #include "destination.h"
@@ -493,6 +495,8 @@ gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, in
 	struct menu_priv *ret;
 	GError *error;
 	GtkWidget *widget;
+	struct attr attr;
+	GtkToggleAction *toggle_action;
 
 	*meth=menu_methods;
 	ret=g_new0(struct menu_priv, 1);
@@ -518,6 +522,24 @@ gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, in
 		if (error) {
 			g_message ("building menus failed: %s", error->message);
 			g_error_free (error);
+		}
+		if (navit_get_attr(this->nav, attr_cursor, &attr)) {
+			toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "CursorAction"));
+			gtk_toggle_action_set_active(toggle_action, attr.u.num);
+		} else {
+			dbg(0, "Unable to locate CursorAction\n");
+		}
+		if (navit_get_attr(this->nav, attr_orientation, &attr)) {
+			toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "OrientationAction"));
+			gtk_toggle_action_set_active(toggle_action, attr.u.num);
+		} else {
+			dbg(0, "Unable to locate OrientationAction\n");
+		}
+		if (navit_get_attr(this->nav, attr_tracking, &attr)) {
+			toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "TrackingAction"));
+			gtk_toggle_action_set_active(toggle_action, attr.u.num);
+		} else {
+			dbg(0, "Unable to locate TrackingAction\n");
 		}
 	}
 	widget=gtk_ui_manager_get_widget(this->menu_manager, path);

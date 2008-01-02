@@ -1182,7 +1182,10 @@ navit_toggle_orient_north(struct navit *this_)
 		}
 	}
 	transform_set_angle(this_->trans, dir);
+#if 0
+	/* FIXME check if we are ready for this. */
 	navit_draw(this_);
+#endif
 }
 
 int
