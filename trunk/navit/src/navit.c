@@ -1144,50 +1144,6 @@ navit_set_center_screen(struct navit *this_, struct point *p)
 	navit_set_center(this_, &c);
 }
 
-void
-navit_toggle_cursor(struct navit *this_)
-{
-	this_->cursor_flag=1-this_->cursor_flag;
-}
-
-/**
- * Toggle the tracking : automatic centering of the map on the main vehicle
- *
- * @param navit The navit instance
- * @returns nothing
- */
-void
-navit_toggle_tracking(struct navit *this_)
-{
-	this_->tracking_flag=1-this_->tracking_flag;
-}
-
-/**
- * Toggle the north orientation : forces the map to be aimed at north
- *
- * @param navit The navit instance
- * @returns nothing
- */
-void
-navit_toggle_orient_north(struct navit *this_)
-{
-	int dir = 0;
-
-	this_->orient_north_flag=1-this_->orient_north_flag;
-	if (this_->orient_north_flag) {
-		dir = 0;
-	} else {
-		if (this_->vehicle) {
-			dir = this_->vehicle->dir;
-		}
-	}
-	transform_set_angle(this_->trans, dir);
-#if 0
-	/* FIXME check if we are ready for this. */
-	navit_draw(this_);
-#endif
-}
-
 int
 navit_set_attr(struct navit *this_, struct attr *attr)
 {
