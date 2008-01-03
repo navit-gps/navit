@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <termios.h>
 #include <math.h>
+#include "config.h"
 #include "debug.h"
 #include "callback.h"
 #include "plugin.h"

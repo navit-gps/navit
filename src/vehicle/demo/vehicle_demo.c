@@ -1,4 +1,5 @@
 #include <glib.h>
+#include "config.h"
 #include "debug.h"
 #include "coord.h"
 #include "item.h"

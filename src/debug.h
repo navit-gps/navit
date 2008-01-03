@@ -7,7 +7,10 @@ extern "C" {
 
 #include <stdarg.h>
 extern int debug_level;
-#define dbg(level,fmt...) ({ if (debug_level >= level) debug_printf(level,MODULE,__PRETTY_FUNCTION__,1,fmt); })
+#define dbg_str2(x) #x
+#define dbg_str1(x) dbg_str2(x)
+#define dbg_module dbg_str1(MODULE)
+#define dbg(level,fmt...) ({ if (debug_level >= level) debug_printf(level,dbg_module,__PRETTY_FUNCTION__,1,fmt); })
 
 /* prototypes */
 void debug_init(void);

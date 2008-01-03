@@ -1,5 +1,6 @@
 #include <glib.h>
 #include <gmodule.h>
+#include "config.h"
 #include "plugin.h"
 #include "file.h"
 #define PLUGIN_C
@@ -144,6 +145,7 @@ plugins_add_path(struct plugins *pls, const char *path, int active, int lazy)
 void
 plugins_init(struct plugins *pls)
 {
+#ifdef USE_PLUGINS
 	struct plugin *pl;
 	GList *l;
 
@@ -162,6 +164,7 @@ plugins_init(struct plugins *pls)
 			plugin_call_init(pl);
 		l=g_list_next(l);
 	}
+#endif
 }
 
 void
