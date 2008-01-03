@@ -1184,7 +1184,12 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 		return 0;
 	}
 	if (attr_updated) {
-		callback_list_call_attr(this_->attr_cbl, attr->type, 1, &attr);
+		void *p[2];
+
+		p[0] = this_;
+		p[1] = attr;
+
+		callback_list_call_attr(this_->attr_cbl, attr->type, 2, p);
 	}
 	return 1;
 }
