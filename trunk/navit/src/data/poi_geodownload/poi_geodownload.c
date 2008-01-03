@@ -1,4 +1,5 @@
 #include <mdbtools.h>
+#include "config.h"
 #include "debug.h"
 #include "coord.h"
 #include "projection.h"

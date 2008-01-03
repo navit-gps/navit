@@ -1,5 +1,5 @@
 include $(top_srcdir)/Makefile.inc
-AM_CPPFLAGS = @NAVIT_CFLAGS@   -I$(top_srcdir)/src -DMODULE=\"data_garmin\"
+AM_CPPFLAGS = @NAVIT_CFLAGS@   -I$(top_srcdir)/src -DMODULE=data_garmin
 AM_CPPFLAGS+= @LIBGARMIN_CFLAGS@
 INCLUDES=-I$(top_srcdir)/src/data/garmin/libgarmin
 AM_CPPFLAGS+=-I$(top_srcdir)/src/data/garmin/libgarmin

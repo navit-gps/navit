@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <glib.h>
+#include "config.h"
 #include "plugin.h"
 #include "speech.h"
 

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include "config.h"
 #include "plugin.h"
 #include "data.h"
 #include "projection.h"

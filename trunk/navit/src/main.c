@@ -11,12 +11,12 @@
 #ifdef USE_GTK_MAIN_LOOP
 #include <gtk/gtk.h>
 #endif
+#include "config.h"
 #include "file.h"
 #include "debug.h"
 #include "main.h"
 #include "navit.h"
 #include "gui.h"
-#include "plugin.h"
 #include "xmlconfig.h"
 
 #define _(STRING)    gettext(STRING)
@@ -128,6 +128,10 @@ int main(int argc, char **argv)
 	textdomain( "navit" );
 
 	debug_init();
+#ifndef USE_PLUGINS
+	extern void builtin_init(void);
+	builtin_init();
+#endif
 #if 0
 	/* handled in gui/gtk */
 	gtk_set_locale();
