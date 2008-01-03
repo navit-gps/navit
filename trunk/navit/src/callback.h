@@ -15,6 +15,7 @@ struct callback *callback_list_add_new(struct callback_list *l, void (*func)(voi
 void callback_list_remove(struct callback_list *l, struct callback *cb);
 void callback_list_remove_destroy(struct callback_list *l, struct callback *cb);
 void callback_call(struct callback *cb, int pcount, void **p);
+void callback_list_call_attr(struct callback_list *l, enum attr_type type, int pcount, void **p);
 void callback_list_call(struct callback_list *l, int pcount, void **p);
 void callback_list_destroy(struct callback_list *l);
 /* end of prototypes */
