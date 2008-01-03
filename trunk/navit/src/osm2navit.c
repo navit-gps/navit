@@ -148,18 +148,18 @@ build_attrmap_line(char *line)
 	gpointer *data;
 	GHashTable *key_hash,*value_hash;
 	t=line;
-	p=index(t,'\t');
+	p=strchr(t,'\t');
 	if (p) {
 		while (*p == '\t')
 			*p++='\0';
 		k=p;
-		p=index(k,'\t');
+		p=strchr(k,'\t');
 	}
 	if (p) {
 		while (*p == '\t')
 			*p++='\0';
 		v=p;
-		p=index(v,'\t');
+		p=strchr(v,'\t');
 	}
 	if (p) {
 		while (*p == '\t')
@@ -196,7 +196,7 @@ build_attrmap(char *map)
 	way_key_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	node_key_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	while (map) {
-		p=index(map,'\n');
+		p=strchr(map,'\n');
 		if (p)
 			*p++='\0';
 		if (strlen(map))
@@ -276,7 +276,7 @@ xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size)
 	s=*pos++;
 	if (! s)
 		return 0;
-	i=index(pos, s);
+	i=strchr(pos, s);
 	if (! i)
 		return 0;
 	if (i - pos > buffer_size)
@@ -751,7 +751,7 @@ phase1(FILE *in, FILE *out_ways, FILE *out_nodes)
 	char *p;
 	sig_alrm(0);
 	while (fgets(buffer, size, in)) {
-		p=index(buffer,'<');
+		p=strchr(buffer,'<');
 		if (! p) {
 			fprintf(stderr,"WARNING: wrong line %s\n", buffer);
 			continue;
