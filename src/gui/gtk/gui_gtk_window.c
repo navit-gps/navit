@@ -6,6 +6,7 @@
 #endif
 #include <libintl.h>
 #include <gtk/gtk.h>
+#include "config.h"
 #include "navit.h"
 #include "debug.h"
 #include "gui.h"

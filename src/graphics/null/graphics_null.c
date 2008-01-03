@@ -1,4 +1,5 @@
 #include <glib.h>
+#include "config.h"
 #include "point.h"
 #include "graphics.h"
 #include "color.h"

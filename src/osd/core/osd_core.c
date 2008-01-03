@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <glib.h>
+#include "config.h"
 #include "item.h"
 #include "point.h"
 #include "coord.h"

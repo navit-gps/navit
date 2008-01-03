@@ -104,7 +104,15 @@ void *plugin_get_##type##_type(const char *name);
 
 #include "plugin_def.h"
 
+#ifndef USE_PLUGINS
+#define plugin_module_cat3(pre,mod,post) pre##mod##post
+#define plugin_module_cat2(pre,mod,post) plugin_module_cat3(pre,mod,post)
+#define plugin_module_cat(pre,post) plugin_module_cat2(pre,MODULE,post)
+#define plugin_init plugin_module_cat(module_,_init)
+#endif
+
 void plugin_init(void);
+
 /* prototypes */
 struct plugin *plugin_new(char *plugin);
 int plugin_load(struct plugin *pl);
