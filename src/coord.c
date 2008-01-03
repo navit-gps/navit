@@ -137,15 +137,15 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 	enum projection str_pro=projection_none;
 
 	dbg(1,"enter('%s',%d,%p)\n", c_str, pro, c_ret);
-	s=index(str,' ');
-	co=index(str,':');
+	s=strchr(str,' ');
+	co=strchr(str,':');
 	if (co && co < s) {
 		proj=malloc(co-str+1);
 		strncpy(proj, str, co-str);
 		proj[co-str]='\0';
 		dbg(1,"projection=%s\n", proj);
 		str=co+1;
-		s=index(str,' ');
+		s=strchr(str,' ');
 		if (!strcmp(proj, "mg"))
 			str_pro = projection_mg;
 		else if (!strcmp(proj, "garmin"))

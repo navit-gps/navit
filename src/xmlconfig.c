@@ -113,7 +113,7 @@ find_order(struct xmlstate *state, int required, int *min, int *max)
 	value=find_attribute(state, "order", required);
 	if (! value)
 		return 0;
-	pos=index(value, '-');
+	pos=strchr(value, '-');
 	if (! pos) {
 		ret=sscanf(value,"%d",min);
 		*max=*min;
