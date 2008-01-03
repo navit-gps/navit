@@ -442,7 +442,7 @@ navit_add_menu_destinations(struct navit *this_, char *name, struct menu *rmen, 
 		i=name;
 		n=name;
 		men=rmen;
-		while (h && (i=index(n, '/'))) {
+		while (h && (i=strchr(n, '/'))) {
 			strcpy(buffer2, name);
 			buffer2[i-name]='\0';
 			if (!(nmen=g_hash_table_lookup(h, buffer2))) {
@@ -516,10 +516,10 @@ parse_line(FILE *f, char *buffer, char **name, struct pcoord *c)
 	cp[strlen(cp)-1]='\0';
 	s=cp+pos+1;
 	if (!strncmp(s,"type=", 5)) {
-		i=index(s, '"');
+		i=strchr(s, '"');
 		if (i) {
 			s=i+1;
-			i=index(s, '"');
+			i=strchr(s, '"');
 			if (i) 
 				*i='\0';
 		}
