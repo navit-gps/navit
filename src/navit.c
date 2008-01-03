@@ -85,6 +85,7 @@ struct navit {
 	struct navit_vehicle *vehicle;
 	struct callback_list *vehicle_cbl;
 	struct callback_list *init_cbl;
+	struct callback_list *attr_cbl;
 	int pid;
 	struct callback *nav_speech_cb;
 	struct callback *roadbook_callback;
@@ -326,6 +327,7 @@ navit_new(struct attr **attrs)
 	this_->self.u.navit=this_;
 	this_->vehicle_cbl=callback_list_new();
 	this_->init_cbl=callback_list_new();
+	this_->attr_cbl=callback_list_new();
 
 	f=popen("pidof /usr/bin/ipaq-sleep","r");
 	if (f) {
@@ -1147,14 +1149,20 @@ navit_set_center_screen(struct navit *this_, struct point *p)
 int
 navit_set_attr(struct navit *this_, struct attr *attr)
 {
-	int dir=0, orient_old=0;
+	int dir=0, orient_old=0, attr_updated=0;
 
 	switch (attr->type) {
 	case attr_cursor:
-		this_->cursor_flag=!!attr->u.num;
+		if (this_->cursor_flag != !!attr->u.num) {
+			this_->cursor_flag=!!attr->u.num;
+			attr_updated=1;
+		}
 		break;
 	case attr_tracking:
-		this_->tracking_flag=!!attr->u.num;
+		if (this_->tracking_flag != !!attr->u.num) {
+			this_->tracking_flag=!!attr->u.num;
+			attr_updated=1;
+		}
 		break;
 	case attr_orientation:
 		orient_old=this_->orient_north_flag;
@@ -1169,10 +1177,14 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 		transform_set_angle(this_->trans, dir);
 		if (orient_old != this_->orient_north_flag) {
 			navit_draw(this_);
+			attr_updated=1;
 		}
 		break;
 	default:
 		return 0;
+	}
+	if (attr_updated) {
+		callback_list_call_attr(this_->attr_cbl, attr->type, 1, &attr);
 	}
 	return 1;
 }
@@ -1195,6 +1207,18 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr)
 	}
 	attr->type=type;
 	return 1;
+}
+
+void
+navit_add_attr_cb(struct navit *this_, struct callback *cb)
+{
+	callback_list_add(this_->attr_cbl, cb);
+}
+
+void
+navit_remove_attr_cb(struct navit *this_, struct callback *cb)
+{
+	callback_list_remove(this_->attr_cbl, cb);
 }
 
 /**
