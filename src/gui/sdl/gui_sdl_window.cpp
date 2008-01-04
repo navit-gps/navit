@@ -578,6 +578,7 @@ static void init_sdlgui(char * skin_layout,int fullscreen,int tilt)
 		CEGUI::SchemeManager::getSingleton().loadScheme(buffer);
 
 		CEGUI::FontManager::getSingleton().createFont("DejaVuSans-10.font");
+		CEGUI::FontManager::getSingleton().createFont("DejaVuSans-12.font");
 		CEGUI::FontManager::getSingleton().createFont("DejaVuSans-14.font");
 
 		CEGUI::System::getSingleton().setDefaultFont("DejaVuSans-10");
