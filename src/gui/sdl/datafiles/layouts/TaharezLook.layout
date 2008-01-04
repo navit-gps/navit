@@ -215,7 +215,6 @@
         <Window Type="TaharezLook/FrameWindow" Name="Navit/ProgressWindow" >
             <Property Name="Text" Value="Calculating the route" />
             <Property Name="Visible" Value="False" />
-            <Property Name="TitlebarFont" Value="Commonwealth-10" />
             <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
             <Property Name="TitlebarEnabled" Value="True" />
             <Property Name="UnifiedAreaRect" Value="{{0.137865,0},{0.775,0},{0.729668,0},{0.888333,0}}" />
