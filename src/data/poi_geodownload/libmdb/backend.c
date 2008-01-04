@@ -160,7 +160,7 @@ int mdb_coltype_takes_length(MdbBackend *backend, int col_type)
  * Initializes the mdb_backends hash and loads the builtin backends.
  * Use mdb_remove_backends() to destroy this hash when done.
  */
-void mdb_init_backends()
+void mdb_init_backends(void)
 {
 	mdb_backends = g_hash_table_new(g_str_hash, g_str_equal);
 
@@ -182,7 +182,7 @@ void mdb_register_backend(MdbBackendType *backend_type, char *backend_name)
  *
  * Removes all entries from and destroys the mdb_backends hash.
  */
-void mdb_remove_backends()
+void mdb_remove_backends(void)
 {
 	g_hash_table_foreach_remove(mdb_backends, mdb_drop_backend, NULL);
 	g_hash_table_destroy(mdb_backends);

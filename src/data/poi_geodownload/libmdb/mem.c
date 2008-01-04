@@ -31,7 +31,7 @@
  * by calling program and prior to any other function.
  *
  **/
-void mdb_init()
+void mdb_init(void)
 {
 	mdb_init_backends();
 }
@@ -44,7 +44,7 @@ void mdb_init()
  * functions).
  *
  **/
-void mdb_exit()
+void mdb_exit(void)
 {
 	mdb_remove_backends();
 }
