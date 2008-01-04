@@ -34,7 +34,7 @@ static gint mdb_col_comparer(MdbColumn **a, MdbColumn **b)
 		return 0;
 }
 
-unsigned char mdb_col_needs_size(int col_type)
+static unsigned char mdb_col_needs_size(int col_type)
 {
 	if (col_type == MDB_TEXT) {
 		return TRUE;

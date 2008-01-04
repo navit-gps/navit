@@ -385,8 +385,8 @@ typedef struct {
 } MdbSarg;
 
 /* mem.c */
-extern void mdb_init();
-extern void mdb_exit();
+extern void mdb_init(void);
+extern void mdb_exit(void);
 
 /* file.c */
 extern ssize_t mdb_read_pg(MdbHandle *mdb, unsigned long pg);
@@ -456,9 +456,9 @@ extern void buffer_dump(const unsigned char* buf, int start, int end);
 /* backend.c */
 extern char *mdb_get_coltype_string(MdbBackend *backend, int col_type);
 extern int  mdb_coltype_takes_length(MdbBackend *backend, int col_type);
-extern void mdb_init_backends();
+extern void mdb_init_backends(void);
 extern void mdb_register_backend(MdbBackendType *backend, char *backend_name);
-extern void mdb_remove_backends();
+extern void mdb_remove_backends(void);
 extern int  mdb_set_default_backend(MdbHandle *mdb, char *backend_name);
 extern char *mdb_get_relationships(MdbHandle *mdb);
 
