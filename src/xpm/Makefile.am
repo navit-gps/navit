@@ -1,5 +1,5 @@
 include $(top_srcdir)/Makefile.inc
-xpm_DATA = airport.xpm bank.xpm camping.xpm car_dealer.xpm dumping-station.xpm flag_bk_tr.xpm flag_bk_wh.xpm flag_bl_wh.xpm fuel.xpm golf.xpm highway_exit.xpm hospital.xpm hotel.xpm information.xpm parking.xpm police.xpm restaurant.xpm trailerpark.xpm unknown.xpm
+xpm_DATA = airport.xpm attraction.xpm bank.xpm bar.xpm bus.xpm camping.xpm car_dealer.xpm church.xpm cinema.xpm dumping-station.xpm fastfood.xpm firebrigade.xpm flag_bk_tr.xpm flag_bk_wh.xpm flag_bl_wh.xpm fuel.xpm golf.xpm highway_exit.xpm hospital.xpm hotel.xpm information.xpm library.xpm museum.xpm parking.xpm pharmacy.xpm picnic.xpm police.xpm post.xpm restaurant.xpm restroom.xpm skiing.xpm sports.xpm swimming.xpm telephone.xpm theater.xpm tower.xpm traffic_signals.xpm trailerpark.xpm unknown.xpm 
 EXTRA_DIST = $(xpm_DATA)
 #burgerking.ico:
 #	wget http://www.burgerking.de/favicon.ico -O burgerking.ico
