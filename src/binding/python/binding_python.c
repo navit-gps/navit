@@ -1,4 +1,5 @@
 #include "config.h"
+#include <glib.h>
 #include <Python.h>
 #include <fcntl.h>
 #include "coord.h"

@@ -7,7 +7,9 @@ enum menu_type {
 	menu_type_toggle,
 };
 
+struct container;
 struct menu;
+struct callback;
 
 struct menu_methods {
 	struct menu_priv *(*add)(struct menu_priv *menu, struct menu_methods *meth, char *name, enum menu_type type, struct callback *cb);
@@ -21,10 +23,6 @@ struct menu {
 };
 
 /* prototypes */
-enum menu_type;
-struct callback;
-struct container;
-struct menu;
 void menu_route_do_update(struct container *co);
 void menu_route_update(struct container *co);
 struct menu *menu_add(struct menu *menu, char *name, enum menu_type type, struct callback *cb);
