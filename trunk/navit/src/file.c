@@ -14,6 +14,10 @@
 #include "debug.h"
 #include "file.h"
 
+#ifndef O_LARGEFILE
+#define O_LARGEFILE 0
+#endif
+
 static struct file *file_list;
 
 struct file *
