@@ -795,6 +795,7 @@ navit_window_roadbook_update(struct navit *this_)
 	struct item *item;
 	struct attr attr;
 	struct param_list param[5];
+	int secs;
 
 	dbg(1,"enter\n");	
 	datawindow_mode(this_->roadbook_window, 1);
@@ -813,8 +814,9 @@ navit_window_roadbook_update(struct navit *this_)
 
 		item_attr_get(item, attr_time, &attr);
 		dbg(2, "Time=%d\n", attr.u.num);
+		secs=attr.u.num/10;
 		param[2].name=_("Time");
-		param[2].value=g_strdup_printf("%d:%d",attr.u.num / 60, attr.u.num % 60);
+		param[2].value=g_strdup_printf("%d:%d",secs / 60, secs % 60);
 
 		item_attr_get(item, attr_destination_length, &attr);
 		dbg(2, "Destlength=%d\n", attr.u.num);
@@ -823,8 +825,9 @@ navit_window_roadbook_update(struct navit *this_)
 
 		item_attr_get(item, attr_destination_time, &attr);
 		dbg(2, "Desttime=%d\n", attr.u.num);
+		secs=attr.u.num/10;
 		param[4].name=_("Destination Time");
-		param[4].value=g_strdup_printf("%d:%d",attr.u.num / 60, attr.u.num % 60);
+		param[4].value=g_strdup_printf("%d:%d",secs / 60, secs % 60);
 
 		datawindow_add(this_->roadbook_window, param, 5);
 	}

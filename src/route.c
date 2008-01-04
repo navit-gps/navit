@@ -58,7 +58,9 @@ struct route_path_segment {
 	struct route_path_segment *next;
 	struct item item;
 	unsigned int offset;
+#if 0
 	int time;
+#endif
 	int length;
 	int dir;
 	unsigned ncoords;
@@ -526,7 +528,7 @@ route_extract_segment_from_path(struct route_path *path, struct item *item,
 
 static void
 route_path_add_item(struct route_path *this, struct route_path *oldpath,
-		struct route_graph_segment *rgs, int len, int time, int offset, int dir)
+		struct route_graph_segment *rgs, int len, int offset, int dir)
 {
 	struct route_path_segment *segment;
 	int ccnt = 0;
@@ -554,7 +556,6 @@ route_path_add_item(struct route_path *this, struct route_path *oldpath,
 	segment->offset = offset;
 linkold:
 	segment->length=len;
-	segment->time=time;
 	segment->dir=dir;
 	segment->next=NULL;
 	item_hash_insert(this->path_hash,  &rgs->item, (void *)offset);
@@ -622,18 +623,6 @@ struct item *
 route_path_segment_get_item(struct route_path_segment *s)
 {
 	return &s->item;
-}
-
-int
-route_path_segment_get_length(struct route_path_segment *s)
-{
-	return s->length;
-}
-
-int
-route_path_segment_get_time(struct route_path_segment *s)
-{
-	return s->time;
 }
 
 void
@@ -883,7 +872,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	struct route_graph_point *start1=NULL,*start2=NULL,*start;
 	struct route_graph_segment *s=NULL;
 	int len=0,segs=0;
-	int ilen,seg_time,seg_len;
+	int ilen,seg_len;
 #if 0
 	int time=0,hr,min,sec
 #endif
@@ -935,16 +924,12 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		printf("start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
 #endif
 		seg_len=s->len;
-		seg_time=route_time(speedlist, &s->item, seg_len);
-#if 0
-		time+=seg_time;
-#endif
 		len+=seg_len;
 		if (s->start == start) {
-			route_path_add_item(ret, oldpath, s, seg_len, seg_time, s->offset, 1);
+			route_path_add_item(ret, oldpath, s, seg_len, s->offset, 1);
 			start=s->end;
 		} else {
-			route_path_add_item(ret, oldpath, s, seg_len, seg_time, s->offset, -1);
+			route_path_add_item(ret, oldpath, s, seg_len, s->offset, -1);
 			start=s->start;
 		}
 	}
@@ -961,29 +946,12 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		return NULL;
 	}
 	ilen=route_info_length(pos, NULL, 0);
-#if 0
-	time+=route_time(&pos->street->item, ilen);
-#endif
 	len+=ilen;
 
 	ilen=route_info_length(NULL, dst, 0);
-#if 0
-	time+=route_time(&dst->street->item, ilen);
-#endif
 	len+=ilen;
 
 	dbg(1, "%d segments\n", segs);
-#if 0
-	dbg(1, "len %5.3f\n", len/1000.0);
-	time/=10;
-	sec=time;
-	min=time/60;
-	time-=min*60;
-	hr=min/60;
-	min-=hr*60;
-	dbg(1, "time %02d:%02d:%02d (%d sec)\n", hr, min, time, sec);
-	dbg(1, "speed %f km/h\n", len/sec*3.6);
-#endif
 	return ret;
 }
 
@@ -1349,6 +1317,8 @@ struct map_rect_priv {
 	int pos;
 	struct map_priv *mpriv;
 	struct item item;
+	struct item *sitem;
+	int length;
 	unsigned int last_coord;
 	struct route_path_segment *seg;
 	struct route_graph_point *point;
@@ -1370,6 +1340,33 @@ rm_attr_rewind(void *priv_data)
 static int
 rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
+	struct map_rect_priv *mr = priv_data;
+	struct route_path_segment *seg=mr->seg;
+	struct route *route=mr->mpriv->route;
+	attr->type=attr_type;
+	switch (attr_type) {
+		case attr_street_item:
+			if (seg)
+				attr->u.item=&seg->item;
+			else
+				attr->u.item=mr->sitem;
+			return 1;
+		case attr_length:
+			if (seg)
+				attr->u.num=seg->length;
+			else
+				attr->u.num=mr->length;
+			return 1;
+		case attr_time:
+			if (seg)
+				attr->u.num=route_time(route->speedlist, &seg->item, seg->length);
+			else
+				attr->u.num=route_time(route->speedlist, mr->sitem, mr->length);
+			return 1;
+		default:
+			attr->type=attr_none;
+			return 0;
+	}
 	return 0;
 }
 
@@ -1396,7 +1393,10 @@ rm_coord_get(void *priv_data, struct coord *c, int count)
 				break;
 			if (i >= seg->ncoords)
 				break;
-			c[i] = seg->c[mr->last_coord++];
+			if (seg->dir < 0)
+				c[i] = seg->c[seg->ncoords-++mr->last_coord];
+			else
+				c[i] = seg->c[mr->last_coord++];
 			rc++;
 		}
 		break;
@@ -1485,8 +1485,12 @@ rm_rect_new(struct map_priv *priv, struct map_selection *sel)
 	mr->mpriv = priv;
 	mr->ri=route_info_open(route_get_pos(priv->route), route_get_dst(priv->route), 0);
 	mr->pos_next=1;
-	if (!mr->ri) {
+	mr->sitem=&(route_get_pos(priv->route)->street->item);
+	if (mr->ri) {
+		mr->length=route_info_length(route_get_pos(priv->route), route_get_dst(priv->route), 0);
+	} else {
 		mr->ri=route_info_open(route_get_pos(priv->route), NULL, 0);
+		mr->length=route_info_length(route_get_pos(priv->route), NULL, 0);
 		mr->pos_next=-1;
 	}
 	return mr;
@@ -1555,12 +1559,14 @@ rm_get_item(struct map_rect_priv *mr)
 		else
 			seg = seg->next;
 		if (seg) {
-			mr->item = seg->item;
+			mr->sitem = &seg->item;
 			break;
 		}
 		mr->pos=1;
 		route_info_close(mr->ri);
 		mr->ri=route_info_open(NULL, route_get_dst(r), 0);
+		mr->sitem=&(route_get_dst(r)->street->item);
+		mr->length=route_info_length(NULL, route_get_dst(r), 0);
 	case 1:
 		mr->pos_next=2;
 		break;

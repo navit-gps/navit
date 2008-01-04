@@ -95,7 +95,7 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 			dbg(1, "endless loop\n");
 		}
 		priv->last = pos;
-		while (item) {
+		while (item && priv->config_speed) {
 			if (!item_coord_get(item, &c, 1)) {
 				item=map_rect_get_item(mr);
 				continue;
