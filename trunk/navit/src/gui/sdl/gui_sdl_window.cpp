@@ -550,38 +550,18 @@ static void init_sdlgui(char * skin_layout,int fullscreen,int tilt)
 		(System::getSingleton().getResourceProvider());
 		
 
-		// FIXME This should maybe move to navit.xml
-		static char *datafiles_path[]={
-			"./gui/sdl/datafiles",
-			"/usr/share/navit/datafiles",
-			"/usr/local/share/navit/datafiles",
-			NULL,
-		};
+		char *filename;
 
-		char **filename=datafiles_path;
+		filename=g_strdup_printf("%s/share/navit/datafiles", getenv("NAVIT_PREFIX"));
+		dbg(0,"Loading SDL datafiles from %s\n",filename);
 
-		while (*filename) {	
-			if (FILE * file = fopen(*filename, "r"))
-			{
-				fclose(file);
-				break;
-			}
-			filename++;
-		}
-
-		if(*filename==NULL){
-			// FIXME Elaborate the possible solutions
-			printf("Can't find the datafiles directory for CEGUI files. Navit will probably crash :)\n");
-		} else {
-			printf("Loading SDL datafiles from %s\n",*filename);
-		}
-
-		rp->setResourceGroupDirectory("schemes", g_strdup_printf("%s/schemes/",*filename));
-		rp->setResourceGroupDirectory("imagesets", g_strdup_printf("%s/imagesets/",*filename));
-		rp->setResourceGroupDirectory("fonts", g_strdup_printf("%s/fonts/",*filename));
-		rp->setResourceGroupDirectory("layouts", g_strdup_printf("%s/layouts/",*filename));
-		rp->setResourceGroupDirectory("looknfeels", g_strdup_printf("%s/looknfeel/",*filename));
-		rp->setResourceGroupDirectory("lua_scripts", g_strdup_printf("%s/lua_scripts/",*filename));
+		rp->setResourceGroupDirectory("schemes", g_strdup_printf("%s/schemes/",filename));
+		rp->setResourceGroupDirectory("imagesets", g_strdup_printf("%s/imagesets/",filename));
+		rp->setResourceGroupDirectory("fonts", g_strdup_printf("%s/fonts/",filename));
+		rp->setResourceGroupDirectory("layouts", g_strdup_printf("%s/layouts/",filename));
+		rp->setResourceGroupDirectory("looknfeels", g_strdup_printf("%s/looknfeel/",filename));
+		rp->setResourceGroupDirectory("lua_scripts", g_strdup_printf("%s/lua_scripts/",filename));
+		g_free(filename);
 
 
 		CEGUI::Imageset::setDefaultResourceGroup("imagesets");
