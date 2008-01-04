@@ -94,7 +94,7 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *nav, struct ve
 	route_len=attr.u.num;
 	if (!item_attr_get(item, attr_destination_time, &attr))
 		return;
-	eta=time(NULL)+attr.u.num;
+	eta=time(NULL)+attr.u.num/10;
 	eta_tm=localtime(&eta);
 	navigation_list_destroy(list);
 	sprintf(buffer,"Route %4.0fkm    %02d:%02d ETA",route_len/1000, eta_tm->tm_hour, eta_tm->tm_min);
