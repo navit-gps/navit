@@ -189,7 +189,6 @@ void
 plugin_init(void)
 {
 	gtk_init(&gtk_argc, &gtk_argv);
-	gdk_rgb_init();
 	gtk_set_locale();
 
 
