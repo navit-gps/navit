@@ -4,7 +4,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+struct vehicle;
 struct vehicle_priv;
+enum attr_type;
+struct attr;
 
 struct vehicle_methods {
 	void (*destroy)(struct vehicle_priv *priv);
@@ -14,9 +17,6 @@ struct vehicle_methods {
 };
 
 /* prototypes */
-enum attr_type;
-struct attr;
-struct vehicle;
 struct vehicle *vehicle_new(struct attr **attrs);
 int vehicle_position_attr_get(struct vehicle *this_, enum attr_type type, struct attr *attr);
 int vehicle_set_attr(struct vehicle *this_, struct attr *attr, struct attr **attrs);

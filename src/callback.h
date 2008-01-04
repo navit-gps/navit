@@ -8,6 +8,7 @@ extern "C" {
 struct callback;
 struct callback_list;
 struct callback_list *callback_list_new(void);
+struct callback * callback_new_attr(void (*func)(), enum attr_type type, int pcount, void **p);
 struct callback *callback_new(void (*func)(void), int pcount, void **p);
 void callback_set_arg(struct callback *cb, int arg, void *p);
 void callback_list_add(struct callback_list *l, struct callback *cb);
