@@ -11,6 +11,7 @@
 #include "transform.h"
 #include "gui.h"
 #include "coord.h"
+#include "config.h"
 #include "plugin.h"
 #include "callback.h"
 #include "point.h"
@@ -60,7 +61,8 @@ CEGUI::OpenGLRenderer* renderer;
 
 CEGUI::Window* myRoot;
 
-#define MODULE "gui_sdl"
+// Temp fix for pluginless mode
+// #define MODULE "gui_sdl"
 GLuint * DLid;
 
 #define _(STRING)    gettext(STRING)
