@@ -113,7 +113,6 @@ navigation_get_announce_level(struct navigation *this_, enum item_type type, int
 struct navigation_itm {
 	char *name1;
 	char *name2;
-	struct coord start;
 	struct item item;
 	int angle_start;
 	int angle_end;
@@ -222,27 +221,51 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 	dbg(2,"ret\n");
 }
 
+static void
+navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
+{
+	struct attr length, time;
+	if (! item_attr_get(ritem, attr_length, &length)) {
+		dbg(0,"no length\n");
+		return;
+	}
+	if (! item_attr_get(ritem, attr_time, &time)) {
+		dbg(0,"no time\n");
+		return;
+	}
+	dbg(1,"length=%d time=%d\n", length.u.num, time.u.num);
+	itm->length=length.u.num;
+	itm->time=time.u.num;
+}
+
 static struct navigation_itm *
-navigation_itm_new(struct navigation *this_, struct item *item, struct coord *start)
+navigation_itm_new(struct navigation *this_, struct item *ritem)
 {
 	struct navigation_itm *ret=g_new0(struct navigation_itm, 1);
-	int l,i=0,a1,a2,dir=0;
+	int l,i=0;
+	struct item *sitem;
+	struct attr street_item;
 	struct map_rect *mr;
 	struct attr attr;
 	struct coord c[5];
 
-	if (item) {
-		dbg(1, "start 0x%x 0x%x\n", start->x, start->y);
-		ret->item=*item;
-		item_hash_insert(this_->hash, item, ret);
-		mr=map_rect_new(item->map, NULL);
-		item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-		if (item_attr_get(item, attr_street_name, &attr))
+	if (ritem) {
+		if (! item_attr_get(ritem, attr_street_item, &street_item)) {
+			dbg(0,"no street item\n");
+			return NULL;
+		}
+		sitem=street_item.u.item;
+		ret->item=*sitem;
+		item_hash_insert(this_->hash, sitem, ret);
+		mr=map_rect_new(sitem->map, NULL);
+		sitem=map_rect_get_item_byid(mr, sitem->id_hi, sitem->id_lo);
+		if (item_attr_get(sitem, attr_street_name, &attr))
 			ret->name1=g_strdup(attr.u.str);
-		if (item_attr_get(item, attr_street_name_systematic, &attr))
+		if (item_attr_get(sitem, attr_street_name_systematic, &attr))
 			ret->name2=g_strdup(attr.u.str);
+		navigation_itm_update(ret, ritem);
 		l=-1;
-		while (item_coord_get(item, &c[i], 1)) {
+		while (item_coord_get(ritem, &c[i], 1)) {
 			dbg(1, "coord %d 0x%x 0x%x\n", i, c[i].x ,c[i].y);
 			l=i;
 			if (i < 4) 
@@ -255,22 +278,11 @@ navigation_itm_new(struct navigation *this_, struct item *item, struct coord *st
 		dbg(1,"count=%d\n", l);
 		if (l == 4)
 			l=3;
-		if (start->x != c[0].x || start->y != c[0].y)
-			dir=-1;
-		a1=road_angle(&c[0], &c[1], dir);
-		a2=road_angle(&c[l-1], &c[l], dir);
-		if (dir >= 0) {
-			ret->angle_start=a1;
-			ret->angle_end=a2;
-		} else {
-			ret->angle_start=a2;
-			ret->angle_end=a1;
-		}
-		dbg(1,"i=%d dir=%d a1 %d a2 %d '%s' '%s'\n", i, dir, a1, a2, ret->name1, ret->name2);
+		ret->angle_start=road_angle(&c[0], &c[1], 0);
+		ret->angle_end=road_angle(&c[l-1], &c[l], 0);
+		dbg(1,"i=%d start %d end %d '%s' '%s'\n", i, ret->angle_start, ret->angle_end, ret->name1, ret->name2);
 		map_rect_destroy(mr);
 	}
-	if (start)
-		ret->start=*start;
 	if (! this_->first)
 		this_->first=ret;
 	if (this_->last) {
@@ -469,13 +481,13 @@ navigation_list_item_attr_get(void *priv_data, enum attr_type attr_type, struct 
 		attr->u.num=this_->itm->dest_length-this_->cmd->itm->dest_length;
 		return 1;
 	case attr_time:
-		attr->u.num=(this_->itm->dest_time-this_->cmd->itm->dest_time)/10;
+		attr->u.num=this_->itm->dest_time-this_->cmd->itm->dest_time;
 		return 1;
 	case attr_destination_length:
 		attr->u.num=this_->itm->dest_length;
 		return 1;
 	case attr_destination_time:
-		attr->u.num=this_->itm->dest_time/10;
+		attr->u.num=this_->itm->dest_time;
 		return 1;
 	default:
 		attr->type=attr_none;
@@ -570,6 +582,60 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 void
 navigation_update(struct navigation *this_, struct route *route)
 {
+	struct map *map;
+	struct map_rect *mr;
+	struct item *ritem,*sitem;
+	struct attr street_item;
+	struct navigation_itm *itm;
+	int incr=0;
+
+	if (! route)
+		return;
+	map=route_get_map(route);
+	if (! map)
+		return;
+	mr=map_rect_new(map, NULL);
+	if (! mr)
+		return;
+	dbg(0,"enter\n");
+	ritem=map_rect_get_item(mr);
+	if (ritem) {
+		if (item_attr_get(ritem, attr_street_item, &street_item)) {
+			sitem=street_item.u.item;
+			dbg(0,"sitem=%p\n", sitem);
+			itm=item_hash_lookup(this_->hash, sitem);
+			dbg(2,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
+			navigation_destroy_itms_cmds(this_, itm);
+			if (itm) {
+				incr=1;
+				navigation_itm_update(itm, ritem);
+			} else {
+				dbg(0,"not on track\n");
+				do {
+					dbg(0,"item\n");
+					navigation_itm_new(this_, ritem);
+					ritem=map_rect_get_item(mr);
+				} while (ritem);
+				itm=navigation_itm_new(this_, NULL);
+				make_maneuvers(this_);
+			}
+		} else
+			dbg(0,"no street_item\n");
+		calculate_dest_distance(this_, incr);
+		dbg(2,"destination distance old=%d new=%d\n", this_->distance_last, this_->first->dest_length);
+		if (this_->first->dest_length > this_->distance_last && this_->distance_last >= 0) 
+			this_->turn_around=1;
+		else
+			this_->turn_around=0;
+		dbg(2,"turn_around=%d\n", this_->turn_around);
+		this_->distance_last=this_->first->dest_length;
+		profile(0,"end");
+		navigation_call_callbacks(this_, FALSE);
+	} else
+		navigation_destroy_itms_cmds(this_, NULL);
+	map_rect_destroy(mr);
+	
+#if 0
 	struct route_path_handle *rph;
 	struct route_path_segment *s;
 	struct navigation_itm *itm;
@@ -637,6 +703,7 @@ navigation_update(struct navigation *this_, struct route *route)
 	this_->distance_last=this_->first->dest_length;
 	profile(0,"end");
 	navigation_call_callbacks(this_, FALSE);
+#endif
 }
 
 void
