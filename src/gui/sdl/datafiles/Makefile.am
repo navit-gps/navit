@@ -2,7 +2,7 @@
 
 CEGUIFONTSdir=$(pkgdatadir)/datafiles/fonts
 # CEGUIFONTS_DATA = fonts/DejaVuSans-10.font fonts/DejaVuSans-14.font fonts/DejaVuSans-18.font fonts/DejaVuSans.ttf fonts/Font.xsd
-CEGUIFONTS_DATA = fonts/DejaVuSans-10.font fonts/DejaVuSans-14.font fonts/DejaVuSans.ttf fonts/Font.xsd
+CEGUIFONTS_DATA = fonts/DejaVuSans-10.font fonts/DejaVuSans-12.font fonts/DejaVuSans-14.font fonts/DejaVuSans.ttf fonts/Font.xsd
 
 CEGUILAYOUTdir=$(pkgdatadir)/datafiles/layouts
 CEGUILAYOUT_DATA = layouts/GUILayout.xsd layouts/Mineque.layout layouts/TaharezLook.layout
