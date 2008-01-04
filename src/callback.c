@@ -24,7 +24,7 @@ callback_list_new(void)
 }
 
 struct callback *
-callback_new_attr(void (*func)(), enum attr_type type, int pcount, void **p)
+callback_new_attr(void (*func)(void), enum attr_type type, int pcount, void **p)
 {
 	struct callback *ret;
 	int i;
@@ -40,7 +40,7 @@ callback_new_attr(void (*func)(), enum attr_type type, int pcount, void **p)
 }
 
 struct callback *
-callback_new(void (*func)(), int pcount, void **p)
+callback_new(void (*func)(void), int pcount, void **p)
 {
 	return callback_new_attr(func, attr_none, pcount, p);
 }
@@ -61,7 +61,7 @@ callback_list_add(struct callback_list *l, struct callback *cb)
 
 
 struct callback *
-callback_list_add_new(struct callback_list *l, void (*func)(), int pcount, void **p)
+callback_list_add_new(struct callback_list *l, void (*func)(void), int pcount, void **p)
 {
 	struct callback *ret;
 	
