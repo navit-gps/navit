@@ -1,0 +1,21 @@
+0.1 new version gpx2navit_txt
+
+0.69
+ by Petter Reinholdsen
+ - Add configure option "--enable-coverage".
+ - Add few check targets.
+ - Patch for compile warning in DBFWriteAttribute().
+ - Patch for compile warning in createParseData().
+ by Toshihiro Hiraoka
+ - Bug (Debian Bug #292514: Segfaults when called only with -v) fix
+ - Delete few unused functions from utils.c
+
+0.68-1
+======
+ by Petter Reinholdtsen
+ - New debian package gpx2shp_0.68-1_i386.deb.
+ - Update debian releted files.
+   debian/watch, control, changelog
+ - Delete src/configure.ac.
+ - Delete libz check entry from configure.ac.
+

@@ -1,0 +1,117 @@
+==============
+gpx2navit_txt README
+==============
+bodenseepingu 
+4/01/2008
+
+What's This
+===========
+  gpx2navit_txt is a converter from GPX file to Navit Text map format
+
+For gpx2navit_txt was the original code from gpx2shp used and modified.  
+This is a output of Metro Manila Transit Map Project by JOCV (Japan
+Overseas Cooperation Volunteers) program of JICA (Japan International
+Cooperation Agency in 2004. It is provided you on GPL2.
+
+
+How to Use
+==========
+- Basic
+  There are three types of data on GPX that are waypoint, trkpoint and
+route. gpx2navit_txt converts the  data to navit file(s)
+Please try to convert a sample file "pinatest2.gpx" in this archive.
+
+    prompt> gpx2navit_txt pinatest2.gpx
+    prompt> ls
+    pinatest2.gpx       (source gpx)     
+    pinatest2_meta.txt  (meta data may be there)
+
+  You can convert only a certain type of data like only waypoint or
+track point using option '-w' (waypoint), '-t' (trackpoint) or '-r'
+(route).
+
+    prompt> gpx2navit_txt -r pinatest2.gpx
+
+- Convert path data to points and etc
+  As default, track point and route data is converted as a arc data but
+you can convert it other ways using option '-p'(convert as point) and
+'-e' (as edge). The edge file has '_edg' in the filename and the point
+file has '_pnt' in the filename.
+ 
+    prompt> gpx2navit_txt -p -e pinatest2.gpx
+
+- Statistics
+  If you add '-s' option you can see a conversion summery.
+
+    prompt> gpx2navit_txt -s pinatest2.gpx
+    Track Points:
+            track count:    4
+            point count:    658
+            total length:   156565.627989
+            unconverted:    0( 0.00%)
+    Routes:
+            route count:    1
+            point count:    323
+            total length:   9258.618971
+            unconverted:    0( 0.00%)
+    Waypoints:
+            point count:    118
+
+- Noise reduction
+  gpx2navit_txt has several thresholds to reduct the noise path data. The
+value can set as '--min-points', '--min-length' and '--min-time'. Please
+try a example below.
+
+    prompt> gpx2navit_txt --min-points 6 -s pinatest2.gpx
+    gpx2navit_txt:../pinatest3.gpx:3962 track was not converted because of
+    less then 6 points. (<- this path is not converted because the path
+    has only 5 points)
+    Track Points:
+            track count:    3
+            point count:    653
+            total length:   156439.490642
+            unconverted:    1(25.00%)
+    Routes:
+            route count:    1
+            point count:    323
+            total length:   9258.618971
+            unconverted:    0( 0.00%)
+    Waypoints:
+            point count:    118
+
+
+- Length and time units
+  You can choose any length related units that are supported by proj4
+for attribute table using 
+    '--length-unit'		(for length column, default: m), 
+    '--time-unit'		(for time column, default: sec), 
+    '--speed-length-unit'	(for speed column, default: km),
+    '--speed-time-unit'		(for speed column, default: hour) and
+    '--length-ellipsoid'	(for length calculation, default: UGS84).
+  You can see the supported units by 'geod -lu' and 'geod -le' command. 
+  Supported time unit are 'sec', 'min', 'hour' and 'day'.  
+
+- Other futures
+  There are other futures in gpx2navit_txt. Please check the option list using
+
+    gpx2navit_txt --help
+
+Problem or Suggestion
+=====================
+Please let me know about your opinion in English  by e-mail.
+    bodenseepingu at users.sourceforge.net
+    navit on sourceforge.net
+    http://gpx2shp.sourceforge.jp/ for original gpx2shp
+    todo for gpx2navit_txt
+
+Acknowledgments
+===============
+NEDA (National Economic and Development Authority) Region IV-B office
+	My generous counter part
+Yoshio Tanaka
+	My project leader gpx2shp
+Petter Reinholdtsen
+	Many support to develop this
+Frank Warmerdam and the team
+	shapelib and proj4
+bodenseepingu for modifications towards navit

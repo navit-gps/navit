@@ -1,0 +1,17 @@
+Requirements
+==============
+- proj		>ver4.0
+- expat 	>ver2.0
+- gpsbabel	If you want to convert from GPS to shp directory but the
+		future is not stable yet.
+
+Installation
+==============
+It's not special. Just type below like others.
+
+  ./configure
+  make
+  su 
+  make install
+
+gpx2navit_txt image will be at /usr/local/bin.

@@ -1,0 +1,125 @@
+#include "gpx2navit_txt.h"
+
+void charHandle(void *userdata, const XML_Char * data, int length);
+void startElement(void *userdata, const char *element, const char **attr);
+void endElement(void *userdata, const char *element);
+void parseMain(g2sprop * prop);
+
+/**
+ * a handler to parse charctor data on expat
+ */
+void charHandle(void *userdata, const XML_Char * data, int length)
+{
+    static int bufsize = DATABUFSIZE;
+    parsedata *pdata = (parsedata *) userdata;
+    if (bufsize < length) {
+	pdata->databuf =
+	    realloc(pdata->databuf, sizeof(char) * (length + 1));
+	bufsize = length;
+    }
+    strncpy(pdata->databuf, data, length);
+    pdata->bufptr = pdata->databuf;
+    pdata->bufptr += length;
+    *pdata->bufptr = '\0';
+}
+
+/**
+ * a handler when a element starts
+ */
+void startElement(void *userdata, const char *element, const char **attr)
+{
+    parsedata *pdata = (parsedata *) userdata;
+    pdata->parent = pdata->current;
+    pdata->current = malloc(sizeof(parent));
+    pdata->current->name = malloc(sizeof(char) * (strlen(element) + 1));
+    strcpy(pdata->current->name, element);
+    pdata->current->parentptr = pdata->parent;
+    startElementControl(pdata, element, attr);
+    if (pdata->prop->verbose) {
+	int i;
+	for (i = 0; i < pdata->depth; i++)
+	    printf("  ");
+	printf("<%s>: ", element);
+	for (i = 0; attr[i]; i += 2) {
+	    printf(" %s='%s'", attr[i], attr[i + 1]);
+	}
+	printf("\n");
+    }
+    pdata->depth++;
+}
+
+/**
+ * a handler when a element ends
+ */
+void endElement(void *userdata, const char *element)
+{
+    parsedata *pdata = (parsedata *) userdata;
+    endElementControl(pdata, element);
+    pdata->depth--;
+    if (pdata->prop->verbose) {
+	int i;
+	for (i = 0; i < pdata->depth; i++)
+	    printf("  ");
+	printf("</%s>:%s\n ", element,pdata->parent->name);
+    }
+    free(pdata->current->name);
+    free(pdata->current);
+    pdata->current = pdata->parent;
+    pdata->parent = pdata->parent->parentptr;
+}
+
+void parseMain(g2sprop * prop)
+{
+    FILE *fp;
+    char buff[BUFFSIZE];
+    XML_Parser parser;
+    parsedata *pdata;
+    fp = fopen(prop->sourcefile, "r");
+    if (fp == NULL) {
+	fprintf(stderr, "Cannot open gpx file: %s\n", prop->sourcefile);
+	exit(ERR_CANNOTOPEN);
+    }
+    parser = XML_ParserCreate(NULL);
+    if (!parser) {
+	fprintf(stderr, "Couldn't allocate memory for parser\n");
+	exit(ERR_OUTOFMEMORY);
+    }
+    pdata = createParsedata(parser, prop);
+
+    char *output_wpt =
+	(char *) malloc(sizeof(char) * (strlen(pdata->prop->output) + 9));
+    strcpy(output_wpt, pdata->prop->output);
+    strcat(output_wpt, "_nav.txt");
+    pdata->fp = fopen(output_wpt,"w");
+    if (pdata->fp == NULL)
+    {
+	//todo
+	fprintf(stderr,"Failure opening File %s for writing",output_wpt);
+        exit(1);
+    }
+    free(output_wpt);
+    XML_SetUserData(parser, pdata);
+    XML_SetElementHandler(parser, startElement, endElement);
+    XML_SetCharacterDataHandler(parser, charHandle);
+    for (;;) {
+	int done;
+	int len;
+	fgets(buff, BUFFSIZE, fp);
+	len = (int) strlen(buff);
+	if (ferror(fp)) {
+	    fprintf(stderr, "Read error file: %s\n", prop->sourcefile);
+	    exit(ERR_READERROR);
+	}
+	done = feof(fp);
+	if (done)
+	    break;
+	if (!XML_Parse(parser, buff, len, done)) {
+	    fprintf(stderr, "Parse error at line %d:\n%s\n",
+		    XML_GetCurrentLineNumber(parser),
+		    XML_ErrorString(XML_GetErrorCode(parser)));
+	    exit(ERR_PARSEERROR);
+	}
+    }
+    fclose(pdata->fp); //close out file
+    closeParsedata(pdata);
+}

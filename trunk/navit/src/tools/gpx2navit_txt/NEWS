@@ -1,0 +1,64 @@
+0.69
+====
+ by Petter Reinholdtsen
+ - Add compile check options
+ - Compile warning fixes
+ by Toshihiro Hiraoka
+ - Bug fix
+ 
+0.68-1
+======
+ by Petter Reinholdtsen
+ - Add debian files
+ by Susumu Murakami
+ - RPM package for Vine 3.1
+
+0.68
+==== 
+ by Toshihiro Hiraoka
+ - Change XML parser from libxml2 to expat for big file support
+ - Remake almost all strucutes.
+ - Rewrite almost all sources.
+ - Add three path check options --min-points, --min-length and
+   --min-time to reduce the noise.
+ - Add -b, --basix-columns option
+ - Add -g, --gpxline option
+ - Add -f, --fast option
+ - README
+ - AUTHORS
+ - Change comment style to javadoc style.
+ - Structures flow 
+ - Error code
+
+0.65-1
+======
+ by Petter Reinholdtsen
+ - Add some debian missing files.
+ - Added config.sub and config.guess.
+ - debian package available now!
+
+ by Toshihiro Hiraoka
+ - Stop to use strange version number.
+
+0.65a
+=====
+ by Petter Reinholdtsen
+ - Add configure script etc.
+ - Get rid of some warnings about loosing the 'const'-ness of the
+   variable.
+ - Remove unused include <math.h>.
+ - Add include to find prototype for geod_set().
+ - Fix handling of output filename, to make sure it handles
+   './foo.gpx' (used to give random filename).
+ - Correct the prototype of closeFiles().
+ - Add files in debian/ to make debian package.  This is just a
+   framework, and need more work.  The package description and a lot
+   of the support files are from the dh-make package, and should be
+   edited or removed.  To build the package, run debuild from the
+   devscripts package.
+ - Solve some memory leaks and complaints.
+
+ by Toshihiro Hiraoka
+ - Restruct directory
+ - Add many prototypes etc.
+
