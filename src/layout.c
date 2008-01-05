@@ -66,7 +66,7 @@ polygon_new(struct color *color)
 }
 
 struct element *
-polyline_new(struct color *color, int width)
+polyline_new(struct color *color, int width, int directed)
 {
 	struct element *e;
 	
@@ -74,6 +74,7 @@ polyline_new(struct color *color, int width)
 	e->type=element_polyline;
 	e->color=*color;
 	e->u.polyline.width=width;
+	e->u.polyline.directed=directed;
 
 	return e;
 }

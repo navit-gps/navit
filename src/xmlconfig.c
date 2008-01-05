@@ -499,15 +499,19 @@ static int
 xmlconfig_polyline(struct xmlstate *state)
 {
 	struct color color;
-	const char *width;
-	int w=0;
+	const char *width, *directed;
+	int w=0,d=0;
 
 	if (! find_color(state, 1, &color))
 		return 0;
 	width=find_attribute(state, "width", 0);
 	if (width) 
 		w=convert_number(width);
-	state->element_object=polyline_new(&color, w);
+	directed=find_attribute(state, "directed", 0);
+	if (directed) 
+		d=convert_number(directed);
+	
+	state->element_object=polyline_new(&color, w, d);
 	if (! state->element_object)
 		return 0;
 	itemtype_add_element(state->parent->element_object, state->element_object);

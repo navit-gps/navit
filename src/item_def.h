@@ -242,6 +242,7 @@ ITEM(time_zone)
 ITEM(marine_boundary)
 ITEM(marine_hazard)
 ITEM(roundabout)
+ITEM(rg_segment)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)

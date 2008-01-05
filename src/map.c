@@ -98,6 +98,12 @@ map_projection(struct map *this_)
 }
 
 void
+map_set_projection(struct map *this_, enum projection pro)
+{
+	this_->meth.pro=pro;
+}
+
+void
 map_destroy(struct map *m)
 {
 	m->meth.map_destroy(m->priv);
