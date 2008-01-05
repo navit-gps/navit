@@ -125,13 +125,9 @@ popup_show_attr_val(struct map *map, void *menu, struct attr *attr)
 	char *attr_name=attr_to_name(attr->type);
 	char *str;
 
-	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
-		popup_printf(menu, menu_type_menu, "%s: %d", attr_name, attr->u.num);
-	else {
-		str=map_convert_string(map, attr->u.str);
-		popup_printf(menu, menu_type_menu, "%s: %s", attr_name, str);
-		map_convert_free(str);
-	}
+	str=attr_to_text(attr, map, 1);
+	popup_printf(menu, menu_type_menu, "%s: %s", attr_name, str);
+	g_free(str);
 }
 
 #if 0

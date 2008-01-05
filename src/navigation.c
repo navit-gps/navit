@@ -16,11 +16,13 @@
 #include "map.h"
 #include "navit.h"
 #include "callback.h"
+#include "plugin.h"
 
 #define _(STRING)    gettext(STRING)
 
 struct navigation {
 	struct mapset *ms;
+	struct map *map;
 	struct item_hash *hash;
 	struct navigation_itm *first;
 	struct navigation_itm *last;
@@ -41,18 +43,6 @@ struct navigation_command {
 	struct navigation_itm *itm;
 	struct navigation_command *next;
 	int delta;
-};
-
-struct navigation_list {
-	struct navigation *nav;
-	struct navigation_command *cmd;
-	struct navigation_command *cmd_next;
-	struct navigation_itm *itm;
-	struct navigation_itm *itm_next;
-	struct item item;
-#if 0
-	char *str;
-#endif
 };
 
 struct navigation *
@@ -465,80 +455,6 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	return ret;
 }
 
-static int
-navigation_list_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
-{
-	struct navigation_list *this_=priv_data;
-	attr->type=attr_type;
-	switch(attr_type) {
-	case attr_navigation_short:
-	case attr_navigation_long:
-	case attr_navigation_long_exact:
-	case attr_navigation_speech:
-		attr->u.str=show_maneuver(this_->nav, this_->itm, this_->cmd, attr_type);
-		return 1;
-	case attr_length:
-		attr->u.num=this_->itm->dest_length-this_->cmd->itm->dest_length;
-		return 1;
-	case attr_time:
-		attr->u.num=this_->itm->dest_time-this_->cmd->itm->dest_time;
-		return 1;
-	case attr_destination_length:
-		attr->u.num=this_->itm->dest_length;
-		return 1;
-	case attr_destination_time:
-		attr->u.num=this_->itm->dest_time;
-		return 1;
-	default:
-		attr->type=attr_none;
-		return 0;
-	}
-}
-
-struct item_methods navigation_list_item_methods = {
-	NULL,
-	NULL,
-	NULL,
-	navigation_list_item_attr_get,
-};
-
-
-
-struct navigation_list *
-navigation_list_new(struct navigation *this_)
-{
-	struct navigation_list *ret=g_new0(struct navigation_list, 1);
-	ret->nav=this_;
-	ret->cmd_next=this_->cmd_first;
-	ret->itm_next=this_->first;
-	ret->item.meth=&navigation_list_item_methods;
-	ret->item.priv_data=ret;
-	return ret;
-}
-
-struct item *
-navigation_list_get_item(struct navigation_list *this_)
-{
-	if (!this_->cmd_next)
-		return NULL;
-	this_->cmd=this_->cmd_next;
-	this_->itm=this_->itm_next;
-#if 0
-	this_->str=show_maneuver(this_->nav, this_->itm, this_->cmd, mode);
-#endif
-	this_->itm_next=this_->cmd->itm;
-	this_->cmd_next=this_->cmd->next;
-
-	return &this_->item;
-}
-
-
-void
-navigation_list_destroy(struct navigation_list *this_)
-{
-	g_free(this_);
-}
-
 static void
 navigation_call_callbacks(struct navigation *this_, int force_speech)
 {
@@ -732,4 +648,148 @@ navigation_unregister_callback(struct navigation *this_, enum attr_type type, st
 		callback_list_remove_destroy(this_->callback_speech, cb);
 	else
 		callback_list_remove_destroy(this_->callback, cb);
+}
+
+struct map *
+navigation_get_map(struct navigation *this_)
+{
+	struct attr navigation_attr={.type=attr_navigation,.u.navigation=this_};
+        struct attr data_attr={.type=attr_data,.u.str=""};
+        struct attr *attrs_navigation[]={&navigation_attr, &data_attr, NULL};
+
+	if (! this_->map)
+		this_->map=map_new("navigation",attrs_navigation);
+	return this_->map;
+}
+
+struct map_priv {
+	struct navigation *navigation;
+};
+
+struct map_rect_priv {
+	struct navigation *nav;
+	struct navigation_command *cmd;
+	struct navigation_command *cmd_next;
+	struct navigation_itm *itm;
+	struct navigation_itm *itm_next;
+	struct item item;
+};
+
+static int
+navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
+{
+	struct map_rect_priv *this_=priv_data;
+	attr->type=attr_type;
+	switch(attr_type) {
+	case attr_navigation_short:
+	case attr_navigation_long:
+	case attr_navigation_long_exact:
+	case attr_navigation_speech:
+		attr->u.str=show_maneuver(this_->nav, this_->itm, this_->cmd, attr_type);
+		return 1;
+	case attr_length:
+		attr->u.num=this_->itm->dest_length-this_->cmd->itm->dest_length;
+		return 1;
+	case attr_time:
+		attr->u.num=this_->itm->dest_time-this_->cmd->itm->dest_time;
+		return 1;
+	case attr_destination_length:
+		attr->u.num=this_->itm->dest_length;
+		return 1;
+	case attr_destination_time:
+		attr->u.num=this_->itm->dest_time;
+		return 1;
+	default:
+		attr->type=attr_none;
+		return 0;
+	}
+}
+
+static struct item_methods navigation_map_item_methods = {
+	NULL,
+	NULL,
+	NULL,
+	navigation_map_item_attr_get,
+};
+
+
+static void
+navigation_map_destroy(struct map_priv *priv)
+{
+	g_free(priv);
+}
+
+static struct map_rect_priv *
+navigation_map_rect_new(struct map_priv *priv, struct map_selection *sel)
+{
+	struct navigation *nav=priv->navigation;
+	struct map_rect_priv *ret=g_new0(struct map_rect_priv, 1);
+	ret->nav=nav;
+	ret->cmd_next=nav->cmd_first;
+	ret->itm_next=nav->first;
+	ret->item.meth=&navigation_map_item_methods;
+	ret->item.priv_data=ret;
+	return ret;
+}
+
+static void
+navigation_map_rect_destroy(struct map_rect_priv *priv)
+{
+	g_free(priv);
+}
+
+static struct item *
+navigation_map_get_item(struct map_rect_priv *priv)
+{
+	if (!priv->cmd_next)
+		return NULL;
+	priv->cmd=priv->cmd_next;
+	priv->itm=priv->itm_next;
+	priv->itm_next=priv->cmd->itm;
+	priv->cmd_next=priv->cmd->next;
+
+	return &priv->item;
+}
+
+static struct item *
+navigation_map_get_item_byid(struct map_rect_priv *priv, int id_hi, int id_lo)
+{
+	dbg(0,"stub");
+	return NULL;
+}
+
+static struct map_methods navigation_map_meth = {
+	projection_mg,
+	NULL,
+	navigation_map_destroy,
+	navigation_map_rect_new,
+	navigation_map_rect_destroy,
+	navigation_map_get_item,
+	navigation_map_get_item_byid,
+	NULL,
+	NULL,
+	NULL,
+};
+
+static struct map_priv *
+navigation_map_new(struct map_methods *meth, struct attr **attrs)
+{
+	struct map_priv *ret;
+	struct attr *navigation_attr;
+
+	navigation_attr=attr_search(attrs, NULL, attr_navigation);
+	if (! navigation_attr)
+		return NULL;
+	ret=g_new0(struct map_priv, 1);
+	*meth=navigation_map_meth;
+	ret->navigation=navigation_attr->u.navigation;
+
+	return ret;
+}
+
+
+void
+navigation_init(void)
+{
+	plugin_register_map_type("navigation", navigation_map_new);
 }

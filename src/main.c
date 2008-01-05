@@ -19,6 +19,10 @@
 #include "navit.h"
 #include "gui.h"
 #include "xmlconfig.h"
+#include "item.h"
+#include "coord.h"
+#include "route.h"
+#include "navigation.h"
 
 #define _(STRING)    gettext(STRING)
 
@@ -144,6 +148,7 @@ int main(int argc, char **argv)
 		setenv("SDL_WINDOWID", s, 0);
 	}
 	route_init();
+	navigation_init();
 	config_file=NULL;
 	if (argc > 1) 
 		config_file=argv[1];
