@@ -4,7 +4,6 @@
 #include <fcntl.h>
 #include "coord.h"
 #include "projection.h"
-#include <glib.h>
 #include "map.h"
 #include "mapset.h"
 #include "plugin.h"
