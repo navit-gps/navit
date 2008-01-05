@@ -114,6 +114,12 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 	char *ret;
 	enum attr_type type=attr->type;
 
+	if (type >= attr_type_item_begin && type <= attr_type_item_end) {
+		struct item *item=attr->u.item;
+		if (! item)
+			return g_strdup("(nil)");
+		return g_strdup_printf("type=0x%x id=0x%x,0x%x map=%p (%s:%s)", item->type, item->id_hi, item->id_lo, item->map, item->map ? map_get_type(item->map) : "", item->map ? map_get_filename(item->map) : "");
+	}
 	if (type >= attr_type_string_begin && type <= attr_type_string_end) {
 		if (map) {
 			char *mstr=map_convert_string(map, attr->u.str);

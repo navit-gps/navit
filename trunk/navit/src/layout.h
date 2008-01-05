@@ -16,6 +16,7 @@ struct element {
 		} point;
 		struct element_polyline {
 			int width;
+			int directed;
 		} polyline;
 		struct element_polygon {
 		} polygon;
@@ -55,7 +56,7 @@ void itemtype_add_type(struct itemtype *this, enum item_type type);
 void layer_add_itemtype(struct layer *layer, struct itemtype *itemtype);
 void itemtype_add_element(struct itemtype *itemtype, struct element *element);
 struct element *polygon_new(struct color *color);
-struct element *polyline_new(struct color *color, int width);
+struct element *polyline_new(struct color *color, int width, int directed);
 struct element *circle_new(struct color *color, int radius, int width, int label_size);
 struct element *label_new(int label_size);
 struct element *icon_new(const char *src);

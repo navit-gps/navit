@@ -15,6 +15,7 @@ struct transformation;
 struct transformation *transform_new(void);
 void transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g);
 void transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c);
+void transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to);
 int transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int flags);
 void transform_reverse(struct transformation *t, struct point *p, struct coord *c);
 enum projection transform_get_projection(struct transformation *this_);
