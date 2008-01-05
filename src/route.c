@@ -1313,6 +1313,7 @@ route_crossings_get(struct route *this, struct coord *c)
 
 struct map_rect_priv {
 	struct route_info_handle *ri;
+	enum attr_type attr_next;
 	int pos_next;
 	int pos;
 	struct map_priv *mpriv;
@@ -1322,7 +1323,8 @@ struct map_rect_priv {
 	unsigned int last_coord;
 	struct route_path_segment *seg;
 	struct route_graph_point *point;
-	char *label;
+	struct route_graph_segment *rseg;
+	char *str;
 };
 
 static void
@@ -1335,6 +1337,8 @@ rm_coord_rewind(void *priv_data)
 static void
 rm_attr_rewind(void *priv_data)
 {
+	struct map_rect_priv *mr = priv_data;
+	mr->attr_next = attr_street_item;
 }
 
 static int
@@ -1345,23 +1349,32 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	struct route *route=mr->mpriv->route;
 	attr->type=attr_type;
 	switch (attr_type) {
+		case attr_any:
+			while (mr->attr_next != attr_none) {
+				if (rm_attr_get(priv_data, mr->attr_next, attr))
+					return 1;
+			}
+			return 0;
 		case attr_street_item:
 			if (seg)
 				attr->u.item=&seg->item;
 			else
 				attr->u.item=mr->sitem;
+			mr->attr_next=attr_length;
 			return 1;
 		case attr_length:
 			if (seg)
 				attr->u.num=seg->length;
 			else
 				attr->u.num=mr->length;
+			mr->attr_next=attr_time;
 			return 1;
 		case attr_time:
 			if (seg)
 				attr->u.num=route_time(route->speedlist, &seg->item, seg->length);
 			else
 				attr->u.num=route_time(route->speedlist, mr->sitem, mr->length);
+			mr->attr_next=attr_none;
 			return 1;
 		default:
 			attr->type=attr_none;
@@ -1422,22 +1435,44 @@ static struct item_methods methods_route_item = {
 	rm_attr_get,
 };
 
+static void
+rp_attr_rewind(void *priv_data)
+{
+	struct map_rect_priv *mr = priv_data;
+	mr->attr_next = attr_label;
+}
+
 static int
 rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
 	struct map_rect_priv *mr = priv_data;
 	struct route_graph_point *p = mr->point;
+	if (mr->item.type != type_rg_point) 
+		return 0;
 	switch (attr_type) {
-		case attr_any:
-		case attr_label:
-			attr->type = attr_label;
-			if (mr->label)
-				g_free(mr->label);
-			mr->label=g_strdup_printf("x=%d y=%d", p->c.x, p->c.y);
-			attr->u.str = mr->label;
-			return 1;
-		default:
-			return 0;
+	case attr_any:
+		while (mr->attr_next != attr_none) {
+			if (rm_attr_get(priv_data, mr->attr_next, attr))
+				return 1;
+		}
+	case attr_label:
+		attr->type = attr_label;
+		if (mr->str)
+			g_free(mr->str);
+		mr->str=g_strdup_printf("%d", p->value);
+		attr->u.str = mr->str;
+		mr->attr_next=attr_none;
+		return 1;
+	case attr_debug:
+		attr->type = attr_debug;
+		if (mr->str)
+			g_free(mr->str);
+		mr->str=g_strdup_printf("x=%d y=%d", p->c.x, p->c.y);
+		attr->u.str = mr->str;
+		mr->attr_next=attr_none;
+		return 1;
+	default:
+		return 0;
 	}
 }
 
@@ -1446,11 +1481,21 @@ rp_coord_get(void *priv_data, struct coord *c, int count)
 {
 	struct map_rect_priv *mr = priv_data;
 	struct route_graph_point *p = mr->point;
+	struct route_graph_segment *seg = mr->rseg;
 	int rc = 0,i;
 	for (i=0; i < count; i++) {
-		if (mr->last_coord >= 1)
-			break;
-		c[i] = p->c;
+		if (mr->item.type == type_rg_point) {
+			if (mr->last_coord >= 1)
+				break;
+			c[i] = p->c;
+		} else {
+			if (mr->last_coord >= 2)
+				break;
+			if (mr->last_coord)
+				c[i] = seg->end->c;
+			else
+				c[i] = seg->start->c;
+		}
 		mr->last_coord++;
 		rc++;
 	}
@@ -1460,7 +1505,7 @@ rp_coord_get(void *priv_data, struct coord *c, int count)
 static struct item_methods methods_point_item = {
 	rm_coord_rewind,
 	rp_coord_get,
-	rm_attr_rewind,
+	rp_attr_rewind,
 	rp_attr_get,
 };
 
@@ -1486,6 +1531,9 @@ rm_rect_new(struct map_priv *priv, struct map_selection *sel)
 	mr->ri=route_info_open(route_get_pos(priv->route), route_get_dst(priv->route), 0);
 	mr->pos_next=1;
 	mr->sitem=&(route_get_pos(priv->route)->street->item);
+	mr->item.priv_data = mr;
+	mr->item.type = type_street_route;
+	mr->item.meth = &methods_route_item;
 	if (mr->ri) {
 		mr->length=route_info_length(route_get_pos(priv->route), route_get_dst(priv->route), 0);
 	} else {
@@ -1505,6 +1553,9 @@ rp_rect_new(struct map_priv *priv, struct map_selection *sel)
 		return NULL;
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->mpriv = priv;
+	mr->item.priv_data = mr;
+	mr->item.type = type_rg_point;
+	mr->item.meth = &methods_point_item;
 	return mr;
 }
 
@@ -1513,8 +1564,8 @@ rm_rect_destroy(struct map_rect_priv *mr)
 {
 	if (mr->ri)
 		route_info_close(mr->ri);
-	if (mr->label)
-		g_free(mr->label);
+	if (mr->str)
+		g_free(mr->str);
 	g_free(mr);
 }
 
@@ -1523,23 +1574,46 @@ rp_get_item(struct map_rect_priv *mr)
 {
 	struct route *r = mr->mpriv->route;
 	struct route_graph_point *p = mr->point;
+	struct route_graph_segment *seg = mr->rseg;
 
-	if (!p)
-		p = r->graph->route_points;
+	if (mr->item.type == type_rg_point) {
+		if (!p)
+			p = r->graph->route_points;
+		else
+			p = p->next;
+		if (p) {
+			mr->point = p;
+			mr->item.id_lo++;
+			rm_coord_rewind(mr);
+			rp_attr_rewind(mr);
+			return &mr->item;
+		} else
+			mr->item.type = type_rg_segment;
+	}
+	if (!seg)
+		seg=r->graph->route_segments;
 	else
-		p = p->next;
-	if (!p)
-		return NULL;
-	mr->point = p;
-	mr->last_coord = 0;
-	mr->item.id_hi = 0;
-	mr->item.id_lo = 0;
-	mr->item.map = NULL;
-	mr->item.priv_data = mr;
-	mr->item.type = type_rg_point;
-	mr->item.meth = &methods_point_item;
-	return &mr->item;
+		seg=seg->next;
+	if (seg) {
+		mr->rseg = seg;
+		mr->item.id_lo++;
+		rm_coord_rewind(mr);
+		rp_attr_rewind(mr);
+		return &mr->item;
+	}
+	return NULL;
+	
 }
+
+static struct item *
+rp_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
+{
+	struct item *ret=NULL;
+	while (id_lo-- > 0) 
+		ret=rp_get_item(mr);
+	return ret;
+}
+
 
 static struct item *
 rm_get_item(struct map_rect_priv *mr)
@@ -1575,20 +1649,18 @@ rm_get_item(struct map_rect_priv *mr)
 	}
 	mr->seg = seg;
 	mr->last_coord = 0;
-	mr->item.id_hi = 0;
-	mr->item.id_lo = 0;
-	mr->item.map = NULL;
-	mr->item.priv_data = mr;
-	mr->item.type = type_street_route;
-	mr->item.meth = &methods_route_item;
+	mr->item.id_lo++;
+	rm_attr_rewind(mr);
 	return &mr->item;
 }
 
 static struct item *
 rm_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
-	dbg(0,"called on Route map\n");
-	return NULL;
+	struct item *ret=NULL;
+	while (id_lo-- > 0) 
+		ret=rm_get_item(mr);
+	return ret;
 }
 
 static struct map_methods route_meth = {
@@ -1611,7 +1683,7 @@ static struct map_methods route_graph_meth = {
 	rp_rect_new,
 	rm_rect_destroy,
 	rp_get_item,
-	rm_get_item_byid,
+	rp_get_item_byid,
 	NULL,
 	NULL,
 	NULL,
@@ -1683,7 +1755,10 @@ route_get_graph_map(struct route *this_)
 	return route_get_map_helper(this_, &this_->graph_map, "route_graph");
 }
 
-
+void
+route_set_projection(struct route *this_, enum projection pro)
+{
+}
 
 void
 route_init(void)

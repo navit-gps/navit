@@ -69,6 +69,14 @@ transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c)
 	}
 }
 
+void
+transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to)
+{
+	struct coord_geo g;
+	transform_to_geo(from, cfrom, &g);
+	transform_from_geo(to, &g, cto);
+}
+
 int
 transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int unique)
 {

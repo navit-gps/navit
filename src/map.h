@@ -142,6 +142,7 @@ int map_requires_conversion(struct map *this_);
 char *map_convert_string(struct map *this_, char *str);
 void map_convert_free(char *str);
 enum projection map_projection(struct map *this_);
+void map_set_projection(struct map *this_, enum projection pro);
 void map_destroy(struct map *m);
 struct map_rect *map_rect_new(struct map *m, struct map_selection *sel);
 struct item *map_rect_get_item(struct map_rect *mr);

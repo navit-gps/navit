@@ -1447,6 +1447,7 @@ void
 navit_route_add(struct navit *this_, struct route *route)
 {
 	this_->route=route;
+	route_set_projection(route, transform_get_projection(this_->trans));
 }
 
 void
