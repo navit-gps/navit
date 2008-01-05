@@ -1,0 +1,25 @@
+/* XPM */
+static char *gc_question[] = {
+/* columns rows colors chars-per-pixel */
+"16 16 3 1",
+"  c black",
+". c none",
+"X c gray100",
+/* pixels */
+".....XXXX.......",
+"....XX  XX......",
+"....X    X......",
+"....X    X......",
+".XXXXX  XXXX....",
+"X          X....",
+"X          XXX..",
+"X XX       X  X.",
+".X..X          X",
+".X..X          X",
+"X XX       X  X.",
+"X          XXX..",
+"X     XX   X....",
+"X    X..X  X....",
+"X     XX   X....",
+".XXXXX..XXX....."
+};
