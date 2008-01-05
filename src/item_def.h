@@ -196,9 +196,10 @@ ITEM(poi_wrecker)
 ITEM(poi_zoo)
 ITEM(rg_point)
 ITEM(point_unkn)
+ITEM(traffic_signals)
+/* Line */
 ITEM2(0x80000000,line)
 ITEM2(0x80000001,line_unspecified)
-/* Line */
 ITEM(border_country)
 ITEM(border_state)
 ITEM(rail)
@@ -234,7 +235,6 @@ ITEM(time_zone)
 ITEM(marine_boundary)
 ITEM(marine_hazard)
 ITEM(roundabout)
-
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)
