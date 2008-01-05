@@ -3,7 +3,7 @@ rm -f item_def.h.wiki
 rm -f osmmap_def.h.wiki
 IFS="|"
 type="n"
-wget -O - "http://navit.sourceforge.net/wiki/index.php/Item_def.h?action=edit" |
+wget -O - "http://wiki.navit-project.org/index.php/Item_def.h?action=edit" |
 awk '/<textarea/,/<\/textarea/ { print $0 }' | 
 grep "^| " |
 sed -e 's/^| *//' -e 's/ *$//' -e 's/ *|/|/g' -e 's/| */|/g' -e 's/||/|/g' | 
