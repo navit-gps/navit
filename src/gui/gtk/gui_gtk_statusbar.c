@@ -11,6 +11,7 @@
 #include "route.h"
 #include "transform.h"
 #include "navit.h"
+#include "map.h"
 #include "navigation.h"
 #include "gui_gtk.h"
 
@@ -61,15 +62,16 @@ statusbar_gps_update(struct statusbar_priv *this, int sats, int qual, double lng
 }
 
 static void
-statusbar_route_update(struct statusbar_priv *this, struct navit *nav, struct vehicle *v)
+statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct vehicle *v)
 {
-	struct navigation *navig;
-	struct navigation_list *list;
-	struct item *item;
+	struct navigation *nav=NULL;
+	struct map *map=NULL;
+	struct map_rect *mr=NULL;
+	struct item *item=NULL;
 	struct attr attr;
-	double route_len;
+	double route_len=0;
 	time_t eta;
-	struct tm *eta_tm;
+	struct tm *eta_tm=NULL;
 	char buffer[128];
 	char *utf8;
 	double lng, lat, direction=0, height=0, speed=0;
@@ -80,24 +82,25 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *nav, struct ve
 	char *dir;
 	int dir_idx;
 
-	navig=navit_get_navigation(nav);
-	if (! navig)
-		return;
-	list=navigation_list_new(navig);
-	if (! list)
-		return;
-	item=navigation_list_get_item(list);
-	if (! item)
-		return;
-	if (!item_attr_get(item, attr_destination_length, &attr))
-		return;
-	route_len=attr.u.num;
-	if (!item_attr_get(item, attr_destination_time, &attr))
-		return;
-	eta=time(NULL)+attr.u.num/10;
-	eta_tm=localtime(&eta);
-	navigation_list_destroy(list);
-	sprintf(buffer,"Route %4.0fkm    %02d:%02d ETA",route_len/1000, eta_tm->tm_hour, eta_tm->tm_min);
+	if (navit)
+		nav=navit_get_navigation(navit);
+	if (nav)
+		map=navigation_get_map(nav);
+	if (map) 
+		mr=map_rect_new(map, NULL);
+	if (mr)
+		item=map_rect_get_item(mr);
+	if (item) {
+		if (item_attr_get(item, attr_destination_length, &attr))
+			route_len=attr.u.num;
+		if (item_attr_get(item, attr_destination_time, &attr)) {
+			eta=time(NULL)+attr.u.num/10;
+			eta_tm=localtime(&eta);
+		}
+	}
+	if (mr)
+		map_rect_destroy(mr);
+	sprintf(buffer,"Route %4.0fkm    %02d:%02d ETA",route_len/1000, eta_tm ? eta_tm->tm_hour : 0 , eta_tm ? eta_tm->tm_min : 0);
 	if (strcmp(buffer, this->route_text)) {
 		strcpy(this->route_text, buffer);
 		gtk_label_set_text(GTK_LABEL(this->route), this->route_text);
