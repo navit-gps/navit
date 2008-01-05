@@ -8,6 +8,7 @@
 #include "transform.h"
 #include "color.h"
 #include "attr.h"
+#include "map.h"
 
 struct attr_name {
 	enum attr_type attr;
@@ -105,6 +106,25 @@ attr_new_from_text(const char *name, const char *value)
 		ret=NULL;
 	}
 	return ret;
+}
+
+char *
+attr_to_text(struct attr *attr, struct map *map, int pretty)
+{
+	char *ret;
+	enum attr_type type=attr->type;
+
+	if (type >= attr_type_string_begin && type <= attr_type_string_end) {
+		if (map) {
+			char *mstr=map_convert_string(map, attr->u.str);
+			ret=g_strdup(mstr);
+		} else
+			ret=g_strdup(attr->u.str);
+		return ret;
+	}
+	if (type >= attr_type_int_begin && type <= attr_type_int_end) 
+		return g_strdup_printf("%d", attr->u.num);
+	return g_strdup("(no text)");	
 }
 
 struct attr *

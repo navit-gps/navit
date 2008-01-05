@@ -38,6 +38,7 @@ struct attr {
 		struct callback *callback;
 		struct log *log;
 		struct route *route;
+		struct navigation *navigation;
 	} u;
 };
 
