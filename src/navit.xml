@@ -436,6 +436,10 @@ Change to your home coordinates.
 			<item type="town_label_1e7,district_label_1e7" order="1-">
 				<circle color="#000000" radius="3" label_size="15" />
 			</item>
+			<item type="track" order="0-">
+                                <polyline color="#3f3f3f" width="1" />
+                        </item>
+
 			<item type="poi_airport" order="0-">
 				<icon src="airport.xpm" />
 			</item>
