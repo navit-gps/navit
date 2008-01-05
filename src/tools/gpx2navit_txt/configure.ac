@@ -25,6 +25,7 @@ AC_ARG_ENABLE(coverage,
 
 # Checks for libraries.
 AC_CHECK_LIB(proj, pj_param)
+AC_CHECK_LIB(proj, pj_init, [], [ echo "Error you need lib proj4" && exit -1])
 AC_CHECK_LIB(expat, XML_SetUserData)
 AC_CHECK_LIB(m, cos)
 
