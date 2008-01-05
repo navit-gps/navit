@@ -784,6 +784,30 @@ Change to your home coordinates.
 			<item type="poi_picnic" order="0-">
 				<icon src="picnic.xpm" />
 			</item>
+			<item type="poi_gc_multi" order="0-">
+				<icon src="gc_multi.xpm" />
+			</item>
+			<item type="poi_gc_tradi" order="0-">
+				<icon src="gc_tradi.xpm" />
+			</item>
+			<item type="poi_gc_event" order="0-">
+				<icon src="gc_event.xpm" />
+			</item>
+			<item type="poi_gc_mystery" order="0-">
+				<icon src="gc_mystery.xpm" />
+			</item>
+			<item type="poi_gc_question" order="0-">
+				<icon src="gc_question.xpm" />
+			</item>
+			<item type="poi_gc_stages" order="0-">
+				<icon src="gc_stages.xpm" />
+			</item>
+			<item type="poi_gc_reference" order="0-">
+				<icon src="gc_reference.xpm" />
+			</item>
+			<item type="poi_gc_webcam" order="0-">
+				<icon src="gc_webcam.xpm" />
+			</item>
 			<item type="flats,scrub,military_zone,marine_poly,plantation,tundra" order="0-">
 				<polygon color="#a0a0a0" />
 				<label label_size="5" /> 
