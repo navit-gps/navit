@@ -38,7 +38,7 @@ void setWpt( parsedata * pdata)
 	strcpy(poi_type,"poi_gc_stages");
 
     //generate the file
-    fprintf(pdata->fp,"type=%s label=\"%s\" desc=\"%s\" gc_type=\"%s\"\n",
+    fprintf(pdata->fp,"type=%s label=\"%s\" description=\"%s\" gc_type=\"%s\"\n",
 	poi_type,pdata->attr->name,pdata->attr->desc,pdata->attr->type);
     fprintf(pdata->fp,"%3.6f %4.6f\n",x[0],y[0]);
 
