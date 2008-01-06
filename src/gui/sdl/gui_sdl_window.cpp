@@ -97,9 +97,18 @@ sdl_update_roadbook(struct navigation *nav)
 {
 
 	using namespace CEGUI;
-	
-	struct navigation_list *list;	
-	list=navigation_list_new(nav);
+
+	struct map *map;
+	struct map_rect *mr;
+
+	if (! nav)
+		return;
+	map=navigation_get_map(nav);
+	if (! map)
+		return;
+	mr=map_rect_new(map, NULL);
+	if (! mr)
+		return;
 
 	// First, ensure the navigation tip is visible. quick workaround for when resuming a destination
 	WindowManager::getSingleton().getWindow("Navit/Routing/Tips")->show();
@@ -107,7 +116,9 @@ sdl_update_roadbook(struct navigation *nav)
 	// update the 'Navigation Tip' on the main window
 	try {
 		struct attr attr;
-		item_attr_get(navigation_list_get_item(list), attr_navigation_speech, &attr);
+		item_attr_get(map_rect_get_item(mr), attr_navigation_speech, &attr);
+		map_rect_destroy(mr);
+		mr=map_rect_new(map, NULL);
 		WindowManager::getSingleton().getWindow("Navit/Routing/Tips")->setText((CEGUI::utf8*)(attr.u.str));
 	}
 	catch (CEGUI::Exception& e)
@@ -131,15 +142,14 @@ sdl_update_roadbook(struct navigation *nav)
 		item *item;
 		struct attr attr;
 
-		list=navigation_list_new(nav);	
-		while ((item=navigation_list_get_item(list))) {
+		while ((item=map_rect_get_item(mr))) {
 	 		mcl->addRow();
 			item_attr_get(item, attr_navigation_short, &attr);
 			ListboxTextItem* itemListbox = new ListboxTextItem(attr.u.str);
 			itemListbox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 			mcl->setItem(itemListbox, 0, mcl->getRowCount()-1);
 		}
-		navigation_list_destroy(list);
+		map_rect_destroy(mr);
 	}
 	catch (CEGUI::Exception& e)
 	{
