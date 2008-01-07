@@ -1327,8 +1327,10 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		}
 	}
 
+#ifndef _WIN32
 	if (this_->pid && nv->speed > 2)
 		kill(this_->pid, SIGWINCH);
+#endif
 	if (this_->route && nv->update_curr == 1)
 		navigation_update(this_->navigation, this_->route);
 	if (this_->cursor_flag && nv->follow_curr == 1) {
