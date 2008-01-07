@@ -4,7 +4,11 @@
 #include <string.h>
 #include <glib.h>
 #include <sys/stat.h>
+#ifdef _WIN32
+    #include <serial_io.h>
+#else
 #include <termios.h>
+#endif
 #include <math.h>
 #include "config.h"
 #include "debug.h"
@@ -16,6 +20,9 @@
 
 static void vehicle_file_disable_watch(struct vehicle_priv *priv);
 static void vehicle_file_enable_watch(struct vehicle_priv *priv);
+static void vehicle_file_parse(struct vehicle_priv *priv, char *buffer);
+static void vehicle_file_close(struct vehicle_priv *priv);
+
 
 enum file_type {
 	file_type_pipe = 1, file_type_device, file_type_file
@@ -40,11 +47,74 @@ struct vehicle_priv {
 	double height;
 	int status;
 	int sats_used;
+#ifdef _WIN32
+	int no_data_count;
+#endif	
 };
+
+#ifdef _WIN32
+static int vehicle_win32_serial_track(struct vehicle_priv *priv)
+{
+
+    static char buffer[2048] = {0,};
+    static int current_index = 0;
+    const int chunk_size = 1024;
+
+    if ( priv->no_data_count > 5 )
+    {
+        vehicle_file_close( priv );
+        priv->no_data_count = 0;
+    }
+
+    if ( priv->fd <= 0 )
+    {
+        vehicle_file_open( priv );
+    }
+
+    if ( current_index >= ( sizeof( buffer ) - chunk_size ) )
+    {
+        // discard
+        current_index = 0;
+        memset( buffer, 0 , sizeof( buffer ) );
+    }
+
+    int dwBytes = serial_io_read( priv->fd, &buffer[ current_index ], chunk_size );
+    if ( dwBytes > 0 )
+    {
+        current_index += dwBytes;
+
+        char* return_pos = NULL;
+        while ( ( return_pos = strchr( buffer, '\n' ) ) != NULL )
+        {
+            char return_buffer[1024];
+            int bytes_to_copy = return_pos - buffer + 1;
+            memcpy( return_buffer, buffer, bytes_to_copy );
+            return_buffer[ bytes_to_copy + 1 ] = '\0';
+
+            // printf( "received %d : '%s' bytes to copy\n", bytes_to_copy, return_buffer );
+            vehicle_file_parse( priv, return_buffer );
+
+            current_index -= bytes_to_copy;
+            memmove( buffer, &buffer[ bytes_to_copy ] , sizeof( buffer ) - bytes_to_copy );
+        }
+
+    }
+    else
+    {
+        priv->no_data_count++;
+    }
+    return 1;
+}
+#endif
 
 static int
 vehicle_file_open(struct vehicle_priv *priv)
 {
+#ifdef _WIN32	
+	char *name;
+    int port = atoi( priv->source + 5 );
+    priv->fd=serial_io_init( port, 115200 );
+#else
 	char *name;
 	struct stat st;
 	struct termios tio;
@@ -75,12 +145,16 @@ vehicle_file_open(struct vehicle_priv *priv)
 		priv->file_type = file_type_pipe;
 	}
 	priv->iochan = g_io_channel_unix_new(priv->fd);
+#endif
 	return 1;
 }
 
 static void
 vehicle_file_close(struct vehicle_priv *priv)
 {
+#ifdef _WIN32
+    serial_io_shutdown( priv->fd );
+#else
 	GError *error = NULL;
 	if (priv->iochan) {
 		g_io_channel_shutdown(priv->iochan, 0, &error);
@@ -90,6 +164,7 @@ vehicle_file_close(struct vehicle_priv *priv)
 		pclose(priv->file);
 	else if (priv->fd >= 0)
 		close(priv->fd);
+#endif
 	priv->file = NULL;
 	priv->fd = -1;
 }
@@ -161,7 +236,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		   0      1          2         3 4          5 6 7  8   9     0 1234
 		   $GPGGA,184424.505,4924.2811,N,01107.8846,E,1,05,2.5,408.6,M,,,,0000*0C
 		   UTC of Fix[1],Latitude[2],N/S[3],Longitude[4],E/W[5],Quality(0=inv,1=gps,2=dgps)[6],Satelites used[7],
-		   HDOP[8],Altitude[9],"M"[10],height of geoid[11], "M"[12], time since dgps update[13], dgps ref station [14] 
+		   HDOP[8],Altitude[9],"M"[10],height of geoid[11], "M"[12], time since dgps update[13], dgps ref station [14]
 		 */
 		sscanf(item[2], "%lf", &lat);
 		priv->geo.lat = floor(lat / 100);
@@ -178,16 +253,19 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		sscanf(item[9], "%lf", &priv->height);
 
 		callback_list_call_0(priv->cbl);
+
+#ifndef _WIN32
 		if (priv->file_type == file_type_file) {
 			vehicle_file_disable_watch(priv);
 			g_timeout_add(1000,
 				      vehicle_file_enable_watch_timer,
 				      priv);
 		}
+#endif
 	}
 	if (!strncmp(buffer, "$GPVTG", 6)) {
-		/* 0      1      2 34 5    6 7   8 
-		   $GPVTG,143.58,T,,M,0.26,N,0.5,K*6A 
+		/* 0      1      2 34 5    6 7   8
+		   $GPVTG,143.58,T,,M,0.26,N,0.5,K*6A
 		   Course Over Ground Degrees True[1],"T"[2],Course Over Ground Degrees Magnetic[3],"M"[4],
 		   Speed in Knots[5],"N"[6],"Speed in KM/H"[7],"K"[8]
 		 */
@@ -197,7 +275,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	if (!strncmp(buffer, "$GPRMC", 6)) {
 		/*                                                           1     1
 		   0      1      2 3        4 5         6 7     8     9      0     1
-		   $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A 
+		   $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A
 		   Time[1],Active/Void[2],lat[3],N/S[4],long[5],W/E[6],speed in knots[7],track angle[8],date[9],
 		   magnetic variation[10],magnetic variation direction[11]
 		 */
@@ -207,6 +285,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	}
 }
 
+#ifndef _WIN32
 static gboolean
 vehicle_file_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
 {
@@ -251,21 +330,28 @@ vehicle_file_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
 	}
 	return FALSE;
 }
+#endif
 
 static void
 vehicle_file_enable_watch(struct vehicle_priv *priv)
 {
+#ifdef _WIN32	
+	g_timeout_add(500, vehicle_win32_serial_track, priv);
+#else
 	priv->watch =
 	    g_io_add_watch(priv->iochan, G_IO_IN | G_IO_ERR | G_IO_HUP,
 			   vehicle_file_io, priv);
+#endif
 }
 
 static void
 vehicle_file_disable_watch(struct vehicle_priv *priv)
 {
+#ifndef _WIN32
 	if (priv->watch)
 		g_source_remove(priv->watch);
 	priv->watch = 0;
+#endif	
 }
 
 
@@ -332,6 +418,9 @@ vehicle_file_new_file(struct vehicle_methods
 		vehicle_file_enable_watch(ret);
 		return ret;
 	}
+#ifdef _WIN32	
+    ret->no_data_count = 0;
+#endif    
 	dbg(0, "Failed to open '%s'\n", ret->source);
 	vehicle_file_destroy(ret);
 	return NULL;
