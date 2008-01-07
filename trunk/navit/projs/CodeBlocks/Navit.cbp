@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Navit" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\Navi" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="bin\Debug\libfib.a" />
+					<Add library="bin\Debug\libvehicle_file.la" />
+					<Add library="bin\Debug\libdata_binfile.la" />
+					<Add library="bin\Debug\libgtk_graphics.la" />
+					<Add library="bin\Debug\libgtk_gui.la" />
+					<Add library="bin\Debug\libvehicle_demo.la" />
+					<Add library="bin\Debug\libdata_poi_geodownload.la" />
+					<Add library="bin\Debug\libmdb.a" />
+					<Add library="user32" />
+					<Add library="gtk-win32-2.0" />
+					<Add library="gdk-win32-2.0" />
+					<Add library="gdk_pixbuf-2.0" />
+					<Add library="freetype" />
+					<Add library="z" />
+					<Add library="gobject-2.0" />
+					<Add library="gmodule-2.0" />
+					<Add library="glib-2.0" />
+					<Add library="intl" />
+					<Add directory="bin\Debug" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\Navit" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="bin\Release\libfib.a" />
+					<Add library="bin\Release\libvehicle_file.la" />
+					<Add library="bin\Release\libdata_binfile.la" />
+					<Add library="bin\Release\libgtk_graphics.la" />
+					<Add library="bin\Release\libgtk_gui.la" />
+					<Add library="user32" />
+					<Add library="gtk-win32-2.0" />
+					<Add library="gdk-win32-2.0" />
+					<Add library="gdk_pixbuf-2.0" />
+					<Add library="freetype" />
+					<Add library="z" />
+					<Add library="gobject-2.0" />
+					<Add library="gmodule-2.0" />
+					<Add library="glib-2.0" />
+					<Add library="intl" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-mms-bitfields" />
+			<Add option="-DMODULE=Navit" />
+			<Add option='-DPREFIX=\&quot;/usr/local\&quot;' />
+			<Add directory="D:\gtk\include" />
+			<Add directory="D:\gtk\include\gtk-2.0" />
+			<Add directory="D:\gtk\include\glib-2.0" />
+			<Add directory="D:\gtk\lib\gtk-2.0\include" />
+			<Add directory="D:\gtk\lib\glib-2.0\include" />
+			<Add directory="D:\gtk\include\cairo" />
+			<Add directory="D:\gtk\include\pango-1.0" />
+			<Add directory="D:\gtk\include\atk-1.0" />
+			<Add directory="..\..\src" />
+			<Add directory="Win32Extra" />
+			<Add directory="..\..\src\fib-1.1" />
+			<Add directory="D:\msys\1.10\freetype-2.3.5\include" />
+		</Compiler>
+		<Linker>
+			<Add directory="d:\gtk\lib" />
+			<Add directory="D:\msys\1.10\freetype-2.3.5\objs\.libs" />
+		</Linker>
+		<Unit filename="Win32Extra\builtin.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Win32Extra\config.h" />
+		<Unit filename="Win32Extra\serial_io.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Win32Extra\serial_io.h" />
+		<Unit filename="Win32Extra\setenv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Win32Extra\setenv.h" />
+		<Unit filename="Win32Extra\wordexp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Win32Extra\wordexp.h" />
+		<Unit filename="..\..\src\Makefile" />
+		<Unit filename="..\..\src\Makefile.am" />
+		<Unit filename="..\..\src\Makefile.in" />
+		<Unit filename="..\..\src\attr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\attr.h" />
+		<Unit filename="..\..\src\attr_def.h" />
+		<Unit filename="..\..\src\callback.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\callback.h" />
+		<Unit filename="..\..\src\color.h" />
+		<Unit filename="..\..\src\compass.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\compass.h" />
+		<Unit filename="..\..\src\coord.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\coord.h" />
+		<Unit filename="..\..\src\country.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\country.h" />
+		<Unit filename="..\..\src\cursor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\cursor.h" />
+		<Unit filename="..\..\src\data.h" />
+		<Unit filename="..\..\src\data_window.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data_window.h" />
+		<Unit filename="..\..\src\data_window_int.h" />
+		<Unit filename="..\..\src\debug.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\debug.h" />
+		<Unit filename="..\..\src\destination.h" />
+		<Unit filename="..\..\src\draw_info.h" />
+		<Unit filename="..\..\src\file.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\file.h" />
+		<Unit filename="..\..\src\graphics.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\graphics.h" />
+		<Unit filename="..\..\src\gtkext.h" />
+		<Unit filename="..\..\src\gui.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\gui.h" />
+		<Unit filename="..\..\src\gui\gtk\gui_gtk.h" />
+		<Unit filename="..\..\src\item.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\item.h" />
+		<Unit filename="..\..\src\item_def.h" />
+		<Unit filename="..\..\src\layer.h" />
+		<Unit filename="..\..\src\layout.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\layout.h" />
+		<Unit filename="..\..\src\log.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\log.h" />
+		<Unit filename="..\..\src\main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\main.h" />
+		<Unit filename="..\..\src\map-share.h" />
+		<Unit filename="..\..\src\map.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\map.h" />
+		<Unit filename="..\..\src\map_data.h" />
+		<Unit filename="..\..\src\mapset.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\mapset.h" />
+		<Unit filename="..\..\src\maptype.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\maptype.h" />
+		<Unit filename="..\..\src\menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\menu.h" />
+		<Unit filename="..\..\src\navigation.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\navigation.h" />
+		<Unit filename="..\..\src\navit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\navit.h" />
+		<Unit filename="..\..\src\navit.xml" />
+		<Unit filename="..\..\src\osd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\osd.h" />
+		<Unit filename="..\..\src\param.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\param.h" />
+		<Unit filename="..\..\src\phrase.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\phrase.h" />
+		<Unit filename="..\..\src\plugin.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\plugin.h" />
+		<Unit filename="..\..\src\plugin_def.h" />
+		<Unit filename="..\..\src\point.h" />
+		<Unit filename="..\..\src\popup.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\popup.h" />
+		<Unit filename="..\..\src\profile.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\profile.h" />
+		<Unit filename="..\..\src\projection.h" />
+		<Unit filename="..\..\src\route.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\route.h" />
+		<Unit filename="..\..\src\search.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\search.h" />
+		<Unit filename="..\..\src\speech.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\speech.h" />
+		<Unit filename="..\..\src\statusbar.h" />
+		<Unit filename="..\..\src\track.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\track.h" />
+		<Unit filename="..\..\src\transform.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\transform.h" />
+		<Unit filename="..\..\src\util.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\util.h" />
+		<Unit filename="..\..\src\vehicle.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\vehicle.h" />
+		<Unit filename="..\..\src\xmlconfig.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\xmlconfig.h" />
+		<Unit filename="..\..\src\zipfile.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

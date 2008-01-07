@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="gui_sdl" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output=".\bin\Debug\libgui_sdl.la" prefix_auto="1" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output=".\obj\Debug\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add directory="d:\gtk\lib" />
+					<Add directory="bin\Debug" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output=".\bin\Release\libgui_sdl.la" prefix_auto="1" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output=".\obj\Release\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add directory="d:\gtk\lib" />
+					<Add directory="bin\Release" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-mms-bitfields `pkg-config --cflags --libs glib-2.0`" />
+			<Add option="-DBUILD_DLL" />
+			<Add option="-DMODULE=gui_sdl" />
+			<Add directory="D:\gtk\include" />
+			<Add directory="D:\gtk\include\gtk-2.0" />
+			<Add directory="D:\gtk\include\glib-2.0" />
+			<Add directory="D:\gtk\lib\gtk-2.0\include" />
+			<Add directory="D:\gtk\lib\glib-2.0\include" />
+			<Add directory="D:\gtk\include\cairo" />
+			<Add directory="D:\gtk\include\pango-1.0" />
+			<Add directory="D:\gtk\include\atk-1.0" />
+			<Add directory="..\..\src" />
+			<Add directory="Win32Extra" />
+			<Add directory="D:\msys\local\include" />
+		</Compiler>
+		<Linker>
+			<Add directory="d:\gtk\lib" />
+		</Linker>
+		<Unit filename="..\..\src\gui\sdl\Makefile.am" />
+		<Unit filename="..\..\src\gui\sdl\Makefile.in" />
+		<Unit filename="..\..\src\gui\sdl\cegui_keyboard.cpp" />
+		<Unit filename="..\..\src\gui\sdl\cegui_keyboard.h" />
+		<Unit filename="..\..\src\gui\sdl\gui_sdl.h" />
+		<Unit filename="..\..\src\gui\sdl\gui_sdl_window.cpp" />
+		<Unit filename="..\..\src\gui\sdl\sdl_events.cpp" />
+		<Unit filename="..\..\src\gui\sdl\sdl_events.h" />
+		<Unit filename="..\..\src\gui\sdl\wmcontrol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\gui\sdl\wmcontrol.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="mdb" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output=".\bin\Debug\libmdb.a" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="obj\mdb\Debug\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-I." />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output=".\bin\Release\libmdb.a" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output="obj\mdb\Release\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-mms-bitfields `pkg-config --cflags --libs glib-2.0`" />
+			<Add directory="..\..\src\data\poi_geodownload\libmdb\include" />
+		</Compiler>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\backend.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\catalog.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\data.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\dump.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\file.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\iconv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\index.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\kkd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\like.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\map.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\mem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\money.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\options.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\props.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\sargs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\stats.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\table.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\worktable.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\data\poi_geodownload\libmdb\write.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

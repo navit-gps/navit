@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Navit">
+		<Project filename="fib-1.1.cbp" />
+		<Project filename="mdb.cbp" />
+		<Project filename="data_poi_geodownload.cbp">
+			<Depends filename="mdb.cbp" />
+		</Project>
+		<Project filename="binfile.cbp" />
+		<Project filename="vehicle_demo.cbp" />
+		<Project filename="vehicle_file.cbp" />
+		<Project filename="Osm2Navit.cbp" />
+		<Project filename="Navit.cbp" active="1">
+			<Depends filename="fib-1.1.cbp" />
+			<Depends filename="mdb.cbp" />
+			<Depends filename="data_poi_geodownload.cbp" />
+			<Depends filename="binfile.cbp" />
+			<Depends filename="vehicle_demo.cbp" />
+			<Depends filename="vehicle_file.cbp" />
+			<Depends filename="gtk_gui.cbp" />
+			<Depends filename="gtk_graphics.cbp" />
+		</Project>
+		<Project filename="gtk_gui.cbp" />
+		<Project filename="gtk_graphics.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>
