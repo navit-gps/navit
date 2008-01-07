@@ -6,7 +6,10 @@
 #ifdef HAVE_IMLIB2
 #include <Imlib2.h>
 #endif
+
+#ifndef _WIN32
 #include <gdk/gdkx.h>
+#endif
 #include "debug.h"
 #include "point.h"
 #include "graphics.h"
@@ -61,6 +64,9 @@ graphics_destroy(struct graphics_priv *gr)
 }
 
 static char *fontpaths[]={
+#ifdef _WIN32
+	"c:/windows/fonts",
+#endif
 	"/usr/share/fonts",
 	"/usr/X11R6/lib/X11/fonts/msttcorefonts",
 	"/usr/X11R6/lib/X11/fonts/truetype",
@@ -289,6 +295,7 @@ struct text_render {
 	struct text_glyph *glyph[0];
 };
 
+#ifndef _WIN32
 static GdkImage *
 display_text_render_shadow(struct text_glyph *g)
 {
@@ -332,6 +339,49 @@ display_text_render_shadow(struct text_glyph *g)
 	ret=gdk_image_new_bitmap(gdk_visual_get_system(), shadow, g->w+2, g->h+2);
 	return ret;
 }
+#else
+static GdkImage *
+display_text_render_shadow(struct text_glyph *g)
+{
+	int mask0, mask1, mask2, x, y, w=g->w, h=g->h;
+	int str=(g->w+9)/8;
+	unsigned char *p, *pm=g->pixmap;
+	GdkImage *ret;
+
+	ret=gdk_image_new( GDK_IMAGE_NORMAL , gdk_visual_get_system(), w+2, h+2);
+
+	for (y = 0 ; y < h ; y++) {
+		p=ret->mem+str*y;
+
+		mask0=0x4000;
+		mask1=0xe000;
+		mask2=0x4000;
+		for (x = 0 ; x < w ; x++) {
+			if (pm[x+y*w]) {
+				p[0]|=(mask0 >> 8);
+				if (mask0 & 0xff)
+					p[1]|=mask0;
+
+				p[str]|=(mask1 >> 8);
+				if (mask1 & 0xff)
+					p[str+1]|=mask1;
+				p[str*2]|=(mask2 >> 8);
+				if (mask2 & 0xff)
+					p[str*2+1]|=mask2;
+			}
+			mask0 >>= 1;
+			mask1 >>= 1;
+			mask2 >>= 1;
+			if (!((mask0 >> 8) | (mask1 >> 8) | (mask2 >> 8))) {
+				mask0<<=8;
+				mask1<<=8;
+				mask2<<=8;
+			}
+		}
+	}
+	return ret;
+}
+#endif
 
 static struct text_render *
 display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy, int x, int y)
