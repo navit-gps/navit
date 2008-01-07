@@ -1,0 +1,629 @@
+# German translations for navit
+# Copyright (C) 2007
+# This file is distributed under the same license as the navit package.
+# Albert Fabe, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Navit 0.0.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-26 11:26+0100\n"
+"PO-Revision-Date: 2007-07-10 21:53+0200\n"
+"Last-Translator: afaber <afaber_at_sourceforge_dot._net>\n"
+"Language-Team: afaber\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=2; plural=n != 1;\n"
+
+#: ../src/main.c:94
+#, c-format
+msgid "Running from source directory\n"
+msgstr "Gestart vanuit de source directory\n"
+
+#: ../src/main.c:110
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "setting '%s' naar '%s'\n"
+
+#: ../src/main.c:173
+#, c-format
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr "Geen config file navit.xml, navit.xml.local gevonden\n"
+
+#: ../src/main.c:177
+#, c-format
+msgid "Error parsing '%s': %s\n"
+msgstr "Error bij het verwerken van '%s': %s\n"
+
+#: ../src/main.c:180
+#, c-format
+msgid "Using '%s'\n"
+msgstr "Gebruik '%s'\n"
+
+#: ../src/main.c:183
+#, c-format
+msgid "No instance has been created, exiting\n"
+msgstr "Geen instantie ge-creerd, beeindigen\n"
+
+#: ../src/navigation.c:173
+#, c-format
+msgid "%d m"
+msgstr "%d Meter"
+
+#: ../src/navigation.c:175
+#, c-format
+msgid "in %d m"
+msgstr "na %d meter"
+
+#: ../src/navigation.c:179
+#, c-format
+msgid "%d meters"
+msgstr "%d Meter"
+
+#: ../src/navigation.c:181
+#, c-format
+msgid "in %d meters"
+msgstr "na %d meter"
+
+#: ../src/navigation.c:187
+#, c-format
+msgid "%d.%d kilometer"
+msgstr "%d,%d kilometer"
+
+#: ../src/navigation.c:189
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "na %d,%d kilometer"
+
+#: ../src/navigation.c:193
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "een kilometer"
+msgstr[1] "%d kilometer"
+
+#: ../src/navigation.c:195
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "na één kilometer"
+msgstr[1] "in %d kilometer"
+
+#: ../src/navigation.c:399
+msgid "right"
+msgstr "rechts"
+
+#: ../src/navigation.c:406
+msgid "left"
+msgstr "links"
+
+#: ../src/navigation.c:410
+msgid "easily "
+msgstr "flauwe "
+
+#: ../src/navigation.c:414
+msgid "strongly "
+msgstr "scherpe "
+
+#: ../src/navigation.c:417
+msgid "unknown "
+msgstr "niet bekend "
+
+#
+#: ../src/navigation.c:423
+msgid "When possible, please turn around"
+msgstr "Wanneer mogelijk, omkeren"
+
+#: ../src/navigation.c:430
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Weg volgen voor %s"
+
+#: ../src/navigation.c:434
+msgid "soon"
+msgstr "binnenkort"
+
+#: ../src/navigation.c:440
+msgid "now"
+msgstr "nu"
+
+#: ../src/navigation.c:443
+msgid "error"
+msgstr "error"
+
+#. TRANSLATORS: The first argument is strength, the second direction and the third distance
+#: ../src/navigation.c:447
+#, c-format
+msgid "Turn %1$s%2$s %3$s"
+msgstr "%3$s %1$s%2$s afslaan"
+
+#: ../src/navigation.c:450
+#, c-format
+msgid "You have reached your destination %s"
+msgstr "%s bestemming bereikt"
+
+#: ../src/navit.c:614 ../src/gui/gtk/gui_gtk_action.c:185
+msgid "Layout"
+msgstr "Layout"
+
+#: ../src/navit.c:630
+msgid "Projection"
+msgstr "Projectie"
+
+#: ../src/navit.c:685
+msgid "Former Destinations"
+msgstr "Vorige bestemmingen"
+
+#: ../src/navit.c:695
+msgid "Bookmarks"
+msgstr "Bookmarks"
+
+#: ../src/navit.c:733
+msgid "Vehicle"
+msgstr "Voertuig"
+
+#: ../src/navit.c:768
+msgid "Command"
+msgstr "Opdracht"
+
+#: ../src/navit.c:773
+msgid "Length"
+msgstr "Lengte"
+
+#: ../src/navit.c:778
+msgid "Time"
+msgstr "Tijd"
+
+#: ../src/navit.c:783
+msgid "Destination Length"
+msgstr "Afstand"
+
+#: ../src/navit.c:788
+msgid "Destination Time"
+msgstr "Aankomsttijd"
+
+#: ../src/navit.c:810 ../src/gui/gtk/gui_gtk_action.c:189
+msgid "Roadbook"
+msgstr "Route"
+
+#: ../src/navit.c:1030 ../src/gui/gtk/destination.c:365
+#: ../src/gui/gtk/gui_gtk_action.c:184
+msgid "Map"
+msgstr "Kaart"
+
+#: ../src/navit.c:1037 ../src/gui/gtk/gui_gtk_action.c:183
+msgid "Route"
+msgstr "Route"
+
+#: ../src/country.c:24
+msgid "Czech Republic"
+msgstr "Tsjechië"
+
+#: ../src/country.c:25
+msgid "Slovakia"
+msgstr "Slowakije"
+
+#: ../src/country.c:26
+msgid "San Marino"
+msgstr "San Marino"
+
+#: ../src/country.c:27
+msgid "Estonia"
+msgstr "Estland"
+
+#: ../src/country.c:28
+msgid "Georgia"
+msgstr "Georgien"
+
+#: ../src/country.c:29
+msgid "Latvia"
+msgstr "Letland"
+
+#: ../src/country.c:30
+msgid "Lithuania"
+msgstr "Litouwen"
+
+#: ../src/country.c:31
+msgid "Moldova"
+msgstr "Moldavië"
+
+#: ../src/country.c:32
+msgid "Russian Federation"
+msgstr "Rusland"
+
+#: ../src/country.c:33
+msgid "Ukraine"
+msgstr "Oekraïne"
+
+#: ../src/country.c:34
+msgid "Belarus"
+msgstr "Wit-Rusland"
+
+#: ../src/country.c:35
+msgid "Egypt"
+msgstr "Egypte"
+
+#: ../src/country.c:36
+msgid "Greece"
+msgstr "Griekenland"
+
+#: ../src/country.c:37
+msgid "Netherlands"
+msgstr "Nederland"
+
+#: ../src/country.c:38
+msgid "Belgium"
+msgstr "België"
+
+#: ../src/country.c:39
+msgid "France"
+msgstr "Frankrijk"
+
+#: ../src/country.c:40
+msgid "Spain"
+msgstr "Spanje"
+
+#: ../src/country.c:41
+msgid "Hungary"
+msgstr "Hongarije"
+
+#: ../src/country.c:42
+msgid "Italy"
+msgstr "Italië"
+
+#: ../src/country.c:43
+msgid "Romania"
+msgstr "Roemenië"
+
+#: ../src/country.c:44
+msgid "Switzerland"
+msgstr "Zwitserland"
+
+#: ../src/country.c:45
+msgid "Austria"
+msgstr "Oostenrijk"
+
+#: ../src/country.c:46
+msgid "United Kingdom"
+msgstr "Groot-Brittannië"
+
+#: ../src/country.c:47
+msgid "Denmark"
+msgstr "Denemarken"
+
+#: ../src/country.c:48
+msgid "Sweden"
+msgstr "Zweden"
+
+#: ../src/country.c:49
+msgid "Norway"
+msgstr "Norwegen"
+
+#: ../src/country.c:50
+msgid "Poland"
+msgstr "Polen"
+
+#: ../src/country.c:51
+msgid "Germany"
+msgstr "Duitsland"
+
+#: ../src/country.c:52
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+#: ../src/country.c:53
+msgid "Portugal"
+msgstr "Portugal"
+
+#: ../src/country.c:54
+msgid "Luxembourg"
+msgstr "Luxemburg"
+
+#: ../src/country.c:55
+msgid "Ireland"
+msgstr "Irland"
+
+#: ../src/country.c:56
+msgid "Iceland"
+msgstr "Island"
+
+#: ../src/country.c:57
+msgid "Albania"
+msgstr "Albanien"
+
+#: ../src/country.c:58
+msgid "Malta"
+msgstr "Malta"
+
+#: ../src/country.c:59
+msgid "Cyprus"
+msgstr "Zypern"
+
+#: ../src/country.c:60
+msgid "Finland"
+msgstr "Finnland"
+
+#: ../src/country.c:61
+msgid "Bulgaria"
+msgstr "Bulgarien"
+
+#: ../src/country.c:62
+msgid "Lebanon"
+msgstr "Libanon"
+
+#: ../src/country.c:63
+msgid "Andorra"
+msgstr "Andorra"
+
+#: ../src/country.c:64
+msgid "Syria"
+msgstr "Syrien"
+
+#
+#: ../src/country.c:65
+msgid "Saudi Arabia"
+msgstr "Saudi-Arabien"
+
+#: ../src/country.c:66
+msgid "Libia"
+msgstr "Libyen"
+
+#: ../src/country.c:67
+msgid "Israel"
+msgstr "Israel"
+
+#: ../src/country.c:68
+msgid "Palestinia"
+msgstr "Palestina"
+
+#: ../src/country.c:69
+msgid "Liechtenstein"
+msgstr "Lichtenstein"
+
+#: ../src/country.c:70
+msgid "Morocco"
+msgstr "Marokko"
+
+#: ../src/country.c:71
+msgid "Algeria"
+msgstr "Algerije"
+
+#: ../src/country.c:72
+msgid "Tunisia"
+msgstr "Tunesië"
+
+#: ../src/country.c:73
+msgid "Serbia"
+msgstr "Servië"
+
+#: ../src/country.c:74
+msgid "Jordan"
+msgstr "Jordanie"
+
+#: ../src/country.c:75
+msgid "Croatia"
+msgstr "Kroatië"
+
+#: ../src/country.c:76
+msgid "Slovenia"
+msgstr "Slovenië"
+
+#: ../src/country.c:77
+msgid "Bosnia and Herzegovina"
+msgstr "Bosnië en Herzegovina"
+
+#: ../src/country.c:78
+msgid "Macedonia"
+msgstr "Macedonië"
+
+#: ../src/country.c:79
+msgid "Turkey"
+msgstr "Turkije"
+
+#: ../src/country.c:80
+msgid "Monaco"
+msgstr "Monaco"
+
+#: ../src/country.c:81
+msgid "Azerbaijan"
+msgstr "Azerbaijan"
+
+#: ../src/country.c:82
+msgid "Armenia"
+msgstr "Armenie"
+
+#: ../src/country.c:83
+msgid "Faroe Islands"
+msgstr "Färöer"
+
+#: ../src/country.c:84
+msgid "Western Sahara"
+msgstr "Westsahara"
+
+#: ../src/country.c:85
+msgid "Svalbard and Jan Mayen"
+msgstr "Svalbard und Jan Mayen"
+
+#: ../src/gui/gtk/destination.c:99 ../src/gui/gtk/destination.c:100
+#: ../src/gui/gtk/destination.c:101 ../src/gui/gtk/destination.c:102
+msgid "Car"
+msgstr "Auto"
+
+#: ../src/gui/gtk/destination.c:99
+msgid "Iso2"
+msgstr "Iso2"
+
+#: ../src/gui/gtk/destination.c:99
+msgid "Iso3"
+msgstr "Iso3"
+
+#: ../src/gui/gtk/destination.c:99 ../src/gui/gtk/destination.c:331
+msgid "Country"
+msgstr "Land"
+
+#
+#: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
+#: ../src/gui/gtk/destination.c:102
+msgid "Postal"
+msgstr "Postcode"
+
+#: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
+#: ../src/gui/gtk/destination.c:102
+msgid "Town"
+msgstr "Plaats"
+
+#
+#: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
+#: ../src/gui/gtk/destination.c:102
+msgid "District"
+msgstr "District"
+
+#: ../src/gui/gtk/destination.c:101 ../src/gui/gtk/destination.c:102
+#: ../src/gui/gtk/destination.c:340
+msgid "Street"
+msgstr "Straat"
+
+#: ../src/gui/gtk/destination.c:102 ../src/gui/gtk/destination.c:342
+msgid "Number"
+msgstr "Nummer"
+
+#
+#: ../src/gui/gtk/destination.c:326
+msgid "Enter Destination"
+msgstr "Bestemming"
+
+#: ../src/gui/gtk/destination.c:333
+msgid "Zip Code"
+msgstr "Postcode"
+
+#: ../src/gui/gtk/destination.c:335
+msgid "City"
+msgstr "Plaats"
+
+#: ../src/gui/gtk/destination.c:337
+msgid "District/Township"
+msgstr "Ortsteil/Gemeinde"
+
+#: ../src/gui/gtk/destination.c:366
+msgid "Bookmark"
+msgstr "Markeren"
+
+#: ../src/gui/gtk/destination.c:367 ../src/gui/gtk/gui_gtk_action.c:195
+msgid "Destination"
+msgstr "Bestemming"
+
+#: ../src/gui/gtk/gui_gtk_action.c:182
+msgid "Display"
+msgstr "Tonen"
+
+#: ../src/gui/gtk/gui_gtk_action.c:186
+msgid "ZoomOut"
+msgstr "Verkleinen"
+
+#: ../src/gui/gtk/gui_gtk_action.c:187
+msgid "ZoomIn"
+msgstr "Vergroten"
+
+#: ../src/gui/gtk/gui_gtk_action.c:188
+msgid "Refresh"
+msgstr "Verversen"
+
+#: ../src/gui/gtk/gui_gtk_action.c:191 ../src/gui/gtk/gui_gtk_action.c:193
+msgid "Info"
+msgstr "Info"
+
+#: ../src/gui/gtk/gui_gtk_action.c:196
+msgid "Clear"
+msgstr "Wissen"
+
+#: ../src/gui/gtk/gui_gtk_action.c:197
+msgid "Test"
+msgstr "Test"
+
+#: ../src/gui/gtk/gui_gtk_action.c:198
+msgid "_Quit"
+msgstr "beëindigen"
+
+#: ../src/gui/gtk/gui_gtk_action.c:205
+msgid "Cursor"
+msgstr "Cursor"
+
+#: ../src/gui/gtk/gui_gtk_action.c:206
+msgid "Tracking"
+msgstr "Volgen"
+
+#: ../src/gui/gtk/gui_gtk_action.c:207
+msgid "Orientation"
+msgstr "Oriëntatie"
+
+#: ../src/gui/gtk/gui_gtk_action.c:209 ../src/gui/gtk/gui_gtk_action.c:211
+msgid "Fullscreen"
+msgstr "Beeldvullend"
+
+#: ../src/gui/gtk/gui_gtk_action.c:219
+msgid "Data"
+msgstr "Data"
+
+#: ../src/gui/gtk/gui_gtk_action.c:220
+msgid "VisibleBlocks"
+msgstr "Toon blokken"
+
+#: ../src/gui/gtk/gui_gtk_action.c:221
+msgid "VisibleTowns"
+msgstr "Sichtbare Städte"
+
+#: ../src/gui/gtk/gui_gtk_action.c:222
+msgid "VisiblePolys"
+msgstr "Toon polygonen"
+
+#: ../src/gui/gtk/gui_gtk_action.c:223
+msgid "VisibleStreets"
+msgstr "Toon straten"
+
+#: ../src/gui/gtk/gui_gtk_action.c:224
+msgid "VisiblePoints"
+msgstr "Toon punten"
+
+#: ../src/gui/gtk/gui_gtk_action.c:225
+msgid "RouteGraph"
+msgstr "Route-Graph"
+
+#~ msgid "Point 0x%x 0x%x"
+#~ msgstr "Punt 0x%x 0x%x"
+
+#~ msgid "Screen %d %d"
+#~ msgstr "Scherm %d %d"
+
+#~ msgid "Set as position"
+#~ msgstr "Zet als positie"
+
+#~ msgid "Set as destination"
+#~ msgstr "Zet als bestemming"
+
+#~ msgid "Add as bookmark"
+#~ msgstr "Opnemen als bladwijzer"
+
+#~ msgid "two kilometers"
+#~ msgstr "twee kilometer"
+
+#~ msgid "in two kilometers"
+#~ msgstr "in twee kilometer"
+
+#~ msgid "three kilometers"
+#~ msgstr "drie kilometer"
+
+#~ msgid "in three kilometers"
+#~ msgstr "in drie kilometers"
+
+#~ msgid "four kilometers"
+#~ msgstr "vier kilometer"
+
+#~ msgid "in four kilometers"
+#~ msgstr "in vier kilometer"
+
+#~ msgid "%d kilometers"
+#~ msgstr "%d kilometer"
+
+#~ msgid "in %d kilometers"
+#~ msgstr "in %d Kilometers"
