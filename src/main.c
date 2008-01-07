@@ -5,8 +5,12 @@
 #include <signal.h>
 #include <glib.h>
 #include <sys/types.h>
+
+#ifndef _WIN32
 #include <sys/wait.h>
 #include <signal.h>
+#endif
+
 #include <unistd.h>
 #include <libintl.h>
 #ifdef USE_GTK_MAIN_LOOP
@@ -30,8 +34,10 @@ struct map_data *map_data_default;
 
 static void sigchld(int sig)
 {
+#ifndef _WIN32
 	int status;
 	while (waitpid(-1, &status, WNOHANG) > 0);
+#endif
 }
 
 
@@ -88,7 +94,10 @@ int main(int argc, char **argv)
 	char *s;
 	int l;
 
+
+#ifndef _WIN32
 	signal(SIGCHLD, sigchld);
+#endif
 
 	setenv("LC_NUMERIC","C",1);
 	setlocale(LC_ALL,"");
@@ -119,10 +128,18 @@ int main(int argc, char **argv)
 			} else 
 				setenv("NAVIT_PREFIX", PREFIX, 0);
 		}
+#ifdef _WIN32
+		s=g_strdup_printf("locale");
+#else
 		s=g_strdup_printf("%s/share/locale", getenv("NAVIT_PREFIX"));
+#endif
 		setenv("NAVIT_LOCALEDIR", s, 0);
 		g_free(s);
+#ifdef _WIN32
+		s=g_strdup_printf(".");
+#else
 		s=g_strdup_printf("%s/share/navit", getenv("NAVIT_PREFIX"));
+#endif
 		setenv("NAVIT_SHAREDIR", s, 0);
 		g_free(s);
 		s=g_strdup_printf("%s/lib/navit", getenv("NAVIT_PREFIX"));

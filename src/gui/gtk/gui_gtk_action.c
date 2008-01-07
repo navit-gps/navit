@@ -507,6 +507,11 @@ popup_deactivate(GtkWidget *widget, struct menu_priv *menu)
 	remove_menu(menu, 1);
 }	
 
+#ifdef _WIN32
+// AF needs to be fixed for win32, 
+static int showPopup = 0;
+#endif
+
 static struct menu_priv *
 gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, int popup, GtkWidget **widget_ret)
 {
@@ -568,8 +573,20 @@ gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, in
 		gtk_box_pack_start (GTK_BOX(this->vbox), widget, FALSE, FALSE, 0);
 		gtk_widget_show (widget);
 	} else {
+#ifdef _WIN32		
+	    if ( showPopup )
+	    {
+	        showPopup = 0;
+#endif	    	
 		gtk_menu_popup(GTK_MENU(widget), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time ());
 		ret->handler_id=g_signal_connect(widget, "selection-done", G_CALLBACK(popup_deactivate), ret);
+#ifdef _WIN32            
+	    }
+	    else
+	    {
+	        showPopup = 1;
+	    }
+#endif	    
 	}
 	return ret;
 }
