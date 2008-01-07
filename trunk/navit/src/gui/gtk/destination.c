@@ -257,6 +257,11 @@ int kbd_pid;
 static int
 spawn_xkbd (char *xkbd_path, char *xkbd_str)
 {
+#ifdef _WIN32 // AF FIXME for WIN32
+    #ifndef F_SETFD
+        #define F_SETFD 2
+    #endif
+#else
 	char *xkbd_args[MAX_ARGS + 1];
 	int fd[2];
 	char buf[256];
@@ -298,6 +303,7 @@ spawn_xkbd (char *xkbd_path, char *xkbd_str)
 		buf[a] = 0;
 		return atoi (buf);
 	}
+#endif
 	return 0;
 }
 

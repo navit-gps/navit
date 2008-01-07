@@ -15,6 +15,7 @@
 #include <zlib.h>
 #include "item.h"
 #include "zipfile.h"
+#include "config.h"
 
 #if 1
 #define debug_tile(x) 0
@@ -210,7 +211,9 @@ static int in_way, in_node, in_relation;
 static void
 sig_alrm(int sig)
 {
+#ifndef _WIN32
 	signal(SIGALRM, sig_alrm);
+#endif
 	alarm(30);
 	fprintf(stderr,"PROGRESS%d: Processed %d nodes (%d out) %d ways %d relations %d tiles\n", phase, processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles);
 }

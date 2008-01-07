@@ -240,4 +240,10 @@ popup(struct navit *nav, int button, struct point *p)
 	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_destination), nav, &c), _("Set as destination"));
 	popup_printf_cb(men, menu_type_menu, callback_new_2(callback_cast(popup_set_bookmark), nav, &c), _("Add as bookmark"));
 	popup_display(nav, popup, p);
+#ifdef _WIN32
+	// menu needs first to be constructed before doing the menu popup
+	// therefore this work around for win32
+	// needs to be fixed
+	popup=gui_popup_new(navit_get_gui(nav));
+#endif
 }
