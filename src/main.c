@@ -102,7 +102,6 @@ int main(int argc, char **argv)
 	setenv("LC_NUMERIC","C",1);
 	setlocale(LC_ALL,"");
 	setlocale(LC_NUMERIC,"C");
-	setlocale(LC_NUMERIC,"C");
 
 	if (file_exists("navit.c") || file_exists("navit.o")) {
 		char buffer[PATH_MAX];
@@ -112,7 +111,7 @@ int main(int argc, char **argv)
 		setenv("NAVIT_LIBDIR", buffer, 0);
 		setenv("NAVIT_SHAREDIR", buffer, 0);
 		setenv("NAVIT_LIBPREFIX", "*/.libs/", 0);
-		s=g_strdup_printf("%s/../locale", buffer);	
+		s=g_strdup_printf("%s/../locale", buffer);
 		setenv("NAVIT_LOCALEDIR", s, 0);
 		g_free(s);
 	} else {
@@ -121,11 +120,11 @@ int main(int argc, char **argv)
 			if (l > 10 && !strcmp(argv[0]+l-10,"/bin/navit")) {
 				s=g_strdup(argv[0]);
 				s[l-10]='\0';
-				if (strcmp(s, PREFIX)) 
+				if (strcmp(s, PREFIX))
 					printf(_("setting '%s' to '%s'\n"), "NAVIT_PREFIX", s);
 				setenv("NAVIT_PREFIX", s, 0);
 				g_free(s);
-			} else 
+			} else
 				setenv("NAVIT_PREFIX", PREFIX, 0);
 		}
 #ifdef _WIN32
@@ -168,7 +167,7 @@ int main(int argc, char **argv)
 	route_init();
 	navigation_init();
 	config_file=NULL;
-	if (argc > 1) 
+	if (argc > 1)
 		config_file=argv[1];
 	if (! config_file) {
 		config_file=g_strjoin(NULL,get_home_directory(), "/.navit/navit.xml" , NULL);
