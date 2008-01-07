@@ -18,6 +18,10 @@
 #define O_LARGEFILE 0
 #endif
 
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+
 static struct file *file_list;
 
 struct file *
@@ -28,7 +32,7 @@ file_create(char *name)
 
 	if (! file)
 		return file; 
-	file->fd=open(name, O_RDONLY|O_LARGEFILE);
+	file->fd=open(name, O_RDONLY|O_LARGEFILE | O_BINARY);
 	if (file->fd < 0) {
 		g_free(file);
 		return NULL;
@@ -45,6 +49,10 @@ file_create(char *name)
 int
 file_mmap(struct file *file)
 {
+	// not supported for WIN32 right now
+#ifdef _WIN32
+	return -1;
+#else
 	file->begin=mmap(NULL, file->size, PROT_READ|PROT_WRITE, MAP_PRIVATE, file->fd, 0);
 	g_assert(file->begin != NULL);
 	if (file->begin == (void *)0xffffffff) {
@@ -53,6 +61,7 @@ file_mmap(struct file *file)
 	}
 	g_assert(file->begin != (void *)0xffffffff);
 	file->end=file->begin+file->size;
+#endif
 	return 1;
 }
 
@@ -144,16 +153,19 @@ file_exists(char *name)
 void
 file_remap_readonly(struct file *f)
 {
+#ifndef _WIN32
 	void *begin;
 	munmap(f->begin, f->size);
 	begin=mmap(f->begin, f->size, PROT_READ, MAP_PRIVATE, f->fd, 0);
 	if (f->begin != begin)
 		printf("remap failed\n");
+#endif
 }
 
 void
 file_remap_readonly_all(void)
 {
+#ifndef _WIN32
 	struct file *f=file_list;
 	int limit=1000;
 
@@ -161,12 +173,15 @@ file_remap_readonly_all(void)
 		file_remap_readonly(f);
 		f=f->next;
 	}
+#endif
 }
 
 void
 file_unmap(struct file *f)
 {
+#ifndef _WIN32	
 	munmap(f->begin, f->size);
+#endif
 }
 
 void
@@ -247,7 +262,11 @@ void
 file_destroy(struct file *f)
 {
 	close(f->fd);
-	munmap(f->begin, f->size);
+
+    if ( f->begin != NULL )
+    {
+// AF FIXME        munmap(f->begin, f->size);
+    }
 	g_free(f->name);
 	g_free(f);	
 }
