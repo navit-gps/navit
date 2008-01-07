@@ -129,8 +129,9 @@ int main(int argc, char **argv)
 		setenv("NAVIT_LIBDIR", s, 0);
 		g_free(s);
 	}
-        bindtextdomain( "navit", getenv("NAVIT_LOCALEDIR"));
-	textdomain( "navit" );
+        bindtextdomain(PACKAGE, getenv("NAVIT_LOCALEDIR"));
+	bind_textdomain_codeset (PACKAGE, "UTF-8");
+	textdomain(PACKAGE);
 
 	debug_init();
 #ifndef USE_PLUGINS
