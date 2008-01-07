@@ -20,6 +20,7 @@
 #include "osd.h"
 #include "log.h"
 #include "xmlconfig.h"
+#include "config.h"
 
 
 struct xmlstate {
