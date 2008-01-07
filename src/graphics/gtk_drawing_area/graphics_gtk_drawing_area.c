@@ -343,9 +343,9 @@ display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy,
 	int n,len;
 	struct text_render *ret;
 	struct text_glyph *curr;
-	wchar_t wtext[1024];
+	char *p=text;
 
-	len=mbstowcs(wtext, text, 1024);
+	len=g_utf8_strlen(text, -1);
 	ret=g_malloc(sizeof(*ret)+len*sizeof(struct text_glyph *));
 	ret->glyph_count=len;
 
@@ -365,7 +365,7 @@ display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy,
 	for ( n = 0; n < len; n++ )
 	{
 
-		glyph_index = FT_Get_Char_Index(font->face, wtext[n]);
+		glyph_index = FT_Get_Char_Index(font->face, g_utf8_get_char(p));
 		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT );
 		FT_Render_Glyph(font->face->glyph, ft_render_mode_normal );
         
@@ -389,6 +389,7 @@ display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy,
 #endif
          	x += slot->advance.x;
          	y -= slot->advance.y;
+		p=g_utf8_next_char(p);
 	}
 	return ret;
 }
