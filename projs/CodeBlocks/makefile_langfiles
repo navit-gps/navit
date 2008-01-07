@@ -1,0 +1,19 @@
+POFILES = cs.mo es.mo fr.mo nl.mo pl.mo de.mo fi.mo it.mo no.mo
+
+MSGFMT=msgfmt.exe
+
+%.mo:../../po/%.po
+	$(MSGFMT) --check --verbose --statistics --output-file=$@ $< && \
+	mkdir -p ./locale/$(basename $@)/LC_MESSAGES && \
+	mv $@ ./locale/$(basename $@)/LC_MESSAGES/navit.mo
+
+.PHONY: all clean
+
+# nl.po: ..\..\nl.mo
+
+all: $(POFILES)
+
+clean:
+	rm -rf locale/*
+
+  
