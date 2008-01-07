@@ -39,7 +39,7 @@ int serial_io_init( int port, int baudrate )
 
 		// Free the buffer.
 		LocalFree( lpMsgBuf );
-		return 0;
+		return -1;
 	}
 
 	DCB dcb;
