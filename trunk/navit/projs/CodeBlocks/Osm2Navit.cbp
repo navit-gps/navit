@@ -18,7 +18,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add directory="d:\gtk\lib" />
+					<Add directory="%GTK_DIR%\lib" />
 					<Add directory="bin\Debug" />
 				</Linker>
 			</Target>
@@ -32,7 +32,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add directory="d:\gtk\lib" />
+					<Add directory="%GTK_DIR%\lib" />
 					<Add directory="bin\Release" />
 				</Linker>
 			</Target>
@@ -40,9 +40,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-mms-bitfields -DMODULE=osm2navit" />
-			<Add directory="D:\gtk\include\glib-2.0" />
-			<Add directory="D:\gtk\lib\glib-2.0\include" />
-			<Add directory="D:\gtk\include" />
+			<Add directory="%GTK_DIR%\include\glib-2.0" />
+			<Add directory="%GTK_DIR%\lib\glib-2.0\include" />
+			<Add directory="%GTK_DIR%\include" />
 			<Add directory="Win32Extra" />
 		</Compiler>
 		<Linker>
@@ -58,7 +58,7 @@
 			<Add library="glib-2.0" />
 			<Add library="intl" />
 			<Add library="zdll" />
-			<Add directory="d:\gtk\lib" />
+			<Add directory="%GTK_DIR%\lib" />
 		</Linker>
 		<Unit filename="Win32Extra\wordexp.c">
 			<Option compilerVar="CC" />
