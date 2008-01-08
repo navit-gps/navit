@@ -70,6 +70,7 @@ struct map_rect_priv {
 	struct coord last_c;
 	void *last_oattr;
 	unsigned int last_attr;
+	struct gar_search *search;
 };
 
 int garmin_debug = 10;
@@ -177,20 +178,64 @@ garmin_object_debug(struct gobject *o, struct attr *attr)
 static struct map_search_priv *
 gmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial)
 {
+	struct map_rect_priv *mr=g_new0(struct map_rect_priv, 1);
+	struct gar_search *gs;
+	int rc;
+
+	dlog(1, "Called!\n");
+	mr->mpriv=map;
+	gs = g_new0(struct gar_search,1);
+	if (!gs) {
+		dlog(1, "Can not init search \n");
+		free(mr);
+		return NULL;
+	}
+	mr->search = gs;
+	switch (search->type) {
+		case attr_country_name:
+			gs->type = GS_COUNTRY;
+				break;
+		case attr_town_name:
+			gs->type = GS_CITY;
+				break;
+		case attr_town_postal:
+			gs->type = GS_ZIP;
+				break;
+		case attr_street_name:
+			gs->type = GS_ROAD;
+				break;
+#if someday
+		case attr_region_name:
+		case attr_intersection:
+		case attr_housenumber:
+#endif
+		default:
+			dlog(1, "Don't know how to search for %d\n", search->type);
+			goto out_err;
+	}
+	gs->match = partial ? GM_START : GM_EXACT;
+	gs->needle = strdup(search->u.str);
+	dlog(5, "Needle: %s\n", gs->needle);
+
+	mr->gmap = gar_find_subfiles(mr->mpriv->g, gs, GO_GET_SEARCH);
+	if (!mr->gmap) {
+		dlog(1, "Can not init search \n");
+		goto out_err;
+	}
+	rc = gar_get_objects(mr->gmap, 0, gs, &mr->objs, GO_GET_SEARCH);
+	if (rc < 0) {
+		dlog(1, "Error loading objects\n");
+		goto out_err;
+	}
+	mr->cobj = mr->objs;
+	dlog(4, "Loaded %d objects\n", rc);
+	return (struct map_search_priv *)mr;
+
+out_err:
+	free(gs);
+	free(mr);
 	return NULL;
 }
-
-static void 
-gmap_search_destroy(struct map_search_priv *ms)
-{
-}
-
-static struct item *
-gmap_search_get_item(struct map_search_priv *ms)
-{
-	return NULL;
-}
-
 
 /* Assumes that only one item will be itterated at time! */
 static void 
@@ -337,6 +382,9 @@ point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			break;
 	case attr_label:
 		attr->type = attr_label;
+		return garmin_object_label(g, attr);
+	case attr_town_name:
+		attr->type = attr_town_name;
 		return garmin_object_label(g, attr);
 	case attr_street_name:
 		attr->type = attr_street_name;
@@ -650,6 +698,12 @@ gmap_rect_destroy(struct map_rect_priv *mr)
 	free(mr);
 }
 
+static void 
+gmap_search_destroy(struct map_search_priv *ms)
+{
+	gmap_rect_destroy((struct map_rect_priv *)ms);
+}
+
 static void
 gmap_destroy(struct map_priv *m)
 {
@@ -663,8 +717,8 @@ gmap_destroy(struct map_priv *m)
 
 static struct map_methods map_methods = {
 	projection_garmin,
-	NULL,
-//	"iso8859-1",	// update from the map
+//	NULL,	FIXME navit no longer displays labels without charset!
+	"iso8859-1",	// update from the map
 	gmap_destroy,	//
 	gmap_rect_new,
 	gmap_rect_destroy,
@@ -672,7 +726,7 @@ static struct map_methods map_methods = {
 	gmap_rect_get_item_byid,
 	gmap_search_new,
 	gmap_search_destroy,
-	gmap_search_get_item,
+	gmap_rect_get_item,
 };
 
 static struct map_priv *
