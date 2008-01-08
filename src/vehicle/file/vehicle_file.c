@@ -49,7 +49,7 @@ struct vehicle_priv {
 	int sats_used;
 #ifdef _WIN32
 	int no_data_count;
-#endif	
+#endif
 };
 
 #ifdef _WIN32
@@ -110,10 +110,27 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
 static int
 vehicle_file_open(struct vehicle_priv *priv)
 {
-#ifdef _WIN32	
-	char *name;
-    int port = atoi( priv->source + 5 );
-    priv->fd=serial_io_init( port, 115200 );
+#ifdef _WIN32
+    dbg(1, "enter vehicle_file_open, priv->source='%s'\n", priv->source);
+
+    if ( priv->source )
+    {
+        char* raw_setting_str = g_strdup( priv->source );
+
+        char* strport = strchr(raw_setting_str, ':' );
+        char* strsettings = strchr(raw_setting_str, ' ' );
+
+        if ( strport && strsettings )
+        {
+            strport++;
+            *strsettings = '\0';
+            strsettings++;
+
+            dbg(1, "calling serial_io_init('%s', '%s')\n", strport, strsettings );
+            priv->fd=serial_io_init( strport, strsettings );
+        }
+        g_free( raw_setting_str );
+    }
 #else
 	char *name;
 	struct stat st;
@@ -335,7 +352,7 @@ vehicle_file_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
 static void
 vehicle_file_enable_watch(struct vehicle_priv *priv)
 {
-#ifdef _WIN32	
+#ifdef _WIN32
 	g_timeout_add(500, vehicle_win32_serial_track, priv);
 #else
 	priv->watch =
@@ -351,7 +368,7 @@ vehicle_file_disable_watch(struct vehicle_priv *priv)
 	if (priv->watch)
 		g_source_remove(priv->watch);
 	priv->watch = 0;
-#endif	
+#endif
 }
 
 
@@ -418,9 +435,9 @@ vehicle_file_new_file(struct vehicle_methods
 		vehicle_file_enable_watch(ret);
 		return ret;
 	}
-#ifdef _WIN32	
+#ifdef _WIN32
     ret->no_data_count = 0;
-#endif    
+#endif
 	dbg(0, "Failed to open '%s'\n", ret->source);
 	vehicle_file_destroy(ret);
 	return NULL;
