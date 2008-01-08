@@ -465,6 +465,8 @@ garmin_obj2item(struct map_rect_priv *mr, struct gobject *o)
 			return garmin_pl2item(mr, o, otype);
 		case GO_POLYGON:
 			return garmin_pg2item(mr, o, otype);
+		case GO_ROAD:
+			return garmin_pl2item(mr, o, otype);
 		default:
 			dlog(1, "Unknown garmin object type:%d\n",
 				o->type);
