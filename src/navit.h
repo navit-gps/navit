@@ -59,7 +59,7 @@ void navit_window_items_add_item(struct navit_window_items *nwi, enum item_type 
 void navit_add_window_items(struct navit *this_, struct navit_window_items *nwi);
 void navit_add_menu_windows_items(struct navit *this_, struct menu *men);
 void navit_init(struct navit *this_);
-void navit_set_center(struct navit *this_, struct coord *center);
+void navit_set_center(struct navit *this_, struct pcoord *center);
 void navit_set_center_screen(struct navit *this_, struct point *p);
 int navit_set_attr(struct navit *this_, struct attr *attr);
 int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr);
