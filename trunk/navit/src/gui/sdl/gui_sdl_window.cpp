@@ -565,6 +565,15 @@ static void init_sdlgui(char * skin_layout,int fullscreen,int tilt)
 		char *filename;
 
 		filename=g_strdup_printf("%s/share/navit/datafiles", getenv("NAVIT_PREFIX"));
+
+		if (FILE * file = fopen(filename, "r")){
+			fclose(file);
+			dbg(0,"Ressources can be loaded from %s\n",filename);
+		} else {
+			filename=g_strdup_printf("./gui/sdl/datafiles");
+			dbg(0,"Failling back to %s",filename);
+		}
+
 		dbg(0,"Loading SDL datafiles from %s\n",filename);
 
 		rp->setResourceGroupDirectory("schemes", g_strdup_printf("%s/schemes/",filename));
