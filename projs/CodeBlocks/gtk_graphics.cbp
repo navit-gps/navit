@@ -53,6 +53,7 @@
 			<Add directory="%GTK_DIR%\include\atk-1.0" />
 			<Add directory="..\..\src" />
 			<Add directory="Win32Extra" />
+			<Add directory="%GTK_DIR%\include\freetype2" />
 		</Compiler>
 		<Linker>
 			<Add library="NavitCommonLib" />
