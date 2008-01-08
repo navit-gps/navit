@@ -1175,8 +1175,12 @@ void
 navit_set_center_screen(struct navit *this_, struct point *p)
 {
 	struct coord c;
+	struct pcoord pc;
 	transform_reverse(this_->trans, p, &c);
-	navit_set_center(this_, &c);
+	pc.x = c.x;
+	pc.y = c.y;
+	pc.pro = transform_get_projection(this_->trans);
+	navit_set_center(this_, &pc);
 }
 
 int
