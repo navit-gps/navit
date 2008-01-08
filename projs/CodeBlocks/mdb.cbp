@@ -35,7 +35,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-mms-bitfields `pkg-config --cflags --libs glib-2.0`" />
+			<Add option="-mms-bitfields" />
 			<Add directory="..\..\src\data\poi_geodownload\libmdb\include" />
 		</Compiler>
 		<Unit filename="..\..\src\data\poi_geodownload\libmdb\backend.c">
