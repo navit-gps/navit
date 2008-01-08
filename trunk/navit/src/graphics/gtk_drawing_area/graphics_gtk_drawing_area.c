@@ -65,7 +65,7 @@ graphics_destroy(struct graphics_priv *gr)
 
 static char *fontpaths[]={
 #ifdef _WIN32
-	"c:/windows/fonts",
+	"%WINDIR%/fonts",
 #endif
 	"/usr/share/fonts",
 	"/usr/X11R6/lib/X11/fonts/msttcorefonts",
@@ -199,9 +199,9 @@ gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 static struct graphics_gc_methods gc_methods = {
 	gc_destroy,
 	gc_set_linewidth,
-	gc_set_dashes,	
-	gc_set_foreground,	
-	gc_set_background	
+	gc_set_dashes,
+	gc_set_foreground,
+	gc_set_background
 };
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)
@@ -233,12 +233,12 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 	*h=ret->h;
 	if (hot) {
 		option=gdk_pixbuf_get_option(pixbuf, "x_hot");
-		if (option) 
+		if (option)
 			hot->x=atoi(option);
 		else
 			hot->x=ret->w/2-1;
 		option=gdk_pixbuf_get_option(pixbuf, "y_hot");
-		if (option) 
+		if (option)
 			hot->y=atoi(option);
 		else
 			hot->y=ret->h/2-1;
@@ -249,7 +249,7 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 static void
 draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	if (gr->mode == draw_mode_begin || gr->mode == draw_mode_end) 
+	if (gr->mode == draw_mode_begin || gr->mode == draw_mode_end)
 		gdk_draw_lines(gr->drawable, gc->gc, (GdkPoint *)p, count);
 	if (gr->mode == draw_mode_end || gr->mode == draw_mode_cursor)
 		gdk_draw_lines(gr->widget->window, gc->gc, (GdkPoint *)p, count);
@@ -283,7 +283,7 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 struct text_glyph {
 	int x,y,w,h;
 	GdkImage *shadow;
-	unsigned char pixmap[0];		
+	unsigned char pixmap[0];
 };
 
 struct text_render {
@@ -307,7 +307,7 @@ display_text_render_shadow(struct text_glyph *g)
 
 	shadow=malloc(str*(g->h+2)); /* do not use g_malloc() here */
 	memset(shadow, 0, str*(g->h+2));
-	for (y = 0 ; y < h ; y++) {	
+	for (y = 0 ; y < h ; y++) {
 		p=shadow+str*y;
 		mask0=0x4000;
 		mask1=0xe000;
@@ -315,14 +315,14 @@ display_text_render_shadow(struct text_glyph *g)
 		for (x = 0 ; x < w ; x++) {
 			if (pm[x+y*w]) {
 				p[0]|=(mask0 >> 8);
-				if (mask0 & 0xff) 
+				if (mask0 & 0xff)
 					p[1]|=mask0;
 
 				p[str]|=(mask1 >> 8);
-				if (mask1 & 0xff) 
+				if (mask1 & 0xff)
 					p[str+1]|=mask1;
 				p[str*2]|=(mask2 >> 8);
-				if (mask2 & 0xff) 
+				if (mask2 & 0xff)
 					p[str*2+1]|=mask2;
 			}
 			mask0 >>= 1;
@@ -409,7 +409,7 @@ display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy,
 	x <<= 6;
 	y <<= 6;
 	FT_Set_Transform( font->face, &matrix, &pen );
-	
+
 
 
 	for ( n = 0; n < len; n++ )
@@ -418,7 +418,7 @@ display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy,
 		glyph_index = FT_Get_Char_Index(font->face, g_utf8_get_char(p));
 		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT );
 		FT_Render_Glyph(font->face->glyph, ft_render_mode_normal );
-        
+
 		curr=g_malloc(sizeof(*curr)+slot->bitmap.rows*slot->bitmap.pitch);
 		ret->glyph[n]=curr;
 
@@ -430,11 +430,11 @@ display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy,
 			memcpy(curr->pixmap, slot->bitmap.buffer, slot->bitmap.rows*slot->bitmap.pitch);
 			curr->shadow=display_text_render_shadow(curr);
 		}
-		else 
+		else
 			curr->shadow=NULL;
 #if 0
-		printf("height=%d\n", slot->metrics.height);	
-		printf("height2=%d\n", face->height);	
+		printf("height=%d\n", slot->metrics.height);
+		printf("height2=%d\n", face->height);
 		printf("bbox %d %d %d %d\n", face->bbox.xMin, face->bbox.yMin, face->bbox.xMax, face->bbox.yMax);
 #endif
          	x += slot->advance.x;
@@ -455,7 +455,7 @@ display_text_draw(struct text_render *text, struct graphics_priv *gr, struct gra
 	while (i-- > 0)
 	{
 		g=*gp++;
-		if (g->shadow && bg) 
+		if (g->shadow && bg)
 			gdk_draw_image(gr->drawable, bg->gc, g->shadow, 0, 0, g->x-1, g->y-1, g->w+2, g->h+2);
 	}
 	gp=text->glyph;
@@ -463,7 +463,7 @@ display_text_draw(struct text_render *text, struct graphics_priv *gr, struct gra
 	while (i-- > 0)
 	{
 		g=*gp++;
-		if (g->w && g->h) 
+		if (g->w && g->h)
 			gdk_draw_gray_image(gr->drawable, fg->gc, g->x, g->y, g->w, g->h, GDK_RGB_DITHER_NONE, g->pixmap, g->w);
 	}
 }
@@ -551,13 +551,13 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, int wi
 		return;
 
 	pixbuf=gdk_pixbuf_get_from_drawable(NULL, overlay->drawable, NULL, 0, 0, 0, 0, overlay->width, overlay->height);
-	pixbuf2=gdk_pixbuf_new(gdk_pixbuf_get_colorspace(pixbuf), TRUE, gdk_pixbuf_get_bits_per_sample(pixbuf), 
+	pixbuf2=gdk_pixbuf_new(gdk_pixbuf_get_colorspace(pixbuf), TRUE, gdk_pixbuf_get_bits_per_sample(pixbuf),
 				gdk_pixbuf_get_width(pixbuf), gdk_pixbuf_get_height(pixbuf));
 
 	rowstride1 = gdk_pixbuf_get_rowstride (pixbuf);
 	rowstride2 = gdk_pixbuf_get_rowstride (pixbuf2);
-	pixels1=gdk_pixbuf_get_pixels (pixbuf);	
-	pixels2=gdk_pixbuf_get_pixels (pixbuf2);	
+	pixels1=gdk_pixbuf_get_pixels (pixbuf);
+	pixels2=gdk_pixbuf_get_pixels (pixbuf2);
 	n_channels1 = gdk_pixbuf_get_n_channels (pixbuf);
 	n_channels2 = gdk_pixbuf_get_n_channels (pixbuf2);
 	for (y = 0 ; y < overlay->height ; y++) {
@@ -648,7 +648,7 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;
         gra->drawable = gdk_pixmap_new(widget->window, gra->width, gra->height, -1);
-	if (gra->resize_callback) 
+	if (gra->resize_callback)
 		(*gra->resize_callback)(gra->resize_callback_data, gra->width, gra->height);
 	return TRUE;
 }
@@ -675,8 +675,8 @@ button_timeout(gpointer user_data)
 {
 #if 0
 	struct container *co=user_data;
-	int x=co->gra->gra->button_event.x; 
-	int y=co->gra->gra->button_event.y; 
+	int x=co->gra->gra->button_event.x;
+	int y=co->gra->gra->button_event.y;
 	int button=co->gra->gra->button_event.button;
 
 	co->gra->gra->button_timeout=0;
@@ -695,7 +695,7 @@ button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 
 	p.x=event->x;
 	p.y=event->y;
-	if (this->button_callback) 
+	if (this->button_callback)
 		(*this->button_callback)(this->button_callback_data, 1, event->button, &p);
 	return FALSE;
 }
@@ -708,7 +708,7 @@ button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 
 	p.x=event->x;
 	p.y=event->y;
-	if (this->button_callback) 
+	if (this->button_callback)
 		(*this->button_callback)(this->button_callback_data, 0, event->button, &p);
 	return FALSE;
 }
@@ -750,7 +750,7 @@ motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer user_data)
 
 	p.x=event->x;
 	p.y=event->y;
-	if (this->motion_callback) 
+	if (this->motion_callback)
 		(*this->motion_callback)(this->motion_callback_data, &p);
 	return FALSE;
 }
@@ -846,10 +846,10 @@ graphics_gtk_drawing_area_new(struct graphics_methods *meth, struct attr **attrs
 	draw=gtk_drawing_area_new();
 	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
 	this->widget=draw;
-	
+
 	this->colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
 	gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_KEY_PRESS_MASK);
-	g_signal_connect(G_OBJECT(draw), "expose_event", G_CALLBACK(expose), this); 
+	g_signal_connect(G_OBJECT(draw), "expose_event", G_CALLBACK(expose), this);
         g_signal_connect(G_OBJECT(draw), "configure_event", G_CALLBACK(configure), this);
 #if 0
         g_signal_connect(G_OBJECT(draw), "realize_event", G_CALLBACK(realize), co);
