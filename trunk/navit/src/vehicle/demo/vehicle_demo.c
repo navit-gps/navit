@@ -156,7 +156,7 @@ vehicle_demo_new(struct vehicle_methods
 		ret->config_speed=speed->u.num;
 	}
 	if ((interval=attr_search(attrs, NULL, attr_interval)))
-		ret->interval=speed->u.num;
+		ret->interval=interval->u.num;
 	if ((position_coord_geo=attr_search(attrs, NULL, attr_position_coord_geo))) {
 		ret->geo=*(position_coord_geo->u.coord_geo);
 		ret->position_set=1;
