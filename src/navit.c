@@ -1133,10 +1133,20 @@ navit_init(struct navit *this_)
 }
 
 void
-navit_set_center(struct navit *this_, struct coord *center)
+navit_set_center(struct navit *this_, struct pcoord *center)
 {
 	struct coord *c=transform_center(this_->trans);
-	*c=*center;
+	struct coord c1,c2;
+	enum projection pro = transform_get_projection(this_->trans);
+	if (pro != center->pro) {
+		c1.x = center->x;
+		c1.y = center->y;
+		transform_from_to(&c1, center->pro, &c2, pro);
+	} else {
+		c2.x = center->x;
+		c2.y = center->y;
+	}
+	*c=c2;
 	if (this_->ready)
 		navit_draw(this_);
 }
