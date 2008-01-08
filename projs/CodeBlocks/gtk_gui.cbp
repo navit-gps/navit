@@ -17,7 +17,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add directory="d:\gtk\lib" />
+					<Add directory="%GTK_DIR%\lib" />
 					<Add directory="bin\Debug" />
 				</Linker>
 			</Target>
@@ -33,29 +33,29 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add directory="d:\gtk\lib" />
+					<Add directory="%GTK_DIR%\lib" />
 					<Add directory="bin\Release" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-mms-bitfields `pkg-config --cflags --libs glib-2.0`" />
+			<Add option="-mms-bitfields" />
 			<Add option="-DBUILD_DLL" />
 			<Add option="-DMODULE=gtk_gui" />
-			<Add directory="D:\gtk\include" />
-			<Add directory="D:\gtk\include\gtk-2.0" />
-			<Add directory="D:\gtk\include\glib-2.0" />
-			<Add directory="D:\gtk\lib\gtk-2.0\include" />
-			<Add directory="D:\gtk\lib\glib-2.0\include" />
-			<Add directory="D:\gtk\include\cairo" />
-			<Add directory="D:\gtk\include\pango-1.0" />
-			<Add directory="D:\gtk\include\atk-1.0" />
+			<Add directory="%GTK_DIR%\include" />
+			<Add directory="%GTK_DIR%\include\gtk-2.0" />
+			<Add directory="%GTK_DIR%\include\glib-2.0" />
+			<Add directory="%GTK_DIR%\lib\gtk-2.0\include" />
+			<Add directory="%GTK_DIR%\lib\glib-2.0\include" />
+			<Add directory="%GTK_DIR%\include\cairo" />
+			<Add directory="%GTK_DIR%\include\pango-1.0" />
+			<Add directory="%GTK_DIR%\include\atk-1.0" />
 			<Add directory="..\..\src" />
 			<Add directory="Win32Extra" />
 		</Compiler>
 		<Linker>
-			<Add directory="d:\gtk\lib" />
+			<Add directory="%GTK_DIR%\lib" />
 		</Linker>
 		<Unit filename="..\..\src\gui\gtk\datawindow.c">
 			<Option compilerVar="CC" />

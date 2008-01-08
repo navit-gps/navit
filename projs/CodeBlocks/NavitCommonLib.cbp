@@ -36,15 +36,15 @@
 			<Add option="-Wall" />
 			<Add option="-mms-bitfields" />
 			<Add option='-DMODULE=\&quot;Navit\&quot;' />
-			<Add directory="D:\gtk\include\glib-2.0" />
-			<Add directory="D:\gtk\lib\glib-2.0\include" />
+			<Add directory="%GTK_DIR%\include\glib-2.0" />
+			<Add directory="%GTK_DIR%\lib\glib-2.0\include" />
 			<Add directory="Win32Extra" />
-			<Add directory="D:\gtk\include" />
+			<Add directory="%GTK_DIR%\include" />
 		</Compiler>
 		<Linker>
 			<Add library="glib-2.0" />
 			<Add library="z" />
-			<Add directory="d:\gtk\lib" />
+			<Add directory="%GTK_DIR%\lib" />
 		</Linker>
 		<Unit filename="Win32Extra\setenv.c">
 			<Option compilerVar="CC" />

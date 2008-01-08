@@ -6,11 +6,11 @@
 		<Project filename="data_poi_geodownload.cbp">
 			<Depends filename="mdb.cbp" />
 		</Project>
-		<Project filename="binfile.cbp" />
+		<Project filename="binfile.cbp" active="1" />
 		<Project filename="vehicle_demo.cbp" />
 		<Project filename="vehicle_file.cbp" />
 		<Project filename="Osm2Navit.cbp" />
-		<Project filename="Navit.cbp" active="1">
+		<Project filename="Navit.cbp">
 			<Depends filename="fib-1.1.cbp" />
 			<Depends filename="mdb.cbp" />
 			<Depends filename="data_poi_geodownload.cbp" />

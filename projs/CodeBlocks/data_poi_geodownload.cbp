@@ -17,7 +17,7 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add directory="d:\gtk\lib" />
+					<Add directory="%GTK_DIR%\lib" />
 					<Add directory="bin\Debug" />
 				</Linker>
 			</Target>
@@ -33,18 +33,18 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add directory="d:\gtk\lib" />
+					<Add directory="%GTK_DIR%\lib" />
 					<Add directory="bin\Release" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-mms-bitfields `pkg-config --cflags --libs glib-2.0`" />
+			<Add option="-mms-bitfields" />
 			<Add option="-DBUILD_DLL" />
 			<Add option="-DMODULE=data_poi_geodownload" />
-			<Add directory="D:\gtk\include\glib-2.0" />
-			<Add directory="D:\gtk\lib\glib-2.0\include" />
+			<Add directory="%GTK_DIR%\include\glib-2.0" />
+			<Add directory="%GTK_DIR%\lib\glib-2.0\include" />
 			<Add directory="..\..\" />
 			<Add directory="..\" />
 			<Add directory="D:\CB_Projects\Navit\src\" />
@@ -57,7 +57,7 @@
 			<Add library="user32" />
 			<Add library="intl" />
 			<Add library="iconv" />
-			<Add directory="d:\gtk\lib" />
+			<Add directory="%GTK_DIR%\lib" />
 		</Linker>
 		<Unit filename="..\..\src\data\poi_geodownload\poi_geodownload.c">
 			<Option compilerVar="CC" />
