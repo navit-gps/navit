@@ -82,7 +82,7 @@
 			<Add directory="..\..\src" />
 			<Add directory="Win32Extra" />
 			<Add directory="..\..\src\fib-1.1" />
-			<Add directory="D:\msys\1.10\freetype-2.3.5\include" />
+			<Add directory="%GTK_DIR%\include\freetype2" />
 		</Compiler>
 		<Linker>
 			<Add directory="%GTK_DIR%\lib" />
@@ -272,4 +272,3 @@
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
- 

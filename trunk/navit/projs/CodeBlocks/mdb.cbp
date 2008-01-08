@@ -37,6 +37,8 @@
 			<Add option="-Wall" />
 			<Add option="-mms-bitfields" />
 			<Add directory="..\..\src\data\poi_geodownload\libmdb\include" />
+			<Add directory="%GTK_DIR%\include\glib-2.0" />
+			<Add directory="%GTK_DIR%\lib\glib-2.0\include" />
 		</Compiler>
 		<Unit filename="..\..\src\data\poi_geodownload\libmdb\backend.c">
 			<Option compilerVar="CC" />

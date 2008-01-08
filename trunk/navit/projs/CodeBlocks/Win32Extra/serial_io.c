@@ -2,12 +2,12 @@
 #include <windows.h>
 #include "serial_io.h"
 
-int serial_io_init( int port, int baudrate )
+int serial_io_init( const char* port, const char* strsettings )
 {
     HANDLE hCom = NULL;
 
 	char strport[16];
-	snprintf( strport, sizeof( strport ), "\\\\.\\COM%d", port );
+	snprintf( strport, sizeof( strport ), "\\\\.\\%s", port );
 
 	hCom = CreateFile(
 			strport,
@@ -33,8 +33,6 @@ int serial_io_init( int port, int baudrate )
 			0,
 			NULL
 		);
-		char * tst = lpMsgBuf;
-
 		// g_strSerialError = strPort + wxT(": ") + (LPTSTR) lpMsgBuf;
 
 		// Free the buffer.
@@ -48,8 +46,8 @@ int serial_io_init( int port, int baudrate )
 
 	GetCommState(hCom, &dcb);
 
-    char strsettings[255];
-    snprintf( strsettings, sizeof( strsettings ), "baud=%d parity=N data=8 stop=1", baudrate );
+//    char strsettings[255];
+//    snprintf( strsettings, sizeof( strsettings ), "baud=%d parity=N data=8 stop=1", baudrate );
 	BuildCommDCB( strsettings, &dcb);
 
 	SetupComm(hCom, 4096, 4096);
