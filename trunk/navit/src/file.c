@@ -265,7 +265,7 @@ file_destroy(struct file *f)
 
     if ( f->begin != NULL )
     {
-// AF FIXME        munmap(f->begin, f->size);
+	    munmap(f->begin, f->size);
     }
 	g_free(f->name);
 	g_free(f);	
