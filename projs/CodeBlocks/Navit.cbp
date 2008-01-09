@@ -24,6 +24,8 @@
 					<Add library="bin\Debug\libvehicle_demo.la" />
 					<Add library="bin\Debug\libdata_poi_geodownload.la" />
 					<Add library="bin\Debug\libmdb.a" />
+					<Add library="bin\Debug\libdata_garmin.la" />
+					<Add library="libgarmin.a" />
 					<Add library="user32" />
 					<Add library="gtk-win32-2.0" />
 					<Add library="gdk-win32-2.0" />
@@ -35,6 +37,8 @@
 					<Add library="glib-2.0" />
 					<Add library="intl" />
 					<Add directory="bin\Debug" />
+					<Add directory="." />
+					<Add directory="Win32Extra\libgarmin" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -52,7 +56,12 @@
 					<Add library="bin\Release\libvehicle_file.la" />
 					<Add library="bin\Release\libdata_binfile.la" />
 					<Add library="bin\Release\libgtk_graphics.la" />
+					<Add library="bin\Release\libvehicle_demo.la" />
 					<Add library="bin\Release\libgtk_gui.la" />
+					<Add library="bin\Release\libdata_poi_geodownload.la" />
+					<Add library="bin\Release\libmdb.a" />
+					<Add library="bin\Release\libdata_garmin.la" />
+					<Add library="libgarmin.a" />
 					<Add library="user32" />
 					<Add library="gtk-win32-2.0" />
 					<Add library="gdk-win32-2.0" />
@@ -63,6 +72,8 @@
 					<Add library="gmodule-2.0" />
 					<Add library="glib-2.0" />
 					<Add library="intl" />
+					<Add directory="." />
+					<Add directory="Win32Extra\libgarmin" />
 				</Linker>
 			</Target>
 		</Build>
