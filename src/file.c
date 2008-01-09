@@ -13,6 +13,7 @@
 #include <zlib.h>
 #include "debug.h"
 #include "file.h"
+#include "config.h"
 
 #ifndef O_LARGEFILE
 #define O_LARGEFILE 0
@@ -31,7 +32,7 @@ file_create(char *name)
 	struct file *file= g_new0(struct file,1);
 
 	if (! file)
-		return file; 
+		return file;
 	file->fd=open(name, O_RDONLY|O_LARGEFILE | O_BINARY);
 	if (file->fd < 0) {
 		g_free(file);
@@ -40,7 +41,7 @@ file_create(char *name)
 	fstat(file->fd, &stat);
 	file->size=stat.st_size;
 	file->name = g_strdup(name);
-	g_assert(file != NULL); 
+	g_assert(file != NULL);
 	file->next=file_list;
 	file_list=file;
 	return file;
@@ -78,7 +79,7 @@ file_data_read(struct file *file, long long offset, int size)
 		ret=NULL;
 	}
 	return ret;
-		
+
 }
 
 static int
@@ -117,7 +118,7 @@ file_data_read_compressed(struct file *file, long long offset, int size, int siz
 	void *ret;
 	char buffer[size];
 	uLongf destLen=size_uncomp;
-	
+
 	ret=g_malloc(size_uncomp);
 	lseek(file->fd, offset, SEEK_SET);
 	if (read(file->fd, buffer, size) != size) {
@@ -179,7 +180,7 @@ file_remap_readonly_all(void)
 void
 file_unmap(struct file *f)
 {
-#ifndef _WIN32	
+#ifndef _WIN32
 	munmap(f->begin, f->size);
 #endif
 }
@@ -265,10 +266,10 @@ file_destroy(struct file *f)
 
     if ( f->begin != NULL )
     {
-	    munmap(f->begin, f->size);
+        munmap(f->begin, f->size);
     }
 	g_free(f->name);
-	g_free(f);	
+	g_free(f);
 }
 
 struct file_wordexp {
@@ -279,7 +280,7 @@ struct file_wordexp *
 file_wordexp_new(const char *pattern)
 {
 	struct file_wordexp *ret=g_new(struct file_wordexp, 1);
-	wordexp(pattern, &ret->we, 0);	
+	wordexp(pattern, &ret->we, 0);
 	return ret;
 }
 
