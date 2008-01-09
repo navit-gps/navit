@@ -222,4 +222,5 @@ void endElementControl(parsedata * pdata, const char *element)
 	setMetadata(pdata);
 	wipeAttr(pdata->attr);
     }
+    pdata->bufptr = NULL; //reset bufptr now
 }
