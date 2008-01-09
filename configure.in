@@ -46,6 +46,7 @@ AC_ARG_ENABLE(avoid-float, [  --enable-avoid-float              avoid floating p
 test x"${AVOID_FLOAT}" = xyes && AC_DEFINE(AVOID_FLOAT,[],Define to avoid floating point)
 
 AC_ARG_ENABLE(libgps, [  --disable-libgps             don't use libgps], USE_LIBGPS=$enableval, USE_LIBGPS=yes)
+AC_ARG_ENABLE(garmin, [  --disable-garmin             disable garmin support], USE_GARMIN=$enableval, USE_GARMIN=yes)
 
 AC_ARG_ENABLE(samplemap, [  --disable-samplemap             don't build the samplemap], samplemap=$enableval, samplemap=yes)
 AM_CONDITIONAL(BUILD_SAMPLEMAP, [test "x$samplemap" = "xyes"])
@@ -279,11 +280,15 @@ AC_SUBST(GPSD_CFLAGS)
 AC_SUBST(GPSD_LIBS)
 AM_CONDITIONAL(VEHICLE_GPSD, [test "x$gpsd" = "xyes"])
 
-# check for libgarmin
-PKG_CHECK_MODULES(LIBGARMIN, libgarmin, use_libgarmin=yes, use_libgarmin=no)
-AC_SUBST(LIBGARMIN_CFLAGS)
-AC_SUBST(LIBGARMIN_LIBS)
-AM_CONDITIONAL(HAVELIBGARMIN, [test "x$use_libgarmin" = "xyes"])
+if test x"${USE_GARMIN}" = xyes
+then
+	# check for libgarmin
+	PKG_CHECK_MODULES(LIBGARMIN, libgarmin, use_libgarmin=yes, use_libgarmin=no)
+	AC_SUBST(LIBGARMIN_CFLAGS)
+	AC_SUBST(LIBGARMIN_LIBS)
+fi
+	AM_CONDITIONAL(HAVELIBGARMIN, [test "x$use_libgarmin" = "xyes"])
+
 
 AC_ARG_ENABLE(binding-python, [  --disable-binding-python             don't create binding python ], MODULE_BINDING_PYTHON=$enableval, MODULE_BINDING_PYTHON=yes)
 if test "$cross_compiling" = no; then
@@ -472,11 +477,16 @@ if test x"$speechd" = xyes
 	else
 	echo "SPEECHD     : DISABLED"
 fi
-if test "x$use_libgarmin" = "xyes"
+if test x"${USE_GARMIN}" = xyes
 	then
-	echo "Garmin IMG  : ENABLED"
-	else
-	echo "Garmin IMG  : DISABLED (you don't have libgarmin)"
+	if test "x$use_libgarmin" = "xyes"
+		then
+		echo "Garmin IMG  : ENABLED"
+		else
+		echo "Garmin IMG  : DISABLED (you don't have libgarmin)"
+	fi
+	else 
+		echo "Garmin IMG  : DISABLED (you requested it)"
 fi
 if test "x$samplemap" = "xyes"
 	then
