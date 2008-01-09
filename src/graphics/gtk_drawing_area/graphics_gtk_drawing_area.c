@@ -65,7 +65,7 @@ graphics_destroy(struct graphics_priv *gr)
 
 static char *fontpaths[]={
 #ifdef _WIN32
-	"%WINDIR%/fonts",
+	".",
 #endif
 	"/usr/share/fonts",
 	"/usr/X11R6/lib/X11/fonts/msttcorefonts",
