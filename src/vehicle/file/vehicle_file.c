@@ -21,6 +21,7 @@
 static void vehicle_file_disable_watch(struct vehicle_priv *priv);
 static void vehicle_file_enable_watch(struct vehicle_priv *priv);
 static void vehicle_file_parse(struct vehicle_priv *priv, char *buffer);
+static int vehicle_file_open(struct vehicle_priv *priv);
 static void vehicle_file_close(struct vehicle_priv *priv);
 
 
