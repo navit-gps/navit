@@ -8,11 +8,12 @@
 #define TIMELENGTH 32
 #define TYPELENGTH 16
 #define BUFFSIZE 8192
-#define DATABUFSIZE 16 
+#define DATABUFSIZE 16
 #define failToWriteAttr(S, T) failToWriteAttrRep((S), (T),__FILE__, __LINE__ )
 
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <libgen.h>

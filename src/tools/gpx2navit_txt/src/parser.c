@@ -11,15 +11,38 @@ void parseMain(g2sprop * prop);
 void charHandle(void *userdata, const XML_Char * data, int length)
 {
     static int bufsize = DATABUFSIZE;
+    static int string_length = 0;
+    int new_length;
+    static int begin_copy = 0;
+    int i;
     parsedata *pdata = (parsedata *) userdata;
-    if (bufsize < length) {
-	pdata->databuf =
-	    realloc(pdata->databuf, sizeof(char) * (length + 1));
-	bufsize = length;
+    if (pdata->bufptr == NULL) {
+	//start of buffer -->pdata->bufptr set to 0 at endelement
+	string_length = 0;
+        begin_copy = 0; //begin to copy after first space
+	pdata->bufptr= pdata->databuf;
     }
-    strncpy(pdata->databuf, data, length);
-    pdata->bufptr = pdata->databuf;
-    pdata->bufptr += length;
+    new_length = string_length + length + 1; //additonal 0
+    if (bufsize < new_length) {
+	pdata->databuf =
+	    realloc(pdata->databuf, new_length);
+	bufsize = new_length;
+	//because of realloc the pointer may have changed
+	pdata->bufptr = pdata->databuf + string_length;
+    }
+    // because expat calls this routine several times on special chars
+    // we need to do following
+    // --concat strings until reset (bufptr set to NULL)
+    // --filter out blank chars at begin of string
+    for (i=0; i<length;i++) {
+       if (begin_copy || !isspace(data[i])) {
+          *pdata->bufptr = data[i];
+          pdata->bufptr++;
+          string_length ++;	
+          begin_copy = 1;  
+          if (DEBUG) fprintf(stderr,"%c",data[i]);
+       }
+    }   	
     *pdata->bufptr = '\0';
 }
 
