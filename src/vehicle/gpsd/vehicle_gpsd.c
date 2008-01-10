@@ -68,6 +68,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 	if (data->set & LATLON_SET) {
 		priv->geo.lat = data->fix.latitude;
 		priv->geo.lng = data->fix.longitude;
+		dbg(1,"lat=%f lng=%f\n", priv->geo.lat, priv->geo.lng);
 		callback_list_call_0(priv->cbl);
 		data->set &= ~LATLON_SET;
 	}
