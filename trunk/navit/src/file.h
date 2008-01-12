@@ -9,9 +9,13 @@ struct file {
 	long long size;
 	char *name;
 	int fd;
+#ifdef _WIN32
+    long map_handle;
+    long map_file;
+#endif
 	struct file *next;
 };
- 
+
 /* prototypes */
 struct file;
 struct file_wordexp;
