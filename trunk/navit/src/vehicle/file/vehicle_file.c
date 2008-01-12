@@ -256,19 +256,19 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		   UTC of Fix[1],Latitude[2],N/S[3],Longitude[4],E/W[5],Quality(0=inv,1=gps,2=dgps)[6],Satelites used[7],
 		   HDOP[8],Altitude[9],"M"[10],height of geoid[11], "M"[12], time since dgps update[13], dgps ref station [14]
 		 */
-		sscanf(item[2], "%lf", &lat);
+		lat = g_ascii_strtod(item[2], NULL);
 		priv->geo.lat = floor(lat / 100);
 		lat -= priv->geo.lat * 100;
 		priv->geo.lat += lat / 60;
 
-		sscanf(item[4], "%lf", &lng);
+		lng = g_ascii_strtod(item[4], NULL);
 		priv->geo.lng = floor(lng / 100);
 		lng -= priv->geo.lng * 100;
 		priv->geo.lng += lng / 60;
 
 		sscanf(item[6], "%d", &priv->status);
 		sscanf(item[7], "%d", &priv->sats_used);
-		sscanf(item[9], "%lf", &priv->height);
+		priv->height = g_ascii_strtod(item[9], NULL);
 
 		callback_list_call_0(priv->cbl);
 
