@@ -50,9 +50,8 @@ file_create(char *name)
 int
 file_mmap(struct file *file)
 {
-	// not supported for WIN32 right now
 #ifdef _WIN32
-	return -1;
+    file->begin = (char*)mmap_readonly_win32( file->name, &file->map_handle, &file->map_file );
 #else
 	file->begin=mmap(NULL, file->size, PROT_READ|PROT_WRITE, MAP_PRIVATE, file->fd, 0);
 	g_assert(file->begin != NULL);
@@ -60,9 +59,10 @@ file_mmap(struct file *file)
 		perror("mmap");
 		return 0;
 	}
+#endif
 	g_assert(file->begin != (void *)0xffffffff);
 	file->end=file->begin+file->size;
-#endif
+
 	return 1;
 }
 
@@ -154,7 +154,8 @@ file_exists(char *name)
 void
 file_remap_readonly(struct file *f)
 {
-#ifndef _WIN32
+#ifdef _WIN32
+#else
 	void *begin;
 	munmap(f->begin, f->size);
 	begin=mmap(f->begin, f->size, PROT_READ, MAP_PRIVATE, f->fd, 0);
@@ -166,7 +167,6 @@ file_remap_readonly(struct file *f)
 void
 file_remap_readonly_all(void)
 {
-#ifndef _WIN32
 	struct file *f=file_list;
 	int limit=1000;
 
@@ -174,13 +174,14 @@ file_remap_readonly_all(void)
 		file_remap_readonly(f);
 		f=f->next;
 	}
-#endif
 }
 
 void
 file_unmap(struct file *f)
 {
-#ifndef _WIN32
+#ifdef _WIN32
+    mmap_unmap_win32( f->begin, f->map_handle , f->map_file );
+#else
 	munmap(f->begin, f->size);
 #endif
 }
@@ -266,8 +267,9 @@ file_destroy(struct file *f)
 
     if ( f->begin != NULL )
     {
-        munmap(f->begin, f->size);
+        file_unmap( f );
     }
+
 	g_free(f->name);
 	g_free(f);
 }
