@@ -415,4 +415,3 @@
 #define strtok_r(s,d,p) strtok(s,d)
 
 #define alarm( a )
-#define munmap( a, b )

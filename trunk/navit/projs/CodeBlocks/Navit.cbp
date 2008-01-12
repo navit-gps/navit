@@ -25,7 +25,10 @@
 					<Add library="bin\Debug\libdata_poi_geodownload.la" />
 					<Add library="bin\Debug\libmdb.a" />
 					<Add library="bin\Debug\libdata_garmin.la" />
+					<Add library="bin\Debug\libspeech_speech_dispatcher.la" />
+					<Add library="bin\Debug\libdata_mg.la" />
 					<Add library="libgarmin.a" />
+					<Add library="ole32" />
 					<Add library="user32" />
 					<Add library="gtk-win32-2.0" />
 					<Add library="gdk-win32-2.0" />
@@ -61,7 +64,10 @@
 					<Add library="bin\Release\libdata_poi_geodownload.la" />
 					<Add library="bin\Release\libmdb.a" />
 					<Add library="bin\Release\libdata_garmin.la" />
+					<Add library="bin\Release\libspeech_speech_dispatcher.la" />
+					<Add library="bin\Release\libdata_mg.la" />
 					<Add library="libgarmin.a" />
+					<Add library="ole32" />
 					<Add library="user32" />
 					<Add library="gtk-win32-2.0" />
 					<Add library="gdk-win32-2.0" />
@@ -111,6 +117,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Win32Extra\setenv.h" />
+		<Unit filename="Win32Extra\sys\mman.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Win32Extra\sys\mman.h" />
 		<Unit filename="Win32Extra\wordexp.c">
 			<Option compilerVar="CC" />
 		</Unit>

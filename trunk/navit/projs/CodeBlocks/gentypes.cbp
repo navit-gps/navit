@@ -2,14 +2,13 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Osm2Navit" />
+		<Option title="GenTypes" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin\Debug\Osm2Navit" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="bin\Debug" />
-				<Option object_output="obj\osm2navit\Debug\" />
+				<Option output="GenTypes" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\GenTypes\Debug\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
@@ -23,8 +22,8 @@
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin\Release\Osm2Navit" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\osm2navit\Release\" />
+				<Option output="GenTypes" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\GenTypes\Release\" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -39,18 +38,18 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-mms-bitfields -DMODULE=osm2navit" />
+			<Add option="-mms-bitfields -DMODULE=GenTypes" />
 			<Add directory="%GTK_DIR%\include\glib-2.0" />
 			<Add directory="%GTK_DIR%\lib\glib-2.0\include" />
 			<Add directory="%GTK_DIR%\include" />
 			<Add directory="Win32Extra" />
+			<Add directory="..\..\src" />
 		</Compiler>
 		<Linker>
 			<Add library="user32" />
 			<Add library="gtk-win32-2.0" />
 			<Add library="gdk-win32-2.0" />
 			<Add library="gdk_pixbuf-2.0" />
-			<Add library="fib" />
 			<Add library="freetype" />
 			<Add library="z" />
 			<Add library="gobject-2.0" />
@@ -60,57 +59,26 @@
 			<Add library="zdll" />
 			<Add directory="%GTK_DIR%\lib" />
 		</Linker>
-		<Unit filename="Win32Extra\sys\mman.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="Win32Extra\sys\mman.h" />
+		<ExtraCommands>
+			<Add after="GenTypes.exe ..\..\src\data\garmin\garmintypes.txt ..\..\src\data\garmin\g2nbuiltin.h" />
+		</ExtraCommands>
 		<Unit filename="Win32Extra\wordexp.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Win32Extra\wordexp.h" />
-		<Unit filename="..\..\src\attr.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="..\..\src\attr.h" />
 		<Unit filename="..\..\src\attr_def.h" />
-		<Unit filename="..\..\src\coord.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="..\..\src\coord.h" />
-		<Unit filename="..\..\src\country.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="..\..\src\country.h" />
-		<Unit filename="..\..\src\debug.c">
+		<Unit filename="..\..\src\data\garmin\gentypes.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="..\..\src\debug.h" />
-		<Unit filename="..\..\src\file.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="..\..\src\file.h" />
-		<Unit filename="..\..\src\item.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="..\..\src\item.h" />
-		<Unit filename="..\..\src\map.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="..\..\src\map.h" />
-		<Unit filename="..\..\src\osm2navit.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="..\..\src\param.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="..\..\src\param.h" />
-		<Unit filename="..\..\src\plugin.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="..\..\src\plugin.h" />
-		<Unit filename="..\..\src\transform.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="..\..\src\transform.h" />
 		<Extensions>
 			<code_completion />
