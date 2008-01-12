@@ -5,6 +5,7 @@
 		<Project filename="Osm2Navit.cbp" />
 		<Project filename="gentypes.cbp" />
 		<Project filename="binfile.cbp" />
+		<Project filename="data_mg.cbp" />
 		<Project filename="data_garmin.cbp">
 			<Depends filename="gentypes.cbp" />
 		</Project>
@@ -16,6 +17,7 @@
 		<Project filename="gtk_graphics.cbp" />
 		<Project filename="Navit.cbp" active="1">
 			<Depends filename="fib-1.1.cbp" />
+			<Depends filename="gentypes.cbp" />
 			<Depends filename="binfile.cbp" />
 			<Depends filename="data_garmin.cbp" />
 			<Depends filename="mdb.cbp" />
@@ -23,7 +25,10 @@
 			<Depends filename="vehicle_demo.cbp" />
 			<Depends filename="vehicle_file.cbp" />
 			<Depends filename="gtk_gui.cbp" />
+			<Depends filename="data_mg.cbp" />
 			<Depends filename="gtk_graphics.cbp" />
+			<Depends filename="speech_speech_dispatcher.cbp" />
 		</Project>
+		<Project filename="speech_speech_dispatcher.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

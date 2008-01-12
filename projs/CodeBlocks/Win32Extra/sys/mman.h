@@ -1,7 +1,8 @@
-#ifndef _SYS_MAN_H_INCLUDED
-#define	_SYS_MAN_H_INCLUDED
+#ifndef _WIN32_MMAN_H_INCLUDED
+#define	_WIN32_MMAN_H_INCLUDED
 
-void * mmap_file_readonly( const char* name );
+void * mmap_readonly_win32( const char* name, long* map_handle_ptr, long* map_file_ptr );
+void mmap_unmap_win32( void* mem_ptr, long map_handle, long map_file );
 
-#endif /* !_SYS_MAN_H_INCLUDED */
+#endif /* !_WIN32_MMAN_H_INCLUDED */
 
