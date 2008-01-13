@@ -15,7 +15,7 @@
 #define _n(STRING)    gettext_noop(STRING)
 
 struct menu_priv {
-	char *path;	
+	char *path;
 	GtkAction *action;
 	struct gui_priv *gui;
 	enum menu_type type;
@@ -139,7 +139,7 @@ destination_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 }
 
 
-static void     
+static void
 quit_action (GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
 	navit_destroy(gui->nav);
@@ -190,7 +190,7 @@ visible_points_action(GtkWidget *w, struct container *co)
 #endif
 }
 
-static GtkActionEntry entries[] = 
+static GtkActionEntry entries[] =
 {
 	{ "DisplayMenuAction", NULL, gettext_noop("Display") },
 	{ "RouteMenuAction", NULL, _n("Route") },
@@ -213,7 +213,7 @@ static GtkActionEntry entries[] =
 
 static guint n_entries = G_N_ELEMENTS (entries);
 
-static GtkToggleActionEntry toggleentries[] = 
+static GtkToggleActionEntry toggleentries[] =
 {
 	{ "CursorAction", "cursor_icon",_n("Cursor"), NULL, NULL, G_CALLBACK(cursor_action),TRUE },
 	{ "TrackingAction", NULL ,_n("Tracking"), NULL, NULL, G_CALLBACK(tracking_action),TRUE },
@@ -227,7 +227,7 @@ static GtkToggleActionEntry toggleentries[] =
 
 static guint n_toggleentries = G_N_ELEMENTS (toggleentries);
 
-static GtkActionEntry debug_entries[] = 
+static GtkActionEntry debug_entries[] =
 {
 	{ "DataMenuAction", NULL, _n("Data") },
 	{ "VisibleBlocksAction", NULL, _n("VisibleBlocks"), NULL, NULL, G_CALLBACK(visible_blocks_action) },
@@ -342,13 +342,13 @@ static void
 register_my_stock_icons (void)
 {
 	GtkIconFactory *icon_factory;
-	GtkIconSet *icon_set; 
+	GtkIconSet *icon_set;
 	GdkPixbuf *pixbuf;
 	gint i;
 
 	icon_factory = gtk_icon_factory_new ();
 
-	for (i = 0; i < n_stock_icons; i++) 
+	for (i = 0; i < n_stock_icons; i++)
 	{
 		pixbuf = gdk_pixbuf_new_from_xpm_data(stock_icons[i].icon_xpm);
 		icon_set = gtk_icon_set_new_from_pixbuf (pixbuf);
@@ -357,7 +357,7 @@ register_my_stock_icons (void)
 		gtk_icon_set_unref (icon_set);
 	}
 
-	gtk_icon_factory_add_default(icon_factory); 
+	gtk_icon_factory_add_default(icon_factory);
 
 	g_object_unref(icon_factory);
 }
@@ -411,14 +411,14 @@ static char layout[] =
 		<popup name=\"PopUp\">\
 		</popup>\
 	</ui>";
-	
+
 
 static void
 activate(void *dummy, struct menu_priv *menu)
 {
 	if (menu->cb)
 		callback_call_0(menu->cb);
-}	
+}
 
 static struct menu_methods menu_methods;
 
@@ -440,7 +440,7 @@ add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum men
 			ret->action=GTK_ACTION(gtk_toggle_action_new(dynname, name, NULL, NULL));
 		else
 			ret->action=gtk_action_new(dynname, name, NULL, NULL);
-		if (cb) 
+		if (cb)
 			ret->handler_id=g_signal_connect(ret->action, "activate", G_CALLBACK(activate), ret);
 		gtk_action_group_add_action(menu->gui->dyn_group, ret->action);
 		ret->merge_id=gtk_ui_manager_new_merge_id(menu->gui->menu_manager);
@@ -454,7 +454,7 @@ add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum men
 	menu->child=ret;
 	g_free(dynname);
 	return ret;
-		
+
 }
 
 static void
@@ -506,11 +506,14 @@ popup_deactivate(GtkWidget *widget, struct menu_priv *menu)
 {
 	g_signal_handler_disconnect(widget, menu->handler_id);
 	remove_menu(menu, 1);
-}	
+}
 
 static void
 popup_activate(struct menu_priv *menu)
 {
+#ifdef _WIN32
+	menu->widget=gtk_ui_manager_get_widget(menu->gui->menu_manager, menu->path );
+#endif
 	gtk_menu_popup(GTK_MENU(menu->widget), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time ());
 	menu->handler_id=g_signal_connect(menu->widget, "selection-done", G_CALLBACK(popup_deactivate), menu);
 }
