@@ -53,3 +53,12 @@ menu_get_toggle(struct menu *menu)
 {
 	return ((*menu->meth.get_toggle) && (*menu->meth.get_toggle)(menu->priv));
 }
+
+void
+menu_popup(struct menu *menu)
+{
+	if (! menu || ! menu->meth.popup)
+		return;
+	(*menu->meth.popup)(menu->priv);
+
+}
