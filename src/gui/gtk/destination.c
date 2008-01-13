@@ -52,9 +52,9 @@ static char *description(struct search_param *search, GtkTreeIter *iter)
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), iter, 1, &postal, -1);
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), iter, 2, &town, -1);
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), iter, 4, &street, -1);
-	if (search->attr.type == attr_town_name) 
+	if (search->attr.type == attr_town_name)
 		desc=g_strdup_printf("%s-%s %s", car, postal, town);
-	else 
+	else
 		desc=g_strdup_printf("%s-%s %s, %s", car, postal, town, street);
 	return desc;
 }
@@ -103,7 +103,7 @@ static void set_columns(struct search_param *param, int mode)
 {
 	GList *columns_list,*columns;
 	char **column_text=columns_text[mode];
-	int i=0;	
+	int i=0;
 
 	columns_list=gtk_tree_view_get_columns(GTK_TREE_VIEW(param->treeview));
 	columns=columns_list;
@@ -120,7 +120,7 @@ static void set_columns(struct search_param *param, int mode)
 		i++;
 		column_text++;
 	}
-	
+
 }
 
 static void changed(GtkWidget *widget, struct search_param *search)
@@ -138,7 +138,7 @@ static void changed(GtkWidget *widget, struct search_param *search)
 	if (widget == search->entry_city) {
 		dbg(0,"town\n");
 		search->attr.type=attr_town_name;
-		if (strlen(search->attr.u.str) < 3) 
+		if (strlen(search->attr.u.str) < 3)
 			return;
 		set_columns(search, 1);
 	}
@@ -149,7 +149,7 @@ static void changed(GtkWidget *widget, struct search_param *search)
 	}
 
 
-	search_list_search(search->sl, &search->attr, 1);	
+	search_list_search(search->sl, &search->attr, 1);
 	gtk_list_store_clear(search->liststore);
 	while((res=search_list_get_result(search->sl))) {
 		gtk_list_store_append(search->liststore,&iter);
@@ -179,7 +179,7 @@ static void changed(GtkWidget *widget, struct search_param *search)
 				gtk_list_store_set(search->liststore,&iter,4,res->street->name,-1);
 			else
 				gtk_list_store_set(search->liststore,&iter,4,"",-1);
-			
+
 		}
 	}
 }
@@ -350,7 +350,7 @@ int destination_address(struct navit *nav)
 
 	gtk_tree_view_set_model (GTK_TREE_VIEW (search->treeview), NULL);
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(search->listbox),search->treeview);
-	{ 
+	{
 		GType types[COL_COUNT+1];
 		for(i=0;i<COL_COUNT;i++)
 			types[i]=G_TYPE_STRING;
@@ -411,15 +411,18 @@ int destination_address(struct navit *nav)
 	g_signal_connect(G_OBJECT(listbox), "select-row", G_CALLBACK(select_row), NULL);
 #endif
 	gtk_widget_show_all(window2);
+
+#ifndef _WIN32
 	gtk_socket_steal(GTK_SOCKET(keyboard), spawn_xkbd("xkbd","-geometry 200x100"));
+#endif
 
 	country_attr=country_default();
 	tracking=navit_get_tracking(nav);
-	if (tracking && tracking_get_current_attr(tracking, attr_country_id, &search_attr)) 
+	if (tracking && tracking_get_current_attr(tracking, attr_country_id, &search_attr))
 		country_attr=&search_attr;
 	cs=country_search_new(country_attr, 0);
 	item=country_search_get_item(cs);
-	if (item && item_attr_get(item, attr_country_name, &country_name)) 
+	if (item && item_attr_get(item, attr_country_name, &country_name))
 		gtk_entry_set_text(GTK_ENTRY(search->entry_country), country_name.u.str);
 	country_search_destroy(cs);
 	return 0;
