@@ -12,7 +12,8 @@ POTFILES  = \
 	$(top_srcdir)/src/popup.c \
 	$(top_srcdir)/src/country.c \
 	$(top_srcdir)/src/gui/gtk/destination.c \
-	$(top_srcdir)/src/gui/gtk/gui_gtk_action.c
+	$(top_srcdir)/src/gui/gtk/gui_gtk_action.c \
+	$(top_srcdir)/src/gui/gtk/gui_gtk_statusbar.c
 
 
 SUFFIXES = .po .mo
