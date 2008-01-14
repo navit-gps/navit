@@ -13,8 +13,8 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-
+    
+    
 */
 
 #include <sys/types.h>
@@ -138,7 +138,7 @@ int gar_get_zoomlevels(struct gar_subfile *sub);
 #define GO_GET_SEARCH	(1<<2)
 
 struct gobject *gar_get_object(struct gar *gar, void *ptr);
-int gar_get_objects(struct gmap *gm, int level, void *select,
+int gar_get_objects(struct gmap *gm, int level, void *select, 
 			struct gobject **ret, int flags);
 void gar_free_objects(struct gobject *g);
 u_int8_t gar_obj_type(struct gobject *o);
@@ -176,6 +176,15 @@ int gar_object_flags(struct gobject *o);
 #define GARRAD(x) ((x) < 0x800000 ? (double)(x) * TWOPI / 16777216.0 : -(double)((x) - 0x100000) * TWOPI / 16777216.0)
 #define DEGGAR(x) ((x) * (1/(360.0/(1<<24))))
 #define FEET2METER(x) ((x)/3.28084)
+
+#define POI_STREET_NUM		(1<<0)
+#define POI_STREET		(1<<1)
+#define POI_CITY		(1<<2)
+#define POI_ZIP			(1<<3)
+#define POI_PHONE		(1<<4)
+#define POI_EXIT		(1<<5)
+#define POI_TIDE_PREDICT	(1<<6)
+#define POI_UNKNOW		(1<<7)
 
 
 #ifdef __cplusplus
