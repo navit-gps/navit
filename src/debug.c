@@ -62,30 +62,24 @@ debug_level_get(const char *name)
 }
 
 void
-debug_vprintf(int level, const char *module, const char *function, int prefix, const char *fmt, va_list ap)
+debug_vprintf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap)
 {
-	int module_len=strlen(module);
-	int function_len=strlen(function);
-	char buffer[module_len+function_len+3];
+	char buffer[mlen+flen+3];
 
-	strcpy(buffer, module);
-	buffer[module_len]=':';
-	strcpy(buffer+module_len+1, function);
-
+	sprintf(buffer, "%s:%s", module, function);
 	if (debug_level_get(module) >= level || debug_level_get(buffer) >= level) {
-		strcpy(buffer+module_len+function_len+1, ":");
 		if (prefix)
-			printf("%s",buffer);
+			printf("%s:",buffer);
 		vprintf(fmt, ap);
 	}
 }
 
 void
-debug_printf(int level, const char *module, const char *function, int prefix, const char *fmt, ...)
+debug_printf(int level, const char *module, const int mlen,const char *function, const int flen, int prefix, const char *fmt, ...)
 {
 	va_list ap;
 	va_start(ap, fmt);
-	debug_vprintf(level, module, function, prefix, fmt, ap);
+	debug_vprintf(level, module, mlen, function, flen, prefix, fmt, ap);
 	va_end(ap);
 }
 
