@@ -122,6 +122,8 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	if (vehicle_position_attr_get(v, attr_position_direction, &attr))
 		direction=*(attr.u.numd);
 	direction=fmod(direction,360);
+	if (direction < 0)
+		direction+=360;
 	dir_idx=(direction+22.5)/45;
 	dir=dirs[dir_idx];
 	if (vehicle_position_attr_get(v, attr_position_height, &attr))
