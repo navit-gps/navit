@@ -3,6 +3,7 @@
 #include <time.h>
 #include <math.h>
 #include <gtk/gtk.h>
+#include <libintl.h>
 #include "item.h"
 #include "coord.h"
 #include "debug.h"
@@ -17,15 +18,20 @@
 
 #include "statusbar.h"
 
+
+#define _(STRING) gettext(STRING)
+
 struct statusbar_priv {
 	struct gui_priv *gui;
 	GtkWidget *hbox;
 	char gps_text[128];
-	GtkWidget *gps;	
+	GtkWidget *gps;
 	char route_text[128];
 	GtkWidget *route;
 	struct callback *vehicle_cb;
 };
+
+
 
 
 static void
@@ -39,9 +45,8 @@ statusbar_gps_update(struct statusbar_priv *this, int sats, int qual, double lng
 {
 	char lat_c='N';
 	char lng_c='E';
-	char *dirs[]={"N","NO","O","SO","S","SW","W","NW","N"};
+    char *dirs[]={_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
 	char *dir;
-	char *utf8;
 	int dir_idx;
 
 	if (lng < 0) {
@@ -54,11 +59,9 @@ statusbar_gps_update(struct statusbar_priv *this, int sats, int qual, double lng
 	}
 	dir_idx=(direction+22.5)/45;
 	dir=dirs[dir_idx];
-	sprintf(this->gps_text,"GPS %2d/%1d %02.0f%07.4f%c %03.0f%07.4f%c %4.0fm %3.0f°%-2s %3.0fkm/h", sats, qual, floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c, height, direction, dir, speed);
-	utf8=g_locale_to_utf8(this->gps_text,-1,NULL,NULL,NULL);
-	gtk_label_set_text(GTK_LABEL(this->gps), utf8);
-	g_free(utf8);
-	
+	sprintf(this->gps_text, "GPS %2d/%1d %02.0f%07.4f%c %03.0f%07.4f%c %4.0fm %3.0f°%-2s %3.0fkm/h", sats, qual, floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c, height, direction, dir, speed);
+	gtk_label_set_text(GTK_LABEL(this->gps), this->gps_text);
+
 }
 
 static void
@@ -73,12 +76,11 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	time_t eta;
 	struct tm *eta_tm=NULL;
 	char buffer[128];
-	char *utf8;
 	double lng, lat, direction=0, height=0, speed=0;
 	int sats=0, qual=0;
 	char lat_c='N';
 	char lng_c='E';
-	char *dirs[]={"N","NO","O","SO","S","SW","W","NW","N"};
+    char *dirs[]={_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
 	char *dir;
 	int dir_idx;
 
@@ -86,7 +88,7 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 		nav=navit_get_navigation(navit);
 	if (nav)
 		map=navigation_get_map(nav);
-	if (map) 
+	if (map)
 		mr=map_rect_new(map, NULL);
 	if (mr)
 		item=map_rect_get_item(mr);
@@ -100,7 +102,7 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	}
 	if (mr)
 		map_rect_destroy(mr);
-	sprintf(buffer,"Route %4.0fkm    %02d:%02d ETA",route_len/1000, eta_tm ? eta_tm->tm_hour : 0 , eta_tm ? eta_tm->tm_min : 0);
+	sprintf(buffer,_("Route %4.0fkm    %02d:%02d ETA" ),route_len/1000, eta_tm ? eta_tm->tm_hour : 0 , eta_tm ? eta_tm->tm_min : 0);
 	if (strcmp(buffer, this->route_text)) {
 		strcpy(this->route_text, buffer);
 		gtk_label_set_text(GTK_LABEL(this->route), this->route_text);
@@ -130,9 +132,7 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	if (vehicle_position_attr_get(v, attr_position_qual, &attr))
 		qual=attr.u.num;
 	sprintf(this->gps_text,"GPS %2d/%1d %02.0f%07.4f%c %03.0f%07.4f%c %4.0fm %3.0f°%-2s %3.0fkm/h", sats, qual, floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c, height, direction, dir, speed);
-	utf8=g_locale_to_utf8(this->gps_text,-1,NULL,NULL,NULL);
-	gtk_label_set_text(GTK_LABEL(this->gps), utf8);
-	g_free(utf8);
+	gtk_label_set_text(GTK_LABEL(this->gps), this->gps_text);
 }
 
 static struct statusbar_methods methods = {
@@ -143,17 +143,14 @@ struct statusbar_priv *
 gui_gtk_statusbar_new(struct gui_priv *gui, struct statusbar_methods *meth)
 {
 	struct statusbar_priv *this=g_new0(struct statusbar_priv, 1);
-	char *utf8;
 
 	this->gui=gui;
 	*meth=methods;
 
 	this->hbox=gtk_hbox_new(FALSE, 1);
-	utf8=g_locale_to_utf8("GPS 00/0 0000.0000N 00000.0000E 0000m 000°NO 000km/h",-1,NULL,NULL,NULL);
-	this->gps=gtk_label_new(utf8);
-	g_free(utf8);
+	this->gps=gtk_label_new( "GPS 00/0 0000.0000N 00000.0000E 0000m 000°NO 000km/h" );
 	gtk_label_set_justify(GTK_LABEL(this->gps),  GTK_JUSTIFY_LEFT);
-	this->route=gtk_label_new("Route 0000km  0+00:00 ETA");
+	this->route=gtk_label_new( _( "Route 0000km  0+00:00 ETA" ) );
 	gtk_label_set_justify(GTK_LABEL(this->route),  GTK_JUSTIFY_LEFT);
 	gtk_box_pack_start(GTK_BOX(this->hbox), this->gps, TRUE, TRUE, 2);
 	gtk_box_pack_start(GTK_BOX(this->hbox), gtk_vseparator_new(), TRUE, TRUE, 2);
