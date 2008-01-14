@@ -75,6 +75,7 @@ static char *fontpaths[]={
 	"/usr/share/fonts/truetype/msttcorefonts",
 	"/usr/share/fonts/ttf",
 	"/usr/share/fonts/corefonts",
+	"/usr/share/fonts/liberation",
 	NULL,
 };
 
