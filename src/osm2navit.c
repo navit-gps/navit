@@ -832,8 +832,8 @@ bbox(struct coord *c, int count, struct rect *r)
 		return;
 	r->l=*c;
 	r->h=*c;	
-	c++;
 	while (--count) {
+		c++;
 		if (c->x < r->l.x)
 			r->l.x=c->x;
 		if (c->y < r->l.y)
