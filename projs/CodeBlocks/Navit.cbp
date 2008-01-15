@@ -27,6 +27,7 @@
 					<Add library="bin\Debug\libdata_garmin.la" />
 					<Add library="bin\Debug\libspeech_speech_dispatcher.la" />
 					<Add library="bin\Debug\libdata_mg.la" />
+					<Add library="bin\Debug\libdata_textfile.la" />
 					<Add library="libgarmin.a" />
 					<Add library="ole32" />
 					<Add library="user32" />
@@ -66,6 +67,7 @@
 					<Add library="bin\Release\libdata_garmin.la" />
 					<Add library="bin\Release\libspeech_speech_dispatcher.la" />
 					<Add library="bin\Release\libdata_mg.la" />
+					<Add library="bin\Release\libdata_textfile.la" />
 					<Add library="libgarmin.a" />
 					<Add library="ole32" />
 					<Add library="user32" />
