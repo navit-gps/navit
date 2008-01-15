@@ -123,6 +123,7 @@ static char *attrmap={
 	"w	landuse	cemetery	cemetery_poly\n"
 	"w	landuse	forest		wood\n"
 	"w	landuse	industrial	industry_poly\n"
+	"w	landuse	residential	town_poly\n"
 	"w	leisure	park		park_poly\n"
 	"w	natural	wood		wood\n"
 	"w	natural	water		water_poly\n"
@@ -137,6 +138,7 @@ static char *attrmap={
 	"w	waterway	weir		water_line\n"
 	"w	waterway	stream		water_line\n"
 	"w	waterway	drain		water_line\n"
+	"w	sport	golf	golf_course\n"
 };
 
 static GHashTable *way_key_hash, *node_key_hash;
