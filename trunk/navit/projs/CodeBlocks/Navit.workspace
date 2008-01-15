@@ -3,6 +3,7 @@
 	<Workspace title="Navit">
 		<Project filename="fib-1.1.cbp" />
 		<Project filename="Osm2Navit.cbp" />
+		<Project filename="Gpx2Navit.cbp" />
 		<Project filename="gentypes.cbp" />
 		<Project filename="data_textfile.cbp" />
 		<Project filename="binfile.cbp" />
@@ -18,15 +19,17 @@
 		<Project filename="gtk_graphics.cbp" />
 		<Project filename="Navit.cbp" active="1">
 			<Depends filename="fib-1.1.cbp" />
+			<Depends filename="Osm2Navit.cbp" />
 			<Depends filename="gentypes.cbp" />
+			<Depends filename="data_textfile.cbp" />
 			<Depends filename="binfile.cbp" />
+			<Depends filename="data_mg.cbp" />
 			<Depends filename="data_garmin.cbp" />
 			<Depends filename="mdb.cbp" />
 			<Depends filename="data_poi_geodownload.cbp" />
 			<Depends filename="vehicle_demo.cbp" />
 			<Depends filename="vehicle_file.cbp" />
 			<Depends filename="gtk_gui.cbp" />
-			<Depends filename="data_mg.cbp" />
 			<Depends filename="gtk_graphics.cbp" />
 			<Depends filename="speech_speech_dispatcher.cbp" />
 		</Project>

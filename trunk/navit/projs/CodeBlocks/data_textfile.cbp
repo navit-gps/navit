@@ -42,7 +42,7 @@
 			<Add option="-Wall" />
 			<Add option="-mms-bitfields" />
 			<Add option="-DBUILD_DLL" />
-			<Add option="-DMODULE=textfile" />
+			<Add option="-DMODULE=data_textfile" />
 			<Add directory="%GTK_DIR%\include\glib-2.0" />
 			<Add directory="%GTK_DIR%\lib\glib-2.0\include" />
 			<Add directory="..\..\" />
@@ -59,9 +59,10 @@
 			<Add library="iconv" />
 			<Add directory="%GTK_DIR%\lib" />
 		</Linker>
-		<Unit filename="..\..\src\data\poi_geodownload\poi_geodownload.c">
+		<Unit filename="..\..\src\data\textfile\textfile.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="..\..\src\data\textfile\textfile.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
