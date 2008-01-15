@@ -261,7 +261,7 @@ pad_text_attr(struct attr_bin *a, char *buffer)
 {
 	int l;
 	l=strlen(buffer)+1;
-	while (l % 4) 
+	while (l % 4)
 		buffer[l++]='\0';
 	a->len=l/4+1;
 }
@@ -341,7 +341,7 @@ add_tag(char *k, char *v)
 	if (! strcmp(k,"foot")) {
 		level=5;
 	}
-	if (! strcmp(k,"note")) 
+	if (! strcmp(k,"note"))
 		level=5;
 	if (! strcmp(k,"name")) {
 		if (in_way) {
@@ -370,11 +370,11 @@ add_tag(char *k, char *v)
 		sprintf(debug_attr_buffer+strlen(debug_attr_buffer), " %s=%s", k, v);
 		node_is_tagged=1;
 	}
-	if (level < 6) 
+	if (level < 6)
 		node_is_tagged=1;
 	if (level >= 5)
 		return;
-	if (in_way) 
+	if (in_way)
 		value_hash=g_hash_table_lookup(way_key_hash, k);
 	else
 		value_hash=g_hash_table_lookup(node_key_hash, k);
@@ -466,7 +466,7 @@ extend_buffer(struct buffer *b)
 		fprintf(stderr,"realloc of %d bytes failed\n",b->malloced);
 		exit(1);
 	}
-	
+
 }
 
 int nodeid_last;
@@ -477,7 +477,7 @@ node_buffer_to_hash(void)
 {
 	int i,count=node_buffer.size/sizeof(struct node_item);
 	struct node_item *ni=(struct node_item *)node_buffer.base;
-	for (i = 0 ; i < count ; i++) 
+	for (i = 0 ; i < count ; i++)
 		g_hash_table_insert(node_hash, (gpointer)(ni[i].id), (gpointer)i);
 }
 
@@ -486,7 +486,7 @@ static struct node_item *ni;
 static void
 add_node(int id, double lat, double lon)
 {
-	if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced) 
+	if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced)
 		extend_buffer(&node_buffer);
 	node_is_tagged=0;
 	nodeid=id;
@@ -512,7 +512,7 @@ add_node(int id, double lat, double lon)
 			node_buffer_to_hash();
 		}
 	} else
-		if (!g_hash_table_lookup(node_hash, (gpointer)(ni->id))) 
+		if (!g_hash_table_lookup(node_hash, (gpointer)(ni->id)))
 			g_hash_table_insert(node_hash, (gpointer)(ni->id), (gpointer)(ni-(struct node_item *)node_buffer.base));
 		else {
 			node_buffer.size-=sizeof(struct node_item);
@@ -653,9 +653,9 @@ end_way(FILE *out)
 	if (street_name_systematic_attr.len)
 		alen+=street_name_systematic_attr.len+1;
 	if (debug_attr.len)
-		alen+=debug_attr.len+1;	
+		alen+=debug_attr.len+1;
 	if (flags_attr.len)
-		alen+=flags_attr.len+1;	
+		alen+=flags_attr.len+1;
 	item.clen=coord_count*2;
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
@@ -674,9 +674,9 @@ end_node(FILE *out)
 		return;
 	pad_text_attr(&debug_attr, debug_attr_buffer);
 	if (label_attr.len)
-		alen+=label_attr.len+1;	
+		alen+=label_attr.len+1;
 	if (debug_attr.len)
-		alen+=debug_attr.len+1;	
+		alen+=debug_attr.len+1;
 	item.clen=2;
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
@@ -703,7 +703,7 @@ add_nd(char *p, int ref)
 	} else {
 		len=strlen(p);
 		if (len > 0 && p[len-1]=='\n')
-			p[len-1]='\0';	
+			p[len-1]='\0';
 		fprintf(stderr,"WARNING: way %d: node %d not found (%s)\n",wayid,ref,p);
 	}
 	if (coord_count > 65536) {
@@ -725,7 +725,7 @@ parse_nd(char *p)
 
 static void
 save_buffer(char *filename, struct buffer *b)
-{	
+{
 	FILE *f;
 	f=fopen(filename,"wb+");
 	fwrite(b->base, b->size, 1, f);
@@ -736,7 +736,7 @@ static void
 load_buffer(char *filename, struct buffer *b)
 {
 	FILE *f;
-	if (b->base) 
+	if (b->base)
 		free(b->base);
 	b->malloced=0;
 	f=fopen(filename,"rb");
@@ -767,24 +767,24 @@ phase1(FILE *in, FILE *out_ways, FILE *out_nodes)
 		} else if (!strncmp(p, "<osm ",5)) {
 		} else if (!strncmp(p, "<bound ",7)) {
 		} else if (!strncmp(p, "<node ",6)) {
-			if (!parse_node(p)) 
+			if (!parse_node(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 			in_node=1;
 			processed_nodes++;
 		} else if (!strncmp(p, "<tag ",5)) {
-			if (!parse_tag(p)) 
+			if (!parse_tag(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 		} else if (!strncmp(p, "<way ",5)) {
 			in_way=1;
-			if (!parse_way(p)) 
+			if (!parse_way(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 			processed_ways++;
 		} else if (!strncmp(p, "<nd ",4)) {
-			if (!parse_nd(p)) 
+			if (!parse_nd(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 		} else if (!strncmp(p, "<relation ",10)) {
 			in_relation=1;
-			if (!parse_relation(p)) 
+			if (!parse_relation(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 			processed_relations++;
 		} else if (!strncmp(p, "<member ",8)) {
@@ -813,7 +813,7 @@ int bytes_read=0;
 static struct item_bin *
 read_item(FILE *in)
 {
-	struct item_bin *ib=(struct item_bin *) buffer;	
+	struct item_bin *ib=(struct item_bin *) buffer;
 	int r,s;
 	r=fread(ib, sizeof(*ib), 1, in);
 	if (r != 1)
@@ -833,7 +833,7 @@ bbox(struct coord *c, int count, struct rect *r)
 	if (! count)
 		return;
 	r->l=*c;
-	r->h=*c;	
+	r->h=*c;
 	while (--count) {
 		c++;
 		if (c->x < r->l.x)
@@ -903,7 +903,7 @@ tile(struct rect *r, char *ret)
 			strcat(ret,"a");
                         x0=x2;
                         y0=y2;
-		} else 
+		} else
 			return;
 	}
 }
@@ -945,7 +945,7 @@ static void
 tile_extend(char *tile, struct item_bin *ib)
 {
 	struct tile_head *th=NULL;
-	if (debug_tile(tile)) 
+	if (debug_tile(tile))
 		fprintf(stderr,"Tile:Writing %d bytes to '%s' (%p,%p)\n", (ib->len+1)*4, tile, g_hash_table_lookup(tile_hash, tile), tile_hash2 ? g_hash_table_lookup(tile_hash2, tile) : NULL);
 	if (tile_hash2)
 		th=g_hash_table_lookup(tile_hash2, tile);
@@ -964,11 +964,11 @@ tile_extend(char *tile, struct item_bin *ib)
 		if (tile_hash2)
 			g_hash_table_insert(tile_hash2, th->name, th);
 		processed_tiles++;
-		if (debug_tile(tile)) 
+		if (debug_tile(tile))
 			fprintf(stderr,"new '%s'\n", tile);
 	}
 	th->total_size+=ib->len*4+4;
-	if (debug_tile(tile)) 
+	if (debug_tile(tile))
 		fprintf(stderr,"New total size of %s(%p):%d\n", th->name, th, th->total_size);
 	g_hash_table_insert(tile_hash, th->name, th);
 }
@@ -991,7 +991,7 @@ merge_tile(char *base, char *sub)
 	ths=g_hash_table_lookup(tile_hash, sub);
 	if (! ths)
 		return 0;
-	if (debug_tile(base) || debug_tile(sub)) 
+	if (debug_tile(base) || debug_tile(sub))
 		fprintf(stderr,"merging '%s'(%p) (%d) with '%s'(%p) (%d)\n", base, thb, thb ? thb->total_size : 0, sub, ths, ths->total_size);
 	if (! thb) {
 		thb=ths;
@@ -999,7 +999,7 @@ merge_tile(char *base, char *sub)
 		g_free(thb->name);
 		thb->name=g_strdup(base);
 		g_hash_table_insert(tile_hash, thb->name, thb);
-		
+
 	} else {
 		thb=realloc(thb, sizeof(*thb)+ths->size+thb->size);
 		assert(thb != NULL);
@@ -1061,7 +1061,7 @@ write_item(char *tile, struct item_bin *ib)
 	if (th) {
 		if (! th->process)
 			return;
-		if (debug_tile(tile)) 
+		if (debug_tile(tile))
 			fprintf(stderr,"Data:Writing %d bytes to '%s' (%p,%p)\n", (ib->len+1)*4, tile, g_hash_table_lookup(tile_hash, tile), tile_hash2 ? g_hash_table_lookup(tile_hash2, tile) : NULL);
 		size=(ib->len+1)*4;
 		if (th->total_size_used+size > th->total_size) {
@@ -1197,9 +1197,9 @@ index_submap_add(int phase, struct tile_head *th)
 	ii.attr_zipfile_ref.type=attr_zipfile_ref;
 	ii.zipfile_ref=th->zipnum;
 
-	if (phase == 3) 
+	if (phase == 3)
 		tile_extend(index_tile, (struct item_bin *)&ii);
-	else 
+	else
 		write_item(index_tile, (struct item_bin *)&ii);
 #if 0
 	unsigned int *c=(unsigned int *)&ii;
@@ -1207,7 +1207,7 @@ index_submap_add(int phase, struct tile_head *th)
 	for (i = 0 ; i < sizeof(ii)/4 ; i++) {
 		fprintf(stderr,"%08x ", c[i]);
 	}
-	fprintf(stderr,"\n");	
+	fprintf(stderr,"\n");
 #endif
 }
 
@@ -1254,7 +1254,7 @@ create_tile_hash(void)
 	return maxnamelen;
 }
 
-static void 
+static void
 create_tile_hash_list(GList *list)
 {
 	GList *next;
@@ -1276,7 +1276,7 @@ create_tile_hash_list(GList *list)
 
 static void
 destroy_tile_hash(void)
-{	
+{
 	g_hash_table_destroy(tile_hash2);
 	tile_hash2=NULL;
 }
@@ -1297,7 +1297,7 @@ write_tilesdir(int phase, int maxlen, FILE *out)
 	last=&tile_head_root;
 	if (! maxlen) {
 		while (next) {
-			if (strlen(next->data) > maxlen) 
+			if (strlen(next->data) > maxlen)
 				maxlen=strlen(next->data);
 			next=g_list_next(next);
 		}
@@ -1321,7 +1321,7 @@ write_tilesdir(int phase, int maxlen, FILE *out)
 					data=th->subtiles;
 					while (dlen > 0) {
 						fprintf(out,":%s", data);
-						while (*data++) 
+						while (*data++)
 							dlen--;
 						dlen--;
 					}
@@ -1346,7 +1346,7 @@ merge_tiles(void)
 	GList *tiles_list_sorted,*last;
 	int i,i_min,len,size_all,size[5],size_min,work_done;
 	long long zip_size;
-	
+
 	do {
 		tiles_list_sorted=get_tiles_list();
 		fprintf(stderr,"PROGRESS: sorting %d tiles\n", g_list_length(tiles_list_sorted));
@@ -1430,7 +1430,7 @@ phase34(int phase, int maxnamelen, FILE *ways_in, FILE *nodes_in, FILE *tilesdir
 	write_tilesdir(phase, maxnamelen, tilesdir_out);
 
 	return 0;
-		
+
 }
 
 static int
@@ -1637,7 +1637,7 @@ phase4(FILE *ways_in, FILE *nodes_in, FILE *out, FILE *dir_out, int compression_
 		size+=th->total_size;
 		th=th->next;
 	}
-	if (size) 
+	if (size)
 		fprintf(stderr,"Slice %d is of size %d\n", slices, size);
 	th=tile_head_root;
 	size=0;
@@ -1658,7 +1658,7 @@ phase4(FILE *ways_in, FILE *nodes_in, FILE *out, FILE *dir_out, int compression_
 		slices++;
 	}
 	fseek(dir_out, 0, SEEK_SET);
-	cat(dir_out, out);	
+	cat(dir_out, out);
 	eoc.zipenum=zipfiles;
 	eoc.zipecenn=zipfiles;
 	eoc.zipecsz=zipdir_size;
@@ -1666,7 +1666,7 @@ phase4(FILE *ways_in, FILE *nodes_in, FILE *out, FILE *dir_out, int compression_
 	fwrite(&eoc, sizeof(eoc), 1, out);
 	sig_alrm(0);
 	alarm(0);
-	return 0;	
+	return 0;
 }
 
 static void
@@ -1685,6 +1685,7 @@ usage(FILE *f)
 	fprintf(f,"-e (--end)               : end at specified phase\n");
 	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
 	fprintf(f,"-s (--start)             : start at specified phase\n");
+	fprintf(f,"-i (--input-file)        : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-w (--dedupe-ways)       : ensure no duplicate ways or nodes. useful when using several input files\n");
 	fprintf(f,"-z (--compression-level) : set the compression level\n");
 	exit(1);
@@ -1699,6 +1700,9 @@ int main(int argc, char **argv)
 	int process_nodes=1, process_ways=1;
 	int compression_level=9;
 	char *result;
+	FILE* input_file = stdin;
+
+
 	while (1) {
 #if 0
 		int this_option_optind = optind ? optind : 1;
@@ -1713,6 +1717,7 @@ int main(int argc, char **argv)
 			{"keep-tmpfiles", 0, 0, 'k'},
 			{"nodes-only", 0, 0, 'N'},
 			{"start", 1, 0, 's'},
+			{"input-file", 1, 0, 'i'},
 			{"ways-only", 0, 0, 'W'},
 			{0, 0, 0, 0}
 		};
@@ -1748,6 +1753,14 @@ int main(int argc, char **argv)
 		case 'w':
 			dedupe_ways_hash=g_hash_table_new(NULL, NULL);
 			break;
+		case 'i':
+			input_file = fopen( optarg, "r" );
+			if ( input_file ==  NULL )
+			{
+			    fprintf( stderr, "\nInput file (%s) not found\n", optarg );
+			    exit( -1 );
+			}
+			break;
 		case 'z':
 			compression_level=atoi(optarg);
 			break;
@@ -1756,10 +1769,10 @@ int main(int argc, char **argv)
 			break;
 		default:
 			fprintf(stderr,"c=%d\n", c);
-		}	
+		}
 
 	}
-	if (optind != argc-1) 
+	if (optind != argc-1)
 		usage(stderr);
 	result=argv[optind];
 	build_attrmap(map);
@@ -1772,17 +1785,17 @@ int main(int argc, char **argv)
 			nodes=fopen("nodes.tmp","wb+");
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
-		phase1(stdin,ways,nodes);
+		phase1(input_file,ways,nodes);
 		if (ways)
 			fclose(ways);
 		if (nodes)
 			fclose(nodes);
 	}
-	if (end == 1 || dump_coordinates) 
+	if (end == 1 || dump_coordinates)
 		save_buffer("coords.tmp",&node_buffer);
 	if (end == 1)
 		exit(0);
-	if (start == 2) 
+	if (start == 2)
 		load_buffer("coords.tmp",&node_buffer);
 	if (start <= 2) {
 		if (process_ways) {
@@ -1795,7 +1808,7 @@ int main(int argc, char **argv)
 			fclose(ways);
 			if(!keep_tmpfiles)
 				remove("ways.tmp");
-		} else 
+		} else
 			fprintf(stderr,"PROGRESS: Skipping Phase 2\n");
 	}
 	free(node_buffer.base);
