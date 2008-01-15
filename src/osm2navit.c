@@ -302,7 +302,7 @@ add_tag(char *k, char *v)
 		level=9;
 	if (! strcmp(k,"created_by"))
 		level=9;
-	if (! strncmp(k,"tiger:",6))
+	if (! strncmp(k,"tiger:",6) || !strcmp(k,"AND_nodes"))
 		level=9;
 	if (! strcmp(k,"converted_by") || ! strcmp(k,"source"))
 		level=8;
