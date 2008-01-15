@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Gpx2Navit" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\gpx2navit" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin\Debug" />
+				<Option object_output="obj\gpx2navit\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Option parameters="--input-file=d:\CB_Projects\netherlands.osm --attr-debug-level=0 -k netherlands.bin" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add directory="%GTK_DIR%\lib" />
+					<Add directory="bin\Debug" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\gpx2navit" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\gpx2navit\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add directory="%GTK_DIR%\lib" />
+					<Add directory="bin\Release" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-mms-bitfields -DMODULE=osm2navit" />
+			<Add directory="%GTK_DIR%\include\glib-2.0" />
+			<Add directory="%GTK_DIR%\lib\glib-2.0\include" />
+			<Add directory="%GTK_DIR%\include" />
+			<Add directory="Win32Extra" />
+			<Add directory="..\..\src\tools\gpx2navit_txt\src" />
+		</Compiler>
+		<Linker>
+			<Add library="user32" />
+			<Add library="gtk-win32-2.0" />
+			<Add library="gdk-win32-2.0" />
+			<Add library="gdk_pixbuf-2.0" />
+			<Add library="fib" />
+			<Add library="freetype" />
+			<Add library="z" />
+			<Add library="gobject-2.0" />
+			<Add library="gmodule-2.0" />
+			<Add library="glib-2.0" />
+			<Add library="intl" />
+			<Add library="zdll" />
+			<Add directory="%GTK_DIR%\lib" />
+		</Linker>
+		<Unit filename="Win32Extra\sys\mman.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Win32Extra\sys\mman.h" />
+		<Unit filename="Win32Extra\wordexp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Win32Extra\wordexp.h" />
+		<Unit filename="..\..\src\attr.h" />
+		<Unit filename="..\..\src\attr_def.h" />
+		<Unit filename="..\..\src\coord.h" />
+		<Unit filename="..\..\src\country.h" />
+		<Unit filename="..\..\src\debug.h" />
+		<Unit filename="..\..\src\file.h" />
+		<Unit filename="..\..\src\item.h" />
+		<Unit filename="..\..\src\map.h" />
+		<Unit filename="..\..\src\param.h" />
+		<Unit filename="..\..\src\plugin.h" />
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\Makefile.am" />
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\elementControl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\emess.h" />
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\errorcode.h" />
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\geod_for.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\geod_inv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\geod_set.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\geodesic.h" />
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\gpx2navit_txt.h" />
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\misc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\parser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\setmeta.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\setpath.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\setwpt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\tools\gpx2navit_txt\src\utils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\src\transform.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
