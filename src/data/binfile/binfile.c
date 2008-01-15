@@ -122,7 +122,7 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			mr->street_name_systematic_attr=t->pos_attr;
 		if (type == attr_type || attr_type == attr_any) {
 			if (attr_type == attr_any) {
-				dbg(0,"pos %p attr %s size %d\n", t->pos_attr-1, attr_to_name(type), size);
+				dbg(1,"pos %p attr %s size %d\n", t->pos_attr-1, attr_to_name(type), size);
 			}
 			attr->type=type;
 			attr_data_set(attr, t->pos_attr+1);
@@ -181,7 +181,7 @@ zipfile_to_tile(struct file *f, struct zip_cd *cd, struct tile *t)
 	zipfn=(char *)(file_data_read(f,cd->zipofst+sizeof(struct zip_lfh), lfh->zipfnln));
 	strncpy(buffer, zipfn, lfh->zipfnln);
 	buffer[lfh->zipfnln]='\0';
-	dbg(0,"0x%x '%s' %d %d,%d\n", lfh->ziplocsig, buffer, sizeof(*cd)+cd->zipcfnl, lfh->zipsize, lfh->zipuncmp);
+	dbg(1,"0x%x '%s' %d %d,%d\n", lfh->ziplocsig, buffer, sizeof(*cd)+cd->zipcfnl, lfh->zipsize, lfh->zipuncmp);
 	switch (lfh->zipmthd) {
 	case 0:
 		t->start=(int *)(file_data_read(f,cd->zipofst+sizeof(struct zip_lfh)+lfh->zipfnln, lfh->zipuncmp));
