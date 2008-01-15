@@ -408,9 +408,9 @@ parse_tag(char *p)
 
 struct buffer {
 	int malloced_step;
-	int malloced;
+	size_t malloced;
 	unsigned char *base;
-	int size;
+	size_t size;
 };
 
 static struct tile_head {
@@ -460,7 +460,10 @@ extend_buffer(struct buffer *b)
 {
 	b->malloced+=b->malloced_step;
 	b->base=realloc(b->base, b->malloced);
-	assert(b->base != NULL);
+	if (b->base == NULL) {
+		fprintf(stderr,"realloc of %d bytes failed\n",b->malloced);
+		exit(1);
+	}
 	
 }
 
