@@ -4,6 +4,7 @@
 		<Project filename="fib-1.1.cbp" />
 		<Project filename="Osm2Navit.cbp" />
 		<Project filename="gentypes.cbp" />
+		<Project filename="data_textfile.cbp" />
 		<Project filename="binfile.cbp" />
 		<Project filename="data_mg.cbp" />
 		<Project filename="data_garmin.cbp">
