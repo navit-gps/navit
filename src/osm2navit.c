@@ -1176,6 +1176,8 @@ index_submap_add(int phase, struct tile_head *th)
 	int len=strlen(th->name);
 	char index_tile[len+1];
 
+	ii.min=(len > 4) ? len-4 : 0;
+	ii.max=255;
 	strcpy(index_tile, th->name);
 	if (len > 6)
 		len=6;
@@ -1190,8 +1192,6 @@ index_submap_add(int phase, struct tile_head *th)
 
 	ii.attr_order_limit.len=2;
 	ii.attr_order_limit.type=attr_order_limit;
-	ii.min=0;
-	ii.max=0;
 
 	ii.attr_zipfile_ref.len=2;
 	ii.attr_zipfile_ref.type=attr_zipfile_ref;
