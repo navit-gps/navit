@@ -942,7 +942,7 @@ GHashTable *tile_hash;
 GHashTable *tile_hash2;
 
 static void
-tile_extend(char *tile, struct item_bin *ib)
+tile_extend(char *tile, struct item_bin *ib, GList **tiles_list)
 {
 	struct tile_head *th=NULL;
 	if (debug_tile(tile))
@@ -963,6 +963,8 @@ tile_extend(char *tile, struct item_bin *ib)
 		th->name=g_strdup(tile);
 		if (tile_hash2)
 			g_hash_table_insert(tile_hash2, th->name, th);
+		if (tiles_list)
+			*tiles_list=g_list_append(*tiles_list, th->name);
 		processed_tiles++;
 		if (debug_tile(tile))
 			fprintf(stderr,"new '%s'\n", tile);
@@ -1059,6 +1061,10 @@ write_item(char *tile, struct item_bin *ib)
 	if (! th)
 		th=g_hash_table_lookup(tile_hash, tile);
 	if (th) {
+		if (th->process != 0 && th->process != 1) {
+			fprintf(stderr,"error with tile '%s' of length %d\n", tile, strlen(tile));
+			abort();
+		}
 		if (! th->process)
 			return;
 		if (debug_tile(tile))
@@ -1153,7 +1159,7 @@ phase34_process_file(int phase, FILE *in)
 		fprintf(stderr,"%s\n", buffer);
 #endif
 		if (phase == 3)
-			tile_extend(buffer, ib);
+			tile_extend(buffer, ib, NULL);
 		else
 			write_item(buffer, ib);
 	}
@@ -1170,7 +1176,7 @@ struct index_item {
 };
 
 static void
-index_submap_add(int phase, struct tile_head *th)
+index_submap_add(int phase, struct tile_head *th, GList **tiles_list)
 {
 	struct index_item ii;
 	int len=strlen(th->name);
@@ -1198,7 +1204,7 @@ index_submap_add(int phase, struct tile_head *th)
 	ii.zipfile_ref=th->zipnum;
 
 	if (phase == 3)
-		tile_extend(index_tile, (struct item_bin *)&ii);
+		tile_extend(index_tile, (struct item_bin *)&ii, tiles_list);
 	else
 		write_item(index_tile, (struct item_bin *)&ii);
 #if 0
@@ -1328,7 +1334,7 @@ write_tilesdir(int phase, int maxlen, FILE *out)
 					fprintf(out,"\n");
 				}
 				if (th->name[0])
-					index_submap_add(phase, th);
+					index_submap_add(phase, th, &tiles_list);
 				processed_tiles++;
 			}
 			next=g_list_next(next);
