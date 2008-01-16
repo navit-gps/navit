@@ -261,10 +261,16 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		lat -= priv->geo.lat * 100;
 		priv->geo.lat += lat / 60;
 
+		if (!strcasecmp(item[3],"S"))
+			priv->geo.lat=-priv->geo.lat;
+
 		lng = g_ascii_strtod(item[4], NULL);
 		priv->geo.lng = floor(lng / 100);
 		lng -= priv->geo.lng * 100;
 		priv->geo.lng += lng / 60;
+
+		if (!strcasecmp(item[5],"W"))
+			priv->geo.lng=-priv->geo.lng;
 
 		sscanf(item[6], "%d", &priv->status);
 		sscanf(item[7], "%d", &priv->sats_used);
