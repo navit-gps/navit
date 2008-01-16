@@ -313,7 +313,7 @@ add_tag(char *k, char *v)
 	if (! strcmp(k,"layer"))
 		level=7;
 	if (! strcmp(k,"oneway")) {
-		if (! strcmp(v,"true") || !strcmp(v,"yes")) {
+		if (! strcasecmp(v,"true") || !strcasecmp(v,"yes") || !strcmp(v,"1")) {
 			flags_attr_value=AF_ONEWAY;
 			flags_attr.len=2;
 		}
