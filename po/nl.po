@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-14 23:23+0100\n"
+"POT-Creation-Date: 2008-01-16 23:15+0100\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: afaber <afaber_at_sourceforge_dot._net>\n"
 "Language-Team: afaber\n"
@@ -645,6 +645,6 @@ msgstr "NW"
 msgid "Route %4.0fkm    %02d:%02d ETA"
 msgstr "Route %4.0fkm    %02d:%02d Aankomsttijd"
 
-#: ../src/gui/gtk/gui_gtk_statusbar.c:153
+#: ../src/gui/gtk/gui_gtk_statusbar.c:156
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Route 0000km  0+00:00 Aankomsttijd"
