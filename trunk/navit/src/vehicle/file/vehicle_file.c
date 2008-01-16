@@ -293,8 +293,8 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		   Course Over Ground Degrees True[1],"T"[2],Course Over Ground Degrees Magnetic[3],"M"[4],
 		   Speed in Knots[5],"N"[6],"Speed in KM/H"[7],"K"[8]
 		 */
-		sscanf(item[1], "%lf", &priv->direction);
-		sscanf(item[7], "%lf", &priv->speed);
+		priv->direction = g_ascii_strtod( item[1], NULL );
+		priv->speed = g_ascii_strtod( item[7], NULL );
 	}
 	if (!strncmp(buffer, "$GPRMC", 6)) {
 		/*                                                           1     1
@@ -303,8 +303,8 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		   Time[1],Active/Void[2],lat[3],N/S[4],long[5],W/E[6],speed in knots[7],track angle[8],date[9],
 		   magnetic variation[10],magnetic variation direction[11]
 		 */
-		sscanf(item[8], "%lf", &priv->direction);
-		sscanf(item[7], "%lf", &priv->speed);
+		priv->direction = g_ascii_strtod( item[8], NULL );
+		priv->speed = g_ascii_strtod( item[7], NULL );
 		priv->speed *= 1.852;
 	}
 }
