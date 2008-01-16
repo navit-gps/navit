@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-12-26 11:26+0100\n"
+"POT-Creation-Date: 2008-01-16 23:15+0100\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Ossi Berg <o.berg@mail.com>\n"
 "Language-Team: Ossi Berg <o.berg@mail.com>\n"
@@ -16,188 +16,210 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=n != 1;\n"
 
-#: ../src/main.c:94
+#: ../src/main.c:108
 #, c-format
 msgid "Running from source directory\n"
 msgstr "Ajetaan lähdehakemistosta\n"
 
-#: ../src/main.c:110
+#: ../src/main.c:124
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "asetetaan '%s' arvoon '%s'\n"
 
-#: ../src/main.c:173
+#: ../src/main.c:202
 #, c-format
 msgid "No config file navit.xml, navit.xml.local found\n"
 msgstr "Ei asetustiedostoita navit.xml tai navit.xml.local\n"
 
-#: ../src/main.c:177
+#: ../src/main.c:206
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr "Virhe tulkitessa '%s': %s\n"
 
-#: ../src/main.c:180
+#: ../src/main.c:209
 #, c-format
 msgid "Using '%s'\n"
 msgstr "Käytetään '%s'\n"
 
-#: ../src/main.c:183
+#: ../src/main.c:212
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr "Esimerkkiä ei tehty, lopetetaan\n"
 
-#: ../src/navigation.c:173
+#: ../src/navigation.c:162
 #, c-format
 msgid "%d m"
 msgstr "%d m"
 
-#: ../src/navigation.c:175
+#: ../src/navigation.c:164
 #, c-format
 msgid "in %d m"
 msgstr "%d m päästä"
 
-#: ../src/navigation.c:179
+#: ../src/navigation.c:168
 #, c-format
 msgid "%d meters"
 msgstr "%d metriä"
 
-#: ../src/navigation.c:181
+#: ../src/navigation.c:170
 #, c-format
 msgid "in %d meters"
 msgstr "%d metrin päästä"
 
-#: ../src/navigation.c:187
+#: ../src/navigation.c:176
 #, c-format
 msgid "%d.%d kilometer"
 msgstr "%d,%d kilometri"
 
-#: ../src/navigation.c:189
+#: ../src/navigation.c:178
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "%d,%d kilometrin päästä"
 
-#: ../src/navigation.c:193
+#: ../src/navigation.c:182
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "yksi kilometri"
 msgstr[1] "%d kilometriä"
 
-#: ../src/navigation.c:195
+#: ../src/navigation.c:184
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "Kilometrin päästä"
 msgstr[1] "%d kilometrin päästä"
 
-#: ../src/navigation.c:399
+#: ../src/navigation.c:402
 msgid "right"
 msgstr "vasemmalle"
 
-#: ../src/navigation.c:406
+#: ../src/navigation.c:409
 msgid "left"
 msgstr "oikealle"
 
-#: ../src/navigation.c:410
+#: ../src/navigation.c:413
 msgid "easily "
 msgstr "loivasti "
 
-#: ../src/navigation.c:414
+#: ../src/navigation.c:417
 msgid "strongly "
 msgstr "jyrkästi "
 
-#: ../src/navigation.c:417
+#: ../src/navigation.c:420
 msgid "unknown "
 msgstr "tuntematon "
 
 #
-#: ../src/navigation.c:423
+#: ../src/navigation.c:426
 msgid "When possible, please turn around"
 msgstr "Käänny ympäri"
 
-#: ../src/navigation.c:430
+#: ../src/navigation.c:433
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Seuraa tätä tietä %s"
 
-#: ../src/navigation.c:434
+#: ../src/navigation.c:437
 msgid "soon"
 msgstr "pian"
 
-#: ../src/navigation.c:440
+#: ../src/navigation.c:443
 msgid "now"
 msgstr "nyt"
 
-#: ../src/navigation.c:443
+#: ../src/navigation.c:446
 msgid "error"
 msgstr "virhe"
 
 #. TRANSLATORS: The first argument is strength, the second direction and the third distance
-#: ../src/navigation.c:447
+#: ../src/navigation.c:450
 #, c-format
 msgid "Turn %1$s%2$s %3$s"
 msgstr "Käänny %3$s %1$s%2$s"
 
-#: ../src/navigation.c:450
+#: ../src/navigation.c:453
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Olet saavuttanut kohteesi %s"
 
-#: ../src/navit.c:614 ../src/gui/gtk/gui_gtk_action.c:185
+#: ../src/navit.c:652 ../src/gui/gtk/gui_gtk_action.c:198
 msgid "Layout"
 msgstr "Pohja"
 
-#: ../src/navit.c:630
+#: ../src/navit.c:668
 msgid "Projection"
 msgstr "Projektio"
 
-#: ../src/navit.c:685
+#: ../src/navit.c:723
 msgid "Former Destinations"
 msgstr "Aiemmat kohteet"
 
-#: ../src/navit.c:695
+#: ../src/navit.c:733
 msgid "Bookmarks"
 msgstr "Kirjanmerkit"
 
-#: ../src/navit.c:733
+#: ../src/navit.c:771
 msgid "Vehicle"
 msgstr "Kulkuneuvo"
 
-#: ../src/navit.c:768
+#: ../src/navit.c:821
 #, fuzzy
 msgid "Command"
 msgstr "Puola"
 
-#: ../src/navit.c:773
+#: ../src/navit.c:826
 msgid "Length"
 msgstr ""
 
-#: ../src/navit.c:778
+#: ../src/navit.c:832
 msgid "Time"
 msgstr ""
 
-#: ../src/navit.c:783
+#: ../src/navit.c:837
 #, fuzzy
 msgid "Destination Length"
 msgstr "Kohde"
 
-#: ../src/navit.c:788
+#: ../src/navit.c:843
 #, fuzzy
 msgid "Destination Time"
 msgstr "Kohde"
 
-#: ../src/navit.c:810 ../src/gui/gtk/gui_gtk_action.c:189
+#: ../src/navit.c:866 ../src/gui/gtk/gui_gtk_action.c:202
 msgid "Roadbook"
 msgstr "Ohjeistaja"
 
-#: ../src/navit.c:1030 ../src/gui/gtk/destination.c:365
-#: ../src/gui/gtk/gui_gtk_action.c:184
+#: ../src/navit.c:1099 ../src/gui/gtk/destination.c:368
+#: ../src/gui/gtk/gui_gtk_action.c:197
 msgid "Map"
 msgstr "Kartta"
 
-#: ../src/navit.c:1037 ../src/gui/gtk/gui_gtk_action.c:183
+#: ../src/navit.c:1106 ../src/gui/gtk/gui_gtk_action.c:196
 msgid "Route"
 msgstr "Reitti"
+
+#: ../src/popup.c:229
+#, c-format
+msgid "Point 0x%x 0x%x"
+msgstr "Piste 0x%x 0x%x"
+
+#: ../src/popup.c:230
+#, c-format
+msgid "Screen %d %d"
+msgstr "Ruutu %d %d"
+
+#: ../src/popup.c:239
+msgid "Set as position"
+msgstr "Aseta sijainniksi"
+
+#: ../src/popup.c:240
+msgid "Set as destination"
+msgstr "Aseta kohteeksi"
+
+#: ../src/popup.c:241
+msgid "Add as bookmark"
+msgstr "Lisää kirjanmerkiksi"
 
 #: ../src/country.c:24
 msgid "Czech Republic"
@@ -448,164 +470,189 @@ msgstr "LÃ¤nsi-Sahara"
 msgid "Svalbard and Jan Mayen"
 msgstr "Svalbard ja Jan Mayen"
 
-#: ../src/gui/gtk/destination.c:99 ../src/gui/gtk/destination.c:100
-#: ../src/gui/gtk/destination.c:101 ../src/gui/gtk/destination.c:102
+#: ../src/gui/gtk/destination.c:96 ../src/gui/gtk/destination.c:97
+#: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
 msgid "Car"
 msgstr "Auto"
 
-#: ../src/gui/gtk/destination.c:99
+#: ../src/gui/gtk/destination.c:96
 msgid "Iso2"
 msgstr "Iso2"
 
-#: ../src/gui/gtk/destination.c:99
+#: ../src/gui/gtk/destination.c:96
 msgid "Iso3"
 msgstr "Iso3"
 
-#: ../src/gui/gtk/destination.c:99 ../src/gui/gtk/destination.c:331
+#: ../src/gui/gtk/destination.c:96 ../src/gui/gtk/destination.c:334
 msgid "Country"
 msgstr "Maa"
 
 #
-#: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
-#: ../src/gui/gtk/destination.c:102
+#: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
+#: ../src/gui/gtk/destination.c:99
 msgid "Postal"
 msgstr "Postinumero"
 
-#: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
-#: ../src/gui/gtk/destination.c:102
+#: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
+#: ../src/gui/gtk/destination.c:99
 msgid "Town"
 msgstr "Paikkakunta"
 
 #
-#: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:101
-#: ../src/gui/gtk/destination.c:102
+#: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
+#: ../src/gui/gtk/destination.c:99
 msgid "District"
 msgstr "Alue"
 
-#: ../src/gui/gtk/destination.c:101 ../src/gui/gtk/destination.c:102
-#: ../src/gui/gtk/destination.c:340
+#: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
+#: ../src/gui/gtk/destination.c:343
 msgid "Street"
 msgstr "Katu"
 
-#: ../src/gui/gtk/destination.c:102 ../src/gui/gtk/destination.c:342
+#: ../src/gui/gtk/destination.c:99 ../src/gui/gtk/destination.c:345
 msgid "Number"
 msgstr "Numero"
 
 #
-#: ../src/gui/gtk/destination.c:326
+#: ../src/gui/gtk/destination.c:329
 msgid "Enter Destination"
 msgstr "Anna kohde"
 
-#: ../src/gui/gtk/destination.c:333
+#: ../src/gui/gtk/destination.c:336
 msgid "Zip Code"
 msgstr "Postinumero"
 
-#: ../src/gui/gtk/destination.c:335
+#: ../src/gui/gtk/destination.c:338
 msgid "City"
 msgstr "Kaupunki"
 
-#: ../src/gui/gtk/destination.c:337
+#: ../src/gui/gtk/destination.c:340
 msgid "District/Township"
 msgstr "Maakunta"
 
-#: ../src/gui/gtk/destination.c:366
+#: ../src/gui/gtk/destination.c:369
 msgid "Bookmark"
 msgstr "Kirjanmerkki"
 
-#: ../src/gui/gtk/destination.c:367 ../src/gui/gtk/gui_gtk_action.c:195
+#: ../src/gui/gtk/destination.c:370 ../src/gui/gtk/gui_gtk_action.c:208
 msgid "Destination"
 msgstr "Kohde"
 
-#: ../src/gui/gtk/gui_gtk_action.c:182
+#: ../src/gui/gtk/gui_gtk_action.c:195
 msgid "Display"
 msgstr "Näyttö"
 
-#: ../src/gui/gtk/gui_gtk_action.c:186
+#: ../src/gui/gtk/gui_gtk_action.c:199
 msgid "ZoomOut"
 msgstr "Loitonna"
 
-#: ../src/gui/gtk/gui_gtk_action.c:187
+#: ../src/gui/gtk/gui_gtk_action.c:200
 msgid "ZoomIn"
 msgstr "Lähennä"
 
-#: ../src/gui/gtk/gui_gtk_action.c:188
+#: ../src/gui/gtk/gui_gtk_action.c:201
 msgid "Refresh"
 msgstr "Päivitä"
 
-#: ../src/gui/gtk/gui_gtk_action.c:191 ../src/gui/gtk/gui_gtk_action.c:193
+#: ../src/gui/gtk/gui_gtk_action.c:204 ../src/gui/gtk/gui_gtk_action.c:206
 msgid "Info"
 msgstr "Info"
 
-#: ../src/gui/gtk/gui_gtk_action.c:196
+#: ../src/gui/gtk/gui_gtk_action.c:209
 msgid "Clear"
 msgstr "Tyhjennä"
 
-#: ../src/gui/gtk/gui_gtk_action.c:197
+#: ../src/gui/gtk/gui_gtk_action.c:210
 msgid "Test"
 msgstr "Testi"
 
-#: ../src/gui/gtk/gui_gtk_action.c:198
+#: ../src/gui/gtk/gui_gtk_action.c:211
 msgid "_Quit"
 msgstr "Sulje"
 
-#: ../src/gui/gtk/gui_gtk_action.c:205
+#: ../src/gui/gtk/gui_gtk_action.c:218
 msgid "Cursor"
 msgstr "Osoitin"
 
-#: ../src/gui/gtk/gui_gtk_action.c:206
+#: ../src/gui/gtk/gui_gtk_action.c:219
 msgid "Tracking"
 msgstr "Reititys"
 
-#: ../src/gui/gtk/gui_gtk_action.c:207
+#: ../src/gui/gtk/gui_gtk_action.c:220
 msgid "Orientation"
 msgstr "Asento"
 
-#: ../src/gui/gtk/gui_gtk_action.c:209 ../src/gui/gtk/gui_gtk_action.c:211
+#: ../src/gui/gtk/gui_gtk_action.c:222 ../src/gui/gtk/gui_gtk_action.c:224
 msgid "Fullscreen"
 msgstr "Koko ruutu"
 
-#: ../src/gui/gtk/gui_gtk_action.c:219
+#: ../src/gui/gtk/gui_gtk_action.c:232
 msgid "Data"
 msgstr "Tieto"
 
-#: ../src/gui/gtk/gui_gtk_action.c:220
+#: ../src/gui/gtk/gui_gtk_action.c:233
 msgid "VisibleBlocks"
 msgstr "Näkyvät korttelit"
 
-#: ../src/gui/gtk/gui_gtk_action.c:221
+#: ../src/gui/gtk/gui_gtk_action.c:234
 msgid "VisibleTowns"
 msgstr "Näkyvät paikkakunnat"
 
-#: ../src/gui/gtk/gui_gtk_action.c:222
+#: ../src/gui/gtk/gui_gtk_action.c:235
 msgid "VisiblePolys"
 msgstr "Näkyvät monikulmio"
 
-#: ../src/gui/gtk/gui_gtk_action.c:223
+#: ../src/gui/gtk/gui_gtk_action.c:236
 msgid "VisibleStreets"
 msgstr "Näkyvät kadut"
 
-#: ../src/gui/gtk/gui_gtk_action.c:224
+#: ../src/gui/gtk/gui_gtk_action.c:237
 msgid "VisiblePoints"
 msgstr "Näkyvät pisteet"
 
-#: ../src/gui/gtk/gui_gtk_action.c:225
-msgid "RouteGraph"
-msgstr "Tiepiirros"
+#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+msgid "N"
+msgstr ""
 
-#~ msgid "Point 0x%x 0x%x"
-#~ msgstr "Piste 0x%x 0x%x"
+#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+msgid "NE"
+msgstr ""
 
-#~ msgid "Screen %d %d"
-#~ msgstr "Ruutu %d %d"
+#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+msgid "E"
+msgstr ""
 
-#~ msgid "Set as position"
-#~ msgstr "Aseta sijainniksi"
+#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+msgid "SE"
+msgstr ""
 
-#~ msgid "Set as destination"
-#~ msgstr "Aseta kohteeksi"
+#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+msgid "S"
+msgstr ""
 
-#~ msgid "Add as bookmark"
-#~ msgstr "Lisää kirjanmerkiksi"
+#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+msgid "SW"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+msgid "W"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+msgid "NW"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_statusbar.c:105
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr ""
+
+#: ../src/gui/gtk/gui_gtk_statusbar.c:156
+msgid "Route 0000km  0+00:00 ETA"
+msgstr ""
+
+#~ msgid "RouteGraph"
+#~ msgstr "Tiepiirros"
 
 #~ msgid "two kilometers"
 #~ msgstr "kaksi kilometriä"
