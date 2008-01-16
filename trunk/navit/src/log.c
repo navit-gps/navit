@@ -78,7 +78,7 @@ static void
 log_close(struct log *this_)
 {
 	if (this_->trailer.len) 
-		fwrite(this_->header.data, 1, this_->trailer.len, this_->f);
+		fwrite(this_->trailer.data, 1, this_->trailer.len, this_->f);
 	fflush(this_->f);
 	fclose(this_->f);
 	this_->f=NULL;
@@ -87,6 +87,7 @@ log_close(struct log *this_)
 static void
 log_flush(struct log *this_)
 {
+	long pos;
 	if (this_->empty) {
 		if (this_->header.len) 
 			fwrite(this_->header.data, 1, this_->header.len, this_->f);
@@ -94,6 +95,14 @@ log_flush(struct log *this_)
 			this_->empty=0;
 	}
 	fwrite(this_->data.data, 1, this_->data.len, this_->f);
+	if (this_->trailer.len) {
+		pos=ftell(this_->f);
+		if (pos > 0) {
+			fwrite(this_->trailer.data, 1, this_->trailer.len, this_->f);
+			fseek(this_->f, pos, SEEK_SET);	
+		}
+	}
+	
 	fflush(this_->f);
 	g_free(this_->data.data);
 	this_->data.data=NULL;
