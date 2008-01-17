@@ -810,7 +810,7 @@ phase1(FILE *in, FILE *out_ways, FILE *out_nodes)
 	return 1;
 }
 
-static char buffer[65536];
+static char buffer[131072];
 
 int bytes_read=0;
 
@@ -823,6 +823,7 @@ read_item(FILE *in)
 	if (r != 1)
 		return NULL;
 	bytes_read+=r;
+	g_assert((ib->len+1)*4 < sizeof(buffer));
 	s=(ib->len+1)*4-sizeof(*ib);
 	r=fread(ib+1, s, 1, in);
 	if (r != 1)
