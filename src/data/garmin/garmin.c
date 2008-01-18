@@ -421,20 +421,16 @@ static struct item_methods methods_garmin_poly = {
 };
 
 static struct item *
-garmin_poi2item(struct map_rect_priv *mr, struct gobject *o, unsigned char otype)
+garmin_poi2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype)
 {
-	int subtype;
-
-	subtype = gar_object_subtype(o);
 	if (mr->mpriv->conv)
-		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POINT, 
-				(otype << 8) | subtype);
+		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POINT, otype);
 	mr->item.meth = &methods_garmin_point;
 	return &mr->item;
 }
 
 static struct item *
-garmin_pl2item(struct map_rect_priv *mr, struct gobject *o, unsigned char otype)
+garmin_pl2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype)
 {
 	if (mr->mpriv->conv)
 		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POLYLINE, otype);
@@ -443,7 +439,7 @@ garmin_pl2item(struct map_rect_priv *mr, struct gobject *o, unsigned char otype)
 }
 
 static struct item *
-garmin_pg2item(struct map_rect_priv *mr, struct gobject *o, unsigned char otype)
+garmin_pg2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype)
 {
 	if (mr->mpriv->conv)
 		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POLYGONE, otype);
@@ -454,12 +450,11 @@ garmin_pg2item(struct map_rect_priv *mr, struct gobject *o, unsigned char otype)
 static struct item *
 garmin_obj2item(struct map_rect_priv *mr, struct gobject *o)
 {
-	unsigned char otype;
+	unsigned short otype;
 	otype = gar_obj_type(o);
 	mr->item.type = type_none;
 	switch (o->type) {
 		case GO_POINT:
-		case GO_POI:
 			return garmin_poi2item(mr, o, otype);
 		case GO_POLYLINE:
 			return garmin_pl2item(mr, o, otype);
