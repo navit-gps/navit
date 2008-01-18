@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE navit SYSTEM "navit.dtd">
+<config>
 <plugins>
 	<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}lib*.so"/>
 	<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libgraphics_null.so" active="no" />
@@ -827,3 +828,4 @@ Change to your home coordinates.
 	<layout name="Nacht">
 	</layout>
 </navit>
+</config>
