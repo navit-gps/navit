@@ -145,6 +145,13 @@ convert_number(const char *val)
 }
 
 static int
+xmlconfig_config(struct xmlstate *state)
+{
+	state->element_object = 1;
+	return 1;
+}
+
+static int
 xmlconfig_plugins(struct xmlstate *state)
 {
 	state->element_object = plugins_new();
@@ -594,8 +601,9 @@ struct element_func {
 	char *parent;
 	int (*func)(struct xmlstate *state);
 } elements[] = {
-	{ "debug", NULL, xmlconfig_debug},
-	{ "navit", NULL, xmlconfig_navit},
+	{ "config", NULL, xmlconfig_config},
+	{ "debug", "config", xmlconfig_debug},
+	{ "navit", "config", xmlconfig_navit},
 	{ "graphics", "navit", xmlconfig_graphics},
 	{ "gui", "navit", xmlconfig_gui},
 	{ "layout", "navit", xmlconfig_layout},
@@ -619,7 +627,7 @@ struct element_func {
 	{ "vehicle", "navit", xmlconfig_vehicle},
 	{ "log", "vehicle", xmlconfig_log},
 	{ "window_items", "navit", xmlconfig_window_items},
-	{ "plugins", NULL, xmlconfig_plugins},
+	{ "plugins", "config", xmlconfig_plugins},
 	{ "plugin", "plugins", xmlconfig_plugin},
 	{},
 };
