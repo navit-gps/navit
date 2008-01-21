@@ -18,6 +18,11 @@
 
 static int map_id;
 
+struct minmax {
+	short min;
+	short max;
+};
+
 struct tile {
 	int *start;
 	int *end;
@@ -270,13 +275,20 @@ setup_pos(struct map_rect_priv *mr)
 }
 
 static int
-selection_contains(struct map_selection *sel, struct coord_rect *r)
+selection_contains(struct map_selection *sel, struct coord_rect *r, struct minmax *mima)
 {
+	int order;
 	if (! sel)
 		return 1;
 	while (sel) {
-		if (coord_rect_overlap(r, &sel->u.c_rect))
-			return 1;
+		if (coord_rect_overlap(r, &sel->u.c_rect)) {
+			order=sel->order[0];
+			dbg(1,"min %d max %d order %d\n", mima->min, mima->max, order);
+			if (!mima->min && !mima->max)
+				return 1;
+			if (order >= mima->min && order <= mima->max)
+				return 1;
+		}
 		sel=sel->next;
 	}
 	return 0;
@@ -288,6 +300,7 @@ static struct item *
 map_rect_get_item_binfile(struct map_rect_priv *mr)
 {
 	struct tile *t;
+	struct minmax *mima;
 	for (;;) {
 		t=mr->t;
 		if (! t)
@@ -310,7 +323,8 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 			r.lu.y=t->pos_coord[3];
 			r.rl.x=t->pos_coord[2];
 			r.rl.y=t->pos_coord[1];
-			if (!mr->m->eoc || !selection_contains(mr->sel, &r)) {
+			mima=(struct minmax *)(t->pos_attr+2);
+			if (!mr->m->eoc || !selection_contains(mr->sel, &r, mima)) {
 				continue;
 			}
 			dbg(1,"pushing zipfile %d from %d\n", t->pos_attr[5], t->zipfile_num);
