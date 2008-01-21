@@ -90,6 +90,7 @@ static char *attrmap={
 	"n	sport	swimming	poi_swimming\n"
 	"n	sport	skiing		poi_skiing\n"
 	"n	aeroway	aerodrome	poi_airport\n"
+	"n	aeroway	airport		poi_airport\n"
 	"n	aeroway	terminal	poi_airport\n"
 	"n	aeroway	helipad		poi_heliport\n"
 	"n	man_made	tower	poi_tower\n"
@@ -98,6 +99,7 @@ static char *attrmap={
 	"n	place	city		town_label_2e5\n"
 	"n	place	town		town_label_2e4\n"
 	"n	place	village		town_label_2e3\n"
+	"n	place	hamlet		town_label_2e2\n"
 	"w	amenity	place_of_worship	building_poly\n"
 	"w	building	glasshouse	building_poly\n"
 	"w	building\n"
@@ -130,10 +132,12 @@ static char *attrmap={
 	"w	leisure	park		park_poly\n"
 	"w	natural	wood		wood\n"
 	"w	natural	water		water_poly\n"
+	"w	natural	coast		water_line\n"
 	"w	place		suburb		town_poly\n"
 	"w	place		town		town_poly\n"
 	"w	power	line	powerline\n"
 	"w	railway	rail		rail\n"
+	"w	railway	narrow_gauge	rail\n"
 	"w	railway	station		building_poly\n"
 	"w	railway	subway		rail\n"
 	"w	railway	tram		rail\n"
@@ -143,6 +147,8 @@ static char *attrmap={
 	"w	waterway	weir		water_line\n"
 	"w	waterway	stream		water_line\n"
 	"w	waterway	drain		water_line\n"
+	"w	boundary	administrative	border_country\n"
+	"w	route		ferry		ferry\n"
 };
 
 static GHashTable *way_key_hash, *node_key_hash;
