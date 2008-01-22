@@ -1168,7 +1168,7 @@ phase34_process_file(int phase, FILE *in)
 		bbox((struct coord *)(ib+1), ib->clen/2, &r);
 		buffer[0]='\0';
 		max=14;
-		if (ib->type == type_street_n_lanes || ib->type == type_highway_city || ib->type == type_highway_land)
+		if (ib->type == type_street_n_lanes || ib->type == type_highway_city || ib->type == type_highway_land || ib->type == type_ramp)
 			max=8;
 		if (ib->type == type_street_3_city || ib->type == type_street_4_city || ib->type == type_street_3_land || ib->type == type_street_4_land)
 			max=12;
