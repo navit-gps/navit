@@ -882,7 +882,7 @@ struct rect world_bbox = {
 };
 
 static void
-tile(struct rect *r, char *ret)
+tile(struct rect *r, char *ret, int max)
 {
 	int x0,x1,x2,x3,x4;
 	int y0,y1,y2,y3,y4;
@@ -891,7 +891,7 @@ tile(struct rect *r, char *ret)
 	y0=world_bbox.l.y;
 	x4=world_bbox.h.x;
 	y4=world_bbox.h.y;
-	for (i = 0 ; i < 14 ; i++) {
+	for (i = 0 ; i < max ; i++) {
 		x2=(x0+x4)/2;
                 y2=(y0+y4)/2;
                 x1=(x0+x2)/2;
@@ -1158,6 +1158,8 @@ phase34_process_file(int phase, FILE *in)
 	struct item_bin *ib;
 	struct rect r;
 	char buffer[1024];
+	int max;
+
 	while ((ib=read_item(in))) {
 		if (ib->type < 0x80000000)
 			processed_nodes++;
@@ -1165,7 +1167,13 @@ phase34_process_file(int phase, FILE *in)
 			processed_ways++;
 		bbox((struct coord *)(ib+1), ib->clen/2, &r);
 		buffer[0]='\0';
-		tile(&r, buffer);
+		max=14;
+		if (ib->type == type_street_n_lanes || ib->type == type_highway_city || ib->type == type_highway_land)
+			max=8;
+		if (ib->type == type_street_3_city || ib->type == type_street_4_city || ib->type == type_street_3_land || ib->type == type_street_4_land)
+			max=12;
+		
+		tile(&r, buffer, max);
 #if 0
 		fprintf(stderr,"%s\n", buffer);
 #endif
