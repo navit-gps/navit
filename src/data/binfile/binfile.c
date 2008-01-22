@@ -283,6 +283,10 @@ selection_contains(struct map_selection *sel, struct coord_rect *r, struct minma
 	while (sel) {
 		if (coord_rect_overlap(r, &sel->u.c_rect)) {
 			order=sel->order[0];
+			if (sel->order[1] > order)
+				order=sel->order[1];
+			if (sel->order[2] > order)
+				order=sel->order[2];
 			dbg(1,"min %d max %d order %d\n", mima->min, mima->max, order);
 			if (!mima->min && !mima->max)
 				return 1;
