@@ -660,8 +660,8 @@ start_element (GMarkupParseContext *context,
 	if ((parent_name && func->parent && g_ascii_strcasecmp(parent_name, func->parent)) || 
 	    (!parent_name && func->parent) || (parent_name && !func->parent)) {
 		g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT,
-				"Element '%s' within unexpected context '%s'. Expected '%s'",
-				element_name, parent_name, func->parent);
+				"Element '%s' within unexpected context '%s'. Expected '%s'%s",
+				element_name, parent_name, func->parent, ! strcmp(func->parent,"config") ? "\nPlease add <config> </config> tags at the beginning/end of your navit.xml": "");
 		return;
 	}
 
