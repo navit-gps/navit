@@ -1003,17 +1003,18 @@ route_graph_update(struct route *this)
 struct street_data *
 street_get_data (struct item *item)
 {
-	struct coord c[1000];
+	int maxcount=2000;
+	struct coord c[maxcount];
 	int count=0;
 	struct street_data *ret;
 	struct attr attr;
 
-	while (count < 1000) {
+	while (count < maxcount) {
 		if (!item_coord_get(item, &c[count], 1))
 			break;
 		count++;
 	}
-	g_assert(count < 1000);
+	g_assert(count < maxcount);
 	ret=g_malloc(sizeof(struct street_data)+count*sizeof(struct coord));
 	ret->item=*item;
 	ret->count=count;
@@ -1459,7 +1460,10 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		attr->type = attr_label;
 		if (mr->str)
 			g_free(mr->str);
-		mr->str=g_strdup_printf("%d", p->value);
+		if (p->value != INT_MAX)
+			mr->str=g_strdup_printf("%d", p->value);
+		else
+			mr->str=g_strdup("-");
 		attr->u.str = mr->str;
 		mr->attr_next=attr_none;
 		return 1;
