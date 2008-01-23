@@ -323,6 +323,7 @@ transform_setup_source_rect(struct transformation *t)
 	ms=t->screen_sel;
 	while (ms) {
 		msm=g_new0(struct map_selection, 1);
+		*msm=*ms;
 		pr=&ms->u.p_rect;
 		screen_pnt[0].x=pr->lu.x;
 		screen_pnt[0].y=pr->lu.y;
