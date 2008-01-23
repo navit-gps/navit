@@ -73,6 +73,7 @@ static char *fontpaths[]={
 	"/usr/X11R6/lib/X11/fonts/TTF",
 	"/usr/share/fonts/truetype",
 	"/usr/share/fonts/truetype/msttcorefonts",
+	"/usr/share/fonts/truetype/ttf-dejavu",
 	"/usr/share/fonts/ttf",
 	"/usr/share/fonts/corefonts",
 	"/usr/share/fonts/liberation",
