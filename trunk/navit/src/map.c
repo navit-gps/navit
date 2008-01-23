@@ -232,6 +232,7 @@ map_selection_dup(struct map_selection *sel)
 		next = g_new(struct map_selection, 1);
 		*next=*sel;
 		*last=next;
+		last=&next->next;
 		sel = sel->next;
 	}
 	return ret;
