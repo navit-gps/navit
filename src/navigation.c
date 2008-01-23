@@ -623,8 +623,16 @@ navigation_update(struct navigation *this_, struct route *route)
 }
 
 void
+navigation_flush(struct navigation *this_)
+{
+	navigation_destroy_itms_cmds(this_, NULL);
+}
+
+
+void
 navigation_destroy(struct navigation *this_)
 {
+	navigation_flush(this_);
 	item_hash_destroy(this_->hash);
 	callback_list_destroy(this_->callback);
 	callback_list_destroy(this_->callback_speech);

@@ -579,6 +579,8 @@ navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
 	navit_append_coord(this_, "destination.txt", c, "former_destination", description, this_->destinations, NULL, callback_cast(navit_set_destination_from_destination));
 	if (this_->route) {
 		route_set_destination(this_->route, c);
+		if (this_->navigation)
+			navigation_flush(this_->navigation);
 		navit_draw(this_);
 	}
 }
