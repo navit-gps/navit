@@ -192,11 +192,21 @@ static int gui_run_main_loop(struct gui_priv *this_)
 	int frames=0;
 	char fps [12];
 
-	struct map_selection sel;
+	struct map_selection sel,sel2;
 
 	memset(&sel, 0, sizeof(sel));
+	memset(&sel2, 0, sizeof(sel2));
 	sel.u.c_rect.rl.x=800;
 	sel.u.c_rect.rl.y=600;
+#if 0
+	sel.next=&sel2;
+	sel2.u.c_rect.rl.x=-200;
+	sel2.u.c_rect.rl.y=0;
+	sel2.u.c_rect.lu.x=1000;
+	sel2.u.c_rect.lu.y=-800;
+	for (int i=0 ; i < layer_end ; i++) 
+		sel2.order[i]=-4;
+#endif
 	
 	transform_set_screen_selection(navit_get_trans(this_->nav), &sel);
 	navit_draw(this_->nav);
@@ -249,7 +259,10 @@ static int gui_run_main_loop(struct gui_priv *this_)
 
 		show_road_name();
 
-		navit_draw_displaylist(sdl_gui_navit);
+		if (DLid && *DLid)
+			glCallList(*DLid);
+		else
+			navit_draw_displaylist(sdl_gui_navit);
 
 		inject_input(must_quit);
  		if(enable_timer)
