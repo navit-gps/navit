@@ -350,9 +350,6 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 {
 	int i;
 
-	GLuint id = glGenLists(1);  // create a display list
-	if(!id) return id;          // failed to create a list, return 0
-
 	GLUtesselator *tess = gluNewTess(); // create a tessellator
 	if(!tess) return 0;  // failed to create tessellation object, return 0
 
@@ -379,7 +376,6 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 	// and UV coords which are needed for actual drawing.
 	// Here, we are looking at only vertex coods, so the 2nd and 3rd params are
 	// pointing same address.
-	glNewList(id, GL_COMPILE);
 	glColor4f( gc->fr, gc->fg, gc->fb, gc->fa);
 	gluTessBeginPolygon(tess, 0);                   // with NULL data
 		gluTessBeginContour(tess);
@@ -388,13 +384,8 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 		}
 		gluTessEndContour(tess);
 	gluTessEndPolygon(tess);
-	glEndList();
 	
 	gluDeleteTess(tess);        // delete after tessellation
-	
-	// Actually display the polygon. 
-	// FIXME It would maybe be better to display them before calling swap_buffers
-	glCallList(id);
 
 }
 
@@ -440,7 +431,6 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 {
 //	dbg(0,"%s : %i,%i, %f\n",text,dx,dy,(180*atan2(dx,dy)/3.14));
 	SDL_print(text,p->x,p->y,(180*atan2(dx,dy)/3.14)-90);
-
 }
 
 static void
@@ -550,12 +540,12 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-#if 0
-	if (mode == draw_mode_begin)
-		glNewList(gr->DLid,GL_COMPILE);
-	if (mode == draw_mode_end)
-		glEndList();
-#endif
+	if (gr->DLid) {
+		if (mode == draw_mode_begin)
+			glNewList(gr->DLid,GL_COMPILE);
+		if (mode == draw_mode_end)
+			glEndList();
+	}
 
 #if 0
 	struct graphics_priv *overlay;
@@ -734,6 +724,10 @@ get_data(struct graphics_priv *this, char *type)
 {
 	if (strcmp(type,"opengl_displaylist"))
 		return NULL;
+#if 0
+        dbg(1,"Creating the DL from driver\n");
+        this->DLid = glGenLists(1);
+#endif
         return &this->DLid;
 }
 
@@ -794,8 +788,6 @@ graphics_opengl_new(struct graphics_methods *meth, struct attr **attrs)
 
 // 	draw=gtk_drawnig_area_new();
 	
-        dbg(1,"Creating the DL from driver\n");
-        this->DLid = glGenLists(1);
 
 	// Initialize the fonts
 	int ctx = 0;
