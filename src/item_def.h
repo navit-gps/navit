@@ -244,6 +244,8 @@ ITEM(marine_boundary)
 ITEM(marine_hazard)
 ITEM(roundabout)
 ITEM(rg_segment)
+ITEM(aeroway_runway)
+ITEM(aeroway_taxiway)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)

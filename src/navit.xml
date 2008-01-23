@@ -407,6 +407,89 @@ Change to your home coordinates.
 			<item type="street_nopass,street_0,street_1_city,street_1_land" order="12-18">
 				<label label_size="9" />
 			</item>
+			<item type="aeroway_taxiway" order="10">
+				<polyline color="#989994" width="4" />
+				<polyline color="#d3dbbc" width="2" />
+			</item>
+			<item type="aeroway_taxiway" order="11">
+				<polyline color="#989994" width="6" />
+				<polyline color="#d3dbbc" width="4" />
+			</item>
+			<item type="aeroway_taxiway" order="12">
+				<polyline color="#989994" width="10" />
+				<polyline color="#d3dbbc" width="8" />
+			</item>
+			<item type="aeroway_taxiway" order="13">
+				<polyline color="#989994" width="12" />
+				<polyline color="#d3dbbc" width="9" />
+			</item>
+			<item type="aeroway_taxiway" order="14">
+				<polyline color="#989994" width="15" />
+				<polyline color="#d3dbbc" width="13" />
+			</item>
+			<item type="aeroway_taxiway" order="15">
+				<polyline color="#989994" width="17" />
+				<polyline color="#d3dbbc" width="14" />
+			</item>
+			<item type="aeroway_taxiway" order="16">
+				<polyline color="#989994" width="33" />
+				<polyline color="#d3dbbc" width="26" />
+			</item>
+			<item type="aeroway_taxiway" order="17">
+				<polyline color="#989994" width="69" />
+				<polyline color="#d3dbbc" width="61" />
+			</item>
+			<item type="aeroway_taxiway" order="18">
+				<polyline color="#989994" width="132" />
+				<polyline color="#d3dbbc" width="126" />
+			</item>
+			<item type="aeroway_runway" order="2-6">
+				<polyline color="#404040" width="1" />
+			</item>
+			<item type="aeroway_runway" order="7-8">
+				<polyline color="#404040" width="3" />
+				<polyline color="#d3dbbc" width="1" />
+			</item>
+			<item type="aeroway_runway" order="9">
+				<polyline color="#6b6f5f" width="5" />
+				<polyline color="#d3dbbc" width="3" />
+			</item>
+			<item type="aeroway_runway" order="10">
+				<polyline color="#6b6f5f" width="6" />
+				<polyline color="#d3dbbc" width="4" />
+			</item>
+			<item type="aeroway_runway" order="11">
+				<polyline color="#6b6f5f" width="9" />
+				<polyline color="#d3dbbc" width="7" />
+			</item>
+			<item type="aeroway_runway" order="12">
+				<polyline color="#6b6f5f" width="13" />
+				<polyline color="#d3dbbc" width="9" />
+			</item>
+			<item type="aeroway_runway" order="13">
+				<polyline color="#6b6f5f" width="18" />
+				<polyline color="#d3dbbc" width="14" />
+			</item>
+			<item type="aeroway_runway" order="14">
+				<polyline color="#6b6f5f" width="21" />
+				<polyline color="#d3dbbc" width="17" />
+			</item>
+			<item type="aeroway_runway" order="15">
+				<polyline color="#6b6f5f" width="24" />
+				<polyline color="#d3dbbc" width="20" />
+			</item>
+			<item type="aeroway_runway" order="16">
+				<polyline color="#6b6f5f" width="39" />
+				<polyline color="#d3dbbc" width="33" />
+			</item>
+			<item type="aeroway_runway" order="17">
+				<polyline color="#6b6f5f" width="78" />
+				<polyline color="#d3dbbc" width="72" />
+			</item>
+			<item type="aeroway_runway" order="18">
+				<polyline color="#6b6f5f" width="156" />
+				<polyline color="#d3dbbc" width="150" />
+			</item>
 			<item type="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="12-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
