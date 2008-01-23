@@ -103,6 +103,8 @@ static char *attrmap={
 	"w	amenity	place_of_worship	building_poly\n"
 	"w	building	glasshouse	building_poly\n"
 	"w	building\n"
+	"w	aeroway	runway		aeroway_runway\n"
+	"w	aeroway	taxiway		aeroway_taxiway\n"
 	"w	highway	cycleway	street_nopass\n"
 	"w	highway	footway		street_nopass\n"
 	"w	highway	steps		street_nopass\n"
