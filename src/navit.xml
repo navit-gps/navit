@@ -524,58 +524,58 @@ Change to your home coordinates.
                                 <polyline color="#3f3f3f" width="1" />
                         </item>
 
-			<item type="poi_airport" order="0-">
+			<item type="poi_airport" order="5-">
 				<icon src="airport.xpm" />
 			</item>
 			<item type="town_ghost" order="0-">
 				<icon src="ghost_town.xpm" />
 			</item>
-			<item type="poi_hotel" order="0-">
+			<item type="poi_hotel" order="12-">
 				<icon src="hotel.xpm" />
 			</item>
-			<item type="poi_car_parking" order="0-">
+			<item type="poi_car_parking" order="11-">
 				<icon src="parking.xpm" />
 			</item>
 			<item type="poi_car_dealer_parts" order="0-">
 				<icon src="car_dealer.xpm" />
 			</item>
-			<item type="poi_fuel" order="0-">
+			<item type="poi_fuel" order="10-">
 				<icon src="fuel.xpm" />
 			</item>
 			<item type="poi_shopping" order="0-">
 				<icon src="shopping.xpm" />
 			</item>
-			<item type="poi_attraction" order="0-">
+			<item type="poi_attraction" order="5-">
 				<icon src="attraction.xpm" />
 			</item>
-			<item type="poi_bar" order="0-">
+			<item type="poi_bar" order="12-">
 				<icon src="bar.xpm" />
 			</item>
 			<item type="poi_bridge" order="0-">
 				<icon src="bridge.xpm" />
 			</item>
-			<item type="highway_exit" order="0-">
+			<item type="highway_exit" order="11-">
 				<icon src="exit.xpm" />
 			</item>
-			<item type="poi_camp_rv" order="0-">
+			<item type="poi_camp_rv" order="9-">
 				<icon src="camping.xpm" />
 			</item>
-			<item type="poi_museum_history" order="0-">
+			<item type="poi_museum_history" order="12-">
 				<icon src="museum.xpm" />
 			</item>
-			<item type="poi_hospital" order="0-">
+			<item type="poi_hospital" order="12-">
 				<icon src="hospital.xpm" />
 			</item>
 			<item type="point_unkn" order="0-">
 				<circle color="#8080ff" radius="3" />
 			</item>
-			<item type="poi_dining" order="0-">
+			<item type="poi_dining" order="12-">
 				<icon src="dining.xpm" />
 			</item>
-			<item type="poi_fastfood" order="0-">
+			<item type="poi_fastfood" order="12-">
 				<icon src="fastfood.xpm" />
 			</item>
-			<item type="poi_police" order="0-">
+			<item type="poi_police" order="12-">
 				<icon src="police.xpm" />
 			</item>
 			<item type="poi_auto_club" order="0-">
@@ -584,7 +584,7 @@ Change to your home coordinates.
 			<item type="poi_autoservice" order="0-">
 				<icon src="autoservice.xpm" />
 			</item>
-			<item type="poi_bank" order="0-">
+			<item type="poi_bank" order="12-">
 				<icon src="bank.xpm" />
 			</item>
 			<item type="poi_bay" order="0-">
@@ -623,10 +623,10 @@ Change to your home coordinates.
 			<item type="poi_cemetery" order="0-">
 				<icon src="cemetery.xpm" />
 			</item>
-			<item type="poi_church" order="0-">
+			<item type="poi_church" order="11-">
 				<icon src="church.xpm" />
 			</item>
-			<item type="poi_cinema" order="0-">
+			<item type="poi_cinema" order="12-">
 				<icon src="cinema.xpm" />
 			</item>
 			<item type="poi_civil" order="0-">
@@ -668,7 +668,7 @@ Change to your home coordinates.
 			<item type="poi_fair" order="0-">
 				<icon src="fair.xpm" />
 			</item>
-			<item type="poi_firebrigade" order="0-">
+			<item type="poi_firebrigade" order="12-">
 				<icon src="firebrigade.xpm" />
 			</item>
 			<item type="poi_fish" order="0-">
@@ -680,7 +680,7 @@ Change to your home coordinates.
 			<item type="poi_garmin" order="0-">
 				<icon src="garmin.xpm" />
 			</item>
-			<item type="poi_golf" order="0-">
+			<item type="poi_golf" order="12-">
 				<icon src="golf.xpm" />
 			</item>
 			<item type="poi_goverment_building" order="0-">
@@ -698,7 +698,7 @@ Change to your home coordinates.
 			<item type="poi_icesport" order="0-">
 				<icon src="icesport.xpm" />
 			</item>
-			<item type="poi_information" order="0-">
+			<item type="poi_information" order="12-">
 				<icon src="information.xpm" />
 			</item>
 			<item type="poi_justice" order="0-">
@@ -710,7 +710,7 @@ Change to your home coordinates.
 			<item type="poi_levee" order="0-">
 				<icon src="levee.xpm" />
 			</item>
-			<item type="poi_library" order="0-">
+			<item type="poi_library" order="12-">
 				<icon src="library.xpm" />
 			</item>
 			<item type="poi_locale" order="0-">
@@ -749,10 +749,10 @@ Change to your home coordinates.
 			<item type="poi_personal_service" order="0-">
 				<icon src="personal_service.xpm" />
 			</item>
-			<item type="poi_pharmacy" order="0-">
+			<item type="poi_pharmacy" order="12-">
 				<icon src="pharmacy.xpm" />
 			</item>
-			<item type="poi_post" order="0-">
+			<item type="poi_post" order="13-">
 				<icon src="post.xpm" />
 			</item>
 			<item type="poi_public_office" order="0-">
@@ -764,16 +764,16 @@ Change to your home coordinates.
 			<item type="poi_resort" order="0-">
 				<icon src="resort.xpm" />
 			</item>
-			<item type="poi_rest_room" order="0-">
+			<item type="poi_rest_room" order="13-">
 				<icon src="rest_room.xpm" />
 			</item>
-			<item type="poi_restaurant" order="0-">
+			<item type="poi_restaurant" order="12-">
 				<icon src="restaurant.xpm" />
 			</item>
 			<item type="poi_restricted_area" order="0-">
 				<icon src="restricted_area.xpm" />
 			</item>
-			<item type="poi_restroom" order="0-">
+			<item type="poi_restroom" order="13-">
 				<icon src="restroom.xpm" />
 			</item>
 			<item type="poi_sailing" order="0-">
@@ -782,7 +782,7 @@ Change to your home coordinates.
 			<item type="poi_scenic_area" order="0-">
 				<icon src="scenic_area.xpm" />
 			</item>
-			<item type="poi_school" order="0-">
+			<item type="poi_school" order="12-">
 				<icon src="school.xpm" />
 			</item>
 			<item type="poi_service" order="0-">
@@ -815,7 +815,7 @@ Change to your home coordinates.
 			<item type="poi_shower" order="0-">
 				<icon src="shower.xpm" />
 			</item>
-			<item type="poi_skiing" order="0-">
+			<item type="poi_skiing" order="12-">
 				<icon src="skiing.xpm" />
 			</item>
 			<item type="poi_social_service" order="0-">
@@ -833,19 +833,19 @@ Change to your home coordinates.
 			<item type="poi_subdivision" order="0-">
 				<icon src="subdivision.xpm" />
 			</item>
-			<item type="poi_swimming" order="0-">
+			<item type="poi_swimming" order="12-">
 				<icon src="swimming.xpm" />
 			</item>
-			<item type="poi_telephone" order="0-">
+			<item type="poi_telephone" order="13-">
 				<icon src="telephone.xpm" />
 			</item>
-			<item type="poi_theater" order="0-">
+			<item type="poi_theater" order="12-">
 				<icon src="theater.xpm" />
 			</item>
 			<item type="poi_tide" order="0-">
 				<icon src="tide.xpm" />
 			</item>
-			<item type="poi_tower" order="0-">
+			<item type="poi_tower" order="13-">
 				<icon src="tower.xpm" />
 			</item>
 			<item type="poi_trail" order="0-">
@@ -869,7 +869,7 @@ Change to your home coordinates.
 			<item type="poi_zoo" order="0-">
 				<icon src="zoo.xpm" />
 			</item>
-			<item type="poi_picnic" order="0-">
+			<item type="poi_picnic" order="11-">
 				<icon src="picnic.xpm" />
 			</item>
 			<item type="poi_gc_multi" order="0-">
