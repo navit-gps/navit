@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="gtk_gl_ext" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output=".\bin\Debug\libgtk_gl_ext.la" prefix_auto="1" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output=".\obj\Debug\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add directory="%GTK_DIR%\lib" />
+					<Add directory="bin\Debug" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output=".\bin\Release\libgtk_gl_ext.la" prefix_auto="1" extension_auto="0" />
+				<Option working_dir="" />
+				<Option object_output=".\obj\Release\" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add directory="%GTK_DIR%\lib" />
+					<Add directory="bin\Release" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-mms-bitfields" />
+			<Add option="-DBUILD_DLL" />
+			<Add option="-DMODULE=gtk_gl_ext" />
+			<Add directory="%GTK_DIR%\include" />
+			<Add directory="%GTK_DIR%\include\gtk-2.0" />
+			<Add directory="%GTK_DIR%\include\glib-2.0" />
+			<Add directory="%GTK_DIR%\lib\gtk-2.0\include" />
+			<Add directory="%GTK_DIR%\lib\glib-2.0\include" />
+			<Add directory="%GTK_DIR%\include\cairo" />
+			<Add directory="%GTK_DIR%\include\pango-1.0" />
+			<Add directory="%GTK_DIR%\include\atk-1.0" />
+			<Add directory="..\..\src" />
+			<Add directory="Win32Extra" />
+			<Add directory="%GTK_DIR%\include\freetype2" />
+			<Add directory="%GTK_DIR%\include\gtkglext-1.0" />
+			<Add directory="%GTK_DIR%\lib\gtkglext-1.0\include" />
+		</Compiler>
+		<Linker>
+			<Add library="glib-2.0" />
+			<Add library="user32" />
+			<Add library="intl" />
+			<Add library="iconv" />
+			<Add directory="%GTK_DIR%\lib" />
+		</Linker>
+		<Unit filename="..\..\src\graphics\gtk_gl_ext\graphics_gtk_gl_ext.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
