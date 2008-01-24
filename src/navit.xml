@@ -72,29 +72,29 @@ Change to your home coordinates.
 
 	<layout name="Tag">
 		<layer name="sea" details="0">
-			<item type="wood" order="0-">
+			<item type="poly_wood" order="0-">
 				<polygon color="#8ec78d" /> 
 			</item>
-			<item type="town_poly" order="0-">
+			<item type="poly_town" order="0-">
 				<polygon color="#ffc895" /> 
 				<polyline color="#ebb481" /> 
 			</item>
-			<item type="water_poly" order="0-">
+			<item type="poly_water" order="0-">
 				<polygon color="#82c8ea" /> 
 				<polyline color="#5096b8" /> 
 				<label label_size="5" /> 
 			</item>
-			<item type="park_poly" order="0-">
+			<item type="poly_park" order="0-">
 				<polygon color="#7cc334" /> 
 				<label label_size="5" /> 
 			</item>
-			<item type="airport_poly" order="0-">
+			<item type="poly_airport" order="0-">
 				<polygon color="#a0a0a0" /> 
 			</item>
-			<item type="sport_poly" order="0-">
+			<item type="poly_sport" order="0-">
 				<polygon color="#4af04f" /> 
 			</item>
-			<item type="industry_poly,building_poly,place_poly" order="0-">
+			<item type="poly_industry,poly_building,poly_place" order="0-">
 				<polygon color="#e6e6e6" /> 
 			</item>
 			<item type="water_line" order="0-">
@@ -896,7 +896,7 @@ Change to your home coordinates.
 			<item type="poi_gc_webcam" order="0-">
 				<icon src="gc_webcam.xpm" />
 			</item>
-			<item type="flats,scrub,military_zone,marine_poly,plantation,tundra" order="0-">
+			<item type="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-">
 				<polygon color="#a0a0a0" />
 				<label label_size="5" /> 
 			</item>
