@@ -45,9 +45,6 @@
 			<Add option="-DMODULE=vehicle_file" />
 			<Add directory="%GTK_DIR%\include\glib-2.0" />
 			<Add directory="%GTK_DIR%\lib\glib-2.0\include" />
-			<Add directory="..\..\" />
-			<Add directory="..\" />
-			<Add directory="D:\CB_Projects\Navit\src\" />
 			<Add directory="Win32Extra" />
 			<Add directory="..\..\src" />
 		</Compiler>
