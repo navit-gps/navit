@@ -135,7 +135,7 @@ static char *attrmap={
 	"w	leisure	park		park_poly\n"
 	"w	natural	wood		wood\n"
 	"w	natural	water		water_poly\n"
-	"w	natural	coast		water_line\n"
+	"w	natural	coastline	water_line\n"
 	"w	place		suburb		town_poly\n"
 	"w	place		town		town_poly\n"
 	"w	power	line	powerline\n"
