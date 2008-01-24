@@ -29,6 +29,7 @@ static GHashTable *dedupe_ways_hash;
 static int attr_debug_level=1;
 static int nodeid,wayid;
 static int report,phase;
+static int ignore_unkown = 0;
 
 static char *attrmap={
 	"n	historic\n"
@@ -155,6 +156,25 @@ static char *attrmap={
 
 static GHashTable *way_key_hash, *node_key_hash;
 
+static GHashTable *strings_hash = NULL;
+
+
+static char* string_hash_lookup( const char* key )
+{
+	char* key_ptr = NULL;
+
+	if ( strings_hash == NULL ) {
+		strings_hash = g_hash_table_new(g_str_hash, g_str_equal);
+	}
+
+	if ( ( key_ptr = g_hash_table_lookup(strings_hash, key )) == NULL ) {
+		key_ptr = g_strdup( key );
+		g_hash_table_insert(strings_hash, key_ptr,  (gpointer)key_ptr );
+
+	}
+	return key_ptr;
+}
+
 static void
 build_attrmap_line(char *line)
 {
@@ -192,11 +212,11 @@ build_attrmap_line(char *line)
 	value_hash=g_hash_table_lookup(key_hash, k);
 	if (! value_hash) {
 		value_hash=g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(key_hash, g_strdup(k), value_hash);
+		g_hash_table_insert(key_hash, string_hash_lookup(k), value_hash);
 	}
 	if (v) {
 		data=(gpointer)item_from_name(i);
-		g_hash_table_insert(value_hash, g_strdup(v), data);
+		g_hash_table_insert(value_hash, string_hash_lookup(v), data);
 	}
 #if 0
 	fprintf(stderr,"'%s' '%s' '%s'\n", k, v, i);
@@ -399,11 +419,22 @@ add_tag(char *k, char *v)
 	if (!type) {
 		if (report)
 			fprintf(stderr,"Unknown %s %d value of '%s' '%s'\n", in_way ? "way" : "node", in_way ? wayid:nodeid, k, v);
+		if ( ignore_unkown == 1 )
+			return;
 		type=in_way ? type_street_unkn : type_point_unkn;
-		g_hash_table_insert(value_hash, g_strdup(v), (gpointer)item.type);
+	        g_hash_table_insert(value_hash, string_hash_lookup( v ), (gpointer)item.type);
 	}
-	if (type != type_street_unkn && type != type_point_unkn)
+	if ( (type != type_street_unkn ) && ( type != type_point_unkn )  )
+	{
 		item.type=type;
+	}
+	else
+	{
+        	if ( ignore_unkown == 1 )
+		{
+		    level = 10;
+		}
+	}
 }
 
 static int
@@ -428,7 +459,7 @@ struct buffer {
 };
 
 static struct tile_head {
-	int size;
+	int num_subtiles;
 	int total_size;
 	char *name;
 	char *zip_data;
@@ -436,7 +467,7 @@ static struct tile_head {
 	int zipnum;
 	int process;
 	struct tile_head *next;
-	char subtiles[0];
+	// char subtiles[0];
 } *tile_head_root;
 
 
@@ -468,6 +499,13 @@ static struct buffer node_buffer = {
 	64*1024*1024,
 };
 
+
+static char** th_get_subtile( const struct tile_head* th, int idx )
+{
+	char* subtile_ptr = NULL;
+	subtile_ptr = (char*)th + sizeof( struct tile_head ) + idx * sizeof( char *);
+	return (char**)subtile_ptr;
+}
 
 static void
 extend_buffer(struct buffer *b)
@@ -831,7 +869,6 @@ read_item(FILE *in)
 	if (r != 1)
 		return NULL;
 	bytes_read+=r;
-	g_assert((ib->len+1)*4 < sizeof(buffer));
 	s=(ib->len+1)*4-sizeof(*ib);
 	r=fread(ib+1, s, 1, in);
 	if (r != 1)
@@ -965,19 +1002,21 @@ tile_extend(char *tile, struct item_bin *ib, GList **tiles_list)
 	if (!th)
 		th=g_hash_table_lookup(tile_hash, tile);
 	if (! th) {
-		th=malloc(sizeof(*th)+strlen(tile)+1);
+		th=malloc(sizeof(struct tile_head)+ sizeof( char* ) );
 		assert(th != NULL);
-		strcpy(th->subtiles, tile);
-		th->size=strlen(tile)+1;
+		// strcpy(th->subtiles, tile);
+		th->num_subtiles=1;
 		th->total_size=0;
 		th->total_size_used=0;
 		th->zipnum=0;
 		th->zip_data=NULL;
-		th->name=g_strdup(tile);
+		th->name=string_hash_lookup(tile);
+		*th_get_subtile( th, 0 ) = th->name;
+
 		if (tile_hash2)
-			g_hash_table_insert(tile_hash2, th->name, th);
+			g_hash_table_insert(tile_hash2, string_hash_lookup( th->name ), th);
 		if (tiles_list)
-			*tiles_list=g_list_append(*tiles_list, th->name);
+			*tiles_list=g_list_append(*tiles_list, string_hash_lookup( th->name ) );
 		processed_tiles++;
 		if (debug_tile(tile))
 			fprintf(stderr,"new '%s'\n", tile);
@@ -985,7 +1024,7 @@ tile_extend(char *tile, struct item_bin *ib, GList **tiles_list)
 	th->total_size+=ib->len*4+4;
 	if (debug_tile(tile))
 		fprintf(stderr,"New total size of %s(%p):%d\n", th->name, th, th->total_size);
-	g_hash_table_insert(tile_hash, th->name, th);
+	g_hash_table_insert(tile_hash, string_hash_lookup( th->name ), th);
 }
 
 static int
@@ -1011,19 +1050,17 @@ merge_tile(char *base, char *sub)
 	if (! thb) {
 		thb=ths;
 		g_hash_table_remove(tile_hash, sub);
-		g_free(thb->name);
-		thb->name=g_strdup(base);
-		g_hash_table_insert(tile_hash, thb->name, thb);
+		thb->name=string_hash_lookup(base);
+		g_hash_table_insert(tile_hash, string_hash_lookup( thb->name ), thb);
 
 	} else {
-		thb=realloc(thb, sizeof(*thb)+ths->size+thb->size);
+		thb=realloc(thb, sizeof(struct tile_head)+( ths->num_subtiles+thb->num_subtiles ) * sizeof( char*) );
 		assert(thb != NULL);
-		memcpy(thb->subtiles+thb->size, ths->subtiles, ths->size);
-		thb->size+=ths->size;
+		memcpy( th_get_subtile( thb, thb->num_subtiles ), th_get_subtile( ths, 0 ), ths->num_subtiles * sizeof( char*) );
+		thb->num_subtiles+=ths->num_subtiles;
 		thb->total_size+=ths->total_size;
-		g_hash_table_insert(tile_hash, thb->name, thb);
+		g_hash_table_insert(tile_hash, string_hash_lookup( thb->name ), thb);
 		g_hash_table_remove(tile_hash, sub);
-		g_free(ths->name);
 		g_free(ths);
 	}
 	return 1;
@@ -1241,24 +1278,27 @@ index_submap_add(int phase, struct tile_head *th, GList **tiles_list)
 static int
 add_tile_hash(struct tile_head *th)
 {
-	int dlen,len,maxnamelen=0;
-	char *data;
+	int idx,len,maxnamelen=0;
+	char **data;
 
 #if 0
-	g_hash_table_insert(tile_hash2, th->name, th);
+	g_hash_table_insert(tile_hash2, string_hash_lookup( th->name ), th);
 #endif
-	dlen=th->size;
-	data=th->subtiles;
-	while (dlen > 0) {
+	for( idx = 0; idx < th->num_subtiles; idx++ ) {
+
+        data = th_get_subtile( th, idx );
+
 		if (debug_tile(data) || debug_tile(th->name)) {
-			fprintf(stderr,"Parent for '%s' is '%s'\n", data, th->name);
+			fprintf(stderr,"Parent for '%s' is '%s'\n", *data, th->name);
 		}
-		g_hash_table_insert(tile_hash2, data, th);
-		len=strlen(data);
-		if (len > maxnamelen)
+
+		g_hash_table_insert(tile_hash2, *data, th);
+
+		len = strlen( *data );
+
+		if (len > maxnamelen) {
 			maxnamelen=len;
-		data+=len+1;
-		dlen-=len+1;
+		}
 	}
 	return maxnamelen;
 }
@@ -1312,9 +1352,9 @@ destroy_tile_hash(void)
 static void
 write_tilesdir(int phase, int maxlen, FILE *out)
 {
-	int dlen,len,zipnum=0;
+	int idx,len,zipnum=0;
 	GList *tiles_list,*next;
-	char *data;
+	char **data;
 	struct tile_head *th,**last=NULL;
 
 	tiles_list=get_tiles_list();
@@ -1344,14 +1384,12 @@ write_tilesdir(int phase, int maxlen, FILE *out)
 					th->next=NULL;
 					th->zipnum=zipnum++;
 					fprintf(out,"%s:%d",(char *)next->data,th->total_size);
-					dlen=th->size;
-					data=th->subtiles;
-					while (dlen > 0) {
-						fprintf(out,":%s", data);
-						while (*data++)
-							dlen--;
-						dlen--;
+
+					for ( idx = 0; idx< th->num_subtiles; idx++ ){
+                        data= th_get_subtile( th, idx );
+						fprintf(out,":%s", *data);
 					}
+
 					fprintf(out,"\n");
 				}
 				if (th->name[0])
@@ -1745,10 +1783,11 @@ int main(int argc, char **argv)
 			{"nodes-only", 0, 0, 'N'},
 			{"start", 1, 0, 's'},
 			{"input-file", 1, 0, 'i'},
+			{"ignore-unknown", 0, 0, 'n'},
 			{"ways-only", 0, 0, 'W'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "NWa:ce:hks:w", long_options, &option_index);
+		c = getopt_long (argc, argv, "Nni:Wa:ce:hks:w", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
@@ -1769,6 +1808,10 @@ int main(int argc, char **argv)
 			break;
 		case 'h':
 			usage(stdout);
+			break;
+		case 'n':
+			fprintf(stderr,"I will IGNORE unknown types\n");
+			ignore_unkown=1;
 			break;
 		case 'k':
 			fprintf(stderr,"I will KEEP tmp files\n");
