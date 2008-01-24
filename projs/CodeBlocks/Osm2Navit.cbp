@@ -13,7 +13,7 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
-				<Option parameters="--input-file=d:\CB_Projects\netherlands.osm --attr-debug-level=0 -k netherlands.bin" />
+				<Option parameters="--input-file=d:\josm\nld_zuid.osm --attr-debug-level=0 -k ehv3.bin" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -50,7 +50,6 @@
 			<Add library="gtk-win32-2.0" />
 			<Add library="gdk-win32-2.0" />
 			<Add library="gdk_pixbuf-2.0" />
-			<Add library="fib" />
 			<Add library="freetype" />
 			<Add library="z" />
 			<Add library="gobject-2.0" />
