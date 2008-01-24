@@ -1,0 +1,26 @@
+#! /bin/sh
+function check_item
+{
+	grep -q "[(,]$1)" ../item_def.h || echo "$1 missing"
+}
+
+echo osm2navit.c
+egrep '^	"[nw]	+[^	]+	+[^	]+	+' ../osm2navit.c | sed "s/.*	//" |
+while read -r x
+do
+	check_item "${x%%\\n\"}"
+done
+
+echo "navit.xml"
+grep '<item type="' <../navit.xml | cut -d \" -f 2 | tr "," "\012" |
+while read -r x
+do
+	check_item "$x"
+done
+
+echo "garmintypes.txt"
+grep ^0x ../data/garmin/garmintypes.txt | sed -e 's/[A-Z][A-Z]*, //' -e 's/.*= \([^,]*\),.*/\1/' |
+while read -r x
+do
+	check_item "$x"
+done

@@ -119,74 +119,74 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 			}
 			switch(poly->type) {
 			case 0x13:
-				item->type=type_wood;
+				item->type=type_poly_wood;
 				break;
 			case 0x14:
-				item->type=type_town_poly;
+				item->type=type_poly_town;
 				break;
 			case 0x15:
-				item->type=type_cemetery_poly;
+				item->type=type_poly_cemetery;
 				break;
 			case 0x16:
-				item->type=type_building_poly;
+				item->type=type_poly_building;
 				break;
 			case 0x17:
-				item->type=type_museum_poly;
+				item->type=type_poly_museum;
 				break;
 			case 0x19:
-				item->type=type_place_poly;
+				item->type=type_poly_place;
 				break;
 			case 0x1b:
-				item->type=type_commercial_center;
+				item->type=type_poly_commercial_center;
 				break;
 			case 0x1e:
-				item->type=type_industry_poly;
+				item->type=type_poly_industry;
 				break;
 			case 0x23:
 				/* FIXME: what is this ?*/
-				item->type=type_place_poly;
+				item->type=type_poly_place;
 				break;
 			case 0x24:
-				item->type=type_parking_lot_poly;
+				item->type=type_poly_car_parking;
 				break;
 			case 0x28:
-				item->type=type_airport_poly;
+				item->type=type_poly_airport;
 				break;
 			case 0x29:
-				item->type=type_station_poly;
+				item->type=type_poly_station;
 				break;
 			case 0x2d:
-				item->type=type_hospital_poly;
+				item->type=type_poly_hospital;
 				break;
 			case 0x2e:
-				item->type=type_hospital_poly;
+				item->type=type_poly_hospital;
 				break;
 			case 0x2f:
-				item->type=type_university;
+				item->type=type_poly_university;
 				break;
 			case 0x30:
-				item->type=type_university;
+				item->type=type_poly_university;
 				break;
 			case 0x32:
-				item->type=type_park_poly;
+				item->type=type_poly_park;
 				break;
 			case 0x34:
-				item->type=type_sport_poly;
+				item->type=type_poly_sport;
 				break;
 			case 0x35:
-				item->type=type_sport_poly;
+				item->type=type_poly_sport;
 				break;
 			case 0x37:
-				item->type=type_golf_course;
+				item->type=type_poly_golf_course;
 				break;
 			case 0x38:
-				item->type=type_national_park;
+				item->type=type_poly_national_park;
 				break;
 			case 0x39:
-				item->type=type_nature_park;
+				item->type=type_poly_nature_park;
 				break;
 			case 0x3c:
-				item->type=type_water_poly;
+				item->type=type_poly_water;
 				break;
 			case 0xbc:
 				item->type=type_water_line;

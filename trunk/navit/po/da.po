@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-15 20:02+0100\n"
+"POT-Creation-Date: 2008-01-24 10:49+0100\n"
 "PO-Revision-Date: 2008-01-15 22:20+0100\n"
 "Last-Translator: Glenn Sommer <glemsom@gmail.com>>\n"
 "Language-Team: Glenn Sommer <glemsom@gmail.com>\n"
@@ -76,7 +76,6 @@ msgid "in %d.%d kilometers"
 msgstr "om %d.%d kilometer"
 
 #: ../src/navigation.c:182
-#, c-format
 #, fuzzy, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
@@ -142,56 +141,56 @@ msgstr "Drej %1$s til %2$s %3$s"
 msgid "You have reached your destination %s"
 msgstr "Du er fremme ved destinationen %s"
 
-#: ../src/navit.c:652 ../src/gui/gtk/gui_gtk_action.c:198
+#: ../src/navit.c:654 ../src/gui/gtk/gui_gtk_action.c:198
 msgid "Layout"
 msgstr "Layout"
 
-#: ../src/navit.c:668
+#: ../src/navit.c:670
 msgid "Projection"
 msgstr "Visning"
 
-#: ../src/navit.c:723
+#: ../src/navit.c:725
 msgid "Former Destinations"
 msgstr "Tidligere destinationer"
 
-#: ../src/navit.c:733
+#: ../src/navit.c:735
 msgid "Bookmarks"
 msgstr "Bogmærker"
 
-#: ../src/navit.c:771
+#: ../src/navit.c:773
 msgid "Vehicle"
 msgstr "Køretøj"
 
-#: ../src/navit.c:821
+#: ../src/navit.c:823
 msgid "Command"
 msgstr "Kommando"
 
-#: ../src/navit.c:826
+#: ../src/navit.c:828
 msgid "Length"
 msgstr "Længde"
 
-#: ../src/navit.c:832
+#: ../src/navit.c:834
 msgid "Time"
 msgstr "Tid"
 
-#: ../src/navit.c:837
+#: ../src/navit.c:839
 msgid "Destination Length"
 msgstr "Længde til destinationen"
 
-#: ../src/navit.c:843
+#: ../src/navit.c:845
 msgid "Destination Time"
 msgstr "Tid til destinationen"
 
-#: ../src/navit.c:866 ../src/gui/gtk/gui_gtk_action.c:202
+#: ../src/navit.c:868 ../src/gui/gtk/gui_gtk_action.c:202
 msgid "Roadbook"
 msgstr "Vejbog"
 
-#: ../src/navit.c:1099 ../src/gui/gtk/destination.c:368
+#: ../src/navit.c:1101 ../src/gui/gtk/destination.c:368
 #: ../src/gui/gtk/gui_gtk_action.c:197
 msgid "Map"
 msgstr "Kort"
 
-#: ../src/navit.c:1106 ../src/gui/gtk/gui_gtk_action.c:196
+#: ../src/navit.c:1108 ../src/gui/gtk/gui_gtk_action.c:196
 msgid "Route"
 msgstr "Rute"
 
