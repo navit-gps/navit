@@ -2,33 +2,35 @@
 # Copyright (C) 2007
 # This file is distributed under the same license as the navit package.
 # Bendik Brenne <bendik@xplore.nu>, 2007.
+# Helge Hafting <helge.hafting@aitel.hist.no>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-24 10:49+0100\n"
-"PO-Revision-Date: 2007-10-30 16:26+0100\n"
+"POT-Creation-Date: 2008-01-25 14:33+0100\n"
+"PO-Revision-Date: 2008-01-11 09:52+0100\n"
 "Last-Translator: Bendik Brenne <bendik@xplore.nu>\n"
 "Language-Team: Bendik Brenne <bendik@xplore.nu>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: ../src/main.c:108
 #, c-format
 msgid "Running from source directory\n"
-msgstr ""
+msgstr "Kjører fra kildemappa\n"
 
 #: ../src/main.c:124
-#, fuzzy, c-format
+#, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "Bruker '%s'\n"
+msgstr "setter '%s' til '%s'\n"
 
 #: ../src/main.c:202
 #, c-format
 msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
+msgstr "Ingen fil navit.xml, fant navit.xml.local\n"
 
 #: ../src/main.c:206
 #, c-format
@@ -46,12 +48,12 @@ msgid "No instance has been created, exiting\n"
 msgstr "Ingen instans er blitt opprettet, avslutter\n"
 
 #: ../src/navigation.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "%d m"
 msgstr "%d meter"
 
 #: ../src/navigation.c:164
-#, fuzzy, c-format
+#, c-format
 msgid "in %d m"
 msgstr "om %d meter"
 
@@ -76,18 +78,18 @@ msgid "in %d.%d kilometers"
 msgstr "om %d,%d kilometer"
 
 #: ../src/navigation.c:182
-#, fuzzy, c-format
+#, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "èn kilometer"
-msgstr[1] "èn kilometer"
+msgstr[0] "én kilometer"
+msgstr[1] "%d kilometer"
 
 #: ../src/navigation.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "om èn kilometer"
-msgstr[1] "om èn kilometer"
+msgstr[0] "om én kilometer"
+msgstr[1] "om %d kilometer"
 
 #: ../src/navigation.c:402
 msgid "right"
@@ -99,20 +101,19 @@ msgstr "venstre"
 
 #: ../src/navigation.c:413
 msgid "easily "
-msgstr "slakk "
+msgstr "slakt "
 
 #: ../src/navigation.c:417
 msgid "strongly "
-msgstr "skarp "
+msgstr "skarpt "
 
 #: ../src/navigation.c:420
 msgid "unknown "
 msgstr "ukjent "
 
 #: ../src/navigation.c:426
-#, fuzzy
 msgid "When possible, please turn around"
-msgstr "Når mulig, vennligst sving"
+msgstr "Snu, om det er mulig"
 
 #: ../src/navigation.c:433
 #, c-format
@@ -133,9 +134,9 @@ msgstr "feil"
 
 #. TRANSLATORS: The first argument is strength, the second direction and the third distance
 #: ../src/navigation.c:450
-#, fuzzy, c-format
+#, c-format
 msgid "Turn %1$s%2$s %3$s"
-msgstr "Sving %s%s %s"
+msgstr "Sving %1$stil %2$s %3$s"
 
 #: ../src/navigation.c:453
 #, c-format
@@ -151,40 +152,36 @@ msgid "Projection"
 msgstr "Projeksjon"
 
 #: ../src/navit.c:725
-#, fuzzy
 msgid "Former Destinations"
-msgstr "Destinasjon"
+msgstr "Tidligere reisemål"
 
 #: ../src/navit.c:735
 msgid "Bookmarks"
-msgstr ""
+msgstr "Bokmerker"
 
 #: ../src/navit.c:773
 msgid "Vehicle"
-msgstr ""
+msgstr "Kjøretøy"
 
 #: ../src/navit.c:823
-#, fuzzy
 msgid "Command"
-msgstr "Polen"
+msgstr "Instruks"
 
 #: ../src/navit.c:828
 msgid "Length"
-msgstr ""
+msgstr "Avstand"
 
 #: ../src/navit.c:834
 msgid "Time"
-msgstr ""
+msgstr "Tid"
 
 #: ../src/navit.c:839
-#, fuzzy
 msgid "Destination Length"
-msgstr "Destinasjon"
+msgstr "Avstand til målet"
 
 #: ../src/navit.c:845
-#, fuzzy
 msgid "Destination Time"
-msgstr "Destinasjon"
+msgstr "Tid til målet"
 
 #: ../src/navit.c:868 ../src/gui/gtk/gui_gtk_action.c:202
 msgid "Roadbook"
@@ -219,8 +216,9 @@ msgid "Set as destination"
 msgstr "Destinasjon"
 
 #: ../src/popup.c:241
+#, fuzzy
 msgid "Add as bookmark"
-msgstr ""
+msgstr "Bokmerke"
 
 #: ../src/country.c:24
 msgid "Czech Republic"
@@ -387,7 +385,6 @@ msgid "Syria"
 msgstr "Syria"
 
 #: ../src/country.c:65
-#, fuzzy
 msgid "Saudi Arabia"
 msgstr "Saudi-Arabia"
 
@@ -473,9 +470,8 @@ msgstr "Svalbard og Jan Mayen"
 
 #: ../src/gui/gtk/destination.c:96 ../src/gui/gtk/destination.c:97
 #: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
-#, fuzzy
 msgid "Car"
-msgstr "Fjern"
+msgstr "Bil"
 
 #: ../src/gui/gtk/destination.c:96
 msgid "Iso2"
@@ -498,11 +494,10 @@ msgstr "Portugal"
 #: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
 #: ../src/gui/gtk/destination.c:99
 msgid "Town"
-msgstr ""
+msgstr "By"
 
 #: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
 #: ../src/gui/gtk/destination.c:99
-#, fuzzy
 msgid "District"
 msgstr "Distrikt/Kommune"
 
@@ -516,9 +511,8 @@ msgid "Number"
 msgstr "Nummer"
 
 #: ../src/gui/gtk/destination.c:329
-#, fuzzy
 msgid "Enter Destination"
-msgstr "Destinasjon"
+msgstr "Oppgi reisemålet"
 
 #: ../src/gui/gtk/destination.c:336
 msgid "Zip Code"
@@ -534,7 +528,7 @@ msgstr "Distrikt/Kommune"
 
 #: ../src/gui/gtk/destination.c:369
 msgid "Bookmark"
-msgstr ""
+msgstr "Bokmerke"
 
 #: ../src/gui/gtk/destination.c:370 ../src/gui/gtk/gui_gtk_action.c:208
 msgid "Destination"
@@ -653,9 +647,8 @@ msgstr ""
 msgid "Route 0000km  0+00:00 ETA"
 msgstr ""
 
-#, fuzzy
 #~ msgid "RouteGraph"
-#~ msgstr "Rute"
+#~ msgstr "Rutegraf"
 
 #~ msgid "two kilometers"
 #~ msgstr "to kilometer"
