@@ -201,19 +201,16 @@ if test x"$cegui" = xyes
 	          [], 	 
 	          [ 	 
 	         echo "Error! Something is wrong with CEGUIBase. Do you have at least cegui-0.5?" 	 
-	         exit -1 	 
 	         ]) 	 
 	 AC_CHECK_LIB(CEGUIOpenGLRenderer, main, 	 
 	          [], 	 
 	          [ 	 
 	         echo "Error! Something is wrong with CEGUIOpenGLRenderer. Do you have at least cegui-0.5? " 	 
-	         exit -1 	 
 	         ], $OPENGL_LIBS ) 	 
 	 AC_CHECK_LIB(CEGUIFalagardWRBase, main, 	 
 	          [], 	 
 	          [ 	 
 	         echo "Error! Something is wrong with CEGUIFalagardWRBase. Do you have at least cegui-0.5?" 	 
-	         exit -1 	 
 	         ], $OPENGL_LIBS) 	 
 	 CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUIFalagardWRBase" 	 
 	  	 
