@@ -69,8 +69,12 @@ log_open(struct log *this_)
 	if (this_->overwrite)
 		mode="w";
 	else
-		mode="a";
+		mode="r+";
 	this_->f=fopen(this_->filename_ex2, mode);
+	if (! this_->f)
+		this_->f=fopen(this_->filename_ex2, "w");
+	if (!this_->overwrite) 
+		fseek(this_->f, 0, SEEK_END);
 	this_->empty = !ftell(this_->f);
 }
 
@@ -142,9 +146,9 @@ log_timer(gpointer data)
 	int delta;
 	gettimeofday(&tv, NULL);
 	delta=(tv.tv_sec-this_->last_flush.tv_sec)*1000+(tv.tv_usec-this_->last_flush.tv_usec)/1000;
+	dbg(0,"delta=%d flush_time=%d\n", delta, this_->flush_time);
 	if (this_->flush_time && delta > this_->flush_time*1000)
 		log_flush(this_);
-	
 	return TRUE;
 }
 
@@ -168,10 +172,13 @@ log_new(struct attr **attrs)
 	flush_time=attr_search(attrs, NULL, attr_flush_time);
 	if (flush_time)
 		ret->flush_time=flush_time->u.num;
-	if (ret->flush_time) 
+	if (ret->flush_time) {
+		dbg(0,"interval %d\n", ret->flush_time*1000);
 		ret->timer=g_timeout_add(ret->flush_time*1000, log_timer, ret);
+	}
 	expand_filenames(ret);
 	log_open(ret);
+	gettimeofday(&ret->last_flush, NULL);
 	return ret;
 }
 
