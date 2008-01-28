@@ -101,6 +101,12 @@ Change to your home coordinates.
 				<polyline color="#5096b8" width="1" /> 
 				<label label_size="5" /> 
 			</item>
+			<item type="poly_apron" order="0-">
+				<polygon color="#d0d0d0" />
+			</item>
+			<item type="poly_terminal" order="7-">
+				<polygon color="#e3c6a6" />
+			</item>
 			<item type="rail" order="6-">
 				<polyline color="#808080" width="3" /> 
 			</item>
