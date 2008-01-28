@@ -247,6 +247,7 @@ ITEM(rg_segment)
 ITEM(aeroway_runway)
 ITEM(aeroway_taxiway)
 ITEM(street_service)
+ITEM(coverage)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)
