@@ -29,7 +29,7 @@ static GHashTable *dedupe_ways_hash;
 static int attr_debug_level=1;
 static int nodeid,wayid;
 static int report,phase;
-static int ignore_unkown = 0;
+static int ignore_unkown = 0, coverage=0;
 
 static char *attrmap={
 	"n	historic\n"
@@ -429,7 +429,10 @@ add_tag(char *k, char *v)
 	}
 	if ( (type != type_street_unkn ) && ( type != type_point_unkn )  )
 	{
-		item.type=type;
+		if (coverage && type >= type_street_nopass && type <= type_ramp)
+			item.type=type_coverage;
+		else
+			item.type=type;
 	}
 	else
 	{
@@ -1752,6 +1755,7 @@ usage(FILE *f)
 	fprintf(f,"-c (--dump-coordinates)  : dump coordinates after phase 1\n");
 	fprintf(f,"-e (--end)               : end at specified phase\n");
 	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
+	fprintf(f,"-o (--coverage)          : map every street to item overage\n");
 	fprintf(f,"-s (--start)             : start at specified phase\n");
 	fprintf(f,"-i (--input-file)        : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-w (--dedupe-ways)       : ensure no duplicate ways or nodes. useful when using several input files\n");
@@ -1779,6 +1783,7 @@ int main(int argc, char **argv)
 		static struct option long_options[] = {
 			{"attr-debug-level", 1, 0, 'a'},
 			{"compression-level", 1, 0, 'z'},
+			{"coverage", 0, 0, 'o'},
 			{"dedupe-ways", 0, 0, 'w'},
 			{"end", 1, 0, 'e'},
 			{"help", 0, 0, 'h'},
@@ -1819,6 +1824,9 @@ int main(int argc, char **argv)
 		case 'k':
 			fprintf(stderr,"I will KEEP tmp files\n");
 			keep_tmpfiles=1;
+			break;
+		case 'o':
+			coverage=1;
 			break;
 		case 's':
 			start=atoi(optarg);
