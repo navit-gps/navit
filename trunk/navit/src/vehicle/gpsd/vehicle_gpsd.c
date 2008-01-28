@@ -85,8 +85,10 @@ vehicle_gpsd_open(struct vehicle_priv *priv)
 	} else
 		priv->gps = gps_open(source + 7, NULL);
 	g_free(source);
-	if (!priv->gps)
+	if (!priv->gps){
+		dbg(0, "gps_open failed. Have you started gpsd?\n");
 		return 0;
+	}
 	gps_query(priv->gps, "w+x\n");
 	gps_set_raw_hook(priv->gps, vehicle_gpsd_callback);
 	priv->iochan = g_io_channel_unix_new(priv->gps->gps_fd);
@@ -124,7 +126,11 @@ vehicle_gpsd_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
 	if (condition == G_IO_IN) {
 		if (priv->gps) {
 			vehicle_last = priv;
-			gps_poll(priv->gps);
+                        if (gps_poll(priv->gps)) {
+                               dbg(0, "gps_poll failed\n");
+                               vehicle_gpsd_close(priv);
+                               vehicle_gpsd_open(priv);
+                        }
 		}
 		return TRUE;
 	}
