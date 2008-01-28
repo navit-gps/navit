@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <gdk/gdkkeysyms.h>
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
