@@ -1,4 +1,5 @@
 #include <glib.h>
+#include <string.h>
 #include "item.h"
 #include "attr.h"
 #include "track.h"
@@ -9,18 +10,6 @@
 #include "projection.h"
 #include "map.h"
 #include "mapset.h"
-
-#if 0
-#include <stdio.h>
-#include <glib.h>
-#include "coord.h"
-#include "block.h"
-#include "street.h"
-#include "profile.h"
-#include "tracking.h"
-
-#endif
-
 
 struct tracking_line
 {
@@ -117,7 +106,9 @@ tracking_doupdate_lines(struct tracking *tr, struct coord *cc)
 	struct item *item;
 	struct street_data *street;
 	struct tracking_line *tl;
+#if 0
 	struct coord c;
+#endif
 
 	dbg(1,"enter\n");
         h=mapset_open(tr->ms);
