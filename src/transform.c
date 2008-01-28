@@ -3,6 +3,7 @@
 #include <math.h>
 #include <limits.h>
 #include <glib.h>
+#include <string.h>
 #include "config.h"
 #include "coord.h"
 #include "debug.h"
