@@ -112,7 +112,12 @@ navit_add_mapset(struct navit *this_, struct mapset *ms)
 struct mapset *
 navit_get_mapset(struct navit *this_)
 {
-	return this_->mapsets->data;
+	if(this_->mapsets){
+		return this_->mapsets->data;
+	} else {
+		g_warning("No mapsets enabled! Is it on purpose? Navit can't draw a map. Please check your navit.xml\n");
+	}
+	exit(-1);
 }
 
 struct tracking *
