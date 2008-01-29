@@ -1,0 +1,145 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Planet Extraction</title>
+    <style type="text/css">
+        html, body {
+          margin: 0;
+          padding: 1em;
+          font: 0.9em Verdana, Arial, sans serif;
+        }
+        input, select, textarea {
+          font: 1em Verdana, Arial, sans serif;
+        }
+        .input {
+          border: none;
+          width: 100px;
+        }
+        .bbox {
+          font-size: 12px;
+          color: #000;
+          background-color: #fff;
+          width: 300px;
+          border: 1px solid gray;
+        }
+        .button {
+          width: 200px;
+          height: 50px;
+          font-weight: bold;
+        }
+        #map {
+          float: left;
+		  width: 500px;
+          height: 500px;
+          border: 1px solid gray;
+        }
+        #controls {
+          float: left;
+          
+        }
+    </style>
+    <script src="http://openlayers.org/dev/lib/OpenLayers.js"></script>
+    <script type="text/javascript">
+	var map, polygonControl, polygonLayer, bbox_set;
+	
+	OpenLayers.Util.onImageLoadErrorColor = "transparent";
+	function init(){
+		map = new OpenLayers.Map('map');
+		
+		var wmsLayer = new OpenLayers.Layer.WMS( "OpenLayers WMS", 
+		"http://labs.metacarta.com/wms/vmap0?", {layers: 'basic'}); 
+		
+		polygonLayer = new OpenLayers.Layer.Vector("Polygon Layer");
+		
+		map.addLayers([wmsLayer, polygonLayer]);
+		map.addControl(new OpenLayers.Control.LayerSwitcher());
+		map.addControl(new OpenLayers.Control.MousePosition());
+		
+		polyOptions = {sides: 4, irregular: true};
+		polygonControl = new OpenLayers.Control.DrawFeature(polygonLayer,
+		OpenLayers.Handler.RegularPolygon,
+		{handlerOptions: polyOptions});
+		//alert(polygonControl);
+		
+		map.addControl(polygonControl);
+		
+		polygonControl.featureAdded=featureInsert;
+		
+		map.setCenter(new OpenLayers.LonLat(0, 0), 3);
+		
+		document.getElementById('noneToggle').checked = true;
+		//document.getElementById('irregularToggle').checked = false;
+		
+		//var polyOptions = {sides: 4, irregular: true};
+		//polygonControl.handler.setOptions(polyOptions);
+	}
+	
+	function featureInsert(feature){
+		var old=[];
+		for (var i = 0; i < polygonLayer.features.length; i++) {
+			if (polygonLayer.features[i] != feature) {
+				old.push(polygonLayer.features[i]);
+			}
+		}
+		polygonLayer.destroyFeatures(old);
+		
+		var bounds = feature.geometry.getBounds();
+		
+		document.form.bounds_top.value = bounds.top;
+		document.form.bounds_right.value = bounds.right;
+		document.form.bounds_btm.value = bounds.bottom;
+		document.form.bounds_left.value = bounds.left;
+		bbox_set=true;
+	}
+	function download() {
+		var bbox = document.form.bounds_left.value + "," +
+		           document.form.bounds_btm.value + "," +
+		           document.form.bounds_right.value + "," +
+			   document.form.bounds_top.value;
+		if (bbox_set) {
+			location.href="http://maps.navit-project.org/api/map?bbox=" + bbox;
+		} else {
+			alert("Please select a bounding box first\n");
+		}
+	}
+	function setOptions(options) {
+		polygonControl.handler.setOptions(options);
+	}
+	function setSize(fraction) {
+		var radius = fraction * map.getExtent().getHeight();
+		polygonControl.handler.setOptions({radius: radius,
+		angle: 0});
+	}
+    </script>
+  </head>
+  <body onload="init()">
+    <h2>Planet extract</h2>
+    <div id="map"></div>
+    <div id="controls">
+        <ul style="list-style:none;"><b>Map Controls</b>
+            <li>
+                <input type="radio" name="type"
+                       value="none" id="noneToggle"
+                       onclick="polygonControl.deactivate()"
+                       checked="checked" />
+                <label for="noneToggle">navigate</label>
+            </li>
+            <li>
+                <input type="radio" name="type"
+                       value="polygon" id="polygonToggle"
+                       onclick="polygonControl.activate()" />
+                <label for="polygonToggle">select</label>
+            </li>
+        </ul>
+        <ul style="list-style:none"><b>Fetch box</b>
+		<form name="form">
+        	<li>Top Right: <input type="text" name="bounds_top" class="input">,
+        				   <input type="text" name="bounds_right" class="input"></li>
+			<li>Bottom left: <input type="text" name="bounds_btm" class="input">,
+			                 <input type="text" name="bounds_left" class="input"></li>
+		</form>
+			<li>&nbsp;</li>
+			<li><input type="button" value="Get map!" onclick="javascript:download()"></li>
+        </ul>
+    </div>
+  </body>
+</html>

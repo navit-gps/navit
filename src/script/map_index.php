@@ -1,4 +1,42 @@
-<code><span style="color: #000000">
-<span style="color: #0000BB">&lt;?php<br />&nbsp;&nbsp;&nbsp;&nbsp;set_time_limit</span><span style="color: #007700">(</span><span style="color: #0000BB">600</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;require_once(</span><span style="color: #DD0000">"mapExtract.class.php"</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$bbox</span><span style="color: #007700">=</span><span style="color: #0000BB">split</span><span style="color: #007700">(</span><span style="color: #DD0000">','</span><span style="color: #007700">,</span><span style="color: #0000BB">$HTTP_GET_VARS</span><span style="color: #007700">[</span><span style="color: #DD0000">'bbox'</span><span style="color: #007700">]);<br />&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">count</span><span style="color: #007700">(</span><span style="color: #0000BB">$bbox</span><span style="color: #007700">)&nbsp;==&nbsp;</span><span style="color: #0000BB">4</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$mapextract&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">mapExtract</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$mapextract</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setBbox</span><span style="color: #007700">(</span><span style="color: #0000BB">$bbox</span><span style="color: #007700">[</span><span style="color: #0000BB">0</span><span style="color: #007700">],&nbsp;</span><span style="color: #0000BB">$bbox</span><span style="color: #007700">[</span><span style="color: #0000BB">1</span><span style="color: #007700">],&nbsp;</span><span style="color: #0000BB">$bbox</span><span style="color: #007700">[</span><span style="color: #0000BB">2</span><span style="color: #007700">],&nbsp;</span><span style="color: #0000BB">$bbox</span><span style="color: #007700">[</span><span style="color: #0000BB">3</span><span style="color: #007700">]);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$fp</span><span style="color: #007700">=</span><span style="color: #0000BB">fopen</span><span style="color: #007700">(</span><span style="color: #DD0000">'php://output'</span><span style="color: #007700">,</span><span style="color: #DD0000">'w'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$mapextract</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setInput</span><span style="color: #007700">(</span><span style="color: #DD0000">'../../planet.bin'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$mapextract</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">setOutputFD</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">header</span><span style="color: #007700">(</span><span style="color: #DD0000">'Content-Type:&nbsp;application/octet-stream'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$error</span><span style="color: #007700">=</span><span style="color: #0000BB">$mapextract</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">process</span><span style="color: #007700">();<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(</span><span style="color: #0000BB">$error</span><span style="color: #007700">)&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">header</span><span style="color: #007700">(</span><span style="color: #DD0000">'Content-Type:&nbsp;text/plain'</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #0000BB">$error</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">fclose</span><span style="color: #007700">(</span><span style="color: #0000BB">$fp</span><span style="color: #007700">);<br />&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;else&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">#echo&nbsp;"&lt;pre&gt;";<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#print_r($HTTP_HOST);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#echo&nbsp;"&lt;/pre&gt;";<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$areas</span><span style="color: #007700">=array(<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #DD0000">'Germany'&nbsp;</span><span style="color: #007700">=&gt;&nbsp;</span><span style="color: #DD0000">'5,47,16,55.1'</span><span style="color: #007700">,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$url</span><span style="color: #007700">=</span><span style="color: #DD0000">'http://'&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$HTTP_HOST&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$PHP_SELF</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Use:&nbsp;$url?bbox=bllon,bllat,trlon,trlat&nbsp;&lt;br&nbsp;/&gt;\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;br&nbsp;/&gt;\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;(list(</span><span style="color: #0000BB">$area</span><span style="color: #007700">,</span><span style="color: #0000BB">$bbox</span><span style="color: #007700">)=</span><span style="color: #0000BB">each</span><span style="color: #007700">(</span><span style="color: #0000BB">$areas</span><span style="color: #007700">))&nbsp;{<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$urlf</span><span style="color: #007700">=</span><span style="color: #0000BB">$url&nbsp;</span><span style="color: #007700">.&nbsp;</span><span style="color: #DD0000">"?bbox=$bbox"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"$area&nbsp;&lt;a&nbsp;href='$urlf'&gt;$urlf&lt;/a&gt;&lt;br&nbsp;/&gt;\n"</span><span style="color: #007700">;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />&nbsp;&nbsp;&nbsp;&nbsp;}<br /></span><span style="color: #0000BB">?&gt;<br /></span>
-</span>
-</code>
+<?php
+	set_time_limit(600);
+	require_once("mapExtract.class.php");
+	$bbox=split(',',urldecode($HTTP_GET_VARS['bbox']));
+	if (count($bbox) == 4) {
+		$mapextract = new mapExtract();
+		$mapextract->setBbox($bbox[0], $bbox[1], $bbox[2], $bbox[3]);		
+		$fp=fopen('php://output','w');
+		$mapextract->setInput('../../planet.bin');
+		$mapextract->setOutputFD($fp);
+		if(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE'))
+			header('Content-Type: application/force-download');
+		else
+			header('Content-Type: application/octet-stream');
+		$name='osm_bbox_';
+		$name.=round($bbox[0],1) . ',' . round($bbox[1],1) . ','; 
+		$name.=round($bbox[2],1) . ',' . round($bbox[3],1);
+		$name.='.bin';
+		header("Content-disposition: attachment; filename=\"$name\"");
+		$error=$mapextract->process();
+		if ($error) {
+			header('Content-Type: text/plain');
+			echo $error;
+		}
+		fclose($fp);
+	} else {
+		#echo "<pre>";
+		#print_r($HTTP_HOST);
+		#echo "</pre>";
+		$areas=array(
+			'Germany' => '5,47,16,55.1',
+		);
+		$url='http://' . $HTTP_HOST . $PHP_SELF;
+		echo "Use: $url?bbox=bllon,bllat,trlon,trlat <br />\n";
+		echo "<br />\n";
+		while (list($area,$bbox)=each($areas)) {
+			$urlf=$url . "?bbox=$bbox";
+			echo "$area <a href='$urlf'>$urlf</a><br />\n";
+		}
+		
+	}
+?>
