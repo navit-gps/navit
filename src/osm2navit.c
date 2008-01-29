@@ -104,6 +104,7 @@ static char *attrmap={
 	"n	place	hamlet		town_label_2e2\n"
 	"w	amenity	place_of_worship	poly_building\n"
 	"w	building	glasshouse	poly_building\n"
+	"w	building	1	poly_building\n"
 	"w	building\n"
 	"w	aeroway	apron		poly_apron\n"
 	"w	aeroway	runway		aeroway_runway\n"
@@ -114,7 +115,7 @@ static char *attrmap={
 	"w	highway	steps		street_nopass\n"
 	"w	highway	cyclepath	street_nopass\n"
 	"w	highway	track		street_nopass\n"
-	"w	highway	service		street_nopass\n"
+	"w	highway	service		street_service\n"
 	"w	highway	pedestrian	street_nopass\n"
 	"w	highway	residential	street_1_city\n"
 	"w	highway	unclassified	street_1_city\n"
@@ -348,8 +349,10 @@ add_tag(char *k, char *v)
 		level=8;
 	if (! strcmp(k,"layer"))
 		level=7;
+	if (! strcasecmp(v,"true") || ! strcasecmp(v,"yes"))
+		v="1";
 	if (! strcmp(k,"oneway")) {
-		if (! strcasecmp(v,"true") || !strcasecmp(v,"yes") || !strcmp(v,"1")) {
+		if (!strcmp(v,"1")) {
 			flags_attr_value=AF_ONEWAY;
 			flags_attr.len=2;
 		}
