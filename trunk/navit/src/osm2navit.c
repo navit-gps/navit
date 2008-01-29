@@ -118,6 +118,7 @@ static char *attrmap={
 	"w	highway	pedestrian	street_nopass\n"
 	"w	highway	residential	street_1_city\n"
 	"w	highway	unclassified	street_1_city\n"
+	"w	highway	minor		street_1_land\n"
 	"w	highway	tertiary	street_2_city\n"
 	"w	highway	secondary	street_3_city\n"
 	"w	highway	pedestrian	street_nopass\n"
