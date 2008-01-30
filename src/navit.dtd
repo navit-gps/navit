@@ -1,0 +1,71 @@
+<!ELEMENT config (plugins,debug*,navit)>
+<!ELEMENT plugins (plugin*)>
+<!ELEMENT plugin EMPTY>
+<!ATTLIST plugin path CDATA #REQUIRED>
+<!ATTLIST plugin active CDATA #IMPLIED>
+<!ELEMENT debug EMPTY>
+<!ATTLIST debug name CDATA #REQUIRED>
+<!ATTLIST debug level CDATA "0">
+<!ELEMENT navit (gui,graphics,vehicle*,tracking,route,navigation,speech,mapset+,layout+)>
+<!ATTLIST navit center CDATA #REQUIRED>
+<!ATTLIST navit zoom CDATA #REQUIRED>
+<!ATTLIST navit tracking CDATA #REQUIRED>
+<!ATTLIST navit cursor CDATA #REQUIRED>
+<!ATTLIST navit orientation CDATA #REQUIRED>
+<!ELEMENT gui EMPTY>
+<!ATTLIST gui type CDATA #REQUIRED>
+<!ELEMENT graphics EMPTY>
+<!ATTLIST graphics type CDATA #REQUIRED>
+<!ELEMENT vehicle EMPTY>
+<!ATTLIST vehicle name CDATA #REQUIRED>
+<!ATTLIST vehicle source CDATA #REQUIRED>
+<!ATTLIST vehicle color CDATA #REQUIRED>
+<!ATTLIST vehicle enabled CDATA #IMPLIED>
+<!ATTLIST vehicle active CDATA #IMPLIED>
+<!ATTLIST vehicle follow CDATA #IMPLIED>
+<!ATTLIST vehicle refresh CDATA #IMPLIED>
+<!ELEMENT tracking ANY>
+<!ELEMENT route (speed+)>
+<!ELEMENT speed EMPTY>
+<!ATTLIST speed type CDATA #REQUIRED>
+<!ATTLIST speed value CDATA #REQUIRED>
+<!ELEMENT navigation (announce+)>
+<!ELEMENT announce EMPTY>
+<!ATTLIST announce type CDATA #REQUIRED>
+<!ATTLIST announce level0 CDATA #IMPLIED>
+<!ATTLIST announce level1 CDATA #IMPLIED>
+<!ATTLIST announce level2 CDATA #IMPLIED>
+<!ATTLIST announce unit CDATA #REQUIRED>
+<!ELEMENT speech EMPTY>
+<!ATTLIST speech type CDATA #REQUIRED>
+<!ATTLIST speech data CDATA #REQUIRED>
+<!ELEMENT mapset (map+)>
+<!ATTLIST mapset enabled CDATA #IMPLIED>
+<!ELEMENT map EMPTY>
+<!ATTLIST map type CDATA #REQUIRED>
+<!ATTLIST map enabled CDATA #IMPLIED>
+<!ATTLIST map active CDATA #IMPLIED>
+<!ATTLIST map data CDATA #REQUIRED>
+<!ATTLIST map debug CDATA #IMPLIED>
+<!ELEMENT layout (layer*)>
+<!ATTLIST layout name CDATA #REQUIRED>
+<!ELEMENT layer (item+)>
+<!ATTLIST layer name CDATA #REQUIRED>
+<!ATTLIST layer details CDATA #REQUIRED>
+<!ELEMENT item (polygon|polyline|label|circle|icon)*>
+<!ATTLIST item type CDATA #REQUIRED>
+<!ATTLIST item order CDATA #REQUIRED>
+<!ELEMENT polygon EMPTY>
+<!ATTLIST polygon color CDATA #REQUIRED>
+<!ELEMENT polyline EMPTY>
+<!ATTLIST polyline color CDATA #REQUIRED>
+<!ATTLIST polyline width CDATA #IMPLIED>
+<!ELEMENT label EMPTY>
+<!ATTLIST label label_size CDATA #REQUIRED>
+<!ELEMENT circle EMPTY>
+<!ATTLIST circle color CDATA #REQUIRED>
+<!ATTLIST circle radius CDATA #REQUIRED>
+<!ATTLIST circle label_size CDATA #IMPLIED>
+<!ELEMENT icon EMPTY>
+<!ATTLIST icon src CDATA #REQUIRED>
+
