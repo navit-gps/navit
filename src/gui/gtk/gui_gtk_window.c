@@ -8,6 +8,7 @@
 #include <libintl.h>
 #include <gtk/gtk.h>
 #include "config.h"
+#include "item.h"
 #include "navit.h"
 #include "debug.h"
 #include "gui.h"
@@ -158,11 +159,24 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	int w=792, h=547;
 	char *cp = getenv("NAVIT_XID");
 	unsigned xid = 0;
+	struct attr *menubar, *toolbar, *statusbar;
 
 	if (cp) {
 		xid = strtol(cp, NULL, 0);
 	}
 
+	menubar = attr_search(attrs, NULL, attr_menubar);
+	if (menubar && menubar->u.num == 0) {
+		gui_gtk_methods.menubar_new = NULL;
+	}
+	toolbar = attr_search(attrs, NULL, attr_toolbar);
+	if (toolbar && toolbar->u.num == 0) {
+		gui_gtk_methods.toolbar_new = NULL;
+	}
+	statusbar = attr_search(attrs, NULL, attr_statusbar);
+	if (statusbar && statusbar->u.num == 0) {
+		gui_gtk_methods.statusbar_new = NULL;
+	}
 	*meth=gui_gtk_methods;
 
 	this=g_new0(struct gui_priv, 1);
