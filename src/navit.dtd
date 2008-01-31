@@ -14,6 +14,9 @@
 <!ATTLIST navit orientation CDATA #REQUIRED>
 <!ELEMENT gui EMPTY>
 <!ATTLIST gui type CDATA #REQUIRED>
+<!ATTLIST gui menubar CDATA #IMPLIED>
+<!ATTLIST gui toolbar CDATA #IMPLIED>
+<!ATTLIST gui statusbar CDATA #IMPLIED>
 <!ELEMENT graphics EMPTY>
 <!ATTLIST graphics type CDATA #REQUIRED>
 <!ELEMENT vehicle EMPTY>
