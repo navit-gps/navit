@@ -14,7 +14,7 @@ Center coordinates format:
 Change to your home coordinates.
 -->
 <navit center="4808 N 1134 E" zoom="256" tracking="1" cursor="1" orientation="0">
-	<gui type="gtk" />
+	<gui type="gtk" menubar="1" toolbar="1" statusbar="1" />
 	<graphics type="gtk_drawing_area" />
 <!-- For SDL, use rather the following lines
 	<gui type="sdl" />
