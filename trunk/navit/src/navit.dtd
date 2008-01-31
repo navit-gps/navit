@@ -17,6 +17,8 @@
 <!ATTLIST gui menubar CDATA #IMPLIED>
 <!ATTLIST gui toolbar CDATA #IMPLIED>
 <!ATTLIST gui statusbar CDATA #IMPLIED>
+<!ATTLIST gui skin CDATA #IMPLIED>
+<!ATTLIST gui fullscreen CDATA #IMPLIED>
 <!ELEMENT graphics EMPTY>
 <!ATTLIST graphics type CDATA #REQUIRED>
 <!ELEMENT vehicle EMPTY>
