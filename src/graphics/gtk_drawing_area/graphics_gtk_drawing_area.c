@@ -1,6 +1,7 @@
 #define GDK_ENABLE_BROKEN
 #include "config.h"
 #include <gtk/gtk.h>
+#include <fontconfig/fontconfig.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #ifdef HAVE_IMLIB2
@@ -61,37 +62,21 @@ struct graphics_image_priv {
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
+	FcFini();
 }
 
-static char *fontpaths[]={
-#ifdef _WIN32
-	".",
-#endif
-	"/usr/share/fonts",
-	"/usr/X11R6/lib/X11/fonts/msttcorefonts",
-	"/usr/X11R6/lib/X11/fonts/truetype",
-	"/usr/X11R6/lib/X11/fonts/TTF",
-	"/usr/share/fonts/truetype",
-	"/usr/share/fonts/truetype/msttcorefonts",
-	"/usr/share/fonts/truetype/ttf-dejavu",
-	"/usr/share/fonts/ttf",
-	"/usr/share/fonts/corefonts",
-	"/usr/share/fonts/liberation",
+/**
+ * List of font families to use, in order of preference
+ */
+static char *fontfamilies[]={
+	"Liberation Mono",
+	"Arial",
+	"DejaVu Sans",
+	"NcrBI4nh",
+	"luximbi",
+	"FreeSans",
 	NULL,
 };
-
-#if 0
-static char *fontlist_bd[]={
-	"/usr/X11R6/lib/X11/fonts/msttcorefonts/arialbd.ttf",
-	"/usr/X11R6/lib/X11/fonts/truetype/arialbd.ttf",
-	"/usr/share/fonts/truetype/msttcorefonts/arialbd.ttf",
-	"/usr/share/fonts/ttf/arialbd.ttf",
-	"/usr/share/fonts/corefonts/arialbd.ttf",
-	NULL,
-};
-#endif
-
-
 
 static void font_destroy(struct graphics_font_priv *font)
 {
@@ -103,45 +88,53 @@ static struct graphics_font_methods font_methods = {
 	font_destroy
 };
 
+/**
+ * Load a new font using the fontconfig library.
+ * First search for each of the font families and require and exact match on family
+ * If no font found, let fontconfig pick the best match
+ */
 static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, int size)
 {
-	char **filename=fontpaths;
-	char fontpath [256];
-
 	struct graphics_font_priv *font=g_new(struct graphics_font_priv, 1);
 
 	*meth=font_methods;
+	int exact, found;
+	char **family;
 
 	if (!gr->library_init) {
 		FT_Init_FreeType( &gr->library );
 		gr->library_init=1;
 	}
-	while (*filename) {
-		// Trying the Liberation font first
-		sprintf(fontpath,"%s/LiberationMono-Regular.ttf",*filename);
-		dbg(1,"font : %s\n",fontpath);
-	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
-			break;
-		//Fallback to arial.ttf, in the same path
-		sprintf(fontpath,"%s/arial.ttf",*filename);
-		dbg(1,"font : %s\n",fontpath);
-	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
-			break;
-		sprintf(fontpath,"%s/NcrBI4nh.ttf",*filename);
-		dbg(1,"font : %s\n",fontpath);
-	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
-			break;
-		sprintf(fontpath,"%s/luximbi.ttf",*filename);
-		dbg(1,"font : %s\n",fontpath);
-	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
-			break;
-		sprintf(fontpath,"%s/DejaVuSans.ttf",*filename);
-		dbg(1,"font : %s\n",fontpath);
-	    	if (!FT_New_Face( gr->library, fontpath, 0, &font->face ))
-			break;
-		filename++;
+	found=0;
+	for (exact=1;!found && exact>=0;exact--) {
+		family=fontfamilies;
+		while (*family && !found) {
+			dbg(1, "Looking for font family %s. exact=%d\n", *family, exact);
+			FcPattern *required = FcPatternBuild(NULL, FC_FAMILY, FcTypeString, *family, NULL);
+			FcConfigSubstitute(FcConfigGetCurrent(), required, FcMatchFont);
+			FcDefaultSubstitute(required);
+			FcResult result;
+			FcPattern *matched = FcFontMatch(FcConfigGetCurrent(), required, &result);
+			if (matched) {
+				FcValue v1, v2;
+				FcChar8 *fontfile;
+				int fontindex;
+				FcPatternGet(required, FC_FAMILY, 0, &v1);
+				FcPatternGet(matched, FC_FAMILY, 0, &v2);
+				FcResult r1 = FcPatternGetString(matched, FC_FILE, 0, &fontfile);
+				FcResult r2 = FcPatternGetInteger(matched, FC_INDEX, 0, &fontindex);
+				if ((r1 == FcResultMatch) && (r2 == FcResultMatch) && (FcValueEqual(v1,v2) || !exact)) {
+					dbg(2, "About to load font from file %s index %d\n", fontfile, fontindex);
+					FT_New_Face( gr->library, (char *)fontfile, fontindex, &font->face );
+					found=1;
+				}
+				FcPatternDestroy(matched);
+			}
+			FcPatternDestroy(required);
+			family++;
+		}
 	}
-	if (! *filename) {
+	if (!found) {
 		g_warning("Failed to load font, no labelling");
 		g_free(font);
 		return NULL;
@@ -213,6 +206,8 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 	*meth=gc_methods;
 	gc->gc=gdk_gc_new(gr->widget->window);
 	gc->gr=gr;
+	if (FcInit() != FcTrue)
+		dbg(0, "Failed to init fontconfig");
 	return gc;
 }
 
