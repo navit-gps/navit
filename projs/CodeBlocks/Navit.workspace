@@ -19,6 +19,7 @@
 		<Project filename="data_garmin.cbp">
 			<Depends filename="gentypes.cbp" />
 		</Project>
+		<Project filename="data_mg.cbp" />
 		<Project filename="Navit.cbp" active="1">
 			<Depends filename="win32_gui.cbp" />
 			<Depends filename="fib-1.1.cbp" />
@@ -37,6 +38,5 @@
 			<Depends filename="data_garmin.cbp" />
 			<Depends filename="data_mg.cbp" />
 		</Project>
-		<Project filename="data_mg.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
