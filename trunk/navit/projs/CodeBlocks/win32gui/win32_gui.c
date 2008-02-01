@@ -8,14 +8,27 @@
 #include "win32_gui.h"
 #include "point.h"
 
+#define ID_DISPLAY_ZOOMIN 8000
+#define ID_DISPLAY_ZOOMOUT 8001
+
 #define ID_FILE_EXIT 9001
 #define ID_STUFF_GO 9002
 
 const char g_szClassName[] = "myWindowClass";
 
+#define ID_CHILD_GFX 2000
+#define ID_CHILD_1 2001
+#define ID_CHILD_2 ID_CHILD_1 + 1
+#define ID_CHILD_3 ID_CHILD_2 + 1
+#define ID_CHILD_4 ID_CHILD_4 + 1
+
+#define _(text) gettext(text)
 
 gboolean message_pump( gpointer data )
 {
+	Sleep( 100 );
+	printf( "pump\n" );
+
     MSG messages;            /* Here messages to the application are saved */
     if (GetMessage (&messages, NULL, 0, 0))
     {
@@ -27,7 +40,7 @@ gboolean message_pump( gpointer data )
     else{
     	exit( 0 );
     }
-    return TRUE;
+     return TRUE;
 }
 
 
@@ -50,16 +63,40 @@ struct graphics_priv {
 	void *motion_callback_data;
 	void (*button_callback)(void *data, int press, int button, struct point *p);
 	void *button_callback_data;
-	// AF FIXenum draw_mode_num mode;
+// 	enum draw_mode_num mode;
 };
 
 
 extern struct graphics_priv *g_gra;
 
+BOOL CALLBACK EnumChildProc(HWND hwndChild, LPARAM lParam)
+{
+    LPRECT rcParent;
+    int idChild;
 
+    idChild = GetWindowLong(hwndChild, GWL_ID);
+
+	if ( idChild == ID_CHILD_GFX )
+	{
+		rcParent = (LPRECT) lParam;
+
+		MoveWindow( hwndChild,  0, 0, rcParent->right, rcParent->bottom, TRUE );
+		(*g_gra->resize_callback)(g_gra->resize_callback_data, rcParent->right, rcParent->bottom);
+	}
+
+    return TRUE;
+}
+
+#ifndef GET_WHEEL_DELTA_WPARAM
+	#define GET_WHEEL_DELTA_WPARAM(wParam)  ((short)HIWORD(wParam))
+#endif
 
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
+    RECT rcClient;
+
+	printf( "PARENT %d %d %d \n", Message, wParam, lParam );
+
 	switch(Message)
 	{
 		case WM_CREATE:
@@ -71,8 +108,24 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			g_this_->hwnd = hwnd;
 
 			hSubMenu = CreatePopupMenu();
-			AppendMenu(hSubMenu, MF_STRING, ID_FILE_EXIT, "E&xit");
-			AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "&File");
+
+			gunichar2* utf16 = NULL;
+
+			utf16 = g_utf8_to_utf16( _( "_Quit" ), -1, NULL, NULL, NULL );
+			AppendMenuW(hSubMenu, MF_STRING, ID_FILE_EXIT, utf16 );
+			g_free( utf16 );
+
+			utf16 = g_utf8_to_utf16( _( "Zoom in" ), -1, NULL, NULL, NULL );
+			AppendMenuW(hSubMenu, MF_STRING, ID_DISPLAY_ZOOMIN, utf16 );
+			g_free( utf16 );
+
+			utf16 = g_utf8_to_utf16( _( "Zoom out" ), -1, NULL, NULL, NULL );
+			AppendMenuW(hSubMenu, MF_STRING, ID_DISPLAY_ZOOMOUT, utf16 );
+			g_free( utf16 );
+
+			utf16 = g_utf8_to_utf16( _( "Display" ), -1, NULL, NULL, NULL );
+			AppendMenuW(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, utf16 );
+			g_free( utf16 );
 
 			hSubMenu = CreatePopupMenu();
 			AppendMenu(hSubMenu, MF_STRING, ID_STUFF_GO, "&Go");
@@ -111,19 +164,46 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 				break;
 			}
 		break;
+		case WM_USER+ 1:
+			printf( "wm_user \n" );
+			(*g_gra->resize_callback)( g_gra->resize_callback_data, g_gra->width, g_gra->height );
+		break;
 		case WM_CLOSE:
 			DestroyWindow(hwnd);
+		break;
+		case WM_SIZE:
+            GetClientRect(hwnd, &rcClient);
+			printf( "resize gui to: %d %d \n", rcClient.right, rcClient.bottom );
+
+            EnumChildWindows(hwnd, EnumChildProc, (LPARAM) &rcClient);
+            return 0;
 		break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
 		break;
+
+		case WM_MOUSEWHEEL:
+		{
+			struct gui_priv * priv = GetWindowLongPtr( hwnd, DWLP_USER );
+
+			short delta = GET_WHEEL_DELTA_WPARAM( wParam );
+			if ( delta > 0 )
+			{
+				navit_zoom_in(g_this_->nav, 2, NULL);
+			}
+			else{
+				navit_zoom_out(g_this_->nav, 2, NULL);
+			}
+		}
+		break;
+
 		default:
 			return DefWindowProc(hwnd, Message, wParam, lParam);
 	}
 	return 0;
 }
 
-int Win32Init( void )
+HANDLE Win32Init( void )
 {
 	WNDCLASSEX wc;
 	HWND hwnd;
@@ -152,7 +232,7 @@ int Win32Init( void )
 	hwnd = CreateWindowEx(
 		WS_EX_CLIENTEDGE,
 		g_szClassName,
-		"A Menu #2",
+		_( "Navit" ),
 		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 		CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
 		NULL, NULL, NULL, NULL);
@@ -222,7 +302,8 @@ static struct gui_priv *win32_gui_new( struct navit *nav, struct gui_methods *me
 
 	g_this_ = this_;
 
-	Win32Init();
+	this_->hwnd = Win32Init();
+	SetWindowLongPtr( this_->hwnd , DWLP_USER, this_ );
 
 
 //	navit_zoom_out(this_->nav, 2, NULL);
