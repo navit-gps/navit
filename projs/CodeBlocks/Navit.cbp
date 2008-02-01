@@ -9,7 +9,7 @@
 			<Target title="Debug">
 				<Option output="bin\Debug\Navit" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
-				<Option external_deps="bin\Debug\libvehicle_file.la;bin\Debug\libdata_binfile.la;bin\Debug\libgtk_graphics.la;bin\Debug\libgtk_gui.la" />
+				<Option external_deps="bin\Debug\libvehicle_file.la;bin\Debug\libdata_binfile.la;bin\Debug\libgtk_graphics.la;bin\Debug\libgtk_gui.la;bin\Debug\libwin32_gui.la" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
