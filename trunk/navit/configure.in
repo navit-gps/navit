@@ -83,7 +83,7 @@ AC_ARG_ENABLE(gui-gtk, [  --disable-gui-gtk             don't create gui gtk ], 
 if test "x$MODULE_GUI_GTK" = "xyes"; then
 	PKG_CHECK_MODULES(GTK2, [gtk+-2.0], [gtk2_pkgconfig=yes], [gtk2_pkgconfig=no])
 	if test "x$gtk2_pkgconfig" = "xyes"; then
-		AC_DEFINE(HAVE_GTK2, 1, [Define to 1 if you have imlib2])
+		AC_DEFINE(HAVE_GTK2, 1, [Define to 1 if you have gtk2])
 	fi
 fi
 
@@ -97,10 +97,17 @@ AM_CONDITIONAL(PLUGINS, [test "x$plugins" = "xyes"])
 
 PKG_CHECK_MODULES(FREETYPE2, [freetype2], [freetype2_pkgconfig=yes], [freetype2_pkgconfig=no])
 if test "x$freetype2_pkgconfig" = "xyes"; then
-   AC_DEFINE(HAVE_FREETYPE2, 1, [Define to 1 if you have imlib2])
+   AC_DEFINE(HAVE_FREETYPE2, 1, [Define to 1 if you have freetype2])
 fi
 AC_SUBST(FREETYPE2_CFLAGS)
 AC_SUBST(FREETYPE2_LIBS)
+
+PKG_CHECK_MODULES(FONTCONFIG, [fontconfig], [fontconfig_pkgconfig=yes], [fontconfig_pkgconfig=no])
+if test "x$fontconfig_pkgconfig" = "xyes"; then
+   AC_DEFINE(HAVE_FONTCONFIG, 1, [Define to 1 if you have fontconfig])
+fi
+AC_SUBST(FONTCONFIG_CFLAGS)
+AC_SUBST(FONTCONFIG_LIBS)
 
 PKG_CHECK_MODULES(IMLIB2, [imlib2], [imlib2_pkgconfig=yes], [imlib2_pkgconfig=no])
 if test "x$imlib2_pkgconfig" = "xyes"; then
