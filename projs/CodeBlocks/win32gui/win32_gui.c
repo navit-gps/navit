@@ -7,64 +7,33 @@
 #include "gui.h"
 #include "win32_gui.h"
 #include "point.h"
+#include "menu.h"
 
-#define ID_DISPLAY_ZOOMIN 8000
-#define ID_DISPLAY_ZOOMOUT 8001
 
-#define ID_FILE_EXIT 9001
-#define ID_STUFF_GO 9002
+const char g_szClassName[] = "navit_gui_class";
 
-const char g_szClassName[] = "myWindowClass";
 
-#define ID_CHILD_GFX 2000
-#define ID_CHILD_1 2001
-#define ID_CHILD_2 ID_CHILD_1 + 1
-#define ID_CHILD_3 ID_CHILD_2 + 1
-#define ID_CHILD_4 ID_CHILD_4 + 1
-
-#define _(text) gettext(text)
+static menu_id = 0;
+static POINT menu_pt;
 
 gboolean message_pump( gpointer data )
 {
-	Sleep( 100 );
-	printf( "pump\n" );
+    MSG messages;
 
-    MSG messages;            /* Here messages to the application are saved */
     if (GetMessage (&messages, NULL, 0, 0))
     {
-        /* Translate virtual-key messages into character messages */
         TranslateMessage(&messages);
-        /* Send message to WindowProcedure */
         DispatchMessage(&messages);
     }
     else{
     	exit( 0 );
     }
-     return TRUE;
+	return TRUE;
 }
 
 
 
-struct gui_priv *g_this_;
 
-
-struct graphics_priv {
-	struct point p;
-	int width;
-	int height;
-	int library_init;
-	int visible;
-	HANDLE wnd_parent_handle;
-	HANDLE wnd_handle;
-
-	void (*resize_callback)(void *data, int w, int h);
-	void *resize_callback_data;
-	void (*motion_callback)(void *data, struct point *p);
-	void *motion_callback_data;
-	void (*button_callback)(void *data, int press, int button, struct point *p);
-	void *button_callback_data;
-// 	enum draw_mode_num mode;
-};
 
 
 extern struct graphics_priv *g_gra;
@@ -95,7 +64,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 {
     RECT rcClient;
 
-	printf( "PARENT %d %d %d \n", Message, wParam, lParam );
+	//printf( "PARENT %d %d %d \n", Message, wParam, lParam );
 
 	switch(Message)
 	{
@@ -105,7 +74,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			HICON hIcon, hIconSm;
 
 			hMenu = CreateMenu();
-			g_this_->hwnd = hwnd;
+			// g_this_->hwnd = hwnd;
 
 			hSubMenu = CreatePopupMenu();
 
@@ -151,18 +120,28 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 		}
 		break;
 		case WM_COMMAND:
+		{
+			struct gui_priv* gui = (struct gui_priv*)GetWindowLongPtr( hwnd , DWLP_USER );
+
 			switch(LOWORD(wParam))
 			{
+				case ID_DISPLAY_ZOOMIN:
+						navit_zoom_in(gui->nav, 2, NULL);
+				break;
+				case ID_DISPLAY_ZOOMOUT:
+						navit_zoom_out(gui->nav, 2, NULL);
+				break;
 				case ID_FILE_EXIT:
 					PostMessage(hwnd, WM_CLOSE, 0, 0);
 				break;
 				case ID_STUFF_GO:
 								 	(*g_gra->resize_callback)(g_gra->resize_callback_data, g_gra->width, g_gra->height);
 
-//					navit_draw(g_this_->nav);
+//					navit_draw(gui->nav);
 					// MessageBox(hwnd, "You clicked Go!", "Woo!", MB_OK);
 				break;
 			}
+		}
 		break;
 		case WM_USER+ 1:
 			printf( "wm_user \n" );
@@ -182,17 +161,18 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			PostQuitMessage(0);
 		break;
 
+
 		case WM_MOUSEWHEEL:
 		{
-			struct gui_priv * priv = GetWindowLongPtr( hwnd, DWLP_USER );
+			struct gui_priv* gui = (struct gui_priv*)GetWindowLongPtr( hwnd , DWLP_USER );
 
 			short delta = GET_WHEEL_DELTA_WPARAM( wParam );
 			if ( delta > 0 )
 			{
-				navit_zoom_in(g_this_->nav, 2, NULL);
+				navit_zoom_in(gui->nav, 2, NULL);
 			}
 			else{
-				navit_zoom_out(g_this_->nav, 2, NULL);
+				navit_zoom_out(gui->nav, 2, NULL);
 			}
 		}
 		break;
@@ -203,7 +183,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 	return 0;
 }
 
-HANDLE Win32Init( void )
+HANDLE CreateWin32Window( void )
 {
 	WNDCLASSEX wc;
 	HWND hwnd;
@@ -213,7 +193,7 @@ HANDLE Win32Init( void )
 	wc.style		 = 0;
 	wc.lpfnWndProc	 = WndProc;
 	wc.cbClsExtra	 = 0;
-	wc.cbWndExtra	 = 0;
+	wc.cbWndExtra	 = 32;
 	wc.hInstance	 = NULL;
 	wc.hIcon		 = NULL;
 	wc.hCursor		 = LoadCursor(NULL, IDC_ARROW);
@@ -224,8 +204,7 @@ HANDLE Win32Init( void )
 
 	if(!RegisterClassEx(&wc))
 	{
-		MessageBox(NULL, "Window Registration Failed!", "Error!",
-			MB_ICONEXCLAMATION | MB_OK);
+		MessageBox(NULL, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 	}
 
@@ -239,8 +218,7 @@ HANDLE Win32Init( void )
 
 	if(hwnd == NULL)
 	{
-		MessageBox(NULL, "Window Creation Failed!", "Error!",
-			MB_ICONEXCLAMATION | MB_OK);
+		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 	}
 
@@ -256,9 +234,7 @@ HANDLE Win32Init( void )
 static int win32_gui_set_graphics(struct gui_priv *this_, struct graphics *gra)
 {
 	HANDLE* wndHandle_ptr = graphics_get_data(gra, "wnd_parent_handle_ptr");
-
 	*wndHandle_ptr = this_->hwnd;
-
 	graphics_get_data(gra, "START_CLIENT");
 	return 0;
 }
@@ -275,12 +251,97 @@ static int win32_gui_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *
  	return 1;
 }
 
+struct menu_priv {
+	HWND wnd_handle;
+	HMENU hMenu;
+};
+
+static struct menu_methods menu_methods;
+
+
+static struct menu_priv *add_menu(	struct menu_priv *menu,
+									struct menu_methods *meth,
+									char *name,
+									enum menu_type type,
+									struct callback *cb)
+{
+	struct menu_priv* ret = NULL;
+
+	ret = g_new0(struct menu_priv, 1);
+
+	*ret = *menu;
+	*meth = menu_methods;
+
+	if ( type == menu_type_submenu )
+	{
+		HMENU hSubMenu = NULL;
+		hSubMenu = CreatePopupMenu();
+		AppendMenu(menu->hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, name );
+		ret->hMenu = hSubMenu;
+	}
+	else
+	{
+		AppendMenu( menu->hMenu, MF_STRING, menu_id, name );
+	}
+	menu_id++;
+
+	return ret;
+
+}
+
+static void set_toggle(struct menu_priv *menu, int active)
+{
+	// gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(menu->action), active);
+}
+
+static int get_toggle(struct menu_priv *menu)
+{
+	// return gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(menu->action));
+	return 0;
+}
+
+static struct menu_methods menu_methods = {
+	add_menu,
+	set_toggle,
+	get_toggle,
+};
+
+static void popup_activate(struct menu_priv *menu)
+{
+	POINT menu_pt = { 200,200 };
+	POINT pnt = menu_pt;
+
+	ClientToScreen(menu->wnd_handle, (LPPOINT) &pnt);
+
+	if (menu->hMenu)
+	{
+		TrackPopupMenu (menu->hMenu, 0, pnt.x, pnt.y, 0, menu->wnd_handle, NULL);
+	}
+}
+
+struct menu_priv* win32_gui_popup_new(struct gui_priv *this_, struct menu_methods *meth)
+{
+	struct menu_priv* ret = NULL;
+
+	ret = g_new0(struct menu_priv, 1);
+	*meth = menu_methods;
+
+	menu_id = 4000;
+
+	ret->hMenu = CreatePopupMenu();
+	ret->wnd_handle = this_->hwnd;
+	meth->popup=popup_activate;
+
+printf( "create popup menu %d \n", ret->hMenu );
+
+	return ret;
+}
 
 struct gui_methods win32_gui_methods = {
 	NULL, // win32_gui_menubar_new,
 	NULL, // win32_gui_toolbar_new,
 	NULL, // win32_gui_statusbar_new,
-	NULL, // win32_gui_popup_new,
+	win32_gui_popup_new,
 	win32_gui_set_graphics,
 	NULL,
 	NULL, // win32_gui_datawindow_new,
@@ -292,27 +353,17 @@ struct gui_methods win32_gui_methods = {
 static struct gui_priv *win32_gui_new( struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 {
 	struct gui_priv *this_;
-	int w=792, h=547;
-	unsigned xid = 0;
 
 	*meth=win32_gui_methods;
 
 	this_=g_new0(struct gui_priv, 1);
 	this_->nav=nav;
 
-	g_this_ = this_;
-
-	this_->hwnd = Win32Init();
+	this_->hwnd = CreateWin32Window();
 	SetWindowLongPtr( this_->hwnd , DWLP_USER, this_ );
-
-
-//	navit_zoom_out(this_->nav, 2, NULL);
 
 	return this_;
 }
-
-extern struct graphics_priv* win32_graphics_new( struct graphics_methods *meth, struct attr **attrs);
-
 
 void plugin_init(void)
 {

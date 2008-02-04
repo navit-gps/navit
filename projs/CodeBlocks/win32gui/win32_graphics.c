@@ -8,13 +8,91 @@
 #include "graphics.h"
 #include "color.h"
 #include "plugin.h"
+#include "win32_gui.h"
 
-#define ID_CHILD_GFX 2000
 #include "xpm2bmp.h";
 
 #ifndef GET_WHEEL_DELTA_WPARAM
 	#define GET_WHEEL_DELTA_WPARAM(wParam)  ((short)HIWORD(wParam))
 #endif
+
+HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
+                    int iDeciPtWidth, int iAttributes, BOOL fLogRes) ;
+
+#define EZ_ATTR_BOLD          1
+#define EZ_ATTR_ITALIC        2
+#define EZ_ATTR_UNDERLINE     4
+#define EZ_ATTR_STRIKEOUT     8
+
+HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
+                    int iDeciPtWidth, int iAttributes, BOOL fLogRes)
+{
+     FLOAT      cxDpi, cyDpi ;
+     HFONT      hFont ;
+     LOGFONT    lf ;
+     POINT      pt ;
+     TEXTMETRIC tm ;
+
+     SaveDC (hdc) ;
+
+     SetGraphicsMode (hdc, GM_ADVANCED) ;
+     ModifyWorldTransform (hdc, NULL, MWT_IDENTITY) ;
+     SetViewportOrgEx (hdc, 0, 0, NULL) ;
+     SetWindowOrgEx   (hdc, 0, 0, NULL) ;
+
+     if (fLogRes)
+     {
+          cxDpi = (FLOAT) GetDeviceCaps (hdc, LOGPIXELSX) ;
+          cyDpi = (FLOAT) GetDeviceCaps (hdc, LOGPIXELSY) ;
+     }
+     else
+     {
+          cxDpi = (FLOAT) (25.4 * GetDeviceCaps (hdc, HORZRES) /
+                                        GetDeviceCaps (hdc, HORZSIZE)) ;
+
+          cyDpi = (FLOAT) (25.4 * GetDeviceCaps (hdc, VERTRES) /
+                                        GetDeviceCaps (hdc, VERTSIZE)) ;
+     }
+
+     pt.x = (int) (iDeciPtWidth  * cxDpi / 72) ;
+     pt.y = (int) (iDeciPtHeight * cyDpi / 72) ;
+
+     DPtoLP (hdc, &pt, 1) ;
+     lf.lfHeight         = - (int) (fabs (pt.y) / 10.0 + 0.5) ;
+     lf.lfWidth          = 0 ;
+     lf.lfEscapement     = 0 ;
+     lf.lfOrientation    = 0 ;
+     lf.lfWeight         = iAttributes & EZ_ATTR_BOLD      ? 700 : 0 ;
+     lf.lfItalic         = iAttributes & EZ_ATTR_ITALIC    ?   1 : 0 ;
+     lf.lfUnderline      = iAttributes & EZ_ATTR_UNDERLINE ?   1 : 0 ;
+     lf.lfStrikeOut      = iAttributes & EZ_ATTR_STRIKEOUT ?   1 : 0 ;
+     lf.lfCharSet        = DEFAULT_CHARSET ;
+     lf.lfOutPrecision   = 0 ;
+     lf.lfClipPrecision  = 0 ;
+     lf.lfQuality        = 0 ;
+     lf.lfPitchAndFamily = 0 ;
+
+     lstrcpy (lf.lfFaceName, szFaceName) ;
+
+     hFont = CreateFontIndirect (&lf) ;
+
+     if (iDeciPtWidth != 0)
+     {
+          hFont = (HFONT) SelectObject (hdc, hFont) ;
+
+          GetTextMetrics (hdc, &tm) ;
+
+          DeleteObject (SelectObject (hdc, hFont)) ;
+
+          lf.lfWidth = (int) (tm.tmAveCharWidth *
+                                        fabs (pt.x) / fabs (pt.y) + 0.5) ;
+
+          hFont = CreateFontIndirect (&lf) ;
+     }
+
+     RestoreDC (hdc, -1) ;
+     return hFont ;
+}
 
 struct graphics_image_priv {
 	PXPM2BMP pxpm;
@@ -52,23 +130,6 @@ void ErrorExit(LPTSTR lpszFunction)
 }
 
 
-struct graphics_priv {
-	struct point p;
-	int width;
-	int height;
-	int library_init;
-	int visible;
-	HANDLE wnd_parent_handle;
-	HANDLE wnd_handle;
-
-	void (*resize_callback)(void *data, int w, int h);
-	void *resize_callback_data;
-	void (*motion_callback)(void *data, struct point *p);
-	void *motion_callback_data;
-	void (*button_callback)(void *data, int press, int button, struct point *p);
-	void *button_callback_data;
-	enum draw_mode_num mode;
-};
 
 struct graphics_gc_priv {
 	HWND hwnd;
@@ -118,11 +179,23 @@ static void MakeMemoryDC(HANDLE hWnd, HDC hdc )
 	}
 }
 
+static void HandleButtonClick( int updown, int button, long lParam )
+{
+	int xPos = LOWORD(lParam);
+	int yPos = HIWORD(lParam);
+	// printf( "WM_LBUTTONDOWN: %d %d \n", xPos, yPos );
+	if (g_gra->button_callback )
+	{
+		struct point pt = {xPos, yPos};
+		(*g_gra->button_callback)(g_gra->button_callback_data, updown, button, &pt);
+	}
+}
+
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
 
-if ( Message != 15 )
-	printf( "CHILD %d %d %d \n", Message, wParam, lParam );
+//if ( Message != 15 )
+	// printf( "CHILD %d %d %d \n", Message, wParam, lParam );
 	switch(Message)
 	{
 		case WM_CREATE:
@@ -150,10 +223,6 @@ if ( Message != 15 )
 		break;
 		case WM_CLOSE:
 			DestroyWindow(hwnd);
-		break;
-		case WM_LBUTTONDBLCLK:
-				if (g_gra->resize_callback)
-				 	(*g_gra->resize_callback)(g_gra->resize_callback_data, g_gra->width, g_gra->height);
 		break;
 		case WM_SIZE:
 			{
@@ -193,39 +262,23 @@ if ( Message != 15 )
 			int yPos = HIWORD(lParam);
 			struct point pt = {xPos, yPos};
 
-			printf( "WM_MOUSEMOVE: %d %d \n", xPos, yPos );
+			// printf( "WM_MOUSEMOVE: %d %d \n", xPos, yPos );
 			(*g_gra->motion_callback)(g_gra->motion_callback_data, &pt);
 		}
 
 		break;
-		case WM_LBUTTONUP:
-		{
-			int xPos = LOWORD(lParam);
-			int yPos = HIWORD(lParam);
-
-			struct point pt = { xPos, yPos };
-
-			printf( "WM_LBUTTONUP: %d %d \n", xPos, yPos );
-			if (g_gra->button_callback )
-			{
-				struct point pt = {xPos, yPos};
-				(*g_gra->button_callback)(g_gra->button_callback_data, 0, 1, &pt);
-			}
-
-		}
-		break;
 
 		case WM_LBUTTONDOWN:
-		{
-			int xPos = LOWORD(lParam);
-			int yPos = HIWORD(lParam);
-			printf( "WM_LBUTTONDOWN: %d %d \n", xPos, yPos );
-			if (g_gra->button_callback )
-			{
-				struct point pt = {xPos, yPos};
-				(*g_gra->button_callback)(g_gra->button_callback_data, 1, 1, &pt);
-			}
-		}
+			HandleButtonClick( 1, 1,lParam );
+		break;
+		case WM_LBUTTONUP:
+			HandleButtonClick( 0, 1,lParam );
+		break;
+		case WM_RBUTTONDOWN:
+			HandleButtonClick( 1, 3,lParam );
+		break;
+		case WM_RBUTTONUP:
+			HandleButtonClick( 0, 3,lParam );
 		break;
 
 		case WM_HSCROLL:
@@ -275,17 +328,16 @@ void CreateGraphicsWindows( struct graphics_priv* gr )
 		return NULL;
 	}
 
-	g_gra->width = rcParent.right - rcParent.left;
-	g_gra->height  = rcParent.bottom - rcParent.top;
-
+	gr->width = rcParent.right - rcParent.left;
+	gr->height  = rcParent.bottom - rcParent.top;
 
 	hwnd = CreateWindow( 	g_szClassName,
 							"",
 							WS_CHILD  ,
 							0,
 							0,
-							g_gra->width,
-							g_gra->height,
+							gr->width,
+							gr->height,
 							gr->wnd_parent_handle,
 							(HMENU)ID_CHILD_GFX,
 							NULL,
@@ -404,6 +456,7 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
+
 	//if (gr->mode == draw_mode_begin || gr->mode == draw_mode_end)
 	{
 		int i;
@@ -459,21 +512,29 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 
 static void draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
 {
-	// AF TODO
-	printf( "draw restore \n" );
-
-	InvalidateRect( gr->wnd_handle, NULL, FALSE );
+	InvalidateRect( gr->wnd_handle, NULL, TRUE );
 }
 
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-	printf( "set draw_mode to %d\n", (int)mode );
+	// printf( "set draw_mode to %d\n", (int)mode );
 
 	if ( mode == draw_mode_begin )
 	{
 		if ( gr->wnd_handle == NULL )
 		{
 			CreateGraphicsWindows( gr );
+		}
+		if ( gr->mode != draw_mode_begin )
+		{
+			if ( hMemDC )
+			{
+				RECT rcClient;
+				HBRUSH bgBrush = CreateSolidBrush( gr->bg_color  );
+				GetClientRect( gr->wnd_handle, &rcClient );
+				FillRect( hMemDC, &rcClient, bgBrush );
+				DeleteObject( bgBrush );
+			}
 		}
 	}
 
@@ -523,17 +584,102 @@ static void register_button_callback(struct graphics_priv *this_, void (*callbac
 
 static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
-// 	gr->background_gc=gc;
+	RECT rcClient;
+	HBRUSH bgBrush = CreateSolidBrush( gc->bg_color  );
+	GetClientRect( gr->wnd_handle, &rcClient );
+	FillRect( hMemDC, &rcClient, bgBrush );
+	DeleteObject( bgBrush );
+	gr->bg_color = gc->bg_color;
 }
+
+struct graphics_font_priv {
+	LOGFONT lf;
+	HFONT hfont;
+	int size;
+};
 
 static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
+	RECT rcClient;
+	GetClientRect( gr->wnd_handle, &rcClient );
+
+	int prevBkMode = SetBkMode( hMemDC, TRANSPARENT );
+
+	if ( NULL == font->hfont )
+	{
+		int size = font->size;
+		long lfHeight = -MulDiv(font->size, GetDeviceCaps(hMemDC, LOGPIXELSY), 72);
+
+		font->hfont = EzCreateFont (hMemDC, TEXT ("Arial"), size/2, 0, 0, TRUE) ;
+		GetObject ( font->hfont, sizeof (LOGFONT), &font->lf) ;
+
+/*
+		font->hfont = CreateFont( 	lfHeight,
+									0,
+									0,
+									0,
+									0,
+									TRUE,
+									0,
+									0,
+									DEFAULT_CHARSET,
+									0,
+									0,
+									0,
+									0,
+									"Arial");
+									*/
+	}
+
+
+//	RECT rc = { p->x, p->y, 800, 800 };
+//	DrawText(hMemDC, text, -1, &rc, DT_NOCLIP | DT_CALCRECT| DT_SINGLELINE);
+	double angle = -atan2( dy, dx ) * 180 / 3.14159 ;
+// printf( "dx %d , dy %d angle %6.3f %s\n", dx, dy, angle, text);
+	SetTextAlign (hMemDC, TA_BASELINE) ;
+	SetViewportOrgEx (hMemDC, p->x, p->y, NULL) ;
+	font->lf.lfEscapement = font->lf.lfOrientation = ( angle * 10 ) ;
+	DeleteObject (font->hfont) ;
+
+	font->hfont = CreateFontIndirect (&font->lf);
+	HFONT hOldFont = SelectObject(hMemDC, font->hfont );
+
+	TextOut(hMemDC, 0,0, text, strlen( text ) );
+
+	SelectObject(hMemDC, hOldFont);
+	DeleteObject (font->hfont) ;
+
+	SetBkMode( hMemDC, prevBkMode );
+
+	SetViewportOrgEx (hMemDC, 0, 0, NULL) ;
+
 }
+
+
+
+static void font_destroy(struct graphics_font_priv *font)
+{
+	if ( font->hfont )
+	{
+		DeleteObject(font->hfont);
+	}
+	g_free(font);
+}
+
+static struct graphics_font_methods font_methods = {
+	font_destroy
+};
 
 static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, int size)
 {
-	meth = NULL;
-	return NULL;
+	struct graphics_font_priv *font=g_new(struct graphics_font_priv, 1);
+	*meth = font_methods;
+
+	font->hfont = NULL;
+	font->size = size;
+    // FontFamily fontFamily( "Liberation Mono");
+//font( &fontFamily, size, FontStyleRegular, UnitPoint );
+	return font;
 }
 
 static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot)
@@ -583,6 +729,7 @@ static struct graphics_priv * graphics_win32_drawing_area_new_helper(struct grap
 	struct graphics_priv *this_=g_new0(struct graphics_priv,1);
 	*meth=graphics_methods;
 	g_gra = this_;
+	this_->mode = -1;
 	return this_;
 }
 
