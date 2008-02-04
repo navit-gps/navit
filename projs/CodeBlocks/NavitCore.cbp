@@ -48,9 +48,6 @@
 		<Linker>
 			<Add directory="%GTK_DIR%\lib" />
 		</Linker>
-		<Unit filename="Win32Extra\builtin.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="Win32Extra\config.h" />
 		<Unit filename="Win32Extra\serial_io.c">
 			<Option compilerVar="CC" />

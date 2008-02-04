@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="Navit">
+		<Project filename="NavitCore.cbp" />
 		<Project filename="win32_gui.cbp" />
 		<Project filename="fib-1.1.cbp" />
 		<Project filename="Osm2Navit.cbp" />
@@ -20,7 +21,27 @@
 			<Depends filename="gentypes.cbp" />
 		</Project>
 		<Project filename="data_mg.cbp" />
-		<Project filename="Navit.cbp" active="1">
+		<Project filename="Navit_win32.cbp" active="1">
+			<Depends filename="NavitCore.cbp" />
+			<Depends filename="win32_gui.cbp" />
+			<Depends filename="fib-1.1.cbp" />
+			<Depends filename="Osm2Navit.cbp" />
+			<Depends filename="gentypes.cbp" />
+			<Depends filename="data_textfile.cbp" />
+			<Depends filename="mdb.cbp" />
+			<Depends filename="gtk_gui.cbp" />
+			<Depends filename="gtk_graphics.cbp" />
+			<Depends filename="gtk_gl_ext.cbp" />
+			<Depends filename="vehicle_file.cbp" />
+			<Depends filename="vehicle_demo.cbp" />
+			<Depends filename="speech_speech_dispatcher.cbp" />
+			<Depends filename="binfile.cbp" />
+			<Depends filename="data_poi_geodownload.cbp" />
+			<Depends filename="data_garmin.cbp" />
+			<Depends filename="data_mg.cbp" />
+		</Project>
+		<Project filename="Navit_gtk.cbp">
+			<Depends filename="NavitCore.cbp" />
 			<Depends filename="win32_gui.cbp" />
 			<Depends filename="fib-1.1.cbp" />
 			<Depends filename="Osm2Navit.cbp" />
