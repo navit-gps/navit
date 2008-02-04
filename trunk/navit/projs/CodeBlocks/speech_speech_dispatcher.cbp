@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="data_garmin" />
+		<Option title="speech" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output=".\bin\Debug\libdata_garmin.la" prefix_auto="1" extension_auto="0" />
+				<Option output=".\bin\Debug\libspeech_speech_dispatcher.la" prefix_auto="1" extension_auto="0" />
 				<Option working_dir="" />
 				<Option object_output=".\obj\Debug\" />
 				<Option type="2" />
@@ -22,7 +22,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output=".\bin\Release\libdata_garmin.la" prefix_auto="1" extension_auto="0" />
+				<Option output=".\bin\Release\libspeech_speech_dispatcher.la" prefix_auto="1" extension_auto="0" />
 				<Option working_dir="" />
 				<Option object_output=".\obj\Release\" />
 				<Option type="2" />
@@ -42,13 +42,14 @@
 			<Add option="-Wall" />
 			<Add option="-mms-bitfields" />
 			<Add option="-DBUILD_DLL" />
-			<Add option="-DMODULE=data_garmin" />
+			<Add option="-DMODULE=speech_speech_dispatcher" />
 			<Add directory="%GTK_DIR%\include\glib-2.0" />
 			<Add directory="%GTK_DIR%\lib\glib-2.0\include" />
 			<Add directory="Win32Extra" />
 			<Add directory="..\..\src" />
 			<Add directory="." />
 			<Add directory="Win32Extra\libgarmin" />
+			<Add directory="C:\Program Files\Microsoft Speech SDK 5.1\Include" />
 		</Compiler>
 		<Linker>
 			<Add library="NavitCommonLib" />
@@ -58,10 +59,7 @@
 			<Add library="iconv" />
 			<Add directory="%GTK_DIR%\lib" />
 		</Linker>
-		<Unit filename="..\..\src\data\garmin\gar2navit.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="..\..\src\data\garmin\garmin.c">
+		<Unit filename="Win32Extra\speech_dispatcher_win32.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="..\..\src\data\garmin\garmin.h" />
