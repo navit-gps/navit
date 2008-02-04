@@ -16,7 +16,14 @@ DST_LIB_PATH = $(DST_PATH)/lib
 DST_MAP_PATH = $(DST_PATH)/maps
 DST_MO_PATH = $(DST_BIN_PATH)/locale
 
-
+WIN32_DLLS =  \
+	iconv.dll \
+	intl.dll \
+	libglib-2.0-0.dll \
+	libgmodule-2.0-0.dll \
+	libgobject-2.0-0.dll \
+	zlib1.dll
+	
 GTK_DLLS =  \
 	freetype6.dll \
 	iconv.dll \
@@ -39,7 +46,8 @@ GTK_DLLS =  \
 	libxml2.dll \
 	zlib1.dll
 
-NAVIT_EXES = navit.exe osm2navit.exe
+NAVIT_EXES_GTK = navit_gtk.exe osm2navit.exe
+NAVIT_EXES_W32 = navit_win32.exe osm2navit.exe
 
 
 SAMPLE_MAP=osm_bbox_11.3,47.9,11.7,48.2
@@ -75,12 +83,12 @@ locale: $(POFILES)
 locale_clean:
 	rm -Rf locale
 
-distr: $(SAMPLE_MAP).bin $(POFILES)
+distr_gtk: $(SAMPLE_MAP).bin $(POFILES)
 	rm -Rf $(DISTR_TARGET_PATH);
 	mkdir -p $(DST_BIN_PATH);
 	mkdir -p $(DST_ETC_PATH);
 	mkdir -p $(DST_LIB_PATH);
-	for i in $(NAVIT_EXES); do \
+	for i in $(NAVIT_EXES_GTK); do \
 		cp $(SRC_NAVIT_EXE_PATH)/$$i $(DST_BIN_PATH)/$$i; \
 	done;
 	for i in $(GTK_DLLS); do \
@@ -100,3 +108,27 @@ distr: $(SAMPLE_MAP).bin $(POFILES)
 	mkdir -p $(DST_MO_PATH) ;	
 	cp -r $(SRC_MO_PATH)/* $(DST_MO_PATH)/		 
 
+distr_win32: $(SAMPLE_MAP).bin $(POFILES)
+	rm -Rf $(DISTR_TARGET_PATH);
+	mkdir -p $(DST_BIN_PATH);
+	mkdir -p $(DST_ETC_PATH);
+	mkdir -p $(DST_LIB_PATH);
+	for i in $(NAVIT_EXES); do \
+		cp $(SRC_NAVIT_EXE_W32_PATH)/$$i $(DST_BIN_PATH)/$$i; \
+	done;
+	for i in $(WIN32_DLLS); do \
+		cp $(SRC_GTK_BIN_PATH)/$$i $(DST_BIN_PATH)/$$i; \
+	done;
+	cp -r $(SRC_GTK_ETC_PATH)/* $(DST_ETC_PATH) ;
+	mkdir -p $(DST_LIB_PATH)/gtk-2.0/2.10.0 ;
+	cp -r $(SRC_GTK_LIB_PATH)/gtk-2.0/2.10.0/* $(DST_LIB_PATH)/gtk-2.0/2.10.0 ;
+	mkdir -p $(DST_LIB_PATH)/pango ;	
+	cp -r $(SRC_GTK_LIB_PATH)/pango/* $(DST_LIB_PATH)/pango ;
+	cp ./navit.xml.distr $(DST_BIN_PATH)/navit.xml ;
+	cp ./*.ttf $(DST_BIN_PATH)/ ;
+	mkdir -p $(DST_MAP_PATH) ;
+	cp $(SAMPLE_MAP).bin $(DST_MAP_PATH)/ ;
+	mkdir -p $(DST_XPM_PATH) ;	
+	cp -r $(SRC_XPM_PATH)/*.xpm $(DST_XPM_PATH)/ ; 
+	mkdir -p $(DST_MO_PATH) ;	
+	cp -r $(SRC_MO_PATH)/* $(DST_MO_PATH)/		 

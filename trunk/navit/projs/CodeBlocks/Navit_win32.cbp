@@ -101,11 +101,18 @@
 			<Add directory="..\..\src\fib-1.1" />
 			<Add directory="%GTK_DIR%\include\freetype2" />
 		</Compiler>
+		<ResourceCompiler>
+			<Add directory="win32gui\resources" />
+		</ResourceCompiler>
 		<Linker>
 			<Add directory="%GTK_DIR%\lib" />
 		</Linker>
 		<Unit filename="Win32Extra\navit_win32.c">
 			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="win32gui\resources\resource.h" />
+		<Unit filename="win32gui\resources\resource.rc">
+			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Extensions>
 			<code_completion />
