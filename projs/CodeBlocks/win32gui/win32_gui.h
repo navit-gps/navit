@@ -1,29 +1,41 @@
 #ifndef WIN32_GUI_INCLUDED
 #define WIN32_GUI_INCLUDED
 
+#include "resources\resource.h"
 #include "coord.h"
 #include "point.h"
 #include "graphics.h"
 
-#define ID_CHILD_GFX 2000
-#define ID_CHILD_1 2001
-#define ID_CHILD_2 ID_CHILD_1 + 1
-#define ID_CHILD_3 ID_CHILD_2 + 1
-#define ID_CHILD_4 ID_CHILD_4 + 1
-#define ID_DISPLAY_ZOOMIN 8000
-#define ID_DISPLAY_ZOOMOUT 8001
+#define ID_CHILD_GFX 100
+#define ID_CHILD_TOOLBAR (ID_CHILD_GFX + 1)
+#define ID_CHILD_1 (ID_CHILD_TOOLBAR + 1)
+#define ID_CHILD_2 (ID_CHILD_1 + 1)
+#define ID_CHILD_3 (ID_CHILD_2 + 1)
+#define ID_CHILD_4 (ID_CHILD_4 + 1)
 
-#define ID_FILE_EXIT 9001
-#define ID_STUFF_GO 9002
+#define ID_DISPLAY_ZOOMIN 		200
+#define ID_DISPLAY_ZOOMOUT		201
+#define ID_DISPLAY_REFRESH		202
+
+#define ID_FILE_EXIT 		9001
+#define ID_STUFF_GO 		9002
 
 #define _(text) gettext(text)
 
+#define POPUP_MENU_OFFSET  4000
 
 struct statusbar_methods;
 struct menu_methods;
 struct datawindow_methods;
 struct navit;
 struct callback;
+
+
+struct menu_priv {
+	HWND wnd_handle;
+	HMENU hMenu;
+	struct callback* cb;
+};
 
 struct gui_priv {
 	struct navit *nav;

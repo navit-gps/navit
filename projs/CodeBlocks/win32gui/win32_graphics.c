@@ -1,6 +1,9 @@
 #include <windows.h>
 #include <wingdi.h>
 #include <glib.h>
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "config.h"
 #include "debug.h"
@@ -9,12 +12,15 @@
 #include "color.h"
 #include "plugin.h"
 #include "win32_gui.h"
-
-#include "xpm2bmp.h";
+#include "xpm2bmp.h"
 
 #ifndef GET_WHEEL_DELTA_WPARAM
 	#define GET_WHEEL_DELTA_WPARAM(wParam)  ((short)HIWORD(wParam))
 #endif
+
+
+static GHashTable *image_cache_hash = NULL;
+
 
 HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
                     int iDeciPtWidth, int iAttributes, BOOL fLogRes) ;
@@ -140,7 +146,8 @@ struct graphics_gc_priv {
 };
 
 
-struct graphics_priv *g_gra;
+//struct graphics_priv *g_gra;
+
 static HDC hMemDC;
 static HBITMAP hBitmap;
 static HBITMAP hOldBitmap;
@@ -179,15 +186,15 @@ static void MakeMemoryDC(HANDLE hWnd, HDC hdc )
 	}
 }
 
-static void HandleButtonClick( int updown, int button, long lParam )
+static void HandleButtonClick( struct graphics_priv *gra_priv, int updown, int button, long lParam )
 {
 	int xPos = LOWORD(lParam);
 	int yPos = HIWORD(lParam);
-	// printf( "WM_LBUTTONDOWN: %d %d \n", xPos, yPos );
-	if (g_gra->button_callback )
+
+	if (gra_priv->button_callback )
 	{
 		struct point pt = {xPos, yPos};
-		(*g_gra->button_callback)(g_gra->button_callback_data, updown, button, &pt);
+		(*gra_priv->button_callback)(gra_priv->button_callback_data, updown, button, &pt);
 	}
 }
 
@@ -195,23 +202,18 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 {
 
 //if ( Message != 15 )
-	// printf( "CHILD %d %d %d \n", Message, wParam, lParam );
+//printf( "CHILD %d %d %d \n", Message, wParam, lParam );
+
+	struct graphics_priv* gra_priv = (struct graphics_priv*)GetWindowLongPtr( hwnd , DWLP_USER );
+
 	switch(Message)
 	{
 		case WM_CREATE:
 		{
-			g_gra->wnd_handle = hwnd;
-			//if (g_gra->resize_callback)
-			// 	(*g_gra->resize_callback)(g_gra->resize_callback_data, g_gra->width, g_gra->height);
-			//MoveWindow( hwnd, 0,0, 780, 680, TRUE );
-
-			{
-				HDC hdc;
-				hdc = GetDC( hwnd );
-				MakeMemoryDC(hwnd, hdc );
-				ReleaseDC( hwnd, hdc );
-			}
-			PostMessage( g_gra->wnd_parent_handle, WM_USER + 1, 0, 0 );
+			HDC hdc;
+			hdc = GetDC( hwnd );
+			MakeMemoryDC(hwnd, hdc );
+			ReleaseDC( hwnd, hdc );
 		}
 		break;
 		case WM_COMMAND:
@@ -224,12 +226,29 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 		case WM_CLOSE:
 			DestroyWindow(hwnd);
 		break;
+		case WM_USER+1:
+			if ( gra_priv )
+			{
+				RECT rc ;
+				HDC hdc;
+
+				GetClientRect( hwnd, &rc );
+				gra_priv->width = rc.right;
+				gra_priv->height = rc.bottom;
+
+				hdc = GetDC( hwnd );
+				MakeMemoryDC(hwnd, hdc );
+				ReleaseDC( hwnd, hdc );
+				(*gra_priv->resize_callback)(gra_priv->resize_callback_data, gra_priv->width, gra_priv->height);
+			}
+		break;
+
 		case WM_SIZE:
+		/*
+			if ( gra_priv )
 			{
 				//graphics = GetWindowLong( hwnd, DWL_USER, 0 );
 
-				g_gra->width = LOWORD( lParam );
-				g_gra->height  = HIWORD( lParam );
 
 				{
 					HDC hdc;
@@ -237,8 +256,16 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 					MakeMemoryDC(hwnd, hdc );
 					ReleaseDC( hwnd, hdc );
 				}
-				printf( "resize gfx to: %d %d \n", g_gra->width, g_gra->height );
+				(*gra_priv->resize_callback)(gra_priv->resize_callback_data, gra_priv->width, gra_priv->height);
 
+
+			}
+			*/
+			if ( gra_priv )
+			{
+				gra_priv->width = LOWORD( lParam );
+				gra_priv->height  = HIWORD( lParam );
+				printf( "resize gfx to: %d %d \n", gra_priv->width, gra_priv->height );
 			}
 		break;
 		case WM_DESTROY:
@@ -246,14 +273,14 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			exit( 0 );
 		break;
 		case WM_PAINT:
+			if ( gra_priv )
 			{
-
-			HDC hdc = GetDC(hwnd );
-			if ( hMemDC )
-			{
-				BitBlt( hdc, 0, 0, g_gra->width , g_gra->height, hMemDC, 0, 0, SRCCOPY );
-			}
-			ReleaseDC( hwnd, hdc );
+				HDC hdc = GetDC(hwnd );
+				if ( hMemDC )
+				{
+					BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, hMemDC, 0, 0, SRCCOPY );
+				}
+				ReleaseDC( hwnd, hdc );
 			}
 		break;
 		case WM_MOUSEMOVE:
@@ -263,32 +290,24 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			struct point pt = {xPos, yPos};
 
 			// printf( "WM_MOUSEMOVE: %d %d \n", xPos, yPos );
-			(*g_gra->motion_callback)(g_gra->motion_callback_data, &pt);
+			(*gra_priv->motion_callback)(gra_priv->motion_callback_data, &pt);
 		}
 
 		break;
 
 		case WM_LBUTTONDOWN:
-			HandleButtonClick( 1, 1,lParam );
+			HandleButtonClick( gra_priv,1, 1,lParam );
 		break;
 		case WM_LBUTTONUP:
-			HandleButtonClick( 0, 1,lParam );
+			HandleButtonClick( gra_priv, 0, 1,lParam );
 		break;
 		case WM_RBUTTONDOWN:
-			HandleButtonClick( 1, 3,lParam );
+			HandleButtonClick( gra_priv, 1, 3,lParam );
 		break;
 		case WM_RBUTTONUP:
-			HandleButtonClick( 0, 3,lParam );
+			HandleButtonClick( gra_priv, 0, 3,lParam );
 		break;
 
-		case WM_HSCROLL:
-		case WM_VSCROLL:
-			printf( "mousewheel delta %d\n", wParam );
-		break;
-		case WM_MOUSEWHEEL:
-			printf( "mousewheel delta %d\n", wParam );
-
-		break;
 		default:
 			return DefWindowProc(hwnd, Message, wParam, lParam);
 	}
@@ -298,18 +317,17 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 static const char g_szClassName[] = "NAVGRA";
 
-void CreateGraphicsWindows( struct graphics_priv* gr )
+HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 {
 	WNDCLASSEX wc;
 	HWND hwnd;
-	MSG Msg;
     RECT rcParent;
 
 	wc.cbSize		 = sizeof(WNDCLASSEX);
 	wc.style		 = 0;
 	wc.lpfnWndProc	 = WndProc;
 	wc.cbClsExtra	 = 0;
-	wc.cbWndExtra	 = 0;
+	wc.cbWndExtra	 = 64;
 	wc.hInstance	 = NULL;
 	wc.hIcon		 = NULL;
 	wc.hCursor		 = LoadCursor(NULL, IDC_ARROW);
@@ -346,12 +364,19 @@ void CreateGraphicsWindows( struct graphics_priv* gr )
 	if(hwnd == NULL)
 	{
 		ErrorExit( "Window Creation Failed!" );
-		return 0;
+		return NULL;
 	}
 
-	ShowWindow(hwnd, TRUE);
-	UpdateWindow(hwnd);
+	SetWindowLongPtr( hwnd , DWLP_USER, gr );
+
+	ShowWindow( hwnd, TRUE );
+	UpdateWindow( hwnd );
+
 	gr->wnd_handle = hwnd;
+
+	PostMessage( gr->wnd_parent_handle, WM_USER + 1, 0, 0 );
+
+	return hwnd;
 }
 
 
@@ -366,8 +391,6 @@ static void gc_destroy(struct graphics_gc_priv *gc)
 {
 	g_free( gc );
 }
-
-static HPEN line_pen;
 
 static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
@@ -413,7 +436,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 {
 	struct graphics_gc_priv *gc=g_new(struct graphics_gc_priv, 1);
 	*meth=gc_methods;
-	gc->hwnd = g_gra->wnd_handle;
+	gc->hwnd = gr->wnd_handle;
 	gc->line_width = 1;
 	gc->fg_color = RGB( 0,0,0 );
 	gc->bg_color = RGB( 255,255,255 );
@@ -424,17 +447,13 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
 	int i;
-	HANDLE hndl = gr->wnd_handle;
-
-	HDC dc = hMemDC;
-
 	HPEN holdpen;
 	HPEN hpen;
 
 	hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
-	holdpen = SelectObject( dc, hpen );
+	holdpen = SelectObject( hMemDC, hpen );
 
-	SetBkColor( dc, gc->bg_color );
+	SetBkColor( hMemDC, gc->bg_color );
 
 	int first = 1;
 	for ( i = 0; i< count; i++ )
@@ -442,15 +461,15 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 		if ( first )
 		{
 			first = 0;
-			MoveToEx( dc, p[0].x, p[0].y, NULL );
+			MoveToEx( hMemDC, p[0].x, p[0].y, NULL );
 		}
 		else
 		{
-			LineTo( dc, p[i].x, p[i].y );
+			LineTo( hMemDC, p[i].x, p[i].y );
 		}
 	}
 
-	SelectObject( dc, holdpen );
+	SelectObject( hMemDC, holdpen );
 	DeleteObject( hpen );
 }
 
@@ -512,7 +531,7 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 
 static void draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
 {
-	InvalidateRect( gr->wnd_handle, NULL, TRUE );
+	InvalidateRect( gr->wnd_handle, NULL, FALSE );
 }
 
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
@@ -607,35 +626,13 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 
 	if ( NULL == font->hfont )
 	{
-		int size = font->size;
-		long lfHeight = -MulDiv(font->size, GetDeviceCaps(hMemDC, LOGPIXELSY), 72);
-
-		font->hfont = EzCreateFont (hMemDC, TEXT ("Arial"), size/2, 0, 0, TRUE) ;
+		font->hfont = EzCreateFont (hMemDC, TEXT ("Arial"), font->size/2, 0, 0, TRUE) ;
 		GetObject ( font->hfont, sizeof (LOGFONT), &font->lf) ;
-
-/*
-		font->hfont = CreateFont( 	lfHeight,
-									0,
-									0,
-									0,
-									0,
-									TRUE,
-									0,
-									0,
-									DEFAULT_CHARSET,
-									0,
-									0,
-									0,
-									0,
-									"Arial");
-									*/
 	}
 
 
-//	RECT rc = { p->x, p->y, 800, 800 };
-//	DrawText(hMemDC, text, -1, &rc, DT_NOCLIP | DT_CALCRECT| DT_SINGLELINE);
 	double angle = -atan2( dy, dx ) * 180 / 3.14159 ;
-// printf( "dx %d , dy %d angle %6.3f %s\n", dx, dy, angle, text);
+
 	SetTextAlign (hMemDC, TA_BASELINE) ;
 	SetViewportOrgEx (hMemDC, p->x, p->y, NULL) ;
 	font->lf.lfEscapement = font->lf.lfOrientation = ( angle * 10 ) ;
@@ -644,7 +641,13 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 	font->hfont = CreateFontIndirect (&font->lf);
 	HFONT hOldFont = SelectObject(hMemDC, font->hfont );
 
-	TextOut(hMemDC, 0,0, text, strlen( text ) );
+	gunichar2* utf16 = NULL;
+	glong utf16_len = 0;
+
+	utf16 = g_utf8_to_utf16( text, -1, NULL, &utf16_len, NULL );
+	TextOutW(hMemDC, 0,0, utf16, (size_t)utf16_len );
+	g_free( utf16 );
+
 
 	SelectObject(hMemDC, hOldFont);
 	DeleteObject (font->hfont) ;
@@ -682,14 +685,48 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 	return font;
 }
 
+
+void image_cache_hash_add( const char* key, struct graphics_image_priv* val_ptr)
+{
+	char* key_ptr = NULL;
+
+	if ( image_cache_hash == NULL ) {
+		image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
+	}
+
+	if ( g_hash_table_lookup(image_cache_hash, key ) == NULL )
+	{
+		g_hash_table_insert(image_cache_hash, g_strdup( key ),  (gpointer)val_ptr );
+	}
+
+}
+
+struct graphics_image_priv* image_cache_hash_lookup( const char* key )
+{
+	struct graphics_image_priv* val_ptr = NULL;
+
+	if ( image_cache_hash != NULL )
+	{
+		val_ptr = g_hash_table_lookup(image_cache_hash, key );
+	}
+	return val_ptr;
+}
+
+
+
 static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot)
 {
 	struct graphics_image_priv* ret;
 
-	ret = g_new( struct graphics_image_priv, 1 );
-	printf( "loading image '%s'\n", name );
-	ret->pxpm = Xpm2bmp_new();
-	Xpm2bmp_load( ret->pxpm, name );
+	if ( NULL == ( ret = image_cache_hash_lookup( name ) ) )
+	{
+		ret = g_new( struct graphics_image_priv, 1 );
+		printf( "loading image '%s'\n", name );
+		ret->pxpm = Xpm2bmp_new();
+		Xpm2bmp_load( ret->pxpm, name );
+		image_cache_hash_add( name, ret );
+	}
+
 	return ret;
 }
 
@@ -728,7 +765,6 @@ static struct graphics_priv * graphics_win32_drawing_area_new_helper(struct grap
 {
 	struct graphics_priv *this_=g_new0(struct graphics_priv,1);
 	*meth=graphics_methods;
-	g_gra = this_;
 	this_->mode = -1;
 	return this_;
 }
