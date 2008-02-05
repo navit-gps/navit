@@ -688,8 +688,6 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 
 void image_cache_hash_add( const char* key, struct graphics_image_priv* val_ptr)
 {
-	char* key_ptr = NULL;
-
 	if ( image_cache_hash == NULL ) {
 		image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
 	}

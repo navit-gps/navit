@@ -8,8 +8,11 @@
 #include "win32_gui.h"
 #include "point.h"
 #include "menu.h"
+#include "item.h"
+#include "attr.h"
 #include "callback.h"
 #include <commctrl.h>
+#include "debug.h"
 
 
 //static GHashTable *popup_callback_hash = NULL;
@@ -81,47 +84,6 @@ BOOL CALLBACK EnumChildProc(HWND hwndChild, LPARAM lParam)
 	#define GET_WHEEL_DELTA_WPARAM(wParam)  ((short)HIWORD(wParam))
 #endif
 
-/*
-TBBUTTON toolbutton [] =
-{
-	{STD_FILENEW,    IDM_NEW,        TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_FILEOPEN,   IDM_LOAD,       TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_PRINT,      IDM_PRINT,      TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_FILESAVE,   IDM_SAVE,       TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_COPY,       IDM_COPY,       TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_DELETE,     IDM_DELETE,     TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_PASTE,      IDM_PASTE,      TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_CUT,        IDM_CUT,        TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_FIND,       IDM_FIND,       TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_HELP,       IDM_HELP,       TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_PRINTPRE ,  IDM_PRINTVIEW,  TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_PROPERTIES, IDM_PROPERTY,   TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_REDOW,      IDM_REDOW,      TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_REPLACE,    IDM_REPLACE,    TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{STD_UNDO,       IDM_UNDO,       TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-	{IDB_BITMAP1,    IDM_CONSOLE,    TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0},
-};
-*/
-
-static void AddToolbarBitmaps( HWND toolbar )
-{
-//    TBADDBITMAP mybit;
-//    memset (&mybit, 0, sizeof (TBADDBITMAP));
- //   mybit.hInst = instance;
-  //  mybit.nID = IDB_STD_SMALL_COLOR  ;
-
-    TBADDBITMAP dabit;
-    HBITMAP mybitmap = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_NAVITTOOLBAR));
-
-    memset (&dabit, 0, sizeof (TBADDBITMAP));
-    dabit.hInst = NULL;
-    dabit.nID = (UINT) mybitmap;
-
-
-    //int n = SendMessage (toolbar, TB_ADDBITMAP, 0, (LPARAM) &mybit);
-    int n = SendMessage (toolbar, TB_ADDBITMAP, 10, (LPARAM) &dabit);
-}
-
 static void CreateToolBar(HWND hwnd)
 {
 	// Create Toolbar
@@ -131,26 +93,17 @@ static void CreateToolBar(HWND hwnd)
 
 	hTool = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE, 0, 0, 0, 0,
 		hwnd, (HMENU)ID_CHILD_TOOLBAR, GetModuleHandle(NULL), NULL);
+
 	if(hTool == NULL)
 		MessageBox(hwnd, "Could not create tool bar.", "Error", MB_OK | MB_ICONERROR);
 
-	// Send the TB_BUTTONSTRUCTSIZE message, which is required for
-	// backward compatibility.
 	SendMessage(hTool, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 
-// AddToolbarBitmaps( hTool );
-// LoadBitmap(GetModuleHandle(NULL), );
-
-int  inst = GetModuleHandle(NULL);
-	tbab.hInst = inst;
+	tbab.hInst = GetModuleHandle(NULL);
 	tbab.nID = IDB_NAVITTOOLBAR;
-	int iImageOffset = SendMessage(hTool, TB_ADDBITMAP, 10, (LPARAM) &tbab); /* Bitmap contains 5 icons */
+	int iImageOffset = SendMessage(hTool, TB_ADDBITMAP, 10, (LPARAM) &tbab);
 
 	int iStr;
-
-	// tbab.hInst = HINST_COMMCTRL;
-	//tbab.nID = IDB_STD_SMALL_COLOR;
-	// SendMessage(hTool, TB_ADDBITMAP, 0, (LPARAM)&tbab);
 
 	ZeroMemory(tbb, sizeof(tbb));
 
@@ -171,7 +124,7 @@ int  inst = GetModuleHandle(NULL);
 	tbb[2].iBitmap = iImageOffset+4;
 	tbb[2].fsState = TBSTATE_ENABLED;
 	tbb[2].fsStyle = TBSTYLE_BUTTON;
-	tbb[2].idCommand = ID_DISPLAY_ZOOMIN;
+	tbb[2].idCommand = ID_DISPLAY_REFRESH;
 	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  Utf8ToUtf16( _("Refresh" ) ) );
 	tbb[2].iString = iStr;
 
@@ -185,7 +138,7 @@ int  inst = GetModuleHandle(NULL);
 	tbb[4].iBitmap = iImageOffset+5;
 	tbb[4].fsState = TBSTATE_ENABLED;
 	tbb[4].fsStyle = TBSTYLE_BUTTON;
-	tbb[4].idCommand = ID_DISPLAY_ZOOMIN;
+	tbb[4].idCommand = ID_DISPLAY_ORIENT;
 	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  Utf8ToUtf16( _("Orientation" ) ) );
 	tbb[4].iString = iStr;
 
@@ -211,8 +164,6 @@ int  inst = GetModuleHandle(NULL);
 	tbb[7].iString = iStr;
 
 	SendMessage(hTool, TB_ADDBUTTONS, sizeof(tbb)/sizeof(TBBUTTON), (LPARAM)&tbb);
-	HWND hChild = GetDlgItem(hwnd, ID_CHILD_TOOLBAR);
-	hChild = hChild;
 }
 
 static void window_layout( HWND hwnd )
@@ -284,6 +235,50 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			printf( "WM_COMMAND %d\n", LOWORD(wParam) );
 			struct gui_priv* gui = (struct gui_priv*)GetWindowLongPtr( hwnd , DWLP_USER );
 
+
+			switch(LOWORD(wParam))
+			{
+				case ID_DISPLAY_ZOOMIN:
+					navit_zoom_in(gui->nav, 2, NULL);
+					return 0;
+				break;
+				case ID_DISPLAY_ZOOMOUT:
+					navit_zoom_out(gui->nav, 2, NULL);
+					return 0;
+				break;
+				case ID_DISPLAY_REFRESH:
+					navit_draw(gui->nav);
+					return 0;
+				break;
+				case ID_DISPLAY_CURSOR:
+				{
+					struct attr attr;
+					attr.type=attr_cursor;
+					// TODO attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
+					if(!navit_set_attr(gui->nav, &attr)) {
+						dbg(0, "Failed to set attr_cursor\n");
+					}
+					return 0;
+				}
+				break;
+				case ID_DISPLAY_ORIENT:
+				{
+					struct attr attr;
+
+					attr.type=attr_orientation;
+					// attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
+					attr.u.num = 0; // TODO
+					if(!navit_set_attr(gui->nav, &attr)) {
+						dbg(0, "Failed to set attr_orientation\n");
+					}
+					return 0;
+				}
+
+				case ID_FILE_EXIT:
+					PostMessage(hwnd, WM_CLOSE, 0, 0);
+					return 0;
+				break;
+			}
 			if ( popup_menu_array )
 			{
 				struct menu_priv* priv = (struct menu_priv*)g_array_index( popup_menu_array, gint, LOWORD(wParam) - POPUP_MENU_OFFSET );
@@ -298,20 +293,6 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 					}
 				}
 			}
-
-			switch(LOWORD(wParam))
-			{
-				case ID_DISPLAY_ZOOMIN:
-						navit_zoom_in(gui->nav, 2, NULL);
-				break;
-				case ID_DISPLAY_ZOOMOUT:
-						navit_zoom_out(gui->nav, 2, NULL);
-				break;
-				case ID_FILE_EXIT:
-					PostMessage(hwnd, WM_CLOSE, 0, 0);
-				break;
-			}
-			return 0;
 		}
 		break;
 		case WM_USER+ 1:
