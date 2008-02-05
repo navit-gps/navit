@@ -1,0 +1,15 @@
+bin
+obj
+*.img
+*.bin
+navit.xml
+*.depend
+*.layout
+*.bak
+bak
+locale
+distr
+xpm
+*.bz2
+*.zip
+destination.txt
