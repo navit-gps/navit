@@ -38,7 +38,7 @@ static char *attrmap={
 	"n	amenity	atm		poi_bank\n"
 	"n	amenity	bank		poi_bank\n"
 	"n	amenity	pub		poi_bar\n"
-	"n	amenity	cafe		poi_bar\n"
+	"n	amenity	cafe		poi_cafe\n"
 	"n	amenity	bus_station	poi_bus_station\n"
 	"n	amenity	parking		poi_car_parking\n"
 	"n	amenity	cinema		poi_cinema\n"
