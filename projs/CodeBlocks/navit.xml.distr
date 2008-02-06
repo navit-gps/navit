@@ -589,6 +589,9 @@ Change to your home coordinates.
 			<item type="poi_attraction" order="5-">
 				<icon src="attraction.xpm" />
 			</item>
+			<item type="poi_cafe" order="12-">
+				<icon src="cafe.xpm" />
+			</item>
 			<item type="poi_bar" order="12-">
 				<icon src="bar.xpm" />
 			</item>
