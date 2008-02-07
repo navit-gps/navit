@@ -1,5 +1,5 @@
 #!/bin/sh
-for pkg in pkg-config libtool automake aclocal autoreconf autopoint:gettext
+for pkg in pkg-config libtool automake aclocal autoreconf:autoconf autopoint:gettext
 do
 	if ! ${pkg%%:*} --version >/dev/null 
 	then
