@@ -470,18 +470,18 @@ if test x"$sdl" = xyes
 			then
 			if test x"$glc" = xyes
 				then
-				echo "SDL gui     : ENABLED, with $CEGUI_LIBS"
+				echo "OpenGL gui     : ENABLED, with $CEGUI_LIBS"
 				else
-				echo "SDL gui     : DISABLED, you are missing quesoglc"
+				echo "OpenGL gui     : DISABLED, you are missing quesoglc"
 				fi
 			else
-			echo "SDL gui     : DISABLED, your are missing glut"
+			echo "OpenGL gui     : DISABLED, your are missing glut"
 			fi
 		else
-		echo "SDL gui     : DISABLED : you are missing cegui-devel >= 0.5"
+		echo "OpenGL gui     : DISABLED : you are missing cegui-devel >= 0.5"
 	fi
 	else
-	echo "SDL gui     : DISABLED : you are missing a SDL dependency"
+	echo "OpenGL gui     : DISABLED : you are missing a SDL dependency (libsdl maybe?)"
 fi
 if test x"$enable_hildon" = xyes
         then
@@ -525,7 +525,7 @@ if  [ test x"$gtk2_pkgconfig" != xyes ] && [ test x"$sdl" != xyes ]
 	echo "" 
 	echo "*** WARNING! you have no gui that can be built! ***"
 	echo "Please install the dependency for at least gtk or sdl gui"
-	echo "For more details, see the wiki at http://navit.sf.net/wiki/"
+	echo "For more details, see the wiki at http://wiki.navit-project.org/"
 	echo "" 
 	exit 1
 fi
