@@ -560,8 +560,10 @@ static void init_sdlgui(char * skin_layout,int fullscreen,int tilt)
 	
 	try
 	{
+		dbg(0, "Forcing silly image codec\n");
+		CEGUI::OpenGLRenderer::setDefaultImageCodecName("SILLYImageCodec");
 		CEGUI::System::setDefaultXMLParserName(CEGUI::String("TinyXMLParser"));
-		dbg(1, "Using %s as the default CEGUI XML Parser\n", CEGUI::System::getDefaultXMLParserName().c_str());
+		dbg(0, "Using %s as the default CEGUI XML Parser\n", CEGUI::System::getDefaultXMLParserName().c_str());
 		renderer = new CEGUI::OpenGLRenderer(0,XRES,YRES);
 		new CEGUI::System(renderer);
 
