@@ -407,8 +407,6 @@ display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy,
 	y <<= 6;
 	FT_Set_Transform( font->face, &matrix, &pen );
 
-
-
 	for ( n = 0; n < len; n++ )
 	{
 
