@@ -470,18 +470,18 @@ if test x"$sdl" = xyes
 			then
 			if test x"$glc" = xyes
 				then
-				echo "OpenGL gui     : ENABLED, with $CEGUI_LIBS"
+				echo "OpenGL gui  : ENABLED, with $CEGUI_LIBS"
 				else
-				echo "OpenGL gui     : DISABLED, you are missing quesoglc"
+				echo "OpenGL gui  : DISABLED, you are missing quesoglc"
 				fi
 			else
-			echo "OpenGL gui     : DISABLED, your are missing glut"
+			echo "OpenGL gui  : DISABLED, your are missing glut"
 			fi
 		else
-		echo "OpenGL gui     : DISABLED : you are missing cegui-devel >= 0.5"
+		echo "OpenGL gui  : DISABLED : you are missing cegui-devel >= 0.5"
 	fi
 	else
-	echo "OpenGL gui     : DISABLED : you are missing a SDL dependency (libsdl maybe?)"
+	echo "OpenGL gui  : DISABLED : you are missing a SDL dependency (libsdl maybe?)"
 fi
 if test x"$enable_hildon" = xyes
         then
