@@ -60,22 +60,22 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 	case GDK_KP_Enter:
 		gtk_menu_shell_select_first(GTK_MENU_SHELL(this->menubar), TRUE);
 		break;
-	case KEY_Up:
+	case KEY_UP:
 		p.x=w/2;
 		p.y=0;
 		navit_set_center_screen(this->nav, &p);
 		break;
-	case KEY_Down:
+	case KEY_DOWN:
 		p.x=w/2;
 		p.y=h;
 		navit_set_center_screen(this->nav, &p);
 		break;
-	case KEY_Left:
+	case KEY_LEFT:
 		p.x=0;
 		p.y=h/2;
 		navit_set_center_screen(this->nav, &p);
 		break;
-	case KEY_Right:
+	case KEY_RIGHT:
 		p.x=w;
 		p.y=h/2;
 		navit_set_center_screen(this->nav, &p);
