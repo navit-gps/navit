@@ -45,6 +45,20 @@ test x"${AVOID_UNALIGNED}" = xyes && AC_DEFINE(AVOID_UNALIGNED,[],Define to avoi
 AC_ARG_ENABLE(avoid-float, [  --enable-avoid-float              avoid floating point calculations], AVOID_FLOAT=$enableval, AVOID_FLOAT=no)
 test x"${AVOID_FLOAT}" = xyes && AC_DEFINE(AVOID_FLOAT,[],Define to avoid floating point)
 
+AC_ARG_ENABLE(hildon, [  --enable-hildon              build with maemo/hildon support], enable_hildon=$enableval, enable_hildon=no)
+if test "x${enable_hildon}" = "xyes" ; then
+	PKG_CHECK_MODULES(enable_hildon, hildon-libs >= 0.12.24, , [
+		AC_MSG_RESULT(no)
+		enable_hildon=no
+	])
+	if test x"${enable_hildon}" = xyes ; then
+		AC_DEFINE(USE_HILDON, 1, [Build with maemo/hildon support])
+		AC_SUBST(HILDON_CFLAGS)
+		AC_SUBST(HILDON_LIBS)
+	fi
+fi
+AM_CONDITIONAL(USE_HILDON, test "${enable_hildon}" = "xyes")
+
 AC_ARG_ENABLE(libgps, [  --disable-libgps             don't use libgps], USE_LIBGPS=$enableval, USE_LIBGPS=yes)
 AC_ARG_ENABLE(garmin, [  --disable-garmin             disable garmin support], USE_GARMIN=$enableval, USE_GARMIN=yes)
 
@@ -469,6 +483,13 @@ if test x"$sdl" = xyes
 	else
 	echo "SDL gui     : DISABLED : you are missing a SDL dependency"
 fi
+if test x"$enable_hildon" = xyes
+        then
+        echo "Maemo/Hildon: ENABLED"
+        else
+        echo "Maemo/Hildon: DISABLED"
+fi
+
 if test x"$gpsd" = xyes
 	then
 	echo "GPSD support: ENABLED"
