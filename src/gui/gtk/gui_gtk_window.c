@@ -18,13 +18,29 @@
 #include "graphics.h"
 #include "gui_gtk.h"
 #include "transform.h"
+#include "config.h"
 
+#ifdef USE_HILDON
+#include "hildon-widgets/hildon-defines.h"
+#define KEY_ZOOM_IN HILDON_HARDKEY_INCREASE
+#define KEY_ZOOM_OUT HILDON_HARDKEY_DECREASE
+#define KEY_UP HILDON_HARDKEY_UP
+#define KEY_DOWN HILDON_HARDKEY_DOWN
+#define KEY_LEFT HILDON_HARDKEY_LEFT
+#define KEY_RIGHT HILDON_HARDKEY_RIGHT
+#else
 #ifndef GDK_Book
 #define GDK_Book XF86XK_Book
 #endif
-
 #ifndef GDK_Calendar
 #define GDK_Calendar XF86XK_Calendar
+#endif
+#define KEY_ZOOM_IN GDK_Book
+#define KEY_ZOOM_OUT GDK_Calendar 
+#define KEY_UP GDK_Up
+#define KEY_DOWN GDK_Down
+#define KEY_LEFT GDK_Left
+#define KEY_RIGHT GDK_Right
 #endif
 
 #define _(text) gettext(text)
@@ -33,6 +49,8 @@ static gboolean
 keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 {
 	int w,h;
+	GtkToggleAction *action;
+	gboolean *fullscreen;
 	struct point p;
 	if (event->type != GDK_KEY_PRESS)
 		return FALSE;
@@ -42,32 +60,45 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 	case GDK_KP_Enter:
 		gtk_menu_shell_select_first(GTK_MENU_SHELL(this->menubar), TRUE);
 		break;
-	case GDK_Up:
+	case KEY_Up:
 		p.x=w/2;
 		p.y=0;
 		navit_set_center_screen(this->nav, &p);
 		break;
-	case GDK_Down:
+	case KEY_Down:
 		p.x=w/2;
 		p.y=h;
 		navit_set_center_screen(this->nav, &p);
 		break;
-	case GDK_Left:
+	case KEY_Left:
 		p.x=0;
 		p.y=h/2;
 		navit_set_center_screen(this->nav, &p);
 		break;
-	case GDK_Right:
+	case KEY_Right:
 		p.x=w;
 		p.y=h/2;
 		navit_set_center_screen(this->nav, &p);
 		break;
-	case GDK_Book:
+	case KEY_ZOOM_IN:
 		navit_zoom_in(this->nav, 2, NULL);
 		break;
-	case GDK_Calendar:
+	case KEY_ZOOM_OUT:
 		navit_zoom_out(this->nav, 2, NULL);
 		break;
+	#ifdef USE_HILDON
+	case HILDON_HARDKEY_FULLSCREEN:
+		action = GTK_TOGGLE_ACTION (gtk_action_group_get_action (this->base_group, "FullscreenAction"));
+			
+		if ( gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action)))
+		{
+			fullscreen = 0;
+		} else  {
+			fullscreen = 1;
+		}
+		gtk_toggle_action_set_active (action, fullscreen);
+		break;
+	#endif /*HILDON*/
 	default:
 		return FALSE;
 	}
