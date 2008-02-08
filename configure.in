@@ -171,6 +171,17 @@ PKG_CHECK_MODULES(
 )
 
 AC_CHECK_HEADER(
+        X11/Xmu/Xmu.h,
+        AC_DEFINE(
+                [HAVE_XMU],
+                [],
+                Define to 1 if you have the <X11/Xmu/Xmu.h> header file.
+                )
+                xmu=yes,
+        AC_MSG_WARN([*** no X11/Xmu/Xmu.h -- opengl and SDL support disabled])
+)
+
+AC_CHECK_HEADER(
 	GL/gl.h,
 	AC_DEFINE(
 		[HAVE_OPENGL],
@@ -286,7 +297,7 @@ if test x"$cegui" = xyes
 AC_SUBST(CEGUI_CFLAGS)
 AC_SUBST(CEGUI_LIBS)
 
-AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$cegui" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
+AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$cegui" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" -a "x$xmu" = "xyes" ])
 AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
 
 
@@ -462,26 +473,31 @@ if test x"$gtk2_pkgconfig" = xyes
 	echo "GTK gui     : DISABLED : you are missing a dependency. To fix this install a package named gtk2-devel or libgtk2.0-dev"
 fi
 # FIXME : maybe elaborate missing dependencies
-if test x"$sdl" = xyes
+if test x"$sdl" != xyes
 	then
-	if test x"$cegui" = xyes
-		then
-		if test x"$glut" = xyes
-			then
-			if test x"$glc" = xyes
-				then
-				echo "OpenGL gui  : ENABLED, with $CEGUI_LIBS"
-				else
-				echo "OpenGL gui  : DISABLED, you are missing quesoglc"
-				fi
-			else
-			echo "OpenGL gui  : DISABLED, your are missing glut"
-			fi
-		else
-		echo "OpenGL gui  : DISABLED : you are missing cegui-devel >= 0.5"
-	fi
-	else
-	echo "OpenGL gui  : DISABLED : you are missing a SDL dependency (libsdl maybe?)"
+        sdl_failures="(libsdl maybe?) "
+fi
+if test x"$xmu" != xyes
+        then                
+        sdl_failures=$sdl_failures"libxmu "
+fi        
+if test x"$glut" != xyes
+       then
+        sdl_failures=$sdl_failures"glut "
+fi
+if test x"$glc" != xyes
+        then
+        sdl_failures=$sdl_failures"quesoglc "
+fi
+if test x"$cegui" != xyes
+        then
+        sdl_failures=$sdl_failures"cegui-devel >= 0.5 "
+fi
+if test -z "$sdl_failures"
+        then
+        echo "OpenGL gui  : ENABLED, with $CEGUI_LIBS"
+        else
+	         echo "OpenGL gui  : DISABLED : you are missing $sdl_failures"
 fi
 if test x"$enable_hildon" = xyes
         then
