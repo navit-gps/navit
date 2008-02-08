@@ -94,8 +94,11 @@ Change to your home coordinates.
 			<item type="poly_sport" order="0-">
 				<polygon color="#4af04f" /> 
 			</item>
-			<item type="poly_industry,poly_building,poly_place" order="0-">
+			<item type="poly_industry,poly_place" order="0-">
 				<polygon color="#e6e6e6" /> 
+			</item>
+			<item type="poly_building" order="0-">
+				<polygon color="#b6a6a6" />
 			</item>
 			<item type="water_line" order="0-">
 				<polyline color="#5096b8" width="1" /> 
@@ -106,6 +109,12 @@ Change to your home coordinates.
 			</item>
 			<item type="poly_terminal" order="7-">
 				<polygon color="#e3c6a6" />
+			</item>
+			<item type="poly_cemetery" order="1-">
+				<polygon color="#bde3cb" />
+			</item>
+			<item type="poly_car_parking" order="1-">
+				<polygon color="#e7cf87" />
 			</item>
 			<item type="rail" order="6-">
 				<polyline color="#808080" width="3" /> 
@@ -167,6 +176,42 @@ Change to your home coordinates.
 			<item type="street_nopass" order="10-">
 				<polyline color="#000000" width="1" /> 
 			</item>
+ 			<item type="street_pedestrian" order="10">
+ 				<polyline color="#d2d2d2" width="3" />
+ 				<polyline color="#dddddd" width="1" />
+ 			</item>
+ 			<item type="street_pedestrian" order="11">
+ 				<polyline color="#d2d2d2" width="5" />
+ 				<polyline color="#dddddd" width="3" />
+ 			</item>
+ 			<item type="street_pedestrian" order="12">
+ 				<polyline color="#d2d2d2" width="8" />
+ 				<polyline color="#dddddd" width="6" />
+ 			</item>
+ 			<item type="street_pedestrian" order="13">
+ 				<polyline color="#d2d2d2" width="9" />
+ 				<polyline color="#dddddd" width="7" />
+ 			</item>
+ 			<item type="street_pedestrian" order="14">
+ 				<polyline color="#d2d2d2" width="13" />
+ 				<polyline color="#dddddd" width="9" />
+ 			</item>
+ 			<item type="street_pedestrian" order="15">
+ 				<polyline color="#d2d2d2" width="18" />
+ 				<polyline color="#dddddd" width="14" />
+ 			</item>
+ 			<item type="street_pedestrian" order="16">
+ 				<polyline color="#d2d2d2" width="21" />
+ 				<polyline color="#dddddd" width="17" />
+ 			</item>
+ 			<item type="street_pedestrian" order="17">
+ 				<polyline color="#d2d2d2" width="25" />
+ 				<polyline color="#dddddd" width="21" />
+ 			</item>
+ 			<item type="street_pedestrian" order="18">
+ 				<polyline color="#d2d2d2" width="40" />
+ 				<polyline color="#dddddd" width="34" />
+ 			</item>
 			<item type="street_service"	order="11">
 				<polyline color="#d2d2d2" width="4" />
 				<polyline color="#fefefe" width="2" />
@@ -644,11 +689,11 @@ Change to your home coordinates.
 			<item type="poi_bowling" order="0-">
 				<icon src="bowling.xpm" />
 			</item>
-			<item type="poi_bus_station" order="0-">
-				<icon src="bus_station.xpm" />
+			<item type="poi_bus_station" order="12-">
+				<icon src="bus.xpm" />
 			</item>
-			<item type="poi_bus_stop" order="0-">
-				<icon src="bus_stop.xpm" />
+			<item type="poi_bus_stop" order="12-">
+				<icon src="bus.xpm" />
 			</item>
 			<item type="poi_bussines_service" order="0-">
 				<icon src="bussines_service.xpm" />
