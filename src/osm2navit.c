@@ -61,6 +61,7 @@ static char *attrmap={
 	"n	amenity	telephone	poi_telephone\n"
 	"n	amenity	theatre		poi_theater\n"
 	"n	highway	bus_stop	poi_bus_stop\n"
+	"n	highway	motorway_junction	highway_exit\n"
 	"n	highway	traffic_signals	traffic_signals\n"
 	"n	leisure	slipway		poi_boat_ramp\n"
 	"n	leisure	fishing		poi_fish\n"
