@@ -626,7 +626,7 @@ Change to your home coordinates.
 			<item type="poi_fuel" order="10-">
 				<icon src="fuel.xpm" />
 			</item>
-			<item type="poi_shopping" order="0-">
+			<item type="poi_shopping" order="10-">
 				<icon src="shopping.xpm" />
 			</item>
 			<item type="poi_attraction" order="5-">
