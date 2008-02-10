@@ -548,6 +548,10 @@ void
 graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, GList *layouts)
 {
 	int order=transform_get_order(trans);
+	// FIXME find a better place to set the background color
+	graphics_gc_set_background(gra->gc[0], ((struct layout *)layouts->data)->color);
+	graphics_gc_set_foreground(gra->gc[0], ((struct layout *)layouts->data)->color);
+	gra->meth.background_gc(gra->priv, gra->gc[0]->priv);
 	gra->meth.draw_mode(gra->priv, draw_mode_begin);
 	xdisplay_draw(displaylist->dl, gra, layouts, order);
 	gra->meth.draw_mode(gra->priv, draw_mode_end);

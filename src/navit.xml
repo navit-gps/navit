@@ -70,7 +70,7 @@ Change to your home coordinates.
 		<map type="garmin" enabled="yes" data="/path/to/img" debug="4"/>
 	</mapset>
 
-	<layout name="Tag">
+	<layout name="Tag" color= "#ffefb7">
 		<layer name="sea" details="0">
 			<item type="poly_wood" order="0-">
 				<polygon color="#8ec78d" /> 
@@ -998,7 +998,7 @@ Change to your home coordinates.
 			</item>
 		</layer>
 	</layout>
-	<layout name="Nacht">
+	<layout name="Nacht" color="#ffefb7">
 	</layout>
 </navit>
 </config>
