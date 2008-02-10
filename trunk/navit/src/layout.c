@@ -2,12 +2,14 @@
 #include <string.h>
 #include "layout.h"
 
-struct layout * layout_new(const char *name)
+struct layout * layout_new(const char *name, struct color *color)
 {
 	struct layout *l;
 
 	l = g_new0(struct layout, 1);
 	l->name = g_strdup(name);
+	l->color = g_new0(struct color,1);
+	*(l->color) = *color;
 	return l;
 }
 
