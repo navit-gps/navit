@@ -441,7 +441,7 @@ xmlconfig_layout(struct xmlstate *state)
 
 	if (! name)
 		return 0;
-	find_color(state, 1, &color);
+	find_color(state, 0, &color);
 	state->element_object = layout_new(name, &color);
 	if (! state->element_object)
 		return 0;
