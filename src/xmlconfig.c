@@ -437,10 +437,12 @@ static int
 xmlconfig_layout(struct xmlstate *state)
 {
 	const char *name=find_attribute(state, "name", 1);
+	struct color color = {0xffff, 0xefef, 0xb7b7, 0xffff};
 
 	if (! name)
 		return 0;
-	state->element_object = layout_new(name);
+	find_color(state, 1, &color);
+	state->element_object = layout_new(name, &color);
 	if (! state->element_object)
 		return 0;
 	navit_add_layout(state->parent->element_object, state->element_object);

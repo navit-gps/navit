@@ -54,6 +54,7 @@
 <!ATTLIST map debug CDATA #IMPLIED>
 <!ELEMENT layout (layer*)>
 <!ATTLIST layout name CDATA #REQUIRED>
+<!ATTLIST layout color CDATA #IMPLIED>
 <!ELEMENT layer (item+)>
 <!ATTLIST layer name CDATA #REQUIRED>
 <!ATTLIST layer details CDATA #REQUIRED>
