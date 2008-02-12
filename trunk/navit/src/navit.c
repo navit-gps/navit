@@ -656,11 +656,13 @@ navit_add_menu_layouts(struct navit *this_, struct menu *men)
 {
 	GList *layouts;
 	struct layout *l;
+	struct callback *cb;
 
 	layouts = this_->layouts;
 	while (layouts) {
 		l=layouts->data;
-		menu_add(men, l->name, menu_type_menu, NULL);
+		cb=callback_new_2(callback_cast(navit_set_attr), this_, attr_new_from_text("layout",l->name));
+		menu_add(men, l->name, menu_type_menu, cb);
 		layouts=g_list_next(layouts);
 	}
 }
@@ -1244,6 +1246,7 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 			l=layouts->data;
 			if(!strcmp(attr->u.str,l->name) && this_->layout_current!=l) {
 				this_->layout_current=l;
+				navit_draw(this_);
 				attr_updated=1;
 			}
 			layouts=g_list_next(layouts);
@@ -1275,6 +1278,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr)
 		break;
 	case attr_orientation:
 		attr->u.num=this_->orient_north_flag;
+		break;
+	case attr_layout:
+		attr->u.str=g_strdup(this_->layout_current->name);
 		break;
 	default:
 		return 0;
