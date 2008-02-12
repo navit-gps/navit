@@ -428,7 +428,7 @@ xdisplay_draw_layer(GHashTable *display_list, struct graphics *gra, struct layer
 }
 
 static void
-xdisplay_draw_layout(GHashTable *display_list, struct graphics *gra, struct layout *l, int order)
+xdisplay_draw(GHashTable *display_list, struct graphics *gra, struct layout *l, int order)
 {
 	GList *lays;
 	struct layer *lay;
@@ -438,19 +438,6 @@ xdisplay_draw_layout(GHashTable *display_list, struct graphics *gra, struct layo
 		lay=lays->data;
 		xdisplay_draw_layer(display_list, gra, lay, order);
 		lays=g_list_next(lays);
-	}
-}
-
-static void
-xdisplay_draw(GHashTable *display_list, struct graphics *gra, GList *layouts, int order)
-{
-	struct layout *l;
-
-	while (layouts) {
-		l=layouts->data;
-		xdisplay_draw_layout(display_list, gra, l, order);
-		return;
-		layouts=g_list_next(layouts);
 	}
 }
 
@@ -545,15 +532,15 @@ graphics_ready(struct graphics *this_)
 }
 
 void
-graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, GList *layouts)
+graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l)
 {
 	int order=transform_get_order(trans);
 	// FIXME find a better place to set the background color
-	graphics_gc_set_background(gra->gc[0], ((struct layout *)layouts->data)->color);
-	graphics_gc_set_foreground(gra->gc[0], ((struct layout *)layouts->data)->color);
+	graphics_gc_set_background(gra->gc[0], l->color);
+	graphics_gc_set_foreground(gra->gc[0], l->color);
 	gra->meth.background_gc(gra->priv, gra->gc[0]->priv);
 	gra->meth.draw_mode(gra->priv, draw_mode_begin);
-	xdisplay_draw(displaylist->dl, gra, layouts, order);
+	xdisplay_draw(displaylist->dl, gra, l, order);
 	gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
 
@@ -576,7 +563,7 @@ graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy)
 
 
 void
-graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, GList *layouts)
+graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l)
 {
 	int order=transform_get_order(trans);
 
@@ -598,7 +585,7 @@ graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *maps
 	profile(0,NULL);
 	do_draw(displaylist, trans, mapsets, order);
 	profile(1,"do_draw");
-	graphics_displaylist_draw(gra, displaylist, trans, layouts);
+	graphics_displaylist_draw(gra, displaylist, trans, l);
 	profile(1,"xdisplay_draw");
 	profile(0,"end");
   
