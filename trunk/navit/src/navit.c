@@ -31,6 +31,7 @@
 #include "track.h"
 #include "vehicle.h"
 #include "color.h"
+#include "layout.h"
 
 #define _(STRING)    gettext(STRING)
 /**
@@ -130,6 +131,9 @@ void
 navit_add_layout(struct navit *this_, struct layout *lay)
 {
 	this_->layouts = g_list_append(this_->layouts, lay);
+	if(!this_->layout_current) {
+		this_->layout_current=lay;
+	}
 }
 
 void
@@ -139,7 +143,7 @@ navit_draw(struct navit *this_)
 	struct navit_vehicle *nv;
 
 	transform_setup_source_rect(this_->trans);
-	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layouts);
+	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layout_current);
 	l=this_->vehicles;
 	while (l) {
 		nv=l->data;
@@ -153,7 +157,7 @@ void
 navit_draw_displaylist(struct navit *this_)
 {
 	if (this_->ready) 
-		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layouts);
+		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current);
 }
 
 static void
@@ -238,7 +242,7 @@ navit_motion_timeout(void *data)
 	if (dx || dy) {
 		this_->last=this_->current;
 		graphics_displaylist_move(this_->displaylist, dx, dy);
-		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layouts);
+		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current);
 		this_->moved=1;
 	}
 	this_->motion_timeout=0;
@@ -650,7 +654,15 @@ navit_debug(struct navit *this_)
 void
 navit_add_menu_layouts(struct navit *this_, struct menu *men)
 {
-	menu_add(men, "Test", menu_type_menu, NULL);
+	GList *layouts;
+	struct layout *l;
+
+	layouts = this_->layouts;
+	while (layouts) {
+		l=layouts->data;
+		menu_add(men, l->name, menu_type_menu, NULL);
+		layouts=g_list_next(layouts);
+	}
 }
 
 void
@@ -1193,6 +1205,8 @@ navit_set_center_screen(struct navit *this_, struct point *p)
 int
 navit_set_attr(struct navit *this_, struct attr *attr)
 {
+	GList *layouts;
+	struct layout *l;
 	int dir=0, orient_old=0, attr_updated=0;
 
 	switch (attr->type) {
@@ -1222,6 +1236,17 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 		if (orient_old != this_->orient_north_flag) {
 			navit_draw(this_);
 			attr_updated=1;
+		}
+		break;
+	case attr_layout:
+		layouts = this_->layouts;
+		while (layouts) {
+			l=layouts->data;
+			if(!strcmp(attr->u.str,l->name) && this_->layout_current!=l) {
+				this_->layout_current=l;
+				attr_updated=1;
+			}
+			layouts=g_list_next(layouts);
 		}
 		break;
 	default:
