@@ -74,6 +74,7 @@ ATTR(view_mode)
 ATTR(tilt)
 ATTR(media_window_title)
 ATTR(media_cmd)
+ATTR(image_codec)
 /* poi */
 ATTR(icon)
 ATTR(info_html)

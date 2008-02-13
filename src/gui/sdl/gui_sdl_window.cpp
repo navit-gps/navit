@@ -505,7 +505,7 @@ bool MoveCamera(const CEGUI::EventArgs& event){
 
 
 
-static void init_sdlgui(char * skin_layout,int fullscreen,int tilt)
+static void init_sdlgui(char * skin_layout,int fullscreen,int tilt, char *image_codec_name)
 {
 	SDL_Surface * screen;
 // 	atexit (SDL_Quit);
@@ -560,15 +560,29 @@ static void init_sdlgui(char * skin_layout,int fullscreen,int tilt)
 	
 	try
 	{
-		dbg(0, "Forcing silly image codec\n");
-		CEGUI::OpenGLRenderer::setDefaultImageCodecName("SILLYImageCodec");
+		using namespace CEGUI;
+		if (image_codec_name) {
+			dbg(0, "Using image codec: %s from config\n", image_codec_name);
+		} else {
+#if defined (HAVE_LIBCEGUISILLYIMAGECODEC)
+			image_codec_name = "SILLYImageCodec";
+#elif defined(HAVE_LIBCEGUIDEVILIMAGECODEC)
+			image_codec_name = "DevILImageCodec";
+#elif defined (HAVE_LIBCEGUITGAIMAGECODEC)
+			image_codec_name = "TGAImageCodec";
+#else
+			fprintf (stderr, "No default image codec available. Try setting image_codec in your config\n");
+			exit (1);
+#endif
+			dbg(0, "Using default image codec: %s\n", image_codec_name);
+		}
+		CEGUI::OpenGLRenderer::setDefaultImageCodecName(image_codec_name);
+
 		CEGUI::System::setDefaultXMLParserName(CEGUI::String("TinyXMLParser"));
 		dbg(0, "Using %s as the default CEGUI XML Parser\n", CEGUI::System::getDefaultXMLParserName().c_str());
 		renderer = new CEGUI::OpenGLRenderer(0,XRES,YRES);
 		new CEGUI::System(renderer);
-
-		using namespace CEGUI;
-
+		
 		SDL_ShowCursor(SDL_ENABLE);
 		SDL_EnableUNICODE(1);
 		SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
@@ -868,12 +882,16 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 //		strcpy(media_cmd_setting->u.str,media_window_title);
 	}
 
+	struct attr *image_codec_setting=attr_search(attrs, NULL, attr_image_codec);
+	char *image_codec_name=NULL;
+	if (image_codec_setting)
+		image_codec_name=image_codec_setting->u.str;
 	struct attr *skin_setting=attr_search(attrs, NULL, attr_skin);
 	if(skin_setting){
-		init_sdlgui(skin_setting->u.str,fullscreen,tilt);
+		init_sdlgui(skin_setting->u.str,fullscreen,tilt, image_codec_name);
 	} else {
 		g_warning("Warning, no skin set for <sdl> in navit.xml. Using default one");
-		init_sdlgui("TaharezLook",fullscreen,tilt);
+		init_sdlgui("TaharezLook",fullscreen,tilt, image_codec_name);
 	}
 	
 
