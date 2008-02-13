@@ -246,14 +246,7 @@ if test x"$cegui" = xyes
 	         ], $OPENGL_LIBS) 	 
 	 CEGUI_LIBS="-lCEGUIBase -lCEGUIOpenGLRenderer -lCEGUIFalagardWRBase" 	 
 	  	 
-	 # The following are optionnal, but we need to link against them if cegui was built with them 	 
-	 libssilly="$OPENGL_LIBS -lpng" 	 
-	 AC_CHECK_LIB(CEGUISILLYImageCodec, createImageCodec, 	 
-	          [CEGUI_LIBS="$CEGUI_LIBS -lCEGUISILLYImageCodec"], 	 
-	          [echo "CEGUISILLYImageCodec not found/not working, disabled."], 	 
-	          $libssilly 	 
-	 ) 	 
-	  	 
+	 # The following are optional, but we need to link against them if cegui was built with them 	 
 	 AC_CHECK_LIB(CEGUIXercesParser, main, 	 
 	          [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIXercesParser"], 	 
 	          [echo "CEGUIXercesParser not found/not working, disabled."], 	 
@@ -279,19 +272,35 @@ if test x"$cegui" = xyes
 	 ) 	 
 	  	 
 	 AC_CHECK_LIB(CEGUIDevILImageCodec, main, 	 
-	          [CEGUI_LIBS="$CEGUI_LIBS -lCEGUIDevILImageCodec"], 	 
+	          [
+		  	CEGUI_LIBS="$CEGUI_LIBS -lCEGUIDevILImageCodec"
+			 AC_DEFINE([HAVE_LIBCEGUIDEVILIMAGECODEC],[1],Define to 1 to use DevIL codec)
+		  ],
 	          [echo "CEGUIDevILImageCodec not found/not working, disabled."], 	 
 	          $OPENGL_LIBS 	 
 	 ) 	 
 	  	 
 	 AC_CHECK_LIB(CEGUITGAImageCodec, createImageCodec, 	 
-	          [CEGUI_LIBS="$CEGUI_LIBS -lCEGUITGAImageCodec"], 	 
+	          [
+			  CEGUI_LIBS="$CEGUI_LIBS -lCEGUITGAImageCodec"
+			  AC_DEFINE(HAVE_LIBCEGUITGAIMAGECODEC,[1],Define to 1 to use the TGA codec)
+		  ],
 	          [echo "GUITGAImageCodec not found/not working, disabled."], 	 
 	          $OPENGL_LIBS 	 
 	 ) 	 
 	  	 
+	 libssilly="$OPENGL_LIBS -lpng" 	 
+	 AC_CHECK_LIB(CEGUISILLYImageCodec, createImageCodec, 	 
+	          [
+		 	 CEGUI_LIBS="$CEGUI_LIBS -lCEGUISILLYImageCodec"
+			 AC_DEFINE([HAVE_LIBCEGUISILLYIMAGECODEC],[1],Define to 1 to use SILLY codec)
+		  ],
+	          [echo "CEGUISILLYImageCodec not found/not working, disabled."], 	 
+	          $libssilly 	 
+	 ) 	 
+	 # Restore the libs
 	 LIBS="$libstemp" 	 
-	 echo "LIBS : $CEGUI_LIBS" 	 
+	 echo "CEGUI_LIBS : $CEGUI_LIBS" 	 
 	 fi
 
 AC_SUBST(CEGUI_CFLAGS)
