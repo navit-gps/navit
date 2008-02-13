@@ -33,7 +33,7 @@ select_row(GtkTreeView *tree, GtkTreePath *path, GtkTreeViewColumn *column, stru
 	GtkTreeModel *model;
 	int i;
 
-	dbg(0,"win=%p\n", win);	
+	dbg(0,"win=%p\n", win);
 
 	model=gtk_tree_view_get_model(tree);
 	gtk_tree_model_get_iter(model, &iter, path);
@@ -54,7 +54,6 @@ gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, in
 	GtkCellRenderer *cell;
 	GtkTreeIter iter;
 	GType types[count];
-	gchar *utf8;
 
 	if (! win->treeview) {
 		win->treeview=gtk_tree_view_new();
@@ -62,7 +61,7 @@ gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, in
 		gtk_container_add(GTK_CONTAINER(win->scrolled_window), win->treeview);
 		gtk_widget_show_all(GTK_WIDGET(win->window));
 		gtk_widget_grab_focus(GTK_WIDGET(win->treeview));
-		
+
 		/* add column names to treeview */
 		for(i=0;i<count;i++) {
 			if (param[i].name) {
@@ -80,7 +79,7 @@ gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, in
 	/* find data storage and create a new one if none is there */
 	if (gtk_tree_view_get_model(GTK_TREE_VIEW (win->treeview)) == NULL) {
 		for(i=0;i<count;i++) {
-			if (param[i].name && !strcmp(param[i].name, "Distance")) 
+			if (param[i].name && !strcmp(param[i].name, "Distance"))
 				types[i]=G_TYPE_INT;
 			else
 				types[i]=G_TYPE_STRING;
@@ -90,7 +89,7 @@ gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, in
 			win->sortmodel=gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(win->liststore));
 			gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (win->sortmodel), 0, GTK_SORT_ASCENDING);
 			gtk_tree_view_set_model (GTK_TREE_VIEW (win->treeview), GTK_TREE_MODEL(win->sortmodel));
-		} else 
+		} else
 			gtk_tree_view_set_model (GTK_TREE_VIEW (win->treeview), GTK_TREE_MODEL(win->liststore));
 	}
 
@@ -101,8 +100,7 @@ gui_gtk_datawindow_add(struct datawindow_priv *win, struct param_list *param, in
 		if (param[i].name && !strcmp(param[i].name, "Distance")) {
 			gtk_list_store_set(win->liststore,&iter,i,atoi(param[i].value),-1);
 		} else {
-			utf8=g_locale_to_utf8(param[i].value,-1,NULL,NULL,NULL);
-			gtk_list_store_set(win->liststore,&iter,i,utf8,-1);
+			gtk_list_store_set(win->liststore,&iter,i,param[i].value,-1);
 		}
 	}
 }
@@ -163,7 +161,7 @@ gui_gtk_datawindow_new(struct gui_priv *gui, char *name, struct callback *click,
 	win->treeview=NULL;
 	win->click=click;
 	win->close=close;
-	if (gui) 
+	if (gui)
 		gtk_window_set_transient_for(GTK_WINDOW((GtkWidget *)(win->window)), GTK_WINDOW(gui->win));
 	g_signal_connect(G_OBJECT(win->window), "delete-event", G_CALLBACK(gui_gtk_datawindow_delete), win);
 	gtk_widget_show_all(win->window);
