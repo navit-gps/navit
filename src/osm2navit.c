@@ -410,8 +410,13 @@ add_tag(char *k, char *v)
 		level=5;
 	}
 	if (attr_debug_level >= level) {
-		sprintf(debug_attr_buffer+strlen(debug_attr_buffer), " %s=%s", k, v);
-		node_is_tagged=1;
+		int bytes_left = sizeof( debug_attr_buffer ) - strlen(debug_attr_buffer) - 1;
+		if ( bytes_left > 0 )
+		{
+			snprintf(debug_attr_buffer+strlen(debug_attr_buffer), bytes_left,  " %s=%s", k, v);
+			debug_attr_buffer[ sizeof( debug_attr_buffer ) -  1 ] = '\0';
+			node_is_tagged=1;
+		}
 	}
 	if (level < 6)
 		node_is_tagged=1;
@@ -1225,7 +1230,7 @@ phase34_process_file(int phase, FILE *in)
 			max=8;
 		if (ib->type == type_street_3_city || ib->type == type_street_4_city || ib->type == type_street_3_land || ib->type == type_street_4_land)
 			max=12;
-		
+
 		tile(&r, buffer, max);
 #if 0
 		fprintf(stderr,"%s\n", buffer);
