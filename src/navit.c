@@ -156,7 +156,7 @@ navit_draw(struct navit *this_)
 void
 navit_draw_displaylist(struct navit *this_)
 {
-	if (this_->ready) 
+	if (this_->ready)
 		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current);
 }
 
@@ -208,14 +208,14 @@ navit_button(void *data, int pressed, int button, struct point *p)
 	} else {
 		this_->button_pressed=0;
 		if (this_->button_timeout) {
-			g_source_remove(this_->button_timeout);	
+			g_source_remove(this_->button_timeout);
 			this_->button_timeout=0;
 			if (! this_->moved && ! transform_within_border(this_->trans, p, border))
 				navit_set_center_screen(this_, p);
-				
+
 		}
 		if (this_->motion_timeout) {
-			g_source_remove(this_->motion_timeout);	
+			g_source_remove(this_->motion_timeout);
 			this_->motion_timeout=0;
 		}
 		if (this_->moved) {
@@ -260,7 +260,7 @@ navit_motion(void *data, struct point *p)
 		dy=(p->y-this_->pressed.y);
 		if (dx < -8 || dx > 8 || dy < -8 || dy > 8) {
 			if (this_->button_timeout) {
-				g_source_remove(this_->button_timeout);	
+				g_source_remove(this_->button_timeout);
 				this_->button_timeout=0;
 			}
 			this_->current=*p;
@@ -520,7 +520,7 @@ parse_line(FILE *f, char *buffer, char **name, struct pcoord *c)
 	pos=coord_parse(cp, pro, &co);
 	if (!pos)
 		return -2;
-	if (!cp[pos] || cp[pos] == '\n') 
+	if (!cp[pos] || cp[pos] == '\n')
 		return -1;
 	cp[strlen(cp)-1]='\0';
 	s=cp+pos+1;
@@ -529,7 +529,7 @@ parse_line(FILE *f, char *buffer, char **name, struct pcoord *c)
 		if (i) {
 			s=i+1;
 			i=strchr(s, '"');
-			if (i) 
+			if (i)
 				*i='\0';
 		}
 	}
@@ -547,7 +547,7 @@ navit_set_destination_from_file(struct navit *this_, char *file, int bookmark, i
 	FILE *f;
 	char *name, *description, buffer[2048];
 	struct pcoord c;
-	
+
 	f=fopen(file, "r");
 	if (! f)
 		return;
@@ -558,7 +558,7 @@ navit_set_destination_from_file(struct navit *this_, char *file, int bookmark, i
 		description=g_strdup_printf("Bookmark %s", name);
 		navit_set_destination(this_, &c, description);
 		g_free(description);
-	} else 
+	} else
 		navit_set_destination(this_, &c, name);
 }
 
@@ -719,7 +719,7 @@ navit_add_menu_destinations_from_file(struct navit *this_, char *file, struct me
 	char *name;
 	int offset=0;
 	struct callback *cb;
-	
+
 	f=fopen(file, "r");
 	if (f) {
 		while (! feof(f) && (pos=parse_line(f, buffer, &name, &c)) > -3) {
@@ -761,11 +761,11 @@ static void
 navit_vehicle_toggle(struct navit *this_, struct navit_vehicle *nv)
 {
 	if (menu_get_toggle(nv->menu)) {
-		if (this_->vehicle && this_->vehicle != nv) 
+		if (this_->vehicle && this_->vehicle != nv)
 			menu_set_toggle(this_->vehicle->menu, 0);
 		this_->vehicle=nv;
 	} else {
-		if (this_->vehicle == nv) 
+		if (this_->vehicle == nv)
 			this_->vehicle=NULL;
 	}
 }
@@ -808,7 +808,7 @@ navit_speak(struct navit *this_)
 		mr=map_rect_new(map, NULL);
 	if (mr) {
 		item=map_rect_get_item(mr);
-		if (item && item_attr_get(item, attr_navigation_speech, &attr)) 
+		if (item && item_attr_get(item, attr_navigation_speech, &attr))
 			speech_say(this_->speech, attr.u.str);
 		map_rect_destroy(mr);
 	}
@@ -845,25 +845,53 @@ navit_window_roadbook_update(struct navit *this_)
 			item_attr_get(item, attr_length, &attr);
 			dbg(2, "Length=%d\n", attr.u.num);
 			param[1].name=_("Length");
-			param[1].value=g_strdup_printf("%d m",attr.u.num);
+
+			if ( attr.u.num >= 2000 )
+			{
+				param[1].value=g_strdup_printf("%5.1f %s",(float)attr.u.num / 1000, _("km") );
+			}
+			else
+			{
+				param[1].value=g_strdup_printf("%7d %s",attr.u.num, _("m"));
+			}
 
 			item_attr_get(item, attr_time, &attr);
 			dbg(2, "Time=%d\n", attr.u.num);
 			secs=attr.u.num/10;
 			param[2].name=_("Time");
-			param[2].value=g_strdup_printf("%d:%d",secs / 60, secs % 60);
+			if ( secs >= 3600 )
+			{
+				param[2].value=g_strdup_printf("%d:%02d:%02d",secs / 60, ( secs / 60 ) % 60 , secs % 60);
+			}
+			else
+			{
+				param[2].value=g_strdup_printf("%d:%02d",secs / 60, secs % 60);
+			}
 
 			item_attr_get(item, attr_destination_length, &attr);
 			dbg(2, "Destlength=%d\n", attr.u.num);
 			param[3].name=_("Destination Length");
-			param[3].value=g_strdup_printf("%d m",attr.u.num);
+			if ( attr.u.num >= 2000 )
+			{
+				param[3].value=g_strdup_printf("%5.1f %s",(float)attr.u.num / 1000, _("km") );
+			}
+			else
+			{
+				param[3].value=g_strdup_printf("%d %s",attr.u.num, _("m"));
+			}
 
 			item_attr_get(item, attr_destination_time, &attr);
 			dbg(2, "Desttime=%d\n", attr.u.num);
 			secs=attr.u.num/10;
 			param[4].name=_("Destination Time");
-			param[4].value=g_strdup_printf("%d:%d",secs / 60, secs % 60);
-
+			if ( secs >= 3600 )
+			{
+				param[4].value=g_strdup_printf("%d:%02d:%02d",secs / 3600, (secs / 60 ) % 60 , secs % 60);
+			}
+			else
+			{
+				param[4].value=g_strdup_printf("%d:%02d",secs / 60, secs % 60);
+			}
 			datawindow_add(this_->roadbook_window, param, 5);
 		}
 		map_rect_destroy(mr);
@@ -904,7 +932,7 @@ get_direction(char *buffer, int angle, int mode)
 		if (angle > 22 && angle < 158)
 			*buffer++='E';
 		if (angle > 202 && angle < 338)
-			*buffer++='W';	
+			*buffer++='W';
 		*buffer++='\0';
 		break;
 	case 2:
@@ -956,9 +984,9 @@ navit_window_items_open(struct navit *this_, struct navit_window_items *nwi)
 	char distbuf[32];
 	char dirbuf[32];
 	char coordbuf[64];
-	
+
 	dbg(0, "distance=%d\n", nwi->distance);
-	if (nwi->distance == -1) 
+	if (nwi->distance == -1)
 		dist=40000000;
 	else
 		dist=nwi->distance*1000;
@@ -993,12 +1021,12 @@ navit_window_items_open(struct navit *this_, struct navit_window_items *nwi)
 		while ((item=map_rect_get_item(mr))) {
 			if (item_coord_get(item, &c, 1)) {
 				if (coord_rect_contains(&sel.u.c_rect, &c) && g_hash_table_lookup(nwi->hash, &item->type)) {
-					if (! item_attr_get(item, attr_label, &attr)) 
+					if (! item_attr_get(item, attr_label, &attr))
 						attr.u.str="";
 					idist=transform_distance(map_projection(item->map), center, &c);
 					if (idist < dist) {
 						get_direction(dirbuf, transform_get_angle_delta(center, &c, 0), 1);
-						param[0].value=distbuf;	
+						param[0].value=distbuf;
 						param[1].value=dirbuf;
 						param[2].value=item_to_name(item->type);
 						sprintf(distbuf,"%d", idist/1000);
@@ -1009,11 +1037,11 @@ navit_window_items_open(struct navit *this_, struct navit_window_items *nwi)
 					}
 					/* printf("gefunden %s %s %d\n",item_to_name(item->type), attr.u.str, idist/1000); */
 				}
-				if (item->type >= type_line) 
+				if (item->type >= type_line)
 					while (item_coord_get(item, &c, 1));
 			}
 		}
-		map_rect_destroy(mr);	
+		map_rect_destroy(mr);
 	}
 	mapset_close(h);
 }
@@ -1313,7 +1341,7 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 {
 	struct point pnt2;
 	enum projection pro;
-	if (pnt) 
+	if (pnt)
 		pnt2=*pnt;
 	else {
 		pro=transform_get_projection(this_->trans);
@@ -1355,7 +1383,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		route_path_set=route_get_path_set(this_->route);
 	if (this_->tracking && this_->tracking_flag) {
 		if (tracking_update(this_->tracking, &nv->coord, nv->dir)) {
-			if (this_->route && nv->update_curr == 1) 
+			if (this_->route && nv->update_curr == 1)
 				route_set_position_from_tracking(this_->route, this_->tracking);
 		}
 	} else {
@@ -1389,7 +1417,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
 		pnt=NULL;
 	}
-	if (pnt && this_->route && !route_path_set && route_get_path_set(this_->route)) 
+	if (pnt && this_->route && !route_path_set && route_get_path_set(this_->route))
 		navit_draw(this_);
 	if (nv->follow_curr > 1)
 		nv->follow_curr--;
@@ -1400,7 +1428,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	else
 		nv->update_curr=nv->update;
 	callback_list_call_2(this_->vehicle_cbl, this_, nv->vehicle);
-	if (pnt) 
+	if (pnt)
 		navit_vehicle_draw(this_, nv, pnt);
 }
 
@@ -1450,12 +1478,12 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v, struct attr **attrs)
 		nv->update=nv->update=update->u.num;
 	if ((follow=attr_search(attrs, NULL, attr_follow)))
 		nv->follow=nv->follow=follow->u.num;
-	if ((color=attr_search(attrs, NULL, attr_color))) 
+	if ((color=attr_search(attrs, NULL, attr_color)))
 		nv->c=*(color->u.color);
 	nv->update_curr=nv->update;
 	nv->follow_curr=nv->follow;
 	this_->vehicles=g_list_append(this_->vehicles, nv);
-	if ((active=attr_search(attrs, NULL, attr_active)) && active->u.num) 
+	if ((active=attr_search(attrs, NULL, attr_active)) && active->u.num)
 		navit_set_vehicle(this_, nv);
 
 	return nv;
