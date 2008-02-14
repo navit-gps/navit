@@ -41,6 +41,8 @@ struct vehicle_priv {
 	GIOChannel *iochan;
 	char *buffer;
 	int buffer_pos;
+	char *nmea_data;
+	char *nmea_data_buf;
 
 	struct coord_geo geo;
 	double speed;
@@ -201,7 +203,7 @@ vehicle_file_enable_watch_timer(gpointer t)
 static void
 vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 {
-	char *p, *item[16];
+	char *nmea_data_buf, *p, *item[16];
 	double lat, lng;
 	int i, bcsum;
 	int len = strlen(buffer);
@@ -210,7 +212,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	dbg(1, "buffer='%s'\n", buffer);
 	for (;;) {
 		if (len < 4) {
-			dbg(0, "too short\n");
+			dbg(0, "'%s' too short\n", buffer);
 			return;
 		}
 		if (buffer[len - 1] == '\r' || buffer[len - 1] == '\n')
@@ -219,25 +221,32 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 			break;
 	}
 	if (buffer[0] != '$') {
-		dbg(0, "no leading $\n");
+		dbg(0, "no leading $ in '%s'\n", buffer);
 		return;
 	}
 	if (buffer[len - 3] != '*') {
-		dbg(0, "no *XX\n");
+		dbg(0, "no *XX in '%s'\n", buffer);
 		return;
 	}
 	for (i = 1; i < len - 3; i++) {
 		csum ^= (unsigned char) (buffer[i]);
 	}
 	if (!sscanf(buffer + len - 2, "%x", &bcsum)) {
-		dbg(0, "no checksum\n");
+		dbg(0, "no checksum in '%s'\n", buffer);
 		return;
 	}
 	if (bcsum != csum) {
-		dbg(0, "wrong checksum\n");
+		dbg(0, "wrong checksum in '%s'\n", buffer);
 		return;
 	}
 
+	if (!priv->nmea_data_buf || strlen(priv->nmea_data_buf) < 65536) {
+		nmea_data_buf=g_strconcat(priv->nmea_data_buf ? priv->nmea_data_buf : "", buffer, "\n", NULL);
+		g_free(priv->nmea_data_buf);
+		priv->nmea_data_buf=nmea_data_buf;
+	} else {
+		dbg(0, "nmea buffer overflow, discarding '%s'\n", buffer);
+	}
 	i = 0;
 	p = buffer;
 	while (i < 16) {
@@ -275,6 +284,9 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		sscanf(item[6], "%d", &priv->status);
 		sscanf(item[7], "%d", &priv->sats_used);
 		priv->height = g_ascii_strtod(item[9], NULL);
+		g_free(priv->nmea_data);
+		priv->nmea_data=priv->nmea_data_buf;
+		priv->nmea_data_buf=NULL;
 
 		callback_list_call_0(priv->cbl);
 
@@ -409,6 +421,11 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 		break;
 	case attr_position_coord_geo:
 		attr->u.coord_geo = &priv->geo;
+		break;
+	case attr_position_nmea:
+		attr->u.str=priv->nmea_data;
+		if (! attr->u.str)
+			return 0;
 		break;
 	default:
 		return 0;

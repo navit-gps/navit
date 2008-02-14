@@ -20,6 +20,12 @@ struct vehicle {
 static void
 vehicle_log_nmea(struct vehicle *this_, struct log *log)
 {
+	struct attr pos_attr;
+	if (!this_->meth.position_attr_get)
+		return;
+	if (!this_->meth.position_attr_get(this_->priv, attr_position_nmea, &pos_attr))
+		return;
+	log_write(log, pos_attr.u.str, strlen(pos_attr.u.str));
 }
 
 static void
