@@ -21,7 +21,7 @@
 			<Depends filename="gentypes.cbp" />
 		</Project>
 		<Project filename="data_mg.cbp" />
-		<Project filename="Navit_win32.cbp" active="1">
+		<Project filename="Navit_win32.cbp">
 			<Depends filename="NavitCore.cbp" />
 			<Depends filename="win32_gui.cbp" />
 			<Depends filename="fib-1.1.cbp" />
@@ -40,7 +40,7 @@
 			<Depends filename="data_garmin.cbp" />
 			<Depends filename="data_mg.cbp" />
 		</Project>
-		<Project filename="Navit_gtk.cbp">
+		<Project filename="Navit_gtk.cbp" active="1">
 			<Depends filename="NavitCore.cbp" />
 			<Depends filename="win32_gui.cbp" />
 			<Depends filename="fib-1.1.cbp" />
