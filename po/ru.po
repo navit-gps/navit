@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Navit 0.0.4\n"
+"Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-30 10:48+0100\n"
+"POT-Creation-Date: 2008-02-14 21:09+0100\n"
 "PO-Revision-Date: 2008-01-24 15:46+0300\n"
 "Last-Translator: Rustam T. Usmanov\n"
 "Language-Team: Rustam T. Usmanov\n"
@@ -145,56 +145,64 @@ msgstr "Поверните %1$s%2$s %3$s"
 msgid "You have reached your destination %s"
 msgstr "Вы прибыли в пункт назначения %s"
 
-#: ../src/navit.c:659 ../src/gui/gtk/gui_gtk_action.c:198
+#: ../src/navit.c:675 ../src/gui/gtk/gui_gtk_action.c:198
 msgid "Layout"
 msgstr "Схема"
 
-#: ../src/navit.c:675
+#: ../src/navit.c:691
 msgid "Projection"
 msgstr "Проекция"
 
-#: ../src/navit.c:730
+#: ../src/navit.c:746
 msgid "Former Destinations"
 msgstr "Прошлые пункты назначения"
 
-#: ../src/navit.c:740
+#: ../src/navit.c:756
 msgid "Bookmarks"
 msgstr "Закладки"
 
-#: ../src/navit.c:778
+#: ../src/navit.c:794
 msgid "Vehicle"
 msgstr "Т/с"
 
-#: ../src/navit.c:828
+#: ../src/navit.c:863
 msgid "Command"
 msgstr "Команда"
 
-#: ../src/navit.c:833
+#: ../src/navit.c:868
 msgid "Length"
 msgstr "Длина"
 
-#: ../src/navit.c:839
+#: ../src/navit.c:872 ../src/navit.c:897
+msgid "km"
+msgstr ""
+
+#: ../src/navit.c:876 ../src/navit.c:901
+msgid "m"
+msgstr ""
+
+#: ../src/navit.c:882
 msgid "Time"
 msgstr "Время"
 
-#: ../src/navit.c:844
+#: ../src/navit.c:894
 msgid "Destination Length"
 msgstr ""
 
-#: ../src/navit.c:850
+#: ../src/navit.c:907
 msgid "Destination Time"
 msgstr ""
 
-#: ../src/navit.c:873 ../src/gui/gtk/gui_gtk_action.c:202
+#: ../src/navit.c:936 ../src/gui/gtk/gui_gtk_action.c:202
 msgid "Roadbook"
 msgstr "Дорожный справочник"
 
-#: ../src/navit.c:1106 ../src/gui/gtk/destination.c:368
+#: ../src/navit.c:1169 ../src/gui/gtk/destination.c:368
 #: ../src/gui/gtk/gui_gtk_action.c:197
 msgid "Map"
 msgstr "Карта"
 
-#: ../src/navit.c:1113 ../src/gui/gtk/gui_gtk_action.c:196
+#: ../src/navit.c:1176 ../src/gui/gtk/gui_gtk_action.c:196
 msgid "Route"
 msgstr "Маршрут"
 
