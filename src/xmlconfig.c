@@ -147,7 +147,7 @@ convert_number(const char *val)
 static int
 xmlconfig_config(struct xmlstate *state)
 {
-	state->element_object = 1;
+	state->element_object = (void *)1;
 	return 1;
 }
 
@@ -262,7 +262,7 @@ xmlconfig_vehicle(struct xmlstate *state)
 }
 
 static int
-xmlconfig_log(struct xmlstate *state)
+xmlconfig_log_vehicle(struct xmlstate *state)
 {
 	struct attr attr;
 	struct attr **attrs;
@@ -273,6 +273,22 @@ xmlconfig_log(struct xmlstate *state)
 	attr.type=attr_log;
 	attr.u.log=state->element_object;
 	if (vehicle_add_attr(state->parent->element_object, &attr, attrs))
+		return 0;
+	return 1;
+}
+
+static int
+xmlconfig_log_navit(struct xmlstate *state)
+{
+	struct attr attr;
+	struct attr **attrs;
+	attrs=convert_to_attrs(state);
+	state->element_object = log_new(attrs);
+	if (! state->element_object)
+		return 0;
+	attr.type=attr_log;
+	attr.u.log=state->element_object;
+	if (navit_add_attr(state->parent->element_object, &attr, attrs))
 		return 0;
 	return 1;
 }
@@ -627,7 +643,8 @@ struct element_func {
 	{ "route", "navit", xmlconfig_route},
 	{ "speed", "route", xmlconfig_speed},
 	{ "vehicle", "navit", xmlconfig_vehicle},
-	{ "log", "vehicle", xmlconfig_log},
+	{ "log", "vehicle", xmlconfig_log_vehicle},
+	{ "log", "navit", xmlconfig_log_navit},
 	{ "window_items", "navit", xmlconfig_window_items},
 	{ "plugins", "config", xmlconfig_plugins},
 	{ "plugin", "plugins", xmlconfig_plugin},
@@ -644,28 +661,39 @@ start_element (GMarkupParseContext *context,
 {
 	struct xmlstate *new=NULL, **parent = user_data;
 	struct element_func *e=elements,*func=NULL;
+	int found=0;
 	const char *parent_name=NULL;
+	char *s,*sep="",*possible_parents=g_strdup("");
 	dbg(2,"name='%s'\n", element_name);
+	if (*parent)
+		parent_name=(*parent)->element;
 	while (e->name) {
 		if (!g_ascii_strcasecmp(element_name, e->name)) {
-			func=e;
+			found=1;
+			s=g_strconcat(possible_parents,sep,e->parent,NULL);
+			g_free(possible_parents);
+			possible_parents=s;
+			sep=",";
+			if ((parent_name && e->parent && !g_ascii_strcasecmp(parent_name, e->parent)) ||
+			    (!parent_name && !e->parent))
+				func=e;
 		}
 		e++;
 	}
-	if (! func) {
+	if (! found) {
 		g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_UNKNOWN_ELEMENT,
 				"Unknown element '%s'", element_name);
+		g_free(possible_parents);
 		return;
 	}
-	if (*parent)
-		parent_name=(*parent)->element;
-	if ((parent_name && func->parent && g_ascii_strcasecmp(parent_name, func->parent)) || 
-	    (!parent_name && func->parent) || (parent_name && !func->parent)) {
+	if (! func) {
 		g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT,
 				"Element '%s' within unexpected context '%s'. Expected '%s'%s",
-				element_name, parent_name, func->parent, ! strcmp(func->parent,"config") ? "\nPlease add <config> </config> tags at the beginning/end of your navit.xml": "");
+				element_name, parent_name, possible_parents, ! strcmp(possible_parents, "config") ? "\nPlease add <config> </config> tags at the beginning/end of your navit.xml": "");
+		g_free(possible_parents);
 		return;
 	}
+	g_free(possible_parents);
 
 	new=g_new(struct xmlstate, 1);
 	new->attribute_names=attribute_names;

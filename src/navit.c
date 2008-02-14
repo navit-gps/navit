@@ -32,6 +32,7 @@
 #include "vehicle.h"
 #include "color.h"
 #include "layout.h"
+#include "log.h"
 
 #define _(STRING)    gettext(STRING)
 /**
@@ -97,6 +98,7 @@ struct navit {
 	struct point pressed, last, current;
 	int button_pressed,moved,popped;
 	guint button_timeout, motion_timeout;
+	struct log *textfile_debug_log;
 };
 
 struct gui *main_loop_gui;
@@ -794,6 +796,23 @@ navit_add_menu_vehicle(struct navit *this_, struct menu *men)
 }
 
 void
+navit_textfile_debug_log(struct navit *this_, const char *fmt, ...)
+{
+	va_list ap;
+	char *str1,*str2;
+	va_start(ap, fmt);
+	if (this_->textfile_debug_log && this_->vehicle) {
+		str1=g_strdup_vprintf(fmt, ap);
+		str2=g_strdup_printf("0x%x 0x%x%s%s\n", this_->vehicle->coord.x, this_->vehicle->coord.y, strlen(str1) ? " " : "", str1);
+		log_write(this_->textfile_debug_log, str2, strlen(str2));
+		g_free(str2);
+		g_free(str1);
+	}
+       	va_end(ap);
+}
+
+
+void
 navit_speak(struct navit *this_)
 {
 	struct navigation *nav=this_->navigation;
@@ -808,8 +827,10 @@ navit_speak(struct navit *this_)
 		mr=map_rect_new(map, NULL);
 	if (mr) {
 		item=map_rect_get_item(mr);
-		if (item && item_attr_get(item, attr_navigation_speech, &attr))
+		if (item && item_attr_get(item, attr_navigation_speech, &attr)) {
 			speech_say(this_->speech, attr.u.str);
+			navit_textfile_debug_log(this_, "item=point_debug debug=\"speech_say('%s')\"", attr.u.str);
+		}
 		map_rect_destroy(mr);
 	}
 }
@@ -1314,6 +1335,36 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr)
 		return 0;
 	}
 	attr->type=type;
+	return 1;
+}
+
+static int
+navit_add_log(struct navit *this_, struct log *log,
+                struct attr **attrs)
+{
+	struct attr *type;
+	type = attr_search(attrs, NULL, attr_type);
+	if (!type)
+		return 1;
+	if (!strcmp(type->u.str, "textfile_debug")) {
+		if (this_->textfile_debug_log)
+			return 1;
+		this_->textfile_debug_log=log;
+		return 0;
+	}
+	return 1;
+}
+
+int
+navit_add_attr(struct navit *this_, struct attr *attr,
+                 struct attr **attrs)
+{
+	switch (attr->type) {
+	case attr_log:
+		return navit_add_log(this_, attr->u.log, attrs);
+	default:
+		return 0;
+	}
 	return 1;
 }
 
