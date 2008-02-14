@@ -4,7 +4,7 @@
 #include <wingdi.h>
 #include "Xpm2bmp.h"
 
-// #define _DBG
+#define _DBG
 
 // function prototypes
 static int CreateBitmapFromXpm( const char* filename, PXPM2BMP pXpm2bmp );
@@ -334,11 +334,10 @@ static DWORD string2hex16( const char* str )
 static int parse_color_values( const char* line, PXPM2BMP pXpm2bmp )
 {
 	int return_value = 0;
-
 	char* cq    = strchr( line, '"' );
-	char* cchar = strchr(  cq+pXpm2bmp->chars_per_pixel, 'c' );
-	char* chash = strchr(  cq+pXpm2bmp->chars_per_pixel, '#' );
-	char* qe    = strchr(  cq+pXpm2bmp->chars_per_pixel, '"' );
+	char* cchar = strchr(  cq+pXpm2bmp->chars_per_pixel+1, 'c' );
+	char* chash = strchr(  cq+pXpm2bmp->chars_per_pixel+1, '#' );
+	char* qe    = strchr(  cq+pXpm2bmp->chars_per_pixel+1, '"' );
 
 	cq++;
 
@@ -358,12 +357,13 @@ static int parse_color_values( const char* line, PXPM2BMP pXpm2bmp )
 			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].g = string2hex16( &chash[len / 3] );
 			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].b = string2hex16( &chash[len * 2 / 3] );
 #ifdef _DBG
-printf( "adding color %s => %d RGB %x %x %x \n",
+printf( "adding color %s => %d RGB %x %x %x to index %d\n",
 			line,
 			pXpm2bmp->color_entires_size,
 			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].r,
 			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].g,
-			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].b );
+			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].b,
+			pXpm2bmp->color_entires_size );
 #endif
 		}
 		else
