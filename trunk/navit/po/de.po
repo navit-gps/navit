@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Navit 0.0.4\n"
+"Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-24 10:49+0100\n"
+"POT-Creation-Date: 2008-02-14 21:09+0100\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: Martin Schaller <martin-s@sourceforge.net>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -143,56 +143,64 @@ msgstr "%3$s %1$s%2$s abbiegen"
 msgid "You have reached your destination %s"
 msgstr "%s haben Sie ihr Ziel erreicht"
 
-#: ../src/navit.c:654 ../src/gui/gtk/gui_gtk_action.c:198
+#: ../src/navit.c:675 ../src/gui/gtk/gui_gtk_action.c:198
 msgid "Layout"
 msgstr "Layout"
 
-#: ../src/navit.c:670
+#: ../src/navit.c:691
 msgid "Projection"
 msgstr "Projektion"
 
-#: ../src/navit.c:725
+#: ../src/navit.c:746
 msgid "Former Destinations"
 msgstr "Frühere Ziele"
 
-#: ../src/navit.c:735
+#: ../src/navit.c:756
 msgid "Bookmarks"
 msgstr "Lesezeichen"
 
-#: ../src/navit.c:773
+#: ../src/navit.c:794
 msgid "Vehicle"
 msgstr "Fahrzeug"
 
-#: ../src/navit.c:823
+#: ../src/navit.c:863
 msgid "Command"
 msgstr "Kommando"
 
-#: ../src/navit.c:828
+#: ../src/navit.c:868
 msgid "Length"
 msgstr "Länge"
 
-#: ../src/navit.c:834
+#: ../src/navit.c:872 ../src/navit.c:897
+msgid "km"
+msgstr ""
+
+#: ../src/navit.c:876 ../src/navit.c:901
+msgid "m"
+msgstr ""
+
+#: ../src/navit.c:882
 msgid "Time"
 msgstr "Zeit"
 
-#: ../src/navit.c:839
+#: ../src/navit.c:894
 msgid "Destination Length"
 msgstr "Länge Ziel"
 
-#: ../src/navit.c:845
+#: ../src/navit.c:907
 msgid "Destination Time"
 msgstr "Zeit Ziel"
 
-#: ../src/navit.c:868 ../src/gui/gtk/gui_gtk_action.c:202
+#: ../src/navit.c:936 ../src/gui/gtk/gui_gtk_action.c:202
 msgid "Roadbook"
 msgstr "Straßenliste"
 
-#: ../src/navit.c:1101 ../src/gui/gtk/destination.c:368
+#: ../src/navit.c:1169 ../src/gui/gtk/destination.c:368
 #: ../src/gui/gtk/gui_gtk_action.c:197
 msgid "Map"
 msgstr "Karte"
 
-#: ../src/navit.c:1108 ../src/gui/gtk/gui_gtk_action.c:196
+#: ../src/navit.c:1176 ../src/gui/gtk/gui_gtk_action.c:196
 msgid "Route"
 msgstr "Route"
 
@@ -202,8 +210,8 @@ msgid "Point 0x%x 0x%x"
 msgstr "Punkt 0x%x 0x%x"
 
 #: ../src/popup.c:230
-#, c-format
-msgid "Screen %d %d"
+#, fuzzy, c-format
+msgid "Screen coord : %d %d"
 msgstr "Bildschirm %d %d"
 
 #: ../src/popup.c:239
