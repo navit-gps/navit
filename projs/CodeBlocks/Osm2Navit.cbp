@@ -13,7 +13,7 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Option use_console_runner="0" />
-				<Option parameters="--input-file=d:\josm\nld_zuid.osm --attr-debug-level=0 -k ehv3.bin" />
+				<Option parameters="--input-file=d:\europe.osm --attr-debug-level=5  europa.bin" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
