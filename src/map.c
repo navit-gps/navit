@@ -76,7 +76,7 @@ map_set_active(struct map *this_, int active)
 int
 map_requires_conversion(struct map *this_)
 {
-	return (this_->meth.charset != NULL);	
+	return (this_->meth.charset != NULL && strcmp(this_->meth.charset, "utf-8"));
 }
 
 char *
