@@ -35,11 +35,12 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		      int level)
 {
 	struct vehicle_priv *priv = vehicle_last;
+	dbg(1,"data->set=0x%x\n", data->set);
 	// If data->fix.speed is NAN, then the drawing gets jumpy. 
 	if (isnan(data->fix.speed)) {
 		return;
 	}
-
+	dbg(2,"speed ok\n");
 	if (data->set & SPEED_SET) {
 		priv->speed = data->fix.speed * 3.6;
 		data->set &= ~SPEED_SET;
