@@ -776,6 +776,7 @@ static struct graphics_methods graphics_methods = {
 	register_resize_callback,
 	register_button_callback,
 	register_motion_callback,
+	NULL,	// image_free
 };
 
 static struct graphics_priv *

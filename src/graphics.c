@@ -152,6 +152,13 @@ graphics_image_new(struct graphics *gra, char *path)
 	return this_;
 }
 
+void graphics_image_free(struct graphics *gra, struct graphics_image *img)
+{
+	if (gra->meth.image_free)
+		gra->meth.image_free(gra->priv, img->priv);
+	g_free(img);
+}
+
 void
 graphics_draw_restore(struct graphics *this_, struct point *p, int w, int h)
 {
@@ -394,6 +401,8 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 						p.x=di->pnt[0].x - img->hot.x;
 						p.y=di->pnt[0].y - img->hot.y;
 						gra->meth.draw_image(gra->priv, gra->gc[0]->priv, &p, img->priv);
+						graphics_image_free(gra, img);
+						img = NULL;
 					}
 					break;
 				case element_image:
@@ -584,7 +593,7 @@ graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *maps
 #endif
 	profile(0,NULL);
 	do_draw(displaylist, trans, mapsets, order);
-	profile(1,"do_draw");
+//	profile(1,"do_draw");
 	graphics_displaylist_draw(gra, displaylist, trans, l);
 	profile(1,"xdisplay_draw");
 	profile(0,"end");

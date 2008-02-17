@@ -243,6 +243,14 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 	return ret;
 }
 
+static void 
+image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
+{
+	if (priv->pixbuf)
+		gdk_pixbuf_unref(priv->pixbuf);
+	g_free(priv);
+}
+
 static void
 draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
@@ -822,6 +830,7 @@ static struct graphics_methods graphics_methods = {
 	register_resize_callback,
 	register_button_callback,
 	register_motion_callback,
+	image_free,
 };
 
 static struct graphics_priv *

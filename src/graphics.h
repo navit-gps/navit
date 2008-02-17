@@ -46,6 +46,7 @@ struct graphics_methods {
 	void (*register_resize_callback)(struct graphics_priv *gr, void (*callback)(void *data, int w, int h), void *data);
 	void (*register_button_callback)(struct graphics_priv *gr, void (*callback)(void *data, int pressed, int button, struct point *p), void *data);
 	void (*register_motion_callback)(struct graphics_priv *gr, void (*callback)(void *data, struct point *p), void *data);
+	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
 };
 
 
@@ -111,6 +112,7 @@ void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c);
 void graphics_gc_set_background(struct graphics_gc *gc, struct color *c);
 void graphics_gc_set_linewidth(struct graphics_gc *gc, int width);
 struct graphics_image *graphics_image_new(struct graphics *gra, char *path);
+void graphics_image_free(struct graphics *gra, struct graphics_image *img);
 void graphics_draw_restore(struct graphics *this_, struct point *p, int w, int h);
 void graphics_draw_mode(struct graphics *this_, enum draw_mode_num mode);
 void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct point *p, int count);
