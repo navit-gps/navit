@@ -339,11 +339,11 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 	struct element *e;
 	GList *l,*ls,*es,*types;
 	enum item_type type;
-	struct graphics_gc *gc;
+	struct graphics_gc *gc = NULL;
 	struct graphics_image *img;
 	struct point p;
 
-	es=itm->elements;	
+	es=itm->elements;
 	while (es) {
 		e=es->data;
 		types=itm->type;
@@ -351,6 +351,8 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 			type=GPOINTER_TO_INT(types->data);
 			ls=g_hash_table_lookup(display_list, GINT_TO_POINTER(type));
 			l=ls;
+			if (gc)
+				graphics_gc_destroy(gc);
 			gc=NULL;
 			img=NULL;
 			while (l) {
@@ -415,10 +417,12 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 				}
 				l=g_list_next(l);
 			}
-			types=g_list_next(types);	
+			types=g_list_next(types);
 		}
 		es=g_list_next(es);
-	}	
+	}
+	if (gc)
+		graphics_gc_destroy(gc);
 }
 
 static void
