@@ -247,7 +247,7 @@ static void
 image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 {
 	if (priv->pixbuf)
-		gdk_pixbuf_unref(priv->pixbuf);
+		g_object_unref(priv->pixbuf);
 	g_free(priv);
 }
 
