@@ -269,7 +269,7 @@ street_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			return 0;
 		if (! street->name.len)
 			street_name_get_by_id(&street->name,street->name_file,nameid);
-		attr->u.num=street->name.country;
+		attr->u.num=mg_country_to_isonum(street->name.country);
 		return 1;
 	case attr_debug:
 		street->attr_next=attr_none;
