@@ -118,6 +118,7 @@ void
 graphics_gc_destroy(struct graphics_gc *gc)
 {
 	gc->meth.gc_destroy(gc->priv);
+	g_free(gc);
 }
 
 void
