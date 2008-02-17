@@ -7,6 +7,74 @@
 #include "mg.h"
 
 
+struct country_isonum {
+	int country;
+	int isonum;
+} country_isonums[]={
+  {  1,203},
+  {  2,703},
+  {  7,674},
+  { 11,233},
+  { 12,268},
+  { 13,428},
+  { 14,440},
+  { 15,498},
+  { 16,643},
+  { 17,804},
+  { 18,112},
+  { 20,818},
+  { 30,300},
+  { 31,528},
+  { 32, 56},
+  { 33,250},
+  { 34,724},
+  { 36,348},
+  { 39,380},
+  { 40,642},
+  { 41,756},
+  { 43, 40},
+  { 44,826},
+  { 45,208},
+  { 46,752},
+  { 47,578},
+  { 48,616},
+  { 49,276},
+  { 50,292},
+  { 51,620},
+  { 52,442},
+  { 53,372},
+  { 54,352},
+  { 55,  8},
+  { 56,470},
+  { 57,196},
+  { 58,246},
+  { 59,100},
+  { 61,422},
+  { 62, 20},
+  { 63,760},
+  { 66,682},
+  { 71,434},
+  { 72,376},
+  { 73,275},
+  { 75,438},
+  { 76,504},
+  { 77, 12},
+  { 78,788},
+  { 81,688},
+  { 83,400},
+  { 85,191},
+  { 86,705},
+  { 87, 70},
+  { 89,807},
+  { 90,792},
+  { 93,492},
+  { 94, 31},
+  { 95, 51},
+  { 98,234},
+  { 99,732},
+  {336,774},
+};
+
 struct map_priv * map_new_mg(struct map_methods *meth, struct attr **attrs);
 
 static int map_id;
@@ -31,6 +99,23 @@ static char *file[]={
 	[file_woodland_ply]="woodland.ply",
 };
 
+int mg_country_from_isonum(int isonum)
+{
+	int i;
+	for (i = 0 ; i < sizeof(country_isonums)/sizeof(struct country_isonum) ; i++)
+		if (country_isonums[i].isonum == isonum)
+			return country_isonums[i].country;
+	return 0;
+}
+
+int mg_country_to_isonum(int country)
+{
+	int i;
+	for (i = 0 ; i < sizeof(country_isonums)/sizeof(struct country_isonum) ; i++)
+		if (country_isonums[i].country == country)
+			return country_isonums[i].isonum;
+	return 0;
+}
 
 static int
 file_next(struct map_rect_priv *mr)
@@ -242,6 +327,7 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
 		tree_search_init(map->dirname, "town.b2", &mr->ts, 0x1000);
 		mr->current_file=file_town_twn;
 		mr->search_str=map_search_mg_convert_special(search->u.str);
+		mr->search_country=mg_country_from_isonum(item->id_lo);
 		break;
 	case attr_street_name:
 		if (item->type != type_town_streets)
@@ -257,7 +343,6 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
 		return NULL;
 	}
 	mr->search_item=*item;
-	mr->search_country=item->id_lo;
 	mr->search_partial=partial;
 	mr->file=mr->m->file[mr->current_file];
 	block_init(mr);

@@ -270,6 +270,9 @@ struct map_rect_priv {
 	struct item_priv item3;
 };
 
+int mg_country_from_isonum(int isonum);
+int mg_country_to_isonum(int country);
+
 int block_init(struct map_rect_priv *mr);
 int block_next(struct map_rect_priv *mr);
 int block_get_byindex(struct file *file, int idx, struct block_priv *blk);
