@@ -81,6 +81,10 @@ PKG_CHECK_MODULES(NAVIT, [glib-2.0 gmodule-2.0], [], AC_MSG_ERROR([glib-2.0 or g
 AC_SUBST(NAVIT_CFLAGS)
 AC_SUBST(NAVIT_LIBS)
 
+PKG_CHECK_MODULES(DBUS, [dbus-glib-1], [dbus_pkgconfig=yes], [dbus_pkgconfig=no])
+AC_SUBST(DBUS_CFLAGS)
+AC_SUBST(DBUS_LIBS)
+
 AC_CHECK_HEADER(
 	zlib.h,
 	AC_DEFINE(
@@ -436,6 +440,7 @@ Makefile
 src/Makefile
 src/binding/Makefile
 src/binding/python/Makefile
+src/binding/dbus/Makefile
 src/data/Makefile
 src/data/mg/Makefile
 src/data/textfile/Makefile
