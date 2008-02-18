@@ -67,6 +67,41 @@ static GList *navit;
 static GMainLoop *loop;
 #endif
 
+struct iter {
+	GList *list;
+};
+
+struct iter *
+main_iter_new(void)
+{
+	struct iter *ret=g_new0(struct iter, 1);
+	ret->list=navit;
+	return ret;
+}
+
+void
+main_iter_destroy(struct iter *iter)
+{
+	g_free(iter);
+}
+
+struct navit *
+main_get_navit(struct iter *iter)
+{
+	GList *list;
+	struct navit *ret=NULL;
+	if (iter)
+		list=iter->list;
+	else
+		list=navit;
+	if (list) {
+		ret=(struct navit *)(list->data);
+		if (iter)
+			iter->list=g_list_next(iter->list);
+	}
+	return ret;
+	
+}
 void
 main_add_navit(struct navit *nav)
 {
