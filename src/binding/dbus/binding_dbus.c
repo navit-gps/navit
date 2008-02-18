@@ -2,6 +2,7 @@
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
+#include "config.h"
 #include "main.h"
 #include "navit.h"
 #include "coord.h"
@@ -145,7 +146,7 @@ request_main_iter_destroy(DBusConnection *connection, DBusMessage *message)
 	return empty_reply(connection, message);
 }
 static int
-coord_get_from_message(DBusMessage *message, struct coord *c)
+pcoord_get_from_message(DBusMessage *message, struct pcoord *pc)
 {
 	DBusMessageIter iter,iter2;
 
@@ -155,11 +156,15 @@ coord_get_from_message(DBusMessage *message, struct coord *c)
 
 	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
 		return 0;
-	dbus_message_iter_get_basic(&iter2, &c->x);
+	dbus_message_iter_get_basic(&iter2, &pc->pro);
 	dbus_message_iter_next(&iter2);
 	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
 		return 0;
-	dbus_message_iter_get_basic(&iter2, &c->y);
+	dbus_message_iter_get_basic(&iter2, &pc->x);
+	dbus_message_iter_next(&iter2);
+	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
+		return 0;
+	dbus_message_iter_get_basic(&iter2, &pc->y);
 	dbus_message_iter_next(&iter2);
 	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INVALID)
 		return 0;
@@ -169,14 +174,14 @@ coord_get_from_message(DBusMessage *message, struct coord *c)
 static DBusHandlerResult
 request_navit_set_center(DBusConnection *connection, DBusMessage *message)
 {
-	struct coord c;
+	struct pcoord pc;
 	struct navit *navit;
 	navit=object_get_from_message(message, "navit");
 	if (! navit)
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	if (!coord_get_from_message(message, &c))
+	if (!pcoord_get_from_message(message, &pc))
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	navit_set_center(navit, &c);
+	navit_set_center(navit, &pc);
 	return empty_reply(connection, message);
 }
 
@@ -210,7 +215,7 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 		dbus_message_has_signature(message,"o")) 
 		return request_main_get_navit(connection, message);
 	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_center") &&
-		dbus_message_has_signature(message,"(ii)")) 
+		dbus_message_has_signature(message,"(iii)")) 
 		return request_navit_set_center(connection, message);
 
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
