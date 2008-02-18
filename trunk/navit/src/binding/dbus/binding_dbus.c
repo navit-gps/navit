@@ -1,0 +1,261 @@
+#include <string.h>
+#include <dbus/dbus.h>
+#include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-lowlevel.h>
+#include "main.h"
+#include "navit.h"
+#include "coord.h"
+#include "plugin.h"
+#include "debug.h"
+
+
+static DBusConnection *connection;
+
+static char *service_name="org.navit-project.navit";
+static char *object_path="/org/navit_project/navit";
+
+GHashTable *object_hash;
+GHashTable *object_count;
+
+static char *
+object_new(char *type, void *object)
+{
+	int id;
+	char *ret;
+	dbg(0,"enter %s\n", type);
+	id=(int)g_hash_table_lookup(object_count, type);
+	g_hash_table_insert(object_count, type, (void *)(id+1));
+	ret=g_strdup_printf("%s/%s/%d", object_path, type, id);
+	g_hash_table_insert(object_hash, ret, object);
+	dbg(0,"return %s\n", ret);
+	return (ret);
+}
+
+static void *
+object_get(const char *path)
+{
+	return g_hash_table_lookup(object_hash, path);
+}
+
+static void *
+object_get_from_message_arg(DBusMessage *message, char *type)
+{
+	char *opath;
+	char *prefix;
+	DBusError error;
+	void *ret=NULL;
+
+	dbus_error_init(&error);
+	if (!dbus_message_get_args(message, &error, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID)) {
+		dbus_error_free(&error);
+		dbg(0,"wrong arg type\n");
+		return NULL;
+	}
+	prefix=g_strdup_printf("%s/%s/", object_path, type);
+	if (!strncmp(prefix, opath, strlen(prefix)))
+		ret=object_get(opath);
+	else
+		dbg(0,"wrong object type\n");
+	g_free(prefix);
+	return ret;
+}
+
+static void *
+object_get_from_message(DBusMessage *message, char *type)
+{
+	const char *opath=dbus_message_get_path(message);
+	char *prefix;
+	void *ret=NULL;
+
+	prefix=g_strdup_printf("%s/%s/", object_path, type);
+	if (!strncmp(prefix, opath, strlen(prefix)))
+		ret=object_get(opath);
+	else
+		dbg(0,"wrong object type\n");
+	g_free(prefix);
+	return ret;
+}
+
+static DBusHandlerResult
+empty_reply(DBusConnection *connection, DBusMessage *message)
+{
+	DBusMessage *reply;
+
+	reply = dbus_message_new_method_return(message);
+	dbus_connection_send (connection, reply, NULL);
+	dbus_message_unref (reply);
+
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
+
+static DBusHandlerResult
+request_main_get_navit(DBusConnection *connection, DBusMessage *message)
+{
+	DBusMessage *reply;
+	DBusError error;
+	struct iter *iter;
+	struct navit *navit;
+	char *opath;
+
+	dbus_error_init(&error);
+
+	if (!dbus_message_get_args(message, &error, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID)) {
+            dbg(0,"Error parsing\n");
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+        }
+	dbg(0,"opath=%s\n", opath);
+	iter=object_get(opath);
+	navit=main_get_navit(iter);
+	if (navit) {
+		reply = dbus_message_new_method_return(message);
+		opath=object_new("navit",navit);
+		dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
+		dbus_connection_send (connection, reply, NULL);
+		dbus_message_unref (reply);
+		return DBUS_HANDLER_RESULT_HANDLED;
+	}
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
+
+static DBusHandlerResult
+request_main_iter(DBusConnection *connection, DBusMessage *message)
+{
+	DBusMessage *reply;
+	struct iter *iter=main_iter_new();
+	dbg(0,"iter=%p\n", iter);
+	char *opath=object_new("main_iter",iter);
+	reply = dbus_message_new_method_return(message);
+	dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
+	dbus_connection_send (connection, reply, NULL);
+	dbus_message_unref (reply);
+
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
+
+static DBusHandlerResult
+request_main_iter_destroy(DBusConnection *connection, DBusMessage *message)
+{
+	struct iter *iter;
+	
+	iter=object_get_from_message_arg(message, "main_iter");
+	if (! iter)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	main_iter_destroy(iter);
+
+	return empty_reply(connection, message);
+}
+static int
+coord_get_from_message(DBusMessage *message, struct coord *c)
+{
+	DBusMessageIter iter,iter2;
+
+	dbus_message_iter_init(message, &iter);
+	dbg(0,"%s\n", dbus_message_iter_get_signature(&iter));
+	dbus_message_iter_recurse(&iter, &iter2);
+
+	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
+		return 0;
+	dbus_message_iter_get_basic(&iter2, &c->x);
+	dbus_message_iter_next(&iter2);
+	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
+		return 0;
+	dbus_message_iter_get_basic(&iter2, &c->y);
+	dbus_message_iter_next(&iter2);
+	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INVALID)
+		return 0;
+	return 1;
+}
+
+static DBusHandlerResult
+request_navit_set_center(DBusConnection *connection, DBusMessage *message)
+{
+	struct coord c;
+	struct navit *navit;
+	navit=object_get_from_message(message, "navit");
+	if (! navit)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	if (!coord_get_from_message(message, &c))
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	navit_set_center(navit, &c);
+	return empty_reply(connection, message);
+}
+
+static DBusHandlerResult
+navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_data)
+{
+	dbg(0,"type=%s interface=%s path=%s member=%s signature=%s\n", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
+#if 0
+	if (dbus_message_is_method_call (message, "org.freedesktop.DBus.Introspectable", "Introspect")) {
+		DBusMessage *reply;
+		gchar *idata;
+		dbg(0,"Introspect\n");
+		if (! strcmp(dbus_message_get_path(message), "/org/navit_project/navit")) {
+			g_file_get_contents("binding/dbus/navit.introspect", &idata, NULL, NULL);
+			reply = dbus_message_new_method_return(message);
+			dbus_message_append_args(reply, DBUS_TYPE_STRING, &idata, DBUS_TYPE_INVALID);
+			dbus_connection_send (connection, reply, NULL);
+			dbus_message_unref (reply);
+			g_free(idata);
+			return DBUS_HANDLER_RESULT_HANDLED;
+		}
+	}
+#endif
+	if (dbus_message_is_method_call (message, "org.navit_project.navit", "iter") &&
+		dbus_message_has_signature(message, ""))
+		return request_main_iter(connection, message);
+	if (dbus_message_is_method_call (message, "org.navit_project.navit", "iter_destroy") &&
+		dbus_message_has_signature(message, "o"))
+		return request_main_iter_destroy(connection, message);
+	if (dbus_message_is_method_call (message, "org.navit_project.navit", "get_navit") &&
+		dbus_message_has_signature(message,"o")) 
+		return request_main_get_navit(connection, message);
+	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_center") &&
+		dbus_message_has_signature(message,"(ii)")) 
+		return request_navit_set_center(connection, message);
+
+	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
+
+static DBusObjectPathVTable dbus_navit_vtable = {
+	NULL,
+	navit_handler_func,
+	NULL
+};
+
+#if 0
+DBusHandlerResult
+filter(DBusConnection *connection, DBusMessage *message, void *user_data)
+{
+	dbg(0,"type=%s interface=%s path=%s member=%s signature=%s\n", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
+	if (dbus_message_is_signal(message, DBUS_INTERFACE_DBUS, "NameOwnerChanged")) {
+	}
+	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
+#endif
+
+void plugin_init(void)
+{
+	DBusError error;
+
+	object_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	object_count=g_hash_table_new(g_str_hash, g_str_equal);
+	dbg(0,"enter 1\n");
+	dbus_error_init(&error);
+	connection = dbus_bus_get(DBUS_BUS_SESSION, &error);
+	if (!connection) {
+		dbg(0,"Failed to open connection to session message bus: %s", error.message);
+		dbus_error_free(&error);
+		return;
+	}
+	dbus_connection_setup_with_g_main(connection, NULL);
+#if 0
+	dbus_connection_add_filter(connection, filter, NULL, NULL);
+	dbus_bus_add_match(connection, "type='signal',""interface='" DBUS_INTERFACE_DBUS  "'", &error);
+#endif
+	dbus_connection_register_fallback(connection, object_path, &dbus_navit_vtable, NULL);
+	dbus_bus_request_name(connection, service_name, 0, &error);
+	if (dbus_error_is_set(&error)) {
+		dbg(0,"Failed to request name: %s", error.message);
+		dbus_error_free (&error);
+	}
+}

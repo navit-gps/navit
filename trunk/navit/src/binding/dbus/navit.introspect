@@ -1,0 +1,16 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.navit_project.navit">
+    <method name="iter_new">
+      <arg name="iter" type="o" direction="out"/>
+    </method>
+    <method name="get_navit">
+      <arg name="iter" type="o" direction="in"/>
+      <arg name="navit" type="o" direction="out"/>
+    </method>
+    <method name="iter_destroy">
+      <arg name="iter" type="o" direction="in"/>
+    </method>
+  </interface>
+</node>
