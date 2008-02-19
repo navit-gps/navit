@@ -162,8 +162,9 @@ gui_gtk_statusbar_new(struct gui_priv *gui, struct statusbar_methods *meth)
 
 	gtk_box_pack_end(GTK_BOX(gui->vbox), this->hbox, FALSE, FALSE, 0);
 	gtk_widget_show_all(this->hbox);
-	this->vehicle_cb=callback_new_1(callback_cast(statusbar_route_update), this);
-	navit_add_vehicle_cb(gui->nav, this->vehicle_cb);
+	/* add a callback for position updates */
+	this->vehicle_cb=callback_new_attr_1(callback_cast(statusbar_route_update), attr_position_coord_geo, this);
+	navit_add_callback(gui->nav, this->vehicle_cb);
 	return this;
 }
 

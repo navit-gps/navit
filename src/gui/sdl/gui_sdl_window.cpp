@@ -897,9 +897,11 @@ gui_sdl_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	dbg(1,"End SDL init\n");
 
 	//gui_sdl_window.cpp:710: error: invalid conversion from 'void (*)(vehicle*)' to 'void (*)()'
-	struct callback *cb=callback_new_0(callback_cast(vehicle_callback_handler));
+	
+	/* add callback for position updates */
+	struct callback *cb=callback_new_attr_0(callback_cast(vehicle_callback_handler), attr_position_coord_geo);
 
-	navit_add_vehicle_cb(nav,cb);
+	navit_add_callback(nav,cb);
 	this_->nav=nav;
 	
 	return this_;

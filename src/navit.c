@@ -85,8 +85,6 @@ struct navit {
 	GList *vehicles;
 	GList *windows_items;
 	struct navit_vehicle *vehicle;
-	struct callback_list *vehicle_cbl;
-	struct callback_list *init_cbl;
 	struct callback_list *attr_cbl;
 	int pid;
 	struct callback *nav_speech_cb;
@@ -336,8 +334,6 @@ navit_new(struct attr **attrs)
 	main_add_navit(this_);
 	this_->self.type=attr_navit;
 	this_->self.u.navit=this_;
-	this_->vehicle_cbl=callback_list_new();
-	this_->init_cbl=callback_list_new();
 	this_->attr_cbl=callback_list_new();
 
 	f=popen("pidof /usr/bin/ipaq-sleep","r");
@@ -1184,8 +1180,6 @@ navit_init(struct navit *this_)
 	if (this_->navigation && this_->speech) {
 		this_->nav_speech_cb=callback_new_1(callback_cast(navit_speak), this_);
 		navigation_register_callback(this_->navigation, attr_navigation_speech, this_->nav_speech_cb);
-#if 0
-#endif
 	}
 	if (this_->menubar) {
 		men=menu_add(this_->menubar, "Data", menu_type_submenu, NULL);
@@ -1199,7 +1193,7 @@ navit_init(struct navit *this_)
 	navit_window_items_new(this_);
 #endif
 	navit_debug(this_);
-	callback_list_call_1(this_->init_cbl, this_);
+	callback_list_call_attr_1(this_->attr_cbl, attr_navit, this_);
 }
 
 void
@@ -1305,12 +1299,7 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 		return 0;
 	}
 	if (attr_updated) {
-		void *p[2];
-
-		p[0] = this_;
-		p[1] = attr;
-
-		callback_list_call_attr(this_->attr_cbl, attr->type, 2, p);
+		callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
 	}
 	return 1;
 }
@@ -1339,8 +1328,7 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr)
 }
 
 static int
-navit_add_log(struct navit *this_, struct log *log,
-                struct attr **attrs)
+navit_add_log(struct navit *this_, struct log *log, struct attr **attrs)
 {
 	struct attr *type;
 	type = attr_search(attrs, NULL, attr_type);
@@ -1356,8 +1344,7 @@ navit_add_log(struct navit *this_, struct log *log,
 }
 
 int
-navit_add_attr(struct navit *this_, struct attr *attr,
-                 struct attr **attrs)
+navit_add_attr(struct navit *this_, struct attr *attr, struct attr **attrs)
 {
 	switch (attr->type) {
 	case attr_log:
@@ -1369,13 +1356,13 @@ navit_add_attr(struct navit *this_, struct attr *attr,
 }
 
 void
-navit_add_attr_cb(struct navit *this_, struct callback *cb)
+navit_add_callback(struct navit *this_, struct callback *cb)
 {
 	callback_list_add(this_->attr_cbl, cb);
 }
 
 void
-navit_remove_attr_cb(struct navit *this_, struct callback *cb)
+navit_remove_callback(struct navit *this_, struct callback *cb)
 {
 	callback_list_remove(this_->attr_cbl, cb);
 }
@@ -1478,7 +1465,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		nv->update_curr--;
 	else
 		nv->update_curr=nv->update;
-	callback_list_call_2(this_->vehicle_cbl, this_, nv->vehicle);
+	callback_list_call_attr_2(this_->attr_cbl, attr_position_coord_geo, this_, nv->vehicle);
 	if (pnt)
 		navit_vehicle_draw(this_, nv, pnt);
 }
@@ -1538,30 +1525,6 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v, struct attr **attrs)
 		navit_set_vehicle(this_, nv);
 
 	return nv;
-}
-
-void
-navit_add_vehicle_cb(struct navit *this_, struct callback *cb)
-{
-	callback_list_add(this_->vehicle_cbl, cb);
-}
-
-void
-navit_remove_vehicle_cb(struct navit *this_, struct callback *cb)
-{
-	callback_list_remove(this_->vehicle_cbl, cb);
-}
-
-void
-navit_add_init_cb(struct navit *this_, struct callback *cb)
-{
-	callback_list_add(this_->init_cbl, cb);
-}
-
-void
-navit_remove_init_cb(struct navit *this_, struct callback *cb)
-{
-	callback_list_remove(this_->init_cbl, cb);
 }
 
 void
