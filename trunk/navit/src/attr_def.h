@@ -36,6 +36,7 @@ ATTR(speed)
 ATTR(interval)
 ATTR(position_qual)
 ATTR(zoom)
+ATTR(retry_interval)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
