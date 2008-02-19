@@ -60,8 +60,11 @@ void *item_hash_lookup(struct item_hash *h, struct item *item);
 void item_hash_destroy(struct item_hash *h);
 /* end of prototypes */
 
-#endif
 
 #ifdef __cplusplus
 }
+/* __cplusplus */
+#endif
+
+/* NAVIT_ITEM_H */
 #endif
