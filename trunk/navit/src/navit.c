@@ -791,7 +791,7 @@ navit_add_menu_vehicle(struct navit *this_, struct menu *men)
 	navit_add_menu_vehicles(this_, men);
 }
 
-void
+static void
 navit_textfile_debug_log(struct navit *this_, const char *fmt, ...)
 {
 	va_list ap;
