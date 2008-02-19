@@ -153,7 +153,7 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs
 	attr=attr_search(attrs, NULL, attr_y);
 	if (attr)
 		this->p.y=attr->u.num;
-	navit_add_init_cb(nav, callback_new_1(osd_compass_init, this));
+	navit_add_callback(nav, callback_new_attr_1(osd_compass_init, attr_navit, this));
 	return (struct osd_priv *) this;
 }
 
