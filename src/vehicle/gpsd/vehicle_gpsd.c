@@ -14,6 +14,7 @@ static struct vehicle_priv {
 	char *source;
 	struct callback_list *cbl;
 	GIOChannel *iochan;
+	guint retry_interval;
 	guint watch;
 	struct gps_data_t *gps;
 	struct coord_geo geo;
@@ -24,6 +25,9 @@ static struct vehicle_priv {
 	int sats;
 	int sats_used;
 } *vehicle_last;
+
+#define DEFAULT_RETRY_INTERVAL 10 // seconds
+#define MIN_RETRY_INTERVAL 1 // seconds
 
 static gboolean vehicle_gpsd_io(GIOChannel * iochan,
 				GIOCondition condition, gpointer t);
@@ -75,9 +79,15 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 	}
 }
 
-static int
-vehicle_gpsd_open(struct vehicle_priv *priv)
+/**
+ * Attempt to open the gps device.
+ * Return FALSE if retry not required
+ * Return TRUE to try again
+ */
+static gboolean
+vehicle_gpsd_try_open(gpointer *data)
 {
+	struct vehicle_priv *priv = (struct vehicle_priv *)data;
 	char *source = g_strdup(priv->source);
 	char *colon = index(source + 7, ':');
 	if (colon) {
@@ -86,9 +96,10 @@ vehicle_gpsd_open(struct vehicle_priv *priv)
 	} else
 		priv->gps = gps_open(source + 7, NULL);
 	g_free(source);
+
 	if (!priv->gps){
-		dbg(0, "gps_open failed. Have you started gpsd?\n");
-		return 0;
+		g_warning("gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?\n", priv->source, priv->retry_interval);
+		return TRUE;
 	}
 	gps_query(priv->gps, "w+x\n");
 	gps_set_raw_hook(priv->gps, vehicle_gpsd_callback);
@@ -96,7 +107,19 @@ vehicle_gpsd_open(struct vehicle_priv *priv)
 	priv->watch =
 	    g_io_add_watch(priv->iochan, G_IO_IN | G_IO_ERR | G_IO_HUP,
 			   vehicle_gpsd_io, priv);
-	return 1;
+	dbg(0,"Connected to gpsd\n");
+	return FALSE;
+}
+
+/**
+ * Open a connection to gpsd. Will re-try the connection if it fails
+ */
+static void
+vehicle_gpsd_open(struct vehicle_priv *priv)
+{
+	if (vehicle_gpsd_try_open((gpointer *)priv)) {
+		g_timeout_add(priv->retry_interval*1000, (GSourceFunc)vehicle_gpsd_try_open, (gpointer *)priv);
+	}
 }
 
 static void
@@ -128,7 +151,7 @@ vehicle_gpsd_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
 		if (priv->gps) {
 			vehicle_last = priv;
                         if (gps_poll(priv->gps)) {
-                               dbg(0, "gps_poll failed\n");
+                               g_warning("gps_poll failed\n");
                                vehicle_gpsd_close(priv);
                                vehicle_gpsd_open(priv);
                         }
@@ -188,19 +211,27 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 		      *cbl, struct attr **attrs)
 {
 	struct vehicle_priv *ret;
-	struct attr *source;
+	struct attr *source, *retry_int;
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->source = g_strdup(source->u.str);
+	retry_int = attr_search(attrs, NULL, attr_retry_interval);
+	if (retry_int) {
+		ret->retry_interval = retry_int->u.num;
+		if (ret->retry_interval < MIN_RETRY_INTERVAL) {
+			dbg(0, "Retry interval %d too small, setting to %d\n", ret->retry_interval, MIN_RETRY_INTERVAL);
+			ret->retry_interval = MIN_RETRY_INTERVAL;
+		}
+	} else {
+		dbg(0, "Retry interval not defined, setting to %d\n", DEFAULT_RETRY_INTERVAL);
+		ret->retry_interval = DEFAULT_RETRY_INTERVAL;
+	}
 	ret->cbl = cbl;
 	*meth = vehicle_gpsd_methods;
-	if (vehicle_gpsd_open(ret))
-		return ret;
-	dbg(0, "Failed to open '%s'\n", ret->source);
-	vehicle_gpsd_destroy(ret);
-	return NULL;
+	vehicle_gpsd_open(ret);
+	return ret;
 }
 
 void
