@@ -608,47 +608,6 @@ navit_add_bookmark(struct navit *this_, struct pcoord *c, char *description)
 
 struct navit *global_navit;
 
-
-/**
- * Deprecated
- */
-static void
-navit_debug(struct navit *this_)
-{
-#if 0
-	struct attr attr;
-#include "search.h"
-	struct search_list *sl;
-	struct search_list_result *res;
-
-	debug_level_set("data_mg:town_search_get_item",9);
-	debug_level_set("data_mg:town_search_compare",9);
-	debug_level_set("data_mg:tree_search_next",9);
-	debug_level_set("data_mg:map_search_new_mg",9);
-	sl=search_list_new(this_->mapsets->data);
-	attr.type=attr_country_all;
-	attr.u.str="Fra";
-	search_list_search(sl, &attr, 1);
-	while ((res=search_list_get_result(sl))) {
-		printf("country result\n");
-	}
-	attr.type=attr_town_name;
-	attr.u.str="seclin";
-	search_list_search(sl, &attr, 1);
-	while ((res=search_list_get_result(sl))) {
-		printf("town result\n");
-	}
-	attr.type=attr_street_name;
-	attr.u.str="rue";
-	search_list_search(sl, &attr, 1);
-	while ((res=search_list_get_result(sl))) {
-		printf("street result\n");
-	}
-	search_list_destroy(sl);
-	exit(0);
-#endif
-}
-
 void
 navit_add_menu_layouts(struct navit *this_, struct menu *men)
 {
@@ -1192,7 +1151,6 @@ navit_init(struct navit *this_)
 	navit_window_roadbook_new(this_);
 	navit_window_items_new(this_);
 #endif
-	navit_debug(this_);
 	callback_list_call_attr_1(this_->attr_cbl, attr_navit, this_);
 }
 
