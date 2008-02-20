@@ -185,6 +185,8 @@ int main(int argc, char **argv)
 	textdomain(PACKAGE);
 
 	debug_init();
+	if (getenv("LC_ALL")) 
+		dbg(0,"Warning: LC_ALL is set, this might lead to problems\n");
 #ifndef USE_PLUGINS
 	extern void builtin_init(void);
 	builtin_init();
