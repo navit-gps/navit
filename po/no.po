@@ -1,7 +1,7 @@
 # Norwegian translations for navit
-# Copyright (C) 2007
+# Copyright (C) 2008
 # This file is distributed under the same license as the navit package.
-# Bendik Brenne <bendik@xplore.nu>, 2007.
+# Bendik Brenne <bendik@xplore.nu>, 2008.
 # Helge Hafting <helge.hafting@aitel.hist.no>
 #
 msgid ""
@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-02-18 18:06+0100\n"
-"PO-Revision-Date: 2008-01-11 09:52+0100\n"
+"PO-Revision-Date: 2008-02-20 19:02+0100\n"
 "Last-Translator: Bendik Brenne <bendik@xplore.nu>\n"
 "Language-Team: Bendik Brenne <bendik@xplore.nu>\n"
 "MIME-Version: 1.0\n"
@@ -173,11 +173,11 @@ msgstr "Avstand"
 
 #: ../src/navit.c:872 ../src/navit.c:897
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #: ../src/navit.c:876 ../src/navit.c:901
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #: ../src/navit.c:882
 msgid "Time"
@@ -207,26 +207,24 @@ msgstr "Rute"
 #: ../src/popup.c:229
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr ""
+msgstr "Punkt 0x%x 0x%x"
 
 #: ../src/popup.c:230
 #, c-format
 msgid "Screen coord : %d %d"
-msgstr ""
+msgstr "Skjerm koord: %d %d"
 
 #: ../src/popup.c:239
 msgid "Set as position"
-msgstr ""
+msgstr "Sett som posisjon"
 
 #: ../src/popup.c:240
-#, fuzzy
 msgid "Set as destination"
-msgstr "Destinasjon"
+msgstr "Sett som destinasjon"
 
 #: ../src/popup.c:241
-#, fuzzy
 msgid "Add as bookmark"
-msgstr "Bokmerke"
+msgstr "Legg til som bokmerke"
 
 #. 020
 #: ../src/country.c:24
@@ -236,22 +234,22 @@ msgstr "Andorra"
 #. 784
 #: ../src/country.c:25
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "De forente arabiske emirater"
 
 #. 004
 #: ../src/country.c:26
 msgid "Afghanistan"
-msgstr ""
+msgstr "Afghanistan"
 
 #. 028
 #: ../src/country.c:27
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "Antigua og Barbuda"
 
 #. 660
 #: ../src/country.c:28
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguilla"
 
 #. 008
 #: ../src/country.c:29
@@ -265,31 +263,28 @@ msgstr "Armenia"
 
 #. 530
 #: ../src/country.c:31
-#, fuzzy
 msgid "Netherlands Antilles"
-msgstr "Nederland"
+msgstr "De nederlandske Antillene"
 
 #. 024
 #: ../src/country.c:32
-#, fuzzy
 msgid "Angola"
-msgstr "Andorra"
+msgstr "Angola"
 
 #. 010
 #: ../src/country.c:33
 msgid "Antarctica"
-msgstr ""
+msgstr "Antarktis"
 
 #. 032
 #: ../src/country.c:34
-#, fuzzy
 msgid "Argentina"
-msgstr "Armenia"
+msgstr "Argentina"
 
 #. 016
 #: ../src/country.c:35
 msgid "American Samoa"
-msgstr ""
+msgstr "Amerikansk Samoa"
 
 #. 040
 #: ../src/country.c:36
@@ -298,20 +293,18 @@ msgstr "Østerrike"
 
 #. 036
 #: ../src/country.c:37
-#, fuzzy
 msgid "Australia"
-msgstr "Østerrike"
+msgstr "Australia"
 
 #. 533
 #: ../src/country.c:38
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #. 248
 #: ../src/country.c:39
-#, fuzzy
 msgid "Aland Islands"
-msgstr "Færøyene"
+msgstr "Åland"
 
 #. 031
 #: ../src/country.c:40
@@ -326,12 +319,12 @@ msgstr "Bosnia and Herzegovina"
 #. 052
 #: ../src/country.c:42
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #. 050
 #: ../src/country.c:43
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladesh"
 
 #. 056
 #: ../src/country.c:44
@@ -341,7 +334,7 @@ msgstr "Belgia"
 #. 854
 #: ../src/country.c:45
 msgid "Burkina Faso"
-msgstr ""
+msgstr "Burkina Faso"
 
 #. 100
 #: ../src/country.c:46
@@ -351,63 +344,62 @@ msgstr "Bulgaria"
 #. 048
 #: ../src/country.c:47
 msgid "Bahrain"
-msgstr ""
+msgstr "Bahrain"
 
 #. 108
 #: ../src/country.c:48
 msgid "Burundi"
-msgstr ""
+msgstr "Burundi"
 
 #. 204
 #: ../src/country.c:49
 msgid "Benin"
-msgstr ""
+msgstr "Benin"
 
 #. 652
 #: ../src/country.c:50
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "Saint Barthelemy"
 
 #. 060
 #: ../src/country.c:51
 msgid "Bermuda"
-msgstr ""
+msgstr "Bermuda"
 
 #. 096
 #: ../src/country.c:52
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunei"
 
 #. 068
 #: ../src/country.c:53
 msgid "Bolivia"
-msgstr ""
+msgstr "Bolivia"
 
 #. 076
 #: ../src/country.c:54
 msgid "Brazil"
-msgstr ""
+msgstr "Brazil"
 
 #. 044
 #: ../src/country.c:55
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahamas"
 
 #. 064
 #: ../src/country.c:56
 msgid "Bhutan"
-msgstr ""
+msgstr "Bhutan"
 
 #. 074
 #: ../src/country.c:57
-#, fuzzy
 msgid "Bouvet Island"
-msgstr "Færøyene"
+msgstr "Bouvetøya"
 
 #. 072
 #: ../src/country.c:58
 msgid "Botswana"
-msgstr ""
+msgstr "Botswana"
 
 #. 112
 #: ../src/country.c:59
@@ -416,36 +408,33 @@ msgstr "Hvite-Russland"
 
 #. 084
 #: ../src/country.c:60
-#, fuzzy
 msgid "Belize"
-msgstr "Belgia"
+msgstr "Belize"
 
 #. 124
 #: ../src/country.c:61
-#, fuzzy
 msgid "Canada"
-msgstr "Instruks"
+msgstr "Kanada"
 
 #. 166
 #: ../src/country.c:62
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "Kokosøyene"
 
 #. 180
 #: ../src/country.c:63
 msgid "Congo, Democratic Republic of the"
-msgstr ""
+msgstr "Kongo, Den demokratiske republikken"
 
 #. 140
 #: ../src/country.c:64
-#, fuzzy
 msgid "Central African Republic"
-msgstr "Tsjekkia"
+msgstr "Den sentralafrikanske republikk"
 
 #. 178
 #: ../src/country.c:65
 msgid "Congo"
-msgstr ""
+msgstr "Kongo"
 
 #. 756
 #: ../src/country.c:66
@@ -455,54 +444,52 @@ msgstr "Sveits"
 #. 384
 #: ../src/country.c:67
 msgid "Cote d'Ivoire"
-msgstr ""
+msgstr "Elfenbenskysten"
 
 #. 184
 #: ../src/country.c:68
-#, fuzzy
 msgid "Cook Islands"
-msgstr "Færøyene"
+msgstr "Cookøyene"
 
 #. 152
 #: ../src/country.c:69
-#, fuzzy
 msgid "Chile"
-msgstr "Kjøretøy"
+msgstr "Chile"
 
 #. 120
 #: ../src/country.c:70
 msgid "Cameroon"
-msgstr ""
+msgstr "Kamerun"
 
 #. 156
 #: ../src/country.c:71
 msgid "China"
-msgstr ""
+msgstr "Kina"
 
 #. 170
 #: ../src/country.c:72
 msgid "Colombia"
-msgstr ""
+msgstr "Colombia"
 
 #. 188
 #: ../src/country.c:73
 msgid "Costa Rica"
-msgstr ""
+msgstr "Costa Rica"
 
 #. 192
 #: ../src/country.c:74
 msgid "Cuba"
-msgstr ""
+msgstr "Kuba"
 
 #. 132
 #: ../src/country.c:75
 msgid "Cape Verde"
-msgstr ""
+msgstr "Kapp Verde"
 
 #. 162
 #: ../src/country.c:76
 msgid "Christmas Island"
-msgstr ""
+msgstr "Christmasøya"
 
 #. 196
 #: ../src/country.c:77
@@ -522,7 +509,7 @@ msgstr "Tyskland"
 #. 262
 #: ../src/country.c:80
 msgid "Djibouti"
-msgstr ""
+msgstr "Djibouti"
 
 #. 208
 #: ../src/country.c:81
@@ -531,15 +518,13 @@ msgstr "Danmark"
 
 #. 212
 #: ../src/country.c:82
-#, fuzzy
 msgid "Dominica"
-msgstr "Romania"
+msgstr "Dominica"
 
 #. 214
 #: ../src/country.c:83
-#, fuzzy
 msgid "Dominican Republic"
-msgstr "Tsjekkia"
+msgstr "Den dominikanske republikk"
 
 #. 012
 #: ../src/country.c:84
@@ -549,7 +534,7 @@ msgstr "Algeria"
 #. 218
 #: ../src/country.c:85
 msgid "Ecuador"
-msgstr ""
+msgstr "Ecuador"
 
 #. 233
 #: ../src/country.c:86
@@ -569,7 +554,7 @@ msgstr "Vest-Sahara"
 #. 232
 #: ../src/country.c:89
 msgid "Eritrea"
-msgstr ""
+msgstr "Eritrea"
 
 #. 724
 #: ../src/country.c:90
@@ -578,9 +563,8 @@ msgstr "Spania"
 
 #. 231
 #: ../src/country.c:91
-#, fuzzy
 msgid "Ethiopia"
-msgstr "Estland"
+msgstr "Etiopia"
 
 #. 246
 #: ../src/country.c:92
@@ -590,17 +574,17 @@ msgstr "Finnland"
 #. 242
 #: ../src/country.c:93
 msgid "Fiji"
-msgstr ""
+msgstr "Fiji"
 
 #. 238
 #: ../src/country.c:94
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "Falklandsøyene"
 
 #. 583
 #: ../src/country.c:95
 msgid "Micronesia, Federated States of"
-msgstr ""
+msgstr "Mikronesia"
 
 #. 234
 #: ../src/country.c:96
@@ -615,7 +599,7 @@ msgstr "Frankrike"
 #. 266
 #: ../src/country.c:98
 msgid "Gabon"
-msgstr ""
+msgstr "Gabon"
 
 #. 826
 #: ../src/country.c:99
@@ -625,7 +609,7 @@ msgstr "Storbritannia"
 #. 308
 #: ../src/country.c:100
 msgid "Grenada"
-msgstr ""
+msgstr "Grenada"
 
 #. 268
 #: ../src/country.c:101
@@ -635,18 +619,17 @@ msgstr "Georgia"
 #. 254
 #: ../src/country.c:102
 msgid "French Guiana"
-msgstr ""
+msgstr "Fransk Guyana"
 
 #. 831
 #: ../src/country.c:103
-#, fuzzy
 msgid "Guernsey"
-msgstr "Tyskland"
+msgstr "Guernsey"
 
 #. 288
 #: ../src/country.c:104
 msgid "Ghana"
-msgstr ""
+msgstr "Ghana"
 
 #. 292
 #: ../src/country.c:105
@@ -655,29 +638,28 @@ msgstr "Gibraltar"
 
 #. 304
 #: ../src/country.c:106
-#, fuzzy
 msgid "Greenland"
-msgstr "Irland"
+msgstr "Grønland"
 
 #. 270
 #: ../src/country.c:107
 msgid "Gambia"
-msgstr ""
+msgstr "Gambia"
 
 #. 324
 #: ../src/country.c:108
 msgid "Guinea"
-msgstr ""
+msgstr "Guinea"
 
 #. 312
 #: ../src/country.c:109
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Guadeloupe"
 
 #. 226
 #: ../src/country.c:110
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "Ekvatorial-Guinea"
 
 #. 300
 #: ../src/country.c:111
@@ -687,42 +669,42 @@ msgstr "Hellas"
 #. 239
 #: ../src/country.c:112
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "Sør-Georgia og Sør-Sandwichøyene"
 
 #. 320
 #: ../src/country.c:113
 msgid "Guatemala"
-msgstr ""
+msgstr "Guatemala"
 
 #. 316
 #: ../src/country.c:114
 msgid "Guam"
-msgstr ""
+msgstr "Guam"
 
 #. 624
 #: ../src/country.c:115
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "Guinea-Bissau"
 
 #. 328
 #: ../src/country.c:116
 msgid "Guyana"
-msgstr ""
+msgstr "Guyana"
 
 #. 344
 #: ../src/country.c:117
 msgid "Hong Kong"
-msgstr ""
+msgstr "Hong Kong"
 
 #. 334
 #: ../src/country.c:118
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "Heard- og McDonald-øyene"
 
 #. 340
 #: ../src/country.c:119
 msgid "Honduras"
-msgstr ""
+msgstr "Honduras"
 
 #. 191
 #: ../src/country.c:120
@@ -732,7 +714,7 @@ msgstr "Kroatia"
 #. 332
 #: ../src/country.c:121
 msgid "Haiti"
-msgstr ""
+msgstr "Haiti"
 
 #. 348
 #: ../src/country.c:122
@@ -742,7 +724,7 @@ msgstr "Ungarn"
 #. 360
 #: ../src/country.c:123
 msgid "Indonesia"
-msgstr ""
+msgstr "Indonesia"
 
 #. 372
 #: ../src/country.c:124
@@ -757,28 +739,27 @@ msgstr "Israel"
 #. 833
 #: ../src/country.c:126
 msgid "Isle of Man"
-msgstr ""
+msgstr "Man"
 
 #. 356
 #: ../src/country.c:127
 msgid "India"
-msgstr ""
+msgstr "India"
 
 #. 086
 #: ../src/country.c:128
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "Det britiske territoriet i Indiahavet"
 
 #. 368
 #: ../src/country.c:129
-#, fuzzy
 msgid "Iraq"
-msgstr "Israel"
+msgstr "Irak"
 
 #. 364
 #: ../src/country.c:130
 msgid "Iran, Islamic Republic of"
-msgstr ""
+msgstr "Iran"
 
 #. 352
 #: ../src/country.c:131
@@ -793,12 +774,12 @@ msgstr "Italia"
 #. 832
 #: ../src/country.c:133
 msgid "Jersey"
-msgstr ""
+msgstr "Jersey"
 
 #. 388
 #: ../src/country.c:134
 msgid "Jamaica"
-msgstr ""
+msgstr "Jamaica"
 
 #. 400
 #: ../src/country.c:135
@@ -807,71 +788,68 @@ msgstr "Jordan"
 
 #. 392
 #: ../src/country.c:136
-#, fuzzy
 msgid "Japan"
-msgstr "Spania"
+msgstr "Japan"
 
 #. 404
 #: ../src/country.c:137
 msgid "Kenya"
-msgstr ""
+msgstr "Kenya"
 
 #. 417
 #: ../src/country.c:138
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "Kirgisistan"
 
 #. 116
 #: ../src/country.c:139
 msgid "Cambodia"
-msgstr ""
+msgstr "Kambodsja"
 
 #. 296
 #: ../src/country.c:140
 msgid "Kiribati"
-msgstr ""
+msgstr "Kiribati"
 
 #. 174
 #: ../src/country.c:141
 msgid "Comoros"
-msgstr ""
+msgstr "Komorene"
 
 #. 659
 #: ../src/country.c:142
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "Saint Kitts og Nevis"
 
 #. 408
 #: ../src/country.c:143
 msgid "Korea, Democratic People's Republic of"
-msgstr ""
+msgstr "Nord-Korea"
 
 #. 410
 #: ../src/country.c:144
-#, fuzzy
 msgid "Korea, Republic of"
-msgstr "Tsjekkia"
+msgstr "Sør-Korea"
 
 #. 414
 #: ../src/country.c:145
 msgid "Kuwait"
-msgstr ""
+msgstr "Kuwait"
 
 #. 136
 #: ../src/country.c:146
-#, fuzzy
 msgid "Cayman Islands"
-msgstr "Færøyene"
+msgstr "Caymanøyene"
 
 #. 398
 #: ../src/country.c:147
 msgid "Kazakhstan"
-msgstr ""
+msgstr "Kazakhstan"
 
 #. 418
 #: ../src/country.c:148
 msgid "Lao People's Democratic Republic"
-msgstr ""
+msgstr "Laos"
 
 #. 422
 #: ../src/country.c:149
@@ -881,7 +859,7 @@ msgstr "Libanon"
 #. 662
 #: ../src/country.c:150
 msgid "Saint Lucia"
-msgstr ""
+msgstr "Saint Lucia"
 
 #. 438
 #: ../src/country.c:151
@@ -891,19 +869,17 @@ msgstr "Lichtenstein"
 #. 144
 #: ../src/country.c:152
 msgid "Sri Lanka"
-msgstr ""
+msgstr "Sri Lanka"
 
 #. 430
 #: ../src/country.c:153
-#, fuzzy
 msgid "Liberia"
-msgstr "Libya"
+msgstr "Liberia"
 
 #. 426
 #: ../src/country.c:154
-#, fuzzy
 msgid "Lesotho"
-msgstr "Avstand"
+msgstr "Lesotho"
 
 #. 440
 #: ../src/country.c:155
@@ -923,7 +899,7 @@ msgstr "Latvia"
 #. 434
 #: ../src/country.c:158
 msgid "Libyan Arab Jamahiriya"
-msgstr ""
+msgstr "Libya"
 
 #. 504
 #: ../src/country.c:159
@@ -938,76 +914,72 @@ msgstr "Monaco"
 #. 498
 #: ../src/country.c:161
 msgid "Moldova, Republic of"
-msgstr ""
+msgstr "Moldova"
 
 #. 499
 #: ../src/country.c:162
 msgid "Montenegro"
-msgstr ""
+msgstr "Montenegro"
 
 #. 663
 #: ../src/country.c:163
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "Saint Martin (Fransk del)"
 
 #. 450
 #: ../src/country.c:164
 msgid "Madagascar"
-msgstr ""
+msgstr "Madagascar"
 
 #. 584
 #: ../src/country.c:165
-#, fuzzy
 msgid "Marshall Islands"
-msgstr "Færøyene"
+msgstr "Marshalløyene"
 
 #. 807
 #: ../src/country.c:166
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr ""
+msgstr "Makedonia"
 
 #. 466
 #: ../src/country.c:167
-#, fuzzy
 msgid "Mali"
-msgstr "Malta"
+msgstr "Mali"
 
 #. 104
 #: ../src/country.c:168
 msgid "Myanmar"
-msgstr ""
+msgstr "Burma"
 
 #. 496
 #: ../src/country.c:169
 msgid "Mongolia"
-msgstr ""
+msgstr "Mongolia"
 
 #. 446
 #: ../src/country.c:170
-#, fuzzy
 msgid "Macao"
-msgstr "Monaco"
+msgstr "Macao"
 
 #. 580
 #: ../src/country.c:171
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "Nord-Marianene"
 
 #. 474
 #: ../src/country.c:172
 msgid "Martinique"
-msgstr ""
+msgstr "Martinique"
 
 #. 478
 #: ../src/country.c:173
-#, fuzzy
 msgid "Mauritania"
-msgstr "Litauen"
+msgstr "Mauritania"
 
 #. 500
 #: ../src/country.c:174
 msgid "Montserrat"
-msgstr ""
+msgstr "Montserrat"
 
 #. 470
 #: ../src/country.c:175
@@ -1017,68 +989,62 @@ msgstr "Malta"
 #. 480
 #: ../src/country.c:176
 msgid "Mauritius"
-msgstr ""
+msgstr "Mauritius"
 
 #. 462
 #: ../src/country.c:177
 msgid "Maldives"
-msgstr ""
+msgstr "Maldivene"
 
 #. 454
 #: ../src/country.c:178
-#, fuzzy
 msgid "Malawi"
-msgstr "Malta"
+msgstr "Malawi"
 
 #. 484
 #: ../src/country.c:179
 msgid "Mexico"
-msgstr ""
+msgstr "Mexico"
 
 #. 458
 #: ../src/country.c:180
-#, fuzzy
 msgid "Malaysia"
-msgstr "Malta"
+msgstr "Malaysia"
 
 #. 508
 #: ../src/country.c:181
 msgid "Mozambique"
-msgstr ""
+msgstr "Mosambik"
 
 #. 516
 #: ../src/country.c:182
-#, fuzzy
 msgid "Namibia"
-msgstr "Libya"
+msgstr "Namibia"
 
 #. 540
 #: ../src/country.c:183
-#, fuzzy
 msgid "New Caledonia"
-msgstr "Makedonia"
+msgstr "Ny-Caledonia"
 
 #. 562
 #: ../src/country.c:184
 msgid "Niger"
-msgstr ""
+msgstr "Niger"
 
 #. 574
 #: ../src/country.c:185
-#, fuzzy
 msgid "Norfolk Island"
-msgstr "Færøyene"
+msgstr "Norfolkøya"
 
 #. 566
 #: ../src/country.c:186
-#, fuzzy
 msgid "Nigeria"
-msgstr "Algeria"
+msgstr "Nigeria"
 
 #. 558
 #: ../src/country.c:187
 msgid "Nicaragua"
-msgstr ""
+msgstr "Nicaragua"
 
 #. 528
 #: ../src/country.c:188
@@ -1093,59 +1059,57 @@ msgstr "Norge"
 #. 524
 #: ../src/country.c:190
 msgid "Nepal"
-msgstr ""
+msgstr "Nepal"
 
 #. 520
 #: ../src/country.c:191
 msgid "Nauru"
-msgstr ""
+msgstr "Nauru"
 
 #. 570
 #: ../src/country.c:192
-#, fuzzy
 msgid "Niue"
-msgstr "Nummer"
+msgstr "Niue"
 
 #. 554
 #: ../src/country.c:193
-#, fuzzy
 msgid "New Zealand"
-msgstr "Nederland"
+msgstr "New Zealand"
 
 #. 512
 #: ../src/country.c:194
 msgid "Oman"
-msgstr ""
+msgstr "Oman"
 
 #. 591
 #: ../src/country.c:195
 msgid "Panama"
-msgstr ""
+msgstr "Panama"
 
 #. 604
 #: ../src/country.c:196
 msgid "Peru"
-msgstr ""
+msgstr "Peru"
 
 #. 258
 #: ../src/country.c:197
 msgid "French Polynesia"
-msgstr ""
+msgstr "Fransk Polynesia"
 
 #. 598
 #: ../src/country.c:198
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "Papua Ny-Guinea"
 
 #. 608
 #: ../src/country.c:199
 msgid "Philippines"
-msgstr ""
+msgstr "Filippinene"
 
 #. 586
 #: ../src/country.c:200
 msgid "Pakistan"
-msgstr ""
+msgstr "Pakistan"
 
 #. 616
 #: ../src/country.c:201
@@ -1155,22 +1119,22 @@ msgstr "Polen"
 #. 666
 #: ../src/country.c:202
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "Saint-Pierre og Miquelon"
 
 #. 612
 #: ../src/country.c:203
 msgid "Pitcairn"
-msgstr ""
+msgstr "Pitcairnøyene"
 
 #. 630
 #: ../src/country.c:204
 msgid "Puerto Rico"
-msgstr ""
+msgstr "Puerto Rico"
 
 #. 275
 #: ../src/country.c:205
 msgid "Palestinian Territory, Occupied"
-msgstr ""
+msgstr "Palestinia"
 
 #. 620
 #: ../src/country.c:206
@@ -1179,25 +1143,23 @@ msgstr "Portugal"
 
 #. 585
 #: ../src/country.c:207
-#, fuzzy
 msgid "Palau"
-msgstr "Malta"
+msgstr "Palau"
 
 #. 600
 #: ../src/country.c:208
 msgid "Paraguay"
-msgstr ""
+msgstr "Paraguay"
 
 #. 634
 #: ../src/country.c:209
-#, fuzzy
 msgid "Qatar"
-msgstr "Data"
+msgstr "Qatar"
 
 #. 638
 #: ../src/country.c:210
 msgid "Reunion"
-msgstr ""
+msgstr "Reunion"
 
 #. 642
 #: ../src/country.c:211
@@ -1216,9 +1178,8 @@ msgstr "Russland"
 
 #. 646
 #: ../src/country.c:214
-#, fuzzy
 msgid "Rwanda"
-msgstr "Romania"
+msgstr "Rwanda"
 
 #. 682
 #: ../src/country.c:215
@@ -1227,20 +1188,18 @@ msgstr "Saudi-Arabia"
 
 #. 090
 #: ../src/country.c:216
-#, fuzzy
 msgid "Solomon Islands"
-msgstr "Færøyene"
+msgstr "Salomonøyene"
 
 #. 690
 #: ../src/country.c:217
 msgid "Seychelles"
-msgstr ""
+msgstr "Seychellene"
 
 #. 736
 #: ../src/country.c:218
-#, fuzzy
 msgid "Sudan"
-msgstr "Spania"
+msgstr "Sudan"
 
 #. 752
 #: ../src/country.c:219
@@ -1250,12 +1209,12 @@ msgstr "Sverige"
 #. 702
 #: ../src/country.c:220
 msgid "Singapore"
-msgstr ""
+msgstr "Singapore"
 
 #. 654
 #: ../src/country.c:221
 msgid "Saint Helena"
-msgstr ""
+msgstr "Saint Helena"
 
 #. 705
 #: ../src/country.c:222
@@ -1275,7 +1234,7 @@ msgstr "Slovakia"
 #. 694
 #: ../src/country.c:225
 msgid "Sierra Leone"
-msgstr ""
+msgstr "Sierra Leone"
 
 #. 674
 #: ../src/country.c:226
@@ -1285,87 +1244,82 @@ msgstr "San Marino"
 #. 686
 #: ../src/country.c:227
 msgid "Senegal"
-msgstr ""
+msgstr "Senegal"
 
 #. 706
 #: ../src/country.c:228
-#, fuzzy
 msgid "Somalia"
-msgstr "Romania"
+msgstr "Somalia"
 
 #. 740
 #: ../src/country.c:229
-#, fuzzy
 msgid "Suriname"
-msgstr "Syria"
+msgstr "Surinam"
 
 #. 678
 #: ../src/country.c:230
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "Sao Tome and Principe"
 
 #. 222
 #: ../src/country.c:231
 msgid "El Salvador"
-msgstr ""
+msgstr "El Salvador"
 
 #. 760
 #: ../src/country.c:232
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "Syria"
 
 #. 748
 #: ../src/country.c:233
-#, fuzzy
 msgid "Swaziland"
-msgstr "Sveits"
+msgstr "Swaziland"
 
 #. 796
 #: ../src/country.c:234
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Turks- og Caicosøyene"
 
 #. 148
 #: ../src/country.c:235
 msgid "Chad"
-msgstr ""
+msgstr "Tsjad"
 
 #. 260
 #: ../src/country.c:236
 msgid "French Southern Territories"
-msgstr ""
+msgstr "De franske sørterritorier"
 
 #. 768
 #: ../src/country.c:237
 msgid "Togo"
-msgstr ""
+msgstr "Togo"
 
 #. 764
 #: ../src/country.c:238
-#, fuzzy
 msgid "Thailand"
-msgstr "Finnland"
+msgstr "Thailand"
 
 #. 762
 #: ../src/country.c:239
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tajikistan"
 
 #. 772
 #: ../src/country.c:240
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #. 626
 #: ../src/country.c:241
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Øst-Timor"
 
 #. 795
 #: ../src/country.c:242
-#, fuzzy
 msgid "Turkmenistan"
-msgstr "Tunisia"
+msgstr "Turkmenistan"
 
 #. 788
 #: ../src/country.c:243
@@ -1374,9 +1328,8 @@ msgstr "Tunisia"
 
 #. 776
 #: ../src/country.c:244
-#, fuzzy
 msgid "Tonga"
-msgstr "By"
+msgstr "Tonga"
 
 #. 792
 #: ../src/country.c:245
@@ -1386,22 +1339,22 @@ msgstr "Tyrkia"
 #. 780
 #: ../src/country.c:246
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "Trinidad og Tobago"
 
 #. 798
 #: ../src/country.c:247
 msgid "Tuvalu"
-msgstr ""
+msgstr "Tuvalu"
 
 #. 158
 #: ../src/country.c:248
 msgid "Taiwan, Province of China"
-msgstr ""
+msgstr "Taiwan, Provins av Kina"
 
 #. 834
 #: ../src/country.c:249
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "Tanzania, Den forente republikken"
 
 #. 804
 #: ../src/country.c:250
@@ -1411,98 +1364,97 @@ msgstr "Ukraina"
 #. 800
 #: ../src/country.c:251
 msgid "Uganda"
-msgstr ""
+msgstr "Uganda"
 
 #. 581
 #: ../src/country.c:252
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "De forente staters små fjerntliggende øyer"
 
 #. 840
 #: ../src/country.c:253
 msgid "United States"
-msgstr ""
+msgstr "Amerikas forente stater"
 
 #. 858
 #: ../src/country.c:254
 msgid "Uruguay"
-msgstr ""
+msgstr "Uruguay"
 
 #. 860
 #: ../src/country.c:255
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Usbekistan"
 
 #. 336
 #: ../src/country.c:256
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "Vatikanstaten"
 
 #. 670
 #: ../src/country.c:257
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "Saint Vincent og Grenadinene"
 
 #. 862
 #: ../src/country.c:258
 msgid "Venezuela"
-msgstr ""
+msgstr "Venezuela"
 
 #. 092
 #: ../src/country.c:259
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "Jomfruøyene, De britiske"
 
 #. 850
 #: ../src/country.c:260
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "Jomfruøyene, De amerikanske"
 
 #. 704
 #: ../src/country.c:261
 msgid "Viet Nam"
-msgstr ""
+msgstr "Vietnam"
 
 #. 548
 #: ../src/country.c:262
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #. 876
 #: ../src/country.c:263
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "Wallis- og Futunaøyene"
 
 #. 882
 #: ../src/country.c:264
 msgid "Samoa"
-msgstr ""
+msgstr "Samoa"
 
 #. 887
 #: ../src/country.c:265
 msgid "Yemen"
-msgstr ""
+msgstr "Yemen"
 
 #. 175
 #: ../src/country.c:266
-#, fuzzy
 msgid "Mayotte"
-msgstr "Layout"
+msgstr "Mayotte"
 
 #. 710
 #: ../src/country.c:267
 msgid "South Africa"
-msgstr ""
+msgstr "Sør-Afrika"
 
 #. 894
 #: ../src/country.c:268
 msgid "Zambia"
-msgstr ""
+msgstr "Zambia"
 
 #. 716
 #: ../src/country.c:269
 msgid "Zimbabwe"
-msgstr ""
+msgstr "Zimbabwe"
 
 #: ../src/gui/gtk/destination.c:96 ../src/gui/gtk/destination.c:97
 #: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
@@ -1511,11 +1463,11 @@ msgstr "Bil"
 
 #: ../src/gui/gtk/destination.c:96
 msgid "Iso2"
-msgstr ""
+msgstr "Iso2"
 
 #: ../src/gui/gtk/destination.c:96
 msgid "Iso3"
-msgstr ""
+msgstr "Iso3"
 
 #: ../src/gui/gtk/destination.c:96 ../src/gui/gtk/destination.c:334
 msgid "Country"
@@ -1523,9 +1475,8 @@ msgstr "Land"
 
 #: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
 #: ../src/gui/gtk/destination.c:99
-#, fuzzy
 msgid "Postal"
-msgstr "Portugal"
+msgstr "Post"
 
 #: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
 #: ../src/gui/gtk/destination.c:99
@@ -1644,44 +1595,44 @@ msgstr "Synlige punkt"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "N"
-msgstr ""
+msgstr "N"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "NE"
-msgstr ""
+msgstr "NØ"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "E"
-msgstr ""
+msgstr "Ø"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "SE"
-msgstr ""
+msgstr "SØ"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "SW"
-msgstr ""
+msgstr "SV"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "W"
-msgstr ""
+msgstr "V"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "NW"
-msgstr ""
+msgstr "NV"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:105
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "Rute %4.0fkm    %02d:%02d ETA"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:156
 msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
+msgstr "Rute 0000km  0+00:00 ETA"
 
 #~ msgid "Moldova"
 #~ msgstr "Moldova"
