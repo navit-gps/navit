@@ -17,6 +17,10 @@
 #include "zipfile.h"
 #include "config.h"
 
+#define BUFFER_SIZE 1280
+
+/* #define GENERATE_INDEX */
+
 #if 1
 #define debug_tile(x) 0
 #else
@@ -163,6 +167,19 @@ static char *attrmap={
 	"w	route		ferry		ferry\n"
 };
 
+#ifdef GENERATE_INDEX
+
+struct country_table {
+	int countryid;
+	char *names;
+	FILE *file;
+} country_table[] = {
+	{276,"Germany,Deutschland,Bundesrepublik Deutschland"},
+};
+
+static GHashTable *country_table_hash;
+#endif
+
 static GHashTable *way_key_hash, *node_key_hash;
 
 static GHashTable *strings_hash = NULL;
@@ -248,6 +265,26 @@ build_attrmap(char *map)
 	}
 }
 
+#ifdef GENERATE_INDEX
+static void
+build_countrytable(void)
+{
+	int i;
+	char *names,*str,*tok;
+	country_table_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
+		names=g_strdup(country_table[i].names);
+		str=names;
+		while ((tok=strtok(str, ","))) {
+			str=NULL;
+			g_hash_table_insert(country_table_hash, tok,  (gpointer)&country_table[i]);
+		}
+	}
+}
+#endif
+
+
+
 static int processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles;
 static int in_way, in_node, in_relation;
 
@@ -275,27 +312,30 @@ struct attr_bin {
 struct attr_bin label_attr = {
 	0, attr_label
 };
-char label_attr_buffer[1024];
+char label_attr_buffer[BUFFER_SIZE];
 
 struct attr_bin street_name_attr = {
 	0, attr_street_name
 };
-char street_name_attr_buffer[1024];
+char street_name_attr_buffer[BUFFER_SIZE];
 
 struct attr_bin street_name_systematic_attr = {
 	0, attr_street_name_systematic
 };
-char street_name_systematic_attr_buffer[1024];
+char street_name_systematic_attr_buffer[BUFFER_SIZE];
 
 struct attr_bin debug_attr = {
 	0, attr_debug
 };
-char debug_attr_buffer[1024];
+char debug_attr_buffer[BUFFER_SIZE];
 
 struct attr_bin flags_attr = {
 	0, attr_flags
 };
 int flags_attr_value;
+
+char is_in_buffer[BUFFER_SIZE];
+
 
 static void
 pad_text_attr(struct attr_bin *a, char *buffer)
@@ -324,8 +364,10 @@ xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size)
 	i=strchr(pos, s);
 	if (! i)
 		return 0;
-	if (i - pos > buffer_size)
+	if (i - pos > buffer_size) {
+		fprintf(stderr,"Buffer overflow %d vs %d\n", i-pos, buffer_size);
 		return 0;
+	}
 	strncpy(buffer, pos, i-pos);
 	buffer[i-pos]='\0';
 	return 1;
@@ -404,6 +446,7 @@ add_tag(char *k, char *v)
 		level=5;
 	}
 	if (! strcmp(k,"is_in")) {
+		strcpy(is_in_buffer, v);
 		level=5;
 	}
 	if (! strcmp(k,"lanes")) {
@@ -459,11 +502,11 @@ add_tag(char *k, char *v)
 static int
 parse_tag(char *p)
 {
-	char k_buffer[1024];
-	char v_buffer[1024];
-	if (!xml_get_attribute(p, "k", k_buffer, 1024))
+	char k_buffer[BUFFER_SIZE];
+	char v_buffer[BUFFER_SIZE];
+	if (!xml_get_attribute(p, "k", k_buffer, BUFFER_SIZE))
 		return 0;
-	if (!xml_get_attribute(p, "v", v_buffer, 1024))
+	if (!xml_get_attribute(p, "v", v_buffer, BUFFER_SIZE))
 		return 0;
 	add_tag(k_buffer, v_buffer);
 	return 1;
@@ -562,6 +605,7 @@ add_node(int id, double lat, double lon)
 	item.type=type_point_unkn;
 	label_attr.len=0;
 	debug_attr.len=0;
+	is_in_buffer[0]='\0';
 	sprintf(debug_attr_buffer,"nodeid=%d", nodeid);
 	ni=(struct node_item *)(node_buffer.base+node_buffer.size);
 	ni->id=id;
@@ -593,14 +637,14 @@ add_node(int id, double lat, double lon)
 static int
 parse_node(char *p)
 {
-	char id_buffer[1024];
-	char lat_buffer[1024];
-	char lon_buffer[1024];
-	if (!xml_get_attribute(p, "id", id_buffer, 1024))
+	char id_buffer[BUFFER_SIZE];
+	char lat_buffer[BUFFER_SIZE];
+	char lon_buffer[BUFFER_SIZE];
+	if (!xml_get_attribute(p, "id", id_buffer, BUFFER_SIZE))
 		return 0;
-	if (!xml_get_attribute(p, "lat", lat_buffer, 1024))
+	if (!xml_get_attribute(p, "lat", lat_buffer, BUFFER_SIZE))
 		return 0;
-	if (!xml_get_attribute(p, "lon", lon_buffer, 1024))
+	if (!xml_get_attribute(p, "lon", lon_buffer, BUFFER_SIZE))
 		return 0;
 	add_node(atoi(id_buffer), atof(lat_buffer), atof(lon_buffer));
 	return 1;
@@ -681,8 +725,8 @@ add_way(int id)
 static int
 parse_way(char *p)
 {
-	char id_buffer[1024];
-	if (!xml_get_attribute(p, "id", id_buffer, 1024))
+	char id_buffer[BUFFER_SIZE];
+	if (!xml_get_attribute(p, "id", id_buffer, BUFFER_SIZE))
 		return 0;
 	add_way(atoi(id_buffer));
 	return 1;
@@ -739,6 +783,8 @@ static void
 end_node(FILE *out)
 {
 	int alen=0;
+	int conflict=0;
+	struct country_table *result=NULL, *lookup;
 	if (!out || ! node_is_tagged || ! nodeid)
 		return;
 	pad_text_attr(&debug_attr, debug_attr_buffer);
@@ -752,6 +798,38 @@ end_node(FILE *out)
 	fwrite(&ni->c, 1*sizeof(struct coord), 1, out);
 	write_attr(out, &label_attr, label_attr_buffer);
 	write_attr(out, &debug_attr, debug_attr_buffer);
+#ifdef GENERATE_INDEX
+	if (item.type >= type_town_label && item.type <= type_town_label_1e7 && label_attr.len) {
+		char *tok,*buf=is_in_buffer;
+		while ((tok=strtok(buf, ","))) {
+			while (*tok==' ')
+				tok++;
+			lookup=g_hash_table_lookup(country_table_hash,tok);
+			if (lookup) {
+				if (result && result->countryid != lookup->countryid) {
+					fprintf(stderr,"conflict for %s %s country %d vs %d\n", label_attr_buffer, debug_attr_buffer, lookup->countryid, result->countryid);
+					conflict=1;
+				} else
+					result=lookup;
+			}
+			buf=NULL;
+		}
+		if (result && !conflict) {
+			if (!result->file) {
+				char *name=g_strdup_printf("country_%d.bin", result->countryid);
+				result->file=fopen(name,"w");
+			}
+			if (result->file) {
+				item.clen=2;
+				item.len=item.clen+2+label_attr.len+1;
+				fwrite(&item, sizeof(item), 1, result->file);
+				fwrite(&ni->c, 1*sizeof(struct coord), 1, result->file);
+				write_attr(result->file, &label_attr, label_attr_buffer);
+			}
+			
+		}
+	}
+#endif
 	processed_nodes_out++;
 }
 
@@ -784,8 +862,8 @@ add_nd(char *p, int ref)
 static int
 parse_nd(char *p)
 {
-	char ref_buffer[1024];
-	if (!xml_get_attribute(p, "ref", ref_buffer, 1024))
+	char ref_buffer[BUFFER_SIZE];
+	if (!xml_get_attribute(p, "ref", ref_buffer, BUFFER_SIZE))
 		return 0;
 	add_nd(p, atoi(ref_buffer));
 	return 1;
@@ -1871,6 +1949,9 @@ int main(int argc, char **argv)
 		usage(stderr);
 	result=argv[optind];
 	build_attrmap(map);
+#ifdef GENERATE_INDEX
+	build_countrytable();
+#endif
 
 
 	if (start == 1) {
