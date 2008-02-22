@@ -139,7 +139,7 @@ search_list_town_new(struct item *item)
 	}
 	else
 		ret->item=*item;
-	if (item_attr_get(item, attr_town_name, &attr))
+	if (item_attr_get(item, attr_label, &attr))
 		ret->name=map_convert_string(item->map,attr.u.str);
 	if (item_attr_get(item, attr_town_postal, &attr))
 		ret->postal=map_convert_string(item->map,attr.u.str);
