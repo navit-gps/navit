@@ -1939,8 +1939,10 @@ process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, FILE *out
 	th=tile_head_root;
 	while (th) {
 		if (th->process) {
+#ifdef GENERATE_INDEX
 			if (! strlen(th->name)) 
 				zipfiles+=write_aux_tiles(out, dir_out, compression_level, maxnamelen);
+#endif
 			if (th->total_size != th->total_size_used) {
 				fprintf(stderr,"Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
 				exit(1);
