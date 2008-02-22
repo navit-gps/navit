@@ -394,41 +394,34 @@ map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 static struct map_search_priv *
 binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial)
 {
-	struct map_selection *ms = NULL;
-	if (ms == NULL)
-		ms = g_new(struct map_selection, 1);
-	int i = 0;
-	ms->next = NULL;
-	for (i = 0; i < layer_end; i++)
-	{
-		ms->order[i] = 18;
-	}
-	ms->u.c_rect.lu.x = 0;
-	ms->u.c_rect.lu.y = 100000000;
-	ms->u.c_rect.rl.x = 100000000;
-	ms->u.c_rect.rl.y = 0;
-
 	struct map_rect_priv *map_rec;
-	search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	int country = item->id_lo;
+	
 	switch (search->type) {
 		case attr_country_name:
 			break;
 		case attr_town_name:
-			map_rec = map_rect_new_binfile(map, ms);
-			int country = item->id_lo;
-			int country_ref = 0;
-			
+			search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 			struct item *it;
-			struct map_rect_priv *temp = map_rect_new_binfile(map, NULL);
-			temp->country_id = country;
+			map_rec = map_rect_new_binfile(map, NULL);
+			map_rec->country_id = country;
 			struct map_search_priv *msp = g_new(struct map_search_priv, 1);
-			msp->mr = temp;
+			msp->mr = map_rec;
 			msp->search = search;
 			return msp;
 			break;
 		case attr_town_postal:
 			break;
 		case attr_street_name:
+			search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+			struct map_selection *ms = NULL;
+			ms = g_new(struct map_selection, 1);
+			int i = 0;
+			ms->next = NULL;
+			for (i = 0; i < layer_end; i++)
+			{
+				ms->order[i] = 18;
+			}
 			map_rec = map_rect_new_binfile(map, ms);
 			struct item *town = map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo);
 			if (town) {
@@ -464,11 +457,11 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 				return msp;
 			}
 			map_rect_destroy_binfile(map_rec);
+			g_free(ms);
 			break;
 		default:
 			break;
 	}
-	g_free(ms);
 	return NULL;
 }
 
