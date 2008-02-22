@@ -1541,6 +1541,8 @@ destroy_tile_hash(void)
 
 static int zipnum;
 
+static void write_countrydir(int phase, int maxnamelen);
+
 static void
 write_tilesdir(int phase, int maxlen, FILE *out)
 {
@@ -1548,6 +1550,7 @@ write_tilesdir(int phase, int maxlen, FILE *out)
 	GList *tiles_list,*next;
 	char **data;
 	struct tile_head *th,**last=NULL;
+	zipnum=0;
 
 	tiles_list=get_tiles_list();
 	if (phase == 3)
@@ -1566,6 +1569,10 @@ write_tilesdir(int phase, int maxlen, FILE *out)
 #if 0
 		fprintf(stderr,"PROGRESS: collecting tiles with len=%d\n", len);
 #endif
+#ifdef GENERATE_INDEX
+		if (! len)
+			write_countrydir(phase, maxlen);
+#endif
 		next=g_list_first(tiles_list);
 		while (next) {
 			if (strlen(next->data) == len) {
@@ -1574,7 +1581,7 @@ write_tilesdir(int phase, int maxlen, FILE *out)
 					*last=th;
 					last=&th->next;
 					th->next=NULL;
-					th->zipnum=zipnum++;
+					th->zipnum=zipnum;
 					fprintf(out,"%s:%d",(char *)next->data,th->total_size);
 
 					for ( idx = 0; idx< th->num_subtiles; idx++ ){
@@ -1586,6 +1593,7 @@ write_tilesdir(int phase, int maxlen, FILE *out)
 				}
 				if (th->name[0])
 					index_submap_add(phase, th, &tiles_list);
+				zipnum++;
 				processed_tiles++;
 			}
 			next=g_list_next(next);
@@ -1693,7 +1701,7 @@ index_country_add(int phase, int country_id, int zipnum)
 
 	if (phase == 3)
 		tile_extend(index_tile, (struct item_bin *)&ii, NULL);
-	else
+	else 
 		write_item(index_tile, (struct item_bin *)&ii);
 }
 
@@ -1781,11 +1789,7 @@ phase34(int phase, int maxnamelen, FILE *ways_in, FILE *nodes_in, FILE *tilesdir
 		merge_tiles();
 	sig_alrm(0);
 	alarm(0);
-	zipnum=0;
 	write_tilesdir(phase, maxnamelen, tilesdir_out);
-#ifdef GENERATE_INDEX
-	write_countrydir(phase, maxnamelen);
-#endif
 
 	return 0;
 
@@ -1935,6 +1939,8 @@ process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, FILE *out
 	th=tile_head_root;
 	while (th) {
 		if (th->process) {
+			if (! strlen(th->name)) 
+				zipfiles+=write_aux_tiles(out, dir_out, compression_level, maxnamelen);
 			if (th->total_size != th->total_size_used) {
 				fprintf(stderr,"Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
 				exit(1);
@@ -1942,9 +1948,6 @@ process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, FILE *out
 				if (strlen(th->name))
 					write_zipmember(out, dir_out, th->name, maxnamelen, th->zip_data, th->total_size, compression_level);
 				else {
-#ifdef GENERATE_INDEX
-					zipfiles+=write_aux_tiles(out, dir_out, compression_level, maxnamelen);
-#endif
 					write_zipmember(out, dir_out, "index", sizeof("index")-1, th->zip_data, th->total_size, compression_level);
 				}
 				zipfiles++;
