@@ -60,6 +60,7 @@ struct map_rect_priv {
 	int tile_depth;
 	struct tile tiles[8];
 	struct tile *t;
+	int country_id;
 };
 
 struct map_search_priv {
@@ -306,7 +307,20 @@ selection_contains(struct map_selection *sel, struct coord_rect *r, struct minma
 	return 0;
 }
 
-
+static void
+map_parse_country_binfile(struct map_rect_priv *mr)
+{
+	struct attr at;
+	if (binfile_attr_get(mr->item.priv_data, attr_country_id, &at)) {
+		if (at.u.num == mr->country_id)
+		{
+			if (binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
+			{
+				push_zipfile_tile(mr, at.u.num);
+			}
+		}
+	}
+}
 
 static struct item *
 map_rect_get_item_binfile(struct map_rect_priv *mr)
@@ -329,7 +343,7 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 		mr->street_name_attr=NULL;
 		mr->street_name_systematic_attr=NULL;
 		setup_pos(mr);
-		if (mr->item.type == type_submap) {
+		if ((mr->item.type == type_submap) && (!mr->country_id)) {
 			struct coord_rect r;
 			r.lu.x=t->pos_coord[0];
 			r.lu.y=t->pos_coord[3];
@@ -343,6 +357,18 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 			push_zipfile_tile(mr, t->pos_attr[5]);
 			continue;
 				
+		}
+		if (mr->country_id)
+		{
+			if (mr->item.type == type_countryindex) {
+				map_parse_country_binfile(mr);
+			}
+			if (mr->item.type >= type_town_label && mr->item.type <= type_district_label_1e7)
+			{
+				return &mr->item;
+			} else {
+				continue;
+			}
 		}
 		return &mr->item;
 	}
@@ -378,20 +404,25 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 		ms->order[i] = 18;
 	}
 	ms->u.c_rect.lu.x = 0;
-	ms->u.c_rect.lu.y = 10000000;
-	ms->u.c_rect.rl.x = 10000000;
+	ms->u.c_rect.lu.y = 100000000;
+	ms->u.c_rect.rl.x = 100000000;
 	ms->u.c_rect.rl.y = 0;
 
 	struct map_rect_priv *map_rec;
-	search_results = g_hash_table_new(g_str_hash, g_str_equal);
+	search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	switch (search->type) {
 		case attr_country_name:
 			break;
 		case attr_town_name:
 			map_rec = map_rect_new_binfile(map, ms);
 			int country = item->id_lo;
+			int country_ref = 0;
+			
+			struct item *it;
+			struct map_rect_priv *temp = map_rect_new_binfile(map, NULL);
+			temp->country_id = country;
 			struct map_search_priv *msp = g_new(struct map_search_priv, 1);
-			msp->mr = map_rec;
+			msp->mr = temp;
 			msp->search = search;
 			return msp;
 			break;
@@ -437,6 +468,7 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 		default:
 			break;
 	}
+	g_free(ms);
 	return NULL;
 }
 
@@ -444,7 +476,6 @@ struct item *
 binmap_search_get_item(struct map_search_priv *map_search)
 {
 	struct item* it;
-	if (strlen(map_search->search->u.str) <= 2) { return NULL; }
 	while ((it  = map_rect_get_item_binfile(map_search->mr))) {
 		if (map_search->search->type == attr_town_name) {
 			if ((it->type >= type_town_label) && (it->type <= type_town_label_1e7)) {
@@ -478,7 +509,9 @@ static void
 binmap_search_destroy(struct map_search_priv *ms)
 {
 	g_hash_table_destroy(search_results);
+	g_free(ms->mr->sel);
 	map_rect_destroy_binfile(ms->mr);
+	g_free(ms);
 }
 
 static struct map_methods map_methods_binfile = {
