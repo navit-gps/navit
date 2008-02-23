@@ -1761,12 +1761,14 @@ write_countrydir(int phase, int maxnamelen)
 	struct country_table *co;
 	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
 		co=&country_table[i];
-		tilename[0]='\0';
-		tile(&co->r, tilename, max);
-		sprintf(searchtile,"%ss%d", tilename, 0);
-		sprintf(filename,"country_%d.bin", co->countryid);
-		zipnum=add_aux_tile(phase, searchtile, filename, co->size);
-		index_country_add(phase,co->countryid,zipnum);
+		if (co->size) {
+			tilename[0]='\0';
+			tile(&co->r, tilename, max);
+			sprintf(searchtile,"%ss%d", tilename, 0);
+			sprintf(filename,"country_%d.bin", co->countryid);
+			zipnum=add_aux_tile(phase, searchtile, filename, co->size);
+			index_country_add(phase,co->countryid,zipnum);
+		}
 	}
 }
 #endif
