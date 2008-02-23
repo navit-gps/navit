@@ -420,10 +420,14 @@ int destination_address(struct navit *nav)
 	tracking=navit_get_tracking(nav);
 	if (tracking && tracking_get_current_attr(tracking, attr_country_id, &search_attr))
 		country_attr=&search_attr;
-	cs=country_search_new(country_attr, 0);
-	item=country_search_get_item(cs);
-	if (item && item_attr_get(item, attr_country_name, &country_name))
-		gtk_entry_set_text(GTK_ENTRY(search->entry_country), country_name.u.str);
-	country_search_destroy(cs);
+	if (country_attr) {
+		cs=country_search_new(country_attr, 0);
+		item=country_search_get_item(cs);
+		if (item && item_attr_get(item, attr_country_name, &country_name))
+			gtk_entry_set_text(GTK_ENTRY(search->entry_country), country_name.u.str);
+		country_search_destroy(cs);
+	} else {
+		dbg(0,"warning: no default country found\n");
+	}
 	return 0;
 }
