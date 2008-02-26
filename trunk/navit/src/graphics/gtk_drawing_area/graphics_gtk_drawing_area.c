@@ -522,7 +522,7 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 {
 	void *image;
 	int w,h;
-	printf("draw_image_warp data=%s\n", data);
+	dbg(1,"draw_image_warp data=%s\n", data);
 	image = imlib_load_image(data);
 	imlib_context_set_display(gdk_x11_drawable_get_xdisplay(gr->widget->window));
 	imlib_context_set_colormap(gdk_x11_colormap_get_xcolormap(gtk_widget_get_colormap(gr->widget)));
