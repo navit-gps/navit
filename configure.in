@@ -354,11 +354,10 @@ if test "x${enable_binding_python}" = "xyes"; then
 			py_libbasemod=`grep '^BASEMODLIBS=' $py_libdir/config/Makefile | sed -e 's/^.*=//'`
 			PYTHON_LIBS="-L$py_libdir/config $py_libs $py_libc $py_libm -lpython$py_ver $py_liblocalmod $py_libbasemod"
 			PYTHON_LIBS=`echo $PYTHON_LIBS | sed -e 's/[ \\t]*/ /g'`
-			AC_DEFINE(HAVE_PYTHON, 1, [Define to 1 if you have python])
-			python=yes
 			AC_MSG_RESULT($py_libdir)
 		else
 			AC_MSG_WARN([$py_libdir/config/Makefile or $py_prefix/include/python${py_ver}/Python.h missing, support for python disabled])
+			enable_binding_python="no"
 		fi
 	else
 		AC_MSG_WARN([no python found, support for python disabled])
