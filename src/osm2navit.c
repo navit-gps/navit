@@ -19,7 +19,7 @@
 
 #define BUFFER_SIZE 1280
 
-/* #define GENERATE_INDEX */
+#define GENERATE_INDEX
 
 #if 1
 #define debug_tile(x) 0
@@ -195,7 +195,9 @@ struct country_table {
 	int count;
 	struct rect r;
 } country_table[] = {
+	{ 40,"Austria,Österreich,AUT"},
 	{276,"Germany,Deutschland,Bundesrepublik Deutschland"},
+	{518,"Nederland,The Netherlands,Niederlande,NL"},
 };
 
 static GHashTable *country_table_hash;
