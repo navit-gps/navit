@@ -888,7 +888,7 @@ sort_countries(void)
 		if (co->size) {
 			buffer=malloc(co->size);
 			assert(buffer != NULL);
-			idx=malloc(co->count*4);
+			idx=malloc(co->count*sizeof(void *));
 			assert(idx != NULL);
 			name=g_strdup_printf("country_%d.bin.unsorted", co->countryid);
 			f=fopen(name,"r");
@@ -902,7 +902,7 @@ sort_countries(void)
 				idx[j]=p;
 				p+=(*((int *)p)+1)*4;
 			}
-			qsort(idx, co->count, 4, sort_countries_compare);
+			qsort(idx, co->count, sizeof(void *), sort_countries_compare);
 			name=g_strdup_printf("country_%d.bin", co->countryid);
 			f=fopen(name,"w");
 			for (j = 0 ; j < co->count ; j++) {
