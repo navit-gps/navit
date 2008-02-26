@@ -409,7 +409,7 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 					}
 					break;
 				case element_image:
-					printf("image: '%s'\n", di->label);
+					dbg(1,"image: '%s'\n", di->label);
 					gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, di->pnt, di->count, di->label);
 					break;
 				default:
@@ -497,9 +497,19 @@ do_draw_map(struct displaylist *displaylist, struct transformation *t, struct ma
 				continue;
 			}
 		} else {
-			if (! map_selection_contains_polygon(sel, ca, count)) {
-				dbg(1,"polygon not visible\n");
-				continue;
+			if (item->type == type_image && count == 2) {
+				struct coord_rect r;
+				r.lu=ca[0];
+				r.rl=ca[1];
+				if (! map_selection_contains_rect(sel, &r)) {
+					dbg(1,"image not visible\n");
+					continue;
+				}
+			} else {
+				if (! map_selection_contains_polygon(sel, ca, count)) {
+					dbg(1,"polygon not visible\n");
+					continue;
+				}
 			}
 		}
 		if (count == max) 
