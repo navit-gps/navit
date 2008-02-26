@@ -197,7 +197,26 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 	mr->item.id_lo=0;
 	mr->item.meth=&methods_textfile;
 	mr->item.priv_data=mr;
-	mr->f=fopen(map->filename, "r");
+	if (map->is_pipe) {
+		char *oargs,*args=g_strdup(map->filename),*sep=" ";
+		enum layer_type lay;
+		while (sel) {
+			oargs=args;
+			args=g_strdup_printf("%s 0x%x 0x%x 0x%x 0x%x", oargs, sel->u.c_rect.lu.x, sel->u.c_rect.lu.y, sel->u.c_rect.rl.x, sel->u.c_rect.rl.y);
+			g_free(oargs);
+			for (lay=layer_town ; lay < layer_end ; lay++) {
+				oargs=args;
+				args=g_strdup_printf("%s%s%d", oargs, sep, sel->order[lay]);
+				g_free(oargs);
+				sep=",";
+			}
+			sel=sel->next;
+		}
+		dbg(1,"popen args %s\n", args);
+		mr->f=popen(args, "r");
+	} else {
+		mr->f=fopen(map->filename, "r");
+	}
 	if(!mr->f) {
 		printf("map_rect_new_textfile unable to open textfile %s\n",map->filename);
 	}
@@ -210,7 +229,10 @@ static void
 map_rect_destroy_textfile(struct map_rect_priv *mr)
 {
 	if (mr->f) {
-		fclose(mr->f);
+		if (mr->m->is_pipe)
+			pclose(mr->f);
+		else
+			fclose(mr->f);
 	}
         g_free(mr);
 }
@@ -306,18 +328,27 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs)
 	struct attr *data=attr_search(attrs, NULL, attr_data);
 	struct attr *charset=attr_search(attrs, NULL, attr_charset);
 	struct file_wordexp *wexp;
+	int len,is_pipe=0;
+	char *wdata;
 	char **wexp_data;
 	if (! data)
 		return NULL;
-
-	wexp=file_wordexp_new(data->u.str);
+	dbg(0,"map_new_textfile %s\n", data->u.str);	
+	wdata=g_strdup_printf(data->u.str);
+	len=strlen(wdata);
+	if (len && wdata[len-1] == '|') {
+		wdata[len-1]='\0';
+		is_pipe=1;
+	}
+	wexp=file_wordexp_new(wdata);
 	wexp_data=file_wordexp_get_array(wexp);
-	dbg(1,"map_new_textfile %s\n", data->u.str);	
 	*meth=map_methods_textfile;
 
 	m=g_new0(struct map_priv, 1);
 	m->id=++map_id;
 	m->filename=g_strdup(wexp_data[0]);
+	m->is_pipe=is_pipe;
+	dbg(1,"map_new_textfile %s %s\n", m->filename, wdata);
 	if (charset) {
 		m->charset=g_strdup(charset->u.str);
 		meth->charset=m->charset;

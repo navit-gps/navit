@@ -5,6 +5,7 @@ struct map_priv {
 	int id;
 	char *filename;
 	char *charset;
+	int is_pipe;
 };
 
 #define SIZE 512

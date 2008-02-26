@@ -72,6 +72,9 @@ Change to your home coordinates.
 
 	<layout name="Tag" color= "#ffefb7">
 		<layer name="sea" details="0">
+			<item type="image" order="0-">
+				<image />
+			</item>
 			<item type="poly_wood" order="0-">
 				<polygon color="#8ec78d" /> 
 			</item>
