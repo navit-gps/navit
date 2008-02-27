@@ -532,9 +532,13 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 	w = imlib_image_get_width();
 	h = imlib_image_get_height();
 	if (count == 3) {
+		/* 0 1
+        	   2   */
 		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, p[1].y-p[0].y, p[2].x-p[0].x, p[2].y-p[0].y);
 	}
 	if (count == 2) {
+		/* 0 
+        	     1 */
 		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, 0, 0, p[1].y-p[0].y);
 	}
 }
