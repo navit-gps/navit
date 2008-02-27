@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-14 21:09+0100\n"
+"POT-Creation-Date: 2008-02-27 22:10+0100\n"
 "PO-Revision-Date: 2008-01-24 15:46+0300\n"
 "Last-Translator: Rustam T. Usmanov\n"
 "Language-Team: Rustam T. Usmanov\n"
@@ -17,32 +17,32 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%100/10==1 ? 2 : n%10==1 ? 0 : (n+9)%"
 "10>3 ? 2 : 1;\n"
 
-#: ../src/main.c:108
+#: ../src/main.c:143
 #, c-format
 msgid "Running from source directory\n"
 msgstr "Запуск в исходном каталоге\n"
 
-#: ../src/main.c:124
+#: ../src/main.c:159
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "установка '%s' в '%s'\n"
 
-#: ../src/main.c:202
+#: ../src/main.c:239
 #, c-format
 msgid "No config file navit.xml, navit.xml.local found\n"
 msgstr "Не найден конфигурационный файл navit.xml, navit.xml.local\n"
 
-#: ../src/main.c:206
+#: ../src/main.c:243
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr "Ошибка разбора '%s': %s\n"
 
-#: ../src/main.c:209
+#: ../src/main.c:246
 #, c-format
 msgid "Using '%s'\n"
 msgstr "Используется '%s'\n"
 
-#: ../src/main.c:212
+#: ../src/main.c:249
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr "Экземпляр не создан, выходим\n"
@@ -145,64 +145,64 @@ msgstr "Поверните %1$s%2$s %3$s"
 msgid "You have reached your destination %s"
 msgstr "Вы прибыли в пункт назначения %s"
 
-#: ../src/navit.c:675 ../src/gui/gtk/gui_gtk_action.c:198
+#: ../src/navit.c:638 ../src/gui/gtk/gui_gtk_action.c:198
 msgid "Layout"
 msgstr "Схема"
 
-#: ../src/navit.c:691
+#: ../src/navit.c:654
 msgid "Projection"
 msgstr "Проекция"
 
-#: ../src/navit.c:746
+#: ../src/navit.c:712
 msgid "Former Destinations"
 msgstr "Прошлые пункты назначения"
 
-#: ../src/navit.c:756
+#: ../src/navit.c:722
 msgid "Bookmarks"
 msgstr "Закладки"
 
-#: ../src/navit.c:794
+#: ../src/navit.c:760
 msgid "Vehicle"
 msgstr "Т/с"
 
-#: ../src/navit.c:863
+#: ../src/navit.c:829
 msgid "Command"
 msgstr "Команда"
 
-#: ../src/navit.c:868
+#: ../src/navit.c:834
 msgid "Length"
 msgstr "Длина"
 
-#: ../src/navit.c:872 ../src/navit.c:897
+#: ../src/navit.c:838 ../src/navit.c:863
 msgid "km"
-msgstr ""
+msgstr "км"
 
-#: ../src/navit.c:876 ../src/navit.c:901
+#: ../src/navit.c:842 ../src/navit.c:867
 msgid "m"
-msgstr ""
+msgstr "м"
 
-#: ../src/navit.c:882
+#: ../src/navit.c:848
 msgid "Time"
 msgstr "Время"
 
-#: ../src/navit.c:894
+#: ../src/navit.c:860
 msgid "Destination Length"
-msgstr ""
+msgstr "Дистанция до пункта назначения"
 
-#: ../src/navit.c:907
+#: ../src/navit.c:873
 msgid "Destination Time"
-msgstr ""
+msgstr "Время до пункта назначения"
 
-#: ../src/navit.c:936 ../src/gui/gtk/gui_gtk_action.c:202
+#: ../src/navit.c:902 ../src/gui/gtk/gui_gtk_action.c:202
 msgid "Roadbook"
 msgstr "Дорожный справочник"
 
-#: ../src/navit.c:1169 ../src/gui/gtk/destination.c:368
+#: ../src/navit.c:1135 ../src/gui/gtk/destination.c:368
 #: ../src/gui/gtk/gui_gtk_action.c:197
 msgid "Map"
 msgstr "Карта"
 
-#: ../src/navit.c:1176 ../src/gui/gtk/gui_gtk_action.c:196
+#: ../src/navit.c:1142 ../src/gui/gtk/gui_gtk_action.c:196
 msgid "Route"
 msgstr "Маршрут"
 
@@ -228,253 +228,1239 @@ msgstr "Установить как пункт назначения"
 msgid "Add as bookmark"
 msgstr "Добавить в закладки"
 
+#. 020
 #: ../src/country.c:24
-msgid "Czech Republic"
-msgstr "Чешская Республика"
-
-#: ../src/country.c:25
-msgid "Slovakia"
-msgstr "Словакия"
-
-#: ../src/country.c:26
-msgid "San Marino"
-msgstr "Сан Марино"
-
-#: ../src/country.c:27
-msgid "Estonia"
-msgstr "Эстония"
-
-#: ../src/country.c:28
-msgid "Georgia"
-msgstr "Грузия"
-
-#: ../src/country.c:29
-msgid "Latvia"
-msgstr "Латвия"
-
-#: ../src/country.c:30
-msgid "Lithuania"
-msgstr "Литва"
-
-#: ../src/country.c:31
-msgid "Moldova"
-msgstr "Молдавия"
-
-#: ../src/country.c:32
-msgid "Russian Federation"
-msgstr "Российская Федерация"
-
-#: ../src/country.c:33
-msgid "Ukraine"
-msgstr "Украина"
-
-#: ../src/country.c:34
-msgid "Belarus"
-msgstr "Белоруссия"
-
-#: ../src/country.c:35
-msgid "Egypt"
-msgstr "Египет"
-
-#: ../src/country.c:36
-msgid "Greece"
-msgstr "Греция"
-
-#: ../src/country.c:37
-msgid "Netherlands"
-msgstr "Нидерланды"
-
-#: ../src/country.c:38
-msgid "Belgium"
-msgstr "Бельгия"
-
-#: ../src/country.c:39
-msgid "France"
-msgstr "Франция"
-
-#: ../src/country.c:40
-msgid "Spain"
-msgstr "Испания"
-
-#: ../src/country.c:41
-msgid "Hungary"
-msgstr "Венгрия"
-
-#: ../src/country.c:42
-msgid "Italy"
-msgstr "Италия"
-
-#: ../src/country.c:43
-msgid "Romania"
-msgstr "Румыния"
-
-#: ../src/country.c:44
-msgid "Switzerland"
-msgstr "Швейцария"
-
-#: ../src/country.c:45
-msgid "Austria"
-msgstr "Австрия"
-
-#: ../src/country.c:46
-msgid "United Kingdom"
-msgstr "Великобритания"
-
-#: ../src/country.c:47
-msgid "Denmark"
-msgstr "Дания"
-
-#: ../src/country.c:48
-msgid "Sweden"
-msgstr "Швеция"
-
-#: ../src/country.c:49
-msgid "Norway"
-msgstr "Норвегия"
-
-#: ../src/country.c:50
-msgid "Poland"
-msgstr "Польша"
-
-#: ../src/country.c:51
-msgid "Germany"
-msgstr "Германия"
-
-#: ../src/country.c:52
-msgid "Gibraltar"
-msgstr "Гибралтар"
-
-#: ../src/country.c:53
-msgid "Portugal"
-msgstr "Португалия"
-
-#: ../src/country.c:54
-msgid "Luxembourg"
-msgstr "Люксембург"
-
-#: ../src/country.c:55
-msgid "Ireland"
-msgstr "Ирландия"
-
-#: ../src/country.c:56
-msgid "Iceland"
-msgstr "Исландия"
-
-#: ../src/country.c:57
-msgid "Albania"
-msgstr "Албания"
-
-#: ../src/country.c:58
-msgid "Malta"
-msgstr "Мальта"
-
-#: ../src/country.c:59
-msgid "Cyprus"
-msgstr "Кипр"
-
-#: ../src/country.c:60
-msgid "Finland"
-msgstr "Финляндия"
-
-#: ../src/country.c:61
-msgid "Bulgaria"
-msgstr "Болгария"
-
-#: ../src/country.c:62
-msgid "Lebanon"
-msgstr "Ливан"
-
-#: ../src/country.c:63
 msgid "Andorra"
 msgstr "Андорра"
 
-#: ../src/country.c:64
-msgid "Syria"
-msgstr "Сирия"
+#. 784
+#: ../src/country.c:25
+msgid "United Arab Emirates"
+msgstr "Объединенные Арабские Эмираты"
 
-#: ../src/country.c:65
-msgid "Saudi Arabia"
-msgstr "Саудовская Аравия"
+#. 004
+#: ../src/country.c:26
+msgid "Afghanistan"
+msgstr "Афганистан"
 
-#: ../src/country.c:66
-msgid "Libia"
-msgstr "Ливия"
+#. 028
+#: ../src/country.c:27
+msgid "Antigua and Barbuda"
+msgstr "Антига и Барбуда"
 
-#: ../src/country.c:67
-msgid "Israel"
-msgstr "Израиль"
+#. 660
+#: ../src/country.c:28
+msgid "Anguilla"
+msgstr "Ангуила"
 
-#: ../src/country.c:68
-msgid "Palestinia"
-msgstr "Палестина"
+#. 008
+#: ../src/country.c:29
+msgid "Albania"
+msgstr "Албания"
 
-#: ../src/country.c:69
-msgid "Liechtenstein"
-msgstr "Лихтенштейн"
-
-#: ../src/country.c:70
-msgid "Morocco"
-msgstr "Марокко"
-
-#: ../src/country.c:71
-msgid "Algeria"
-msgstr "Алжир"
-
-#: ../src/country.c:72
-msgid "Tunisia"
-msgstr "Тунис"
-
-#: ../src/country.c:73
-msgid "Serbia"
-msgstr "Сербия"
-
-#: ../src/country.c:74
-msgid "Jordan"
-msgstr "Иордания"
-
-#: ../src/country.c:75
-msgid "Croatia"
-msgstr "Хорватия"
-
-#: ../src/country.c:76
-msgid "Slovenia"
-msgstr "Словения"
-
-#: ../src/country.c:77
-msgid "Bosnia and Herzegovina"
-msgstr "Босния и Герцеговина"
-
-#: ../src/country.c:78
-msgid "Macedonia"
-msgstr "Македония"
-
-#: ../src/country.c:79
-msgid "Turkey"
-msgstr "Турция"
-
-#: ../src/country.c:80
-msgid "Monaco"
-msgstr "Монако"
-
-#: ../src/country.c:81
-msgid "Azerbaijan"
-msgstr "Азербайджан"
-
-#: ../src/country.c:82
+#. 051
+#: ../src/country.c:30
 msgid "Armenia"
 msgstr "Армения"
 
-#: ../src/country.c:83
-msgid "Faroe Islands"
+#. 530
+#: ../src/country.c:31
+msgid "Netherlands Antilles"
+msgstr "Антильские (Нидерланские) острова"
+
+#. 024
+#: ../src/country.c:32
+msgid "Angola"
+msgstr "Ангола"
+
+#. 010
+#: ../src/country.c:33
+msgid "Antarctica"
+msgstr "Антарктика"
+
+#. 032
+#: ../src/country.c:34
+msgid "Argentina"
+msgstr "Аргентина"
+
+#. 016
+#: ../src/country.c:35
+msgid "American Samoa"
+msgstr "Америк. Самоа"
+
+#. 040
+#: ../src/country.c:36
+msgid "Austria"
+msgstr "Австрия"
+
+#. 036
+#: ../src/country.c:37
+msgid "Australia"
+msgstr "Австралия"
+
+#. 533
+#: ../src/country.c:38
+msgid "Aruba"
+msgstr "Аруба"
+
+#. 248
+#: ../src/country.c:39
+msgid "Aland Islands"
 msgstr "Фарерские Острова"
 
+#. 031
+#: ../src/country.c:40
+msgid "Azerbaijan"
+msgstr "Азербайджан"
+
+#. 070
+#: ../src/country.c:41
+msgid "Bosnia and Herzegovina"
+msgstr "Босния и Герцеговина"
+
+#. 052
+#: ../src/country.c:42
+msgid "Barbados"
+msgstr "Барбадос"
+
+#. 050
+#: ../src/country.c:43
+msgid "Bangladesh"
+msgstr "Бангладеш"
+
+#. 056
+#: ../src/country.c:44
+msgid "Belgium"
+msgstr "Бельгия"
+
+#. 854
+#: ../src/country.c:45
+msgid "Burkina Faso"
+msgstr "Буркина-Фасо"
+
+#. 100
+#: ../src/country.c:46
+msgid "Bulgaria"
+msgstr "Болгария"
+
+#. 048
+#: ../src/country.c:47
+msgid "Bahrain"
+msgstr "Бахрейн"
+
+#. 108
+#: ../src/country.c:48
+msgid "Burundi"
+msgstr "Бурунди"
+
+#. 204
+#: ../src/country.c:49
+msgid "Benin"
+msgstr "Бенин"
+
+#. 652
+#: ../src/country.c:50
+msgid "Saint Barthelemy"
+msgstr "Сен-Бартелемей"
+
+#. 060
+#: ../src/country.c:51
+msgid "Bermuda"
+msgstr "Бермуда"
+
+#. 096
+#: ../src/country.c:52
+#, fuzzy
+msgid "Brunei Darussalam"
+msgstr "Брюней Даруссалам"
+
+#. 068
+#: ../src/country.c:53
+msgid "Bolivia"
+msgstr "Боливия"
+
+#. 076
+#: ../src/country.c:54
+msgid "Brazil"
+msgstr "Бразилия"
+
+#. 044
+#: ../src/country.c:55
+msgid "Bahamas"
+msgstr "Багамы"
+
+#. 064
+#: ../src/country.c:56
+msgid "Bhutan"
+msgstr "Бутан"
+
+#. 074
+#: ../src/country.c:57
+#, fuzzy
+msgid "Bouvet Island"
+msgstr "Фарерские Острова"
+
+#. 072
+#: ../src/country.c:58
+msgid "Botswana"
+msgstr "Ботсвана"
+
+#. 112
+#: ../src/country.c:59
+msgid "Belarus"
+msgstr "Белоруссия"
+
+#. 084
+#: ../src/country.c:60
+msgid "Belize"
+msgstr "Белиз"
+
+#. 124
+#: ../src/country.c:61
+msgid "Canada"
+msgstr "Канада"
+
+#. 166
+#: ../src/country.c:62
+msgid "Cocos (Keeling) Islands"
+msgstr "Кокосовые (Килинговы) Острова"
+
+#. 180
+#: ../src/country.c:63
+msgid "Congo, Democratic Republic of the"
+msgstr "Конго, Демократическая Республика"
+
+#. 140
+#: ../src/country.c:64
+msgid "Central African Republic"
+msgstr "Центральня Африканская Республика"
+
+#. 178
+#: ../src/country.c:65
+msgid "Congo"
+msgstr "Конго"
+
+#. 756
+#: ../src/country.c:66
+msgid "Switzerland"
+msgstr "Швейцария"
+
+#. 384
+#: ../src/country.c:67
+msgid "Cote d'Ivoire"
+msgstr ""
+
+#. 184
+#: ../src/country.c:68
+msgid "Cook Islands"
+msgstr "Кука Острова"
+
+#. 152
+#: ../src/country.c:69
+msgid "Chile"
+msgstr "Чили"
+
+#. 120
+#: ../src/country.c:70
+msgid "Cameroon"
+msgstr "Камерон"
+
+#. 156
+#: ../src/country.c:71
+msgid "China"
+msgstr "Китай"
+
+#. 170
+#: ../src/country.c:72
+msgid "Colombia"
+msgstr "Колумбия"
+
+#. 188
+#: ../src/country.c:73
+msgid "Costa Rica"
+msgstr "Коста Рика"
+
+#. 192
+#: ../src/country.c:74
+msgid "Cuba"
+msgstr "Куба"
+
+#. 132
+#: ../src/country.c:75
+#, fuzzy
+msgid "Cape Verde"
+msgstr "кап Вердэ"
+
+#. 162
+#: ../src/country.c:76
+msgid "Christmas Island"
+msgstr "Рождественские Острова"
+
+#. 196
+#: ../src/country.c:77
+msgid "Cyprus"
+msgstr "Кипр"
+
+#. 203
+#: ../src/country.c:78
+msgid "Czech Republic"
+msgstr "Чешская Республика"
+
+#. 276
+#: ../src/country.c:79
+msgid "Germany"
+msgstr "Германия"
+
+#. 262
+#: ../src/country.c:80
+msgid "Djibouti"
+msgstr "Джибути"
+
+#. 208
+#: ../src/country.c:81
+msgid "Denmark"
+msgstr "Дания"
+
+#. 212
+#: ../src/country.c:82
+msgid "Dominica"
+msgstr "Доминика"
+
+#. 214
+#: ../src/country.c:83
+msgid "Dominican Republic"
+msgstr "Доминиканская Республика"
+
+#. 012
 #: ../src/country.c:84
+msgid "Algeria"
+msgstr "Алжир"
+
+#. 218
+#: ../src/country.c:85
+msgid "Ecuador"
+msgstr "Эквадор"
+
+#. 233
+#: ../src/country.c:86
+msgid "Estonia"
+msgstr "Эстония"
+
+#. 818
+#: ../src/country.c:87
+msgid "Egypt"
+msgstr "Египет"
+
+#. 732
+#: ../src/country.c:88
 msgid "Western Sahara"
 msgstr "Западная Сахара"
 
-#: ../src/country.c:85
+#. 232
+#: ../src/country.c:89
+msgid "Eritrea"
+msgstr "Эритрея"
+
+#. 724
+#: ../src/country.c:90
+msgid "Spain"
+msgstr "Испания"
+
+#. 231
+#: ../src/country.c:91
+msgid "Ethiopia"
+msgstr "ЭФиопия"
+
+#. 246
+#: ../src/country.c:92
+msgid "Finland"
+msgstr "Финляндия"
+
+#. 242
+#: ../src/country.c:93
+msgid "Fiji"
+msgstr "Фиджи"
+
+#. 238
+#: ../src/country.c:94
+msgid "Falkland Islands (Malvinas)"
+msgstr "Фолклендские Острова"
+
+#. 583
+#: ../src/country.c:95
+msgid "Micronesia, Federated States of"
+msgstr "Микронэзия, Федеративные Штаты"
+
+#. 234
+#: ../src/country.c:96
+msgid "Faroe Islands"
+msgstr "Фарерские Острова"
+
+#. 250
+#: ../src/country.c:97
+msgid "France"
+msgstr "Франция"
+
+#. 266
+#: ../src/country.c:98
+msgid "Gabon"
+msgstr "Габон"
+
+#. 826
+#: ../src/country.c:99
+msgid "United Kingdom"
+msgstr "Великобритания"
+
+#. 308
+#: ../src/country.c:100
+msgid "Grenada"
+msgstr "Гренада"
+
+#. 268
+#: ../src/country.c:101
+msgid "Georgia"
+msgstr "Грузия"
+
+#. 254
+#: ../src/country.c:102
+msgid "French Guiana"
+msgstr "Французкая Гвинея"
+
+#. 831
+#: ../src/country.c:103
+#, fuzzy
+msgid "Guernsey"
+msgstr "Германия"
+
+#. 288
+#: ../src/country.c:104
+msgid "Ghana"
+msgstr "Гхана"
+
+#. 292
+#: ../src/country.c:105
+msgid "Gibraltar"
+msgstr "Гибралтар"
+
+#. 304
+#: ../src/country.c:106
+msgid "Greenland"
+msgstr "Гренландия"
+
+#. 270
+#: ../src/country.c:107
+msgid "Gambia"
+msgstr "Гамбия"
+
+#. 324
+#: ../src/country.c:108
+msgid "Guinea"
+msgstr "Гвинея"
+
+#. 312
+#: ../src/country.c:109
+msgid "Guadeloupe"
+msgstr "Гуаделупа"
+
+#. 226
+#: ../src/country.c:110
+msgid "Equatorial Guinea"
+msgstr "Экваториальная Гвинея"
+
+#. 300
+#: ../src/country.c:111
+msgid "Greece"
+msgstr "Греция"
+
+#. 239
+#: ../src/country.c:112
+msgid "South Georgia and the South Sandwich Islands"
+msgstr "Южная Георгия и Южные Сандвичевы Острова"
+
+#. 320
+#: ../src/country.c:113
+msgid "Guatemala"
+msgstr "Гватемала"
+
+#. 316
+#: ../src/country.c:114
+msgid "Guam"
+msgstr "Гуам"
+
+#. 624
+#: ../src/country.c:115
+msgid "Guinea-Bissau"
+msgstr "Гвинея-Бисау"
+
+#. 328
+#: ../src/country.c:116
+msgid "Guyana"
+msgstr "Гуана"
+
+#. 344
+#: ../src/country.c:117
+msgid "Hong Kong"
+msgstr "Гонк Конг"
+
+#. 334
+#: ../src/country.c:118
+msgid "Heard Island and McDonald Islands"
+msgstr ""
+
+#. 340
+#: ../src/country.c:119
+msgid "Honduras"
+msgstr "Гандурас"
+
+#. 191
+#: ../src/country.c:120
+msgid "Croatia"
+msgstr "Хорватия"
+
+#. 332
+#: ../src/country.c:121
+msgid "Haiti"
+msgstr "Гаити"
+
+#. 348
+#: ../src/country.c:122
+msgid "Hungary"
+msgstr "Венгрия"
+
+#. 360
+#: ../src/country.c:123
+msgid "Indonesia"
+msgstr "Индонезия"
+
+#. 372
+#: ../src/country.c:124
+msgid "Ireland"
+msgstr "Ирландия"
+
+#. 376
+#: ../src/country.c:125
+msgid "Israel"
+msgstr "Израиль"
+
+#. 833
+#: ../src/country.c:126
+msgid "Isle of Man"
+msgstr ""
+
+#. 356
+#: ../src/country.c:127
+msgid "India"
+msgstr "Индия"
+
+#. 086
+#: ../src/country.c:128
+msgid "British Indian Ocean Territory"
+msgstr "Британская Территория Индиского Океана"
+
+#. 368
+#: ../src/country.c:129
+msgid "Iraq"
+msgstr "Ирак"
+
+#. 364
+#: ../src/country.c:130
+msgid "Iran, Islamic Republic of"
+msgstr "Ирак, Исламская Демократическая Республика"
+
+#. 352
+#: ../src/country.c:131
+msgid "Iceland"
+msgstr "Исландия"
+
+#. 380
+#: ../src/country.c:132
+msgid "Italy"
+msgstr "Италия"
+
+#. 832
+#: ../src/country.c:133
+msgid "Jersey"
+msgstr "Джерси"
+
+#. 388
+#: ../src/country.c:134
+msgid "Jamaica"
+msgstr "Йамайка"
+
+#. 400
+#: ../src/country.c:135
+msgid "Jordan"
+msgstr "Иордания"
+
+#. 392
+#: ../src/country.c:136
+msgid "Japan"
+msgstr "Япония"
+
+#. 404
+#: ../src/country.c:137
+msgid "Kenya"
+msgstr "Кения"
+
+#. 417
+#: ../src/country.c:138
+msgid "Kyrgyzstan"
+msgstr "Киргизтан"
+
+#. 116
+#: ../src/country.c:139
+msgid "Cambodia"
+msgstr "Комбодия"
+
+#. 296
+#: ../src/country.c:140
+msgid "Kiribati"
+msgstr "Кирибати"
+
+#. 174
+#: ../src/country.c:141
+msgid "Comoros"
+msgstr "Коморские Острова"
+
+#. 659
+#: ../src/country.c:142
+msgid "Saint Kitts and Nevis"
+msgstr "Сен Китс и Невис"
+
+#. 408
+#: ../src/country.c:143
+msgid "Korea, Democratic People's Republic of"
+msgstr "Корея, Демократическая Республика"
+
+#. 410
+#: ../src/country.c:144
+msgid "Korea, Republic of"
+msgstr "Корея, Республика"
+
+#. 414
+#: ../src/country.c:145
+msgid "Kuwait"
+msgstr "Кювайт"
+
+#. 136
+#: ../src/country.c:146
+msgid "Cayman Islands"
+msgstr "Кайманские Острова"
+
+#. 398
+#: ../src/country.c:147
+msgid "Kazakhstan"
+msgstr "Казахстан"
+
+#. 418
+#: ../src/country.c:148
+msgid "Lao People's Democratic Republic"
+msgstr "Лао, Демократическая Республика"
+
+#. 422
+#: ../src/country.c:149
+msgid "Lebanon"
+msgstr "Ливан"
+
+#. 662
+#: ../src/country.c:150
+msgid "Saint Lucia"
+msgstr "Сен-Лусия"
+
+#. 438
+#: ../src/country.c:151
+msgid "Liechtenstein"
+msgstr "Лихтенштейн"
+
+#. 144
+#: ../src/country.c:152
+msgid "Sri Lanka"
+msgstr "Шри Ланка"
+
+#. 430
+#: ../src/country.c:153
+msgid "Liberia"
+msgstr "Либерия"
+
+#. 426
+#: ../src/country.c:154
+msgid "Lesotho"
+msgstr "Лесото"
+
+#. 440
+#: ../src/country.c:155
+msgid "Lithuania"
+msgstr "Литва"
+
+#. 442
+#: ../src/country.c:156
+msgid "Luxembourg"
+msgstr "Люксембург"
+
+#. 428
+#: ../src/country.c:157
+msgid "Latvia"
+msgstr "Латвия"
+
+#. 434
+#: ../src/country.c:158
+msgid "Libyan Arab Jamahiriya"
+msgstr "Ливия"
+
+#. 504
+#: ../src/country.c:159
+msgid "Morocco"
+msgstr "Марокко"
+
+#. 492
+#: ../src/country.c:160
+msgid "Monaco"
+msgstr "Монако"
+
+#. 498
+#: ../src/country.c:161
+msgid "Moldova, Republic of"
+msgstr "Молдовия, Республика"
+
+#. 499
+#: ../src/country.c:162
+msgid "Montenegro"
+msgstr "Черногория"
+
+#. 663
+#: ../src/country.c:163
+msgid "Saint Martin (French part)"
+msgstr "Сен-Мартин (Французкая часть)"
+
+#. 450
+#: ../src/country.c:164
+msgid "Madagascar"
+msgstr "Мадагаскар"
+
+#. 584
+#: ../src/country.c:165
+msgid "Marshall Islands"
+msgstr "Маршаловы Острова"
+
+#. 807
+#: ../src/country.c:166
+msgid "Macedonia, the former Yugoslav Republic of"
+msgstr "Македония, бывшая республика Югославии"
+
+#. 466
+#: ../src/country.c:167
+msgid "Mali"
+msgstr "Мали"
+
+#. 104
+#: ../src/country.c:168
+msgid "Myanmar"
+msgstr "Мьянма"
+
+#. 496
+#: ../src/country.c:169
+msgid "Mongolia"
+msgstr "Монголия"
+
+#. 446
+#: ../src/country.c:170
+msgid "Macao"
+msgstr "Мокао"
+
+#. 580
+#: ../src/country.c:171
+msgid "Northern Mariana Islands"
+msgstr "Северные Марианские Острова"
+
+#. 474
+#: ../src/country.c:172
+msgid "Martinique"
+msgstr "Мартиника"
+
+#. 478
+#: ../src/country.c:173
+msgid "Mauritania"
+msgstr "Мавритания"
+
+#. 500
+#: ../src/country.c:174
+msgid "Montserrat"
+msgstr "Монтсеррат"
+
+#. 470
+#: ../src/country.c:175
+msgid "Malta"
+msgstr "Мальта"
+
+#. 480
+#: ../src/country.c:176
+msgid "Mauritius"
+msgstr "Маврикий"
+
+#. 462
+#: ../src/country.c:177
+msgid "Maldives"
+msgstr "Мальдивы"
+
+#. 454
+#: ../src/country.c:178
+msgid "Malawi"
+msgstr "Малави"
+
+#. 484
+#: ../src/country.c:179
+msgid "Mexico"
+msgstr "Мексика"
+
+#. 458
+#: ../src/country.c:180
+msgid "Malaysia"
+msgstr "Малазия"
+
+#. 508
+#: ../src/country.c:181
+msgid "Mozambique"
+msgstr "Мозамбик"
+
+#. 516
+#: ../src/country.c:182
+msgid "Namibia"
+msgstr "Намибия"
+
+#. 540
+#: ../src/country.c:183
+msgid "New Caledonia"
+msgstr "Новая Каледония"
+
+#. 562
+#: ../src/country.c:184
+msgid "Niger"
+msgstr "Нигер"
+
+#. 574
+#: ../src/country.c:185
+msgid "Norfolk Island"
+msgstr "Норфолк Остров"
+
+#. 566
+#: ../src/country.c:186
+msgid "Nigeria"
+msgstr "Нигерия"
+
+#. 558
+#: ../src/country.c:187
+msgid "Nicaragua"
+msgstr "Никарагуа"
+
+#. 528
+#: ../src/country.c:188
+msgid "Netherlands"
+msgstr "Нидерланды"
+
+#. 578
+#: ../src/country.c:189
+msgid "Norway"
+msgstr "Норвегия"
+
+#. 524
+#: ../src/country.c:190
+msgid "Nepal"
+msgstr "Непал"
+
+#. 520
+#: ../src/country.c:191
+msgid "Nauru"
+msgstr "Науру"
+
+#. 570
+#: ../src/country.c:192
+msgid "Niue"
+msgstr "Ниуэ"
+
+#. 554
+#: ../src/country.c:193
+msgid "New Zealand"
+msgstr "Новая Зеландия"
+
+#. 512
+#: ../src/country.c:194
+msgid "Oman"
+msgstr "Оман"
+
+#. 591
+#: ../src/country.c:195
+msgid "Panama"
+msgstr "Панама"
+
+#. 604
+#: ../src/country.c:196
+msgid "Peru"
+msgstr "Перу"
+
+#. 258
+#: ../src/country.c:197
+msgid "French Polynesia"
+msgstr "Француская Полинезия"
+
+#. 598
+#: ../src/country.c:198
+msgid "Papua New Guinea"
+msgstr "Папуа Новая Гвинея"
+
+#. 608
+#: ../src/country.c:199
+msgid "Philippines"
+msgstr "Филипины"
+
+#. 586
+#: ../src/country.c:200
+msgid "Pakistan"
+msgstr "Пакистан"
+
+#. 616
+#: ../src/country.c:201
+msgid "Poland"
+msgstr "Польша"
+
+#. 666
+#: ../src/country.c:202
+msgid "Saint Pierre and Miquelon"
+msgstr "Сен-Пьер и Микелон"
+
+#. 612
+#: ../src/country.c:203
+msgid "Pitcairn"
+msgstr "Питкэрн"
+
+#. 630
+#: ../src/country.c:204
+msgid "Puerto Rico"
+msgstr "Пуэрто Рико"
+
+#. 275
+#: ../src/country.c:205
+msgid "Palestinian Territory, Occupied"
+msgstr "Палестина"
+
+#. 620
+#: ../src/country.c:206
+msgid "Portugal"
+msgstr "Португалия"
+
+#. 585
+#: ../src/country.c:207
+msgid "Palau"
+msgstr "Палау"
+
+#. 600
+#: ../src/country.c:208
+msgid "Paraguay"
+msgstr "Парагваи"
+
+#. 634
+#: ../src/country.c:209
+msgid "Qatar"
+msgstr "Катар"
+
+#. 638
+#: ../src/country.c:210
+msgid "Reunion"
+msgstr ""
+
+#. 642
+#: ../src/country.c:211
+msgid "Romania"
+msgstr "Румыния"
+
+#. 688
+#: ../src/country.c:212
+msgid "Serbia"
+msgstr "Сербия"
+
+#. 643
+#: ../src/country.c:213
+msgid "Russian Federation"
+msgstr "Российская Федерация"
+
+#. 646
+#: ../src/country.c:214
+msgid "Rwanda"
+msgstr "Руанда"
+
+#. 682
+#: ../src/country.c:215
+msgid "Saudi Arabia"
+msgstr "Саудовская Аравия"
+
+#. 090
+#: ../src/country.c:216
+msgid "Solomon Islands"
+msgstr "Соломонские Острова"
+
+#. 690
+#: ../src/country.c:217
+msgid "Seychelles"
+msgstr "Сейшельские Острова"
+
+#. 736
+#: ../src/country.c:218
+msgid "Sudan"
+msgstr "Судан"
+
+#. 752
+#: ../src/country.c:219
+msgid "Sweden"
+msgstr "Швеция"
+
+#. 702
+#: ../src/country.c:220
+msgid "Singapore"
+msgstr "Сингапур"
+
+#. 654
+#: ../src/country.c:221
+msgid "Saint Helena"
+msgstr "Сент-Хелен"
+
+#. 705
+#: ../src/country.c:222
+msgid "Slovenia"
+msgstr "Словения"
+
+#. 744
+#: ../src/country.c:223
 msgid "Svalbard and Jan Mayen"
 msgstr "Свальбард и Ян Майен"
+
+#. 703
+#: ../src/country.c:224
+msgid "Slovakia"
+msgstr "Словакия"
+
+#. 694
+#: ../src/country.c:225
+msgid "Sierra Leone"
+msgstr "Сиерра Леоне"
+
+#. 674
+#: ../src/country.c:226
+msgid "San Marino"
+msgstr "Сан Марино"
+
+#. 686
+#: ../src/country.c:227
+msgid "Senegal"
+msgstr "Сенегал"
+
+#. 706
+#: ../src/country.c:228
+msgid "Somalia"
+msgstr "Сомали"
+
+#. 740
+#: ../src/country.c:229
+msgid "Suriname"
+msgstr "Суринам"
+
+#. 678
+#: ../src/country.c:230
+msgid "Sao Tome and Principe"
+msgstr "Сао-Томе и Принсипи"
+
+#. 222
+#: ../src/country.c:231
+msgid "El Salvador"
+msgstr "Эль Сальвадор"
+
+#. 760
+#: ../src/country.c:232
+msgid "Syrian Arab Republic"
+msgstr "Сирия, Арабская Республика"
+
+#. 748
+#: ../src/country.c:233
+msgid "Swaziland"
+msgstr "Швейцария"
+
+#. 796
+#: ../src/country.c:234
+msgid "Turks and Caicos Islands"
+msgstr "Теркс и Кайкос"
+
+#. 148
+#: ../src/country.c:235
+msgid "Chad"
+msgstr "Чад"
+
+#. 260
+#: ../src/country.c:236
+msgid "French Southern Territories"
+msgstr "Францизкие Южные Территории"
+
+#. 768
+#: ../src/country.c:237
+msgid "Togo"
+msgstr "Того"
+
+#. 764
+#: ../src/country.c:238
+msgid "Thailand"
+msgstr "Таиланд"
+
+#. 762
+#: ../src/country.c:239
+msgid "Tajikistan"
+msgstr "Таджикистан"
+
+#. 772
+#: ../src/country.c:240
+msgid "Tokelau"
+msgstr "Токелау"
+
+#. 626
+#: ../src/country.c:241
+msgid "Timor-Leste"
+msgstr "Восточный Тимор"
+
+#. 795
+#: ../src/country.c:242
+msgid "Turkmenistan"
+msgstr "Туркменистан"
+
+#. 788
+#: ../src/country.c:243
+msgid "Tunisia"
+msgstr "Тунис"
+
+#. 776
+#: ../src/country.c:244
+msgid "Tonga"
+msgstr "Тонга"
+
+#. 792
+#: ../src/country.c:245
+msgid "Turkey"
+msgstr "Турция"
+
+#. 780
+#: ../src/country.c:246
+msgid "Trinidad and Tobago"
+msgstr "Тринидад и Тобаго"
+
+#. 798
+#: ../src/country.c:247
+msgid "Tuvalu"
+msgstr "Тувалу"
+
+#. 158
+#: ../src/country.c:248
+msgid "Taiwan, Province of China"
+msgstr "Тайвань, Провинция Китая"
+
+#. 834
+#: ../src/country.c:249
+msgid "Tanzania, United Republic of"
+msgstr "Танзия, Объедененная Республика"
+
+#. 804
+#: ../src/country.c:250
+msgid "Ukraine"
+msgstr "Украина"
+
+#. 800
+#: ../src/country.c:251
+msgid "Uganda"
+msgstr "Уганда"
+
+#. 581
+#: ../src/country.c:252
+msgid "United States Minor Outlying Islands"
+msgstr ""
+
+#. 840
+#: ../src/country.c:253
+msgid "United States"
+msgstr "США"
+
+#. 858
+#: ../src/country.c:254
+msgid "Uruguay"
+msgstr "Уругвай"
+
+#. 860
+#: ../src/country.c:255
+msgid "Uzbekistan"
+msgstr "Узбекистан"
+
+#. 336
+#: ../src/country.c:256
+msgid "Holy See (Vatican City State)"
+msgstr "Ватикан"
+
+#. 670
+#: ../src/country.c:257
+msgid "Saint Vincent and the Grenadines"
+msgstr "Сент-Винсент и Гренадины"
+
+#. 862
+#: ../src/country.c:258
+msgid "Venezuela"
+msgstr "Венесуэла"
+
+#. 092
+#: ../src/country.c:259
+msgid "Virgin Islands, British"
+msgstr "Виргинские Острова, Британия"
+
+#. 850
+#: ../src/country.c:260
+msgid "Virgin Islands, U.S."
+msgstr "Виргинские Острова, США"
+
+#. 704
+#: ../src/country.c:261
+msgid "Viet Nam"
+msgstr "Вьетнам"
+
+#. 548
+#: ../src/country.c:262
+msgid "Vanuatu"
+msgstr "Вануату"
+
+#. 876
+#: ../src/country.c:263
+msgid "Wallis and Futuna"
+msgstr "Уоллис и Футуна"
+
+#. 882
+#: ../src/country.c:264
+msgid "Samoa"
+msgstr "Самоа"
+
+#. 887
+#: ../src/country.c:265
+msgid "Yemen"
+msgstr "Йемен"
+
+#. 175
+#: ../src/country.c:266
+msgid "Mayotte"
+msgstr "Майотта"
+
+#. 710
+#: ../src/country.c:267
+msgid "South Africa"
+msgstr "Южная Африка"
+
+#. 894
+#: ../src/country.c:268
+msgid "Zambia"
+msgstr "Замбия"
+
+#. 716
+#: ../src/country.c:269
+msgid "Zimbabwe"
+msgstr "Зимбабвэ"
 
 #: ../src/gui/gtk/destination.c:96 ../src/gui/gtk/destination.c:97
 #: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
@@ -595,55 +1581,55 @@ msgstr "Данные"
 
 #: ../src/gui/gtk/gui_gtk_action.c:233
 msgid "VisibleBlocks"
-msgstr ""
+msgstr "ВидимыеБлоки"
 
 #: ../src/gui/gtk/gui_gtk_action.c:234
 msgid "VisibleTowns"
-msgstr ""
+msgstr "ВидимыеГорода"
 
 #: ../src/gui/gtk/gui_gtk_action.c:235
 msgid "VisiblePolys"
-msgstr ""
+msgstr "ВидимыеПолигоны"
 
 #: ../src/gui/gtk/gui_gtk_action.c:236
 msgid "VisibleStreets"
-msgstr ""
+msgstr "ВидимыеУлицы"
 
 #: ../src/gui/gtk/gui_gtk_action.c:237
 msgid "VisiblePoints"
-msgstr ""
+msgstr "ВидимыеТочки"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "N"
-msgstr ""
+msgstr "С"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "NE"
-msgstr ""
+msgstr "СВ"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "E"
-msgstr ""
+msgstr "В"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "SE"
-msgstr ""
+msgstr "ЮВ"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "S"
-msgstr ""
+msgstr "Ю"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "SW"
-msgstr ""
+msgstr "ЮЗ"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "W"
-msgstr ""
+msgstr "З"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "NW"
-msgstr ""
+msgstr "СЗ"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:105
 #, c-format
@@ -653,3 +1639,9 @@ msgstr "Маршрут %4.0fкм    %02d:%02d РВП"
 #: ../src/gui/gtk/gui_gtk_statusbar.c:156
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Маршрут 0000км  0+00:00 РВП"
+
+#~ msgid "Moldova"
+#~ msgstr "Молдавия"
+
+#~ msgid "Palestinia"
+#~ msgstr "Палестина"
