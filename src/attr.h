@@ -39,6 +39,8 @@ struct attr {
 		struct log *log;
 		struct route *route;
 		struct navigation *navigation;
+		struct coord *coord;
+		struct pcoord *pcoord;
 	} u;
 };
 
