@@ -1,3 +1,5 @@
+#ifndef __ZIPFILE_H__
+
 struct zip_lfh {
 	int ziplocsig;
 	short zipver;
@@ -47,3 +49,7 @@ struct zip_eoc {
 	short zipecoml;
 	char zipecom[0];
 } __attribute__ ((packed));
+
+#define __ZIPFILE_H__
+
+#endif

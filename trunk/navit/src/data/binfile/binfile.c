@@ -15,6 +15,7 @@
 #include "transform.h"
 #include "file.h"
 #include "zipfile.h"
+#include "endianess.h"
 
 static int map_id;
 
@@ -70,6 +71,53 @@ struct map_search_priv {
 };
 
 
+static void minmax_to_cpu(struct minmax * mima) {
+	g_assert(mima  != NULL);
+	mima->min = le16_to_cpu(mima->min);
+	mima->max = le16_to_cpu(mima->max);
+}
+
+static void lfh_to_cpu(struct zip_lfh *lfh) {
+	g_assert(lfh != NULL);
+	lfh->ziplocsig = le32_to_cpu(lfh->ziplocsig);
+	lfh->zipver    = le16_to_cpu(lfh->zipver);
+	lfh->zipgenfld = le16_to_cpu(lfh->zipgenfld);
+	lfh->zipmthd   = le16_to_cpu(lfh->zipmthd);
+	lfh->ziptime   = le16_to_cpu(lfh->ziptime);
+	lfh->zipdate   = le16_to_cpu(lfh->zipdate);
+	lfh->zipcrc    = le32_to_cpu(lfh->zipcrc);
+	lfh->zipsize   = le32_to_cpu(lfh->zipsize);
+	lfh->zipuncmp  = le32_to_cpu(lfh->zipuncmp);
+	lfh->zipfnln   = le16_to_cpu(lfh->zipfnln);
+	lfh->zipxtraln = le16_to_cpu(lfh->zipxtraln);
+}
+
+static void cd_to_cpu(struct zip_cd *zcd) {
+	g_assert(zcd != NULL);
+	zcd->zipccrc   = le32_to_cpu(zcd->zipccrc);
+	zcd->zipcsiz   = le32_to_cpu(zcd->zipcsiz);
+	zcd->zipcunc   = le32_to_cpu(zcd->zipcunc);
+	zcd->zipcfnl   = le16_to_cpu(zcd->zipcfnl);
+	zcd->zipcxtl   = le16_to_cpu(zcd->zipcxtl);
+	zcd->zipccml   = le16_to_cpu(zcd->zipccml);
+	zcd->zipdsk    = le16_to_cpu(zcd->zipdsk);
+	zcd->zipint    = le16_to_cpu(zcd->zipint);
+	zcd->zipext    = le32_to_cpu(zcd->zipext);
+	zcd->zipofst   = le32_to_cpu(zcd->zipofst);
+}
+
+static void eoc_to_cpu(struct zip_eoc *eoc) {
+	g_assert(eoc != NULL);
+	eoc->zipesig   = le32_to_cpu(eoc->zipesig);
+	eoc->zipedsk   = le16_to_cpu(eoc->zipedsk);
+	eoc->zipecen   = le16_to_cpu(eoc->zipecen);
+	eoc->zipenum   = le16_to_cpu(eoc->zipenum);
+	eoc->zipecenn  = le16_to_cpu(eoc->zipecenn);
+	eoc->zipecsz   = le32_to_cpu(eoc->zipecsz);
+	eoc->zipeofst  = le32_to_cpu(eoc->zipeofst);
+	eoc->zipecoml  = le16_to_cpu(eoc->zipecoml);
+}
+
 static void
 map_destroy_binfile(struct map_priv *m)
 {
@@ -96,8 +144,8 @@ binfile_coord_get(void *priv_data, struct coord *c, int count)
 		dbg(2,"%p vs %p\n", t->pos_coord, t->pos_attr_start);
 		if (t->pos_coord >= t->pos_attr_start)
 			break;
-		c->x=*(t->pos_coord++);
-		c->y=*(t->pos_coord++);
+		c->x=le32_to_cpu(*(t->pos_coord++));
+		c->y=le32_to_cpu(*(t->pos_coord++));
 		c++;
 		ret++;
 	}
@@ -126,8 +174,8 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		mr->attr_last=attr_type;
 	}
 	while (t->pos_attr < t->pos_next) {
-		size=*(t->pos_attr++);
-		type=t->pos_attr[0];
+		size=le32_to_cpu(*(t->pos_attr++));
+		type=le32_to_cpu(t->pos_attr[0]);
 		if (type == attr_label) 
 			mr->label=1;
 		if (type == attr_street_name)
@@ -192,6 +240,7 @@ zipfile_to_tile(struct file *f, struct zip_cd *cd, struct tile *t)
 	dbg(1,"cd->zipofst=0x%x\n", cd->zipofst);
 	t->start=NULL;
 	lfh=(struct zip_lfh *)(file_data_read(f,cd->zipofst,sizeof(struct zip_lfh)));
+	lfh_to_cpu(lfh);
 	zipfn=(char *)(file_data_read(f,cd->zipofst+sizeof(struct zip_lfh), lfh->zipfnln));
 	strncpy(buffer, zipfn, lfh->zipfnln);
 	buffer[lfh->zipfnln]='\0';
@@ -220,6 +269,7 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 	struct file *f=m->fi;
 	struct tile t;
 	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, sizeof(struct zip_cd)));
+	cd_to_cpu(cd);
 	dbg(1,"enter %p %d\n", mr, zipfile);
 	t.zipfile_num=zipfile;
 	if (zipfile_to_tile(f, cd, &t))
@@ -268,7 +318,7 @@ setup_pos(struct map_rect_priv *mr)
 {
 	int size,coord_size;
 	struct tile *t=mr->t;
-	size=*(t->pos++);
+	size=le32_to_cpu(*(t->pos++));
 	if (size > 1024*1024 || size < 0) {
 		fprintf(stderr,"size=0x%x\n", size);
 #if 0
@@ -277,8 +327,8 @@ setup_pos(struct map_rect_priv *mr)
 		g_error("size error");
 	}
 	t->pos_next=t->pos+size;
-	mr->item.type=*(t->pos++);
-	coord_size=*(t->pos++);
+	mr->item.type=le32_to_cpu(*(t->pos++));
+	coord_size=le32_to_cpu(*(t->pos++));
 	t->pos_coord_start=t->pos_coord=t->pos;
 	t->pos_attr_start=t->pos_attr=t->pos_coord+coord_size;
 }
@@ -345,16 +395,17 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 		setup_pos(mr);
 		if ((mr->item.type == type_submap) && (!mr->country_id)) {
 			struct coord_rect r;
-			r.lu.x=t->pos_coord[0];
-			r.lu.y=t->pos_coord[3];
-			r.rl.x=t->pos_coord[2];
-			r.rl.y=t->pos_coord[1];
+			r.lu.x=le32_to_cpu(t->pos_coord[0]);
+			r.lu.y=le32_to_cpu(t->pos_coord[3]);
+			r.rl.x=le32_to_cpu(t->pos_coord[2]);
+			r.rl.y=le32_to_cpu(t->pos_coord[1]);
 			mima=(struct minmax *)(t->pos_attr+2);
+			minmax_to_cpu(mima);
 			if (!mr->m->eoc || !selection_contains(mr->sel, &r, mima)) {
 				continue;
 			}
-			dbg(1,"pushing zipfile %d from %d\n", t->pos_attr[5], t->zipfile_num);
-			push_zipfile_tile(mr, t->pos_attr[5]);
+			dbg(1,"pushing zipfile %d from %d\n", le32_to_cpu(t->pos_attr[5]), t->zipfile_num);
+			push_zipfile_tile(mr, le32_to_cpu(t->pos_attr[5]));
 			continue;
 				
 		}
@@ -549,12 +600,16 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 	}
 	file_wordexp_destroy(wexp);
 	magic=(int *)file_data_read(m->fi, 0, 4);
+	*magic = le32_to_cpu(*magic);
 	if (*magic == 0x04034b50) {
 		cde_index_size=sizeof(struct zip_cd)+sizeof("index")-1;
 		m->eoc=(struct zip_eoc *)file_data_read(m->fi,m->fi->size-sizeof(struct zip_eoc), sizeof(struct zip_eoc));
+		eoc_to_cpu(m->eoc);
 		printf("magic 0x%x\n", m->eoc->zipesig);
 		m->index_cd=(struct zip_cd *)file_data_read(m->fi,m->fi->size-sizeof(struct zip_eoc)-cde_index_size, cde_index_size);
+		cd_to_cpu(m->index_cd);
 		first_cd=(struct zip_cd *)file_data_read(m->fi,m->eoc->zipeofst, sizeof(struct zip_cd));
+		cd_to_cpu(first_cd);
 		m->cde_size=sizeof(struct zip_cd)+first_cd->zipcfnl;
 		m->zip_members=(m->eoc->zipecsz-cde_index_size)/m->cde_size+1;
 		printf("cde_size %d\n", m->cde_size);
