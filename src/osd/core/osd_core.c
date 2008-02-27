@@ -77,8 +77,10 @@ format_distance(char *buffer, double distance)
 		sprintf(buffer,"%.0f km", distance/1000);
 	else if (distance >= 10000)
 		sprintf(buffer,"%.1f km", distance/1000);
-	else
-		sprintf(buffer,"%.2f km", distance/1000);
+	else if (distance >= 300)
+		sprintf(buffer,"%.0f m", round(distance/25)*25);
+	else 
+		sprintf(buffer,"%.0f m", round(distance/10)*10);
 }
 
 static void
@@ -184,7 +186,7 @@ osd_eta_draw(struct eta *this, struct navit *navit, struct vehicle *v)
 	struct point p;
 	char eta[16];
 	char distance[16];
-	int days=0,do_draw=1;
+	int days=0,do_draw=0;
 	time_t etat;
         struct tm tm,eta_tm,eta_tm0;
 	struct attr attr;
@@ -251,7 +253,8 @@ osd_eta_draw(struct eta *this, struct navit *navit, struct vehicle *v)
 		graphics_draw_rectangle(this->gr, this->bg, &p, this->w, this->h);
 		p.x=6;
 		p.y=6;
-		graphics_draw_image(this->gr, this->white, &p, this->flag);
+		if (this->flag)
+			graphics_draw_image(this->gr, this->white, &p, this->flag);
 		if (eta[0]) {
 			p.x=28;
 			p.y=28;
@@ -315,10 +318,129 @@ osd_eta_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 	return (struct osd_priv *) this;
 }
 
+struct osd_navigation {
+	struct point p;
+	int w,h;
+	struct graphics *gr;
+	struct graphics_gc *bg;
+	struct graphics_gc *white;
+	struct graphics_font *font;
+	int active;
+	char last_distance[16];
+};
+
+static void
+osd_navigation_draw(struct osd_navigation *this, struct navit *navit, struct vehicle *v)
+{
+	struct point p;
+	char navigation[16];
+	char distance[16];
+	int days=0,do_draw=1;
+	time_t navigationt;
+        struct tm tm,navigation_tm,navigation_tm0;
+	struct attr attr;
+	struct navigation *nav=NULL;
+	struct map *map=NULL;
+	struct map_rect *mr=NULL;
+	struct item *item=NULL;
+	struct graphics_image *gr_image;
+	char *image;
+	char *name="unknown";
+
+	distance[0]='\0';
+
+	if (navit)
+                nav=navit_get_navigation(navit);
+        if (nav)
+                map=navigation_get_map(nav);
+        if (map)
+                mr=map_rect_new(map, NULL);
+        if (mr)
+                item=map_rect_get_item(mr);
+        if (item) {
+		name=item_to_name(item->type);
+		dbg(0,"name=%s\n", name);
+                if (item_attr_get(item, attr_length, &attr)) {
+                        format_distance(distance, attr.u.num);
+		}
+	}
+        if (mr)
+                map_rect_destroy(mr);
+
+	if (do_draw) {
+		graphics_draw_mode(this->gr, draw_mode_begin);
+		p.x=0;
+		p.y=0;
+		graphics_draw_rectangle(this->gr, this->bg, &p, this->w, this->h);
+		image=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/", name, "_32.xpm", NULL);
+		gr_image=graphics_image_new(this->gr, image);
+		if (! gr_image) {
+			g_free(image);
+			image=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/unknown.xpm", NULL);
+			gr_image=graphics_image_new(this->gr, image);
+		}
+		dbg(0,"gr_image=%p\n", gr_image);
+		if (gr_image) {
+			p.x=(this->w-gr_image->width)/2;
+			p.y=(46-gr_image->height)/2;
+			graphics_draw_image(this->gr, this->white, &p, gr_image);
+			graphics_image_free(this->gr, gr_image);
+		}
+		p.x=12;
+		p.y=56;
+		graphics_draw_text(this->gr, this->white, NULL, this->font, distance, &p, 0x10000, 0);
+		graphics_draw_mode(this->gr, draw_mode_end);
+	}
+}
+
+static void
+osd_navigation_init(struct osd_navigation *this, struct navit *nav)
+{
+	struct graphics *navit_gr;
+	struct color c;
+	navit_gr=navit_get_graphics(nav);
+	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h);
+
+	this->bg=graphics_gc_new(this->gr);
+	c.r=0; c.g=0; c.b=0;
+	graphics_gc_set_foreground(this->bg, &c);
+
+	this->white=graphics_gc_new(this->gr);
+	c.r=65535; c.g=65535; c.b=65535;
+	graphics_gc_set_foreground(this->white, &c);
+	graphics_gc_set_linewidth(this->white, 2);
+
+	this->font=graphics_font_new(this->gr, 200);
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_navigation_draw), attr_position_coord_geo, this));
+
+	osd_navigation_draw(this, nav, NULL);
+}
+
+static struct osd_priv *
+osd_navigation_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
+{
+	struct osd_navigation *this=g_new0(struct osd_navigation, 1);
+	struct attr *attr;
+	this->p.x=20;
+	this->p.y=-80;
+	this->w=60;
+	this->h=60;
+	this->active=-1;
+	attr=attr_search(attrs, NULL, attr_x);
+	if (attr)
+		this->p.x=attr->u.num;
+	attr=attr_search(attrs, NULL, attr_y);
+	if (attr)
+		this->p.y=attr->u.num;
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_navigation_init), attr_navit, this));
+	return (struct osd_priv *) this;
+}
+
 void
 plugin_init(void)
 {
 	plugin_register_osd_type("compass", osd_compass_new);
 	plugin_register_osd_type("eta", osd_eta_new);
+	plugin_register_osd_type("navigation", osd_navigation_new);
 }
 
