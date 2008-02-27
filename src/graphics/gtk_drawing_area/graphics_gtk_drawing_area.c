@@ -577,17 +577,23 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, int wi
 			p2[3]=127;
 		}
 	}
+	x=overlay->p.x;
+	if (x < 0)
+		x+=parent->width;
+	y=overlay->p.y;
+	if (y < 0)
+		y+=parent->height;
 	if (window) {
 		if (overlay->background_ready)
-			gdk_draw_drawable(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], overlay->background, 0, 0, overlay->p.x, overlay->p.y, overlay->width, overlay->height);
+			gdk_draw_drawable(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], overlay->background, 0, 0, x, y, overlay->width, overlay->height);
 	}
 	else {
-		gdk_draw_drawable(overlay->background, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, overlay->p.x, overlay->p.y, 0, 0, overlay->width, overlay->height);
+		gdk_draw_drawable(overlay->background, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, x, y, 0, 0, overlay->width, overlay->height);
 		overlay->background_ready=1;
 	}
-	gdk_draw_pixbuf(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], pixbuf2, 0, 0, overlay->p.x, overlay->p.y, overlay->width, overlay->height, GDK_RGB_DITHER_NONE, 0, 0);
+	gdk_draw_pixbuf(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], pixbuf2, 0, 0, x, y, overlay->width, overlay->height, GDK_RGB_DITHER_NONE, 0, 0);
 	if (window)
-		gdk_draw_drawable(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, overlay->p.x, overlay->p.y, overlay->p.x, overlay->p.y, overlay->width, overlay->height);
+		gdk_draw_drawable(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, x, y, x, y, overlay->width, overlay->height);
 #if 0
 	gdk_draw_drawable(gr->gra->drawable,
                         gr->gra->widget->style->fg_gc[GTK_WIDGET_STATE(gr->gra->widget)],
