@@ -97,6 +97,8 @@ struct navit {
 	int button_pressed,moved,popped;
 	guint button_timeout, motion_timeout;
 	struct log *textfile_debug_log;
+	struct pcoord destination;
+	int destination_valid;
 };
 
 struct gui *main_loop_gui;
@@ -583,7 +585,13 @@ navit_set_destination_from_bookmark(struct navit *this_, void *offset_p)
 void
 navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
 {
+	if (c) {
+		this_->destination=*c;
+		this_->destination_valid=1;
+	} else
+		this_->destination_valid=0;
 	navit_append_coord(this_, "destination.txt", c, "former_destination", description, this_->destinations, NULL, callback_cast(navit_set_destination_from_destination));
+	callback_list_call_attr_1(this_->attr_cbl, attr_destination, this_);
 	if (this_->route) {
 		route_set_destination(this_->route, c);
 		if (this_->navigation)
@@ -689,8 +697,11 @@ navit_add_menu_destinations_from_file(struct navit *this_, char *file, struct me
 			offset=ftell(f);
 		}
 		fclose(f);
-		if (route && flag)
+		if (route && flag) {
+			this_->destination=c;
+			this_->destination_valid=1;
 			route_set_destination(route, &c);
+		}
 	}
 }
 
@@ -1277,6 +1288,11 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr)
 		break;
 	case attr_layout:
 		attr->u.str=g_strdup(this_->layout_current->name);
+		break;
+	case attr_destination:
+		if (! this_->destination_valid)
+			return 0;
+		attr->u.pcoord=&this_->destination;
 		break;
 	default:
 		return 0;

@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <glib.h>
+#include <string.h>
 #include "config.h"
 #include "item.h"
 #include "point.h"
@@ -66,14 +67,27 @@ handle(struct graphics *gr, struct graphics_gc *gc, struct point *p, int r, int 
 }
 
 static void
-osd_compass_draw(struct compass *this, struct vehicle *v)
+format_distance(char *buffer, double distance)
+{
+	if (distance >= 100000)
+		sprintf(buffer,"%.0f km", distance/1000);
+	else if (distance >= 10000)
+		sprintf(buffer,"%.1f km", distance/1000);
+	else
+		sprintf(buffer,"%.2f km", distance/1000);
+}
+
+static void
+osd_compass_draw(struct compass *this, struct navit *nav, struct vehicle *v)
 {
 	struct point p;
-	struct coord *pos, *dest;
-	double *vehicle_dir,dir,distance;
-	int dx,dy;
+	struct attr attr_dir, destination_attr, position_attr;
+	double dir;
 	char buffer[16];
+	struct coord c1, c2;
+	enum projection pro;
 
+	dbg(0,"enter 0x%x 0x%x 0x%x\n", this, nav, v);
 	graphics_draw_mode(this->gr, draw_mode_begin);
 	p.x=0;
 	p.y=0;
@@ -81,35 +95,21 @@ osd_compass_draw(struct compass *this, struct vehicle *v)
 	p.x=30;
 	p.y=30;
 	graphics_draw_circle(this->gr, this->white, &p, 50);
-	if (v) {
-		vehicle_dir=vehicle_dir_get(v);
-		handle(this->gr, this->white, &p, 20, -*vehicle_dir);
-#if 0 /* FIXME */
-	dest=route_get_destination(co->route);
-	if (dest) {
-		pos=vehicle_pos_get(co->vehicle);	
-		dx=dest->x-pos->x;
-		dy=dest->y-pos->y;
-		dir=atan2(dx,dy)*180.0/M_PI;
-#if 0
-		printf("dx %d dy %d dir=%f vehicle_dir=%f\n", dx, dy, dir, *vehicle_dir);
-#endif
-		if (! co->flags->orient_north)
-			dir-=*vehicle_dir;
-		handle(comp->gr, comp->green, &p, 20, dir);
+	if (v && vehicle_position_attr_get(v, attr_position_direction, &attr_dir)) {
+		handle(this->gr, this->white, &p, 20, -*attr_dir.u.numd);
+	}
+	dbg(0,"calling navit_get_attr\n");
+	if (navit_get_attr(nav, attr_destination, &destination_attr) && v && vehicle_position_attr_get(v, attr_position_coord_geo, &position_attr)) {
+		pro=destination_attr.u.pcoord->pro;
+		transform_from_geo(pro, position_attr.u.coord_geo, &c1);
+		c2.x=destination_attr.u.pcoord->x;
+		c2.y=destination_attr.u.pcoord->y;
+		dir=atan2(c2.x-c1.x,c2.y-c1.y)*180.0/M_PI;
+		handle(this->gr, this->green, &p, 20, dir);
+		format_distance(buffer, transform_distance(pro, &c1, &c2));
 		p.x=8;
 		p.y=72;
-		distance=transform_distance(pos, dest)/1000.0;
-		if (distance >= 100)
-			sprintf(buffer,"%.0f km", distance);
-		else if (distance >= 10)
-			sprintf(buffer,"%.1f km", distance);
-		else
-			sprintf(buffer,"%.2f km", distance);
-
-		comp->gr->draw_text(comp->gr, comp->green, NULL, comp->font, buffer, &p, 0x10000, 0);
-	}
-#endif
+		graphics_draw_text(this->gr, this->green, NULL, this->font, buffer, &p, 0x10000, 0);
 	}
 	graphics_draw_mode(this->gr, draw_mode_end);
 }
@@ -117,7 +117,6 @@ osd_compass_draw(struct compass *this, struct vehicle *v)
 static void
 osd_compass_init(struct compass *this, struct navit *nav)
 {
-	struct point p;
 	struct graphics *navit_gr;
 	struct color c;
 	navit_gr=navit_get_graphics(nav);
@@ -137,7 +136,10 @@ osd_compass_init(struct compass *this, struct navit *nav)
 	graphics_gc_set_foreground(this->green, &c);
 	graphics_gc_set_linewidth(this->green, 2);
 
-	osd_compass_draw(this, NULL);
+	this->font=graphics_font_new(this->gr, 200);
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_draw), attr_position_coord_geo, this));
+
+	osd_compass_draw(this, nav, NULL);
 }
 
 static struct osd_priv *
@@ -153,7 +155,7 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs
 	attr=attr_search(attrs, NULL, attr_y);
 	if (attr)
 		this->p.y=attr->u.num;
-	navit_add_callback(nav, callback_new_attr_1(osd_compass_init, attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
 

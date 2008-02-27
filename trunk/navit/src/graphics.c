@@ -191,6 +191,17 @@ graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct p
 	this_->meth.draw_rectangle(this_->priv, gc->priv, p, w, h);
 }
 
+void
+graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2, struct graphics_font *font, char *text, struct point *p, int dx, int dy)
+{
+	this_->meth.draw_text(this_->priv, gc1->priv, gc2 ? gc2->priv : NULL, font->priv, text, p, dx, dy);
+}
+
+void
+graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img)
+{
+	this_->meth.draw_image(this_->priv, gc->priv, p, img->priv);
+}
 
 #include "attr.h"
 #include "popup.h"
@@ -413,7 +424,7 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 					if (gra->meth.draw_image_warp)
 						gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, di->pnt, di->count, di->label);
 					else
-						dbg(0,"draw_image_warp not supported by graphics driver drawing '%s'\ņ", di->label);
+						dbg(0,"draw_image_warp not supported by graphics driver drawing '%s'\n", di->label);
 					break;
 				default:
 					printf("Unhandled element type %d\n", e->type);
