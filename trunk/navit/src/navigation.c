@@ -749,14 +749,40 @@ navigation_map_rect_destroy(struct map_rect_priv *priv)
 static struct item *
 navigation_map_get_item(struct map_rect_priv *priv)
 {
+	struct item *ret;
+	int delta;
 	if (!priv->cmd_next)
 		return NULL;
+	ret=&priv->item;	
 	priv->cmd=priv->cmd_next;
 	priv->itm=priv->itm_next;
 	priv->itm_next=priv->cmd->itm;
 	priv->cmd_next=priv->cmd->next;
 
-	return &priv->item;
+	delta=priv->cmd->delta;	
+	dbg(1,"delta=%d\n", delta);
+	if (delta < 0) {
+		delta=-delta;
+		if (delta < 45)
+			ret->type=type_nav_left_1;
+		else if (delta < 105)
+			ret->type=type_nav_left_2;
+		else if (delta < 165) 
+			ret->type=type_nav_left_3;
+		else
+			ret->type=type_none;
+	} else {
+		if (delta < 45)
+			ret->type=type_nav_right_1;
+		else if (delta < 105)
+			ret->type=type_nav_right_2;
+		else if (delta < 165) 
+			ret->type=type_nav_right_3;
+		else
+			ret->type=type_none;
+	}
+	dbg(1,"type=%d\n", ret->type);
+	return ret;
 }
 
 static struct item *
