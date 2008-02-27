@@ -513,12 +513,12 @@ navigation_update(struct navigation *this_, struct route *route)
 	mr=map_rect_new(map, NULL);
 	if (! mr)
 		return;
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 	ritem=map_rect_get_item(mr);
 	if (ritem) {
 		if (item_attr_get(ritem, attr_street_item, &street_item)) {
 			sitem=street_item.u.item;
-			dbg(0,"sitem=%p\n", sitem);
+			dbg(1,"sitem=%p\n", sitem);
 			itm=item_hash_lookup(this_->hash, sitem);
 			dbg(2,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
 			navigation_destroy_itms_cmds(this_, itm);
@@ -528,7 +528,7 @@ navigation_update(struct navigation *this_, struct route *route)
 			} else {
 				dbg(0,"not on track\n");
 				do {
-					dbg(0,"item\n");
+					dbg(1,"item\n");
 					navigation_itm_new(this_, ritem);
 					ritem=map_rect_get_item(mr);
 				} while (ritem);
