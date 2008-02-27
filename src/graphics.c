@@ -410,7 +410,10 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 					break;
 				case element_image:
 					dbg(1,"image: '%s'\n", di->label);
-					gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, di->pnt, di->count, di->label);
+					if (gra->meth.draw_image_warp)
+						gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, di->pnt, di->count, di->label);
+					else
+						dbg(0,"draw_image_warp not supported by graphics driver drawing '%s'\ņ", di->label);
 					break;
 				default:
 					printf("Unhandled element type %d\n", e->type);
@@ -497,19 +500,9 @@ do_draw_map(struct displaylist *displaylist, struct transformation *t, struct ma
 				continue;
 			}
 		} else {
-			if (item->type == type_image && count == 2) {
-				struct coord_rect r;
-				r.lu=ca[0];
-				r.rl=ca[1];
-				if (! map_selection_contains_rect(sel, &r)) {
-					dbg(1,"image not visible\n");
-					continue;
-				}
-			} else {
-				if (! map_selection_contains_polygon(sel, ca, count)) {
-					dbg(1,"polygon not visible\n");
-					continue;
-				}
+			if (! map_selection_contains_polygon(sel, ca, count)) {
+				dbg(1,"polygon not visible\n");
+				continue;
 			}
 		}
 		if (count == max) 
