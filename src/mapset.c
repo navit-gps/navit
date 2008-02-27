@@ -1,3 +1,4 @@
+#include <string.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include "debug.h"
@@ -100,7 +101,9 @@ mapset_search_get_item(struct mapset_search *this)
 	while (!(ret=map_search_get_item(this->ms))) {
 		if (this->search_attr->type >= attr_country_all && this->search_attr->type <= attr_country_name)
 			break;
-		this->map=g_list_next(this->map);
+		do {
+			this->map=g_list_next(this->map);
+		} while (this->map && ! map_get_active(this->map->data));
 		if (! this->map)
 			break;
 		map_search_destroy(this->ms);
