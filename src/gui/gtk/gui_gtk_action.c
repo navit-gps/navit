@@ -383,7 +383,6 @@ static char layout[] =
 				<menuitem name=\"Visible Polys\" action=\"VisiblePolysAction\" />\
 				<menuitem name=\"Visible Streets\" action=\"VisibleStreetsAction\" />\
 				<menuitem name=\"Visible Points\" action=\"VisiblePointsAction\" />\
-				<menuitem name=\"Visible Routegraph\" action=\"VisibleRouteGraphAction\" />\
 				<placeholder name=\"DataMenuAdditions\" />\
 			</menu>\
 			<menu name=\"Route\" action=\"RouteMenuAction\">\
