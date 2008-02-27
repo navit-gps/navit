@@ -111,7 +111,7 @@ map_selection_contains_polygon(struct map_selection *sel, struct coord *c, int c
 		return 0;
 	r.lu=c[0];
 	r.rl=c[0];
-	for (i = 1 ; i < count-1 ; i++) {
+	for (i = 1 ; i < count ; i++) {
 		if (c[i].x < r.lu.x)
 			r.lu.x=c[i].x;
 		if (c[i].x > r.rl.x)
@@ -123,7 +123,6 @@ map_selection_contains_polygon(struct map_selection *sel, struct coord *c, int c
 	}
 	return map_selection_contains_rect(sel, &r);
 }
-
 
 /* prototypes */
 enum projection;
