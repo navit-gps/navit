@@ -189,7 +189,9 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 {
 	struct navigation_itm *itm;
 	struct navigation_command *cmd;
-	dbg(2,"enter this_=%p end=%p\n", this_, end);
+	dbg(2,"enter this_=%p this_->first=%p this_->cmd_first=%p end=%p\n", this_, this_->first, this_->cmd_first, end);
+	if (this_->cmd_first)
+		dbg(2,"this_->cmd_first->itm=%p\n", this_->cmd_first->itm);
 	while (this_->first && this_->first != end) {
 		itm=this_->first;
 		dbg(3,"destroying %p\n", itm);
@@ -197,7 +199,7 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 		this_->first=itm->next;
 		if (this_->first)
 			this_->first->prev=NULL;
-		if (this_->cmd_first && this_->cmd_first->itm == itm) {
+		if (this_->cmd_first && this_->cmd_first->itm == itm->next) {
 			cmd=this_->cmd_first;
 			this_->cmd_first=cmd->next;
 			g_free(cmd);
@@ -208,7 +210,7 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 		this_->last=NULL;
 	if (! this_->first && end) 
 		dbg(0,"end wrong\n");
-	dbg(2,"ret\n");
+	dbg(2,"ret this_->first=%p this_->cmd_first=%p\n",this_->first, this_->cmd_first);
 }
 
 static void
@@ -333,14 +335,13 @@ static int
 maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *delta)
 {
 	dbg(1,"enter %p %p %p\n",old, new, delta);
-	if (new->item.type != old->item.type && (new->item.type == type_ramp || old->item.type == type_ramp)) {
+	if (new->item.type == old->item.type || (new->item.type != type_ramp && old->item.type != type_ramp)) {
+		if (is_same_street2(old, new)) {
+			dbg(1, "maneuver_required: is_same_street: no\n");
+			return 0;
+		}
+	} else
 		dbg(1, "maneuver_required: old or new is ramp\n");
-		return 1;
-	}
-	if (is_same_street2(old, new)) {
-		dbg(1, "maneuver_required: is_same_street: no\n");
-		return 0;
-	}
 #if 0
 	if (old->crossings_end == 2) {
 		dbg(1, "maneuver_required: only 2 connections: no\n");
@@ -365,6 +366,7 @@ static struct navigation_command *
 command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 {
 	struct navigation_command *ret=g_new0(struct navigation_command, 1);
+	dbg(1,"enter this_=%p itm=%p delta=%d\n", this_, itm, delta);
 	ret->delta=delta;
 	ret->itm=itm;
 	if (this_->cmd_last)

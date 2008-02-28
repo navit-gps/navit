@@ -359,7 +359,7 @@ osd_navigation_draw(struct osd_navigation *this, struct navit *navit, struct veh
                 item=map_rect_get_item(mr);
         if (item) {
 		name=item_to_name(item->type);
-		dbg(0,"name=%s\n", name);
+		dbg(1,"name=%s\n", name);
                 if (item_attr_get(item, attr_length, &attr)) {
                         format_distance(distance, attr.u.num);
 		}
@@ -379,7 +379,7 @@ osd_navigation_draw(struct osd_navigation *this, struct navit *navit, struct veh
 			image=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/unknown.xpm", NULL);
 			gr_image=graphics_image_new(this->gr, image);
 		}
-		dbg(0,"gr_image=%p\n", gr_image);
+		dbg(1,"gr_image=%p\n", gr_image);
 		if (gr_image) {
 			p.x=(this->w-gr_image->width)/2;
 			p.y=(46-gr_image->height)/2;
