@@ -1773,6 +1773,22 @@ write_countrydir(int phase, int maxnamelen)
 		}
 	}
 }
+
+static void
+remove_countryfiles(void)
+{
+	int i;
+	char filename[32];
+	struct country_table *co;
+
+	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
+		co=&country_table[i];
+		if (co->size) {
+			sprintf(filename,"country_%d.bin", co->countryid);
+			unlink(filename);
+		}
+	}
+}
 #endif
 
 static int
@@ -2243,6 +2259,9 @@ int main(int argc, char **argv)
 			remove("ways_split.tmp");
 			remove("tilesdir.tmp");
 			remove("zipdir.tmp");
+#ifdef GENERATE_INDEX
+			remove_countryfiles();
+#endif
 		}
 	}
 	return 0;
