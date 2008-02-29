@@ -12,6 +12,7 @@
 
 static struct vehicle_priv {
 	char *source;
+	char *gpsd_query;
 	struct callback_list *cbl;
 	GIOChannel *iochan;
 	guint retry_interval;
@@ -123,7 +124,7 @@ vehicle_gpsd_try_open(gpointer *data)
 		g_warning("gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?\n", priv->source, priv->retry_interval);
 		return TRUE;
 	}
-	gps_query(priv->gps, "w+xr+\n");
+	gps_query(priv->gps, priv->gpsd_query);
 	gps_set_raw_hook(priv->gps, vehicle_gpsd_callback);
 	priv->iochan = g_io_channel_unix_new(priv->gps->gps_fd);
 	priv->watch =
@@ -189,6 +190,8 @@ vehicle_gpsd_destroy(struct vehicle_priv *priv)
 	vehicle_gpsd_close(priv);
 	if (priv->source)
 		g_free(priv->source);
+	if (priv->gpsd_query)
+		g_free(priv->gpsd_query);
 	g_free(priv);
 }
 
@@ -238,12 +241,19 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 		      *cbl, struct attr **attrs)
 {
 	struct vehicle_priv *ret;
-	struct attr *source, *retry_int;
+	struct attr *source, *query, *retry_int;
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->source = g_strdup(source->u.str);
+	query = attr_search(attrs, NULL, attr_gpsd_query);
+	if (query) {
+		ret->gpsd_query = g_strconcat(query->u.str, "\n", NULL);
+	} else {
+		ret->gpsd_query = g_strdup("w+xr+\n");
+	}
+	dbg(1,"Format string for gpsd_query: %s\n",ret->gpsd_query);
 	retry_int = attr_search(attrs, NULL, attr_retry_interval);
 	if (retry_int) {
 		ret->retry_interval = retry_int->u.num;
