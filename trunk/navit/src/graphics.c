@@ -95,12 +95,12 @@ graphics_register_motion_callback(struct graphics *this_, void (*callback)(void 
 }
 
 struct graphics_font *
-graphics_font_new(struct graphics *gra, int size)
+graphics_font_new(struct graphics *gra, int size, int flags)
 {
 	struct graphics_font *this_;
 
 	this_=g_new0(struct graphics_font,1);
-	this_->priv=gra->meth.font_new(gra->priv, &this_->meth, size);
+	this_->priv=gra->meth.font_new(gra->priv, &this_->meth, size, flags);
 	return this_;
 }
 
@@ -392,14 +392,14 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 						p.x=di->pnt[0].x+3;
 						p.y=di->pnt[0].y+10;
 						if (! gra->font[e->label_size])
-							gra->font[e->label_size]=graphics_font_new(gra, e->label_size*20);
+							gra->font[e->label_size]=graphics_font_new(gra, e->label_size*20, 0);
 						gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->label_size]->priv, di->label, &p, 0x10000, 0);
 					}
 					break;
 				case element_label:
 					if (di->label) {
 						if (! gra->font[e->label_size])
-							gra->font[e->label_size]=graphics_font_new(gra, e->label_size*20);
+							gra->font[e->label_size]=graphics_font_new(gra, e->label_size*20, 0);
 						label_line(gra, gra->gc[2], gra->gc[1], gra->font[e->label_size], di->pnt, di->count, di->label);
 					}
 					break;
