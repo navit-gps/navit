@@ -37,7 +37,7 @@ struct graphics_methods {
 	void (*draw_image)(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img);
 	void (*draw_image_warp)(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, char *data);
 	void (*draw_restore)(struct graphics_priv *gr, struct point *p, int w, int h);
-	struct graphics_font_priv *(*font_new)(struct graphics_priv *gr, struct graphics_font_methods *meth, int size);
+	struct graphics_font_priv *(*font_new)(struct graphics_priv *gr, struct graphics_font_methods *meth, int size, int flags);
 	struct graphics_gc_priv *(*gc_new)(struct graphics_priv *gr, struct graphics_gc_methods *meth);
 	void (*background_gc)(struct graphics_priv *gr, struct graphics_gc_priv *gc);
 	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h);
@@ -106,7 +106,7 @@ void *graphics_get_data(struct graphics *this_, char *type);
 void graphics_register_resize_callback(struct graphics *this_, void (*callback)(void *data, int w, int h), void *data);
 void graphics_register_button_callback(struct graphics *this_, void (*callback)(void *data, int pressed, int button, struct point *p), void *data);
 void graphics_register_motion_callback(struct graphics *this_, void (*callback)(void *data, struct point *p), void *data);
-struct graphics_font *graphics_font_new(struct graphics *gra, int size);
+struct graphics_font *graphics_font_new(struct graphics *gra, int size, int flags);
 struct graphics_gc *graphics_gc_new(struct graphics *gra);
 void graphics_gc_destroy(struct graphics_gc *gc);
 void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c);
