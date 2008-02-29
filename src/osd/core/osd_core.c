@@ -142,7 +142,7 @@ osd_compass_init(struct compass *this, struct navit *nav)
 	graphics_gc_set_foreground(this->green, &c);
 	graphics_gc_set_linewidth(this->green, 2);
 
-	this->font=graphics_font_new(this->gr, 200);
+	this->font=graphics_font_new(this->gr, 200, 1);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_draw), attr_position_coord_geo, this));
 
 	osd_compass_draw(this, nav, NULL);
@@ -290,7 +290,7 @@ osd_eta_init(struct eta *this, struct navit *nav)
 	graphics_gc_set_foreground(this->white, &c);
 	graphics_gc_set_linewidth(this->white, 2);
 
-	this->font=graphics_font_new(this->gr, 200);
+	this->font=graphics_font_new(this->gr, 200, 1);
 	this->flag=graphics_image_new(this->gr, flag);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_eta_draw), attr_position_coord_geo, this));
 
@@ -327,17 +327,15 @@ struct osd_navigation {
 	struct graphics_font *font;
 	int active;
 	char last_distance[16];
+	char *last_name;
 };
 
 static void
 osd_navigation_draw(struct osd_navigation *this, struct navit *navit, struct vehicle *v)
 {
 	struct point p;
-	char navigation[16];
 	char distance[16];
-	int days=0,do_draw=1;
-	time_t navigationt;
-        struct tm tm,navigation_tm,navigation_tm0;
+	int do_draw=0;
 	struct attr attr;
 	struct navigation *nav=NULL;
 	struct map *map=NULL;
@@ -363,6 +361,17 @@ osd_navigation_draw(struct osd_navigation *this, struct navit *navit, struct veh
                 if (item_attr_get(item, attr_length, &attr)) {
                         format_distance(distance, attr.u.num);
 		}
+		if (this->active != 1 || strcmp(this->last_distance, distance) || this->last_name != name) {
+			this->active=1;
+			strcpy(this->last_distance, distance);
+			this->last_name=name;
+			do_draw=1;
+		}
+        } else {
+		if (this->active != 0) {
+			this->active=0;
+			do_draw=1;
+		}
 	}
         if (mr)
                 map_rect_destroy(mr);
@@ -372,23 +381,25 @@ osd_navigation_draw(struct osd_navigation *this, struct navit *navit, struct veh
 		p.x=0;
 		p.y=0;
 		graphics_draw_rectangle(this->gr, this->bg, &p, this->w, this->h);
-		image=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/", name, "_32.xpm", NULL);
-		gr_image=graphics_image_new(this->gr, image);
-		if (! gr_image) {
-			g_free(image);
-			image=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/unknown.xpm", NULL);
+		if (this->active) {
+			image=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/", name, "_32.xpm", NULL);
 			gr_image=graphics_image_new(this->gr, image);
+			if (! gr_image) {
+				g_free(image);
+				image=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/unknown.xpm", NULL);
+				gr_image=graphics_image_new(this->gr, image);
+			}
+			dbg(1,"gr_image=%p\n", gr_image);
+			if (gr_image) {
+				p.x=(this->w-gr_image->width)/2;
+				p.y=(46-gr_image->height)/2;
+				graphics_draw_image(this->gr, this->white, &p, gr_image);
+				graphics_image_free(this->gr, gr_image);
+			}
+			p.x=12;
+			p.y=56;
+			graphics_draw_text(this->gr, this->white, NULL, this->font, distance, &p, 0x10000, 0);
 		}
-		dbg(1,"gr_image=%p\n", gr_image);
-		if (gr_image) {
-			p.x=(this->w-gr_image->width)/2;
-			p.y=(46-gr_image->height)/2;
-			graphics_draw_image(this->gr, this->white, &p, gr_image);
-			graphics_image_free(this->gr, gr_image);
-		}
-		p.x=12;
-		p.y=56;
-		graphics_draw_text(this->gr, this->white, NULL, this->font, distance, &p, 0x10000, 0);
 		graphics_draw_mode(this->gr, draw_mode_end);
 	}
 }
@@ -410,7 +421,7 @@ osd_navigation_init(struct osd_navigation *this, struct navit *nav)
 	graphics_gc_set_foreground(this->white, &c);
 	graphics_gc_set_linewidth(this->white, 2);
 
-	this->font=graphics_font_new(this->gr, 200);
+	this->font=graphics_font_new(this->gr, 200, 1);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_navigation_draw), attr_position_coord_geo, this));
 
 	osd_navigation_draw(this, nav, NULL);

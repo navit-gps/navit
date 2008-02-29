@@ -93,7 +93,7 @@ static struct graphics_font_methods font_methods = {
  * First search for each of the font families and require and exact match on family
  * If no font found, let fontconfig pick the best match
  */
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, int size)
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, int size, int flags)
 {
 	struct graphics_font_priv *font=g_new(struct graphics_font_priv, 1);
 
@@ -111,6 +111,8 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 		while (*family && !found) {
 			dbg(1, "Looking for font family %s. exact=%d\n", *family, exact);
 			FcPattern *required = FcPatternBuild(NULL, FC_FAMILY, FcTypeString, *family, NULL);
+			if (flags)
+				FcPatternAddInteger(required,FC_WEIGHT,FC_WEIGHT_BOLD);
 			FcConfigSubstitute(FcConfigGetCurrent(), required, FcMatchFont);
 			FcDefaultSubstitute(required);
 			FcResult result;
