@@ -24,6 +24,8 @@ static struct vehicle_priv {
 	int status;
 	int sats;
 	int sats_used;
+	char *nmea_data;
+        char *nmea_data_buf;
 } *vehicle_last;
 
 #define DEFAULT_RETRY_INTERVAL 10 // seconds
@@ -38,7 +40,24 @@ static void
 vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		      int level)
 {
+	char *pos,*nmea_data_buf;
 	struct vehicle_priv *priv = vehicle_last;
+	if (buf[0] == '$') {
+		char buffer[len+1];
+		buffer[len+1]='\0';
+		memcpy(buffer, buf, len);
+		pos=strchr(buffer,'\n');
+		if (pos) {
+			*++pos='\0';
+			if (!priv->nmea_data_buf || strlen(priv->nmea_data_buf) < 65536) {
+				nmea_data_buf=g_strconcat(priv->nmea_data_buf ? priv->nmea_data_buf : "", buffer, NULL);
+				g_free(priv->nmea_data_buf);
+				priv->nmea_data_buf=nmea_data_buf;
+			} else {
+				dbg(0, "nmea buffer overflow, discarding '%s'\n", buffer);
+			}
+		}
+	}	
 	dbg(1,"data->set=0x%x\n", data->set);
 	// If data->fix.speed is NAN, then the drawing gets jumpy. 
 	if (isnan(data->fix.speed)) {
@@ -74,6 +93,9 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		priv->geo.lat = data->fix.latitude;
 		priv->geo.lng = data->fix.longitude;
 		dbg(1,"lat=%f lng=%f\n", priv->geo.lat, priv->geo.lng);
+		g_free(priv->nmea_data);
+		priv->nmea_data=priv->nmea_data_buf;
+		priv->nmea_data_buf=NULL;
 		callback_list_call_0(priv->cbl);
 		data->set &= ~LATLON_SET;
 	}
@@ -101,7 +123,7 @@ vehicle_gpsd_try_open(gpointer *data)
 		g_warning("gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?\n", priv->source, priv->retry_interval);
 		return TRUE;
 	}
-	gps_query(priv->gps, "w+x\n");
+	gps_query(priv->gps, "w+xr+\n");
 	gps_set_raw_hook(priv->gps, vehicle_gpsd_callback);
 	priv->iochan = g_io_channel_unix_new(priv->gps->gps_fd);
 	priv->watch =
@@ -192,6 +214,11 @@ vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
 		break;
 	case attr_position_coord_geo:
 		attr->u.coord_geo = &priv->geo;
+		break;
+	case attr_position_nmea:
+		attr->u.str=priv->nmea_data;
+		if (! attr->u.str)
+			return 0;
 		break;
 	default:
 		return 0;
