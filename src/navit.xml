@@ -21,7 +21,7 @@ Change to your home coordinates.
 	<graphics type="opengl" />
 -->
 	
-	<vehicle name="Meins" enabled="yes" active="1" source="gpsd://localhost" color="#0000ff"/>
+	<vehicle name="Meins" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xjr+" color="#0000ff"/>
 	<!-- For SDL, you should add follow="1" refresh="1" to have the view centered on your position
 	<vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1" refresh="1"/>
 	-->
