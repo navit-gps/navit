@@ -1087,7 +1087,7 @@ navit_init(struct navit *this_)
 		return;
 	}
 	if (!this_->gra) {
-		g_warning("failed to instantiate gui '%s'\n",this_->gra_type);
+		g_warning("failed to instantiate graphics '%s'\n",this_->gra_type);
 		navit_destroy(this_);
 		return;
 	}
