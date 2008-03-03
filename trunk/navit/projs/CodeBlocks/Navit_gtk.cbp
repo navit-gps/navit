@@ -80,6 +80,7 @@
 					<Add library="gdk-win32-2.0" />
 					<Add library="gdk_pixbuf-2.0" />
 					<Add library="freetype" />
+					<Add library="fontconfig" />
 					<Add library="z" />
 					<Add library="gobject-2.0" />
 					<Add library="gmodule-2.0" />
