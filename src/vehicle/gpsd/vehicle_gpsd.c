@@ -27,6 +27,7 @@ static struct vehicle_priv {
 	int sats_used;
 	char *nmea_data;
         char *nmea_data_buf;
+	guint retry_timer;
 } *vehicle_last;
 
 #define DEFAULT_RETRY_INTERVAL 10 // seconds
@@ -140,8 +141,9 @@ vehicle_gpsd_try_open(gpointer *data)
 static void
 vehicle_gpsd_open(struct vehicle_priv *priv)
 {
+	priv->retry_timer=0;
 	if (vehicle_gpsd_try_open((gpointer *)priv)) {
-		g_timeout_add(priv->retry_interval*1000, (GSourceFunc)vehicle_gpsd_try_open, (gpointer *)priv);
+		priv->retry_timer = g_timeout_add(priv->retry_interval*1000, (GSourceFunc)vehicle_gpsd_try_open, (gpointer *)priv);
 	}
 }
 
@@ -153,6 +155,10 @@ vehicle_gpsd_close(struct vehicle_priv *priv)
 	if (priv->watch) {
 		g_source_remove(priv->watch);
 		priv->watch = 0;
+	}
+	if (priv->retry_timer) {
+		g_source_remove(priv->retry_timer);
+		priv->retry_timer=0;
 	}
 	if (priv->iochan) {
 		g_io_channel_shutdown(priv->iochan, 0, &error);
