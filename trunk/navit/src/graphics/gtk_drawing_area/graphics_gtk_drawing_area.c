@@ -208,8 +208,6 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 	*meth=gc_methods;
 	gc->gc=gdk_gc_new(gr->widget->window);
 	gc->gr=gr;
-	if (FcInit() != FcTrue)
-		dbg(0, "Failed to init fontconfig");
 	return gc;
 }
 
@@ -874,6 +872,8 @@ graphics_gtk_drawing_area_new(struct graphics_methods *meth, struct attr **attrs
 	g_signal_connect(G_OBJECT(draw), "button_release_event", G_CALLBACK(button_release), this);
 	g_signal_connect(G_OBJECT(draw), "scroll_event", G_CALLBACK(scroll), this);
 	g_signal_connect(G_OBJECT(draw), "motion_notify_event", G_CALLBACK(motion_notify), this);
+	if (FcInit() != FcTrue)
+		dbg(0, "Failed to init fontconfig");
 	return this;
 }
 
