@@ -123,11 +123,11 @@ gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 }
 
 static void
-gc_set_dashes(struct graphics_gc_priv *gc, unsigned char *dash_list, int n)
+gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, unsigned char *dash_list, int n)
 {
 #if 0
-	gdk_gc_set_dashes(gc->gc, 0, (gint8 *)dash_list, n);
-	gdk_gc_set_line_attributes(gc->gc, 1, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
+	gdk_gc_set_dashes(gc->gc, offset, (gint8 *)dash_list, n);
+	gdk_gc_set_line_attributes(gc->gc, width, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
 #endif
 }
 

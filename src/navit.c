@@ -50,10 +50,12 @@ struct navit_vehicle {
 	int dir;
 	int speed;
 	struct color c;
+	struct color *c2;
 	struct menu *menu;
 	struct cursor *cursor;
 	struct vehicle *vehicle;
 	struct attr callback;
+	int animate_cursor;
 };
 
 struct navit {
@@ -1104,7 +1106,7 @@ navit_init(struct navit *this_)
 	while (l) {
 		dbg(1,"parsed one vehicle\n");
 		nv=l->data;
-		nv->cursor=cursor_new(this_->gra, &nv->c);
+		nv->cursor=cursor_new(this_->gra, &nv->c, nv->c2, nv->animate_cursor);
 		nv->callback.type=attr_callback;
 		nv->callback.u.callback=callback_new_2(callback_cast(navit_vehicle_update), this_, nv);
 		vehicle_add_attr(nv->vehicle, &nv->callback, NULL);
@@ -1479,10 +1481,11 @@ struct navit_vehicle *
 navit_add_vehicle(struct navit *this_, struct vehicle *v, struct attr **attrs)
 {
 	struct navit_vehicle *nv=g_new0(struct navit_vehicle, 1);
-	struct attr *name,*update,*follow,*color,*active;
+	struct attr *name,*update,*follow,*color,*active, *color2, *animate;
 	nv->vehicle=v;
 	nv->update=1;
 	nv->follow=0;
+	nv->animate_cursor=0;
 	nv->name="Noname";
 	if ((name=attr_search(attrs, NULL, attr_name)))
 		nv->name=g_strdup(name->u.str);
@@ -1492,12 +1495,17 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v, struct attr **attrs)
 		nv->follow=nv->follow=follow->u.num;
 	if ((color=attr_search(attrs, NULL, attr_color)))
 		nv->c=*(color->u.color);
+	if ((color2=attr_search(attrs, NULL, attr_color2)))
+		nv->c2=color2->u.color;
+	else
+		nv->c2=NULL;
 	nv->update_curr=nv->update;
 	nv->follow_curr=nv->follow;
 	this_->vehicles=g_list_append(this_->vehicles, nv);
 	if ((active=attr_search(attrs, NULL, attr_active)) && active->u.num)
 		navit_set_vehicle(this_, nv);
-
+	if ((animate=attr_search(attrs, NULL, attr_animate)))
+		nv->animate_cursor=animate->u.num;
 	return nv;
 }
 

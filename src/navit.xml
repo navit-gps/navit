@@ -22,6 +22,10 @@ Change to your home coordinates.
 -->
 	
 	<vehicle name="Meins" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xjr+" color="#0000ff"/>
+	<!-- To improve visibility of the cursor in gtk, you may optionally add:
+		color2="#rrggbb"  - draws a second cursor inside the original, in the specified colour
+		animate="1" - animates the cursor, as series of moving dots
+	-->
 	<!-- For SDL, you should add follow="1" refresh="1" to have the view centered on your position
 	<vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1" refresh="1"/>
 	-->
