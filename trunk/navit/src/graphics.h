@@ -62,7 +62,7 @@ struct graphics_font {
 struct graphics_gc_methods {
 	void (*gc_destroy)(struct graphics_gc_priv *gc);
 	void (*gc_set_linewidth)(struct graphics_gc_priv *gc, int width);
-	void (*gc_set_dashes)(struct graphics_gc_priv *gc, unsigned char dash_list[], int n);
+	void (*gc_set_dashes)(struct graphics_gc_priv *gc, int width, int offset, unsigned char dash_list[], int n);
 	void (*gc_set_foreground)(struct graphics_gc_priv *gc, struct color *c);
 	void (*gc_set_background)(struct graphics_gc_priv *gc, struct color *c);
 };
@@ -112,6 +112,7 @@ void graphics_gc_destroy(struct graphics_gc *gc);
 void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c);
 void graphics_gc_set_background(struct graphics_gc *gc, struct color *c);
 void graphics_gc_set_linewidth(struct graphics_gc *gc, int width);
+void graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsigned char dash_list[], int n);
 struct graphics_image *graphics_image_new(struct graphics *gra, char *path);
 void graphics_image_free(struct graphics *gra, struct graphics_image *img);
 void graphics_draw_restore(struct graphics *this_, struct point *p, int w, int h);

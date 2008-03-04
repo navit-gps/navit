@@ -139,6 +139,13 @@ graphics_gc_set_linewidth(struct graphics_gc *gc, int width)
 	gc->meth.gc_set_linewidth(gc->priv, width);
 }
 
+void
+graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsigned char dash_list[], int n)
+{
+	if (gc->meth.gc_set_dashes)
+		gc->meth.gc_set_dashes(gc->priv, width, offset, dash_list, n);
+}
+
 struct graphics_image *
 graphics_image_new(struct graphics *gra, char *path)
 {
