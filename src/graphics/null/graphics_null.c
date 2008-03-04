@@ -53,7 +53,7 @@ gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 }
 
 static void
-gc_set_dashes(struct graphics_gc_priv *gc, unsigned char *dash_list, int n)
+gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)
 {
 }
 
