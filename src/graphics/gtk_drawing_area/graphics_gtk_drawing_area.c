@@ -594,6 +594,8 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, int wi
 	gdk_draw_pixbuf(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], pixbuf2, 0, 0, x, y, overlay->width, overlay->height, GDK_RGB_DITHER_NONE, 0, 0);
 	if (window)
 		gdk_draw_drawable(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, x, y, x, y, overlay->width, overlay->height);
+	g_object_unref(pixbuf);
+	g_object_unref(pixbuf2);
 #if 0
 	gdk_draw_drawable(gr->gra->drawable,
                         gr->gra->widget->style->fg_gc[GTK_WIDGET_STATE(gr->gra->widget)],
