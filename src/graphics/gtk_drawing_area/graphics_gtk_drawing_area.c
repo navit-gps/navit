@@ -21,6 +21,7 @@ struct graphics_priv {
 	GdkEventButton button_event;
 	int button_timeout;
 	GtkWidget *widget;
+	GtkWidget *win;
 	GdkDrawable *drawable;
 	GdkDrawable *background;
 	int background_ready;
@@ -789,12 +790,27 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	return this;
 }
 
+static int gtk_argc;
+static char **gtk_argv={NULL};
+
+
 static void *
 get_data(struct graphics_priv *this, char *type)
 {
-	if (strcmp(type,"gtk_widget"))
-		return NULL;
-	return this->widget;
+	if (!strcmp(type,"gtk_widget"))
+		return this->widget;
+	if (!strcmp(type,"window")) {
+		gtk_init(&gtk_argc, &gtk_argv);
+		gtk_set_locale();
+		this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+		gtk_window_set_default_size(GTK_WINDOW(this->win), 792, 547);
+		gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
+		gtk_widget_realize(this->win);
+		gtk_container_add(GTK_CONTAINER(this->win), this->widget);
+		gtk_widget_show_all(this->win);
+		return this->win;
+	}
+	return NULL;
 }
 
 static void
