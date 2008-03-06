@@ -1,4 +1,4 @@
-SUBDIRS=
+SUBDIRS=internal
 if GUI_GTK
   SUBDIRS += gtk
 endif
