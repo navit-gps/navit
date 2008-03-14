@@ -274,6 +274,8 @@ ITEM(aeroway_taxiway)
 ITEM(street_service)
 ITEM(coverage)
 ITEM(street_pedestrian)
+ITEM(bridge)
+ITEM(tunnel)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)
