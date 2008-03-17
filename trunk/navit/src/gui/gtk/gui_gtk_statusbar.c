@@ -16,8 +16,6 @@
 #include "navigation.h"
 #include "gui_gtk.h"
 
-#include "statusbar.h"
-
 
 #define _(STRING) gettext(STRING)
 
@@ -107,7 +105,7 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 		strcpy(this->route_text, buffer);
 		gtk_label_set_text(GTK_LABEL(this->route), this->route_text);
 	}
-	if (!vehicle_position_attr_get(v, attr_position_coord_geo, &attr))
+	if (!vehicle_get_attr(v, attr_position_coord_geo, &attr))
 		return;
 	lng=attr.u.coord_geo->lng;
 	lat=attr.u.coord_geo->lat;
@@ -119,37 +117,31 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 		lat=-lat;
 		lat_c='S';
 	}
-	if (vehicle_position_attr_get(v, attr_position_direction, &attr))
+	if (vehicle_get_attr(v, attr_position_direction, &attr))
 		direction=*(attr.u.numd);
 	direction=fmod(direction,360);
 	if (direction < 0)
 		direction+=360;
 	dir_idx=(direction+22.5)/45;
 	dir=dirs[dir_idx];
-	if (vehicle_position_attr_get(v, attr_position_height, &attr))
+	if (vehicle_get_attr(v, attr_position_height, &attr))
 		height=*(attr.u.numd);
-	if (vehicle_position_attr_get(v, attr_position_speed, &attr))
+	if (vehicle_get_attr(v, attr_position_speed, &attr))
 		speed=*(attr.u.numd);
-	if (vehicle_position_attr_get(v, attr_position_sats_used, &attr))
+	if (vehicle_get_attr(v, attr_position_sats_used, &attr))
 		sats=attr.u.num;
-	if (vehicle_position_attr_get(v, attr_position_qual, &attr))
+	if (vehicle_get_attr(v, attr_position_qual, &attr))
 		qual=attr.u.num;
 	sprintf(this->gps_text,"GPS %2d/%1d %02.0f%07.4f%c %03.0f%07.4f%c %4.0fm %3.0f°%-2s %3.0fkm/h", sats, qual, floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c, height, direction, dir, speed);
 	gtk_label_set_text(GTK_LABEL(this->gps), this->gps_text);
 }
 
-static struct statusbar_methods methods = {
-	statusbar_destroy,
-};
-
 struct statusbar_priv *
-gui_gtk_statusbar_new(struct gui_priv *gui, struct statusbar_methods *meth)
+gui_gtk_statusbar_new(struct gui_priv *gui)
 {
 	struct statusbar_priv *this=g_new0(struct statusbar_priv, 1);
 
 	this->gui=gui;
-	*meth=methods;
-
 	this->hbox=gtk_hbox_new(FALSE, 1);
 	this->gps=gtk_label_new( "GPS 00/0 0000.0000N 00000.0000E 0000m 000°NO 000km/h" );
 	gtk_label_set_justify(GTK_LABEL(this->gps),  GTK_JUSTIFY_LEFT);

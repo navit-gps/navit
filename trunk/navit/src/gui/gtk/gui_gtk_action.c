@@ -138,64 +138,22 @@ destination_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 	destination_address(gui->nav);
 }
 
-
 static void
 quit_action (GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
 	navit_destroy(gui->nav);
 }
 
-static void
-visible_blocks_action(GtkWidget *w, struct container *co)
-{
-#if 0
-	co->data_window[data_window_type_block]=data_window("Visible Blocks",co->win,NULL);
-	graphics_redraw(co);
-#endif
-}
-
-static void
-visible_towns_action(GtkWidget *w, struct container *co)
-{
-#if 0
-	co->data_window[data_window_type_town]=data_window("Visible Towns",co->win,NULL);
-	graphics_redraw(co);
-#endif
-}
-
-static void
-visible_polys_action(GtkWidget *w, struct container *co)
-{
-#if 0
-	co->data_window[data_window_type_street]=data_window("Visible Polys",co->win,NULL);
-	graphics_redraw(co);
-#endif
-}
-
-static void
-visible_streets_action(GtkWidget *w, struct container *co)
-{
-#if 0
-	co->data_window[data_window_type_street]=data_window("Visible Streets",co->win,NULL);
-	graphics_redraw(co);
-#endif
-}
-
-static void
-visible_points_action(GtkWidget *w, struct container *co)
-{
-#if 0
-	co->data_window[data_window_type_point]=data_window("Visible Points",co->win,NULL);
-	graphics_redraw(co);
-#endif
-}
-
 static GtkActionEntry entries[] =
 {
-	{ "DisplayMenuAction", NULL, gettext_noop("Display") },
+	{ "DisplayMenuAction", NULL, _n("Display") },
 	{ "RouteMenuAction", NULL, _n("Route") },
-	{ "Map", NULL, _n("Map") },
+	{ "FormerDestinationMenuAction", NULL, _n("Former Destinations") },
+	{ "BookmarkMenuAction", NULL, _n("Bookmarks") },
+	{ "MapMenuAction", NULL, _n("Map") },
 	{ "LayoutMenuAction", NULL, _n("Layout") },
+	{ "ProjectionMenuAction", NULL, _n("Projection") },
+	{ "VehicleMenuAction", NULL, _n("Vehicle") },
 	{ "ZoomOutAction", GTK_STOCK_ZOOM_OUT, _n("ZoomOut"), NULL, NULL, G_CALLBACK(zoom_out_action) },
 	{ "ZoomInAction", GTK_STOCK_ZOOM_IN, _n("ZoomIn"), NULL, NULL, G_CALLBACK(zoom_in_action) },
 	{ "RefreshAction", GTK_STOCK_REFRESH, _n("Refresh"), NULL, NULL, G_CALLBACK(refresh_action) },
@@ -230,11 +188,6 @@ static guint n_toggleentries = G_N_ELEMENTS (toggleentries);
 static GtkActionEntry debug_entries[] =
 {
 	{ "DataMenuAction", NULL, _n("Data") },
-	{ "VisibleBlocksAction", NULL, _n("VisibleBlocks"), NULL, NULL, G_CALLBACK(visible_blocks_action) },
-	{ "VisibleTownsAction", NULL, _n("VisibleTowns"), NULL, NULL, G_CALLBACK(visible_towns_action) },
-	{ "VisiblePolysAction", NULL, _n("VisiblePolys"), NULL, NULL, G_CALLBACK(visible_polys_action) },
-	{ "VisibleStreetsAction", NULL, _n("VisibleStreets"), NULL, NULL, G_CALLBACK(visible_streets_action) },
-	{ "VisiblePointsAction", NULL, _n("VisiblePoints"), NULL, NULL, G_CALLBACK(visible_points_action) },
 };
 
 static guint n_debug_entries = G_N_ELEMENTS (debug_entries);
@@ -378,18 +331,31 @@ static char layout[] =
 				<placeholder name=\"RouteMenuAdditions\" />\
 			</menu>\
 			<menu name=\"Data\" action=\"DataMenuAction\">\
-				<menuitem name=\"Visible Blocks\" action=\"VisibleBlocksAction\" />\
-				<menuitem name=\"Visible Towns\" action=\"VisibleTownsAction\" />\
-				<menuitem name=\"Visible Polys\" action=\"VisiblePolysAction\" />\
-				<menuitem name=\"Visible Streets\" action=\"VisibleStreetsAction\" />\
-				<menuitem name=\"Visible Points\" action=\"VisiblePointsAction\" />\
 				<placeholder name=\"DataMenuAdditions\" />\
 			</menu>\
 			<menu name=\"Route\" action=\"RouteMenuAction\">\
 				<menuitem name=\"Refresh\" action=\"RefreshAction\" />\
 				<menuitem name=\"Destination\" action=\"DestinationAction\" />\
 				<menuitem name=\"Clear\" action=\"RouteClearAction\" />\
+				<menu name=\"FormerDestinations\" action=\"FormerDestinationMenuAction\">\
+					<placeholder name=\"FormerDestinationMenuAdditions\" />\
+				</menu>\
+				<menu name=\"Bookmarks\" action=\"BookmarkMenuAction\">\
+					<placeholder name=\"BookmarkMenuAdditions\" />\
+				</menu>\
 				<placeholder name=\"RouteMenuAdditions\" />\
+			</menu>\
+			<menu name=\"Map\" action=\"MapMenuAction\">\
+				<menu name=\"Layout\" action=\"LayoutMenuAction\">\
+					<placeholder name=\"LayoutMenuAdditions\" />\
+				</menu>\
+				<menu name=\"Projection\" action=\"ProjectionMenuAction\">\
+					<placeholder name=\"ProjectionMenuAdditions\" />\
+				</menu>\
+				<menu name=\"Vehicle\" action=\"VehicleMenuAction\">\
+					<placeholder name=\"VehicleMenuAdditions\" />\
+				</menu>\
+				<placeholder name=\"MapMenuAdditions\" />\
 			</menu>\
 		</menubar>\
 	 	<toolbar name=\"ToolBar\" action=\"BaseToolbar\" action=\"BaseToolbarAction\">\
@@ -442,8 +408,8 @@ add_menu(struct menu_priv *menu, struct menu_methods *meth, char *name, enum men
 		if (cb)
 			ret->handler_id=g_signal_connect(ret->action, "activate", G_CALLBACK(activate), ret);
 		gtk_action_group_add_action(menu->gui->dyn_group, ret->action);
-		ret->merge_id=gtk_ui_manager_new_merge_id(menu->gui->menu_manager);
-		gtk_ui_manager_add_ui( menu->gui->menu_manager, ret->merge_id, menu->path, dynname, dynname, type == menu_type_submenu ? GTK_UI_MANAGER_MENU : GTK_UI_MANAGER_MENUITEM, FALSE);
+		ret->merge_id=gtk_ui_manager_new_merge_id(menu->gui->ui_manager);
+		gtk_ui_manager_add_ui( menu->gui->ui_manager, ret->merge_id, menu->path, dynname, dynname, type == menu_type_submenu ? GTK_UI_MANAGER_MENU : GTK_UI_MANAGER_MENUITEM, FALSE);
 	}
 	ret->gui=menu->gui;
 	ret->path=g_strdup_printf("%s/%s", menu->path, dynname);
@@ -469,7 +435,7 @@ remove_menu(struct menu_priv *item, int recursive)
 		}
 	}
 	if (item->action) {
-		gtk_ui_manager_remove_ui(item->gui->menu_manager, item->merge_id);
+		gtk_ui_manager_remove_ui(item->gui->ui_manager, item->merge_id);
 		gtk_action_group_remove_action(item->gui->dyn_group, item->action);
 #if 0
 		if (item->callback)
@@ -494,9 +460,15 @@ get_toggle(struct menu_priv *menu)
 }
 
 static struct menu_methods menu_methods = {
+#if 1
 	add_menu,
 	set_toggle,
 	get_toggle,
+#else
+	NULL,
+	NULL,
+	NULL
+#endif
 };
 
 
@@ -511,66 +483,64 @@ static void
 popup_activate(struct menu_priv *menu)
 {
 #ifdef _WIN32
-	menu->widget=gtk_ui_manager_get_widget(menu->gui->menu_manager, menu->path );
+	menu->widget=gtk_ui_manager_get_widget(menu->gui->ui_manager, menu->path );
 #endif
 	gtk_menu_popup(GTK_MENU(menu->widget), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time ());
 	menu->handler_id=g_signal_connect(menu->widget, "selection-done", G_CALLBACK(popup_deactivate), menu);
+}
+
+void
+gui_gtk_ui_init(struct gui_priv *this)
+{
+	GError *error = NULL;
+	struct attr attr;
+	GtkToggleAction *toggle_action;
+
+	this->base_group = gtk_action_group_new ("BaseActions");
+	this->debug_group = gtk_action_group_new ("DebugActions");
+	this->dyn_group = gtk_action_group_new ("DynamicActions");
+	register_my_stock_icons();
+	this->ui_manager = gtk_ui_manager_new ();
+	gtk_action_group_set_translation_domain(this->base_group,"navit");
+	gtk_action_group_set_translation_domain(this->debug_group,"navit");
+	gtk_action_group_set_translation_domain(this->dyn_group,"navit");
+	gtk_action_group_add_actions (this->base_group, entries, n_entries, this);
+	gtk_action_group_add_toggle_actions (this->base_group, toggleentries, n_toggleentries, this);
+	gtk_ui_manager_insert_action_group (this->ui_manager, this->base_group, 0);
+	gtk_action_group_add_actions (this->debug_group, debug_entries, n_debug_entries, this);
+	gtk_ui_manager_insert_action_group (this->ui_manager, this->debug_group, 0);
+	gtk_ui_manager_add_ui_from_string (this->ui_manager, layout, strlen(layout), &error);
+	gtk_ui_manager_insert_action_group (this->ui_manager, this->dyn_group, 0);
+	if (error) {
+		g_message ("building menus failed: %s", error->message);
+		g_error_free (error);
+	}
+	if (navit_get_attr(this->nav, attr_cursor, &attr, NULL)) {
+		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "CursorAction"));
+		gtk_toggle_action_set_active(toggle_action, attr.u.num);
+	}
+	if (navit_get_attr(this->nav, attr_orientation, &attr, NULL)) {
+		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "OrientationAction"));
+		gtk_toggle_action_set_active(toggle_action, attr.u.num);
+	}
+	if (navit_get_attr(this->nav, attr_tracking, &attr, NULL)) {
+		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "TrackingAction"));
+		gtk_toggle_action_set_active(toggle_action, attr.u.num);
+	}
 }
 
 static struct menu_priv *
 gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, int popup, GtkWidget **widget_ret)
 {
 	struct menu_priv *ret;
-	GError *error;
 	GtkWidget *widget;
-	struct attr attr;
-	GtkToggleAction *toggle_action;
 
 	*meth=menu_methods;
 	ret=g_new0(struct menu_priv, 1);
 	ret->path=g_strdup(path);
 	ret->gui=this;
-	if (! this->menu_manager) {
-		this->base_group = gtk_action_group_new ("BaseActions");
-		this->debug_group = gtk_action_group_new ("DebugActions");
-		this->dyn_group = gtk_action_group_new ("DynamicActions");
-		register_my_stock_icons();
-		this->menu_manager = gtk_ui_manager_new ();
-		gtk_action_group_set_translation_domain(this->base_group,"navit");
-		gtk_action_group_set_translation_domain(this->debug_group,"navit");
-		gtk_action_group_set_translation_domain(this->dyn_group,"navit");
-		gtk_action_group_add_actions (this->base_group, entries, n_entries, this);
-		gtk_action_group_add_toggle_actions (this->base_group, toggleentries, n_toggleentries, this);
-		gtk_ui_manager_insert_action_group (this->menu_manager, this->base_group, 0);
-		gtk_action_group_add_actions (this->debug_group, debug_entries, n_debug_entries, this);
-		gtk_ui_manager_insert_action_group (this->menu_manager, this->debug_group, 0);
-		gtk_ui_manager_add_ui_from_string (this->menu_manager, layout, strlen(layout), &error);
-		gtk_ui_manager_insert_action_group (this->menu_manager, this->dyn_group, 0);
-		error=NULL;
-		if (error) {
-			g_message ("building menus failed: %s", error->message);
-			g_error_free (error);
-		}
-		if (navit_get_attr(this->nav, attr_cursor, &attr)) {
-			toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "CursorAction"));
-			gtk_toggle_action_set_active(toggle_action, attr.u.num);
-		} else {
-			dbg(0, "Unable to locate CursorAction\n");
-		}
-		if (navit_get_attr(this->nav, attr_orientation, &attr)) {
-			toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "OrientationAction"));
-			gtk_toggle_action_set_active(toggle_action, attr.u.num);
-		} else {
-			dbg(0, "Unable to locate OrientationAction\n");
-		}
-		if (navit_get_attr(this->nav, attr_tracking, &attr)) {
-			toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "TrackingAction"));
-			gtk_toggle_action_set_active(toggle_action, attr.u.num);
-		} else {
-			dbg(0, "Unable to locate TrackingAction\n");
-		}
-	}
-	widget=gtk_ui_manager_get_widget(this->menu_manager, path);
+
+	widget=gtk_ui_manager_get_widget(this->ui_manager, path);
 	GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
 	if (widget_ret)
 		*widget_ret=widget;
@@ -584,17 +554,13 @@ gui_gtk_ui_new (struct gui_priv *this, struct menu_methods *meth, char *path, in
 	return ret;
 }
 
-struct menu_priv *
-gui_gtk_toolbar_new(struct gui_priv *this, struct menu_methods *meth)
-{
-	return gui_gtk_ui_new(this, meth, "/ui/ToolBar", 0, NULL);
-}
-
+#if 0
 struct menu_priv *
 gui_gtk_menubar_new(struct gui_priv *this, struct menu_methods *meth)
 {
 	return gui_gtk_ui_new(this, meth, "/ui/MenuBar", 0, &this->menubar);
 }
+#endif
 
 struct menu_priv *
 gui_gtk_popup_new(struct gui_priv *this, struct menu_methods *meth)
