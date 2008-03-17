@@ -11,8 +11,6 @@
 #include "projection.h"
 #include "point.h"
 #include "graphics.h"
-#include "statusbar.h"
-#include "menu.h"
 #include "vehicle.h"
 #include "navit.h"
 #include "callback.h"

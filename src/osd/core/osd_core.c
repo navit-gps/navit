@@ -100,11 +100,11 @@ osd_compass_draw(struct compass *this, struct navit *nav, struct vehicle *v)
 	p.x=30;
 	p.y=30;
 	graphics_draw_circle(this->gr, this->white, &p, 50);
-	if (v && vehicle_position_attr_get(v, attr_position_direction, &attr_dir)) {
+	if (v && vehicle_get_attr(v, attr_position_direction, &attr_dir)) {
 		vdir=*attr_dir.u.numd;
 		handle(this->gr, this->white, &p, 20, -vdir);
 	}
-	if (navit_get_attr(nav, attr_destination, &destination_attr) && v && vehicle_position_attr_get(v, attr_position_coord_geo, &position_attr)) {
+	if (navit_get_attr(nav, attr_destination, &destination_attr, NULL) && v && vehicle_get_attr(v, attr_position_coord_geo, &position_attr)) {
 		pro=destination_attr.u.pcoord->pro;
 		transform_from_geo(pro, position_attr.u.coord_geo, &c1);
 		c2.x=destination_attr.u.pcoord->x;

@@ -7,6 +7,8 @@ extern "C" {
 #ifndef ATTR_H
 #define ATTR_H
 
+#include "projection.h"
+
 enum item_type;
 
 enum attr_type {
@@ -31,11 +33,15 @@ struct attr {
 		int num;
 		struct item *item;
 		enum item_type item_type;
+		enum projection projection;
 		double * numd;
 		struct color *color;
 		struct coord_geo *coord_geo;
 		struct navit *navit;
 		struct callback *callback;
+		struct vehicle *vehicle;
+		struct layout *layout;
+		struct map *map;
 		struct log *log;
 		struct route *route;
 		struct navigation *navigation;

@@ -33,6 +33,7 @@
 #include "color.h"
 #include "layout.h"
 #include "log.h"
+#include "attr.h"
 
 #define _(STRING)    gettext(STRING)
 /**
@@ -41,7 +42,9 @@
  */
 
 struct navit_vehicle {
+#if 0
 	char *name;
+#endif
 	int update;
 	int update_curr;
 	int follow;
@@ -71,8 +74,6 @@ struct navit {
 	struct transformation *trans;
 	struct compass *compass;
 	struct menu *menu;
-	struct menu *toolbar;
-	struct statusbar *statusbar;
 	struct menu *menubar;
 	struct route *route;
 	struct navigation *navigation;
@@ -104,6 +105,13 @@ struct navit {
 };
 
 struct gui *main_loop_gui;
+
+struct attr_iter {
+	union {
+		GList *list;
+		struct mapset_handle *mapset_handle;
+	} u;
+};
 
 static void navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv);
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt);
@@ -400,8 +408,6 @@ navit_set_gui(struct navit *this_, struct gui *gui, char *type)
 		}
 	}
 	this_->menubar=gui_menubar_new(this_->gui);
-	this_->toolbar=gui_toolbar_new(this_->gui);
-	this_->statusbar=gui_statusbar_new(this_->gui);
 }
 
 void
@@ -418,15 +424,6 @@ struct graphics *
 navit_get_graphics(struct navit *this_)
 {
 	return this_->gra;
-}
-
-static void
-navit_map_toggle(struct menu *menu, struct navit *this_, struct map *map)
-{
-	if ((menu_get_toggle(menu) != 0) != (map_get_active(map) != 0)) {
-		map_set_active(map, (menu_get_toggle(menu) != 0));
-		navit_draw(this_);
-	}
 }
 
 static void
@@ -467,18 +464,6 @@ navit_add_menu_destinations(struct navit *this_, char *name, struct menu *rmen, 
 	}
 }
 
-static const char *
-navit_proj2str(enum projection pro)
-{
-	switch (pro) {
-		case projection_mg:
-			return "mg";
-		case projection_garmin:
-			return "garmin";
-		default:
-			return "";
-	}
-}
 static void
 navit_append_coord(struct navit *this_, char *file, struct pcoord *c, char *type, char *description, struct menu *rmen, GHashTable *h, void (*cb_func)(void))
 {
@@ -492,7 +477,7 @@ navit_append_coord(struct navit *this_, char *file, struct pcoord *c, char *type
 	if (f) {
 		offset=ftell(f);
 		if (c) {
-			prostr = navit_proj2str(c->pro);
+			prostr = projection_to_name(c->pro);
 			fprintf(f,"%s%s0x%x 0x%x type=%s label=\"%s\"\n",
 				 prostr, *prostr ? ":" : "", c->x, c->y, type, description);
 		} else
@@ -618,64 +603,6 @@ navit_add_bookmark(struct navit *this_, struct pcoord *c, char *description)
 
 struct navit *global_navit;
 
-void
-navit_add_menu_layouts(struct navit *this_, struct menu *men)
-{
-	GList *layouts;
-	struct layout *l;
-	struct callback *cb;
-
-	layouts = this_->layouts;
-	while (layouts) {
-		l=layouts->data;
-		cb=callback_new_2(callback_cast(navit_set_attr), this_, attr_new_from_text("layout",l->name));
-		menu_add(men, l->name, menu_type_menu, cb);
-		layouts=g_list_next(layouts);
-	}
-}
-
-void
-navit_add_menu_layout(struct navit *this_, struct menu *men)
-{
-	navit_add_menu_layouts(this_, menu_add(men, _("Layout"), menu_type_submenu, NULL));
-}
-
-void
-navit_add_menu_projections(struct navit *this_, struct menu *men)
-{
-	struct callback *cb;
-	cb=callback_new_2(callback_cast(navit_projection_set), this_, (void *)projection_mg);
-	menu_add(men, "M&G", menu_type_menu, cb);
-	cb=callback_new_2(callback_cast(navit_projection_set), this_, (void *)projection_garmin);
-	menu_add(men, "Garmin", menu_type_menu, cb);
-}
-
-void
-navit_add_menu_projection(struct navit *this_, struct menu *men)
-{
-	navit_add_menu_projections(this_, menu_add(men, _("Projection"), menu_type_submenu, NULL));
-}
-
-void
-navit_add_menu_maps(struct navit *this_, struct mapset *ms, struct menu *men)
-{
-	struct mapset_handle *handle;
-	struct map *map;
-	struct menu *mmen;
-	struct callback *cb;
-
-	handle=mapset_open(ms);
-	while ((map=mapset_next(handle,0))) {
-		char *s=g_strdup_printf("%s:%s", map_get_type(map), map_get_filename(map));
-		cb=callback_new_3(callback_cast(navit_map_toggle), NULL, this_, map);
-		mmen=menu_add(men, s, menu_type_toggle, cb);
-		callback_set_arg(cb, 0, mmen);
-		menu_set_toggle(mmen, map_get_active(map));
-		g_free(s);
-	}
-	mapset_close(handle);
-}
-
 static void
 navit_add_menu_destinations_from_file(struct navit *this_, char *file, struct menu *rmen, GHashTable *h, struct route *route, void (*cb_func)(void))
 {
@@ -707,7 +634,7 @@ navit_add_menu_destinations_from_file(struct navit *this_, char *file, struct me
 	}
 }
 
-void
+static void
 navit_add_menu_former_destinations(struct navit *this_, struct menu *men, struct route *route)
 {
 	if (men)
@@ -717,7 +644,7 @@ navit_add_menu_former_destinations(struct navit *this_, struct menu *men, struct
 	navit_add_menu_destinations_from_file(this_, "destination.txt", this_->destinations, NULL, route, callback_cast(navit_set_destination_from_destination));
 }
 
-void
+static void
 navit_add_menu_bookmarks(struct navit *this_, struct menu *men)
 {
 	if (men)
@@ -725,42 +652,6 @@ navit_add_menu_bookmarks(struct navit *this_, struct menu *men)
 	else
 		this_->bookmarks=NULL;
 	navit_add_menu_destinations_from_file(this_, "bookmark.txt", this_->bookmarks, this_->bookmarks_hash, NULL, callback_cast(navit_set_destination_from_bookmark));
-}
-
-static void
-navit_vehicle_toggle(struct navit *this_, struct navit_vehicle *nv)
-{
-	if (menu_get_toggle(nv->menu)) {
-		if (this_->vehicle && this_->vehicle != nv)
-			menu_set_toggle(this_->vehicle->menu, 0);
-		this_->vehicle=nv;
-	} else {
-		if (this_->vehicle == nv)
-			this_->vehicle=NULL;
-	}
-}
-
-void
-navit_add_menu_vehicles(struct navit *this_, struct menu *men)
-{
-	struct navit_vehicle *nv;
-	struct callback *cb;
-	GList *l;
-	l=this_->vehicles;
-	while (l) {
-		nv=l->data;
-		cb=callback_new_2(callback_cast(navit_vehicle_toggle), this_, nv);
-		nv->menu=menu_add(men, nv->name, menu_type_toggle, cb);
-		menu_set_toggle(nv->menu, this_->vehicle == nv);
-		l=g_list_next(l);
-	}
-}
-
-void
-navit_add_menu_vehicle(struct navit *this_, struct menu *men)
-{
-	men=menu_add(men, _("Vehicle"), menu_type_submenu, NULL);
-	navit_add_menu_vehicles(this_, men);
 }
 
 static void
@@ -1059,7 +950,7 @@ navit_add_window_items(struct navit *this_, struct navit_window_items *nwi)
 	this_->windows_items=g_list_append(this_->windows_items, nwi);
 }
 
-void
+static void
 navit_add_menu_windows_items(struct navit *this_, struct menu *men)
 {
 	struct navit_window_items *nwi;
@@ -1133,21 +1024,7 @@ navit_init(struct navit *this_)
 			}
 			navigation_set_mapset(this_->navigation, ms);
 		}
-		if (this_->menubar) {
-			men=menu_add(this_->menubar, _("Map"), menu_type_submenu, NULL);
-			if (men) {
-				navit_add_menu_layout(this_, men);
-				navit_add_menu_projection(this_, men);
-				navit_add_menu_vehicle(this_, men);
-				navit_add_menu_maps(this_, ms, men);
-			}
-			men=menu_add(this_->menubar, _("Route"), menu_type_submenu, NULL);
-			if (men) {
-				navit_add_menu_former_destinations(this_, men, this_->route);
-				navit_add_menu_bookmarks(this_, men);
-			}
-		} else
-			navit_add_menu_former_destinations(this_, NULL, this_->route);
+		navit_add_menu_former_destinations(this_, NULL, this_->route);
 	}
 	if (this_->navigation && this_->speech) {
 		this_->nav_speech_cb=callback_new_1(callback_cast(navit_speak), this_);
@@ -1221,8 +1098,6 @@ navit_set_center_screen(struct navit *this_, struct point *p)
 int
 navit_set_attr(struct navit *this_, struct attr *attr)
 {
-	GList *layouts;
-	struct layout *l;
 	int dir=0, orient_old=0, attr_updated=0;
 
 	switch (attr->type) {
@@ -1232,9 +1107,10 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 			attr_updated=1;
 		}
 		break;
-	case attr_tracking:
-		if (this_->tracking_flag != !!attr->u.num) {
-			this_->tracking_flag=!!attr->u.num;
+	case attr_layout:
+		if(this_->layout_current!=attr->u.layout) {
+			this_->layout_current=attr->u.layout;
+			navit_draw(this_);
 			attr_updated=1;
 		}
 		break;
@@ -1254,16 +1130,29 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 			attr_updated=1;
 		}
 		break;
-	case attr_layout:
-		layouts = this_->layouts;
-		while (layouts) {
-			l=layouts->data;
-			if(!strcmp(attr->u.str,l->name) && this_->layout_current!=l) {
-				this_->layout_current=l;
-				navit_draw(this_);
-				attr_updated=1;
+	case attr_projection:
+		if(this_->trans && transform_get_projection(this_->trans) != attr->u.projection) {
+			navit_projection_set(this_, attr->u.projection);
+			attr_updated=1;
+		}
+		break;
+	case attr_tracking:
+		if (this_->tracking_flag != !!attr->u.num) {
+			this_->tracking_flag=!!attr->u.num;
+			attr_updated=1;
+		}
+		break;
+	case attr_vehicle:
+		if (this_->vehicle && this_->vehicle->vehicle != attr->u.vehicle) {
+			GList *l;
+			l=this_->vehicles;
+			while(l) {
+				if (((struct navit_vehicle *)l->data)->vehicle == attr->u.vehicle) {
+					this_->vehicle=(struct navit_vehicle *)l;
+					attr_updated=1;
+				}
+				l=g_list_next(l);
 			}
-			layouts=g_list_next(layouts);
 		}
 		break;
 	default:
@@ -1276,25 +1165,75 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 }
 
 int
-navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr)
+navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
 	switch (type) {
 	case attr_cursor:
 		attr->u.num=this_->cursor_flag;
 		break;
-	case attr_tracking:
-		attr->u.num=this_->tracking_flag;
-		break;
-	case attr_orientation:
-		attr->u.num=this_->orient_north_flag;
-		break;
-	case attr_layout:
-		attr->u.str=g_strdup(this_->layout_current->name);
-		break;
 	case attr_destination:
 		if (! this_->destination_valid)
 			return 0;
 		attr->u.pcoord=&this_->destination;
+		break;
+	case attr_layout:
+		if (iter) {
+			if (iter->u.list) {
+				iter->u.list=g_list_next(iter->u.list);
+			} else { 
+				iter->u.list=this_->layouts;
+			}
+			if (!iter->u.list)
+				return 0;
+			attr->u.layout=(struct layout *)iter->u.list->data;
+		} else {
+			attr->u.layout=this_->layout_current;
+		}
+		break;
+	case attr_map:
+		if (iter && this_->mapsets) {
+			if (!iter->u.mapset_handle) {
+				iter->u.mapset_handle=mapset_open((struct mapset *)this_->mapsets->data);
+			}
+			attr->u.map=mapset_next(iter->u.mapset_handle, 0);
+			if(!attr->u.map) {
+				mapset_close(iter->u.mapset_handle);
+				return 0;
+			}
+		} else {
+			return 0;
+		}
+		break;
+	case attr_orientation:
+		attr->u.num=this_->orient_north_flag;
+		break;
+	case attr_projection:
+		if(this_->trans) {
+			attr->u.num=transform_get_projection(this_->trans);
+		} else {
+			return 0;
+		}
+		break;
+	case attr_tracking:
+		attr->u.num=this_->tracking_flag;
+		break;
+	case attr_vehicle:
+		if(iter) {
+			if(iter->u.list) {
+				iter->u.list=g_list_next(iter->u.list);
+			} else { 
+				iter->u.list=this_->vehicles;
+			}
+			if(!iter->u.list)
+				return 0;
+			attr->u.vehicle=((struct navit_vehicle*)iter->u.list->data)->vehicle;
+		} else {
+			if(this_->vehicle) {
+				attr->u.vehicle=this_->vehicle->vehicle;
+			} else {
+				return 0;
+			}
+		}
 		break;
 	default:
 		return 0;
@@ -1329,6 +1268,18 @@ navit_add_attr(struct navit *this_, struct attr *attr, struct attr **attrs)
 		return 0;
 	}
 	return 1;
+}
+
+struct attr_iter *
+navit_attr_iter_new()
+{
+	return g_new0(struct attr_iter, 1);
+}
+
+void
+navit_attr_iter_destroy(struct attr_iter *iter)
+{
+	g_free(iter);
 }
 
 void
@@ -1381,9 +1332,9 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	if (! this_->ready)
 		return;
 
-	if (! vehicle_position_attr_get(nv->vehicle, attr_position_direction, &attr_dir) ||
-	    ! vehicle_position_attr_get(nv->vehicle, attr_position_speed, &attr_speed) ||
-	    ! vehicle_position_attr_get(nv->vehicle, attr_position_coord_geo, &attr_pos))
+	if (! vehicle_get_attr(nv->vehicle, attr_position_direction, &attr_dir) ||
+	    ! vehicle_get_attr(nv->vehicle, attr_position_speed, &attr_speed) ||
+	    ! vehicle_get_attr(nv->vehicle, attr_position_coord_geo, &attr_pos))
 		return;
 	nv->dir=*attr_dir.u.numd;
 	nv->speed=*attr_speed.u.numd;
@@ -1481,14 +1432,11 @@ struct navit_vehicle *
 navit_add_vehicle(struct navit *this_, struct vehicle *v, struct attr **attrs)
 {
 	struct navit_vehicle *nv=g_new0(struct navit_vehicle, 1);
-	struct attr *name,*update,*follow,*color,*active, *color2, *animate;
+	struct attr *update,*follow,*color,*active, *color2, *animate;
 	nv->vehicle=v;
 	nv->update=1;
 	nv->follow=0;
 	nv->animate_cursor=0;
-	nv->name="Noname";
-	if ((name=attr_search(attrs, NULL, attr_name)))
-		nv->name=g_strdup(name->u.str);
 	if ((update=attr_search(attrs, NULL, attr_update)))
 		nv->update=nv->update=update->u.num;
 	if ((follow=attr_search(attrs, NULL, attr_follow)))

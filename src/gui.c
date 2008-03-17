@@ -1,7 +1,6 @@
 #include <glib.h>
 #include "debug.h"
 #include "gui.h"
-#include "statusbar.h"
 #include "menu.h"
 #include "data_window.h"
 #include "plugin.h"
@@ -21,21 +20,6 @@ gui_new(struct navit *nav, const char *type, struct attr **attrs)
 	return this_;
 }
 
-struct statusbar *
-gui_statusbar_new(struct gui *gui)
-{
-	struct statusbar *this_;
-	if (! gui->meth.statusbar_new)
-		return NULL;
-	this_=g_new0(struct statusbar, 1);
-	this_->priv=gui->meth.statusbar_new(gui->priv, &this_->meth);
-	if (! this_->priv) {
-		g_free(this_);
-		return NULL;
-	}
-	return this_;
-}
-
 struct menu *
 gui_menubar_new(struct gui *gui)
 {
@@ -44,22 +28,6 @@ gui_menubar_new(struct gui *gui)
 		return NULL;
 	this_=g_new0(struct menu, 1);
 	this_->priv=gui->meth.menubar_new(gui->priv, &this_->meth);
-	if (! this_->priv) {
-		g_free(this_);
-		return NULL;
-	}
-	return this_;
-}
-
-
-struct menu *
-gui_toolbar_new(struct gui *gui)
-{
-	struct menu *this_;
-	if (! gui->meth.toolbar_new)
-		return NULL;
-	this_=g_new0(struct menu, 1);
-	this_->priv=gui->meth.toolbar_new(gui->priv, &this_->meth);
 	if (! this_->priv) {
 		g_free(this_);
 		return NULL;
