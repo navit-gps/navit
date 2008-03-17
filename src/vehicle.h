@@ -18,7 +18,7 @@ struct vehicle_methods {
 
 /* prototypes */
 struct vehicle *vehicle_new(struct attr **attrs);
-int vehicle_position_attr_get(struct vehicle *this_, enum attr_type type, struct attr *attr);
+int vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr);
 int vehicle_set_attr(struct vehicle *this_, struct attr *attr, struct attr **attrs);
 int vehicle_add_attr(struct vehicle *this_, struct attr *attr, struct attr **attrs);
 int vehicle_remove_attr(struct vehicle *this_, struct attr *attr);

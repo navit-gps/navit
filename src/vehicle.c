@@ -11,6 +11,7 @@
 #include "vehicle.h"
 
 struct vehicle {
+	char *name;
 	struct vehicle_priv *priv;
 	struct vehicle_methods meth;
 	struct callback_list *cbl;
@@ -94,6 +95,7 @@ vehicle_new(struct attr **attrs)
 						 cbl,
 						 struct attr ** attrs);
 	char *type, *colon;
+	struct attr *name;
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
@@ -124,17 +126,30 @@ vehicle_new(struct attr **attrs)
 	}
 	dbg(1, "leave\n");
 
+	if ((name=attr_search(attrs, NULL, attr_name))) {
+		this_->name=g_strdup(name->u.str);
+	} else {
+		this_->name=g_strdup("Noname");
+	}
 	return this_;
 }
 
 int
-vehicle_position_attr_get(struct vehicle *this_, enum attr_type type,
-			  struct attr *attr)
+vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr)
 {
-	if (this_->meth.position_attr_get)
-		return this_->meth.position_attr_get(this_->priv, type,
-						     attr);
-	return 0;
+	switch (type) {
+	case attr_name:
+		attr->u.str=this_->name;
+		break;
+	default:
+		if (this_->meth.position_attr_get) {
+			return this_->meth.position_attr_get(this_->priv, type, attr);
+		} else {
+			return 0;
+		}
+	}
+	attr->type=type;
+	return 1;
 }
 
 int
@@ -179,5 +194,6 @@ void
 vehicle_destroy(struct vehicle *this_)
 {
 	callback_list_destroy(this_->cbl);
+	if(this_->name) g_free(this_->name);
 	g_free(this_);
 }

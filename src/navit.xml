@@ -30,7 +30,7 @@ Change to your home coordinates.
 	<vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1" refresh="1"/>
 	-->
 	
-	<vehicle name="Deins" enabled="no" source="gpsd://somehost" color="#0000aa"/> 
+	<vehicle name="Demo" enabled="yes" source="demo://" color="#0000aa"/> 
 	<tracking>
 	</tracking>
 	<route>

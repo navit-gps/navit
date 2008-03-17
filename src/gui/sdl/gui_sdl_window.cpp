@@ -409,17 +409,6 @@ bool FormerDestGo(const char * name)
 	}
 
 }
-static struct menu_priv *
-gui_sdl_toolbar_new(struct gui_priv *this_, struct menu_methods *meth)
-{
-	return NULL; //gui_gtk_ui_new(this_, meth, "/ui/ToolBar", nav, 0);
-}
-
-static struct statusbar_priv *
-gui_sdl_statusbar_new(struct gui_priv *gui, struct statusbar_methods *meth)
-{
-	return NULL; //gui_gtk_ui_new(this_, meth, "/ui/ToolBar", nav, 0);
-}
 
 static struct menu_priv *
 gui_sdl_menubar_new(struct gui_priv *this_, struct menu_methods *meth)
@@ -436,8 +425,6 @@ gui_sdl_popup_new(struct gui_priv *this_, struct menu_methods *meth)
 
 struct gui_methods gui_sdl_methods = {
 	gui_sdl_menubar_new,
-	gui_sdl_toolbar_new,
-	gui_sdl_statusbar_new,
 	gui_sdl_popup_new,
 	gui_sdl_set_graphics,
 	gui_run_main_loop,
@@ -750,21 +737,21 @@ static void vehicle_callback_handler( struct navit *nav, struct vehicle *v){
 	struct attr attr;
 	int sats=0, sats_used=0;
 
-	if (vehicle_position_attr_get(v, attr_position_speed, &attr))
+	if (vehicle_get_attr(v, attr_position_speed, &attr))
 		sprintf (buffer, "%02.02f km/h", *attr.u.numd);
 	else
 		strcpy (buffer, "N/A");
   	CEGUI::WindowManager::getSingleton().getWindow("OSD/SpeedoMeter")->setText(buffer);
 
-	if (vehicle_position_attr_get(v, attr_position_height, &attr))
+	if (vehicle_get_attr(v, attr_position_height, &attr))
 		sprintf (buffer, "%.f m", *attr.u.numd);
 	else
 		strcpy (buffer, "N/A");
  	CEGUI::WindowManager::getSingleton().getWindow("OSD/Altimeter")->setText(buffer);
 
-	if (vehicle_position_attr_get(v, attr_position_sats, &attr))
+	if (vehicle_get_attr(v, attr_position_sats, &attr))
 		sats=attr.u.num;
-	if (vehicle_position_attr_get(v, attr_position_sats_used, &attr))
+	if (vehicle_get_attr(v, attr_position_sats_used, &attr))
 		sats_used=attr.u.num;
 // 	printf(" sats : %i, used %i: \n",sats,sats_used);
 	// Sat image hardcoded for now. may break the TaharezSkin
