@@ -1,4 +1,5 @@
 #include <glib.h>
+#include <string.h>
 #include "debug.h"
 #include "gui.h"
 #include "menu.h"
