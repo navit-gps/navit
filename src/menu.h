@@ -25,8 +25,6 @@ struct menu {
 
 /* prototypes */
 struct menu *menu_add(struct menu *menu, char *name, enum menu_type type, struct callback *cb);
-void menu_set_toggle(struct menu *menu, int active);
-int menu_get_toggle(struct menu *menu);
 void menu_popup(struct menu *menu);
 /* end of prototypes */
 #endif

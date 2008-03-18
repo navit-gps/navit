@@ -42,9 +42,6 @@
  */
 
 struct navit_vehicle {
-#if 0
-	char *name;
-#endif
 	int update;
 	int update_curr;
 	int follow;
@@ -54,7 +51,6 @@ struct navit_vehicle {
 	int speed;
 	struct color c;
 	struct color *c2;
-	struct menu *menu;
 	struct cursor *cursor;
 	struct vehicle *vehicle;
 	struct attr callback;
@@ -73,8 +69,6 @@ struct navit {
 	struct action *action;
 	struct transformation *trans;
 	struct compass *compass;
-	struct menu *menu;
-	struct menu *menubar;
 	struct route *route;
 	struct navigation *navigation;
 	struct speech *speech;
@@ -93,6 +87,8 @@ struct navit {
 	struct callback *nav_speech_cb;
 	struct callback *roadbook_callback;
 	struct datawindow *roadbook_window;
+	struct map *bookmark;
+	struct map *former_destination;
 	struct menu *bookmarks;
 	GHashTable *bookmarks_hash;
 	struct menu *destinations;
@@ -407,7 +403,6 @@ navit_set_gui(struct navit *this_, struct gui *gui, char *type)
 			return;
 		}
 	}
-	this_->menubar=gui_menubar_new(this_->gui);
 }
 
 void
@@ -596,7 +591,7 @@ navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
  * @returns nothing
  */
 void
-navit_add_bookmark(struct navit *this_, struct pcoord *c, char *description)
+navit_add_bookmark(struct navit *this_, struct pcoord *c, const char *description)
 {
 	navit_append_coord(this_,"bookmark.txt", c, "bookmark", description, this_->bookmarks, this_->bookmarks_hash, callback_cast(navit_set_destination_from_bookmark));
 }
@@ -653,6 +648,25 @@ navit_add_menu_bookmarks(struct navit *this_, struct menu *men)
 		this_->bookmarks=NULL;
 	navit_add_menu_destinations_from_file(this_, "bookmark.txt", this_->bookmarks, this_->bookmarks_hash, NULL, callback_cast(navit_set_destination_from_bookmark));
 }
+
+static void
+navit_add_bookmarks_from_file(struct navit *this_)
+{
+	struct attr type={attr_type, {"textfile"}}, data={attr_data, {"bookmark.txt"}};
+	struct attr *attrs[]={&type, &data, NULL};
+
+	this_->bookmark=map_new("textfile", attrs);
+}
+
+static void
+navit_add_former_destinations_from_file(struct navit *this_)
+{
+	struct attr type={attr_type, {"textfile"}}, data={attr_data, {"destination.txt"}};
+	struct attr *attrs[]={&type, &data, NULL};
+
+	this_->former_destination=map_new("textfile", attrs);
+}
+
 
 static void
 navit_textfile_debug_log(struct navit *this_, const char *fmt, ...)
@@ -968,7 +982,6 @@ navit_add_menu_windows_items(struct navit *this_, struct menu *men)
 void
 navit_init(struct navit *this_)
 {
-	struct menu *men;
 	struct mapset *ms;
 	struct map *map;
 	GList *l;
@@ -1024,18 +1037,22 @@ navit_init(struct navit *this_)
 			}
 			navigation_set_mapset(this_->navigation, ms);
 		}
+		navit_add_bookmarks_from_file(this_);
+		navit_add_former_destinations_from_file(this_);
 		navit_add_menu_former_destinations(this_, NULL, this_->route);
 	}
 	if (this_->navigation && this_->speech) {
 		this_->nav_speech_cb=callback_new_1(callback_cast(navit_speak), this_);
 		navigation_register_callback(this_->navigation, attr_navigation_speech, this_->nav_speech_cb);
 	}
+#if 0
 	if (this_->menubar) {
 		men=menu_add(this_->menubar, "Data", menu_type_submenu, NULL);
 		if (men) {
 			navit_add_menu_windows_items(this_, men);
 		}
 	}
+#endif
 	global_navit=this_;
 #if 0
 	navit_window_roadbook_new(this_);
@@ -1168,6 +1185,9 @@ int
 navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
 	switch (type) {
+	case attr_bookmark_map:
+		attr->u.map=this_->bookmark;
+		break;
 	case attr_cursor:
 		attr->u.num=this_->cursor_flag;
 		break;
@@ -1175,6 +1195,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		if (! this_->destination_valid)
 			return 0;
 		attr->u.pcoord=&this_->destination;
+		break;
+	case attr_former_destination_map:
+		attr->u.map=this_->former_destination;
 		break;
 	case attr_layout:
 		if (iter) {
