@@ -403,26 +403,9 @@ gui_gtk_bookmarks_init(struct gui_priv *this)
 static void
 gui_gtk_init(struct gui_priv *this, struct navit *nav)
 {
-	GtkWidget *widget;
 
-	gui_gtk_ui_init(this);
 
 	gui_gtk_toggle_init(this);
-	if (this->menubar_enable) {
-		widget=gtk_ui_manager_get_widget(this->ui_manager, "/ui/MenuBar");
-		GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
-		gtk_box_pack_start (GTK_BOX(this->vbox), widget, FALSE, FALSE, 0);
-		gtk_widget_show (widget);
-	}
-	if (this->toolbar_enable) {
-		widget=gtk_ui_manager_get_widget(this->ui_manager, "/ui/ToolBar");
-		GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
-		gtk_box_pack_start (GTK_BOX(this->vbox), widget, FALSE, FALSE, 0);
-		gtk_widget_show (widget);
-	}
-	if (this->statusbar_enable) {
-		this->statusbar=gui_gtk_statusbar_new(this);
-	}
 	gui_gtk_layouts_init(this);
 	gui_gtk_projections_init(this);
 	gui_gtk_vehicles_init(this);
@@ -439,6 +422,7 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	char *cp = getenv("NAVIT_XID");
 	unsigned xid = 0;
 	struct attr *attr;
+	GtkWidget *widget;
 
 	if (cp) {
 		xid = strtol(cp, NULL, 0);
@@ -478,6 +462,22 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	gtk_window_set_default_size(GTK_WINDOW(this->win), w, h);
 	gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
 	gtk_widget_realize(this->win);
+	gui_gtk_ui_init(this);
+	if (this->menubar_enable) {
+		widget=gtk_ui_manager_get_widget(this->ui_manager, "/ui/MenuBar");
+		GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
+		gtk_box_pack_start (GTK_BOX(this->vbox), widget, FALSE, FALSE, 0);
+		gtk_widget_show (widget);
+	}
+	if (this->toolbar_enable) {
+		widget=gtk_ui_manager_get_widget(this->ui_manager, "/ui/ToolBar");
+		GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
+		gtk_box_pack_start (GTK_BOX(this->vbox), widget, FALSE, FALSE, 0);
+		gtk_widget_show (widget);
+	}
+	if (this->statusbar_enable) {
+		this->statusbar=gui_gtk_statusbar_new(this);
+	}
 	gtk_container_add(GTK_CONTAINER(this->win), this->vbox);
 	gtk_widget_show_all(this->win);
 
