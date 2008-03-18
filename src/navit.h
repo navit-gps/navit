@@ -43,7 +43,7 @@ void navit_set_gui(struct navit *this_, struct gui *gui, char *type);
 void navit_set_graphics(struct navit *this_, struct graphics *gra, char *type);
 struct graphics *navit_get_graphics(struct navit *this_);
 void navit_set_destination(struct navit *this_, struct pcoord *c, char *description);
-void navit_add_bookmark(struct navit *this_, struct pcoord *c, char *description);
+void navit_add_bookmark(struct navit *this_, struct pcoord *c, const char *description);
 void navit_speak(struct navit *this_);
 void navit_window_roadbook_destroy(struct navit *this_);
 void navit_window_roadbook_new(struct navit *this_);
