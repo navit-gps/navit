@@ -14,9 +14,11 @@ Center coordinates format:
 Change to your home coordinates.
 -->
 <navit center="4808 N 1134 E" zoom="256" tracking="1" cursor="1" orientation="0">
+<!--
 	<osd type="compass" />
 	<osd type="eta" />
 	<osd type="navigation" />
+-->
 	<gui type="gtk" menubar="1" toolbar="1" statusbar="1" />
 	<graphics type="gtk_drawing_area" />
 <!-- For SDL, use rather the following lines
@@ -24,7 +26,7 @@ Change to your home coordinates.
 	<graphics type="opengl" />
 -->
 	
-	<vehicle name="Meins" enabled="yes" active="1" source="demo://" gpsd_query="w+xjr+" color="#0000ff" color2="#ff000000"/>
+	<vehicle name="Meins" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xjr+" color="#0000ff"/>
 	<!-- To improve visibility of the cursor in gtk, you may optionally add:
 		color2="#rrggbb"  - draws a second cursor inside the original, in the specified colour
 		animate="1" - animates the cursor, as series of moving dots
@@ -33,7 +35,7 @@ Change to your home coordinates.
 	<vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1" refresh="1"/>
 	-->
 	
-	<vehicle name="Demo" enabled="yes" source="demo://" color="#0000aa"/> 
+	<vehicle name="Demo" enabled="no" source="demo://" color="#0000aa"/> 
 	<tracking>
 	</tracking>
 	<route>
