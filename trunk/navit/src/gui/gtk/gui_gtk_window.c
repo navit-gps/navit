@@ -53,8 +53,10 @@ static gboolean
 keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 {
 	int w,h;
+	#ifdef USE_HILDON
 	GtkToggleAction *action;
 	gboolean *fullscreen;
+	#endif /*HILDON*/
 	struct point p;
 	if (event->type != GDK_KEY_PRESS)
 		return FALSE;
@@ -169,11 +171,7 @@ gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description)
 }
 
 struct gui_methods gui_gtk_methods = {
-#if 0
-	gui_gtk_menubar_new,
-#else
 	NULL,
-#endif
 	gui_gtk_popup_new,
 	gui_gtk_set_graphics,
 	NULL,
@@ -373,16 +371,19 @@ gui_gtk_maps_init(struct gui_priv *this)
 static void
 gui_gtk_destinations_init(struct gui_priv *this)
 {
+	struct attr attr;
 	struct action_cb_data *data;
 
-	data=g_new(struct action_cb_data, 1);
-	data->gui=this;
-	data->attr.type=attr_destination;
-	data->attr.u.pcoord=g_new(struct pcoord, 1);
-	data->attr.u.pcoord->pro=projection_mg;
-	data->attr.u.pcoord->x=0x13a3e2;
-	data->attr.u.pcoord->y=0x5d6d6a;
-	gui_gtk_add_menu(this, "Destination 1", "Muenchen","/ui/MenuBar/Route/FormerDestinations/FormerDestinationMenuAdditions",data); 
+	if(navit_get_attr(this->nav, attr_former_destination_map, &attr, NULL) && attr.u.map) {
+		data=g_new(struct action_cb_data, 1);
+		data->gui=this;
+		data->attr.type=attr_destination;
+		data->attr.u.pcoord=g_new(struct pcoord, 1);
+		data->attr.u.pcoord->pro=projection_mg;
+		data->attr.u.pcoord->x=0x13a3e2;
+		data->attr.u.pcoord->y=0x5d6d6a;
+		gui_gtk_add_menu(this, "Destination 1", "Muenchen","/ui/MenuBar/Route/FormerDestinations/FormerDestinationMenuAdditions",data); 
+	}
 }
 
 static void
