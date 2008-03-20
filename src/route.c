@@ -1014,6 +1014,11 @@ street_get_data (struct item *item)
 			break;
 		count++;
 	}
+	if (count >= maxcount) {
+		dbg(0, "count=%d maxcount=%d id_hi=0x%x id_lo=0x%x\n", count, maxcount, item->id_hi, item->id_lo);
+		if (item_attr_get(item, attr_debug, &attr)) 
+			dbg(0,"debug='%s'\n", attr.u.str);
+	}
 	g_assert(count < maxcount);
 	ret=g_malloc(sizeof(struct street_data)+count*sizeof(struct coord));
 	ret->item=*item;
