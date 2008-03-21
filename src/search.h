@@ -18,6 +18,7 @@ struct search_list_town {
 	struct pcoord *c;
 	char *postal;
 	char *name;
+	char *district;
 };
 
 struct search_list_street {
