@@ -49,6 +49,7 @@ struct town_priv {
 	int aidx;
 	enum attr_type attr_next;
 	char debug[256];
+	char postal[32];
 	struct item town_attr_item;
 };
 
@@ -272,6 +273,7 @@ struct map_rect_priv {
 
 int mg_country_from_isonum(int isonum);
 int mg_country_to_isonum(int country);
+int mg_country_postal_len(int country);
 
 int block_init(struct map_rect_priv *mr);
 int block_next(struct map_rect_priv *mr);

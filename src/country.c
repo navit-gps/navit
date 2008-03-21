@@ -20,7 +20,7 @@ struct country {
 #define _(STRING)    gettext(STRING)
 #define _n(STRING)    gettext_noop(STRING)
 
-struct country country[]= {
+static struct country country[]= {
   { 20,	"AND",	"AD", "AND", /* 020 */ _n("Andorra")},
   {784,	"UAE",	"AE", "ARE", /* 784 */ _n("United Arab Emirates")},
   {  4,	"AFG",	"AF", "AFG", /* 004 */ _n("Afghanistan")},
