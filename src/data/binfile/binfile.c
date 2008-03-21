@@ -53,8 +53,7 @@ struct map_rect_priv {
 	int *end;
 	enum attr_type attr_last;
 	int label;
-	unsigned int *street_name_attr;
-	unsigned int *street_name_systematic_attr;
+	unsigned int *label_attr[2];
         struct map_selection *sel;
         struct map_priv *m;
         struct item item;
@@ -167,7 +166,7 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	struct map_rect_priv *mr=priv_data;
 	struct tile *t=mr->t;
 	enum attr_type type;
-	int size;
+	int i,size;
 
 	if (attr_type != mr->attr_last) {
 		t->pos_attr=t->pos_attr_start;
@@ -178,10 +177,12 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		type=le32_to_cpu(t->pos_attr[0]);
 		if (type == attr_label) 
 			mr->label=1;
+		if (type == attr_town_name)
+			mr->label_attr[0]=t->pos_attr;
 		if (type == attr_street_name)
-			mr->street_name_attr=t->pos_attr;
+			mr->label_attr[0]=t->pos_attr;
 		if (type == attr_street_name_systematic)
-			mr->street_name_systematic_attr=t->pos_attr;
+			mr->label_attr[1]=t->pos_attr;
 		if (type == attr_type || attr_type == attr_any) {
 			if (attr_type == attr_any) {
 				dbg(1,"pos %p attr %s size %d\n", t->pos_attr-1, attr_to_name(type), size);
@@ -194,11 +195,15 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			t->pos_attr+=size;
 		}
 	}
-	if (!mr->label && (attr_type == attr_any || attr_type == attr_label) && (mr->street_name_attr || mr->street_name_systematic_attr)) {
-		mr->label=1;
-		attr->type=attr_label;
-		attr_data_set(attr, (mr->street_name_attr ? mr->street_name_attr : mr->street_name_systematic_attr) +1);
-		return 1;
+	if (!mr->label && (attr_type == attr_any || attr_type == attr_label)) {
+		for (i = 0 ; i < sizeof(mr->label_attr)/sizeof(int *) ; i++) {
+			if (mr->label_attr[i]) {
+				mr->label=1;
+				attr->type=attr_label;
+				attr_data_set(attr, mr->label_attr[i]+1);
+				return 1;
+			}
+		}
 	}
 	return 0;
 }
@@ -390,8 +395,7 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 		mr->item.id_hi=t->zipfile_num;
 		mr->item.id_lo=t->pos-t->start;
 		mr->label=0;
-		mr->street_name_attr=NULL;
-		mr->street_name_systematic_attr=NULL;
+		memset(mr->label_attr, 0, sizeof(mr->label_attr));
 		setup_pos(mr);
 		if ((mr->item.type == type_submap) && (!mr->country_id)) {
 			struct coord_rect r;
@@ -436,8 +440,7 @@ map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 	mr->item.id_hi=id_hi;
 	mr->item.id_lo=id_lo;
 	mr->label=0;
-	mr->street_name_attr=NULL;
-	mr->street_name_systematic_attr=NULL;
+	memset(mr->label_attr, 0, sizeof(mr->label_attr));
 	setup_pos(mr);
 	return &mr->item;
 }
