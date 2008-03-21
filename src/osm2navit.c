@@ -27,6 +27,8 @@
 #define debug_tile(x) (!strcmp(x,"bcdbd") || !strcmp(x,"bcdbd") || !strcmp(x,"bcdbda") || !strcmp(x,"bcdbdb") || !strcmp(x,"bcdbdba") || !strcmp(x,"bcdbdbb") || !strcmp(x,"bcdbdbba") || !strcmp(x,"bcdbdbaa") || !strcmp(x,"bcdbdbacaa") || !strcmp(x,"bcdbdbacab") || !strcmp(x,"bcdbdbacaba") || !strcmp(x,"bcdbdbacabaa") || !strcmp(x,"bcdbdbacabab") || !strcmp(x,"bcdbdbacababb") || !strcmp(x,"bcdbdbacababba") || !strcmp(x,"bcdbdbacababbb") || !strcmp(x,"bcdbdbacababbd") || !strcmp(x,"bcdbdbacababaa") || !strcmp(x,"bcdbdbacababab") || !strcmp(x,"bcdbdbacababac") || !strcmp(x,"bcdbdbacababad") || !strcmp(x,"bcdbdbacabaaa") || !strcmp(x,"bcdbdbacabaaba") || !strcmp(x,"bcdbdbacabaabb") || !strcmp(x,"bcdbdbacabaabc") || !strcmp(x,"bcdbdbacabaabd") || !strcmp(x,"bcdbdbacabaaaa") || !strcmp(x,"bcdbdbacabaaab") || !strcmp(x,"bcdbdbacabaaac") || !strcmp(x,"bcdbdbacabaaad") || 0)
 #endif
 
+#define IS_TOWN(item) ((item).type >= type_town_label && (item).type <= type_town_label_1e7)
+#define IS_STREET(item) ((item).type >= type_street_nopass && (item).type <= type_ferry)
 
 static GHashTable *dedupe_ways_hash;
 
@@ -337,10 +339,13 @@ struct attr_bin label_attr = {
 };
 char label_attr_buffer[BUFFER_SIZE];
 
+struct attr_bin town_name_attr = {
+	0, attr_town_name
+};
+
 struct attr_bin street_name_attr = {
 	0, attr_street_name
 };
-char street_name_attr_buffer[BUFFER_SIZE];
 
 struct attr_bin street_name_systematic_attr = {
 	0, attr_street_name_systematic
@@ -366,10 +371,13 @@ static void
 pad_text_attr(struct attr_bin *a, char *buffer)
 {
 	int l;
-	l=strlen(buffer)+1;
-	while (l % 4)
-		buffer[l++]='\0';
-	a->len=l/4+1;
+	if (buffer && buffer[0]) {
+		l=strlen(buffer)+1;
+		while (l % 4)
+			buffer[l++]='\0';
+		a->len=l/4+1;
+	} else
+		a->len=0;
 }
 
 static int
@@ -454,13 +462,8 @@ add_tag(char *k, char *v)
 	if (! strcmp(k,"note"))
 		level=5;
 	if (! strcmp(k,"name")) {
-		if (in_way) {
-			strcpy(street_name_attr_buffer, v);
-			pad_text_attr(&street_name_attr, street_name_attr_buffer);
-		} else {
 		strcpy(label_attr_buffer, v);
 		pad_text_attr(&label_attr, label_attr_buffer);
-		}
 		level=5;
 	}
 	if (! strcmp(k,"ref")) {
@@ -510,10 +513,9 @@ add_tag(char *k, char *v)
 	}
 	if ( (type != type_street_unkn ) && ( type != type_point_unkn )  )
 	{
-		if (coverage && type >= type_street_nopass && type <= type_ramp)
+		item.type=type;
+		if (coverage && IS_STREET(item))
 			item.type=type_coverage;
-		else
-			item.type=type;
 	}
 	else
 	{
@@ -616,6 +618,7 @@ add_node(int id, double lat, double lon)
 	nodeid=id;
 	item.type=type_point_unkn;
 	label_attr.len=0;
+	town_name_attr.len=0;
 	debug_attr.len=0;
 	is_in_buffer[0]='\0';
 	sprintf(debug_attr_buffer,"nodeid=%d", nodeid);
@@ -727,6 +730,7 @@ add_way(int id)
 	wayid=id;
 	coord_count=0;
 	item.type=type_street_unkn;
+	label_attr.len=0;
 	street_name_attr.len=0;
 	street_name_systematic_attr.len=0;
 	debug_attr.len=0;
@@ -773,8 +777,8 @@ end_way(FILE *out)
 		g_hash_table_insert(dedupe_ways_hash, (gpointer)wayid, (gpointer)1);
 	}
 	pad_text_attr(&debug_attr, debug_attr_buffer);
-	if (street_name_attr.len)
-		alen+=street_name_attr.len+1;
+	if (label_attr.len)
+		alen+=label_attr.len+1;
 	if (street_name_systematic_attr.len)
 		alen+=street_name_systematic_attr.len+1;
 	if (debug_attr.len)
@@ -785,7 +789,11 @@ end_way(FILE *out)
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
 	fwrite(coord_buffer, coord_count*sizeof(struct coord), 1, out);
-	write_attr(out, &street_name_attr, street_name_attr_buffer);
+	if (IS_STREET(item)) {
+		street_name_attr.len=label_attr.len;
+		write_attr(out, &street_name_attr, label_attr_buffer);
+	} else
+		write_attr(out, &label_attr, label_attr_buffer);
 	write_attr(out, &street_name_systematic_attr, street_name_systematic_attr_buffer);
 	write_attr(out, &debug_attr, debug_attr_buffer);
 	write_attr(out, &flags_attr, &flags_attr_value);
@@ -808,10 +816,14 @@ end_node(FILE *out)
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
 	fwrite(&ni->c, 1*sizeof(struct coord), 1, out);
-	write_attr(out, &label_attr, label_attr_buffer);
+	if (IS_TOWN(item)) {
+		town_name_attr.len=label_attr.len;
+		write_attr(out, &town_name_attr, label_attr_buffer);
+	} else
+		write_attr(out, &label_attr, label_attr_buffer);
 	write_attr(out, &debug_attr, debug_attr_buffer);
 #ifdef GENERATE_INDEX
-	if (item.type >= type_town_label && item.type <= type_town_label_1e7 && label_attr.len) {
+	if (IS_TOWN(item) && town_name_attr.len) {
 		char *tok,*buf=is_in_buffer;
 		while ((tok=strtok(buf, ","))) {
 			while (*tok==' ')
@@ -837,7 +849,7 @@ end_node(FILE *out)
 				item.len=item.clen+2+label_attr.len+1;
 				fwrite(&item, sizeof(item), 1, result->file);
 				fwrite(&ni->c, 1*sizeof(struct coord), 1, result->file);
-				write_attr(result->file, &label_attr, label_attr_buffer);
+				write_attr(result->file, &town_name_attr, label_attr_buffer);
 				result->count++;
 				result->size+=(item.clen+3+label_attr.len+1)*4;
 			}
@@ -858,8 +870,8 @@ sort_countries_compare(const void *p1, const void *p2)
 	assert(ib2->clen==2);
 	attr1=(struct attr_bin *)((int *)(ib1+1)+ib1->clen);
 	attr2=(struct attr_bin *)((int *)(ib2+1)+ib1->clen);
-	assert(attr1->type == attr_label);
-	assert(attr2->type == attr_label);
+	assert(attr1->type == attr_town_name);
+	assert(attr2->type == attr_town_name);
 	s1=(char *)(attr1+1);
 	s2=(char *)(attr2+1);
 	return strcmp(s1, s2);
@@ -1371,7 +1383,7 @@ phase2(FILE *in, FILE *out)
 				fprintf(stderr,"ni=%p\n", ni);
 #endif
 				c[i]=ni->c;
-				if (ni->ref_way > 1 && i != 0 && i != ccount-1 && ib->type >= type_street_nopass && ib->type <= type_ferry) {
+				if (ni->ref_way > 1 && i != 0 && i != ccount-1 && IS_STREET(*ib)) {
 					write_item_part(out, ib, last, i);
 					last=i;
 				}

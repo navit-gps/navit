@@ -241,16 +241,12 @@ search_list_search_free(struct search_list *sl, int level)
 static int
 search_add_result(struct search_list_level *le, void *p)
 {
-#if 0
 	if (! g_hash_table_lookup(le->hash, p)) {
-#endif
 		g_hash_table_insert(le->hash, p, (void *)1);	
 		le->list=g_list_append(le->list, p);
 		return 1;
-#if 0
 	}
 	return 0;
-#endif
 }
 
 struct search_list_result *
