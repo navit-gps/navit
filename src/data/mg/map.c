@@ -7,9 +7,11 @@
 #include "mg.h"
 
 
-struct country_isonum {
+static struct country_isonum {
 	int country;
 	int isonum;
+	int postal_len;
+	char *postal_prefix;
 } country_isonums[]={
   {  1,203},
   {  2,703},
@@ -38,7 +40,7 @@ struct country_isonum {
   { 46,752},
   { 47,578},
   { 48,616},
-  { 49,276},
+  { 49,276,5,"D@@"},
   { 50,292},
   { 51,620},
   { 52,442},
@@ -115,6 +117,24 @@ int mg_country_to_isonum(int country)
 		if (country_isonums[i].country == country)
 			return country_isonums[i].isonum;
 	return 0;
+}
+
+int mg_country_postal_len(int country)
+{
+	int i;
+	for (i = 0 ; i < sizeof(country_isonums)/sizeof(struct country_isonum) ; i++)
+		if (country_isonums[i].country == country)
+			return country_isonums[i].postal_len;
+	return 0;
+}
+
+static char *mg_country_postal_prefix(int isonum)
+{
+	int i;
+	for (i = 0 ; i < sizeof(country_isonums)/sizeof(struct country_isonum) ; i++)
+		if (country_isonums[i].isonum == isonum)
+			return country_isonums[i].postal_prefix;
+	return NULL;
 }
 
 static int
@@ -316,6 +336,7 @@ static struct map_search_priv *
 map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, int partial)
 {
 	struct map_rect_priv *mr=g_new0(struct map_rect_priv, 1);
+	char *prefix;
 	dbg(1,"id_lo=0x%x\n", item->id_lo);
 	dbg(1,"search=%s\n", search->u.str);
 	mr->m=map;
@@ -324,9 +345,13 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
 	case attr_town_postal:
 		if (item->type != type_country_label)
 			return NULL;
+		prefix=mg_country_postal_prefix(item->id_lo);
+		if (! prefix)
+			return NULL;
 		tree_search_init(map->dirname, "town.b1", &mr->ts, 0);
 		mr->current_file=file_town_twn;
-		mr->search_str=g_strdup(search->u.str);
+		mr->search_str=g_strdup_printf("%s%s",prefix,search->u.str);
+		dbg(0,"search_str='%s'\n",mr->search_str);
 		mr->search_country=mg_country_from_isonum(item->id_lo);
 		break;
 	case attr_town_name:
@@ -362,6 +387,7 @@ map_search_destroy_mg(struct map_search_priv *ms)
 {
 	struct map_rect_priv *mr=(struct map_rect_priv *)ms;
 
+	dbg(1,"mr=%p\n", mr);
 	if (! mr)
 		return;
 	g_free(mr->search_str);

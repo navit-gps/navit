@@ -16,8 +16,6 @@ struct search_list_level {
 	struct mapset_search *search;
 	GHashTable *hash;
 	GList *list,*curr,*last;
-	int complete;
-	
 };
 
 struct search_list {
@@ -142,7 +140,7 @@ search_list_town_new(struct item *item)
 	}
 	else
 		ret->item=*item;
-	if (item_attr_get(item, attr_label, &attr))
+	if (item_attr_get(item, attr_town_name, &attr))
 		ret->name=map_convert_string(item->map,attr.u.str);
 	if (item_attr_get(item, attr_town_postal, &attr))
 		ret->postal=map_convert_string(item->map,attr.u.str);
@@ -221,9 +219,12 @@ search_list_search_free(struct search_list *sl, int level)
 		mapset_search_destroy(le->search);
 		le->search=NULL;
 	}
-	if (le->search) {
+#if 0 /* FIXME */
+	if (le->hash) {
 		g_hash_table_destroy(le->hash);
+		le->hash=NULL;
 	}
+#endif
 	curr=le->list;
 	while (curr) {
 		search_list_result_destroy(level, curr->data);
@@ -234,19 +235,22 @@ search_list_search_free(struct search_list *sl, int level)
 	le->list=NULL;
 	le->curr=NULL;
 	le->last=NULL;
-	le->complete=0;
 
 }
 
 static int
 search_add_result(struct search_list_level *le, void *p)
 {
+#if 0
 	if (! g_hash_table_lookup(le->hash, p)) {
+#endif
 		g_hash_table_insert(le->hash, p, (void *)1);	
 		le->list=g_list_append(le->list, p);
 		return 1;
+#if 0
 	}
 	return 0;
+#endif
 }
 
 struct search_list_result *
@@ -259,7 +263,7 @@ search_list_get_result(struct search_list *this_)
 	dbg(1,"enter\n");
 	le=&this_->levels[level];
 	dbg(1,"le=%p\n", le);
-	while(! le->complete) {
+	for (;;) {
 		dbg(1,"le->search=%p\n", le->search);
 		if (! le->search) {
 			dbg(1,"partial=%d\n", le->partial);
@@ -273,14 +277,18 @@ search_list_get_result(struct search_list *this_)
 				leu->last=leu->curr;
 				leu->curr=g_list_next(leu->curr);
 			}
+			if (le->parent)
+				dbg(1,"mapset_search_new with item(%d,%d)\n", le->parent->id_hi, le->parent->id_lo);
+			dbg(1,"attr=%s\n", attr_to_name(le->attr.type));	
 			le->search=mapset_search_new(this_->ms, le->parent, &le->attr, le->partial);
-			le->hash=g_hash_table_new_full(search_item_hash_hash, search_item_hash_equal, g_free, NULL);
+			le->hash=g_hash_table_new(search_item_hash_hash, search_item_hash_equal);
 		}
 		dbg(1,"le->search=%p\n", le->search);
 		item=mapset_search_get_item(le->search);
 		dbg(1,"item=%p\n", item);
 		if (item) {
 			void *p=NULL;
+			dbg(1,"id_hi=%d id_lo=%d\n", item->id_hi, item->id_lo);
 			this_->result.country=NULL;
 			this_->result.town=NULL;
 			this_->result.street=NULL;
@@ -310,8 +318,13 @@ search_list_get_result(struct search_list *this_)
 				else 
 					search_list_result_destroy(level, p);
 			}
-		} else 
-			le->complete=1;
+		} else {
+			mapset_search_destroy(le->search);
+			le->search=NULL;
+			g_hash_table_destroy(le->hash);
+			if (! level)
+				break;
+		}
 	}
 	return NULL;
 }

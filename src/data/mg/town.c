@@ -38,6 +38,7 @@ static int
 town_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
 	struct town_priv *twn=priv_data;
+	int len;
 
 	attr->type=attr_type;
 	switch (attr_type) {
@@ -59,7 +60,12 @@ town_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		twn->attr_next=attr_town_postal;
 		return ((attr->u.str && attr->u.str[0]) ? 1:0);
 	case attr_town_postal:
-		attr->u.str=twn->postal_code1;
+		strncpy(twn->postal, twn->postal_code1, 32);
+		attr->u.str=twn->postal;
+		len=mg_country_postal_len(twn->country);
+		if (!len)
+			len=31;
+		twn->postal[len]='\0';
 		twn->attr_next=attr_district_name;
 		return ((attr->u.str && attr->u.str[0]) ? 1:0);
 	case attr_district_name:
@@ -225,19 +231,25 @@ town_search_get_item(struct map_rect_priv *mr)
 		if (! mr->search_linear) {
 			while ((leaf=tree_search_next(&mr->ts, &mr->search_p, dir)) != -1) {
 				dir=town_search_compare(&mr->search_p, mr);
-				if (! dir && (mr->search_partial == 0 || leaf)) {
+				if (! dir && leaf) {
 					mr->search_linear=1;
 					mr->search_p=NULL;
 					break;
 				}
 			}
-			if (! mr->search_linear)
+			if (! mr->search_linear) {
+				dbg(1,"not found\n");
 				return NULL;
+			}
 		}
-		if (! tree_search_next_lin(&mr->ts, &mr->search_p))
+		if (! tree_search_next_lin(&mr->ts, &mr->search_p)) {
+			dbg(1,"linear not found\n");
 			return NULL;
-		if (town_search_compare(&mr->search_p, mr))
+		}
+		if (town_search_compare(&mr->search_p, mr)) {
+			dbg(1,"no match\n");
 			return NULL;
+		}
 		dbg(1,"found %d blocks\n",mr->search_blk_count);
 	}
 	if (! mr->search_blk_count)
