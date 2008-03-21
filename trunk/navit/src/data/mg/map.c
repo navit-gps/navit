@@ -321,6 +321,14 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
 	mr->m=map;
 	mr->search_type=search->type;
 	switch (search->type) {
+	case attr_town_postal:
+		if (item->type != type_country_label)
+			return NULL;
+		tree_search_init(map->dirname, "town.b1", &mr->ts, 0);
+		mr->current_file=file_town_twn;
+		mr->search_str=g_strdup(search->u.str);
+		mr->search_country=mg_country_from_isonum(item->id_lo);
+		break;
 	case attr_town_name:
 		if (item->type != type_country_label)
 			return NULL;
@@ -369,6 +377,7 @@ map_search_get_item_mg(struct map_search_priv *ms)
 	if (! mr)
 		return NULL;
 	switch (mr->search_type) {
+	case attr_town_postal:
 	case attr_town_name:
 		return town_search_get_item(mr);
 	case attr_street_name:

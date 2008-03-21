@@ -25,6 +25,7 @@ static struct search_param {
 	struct mapset *ms;
 	struct search_list *sl;
 	struct attr attr;
+	int partial;
 	GtkWidget *entry_country, *entry_postal, *entry_city, *entry_district;
 	GtkWidget *entry_street, *entry_number;
 	GtkWidget *listbox;
@@ -123,19 +124,84 @@ static void set_columns(struct search_param *param, int mode)
 
 }
 
+static void row_activated(GtkWidget *widget, GtkTreePath *p1, GtkTreeViewColumn *c, struct search_param *search)
+{
+	GtkTreePath *path;
+	GtkTreeViewColumn *focus_column;
+	GtkTreeIter iter;
+	GtkWidget *entry_widget;
+	char *str;
+	int column;
+
+	dbg(0,"enter\n");
+	gtk_tree_view_get_cursor(GTK_TREE_VIEW(search->treeview), &path, &focus_column);
+	gtk_tree_model_get_iter(search->liststore2, &iter, path);
+	switch(search->attr.type) {
+	case attr_country_all:
+		entry_widget=search->entry_country;
+		column=3;
+		break;
+	case attr_town_name:
+		entry_widget=search->entry_city;
+		column=2;
+		break;
+	case attr_street_name:
+		entry_widget=search->entry_street;
+		column=4;
+		break;
+	default:
+		dbg(0,"Unknown mode\n");
+		return;
+	}
+	gtk_tree_model_get(search->liststore2, &iter, column, &str, -1);
+	dbg(0,"str=%s\n", str);
+	search->partial=0;
+	gtk_entry_set_text(GTK_ENTRY(entry_widget), str);
+}
+
+static void tree_view_button_release(GtkWidget *widget, GdkEventButton *event, struct search_param *search)
+{
+	GtkTreePath *path;
+	GtkTreeViewColumn *column;
+	gtk_tree_view_get_cursor(GTK_TREE_VIEW(search->treeview), &path, &column);
+	gtk_tree_view_row_activated(GTK_TREE_VIEW(search->treeview), path, column);
+	
+}
+static void
+next_focus(struct search_param *search, GtkWidget *widget)
+{
+	if (widget == search->entry_country)
+		gtk_widget_grab_focus(search->entry_city);
+	if (widget == search->entry_city)
+		gtk_widget_grab_focus(search->entry_street);
+	if (widget == search->entry_street)
+		gtk_widget_grab_focus(search->entry_number);
+		
+}
+
 static void changed(GtkWidget *widget, struct search_param *search)
 {
 	struct search_list_result *res;
 	GtkTreeIter iter;
 
 	search->attr.u.str=(char *)gtk_entry_get_text(GTK_ENTRY(widget));
-	printf("changed %s\n", search->attr.u.str);
+	printf("changed %s partial %d\n", search->attr.u.str, search->partial);
 	if (widget == search->entry_country) {
+		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (search->liststore2), 3, GTK_SORT_ASCENDING);
 		dbg(0,"country\n");
 		search->attr.type=attr_country_all;
 		set_columns(search, 0);
 	}
+	if (widget == search->entry_postal) {
+		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (search->liststore2), 1, GTK_SORT_ASCENDING);
+		dbg(0,"postal\n");
+		search->attr.type=attr_town_postal;
+		if (strlen(search->attr.u.str) < 2)
+			return;
+		set_columns(search, 1);
+	}
 	if (widget == search->entry_city) {
+		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (search->liststore2), 2, GTK_SORT_ASCENDING);
 		dbg(0,"town\n");
 		search->attr.type=attr_town_name;
 		if (strlen(search->attr.u.str) < 3)
@@ -149,7 +215,7 @@ static void changed(GtkWidget *widget, struct search_param *search)
 	}
 
 
-	search_list_search(search->sl, &search->attr, 1);
+	search_list_search(search->sl, &search->attr, search->partial);
 	gtk_list_store_clear(search->liststore);
 	while((res=search_list_get_result(search->sl))) {
 		gtk_list_store_append(search->liststore,&iter);
@@ -169,7 +235,7 @@ static void changed(GtkWidget *widget, struct search_param *search)
 			if (res->town) {
 				gtk_list_store_set(search->liststore,&iter,1,res->town->postal,-1);
 				gtk_list_store_set(search->liststore,&iter,2,res->town->name,-1);
-				gtk_list_store_set(search->liststore,&iter,3,"",-1);
+				gtk_list_store_set(search->liststore,&iter,3,res->town->district,-1);
 			} else {
 				gtk_list_store_set(search->liststore,&iter,1,"",-1);
 				gtk_list_store_set(search->liststore,&iter,2,"",-1);
@@ -182,6 +248,9 @@ static void changed(GtkWidget *widget, struct search_param *search)
 
 		}
 	}
+	if (! search->partial)
+		next_focus(search, widget);
+	search->partial=1;
 }
 
 /* borrowed from gpe-login */
@@ -357,7 +426,7 @@ int destination_address(struct navit *nav)
 		types[i]=G_TYPE_POINTER;
                 search->liststore=gtk_list_store_newv(COL_COUNT+1,types);
                 search->liststore2=gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(search->liststore));
-		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (search->liststore2), 0, GTK_SORT_ASCENDING);
+		gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (search->liststore2), 3, GTK_SORT_ASCENDING);
                 gtk_tree_view_set_model (GTK_TREE_VIEW (search->treeview), GTK_TREE_MODEL(search->liststore2));
 	}
 
@@ -400,6 +469,8 @@ int destination_address(struct navit *nav)
 	g_signal_connect(G_OBJECT(button1), "clicked", G_CALLBACK(button_map), search);
 	g_signal_connect(G_OBJECT(button2), "clicked", G_CALLBACK(button_bookmark), search);
 	g_signal_connect(G_OBJECT(button3), "clicked", G_CALLBACK(button_destination), search);
+	g_signal_connect(G_OBJECT(search->treeview), "button-release-event", G_CALLBACK(tree_view_button_release), search);
+	g_signal_connect(G_OBJECT(search->treeview), "row_activated", G_CALLBACK(row_activated), search);
 
 	gtk_widget_grab_focus(search->entry_city);
 
@@ -429,5 +500,6 @@ int destination_address(struct navit *nav)
 	} else {
 		dbg(0,"warning: no default country found\n");
 	}
+	search->partial=1;
 	return 0;
 }

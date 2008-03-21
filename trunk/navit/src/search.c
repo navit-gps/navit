@@ -71,6 +71,9 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 	case attr_country_name:
 		level=0;
 		break;
+	case attr_town_postal:
+		level=1;
+		break;
 	case attr_town_name:
 		level=1;
 		break;
@@ -143,6 +146,8 @@ search_list_town_new(struct item *item)
 		ret->name=map_convert_string(item->map,attr.u.str);
 	if (item_attr_get(item, attr_town_postal, &attr))
 		ret->postal=map_convert_string(item->map,attr.u.str);
+	if (item_attr_get(item, attr_district_name, &attr))
+		ret->district=map_convert_string(item->map,attr.u.str);
 	if (item_coord_get(item, &c, 1)) {
 		ret->c=g_new(struct pcoord, 1);
 		ret->c->x=c.x;
