@@ -185,15 +185,23 @@ town_search_compare(unsigned char **p, struct map_rect_priv *mr)
         int country, d;
         char *name;
 
-	country=get_u16_unal(p);
-	dbg(1,"country 0x%x ", country);
-	name=get_string(p);
-	dbg(1,"name '%s' ",name);
-	mr->search_blk_count=get_u32_unal(p);
-	mr->search_blk_off=(struct block_offset *)(*p);
-	dbg(1,"len %d ", mr->search_blk_count);
-	(*p)+=mr->search_blk_count*4;
-	d=mr->search_country-country;
+	if (mr->search_type == attr_town_postal) {
+		mr->search_blk_count=1;
+		mr->search_blk_off=(struct block_offset *)(*p);
+		*p+=4;
+		name=get_string(p);
+		d=0;
+	} else {
+		country=get_u16_unal(p);
+		dbg(1,"country 0x%x ", country);
+		name=get_string(p);
+		dbg(1,"name '%s' ",name);
+		mr->search_blk_count=get_u32_unal(p);
+		mr->search_blk_off=(struct block_offset *)(*p);
+		dbg(1,"len %d ", mr->search_blk_count);
+		(*p)+=mr->search_blk_count*4;
+		d=mr->search_country-country;
+	}
 	if (!d) {
 		if (mr->search_partial)
 			d=strncasecmp(mr->search_str, name, strlen(mr->search_str));
@@ -213,41 +221,24 @@ town_search_get_item(struct map_rect_priv *mr)
 	int dir=1,leaf;
 
 	if (! mr->search_blk_count) {
-		if (mr->search_partial) {
-			dbg(1,"partial 0x%x '%s' ***\n", mr->search_country, mr->search_str);
-			if (! mr->search_linear) {
-				while ((leaf=tree_search_next(&mr->ts, &mr->search_p, dir)) != -1) {
-					dir=town_search_compare(&mr->search_p, mr);
-					if (! dir && leaf) {
-						mr->search_linear=1;
-						mr->search_p=NULL;
-						break;
-					}
-				}
-				if (! mr->search_linear)
-					return NULL;
-			}
-			if (! tree_search_next_lin(&mr->ts, &mr->search_p))
-				return NULL;
-			if (town_search_compare(&mr->search_p, mr))
-				return NULL;
-			dbg(1,"found %d blocks\n",mr->search_blk_count);
-		} else {
-	#if 0
-			dbg(1,"full 0x%x '%s' ***\n", country, search);
-			while (tree_search_next(&ts, &p, dir) != -1) {
-				ps=p;
-				printf("0x%x ",p-ts.f->begin);
-				dir=show_town2(&p, country, search, 0);
-				if (! dir) {
-					printf("*** found full: ");
-					show_town2(&ps, country, search, 0);
+		dbg(1,"partial %d 0x%x '%s' ***\n", mr->search_partial, mr->search_country, mr->search_str);
+		if (! mr->search_linear) {
+			while ((leaf=tree_search_next(&mr->ts, &mr->search_p, dir)) != -1) {
+				dir=town_search_compare(&mr->search_p, mr);
+				if (! dir && (mr->search_partial == 0 || leaf)) {
+					mr->search_linear=1;
+					mr->search_p=NULL;
 					break;
 				}
 			}
-	#endif
-			return NULL;
+			if (! mr->search_linear)
+				return NULL;
 		}
+		if (! tree_search_next_lin(&mr->ts, &mr->search_p))
+			return NULL;
+		if (town_search_compare(&mr->search_p, mr))
+			return NULL;
+		dbg(1,"found %d blocks\n",mr->search_blk_count);
 	}
 	if (! mr->search_blk_count)
 		return NULL;
