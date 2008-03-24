@@ -129,13 +129,13 @@ Change to your home coordinates.
 				<polygon color="#e7cf87" />
 			</item>
 			<item type="rail" order="6-">
-				<polyline color="#808080" width="3" /> 
+				<polyline color="#808080" width="3" dash="10" />
 			</item>
 			<item type="ferry" order="5-">
-				<polyline color="#000000" width="1" /> 
+				<polyline color="#000000" width="1" dash="10" />
 			</item>
 			<item type="border_country" order="0-">
-				<polyline color="#b8434e" width="1" /> 
+				<polyline color="#b8434e" width="1" dash="10,5,2,5" />
 			</item>
 			<item type="border_state" order="0-">
 				<polyline color="#808080" width="1" /> 
@@ -845,6 +845,9 @@ Change to your home coordinates.
 			<item type="poi_oil_field" order="0-">
 				<icon src="oil_field.xpm" />
 			</item>
+			<item type="poi_peak" order="6-">
+				<icon src="peak.xpm" />
+			</item>
 			<item type="poi_personal_service" order="0-">
 				<icon src="personal_service.xpm" />
 			</item>
@@ -856,6 +859,10 @@ Change to your home coordinates.
 			</item>
 			<item type="poi_public_office" order="0-">
 				<icon src="public_office.xpm" />
+			</item>
+			<item type="poi_rail_station" order="9-">
+				<circle color="#ff0000" radius="3" width="3" />
+				<circle color="#000000" radius="6" width="2" label_size="8" />
 			</item>
 			<item type="poi_repair_service" order="0-">
 				<icon src="repair_service.xpm" />

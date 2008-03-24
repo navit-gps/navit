@@ -145,6 +145,20 @@ convert_number(const char *val)
 }
 
 static int
+convert_number_list(const char *val, int *table, int size)
+{
+	char *tok,*str,*val_str,*saveptr=NULL;
+	int i;
+	str=val_str=g_strdup(val);
+	for (i=0; i<size && (tok=strtok_r(str, ",", &saveptr)); i++) {
+		table[i]=convert_number(tok);
+		str=NULL;
+	}
+	g_free(val_str);
+    return i;
+}
+
+static int
 xmlconfig_config(struct xmlstate *state)
 {
 	state->element_object = (void *)1;
@@ -525,19 +539,22 @@ static int
 xmlconfig_polyline(struct xmlstate *state)
 {
 	struct color color;
-	const char *width, *directed;
-	int w=0,d=0;
+	const char *width, *dash, *directed;
+	int w=0, d=0, dt[4], ds=0;
 
 	if (! find_color(state, 1, &color))
 		return 0;
 	width=find_attribute(state, "width", 0);
 	if (width) 
 		w=convert_number(width);
+	dash=find_attribute(state, "dash", 0);
+	if (dash)
+		ds=convert_number_list(dash, dt, sizeof(dt)/sizeof(*dt));
 	directed=find_attribute(state, "directed", 0);
 	if (directed) 
 		d=convert_number(directed);
 	
-	state->element_object=polyline_new(&color, w, d);
+	state->element_object=polyline_new(&color, w, d, dt, ds);
 	if (! state->element_object)
 		return 0;
 	itemtype_add_element(state->parent->element_object, state->element_object);
