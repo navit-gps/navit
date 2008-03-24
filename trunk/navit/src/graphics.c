@@ -389,6 +389,10 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 				case element_polyline:
 					if (e->u.polyline.width > 1) 
 						gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
+					if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
+						graphics_gc_set_dashes(gc, e->u.polyline.width, 0,
+						                       e->u.polyline.dash_table,
+						                       e->u.polyline.dash_num);
 					gra->meth.draw_lines(gra->priv, gc->priv, di->pnt, di->count);
 					break;
 				case element_circle:
