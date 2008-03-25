@@ -221,10 +221,13 @@ struct action_cb_data {
 };
 
 static void
-gui_gtk_action_activate(GtkToggleAction *action, struct action_cb_data *data)
+gui_gtk_action_activate(GtkAction *action, struct action_cb_data *data)
 {
 	if(data->attr.type == attr_destination) {
-		navit_set_destination(data->gui->nav, data->attr.u.pcoord, NULL);
+		char * label;
+		g_object_get(G_OBJECT(action), "label", &label,NULL);
+		navit_set_destination(data->gui->nav, data->attr.u.pcoord, label);
+		g_free(label);
 	}
 }
 static void
