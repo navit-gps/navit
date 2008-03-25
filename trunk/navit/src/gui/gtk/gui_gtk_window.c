@@ -23,6 +23,7 @@
 #include "layout.h"
 #include "vehicle.h"
 #include "map.h"
+#include "coord.h"
 
 #ifdef USE_HILDON
 #include "hildon-widgets/hildon-defines.h"
@@ -222,6 +223,9 @@ struct action_cb_data {
 static void
 gui_gtk_action_activate(GtkToggleAction *action, struct action_cb_data *data)
 {
+	if(data->attr.type == attr_destination) {
+		navit_set_destination(data->gui->nav, data->attr.u.pcoord, NULL);
+	}
 }
 static void
 gui_gtk_add_menu(struct gui_priv *this, char *name, char *label, char *path, struct action_cb_data *data)
@@ -373,32 +377,62 @@ gui_gtk_destinations_init(struct gui_priv *this)
 {
 	struct attr attr;
 	struct action_cb_data *data;
+	struct map_rect *mr=NULL;
+	struct item *item;
+	struct coord c;
+	int count=0;
+	char *name, *label;
 
-	if(navit_get_attr(this->nav, attr_former_destination_map, &attr, NULL) && attr.u.map) {
-		data=g_new(struct action_cb_data, 1);
-		data->gui=this;
-		data->attr.type=attr_destination;
-		data->attr.u.pcoord=g_new(struct pcoord, 1);
-		data->attr.u.pcoord->pro=projection_mg;
-		data->attr.u.pcoord->x=0x13a3e2;
-		data->attr.u.pcoord->y=0x5d6d6a;
-		gui_gtk_add_menu(this, "Destination 1", "Muenchen","/ui/MenuBar/Route/FormerDestinations/FormerDestinationMenuAdditions",data); 
+	if(navit_get_attr(this->nav, attr_former_destination_map, &attr, NULL) && attr.u.map && (mr=map_rect_new(attr.u.map, NULL))) {
+		while ((item=map_rect_get_item(mr))) {
+			if (item->type != type_former_destination) continue;
+			name=g_strdup_printf("Destination %d", count++);
+			item_attr_get(item, attr_label, &attr);
+			label=attr.u.str;
+			item_coord_get(item, &c, 1);
+			data=g_new(struct action_cb_data, 1);
+			data->gui=this;
+			data->attr.type=attr_destination;
+			data->attr.u.pcoord=g_new(struct pcoord, 1);
+			data->attr.u.pcoord->pro=projection_mg;
+			data->attr.u.pcoord->x=c.x;
+			data->attr.u.pcoord->y=c.y;
+			gui_gtk_add_menu(this, name, label, "/ui/MenuBar/Route/FormerDestinations/FormerDestinationMenuAdditions",data); 
+			g_free(name);
+		}
+		map_rect_destroy(mr);
 	}
 }
 
 static void
 gui_gtk_bookmarks_init(struct gui_priv *this)
 {
+	struct attr attr;
 	struct action_cb_data *data;
+	struct map_rect *mr=NULL;
+	struct item *item;
+	struct coord c;
+	int count=0;
+	char *name, *label;
 
-	data=g_new(struct action_cb_data, 1);
-	data->gui=this;
-	data->attr.type=attr_destination;
-	data->attr.u.pcoord=g_new(struct pcoord, 1);
-	data->attr.u.pcoord->pro=projection_mg;
-	data->attr.u.pcoord->x=0x13a3e2;
-	data->attr.u.pcoord->y=0x5d6d6a;
-	gui_gtk_add_menu(this, "Bookmark 1", "Muenchen","/ui/MenuBar/Route/Bookmarks/BookmarkMenuAdditions",data); 
+	if(navit_get_attr(this->nav, attr_bookmark_map, &attr, NULL) && attr.u.map && (mr=map_rect_new(attr.u.map, NULL))) {
+		while ((item=map_rect_get_item(mr))) {
+			if (item->type != type_bookmark) continue;
+			name=g_strdup_printf("Bookmark %d", count++);
+			item_attr_get(item, attr_label, &attr);
+			label=attr.u.str;
+			item_coord_get(item, &c, 1);
+			data=g_new(struct action_cb_data, 1);
+			data->gui=this;
+			data->attr.type=attr_destination;
+			data->attr.u.pcoord=g_new(struct pcoord, 1);
+			data->attr.u.pcoord->pro=projection_mg;
+			data->attr.u.pcoord->x=c.x;
+			data->attr.u.pcoord->y=c.y;
+			gui_gtk_add_menu(this, name, label, "/ui/MenuBar/Route/Bookmarks/BookmarkMenuAdditions",data); 
+			g_free(name);
+		}
+	}
 }
 
 static void
