@@ -2005,5 +2005,458 @@ Change to your home coordinates.
 			</item>
 		</layer>
 	</layout>
+<layout name="T@H">
+		<layer name="sea" details="0">
+			
+			
+<!-- landuse=forest -->
+			<item type="wood" order="0-">
+				<polygon color="#72bf81" /> 
+			</item>
+<!-- landuse=residential -->
+			<item type="town_poly" order="0-">
+				<polygon color="#f2f2f2" /> 
+			</item>
+<!-- natural=water -->
+			<item type="water_poly" order="0-">
+				<polygon color="#b5d6f1" /> 
+				<polyline color="#b5d6f1" /> 
+				<label label_size="8" /> 
+			</item>
+<!-- leisure=park -->
+			<item type="park_poly" order="0-">
+				<polygon color="#c7f1a3" /> 
+				<polyline color="#79c691" /> 
+				<label label_size="5" /> 
+			</item>
+			<item type="airport_poly" order="0-">
+				<polygon color="#a0a0a0" /> 
+			</item>
+			<item type="sport_poly" order="0-">
+				<polygon color="#4af04f" /> 
+			</item>
+			
+<!-- landuse=industrial -->
+			<item type="industry_poly,building_poly,place_poly" order="0-">
+				<polygon color="#ecd8ff" /> 
+			</item>
+<!-- waterway=stream -->
+			<item type="water_line" order="0-4">
+				<polyline color="#b5d6f1" width="1" /> 
+				<label label_size="8" /> 
+			</item>
+<!-- railway=subway -->
+			<item type="rail" order="6">
+				<polyline color="#aaaaaa" width="1" /> 
+			</item>
+			<item type="rail" order="7-8">
+				<polyline color="#aaaaaa" width="2" /> 
+			</item>
+			<item type="rail" order="9-">
+				<polyline color="#aaaaaa" width="6" /> 
+			</item>
+			<item type="ferry" order="5-">
+				<polyline color="#000000" width="1" /> 
+			</item>
+			<item type="border_country" order="0-">
+				<polyline color="#b8434e" width="1" /> 
+			</item>
+			<item type="border_state" order="0-">
+				<polyline color="#808080" width="1" /> 
+			</item>
+			<item type="height_line_1" order="0-">
+				<polyline color="#000000" width="1" /> 
+			</item>
+			<item type="height_line_2" order="0-">
+				<polyline color="#000000" width="2" /> 
+			</item>
+<!-- routing -->
+			<item type="street_route" order="2">
+				<polyline color="#0000a0" width="4" /> 
+			</item>
+			<item type="street_route" order="3-5">
+				<polyline color="#0000a0" width="8" /> 
+			</item>
+			<item type="street_route" order="6">
+				<polyline color="#0000a0" width="10" /> 
+			</item>
+			<item type="street_route" order="7-8">
+				<polyline color="#0000a0" width="16" /> 
+			</item>
+			<item type="street_route" order="9-10">
+				<polyline color="#0000a0" width="20" /> 
+			</item>
+			<item type="street_route" order="11">
+				<polyline color="#0000a0" width="28" /> 
+			</item>
+			<item type="street_route" order="12">
+				<polyline color="#0000a0" width="32" /> 
+			</item>
+			<item type="street_route" order="13">
+				<polyline color="#0000a0" width="52" /> 
+			</item>
+			<item type="street_route" order="14">
+				<polyline color="#0000a0" width="64" /> 
+			</item>
+			<item type="street_route" order="15">
+				<polyline color="#0000a0" width="68" /> 
+			</item>
+			<item type="street_route" order="16">
+				<polyline color="#0000a0" width="132" /> 
+			</item>
+			<item type="street_route" order="17">
+				<polyline color="#0000a0" width="268" /> 
+			</item>
+			<item type="street_route" order="18">
+				<polyline color="#0000a0" width="530" /> 
+			</item>
+<!-- highway=service,footway, ,... -->
+			<item type="street_nopass" order="10">
+				<polyline color="#efeaa0" width="1" /> 
+			</item>
+			<item type="street_nopass" order="11-12">
+				<polyline color="#efeaa0" width="2" /> 
+			</item>
+			<item type="street_nopass" order="13-">
+				<polyline color="#efeaa0" width="4" /> 
+			</item>
+			<item type="street_0,street_1_city,street_1_land" order="10">
+				<polyline color="#d2d2d2" width="4" /> 
+				<polyline color="#ffffff" width="2" /> 
+			</item>
+			<item type="street_0,street_1_city,street_1_land" order="11">
+				<polyline color="#d2d2d2" width="6" /> 
+				<polyline color="#ffffff" width="4" /> 
+			</item>
+			<item type="street_0,street_1_city,street_1_land" order="12">
+				<polyline color="#d2d2d2" width="10" /> 
+				<polyline color="#ffffff" width="8" /> 
+			</item>
+			<item type="street_0,street_1_city,street_1_land" order="13">
+				<polyline color="#d2d2d2" width="12" /> 
+				<polyline color="#ffffff" width="9" /> 
+			</item>
+			<item type="street_0,street_1_city,street_1_land" order="14">
+				<polyline color="#d2d2d2" width="15" /> 
+				<polyline color="#ffffff" width="13" /> 
+			</item>
+			<item type="street_0,street_1_city,street_1_land" order="15">
+				<polyline color="#d2d2d2" width="17" /> 
+				<polyline color="#ffffff" width="14" /> 
+			</item>
+			<item type="street_0,street_1_city,street_1_land" order="16">
+				<polyline color="#d2d2d2" width="33" /> 
+				<polyline color="#ffffff" width="26" /> 
+			</item>
+			<item type="street_0,street_1_city,street_1_land" order="17">
+				<polyline color="#d2d2d2" width="69" /> 
+				<polyline color="#ffffff" width="61" /> 
+			</item>
+			<item type="street_0,street_1_city,street_1_land" order="18">
+				<polyline color="#d2d2d2" width="132" /> 
+				<polyline color="#ffffff" width="126" /> 
+			</item>
+<!-- highway=tertiary -->
+			<item type="street_2_city,street_2_land" order="7-8">
+				<polyline color="#c4c4c4" width="2" /> 
+			</item>
+			<item type="street_2_city,street_2_land" order="9">
+				<polyline color="#c4c4c4" width="4" /> 
+				<polyline color="#f7f496" width="2" /> 
+			</item>
+			<item type="street_2_city,street_2_land" order="10">
+				<polyline color="#c4c4c4" width="6" /> 
+				<polyline color="#f7f496" width="4" /> 
+			</item>
+			<item type="street_2_city,street_2_land" order="11">
+				<polyline color="#c4c4c4" width="8" /> 
+				<polyline color="#f7f496" width="6" /> 
+			</item>
+			<item type="street_2_city,street_2_land" order="12">
+				<polyline color="#c4c4c4" width="12" /> 
+				<polyline color="#f7f496" width="9" /> 
+			</item>
+			<item type="street_2_city,street_2_land" order="13">
+				<polyline color="#c4c4c4" width="15" /> 
+				<polyline color="#f7f496" width="11" /> 
+			</item>
+			<item type="street_2_city,street_2_land" order="14">
+				<polyline color="#c4c4c4" width="18" /> 
+				<polyline color="#f7f496" width="14" /> 
+			</item>
+			<item type="street_2_city,street_2_land" order="15">
+				<polyline color="#c4c4c4" width="21" /> 
+				<polyline color="#f7f496" width="17" /> 
+			</item>
+			<item type="street_2_city,street_2_land" order="16">
+				<polyline color="#c4c4c4" width="35" /> 
+				<polyline color="#f7f496" width="30" /> 
+			</item>
+			<item type="street_2_city,street_2_land" order="17">
+				<polyline color="#c4c4c4" width="73" /> 
+				<polyline color="#f7f496" width="67" /> 
+			</item>
+			<item type="street_2_city,street_2_land" order="18">
+				<polyline color="#c4c4c4" width="144" /> 
+				<polyline color="#f7f496" width="138" /> 
+			</item>
+<!-- highway=secondary -->
+			<item type="street_3_city,street_3_land,ramp" order="7">
+				<polyline color="#fdbf6f" width="1" /> 
+			</item>
+			<item type="street_3_city,street_3_land,ramp" order="8">
+				<polyline color="#000000" width="2" /> 
+				<polyline color="#fdbf6f" width="1" /> 
+			</item>
+			<item type="street_3_city,street_3_land,ramp" order="9">
+				<polyline color="#000000" width="5" /> 
+				<polyline color="#fdbf6f" width="3" /> 
+			</item>
+			<item type="street_3_city,street_3_land,ramp" order="10">
+				<polyline color="#000000" width="8" /> 
+				<polyline color="#fdbf6f" width="6" /> 
+			</item>
+			<item type="street_3_city,street_3_land,ramp" order="11">
+				<polyline color="#000000" width="9" /> 
+				<polyline color="#fdbf6f" width="7" /> 
+			</item>
+			<item type="street_3_city,street_3_land,ramp" order="12">
+				<polyline color="#000000" width="11" /> 
+				<polyline color="#fdbf6f" width="9" /> 
+			</item>
+			<item type="street_3_city,street_3_land,ramp" order="13">
+				<polyline color="#000000" width="16" /> 
+				<polyline color="#fdbf6f" width="14" /> 
+			</item>
+			<item type="street_3_city,street_3_land,ramp" order="14">
+				<polyline color="#000000" width="19" /> 
+				<polyline color="#fdbf6f" width="17" /> 
+			</item>
+			<item type="street_3_city,street_3_land,ramp" order="15">
+				<polyline color="#000000" width="23" /> 
+				<polyline color="#fdbf6f" width="21" /> 
+			</item>
+			<item type="street_3_city,street_3_land,ramp" order="16">
+				<polyline color="#000000" width="36" /> 
+				<polyline color="#fdbf6f" width="34" /> 
+			</item>
+			<item type="street_3_city,street_3_land,ramp" order="17">
+				<polyline color="#000000" width="75" /> 
+				<polyline color="#fdbf6f" width="73" /> 
+			</item>
+			<item type="street_3_city,street_3_land,ramp" order="18">
+				<polyline color="#000000" width="152" /> 
+				<polyline color="#fdbf6f" width="150" /> 
+			</item>
+<!-- highway=primary -->
+			<item type="street_4_city,street_4_land,street_n_lanes" order="2-6">
+				<polyline color="#e46d71" width="1" /> 
+			</item>
+			<item type="street_4_city,street_4_land,street_n_lanes" order="7-8">
+				<polyline color="#e46d71" width="3" /> 
+				<polyline color="#e46d71" width="1" /> 
+			</item>
+			<item type="street_4_city,street_4_land,street_n_lanes" order="9">
+				<polyline color="#e46d71" width="5" /> 
+				<polyline color="#e46d71" width="3" /> 
+			</item>
+			<item type="street_4_city,street_4_land,street_n_lanes" order="10">
+				<polyline color="#e46d71" width="6" /> 
+				<polyline color="#e46d71" width="4" /> 
+			</item>
+			<item type="street_4_city,street_4_land,street_n_lanes" order="11">
+				<polyline color="#e46d71" width="9" /> 
+				<polyline color="#e46d71" width="7" /> 
+			</item>
+			<item type="street_4_city,street_4_land,street_n_lanes" order="12">
+				<polyline color="#e46d71" width="13" /> 
+				<polyline color="#e46d71" width="9" /> 
+			</item>
+			<item type="street_4_city,street_4_land,street_n_lanes" order="13">
+				<polyline color="#e46d71" width="18" /> 
+				<polyline color="#e46d71" width="14" /> 
+			</item>
+			<item type="street_4_city,street_4_land,street_n_lanes" order="14">
+				<polyline color="#e46d71" width="21" /> 
+				<polyline color="#e46d71" width="17" /> 
+			</item>
+			<item type="street_4_city,street_4_land,street_n_lanes" order="15">
+				<polyline color="#e46d71" width="24" /> 
+				<polyline color="#e46d71" width="20" /> 
+			</item>
+			<item type="street_4_city,street_4_land,street_n_lanes" order="16">
+				<polyline color="#e46d71" width="39" /> 
+				<polyline color="#e46d71" width="33" /> 
+			</item>
+			<item type="street_4_city,street_4_land,street_n_lanes" order="17">
+				<polyline color="#e46d71" width="78" /> 
+				<polyline color="#e46d71" width="72" /> 
+			</item>
+			<item type="street_4_city,street_4_land,street_n_lanes" order="18">
+				<polyline color="#e46d71" width="156" /> 
+				<polyline color="#e46d71" width="150" /> 
+			</item>
+<!-- highway=motorway -->
+			<item type="highway_city,highway_land" order="2">
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+			<item type="highway_city,highway_land" order="3-5">
+				<polyline color="#87908a" width="3" /> 
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+			<item type="highway_city,highway_land" order="6">
+				<polyline color="#87908a" width="4" /> 
+				<polyline color="#809bc0" width="2" /> 
+			</item>
+			<item type="highway_city,highway_land" order="7-8">
+				<polyline color="#87908a" width="7" /> 
+				<polyline color="#809bc0" width="5" /> 
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+			<item type="highway_city,highway_land" order="9-10">
+				<polyline color="#87908a" width="9" /> 
+				<polyline color="#809bc0" width="5" /> 
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+			<item type="highway_city,highway_land" order="11">
+				<polyline color="#87908a" width="13" /> 
+				<polyline color="#809bc0" width="9" /> 
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+			<item type="highway_city,highway_land" order="12">
+				<polyline color="#87908a" width="15" /> 
+				<polyline color="#809bc0" width="10" /> 
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+			<item type="highway_city,highway_land" order="13">
+				<polyline color="#87908a" width="25" /> 
+				<polyline color="#809bc0" width="17" /> 
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+			<item type="highway_city,highway_land" order="14">
+				<polyline color="#87908a" width="31" /> 
+				<polyline color="#809bc0" width="24" /> 
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+			<item type="highway_city,highway_land" order="15">
+				<polyline color="#87908a" width="33" /> 
+				<polyline color="#809bc0" width="27" /> 
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+			<item type="highway_city,highway_land" order="16">
+				<polyline color="#87908a" width="65" /> 
+				<polyline color="#809bc0" width="59" /> 
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+			<item type="highway_city,highway_land" order="17">
+				<polyline color="#87908a" width="133" /> 
+				<polyline color="#809bc0" width="127" /> 
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+			<item type="highway_city,highway_land" order="18">
+				<polyline color="#87908a" width="264" /> 
+				<polyline color="#809bc0" width="258" /> 
+				<polyline color="#809bc0" width="1" /> 
+			</item>
+<!-- unbekannte elemente -->
+			<item type="street_unkn" order="11-">
+				<polyline color="#f3d6b6" width="3" /> 
+			</item>
+			<item type="highway_exit_label" order="10-">
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+<!-- highway=primary (font)-->
+			<item type="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes" order="10-18">
+				<label label_size="9" />
+			</item>
+			<item type="street_2_city,street_2_land,street_3_city,street_3_land,ramp" order="11-18">
+				<label label_size="9" />
+			</item>
+			<item type="street_nopass,street_0,street_1_city,street_1_land" order="12-18">
+				<label label_size="9" />
+			</item>
+<!-- place=suburb -->
+			<item type="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="9-">
+				<circle color="#000000" radius="3" label_size="9" />
+			</item>
+			<item type="district_label_1e3,district_label_2e3,district_label_5e3" order="11-">
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+			<item type="town_label_1e3,town_label_2e3,town_label_5e3" order="10-">
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+			<item type="district_label_1e4,district_label_2e4,district_label_5e4" order="9-">
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+			<item type="town_label_1e4,town_label_2e4,town_label_5e4" order="8-">
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+			<item type="district_label_1e5,district_label_2e5,district_label_5e5" order="6-">
+				<circle color="#000000" radius="3" label_size="10" />
+			</item>
+<!-- place=city -->
+			<item type="town_label_1e5,town_label_2e5,town_label_5e5" order="4-">
+				<circle color="#000000" radius="3" label_size="15" />
+			</item>
+			<item type="district_label_1e6,district_label_2e6,district_label_5e6" order="3-">
+				<circle color="#000000" radius="3" label_size="15" />
+			</item>
+			<item type="town_label_1e6,town_label_2e6,town_label_5e6" order="2-">
+				<circle color="#000000" radius="3" label_size="15" />
+			</item>
+			<item type="town_label_1e7,district_label_1e7" order="1-">
+				<circle color="#000000" radius="3" label_size="15" />
+			</item>
+			<item type="flats,scrub,military_zone,marine_poly,plantation,tundra" order="0-">
+				<polygon color="#a0a0a0" />
+				<label label_size="5" /> 
+			</item>
+			<item type="rg_point" order="0-">
+				<circle color="#FF089C" radius="10"  />
+			</item>
+			
+<!-- !!!!...POIs...!!!! -->
+
+<!-- amenity=bank -->
+			<item type="poi_bank" order="14-">
+				<icon src="bank.xpm" />
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+<!-- amenity=fuel -->
+			<item type="poi_fuel" order="14-">
+				<icon src="fuel.xpm" />
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+<!-- amenity=hospitalg -->
+			<item type="poi_hospital" order="14-">
+				<icon src="hospital.xpm" />
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+<!-- amenity=parking -->
+			<item type="poi_car_parking" order="14-">
+				<icon src="parking.xpm" />
+			</item>
+<!-- amenity=police -->
+			<item type="poi_police" order="14-">
+				<icon src="police.xpm" />
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+<!-- amenity=restaurant -->
+			<item type="poi_restaurant" order="14-">
+				<icon src="restaurant.xpm" />
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+<!-- leisure=golf_curse -->
+			<item type="poi_golf" order="14-">
+				<icon src="golf.xpm" />
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+<!-- tourism=hotel -->
+			<item type="poi_hotel" order="14-">
+				<icon src="hotel.xpm" />
+				<circle color="#000000" radius="3" label_size="7" />
+			</item>
+		</layer>
+	</layout>
 </navit>
 </config>
