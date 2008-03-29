@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-21 17:53+0100\n"
+"POT-Creation-Date: 2008-03-29 10:39+0100\n"
 "PO-Revision-Date: 2007-07-10 21:53+0200\n"
 "Last-Translator: afaber <afaber_at_sourceforge_dot._net>\n"
 "Language-Team: afaber\n"
@@ -90,140 +90,119 @@ msgid_plural "in %d kilometers"
 msgstr[0] "na één kilometer"
 msgstr[1] "in %d kilometer"
 
-#: ../src/navigation.c:402
+#: ../src/navigation.c:404
 msgid "right"
 msgstr "rechts"
 
-#: ../src/navigation.c:409
+#: ../src/navigation.c:411
 msgid "left"
 msgstr "links"
 
-#: ../src/navigation.c:413
+#: ../src/navigation.c:415
 msgid "easily "
 msgstr "flauwe "
 
-#: ../src/navigation.c:417
+#: ../src/navigation.c:419
 msgid "strongly "
 msgstr "scherpe "
 
-#: ../src/navigation.c:420
+#: ../src/navigation.c:422
 msgid "unknown "
 msgstr "niet bekend "
 
 #
-#: ../src/navigation.c:426
+#: ../src/navigation.c:428
 msgid "When possible, please turn around"
 msgstr "Wanneer mogelijk, omkeren"
 
-#: ../src/navigation.c:433
+#: ../src/navigation.c:435
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Weg volgen voor %s"
 
-#: ../src/navigation.c:437
+#: ../src/navigation.c:439
 msgid "soon"
 msgstr "binnenkort"
 
-#: ../src/navigation.c:443
+#: ../src/navigation.c:445
 msgid "now"
 msgstr "nu"
 
-#: ../src/navigation.c:446
+#: ../src/navigation.c:448
 msgid "error"
 msgstr "error"
 
 #. TRANSLATORS: The first argument is strength, the second direction and the third distance
-#: ../src/navigation.c:450
+#: ../src/navigation.c:452
 #, c-format
 msgid "Turn %1$s%2$s %3$s"
 msgstr "%3$s %1$s%2$s afslaan"
 
 # over 200 meter links aanhouden
-#: ../src/navigation.c:453
+#: ../src/navigation.c:455
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "%s bestemming bereikt"
 
-#: ../src/navit.c:630 ../src/gui/gtk/gui_gtk_action.c:198
-msgid "Layout"
-msgstr "Layout"
-
-#: ../src/navit.c:646
-msgid "Projection"
-msgstr "Projectie"
-
-#: ../src/navit.c:701
+#: ../src/navit.c:636 ../src/gui/gtk/gui_gtk_action.c:151
 msgid "Former Destinations"
 msgstr "Vorige bestemmingen"
 
-#: ../src/navit.c:711
+#: ../src/navit.c:646 ../src/gui/gtk/gui_gtk_action.c:152
 msgid "Bookmarks"
 msgstr "Bookmarks"
 
-#: ../src/navit.c:749
-msgid "Vehicle"
-msgstr "Voertuig"
-
-#: ../src/navit.c:818
+#: ../src/navit.c:736
 msgid "Command"
 msgstr "Opdracht"
 
-#: ../src/navit.c:823
+#: ../src/navit.c:741
 msgid "Length"
 msgstr "Lengte"
 
-#: ../src/navit.c:827 ../src/navit.c:852
+#: ../src/navit.c:745 ../src/navit.c:770
 msgid "km"
 msgstr "km"
 
-#: ../src/navit.c:831 ../src/navit.c:856
+#: ../src/navit.c:749 ../src/navit.c:774
 msgid "m"
 msgstr "m"
 
-#: ../src/navit.c:837
+#: ../src/navit.c:755
 msgid "Time"
 msgstr "Tijd"
 
-#: ../src/navit.c:849
+#: ../src/navit.c:767
 msgid "Destination Length"
 msgstr "Afstand"
 
-#: ../src/navit.c:862
+#: ../src/navit.c:780
 msgid "Destination Time"
 msgstr "Aankomsttijd"
 
-#: ../src/navit.c:891 ../src/gui/gtk/gui_gtk_action.c:202
+#: ../src/navit.c:809 ../src/gui/gtk/gui_gtk_action.c:160
 msgid "Roadbook"
 msgstr "Route"
 
-#: ../src/navit.c:1124 ../src/gui/gtk/destination.c:368
-#: ../src/gui/gtk/gui_gtk_action.c:197
-msgid "Map"
-msgstr "Kaart"
-
-#: ../src/navit.c:1131 ../src/gui/gtk/gui_gtk_action.c:196
-msgid "Route"
-msgstr "Route"
-
-#: ../src/popup.c:229
+#: ../src/popup.c:231
 #, c-format
 msgid "Point 0x%x 0x%x"
 msgstr "Punt 0x%x 0x%x"
 
-#: ../src/popup.c:230
-#, fuzzy, c-format
+#: ../src/popup.c:232
+#, c-format
 msgid "Screen coord : %d %d"
 msgstr "Scherm %d %d"
 
-#: ../src/popup.c:239
+#: ../src/popup.c:241
 msgid "Set as position"
 msgstr "Zet als positie"
 
-#: ../src/popup.c:240
+#: ../src/popup.c:242
 msgid "Set as destination"
 msgstr "Zet als bestemming"
 
-#: ../src/popup.c:241
+#: ../src/popup.c:243
 msgid "Add as bookmark"
 msgstr "Opnemen als bladwijzer"
 
@@ -250,7 +229,7 @@ msgstr "Antigua en Barbuda"
 #. 660
 #: ../src/country.c:28
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguilla"
 
 #. 008
 #: ../src/country.c:29
@@ -264,13 +243,11 @@ msgstr "Armenië"
 
 #. 530
 #: ../src/country.c:31
-#, fuzzy
 msgid "Netherlands Antilles"
 msgstr "Nederlandse Antillen"
 
 #. 024
 #: ../src/country.c:32
-#, fuzzy
 msgid "Angola"
 msgstr "Angola"
 
@@ -281,7 +258,6 @@ msgstr "Antarctica"
 
 #. 032
 #: ../src/country.c:34
-#, fuzzy
 msgid "Argentina"
 msgstr "Argentinië"
 
@@ -297,9 +273,8 @@ msgstr "Oostenrijk"
 
 #. 036
 #: ../src/country.c:37
-#, fuzzy
 msgid "Australia"
-msgstr "Oostenrijk"
+msgstr "Australië"
 
 #. 533
 #: ../src/country.c:38
@@ -308,9 +283,8 @@ msgstr "Aruba"
 
 #. 248
 #: ../src/country.c:39
-#, fuzzy
 msgid "Aland Islands"
-msgstr "Färöer"
+msgstr "Färöer eilanden"
 
 #. 031
 #: ../src/country.c:40
@@ -325,7 +299,7 @@ msgstr "Bosnië en Herzegovina"
 #. 052
 #: ../src/country.c:42
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #. 050
 #: ../src/country.c:43
@@ -365,7 +339,7 @@ msgstr "Benin"
 #. 652
 #: ../src/country.c:50
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "Saint-Barthélemy"
 
 #. 060
 #: ../src/country.c:51
@@ -375,7 +349,7 @@ msgstr "Bermuda"
 #. 096
 #: ../src/country.c:52
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunei"
 
 #. 068
 #: ../src/country.c:53
@@ -399,9 +373,8 @@ msgstr "Bhutan"
 
 #. 074
 #: ../src/country.c:57
-#, fuzzy
 msgid "Bouvet Island"
-msgstr "Färöer"
+msgstr "Bouvet eiland"
 
 #. 072
 #: ../src/country.c:58
@@ -415,36 +388,33 @@ msgstr "Wit-Rusland"
 
 #. 084
 #: ../src/country.c:60
-#, fuzzy
 msgid "Belize"
-msgstr "Belze"
+msgstr "Belize"
 
 #. 124
 #: ../src/country.c:61
-#, fuzzy
 msgid "Canada"
 msgstr "Canada"
 
 #. 166
 #: ../src/country.c:62
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "Cocoseilanden"
 
 #. 180
 #: ../src/country.c:63
 msgid "Congo, Democratic Republic of the"
-msgstr ""
+msgstr "Congo-Kinshasa"
 
 #. 140
 #: ../src/country.c:64
-#, fuzzy
 msgid "Central African Republic"
-msgstr ""
+msgstr "Centraal Afrikaanse Republiek"
 
 #. 178
 #: ../src/country.c:65
 msgid "Congo"
-msgstr "Congo"
+msgstr "Congo-Brazzaville"
 
 #. 756
 #: ../src/country.c:66
@@ -459,11 +429,10 @@ msgstr "Ivoorkust"
 #. 184
 #: ../src/country.c:68
 msgid "Cook Islands"
-msgstr ""
+msgstr "Cookeilanden"
 
 #. 152
 #: ../src/country.c:69
-#, fuzzy
 msgid "Chile"
 msgstr "Chili"
 
@@ -490,7 +459,7 @@ msgstr "Costa Rica"
 #. 192
 #: ../src/country.c:74
 msgid "Cuba"
-msgstr "Vuba"
+msgstr "Cuba"
 
 #. 132
 #: ../src/country.c:75
@@ -529,13 +498,11 @@ msgstr "Denemarken"
 
 #. 212
 #: ../src/country.c:82
-#, fuzzy
 msgid "Dominica"
-msgstr ""
+msgstr "Dominica"
 
 #. 214
 #: ../src/country.c:83
-#, fuzzy
 msgid "Dominican Republic"
 msgstr "Dominicaanse Republiek"
 
@@ -576,7 +543,6 @@ msgstr "Spanje"
 
 #. 231
 #: ../src/country.c:91
-#, fuzzy
 msgid "Ethiopia"
 msgstr "Ethiopië"
 
@@ -613,17 +579,17 @@ msgstr "Frankrijk"
 #. 266
 #: ../src/country.c:98
 msgid "Gabon"
-msgstr ""
+msgstr "Gabon"
 
 #. 826
 #: ../src/country.c:99
 msgid "United Kingdom"
-msgstr "Groot-Brittannië"
+msgstr "Verenigd Koninkrijk"
 
 #. 308
 #: ../src/country.c:100
 msgid "Grenada"
-msgstr ""
+msgstr "Grenada"
 
 #. 268
 #: ../src/country.c:101
@@ -633,11 +599,10 @@ msgstr "Georgië"
 #. 254
 #: ../src/country.c:102
 msgid "French Guiana"
-msgstr "FRans Guiana"
+msgstr "Frans Guiana"
 
 #. 831
 #: ../src/country.c:103
-#, fuzzy
 msgid "Guernsey"
 msgstr "Guernsey"
 
@@ -653,7 +618,6 @@ msgstr "Gibraltar"
 
 #. 304
 #: ../src/country.c:106
-#, fuzzy
 msgid "Greenland"
 msgstr "Groenland"
 
@@ -665,7 +629,7 @@ msgstr "Gambia"
 #. 324
 #: ../src/country.c:108
 msgid "Guinea"
-msgstr "Guinee"
+msgstr "Papoea-Nieuw-Guinea"
 
 #. 312
 #: ../src/country.c:109
@@ -685,7 +649,7 @@ msgstr "Griekenland"
 #. 239
 #: ../src/country.c:112
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "Zuid Georgia en de zuidelijke Sandwich eilanden"
 
 #. 320
 #: ../src/country.c:113
@@ -700,7 +664,7 @@ msgstr "Guam"
 #. 624
 #: ../src/country.c:115
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "Guinee-Bissau"
 
 #. 328
 #: ../src/country.c:116
@@ -715,7 +679,7 @@ msgstr "Hong Kong"
 #. 334
 #: ../src/country.c:118
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "Heard en McDonald eilanden"
 
 #. 340
 #: ../src/country.c:119
@@ -730,7 +694,7 @@ msgstr "Kroatië"
 #. 332
 #: ../src/country.c:121
 msgid "Haiti"
-msgstr "Haitie"
+msgstr "Haiti"
 
 #. 348
 #: ../src/country.c:122
@@ -740,7 +704,7 @@ msgstr "Hongarije"
 #. 360
 #: ../src/country.c:123
 msgid "Indonesia"
-msgstr ""
+msgstr "Indonesië"
 
 #. 372
 #: ../src/country.c:124
@@ -765,11 +729,10 @@ msgstr "India"
 #. 086
 #: ../src/country.c:128
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "Brits Territorium in de Indische Oceaan"
 
 #. 368
 #: ../src/country.c:129
-#, fuzzy
 msgid "Iraq"
 msgstr "Irak"
 
@@ -805,50 +768,48 @@ msgstr "Jordanie"
 
 #. 392
 #: ../src/country.c:136
-#, fuzzy
 msgid "Japan"
-msgstr "Spanje"
+msgstr "Japan"
 
 #. 404
 #: ../src/country.c:137
 msgid "Kenya"
-msgstr ""
+msgstr "Kenia"
 
 #. 417
 #: ../src/country.c:138
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "Kirgizië"
 
 #. 116
 #: ../src/country.c:139
 msgid "Cambodia"
-msgstr "Kambodja"
+msgstr "Cambodja"
 
 #. 296
 #: ../src/country.c:140
 msgid "Kiribati"
-msgstr ""
+msgstr "Kiribati"
 
 #. 174
 #: ../src/country.c:141
 msgid "Comoros"
-msgstr ""
+msgstr "Comoren"
 
 #. 659
 #: ../src/country.c:142
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "Saint Kitts en Nevis"
 
 #. 408
 #: ../src/country.c:143
 msgid "Korea, Democratic People's Republic of"
-msgstr ""
+msgstr "ZuidKorea"
 
 #. 410
 #: ../src/country.c:144
-#, fuzzy
 msgid "Korea, Republic of"
-msgstr "Tsjechië"
+msgstr "Noord-Korea"
 
 #. 414
 #: ../src/country.c:145
@@ -857,19 +818,18 @@ msgstr "Koeweit"
 
 #. 136
 #: ../src/country.c:146
-#, fuzzy
 msgid "Cayman Islands"
-msgstr "Färöer"
+msgstr "Caymaneilanden"
 
 #. 398
 #: ../src/country.c:147
 msgid "Kazakhstan"
-msgstr ""
+msgstr "Kazachstan"
 
 #. 418
 #: ../src/country.c:148
 msgid "Lao People's Democratic Republic"
-msgstr ""
+msgstr "Laos"
 
 #. 422
 #: ../src/country.c:149
@@ -879,7 +839,7 @@ msgstr "Libanon"
 #. 662
 #: ../src/country.c:150
 msgid "Saint Lucia"
-msgstr ""
+msgstr "Saint Lucia"
 
 #. 438
 #: ../src/country.c:151
@@ -893,15 +853,13 @@ msgstr "Sri Lanka"
 
 #. 430
 #: ../src/country.c:153
-#, fuzzy
 msgid "Liberia"
-msgstr "Libyen"
+msgstr "Liberia"
 
 #. 426
 #: ../src/country.c:154
-#, fuzzy
 msgid "Lesotho"
-msgstr "Lengte"
+msgstr "Lesotho"
 
 #. 440
 #: ../src/country.c:155
@@ -921,7 +879,7 @@ msgstr "Letland"
 #. 434
 #: ../src/country.c:158
 msgid "Libyan Arab Jamahiriya"
-msgstr ""
+msgstr "Libië"
 
 #. 504
 #: ../src/country.c:159
@@ -936,7 +894,7 @@ msgstr "Monaco"
 #. 498
 #: ../src/country.c:161
 msgid "Moldova, Republic of"
-msgstr ""
+msgstr "Moldavië"
 
 #. 499
 #: ../src/country.c:162
@@ -946,7 +904,7 @@ msgstr "Montenegro"
 #. 663
 #: ../src/country.c:163
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "Sint-Maarten (Franse Antillen)"
 
 #. 450
 #: ../src/country.c:164
@@ -955,7 +913,6 @@ msgstr "Madagascar"
 
 #. 584
 #: ../src/country.c:165
-#, fuzzy
 msgid "Marshall Islands"
 msgstr "Marshall eilanden"
 
@@ -966,7 +923,6 @@ msgstr "Macedonië"
 
 #. 466
 #: ../src/country.c:167
-#, fuzzy
 msgid "Mali"
 msgstr "Mali"
 
@@ -982,14 +938,13 @@ msgstr "Mongolië"
 
 #. 446
 #: ../src/country.c:170
-#, fuzzy
 msgid "Macao"
 msgstr "Macao"
 
 #. 580
 #: ../src/country.c:171
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "Noordelijke Marianen"
 
 #. 474
 #: ../src/country.c:172
@@ -1004,7 +959,7 @@ msgstr "Mauretanië"
 #. 500
 #: ../src/country.c:174
 msgid "Montserrat"
-msgstr ""
+msgstr "Montserrat"
 
 #. 470
 #: ../src/country.c:175
@@ -1014,16 +969,15 @@ msgstr "Malta"
 #. 480
 #: ../src/country.c:176
 msgid "Mauritius"
-msgstr ""
+msgstr "Mauritius"
 
 #. 462
 #: ../src/country.c:177
 msgid "Maldives"
-msgstr ""
+msgstr "Maldiven"
 
 #. 454
 #: ../src/country.c:178
-#, fuzzy
 msgid "Malawi"
 msgstr "Malawi"
 
@@ -1034,7 +988,6 @@ msgstr "Mexico"
 
 #. 458
 #: ../src/country.c:180
-#, fuzzy
 msgid "Malaysia"
 msgstr "Maleisië"
 
@@ -1045,13 +998,11 @@ msgstr "Mozambique"
 
 #. 516
 #: ../src/country.c:182
-#, fuzzy
 msgid "Namibia"
 msgstr "Namibië"
 
 #. 540
 #: ../src/country.c:183
-#, fuzzy
 msgid "New Caledonia"
 msgstr "Nieuw Caledonië"
 
@@ -1062,9 +1013,8 @@ msgstr "Niger"
 
 #. 574
 #: ../src/country.c:185
-#, fuzzy
 msgid "Norfolk Island"
-msgstr ""
+msgstr "Norfolk"
 
 #. 566
 #: ../src/country.c:186
@@ -1098,13 +1048,11 @@ msgstr "Nauru"
 
 #. 570
 #: ../src/country.c:192
-#, fuzzy
 msgid "Niue"
-msgstr ""
+msgstr "Niue"
 
 #. 554
 #: ../src/country.c:193
-#, fuzzy
 msgid "New Zealand"
 msgstr "Nieuw Zeeland"
 
@@ -1151,12 +1099,12 @@ msgstr "Polen"
 #. 666
 #: ../src/country.c:202
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "Saint-Pierre en Miquelon"
 
 #. 612
 #: ../src/country.c:203
 msgid "Pitcairn"
-msgstr ""
+msgstr "Pitcairneilanden"
 
 #. 630
 #: ../src/country.c:204
@@ -1175,9 +1123,8 @@ msgstr "Portugal"
 
 #. 585
 #: ../src/country.c:207
-#, fuzzy
 msgid "Palau"
-msgstr ""
+msgstr "Palau"
 
 #. 600
 #: ../src/country.c:208
@@ -1187,12 +1134,12 @@ msgstr "Paraguay"
 #. 634
 #: ../src/country.c:209
 msgid "Qatar"
-msgstr "Qatair"
+msgstr "Qatar"
 
 #. 638
 #: ../src/country.c:210
 msgid "Reunion"
-msgstr ""
+msgstr "Réunion"
 
 #. 642
 #: ../src/country.c:211
@@ -1211,7 +1158,6 @@ msgstr "Rusland"
 
 #. 646
 #: ../src/country.c:214
-#, fuzzy
 msgid "Rwanda"
 msgstr "Rwanda"
 
@@ -1224,7 +1170,7 @@ msgstr "Saudi-Arabië"
 #. 090
 #: ../src/country.c:216
 msgid "Solomon Islands"
-msgstr ""
+msgstr "Salomonseilanden"
 
 #. 690
 #: ../src/country.c:217
@@ -1233,7 +1179,6 @@ msgstr "Seychellen"
 
 #. 736
 #: ../src/country.c:218
-#, fuzzy
 msgid "Sudan"
 msgstr "Soedan"
 
@@ -1250,7 +1195,7 @@ msgstr "Singapore"
 #. 654
 #: ../src/country.c:221
 msgid "Saint Helena"
-msgstr ""
+msgstr "Sint-Helena"
 
 #. 705
 #: ../src/country.c:222
@@ -1284,20 +1229,18 @@ msgstr "Senegal"
 
 #. 706
 #: ../src/country.c:228
-#, fuzzy
 msgid "Somalia"
 msgstr "Somalië"
 
 #. 740
 #: ../src/country.c:229
-#, fuzzy
 msgid "Suriname"
 msgstr "Suriname"
 
 #. 678
 #: ../src/country.c:230
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "Sao Tomé en Principe"
 
 #. 222
 #: ../src/country.c:231
@@ -1311,14 +1254,13 @@ msgstr "Syrië"
 
 #. 748
 #: ../src/country.c:233
-#, fuzzy
 msgid "Swaziland"
 msgstr "Swasiland"
 
 #. 796
 #: ../src/country.c:234
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Turks- en Caicoseilanden"
 
 #. 148
 #: ../src/country.c:235
@@ -1328,7 +1270,7 @@ msgstr "Tjaad"
 #. 260
 #: ../src/country.c:236
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Franse Zuidelijke en Antarctische Gebieden"
 
 #. 768
 #: ../src/country.c:237
@@ -1337,28 +1279,26 @@ msgstr "Togo"
 
 #. 764
 #: ../src/country.c:238
-#, fuzzy
 msgid "Thailand"
 msgstr "Thailand"
 
 #. 762
 #: ../src/country.c:239
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tadzjikistan"
 
 #. 772
 #: ../src/country.c:240
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau-eilanden"
 
 #. 626
 #: ../src/country.c:241
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Oost-Timor"
 
 #. 795
 #: ../src/country.c:242
-#, fuzzy
 msgid "Turkmenistan"
 msgstr "Turkmenistan"
 
@@ -1369,7 +1309,6 @@ msgstr "Tunesië"
 
 #. 776
 #: ../src/country.c:244
-#, fuzzy
 msgid "Tonga"
 msgstr "Tonga"
 
@@ -1411,7 +1350,7 @@ msgstr "Oeganda"
 #. 581
 #: ../src/country.c:252
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "Kleine Pacifische eilanden van de Verenigde Staten"
 
 #. 840
 #: ../src/country.c:253
@@ -1433,11 +1372,10 @@ msgstr "Uzbekistan"
 msgid "Holy See (Vatican City State)"
 msgstr "Vaticaanstad"
 
-
 #. 670
 #: ../src/country.c:257
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "Saint Vincent en de Grenadines"
 
 #. 862
 #: ../src/country.c:258
@@ -1462,12 +1400,12 @@ msgstr "Vietnam"
 #. 548
 #: ../src/country.c:262
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #. 876
 #: ../src/country.c:263
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "Wallis en Futuna"
 
 #. 882
 #: ../src/country.c:264
@@ -1481,9 +1419,8 @@ msgstr "Jemen"
 
 #. 175
 #: ../src/country.c:266
-#, fuzzy
 msgid "Mayotte"
-msgstr "Layout"
+msgstr "Mayotte"
 
 #. 710
 #: ../src/country.c:267
@@ -1500,186 +1437,201 @@ msgstr "Zambia"
 msgid "Zimbabwe"
 msgstr "Zimbabwe"
 
-#: ../src/gui/gtk/destination.c:96 ../src/gui/gtk/destination.c:97
-#: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
+#: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
+#: ../src/gui/gtk/destination.c:99 ../src/gui/gtk/destination.c:100
 msgid "Car"
 msgstr "Auto"
 
-#: ../src/gui/gtk/destination.c:96
+#: ../src/gui/gtk/destination.c:97
 msgid "Iso2"
 msgstr "Iso2"
 
-#: ../src/gui/gtk/destination.c:96
+#: ../src/gui/gtk/destination.c:97
 msgid "Iso3"
 msgstr "Iso3"
 
-#: ../src/gui/gtk/destination.c:96 ../src/gui/gtk/destination.c:334
+#: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:403
 msgid "Country"
 msgstr "Land"
 
 #
-#: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
-#: ../src/gui/gtk/destination.c:99
+#: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
+#: ../src/gui/gtk/destination.c:100
 msgid "Postal"
 msgstr "Postcode"
 
-#: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
-#: ../src/gui/gtk/destination.c:99
+#: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
+#: ../src/gui/gtk/destination.c:100
 msgid "Town"
 msgstr "Plaats"
 
 #
-#: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
-#: ../src/gui/gtk/destination.c:99
+#: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
+#: ../src/gui/gtk/destination.c:100
 msgid "District"
 msgstr "District"
 
-#: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
-#: ../src/gui/gtk/destination.c:343
+#: ../src/gui/gtk/destination.c:99 ../src/gui/gtk/destination.c:100
+#: ../src/gui/gtk/destination.c:412
 msgid "Street"
 msgstr "Straat"
 
-#: ../src/gui/gtk/destination.c:99 ../src/gui/gtk/destination.c:345
+#: ../src/gui/gtk/destination.c:100 ../src/gui/gtk/destination.c:414
 msgid "Number"
 msgstr "Nummer"
 
 #
-#: ../src/gui/gtk/destination.c:329
+#: ../src/gui/gtk/destination.c:398
 msgid "Enter Destination"
 msgstr "Bestemming"
 
-#: ../src/gui/gtk/destination.c:336
+#: ../src/gui/gtk/destination.c:405
 msgid "Zip Code"
 msgstr "Postcode"
 
-#: ../src/gui/gtk/destination.c:338
+#: ../src/gui/gtk/destination.c:407
 msgid "City"
-msgstr "Plaats"
+msgstr "Stad"
 
-#: ../src/gui/gtk/destination.c:340
+#: ../src/gui/gtk/destination.c:409
 msgid "District/Township"
 msgstr "Gebied"
 
-#: ../src/gui/gtk/destination.c:369
+#: ../src/gui/gtk/destination.c:437 ../src/gui/gtk/gui_gtk_action.c:153
+msgid "Map"
+msgstr "Kaart"
+
+#: ../src/gui/gtk/destination.c:438
 msgid "Bookmark"
 msgstr "Markeren"
 
-#: ../src/gui/gtk/destination.c:370 ../src/gui/gtk/gui_gtk_action.c:208
+#: ../src/gui/gtk/destination.c:439 ../src/gui/gtk/gui_gtk_action.c:166
 msgid "Destination"
 msgstr "Bestemming"
 
-#: ../src/gui/gtk/gui_gtk_action.c:195
+#: ../src/gui/gtk/gui_gtk_action.c:149
 msgid "Display"
 msgstr "Tonen"
 
-#: ../src/gui/gtk/gui_gtk_action.c:199
+#: ../src/gui/gtk/gui_gtk_action.c:150
+msgid "Route"
+msgstr "Route"
+
+#: ../src/gui/gtk/gui_gtk_action.c:154
+msgid "Layout"
+msgstr "Opmaak"
+
+#: ../src/gui/gtk/gui_gtk_action.c:155
+msgid "Projection"
+msgstr "Projectie"
+
+#: ../src/gui/gtk/gui_gtk_action.c:156
+msgid "Vehicle"
+msgstr "Voertuig"
+
+#: ../src/gui/gtk/gui_gtk_action.c:157
 msgid "ZoomOut"
 msgstr "Verkleinen"
 
-#: ../src/gui/gtk/gui_gtk_action.c:200
+#: ../src/gui/gtk/gui_gtk_action.c:158
 msgid "ZoomIn"
 msgstr "Vergroten"
 
-#: ../src/gui/gtk/gui_gtk_action.c:201
+#: ../src/gui/gtk/gui_gtk_action.c:159
 msgid "Refresh"
 msgstr "Verversen"
 
-#: ../src/gui/gtk/gui_gtk_action.c:204 ../src/gui/gtk/gui_gtk_action.c:206
+#: ../src/gui/gtk/gui_gtk_action.c:162 ../src/gui/gtk/gui_gtk_action.c:164
 msgid "Info"
 msgstr "Info"
 
-#: ../src/gui/gtk/gui_gtk_action.c:209
+#: ../src/gui/gtk/gui_gtk_action.c:167
 msgid "Clear"
 msgstr "Wissen"
 
-#: ../src/gui/gtk/gui_gtk_action.c:210
+#: ../src/gui/gtk/gui_gtk_action.c:168
 msgid "Test"
 msgstr "Test"
 
-#: ../src/gui/gtk/gui_gtk_action.c:211
+#: ../src/gui/gtk/gui_gtk_action.c:169
 msgid "_Quit"
 msgstr "Beëindigen"
 
-#: ../src/gui/gtk/gui_gtk_action.c:218
+#: ../src/gui/gtk/gui_gtk_action.c:176
 msgid "Cursor"
 msgstr "Cursor"
 
-#: ../src/gui/gtk/gui_gtk_action.c:219
+#: ../src/gui/gtk/gui_gtk_action.c:177
 msgid "Tracking"
 msgstr "Volgen"
 
-#: ../src/gui/gtk/gui_gtk_action.c:220
+#: ../src/gui/gtk/gui_gtk_action.c:178
 msgid "Orientation"
 msgstr "Oriëntatie"
 
-#: ../src/gui/gtk/gui_gtk_action.c:222 ../src/gui/gtk/gui_gtk_action.c:224
+#: ../src/gui/gtk/gui_gtk_action.c:180 ../src/gui/gtk/gui_gtk_action.c:182
 msgid "Fullscreen"
 msgstr "Beeldvullend"
 
-#: ../src/gui/gtk/gui_gtk_action.c:232
+#: ../src/gui/gtk/gui_gtk_action.c:190
 msgid "Data"
 msgstr "Data"
 
-#: ../src/gui/gtk/gui_gtk_action.c:233
-msgid "VisibleBlocks"
-msgstr "Toon blokken"
-
-#: ../src/gui/gtk/gui_gtk_action.c:234
-msgid "VisibleTowns"
-msgstr "Zichtbare Steden"
-
-#: ../src/gui/gtk/gui_gtk_action.c:235
-msgid "VisiblePolys"
-msgstr "Toon polygonen"
-
-#: ../src/gui/gtk/gui_gtk_action.c:236
-msgid "VisibleStreets"
-msgstr "Toon straten"
-
-#: ../src/gui/gtk/gui_gtk_action.c:237
-msgid "VisiblePoints"
-msgstr "Toon punten"
-
-#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+#: ../src/gui/gtk/gui_gtk_statusbar.c:46 ../src/gui/gtk/gui_gtk_statusbar.c:81
 msgid "N"
 msgstr "N"
 
-#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+#: ../src/gui/gtk/gui_gtk_statusbar.c:46 ../src/gui/gtk/gui_gtk_statusbar.c:81
 msgid "NE"
 msgstr "NO"
 
-#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+#: ../src/gui/gtk/gui_gtk_statusbar.c:46 ../src/gui/gtk/gui_gtk_statusbar.c:81
 msgid "E"
 msgstr "O"
 
-#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+#: ../src/gui/gtk/gui_gtk_statusbar.c:46 ../src/gui/gtk/gui_gtk_statusbar.c:81
 msgid "SE"
 msgstr "ZO"
 
-#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+#: ../src/gui/gtk/gui_gtk_statusbar.c:46 ../src/gui/gtk/gui_gtk_statusbar.c:81
 msgid "S"
 msgstr "Z"
 
-#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+#: ../src/gui/gtk/gui_gtk_statusbar.c:46 ../src/gui/gtk/gui_gtk_statusbar.c:81
 msgid "SW"
 msgstr "ZW"
 
-#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+#: ../src/gui/gtk/gui_gtk_statusbar.c:46 ../src/gui/gtk/gui_gtk_statusbar.c:81
 msgid "W"
 msgstr "W"
 
-#: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
+#: ../src/gui/gtk/gui_gtk_statusbar.c:46 ../src/gui/gtk/gui_gtk_statusbar.c:81
 msgid "NW"
 msgstr "NW"
 
-#: ../src/gui/gtk/gui_gtk_statusbar.c:105
+#: ../src/gui/gtk/gui_gtk_statusbar.c:103
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
 msgstr "Route %4.0fkm    %02d:%02d Aankomsttijd"
 
-#: ../src/gui/gtk/gui_gtk_statusbar.c:156
+#: ../src/gui/gtk/gui_gtk_statusbar.c:148
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Route 0000km  0+00:00 Aankomsttijd"
+
+#~ msgid "VisibleBlocks"
+#~ msgstr "Toon blokken"
+
+#~ msgid "VisibleTowns"
+#~ msgstr "Zichtbare Steden"
+
+#~ msgid "VisiblePolys"
+#~ msgstr "Toon polygonen"
+
+#~ msgid "VisibleStreets"
+#~ msgstr "Toon straten"
+
+#~ msgid "VisiblePoints"
+#~ msgstr "Toon punten"
 
 #~ msgid "Moldova"
 #~ msgstr "Moldavië"
