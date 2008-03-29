@@ -38,137 +38,135 @@ static int report,phase;
 static int ignore_unkown = 0, coverage=0;
 
 static char *attrmap={
-	"n	historic\n"
-	"n	type	junktion\n"
-	"n	amenity	hospital	poi_hospital\n"
-	"n	amenity	atm		poi_bank\n"
-	"n	amenity	bank		poi_bank\n"
-	"n	amenity	pub		poi_bar\n"
-	"n	amenity	cafe		poi_cafe\n"
-	"n	amenity	bus_station	poi_bus_station\n"
-	"n	amenity	parking		poi_car_parking\n"
-	"n	amenity	cinema		poi_cinema\n"
-	"n	amenity	fire_station	poi_firebrigade\n"
-	"n	amenity	fuel		poi_fuel\n"
-	"n	amenity	courthouse	poi_justice\n"
-	"n	amenity	library		poi_library\n"
-	"n	amenity	pharmacy	poi_pharmacy\n"
-	"n	amenity	place_of_worship	poi_church\n"
-	"n	amenity	police		poi_police\n"
-	"n	amenity	post_office	poi_post\n"
-	"n	amenity	post_box	poi_post\n"
-	"n	amenity	public_building	poi_public_office\n"
-	"n	amenity	restaurant	poi_restaurant\n"
-	"n	amenity	fast_food	poi_fastfood\n"
-	"n	amenity	toilets		poi_restroom\n"
-	"n	amenity	school		poi_school\n"
-	"n	amenity	university	poi_school\n"
-	"n	amenity	college		poi_school\n"
-	"n	amenity	telephone	poi_telephone\n"
-	"n	amenity	theatre		poi_theater\n"
-	"n	highway	bus_stop	poi_bus_stop\n"
-	"n	highway	motorway_junction	highway_exit\n"
-	"n	highway	traffic_signals	traffic_signals\n"
-	"n	leisure	slipway		poi_boat_ramp\n"
-	"n	leisure	fishing		poi_fish\n"
-	"n	sport	golf	poi_golf\n"
-	"n	leisure	golf_course	poi_golf\n"
-	"n	leisure	marina		poi_marine\n"
-	"n	leisure	sports_centre	poi_sport\n"
-	"n	leisure	stadium		poi_stadium\n"
-	"n	shop	supermarket	poi_shopping\n"
-	"n	shop	convenience	poi_shop_grocery\n"
-	"n	tourism	attraction	poi_attraction\n"
-	"n	tourism	camp_site	poi_camp_rv\n"
-	"n	tourism	caravan_site	poi_camp_rv\n"
-	"n	tourism	hotel		poi_hotel\n"
-	"n	tourism	motel		poi_hotel\n"
-	"n	tourism	guest_house	poi_hotel\n"
-	"n	tourism	hostel		poi_hotel\n"
-	"n	tourism	information	poi_information\n"
-	"n	tourism	picnic_site	poi_picnic\n"
-	"n	tourism	theme_park	poi_resort\n"
-	"n	tourism	zoo		poi_zoo\n"
-	"n	historic	museum	poi_museum_history\n"
-	"n	amenity	grave_yard	poi_cemetery\n"
-	"n	landuse	cemetery	poi_cemetery\n"
-	"n	military	airfield	poi_military\n"
-	"n	military	bunker		poi_military\n"
-	"n	military	barracks	poi_military\n"
-	"n	military	range		poi_military\n"
-	"n	military	danger_area	poi_danger_area\n"
-	"n	sport	swimming	poi_swimming\n"
-	"n	sport	skiing		poi_skiing\n"
-	"n	aeroway	aerodrome	poi_airport\n"
-	"n	aeroway	airport		poi_airport\n"
-	"n	aeroway	terminal	poi_airport\n"
-	"n	aeroway	helipad		poi_heliport\n"
-	"n	man_made	tower	poi_tower\n"
-	"n	natural	bay		poi_bay\n"
-	"n	natural	peak		poi_peak\n"
-	"n	place	suburb		district_label\n"
-	"n	place	city		town_label_2e5\n"
-	"n	place	town		town_label_2e4\n"
-	"n	place	village		town_label_2e3\n"
-	"n	place	hamlet		town_label_2e2\n"
-	"n	railway	station		poi_rail_station\n"
-	"w	amenity	place_of_worship	poly_building\n"
-	"w	building	glasshouse	poly_building\n"
-	"w	building	1	poly_building\n"
-	"w	building\n"
-	"w	aeroway	aerodrome	poly_airport\n"
-	"w	aeroway	apron		poly_apron\n"
-	"w	aeroway	runway		aeroway_runway\n"
-	"w	aeroway	taxiway		aeroway_taxiway\n"
-	"w	aeroway	terminal	poly_terminal\n"
-	"w	amenity	parking		poly_car_parking\n"
-	"w	highway	bridleway	bridleway\n"
-	"w	highway	cycleway	cycleway\n"
-	"w	highway	cyclepath	cycleway\n"
-	"w	highway	footway		footway\n"
-	"w	highway	steps		steps\n"
-	"w	highway	track		track_gravelled\n"
-	"w	highway	service		street_service\n"
-	"w	highway	pedestrian	street_pedestrian\n"
-	"w	highway	residential	street_1_city\n"
-	"w	highway	unclassified	street_1_city\n"
-	"w	highway	minor		street_1_land\n"
-	"w	highway	tertiary	street_2_city\n"
-	"w	highway	secondary	street_3_city\n"
-	"w	highway	unsurfaced	track_gravelled\n"
-	"w	highway	primary		street_4_city\n"
-	"w	highway	primary_link	ramp\n"
-	"w	highway	trunk		street_4_city\n"
-	"w	highway	trunk_link	ramp\n"
-	"w	highway	motorway	highway_city\n"
-	"w	highway	motorway_link	ramp\n"
-	"w	historic	town gate	poly_building\n"
-	"w	landuse	allotments	poly_wood\n"
-	"w	landuse	cemetery	poly_cemetery\n"
-	"w	landuse	forest		poly_wood\n"
-	"w	landuse	industrial	poly_industry\n"
-	"w	landuse	residential	poly_town\n"
-	"w	landuse	farm	poly_farm\n"
-	"w	leisure	park		poly_park\n"
-	"w	natural	wood		poly_wood\n"
-	"w	natural	water		poly_water\n"
-	"w	natural	coastline	water_line\n"
-	"w	place		suburb		poly_town\n"
-	"w	place		town		poly_town\n"
-	"w	power	line	powerline\n"
-	"w	railway	rail		rail\n"
-	"w	railway	narrow_gauge	rail\n"
-	"w	railway	subway		rail\n"
-	"w	railway	tram		rail\n"
-	"w	leisure	golf_course	poly_golf_course\n"
-	"w	waterway	canal		water_line\n"
-	"w	waterway	river		water_line\n"
-	"w	waterway	weir		water_line\n"
-	"w	waterway	stream		water_line\n"
-	"w	waterway	drain		water_line\n"
-	"w	waterway	riverbank	poly_water\n"
-	"w	boundary	administrative	border_country\n"
-	"w	route		ferry		ferry\n"
+	"n	*=*			point_unkn\n"
+	"n	amenity=hospital	poi_hospital\n"
+	"n	amenity=atm		poi_bank\n"
+	"n	amenity=bank		poi_bank\n"
+	"n	amenity=pub		poi_bar\n"
+	"n	amenity=cafe		poi_cafe\n"
+	"n	amenity=bus_station	poi_bus_station\n"
+	"n	amenity=parking		poi_car_parking\n"
+	"n	amenity=cinema		poi_cinema\n"
+	"n	amenity=fire_station	poi_firebrigade\n"
+	"n	amenity=fuel		poi_fuel\n"
+	"n	amenity=courthouse	poi_justice\n"
+	"n	amenity=library		poi_library\n"
+	"n	amenity=pharmacy	poi_pharmacy\n"
+	"n	amenity=place_of_worship	poi_church\n"
+	"n	amenity=police		poi_police\n"
+	"n	amenity=post_office	poi_post\n"
+	"n	amenity=post_box	poi_post\n"
+	"n	amenity=public_building	poi_public_office\n"
+	"n	amenity=restaurant	poi_restaurant\n"
+	"n	amenity=fast_food	poi_fastfood\n"
+	"n	amenity=toilets		poi_restroom\n"
+	"n	amenity=school		poi_school\n"
+	"n	amenity=university	poi_school\n"
+	"n	amenity=college		poi_school\n"
+	"n	amenity=telephone	poi_telephone\n"
+	"n	amenity=theatre		poi_theater\n"
+	"n	highway=bus_stop	poi_bus_stop\n"
+	"n	highway=motorway_junction	highway_exit\n"
+	"n	highway=traffic_signals	traffic_signals\n"
+	"n	leisure=slipway		poi_boat_ramp\n"
+	"n	leisure=fishing		poi_fish\n"
+	"n	sport=golf	poi_golf\n"
+	"n	leisure=golf_course	poi_golf\n"
+	"n	leisure=marina		poi_marine\n"
+	"n	leisure=sports_centre	poi_sport\n"
+	"n	leisure=stadium		poi_stadium\n"
+	"n	shop=supermarket	poi_shopping\n"
+	"n	shop=convenience	poi_shop_grocery\n"
+	"n	tourism=attraction	poi_attraction\n"
+	"n	tourism=camp_site	poi_camp_rv\n"
+	"n	tourism=caravan_site	poi_camp_rv\n"
+	"n	tourism=hotel		poi_hotel\n"
+	"n	tourism=motel		poi_hotel\n"
+	"n	tourism=guest_house	poi_hotel\n"
+	"n	tourism=hostel		poi_hotel\n"
+	"n	tourism=information	poi_information\n"
+	"n	tourism=picnic_site	poi_picnic\n"
+	"n	tourism=theme_park	poi_resort\n"
+	"n	tourism=zoo		poi_zoo\n"
+	"n	historic=museum	poi_museum_history\n"
+	"n	amenity=grave_yard	poi_cemetery\n"
+	"n	landuse=cemetery	poi_cemetery\n"
+	"n	military=airfield	poi_military\n"
+	"n	military=bunker		poi_military\n"
+	"n	military=barracks	poi_military\n"
+	"n	military=range		poi_military\n"
+	"n	military=danger_area	poi_danger_area\n"
+	"n	sport=swimming	poi_swimming\n"
+	"n	sport=skiing		poi_skiing\n"
+	"n	aeroway=aerodrome	poi_airport\n"
+	"n	aeroway=airport		poi_airport\n"
+	"n	aeroway=terminal	poi_airport\n"
+	"n	aeroway=helipad		poi_heliport\n"
+	"n	man_made=tower	poi_tower\n"
+	"n	natural=bay		poi_bay\n"
+	"n	natural=peak		poi_peak\n"
+	"n	place=suburb		district_label\n"
+	"n	place=city		town_label_2e5\n"
+	"n	place=town		town_label_2e4\n"
+	"n	place=village		town_label_2e3\n"
+	"n	place=hamlet		town_label_2e2\n"
+	"n	railway=station		poi_rail_station\n"
+	"w	*=*			street_unkn\n"
+	"w	amenity=place_of_worship	poly_building\n"
+	"w	building=*	poly_building\n"
+	"w	aeroway=aerodrome	poly_airport\n"
+	"w	aeroway=apron		poly_apron\n"
+	"w	aeroway=runway		aeroway_runway\n"
+	"w	aeroway=taxiway		aeroway_taxiway\n"
+	"w	aeroway=terminal	poly_terminal\n"
+	"w	amenity=parking		poly_car_parking\n"
+	"w	highway=bridleway	bridleway\n"
+	"w	highway=cycleway	cycleway\n"
+	"w	highway=cyclepath	cycleway\n"
+	"w	highway=footway		footway\n"
+	"w	highway=steps		steps\n"
+	"w	highway=track		track_gravelled\n"
+	"w	highway=service		street_service\n"
+	"w	highway=pedestrian	street_pedestrian\n"
+	"w	highway=residential	street_1_city\n"
+	"w	highway=unclassified	street_1_city\n"
+	"w	highway=minor		street_1_land\n"
+	"w	highway=tertiary	street_2_city\n"
+	"w	highway=secondary	street_3_city\n"
+	"w	highway=unsurfaced	track_gravelled\n"
+	"w	highway=primary		street_4_city\n"
+	"w	highway=primary_link	ramp\n"
+	"w	highway=trunk		street_4_city\n"
+	"w	highway=trunk_link	ramp\n"
+	"w	highway=motorway	highway_city\n"
+	"w	highway=motorway_link	ramp\n"
+	"w	historic=town gate	poly_building\n"
+	"w	landuse=allotments	poly_wood\n"
+	"w	landuse=cemetery	poly_cemetery\n"
+	"w	landuse=forest		poly_wood\n"
+	"w	landuse=industrial	poly_industry\n"
+	"w	landuse=residential	poly_town\n"
+	"w	landuse=farm	poly_farm\n"
+	"w	leisure=park		poly_park\n"
+	"w	natural=wood		poly_wood\n"
+	"w	natural=water		poly_water\n"
+	"w	natural=coastline	water_line\n"
+	"w	place=suburb		poly_town\n"
+	"w	place=town		poly_town\n"
+	"w	power=line	powerline\n"
+	"w	railway=rail		rail\n"
+	"w	railway=narrow_gauge	rail\n"
+	"w	railway=subway		rail\n"
+	"w	railway=tram		rail\n"
+	"w	leisure=golf_course	poly_golf_course\n"
+	"w	waterway=canal		water_line\n"
+	"w	waterway=river		water_line\n"
+	"w	waterway=weir		water_line\n"
+	"w	waterway=stream		water_line\n"
+	"w	waterway=drain		water_line\n"
+	"w	waterway=riverbank	poly_water\n"
+	"w	boundary=administrative	border_country\n"
+	"w	route=ferry		ferry\n"
 };
 
 struct coord {
@@ -207,7 +205,21 @@ struct country_table {
 static GHashTable *country_table_hash;
 #endif
 
-static GHashTable *way_key_hash, *node_key_hash;
+struct attr_mapping {
+	enum item_type type;
+	int attr_present_idx_count;
+	int attr_present_idx[0];	
+};
+
+static struct attr_mapping **attr_mapping_node;
+static int attr_mapping_node_count;
+static struct attr_mapping **attr_mapping_way;
+static int attr_mapping_way_count;
+
+static char *attr_present;
+static int attr_present_count;
+static GHashTable *attr_hash;
+
 
 static GHashTable *strings_hash = NULL;
 
@@ -231,22 +243,16 @@ static char* string_hash_lookup( const char* key )
 static void
 build_attrmap_line(char *line)
 {
-	char *t=NULL,*k=NULL,*v=NULL,*i=NULL,*p;
-	gpointer *data;
-	GHashTable *key_hash,*value_hash;
+	char *t=NULL,*kvl=NULL,*i=NULL,*p,*kv;
+	struct attr_mapping ***attr_mapping_curr,*attr_mapping=g_malloc0(sizeof(struct attr_mapping));
+	int idx,attr_mapping_count=0,*attr_mapping_curr_count;
 	t=line;
 	p=strchr(t,'\t');
 	if (p) {
 		while (*p == '\t')
 			*p++='\0';
-		k=p;
-		p=strchr(k,'\t');
-	}
-	if (p) {
-		while (*p == '\t')
-			*p++='\0';
-		v=p;
-		p=strchr(v,'\t');
+		kvl=p;
+		p=strchr(kvl,'\t');
 	}
 	if (p) {
 		while (*p == '\t')
@@ -256,32 +262,35 @@ build_attrmap_line(char *line)
 	if (t[0] == 'w') {
 		if (! i)
 			i="street_unkn";
-		key_hash=way_key_hash;
+		attr_mapping_curr=&attr_mapping_way;
+		attr_mapping_curr_count=&attr_mapping_way_count;
 	} else {
 		if (! i)
 			i="point_unkn";
-		key_hash=node_key_hash;
+		attr_mapping_curr=&attr_mapping_node;
+		attr_mapping_curr_count=&attr_mapping_node_count;
 	}
-	value_hash=g_hash_table_lookup(key_hash, k);
-	if (! value_hash) {
-		value_hash=g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(key_hash, string_hash_lookup(k), value_hash);
+	attr_mapping->type=item_from_name(i);
+	while ((kv=strtok(kvl, ","))) {
+		kvl=NULL;
+		if (!(idx=(int)g_hash_table_lookup(attr_hash, kv))) {
+			idx=attr_present_count++;
+			g_hash_table_insert(attr_hash, kv, (gpointer) idx);
+		}
+		attr_mapping=g_realloc(attr_mapping, sizeof(struct attr_mapping)+(attr_mapping_count+1)*sizeof(int));
+		attr_mapping->attr_present_idx[attr_mapping_count++]=idx;
+		attr_mapping->attr_present_idx_count=attr_mapping_count;
 	}
-	if (v) {
-		data=(gpointer)item_from_name(i);
-		g_hash_table_insert(value_hash, string_hash_lookup(v), data);
-	}
-#if 0
-	fprintf(stderr,"'%s' '%s' '%s'\n", k, v, i);
-#endif
+	*attr_mapping_curr=g_realloc(*attr_mapping_curr, sizeof(**attr_mapping_curr)*(*attr_mapping_curr_count+1));
+	(*attr_mapping_curr)[(*attr_mapping_curr_count)++]=attr_mapping;
 }
 
 static void
 build_attrmap(char *map)
 {
 	char *p;
-	way_key_hash=g_hash_table_new(g_str_hash, g_str_equal);
-	node_key_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	attr_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	attr_present_count=1;
 	while (map) {
 		p=strchr(map,'\n');
 		if (p)
@@ -290,6 +299,7 @@ build_attrmap(char *map)
 			build_attrmap_line(map);
 		map=p;
 	}
+	attr_present=g_malloc0(sizeof(*attr_present)*attr_present_count);
 }
 
 #ifdef GENERATE_INDEX
@@ -415,7 +425,8 @@ add_tag(char *k, char *v)
 {
 	GHashTable *value_hash;
 	enum item_type type;
-	int level=2;
+	int idx,level=2;
+	char buffer[BUFFER_SIZE*2+2];
 	if (! strcmp(k,"ele"))
 		level=9;
 	if (! strcmp(k,"time"))
@@ -495,37 +506,22 @@ add_tag(char *k, char *v)
 		node_is_tagged=1;
 	if (level >= 5)
 		return;
-	if (in_way)
-		value_hash=g_hash_table_lookup(way_key_hash, k);
-	else
-		value_hash=g_hash_table_lookup(node_key_hash, k);
-	if (! value_hash) {
-		if (report)
-			fprintf(stderr,"Unknown %s %d key '%s' (value '%s')\n", in_way ? "way" : "node", in_way ? wayid:nodeid, k, v);
-		return;
-	}
-	type=(enum item_type) g_hash_table_lookup(value_hash, v);
-	if (!type) {
-		if (report)
-			fprintf(stderr,"Unknown %s %d value of '%s' '%s'\n", in_way ? "way" : "node", in_way ? wayid:nodeid, k, v);
-		if ( ignore_unkown == 1 )
-			return;
-		type=in_way ? type_street_unkn : type_point_unkn;
-	        g_hash_table_insert(value_hash, string_hash_lookup( v ), (gpointer)item.type);
-	}
-	if ( (type != type_street_unkn ) && ( type != type_point_unkn )  )
-	{
-		item.type=type;
-		if (coverage && IS_STREET(item))
-			item.type=type_coverage;
-	}
-	else
-	{
-        	if ( ignore_unkown == 1 )
-		{
-		    level = 10;
-		}
-	}
+
+	strcpy(buffer,"*=*");
+	if ((idx=(int)g_hash_table_lookup(attr_hash, buffer)))
+		attr_present[idx]=1;
+
+	sprintf(buffer,"%s=*", k);
+	if ((idx=(int)g_hash_table_lookup(attr_hash, buffer)))
+		attr_present[idx]=2;
+
+	sprintf(buffer,"*=%s", v);
+	if ((idx=(int)g_hash_table_lookup(attr_hash, buffer)))
+		attr_present[idx]=2;
+
+	sprintf(buffer,"%s=%s", k, v);
+	if ((idx=(int)g_hash_table_lookup(attr_hash, buffer)))
+		attr_present[idx]=4;
 }
 
 static int
@@ -766,10 +762,32 @@ write_attr(FILE *out, struct attr_bin *attr, void *buffer)
 	}
 }
 
+static int
+attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_type *types, int types_count)
+{
+	int i,j,longest=0,ret=0,sum;
+	struct attr_mapping *curr;
+	for (i = 0 ; i < mapping_count ; i++) {
+		sum=0;
+		curr=mapping[i];
+		for (j = 0 ; j < curr->attr_present_idx_count ; j++)
+			sum+=attr_present[curr->attr_present_idx[j]];
+		if (sum > longest) {
+			longest=sum;
+			ret=0;
+		}
+		if (sum > 0 && sum == longest && ret < types_count) 
+			types[ret++]=curr->type;
+	}
+	memset(attr_present, 0, sizeof(*attr_present)*attr_present_count);
+	return ret;
+}
+
 static void
 end_way(FILE *out)
 {
-	int alen=0;
+	int alen=0,count;
+	enum item_type types[5];
 
 	if (! out)
 		return;
@@ -778,6 +796,7 @@ end_way(FILE *out)
 			return;
 		g_hash_table_insert(dedupe_ways_hash, (gpointer)wayid, (gpointer)1);
 	}
+	count=attr_longest_match(attr_mapping_way, attr_mapping_way_count, types, sizeof(types)/sizeof(enum item_type));
 	pad_text_attr(&debug_attr, debug_attr_buffer);
 	if (label_attr.len)
 		alen+=label_attr.len+1;
@@ -787,6 +806,10 @@ end_way(FILE *out)
 		alen+=debug_attr.len+1;
 	if (flags_attr.len)
 		alen+=flags_attr.len+1;
+	if (count)
+		item.type=types[0];
+	else
+		item.type=type_street_unkn;
 	item.clen=coord_count*2;
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
@@ -804,16 +827,21 @@ end_way(FILE *out)
 static void
 end_node(FILE *out)
 {
-	int alen=0;
-	int conflict=0;
+	int alen=0,conflict=0,count;
+	enum item_type types[5];
 	struct country_table *result=NULL, *lookup;
 	if (!out || ! node_is_tagged || ! nodeid)
 		return;
+	count=attr_longest_match(attr_mapping_node, attr_mapping_node_count, types, sizeof(types)/sizeof(enum item_type));
 	pad_text_attr(&debug_attr, debug_attr_buffer);
 	if (label_attr.len)
 		alen+=label_attr.len+1;
 	if (debug_attr.len)
 		alen+=debug_attr.len+1;
+	if (count)
+		item.type=types[0];
+	else
+		item.type=type_point_unkn;
 	item.clen=2;
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
