@@ -19,7 +19,6 @@
 
 static int map_id;
 
-static GHashTable *search_results;
 
 struct minmax {
 	short min;
@@ -53,7 +52,7 @@ struct map_rect_priv {
 	int *end;
 	enum attr_type attr_last;
 	int label;
-	unsigned int *label_attr[2];
+	int *label_attr[2];
         struct map_selection *sel;
         struct map_priv *m;
         struct item item;
@@ -67,6 +66,8 @@ struct map_search_priv {
 	struct map_rect_priv *mr;
 	struct attr *search;
 	struct map_selection *ms;
+	int partial;
+	GHashTable *search_results;
 };
 
 
@@ -449,28 +450,27 @@ static struct map_search_priv *
 binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial)
 {
 	struct map_rect_priv *map_rec;
-	int country = item->id_lo;
+	struct map_search_priv *msp;
+	struct map_selection *ms;
+	int i;
 	
 	switch (search->type) {
 		case attr_country_name:
 			break;
 		case attr_town_name:
-			search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-			struct item *it;
+			msp = g_new(struct map_search_priv, 1);
+			msp->search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 			map_rec = map_rect_new_binfile(map, NULL);
-			map_rec->country_id = country;
-			struct map_search_priv *msp = g_new(struct map_search_priv, 1);
+			map_rec->country_id = item->id_lo;
 			msp->mr = map_rec;
 			msp->search = search;
+			msp->partial = partial;
 			return msp;
 			break;
 		case attr_town_postal:
 			break;
 		case attr_street_name:
-			search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-			struct map_selection *ms = NULL;
 			ms = g_new(struct map_selection, 1);
-			int i = 0;
 			ms->next = NULL;
 			for (i = 0; i < layer_end; i++)
 			{
@@ -508,6 +508,8 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 				map_rec = map_rect_new_binfile(map, ms);
 				msp->mr = map_rec;
 				msp->search = search;
+				msp->partial = partial;
+				msp->search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 				return msp;
 			}
 			map_rect_destroy_binfile(map_rec);
@@ -518,8 +520,16 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 	}
 	return NULL;
 }
+static int
+ascii_cmp(char *name, char *match, int partial)
+{
+	if (partial)
+		return g_ascii_strncasecmp(name, match, strlen(match));
+	else
+		return g_ascii_strcasecmp(name, match);
+}
 
-struct item *
+static struct item *
 binmap_search_get_item(struct map_search_priv *map_search)
 {
 	struct item* it;
@@ -528,8 +538,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 			if ((it->type >= type_town_label) && (it->type <= type_town_label_1e7)) {
 				struct attr at;
 				if (binfile_attr_get(it->priv_data, attr_label, &at)) {
-					char* tmp = g_strdup(at.u.str);
-					if (g_ascii_strncasecmp(tmp, map_search->search->u.str, strlen(map_search->search->u.str)) == 0) {
+					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
 						return it;
 					}
 				}
@@ -538,10 +547,9 @@ binmap_search_get_item(struct map_search_priv *map_search)
 			if ((it->type == type_street_3_city) || (it->type == type_street_2_city) || (it->type == type_street_1_city)) {
 				struct attr at;
 				if (binfile_attr_get(it->priv_data, attr_label, &at)) {
-					char* tmp = g_strdup(at.u.str);
-					if (g_ascii_strncasecmp(tmp, map_search->search->u.str, strlen(map_search->search->u.str)) == 0) {
-						if (!g_hash_table_lookup(search_results, at.u.str)) {
-							g_hash_table_insert(search_results, tmp, "");
+					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
+						if (!g_hash_table_lookup(map_search->search_results, at.u.str)) {
+							g_hash_table_insert(map_search->search_results, g_strdup(at.u.str), "");
 							return it;
 						}
 					}
@@ -555,7 +563,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 static void
 binmap_search_destroy(struct map_search_priv *ms)
 {
-	g_hash_table_destroy(search_results);
+	g_hash_table_destroy(ms->search_results);
 	g_free(ms->mr->sel);
 	map_rect_destroy_binfile(ms->mr);
 	g_free(ms);
