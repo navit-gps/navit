@@ -199,7 +199,7 @@ struct country_table {
 } country_table[] = {
 	{ 40,"Austria,Österreich,AUT"},
 	{276,"Germany,Deutschland,Bundesrepublik Deutschland"},
-	{518,"Nederland,The Netherlands,Niederlande,NL"},
+	{528,"Nederland,The Netherlands,Niederlande,NL"},
 };
 
 static GHashTable *country_table_hash;
@@ -524,6 +524,38 @@ add_tag(char *k, char *v)
 		attr_present[idx]=4;
 }
 
+struct entity {
+	char *entity;
+	char c;
+} entities[]= {
+	{"&qout;",'"'},
+	{"&apos;",'\''},
+	{"&amp;",'&'},
+	{"&lt;",'<'},
+	{"&gt;",'>'},
+};
+
+static void
+decode_entities(char *buffer)
+{
+	char *pos=buffer;
+	int i,len,found;
+
+	while ((pos=strchr(pos, '&'))) {
+		found=0;
+		for (i = 0 ; i < sizeof(entities)/sizeof(struct entity); i++) {
+			len=strlen(entities[i].entity);
+			if (!strncmp(pos, entities[i].entity, len)) {
+				*pos=entities[i].c;
+			 	memmove(pos+1, pos+len, strlen(pos+len)+1);
+				found=1;
+				break;
+			}
+		}
+		pos++;
+	}
+}
+
 static int
 parse_tag(char *p)
 {
@@ -533,6 +565,7 @@ parse_tag(char *p)
 		return 0;
 	if (!xml_get_attribute(p, "v", v_buffer, BUFFER_SIZE))
 		return 0;
+	decode_entities(v_buffer);
 	add_tag(k_buffer, v_buffer);
 	return 1;
 }
