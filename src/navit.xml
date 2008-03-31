@@ -1057,20 +1057,25 @@ Change to your home coordinates.
 				<polygon color="#ffc895" /> 
 				<polyline color="#ebb481" /> 
 			</item>
+			<item type="poly_park" order="0-">
+				<polygon color="#7cc334" /> 
+				<label label_size="5" /> 
+			</item>
 			<item type="poly_water" order="0-">
 				<polygon color="#82c8ea" /> 
 				<polyline color="#5096b8" /> 
 				<label label_size="5" /> 
 			</item>
-			<item type="poly_park" order="0-">
-				<polygon color="#7cc334" /> 
+			<item type="poly_land" order="0-">
+				<polygon color="#ffefb7" /> 
+				<polyline color="#ffefb7" /> 
 				<label label_size="5" /> 
 			</item>
 			<item type="poly_airport" order="0-">
 				<polygon color="#a0a0a0" /> 
 			</item>
 			<item type="poly_sport" order="0-">
-				<polygon color="#4af04f" /> 
+				<polygon color="#deb887" /> 
 			</item>
 			<item type="poly_industry,poly_place" order="0-">
 				<polygon color="#e6e6e6" /> 
@@ -1079,7 +1084,23 @@ Change to your home coordinates.
 				<polygon color="#b6a6a6" />
 			</item>
 			<item type="water_line" order="0-">
-				<polyline color="#5096b8" width="1" /> 
+				<polyline color="#82c8ea" width="2" /> 
+				<label label_size="5" /> 
+			</item>
+			<item type="water_river" order="0-">
+				<polyline color="#82c8ea" width="4" /> 
+				<label label_size="5" /> 
+			</item>
+			<item type="water_canal" order="0-">
+				<polyline color="#82c8ea" width="3" /> 
+				<label label_size="5" /> 
+			</item>
+			<item type="water_stream" order="0-">
+				<polyline color="#82c8ea" width="2" /> 
+				<label label_size="5" /> 
+			</item>
+			<item type="water_drain" order="0-">
+				<polyline color="#82c8ea" width="1" /> 
 				<label label_size="5" /> 
 			</item>
 			<item type="poly_apron" order="0-">
@@ -1093,12 +1114,6 @@ Change to your home coordinates.
 			</item>
 			<item type="poly_car_parking" order="1-">
 				<polygon color="#e7cf87" />
-			</item>
-			<item type="rail" order="6-">
-				<polyline color="#808080" width="3" /> 
-			</item>
-			<item type="ferry" order="5-">
-				<polyline color="#000000" width="1" /> 
 			</item>
 			<item type="border_country" order="0-">
 				<polyline color="#b8434e" width="1" /> 
@@ -1154,67 +1169,73 @@ Change to your home coordinates.
 			<item type="street_nopass" order="10-">
 				<polyline color="#000000" width="1" /> 
 			</item>
-			<item type="track_paved" order="10-">
+			<item type="track_paved" order="9-">
 				<polyline color="#d2d2d2" width="4" />
 				<polyline color="#fefefe" width="2" />
 			</item>
 			<item type="track_gravelled" order="10-">
-				<polyline color="#d2d2d2" width="3" />
+				<polyline color="#dcdcdc" width="3" />
 				<polyline color="#fefefe" width="2" />
 			</item>
-			<item type="track_unpaved" order="10-">
-				<polyline color="#d2d2d2" width="2" />
-				<polyline color="#fefefe" width="2" />
+			<item type="track_unpaved" order="11-">
+				<polyline color="#fff0f5" width="2" />
+				<polyline color="#fff0f5" width="2" />
+			</item>
+			<item type="track_ground" order="12-">
+				<polyline color="#fff0f5" width="3" />
+				<polyline color="#fff0f5" width="2" />
+			</item>
+			<item type="track_grass" order="12-">
+				<polyline color="#ffffe0" width="2" />
+				<polyline color="#ffffe0" width="2" />
 			</item>
 			<item type="bridleway" order="10-">
-				<polyline color="#d2d2d2" width="2" />
-				<polyline color="#fefefe" width="2" />
+				<polyline color="#8B5A2B" width="2" />
+				<polyline color="#8B5A2B" width="2" />
 			</item>
 			<item type="cycleway" order="10-">
-				<polyline color="#d2d2d2" width="3" />
-				<polyline color="#fefefe" width="2" />
+				<polyline color="#00BD00" width="3" />
+				<polyline color="#00BD00" width="2" />
 			</item>
-			<item type="footway" order="10-">
-				<polyline color="#d2d2d2" width="2" />
-				<polyline color="#fefefe" width="2" />
+			<item type="footway" order="11-">
+				<polyline color="#CD853F" width="2" />
 			</item>
-			<item type="steps" order="10-">
-				<polyline color="#d2d2d2" width="1" />
-				<polyline color="#fefefe" width="2" /> 
+			<item type="steps" order="11-">
+				<polyline color="#CD853F" width="2" dash="5" />
 			</item>
-			<item type="street_pedestrian" order="10">
+			<item type="street_pedestrian,living_street" order="10">
 				<polyline color="#d2d2d2" width="3" />
 				<polyline color="#dddddd" width="1" />
 			</item>
-			<item type="street_pedestrian" order="11">
+			<item type="street_pedestrian,living_street" order="11">
 				<polyline color="#d2d2d2" width="5" />
 				<polyline color="#dddddd" width="3" />
 			</item>
-			<item type="street_pedestrian" order="12">
+			<item type="street_pedestrian,living_street" order="12">
 				<polyline color="#d2d2d2" width="8" />
 				<polyline color="#dddddd" width="6" />
 			</item>
-			<item type="street_pedestrian" order="13">
+			<item type="street_pedestrian,living_street" order="13">
 				<polyline color="#d2d2d2" width="9" />
 				<polyline color="#dddddd" width="7" />
 			</item>
-			<item type="street_pedestrian" order="14">
+			<item type="street_pedestrian,living_street" order="14">
 				<polyline color="#d2d2d2" width="13" />
 				<polyline color="#dddddd" width="9" />
 			</item>
-			<item type="street_pedestrian" order="15">
+			<item type="street_pedestrian,living_street" order="15">
 				<polyline color="#d2d2d2" width="18" />
 				<polyline color="#dddddd" width="14" />
 			</item>
-			<item type="street_pedestrian" order="16">
+			<item type="street_pedestrian,living_street" order="16">
 				<polyline color="#d2d2d2" width="21" />
 				<polyline color="#dddddd" width="17" />
 			</item>
-			<item type="street_pedestrian" order="17">
+			<item type="street_pedestrian,living_street" order="17">
 				<polyline color="#d2d2d2" width="25" />
 				<polyline color="#dddddd" width="21" />
 			</item>
-			<item type="street_pedestrian" order="18">
+			<item type="street_pedestrian,living_street" order="18">
 				<polyline color="#d2d2d2" width="40" />
 				<polyline color="#dddddd" width="34" />
 			</item>
@@ -1254,7 +1275,6 @@ Change to your home coordinates.
 				<polyline color="#d2d2d2" width="11" />
 				<polyline color="#fefefe" width="9" />
 			</item>
-			
 			<item type="street_0,street_1_city,street_1_land" order="10">
 				<polyline color="#d2d2d2" width="4" /> 
 				<polyline color="#ffffff" width="2" /> 
@@ -1584,6 +1604,45 @@ Change to your home coordinates.
 				<polyline color="#6b6f5f" width="156" />
 				<polyline color="#d3dbbc" width="150" />
 			</item>
+			<item type="rail" order="6-">
+				<polyline color="#696969" width="3" />
+			</item>
+			<item type="rail_narrow_gauge" order="6-">
+				<polyline color="#696969" width="3" />
+			</item>
+			<item type="rail_light" order="8-">
+				<polyline color="#696969" width="2" />
+			</item>
+			<item type="rail_subway" order="8-">
+				<polyline color="#696969" width="2" dash="10" />
+			</item>
+			<item type="rail_mono" order="10-">
+				<polyline color="#696969" width="2" />
+			</item>
+			<item type="rail_tram,bus_guideway" order="10-">
+				<polyline color="#696969" width="2navit" />
+			</item>
+			<item type="rail_preserved" order="10-">
+				<polyline color="#696969" width="1" dash="7" />
+			</item>
+			<item type="rail_disused" order="12-">
+				<polyline color="#d3d3d3" width="1" dash="10" />
+			</item>
+			<item type="rail_abandoned" order="12-">
+				<polyline color="#f5f5f5" width="1" dash="10" />
+			</item>
+			<item type="lift_cable_car" order="6-">
+				<polyline color="#696969" width="1" dash="5" />
+			</item>
+			<item type="lift_chair" order="6-">
+				<polyline color="#696969" width="1" dash="5" />
+			</item>
+			<item type="lift_drag" order="6-">
+				<polyline color="#696969" width="1" dash="5" />
+			</item>
+			<item type="ferry" order="5-">
+				<polyline color="#000000" width="3" dash="5" /> 
+			</item>
 			<item type="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="12-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
@@ -1617,7 +1676,6 @@ Change to your home coordinates.
 			<item type="track" order="3-">
 				<polyline color="#3f3f3f" width="1" />
 			</item>
-			
 			<item type="poi_airport" order="5-">
 				<icon src="airport.xpm" />
 			</item>
