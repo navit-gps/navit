@@ -46,99 +46,117 @@ msgstr "Benutze '%s'\n"
 msgid "No instance has been created, exiting\n"
 msgstr "Es wurde keine Instanz erzeugt, Ende\n"
 
-#: ../src/navigation.c:162
+#: ../src/navigation.c:163
 #, c-format
 msgid "%d m"
 msgstr "%d Meter"
 
-#: ../src/navigation.c:164
+#: ../src/navigation.c:165
 #, c-format
 msgid "in %d m"
 msgstr "In %d metern"
 
-#: ../src/navigation.c:168
+#: ../src/navigation.c:169
 #, c-format
 msgid "%d meters"
 msgstr "%d Meter"
 
-#: ../src/navigation.c:170
+#: ../src/navigation.c:171
 #, c-format
 msgid "in %d meters"
 msgstr "In %d metern"
 
-#: ../src/navigation.c:176
+#: ../src/navigation.c:177
 #, c-format
 msgid "%d.%d kilometer"
 msgstr "%d,%d Kilometer"
 
-#: ../src/navigation.c:178
+#: ../src/navigation.c:179
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "In %d,%d Kilometern"
 
-#: ../src/navigation.c:182
+#: ../src/navigation.c:183
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "einen Kilometer"
 msgstr[1] "%d Kilometer"
 
-#: ../src/navigation.c:184
+#: ../src/navigation.c:185
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "In einem Kilometer"
 msgstr[1] "In %d Kilometern"
 
-#: ../src/navigation.c:404
+#: ../src/navigation.c:406
 msgid "right"
 msgstr "rechts"
 
-#: ../src/navigation.c:411
+#: ../src/navigation.c:413
 msgid "left"
 msgstr "links"
 
-#: ../src/navigation.c:415
+#: ../src/navigation.c:417
 msgid "easily "
 msgstr "leicht "
 
-#: ../src/navigation.c:419
+#: ../src/navigation.c:421
 msgid "strongly "
 msgstr "scharf "
 
-#: ../src/navigation.c:422
+#: ../src/navigation.c:424
 msgid "unknown "
 msgstr "unbekannt "
 
 #
-#: ../src/navigation.c:428
+#: ../src/navigation.c:430
 msgid "When possible, please turn around"
 msgstr "Wenn möglich bitte wenden"
 
-#: ../src/navigation.c:435
+#: ../src/navigation.c:437
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Dem Straßenverlauf %s folgen"
 
-#: ../src/navigation.c:439
+#: ../src/navigation.c:441
 msgid "soon"
 msgstr "Demnächst"
 
-#: ../src/navigation.c:445
+#: ../src/navigation.c:447
 msgid "now"
 msgstr "Jetzt"
 
-#: ../src/navigation.c:448
+#: ../src/navigation.c:450
 msgid "error"
 msgstr "fehler"
 
+#: ../src/navigation.c:474
+msgid "exit"
+msgstr "Ausfahrt"
+
+#: ../src/navigation.c:476
+msgid "ramp"
+msgstr "Autobahneinfahrt"
+
+#: ../src/navigation.c:510
+#, c-format
+msgid "Turn %1$s%2$s %3$s onto %4$s"
+msgstr "%3$s %1$s%2$s abbiegen auf den %4$s"
+
+#: ../src/navigation.c:512
+#, c-format
+msgid "Turn %1$s%2$s %3$s into %4$s"
+msgstr "%3$s %1$s%2$s abbiegen auf die %4$s"
+
 #. TRANSLATORS: The first argument is strength, the second direction and the third distance
-#: ../src/navigation.c:452
+#: ../src/navigation.c:516
 #, c-format
 msgid "Turn %1$s%2$s %3$s"
 msgstr "%3$s %1$s%2$s abbiegen"
 
-#: ../src/navigation.c:455
+#: ../src/navigation.c:522
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "%s haben Sie ihr Ziel erreicht"
