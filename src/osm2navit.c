@@ -843,6 +843,8 @@ end_way(FILE *out)
 		item.type=types[0];
 	else
 		item.type=type_street_unkn;
+	if (coverage && IS_STREET(item))
+		item.type=type_coverage;
 	item.clen=coord_count*2;
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
