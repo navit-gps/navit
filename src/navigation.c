@@ -110,6 +110,7 @@ struct navigation_itm {
 	int length;
 	int dest_time;
 	int dest_length;
+	int told;
 	struct navigation_itm *next;
 	struct navigation_itm *prev;
 };
@@ -242,6 +243,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 	struct coord c[5];
 
 	if (ritem) {
+		ret->told=0;
 		if (! item_attr_get(ritem, attr_street_item, &street_item)) {
 			dbg(0,"no street item\n");
 			return NULL;
@@ -448,8 +450,73 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		d=g_strdup(_("error"));
 	}
 	if (cmd->itm->next) {
+		short tellStreetName = 0;
+		char  * streetName = 0;
+ 
+		if(cmd->itm->name1 || cmd->itm->name2 || cmd->itm->item.type == type_ramp) // If the next street has a name
+		{
+		   if(cmd->itm->name1 && cmd->itm->name2 )
+					streetName = g_strdup_printf("%s %s", cmd->itm->name1, cmd->itm->name2);
+			 else if(cmd->itm->name1)
+		      streetName = g_strdup(cmd->itm->name1);
+		   else if(cmd->itm->name2)
+		      streetName = g_strdup(cmd->itm->name2);
+
+			 // Now special handling for ramps and exists
+			 
+		   if(streetName == 0 && cmd->itm->item.type == type_ramp)
+			 {
+			 		//printf(">> Next is ramp %lx current is %lx \n", cmd->itm->item.type, itm->item.type);
+			 
+			 		if(itm->item.type == type_ramp)
+			 			streetName = 0;  // looks like we stay on the ramp
+			 		if(itm->item.type == type_highway_city || itm->item.type == type_highway_land )
+				    streetName = g_strdup(_("exit"));				 
+					else
+				    streetName = g_strdup(_("ramp"));
+			 }
+
+		   if(type == attr_navigation_speech) // In voice mode
+		   {
+			 	 // In Voice Mode only tell the street name in level 1 or in level 0 if level 1
+				 // was skipped
+			 
+			   if (level == 1) // we are close to the intersection
+			   {
+			     cmd->itm->told = 1; // remeber to be checked when we turn
+		  	   tellStreetName = 1; // Ok so we tell the name of the street 
+			   }
+
+			   if (level == 0)
+				 {
+				  if(cmd->itm->told == 0) // we are write at the intersection
+						tellStreetName = 1; 
+					else
+					  cmd->itm->told = 0;  // reset just in case we come to the same street again
+				 }
+
+   	   }
+		   else
+		     tellStreetName = 1;
+		}
+
+		if(streetName && tellStreetName )
+		{
+		/* TRANSLATORS: The first argument is strength, the second direction and the third distance */
+	
+		if( strcasestr(streetName,"weg") 
+		   || strcasestr(streetName,"platz")
+		   || strcasestr(streetName,"ring"))
+		  ret=g_strdup_printf(_("Turn %1$s%2$s %3$s onto %4$s"), strength, dir, d, streetName);
+		else
+		   ret=g_strdup_printf(_("Turn %1$s%2$s %3$s into %4$s"), strength, dir, d, streetName);
+		}
+		else
 		/* TRANSLATORS: The first argument is strength, the second direction and the third distance */
 		ret=g_strdup_printf(_("Turn %1$s%2$s %3$s"), strength, dir, d);
+		
+		if(streetName)
+			g_free(streetName);
 	}
 	else
 		ret=g_strdup_printf(_("You have reached your destination %s"), d);
