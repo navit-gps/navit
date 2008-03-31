@@ -232,6 +232,7 @@ ITEM(nav_roundabout_l7)
 ITEM(nav_roundabout_l8)
 ITEM(poi_peak)
 ITEM(poi_rail_station)
+ITEM(poi_image)
 /* Line */
 ITEM2(0x80000000,line)
 ITEM2(0x80000001,line_unspecified)
