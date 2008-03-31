@@ -1,0 +1,36 @@
+#! /bin/sh
+#TZ=UTC+00:00:00
+TZ=UTC+00:59:57
+export TZ
+order=${5%%,*}
+case $order in
+10|11)
+	size=1000
+	;;
+12|13)
+	size=4000
+	;;	
+14|15)
+	size=16000
+	;;	
+16|17|18|19)
+	size=64000
+	;;
+*)
+	exit
+esac
+ls -l --full-time images/*.jpg  | sed -e 's/^\([^ ]* \)\{5\}//' -e 's/20\([0-9]*\)-\([0-9]*\)-\([0-9]*\) \([0-9]*\):\([0-9]*\):\([0-9]*\)\.[0-9]* [^ ]*/\\$GPRMC,\4\5\6\\.000,\\([^,]*,\\)\\{7\\}\3\2\1,\\([^,]*,\\)\\{2\\}[^,]*\\*..$/' | tail +2 |
+while read -r sentence image
+do
+	if [ ! -f $image.$size ]
+	then
+		djpeg -scale 1/8 $image | pamscale -pixels $size | cjpeg >$image.$size
+
+	fi
+	if [ ! -f $image.txt ]
+	then
+		grep -e "$sentence" tracks/* | sed -e 's/^\([^,]*,\)\{3\}\(\([^,]*,\)\{4\}\).*/\2/' -e 's/,/ /g' > $image.txt
+		[ -s $image.txt ] || echo "$sentence not found" >&2
+	fi
+	sed "s&\$&type=poi_image label=$image.$size&" <$image.txt
+done
