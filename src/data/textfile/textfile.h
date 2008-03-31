@@ -26,5 +26,6 @@ struct map_rect_priv {
 	int more;
 	struct map_priv *m;
 	struct item item;
+	char *args;
 };
 

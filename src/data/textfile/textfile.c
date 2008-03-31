@@ -200,6 +200,7 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 	if (map->is_pipe) {
 		char *oargs,*args=g_strdup(map->filename),*sep=" ";
 		enum layer_type lay;
+		g_free(mr->args);
 		while (sel) {
 			oargs=args;
 			args=g_strdup_printf("%s 0x%x 0x%x 0x%x 0x%x", oargs, sel->u.c_rect.lu.x, sel->u.c_rect.lu.y, sel->u.c_rect.rl.x, sel->u.c_rect.rl.y);
@@ -213,7 +214,8 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 			sel=sel->next;
 		}
 		dbg(1,"popen args %s\n", args);
-		mr->f=popen(args, "r");
+		mr->args=args;
+		mr->f=popen(mr->args, "r");
 	} else {
 		mr->f=fopen(map->filename, "r");
 	}
@@ -256,7 +258,11 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 				return NULL;
 			}
 			mr->item.id_hi++;
-			fseek(mr->f, 0, SEEK_SET);
+			if (mr->m->is_pipe) {
+				pclose(mr->f);
+				mr->f=popen(mr->args, "r");
+			} else
+				fseek(mr->f, 0, SEEK_SET);
 			get_line(mr);
 		}
 		if ((p=index(mr->line,'\n'))) 
@@ -305,7 +311,11 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 static struct item *
 map_rect_get_item_byid_textfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
-	fseek(mr->f, id_lo, SEEK_SET);
+	if (mr->m->is_pipe) {
+		pclose(mr->f);
+		mr->f=popen(mr->args, "r");
+	} else
+		fseek(mr->f, id_lo, SEEK_SET);
 	get_line(mr);
 	mr->item.id_hi=id_hi;
 	return map_rect_get_item_textfile(mr);
