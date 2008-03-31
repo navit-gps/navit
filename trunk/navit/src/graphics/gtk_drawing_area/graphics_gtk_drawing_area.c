@@ -542,6 +542,12 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
         	     1 */
 		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, 0, 0, p[1].y-p[0].y);
 	}
+	if (count == 1) {
+		/* 
+                   0 
+        	     */
+		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x-w/2, p[0].y-h/2, w, 0, 0, h);
+	}
 }
 #endif
 
