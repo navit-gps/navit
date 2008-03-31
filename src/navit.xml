@@ -1034,6 +1034,9 @@ Change to your home coordinates.
 				<polygon color="#a0a0a0" />
 				<label label_size="5" /> 
 			</item>
+			<item type="poi_image" order="0-">
+				<image />
+			</item>
 			<item type="rg_segment" order="0-">
 				<polyline color="#FF089C" width="1" />
 			</item>
