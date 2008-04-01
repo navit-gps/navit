@@ -39,8 +39,6 @@ gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra)
 struct gui_methods gui_internal_methods = {
 	NULL,
 	NULL,
-	NULL,
-	NULL,
         gui_internal_set_graphics,
 };
 
