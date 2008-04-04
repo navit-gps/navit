@@ -5,3 +5,6 @@ endif
 if GRAPHICS_OPENGL
   SUBDIRS+=opengl
 endif
+if USE_GRAPHICS_QT_QPAINTER
+  SUBDIRS+=qt_qpainter
+endif
