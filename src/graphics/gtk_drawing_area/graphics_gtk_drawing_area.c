@@ -634,10 +634,12 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 	struct graphics_priv *overlay;
 	GtkWidget *widget=gr->widget;
 
+#if 0
 	if (mode == draw_mode_begin) {
 		if (! gr->parent && gr->background_gc)
 			gdk_draw_rectangle(gr->drawable, gr->background_gc->gc, TRUE, 0, 0, gr->width, gr->height);
 	}
+#endif
 	if (mode == draw_mode_end && gr->mode == draw_mode_begin) {
 		if (gr->parent) {
 			overlay_draw(gr->parent, gr, 1);
