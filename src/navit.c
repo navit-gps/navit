@@ -86,6 +86,7 @@ struct navit {
 	int pid;
 	struct callback *nav_speech_cb;
 	struct callback *roadbook_callback;
+	struct callback *popup_callback;
 	struct datawindow *roadbook_window;
 	struct map *bookmark;
 	struct map *former_destination;
@@ -158,17 +159,16 @@ navit_draw(struct navit *this_)
 		navit_vehicle_draw(this_, nv, NULL);
 		l=g_list_next(l);
 	}
-	this_->ready=1;
 }
 
 void
 navit_draw_displaylist(struct navit *this_)
 {
-	if (this_->ready)
+	if (this_->ready == 3)
 		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current);
 }
 
-static void
+void
 navit_resize(void *data, int w, int h)
 {
 	struct navit *this_=data;
@@ -177,23 +177,32 @@ navit_resize(void *data, int w, int h)
 	sel.u.p_rect.rl.x=w;
 	sel.u.p_rect.rl.y=h;
 	transform_set_screen_selection(this_->trans, &sel);
-	navit_draw(this_);
+	this_->ready |= 2;
+	if (this_->ready == 3)
+		navit_draw(this_);
 }
 
-static gboolean
+static void
 navit_popup(void *data)
 {
 	struct navit *this_=data;
 	popup(this_, 1, &this_->pressed);
 	this_->button_timeout=0;
 	this_->popped=1;
+}
+
+
+static gboolean
+navit_handle_button_timeout(void *data)
+{
+	callback_call_0((struct callback *)data);
 	return FALSE;
 }
 
-static void
-navit_button(void *data, int pressed, int button, struct point *p)
+
+int
+navit_handle_button(struct navit *this_, int pressed, int button, struct point *p, struct callback *popup_callback)
 {
-	struct navit *this_=data;
 	int border=16;
 
 	if (pressed) {
@@ -203,7 +212,8 @@ navit_button(void *data, int pressed, int button, struct point *p)
 			this_->button_pressed=1;
 			this_->moved=0;
 			this_->popped=0;
-			this_->button_timeout=g_timeout_add(500, navit_popup, data);
+			if (popup_callback)
+				this_->button_timeout=g_timeout_add(500, navit_handle_button_timeout, popup_callback);
 		}
 		if (button == 2)
 			navit_set_center_screen(this_, p);
@@ -234,8 +244,19 @@ navit_button(void *data, int pressed, int button, struct point *p)
 			p.x-=this_->last.x-this_->pressed.x;
 			p.y-=this_->last.y-this_->pressed.y;
 			navit_set_center_screen(this_, &p);
-		}
+		} else
+			return 1;
 	}
+	return 0;
+}
+
+static void
+navit_button(void *data, int pressed, int button, struct point *p)
+{
+	struct navit *this=data;
+	if (! this->popup_callback)
+		this->popup_callback=callback_new_1(navit_popup, this);
+	navit_handle_button(this, pressed, button, p, this->popup_callback);
 }
 
 
@@ -257,10 +278,9 @@ navit_motion_timeout(void *data)
 	return FALSE;
 }
 
-static void
-navit_motion(void *data, struct point *p)
+void
+navit_handle_motion(struct navit *this_, struct point *p)
 {
-	struct navit *this_=data;
 	int dx, dy;
 
 	if (this_->button_pressed && !this_->popped) {
@@ -273,9 +293,15 @@ navit_motion(void *data, struct point *p)
 			}
 			this_->current=*p;
 			if (! this_->motion_timeout)
-				this_->motion_timeout=g_timeout_add(100, navit_motion_timeout, data);
+				this_->motion_timeout=g_timeout_add(100, navit_motion_timeout, this_);
 		}
 	}
+}
+
+static void
+navit_motion(void *data, struct point *p)
+{
+	navit_handle_motion((struct navit *)data, p);
 }
 
 static void
@@ -1059,6 +1085,9 @@ navit_init(struct navit *this_)
 	navit_window_items_new(this_);
 #endif
 	callback_list_call_attr_1(this_->attr_cbl, attr_navit, this_);
+	this_->ready|=1;
+	if (this_->ready == 3)
+		navit_draw(this_);
 }
 
 void
@@ -1076,7 +1105,7 @@ navit_set_center(struct navit *this_, struct pcoord *center)
 		c2.y = center->y;
 	}
 	*c=c2;
-	if (this_->ready)
+	if (this_->ready == 3)
 		navit_draw(this_);
 }
 
@@ -1095,7 +1124,7 @@ navit_set_center_cursor(struct navit *this_, struct coord *cursor, int dir, int 
 	p.y=(100-ypercent)*height/100;
 	transform_reverse(this_->trans, &p, &cnew);
 	*c=cnew;
-	if (this_->ready)
+	if (this_->ready == 3)
 		navit_draw(this_);
 }
 
@@ -1352,7 +1381,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	int border=16;
 	int route_path_set=0;
 
-	if (! this_->ready)
+	if (this_->ready != 3)
 		return;
 
 	if (! vehicle_get_attr(nv->vehicle, attr_position_direction, &attr_dir) ||
