@@ -1,4 +1,3 @@
-enum projection;
 struct attr;
 struct navit;
 struct callback_list;

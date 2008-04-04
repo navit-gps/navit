@@ -574,11 +574,15 @@ void
 graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l)
 {
 	int order=transform_get_order(trans);
+	struct point p;
+	p.x=0;
+	p.y=0;
 	// FIXME find a better place to set the background color
 	graphics_gc_set_background(gra->gc[0], l->color);
 	graphics_gc_set_foreground(gra->gc[0], l->color);
 	gra->meth.background_gc(gra->priv, gra->gc[0]->priv);
 	gra->meth.draw_mode(gra->priv, draw_mode_begin);
+	gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &p, 32767, 32767);
 	xdisplay_draw(displaylist->dl, gra, l, order);
 	gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
