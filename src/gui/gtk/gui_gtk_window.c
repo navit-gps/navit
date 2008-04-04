@@ -506,6 +506,7 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 		GTK_WIDGET_UNSET_FLAGS (widget, GTK_CAN_FOCUS);
 		gtk_box_pack_start (GTK_BOX(this->vbox), widget, FALSE, FALSE, 0);
 		gtk_widget_show (widget);
+		this->menubar=widget;
 	}
 	if (this->toolbar_enable) {
 		widget=gtk_ui_manager_get_widget(this->ui_manager, "/ui/ToolBar");
