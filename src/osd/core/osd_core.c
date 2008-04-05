@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <glib.h>
+#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 #include "config.h"
@@ -79,8 +80,12 @@ format_distance(char *buffer, double distance)
 		sprintf(buffer,"%.1f km", distance/1000);
 	else if (distance >= 300)
 		sprintf(buffer,"%.0f m", round(distance/25)*25);
-	else 
+	else if (distance >= 50) 
 		sprintf(buffer,"%.0f m", round(distance/10)*10);
+	else if (distance >= 10) 
+		sprintf(buffer,"%.0f m", distance);
+	else
+		sprintf(buffer,"%.1f m", distance);
 }
 
 static void
