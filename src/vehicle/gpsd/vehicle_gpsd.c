@@ -131,7 +131,7 @@ vehicle_gpsd_try_open(gpointer *data)
 	priv->watch =
 	    g_io_add_watch(priv->iochan, G_IO_IN | G_IO_ERR | G_IO_HUP,
 			   vehicle_gpsd_io, priv);
-	dbg(0,"Connected to gpsd\n");
+	dbg(0,"Connected to gpsd fd=%d iochan=%p watch=%p\n", priv->gps->gps_fd, priv->iochan, priv->watch);
 	return FALSE;
 }
 
