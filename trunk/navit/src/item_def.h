@@ -395,4 +395,6 @@ ITEM(poly_basin)
 ITEM(poly_reservoir)
 ITEM(poly_college)
 ITEM(poly_battlefield)
+ITEM(poly_pedestrian)
+ITEM(poly_plaza)
 
