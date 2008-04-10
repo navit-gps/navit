@@ -236,8 +236,20 @@ Change to your home coordinates.
 			<item type="track_paved" order="10-">
 				<polyline color="#000000" width="1" /> 
 			</item>
-			<item type="track_gravelled" order="10-">
-				<polyline color="#000000" width="1" /> 
+			<item type="track_gravelled" order="10-12">
+				<polyline color="#800000" width="1" dash="3,6" />
+			</item>
+			<item type="track_gravelled" order="13-14">
+				<polyline color="#ffffff" width="4" dash="4,8" />
+				<polyline color="#800000" width="2" dash="4,8" />
+			</item>
+			<item type="track_gravelled" order="15-16">
+				<polyline color="#ffffff" width="5" dash="5,10" />
+				<polyline color="#800000" width="3" dash="5,10" />
+			</item>
+			<item type="track_gravelled" order="17-">
+				<polyline color="#ffffff" width="7" dash="7,15" />
+				<polyline color="#800000" width="5" dash="7,15" />
 			</item>
 			<item type="track_unpaved" order="10-">
 				<polyline color="#000000" width="1" /> 
@@ -248,8 +260,20 @@ Change to your home coordinates.
 			<item type="cycleway" order="10-">
 				<polyline color="#000000" width="1" /> 
 			</item>
-			<item type="footway" order="10-">
-				<polyline color="#000000" width="1" /> 
+			<item type="footway" order="10-12">
+				<polyline color="#ff0000" width="1" dash="3,6" />
+			</item>
+			<item type="footway" order="13-14">
+				<polyline color="#ffffff" width="4" dash="4,8" />
+				<polyline color="#ff0000" width="2" dash="4,8" />
+			</item>
+			<item type="footway" order="15-16">
+				<polyline color="#ffffff" width="5" dash="5,10" />
+				<polyline color="#ff0000" width="3" dash="5,10" />
+			</item>
+			<item type="footway" order="17-">
+				<polyline color="#ffffff" width="7" dash="7,15" />
+				<polyline color="#ff0000" width="5" dash="7,15" />
 			</item>
 			<item type="steps" order="10-">
 				<polyline color="#000000" width="1" /> 
