@@ -85,8 +85,10 @@ struct graphics_image {
 };
 
 /* prototypes */
+enum attr_type;
 enum draw_mode_num;
 struct attr;
+struct attr_iter;
 struct color;
 struct displayitem;
 struct displaylist;
@@ -100,6 +102,7 @@ struct layout;
 struct point;
 struct transformation;
 struct graphics *graphics_new(const char *type, struct attr **attrs);
+int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 struct graphics *graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h);
 void graphics_init(struct graphics *this_);
 void *graphics_get_data(struct graphics *this_, char *type);

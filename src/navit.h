@@ -6,19 +6,16 @@ extern "C" {
 #endif
 extern struct gui *main_loop_gui;
 /* prototypes */
-enum item_type;
 enum attr_type;
+enum item_type;
 struct attr;
 struct attr_iter;
-struct attr_iter;
 struct callback;
-struct coord;
 struct displaylist;
 struct graphics;
 struct gui;
 struct layout;
 struct mapset;
-struct menu;
 struct navigation;
 struct navit;
 struct navit_vehicle;
@@ -36,11 +33,12 @@ struct tracking *navit_get_tracking(struct navit *this_);
 void navit_add_layout(struct navit *this_, struct layout *lay);
 void navit_draw(struct navit *this_);
 void navit_draw_displaylist(struct navit *this_);
+void navit_resize(void *data, int w, int h);
+int navit_handle_button(struct navit *this_, int pressed, int button, struct point *p, struct callback *popup_callback);
+void navit_handle_motion(struct navit *this_, struct point *p);
 void navit_zoom_in(struct navit *this_, int factor, struct point *p);
 void navit_zoom_out(struct navit *this_, int factor, struct point *p);
 struct navit *navit_new(struct attr **attrs);
-void navit_set_gui(struct navit *this_, struct gui *gui, char *type);
-void navit_set_graphics(struct navit *this_, struct graphics *gra, char *type);
 struct graphics *navit_get_graphics(struct navit *this_);
 void navit_set_destination(struct navit *this_, struct pcoord *c, char *description);
 void navit_add_bookmark(struct navit *this_, struct pcoord *c, const char *description);
@@ -65,7 +63,6 @@ struct navit_vehicle *navit_add_vehicle(struct navit *this_, struct vehicle *v, 
 void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 void navit_tracking_add(struct navit *this_, struct tracking *tracking);
 void navit_route_add(struct navit *this_, struct route *route);
-struct map *navit_get_route_map(struct navit *this_);
 void navit_navigation_add(struct navit *this_, struct navigation *navigation);
 void navit_set_speech(struct navit *this_, struct speech *speech);
 struct gui *navit_get_gui(struct navit *this_);
@@ -74,7 +71,6 @@ struct route *navit_get_route(struct navit *this_);
 struct navigation *navit_get_navigation(struct navit *this_);
 struct displaylist *navit_get_displaylist(struct navit *this_);
 void navit_destroy(struct navit *this_);
-void navit_toggle_routegraph_display(struct navit *nav);
 /* end of prototypes */
 #ifdef __cplusplus
 }

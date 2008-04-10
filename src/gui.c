@@ -4,7 +4,14 @@
 #include "gui.h"
 #include "menu.h"
 #include "data_window.h"
+#include "item.h"
 #include "plugin.h"
+
+struct gui {
+	struct gui_methods meth;
+	struct gui_priv *priv;
+	struct attr **attrs;
+};
 
 struct gui *
 gui_new(struct navit *nav, const char *type, struct attr **attrs)
@@ -18,7 +25,14 @@ gui_new(struct navit *nav, const char *type, struct attr **attrs)
 
 	this_=g_new0(struct gui, 1);
 	this_->priv=guitype_new(nav, &this_->meth, attrs);
+	this_->attrs=attr_list_dup(attrs);
 	return this_;
+}
+
+int
+gui_get_attr(struct gui *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	return attr_generic_get_attr(this_->attrs, type, attr, iter);
 }
 
 struct menu *

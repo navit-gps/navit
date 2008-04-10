@@ -24,6 +24,7 @@ struct graphics
 	struct graphics_methods meth;
 	struct graphics_font *font[16];
 	struct graphics_gc *gc[3];
+	struct attr **attrs;
 	int ready;
 };
 
@@ -42,8 +43,16 @@ graphics_new(const char *type, struct attr **attrs)
 		return NULL;	
 	this_=g_new0(struct graphics, 1);
 	this_->priv=(*new)(&this_->meth, attrs);
+	this_->attrs=attr_list_dup(attrs);
 	return this_;
 }
+
+int
+graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	return attr_generic_get_attr(this_->attrs, type, attr, iter);
+}
+
 
 struct graphics *
 graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h)

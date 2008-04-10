@@ -20,21 +20,19 @@ struct gui_methods {
 };
 
 
-struct gui {
-	struct gui_methods meth;
-	struct gui_priv *priv;		
-};
-
 /* prototypes */
+enum attr_type;
 struct attr;
+struct attr_iter;
 struct callback;
-struct coord;
 struct datawindow;
 struct graphics;
 struct gui;
 struct menu;
 struct navit;
+struct pcoord;
 struct gui *gui_new(struct navit *nav, const char *type, struct attr **attrs);
+int gui_get_attr(struct gui *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 struct menu *gui_menubar_new(struct gui *gui);
 struct menu *gui_popup_new(struct gui *gui);
 struct datawindow *gui_datawindow_new(struct gui *gui, char *name, struct callback *click, struct callback *close);

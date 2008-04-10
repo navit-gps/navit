@@ -31,6 +31,7 @@ struct log {
 	struct log_data header;
 	struct log_data data;
 	struct log_data trailer;
+	struct attr **attrs;
 };
 
 static void
@@ -152,6 +153,13 @@ log_timer(gpointer data)
 	return TRUE;
 }
 
+int
+log_get_attr(struct log *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+        return attr_generic_get_attr(this_->attrs, type, attr, iter);
+}
+
+
 struct log *
 log_new(struct attr **attrs)
 {
@@ -179,6 +187,7 @@ log_new(struct attr **attrs)
 	expand_filenames(ret);
 	log_open(ret);
 	gettimeofday(&ret->last_flush, NULL);
+	ret->attrs=attr_list_dup(attrs);
 	return ret;
 }
 
