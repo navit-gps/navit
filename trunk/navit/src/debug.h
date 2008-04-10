@@ -13,7 +13,7 @@ extern int debug_level;
 #define dbg(level,fmt...) ({ if (debug_level >= level) debug_printf(level,dbg_module,strlen(dbg_module),__PRETTY_FUNCTION__, strlen(__PRETTY_FUNCTION__),1,fmt); })
 
 /* prototypes */
-void debug_init(void);
+void debug_init(const char *program_name);
 void debug_level_set(const char *name, int level);
 int debug_level_get(const char *name);
 void debug_vprintf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap);
