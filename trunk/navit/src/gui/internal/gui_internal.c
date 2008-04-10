@@ -104,11 +104,13 @@ gui_internal_draw_button(struct gui_priv *this, struct widget *wi)
 	graphics_draw_text(this->gra, this->foreground, NULL, this->font, wi->text, &pnt[0], 0x10000, 0);
 
 	img=graphics_image_new(this->gra, wi->icon);	
-	pnt[0]=wi->p;
-	pnt[0].x+=wi->w/2-img->hot.x;
-	pnt[0].y+=(wi->h-th-b)/2-img->hot.y;
-	graphics_draw_image(this->gra, this->foreground, &pnt[0], img);
-	graphics_image_free(this->gra, img);
+	if (img) {
+		pnt[0]=wi->p;
+		pnt[0].x+=wi->w/2-img->hot.x;
+		pnt[0].y+=(wi->h-th-b)/2-img->hot.y;
+		graphics_draw_image(this->gra, this->foreground, &pnt[0], img);
+		graphics_image_free(this->gra, img);
+	}
 
 	pnt[0]=wi->p;
 	pnt[1].x=pnt[0].x+wi->w;
