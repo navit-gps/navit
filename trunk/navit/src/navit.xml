@@ -129,7 +129,8 @@ Change to your home coordinates.
 				<polygon color="#e7cf87" />
 			</item>
 			<item type="rail" order="6-">
-				<polyline color="#808080" width="3" dash="10" />
+				<polyline color="#696969" width="3" />
+				<polyline color="#ffffff" width="1" dash="5,5" />
 			</item>
 			<item type="ferry" order="5-">
 				<polyline color="#000000" width="1" dash="10" />
