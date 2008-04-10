@@ -15,7 +15,7 @@ speech_new(const char *type, const char *data)
 	struct speech *this_;
 	struct speech_priv *(*speech_new)(const char *data, struct speech_methods *meth);
 
-	dbg("enter type=%s data=%s\n", type, data);
+	dbg(1,"enter type=%s data=%s\n", type, data);
         speech_new=plugin_get_speech_type(type);
 	dbg(1,"new=%p\n", speech_new);
         if (! speech_new) {

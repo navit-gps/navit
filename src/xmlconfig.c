@@ -241,8 +241,10 @@ xmlconfig_graphics(struct xmlstate *state)
 		return 0;
 	attrs=convert_to_attrs(state);
 	state->element_object = graphics_new(type, attrs);
-	if (! state->element_object)
+	if (! state->element_object) {
+		dbg(0,"Failed to create graphics '%s'\n", type);
 		return 0;
+	}
 	navit_set_graphics(state->parent->element_object, state->element_object, type);
 	return 1;
 }
@@ -256,8 +258,10 @@ xmlconfig_gui(struct xmlstate *state)
 		return 0;
 	attrs=convert_to_attrs(state);
 	state->element_object = gui_new(state->parent->element_object, type, attrs);
-	if (! state->element_object)
+	if (! state->element_object) {
+		dbg(0,"Failed to create gui '%s'\n", type);
 		return 0;
+	}
 	navit_set_gui(state->parent->element_object, state->element_object, type);
 	return 1;
 }
