@@ -814,7 +814,7 @@ Change to your home coordinates.
 			<item type="poi_height" order="0-">
 				<icon src="height.xpm" />
 			</item>
-			<item type="poi_heliport" order="0-">
+			<item type="poi_heliport" order="7-">
 				<icon src="heliport.xpm" />
 			</item>
 			<item type="poi_hotspring" order="0-">
