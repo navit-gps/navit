@@ -13,9 +13,6 @@
 
 #include <unistd.h>
 #include <libintl.h>
-#ifdef USE_GTK_MAIN_LOOP
-#include <gtk/gtk.h>
-#endif
 #include "config.h"
 #include "file.h"
 #include "debug.h"
@@ -27,6 +24,7 @@
 #include "coord.h"
 #include "route.h"
 #include "navigation.h"
+#include "event.h"
 
 #define _(STRING)    gettext(STRING)
 
@@ -63,9 +61,6 @@ static gchar *get_home_directory(void)
 }
 
 static GList *navit;
-#ifndef USE_GTK_MAIN_LOOP
-static GMainLoop *loop;
-#endif
 
 struct iter {
 	GList *list;
@@ -112,14 +107,8 @@ void
 main_remove_navit(struct navit *nav)
 {
 	navit=g_list_remove(navit, nav);
-	if (! navit) {
-#ifdef USE_GTK_MAIN_LOOP
-		gtk_main_quit();
-#else
-		if (loop)
-			g_main_loop_quit(loop);
-#endif
-	}
+	if (! navit) 
+		event_main_loop_quit();
 }
 
 int main(int argc, char **argv)
@@ -137,7 +126,6 @@ int main(int argc, char **argv)
 	setenv("LC_NUMERIC","C",1);
 	setlocale(LC_ALL,"");
 	setlocale(LC_NUMERIC,"C");
-
 	if (file_exists("navit.c") || file_exists("navit.o")) {
 		char buffer[PATH_MAX];
 		printf(_("Running from source directory\n"));
@@ -184,7 +172,7 @@ int main(int argc, char **argv)
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain(PACKAGE);
 
-	debug_init();
+	debug_init(argv[0]);
 	if (getenv("LC_ALL")) 
 		dbg(0,"Warning: LC_ALL is set, this might lead to problems\n");
 #ifndef USE_PLUGINS
@@ -251,17 +239,8 @@ int main(int argc, char **argv)
 	}
 	if (main_loop_gui) {
 		gui_run_main_loop(main_loop_gui);
-	} else {
-#ifdef USE_GTK_MAIN_LOOP
-		gtk_main();
-#else
-		loop = g_main_loop_new (NULL, TRUE);
-		if (g_main_loop_is_running (loop))
-		{
-			g_main_loop_run (loop);
-		}
-#endif
-	}
+	} else 
+		event_main_loop_run();
 
 	return 0;
 }

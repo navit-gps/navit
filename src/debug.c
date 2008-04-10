@@ -9,33 +9,26 @@
 #include "debug.h"
 
 
-int debug_level=0;
+int debug_level=0,segv_level=0;
 static GHashTable *debug_hash;
+static char *gdb_program;
 
-#if 0
 static void sigsegv(int sig)
 {
-	FILE *f;
-	time_t t;
-	printf("segmentation fault received\n");
-	f=fopen("crash.txt","a");
-	setvbuf(f, NULL, _IONBF, 0);
-	fprintf(f,"segmentation fault received\n");
-	t=time(NULL);
-	fprintf(f,"Time: %s", ctime(&t));
-	file_unmap_all();
-	fprintf(f,"dumping core\n");
-	fclose(f);	
-	abort();
+	char buffer[256];
+	if (segv_level > 1)
+		sprintf(buffer, "gdb -ex bt %s %d", gdb_program, getpid());
+	else
+		sprintf(buffer, "gdb -ex bt -ex detach -ex quit %s %d", gdb_program, getpid());
+	system(buffer);
+	exit(1);
 }
-#endif
 
 void
-debug_init(void)
+debug_init(const char *program_name)
 {
-#if 0
+	gdb_program=program_name;
 	signal(SIGSEGV, sigsegv);
-#endif
 	debug_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 }
 
@@ -51,8 +44,16 @@ void
 debug_level_set(const char *name, int level)
 {
 	debug_level=0;
-	g_hash_table_insert(debug_hash, g_strdup(name), (gpointer) level);
-	g_hash_table_foreach(debug_hash, debug_update_level, NULL);	
+	if (strcmp(name,"segv")) {
+		g_hash_table_insert(debug_hash, g_strdup(name), (gpointer) level);
+		g_hash_table_foreach(debug_hash, debug_update_level, NULL);	
+	} else {
+		segv_level=level;
+		if (segv_level)
+			signal(SIGSEGV, sigsegv);
+		else
+			signal(SIGSEGV, NULL);
+	}
 }
 
 int
