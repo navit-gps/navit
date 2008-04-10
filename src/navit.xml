@@ -100,6 +100,51 @@ Change to your home coordinates.
 				<polygon color="#7cc334" /> 
 				<label label_size="5" /> 
 			</item>
+			<item type="poly_pedestrian" order="10">
+				<polyline color="#d2d2d2" width="3" />
+				<polyline color="#dddddd" width="1" />
+				<polygon color="#dddddd" />
+			</item>
+			<item type="poly_pedestrian" order="11">
+				<polyline color="#d2d2d2" width="5" />
+				<polyline color="#dddddd" width="3" />
+				<polygon color="#dddddd" />
+			</item>
+			<item type="poly_pedestrian" order="12">
+				<polyline color="#d2d2d2" width="8" />
+				<polyline color="#dddddd" width="6" />
+				<polygon color="#dddddd" />
+			</item>
+			<item type="poly_pedestrian" order="13">
+				<polyline color="#d2d2d2" width="9" />
+				<polyline color="#dddddd" width="7" />
+				<polygon color="#dddddd" />
+			</item>
+			<item type="poly_pedestrian" order="14">
+				<polyline color="#d2d2d2" width="13" />
+				<polyline color="#dddddd" width="9" />
+				<polygon color="#dddddd" />
+			</item>
+			<item type="poly_pedestrian" order="15">
+				<polyline color="#d2d2d2" width="18" />
+				<polyline color="#dddddd" width="14" />
+				<polygon color="#dddddd" />
+			</item>
+			<item type="poly_pedestrian" order="16">
+				<polyline color="#d2d2d2" width="21" />
+				<polyline color="#dddddd" width="17" />
+				<polygon color="#dddddd" />
+			</item>
+			<item type="poly_pedestrian" order="17">
+				<polyline color="#d2d2d2" width="25" />
+				<polyline color="#dddddd" width="21" />
+				<polygon color="#dddddd" />
+			</item>
+			<item type="poly_pedestrian" order="18">
+				<polyline color="#d2d2d2" width="40" />
+				<polyline color="#dddddd" width="34" />
+				<polygon color="#dddddd" />
+			</item>
 			<item type="poly_airport" order="0-">
 				<polygon color="#a0a0a0" /> 
 			</item>
