@@ -116,6 +116,50 @@ Change to your home coordinates.
 				<polyline color="#5096b8" width="1" /> 
 				<label label_size="5" /> 
 			</item>
+			<item type="water_river" order="4-5">
+				<polyline color="#82c8ea" width="1" />
+			</item>
+			<item type="water_river" order="6">
+				<polyline color="#82c8ea" width="2" />
+			</item>
+			<item type="water_river" order="7">
+				<polyline color="#82c8ea" width="3" />
+				<label label_size="5" />
+			</item>
+			<item type="water_river" order="8-9">
+				<polyline color="#82c8ea" width="4" />
+				<label label_size="7" />
+			</item>
+			<item type="water_river" order="10-">
+				<polyline color="#82c8ea" width="4" />
+				<label label_size="10" />
+			</item>
+			<item type="water_canal" order="6">
+				<polyline color="#82c8ea" width="1" />
+			</item>
+			<item type="water_canal" order="7">
+				<polyline color="#82c8ea" width="2" />
+				<label label_size="5" />
+			</item>
+			<item type="water_canal" order="8-9">
+				<polyline color="#82c8ea" width="3" />
+				<label label_size="7" />
+			</item>
+			<item type="water_canal" order="10-">
+				<polyline color="#82c8ea" width="3" />
+				<label label_size="10" />
+			</item>
+			<item type="water_stream" order="8-9">
+				<polyline color="#82c8ea" width="1" />
+			</item>
+			<item type="water_stream" order="10-">
+				<polyline color="#82c8ea" width="2" />
+				<label label_size="7" />
+			</item>
+			<item type="water_drain" order="10-">
+				<polyline color="#82c8ea" width="1" />
+				<label label_size="5" />
+			</item>
 			<item type="poly_apron" order="0-">
 				<polygon color="#d0d0d0" />
 			</item>
