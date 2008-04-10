@@ -1829,7 +1829,7 @@ Change to your home coordinates.
 			<polyline color="#696969" width="2" />
 		</item>
 		<item type="rail_tram,bus_guideway" order="10-">
-			<polyline color="#696969" width="2navit" />
+			<polyline color="#696969" width="2" />
 		</item>
 		<item type="rail_preserved" order="10-">
 			<polyline color="#696969" width="1" dash="7" />
