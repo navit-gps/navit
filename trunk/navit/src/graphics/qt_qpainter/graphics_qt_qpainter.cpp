@@ -1,6 +1,7 @@
 #include <glib.h>
 #include "config.h"
 #include "point.h"
+#include "item.h"
 #include "graphics.h"
 #include "color.h"
 #include "debug.h"

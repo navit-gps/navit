@@ -236,6 +236,7 @@ static int
 xmlconfig_graphics(struct xmlstate *state)
 {
 	struct attr **attrs;
+	struct attr graphics_attr;
 	const char *type=find_attribute(state, "type", 1);
 	if (! type)
 		return 0;
@@ -245,14 +246,16 @@ xmlconfig_graphics(struct xmlstate *state)
 		dbg(0,"Failed to create graphics '%s'\n", type);
 		return 0;
 	}
-	navit_set_graphics(state->parent->element_object, state->element_object, type);
-	return 1;
+	graphics_attr.type=attr_graphics;
+	graphics_attr.u.graphics=state->element_object;
+	return navit_add_attr(state->parent->element_object, &graphics_attr, NULL);
 }
 
 static int
 xmlconfig_gui(struct xmlstate *state)
 {
 	struct attr **attrs;
+	struct attr gui_attr;
 	const char *type=find_attribute(state, "type", 1);
 	if (! type)
 		return 0;
@@ -262,8 +265,9 @@ xmlconfig_gui(struct xmlstate *state)
 		dbg(0,"Failed to create gui '%s'\n", type);
 		return 0;
 	}
-	navit_set_gui(state->parent->element_object, state->element_object, type);
-	return 1;
+	gui_attr.type=attr_gui;
+	gui_attr.u.gui=state->element_object;
+	return navit_add_attr(state->parent->element_object, &gui_attr, NULL);
 }
 
 static int
