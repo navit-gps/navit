@@ -62,10 +62,8 @@ struct navit {
 	GList *mapsets;
 	GList *layouts;
 	struct gui *gui;
-	char *gui_type;
 	struct layout *layout_current;
 	struct graphics *gra;
-	char *gra_type;
 	struct action *action;
 	struct transformation *trans;
 	struct compass *compass;
@@ -416,29 +414,33 @@ navit_new(struct attr **attrs)
 	return this_;
 }
 
-void
-navit_set_gui(struct navit *this_, struct gui *gui, char *type)
+static int
+navit_set_gui(struct navit *this_, struct gui *gui)
 {
+	if (this_->gui)
+		return 0;
 	this_->gui=gui;
-	this_->gui_type=g_strdup(type);
 	if (gui_has_main_loop(this_->gui)) {
 		if (! main_loop_gui) {
 			main_loop_gui=this_->gui;
 		} else {
 			g_warning("gui with main loop already active, ignoring this instance");
-			return;
+			return 0;
 		}
 	}
+	return 1;
 }
 
-void
-navit_set_graphics(struct navit *this_, struct graphics *gra, char *type)
+static int
+navit_set_graphics(struct navit *this_, struct graphics *gra)
 {
+	if (this_->gra)
+		return 0;
 	this_->gra=gra;
-	this_->gra_type=g_strdup(type);
 	graphics_register_resize_callback(this_->gra, navit_resize, this_);
 	graphics_register_button_callback(this_->gra, navit_button, this_);
 	graphics_register_motion_callback(this_->gra, navit_motion, this_);
+	return 1;
 }
 
 struct graphics *
@@ -1014,17 +1016,20 @@ navit_init(struct navit *this_)
 	struct navit_vehicle *nv;
 
 	if (!this_->gui) {
-		g_warning("failed to instantiate gui '%s'\n",this_->gui_type);
+		g_warning("no gui\n");
 		navit_destroy(this_);
 		return;
 	}
 	if (!this_->gra) {
-		g_warning("failed to instantiate graphics '%s'\n",this_->gra_type);
+		g_warning("no graphics\n");
 		navit_destroy(this_);
 		return;
 	}
 	if (gui_set_graphics(this_->gui, this_->gra)) {
-		g_warning("failed to connect graphics '%s' to gui '%s'\n", this_->gra_type, this_->gui_type);
+		struct attr attr_type_gui, attr_type_graphics;
+		gui_get_attr(this_->gui, attr_type, &attr_type_gui, NULL);
+		graphics_get_attr(this_->gra, attr_type, &attr_type_graphics, NULL);
+		g_warning("failed to connect graphics '%s' to gui '%s'\n", attr_type_graphics.u.str, attr_type_gui.u.str);
 		g_warning(" Please see http://navit.sourceforge.net/wiki/index.php/Failed_to_connect_graphics_to_gui\n");
 		g_warning(" for explanations and solutions\n");
 
@@ -1295,19 +1300,18 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 }
 
 static int
-navit_add_log(struct navit *this_, struct log *log, struct attr **attrs)
+navit_add_log(struct navit *this_, struct log *log)
 {
-	struct attr *type;
-	type = attr_search(attrs, NULL, attr_type);
-	if (!type)
-		return 1;
-	if (!strcmp(type->u.str, "textfile_debug")) {
-		if (this_->textfile_debug_log)
-			return 1;
-		this_->textfile_debug_log=log;
+	struct attr type_attr;
+	if (!log_get_attr(log, attr_type, &type_attr, NULL))
 		return 0;
+	if (!strcmp(type_attr.u.str, "textfile_debug")) {
+		if (this_->textfile_debug_log)
+			return 0;
+		this_->textfile_debug_log=log;
+		return 1;
 	}
-	return 1;
+	return 0;
 }
 
 int
@@ -1315,7 +1319,11 @@ navit_add_attr(struct navit *this_, struct attr *attr, struct attr **attrs)
 {
 	switch (attr->type) {
 	case attr_log:
-		return navit_add_log(this_, attr->u.log, attrs);
+		return navit_add_log(this_, attr->u.log);
+	case attr_gui:
+		return navit_set_gui(this_, attr->u.gui);
+	case attr_graphics:
+		return navit_set_graphics(this_, attr->u.graphics);
 	default:
 		return 0;
 	}

@@ -148,6 +148,19 @@ attr_search(struct attr **attrs, struct attr *last, enum attr_type attr)
 }
 
 int
+attr_generic_get_attr(struct attr **attrs, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	while (*attrs) {
+		if ((*attrs)->type == type) {
+			*attr=**attrs;
+			return 1;
+		}
+		attrs++;
+	}
+	return 0;
+}
+
+int
 attr_data_size(struct attr *attr)
 {
 	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
@@ -190,4 +203,46 @@ attr_free(struct attr *attr)
 	if (attr->type >= attr_type_color_begin && attr->type <= attr_type_color_end) 
 		g_free(attr->u.color);
 	g_free(attr);
+}
+
+struct attr *
+attr_dup(struct attr *attr)
+{
+	int size;
+	struct attr *ret=g_new0(struct attr, 1);
+	ret->type=attr->type;
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) {
+		ret->u.num=attr->u.num;
+	} else {
+		size=attr_data_size(attr);
+		if (size) {
+			ret->u.data=g_malloc(size);
+			memcpy(ret->u.data, attr->u.data, size);
+		}
+	}
+	return ret;
+}
+
+void
+attr_list_free(struct attr **attrs)
+{
+	int count=0;
+	while (attrs[count]) {
+		attr_free(attrs[count++]);
+	}
+	g_free(attrs);
+}
+
+struct attr **
+attr_list_dup(struct attr **attrs)
+{
+	struct attr **ret=attrs;
+	int i,count=0;
+
+	while (attrs[count])
+		count++;
+	ret=g_new0(struct attr *, count+1);
+	for (i = 0 ; i < count ; i++)
+		ret[i]=attr_dup(attrs[i]);
+	return ret;
 }

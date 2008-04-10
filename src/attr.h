@@ -30,6 +30,7 @@ struct attr {
 	enum attr_type type;
 	union {
 		char *str;
+		void *data;
 		int num;
 		struct item *item;
 		enum item_type item_type;
@@ -47,22 +48,29 @@ struct attr {
 		struct navigation *navigation;
 		struct coord *coord;
 		struct pcoord *pcoord;
+		struct gui *gui;
+		struct graphics *graphics;
 	} u;
 };
 
 /* prototypes */
 enum attr_type;
 struct attr;
+struct attr_iter;
 struct map;
 enum attr_type attr_from_name(const char *name);
 char *attr_to_name(enum attr_type attr);
 struct attr *attr_new_from_text(const char *name, const char *value);
 char *attr_to_text(struct attr *attr, struct map *map, int pretty);
 struct attr *attr_search(struct attr **attrs, struct attr *last, enum attr_type attr);
+int attr_generic_get_attr(struct attr **attrs, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int attr_data_size(struct attr *attr);
 void *attr_data_get(struct attr *attr);
 void attr_data_set(struct attr *attr, void *data);
 void attr_free(struct attr *attr);
+struct attr *attr_dup(struct attr *attr);
+void attr_list_free(struct attr **attrs);
+struct attr **attr_list_dup(struct attr **attrs);
 /* end of prototypes */
 #endif
 #ifdef __cplusplus
