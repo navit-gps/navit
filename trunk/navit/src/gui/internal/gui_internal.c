@@ -230,9 +230,13 @@ gui_internal_button(struct gui_priv *this, int pressed, int button, struct point
 {
 	struct graphics *gra=this->gra;
 	struct point pnt;
-	if (!this->menu) {
-		if (!navit_handle_button(this->nav, pressed, button, p, NULL))
+	
+	// if still on the map (not in the menu, yet):
+	if (!this->menu) {	
+		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel 
+		if (!navit_handle_button(this->nav, pressed, button, p, NULL) || button >=4)
 			return;
+		// draw menu
 		this->menu++;
 		graphics_draw_mode(gra, draw_mode_begin);
 		gui_internal_clear(this);
@@ -240,6 +244,8 @@ gui_internal_button(struct gui_priv *this, int pressed, int button, struct point
 		graphics_draw_mode(gra, draw_mode_end);
 		return;
 	}
+	
+	// if already in the menu:
 	if (pressed) {
 		graphics_draw_mode(gra, draw_mode_begin);
 		gui_internal_highlight(this, p);
