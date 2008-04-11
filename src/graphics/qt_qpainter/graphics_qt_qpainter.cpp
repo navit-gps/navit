@@ -58,6 +58,7 @@ class RenderArea : public QWidget
      void mousePressEvent(QMouseEvent *event);
      void mouseReleaseEvent(QMouseEvent *event);
      void mouseMoveEvent(QMouseEvent *event);
+     void wheelEvent(QWheelEvent *event);
 
  };
 
@@ -65,6 +66,9 @@ RenderArea::RenderArea(QWidget *parent)
      : QWidget(parent)
  {
      pixmap = new QPixmap(800, 600);
+     
+     //setEnabled(TRUE);
+     //QWheelEvent::accept();
  }
 
  QSize RenderArea::sizeHint() const
@@ -129,7 +133,33 @@ void RenderArea::mouseMoveEvent(QMouseEvent *event)
 	(this->motion_callback)(this->motion_callback_data, &p);
 }
 
+// Zoom in/out with the mouse's scroolwheel
+void RenderArea::wheelEvent(QWheelEvent *event)
+{
+	struct point p;
+	int button;
+	
+	if (!this->button_callback)
+		return;
+	p.x=event->x();	// xy-coordinates of the mouse pointer
+	p.y=event->y();
+	
+	if (event->delta() > 0)	// wheel movement away from the person
+		button=4;
+	else if (event->delta() < 0) // wheel movement towards the person
+		button=5;
+	else
+		button=-1;
+	
+	if (button != -1) {
+		(*this->button_callback)(this->button_callback_data, 1, button, &p);
+		(*this->button_callback)(this->button_callback_data, 0, button, &p);
+	}
+	
+	event->accept();
+}
 
+// ####################################################################################
 
 static int dummy;
 
@@ -291,7 +321,8 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 static void
 draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
-	gr->painter->drawText(p->x, p->y, text);
+	QString tmp = text;
+	gr->painter->drawText(p->x, p->y, tmp);
 }
 
 static void
