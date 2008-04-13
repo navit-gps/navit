@@ -725,6 +725,9 @@ Change to your home coordinates.
 				<polyline color="#6b6f5f" width="156" />
 				<polyline color="#d3dbbc" width="150" />
 			</item>
+			<item type="rail_tram" order="10-">
+				<polyline color="#606060" width="2" />
+			</item>
 			<item type="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="12-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
@@ -1008,9 +1011,20 @@ Change to your home coordinates.
 			<item type="poi_public_office" order="0-">
 				<icon src="public_office.xpm" />
 			</item>
+			<item type="poi_rail_halt" order="10-">
+				<circle color="#ff0000" radius="3" width="3" />
+				<circle color="#000000" radius="5" width="2" label_size="8" />
+			</item>
 			<item type="poi_rail_station" order="9-">
 				<circle color="#ff0000" radius="3" width="3" />
 				<circle color="#000000" radius="6" width="2" label_size="8" />
+			</item>
+			<item type="poi_rail_tram_stop" order="10-11">
+				<circle color="#ff0000" radius="2" width="2"/>
+			</item>
+			<item type="poi_rail_tram_stop" order="12-">
+				<circle color="#ff0000" radius="3" width="3" />
+				<circle color="#606060" radius="5" width="2" label_size="8" />
 			</item>
 			<item type="poi_repair_service" order="0-">
 				<icon src="repair_service.xpm" />
