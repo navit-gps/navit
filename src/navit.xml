@@ -1099,6 +1099,9 @@ Change to your home coordinates.
 			<item type="poi_tower" order="13-">
 				<icon src="tower.xpm" />
 			</item>
+			<item type="poi_townhall" order="12-">
+				<icon src="townhall.xpm" />
+			</item>
 			<item type="poi_trail" order="0-">
 				<icon src="trail.xpm" />
 			</item>
