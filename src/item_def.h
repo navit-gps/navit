@@ -236,6 +236,7 @@ ITEM(poi_image)
 ITEM(mini_roundabout)
 ITEM(turning_circle)
 ITEM(poi_townhall)
+ITEM(poi_level_crossing)
 /* Line */
 ITEM2(0x80000000,line)
 ITEM2(0x80000001,line_unspecified)

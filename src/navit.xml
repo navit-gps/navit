@@ -954,6 +954,9 @@ Change to your home coordinates.
 			<item type="poi_levee" order="0-">
 				<icon src="levee.xpm" />
 			</item>
+			<item type="poi_level_crossing" order="11-">
+				<icon src="level_crossing.xpm" />
+			</item>
 			<item type="poi_library" order="12-">
 				<icon src="library.xpm" />
 			</item>
