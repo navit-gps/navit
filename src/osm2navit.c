@@ -113,6 +113,7 @@ static char *attrmap={
 	"n	place=town		town_label_2e4\n"
 	"n	place=village		town_label_2e3\n"
 	"n	place=hamlet		town_label_2e2\n"
+	"n	railway=level_crossing		poi_level_crossing\n"
 	"n	railway=station		poi_rail_station\n"
 	"w	*=*			street_unkn\n"
 	"w	amenity=place_of_worship	poly_building\n"
