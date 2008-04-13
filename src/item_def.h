@@ -235,6 +235,7 @@ ITEM(poi_rail_station)
 ITEM(poi_image)
 ITEM(mini_roundabout)
 ITEM(turning_circle)
+ITEM(poi_townhall)
 /* Line */
 ITEM2(0x80000000,line)
 ITEM2(0x80000001,line_unspecified)
