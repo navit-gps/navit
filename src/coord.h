@@ -32,6 +32,13 @@ struct coord_geo {
 	double lat; /*!< Latitude */
 };
 
+//! A cartesian coordinate 
+struct coord_geo_cart {
+	double x; /*!< X-Value */
+	double y; /*!< Y-Value */
+	double z; /*!< Z-Value */
+};
+
 enum projection;
 
 struct coord * coord_get(unsigned char **p);

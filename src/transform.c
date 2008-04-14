@@ -78,6 +78,41 @@ transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, 
 	transform_from_geo(to, &g, cto);
 }
 
+void
+transform_geo_to_cart(struct coord_geo *geo, double a, double b, struct coord_geo_cart *cart)
+{
+	double n,ee=1-b*b/(a*a);
+	n = a/sqrt(1-ee*sin(geo->lat)*sin(geo->lat));
+        cart->x=n*cos(geo->lat)*cos(geo->lng);
+        cart->y=n*cos(geo->lat)*sin(geo->lng);
+        cart->z=n*(1-ee)*sin(geo->lat);
+}
+
+void
+transform_cart_to_geo(struct coord_geo_cart *cart, double a, double b, struct coord_geo *geo)
+{
+	double lat,lati,n,ee=1-b*b/(a*a), lng = atan(cart->y/cart->x);
+
+        lat = atan(cart->z / sqrt((cart->x * cart->x) + (cart->y * cart->y)));
+        do
+        {
+                lati = lat;
+
+                n = a / sqrt(1-ee*sin(lat)*sin(lat));
+                lat = atan((cart->z + ee * n * sin(lat)) / sqrt(cart->x * cart->x + cart->y * cart->y));
+        }
+        while (fabs(lat - lati) >= 0.000000000000001);
+
+	geo->lng=lng/M_PI*180;
+	geo->lat=lat/M_PI*180;
+}
+
+
+void
+transform_datum(struct coord_geo *from, enum map_datum from_datum, struct coord_geo *to, enum map_datum to_datum)
+{
+}
+
 int
 transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int unique)
 {
