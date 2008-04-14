@@ -1,19 +1,23 @@
-# German translations for navit
-# Copyright (C) 2007
+# translation of it.po to Italiano
+# Italian translations for navit
+# Copyright (C) 2007, 2008
 # This file is distributed under the same license as the navit package.
 # Andrea GHENSI <andrea.ghensi@gmail.com> 2007
 #
+# Niccolo Rigacci <niccolo@rigacci.org>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: Navit 0.1.0\n"
+"Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-02-14 21:09+0100\n"
-"PO-Revision-Date: 2007-07-10 21:53+0200\n"
-"Last-Translator: Andrea GHENSI <andrea.ghensi@gmail.com>\n"
-"Language-Team: Andrea GHENSI <andrea.ghensi@gmail.com>\n"
+"POT-Creation-Date: 2008-02-14 20:45+0100\n"
+"PO-Revision-Date: 2008-04-10 00:25+0200\n"
+"Last-Translator: Niccolo Rigacci <niccolo@rigacci.org>\n"
+"Language-Team: Italiano\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #: ../src/main.c:108
 #, c-format
@@ -21,9 +25,9 @@ msgid "Running from source directory\n"
 msgstr "Esecuzione dalla directory sorgente\n"
 
 #: ../src/main.c:124
-#, fuzzy, c-format
+#, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "Utilizzo il file di configurazione '%s'\n"
+msgstr ""
 
 #: ../src/main.c:202
 #, c-format
@@ -46,14 +50,14 @@ msgid "No instance has been created, exiting\n"
 msgstr "Nessuna istanza creata, esco\n"
 
 #: ../src/navigation.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "%d m"
-msgstr "%d m"
+msgstr ""
 
 #: ../src/navigation.c:164
-#, fuzzy, c-format
+#, c-format
 msgid "in %d m"
-msgstr "tra %d m"
+msgstr "fra %d m"
 
 #: ../src/navigation.c:168
 #, c-format
@@ -76,18 +80,18 @@ msgid "in %d.%d kilometers"
 msgstr "tra %d.%d chilometri"
 
 #: ../src/navigation.c:182
-#, fuzzy, c-format
+#, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "un chilometro"
-msgstr[1] "un chilometro"
+msgstr[1] "%d chilometri"
 
 #: ../src/navigation.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "tra un chilometro"
-msgstr[1] "tra un chilometro"
+msgstr[0] "fra un chilometro"
+msgstr[1] "fra %d chilometri"
 
 #: ../src/navigation.c:402
 msgid "right"
@@ -110,7 +114,6 @@ msgid "unknown "
 msgstr "sconosciuto "
 
 #: ../src/navigation.c:426
-#, fuzzy
 msgid "When possible, please turn around"
 msgstr "Appena possibile, invertire il senso di marcia"
 
@@ -133,9 +136,9 @@ msgstr "errore"
 
 #. TRANSLATORS: The first argument is strength, the second direction and the third distance
 #: ../src/navigation.c:450
-#, fuzzy, c-format
+#, c-format
 msgid "Turn %1$s%2$s %3$s"
-msgstr "%s, svoltare %s%s"
+msgstr "Svoltare %1$sa %2$s %3$s"
 
 #: ../src/navigation.c:453
 #, c-format
@@ -144,55 +147,51 @@ msgstr "Hai raggiunto la destinazione %s"
 
 #: ../src/navit.c:675 ../src/gui/gtk/gui_gtk_action.c:198
 msgid "Layout"
-msgstr "Layout"
+msgstr ""
 
 #: ../src/navit.c:691
 msgid "Projection"
 msgstr "Proiezione"
 
 #: ../src/navit.c:746
-#, fuzzy
 msgid "Former Destinations"
-msgstr "Destinazione"
+msgstr "Destinazione precedente"
 
 #: ../src/navit.c:756
 msgid "Bookmarks"
-msgstr ""
+msgstr "Segnalibri"
 
 #: ../src/navit.c:794
 msgid "Vehicle"
-msgstr ""
+msgstr "Veicolo"
 
 #: ../src/navit.c:863
-#, fuzzy
 msgid "Command"
-msgstr "Polonia"
+msgstr "Indicazione"
 
 #: ../src/navit.c:868
 msgid "Length"
-msgstr ""
+msgstr "Distanza"
 
 #: ../src/navit.c:872 ../src/navit.c:897
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #: ../src/navit.c:876 ../src/navit.c:901
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #: ../src/navit.c:882
 msgid "Time"
-msgstr ""
+msgstr "Tempo"
 
 #: ../src/navit.c:894
-#, fuzzy
 msgid "Destination Length"
-msgstr "Destinazione"
+msgstr "Distanza all'arrivo"
 
 #: ../src/navit.c:907
-#, fuzzy
 msgid "Destination Time"
-msgstr "Destinazione"
+msgstr "Tempo all'arrivo"
 
 #: ../src/navit.c:936 ../src/gui/gtk/gui_gtk_action.c:202
 msgid "Roadbook"
@@ -210,25 +209,24 @@ msgstr "Percorso"
 #: ../src/popup.c:229
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr ""
+msgstr "Punto 0x%x, 0x%x"
 
 #: ../src/popup.c:230
 #, c-format
 msgid "Screen coord : %d %d"
-msgstr ""
+msgstr "Coordinate schermo: %d, %d"
 
 #: ../src/popup.c:239
 msgid "Set as position"
-msgstr ""
+msgstr "Imposta come posizione"
 
 #: ../src/popup.c:240
-#, fuzzy
 msgid "Set as destination"
-msgstr "Destinazione"
+msgstr "Imposta come destinazione"
 
 #: ../src/popup.c:241
 msgid "Add as bookmark"
-msgstr ""
+msgstr "Aggiungi come segnalibro"
 
 #: ../src/country.c:24
 msgid "Czech Republic"
@@ -480,9 +478,8 @@ msgstr "Svalbard e Jan Mayen"
 
 #: ../src/gui/gtk/destination.c:96 ../src/gui/gtk/destination.c:97
 #: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
-#, fuzzy
 msgid "Car"
-msgstr "Pulisci"
+msgstr "Sigla"
 
 #: ../src/gui/gtk/destination.c:96
 msgid "Iso2"
@@ -498,20 +495,18 @@ msgstr "Stato"
 
 #: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
 #: ../src/gui/gtk/destination.c:99
-#, fuzzy
 msgid "Postal"
-msgstr "Portogallo"
+msgstr "Postale"
 
 #: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
 #: ../src/gui/gtk/destination.c:99
 msgid "Town"
-msgstr ""
+msgstr "Centro abitato"
 
 #: ../src/gui/gtk/destination.c:97 ../src/gui/gtk/destination.c:98
 #: ../src/gui/gtk/destination.c:99
-#, fuzzy
 msgid "District"
-msgstr "Distretto"
+msgstr "Regione"
 
 #: ../src/gui/gtk/destination.c:98 ../src/gui/gtk/destination.c:99
 #: ../src/gui/gtk/destination.c:343
@@ -523,13 +518,12 @@ msgid "Number"
 msgstr "Numero"
 
 #: ../src/gui/gtk/destination.c:329
-#, fuzzy
 msgid "Enter Destination"
 msgstr "Destinazione"
 
 #: ../src/gui/gtk/destination.c:336
 msgid "Zip Code"
-msgstr "Codice ZIP"
+msgstr "Codice postale"
 
 #: ../src/gui/gtk/destination.c:338
 msgid "City"
@@ -537,11 +531,11 @@ msgstr "Città"
 
 #: ../src/gui/gtk/destination.c:340
 msgid "District/Township"
-msgstr "Distretto"
+msgstr "Regione/provincia"
 
 #: ../src/gui/gtk/destination.c:369
 msgid "Bookmark"
-msgstr ""
+msgstr "Segnalibro"
 
 #: ../src/gui/gtk/destination.c:370 ../src/gui/gtk/gui_gtk_action.c:208
 msgid "Destination"
@@ -581,7 +575,7 @@ msgstr "_Esci"
 
 #: ../src/gui/gtk/gui_gtk_action.c:218
 msgid "Cursor"
-msgstr "Cursore"
+msgstr "Posizione attuale"
 
 #: ../src/gui/gtk/gui_gtk_action.c:219
 msgid "Tracking"
@@ -589,7 +583,7 @@ msgstr "Tracking"
 
 #: ../src/gui/gtk/gui_gtk_action.c:220
 msgid "Orientation"
-msgstr "Bussola"
+msgstr "Orienta mappa a nord"
 
 #: ../src/gui/gtk/gui_gtk_action.c:222 ../src/gui/gtk/gui_gtk_action.c:224
 msgid "Fullscreen"
@@ -621,78 +615,42 @@ msgstr "PuntiVisibili"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "N"
-msgstr ""
+msgstr "N"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "NE"
-msgstr ""
+msgstr "NE"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "SE"
-msgstr ""
+msgstr "SE"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "SW"
-msgstr ""
+msgstr "SO"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "W"
-msgstr ""
+msgstr "O"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:48 ../src/gui/gtk/gui_gtk_statusbar.c:83
 msgid "NW"
-msgstr ""
+msgstr "NO"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:105
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "Percorso %4.0f km, %02d:%02d ETA"
 
 #: ../src/gui/gtk/gui_gtk_statusbar.c:156
 msgid "Route 0000km  0+00:00 ETA"
 msgstr ""
 
-#, fuzzy
-#~ msgid "RouteGraph"
-#~ msgstr "Percorso"
-
-#~ msgid "two kilometers"
-#~ msgstr "due chilometri"
-
-#~ msgid "in two kilometers"
-#~ msgstr "tra due chilometri"
-
-#~ msgid "three kilometers"
-#~ msgstr "tre chilometri"
-
-#~ msgid "in three kilometers"
-#~ msgstr "tra tre chilometri"
-
-#~ msgid "four kilometers"
-#~ msgstr "quattro chilometri"
-
-#~ msgid "in four kilometers"
-#~ msgstr "tra quattro chilometri"
-
-#~ msgid "%d kilometers"
-#~ msgstr "%d chilometri"
-
-#~ msgid "in %d kilometers"
-#~ msgstr "tra %d chilometri"
-
-#~ msgid "strength_pos"
-#~ msgstr "2"
-
-#~ msgid "direction_pos"
-#~ msgstr "3"
-
-#~ msgid "distance_pos"
-#~ msgstr "1"
