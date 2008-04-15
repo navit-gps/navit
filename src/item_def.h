@@ -1,3 +1,4 @@
+/* This file is generated from http://wiki.navit-project.org/index.php/Item_def.h, do not edit it, edit the wiki page instead */
 ITEM2(0x00000000,none)
 ITEM2(0x00000001,point_unspecified)
 ITEM(town_streets)
@@ -403,4 +404,3 @@ ITEM(poly_college)
 ITEM(poly_battlefield)
 ITEM(poly_pedestrian)
 ITEM(poly_plaza)
-
