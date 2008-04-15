@@ -1030,7 +1030,7 @@ navit_init(struct navit *this_)
 		gui_get_attr(this_->gui, attr_type, &attr_type_gui, NULL);
 		graphics_get_attr(this_->gra, attr_type, &attr_type_graphics, NULL);
 		g_warning("failed to connect graphics '%s' to gui '%s'\n", attr_type_graphics.u.str, attr_type_gui.u.str);
-		g_warning(" Please see http://navit.sourceforge.net/wiki/index.php/Failed_to_connect_graphics_to_gui\n");
+		g_warning(" Please see http://wiki.navit-project.org/index.php/Failed_to_connect_graphics_to_gui\n");
 		g_warning(" for explanations and solutions\n");
 
 		navit_destroy(this_);
