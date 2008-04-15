@@ -2,6 +2,8 @@
 rm -f item_def.h.wiki
 rm -f osmmap_def.h.wiki
 IFS="|"
+echo "/* This file is generated from http://wiki.navit-project.org/index.php/Item_def.h, do not edit it, edit the wiki page instead */" >item_def.h.wiki
+echo "/* This file is generated from http://wiki.navit-project.org/index.php/Item_def.h, do not edit it, edit the wiki page instead */" >osmmap_def.h.wiki
 type="n"
 wget -O - "http://wiki.navit-project.org/index.php/Item_def.h?action=edit" |
 awk '/<textarea/,/<\/textarea/ { print $0 }' | 
@@ -28,9 +30,7 @@ do
 	then
 		for osmtag in $(echo "$osmtags" | sed 's/&lt;br\/&gt;/|/g')
 		do
-			key=${osmtag%%=*}
-			value=${osmtag##*=}
-			printf '"%s\t%s\t%s\t%s\\n"\n' $type $key $value $item >> osmmap_def.h.wiki
+			printf '"%s\t%s\t%s\t%s\\n"\n' $type $osmtag $item >> osmmap_def.h.wiki
 		done
 	fi
 done
