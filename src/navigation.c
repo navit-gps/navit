@@ -753,6 +753,12 @@ struct map_rect_priv {
 };
 
 static int
+navigation_map_item_coord_get(void *priv_data, struct coord *c, int count)
+{
+	return 0;
+}
+
+static int
 navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
 	struct map_rect_priv *this_=priv_data;
@@ -784,7 +790,7 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 
 static struct item_methods navigation_map_item_methods = {
 	NULL,
-	NULL,
+	navigation_map_item_coord_get,
 	NULL,
 	navigation_map_item_attr_get,
 };
