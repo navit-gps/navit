@@ -1,3 +1,13 @@
+//##############################################################################################################
+//#
+//# File: graphics_qt_qpainter.cpp
+//# Description: Graphics interface for internal GUI using Qt (Trolltech.com)
+//# Comment: 
+//# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
+//#
+//##############################################################################################################
+
+
 #include <glib.h>
 #include "config.h"
 #include "point.h"
@@ -36,7 +46,11 @@
 #include <QtGui>
 #endif
 
-
+//##############################################################################################################
+//# Description: RenderArea (QWidget) class for the main window (map, menu, ...) 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
+//##############################################################################################################
 class RenderArea : public QWidget
  {
  public:
@@ -62,6 +76,11 @@ class RenderArea : public QWidget
 
  };
 
+//##############################################################################################################
+//# Description: Constructor
+//# Comment: Using a QPixmap for rendering the graphics
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 RenderArea::RenderArea(QWidget *parent)
      : QWidget(parent)
  {
@@ -82,6 +101,12 @@ void RenderArea::paintEvent(QPaintEvent * event)
      painter.drawPixmap(0, 0, *pixmap);
 }
 
+
+//##############################################################################################################
+//# Description: QWidget::resizeEvent()
+//# Comment: When resizeEvent() is called, the widget already has its new geometry
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 void RenderArea::resizeEvent(QResizeEvent * event)
 {
 	QSize size=event->size();
@@ -91,6 +116,11 @@ void RenderArea::resizeEvent(QResizeEvent * event)
                 (this->resize_callback)(this->resize_callback_data, size.width(), size.height());
 }
 
+//##############################################################################################################
+//# Description: Method to handle mouse clicks
+//# Comment: Delegate of QWidget::mousePressEvent and QWidget::mouseReleaseEvent (see below)
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 void RenderArea::mouseEvent(int pressed, QMouseEvent *event)
 {
 	struct point p;
@@ -123,6 +153,11 @@ void RenderArea::mouseReleaseEvent(QMouseEvent *event)
 	mouseEvent(0, event);
 }
 
+//##############################################################################################################
+//# Description: QWidget::mouseMoveEvent
+//# Comment: If mouse tracking is switched on, mouse move events occur even if no mouse button is pressed.
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 void RenderArea::mouseMoveEvent(QMouseEvent *event)
 {
 	struct point p;
@@ -133,7 +168,12 @@ void RenderArea::mouseMoveEvent(QMouseEvent *event)
 	(this->motion_callback)(this->motion_callback_data, &p);
 }
 
-// Zoom in/out with the mouse's scroolwheel
+
+//##############################################################################################################
+//# Description: Qt Event :: Zoom in/out with the mouse's scrollwheel
+//# Comment:
+//# Authors: Stefan Klumpp (04/2008)
+//##############################################################################################################
 void RenderArea::wheelEvent(QWheelEvent *event)
 {
 	struct point p;
@@ -163,6 +203,11 @@ void RenderArea::wheelEvent(QWheelEvent *event)
 
 static int dummy;
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 struct graphics_priv {
 	QApplication *app;
 	RenderArea *widget;
@@ -171,57 +216,107 @@ struct graphics_priv {
 	enum draw_mode_num mode;
 };
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 static struct graphics_font_priv {
 	int dummy;
 } graphics_font_priv;
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 static struct graphics_gc_priv {
 	QPen *pen;
 	QBrush *brush;
 } graphics_gc_priv;
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 static struct graphics_image_priv {
 	QImage *image;
 } graphics_image_priv;
 
-static void
-graphics_destroy(struct graphics_priv *gr)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void graphics_destroy(struct graphics_priv *gr)
 {
 }
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 static void font_destroy(struct graphics_font_priv *font)
 {
 
 }
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 static struct graphics_font_methods font_methods = {
 	font_destroy
 };
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, int size, int flags)
 {
 	*meth=font_methods;
 	return &graphics_font_priv;
 }
 
-static void
-gc_destroy(struct graphics_gc_priv *gc)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gc_destroy(struct graphics_gc_priv *gc)
 {
 }
 
-static void
-gc_set_linewidth(struct graphics_gc_priv *gc, int w)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
 	gc->pen->setWidth(w);
 }
 
-static void
-gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *dash_list, int n)
 {
 }
 
-static void
-gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
 #if QT_VERSION >= 0x040000
 	QColor col(c->r >> 8, c->g >> 8, c->b >> 8, c->a >> 8); 
@@ -232,11 +327,20 @@ gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 	gc->brush->setColor(col);
 }
 
-static void
-gc_set_background(struct graphics_gc_priv *gc, struct color *c)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 {
 }
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 static struct graphics_gc_methods gc_methods = {
 	gc_destroy,
 	gc_set_linewidth,
@@ -245,6 +349,11 @@ static struct graphics_gc_methods gc_methods = {
 	gc_set_background	
 };
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)
 {
 	*meth=gc_methods;
@@ -254,9 +363,12 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 	return ret;
 }
 
-
-static struct graphics_image_priv *
-image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot)
 {
 	struct graphics_image_priv *ret=g_new0(struct graphics_image_priv, 1);
 
@@ -270,8 +382,12 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *p
 	return ret;
 }
 
-static void
-draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
 	int i;
 #if QT_VERSION >= 0x040000
@@ -286,8 +402,12 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 	gr->painter->drawPolyline(polygon);
 }
 
-static void
-draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
 	int i;
 #if QT_VERSION >= 0x040000
@@ -303,52 +423,83 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 	gr->painter->drawPolygon(polygon);
 }
 
-static void
-draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
 	gr->painter->fillRect(p->x,p->y, w, h, *gc->brush);
 }
 
-static void
-draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
 	gr->painter->setPen(*gc->pen);
 	gr->painter->drawArc(p->x-r, p->y-r, r*2, r*2, 0, 360*16);
 	
 }
 
-
-static void
-draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
 	QString tmp = text;
 	gr->painter->drawText(p->x, p->y, tmp);
 }
 
-static void
-draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
 {
 	gr->painter->drawImage(p->x, p->y, *img->image);
 }
 
-static void
-draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, char *data)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, char *data)
 {
 }
 
-static void
-draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
 {
 }
 
-static void
-background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
 	gr->background_gc=gc;
 }
 
-static void
-draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	dbg(0,"mode=%d\n", mode);
 	if (mode == draw_mode_begin) {
@@ -375,12 +526,22 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 	gr->mode=mode;
 }
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h);
 
 static int argc=1;
 static char *argv[]={"navit",NULL};
-static void *
-get_data(struct graphics_priv *this_, char *type)
+
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void * get_data(struct graphics_priv *this_, char *type)
 {
 	if (strcmp(type, "window"))
 		return NULL;
@@ -390,28 +551,44 @@ get_data(struct graphics_priv *this_, char *type)
 }
 
 
-
-static void
-register_resize_callback(struct graphics_priv *this_, void (*callback)(void *data, int w, int h), void *data)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void register_resize_callback(struct graphics_priv *this_, void (*callback)(void *data, int w, int h), void *data)
 {
 	this_->widget->resize_callback=callback;
         this_->widget->resize_callback_data=data;
 }
 
-static void
-register_motion_callback(struct graphics_priv *this_, void (*callback)(void *data, struct point *p), void *data)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void register_motion_callback(struct graphics_priv *this_, void (*callback)(void *data, struct point *p), void *data)
 {
 	this_->widget->motion_callback=callback;
         this_->widget->motion_callback_data=data;
 }
 
-static void
-register_button_callback(struct graphics_priv *this_, void (*callback)(void *data, int press, int button, struct point *p), void *data)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void register_button_callback(struct graphics_priv *this_, void (*callback)(void *data, int press, int button, struct point *p), void *data)
 {
 	this_->widget->button_callback=callback;
         this_->widget->button_callback_data=data;
 }
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 static struct graphics_methods graphics_methods = {
 	graphics_destroy,
 	draw_mode,
@@ -434,16 +611,24 @@ static struct graphics_methods graphics_methods = {
 	register_motion_callback,
 };
 
-static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
 {
 	*meth=graphics_methods;
 	return NULL;
 }
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 #if QT_VERSION < 0x040000
-static gboolean
-graphics_qt_qpainter_idle(void *data)
+static gboolean graphics_qt_qpainter_idle(void *data)
 {
 	struct graphics_priv *gr=(struct graphics_priv *)data;
 	gr->app->processOneEvent();
@@ -451,9 +636,12 @@ graphics_qt_qpainter_idle(void *data)
 }
 #endif
 
-
-static struct graphics_priv *
-graphics_qt_qpainter_new(struct graphics_methods *meth, struct attr **attrs)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static struct graphics_priv * graphics_qt_qpainter_new(struct graphics_methods *meth, struct attr **attrs)
 {
 	struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
@@ -466,8 +654,17 @@ graphics_qt_qpainter_new(struct graphics_methods *meth, struct attr **attrs)
 	return ret;
 }
 
-void
-plugin_init(void)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void plugin_init(void)
 {
         plugin_register_graphics_type("qt_qpainter", graphics_qt_qpainter_new);
 }
+
+
+
+
+// *** EOF *** 
