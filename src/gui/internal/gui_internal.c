@@ -1,12 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <gdk/gdkkeysyms.h>
-#if !defined(GDK_Book) || !defined(GDK_Calendar)
-#include <X11/XF86keysym.h>
-#endif
 #include <libintl.h>
-#include <gtk/gtk.h>
+#include <glib.h>
 #include "config.h"
 #include "item.h"
 #include "navit.h"

@@ -103,10 +103,10 @@ cursor_draw(struct cursor *this_, struct point *pnt, int dir, int draw_dir, int 
 
 static gboolean cursor_animate(struct cursor * this)
 {
+	struct point p;
 	this->current_gc++;
 	if (this->current_gc >= NUM_GC)
 		this->current_gc=0;
-	struct point p;
 	p.x = this->cursor_pnt.x;
 	p.y = this->cursor_pnt.y;
 	cursor_draw(this, &p, this->last_dir, this->last_draw_dir, 1);
@@ -118,8 +118,8 @@ cursor_new(struct graphics *gra, struct color *c, struct color *c2, int animate)
 {
 	unsigned char dash_list[] = { 4, 6 };
 	int i;
-	dbg(2,"enter gra=%p c=%p\n", gra, c);
 	struct cursor *this=g_new(struct cursor,1);
+	dbg(2,"enter gra=%p c=%p\n", gra, c);
 	this->gra=gra;
 	this->animate_timer=0;
 	for (i=0;i<NUM_GC;i++) {

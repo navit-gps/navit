@@ -622,7 +622,7 @@ street_name_attr_get(void *priv_data, enum attr_type attr_type, struct attr *att
 			printf("\n");
 			{
 				while (p < end) {
-					unsigned char *pn,*pn_end;;
+					unsigned char *pn,*pn_end;
 					struct street_name_number nn;
 					street_name_numbers_get(&nns, &p);
 					printf("name_numbers:\n");
