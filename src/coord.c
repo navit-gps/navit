@@ -177,9 +177,9 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		}
 		*c_ret=c;
 	} else if (*s == 'N' || *s == 'n' || *s == 'S' || *s == 's') {
-		dbg(1,"str='%s'\n", str);
 		double lng, lat;
 		char ns, ew;
+		dbg(1,"str='%s'\n", str);
 		args=sscanf(str, "%lf %c %lf %c%n", &lat, &ns, &lng, &ew, &ret);
 		if (args < 4)
 			goto out;

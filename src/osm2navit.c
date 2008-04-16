@@ -1315,8 +1315,8 @@ tile(struct rect *r, char *ret, int max)
 static void
 tile_bbox(char *tile, struct rect *r)
 {
-	*r=world_bbox;
 	struct coord c;
+	*r=world_bbox;
 	while (*tile) {
 		c.x=(r->l.x+r->h.x)/2;
 		c.y=(r->l.y+r->h.y)/2;

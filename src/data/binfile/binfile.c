@@ -452,6 +452,7 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 	struct map_rect_priv *map_rec;
 	struct map_search_priv *msp;
 	struct map_selection *ms;
+	struct item *town;
 	int i;
 	
 	switch (search->type) {
@@ -477,7 +478,7 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 				ms->order[i] = 18;
 			}
 			map_rec = map_rect_new_binfile(map, ms);
-			struct item *town = map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo);
+			town = map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo);
 			if (town) {
 				struct map_search_priv *msp = g_new(struct map_search_priv, 1);
 				struct coord *c = g_new(struct coord, 1);
