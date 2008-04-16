@@ -384,8 +384,8 @@ static void
 make_maneuvers(struct navigation *this_)
 {
 	struct navigation_itm *itm, *last=NULL, *last_itm=NULL;
-	itm=this_->first;
 	int delta;
+	itm=this_->first;
 	this_->cmd_last=NULL;
 	this_->cmd_first=NULL;
 	while (itm) {
@@ -730,9 +730,13 @@ navigation_unregister_callback(struct navigation *this_, enum attr_type type, st
 struct map *
 navigation_get_map(struct navigation *this_)
 {
-	struct attr navigation_attr={.type=attr_navigation,.u.navigation=this_};
-        struct attr data_attr={.type=attr_data,.u.str=""};
+	struct attr navigation_attr;
+        struct attr data_attr;
         struct attr *attrs_navigation[]={&navigation_attr, &data_attr, NULL};
+	navigation_attr.type=attr_navigation;
+	navigation_attr.u.navigation=this_;
+	data_attr.type=attr_data;
+	data_attr.u.str="";
 
 	if (! this_->map)
 		this_->map=map_new("navigation",attrs_navigation);
