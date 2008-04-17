@@ -1,3 +1,12 @@
+//##############################################################################################################
+//#
+//# File: graphics.c
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//#
+//##############################################################################################################
+
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +27,11 @@
 #include "route.h"
 #include "util.h"
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 struct graphics
 {
 	struct graphics_priv *priv;
@@ -27,13 +41,20 @@ struct graphics
 	struct attr **attrs;
 	int ready;
 };
-
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 struct displaylist {
 	GHashTable *dl;
 };
-
-struct graphics *
-graphics_new(const char *type, struct attr **attrs)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct graphics * graphics_new(const char *type, struct attr **attrs)
 {
 	struct graphics *this_;
 	struct graphics_priv * (*new)(struct graphics_methods *meth, struct attr **attrs);
@@ -47,15 +68,22 @@ graphics_new(const char *type, struct attr **attrs)
 	return this_;
 }
 
-int
-graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
 	return attr_generic_get_attr(this_->attrs, type, attr, iter);
 }
 
-
-struct graphics *
-graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h)
 {
 	struct graphics *this_;
 	this_=g_new0(struct graphics, 1);
@@ -63,9 +91,12 @@ graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h)
 	return this_;
 }
 
-
-void
-graphics_init(struct graphics *this_)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_init(struct graphics *this_)
 {
 	this_->gc[0]=graphics_gc_new(this_);
 	graphics_gc_set_background(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7 });
@@ -79,32 +110,52 @@ graphics_init(struct graphics *this_)
 	this_->meth.background_gc(this_->priv, this_->gc[0]->priv);
 }
 
-void *
-graphics_get_data(struct graphics *this_, char *type)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void * graphics_get_data(struct graphics *this_, char *type)
 {
 	return (this_->meth.get_data(this_->priv, type));
 }
 
-void
-graphics_register_resize_callback(struct graphics *this_, void (*callback)(void *data, int w, int h), void *data)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_register_resize_callback(struct graphics *this_, void (*callback)(void *data, int w, int h), void *data)
 {
 	this_->meth.register_resize_callback(this_->priv, callback, data);
 }
 
-void
-graphics_register_button_callback(struct graphics *this_, void (*callback)(void *data, int pressed, int button, struct point *p), void *data)
+//##############################################################################################################
+//# Description: 
+//# Comment: Called in navit.c
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_register_button_callback(struct graphics *this_, void (*callback)(void *data, int pressed, int button, struct point *p), void *data)
 {
 	this_->meth.register_button_callback(this_->priv, callback, data);
 }
 
-void
-graphics_register_motion_callback(struct graphics *this_, void (*callback)(void *data, struct point *p), void *data)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_register_motion_callback(struct graphics *this_, void (*callback)(void *data, struct point *p), void *data)
 {
 	this_->meth.register_motion_callback(this_->priv, callback, data);
 }
 
-struct graphics_font *
-graphics_font_new(struct graphics *gra, int size, int flags)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct graphics_font * graphics_font_new(struct graphics *gra, int size, int flags)
 {
 	struct graphics_font *this_;
 
@@ -113,8 +164,12 @@ graphics_font_new(struct graphics *gra, int size, int flags)
 	return this_;
 }
 
-struct graphics_gc *
-graphics_gc_new(struct graphics *gra)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct graphics_gc * graphics_gc_new(struct graphics *gra)
 {
 	struct graphics_gc *this_;
 
@@ -123,40 +178,64 @@ graphics_gc_new(struct graphics *gra)
 	return this_;
 }
 
-void
-graphics_gc_destroy(struct graphics_gc *gc)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_gc_destroy(struct graphics_gc *gc)
 {
 	gc->meth.gc_destroy(gc->priv);
 	g_free(gc);
 }
 
-void
-graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c)
 {
 	gc->meth.gc_set_foreground(gc->priv, c);
 }
 
-void
-graphics_gc_set_background(struct graphics_gc *gc, struct color *c)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_gc_set_background(struct graphics_gc *gc, struct color *c)
 {
 	gc->meth.gc_set_background(gc->priv, c);
 }
 
-void
-graphics_gc_set_linewidth(struct graphics_gc *gc, int width)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_gc_set_linewidth(struct graphics_gc *gc, int width)
 {
 	gc->meth.gc_set_linewidth(gc->priv, width);
 }
 
-void
-graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsigned char dash_list[], int n)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsigned char dash_list[], int n)
 {
 	if (gc->meth.gc_set_dashes)
 		gc->meth.gc_set_dashes(gc->priv, width, offset, dash_list, n);
 }
 
-struct graphics_image *
-graphics_image_new(struct graphics *gra, char *path)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct graphics_image * graphics_image_new(struct graphics *gra, char *path)
 {
 	struct graphics_image *this_;
 
@@ -169,6 +248,11 @@ graphics_image_new(struct graphics *gra, char *path)
 	return this_;
 }
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 void graphics_image_free(struct graphics *gra, struct graphics_image *img)
 {
 	if (gra->meth.image_free)
@@ -176,45 +260,72 @@ void graphics_image_free(struct graphics *gra, struct graphics_image *img)
 	g_free(img);
 }
 
-void
-graphics_draw_restore(struct graphics *this_, struct point *p, int w, int h)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_draw_restore(struct graphics *this_, struct point *p, int w, int h)
 {
 	this_->meth.draw_restore(this_->priv, p, w, h);
 }
 
-void
-graphics_draw_mode(struct graphics *this_, enum draw_mode_num mode)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_draw_mode(struct graphics *this_, enum draw_mode_num mode)
 {
 	this_->meth.draw_mode(this_->priv, mode);
 }
 
-void
-graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct point *p, int count)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct point *p, int count)
 {
 	this_->meth.draw_lines(this_->priv, gc->priv, p, count);
 }
 
-void
-graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r)
 {
 	this_->meth.draw_circle(this_->priv, gc->priv, p, r);
 }
 
-
-void
-graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int w, int h)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int w, int h)
 {
 	this_->meth.draw_rectangle(this_->priv, gc->priv, p, w, h);
 }
 
-void
-graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2, struct graphics_font *font, char *text, struct point *p, int dx, int dy)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2, struct graphics_font *font, char *text, struct point *p, int dx, int dy)
 {
 	this_->meth.draw_text(this_->priv, gc1->priv, gc2 ? gc2->priv : NULL, font->priv, text, p, dx, dy);
 }
 
-void
-graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img)
 {
 	this_->meth.draw_image(this_->priv, gc->priv, p, img->priv);
 }
@@ -223,17 +334,26 @@ graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point
 #include "popup.h"
 #include <stdio.h>
 
+
 #if 0
-static void
-popup_view_html(struct popup_item *item, char *file)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void popup_view_html(struct popup_item *item, char *file)
 {
 	char command[1024];
 	sprintf(command,"firefox %s", file);
 	system(command);
 }
 
-static void
-graphics_popup(struct display_list *list, struct popup_item **popup)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void graphics_popup(struct display_list *list, struct popup_item **popup)
 {
 	struct item *item;
 	struct attr attr;
@@ -260,6 +380,11 @@ graphics_popup(struct display_list *list, struct popup_item **popup)
 }
 #endif
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 struct displayitem {
 	struct item item;
 	char *label;
@@ -268,8 +393,12 @@ struct displayitem {
 	struct point pnt[0];
 };
 
-static int
-xdisplay_free_list(gpointer key, gpointer value, gpointer user_data)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static int xdisplay_free_list(gpointer key, gpointer value, gpointer user_data)
 {
 	GList *h, *l;
 	h=value;
@@ -285,14 +414,22 @@ xdisplay_free_list(gpointer key, gpointer value, gpointer user_data)
 	return TRUE;
 }
 
-static void
-xdisplay_free(GHashTable *display_list)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void xdisplay_free(GHashTable *display_list)
 {
 	g_hash_table_foreach_remove(display_list, xdisplay_free_list, NULL);
 }
 
-void
-display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label)
 {
 	struct displayitem *di;
 	int len;
@@ -323,8 +460,12 @@ display_add(struct displaylist *displaylist, struct item *item, int count, struc
 }
 
 
-static void
-label_line(struct graphics *gra, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font, struct point *p, int count, char *label)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void label_line(struct graphics *gra, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font, struct point *p, int count, char *label)
 {
 	int i,x,y,tl;
 	double dx,dy,l;
@@ -360,9 +501,12 @@ label_line(struct graphics *gra, struct graphics_gc *fg, struct graphics_gc *bg,
 	}
 }
 
-
-static void
-xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct itemtype *itm)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct itemtype *itm)
 {
 	struct element *e;
 	GList *l,*ls,*es,*types;
@@ -460,8 +604,12 @@ xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct it
 		graphics_gc_destroy(gc);
 }
 
-static void
-xdisplay_draw_layer(GHashTable *display_list, struct graphics *gra, struct layer *lay, int order)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void xdisplay_draw_layer(GHashTable *display_list, struct graphics *gra, struct layer *lay, int order)
 {
 	GList *itms;
 	struct itemtype *itm;
@@ -475,8 +623,12 @@ xdisplay_draw_layer(GHashTable *display_list, struct graphics *gra, struct layer
 	}
 }
 
-static void
-xdisplay_draw(GHashTable *display_list, struct graphics *gra, struct layout *l, int order)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void xdisplay_draw(GHashTable *display_list, struct graphics *gra, struct layout *l, int order)
 {
 	GList *lays;
 	struct layer *lay;
@@ -489,10 +641,19 @@ xdisplay_draw(GHashTable *display_list, struct graphics *gra, struct layout *l, 
 	}
 }
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 extern void *route_selection;
 
-static void
-do_draw_map(struct displaylist *displaylist, struct transformation *t, struct map *m, int order)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void do_draw_map(struct displaylist *displaylist, struct transformation *t, struct map *m, int order)
 {
 	enum projection pro;
 	struct map_rect *mr;
@@ -556,8 +717,12 @@ do_draw_map(struct displaylist *displaylist, struct transformation *t, struct ma
 	map_selection_destroy(sel);
 }
 
-static void
-do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapsets, int order)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapsets, int order)
 {
 	struct mapset *ms;
 	struct map *m;
@@ -573,14 +738,22 @@ do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapset
 	mapset_close(h);
 }
 
-int
-graphics_ready(struct graphics *this_)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+int graphics_ready(struct graphics *this_)
 {
 	return this_->ready;
 }
 
-void
-graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l)
 {
 	int order=transform_get_order(trans);
 	struct point p;
@@ -596,8 +769,12 @@ graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist,
 	gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
 
-void
-graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy)
 {
 	struct displaylist_handle *dlh;
 	struct displayitem *di;
@@ -613,9 +790,12 @@ graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy)
 	graphics_displaylist_close(dlh);
 }
 
-
-void
-graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l)
 {
 	int order=transform_get_order(trans);
 
@@ -649,14 +829,21 @@ graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *maps
 	gra->ready=1;
 }
 
-
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 struct displaylist_handle {
 	GList *hl_head,*hl,*l;
 };
 
-
-struct displaylist_handle *
-graphics_displaylist_open(struct displaylist *displaylist)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct displaylist_handle * graphics_displaylist_open(struct displaylist *displaylist)
 {
 	struct displaylist_handle *ret;
 
@@ -666,8 +853,12 @@ graphics_displaylist_open(struct displaylist *displaylist)
 	return ret;
 }
 
-struct displayitem *
-graphics_displaylist_next(struct displaylist_handle *dlh)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct displayitem * graphics_displaylist_next(struct displaylist_handle *dlh)
 {
 	struct displayitem *ret;
 	if (! dlh->l) {
@@ -681,15 +872,23 @@ graphics_displaylist_next(struct displaylist_handle *dlh)
 	return ret;
 }
 
-void
-graphics_displaylist_close(struct displaylist_handle *dlh)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_displaylist_close(struct displaylist_handle *dlh)
 {
 	g_list_free(dlh->hl_head);
 	g_free(dlh);
 }
 
-struct displaylist *
-graphics_displaylist_new(void)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct displaylist * graphics_displaylist_new(void)
 {
 	struct displaylist *ret=g_new(struct displaylist, 1);
 
@@ -698,20 +897,32 @@ graphics_displaylist_new(void)
 	return ret;
 }
 
-struct item *
-graphics_displayitem_get_item(struct displayitem *di)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct item * graphics_displayitem_get_item(struct displayitem *di)
 {
 	return &di->item;	
 }
 
-char *
-graphics_displayitem_get_label(struct displayitem *di)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+char * graphics_displayitem_get_label(struct displayitem *di)
 {
 	return di->label;
 }
 
-static int
-within_dist_point(struct point *p0, struct point *p1, int dist)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static int within_dist_point(struct point *p0, struct point *p1, int dist)
 {
 	if (p0->x == 32767 || p0->y == 32767 || p1->x == 32767 || p1->y == 32767)
 		return 0;
@@ -723,8 +934,12 @@ within_dist_point(struct point *p0, struct point *p1, int dist)
         return 0;
 }
 
-static int
-within_dist_line(struct point *p, struct point *line_p0, struct point *line_p1, int dist)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static int within_dist_line(struct point *p, struct point *line_p0, struct point *line_p1, int dist)
 {
 	int vx,vy,wx,wy;
 	int c1,c2;
@@ -747,8 +962,12 @@ within_dist_line(struct point *p, struct point *line_p0, struct point *line_p1, 
 	return within_dist_point(p, &line_p, dist);
 }
 
-static int
-within_dist_polyline(struct point *p, struct point *line_pnt, int count, int dist, int close)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static int within_dist_polyline(struct point *p, struct point *line_pnt, int count, int dist, int close)
 {
 	int i;
 	for (i = 0 ; i < count-1 ; i++) {
@@ -761,8 +980,12 @@ within_dist_polyline(struct point *p, struct point *line_pnt, int count, int dis
 	return 0;
 }
 
-static int
-within_dist_polygon(struct point *p, struct point *poly_pnt, int count, int dist)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static int within_dist_polygon(struct point *p, struct point *poly_pnt, int count, int dist)
 {
 	int i, j, c = 0;
         for (i = 0, j = count-1; i < count; j = i++) {
@@ -776,8 +999,12 @@ within_dist_polygon(struct point *p, struct point *poly_pnt, int count, int dist
         return c;
 }
 
-int
-graphics_displayitem_within_dist(struct displayitem *di, struct point *p, int dist)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+int graphics_displayitem_within_dist(struct displayitem *di, struct point *p, int dist)
 {
 	if (di->item.type < type_line) {
 		return within_dist_point(p, &di->pnt[0], dist);
