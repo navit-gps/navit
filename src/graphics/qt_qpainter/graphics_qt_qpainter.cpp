@@ -11,7 +11,6 @@
 #include <glib.h>
 #include "config.h"
 #include "point.h"
-#include "item.h"
 #include "graphics.h"
 #include "color.h"
 #include "debug.h"
@@ -61,7 +60,7 @@ class RenderArea : public QWidget
      void (*motion_callback)(void *data, struct point *p);
      void *motion_callback_data;
      void (*button_callback)(void *data, int press, int button, struct point *p);
-     void *button_callback_data;
+     void *button_callback_data;	// struct navit *
 
 
  protected:
@@ -82,29 +81,36 @@ class RenderArea : public QWidget
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 RenderArea::RenderArea(QWidget *parent)
-     : QWidget(parent)
- {
-     pixmap = new QPixmap(800, 600);
-     
-     //setEnabled(TRUE);
-     //QWheelEvent::accept();
- }
+	: QWidget(parent)
+{
+	pixmap = new QPixmap(800, 600);
+}
 
- QSize RenderArea::sizeHint() const
- {
-     return QSize(800, 600);
- }
+//##############################################################################################################
+//# Description: QWidget:sizeHint
+//# Comment: This property holds the recommended size for the widget
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+QSize RenderArea::sizeHint() const
+{
+	return QSize(800, 600);
+}
 
+//##############################################################################################################
+//# Description: QWidget:paintEvent
+//# Comment: A paint event is a request to repaint all or part of the widget.
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 void RenderArea::paintEvent(QPaintEvent * event)
 {
-     QPainter painter(this);
-     painter.drawPixmap(0, 0, *pixmap);
+	QPainter painter(this);
+    painter.drawPixmap(0, 0, *pixmap);
 }
 
 
 //##############################################################################################################
 //# Description: QWidget::resizeEvent()
-//# Comment: When resizeEvent() is called, the widget already has its new geometry
+//# Comment: When resizeEvent() is called, the widget already has its new geometry.
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 void RenderArea::resizeEvent(QResizeEvent * event)
@@ -130,7 +136,7 @@ void RenderArea::mouseEvent(int pressed, QMouseEvent *event)
 	p.y=event->y();
 	switch (event->button()) {
 	case Qt::LeftButton:
-		(this->button_callback)(this->button_callback_data, pressed, 1, &p);
+		(this->button_callback)(this->button_callback_data, pressed, 1, &p); // calls navit_button() in navit.c
 		break;
 	case Qt::MidButton:
 		(this->button_callback)(this->button_callback_data, pressed, 2, &p);
@@ -199,7 +205,12 @@ void RenderArea::wheelEvent(QWheelEvent *event)
 	event->accept();
 }
 
-// ####################################################################################
+//##############################################################################################################
+// General comments:
+// -----------------
+// gr = graphics = draw area
+// gc = graphics context = pen to paint on the draw area
+//##############################################################################################################
 
 static int dummy;
 
