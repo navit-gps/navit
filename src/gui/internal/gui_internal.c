@@ -1,3 +1,13 @@
+//##############################################################################################################
+//#
+//# File: gui_internal.c
+//# Description: New "internal" GUI for use with any graphics library
+//# Comment: Trying to make a touchscreen friendly GUI
+//# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
+//#
+//##############################################################################################################
+
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -20,6 +30,11 @@
 #define STATE_SELECTED 2
 #define STATE_HIGHLIGHTED 4
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 struct gui_priv {
         struct navit *nav;
 	struct graphics *gra;
@@ -32,7 +47,11 @@ struct gui_priv {
 	struct widget *widgets;
 	int widgets_count;
 };
-
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 struct widget {
 	int type;
 	char *text;
@@ -44,45 +63,65 @@ struct widget {
 	int w,h;
 };
 
-static void
-action_return(struct gui_priv *this, struct widget *wi)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void action_return(struct gui_priv *this, struct widget *wi)
 {
 	this->menu=0;
 	wi->state &= ~STATE_HIGHLIGHTED;
 	navit_draw_displaylist(this->nav);
 }
 
-static void
-action_zoom_in(struct gui_priv *this, struct widget *wi)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void action_zoom_in(struct gui_priv *this, struct widget *wi)
 {
 	this->menu=0;
 	wi->state &= ~STATE_HIGHLIGHTED;
 	navit_zoom_in(this->nav,2,NULL);
 }
 
-static void
-action_zoom_out(struct gui_priv *this, struct widget *wi)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void action_zoom_out(struct gui_priv *this, struct widget *wi)
 {
 	this->menu=0;
 	wi->state &= ~STATE_HIGHLIGHTED;
 	navit_zoom_out(this->nav,2,NULL);
 }
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 struct widget main_menu[] = {
 	{0, "Return", "xpm/unknown.xpm",action_return},
-	{0, "Ziel", "xpm/flag_bk_wh.xpm"},
+	{0, "Destination", "xpm/flag_bk_wh.xpm"},
 	{0, "Tour", "xpm/unknown.xpm" },
-	{0, "Fahrzeug", "xpm/cursor.xpm"},
-	{0, "Kartenpunkt", "xpm/unknown.xpm" },
-	{0, "Karte", "xpm/unknown.xpm",NULL,NULL,STATE_SELECTED},
-	{0, "Steckenliste", "xpm/unknown.xpm" },
-	{0, "Zoom In", "xpm/unknown.xpm",action_zoom_in},
-	{0, "Zoom Out", "xpm/unknown.xpm",action_zoom_out},
+	{0, "Vehicle", "xpm/cursor.xpm"},
+	{0, "Map point?", "xpm/unknown.xpm" },		// cp15: What do you mean with "Kartenpunkt"?
+	{0, "Map", "xpm/unknown.xpm",NULL,NULL,STATE_SELECTED},
+	{0, "Road map", "xpm/unknown.xpm" },
+	{0, "Zoom in", "xpm/unknown.xpm",action_zoom_in},
+	{0, "Zoom out", "xpm/unknown.xpm",action_zoom_out},
 };
 
-
-static void
-gui_internal_draw_button(struct gui_priv *this, struct widget *wi)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gui_internal_draw_button(struct gui_priv *this, struct widget *wi)
 {
 	struct point pnt[5];
 	struct graphics_image *img;
@@ -135,8 +174,12 @@ gui_internal_draw_button(struct gui_priv *this, struct widget *wi)
 		graphics_gc_set_linewidth(this->foreground, 1);
 }
 
-static void
-gui_internal_clear(struct gui_priv *this)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gui_internal_clear(struct gui_priv *this)
 {
 	struct graphics *gra=this->gra;
 	struct point pnt;
@@ -146,8 +189,12 @@ gui_internal_clear(struct gui_priv *this)
 	graphics_draw_rectangle(gra, this->background, &pnt, this->w, this->h);
 }
 
-static void
-gui_internal_render_menu(struct gui_priv *this, int offset, struct widget *wi, int count)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gui_internal_render_menu(struct gui_priv *this, int offset, struct widget *wi, int count)
 {
 	struct graphics *gra=this->gra;
 	struct point pnt;
@@ -176,8 +223,12 @@ gui_internal_render_menu(struct gui_priv *this, int offset, struct widget *wi, i
 	this->widgets_count=count;
 }
 
-static void
-gui_internal_highlight(struct gui_priv *this, struct point *p)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gui_internal_highlight(struct gui_priv *this, struct point *p)
 {
 	struct widget *wi,*found=NULL;
 	int i;
@@ -200,8 +251,12 @@ gui_internal_highlight(struct gui_priv *this, struct point *p)
 	}
 }
 
-static void
-gui_internal_call_highlighted(struct gui_priv *this)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gui_internal_call_highlighted(struct gui_priv *this)
 {
 	struct widget *wi;
 	int i;
@@ -214,15 +269,24 @@ gui_internal_call_highlighted(struct gui_priv *this)
 		}
 	}
 }
-static void
-gui_internal_motion(struct gui_priv *this, struct point *p)
+
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gui_internal_motion(struct gui_priv *this, struct point *p)
 {
 	if (!this->menu) 
 		navit_handle_motion(this->nav, p);
 }
 
-static void
-gui_internal_button(struct gui_priv *this, int pressed, int button, struct point *p)
+//##############################################################################################################
+//# Description: Function to handle mouse clicks and scroll wheel movement
+//# Comment: 
+//# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
+//##############################################################################################################
+static void gui_internal_button(struct gui_priv *this, int pressed, int button, struct point *p)
 {
 	struct graphics *gra=this->gra;
 	struct point pnt;
@@ -230,7 +294,7 @@ gui_internal_button(struct gui_priv *this, int pressed, int button, struct point
 	// if still on the map (not in the menu, yet):
 	if (!this->menu) {	
 		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel 
-		if (!navit_handle_button(this->nav, pressed, button, p, NULL) || button >=4)
+		if (!navit_handle_button(this->nav, pressed, button, p, NULL) || button >=4) // Maybe there's a better way to do this
 			return;
 		// draw menu
 		this->menu++;
@@ -259,8 +323,12 @@ gui_internal_button(struct gui_priv *this, int pressed, int button, struct point
 	}
 }
 
-static void
-gui_internal_resize(struct gui_priv *this, int w, int h)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gui_internal_resize(struct gui_priv *this, int w, int h)
 {
 	this->w=w;
 	this->h=h;
@@ -270,8 +338,12 @@ gui_internal_resize(struct gui_priv *this, int w, int h)
 } 
 
 
-static int
-gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra)
 {
 	void *graphics;
 	struct color cb={0x7fff,0x7fff,0x7fff,0xffff};
@@ -298,15 +370,23 @@ gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra)
 	return 0;
 }
 
-
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 struct gui_methods gui_internal_methods = {
 	NULL,
 	NULL,
         gui_internal_set_graphics,
 };
 
-static struct gui_priv *
-gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs) 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs) 
 {
 	struct gui_priv *this;
 	*meth=gui_internal_methods;
@@ -316,8 +396,12 @@ gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	return this;
 }
 
-void
-plugin_init(void)
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void plugin_init(void)
 {
 	plugin_register_gui_type("internal", gui_internal_new);
 }
