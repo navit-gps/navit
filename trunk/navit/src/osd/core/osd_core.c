@@ -18,6 +18,7 @@
 #include "color.h"
 #include "vehicle.h"
 #include "navigation.h"
+#include "track.h"
 #include "map.h"
 
 struct compass {
@@ -452,11 +453,126 @@ osd_navigation_new(struct navit *nav, struct osd_methods *meth, struct attr **at
 	return (struct osd_priv *) this;
 }
 
+struct osd_street_name {
+	struct point p;
+	int w,h;
+	struct graphics *gr;
+	struct graphics_gc *bg;
+	struct graphics_gc *white;
+	struct graphics_font *font;
+	int active;
+	struct item item;
+};
+
+static void
+osd_street_name_draw(struct osd_street_name *this, struct navit *navit, struct vehicle *v)
+{
+	struct point p;
+	char distance[16];
+	int do_draw=0;
+	struct attr attr_name1, attr_name2;
+	char *name1=NULL,*name2=NULL;
+	struct tracking *tr=NULL;
+	struct map_rect *mr=NULL;
+	struct item *item=NULL;
+	char *name=NULL;
+
+	distance[0]='\0';
+	if (navit) 
+		tr=navit_get_tracking(navit);
+	if (tr)
+		item=tracking_get_current_item(tr);
+	dbg(1,"navit=%p tr=%p item=%p\n", navit, tr, item);
+	if (item) {
+		if (!item_is_equal(*item, this->item)) {
+			do_draw=1;
+			this->item=*item;
+			mr=map_rect_new(item->map,NULL);
+			item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+			if (item_attr_get(item, attr_street_name, &attr_name1))
+				name1=map_convert_string(item->map, attr_name1.u.str);
+			if (item_attr_get(item, attr_street_name_systematic, &attr_name2))
+				name2=map_convert_string(item->map, attr_name2.u.str);
+			printf("name1=%s name2=%s\n", name1, name2);
+        		map_rect_destroy(mr);
+			if (name1 && name2)
+				name=g_strdup_printf("%s/%s", name2,name1);
+			else
+				name=g_strdup(name1?name1:name2);
+			map_convert_free(name1);
+			map_convert_free(name2);
+			this->active=1;
+		}
+	} else {
+		if (this->item.map || this->active)
+			do_draw=1;
+		this->active=0;
+		memset(&this->item, 0, sizeof(this->item));
+		name=NULL;
+	}
+	if (do_draw) {
+		dbg(1,"name=%s\n", name);
+		graphics_draw_mode(this->gr, draw_mode_begin);
+		p.x=0;
+		p.y=0;
+		graphics_draw_rectangle(this->gr, this->bg, &p, 32767, 32767);
+		if (name) {
+			p.x=2;
+			p.y=12;
+			graphics_draw_text(this->gr, this->white, NULL, this->font, name, &p, 0x10000, 0);
+		}
+		graphics_draw_mode(this->gr, draw_mode_end);
+	}
+}
+
+static void
+osd_street_name_init(struct osd_street_name *this, struct navit *nav)
+{
+	struct graphics *navit_gr;
+	struct color c;
+	navit_gr=navit_get_graphics(nav);
+	this->active=-1;
+	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h);
+
+	this->bg=graphics_gc_new(this->gr);
+	c.r=0; c.g=0; c.b=0;
+	graphics_gc_set_foreground(this->bg, &c);
+
+	this->white=graphics_gc_new(this->gr);
+	c.r=65535; c.g=65535; c.b=65535;
+	graphics_gc_set_foreground(this->white, &c);
+
+	this->font=graphics_font_new(this->gr, 200, 1);
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_street_name_draw), attr_position_coord_geo, this));
+
+	osd_street_name_draw(this, nav, NULL);
+}
+
+static struct osd_priv *
+osd_street_name_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
+{
+	struct osd_street_name *this=g_new0(struct osd_street_name, 1);
+	struct attr *attr;
+	this->p.x=90;
+	this->p.y=-36;
+	this->w=150;
+	this->h=16;
+	attr=attr_search(attrs, NULL, attr_x);
+	if (attr)
+		this->p.x=attr->u.num;
+	attr=attr_search(attrs, NULL, attr_y);
+	if (attr)
+		this->p.y=attr->u.num;
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_street_name_init), attr_navit, this));
+	return (struct osd_priv *) this;
+}
+
 void
 plugin_init(void)
 {
 	plugin_register_osd_type("compass", osd_compass_new);
 	plugin_register_osd_type("eta", osd_eta_new);
 	plugin_register_osd_type("navigation", osd_navigation_new);
+	plugin_register_osd_type("street_name", osd_street_name_new);
 }
 
