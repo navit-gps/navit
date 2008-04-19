@@ -16,6 +16,7 @@ int tracking_update(struct tracking *tr, struct coord *c, int angle);
 struct tracking *tracking_new(struct mapset *ms);
 void tracking_set_mapset(struct tracking *this_, struct mapset *ms);
 int tracking_get_current_attr(struct tracking *_this, enum attr_type type, struct attr *attr);
+struct item *tracking_get_current_item(struct tracking *_this);
 void tracking_destroy(struct tracking *tr);
 /* end of prototypes */
 #ifdef __cplusplus
