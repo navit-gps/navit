@@ -20,6 +20,20 @@
 
 #define _(STRING)    gettext(STRING)
 
+struct suffix {
+	char *fullname;
+	char *abbrev;
+	int sex;
+} suffixes[]= {
+	{"weg",NULL,1},
+	{"platz","pl.",1},
+	{"ring",NULL,1},
+	{"allee",NULL,2},
+	{"gasse",NULL,2},
+	{"straße","str.",2},
+	{"strasse",NULL,2},
+};
+
 struct navigation {
 	struct mapset *ms;
 	struct map *map;
@@ -205,6 +219,8 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 			this_->cmd_first=cmd->next;
 			g_free(cmd);
 		}
+		map_convert_free(itm->name1);
+		map_convert_free(itm->name2);
 		g_free(itm);
 	}
 	if (! this_->first)
@@ -254,9 +270,9 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 		mr=map_rect_new(sitem->map, NULL);
 		sitem=map_rect_get_item_byid(mr, sitem->id_hi, sitem->id_lo);
 		if (item_attr_get(sitem, attr_street_name, &attr))
-			ret->name1=g_strdup(attr.u.str);
+			ret->name1=map_convert_string(sitem->map,attr.u.str);
 		if (item_attr_get(sitem, attr_street_name_systematic, &attr))
-			ret->name2=g_strdup(attr.u.str);
+			ret->name2=map_convert_string(sitem->map,attr.u.str);
 		navigation_itm_update(ret, ritem);
 		l=-1;
 		while (item_coord_get(ritem, &c[i], 1)) {
@@ -400,6 +416,104 @@ make_maneuvers(struct navigation *this_)
 	}
 }
 
+static int
+contains_suffix(char *name, char *suffix)
+{
+	if (!suffix)
+		return 0;
+	if (strlen(name) < strlen(suffix))
+		return 0;
+	return !strcasecmp(name+strlen(name)-strlen(suffix), suffix);
+}
+
+static char *
+replace_suffix(char *name, char *search, char *replace)
+{
+	int len=strlen(name)-strlen(search);
+	char *ret=g_malloc(len+strlen(replace)+1);
+	strncpy(ret, name, len);
+	strcpy(ret+len, replace);
+
+	return ret;
+}
+
+static char *
+navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *next, char *prefix)
+{
+	char *ret=NULL,*name1,*sep,*name2;
+	int i,sex;
+	if (! prefix)
+		prefix="";
+	if(!itm->name1 && !itm->name2 && itm->item.type == type_ramp) {
+		dbg(1,">> Next is ramp %lx current is %lx \n", itm->item.type, next->item.type);
+			 
+		if(next->item.type == type_ramp)
+			return NULL;
+		if(itm->item.type == type_highway_city || itm->item.type == type_highway_land )
+			return g_strdup_printf("%s%s",prefix,_("exit"));				 
+		else
+			return g_strdup_printf("%s%s",prefix,_("ramp"));
+		
+	}
+	if (!itm->name1 && !itm->name2)
+		return NULL;
+	if (itm->name1) {
+		sex=-1;
+		name1=NULL;
+		for (i = 0 ; i < sizeof(suffixes)/sizeof(suffixes[0]) ; i++) {
+			if (contains_suffix(itm->name1,suffixes[i].fullname)) {
+				sex=suffixes[i].sex;
+				name1=g_strdup(itm->name1);
+				break;
+			}
+			if (contains_suffix(itm->name1,suffixes[i].abbrev)) {
+				sex=suffixes[i].sex;
+				name1=replace_suffix(itm->name1, suffixes[i].abbrev, suffixes[i].fullname);
+				break;
+			}
+		}
+		if (itm->name2) {
+			name2=itm->name2;
+			sep=" ";
+		} else {
+			name2="";
+			sep="";
+		}
+		switch (sex) {
+		case -1:
+			ret=g_strdup_printf(_("%sinto the street %s%s%s"),prefix,itm->name1, sep, name2);
+			break;
+		case 1:
+			ret=g_strdup_printf(_("%sinto the %s%s%s|male form"),prefix,name1, sep, name2);
+			break;
+		case 2:
+			ret=g_strdup_printf(_("%sinto the %s%s%s|female form"),prefix,name1, sep, name2);
+			break;
+		case 3:
+			ret=g_strdup_printf(_("%sinto the %s%s%s|neutral form"),prefix,name1, sep, name2);
+			break;
+		}
+		g_free(name1);
+			
+	} else
+		ret=g_strdup_printf(_("into the %s"),itm->name2);
+	name1=ret;
+	while (*name1) {
+		switch (*name1) {
+		case '|':
+			*name1='\0';
+			break;
+		case '/':
+			*name1++=' ';
+			break;
+		default:
+			name1++;
+		}
+	}
+	return ret;
+}
+
+
 static char *
 show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum attr_type type)
 {
@@ -450,75 +564,35 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		d=g_strdup(_("error"));
 	}
 	if (cmd->itm->next) {
-		short tellStreetName = 0;
-		char  * streetName = 0;
+		int tellstreetname = 0;
+		char *destination = NULL; 
  
-		if(cmd->itm->name1 || cmd->itm->name2 || cmd->itm->item.type == type_ramp) // If the next street has a name
-		{
-		   if(cmd->itm->name1 && cmd->itm->name2 )
-					streetName = g_strdup_printf("%s %s", cmd->itm->name1, cmd->itm->name2);
-			 else if(cmd->itm->name1)
-		      streetName = g_strdup(cmd->itm->name1);
-		   else if(cmd->itm->name2)
-		      streetName = g_strdup(cmd->itm->name2);
+		if(type == attr_navigation_speech) { // In voice mode
+			// In Voice Mode only tell the street name in level 1 or in level 0 if level 1
+			// was skipped
 
-			 // Now special handling for ramps and exists
-			 
-		   if(streetName == 0 && cmd->itm->item.type == type_ramp)
-			 {
-			 		//printf(">> Next is ramp %lx current is %lx \n", cmd->itm->item.type, itm->item.type);
-			 
-			 		if(itm->item.type == type_ramp)
-			 			streetName = 0;  // looks like we stay on the ramp
-			 		if(itm->item.type == type_highway_city || itm->item.type == type_highway_land )
-				    streetName = g_strdup(_("exit"));				 
-					else
-				    streetName = g_strdup(_("ramp"));
-			 }
+			if (level == 1) { // we are close to the intersection
+				cmd->itm->told = 1; // remeber to be checked when we turn
+				tellstreetname = 1; // Ok so we tell the name of the street 
+			}
 
-		   if(type == attr_navigation_speech) // In voice mode
-		   {
-			 	 // In Voice Mode only tell the street name in level 1 or in level 0 if level 1
-				 // was skipped
-			 
-			   if (level == 1) // we are close to the intersection
-			   {
-			     cmd->itm->told = 1; // remeber to be checked when we turn
-		  	   tellStreetName = 1; // Ok so we tell the name of the street 
-			   }
+			if (level == 0) {
+				if(cmd->itm->told == 0) // we are write at the intersection
+					tellstreetname = 1; 
+				else
+					cmd->itm->told = 0;  // reset just in case we come to the same street again
+			}
 
-			   if (level == 0)
-				 {
-				  if(cmd->itm->told == 0) // we are write at the intersection
-						tellStreetName = 1; 
-					else
-					  cmd->itm->told = 0;  // reset just in case we come to the same street again
-				 }
-
-   	   }
-		   else
-		     tellStreetName = 1;
-		}
-
-		if(streetName && tellStreetName )
-		{
-		/* TRANSLATORS: The first argument is strength, the second direction and the third distance */
-	
-		if( strcasestr(streetName,"weg") 
-		   || strcasestr(streetName,"platz")
-		   || strcasestr(streetName,"ring"))
-		  ret=g_strdup_printf(_("Turn %1$s%2$s %3$s onto %4$s"), strength, dir, d, streetName);
-		else
-		   ret=g_strdup_printf(_("Turn %1$s%2$s %3$s into %4$s"), strength, dir, d, streetName);
 		}
 		else
-		/* TRANSLATORS: The first argument is strength, the second direction and the third distance */
-		ret=g_strdup_printf(_("Turn %1$s%2$s %3$s"), strength, dir, d);
-		
-		if(streetName)
-			g_free(streetName);
-	}
-	else
+		     tellstreetname = 1;
+
+		if(tellstreetname) 
+			destination=navigation_item_destination(cmd->itm, itm, " ");
+		/* TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street' */
+		ret=g_strdup_printf(_("Turn %1$s%2$s %3$s%4$s"), strength, dir, d, destination ? destination:"");
+		g_free(destination);
+	} else
 		ret=g_strdup_printf(_("You have reached your destination %s"), d);
 	g_free(d);
 	return ret;
