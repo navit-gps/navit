@@ -1066,7 +1066,6 @@ navit_init(struct navit *this_)
 				mapset_add(ms, map);
 				map_set_active(map, 0);
 			}
-			navigation_set_mapset(this_->navigation, ms);
 		}
 		navit_add_bookmarks_from_file(this_);
 		navit_add_former_destinations_from_file(this_);
@@ -1324,6 +1323,13 @@ navit_add_attr(struct navit *this_, struct attr *attr, struct attr **attrs)
 		return navit_set_gui(this_, attr->u.gui);
 	case attr_graphics:
 		return navit_set_graphics(this_, attr->u.graphics);
+	case attr_route:
+		this_->route=attr->u.route;
+		route_set_projection(this_->route, transform_get_projection(this_->trans));
+		break;
+	case attr_navigation:
+		this_->navigation=attr->u.navigation;
+		break;
 	default:
 		return 0;
 	}
@@ -1527,19 +1533,6 @@ void
 navit_tracking_add(struct navit *this_, struct tracking *tracking)
 {
 	this_->tracking=tracking;
-}
-
-void
-navit_route_add(struct navit *this_, struct route *route)
-{
-	this_->route=route;
-	route_set_projection(route, transform_get_projection(this_->trans));
-}
-
-void
-navit_navigation_add(struct navit *this_, struct navigation *navigation)
-{
-	this_->navigation=navigation;
 }
 
 void

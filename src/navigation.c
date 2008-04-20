@@ -35,7 +35,6 @@ struct suffix {
 };
 
 struct navigation {
-	struct mapset *ms;
 	struct map *map;
 	struct item_hash *hash;
 	struct navigation_itm *first;
@@ -60,11 +59,10 @@ struct navigation_command {
 };
 
 struct navigation *
-navigation_new(struct mapset *ms)
+navigation_new(struct attr **attrs)
 {
 	int i,j;
 	struct navigation *ret=g_new0(struct navigation, 1);
-	ret->ms=ms;
 	ret->hash=item_hash_new();
 	ret->callback=callback_list_new();
 	ret->callback_speech=callback_list_new();
@@ -79,12 +77,6 @@ navigation_new(struct mapset *ms)
 	}
 
 	return ret;	
-}
-
-void
-navigation_set_mapset(struct navigation *this_, struct mapset *ms)
-{
-	this_->ms=ms;
 }
 
 int
