@@ -166,7 +166,7 @@ popup_show_attrs(struct map *map, void *menu, struct item *item)
 }
 
 static void
-popup_show_item(void *popup, struct displayitem *di)
+popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 {
 	struct map_rect *mr;
 	void *menu, *menu_map, *menu_item;
@@ -189,6 +189,19 @@ popup_show_item(void *popup, struct displayitem *di)
 		dbg(1,"item=%p\n", item);
 		if (item) {
 			popup_show_attrs(item->map, menu_item, item);
+			if (item->type < type_line) {
+				struct coord co;
+				struct pcoord *c;
+				if (item_coord_get(item, &co, 1)) {
+					c=g_new(struct pcoord, 1);
+					c->pro = transform_get_projection(navit_get_trans(nav));
+					c->x = co.x;
+					c->y = co.y;
+					popup_printf_cb(menu_item, menu_type_menu, callback_new_2(callback_cast(popup_set_position), nav, c), _("Set as position"));
+					popup_printf_cb(menu_item, menu_type_menu, callback_new_2(callback_cast(popup_set_destination), nav, c), _("Set as destination"));
+					popup_printf_cb(menu_item, menu_type_menu, callback_new_2(callback_cast(popup_set_bookmark), nav, c), _("Add as bookmark"));
+				}
+			}
 		}
 		map_rect_destroy(mr);
 		menu_map=popup_printf(menu, menu_type_submenu, "Map");
@@ -208,7 +221,7 @@ popup_display(struct navit *nav, void *popup, struct point *p)
 	dlh=graphics_displaylist_open(display);
 	while ((di=graphics_displaylist_next(dlh))) {
 		if (graphics_displayitem_within_dist(di, p, 5)) {
-			popup_show_item(popup, di);
+			popup_show_item(nav, popup, di);
 		}
 	}
 	graphics_displaylist_close(dlh);
