@@ -243,7 +243,7 @@ xmlconfig_graphics(struct xmlstate *state)
 	attrs=convert_to_attrs(state);
 	state->element_object = graphics_new(type, attrs);
 	if (! state->element_object) {
-		dbg(0,"Failed to create graphics '%s'\n", type);
+		dbg(0,"Failed to create graphics object '%s'\n", type);
 		return 0;
 	}
 	graphics_attr.type=attr_graphics;
@@ -262,7 +262,7 @@ xmlconfig_gui(struct xmlstate *state)
 	attrs=convert_to_attrs(state);
 	state->element_object = gui_new(state->parent->element_object, type, attrs);
 	if (! state->element_object) {
-		dbg(0,"Failed to create gui '%s'\n", type);
+		dbg(0,"Failed to create gui object '%s'\n", type);
 		return 0;
 	}
 	gui_attr.type=attr_gui;
@@ -356,9 +356,18 @@ xmlconfig_tracking(struct xmlstate *state)
 static int
 xmlconfig_route(struct xmlstate *state)
 {
-	state->element_object = route_new(NULL);
-	navit_route_add(state->parent->element_object, state->element_object);
-	return 1;
+	struct attr **attrs;
+	struct attr route_attr;
+
+	attrs=convert_to_attrs(state);
+	state->element_object = route_new(attrs);
+	if (! state->element_object) {
+		dbg(0,"Failed to create route object\n");
+		return 0;
+	}
+	route_attr.type=attr_route;
+	route_attr.u.route=state->element_object;
+	return navit_add_attr(state->parent->element_object, &route_attr, NULL);
 }
 
 static int
@@ -393,9 +402,18 @@ xmlconfig_speed(struct xmlstate *state)
 static int
 xmlconfig_navigation(struct xmlstate *state)
 {
-	state->element_object = navigation_new(NULL);
-	navit_navigation_add(state->parent->element_object, state->element_object);
-	return 1;
+	struct attr **attrs;
+	struct attr navigation_attr;
+
+	attrs=convert_to_attrs(state);
+	state->element_object = navigation_new(attrs);
+	if (! state->element_object) {
+		dbg(0,"Failed to create navigation object\n");
+		return 0;
+	}
+	navigation_attr.type=attr_navigation;
+	navigation_attr.u.navigation=state->element_object;
+	return navit_add_attr(state->parent->element_object, &navigation_attr, NULL);
 }
 
 static int

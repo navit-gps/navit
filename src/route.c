@@ -150,14 +150,13 @@ route_path_destroy(struct route_path *this)
 }
 
 struct route *
-route_new(struct mapset *ms)
+route_new(struct attr **attrs)
 {
 	struct route *this=g_new0(struct route, 1);
 	if (!this) {
 		printf("%s:Out of memory\n", __FUNCTION__);
 		return NULL;
 	}
-	this->ms=ms;
 	return this;
 }
 

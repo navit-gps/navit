@@ -7,13 +7,12 @@ extern "C" {
 /* prototypes */
 enum attr_type;
 enum item_type;
+struct attr;
 struct callback;
 struct map;
-struct mapset;
 struct navigation;
 struct route;
-struct navigation *navigation_new(struct mapset *ms);
-void navigation_set_mapset(struct navigation *this_, struct mapset *ms);
+struct navigation *navigation_new(struct attr **attrs);
 int navigation_set_announce(struct navigation *this_, enum item_type type, int *level);
 void navigation_update(struct navigation *this_, struct route *route);
 void navigation_flush(struct navigation *this_);
