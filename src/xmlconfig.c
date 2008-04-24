@@ -27,7 +27,7 @@ struct xmlstate {
 	const gchar **attribute_names;
 	const gchar **attribute_values;
 	struct xmlstate *parent;
-	void *element_object;
+	struct attr element_attr;
 	const gchar *element;
 	GError **error;
 	struct element_func *func;
@@ -161,16 +161,7 @@ convert_number_list(const char *val, int *table, int size)
 static int
 xmlconfig_config(struct xmlstate *state)
 {
-	state->element_object = (void *)1;
-	return 1;
-}
-
-static int
-xmlconfig_plugins(struct xmlstate *state)
-{
-	state->element_object = plugins_new();
-	if (! state->element_object)
-		return 0;
+	state->element_attr.u.data = (void *)1;
 	return 1;
 }
 
@@ -180,13 +171,13 @@ xmlconfig_plugin(struct xmlstate *state)
 	const char *path;
 	int active,lazy;
 
-	state->element_object=state->parent->element_object;
+	state->element_attr.u.data=state->parent->element_attr.u.data;
 	path=find_attribute(state, "path", 1);
 	if (! path)
 		return 0;
 	active=find_boolean(state, "active", 1, 0);
 	lazy=find_boolean(state, "lazy", 1, 0);
-	plugins_add_path(state->parent->element_object, path, active, lazy);
+	plugins_add_path(state->parent->element_attr.u.data, path, active, lazy);
 	return 1;
 }
 
@@ -199,10 +190,10 @@ xmlconfig_speech(struct xmlstate *state)
 	if (! type)
 		return 0;
 	data=find_attribute(state, "data", 0);
-	state->element_object = speech_new(type, data);
-	if (! state->element_object)
+	state->element_attr.u.data = speech_new(type, data);
+	if (! state->element_attr.u.data)
 		return 0;
-	navit_set_speech(state->parent->element_object, state->element_object);
+	navit_set_speech(state->parent->element_attr.u.data, state->element_attr.u.data);
 	return 1;
 }
 
@@ -221,65 +212,15 @@ xmlconfig_debug(struct xmlstate *state)
 }
 
 static int
-xmlconfig_navit(struct xmlstate *state)
-{
-	struct attr **attrs;
-
-	attrs=convert_to_attrs(state);
-	state->element_object = navit_new(attrs);
-	if (! state->element_object)
-		return 0;
-	return 1;
-}
-
-static int
-xmlconfig_graphics(struct xmlstate *state)
-{
-	struct attr **attrs;
-	struct attr graphics_attr;
-	const char *type=find_attribute(state, "type", 1);
-	if (! type)
-		return 0;
-	attrs=convert_to_attrs(state);
-	state->element_object = graphics_new(type, attrs);
-	if (! state->element_object) {
-		dbg(0,"Failed to create graphics object '%s'\n", type);
-		return 0;
-	}
-	graphics_attr.type=attr_graphics;
-	graphics_attr.u.graphics=state->element_object;
-	return navit_add_attr(state->parent->element_object, &graphics_attr, NULL);
-}
-
-static int
-xmlconfig_gui(struct xmlstate *state)
-{
-	struct attr **attrs;
-	struct attr gui_attr;
-	const char *type=find_attribute(state, "type", 1);
-	if (! type)
-		return 0;
-	attrs=convert_to_attrs(state);
-	state->element_object = gui_new(state->parent->element_object, type, attrs);
-	if (! state->element_object) {
-		dbg(0,"Failed to create gui object '%s'\n", type);
-		return 0;
-	}
-	gui_attr.type=attr_gui;
-	gui_attr.u.gui=state->element_object;
-	return navit_add_attr(state->parent->element_object, &gui_attr, NULL);
-}
-
-static int
 xmlconfig_vehicle(struct xmlstate *state)
 {
 	struct attr **attrs;
 	attrs=convert_to_attrs(state);
 
-	state->element_object = vehicle_new(attrs);
-	if (! state->element_object)
+	state->element_attr.u.data = vehicle_new(attrs);
+	if (! state->element_attr.u.data)
 		return 0;
-	navit_add_vehicle(state->parent->element_object, state->element_object, attrs);
+	navit_add_vehicle(state->parent->element_attr.u.data, state->element_attr.u.data, attrs);
 	return 1;
 }
 
@@ -289,12 +230,12 @@ xmlconfig_log_vehicle(struct xmlstate *state)
 	struct attr attr;
 	struct attr **attrs;
 	attrs=convert_to_attrs(state);
-	state->element_object = log_new(attrs);
-	if (! state->element_object)
+	state->element_attr.u.data = log_new(attrs);
+	if (! state->element_attr.u.data)
 		return 0;
 	attr.type=attr_log;
-	attr.u.log=state->element_object;
-	if (vehicle_add_attr(state->parent->element_object, &attr, attrs))
+	attr.u.log=state->element_attr.u.data;
+	if (vehicle_add_attr(state->parent->element_attr.u.data, &attr))
 		return 0;
 	return 1;
 }
@@ -305,12 +246,12 @@ xmlconfig_log_navit(struct xmlstate *state)
 	struct attr attr;
 	struct attr **attrs;
 	attrs=convert_to_attrs(state);
-	state->element_object = log_new(attrs);
-	if (! state->element_object)
+	state->element_attr.u.data = log_new(attrs);
+	if (! state->element_attr.u.data)
 		return 0;
 	attr.type=attr_log;
-	attr.u.log=state->element_object;
-	if (navit_add_attr(state->parent->element_object, &attr, attrs))
+	attr.u.log=state->element_attr.u.data;
+	if (navit_add_attr(state->parent->element_attr.u.data, &attr))
 		return 0;
 	return 1;
 }
@@ -329,17 +270,17 @@ xmlconfig_window_items(struct xmlstate *state)
 		return 0;
 	if (value) 
 		distance=convert_number(value);
-	state->element_object = navit_window_items_new(name, distance);
+	state->element_attr.u.data = navit_window_items_new(name, distance);
 	type_str=g_strdup(type);
 	str=type_str;
 	while ((tok=strtok_r(str, ",", &saveptr))) {
 		itype=item_from_name(tok);
-		navit_window_items_add_item(state->element_object, itype);
+		navit_window_items_add_item(state->element_attr.u.data, itype);
 		str=NULL;
 	}
 	g_free(type_str);
 
-	navit_add_window_items(state->parent->element_object, state->element_object);
+	navit_add_window_items(state->parent->element_attr.u.data, state->element_attr.u.data);
 
 	return 1;
 }
@@ -348,8 +289,8 @@ xmlconfig_window_items(struct xmlstate *state)
 static int
 xmlconfig_tracking(struct xmlstate *state)
 {
-	state->element_object = tracking_new(NULL);
-	navit_tracking_add(state->parent->element_object, state->element_object);
+	state->element_attr.u.data = tracking_new(NULL);
+	navit_tracking_add(state->parent->element_attr.u.data, state->element_attr.u.data);
 	return 1;
 }
 
@@ -360,14 +301,14 @@ xmlconfig_route(struct xmlstate *state)
 	struct attr route_attr;
 
 	attrs=convert_to_attrs(state);
-	state->element_object = route_new(attrs);
-	if (! state->element_object) {
+	state->element_attr.u.data = route_new(attrs);
+	if (! state->element_attr.u.data) {
 		dbg(0,"Failed to create route object\n");
 		return 0;
 	}
 	route_attr.type=attr_route;
-	route_attr.u.route=state->element_object;
-	return navit_add_attr(state->parent->element_object, &route_attr, NULL);
+	route_attr.u.route=state->element_attr.u.data;
+	return navit_add_attr(state->parent->element_attr.u.data, &route_attr);
 }
 
 static int
@@ -390,7 +331,7 @@ xmlconfig_speed(struct xmlstate *state)
 	str=type_str;
 	while ((tok=strtok_r(str, ",", &saveptr))) {
 		itype=item_from_name(tok);
-		route_set_speed(state->parent->element_object, itype, v);
+		route_set_speed(state->parent->element_attr.u.data, itype, v);
 		str=NULL;
 	}
 	g_free(type_str);
@@ -406,14 +347,14 @@ xmlconfig_navigation(struct xmlstate *state)
 	struct attr navigation_attr;
 
 	attrs=convert_to_attrs(state);
-	state->element_object = navigation_new(attrs);
-	if (! state->element_object) {
+	state->element_attr.u.data = navigation_new(attrs);
+	if (! state->element_attr.u.data) {
 		dbg(0,"Failed to create navigation object\n");
 		return 0;
 	}
 	navigation_attr.type=attr_navigation;
-	navigation_attr.u.navigation=state->element_object;
-	return navit_add_attr(state->parent->element_object, &navigation_attr, NULL);
+	navigation_attr.u.navigation=state->element_attr.u.data;
+	return navit_add_attr(state->parent->element_attr.u.data, &navigation_attr);
 }
 
 static int
@@ -424,7 +365,7 @@ xmlconfig_osd(struct xmlstate *state)
 	if (! type)
 		return 0;
 	attrs=convert_to_attrs(state);
-	state->element_object = osd_new(state->parent->element_object, type, attrs);
+	state->element_attr.u.data = osd_new(state->parent->element_attr.u.data, type, attrs);
 	return 1;
 }
 
@@ -453,7 +394,7 @@ xmlconfig_announce(struct xmlstate *state)
 	str=type_str;
 	while ((tok=strtok_r(str, ",", &saveptr))) {
 		itype=item_from_name(tok);
-		navigation_set_announce(state->parent->element_object, itype, level);
+		navigation_set_announce(state->parent->element_attr.u.data, itype, level);
 		str=NULL;
 	}
 	g_free(type_str);
@@ -463,10 +404,10 @@ xmlconfig_announce(struct xmlstate *state)
 static int
 xmlconfig_mapset(struct xmlstate *state)
 {
-	state->element_object = mapset_new();
-	if (! state->element_object)
+	state->element_attr.u.data = mapset_new();
+	if (! state->element_attr.u.data)
 		return 0;
-	navit_add_mapset(state->parent->element_object, state->element_object);
+	navit_add_mapset(state->parent->element_attr.u.data, state->element_attr.u.data);
 
 	return 1;
 }
@@ -479,12 +420,12 @@ xmlconfig_map(struct xmlstate *state)
 	if (! type)
 		return 0;
 	attrs=convert_to_attrs(state);
-	state->element_object = map_new(type, attrs);
-	if (! state->element_object)
+	state->element_attr.u.data = map_new(type, attrs);
+	if (! state->element_attr.u.data)
 		return 0;
 	if (!find_boolean(state, "active", 1, 0))
-		map_set_active(state->element_object, 0);
-	mapset_add(state->parent->element_object, state->element_object);
+		map_set_active(state->element_attr.u.data, 0);
+	mapset_add(state->parent->element_attr.u.data, state->element_attr.u.data);
 
 	return 1;
 }
@@ -498,10 +439,10 @@ xmlconfig_layout(struct xmlstate *state)
 	if (! name)
 		return 0;
 	find_color(state, 0, &color);
-	state->element_object = layout_new(name, &color);
-	if (! state->element_object)
+	state->element_attr.u.data = layout_new(name, &color);
+	if (! state->element_attr.u.data)
 		return 0;
-	navit_add_layout(state->parent->element_object, state->element_object);
+	navit_add_layout(state->parent->element_attr.u.data, state->element_attr.u.data);
 	return 1;
 }
 
@@ -511,10 +452,10 @@ xmlconfig_layer(struct xmlstate *state)
 	const char *name=find_attribute(state, "name", 1);
 	if (! name)
 		return 0;
-	state->element_object = layer_new(name, convert_number(find_attribute(state, "details", 0)));
-	if (! state->element_object)
+	state->element_attr.u.data = layer_new(name, convert_number(find_attribute(state, "details", 0)));
+	if (! state->element_attr.u.data)
 		return 0;
-	layout_add_layer(state->parent->element_object, state->element_object);
+	layout_add_layer(state->parent->element_attr.u.data, state->element_attr.u.data);
 	return 1;
 }
 
@@ -530,15 +471,15 @@ xmlconfig_item(struct xmlstate *state)
 		return 0;
 	if (! find_order(state, 1, &min, &max))
 		return 0;
-	state->element_object=itemtype_new(min, max);
-	if (! state->element_object)
+	state->element_attr.u.data=itemtype_new(min, max);
+	if (! state->element_attr.u.data)
 		return 0;
 	type_str=g_strdup(type);
 	str=type_str;
-	layer_add_itemtype(state->parent->element_object, state->element_object);
+	layer_add_itemtype(state->parent->element_attr.u.data, state->element_attr.u.data);
 	while ((tok=strtok_r(str, ",", &saveptr))) {
 		itype=item_from_name(tok);
-		itemtype_add_type(state->element_object, itype);
+		itemtype_add_type(state->element_attr.u.data, itype);
 		str=NULL;
 	}
 	g_free(type_str);
@@ -553,10 +494,10 @@ xmlconfig_polygon(struct xmlstate *state)
 
 	if (! find_color(state, 1, &color))
 		return 0;
-	state->element_object=polygon_new(&color);
-	if (! state->element_object)
+	state->element_attr.u.data=polygon_new(&color);
+	if (! state->element_attr.u.data)
 		return 0;
-	itemtype_add_element(state->parent->element_object, state->element_object);
+	itemtype_add_element(state->parent->element_attr.u.data, state->element_attr.u.data);
 
 	return 1;
 }
@@ -580,10 +521,10 @@ xmlconfig_polyline(struct xmlstate *state)
 	if (directed) 
 		d=convert_number(directed);
 	
-	state->element_object=polyline_new(&color, w, d, dt, ds);
-	if (! state->element_object)
+	state->element_attr.u.data=polyline_new(&color, w, d, dt, ds);
+	if (! state->element_attr.u.data)
 		return 0;
-	itemtype_add_element(state->parent->element_object, state->element_object);
+	itemtype_add_element(state->parent->element_attr.u.data, state->element_attr.u.data);
 
 	return 1;
 }
@@ -606,10 +547,10 @@ xmlconfig_circle(struct xmlstate *state)
 	label_size=find_attribute(state, "label_size", 0);
 	if (label_size) 
 		ls=convert_number(label_size);
-	state->element_object=circle_new(&color, r, w, ls);
-	if (! state->element_object)
+	state->element_attr.u.data=circle_new(&color, r, w, ls);
+	if (! state->element_attr.u.data)
 		return 0;
-	itemtype_add_element(state->parent->element_object, state->element_object);
+	itemtype_add_element(state->parent->element_attr.u.data, state->element_attr.u.data);
 
 	return 1;
 }
@@ -623,10 +564,10 @@ xmlconfig_label(struct xmlstate *state)
 	label_size=find_attribute(state, "label_size", 0);
 	if (label_size) 
 		ls=convert_number(label_size);
-	state->element_object=label_new(ls);
-	if (! state->element_object)
+	state->element_attr.u.data=label_new(ls);
+	if (! state->element_attr.u.data)
 		return 0;
-	itemtype_add_element(state->parent->element_object, state->element_object);
+	itemtype_add_element(state->parent->element_attr.u.data, state->element_attr.u.data);
 
 	return 1;
 }
@@ -638,10 +579,10 @@ xmlconfig_icon(struct xmlstate *state)
 
 	if (! src)
 		return 0;
-	state->element_object=icon_new(src);
-	if (! state->element_object)
+	state->element_attr.u.data=icon_new(src);
+	if (! state->element_attr.u.data)
 		return 0;
-	itemtype_add_element(state->parent->element_object, state->element_object);
+	itemtype_add_element(state->parent->element_attr.u.data, state->element_attr.u.data);
 
 	return 1;
 }
@@ -649,24 +590,32 @@ xmlconfig_icon(struct xmlstate *state)
 static int
 xmlconfig_image(struct xmlstate *state)
 {
-	state->element_object=image_new();
-	if (! state->element_object)
+	state->element_attr.u.data=image_new();
+	if (! state->element_attr.u.data)
 		return 0;
-	itemtype_add_element(state->parent->element_object, state->element_object);
+	itemtype_add_element(state->parent->element_attr.u.data, state->element_attr.u.data);
 
 	return 1;
 }
 
+#define NEW(x) (void *(*)(struct attr *, struct attr **))(x)
+#define ADD(x) (int (*)(void *, struct attr *attr))(x)
+#define INIT(x) (int (*)(void *))(x)
+#define DESTROY(x) (void (*)(void *))(x)
 struct element_func {
 	char *name;
 	char *parent;
 	int (*func)(struct xmlstate *state);
+	void *(*new)(struct attr *parent, struct attr **attrs);
+	int (*add_attr)(void *, struct attr *attr);
+	int (*init)(void *);
+	void (*destroy)(void *);
 } elements[] = {
 	{ "config", NULL, xmlconfig_config},
 	{ "debug", "config", xmlconfig_debug},
-	{ "navit", "config", xmlconfig_navit},
-	{ "graphics", "navit", xmlconfig_graphics},
-	{ "gui", "navit", xmlconfig_gui},
+	{ "navit", "config", NULL, NEW(navit_new), ADD(navit_add_attr), INIT(navit_init), DESTROY(navit_destroy)},
+	{ "graphics", "navit", NULL, NEW(graphics_new), NULL, NULL, NULL},
+	{ "gui", "navit", NULL, NEW(gui_new), NULL, NULL, NULL},
 	{ "layout", "navit", xmlconfig_layout},
 	{ "layer", "layout", xmlconfig_layer},
 	{ "item", "layer", xmlconfig_item},
@@ -689,7 +638,7 @@ struct element_func {
 	{ "log", "vehicle", xmlconfig_log_vehicle},
 	{ "log", "navit", xmlconfig_log_navit},
 	{ "window_items", "navit", xmlconfig_window_items},
-	{ "plugins", "config", xmlconfig_plugins},
+	{ "plugins", "config", NULL, NEW(plugins_new), NULL, INIT(plugins_init), NULL},
 	{ "plugin", "plugins", xmlconfig_plugin},
 	{},
 };
@@ -742,17 +691,30 @@ start_element (GMarkupParseContext *context,
 	new->attribute_names=attribute_names;
 	new->attribute_values=attribute_values;
 	new->parent=*parent;
-	new->element_object=NULL;
+	new->element_attr.u.data=NULL;
 	new->element=element_name;
 	new->error=error;
 	new->func=func;
 	*parent=new;
 	if (!find_boolean(new, "enabled", 1, 0))
 		return;
-	if (new->parent && !new->parent->element_object)
+	if (new->parent && !new->parent->element_attr.u.data)
 		return;
-	if (!func->func(new)) {
-		return;
+	if (func->func) {
+		if (!func->func(new)) {
+			return;
+		}
+	} else {
+		struct attr **attrs;
+
+		attrs=convert_to_attrs(new);
+		new->element_attr.type=attr_none;
+		new->element_attr.u.data = func->new(&new->parent->element_attr, attrs);
+		if (! new->element_attr.u.data)
+			return;
+		new->element_attr.type=attr_from_name(element_name);
+		if (new->parent->func->add_attr) 
+			new->parent->func->add_attr(new->parent->element_attr.u.data, &new->element_attr);
 	}
 	return;
 #if 0
@@ -786,10 +748,8 @@ end_element (GMarkupParseContext *context,
 
 	dbg(2,"name='%s'\n", element_name);
 	curr=*state;
-	if(!g_ascii_strcasecmp("plugins", element_name) && curr->element_object) 
-		plugins_init(curr->element_object);
-	if(!g_ascii_strcasecmp("navit", element_name) && curr->element_object) 
-		navit_init(curr->element_object);
+	if (curr->func->init)
+		curr->func->init(curr->element_attr.u.data);
 	*state=curr->parent;
 	g_free(curr);
 }
@@ -818,7 +778,6 @@ static const GMarkupParser parser = {
 	NULL,
 	NULL
 };
-
 
 gboolean config_load(char *filename, GError **error)
 {

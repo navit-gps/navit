@@ -50,20 +50,25 @@ struct displaylist {
 	GHashTable *dl;
 };
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description: Creates a new graphics object
+//# Comment: attr type required
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-struct graphics * graphics_new(const char *type, struct attr **attrs)
+struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 {
 	struct graphics *this_;
-	struct graphics_priv * (*new)(struct graphics_methods *meth, struct attr **attrs);
+    	struct attr *type_attr;
+	struct graphics_priv * (*graphicstype_new)(struct graphics_methods *meth, struct attr **attrs);
 
-	new=plugin_get_graphics_type(type);
-	if (! new)
-		return NULL;	
+        if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
+                return NULL;
+        }
+
+	graphicstype_new=plugin_get_graphics_type(type_attr->u.str);
+	if (! graphicstype_new)
+		return NULL;
 	this_=g_new0(struct graphics, 1);
-	this_->priv=(*new)(&this_->meth, attrs);
+	this_->priv=(*graphicstype_new)(&this_->meth, attrs);
 	this_->attrs=attr_list_dup(attrs);
 	return this_;
 }
