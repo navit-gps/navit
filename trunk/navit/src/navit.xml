@@ -1399,7 +1399,7 @@ Change to your home coordinates.
 			</item>
 			<item type="steps" order="12-">
 				<polyline color="#8b4513" width="3" />
-				<polyline color="#CD853F" width="1" dash="5,5" />
+				<polyline color="#F4A460" width="1" dash="6,4" />
 			</item>
 			<item type="poly_pedestrian,poly_plaza" order="0-">
 				<polygon color="#d2d2d2" />
