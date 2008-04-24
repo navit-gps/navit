@@ -38,7 +38,7 @@ int navit_handle_button(struct navit *this_, int pressed, int button, struct poi
 void navit_handle_motion(struct navit *this_, struct point *p);
 void navit_zoom_in(struct navit *this_, int factor, struct point *p);
 void navit_zoom_out(struct navit *this_, int factor, struct point *p);
-struct navit *navit_new(struct attr **attrs);
+struct navit *navit_new(struct attr *parent, struct attr **attrs);
 struct graphics *navit_get_graphics(struct navit *this_);
 void navit_set_destination(struct navit *this_, struct pcoord *c, char *description);
 void navit_add_bookmark(struct navit *this_, struct pcoord *c, const char *description);
@@ -53,7 +53,7 @@ void navit_set_center(struct navit *this_, struct pcoord *center);
 void navit_set_center_screen(struct navit *this_, struct point *p);
 int navit_set_attr(struct navit *this_, struct attr *attr);
 int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
-int navit_add_attr(struct navit *this_, struct attr *attr, struct attr **attrs);
+int navit_add_attr(struct navit *this_, struct attr *attr);
 struct attr_iter *navit_attr_iter_new(void);
 void navit_attr_iter_destroy(struct attr_iter *iter);
 void navit_add_callback(struct navit *this_, struct callback *cb);

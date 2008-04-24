@@ -351,7 +351,7 @@ navit_zoom_out(struct navit *this_, int factor, struct point *p)
 }
 
 struct navit *
-navit_new(struct attr **attrs)
+navit_new(struct attr *parent, struct attr **attrs)
 {
 	struct navit *this_=g_new0(struct navit, 1);
 	struct pcoord center;
@@ -1044,7 +1044,7 @@ navit_init(struct navit *this_)
 		nv->cursor=cursor_new(this_->gra, &nv->c, nv->c2, nv->animate_cursor);
 		nv->callback.type=attr_callback;
 		nv->callback.u.callback=callback_new_2(callback_cast(navit_vehicle_update), this_, nv);
-		vehicle_add_attr(nv->vehicle, &nv->callback, NULL);
+		vehicle_add_attr(nv->vehicle, &nv->callback);
 		vehicle_set_attr(nv->vehicle, &this_->self, NULL);
 		l=g_list_next(l);
 	}
@@ -1314,7 +1314,7 @@ navit_add_log(struct navit *this_, struct log *log)
 }
 
 int
-navit_add_attr(struct navit *this_, struct attr *attr, struct attr **attrs)
+navit_add_attr(struct navit *this_, struct attr *attr)
 {
 	switch (attr->type) {
 	case attr_log:

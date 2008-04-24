@@ -14,17 +14,21 @@ struct gui {
 };
 
 struct gui *
-gui_new(struct navit *nav, const char *type, struct attr **attrs)
+gui_new(struct attr *parent, struct attr **attrs)
 {
 	struct gui *this_;
+	struct attr *type_attr;
 	struct gui_priv *(*guitype_new)(struct navit *nav, struct gui_methods *meth, struct attr **attrs);
+	if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
+		return NULL;
+	}
 
-        guitype_new=plugin_get_gui_type(type);
+        guitype_new=plugin_get_gui_type(type_attr->u.str);
         if (! guitype_new)
                 return NULL;
 
 	this_=g_new0(struct gui, 1);
-	this_->priv=guitype_new(nav, &this_->meth, attrs);
+	this_->priv=guitype_new(parent->u.navit, &this_->meth, attrs);
 	this_->attrs=attr_list_dup(attrs);
 	return this_;
 }

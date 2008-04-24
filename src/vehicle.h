@@ -20,7 +20,7 @@ struct vehicle_methods {
 struct vehicle *vehicle_new(struct attr **attrs);
 int vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr);
 int vehicle_set_attr(struct vehicle *this_, struct attr *attr, struct attr **attrs);
-int vehicle_add_attr(struct vehicle *this_, struct attr *attr, struct attr **attrs);
+int vehicle_add_attr(struct vehicle *this_, struct attr *attr);
 int vehicle_remove_attr(struct vehicle *this_, struct attr *attr);
 void vehicle_destroy(struct vehicle *this_);
 /* end of prototypes */

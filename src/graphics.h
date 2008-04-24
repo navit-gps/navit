@@ -101,7 +101,7 @@ struct item;
 struct layout;
 struct point;
 struct transformation;
-struct graphics *graphics_new(const char *type, struct attr **attrs);
+struct graphics *graphics_new(struct attr *parent, struct attr **attrs);
 int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 struct graphics *graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h);
 void graphics_init(struct graphics *this_);

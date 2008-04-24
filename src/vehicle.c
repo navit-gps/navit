@@ -57,24 +57,23 @@ vehicle_log_textfile(struct vehicle *this_, struct log *log)
 }
 
 static int
-vehicle_add_log(struct vehicle *this_, struct log *log,
-		struct attr **attrs)
+vehicle_add_log(struct vehicle *this_, struct log *log)
 {
-	struct attr *type;
 	struct callback *cb;
-	type = attr_search(attrs, NULL, attr_type);
-	if (!type)
-		return 1;
-	if (!strcmp(type->u.str, "nmea")) {
+	struct attr type_attr;
+	if (!log_get_attr(log, attr_type, &type_attr, NULL))
+                return 1;
+
+	if (!strcmp(type_attr.u.str, "nmea")) {
 		cb=callback_new_2(callback_cast(vehicle_log_nmea), this_, log);
-	} else if (!strcmp(type->u.str, "gpx")) {
+	} else if (!strcmp(type_attr.u.str, "gpx")) {
 		char *header =
 		    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gpx version=\"1.0\" creator=\"Navit http://navit.sourceforge.net\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.topografix.com/GPX/1/0\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd\">\n<trk>\n<trkseg>\n";
 		char *trailer = "</trkseg>\n</trk>\n</gpx>\n";
 		log_set_header(log, header, strlen(header));
 		log_set_trailer(log, trailer, strlen(trailer));
 		cb=callback_new_2(callback_cast(vehicle_log_gpx), this_, log);
-	} else if (!strcmp(type->u.str, "textfile")) {
+	} else if (!strcmp(type_attr.u.str, "textfile")) {
 		char *header = "type=track\n";
 		log_set_header(log, header, strlen(header));
 		cb=callback_new_2(callback_cast(vehicle_log_textfile), this_, log);
@@ -162,15 +161,14 @@ vehicle_set_attr(struct vehicle *this_, struct attr *attr,
 }
 
 int
-vehicle_add_attr(struct vehicle *this_, struct attr *attr,
-		 struct attr **attrs)
+vehicle_add_attr(struct vehicle *this_, struct attr *attr)
 {
 	switch (attr->type) {
 	case attr_callback:
 		callback_list_add(this_->cbl, attr->u.callback);
 		break;
 	case attr_log:
-		return vehicle_add_log(this_, attr->u.log, attrs);
+		return vehicle_add_log(this_, attr->u.log);
 	default:
 		return 0;
 	}
