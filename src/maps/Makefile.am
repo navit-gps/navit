@@ -17,7 +17,7 @@ $(SAMPLE_MAP).bin $(SAMPLE_MAP).xml: $(SAMPLE_MAP).osm.bz2 $(top_builddir)/src/o
 	mv $(SAMPLE_MAP).bin.tmp $(SAMPLE_MAP).bin
 	echo '<map type="binfile" enabled="yes" data="$$NAVIT_SHAREDIR/maps/osm_bbox_11.3,47.9,11.7,48.2.bin"/>' >$(SAMPLE_MAP).xml
 
-distclean-local:
-	rm -f $(SAMPLE_MAP).osm.bz2 $(SAMPLE_MAP).bin
+distclean-local: 
+	rm -f $(SAMPLE_MAP).osm.bz2 $(SAMPLE_MAP).bin $(SAMPLE_MAP).xml
 
 all:
