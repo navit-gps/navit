@@ -50,6 +50,7 @@ struct vehicle_priv {
 	double height;
 	int status;
 	int sats_used;
+	int time;
 #ifdef _WIN32
 	int no_data_count;
 #endif
@@ -293,7 +294,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 #ifndef _WIN32
 		if (priv->file_type == file_type_file) {
 			vehicle_file_disable_watch(priv);
-			g_timeout_add(1000,
+			g_timeout_add(priv->time,
 				      vehicle_file_enable_watch_timer,
 				      priv);
 		}
@@ -446,6 +447,7 @@ vehicle_file_new_file(struct vehicle_methods
 {
 	struct vehicle_priv *ret;
 	struct attr *source;
+	struct attr *time;
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
@@ -459,6 +461,11 @@ vehicle_file_new_file(struct vehicle_methods
 		vehicle_file_enable_watch(ret);
 		return ret;
 	}
+
+	ret->time=1000;
+	time = attr_search(attrs, NULL, attr_time);
+	if (time)
+		ret->time=time->u.num;
 #ifdef _WIN32
     ret->no_data_count = 0;
 #endif
