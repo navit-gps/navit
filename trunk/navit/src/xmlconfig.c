@@ -2,6 +2,7 @@
 #include <glib/gprintf.h>
 #include <string.h>
 #include "debug.h"
+#include "file.h"
 #include "coord.h"
 #include "layout.h"
 #include "mapset.h"
@@ -22,6 +23,23 @@
 #include "xmlconfig.h"
 #include "config.h"
 
+struct xistate {
+	struct xistate *parent;
+	struct xistate *child;
+	const gchar *element;
+	gchar **attribute_names;
+	gchar **attribute_values;
+};
+
+struct xmldocument {
+	const gchar *href;
+	const gchar *xpointer;	
+	gpointer user_data;
+	struct xistate *first;
+	struct xistate *last;
+	int active;
+	int level;
+};
 
 struct xmlstate {
 	const gchar **attribute_names;
@@ -31,7 +49,9 @@ struct xmlstate {
 	const gchar *element;
 	GError **error;
 	struct element_func *func;
-} *xmlstate_root;
+	struct xmldocument *document;
+};
+
 
 
 static struct attr ** convert_to_attrs(struct xmlstate *state)
@@ -141,7 +161,10 @@ find_boolean(struct xmlstate *state, const char *attribute, int deflt, int requi
 static int
 convert_number(const char *val)
 {
-	return g_ascii_strtoull(val,NULL,0);
+	if (val)
+		return g_ascii_strtoull(val,NULL,0);
+	else
+		return 0;
 }
 
 static int
@@ -644,7 +667,7 @@ struct element_func {
 };
 
 static void
-start_element (GMarkupParseContext *context,
+start_element(GMarkupParseContext *context,
 		const gchar         *element_name,
 		const gchar        **attribute_names,
 		const gchar        **attribute_values,
@@ -655,8 +678,9 @@ start_element (GMarkupParseContext *context,
 	struct element_func *e=elements,*func=NULL;
 	int found=0;
 	const char *parent_name=NULL;
-	char *s,*sep="",*possible_parents=g_strdup("");
-	dbg(2,"name='%s'\n", element_name);
+	char *s,*sep="",*possible_parents;
+	dbg(2,"name='%s' parent='%s'\n", element_name, *parent ? (*parent)->element:NULL);
+	possible_parents=g_strdup("");
 	if (*parent)
 		parent_name=(*parent)->element;
 	while (e->name) {
@@ -717,23 +741,6 @@ start_element (GMarkupParseContext *context,
 			new->parent->func->add_attr(new->parent->element_attr.u.data, &new->element_attr);
 	}
 	return;
-#if 0
-	struct elem_data *data = user_data;
-	void *elem=NULL;
-	void *parent_object;
-	char *parent_token;
-	parent_object=data->elem_stack ? data->elem_stack->data : NULL;
-	parent_token=data->token_stack ? data->token_stack->data : NULL;
-
-	/* g_printf("start_element: %s AN: %s AV: %s\n",element_name,*attribute_names,*attribute_values); */
-
-
-	printf("Unknown element '%s'\n", element_name);
-#if 0
-	data->elem_stack = g_list_prepend(data->elem_stack, elem);
-	data->token_stack = g_list_prepend(data->token_stack, (gpointer)element_name);
-#endif
-#endif
 }
 
 
@@ -754,53 +761,284 @@ end_element (GMarkupParseContext *context,
 	g_free(curr);
 }
 
+static gboolean parse_file(struct xmldocument *document, GError **error);
+
+static void
+xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gchar **attribute_values, struct xmldocument *doc_old, GError **error)
+{
+	struct xmldocument doc_new;
+	struct file_wordexp *we;
+	int i,count;
+	const char *href=NULL;
+	char **we_files;
+
+	if (doc_old->level >= 16) {
+		g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "xi:include recursion too deep");
+		return;
+	}
+	memset(&doc_new, 0, sizeof(doc_new));
+	i=0;
+	while (attribute_names[i]) {
+		if(!g_ascii_strcasecmp("href", attribute_names[i])) {
+			if (!href) 
+				href=attribute_values[i];
+			else {
+				g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "xi:include has more than one href");
+				return;
+			}
+		} else if(!g_ascii_strcasecmp("xpointer", attribute_names[i])) {
+			if (!doc_new.xpointer) 
+				doc_new.xpointer=attribute_values[i];
+			else {
+				g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "xi:include has more than one xpointer");
+				return;
+			}
+		} else {
+			g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "xi:include has invalid attributes");
+			return;
+		}
+		i++;
+	}
+	if (!doc_new.xpointer && !href) {
+		g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "xi:include has neither href nor xpointer");
+		return;
+	}
+	doc_new.level=doc_old->level+1;
+	doc_new.user_data=doc_old->user_data;
+	if (! href) {
+		doc_new.href=doc_old->href;
+		parse_file(&doc_new, error);
+	} else {
+		we=file_wordexp_new(href);
+		we_files=file_wordexp_get_array(we);
+		count=file_wordexp_get_count(we);
+		for (i = 0 ; i < count ; i++) {
+			doc_new.href=we_files[i];
+			parse_file(&doc_new, error);
+		}
+		file_wordexp_destroy(we);	
+		
+	}
+	
+}
+static int
+strncmp_len(const char *s1, int s1len, const char *s2)
+{
+	int ret;
+#if 0
+	char c[s1len+1];
+	strncpy(c, s1, s1len);
+	c[s1len]='\0';
+	dbg(0,"'%s' vs '%s'\n", c, s2);
+#endif
+
+	ret=strncmp(s1, s2, s1len);
+	if (ret)
+		return ret;
+	return strlen(s2)-s1len;
+}
+
+static int
+xpointer_test(const char *test, int len, struct xistate *elem)
+{
+	int eq,i;
+	char c;
+	char *name_equal="name(.)=";
+	char *name_not_equal="name(.)!=";
+
+	if (!len)
+		return 0;
+	c=test[len-1];
+	if (c != '\'' && c != '"')
+		return 0;
+	eq=strcspn(test, "=");
+	if (eq >= len || test[eq+1] != c)
+		return 0;
+	if (test[0] == '@') {
+		i=0;
+		while (elem->attribute_names[i]) {
+			if (!strncmp_len(test+1,eq-1,elem->attribute_names[i]) && !strncmp_len(test+eq+2,len-eq-3, elem->attribute_values[i])) {
+				return 1;
+			}
+			i++;
+		}
+	}
+	if (!strncmp(test,name_equal,strlen(name_equal)) && len > strlen(name_equal)) {
+		if (!strncmp_len(test+eq+2,len-eq-3, elem->element))
+			return 1;
+	}
+	if (!strncmp(test,name_not_equal,strlen(name_not_equal)) && len > strlen(name_not_equal)) {
+		if (strncmp_len(test+eq+2,len-eq-3, elem->element))
+			return 1;
+	}
+	return 0;
+}
+
+static int
+xpointer_element_match(const char *xpointer, int len, struct xistate *elem)
+{
+	int len_test;
+	len_test=strcspn(xpointer, "[");
+	if (len_test > len)
+		len_test=len;
+	if (strncmp_len(xpointer, len_test, elem->element) && (len_test != 1 || xpointer[0] != '*'))
+		return 0;
+	if (len_test == len)
+		return 1;
+	if (xpointer[len-1] != ']')
+		return 0;
+	return xpointer_test(xpointer+len_test+1, len-len_test-2, elem);
+}
+
+static int
+xpointer_xpointer_match(const char *xpointer, int len, struct xistate *first)
+{
+	const char *c;
+	int s;
+	dbg(2,"%s\n", xpointer);
+	if (xpointer[0] != '/')
+		return 0;
+	c=xpointer+1;
+	len--;
+	do {
+		s=strcspn(c, "/");
+		if (s > len)
+			s=len;
+		if (! xpointer_element_match(c, s, first))
+			return 0;
+		first=first->child;
+		c+=s+1;
+		len-=s+1;
+	} while (s < len && first);
+	if (s < len)
+		return 0;
+	return 1;
+}
+
+static int
+xpointer_match(const char *xpointer, struct xistate *first)
+{
+	char *prefix="xpointer(";
+	int len=strlen(xpointer);
+	if (! xpointer)
+		return 1;
+	if (strncmp(xpointer,prefix,strlen(prefix)))
+		return 0;
+	if (xpointer[len-1] != ')')
+		return 0;
+	return xpointer_xpointer_match(xpointer+strlen(prefix), len-strlen(prefix)-1, first);
+
+}
+
+static void
+xi_start_element(GMarkupParseContext *context,
+		const gchar         *element_name,
+		const gchar        **attribute_names,
+		const gchar        **attribute_values,
+		gpointer             user_data,
+		GError             **error)
+{
+	struct xmldocument *doc=user_data;
+	struct xistate *xistate;
+	int i,count=0;
+	while (attribute_names[count++]);
+	xistate=g_new0(struct xistate, 1);
+	xistate->element=element_name;
+	xistate->attribute_names=g_new(char *, count);
+	xistate->attribute_values=g_new(char *, count);
+	for (i = 0 ; i < count ; i++) {
+		xistate->attribute_names[i]=g_strdup(attribute_names[i]);
+		xistate->attribute_values[i]=g_strdup(attribute_values[i]);
+	}
+	xistate->parent=doc->last;
+	
+	if (doc->last) {
+		doc->last->child=xistate;
+	} else
+		doc->first=xistate;
+	doc->last=xistate;
+	if (doc->active > 0 || xpointer_match(doc->xpointer, doc->first)) {
+		if(!g_ascii_strcasecmp("xi:include", element_name)) {
+			xinclude(context, attribute_names, attribute_values, doc, error);
+			return;
+		}
+		start_element(context, element_name, attribute_names, attribute_values, doc->user_data, error);
+		doc->active++;
+	}
+		
+}
+
+static void
+xi_end_element (GMarkupParseContext *context,
+		const gchar         *element_name,
+		gpointer             user_data,
+		GError             **error)
+{
+	struct xmldocument *doc=user_data;
+	struct xistate *xistate=doc->last;
+	int i=0;
+	doc->last=doc->last->parent;
+	if (! doc->last)
+		doc->first=NULL;
+	else
+		doc->last->child=NULL;
+	if (doc->active > 0) {
+		if(!g_ascii_strcasecmp("xi:include", element_name)) {
+			return;
+		}
+		end_element(context, element_name, doc->user_data, error);
+		doc->active--;
+	}
+	while (xistate->attribute_names[i]) {
+		g_free(xistate->attribute_names[i]);
+		g_free(xistate->attribute_values[i]);
+		i++;
+	}
+	g_free(xistate->attribute_names);
+	g_free(xistate->attribute_values);
+	g_free(xistate);
+}
 
 /* Called for character data */
 /* text is not nul-terminated */
 static void
-text (GMarkupParseContext *context,
+xi_text (GMarkupParseContext *context,
 		const gchar            *text,
 		gsize                   text_len,
 		gpointer                user_data,
 		GError               **error)
 {
-	struct xmlstate **state = user_data;
-
-	(void) state;
 }
 
 
 
 static const GMarkupParser parser = {
-	start_element,
-	end_element,
-	text,
+	xi_start_element,
+	xi_end_element,
+	xi_text,
 	NULL,
 	NULL
 };
 
-gboolean config_load(char *filename, GError **error)
+static gboolean
+parse_file(struct xmldocument *document, GError **error)
 {
 	GMarkupParseContext *context;
-	char *contents;
+	gchar *contents, *message;
 	gsize len;
+	gint line, chr;
 	gboolean result;
-	gint line;
-	gint chr;
-	gchar *message;
 
-	struct xmlstate *curr=NULL;
-	
-	context = g_markup_parse_context_new (&parser, 0, &curr, NULL);
+	context = g_markup_parse_context_new (&parser, 0, document, NULL);
 
-	if (!g_file_get_contents (filename, &contents, &len, error))
+	if (!g_file_get_contents (document->href, &contents, &len, error)) {
+		g_markup_parse_context_free (context);
 		return FALSE;
-
-	result = g_markup_parse_context_parse (context, contents, len, error);
-	if (result && curr) {
-		g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_PARSE, "element '%s' not closed", curr->element);
-		result=FALSE;	
 	}
+	document->active=document->xpointer ? 0:1;
+	document->first=NULL;
+	document->last=NULL;
+	result = g_markup_parse_context_parse (context, contents, len, error);
 	if (!result && error && *error) {
 		g_markup_parse_context_get_position(context, &line, &chr);
 		message=g_strdup_printf("%s at line %d, char %d\n", (*error)->message, line, chr);
@@ -810,6 +1048,23 @@ gboolean config_load(char *filename, GError **error)
 	g_markup_parse_context_free (context);
 	g_free (contents);
 
+	return result;
+}
+
+gboolean config_load(char *filename, GError **error)
+{
+	struct xmldocument document;
+	struct xmlstate *curr=NULL;
+	gboolean result;
+
+	memset(&document, 0, sizeof(document));
+	document.href=filename;
+	document.user_data=&curr;
+	result=parse_file(&document, error);
+	if (result && curr) {
+		g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_PARSE, "element '%s' not closed", curr->element);
+		result=FALSE;
+	}
 	return result;
 }
 
