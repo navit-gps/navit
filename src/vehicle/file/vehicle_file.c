@@ -51,6 +51,7 @@ struct vehicle_priv {
 	int status;
 	int sats_used;
 	int time;
+	int on_eof;
 #ifdef _WIN32
 	int no_data_count;
 #endif
@@ -337,8 +338,17 @@ vehicle_file_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
 			 priv->buffer + priv->buffer_pos,
 			 buffer_size - priv->buffer_pos - 1);
 		if (size <= 0) {
-			vehicle_file_close(priv);
-			vehicle_file_open(priv);
+			switch (priv->on_eof) {
+			case 0:
+				vehicle_file_close(priv);
+				vehicle_file_open(priv);
+				break;
+			case 1:
+				break;
+			case 2:
+				exit(0);
+				break;
+			}
 			return TRUE;
 		}
 		priv->buffer_pos += size;
@@ -448,6 +458,7 @@ vehicle_file_new_file(struct vehicle_methods
 	struct vehicle_priv *ret;
 	struct attr *source;
 	struct attr *time;
+	struct attr *on_eof;
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
@@ -456,16 +467,22 @@ vehicle_file_new_file(struct vehicle_methods
 	ret->cbl = cbl;
 	ret->source = g_strdup(source->u.str);
 	ret->buffer = g_malloc(buffer_size);
+	ret->time=1000;
+	time = attr_search(attrs, NULL, attr_time);
+	if (time)
+		ret->time=time->u.num;
+	on_eof = attr_search(attrs, NULL, attr_on_eof);
+	if (on_eof && !strcasecmp(on_eof->u.str, "stop"))
+		ret->on_eof=1;
+	if (on_eof && !strcasecmp(on_eof->u.str, "exit"))
+		ret->on_eof=2;
+	dbg(0,"on_eof=%d\n", ret->on_eof);
 	*meth = vehicle_file_methods;
 	if (vehicle_file_open(ret)) {
 		vehicle_file_enable_watch(ret);
 		return ret;
 	}
 
-	ret->time=1000;
-	time = attr_search(attrs, NULL, attr_time);
-	if (time)
-		ret->time=time->u.num;
 #ifdef _WIN32
     ret->no_data_count = 0;
 #endif
