@@ -70,8 +70,8 @@ debug_vprintf(int level, const char *module, const int mlen, const char *functio
 	sprintf(buffer, "%s:%s", module, function);
 	if (debug_level_get(module) >= level || debug_level_get(buffer) >= level) {
 		if (prefix)
-			printf("%s:",buffer);
-		vprintf(fmt, ap);
+			fprintf(stderr,"%s:",buffer);
+		vfprintf(stderr,fmt, ap);
 	}
 }
 
