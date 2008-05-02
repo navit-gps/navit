@@ -1,5 +1,6 @@
 #include "glib.h"
 #include <stdio.h>
+#include <libintl.h>
 
 //  FIXME temporary fix for enum
 #include "projection.h"
