@@ -637,9 +637,8 @@ msgstr "Gibilterra"
 
 #. 304
 #: ../src/country.c:106
-#, fuzzy
 msgid "Greenland"
-msgstr "Irlanda"
+msgstr "Groenlandia"
 
 #. 270
 #: ../src/country.c:107
@@ -1273,9 +1272,8 @@ msgstr "Siria"
 
 #. 748
 #: ../src/country.c:233
-#, fuzzy
 msgid "Swaziland"
-msgstr "Svizzera"
+msgstr "Swaziland"
 
 #. 796
 #: ../src/country.c:234
