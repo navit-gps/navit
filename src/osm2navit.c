@@ -283,6 +283,7 @@ struct country_table {
 	struct rect r;
 } country_table[] = {
 	{ 40,"Austria,Österreich,AUT"},
+	{124,"Canada"},
 	{276,"Germany,Deutschland,Bundesrepublik Deutschland"},
 	{528,"Nederland,The Netherlands,Niederlande,NL"},
 	{756,"Schweiz"},
