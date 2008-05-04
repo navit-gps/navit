@@ -1193,12 +1193,12 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 		}
 		break;
 	case attr_vehicle:
-		if (this_->vehicle && this_->vehicle->vehicle != attr->u.vehicle) {
+		if (!this_->vehicle || this_->vehicle->vehicle != attr->u.vehicle) {
 			GList *l;
 			l=this_->vehicles;
 			while(l) {
 				if (((struct navit_vehicle *)l->data)->vehicle == attr->u.vehicle) {
-					this_->vehicle=(struct navit_vehicle *)l;
+					this_->vehicle=(struct navit_vehicle *)l->data;
 					attr_updated=1;
 				}
 				l=g_list_next(l);
