@@ -838,13 +838,37 @@ strncmp_len(const char *s1, int s1len, const char *s2)
 	return strlen(s2)-s1len;
 }
 
+static int 
+xpointer_value(const char *test, int len, struct xistate *elem, const char **out, int out_len)
+{
+	int i,ret=0;
+	if (len <= 0 || out_len <= 0) {
+		return 0;
+	}
+	if (!(strncmp_len(test,len,"name(.)"))) {
+		out[0]=elem->element;
+		return 1;
+	}
+	if (test[0] == '@') {
+		i=0;
+		while (elem->attribute_names[i] && out_len > 0) {
+			if (!strncmp_len(test+1,len-1,elem->attribute_names[i])) {
+				out[ret++]=elem->attribute_values[i];
+				out_len--;
+			}
+			i++;
+		}
+		return ret;
+	}
+	return 0;
+}
+
 static int
 xpointer_test(const char *test, int len, struct xistate *elem)
 {
-	int eq,i;
+	int eq,i,count,vlen,cond_req=1,cond=0;
 	char c;
-	char *name_equal="name(.)=";
-	char *name_not_equal="name(.)!=";
+	const char *tmp[16];
 
 	if (!len)
 		return 0;
@@ -854,23 +878,18 @@ xpointer_test(const char *test, int len, struct xistate *elem)
 	eq=strcspn(test, "=");
 	if (eq >= len || test[eq+1] != c)
 		return 0;
-	if (test[0] == '@') {
-		i=0;
-		while (elem->attribute_names[i]) {
-			if (!strncmp_len(test+1,eq-1,elem->attribute_names[i]) && !strncmp_len(test+eq+2,len-eq-3, elem->attribute_values[i])) {
-				return 1;
-			}
-			i++;
-		}
+	vlen=eq;
+	if (eq > 0 && test[eq-1] == '!') {
+		cond_req=0;
+		vlen--;
 	}
-	if (!strncmp(test,name_equal,strlen(name_equal)) && len > strlen(name_equal)) {
-		if (!strncmp_len(test+eq+2,len-eq-3, elem->element))
-			return 1;
+	count=xpointer_value(test,vlen,elem,tmp,16);
+	for (i = 0 ; i < count ; i++) {
+		if (!strncmp_len(test+eq+2,len-eq-3, tmp[i]))
+			cond=1;
 	}
-	if (!strncmp(test,name_not_equal,strlen(name_not_equal)) && len > strlen(name_not_equal)) {
-		if (strncmp_len(test+eq+2,len-eq-3, elem->element))
-			return 1;
-	}
+	if (cond == cond_req)
+		return 1;
 	return 0;
 }
 
