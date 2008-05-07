@@ -257,7 +257,7 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 	if (query) {
 		ret->gpsd_query = g_strconcat(query->u.str, "\n", NULL);
 	} else {
-		ret->gpsd_query = g_strdup("w+xr+\n");
+		ret->gpsd_query = g_strdup("w+x\n");
 	}
 	dbg(1,"Format string for gpsd_query: %s\n",ret->gpsd_query);
 	retry_int = attr_search(attrs, NULL, attr_retry_interval);
