@@ -46,6 +46,7 @@ struct navigation {
 	int level_last;
 	struct item item_last;
 	int turn_around;
+	int turn_around_limit;
 	int distance_turn;
 	int distance_last;
 	int announce[route_item_last-route_item_first+1][3];
@@ -69,6 +70,7 @@ navigation_new(struct attr **attrs)
 	ret->level_last=-2;
 	ret->distance_last=-2;
 	ret->distance_turn=50;
+	ret->turn_around_limit=3;
 
 	for (j = 0 ; j <= route_item_last-route_item_first ; j++) {
 		for (i = 0 ; i < 3 ; i++) {
@@ -532,7 +534,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	if (type != attr_navigation_long_exact) 
 		distance=round_distance(distance);
 	if (type == attr_navigation_speech) {
-		if (nav->turn_around) 
+		if (nav->turn_around && nav->turn_around == nav->turn_around_limit) 
 			return g_strdup(_("When possible, please turn around"));
 		level=navigation_get_announce_level(nav, itm->item.type, distance);
 		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, itm->item.type);
@@ -599,7 +601,7 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 		return;
 	callback_list_call(this_->callback, 1, &p);
 	distance=round_distance(this_->first->dest_length-this_->cmd_first->itm->dest_length);
-	if (this_->turn_around) {
+	if (this_->turn_around && this_->turn_around == this_->turn_around_limit) {
 		if (distance > this_->distance_turn) {
 			this_->level_last=4;
 			level=4;
@@ -675,9 +677,13 @@ navigation_update(struct navigation *this_, struct route *route)
 		calculate_dest_distance(this_, incr);
 		dbg(2,"destination distance old=%d new=%d\n", this_->distance_last, this_->first->dest_length);
 		if (this_->first->dest_length > this_->distance_last && this_->distance_last >= 0) 
-			this_->turn_around=1;
+			this_->turn_around++;
 		else
-			this_->turn_around=0;
+			this_->turn_around--;
+		if (this_->turn_around > this_->turn_around_limit)
+			this_->turn_around=this_->turn_around_limit;
+		else if (this_->turn_around < -this_->turn_around_limit+1)
+			this_->turn_around=-this_->turn_around_limit+1;
 		dbg(2,"turn_around=%d\n", this_->turn_around);
 		this_->distance_last=this_->first->dest_length;
 		profile(0,"end");
