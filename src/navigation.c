@@ -600,34 +600,36 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 	if (!this_->cmd_first)
 		return;
 	callback_list_call(this_->callback, 1, &p);
+	dbg(1,"force_speech=%d turn_around=%d turn_around_limit=%d\n", force_speech, this_->turn_around, this_->turn_around_limit);
 	distance=round_distance(this_->first->dest_length-this_->cmd_first->itm->dest_length);
-	if (this_->turn_around && this_->turn_around == this_->turn_around_limit) {
-		if (distance > this_->distance_turn) {
+	if (this_->turn_around_limit && this_->turn_around == this_->turn_around_limit) {
+		dbg(1,"distance=%d distance_turn=%d\n", distance, this_->distance_turn);
+		while (distance > this_->distance_turn) {
 			this_->level_last=4;
 			level=4;
 			force_speech=1;
-			if (this_->distance_turn > 500)
+			if (this_->distance_turn >= 500)
 				this_->distance_turn*=2;
 			else
 				this_->distance_turn=500;
 		}
-	} else {
+	} else if (!this_->turn_around_limit || this_->turn_around == -this_->turn_around_limit+1) {
 		this_->distance_turn=50;
 		level=navigation_get_announce_level(this_, this_->first->item.type, distance);
 		if (level < this_->level_last) {
-			dbg(0,"level %d < %d\n", level, this_->level_last);
+			dbg(1,"level %d < %d\n", level, this_->level_last);
 			this_->level_last=level;
 			force_speech=1;
 		}
 		if (!item_is_equal(this_->cmd_first->itm->item, this_->item_last)) {
-			dbg(0,"item different\n");
+			dbg(1,"item different\n");
 			this_->item_last=this_->cmd_first->itm->item;
 			force_speech=1;
 		}
 	}
 	if (force_speech) {
 		this_->level_last=level;
-		dbg(0,"distance=%d level=%d type=0x%x\n", distance, level, this_->first->item.type);
+		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, this_->first->item.type);
 		callback_list_call(this_->callback_speech, 1, &p);
 	}
 }
@@ -663,7 +665,7 @@ navigation_update(struct navigation *this_, struct route *route)
 				incr=1;
 				navigation_itm_update(itm, ritem);
 			} else {
-				dbg(0,"not on track\n");
+				dbg(1,"not on track\n");
 				do {
 					dbg(1,"item\n");
 					navigation_itm_new(this_, ritem);
