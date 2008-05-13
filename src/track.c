@@ -45,9 +45,10 @@ struct tracking {
 };
 
 
-int angle_factor=4;
+int angle_factor=30;
 int connected_pref=-10;
 int nostop_pref=10;
+int offroad_limit_pref=5000;
 
 
 struct coord *
@@ -263,7 +264,7 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 			dbg(2, "%d: (0x%x,0x%x)-(0x%x,0x%x)\n", i, sd->c[i].x, sd->c[i].y, sd->c[i+1].x, sd->c[i+1].y);
 			value=transform_distance_line_sq(&sd->c[i], &sd->c[i+1], c, &lpnt);
 			if (value < INT_MAX/2) 
-				value += tracking_angle_delta(angle, t->angle[i], dir)*angle_factor;
+				value += tracking_angle_delta(angle, t->angle[i], dir)*angle_factor>>4;
 			if (tracking_is_connected(tr->curr, &sd->c[i]))
 				value += connected_pref;
 			if (lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y)
@@ -286,8 +287,8 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 		}
 		t=t->next;
 	}
-	dbg(1,"tr->curr_line=%p\n", tr->curr_line);
-	if (!tr->curr_line)
+	dbg(1,"tr->curr_line=%p min=%d\n", tr->curr_line, min);
+	if (!tr->curr_line || min > offroad_limit_pref)
 		return 0;
 	dbg(1,"found 0x%x,0x%x\n", tr->last_out.x, tr->last_out.y);
 	*c=tr->last_out;
