@@ -806,13 +806,17 @@ xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gcha
 	doc_new.level=doc_old->level+1;
 	doc_new.user_data=doc_old->user_data;
 	if (! href) {
+		dbg(1,"no href, using '%s'\n", doc_old->href);
 		doc_new.href=doc_old->href;
 		parse_file(&doc_new, error);
 	} else {
+		dbg(1,"expanding '%s'\n", href);
 		we=file_wordexp_new(href);
 		we_files=file_wordexp_get_array(we);
 		count=file_wordexp_get_count(we);
+		dbg(1,"%d results\n", count);
 		for (i = 0 ; i < count ; i++) {
+			dbg(1,"result[%d]='%s'\n", i, we_files[i]);
 			doc_new.href=we_files[i];
 			parse_file(&doc_new, error);
 		}
@@ -1048,6 +1052,7 @@ parse_file(struct xmldocument *document, GError **error)
 	gint line, chr;
 	gboolean result;
 
+	dbg(1,"enter filename='%s'\n", document->href);
 	context = g_markup_parse_context_new (&parser, 0, document, NULL);
 
 	if (!g_file_get_contents (document->href, &contents, &len, error)) {
@@ -1066,6 +1071,7 @@ parse_file(struct xmldocument *document, GError **error)
 	}
 	g_markup_parse_context_free (context);
 	g_free (contents);
+	dbg(1,"return %d\n", result);
 
 	return result;
 }
@@ -1076,6 +1082,7 @@ gboolean config_load(char *filename, GError **error)
 	struct xmlstate *curr=NULL;
 	gboolean result;
 
+	dbg(1,"enter filename='%s'\n", filename);
 	memset(&document, 0, sizeof(document));
 	document.href=filename;
 	document.user_data=&curr;
@@ -1084,6 +1091,7 @@ gboolean config_load(char *filename, GError **error)
 		g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_PARSE, "element '%s' not closed", curr->element);
 		result=FALSE;
 	}
+	dbg(1,"return %d\n", result);
 	return result;
 }
 
