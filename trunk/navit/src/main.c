@@ -26,8 +26,6 @@
 #include "navigation.h"
 #include "event.h"
 
-/* test */
-
 #define _(STRING)    gettext(STRING)
 
 struct map_data *map_data_default;
