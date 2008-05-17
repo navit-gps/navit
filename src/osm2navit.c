@@ -887,13 +887,20 @@ write_attr(FILE *out, struct attr_bin *attr, void *buffer)
 static int
 attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_type *types, int types_count)
 {
-	int i,j,longest=0,ret=0,sum;
+	int i,j,longest=0,ret=0,sum,val;
 	struct attr_mapping *curr;
 	for (i = 0 ; i < mapping_count ; i++) {
 		sum=0;
 		curr=mapping[i];
-		for (j = 0 ; j < curr->attr_present_idx_count ; j++)
-			sum+=attr_present[curr->attr_present_idx[j]];
+		for (j = 0 ; j < curr->attr_present_idx_count ; j++) {
+			val=attr_present[curr->attr_present_idx[j]];
+			if (val)
+				sum+=val;
+			else {
+				sum=-1;
+				break;
+			}
+		}
 		if (sum > longest) {
 			longest=sum;
 			ret=0;
