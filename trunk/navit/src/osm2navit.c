@@ -1,3 +1,4 @@
+
 #define _FILE_OFFSET_BITS 64
 #define _LARGEFILE_SOURCE
 #define _LARGEFILE64_SOURCE
@@ -113,6 +114,7 @@ static char *attrmap={
 	"n	place=town		town_label_2e4\n"
 	"n	place=village		town_label_2e3\n"
 	"n	place=hamlet		town_label_2e2\n"
+	"n	place=locality		town_label_2e0\n"
 	"n	railway=halt		poi_rail_halt\n"
 	"n	railway=level_crossing		poi_level_crossing\n"
 	"n	railway=station		poi_rail_station\n"
