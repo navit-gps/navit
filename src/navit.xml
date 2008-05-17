@@ -1913,38 +1913,41 @@ Change to your home coordinates.
 			<item type="ferry" order="5-">
 				<polyline color="#000000" width="3" dash="5" />
 			</item>
+			<item type="track" order="3-">
+				<polyline color="#3f3f3f" width="1" />
+			</item>
+
+
+
 			<item type="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="12-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
-			<item type="district_label_1e3,district_label_2e3,district_label_5e3" order="11-">
+			<item type="district_label_1e3,district_label_2e3,district_label_5e3" order="9-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
-			<item type="town_label_1e3,town_label_2e3,town_label_5e3" order="10-">
+			<item type="town_label_1e3,town_label_2e3,town_label_5e3" order="9-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
-			<item type="district_label_1e4,district_label_2e4,district_label_5e4" order="9-">
+			<item type="district_label_1e4,district_label_2e4,district_label_5e4" order="7-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
-			<item type="town_label_1e4,town_label_2e4,town_label_5e4" order="8-">
+			<item type="town_label_1e4,town_label_2e4,town_label_5e4" order="7-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
-			<item type="district_label_1e5,district_label_2e5,district_label_5e5" order="6-">
+			<item type="district_label_1e5,district_label_2e5,district_label_5e5" order="5-">
 				<circle color="#000000" radius="3" label_size="10" />
 			</item>
-			<item type="town_label_1e5,town_label_2e5,town_label_5e5" order="4-">
+			<item type="town_label_1e5,town_label_2e5,town_label_5e5" order="5-">
 				<circle color="#000000" radius="3" label_size="10" />
 			</item>
 			<item type="district_label_1e6,district_label_2e6,district_label_5e6" order="3-">
 				<circle color="#000000" radius="3" label_size="15" />
 			</item>
-			<item type="town_label_1e6,town_label_2e6,town_label_5e6" order="2-">
+			<item type="town_label_1e6,town_label_2e6,town_label_5e6" order="3-">
 				<circle color="#000000" radius="3" label_size="15" />
 			</item>
 			<item type="town_label_1e7,district_label_1e7" order="1-">
 				<circle color="#000000" radius="3" label_size="15" />
-			</item>
-			<item type="track" order="3-">
-				<polyline color="#3f3f3f" width="1" />
 			</item>
 		</layer>
 		<xi:include xpointer="xpointer(/config/navit/layout[@name='Car']/layer[@name='points'])" />
