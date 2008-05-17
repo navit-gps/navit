@@ -1,3 +1,8 @@
+<!--
+For configuration options used in this file, please read
+http://wiki.navit-project.org/index.php/Configuring_NavIt
+-->
+
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE navit SYSTEM "navit.dtd">
 <config xmlns:xi="http://www.w3.org/2001/XInclude">
