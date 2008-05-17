@@ -6,6 +6,7 @@
 	<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libgraphics_null.so" active="no" />
 </plugins>
 <debug name="navit:do_draw" level="0" />
+
 <!--
 Center coordinates format:
 [D][D]DMM.ss[S][S]... N/S [D][D]DMM.ss[S][S]... E/W 
@@ -13,20 +14,35 @@ Center coordinates format:
 [-]0xX [-]0xX 
 Change to your home coordinates.
 -->
+
+
+<!--
+		This line defines which location on the map navit will show after startup.
+		It makes sense to set it to your home coordinates.
+-->
 <navit center="4808 N 1134 E" zoom="256" tracking="1" cursor="1" orientation="0">
+
+
 <!--
 	<osd type="compass" />
 	<osd type="eta" />
 	<osd type="navigation" />
 -->
+
+
+<!--
+			The following line let you select which graphical user interface you'd like to use.
+			The default is GTK:
+-->
 	<gui type="gtk" menubar="1" toolbar="1" statusbar="1" />
 	<graphics type="gtk_drawing_area" />
+
 <!-- For SDL, use rather the following lines
 	<gui type="sdl" />
 	<graphics type="opengl" />
 -->
 	
-	<vehicle name="Meins" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff"/>
+	<vehicle name="Mine" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff"/>
 	<!-- To improve visibility of the cursor in gtk, you may optionally add:
 		color2="#rrggbb"  - draws a second cursor inside the original, in the specified colour
 		animate="1" - animates the cursor, as series of moving dots
@@ -35,9 +51,11 @@ Change to your home coordinates.
 	<vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1" refresh="1"/>
 	-->
 	
-	<vehicle name="Demo" enabled="no" source="demo://" color="#0000aa"/> 
+	<vehicle name="Demo" enabled="no" source="demo://" color="#0000aa"/>
+
 	<tracking>
 	</tracking>
+	
 	<route>
 		<speed type="street_0,street_1_city" value="10" />
 		<speed type="street_2_city" value="30" />
@@ -53,14 +71,22 @@ Change to your home coordinates.
 		<speed type="ramp" value="40" />
 		<speed type="ferry" value="40" />
 	</route>
+
 	<navigation>
 		<announce type="street_0,street_1_city" level0="10" level1="100" level2="200" unit="m" />
 		<announce type="street_2_city,street_3_city,street_4_city,ramp" level0="20" level1="200" level2="500" unit="m" />
 		<announce type="highway_city,street_1_land,street_2_land,street_3_land,street_4_land" level0="40" level1="400" level2="1000" unit="m" />
 		<announce type="street_n_lanes,highway_land" level0="100" level1="1000" level2="2000" unit="m" />
-
 	</navigation>
+
+
+	<!--	Navit provides speech output in text format.
+				If you have a speech synthesizer like festival lite installed, you can get turn by turn directions out of navit.
+				The default is text output to the shell
+	-->
 	<speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" />
+	<!--<speech type="cmdline" data="flite -t '%s'" />-->
+
 <!-- If you have the reiseplaner maps installed, set enabled="yes" in the next line -->
 	<mapset enabled="no">
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map" />
@@ -70,10 +96,12 @@ Change to your home coordinates.
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp4.smp" />
 		<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp5.smp" />
 	</mapset>
+
 <!-- If you dont want to use the sample map, either set enabled="no" in the next line or remove the xml file from the maps directory -->
 	<mapset enabled="yes">
 		<xi:include href="$NAVIT_SHAREDIR/maps/*.xml" />
 	</mapset>
+
 <!-- Sample mapset for garmin maps -->
 	<mapset enabled="no">
 		<map type="garmin" enabled="yes" data="/path/to/img" debug="4"/>
@@ -1878,7 +1906,7 @@ Change to your home coordinates.
 				<polyline color="#696969" width="1" dash="5" />
 			</item>
 			<item type="ferry" order="5-">
-				<polyline color="#000000" width="3" dash="5" /> 
+				<polyline color="#000000" width="3" dash="5" />
 			</item>
 			<item type="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="12-">
 				<circle color="#000000" radius="3" label_size="7" />
@@ -1916,10 +1944,12 @@ Change to your home coordinates.
 		</layer>
 		<xi:include xpointer="xpointer(/config/navit/layout[@name='Car']/layer[@name='points'])" />
 	</layout>
+
+
+
 	<layout name="T@H">
 		<layer name="sea" details="0">
-			
-			
+
 <!-- landuse=forest -->
 			<item type="wood" order="0-">
 				<polygon color="#72bf81" /> 
@@ -2371,3 +2401,5 @@ Change to your home coordinates.
 	</layout>
 </navit>
 </config>
+
+
