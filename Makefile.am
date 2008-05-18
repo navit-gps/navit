@@ -1,4 +1,4 @@
 include $(top_srcdir)/Makefile.inc
-SUBDIRS=src po intl
+SUBDIRS=navit po intl
 pkgdoc_DATA = README
 EXTRA_DIST = README COPYRIGHT

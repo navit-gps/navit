@@ -5,7 +5,7 @@ if BUILD_SAMPLEMAP
   SUBDIRS += maps
 endif
 
-AM_CPPFLAGS = -I$(top_srcdir)/src/fib-1.1 @NAVIT_CFLAGS@ -DPREFIX=\"@prefix@\" -DMODULE=navit
+AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ -DPREFIX=\"@prefix@\" -DMODULE=navit
 BUILT_SOURCES=osm2navit
 bin_PROGRAMS = navit osm2navit
 
@@ -30,14 +30,14 @@ navit_LDADD = @NAVIT_LIBS@ @ZLIB_LIBS@ -Lfib-1.1 -lfib
 
 if !PLUGINS
   navit_SOURCES += builtin.c
-  navit_LDADD += $(wildcard $(top_builddir)/src/*/*/*.la)
+  navit_LDADD += $(wildcard $(top_builddir)/navit/*/*/*.la)
 endif
 
 builtin.c:
-	ls $(top_builddir)/src/*/*/*.la | sed -e "s/.la/_init(void);/" -e "s/.*lib/extern void module_/" >builtin.c
+	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/.la/_init(void);/" -e "s/.*lib/extern void module_/" >builtin.c
 	echo "extern void builtin_init(void);" >>builtin.c
 	echo "void builtin_init(void) {" >>builtin.c
-	ls $(top_builddir)/src/*/*/*.la | sed -e "s/.la/_init();/" -e "s/.*lib/	module_/" >>builtin.c
+	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/.la/_init();/" -e "s/.*lib/	module_/" >>builtin.c
 	echo "}" >>builtin.c
 
 osm2navit_LDADD = @NAVIT_LIBS@  @ZLIB_LIBS@
