@@ -6,14 +6,14 @@ CLEANFILES = $(CATALOGS) navit.pot
 EXTRA_DIST = @POFILES@
 
 POTFILES  = \
-	$(top_srcdir)/src/main.c \
-	$(top_srcdir)/src/navigation.c \
-	$(top_srcdir)/src/navit.c \
-	$(top_srcdir)/src/popup.c \
-	$(top_srcdir)/src/country.c \
-	$(top_srcdir)/src/gui/gtk/destination.c \
-	$(top_srcdir)/src/gui/gtk/gui_gtk_action.c \
-	$(top_srcdir)/src/gui/gtk/gui_gtk_statusbar.c
+	$(top_srcdir)/navit/main.c \
+	$(top_srcdir)/navit/navigation.c \
+	$(top_srcdir)/navit/navit.c \
+	$(top_srcdir)/navit/popup.c \
+	$(top_srcdir)/navit/country.c \
+	$(top_srcdir)/navit/gui/gtk/destination.c \
+	$(top_srcdir)/navit/gui/gtk/gui_gtk_action.c \
+	$(top_srcdir)/navit/gui/gtk/gui_gtk_statusbar.c
 
 
 SUFFIXES = .po .mo

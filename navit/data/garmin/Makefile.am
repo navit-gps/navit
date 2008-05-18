@@ -19,7 +19,7 @@ noinst_PROGRAMS=gentypes
 gentypes_SOURCES=gentypes.c
 
 g2nbuiltin.h: gentypes garmintypes.txt
-	./gentypes $(top_srcdir)/src/data/garmin/garmintypes.txt $@
+	./gentypes garmintypes.txt $@
 
 EXTRA_DIST = garmintypes.txt
 
