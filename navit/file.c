@@ -275,14 +275,18 @@ file_destroy(struct file *f)
 }
 
 struct file_wordexp {
+	int err;
 	wordexp_t we;
 };
 
 struct file_wordexp *
 file_wordexp_new(const char *pattern)
 {
-	struct file_wordexp *ret=g_new(struct file_wordexp, 1);
-	wordexp(pattern, &ret->we, 0);
+	struct file_wordexp *ret=g_new0(struct file_wordexp, 1);
+
+	ret->err=wordexp(pattern, &ret->we, 0);
+	if (ret->err)
+		dbg(0,"wordexp('%s') returned %d\n", pattern, ret->err);
 	return ret;
 }
 
@@ -301,7 +305,8 @@ file_wordexp_get_array(struct file_wordexp *wexp)
 void
 file_wordexp_destroy(struct file_wordexp *wexp)
 {
-	wordfree(&wexp->we);
+	if (! wexp->err)
+		wordfree(&wexp->we);
 	g_free(wexp);
 }
 
