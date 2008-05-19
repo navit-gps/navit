@@ -1,6 +1,10 @@
 #ifndef __ENDIANESS_HANDLER__
 
-#include <endian.h>
+#ifndef __APPLE__
+ #include <endian.h>
+#else
+ # include <machine/endian.h>
+#endif
 
 /* Get machine dependent optimized versions of byte swapping functions.  */
 #include <byteswap.h>
