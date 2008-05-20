@@ -46,7 +46,6 @@ static gchar *get_home_directory(void)
 
 	if (homedir) return homedir;
 	homedir = getenv("HOME");
-	}
 	if (!homedir)
 	{
 		g_warning("Could not find home directory. Using current directory as home directory.");
@@ -109,7 +108,7 @@ main_remove_navit(struct navit *nav)
 void
 print_usage(void)
 {
-	printf(_("navit usage:\nnavit [options]\n\t-c <file>: use <file> as config file\n\t-d <n>: set the debug output level to <n>. (TODO)\n\t-h: print this usage info and exit.\n\t-v: Print the version and exit.\n"));
+	printf(_("navit usage:\nnavit [options] [configfile]\n\t-c <file>: use <file> as config file\n\t-d <n>: set the debug output level to <n>. (TODO)\n\t-h: print this usage info and exit.\n\t-v: Print the version and exit.\n"));
 }
 
 int main(int argc, char **argv)
@@ -202,16 +201,16 @@ int main(int argc, char **argv)
 				print_usage();
 				exit(0);
 				break;
-			case '	v':
-				printf("	%s %s\n", "navit", "0.0.4+svn"); 
+			case 'v':
+				printf("%s %s\n", "navit", "0.0.4+svn"); 
 				exit(0);
 				break;
 			case 'c':
-				printf("c	onfig file n is set to `%s'\n", optarg);
+				printf("config file n is set to `%s'\n", optarg);
 	            config_file = optarg;
 				break;
 			case 'd':
-				printf("T	ODO Verbose option is set to `%s'\n", optarg);
+				printf("TODO Verbose option is set to `%s'\n", optarg);
 				break;
 			case ':':
 				fprintf(stderr, "navit: Error - Option `%c' needs a value\n", optopt);
@@ -226,9 +225,8 @@ int main(int argc, char **argv)
 	    }
 	}
 	if (optind < argc) {
-		// there are still unknown non config options left on the command line.
-		print_usage();
-		exit(1);
+		// use 1sr cmd line option left for the config file
+		config_file = argv[optind];
 	}
 
 	if (! config_file) {
