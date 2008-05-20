@@ -224,44 +224,33 @@ int main(int argc, char **argv)
 			}
 	    }
 	}
-	if (optind < argc) {
-		// use 1sr cmd line option left for the config file
-		config_file = argv[optind];
-	}
+	// use 1st cmd line option that is left for the config file
+	if (optind < argc) config_file = argv[optind];
 
-	if (! config_file) {
-		config_file=g_strjoin(NULL,get_home_directory(), "/.navit/navit.xml" , NULL);
-		if (!file_exists(config_file)) {
-			g_free(config_file);
-			config_file=NULL;
-			}
+    GList *list = NULL, *li;
+    // if config file is explicitely given only look for it, otherwise try std paths
+	if (config_file) list = g_list_append(list,g_strdup(config_file));
+    else {
+		list = g_list_append(list,g_strjoin(NULL,get_home_directory(), "/.navit/navit.xml" , NULL));
+		list = g_list_append(list,g_strdup("navit.xml.local"));
+		list = g_list_append(list,g_strdup("navit.xml"));
+		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml.local" , NULL));
+		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml" , NULL));
 	}
-	if (! config_file) {
-		if (file_exists("navit.xml.local"))
-			config_file="navit.xml.local";
-	}
-	if (! config_file) {
-		if (file_exists("navit.xml"))
-			config_file="navit.xml";
-	}
-	if (! config_file) {
-		config_file=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml.local" , NULL);
-		if (!file_exists(config_file)) {
-			g_free(config_file);
-			config_file=NULL;
+	li = list;
+	do {
+        // Try the next config file possibility from the list
+		config_file = li->data;
+		if (!file_exists(config_file)) g_free(config_file);
+		li = g_list_next(li);
+		if (li == NULL) {
+			// We have not found an existing config file from all possibilities
+			printf(_("No config file navit.xml, navit.xml.local found\n"));
+			exit(1);
 		}
-	}
-	if (! config_file) {
-		config_file=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml" , NULL);
-		if (!file_exists(config_file)) {
-			g_free(config_file);
-			config_file=NULL;
-		}
-	}
-	if (!config_file) {
-		printf(_("No config file navit.xml, navit.xml.local found\n"));
-		exit(1);
-	}
+	} while (!file_exists(config_file));
+	g_list_free(list);
+
 	if (!config_load(config_file, &error)) {
 		printf(_("Error parsing '%s': %s\n"), config_file, error->message);
 		exit(1);
