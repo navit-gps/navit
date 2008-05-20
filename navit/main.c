@@ -115,7 +115,7 @@ main_remove_navit(struct navit *nav)
 void
 print_usage(void)
 {
-	printf(_("navit usage:\nnavit [options] [configfile]\n\t-d <n>: set the debug output level to <n>.\n\t-h: print this usage info.\n\t-v: Print the version and exit.\n"));
+	printf(_("navit usage:\nnavit [options]\n\t-c <file>: use <file> as config file\n\t-d <n>: set the debug output level to <n>. (TODO)\n\t-h: print this usage info and exit.\n\t-v: Print the version and exit.\n"));
 }
 
 int main(int argc, char **argv)
@@ -202,7 +202,7 @@ int main(int argc, char **argv)
 	int opt;
 	opterr=0;  //don't bomb out on errors.
 	if (argc > 1) {
-	  while((opt = getopt(argc, argv, ":hvd:")) != -1) {
+	  while((opt = getopt(argc, argv, ":hvc:d:")) != -1) {
 	    switch(opt) {
 	      case 'h':
 		    print_usage();
@@ -211,6 +211,10 @@ int main(int argc, char **argv)
 	      case 'v':
 		    printf("%s %s\n", "navit", "0.0.4+svn"); 
 		    exit(0);
+		    break;
+	      case 'c':
+		    printf("config file n is set to `%s'\n", optarg);
+	            config_file = optarg;
 		    break;
 	      case 'd':
 		    printf("TODO Verbose option is set to `%s'\n", optarg);
@@ -227,9 +231,11 @@ int main(int argc, char **argv)
 		}
 	    }
         }
-	// the first non-option argument is the config file
-	if (optind < argc)
-            config_file=argv[optind];
+	if (optind < argc) {
+		// there are still unknown non config options left on the command line.
+		print_usage();
+		exit(1);
+	}
 
 	if (! config_file) {
 		config_file=g_strjoin(NULL,get_home_directory(), "/.navit/navit.xml" , NULL);
