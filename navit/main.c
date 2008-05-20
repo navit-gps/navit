@@ -1,6 +1,7 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <getopt.h>
 #include <string.h>
 #include <signal.h>
 #include <glib.h>
@@ -111,6 +112,12 @@ main_remove_navit(struct navit *nav)
 		event_main_loop_quit();
 }
 
+void
+print_usage(void)
+{
+	printf(_("navit usage:\nnavit [options] [configfile]\n\t-d <n>: set the debug output level to <n>.\n\t-h: print this usage info.\n\t-v: Print the version and exit.\n"));
+}
+
 int main(int argc, char **argv)
 {
 	GError *error = NULL;
@@ -192,8 +199,38 @@ int main(int argc, char **argv)
 	route_init();
 	navigation_init();
 	config_file=NULL;
-	if (argc > 1)
-		config_file=argv[1];
+	int opt;
+	opterr=0;  //don't bomb out on errors.
+	if (argc > 1) {
+	  while((opt = getopt(argc, argv, ":hvd:")) != -1) {
+	    switch(opt) {
+	      case 'h':
+		    print_usage();
+		    exit(0);
+		    break;
+	      case 'v':
+		    printf("%s %s\n", "navit", "0.0.4+svn"); 
+		    exit(0);
+		    break;
+	      case 'd':
+		    printf("TODO Verbose option is set to `%s'\n", optarg);
+		    break;
+	      case ':':
+		    fprintf(stderr, "navit: Error - Option `%c' needs a value\n", optopt);
+		    print_usage();
+		    exit(1);
+		    break;
+	       case '?':
+		    fprintf(stderr, "navit: Error - No such option: `%c'\n", optopt);
+		    print_usage();
+		    exit(1);
+		}
+	    }
+        }
+	// the first non-option argument is the config file
+	if (optind < argc)
+            config_file=argv[optind];
+
 	if (! config_file) {
 		config_file=g_strjoin(NULL,get_home_directory(), "/.navit/navit.xml" , NULL);
 		if (!file_exists(config_file)) {
