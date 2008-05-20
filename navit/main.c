@@ -196,35 +196,35 @@ int main(int argc, char **argv)
 	int opt;
 	opterr=0;  //don't bomb out on errors.
 	if (argc > 1) {
-	  while((opt = getopt(argc, argv, ":hvc:d:")) != -1) {
-	    switch(opt) {
-	      case 'h':
-		    print_usage();
-		    exit(0);
-		    break;
-	      case 'v':
-		    printf("%s %s\n", "navit", "0.0.4+svn"); 
-		    exit(0);
-		    break;
-	      case 'c':
-		    printf("config file n is set to `%s'\n", optarg);
+		while((opt = getopt(argc, argv, ":hvc:d:")) != -1) {
+			switch(opt) {
+			case 'h':
+				print_usage();
+				exit(0);
+				break;
+			case '	v':
+				printf("	%s %s\n", "navit", "0.0.4+svn"); 
+				exit(0);
+				break;
+			case 'c':
+				printf("c	onfig file n is set to `%s'\n", optarg);
 	            config_file = optarg;
-		    break;
-	      case 'd':
-		    printf("TODO Verbose option is set to `%s'\n", optarg);
-		    break;
-	      case ':':
-		    fprintf(stderr, "navit: Error - Option `%c' needs a value\n", optopt);
-		    print_usage();
-		    exit(1);
-		    break;
-	       case '?':
-		    fprintf(stderr, "navit: Error - No such option: `%c'\n", optopt);
-		    print_usage();
-		    exit(1);
-		}
+				break;
+			case 'd':
+				printf("T	ODO Verbose option is set to `%s'\n", optarg);
+				break;
+			case ':':
+				fprintf(stderr, "navit: Error - Option `%c' needs a value\n", optopt);
+				print_usage();
+				exit(1);
+				break;
+			case '?':
+				fprintf(stderr, "navit: Error - No such option: `%c'\n", optopt);
+				print_usage();
+				exit(1);
+			}
 	    }
-        }
+	}
 	if (optind < argc) {
 		// there are still unknown non config options left on the command line.
 		print_usage();
