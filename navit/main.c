@@ -46,12 +46,6 @@ static gchar *get_home_directory(void)
 
 	if (homedir) return homedir;
 	homedir = getenv("HOME");
-	if (!homedir)
-	{
-//		struct passwd *p;
-
-// 		p = getpwuid(getuid());
-// 		if (p) homedir = p->pw_dir;
 	}
 	if (!homedir)
 	{
