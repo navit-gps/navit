@@ -30,7 +30,7 @@
 		$areas=array(
 			'Germany' => '5,47,16,55.1',
 		);
-		$url='http://' . $HTTP_HOST . $PHP_SELF;
+		$url='http://' . $HTTP_SERVER_VARS['HTTP_HOST'] . $HTTP_SERVER_VARS['PHP_SELF'];
 		echo "Use: $url?bbox=bllon,bllat,trlon,trlat <br />\n";
 		echo "<br />\n";
 		while (list($area,$bbox)=each($areas)) {
