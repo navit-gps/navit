@@ -47,6 +47,41 @@ file_create(char *name)
 	return file;
 }
 
+int file_is_dir(char *name)
+{
+	struct stat buf;
+	if (! stat(name, &buf)) {
+		return S_ISDIR(buf.st_mode);
+	}
+	return 0;
+
+}
+
+int file_mkdir(char *name, int pflag)
+{
+	char buffer[strlen(name)+1];
+	int ret;
+	char *curr, *next;
+	dbg(1,"enter %s %d\n",name,pflag);
+	if (!pflag) {
+		if (file_is_dir(name))
+			return 0;
+		return mkdir(name, 0777);
+	}
+	strcpy(buffer, name);
+	next=buffer;
+	while (next=strchr(next, '/')) {
+		*next='\0';
+		ret=file_mkdir(buffer, 0);
+		if (ret)
+			return ret;
+		*next++='/';
+	}
+	if (pflag == 1)
+		return mkdir(buffer, 0);
+	return 0;
+}
+
 int
 file_mmap(struct file *file)
 {

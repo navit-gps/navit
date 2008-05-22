@@ -21,6 +21,8 @@ struct log {
 	FILE *f;
 	int overwrite;
 	int empty;
+	int lazy;
+	int mkdir;
 	int flush_size;
 	int flush_time;
 	guint timer;
@@ -71,17 +73,24 @@ log_open(struct log *this_)
 		mode="w";
 	else
 		mode="r+";
+	if (this_->mkdir)
+		file_mkdir(this_->filename_ex2, 2);
 	this_->f=fopen(this_->filename_ex2, mode);
 	if (! this_->f)
 		this_->f=fopen(this_->filename_ex2, "w");
+	if (! this_->f)
+		return;
 	if (!this_->overwrite) 
 		fseek(this_->f, 0, SEEK_END);
 	this_->empty = !ftell(this_->f);
+	gettimeofday(&this_->last_flush, NULL);
 }
 
 static void
 log_close(struct log *this_)
 {
+	if (! this_->f)
+		return;
 	if (this_->trailer.len) 
 		fwrite(this_->trailer.data, 1, this_->trailer.len, this_->f);
 	fflush(this_->f);
@@ -93,6 +102,11 @@ static void
 log_flush(struct log *this_)
 {
 	long pos;
+	if (this_->lazy && !this_->f) {
+		if (!this_->data.len)
+			return;
+		log_open(this_);
+	}
 	if (this_->empty) {
 		if (this_->header.len) 
 			fwrite(this_->header.data, 1, this_->header.len, this_->f);
@@ -127,7 +141,9 @@ log_change(struct log *this_)
 {
 	log_flush(this_);
 	log_close(this_);
-	log_open(this_);
+	expand_filenames(this_);
+	if (! this_->lazy)
+		log_open(this_);
 }
 
 static int
@@ -147,7 +163,7 @@ log_timer(gpointer data)
 	int delta;
 	gettimeofday(&tv, NULL);
 	delta=(tv.tv_sec-this_->last_flush.tv_sec)*1000+(tv.tv_usec-this_->last_flush.tv_usec)/1000;
-	dbg(0,"delta=%d flush_time=%d\n", delta, this_->flush_time);
+	dbg(1,"delta=%d flush_time=%d\n", delta, this_->flush_time);
 	if (this_->flush_time && delta > this_->flush_time*1000)
 		log_flush(this_);
 	return TRUE;
@@ -164,7 +180,7 @@ struct log *
 log_new(struct attr **attrs)
 {
 	struct log *ret=g_new0(struct log, 1);
-	struct attr *data,*overwrite,*flush_size,*flush_time;
+	struct attr *data,*overwrite,*lazy,*mkdir,*flush_size,*flush_time;
 
 	dbg(1,"enter\n");
 	data=attr_search(attrs, NULL, attr_data);
@@ -174,6 +190,12 @@ log_new(struct attr **attrs)
 	overwrite=attr_search(attrs, NULL, attr_overwrite);
 	if (overwrite)
 		ret->overwrite=overwrite->u.num;
+	lazy=attr_search(attrs, NULL, attr_lazy);
+	if (lazy)
+		ret->lazy=lazy->u.num;
+	mkdir=attr_search(attrs, NULL, attr_mkdir);
+	if (mkdir)
+		ret->mkdir=mkdir->u.num;
 	flush_size=attr_search(attrs, NULL, attr_flush_size);
 	if (flush_size)
 		ret->flush_size=flush_size->u.num;
@@ -181,12 +203,12 @@ log_new(struct attr **attrs)
 	if (flush_time)
 		ret->flush_time=flush_time->u.num;
 	if (ret->flush_time) {
-		dbg(0,"interval %d\n", ret->flush_time*1000);
+		dbg(1,"interval %d\n", ret->flush_time*1000);
 		ret->timer=g_timeout_add(ret->flush_time*1000, log_timer, ret);
 	}
 	expand_filenames(ret);
-	log_open(ret);
-	gettimeofday(&ret->last_flush, NULL);
+	if (! ret->lazy)
+		log_open(ret);
 	ret->attrs=attr_list_dup(attrs);
 	return ret;
 }
@@ -211,8 +233,10 @@ void
 log_write(struct log *this_, char *data, int len)
 {
 	dbg(1,"enter\n");
-	if (log_change_required(this_)) 
+	if (log_change_required(this_)) {
+		dbg(1,"log_change");
 		log_change(this_);
+	}
 	if (this_->data.len + len > this_->data.max_len) {
 		dbg(2,"overflow\n");
 		this_->data.max_len+=16384;
