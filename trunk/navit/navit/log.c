@@ -181,12 +181,23 @@ log_new(struct attr **attrs)
 {
 	struct log *ret=g_new0(struct log, 1);
 	struct attr *data,*overwrite,*lazy,*mkdir,*flush_size,*flush_time;
+	struct file_wordexp *wexp;
+	char *filename, **wexp_data;
 
 	dbg(1,"enter\n");
 	data=attr_search(attrs, NULL, attr_data);
 	if (! data)
 		return NULL;
-	ret->filename=g_strdup(data->u.str);
+	filename=data->u.str;
+	wexp=file_wordexp_new(filename);
+	if (wexp && file_wordexp_get_count(wexp) > 0) {
+		wexp_data=file_wordexp_get_array(wexp);
+		filename=wexp_data[0];
+	}
+	if (filename)
+		ret->filename=g_strdup(filename);
+	if (wexp)
+		file_wordexp_destroy(wexp);
 	overwrite=attr_search(attrs, NULL, attr_overwrite);
 	if (overwrite)
 		ret->overwrite=overwrite->u.num;
