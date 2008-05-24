@@ -107,6 +107,8 @@ log_flush(struct log *this_)
 			return;
 		log_open(this_);
 	}
+	if (! this_->f)
+		return;
 	if (this_->empty) {
 		if (this_->header.len) 
 			fwrite(this_->header.data, 1, this_->header.len, this_->f);
