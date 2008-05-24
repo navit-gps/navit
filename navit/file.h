@@ -21,6 +21,8 @@ struct file;
 struct file_wordexp;
 struct param_list;
 struct file *file_create(char *name);
+int file_is_dir(char *name);
+int file_mkdir(char *name, int pflag);
 int file_mmap(struct file *file);
 unsigned char *file_data_read(struct file *file, long long offset, int size);
 unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp);
