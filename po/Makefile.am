@@ -28,9 +28,9 @@ all: @MOFILES@
 
 @POFILES@: navit.pot
 	if test "$(top_srcdir)" != "$(top_builddir)"; then \
-		$(MSGMERGE) --verbose -o $(top_builddir)/po/$@ $(top_srcdir)/po/$@ navit.pot; \
+		$(MSGMERGE) --no-fuzzy-matching --verbose -o $(top_builddir)/po/$@ $(top_srcdir)/po/$@ navit.pot; \
 	else \
-        	$(MSGMERGE) --update --verbose $@ navit.pot; \
+        	$(MSGMERGE) --no-fuzzy-matching --update --verbose $@ navit.pot; \
         fi
 
 
