@@ -475,15 +475,19 @@ navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *n
 		}
 		switch (sex) {
 		case -1:
+			/* TRANSLATORS: Arguments: 1: Command 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name */
 			ret=g_strdup_printf(_("%sinto the street %s%s%s"),prefix,itm->name1, sep, name2);
 			break;
 		case 1:
+			/* TRANSLATORS: Arguments: 1: Command 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included */
 			ret=g_strdup_printf(_("%sinto the %s%s%s|male form"),prefix,name1, sep, name2);
 			break;
 		case 2:
+			/* TRANSLATORS: Arguments: 1: Command 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included */
 			ret=g_strdup_printf(_("%sinto the %s%s%s|female form"),prefix,name1, sep, name2);
 			break;
 		case 3:
+			/* TRANSLATORS: Arguments: 1: Command 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included */
 			ret=g_strdup_printf(_("%sinto the %s%s%s|neutral form"),prefix,name1, sep, name2);
 			break;
 		}
