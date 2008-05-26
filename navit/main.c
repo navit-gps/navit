@@ -239,15 +239,15 @@ int main(int argc, char **argv)
 	}
 	li = list;
 	do {
-        // Try the next config file possibility from the list
-		config_file = li->data;
-		if (!file_exists(config_file)) g_free(config_file);
-		li = g_list_next(li);
 		if (li == NULL) {
 			// We have not found an existing config file from all possibilities
 			printf(_("No config file navit.xml, navit.xml.local found\n"));
 			exit(1);
 		}
+        // Try the next config file possibility from the list
+		config_file = li->data;
+		if (!file_exists(config_file)) g_free(config_file);
+		li = g_list_next(li);
 	} while (!file_exists(config_file));
 	g_list_free(list);
 
