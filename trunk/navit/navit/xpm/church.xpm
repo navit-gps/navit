@@ -1,26 +1,23 @@
 /* XPM */
-static char *church[] = {
-/* columns rows colors chars-per-pixel */
+static char * church_xpm[] = {
 "16 16 4 1",
-"  c black",
-". c #2F2F2F",
-"X c #B1B1B1",
-"o c gray100",
-/* pixels */
-"ooooooo..ooooooo",
-"ooooooo..ooooooo",
-"ooooooo..ooooooo",
-"oooo...XX...oooo",
-"oooo...XX...oooo",
-"ooooooo..ooooooo",
-"ooooooo..ooooooo",
-"ooooooo..ooooooo",
-"oooo        oooo",
-"oooo        oooo",
-"oooo        oooo",
-"oooo        oooo",
-"oooo        oooo",
-"oooo        oooo",
-"oooo        oooo",
-"oooo        oooo"
-};
+" 	c None",
+".	c #2F2F2F",
+"+	c #B1B1B1",
+"@	c #000000",
+"       ..       ",
+"       ..       ",
+"       ..       ",
+"    ...++...    ",
+"    ...++...    ",
+"       ..       ",
+"       ..       ",
+"       ..       ",
+"    @@@@@@@@    ",
+"    @@@@@@@@    ",
+"    @@@@@@@@    ",
+"    @@@@@@@@    ",
+"    @@@@@@@@    ",
+"    @@@@@@@@    ",
+"    @@@@@@@@    ",
+"    @@@@@@@@    "};
