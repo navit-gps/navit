@@ -584,6 +584,70 @@ navit_set_destination_from_bookmark(struct navit *this_, void *offset_p)
 	navit_set_destination_from_file(this_, "bookmark.txt", 1, (int)offset_p);
 }
 
+static void
+navit_set_center_from_file(struct navit *this_, char *file)
+{
+	FILE *f;
+	char *line = NULL;
+
+	size_t line_size = 0;
+	enum projection pro;
+	struct coord *center;
+
+	file = g_strjoin(NULL, get_home_directory(), "/.navit/", file, NULL);
+	if (!file_exists(file)) {
+		g_free(file);
+		return;
+	}
+	f = fopen(file, "r");
+	getline(&line, &line_size, f);
+	fclose(f);
+	g_free(file);
+	if (line) {
+		center = transform_center(this_->trans);
+		pro = transform_get_projection(this_->trans);
+		coord_parse(g_strchomp(line), pro, center);
+		free(line);
+	}
+	return;
+}
+ 
+static void
+navit_write_center_to_file(struct navit *this_, char *file)
+{
+	FILE *f;
+	enum projection pro;
+	struct coord *center;
+	char *directory;
+ 
+	directory = g_strjoin(NULL, get_home_directory(), "/.navit/", NULL);
+	if (!file_exists(directory)) {
+		if (mkdir(directory,
+			  S_IRUSR|S_IWUSR|S_IXUSR|
+			  S_IRGRP|S_IXGRP|
+			  S_IROTH|S_IXOTH) == -1) {
+			perror(directory);
+			g_free(directory);
+			return;
+		}
+	}
+
+        file = g_strjoin(NULL, directory, file, NULL);
+	g_free(directory);
+	f = fopen(file, "w+");
+	if (f) {
+		center = transform_center(this_->trans);
+		pro = transform_get_projection(this_->trans);
+		coord_print(pro, center, f);
+		fclose(f);
+	} else {
+		perror(file);
+	}
+	g_free(file);
+	return;
+}
+
+
 /**
  * Start the route computing to a given set of coordinates
  *
@@ -1075,6 +1139,7 @@ navit_init(struct navit *this_)
 		this_->nav_speech_cb=callback_new_1(callback_cast(navit_speak), this_);
 		navigation_register_callback(this_->navigation, attr_navigation_speech, this_->nav_speech_cb);
 	}
+	navit_set_center_from_file(this_, "center.txt");
 #if 0
 	if (this_->menubar) {
 		men=menu_add(this_->menubar, "Data", menu_type_submenu, NULL);
@@ -1577,6 +1642,7 @@ navit_destroy(struct navit *this_)
 {
 	/* TODO: destroy objects contained in this_ */
 	main_remove_navit(this_);
+	navit_write_center_to_file(this_, "center.txt");
 	g_free(this_);
 }
 
