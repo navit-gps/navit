@@ -40,7 +40,7 @@ static void sigchld(int sig)
 }
 
 
-static gchar *get_home_directory(void)
+gchar *get_home_directory(void)
 {
 	static gchar *homedir = NULL;
 
