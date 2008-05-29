@@ -162,8 +162,8 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 	while (*s == ' ') {
 		s++;
 	}
-	if (!strncmp(str, "0x", 2) || !strncmp(str,"-0x", 3)) {
-		args=sscanf(str, "%x %x%n",&c.x, &c.y, &ret);
+	if (!strncmp(s, "0x", 2) || !strncmp(s, "-0x", 3)) {
+		args=sscanf(str, "%i %i%n",&c.x, &c.y, &ret);
 		if (args < 2)
 			goto out;
 		dbg(1,"str='%s' x=0x%x y=0x%x c=%d\n", str, c.x, c.y, ret);
@@ -220,6 +220,32 @@ out:
 	if (proj)
 		free(proj);
 	return ret;
+}
+
+void
+coord_print(enum projection pro, struct coord *c, FILE *out) {
+	unsigned int x;
+	unsigned int y;
+	char *sign_x = "";
+	char *sign_y = "";
+	
+	if ( c->x < 0 ) {
+		x = -c->x;
+		sign_x = "-";
+	} else {
+		x = c->x;
+	}
+	if ( c->y < 0 ) {
+		y = -c->y;
+		sign_y = "-";
+	} else {
+		y = c->y;
+	}
+	fprintf( out, "%s: %s0x%x %s0x%x\n",
+		 projection_to_name( pro ),
+		 sign_x, x,
+		 sign_y, y );
+	return;
 }
 
 /** @} */
