@@ -1295,6 +1295,9 @@ Change to your home coordinates.
 			<item type="poly_building" order="0-">
 				<polygon color="#ff6347" />
 			</item>
+			<item type="poly_ruins" order="0-">
+				<polygon color="#b6a6a6" />
+			</item>
 			<item type="water_line" order="0-">
 				<polyline color="#82c8ea" width="2" /> 
 				<label label_size="5" /> 
