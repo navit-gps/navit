@@ -50,6 +50,8 @@ gchar *get_home_directory(void)
 	{
 		g_warning("Could not find home directory. Using current directory as home directory.");
 		homedir = ".";
+	} else {
+		homedir=g_strdup(homedir);
 	}
 	return homedir;
 }
