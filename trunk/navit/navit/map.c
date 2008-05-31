@@ -184,6 +184,10 @@ map_search_new(struct map *m, struct item *item, struct attr *search_attr, int p
 			if (m->meth.charset) 
 				this_->search_attr.u.str=g_convert(this_->search_attr.u.str, -1,m->meth.charset,"utf-8",NULL,NULL,NULL);
 			this_->priv=m->meth.map_search_new(m->priv, item, &this_->search_attr, partial);
+			if (! this_->priv) {
+				g_free(this_);
+				this_=NULL;
+			}
 		} else {
 			g_free(this_);
 			this_=NULL;
@@ -247,4 +251,31 @@ map_selection_destroy(struct map_selection *sel)
 		g_free(sel);
 		sel = next;
 	}
+}
+
+int
+map_selection_contains_item_rect(struct map_selection *sel, struct item *item)
+{
+	struct coord c;
+	struct coord_rect r;
+	int count=0;
+	while (item_coord_get(item, &c, 1)) {
+		if (! count) {
+			r.lu=c;
+			r.rl=c;
+		} else 
+			coord_rect_extend(&r, &c);
+		count++;
+	}
+	if (! count)
+		return 0;
+	return map_selection_contains_rect(sel, &r);
+	
+}
+
+
+int
+map_priv_is(struct map *map, struct map_priv *priv)
+{
+	return (map->priv == priv);
 }
