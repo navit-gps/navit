@@ -152,6 +152,8 @@ struct item *map_search_get_item(struct map_search *this_);
 void map_search_destroy(struct map_search *this_);
 struct map_selection *map_selection_dup(struct map_selection *sel);
 void map_selection_destroy(struct map_selection *sel);
+int map_selection_contains_item_rect(struct map_selection *sel, struct item *item);
+int map_priv_is(struct map *map, struct map_priv *priv);
 /* end of prototypes */
 
 #endif

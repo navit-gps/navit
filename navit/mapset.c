@@ -97,8 +97,8 @@ mapset_search_new(struct mapset *ms, struct item *item, struct attr *search_attr
 struct item *
 mapset_search_get_item(struct mapset_search *this)
 {
-	struct item *ret;
-	while (!(ret=map_search_get_item(this->ms))) {
+	struct item *ret=NULL;
+	while (!this->ms || !(ret=map_search_get_item(this->ms))) {
 		if (this->search_attr->type >= attr_country_all && this->search_attr->type <= attr_country_name)
 			break;
 		do {
@@ -115,6 +115,8 @@ mapset_search_get_item(struct mapset_search *this)
 void
 mapset_search_destroy(struct mapset_search *this)
 {
-	map_search_destroy(this->ms);
-	g_free(this);
+	if (this) {
+		map_search_destroy(this->ms);
+		g_free(this);
+	}
 }
