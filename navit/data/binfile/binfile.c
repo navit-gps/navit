@@ -471,6 +471,10 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 		case attr_town_postal:
 			break;
 		case attr_street_name:
+			if (! item->map)
+				break;
+			if (!map_priv_is(item->map, map))
+				break;
 			ms = g_new(struct map_selection, 1);
 			ms->next = NULL;
 			for (i = 0; i < layer_end; i++)
@@ -488,10 +492,10 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 						size = 10000;
 						break;
 					case type_town_label_2e4:
-						size = 2500;
+						size = 5000;
 						break;
 					case type_town_label_2e3:
-						size = 1000;
+						size = 2500;
 						break;
 					case type_town_label_2e2:
 						size = 1000;
@@ -547,9 +551,11 @@ binmap_search_get_item(struct map_search_priv *map_search)
 		} else if (map_search->search->type == attr_street_name) {
 			if ((it->type == type_street_3_city) || (it->type == type_street_2_city) || (it->type == type_street_1_city)) {
 				struct attr at;
-				if (binfile_attr_get(it->priv_data, attr_label, &at)) {
+				if (map_selection_contains_item_rect(map_search->mr->sel, it) && binfile_attr_get(it->priv_data, attr_label, &at)) {
 					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
 						if (!g_hash_table_lookup(map_search->search_results, at.u.str)) {
+							item_coord_rewind(it);
+							item_attr_rewind(it);
 							g_hash_table_insert(map_search->search_results, g_strdup(at.u.str), "");
 							return it;
 						}
