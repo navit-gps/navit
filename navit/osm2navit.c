@@ -620,7 +620,7 @@ struct entity {
 	char *entity;
 	char c;
 } entities[]= {
-	{"&qout;",'"'},
+	{"&quot;",'"'},
 	{"&apos;",'\''},
 	{"&amp;",'&'},
 	{"&lt;",'<'},
