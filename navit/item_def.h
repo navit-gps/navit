@@ -1,3 +1,22 @@
+/**
+ * Navit, a modular navigation system.
+ * Copyright (C) 2005-2008 Navit Team
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this program; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA  02110-1301, USA.
+ */
+
 /* This file is generated from http://wiki.navit-project.org/index.php/Item_def.h, do not edit it, edit the wiki page instead */
 ITEM2(0x00000000,none)
 ITEM2(0x00000001,point_unspecified)
