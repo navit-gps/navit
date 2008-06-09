@@ -23,6 +23,7 @@
 #include <fontconfig/fontconfig.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include <freetype/ftglyph.h>
 #ifdef HAVE_IMLIB2
 #include <Imlib2.h>
 #endif
@@ -239,7 +240,10 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 	struct graphics_image_priv *ret;
 	const char *option;
 
-	pixbuf=gdk_pixbuf_new_from_file(name, NULL);
+	if (*w == -1 && *h == -1)
+		pixbuf=gdk_pixbuf_new_from_file(name, NULL);
+	else
+		pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
 	if (! pixbuf)
 		return NULL;
 	ret=g_new0(struct graphics_image_priv, 1);
@@ -527,6 +531,66 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 		gdk_gc_set_function(fg->gc, GDK_COPY);
         	gdk_gc_set_function(bg->gc, GDK_COPY);
 	}
+}
+
+static void
+get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret)
+{
+	char *p=text;
+	FT_BBox bbox;
+	FT_UInt  glyph_index;
+       	FT_GlyphSlot  slot = font->face->glyph;  // a small shortcut
+	FT_Glyph glyph;
+	FT_Matrix matrix;
+	FT_Vector pen;
+	pen.x = 0 * 64;
+	pen.y = 0 * 64;
+	matrix.xx = dx;
+	matrix.xy = dy;
+	matrix.yx = -dy;
+	matrix.yy = dx;
+	int n,len,x=0,y=0;
+
+	bbox.xMin = bbox.yMin = 32000;
+	bbox.xMax = bbox.yMax = -32000; 
+	FT_Set_Transform( font->face, &matrix, &pen );
+	len=g_utf8_strlen(text, -1);
+	for ( n = 0; n < len; n++ ) {
+		FT_BBox glyph_bbox;
+		glyph_index = FT_Get_Char_Index(font->face, g_utf8_get_char(p));
+		p=g_utf8_next_char(p);
+		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT );
+		FT_Get_Glyph(font->face->glyph, &glyph);
+		FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_pixels, &glyph_bbox );
+		glyph_bbox.xMin += x >> 6;
+		glyph_bbox.xMax += x >> 6;
+		glyph_bbox.yMin += y >> 6;
+		glyph_bbox.yMax += y >> 6;
+         	x += slot->advance.x;
+         	y -= slot->advance.y;
+		if ( glyph_bbox.xMin < bbox.xMin )
+			bbox.xMin = glyph_bbox.xMin;
+		if ( glyph_bbox.yMin < bbox.yMin )
+			bbox.yMin = glyph_bbox.yMin;
+		if ( glyph_bbox.xMax > bbox.xMax )
+			bbox.xMax = glyph_bbox.xMax;
+		if ( glyph_bbox.yMax > bbox.yMax )
+			bbox.yMax = glyph_bbox.yMax;
+	} 
+	if ( bbox.xMin > bbox.xMax ) {
+		bbox.xMin = 0;
+		bbox.yMin = 0;
+		bbox.xMax = 0;
+		bbox.yMax = 0;
+	}
+	ret[0].x=bbox.xMin;
+	ret[0].y=-bbox.yMin;
+	ret[1].x=bbox.xMin;
+	ret[1].y=-bbox.yMax;
+	ret[2].x=bbox.xMax;
+	ret[2].y=-bbox.yMax;
+	ret[3].x=bbox.xMax;
+	ret[3].y=-bbox.yMin;
 }
 
 static void
@@ -892,6 +956,7 @@ static struct graphics_methods graphics_methods = {
 	register_button_callback,
 	register_motion_callback,
 	image_free,
+	get_text_bbox,
 };
 
 static struct graphics_priv *
