@@ -66,6 +66,7 @@ struct graphics_methods {
 	void (*register_button_callback)(struct graphics_priv *gr, void (*callback)(void *data, int pressed, int button, struct point *p), void *data);
 	void (*register_motion_callback)(struct graphics_priv *gr, void (*callback)(void *data, struct point *p), void *data);
 	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
+	void (*get_text_bbox)(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret);
 };
 
 
@@ -135,6 +136,7 @@ void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c);
 void graphics_gc_set_background(struct graphics_gc *gc, struct color *c);
 void graphics_gc_set_linewidth(struct graphics_gc *gc, int width);
 void graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsigned char dash_list[], int n);
+struct graphics_image * graphics_image_new_scaled(struct graphics *gra, char *path, int w, int h);
 struct graphics_image *graphics_image_new(struct graphics *gra, char *path);
 void graphics_image_free(struct graphics *gra, struct graphics_image *img);
 void graphics_draw_restore(struct graphics *this_, struct point *p, int w, int h);
@@ -143,6 +145,7 @@ void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct 
 void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r);
 void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int w, int h);
 void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2, struct graphics_font *font, char *text, struct point *p, int dx, int dy);
+void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy, struct point *ret);
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img);
 void display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label);
 int graphics_ready(struct graphics *this_);

@@ -255,21 +255,33 @@ void graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsig
 }
 
 //##############################################################################################################
-//# Description: 
+//# Description: Create a new image from file path scaled to w and h pixels
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-struct graphics_image * graphics_image_new(struct graphics *gra, char *path)
+struct graphics_image * graphics_image_new_scaled(struct graphics *gra, char *path, int w, int h)
 {
 	struct graphics_image *this_;
 
 	this_=g_new0(struct graphics_image,1);
+	this_->height=h;
+	this_->width=w;
 	this_->priv=gra->meth.image_new(gra->priv, &this_->meth, path, &this_->width, &this_->height, &this_->hot);
 	if (! this_->priv) {
 		g_free(this_);
 		this_=NULL;
 	}
 	return this_;
+}
+
+//##############################################################################################################
+//# Description: Create a new image from file path
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct graphics_image * graphics_image_new(struct graphics *gra, char *path)
+{
+	return graphics_image_new_scaled(gra, path, -1, -1);
 }
 
 //##############################################################################################################
@@ -342,6 +354,16 @@ void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, str
 void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2, struct graphics_font *font, char *text, struct point *p, int dx, int dy)
 {
 	this_->meth.draw_text(this_->priv, gc1->priv, gc2 ? gc2->priv : NULL, font->priv, text, p, dx, dy);
+}
+
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy, struct point *ret)
+{
+	this_->meth.get_text_bbox(this_->priv, font->priv, text, dx, dy, ret);
 }
 
 //##############################################################################################################
