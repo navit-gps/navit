@@ -314,6 +314,19 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 	GList *l;
 
 	gui_internal_background_render(this, w);
+#if 0
+	struct point pnt[5];
+	pnt[0]=w->p;
+        pnt[1].x=pnt[0].x+w->w;
+        pnt[1].y=pnt[0].y;
+        pnt[2].x=pnt[0].x+w->w;
+        pnt[2].y=pnt[0].y+w->h;
+        pnt[3].x=pnt[0].x;
+        pnt[3].y=pnt[0].y+w->h;
+        pnt[4]=pnt[0];
+	graphics_draw_lines(this->gra, this->foreground, pnt, 5);
+#endif
+
 	l=w->children;
 	while (l) {
 		wc=l->data;
@@ -601,7 +614,7 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	gui_internal_clear(this);
 	w=gui_internal_top_bar(this);
 	gui_internal_widget_append(menu, w);
-	w=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_expand);
+	w=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_expand|flags_fill);
 	w->spx=20;
 	gui_internal_widget_append(menu, w);
 
@@ -627,7 +640,7 @@ gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm)
 {
 	struct widget *wb,*w;
 	wb=gui_internal_menu(this, "Rules");	
-	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_fill);
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Stick to roads, obey traffic rules",
