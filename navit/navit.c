@@ -62,14 +62,14 @@
 
 //! The navit_vehicule
 struct navit_vehicle {
-	/*!< Limit of the update counter. See navit_add_vehicle */
 	int update;
-	/*!< Deprecated : Update counter itself. When it reaches 'update' counts, route is updated */
+	/*! Limit of the update counter. See navit_add_vehicle */
 	int update_curr;
-	/*!< Limit of the follow counter. See navit_add_vehicle */
+	/*! Deprecated : Update counter itself. When it reaches 'update' counts, route is updated */
 	int follow;
-	/*!< Deprecated : follow counter itself. When it reaches 'update' counts, map is recentered*/
+	/*! Limit of the follow counter. See navit_add_vehicle */
 	int follow_curr;
+	/*! Deprecated : follow counter itself. When it reaches 'update' counts, map is recentered*/
 	struct coord coord;
 	int dir;
 	int speed;
