@@ -57,12 +57,27 @@ enum widget_type {
 	widget_image,
 };
 
-enum gravity {
-	gravity_none, gravity_left_top, gravity_top, gravity_left, gravity_center,
-};
-
-enum orientation {
-	orientation_none, orientation_horizontal, orientation_vertical,
+enum flags {
+	gravity_none=0x00,
+	gravity_left=1,
+	gravity_xcenter=2,
+	gravity_right=4,
+	gravity_top=8,
+	gravity_ycenter=16,
+	gravity_bottom=32,
+	gravity_left_top=gravity_left|gravity_top,
+	gravity_top_center=gravity_xcenter|gravity_top,
+	gravity_right_top=gravity_right|gravity_top,
+	gravity_left_center=gravity_left|gravity_ycenter,
+	gravity_center=gravity_xcenter|gravity_ycenter,
+	gravity_right_center=gravity_right|gravity_ycenter,
+	gravity_left_bottom=gravity_left|gravity_bottom,
+	gravity_bottom_center=gravity_xcenter|gravity_bottom,
+	gravity_right_bottom=gravity_right|gravity_bottom,
+	flags_expand=0x100,
+	flags_fill=0x200,
+	orientation_horizontal=0x10000,
+	orientation_vertical=0x20000,
 };
 
 
@@ -84,8 +99,7 @@ struct widget {
 	int wmin,hmin;
 	int w,h;
 	int bl,br,bt,bb,spx,spy;
-	enum gravity gravity;
-	enum orientation orientation;
+	enum flags flags;
 	GList *children;
 };
 
@@ -101,9 +115,9 @@ struct gui_priv {
 	struct graphics_gc *background2;
 	struct graphics_gc *highlight_background;
 	struct graphics_gc *foreground;
+	int font_size;
 	struct graphics_font *font;
-	struct graphics_font *font2;
-	int w,h;
+	int icon_large, icon_small;
 	int pressed;
 	struct widget *widgets;
 	int widgets_count;
@@ -113,54 +127,21 @@ struct gui_priv {
 };
 
 static void gui_internal_widget_render(struct gui_priv *this, struct widget *w);
+static void gui_internal_widget_pack(struct gui_priv *this, struct widget *w);
+static struct widget * gui_internal_box_new(struct gui_priv *this, enum flags flags);
+static void gui_internal_widget_append(struct widget *parent, struct widget *child);
 
-static struct widget *
-gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct graphics_image *image, enum orientation orientation, void(*func)(struct gui_priv *priv, struct widget *widget), void *data)
+static void
+gui_internal_background_render(struct gui_priv *this, struct widget *w)
 {
-	struct widget *widget=g_new0(struct widget, 1);
-
-	widget->type=widget_button;
-	widget->func=func;
-	widget->data=data;
-	widget->orientation=orientation;
-	if (func)
-		widget->state |= STATE_SENSITIVE;
-	if (text) {
-		widget->text=g_strdup(text);
-		widget->h=40;
-		widget->w=strlen(text)*20;
+	struct point pnt=w->p;
+	if (w->state & STATE_HIGHLIGHTED) 
+		graphics_draw_rectangle(this->gra, this->highlight_background, &pnt, w->w-1, w->h-1);
+	else {
+		if (w->background)
+			graphics_draw_rectangle(this->gra, w->background, &pnt, w->w-1, w->h-1);
 	}
-	if (text && image) {
-		if (orientation == orientation_horizontal)
-			widget->w+=10;
-		else
-			widget->h+=10;
-		
-	}
-	if (image) {
-		widget->img=image;
-		if (orientation == orientation_horizontal) {
-			if (widget->h < widget->img->height)
-				widget->h=widget->img->height;
-			widget->w+=widget->img->width;
-		} else {
-			if (widget->w < widget->img->width)
-				widget->w=widget->img->width;
-			widget->h+=widget->img->height;
-		}
-	}
-#if 0
-	widget->foreground_frame=this->foreground;
-#endif
-	return widget;
 }
-
-static struct widget *
-gui_internal_button_new(struct gui_priv *this, char *text, struct graphics_image *image, enum orientation orientation)
-{
-	return gui_internal_button_new_with_callback(this, text, image, orientation, NULL, NULL);
-}
-
 static struct widget *
 gui_internal_label_new(struct gui_priv *this, char *text)
 {
@@ -169,112 +150,76 @@ gui_internal_label_new(struct gui_priv *this, char *text)
 	struct widget *widget=g_new0(struct widget, 1);
 	widget->type=widget_label;
 	widget->text=g_strdup(text);
-	graphics_get_text_bbox(this->gra, this->font2, text, 0x10000, 0x0, p);
+	graphics_get_text_bbox(this->gra, this->font, text, 0x10000, 0x0, p);
 	widget->h=40;
-	dbg(0,"h=%d\n", widget->h);
 	widget->w=p[2].x-p[0].x+8;
-	widget->gravity=gravity_center;
+	widget->flags=gravity_center;
 
 	return widget;
 }
 
-void
-gui_internal_label_render(struct gui_priv *this, struct widget *wi)
+static struct widget *
+gui_internal_image_new(struct gui_priv *this, struct graphics_image *image)
 {
-	struct point pnt=wi->p;
-	if (wi->state & STATE_HIGHLIGHTED) 
-		graphics_draw_rectangle(this->gra, this->highlight_background, &pnt, wi->w-1, wi->h-1);
-	else {
-		if (wi->background)
-			graphics_draw_rectangle(this->gra, wi->background, &pnt, wi->w-1, wi->h-1);
-	}
-	pnt.y+=wi->h-10;
-	graphics_draw_text(this->gra, this->foreground, NULL, this->font2, wi->text, &pnt, 0x10000, 0x0);
+	struct widget *widget=g_new0(struct widget, 1);
+	widget->type=widget_image;
+	widget->img=image;
+	widget->w=widget->img->width;
+	widget->h=widget->img->height;
+	return widget;
+}
+
+static void
+gui_internal_image_render(struct gui_priv *this, struct widget *w)
+{
+	struct point pnt;
+
+	gui_internal_background_render(this, w);
+	pnt=w->p;
+	pnt.x+=w->w/2-w->img->hot.x;
+	pnt.y+=w->h/2-w->img->hot.y;
+	graphics_draw_image(this->gra, this->foreground, &pnt, w->img);
+}
+
+static void
+gui_internal_label_render(struct gui_priv *this, struct widget *w)
+{
+	struct point pnt=w->p;
+	gui_internal_background_render(this, w);
+	pnt.y+=w->h-10;
+	graphics_draw_text(this->gra, this->foreground, NULL, this->font, w->text, &pnt, 0x10000, 0x0);
 }
 
 
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-static void gui_internal_button_render(struct gui_priv *this, struct widget *wi)
+static struct widget *
+gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget), void *data)
 {
-	struct point pnt[5];
-	struct point p2[5];
-	int i,th=0,tw=0,b=0;
-	pnt[0]=wi->p;
-	pnt[0].x+=1;
-	pnt[0].y+=1;
-	if (wi->state & STATE_HIGHLIGHTED) 
-		graphics_draw_rectangle(this->gra, this->highlight_background, pnt, wi->w-1, wi->h-1);
-	else {
-		if (wi->background)
-			graphics_draw_rectangle(this->gra, wi->background, pnt, wi->w-1, wi->h-1);
+	struct widget *ret=NULL;
+	if (text && image) {
+		ret=gui_internal_box_new(this, flags);
+		gui_internal_widget_append(ret, gui_internal_image_new(this, image));
+		gui_internal_widget_append(ret, gui_internal_label_new(this, text));
+	} else {
+		if (text)
+			ret=gui_internal_label_new(this, text);
+		if (image)
+			ret=gui_internal_image_new(this, image);
 	}
-	if (wi->text) {
-		th=6;
-		tw=strlen(wi->text)*20;
-		b=30;
-		pnt[0]=wi->p;
-		if (wi->orientation == orientation_horizontal) {
-			if (wi->img)
-				pnt[0].x+=wi->img->hot.x*2+10;
-		} else {
-			pnt[0].x+=(wi->w-tw)/2;
-		}
-		pnt[0].y+=wi->h-th;
-		graphics_draw_text(this->gra, this->foreground, NULL, this->font2, wi->text, &pnt[0], 0x10000, 0x0);
-#if 0
-		graphics_get_text_bbox(this->gra, this->font2, wi->text, 0x10000, 0x0, p2);
-		for (i = 0 ; i < 4 ; i++) {
-			p2[i].x+=pnt[0].x;
-			p2[i].y+=pnt[0].y;
-		}
-		p2[4]=p2[0];
-		graphics_draw_lines(this->gra, this->foreground, p2, 5);
-#endif
+	if (ret) {
+		ret->func=func;
+		ret->data=data;
+		if (func) 
+			ret->state |= STATE_SENSITIVE;
 	}
+	return ret;
 
-	if (wi->img) {
-		if (wi->orientation == orientation_horizontal) {
-			pnt[0]=wi->p;
-			pnt[0].y+=wi->h/2-wi->img->hot.y;
-		} else {
-			pnt[0]=wi->p;
-			pnt[0].x+=wi->w/2-wi->img->hot.x;
-			pnt[0].y+=(wi->h-th-b)/2-wi->img->hot.y;
-		}
-		graphics_draw_image(this->gra, this->foreground, &pnt[0], wi->img);
-	}
+}
 
-	pnt[0]=wi->p;
-	pnt[1].x=pnt[0].x+wi->w;
-	pnt[1].y=pnt[0].y;
-	pnt[2].x=pnt[0].x+wi->w;
-	pnt[2].y=pnt[0].y+wi->h;
-	pnt[3].x=pnt[0].x;
-	pnt[3].y=pnt[0].y+wi->h;
-	pnt[4]=pnt[0];
-	if (wi->state & STATE_SELECTED) {
-		graphics_gc_set_linewidth(this->foreground, 4);
-		b=2;
-		pnt[0].x+=b;
-		pnt[0].y+=b;
-		pnt[1].x-=b-1;
-		pnt[1].y+=b;
-		pnt[2].x-=b-1;
-		pnt[2].y-=b-1;
-		pnt[3].x+=b;
-		pnt[3].y-=b-1;
-		pnt[4].x+=b;
-		pnt[4].y+=b;
-	}
-	if (wi->foreground_frame)
-		graphics_draw_lines(this->gra, wi->foreground_frame, pnt, 5);
-	if (wi->state & STATE_SELECTED) 
-		graphics_gc_set_linewidth(this->foreground, 1);
+static struct widget *
+gui_internal_button_new(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags)
+{
+	return gui_internal_button_new_with_callback(this, text, image, flags, NULL, NULL);
 }
 
 //##############################################################################################################
@@ -288,8 +233,7 @@ static void gui_internal_clear(struct gui_priv *this)
 	struct point pnt;
 	pnt.x=0;
 	pnt.y=0;
-	dbg(0,"w=%d h=%d\n", this->w, this->h);
-	graphics_draw_rectangle(gra, this->background, &pnt, this->w, this->h);
+	graphics_draw_rectangle(gra, this->background, &pnt, this->root.w, this->root.h);
 }
 
 static struct widget *
@@ -346,84 +290,154 @@ static void gui_internal_highlight(struct gui_priv *this, struct point *p)
 }
 
 static struct widget *
-gui_internal_box_new_with_label(struct gui_priv *this, enum gravity gravity, enum orientation orientation, char *label)
+gui_internal_box_new_with_label(struct gui_priv *this, enum flags flags, char *label)
 {
 	struct widget *widget=g_new0(struct widget, 1);
 
 	if (label) 
 		widget->text=g_strdup(label);
 	widget->type=widget_box;
-	widget->gravity=gravity;
+	widget->flags=flags;
 	return widget;
 }
 
 static struct widget *
-gui_internal_box_new(struct gui_priv *this, enum gravity gravity, enum orientation orientation)
+gui_internal_box_new(struct gui_priv *this, enum flags flags)
 {
-	return gui_internal_box_new_with_label(this, gravity, orientation, NULL);
+	return gui_internal_box_new_with_label(this, flags, NULL);
 }
 
 
 static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 {
 	struct widget *wc;
-	int x,y,width;
 	GList *l;
-	if (w->background) 
-		graphics_draw_rectangle(this->gra, w->background, &w->p, w->w, w->h);
-	x=w->p.x+w->bl;
-	y=w->p.y+w->bt;
-	switch (w->gravity) {
-	case gravity_center:
+
+	gui_internal_background_render(this, w);
+	l=w->children;
+	while (l) {
+		wc=l->data;
+		gui_internal_widget_render(this, wc);
+		l=g_list_next(l);
+	}
+}
+
+static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
+{
+	struct widget *wc;
+	int x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0;
+	GList *l;
+
+	switch (w->flags & 0xffff0000) {
+	case orientation_horizontal:
 		l=w->children;
-		width=0;
 		while (l) {
 			wc=l->data;
-			width+=wc->w+w->spx;
+			gui_internal_widget_pack(this, wc);
+			if (height < wc->h)
+				height=wc->h;
+			width+=wc->w;
+			if (wc->flags & flags_expand)
+				expand+=wc->w;
 			l=g_list_next(l);
+			if (l)
+				width+=w->spx;
 		}
-		x=w->p.x+(w->w-width)/2;
-	case gravity_left:
+		owidth=width;
+		if (expand && w->w) {
+			expand=100*(w->w-width+expand)/expand;
+			owidth=w->w;
+		} else
+			expand=100;
+		break;
+	case orientation_vertical:
+		l=w->children;
+		while (l) {
+			wc=l->data;
+			gui_internal_widget_pack(this, wc);
+			if (width < wc->w)
+				width=wc->w;
+			height+=wc->h;
+			if (wc->flags & flags_expand)
+				expand+=wc->h;
+			l=g_list_next(l);
+			if (l)
+				height+=w->spy;
+		}
+		oheight=height;
+		if (expand && w->h) {
+			expand=100*(w->h-height+expand)/expand;
+			oheight=w->h;
+		} else
+			expand=100;
+		break;
+	default:
+		break;
+	}
+	if (! w->w && ! w->h) {
+		w->w=w->bl+w->br+width;
+		w->h=w->bt+w->bb+height;
+	}
+	if (w->flags & gravity_left) 
+		x=w->p.x+w->bl;
+	if (w->flags & gravity_xcenter)
+		x=w->p.x+w->w/2-owidth/2;
+	if (w->flags & gravity_right)
+		x=w->p.x+w->w-w->br-owidth;
+	if (w->flags & gravity_top)
+		y=w->p.y+w->bt;
+	if (w->flags & gravity_ycenter) 
+		y=w->p.y+w->h/2-oheight/2;
+	if (w->flags & gravity_bottom) 
+		y=w->p.y+w->h-w->bb-oheight;
+	l=w->children;
+	switch (w->flags & 0xffff0000) {
+	case orientation_horizontal:
 		l=w->children;
 		while (l) {
 			wc=l->data;
 			wc->p.x=x;
-			wc->p.y=w->p.y+(w->h-wc->h)/2;
-			gui_internal_widget_render(this, wc);
+			if (wc->flags & flags_fill)
+				wc->h=w->h;
+			if (wc->flags & flags_expand)
+				wc->w=wc->w*expand/100;
+			if (w->flags & gravity_top) 
+				wc->p.y=y;
+			if (w->flags & gravity_ycenter) 
+				wc->p.y=y-wc->h/2;
+			if (w->flags & gravity_bottom) 
+				wc->p.y=y-wc->h;
 			x+=wc->w+w->spx;
 			l=g_list_next(l);
 		}
 		break;
-	case gravity_left_top:
+	case orientation_vertical:
 		l=w->children;
 		while (l) {
 			wc=l->data;
-			wc->p.x=x;
 			wc->p.y=y;
-			gui_internal_widget_render(this, wc);
+			if (wc->flags & flags_fill)
+				wc->w=w->w;
+			if (wc->flags & flags_expand)
+				wc->h=wc->h*expand/100;
+			if (w->flags & gravity_left) 
+				wc->p.x=x;
+			if (w->flags & gravity_xcenter) 
+				wc->p.x=x-wc->w/2;
+			if (w->flags & gravity_right) 
+				wc->p.x=x-wc->w;
 			y+=wc->h+w->spy;
 			l=g_list_next(l);
 		}
 		break;
-	case gravity_top:
-		l=w->children;
-		while (l) {
-			wc=l->data;
-			wc->p.x=x;
-			wc->p.y=w->p.y+(w->h-wc->h)/2;
-			gui_internal_widget_render(this, wc);
-			x+=wc->w+w->spx;
-			l=g_list_next(l);
-		}
+	default:
 		break;
-
-	case gravity_none:
-		l=w->children;
-		while (l) {
-			wc=l->data;
-			gui_internal_widget_render(this, wc);
-			l=g_list_next(l);
-		}
+	}
+	l=w->children;
+	while (l) {
+		wc=l->data;
+		gui_internal_widget_pack(this, wc);
+		l=g_list_next(l);
 	}
 }
 
@@ -459,11 +473,25 @@ gui_internal_widget_render(struct gui_priv *this, struct widget *w)
 	case widget_box:
 		gui_internal_box_render(this, w);
 		break;
-	case widget_button:
-		gui_internal_button_render(this, w);
-		break;
 	case widget_label:
 		gui_internal_label_render(this, w);
+		break;
+	case widget_image:
+		gui_internal_image_render(this, w);
+		break;
+	default:
+		break;
+	}
+}
+
+static void
+gui_internal_widget_pack(struct gui_priv *this, struct widget *w)
+{
+	switch (w->type) {
+	case widget_box:
+		gui_internal_box_pack(this, w);
+		break;
+	default:
 		break;
 	}
 }
@@ -497,7 +525,6 @@ gui_internal_prune_menu(struct gui_priv *this, struct widget *w)
 static void
 gui_internal_cmd_return(struct gui_priv *this, struct widget *wm)
 {
-	dbg(0,"enter\n");
 	gui_internal_prune_menu(this, wm->data);
 }
 
@@ -514,17 +541,15 @@ gui_internal_top_bar(struct gui_priv *this)
 	GList *res=NULL,*l;
 	int width;
 
-	w=gui_internal_box_new(this, gravity_left, orientation_horizontal);
-	w->w=this->w;
-	w->h=56;
+	w=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	w->bl=6;
-	w->spx=5;	
+	w->spx=5;
 	w->background=this->background2;
 	wm=gui_internal_button_new_with_callback(this, NULL,
-		graphics_image_new(this->gra, "xpm/gui_map.svg"), orientation_none,
+		graphics_image_new_scaled(this->gra, "xpm/gui_map.svg", this->icon_small, this->icon_small), gravity_center,
 		gui_internal_cmd_return, NULL);
 	wh=gui_internal_button_new_with_callback(this, NULL,
-		graphics_image_new(this->gra, "xpm/gui_home.svg"), orientation_none,
+		graphics_image_new_scaled(this->gra, "xpm/gui_home.svg", this->icon_small, this->icon_small), gravity_center,
 		gui_internal_cmd_main_menu, NULL);
 	gui_internal_widget_append(w, wm);
 	gui_internal_widget_append(w, wh);
@@ -551,85 +576,94 @@ gui_internal_top_bar(struct gui_priv *this)
 	}
 	if (dots)
 		gui_internal_widget_destroy(this, dots);
-#if 0		
-	gui_internal_widget_append(w, gui_internal_button_new(this, "Main menu", NULL));
-	gui_internal_widget_append(w, gui_internal_button_new(this, "»", NULL));
-	gui_internal_widget_append(w, gui_internal_button_new(this, "Main menu", NULL));
-#endif
 	return w;
 }
 
+static struct widget *
+gui_internal_menu(struct gui_priv *this, char *label)
+{
+	struct widget *menu,*w;
+	menu=gui_internal_box_new_with_label(this, gravity_center|orientation_vertical, label);
+	menu->w=this->root.w;
+	menu->h=this->root.h;
+	if (this->root.w > 320 || this->root.h > 320) {
+		this->font_size=20;
+		this->icon_small=48;
+		this->icon_large=96;
+		this->font=graphics_font_new(this->gra, 545, 1);
+	} else {
+		this->font_size=5;
+		this->icon_large=24;
+		this->icon_small=12;
+		this->font=graphics_font_new(this->gra, 136, 1);
+	}
+	gui_internal_widget_append(&this->root, menu);
+	gui_internal_clear(this);
+	w=gui_internal_top_bar(this);
+	gui_internal_widget_append(menu, w);
+	w=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_expand);
+	w->spx=20;
+	gui_internal_widget_append(menu, w);
+
+	return w;
+}
+
+static void
+gui_internal_menu_render(struct gui_priv *this)
+{
+	GList *l;
+	struct widget *menu;
+
+	l=g_list_last(this->root.children);
+	menu=l->data;
+	gui_internal_widget_pack(this, menu);
+	graphics_draw_mode(this->gra, draw_mode_begin);
+	gui_internal_widget_render(this, menu);
+	graphics_draw_mode(this->gra, draw_mode_end);
+}
 
 static void
 gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm)
 {
-	struct widget *menu,*w;
-	menu=gui_internal_box_new_with_label(this, gravity_none, orientation_none, "Rules");
-	menu->w=this->root.w;
-	menu->h=this->root.h;
-	gui_internal_widget_append(&this->root, menu);
-	gui_internal_clear(this);
-	w=gui_internal_top_bar(this);
-	gui_internal_widget_append(menu, w);
-	w=gui_internal_box_new(this, gravity_left_top, orientation_vertical);
-	w->p.y=56;
-	w->bl=20;
-	w->bt=20;
-	w->spy=20;
-	w->w=this->w;
-	w->h=this->h-56;
-	gui_internal_widget_append(menu, w);
+	struct widget *wb,*w;
+	wb=gui_internal_menu(this, "Rules");	
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_fill);
+	gui_internal_widget_append(wb, w);
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Stick to roads, obey traffic rules",
-			graphics_image_new(this->gra, "xpm/gui_active.svg"), orientation_horizontal));
+			graphics_image_new(this->gra, "xpm/gui_active.svg"), gravity_left_center|orientation_horizontal|flags_fill));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Keep orientation to the North",
-			graphics_image_new(this->gra, "xpm/gui_active.svg"), orientation_horizontal));
+			graphics_image_new(this->gra, "xpm/gui_active.svg"), gravity_left_center|orientation_horizontal|flags_fill));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Warn about wrong directions",
-			graphics_image_new(this->gra, "xpm/gui_inactive.svg"), orientation_horizontal));
+			graphics_image_new(this->gra, "xpm/gui_inactive.svg"), gravity_left_center|orientation_horizontal|flags_fill));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Attack defenseless civilians",
-			graphics_image_new(this->gra, "xpm/gui_active.svg"), orientation_horizontal));
-
-	graphics_draw_mode(this->gra, draw_mode_begin);
-	gui_internal_widget_render(this, menu);
-	graphics_draw_mode(this->gra, draw_mode_end);
+			graphics_image_new(this->gra, "xpm/gui_active.svg"), gravity_left_center|orientation_horizontal|flags_fill));
+	gui_internal_menu_render(this);
 }
+
 static void
 gui_internal_cmd_settings(struct gui_priv *this, struct widget *wm)
 {
-	struct widget *menu,*w;
-	menu=gui_internal_box_new_with_label(this, gravity_none, orientation_none, "Settings");
-	menu->w=this->root.w;
-	menu->h=this->root.h;
-	gui_internal_widget_append(&this->root, menu);
-	gui_internal_clear(this);
-	w=gui_internal_top_bar(this);
-	gui_internal_widget_append(menu, w);
-	w=gui_internal_box_new(this, gravity_center, orientation_horizontal);
-	w->p.y=56;
-	w->spx=20;
-	w->w=this->w;
-	w->h=this->h-56;
-	gui_internal_widget_append(menu, w);
+	struct widget *w;
+
+	w=gui_internal_menu(this, "Settings");	
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Display",
-			graphics_image_new_scaled(this->gra, "xpm/gui_display.svg", 96, 96), orientation_vertical));
+			graphics_image_new_scaled(this->gra, "xpm/gui_display.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Maps",
-			graphics_image_new_scaled(this->gra, "xpm/gui_maps.svg", 96, 96), orientation_vertical));
+			graphics_image_new_scaled(this->gra, "xpm/gui_maps.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Sound",
-			graphics_image_new_scaled(this->gra, "xpm/gui_sound.svg", 96, 96), orientation_vertical));
+			graphics_image_new_scaled(this->gra, "xpm/gui_sound.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical));
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Rules",
-			graphics_image_new_scaled(this->gra, "xpm/gui_rules.svg", 96, 96), orientation_vertical,
+			graphics_image_new_scaled(this->gra, "xpm/gui_rules.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical,
 			gui_internal_cmd_rules, NULL));
-
-	graphics_draw_mode(this->gra, draw_mode_begin);
-	gui_internal_widget_render(this, menu);
-	graphics_draw_mode(this->gra, draw_mode_end);
+	gui_internal_menu_render(this);
 }
 
 //##############################################################################################################
@@ -652,36 +686,20 @@ static void gui_internal_motion(void *data, struct point *p)
 	
 }
 
+
 static void gui_internal_menu_root(struct gui_priv *this)
 {
-	struct widget *menu,*w;
-	menu=gui_internal_box_new_with_label(this, gravity_none, orientation_horizontal, "Main menu");
-	menu->w=this->root.w;
-	menu->h=this->root.h;
-	gui_internal_widget_append(&this->root, menu);
-	gui_internal_clear(this);
-	w=gui_internal_top_bar(this);
-	gui_internal_widget_append(menu, w);
-	w=gui_internal_box_new(this, gravity_center, orientation_horizontal);
-	w->p.y=56;
-	w->spx=20;
-	w->w=this->w;
-	w->h=this->h-56;
-	gui_internal_widget_append(menu, w);
-	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Actions",
-			graphics_image_new_scaled(this->gra, "xpm/gui_actions.svg", 96, 96), orientation_vertical));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Settings",
-			graphics_image_new_scaled(this->gra, "xpm/gui_settings.svg", 96, 96), orientation_vertical,
-			gui_internal_cmd_settings, NULL));
-	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Tools",
-			graphics_image_new_scaled(this->gra, "xpm/gui_tools.svg", 96, 96), orientation_vertical));
+	struct widget *w;
 
-	graphics_draw_mode(this->gra, draw_mode_begin);
-	gui_internal_widget_render(this, menu);
-	graphics_draw_mode(this->gra, draw_mode_end);
+	w=gui_internal_menu(this, "Main menu");	
+	gui_internal_widget_append(w, gui_internal_button_new(this, "Actions",
+			graphics_image_new_scaled(this->gra, "xpm/gui_actions.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical));
+	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, "Settings",
+			graphics_image_new_scaled(this->gra, "xpm/gui_settings.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical,
+			gui_internal_cmd_settings, NULL));
+	gui_internal_widget_append(w, gui_internal_button_new(this, "Tools",
+			graphics_image_new_scaled(this->gra, "xpm/gui_tools.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical));
+	gui_internal_menu_render(this);
 }
 
 
@@ -703,8 +721,6 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		// draw menu
 		this->root.p.x=0;
 		this->root.p.y=0;
-		this->root.w=this->w;
-		this->root.h=this->h;
 		this->root.background=this->background;
 		gui_internal_menu_root(this);
 		return;
@@ -735,11 +751,15 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 static void gui_internal_resize(void *data, int w, int h)
 {
 	struct gui_priv *this=data;
-	this->w=w;
-	this->h=h;
+	this->root.w=w;
+	this->root.h=h;
 	dbg(0,"w=%d h=%d\n", w, h);
-	if (!this->root.children)
+	if (!this->root.children) {
 		navit_resize(this->nav, w, h);
+		return;
+	}
+	gui_internal_prune_menu(this, NULL);
+	gui_internal_menu_root(this);
 } 
 
 
@@ -760,12 +780,11 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	struct color cf={0xbfff,0xbfff,0xbfff,0xffff};
 	struct transformation *trans=navit_get_trans(this->nav);
 	
-	dbg(0,"enter\n");
 	graphics=graphics_get_data(gra, "window");
         if (! graphics)
                 return 1;
 	this->gra=gra;
-	transform_get_size(trans, &this->w, &this->h);
+	transform_get_size(trans, &this->root.w, &this->root.h);
 	graphics_register_resize_callback(gra, gui_internal_resize, this);
 	graphics_register_button_callback(gra, gui_internal_button, this);
 	graphics_register_motion_callback(gra, gui_internal_motion, this);
@@ -777,8 +796,6 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	graphics_gc_set_foreground(this->highlight_background, &cbh);
 	this->foreground=graphics_gc_new(gra);
 	graphics_gc_set_foreground(this->foreground, &cf);
-	this->font=graphics_font_new(gra, 200, 1);
-	this->font2=graphics_font_new(gra, 545, 1);
 	return 0;
 }
 
