@@ -43,6 +43,7 @@
 #include "graphics.h"
 #include "transform.h"
 #include "color.h"
+#include "map.h"
 #include "config.h"
 
 #define STATE_VISIBLE 1
@@ -94,6 +95,9 @@ struct widget {
 	struct graphics_image *img;
 	void (*func)(struct gui_priv *priv, struct widget *widget);
 	void *data;
+	char *prefix;
+	char *name;
+	struct coord c;
 	int state;
 	struct point p;
 	int wmin,hmin;
@@ -130,6 +134,42 @@ static void gui_internal_widget_render(struct gui_priv *this, struct widget *w);
 static void gui_internal_widget_pack(struct gui_priv *this, struct widget *w);
 static struct widget * gui_internal_box_new(struct gui_priv *this, enum flags flags);
 static void gui_internal_widget_append(struct widget *parent, struct widget *child);
+static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w);
+
+static struct graphics_image *
+image_new(struct gui_priv *this, char *name)
+{
+	char *full_name=g_strdup_printf("xpm/%s.svg", name);
+	struct graphics_image *ret;
+
+	ret=graphics_image_new(this->gra, full_name);
+	g_free(full_name);
+	return ret;
+}
+
+
+static struct graphics_image *
+image_new_scaled(struct gui_priv *this, char *name, int w, int h)
+{
+	char *full_name=g_strdup_printf("xpm/%s.svg", name);
+	struct graphics_image *ret;
+
+	ret=graphics_image_new_scaled(this->gra, full_name, w, h);
+	g_free(full_name);
+	return ret;
+}
+
+static struct graphics_image *
+image_new_s(struct gui_priv *this, char *name)
+{
+	return image_new_scaled(this, name, this->icon_small, this->icon_small);
+}
+
+static struct graphics_image *
+image_new_l(struct gui_priv *this, char *name)
+{
+	return image_new_scaled(this, name, this->icon_large, this->icon_large);
+}
 
 static void
 gui_internal_background_render(struct gui_priv *this, struct widget *w)
@@ -156,6 +196,29 @@ gui_internal_label_new(struct gui_priv *this, char *text)
 	widget->flags=gravity_center;
 
 	return widget;
+}
+
+static struct widget *
+gui_internal_label_new_abbrev(struct gui_priv *this, char *text, int maxwidth)
+{
+	struct widget *ret=NULL;
+	char *tmp=g_malloc(strlen(text)+3);
+	int i;
+
+	i=strlen(text)-1;
+	while (i >= 0) {
+		strcpy(tmp, text);
+		strcpy(tmp+i,"..");
+		dbg(0, "tmp=%s\n", tmp);
+		ret=gui_internal_label_new(this, tmp);
+		if (ret->w < maxwidth)
+			break;
+		gui_internal_widget_destroy(this, ret);
+		ret=NULL;
+		i--;
+	}
+	g_free(tmp);
+	return ret;
 }
 
 static struct widget *
@@ -475,6 +538,10 @@ static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 	g_free(w->text);
 	if (w->img)
 		graphics_image_free(this->gra, w->img);
+	if (w->prefix)
+		g_free(w->prefix);
+	if (w->name)
+		g_free(w->name);
 	g_free(w);
 }
 
@@ -550,45 +617,82 @@ gui_internal_cmd_main_menu(struct gui_priv *this, struct widget *wm)
 static struct widget *
 gui_internal_top_bar(struct gui_priv *this)
 {
-	struct widget *w,*wm,*wh,*wc,*wcn,*dots;
+	struct widget *w,*wm,*wh,*wc,*wcn;
+	int dots_len, sep_len;
 	GList *res=NULL,*l;
-	int width;
+	int width,width_used=0,use_sep,incomplete=0;
 
 	w=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	w->bl=6;
 	w->spx=5;
 	w->background=this->background2;
 	wm=gui_internal_button_new_with_callback(this, NULL,
-		graphics_image_new_scaled(this->gra, "xpm/gui_map.svg", this->icon_small, this->icon_small), gravity_center,
+		image_new_s(this, "gui_map"), gravity_center,
 		gui_internal_cmd_return, NULL);
 	wh=gui_internal_button_new_with_callback(this, NULL,
-		graphics_image_new_scaled(this->gra, "xpm/gui_home.svg", this->icon_small, this->icon_small), gravity_center,
+		image_new_s(this, "gui_home"), gravity_center,
 		gui_internal_cmd_main_menu, NULL);
 	gui_internal_widget_append(w, wm);
 	gui_internal_widget_append(w, wh);
-	width=w->w-wm->w-wh->w;
+	width=this->root.w-w->bl-wm->w-w->spx-wh->w;
 	l=g_list_last(this->root.children);
-	dots=gui_internal_label_new(this,"..");
+	wcn=gui_internal_label_new(this,"..");
+	dots_len=wcn->w;
+	gui_internal_widget_destroy(this, wcn);
+	wcn=gui_internal_label_new(this,"»");
+	sep_len=wcn->w;
+	gui_internal_widget_destroy(this, wcn);
 	while (l) {
 		if (g_list_previous(l) || !g_list_next(l)) {
 			wc=l->data;
 			wcn=gui_internal_label_new(this, wc->text);
+			if (g_list_previous(l) && g_list_previous(g_list_previous(l))) 
+				use_sep=1;
+			else
+				use_sep=0;
+			if (wcn->w + width_used + w->spx + (use_sep ? sep_len : 0) > width) {
+				incomplete=1;
+				gui_internal_widget_destroy(this, wcn);
+				break;
+			}
+			width_used+=wcn->w;
 			wcn->func=gui_internal_cmd_return;
 			wcn->data=wc;
 			wcn->state |= STATE_SENSITIVE;
 			res=g_list_prepend(res, wcn);
-			if (g_list_previous(l) && g_list_previous(g_list_previous(l)))
+			if (use_sep) {
 				res=g_list_prepend(res, gui_internal_label_new(this, "»"));
+				width_used+=sep_len+w->spx;
+			}
+			
 		}
 		l=g_list_previous(l);
+	}
+	if (incomplete) {
+		if (! res) {
+			wcn=gui_internal_label_new_abbrev(this, wc->text, width-width_used-w->spx-dots_len);
+			wcn->func=gui_internal_cmd_return;
+			wcn->data=wc;
+			wcn->state |= STATE_SENSITIVE;
+			res=g_list_prepend(res, wcn);
+			l=g_list_previous(l);
+			wc=l->data;
+		}
+		wcn=gui_internal_label_new(this, "..");
+		wcn->func=gui_internal_cmd_return;
+		wcn->data=wc;
+		wcn->state |= STATE_SENSITIVE;
+		res=g_list_prepend(res, wcn);
 	}
 	l=res;
 	while (l) {
 		gui_internal_widget_append(w, l->data);
 		l=g_list_next(l);
 	}
+#if 0
 	if (dots)
 		gui_internal_widget_destroy(this, dots);
+#endif
 	return w;
 }
 
@@ -644,16 +748,115 @@ gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm)
 	gui_internal_widget_append(wb, w);
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Stick to roads, obey traffic rules",
-			graphics_image_new(this->gra, "xpm/gui_active.svg"), gravity_left_center|orientation_horizontal|flags_fill));
+			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Keep orientation to the North",
-			graphics_image_new(this->gra, "xpm/gui_active.svg"), gravity_left_center|orientation_horizontal|flags_fill));
+			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Warn about wrong directions",
-			graphics_image_new(this->gra, "xpm/gui_inactive.svg"), gravity_left_center|orientation_horizontal|flags_fill));
+			image_new(this, "gui_inactive"), gravity_left_center|orientation_horizontal|flags_fill));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Attack defenseless civilians",
-			graphics_image_new(this->gra, "xpm/gui_active.svg"), gravity_left_center|orientation_horizontal|flags_fill));
+			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
+	gui_internal_menu_render(this);
+}
+
+static void
+gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
+{
+	struct widget *wb,*w;
+	wb=gui_internal_menu(this, wm->text);	
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	gui_internal_widget_append(w,
+		gui_internal_button_new(this, "Set as destination",
+			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
+	gui_internal_widget_append(w,
+		gui_internal_button_new(this, "Add to tour",
+			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
+	gui_internal_widget_append(w,
+		gui_internal_button_new(this, "Add as bookmark",
+			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
+	gui_internal_widget_append(w,
+		gui_internal_button_new(this, "View on map",
+			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
+	gui_internal_menu_render(this);
+}
+
+static void
+gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
+{
+	struct attr attr;
+	struct map_rect *mr=NULL;
+	struct item *item;
+	char *label_full,*l,*prefix,*pos;
+	int len,plen,hassub;
+	struct widget *wb,*w,*wbm;
+	GHashTable *hash;
+
+
+	wb=gui_internal_menu(this, wm->text ? wm->text : "Bookmarks");
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+
+	prefix=wm->prefix;
+	if (! prefix)
+		prefix="";
+	plen=strlen(prefix);
+
+	if(navit_get_attr(this->nav, attr_bookmark_map, &attr, NULL) && attr.u.map && (mr=map_rect_new(attr.u.map, NULL))) {
+		hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+		while ((item=map_rect_get_item(mr))) {
+			if (item->type != type_bookmark) continue;
+			if (!item_attr_get(item, attr_label, &attr)) continue;
+			label_full=attr.u.str;
+			if (!strncmp(label_full, prefix, plen)) {
+				pos=strchr(label_full+plen, '/');
+				if (pos) {
+					hassub=1;
+					len=pos-label_full;
+				} else {
+					hassub=0;
+					len=strlen(label_full);
+				}
+				l=g_malloc(len-plen+1);
+				strncpy(l, label_full+plen, len-plen);
+				l[len-plen]='\0';
+				if (!g_hash_table_lookup(hash, l)) {
+					wbm=gui_internal_button_new_with_callback(this, l,
+						image_new(this, hassub ? "gui_inactive" : "gui_active" ), gravity_left_center|orientation_horizontal|flags_fill,
+							hassub ? gui_internal_cmd_bookmarks : gui_internal_cmd_position, NULL);
+					if (item_coord_get(item, &wbm->c, 1)) {
+						wbm->name=g_strdup(label_full);
+						wbm->text=g_strdup(l);
+						gui_internal_widget_append(w, wbm);
+						g_hash_table_insert(hash, g_strdup(l), (void *)1);
+						wbm->prefix=g_malloc(plen+len+2);
+						strncpy(wbm->prefix, label_full, plen+len+1);
+						wbm->prefix[plen+len+1]='\0';
+					} else {
+						gui_internal_widget_destroy(this, wbm);
+					}
+				}
+				g_free(l);
+			}
+
+		}
+		g_hash_table_destroy(hash);
+	}
+	gui_internal_menu_render(this);
+}
+
+static void
+gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
+{
+	struct widget *w;
+
+	w=gui_internal_menu(this, "Actions");	
+	gui_internal_widget_append(w,
+		gui_internal_button_new_with_callback(this, "Bookmarks",
+			image_new_l(this, "gui_bookmark"), gravity_center|orientation_vertical,
+			gui_internal_cmd_bookmarks, NULL));
 	gui_internal_menu_render(this);
 }
 
@@ -665,16 +868,16 @@ gui_internal_cmd_settings(struct gui_priv *this, struct widget *wm)
 	w=gui_internal_menu(this, "Settings");	
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Display",
-			graphics_image_new_scaled(this->gra, "xpm/gui_display.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical));
+			image_new_l(this, "gui_display"), gravity_center|orientation_vertical));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Maps",
-			graphics_image_new_scaled(this->gra, "xpm/gui_maps.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical));
+			image_new_l(this, "gui_maps"), gravity_center|orientation_vertical));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Sound",
-			graphics_image_new_scaled(this->gra, "xpm/gui_sound.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical));
+			image_new_l(this, "gui_sound"), gravity_center|orientation_vertical));
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Rules",
-			graphics_image_new_scaled(this->gra, "xpm/gui_rules.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical,
+			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
 			gui_internal_cmd_rules, NULL));
 	gui_internal_menu_render(this);
 }
@@ -705,13 +908,14 @@ static void gui_internal_menu_root(struct gui_priv *this)
 	struct widget *w;
 
 	w=gui_internal_menu(this, "Main menu");	
-	gui_internal_widget_append(w, gui_internal_button_new(this, "Actions",
-			graphics_image_new_scaled(this->gra, "xpm/gui_actions.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical));
+	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, "Actions",
+			image_new_l(this, "gui_actions"), gravity_center|orientation_vertical,
+			gui_internal_cmd_actions, NULL));
 	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, "Settings",
-			graphics_image_new_scaled(this->gra, "xpm/gui_settings.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical,
+			image_new_l(this, "gui_settings"), gravity_center|orientation_vertical,
 			gui_internal_cmd_settings, NULL));
 	gui_internal_widget_append(w, gui_internal_button_new(this, "Tools",
-			graphics_image_new_scaled(this->gra, "xpm/gui_tools.svg", this->icon_large, this->icon_large), gravity_center|orientation_vertical));
+			image_new_l(this, "gui_tools"), gravity_center|orientation_vertical));
 	gui_internal_menu_render(this);
 }
 
