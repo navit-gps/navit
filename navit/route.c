@@ -1021,7 +1021,7 @@ route_graph_update(struct route *this)
 struct street_data *
 street_get_data (struct item *item)
 {
-	int maxcount=2000;
+	int maxcount=4000;
 	struct coord c[maxcount];
 	int count=0;
 	struct street_data *ret;
