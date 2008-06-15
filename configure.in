@@ -120,6 +120,26 @@ if test "x${enable_graphics_qt_qpainter}" = "xyes" ; then
 fi
 AM_CONDITIONAL(USE_GRAPHICS_QT_QPAINTER, test "x${enable_graphics_qt_qpainter}" = "xyes")
 
+AC_ARG_ENABLE(postgresql, [  --disable-postgresql             don't add postgresql support to osm2navit], enable_postgresql=$enableval, enable_postgresql=yes)
+if test "x${enable_postgresql}" = "xyes" ; then
+	if test -z "$PG_CONFIG"; then
+            AC_PATH_PROG([PG_CONFIG], [pg_config], [])
+        fi
+        AC_MSG_CHECKING([for PostgreSQL libraries with $PG_CONFIG])
+	if test ! -x "$PG_CONFIG"; then
+	    enable_postgresql = "no"
+            AC_MSG_RESULT([no])
+	else
+	    POSTGRESQL_CFLAGS="-I`$PG_CONFIG --includedir`"
+	    POSTGRESQL_LIBS="-L`$PG_CONFIG --libdir` -lpq"
+    	    AC_DEFINE(HAVE_POSTGRESQL, 1, [Postgresql libraries available])
+	    AC_SUBST(POSTGRESQL_CFLAGS)
+	    AC_SUBST(POSTGRESQL_LIBS)
+            AC_MSG_RESULT([yes])
+       	fi 
+fi
+AM_CONDITIONAL(HAVE_POSTGRESQL, test "x${enable_postgresql}" = "xyes")
+
 PKG_CHECK_MODULES(FREETYPE2, [freetype2], [freetype2_pkgconfig=yes], [freetype2_pkgconfig=no])
 if test "x$freetype2_pkgconfig" = "xyes"; then
    AC_DEFINE(HAVE_FREETYPE2, 1, [Define to 1 if you have freetype2])
