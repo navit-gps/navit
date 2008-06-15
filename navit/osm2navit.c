@@ -36,6 +36,9 @@
 #include "item.h"
 #include "zipfile.h"
 #include "config.h"
+#ifdef HAVE_POSTGRESQL
+#include <libpq-fe.h>
+#endif
 
 #define BUFFER_SIZE 1280
 
@@ -1238,6 +1241,171 @@ phase1(FILE *in, FILE *out_ways, FILE *out_nodes)
 	return 1;
 }
 
+static int
+phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
+{
+	PGconn *conn;
+	PGresult *res,*node,*way,*tag;
+	int count,tagged,i,j,k;
+	long min, max, id, tag_id, node_id;
+	char query[256];
+	
+	sig_alrm(0);
+	conn=PQconnectdb(dbstr);
+	if (! conn) {
+		fprintf(stderr,"Failed to connect to database with '%s'\n",dbstr);
+		exit(1);
+	}
+	res=PQexec(conn, "begin");
+	if (! res) {
+		fprintf(stderr, "Cannot begin transaction: %s\n", PQerrorMessage(conn));
+		PQclear(res);
+		exit(1);
+	}
+	res=PQexec(conn, "set transaction isolation level serializable");
+	if (! res) {
+		fprintf(stderr, "Cannot set isolation level: %s\n", PQerrorMessage(conn));
+		PQclear(res);
+		exit(1);
+	}
+	res=PQexec(conn, "declare node cursor for select id,x(coordinate),y(coordinate) from node order by id");
+	if (! res) {
+		fprintf(stderr, "Cannot setup cursor for nodes: %s\n", PQerrorMessage(conn));
+		PQclear(res);
+		exit(1);
+	}
+	res=PQexec(conn, "declare way cursor for select id from way order by id");
+	if (! res) {
+		fprintf(stderr, "Cannot setup cursor for nodes: %s\n", PQerrorMessage(conn));
+		PQclear(res);
+		exit(1);
+	}
+	res=PQexec(conn, "declare relation cursor for select id from relation order by id");
+	if (! res) {
+		fprintf(stderr, "Cannot setup cursor for nodes: %s\n", PQerrorMessage(conn));
+		PQclear(res);
+		exit(1);
+	}
+	for (;;) {
+		node=PQexec(conn, "fetch 100000 from node");
+		if (! node) {
+			fprintf(stderr, "Cannot setup cursor for nodes: %s\n", PQerrorMessage(conn));
+			PQclear(node);
+			exit(1);
+		}
+		count=PQntuples(node);
+		if (! count)
+			break;
+		min=atol(PQgetvalue(node, 0, 0));
+		max=atol(PQgetvalue(node, count-1, 0));
+		sprintf(query,"select node_id,name,value from node_tag where node_id >= %ld and node_id <= %ld order by node_id", min, max);
+		tag=PQexec(conn, query);
+		if (! tag) {
+			fprintf(stderr, "Cannot query node_tag: %s\n", PQerrorMessage(conn));
+			exit(1);
+		}
+		j=0;
+		for (i = 0 ; i < count ; i++) {
+			id=atol(PQgetvalue(node, i, 0));
+			add_node(id, atof(PQgetvalue(node, i, 1)), atof(PQgetvalue(node, i, 2)));
+			tagged=0;
+			in_node=1;
+			processed_nodes++;
+			while (j < PQntuples(tag)) {
+				tag_id=atol(PQgetvalue(tag, j, 0));
+				if (tag_id == id) {
+					add_tag(PQgetvalue(tag, j, 1), PQgetvalue(tag, j, 2));
+					tagged=1;
+					j++;
+				}
+				if (tag_id < id)
+					j++;
+				if (tag_id > id)
+					break;
+			}
+			if (tagged)
+				end_node(out_nodes);
+			in_node=0;
+		}
+		PQclear(tag);
+		PQclear(node);
+	}
+	for (;;) {
+		way=PQexec(conn, "fetch 100000 from way");
+		if (! way) {
+			fprintf(stderr, "Cannot setup cursor for ways: %s\n", PQerrorMessage(conn));
+			PQclear(node);
+			exit(1);
+		}
+		count=PQntuples(way);
+		if (! count)
+			break;
+		min=atol(PQgetvalue(way, 0, 0));
+		max=atol(PQgetvalue(way, count-1, 0));
+		sprintf(query,"select way_id,node_id from way_node where way_id >= %ld and way_id <= %ld order by way_id,sequence_id", min, max);
+		node=PQexec(conn, query);
+		if (! node) {
+			fprintf(stderr, "Cannot query way_node: %s\n", PQerrorMessage(conn));
+			exit(1);
+		}
+		sprintf(query,"select way_id,name,value from way_tag where way_id >= %ld and way_id <= %ld", min, max);
+		tag=PQexec(conn, query);
+		if (! tag) {
+			fprintf(stderr, "Cannot query way_tag: %s\n", PQerrorMessage(conn));
+			exit(1);
+		}
+		j=0;
+		k=0;
+		for (i = 0 ; i < count ; i++) {
+			id=atol(PQgetvalue(way, i, 0));
+			add_way(id);
+			tagged=0;
+			in_way=1;
+			processed_ways++;
+			while (k < PQntuples(node)) {
+				node_id=atol(PQgetvalue(node, k, 0));
+				if (node_id == id) {
+					add_nd("",atol(PQgetvalue(node, k, 1)));
+					tagged=1;
+					k++;
+				}
+				if (node_id < id)
+					k++;
+				if (node_id > id)
+					break;
+			}
+			while (j < PQntuples(tag)) {
+				tag_id=atol(PQgetvalue(tag, j, 0));
+				if (tag_id == id) {
+					add_tag(PQgetvalue(tag, j, 1), PQgetvalue(tag, j, 2));
+					tagged=1;
+					j++;
+				}
+				if (tag_id < id)
+					j++;
+				if (tag_id > id)
+					break;
+			}
+			if (tagged)
+				end_way(out_ways);
+			in_way=0;
+		}
+		PQclear(tag);
+		PQclear(node);
+		PQclear(way);
+	}
+
+	res=PQexec(conn, "commit");
+	if (! res) {
+		fprintf(stderr, "Cannot commit transaction: %s\n", PQerrorMessage(conn));
+		PQclear(res);
+		exit(1);
+	}
+	sig_alrm(0);
+	alarm(0);
+	return 1;
+}
+
 static char buffer[150000];
 
 int bytes_read=0;
@@ -2266,6 +2434,7 @@ usage(FILE *f)
 	fprintf(f,"-W (--ways-only)         : process only ways\n");
 	fprintf(f,"-a (--attr-debug-level)  : control which data is included in the debug attribute\n");
 	fprintf(f,"-c (--dump-coordinates)  : dump coordinates after phase 1\n");
+	fprintf(f,"-d (--db)                : get osm data out of a postgresql database with osm simple scheme and given connect string\n");
 	fprintf(f,"-e (--end)               : end at specified phase\n");
 	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
 	fprintf(f,"-o (--coverage)          : map every street to item overage\n");
@@ -2284,7 +2453,7 @@ int main(int argc, char **argv)
 	int keep_tmpfiles=0;
 	int process_nodes=1, process_ways=1;
 	int compression_level=9;
-	char *result;
+	char *result,*dbstr=NULL;
 	FILE* input_file = stdin;
 
 
@@ -2297,6 +2466,7 @@ int main(int argc, char **argv)
 			{"attr-debug-level", 1, 0, 'a'},
 			{"compression-level", 1, 0, 'z'},
 			{"coverage", 0, 0, 'o'},
+			{"db", 1, 0, 'd'},
 			{"dedupe-ways", 0, 0, 'w'},
 			{"end", 1, 0, 'e'},
 			{"help", 0, 0, 'h'},
@@ -2308,7 +2478,7 @@ int main(int argc, char **argv)
 			{"ways-only", 0, 0, 'W'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "Nni:Wa:ce:hks:w", long_options, &option_index);
+		c = getopt_long (argc, argv, "Nni:Wa:cd:e:hks:w", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
@@ -2323,6 +2493,9 @@ int main(int argc, char **argv)
 			break;
 		case 'c':
 			dump_coordinates=1;
+			break;
+		case 'd':
+			dbstr=optarg;
 			break;
 		case 'e':
 			end=atoi(optarg);
@@ -2382,7 +2555,10 @@ int main(int argc, char **argv)
 			nodes=fopen("nodes.tmp","wb+");
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
-		phase1(input_file,ways,nodes);
+		if (dbstr) 
+			phase1_db(dbstr,ways,nodes);
+		else
+			phase1(input_file,ways,nodes);
 		if (ways)
 			fclose(ways);
 		if (nodes)
