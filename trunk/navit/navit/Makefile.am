@@ -40,4 +40,5 @@ builtin.c:
 	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/.la/_init();/" -e "s/.*lib/	module_/" >>builtin.c
 	echo "}" >>builtin.c
 
-osm2navit_LDADD = @NAVIT_LIBS@  @ZLIB_LIBS@
+osm2navit_CPPFLAGS = $(AM_CPPFLAGS) @POSTGRESQL_CFLAGS@
+osm2navit_LDADD = @NAVIT_LIBS@  @ZLIB_LIBS@ @POSTGRESQL_LIBS@
