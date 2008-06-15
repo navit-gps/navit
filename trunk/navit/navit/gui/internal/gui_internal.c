@@ -34,6 +34,7 @@
 #include <glib.h>
 #include "config.h"
 #include "item.h"
+#include "file.h"
 #include "navit.h"
 #include "debug.h"
 #include "gui.h"
@@ -136,13 +137,29 @@ static struct widget * gui_internal_box_new(struct gui_priv *this, enum flags fl
 static void gui_internal_widget_append(struct widget *parent, struct widget *child);
 static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w);
 
+static char *
+image_path(char *name, int w, int h)
+{
+	char *full_name;
+	full_name=g_strdup_printf("%s/xpm/%s.svg", getenv("NAVIT_SHAREDIR"), name);
+	if (file_exists(full_name))
+		return full_name;
+	full_name=g_strdup_printf("%s/xpm/%s.png", getenv("NAVIT_SHAREDIR"), name);
+	if (file_exists(full_name))
+		return full_name;
+	return NULL;
+}
+
 static struct graphics_image *
 image_new(struct gui_priv *this, char *name)
 {
-	char *full_name=g_strdup_printf("xpm/%s.svg", name);
-	struct graphics_image *ret;
+	char *full_name=image_path(name, -1, -1);
+	struct graphics_image *ret=NULL;
 
-	ret=graphics_image_new(this->gra, full_name);
+	if (full_name);
+		ret=graphics_image_new(this->gra, full_name);
+	if (! ret)
+		dbg(0,"Failed to load %s\n", full_name);
 	g_free(full_name);
 	return ret;
 }
@@ -151,10 +168,13 @@ image_new(struct gui_priv *this, char *name)
 static struct graphics_image *
 image_new_scaled(struct gui_priv *this, char *name, int w, int h)
 {
-	char *full_name=g_strdup_printf("xpm/%s.svg", name);
-	struct graphics_image *ret;
+	char *full_name=image_path(name, w, h);
+	struct graphics_image *ret=NULL;
 
-	ret=graphics_image_new_scaled(this->gra, full_name, w, h);
+	if (full_name);
+		ret=graphics_image_new_scaled(this->gra, full_name, w, h);
+	if (! ret)
+		dbg(0,"Failed to load %s\n", full_name);
 	g_free(full_name);
 	return ret;
 }
@@ -227,8 +247,10 @@ gui_internal_image_new(struct gui_priv *this, struct graphics_image *image)
 	struct widget *widget=g_new0(struct widget, 1);
 	widget->type=widget_image;
 	widget->img=image;
-	widget->w=widget->img->width;
-	widget->h=widget->img->height;
+	if (image) {
+		widget->w=image->width;
+		widget->h=image->height;
+	}
 	return widget;
 }
 
@@ -268,6 +290,8 @@ gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct 
 			ret=gui_internal_label_new(this, text);
 		if (image)
 			ret=gui_internal_image_new(this, image);
+		if (! ret)
+			ret=gui_internal_box_new(this, flags);
 	}
 	if (ret) {
 		ret->func=func;
