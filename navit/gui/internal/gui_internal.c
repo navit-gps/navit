@@ -50,6 +50,7 @@
 #include "vehicle.h"
 #include "window.h"
 #include "main.h"
+#include "keys.h"
 #include "config.h"
 
 #define STATE_VISIBLE 1
@@ -1391,6 +1392,49 @@ static void gui_internal_resize(void *data, int w, int h)
 	gui_internal_menu_root(this);
 } 
 
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gui_internal_keypress(void *data, int key)
+{
+	struct gui_priv *this=data;
+	int w,h;
+	struct point p;
+	transform_get_size(navit_get_trans(this->nav), &w, &h);
+	switch (key) {
+	case NAVIT_KEY_UP:
+		p.x=w/2;
+                p.y=0;
+                navit_set_center_screen(this->nav, &p);
+                break;
+	case NAVIT_KEY_DOWN:
+                p.x=w/2;
+                p.y=h;
+                navit_set_center_screen(this->nav, &p);
+                break;
+        case NAVIT_KEY_LEFT:
+                p.x=0;
+                p.y=h/2;
+                navit_set_center_screen(this->nav, &p);
+                break;
+        case NAVIT_KEY_RIGHT:
+                p.x=w;
+                p.y=h/2;
+                navit_set_center_screen(this->nav, &p);
+                break;
+        case NAVIT_KEY_ZOOM_IN:
+                navit_zoom_in(this->nav, 2, NULL);
+                break;
+        case NAVIT_KEY_ZOOM_OUT:
+                navit_zoom_out(this->nav, 2, NULL);
+                break;
+	default:
+		dbg(0,"key=%d\n", key);
+	}
+} 
+
 
 //##############################################################################################################
 //# Description: 
@@ -1418,6 +1462,7 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	graphics_register_resize_callback(gra, gui_internal_resize, this);
 	graphics_register_button_callback(gra, gui_internal_button, this);
 	graphics_register_motion_callback(gra, gui_internal_motion, this);
+	graphics_register_keypress_callback(gra, gui_internal_keypress, this);
 	this->background=graphics_gc_new(gra);
 	graphics_gc_set_foreground(this->background, &cb);
 	this->background2=graphics_gc_new(gra);

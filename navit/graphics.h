@@ -68,7 +68,7 @@ struct graphics_methods {
 	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
 	void (*get_text_bbox)(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret);
 	void (*overlay_disable)(struct graphics_priv *gr, int disable);
-	void (*register_key_callback)(struct graphics_priv *gr, void (*callback)(void *data, struct point *p), void *data);
+	void (*register_keypress_callback)(struct graphics_priv *gr, void (*callback)(void *data, int key), void *data);
 };
 
 
@@ -131,6 +131,7 @@ void *graphics_get_data(struct graphics *this_, char *type);
 void graphics_register_resize_callback(struct graphics *this_, void (*callback)(void *data, int w, int h), void *data);
 void graphics_register_button_callback(struct graphics *this_, void (*callback)(void *data, int pressed, int button, struct point *p), void *data);
 void graphics_register_motion_callback(struct graphics *this_, void (*callback)(void *data, struct point *p), void *data);
+void graphics_register_keypress_callback(struct graphics *this_, void (*callback)(void *data, int key), void *data);
 struct graphics_font *graphics_font_new(struct graphics *gra, int size, int flags);
 struct graphics_gc *graphics_gc_new(struct graphics *gra);
 void graphics_gc_destroy(struct graphics_gc *gc);
