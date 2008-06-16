@@ -49,6 +49,7 @@
 #include "callback.h"
 #include "vehicle.h"
 #include "window.h"
+#include "main.h"
 #include "config.h"
 
 #define STATE_VISIBLE 1
@@ -84,6 +85,7 @@ enum flags {
 	flags_fill=0x200,
 	orientation_horizontal=0x10000,
 	orientation_vertical=0x20000,
+	orientation_horizontal_vertical=0x40000,
 };
 
 
@@ -260,7 +262,6 @@ gui_internal_label_new_abbrev(struct gui_priv *this, char *text, int maxwidth)
 	while (i >= 0) {
 		strcpy(tmp, text);
 		strcpy(tmp+i,"..");
-		dbg(0, "tmp=%s\n", tmp);
 		ret=gui_internal_label_new(this, tmp);
 		if (ret->w < maxwidth)
 			break;
@@ -302,7 +303,7 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
 {
 	struct point pnt=w->p;
 	gui_internal_background_render(this, w);
-	pnt.y+=w->h-10;
+	pnt.y+=w->h-this->spacing;
 	graphics_draw_text(this->gra, this->foreground, NULL, this->font, w->text, &pnt, 0x10000, 0x0);
 }
 
@@ -313,7 +314,6 @@ gui_internal_text_new(struct gui_priv *this, char *text)
 	struct widget *ret=gui_internal_box_new(this, gravity_center|orientation_vertical);
 	s2=s;
 	while ((tok=strtok(s2,"\n"))) {
-		dbg(0,"tok='%s'\n", tok);
 		gui_internal_widget_append(ret, gui_internal_label_new(this, tok));
 		s2=NULL;
 	}
@@ -376,14 +376,12 @@ gui_internal_button_attr_update(struct gui_priv *this, struct widget *w)
 static void
 gui_internal_button_attr_callback(struct gui_priv *this, struct widget *w)
 {
-	dbg(0,"enter\n");
 	if (gui_internal_button_attr_update(this, w))
 		gui_internal_widget_render(this, w);
 }
 static void
 gui_internal_button_attr_pressed(struct gui_priv *this, struct widget *w)
 {
-	dbg(0,"enter is_on=%d\n", w->is_on);
 	if (w->is_on) 
 		w->set_attr(w->instance, &w->off);
 	else
@@ -503,6 +501,9 @@ static void gui_internal_highlight(struct gui_priv *this, struct point *p)
 		this->highlighted_menu=g_list_last(this->root.children)->data;
 		this->highlighted->state |= STATE_HIGHLIGHTED;
 		gui_internal_widget_render(this, this->highlighted);
+#if 0
+		dbg(0,"%d,%d %dx%d\n", found->p.x, found->p.y, found->w, found->h);
+#endif
 	}
 }
 
@@ -555,10 +556,19 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 {
 	struct widget *wc;
-	int x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0;
+	int x0,x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0,count=0,rows=0,cols=3;
 	GList *l;
+	int orientation=w->flags & 0xffff0000;
 
-	switch (w->flags & 0xffff0000) {
+	
+	l=w->children;
+	while (l) {
+		count++;
+		l=g_list_next(l);
+	}
+	if (orientation == orientation_horizontal_vertical && count <= cols)
+		orientation=orientation_horizontal;
+	switch (orientation) {
 	case orientation_horizontal:
 		l=w->children;
 		while (l) {
@@ -601,6 +611,30 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		} else
 			expand=100;
 		break;
+	case orientation_horizontal_vertical:
+		count=0;
+		l=w->children;
+		while (l) {
+			wc=l->data;
+			gui_internal_widget_pack(this, wc);
+			if (height < wc->h)
+				height=wc->h;
+			if (width < wc->w) 
+				width=wc->w;
+			l=g_list_next(l);
+			count++;
+		}
+		if (count < cols)
+			cols=count;
+		rows=(count+cols-1)/cols;
+		width*=cols;
+		height*=rows;
+		width+=w->spx*(cols-1);
+		height+=w->spy*(rows-1);
+		owidth=width;
+		oheight=height;
+		expand=100;
+		break;
 	default:
 		break;
 	}
@@ -621,7 +655,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 	if (w->flags & gravity_bottom) 
 		y=w->p.y+w->h-w->bb-oheight;
 	l=w->children;
-	switch (w->flags & 0xffff0000) {
+	switch (orientation) {
 	case orientation_horizontal:
 		l=w->children;
 		while (l) {
@@ -657,6 +691,42 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 			if (w->flags & gravity_right) 
 				wc->p.x=x-wc->w;
 			y+=wc->h+w->spy;
+			l=g_list_next(l);
+		}
+		break;
+	case orientation_horizontal_vertical:
+		l=w->children;
+		x0=x;
+		count=0;
+		width/=cols;
+		height/=rows;
+		while (l) {
+			wc=l->data;
+			printf("x=%d y=%d\n", x, y);
+			wc->p.x=x;
+			wc->p.y=y;
+			if (wc->flags & flags_fill) {
+				wc->w=width;
+				wc->h=height;
+			}
+			if (w->flags & gravity_left) 
+				wc->p.x=x;
+			if (w->flags & gravity_xcenter) 
+				wc->p.x=x+(width-wc->w)/2;
+			if (w->flags & gravity_right) 
+				wc->p.x=x+width-wc->w;
+			if (w->flags & gravity_top) 
+				wc->p.y=y;
+			if (w->flags & gravity_ycenter) 
+				wc->p.y=y+(height-wc->h)/2;
+			if (w->flags & gravity_bottom) 
+				wc->p.y=y-height-wc->h;
+			x+=width;
+			if (++count == cols) {
+				count=0;
+				x=x0;
+				y+=height;
+			}
 			l=g_list_next(l);
 		}
 		break;
@@ -859,7 +929,6 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	menu=gui_internal_box_new_with_label(this, gravity_center|orientation_vertical, label);
 	menu->w=this->root.w;
 	menu->h=this->root.h;
-	dbg(0,"w=%d h=%d\n", this->root.w, this->root.h);
 	if (this->root.w > 320 || this->root.h > 320) {
 		this->font_size=40;
 		this->icon_s=48;
@@ -867,7 +936,7 @@ gui_internal_menu(struct gui_priv *this, char *label)
 		this->spacing=5;
 		this->font=graphics_font_new(this->gra, 545, 1);
 	} else {
-		this->font_size=25;
+		this->font_size=16;
 		this->icon_xs=16;
 		this->icon_s=32;
 		this->icon_l=48;
@@ -878,8 +947,8 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	gui_internal_clear(this);
 	w=gui_internal_top_bar(this);
 	gui_internal_widget_append(menu, w);
-	w=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_expand|flags_fill);
-	w->spx=20;
+	w=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
+	w->spx=4*this->spacing;
 	gui_internal_widget_append(menu, w);
 
 	return w;
@@ -947,6 +1016,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 
 	wb=gui_internal_menu(this, wm->text ? wm->text : "Bookmarks");
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
 
 	prefix=wm->prefix;
@@ -1039,11 +1109,32 @@ gui_internal_cmd_display(struct gui_priv *this, struct widget *wm)
 		gui_internal_button_new_with_callback(this, "Layout",
 			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
 			gui_internal_cmd_layout, NULL));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Fullscreen",
-			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
-			gui_internal_cmd_fullscreen, NULL));
+	if (this->fullscreen) {
+		gui_internal_widget_append(w,
+			gui_internal_button_new_with_callback(this, "Window Mode",
+				image_new_l(this, "gui_leave_fullscreen"), gravity_center|orientation_vertical,
+				gui_internal_cmd_fullscreen, NULL));
+	} else {
+		gui_internal_widget_append(w,
+			gui_internal_button_new_with_callback(this, "Fullscreen",
+				image_new_l(this, "gui_fullscreen"), gravity_center|orientation_vertical,
+				gui_internal_cmd_fullscreen, NULL));
+	}
 	gui_internal_menu_render(this);
+}
+
+static void
+gui_internal_cmd_quit(struct gui_priv *this, struct widget *wm)
+{
+	struct navit *nav=this->nav;
+	navit_destroy(nav);
+	main_remove_navit(nav);
+}
+
+static void
+gui_internal_cmd_abort_navigation(struct gui_priv *this, struct widget *wm)
+{
+	navit_set_destination(this->nav, NULL, NULL);
 }
 
 
@@ -1061,7 +1152,6 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 		gui_internal_button_new_with_callback(this, "172°15'23\" E\n55°23'44\" S",
 			image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
 			gui_internal_cmd_bookmarks, NULL));
-#if 0
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "172°15'23\" E\n55°23'44\" S",
 			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
@@ -1074,7 +1164,14 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 		gui_internal_button_new_with_callback(this, "Street",
 			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
 			gui_internal_cmd_bookmarks, NULL));
-#endif
+	gui_internal_widget_append(w,
+		gui_internal_button_new_with_callback(this, "Quit",
+			image_new_l(this, "gui_quit"), gravity_center|orientation_vertical,
+			gui_internal_cmd_quit, NULL));
+	gui_internal_widget_append(w,
+		gui_internal_button_new_with_callback(this, "Abort\nNavigation",
+			image_new_l(this, "gui_stop"), gravity_center|orientation_vertical,
+			gui_internal_cmd_abort_navigation, NULL));
 	gui_internal_menu_render(this);
 }
 
@@ -1209,6 +1306,7 @@ static void gui_internal_menu_root(struct gui_priv *this)
 	struct widget *w;
 
 	w=gui_internal_menu(this, "Main menu");	
+	w->spx=this->spacing*10;
 	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, "Actions",
 			image_new_l(this, "gui_actions"), gravity_center|orientation_vertical,
 			gui_internal_cmd_actions, NULL));
