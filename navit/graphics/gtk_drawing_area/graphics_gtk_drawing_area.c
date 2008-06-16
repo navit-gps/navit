@@ -36,6 +36,7 @@
 #include "graphics.h"
 #include "color.h"
 #include "item.h"
+#include "window.h"
 #include "plugin.h"
 
 struct graphics_priv {
@@ -43,6 +44,7 @@ struct graphics_priv {
 	int button_timeout;
 	GtkWidget *widget;
 	GtkWidget *win;
+	struct window window;
 	GdkDrawable *drawable;
 	GdkDrawable *background;
 	int background_ready;
@@ -55,6 +57,7 @@ struct graphics_priv {
 	int win_h;
 	int library_init;
 	int visible;
+	int overlay_disabled;
 	struct graphics_priv *parent;
 	struct graphics_priv *overlays;
 	struct graphics_priv *next;
@@ -66,7 +69,10 @@ struct graphics_priv {
 	void *motion_callback_data;
 	void (*button_callback)(void *data, int press, int button, struct point *p);
 	void *button_callback_data;
+	void (*key_callback)(void *data, int key);
+	void *key_callback_data;
 };
+
 
 struct graphics_font_priv {
         FT_Face face;
@@ -649,7 +655,8 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, int wi
 
 	if (! parent->drawable)
 		return;
-
+	if (parent->overlay_disabled || overlay->overlay_disabled)
+		return;
 	w=overlay->width;
 	if (w < 0)
 		w+=parent->width;
@@ -873,6 +880,12 @@ motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer user_data)
 
 static struct graphics_priv *graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth);
 
+static void
+overlay_disable(struct graphics_priv *gr, int disabled)
+{
+	gr->overlay_disabled=disabled;
+}
+
 static struct graphics_priv *
 overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
 {
@@ -894,6 +907,17 @@ static int gtk_argc;
 static char **gtk_argv={NULL};
 
 
+static int
+graphics_gtk_drawing_area_fullscreen(struct window *w, int on)
+{
+	struct graphics_priv *gr=w->priv;
+	if (on)
+                gtk_window_fullscreen(GTK_WINDOW(gr->win));
+	else
+                gtk_window_unfullscreen(GTK_WINDOW(gr->win));
+	return 1;
+}		
+
 static void *
 get_data(struct graphics_priv *this, char *type)
 {
@@ -908,7 +932,9 @@ get_data(struct graphics_priv *this, char *type)
 		gtk_widget_realize(this->win);
 		gtk_container_add(GTK_CONTAINER(this->win), this->widget);
 		gtk_widget_show_all(this->win);
-		return this->win;
+		this->window.fullscreen=graphics_gtk_drawing_area_fullscreen;
+		this->window.priv=this;
+		return &this->window;
 	}
 	return NULL;
 }
@@ -932,6 +958,13 @@ register_button_callback(struct graphics_priv *this, void (*callback)(void *data
 {
 	this->button_callback=callback;
 	this->button_callback_data=data;
+}
+
+static void
+register_key_callback(struct graphics_priv *this, void (*callback)(void *data, int press, int button, struct point *p), void *data)
+{
+	this->key_callback=callback;
+	this->key_callback_data=data;
 }
 
 static struct graphics_methods graphics_methods = {
@@ -960,6 +993,8 @@ static struct graphics_methods graphics_methods = {
 	register_motion_callback,
 	image_free,
 	get_text_bbox,
+	overlay_disable,
+	register_key_callback,
 };
 
 static struct graphics_priv *

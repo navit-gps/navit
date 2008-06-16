@@ -371,6 +371,17 @@ void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, 
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
+void graphics_overlay_disable(struct graphics *this_, int disable)
+{
+	if (this_->meth.overlay_disable)
+		this_->meth.overlay_disable(this_->priv, disable);
+}
+
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img)
 {
 	this_->meth.draw_image(this_->priv, gc->priv, p, img->priv);

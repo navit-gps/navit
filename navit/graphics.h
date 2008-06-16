@@ -67,6 +67,8 @@ struct graphics_methods {
 	void (*register_motion_callback)(struct graphics_priv *gr, void (*callback)(void *data, struct point *p), void *data);
 	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
 	void (*get_text_bbox)(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret);
+	void (*overlay_disable)(struct graphics_priv *gr, int disable);
+	void (*register_key_callback)(struct graphics_priv *gr, void (*callback)(void *data, struct point *p), void *data);
 };
 
 
@@ -146,6 +148,7 @@ void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct
 void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int w, int h);
 void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2, struct graphics_font *font, char *text, struct point *p, int dx, int dy);
 void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy, struct point *ret);
+void graphics_overlay_disable(struct graphics *this_, int disable);
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img);
 void display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label);
 int graphics_ready(struct graphics *this_);
