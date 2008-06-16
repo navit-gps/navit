@@ -1080,6 +1080,7 @@ gui_internal_cmd_layout(struct gui_priv *this, struct widget *wm)
 
 	wb=gui_internal_menu(this, "Layout");
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
 	iter=navit_attr_iter_new();
 	while(navit_get_attr(this->nav, attr_layout, &attr, iter)) {
@@ -1187,6 +1188,7 @@ gui_internal_cmd_maps(struct gui_priv *this, struct widget *wm)
 
 	wb=gui_internal_menu(this, "Maps");
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
 	iter=navit_attr_iter_new();
 	on.type=off.type=attr_active;
@@ -1214,6 +1216,7 @@ gui_internal_cmd_vehicle(struct gui_priv *this, struct widget *wm)
 
 	wb=gui_internal_menu(this, "Vehicle");
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
 	iter=navit_attr_iter_new();
 	while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
@@ -1234,6 +1237,7 @@ gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm)
 	struct attr on,off;
 	wb=gui_internal_menu(this, "Rules");	
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
 	on.u.num=1;
 	off.u.num=0;
