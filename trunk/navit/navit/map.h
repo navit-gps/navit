@@ -144,10 +144,14 @@ map_selection_contains_polygon(struct map_selection *sel, struct coord *c, int c
 }
 
 /* prototypes */
+enum attr_type;
 enum projection;
 struct attr;
+struct attr_iter;
+struct callback;
 struct item;
 struct map;
+struct map_priv;
 struct map_rect;
 struct map_search;
 struct map_selection;
@@ -156,6 +160,10 @@ char *map_get_filename(struct map *this_);
 char *map_get_type(struct map *this_);
 int map_get_active(struct map *this_);
 void map_set_active(struct map *this_, int active);
+int map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+int map_set_attr(struct map *this_, struct attr *attr);
+void map_add_callback(struct map *this_, struct callback *cb);
+void map_remove_callback(struct map *this_, struct callback *cb);
 int map_requires_conversion(struct map *this_);
 char *map_convert_string(struct map *this_, char *str);
 void map_convert_free(char *str);

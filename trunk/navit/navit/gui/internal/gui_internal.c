@@ -45,6 +45,9 @@
 #include "transform.h"
 #include "color.h"
 #include "map.h"
+#include "layout.h"
+#include "callback.h"
+#include "vehicle.h"
 #include "config.h"
 
 #define STATE_VISIBLE 1
@@ -98,13 +101,22 @@ struct widget {
 	void *data;
 	char *prefix;
 	char *name;
-	struct coord c;
+	struct pcoord c;
 	int state;
 	struct point p;
 	int wmin,hmin;
 	int w,h;
 	int bl,br,bt,bb,spx,spy;
 	enum flags flags;
+	void *instance;
+	int (*set_attr)(void *, struct attr *);
+	int (*get_attr)(void *, enum attr_type, struct attr *, struct attr_iter *);
+	void (*remove_cb)(void *, struct callback *cb);
+	struct callback *cb;
+	struct attr on;
+	struct attr off;
+	int is_on;
+	int redraw;
 	GList *children;
 };
 
@@ -127,6 +139,7 @@ struct gui_priv {
 	int pressed;
 	struct widget *widgets;
 	int widgets_count;
+	int redraw;
 	struct widget root;
 	struct widget *highlighted;
 	struct widget *highlighted_menu;
@@ -181,7 +194,7 @@ image_new_scaled(struct gui_priv *this, char *name, int w, int h)
 }
 
 static struct graphics_image *
-image_new(struct gui_priv *this, char *name)
+image_new_o(struct gui_priv *this, char *name)
 {
 	return image_new_scaled(this, name, -1, -1);
 }
@@ -221,7 +234,6 @@ gui_internal_label_new(struct gui_priv *this, char *text)
 {
 	struct point p[4];
 	int h=this->font_size;
-	char *pos=text;
 
 	struct widget *widget=g_new0(struct widget, 1);
 	widget->type=widget_label;
@@ -330,6 +342,92 @@ gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct 
 	}
 	return ret;
 
+}
+
+static int
+gui_internal_button_attr_update(struct gui_priv *this, struct widget *w)
+{
+	struct widget *wi;
+	int is_on=0;
+	struct attr curr;
+
+	if (w->get_attr(w->instance, w->on.type, &curr, NULL))
+		is_on=curr.u.data == w->on.u.data;
+	if (is_on != w->is_on) {
+		if (w->redraw)
+			this->redraw=1;
+		w->is_on=is_on;
+		wi=g_list_first(w->children)->data;
+		if (wi->img)
+			graphics_image_free(this->gra, wi->img);
+		wi->img=image_new_xs(this, is_on ? "gui_active" : "gui_inactive");
+		if (w->is_on && w->off.type == attr_none)
+			w->state &= ~STATE_SENSITIVE;
+		else
+			w->state |= STATE_SENSITIVE;
+		return 1;
+	}
+	return 0;
+}
+
+static void
+gui_internal_button_attr_callback(struct gui_priv *this, struct widget *w)
+{
+	dbg(0,"enter\n");
+	if (gui_internal_button_attr_update(this, w))
+		gui_internal_widget_render(this, w);
+}
+static void
+gui_internal_button_attr_pressed(struct gui_priv *this, struct widget *w)
+{
+	dbg(0,"enter is_on=%d\n", w->is_on);
+	if (w->is_on) 
+		w->set_attr(w->instance, &w->off);
+	else
+		w->set_attr(w->instance, &w->on);
+	gui_internal_button_attr_update(this, w);
+	
+}
+
+static struct widget *
+gui_internal_button_navit_attr_new(struct gui_priv *this, char *text, enum flags flags, struct attr *on, struct attr *off)
+{
+	struct graphics_image *image=image_new_xs(this, "gui_inactive");
+	struct widget *ret;
+	ret=gui_internal_button_new_with_callback(this, text, image, flags, gui_internal_button_attr_pressed, NULL);
+	if (on)
+		ret->on=*on;
+	if (off)
+		ret->off=*off;
+	ret->get_attr=navit_get_attr;
+	ret->set_attr=navit_set_attr;
+	ret->remove_cb=navit_remove_callback;
+	ret->instance=this->nav;
+	ret->cb=callback_new_attr_2(gui_internal_button_attr_callback, on->type, this, ret);
+	navit_add_callback(this->nav, ret->cb);
+	gui_internal_button_attr_update(this, ret);
+	return ret;
+}
+
+static struct widget *
+gui_internal_button_map_attr_new(struct gui_priv *this, char *text, enum flags flags, struct map *map, struct attr *on, struct attr *off)
+{
+	struct graphics_image *image=image_new_xs(this, "gui_inactive");
+	struct widget *ret;
+	ret=gui_internal_button_new_with_callback(this, text, image, flags, gui_internal_button_attr_pressed, NULL);
+	if (on)
+		ret->on=*on;
+	if (off)
+		ret->off=*off;
+	ret->get_attr=map_get_attr;
+	ret->set_attr=map_set_attr;
+	ret->remove_cb=map_remove_callback;
+	ret->instance=map;
+	ret->redraw=1;
+	ret->cb=callback_new_attr_2(gui_internal_button_attr_callback, on->type, this, ret);
+	map_add_callback(map, ret->cb);
+	gui_internal_button_attr_update(this, ret);
+	return ret;
 }
 
 static struct widget *
@@ -595,6 +693,8 @@ static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 		g_free(w->prefix);
 	if (w->name)
 		g_free(w->name);
+	if (w->cb && w->remove_cb)
+		w->remove_cb(w->instance, w->cb);
 	g_free(w);
 }
 
@@ -797,25 +897,11 @@ gui_internal_menu_render(struct gui_priv *this)
 }
 
 static void
-gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm)
+gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm)
 {
-	struct widget *wb,*w;
-	wb=gui_internal_menu(this, "Rules");	
-	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
-	gui_internal_widget_append(wb, w);
-	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Stick to roads, obey traffic rules",
-			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
-	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Keep orientation to the North",
-			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
-	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Warn about wrong directions",
-			image_new(this, "gui_inactive"), gravity_left_center|orientation_horizontal|flags_fill));
-	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Attack defenseless civilians",
-			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
-	gui_internal_menu_render(this);
+	struct widget *w=wm->data;
+	navit_set_destination(this->nav, &w->c, w->name);
+	gui_internal_prune_menu(this, NULL);
 }
 
 static void
@@ -826,30 +912,34 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
 	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Set as destination",
-			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
+		gui_internal_button_new_with_callback(this, "Set as destination",
+			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+			gui_internal_cmd_set_destination, wm));
+#if 0
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Add to tour",
-			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
+			image_new_o(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Add as bookmark",
-			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
+			image_new_o(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "View on map",
-			image_new(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
+			image_new_o(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
+#endif
 	gui_internal_menu_render(this);
 }
 
 static void
 gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 {
-	struct attr attr;
+	struct attr attr,mattr;
 	struct map_rect *mr=NULL;
 	struct item *item;
 	char *label_full,*l,*prefix,*pos;
 	int len,plen,hassub;
 	struct widget *wb,*w,*wbm;
 	GHashTable *hash;
+	struct coord c;
 
 
 	wb=gui_internal_menu(this, wm->text ? wm->text : "Bookmarks");
@@ -861,7 +951,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 		prefix="";
 	plen=strlen(prefix);
 
-	if(navit_get_attr(this->nav, attr_bookmark_map, &attr, NULL) && attr.u.map && (mr=map_rect_new(attr.u.map, NULL))) {
+	if(navit_get_attr(this->nav, attr_bookmark_map, &mattr, NULL) && mattr.u.map && (mr=map_rect_new(mattr.u.map, NULL))) {
 		hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type != type_bookmark) continue;
@@ -883,8 +973,11 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 					wbm=gui_internal_button_new_with_callback(this, l,
 						image_new_xs(this, hassub ? "gui_inactive" : "gui_active" ), gravity_left_center|orientation_horizontal|flags_fill,
 							hassub ? gui_internal_cmd_bookmarks : gui_internal_cmd_position, NULL);
-					if (item_coord_get(item, &wbm->c, 1)) {
-						wbm->name=g_strdup(label_full);
+					if (item_coord_get(item, &c, 1)) {
+						wbm->c.x=c.x;
+						wbm->c.y=c.y;
+						wbm->c.pro=map_projection(mattr.u.map);
+						wbm->name=g_strdup_printf("Bookmark %s",label_full);
 						wbm->text=g_strdup(l);
 						gui_internal_widget_append(w, wbm);
 						g_hash_table_insert(hash, g_strdup(l), (void *)1);
@@ -905,6 +998,42 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 }
 
 static void
+gui_internal_cmd_layout(struct gui_priv *this, struct widget *wm)
+{
+	struct attr attr;
+	struct widget *w,*wb,*wl;
+	struct attr_iter *iter;
+
+
+	wb=gui_internal_menu(this, "Layout");
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	iter=navit_attr_iter_new();
+	while(navit_get_attr(this->nav, attr_layout, &attr, iter)) {
+		wl=gui_internal_button_navit_attr_new(this, attr.u.layout->name, gravity_left_center|orientation_horizontal|flags_fill,
+			&attr, NULL);
+		gui_internal_widget_append(w, wl);
+	}
+	navit_attr_iter_destroy(iter);
+	gui_internal_menu_render(this);
+}
+
+
+static void
+gui_internal_cmd_display(struct gui_priv *this, struct widget *wm)
+{
+	struct widget *w;
+
+	w=gui_internal_menu(this, "Display");	
+	gui_internal_widget_append(w,
+		gui_internal_button_new_with_callback(this, "Layout",
+			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
+			gui_internal_cmd_layout, NULL));
+	gui_internal_menu_render(this);
+}
+
+
+static void
 gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 {
 	struct widget *w;
@@ -918,6 +1047,100 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 		gui_internal_button_new_with_callback(this, "172°15'23\" E\n55°23'44\" S",
 			image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
 			gui_internal_cmd_bookmarks, NULL));
+#if 0
+	gui_internal_widget_append(w,
+		gui_internal_button_new_with_callback(this, "172°15'23\" E\n55°23'44\" S",
+			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
+			gui_internal_cmd_bookmarks, NULL));
+	gui_internal_widget_append(w,
+		gui_internal_button_new_with_callback(this, "Town",
+			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
+			gui_internal_cmd_bookmarks, NULL));
+	gui_internal_widget_append(w,
+		gui_internal_button_new_with_callback(this, "Street",
+			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
+			gui_internal_cmd_bookmarks, NULL));
+#endif
+	gui_internal_menu_render(this);
+}
+
+static void
+gui_internal_cmd_maps(struct gui_priv *this, struct widget *wm)
+{
+	struct attr attr;
+	struct widget *w,*wb,*wma;
+	char *label;
+	struct attr_iter *iter;
+	struct attr on, off;
+
+
+	wb=gui_internal_menu(this, "Maps");
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	iter=navit_attr_iter_new();
+	on.type=off.type=attr_active;
+	on.u.num=1;
+	off.u.num=0;
+	while(navit_get_attr(this->nav, attr_map, &attr, iter)) {
+		label=g_strdup_printf("%s:%s", map_get_type(attr.u.map), map_get_filename(attr.u.map));
+		wma=gui_internal_button_map_attr_new(this, label, gravity_left_center|orientation_horizontal|flags_fill,
+			attr.u.map, &on, &off);
+		gui_internal_widget_append(w, wma);
+		g_free(label);
+	}
+	navit_attr_iter_destroy(iter);
+	gui_internal_menu_render(this);
+	
+}
+
+static void
+gui_internal_cmd_vehicle(struct gui_priv *this, struct widget *wm)
+{
+	struct attr attr,vattr;
+	struct widget *w,*wb,*wl;
+	struct attr_iter *iter;
+
+
+	wb=gui_internal_menu(this, "Vehicle");
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	iter=navit_attr_iter_new();
+	while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
+		vehicle_get_attr(attr.u.vehicle, attr_name, &vattr);
+		wl=gui_internal_button_navit_attr_new(this, vattr.u.str, gravity_left_center|orientation_horizontal|flags_fill,
+			&attr, NULL);
+		gui_internal_widget_append(w, wl);
+	}
+	navit_attr_iter_destroy(iter);
+	gui_internal_menu_render(this);
+}
+
+
+static void
+gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm)
+{
+	struct widget *wb,*w;
+	struct attr on,off;
+	wb=gui_internal_menu(this, "Rules");	
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	on.u.num=1;
+	off.u.num=0;
+	on.type=off.type=attr_tracking;
+	gui_internal_widget_append(w,
+		gui_internal_button_navit_attr_new(this, "Stick to roads", gravity_left_center|orientation_horizontal|flags_fill,
+			&on, &off));
+	on.type=off.type=attr_orientation;
+	gui_internal_widget_append(w,
+		gui_internal_button_navit_attr_new(this, "Keep orientation to the North", gravity_left_center|orientation_horizontal|flags_fill,
+			&on, &off));
+	on.type=off.type=attr_cursor;
+	gui_internal_widget_append(w,
+		gui_internal_button_navit_attr_new(this, "Map follows Vehicle", gravity_left_center|orientation_horizontal|flags_fill,
+			&on, &off));
+	gui_internal_widget_append(w,
+		gui_internal_button_new(this, "Attack defenseless civilians",
+			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
 	gui_internal_menu_render(this);
 }
 
@@ -928,14 +1151,17 @@ gui_internal_cmd_settings(struct gui_priv *this, struct widget *wm)
 
 	w=gui_internal_menu(this, "Settings");	
 	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Display",
-			image_new_l(this, "gui_display"), gravity_center|orientation_vertical));
+		gui_internal_button_new_with_callback(this, "Display",
+			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
+			gui_internal_cmd_display, NULL));
 	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Maps",
-			image_new_l(this, "gui_maps"), gravity_center|orientation_vertical));
+		gui_internal_button_new_with_callback(this, "Maps",
+			image_new_l(this, "gui_maps"), gravity_center|orientation_vertical,
+			gui_internal_cmd_maps, NULL));
 	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Sound",
-			image_new_l(this, "gui_sound"), gravity_center|orientation_vertical));
+		gui_internal_button_new_with_callback(this, "Vehicle",
+			image_new_l(this, "gui_sound"), gravity_center|orientation_vertical,
+			gui_internal_cmd_vehicle, NULL));
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Rules",
 			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
@@ -996,6 +1222,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel 
 		if (!navit_handle_button(this->nav, pressed, button, p, NULL) || button >=4) // Maybe there's a better way to do this
 			return;
+		navit_block(this->nav, 1);
 		// draw menu
 		this->root.p.x=0;
 		this->root.p.y=0;
@@ -1016,8 +1243,14 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		gui_internal_call_highlighted(this);
 		gui_internal_highlight(this, NULL);
 		graphics_draw_mode(gra, draw_mode_end);
-		if (! this->root.children)
-			navit_draw_displaylist(this->nav);
+		if (! this->root.children) {
+			if (!navit_block(this->nav, 0)) {
+				if (this->redraw)
+					navit_draw(this->nav);
+				else
+					navit_draw_displaylist(this->nav);
+			}
+		}
 	}
 }
 
