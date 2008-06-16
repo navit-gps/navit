@@ -137,47 +137,54 @@ static struct widget * gui_internal_box_new(struct gui_priv *this, enum flags fl
 static void gui_internal_widget_append(struct widget *parent, struct widget *child);
 static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w);
 
-static char *
-image_path(char *name, int w, int h)
+static struct graphics_image *
+image_new_scaled(struct gui_priv *this, char *name, int w, int h)
 {
-	char *full_name;
-	full_name=g_strdup_printf("%s/xpm/%s.svg", getenv("NAVIT_SHAREDIR"), name);
-	if (file_exists(full_name))
-		return full_name;
-	full_name=g_strdup_printf("%s/xpm/%s.png", getenv("NAVIT_SHAREDIR"), name);
-	if (file_exists(full_name))
-		return full_name;
+	struct graphics_image *ret=NULL;
+	char *full_name=NULL;
+	int i;
+
+	for (i = 1 ; i < 5 ; i++) {
+		full_name=NULL;
+		switch (i) {
+		case 1:
+			full_name=g_strdup_printf("%s/xpm/%s.svg", getenv("NAVIT_SHAREDIR"), name);
+			break;
+		case 2:
+			if (w != -1 && h != -1) {
+				full_name=g_strdup_printf("%s/xpm/%s_%d_%d.png", getenv("NAVIT_SHAREDIR"), name, w, h);
+			}
+			break;
+		case 3:
+			full_name=g_strdup_printf("%s/xpm/%s.png", getenv("NAVIT_SHAREDIR"), name);
+			break;
+		case 4:
+			full_name=g_strdup_printf("%s/xpm/%s.xpm", getenv("NAVIT_SHAREDIR"), name);
+			break;
+		}
+		dbg(1,"trying '%s'\n", full_name);
+		if (! full_name)
+			continue;
+		if (!file_exists(full_name)) {
+			g_free(full_name);
+			continue;
+		}
+		ret=graphics_image_new_scaled(this->gra, full_name, w, h);
+		dbg(1,"ret=%p\n", ret);
+		g_free(full_name);
+		if (ret) 
+			return ret;	
+	}
+	dbg(0,"failed to load %s with %d,%d\n", name, w, h);
 	return NULL;
 }
 
 static struct graphics_image *
 image_new(struct gui_priv *this, char *name)
 {
-	char *full_name=image_path(name, -1, -1);
-	struct graphics_image *ret=NULL;
-
-	if (full_name);
-		ret=graphics_image_new(this->gra, full_name);
-	if (! ret)
-		dbg(0,"Failed to load %s\n", full_name);
-	g_free(full_name);
-	return ret;
+	return image_new_scaled(this, name, -1, -1);
 }
 
-
-static struct graphics_image *
-image_new_scaled(struct gui_priv *this, char *name, int w, int h)
-{
-	char *full_name=image_path(name, w, h);
-	struct graphics_image *ret=NULL;
-
-	if (full_name);
-		ret=graphics_image_new_scaled(this->gra, full_name, w, h);
-	if (! ret)
-		dbg(0,"Failed to load %s\n", full_name);
-	g_free(full_name);
-	return ret;
-}
 
 static struct graphics_image *
 image_new_s(struct gui_priv *this, char *name)
