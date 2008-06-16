@@ -1241,6 +1241,7 @@ phase1(FILE *in, FILE *out_ways, FILE *out_nodes)
 	return 1;
 }
 
+#ifdef HAVE_POSTGRESQL
 static int
 phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
 {
@@ -1405,6 +1406,7 @@ phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
 	alarm(0);
 	return 1;
 }
+#endif
 
 static char buffer[150000];
 
@@ -2434,7 +2436,9 @@ usage(FILE *f)
 	fprintf(f,"-W (--ways-only)         : process only ways\n");
 	fprintf(f,"-a (--attr-debug-level)  : control which data is included in the debug attribute\n");
 	fprintf(f,"-c (--dump-coordinates)  : dump coordinates after phase 1\n");
+#ifdef HAVE_POSTGRESQL
 	fprintf(f,"-d (--db)                : get osm data out of a postgresql database with osm simple scheme and given connect string\n");
+#endif
 	fprintf(f,"-e (--end)               : end at specified phase\n");
 	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
 	fprintf(f,"-o (--coverage)          : map every street to item overage\n");
@@ -2466,7 +2470,9 @@ int main(int argc, char **argv)
 			{"attr-debug-level", 1, 0, 'a'},
 			{"compression-level", 1, 0, 'z'},
 			{"coverage", 0, 0, 'o'},
+#ifdef HAVE_POSTGRESQL
 			{"db", 1, 0, 'd'},
+#endif
 			{"dedupe-ways", 0, 0, 'w'},
 			{"end", 1, 0, 'e'},
 			{"help", 0, 0, 'h'},
@@ -2478,7 +2484,11 @@ int main(int argc, char **argv)
 			{"ways-only", 0, 0, 'W'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "Nni:Wa:cd:e:hks:w", long_options, &option_index);
+		c = getopt_long (argc, argv, "Nni:Wa:c"
+#ifdef HAVE_POSTGRESQL
+					      "d:"
+#endif
+					      "e:hks:w", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
@@ -2494,9 +2504,11 @@ int main(int argc, char **argv)
 		case 'c':
 			dump_coordinates=1;
 			break;
+#ifdef HAVE_POSTGRESQL
 		case 'd':
 			dbstr=optarg;
 			break;
+#endif
 		case 'e':
 			end=atoi(optarg);
 			break;
@@ -2555,9 +2567,11 @@ int main(int argc, char **argv)
 			nodes=fopen("nodes.tmp","wb+");
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
+#ifdef HAVE_POSTGRESQL
 		if (dbstr) 
 			phase1_db(dbstr,ways,nodes);
 		else
+#endif
 			phase1(input_file,ways,nodes);
 		if (ways)
 			fclose(ways);
