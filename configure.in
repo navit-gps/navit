@@ -450,11 +450,11 @@ AM_CONDITIONAL(USE_BINDING_DBUS, test "x${enable_binding_dbus}" = "xyes")
 # svg
 AC_ARG_ENABLE(svg, [  --disable-svg        disable Scalable Vector Graphics], enable_svg=$enableval, enable_svg=yes)
 AC_ARG_ENABLE(svg2png, [  --disable-svg2png        disable conversion of svgs to pngs], enable_svg2png=$enableval, enable_svg2png=yes)
-AC_ARG_ENABLE(svg2png_scaling, [  --enable-svg2png-scaling   enable conversion of svgs to pngs with specified sizes], SVG2PNG_SCALES=$enableval, SVG2PNG_SCALES="8 16 32 48")
+AC_ARG_ENABLE(svg2png_scaling, [  --enable-svg2png-scaling   enable conversion of svgs to pngs with specified sizes], SVG2PNG_SCALES=$enableval, SVG2PNG_SCALES="8 16 32 48 96")
 if test "x${enable_svg2png}" = "xyes" ; then
 	AC_PATH_PROG([KSVGTOPNG], [ksvgtopng], [])
 	if test ! -x "$KSVGTOPNG"; then
-	    enable_svg2png = "no"
+	    enable_svg2png="no"
         fi
 fi
 AC_SUBST(SVG2PNG_SCALES)
