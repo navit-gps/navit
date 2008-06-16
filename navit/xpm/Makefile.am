@@ -3,6 +3,20 @@ xpm_DATA = airport.xpm attraction.xpm bank.xpm bar.xpm bus.xpm cafe.xpm camping.
 xpm_DATA += gc_reference.xpm gc_webcam.xpm gc_question.xpm gc_stages.xpm
 xpm_DATA += shopping.xpm heliport.xpm cursor.xpm peak.xpm mini_roundabout.xpm
 xpm_DATA += townhall.xpm level_crossing.xpm boat_ramp.xpm
+svgs = gui_actions.svg gui_active.svg gui_bookmark.svg gui_display.svg gui_home.svg gui_inactive.svg gui_map.svg gui_maps.svg gui_rules.svg gui_settings.svg gui_sound.svg gui_tools.svg
+if USE_SVG
+   xpm_DATA += $(svgs)
+endif
+
+if USE_SVG2PNG
+%.png:*.svg
+	$(srcdir)/png2svg "$@"
+xpm_DATA += $(addsuffix .png,$(basename $(svgs)))
+if USE_SVG2PNG_SCALES
+xpm_DATA += $(foreach scale, @SVG2PNG_SCALES@, $(addsuffix _$(scale)_$(scale).png,$(basename $(svgs))))
+endif
+endif
+
 EXTRA_DIST = $(xpm_DATA)
 #burgerking.ico:
 #	wget http://www.burgerking.de/favicon.ico -O burgerking.ico
