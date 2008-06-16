@@ -1,0 +1,15 @@
+#! /bin/sh
+png=$1
+if [[ "$png" = *_[1-9]*_[1-9]*.png ]]; 
+then
+        svg=${png%_*_*.png};
+	h=${png##*_}
+	w=${png%_$h}
+	h=${h%.png}
+	w=${w##*_}
+else
+	w=$(grep 'width=".*px"' gui_actions.svg | head -1 | sed -e 's/px".*//' -e 's/.*"//')
+	h=$(grep 'height=".*px"' gui_actions.svg | head -1 | sed -e 's/px".*//' -e 's/.*"//')
+	svg=${png%.png}
+fi
+ksvgtopng $w $h $svg.svg $png
