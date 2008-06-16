@@ -89,6 +89,7 @@ struct transformation *navit_get_trans(struct navit *this_);
 struct route *navit_get_route(struct navit *this_);
 struct navigation *navit_get_navigation(struct navit *this_);
 struct displaylist *navit_get_displaylist(struct navit *this_);
+int navit_block(struct navit *this_, int block);
 void navit_destroy(struct navit *this_);
 /* end of prototypes */
 #ifdef __cplusplus

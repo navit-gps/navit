@@ -121,6 +121,7 @@ struct navit {
 	struct log *textfile_debug_log;
 	struct pcoord destination;
 	int destination_valid;
+	int blocked;
 };
 
 struct gui *main_loop_gui;
@@ -173,6 +174,10 @@ navit_draw(struct navit *this_)
 	GList *l;
 	struct navit_vehicle *nv;
 
+	if (this_->blocked) {
+		this_->blocked |= 2;
+		return;
+	}
 	transform_setup_source_rect(this_->trans);
 	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layout_current);
 	l=this_->vehicles;
@@ -1461,6 +1466,8 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 {
 	struct point pnt2;
 	enum projection pro;
+	if (this_->blocked)
+		return;
 	if (pnt)
 		pnt2=*pnt;
 	else {
@@ -1659,6 +1666,22 @@ struct displaylist *
 navit_get_displaylist(struct navit *this_)
 {
 	return this_->displaylist;
+}
+
+int
+navit_block(struct navit *this_, int block)
+{
+	if (block) {
+		this_->blocked |= 1;
+		return;
+	}
+	if (this_->blocked & 2) {
+		this_->blocked=0;
+		navit_draw(this_);
+		return 1;
+	}
+	this_->blocked=0;
+	return 0;
 }
 
 void

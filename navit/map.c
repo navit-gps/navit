@@ -27,6 +27,7 @@
 #include "transform.h"
 #include "item.h"
 #include "plugin.h"
+#include "callback.h"
 #include "country.h"
 
 
@@ -35,6 +36,7 @@ struct map {
 	struct map_priv *priv;
 	char *type;
 	char *filename;
+	struct callback_list *attr_cbl;
 	int active;
 };
 
@@ -65,6 +67,8 @@ map_new(const char *type, struct attr **attrs)
 		g_free(m);
 		m=NULL;
 	}
+	if (m)
+		m->attr_cbl=callback_list_new();
 	return m;
 }
 
@@ -91,6 +95,52 @@ map_set_active(struct map *this_, int active)
 {
 	this_->active=active;
 }
+
+int
+map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	switch (type) {
+	case attr_active:
+		attr->u.num=this_->active;
+		break;
+	default:
+		return 0;
+	}
+	return 1;
+}
+
+int
+map_set_attr(struct map *this_, struct attr *attr)
+{
+	int attr_updated=0;
+
+	switch (attr->type) {
+	case attr_active:
+		if (this_->active != !!attr->u.num) {
+			this_->active=!!attr->u.num;
+			attr_updated=1;
+		}
+		break;
+	default:
+		return 0;
+	}
+	if (attr_updated)
+		callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
+}
+
+void
+map_add_callback(struct map *this_, struct callback *cb)
+{
+	callback_list_add(this_->attr_cbl, cb);
+}
+
+void
+map_remove_callback(struct map *this_, struct callback *cb)
+{
+	callback_list_remove(this_->attr_cbl, cb);
+}
+
+
 
 int
 map_requires_conversion(struct map *this_)
