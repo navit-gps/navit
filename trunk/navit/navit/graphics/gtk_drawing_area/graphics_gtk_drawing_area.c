@@ -20,6 +20,10 @@
 #define GDK_ENABLE_BROKEN
 #include "config.h"
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
+#if !defined(GDK_Book) || !defined(GDK_Calendar)
+#include <X11/XF86keysym.h>
+#endif
 #include <fontconfig/fontconfig.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -37,7 +41,16 @@
 #include "color.h"
 #include "item.h"
 #include "window.h"
+#include "keys.h"
 #include "plugin.h"
+
+#ifndef GDK_Book
+#define GDK_Book XF86XK_Book
+#endif
+#ifndef GDK_Calendar
+#define GDK_Calendar XF86XK_Calendar
+#endif
+
 
 struct graphics_priv {
 	GdkEventButton button_event;
@@ -69,8 +82,8 @@ struct graphics_priv {
 	void *motion_callback_data;
 	void (*button_callback)(void *data, int press, int button, struct point *p);
 	void *button_callback_data;
-	void (*key_callback)(void *data, int key);
-	void *key_callback_data;
+	void (*keypress_callback)(void *data, int key);
+	void *keypress_callback_data;
 };
 
 
@@ -836,6 +849,8 @@ button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 	return FALSE;
 }
 
+
+
 static gint
 scroll(GtkWidget * widget, GdkEventScroll * event, gpointer user_data)
 {
@@ -875,6 +890,41 @@ motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer user_data)
 	p.y=event->y;
 	if (this->motion_callback)
 		(*this->motion_callback)(this->motion_callback_data, &p);
+	return FALSE;
+}
+
+static gint
+keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
+{
+	struct graphics_priv *this=user_data;
+	if (! this->keypress_callback)
+		return FALSE;
+	if (event->keyval >= 32 && event->keyval < 127) {
+		(*this->keypress_callback)(this->motion_callback_data, event->keyval);
+		return FALSE;
+	}
+	switch (event->keyval) {
+	case GDK_Up:
+		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_UP);
+		break;
+	case GDK_Down:
+		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_DOWN);
+		break;
+	case GDK_Left:
+		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_LEFT);
+		break;
+	case GDK_Right:
+		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_RIGHT);
+		break;
+	case GDK_Book:
+		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_ZOOM_IN);
+		break;
+	case GDK_Calendar:
+		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_ZOOM_OUT);
+		break;
+	default:
+		break;
+	}
 	return FALSE;
 }
 
@@ -961,10 +1011,15 @@ register_button_callback(struct graphics_priv *this, void (*callback)(void *data
 }
 
 static void
-register_key_callback(struct graphics_priv *this, void (*callback)(void *data, int press, int button, struct point *p), void *data)
+register_keypress_callback(struct graphics_priv *this, void (*callback)(void *data, int key), void *data)
 {
-	this->key_callback=callback;
-	this->key_callback_data=data;
+	dbg(0,"enter\n");
+	GTK_WIDGET_SET_FLAGS (this->widget, GTK_CAN_FOCUS);
+        gtk_widget_set_sensitive(this->widget, TRUE);
+	gtk_widget_grab_focus(this->widget);
+	g_signal_connect(G_OBJECT(this->widget), "key-press-event", G_CALLBACK(keypress), this);
+	this->keypress_callback=callback;
+	this->keypress_callback_data=data;
 }
 
 static struct graphics_methods graphics_methods = {
@@ -994,7 +1049,7 @@ static struct graphics_methods graphics_methods = {
 	image_free,
 	get_text_bbox,
 	overlay_disable,
-	register_key_callback,
+	register_keypress_callback,
 };
 
 static struct graphics_priv *
