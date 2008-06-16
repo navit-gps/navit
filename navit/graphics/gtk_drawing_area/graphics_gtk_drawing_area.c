@@ -35,6 +35,7 @@
 #include "point.h"
 #include "graphics.h"
 #include "color.h"
+#include "item.h"
 #include "plugin.h"
 
 struct graphics_priv {
@@ -50,6 +51,8 @@ struct graphics_priv {
 	struct point p;
 	int width;
 	int height;
+	int win_w;
+	int win_h;
 	int library_init;
 	int visible;
 	struct graphics_priv *parent;
@@ -900,7 +903,7 @@ get_data(struct graphics_priv *this, char *type)
 		gtk_init(&gtk_argc, &gtk_argv);
 		gtk_set_locale();
 		this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-		gtk_window_set_default_size(GTK_WINDOW(this->win), 792, 547);
+		gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
 		gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
 		gtk_widget_realize(this->win);
 		gtk_container_add(GTK_CONTAINER(this->win), this->widget);
@@ -972,10 +975,17 @@ static struct graphics_priv *
 graphics_gtk_drawing_area_new(struct graphics_methods *meth, struct attr **attrs)
 {
 	GtkWidget *draw;
+	struct attr *attr;
 
 	draw=gtk_drawing_area_new();
 	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
 	this->widget=draw;
+	this->win_w=792;
+	if ((attr=attr_search(attrs, NULL, attr_w))) 
+		this->win_w=attr->u.num;
+	this->win_h=547;
+	if ((attr=attr_search(attrs, NULL, attr_h))) 
+		this->win_h=attr->u.num;
 
 	this->colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
 	gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_KEY_PRESS_MASK);

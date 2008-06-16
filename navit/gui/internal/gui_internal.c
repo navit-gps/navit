@@ -120,9 +120,10 @@ struct gui_priv {
 	struct graphics_gc *background2;
 	struct graphics_gc *highlight_background;
 	struct graphics_gc *foreground;
+	int spacing;
 	int font_size;
 	struct graphics_font *font;
-	int icon_large, icon_small;
+	int icon_xs, icon_s, icon_l;
 	int pressed;
 	struct widget *widgets;
 	int widgets_count;
@@ -185,17 +186,23 @@ image_new(struct gui_priv *this, char *name)
 	return image_new_scaled(this, name, -1, -1);
 }
 
+static struct graphics_image *
+image_new_xs(struct gui_priv *this, char *name)
+{
+	return image_new_scaled(this, name, this->icon_xs, this->icon_xs);
+}
+
 
 static struct graphics_image *
 image_new_s(struct gui_priv *this, char *name)
 {
-	return image_new_scaled(this, name, this->icon_small, this->icon_small);
+	return image_new_scaled(this, name, this->icon_s, this->icon_s);
 }
 
 static struct graphics_image *
 image_new_l(struct gui_priv *this, char *name)
 {
-	return image_new_scaled(this, name, this->icon_large, this->icon_large);
+	return image_new_scaled(this, name, this->icon_l, this->icon_l);
 }
 
 static void
@@ -213,13 +220,15 @@ static struct widget *
 gui_internal_label_new(struct gui_priv *this, char *text)
 {
 	struct point p[4];
+	int h=this->font_size;
+	char *pos=text;
 
 	struct widget *widget=g_new0(struct widget, 1);
 	widget->type=widget_label;
 	widget->text=g_strdup(text);
 	graphics_get_text_bbox(this->gra, this->font, text, 0x10000, 0x0, p);
-	widget->h=40;
-	widget->w=p[2].x-p[0].x+8;
+	widget->h=h;
+	widget->w=p[2].x-p[0].x+this->spacing;
 	widget->flags=gravity_center;
 
 	return widget;
@@ -282,6 +291,19 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
 	graphics_draw_text(this->gra, this->foreground, NULL, this->font, w->text, &pnt, 0x10000, 0x0);
 }
 
+static struct widget *
+gui_internal_text_new(struct gui_priv *this, char *text)
+{
+	char *s=g_strdup(text),*s2,*tok;
+	struct widget *ret=gui_internal_box_new(this, gravity_center|orientation_vertical);
+	s2=s;
+	while ((tok=strtok(s2,"\n"))) {
+		dbg(0,"tok='%s'\n", tok);
+		gui_internal_widget_append(ret, gui_internal_label_new(this, tok));
+		s2=NULL;
+	}
+	return ret;
+}
 
 
 static struct widget *
@@ -291,7 +313,7 @@ gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct 
 	if (text && image) {
 		ret=gui_internal_box_new(this, flags);
 		gui_internal_widget_append(ret, gui_internal_image_new(this, image));
-		gui_internal_widget_append(ret, gui_internal_label_new(this, text));
+		gui_internal_widget_append(ret, gui_internal_text_new(this, text));
 	} else {
 		if (text)
 			ret=gui_internal_label_new(this, text);
@@ -654,8 +676,8 @@ gui_internal_top_bar(struct gui_priv *this)
 	int width,width_used=0,use_sep,incomplete=0;
 
 	w=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
-	w->bl=6;
-	w->spx=5;
+	w->bl=this->spacing;
+	w->spx=this->spacing;
 	w->background=this->background2;
 	wm=gui_internal_button_new_with_callback(this, NULL,
 		image_new_s(this, "gui_map"), gravity_center,
@@ -734,16 +756,20 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	menu=gui_internal_box_new_with_label(this, gravity_center|orientation_vertical, label);
 	menu->w=this->root.w;
 	menu->h=this->root.h;
+	dbg(0,"w=%d h=%d\n", this->root.w, this->root.h);
 	if (this->root.w > 320 || this->root.h > 320) {
-		this->font_size=20;
-		this->icon_small=48;
-		this->icon_large=96;
+		this->font_size=40;
+		this->icon_s=48;
+		this->icon_l=96;
+		this->spacing=5;
 		this->font=graphics_font_new(this->gra, 545, 1);
 	} else {
-		this->font_size=5;
-		this->icon_large=24;
-		this->icon_small=12;
-		this->font=graphics_font_new(this->gra, 136, 1);
+		this->font_size=25;
+		this->icon_xs=16;
+		this->icon_s=32;
+		this->icon_l=48;
+		this->spacing=2;
+		this->font=graphics_font_new(this->gra, 200, 1);
 	}
 	gui_internal_widget_append(&this->root, menu);
 	gui_internal_clear(this);
@@ -855,7 +881,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 				l[len-plen]='\0';
 				if (!g_hash_table_lookup(hash, l)) {
 					wbm=gui_internal_button_new_with_callback(this, l,
-						image_new(this, hassub ? "gui_inactive" : "gui_active" ), gravity_left_center|orientation_horizontal|flags_fill,
+						image_new_xs(this, hassub ? "gui_inactive" : "gui_active" ), gravity_left_center|orientation_horizontal|flags_fill,
 							hassub ? gui_internal_cmd_bookmarks : gui_internal_cmd_position, NULL);
 					if (item_coord_get(item, &wbm->c, 1)) {
 						wbm->name=g_strdup(label_full);
@@ -887,6 +913,10 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Bookmarks",
 			image_new_l(this, "gui_bookmark"), gravity_center|orientation_vertical,
+			gui_internal_cmd_bookmarks, NULL));
+	gui_internal_widget_append(w,
+		gui_internal_button_new_with_callback(this, "172°15'23\" E\n55°23'44\" S",
+			image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
 			gui_internal_cmd_bookmarks, NULL));
 	gui_internal_menu_render(this);
 }
