@@ -354,6 +354,7 @@ gui_internal_button_attr_update(struct gui_priv *this, struct widget *w)
 	struct widget *wi;
 	int is_on=0;
 	struct attr curr;
+	GList *l;
 
 	if (w->get_attr(w->instance, w->on.type, &curr, NULL))
 		is_on=curr.u.data == w->on.u.data;
@@ -361,10 +362,13 @@ gui_internal_button_attr_update(struct gui_priv *this, struct widget *w)
 		if (w->redraw)
 			this->redraw=1;
 		w->is_on=is_on;
-		wi=g_list_first(w->children)->data;
-		if (wi->img)
-			graphics_image_free(this->gra, wi->img);
-		wi->img=image_new_xs(this, is_on ? "gui_active" : "gui_inactive");
+		l=g_list_first(w->children);
+		if (l) {
+			wi=l->data;
+			if (wi->img)
+				graphics_image_free(this->gra, wi->img);
+			wi->img=image_new_xs(this, is_on ? "gui_active" : "gui_inactive");
+		}
 		if (w->is_on && w->off.type == attr_none)
 			w->state &= ~STATE_SENSITIVE;
 		else
