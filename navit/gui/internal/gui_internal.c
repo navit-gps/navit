@@ -48,6 +48,7 @@
 #include "layout.h"
 #include "callback.h"
 #include "vehicle.h"
+#include "window.h"
 #include "config.h"
 
 #define STATE_VISIBLE 1
@@ -127,6 +128,7 @@ struct widget {
 //##############################################################################################################
 struct gui_priv {
         struct navit *nav;
+	struct window *win;
 	struct graphics *gra;
 	struct graphics_gc *background;
 	struct graphics_gc *background2;
@@ -134,6 +136,7 @@ struct gui_priv {
 	struct graphics_gc *foreground;
 	int spacing;
 	int font_size;
+	int fullscreen;
 	struct graphics_font *font;
 	int icon_xs, icon_s, icon_l;
 	int pressed;
@@ -1018,6 +1021,13 @@ gui_internal_cmd_layout(struct gui_priv *this, struct widget *wm)
 	gui_internal_menu_render(this);
 }
 
+static void
+gui_internal_cmd_fullscreen(struct gui_priv *this, struct widget *wm)
+{
+	this->fullscreen=!this->fullscreen;
+	this->win->fullscreen(this->win, this->fullscreen);
+}
+
 
 static void
 gui_internal_cmd_display(struct gui_priv *this, struct widget *wm)
@@ -1029,6 +1039,10 @@ gui_internal_cmd_display(struct gui_priv *this, struct widget *wm)
 		gui_internal_button_new_with_callback(this, "Layout",
 			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
 			gui_internal_cmd_layout, NULL));
+	gui_internal_widget_append(w,
+		gui_internal_button_new_with_callback(this, "Fullscreen",
+			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
+			gui_internal_cmd_fullscreen, NULL));
 	gui_internal_menu_render(this);
 }
 
@@ -1223,6 +1237,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		if (!navit_handle_button(this->nav, pressed, button, p, NULL) || button >=4) // Maybe there's a better way to do this
 			return;
 		navit_block(this->nav, 1);
+		graphics_overlay_disable(gra, 1);
 		// draw menu
 		this->root.p.x=0;
 		this->root.p.y=0;
@@ -1244,6 +1259,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		gui_internal_highlight(this, NULL);
 		graphics_draw_mode(gra, draw_mode_end);
 		if (! this->root.children) {
+			graphics_overlay_disable(gra, 0);
 			if (!navit_block(this->nav, 0)) {
 				if (this->redraw)
 					navit_draw(this->nav);
@@ -1281,7 +1297,7 @@ static void gui_internal_resize(void *data, int w, int h)
 //##############################################################################################################
 static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra)
 {
-	void *graphics;
+	struct window *win;
 #if 0
 	struct color cb={0x7fff,0x7fff,0x7fff,0xffff};
 #endif
@@ -1291,10 +1307,11 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	struct color cf={0xbfff,0xbfff,0xbfff,0xffff};
 	struct transformation *trans=navit_get_trans(this->nav);
 	
-	graphics=graphics_get_data(gra, "window");
-        if (! graphics)
+	win=graphics_get_data(gra, "window");
+        if (! win)
                 return 1;
 	this->gra=gra;
+	this->win=win;
 	transform_get_size(trans, &this->root.w, &this->root.h);
 	graphics_register_resize_callback(gra, gui_internal_resize, this);
 	graphics_register_button_callback(gra, gui_internal_button, this);
