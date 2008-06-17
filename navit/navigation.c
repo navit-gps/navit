@@ -513,6 +513,7 @@ navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *n
 		g_free(name1);
 			
 	} else
+		/* TRANSLATORS: gives the name of the next road to turn into (into the E17) */
 		ret=g_strdup_printf(_("into the %s"),itm->name2);
 	name1=ret;
 	while (*name1) {
@@ -534,6 +535,7 @@ navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *n
 static char *
 show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum attr_type type)
 {
+	/* TRANSLATORS: right, as in 'Turn right' */
 	char *dir=_("right"),*strength="";
 	int distance=itm->dest_length-cmd->itm->dest_length;
 	char *d,*ret;
@@ -541,17 +543,21 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	int level;
 	level=1;
 	if (delta < 0) {
+		/* TRANSLATORS: left, as in 'Turn left' */
 		dir=_("left");
 		delta=-delta;
 	}
 	if (delta < 45) {
+		/* TRANSLATORS: Don't forget the ending space */
 		strength=_("easily ");
 	} else if (delta < 105) {
 		strength="";
 	} else if (delta < 165) {
+		/* TRANSLATORS: Don't forget the ending space */
 		strength=_("strongly ");
 	} else {
 		dbg(1,"delta=%d\n", delta);
+		/* TRANSLATORS: Don't forget the ending space */
 		strength=_("unknown ");
 	}
 	if (type != attr_navigation_long_exact) 
