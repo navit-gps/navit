@@ -7,7 +7,6 @@
    - kb events
    - raw linux touchscreen
    - resize events (cannot be generated right now)
-   - SDL window title for X
    - text visibility cleanup/tweaks
    - dashed lines
    - ifdef DEBUG -> dbg()
@@ -15,6 +14,7 @@
 
    revision history:
    2008-06-01 initial
+   2008-06-15 SDL_DOUBLEBUF+SDL_Flip for linux fb. fix FT leaks.
 */
 
 #include <glib.h>
@@ -66,7 +66,6 @@ struct graphics_priv {
 
 #ifndef SDL_TTF
     FT_Library library;
-    int library_init;
 #endif
 };
 
@@ -104,6 +103,8 @@ graphics_destroy(struct graphics_priv *gr)
 {
 #ifdef SDL_TTF
     TTF_Quit();
+#else
+    FT_Done_FreeType(gr->library);
 #endif
     SDL_Quit();
 }
@@ -121,7 +122,10 @@ static char *fontfamilies[]={
 
 static void font_destroy(struct graphics_font_priv *gf)
 {
-    /* TODO: free FT stuff? */
+#ifdef SDL_TTF
+#else
+    FT_Done_Face(gf->face);
+#endif
     g_free(gf);
 }
 
@@ -172,10 +176,6 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 	int exact, found;
 	char **family;
 
-	if (!gr->library_init) {
-		FT_Init_FreeType( &gr->library );
-		gr->library_init=1;
-	}
 	found=0;
 	for (exact=1;!found && exact>=0;exact--) {
 		family=fontfamilies;
@@ -287,6 +287,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 }
 
 
+#if 0 /* unused by core? */
 static void image_destroy(struct graphics_image_priv *gi)
 {
 #ifdef SDL_IMAGE
@@ -299,6 +300,7 @@ static struct graphics_image_methods gi_methods =
 {
     image_destroy
 };
+#endif
 
 static struct graphics_image_priv *
 image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h,
@@ -319,7 +321,6 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
         *h=gi->img->h;
         hot->x=*w/2;
         hot->y=*h/2;
-        *meth = gi_methods;
     }
     else
     {
@@ -336,9 +337,12 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 }
 
 static void
-image_free(struct graphics_priv *gr, struct graphics_image_priv * img)
+image_free(struct graphics_priv *gr, struct graphics_image_priv * gi)
 {
-	dbg(0,"TODO");
+#ifdef SDL_IMAGE
+    SDL_FreeSurface(gi->img);
+    g_free(gi);
+#endif
 }
 
 static void
@@ -550,7 +554,6 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 		float cy=(p[i+1].y+p[i].y)/2;
 #endif
 
-		int l=round(sqrt(dx*dx+dy*dy));
         float angle;
 
         int x_lw_adj, y_lw_adj;
@@ -623,7 +626,6 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
             vert[2].y = p[i+1].y + y_lw_adj;
             vert[3].x = p[i+1].x + x_lw_adj;
             vert[3].y = p[i+1].y - y_lw_adj;
-            /* FIXME?: need extra copy of vert[0] here to "close" the poly? apparently not! */
 
             draw_polygon(gr, gc, vert, 4);
 
@@ -857,6 +859,7 @@ display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy,
 	return ret;
 }
 
+#if 0
 static void hexdump(unsigned char *buf, unsigned int n)
 {
     int i;
@@ -870,6 +873,7 @@ static void hexdump(unsigned char *buf, unsigned int n)
     }
     printf("\n");
 }
+#endif
 
 #if 0
 static void sdl_inv_grayscale_pal_set(SDL_Surface *ss)
@@ -925,7 +929,6 @@ display_text_draw(struct text_render *text, struct graphics_priv *gr, struct gra
 	struct text_glyph *g, **gp;
     SDL_Surface *ss;
     SDL_Rect r;
-    SDL_Color b, f;
 
 	gp=text->glyph;
 	i=text->glyph_count;
@@ -1068,24 +1071,26 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-    SDL_Rect rect;
-
 #ifdef DEBUG
     printf("draw_mode: %d\n", mode);
 #endif
 
     if(mode == draw_mode_end)
     {
-        /* TBD: just update the modified rects? that may be slower, actually */
-        rect.x = 0;
-        rect.y = 0;
-        rect.w = DISPLAY_W;
-        rect.h = DISPLAY_H;
-        SDL_UpdateRects(gr->screen, 1, &rect);
+        SDL_Flip(gr->screen);
     }
 }
 
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h);
+static struct graphics_priv *
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
+{
+    return NULL;
+}
+
+static void overlay_disable(struct graphics_priv *gr, int disable)
+{
+    /* TODO */
+}
 
 static void *
 get_data(struct graphics_priv *this, char *type)
@@ -1122,6 +1127,14 @@ register_button_callback(struct graphics_priv *this, void (*callback)(void *data
 	this->button_callback_data=data;
 }
 
+static void
+register_keypress_callback(struct graphics_priv *gr,
+                            void (*callback)(void *data, int key),
+                            void *data)
+{
+    /* TODO */
+}
+
 static struct graphics_methods graphics_methods = {
 	graphics_destroy,
 	draw_mode,
@@ -1143,14 +1156,10 @@ static struct graphics_methods graphics_methods = {
 	register_button_callback,
 	register_motion_callback,
 	image_free,
-        get_text_bbox,
+	get_text_bbox,
+	overlay_disable,
+	register_keypress_callback
 };
-
-static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
-{
-    return NULL;
-}
 
 static gboolean graphics_sdl_idle(void *data)
 {
@@ -1268,10 +1277,6 @@ graphics_sdl_new(struct graphics_methods *meth, struct attr **attrs)
     struct graphics_priv *this=g_new0(struct graphics_priv, 1);
     int ret;
 
-#ifndef SDL_TTF
-    this->library_init = 0;
-#endif
-
     ret = SDL_Init(SDL_INIT_VIDEO);
     if(ret < 0)
     {
@@ -1287,9 +1292,13 @@ graphics_sdl_new(struct graphics_methods *meth, struct attr **attrs)
         SDL_Quit();
         return NULL;
     }
+#else
+    FT_Init_FreeType( &this->library );
 #endif
 
-    this->screen = SDL_SetVideoMode(DISPLAY_W, DISPLAY_H, 32, SDL_HWSURFACE);
+    /* TODO: xml params for W/H/BPP */
+
+    this->screen = SDL_SetVideoMode(DISPLAY_W, DISPLAY_H, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
     if(this->screen == NULL)
     {
         g_free(this);
