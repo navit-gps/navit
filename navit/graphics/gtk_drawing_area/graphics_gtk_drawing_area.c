@@ -584,6 +584,7 @@ get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *t
 		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT );
 		FT_Get_Glyph(font->face->glyph, &glyph);
 		FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_pixels, &glyph_bbox );
+		FT_Done_Glyph(glyph);
 		glyph_bbox.xMin += x >> 6;
 		glyph_bbox.xMax += x >> 6;
 		glyph_bbox.yMin += y >> 6;
