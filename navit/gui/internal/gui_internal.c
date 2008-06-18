@@ -111,6 +111,7 @@ struct widget {
 	int wmin,hmin;
 	int w,h;
 	int bl,br,bt,bb,spx,spy;
+	int cols;
 	enum flags flags;
 	void *instance;
 	int (*set_attr)(void *, struct attr *);
@@ -231,10 +232,10 @@ gui_internal_background_render(struct gui_priv *this, struct widget *w)
 {
 	struct point pnt=w->p;
 	if (w->state & STATE_HIGHLIGHTED) 
-		graphics_draw_rectangle(this->gra, this->highlight_background, &pnt, w->w-1, w->h-1);
+		graphics_draw_rectangle(this->gra, this->highlight_background, &pnt, w->w, w->h);
 	else {
 		if (w->background)
-			graphics_draw_rectangle(this->gra, w->background, &pnt, w->w-1, w->h-1);
+			graphics_draw_rectangle(this->gra, w->background, &pnt, w->w, w->h);
 	}
 }
 static struct widget *
@@ -328,19 +329,12 @@ static struct widget *
 gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget), void *data)
 {
 	struct widget *ret=NULL;
-	if (text && image) {
-		ret=gui_internal_box_new(this, flags);
-		gui_internal_widget_append(ret, gui_internal_image_new(this, image));
-		gui_internal_widget_append(ret, gui_internal_text_new(this, text));
-	} else {
-		if (text)
-			ret=gui_internal_label_new(this, text);
-		if (image)
-			ret=gui_internal_image_new(this, image);
-		if (! ret)
-			ret=gui_internal_box_new(this, flags);
-	}
+	ret=gui_internal_box_new(this, flags);
 	if (ret) {
+		if (image)
+			gui_internal_widget_append(ret, gui_internal_image_new(this, image));
+		if (text)
+			gui_internal_widget_append(ret, gui_internal_text_new(this, text));
 		ret->func=func;
 		ret->data=data;
 		if (func) 
@@ -563,7 +557,7 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 {
 	struct widget *wc;
-	int x0,x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0,count=0,rows=0,cols=3;
+	int x0,x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0,count=0,rows=0,cols=w->cols ? w->cols : 3;
 	GList *l;
 	int orientation=w->flags & 0xffff0000;
 
@@ -715,7 +709,6 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		height/=rows;
 		while (l) {
 			wc=l->data;
-			printf("x=%d y=%d\n", x, y);
 			wc->p.x=x;
 			wc->p.y=y;
 			if (wc->flags & flags_fill) {
@@ -866,10 +859,10 @@ gui_internal_top_bar(struct gui_priv *this)
 	w->spx=this->spacing;
 	w->background=this->background2;
 	wm=gui_internal_button_new_with_callback(this, NULL,
-		image_new_s(this, "gui_map"), gravity_center,
+		image_new_s(this, "gui_map"), gravity_center|orientation_vertical,
 		gui_internal_cmd_return, NULL);
 	wh=gui_internal_button_new_with_callback(this, NULL,
-		image_new_s(this, "gui_home"), gravity_center,
+		image_new_s(this, "gui_home"), gravity_center|orientation_vertical,
 		gui_internal_cmd_main_menu, NULL);
 	gui_internal_widget_append(w, wm);
 	gui_internal_widget_append(w, wh);
@@ -942,6 +935,7 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	menu=gui_internal_box_new_with_label(this, gravity_center|orientation_vertical, label);
 	menu->w=this->root.w;
 	menu->h=this->root.h;
+	menu->background=this->background;
 	if (this->root.w > 320 || this->root.h > 320) {
 		this->font_size=40;
 		this->icon_s=48;
@@ -957,7 +951,6 @@ gui_internal_menu(struct gui_priv *this, char *label)
 		this->font=graphics_font_new(this->gra, 200, 1);
 	}
 	gui_internal_widget_append(&this->root, menu);
-	gui_internal_clear(this);
 	w=gui_internal_top_bar(this);
 	gui_internal_widget_append(menu, w);
 	w=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
@@ -1084,6 +1077,41 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 }
 
 static void
+gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm)
+{
+	dbg(0,"enter\n");
+}
+
+static void
+gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
+{
+	struct widget *wb,*wkbd,*wk,*w,*wr;
+	int i;
+	wb=gui_internal_menu(this, "Town");
+	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	wr=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(w, wr);
+	wkbd=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
+	wkbd->cols=7;
+	gui_internal_widget_append(w, wkbd);
+	wkbd->spx=4;
+	wkbd->spy=3;
+	for (i = 0 ; i < 26 ; i++) {
+		char text[]={'A'+i,'\0'};
+		gui_internal_widget_append(wkbd, wk=gui_internal_button_new_with_callback(this, text,
+			NULL, gravity_center|orientation_vertical,
+			gui_internal_cmd_keypress, NULL));
+		wk->background=this->background;
+		wk->bl=8;
+		wk->br=8;
+		wk->bt=6;
+		wk->bb=6;
+	}
+	gui_internal_menu_render(this);
+}
+
+static void
 gui_internal_cmd_layout(struct gui_priv *this, struct widget *wm)
 {
 	struct attr attr;
@@ -1173,7 +1201,7 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Town",
 			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
-			gui_internal_cmd_bookmarks, NULL));
+			gui_internal_cmd_town, NULL));
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Street",
 			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
@@ -1396,10 +1424,7 @@ static void gui_internal_resize(void *data, int w, int h)
 	this->root.w=w;
 	this->root.h=h;
 	dbg(0,"w=%d h=%d\n", w, h);
-	if (!this->root.children) {
-		navit_resize(this->nav, w, h);
-		return;
-	}
+	navit_resize(this->nav, w, h);
 	gui_internal_prune_menu(this, NULL);
 	gui_internal_menu_root(this);
 } 
