@@ -605,7 +605,7 @@ static void init_sdlgui(char * skin_layout,int fullscreen,int tilt, char *image_
 			fclose(file);
 			dbg(0,"Ressources can be loaded from %s\n",filename);
 		} else {
-			filename=g_strdup_printf("./gui/sdl/datafiles");
+			filename=g_strdup_printf("./gui/cegui/datafiles");
 			dbg(0,"Failling back to %s",filename);
 		}
 

@@ -42,8 +42,8 @@ Change to your home coordinates.
 	<gui type="gtk" menubar="1" toolbar="1" statusbar="1" />
 	<graphics type="gtk_drawing_area" />
 
-<!-- For SDL, use rather the following lines
-	<gui type="sdl" />
+<!-- For cegui, use rather the following lines
+	<gui type="cegui" />
 	<graphics type="opengl" />
 -->
 	
