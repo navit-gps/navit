@@ -13,6 +13,11 @@ This is a output of Metro Manila Transit Map Project by JOCV (Japan
 Overseas Cooperation Volunteers) program of JICA (Japan International
 Cooperation Agency in 2004. It is provided you on GPL2.
 
+Compilation/Installation
+========================
+run ./autogen.sh && ./configure && make
+run make install if you want the binary to be installed in your system.
+run make uninstall to wipe everything related.
 
 How to Use
 ==========
