@@ -264,13 +264,14 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			this_->motion_timeout=0;
 		}
 		if (this_->moved) {
-			struct point p;
-			transform_get_size(this_->trans, &p.x, &p.y);
-			p.x/=2;
-			p.y/=2;
-			p.x-=this_->last.x-this_->pressed.x;
-			p.y-=this_->last.y-this_->pressed.y;
-			navit_set_center_screen(this_, &p);
+			struct point pt;
+			this_->last=*p;
+			transform_get_size(this_->trans, &pt.x, &pt.y);
+			pt.x/=2;
+			pt.y/=2;
+			pt.x-=this_->last.x-this_->pressed.x;
+			pt.y-=this_->last.y-this_->pressed.y;
+			navit_set_center_screen(this_, &pt);
 		} else
 			return 1;
 	}
