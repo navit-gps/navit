@@ -94,6 +94,7 @@ struct graphics_font_priv {
 struct graphics_gc_priv {
 	GdkGC *gc;
 	struct graphics_priv *gr;
+	int level;
 };
 
 struct graphics_image_priv {
@@ -218,9 +219,10 @@ gc_set_color(struct graphics_gc_priv *gc, struct color *c, int fg)
 	gdkc.green=c->g;
 	gdkc.blue=c->b;
 	gdk_colormap_alloc_color(gc->gr->colormap, &gdkc, FALSE, TRUE);
-	if (fg)
+	if (fg) {
 		gdk_gc_set_foreground(gc->gc, &gdkc);
-	else
+		gc->level=(c->r+c->g+c->b)/3;
+	} else
 		gdk_gc_set_background(gc->gc, &gdkc);
 }
 
@@ -542,8 +544,13 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 	if (! font)
 		return;
 	if (bg) {
-		gdk_gc_set_function(fg->gc, GDK_AND_INVERT);
-		gdk_gc_set_function(bg->gc, GDK_OR);
+		if (bg->level > 32767) {
+			gdk_gc_set_function(fg->gc, GDK_AND_INVERT);
+			gdk_gc_set_function(bg->gc, GDK_OR);
+		} else {
+			gdk_gc_set_function(fg->gc, GDK_OR);
+			gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
+		}
 	}
 
 	t=display_text_render(text, font, dx, dy, p->x, p->y);

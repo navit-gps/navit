@@ -39,7 +39,7 @@ Change to your home coordinates.
 			The following line let you select which graphical user interface you'd like to use.
 			The default is GTK:
 -->
-	<gui type="gtk" menubar="1" toolbar="1" statusbar="1" />
+	<gui type="internal" menubar="1" toolbar="1" statusbar="1" />
 	<graphics type="gtk_drawing_area" />
 
 <!-- For SDL, use rather the following lines
