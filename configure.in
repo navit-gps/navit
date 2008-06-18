@@ -554,8 +554,8 @@ navit/graphics/qt_qpainter/Makefile
 navit/gui/Makefile
 navit/gui/gtk/Makefile
 navit/gui/internal/Makefile
-navit/gui/sdl/Makefile
-navit/gui/sdl/datafiles/Makefile
+navit/gui/cegui/Makefile
+navit/gui/cegui/datafiles/Makefile
 navit/osd/Makefile
 navit/osd/core/Makefile
 navit/speech/Makefile

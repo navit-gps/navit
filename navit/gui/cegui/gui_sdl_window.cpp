@@ -918,5 +918,5 @@ void
 plugin_init(void)
 {
 	dbg(1,"registering sdl plugin\n");
-	plugin_register_gui_type("sdl", gui_sdl_new);
+	plugin_register_gui_type("cegui", gui_sdl_new);
 }
