@@ -137,6 +137,8 @@ struct gui_priv {
 	struct graphics_gc *background2;
 	struct graphics_gc *highlight_background;
 	struct graphics_gc *foreground;
+	struct graphics_gc *text_foreground;
+	struct graphics_gc *text_background;
 	int spacing;
 	int font_size;
 	int fullscreen;
@@ -305,7 +307,7 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
 	struct point pnt=w->p;
 	gui_internal_background_render(this, w);
 	pnt.y+=w->h-this->spacing;
-	graphics_draw_text(this->gra, this->foreground, NULL, this->font, w->text, &pnt, 0x10000, 0x0);
+	graphics_draw_text(this->gra, this->text_foreground, this->text_background, this->font, w->text, &pnt, 0x10000, 0x0);
 }
 
 static struct widget *
@@ -583,7 +585,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 				height=wc->h;
 			width+=wc->w;
 			if (wc->flags & flags_expand)
-				expand+=wc->w;
+				expand+=wc->w ? wc->w : 1;
 			l=g_list_next(l);
 			if (l)
 				width+=w->spx;
@@ -604,7 +606,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 				width=wc->w;
 			height+=wc->h;
 			if (wc->flags & flags_expand)
-				expand+=wc->h;
+				expand+=wc->h ? wc->h : 1;
 			l=g_list_next(l);
 			if (l)
 				height+=w->spy;
@@ -668,8 +670,11 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 			wc->p.x=x;
 			if (wc->flags & flags_fill)
 				wc->h=w->h;
-			if (wc->flags & flags_expand)
+			if (wc->flags & flags_expand) {
+				if (! wc->w)
+					wc->w=1;
 				wc->w=wc->w*expand/100;
+			}
 			if (w->flags & gravity_top) 
 				wc->p.y=y;
 			if (w->flags & gravity_ycenter) 
@@ -687,8 +692,11 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 			wc->p.y=y;
 			if (wc->flags & flags_fill)
 				wc->w=w->w;
-			if (wc->flags & flags_expand)
+			if (wc->flags & flags_expand) {
+				if (! wc->h)
+					wc->h=1;
 				wc->h=wc->h*expand/100;
+			}
 			if (w->flags & gravity_left) 
 				wc->p.x=x;
 			if (w->flags & gravity_xcenter) 
@@ -1455,6 +1463,7 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	struct color cb2={0x4141,0x4141,0x4141,0xffff};
 	struct color cbh={0x9fff,0x9fff,0x9fff,0xffff};
 	struct color cf={0xbfff,0xbfff,0xbfff,0xffff};
+	struct color cw={0xffff,0xffff,0xffff,0xffff};
 	struct transformation *trans=navit_get_trans(this->nav);
 	
 	win=graphics_get_data(gra, "window");
@@ -1475,6 +1484,10 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	graphics_gc_set_foreground(this->highlight_background, &cbh);
 	this->foreground=graphics_gc_new(gra);
 	graphics_gc_set_foreground(this->foreground, &cf);
+	this->text_background=graphics_gc_new(gra);
+	graphics_gc_set_foreground(this->text_background, &cb);
+	this->text_foreground=graphics_gc_new(gra);
+	graphics_gc_set_foreground(this->text_foreground, &cw);
 	return 0;
 }
 
