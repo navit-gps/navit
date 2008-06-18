@@ -36,3 +36,33 @@ void event_main_loop_quit(void)
 	if (loop)
 		g_main_loop_quit(loop);
 } 
+
+void *
+event_add_watch(int fd, int w, struct callback *cb)
+{
+}
+
+void
+event_remove_watch(void *data)
+{
+}
+
+void *
+event_add_timeout(int timeout, struct callback *cb)
+{
+}
+
+void
+event_remove_timeout(void *data)
+{
+}
+
+void *
+event_add_idle(struct callback *cb)
+{
+}
+
+void
+event_remove_idle(void *data)
+{
+}
