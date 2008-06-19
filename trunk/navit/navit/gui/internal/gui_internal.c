@@ -1375,7 +1375,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 	struct graphics *gra=this->gra;
 	
 	// if still on the map (not in the menu, yet):
-	if (!this->root.children) {	
+	if (!this->root.children) {
 		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel 
 		if (!navit_handle_button(this->nav, pressed, button, p, NULL) || button >=4) // Maybe there's a better way to do this
 			return;
@@ -1425,8 +1425,10 @@ static void gui_internal_resize(void *data, int w, int h)
 	this->root.h=h;
 	dbg(0,"w=%d h=%d\n", w, h);
 	navit_resize(this->nav, w, h);
-	gui_internal_prune_menu(this, NULL);
-	gui_internal_menu_root(this);
+	if (this->root.children) {
+		gui_internal_prune_menu(this, NULL);
+		gui_internal_menu_root(this);
+	}
 } 
 
 //##############################################################################################################
