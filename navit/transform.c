@@ -30,6 +30,7 @@
 #include "transform.h"
 #include "projection.h"
 #include "point.h"
+#include "item.h"
 
 struct transformation {
 	long scale;		/* Scale factor */
@@ -723,6 +724,108 @@ transform_within_border(struct transformation *this_, struct point *p, int borde
 	}
 	return 0;
 }
+
+int
+transform_within_dist_point(struct coord *ref, struct coord *c, int dist)
+{
+	if (c->x-dist > ref->x)
+		return 0;
+	if (c->x+dist < ref->x)
+		return 0;
+	if (c->y-dist > ref->y)
+		return 0;
+	if (c->y+dist < ref->y)
+		return 0;
+	if ((c->x-ref->x)*(c->x-ref->x) + (c->y-ref->y)*(c->y-ref->y) <= dist*dist) 
+		return 1;
+        return 0;
+}
+
+int
+transform_within_dist_line(struct coord *ref, struct coord *c0, struct coord *c1, int dist)
+{
+	int vx,vy,wx,wy;
+	int n1,n2;
+	struct coord lc;
+
+	if (c0->x < c1->x) {
+		if (c0->x-dist > ref->x)
+			return 0;
+		if (c1->x+dist < ref->x)
+			return 0;
+	} else {
+		if (c1->x-dist > ref->x)
+			return 0;
+		if (c0->x+dist < ref->x)
+			return 0;
+	}
+	if (c0->y < c1->y) {
+		if (c0->y-dist > ref->y)
+			return 0;
+		if (c1->y+dist < ref->y)
+			return 0;
+	} else {
+		if (c1->y-dist > ref->y)
+			return 0;
+		if (c0->y+dist < ref->y)
+			return 0;
+	}
+	vx=c1->x-c0->x;
+	vy=c1->y-c0->y;
+	wx=ref->x-c0->x;
+	wy=ref->y-c0->y;
+
+	n1=vx*wx+vy*wy;
+	if ( n1 <= 0 )
+		return transform_within_dist_point(ref, c0, dist);
+	n2=vx*vx+vy*vy;
+	if ( n2 <= n1 )
+		return transform_within_dist_point(ref, c1, dist);
+
+	lc.x=c0->x+vx*n1/n2;
+	lc.y=c0->y+vy*n1/n2;
+	return transform_within_dist_point(ref, &lc, dist);
+}
+
+int
+transform_within_dist_polyline(struct coord *ref, struct coord *c, int count, int close, int dist)
+{
+	int i;
+	for (i = 0 ; i < count-1 ; i++) {
+		if (transform_within_dist_line(ref,c+i,c+i+1,dist)) {
+			return 1;
+		}
+	}
+	if (close)
+		return (transform_within_dist_line(ref,c,c+count-1,dist));
+	return 0;
+}
+
+int
+transform_within_dist_polygon(struct coord *ref, struct coord *c, int count, int dist)
+{
+	int i, j, ci = 0;
+	for (i = 0, j = count-1; i < count; j = i++) {
+		if ((((c[i].y <= ref->y) && ( ref->y < c[j].y )) ||
+		((c[j].y <= ref->y) && ( ref->y < c[i].y))) &&
+		(ref->x < (c[j].x - c[i].x) * (ref->y - c[i].y) / (c[j].y - c[i].y) + c[i].x))
+			ci = !ci;
+	}
+	if (! ci)
+		return transform_within_dist_polyline(ref, c, count, dist, 1);
+	return 1;
+}
+
+int
+transform_within_dist_item(struct coord *ref, enum item_type type, struct coord *c, int count, int dist)
+{
+	if (type < type_line)
+		return transform_within_dist_point(ref, c, dist);
+	if (type < type_area)
+		return transform_within_dist_polyline(ref, c, count, 0, dist);
+	return transform_within_dist_polygon(ref, c, count, dist);
+}
+
 
 /*
 Note: there are many mathematically equivalent ways to express these formulas. As usual, not all of them are computationally equivalent.
