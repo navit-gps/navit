@@ -274,14 +274,17 @@ static struct widget *
 gui_internal_label_new(struct gui_priv *this, char *text)
 {
 	struct point p[4];
-	int h=this->font_size;
+	int w=0,h=this->font_size;
 
 	struct widget *widget=g_new0(struct widget, 1);
 	widget->type=widget_label;
-	widget->text=g_strdup(text);
-	graphics_get_text_bbox(this->gra, this->font, text, 0x10000, 0x0, p);
+	if (text) {
+		widget->text=g_strdup(text);
+		graphics_get_text_bbox(this->gra, this->font, text, 0x10000, 0x0, p);
+		w=p[2].x-p[0].x;
+	}
 	widget->h=h;
-	widget->w=p[2].x-p[0].x+this->spacing;
+	widget->w=w+this->spacing;
 	widget->flags=gravity_center;
 
 	return widget;
@@ -339,8 +342,10 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
 {
 	struct point pnt=w->p;
 	gui_internal_background_render(this, w);
-	pnt.y+=w->h-this->spacing;
-	graphics_draw_text(this->gra, this->text_foreground, this->text_background, this->font, w->text, &pnt, 0x10000, 0x0);
+	if (w->text) {
+		pnt.y+=w->h-this->spacing;
+		graphics_draw_text(this->gra, this->text_foreground, this->text_background, this->font, w->text, &pnt, 0x10000, 0x0);
+	}
 }
 
 static struct widget *
