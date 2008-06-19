@@ -907,7 +907,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 	struct graphics_priv *this=user_data;
 	if (! this->keypress_callback)
 		return FALSE;
-	if (event->keyval >= 32 && event->keyval < 127) {
+	if ((event->keyval >= 32 && event->keyval < 127) || event->keyval == 8 || event->keyval == 13) {
 		(*this->keypress_callback)(this->motion_callback_data, event->keyval);
 		return FALSE;
 	}
@@ -924,6 +924,12 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 	case GDK_Right:
 		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_RIGHT);
 		break;
+	case GDK_BackSpace:
+		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_BACKSPACE);
+		break;
+	case GDK_Return:
+		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_RETURN);
+		break;
 	case GDK_Book:
 		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_ZOOM_IN);
 		break;
@@ -931,6 +937,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_ZOOM_OUT);
 		break;
 	default:
+		dbg(0,"keyval 0x%x\n", event->keyval);
 		break;
 	}
 	return FALSE;

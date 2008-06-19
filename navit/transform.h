@@ -24,9 +24,12 @@
 extern "C" {
 #endif
 /* prototypes */
+enum item_type;
+enum map_datum;
 enum projection;
 struct coord;
 struct coord_geo;
+struct coord_geo_cart;
 struct map_selection;
 struct pcoord;
 struct point;
@@ -35,7 +38,10 @@ struct transformation *transform_new(void);
 void transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g);
 void transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c);
 void transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to);
-int transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int flags);
+void transform_geo_to_cart(struct coord_geo *geo, double a, double b, struct coord_geo_cart *cart);
+void transform_cart_to_geo(struct coord_geo_cart *cart, double a, double b, struct coord_geo *geo);
+void transform_datum(struct coord_geo *from, enum map_datum from_datum, struct coord_geo *to, enum map_datum to_datum);
+int transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int unique);
 void transform_reverse(struct transformation *t, struct point *p, struct coord *c);
 enum projection transform_get_projection(struct transformation *this_);
 void transform_set_projection(struct transformation *this_, enum projection pro);
@@ -59,6 +65,11 @@ int transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref
 void transform_print_deg(double deg);
 int transform_get_angle_delta(struct coord *c1, struct coord *c2, int dir);
 int transform_within_border(struct transformation *this_, struct point *p, int border);
+int transform_within_dist_point(struct coord *ref, struct coord *c, int dist);
+int transform_within_dist_line(struct coord *ref, struct coord *c0, struct coord *c1, int dist);
+int transform_within_dist_polyline(struct coord *ref, struct coord *c, int count, int close, int dist);
+int transform_within_dist_polygon(struct coord *ref, struct coord *c, int count, int dist);
+int transform_within_dist_item(struct coord *ref, enum item_type type, struct coord *c, int count, int dist);
 /* end of prototypes */
 #ifdef __cplusplus
 }
