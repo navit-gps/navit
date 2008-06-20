@@ -110,6 +110,11 @@ static inline void callback_list_call_0(struct callback_list *l)
 	callback_list_call(l, 0, NULL);
 }
 
+static inline void callback_list_call_attr_0(struct callback_list *l, enum attr_type type)
+{
+	callback_list_call_attr(l, type, 0, NULL);
+}
+
 static inline void callback_list_call_attr_1(struct callback_list *l, enum attr_type type, void *p1)
 {
 	void *p[1];
@@ -139,6 +144,17 @@ static inline void callback_list_call_2(struct callback_list *l, void *p1, void 
 	p[1]=p2;
 	callback_list_call(l, 2, p);
 }
+
+static inline void callback_list_call_attr_4(struct callback_list *l, enum attr_type type, void *p1, void *p2, void *p3, void *p4)
+{
+	void *p[4];
+	p[0]=p1;
+	p[1]=p2;
+	p[2]=p3;
+	p[3]=p4;
+	callback_list_call_attr(l, type, 4, p);
+}
+
 
 #define callback_cast(x) (void (*)(void))(x)
 #ifdef __cplusplus

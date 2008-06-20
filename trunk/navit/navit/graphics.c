@@ -45,6 +45,7 @@
 #include "layout.h"
 #include "route.h"
 #include "util.h"
+#include "callback.h"
 
 //##############################################################################################################
 //# Description: 
@@ -58,6 +59,7 @@ struct graphics
 	struct graphics_font *font[16];
 	struct graphics_gc *gc[3];
 	struct attr **attrs;
+	struct callback_list *cbl;
 	int ready;
 };
 //##############################################################################################################
@@ -87,6 +89,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 	if (! graphicstype_new)
 		return NULL;
 	this_=g_new0(struct graphics, 1);
+	this_->cbl=callback_list_new();
 	this_->priv=(*graphicstype_new)(&this_->meth, attrs);
 	this_->attrs=attr_list_dup(attrs);
 	return this_;
@@ -182,6 +185,11 @@ void graphics_register_motion_callback(struct graphics *this_, void (*callback)(
 void graphics_register_keypress_callback(struct graphics *this_, void (*callback)(void *data, int key), void *data)
 {
 	this_->meth.register_keypress_callback(this_->priv, callback, data);
+}
+
+void graphics_add_callback(struct graphics *this_, struct callback *cb)
+{
+	callback_list_add(this_->cbl, cb);
 }
 
 //##############################################################################################################
@@ -820,7 +828,7 @@ int graphics_ready(struct graphics *this_)
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l)
+void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int callback)
 {
 	int order=transform_get_order(trans);
 	struct point p;
@@ -833,6 +841,8 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	gra->meth.draw_mode(gra->priv, draw_mode_begin);
 	gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &p, 32767, 32767);
 	xdisplay_draw(displaylist->dl, gra, l, order);
+	if (callback)
+		callback_list_call_attr_0(gra->cbl, attr_postdraw);
 	gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
 
@@ -884,7 +894,7 @@ void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList 
 	profile(0,NULL);
 	do_draw(displaylist, trans, mapsets, order);
 //	profile(1,"do_draw");
-	graphics_displaylist_draw(gra, displaylist, trans, l);
+	graphics_displaylist_draw(gra, displaylist, trans, l, 1);
 	profile(1,"xdisplay_draw");
 	profile(0,"end");
   
