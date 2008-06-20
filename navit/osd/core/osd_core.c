@@ -586,6 +586,62 @@ osd_street_name_new(struct navit *nav, struct osd_methods *meth, struct attr **a
 	return (struct osd_priv *) this;
 }
 
+struct osd_button {
+	struct point p;
+	struct navit *nav;
+	struct graphics *gra;
+	struct graphics_gc *gc;
+	struct callback *navit_init_cb;
+	struct callback *draw_cb;
+	struct graphics_image *img;
+};
+
+static void
+osd_button_click(struct osd_button *this, struct navit *nav, int pressed, int button, struct point *p)
+{
+	if (p->x < this->p.x || p->y < this->p.y || p->x > this->p.x+this->img->width || p->y > this->p.y+this->img->height)
+		return;
+	navit_ignore_button(nav);
+	if (pressed) {
+		dbg(0,"enter\n");
+	}
+}
+
+static void
+osd_button_draw(struct osd_button *this)
+{
+	graphics_draw_image(this->gra,this->gc, &this->p, this->img);
+}
+
+static void
+osd_button_init(struct osd_button *this, struct navit *nav)
+{
+	struct graphics *gra=navit_get_graphics(nav);
+	dbg(0,"enter\n");
+	this->nav=nav;
+	this->gra=gra;
+	this->gc=graphics_gc_new(gra);
+	this->img=graphics_image_new(gra, "xpm/gui_map.svg");
+	navit_add_callback(nav, this->navit_init_cb=callback_new_attr_1(callback_cast(osd_button_click), attr_button, this));
+	graphics_add_callback(gra, this->draw_cb=callback_new_attr_1(callback_cast(osd_button_draw), attr_postdraw, this));
+}
+
+static struct osd_priv *
+osd_button_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
+{
+	struct osd_button *this=g_new0(struct osd_button, 1);
+	struct attr *attr;
+	attr=attr_search(attrs, NULL, attr_x);
+	if (attr)
+		this->p.x=attr->u.num;
+	attr=attr_search(attrs, NULL, attr_y);
+	if (attr)
+		this->p.y=attr->u.num;
+	navit_add_callback(nav, this->navit_init_cb=callback_new_attr_1(callback_cast(osd_button_init), attr_navit, this));
+	
+	return (struct osd_priv *) this;
+}
+
 void
 plugin_init(void)
 {
@@ -593,5 +649,6 @@ plugin_init(void)
 	plugin_register_osd_type("eta", osd_eta_new);
 	plugin_register_osd_type("navigation", osd_navigation_new);
 	plugin_register_osd_type("street_name", osd_street_name_new);
+	plugin_register_osd_type("button", osd_button_new);
 }
 
