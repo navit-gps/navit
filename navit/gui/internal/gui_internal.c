@@ -104,6 +104,7 @@ struct widget {
 	char *text;
 	struct graphics_image *img;
 	void (*func)(struct gui_priv *priv, struct widget *widget);
+	int reason;
 	void *data;
 	char *prefix;
 	char *name;
@@ -154,7 +155,8 @@ struct gui_priv {
 	struct widget root;
 	struct widget *highlighted;
 	struct widget *highlighted_menu;
-	struct pcoord click, vehicle;
+	int vehicle_valid;
+	struct coord_geo click, vehicle;
 };
 
 static void gui_internal_widget_render(struct gui_priv *this, struct widget *w);
@@ -232,30 +234,25 @@ image_new_l(struct gui_priv *this, char *name)
 }
 
 static char *
-coordinates(struct pcoord *pc, char sep)
+coordinates(struct coord_geo *g, char sep)
 {
-	struct coord_geo g;
-	struct coord c;
-	char latc='N',lngc='W';
+	char latc='N',lngc='E';
 	int lat_deg,lat_min,lat_sec;
 	int lng_deg,lng_min,lng_sec;
-	c.x=pc->x;
-	c.y=pc->y;
-	transform_to_geo(pc->pro, &c, &g);
-	if (g.lat < 0) {
-		g.lat=-g.lat;
+	if (g->lat < 0) {
+		g->lat=-g->lat;
 		latc='S';
 	}
-	if (g.lng < 0) {
-		g.lng=-g.lng;
-		lngc='E';
+	if (g->lng < 0) {
+		g->lng=-g->lng;
+		lngc='W';
 	}
-	lat_deg=g.lat;
-	lat_min=fmod(g.lat*60,60);
-	lat_sec=fmod(g.lat*3600,60);
-	lng_deg=g.lng;
-	lng_min=fmod(g.lng*60,60);
-	lng_sec=fmod(g.lng*3600,60);
+	lat_deg=g->lat;
+	lat_min=fmod(g->lat*60,60);
+	lat_sec=fmod(g->lat*3600,60);
+	lng_deg=g->lng;
+	lng_min=fmod(g->lng*60,60);
+	lng_sec=fmod(g->lng*3600,60);
 	return g_strdup_printf("%d°%d'%d\" %c%c%d°%d'%d\" %c",lat_deg,lat_min,lat_sec,latc,sep,lng_deg,lng_min,lng_sec,lngc);
 }
 
@@ -852,6 +849,7 @@ static void gui_internal_call_highlighted(struct gui_priv *this)
 {
 	if (! this->highlighted || ! this->highlighted->func)
 		return;
+	this->highlighted->reason=1;
 	this->highlighted->func(this, this->highlighted);
 }
 
@@ -1046,14 +1044,14 @@ static void
 gui_internal_cmd_point(struct gui_priv *this, struct widget *wm)
 {
 	struct widget *wb,*w;
-	struct pcoord *pc;
+	struct coord_geo *g;
 	char *coord;
 
-	pc=&this->click;
+	g=&this->click;
 	wb=gui_internal_menu(this, "Map Point");
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
-	coord=coordinates(pc, ' ');
+	coord=coordinates(g, ' ');
 	gui_internal_widget_append(w, gui_internal_label_new(this, coord));
 	g_free(coord);
 	gui_internal_widget_append(w,
@@ -1148,11 +1146,15 @@ static void gui_internal_keypress_do(struct gui_priv *this, int key)
 			text=g_strdup_printf("%s%c", wi->text ? wi->text : "", key);
 		g_free(wi->text);
 		wi->text=text;
-		gui_internal_widget_render(this, wi);
 		if (key == NAVIT_KEY_BACKSPACE) {
-			wi->text[len]='\0';
 			gui_internal_widget_render(this, wi);
+			wi->text[len]='\0';
 		}
+		if (wi->func) {
+			wi->reason=2;
+			wi->func(this, wi);
+		}
+		gui_internal_widget_render(this, wi);
 	}
 }
 
@@ -1161,6 +1163,12 @@ static void
 gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm)
 {
 	gui_internal_keypress_do(this, (int) wm->data);
+}
+
+static void
+gui_internal_changed(struct gui_priv *this, struct widget *wm)
+{
+	dbg(0,"town now '%s'\n", wm->text);
 }
 
 static void
@@ -1179,6 +1187,7 @@ gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 	wk->state |= STATE_EDIT;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
+	wk->func = gui_internal_changed;
 	wkbd=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
 	wkbd->cols=7;
 	gui_internal_widget_append(w, wkbd);
@@ -1189,7 +1198,7 @@ gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 		gui_internal_widget_append(wkbd, wk=gui_internal_button_new_with_callback(this, text,
 			NULL, gravity_center|orientation_vertical,
 			gui_internal_cmd_keypress, NULL));
-		wk->data=text[0];
+		wk->data=(void *)((int)(text[0]));
 		wk->background=this->background;
 		wk->bl=8;
 		wk->br=8;
@@ -1285,10 +1294,14 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 			image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
 			gui_internal_cmd_point, NULL));
 	g_free(coord);
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "172°15'23\" E\n55°23'44\" S",
-			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
-			gui_internal_cmd_bookmarks, NULL));
+	if (this->vehicle_valid) {
+		coord=coordinates(&this->vehicle, '\n');
+		gui_internal_widget_append(w,
+			gui_internal_button_new_with_callback(this, coord,
+				image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
+				gui_internal_cmd_bookmarks, NULL));
+		g_free(coord);
+	}
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Town",
 			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
@@ -1465,6 +1478,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 	struct gui_priv *this=data;
 	struct graphics *gra=this->gra;
 	struct transformation *trans;
+	struct attr attr,attrp;
 	struct coord c;
 	
 	// if still on the map (not in the menu, yet):
@@ -1476,10 +1490,13 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		navit_block(this->nav, 1);
 		graphics_overlay_disable(gra, 1);
 		trans=navit_get_trans(this->nav);
-		this->click.pro=transform_get_projection(trans);
 		transform_reverse(trans, p, &c);
-		this->click.x=c.x;
-		this->click.y=c.y;
+		transform_to_geo(transform_get_projection(trans), &c, &this->click);
+		if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle
+			&& vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp)) {
+			this->vehicle=*attrp.u.coord_geo;
+			this->vehicle_valid=1;
+		}	
 		// draw menu
 		this->root.p.x=0;
 		this->root.p.y=0;
