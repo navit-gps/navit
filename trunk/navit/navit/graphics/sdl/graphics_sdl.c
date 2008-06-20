@@ -25,6 +25,7 @@
 #include "graphics.h"
 #include "color.h"
 #include "plugin.h"
+#include "window.h"
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_gfxPrimitives.h>
@@ -1233,11 +1234,33 @@ static void overlay_disable(struct graphics_priv *gr, int disable)
     /* TODO */
 }
 
+
+static int window_fullscreen(struct window *win, int on)
+{
+    /* TODO */
+    return 0;
+}
+
+static struct window sdl_win =
+{
+    NULL,
+    window_fullscreen
+
+};
+
 static void *
 get_data(struct graphics_priv *this, char *type)
 {
     printf("get_data: %s\n", type);
-	return &dummy;
+
+    if(strcmp(type, "window") == 0)
+    {
+        return &sdl_win;
+    }
+    else
+    {
+    	return &dummy;
+    }
 }
 
 
