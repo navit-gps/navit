@@ -7,14 +7,15 @@
    - kb events
    - raw linux touchscreen
    - resize events (cannot be generated right now)
-   - text visibility cleanup/tweaks
    - dashed lines
    - ifdef DEBUG -> dbg()
+   - proper image transparency (libsdl-image does not work)
    - valgrind
 
    revision history:
    2008-06-01 initial
    2008-06-15 SDL_DOUBLEBUF+SDL_Flip for linux fb. fix FT leaks.
+   2008-06-18 defer initial resize_callback
 */
 
 #include <glib.h>
@@ -52,6 +53,12 @@
 #undef ANTI_ALIAS
 
 #undef DEBUG
+#undef PROFILE
+
+#ifdef PROFILE
+#include <sys/time.h>
+#include <time.h>
+#endif
 
 
 struct graphics_priv {
@@ -59,13 +66,24 @@ struct graphics_priv {
 
 	void (*resize_callback)(void *data, int w, int h);
 	void *resize_callback_data;
+	int resize_callback_initial;
+
 	void (*motion_callback)(void *data, struct point *p);
 	void *motion_callback_data;
+
 	void (*button_callback)(void *data, int press, int button, struct point *p);
 	void *button_callback_data;
 
+	void (*keypress_callback)(void *data, int key);
+	void *keypress_callback_data;
+
 #ifndef SDL_TTF
     FT_Library library;
+#endif
+
+#ifdef PROFILE
+    struct timeval draw_begin_tv;
+    unsigned long draw_time_peak;
 #endif
 };
 
@@ -105,6 +123,7 @@ graphics_destroy(struct graphics_priv *gr)
     TTF_Quit();
 #else
     FT_Done_FreeType(gr->library);
+    FcFini();
 #endif
     SDL_Quit();
 }
@@ -279,7 +298,7 @@ static struct graphics_gc_methods gc_methods = {
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)
 {
-    struct graphics_gc_priv *gc=g_new(struct graphics_gc_priv, 1);
+    struct graphics_gc_priv *gc=g_new0(struct graphics_gc_priv, 1);
 	*meth=gc_methods;
     gc->gr=gr;
     gc->linewidth=1; /* upper layer should override anyway? */
@@ -437,13 +456,13 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
         printf("draw_rectangle: %d %d %d %d r=%d g=%d b=%d a=%d\n", p->x, p->y, w, h,
                gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
 #endif
-    if(w > DISPLAY_W)
+    if(w > gr->screen->w)
     {
-        w = DISPLAY_W-1;
+        w = gr->screen->w - 1;
     }
-    if(h > DISPLAY_H)
+    if(h > gr->screen->h)
     {
-        h = DISPLAY_H-1;
+        h = gr->screen->h - 1;
     }
     boxRGBA(gr->screen, p->x, p->y, p->x + w, p->y + h,
             gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
@@ -707,7 +726,6 @@ struct text_render {
 	struct text_glyph *glyph[0];
 };
 
-#ifndef _WIN32
 static unsigned char *
 display_text_render_shadow(struct text_glyph *g)
 {
@@ -716,7 +734,7 @@ display_text_render_shadow(struct text_glyph *g)
 	unsigned char *shadow;
 	unsigned char *p, *pm=g->pixmap;
 
-	shadow=malloc(str*(g->h+2)); /* do not use g_malloc() here */
+	shadow=malloc(str*(g->h+2));
 	memset(shadow, 0, str*(g->h+2));
 	for (y = 0 ; y < h ; y++) {
 		p=shadow+str*y;
@@ -749,50 +767,7 @@ display_text_render_shadow(struct text_glyph *g)
 	}
 	return shadow;
 }
-#else
-/* TODO FIXME */
-static GdkImage *
-display_text_render_shadow(struct text_glyph *g)
-{
-	int mask0, mask1, mask2, x, y, w=g->w, h=g->h;
-	int str=(g->w+9)/8;
-	unsigned char *p, *pm=g->pixmap;
-	GdkImage *ret;
 
-	ret=gdk_image_new( GDK_IMAGE_NORMAL , gdk_visual_get_system(), w+2, h+2);
-
-	for (y = 0 ; y < h ; y++) {
-		p=ret->mem+str*y;
-
-		mask0=0x4000;
-		mask1=0xe000;
-		mask2=0x4000;
-		for (x = 0 ; x < w ; x++) {
-			if (pm[x+y*w]) {
-				p[0]|=(mask0 >> 8);
-				if (mask0 & 0xff)
-					p[1]|=mask0;
-
-				p[str]|=(mask1 >> 8);
-				if (mask1 & 0xff)
-					p[str+1]|=mask1;
-				p[str*2]|=(mask2 >> 8);
-				if (mask2 & 0xff)
-					p[str*2+1]|=mask2;
-			}
-			mask0 >>= 1;
-			mask1 >>= 1;
-			mask2 >>= 1;
-			if (!((mask0 >> 8) | (mask1 >> 8) | (mask2 >> 8))) {
-				mask0<<=8;
-				mask1<<=8;
-				mask2<<=8;
-			}
-		}
-	}
-	return ret;
-}
-#endif
 
 static struct text_render *
 display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy, int x, int y)
@@ -860,16 +835,45 @@ display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy,
 }
 
 #if 0
-static void hexdump(unsigned char *buf, unsigned int n)
+static void hexdump(unsigned char *buf, unsigned int w, unsigned int h)
 {
-    int i;
-    for(i = 0; i < n; i++)
+    int x, y;
+    printf("hexdump %u %u\n", w, h);
+    for(y = 0; y < h; y++)
     {
-        if((i&0xf)==0)
+        for(x = 0; x < w; x++)
         {
-            printf("\n%02x: ", i);
+            printf("%02x ", buf[y*w+x]);
         }
-        printf("%02x ", buf[i]);
+        printf("\n");
+    }
+}
+
+static void bitdump(unsigned char *buf, unsigned int w, unsigned int h)
+{
+    int x, pos;
+    printf("bitdump %u %u\n", w, h);
+    pos = 0;
+    for(x = 0; x < h * w; x++)
+    {
+        if(buf[pos] & (1 << (x&0x7)))
+        {
+            printf("00 ");
+        }
+        else
+        {
+            printf("ff ");
+        }
+
+        if((x & 0x7) == 0x7)
+        {
+            pos++;
+        }
+
+        if((x % w) == (w-1))
+        {
+            printf("\n");
+        }
     }
     printf("\n");
 }
@@ -889,22 +893,21 @@ static void sdl_inv_grayscale_pal_set(SDL_Surface *ss)
         SDL_SetPalette(ss, SDL_LOGPAL, &c, i, 1); 
     }
 }
-#endif
 
 static void sdl_scale_pal_set(SDL_Surface *ss, Uint8 r, Uint8 g, Uint8 b)
 {
     SDL_Color c;
     int i;
 
-
     for(i = 0; i < 256; i++)
     {
-        c.r = 255 - (i * r) / 256;
-        c.g = 255 - (i * g) / 256;
-        c.b = 255 - (i * b) / 256;
+        c.r = (i * r) / 256;
+        c.g = (i * g) / 256;
+        c.b = (i * b) / 256;
         SDL_SetPalette(ss, SDL_LOGPAL, &c, i, 1); 
     }
 }
+#endif
 
 #if 0
 static void sdl_fixed_pal_set(SDL_Surface *ss, Uint8 r, Uint8 g, Uint8 b)
@@ -925,65 +928,180 @@ static void sdl_fixed_pal_set(SDL_Surface *ss, Uint8 r, Uint8 g, Uint8 b)
 static void
 display_text_draw(struct text_render *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg)
 {
-	int i;
-	struct text_glyph *g, **gp;
-    SDL_Surface *ss;
-    SDL_Rect r;
+    int i, x, y, poff, soff, col_lev;
+    struct text_glyph *gly, **gp;
+    Uint32 pix;
+    Uint8 r, g, b;
 
+#if 0
+    dbg(0,"%u %u %u %u, %u %u %u %u\n",
+        fg->fore_a, fg->fore_r, fg->fore_g, fg->fore_b,
+        fg->back_a, fg->back_r, fg->back_g, fg->back_b);
+
+    dbg(0,"%u %u %u %u, %u %u %u %u\n",
+        bg->fore_a, bg->fore_r, bg->fore_g, bg->fore_b,
+        bg->back_a, bg->back_r, bg->back_g, bg->back_b);
+#endif
+
+    col_lev = bg->fore_r + bg->fore_g + bg->fore_b;
+
+    /* TODO: lock/unlock in draw_mode() to reduce overhead */
+    SDL_LockSurface(gr->screen);
 	gp=text->glyph;
 	i=text->glyph_count;
 	while (i-- > 0)
 	{
-		g=*gp++;
-        if(g->shadow && bg)
+		gly=*gp++;
+		if (gly->w && gly->h)
         {
-            ss = SDL_CreateRGBSurfaceFrom(g->pixmap, g->w+2, g->h+2, 8, g->w+2, 0, 0, 0, 0);
-            if(ss)
+#if 0
+            if(gly->shadow && bg)
             {
-                //sdl_inv_grayscale_pal_set(ss);
-                sdl_scale_pal_set(ss, bg->back_r, bg->back_g, bg->back_b);
-                r.x = g->x-1;
-                r.y = g->y-1;
-                r.w = g->w+2;
-                r.h = g->h+2;
-                //printf("%d %d %d %d\n", g->x, g->y, g->w, g->h);
-                SDL_SetAlpha(ss, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
-                //SDL_SetColorKey(ss, SDL_SRCCOLORKEY, 0x00);
-                SDL_BlitSurface(ss, NULL, gr->screen, &r);
-                SDL_FreeSurface(ss);
+                hexdump(gly->pixmap, gly->w, gly->h);
+                bitdump(gly->shadow, gly->w+2, gly->h+2);    
             }
-        }
-		//if (g->shadow && bg)
-			//gdk_draw_image(gr->drawable, bg->gc, g->shadow, 0, 0, g->x-1, g->y-1, g->w+2, g->h+2);
-	}
-	gp=text->glyph;
-	i=text->glyph_count;
-	while (i-- > 0)
-	{
-		g=*gp++;
-		if (g->w && g->h)
-        {
-            //hexdump(g->pixmap, g->w * g->h);
+#endif
 
-            ss = SDL_CreateRGBSurfaceFrom(g->pixmap, g->w, g->h, 8, g->w, 0, 0, 0, 0);
-            if(ss)
+            for(y = 0; y < gly->h + 2; y++)
             {
-                //sdl_inv_grayscale_pal_set(ss);
-                sdl_scale_pal_set(ss, fg->fore_r, fg->fore_g, fg->fore_b);
-                //sdl_inv_bw_pal_set(ss);
-                r.x = g->x;
-                r.y = g->y;
-                r.w = g->w;
-                r.h = g->h;
-                //printf("%d %d %d %d\n", g->x, g->y, g->w, g->h);
-                //SDL_SetAlpha(ss, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
-                SDL_SetColorKey(ss, SDL_SRCCOLORKEY, 0x00);
-                SDL_BlitSurface(ss, NULL, gr->screen, &r);
-                SDL_FreeSurface(ss);
+                if(gly->y - 1 + y < 0)
+                {
+                    continue;
+                }
+
+                if(((gly->y-1) + y) >= gr->screen->h)
+                {
+                    break;
+                }
+
+                for(x = 0; x < gly->w + 2; x++)
+                {
+                    if(gly->x - 1 + x < 0)
+                    {
+                        continue;
+                    }
+
+                    if(((gly->x-1) + x) >= gr->screen->w)
+                    {
+                        break;
+                    }
+
+                    poff = gr->screen->w * ((gly->y-1) + y) + ((gly->x-1) + x);
+                    poff = poff * gr->screen->format->BytesPerPixel;
+
+                    switch(gr->screen->format->BytesPerPixel)
+                    {
+                        case 2:
+                        {
+                            pix = *(Uint16 *)((Uint8*)gr->screen->pixels + poff);
+                            break;
+                        }
+                        case 4:
+                        {
+                            pix = *(Uint32 *)((Uint8*)gr->screen->pixels + poff);
+                            break;
+                        }
+                        default:
+                        {
+                            pix = 0;
+                            break;
+                        }
+                    }
+
+                    SDL_GetRGB(pix,
+                               gr->screen->format,
+                               &r,
+                               &g,
+                               &b);
+
+#ifdef DEBUG
+                    printf("%u %u -> %u off\n",
+                           gly->x,
+                           gly->y,
+                           off);
+
+                    printf("%u,%u: %u %u %u in\n",
+                           x, y,
+                           r, g, b, off);
+#endif
+
+
+
+                    if(gly->shadow && bg)
+                    {
+                        soff = (8 * ((gly->w+9)/8) * y) + x;
+                        pix = gly->shadow[soff/8];
+
+                        if(pix & (1 << (7-(soff&0x7))))
+                        {
+                            if(col_lev >= 3*0x80)
+                            {
+                                r |= bg->fore_r;
+                                g |= bg->fore_g;
+                                b |= bg->fore_b;
+                            }
+                            else
+                            {
+                                r &= ~bg->fore_r;
+                                g &= ~bg->fore_g;
+                                b &= ~bg->fore_b;
+                            }
+                        }
+                    }
+
+                    /* glyph */
+                    if((x > 0) && (x <= gly->w) &&
+                       (y > 0) && (y <= gly->h))
+                    {
+                        if(col_lev >= 3*0x80)
+                        {
+                            r &= ~gly->pixmap[gly->w * (y-1) + (x-1)];
+                            g &= ~gly->pixmap[gly->w * (y-1) + (x-1)];
+                            b &= ~gly->pixmap[gly->w * (y-1) + (x-1)];
+                        }
+                        else
+                        {
+                            r |= gly->pixmap[gly->w * (y-1) + (x-1)];
+                            g |= gly->pixmap[gly->w * (y-1) + (x-1)];
+                            b |= gly->pixmap[gly->w * (y-1) + (x-1)];
+                        }
+                    }
+
+#ifdef DEBUG
+                    printf("%u,%u: %u %u %u out\n",
+                           x, y,
+                           r, g, b);
+#endif
+
+                    pix = SDL_MapRGB(gr->screen->format,
+                                     r,
+                                     g,
+                                     b);
+
+                    switch(gr->screen->format->BytesPerPixel)
+                    {
+                        case 2:
+                        {
+                            *(Uint16 *)((Uint8*)gr->screen->pixels + poff) = pix;
+                            break;
+                        }
+                        case 4:
+                        {
+                            *(Uint32 *)((Uint8*)gr->screen->pixels + poff) = pix;
+                            break;
+                        }
+                        default:
+                        {
+                            break;
+                        }
+                    }
+                }
             }
+
+            //dbg(0, "glyph %d %d %d %d\n", g->x, g->y, g->w, g->h);
         }
-			//gdk_draw_gray_image(gr->drawable, fg->gc, g->x, g->y, g->w, g->h, GDK_RGB_DITHER_NONE, g->pixmap, g->w);
 	}
+    SDL_UnlockSurface(gr->screen);
 }
 
 static void
@@ -1068,16 +1186,39 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 #endif
 }
 
+
 static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
+#ifdef PROFILE
+    struct timeval now;
+    unsigned long elapsed;
+#endif
+
 #ifdef DEBUG
     printf("draw_mode: %d\n", mode);
+#endif
+
+#ifdef PROFILE
+    if(mode == draw_mode_begin)
+    {
+        gettimeofday(&gr->draw_begin_tv, NULL);
+    }
 #endif
 
     if(mode == draw_mode_end)
     {
         SDL_Flip(gr->screen);
+#ifdef PROFILE
+        gettimeofday(&now, NULL);
+        elapsed = 1000000 * (now.tv_sec - gr->draw_begin_tv.tv_sec);
+        elapsed += (now.tv_usec - gr->draw_begin_tv.tv_usec);
+        if(elapsed >= gr->draw_time_peak)
+        {
+           dbg(0, "draw elapsed %u usec\n", elapsed);
+           gr->draw_time_peak = elapsed;
+        }
+#endif
     }
 }
 
@@ -1106,11 +1247,7 @@ register_resize_callback(struct graphics_priv *this, void (*callback)(void *data
 {
 	this->resize_callback=callback;
 	this->resize_callback_data=data;
-
-    if(this->resize_callback)
-    {
-        this->resize_callback(this->resize_callback_data, DISPLAY_W, DISPLAY_H);
-    }
+    this->resize_callback_initial=1;
 }
 
 static void
@@ -1128,11 +1265,12 @@ register_button_callback(struct graphics_priv *this, void (*callback)(void *data
 }
 
 static void
-register_keypress_callback(struct graphics_priv *gr,
+register_keypress_callback(struct graphics_priv *this,
                             void (*callback)(void *data, int key),
                             void *data)
 {
-    /* TODO */
+    this->keypress_callback=callback;
+    this->keypress_callback_data=data;
 }
 
 static struct graphics_methods graphics_methods = {
@@ -1167,6 +1305,22 @@ static gboolean graphics_sdl_idle(void *data)
     struct point p;
     SDL_Event ev;
     int ret;
+
+    /* generate the initial resize callback, so the gui knows W/H
+
+       its unsafe to do this directly inside register_resize_callback;
+       graphics_gtk does it during Configure, but SDL does not have
+       an equivalent event, so we use our own flag
+    */
+    if(gr->resize_callback_initial != 0)
+    {
+        if(gr->resize_callback)
+        {
+            gr->resize_callback(gr->resize_callback_data, gr->screen->w, gr->screen->h);
+        }
+
+        gr->resize_callback_initial = 0;
+    }
 
     while(1)
     {
@@ -1251,7 +1405,7 @@ static gboolean graphics_sdl_idle(void *data)
                 /* hack to repair damage */
                 if(gr->resize_callback)
                 {
-                    gr->resize_callback(gr->resize_callback_data, DISPLAY_W, DISPLAY_H);
+                    gr->resize_callback(gr->resize_callback_data, gr->screen->w, gr->screen->h);
                 }
                 break;
             }
