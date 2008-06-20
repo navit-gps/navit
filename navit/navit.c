@@ -118,6 +118,7 @@ struct navit {
 	struct point pressed, last, current;
 	int button_pressed,moved,popped;
 	guint button_timeout, motion_timeout;
+	int ignore_button;
 	struct log *textfile_debug_log;
 	struct pcoord destination;
 	int destination_valid;
@@ -192,7 +193,7 @@ void
 navit_draw_displaylist(struct navit *this_)
 {
 	if (this_->ready == 3)
-		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current);
+		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current, 1);
 }
 
 void
@@ -226,12 +227,22 @@ navit_handle_button_timeout(void *data)
 	return FALSE;
 }
 
+int
+navit_ignore_button(struct navit *this_)
+{
+	this_->ignore_button=1;
+}
 
 int
 navit_handle_button(struct navit *this_, int pressed, int button, struct point *p, struct callback *popup_callback)
 {
 	int border=16;
 
+	callback_list_call_attr_4(this_->attr_cbl, attr_button, this_, pressed, button, p);
+	if (this_->ignore_button) {
+		this_->ignore_button=0;
+		return 0;
+	}
 	if (pressed) {
 		this_->pressed=*p;
 		this_->last=*p;
@@ -299,7 +310,7 @@ navit_motion_timeout(void *data)
 	if (dx || dy) {
 		this_->last=this_->current;
 		graphics_displaylist_move(this_->displaylist, dx, dy);
-		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current);
+		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current, 0);
 		this_->moved=1;
 	}
 	this_->motion_timeout=0;

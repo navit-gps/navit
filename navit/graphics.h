@@ -153,7 +153,7 @@ void graphics_overlay_disable(struct graphics *this_, int disable);
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img);
 void display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label);
 int graphics_ready(struct graphics *this_);
-void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l);
+void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int callback);
 void graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy);
 void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l);
 struct displaylist_handle *graphics_displaylist_open(struct displaylist *displaylist);
