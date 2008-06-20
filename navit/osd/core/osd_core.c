@@ -594,6 +594,8 @@ struct osd_button {
 	struct callback *navit_init_cb;
 	struct callback *draw_cb;
 	struct graphics_image *img;
+	char *src;
+	char *command;
 };
 
 static void
@@ -604,6 +606,12 @@ osd_button_click(struct osd_button *this, struct navit *nav, int pressed, int bu
 	navit_ignore_button(nav);
 	if (pressed) {
 		dbg(0,"enter\n");
+		if (! strcmp(this->command, "zoom_in")) {
+			navit_zoom_in(nav, 2, NULL);
+		}
+		if (! strcmp(this->command, "zoom_out")) {
+			navit_zoom_out(nav, 2, NULL);
+		}
 	}
 }
 
@@ -621,7 +629,7 @@ osd_button_init(struct osd_button *this, struct navit *nav)
 	this->nav=nav;
 	this->gra=gra;
 	this->gc=graphics_gc_new(gra);
-	this->img=graphics_image_new(gra, "xpm/gui_map.svg");
+	this->img=graphics_image_new(gra, this->src);
 	navit_add_callback(nav, this->navit_init_cb=callback_new_attr_1(callback_cast(osd_button_click), attr_button, this));
 	graphics_add_callback(gra, this->draw_cb=callback_new_attr_1(callback_cast(osd_button_draw), attr_postdraw, this));
 }
@@ -637,9 +645,24 @@ osd_button_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 	attr=attr_search(attrs, NULL, attr_y);
 	if (attr)
 		this->p.y=attr->u.num;
+	attr=attr_search(attrs, NULL, attr_command);
+	if (! attr) {
+		dbg(0,"no command\n");
+		goto error;
+	}
+	this->command=g_strdup(attr->u.str);
+	attr=attr_search(attrs, NULL, attr_src);
+	if (! attr) {
+		dbg(0,"no src\n");
+		goto error;
+	}
+	this->src=g_strdup(attr->u.str);
 	navit_add_callback(nav, this->navit_init_cb=callback_new_attr_1(callback_cast(osd_button_init), attr_navit, this));
 	
 	return (struct osd_priv *) this;
+error:
+	g_free(this);
+	return NULL;
 }
 
 void
