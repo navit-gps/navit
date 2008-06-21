@@ -52,6 +52,8 @@
 #include "window.h"
 #include "main.h"
 #include "keys.h"
+#include "mapset.h"
+#include "route.h"
 #include "config.h"
 
 #define STATE_VISIBLE 1
@@ -1018,10 +1020,31 @@ gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm)
 static void
 gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 {
-	struct widget *wb,*w;
-	wb=gui_internal_menu(this, wm->text);	
+	struct widget *wb,*w,*wc;
+	struct coord_geo g;
+	struct coord c;
+	char *coord;
+
+	switch ((int)wm->data) {
+		case 0:
+			c.x=wm->c.x;
+			c.y=wm->c.y;
+			dbg(0,"x=0x%x y=0x%x\n", c.x, c.y);
+			transform_to_geo(wm->c.pro, &c, &g);
+			break;
+		case 1:
+			g=this->click;
+			break;
+		case 2:
+			g=this->vehicle;
+			break;
+	}
+	wb=gui_internal_menu(this, wm->name ? wm->name : wm->text);	
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
+	coord=coordinates(&g, ' ');
+	gui_internal_widget_append(w, gui_internal_label_new(this, coord));
+	g_free(coord);
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Set as destination",
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
@@ -1037,6 +1060,62 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 		gui_internal_button_new(this, "View on map",
 			image_new_o(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
 #endif
+	if (wm->data) {
+		int i,dist=10;
+		struct mapset *ms;
+		struct mapset_handle *h;
+		struct map_rect *mr;
+		struct map *m;
+		struct item *item;
+		struct street_data *data;
+		struct map_selection sel;
+		struct transformation *trans;
+		enum projection pro;
+		struct attr attr;
+		char *text;
+
+		trans=navit_get_trans(this->nav);
+		pro=transform_get_projection(trans);
+		transform_from_geo(pro, &g, &c);
+		ms=navit_get_mapset(this->nav);
+		sel.next=NULL;
+		sel.u.c_rect.lu.x=c.x-dist;
+		sel.u.c_rect.lu.y=c.y+dist;
+		sel.u.c_rect.rl.x=c.x+dist;
+		sel.u.c_rect.rl.y=c.y-dist;
+		for (i = 0 ; i < layer_end ; i++) {
+			sel.order[i]=18;
+		}
+		h=mapset_open(ms);
+		while ((m=mapset_next(h,1))) {
+			mr=map_rect_new(m, &sel);
+			if (! mr)
+				continue;
+			while ((item=map_rect_get_item(mr))) {
+				data=street_get_data(item);
+				if (transform_within_dist_item(&c, item->type, data->c, data->count, dist)) {
+					if (item_attr_get(item, attr_label, &attr)) {
+						text=g_strdup_printf("%s %s", item_to_name(item->type), attr.u.str);
+					} else 
+						text=g_strdup_printf("%s", item_to_name(item->type));
+					gui_internal_widget_append(w,
+						wc=gui_internal_button_new_with_callback(this, text,
+						image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+						gui_internal_cmd_position, NULL));
+					dbg(0,"x=0x%x y=0x%x\n", data->c[0].x, data->c[0].y);
+					wc->c.x=data->c[0].x;
+					wc->c.y=data->c[0].y;
+					wc->c.pro=pro;
+					wc->name=g_strdup(text);
+					g_free(text);
+				}
+				street_data_free(data);
+			}
+			map_rect_destroy(mr);
+		}
+		mapset_close(h);
+	}
+	
 	gui_internal_menu_render(this);
 }
 
@@ -1189,9 +1268,9 @@ gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 	wk->flags |= flags_expand|flags_fill;
 	wk->func = gui_internal_changed;
 	wkbd=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
-	wkbd->cols=7;
+	wkbd->cols=8;
 	gui_internal_widget_append(w, wkbd);
-	wkbd->spx=4;
+	wkbd->spx=3;
 	wkbd->spy=3;
 	for (i = 0 ; i < 26 ; i++) {
 		char text[]={'A'+i,'\0'};
@@ -1200,8 +1279,8 @@ gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 			gui_internal_cmd_keypress, NULL));
 		wk->data=(void *)((int)(text[0]));
 		wk->background=this->background;
-		wk->bl=8;
-		wk->br=8;
+		wk->bl=6;
+		wk->br=6;
 		wk->bt=6;
 		wk->bb=6;
 	}
@@ -1292,14 +1371,16 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 	gui_internal_widget_append(w,
 		wc=gui_internal_button_new_with_callback(this, coord,
 			image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
-			gui_internal_cmd_point, NULL));
+			gui_internal_cmd_position, (void *)1));
+	wc->name=g_strdup("Map Point");
 	g_free(coord);
 	if (this->vehicle_valid) {
 		coord=coordinates(&this->vehicle, '\n');
 		gui_internal_widget_append(w,
-			gui_internal_button_new_with_callback(this, coord,
+			wc=gui_internal_button_new_with_callback(this, coord,
 				image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
-				gui_internal_cmd_bookmarks, NULL));
+				gui_internal_cmd_bookmarks, (void *)2));
+		wc->name=g_strdup("Vehicle Position");
 		g_free(coord);
 	}
 	gui_internal_widget_append(w,
@@ -1491,6 +1572,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		graphics_overlay_disable(gra, 1);
 		trans=navit_get_trans(this->nav);
 		transform_reverse(trans, p, &c);
+		dbg(0,"x=0x%x y=0x%x\n", c.x, c.y);
 		transform_to_geo(transform_get_projection(trans), &c, &this->click);
 		if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle
 			&& vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp)) {
