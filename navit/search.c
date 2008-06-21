@@ -281,11 +281,12 @@ search_list_get_result(struct search_list *this_)
 	for (;;) {
 		dbg(1,"le->search=%p\n", le->search);
 		if (! le->search) {
-			dbg(1,"partial=%d\n", le->partial);
+			dbg(1,"partial=%d level=%d\n", le->partial, level);
 			if (! level) 
 				le->parent=NULL;
 			else {
 				leu=&this_->levels[level-1];
+				dbg(1,"leu->curr=%p\n", leu->curr);
 				if (! leu->curr)
 					break;
 				le->parent=leu->curr->data;

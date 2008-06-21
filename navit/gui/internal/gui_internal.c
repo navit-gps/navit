@@ -54,6 +54,9 @@
 #include "keys.h"
 #include "mapset.h"
 #include "route.h"
+#include "search.h"
+#include "track.h"
+#include "country.h"
 #include "config.h"
 
 #define STATE_VISIBLE 1
@@ -157,6 +160,7 @@ struct gui_priv {
 	struct widget root;
 	struct widget *highlighted;
 	struct widget *highlighted_menu;
+	struct widget *list;
 	int vehicle_valid;
 	struct coord_geo click, vehicle;
 };
@@ -536,9 +540,7 @@ static void gui_internal_highlight(struct gui_priv *this, struct point *p)
 		this->highlighted_menu=g_list_last(this->root.children)->data;
 		this->highlighted->state |= STATE_HIGHLIGHTED;
 		gui_internal_widget_render(this, this->highlighted);
-#if 0
-		dbg(0,"%d,%d %dx%d\n", found->p.x, found->p.y, found->w, found->h);
-#endif
+		dbg(1,"%d,%d %dx%d\n", found->p.x, found->p.y, found->w, found->h);
 	}
 }
 
@@ -788,7 +790,7 @@ static void gui_internal_widget_append(struct widget *parent, struct widget *chi
 	parent->children=g_list_append(parent->children, child);
 }
 
-static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
+static void gui_internal_widget_children_destroy(struct gui_priv *this, struct widget *w)
 {
 	GList *l;
 	struct widget *wc;
@@ -799,6 +801,13 @@ static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 		gui_internal_widget_destroy(this, wc);
 		l=g_list_next(l);
 	}
+	g_list_free(w->children);
+	w->children=NULL;
+}
+
+static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
+{
+	gui_internal_widget_children_destroy(this, w);
 	g_free(w->text);
 	if (w->img)
 		graphics_image_free(this->gra, w->img);
@@ -896,14 +905,16 @@ gui_internal_top_bar(struct gui_priv *this)
 	wm=gui_internal_button_new_with_callback(this, NULL,
 		image_new_s(this, "gui_map"), gravity_center|orientation_vertical,
 		gui_internal_cmd_return, NULL);
+	gui_internal_widget_pack(this, wm);
 	wh=gui_internal_button_new_with_callback(this, NULL,
 		image_new_s(this, "gui_home"), gravity_center|orientation_vertical,
 		gui_internal_cmd_main_menu, NULL);
+	gui_internal_widget_pack(this, wh);
 	gui_internal_widget_append(w, wm);
 	gui_internal_widget_append(w, wh);
 	width=this->root.w-w->bl-wm->w-w->spx-wh->w;
 	l=g_list_last(this->root.children);
-	wcn=gui_internal_label_new(this,"..");
+	wcn=gui_internal_label_new(this,".. »");
 	dots_len=wcn->w;
 	gui_internal_widget_destroy(this, wcn);
 	wcn=gui_internal_label_new(this,"»");
@@ -913,24 +924,25 @@ gui_internal_top_bar(struct gui_priv *this)
 		if (g_list_previous(l) || !g_list_next(l)) {
 			wc=l->data;
 			wcn=gui_internal_label_new(this, wc->text);
-			if (g_list_previous(l) && g_list_previous(g_list_previous(l))) 
+			if (g_list_next(l)) 
 				use_sep=1;
 			else
 				use_sep=0;
-			if (wcn->w + width_used + w->spx + (use_sep ? sep_len : 0) > width) {
+			dbg(1,"%d (%s) + %d + %d + %d > %d\n", wcn->w, wc->text, width_used, w->spx, use_sep ? sep_len : 0, width);
+			if (wcn->w + width_used + w->spx + (use_sep ? sep_len : 0) + (g_list_previous(l) ? dots_len : 0) > width) {
 				incomplete=1;
 				gui_internal_widget_destroy(this, wcn);
 				break;
+			}
+			if (use_sep) {
+				res=g_list_prepend(res, gui_internal_label_new(this, "»"));
+				width_used+=sep_len+w->spx;
 			}
 			width_used+=wcn->w;
 			wcn->func=gui_internal_cmd_return;
 			wcn->data=wc;
 			wcn->state |= STATE_SENSITIVE;
 			res=g_list_prepend(res, wcn);
-			if (use_sep) {
-				res=g_list_prepend(res, gui_internal_label_new(this, "»"));
-				width_used+=sep_len+w->spx;
-			}
 			
 		}
 		l=g_list_previous(l);
@@ -945,7 +957,7 @@ gui_internal_top_bar(struct gui_priv *this)
 			l=g_list_previous(l);
 			wc=l->data;
 		}
-		wcn=gui_internal_label_new(this, "..");
+		wcn=gui_internal_label_new(this, ".. »");
 		wcn->func=gui_internal_cmd_return;
 		wcn->data=wc;
 		wcn->state |= STATE_SENSITIVE;
@@ -1018,6 +1030,14 @@ gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm)
 }
 
 static void
+gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm)
+{
+	struct widget *w=wm->data;
+	navit_set_center(this->nav, &w->c);
+	gui_internal_prune_menu(this, NULL);
+}
+
+static void
 gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 {
 	struct widget *wb,*w,*wc;
@@ -1056,10 +1076,13 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Add as bookmark",
 			image_new_o(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
-	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "View on map",
-			image_new_o(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
 #endif
+	if ((int)wm->data != 1) {
+		gui_internal_widget_append(w,
+			gui_internal_button_new_with_callback(this, "View on map",
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_view_on_map, wm));
+	}
 	if (wm->data) {
 		int i,dist=10;
 		struct mapset *ms;
@@ -1072,7 +1095,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 		struct transformation *trans;
 		enum projection pro;
 		struct attr attr;
-		char *text;
+		char *label,*text;
 
 		trans=navit_get_trans(this->nav);
 		pro=transform_get_projection(trans);
@@ -1095,7 +1118,9 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 				data=street_get_data(item);
 				if (transform_within_dist_item(&c, item->type, data->c, data->count, dist)) {
 					if (item_attr_get(item, attr_label, &attr)) {
-						text=g_strdup_printf("%s %s", item_to_name(item->type), attr.u.str);
+						label=map_convert_string(m, attr.u.str);
+						text=g_strdup_printf("%s %s", item_to_name(item->type), label);
+						map_convert_free(label);
 					} else 
 						text=g_strdup_printf("%s", item_to_name(item->type));
 					gui_internal_widget_append(w,
@@ -1119,27 +1144,6 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 	gui_internal_menu_render(this);
 }
 
-static void
-gui_internal_cmd_point(struct gui_priv *this, struct widget *wm)
-{
-	struct widget *wb,*w;
-	struct coord_geo *g;
-	char *coord;
-
-	g=&this->click;
-	wb=gui_internal_menu(this, "Map Point");
-	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
-	gui_internal_widget_append(wb, w);
-	coord=coordinates(g, ' ');
-	gui_internal_widget_append(w, gui_internal_label_new(this, coord));
-	g_free(coord);
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Set as destination",
-			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-			gui_internal_cmd_set_destination, wm));
-	gui_internal_menu_render(this);
-	
-}
 static void
 gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 {
@@ -1247,13 +1251,63 @@ gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm)
 static void
 gui_internal_changed(struct gui_priv *this, struct widget *wm)
 {
+	GList *l;
+	gui_internal_widget_children_destroy(this, this->list);
 	dbg(0,"town now '%s'\n", wm->text);
+	if (g_utf8_strlen(wm->text, -1) >= 2) {
+		struct item *item;
+		struct attr search_attr, country_name, *country_attr;
+		struct country_search *cs;
+		struct mapset *ms;
+		struct search_list *sl;
+		struct tracking *tracking;
+		struct search_list_result *res;
+		struct widget *wc;
+
+		dbg(0,"process\n");
+		ms=navit_get_mapset(this->nav);
+		sl=search_list_new(ms);
+		country_attr=country_default();
+		tracking=navit_get_tracking(this->nav);
+		if (tracking && tracking_get_current_attr(tracking, attr_country_id, &search_attr))
+			country_attr=&search_attr;
+		if (country_attr) {
+			cs=country_search_new(country_attr, 0);
+			item=country_search_get_item(cs);
+			if (item && item_attr_get(item, attr_country_name, &country_name)) {
+				search_attr.type=attr_country_all;
+				dbg(0,"country %s\n", country_name.u.str);
+				search_attr.u.str=country_name.u.str;
+				search_list_search(sl, &search_attr, 0);
+				while((res=search_list_get_result(sl)));
+			}
+			country_search_destroy(cs);
+		} else {
+			dbg(0,"warning: no default country found\n");
+		}
+		search_attr.type=attr_town_name;
+		search_attr.u.str=wm->text;
+		search_list_search(sl, &search_attr, 1);
+		while((res=search_list_get_result(sl))) {
+			dbg(0,"res=%s\n", res->town->name);	
+			gui_internal_widget_append(this->list,
+				wc=gui_internal_button_new_with_callback(this, res->town->name,
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_position, NULL));
+			wc->name=g_strdup(res->town->name);
+			wc->c=*res->c;
+		}
+		gui_internal_widget_pack(this, this->list);
+		search_list_destroy(sl);
+	}
+	l=g_list_last(this->root.children);
+	gui_internal_widget_render(this, l->data);
 }
 
 static void
 gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 {
-	struct widget *wb,*wkbd,*wk,*w,*wr,*we;
+	struct widget *wb,*wkbd,*wk,*w,*wr,*we,*wl;
 	int i;
 	wb=gui_internal_menu(this, "Town");
 	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
@@ -1263,6 +1317,9 @@ gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	gui_internal_widget_append(wr, we);
 	gui_internal_widget_append(we, wk=gui_internal_label_new(this, NULL));
+	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wr, wl);
+	this->list=wl;
 	wk->state |= STATE_EDIT;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
