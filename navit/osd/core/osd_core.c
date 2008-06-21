@@ -630,8 +630,12 @@ osd_button_init(struct osd_button *this, struct navit *nav)
 	this->gra=gra;
 	this->gc=graphics_gc_new(gra);
 	this->img=graphics_image_new(gra, this->src);
-	navit_add_callback(nav, this->navit_init_cb=callback_new_attr_1(callback_cast(osd_button_click), attr_button, this));
-	graphics_add_callback(gra, this->draw_cb=callback_new_attr_1(callback_cast(osd_button_draw), attr_postdraw, this));
+	if (! this->img) {
+		dbg(0,"failed to load '%s'\n", this->src);
+	} else {
+		navit_add_callback(nav, this->navit_init_cb=callback_new_attr_1(callback_cast(osd_button_click), attr_button, this));
+		graphics_add_callback(gra, this->draw_cb=callback_new_attr_1(callback_cast(osd_button_draw), attr_postdraw, this));
+	}
 }
 
 static struct osd_priv *
@@ -656,7 +660,7 @@ osd_button_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 		dbg(0,"no src\n");
 		goto error;
 	}
-	this->src=g_strdup(attr->u.str);
+	this->src=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/", attr->u.str, NULL);
 	navit_add_callback(nav, this->navit_init_cb=callback_new_attr_1(callback_cast(osd_button_init), attr_navit, this));
 	
 	return (struct osd_priv *) this;
