@@ -1436,7 +1436,7 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 		gui_internal_widget_append(w,
 			wc=gui_internal_button_new_with_callback(this, coord,
 				image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
-				gui_internal_cmd_bookmarks, (void *)2));
+				gui_internal_cmd_position, (void *)2));
 		wc->name=g_strdup("Vehicle Position");
 		g_free(coord);
 	}
