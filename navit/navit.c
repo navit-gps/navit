@@ -282,6 +282,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			pt.y/=2;
 			pt.x-=this_->last.x-this_->pressed.x;
 			pt.y-=this_->last.y-this_->pressed.y;
+			graphics_overlay_disable(this_->gra, 0);
 			navit_set_center_screen(this_, &pt);
 		} else
 			return 1;
@@ -309,6 +310,7 @@ navit_motion_timeout(void *data)
 	dy=(this_->current.y-this_->last.y);
 	if (dx || dy) {
 		this_->last=this_->current;
+		graphics_overlay_disable(this_->gra, 1);
 		graphics_displaylist_move(this_->displaylist, dx, dy);
 		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current, 0);
 		this_->moved=1;
