@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-06-17 14:24+0200\n"
-"PO-Revision-Date: 2008-06-19 21:35+0000\n"
+"PO-Revision-Date: 2008-06-21 15:54+0000\n"
 "Last-Translator: Fennek <ng@fennek.dk>\n"
 "Language-Team: Glenn Sommer <glemsom@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2008-06-20 08:08+0000\n"
+"X-Launchpad-Export-Date: 2008-06-22 14:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #~ msgid "Turn %1$s%2$s %3$s"
@@ -298,7 +298,7 @@ msgstr "Punkt 0x%x 0x%x"
 #: ../navit/popup.c:264
 #, fuzzy, c-format
 msgid "Screen coord : %d %d"
-msgstr "Skærm %d %d"
+msgstr "Skærm koordinater %d %d"
 
 #. 020
 #: ../navit/country.c:43
@@ -1334,7 +1334,7 @@ msgstr "Surinam"
 #. 678
 #: ../navit/country.c:249
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "São Tomé og Príncipe"
 
 #. 222
 #: ../navit/country.c:250
@@ -1355,7 +1355,7 @@ msgstr "Swaziland"
 #. 796
 #: ../navit/country.c:253
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Turks- og Caicosøerne"
 
 #. 148
 #: ../navit/country.c:254
@@ -1365,37 +1365,37 @@ msgstr "Tchad"
 #. 260
 #: ../navit/country.c:255
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Fransk sydlige territorier"
 
 #. 768
 #: ../navit/country.c:256
 msgid "Togo"
-msgstr ""
+msgstr "Togo"
 
 #. 764
 #: ../navit/country.c:257
 msgid "Thailand"
-msgstr ""
+msgstr "Thailand"
 
 #. 762
 #: ../navit/country.c:258
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tajikistan"
 
 #. 772
 #: ../navit/country.c:259
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #. 626
 #: ../navit/country.c:260
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Timor-Leste"
 
 #. 795
 #: ../navit/country.c:261
 msgid "Turkmenistan"
-msgstr ""
+msgstr "Turkmenistan"
 
 #. 788
 #: ../navit/country.c:262
@@ -1405,7 +1405,7 @@ msgstr "Tunesien"
 #. 776
 #: ../navit/country.c:263
 msgid "Tonga"
-msgstr ""
+msgstr "Tonga"
 
 #. 792
 #: ../navit/country.c:264
@@ -1415,22 +1415,22 @@ msgstr "Tyrkiet"
 #. 780
 #: ../navit/country.c:265
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "Trinidad og Tobago"
 
 #. 798
 #: ../navit/country.c:266
 msgid "Tuvalu"
-msgstr ""
+msgstr "Tuvalu"
 
 #. 158
 #: ../navit/country.c:267
 msgid "Taiwan, Province of China"
-msgstr ""
+msgstr "Taiwan, Den Kinesiske Provins"
 
 #. 834
 #: ../navit/country.c:268
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "Tanzania, Den Forenede Republik"
 
 #. 804
 #: ../navit/country.c:269
@@ -1440,92 +1440,92 @@ msgstr "Ukraine"
 #. 800
 #: ../navit/country.c:270
 msgid "Uganda"
-msgstr ""
+msgstr "Uganda"
 
 #. 581
 #: ../navit/country.c:271
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "USA, mindre omliggende øer"
 
 #. 840
 #: ../navit/country.c:272
 msgid "United States"
-msgstr ""
+msgstr "USA"
 
 #. 858
 #: ../navit/country.c:273
 msgid "Uruguay"
-msgstr ""
+msgstr "Uruguay"
 
 #. 860
 #: ../navit/country.c:274
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Usbekistan"
 
 #. 336
 #: ../navit/country.c:275
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "Vatikanstaten"
 
 #. 670
 #: ../navit/country.c:276
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "Sankt Vincent og Grenadinerne"
 
 #. 862
 #: ../navit/country.c:277
 msgid "Venezuela"
-msgstr ""
+msgstr "Venezuela"
 
 #. 092
 #: ../navit/country.c:278
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "Britiske Jomfruøer, De"
 
 #. 850
 #: ../navit/country.c:279
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "Amerikanske Jomfruøer"
 
 #. 704
 #: ../navit/country.c:280
 msgid "Viet Nam"
-msgstr ""
+msgstr "Vietnam"
 
 #. 548
 #: ../navit/country.c:281
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #. 876
 #: ../navit/country.c:282
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "Wallis og Futunaøerne"
 
 #. 882
 #: ../navit/country.c:283
 msgid "Samoa"
-msgstr ""
+msgstr "Samoa"
 
 #. 887
 #: ../navit/country.c:284
 msgid "Yemen"
-msgstr ""
+msgstr "Yemen"
 
 #. 175
 #: ../navit/country.c:285
 msgid "Mayotte"
-msgstr ""
+msgstr "Mayotte"
 
 #. 710
 #: ../navit/country.c:286
 msgid "South Africa"
-msgstr ""
+msgstr "Sydafrika"
 
 #. 894
 #: ../navit/country.c:287
 msgid "Zambia"
-msgstr ""
+msgstr "Zambia"
 
 #. 716
 #: ../navit/country.c:288
@@ -1551,8 +1551,9 @@ msgstr "Land"
 
 #: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
 #: ../navit/gui/gtk/destination.c:119
+#, fuzzy
 msgid "Postal"
-msgstr ""
+msgstr "Post"
 
 #: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
 #: ../navit/gui/gtk/destination.c:119
