@@ -167,6 +167,8 @@ cursor_new(struct graphics *gra, struct color *c, struct color *c2, int animate)
 	}
 	if (animate)
 		this->animate_timer=g_timeout_add(250, (GSourceFunc)cursor_animate, (gpointer *)this);	
+	this->cursor_pnt.x = 0;
+	this->cursor_pnt.y = 0;
 	dbg(2,"ret=%p\n", this);
 	return this;
 }
