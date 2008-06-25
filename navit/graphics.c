@@ -79,7 +79,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 {
 	struct graphics *this_;
     	struct attr *type_attr;
-	struct graphics_priv * (*graphicstype_new)(struct graphics_methods *meth, struct attr **attrs);
+	struct graphics_priv * (*graphicstype_new)(struct navit *nav, struct graphics_methods *meth, struct attr **attrs);
 
         if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
                 return NULL;
@@ -90,7 +90,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 		return NULL;
 	this_=g_new0(struct graphics, 1);
 	this_->cbl=callback_list_new();
-	this_->priv=(*graphicstype_new)(&this_->meth, attrs);
+	this_->priv=(*graphicstype_new)(parent->u.navit, &this_->meth, attrs);
 	this_->attrs=attr_list_dup(attrs);
 	return this_;
 }
