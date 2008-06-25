@@ -672,7 +672,7 @@ static gboolean graphics_qt_qpainter_idle(void *data)
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_priv * graphics_qt_qpainter_new(struct graphics_methods *meth, struct attr **attrs)
+static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
 {
 	struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
