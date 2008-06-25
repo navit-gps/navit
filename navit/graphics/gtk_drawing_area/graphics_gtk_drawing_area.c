@@ -1077,7 +1077,7 @@ graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth)
 }
 
 static struct graphics_priv *
-graphics_gtk_drawing_area_new(struct graphics_methods *meth, struct attr **attrs)
+graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
 {
 	GtkWidget *draw;
 	struct attr *attr;

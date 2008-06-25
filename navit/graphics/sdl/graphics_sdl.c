@@ -4,18 +4,16 @@
    license: GPLv2
 
    TODO:
-   - kb events
-   - raw linux touchscreen
-   - resize events (cannot be generated right now)
    - dashed lines
    - ifdef DEBUG -> dbg()
-   - proper image transparency (libsdl-image does not work)
+   - proper image transparency (libsdl-image xpm does not work)
    - valgrind
 
    revision history:
    2008-06-01 initial
    2008-06-15 SDL_DOUBLEBUF+SDL_Flip for linux fb. fix FT leaks.
    2008-06-18 defer initial resize_callback
+   2008-06-21 linux touchscreen
 */
 
 #include <glib.h>
@@ -26,11 +24,25 @@
 #include "color.h"
 #include "plugin.h"
 #include "window.h"
+#include "navit.h"
+#include "keys.h"
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_gfxPrimitives.h>
 
 #undef SDL_TTF
+#define SDL_IMAGE
+#undef LINUX_TOUCHSCREEN
+
+#define DISPLAY_W 800
+#define DISPLAY_H 600
+
+#undef ANTI_ALIAS
+
+#undef DEBUG
+#undef PROFILE
+
+#define OVERLAY_MAX 8
 
 #ifdef SDL_TTF
 #include <SDL/SDL_ttf.h>
@@ -41,20 +53,19 @@
 #include <freetype/ftglyph.h>
 #endif
 
-#define SDL_IMAGE
 #ifdef SDL_IMAGE
 #include <SDL/SDL_image.h>
 #endif
 
+#ifdef LINUX_TOUCHSCREEN
+/* we use Linux evdev directly for the touchscreen.  */
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <linux/input.h>
+#endif
+
 #include <alloca.h>
-
-#define DISPLAY_W 800
-#define DISPLAY_H 600
-
-#undef ANTI_ALIAS
-
-#undef DEBUG
-#undef PROFILE
 
 #ifdef PROFILE
 #include <sys/time.h>
@@ -62,8 +73,23 @@
 #endif
 
 
+/* TODO: union overlay + non-overlay to reduce size */
+struct graphics_priv;
 struct graphics_priv {
     SDL_Surface *screen;
+
+    /* <overlay> */
+    int overlay_mode;
+    int overlay_x;
+    int overlay_y;
+    struct graphics_priv *overlay_parent;
+    int overlay_idx;
+    /* </overlay> */
+
+    /* <main> */
+    struct graphics_priv *overlay_array[OVERLAY_MAX];
+    int overlay_enable;
+    enum draw_mode_num draw_mode;
 
 	void (*resize_callback)(void *data, int w, int h);
 	void *resize_callback_data;
@@ -78,6 +104,15 @@ struct graphics_priv {
 	void (*keypress_callback)(void *data, int key);
 	void *keypress_callback_data;
 
+    struct navit *nav;
+
+#ifdef LINUX_TOUCHSCREEN
+    int ts_fd;
+    int32_t ts_hit;
+    uint32_t ts_x;
+    uint32_t ts_y;
+#endif
+
 #ifndef SDL_TTF
     FT_Library library;
 #endif
@@ -86,6 +121,7 @@ struct graphics_priv {
     struct timeval draw_begin_tv;
     unsigned long draw_time_peak;
 #endif
+    /* </main> */
 };
 
 static int dummy;
@@ -117,16 +153,35 @@ struct graphics_image_priv {
 };
 
 
+#ifdef LINUX_TOUCHSCREEN
+static int input_ts_exit(struct graphics_priv *gr);
+#endif
+
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
+    dbg(0, "graphics_destroy %p %u\n", gr, gr->overlay_mode);
+
+    if(gr->overlay_mode)
+    {
+        SDL_FreeSurface(gr->screen);
+        gr->overlay_parent->overlay_array[gr->overlay_idx] = NULL;
+    }
+    else
+    {
 #ifdef SDL_TTF
-    TTF_Quit();
+        TTF_Quit();
 #else
-    FT_Done_FreeType(gr->library);
-    FcFini();
+        FT_Done_FreeType(gr->library);
+        FcFini();
 #endif
-    SDL_Quit();
+#ifdef LINUX_TOUCHSCREEN
+        input_ts_exit(gr);
+#endif
+        SDL_Quit();
+    }
+
+    g_free(gr);
 }
 
 /* graphics_font */
@@ -195,6 +250,11 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 
 	int exact, found;
 	char **family;
+
+    if(gr->overlay_mode)
+    {
+        gr = gr->overlay_parent;
+    }
 
 	found=0;
 	for (exact=1;!found && exact>=0;exact--) {
@@ -465,6 +525,7 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
     {
         h = gr->screen->h - 1;
     }
+
     boxRGBA(gr->screen, p->x, p->y, p->x + w, p->y + h,
             gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
 
@@ -473,21 +534,27 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
 static void
 draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
-    int l, a;
-#ifdef DEBUG
-        printf("draw_circle: %d %d %d\n", p->x, p->y, r);
+    int l, w;
+#if 0
+        if(gc->fore_a != 0xff)
+        {
+        dbg(0, "%d %d %d %u %u:%u:%u:%u\n", p->x, p->y, r, gc->linewidth,
+            gc->fore_a, gc->fore_r, gc->fore_g, gc->fore_b);
+        }
 #endif
 
     /* FIXME: does not quite match gtk */
 
-    /* looks like GTK counts the outline in r,
-       sdl-gfx does not?
-    */
-    r = r - 1;
-
-    for(l = 0; l < gc->linewidth; l++)
+    /* hack for osd compass.. why is this needed!? */
+    if(gr->overlay_mode)
     {
-        a = l - (gc->linewidth/2);
+        r = r / 2;
+    }
+
+    w = gc->linewidth;
+
+    for(l = 0; l < w; l++)
+    {
 #ifdef ANTI_ALIAS
         aacircleRGBA(gr->screen, p->x, p->y, r - l,
                    gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
@@ -507,7 +574,6 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
        and even worse, we have to calculate their parameters!
        go dust off your trigonometry hat.
     */
-
 #if 0
     int i, l, x_inc, y_inc, lw;
 
@@ -943,8 +1009,11 @@ display_text_draw(struct text_render *text, struct graphics_priv *gr, struct gra
         bg->fore_a, bg->fore_r, bg->fore_g, bg->fore_b,
         bg->back_a, bg->back_r, bg->back_g, bg->back_b);
 #endif
-
-    col_lev = bg->fore_r + bg->fore_g + bg->fore_b;
+    
+    if(bg)
+    {
+        col_lev = bg->fore_r + bg->fore_g + bg->fore_b;
+    }
 
     /* TODO: lock/unlock in draw_mode() to reduce overhead */
     SDL_LockSurface(gr->screen);
@@ -1129,6 +1198,7 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 
 	if (! font)
 		return;
+
 #if 0
 	if (bg) {
 		gdk_gc_set_function(fg->gc, GDK_AND_INVERT);
@@ -1195,43 +1265,143 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
     struct timeval now;
     unsigned long elapsed;
 #endif
+    struct graphics_priv *ov;
+    SDL_Rect rect;
+    int i;
 
-#ifdef DEBUG
-    printf("draw_mode: %d\n", mode);
-#endif
-
-#ifdef PROFILE
-    if(mode == draw_mode_begin)
+    if(gr->overlay_mode)
     {
-        gettimeofday(&gr->draw_begin_tv, NULL);
+        /* will be drawn below */
     }
+    else
+    {
+#ifdef DEBUG
+        printf("draw_mode: %d\n", mode);
 #endif
 
-    if(mode == draw_mode_end)
-    {
-        SDL_Flip(gr->screen);
 #ifdef PROFILE
-        gettimeofday(&now, NULL);
-        elapsed = 1000000 * (now.tv_sec - gr->draw_begin_tv.tv_sec);
-        elapsed += (now.tv_usec - gr->draw_begin_tv.tv_usec);
-        if(elapsed >= gr->draw_time_peak)
+        if(mode == draw_mode_begin)
         {
-           dbg(0, "draw elapsed %u usec\n", elapsed);
-           gr->draw_time_peak = elapsed;
+            gettimeofday(&gr->draw_begin_tv, NULL);
         }
 #endif
+
+        if(mode == draw_mode_end)
+        {
+            if((gr->draw_mode == draw_mode_begin) && gr->overlay_enable)
+            {
+                for(i = 0; i < OVERLAY_MAX; i++)
+                {
+                    ov = gr->overlay_array[i];
+                    if(ov)
+                    {
+                        rect.x = ov->overlay_x;
+                        rect.y = ov->overlay_y;
+                        rect.w = ov->screen->w;
+                        rect.h = ov->screen->h;
+                        SDL_BlitSurface(ov->screen, NULL,
+                                        gr->screen, &rect);
+                    }
+                }
+            }
+
+            SDL_Flip(gr->screen);
+
+#ifdef PROFILE
+            gettimeofday(&now, NULL);
+            elapsed = 1000000 * (now.tv_sec - gr->draw_begin_tv.tv_sec);
+            elapsed += (now.tv_usec - gr->draw_begin_tv.tv_usec);
+            if(elapsed >= gr->draw_time_peak)
+            {
+               dbg(0, "draw elapsed %u usec\n", elapsed);
+               gr->draw_time_peak = elapsed;
+            }
+#endif
+        }
+
+        gr->draw_mode = mode;
     }
 }
+
+static struct graphics_methods graphics_methods;
 
 static struct graphics_priv *
 overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
 {
-    return NULL;
+    struct graphics_priv *ov;
+    int i, x, y;
+
+    for(i = 0; i < OVERLAY_MAX; i++)
+    {
+        if(gr->overlay_array[i] == NULL)
+        {
+            break;
+        }
+    }
+    if(i == OVERLAY_MAX)
+    {
+        dbg(0, "too many overlays! increase OVERLAY_MAX\n");
+        return NULL;
+    }
+    dbg(0, "x %d y %d\n", p->x, p->y);
+
+    if(p->x < 0)
+    {
+        x = gr->screen->w + p->x;
+    }
+    else
+    {
+        x = p->x;
+    }
+    if(p->y < 0)
+    {
+        y = gr->screen->h + p->y;
+    }
+    else
+    {
+        y = p->y;
+    }
+
+    dbg(1, "overlay_new %d %d %d %u %u\n", i,
+        x,
+        y,
+        w,
+        h);
+
+    ov = g_new0(struct graphics_priv, 1);
+
+    ov->screen = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCALPHA, 
+                                      w, h,
+#if 1 
+                                      gr->screen->format->BitsPerPixel,
+                                      gr->screen->format->Rmask,
+                                      gr->screen->format->Gmask,
+                                      gr->screen->format->Bmask,
+                                      0x00000000);
+#else
+                                      0x00ff0000,
+                                      0x0000ff00,
+                                      0x000000ff,
+                                      0xff000000);
+#endif
+    SDL_SetAlpha(ov->screen, SDL_SRCALPHA, 128);
+
+    ov->overlay_mode = 1;
+    ov->overlay_x = x;
+    ov->overlay_y = y;
+    ov->overlay_parent = gr;
+    ov->overlay_idx = i;
+
+    gr->overlay_array[i] = ov;
+
+	*meth=graphics_methods;
+
+    return ov;
 }
 
 static void overlay_disable(struct graphics_priv *gr, int disable)
 {
-    /* TODO */
+    gr->overlay_enable = !disable;
 }
 
 
@@ -1322,12 +1492,176 @@ static struct graphics_methods graphics_methods = {
 	register_keypress_callback
 };
 
+
+#ifdef LINUX_TOUCHSCREEN
+
+#define EVFN "/dev/input/eventX"
+
+static int input_ts_init(struct graphics_priv *gr)
+{
+    struct input_id ii;
+    char fn[32];
+#if 0
+    char name[64];
+#endif
+    int n, fd, ret;
+
+    gr->ts_fd = -1;
+    gr->ts_hit = -1;
+    gr->ts_x = 0;
+    gr->ts_y = 0;
+
+    strcpy(fn, EVFN);
+    n = 0;
+    while(1)
+    {
+        fn[sizeof(EVFN)-2] = '0' + n;
+
+        fd = open(fn, O_RDONLY);
+        if(fd >= 0)
+        {
+#if 0
+            ret = ioctl(fd, EVIOCGNAME(64), (void *)name);
+            if(ret > 0)
+            {
+                printf("input_ts: %s\n", name);
+            }
+#endif
+
+            ret = ioctl(fd, EVIOCGID, (void *)&ii);
+            if(ret == 0)
+            {
+#if 1
+                printf("bustype %04x vendor %04x product %04x version %04x\n",
+                       ii.bustype,
+                       ii.vendor,
+                       ii.product,
+                       ii.version);
+#endif
+
+                if((ii.bustype == BUS_USB) &&
+                   (ii.vendor == 0x0eef) &&
+                   (ii.product == 0x0001))
+                {
+                    ret = fcntl(fd, F_SETFL, O_NONBLOCK);
+                    if(ret == 0)
+                    {
+                        gr->ts_fd = fd;
+                    }
+                    else
+                    {
+                        close(fd);
+                    }
+
+                    break;
+                }
+            }
+
+            close(fd);
+        }
+
+        n = n + 1;
+
+        /* FIXME: should check all 32 minors */
+        if(n == 10)
+        {
+            /* not found */
+            ret = -1;
+            break;
+        }
+    }
+
+    return ret;
+}
+
+
+/* returns 0-based display coordinate for the given ts coord */
+static void input_ts_map(int *disp_x, int *disp_y,
+                         uint32_t ts_x, uint32_t ts_y)
+{
+    /* Dynamix 7" (eGalax TS)
+       top left  = 1986,103
+       top right =   61,114
+       bot left  = 1986,1897
+       bot right =   63,1872
+
+       calibrate your TS using input_event_dump
+       and touching all four corners. use the most extreme values. 
+    */
+
+#define INPUT_TS_LEFT 1978
+#define INPUT_TS_RIGHT  48
+#define INPUT_TS_TOP   115
+#define INPUT_TS_BOT  1870
+
+    /* clamp first */
+    if(ts_x > INPUT_TS_LEFT)
+    {
+        ts_x = INPUT_TS_LEFT;
+    }
+    if(ts_x < INPUT_TS_RIGHT)
+    {
+        ts_x = INPUT_TS_RIGHT;
+    }
+
+    ts_x = ts_x - INPUT_TS_RIGHT;
+
+    *disp_x = ((DISPLAY_W-1) * ts_x) / (INPUT_TS_LEFT - INPUT_TS_RIGHT);
+    *disp_x = (DISPLAY_W-1) - *disp_x;
+
+
+    if(ts_y > INPUT_TS_BOT)
+    {
+        ts_y = INPUT_TS_BOT;
+    }
+    if(ts_y < INPUT_TS_TOP)
+    {
+        ts_y = INPUT_TS_TOP;
+    }
+
+    ts_y = ts_y - INPUT_TS_TOP;
+
+    *disp_y = ((DISPLAY_H-1) * ts_y) / (INPUT_TS_BOT - INPUT_TS_TOP);
+/*  *disp_y = (DISPLAY_H-1) - *disp_y; */
+}
+
+#if 0
+static void input_event_dump(struct input_event *ie)
+{
+    printf("input_event:\n"
+           "\ttv_sec\t%u\n"
+           "\ttv_usec\t%lu\n"
+           "\ttype\t%u\n"
+           "\tcode\t%u\n"
+           "\tvalue\t%d\n",
+           (unsigned int)ie->time.tv_sec,
+           ie->time.tv_usec,
+           ie->type,
+           ie->code,
+           ie->value);
+}
+#endif
+
+static int input_ts_exit(struct graphics_priv *gr)
+{
+    close(gr->ts_fd);
+    gr->ts_fd = -1;
+
+    return 0;
+}
+#endif
+
+
 static gboolean graphics_sdl_idle(void *data)
 {
     struct graphics_priv *gr = (struct graphics_priv *)data;
     struct point p;
     SDL_Event ev;
-    int ret;
+#ifdef LINUX_TOUCHSCREEN
+    struct input_event ie;
+    ssize_t ss;
+#endif
+    int ret, key;
 
     /* generate the initial resize callback, so the gui knows W/H
 
@@ -1344,6 +1678,104 @@ static gboolean graphics_sdl_idle(void *data)
 
         gr->resize_callback_initial = 0;
     }
+
+#ifdef LINUX_TOUCHSCREEN
+    if(gr->ts_fd >= 0)
+    {
+        ss = read(gr->ts_fd, (void *)&ie, sizeof(ie));
+        if(ss == sizeof(ie))
+        {
+            /* we (usually) get three events on a touchscreen hit:
+              1: type =EV_KEY
+                 code =330 [BTN_TOUCH]
+                 value=1
+
+              2: type =EV_ABS
+                 code =0 [X]
+                 value=X pos
+
+              3: type =EV_ABS
+                 code =1 [Y]
+                 value=Y pos
+
+              4: type =EV_SYN
+
+              once hit, if the contact point changes, we'll get more 
+              EV_ABS (for 1 or both axes), followed by an EV_SYN.
+
+              and, on a lift:
+
+              5: type =EV_KEY
+                 code =330 [BTN_TOUCH]
+                 value=0
+
+              6: type =EV_SYN
+            */
+            switch(ie.type)
+            {
+                case EV_KEY:
+                {
+                    if(ie.code == BTN_TOUCH)
+                    {
+                        gr->ts_hit = ie.value;
+                    }
+
+                    break;
+                }
+
+                case EV_ABS:
+                {
+                    if(ie.code == 0)
+                    {
+                        gr->ts_x = ie.value;
+                    }
+                    else if(ie.code == 1)
+                    {
+                        gr->ts_y = ie.value;
+                    }
+
+                    break;
+                }
+
+                case EV_SYN:
+                {
+                    input_ts_map(&p.x, &p.y, gr->ts_x, gr->ts_y);
+
+                    /* always send MOUSE_MOTION (first) */
+                    if(gr->motion_callback)
+                    {
+                        gr->motion_callback(gr->motion_callback_data, &p);
+                    }
+
+                    if(gr->ts_hit > 0)
+                    {
+                        if(gr->button_callback)
+                        {
+                            gr->button_callback(gr->button_callback_data, 1, SDL_BUTTON_LEFT, &p);
+                        }
+                    }
+                    else if(gr->ts_hit == 0)
+                    {
+                        if(gr->button_callback)
+                        {
+                            gr->button_callback(gr->button_callback_data, 0, SDL_BUTTON_LEFT, &p);
+                        }
+                    }
+
+                    /* reset ts_hit */
+                    gr->ts_hit = -1;
+
+                    break;
+                }
+
+                default:
+                {
+                    break;
+                }
+            }
+        }
+    }
+#endif
 
     while(1)
     {
@@ -1368,6 +1800,60 @@ static gboolean graphics_sdl_idle(void *data)
 
             case SDL_KEYDOWN:
             {
+                switch(ev.key.keysym.sym)
+                {
+                    case SDLK_LEFT:
+                    {
+                        key = NAVIT_KEY_LEFT;
+                        break;
+                    }
+                    case SDLK_RIGHT:
+                    {
+                        key = NAVIT_KEY_RIGHT;
+                        break;
+                    }
+                    case SDLK_BACKSPACE:
+                    {
+                        key = NAVIT_KEY_BACKSPACE;
+                        break;
+                    }
+                    case SDLK_RETURN:
+                    {
+                        key = NAVIT_KEY_RETURN;
+                        break;
+                    }
+                    case SDLK_DOWN:
+                    {
+                        key = NAVIT_KEY_DOWN;
+                        break;
+                    }
+                    case SDLK_PAGEUP:
+                    {
+                        key = NAVIT_KEY_ZOOM_OUT;
+                        break;
+                    }
+                    case SDLK_UP:
+                    {
+                        key = NAVIT_KEY_UP;
+                        break;
+                    }
+                    case SDLK_PAGEDOWN:
+                    {
+                        key = NAVIT_KEY_ZOOM_IN;
+                        break;
+                    }
+                    default:
+                    {
+                        key = 0;
+                        break;
+                    }
+                }
+
+                if(gr->keypress_callback)
+                {
+                    gr->keypress_callback(gr->keypress_callback_data, key);
+                }
+
                 break;
             }
 
@@ -1418,21 +1904,28 @@ static gboolean graphics_sdl_idle(void *data)
 
             case SDL_QUIT:
             {
-                //g_main_loop_quit(GMainLoop);
+                navit_destroy(gr->nav);
                 break;
             }
 
-#if 0
-            case SDL_VIDEOEXPOSE:
+            case SDL_VIDEORESIZE:
             {
-                /* hack to repair damage */
-                if(gr->resize_callback)
+
+                gr->screen = SDL_SetVideoMode(ev.resize.w, ev.resize.h, 16, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
+                if(gr->screen == NULL)
                 {
-                    gr->resize_callback(gr->resize_callback_data, gr->screen->w, gr->screen->h);
+                    navit_destroy(gr->nav);
                 }
+                else
+                {
+                    if(gr->resize_callback)
+                    {
+                        gr->resize_callback(gr->resize_callback_data, gr->screen->w, gr->screen->h);
+                    }
+                }
+
                 break;
             }
-#endif
 
             default:
             {
@@ -1449,10 +1942,12 @@ static gboolean graphics_sdl_idle(void *data)
 
 
 static struct graphics_priv *
-graphics_sdl_new(struct graphics_methods *meth, struct attr **attrs)
+graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
 {
     struct graphics_priv *this=g_new0(struct graphics_priv, 1);
     int ret;
+
+    this->nav = nav;
 
     ret = SDL_Init(SDL_INIT_VIDEO);
     if(ret < 0)
@@ -1475,7 +1970,7 @@ graphics_sdl_new(struct graphics_methods *meth, struct attr **attrs)
 
     /* TODO: xml params for W/H/BPP */
 
-    this->screen = SDL_SetVideoMode(DISPLAY_W, DISPLAY_H, 16, SDL_HWSURFACE | SDL_DOUBLEBUF);
+    this->screen = SDL_SetVideoMode(DISPLAY_W, DISPLAY_H, 16, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
     if(this->screen == NULL)
     {
         g_free(this);
@@ -1483,11 +1978,26 @@ graphics_sdl_new(struct graphics_methods *meth, struct attr **attrs)
         return NULL;
     }
 
+    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+
     SDL_WM_SetCaption("navit", NULL);
+
+#ifdef LINUX_TOUCHSCREEN
+    input_ts_init(this);
+    if(this->ts_fd >= 0)
+    {
+        /* mouse cursor does not always display correctly in Linux FB.
+           anyway, it is unnecessary w/ a touch screen
+        */
+        SDL_ShowCursor(0);
+    }
+#endif
 
 	*meth=graphics_methods;
 
     g_timeout_add(10, graphics_sdl_idle, this);
+
+    this->overlay_enable = 1;
 
 	return this;
 }
