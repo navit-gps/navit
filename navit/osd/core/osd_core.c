@@ -154,16 +154,16 @@ osd_compass_init(struct compass *this, struct navit *nav)
 	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h);
 
 	this->bg=graphics_gc_new(this->gr);
-	c.r=0; c.g=0; c.b=0;
+	c.r=0; c.g=0; c.b=0; c.a=65535;
 	graphics_gc_set_foreground(this->bg, &c);
 
 	this->white=graphics_gc_new(this->gr);
-	c.r=65535; c.g=65535; c.b=65535;
+	c.r=65535; c.g=65535; c.b=65535; c.a=65535;
 	graphics_gc_set_foreground(this->white, &c);
 	graphics_gc_set_linewidth(this->white, 2);
 
 	this->green=graphics_gc_new(this->gr);
-	c.r=0; c.g=65535; c.b=0;
+	c.r=0; c.g=65535; c.b=0; c.a=65535;
 	graphics_gc_set_foreground(this->green, &c);
 	graphics_gc_set_linewidth(this->green, 2);
 
@@ -307,11 +307,11 @@ osd_eta_init(struct eta *this, struct navit *nav)
 	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h);
 
 	this->bg=graphics_gc_new(this->gr);
-	c.r=0; c.g=0; c.b=0;
+	c.r=0; c.g=0; c.b=0; c.a=0;
 	graphics_gc_set_foreground(this->bg, &c);
 
 	this->white=graphics_gc_new(this->gr);
-	c.r=65535; c.g=65535; c.b=65535;
+	c.r=65535; c.g=65535; c.b=65535; c.a=65535;
 	graphics_gc_set_foreground(this->white, &c);
 	graphics_gc_set_linewidth(this->white, 2);
 
@@ -438,11 +438,11 @@ osd_navigation_init(struct osd_navigation *this, struct navit *nav)
 	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h);
 
 	this->bg=graphics_gc_new(this->gr);
-	c.r=0; c.g=0; c.b=0;
+	c.r=0; c.g=0; c.b=0; c.a=0;
 	graphics_gc_set_foreground(this->bg, &c);
 
 	this->white=graphics_gc_new(this->gr);
-	c.r=65535; c.g=65535; c.b=65535;
+	c.r=65535; c.g=65535; c.b=65535; c.a=65535;
 	graphics_gc_set_foreground(this->white, &c);
 	graphics_gc_set_linewidth(this->white, 2);
 
@@ -554,11 +554,11 @@ osd_street_name_init(struct osd_street_name *this, struct navit *nav)
 	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h);
 
 	this->bg=graphics_gc_new(this->gr);
-	c.r=0; c.g=0; c.b=0;
+	c.r=0; c.g=0; c.b=0; c.a=65535;
 	graphics_gc_set_foreground(this->bg, &c);
 
 	this->white=graphics_gc_new(this->gr);
-	c.r=65535; c.g=65535; c.b=65535;
+	c.r=65535; c.g=65535; c.b=65535; c.a=65535;
 	graphics_gc_set_foreground(this->white, &c);
 
 	this->font=graphics_font_new(this->gr, 200, 1);
