@@ -139,6 +139,7 @@ int main(int argc, char **argv)
 	char *s;
 	int l;
 	int opt;
+    GList *list = NULL, *li;
 
 
 #ifndef _WIN32
@@ -248,7 +249,6 @@ int main(int argc, char **argv)
 	// use 1st cmd line option that is left for the config file
 	if (optind < argc) config_file = argv[optind];
 
-    GList *list = NULL, *li;
     // if config file is explicitely given only look for it, otherwise try std paths
 	if (config_file) list = g_list_append(list,g_strdup(config_file));
     else {
