@@ -130,7 +130,7 @@ vehicle_new(struct attr **attrs)
 
 	vehicletype_new = plugin_get_vehicle_type(type);
 	if (!vehicletype_new) {
-		dbg(0, "invalid type\n");
+		dbg(0, "invalid type '%s'\n", type);
 		return NULL;
 	}
 	this_ = g_new0(struct vehicle, 1);
