@@ -175,7 +175,7 @@ static GtkActionEntry entries[] =
 	{ "VehicleMenuAction", NULL, _n("Vehicle") },
 	{ "ZoomOutAction", GTK_STOCK_ZOOM_OUT, _n("ZoomOut"), NULL, NULL, G_CALLBACK(zoom_out_action) },
 	{ "ZoomInAction", GTK_STOCK_ZOOM_IN, _n("ZoomIn"), NULL, NULL, G_CALLBACK(zoom_in_action) },
-	{ "RefreshAction", GTK_STOCK_REFRESH, _n("Refresh"), NULL, NULL, G_CALLBACK(refresh_action) },
+	{ "RefreshAction", GTK_STOCK_REFRESH, _n("Recalculate"), NULL, NULL, G_CALLBACK(refresh_action) },
 	{ "RoadbookAction", GTK_STOCK_JUSTIFY_FILL, _n("Roadbook"), NULL, NULL, G_CALLBACK(roadbook_action) },
 #ifdef GTK_STOCK_INFO
 	{ "InfoAction", GTK_STOCK_INFO, _n("Info"), NULL, NULL, G_CALLBACK(info_action) },
@@ -183,7 +183,7 @@ static GtkActionEntry entries[] =
 	{ "InfoAction", NULL, _n("Info"), NULL, NULL, G_CALLBACK(info_action) },
 #endif /*GTK_STOCK_INFO*/
 	{ "DestinationAction", "flag_icon", _n("Destination"), NULL, NULL, G_CALLBACK(destination_action) },
-	{ "RouteClearAction", NULL, _n("Clear"), NULL, NULL, G_CALLBACK(route_clear_action) },
+	{ "RouteClearAction", NULL, _n("Stop Navigation"), NULL, NULL, G_CALLBACK(route_clear_action) },
 	{ "Test", NULL, _n("Test"), NULL, NULL, G_CALLBACK(destination_action) },
 	{ "QuitAction", GTK_STOCK_QUIT, _n("_Quit"), "<control>Q",NULL, G_CALLBACK (quit_action) }
 };
@@ -193,8 +193,8 @@ static guint n_entries = G_N_ELEMENTS (entries);
 static GtkToggleActionEntry toggleentries[] =
 {
 	{ "CursorAction", "cursor_icon",_n("Cursor"), NULL, NULL, G_CALLBACK(cursor_action),TRUE },
-	{ "TrackingAction", NULL ,_n("Tracking"), NULL, NULL, G_CALLBACK(tracking_action),TRUE },
-	{ "OrientationAction", "orientation_icon", _n("Orientation"), NULL, NULL, G_CALLBACK(orient_north_action),FALSE },
+	{ "TrackingAction", NULL ,_n("Lock on Road"), NULL, NULL, G_CALLBACK(tracking_action),TRUE },
+	{ "OrientationAction", "orientation_icon", _n("Northing"), NULL, NULL, G_CALLBACK(orient_north_action),FALSE },
 #ifdef GTK_STOCK_FULLSCREEN
 	{ "FullscreenAction",GTK_STOCK_FULLSCREEN, _n("Fullscreen"), NULL, NULL, G_CALLBACK(window_fullscreen_action), FALSE }
 #else
