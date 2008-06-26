@@ -138,6 +138,7 @@ int main(int argc, char **argv)
 	char *config_file = NULL;
 	char *s;
 	int l;
+	int opt;
 
 
 #ifndef _WIN32
@@ -213,7 +214,6 @@ int main(int argc, char **argv)
 	route_init();
 	navigation_init();
 	config_file=NULL;
-	int opt;
 	opterr=0;  //don't bomb out on errors.
 	if (argc > 1) {
 		while((opt = getopt(argc, argv, ":hvc:d:")) != -1) {
