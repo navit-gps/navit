@@ -54,8 +54,10 @@ map_new(const char *type, struct attr **attrs)
 
 
 	maptype_new=plugin_get_map_type(type);
-	if (! maptype_new)
+	if (! maptype_new) {
+		dbg(0,"invalid type '%s'\n", type);
 		return NULL;
+	}
 
 	m=g_new0(struct map, 1);
 	m->active=1;
