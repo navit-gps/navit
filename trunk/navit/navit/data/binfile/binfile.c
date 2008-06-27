@@ -438,7 +438,7 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 			if (mr->item.type == type_countryindex) {
 				map_parse_country_binfile(mr);
 			}
-			if (mr->item.type >= type_town_label && mr->item.type <= type_district_label_1e7)
+			if (item_is_town(mr->item))
 			{
 				return &mr->item;
 			} else {
@@ -559,7 +559,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 	struct item* it;
 	while ((it  = map_rect_get_item_binfile(map_search->mr))) {
 		if (map_search->search->type == attr_town_name) {
-			if ((it->type >= type_town_label) && (it->type <= type_town_label_1e7)) {
+			if (item_is_town(*it)) {
 				struct attr at;
 				if (binfile_attr_get(it->priv_data, attr_label, &at)) {
 					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {

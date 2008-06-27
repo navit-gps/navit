@@ -34,6 +34,16 @@ enum item_type {
 
 #include "attr.h"
 
+
+/* NOTE: we treat districts as towns for now, since
+   a) navit does not implement district search yet
+   b) OSM "place=suburb" maps to type_district in osm2navit. with the OSM USA maps,
+      there are many "suburbs" that users will consider towns (not districts/counties);
+      we want navit's town search to find them
+*/
+#define item_is_town(item) ((item).type >= type_town_label && (item).type <= type_district_label_1e7)
+#define item_is_street(item) ((item).type >= type_street_nopass && (item).type <= type_ferry)
+
 #define item_is_equal_id(a,b) ((a).id_hi == (b).id_hi && (a).id_lo == (b).id_lo)
 #define item_is_equal(a,b) (item_is_equal_id(a,b) && (a).map == (b).map)
 

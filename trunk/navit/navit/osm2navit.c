@@ -50,8 +50,6 @@
 #define debug_tile(x) (!strcmp(x,"bcdbd") || !strcmp(x,"bcdbd") || !strcmp(x,"bcdbda") || !strcmp(x,"bcdbdb") || !strcmp(x,"bcdbdba") || !strcmp(x,"bcdbdbb") || !strcmp(x,"bcdbdbba") || !strcmp(x,"bcdbdbaa") || !strcmp(x,"bcdbdbacaa") || !strcmp(x,"bcdbdbacab") || !strcmp(x,"bcdbdbacaba") || !strcmp(x,"bcdbdbacabaa") || !strcmp(x,"bcdbdbacabab") || !strcmp(x,"bcdbdbacababb") || !strcmp(x,"bcdbdbacababba") || !strcmp(x,"bcdbdbacababbb") || !strcmp(x,"bcdbdbacababbd") || !strcmp(x,"bcdbdbacababaa") || !strcmp(x,"bcdbdbacababab") || !strcmp(x,"bcdbdbacababac") || !strcmp(x,"bcdbdbacababad") || !strcmp(x,"bcdbdbacabaaa") || !strcmp(x,"bcdbdbacabaaba") || !strcmp(x,"bcdbdbacabaabb") || !strcmp(x,"bcdbdbacabaabc") || !strcmp(x,"bcdbdbacabaabd") || !strcmp(x,"bcdbdbacabaaaa") || !strcmp(x,"bcdbdbacabaaab") || !strcmp(x,"bcdbdbacabaaac") || !strcmp(x,"bcdbdbacabaaad") || 0)
 #endif
 
-#define IS_TOWN(item) ((item).type >= type_town_label && (item).type <= type_town_label_1e7)
-#define IS_STREET(item) ((item).type >= type_street_nopass && (item).type <= type_ferry)
 
 static GHashTable *dedupe_ways_hash;
 
@@ -316,6 +314,7 @@ struct country_table {
 	{276,"Germany,Deutschland,Bundesrepublik Deutschland"},
 	{528,"Nederland,The Netherlands,Niederlande,NL"},
 	{756,"Schweiz"},
+	{840,"USA"}
 };
 
 static GHashTable *country_table_hash;
@@ -966,13 +965,13 @@ end_way(FILE *out)
 		item.type=types[0];
 	else
 		item.type=type_street_unkn;
-	if (coverage && IS_STREET(item))
+	if (coverage && item_is_street(item))
 		item.type=type_coverage;
 	item.clen=coord_count*2;
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
 	fwrite(coord_buffer, coord_count*sizeof(struct coord), 1, out);
-	if (IS_STREET(item)) {
+	if (item_is_street(item)) {
 		street_name_attr.len=label_attr.len;
 		write_attr(out, &street_name_attr, label_attr_buffer);
 	} else
@@ -1004,14 +1003,14 @@ end_node(FILE *out)
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
 	fwrite(&ni->c, 1*sizeof(struct coord), 1, out);
-	if (IS_TOWN(item)) {
+	if (item_is_town(item)) {
 		town_name_attr.len=label_attr.len;
 		write_attr(out, &town_name_attr, label_attr_buffer);
 	} else
 		write_attr(out, &label_attr, label_attr_buffer);
 	write_attr(out, &debug_attr, debug_attr_buffer);
 #ifdef GENERATE_INDEX
-	if (IS_TOWN(item) && town_name_attr.len) {
+	if (item_is_town(item) && town_name_attr.len) {
 		char *tok,*buf=is_in_buffer;
 		while ((tok=strtok(buf, ","))) {
 			while (*tok==' ')
@@ -1738,7 +1737,7 @@ phase2(FILE *in, FILE *out)
 				fprintf(stderr,"ni=%p\n", ni);
 #endif
 				c[i]=ni->c;
-				if (ni->ref_way > 1 && i != 0 && i != ccount-1 && IS_STREET(*ib)) {
+				if (ni->ref_way > 1 && i != 0 && i != ccount-1 && item_is_street(*ib)) {
 					write_item_part(out, ib, last, i);
 					last=i;
 				}
