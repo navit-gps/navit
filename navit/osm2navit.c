@@ -605,6 +605,14 @@ add_tag(char *k, char *v)
 		strcpy(is_in_buffer, v);
 		level=5;
 	}
+	if (! strcmp(k,"gnis:ST_alpha")) {
+		/*	assume a gnis tag means it is part of the USA:
+			http://en.wikipedia.org/wiki/Geographic_Names_Information_System
+			many US towns do not have is_in tags
+		*/
+		strcpy(is_in_buffer, "USA");
+		level=5;
+	}
 	if (! strcmp(k,"lanes")) {
 		level=5;
 	}
