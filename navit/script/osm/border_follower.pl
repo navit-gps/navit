@@ -71,8 +71,12 @@ do {
 		$admin_level=0;
 		while( my($k,$v) = splice @{$tags}, 0, 2 ) {
 			print "tag: $k=$v\n";
-			if (($k eq "left:$type" || $k eq "right:$type") && $v eq $name && $newid != $lastid) {
-				$match=1;
+			if (($k eq "left:$type" || $k eq "right:$type") && $newid != $lastid) {
+				if ($v eq $name) {
+					$match=1;
+				} else {
+					$neighbors{$v}=$newid;
+				}
 			}
 			if (($k eq "left:$alt_type" || $k eq "right:$alt_type") && $v eq $name && $newid != $lastid) {
 				print "Warning: $k in $newid\n";
@@ -113,4 +117,7 @@ do {
 } while ($wayid != $first_wayid);
 print "End reached\n";
 print "Path $path\n";
+while (($key,$value)=each(%neighbors)) {
+	print "Neighbor $key $value\n";
+}
 #print Dumper($ways);
