@@ -544,8 +544,11 @@ navit_append_coord(struct navit *this_, char *file, struct pcoord *c, char *type
 		offset=ftell(f);
 		if (c) {
 			prostr = projection_to_name(c->pro);
-			fprintf(f,"%s%s0x%x 0x%x type=%s label=\"%s\"\n",
-				 prostr, *prostr ? ":" : "", c->x, c->y, type, description);
+			fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
+				 prostr, *prostr ? ":" : "", 
+				 c->x >= 0 ? "":"-", c->x >= 0 ? c->x : -c->x, 
+				 c->y >= 0 ? "":"-", c->y >= 0 ? c->y : -c->y, 
+				 type, description);
 		} else
 			fprintf(f,"\n");
 		fclose(f);
