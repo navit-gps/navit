@@ -1356,7 +1356,7 @@ phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
 			fprintf(stderr, "Cannot query way_node: %s\n", PQerrorMessage(conn));
 			exit(1);
 		}
-		sprintf(query,"select way_id,name,value from way_tag where way_id >= %ld and way_id <= %ld", min, max);
+		sprintf(query,"select way_id,name,value from way_tag where way_id >= %ld and way_id <= %ld order by way_id", min, max);
 		tag=PQexec(conn, query);
 		if (! tag) {
 			fprintf(stderr, "Cannot query way_tag: %s\n", PQerrorMessage(conn));
