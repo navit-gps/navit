@@ -130,9 +130,10 @@ void *plugin_get_##type##_type(const char *name);
 #define plugin_init plugin_module_cat(module_,_init)
 #endif
 
-void plugin_init(void);
+struct attr;
 
 /* prototypes */
+void plugin_init(void);
 struct plugin *plugin_new(char *plugin);
 int plugin_load(struct plugin *pl);
 char *plugin_get_name(struct plugin *pl);
@@ -143,7 +144,7 @@ void plugin_call_init(struct plugin *pl);
 void plugin_unload(struct plugin *pl);
 void plugin_destroy(struct plugin *pl);
 struct plugins *plugins_new(void);
-void plugins_add_path(struct plugins *pls, const char *path, int active, int lazy);
+void plugins_add_path(struct plugins *pls, struct attr ** attrs);
 void plugins_init(struct plugins *pls);
 void plugins_destroy(struct plugins *pls);
 void *plugin_get_type(enum plugin_type type, const char *name);

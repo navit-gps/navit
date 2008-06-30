@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include <string.h>
 #include <glib.h>
 #include <gmodule.h>
 #include "config.h"
@@ -24,10 +25,13 @@
 #include "file.h"
 #define PLUGIN_C
 #include "plugin.h"
+#include "item.h"
+#include "debug.h"
 
 struct plugin {
 	int active;
 	int lazy;
+	int ondemand;
 	char *name;
 	GModule *mod;
 	void (*init)(void);
@@ -102,6 +106,18 @@ plugin_set_lazy(struct plugin *pl, int lazy)
 	pl->lazy=lazy;
 }
 
+static int
+plugin_get_ondemand(struct plugin *pl)
+{
+	return pl->ondemand;
+}
+
+static void
+plugin_set_ondemand(struct plugin *pl, int ondemand)
+{
+	pl->ondemand=ondemand;
+}
+
 void
 plugin_call_init(struct plugin *pl)
 {
@@ -130,15 +146,32 @@ plugins_new(void)
 }
 
 void
-plugins_add_path(struct plugins *pls, const char *path, int active, int lazy)
-{
+plugins_add_path(struct plugins *pls, struct attr **attrs) {
+	struct attr *path_attr, *attr;
 	struct file_wordexp *we;
+	int active=1; // default active
+	int lazy=0, ondemand=0;
 	int i, count;
 	char **array;
 	char *name;
 	struct plugin *pl;
 
-	we=file_wordexp_new(path);
+	if (! (path_attr=attr_search(attrs, NULL, attr_path))) {
+		dbg(0,"missing path\n");
+		return;
+	}
+	if ( (attr=attr_search(attrs, NULL, attr_active))) {
+		active=attr->u.num;
+	}
+	if ( (attr=attr_search(attrs, NULL, attr_lazy))) {
+		lazy=attr->u.num;
+	}
+	if ( (attr=attr_search(attrs, NULL, attr_ondemand))) {
+		ondemand=attr->u.num;
+	}
+	dbg(1, "path=\"%s\", active=%d, lazy=%d, ondemand=%d\n",path_attr->u.str, active, lazy, ondemand);
+
+	we=file_wordexp_new(path_attr->u.str);
 	count=file_wordexp_get_count(we);
 	array=file_wordexp_get_array(we);	
 	for (i = 0 ; i < count ; i++) {
@@ -157,6 +190,7 @@ plugins_add_path(struct plugins *pls, const char *path, int active, int lazy)
 		}
 		plugin_set_active(pl, active);
 		plugin_set_lazy(pl, lazy);
+		plugin_set_ondemand(pl, ondemand);
 	}
 	file_wordexp_destroy(we);
 }
@@ -171,16 +205,13 @@ plugins_init(struct plugins *pls)
 	l=pls->list;
 	while (l) {
 		pl=l->data;
-		if (plugin_get_active(pl)) 
-			if (!plugin_load(pl)) 
-				plugin_set_active(pl, 0);
-		l=g_list_next(l);
-	}
-	l=pls->list;
-	while (l) {
-		pl=l->data;
-		if (plugin_get_active(pl)) 
-			plugin_call_init(pl);
+		if (! plugin_get_ondemand(pl)) {
+			if (plugin_get_active(pl)) 
+				if (!plugin_load(pl)) 
+					plugin_set_active(pl, 0);
+			if (plugin_get_active(pl)) 
+				plugin_call_init(pl);
+		}
 		l=g_list_next(l);
 	}
 #endif
