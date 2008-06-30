@@ -210,16 +210,9 @@ xmlconfig_config(struct xmlstate *state)
 static int
 xmlconfig_plugin(struct xmlstate *state)
 {
-	const char *path;
-	int active,lazy;
-
-	state->element_attr.u.data=state->parent->element_attr.u.data;
-	path=find_attribute(state, "path", 1);
-	if (! path)
-		return 0;
-	active=find_boolean(state, "active", 1, 0);
-	lazy=find_boolean(state, "lazy", 1, 0);
-	plugins_add_path(state->parent->element_attr.u.data, path, active, lazy);
+	struct attr **attrs;
+	attrs=convert_to_attrs(state);
+	plugins_add_path(state->parent->element_attr.u.data, attrs);
 	return 1;
 }
 
