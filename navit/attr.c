@@ -90,6 +90,12 @@ attr_new_from_text(const char *name, const char *value)
 		}
 		if (attr >= attr_type_int_begin && attr <= attr_type_int_end) {
 			ret->u.num=atoi(value);
+			if (attr >= attr_type_boolean_begin) { // also check for yes and no
+				if (g_ascii_strcasecmp(value,"no") && g_ascii_strcasecmp(value,"0") && g_ascii_strcasecmp(value,"false")) 
+					ret->u.num=1;
+				else
+					ret->u.num=0;
+			}
 			break;
 		}
 		if (attr >= attr_type_color_begin && attr <= attr_type_color_end) {
