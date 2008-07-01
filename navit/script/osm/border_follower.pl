@@ -8,6 +8,11 @@
 # ./border_follower.pl 10359135 Germany 2 country state
 use Geo::OSM::APIClientV5;
 use Data::Dumper;
+$direction='left';
+if ($ARGV[0] eq '-r') {
+	$direction='right';
+	shift(@ARGV);
+}
 $first_wayid=$ARGV[0];
 $name=$ARGV[1];
 $required_admin_level=$ARGV[2];
@@ -21,12 +26,12 @@ sub error
 {
 	my ($message)=@_;
 	$node=$api->get_node($last);
-	print "$message at  $last $node->{lat} $node->{lon}\n";
+	print "$message at Node $last $node->{lat} $node->{lon}\n";
 	$latl=$node->{lat}-0.01;
 	$lath=$node->{lat}+0.01;
 	$lonl=$node->{lon}-0.01;
 	$lonh=$node->{lon}+0.01;
-	system("wget -O error.osm http://www.openstreetmap.org/api/0.5/map?bbox=$lonl,$latl,$lonh,$lath ; java -jar ~/map/osm/josm/josm-latest.jar error.osm --selection=id:$last");
+	system("wget -O error.osm http://www.openstreetmap.org/api/0.5/map?bbox=$lonl,$latl,$lonh,$lath ; josm error.osm --selection=id:$last");
 	exit(1);
 }
 
@@ -40,7 +45,7 @@ do {
 	$reverse=0;
 #	print Dumper($tags);
 	while( my($k,$v) = splice @{$tags}, 0, 2 ) {
-		if (($k eq "left:$type" || $k eq "left:$alt_type") && $v eq $name) {
+		if (($k eq "$direction:$type" || $k eq "$direction:$alt_type") && $v eq $name) {
 			$reverse=1;
 		}
 	}
@@ -64,21 +69,26 @@ do {
 	$count=0;
 	foreach $way (@$ways) {
 		$newid=$way->{'id'};
-		print "Way $newid\n";
+		$timestamp=$way->{'timestamp'};
+		if ($newid == $lastid) {
+			next;
+		}
+		$nodes=$way->nodes;
+		print "way $newid ($#$nodes nodes) $timestamp\n";
 		my $tags = $way->tags;
 		$match=0;
 		$boundary=0;
 		$admin_level=0;
 		while( my($k,$v) = splice @{$tags}, 0, 2 ) {
 			print "tag: $k=$v\n";
-			if (($k eq "left:$type" || $k eq "right:$type") && $newid != $lastid) {
+			if (($k eq "left:$type" || $k eq "right:$type")) {
 				if ($v eq $name) {
 					$match=1;
 				} else {
 					$neighbors{$v}=$newid;
 				}
 			}
-			if (($k eq "left:$alt_type" || $k eq "right:$alt_type") && $v eq $name && $newid != $lastid) {
+			if (($k eq "left:$alt_type" || $k eq "right:$alt_type") && $v eq $name) {
 				print "Warning: $k in $newid\n";
 				$match=1;
 			}
@@ -97,8 +107,8 @@ do {
 				}
 			}
 		}
-		print "match=$match\n";
 		if ($match) {
+			print "MATCH\n";
 			if ($boundary != 1 ) {
 				print "boundary $boundary wrong at $newid\n"
 			}
@@ -109,10 +119,14 @@ do {
 			$count++;
 		}
 	}
-	if ($count != 1) {
-		error "Count: $count != 1" 
-	} else {
-		$path="$path $wayid";
+	if ($count == 0) {
+		error "No connection" 
+	} else { 
+		if ($count > 1) {
+			error "Multiple connections ($count)" 
+		} else {
+			$path="$path $wayid";
+		}
 	}
 } while ($wayid != $first_wayid);
 print "End reached\n";
