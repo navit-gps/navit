@@ -235,34 +235,34 @@ plugins_destroy(struct plugins *pls)
 	g_free(pls);
 }
 
-void *
+	void *
 plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 {
 	dbg(1, "type=\"%s\", name=\"%s\"\n", type_name, name);
 	GList *l,*lpls;
 	struct name_val *nv;
 	struct plugin *pl;
-	char *mod_name;
+	char *mod_name, *filename=NULL, *corename=NULL;
 	l=plugin_types[type];
 	while (l) {
 		nv=l->data;
-	 	if (!g_ascii_strcasecmp(nv->name, name))
+		if (!g_ascii_strcasecmp(nv->name, name))
 			return nv->val;
 		l=g_list_next(l);
 	}
 	lpls=pls->list;
 	if(!g_ascii_strcasecmp(type_name, "map"))
 		type_name="data";
+	filename=g_strjoin("", "lib", type_name, "_", name, NULL);
+	corename=g_strjoin("", "lib", type_name, "_", "core", NULL);
 	while (lpls) {
 		pl=lpls->data;
 		if ((mod_name=g_strrstr(pl->name, "/")))
 			mod_name++;
 		else
 			mod_name=pl->name;
-		if (!g_ascii_strncasecmp(mod_name+3, type_name, strlen(type_name))
-				&& (!g_ascii_strncasecmp(mod_name+4+strlen(type_name), name, strlen(name)) 
-						|| (!g_ascii_strcasecmp(type_name, "osd") && !g_ascii_strncasecmp(mod_name+7, "core", 4) ))) { 
-			dbg(1, "Loading module \"%s\"\n",pl->name) ;
+		if (!g_ascii_strncasecmp(mod_name, filename, strlen(filename)) || !g_ascii_strncasecmp(mod_name, corename, strlen(filename))) {
+			dbg(0, "Loading module \"%s\"\n",pl->name) ;
 			if (plugin_get_active(pl)) 
 				if (!plugin_load(pl)) 
 					plugin_set_active(pl, 0);
@@ -271,12 +271,17 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 			l=plugin_types[type];
 			while (l) {
 				nv=l->data;
-				if (!g_ascii_strcasecmp(nv->name, name))
+				if (!g_ascii_strcasecmp(nv->name, name)) {
+					g_free(filename);
+					g_free(corename);
 					return nv->val;
+				}
 				l=g_list_next(l);
 			}
 		}
 		lpls=g_list_next(lpls);
 	}
+	g_free(filename);
+	g_free(corename);
 	return NULL;
 }
