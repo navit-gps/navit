@@ -27,11 +27,13 @@ sub error
 	my ($message)=@_;
 	$node=$api->get_node($last);
 	print "$message at Node $last $node->{lat} $node->{lon}\n";
+	$lat=$node->{lat};
+	$lon=$node->{lon};
 	$latl=$node->{lat}-0.01;
 	$lath=$node->{lat}+0.01;
 	$lonl=$node->{lon}-0.01;
 	$lonh=$node->{lon}+0.01;
-	system("wget -O error.osm http://www.openstreetmap.org/api/0.5/map?bbox=$lonl,$latl,$lonh,$lath ; josm error.osm --selection=id:$last");
+	system("firefox 'http://www.informationfreeway.org/?lat=$lat&lon=$lon&zoom=12&layers=B000F000F' ; wget -O error.osm http://www.openstreetmap.org/api/0.5/map?bbox=$lonl,$latl,$lonh,$lath ; josm error.osm --selection=id:$last");
 	exit(1);
 }
 
