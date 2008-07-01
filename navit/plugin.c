@@ -40,7 +40,7 @@ struct plugin {
 struct plugins {
 	GHashTable *hash;
 	GList *list;
-};
+} *pls;
 
 struct plugin *
 plugin_new(char *plugin)
@@ -142,6 +142,7 @@ plugins_new(void)
 {
 	struct plugins *ret=g_new0(struct plugins, 1);
 	ret->hash=g_hash_table_new(g_str_hash, g_str_equal);
+	pls=ret;
 	return ret;
 }
 
@@ -235,16 +236,44 @@ plugins_destroy(struct plugins *pls)
 }
 
 void *
-plugin_get_type(enum plugin_type type, const char *name)
+plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 {
-	GList *l;
+	dbg(0, "type=\"%s\", name=\"%s\"\n", type_name, name);
+	GList *l,*lpls;
 	struct name_val *nv;
+	struct plugin *pl;
+	char *mod_name;
 	l=plugin_types[type];
 	while (l) {
 		nv=l->data;
 	 	if (!g_ascii_strcasecmp(nv->name, name))
 			return nv->val;
 		l=g_list_next(l);
+	}
+	lpls=pls->list;
+	while (lpls) {
+		pl=lpls->data;
+		if ((mod_name=g_strrstr(pl->name, "/")))
+			mod_name++;
+		else
+			mod_name=pl->name;
+		if (!g_ascii_strncasecmp(mod_name+3, type_name, strlen(type_name))
+				&& !g_ascii_strncasecmp(mod_name+4+strlen(type_name), name, strlen(name))) { 
+			dbg(0, "pl->name=\"%s\"\n",pl->name) ;
+			if (plugin_get_active(pl)) 
+				if (!plugin_load(pl)) 
+					plugin_set_active(pl, 0);
+			if (plugin_get_active(pl)) 
+				plugin_call_init(pl);
+			l=plugin_types[type];
+			while (l) {
+				nv=l->data;
+				if (!g_ascii_strcasecmp(nv->name, name))
+					return nv->val;
+				l=g_list_next(l);
+			}
+		}
+		lpls=g_list_next(lpls);
 	}
 	return NULL;
 }

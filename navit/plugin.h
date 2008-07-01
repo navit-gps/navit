@@ -97,7 +97,7 @@ plugin_register_##type##_type(const char *name, struct type##_priv *(*new_) newa
 void * \
 plugin_get_##type##_type(const char *name) \
 { \
-	return plugin_get_type(plugin_type_##type, name); \
+	return plugin_get_type(plugin_type_##type, #type, name); \
 } 
 
 #else
@@ -147,7 +147,7 @@ struct plugins *plugins_new(void);
 void plugins_add_path(struct plugins *pls, struct attr ** attrs);
 void plugins_init(struct plugins *pls);
 void plugins_destroy(struct plugins *pls);
-void *plugin_get_type(enum plugin_type type, const char *name);
+void *plugin_get_type(enum plugin_type type, const char *type_name, const char *name);
 /* end of prototypes */
 
 #ifdef __cplusplus
