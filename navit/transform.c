@@ -811,8 +811,12 @@ transform_within_dist_polygon(struct coord *ref, struct coord *c, int count, int
 		(ref->x < (c[j].x - c[i].x) * (ref->y - c[i].y) / (c[j].y - c[i].y) + c[i].x))
 			ci = !ci;
 	}
-	if (! ci)
-		return transform_within_dist_polyline(ref, c, count, dist, 1);
+	if (! ci) {
+		if (dist)
+			return transform_within_dist_polyline(ref, c, count, dist, 1);
+		else
+			return 0;
+	}
 	return 1;
 }
 
