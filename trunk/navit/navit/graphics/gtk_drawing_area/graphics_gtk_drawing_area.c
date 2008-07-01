@@ -989,8 +989,6 @@ get_data(struct graphics_priv *this, char *type)
 	if (!strcmp(type,"gtk_widget"))
 		return this->widget;
 	if (!strcmp(type,"window")) {
-		gtk_init(&gtk_argc, &gtk_argv);
-		gtk_set_locale();
 		this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 		gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
 		gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
@@ -1111,5 +1109,7 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 void
 plugin_init(void)
 {
-        plugin_register_graphics_type("gtk_drawing_area", graphics_gtk_drawing_area_new);
+	gtk_init(&gtk_argc, &gtk_argv);
+	gtk_set_locale();
+	plugin_register_graphics_type("gtk_drawing_area", graphics_gtk_drawing_area_new);
 }
