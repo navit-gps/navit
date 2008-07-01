@@ -238,7 +238,7 @@ plugins_destroy(struct plugins *pls)
 void *
 plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 {
-	dbg(0, "type=\"%s\", name=\"%s\"\n", type_name, name);
+	dbg(1, "type=\"%s\", name=\"%s\"\n", type_name, name);
 	GList *l,*lpls;
 	struct name_val *nv;
 	struct plugin *pl;
@@ -251,6 +251,8 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 		l=g_list_next(l);
 	}
 	lpls=pls->list;
+	if(!g_ascii_strcasecmp(type_name, "map"))
+		type_name="data";
 	while (lpls) {
 		pl=lpls->data;
 		if ((mod_name=g_strrstr(pl->name, "/")))
@@ -258,8 +260,9 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 		else
 			mod_name=pl->name;
 		if (!g_ascii_strncasecmp(mod_name+3, type_name, strlen(type_name))
-				&& !g_ascii_strncasecmp(mod_name+4+strlen(type_name), name, strlen(name))) { 
-			dbg(0, "pl->name=\"%s\"\n",pl->name) ;
+				&& (!g_ascii_strncasecmp(mod_name+4+strlen(type_name), name, strlen(name)) 
+						|| (!g_ascii_strcasecmp(type_name, "osd") && !g_ascii_strncasecmp(mod_name+7, "core", 4) ))) { 
+			dbg(1, "Loading module \"%s\"\n",pl->name) ;
 			if (plugin_get_active(pl)) 
 				if (!plugin_load(pl)) 
 					plugin_set_active(pl, 0);
