@@ -259,6 +259,7 @@ ITEM(poi_townhall)
 ITEM(poi_level_crossing)
 ITEM(poi_rail_halt)
 ITEM(poi_rail_tram_stop)
+ITEM(poi_wifi)
 /* Line */
 ITEM2(0x80000000,line)
 ITEM2(0x80000001,line_unspecified)
