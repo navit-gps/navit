@@ -58,6 +58,7 @@ xpm_DATA += townhall.xpm
 xpm_DATA += traffic_signals.xpm
 xpm_DATA += trailerpark.xpm
 xpm_DATA += unknown.xpm
+xpm_DATA += wifi.xpm
 
 svgs  = gui_actions.svg
 svgs += gui_active.svg
