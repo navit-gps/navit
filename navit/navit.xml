@@ -1211,6 +1211,9 @@ Change to your home coordinates.
 			<item type="traffic_signals" order="13-">
 				<icon src="traffic_signals.xpm" />
 			</item>
+			<item type="poi_wifi" order="11-">
+				<icon src="wifi.xpm" />
+			</item>
 			<item type="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-">
 				<polygon color="#a0a0a0" />
 				<label label_size="5" /> 
