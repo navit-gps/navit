@@ -23,7 +23,7 @@ libnavit_la_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c dat
 	file.h graphics.h gtkext.h gui.h item.h item_def.h keys.h log.h layer.h layout.h main.h map-share.h map.h\
 	map_data.h mapset.h maptype.h menu.h navigation.h navit.h osd.h \
 	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h profile.h search.h speech.h \
-	transform.h track.h util.h vehicle.h window.h xmlconfig.h
+	transform.h track.h util.h vehicle.h window.h xmlconfig.h zipfile.h
 
 navit_SOURCES = start.c
 navit_LDADD = @NAVIT_LIBS@ @ZLIB_LIBS@ libnavit.la -Lfib-1.1 -lfib
