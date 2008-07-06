@@ -145,9 +145,7 @@ if test "x${enable_graphics_sdl}" = "xyes" ; then
 	save_CPPFLAGS=$CPPFLAGS
 	CPPFLAGS="$($SDL_CONFIG --cflags) $CPPFLAGS"
 	AC_CHECK_HEADER(SDL_image.h,SDL_IMAGE_LIBS=-lSDL_image,enable_graphics_sdl=no)
-	AC_CHECK_HEADER(SDL_gfxPrimitives.h,SDL_GFX_LIBS=-lSDL_gfx,enable_graphics_sdl=no)
 	AC_SUBST(SDL_IMAGE_LIBS)
-	AC_SUBST(SDL_GFX_LIBS)
 	CPPFLAGS=$save_CPPFLAGS
 fi
 if test "x${enable_graphics_sdl}" = "xyes" ; then
