@@ -127,12 +127,7 @@ main_remove_navit(struct navit *nav)
 }
 
 void
-print_usage(void)
-{
-	printf(_("navit usage:\nnavit [options] [configfile]\n\t-c <file>: use <file> as config file\n\t-d <n>: set the debug output level to <n>. (TODO)\n\t-h: print this usage info and exit.\n\t-v: Print the version and exit.\n"));
-}
-
-int main(int argc, char **argv)
+main_init(char *program)
 {
 	GError *error = NULL;
 	char *config_file = NULL;
@@ -162,9 +157,9 @@ int main(int argc, char **argv)
 		g_free(s);
 	} else {
 		if (!getenv("NAVIT_PREFIX")) {
-			l=strlen(argv[0]);
-			if (l > 10 && !strcmp(argv[0]+l-10,"/bin/navit")) {
-				s=g_strdup(argv[0]);
+			l=strlen(program);
+			if (l > 10 && !strcmp(program+l-10,"/bin/navit")) {
+				s=g_strdup(program);
 				s[l-10]='\0';
 				if (strcmp(s, PREFIX))
 					printf(_("setting '%s' to '%s'\n"), "NAVIT_PREFIX", s);
@@ -191,101 +186,18 @@ int main(int argc, char **argv)
 		setenv("NAVIT_LIBDIR", s, 0);
 		g_free(s);
 	}
-        bindtextdomain(PACKAGE, getenv("NAVIT_LOCALEDIR"));
-	bind_textdomain_codeset (PACKAGE, "UTF-8");
-	textdomain(PACKAGE);
-
-	debug_init(argv[0]);
 	if (getenv("LC_ALL")) 
 		dbg(0,"Warning: LC_ALL is set, this might lead to problems\n");
-#ifndef USE_PLUGINS
-	extern void builtin_init(void);
-	builtin_init();
-#endif
-#if 0
-	/* handled in gui/gtk */
-	gtk_set_locale();
-	gtk_init(&argc, &argv);
-	gdk_rgb_init();
-#endif
 	s = getenv("NAVIT_WID");
 	if (s) {
 		setenv("SDL_WINDOWID", s, 0);
 	}
-	route_init();
-	navigation_init();
-	config_file=NULL;
-	opterr=0;  //don't bomb out on errors.
-	if (argc > 1) {
-		while((opt = getopt(argc, argv, ":hvc:d:")) != -1) {
-			switch(opt) {
-			case 'h':
-				print_usage();
-				exit(0);
-				break;
-			case 'v':
-				printf("%s %s\n", "navit", "0.0.4+svn"); 
-				exit(0);
-				break;
-			case 'c':
-				printf("config file n is set to `%s'\n", optarg);
-	            config_file = optarg;
-				break;
-			case 'd':
-				printf("TODO Verbose option is set to `%s'\n", optarg);
-				break;
-			case ':':
-				fprintf(stderr, "navit: Error - Option `%c' needs a value\n", optopt);
-				print_usage();
-				exit(1);
-				break;
-			case '?':
-				fprintf(stderr, "navit: Error - No such option: `%c'\n", optopt);
-				print_usage();
-				exit(1);
-			}
-	    }
-	}
-	// use 1st cmd line option that is left for the config file
-	if (optind < argc) config_file = argv[optind];
+}
 
-    // if config file is explicitely given only look for it, otherwise try std paths
-	if (config_file) list = g_list_append(list,g_strdup(config_file));
-    else {
-		list = g_list_append(list,g_strjoin(NULL,get_home_directory(), "/.navit/navit.xml" , NULL));
-		list = g_list_append(list,g_strdup("navit.xml.local"));
-		list = g_list_append(list,g_strdup("navit.xml"));
-		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml.local" , NULL));
-		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml" , NULL));
-	}
-	li = list;
-	do {
-		if (li == NULL) {
-			// We have not found an existing config file from all possibilities
-			printf(_("No config file navit.xml, navit.xml.local found\n"));
-			exit(1);
-		}
-        // Try the next config file possibility from the list
-		config_file = li->data;
-		if (!file_exists(config_file)) g_free(config_file);
-		li = g_list_next(li);
-	} while (!file_exists(config_file));
-	g_list_free(list);
-
-	if (!config_load(config_file, &error)) {
-		printf(_("Error parsing '%s': %s\n"), config_file, error->message);
-		exit(1);
-	} else {
-		printf(_("Using '%s'\n"), config_file);
-	}
-	if (! navit) {
-		printf(_("No instance has been created, exiting\n"));
-		exit(1);
-	}
-	if (main_loop_gui) {
-		gui_run_main_loop(main_loop_gui);
-	} else 
-		event_main_loop_run();
-
-	return 0;
+void
+main_init_nls(void)
+{
+	bindtextdomain(PACKAGE, getenv("NAVIT_LOCALEDIR"));
+	bind_textdomain_codeset (PACKAGE, "UTF-8");
+	textdomain(PACKAGE);
 }

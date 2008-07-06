@@ -350,3 +350,8 @@ search_list_destroy(struct search_list *this_)
 {
 	g_free(this_);
 }
+
+void
+search_init(void)
+{
+}
