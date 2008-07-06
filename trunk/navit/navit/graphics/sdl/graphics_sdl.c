@@ -14,6 +14,7 @@
    2008-06-15 SDL_DOUBLEBUF+SDL_Flip for linux fb. fix FT leaks.
    2008-06-18 defer initial resize_callback
    2008-06-21 linux touchscreen
+   2008-07-04 custom rastering
 */
 
 #include <glib.h>
@@ -26,9 +27,16 @@
 #include "window.h"
 #include "navit.h"
 #include "keys.h"
+#include "item.h"
+#include "attr.h"
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_gfxPrimitives.h>
+#include <math.h>
+
+#define RASTER
+#undef SDL_SGE
+#undef SDL_GFX
+#undef ALPHA
 
 #undef SDL_TTF
 #define SDL_IMAGE
@@ -37,12 +45,23 @@
 #define DISPLAY_W 800
 #define DISPLAY_H 600
 
-#undef ANTI_ALIAS
 
 #undef DEBUG
 #undef PROFILE
 
 #define OVERLAY_MAX 8
+
+#ifdef RASTER
+#include "raster.h"
+#endif
+
+#ifdef SDL_SGE
+#include <SDL/sge.h>
+#endif
+
+#ifdef SDL_GFX
+#include <SDL/SDL_gfxPrimitives.h>
+#endif
 
 #ifdef SDL_TTF
 #include <SDL/SDL_ttf.h>
@@ -77,6 +96,7 @@
 struct graphics_priv;
 struct graphics_priv {
     SDL_Surface *screen;
+    int aa;
 
     /* <overlay> */
     int overlay_mode;
@@ -490,6 +510,7 @@ static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
     Sint16 *vx, *vy;
+    Sint16 x, y;
     int i;
 
     vx = alloca(count * sizeof(Sint16));
@@ -497,15 +518,74 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 
     for(i = 0; i < count; i++)
     {
-        vx[i] = (Sint16)p[i].x;
-        vy[i] = (Sint16)p[i].y;
+        x = (Sint16)p[i].x;
+        y = (Sint16)p[i].y;
+
+#if 0
+        if(x < 0)
+        {
+            x = 0;
+        }
+        if(y < 0)
+        {
+            y = 0;
+        }
+#endif
+
+        vx[i] = x;
+        vy[i] = y;
+
 #ifdef DEBUG
         printf("draw_polygon: %p %i %d,%d\n", gc, i, p[i].x, p[i].y);
 #endif
     }
 
+#ifdef RASTER
+    if(gr->aa)
+    {
+        raster_aapolygon(gr->screen, count, vx, vy,
+                       SDL_MapRGB(gr->screen->format,
+                                  gc->fore_r,
+                                  gc->fore_g,
+                                  gc->fore_b));
+    }
+    else
+    {
+        raster_polygon(gr->screen, count, vx, vy,
+                       SDL_MapRGB(gr->screen->format,
+                                  gc->fore_r,
+                                  gc->fore_g,
+                                  gc->fore_b));
+    }
+#else
+#ifdef SDL_SGE
+#ifdef ALPHA
+    sge_FilledPolygonAlpha(gr->screen, count, vx, vy,
+                           SDL_MapRGB(gr->screen->format,
+                                      gc->fore_r,
+                                      gc->fore_g,
+                                      gc->fore_b),
+                           gc->fore_a);
+#else
+#ifdef ANTI_ALIAS
+    sge_AAFilledPolygon(gr->screen, count, vx, vy,
+                           SDL_MapRGB(gr->screen->format,
+                                      gc->fore_r,
+                                      gc->fore_g,
+                                      gc->fore_b));
+#else
+    sge_FilledPolygon(gr->screen, count, vx, vy,
+                           SDL_MapRGB(gr->screen->format,
+                                      gc->fore_r,
+                                      gc->fore_g,
+                                      gc->fore_b));
+#endif
+#endif
+#else
     filledPolygonRGBA(gr->screen, vx, vy, count,
                       gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
+#endif
+#endif
 }
 
 
@@ -519,22 +599,47 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
 #endif
     if(w > gr->screen->w)
     {
-        w = gr->screen->w - 1;
+        w = gr->screen->w;
     }
     if(h > gr->screen->h)
     {
-        h = gr->screen->h - 1;
+        h = gr->screen->h;
     }
 
+#ifdef RASTER
+    raster_rect(gr->screen, p->x, p->y, w, h,
+                SDL_MapRGB(gr->screen->format,
+                           gc->fore_r,
+                           gc->fore_g,
+                           gc->fore_b));
+#else
+#ifdef SDL_SGE
+#ifdef ALPHA
+    sge_FilledRectAlpha(gr->screen, p->x, p->y, p->x + w, p->y + h,
+                        SDL_MapRGB(gr->screen->format,
+                                   gc->fore_r,
+                                   gc->fore_g,
+                                   gc->fore_b),
+                        gc->fore_a);
+#else
+    /* no AA -- should use poly instead for that */
+    sge_FilledRect(gr->screen, p->x, p->y, p->x + w, p->y + h,
+                        SDL_MapRGB(gr->screen->format,
+                                   gc->fore_r,
+                                   gc->fore_g,
+                                   gc->fore_b));
+#endif
+#else
     boxRGBA(gr->screen, p->x, p->y, p->x + w, p->y + h,
             gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
+#endif
+#endif
 
 }
 
 static void
 draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
-    int l, w;
 #if 0
         if(gc->fore_a != 0xff)
         {
@@ -551,18 +656,47 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
         r = r / 2;
     }
 
-    w = gc->linewidth;
-
-    for(l = 0; l < w; l++)
-    {
+#ifdef RASTER
+        if(gr->aa)
+        {
+            raster_aacircle(gr->screen, p->x, p->y, r,
+                            SDL_MapRGB(gr->screen->format,
+                                       gc->fore_r, gc->fore_g, gc->fore_b));
+        }
+        else
+        {
+            raster_circle(gr->screen, p->x, p->y, r,
+                          SDL_MapRGB(gr->screen->format,
+                                     gc->fore_r, gc->fore_g, gc->fore_b));
+        }
+#else
+#ifdef SDL_SGE
+#ifdef ALPHA
+        sge_FilledCircleAlpha(gr->screen, p->x, p->y, r,
+                         SDL_MapRGB(gr->screen->format,
+                                    gc->fore_r, gc->fore_g, gc->fore_b),
+                         gc->fore_a);
+#else
 #ifdef ANTI_ALIAS
-        aacircleRGBA(gr->screen, p->x, p->y, r - l,
+        sge_AAFilledCircle(gr->screen, p->x, p->y, r,
+                         SDL_MapRGB(gr->screen->format,
+                                    gc->fore_r, gc->fore_g, gc->fore_b));
+#else
+        sge_FilledCircle(gr->screen, p->x, p->y, r,
+                         SDL_MapRGB(gr->screen->format,
+                                    gc->fore_r, gc->fore_g, gc->fore_b));
+#endif
+#endif
+#else
+#ifdef ANTI_ALIAS
+        aacircleRGBA(gr->screen, p->x, p->y, r,
                    gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
 #else
-        circleRGBA(gr->screen, p->x, p->y, r - l,
-                   gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
+        filledCircleRGBA(gr->screen, p->x, p->y, r,
+                         gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
 #endif
-    }
+#endif
+#endif
 }
 
 
@@ -646,12 +780,46 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 
         if(lw == 1)
         {
+#ifdef RASTER
+            if(gr->aa)
+            {
+                raster_aaline(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
+                         SDL_MapRGB(gr->screen->format,
+                                    gc->fore_r, gc->fore_g, gc->fore_b));
+            }
+            else
+            {
+                raster_line(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
+                         SDL_MapRGB(gr->screen->format,
+                                    gc->fore_r, gc->fore_g, gc->fore_b));
+            }
+#else
+#ifdef SDL_SGE
+#ifdef ALPHA
+            sge_LineAlpha(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
+                     SDL_MapRGB(gr->screen->format,
+                                gc->fore_r, gc->fore_g, gc->fore_b),
+                     gc->fore_a);
+#else
+#ifdef ANTI_ALIAS
+            sge_AALine(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
+                     SDL_MapRGB(gr->screen->format,
+                                gc->fore_r, gc->fore_g, gc->fore_b));
+#else
+            sge_Line(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
+                     SDL_MapRGB(gr->screen->format,
+                                gc->fore_r, gc->fore_g, gc->fore_b));
+#endif
+#endif
+#else
 #ifdef ANTI_ALIAS
             aalineRGBA(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
                      gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
 #else
             lineRGBA(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
                      gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
+#endif
+#endif
 #endif
         }
         else
@@ -695,11 +863,14 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
                 y_lw_adj = -y_lw_adj;
             }
 
-#ifdef DEBUG
-            printf("i=%d\n", i);
-            printf("   %d,%d->%d,%d\n", p[i].x, p[i].y, p[i+1].x, p[i+1].y);
-            printf("   lw=%d angle=%f\n", lw, 180.0 * angle / M_PI);
-            printf("   x_lw_adj=%d y_lw_adj=%d\n", x_lw_adj, y_lw_adj);
+#if 0
+            if(((y_lw_adj*y_lw_adj)+(x_lw_adj*x_lw_adj)) != (lw/2)*(lw/2))
+            {
+                printf("i=%d\n", i);
+                printf("   %d,%d->%d,%d\n", p[i].x, p[i].y, p[i+1].x, p[i+1].y);
+                printf("   lw=%d angle=%f\n", lw, 180.0 * angle / M_PI);
+                printf("   x_lw_adj=%d y_lw_adj=%d\n", x_lw_adj, y_lw_adj);
+            }
 #endif
 
             /* FIXME: draw a circle/square if p[i]==p[i+1]? */
@@ -1945,6 +2116,7 @@ static struct graphics_priv *
 graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
 {
     struct graphics_priv *this=g_new0(struct graphics_priv, 1);
+    struct attr *attr;
     int ret;
 
     this->nav = nav;
@@ -1993,13 +2165,22 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     }
 #endif
 
+#ifdef SDL_SGE
+    sge_Update_OFF();
+    sge_Lock_ON();
+#endif
+
 	*meth=graphics_methods;
 
     g_timeout_add(10, graphics_sdl_idle, this);
 
     this->overlay_enable = 1;
 
-	return this;
+    this->aa = 1;
+    if((attr=attr_search(attrs, NULL, attr_antialias)))
+        this->aa = attr->u.num;
+
+    return this;
 }
 
 void

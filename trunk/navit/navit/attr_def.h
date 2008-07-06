@@ -62,6 +62,7 @@ ATTR(vocabulary_name)
 ATTR(vocabulary_name_systematic)
 ATTR(vocabulary_distances)
 ATTR(announce_name_systematic_first)
+ATTR(antialias)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
