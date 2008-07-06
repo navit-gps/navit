@@ -6,7 +6,7 @@ if BUILD_SAMPLEMAP
 endif
 
 AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ -DPREFIX=\"@prefix@\" -DMODULE=navit
-BUILT_SOURCES=osm2navit libnavit.la
+BUILT_SOURCES=osm2navit
 bin_PROGRAMS = navit osm2navit
 
 pkgdata_DATA = navit.xml
@@ -26,11 +26,11 @@ libnavit_la_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c dat
 	transform.h track.h util.h vehicle.h window.h xmlconfig.h
 
 navit_SOURCES = start.c
-navit_LDADD = @NAVIT_LIBS@ @ZLIB_LIBS@ -lnavit -Lfib-1.1 -lfib
+navit_LDADD = @NAVIT_LIBS@ @ZLIB_LIBS@ libnavit.la -Lfib-1.1 -lfib
 
 osm2navit_CPPFLAGS = $(AM_CPPFLAGS) @POSTGRESQL_CFLAGS@
 osm2navit_SOURCES = osm2navit.c
-osm2navit_LDADD = @NAVIT_LIBS@ @ZLIB_LIBS@ @POSTGRESQL_LIBS@ -lnavit
+osm2navit_LDADD = @NAVIT_LIBS@ @ZLIB_LIBS@ @POSTGRESQL_LIBS@ libnavit.la
 
 if !PLUGINS
   navit_SOURCES += builtin.c
