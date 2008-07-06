@@ -155,7 +155,7 @@ struct map_priv;
 struct map_rect;
 struct map_search;
 struct map_selection;
-struct map *map_new(const char *type, struct attr **attrs);
+struct map *map_new(struct attr **attrs);
 char *map_get_filename(struct map *this_);
 char *map_get_type(struct map *this_);
 int map_get_active(struct map *this_);

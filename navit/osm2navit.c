@@ -2191,6 +2191,53 @@ phase34(int phase, int maxnamelen, FILE *ways_in, FILE *nodes_in, FILE *tilesdir
 
 }
 
+static void
+dump_coord(struct coord *c)
+{
+	printf("0x%x 0x%x",c->x, c->y);
+}
+
+static void
+dump(FILE *in)
+{
+	struct item_bin *ib;
+	struct coord *c;
+	struct attr_bin *a;
+	struct attr attr;
+	int *attr_start;
+	int *attr_end;
+	int i;
+	char *str;
+	while ((ib=read_item(in))) {
+		c=(struct coord *)(ib+1);
+		if (ib->type < type_line) {
+			dump_coord(c);
+			printf(" ");
+		}
+		attr_start=(int *)(ib+1)+ib->clen;
+		attr_end=(int *)ib+ib->len+1;
+		printf("type=%s", item_to_name(ib->type));
+		while (attr_start < attr_end) {
+			a=(struct attr_bin *)(attr_start);
+			attr_start+=a->len+1;
+			attr.type=a->type;
+			attr_data_set(&attr, (a+1));
+			str=attr_to_text(&attr, NULL, 1);
+			printf(" %s=\"%s\"", attr_to_name(a->type), str);
+			g_free(str);
+		}
+		printf(" debug=\"length=%d\"", ib->len);
+		printf("\n");
+		if (ib->type >= type_line) {
+			for (i = 0 ; i < ib->clen/2 ; i++) {
+				dump_coord(c+i);
+				printf("\n");
+			}
+			
+		}
+	}
+}
+
 static int
 phase3(FILE *ways_in, FILE *nodes_in, FILE *tilesdir_out)
 {
@@ -2458,17 +2505,29 @@ usage(FILE *f)
 	exit(1);
 }
 
+static void
+process_binfile(FILE *in, FILE *out)
+{
+	struct item_bin *ib;
+	while ((ib=read_item(in))) {
+		fwrite(ib, (ib->len+1)*4, 1, out);
+	}
+}
+
 int main(int argc, char **argv)
 {
 	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*tilesdir,*zipdir,*res;
 	char *map=g_strdup(attrmap);
-	int c,start=1,end=4,dump_coordinates=0;
+	int i,c,start=1,end=4,dump_coordinates=0;
 	int keep_tmpfiles=0;
 	int process_nodes=1, process_ways=1;
 	int compression_level=9;
+	int output=0;
+	int input=0;
 	char *result,*dbstr=NULL;
 	FILE* input_file = stdin;
-
+	struct plugins *plugins=NULL;
+	struct attr **attrs;
 
 	while (1) {
 #if 0
@@ -2477,30 +2536,37 @@ int main(int argc, char **argv)
 		int option_index = 0;
 		static struct option long_options[] = {
 			{"attr-debug-level", 1, 0, 'a'},
+			{"binfile", 0, 0, 'b'},
 			{"compression-level", 1, 0, 'z'},
 			{"coverage", 0, 0, 'o'},
 #ifdef HAVE_POSTGRESQL
 			{"db", 1, 0, 'd'},
 #endif
 			{"dedupe-ways", 0, 0, 'w'},
+			{"dump", 0, 0, 'D'},
 			{"end", 1, 0, 'e'},
 			{"help", 0, 0, 'h'},
 			{"keep-tmpfiles", 0, 0, 'k'},
 			{"nodes-only", 0, 0, 'N'},
+			{"map", 1, 0, 'm'},
+			{"plugin", 1, 0, 'p'},
 			{"start", 1, 0, 's'},
 			{"input-file", 1, 0, 'i'},
 			{"ignore-unknown", 0, 0, 'n'},
 			{"ways-only", 0, 0, 'W'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "Nni:Wa:c"
+		c = getopt_long (argc, argv, "DNWa:bc"
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
-					      "e:hks:w", long_options, &option_index);
+					      "e:hi:knm:ps:w", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
+		case 'D':
+			output=1;
+			break;
 		case 'N':
 			process_ways=0;
 			break;
@@ -2509,6 +2575,9 @@ int main(int argc, char **argv)
 			break;
 		case 'a':
 			attr_debug_level=atoi(optarg);
+			break;
+		case 'b':
+			input=1;
 			break;
 		case 'c':
 			dump_coordinates=1;
@@ -2524,6 +2593,14 @@ int main(int argc, char **argv)
 		case 'h':
 			usage(stdout);
 			break;
+		case 'm':
+			attrs=(struct attr*[]){
+				&(struct attr){attr_type,{"textfile"}},
+				&(struct attr){attr_data,{"bookmark.txt"}},
+				NULL};
+			map_new(attrs);
+			fprintf(stderr,"optarg=%s\n", optarg);
+			break;	
 		case 'n':
 			fprintf(stderr,"I will IGNORE unknown types\n");
 			ignore_unkown=1;
@@ -2534,6 +2611,12 @@ int main(int argc, char **argv)
 			break;
 		case 'o':
 			coverage=1;
+			break;
+		case 'p':
+			if (! plugins)
+				plugins=plugins_new();
+			attrs=(struct attr*[]){&(struct attr){attr_path,{optarg}},NULL};
+			plugins_add_path(plugins, attrs);	
 			break;
 		case 's':
 			start=atoi(optarg);
@@ -2560,8 +2643,10 @@ int main(int argc, char **argv)
 		}
 
 	}
-	if (optind != argc-1)
+	if (optind != argc-(output == 1 ? 0:1))
 		usage(stderr);
+	if (plugins)
+		plugins_init(plugins);
 	result=argv[optind];
 	build_attrmap(map);
 #ifdef GENERATE_INDEX
@@ -2569,6 +2654,7 @@ int main(int argc, char **argv)
 #endif
 
 
+	if (input == 0) {
 	if (start == 1) {
 		if (process_ways)
 			ways=fopen("ways.tmp","wb+");
@@ -2617,6 +2703,29 @@ int main(int argc, char **argv)
 	node_buffer.size=0;
 	if (end == 2)
 		exit(0);
+	} else {
+		ways_split=fopen("ways_split.tmp","wb+");
+		process_binfile(stdin, ways_split);
+		fclose(ways_split);
+	}
+	if (output == 1) {
+		fprintf(stderr,"PROGRESS: Phase 3: dumping\n");
+		if (process_nodes) {
+			nodes=fopen("nodes.tmp","rb");
+			if (nodes) {
+				dump(nodes);
+				fclose(nodes);
+			}
+		}
+		if (process_ways) {
+			ways_split=fopen("ways_split.tmp","rb");
+			if (ways_split) {
+				dump(ways_split);
+				fclose(ways_split);
+			}
+		}
+		exit(0);
+	}
 	if (start <= 3) {
 		phase=3;
 		fprintf(stderr,"PROGRESS: Phase 3: generating tiles\n");

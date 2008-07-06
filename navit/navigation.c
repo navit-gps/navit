@@ -833,16 +833,13 @@ navigation_unregister_callback(struct navigation *this_, enum attr_type type, st
 struct map *
 navigation_get_map(struct navigation *this_)
 {
-	struct attr navigation_attr;
-        struct attr data_attr;
-        struct attr *attrs_navigation[]={&navigation_attr, &data_attr, NULL};
-	navigation_attr.type=attr_navigation;
-	navigation_attr.u.navigation=this_;
-	data_attr.type=attr_data;
-	data_attr.u.str="";
+	struct attr type_attr={attr_type, {"navigation"}};
+	struct attr navigation_attr={attr_navigation, .u.navigation=this_};
+        struct attr data_attr={attr_data, {""}};
+        struct attr *attrs_navigation[]={&type_attr, &navigation_attr, &data_attr, NULL};
 
 	if (! this_->map)
-		this_->map=map_new("navigation",attrs_navigation);
+		this_->map=map_new(attrs_navigation);
 	return this_->map;
 }
 
