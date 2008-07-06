@@ -194,7 +194,7 @@ map_new_py(PyObject *self, PyObject *args)
 	if (!PyArg_ParseTuple(args, "ss:navit.map", &type, &filename))
 		return NULL;
 	ret=PyObject_NEW(mapObject, &map_Type);
-	ret->m=map_new(type,NULL);
+	ret->m=map_new(NULL);
 	return (PyObject *)ret;
 }
 

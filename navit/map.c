@@ -46,22 +46,26 @@ struct map_rect {
 };
 
 struct map *
-map_new(const char *type, struct attr **attrs)
+map_new(struct attr **attrs)
 {
 	struct map *m;
 	struct map_priv *(*maptype_new)(struct map_methods *meth, struct attr **attrs);
 	struct attr *data=attr_search(attrs, NULL, attr_data);
+	struct attr *type=attr_search(attrs, NULL, attr_type);
 
-
-	maptype_new=plugin_get_map_type(type);
+	if (! type) {
+		dbg(0,"missing type\n");
+		return NULL;
+	}
+	maptype_new=plugin_get_map_type(type->u.str);
 	if (! maptype_new) {
-		dbg(0,"invalid type '%s'\n", type);
+		dbg(0,"invalid type '%s'\n", type->u.str);
 		return NULL;
 	}
 
 	m=g_new0(struct map, 1);
 	m->active=1;
-	m->type=g_strdup(type);
+	m->type=g_strdup(type->u.str);
 	if (data) 
 		m->filename=g_strdup(data->u.str);
 	m->priv=maptype_new(&m->meth, attrs);
@@ -128,6 +132,7 @@ map_set_attr(struct map *this_, struct attr *attr)
 	}
 	if (attr_updated)
 		callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
+	return 1;
 }
 
 void

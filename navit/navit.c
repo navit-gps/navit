@@ -793,7 +793,7 @@ navit_add_bookmarks_from_file(struct navit *this_)
 	struct attr type={attr_type, {"textfile"}}, data={attr_data, {"bookmark.txt"}};
 	struct attr *attrs[]={&type, &data, NULL};
 
-	this_->bookmark=map_new("textfile", attrs);
+	this_->bookmark=map_new(attrs);
 }
 
 static void
@@ -802,7 +802,7 @@ navit_add_former_destinations_from_file(struct navit *this_)
 	struct attr type={attr_type, {"textfile"}}, data={attr_data, {"destination.txt"}};
 	struct attr *attrs[]={&type, &data, NULL};
 
-	this_->former_destination=map_new("textfile", attrs);
+	this_->former_destination=map_new(attrs);
 }
 
 
