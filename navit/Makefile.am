@@ -6,14 +6,15 @@ if BUILD_SAMPLEMAP
 endif
 
 AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ -DPREFIX=\"@prefix@\" -DMODULE=navit
-BUILT_SOURCES=osm2navit
+BUILT_SOURCES=osm2navit libnavit.la
 bin_PROGRAMS = navit osm2navit
 
 pkgdata_DATA = navit.xml
 
 EXTRA_DIST = navit.xml 
 
-navit_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c data_window.c debug.c \
+noinst_LTLIBRARIES        = libnavit.la
+libnavit_la_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c data_window.c debug.c \
 	event.c file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
 	mapset.c maptype.c menu.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c \
 	profile.c projection.c route.c search.c speech.c transform.c track.c \
@@ -24,9 +25,12 @@ navit_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c data_wind
 	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h profile.h search.h speech.h \
 	transform.h track.h util.h vehicle.h window.h xmlconfig.h
 
-osm2navit_SOURCES = osm2navit.c item.c debug.c zipfile.h
+navit_SOURCES = start.c
+navit_LDADD = @NAVIT_LIBS@ @ZLIB_LIBS@ -lnavit -Lfib-1.1 -lfib
 
-navit_LDADD = @NAVIT_LIBS@ @ZLIB_LIBS@ -Lfib-1.1 -lfib
+osm2navit_CPPFLAGS = $(AM_CPPFLAGS) @POSTGRESQL_CFLAGS@
+osm2navit_SOURCES = osm2navit.c
+osm2navit_LDADD = @NAVIT_LIBS@ @ZLIB_LIBS@ @POSTGRESQL_LIBS@ -lnavit
 
 if !PLUGINS
   navit_SOURCES += builtin.c
@@ -39,6 +43,3 @@ builtin.c:
 	echo "void builtin_init(void) {" >>builtin.c
 	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/.la/_init();/" -e "s/.*lib/	module_/" >>builtin.c
 	echo "}" >>builtin.c
-
-osm2navit_CPPFLAGS = $(AM_CPPFLAGS) @POSTGRESQL_CFLAGS@
-osm2navit_LDADD = @NAVIT_LIBS@  @ZLIB_LIBS@ @POSTGRESQL_LIBS@
