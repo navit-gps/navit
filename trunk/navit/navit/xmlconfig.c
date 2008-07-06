@@ -451,11 +451,8 @@ static int
 xmlconfig_map(struct xmlstate *state)
 {
 	struct attr **attrs;
-	const char *type=find_attribute(state, "type", 1);
-	if (! type)
-		return 0;
 	attrs=convert_to_attrs(state);
-	state->element_attr.u.data = map_new(type, attrs);
+	state->element_attr.u.data = map_new(attrs);
 	if (! state->element_attr.u.data)
 		return 0;
 	if (!find_boolean(state, "active", 1, 0))

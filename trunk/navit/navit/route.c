@@ -1760,16 +1760,12 @@ route_graph_map_new(struct map_methods *meth, struct attr **attrs)
 static struct map *
 route_get_map_helper(struct route *this_, struct map **map, char *type)
 {
-	struct attr route_attr;
-	struct attr data_attr;
-	struct attr *attrs_route[]={&route_attr, &data_attr, NULL};
-	route_attr.type=attr_route;
-	route_attr.u.route=this_;
-	data_attr.type=attr_data;
-	data_attr.u.str="";
-
+	struct attr type_attr={attr_type,{"route"}};
+	struct attr route_attr={attr_route,.u.route=this_};
+	struct attr data_attr={attr_data,{""}};
+	struct attr *attrs_route[]={&type_attr, &route_attr, &data_attr, NULL};
 	if (! *map) 
-		*map=map_new(type,attrs_route);
+		*map=map_new(attrs_route);
 	return *map;
 }
 
