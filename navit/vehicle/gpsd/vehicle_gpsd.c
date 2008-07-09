@@ -234,7 +234,7 @@ vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
 	case attr_position_direction:
 		attr->u.numd = &priv->direction;
 		break;
-	case attr_position_sats:
+	case attr_position_qual:
 		attr->u.num = priv->sats;
 		break;
 	case attr_position_sats_used:
