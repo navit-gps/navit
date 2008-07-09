@@ -62,6 +62,7 @@ fi
 AM_CONDITIONAL(USE_HILDON, test "${enable_hildon}" = "xyes")
 
 AC_ARG_ENABLE(libgps, [  --disable-libgps             don't use libgps], USE_LIBGPS=$enableval, USE_LIBGPS=yes)
+AC_ARG_ENABLE(gypsy, [  --disable-gypsy             don't use gypsy], USE_GYPSY=$enableval, USE_GYPSY=yes)
 AC_ARG_ENABLE(garmin, [  --disable-garmin             disable garmin support], USE_GARMIN=$enableval, USE_GARMIN=yes)
 
 AC_ARG_ENABLE(samplemap, [  --disable-samplemap             don't build the samplemap], samplemap=$enableval, samplemap=yes)
@@ -371,6 +372,13 @@ AC_SUBST(CEGUI_LIBS)
 AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$cegui" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" -a "x$xmu" = "xyes" ])
 AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
 
+if test x"${USE_GYPSY}" = xyes
+then
+	PKG_CHECK_MODULES(GYPSY, gypsy, use_gypsy=yes, use_gypsy=no)
+	AC_SUBST(GYPSY_CFLAGS)
+	AC_SUBST(GYPSY_LIBS)
+fi
+AM_CONDITIONAL(VEHICLE_GYPSY, [test "x$use_gypsy" = "xyes"])
 
 if test x"${USE_LIBGPS}" = xyes
 then
@@ -562,6 +570,7 @@ navit/speech/speech_dispatcher/Makefile
 navit/vehicle/Makefile
 navit/vehicle/file/Makefile
 navit/vehicle/gpsd/Makefile
+navit/vehicle/gypsy/Makefile
 navit/vehicle/demo/Makefile
 navit/xpm/Makefile
 navit/maps/Makefile
@@ -616,6 +625,12 @@ if test x"$enable_hildon" = xyes
         echo "Maemo/Hildon: DISABLED"
 fi
 
+if test x"$use_gypsy" = xyes
+	then
+	echo "Gypsy support: ENABLED"
+	else
+	echo "Gypsy support: DISABLED"
+fi
 if test x"$gpsd" = xyes
 	then
 	echo "GPSD support: ENABLED"
