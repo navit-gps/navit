@@ -55,9 +55,15 @@ static struct search_param {
 
 static void button_map(GtkWidget *widget, struct search_param *search)
 {
+	GtkTreePath *path;
+	GtkTreeViewColumn *focus_column;
 	struct pcoord *c=NULL;
 	GtkTreeIter iter;
-	if (!gtk_tree_model_get_iter_first (GTK_TREE_MODEL (search->liststore2), &iter))
+
+	gtk_tree_view_get_cursor(GTK_TREE_VIEW(search->treeview), &path, &focus_column);
+	if(!path)
+		return;
+	if(!gtk_tree_model_get_iter(search->liststore2, &iter, path))
 		return;
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, COL_COUNT, &c, -1);
 	if (c) {
@@ -154,7 +160,10 @@ static void row_activated(GtkWidget *widget, GtkTreePath *p1, GtkTreeViewColumn 
 
 	dbg(0,"enter\n");
 	gtk_tree_view_get_cursor(GTK_TREE_VIEW(search->treeview), &path, &focus_column);
-	gtk_tree_model_get_iter(search->liststore2, &iter, path);
+	if(!path)
+		return;
+	if(!gtk_tree_model_get_iter(search->liststore2, &iter, path))
+		return;
 	switch(search->attr.type) {
 	case attr_country_all:
 		entry_widget=search->entry_country;
