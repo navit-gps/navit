@@ -336,6 +336,7 @@ ITEM(water_river)
 ITEM(water_canal)
 ITEM(water_stream)
 ITEM(water_drain)
+ITEM(path)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)
