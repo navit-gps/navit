@@ -1440,6 +1440,9 @@ Change to your home coordinates.
 				<polyline color="#8b4513" width="3" />
 				<polyline color="#F4A460" width="1" dash="6,4" />
 			</item>
+			<item type="path" order="12-">
+				<polyline color="#8b4513" width="3" dash="6,4" />
+			</item>
 			<item type="poly_pedestrian,poly_plaza" order="0-">
 				<polygon color="#d2d2d2" />
 			</item>
