@@ -181,21 +181,24 @@ image_new_scaled(struct gui_priv *this, char *name, int w, int h)
 	char *full_name=NULL;
 	int i;
 
-	for (i = 1 ; i < 5 ; i++) {
+	for (i = 1 ; i < 6 ; i++) {
 		full_name=NULL;
 		switch (i) {
 		case 1:
 			full_name=g_strdup_printf("%s/xpm/%s.svg", getenv("NAVIT_SHAREDIR"), name);
 			break;
 		case 2:
+			full_name=g_strdup_printf("%s/xpm/%s.svgz", getenv("NAVIT_SHAREDIR"), name);
+			break;
+		case 3:
 			if (w != -1 && h != -1) {
 				full_name=g_strdup_printf("%s/xpm/%s_%d_%d.png", getenv("NAVIT_SHAREDIR"), name, w, h);
 			}
 			break;
-		case 3:
+		case 4:
 			full_name=g_strdup_printf("%s/xpm/%s.png", getenv("NAVIT_SHAREDIR"), name);
 			break;
-		case 4:
+		case 5:
 			full_name=g_strdup_printf("%s/xpm/%s.xpm", getenv("NAVIT_SHAREDIR"), name);
 			break;
 		}
