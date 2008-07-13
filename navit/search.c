@@ -126,8 +126,10 @@ search_list_country_new(struct item *item)
 	ret->item=*item;
 	if (item_attr_get(item, attr_country_car, &attr))
 		ret->car=g_strdup(attr.u.str);
-	if (item_attr_get(item, attr_country_iso2, &attr))
+	if (item_attr_get(item, attr_country_iso2, &attr)) {
 		ret->iso2=g_strdup(attr.u.str);
+		ret->flag=g_strdup_printf("country_%s", ret->iso2);
+	}
 	if (item_attr_get(item, attr_country_iso3, &attr))
 		ret->iso3=g_strdup(attr.u.str);
 	if (item_attr_get(item, attr_country_name, &attr))
@@ -141,6 +143,7 @@ search_list_country_destroy(struct search_list_country *this_)
 	g_free(this_->car);
 	g_free(this_->iso2);
 	g_free(this_->iso3);
+	g_free(this_->flag);
 	g_free(this_->name);
 	g_free(this_);
 }
