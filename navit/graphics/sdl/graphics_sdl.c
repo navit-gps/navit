@@ -121,7 +121,7 @@ struct graphics_priv {
 	void (*button_callback)(void *data, int press, int button, struct point *p);
 	void *button_callback_data;
 
-	void (*keypress_callback)(void *data, int key);
+	void (*keypress_callback)(void *data, char *key);
 	void *keypress_callback_data;
 
     struct navit *nav;
@@ -1185,6 +1185,10 @@ display_text_draw(struct text_render *text, struct graphics_priv *gr, struct gra
     {
         col_lev = bg->fore_r + bg->fore_g + bg->fore_b;
     }
+    else
+    {
+        col_lev = 0;
+    }
 
     /* TODO: lock/unlock in draw_mode() to reduce overhead */
     SDL_LockSurface(gr->screen);
@@ -1294,7 +1298,7 @@ display_text_draw(struct text_render *text, struct graphics_priv *gr, struct gra
                     if((x > 0) && (x <= gly->w) &&
                        (y > 0) && (y <= gly->h))
                     {
-                        if(col_lev >= 3*0x80)
+                        if(bg && (col_lev >= 3*0x80))
                         {
                             r &= ~gly->pixmap[gly->w * (y-1) + (x-1)];
                             g &= ~gly->pixmap[gly->w * (y-1) + (x-1)];
@@ -1630,7 +1634,7 @@ register_button_callback(struct graphics_priv *this, void (*callback)(void *data
 
 static void
 register_keypress_callback(struct graphics_priv *this,
-                            void (*callback)(void *data, int key),
+                            void (*callback)(void *data, char *key),
                             void *data)
 {
     this->keypress_callback=callback;
@@ -1833,6 +1837,7 @@ static gboolean graphics_sdl_idle(void *data)
     ssize_t ss;
 #endif
     int ret, key;
+    char keybuf[2];
 
     /* generate the initial resize callback, so the gui knows W/H
 
@@ -2022,7 +2027,9 @@ static gboolean graphics_sdl_idle(void *data)
 
                 if(gr->keypress_callback)
                 {
-                    gr->keypress_callback(gr->keypress_callback_data, key);
+                    keybuf[0] = key;
+                    keybuf[1] = '\0';
+                    gr->keypress_callback(gr->keypress_callback_data, keybuf);
                 }
 
                 break;
