@@ -82,7 +82,7 @@ struct graphics_priv {
 	void *motion_callback_data;
 	void (*button_callback)(void *data, int press, int button, struct point *p);
 	void *button_callback_data;
-	void (*keypress_callback)(void *data, int key);
+	void (*keypress_callback)(void *data, char *key);
 	void *keypress_callback_data;
 };
 
@@ -905,41 +905,52 @@ static gint
 keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
 	struct graphics_priv *this=user_data;
+	int ucode;
+	char key[8];
 	if (! this->keypress_callback)
 		return FALSE;
-	if ((event->keyval >= 32 && event->keyval < 127) || event->keyval == 8 || event->keyval == 13) {
-		(*this->keypress_callback)(this->motion_callback_data, event->keyval);
-		return FALSE;
-	}
+	ucode=gdk_keyval_to_unicode(event->keyval);
+	g_unichar_to_utf8(ucode, key);
+	
 	switch (event->keyval) {
 	case GDK_Up:
-		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_UP);
+		key[0]=NAVIT_KEY_UP;
+		key[1]='\0';
 		break;
 	case GDK_Down:
-		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_DOWN);
+		key[0]=NAVIT_KEY_DOWN;
+		key[1]='\0';
 		break;
 	case GDK_Left:
-		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_LEFT);
+		key[0]=NAVIT_KEY_LEFT;
+		key[1]='\0';
 		break;
 	case GDK_Right:
-		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_RIGHT);
+		key[0]=NAVIT_KEY_RIGHT;
+		key[1]='\0';
 		break;
 	case GDK_BackSpace:
-		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_BACKSPACE);
+		key[0]=NAVIT_KEY_BACKSPACE;
+		key[1]='\0';
 		break;
 	case GDK_Return:
-		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_RETURN);
+		key[0]=NAVIT_KEY_RETURN;
+		key[1]='\0';
 		break;
 	case GDK_Book:
-		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_ZOOM_IN);
+		key[0]=NAVIT_KEY_ZOOM_IN;
+		key[1]='\0';
 		break;
 	case GDK_Calendar:
-		(*this->keypress_callback)(this->motion_callback_data, NAVIT_KEY_ZOOM_OUT);
-		break;
-	default:
-		dbg(0,"keyval 0x%x\n", event->keyval);
+		key[0]=NAVIT_KEY_ZOOM_OUT;
+		key[1]='\0';
 		break;
 	}
+	if (key[0])
+		(*this->keypress_callback)(this->keypress_callback_data, key);
+	else
+		dbg(0,"keyval 0x%x\n", event->keyval);
+	
 	return FALSE;
 }
 
@@ -1024,7 +1035,7 @@ register_button_callback(struct graphics_priv *this, void (*callback)(void *data
 }
 
 static void
-register_keypress_callback(struct graphics_priv *this, void (*callback)(void *data, int key), void *data)
+register_keypress_callback(struct graphics_priv *this, void (*callback)(void *data, char *key), void *data)
 {
 	dbg(0,"enter\n");
 	GTK_WIDGET_SET_FLAGS (this->widget, GTK_CAN_FOCUS);
