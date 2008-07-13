@@ -110,7 +110,9 @@ struct widget {
 	struct graphics_image *img;
 	void (*func)(struct gui_priv *priv, struct widget *widget);
 	int reason;
+	int datai;
 	void *data;
+	void (*data_free)(void *data);
 	char *prefix;
 	char *name;
 	struct pcoord c;
@@ -815,6 +817,8 @@ static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 		g_free(w->prefix);
 	if (w->name)
 		g_free(w->name);
+	if (w->data_free)
+		w->data_free(w->data);
 	if (w->cb && w->remove_cb)
 		w->remove_cb(w->instance, w->cb);
 	g_free(w);
@@ -1213,23 +1217,26 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 	gui_internal_menu_render(this);
 }
 
-static void gui_internal_keypress_do(struct gui_priv *this, int key)
+static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 {
 	struct widget *wi,*menu;
 	int len=0;
-	char *text;
+	char *text=NULL;
 
 	menu=g_list_last(this->root.children)->data;
 	wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
 	if (wi) {
-		if (key == NAVIT_KEY_BACKSPACE && wi->text && (len=strlen(wi->text))) {
-			wi->text[--len]=' ';
-			text=g_strdup_printf("%s ", wi->text);
+		if (*key == NAVIT_KEY_BACKSPACE) {
+			if (wi->text && wi->text[0]) {
+				len=g_utf8_prev_char(wi->text+strlen(wi->text))-wi->text;
+				wi->text[len]=' ';	
+				text=g_strdup_printf("%s ", wi->text);
+			}
 		} else
-			text=g_strdup_printf("%s%c", wi->text ? wi->text : "", key);
+			text=g_strdup_printf("%s%s", wi->text ? wi->text : "", key);
 		g_free(wi->text);
 		wi->text=text;
-		if (key == NAVIT_KEY_BACKSPACE) {
+		if (*key == NAVIT_KEY_BACKSPACE && wi->text) {
 			gui_internal_widget_render(this, wi);
 			wi->text[len]='\0';
 		}
@@ -1245,7 +1252,7 @@ static void gui_internal_keypress_do(struct gui_priv *this, int key)
 static void
 gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm)
 {
-	gui_internal_keypress_do(this, (int) wm->data);
+	gui_internal_keypress_do(this, (char *) wm->data);
 }
 
 static void
@@ -1254,7 +1261,7 @@ gui_internal_changed(struct gui_priv *this, struct widget *wm)
 	GList *l;
 	gui_internal_widget_children_destroy(this, this->list);
 	dbg(0,"town now '%s'\n", wm->text);
-	if (g_utf8_strlen(wm->text, -1) >= 2) {
+	if (wm->text && g_utf8_strlen(wm->text, -1) >= 2) {
 		struct item *item;
 		struct attr search_attr, country_name, *country_attr;
 		struct country_search *cs;
@@ -1304,11 +1311,86 @@ gui_internal_changed(struct gui_priv *this, struct widget *wm)
 	gui_internal_widget_render(this, l->data);
 }
 
+static struct widget *
+gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char *text, void(*func)(struct gui_priv *priv, struct widget *widget), void *data, void (*data_free)(void *data))
+{
+	struct widget *wk;
+
+	gui_internal_widget_append(wkbd, wk=gui_internal_button_new_with_callback(this, text,
+		NULL, gravity_center|orientation_vertical, func, data));
+	wk->data_free=data_free;
+	wk->background=this->background;
+	wk->bl=6;
+	wk->br=6;
+	wk->bt=6;
+	wk->bb=6;
+	return wk;
+}
+
+static struct widget *
+gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text, char *key)
+{
+	return gui_internal_keyboard_key_data(this, wkbd, text, gui_internal_cmd_keypress, g_strdup(key), g_free);
+}
+
+static struct widget *
+gui_internal_keyboard(struct gui_priv *this, struct widget *key, int mode)
+{
+	struct widget *wkbdb,*wkbd,*wk;
+	int i;
+	int render=0;
+	GList *l;
+
+	if (key) {
+		wkbdb=key->data;
+		mode=key->datai;
+		render=1;
+		l=g_list_first(wkbdb->children);
+		gui_internal_widget_destroy(this,l->data);
+		g_list_free(wkbdb->children);
+		wkbdb->children=NULL;
+	} else
+		wkbdb=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
+	wkbd=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
+	wkbd->cols=8;
+	wkbd->spx=3;
+	wkbd->spy=3;
+	if (mode == 0) {
+		for (i = 0 ; i < 26 ; i++) {
+			char text[]={'A'+i,'\0'};
+			gui_internal_keyboard_key(this, wkbd, text, text);
+		}
+		gui_internal_keyboard_key(this, wkbd, "_"," ");
+		gui_internal_keyboard_key(this, wkbd, "-","-");
+		gui_internal_keyboard_key(this, wkbd, "'","'");
+		gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+		gui_internal_keyboard_key(this, wkbd, "<-","\b");
+		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard,wkbdb,NULL);
+		wk->datai=1;
+	}
+	if (mode == 1) {
+		gui_internal_keyboard_key(this, wkbd, "Ä","Ä");
+		gui_internal_keyboard_key(this, wkbd, "Ö","Ö");
+		gui_internal_keyboard_key(this, wkbd, "Ü","Ü");
+		for (i = 0 ; i < 27 ; i++) {
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+		}
+		gui_internal_keyboard_key(this, wkbd, "<-","\b");
+		wk=gui_internal_keyboard_key_data(this, wkbd, "A",gui_internal_keyboard,wkbdb,NULL);
+		wk->datai=0;
+	}
+	gui_internal_widget_append(wkbdb, wkbd);
+	if (render) {
+		gui_internal_widget_pack(this, wkbdb);
+		gui_internal_widget_render(this, wkbdb);
+	}
+	return wkbdb;
+}
+
 static void
 gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 {
 	struct widget *wb,*wkbd,*wk,*w,*wr,*we,*wl;
-	int i;
 	wb=gui_internal_menu(this, "Town");
 	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
@@ -1324,23 +1406,7 @@ gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
 	wk->func = gui_internal_changed;
-	wkbd=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
-	wkbd->cols=8;
-	gui_internal_widget_append(w, wkbd);
-	wkbd->spx=3;
-	wkbd->spy=3;
-	for (i = 0 ; i < 26 ; i++) {
-		char text[]={'A'+i,'\0'};
-		gui_internal_widget_append(wkbd, wk=gui_internal_button_new_with_callback(this, text,
-			NULL, gravity_center|orientation_vertical,
-			gui_internal_cmd_keypress, NULL));
-		wk->data=(void *)((int)(text[0]));
-		wk->background=this->background;
-		wk->bl=6;
-		wk->br=6;
-		wk->bt=6;
-		wk->bb=6;
-	}
+	gui_internal_widget_append(w, gui_internal_keyboard(this,NULL,0));
 	gui_internal_menu_render(this);
 }
 
@@ -1691,13 +1757,13 @@ static void gui_internal_resize(void *data, int w, int h)
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static void gui_internal_keypress(void *data, int key)
+static void gui_internal_keypress(void *data, char *key)
 {
 	struct gui_priv *this=data;
 	int w,h;
 	struct point p;
 	transform_get_size(navit_get_trans(this->nav), &w, &h);
-	switch (key) {
+	switch (*key) {
 	case NAVIT_KEY_UP:
 		p.x=w/2;
                 p.y=0;

@@ -182,7 +182,7 @@ void graphics_register_motion_callback(struct graphics *this_, void (*callback)(
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-void graphics_register_keypress_callback(struct graphics *this_, void (*callback)(void *data, int key), void *data)
+void graphics_register_keypress_callback(struct graphics *this_, void (*callback)(void *data, char *key), void *data)
 {
 	this_->meth.register_keypress_callback(this_->priv, callback, data);
 }
