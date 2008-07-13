@@ -29,6 +29,7 @@ struct search_list_country {
 	char *iso2;
 	char *iso3;
 	char *name;
+	char *flag;
 };
 
 struct search_list_town {

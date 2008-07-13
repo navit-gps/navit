@@ -165,6 +165,7 @@ struct gui_priv {
 	struct widget *list;
 	int vehicle_valid;
 	struct coord_geo click, vehicle;
+	struct search_list *sl;
 };
 
 static void gui_internal_widget_render(struct gui_priv *this, struct widget *w);
@@ -336,10 +337,12 @@ gui_internal_image_render(struct gui_priv *this, struct widget *w)
 	struct point pnt;
 
 	gui_internal_background_render(this, w);
-	pnt=w->p;
-	pnt.x+=w->w/2-w->img->hot.x;
-	pnt.y+=w->h/2-w->img->hot.y;
-	graphics_draw_image(this->gra, this->foreground, &pnt, w->img);
+	if (w->img) {
+		pnt=w->p;
+		pnt.x+=w->w/2-w->img->hot.x;
+		pnt.y+=w->h/2-w->img->hot.y;
+		graphics_draw_image(this->gra, this->foreground, &pnt, w->img);
+	}
 }
 
 static void
@@ -1260,52 +1263,39 @@ gui_internal_changed(struct gui_priv *this, struct widget *wm)
 {
 	GList *l;
 	gui_internal_widget_children_destroy(this, this->list);
-	dbg(0,"town now '%s'\n", wm->text);
+	char *text, *name;
+	dbg(0,"%s now '%s'\n", wm->name, wm->text);
 	if (wm->text && g_utf8_strlen(wm->text, -1) >= 2) {
-		struct item *item;
-		struct attr search_attr, country_name, *country_attr;
-		struct country_search *cs;
-		struct mapset *ms;
-		struct search_list *sl;
-		struct tracking *tracking;
+		struct attr search_attr;
 		struct search_list_result *res;
 		struct widget *wc;
 
 		dbg(0,"process\n");
-		ms=navit_get_mapset(this->nav);
-		sl=search_list_new(ms);
-		country_attr=country_default();
-		tracking=navit_get_tracking(this->nav);
-		if (tracking && tracking_get_current_attr(tracking, attr_country_id, &search_attr))
-			country_attr=&search_attr;
-		if (country_attr) {
-			cs=country_search_new(country_attr, 0);
-			item=country_search_get_item(cs);
-			if (item && item_attr_get(item, attr_country_name, &country_name)) {
-				search_attr.type=attr_country_all;
-				dbg(0,"country %s\n", country_name.u.str);
-				search_attr.u.str=country_name.u.str;
-				search_list_search(sl, &search_attr, 0);
-				while((res=search_list_get_result(sl)));
-			}
-			country_search_destroy(cs);
-		} else {
-			dbg(0,"warning: no default country found\n");
-		}
-		search_attr.type=attr_town_name;
+		if (! strcmp(wm->name,"Town"))
+			search_attr.type=attr_town_name;
+		if (! strcmp(wm->name,"Street"))
+			search_attr.type=attr_street_name;
 		search_attr.u.str=wm->text;
-		search_list_search(sl, &search_attr, 1);
-		while((res=search_list_get_result(sl))) {
-			dbg(0,"res=%s\n", res->town->name);	
+		search_list_search(this->sl, &search_attr, 1);
+		while((res=search_list_get_result(this->sl))) {
+			if (! strcmp(wm->name,"Town")) {
+				name=res->town->name;
+				text=g_strdup(name);
+			}
+			if (! strcmp(wm->name,"Street")) {
+				name=res->street->name;
+				text=g_strdup_printf("%s %s", res->town->name, res->street->name);
+			}
+			dbg(0,"res=%s\n", res->town->name);
 			gui_internal_widget_append(this->list,
-				wc=gui_internal_button_new_with_callback(this, res->town->name,
-				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				wc=gui_internal_button_new_with_callback(this, text,
+				image_new_xs(this, res->country->flag), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_position, NULL));
-			wc->name=g_strdup(res->town->name);
+			g_free(text);
+			wc->name=g_strdup(name);
 			wc->c=*res->c;
 		}
 		gui_internal_widget_pack(this, this->list);
-		search_list_destroy(sl);
 	}
 	l=g_list_last(this->root.children);
 	gui_internal_widget_render(this, l->data);
@@ -1333,51 +1323,115 @@ gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text
 	return gui_internal_keyboard_key_data(this, wkbd, text, gui_internal_cmd_keypress, g_strdup(key), g_free);
 }
 
+static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key);
+
 static struct widget *
-gui_internal_keyboard(struct gui_priv *this, struct widget *key, int mode)
+gui_internal_keyboard_do(struct gui_priv *this, struct widget *key, int mode)
 {
 	struct widget *wkbdb,*wkbd,*wk;
 	int i;
 	int render=0;
-	GList *l;
 
 	if (key) {
+		gui_internal_highlight(this, NULL);
 		wkbdb=key->data;
 		mode=key->datai;
 		render=1;
-		l=g_list_first(wkbdb->children);
-		gui_internal_widget_destroy(this,l->data);
-		g_list_free(wkbdb->children);
-		wkbdb->children=NULL;
+		gui_internal_widget_children_destroy(this, wkbdb);
 	} else
 		wkbdb=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
 	wkbd=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
+	wkbd->background=this->background;
 	wkbd->cols=8;
 	wkbd->spx=3;
 	wkbd->spy=3;
-	if (mode == 0) {
+	if (mode >= 0 && mode < 8) {
 		for (i = 0 ; i < 26 ; i++) {
 			char text[]={'A'+i,'\0'};
 			gui_internal_keyboard_key(this, wkbd, text, text);
 		}
 		gui_internal_keyboard_key(this, wkbd, "_"," ");
-		gui_internal_keyboard_key(this, wkbd, "-","-");
-		gui_internal_keyboard_key(this, wkbd, "'","'");
-		gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+		if (mode == 0) {
+			gui_internal_keyboard_key(this, wkbd, "-","-");
+			gui_internal_keyboard_key(this, wkbd, "'","'");
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+		} else {
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+			wk=gui_internal_keyboard_key_data(this, wkbd, "a", gui_internal_keyboard_change, wkbd, NULL);
+			wk->datai=mode+8;
+			wk=gui_internal_keyboard_key_data(this, wkbd, "1", gui_internal_keyboard_change, wkbd, NULL);
+			wk->datai=mode+16;
+		}
+		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard_change, wkbdb,NULL);
+		wk->datai=mode+24;
 		gui_internal_keyboard_key(this, wkbd, "<-","\b");
-		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard,wkbdb,NULL);
-		wk->datai=1;
 	}
-	if (mode == 1) {
+	if (mode >= 8 && mode < 16) {
+		for (i = 0 ; i < 26 ; i++) {
+			char text[]={'a'+i,'\0'};
+			gui_internal_keyboard_key(this, wkbd, text, text);
+		}
+		gui_internal_keyboard_key(this, wkbd, "_"," ");
+		if (mode == 8) {
+			gui_internal_keyboard_key(this, wkbd, "-","-");
+			gui_internal_keyboard_key(this, wkbd, "'","'");
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+		} else {
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+			wk=gui_internal_keyboard_key_data(this, wkbd, "A", gui_internal_keyboard_change, wkbd, NULL);
+			wk->datai=mode-8;
+			wk=gui_internal_keyboard_key_data(this, wkbd, "1", gui_internal_keyboard_change, wkbd, NULL);
+			wk->datai=mode+8;
+		}
+		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard_change,wkbdb,NULL);
+		wk->datai=mode+16;
+		gui_internal_keyboard_key(this, wkbd, "<-","\b");
+	}
+	if (mode >= 16 && mode < 24) {
+		for (i = 0 ; i < 10 ; i++) {
+			char text[]={'0'+i,'\0'};
+			gui_internal_keyboard_key(this, wkbd, text, text);
+		}
+		gui_internal_keyboard_key(this, wkbd, ".",".");
+		gui_internal_keyboard_key(this, wkbd, "°","°");
+		gui_internal_keyboard_key(this, wkbd, "'","'");
+		gui_internal_keyboard_key(this, wkbd, "\"","\"");
+		gui_internal_keyboard_key(this, wkbd, "-","-");
+		gui_internal_keyboard_key(this, wkbd, "+","+");
+		gui_internal_keyboard_key(this, wkbd, "*","*");
+		gui_internal_keyboard_key(this, wkbd, "/","/");
+		gui_internal_keyboard_key(this, wkbd, "(","(");
+		gui_internal_keyboard_key(this, wkbd, ")",")");
+		gui_internal_keyboard_key(this, wkbd, "=","=");
+		gui_internal_keyboard_key(this, wkbd, "?","?");
+		for (i = 0 ; i < 5 ; i++) {
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+		}
+		if (mode == 8) {
+			gui_internal_keyboard_key(this, wkbd, "-","-");
+			gui_internal_keyboard_key(this, wkbd, "'","'");
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+		} else {
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+			wk=gui_internal_keyboard_key_data(this, wkbd, "A", gui_internal_keyboard_change, wkbd, NULL);
+			wk->datai=mode-16;
+			wk=gui_internal_keyboard_key_data(this, wkbd, "a", gui_internal_keyboard_change, wkbd, NULL);
+			wk->datai=mode-8;
+		}
+		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard_change,wkbdb,NULL);
+		wk->datai=mode+8;
+		gui_internal_keyboard_key(this, wkbd, "<-","\b");
+	}
+	if (mode >= 24 && mode < 32) {
 		gui_internal_keyboard_key(this, wkbd, "Ä","Ä");
 		gui_internal_keyboard_key(this, wkbd, "Ö","Ö");
 		gui_internal_keyboard_key(this, wkbd, "Ü","Ü");
 		for (i = 0 ; i < 27 ; i++) {
 			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
 		}
+		wk=gui_internal_keyboard_key_data(this, wkbd, "A",gui_internal_keyboard_change,wkbdb,NULL);
+		wk->datai=mode-24;
 		gui_internal_keyboard_key(this, wkbd, "<-","\b");
-		wk=gui_internal_keyboard_key_data(this, wkbd, "A",gui_internal_keyboard,wkbdb,NULL);
-		wk->datai=0;
 	}
 	gui_internal_widget_append(wkbdb, wkbd);
 	if (render) {
@@ -1387,18 +1441,85 @@ gui_internal_keyboard(struct gui_priv *this, struct widget *key, int mode)
 	return wkbdb;
 }
 
-static void
-gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
+static struct widget *
+gui_internal_keyboard(struct gui_priv *this, int mode)
 {
-	struct widget *wb,*wkbd,*wk,*w,*wr,*we,*wl;
-	wb=gui_internal_menu(this, "Town");
+	return gui_internal_keyboard_do(this, NULL, mode);
+}
+
+static void
+gui_internal_keyboard_change(struct gui_priv *this, struct widget *key)
+{
+	gui_internal_keyboard_do(this, key, 0);
+}
+
+static void
+gui_internal_search_list_set_default_country(struct gui_priv *this)
+{
+	struct attr search_attr, country_name, *country_attr;
+	struct item *item;
+	struct country_search *cs;
+	struct tracking *tracking;
+	struct search_list_result *res;
+
+	country_attr=country_default();
+	tracking=navit_get_tracking(this->nav);
+	if (tracking && tracking_get_current_attr(tracking, attr_country_id, &search_attr))
+		country_attr=&search_attr;
+	if (country_attr) {
+		cs=country_search_new(country_attr, 0);
+		item=country_search_get_item(cs);
+		if (item && item_attr_get(item, attr_country_name, &country_name)) {
+			search_attr.type=attr_country_all;
+			dbg(0,"country %s\n", country_name.u.str);
+			search_attr.u.str=country_name.u.str;
+			search_list_search(this->sl, &search_attr, 0);
+			while((res=search_list_get_result(this->sl)));
+		}
+		country_search_destroy(cs);
+	} else {
+		dbg(0,"warning: no default country found\n");
+	}
+}
+
+static void
+gui_internal_search_list_new(struct gui_priv *this)
+{
+	struct mapset *ms=navit_get_mapset(this->nav);
+	if (! this->sl) {
+		this->sl=search_list_new(ms);
+		gui_internal_search_list_set_default_country(this);
+	}
+}
+
+static void
+gui_internal_search_list_destroy(struct gui_priv *this)
+{
+	if (this->sl) {
+		search_list_destroy(this->sl);
+		this->sl=NULL;
+	}
+}
+
+static void gui_internal_search_street(struct gui_priv *this, struct widget *widget);
+
+static void
+gui_internal_search(struct gui_priv *this, char *what, char *type)
+{
+	struct widget *wb,*wk,*w,*wr,*we,*wl,*wnext;
+	gui_internal_search_list_new(this);
+	wb=gui_internal_menu(this, what);
 	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
 	wr=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, wr);
 	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	gui_internal_widget_append(wr, we);
+	gui_internal_widget_append(we, gui_internal_image_new(this, image_new_xs(this, "country_DE")));
 	gui_internal_widget_append(we, wk=gui_internal_label_new(this, NULL));
+	gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
+	wnext->state |= STATE_SENSITIVE;
+	wnext->func = gui_internal_search_street;
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wr, wl);
 	this->list=wl;
@@ -1406,9 +1527,30 @@ gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
 	wk->func = gui_internal_changed;
-	gui_internal_widget_append(w, gui_internal_keyboard(this,NULL,0));
+	wk->name=g_strdup(type);
+	gui_internal_widget_append(w, gui_internal_keyboard(this,0));
 	gui_internal_menu_render(this);
 }
+
+static void
+gui_internal_search_street(struct gui_priv *this, struct widget *widget)
+{
+	gui_internal_search(this,"Street","Street");
+}
+
+static void
+gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
+{
+	gui_internal_search(this,"Town","Town");
+}
+
+
+static void
+gui_internal_cmd_street(struct gui_priv *this, struct widget *wm)
+{
+	gui_internal_search(this,"Town","Town");
+}
+
 
 static void
 gui_internal_cmd_layout(struct gui_priv *this, struct widget *wm)
@@ -1513,7 +1655,7 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Street",
 			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
-			gui_internal_cmd_bookmarks, NULL));
+			gui_internal_cmd_street, NULL));
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Quit",
 			image_new_l(this, "gui_quit"), gravity_center|orientation_vertical,
@@ -1723,6 +1865,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		gui_internal_highlight(this, NULL);
 		graphics_draw_mode(gra, draw_mode_end);
 		if (! this->root.children) {
+			gui_internal_search_list_destroy(this);
 			graphics_overlay_disable(gra, 0);
 			if (!navit_block(this->nav, 0)) {
 				if (this->redraw)
