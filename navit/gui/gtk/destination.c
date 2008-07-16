@@ -430,10 +430,12 @@ int destination_address(struct navit *nav)
 	search->entry_country = gtk_entry_new();
 	label_country = gtk_label_new(_("Country"));
 	search->entry_postal = gtk_entry_new();
+	gtk_widget_set_sensitive(GTK_WIDGET(search->entry_postal), FALSE);
 	label_postal = gtk_label_new(_("Zip Code"));
 	search->entry_city = gtk_entry_new();
 	label_city = gtk_label_new(_("City"));
 	search->entry_district = gtk_entry_new();
+	gtk_widget_set_sensitive(GTK_WIDGET(search->entry_district), FALSE);
 	label_district = gtk_label_new(_("District/Township"));
 	hseparator1 = gtk_vseparator_new();
 	search->entry_street = gtk_entry_new();
