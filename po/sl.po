@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-06-25 09:28+0200\n"
-"PO-Revision-Date: 2008-07-02 07:20+0000\n"
+"POT-Creation-Date: 2008-06-30 11:32+0200\n"
+"PO-Revision-Date: 2008-07-16 13:44+0000\n"
 "Last-Translator: Štefan Baebler <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
 "n%100==4 ? 3 : 0);\n"
-"X-Launchpad-Export-Date: 2008-07-07 19:00+0000\n"
+"X-Launchpad-Export-Date: 2008-07-17 13:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#, c-format
+#~ msgid "Running from source directory\n"
+#~ msgstr "Zagon iz mape z izvorno kodo\n"
+
+#~ msgid "Refresh"
+#~ msgstr "Osveži"
+
+#~ msgid "Clear"
+#~ msgstr "Počisti"
+
+#~ msgid "Tracking"
+#~ msgstr "Sledenje"
+
+#~ msgid "Orientation"
+#~ msgstr "Orientacija"
 
 #: ../navit/main.c:132
 #, c-format
@@ -36,34 +52,38 @@ msgstr ""
 "\t-h: izpiše ta navodila in zaključi.\n"
 "\t-v: izpiše verzijo in zaključi.\n"
 
-#: ../navit/main.c:152
+#: ../navit/main.c:159
 #, c-format
-msgid "Running from source directory\n"
-msgstr "Zagon iz mape z izvorno kodo\n"
+msgid ""
+"Running from source directory. Bookmarks, center and destinations will be "
+"r/w from this directory\n"
+msgstr ""
+"Zagon iz mape z izvorno kodo. Zaznamki in trenutni položaj bodo shranjeni v "
+"tej mapi.\n"
 
-#: ../navit/main.c:168
+#: ../navit/main.c:175
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "nastavljam '%s' to '%s'\n"
+msgstr "nastavljam '%s' na '%s'\n"
 
 #. We have not found an existing config file from all possibilities
-#: ../navit/main.c:265
+#: ../navit/main.c:286
 #, c-format
 msgid "No config file navit.xml, navit.xml.local found\n"
 msgstr ""
 "Datoteke z nastavitvami navit.xml ni, najdena datoteka navit.xml.local\n"
 
-#: ../navit/main.c:276
+#: ../navit/main.c:297
 #, c-format
 msgid "Error parsing '%s': %s\n"
 msgstr "Napaka pri razčlenjevanju '%s': %s\n"
 
-#: ../navit/main.c:279
+#: ../navit/main.c:300
 #, c-format
 msgid "Using '%s'\n"
 msgstr "Uporabljam '%s'\n"
 
-#: ../navit/main.c:282
+#: ../navit/main.c:303
 #, c-format
 msgid "No instance has been created, exiting\n"
 msgstr "Instanca ni bila ustvarjena, sledi izhod\n"
@@ -76,7 +96,7 @@ msgstr "%d m"
 #: ../navit/navigation.c:192
 #, c-format
 msgid "in %d m"
-msgstr "čez %d m"
+msgstr "Čez %d m"
 
 #: ../navit/navigation.c:196
 #, c-format
@@ -86,7 +106,7 @@ msgstr "%d metrov"
 #: ../navit/navigation.c:198
 #, c-format
 msgid "in %d meters"
-msgstr "čez %d metrov"
+msgstr "Čez %d metrov"
 
 #: ../navit/navigation.c:204
 #, c-format
@@ -96,7 +116,7 @@ msgstr "%d.%d kilometrov"
 #: ../navit/navigation.c:206
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "čez %d.%d kilometov"
+msgstr "Čez %d.%d kilometov"
 
 #: ../navit/navigation.c:210
 #, c-format
@@ -111,10 +131,10 @@ msgstr[3] "%d kilometri"
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "čez %d kilometrov"
-msgstr[1] "čez %d kilometer"
-msgstr[2] "čez %d kilometra"
-msgstr[3] "čez %d kilometre"
+msgstr[0] "Čez %d kilometrov"
+msgstr[1] "Čez %d kilometer"
+msgstr[2] "Čez %d kilometra"
+msgstr[3] "Čez %d kilometre"
 
 #: ../navit/navigation.c:466
 msgid "exit"
@@ -128,7 +148,7 @@ msgstr "priključek"
 #: ../navit/navigation.c:498
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr "%sna cesto %s%s%s"
+msgstr "%sna %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:502
@@ -186,7 +206,7 @@ msgstr "Obrnite čim bo to mogoče"
 #: ../navit/navigation.c:574
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Ostanite na cesti do naslednjega %s"
+msgstr "Ostanite na tej cesti naslednjih %s"
 
 #: ../navit/navigation.c:578
 msgid "soon"
@@ -209,45 +229,45 @@ msgstr "%3$s zavijte %1$s%2$s %4$s"
 #: ../navit/navigation.c:619
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "Prišli ste na cilj %s"
+msgstr "%s prispete na cilj"
 
-#: ../navit/navit.c:771 ../navit/gui/gtk/gui_gtk_action.c:170
+#: ../navit/navit.c:812 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
 msgstr "Prejšnji cilji"
 
-#: ../navit/navit.c:781 ../navit/gui/gtk/gui_gtk_action.c:171
+#: ../navit/navit.c:829 ../navit/gui/gtk/gui_gtk_action.c:171
 msgid "Bookmarks"
 msgstr "Zaznamki"
 
-#: ../navit/navit.c:871
+#: ../navit/navit.c:919
 msgid "Command"
-msgstr "Ukaz"
+msgstr "Navodilo"
 
-#: ../navit/navit.c:876
+#: ../navit/navit.c:924
 msgid "Length"
-msgstr "Dolžina"
+msgstr "Razdalja"
 
-#: ../navit/navit.c:880 ../navit/navit.c:905
+#: ../navit/navit.c:928 ../navit/navit.c:953
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:884 ../navit/navit.c:909
+#: ../navit/navit.c:932 ../navit/navit.c:957
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:890
+#: ../navit/navit.c:938
 msgid "Time"
 msgstr "Čas"
 
-#: ../navit/navit.c:902
+#: ../navit/navit.c:950
 msgid "Destination Length"
 msgstr "Razdalja do cilja"
 
-#: ../navit/navit.c:915
+#: ../navit/navit.c:963
 msgid "Destination Time"
 msgstr "Čas do cilja"
 
-#: ../navit/navit.c:944 ../navit/gui/gtk/gui_gtk_action.c:179
+#: ../navit/navit.c:992 ../navit/gui/gtk/gui_gtk_action.c:179
 msgid "Roadbook"
 msgstr "Načrt poti"
 
@@ -1574,7 +1594,7 @@ msgstr "Cilj"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:168
 msgid "Display"
-msgstr "Prikaži"
+msgstr "Prikaz"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:169
 msgid "Route"
@@ -1594,23 +1614,23 @@ msgstr "Vozilo"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:176
 msgid "ZoomOut"
-msgstr "Povečava"
+msgstr "Pomanjšava"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:177
 msgid "ZoomIn"
-msgstr "Pomanjšava"
+msgstr "Povečava"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:178
-msgid "Refresh"
-msgstr "Osveži"
+msgid "Recalculate"
+msgstr "Preračunaj"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:181 ../navit/gui/gtk/gui_gtk_action.c:183
 msgid "Info"
 msgstr "Podrobnosti"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:186
-msgid "Clear"
-msgstr "Počisti"
+msgid "Stop Navigation"
+msgstr "Ustavi navigacijo"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:187
 msgid "Test"
@@ -1625,12 +1645,12 @@ msgid "Cursor"
 msgstr "Kurzor"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
-msgid "Tracking"
-msgstr "Sledenje"
+msgid "Lock on Road"
+msgstr "Ostani na cesti"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:197
-msgid "Orientation"
-msgstr "Orientacija"
+msgid "Northing"
+msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_action.c:199 ../navit/gui/gtk/gui_gtk_action.c:201
 msgid "Fullscreen"
