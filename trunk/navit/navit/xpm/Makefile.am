@@ -8,6 +8,7 @@ xpm_DATA += bus.xpm
 xpm_DATA += cafe.xpm
 xpm_DATA += camping.xpm
 xpm_DATA += car_dealer.xpm
+xpm_DATA += cemetery.xpm
 xpm_DATA += church.xpm
 xpm_DATA += cinema.xpm
 xpm_DATA += cursor.xpm
