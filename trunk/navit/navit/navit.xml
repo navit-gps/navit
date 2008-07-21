@@ -340,6 +340,75 @@ Change to your home coordinates.
 			<item type="cycleway" order="10-">
 				<polyline color="#000000" width="1" /> 
 			</item>
+			<item type="piste_downhill_novice" order="10-12">
+				<polyline color="#00A000" width="1" />
+			</item>
+			<item type="piste_downhill_novice" order="13-14">
+				<polyline color="#00A000" width="2" />
+			</item>
+			<item type="piste_downhill_novice" order="15-16">
+				<polyline color="#00A000" width="3" />
+			</item>
+			<item type="piste_downhill_novice" order="17-">
+				<polyline color="#00A000" width="5" />
+			</item>
+			<item type="piste_downhill_easy" order="10-12">
+				<polyline color="#0000ff" width="1" />
+			</item>
+			<item type="piste_downhill_easy" order="13-14">
+				<polyline color="#0000ff" width="2" />
+			</item>
+			<item type="piste_downhill_easy" order="15-16">
+				<polyline color="#0000ff" width="3" />
+			</item>
+			<item type="piste_downhill_easy" order="17-">
+				<polyline color="#0000ff" width="5" />
+			</item>
+			<item type="piste_downhill_intermediate" order="10-12">
+				<polyline color="#ff0000" width="1" />
+			</item>
+			<item type="piste_downhill_intermediate" order="13-14">
+				<polyline color="#ff0000" width="2" />
+			</item>
+			<item type="piste_downhill_intermediate" order="15-16">
+				<polyline color="#ff0000" width="3" />
+			</item>
+			<item type="piste_downhill_intermediate" order="17-">
+				<polyline color="#ff0000" width="5" />
+			</item>
+			<item type="piste_downhill_advanced" order="10-12">
+				<polyline color="#000000" width="1" />
+			</item>
+			<item type="piste_downhill_advanced" order="13-14">
+				<polyline color="#000000" width="2" />
+			</item>
+			<item type="piste_downhill_advanced" order="15-16">
+				<polyline color="#000000" width="3" />
+			</item>
+			<item type="piste_downhill_advanced" order="17-">
+				<polyline color="#000000" width="5" />
+			</item>
+			<item type="lift_cable_car" order="6-">
+				<polyline color="#696969" width="1" dash="5" />
+			</item>
+			<item type="lift_chair" order="6-">
+				<polyline color="#696969" width="1" dash="5" />
+			</item>
+			<item type="lift_drag" order="6-">
+				<polyline color="#696969" width="1" dash="5" />
+			</item>
+			<item type="piste_nordic"  order="10-12">
+				<polyline color="#0000ff" width="1" dash="3,6" />
+			</item>
+			<item type="piste_nordic"  order="13-14">
+				<polyline color="#0000ff" width="2" dash="4,8" />
+			</item>
+			<item type="piste_nordic"  order="15-16">
+				<polyline color="#0000ff" width="3" dash="5,10" />
+			</item>
+			<item type="piste_nordic"  order="17-">
+				<polyline color="#0000ff" width="5" dash="7,15" />
+			</item>
 			<item type="footway" order="10-12">
 				<polyline color="#ff0000" width="1" dash="3,6" />
 			</item>
