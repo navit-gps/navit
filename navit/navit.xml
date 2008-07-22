@@ -388,6 +388,30 @@ Change to your home coordinates.
 			<item type="piste_downhill_advanced" order="17-">
 				<polyline color="#000000" width="5" />
 			</item>
+			<item type="piste_downhill_expert" order="10-12">
+				<polyline color="#ffaa00" width="1" />
+			</item>
+			<item type="piste_downhill_expert" order="13-14">
+				<polyline color="#ffaa00" width="2" />
+			</item>
+			<item type="piste_downhill_expert" order="15-16">
+				<polyline color="#ffaa00" width="3" />
+			</item>
+			<item type="piste_downhill_expert" order="17-">
+				<polyline color="#ffaa00" width="5" />
+			</item>
+			<item type="piste_downhill_freeride" order="10-12">
+				<polyline color="#ffff00" width="1" />
+			</item>
+			<item type="piste_downhill_freeride" order="13-14">
+				<polyline color="#ffff00" width="2" />
+			</item>
+			<item type="piste_downhill_freeride" order="15-16">
+				<polyline color="#ffff00" width="3" />
+			</item>
+			<item type="piste_downhill_freeride" order="17-">
+				<polyline color="#ffff00" width="5" />
+			</item>
 			<item type="lift_cable_car" order="6-">
 				<polyline color="#696969" width="1" dash="5" />
 			</item>
