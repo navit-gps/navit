@@ -120,6 +120,11 @@ Change to your home coordinates.
 			<item type="poly_wood" order="0-">
 				<polygon color="#8ec78d" /> 
 			</item>
+			<item type="poly_farm" order="0-">
+				<polygon color="#c7f1a3" /> 
+				<polyline color="#79c691" /> 
+				<label label_size="5" /> 
+			</item>			
 			<item type="poly_town" order="0-">
 				<polygon color="#ffc895" /> 
 				<polyline color="#ebb481" /> 
