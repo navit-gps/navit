@@ -159,6 +159,8 @@ static char *attrmap={
 	"w	piste:type=downhill,piste:difficulty=easy	piste_downhill_easy\n"
 	"w	piste:type=downhill,piste:difficulty=intermediate	piste_downhill_intermediate\n"
 	"w	piste:type=downhill,piste:difficulty=advanced	piste_downhill_advanced\n"
+	"w	piste:type=downhill,piste:difficulty=expert	piste_downhill_expert\n"
+	"w	piste:type=downhill,piste:difficulty=freeride	piste_downhill_freeride\n"
 	"w	highway=path,foot=designated	footway\n"
 	"w	highway=steps		steps\n"
 	"w	highway=path		path\n"
