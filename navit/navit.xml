@@ -192,9 +192,6 @@ Change to your home coordinates.
 			<item type="poly_industry,poly_place" order="0-">
 				<polygon color="#e6e6e6" /> 
 			</item>
-			<item type="poly_building" order="0-">
-				<polygon color="#b6a6a6" />
-			</item>
 			<item type="water_line" order="0-">
 				<polyline color="#5096b8" width="1" /> 
 				<label label_size="5" /> 
@@ -255,6 +252,9 @@ Change to your home coordinates.
 			<item type="poly_car_parking" order="1-">
 				<polygon color="#e7cf87" />
 			</item>
+			<item type="poly_building" order="0-">
+				<polygon color="#b6a6a6" />
+			</item>			
 			<item type="rail" order="6-">
 				<polyline color="#696969" width="3" />
 				<polyline color="#ffffff" width="1" dash="5,5" />
@@ -1393,9 +1393,6 @@ Change to your home coordinates.
 				<label label_size="5" /> 
 			</item>
 			
-			<item type="poly_building" order="0-">
-				<polygon color="#ff6347" />
-			</item>
 			<item type="poly_ruins" order="0-">
 				<polygon color="#b6a6a6" />
 			</item>
@@ -1430,6 +1427,9 @@ Change to your home coordinates.
 			</item>
 			<item type="poly_car_parking" order="1-">
 				<polygon color="#d2d2d2" />
+			</item>
+			<item type="poly_building" order="0-">
+				<polygon color="#ff6347" />
 			</item>
 			
 			<!-- borders -->
