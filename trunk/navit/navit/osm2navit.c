@@ -1808,7 +1808,7 @@ phase34_process_file(int phase, FILE *in)
 struct index_item {
 	struct item_bin item;
 	struct rect r;
-	struct attr_bin attr_order_limit;
+	struct attr_bin attr_order;
 	short min;
 	short max;
 	struct attr_bin attr_zipfile_ref;
@@ -1836,8 +1836,8 @@ index_submap_add(int phase, struct tile_head *th, GList **tiles_list)
 	ii.item.type=type_submap;
 	ii.item.clen=4;
 
-	ii.attr_order_limit.len=2;
-	ii.attr_order_limit.type=attr_order_limit;
+	ii.attr_order.len=2;
+	ii.attr_order.type=attr_order;
 
 	ii.attr_zipfile_ref.len=2;
 	ii.attr_zipfile_ref.type=attr_zipfile_ref;
