@@ -161,15 +161,6 @@ navit_get_tracking(struct navit *this_)
 }
 
 void
-navit_add_layout(struct navit *this_, struct layout *lay)
-{
-	this_->layouts = g_list_append(this_->layouts, lay);
-	if(!this_->layout_current) {
-		this_->layout_current=lay;
-	}
-}
-
-void
 navit_draw(struct navit *this_)
 {
 	GList *l;
@@ -1434,6 +1425,11 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		return navit_set_gui(this_, attr->u.gui);
 	case attr_graphics:
 		return navit_set_graphics(this_, attr->u.graphics);
+	case attr_layout:
+		this_->layouts = g_list_append(this_->layouts, attr->u.layout);
+		if(!this_->layout_current) 
+			this_->layout_current=attr->u.layout;
+		return 1;
 	case attr_route:
 		this_->route=attr->u.route;
 		route_set_projection(this_->route, transform_get_projection(this_->trans));

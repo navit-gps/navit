@@ -463,22 +463,6 @@ xmlconfig_map(struct xmlstate *state)
 }
 
 static int
-xmlconfig_layout(struct xmlstate *state)
-{
-	const char *name=find_attribute(state, "name", 1);
-	struct color color = {0xffff, 0xefef, 0xb7b7, 0xffff};
-
-	if (! name)
-		return 0;
-	find_color(state, 0, &color);
-	state->element_attr.u.data = layout_new(name, &color);
-	if (! state->element_attr.u.data)
-		return 0;
-	navit_add_layout(state->parent->element_attr.u.data, state->element_attr.u.data);
-	return 1;
-}
-
-static int
 xmlconfig_layer(struct xmlstate *state)
 {
 	const char *name=find_attribute(state, "name", 1);
@@ -648,7 +632,7 @@ struct element_func {
 	{ "navit", "config", NULL, NEW(navit_new), ADD(navit_add_attr), INIT(navit_init), DESTROY(navit_destroy)},
 	{ "graphics", "navit", NULL, NEW(graphics_new), NULL, NULL, NULL},
 	{ "gui", "navit", NULL, NEW(gui_new), NULL, NULL, NULL},
-	{ "layout", "navit", xmlconfig_layout},
+	{ "layout", "navit", NULL, NEW(layout_new), NULL, NULL, NULL},
 	{ "layer", "layout", xmlconfig_layer},
 	{ "item", "layer", xmlconfig_item},
 	{ "circle", "item", xmlconfig_circle},

@@ -19,16 +19,26 @@
 
 #include <glib.h>
 #include <string.h>
+#include "item.h"
 #include "layout.h"
 
-struct layout * layout_new(const char *name, struct color *color)
+struct layout * layout_new(struct attr *parent, struct attr **attrs)
 {
 	struct layout *l;
+	struct color def_color = {0xffff, 0xefef, 0xb7b7, 0xffff};
+	struct attr *name_attr,*color_attr,*order_delta_attr;
 
+
+	if (! (name_attr=attr_search(attrs, NULL, attr_name)))
+		return NULL;
 	l = g_new0(struct layout, 1);
-	l->name = g_strdup(name);
-	l->color = g_new0(struct color,1);
-	*(l->color) = *color;
+	l->name = g_strdup(name_attr->u.str);
+	if ((color_attr=attr_search(attrs, NULL, attr_color)))
+		l->color = *color_attr->u.color;
+	else
+		l->color = def_color;
+	if ((order_delta_attr=attr_search(attrs, NULL, attr_order_delta)))
+		l->order_delta=order_delta_attr->u.num;
 	return l;
 }
 
