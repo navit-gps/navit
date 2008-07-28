@@ -18,6 +18,21 @@ CLEANFILES = g2nbuiltin.h
 noinst_PROGRAMS=gentypes
 gentypes_SOURCES=gentypes.c
 
+gentypes.$(OBJEXT): gentypes.c
+	if [ "$(cross_compiling)" = "yes" ]; then \
+		$(CC_FOR_BUILD) -I$(top_srcdir)/navit -c -o $@ $<; \
+	else \
+		$(COMPILE) -c -o $@ $<; \
+	fi
+
+gentypes$(EXEEXT): $(gentypes_OBJECTS) $(gentypes_DEPENDENCIES) 
+	@rm -f gentypes$(EXEEXT)
+	if [ "$(cross_compiling)" = "yes" ]; then \
+		$(CCLD_FOR_BUILD) -o $@ $(gentypes_OBJECTS); \
+	else \
+		$(LINK) $(gentypes_OBJECTS) $(LDADD) $(LIBS); \
+	fi
+
 g2nbuiltin.h: gentypes garmintypes.txt
 	./gentypes $(top_srcdir)/navit/data/garmin/garmintypes.txt $@
 
