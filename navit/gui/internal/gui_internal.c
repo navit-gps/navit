@@ -1207,9 +1207,9 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 						wbm->text=g_strdup(l);
 						gui_internal_widget_append(w, wbm);
 						g_hash_table_insert(hash, g_strdup(l), (void *)1);
-						wbm->prefix=g_malloc(plen+len+2);
-						strncpy(wbm->prefix, label_full, plen+len+1);
-						wbm->prefix[plen+len+1]='\0';
+						wbm->prefix=g_malloc(len+2);
+						strncpy(wbm->prefix, label_full, len+1);
+						wbm->prefix[len+1]='\0';
 					} else {
 						gui_internal_widget_destroy(this, wbm);
 					}
