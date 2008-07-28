@@ -536,6 +536,18 @@ AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
 
+if test "x${cross_compiling}" = "xyes"; then
+  AC_MSG_CHECKING([for a C compiler for build tools])
+  AC_CHECK_PROGS(CC_FOR_BUILD, gcc cc)
+else
+  CC_FOR_BUILD=$CC
+fi
+CCLD_FOR_BUILD="$CC_FOR_BUILD"
+
+AC_SUBST(cross_compiling)
+AC_SUBST(CC_FOR_BUILD)
+AC_SUBST(CCLD_FOR_BUILD)
+
 AC_CONFIG_FILES([
 Makefile
 navit/Makefile
