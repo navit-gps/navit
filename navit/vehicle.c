@@ -53,11 +53,15 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 {
 	struct attr pos_attr;
 	char buffer[256];
+	GTimeVal time; 
+	g_get_current_time(&time); 
+
 	if (!this_->meth.position_attr_get)
 		return;
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
 		return;
-	sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\" />\n", pos_attr.u.coord_geo->lat, pos_attr.u.coord_geo->lng);
+	sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\">\n\t<time>%s</time>\n</trkpt>\n",
+		pos_attr.u.coord_geo->lat, pos_attr.u.coord_geo->lng, g_time_val_to_iso8601(&time));
 	log_write(log, buffer, strlen(buffer));
 }
 
