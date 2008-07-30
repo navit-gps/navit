@@ -246,7 +246,8 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 	dbg(1,"c=0x%x,0x%x\n", c->x, c->y);
 
 	if (c->x == tr->last_in.x && c->y == tr->last_in.y) {
-		*c=tr->last_out;
+		if (tr->last_out.x && tr->last_out.y)
+			*c=tr->last_out;
 		return 0;
 	}
 	tr->last_in=*c;
