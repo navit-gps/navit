@@ -26,11 +26,11 @@ libnavit_la_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c dat
 	transform.h track.h util.h vehicle.h window.h xmlconfig.h zipfile.h
 
 navit_SOURCES = start.c
-navit_LDADD = @NAVIT_LIBS@ @ZLIB_LIBS@ libnavit.la -Lfib-1.1 -lfib
+navit_LDADD = libnavit.la @NAVIT_LIBS@ @ZLIB_LIBS@ -Lfib-1.1 -lfib
 
 osm2navit_CPPFLAGS = $(AM_CPPFLAGS) @POSTGRESQL_CFLAGS@
 osm2navit_SOURCES = osm2navit.c
-osm2navit_LDADD = @NAVIT_LIBS@ @ZLIB_LIBS@ @POSTGRESQL_LIBS@ libnavit.la
+osm2navit_LDADD = libnavit.la @NAVIT_LIBS@ @ZLIB_LIBS@ @POSTGRESQL_LIBS@
 
 if !PLUGINS
   navit_SOURCES += builtin.c
