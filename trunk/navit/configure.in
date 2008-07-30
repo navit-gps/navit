@@ -114,7 +114,7 @@ AM_CONDITIONAL(PLUGINS, [test "x$plugins" = "xyes"])
 
 AC_ARG_ENABLE(graphics-qt-qpainter, [  --disable-graphics-qt-qpainter             don't create graphics qt-qpainter], enable_graphics_qt_qpainter=$enableval, enable_graphics_qt_qpainter=yes)
 if test "x${enable_graphics_qt_qpainter}" = "xyes" ; then
-	PKG_CHECK_MODULES(QT_GUI, [QtGui QtCore], ,enable_graphics_qt_qpainter=no);
+	PKG_CHECK_MODULES(QT_GUI, [QtGui QtCore], ,enable_graphics_qt_qpainter=no)
 fi
 if test "x${enable_graphics_qt_qpainter}" = "xyes" ; then
 	AC_DEFINE(USE_GRAPICS_QT_QPAINTER, 1, [Build with graphics qt_qpainter])
@@ -444,7 +444,7 @@ AM_CONDITIONAL(USE_BINDING_PYTHON, test "x${enable_binding_python}" = "xyes")
 # binding dbus
 AC_ARG_ENABLE(binding-dbus,   [  --disable-binding-dbus               don't create binding dbus], enable_binding_dbus=$enableval, enable_binding_dbus=yes)
 if test "x${enable_binding_dbus}" = "xyes" ; then
-	PKG_CHECK_MODULES(DBUS, [dbus-glib-1], ,enable_binding_dbus=no);
+	PKG_CHECK_MODULES(DBUS, [dbus-glib-1], ,enable_binding_dbus=no)
 fi
 if test "x${enable_binding_dbus}" = "xyes" ; then
 	AC_DEFINE(USE_BINDING_DBUS, 1, [Build with binding dbus])
