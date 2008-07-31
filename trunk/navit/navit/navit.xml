@@ -192,6 +192,46 @@ Change to your home coordinates.
 			<item type="poly_industry,poly_place" order="0-">
 				<polygon color="#e6e6e6" /> 
 			</item>
+                        <item type="poly_service" order="8-18">
+                                <polygon color="#fefefe" />
+                                <polyline color="#d2d2d2" width="1" />
+                        </item>
+                        <item type="poly_street_1" order="8-13">
+                                <polygon color="#ffffff" />
+                                <polyline color="#d2d2d2" width="1" />
+                        </item>
+                        <item type="poly_street_1" order="14-16">
+                                <polygon color="#ffffff" />
+                                <polyline color="#d2d2d2" width="2" />
+                        </item>
+                        <item type="poly_street_1" order="17-18">
+                                <polygon color="#ffffff" />
+                                <polyline color="#d2d2d2" width="3" />
+                        </item>
+			<item type="poly_street_2" order="7-12">
+				<polygon color="#ffff00" />
+				<polyline color="#c0c0c0" width="1" />
+			</item>
+			<item type="poly_street_2" order="13-16">
+				<polygon color="#ffff00" />
+				<polyline color="#c0c0c0" width="2" />
+			</item>
+			<item type="poly_street_2" order="17-18">
+				<polygon color="#ffff00" />
+				<polyline color="#c0c0c0" width="3" />
+			</item>
+			<item type="poly_street_3" order="7-11">
+				<polygon color="#ffff00" />
+				<polyline color="#a0a0a0" width="1" />
+			</item>
+			<item type="poly_street_3" order="12-15">
+				<polygon color="#ffff00" />
+				<polyline color="#a0a0a0" width="2" />
+			</item>
+			<item type="poly_street_3" order="16-18">
+				<polygon color="#ffff00" />
+				<polyline color="#a0a0a0" width="3" />
+			</item>
 			<item type="water_line" order="0-">
 				<polyline color="#5096b8" width="1" /> 
 				<label label_size="5" /> 
@@ -542,23 +582,23 @@ Change to your home coordinates.
 				<polyline color="#ffffff" width="8" /> 
 			</item>
 			<item type="street_0,street_1_city,street_1_land" order="13">
-				<polyline color="#d2d2d2" width="12" /> 
+				<polyline color="#d2d2d2" width="11" /> 
 				<polyline color="#ffffff" width="9" /> 
 			</item>
 			<item type="street_0,street_1_city,street_1_land" order="14">
-				<polyline color="#d2d2d2" width="15" /> 
+				<polyline color="#d2d2d2" width="17" /> 
 				<polyline color="#ffffff" width="13" /> 
 			</item>
 			<item type="street_0,street_1_city,street_1_land" order="15">
-				<polyline color="#d2d2d2" width="17" /> 
+				<polyline color="#d2d2d2" width="18" /> 
 				<polyline color="#ffffff" width="14" /> 
 			</item>
 			<item type="street_0,street_1_city,street_1_land" order="16">
-				<polyline color="#d2d2d2" width="33" /> 
+				<polyline color="#d2d2d2" width="30" /> 
 				<polyline color="#ffffff" width="26" /> 
 			</item>
 			<item type="street_0,street_1_city,street_1_land" order="17">
-				<polyline color="#d2d2d2" width="69" /> 
+				<polyline color="#d2d2d2" width="67" /> 
 				<polyline color="#ffffff" width="61" /> 
 			</item>
 			<item type="street_0,street_1_city,street_1_land" order="18">
@@ -581,7 +621,7 @@ Change to your home coordinates.
 				<polyline color="#ffff00" width="6" /> 
 			</item>
 			<item type="street_2_city,street_2_land" order="12">
-				<polyline color="#c0c0c0" width="12" /> 
+				<polyline color="#c0c0c0" width="11" /> 
 				<polyline color="#ffff00" width="9" /> 
 			</item>
 			<item type="street_2_city,street_2_land" order="13">
@@ -597,7 +637,7 @@ Change to your home coordinates.
 				<polyline color="#ffff00" width="17" /> 
 			</item>
 			<item type="street_2_city,street_2_land" order="16">
-				<polyline color="#c0c0c0" width="35" /> 
+				<polyline color="#c0c0c0" width="34" /> 
 				<polyline color="#ffff00" width="30" /> 
 			</item>
 			<item type="street_2_city,street_2_land" order="17">
