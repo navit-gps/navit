@@ -432,3 +432,8 @@ ITEM(poly_college)
 ITEM(poly_battlefield)
 ITEM(poly_pedestrian)
 ITEM(poly_plaza)
+ITEM(poly_service)
+ITEM(poly_street_1)
+ITEM(poly_street_2)
+ITEM(poly_street_3)
+
