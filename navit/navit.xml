@@ -568,7 +568,34 @@ Change to your home coordinates.
 				<polyline color="#d2d2d2" width="11" />
 				<polyline color="#fefefe" width="9" />
 			</item>
-			
+			<item type="street_parking_lane" order="12">
+				<polyline color="#d2d2d2" width="4" />
+				<polyline color="#fefefe" width="2" />
+			</item>
+			<item type="street_parking_lane" order="13">
+				<polyline color="#d2d2d2" width="4" />
+				<polyline color="#fefefe" width="2" />
+			</item>
+			<item type="street_parking_lane" order="14">
+				<polyline color="#d2d2d2" width="5" />
+				<polyline color="#fefefe" width="3" />
+			</item>
+			<item type="street_parking_lane" order="15">
+				<polyline color="#d2d2d2" width="6" />
+				<polyline color="#fefefe" width="4" />
+			</item>
+			<item type="street_parking_lane" order="16">
+				<polyline color="#d2d2d2" width="7" />
+				<polyline color="#fefefe" width="5" />
+			</item>
+			<item type="street_parking_lane" order="17">
+				<polyline color="#d2d2d2" width="8" />
+				<polyline color="#fefefe" width="6" />
+			</item>
+			<item type="street_parking_lane" order="18">
+				<polyline color="#d2d2d2" width="9" />
+				<polyline color="#fefefe" width="7" />
+			</item>
 			<item type="street_0,street_1_city,street_1_land" order="10">
 				<polyline color="#d2d2d2" width="4" /> 
 				<polyline color="#ffffff" width="2" /> 
