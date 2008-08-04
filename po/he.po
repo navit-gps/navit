@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-31 13:54+0200\n"
-"PO-Revision-Date: 2008-07-31 11:21+0000\n"
+"POT-Creation-Date: 2008-06-30 11:32+0200\n"
+"PO-Revision-Date: 2008-08-04 00:09+0000\n"
 "Last-Translator: rintintin <Unknown>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2008-07-31 11:44+0000\n"
+"X-Launchpad-Export-Date: 2008-08-04 12:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../navit/main.c:132
@@ -38,8 +38,8 @@ msgstr ""
 #: ../navit/main.c:159
 #, c-format
 msgid ""
-"Running from source directory. Bookmarks, center and destinations will be r/"
-"w from this directory\n"
+"Running from source directory. Bookmarks, center and destinations will be "
+"r/w from this directory\n"
 msgstr "פועל מספריית המקור. סימניות, מרכז ויעדים יקראו/יכתבו במקום זה.\n"
 
 #: ../navit/main.c:175
@@ -64,7 +64,7 @@ msgid "Using '%s'\n"
 msgstr "משתמש ב-'%s'\n"
 
 #: ../navit/main.c:303
-#, fuzzy, c-format
+#, c-format
 msgid "No instance has been created, exiting\n"
 msgstr "לא נוצר אף עצם (instance), יוצא\n"
 
@@ -176,7 +176,6 @@ msgid "unknown "
 msgstr "לא ידוע "
 
 #: ../navit/navigation.c:567
-#, fuzzy
 msgid "When possible, please turn around"
 msgstr "כשיתאפשר לך, פנה חזרה"
 
@@ -201,12 +200,12 @@ msgstr "שגיאה"
 #: ../navit/navigation.c:616
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "פנה %2$s %1$s בעוד %4$s %3$s"
+msgstr "פנה %1$s %2$s %4$s %3$s"
 
 #: ../navit/navigation.c:619
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "הגעת ליעד %s"
+msgstr "הגעה ליעד %s"
 
 #: ../navit/navit.c:812 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
