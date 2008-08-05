@@ -49,6 +49,18 @@ item_coord_get(struct item *it, struct coord *c, int count)
 	return it->meth->item_coord_get(it->priv_data, c, count);
 }
 
+int
+item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection to)
+{
+	int ret=item_coord_get(it, c, count);
+	int i;
+	enum projection from=map_projection(it->map);
+	if (from != to) 
+		for (i = 0 ; i < count ; i++) 
+			transform_from_to(c+i, from, c+i, to);
+	return ret;
+}
+
 int 
 item_coord_is_segment(struct item *it)
 {

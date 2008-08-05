@@ -303,7 +303,22 @@ map_search_destroy(struct map_search *this_)
 }
 
 struct map_selection *
-map_selection_dup(struct map_selection *sel)
+map_selection_rect_new(struct pcoord *center, int distance, int order)
+{
+	int i;
+	struct map_selection *ret=g_new0(struct map_selection, 1);
+	for (i = 0 ; i < layer_end ; i++) {
+		ret->order[i]=order;
+	}
+	ret->u.c_rect.lu.x=center->x-distance;
+	ret->u.c_rect.lu.y=center->y+distance;
+	ret->u.c_rect.rl.x=center->x+distance;
+	ret->u.c_rect.rl.y=center->y-distance;
+	return ret;
+}
+
+struct map_selection *
+map_selection_dup_pro(struct map_selection *sel, enum projection from, enum projection to)
 {
 	struct map_selection *next,**last;
 	struct map_selection *ret=NULL;
@@ -311,11 +326,21 @@ map_selection_dup(struct map_selection *sel)
 	while (sel) {
 		next = g_new(struct map_selection, 1);
 		*next=*sel;
+		if (from != projection_none || to != projection_none) {
+			transform_from_to(&sel->u.c_rect.lu, from, &next->u.c_rect.lu, to);
+			transform_from_to(&sel->u.c_rect.rl, from, &next->u.c_rect.rl, to);
+		}
 		*last=next;
 		last=&next->next;
 		sel = sel->next;
 	}
 	return ret;
+}
+
+struct map_selection *
+map_selection_dup(struct map_selection *sel)
+{
+	return map_selection_dup_pro(sel, projection_none, projection_none);
 }
 
 void
