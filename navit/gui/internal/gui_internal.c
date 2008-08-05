@@ -164,7 +164,7 @@ struct gui_priv {
 	struct widget *highlighted_menu;
 	struct widget *list;
 	int vehicle_valid;
-	struct coord_geo click, vehicle;
+	struct pcoord clickp, vehiclep;
 	struct search_list *sl;
 };
 
@@ -246,25 +246,31 @@ image_new_l(struct gui_priv *this, char *name)
 }
 
 static char *
-coordinates(struct coord_geo *g, char sep)
+coordinates(struct pcoord *pc, char sep)
 {
 	char latc='N',lngc='E';
 	int lat_deg,lat_min,lat_sec;
 	int lng_deg,lng_min,lng_sec;
-	if (g->lat < 0) {
-		g->lat=-g->lat;
+	struct coord_geo g;
+	struct coord c;
+	c.x=pc->x;
+	c.y=pc->y;
+	transform_to_geo(pc->pro, &c, &g);
+
+	if (g.lat < 0) {
+		g.lat=-g.lat;
 		latc='S';
 	}
-	if (g->lng < 0) {
-		g->lng=-g->lng;
+	if (g.lng < 0) {
+		g.lng=-g.lng;
 		lngc='W';
 	}
-	lat_deg=g->lat;
-	lat_min=fmod(g->lat*60,60);
-	lat_sec=fmod(g->lat*3600,60);
-	lng_deg=g->lng;
-	lng_min=fmod(g->lng*60,60);
-	lng_sec=fmod(g->lng*3600,60);
+	lat_deg=g.lat;
+	lat_min=fmod(g.lat*60,60);
+	lat_sec=fmod(g.lat*3600,60);
+	lng_deg=g.lng;
+	lng_min=fmod(g.lng*60,60);
+	lng_sec=fmod(g.lng*3600,60);
 	return g_strdup_printf("%d°%d'%d\" %c%c%d°%d'%d\" %c",lat_deg,lat_min,lat_sec,latc,sep,lng_deg,lng_min,lng_sec,lngc);
 }
 
@@ -993,7 +999,7 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	menu->w=this->root.w;
 	menu->h=this->root.h;
 	menu->background=this->background;
-	if (this->root.w > 320 || this->root.h > 320) {
+	if (this->root.w > 3200 || this->root.h > 3200) {
 		this->font_size=40;
 		this->icon_s=48;
 		this->icon_l=96;
@@ -1035,8 +1041,227 @@ static void
 gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm)
 {
 	struct widget *w=wm->data;
+	dbg(0,"c=%d:0x%x,0x%x\n", w->c.pro, w->c.x, w->c.y);
 	navit_set_destination(this->nav, &w->c, w->name);
 	gui_internal_prune_menu(this, NULL);
+}
+
+static void
+gui_internal_cmd_set_position(struct gui_priv *this, struct widget *wm)
+{
+	struct widget *w=wm->data;
+	navit_set_position(this->nav, &w->c);
+	gui_internal_prune_menu(this, NULL);
+}
+
+
+static void
+get_direction(char *buffer, int angle, int mode)
+{
+	angle=angle%360;
+	switch (mode) {
+	case 0:
+		sprintf(buffer,"%d",angle);
+		break;
+	case 1:
+		if (angle < 69 || angle > 291)
+			*buffer++='N';
+		if (angle > 111 && angle < 249)
+			*buffer++='S';
+		if (angle > 22 && angle < 158)
+			*buffer++='E';
+		if (angle > 202 && angle < 338)
+			*buffer++='W';
+		*buffer++='\0';
+		break;
+	case 2:
+		angle=(angle+15)/30;
+		if (! angle)
+			angle=12;
+		sprintf(buffer,"%d H", angle);
+		break;
+	}
+}
+
+struct selector {
+	char *icon;
+	char *name;
+	enum item_type *types;
+} selectors[]={
+	{"bank","Bank",(enum item_type []){type_poi_bank,type_poi_bank,type_none}},
+	{"fuel","Fuel",(enum item_type []){type_poi_fuel,type_poi_fuel,type_none}},
+	{"hotel","Hotel",(enum item_type []) {
+		type_poi_hotel,type_poi_camp_rv,
+		type_poi_camping,type_poi_camping,
+		type_poi_resort,type_poi_resort,
+		type_none}},
+	{"restaurant","Restaurant",(enum item_type []) {
+		type_poi_bar,type_poi_picnic,
+		type_poi_burgerking,type_poi_fastfood,
+		type_poi_restaurant,type_poi_restaurant,
+		type_none}},
+	{"shopping","Shopping",(enum item_type []) {
+		type_poi_mall,type_poi_mall,
+		type_poi_shop_grocery,type_poi_shop_grocery,
+		type_none}},
+	{"hospital","Service",(enum item_type []) {
+		type_poi_marina,type_poi_marina,
+		type_poi_hospital,type_poi_hospital,
+		type_poi_public_utilities,type_poi_public_utilities,
+		type_poi_police,type_poi_autoservice,
+		type_poi_information,type_poi_information,
+		type_poi_personal_service,type_poi_repair_service,
+		type_poi_rest_room,type_poi_rest_room,
+		type_poi_restroom,type_poi_restroom,
+		type_none}},
+	{"parking","Parking",(enum item_type []){type_poi_car_parking,type_poi_car_parking,type_none}},
+	{"peak","Land Features",(enum item_type []){
+		type_poi_land_feature,type_poi_rock,
+		type_poi_dam,type_poi_dam,
+		type_none}},
+	{"unknown","Other",(enum item_type []){
+		type_point_unspecified,type_poi_land_feature-1,
+		type_poi_rock+1,type_poi_fuel-1,
+		type_poi_marina+1,type_poi_car_parking-1,
+		type_poi_car_parking+1,type_poi_bar-1,
+		type_poi_bank+1,type_poi_dam-1,
+		type_poi_dam+1,type_poi_information-1,
+		type_poi_information+1,type_poi_mall-1,
+		type_poi_mall+1,type_poi_personal_service-1,
+		type_poi_restaurant+1,type_poi_restroom-1,
+		type_poi_restroom+1,type_poi_shop_grocery-1,
+		type_poi_shop_grocery+1,type_poi_wifi,
+		type_none}},
+};
+
+static void gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm);
+
+static struct widget *
+gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c)
+{
+	struct widget *wl,*wb;
+	int i;
+	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	for (i = 0 ; i < sizeof(selectors)/sizeof(struct selector) ; i++) {
+	gui_internal_widget_append(wl, wb=gui_internal_button_new_with_callback(this, NULL,
+		image_new_xs(this, selectors[i].icon), gravity_center|orientation_vertical,
+		gui_internal_cmd_pois, &selectors[i]));
+		wb->c=*c;
+	}
+	return wl;
+}
+
+static struct widget *
+gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, int dist)
+{
+	char coordbuf[64];
+	struct param_list param[5];
+	char distbuf[32];
+	char dirbuf[32];
+	char *type;
+	struct attr attr;
+	struct widget *wl;
+
+	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+
+	sprintf(distbuf,"%d", dist/1000);
+	gui_internal_widget_append(wl, gui_internal_label_new(this, distbuf));
+	get_direction(dirbuf, transform_get_angle_delta(center, c, 0), 1);
+	gui_internal_widget_append(wl, gui_internal_label_new(this, dirbuf));
+	gui_internal_widget_append(wl, gui_internal_label_new(this, item_to_name(item->type)));
+	if (! item_attr_get(item, attr_label, &attr)) 
+		attr.u.str="";
+	gui_internal_widget_append(wl, gui_internal_label_new(this, attr.u.str));
+
+	return wl;
+}
+
+static gint
+gui_internal_cmd_pois_sort_num(gconstpointer a, gconstpointer b, gpointer user_data)
+{
+	struct widget *wa=a;
+	struct widget *wb=b;
+	struct widget *wac=wa->children->data;
+	struct widget *wbc=wb->children->data;
+	int ia,ib;
+	ia=atoi(wac->text);
+	ib=atoi(wbc->text);
+
+	return ia-ib;
+}
+
+static int
+gui_internal_cmd_pois_item_selected(struct selector *sel, enum item_type type)
+{
+	enum item_type *types;
+	if (type >= type_line)
+		return 0;
+	if (! sel || !sel->types)
+		return 1;
+	types=sel->types;
+	while (*types != type_none) {
+		if (type >= types[0] && type <= types[1]) {
+			return 1;
+		}
+		types+=2;	
+	}	
+	return 0;
+}
+
+static void gui_internal_cmd_position(struct gui_priv *this, struct widget *wm);
+
+static void
+gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm)
+{
+	struct map_selection *sel,*selm;
+	struct coord c,center;
+	struct mapset_handle *h;
+	struct map *m;
+	struct map_rect *mr;
+	struct item *item;
+	int idist,dist=400000;
+	struct widget *wi,*w,*w2,*wb;
+	enum projection pro=wm->c.pro;
+	struct selector *isel=wm->data;
+
+	wb=gui_internal_menu(this, isel ? isel->name : "POIs");	
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	if (! isel)
+		gui_internal_widget_append(w, gui_internal_cmd_pois_selector(this,&wm->c));
+	w2=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(w, w2);
+
+	sel=map_selection_rect_new(&wm->c, dist, 18);
+	center.x=wm->c.x;
+	center.y=wm->c.y;
+	h=mapset_open(navit_get_mapset(this->nav));
+        while ((m=mapset_next(h, 1))) {
+		selm=map_selection_dup_pro(sel, pro, map_projection(m));
+		mr=map_rect_new(m, selm);
+		dbg(2,"mr=%p\n", mr);
+		if (mr) {
+			while ((item=map_rect_get_item(mr))) {
+				if (gui_internal_cmd_pois_item_selected(isel, item->type) && 
+				    item_coord_get_pro(item, &c, 1, pro) && 
+				    coord_rect_contains(&sel->u.c_rect, &c) && 
+				    (idist=transform_distance(pro, &center, &c)) < dist) {
+					gui_internal_widget_append(w2, wi=gui_internal_cmd_pois_item(this, &center, item, &c, idist));
+					wi->func=gui_internal_cmd_position;
+					wi->state |= STATE_SENSITIVE;
+					wi->c.x=c.x;
+					wi->c.y=c.y;
+					wi->c.pro=pro;
+				}
+			}
+			map_rect_destroy(mr);
+		}
+		map_selection_destroy(selm);
+	}
+	map_selection_destroy(sel);
+	mapset_close(h);
+	w2->children=g_list_sort_with_data(w2->children,  gui_internal_cmd_pois_sort_num, (void *)1);
+	gui_internal_menu_render(this);
 }
 
 static void
@@ -1050,17 +1275,20 @@ gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm)
 static void
 gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 {
-	struct widget *wb,*w,*wc;
+	struct widget *wb,*w,*wc,*wbc;
 	struct coord_geo g;
 	struct coord c;
 	char *coord;
 
+#if 0
 	switch ((int)wm->data) {
 		case 0:
+#endif
 			c.x=wm->c.x;
 			c.y=wm->c.y;
 			dbg(0,"x=0x%x y=0x%x\n", c.x, c.y);
 			transform_to_geo(wm->c.pro, &c, &g);
+#if 0
 			break;
 		case 1:
 			g=this->click;
@@ -1069,16 +1297,26 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 			g=this->vehicle;
 			break;
 	}
+#endif
 	wb=gui_internal_menu(this, wm->name ? wm->name : wm->text);	
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
-	coord=coordinates(&g, ' ');
+	coord=coordinates(&wm->c, ' ');
 	gui_internal_widget_append(w, gui_internal_label_new(this, coord));
 	g_free(coord);
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Set as destination",
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_set_destination, wm));
+	gui_internal_widget_append(w,
+		gui_internal_button_new_with_callback(this, "Set as position",
+			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+			gui_internal_cmd_set_position, wm));
+	gui_internal_widget_append(w,
+		wbc=gui_internal_button_new_with_callback(this, "POIs",
+			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+			gui_internal_cmd_pois, NULL));
+	wbc->c=wm->c;
 #if 0
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Add to tour",
@@ -1635,20 +1873,22 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 		gui_internal_button_new_with_callback(this, "Bookmarks",
 			image_new_l(this, "gui_bookmark"), gravity_center|orientation_vertical,
 			gui_internal_cmd_bookmarks, NULL));
-	coord=coordinates(&this->click, '\n');
+	coord=coordinates(&this->clickp, '\n');
 	gui_internal_widget_append(w,
 		wc=gui_internal_button_new_with_callback(this, coord,
 			image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
-			gui_internal_cmd_position, (void *)1));
+			gui_internal_cmd_position, NULL));
 	wc->name=g_strdup("Map Point");
+	wc->c=this->clickp;
 	g_free(coord);
 	if (this->vehicle_valid) {
-		coord=coordinates(&this->vehicle, '\n');
+		coord=coordinates(&this->vehiclep, '\n');
 		gui_internal_widget_append(w,
 			wc=gui_internal_button_new_with_callback(this, coord,
 				image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
-				gui_internal_cmd_position, (void *)2));
+				gui_internal_cmd_position, NULL));
 		wc->name=g_strdup("Vehicle Position");
+		wc->c=this->vehiclep;
 		g_free(coord);
 	}
 	gui_internal_widget_append(w,
@@ -1841,10 +2081,15 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		trans=navit_get_trans(this->nav);
 		transform_reverse(trans, p, &c);
 		dbg(0,"x=0x%x y=0x%x\n", c.x, c.y);
-		transform_to_geo(transform_get_projection(trans), &c, &this->click);
+		this->clickp.pro=transform_get_projection(trans);
+		this->clickp.x=c.x;
+		this->clickp.y=c.y;
 		if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle
 			&& vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp)) {
-			this->vehicle=*attrp.u.coord_geo;
+			this->vehiclep.pro=transform_get_projection(trans);
+			transform_from_geo(this->vehiclep.pro, attrp.u.coord_geo, &c);
+			this->vehiclep.x=c.x;
+			this->vehiclep.y=c.y;
 			this->vehicle_valid=1;
 		}	
 		// draw menu

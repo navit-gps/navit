@@ -75,6 +75,7 @@ struct item;
 struct item_hash;
 void item_coord_rewind(struct item *it);
 int item_coord_get(struct item *it, struct coord *c, int count);
+int item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection pro);
 /* does the next returned coordinate mark a segment */
 int item_coord_is_segment(struct item *it);
 void item_attr_rewind(struct item *it);

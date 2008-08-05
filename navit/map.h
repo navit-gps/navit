@@ -177,6 +177,8 @@ void map_rect_destroy(struct map_rect *mr);
 struct map_search *map_search_new(struct map *m, struct item *item, struct attr *search_attr, int partial);
 struct item *map_search_get_item(struct map_search *this_);
 void map_search_destroy(struct map_search *this_);
+struct map_selection *map_selection_rect_new(struct pcoord *center, int distance, int order);
+struct map_selection *map_selection_dup_pro(struct map_selection *sel, enum projection from, enum projection to);
 struct map_selection *map_selection_dup(struct map_selection *sel);
 void map_selection_destroy(struct map_selection *sel);
 int map_selection_contains_item_rect(struct map_selection *sel, struct item *item);
