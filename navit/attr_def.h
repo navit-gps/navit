@@ -64,6 +64,7 @@ ATTR(vocabulary_distances)
 ATTR(announce_name_systematic_first)
 ATTR(antialias)
 ATTR(order_delta)
+ATTR(baudrate)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
