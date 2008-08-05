@@ -905,12 +905,13 @@ static gint
 keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
 	struct graphics_priv *this=user_data;
-	int ucode;
+	int len,ucode;
 	char key[8];
 	if (! this->keypress_callback)
 		return FALSE;
 	ucode=gdk_keyval_to_unicode(event->keyval);
-	g_unichar_to_utf8(ucode, key);
+	len=g_unichar_to_utf8(ucode, key);
+	key[len]='\0';
 	
 	switch (event->keyval) {
 	case GDK_Up:
