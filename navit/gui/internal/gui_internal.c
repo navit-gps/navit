@@ -64,6 +64,7 @@
 #define STATE_HIGHLIGHTED 4
 #define STATE_SENSITIVE 8
 #define STATE_EDIT 16
+#define STATE_CLEAR 32
 
 enum widget_type {
 	widget_box=1,
@@ -1054,6 +1055,68 @@ gui_internal_cmd_set_position(struct gui_priv *this, struct widget *wm)
 	gui_internal_prune_menu(this, NULL);
 }
 
+static void
+gui_internal_cmd_add_bookmark_do(struct gui_priv *this, struct widget *widget)
+{
+	GList *l;
+	dbg(0,"text='%s'\n", widget->text);
+	if (widget->text && strlen(widget->text)) 
+		navit_add_bookmark(this->nav, &widget->c, widget->text);
+	g_free(widget->text);
+	widget->text=NULL;
+	l=g_list_previous(g_list_last(this->root.children));
+	gui_internal_prune_menu(this, l->data);
+}
+
+static void
+gui_internal_cmd_add_bookmark_clicked(struct gui_priv *this, struct widget *widget)
+{
+	gui_internal_cmd_add_bookmark_do(this, widget->data);
+}
+
+static void
+gui_internal_cmd_add_bookmark_changed(struct gui_priv *this, struct widget *wm)
+{
+	int len;
+	dbg(0,"enter\n");
+	if (wm->text) {
+		len=strlen(wm->text);
+		dbg(0,"len=%d\n", len);
+		if (len && (wm->text[len-1] == '\n' || wm->text[len-1] == '\r')) {
+			wm->text[len-1]='\0';
+			gui_internal_cmd_add_bookmark_do(this, wm);
+		}
+	}
+}
+
+
+static struct widget * gui_internal_keyboard(struct gui_priv *this, int mode);
+
+static void
+gui_internal_cmd_add_bookmark(struct gui_priv *this, struct widget *wm)
+{
+	struct widget *w,*wb,*wk,*wl,*we,*wnext,*wp=wm->data;
+	wb=gui_internal_menu(this, "Add Bookmark");	
+	w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	gui_internal_widget_append(w, we);
+	gui_internal_widget_append(we, wk=gui_internal_label_new(this, wp->name ? wp->name : wp->text));
+	wk->state |= STATE_EDIT|STATE_CLEAR;
+	wk->background=this->background;
+	wk->flags |= flags_expand|flags_fill;
+	wk->func = gui_internal_cmd_add_bookmark_changed;
+	wk->c=wm->c;
+	gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
+	wnext->state |= STATE_SENSITIVE;
+	wnext->func = gui_internal_cmd_add_bookmark_clicked;
+	wnext->data=wk;
+	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(w, wl);
+	gui_internal_widget_append(w, gui_internal_keyboard(this,0));
+	gui_internal_menu_render(this);
+}
+
 
 static void
 get_direction(char *buffer, int angle, int mode)
@@ -1168,9 +1231,14 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 	gui_internal_widget_append(wl, gui_internal_label_new(this, distbuf));
 	get_direction(dirbuf, transform_get_angle_delta(center, c, 0), 1);
 	gui_internal_widget_append(wl, gui_internal_label_new(this, dirbuf));
-	gui_internal_widget_append(wl, gui_internal_label_new(this, item_to_name(item->type)));
-	if (! item_attr_get(item, attr_label, &attr)) 
+	type=item_to_name(item->type);
+	gui_internal_widget_append(wl, gui_internal_label_new(this, type));
+	if (item_attr_get(item, attr_label, &attr)) {
+		wl->name=g_strdup_printf("%s %s",type,attr.u.str);
+	} else {
 		attr.u.str="";
+		wl->name=g_strdup(type);
+	}
 	gui_internal_widget_append(wl, gui_internal_label_new(this, attr.u.str));
 
 	return wl;
@@ -1278,7 +1346,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 	struct widget *wb,*w,*wc,*wbc;
 	struct coord_geo g;
 	struct coord c;
-	char *coord;
+	char *coord,*name;
 
 #if 0
 	switch ((int)wm->data) {
@@ -1298,7 +1366,8 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 			break;
 	}
 #endif
-	wb=gui_internal_menu(this, wm->name ? wm->name : wm->text);	
+	name=wm->name ? wm->name : wm->text;
+	wb=gui_internal_menu(this, name);	
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
 	coord=coordinates(&wm->c, ' ');
@@ -1312,6 +1381,11 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 		gui_internal_button_new_with_callback(this, "Set as position",
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_set_position, wm));
+	gui_internal_widget_append(w,
+		wbc=gui_internal_button_new_with_callback(this, "Add as bookmark",
+			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+			gui_internal_cmd_add_bookmark, wm));
+	wbc->c=wm->c;
 	gui_internal_widget_append(w,
 		wbc=gui_internal_button_new_with_callback(this, "POIs",
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
@@ -1476,8 +1550,16 @@ static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 				wi->text[len]=' ';	
 				text=g_strdup_printf("%s ", wi->text);
 			}
-		} else
+		} else {
+			if (wi->state & STATE_CLEAR) {
+				dbg(0,"wi->state=0x%x\n", wi->state);
+				g_free(wi->text);
+				wi->text=NULL;
+				wi->state &= ~STATE_CLEAR;
+				dbg(0,"wi->state=0x%x\n", wi->state);
+			}
 			text=g_strdup_printf("%s%s", wi->text ? wi->text : "", key);
+		}
 		g_free(wi->text);
 		wi->text=text;
 		if (*key == NAVIT_KEY_BACKSPACE && wi->text) {
@@ -1500,7 +1582,7 @@ gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm)
 }
 
 static void
-gui_internal_changed(struct gui_priv *this, struct widget *wm)
+gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 {
 	GList *l;
 	gui_internal_widget_children_destroy(this, this->list);
@@ -1767,7 +1849,7 @@ gui_internal_search(struct gui_priv *this, char *what, char *type)
 	wk->state |= STATE_EDIT;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
-	wk->func = gui_internal_changed;
+	wk->func = gui_internal_search_changed;
 	wk->name=g_strdup(type);
 	gui_internal_widget_append(w, gui_internal_keyboard(this,0));
 	gui_internal_menu_render(this);
@@ -2183,6 +2265,7 @@ static void gui_internal_keypress(void *data, char *key)
                 break;
 	default:
 		dbg(1,"key=%d\n", key, this);
+		dbg(0,"key='%s' len=%d\n", key, strlen(key));
 		if (this->root.children) {
 			graphics_draw_mode(this->gra, draw_mode_begin);
 			gui_internal_keypress_do(this, key);
