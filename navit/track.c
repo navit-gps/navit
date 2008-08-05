@@ -283,27 +283,29 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 		for (i = 0; i < sd->count-1 ; i++) {
 			dbg(2, "%d: (0x%x,0x%x)-(0x%x,0x%x)\n", i, sd->c[i].x, sd->c[i].y, sd->c[i+1].x, sd->c[i+1].y);
 			value=transform_distance_line_sq(&sd->c[i], &sd->c[i+1], c, &lpnt);
-			if (value < INT_MAX/2) 
+			if (value < INT_MAX/2) {
 				value += tracking_angle_delta(angle, t->angle[i], dir)*angle_factor>>4;
-			if (tracking_is_connected(tr->curr, &sd->c[i]))
-				value += connected_pref;
-			if (lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y)
-				value += nostop_pref;
-			if (! tr->curr_line || value < min) {
-				tr->curr_line=t;
-				tr->pos=i;
-				tr->curr[0]=sd->c[i];
-				tr->curr[1]=sd->c[i+1];
-				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
-					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], c, &lpnt),
-					tracking_angle_delta(angle, t->angle[i], 0)*angle_factor,
-					tracking_is_connected(tr->curr, &sd->c[i]) ? connected_pref : 0,
-					lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y ? nostop_pref : 0,
-					value
-				);
-				tr->last_out=lpnt;
-				min=value;
-			}
+				if (tracking_is_connected(tr->curr, &sd->c[i]))
+					value += connected_pref;
+				if (lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y)
+					value += nostop_pref;
+				if (! tr->curr_line || value < min) {
+					tr->curr_line=t;
+					tr->pos=i;
+					tr->curr[0]=sd->c[i];
+					tr->curr[1]=sd->c[i+1];
+					dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
+						transform_distance_line_sq(&sd->c[i], &sd->c[i+1], c, &lpnt),
+						tracking_angle_delta(angle, t->angle[i], 0)*angle_factor,
+						tracking_is_connected(tr->curr, &sd->c[i]) ? connected_pref : 0,
+						lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y ? nostop_pref : 0,
+						value
+					);
+					tr->last_out=lpnt;
+					min=value;
+				}
+
+			 }
 		}
 		t=t->next;
 	}
