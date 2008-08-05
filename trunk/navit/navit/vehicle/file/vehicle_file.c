@@ -74,6 +74,7 @@ struct vehicle_priv {
 #ifdef _WIN32
 	int no_data_count;
 #endif
+	speed_t baudrate;
 };
 
 #ifdef _WIN32
@@ -171,8 +172,8 @@ vehicle_file_open(struct vehicle_priv *priv)
 		} else {
 			tcgetattr(priv->fd, &tio);
 			cfmakeraw(&tio);
-			cfsetispeed(&tio, B4800);
-			cfsetospeed(&tio, B4800);
+			cfsetispeed(&tio, priv->baudrate);
+			cfsetospeed(&tio, priv->baudrate);
 			tio.c_cc[VMIN] = 16;
 			tio.c_cc[VTIME] = 1;
 			tcsetattr(priv->fd, TCSANOW, &tio);
@@ -478,6 +479,7 @@ vehicle_file_new_file(struct vehicle_methods
 	struct attr *source;
 	struct attr *time;
 	struct attr *on_eof;
+	struct attr *baudrate;
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
@@ -487,9 +489,23 @@ vehicle_file_new_file(struct vehicle_methods
 	ret->source = g_strdup(source->u.str);
 	ret->buffer = g_malloc(buffer_size);
 	ret->time=1000;
+	ret->baudrate=B4800;
 	time = attr_search(attrs, NULL, attr_time);
 	if (time)
 		ret->time=time->u.num;
+	baudrate = attr_search(attrs, NULL, attr_baudrate);
+	if (baudrate) {
+		switch (baudrate->u.num) {
+		case 4800:
+			ret->baudrate=B4800;
+			break;
+#ifdef B57600
+		case 57600:
+			ret->baudrate=B57600;
+			break;
+#endif
+		}
+	}
 	on_eof = attr_search(attrs, NULL, attr_on_eof);
 	if (on_eof && !strcasecmp(on_eof->u.str, "stop"))
 		ret->on_eof=1;
