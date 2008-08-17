@@ -7,17 +7,1663 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-26 17:12+0200\n"
-"PO-Revision-Date: 2008-05-27 08:55+0000\n"
-"Last-Translator: Nkolay Parukhin <nik@sevpinro.ru>\n"
+"POT-Creation-Date: 2008-08-17 20:37+0200\n"
+"PO-Revision-Date: 2008-08-15 13:02+0000\n"
+"Last-Translator: zcc <zcc@mail.ru>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2008-05-30 21:28+0000\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2008-08-17 18:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#: ../navit/main.c:149
+#, c-format
+msgid "Running from source directory\n"
+msgstr "Запуск в исходном каталоге\n"
+
+#: ../navit/main.c:165
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "установка '%s' в '%s'\n"
+
+#: ../navit/navigation.c:190
+#, c-format
+msgid "%d m"
+msgstr "%d м"
+
+#: ../navit/navigation.c:192
+#, c-format
+msgid "in %d m"
+msgstr "через %d м"
+
+#: ../navit/navigation.c:196
+#, c-format
+msgid "%d meters"
+msgstr "%d метров"
+
+#: ../navit/navigation.c:198
+#, c-format
+msgid "in %d meters"
+msgstr "через %d метров"
+
+#: ../navit/navigation.c:204
+#, c-format
+msgid "%d.%d kilometer"
+msgstr "%d.%d километр"
+
+#: ../navit/navigation.c:206
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "через %d.%d километр(а,ов"
+
+#: ../navit/navigation.c:210
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "%d километр"
+msgstr[1] "%d километра"
+msgstr[2] "%d километров"
+
+#: ../navit/navigation.c:212
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "через %d километр"
+msgstr[1] "%d километра"
+msgstr[2] "%d километров"
+
+#: ../navit/navigation.c:466
+msgid "exit"
+msgstr "съезд"
+
+#: ../navit/navigation.c:468
+#, fuzzy
+msgid "ramp"
+msgstr "въезд"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#: ../navit/navigation.c:498
+#, c-format
+msgid "%sinto the street %s%s%s"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:502
+#, c-format
+msgid "%sinto the %s%s%s|male form"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:506
+#, c-format
+msgid "%sinto the %s%s%s|female form"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:510
+#, c-format
+msgid "%sinto the %s%s%s|neutral form"
+msgstr ""
+
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#: ../navit/navigation.c:517
+#, c-format
+msgid "into the %s"
+msgstr ""
+
+#. TRANSLATORS: right, as in 'Turn right'
+#: ../navit/navigation.c:539
+msgid "right"
+msgstr "направо"
+
+#. TRANSLATORS: left, as in 'Turn left'
+#: ../navit/navigation.c:547
+msgid "left"
+msgstr "налево"
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:552
+msgid "easily "
+msgstr "слегка "
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:557
+msgid "strongly "
+msgstr "сильно "
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:561
+msgid "unknown "
+msgstr "неизвестно "
+
+#: ../navit/navigation.c:567
+msgid "When possible, please turn around"
+msgstr "Развернитесь, пожалуйста, если это возможно"
+
+#: ../navit/navigation.c:574
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Двигайтесь по дороге следующие %s"
+
+#: ../navit/navigation.c:578
+msgid "soon"
+msgstr "скоро"
+
+#: ../navit/navigation.c:584
+msgid "now"
+msgstr "сейчас"
+
+#: ../navit/navigation.c:587
+msgid "error"
+msgstr "ошибка"
+
+#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+#: ../navit/navigation.c:616
+#, c-format
+msgid "Turn %1$s%2$s %3$s%4$s"
+msgstr "Поверните %1$s%2$s %3$s%4$s"
+
+#: ../navit/navigation.c:619
+#, c-format
+msgid "You have reached your destination %s"
+msgstr "Вы прибыли в пункт назначения %s"
+
+#: ../navit/navit.c:765 ../navit/gui/gtk/gui_gtk_action.c:170
+msgid "Former Destinations"
+msgstr "Прошлые пункты назначения"
+
+#: ../navit/navit.c:775 ../navit/gui/gtk/gui_gtk_action.c:171
+msgid "Bookmarks"
+msgstr "Закладки"
+
+#: ../navit/navit.c:865
+msgid "Command"
+msgstr "Команда"
+
+#: ../navit/navit.c:870
+msgid "Length"
+msgstr "Длина"
+
+#: ../navit/navit.c:874 ../navit/navit.c:899
+msgid "km"
+msgstr "км"
+
+#: ../navit/navit.c:878 ../navit/navit.c:903
+msgid "m"
+msgstr "м"
+
+#: ../navit/navit.c:884
+msgid "Time"
+msgstr "Время"
+
+#: ../navit/navit.c:896
+msgid "Destination Length"
+msgstr "Дистанция до пункта назначения"
+
+#: ../navit/navit.c:909
+msgid "Destination Time"
+msgstr "Время до пункта назначения"
+
+#: ../navit/navit.c:938 ../navit/gui/gtk/gui_gtk_action.c:179
+msgid "Roadbook"
+msgstr "Дорожный справочник"
+
+#: ../navit/popup.c:219 ../navit/popup.c:273
+msgid "Set as position"
+msgstr "Установить как пункт отправления"
+
+#: ../navit/popup.c:220 ../navit/popup.c:274
+msgid "Set as destination"
+msgstr "Установить как пункт назначения"
+
+#: ../navit/popup.c:221 ../navit/popup.c:275
+msgid "Add as bookmark"
+msgstr "Добавить в закладки"
+
+#: ../navit/popup.c:263
+#, c-format
+msgid "Point 0x%x 0x%x"
+msgstr "Точка 0x%x 0x%x"
+
+#: ../navit/popup.c:264
+#, fuzzy, c-format
+msgid "Screen coord : %d %d"
+msgstr "Экран %d %d"
+
+#. 020
+#: ../navit/country.c:43
+msgid "Andorra"
+msgstr "Андорра"
+
+#. 784
+#: ../navit/country.c:44
+msgid "United Arab Emirates"
+msgstr "Объединенные Арабские Эмираты"
+
+#. 004
+#: ../navit/country.c:45
+msgid "Afghanistan"
+msgstr "Афганистан"
+
+#. 028
+#: ../navit/country.c:46
+msgid "Antigua and Barbuda"
+msgstr "Антига и Барбуда"
+
+#. 660
+#: ../navit/country.c:47
+msgid "Anguilla"
+msgstr "Ангуила"
+
+#. 008
+#: ../navit/country.c:48
+msgid "Albania"
+msgstr "Албания"
+
+#. 051
+#: ../navit/country.c:49
+msgid "Armenia"
+msgstr "Армения"
+
+#. 530
+#: ../navit/country.c:50
+msgid "Netherlands Antilles"
+msgstr "Антильские (Нидерланские) острова"
+
+#. 024
+#: ../navit/country.c:51
+msgid "Angola"
+msgstr "Ангола"
+
+#. 010
+#: ../navit/country.c:52
+msgid "Antarctica"
+msgstr "Антарктика"
+
+#. 032
+#: ../navit/country.c:53
+msgid "Argentina"
+msgstr "Аргентина"
+
+#. 016
+#: ../navit/country.c:54
+msgid "American Samoa"
+msgstr "Америк. Самоа"
+
+#. 040
+#: ../navit/country.c:55
+msgid "Austria"
+msgstr "Австрия"
+
+#. 036
+#: ../navit/country.c:56
+msgid "Australia"
+msgstr "Австралия"
+
+#. 533
+#: ../navit/country.c:57
+msgid "Aruba"
+msgstr "Аруба"
+
+#. 248
+#: ../navit/country.c:58
+msgid "Aland Islands"
+msgstr "Фарерские Острова"
+
+#. 031
+#: ../navit/country.c:59
+msgid "Azerbaijan"
+msgstr "Азербайджан"
+
+#. 070
+#: ../navit/country.c:60
+msgid "Bosnia and Herzegovina"
+msgstr "Босния и Герцеговина"
+
+#. 052
+#: ../navit/country.c:61
+msgid "Barbados"
+msgstr "Барбадос"
+
+#. 050
+#: ../navit/country.c:62
+msgid "Bangladesh"
+msgstr "Бангладеш"
+
+#. 056
+#: ../navit/country.c:63
+msgid "Belgium"
+msgstr "Бельгия"
+
+#. 854
+#: ../navit/country.c:64
+msgid "Burkina Faso"
+msgstr "Буркина-Фасо"
+
+#. 100
+#: ../navit/country.c:65
+msgid "Bulgaria"
+msgstr "Болгария"
+
+#. 048
+#: ../navit/country.c:66
+msgid "Bahrain"
+msgstr "Бахрейн"
+
+#. 108
+#: ../navit/country.c:67
+msgid "Burundi"
+msgstr "Бурунди"
+
+#. 204
+#: ../navit/country.c:68
+msgid "Benin"
+msgstr "Бенин"
+
+#. 652
+#: ../navit/country.c:69
+msgid "Saint Barthelemy"
+msgstr "Сен-Бартелемей"
+
+#. 060
+#: ../navit/country.c:70
+msgid "Bermuda"
+msgstr "Бермуда"
+
+#. 096
+#: ../navit/country.c:71
+#, fuzzy
+msgid "Brunei Darussalam"
+msgstr "Брюней Даруссалам"
+
+#. 068
+#: ../navit/country.c:72
+msgid "Bolivia"
+msgstr "Боливия"
+
+#. 076
+#: ../navit/country.c:73
+msgid "Brazil"
+msgstr "Бразилия"
+
+#. 044
+#: ../navit/country.c:74
+msgid "Bahamas"
+msgstr "Багамы"
+
+#. 064
+#: ../navit/country.c:75
+msgid "Bhutan"
+msgstr "Бутан"
+
+#. 074
+#: ../navit/country.c:76
+#, fuzzy
+msgid "Bouvet Island"
+msgstr "Фарерские Острова"
+
+#. 072
+#: ../navit/country.c:77
+msgid "Botswana"
+msgstr "Ботсвана"
+
+#. 112
+#: ../navit/country.c:78
+msgid "Belarus"
+msgstr "Белоруссия"
+
+#. 084
+#: ../navit/country.c:79
+msgid "Belize"
+msgstr "Белиз"
+
+#. 124
+#: ../navit/country.c:80
+msgid "Canada"
+msgstr "Канада"
+
+#. 166
+#: ../navit/country.c:81
+msgid "Cocos (Keeling) Islands"
+msgstr "Кокосовые (Килинговы) Острова"
+
+#. 180
+#: ../navit/country.c:82
+msgid "Congo, Democratic Republic of the"
+msgstr "Конго, Демократическая Республика"
+
+#. 140
+#: ../navit/country.c:83
+msgid "Central African Republic"
+msgstr "Центральня Африканская Республика"
+
+#. 178
+#: ../navit/country.c:84
+msgid "Congo"
+msgstr "Конго"
+
+#. 756
+#: ../navit/country.c:85
+msgid "Switzerland"
+msgstr "Швейцария"
+
+#. 384
+#: ../navit/country.c:86
+msgid "Cote d'Ivoire"
+msgstr "Кот-д'Ивуар"
+
+#. 184
+#: ../navit/country.c:87
+msgid "Cook Islands"
+msgstr "Кука Острова"
+
+#. 152
+#: ../navit/country.c:88
+msgid "Chile"
+msgstr "Чили"
+
+#. 120
+#: ../navit/country.c:89
+msgid "Cameroon"
+msgstr "Камерон"
+
+#. 156
+#: ../navit/country.c:90
+msgid "China"
+msgstr "Китай"
+
+#. 170
+#: ../navit/country.c:91
+msgid "Colombia"
+msgstr "Колумбия"
+
+#. 188
+#: ../navit/country.c:92
+msgid "Costa Rica"
+msgstr "Коста Рика"
+
+#. 192
+#: ../navit/country.c:93
+msgid "Cuba"
+msgstr "Куба"
+
+#. 132
+#: ../navit/country.c:94
+#, fuzzy
+msgid "Cape Verde"
+msgstr "кап Вердэ"
+
+#. 162
+#: ../navit/country.c:95
+msgid "Christmas Island"
+msgstr "Рождественские Острова"
+
+#. 196
+#: ../navit/country.c:96
+msgid "Cyprus"
+msgstr "Кипр"
+
+#. 203
+#: ../navit/country.c:97
+msgid "Czech Republic"
+msgstr "Чешская Республика"
+
+#. 276
+#: ../navit/country.c:98
+msgid "Germany"
+msgstr "Германия"
+
+#. 262
+#: ../navit/country.c:99
+msgid "Djibouti"
+msgstr "Джибути"
+
+#. 208
+#: ../navit/country.c:100
+msgid "Denmark"
+msgstr "Дания"
+
+#. 212
+#: ../navit/country.c:101
+msgid "Dominica"
+msgstr "Доминика"
+
+#. 214
+#: ../navit/country.c:102
+msgid "Dominican Republic"
+msgstr "Доминиканская Республика"
+
+#. 012
+#: ../navit/country.c:103
+msgid "Algeria"
+msgstr "Алжир"
+
+#. 218
+#: ../navit/country.c:104
+msgid "Ecuador"
+msgstr "Эквадор"
+
+#. 233
+#: ../navit/country.c:105
+msgid "Estonia"
+msgstr "Эстония"
+
+#. 818
+#: ../navit/country.c:106
+msgid "Egypt"
+msgstr "Египет"
+
+#. 732
+#: ../navit/country.c:107
+msgid "Western Sahara"
+msgstr "Западная Сахара"
+
+#. 232
+#: ../navit/country.c:108
+msgid "Eritrea"
+msgstr "Эритрея"
+
+#. 724
+#: ../navit/country.c:109
+msgid "Spain"
+msgstr "Испания"
+
+#. 231
+#: ../navit/country.c:110
+msgid "Ethiopia"
+msgstr "ЭФиопия"
+
+#. 246
+#: ../navit/country.c:111
+msgid "Finland"
+msgstr "Финляндия"
+
+#. 242
+#: ../navit/country.c:112
+msgid "Fiji"
+msgstr "Фиджи"
+
+#. 238
+#: ../navit/country.c:113
+msgid "Falkland Islands (Malvinas)"
+msgstr "Фолклендские Острова"
+
+#. 583
+#: ../navit/country.c:114
+msgid "Micronesia, Federated States of"
+msgstr "Микронэзия, Федеративные Штаты"
+
+#. 234
+#: ../navit/country.c:115
+msgid "Faroe Islands"
+msgstr "Фарерские Острова"
+
+#. 250
+#: ../navit/country.c:116
+msgid "France"
+msgstr "Франция"
+
+#. 266
+#: ../navit/country.c:117
+msgid "Gabon"
+msgstr "Габон"
+
+#. 826
+#: ../navit/country.c:118
+msgid "United Kingdom"
+msgstr "Великобритания"
+
+#. 308
+#: ../navit/country.c:119
+msgid "Grenada"
+msgstr "Гренада"
+
+#. 268
+#: ../navit/country.c:120
+msgid "Georgia"
+msgstr "Грузия"
+
+#. 254
+#: ../navit/country.c:121
+msgid "French Guiana"
+msgstr "Французкая Гвинея"
+
+#. 831
+#: ../navit/country.c:122
+#, fuzzy
+msgid "Guernsey"
+msgstr "Германия"
+
+#. 288
+#: ../navit/country.c:123
+msgid "Ghana"
+msgstr "Гхана"
+
+#. 292
+#: ../navit/country.c:124
+msgid "Gibraltar"
+msgstr "Гибралтар"
+
+#. 304
+#: ../navit/country.c:125
+msgid "Greenland"
+msgstr "Гренландия"
+
+#. 270
+#: ../navit/country.c:126
+msgid "Gambia"
+msgstr "Гамбия"
+
+#. 324
+#: ../navit/country.c:127
+msgid "Guinea"
+msgstr "Гвинея"
+
+#. 312
+#: ../navit/country.c:128
+msgid "Guadeloupe"
+msgstr "Гуаделупа"
+
+#. 226
+#: ../navit/country.c:129
+msgid "Equatorial Guinea"
+msgstr "Экваториальная Гвинея"
+
+#. 300
+#: ../navit/country.c:130
+msgid "Greece"
+msgstr "Греция"
+
+#. 239
+#: ../navit/country.c:131
+msgid "South Georgia and the South Sandwich Islands"
+msgstr "Южная Георгия и Южные Сандвичевы Острова"
+
+#. 320
+#: ../navit/country.c:132
+msgid "Guatemala"
+msgstr "Гватемала"
+
+#. 316
+#: ../navit/country.c:133
+msgid "Guam"
+msgstr "Гуам"
+
+#. 624
+#: ../navit/country.c:134
+msgid "Guinea-Bissau"
+msgstr "Гвинея-Бисау"
+
+#. 328
+#: ../navit/country.c:135
+msgid "Guyana"
+msgstr "Гуана"
+
+#. 344
+#: ../navit/country.c:136
+msgid "Hong Kong"
+msgstr "Гонк Конг"
+
+#. 334
+#: ../navit/country.c:137
+msgid "Heard Island and McDonald Islands"
+msgstr "Остров Херд и острова Макдональд"
+
+#. 340
+#: ../navit/country.c:138
+msgid "Honduras"
+msgstr "Гандурас"
+
+#. 191
+#: ../navit/country.c:139
+msgid "Croatia"
+msgstr "Хорватия"
+
+#. 332
+#: ../navit/country.c:140
+msgid "Haiti"
+msgstr "Гаити"
+
+#. 348
+#: ../navit/country.c:141
+msgid "Hungary"
+msgstr "Венгрия"
+
+#. 360
+#: ../navit/country.c:142
+msgid "Indonesia"
+msgstr "Индонезия"
+
+#. 372
+#: ../navit/country.c:143
+msgid "Ireland"
+msgstr "Ирландия"
+
+#. 376
+#: ../navit/country.c:144
+msgid "Israel"
+msgstr "Израиль"
+
+#. 833
+#: ../navit/country.c:145
+msgid "Isle of Man"
+msgstr "Остров Мэн"
+
+#. 356
+#: ../navit/country.c:146
+msgid "India"
+msgstr "Индия"
+
+#. 086
+#: ../navit/country.c:147
+msgid "British Indian Ocean Territory"
+msgstr "Британская Территория Индиского Океана"
+
+#. 368
+#: ../navit/country.c:148
+msgid "Iraq"
+msgstr "Ирак"
+
+#. 364
+#: ../navit/country.c:149
+msgid "Iran, Islamic Republic of"
+msgstr "Ирак, Исламская Демократическая Республика"
+
+#. 352
+#: ../navit/country.c:150
+msgid "Iceland"
+msgstr "Исландия"
+
+#. 380
+#: ../navit/country.c:151
+msgid "Italy"
+msgstr "Италия"
+
+#. 832
+#: ../navit/country.c:152
+msgid "Jersey"
+msgstr "Джерси"
+
+#. 388
+#: ../navit/country.c:153
+msgid "Jamaica"
+msgstr "Йамайка"
+
+#. 400
+#: ../navit/country.c:154
+msgid "Jordan"
+msgstr "Иордания"
+
+#. 392
+#: ../navit/country.c:155
+msgid "Japan"
+msgstr "Япония"
+
+#. 404
+#: ../navit/country.c:156
+msgid "Kenya"
+msgstr "Кения"
+
+#. 417
+#: ../navit/country.c:157
+msgid "Kyrgyzstan"
+msgstr "Киргизтан"
+
+#. 116
+#: ../navit/country.c:158
+msgid "Cambodia"
+msgstr "Комбодия"
+
+#. 296
+#: ../navit/country.c:159
+msgid "Kiribati"
+msgstr "Кирибати"
+
+#. 174
+#: ../navit/country.c:160
+msgid "Comoros"
+msgstr "Коморские Острова"
+
+#. 659
+#: ../navit/country.c:161
+msgid "Saint Kitts and Nevis"
+msgstr "Сен Китс и Невис"
+
+#. 408
+#: ../navit/country.c:162
+msgid "Korea, Democratic People's Republic of"
+msgstr "Корея, Демократическая Республика"
+
+#. 410
+#: ../navit/country.c:163
+msgid "Korea, Republic of"
+msgstr "Корея, Республика"
+
+#. 414
+#: ../navit/country.c:164
+msgid "Kuwait"
+msgstr "Кювайт"
+
+#. 136
+#: ../navit/country.c:165
+msgid "Cayman Islands"
+msgstr "Кайманские Острова"
+
+#. 398
+#: ../navit/country.c:166
+msgid "Kazakhstan"
+msgstr "Казахстан"
+
+#. 418
+#: ../navit/country.c:167
+msgid "Lao People's Democratic Republic"
+msgstr "Лао, Демократическая Республика"
+
+#. 422
+#: ../navit/country.c:168
+msgid "Lebanon"
+msgstr "Ливан"
+
+#. 662
+#: ../navit/country.c:169
+msgid "Saint Lucia"
+msgstr "Сен-Лусия"
+
+#. 438
+#: ../navit/country.c:170
+msgid "Liechtenstein"
+msgstr "Лихтенштейн"
+
+#. 144
+#: ../navit/country.c:171
+msgid "Sri Lanka"
+msgstr "Шри Ланка"
+
+#. 430
+#: ../navit/country.c:172
+msgid "Liberia"
+msgstr "Либерия"
+
+#. 426
+#: ../navit/country.c:173
+msgid "Lesotho"
+msgstr "Лесото"
+
+#. 440
+#: ../navit/country.c:174
+msgid "Lithuania"
+msgstr "Литва"
+
+#. 442
+#: ../navit/country.c:175
+msgid "Luxembourg"
+msgstr "Люксембург"
+
+#. 428
+#: ../navit/country.c:176
+msgid "Latvia"
+msgstr "Латвия"
+
+#. 434
+#: ../navit/country.c:177
+msgid "Libyan Arab Jamahiriya"
+msgstr "Ливия"
+
+#. 504
+#: ../navit/country.c:178
+msgid "Morocco"
+msgstr "Марокко"
+
+#. 492
+#: ../navit/country.c:179
+msgid "Monaco"
+msgstr "Монако"
+
+#. 498
+#: ../navit/country.c:180
+msgid "Moldova, Republic of"
+msgstr "Молдовия, Республика"
+
+#. 499
+#: ../navit/country.c:181
+msgid "Montenegro"
+msgstr "Черногория"
+
+#. 663
+#: ../navit/country.c:182
+msgid "Saint Martin (French part)"
+msgstr "Сен-Мартин (Французкая часть)"
+
+#. 450
+#: ../navit/country.c:183
+msgid "Madagascar"
+msgstr "Мадагаскар"
+
+#. 584
+#: ../navit/country.c:184
+msgid "Marshall Islands"
+msgstr "Маршаловы Острова"
+
+#. 807
+#: ../navit/country.c:185
+msgid "Macedonia, the former Yugoslav Republic of"
+msgstr "Македония, бывшая республика Югославии"
+
+#. 466
+#: ../navit/country.c:186
+msgid "Mali"
+msgstr "Мали"
+
+#. 104
+#: ../navit/country.c:187
+msgid "Myanmar"
+msgstr "Мьянма"
+
+#. 496
+#: ../navit/country.c:188
+msgid "Mongolia"
+msgstr "Монголия"
+
+#. 446
+#: ../navit/country.c:189
+msgid "Macao"
+msgstr "Мокао"
+
+#. 580
+#: ../navit/country.c:190
+msgid "Northern Mariana Islands"
+msgstr "Северные Марианские Острова"
+
+#. 474
+#: ../navit/country.c:191
+msgid "Martinique"
+msgstr "Мартиника"
+
+#. 478
+#: ../navit/country.c:192
+msgid "Mauritania"
+msgstr "Мавритания"
+
+#. 500
+#: ../navit/country.c:193
+msgid "Montserrat"
+msgstr "Монтсеррат"
+
+#. 470
+#: ../navit/country.c:194
+msgid "Malta"
+msgstr "Мальта"
+
+#. 480
+#: ../navit/country.c:195
+msgid "Mauritius"
+msgstr "Маврикий"
+
+#. 462
+#: ../navit/country.c:196
+msgid "Maldives"
+msgstr "Мальдивы"
+
+#. 454
+#: ../navit/country.c:197
+msgid "Malawi"
+msgstr "Малави"
+
+#. 484
+#: ../navit/country.c:198
+msgid "Mexico"
+msgstr "Мексика"
+
+#. 458
+#: ../navit/country.c:199
+msgid "Malaysia"
+msgstr "Малазия"
+
+#. 508
+#: ../navit/country.c:200
+msgid "Mozambique"
+msgstr "Мозамбик"
+
+#. 516
+#: ../navit/country.c:201
+msgid "Namibia"
+msgstr "Намибия"
+
+#. 540
+#: ../navit/country.c:202
+msgid "New Caledonia"
+msgstr "Новая Каледония"
+
+#. 562
+#: ../navit/country.c:203
+msgid "Niger"
+msgstr "Нигер"
+
+#. 574
+#: ../navit/country.c:204
+msgid "Norfolk Island"
+msgstr "Норфолк Остров"
+
+#. 566
+#: ../navit/country.c:205
+msgid "Nigeria"
+msgstr "Нигерия"
+
+#. 558
+#: ../navit/country.c:206
+msgid "Nicaragua"
+msgstr "Никарагуа"
+
+#. 528
+#: ../navit/country.c:207
+msgid "Netherlands"
+msgstr "Нидерланды"
+
+#. 578
+#: ../navit/country.c:208
+msgid "Norway"
+msgstr "Норвегия"
+
+#. 524
+#: ../navit/country.c:209
+msgid "Nepal"
+msgstr "Непал"
+
+#. 520
+#: ../navit/country.c:210
+msgid "Nauru"
+msgstr "Науру"
+
+#. 570
+#: ../navit/country.c:211
+msgid "Niue"
+msgstr "Ниуэ"
+
+#. 554
+#: ../navit/country.c:212
+msgid "New Zealand"
+msgstr "Новая Зеландия"
+
+#. 512
+#: ../navit/country.c:213
+msgid "Oman"
+msgstr "Оман"
+
+#. 591
+#: ../navit/country.c:214
+msgid "Panama"
+msgstr "Панама"
+
+#. 604
+#: ../navit/country.c:215
+msgid "Peru"
+msgstr "Перу"
+
+#. 258
+#: ../navit/country.c:216
+msgid "French Polynesia"
+msgstr "Француская Полинезия"
+
+#. 598
+#: ../navit/country.c:217
+msgid "Papua New Guinea"
+msgstr "Папуа Новая Гвинея"
+
+#. 608
+#: ../navit/country.c:218
+msgid "Philippines"
+msgstr "Филипины"
+
+#. 586
+#: ../navit/country.c:219
+msgid "Pakistan"
+msgstr "Пакистан"
+
+#. 616
+#: ../navit/country.c:220
+msgid "Poland"
+msgstr "Польша"
+
+#. 666
+#: ../navit/country.c:221
+msgid "Saint Pierre and Miquelon"
+msgstr "Сен-Пьер и Микелон"
+
+#. 612
+#: ../navit/country.c:222
+msgid "Pitcairn"
+msgstr "Питкэрн"
+
+#. 630
+#: ../navit/country.c:223
+msgid "Puerto Rico"
+msgstr "Пуэрто Рико"
+
+#. 275
+#: ../navit/country.c:224
+msgid "Palestinian Territory, Occupied"
+msgstr "Палестина"
+
+#. 620
+#: ../navit/country.c:225
+msgid "Portugal"
+msgstr "Португалия"
+
+#. 585
+#: ../navit/country.c:226
+msgid "Palau"
+msgstr "Палау"
+
+#. 600
+#: ../navit/country.c:227
+msgid "Paraguay"
+msgstr "Парагваи"
+
+#. 634
+#: ../navit/country.c:228
+msgid "Qatar"
+msgstr "Катар"
+
+#. 638
+#: ../navit/country.c:229
+msgid "Reunion"
+msgstr "Реюньон"
+
+#. 642
+#: ../navit/country.c:230
+msgid "Romania"
+msgstr "Румыния"
+
+#. 688
+#: ../navit/country.c:231
+msgid "Serbia"
+msgstr "Сербия"
+
+#. 643
+#: ../navit/country.c:232
+msgid "Russian Federation"
+msgstr "Российская Федерация"
+
+#. 646
+#: ../navit/country.c:233
+msgid "Rwanda"
+msgstr "Руанда"
+
+#. 682
+#: ../navit/country.c:234
+msgid "Saudi Arabia"
+msgstr "Саудовская Аравия"
+
+#. 090
+#: ../navit/country.c:235
+msgid "Solomon Islands"
+msgstr "Соломонские Острова"
+
+#. 690
+#: ../navit/country.c:236
+msgid "Seychelles"
+msgstr "Сейшельские Острова"
+
+#. 736
+#: ../navit/country.c:237
+msgid "Sudan"
+msgstr "Судан"
+
+#. 752
+#: ../navit/country.c:238
+msgid "Sweden"
+msgstr "Швеция"
+
+#. 702
+#: ../navit/country.c:239
+msgid "Singapore"
+msgstr "Сингапур"
+
+#. 654
+#: ../navit/country.c:240
+msgid "Saint Helena"
+msgstr "Сент-Хелен"
+
+#. 705
+#: ../navit/country.c:241
+msgid "Slovenia"
+msgstr "Словения"
+
+#. 744
+#: ../navit/country.c:242
+msgid "Svalbard and Jan Mayen"
+msgstr "Свальбард и Ян Майен"
+
+#. 703
+#: ../navit/country.c:243
+msgid "Slovakia"
+msgstr "Словакия"
+
+#. 694
+#: ../navit/country.c:244
+msgid "Sierra Leone"
+msgstr "Сиерра Леоне"
+
+#. 674
+#: ../navit/country.c:245
+msgid "San Marino"
+msgstr "Сан Марино"
+
+#. 686
+#: ../navit/country.c:246
+msgid "Senegal"
+msgstr "Сенегал"
+
+#. 706
+#: ../navit/country.c:247
+msgid "Somalia"
+msgstr "Сомали"
+
+#. 740
+#: ../navit/country.c:248
+msgid "Suriname"
+msgstr "Суринам"
+
+#. 678
+#: ../navit/country.c:249
+msgid "Sao Tome and Principe"
+msgstr "Сао-Томе и Принсипи"
+
+#. 222
+#: ../navit/country.c:250
+msgid "El Salvador"
+msgstr "Эль Сальвадор"
+
+#. 760
+#: ../navit/country.c:251
+msgid "Syrian Arab Republic"
+msgstr "Сирия, Арабская Республика"
+
+#. 748
+#: ../navit/country.c:252
+msgid "Swaziland"
+msgstr "Швейцария"
+
+#. 796
+#: ../navit/country.c:253
+msgid "Turks and Caicos Islands"
+msgstr "Теркс и Кайкос"
+
+#. 148
+#: ../navit/country.c:254
+msgid "Chad"
+msgstr "Чад"
+
+#. 260
+#: ../navit/country.c:255
+msgid "French Southern Territories"
+msgstr "Францизкие Южные Территории"
+
+#. 768
+#: ../navit/country.c:256
+msgid "Togo"
+msgstr "Того"
+
+#. 764
+#: ../navit/country.c:257
+msgid "Thailand"
+msgstr "Таиланд"
+
+#. 762
+#: ../navit/country.c:258
+msgid "Tajikistan"
+msgstr "Таджикистан"
+
+#. 772
+#: ../navit/country.c:259
+msgid "Tokelau"
+msgstr "Токелау"
+
+#. 626
+#: ../navit/country.c:260
+msgid "Timor-Leste"
+msgstr "Восточный Тимор"
+
+#. 795
+#: ../navit/country.c:261
+msgid "Turkmenistan"
+msgstr "Туркменистан"
+
+#. 788
+#: ../navit/country.c:262
+msgid "Tunisia"
+msgstr "Тунис"
+
+#. 776
+#: ../navit/country.c:263
+msgid "Tonga"
+msgstr "Тонга"
+
+#. 792
+#: ../navit/country.c:264
+msgid "Turkey"
+msgstr "Турция"
+
+#. 780
+#: ../navit/country.c:265
+msgid "Trinidad and Tobago"
+msgstr "Тринидад и Тобаго"
+
+#. 798
+#: ../navit/country.c:266
+msgid "Tuvalu"
+msgstr "Тувалу"
+
+#. 158
+#: ../navit/country.c:267
+msgid "Taiwan, Province of China"
+msgstr "Тайвань, Провинция Китая"
+
+#. 834
+#: ../navit/country.c:268
+msgid "Tanzania, United Republic of"
+msgstr "Танзия, Объедененная Республика"
+
+#. 804
+#: ../navit/country.c:269
+msgid "Ukraine"
+msgstr "Украина"
+
+#. 800
+#: ../navit/country.c:270
+msgid "Uganda"
+msgstr "Уганда"
+
+#. 581
+#: ../navit/country.c:271
+msgid "United States Minor Outlying Islands"
+msgstr "Внешние Малые Острова Соединённых Штатов"
+
+#. 840
+#: ../navit/country.c:272
+msgid "United States"
+msgstr "США"
+
+#. 858
+#: ../navit/country.c:273
+msgid "Uruguay"
+msgstr "Уругвай"
+
+#. 860
+#: ../navit/country.c:274
+msgid "Uzbekistan"
+msgstr "Узбекистан"
+
+#. 336
+#: ../navit/country.c:275
+msgid "Holy See (Vatican City State)"
+msgstr "Ватикан"
+
+#. 670
+#: ../navit/country.c:276
+msgid "Saint Vincent and the Grenadines"
+msgstr "Сент-Винсент и Гренадины"
+
+#. 862
+#: ../navit/country.c:277
+msgid "Venezuela"
+msgstr "Венесуэла"
+
+#. 092
+#: ../navit/country.c:278
+msgid "Virgin Islands, British"
+msgstr "Виргинские Острова, Британия"
+
+#. 850
+#: ../navit/country.c:279
+msgid "Virgin Islands, U.S."
+msgstr "Виргинские Острова, США"
+
+#. 704
+#: ../navit/country.c:280
+msgid "Viet Nam"
+msgstr "Вьетнам"
+
+#. 548
+#: ../navit/country.c:281
+msgid "Vanuatu"
+msgstr "Вануату"
+
+#. 876
+#: ../navit/country.c:282
+msgid "Wallis and Futuna"
+msgstr "Уоллис и Футуна"
+
+#. 882
+#: ../navit/country.c:283
+msgid "Samoa"
+msgstr "Самоа"
+
+#. 887
+#: ../navit/country.c:284
+msgid "Yemen"
+msgstr "Йемен"
+
+#. 175
+#: ../navit/country.c:285
+msgid "Mayotte"
+msgstr "Майотта"
+
+#. 710
+#: ../navit/country.c:286
+msgid "South Africa"
+msgstr "Южная Африка"
+
+#. 894
+#: ../navit/country.c:287
+msgid "Zambia"
+msgstr "Замбия"
+
+#. 716
+#: ../navit/country.c:288
+msgid "Zimbabwe"
+msgstr "Зимбабвэ"
+
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:123
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
+msgid "Car"
+msgstr "Авто"
+
+#: ../navit/gui/gtk/destination.c:122
+msgid "Iso2"
+msgstr "Iso2"
+
+#: ../navit/gui/gtk/destination.c:122
+msgid "Iso3"
+msgstr "Iso3"
+
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:431
+msgid "Country"
+msgstr "Страна"
+
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
+msgid "Postal"
+msgstr "Индекс"
+
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
+msgid "Town"
+msgstr "Город"
+
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
+msgid "District"
+msgstr "Район"
+
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
+#: ../navit/gui/gtk/destination.c:442
+msgid "Street"
+msgstr "Улица"
+
+#: ../navit/gui/gtk/destination.c:125 ../navit/gui/gtk/destination.c:444
+msgid "Number"
+msgstr "Номер"
+
+#: ../navit/gui/gtk/destination.c:426
+msgid "Enter Destination"
+msgstr "Введите пункт назначения"
+
+#: ../navit/gui/gtk/destination.c:434
+msgid "Zip Code"
+msgstr "Индекс"
+
+#: ../navit/gui/gtk/destination.c:436
+msgid "City"
+msgstr "Город"
+
+#: ../navit/gui/gtk/destination.c:439
+msgid "District/Township"
+msgstr "Район"
+
+#: ../navit/gui/gtk/destination.c:467 ../navit/gui/gtk/gui_gtk_action.c:172
+msgid "Map"
+msgstr "Карта"
+
+#: ../navit/gui/gtk/destination.c:468
+msgid "Bookmark"
+msgstr "Закладка"
+
+#: ../navit/gui/gtk/destination.c:469 ../navit/gui/gtk/gui_gtk_action.c:185
+msgid "Destination"
+msgstr "Пункт назначения"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:168
+msgid "Display"
+msgstr "Дисплей"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:169
+msgid "Route"
+msgstr "Маршрут"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:173
+msgid "Layout"
+msgstr "Схема"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:174
+msgid "Projection"
+msgstr "Проекция"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:175
+msgid "Vehicle"
+msgstr "Т/с"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:176
+msgid "ZoomOut"
+msgstr "Уменьшить"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:177
+msgid "ZoomIn"
+msgstr "Увеличить"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:178
+msgid "Recalculate"
+msgstr "Пересчитать"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:181 ../navit/gui/gtk/gui_gtk_action.c:183
+msgid "Info"
+msgstr "Информация"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:186
+msgid "Stop Navigation"
+msgstr "Остановить навигацию"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:187
+msgid "Test"
+msgstr "Тест"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:188
+msgid "_Quit"
+msgstr "_Выход"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:195
+msgid "Cursor"
+msgstr "Курсор"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:196
+msgid "Lock on Road"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:197
+msgid "Northing"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:199 ../navit/gui/gtk/gui_gtk_action.c:201
+msgid "Fullscreen"
+msgstr "Во весь экран"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:209
+msgid "Data"
+msgstr "Данные"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:65
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:100
+msgid "N"
+msgstr "С"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:65
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:100
+msgid "NE"
+msgstr "СВ"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:65
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:100
+msgid "E"
+msgstr "В"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:65
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:100
+msgid "SE"
+msgstr "ЮВ"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:65
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:100
+msgid "S"
+msgstr "Ю"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:65
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:100
+msgid "SW"
+msgstr "ЮЗ"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:65
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:100
+msgid "W"
+msgstr "З"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:65
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:100
+msgid "NW"
+msgstr "СЗ"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:122
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr "Маршрут %4.0fкм    %02d:%02d РВП"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:167
+msgid "Route 0000km  0+00:00 ETA"
+msgstr "Маршрут 0000км  0+00:00 РВП"
+
+#~ msgid "Refresh"
+#~ msgstr "Обновить"
+
+#~ msgid "Clear"
+#~ msgstr "Очистить"
+
+#~ msgid "Tracking"
+#~ msgstr "Слежение"
+
+#~ msgid "Orientation"
+#~ msgstr "Ориентация"
 
 #~ msgid "Turn %1$s%2$s %3$s"
 #~ msgstr "Поверните %1$s%2$s %3$s"
@@ -43,1669 +1689,29 @@ msgstr ""
 #~ msgid "VisiblePoints"
 #~ msgstr "ВидимыеТочки"
 
-#: ../navit/main.c:111
-#, c-format
-msgid ""
-"navit usage:\n"
-"navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the debug output level to <n>. (TODO)\n"
-"\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
-msgstr ""
-"использование navit:\n"
-"navit [options] [configfile]\n"
-"\t-c <file>: использовать <file> как файл конфигурации\n"
-"\t-d <n>: задать уровень отладочных сообщений <n>. (TODO)\n"
-"\t-h: вывести эту информацию и выйти.\n"
-"\t-v: вывести версию и выйти.\n"
-
-#: ../navit/main.c:131
-#, c-format
-msgid "Running from source directory\n"
-msgstr "Запуск в исходном каталоге\n"
-
-#: ../navit/main.c:147
-#, c-format
-msgid "setting '%s' to '%s'\n"
-msgstr "установка '%s' в '%s'\n"
-
-#. We have not found an existing config file from all possibilities
-#: ../navit/main.c:248
-#, c-format
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "Не найден конфигурационный файл navit.xml, navit.xml.local\n"
-
-#: ../navit/main.c:255
-#, c-format
-msgid "Error parsing '%s': %s\n"
-msgstr "Ошибка разбора '%s': %s\n"
-
-#: ../navit/main.c:258
-#, c-format
-msgid "Using '%s'\n"
-msgstr "Используется '%s'\n"
-
-#: ../navit/main.c:261
-#, c-format
-msgid "No instance has been created, exiting\n"
-msgstr "Экземпляр не создан, выходим\n"
-
-#: ../navit/navigation.c:171
-#, c-format
-msgid "%d m"
-msgstr "%d м"
-
-#: ../navit/navigation.c:173
-#, c-format
-msgid "in %d m"
-msgstr "через %d м"
-
-#: ../navit/navigation.c:177
-#, c-format
-msgid "%d meters"
-msgstr "%d метров"
-
-#: ../navit/navigation.c:179
-#, c-format
-msgid "in %d meters"
-msgstr "через %d метров"
-
-#: ../navit/navigation.c:185
-#, c-format
-msgid "%d.%d kilometer"
-msgstr "%d.%d километр"
-
-#: ../navit/navigation.c:187
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "через %d.%d километр(а,ов"
-
-#: ../navit/navigation.c:191
-#, c-format
-msgid "one kilometer"
-msgid_plural "%d kilometers"
-msgstr[0] "%d километр"
-msgstr[1] "%d километра"
-msgstr[2] "%d километров"
-
-#: ../navit/navigation.c:193
-#, c-format
-msgid "in one kilometer"
-msgid_plural "in %d kilometers"
-msgstr[0] "через %d километр"
-msgstr[1] "%d километра"
-msgstr[2] "%d километров"
-
-#: ../navit/navigation.c:447
-#, fuzzy
-msgid "exit"
-msgstr "выезд"
-
-#: ../navit/navigation.c:449
-#, fuzzy
-msgid "ramp"
-msgstr "въезд"
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:479
-#, c-format
-msgid "%sinto the street %s%s%s"
-msgstr ""
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:483
-#, c-format
-msgid "%sinto the %s%s%s|male form"
-msgstr ""
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:487
-#, c-format
-msgid "%sinto the %s%s%s|female form"
-msgstr ""
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:491
-#, c-format
-msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
-
-#: ../navit/navigation.c:497
-#, c-format
-msgid "into the %s"
-msgstr ""
-
-#: ../navit/navigation.c:518
-msgid "right"
-msgstr "направо"
-
-#: ../navit/navigation.c:525
-msgid "left"
-msgstr "налево"
-
-#: ../navit/navigation.c:529
-msgid "easily "
-msgstr "слегка "
-
-#: ../navit/navigation.c:533
-msgid "strongly "
-msgstr "сильно "
-
-#: ../navit/navigation.c:536
-msgid "unknown "
-msgstr "неизвестно "
-
-#: ../navit/navigation.c:542
-msgid "When possible, please turn around"
-msgstr "Развернитесь, пожалуйста, если это возможно"
-
-#: ../navit/navigation.c:549
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "Двигайтесь по дороге следующие %s"
-
-#: ../navit/navigation.c:553
-msgid "soon"
-msgstr "скоро"
-
-#: ../navit/navigation.c:559
-msgid "now"
-msgstr "сейчас"
-
-#: ../navit/navigation.c:562
-msgid "error"
-msgstr "ошибка"
-
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:591
-#, c-format
-msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Поверните %1$s%2$s %3$s%4$s"
-
-#: ../navit/navigation.c:594
-#, c-format
-msgid "You have reached your destination %s"
-msgstr "Вы прибыли в пункт назначения %s"
-
-#: ../navit/navit.c:664 ../navit/gui/gtk/gui_gtk_action.c:151
-msgid "Former Destinations"
-msgstr "Прошлые пункты назначения"
-
-#: ../navit/navit.c:674 ../navit/gui/gtk/gui_gtk_action.c:152
-msgid "Bookmarks"
-msgstr "Закладки"
-
-#: ../navit/navit.c:764
-msgid "Command"
-msgstr "Команда"
-
-#: ../navit/navit.c:769
-msgid "Length"
-msgstr "Длина"
-
-#: ../navit/navit.c:773 ../navit/navit.c:798
-msgid "km"
-msgstr "км"
-
-#: ../navit/navit.c:777 ../navit/navit.c:802
-msgid "m"
-msgstr "м"
-
-#: ../navit/navit.c:783
-msgid "Time"
-msgstr "Время"
-
-#: ../navit/navit.c:795
-msgid "Destination Length"
-msgstr "Дистанция до пункта назначения"
-
-#: ../navit/navit.c:808
-msgid "Destination Time"
-msgstr "Время до пункта назначения"
-
-#: ../navit/navit.c:837 ../navit/gui/gtk/gui_gtk_action.c:160
-msgid "Roadbook"
-msgstr "Дорожный справочник"
-
-#: ../navit/popup.c:200 ../navit/popup.c:254
-msgid "Set as position"
-msgstr "Установить как пункт отправления"
-
-#: ../navit/popup.c:201 ../navit/popup.c:255
-msgid "Set as destination"
-msgstr "Установить как пункт назначения"
-
-#: ../navit/popup.c:202 ../navit/popup.c:256
-msgid "Add as bookmark"
-msgstr "Добавить в закладки"
-
-#: ../navit/popup.c:244
-#, c-format
-msgid "Point 0x%x 0x%x"
-msgstr "Точка 0x%x 0x%x"
-
-#: ../navit/popup.c:245
-#, fuzzy, c-format
-msgid "Screen coord : %d %d"
-msgstr "Экран %d %d"
-
-#. 020
-#: ../navit/country.c:24
-msgid "Andorra"
-msgstr "Андорра"
-
-#. 784
-#: ../navit/country.c:25
-msgid "United Arab Emirates"
-msgstr "Объединенные Арабские Эмираты"
-
-#. 004
-#: ../navit/country.c:26
-msgid "Afghanistan"
-msgstr "Афганистан"
-
-#. 028
-#: ../navit/country.c:27
-msgid "Antigua and Barbuda"
-msgstr "Антига и Барбуда"
-
-#. 660
-#: ../navit/country.c:28
-msgid "Anguilla"
-msgstr "Ангуила"
-
-#. 008
-#: ../navit/country.c:29
-msgid "Albania"
-msgstr "Албания"
-
-#. 051
-#: ../navit/country.c:30
-msgid "Armenia"
-msgstr "Армения"
-
-#. 530
-#: ../navit/country.c:31
-msgid "Netherlands Antilles"
-msgstr "Антильские (Нидерланские) острова"
-
-#. 024
-#: ../navit/country.c:32
-msgid "Angola"
-msgstr "Ангола"
-
-#. 010
-#: ../navit/country.c:33
-msgid "Antarctica"
-msgstr "Антарктика"
-
-#. 032
-#: ../navit/country.c:34
-msgid "Argentina"
-msgstr "Аргентина"
-
-#. 016
-#: ../navit/country.c:35
-msgid "American Samoa"
-msgstr "Америк. Самоа"
-
-#. 040
-#: ../navit/country.c:36
-msgid "Austria"
-msgstr "Австрия"
-
-#. 036
-#: ../navit/country.c:37
-msgid "Australia"
-msgstr "Австралия"
-
-#. 533
-#: ../navit/country.c:38
-msgid "Aruba"
-msgstr "Аруба"
-
-#. 248
-#: ../navit/country.c:39
-msgid "Aland Islands"
-msgstr "Фарерские Острова"
-
-#. 031
-#: ../navit/country.c:40
-msgid "Azerbaijan"
-msgstr "Азербайджан"
-
-#. 070
-#: ../navit/country.c:41
-msgid "Bosnia and Herzegovina"
-msgstr "Босния и Герцеговина"
-
-#. 052
-#: ../navit/country.c:42
-msgid "Barbados"
-msgstr "Барбадос"
-
-#. 050
-#: ../navit/country.c:43
-msgid "Bangladesh"
-msgstr "Бангладеш"
-
-#. 056
-#: ../navit/country.c:44
-msgid "Belgium"
-msgstr "Бельгия"
-
-#. 854
-#: ../navit/country.c:45
-msgid "Burkina Faso"
-msgstr "Буркина-Фасо"
-
-#. 100
-#: ../navit/country.c:46
-msgid "Bulgaria"
-msgstr "Болгария"
-
-#. 048
-#: ../navit/country.c:47
-msgid "Bahrain"
-msgstr "Бахрейн"
-
-#. 108
-#: ../navit/country.c:48
-msgid "Burundi"
-msgstr "Бурунди"
-
-#. 204
-#: ../navit/country.c:49
-msgid "Benin"
-msgstr "Бенин"
-
-#. 652
-#: ../navit/country.c:50
-msgid "Saint Barthelemy"
-msgstr "Сен-Бартелемей"
-
-#. 060
-#: ../navit/country.c:51
-msgid "Bermuda"
-msgstr "Бермуда"
-
-#. 096
-#: ../navit/country.c:52
-#, fuzzy
-msgid "Brunei Darussalam"
-msgstr "Брюней Даруссалам"
-
-#. 068
-#: ../navit/country.c:53
-msgid "Bolivia"
-msgstr "Боливия"
-
-#. 076
-#: ../navit/country.c:54
-msgid "Brazil"
-msgstr "Бразилия"
-
-#. 044
-#: ../navit/country.c:55
-msgid "Bahamas"
-msgstr "Багамы"
-
-#. 064
-#: ../navit/country.c:56
-msgid "Bhutan"
-msgstr "Бутан"
-
-#. 074
-#: ../navit/country.c:57
-#, fuzzy
-msgid "Bouvet Island"
-msgstr "Фарерские Острова"
-
-#. 072
-#: ../navit/country.c:58
-msgid "Botswana"
-msgstr "Ботсвана"
-
-#. 112
-#: ../navit/country.c:59
-msgid "Belarus"
-msgstr "Белоруссия"
-
-#. 084
-#: ../navit/country.c:60
-msgid "Belize"
-msgstr "Белиз"
-
-#. 124
-#: ../navit/country.c:61
-msgid "Canada"
-msgstr "Канада"
-
-#. 166
-#: ../navit/country.c:62
-msgid "Cocos (Keeling) Islands"
-msgstr "Кокосовые (Килинговы) Острова"
-
-#. 180
-#: ../navit/country.c:63
-msgid "Congo, Democratic Republic of the"
-msgstr "Конго, Демократическая Республика"
-
-#. 140
-#: ../navit/country.c:64
-msgid "Central African Republic"
-msgstr "Центральня Африканская Республика"
-
-#. 178
-#: ../navit/country.c:65
-msgid "Congo"
-msgstr "Конго"
-
-#. 756
-#: ../navit/country.c:66
-msgid "Switzerland"
-msgstr "Швейцария"
-
-#. 384
-#: ../navit/country.c:67
-msgid "Cote d'Ivoire"
-msgstr "Кот-д'Ивуар"
-
-#. 184
-#: ../navit/country.c:68
-msgid "Cook Islands"
-msgstr "Кука Острова"
-
-#. 152
-#: ../navit/country.c:69
-msgid "Chile"
-msgstr "Чили"
-
-#. 120
-#: ../navit/country.c:70
-msgid "Cameroon"
-msgstr "Камерон"
-
-#. 156
-#: ../navit/country.c:71
-msgid "China"
-msgstr "Китай"
-
-#. 170
-#: ../navit/country.c:72
-msgid "Colombia"
-msgstr "Колумбия"
-
-#. 188
-#: ../navit/country.c:73
-msgid "Costa Rica"
-msgstr "Коста Рика"
-
-#. 192
-#: ../navit/country.c:74
-msgid "Cuba"
-msgstr "Куба"
-
-#. 132
-#: ../navit/country.c:75
-#, fuzzy
-msgid "Cape Verde"
-msgstr "кап Вердэ"
-
-#. 162
-#: ../navit/country.c:76
-msgid "Christmas Island"
-msgstr "Рождественские Острова"
-
-#. 196
-#: ../navit/country.c:77
-msgid "Cyprus"
-msgstr "Кипр"
-
-#. 203
-#: ../navit/country.c:78
-msgid "Czech Republic"
-msgstr "Чешская Республика"
-
-#. 276
-#: ../navit/country.c:79
-msgid "Germany"
-msgstr "Германия"
-
-#. 262
-#: ../navit/country.c:80
-msgid "Djibouti"
-msgstr "Джибути"
-
-#. 208
-#: ../navit/country.c:81
-msgid "Denmark"
-msgstr "Дания"
-
-#. 212
-#: ../navit/country.c:82
-msgid "Dominica"
-msgstr "Доминика"
-
-#. 214
-#: ../navit/country.c:83
-msgid "Dominican Republic"
-msgstr "Доминиканская Республика"
-
-#. 012
-#: ../navit/country.c:84
-msgid "Algeria"
-msgstr "Алжир"
-
-#. 218
-#: ../navit/country.c:85
-msgid "Ecuador"
-msgstr "Эквадор"
-
-#. 233
-#: ../navit/country.c:86
-msgid "Estonia"
-msgstr "Эстония"
-
-#. 818
-#: ../navit/country.c:87
-msgid "Egypt"
-msgstr "Египет"
-
-#. 732
-#: ../navit/country.c:88
-msgid "Western Sahara"
-msgstr "Западная Сахара"
-
-#. 232
-#: ../navit/country.c:89
-msgid "Eritrea"
-msgstr "Эритрея"
-
-#. 724
-#: ../navit/country.c:90
-msgid "Spain"
-msgstr "Испания"
-
-#. 231
-#: ../navit/country.c:91
-msgid "Ethiopia"
-msgstr "ЭФиопия"
-
-#. 246
-#: ../navit/country.c:92
-msgid "Finland"
-msgstr "Финляндия"
-
-#. 242
-#: ../navit/country.c:93
-msgid "Fiji"
-msgstr "Фиджи"
-
-#. 238
-#: ../navit/country.c:94
-msgid "Falkland Islands (Malvinas)"
-msgstr "Фолклендские Острова"
-
-#. 583
-#: ../navit/country.c:95
-msgid "Micronesia, Federated States of"
-msgstr "Микронэзия, Федеративные Штаты"
-
-#. 234
-#: ../navit/country.c:96
-msgid "Faroe Islands"
-msgstr "Фарерские Острова"
-
-#. 250
-#: ../navit/country.c:97
-msgid "France"
-msgstr "Франция"
-
-#. 266
-#: ../navit/country.c:98
-msgid "Gabon"
-msgstr "Габон"
-
-#. 826
-#: ../navit/country.c:99
-msgid "United Kingdom"
-msgstr "Великобритания"
-
-#. 308
-#: ../navit/country.c:100
-msgid "Grenada"
-msgstr "Гренада"
-
-#. 268
-#: ../navit/country.c:101
-msgid "Georgia"
-msgstr "Грузия"
-
-#. 254
-#: ../navit/country.c:102
-msgid "French Guiana"
-msgstr "Французкая Гвинея"
-
-#. 831
-#: ../navit/country.c:103
-#, fuzzy
-msgid "Guernsey"
-msgstr "Германия"
-
-#. 288
-#: ../navit/country.c:104
-msgid "Ghana"
-msgstr "Гхана"
-
-#. 292
-#: ../navit/country.c:105
-msgid "Gibraltar"
-msgstr "Гибралтар"
-
-#. 304
-#: ../navit/country.c:106
-msgid "Greenland"
-msgstr "Гренландия"
-
-#. 270
-#: ../navit/country.c:107
-msgid "Gambia"
-msgstr "Гамбия"
-
-#. 324
-#: ../navit/country.c:108
-msgid "Guinea"
-msgstr "Гвинея"
-
-#. 312
-#: ../navit/country.c:109
-msgid "Guadeloupe"
-msgstr "Гуаделупа"
-
-#. 226
-#: ../navit/country.c:110
-msgid "Equatorial Guinea"
-msgstr "Экваториальная Гвинея"
-
-#. 300
-#: ../navit/country.c:111
-msgid "Greece"
-msgstr "Греция"
-
-#. 239
-#: ../navit/country.c:112
-msgid "South Georgia and the South Sandwich Islands"
-msgstr "Южная Георгия и Южные Сандвичевы Острова"
-
-#. 320
-#: ../navit/country.c:113
-msgid "Guatemala"
-msgstr "Гватемала"
-
-#. 316
-#: ../navit/country.c:114
-msgid "Guam"
-msgstr "Гуам"
-
-#. 624
-#: ../navit/country.c:115
-msgid "Guinea-Bissau"
-msgstr "Гвинея-Бисау"
-
-#. 328
-#: ../navit/country.c:116
-msgid "Guyana"
-msgstr "Гуана"
-
-#. 344
-#: ../navit/country.c:117
-msgid "Hong Kong"
-msgstr "Гонк Конг"
-
-#. 334
-#: ../navit/country.c:118
-msgid "Heard Island and McDonald Islands"
-msgstr "Остров Херд и острова Макдональд"
-
-#. 340
-#: ../navit/country.c:119
-msgid "Honduras"
-msgstr "Гандурас"
-
-#. 191
-#: ../navit/country.c:120
-msgid "Croatia"
-msgstr "Хорватия"
-
-#. 332
-#: ../navit/country.c:121
-msgid "Haiti"
-msgstr "Гаити"
-
-#. 348
-#: ../navit/country.c:122
-msgid "Hungary"
-msgstr "Венгрия"
-
-#. 360
-#: ../navit/country.c:123
-msgid "Indonesia"
-msgstr "Индонезия"
-
-#. 372
-#: ../navit/country.c:124
-msgid "Ireland"
-msgstr "Ирландия"
-
-#. 376
-#: ../navit/country.c:125
-msgid "Israel"
-msgstr "Израиль"
-
-#. 833
-#: ../navit/country.c:126
-msgid "Isle of Man"
-msgstr "Остров Мэн"
-
-#. 356
-#: ../navit/country.c:127
-msgid "India"
-msgstr "Индия"
-
-#. 086
-#: ../navit/country.c:128
-msgid "British Indian Ocean Territory"
-msgstr "Британская Территория Индиского Океана"
-
-#. 368
-#: ../navit/country.c:129
-msgid "Iraq"
-msgstr "Ирак"
-
-#. 364
-#: ../navit/country.c:130
-msgid "Iran, Islamic Republic of"
-msgstr "Ирак, Исламская Демократическая Республика"
-
-#. 352
-#: ../navit/country.c:131
-msgid "Iceland"
-msgstr "Исландия"
-
-#. 380
-#: ../navit/country.c:132
-msgid "Italy"
-msgstr "Италия"
-
-#. 832
-#: ../navit/country.c:133
-msgid "Jersey"
-msgstr "Джерси"
-
-#. 388
-#: ../navit/country.c:134
-msgid "Jamaica"
-msgstr "Йамайка"
-
-#. 400
-#: ../navit/country.c:135
-msgid "Jordan"
-msgstr "Иордания"
-
-#. 392
-#: ../navit/country.c:136
-msgid "Japan"
-msgstr "Япония"
-
-#. 404
-#: ../navit/country.c:137
-msgid "Kenya"
-msgstr "Кения"
-
-#. 417
-#: ../navit/country.c:138
-msgid "Kyrgyzstan"
-msgstr "Киргизтан"
-
-#. 116
-#: ../navit/country.c:139
-msgid "Cambodia"
-msgstr "Комбодия"
-
-#. 296
-#: ../navit/country.c:140
-msgid "Kiribati"
-msgstr "Кирибати"
-
-#. 174
-#: ../navit/country.c:141
-msgid "Comoros"
-msgstr "Коморские Острова"
-
-#. 659
-#: ../navit/country.c:142
-msgid "Saint Kitts and Nevis"
-msgstr "Сен Китс и Невис"
-
-#. 408
-#: ../navit/country.c:143
-msgid "Korea, Democratic People's Republic of"
-msgstr "Корея, Демократическая Республика"
-
-#. 410
-#: ../navit/country.c:144
-msgid "Korea, Republic of"
-msgstr "Корея, Республика"
-
-#. 414
-#: ../navit/country.c:145
-msgid "Kuwait"
-msgstr "Кювайт"
-
-#. 136
-#: ../navit/country.c:146
-msgid "Cayman Islands"
-msgstr "Кайманские Острова"
-
-#. 398
-#: ../navit/country.c:147
-msgid "Kazakhstan"
-msgstr "Казахстан"
-
-#. 418
-#: ../navit/country.c:148
-msgid "Lao People's Democratic Republic"
-msgstr "Лао, Демократическая Республика"
-
-#. 422
-#: ../navit/country.c:149
-msgid "Lebanon"
-msgstr "Ливан"
-
-#. 662
-#: ../navit/country.c:150
-msgid "Saint Lucia"
-msgstr "Сен-Лусия"
-
-#. 438
-#: ../navit/country.c:151
-msgid "Liechtenstein"
-msgstr "Лихтенштейн"
-
-#. 144
-#: ../navit/country.c:152
-msgid "Sri Lanka"
-msgstr "Шри Ланка"
-
-#. 430
-#: ../navit/country.c:153
-msgid "Liberia"
-msgstr "Либерия"
-
-#. 426
-#: ../navit/country.c:154
-msgid "Lesotho"
-msgstr "Лесото"
-
-#. 440
-#: ../navit/country.c:155
-msgid "Lithuania"
-msgstr "Литва"
-
-#. 442
-#: ../navit/country.c:156
-msgid "Luxembourg"
-msgstr "Люксембург"
-
-#. 428
-#: ../navit/country.c:157
-msgid "Latvia"
-msgstr "Латвия"
-
-#. 434
-#: ../navit/country.c:158
-msgid "Libyan Arab Jamahiriya"
-msgstr "Ливия"
-
-#. 504
-#: ../navit/country.c:159
-msgid "Morocco"
-msgstr "Марокко"
-
-#. 492
-#: ../navit/country.c:160
-msgid "Monaco"
-msgstr "Монако"
-
-#. 498
-#: ../navit/country.c:161
-msgid "Moldova, Republic of"
-msgstr "Молдовия, Республика"
-
-#. 499
-#: ../navit/country.c:162
-msgid "Montenegro"
-msgstr "Черногория"
-
-#. 663
-#: ../navit/country.c:163
-msgid "Saint Martin (French part)"
-msgstr "Сен-Мартин (Французкая часть)"
-
-#. 450
-#: ../navit/country.c:164
-msgid "Madagascar"
-msgstr "Мадагаскар"
-
-#. 584
-#: ../navit/country.c:165
-msgid "Marshall Islands"
-msgstr "Маршаловы Острова"
-
-#. 807
-#: ../navit/country.c:166
-msgid "Macedonia, the former Yugoslav Republic of"
-msgstr "Македония, бывшая республика Югославии"
-
-#. 466
-#: ../navit/country.c:167
-msgid "Mali"
-msgstr "Мали"
-
-#. 104
-#: ../navit/country.c:168
-msgid "Myanmar"
-msgstr "Мьянма"
-
-#. 496
-#: ../navit/country.c:169
-msgid "Mongolia"
-msgstr "Монголия"
-
-#. 446
-#: ../navit/country.c:170
-msgid "Macao"
-msgstr "Мокао"
-
-#. 580
-#: ../navit/country.c:171
-msgid "Northern Mariana Islands"
-msgstr "Северные Марианские Острова"
-
-#. 474
-#: ../navit/country.c:172
-msgid "Martinique"
-msgstr "Мартиника"
-
-#. 478
-#: ../navit/country.c:173
-msgid "Mauritania"
-msgstr "Мавритания"
-
-#. 500
-#: ../navit/country.c:174
-msgid "Montserrat"
-msgstr "Монтсеррат"
-
-#. 470
-#: ../navit/country.c:175
-msgid "Malta"
-msgstr "Мальта"
-
-#. 480
-#: ../navit/country.c:176
-msgid "Mauritius"
-msgstr "Маврикий"
-
-#. 462
-#: ../navit/country.c:177
-msgid "Maldives"
-msgstr "Мальдивы"
-
-#. 454
-#: ../navit/country.c:178
-msgid "Malawi"
-msgstr "Малави"
-
-#. 484
-#: ../navit/country.c:179
-msgid "Mexico"
-msgstr "Мексика"
-
-#. 458
-#: ../navit/country.c:180
-msgid "Malaysia"
-msgstr "Малазия"
-
-#. 508
-#: ../navit/country.c:181
-msgid "Mozambique"
-msgstr "Мозамбик"
-
-#. 516
-#: ../navit/country.c:182
-msgid "Namibia"
-msgstr "Намибия"
-
-#. 540
-#: ../navit/country.c:183
-msgid "New Caledonia"
-msgstr "Новая Каледония"
-
-#. 562
-#: ../navit/country.c:184
-msgid "Niger"
-msgstr "Нигер"
-
-#. 574
-#: ../navit/country.c:185
-msgid "Norfolk Island"
-msgstr "Норфолк Остров"
-
-#. 566
-#: ../navit/country.c:186
-msgid "Nigeria"
-msgstr "Нигерия"
-
-#. 558
-#: ../navit/country.c:187
-msgid "Nicaragua"
-msgstr "Никарагуа"
-
-#. 528
-#: ../navit/country.c:188
-msgid "Netherlands"
-msgstr "Нидерланды"
-
-#. 578
-#: ../navit/country.c:189
-msgid "Norway"
-msgstr "Норвегия"
-
-#. 524
-#: ../navit/country.c:190
-msgid "Nepal"
-msgstr "Непал"
-
-#. 520
-#: ../navit/country.c:191
-msgid "Nauru"
-msgstr "Науру"
-
-#. 570
-#: ../navit/country.c:192
-msgid "Niue"
-msgstr "Ниуэ"
-
-#. 554
-#: ../navit/country.c:193
-msgid "New Zealand"
-msgstr "Новая Зеландия"
-
-#. 512
-#: ../navit/country.c:194
-msgid "Oman"
-msgstr "Оман"
-
-#. 591
-#: ../navit/country.c:195
-msgid "Panama"
-msgstr "Панама"
-
-#. 604
-#: ../navit/country.c:196
-msgid "Peru"
-msgstr "Перу"
-
-#. 258
-#: ../navit/country.c:197
-msgid "French Polynesia"
-msgstr "Француская Полинезия"
-
-#. 598
-#: ../navit/country.c:198
-msgid "Papua New Guinea"
-msgstr "Папуа Новая Гвинея"
-
-#. 608
-#: ../navit/country.c:199
-msgid "Philippines"
-msgstr "Филипины"
-
-#. 586
-#: ../navit/country.c:200
-msgid "Pakistan"
-msgstr "Пакистан"
-
-#. 616
-#: ../navit/country.c:201
-msgid "Poland"
-msgstr "Польша"
-
-#. 666
-#: ../navit/country.c:202
-msgid "Saint Pierre and Miquelon"
-msgstr "Сен-Пьер и Микелон"
-
-#. 612
-#: ../navit/country.c:203
-msgid "Pitcairn"
-msgstr "Питкэрн"
-
-#. 630
-#: ../navit/country.c:204
-msgid "Puerto Rico"
-msgstr "Пуэрто Рико"
-
-#. 275
-#: ../navit/country.c:205
-msgid "Palestinian Territory, Occupied"
-msgstr "Палестина"
-
-#. 620
-#: ../navit/country.c:206
-msgid "Portugal"
-msgstr "Португалия"
-
-#. 585
-#: ../navit/country.c:207
-msgid "Palau"
-msgstr "Палау"
-
-#. 600
-#: ../navit/country.c:208
-msgid "Paraguay"
-msgstr "Парагваи"
-
-#. 634
-#: ../navit/country.c:209
-msgid "Qatar"
-msgstr "Катар"
-
-#. 638
-#: ../navit/country.c:210
-msgid "Reunion"
-msgstr "Реюньон"
-
-#. 642
-#: ../navit/country.c:211
-msgid "Romania"
-msgstr "Румыния"
-
-#. 688
-#: ../navit/country.c:212
-msgid "Serbia"
-msgstr "Сербия"
-
-#. 643
-#: ../navit/country.c:213
-msgid "Russian Federation"
-msgstr "Российская Федерация"
-
-#. 646
-#: ../navit/country.c:214
-msgid "Rwanda"
-msgstr "Руанда"
-
-#. 682
-#: ../navit/country.c:215
-msgid "Saudi Arabia"
-msgstr "Саудовская Аравия"
-
-#. 090
-#: ../navit/country.c:216
-msgid "Solomon Islands"
-msgstr "Соломонские Острова"
-
-#. 690
-#: ../navit/country.c:217
-msgid "Seychelles"
-msgstr "Сейшельские Острова"
-
-#. 736
-#: ../navit/country.c:218
-msgid "Sudan"
-msgstr "Судан"
-
-#. 752
-#: ../navit/country.c:219
-msgid "Sweden"
-msgstr "Швеция"
-
-#. 702
-#: ../navit/country.c:220
-msgid "Singapore"
-msgstr "Сингапур"
-
-#. 654
-#: ../navit/country.c:221
-msgid "Saint Helena"
-msgstr "Сент-Хелен"
-
-#. 705
-#: ../navit/country.c:222
-msgid "Slovenia"
-msgstr "Словения"
-
-#. 744
-#: ../navit/country.c:223
-msgid "Svalbard and Jan Mayen"
-msgstr "Свальбард и Ян Майен"
-
-#. 703
-#: ../navit/country.c:224
-msgid "Slovakia"
-msgstr "Словакия"
-
-#. 694
-#: ../navit/country.c:225
-msgid "Sierra Leone"
-msgstr "Сиерра Леоне"
-
-#. 674
-#: ../navit/country.c:226
-msgid "San Marino"
-msgstr "Сан Марино"
-
-#. 686
-#: ../navit/country.c:227
-msgid "Senegal"
-msgstr "Сенегал"
-
-#. 706
-#: ../navit/country.c:228
-msgid "Somalia"
-msgstr "Сомали"
-
-#. 740
-#: ../navit/country.c:229
-msgid "Suriname"
-msgstr "Суринам"
-
-#. 678
-#: ../navit/country.c:230
-msgid "Sao Tome and Principe"
-msgstr "Сао-Томе и Принсипи"
-
-#. 222
-#: ../navit/country.c:231
-msgid "El Salvador"
-msgstr "Эль Сальвадор"
-
-#. 760
-#: ../navit/country.c:232
-msgid "Syrian Arab Republic"
-msgstr "Сирия, Арабская Республика"
-
-#. 748
-#: ../navit/country.c:233
-msgid "Swaziland"
-msgstr "Швейцария"
-
-#. 796
-#: ../navit/country.c:234
-msgid "Turks and Caicos Islands"
-msgstr "Теркс и Кайкос"
-
-#. 148
-#: ../navit/country.c:235
-msgid "Chad"
-msgstr "Чад"
-
-#. 260
-#: ../navit/country.c:236
-msgid "French Southern Territories"
-msgstr "Францизкие Южные Территории"
-
-#. 768
-#: ../navit/country.c:237
-msgid "Togo"
-msgstr "Того"
-
-#. 764
-#: ../navit/country.c:238
-msgid "Thailand"
-msgstr "Таиланд"
-
-#. 762
-#: ../navit/country.c:239
-msgid "Tajikistan"
-msgstr "Таджикистан"
-
-#. 772
-#: ../navit/country.c:240
-msgid "Tokelau"
-msgstr "Токелау"
-
-#. 626
-#: ../navit/country.c:241
-msgid "Timor-Leste"
-msgstr "Восточный Тимор"
-
-#. 795
-#: ../navit/country.c:242
-msgid "Turkmenistan"
-msgstr "Туркменистан"
-
-#. 788
-#: ../navit/country.c:243
-msgid "Tunisia"
-msgstr "Тунис"
-
-#. 776
-#: ../navit/country.c:244
-msgid "Tonga"
-msgstr "Тонга"
-
-#. 792
-#: ../navit/country.c:245
-msgid "Turkey"
-msgstr "Турция"
-
-#. 780
-#: ../navit/country.c:246
-msgid "Trinidad and Tobago"
-msgstr "Тринидад и Тобаго"
-
-#. 798
-#: ../navit/country.c:247
-msgid "Tuvalu"
-msgstr "Тувалу"
-
-#. 158
-#: ../navit/country.c:248
-msgid "Taiwan, Province of China"
-msgstr "Тайвань, Провинция Китая"
-
-#. 834
-#: ../navit/country.c:249
-msgid "Tanzania, United Republic of"
-msgstr "Танзия, Объедененная Республика"
-
-#. 804
-#: ../navit/country.c:250
-msgid "Ukraine"
-msgstr "Украина"
-
-#. 800
-#: ../navit/country.c:251
-msgid "Uganda"
-msgstr "Уганда"
-
-#. 581
-#: ../navit/country.c:252
-msgid "United States Minor Outlying Islands"
-msgstr "Внешние Малые Острова Соединённых Штатов"
-
-#. 840
-#: ../navit/country.c:253
-msgid "United States"
-msgstr "США"
-
-#. 858
-#: ../navit/country.c:254
-msgid "Uruguay"
-msgstr "Уругвай"
-
-#. 860
-#: ../navit/country.c:255
-msgid "Uzbekistan"
-msgstr "Узбекистан"
-
-#. 336
-#: ../navit/country.c:256
-msgid "Holy See (Vatican City State)"
-msgstr "Ватикан"
-
-#. 670
-#: ../navit/country.c:257
-msgid "Saint Vincent and the Grenadines"
-msgstr "Сент-Винсент и Гренадины"
-
-#. 862
-#: ../navit/country.c:258
-msgid "Venezuela"
-msgstr "Венесуэла"
-
-#. 092
-#: ../navit/country.c:259
-msgid "Virgin Islands, British"
-msgstr "Виргинские Острова, Британия"
-
-#. 850
-#: ../navit/country.c:260
-msgid "Virgin Islands, U.S."
-msgstr "Виргинские Острова, США"
-
-#. 704
-#: ../navit/country.c:261
-msgid "Viet Nam"
-msgstr "Вьетнам"
-
-#. 548
-#: ../navit/country.c:262
-msgid "Vanuatu"
-msgstr "Вануату"
-
-#. 876
-#: ../navit/country.c:263
-msgid "Wallis and Futuna"
-msgstr "Уоллис и Футуна"
-
-#. 882
-#: ../navit/country.c:264
-msgid "Samoa"
-msgstr "Самоа"
-
-#. 887
-#: ../navit/country.c:265
-msgid "Yemen"
-msgstr "Йемен"
-
-#. 175
-#: ../navit/country.c:266
-msgid "Mayotte"
-msgstr "Майотта"
-
-#. 710
-#: ../navit/country.c:267
-msgid "South Africa"
-msgstr "Южная Африка"
-
-#. 894
-#: ../navit/country.c:268
-msgid "Zambia"
-msgstr "Замбия"
-
-#. 716
-#: ../navit/country.c:269
-msgid "Zimbabwe"
-msgstr "Зимбабвэ"
-
-#: ../navit/gui/gtk/destination.c:97 ../navit/gui/gtk/destination.c:98
-#: ../navit/gui/gtk/destination.c:99 ../navit/gui/gtk/destination.c:100
-msgid "Car"
-msgstr "Авто"
-
-#: ../navit/gui/gtk/destination.c:97
-msgid "Iso2"
-msgstr "Iso2"
-
-#: ../navit/gui/gtk/destination.c:97
-msgid "Iso3"
-msgstr "Iso3"
-
-#: ../navit/gui/gtk/destination.c:97 ../navit/gui/gtk/destination.c:403
-msgid "Country"
-msgstr "Страна"
-
-#: ../navit/gui/gtk/destination.c:98 ../navit/gui/gtk/destination.c:99
-#: ../navit/gui/gtk/destination.c:100
-msgid "Postal"
-msgstr "Индекс"
-
-#: ../navit/gui/gtk/destination.c:98 ../navit/gui/gtk/destination.c:99
-#: ../navit/gui/gtk/destination.c:100
-msgid "Town"
-msgstr "Город"
-
-#: ../navit/gui/gtk/destination.c:98 ../navit/gui/gtk/destination.c:99
-#: ../navit/gui/gtk/destination.c:100
-msgid "District"
-msgstr "Район"
-
-#: ../navit/gui/gtk/destination.c:99 ../navit/gui/gtk/destination.c:100
-#: ../navit/gui/gtk/destination.c:412
-msgid "Street"
-msgstr "Улица"
-
-#: ../navit/gui/gtk/destination.c:100 ../navit/gui/gtk/destination.c:414
-msgid "Number"
-msgstr "Номер"
-
-#: ../navit/gui/gtk/destination.c:398
-msgid "Enter Destination"
-msgstr "Введите пункт назначения"
-
-#: ../navit/gui/gtk/destination.c:405
-msgid "Zip Code"
-msgstr "Индекс"
-
-#: ../navit/gui/gtk/destination.c:407
-msgid "City"
-msgstr "Город"
-
-#: ../navit/gui/gtk/destination.c:409
-msgid "District/Township"
-msgstr "Район"
-
-#: ../navit/gui/gtk/destination.c:437 ../navit/gui/gtk/gui_gtk_action.c:153
-msgid "Map"
-msgstr "Карта"
-
-#: ../navit/gui/gtk/destination.c:438
-msgid "Bookmark"
-msgstr "Закладка"
-
-#: ../navit/gui/gtk/destination.c:439 ../navit/gui/gtk/gui_gtk_action.c:166
-msgid "Destination"
-msgstr "Пункт назначения"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:149
-msgid "Display"
-msgstr "Дисплей"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:150
-msgid "Route"
-msgstr "Маршрут"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:154
-msgid "Layout"
-msgstr "Схема"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:155
-msgid "Projection"
-msgstr "Проекция"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:156
-msgid "Vehicle"
-msgstr "Т/с"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:157
-msgid "ZoomOut"
-msgstr "Уменьшить"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:158
-msgid "ZoomIn"
-msgstr "Увеличить"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:159
-msgid "Refresh"
-msgstr "Обновить"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:162 ../navit/gui/gtk/gui_gtk_action.c:164
-msgid "Info"
-msgstr "Информация"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:167
-msgid "Clear"
-msgstr "Очистить"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:168
-msgid "Test"
-msgstr "Тест"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:169
-msgid "_Quit"
-msgstr "_Выход"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:176
-msgid "Cursor"
-msgstr "Курсор"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:177
-msgid "Tracking"
-msgstr "Слежение"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:178
-msgid "Orientation"
-msgstr "Ориентация"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:180 ../navit/gui/gtk/gui_gtk_action.c:182
-msgid "Fullscreen"
-msgstr "Во весь экран"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:190
-msgid "Data"
-msgstr "Данные"
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:46
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:81
-msgid "N"
-msgstr "С"
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:46
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:81
-msgid "NE"
-msgstr "СВ"
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:46
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:81
-msgid "E"
-msgstr "В"
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:46
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:81
-msgid "SE"
-msgstr "ЮВ"
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:46
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:81
-msgid "S"
-msgstr "Ю"
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:46
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:81
-msgid "SW"
-msgstr "ЮЗ"
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:46
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:81
-msgid "W"
-msgstr "З"
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:46
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:81
-msgid "NW"
-msgstr "СЗ"
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:103
-#, c-format
-msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr "Маршрут %4.0fкм    %02d:%02d РВП"
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:148
-msgid "Route 0000km  0+00:00 ETA"
-msgstr "Маршрут 0000км  0+00:00 РВП"
+#~ msgid ""
+#~ "navit usage:\n"
+#~ "navit [options] [configfile]\n"
+#~ "\t-c <file>: use <file> as config file\n"
+#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
+#~ "\t-h: print this usage info and exit.\n"
+#~ "\t-v: Print the version and exit.\n"
+#~ msgstr ""
+#~ "использование navit:\n"
+#~ "navit [options] [configfile]\n"
+#~ "\t-c <file>: использовать <file> как файл конфигурации\n"
+#~ "\t-d <n>: задать уровень отладочных сообщений <n>. (TODO)\n"
+#~ "\t-h: вывести эту информацию и выйти.\n"
+#~ "\t-v: вывести версию и выйти.\n"
+
+#~ msgid "No config file navit.xml, navit.xml.local found\n"
+#~ msgstr "Не найден конфигурационный файл navit.xml, navit.xml.local\n"
+
+#~ msgid "Error parsing '%s': %s\n"
+#~ msgstr "Ошибка разбора '%s': %s\n"
+
+#~ msgid "Using '%s'\n"
+#~ msgstr "Используется '%s'\n"
+
+#~ msgid "No instance has been created, exiting\n"
+#~ msgstr "Экземпляр не создан, выходим\n"
