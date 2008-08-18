@@ -47,7 +47,7 @@ Change to your home coordinates.
 	<graphics type="opengl" />
 -->
 	
-	<vehicle name="Mine" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
+	<vehicle name="Local GPS" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
 		
 		<!--Navit can write a tracklog in several formats (gpx, nmea or textfile):
 		<log type="gpx" data="track_%Y%m%d%i.gpx" flush_size="1000" flush_time="30" />
