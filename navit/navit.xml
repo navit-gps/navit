@@ -834,9 +834,14 @@ Change to your home coordinates.
 				<polyline color="#ffff00" width="258" /> 
 				<polyline color="#ff0000" width="1" /> 
 			</item>
-			<item type="street_unkn" order="0-">
-				<polyline color="#8080ff" width="3" /> 
-			</item>
+			
+			<!-- This entry shows all unknown linear elements as blue lines -->
+			<!--
+					<item type="street_unkn" order="0-">
+						<polyline color="#8080ff" width="3" /> 
+					</item>
+			-->
+			
 			<item type="highway_exit_label" order="10-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
@@ -1953,9 +1958,14 @@ Change to your home coordinates.
 				<polyline color="#ffff00" width="258" /> 
 				<polyline color="#ff0000" width="1" /> 
 			</item>
+			
+			<!-- This entry shows all unknown linear elements as blue lines -->
+			<!--
 			<item type="street_unkn" order="0-">
 				<polyline color="#8080ff" width="3" /> 
 			</item>
+			-->
+			
 			<item type="highway_exit_label" order="10-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
@@ -2514,10 +2524,6 @@ Change to your home coordinates.
 				<polyline color="#87908a" width="264" /> 
 				<polyline color="#809bc0" width="258" /> 
 				<polyline color="#809bc0" width="1" /> 
-			</item>
-<!-- unbekannte elemente -->
-			<item type="street_unkn" order="11-">
-				<polyline color="#f3d6b6" width="3" /> 
 			</item>
 			<item type="highway_exit_label" order="10-">
 				<circle color="#000000" radius="3" label_size="7" />
