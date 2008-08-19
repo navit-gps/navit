@@ -1405,6 +1405,45 @@ Change to your home coordinates.
 			<item type="rg_point" order="0-">
 				<circle color="#FF089C" radius="10"  label_size="7" />
 			</item>
+			
+			
+			<!-- I'm not sure if the following stuff should appear in any layout. Maybe portions should only apply to the bike layout? -->
+			<item type="poi_bench" order="13-">
+				<icon src="bench.xpm" />
+			</item>
+			<item type="poi_biergarten" order="12-">
+				<icon src="biergarten.xpm" />
+			</item>
+			<item type="poi_boundary_stone" order="13-">
+				<icon src="boundary_stone.xpm" />
+			</item>
+			<item type="poi_castle" order="12-">
+				<icon src="castle.xpm" />
+			</item>
+			<item type="poi_hunting_stand" order="13-">
+				<icon src="hunting_stand.xpm" />
+			</item>
+			<item type="poi_memorial" order="12-">
+				<icon src="memorial.xpm" />
+			</item>
+			<item type="poi_monument" order="12-">
+				<icon src="memorial.xpm" />
+			</item>
+			<item type="poi_shelter" order="10-">
+				<icon src="shelter.xpm" />
+			</item>
+			<item type="poi_fountain" order="12-">
+				<icon src="fountain.xpm" />
+			</item>
+			<item type="poi_potable_water" order="12-">
+				<icon src="potable_water.xpm" />
+			</item>
+			<item type="poi_toilets" order="12-">
+				<icon src="toilets.xpm" />
+			</item>
+			<item type="poi_viewpoint" order="12-">
+				<icon src="viewpoint.xpm" />
+			</item>
 		</layer>
 	</layout>
 	<layout name="Bike" color= "#ffefb7">
