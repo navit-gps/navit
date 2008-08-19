@@ -125,7 +125,8 @@ Change to your home coordinates.
 				<image />
 			</item>
 			<item type="poly_wood" order="0-">
-				<polygon color="#8ec78d" /> 
+				<polygon color="#8ec78d" />
+				<label label_size="5" />
 			</item>
 			<item type="poly_farm" order="0-">
 				<polygon color="#c7f1a3" /> 
@@ -1584,21 +1585,26 @@ Change to your home coordinates.
 			<item type="track_paved" order="9-">
 				<polyline color="#d2d2d2" width="5" />
 				<polyline color="#fefefe" width="3" />
+				<label label_size="5" />
 			</item>
 			<item type="track_gravelled" order="10-">
 				<polyline color="#d2d2d2" width="4" />
 				<polyline color="#fefefe" width="2" />
+				<label label_size="5" />
 			</item>
 			<item type="track_unpaved" order="11-">
 				<polyline color="#d2d2d2" width="3" />
 				<polyline color="#fefefe" width="1" />
+				<label label_size="5" />
 			</item>
 			<item type="track_ground" order="11-">
 				<polyline color="#d2d2d2" width="3" dash="6,6"/>
 				<polyline color="#fefefe" width="1" dash="6,6"/>
+				<label label_size="5" />
 			</item>
 			<item type="track_grass" order="12-">
 				<polyline color="#fefefe" width="2" dash="6,6"/>
+				<label label_size="5" />
 			</item>
 			<item type="bridleway" order="10-">
 				<polyline color="#8b4513" width="3" />
@@ -1976,14 +1982,6 @@ Change to your home coordinates.
 				<polyline color="#ffff00" width="258" /> 
 				<polyline color="#ff0000" width="1" /> 
 			</item>
-			
-			<!-- This entry shows all unknown linear elements as blue lines -->
-			<!--
-			<item type="street_unkn" order="0-">
-				<polyline color="#8080ff" width="3" /> 
-			</item>
-			-->
-			
 			<item type="highway_exit_label" order="10-">
 				<circle color="#000000" radius="3" label_size="7" />
 			</item>
@@ -1994,6 +1992,15 @@ Change to your home coordinates.
 				<label label_size="9" />
 			</item>
 			<item type="street_nopass,street_0,street_1_city,street_1_land" order="12-18">
+				<label label_size="9" />
+			</item>
+			<item type="track,track_paved,track_gravelled,track_unpaved,track_ground,track_grass" order="12-18">
+				<label label_size="9" />
+			</item>
+			<item type="bridleway,cycleway,footway,steps,path" order="12-18">
+				<label label_size="9" />
+			</item>
+			<item type="hiking,hiking_mountain,hiking_mountain_demanding,hiking_alpine,hiking_alpine_demanding,hiking_alpine_difficult" order="12-18">
 				<label label_size="9" />
 			</item>
 			<item type="aeroway_taxiway" order="10">
@@ -2152,7 +2159,12 @@ Change to your home coordinates.
 			<item type="track" order="3-">
 				<polyline color="#3f3f3f" width="1" />
 			</item>
-
+			<!--
+					This entry shows all unknown linear elements as blue lines
+					<item type="street_unkn" order="0-">
+						<polyline color="#8080ff" width="3" /> 
+					</item>
+			-->
 
 
 			<item type="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="12-">
