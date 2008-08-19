@@ -1585,26 +1585,21 @@ Change to your home coordinates.
 			<item type="track_paved" order="9-">
 				<polyline color="#d2d2d2" width="5" />
 				<polyline color="#fefefe" width="3" />
-				<label label_size="5" />
 			</item>
 			<item type="track_gravelled" order="10-">
 				<polyline color="#d2d2d2" width="4" />
 				<polyline color="#fefefe" width="2" />
-				<label label_size="5" />
 			</item>
 			<item type="track_unpaved" order="11-">
 				<polyline color="#d2d2d2" width="3" />
 				<polyline color="#fefefe" width="1" />
-				<label label_size="5" />
 			</item>
 			<item type="track_ground" order="11-">
 				<polyline color="#d2d2d2" width="3" dash="6,6"/>
 				<polyline color="#fefefe" width="1" dash="6,6"/>
-				<label label_size="5" />
 			</item>
 			<item type="track_grass" order="12-">
 				<polyline color="#fefefe" width="2" dash="6,6"/>
-				<label label_size="5" />
 			</item>
 			<item type="bridleway" order="10-">
 				<polyline color="#8b4513" width="3" />
