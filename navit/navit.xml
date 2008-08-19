@@ -1586,15 +1586,15 @@ Change to your home coordinates.
 			<item type="street_nopass" order="10-">
 				<polyline color="#000000" width="1" /> 
 			</item>
-			<item type="track_paved" order="9-">
+			<item type="track_paved" order="8-">
 				<polyline color="#d2d2d2" width="5" />
 				<polyline color="#fefefe" width="3" />
 			</item>
-			<item type="track_gravelled" order="10-">
+			<item type="track_gravelled" order="9-">
 				<polyline color="#d2d2d2" width="4" />
 				<polyline color="#fefefe" width="2" />
 			</item>
-			<item type="track_unpaved" order="11-">
+			<item type="track_unpaved" order="10-">
 				<polyline color="#d2d2d2" width="3" />
 				<polyline color="#fefefe" width="1" />
 			</item>
@@ -1621,13 +1621,13 @@ Change to your home coordinates.
 				<polyline color="#8b4513" width="3" />
 				<polyline color="#F4A460" width="1" dash="6,4" />
 			</item>
-			<item type="path" order="12-">
+			<item type="path" order="11-">
 				<polyline color="#8b4513" width="3" dash="2,4" />
 			</item>
-			<item type="hiking" order="12-">
+			<item type="hiking" order="11-">
 				<polyline color="#8b4513" width="2" dash="4,4" />
 			</item>
-			<item type="hiking_mountain" order="12-">
+			<item type="hiking_mountain" order="11-">
 				<polyline color="#8b4513" width="2" dash="6,4" />
 			</item>
 			<item type="hiking_mountain_demanding" order="13-">
