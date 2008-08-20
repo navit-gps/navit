@@ -139,12 +139,12 @@ static char *attrmap={
 	"n	railway=level_crossing		poi_level_crossing\n"
 	"n	railway=station		poi_rail_station\n"
 	"n	railway=tram_stop		poi_rail_tram_stop\n"
-
 	"n	poi_bench 	 	 amenity=park_bench amenity=bench\n"
 	"n	poi_biergarten 		amenity=biergarten\n"
 	"n	poi_boundary_stone 		historic=boundary_stone\n"
 	"n	poi_castle 		historic=castle\n"
 	"n	poi_hunting_stand 		Annehmlichkeit=Hochsitz\n"
+	"n	poi_hunting_stand 		amenity=hunting_stand\n"
 	"n	poi_memorial 		historic=memorial\n"
 	"n	poi_monument 		historic=monument\n"
 	"n	poi_shelter 		amenity=shelter\n"
