@@ -349,12 +349,19 @@ struct country_table {
 	int count;
 	struct rect r;
 } country_table[] = {
-	{ 40,"Austria,Ã–sterreich,AUT"},
-	{124,"Canada"},
-	{276,"Germany,Deutschland,Bundesrepublik Deutschland"},
-	{528,"Nederland,The Netherlands,Niederlande,NL"},
-	{756,"Schweiz"},
-	{840,"USA"}
+	{ 40,"Austria,Österreich,AUT"}, 
+	{124,"Canada"}, 
+ 	{208,"Denmark,Danmark,DK"}, 
+ 	{246,"Finland,Suomi"}, 
+ 	{250,"France,République française,FR"}, 
+	{276,"Germany,Deutschland,Bundesrepublik Deutschland"}, 
+ 	{380,"Italy,Italia"}, 
+ 	{578,"Norway,Norge,Noreg,NO"}, 
+ 	{752,"Sweden,Sverige,Konungariket Sverige,SE"}, 
+	{528,"Nederland,The Netherlands,Niederlande,NL"}, 
+ 	{724,"Spain,Espana,Espana,Reino de Espana"}, 
+	{756,"Schweiz"}, 
+	{840,"USA"} 
 };
 
 static GHashTable *country_table_hash;
