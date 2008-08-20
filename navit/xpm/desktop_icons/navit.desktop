@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Navit
+Comment=The open source vector based navigation program with routing engine
+Exec=navit
+Icon=navit
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=GTK;Utility;
+GenericName=Navit
