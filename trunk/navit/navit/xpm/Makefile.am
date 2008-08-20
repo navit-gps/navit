@@ -1,4 +1,5 @@
 include $(top_srcdir)/Makefile.inc
+
 xpm_DATA  = airport.xpm
 xpm_DATA += attraction.xpm
 xpm_DATA += bank.xpm
@@ -139,6 +140,15 @@ xpm_DATA += $(foreach scale, @SVG2PNG_SCALES@, $(addsuffix _$(scale)_$(scale).pn
 endif
 endif
 
-EXTRA_DIST = $(xpm_DATA)
+DESKTOPFILEdir=$(DESTDIR)$(datadir)/applications
+DESKTOPFILE_DATA = desktop_icons/navit.desktop
+
+ICON128dir=$(DESTDIR)$(datadir)/icons/hicolor/128x128/apps
+ICON128_DATA = desktop_icons/128x128/navit.png
+
+ICON22dir=$(DESTDIR)$(datadir)/icons/hicolor/22x22/apps
+ICON22_DATA = desktop_icons/22x22/navit.png
+
+EXTRA_DIST = $(xpm_DATA) $(DESKTOPFILE) $(ICON128) $(ICON22)
 #burgerking.ico:
 #	wget http://www.burgerking.de/favicon.ico -O burgerking.ico
