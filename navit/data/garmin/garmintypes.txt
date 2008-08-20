@@ -403,10 +403,10 @@ POLYGONE
 0x4a = area, Definition Area
 0x4b = area, Background
 0x4c = poly_water, Intermittent River/Lake
-0x4d = poly_water, Glaciers
+0x4d = poly_glacier, Glaciers
 0x4e = plantation, Orchard or plantation
 0x4f = poly_scrub, Scrub
 0x50 = poly_wood, Woods
-0x51 = poly_water, Wetland
+0x51 = poly_wetland, Wetland
 0x52 = tundra, Tundra
 0x53 = poly_flats, Flats
