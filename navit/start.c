@@ -124,6 +124,9 @@ int main(int argc, char **argv)
 		list = g_list_append(list,g_strdup("navit.xml"));
 		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml.local" , NULL));
 		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml" , NULL));
+		#ifndef _WIN32
+		list = g_list_append(list,g_strdup("/etc/navit/navit.xml"));
+		#endif
 	}
 	li = list;
 	do {
