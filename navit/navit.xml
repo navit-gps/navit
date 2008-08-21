@@ -119,7 +119,7 @@ Change to your home coordinates.
 		<map type="garmin" enabled="yes" data="/path/to/img" debug="4"/>
 	</mapset>
 
-	<layout name="Car" color= "#ffefb7">
+	<layout name="Car" color= "#ffefb7" font="Liberation Sans">
 		<layer name="polygons">
 			<item type="image" order="0-">
 				<image />

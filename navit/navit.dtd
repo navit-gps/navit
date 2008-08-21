@@ -55,6 +55,7 @@
 <!ELEMENT layout (layer*)>
 <!ATTLIST layout name CDATA #REQUIRED>
 <!ATTLIST layout color CDATA #IMPLIED>
+<!ATTLIST layout font CDATA #IMPLIED>
 <!ELEMENT layer (item+)>
 <!ATTLIST layer name CDATA #REQUIRED>
 <!ATTLIST layer details CDATA #REQUIRED>
