@@ -228,7 +228,7 @@ static struct graphics_font_methods font_methods = {
 	font_destroy
 };
 
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, int size, int flags)
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size, int flags)
 {
     struct graphics_font_priv *gf=g_new(struct graphics_font_priv, 1);
 
