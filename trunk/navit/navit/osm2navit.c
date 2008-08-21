@@ -349,11 +349,11 @@ struct country_table {
 	int count;
 	struct rect r;
 } country_table[] = {
-	{ 40,"Austria,Österreich,AUT"}, 
+	{ 40,"Austria,ï¿½sterreich,AUT"}, 
 	{124,"Canada"}, 
  	{208,"Denmark,Danmark,DK"}, 
  	{246,"Finland,Suomi"}, 
- 	{250,"France,République française,FR"}, 
+ 	{250,"France,Rï¿½publique franï¿½aise,FR"}, 
 	{276,"Germany,Deutschland,Bundesrepublik Deutschland"}, 
  	{380,"Italy,Italia"}, 
  	{578,"Norway,Norge,Noreg,NO"}, 
@@ -2527,6 +2527,7 @@ phase4(FILE *ways_in, FILE *nodes_in, FILE *out, FILE *dir_out, int compression_
 static void
 usage(FILE *f)
 {
+	/* DEVELOPPERS : don't forget to update the manpage if you modify theses options */
 	fprintf(f,"\n");
 	fprintf(f,"osm2navit - parse osm textfile and converts to NavIt binfile format\n\n");
 	fprintf(f,"Usage :\n");
