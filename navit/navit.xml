@@ -37,7 +37,7 @@ Change to your home coordinates.
 
 <!--
 			The following line let you select which graphical user interface you'd like to use.
-			The default is GTK:
+			Options include internal (recommended), gtk (deprecated) and cegui.
 -->
 	<gui type="gtk" menubar="1" toolbar="1" statusbar="1" />
 	<graphics type="gtk_drawing_area" />
