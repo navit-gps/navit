@@ -1,0 +1,49 @@
+.TH osm2navit 1  "August, 21 2008" "version 0.4+svn" "USER COMMANDS"
+.SH NAME
+navit \- The modular touchscreen-friendly vector based navigation software.
+.SH SYNOPSIS
+.B navit
+[\-h] [\-v] [\-c config file]
+.SH DESCRIPTION
+Navit is a open source (GPL) car navigation system with routing engine.
+
+It's modular design is capable of using vector maps of various formats
+for routing and rendering of the displayed map. It's even possible to
+use multiple maps at a time.
+
+The GTK+ or SDL user interfaces are designed to work well with touch
+screen displays. Points of Interest of various formats are displayed
+on the map.
+
+The current vehicle position is either read from gpsd or directly from
+NMEA GPS sensors.
+
+The routing engine not only calculates an optimal route to your
+destination, but also generates directions and even speaks to you.
+
+Navit is translated is 16 languages currently.
+
+For more informations, please refer to our wiki :
+ http://wiki.navit-project.org
+
+You can also try our mailing lists :
+ http://sourceforge.net/mailarchive/forum.php?forum_name=navit-users
+
+Or visit us on IRC : #navit on the freenode network
+.SH OPTIONS
+.TP
+\-h
+display a short help text and exit
+.TP
+\-v
+display the version number and exit
+.TP
+\-c
+specify the config file (navit.xml) to use
+.SH BUGS
+Should you find one, please report it :
+ http://trac.navit-project.org
+.SH AUTHOR
+The navit Team - http://www.navit-project.org
+.SH SEE ALSO
+osm2navit(1)

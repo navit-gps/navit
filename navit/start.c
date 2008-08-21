@@ -84,6 +84,7 @@ int main(int argc, char **argv)
 	config_file=NULL;
 	opterr=0;  //don't bomb out on errors.
 	if (argc > 1) {
+		/* DEVELOPPERS : don't forget to update the manpage if you modify theses options */
 		while((opt = getopt(argc, argv, ":hvc:d:")) != -1) {
 			switch(opt) {
 			case 'h':
