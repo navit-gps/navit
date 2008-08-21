@@ -1986,7 +1986,7 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 			image_new_l(this, "gui_quit"), gravity_center|orientation_vertical,
 			gui_internal_cmd_quit, NULL));
 	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Abort\nNavigation",
+		gui_internal_button_new_with_callback(this, "Stop\nNavigation",
 			image_new_l(this, "gui_stop"), gravity_center|orientation_vertical,
 			gui_internal_cmd_abort_navigation, NULL));
 	gui_internal_menu_render(this);
@@ -2059,11 +2059,11 @@ gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm)
 	off.u.num=0;
 	on.type=off.type=attr_tracking;
 	gui_internal_widget_append(w,
-		gui_internal_button_navit_attr_new(this, "Stick to roads", gravity_left_center|orientation_horizontal|flags_fill,
+		gui_internal_button_navit_attr_new(this, "Lock on road", gravity_left_center|orientation_horizontal|flags_fill,
 			&on, &off));
 	on.type=off.type=attr_orientation;
 	gui_internal_widget_append(w,
-		gui_internal_button_navit_attr_new(this, "Keep orientation to the North", gravity_left_center|orientation_horizontal|flags_fill,
+		gui_internal_button_navit_attr_new(this, "Northing", gravity_left_center|orientation_horizontal|flags_fill,
 			&on, &off));
 	on.type=off.type=attr_cursor;
 	gui_internal_widget_append(w,
