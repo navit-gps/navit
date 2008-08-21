@@ -2,7 +2,9 @@
 Version=1.0
 Encoding=UTF-8
 Name=Navit
+Name[de]=Navit
 Comment=The open source vector based navigation program with routing engine
+Comment[de]=Ein vectorbasiertes Navigationsprogramm
 Exec=navit
 Icon=navit
 StartupNotify=true
@@ -10,3 +12,4 @@ Terminal=false
 Type=Application
 Categories=GTK;Utility;
 GenericName=Navit
+GenericName[de]=Navit
