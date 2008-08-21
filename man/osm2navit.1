@@ -1,0 +1,56 @@
+.TH navit 1  "August, 21 2008" "version 0.4+svn" "USER COMMANDS"
+.SH NAME
+osm2navit \- parse osm textfile and converts to NavIt binfile format
+.SH SYNOPSIS
+.B bzcat planet.osm.bz2 | osm2navit mymap.bin
+[\-h] [\-N] [\-W] [\-a value] [\-c] [\-d connect string] [\-e phase]
+[\-k] [\-o] [\-s phase] [\-i input file] [\-w] [\-z level]
+.SH DESCRIPTION
+osm2navit parses osm textfile and converts to NavIt binfile format
+.SH OPTIONS
+.TP
+\-h (--help)
+display a short help message
+.TP
+\-N (--nodes-only)
+process only nodes
+.TP
+\-W (--ways-only)
+process only ways
+.TP
+\-a (--attr-debug-level)
+control which data is included in the debug attribute
+.TP
+\-c (--dump-coordinates)
+dump coordinates after phase 1
+.TP
+\-d (--db) <connect string>
+get osm data out of a postgresql database with osm simple scheme and given connect string
+.TP
+\-e (--end) <phase>
+end at specified phase
+.TP
+\-k (--keep-tmpfiles)
+do not delete tmp files after processing. useful to reuse them
+.TP
+\-o (--coverage)
+map every street to item overage
+.TP 
+\-s (--start) <phase>
+start at specified phase
+.TP
+\-i (--input-file) <file>
+specify the input file name (OSM), overrules default stdin
+.TP
+\-w (--dedupe-ways)
+ensure no duplicate ways or nodes. useful when using several input files
+.TP
+\-z (--compression-level) <level>
+set the compression level
+.SH BUGS
+Should you find one, please report it :
+ http://trac.navit-project.org
+.SH AUTHOR
+The navit Team - http://www.navit-project.org
+.SH SEE ALSO
+navit(1)
