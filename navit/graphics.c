@@ -56,25 +56,26 @@ struct graphics
 {
 	struct graphics_priv *priv;
 	struct graphics_methods meth;
+	char *default_font;
 	struct graphics_font *font[16];
 	struct graphics_gc *gc[3];
 	struct attr **attrs;
 	struct callback_list *cbl;
 	int ready;
 };
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+
+
 struct displaylist {
 	GHashTable *dl;
 };
-//##############################################################################################################
-//# Description: Creates a new graphics object
-//# Comment: attr type required
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+
+/**
+ * Creates a new graphics object
+ * attr type required
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 {
 	struct graphics *this_;
@@ -95,21 +96,23 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 	return this_;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
 	return attr_generic_get_attr(this_->attrs, type, attr, iter);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h)
 {
 	struct graphics *this_;
@@ -118,11 +121,12 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
 	return this_;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_init(struct graphics *this_)
 {
 	this_->gc[0]=graphics_gc_new(this_);
@@ -137,51 +141,56 @@ void graphics_init(struct graphics *this_)
 	this_->meth.background_gc(this_->priv, this_->gc[0]->priv);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void * graphics_get_data(struct graphics *this_, char *type)
 {
 	return (this_->meth.get_data(this_->priv, type));
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_register_resize_callback(struct graphics *this_, void (*callback)(void *data, int w, int h), void *data)
 {
 	this_->meth.register_resize_callback(this_->priv, callback, data);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: Called in navit.c
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * Called in navit.c
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_register_button_callback(struct graphics *this_, void (*callback)(void *data, int pressed, int button, struct point *p), void *data)
 {
 	this_->meth.register_button_callback(this_->priv, callback, data);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_register_motion_callback(struct graphics *this_, void (*callback)(void *data, struct point *p), void *data)
 {
 	this_->meth.register_motion_callback(this_->priv, callback, data);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_register_keypress_callback(struct graphics *this_, void (*callback)(void *data, char *key), void *data)
 {
 	this_->meth.register_keypress_callback(this_->priv, callback, data);
@@ -192,25 +201,44 @@ void graphics_add_callback(struct graphics *this_, struct callback *cb)
 	callback_list_add(this_->cbl, cb);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct graphics_font * graphics_font_new(struct graphics *gra, int size, int flags)
 {
 	struct graphics_font *this_;
 
 	this_=g_new0(struct graphics_font,1);
-	this_->priv=gra->meth.font_new(gra->priv, &this_->meth, size, flags);
+	this_->priv=gra->meth.font_new(gra->priv, &this_->meth, gra->default_font, size, flags);
 	return this_;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * Free all loaded fonts.
+ * Used when switching layouts.
+ * @param gra The graphics instance
+ * @returns nothing
+ * @author Sarah Nordstrom (05/2008)
+ */
+void graphics_font_destroy_all(struct graphics *gra) 
+{ 
+	int i; 
+	for(i = 0 ; i < sizeof(gra->font) / sizeof(gra->font[0]); i++) { 
+ 		if(!gra->font[i]) continue; 
+ 		gra->font[i]->meth.font_destroy(gra->font[i]->priv); 
+             	gra->font[i] = NULL; 
+	}
+}
+
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct graphics_gc * graphics_gc_new(struct graphics *gra)
 {
 	struct graphics_gc *this_;
@@ -220,63 +248,72 @@ struct graphics_gc * graphics_gc_new(struct graphics *gra)
 	return this_;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_gc_destroy(struct graphics_gc *gc)
 {
 	gc->meth.gc_destroy(gc->priv);
 	g_free(gc);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c)
 {
 	gc->meth.gc_set_foreground(gc->priv, c);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_gc_set_background(struct graphics_gc *gc, struct color *c)
 {
 	gc->meth.gc_set_background(gc->priv, c);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_gc_set_linewidth(struct graphics_gc *gc, int width)
 {
 	gc->meth.gc_set_linewidth(gc->priv, width);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_gc_set_dashes(struct graphics_gc *gc, int width, int offset, unsigned char dash_list[], int n)
 {
 	if (gc->meth.gc_set_dashes)
 		gc->meth.gc_set_dashes(gc->priv, width, offset, dash_list, n);
 }
 
-//##############################################################################################################
-//# Description: Create a new image from file path scaled to w and h pixels
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * Create a new image from file path scaled to w and h pixels
+ * @param gra the graphics instance
+ * @param path path of the image to load
+ * @param w width to rescale to
+ * @param h height to rescale to
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct graphics_image * graphics_image_new_scaled(struct graphics *gra, char *path, int w, int h)
 {
 	struct graphics_image *this_;
@@ -292,21 +329,24 @@ struct graphics_image * graphics_image_new_scaled(struct graphics *gra, char *pa
 	return this_;
 }
 
-//##############################################################################################################
-//# Description: Create a new image from file path
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * Create a new image from file path
+ * @param gra the graphics instance
+ * @param path path of the image to load
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct graphics_image * graphics_image_new(struct graphics *gra, char *path)
 {
 	return graphics_image_new_scaled(gra, path, -1, -1);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_image_free(struct graphics *gra, struct graphics_image *img)
 {
 	if (gra->meth.image_free)
@@ -314,92 +354,101 @@ void graphics_image_free(struct graphics *gra, struct graphics_image *img)
 	g_free(img);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_draw_restore(struct graphics *this_, struct point *p, int w, int h)
 {
 	this_->meth.draw_restore(this_->priv, p, w, h);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_draw_mode(struct graphics *this_, enum draw_mode_num mode)
 {
 	this_->meth.draw_mode(this_->priv, mode);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct point *p, int count)
 {
 	this_->meth.draw_lines(this_->priv, gc->priv, p, count);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r)
 {
 	this_->meth.draw_circle(this_->priv, gc->priv, p, r);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int w, int h)
 {
 	this_->meth.draw_rectangle(this_->priv, gc->priv, p, w, h);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2, struct graphics_font *font, char *text, struct point *p, int dx, int dy)
 {
 	this_->meth.draw_text(this_->priv, gc1->priv, gc2 ? gc2->priv : NULL, font->priv, text, p, dx, dy);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy, struct point *ret)
 {
 	this_->meth.get_text_bbox(this_->priv, font->priv, text, dx, dy, ret);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_overlay_disable(struct graphics *this_, int disable)
 {
 	if (this_->meth.overlay_disable)
 		this_->meth.overlay_disable(this_->priv, disable);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img)
 {
 	this_->meth.draw_image(this_->priv, gc->priv, p, img->priv);
@@ -455,11 +504,12 @@ static void graphics_popup(struct display_list *list, struct popup_item **popup)
 }
 #endif
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct displayitem {
 	struct item item;
 	char *label;
@@ -468,11 +518,12 @@ struct displayitem {
 	struct point pnt[0];
 };
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static int xdisplay_free_list(gpointer key, gpointer value, gpointer user_data)
 {
 	GList *h, *l;
@@ -489,21 +540,23 @@ static int xdisplay_free_list(gpointer key, gpointer value, gpointer user_data)
 	return TRUE;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static void xdisplay_free(GHashTable *display_list)
 {
 	g_hash_table_foreach_remove(display_list, xdisplay_free_list, NULL);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label)
 {
 	struct displayitem *di;
@@ -535,11 +588,12 @@ void display_add(struct displaylist *displaylist, struct item *item, int count, 
 }
 
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static void label_line(struct graphics *gra, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font, struct point *p, int count, char *label)
 {
 	int i,x,y,tl;
@@ -576,11 +630,12 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
 	}
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct itemtype *itm)
 {
 	struct element *e;
@@ -679,11 +734,12 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 		graphics_gc_destroy(gc);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static void xdisplay_draw_layer(GHashTable *display_list, struct graphics *gra, struct layer *lay, int order)
 {
 	GList *itms;
@@ -698,11 +754,12 @@ static void xdisplay_draw_layer(GHashTable *display_list, struct graphics *gra, 
 	}
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static void xdisplay_draw(GHashTable *display_list, struct graphics *gra, struct layout *l, int order)
 {
 	GList *lays;
@@ -716,18 +773,20 @@ static void xdisplay_draw(GHashTable *display_list, struct graphics *gra, struct
 	}
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 extern void *route_selection;
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static void do_draw_map(struct displaylist *displaylist, struct transformation *t, struct map *m, int order)
 {
 	enum projection pro;
@@ -792,11 +851,12 @@ static void do_draw_map(struct displaylist *displaylist, struct transformation *
 	map_selection_destroy(sel);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static void do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapsets, int order)
 {
 	struct mapset *ms;
@@ -813,21 +873,23 @@ static void do_draw(struct displaylist *displaylist, struct transformation *t, G
 	mapset_close(h);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 int graphics_ready(struct graphics *this_)
 {
 	return this_->ready;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int callback)
 {
 	int order=transform_get_order(trans);
@@ -837,6 +899,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	// FIXME find a better place to set the background color
 	graphics_gc_set_background(gra->gc[0], &l->color);
 	graphics_gc_set_foreground(gra->gc[0], &l->color);
+	gra->default_font = g_strdup(l->font);
 	gra->meth.background_gc(gra->priv, gra->gc[0]->priv);
 	gra->meth.draw_mode(gra->priv, draw_mode_begin);
 	gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &p, 32767, 32767);
@@ -846,11 +909,12 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy)
 {
 	struct displaylist_handle *dlh;
@@ -867,11 +931,12 @@ void graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy)
 	graphics_displaylist_close(dlh);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l)
 {
 	int order=transform_get_order(trans);
@@ -908,20 +973,22 @@ void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList 
 	gra->ready=1;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct displaylist_handle {
 	GList *hl_head,*hl,*l;
 };
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct displaylist_handle * graphics_displaylist_open(struct displaylist *displaylist)
 {
 	struct displaylist_handle *ret;
@@ -932,11 +999,12 @@ struct displaylist_handle * graphics_displaylist_open(struct displaylist *displa
 	return ret;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct displayitem * graphics_displaylist_next(struct displaylist_handle *dlh)
 {
 	struct displayitem *ret;
@@ -951,22 +1019,24 @@ struct displayitem * graphics_displaylist_next(struct displaylist_handle *dlh)
 	return ret;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 void graphics_displaylist_close(struct displaylist_handle *dlh)
 {
 	g_list_free(dlh->hl_head);
 	g_free(dlh);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct displaylist * graphics_displaylist_new(void)
 {
 	struct displaylist *ret=g_new(struct displaylist, 1);
@@ -976,31 +1046,34 @@ struct displaylist * graphics_displaylist_new(void)
 	return ret;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 struct item * graphics_displayitem_get_item(struct displayitem *di)
 {
 	return &di->item;	
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 char * graphics_displayitem_get_label(struct displayitem *di)
 {
 	return di->label;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static int within_dist_point(struct point *p0, struct point *p1, int dist)
 {
 	if (p0->x == 32767 || p0->y == 32767 || p1->x == 32767 || p1->y == 32767)
@@ -1013,11 +1086,12 @@ static int within_dist_point(struct point *p0, struct point *p1, int dist)
         return 0;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static int within_dist_line(struct point *p, struct point *line_p0, struct point *line_p1, int dist)
 {
 	int vx,vy,wx,wy;
@@ -1041,11 +1115,12 @@ static int within_dist_line(struct point *p, struct point *line_p0, struct point
 	return within_dist_point(p, &line_p, dist);
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static int within_dist_polyline(struct point *p, struct point *line_pnt, int count, int dist, int close)
 {
 	int i;
@@ -1059,11 +1134,12 @@ static int within_dist_polyline(struct point *p, struct point *line_pnt, int cou
 	return 0;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 static int within_dist_polygon(struct point *p, struct point *poly_pnt, int count, int dist)
 {
 	int i, j, c = 0;
@@ -1078,11 +1154,12 @@ static int within_dist_polygon(struct point *p, struct point *poly_pnt, int coun
         return c;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
 int graphics_displayitem_within_dist(struct displayitem *di, struct point *p, int dist)
 {
 	if (di->item.type < type_line) {

@@ -113,12 +113,12 @@ graphics_destroy(struct graphics_priv *gr)
  * List of font families to use, in order of preference
  */
 static char *fontfamilies[]={
-	"Liberation Mono",
+	"Liberation Sans",
 	"Arial",
-	"DejaVu Sans",
 	"NcrBI4nh",
 	"luximbi",
 	"FreeSans",
+	"DejaVu Sans",
 	NULL,
 };
 
@@ -136,8 +136,14 @@ static struct graphics_font_methods font_methods = {
  * Load a new font using the fontconfig library.
  * First search for each of the font families and require and exact match on family
  * If no font found, let fontconfig pick the best match
- */
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, int size, int flags)
+ * @param graphics_priv FIXME
+ * @param graphics_font_methods FIXME
+ * @param fontfamily the preferred font family
+ * @param size requested size of fonts
+ * @param flags extra flags for the font (bold,etc)
+ * @returns <>
+*/
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size, int flags)
 {
 	struct graphics_font_priv *font=g_new(struct graphics_font_priv, 1);
 
@@ -150,10 +156,24 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 		gr->library_init=1;
 	}
 	found=0;
+	dbg(2," about to search for fonts, prefered = %s\n",fontfamily);
 	for (exact=1;!found && exact>=0;exact--) {
-		family=fontfamilies;
+		if(fontfamily) { 
+			/* prepend the font passed so we look for it first */ 
+			family = malloc(sizeof(fontfamilies)+sizeof(fontfamily)); 
+			if(!family) { 
+				dbg(0,"Out of memory while creating the font families table\n");
+				return NULL; 
+ 			} 
+			memcpy(family, &fontfamily, sizeof(fontfamily)); 
+ 			memcpy(family+1, fontfamilies, sizeof(fontfamilies)); 
+ 		} else { 
+			family=fontfamilies; 
+ 		}
+
+		
 		while (*family && !found) {
-			dbg(1, "Looking for font family %s. exact=%d\n", *family, exact);
+			dbg(2, "Looking for font family %s. exact=%d\n", *family, exact);
 			FcPattern *required = FcPatternBuild(NULL, FC_FAMILY, FcTypeString, *family, NULL);
 			if (flags)
 				FcPatternAddInteger(required,FC_WEIGHT,FC_WEIGHT_BOLD);

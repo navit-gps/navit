@@ -99,7 +99,7 @@ static struct graphics_font_methods font_methods = {
 	font_destroy
 };
 
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, int size)
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size)
 {
 #if 0
 	char **filename=fontlist;

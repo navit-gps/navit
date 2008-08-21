@@ -308,7 +308,7 @@ static struct graphics_font_methods font_methods = {
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, int size, int flags)
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size, int flags)
 {
 	*meth=font_methods;
 	return &graphics_font_priv;

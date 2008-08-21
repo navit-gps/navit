@@ -1262,6 +1262,7 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 	case attr_layout:
 		if(this_->layout_current!=attr->u.layout) {
 			this_->layout_current=attr->u.layout;
+			graphics_font_destroy_all(this_->gra);
 			navit_draw(this_);
 			attr_updated=1;
 		}

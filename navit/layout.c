@@ -26,13 +26,15 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs)
 {
 	struct layout *l;
 	struct color def_color = {0xffff, 0xefef, 0xb7b7, 0xffff};
-	struct attr *name_attr,*color_attr,*order_delta_attr;
-
+	struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr;
 
 	if (! (name_attr=attr_search(attrs, NULL, attr_name)))
 		return NULL;
 	l = g_new0(struct layout, 1);
 	l->name = g_strdup(name_attr->u.str);
+	if ((font_attr=attr_search(attrs, NULL, attr_font))) {
+		l->font = g_strdup(font_attr->u.str);
+	}
 	if ((color_attr=attr_search(attrs, NULL, attr_color)))
 		l->color = *color_attr->u.color;
 	else

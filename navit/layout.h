@@ -62,7 +62,7 @@ struct color;
 
 struct layer { char *name; int details; GList *itemtypes; };
 
-struct layout { char *name; struct color color; GList *layers; int order_delta; };
+struct layout { char *name; char *font; struct color color; GList *layers; int order_delta; };
 
 /* prototypes */
 enum item_type;
