@@ -140,13 +140,13 @@ xpm_DATA += $(foreach scale, @SVG2PNG_SCALES@, $(addsuffix _$(scale)_$(scale).pn
 endif
 endif
 
-DESKTOPFILEdir=$(DESTDIR)$(datadir)/applications
+DESKTOPFILEdir=$(datadir)/applications
 DESKTOPFILE_DATA = desktop_icons/navit.desktop
 
-ICON128dir=$(DESTDIR)$(datadir)/icons/hicolor/128x128/apps
+ICON128dir=$(datadir)/icons/hicolor/128x128/apps
 ICON128_DATA = desktop_icons/128x128/navit.png
 
-ICON22dir=$(DESTDIR)$(datadir)/icons/hicolor/22x22/apps
+ICON22dir=$(datadir)/icons/hicolor/22x22/apps
 ICON22_DATA = desktop_icons/22x22/navit.png
 
 EXTRA_DIST = $(xpm_DATA) $(DESKTOPFILE) $(ICON128) $(ICON22)
