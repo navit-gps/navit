@@ -1450,7 +1450,7 @@ Change to your home coordinates.
 			</item>
 		</layer>
 	</layout>
-	<layout name="Bike" color= "#ffefb7">
+		<layout name="Bike" color= "#ffefb7" font="Liberation Sans">
 		<layer name="polygons">
 			<item type="image" order="0-">
 				<image />
@@ -2245,7 +2245,7 @@ Change to your home coordinates.
 
 
 
-	<layout name="T@H">
+	<layout name="T@H" font="Liberation Sans">
 		<layer name="sea" details="0">
 
 <!-- landuse=forest -->
