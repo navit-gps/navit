@@ -32,6 +32,8 @@ Change to your home coordinates.
 	<osd type="compass" />
 	<osd type="eta" />
 	<osd type="navigation" />
+	<osd type="button" x="48" y="336" command="zoom_in" src="zoom_in.xpm" />
+	<osd type="button" x="48" y="96" command="zoom_out" src="zoom_out.xpm" />
 -->
 
 
