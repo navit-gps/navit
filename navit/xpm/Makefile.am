@@ -73,6 +73,8 @@ xpm_DATA += trailerpark.xpm
 xpm_DATA += unknown.xpm
 xpm_DATA += wifi.xpm
 xpm_DATA += viewpoint.xpm
+xpm_DATA += zoom_in.xpm
+xpm_DATA += zoom_out.xpm
 
 svgs  = gui_actions.svg
 svgs += gui_active.svg
@@ -90,6 +92,8 @@ svgs += gui_leave_fullscreen.svg
 svgs += gui_quit.svg gui_stop.svg
 svgs += gui_zoom_in.svg
 svgs += gui_zoom_out.svg
+svgs += zoom_in.svg
+svgs += zoom_out.svg
 
 flag_svgs  = country_AD.svgz country_AE.svgz country_AF.svgz country_AG.svgz country_AI.svgz country_AL.svgz country_AM.svgz
 flag_svgs += country_AN.svgz country_AO.svgz country_AR.svgz country_AS.svgz country_AT.svgz country_AU.svgz country_AW.svgz
