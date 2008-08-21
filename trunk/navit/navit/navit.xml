@@ -137,6 +137,10 @@ Change to your home coordinates.
 				<polygon color="#ffc895" /> 
 				<polyline color="#ebb481" /> 
 			</item>
+			<item type="poly_university" order="8-">
+				<polygon color="#d68fb8" />
+				<polyline color="#881155" />
+			</item>
 			<item type="poly_water" order="0-">
 				<polygon color="#82c8ea" /> 
 				<polyline color="#5096b8" /> 
@@ -194,7 +198,7 @@ Change to your home coordinates.
 			<item type="poly_airport" order="0-">
 				<polygon color="#a0a0a0" /> 
 			</item>
-			<item type="poly_sport" order="0-">
+			<item type="poly_sport,poly_sports_pitch" order="0-">
 				<polygon color="#4af04f" /> 
 			</item>
 			<item type="poly_industry,poly_place" order="0-">
