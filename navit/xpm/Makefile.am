@@ -38,6 +38,7 @@ xpm_DATA += highway_exit.xpm
 xpm_DATA += hunting_stand.xpm
 xpm_DATA += hospital.xpm hotel.xpm
 xpm_DATA += information.xpm
+xpm_DATA += justice.xpm
 xpm_DATA += level_crossing.xpm
 xpm_DATA += library.xpm
 xpm_DATA += mini_roundabout.xpm
@@ -73,6 +74,7 @@ xpm_DATA += trailerpark.xpm
 xpm_DATA += unknown.xpm
 xpm_DATA += wifi.xpm
 xpm_DATA += viewpoint.xpm
+xpm_DATA += zoo.xpm
 xpm_DATA += zoom_in.xpm
 xpm_DATA += zoom_out.xpm
 
