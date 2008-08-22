@@ -32,6 +32,10 @@ Change to your home coordinates.
 	<osd type="compass" />
 	<osd type="eta" />
 	<osd type="navigation" />
+	-->
+
+<!--
+		Usage of negative values change the origins, e.g. x="0" y="0" specifies the top left, x="-0" y="-0" the bottom right corner
 	<osd type="button" x="48" y="336" command="zoom_in" src="zoom_in.xpm" />
 	<osd type="button" x="48" y="96" command="zoom_out" src="zoom_out.xpm" />
 -->
@@ -39,9 +43,11 @@ Change to your home coordinates.
 
 <!--
 			The following line let you select which graphical user interface you'd like to use.
-			Options include internal (recommended), gtk (deprecated) and cegui.
+			Options include internal (recommended), gtk (the default) and cegui.
 -->
 	<gui type="gtk" menubar="1" toolbar="1" statusbar="1" />
+	
+	<!-- Use one of gtk_drawing_area, qt_qpainter or sdl -->
 	<graphics type="gtk_drawing_area" />
 
 <!-- For cegui, use rather the following lines
