@@ -155,6 +155,6 @@ ICON128_DATA = desktop_icons/128x128/navit.png
 ICON22dir=$(datadir)/icons/hicolor/22x22/apps
 ICON22_DATA = desktop_icons/22x22/navit.png
 
-EXTRA_DIST = $(xpm_DATA) $(DESKTOPFILE) $(ICON128) $(ICON22)
+EXTRA_DIST = $(xpm_DATA) $(DESKTOPFILE_DATA) $(ICON128_DATA) $(ICON22_DATA)
 #burgerking.ico:
 #	wget http://www.burgerking.de/favicon.ico -O burgerking.ico
