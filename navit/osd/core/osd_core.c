@@ -599,9 +599,21 @@ struct osd_button {
 };
 
 static void
+wrap_point(struct point *p, struct navit *nav)
+{
+	if (p->x < 0)
+		p->x+=navit_get_width(nav);
+	if (p->y < 0)
+		p->y+=navit_get_height(nav);
+
+}
+
+static void
 osd_button_click(struct osd_button *this, struct navit *nav, int pressed, int button, struct point *p)
 {
-	if (p->x < this->p.x || p->y < this->p.y || p->x > this->p.x+this->img->width || p->y > this->p.y+this->img->height)
+	struct point bp=this->p;
+	wrap_point(&bp, this->nav);
+	if (p->x < bp.x || p->y < bp.y || p->x > bp.x+this->img->width || p->y > bp.y+this->img->height)
 		return;
 	navit_ignore_button(nav);
 	if (pressed) {
@@ -618,7 +630,9 @@ osd_button_click(struct osd_button *this, struct navit *nav, int pressed, int bu
 static void
 osd_button_draw(struct osd_button *this)
 {
-	graphics_draw_image(this->gra,this->gc, &this->p, this->img);
+	struct point bp=this->p;
+	wrap_point(&bp, this->nav);
+	graphics_draw_image(this->gra,this->gc, &bp, this->img);
 }
 
 static void

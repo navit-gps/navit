@@ -123,6 +123,7 @@ struct navit {
 	struct pcoord destination;
 	int destination_valid;
 	int blocked;
+	int w,h;
 };
 
 struct gui *main_loop_gui;
@@ -195,10 +196,25 @@ navit_resize(void *data, int w, int h)
 	memset(&sel, 0, sizeof(sel));
 	sel.u.p_rect.rl.x=w;
 	sel.u.p_rect.rl.y=h;
+	this_->w=w;
+	this_->h=h;
 	transform_set_screen_selection(this_->trans, &sel);
 	this_->ready |= 2;
 	if (this_->ready == 3)
 		navit_draw(this_);
+}
+
+int
+navit_get_width(struct navit *this_)
+{
+	return this_->w;
+}
+
+
+int
+navit_get_height(struct navit *this_)
+{
+	return this_->h;
 }
 
 static void
