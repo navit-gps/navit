@@ -35,7 +35,8 @@ Change to your home coordinates.
 	-->
 
 <!--
-		Usage of negative values change the origins, e.g. x="0" y="0" specifies the top left, x="-0" y="-0" the bottom right corner
+		Usage of negative values change the origins, e.g. x="0" y="0" specifies the top left, x="-0" y="-0" the bottom right corner.
+		Commands include gui_internal_menu, gui_internal_fullscreen, zoom_in and zoom_out:
 	<osd type="button" x="48" y="336" command="zoom_in" src="zoom_in.xpm" />
 	<osd type="button" x="48" y="96" command="zoom_out" src="zoom_out.xpm" />
 -->
@@ -2033,7 +2034,7 @@ Change to your home coordinates.
 				<polyline color="#ff0000" width="1" /> 
 			</item>
 			<item type="highway_exit_label" order="10-">
-				<circle color="#000000" radius="3" label_size="7" />
+				<circle color="#000000" radius="3" label_size="12" />
 			</item>
 			<item type="highway_city,highway_land,street_4_city,street_4_land,street_n_lanes" order="10-18">
 				<label label_size="8" />
@@ -2218,19 +2219,19 @@ Change to your home coordinates.
 
 
 			<item type="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="12-">
-				<circle color="#000000" radius="3" label_size="7" />
+				<circle color="#000000" radius="3" label_size="12" />
 			</item>
 			<item type="district_label_1e3,district_label_2e3,district_label_5e3" order="9-">
-				<circle color="#000000" radius="3" label_size="7" />
+				<circle color="#000000" radius="3" label_size="12" />
 			</item>
 			<item type="town_label_1e3,town_label_2e3,town_label_5e3" order="9-">
-				<circle color="#000000" radius="3" label_size="7" />
+				<circle color="#000000" radius="3" label_size="12" />
 			</item>
 			<item type="district_label_1e4,district_label_2e4,district_label_5e4" order="7-">
-				<circle color="#000000" radius="3" label_size="7" />
+				<circle color="#000000" radius="3" label_size="12" />
 			</item>
 			<item type="town_label_1e4,town_label_2e4,town_label_5e4" order="7-">
-				<circle color="#000000" radius="3" label_size="7" />
+				<circle color="#000000" radius="3" label_size="12" />
 			</item>
 			<item type="district_label_1e5,district_label_2e5,district_label_5e5" order="5-">
 				<circle color="#000000" radius="3" label_size="10" />
