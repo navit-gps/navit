@@ -684,27 +684,33 @@ navigation_update(struct navigation *this_, struct route *route)
 	dbg(1,"enter\n");
 	ritem=map_rect_get_item(mr);
 	if (ritem) {
-		if (item_attr_get(ritem, attr_street_item, &street_item)) {
-			sitem=street_item.u.item;
-			dbg(1,"sitem=%p\n", sitem);
-			itm=item_hash_lookup(this_->hash, sitem);
-			dbg(2,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
-			navigation_destroy_itms_cmds(this_, itm);
-			if (itm) {
-				incr=1;
-				navigation_itm_update(itm, ritem);
-			} else {
-				dbg(1,"not on track\n");
-				do {
-					dbg(1,"item\n");
-					navigation_itm_new(this_, ritem);
-					ritem=map_rect_get_item(mr);
-				} while (ritem);
-				itm=navigation_itm_new(this_, NULL);
-				make_maneuvers(this_);
+		if (!item_attr_get(ritem, attr_street_item, &street_item)) {
+			ritem=map_rect_get_item(mr);
+			if (! ritem) {
+				return;
 			}
-		} else
-			dbg(0,"no street_item\n");
+			if (!item_attr_get(ritem, attr_street_item, &street_item)) {
+				dbg(0,"no street item\n");
+			}	
+		}
+		sitem=street_item.u.item;
+		dbg(1,"sitem=%p\n", sitem);
+		itm=item_hash_lookup(this_->hash, sitem);
+		dbg(2,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
+		navigation_destroy_itms_cmds(this_, itm);
+		if (itm) {
+			incr=1;
+			navigation_itm_update(itm, ritem);
+		} else {
+			dbg(1,"not on track\n");
+			do {
+				dbg(1,"item\n");
+				navigation_itm_new(this_, ritem);
+				ritem=map_rect_get_item(mr);
+			} while (ritem);
+			itm=navigation_itm_new(this_, NULL);
+			make_maneuvers(this_);
+		}
 		calculate_dest_distance(this_, incr);
 		dbg(2,"destination distance old=%d new=%d\n", this_->distance_last, this_->first->dest_length);
 		if (this_->first->dest_length > this_->distance_last && this_->distance_last >= 0) 
