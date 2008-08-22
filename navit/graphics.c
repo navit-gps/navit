@@ -957,7 +957,6 @@ void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList 
 	}
 #endif
 	profile(0,NULL);
-	dbg(0,"delta=%d\n", l->order_delta);
 	order+=l->order_delta;
 	do_draw(displaylist, trans, mapsets, order);
 //	profile(1,"do_draw");
