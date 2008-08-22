@@ -164,7 +164,7 @@ struct gui_priv {
 	struct widget *highlighted;
 	struct widget *highlighted_menu;
 	struct widget *list;
-	int vehicle_valid;
+	int clickp_valid, vehicle_valid;
 	struct pcoord clickp, vehiclep;
 	struct search_list *sl;
 };
@@ -1955,14 +1955,16 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 		gui_internal_button_new_with_callback(this, "Bookmarks",
 			image_new_l(this, "gui_bookmark"), gravity_center|orientation_vertical,
 			gui_internal_cmd_bookmarks, NULL));
-	coord=coordinates(&this->clickp, '\n');
-	gui_internal_widget_append(w,
-		wc=gui_internal_button_new_with_callback(this, coord,
-			image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
-			gui_internal_cmd_position, NULL));
-	wc->name=g_strdup("Map Point");
-	wc->c=this->clickp;
-	g_free(coord);
+	if (this->clickp_valid) {
+		coord=coordinates(&this->clickp, '\n');
+		gui_internal_widget_append(w,
+			wc=gui_internal_button_new_with_callback(this, coord,
+				image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
+				gui_internal_cmd_position, NULL));
+		wc->name=g_strdup("Map Point");
+		wc->c=this->clickp;
+		g_free(coord);
+	}
 	if (this->vehicle_valid) {
 		coord=coordinates(&this->vehiclep, '\n');
 		gui_internal_widget_append(w,
@@ -2138,6 +2140,39 @@ static void gui_internal_menu_root(struct gui_priv *this)
 	gui_internal_menu_render(this);
 }
 
+static void
+gui_internal_cmd_menu(struct gui_priv *this, struct point *p)
+{
+	struct graphics *gra=this->gra;
+	struct transformation *trans;
+	struct coord c;
+	struct attr attr,attrp;
+
+	navit_block(this->nav, 1);
+	graphics_overlay_disable(gra, 1);
+	trans=navit_get_trans(this->nav);
+	if (p) {
+		transform_reverse(trans, p, &c);
+		dbg(0,"x=0x%x y=0x%x\n", c.x, c.y);
+		this->clickp.pro=transform_get_projection(trans);
+		this->clickp.x=c.x;
+		this->clickp.y=c.y;
+		this->clickp_valid=1;
+	}
+	if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle
+		&& vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp)) {
+		this->vehiclep.pro=transform_get_projection(trans);
+		transform_from_geo(this->vehiclep.pro, attrp.u.coord_geo, &c);
+		this->vehiclep.x=c.x;
+		this->vehiclep.y=c.y;
+		this->vehicle_valid=1;
+	}	
+	// draw menu
+	this->root.p.x=0;
+	this->root.p.y=0;
+	this->root.background=this->background;
+	gui_internal_menu_root(this);
+}
 
 //##############################################################################################################
 //# Description: Function to handle mouse clicks and scroll wheel movement
@@ -2148,37 +2183,13 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 {
 	struct gui_priv *this=data;
 	struct graphics *gra=this->gra;
-	struct transformation *trans;
-	struct attr attr,attrp;
-	struct coord c;
 	
 	// if still on the map (not in the menu, yet):
 	if (!this->root.children) {
 		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel 
 		if (!navit_handle_button(this->nav, pressed, button, p, NULL) || button >=4) // Maybe there's a better way to do this
 			return;
-		
-		navit_block(this->nav, 1);
-		graphics_overlay_disable(gra, 1);
-		trans=navit_get_trans(this->nav);
-		transform_reverse(trans, p, &c);
-		dbg(0,"x=0x%x y=0x%x\n", c.x, c.y);
-		this->clickp.pro=transform_get_projection(trans);
-		this->clickp.x=c.x;
-		this->clickp.y=c.y;
-		if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle
-			&& vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp)) {
-			this->vehiclep.pro=transform_get_projection(trans);
-			transform_from_geo(this->vehiclep.pro, attrp.u.coord_geo, &c);
-			this->vehiclep.x=c.x;
-			this->vehiclep.y=c.y;
-			this->vehicle_valid=1;
-		}	
-		// draw menu
-		this->root.p.x=0;
-		this->root.p.y=0;
-		this->root.background=this->background;
-		gui_internal_menu_root(this);
+		gui_internal_cmd_menu(this, p);	
 		return;
 	}
 	
@@ -2217,7 +2228,7 @@ static void gui_internal_resize(void *data, int w, int h)
 	struct gui_priv *this=data;
 	this->root.w=w;
 	this->root.h=h;
-	dbg(0,"w=%d h=%d\n", w, h);
+	dbg(0,"w=%d h=%d children=%p\n", w, h, this->root.children);
 	navit_resize(this->nav, w, h);
 	if (this->root.children) {
 		gui_internal_prune_menu(this, NULL);
@@ -2340,7 +2351,8 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	*meth=gui_internal_methods;
 	this=g_new0(struct gui_priv, 1);
 	this->nav=nav;
-
+	navit_command_register(nav,"gui_internal_menu",callback_new_2(gui_internal_cmd_menu,this,NULL));
+	navit_command_register(nav,"gui_internal_fullscreen",callback_new_2(gui_internal_cmd_fullscreen,this,NULL));
 	return this;
 }
 
