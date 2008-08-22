@@ -76,12 +76,8 @@ struct route_graph_segment {
 struct route_path_segment {
 	struct route_path_segment *next;
 	struct item item;
-	unsigned int offset;
-#if 0
-	int time;
-#endif
 	int length;
-	int dir;
+	int offset;
 	unsigned ncoords;
 	struct coord c[0];
 };
@@ -91,8 +87,10 @@ struct route_info {
 	struct coord lp;
 	int pos;
 
-	int dist;
-	int dir;
+	int dist2;
+	int lenpos;
+	int lenneg;
+	int lenextra;
 
 	struct street_data *street;
 };
@@ -295,8 +293,6 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 	ret->c=*c;
 	ret->lp=*c;
 	ret->pos=tracking_get_segment_pos(tracking);
-	ret->dist=0;
-	ret->dir=0;
 	ret->street=street_data_dup(tracking_get_street_data(tracking));
 	dbg(3,"c->x=0x%x, c->y=0x%x pos=%d item=(0x%x,0x%x)\n", c->x, c->y, ret->pos, ret->street->item.id_hi, ret->street->item.id_lo);
 	dbg(3,"street 0=(0x%x,0x%x) %d=(0x%x,0x%x)\n", ret->street->c[0].x, ret->street->c[0].y, ret->street->count-1, ret->street->c[ret->street->count-1].x, ret->street->c[ret->street->count-1].y);
@@ -382,6 +378,17 @@ route_free_selection(struct map_selection *sel)
 }
 
 
+static void
+route_info_distances(struct route_info *ri, enum projection pro)
+{
+	int npos=ri->pos+1;
+	struct street_data *sd=ri->street;
+	/* 0 1 2 X 3 4 5 6 pos=2 npos=3 count=7 0,1,2 3,4,5,6*/
+	ri->lenextra=transform_distance(pro, &ri->lp, &ri->c);
+	ri->lenneg=transform_polyline_length(pro, sd->c, npos)+transform_distance(pro, &sd->c[ri->pos], &ri->lp);
+	ri->lenpos=transform_polyline_length(pro, sd->c+npos, sd->count-npos)+transform_distance(pro, &sd->c[npos], &ri->lp);
+}
+
 
 void
 route_set_destination(struct route *this, struct pcoord *dst)
@@ -392,6 +399,7 @@ route_set_destination(struct route *this, struct pcoord *dst)
 	this->dst=NULL;
 	if (dst)
 		this->dst=route_find_nearest_street(this->ms, dst);
+	route_info_distances(this->dst, dst->pro);
 	profile(1,"find_nearest_street");
 	route_graph_destroy(this->graph);
 	this->graph=NULL;
@@ -488,33 +496,27 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 }
 
 static int get_item_seg_coords(struct item *i, struct coord *c, int max,
-		struct route_graph_segment *rgs)
+		struct coord *start, struct coord *end)
 {
 	struct map_rect *mr;
 	struct item *item;
-	int rc = 0, fs = 0, p = 0;
+	int rc = 0, p = 0;
 	struct coord c1;
 	mr=map_rect_new(i->map, NULL);
 	if (!mr)
 		return 0;
 	item = map_rect_get_item_byid(mr, i->id_hi, i->id_lo);
 	if (item) {
-		do {
+		rc = item_coord_get(item, &c1, 1);
+		while (rc && (c1.x != start->x || c1.y != start->y)) {
 			rc = item_coord_get(item, &c1, 1);
-			if (rc) {
-				if (!fs) {
-					if (c1.x == rgs->start->c.x &&
-						c1.y == rgs->start->c.y)
-						fs = 1;
-				}
-				if (fs) {
-					c[p++] = c1;
-					if (c1.x == rgs->end->c.x &&
-						c1.y == rgs->end->c.y)
-						break;
-				}
-			}
-		} while (rc);
+		}
+		while (rc && p < max) {
+			c[p++] = c1;
+			if (c1.x == end->x && c1.y == end->y)
+				break;
+			rc = item_coord_get(item, &c1, 1);
+		}
 	}
 	map_rect_destroy(mr);
 	return p;
@@ -545,11 +547,46 @@ route_extract_segment_from_path(struct route_path *path, struct item *item,
 }
 
 static void
-route_path_add_item(struct route_path *this, struct route_path *oldpath,
+route_path_add_segment(struct route_path *this, struct route_path_segment *segment)
+{
+	if (!this->path)
+		this->path=segment;
+	if (this->path_last)
+		this->path_last->next=segment;
+	this->path_last=segment;
+}
+
+static void
+route_path_add_item(struct route_path *this, struct item *item, int len, struct coord *first, struct coord *c, int count, struct coord *last, int dir)
+{
+	int i,idx=0,ccount=count + (first ? 1:0) + (last ? 1:0);
+	struct route_path_segment *segment;
+	
+	segment=g_malloc0(sizeof(*segment) + sizeof(struct coord) * ccount);
+	segment->ncoords=ccount;
+	if (first)
+		segment->c[idx++]=*first;
+	if (dir > 0) {
+		for (i = 0 ; i < count ; i++)
+			segment->c[idx++]=c[i];
+	} else {
+		for (i = 0 ; i < count ; i++)
+			segment->c[idx++]=c[count-i-1];
+	}
+	if (last)
+		segment->c[idx++]=*last;
+	segment->length=len;
+	if (item)
+		segment->item=*item;
+	route_path_add_segment(this, segment);
+}
+
+static void
+route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpath,
 		struct route_graph_segment *rgs, int len, int offset, int dir)
 {
 	struct route_path_segment *segment;
-	int ccnt = 0;
+	int i,ccnt = 0;
 	struct coord ca[2048];
 
 	if (oldpath) {
@@ -562,91 +599,27 @@ route_path_add_item(struct route_path *this, struct route_path *oldpath,
 		}
 	}
 
-	ccnt = get_item_seg_coords(&rgs->item, ca, 2047, rgs);
+	ccnt = get_item_seg_coords(&rgs->item, ca, 2047, &rgs->start->c, &rgs->end->c);
 	segment= g_malloc0(sizeof(*segment) + sizeof(struct coord) * ccnt);
 	if (!segment) {
 		printf("%s:Out of memory\n", __FUNCTION__);
 		return;
 	}
-	memcpy(segment->c, ca, ccnt * sizeof(struct coord));
+	if (dir > 0) {
+		for (i = 0 ; i < ccnt ; i++)
+			segment->c[i]=ca[i];
+	} else {
+		for (i = 0 ; i < ccnt ; i++)
+			segment->c[i]=ca[ccnt-i-1];
+	}
 	segment->ncoords = ccnt;
 	segment->item=rgs->item;
 	segment->offset = offset;
 linkold:
 	segment->length=len;
-	segment->dir=dir;
 	segment->next=NULL;
-	item_hash_insert(this->path_hash,  &rgs->item, (void *)offset);
-	if (!this->path)
-		this->path=segment;
-	if (this->path_last)
-		this->path_last->next=segment;
-	this->path_last=segment;
-}
-
-struct route_path_handle {
-	struct route_path_segment *s;
-};
-
-struct route_path_handle *
-route_path_open(struct route *this)
-{
-	struct route_path_handle *ret;
-
-	if (! this->path2 || ! this->path2->path) 
-		return NULL;
-
-	ret=g_new(struct route_path_handle, 1);
-	if (!ret) {
-		printf("%s:Out of memory\n", __FUNCTION__);
-		return ret;
-	}
-	ret->s=this->path2->path;
-	return ret;
-}
-
-struct route_path_segment *
-route_path_get_segment(struct route_path_handle *h)
-{
-	struct route_path_segment *ret=h->s;
-
-	if (ret)
-		h->s=ret->next;
-
-	return ret;
-}
-
-static struct coord *
-route_path_segment_get_helper(struct route_path_segment *s, int dir)
-{
-	if (s->dir == dir)
-		return &s->c[0];
-	else
-		return &s->c[s->ncoords-1];
-}
-
-struct coord *
-route_path_segment_get_start(struct route_path_segment *s)
-{
-	return route_path_segment_get_helper(s, 1);
-}
-
-struct coord *
-route_path_segment_get_end(struct route_path_segment *s)
-{
-	return route_path_segment_get_helper(s, -1);
-}
-
-struct item *
-route_path_segment_get_item(struct route_path_segment *s)
-{
-	return &s->item;
-}
-
-void
-route_path_close(struct route_path_handle *h)
-{
-	g_free(h);
+	item_hash_insert(this->path_hash,  &rgs->item, (void *)ccnt);
+	route_path_add_segment(this, segment);
 }
 
 static void
@@ -764,31 +737,6 @@ compare(void *v1, void *v2)
 	return p1->value-p2->value;
 }
 
-int
-route_info_length(struct route_info *pos, struct route_info *dst, int dir)
-{
-	struct route_info_handle *h;
-	struct coord *c,*l;
-	int ret=0;
-	struct street_data *street;
-
-	dbg(2,"enter pos=%p dst=%p dir=%d\n", pos, dst, dir);
-	h=route_info_open(pos, dst, dir);
-	if (! h) {
-		dbg(2,"ret=-1\n");
-		return -1;
-	}
-	street = pos ? pos->street : dst->street;
-	l=route_info_get(h);
-	while ((c=route_info_get(h))) {
-		dbg(3,"c=%p\n", c);
-		ret+=transform_distance(map_projection(street->item.map), c, l);
-		l=c;
-	}
-	dbg(2,"ret=%d\n", ret);
-	return ret;
-}
-
 static void
 route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedlist)
 {
@@ -804,14 +752,14 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 	if (! (sd->flags & AF_ONEWAYREV)) {
 		end=route_graph_get_point(this, &sd->c[0]);
 		g_assert(end != 0);
-		end->value=route_value(speedlist, &sd->item, route_info_length(NULL, dst, -1));
+		end->value=route_value(speedlist, &sd->item, dst->lenneg);
 		end->el=fh_insert(heap, end);
 	}
 
 	if (! (sd->flags & AF_ONEWAY)) {
 		end=route_graph_get_point(this, &sd->c[sd->count-1]);
 		g_assert(end != 0);
-		end->value=route_value(speedlist, &sd->item, route_info_length(NULL, dst, 1));
+		end->value=route_value(speedlist, &sd->item, dst->lenpos);
 		end->el=fh_insert(heap, end);
 	}
 
@@ -885,12 +833,50 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 }
 
 static struct route_path *
+route_path_new_offroad(struct route_graph *this, struct route_info *pos, struct route_info *dst, int dir)
+{
+	struct route_path *ret;
+
+	ret=g_new0(struct route_path, 1);
+	ret->path_hash=item_hash_new();
+	route_path_add_item(ret, NULL, pos->lenextra+dst->lenextra, &pos->c, NULL, 0, &dst->c, 1);
+
+	return ret;
+}
+
+static struct route_path *
+route_path_new_trivial(struct route_graph *this, struct route_info *pos, struct route_info *dst, int dir)
+{
+	struct street_data *sd=pos->street;
+	struct route_path *ret;
+
+	if (dir > 0) {
+		if (pos->lenextra + dst->lenextra + pos->lenneg-dst->lenneg > transform_distance(map_projection(sd->item.map), &pos->c, &dst->c))
+			return route_path_new_offroad(this, pos, dst, dir);
+	} else {
+		if (pos->lenextra + dst->lenextra + pos->lenpos-dst->lenpos > transform_distance(map_projection(sd->item.map), &pos->c, &dst->c))
+			return route_path_new_offroad(this, pos, dst, dir);
+	}
+	ret=g_new0(struct route_path, 1);
+	ret->path_hash=item_hash_new();
+	if (pos->lenextra) 
+		route_path_add_item(ret, NULL, pos->lenextra, &pos->c, NULL, 0, &pos->lp, 1);
+	if (dir > 0)
+		route_path_add_item(ret, &sd->item, pos->lenneg-dst->lenneg, &pos->lp, sd->c+pos->pos+1, dst->pos+pos->pos, &dst->lp, 1);
+	else
+		route_path_add_item(ret, &sd->item, pos->lenpos-dst->lenpos, &pos->lp, sd->c+dst->pos+1, pos->pos-dst->pos, &dst->lp, -1);
+	if (dst->lenextra) 
+		route_path_add_item(ret, NULL, dst->lenextra, &dst->lp, NULL, 0, &dst->c, 1);
+	return ret;
+}
+
+static struct route_path *
 route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, int *speedlist)
 {
 	struct route_graph_point *start1=NULL,*start2=NULL,*start;
 	struct route_graph_segment *s=NULL;
 	int len=0,segs=0;
-	int ilen,seg_len;
+	int seg_len;
 #if 0
 	int time=0,hr,min,sec
 #endif
@@ -898,18 +884,26 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	struct street_data *sd=pos->street;
 	struct route_path *ret;
 
+	if (item_is_equal(pos->street->item, dst->street->item)) {
+		if (!(sd->flags & AF_ONEWAY) && pos->lenneg >= dst->lenneg) {
+			return route_path_new_trivial(this, pos, dst, -1);
+		}
+		if (!(sd->flags & AF_ONEWAYREV) && pos->lenpos >= dst->lenpos) {
+			return route_path_new_trivial(this, pos, dst, 1);
+		}
+	} 
 	if (! (sd->flags & AF_ONEWAY)) {
 		start1=route_graph_get_point(this, &sd->c[0]);
 		if (! start1)
 			return NULL;
-		val1=start1->value+route_value(speedlist, &sd->item, route_info_length(pos, NULL, -1));
+		val1=start1->value+route_value(speedlist, &sd->item, pos->lenneg);
 		dbg(1,"start1: %d(route)+%d=%d\n", start1->value, val1-start1->value, val1);
 	}
 	if (! (sd->flags & AF_ONEWAYREV)) {
 		start2=route_graph_get_point(this, &sd->c[sd->count-1]);
 		if (! start2)
 			return NULL;
-		val2=start2->value+route_value(speedlist, &sd->item, route_info_length(pos, NULL, 1));
+		val2=start2->value+route_value(speedlist, &sd->item, pos->lenpos);
 		dbg(1,"start2: %d(route)+%d=%d\n", start2->value, val2-start2->value, val2);
 	}
 	dbg(1,"val1=%d val2=%d\n", val1, val2);
@@ -917,25 +911,22 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		val1=start1->start->start->value;
 		val2=start2->end->end->value;
 	}
+	ret=g_new0(struct route_path, 1);
+	if (pos->lenextra) 
+		route_path_add_item(ret, NULL, pos->lenextra, &pos->c, NULL, 0, &pos->lp, 1);
 	if (start1 && (val1 < val2)) {
 		start=start1;
-		pos->dir=-1;
+		route_path_add_item(ret, &sd->item, pos->lenneg, &pos->lp, sd->c, pos->pos+1, NULL, -1);
 	} else {
 		if (start2) {
 			start=start2;
-			pos->dir=1;
+			route_path_add_item(ret, &sd->item, pos->lenpos, &pos->lp, sd->c+pos->pos+1, sd->count-pos->pos-1, NULL, 1);
 		} else {
 			printf("no route found, pos blocked\n");
 			return NULL;
 		}
 	}
-	ret=g_new0(struct route_path, 1);
-	if (!ret) {
-		printf("%s:Out of memory\n", __FUNCTION__);
-		return ret;
-	}
 	ret->path_hash=item_hash_new();
-	dbg(1,"dir=%d\n", pos->dir);
 	while ((s=start->seg)) {
 		segs++;
 #if 0
@@ -944,31 +935,27 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		seg_len=s->len;
 		len+=seg_len;
 		if (s->start == start) {
-			route_path_add_item(ret, oldpath, s, seg_len, s->offset, 1);
+			route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, 1);
 			start=s->end;
 		} else {
-			route_path_add_item(ret, oldpath, s, seg_len, s->offset, -1);
+			route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, -1);
 			start=s->start;
 		}
 	}
 	sd=dst->street;
 	dbg(1,"start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
 	dbg(1,"dst sd->flags=%d sd->c[0]=0x%x,0x%x sd->c[sd->count-1]=0x%x,0x%x\n", sd->flags, sd->c[0].x,sd->c[0].y, sd->c[sd->count-1].x, sd->c[sd->count-1].y);
-	if (start->c.x == sd->c[0].x && start->c.y == sd->c[0].y)
-		dst->dir=-1;
-	else if (start->c.x == sd->c[sd->count-1].x && start->c.y == sd->c[sd->count-1].y)
-		dst->dir=1;
-	else {
+	if (start->c.x == sd->c[0].x && start->c.y == sd->c[0].y) {
+		route_path_add_item(ret, &sd->item, dst->lenneg, &dst->lp, sd->c, dst->pos+1, NULL, -1);
+	} else if (start->c.x == sd->c[sd->count-1].x && start->c.y == sd->c[sd->count-1].y) {
+		route_path_add_item(ret, &sd->item, dst->lenpos, &dst->lp, sd->c+dst->pos+1, sd->count-dst->pos-1, NULL, 1);
+	} else {
 		printf("no route found\n");
 		route_path_destroy(ret);
 		return NULL;
 	}
-	ilen=route_info_length(pos, NULL, 0);
-	len+=ilen;
-
-	ilen=route_info_length(NULL, dst, 0);
-	len+=ilen;
-
+	if (dst->lenextra) 
+		route_path_add_item(ret, NULL, dst->lenextra, &dst->lp, NULL, 0, &dst->c, 1);
 	dbg(1, "%d segments\n", segs);
 	return ret;
 }
@@ -1074,7 +1061,7 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 	struct route_info *ret=NULL;
 	int max_dist=1000;
 	struct map_selection *sel;
-	int dist,pos;
+	int dist,mindist=0,pos;
 	struct mapset_handle *h;
 	struct map *m;
 	struct map_rect *mr;
@@ -1107,7 +1094,7 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 			if (item->type >= type_street_0 && item->type <= type_ferry) {
 				sd=street_get_data(item);
 				dist=transform_distance_polyline_sq(sd->c, sd->count, &c, &lp, &pos);
-				if (!ret || dist < ret->dist) {
+				if (!ret || dist < mindist) {
 					if (ret) {
 						street_data_free(ret->street);
 						g_free(ret);
@@ -1120,8 +1107,7 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 					ret->c=c;
 					ret->lp=lp;
 					ret->pos=pos;
-					ret->dist=dist;
-					ret->dir=0;
+					mindist=dist;
 					ret->street=sd;
 					dbg(1,"dist=%d id 0x%x 0x%x pos=%d\n", dist, item->id_hi, item->id_lo, pos);
 				} else 
@@ -1133,6 +1119,7 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 	mapset_close(h);
 	map_selection_destroy(sel);
 
+	route_info_distances(ret, pc->pro);
 	return ret;
 }
 
@@ -1152,159 +1139,6 @@ route_info_street(struct route_info *rinf)
 {
 	return rinf->street;
 }
-
-struct coord *
-route_info_point(struct route_info *rinf, int point)
-{
-	struct street_data *sd=rinf->street;
-	int dir;
-
-	switch(point) {
-	case -1:
-	case 2:
-		dir=(point == 2) ? rinf->dir : -rinf->dir;
-		if (dir > 0)
-			return &sd->c[sd->count-1];
-		else
-			return &sd->c[0];
-	case 0:
-		return &rinf->c;
-	case 1:
-		return &rinf->lp;
-	}
-	return NULL;
-
-}
-
-struct route_info_handle {
-	struct route_info *start;
-	struct route_info *curr;
-	struct route_info *end;
-	struct coord *last;
-	int count;
-	int iter;
-	int pos;
-	int endpos;
-	int dir;
-};
-
-struct route_info_handle *
-route_info_open(struct route_info *start, struct route_info *end, int dir)
-{
-	struct route_info_handle *ret=g_new0(struct route_info_handle, 1);
-	struct route_info *curr;
-	dbg(2,"enter start=%p end=%p dir=%d\n", start, end, dir);
-	if (!ret) {
-		printf("%s:Out of memory\n", __FUNCTION__);
-		return ret;
-	}
-	ret->start=start;
-	ret->end=end;
-	if (start) 
-		curr=start;
-	else
-		curr=end;
-	ret->endpos=-2;
-	if (start && end) {
-		if (start->street->item.map != end->street->item.map || start->street->item.id_hi != end->street->item.id_hi || start->street->item.id_lo != end->street->item.id_lo) {
-			dbg(1,"return NULL\n");
-			return NULL;
-		}
-		printf("trivial start=%d end=%d start dir %d end dir %d\n", start->pos, end->pos, start->dir, end->dir);
-		if (start->pos == end->pos) {
-			printf("fixme\n");
-			start->dir=0;
-			end->dir=0;
-		}
-		if (start->pos > end->pos) {
-			printf("fixme\n");
-			start->dir=-1;
-			end->dir=1;
-		}
-		if (start->pos < end->pos) {
-			printf("fixme\n");
-			start->dir=1;
-			end->dir=-1;
-		}
-		printf("trivial now start=%d end=%d start dir %d end dir %d\n", start->pos, end->pos, start->dir, end->dir);
-		ret->endpos=end->pos;
-	}
-
-	if (!dir)
-		dir=curr->dir;
-	dbg(2,"dir=%d\n", dir);
-	ret->dir=dir;
-	ret->curr=curr;
-	ret->pos=curr->pos;
-	if (dir > 0) {
-		ret->pos++;
-		ret->endpos++;
-	}
-	dbg(2,"ret=%p\n",ret);
-	return ret;
-}
-
-struct coord *
-route_info_get(struct route_info_handle *h)
-{
-	struct coord *new;
-	for (;;) {
-		new=NULL;
-		dbg(1,"iter=%d\n", h->iter);
-		switch(h->iter) {
-		case 0:
-			if (h->start) {
-				new=&h->start->c;
-				h->iter++;
-				break;
-			} else {
-				h->iter=2;
-				continue;
-			}
-		case 1:
-			new=&h->start->lp;
-			h->iter++;
-			break;
-		case 2:
-			dbg(1,"h->pos=%d\n", h->pos);
-			if (h->dir && h->pos >= 0 && h->pos < h->curr->street->count && (h->end == NULL || h->endpos!=h->pos)) {
-				new=&h->curr->street->c[h->pos];
-				h->pos+=h->dir;
-			} else {
-				h->iter++;
-				continue;
-			}
-			break;	
-		case 3:
-			if (h->end) {
-				new=&h->end->lp;
-				h->iter++;
-				break;
-			}
-			break;
-		case 4:
-			new=&h->end->c;
-			h->iter++;
-			break;
-			
-		}
-		if (new) {
-			dbg(1,"new=%p (0x%x,0x%x) last=%p\n", new, new->x, new->y, h->last);
-			if (h->last && new->x == h->last->x && new->y == h->last->y)
-				continue;
-			h->last=new;
-			return new;	
-		}
-		return NULL;
-	}
-}
-
-void
-route_info_close(struct route_info_handle *h)
-{
-	g_free(h);
-}
-
 
 #if 0
 struct route_crossings *
@@ -1338,14 +1172,12 @@ route_crossings_get(struct route *this, struct coord *c)
 struct map_rect_priv {
 	struct route_info_handle *ri;
 	enum attr_type attr_next;
-	int pos_next;
 	int pos;
 	struct map_priv *mpriv;
 	struct item item;
-	struct item *sitem;
 	int length;
 	unsigned int last_coord;
-	struct route_path_segment *seg;
+	struct route_path_segment *seg,*seg_next;
 	struct route_graph_point *point;
 	struct route_graph_segment *rseg;
 	char *str;
@@ -1380,11 +1212,11 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			}
 			return 0;
 		case attr_street_item:
-			if (seg)
+			mr->attr_next=attr_length;
+			if (seg && seg->item.map)
 				attr->u.item=&seg->item;
 			else
-				attr->u.item=mr->sitem;
-			mr->attr_next=attr_length;
+				return 0;
 			return 1;
 		case attr_length:
 			if (seg)
@@ -1394,11 +1226,11 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			mr->attr_next=attr_time;
 			return 1;
 		case attr_time:
+			mr->attr_next=attr_none;
 			if (seg)
 				attr->u.num=route_time(route->speedlist, &seg->item, seg->length);
 			else
-				attr->u.num=route_time(route->speedlist, mr->sitem, mr->length);
-			mr->attr_next=attr_none;
+				return 0;
 			return 1;
 		default:
 			attr->type=attr_none;
@@ -1412,41 +1244,16 @@ rm_coord_get(void *priv_data, struct coord *c, int count)
 {
 	struct map_rect_priv *mr = priv_data;
 	struct route_path_segment *seg = mr->seg;
-	struct coord *c1;
-	int rc = 0,i;
-	dbg(1,"pos=%d seg=%p\n", mr->pos, seg);
-	switch (mr->pos) {
-	case -1:
-		for (i=0; i < count; i++) {
-			if ((c1=route_info_get(mr->ri))) {
-				c[i]=*c1;
-				rc++;
-			}
-		}
-		break;
-	case 0:
-		for (i=0; i < count; i++) {
-			if (mr->last_coord >= seg->ncoords)
-				break;
-			if (i >= seg->ncoords)
-				break;
-			if (seg->dir < 0)
-				c[i] = seg->c[seg->ncoords-++mr->last_coord];
-			else
-				c[i] = seg->c[mr->last_coord++];
-			rc++;
-		}
-		break;
-	case 1:
-		for (i=0; i < count; i++) {
-			if ((c1=route_info_get(mr->ri))) {
-				c[i]=*c1;
-				rc++;
-			}
-		}
-		break;
-	default:
-		rc=0;
+	int i,rc=0;
+	if (! seg)
+		return 0;
+	for (i=0; i < count; i++) {
+		if (mr->last_coord >= seg->ncoords)
+			break;
+		if (i >= seg->ncoords)
+			break;
+		c[i] = seg->c[mr->last_coord++];
+		rc++;
 	}
 	dbg(1,"return %d\n",rc);
 	return rc;
@@ -1555,19 +1362,10 @@ rm_rect_new(struct map_priv *priv, struct map_selection *sel)
 		return NULL;
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->mpriv = priv;
-	mr->ri=route_info_open(route_get_pos(priv->route), route_get_dst(priv->route), 0);
-	mr->pos_next=1;
-	mr->sitem=&(route_get_pos(priv->route)->street->item);
 	mr->item.priv_data = mr;
 	mr->item.type = type_street_route;
 	mr->item.meth = &methods_route_item;
-	if (mr->ri) {
-		mr->length=route_info_length(route_get_pos(priv->route), route_get_dst(priv->route), 0);
-	} else {
-		mr->ri=route_info_open(route_get_pos(priv->route), NULL, 0);
-		mr->length=route_info_length(route_get_pos(priv->route), NULL, 0);
-		mr->pos_next=-1;
-	}
+	mr->seg_next=priv->route->path2->path;
 	return mr;
 }
 
@@ -1589,8 +1387,6 @@ rp_rect_new(struct map_priv *priv, struct map_selection *sel)
 static void
 rm_rect_destroy(struct map_rect_priv *mr)
 {
-	if (mr->ri)
-		route_info_close(mr->ri);
 	if (mr->str)
 		g_free(mr->str);
 	g_free(mr);
@@ -1649,32 +1445,10 @@ rm_get_item(struct map_rect_priv *mr)
 	struct route_path_segment *seg = mr->seg;
 	dbg(1,"enter\n", mr->pos);
 
-	mr->pos=mr->pos_next;
-	switch(mr->pos) {
-	case -1:
-		mr->pos_next=0;
-		break;
-	case 0:
-		if (!seg)
-			seg = r->path2->path;
-		else
-			seg = seg->next;
-		if (seg) {
-			mr->sitem = &seg->item;
-			break;
-		}
-		mr->pos=1;
-		route_info_close(mr->ri);
-		mr->ri=route_info_open(NULL, route_get_dst(r), 0);
-		mr->sitem=&(route_get_dst(r)->street->item);
-		mr->length=route_info_length(NULL, route_get_dst(r), 0);
-	case 1:
-		mr->pos_next=2;
-		break;
-	case 2:
+	mr->seg=mr->seg_next;
+	if (! mr->seg)
 		return NULL;
-	}
-	mr->seg = seg;
+	mr->seg_next=mr->seg->next;
 	mr->last_coord = 0;
 	mr->item.id_lo++;
 	rm_attr_rewind(mr);
