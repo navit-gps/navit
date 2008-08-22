@@ -560,6 +560,17 @@ transform_distance(enum projection pro, struct coord *c1, struct coord *c2)
 	}
 }
 
+double
+transform_polyline_length(enum projection pro, struct coord *c, int count)
+{
+	double ret=0;
+	int i;
+
+	for (i = 0 ; i < count-1 ; i++) 
+		ret+=transform_distance(pro, &c[i], &c[i+1]);
+	return ret;
+}
+
 int
 transform_distance_sq(struct coord *c1, struct coord *c2)
 {
