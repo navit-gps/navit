@@ -66,6 +66,12 @@ callback_new(void (*func)(void), int pcount, void **p)
 }
 
 void
+callback_destroy(struct callback *cb)
+{
+	g_free(cb);
+}
+
+void
 callback_set_arg(struct callback *cb, int arg, void *p)
 {
 	if (arg < 0 || arg > cb->pcount)
