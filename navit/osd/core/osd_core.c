@@ -594,6 +594,7 @@ struct osd_button {
 	struct callback *navit_init_cb;
 	struct callback *draw_cb;
 	struct graphics_image *img;
+	int pressed;
 	char *src;
 	char *command;
 };
@@ -613,17 +614,14 @@ osd_button_click(struct osd_button *this, struct navit *nav, int pressed, int bu
 {
 	struct point bp=this->p;
 	wrap_point(&bp, this->nav);
-	if (p->x < bp.x || p->y < bp.y || p->x > bp.x+this->img->width || p->y > bp.y+this->img->height)
+	dbg(0,"%d,%d-%d,%d %d,%d\n", bp.x, bp.y, bp.x+this->img->width, bp.y+this->img->height, p->x, p->y);
+	if ((p->x < bp.x || p->y < bp.y || p->x > bp.x+this->img->width || p->y > bp.y+this->img->height) && !this->pressed)
 		return;
 	navit_ignore_button(nav);
+	this->pressed=pressed;
 	if (pressed) {
-		dbg(0,"enter\n");
-		if (! strcmp(this->command, "zoom_in")) {
-			navit_zoom_in(nav, 2, NULL);
-		}
-		if (! strcmp(this->command, "zoom_out")) {
-			navit_zoom_out(nav, 2, NULL);
-		}
+		dbg(0,"calling command '%s'\n", this->command);
+		navit_command_call(nav, this->command);
 	}
 }
 

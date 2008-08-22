@@ -124,6 +124,7 @@ struct navit {
 	int destination_valid;
 	int blocked;
 	int w,h;
+	GHashTable *commands;
 };
 
 struct gui *main_loop_gui;
@@ -461,6 +462,9 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->trans=transform_new();
 	transform_setup(this_->trans, &center, zoom, 0);
 	this_->displaylist=graphics_displaylist_new();
+	this_->commands=g_hash_table_new(g_str_hash, g_str_equal);
+	navit_command_register(this_, "zoom_in", callback_new_3(navit_zoom_in, this_, 2, NULL));
+	navit_command_register(this_, "zoom_out", callback_new_3(navit_zoom_out, this_, 2, NULL));
 	return this_;
 }
 
@@ -1714,12 +1718,45 @@ navit_block(struct navit *this_, int block)
 	return 0;
 }
 
+int
+navit_command_register(struct navit *this_, char *command, struct callback *cb)
+{
+	dbg(0,"registering '%s'\n", command);
+	g_hash_table_insert(this_->commands, command, cb);
+
+	return 0;
+}
+
+struct callback *
+navit_command_unregister(struct navit *this_, char *command)
+{
+	struct callback *ret=g_hash_table_lookup(this_->commands, command);
+	if (ret) {
+		g_hash_table_remove(this_->commands, command);
+	}
+
+	return ret;
+}
+
+int
+navit_command_call(struct navit *this_, char *command)
+{
+	struct callback *cb=g_hash_table_lookup(this_->commands, command);
+	dbg(0,"calling callback %p for '%s'\n", cb, command);
+	if (! cb)
+		return 1;
+	callback_call_1(cb, command);
+}
+
 void
 navit_destroy(struct navit *this_)
 {
 	/* TODO: destroy objects contained in this_ */
 	main_remove_navit(this_);
 	navit_write_center_to_file(this_, "center.txt");
+	callback_destroy(navit_command_unregister(this_, "zoom_in"));
+	callback_destroy(navit_command_unregister(this_, "zoom_out"));
+	g_hash_table_destroy(this_->commands);
 	g_free(this_);
 }
 
