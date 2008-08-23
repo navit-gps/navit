@@ -614,7 +614,6 @@ osd_button_click(struct osd_button *this, struct navit *nav, int pressed, int bu
 {
 	struct point bp=this->p;
 	wrap_point(&bp, this->nav);
-	dbg(0,"%d,%d-%d,%d %d,%d\n", bp.x, bp.y, bp.x+this->img->width, bp.y+this->img->height, p->x, p->y);
 	if ((p->x < bp.x || p->y < bp.y || p->x > bp.x+this->img->width || p->y > bp.y+this->img->height) && !this->pressed)
 		return;
 	navit_ignore_button(nav);
