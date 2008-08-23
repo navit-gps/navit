@@ -77,6 +77,8 @@ xpm_DATA += viewpoint.xpm
 xpm_DATA += zoo.xpm
 xpm_DATA += zoom_in.xpm
 xpm_DATA += zoom_out.xpm
+xpm_DATA += toggle_fullscreen.xpm
+xpm_DATA += menu.xpm
 
 svgs  = gui_actions.svg
 svgs += gui_active.svg
