@@ -167,6 +167,8 @@ struct gui_priv {
 	int clickp_valid, vehicle_valid;
 	struct pcoord clickp, vehiclep;
 	struct search_list *sl;
+	int ignore_button;
+	int menu_on_map_click;
 };
 
 static void gui_internal_widget_render(struct gui_priv *this, struct widget *w);
@@ -2141,12 +2143,14 @@ static void gui_internal_menu_root(struct gui_priv *this)
 }
 
 static void
-gui_internal_cmd_menu(struct gui_priv *this, struct point *p)
+gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 {
 	struct graphics *gra=this->gra;
 	struct transformation *trans;
 	struct coord c;
 	struct attr attr,attrp;
+
+	this->ignore_button=ignore;
 
 	navit_block(this->nav, 1);
 	graphics_overlay_disable(gra, 1);
@@ -2185,11 +2189,13 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 	struct graphics *gra=this->gra;
 	
 	// if still on the map (not in the menu, yet):
-	if (!this->root.children) {
+	if (!this->root.children || this->ignore_button) {
+		this->ignore_button=0;
 		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel 
 		if (!navit_handle_button(this->nav, pressed, button, p, NULL) || button >=4) // Maybe there's a better way to do this
 			return;
-		gui_internal_cmd_menu(this, p);	
+		if (this->menu_on_map_click)
+			gui_internal_cmd_menu(this, p, 0);	
 		return;
 	}
 	
@@ -2348,10 +2354,15 @@ struct gui_methods gui_internal_methods = {
 static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs) 
 {
 	struct gui_priv *this;
+	struct attr *attr;
 	*meth=gui_internal_methods;
 	this=g_new0(struct gui_priv, 1);
 	this->nav=nav;
-	navit_command_register(nav,"gui_internal_menu",callback_new_2(gui_internal_cmd_menu,this,NULL));
+	if ((attr=attr_search(attrs, NULL, attr_menu_on_map_click)))
+		this->menu_on_map_click=attr->u.num;
+	else
+		this->menu_on_map_click=1;
+	navit_command_register(nav,"gui_internal_menu",callback_new_3(gui_internal_cmd_menu,this,NULL,1));
 	navit_command_register(nav,"gui_internal_fullscreen",callback_new_2(gui_internal_cmd_fullscreen,this,NULL));
 	return this;
 }
