@@ -37,10 +37,10 @@ osd items allow to position display and control items directly on top of the map
 Commands include gui_internal_menu, gui_internal_fullscreen, zoom_in and zoom_out.
 Usage of negative values change the button origins. x="0" y="0" specifies the top left, x="-0" y="-0" the bottom right corner.
 It's always the top left corner of the icon, so you need to consider the icon's size when you enter the values.
-<osd type="button" x="48" y="48" command="gui_internal_fullscreen" src="toggle_fullscreen.xpm" />
-<osd type="button" x="-96" y="48" command="gui_internal_menu" src="menu.xpm" />
+<osd type="button" x="0" y="0" command="gui_internal_fullscreen" src="toggle_fullscreen.xpm" />
+<osd type="button" x="-96" y="0" command="gui_internal_menu" src="menu.xpm" />
 <osd type="button" x="-96" y="-96" command="zoom_in" src="zoom_in.xpm" />
-<osd type="button" x="48" y="-96" command="zoom_out" src="zoom_out.xpm" />
+<osd type="button" x="0" y="-96" command="zoom_out" src="zoom_out.xpm" />
 -->
 
 
