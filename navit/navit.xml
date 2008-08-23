@@ -215,22 +215,22 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poly_industry,poly_place" order="0-">
 				<polygon color="#e6e6e6" /> 
 			</item>
-                        <item type="poly_service" order="8-18">
-                                <polygon color="#fefefe" />
-                                <polyline color="#d2d2d2" width="1" />
-                        </item>
-                        <item type="poly_street_1" order="8-13">
-                                <polygon color="#ffffff" />
-                                <polyline color="#d2d2d2" width="1" />
-                        </item>
-                        <item type="poly_street_1" order="14-16">
-                                <polygon color="#ffffff" />
-                                <polyline color="#d2d2d2" width="2" />
-                        </item>
-                        <item type="poly_street_1" order="17-18">
-                                <polygon color="#ffffff" />
-                                <polyline color="#d2d2d2" width="3" />
-                        </item>
+			<item type="poly_service" order="8-18">
+				<polygon color="#fefefe" />
+				<polyline color="#d2d2d2" width="1" />
+			</item>
+			<item type="poly_street_1" order="8-13">
+				<polygon color="#ffffff" />
+				<polyline color="#d2d2d2" width="1" />
+			</item>
+			<item type="poly_street_1" order="14-16">
+				<polygon color="#ffffff" />
+				<polyline color="#d2d2d2" width="2" />
+			</item>
+			<item type="poly_street_1" order="17-18">
+				<polygon color="#ffffff" />
+				<polyline color="#d2d2d2" width="3" />
+			</item>
 			<item type="poly_street_2" order="7-12">
 				<polygon color="#ffff00" />
 				<polyline color="#c0c0c0" width="1" />
@@ -1599,43 +1599,43 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 				<polyline color="#778899" dash="1,80" width="5" />
 			</item>
 			<item type="street_route" order="2">
-				<polyline color="#0000a0" width="4" /> 
+				<polyline color="#FF00FF" width="4" /> 
 			</item>
 			<item type="street_route" order="3-5">
-				<polyline color="#0000a0" width="8" /> 
+				<polyline color="#FF00FF" width="8" /> 
 			</item>
 			<item type="street_route" order="6">
-				<polyline color="#0000a0" width="10" /> 
+				<polyline color="#FF00FF" width="10" /> 
 			</item>
 			<item type="street_route" order="7-8">
-				<polyline color="#0000a0" width="16" /> 
+				<polyline color="#FF00FF" width="16" /> 
 			</item>
 			<item type="street_route" order="9-10">
-				<polyline color="#0000a0" width="20" /> 
+				<polyline color="#FF00FF" width="20" /> 
 			</item>
 			<item type="street_route" order="11">
-				<polyline color="#0000a0" width="28" /> 
+				<polyline color="#FF00FF" width="28" /> 
 			</item>
 			<item type="street_route" order="12">
-				<polyline color="#0000a0" width="32" /> 
+				<polyline color="#FF00FF" width="32" /> 
 			</item>
 			<item type="street_route" order="13">
-				<polyline color="#0000a0" width="52" /> 
+				<polyline color="#FF00FF" width="52" /> 
 			</item>
 			<item type="street_route" order="14">
-				<polyline color="#0000a0" width="64" /> 
+				<polyline color="#FF00FF" width="64" /> 
 			</item>
 			<item type="street_route" order="15">
-				<polyline color="#0000a0" width="68" /> 
+				<polyline color="#FF00FF" width="68" /> 
 			</item>
 			<item type="street_route" order="16">
-				<polyline color="#0000a0" width="132" /> 
+				<polyline color="#FF00FF" width="132" /> 
 			</item>
 			<item type="street_route" order="17">
-				<polyline color="#0000a0" width="268" /> 
+				<polyline color="#FF00FF" width="268" /> 
 			</item>
 			<item type="street_route" order="18">
-				<polyline color="#0000a0" width="530" /> 
+				<polyline color="#FF00FF" width="530" /> 
 			</item>
 			<item type="street_nopass" order="10-">
 				<polyline color="#000000" width="1" /> 
