@@ -2197,15 +2197,18 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="rail_abandoned" order="12-">
 				<polyline color="#f5f5f5" width="1" dash="10" />
 			</item>
-			<item type="lift_cable_car" order="6-">
-				<polyline color="#696969" width="1" dash="5" />
+			<item type="lift_cable_car" order="10-">
+				<polyline color="#778899" width="1" />
+				<polyline color="#778899" dash="1,40" width="5" />
 			</item>
-			<item type="lift_chair" order="6-">
-				<polyline color="#696969" width="1" dash="5" />
+			<item type="lift_chair" order="10-">
+				<polyline color="#778899" width="1" />
+				<polyline color="#778899" dash="1,40" width="5" />
 			</item>
-			<item type="lift_drag" order="6-">
-				<polyline color="#696969" width="1" dash="5" />
-			</item>
+			<item type="lift_drag" order="10-">
+				<polyline color="#778899" width="1" />
+				<polyline color="#778899" dash="1,40" width="5" />
+					</item>
 			<item type="ferry" order="5-">
 				<polyline color="#000000" width="3" dash="5" />
 			</item>
