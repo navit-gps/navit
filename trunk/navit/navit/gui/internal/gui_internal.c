@@ -1009,10 +1009,10 @@ gui_internal_menu(struct gui_priv *this, char *label)
 		this->spacing=5;
 		this->font=graphics_font_new(this->gra, 545, 1);
 		if (this->root.w > 640 || this->root.h > 640) {
-			this->font_size=40;
-			this->icon_s=48;
-			this->icon_l=96;
-			this->spacing=5;
+			this->font_size=36;
+			this->icon_s=40;
+			this->icon_l=44;
+			this->spacing=2;
 			this->font=graphics_font_new(this->gra, 545, 1);
 		}
 	} else {
