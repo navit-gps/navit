@@ -1002,12 +1002,19 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	menu->w=this->root.w;
 	menu->h=this->root.h;
 	menu->background=this->background;
-	if (this->root.w > 3200 || this->root.h > 3200) {
+	if (this->root.w > 320 || this->root.h > 320) {
 		this->font_size=40;
 		this->icon_s=48;
 		this->icon_l=96;
 		this->spacing=5;
 		this->font=graphics_font_new(this->gra, 545, 1);
+		if (this->root.w > 640 || this->root.h > 640) {
+			this->font_size=40;
+			this->icon_s=48;
+			this->icon_l=96;
+			this->spacing=5;
+			this->font=graphics_font_new(this->gra, 545, 1);
+		}
 	} else {
 		this->font_size=16;
 		this->icon_xs=16;
