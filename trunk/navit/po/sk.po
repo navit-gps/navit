@@ -7,26 +7,117 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-17 20:37+0200\n"
-"PO-Revision-Date: 2008-08-16 13:23+0000\n"
-"Last-Translator: kayle.sk <webmaster@kayle.sk>\n"
+"POT-Creation-Date: 2008-06-30 11:32+0200\n"
+"PO-Revision-Date: 2008-08-23 12:03+0000\n"
+"Last-Translator: Eduard DRUSA <Unknown>\n"
 "Language-Team: Slovenčina\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Launchpad-Export-Date: 2008-08-17 18:20+0000\n"
+"X-Launchpad-Export-Date: 2008-08-24 23:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../navit/main.c:149
 #, c-format
-msgid "Running from source directory\n"
-msgstr "Beží zo zdrojového adresára\n"
+#~ msgid "Running from source directory\n"
+#~ msgstr "Beží zo zdrojového adresára\n"
 
-#: ../navit/main.c:165
+#~ msgid "Refresh"
+#~ msgstr "Obnoviť"
+
+#~ msgid "Clear"
+#~ msgstr "Zmazať"
+
+#~ msgid "Tracking"
+#~ msgstr "Stopovanie"
+
+#~ msgid "Orientation"
+#~ msgstr "Orientácia"
+
+#~ msgid "Turn %1$s%2$s %3$s"
+#~ msgstr "Odbočte %1$s%2$s %3$s"
+
+#~ msgid "Moldova"
+#~ msgstr "Moldavsko"
+
+#~ msgid "Syria"
+#~ msgstr "Sýria"
+
+#~ msgid "Libia"
+#~ msgstr "Líbya"
+
+#~ msgid "Palestinia"
+#~ msgstr "Palestína"
+
+#~ msgid "Macedonia"
+#~ msgstr "Macedónsko"
+
+#~ msgid "VisibleBlocks"
+#~ msgstr "Viditeľné bloky"
+
+#~ msgid "VisibleTowns"
+#~ msgstr "Viditeľné mestá"
+
+#~ msgid "VisiblePolys"
+#~ msgstr "Viditeľné polygony"
+
+#~ msgid "VisibleStreets"
+#~ msgstr "Viditeľné ulice"
+
+#~ msgid "VisiblePoints"
+#~ msgstr "Viditeľné body"
+
+#: ../navit/main.c:132
+#, c-format
+msgid ""
+"navit usage:\n"
+"navit [options] [configfile]\n"
+"\t-c <file>: use <file> as config file\n"
+"\t-d <n>: set the debug output level to <n>. (TODO)\n"
+"\t-h: print this usage info and exit.\n"
+"\t-v: Print the version and exit.\n"
+msgstr ""
+"použitie navitu:\n"
+"navit [voľby] [konfiguračný súbor]\n"
+"\t-c <súbor>: použije <súbor> ako konfiguračný súbor\n"
+"\t-d <n>: nastaví úroveň ladiacích hlásení na <n>. (TODO)\n"
+"\t-h: zobrazí tento informačný text a skončí.\n"
+"\t-v: vypíše verziu programu a skončí.\n"
+
+#: ../navit/main.c:159
+#, c-format
+msgid ""
+"Running from source directory. Bookmarks, center and destinations will be "
+"r/w from this directory\n"
+msgstr ""
+"Spustený zo zdrojového adresára. Záložky, poloha a cieľe budú "
+"čítane/zapisované do tohto adresára\n"
+
+#: ../navit/main.c:175
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "nastavujem '%s' na '%s'\n"
+
+#. We have not found an existing config file from all possibilities
+#: ../navit/main.c:286
+#, c-format
+msgid "No config file navit.xml, navit.xml.local found\n"
+msgstr "Nenašiel sa konfiguračný súbor navit.xml ani navit.xml.local\n"
+
+#: ../navit/main.c:297
+#, c-format
+msgid "Error parsing '%s': %s\n"
+msgstr "Chyba pri spracovávaní '%s': %s\n"
+
+#: ../navit/main.c:300
+#, c-format
+msgid "Using '%s'\n"
+msgstr "Používam '%s'\n"
+
+#: ../navit/main.c:303
+#, c-format
+msgid "No instance has been created, exiting\n"
+msgstr "Nebola vytvorená žiadna inštancia, ukončujem beh\n"
 
 #: ../navit/navigation.c:190
 #, c-format
@@ -169,43 +260,43 @@ msgstr "Zabočte %1s%2s%3s%4s"
 msgid "You have reached your destination %s"
 msgstr "Dorazili ste do svojho cieľa %s"
 
-#: ../navit/navit.c:765 ../navit/gui/gtk/gui_gtk_action.c:170
+#: ../navit/navit.c:812 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
 msgstr "Predošlé cieľe"
 
-#: ../navit/navit.c:775 ../navit/gui/gtk/gui_gtk_action.c:171
+#: ../navit/navit.c:829 ../navit/gui/gtk/gui_gtk_action.c:171
 msgid "Bookmarks"
 msgstr "Záložky"
 
-#: ../navit/navit.c:865
+#: ../navit/navit.c:919
 msgid "Command"
 msgstr "Príkaz"
 
-#: ../navit/navit.c:870
+#: ../navit/navit.c:924
 msgid "Length"
 msgstr "Dĺžka"
 
-#: ../navit/navit.c:874 ../navit/navit.c:899
+#: ../navit/navit.c:928 ../navit/navit.c:953
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:878 ../navit/navit.c:903
+#: ../navit/navit.c:932 ../navit/navit.c:957
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:884
+#: ../navit/navit.c:938
 msgid "Time"
 msgstr "Čas"
 
-#: ../navit/navit.c:896
+#: ../navit/navit.c:950
 msgid "Destination Length"
 msgstr "Cieľová vzdialenosť"
 
-#: ../navit/navit.c:909
+#: ../navit/navit.c:963
 msgid "Destination Time"
 msgstr "Čas k cieľu"
 
-#: ../navit/navit.c:938 ../navit/gui/gtk/gui_gtk_action.c:179
+#: ../navit/navit.c:992 ../navit/gui/gtk/gui_gtk_action.c:179
 msgid "Roadbook"
 msgstr "Plán trasy"
 
@@ -1461,72 +1552,72 @@ msgstr "Zambia"
 msgid "Zimbabwe"
 msgstr "Zimbabwe"
 
-#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:123
-#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
+#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:117
+#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
 msgid "Car"
 msgstr "Vozidlo"
 
-#: ../navit/gui/gtk/destination.c:122
+#: ../navit/gui/gtk/destination.c:116
 msgid "Iso2"
 msgstr "Iso2"
 
-#: ../navit/gui/gtk/destination.c:122
+#: ../navit/gui/gtk/destination.c:116
 msgid "Iso3"
 msgstr "Iso3"
 
-#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:431
+#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:422
 msgid "Country"
 msgstr "Krajina"
 
-#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
-#: ../navit/gui/gtk/destination.c:125
+#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
+#: ../navit/gui/gtk/destination.c:119
 msgid "Postal"
 msgstr "PSČ"
 
-#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
-#: ../navit/gui/gtk/destination.c:125
+#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
+#: ../navit/gui/gtk/destination.c:119
 msgid "Town"
 msgstr "Mesto"
 
-#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
-#: ../navit/gui/gtk/destination.c:125
+#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
+#: ../navit/gui/gtk/destination.c:119
 msgid "District"
 msgstr "Kraj"
 
-#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
-#: ../navit/gui/gtk/destination.c:442
+#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:431
 msgid "Street"
 msgstr "Ulica"
 
-#: ../navit/gui/gtk/destination.c:125 ../navit/gui/gtk/destination.c:444
+#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:433
 msgid "Number"
 msgstr "Číslo"
 
-#: ../navit/gui/gtk/destination.c:426
+#: ../navit/gui/gtk/destination.c:417
 msgid "Enter Destination"
 msgstr "Uveďte cieľ"
 
-#: ../navit/gui/gtk/destination.c:434
+#: ../navit/gui/gtk/destination.c:424
 msgid "Zip Code"
 msgstr "PSČ"
 
-#: ../navit/gui/gtk/destination.c:436
+#: ../navit/gui/gtk/destination.c:426
 msgid "City"
 msgstr "Mesto"
 
-#: ../navit/gui/gtk/destination.c:439
+#: ../navit/gui/gtk/destination.c:428
 msgid "District/Township"
 msgstr "Kraj/Okres"
 
-#: ../navit/gui/gtk/destination.c:467 ../navit/gui/gtk/gui_gtk_action.c:172
+#: ../navit/gui/gtk/destination.c:456 ../navit/gui/gtk/gui_gtk_action.c:172
 msgid "Map"
 msgstr "Mapa"
 
-#: ../navit/gui/gtk/destination.c:468
+#: ../navit/gui/gtk/destination.c:457
 msgid "Bookmark"
 msgstr "Záložka"
 
-#: ../navit/gui/gtk/destination.c:469 ../navit/gui/gtk/gui_gtk_action.c:185
+#: ../navit/gui/gtk/destination.c:458 ../navit/gui/gtk/gui_gtk_action.c:185
 msgid "Destination"
 msgstr "Cieľ"
 
@@ -1646,75 +1737,3 @@ msgstr "Cesta %4.0fkm    čas %02d:%02d"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Cesta 0000km  čas 0+00:00"
-
-#~ msgid "Refresh"
-#~ msgstr "Obnoviť"
-
-#~ msgid "Clear"
-#~ msgstr "Zmazať"
-
-#~ msgid "Tracking"
-#~ msgstr "Stopovanie"
-
-#~ msgid "Orientation"
-#~ msgstr "Orientácia"
-
-#~ msgid "Turn %1$s%2$s %3$s"
-#~ msgstr "Odbočte %1$s%2$s %3$s"
-
-#~ msgid "Moldova"
-#~ msgstr "Moldavsko"
-
-#~ msgid "Syria"
-#~ msgstr "Sýria"
-
-#~ msgid "Libia"
-#~ msgstr "Líbya"
-
-#~ msgid "Palestinia"
-#~ msgstr "Palestína"
-
-#~ msgid "Macedonia"
-#~ msgstr "Macedónsko"
-
-#~ msgid "VisibleBlocks"
-#~ msgstr "Viditeľné bloky"
-
-#~ msgid "VisibleTowns"
-#~ msgstr "Viditeľné mestá"
-
-#~ msgid "VisiblePolys"
-#~ msgstr "Viditeľné polygony"
-
-#~ msgid "VisibleStreets"
-#~ msgstr "Viditeľné ulice"
-
-#~ msgid "VisiblePoints"
-#~ msgstr "Viditeľné body"
-
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "použitie navitu:\n"
-#~ "navit [voľby] [konfiguračný súbor]\n"
-#~ "\t-c <súbor>: použije <súbor> ako konfiguračný súbor\n"
-#~ "\t-d <n>: nastaví úroveň ladiacích hlásení na <n>. (TODO)\n"
-#~ "\t-h: zobrazí tento informačný text a skončí.\n"
-#~ "\t-v: vypíše verziu programu a skončí.\n"
-
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Nenašiel sa konfiguračný súbor navit.xml ani navit.xml.local\n"
-
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "Chyba pri spracovávaní '%s': %s\n"
-
-#~ msgid "Using '%s'\n"
-#~ msgstr "Používam '%s'\n"
-
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "Nebola vytvorená žiadna inštancia, ukončujem beh\n"
