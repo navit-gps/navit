@@ -197,6 +197,7 @@ static char *attrmap={
 	"w	highway=track,tracktype=grade5		track_grass\n"
 	"w	highway=track,surface=grass		track_grass\n"
 	"w	highway=parking_lane	street_parking_lane\n"
+	"w	highway=service,service=parking_aisle	street_parking_lane\n"
 	"w	highway=service		street_service\n"
 	"w	highway=service,area=1	poly_service\n"
 	"w	highway=construction		street_construction\n"
