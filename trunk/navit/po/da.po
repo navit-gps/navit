@@ -1,5 +1,5 @@
 # Danish translation for Navit
-# Copyright (C) 2008
+# Copyright (C) 2008 The Navit Team
 # This file is distributed under the same license as the navit  package.
 # Glenn Sommer <glemsom@gmail.com>, 2008.
 #
@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-17 14:24+0200\n"
+"POT-Creation-Date: 2008-08-27 14:15+0200\n"
 "PO-Revision-Date: 2008-06-21 15:54+0000\n"
 "Last-Translator: Fennek <ng@fennek.dk>\n"
 "Language-Team: Glenn Sommer <glemsom@gmail.com>\n"
@@ -18,86 +18,15 @@ msgstr ""
 "X-Launchpad-Export-Date: 2008-06-22 14:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#~ msgid "Turn %1$s%2$s %3$s"
-#~ msgstr "Drej %1$s til %2$s %3$s"
-
-#~ msgid "Moldova"
-#~ msgstr "Moldova"
-
-#~ msgid "Syria"
-#~ msgstr "Syrien"
-
-#~ msgid "Libia"
-#~ msgstr "Liberia"
-
-#~ msgid "Palestinia"
-#~ msgstr "Palæstina"
-
-#~ msgid "Macedonia"
-#~ msgstr "Makedonien"
-
-#~ msgid "VisibleBlocks"
-#~ msgstr "Synlige Blokke"
-
-#~ msgid "VisibleTowns"
-#~ msgstr "Synlige byer"
-
-#~ msgid "VisiblePolys"
-#~ msgstr "Synlige Polygomer"
-
-#~ msgid "VisibleStreets"
-#~ msgstr "Synlige veje"
-
-#~ msgid "VisiblePoints"
-#~ msgstr "Synlige punkter"
-
-#: ../navit/main.c:132
-#, c-format
-msgid ""
-"navit usage:\n"
-"navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the debug output level to <n>. (TODO)\n"
-"\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
-msgstr ""
-"navit anvendelse:\n"
-"navit [parametre] [konfigurations fil]\n"
-"\t-c <file>: brug <file> som konfigurations fil\n"
-"\t-d <n>: indstil niveau for debugging beskeder <n>. (TODO)\n"
-"\t-h: Udskriv anvendelses information og afslut.\n"
-"\t-v: Udskriv versions nr. og afslut.\n"
-
-#: ../navit/main.c:152
+#: ../navit/main.c:149
 #, c-format
 msgid "Running from source directory\n"
 msgstr "Afvikler fra kildekode mappen\n"
 
-#: ../navit/main.c:168
+#: ../navit/main.c:165
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "sætter '%s' til '%s'\n"
-
-#. We have not found an existing config file from all possibilities
-#: ../navit/main.c:265
-#, c-format
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "Ingen konfigurationsfil navit.xml eller navit.xml.local fundet\n"
-
-#: ../navit/main.c:276
-#, c-format
-msgid "Error parsing '%s': %s\n"
-msgstr "Fejl ved analyse '%s': %s\n"
-
-#: ../navit/main.c:279
-#, c-format
-msgid "Using '%s'\n"
-msgstr "Bruger '%s'\n"
-
-#: ../navit/main.c:282
-#, c-format
-msgid "No instance has been created, exiting\n"
-msgstr "Ingen instanser er oprettet, afslutter\n"
 
 #: ../navit/navigation.c:190
 #, c-format
@@ -130,14 +59,12 @@ msgid "in %d.%d kilometers"
 msgstr "om %d.%d kilometer"
 
 #: ../navit/navigation.c:210
-#, fuzzy, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "én kilometer"
 msgstr[1] "én kilometer"
 
 #: ../navit/navigation.c:212
-#, fuzzy, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "om én kilometer"
@@ -238,43 +165,43 @@ msgstr "Drej %1$s%2$s %3$s%4$s"
 msgid "You have reached your destination %s"
 msgstr "Du er fremme ved destinationen %s"
 
-#: ../navit/navit.c:757 ../navit/gui/gtk/gui_gtk_action.c:170
+#: ../navit/navit.c:785 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
 msgstr "Tidligere destinationer"
 
-#: ../navit/navit.c:767 ../navit/gui/gtk/gui_gtk_action.c:171
+#: ../navit/navit.c:795 ../navit/gui/gtk/gui_gtk_action.c:171
 msgid "Bookmarks"
 msgstr "Bogmærker"
 
-#: ../navit/navit.c:857
+#: ../navit/navit.c:885
 msgid "Command"
 msgstr "Kommando"
 
-#: ../navit/navit.c:862
+#: ../navit/navit.c:890
 msgid "Length"
 msgstr "Længde"
 
-#: ../navit/navit.c:866 ../navit/navit.c:891
+#: ../navit/navit.c:894 ../navit/navit.c:919
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:870 ../navit/navit.c:895
+#: ../navit/navit.c:898 ../navit/navit.c:923
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:876
+#: ../navit/navit.c:904
 msgid "Time"
 msgstr "Tid"
 
-#: ../navit/navit.c:888
+#: ../navit/navit.c:916
 msgid "Destination Length"
 msgstr "Længde til destinationen"
 
-#: ../navit/navit.c:901
+#: ../navit/navit.c:929
 msgid "Destination Time"
 msgstr "Tid til destinationen"
 
-#: ../navit/navit.c:930 ../navit/gui/gtk/gui_gtk_action.c:179
+#: ../navit/navit.c:958 ../navit/gui/gtk/gui_gtk_action.c:179
 msgid "Roadbook"
 msgstr "Vejbog"
 
@@ -296,7 +223,6 @@ msgid "Point 0x%x 0x%x"
 msgstr "Punkt 0x%x 0x%x"
 
 #: ../navit/popup.c:264
-#, fuzzy, c-format
 msgid "Screen coord : %d %d"
 msgstr "Skærm koordinater %d %d"
 
@@ -1207,7 +1133,6 @@ msgstr "Puerto Rico"
 
 #. 275
 #: ../navit/country.c:224
-#, fuzzy
 msgid "Palestinian Territory, Occupied"
 msgstr "Palæstinensiske Territorie, Det Besatte"
 
@@ -1348,7 +1273,6 @@ msgstr "Den arabiske republik Syrien"
 
 #. 748
 #: ../navit/country.c:252
-#, fuzzy
 msgid "Swaziland"
 msgstr "Swaziland"
 
@@ -1532,73 +1456,72 @@ msgstr "Zambia"
 msgid "Zimbabwe"
 msgstr "Zimbabwe"
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:117
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:123
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
 msgid "Car"
 msgstr "Bil"
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso2"
 msgstr "Iso2"
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso3"
 msgstr "Iso3"
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:422
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:431
 msgid "Country"
 msgstr "Land"
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
-#, fuzzy
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Postal"
 msgstr "Post"
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Town"
 msgstr "By"
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "District"
 msgstr "Område"
 
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
-#: ../navit/gui/gtk/destination.c:431
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
+#: ../navit/gui/gtk/destination.c:442
 msgid "Street"
 msgstr "Gade"
 
-#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:433
+#: ../navit/gui/gtk/destination.c:125 ../navit/gui/gtk/destination.c:444
 msgid "Number"
 msgstr "Nummer"
 
-#: ../navit/gui/gtk/destination.c:417
+#: ../navit/gui/gtk/destination.c:426
 msgid "Enter Destination"
 msgstr "Indtast destination"
 
-#: ../navit/gui/gtk/destination.c:424
+#: ../navit/gui/gtk/destination.c:434
 msgid "Zip Code"
 msgstr "Postnummer"
 
-#: ../navit/gui/gtk/destination.c:426
+#: ../navit/gui/gtk/destination.c:436
 msgid "City"
 msgstr "By"
 
-#: ../navit/gui/gtk/destination.c:428
+#: ../navit/gui/gtk/destination.c:439
 msgid "District/Township"
 msgstr "Distrikt"
 
-#: ../navit/gui/gtk/destination.c:456 ../navit/gui/gtk/gui_gtk_action.c:172
+#: ../navit/gui/gtk/destination.c:467 ../navit/gui/gtk/gui_gtk_action.c:172
 msgid "Map"
 msgstr "Kort"
 
-#: ../navit/gui/gtk/destination.c:457
+#: ../navit/gui/gtk/destination.c:468
 msgid "Bookmark"
 msgstr "Bogmærke"
 
-#: ../navit/gui/gtk/destination.c:458 ../navit/gui/gtk/gui_gtk_action.c:185
+#: ../navit/gui/gtk/destination.c:469 ../navit/gui/gtk/gui_gtk_action.c:185
 msgid "Destination"
 msgstr "Destination"
 
@@ -1631,16 +1554,16 @@ msgid "ZoomIn"
 msgstr "Zoom ind"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:178
-msgid "Refresh"
-msgstr "Forny"
+msgid "Recalculate"
+msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_action.c:181 ../navit/gui/gtk/gui_gtk_action.c:183
 msgid "Info"
 msgstr "Information"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:186
-msgid "Clear"
-msgstr "Ryd"
+msgid "Stop Navigation"
+msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_action.c:187
 msgid "Test"
@@ -1655,12 +1578,12 @@ msgid "Cursor"
 msgstr "Markør"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
-msgid "Tracking"
-msgstr "Sporing"
+msgid "Lock on Road"
+msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_action.c:197
-msgid "Orientation"
-msgstr "Retning"
+msgid "Northing"
+msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_action.c:199 ../navit/gui/gtk/gui_gtk_action.c:201
 msgid "Fullscreen"
@@ -1718,3 +1641,75 @@ msgstr "Rute %4.0fkm    %02d:%02d ETA"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Rute 0000km  0+00:00 ETA"
+
+#~ msgid "Turn %1$s%2$s %3$s"
+#~ msgstr "Drej %1$s til %2$s %3$s"
+
+#~ msgid "Moldova"
+#~ msgstr "Moldova"
+
+#~ msgid "Syria"
+#~ msgstr "Syrien"
+
+#~ msgid "Libia"
+#~ msgstr "Liberia"
+
+#~ msgid "Palestinia"
+#~ msgstr "Palæstina"
+
+#~ msgid "Macedonia"
+#~ msgstr "Makedonien"
+
+#~ msgid "VisibleBlocks"
+#~ msgstr "Synlige Blokke"
+
+#~ msgid "VisibleTowns"
+#~ msgstr "Synlige byer"
+
+#~ msgid "VisiblePolys"
+#~ msgstr "Synlige Polygomer"
+
+#~ msgid "VisibleStreets"
+#~ msgstr "Synlige veje"
+
+#~ msgid "VisiblePoints"
+#~ msgstr "Synlige punkter"
+
+#~ msgid ""
+#~ "navit usage:\n"
+#~ "navit [options] [configfile]\n"
+#~ "\t-c <file>: use <file> as config file\n"
+#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
+#~ "\t-h: print this usage info and exit.\n"
+#~ "\t-v: Print the version and exit.\n"
+#~ msgstr ""
+#~ "navit anvendelse:\n"
+#~ "navit [parametre] [konfigurations fil]\n"
+#~ "\t-c <file>: brug <file> som konfigurations fil\n"
+#~ "\t-d <n>: indstil niveau for debugging beskeder <n>. (TODO)\n"
+#~ "\t-h: Udskriv anvendelses information og afslut.\n"
+#~ "\t-v: Udskriv versions nr. og afslut.\n"
+
+#~ msgid "No config file navit.xml, navit.xml.local found\n"
+#~ msgstr "Ingen konfigurationsfil navit.xml eller navit.xml.local fundet\n"
+
+#~ msgid "Error parsing '%s': %s\n"
+#~ msgstr "Fejl ved analyse '%s': %s\n"
+
+#~ msgid "Using '%s'\n"
+#~ msgstr "Bruger '%s'\n"
+
+#~ msgid "No instance has been created, exiting\n"
+#~ msgstr "Ingen instanser er oprettet, afslutter\n"
+
+#~ msgid "Refresh"
+#~ msgstr "Forny"
+
+#~ msgid "Clear"
+#~ msgstr "Ryd"
+
+#~ msgid "Tracking"
+#~ msgstr "Sporing"
+
+#~ msgid "Orientation"
+#~ msgstr "Retning"

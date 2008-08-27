@@ -1,92 +1,33 @@
 # Slovenian translation for navit
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# Copyright (c) 2008 The Navit Team
 # This file is distributed under the same license as the navit package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Štefan Baebler <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-06-30 11:32+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-08-27 14:15+0200\n"
 "PO-Revision-Date: 2008-07-24 04:53+0000\n"
 "Last-Translator: Štefan Baebler <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
-"n%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
 "X-Launchpad-Export-Date: 2008-07-24 06:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
+#: ../navit/main.c:149
 #, c-format
-#~ msgid "Running from source directory\n"
-#~ msgstr "Zagon iz mape z izvorno kodo\n"
+msgid "Running from source directory\n"
+msgstr "Zagon iz mape z izvorno kodo\n"
 
-#~ msgid "Refresh"
-#~ msgstr "Osveži"
-
-#~ msgid "Clear"
-#~ msgstr "Počisti"
-
-#~ msgid "Tracking"
-#~ msgstr "Sledenje"
-
-#~ msgid "Orientation"
-#~ msgstr "Orientacija"
-
-#: ../navit/main.c:132
-#, c-format
-msgid ""
-"navit usage:\n"
-"navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the debug output level to <n>. (TODO)\n"
-"\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
-msgstr ""
-"uporaba navit-a:\n"
-"navit [možnosti] [nastavitvenadatoteka]\n"
-"\t-c <datoteka>: prebere nastavitve iz datoteke <datoteka>\n"
-"\t-d <n>: nastavi podrobnosti izpisa na nivo <n>. (TODO)\n"
-"\t-h: izpiše ta navodila in zaključi.\n"
-"\t-v: izpiše verzijo in zaključi.\n"
-
-#: ../navit/main.c:159
-#, c-format
-msgid ""
-"Running from source directory. Bookmarks, center and destinations will be "
-"r/w from this directory\n"
-msgstr ""
-"Zagon iz mape z izvorno kodo. Zaznamki in trenutni položaj bodo shranjeni v "
-"tej mapi.\n"
-
-#: ../navit/main.c:175
+#: ../navit/main.c:165
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "nastavljam '%s' na '%s'\n"
-
-#. We have not found an existing config file from all possibilities
-#: ../navit/main.c:286
-#, c-format
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
-"Datoteke z nastavitvami navit.xml ni, najdena datoteka navit.xml.local\n"
-
-#: ../navit/main.c:297
-#, c-format
-msgid "Error parsing '%s': %s\n"
-msgstr "Napaka pri razčlenjevanju '%s': %s\n"
-
-#: ../navit/main.c:300
-#, c-format
-msgid "Using '%s'\n"
-msgstr "Uporabljam '%s'\n"
-
-#: ../navit/main.c:303
-#, c-format
-msgid "No instance has been created, exiting\n"
-msgstr "Instanca ni bila ustvarjena, sledi izhod\n"
 
 #: ../navit/navigation.c:190
 #, c-format
@@ -231,43 +172,43 @@ msgstr "%3$s zavijte %1$s%2$s %4$s"
 msgid "You have reached your destination %s"
 msgstr "%s prispete na cilj"
 
-#: ../navit/navit.c:812 ../navit/gui/gtk/gui_gtk_action.c:170
+#: ../navit/navit.c:785 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
 msgstr "Prejšnji cilji"
 
-#: ../navit/navit.c:829 ../navit/gui/gtk/gui_gtk_action.c:171
+#: ../navit/navit.c:795 ../navit/gui/gtk/gui_gtk_action.c:171
 msgid "Bookmarks"
 msgstr "Zaznamki"
 
-#: ../navit/navit.c:919
+#: ../navit/navit.c:885
 msgid "Command"
 msgstr "Navodilo"
 
-#: ../navit/navit.c:924
+#: ../navit/navit.c:890
 msgid "Length"
 msgstr "Razdalja"
 
-#: ../navit/navit.c:928 ../navit/navit.c:953
+#: ../navit/navit.c:894 ../navit/navit.c:919
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:932 ../navit/navit.c:957
+#: ../navit/navit.c:898 ../navit/navit.c:923
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:938
+#: ../navit/navit.c:904
 msgid "Time"
 msgstr "Čas"
 
-#: ../navit/navit.c:950
+#: ../navit/navit.c:916
 msgid "Destination Length"
 msgstr "Razdalja do cilja"
 
-#: ../navit/navit.c:963
+#: ../navit/navit.c:929
 msgid "Destination Time"
 msgstr "Čas do cilja"
 
-#: ../navit/navit.c:992 ../navit/gui/gtk/gui_gtk_action.c:179
+#: ../navit/navit.c:958 ../navit/gui/gtk/gui_gtk_action.c:179
 msgid "Roadbook"
 msgstr "Načrt poti"
 
@@ -1523,72 +1464,72 @@ msgstr "Zambija"
 msgid "Zimbabwe"
 msgstr "Zimbabve"
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:117
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:123
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
 msgid "Car"
 msgstr "Avto"
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso2"
 msgstr "Iso2"
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso3"
 msgstr "Iso3"
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:422
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:431
 msgid "Country"
 msgstr "Država"
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Postal"
 msgstr "Pošta"
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Town"
 msgstr "Mesto"
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "District"
 msgstr "Regija"
 
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
-#: ../navit/gui/gtk/destination.c:431
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
+#: ../navit/gui/gtk/destination.c:442
 msgid "Street"
 msgstr "Ulica"
 
-#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:433
+#: ../navit/gui/gtk/destination.c:125 ../navit/gui/gtk/destination.c:444
 msgid "Number"
 msgstr "Številka"
 
-#: ../navit/gui/gtk/destination.c:417
+#: ../navit/gui/gtk/destination.c:426
 msgid "Enter Destination"
 msgstr "Vpišite cilj"
 
-#: ../navit/gui/gtk/destination.c:424
+#: ../navit/gui/gtk/destination.c:434
 msgid "Zip Code"
 msgstr "Poštna številka"
 
-#: ../navit/gui/gtk/destination.c:426
+#: ../navit/gui/gtk/destination.c:436
 msgid "City"
 msgstr "Mesto"
 
-#: ../navit/gui/gtk/destination.c:428
+#: ../navit/gui/gtk/destination.c:439
 msgid "District/Township"
 msgstr "Regija"
 
-#: ../navit/gui/gtk/destination.c:456 ../navit/gui/gtk/gui_gtk_action.c:172
+#: ../navit/gui/gtk/destination.c:467 ../navit/gui/gtk/gui_gtk_action.c:172
 msgid "Map"
 msgstr "Zemljevid"
 
-#: ../navit/gui/gtk/destination.c:457
+#: ../navit/gui/gtk/destination.c:468
 msgid "Bookmark"
 msgstr "Zaznamek"
 
-#: ../navit/gui/gtk/destination.c:458 ../navit/gui/gtk/gui_gtk_action.c:185
+#: ../navit/gui/gtk/destination.c:469 ../navit/gui/gtk/gui_gtk_action.c:185
 msgid "Destination"
 msgstr "Cilj"
 
@@ -1708,3 +1649,50 @@ msgstr "Načrt poti %4.0fkm    %02d:%02d ETA"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Načrt poti 0000km  0+00:00 ETA"
+
+#~ msgid "Refresh"
+#~ msgstr "Osveži"
+
+#~ msgid "Clear"
+#~ msgstr "Počisti"
+
+#~ msgid "Tracking"
+#~ msgstr "Sledenje"
+
+#~ msgid "Orientation"
+#~ msgstr "Orientacija"
+
+#~ msgid ""
+#~ "navit usage:\n"
+#~ "navit [options] [configfile]\n"
+#~ "\t-c <file>: use <file> as config file\n"
+#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
+#~ "\t-h: print this usage info and exit.\n"
+#~ "\t-v: Print the version and exit.\n"
+#~ msgstr ""
+#~ "uporaba navit-a:\n"
+#~ "navit [možnosti] [nastavitvenadatoteka]\n"
+#~ "\t-c <datoteka>: prebere nastavitve iz datoteke <datoteka>\n"
+#~ "\t-d <n>: nastavi podrobnosti izpisa na nivo <n>. (TODO)\n"
+#~ "\t-h: izpiše ta navodila in zaključi.\n"
+#~ "\t-v: izpiše verzijo in zaključi.\n"
+
+#~ msgid ""
+#~ "Running from source directory. Bookmarks, center and destinations will be "
+#~ "r/w from this directory\n"
+#~ msgstr ""
+#~ "Zagon iz mape z izvorno kodo. Zaznamki in trenutni položaj bodo shranjeni "
+#~ "v tej mapi.\n"
+
+#~ msgid "No config file navit.xml, navit.xml.local found\n"
+#~ msgstr ""
+#~ "Datoteke z nastavitvami navit.xml ni, najdena datoteka navit.xml.local\n"
+
+#~ msgid "Error parsing '%s': %s\n"
+#~ msgstr "Napaka pri razčlenjevanju '%s': %s\n"
+
+#~ msgid "Using '%s'\n"
+#~ msgstr "Uporabljam '%s'\n"
+
+#~ msgid "No instance has been created, exiting\n"
+#~ msgstr "Instanca ni bila ustvarjena, sledi izhod\n"

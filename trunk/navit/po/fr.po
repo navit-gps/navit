@@ -1,5 +1,5 @@
 # French translations for navit
-# Copyright (C) 2007
+# Copyright (C) 2007, 2008 The Navit Team
 # This file is distributed under the same license as the navit package.
 # 'KaZeR' <kazer@altern.org>
 # 'Nekohayo' <nekohayo arobas gmail point com>
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-17 10:01+0200\n"
+"POT-Creation-Date: 2008-08-27 14:15+0200\n"
 "PO-Revision-Date: 2008-06-17 09:12+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -19,110 +19,15 @@ msgstr ""
 "X-Launchpad-Export-Date: 2008-06-17 11:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#~ msgid "Moldova"
-#~ msgstr "Moldavie"
-
-#~ msgid "Palestinia"
-#~ msgstr "Palestine"
-
-#~ msgid "VisibleBlocks"
-#~ msgstr "Blocs visibles"
-
-#~ msgid "VisibleTowns"
-#~ msgstr "Villes visibles"
-
-#~ msgid "VisiblePolys"
-#~ msgstr "Polys visibles"
-
-#~ msgid "VisibleStreets"
-#~ msgstr "Rues visibles"
-
-#~ msgid "VisiblePoints"
-#~ msgstr "Points visibles"
-
-#~ msgid "RouteGraph"
-#~ msgstr "RouteGraph"
-
-#~ msgid "two kilometers"
-#~ msgstr "deux kilomètres"
-
-#~ msgid "in two kilometers"
-#~ msgstr "dans deux kilomètres"
-
-#~ msgid "three kilometers"
-#~ msgstr "trois kilomètres"
-
-#~ msgid "in three kilometers"
-#~ msgstr "dans trois kilomètres"
-
-#~ msgid "four kilometers"
-#~ msgstr "quatre kilomètres"
-
-#~ msgid "in four kilometers"
-#~ msgstr "dans quatre kilomètres"
-
-#~ msgid "%d kilometers"
-#~ msgstr "%d kilomètres"
-
-#~ msgid "in %d kilometers"
-#~ msgstr "dans %d kilomètres"
-
-#~ msgid "strength_pos"
-#~ msgstr "2"
-
-#~ msgid "direction_pos"
-#~ msgstr "3"
-
-#~ msgid "distance_pos"
-#~ msgstr "1"
-
-#: ../navit/main.c:132
-#, c-format
-msgid ""
-"navit usage:\n"
-"navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the debug output level to <n>. (TODO)\n"
-"\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
-msgstr ""
-"utilisation de navit:\n"
-"navit [options] [fichier de configuration]\n"
-"\t-c <fichier>: utiliser <fichier> comme source de configuration\n"
-"\t-d <n>: définir le niveau de verbosité à <n>. (non implémenté)\n"
-"\t-h: afficher ce message et quitter\n"
-"\t-v: afficher la version et quitter\n"
-
-#: ../navit/main.c:152
+#: ../navit/main.c:149
 #, c-format
 msgid "Running from source directory\n"
 msgstr "Execution depuis le dossier source\n"
 
-#: ../navit/main.c:168
+#: ../navit/main.c:165
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "'%s' mis à '%s'\n"
-
-#. We have not found an existing config file from all possibilities
-#: ../navit/main.c:265
-#, c-format
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "Fichier de configuration navit.xml ou navit.xml.local non trouvé\n"
-
-#: ../navit/main.c:276
-#, c-format
-msgid "Error parsing '%s': %s\n"
-msgstr "Erreur lors du traitement de '%s': %s\n"
-
-#: ../navit/main.c:279
-#, c-format
-msgid "Using '%s'\n"
-msgstr "Utilisation de '%s'\n"
-
-#: ../navit/main.c:282
-#, c-format
-msgid "No instance has been created, exiting\n"
-msgstr "Pas d'instance créée, sortie\n"
 
 #: ../navit/navigation.c:190
 #, c-format
@@ -202,105 +107,111 @@ msgid "%sinto the %s%s%s|neutral form"
 msgstr "%ssur l'%s%s%s|neutral form"
 
 # utilisé pour les "références" de route. Par exemple, "tournez sur la 43".
-#: ../navit/navigation.c:516
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#: ../navit/navigation.c:517
 #, c-format
 msgid "into the %s"
 msgstr "sur la %s"
 
 # tournez à droite
-#: ../navit/navigation.c:537
+#. TRANSLATORS: right, as in 'Turn right'
+#: ../navit/navigation.c:539
 msgid "right"
 msgstr "à droite"
 
 # tournez à gauche
-#: ../navit/navigation.c:544
+#. TRANSLATORS: left, as in 'Turn left'
+#: ../navit/navigation.c:547
 msgid "left"
 msgstr "à gauche"
 
 # utilisé pour les changements de voie pour les sorties?
-#: ../navit/navigation.c:548
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:552
 msgid "easily "
 msgstr "légèrement "
 
-#: ../navit/navigation.c:552
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:557
 msgid "strongly "
 msgstr "fortement "
 
 # attention à l'espace à la fin
-#: ../navit/navigation.c:555
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:561
 msgid "unknown "
 msgstr "inconnu "
 
-#: ../navit/navigation.c:561
+#: ../navit/navigation.c:567
 msgid "When possible, please turn around"
 msgstr "Dès que possible, faites demi-tour"
 
-#: ../navit/navigation.c:568
+#: ../navit/navigation.c:574
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Suivez la route sur %s"
 
-#: ../navit/navigation.c:572
+#: ../navit/navigation.c:578
 msgid "soon"
 msgstr "bientôt"
 
-#: ../navit/navigation.c:578
+#: ../navit/navigation.c:584
 msgid "now"
 msgstr "maintenant"
 
-#: ../navit/navigation.c:581
+#: ../navit/navigation.c:587
 msgid "error"
 msgstr "erreur"
 
 # espace important après le 2
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:610
+#: ../navit/navigation.c:616
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "%3$s, tournez %1$s%2$s %4$s"
 
-#: ../navit/navigation.c:613
+#: ../navit/navigation.c:619
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Vous êtes arrivé à votre destination %s"
 
-#: ../navit/navit.c:757 ../navit/gui/gtk/gui_gtk_action.c:170
+#: ../navit/navit.c:785 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
 msgstr "Destinations précédentes"
 
-#: ../navit/navit.c:767 ../navit/gui/gtk/gui_gtk_action.c:171
+#: ../navit/navit.c:795 ../navit/gui/gtk/gui_gtk_action.c:171
 msgid "Bookmarks"
 msgstr "Signets"
 
-#: ../navit/navit.c:857
+#: ../navit/navit.c:885
 msgid "Command"
 msgstr "Commande"
 
-#: ../navit/navit.c:862
+#: ../navit/navit.c:890
 msgid "Length"
 msgstr "Distance"
 
-#: ../navit/navit.c:866 ../navit/navit.c:891
+#: ../navit/navit.c:894 ../navit/navit.c:919
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:870 ../navit/navit.c:895
+#: ../navit/navit.c:898 ../navit/navit.c:923
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:876
+#: ../navit/navit.c:904
 msgid "Time"
 msgstr "Durée"
 
-#: ../navit/navit.c:888
+#: ../navit/navit.c:916
 msgid "Destination Length"
 msgstr "Distance à parcourir"
 
-#: ../navit/navit.c:901
+#: ../navit/navit.c:929
 msgid "Destination Time"
 msgstr "Temps de parcours"
 
-#: ../navit/navit.c:930 ../navit/gui/gtk/gui_gtk_action.c:179
+#: ../navit/navit.c:958 ../navit/gui/gtk/gui_gtk_action.c:179
 msgid "Roadbook"
 msgstr "Carnet de route"
 
@@ -1556,72 +1467,72 @@ msgstr "Zambie"
 msgid "Zimbabwe"
 msgstr "Zimbabwe"
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:117
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:123
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
 msgid "Car"
 msgstr "Voiture"
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso2"
 msgstr "iso2"
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso3"
 msgstr "iso3"
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:422
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:431
 msgid "Country"
 msgstr "Pays"
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Postal"
 msgstr "Code postal"
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Town"
 msgstr "Ville"
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "District"
 msgstr "Quartier"
 
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
-#: ../navit/gui/gtk/destination.c:431
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
+#: ../navit/gui/gtk/destination.c:442
 msgid "Street"
 msgstr "Rue"
 
-#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:433
+#: ../navit/gui/gtk/destination.c:125 ../navit/gui/gtk/destination.c:444
 msgid "Number"
 msgstr "Numéro"
 
-#: ../navit/gui/gtk/destination.c:417
+#: ../navit/gui/gtk/destination.c:426
 msgid "Enter Destination"
 msgstr "Entrez une destination"
 
-#: ../navit/gui/gtk/destination.c:424
+#: ../navit/gui/gtk/destination.c:434
 msgid "Zip Code"
 msgstr "Code postal"
 
-#: ../navit/gui/gtk/destination.c:426
+#: ../navit/gui/gtk/destination.c:436
 msgid "City"
 msgstr "Ville"
 
-#: ../navit/gui/gtk/destination.c:428
+#: ../navit/gui/gtk/destination.c:439
 msgid "District/Township"
 msgstr "Canton"
 
-#: ../navit/gui/gtk/destination.c:456 ../navit/gui/gtk/gui_gtk_action.c:172
+#: ../navit/gui/gtk/destination.c:467 ../navit/gui/gtk/gui_gtk_action.c:172
 msgid "Map"
 msgstr "Carte"
 
-#: ../navit/gui/gtk/destination.c:457
+#: ../navit/gui/gtk/destination.c:468
 msgid "Bookmark"
 msgstr "Signet"
 
-#: ../navit/gui/gtk/destination.c:458 ../navit/gui/gtk/gui_gtk_action.c:185
+#: ../navit/gui/gtk/destination.c:469 ../navit/gui/gtk/gui_gtk_action.c:185
 msgid "Destination"
 msgstr "Destination"
 
@@ -1654,16 +1565,16 @@ msgid "ZoomIn"
 msgstr "Zoom avant"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:178
-msgid "Refresh"
-msgstr "Rafraîchir"
+msgid "Recalculate"
+msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_action.c:181 ../navit/gui/gtk/gui_gtk_action.c:183
 msgid "Info"
 msgstr "Info"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:186
-msgid "Clear"
-msgstr "Effacer"
+msgid "Stop Navigation"
+msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_action.c:187
 msgid "Test"
@@ -1678,12 +1589,12 @@ msgid "Cursor"
 msgstr "Afficher le curseur"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
-msgid "Tracking"
-msgstr "Coller le curseur à la route"
+msgid "Lock on Road"
+msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_action.c:197
-msgid "Orientation"
-msgstr "Conserver l'orientation vers le Nord"
+msgid "Northing"
+msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_action.c:199 ../navit/gui/gtk/gui_gtk_action.c:201
 msgid "Fullscreen"
@@ -1741,3 +1652,99 @@ msgstr "Trajet restant %4.0f km    heure d'arrivée estimée %02d:%02d"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Trajet 0000 km  temps estimé 0+00:00"
+
+#~ msgid "Moldova"
+#~ msgstr "Moldavie"
+
+#~ msgid "Palestinia"
+#~ msgstr "Palestine"
+
+#~ msgid "VisibleBlocks"
+#~ msgstr "Blocs visibles"
+
+#~ msgid "VisibleTowns"
+#~ msgstr "Villes visibles"
+
+#~ msgid "VisiblePolys"
+#~ msgstr "Polys visibles"
+
+#~ msgid "VisibleStreets"
+#~ msgstr "Rues visibles"
+
+#~ msgid "VisiblePoints"
+#~ msgstr "Points visibles"
+
+#~ msgid "RouteGraph"
+#~ msgstr "RouteGraph"
+
+#~ msgid "two kilometers"
+#~ msgstr "deux kilomètres"
+
+#~ msgid "in two kilometers"
+#~ msgstr "dans deux kilomètres"
+
+#~ msgid "three kilometers"
+#~ msgstr "trois kilomètres"
+
+#~ msgid "in three kilometers"
+#~ msgstr "dans trois kilomètres"
+
+#~ msgid "four kilometers"
+#~ msgstr "quatre kilomètres"
+
+#~ msgid "in four kilometers"
+#~ msgstr "dans quatre kilomètres"
+
+#~ msgid "%d kilometers"
+#~ msgstr "%d kilomètres"
+
+#~ msgid "in %d kilometers"
+#~ msgstr "dans %d kilomètres"
+
+#~ msgid "strength_pos"
+#~ msgstr "2"
+
+#~ msgid "direction_pos"
+#~ msgstr "3"
+
+#~ msgid "distance_pos"
+#~ msgstr "1"
+
+#~ msgid ""
+#~ "navit usage:\n"
+#~ "navit [options] [configfile]\n"
+#~ "\t-c <file>: use <file> as config file\n"
+#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
+#~ "\t-h: print this usage info and exit.\n"
+#~ "\t-v: Print the version and exit.\n"
+#~ msgstr ""
+#~ "utilisation de navit:\n"
+#~ "navit [options] [fichier de configuration]\n"
+#~ "\t-c <fichier>: utiliser <fichier> comme source de configuration\n"
+#~ "\t-d <n>: définir le niveau de verbosité à <n>. (non implémenté)\n"
+#~ "\t-h: afficher ce message et quitter\n"
+#~ "\t-v: afficher la version et quitter\n"
+
+#~ msgid "No config file navit.xml, navit.xml.local found\n"
+#~ msgstr "Fichier de configuration navit.xml ou navit.xml.local non trouvé\n"
+
+#~ msgid "Error parsing '%s': %s\n"
+#~ msgstr "Erreur lors du traitement de '%s': %s\n"
+
+#~ msgid "Using '%s'\n"
+#~ msgstr "Utilisation de '%s'\n"
+
+#~ msgid "No instance has been created, exiting\n"
+#~ msgstr "Pas d'instance créée, sortie\n"
+
+#~ msgid "Refresh"
+#~ msgstr "Rafraîchir"
+
+#~ msgid "Clear"
+#~ msgstr "Effacer"
+
+#~ msgid "Tracking"
+#~ msgstr "Coller le curseur à la route"
+
+#~ msgid "Orientation"
+#~ msgstr "Conserver l'orientation vers le Nord"
