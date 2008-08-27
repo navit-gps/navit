@@ -62,13 +62,15 @@ msgstr "za %d.%d kilometrów"
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "jeden kilometr"
-msgstr[1] "jeden kilometr"
+msgstr[1] "%d kilometr"
+msgstr[2] "%d kilometr"
 
 #: ../navit/navigation.c:212
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "za kilometr"
-msgstr[1] "za kilometr"
+msgstr[1] "%d kilometr"
+msgstr[2] "%d kilometr"
 
 #: ../navit/navigation.c:466
 msgid "exit"
