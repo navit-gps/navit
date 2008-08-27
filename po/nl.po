@@ -1,13 +1,14 @@
-# German translations for navit
-# Copyright (C) 2007
+# Dutch translations for navit
+# Copyright (C) 2007,2008 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Albert Faber, 2007.
-#
+# Ed Kapitein <Unknown>
+
 msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-17 20:37+0200\n"
+"POT-Creation-Date: 2008-08-27 14:15+0200\n"
 "PO-Revision-Date: 2008-08-10 14:30+0000\n"
 "Last-Translator: Ed Kapitein <Unknown>\n"
 "Language-Team: afaber\n"
@@ -73,36 +74,30 @@ msgstr[0] "na één kilometer"
 msgstr[1] "in %d kilometer"
 
 #: ../navit/navigation.c:466
-#, fuzzy
 msgid "exit"
 msgstr "afslag"
 
 #: ../navit/navigation.c:468
-#, fuzzy
 msgid "ramp"
 msgstr "helling"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #: ../navit/navigation.c:498
-#, fuzzy, c-format
 msgid "%sinto the street %s%s%s"
 msgstr "%sin the straat %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:502
-#, fuzzy, c-format
 msgid "%sinto the %s%s%s|male form"
 msgstr "%sin de %s%s%s|mannelijke vorm"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:506
-#, fuzzy, c-format
 msgid "%sinto the %s%s%s|female form"
 msgstr "%sin de %s%s%s|vrouwelijke vorm"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:510
-#, fuzzy, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%sin de %s%s%s|neutrale vorm"
 
@@ -170,43 +165,43 @@ msgstr "Ga %3$s %1$s naar %2$s %4$s"
 msgid "You have reached your destination %s"
 msgstr "%s bestemming bereikt"
 
-#: ../navit/navit.c:765 ../navit/gui/gtk/gui_gtk_action.c:170
+#: ../navit/navit.c:785 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
 msgstr "Vorige bestemmingen"
 
-#: ../navit/navit.c:775 ../navit/gui/gtk/gui_gtk_action.c:171
+#: ../navit/navit.c:795 ../navit/gui/gtk/gui_gtk_action.c:171
 msgid "Bookmarks"
 msgstr "Bookmarks"
 
-#: ../navit/navit.c:865
+#: ../navit/navit.c:885
 msgid "Command"
 msgstr "Opdracht"
 
-#: ../navit/navit.c:870
+#: ../navit/navit.c:890
 msgid "Length"
 msgstr "Lengte"
 
-#: ../navit/navit.c:874 ../navit/navit.c:899
+#: ../navit/navit.c:894 ../navit/navit.c:919
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:878 ../navit/navit.c:903
+#: ../navit/navit.c:898 ../navit/navit.c:923
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:884
+#: ../navit/navit.c:904
 msgid "Time"
 msgstr "Tijd"
 
-#: ../navit/navit.c:896
+#: ../navit/navit.c:916
 msgid "Destination Length"
 msgstr "Afstand"
 
-#: ../navit/navit.c:909
+#: ../navit/navit.c:929
 msgid "Destination Time"
 msgstr "Aankomsttijd"
 
-#: ../navit/navit.c:938 ../navit/gui/gtk/gui_gtk_action.c:179
+#: ../navit/navit.c:958 ../navit/gui/gtk/gui_gtk_action.c:179
 msgid "Roadbook"
 msgstr "Route"
 
@@ -1564,7 +1559,6 @@ msgid "ZoomIn"
 msgstr "Vergroten"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:178
-#, fuzzy
 msgid "Recalculate"
 msgstr "Herberekenen"
 
@@ -1573,7 +1567,6 @@ msgid "Info"
 msgstr "Info"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:186
-#, fuzzy
 msgid "Stop Navigation"
 msgstr "Stop navigatie"
 
@@ -1590,12 +1583,10 @@ msgid "Cursor"
 msgstr "Cursor"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
-#, fuzzy
 msgid "Lock on Road"
 msgstr "houd de weg aan"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:197
-#, fuzzy
 msgid "Northing"
 msgstr "Kaart richting"
 
@@ -1656,73 +1647,3 @@ msgstr "Route %4.0fkm    %02d:%02d Aankomsttijd"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Route 0000km  0+00:00 Aankomsttijd"
 
-#~ msgid "Refresh"
-#~ msgstr "Verversen"
-
-#~ msgid "Clear"
-#~ msgstr "Wissen"
-
-#~ msgid "Tracking"
-#~ msgstr "Volgen"
-
-#~ msgid "Orientation"
-#~ msgstr "Oriëntatie"
-
-#~ msgid "Turn %1$s%2$s %3$s"
-#~ msgstr "%3$s %1$s%2$s afslaan"
-
-#~ msgid "Moldova"
-#~ msgstr "Moldavië"
-
-#~ msgid "Palestinia"
-#~ msgstr "Palestina"
-
-#~ msgid "VisibleBlocks"
-#~ msgstr "Toon blokken"
-
-#~ msgid "VisibleTowns"
-#~ msgstr "Zichtbare Steden"
-
-#~ msgid "VisiblePolys"
-#~ msgstr "Toon polygonen"
-
-#~ msgid "VisibleStreets"
-#~ msgstr "Toon straten"
-
-#~ msgid "VisiblePoints"
-#~ msgstr "Toon punten"
-
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "navit gebruik:\n"
-#~ "navit [opties] [configuratie bestand]\n"
-#~ "\t-c <bestand>: gebruik <bestand> als configuratie bestand\n"
-#~ "\t-d <n>: stel het debug niveau in op <n>. (nog niet actief)\n"
-#~ "\t-h: print deze help pagina en stop.\n"
-#~ "\t-v: Print de versie en stop.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "Running from source directory. Bookmarks, center and destinations will be "
-#~ "r/w from this directory\n"
-#~ msgstr ""
-#~ "Gestart vanuit de bron directory. Bladwijzers, middelpunt en bestemingen "
-#~ "zullen in deze directory gelezen/geschreven worden.\n"
-
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Geen config file navit.xml, navit.xml.local gevonden\n"
-
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "Error bij het verwerken van '%s': %s\n"
-
-#~ msgid "Using '%s'\n"
-#~ msgstr "Gebruik '%s'\n"
-
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "Geen instantie ge-creerd, beëindigen\n"
