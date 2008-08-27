@@ -1,5 +1,5 @@
 # German translations for navit
-# Copyright (C) 2007
+# Copyright (C) 2007,2008 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Martin Schaller <martin-s@sourceforge.net>, 2007.
 #
@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-26 21:19+0200\n"
+"POT-Creation-Date: 2008-08-27 14:15+0200\n"
 "PO-Revision-Date: 2008-05-27 22:03+0000\n"
 "Last-Translator: singesang <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -18,52 +18,15 @@ msgstr ""
 "X-Launchpad-Export-Date: 2008-05-30 21:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../navit/main.c:132
-#, c-format
-msgid ""
-"navit usage:\n"
-"navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the debug output level to <n>. (TODO)\n"
-"\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
-msgstr ""
-"navit [Optionen] [configdatei]\n"
-"\t-c <datei>: <datei> als Konfigurationsdatei benutzen.\n"
-"\t-d <n>: Debugkevek auf <n> setzen. (TODO)\n"
-"\t-h: Diese Hilfe anzeigen und beenden.\n"
-"\t-v: Versionsinfo anzeigen und beenden.\n"
-
-#: ../navit/main.c:154
+#: ../navit/main.c:149
 #, c-format
 msgid "Running from source directory\n"
 msgstr "Aufruf aus Quellverzeichnis\n"
 
-#: ../navit/main.c:170
+#: ../navit/main.c:165
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "setze '%s' auf '%s'\n"
-
-#. We have not found an existing config file from all possibilities
-#: ../navit/main.c:265
-#, c-format
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "Keine Konfigurationsdatei navit.xml, navit.xml.local gefunden\n"
-
-#: ../navit/main.c:276
-#, c-format
-msgid "Error parsing '%s': %s\n"
-msgstr "Fehler beim Parsen von '%s': %s\n"
-
-#: ../navit/main.c:279
-#, c-format
-msgid "Using '%s'\n"
-msgstr "Benutze '%s'\n"
-
-#: ../navit/main.c:282
-#, c-format
-msgid "No instance has been created, exiting\n"
-msgstr "Es wurde keine Instanz erzeugt, Ende\n"
 
 #: ../navit/navigation.c:190
 #, c-format
@@ -206,45 +169,43 @@ msgstr "%3$s %1$s%2$s abbiegen%4$s"
 msgid "You have reached your destination %s"
 msgstr "%s haben Sie ihr Ziel erreicht"
 
-#: ../navit/navit.c:771 ../navit/gui/gtk/gui_gtk_action.c:170
+#: ../navit/navit.c:785 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
 msgstr "Letzte Ziele"
 
-#: ../navit/navit.c:781 ../navit/gui/gtk/gui_gtk_action.c:171
+#: ../navit/navit.c:795 ../navit/gui/gtk/gui_gtk_action.c:171
 msgid "Bookmarks"
 msgstr "Lesezeichen"
 
-#: ../navit/navit.c:871
+#: ../navit/navit.c:885
 msgid "Command"
 msgstr "Befehl"
 
-#: ../navit/navit.c:876
+#: ../navit/navit.c:890
 msgid "Length"
 msgstr "Länge"
 
-#: ../navit/navit.c:880 ../navit/navit.c:905
+#: ../navit/navit.c:894 ../navit/navit.c:919
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:884 ../navit/navit.c:909
+#: ../navit/navit.c:898 ../navit/navit.c:923
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:890
+#: ../navit/navit.c:904
 msgid "Time"
 msgstr "Zeit"
 
-#: ../navit/navit.c:902
-#, fuzzy
+#: ../navit/navit.c:916
 msgid "Destination Length"
 msgstr "Verbleibende Strecke"
 
-#: ../navit/navit.c:915
-#, fuzzy
+#: ../navit/navit.c:929
 msgid "Destination Time"
 msgstr "Fahrzeit"
 
-#: ../navit/navit.c:944 ../navit/gui/gtk/gui_gtk_action.c:179
+#: ../navit/navit.c:958 ../navit/gui/gtk/gui_gtk_action.c:179
 msgid "Roadbook"
 msgstr "Straßenliste"
 
@@ -1503,75 +1464,75 @@ msgstr "Sambia"
 msgid "Zimbabwe"
 msgstr "Simbabwe"
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:117
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:123
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
 msgid "Car"
 msgstr "Auto"
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso2"
 msgstr "Iso2"
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso3"
 msgstr "Iso3"
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:422
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:431
 msgid "Country"
 msgstr "Land"
 
 #
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Postal"
 msgstr "PLZ"
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Town"
 msgstr "Ort"
 
 #
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "District"
 msgstr "Ortsteil"
 
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
-#: ../navit/gui/gtk/destination.c:431
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
+#: ../navit/gui/gtk/destination.c:442
 msgid "Street"
 msgstr "Straße"
 
-#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:433
+#: ../navit/gui/gtk/destination.c:125 ../navit/gui/gtk/destination.c:444
 msgid "Number"
 msgstr "Nummer"
 
 #
-#: ../navit/gui/gtk/destination.c:417
+#: ../navit/gui/gtk/destination.c:426
 msgid "Enter Destination"
 msgstr "Ziel eingeben"
 
-#: ../navit/gui/gtk/destination.c:424
+#: ../navit/gui/gtk/destination.c:434
 msgid "Zip Code"
 msgstr "PLZ"
 
-#: ../navit/gui/gtk/destination.c:426
+#: ../navit/gui/gtk/destination.c:436
 msgid "City"
 msgstr "Ort"
 
-#: ../navit/gui/gtk/destination.c:428
+#: ../navit/gui/gtk/destination.c:439
 msgid "District/Township"
 msgstr "Ortsteil/Gemeinde"
 
-#: ../navit/gui/gtk/destination.c:456 ../navit/gui/gtk/gui_gtk_action.c:172
+#: ../navit/gui/gtk/destination.c:467 ../navit/gui/gtk/gui_gtk_action.c:172
 msgid "Map"
 msgstr "Karte"
 
-#: ../navit/gui/gtk/destination.c:457
+#: ../navit/gui/gtk/destination.c:468
 msgid "Bookmark"
 msgstr "Lesezeichen"
 
-#: ../navit/gui/gtk/destination.c:458 ../navit/gui/gtk/gui_gtk_action.c:185
+#: ../navit/gui/gtk/destination.c:469 ../navit/gui/gtk/gui_gtk_action.c:185
 msgid "Destination"
 msgstr "Ziel"
 
@@ -1691,3 +1652,29 @@ msgstr "Route %4.0fkm    %02d:%02d ETA"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Route 0000km 0+00:00 ETA"
+
+#~ msgid ""
+#~ "navit usage:\n"
+#~ "navit [options] [configfile]\n"
+#~ "\t-c <file>: use <file> as config file\n"
+#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
+#~ "\t-h: print this usage info and exit.\n"
+#~ "\t-v: Print the version and exit.\n"
+#~ msgstr ""
+#~ "navit [Optionen] [configdatei]\n"
+#~ "\t-c <datei>: <datei> als Konfigurationsdatei benutzen.\n"
+#~ "\t-d <n>: Debugkevek auf <n> setzen. (TODO)\n"
+#~ "\t-h: Diese Hilfe anzeigen und beenden.\n"
+#~ "\t-v: Versionsinfo anzeigen und beenden.\n"
+
+#~ msgid "No config file navit.xml, navit.xml.local found\n"
+#~ msgstr "Keine Konfigurationsdatei navit.xml, navit.xml.local gefunden\n"
+
+#~ msgid "Error parsing '%s': %s\n"
+#~ msgstr "Fehler beim Parsen von '%s': %s\n"
+
+#~ msgid "Using '%s'\n"
+#~ msgstr "Benutze '%s'\n"
+
+#~ msgid "No instance has been created, exiting\n"
+#~ msgstr "Es wurde keine Instanz erzeugt, Ende\n"

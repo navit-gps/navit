@@ -1,13 +1,13 @@
 # Russian translations for navit.
-# Copyright (C) 2008.
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) 2008 The Navit Team
+# This file is distributed under the same license as the navit package.
 # Rustam Usmanov <zcc@mail.ru>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-17 20:37+0200\n"
+"POT-Creation-Date: 2008-08-27 14:15+0200\n"
 "PO-Revision-Date: 2008-08-15 13:02+0000\n"
 "Last-Translator: zcc <zcc@mail.ru>\n"
 "Language-Team: Rustam T. Usmanov\n"
@@ -80,7 +80,6 @@ msgid "exit"
 msgstr "съезд"
 
 #: ../navit/navigation.c:468
-#, fuzzy
 msgid "ramp"
 msgstr "въезд"
 
@@ -171,43 +170,43 @@ msgstr "Поверните %1$s%2$s %3$s%4$s"
 msgid "You have reached your destination %s"
 msgstr "Вы прибыли в пункт назначения %s"
 
-#: ../navit/navit.c:765 ../navit/gui/gtk/gui_gtk_action.c:170
+#: ../navit/navit.c:785 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
 msgstr "Прошлые пункты назначения"
 
-#: ../navit/navit.c:775 ../navit/gui/gtk/gui_gtk_action.c:171
+#: ../navit/navit.c:795 ../navit/gui/gtk/gui_gtk_action.c:171
 msgid "Bookmarks"
 msgstr "Закладки"
 
-#: ../navit/navit.c:865
+#: ../navit/navit.c:885
 msgid "Command"
 msgstr "Команда"
 
-#: ../navit/navit.c:870
+#: ../navit/navit.c:890
 msgid "Length"
 msgstr "Длина"
 
-#: ../navit/navit.c:874 ../navit/navit.c:899
+#: ../navit/navit.c:894 ../navit/navit.c:919
 msgid "km"
 msgstr "км"
 
-#: ../navit/navit.c:878 ../navit/navit.c:903
+#: ../navit/navit.c:898 ../navit/navit.c:923
 msgid "m"
 msgstr "м"
 
-#: ../navit/navit.c:884
+#: ../navit/navit.c:904
 msgid "Time"
 msgstr "Время"
 
-#: ../navit/navit.c:896
+#: ../navit/navit.c:916
 msgid "Destination Length"
 msgstr "Дистанция до пункта назначения"
 
-#: ../navit/navit.c:909
+#: ../navit/navit.c:929
 msgid "Destination Time"
 msgstr "Время до пункта назначения"
 
-#: ../navit/navit.c:938 ../navit/gui/gtk/gui_gtk_action.c:179
+#: ../navit/navit.c:958 ../navit/gui/gtk/gui_gtk_action.c:179
 msgid "Roadbook"
 msgstr "Дорожный справочник"
 
@@ -229,7 +228,6 @@ msgid "Point 0x%x 0x%x"
 msgstr "Точка 0x%x 0x%x"
 
 #: ../navit/popup.c:264
-#, fuzzy, c-format
 msgid "Screen coord : %d %d"
 msgstr "Экран %d %d"
 
@@ -375,7 +373,6 @@ msgstr "Бермуда"
 
 #. 096
 #: ../navit/country.c:71
-#, fuzzy
 msgid "Brunei Darussalam"
 msgstr "Брюней Даруссалам"
 
@@ -401,7 +398,6 @@ msgstr "Бутан"
 
 #. 074
 #: ../navit/country.c:76
-#, fuzzy
 msgid "Bouvet Island"
 msgstr "Фарерские Острова"
 
@@ -492,7 +488,6 @@ msgstr "Куба"
 
 #. 132
 #: ../navit/country.c:94
-#, fuzzy
 msgid "Cape Verde"
 msgstr "кап Вердэ"
 
@@ -633,7 +628,6 @@ msgstr "Французкая Гвинея"
 
 #. 831
 #: ../navit/country.c:122
-#, fuzzy
 msgid "Guernsey"
 msgstr "Германия"
 

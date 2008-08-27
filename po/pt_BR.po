@@ -1,13 +1,13 @@
 # Brazilian Portuguese translation for navit
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# Copyright (c) 2008 The Navit Team
 # This file is distributed under the same license as the navit package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
+# Paulohm <EMAIL@ADDRESS>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2008-06-30 11:32+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-08-27 14:15+0200\n"
 "PO-Revision-Date: 2008-08-23 22:40+0000\n"
 "Last-Translator: paulohm <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -18,49 +18,14 @@ msgstr ""
 "X-Launchpad-Export-Date: 2008-08-24 23:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../navit/main.c:132
+#: ../navit/main.c:149
 #, c-format
-msgid ""
-"navit usage:\n"
-"navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the debug output level to <n>. (TODO)\n"
-"\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
+msgid "Running from source directory\n"
 msgstr ""
 
-#: ../navit/main.c:159
-#, c-format
-msgid ""
-"Running from source directory. Bookmarks, center and destinations will be "
-"r/w from this directory\n"
-msgstr ""
-
-#: ../navit/main.c:175
+#: ../navit/main.c:165
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr ""
-
-#. We have not found an existing config file from all possibilities
-#: ../navit/main.c:286
-#, c-format
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr ""
-"Arquivo de configuracao (navit.xml, navit.xml.local) nao encontrado\n"
-
-#: ../navit/main.c:297
-#, c-format
-msgid "Error parsing '%s': %s\n"
-msgstr ""
-
-#: ../navit/main.c:300
-#, c-format
-msgid "Using '%s'\n"
-msgstr "Usando '%s'\n"
-
-#: ../navit/main.c:303
-#, c-format
-msgid "No instance has been created, exiting\n"
 msgstr ""
 
 #: ../navit/navigation.c:190
@@ -202,43 +167,43 @@ msgstr ""
 msgid "You have reached your destination %s"
 msgstr ""
 
-#: ../navit/navit.c:812 ../navit/gui/gtk/gui_gtk_action.c:170
+#: ../navit/navit.c:785 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
 msgstr ""
 
-#: ../navit/navit.c:829 ../navit/gui/gtk/gui_gtk_action.c:171
+#: ../navit/navit.c:795 ../navit/gui/gtk/gui_gtk_action.c:171
 msgid "Bookmarks"
 msgstr ""
 
-#: ../navit/navit.c:919
+#: ../navit/navit.c:885
 msgid "Command"
 msgstr ""
 
-#: ../navit/navit.c:924
+#: ../navit/navit.c:890
 msgid "Length"
 msgstr ""
 
-#: ../navit/navit.c:928 ../navit/navit.c:953
+#: ../navit/navit.c:894 ../navit/navit.c:919
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:932 ../navit/navit.c:957
+#: ../navit/navit.c:898 ../navit/navit.c:923
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:938
+#: ../navit/navit.c:904
 msgid "Time"
 msgstr ""
 
-#: ../navit/navit.c:950
+#: ../navit/navit.c:916
 msgid "Destination Length"
 msgstr ""
 
-#: ../navit/navit.c:963
+#: ../navit/navit.c:929
 msgid "Destination Time"
 msgstr ""
 
-#: ../navit/navit.c:992 ../navit/gui/gtk/gui_gtk_action.c:179
+#: ../navit/navit.c:958 ../navit/gui/gtk/gui_gtk_action.c:179
 msgid "Roadbook"
 msgstr ""
 
@@ -1494,72 +1459,72 @@ msgstr ""
 msgid "Zimbabwe"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:117
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:123
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
 msgid "Car"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso2"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso3"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:422
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:431
 msgid "Country"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Postal"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Town"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "District"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
-#: ../navit/gui/gtk/destination.c:431
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
+#: ../navit/gui/gtk/destination.c:442
 msgid "Street"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:433
+#: ../navit/gui/gtk/destination.c:125 ../navit/gui/gtk/destination.c:444
 msgid "Number"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:417
+#: ../navit/gui/gtk/destination.c:426
 msgid "Enter Destination"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:424
+#: ../navit/gui/gtk/destination.c:434
 msgid "Zip Code"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:426
+#: ../navit/gui/gtk/destination.c:436
 msgid "City"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:428
+#: ../navit/gui/gtk/destination.c:439
 msgid "District/Township"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:456 ../navit/gui/gtk/gui_gtk_action.c:172
+#: ../navit/gui/gtk/destination.c:467 ../navit/gui/gtk/gui_gtk_action.c:172
 msgid "Map"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:457
+#: ../navit/gui/gtk/destination.c:468
 msgid "Bookmark"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:458 ../navit/gui/gtk/gui_gtk_action.c:185
+#: ../navit/gui/gtk/destination.c:469 ../navit/gui/gtk/gui_gtk_action.c:185
 msgid "Destination"
 msgstr ""
 
@@ -1679,3 +1644,10 @@ msgstr ""
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr ""
+
+#~ msgid "No config file navit.xml, navit.xml.local found\n"
+#~ msgstr ""
+#~ "Arquivo de configuracao (navit.xml, navit.xml.local) nao encontrado\n"
+
+#~ msgid "Using '%s'\n"
+#~ msgstr "Usando '%s'\n"

@@ -1,5 +1,5 @@
 # Finnish translations for navit
-# Copyright (C) 2007
+# Copyright (C) 2007,2008 The Navit Team
 # This file is distributed under the same license as the navit package.
 # Ossi Berg <o.berg@mail.com>, 2007.
 #
@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-30 11:32+0200\n"
+"POT-Creation-Date: 2008-08-27 14:15+0200\n"
 "PO-Revision-Date: 2008-08-21 07:48+0000\n"
 "Last-Translator: Ossi Berg <fso_polonez@msn.com>\n"
 "Language-Team: Ossi Berg <o.berg@mail.com>\n"
@@ -18,133 +18,15 @@ msgstr ""
 "X-Launchpad-Export-Date: 2008-08-24 23:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
+#: ../navit/main.c:149
 #, c-format
-#~ msgid "Running from source directory\n"
-#~ msgstr "Ajetaan lähdehakemistosta\n"
+msgid "Running from source directory\n"
+msgstr "Ajetaan lähdehakemistosta\n"
 
-#~ msgid "Refresh"
-#~ msgstr "Päivitä"
-
-#~ msgid "Clear"
-#~ msgstr "Tyhjennä"
-
-#~ msgid "Tracking"
-#~ msgstr "Reititys"
-
-#~ msgid "Orientation"
-#~ msgstr "Asento"
-
-#~ msgid "Turn %1$s%2$s %3$s"
-#~ msgstr "Käänny %3$s %1$s%2$s"
-
-#~ msgid "Moldova"
-#~ msgstr "Moldova"
-
-#~ msgid "Syria"
-#~ msgstr "Syyria"
-
-#~ msgid "Libia"
-#~ msgstr "Libya"
-
-#~ msgid "Palestinia"
-#~ msgstr "Palestiina"
-
-#~ msgid "Macedonia"
-#~ msgstr "Makedonia"
-
-#~ msgid "VisibleBlocks"
-#~ msgstr "Näkyvät korttelit"
-
-#~ msgid "VisibleTowns"
-#~ msgstr "Näkyvät paikkakunnat"
-
-#~ msgid "VisiblePolys"
-#~ msgstr "Näkyvät monikulmio"
-
-#~ msgid "VisibleStreets"
-#~ msgstr "Näkyvät kadut"
-
-#~ msgid "VisiblePoints"
-#~ msgstr "Näkyvät pisteet"
-
-#~ msgid "RouteGraph"
-#~ msgstr "Tiepiirros"
-
-#~ msgid "two kilometers"
-#~ msgstr "kaksi kilometriä"
-
-#~ msgid "in two kilometers"
-#~ msgstr "kahden kilometrin päästä"
-
-#~ msgid "three kilometers"
-#~ msgstr "kolme kilometriä"
-
-#~ msgid "in three kilometers"
-#~ msgstr "kolmen kilometrin päästä"
-
-#~ msgid "four kilometers"
-#~ msgstr "neljä kilometriä"
-
-#~ msgid "in four kilometers"
-#~ msgstr "neljän kilometrin päästä"
-
-#~ msgid "%d kilometers"
-#~ msgstr "%d kilometriä"
-
-#~ msgid "in %d kilometers"
-#~ msgstr "%d kilometrin päästä"
-
-#: ../navit/main.c:132
-#, c-format
-msgid ""
-"navit usage:\n"
-"navit [options] [configfile]\n"
-"\t-c <file>: use <file> as config file\n"
-"\t-d <n>: set the debug output level to <n>. (TODO)\n"
-"\t-h: print this usage info and exit.\n"
-"\t-v: Print the version and exit.\n"
-msgstr ""
-"navitin käyttö:\n"
-"navit [valinnat] [asetustiedosto]\n"
-"\t-c <asetustiedosto>\n"
-"\t-d <num.>: aseta vianjäljityksen ulostulon taso. (EI VALMIS)\n"
-"\t-h: tulosta tämä ohje ja poistu.\n"
-"\t-v: tulosta versionumero ja poistu.\n"
-
-#: ../navit/main.c:159
-#, c-format
-msgid ""
-"Running from source directory. Bookmarks, center and destinations will be "
-"r/w from this directory\n"
-msgstr ""
-"Ajetaan lähdehakemistosta. Kirjanmerkit, keskipiste ja kohteet "
-"ylikirjoitetaan tässä hakemistossa.\n"
-
-#: ../navit/main.c:175
+#: ../navit/main.c:165
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "asetetaan '%s' arvoon '%s'\n"
-
-#. We have not found an existing config file from all possibilities
-#: ../navit/main.c:286
-#, c-format
-msgid "No config file navit.xml, navit.xml.local found\n"
-msgstr "Asetustiedostoja navit.xml tai navit.xml.local ei löytynyt.\n"
-
-#: ../navit/main.c:297
-#, c-format
-msgid "Error parsing '%s': %s\n"
-msgstr "Virhe tulkitessa '%s': %s\n"
-
-#: ../navit/main.c:300
-#, c-format
-msgid "Using '%s'\n"
-msgstr "Käytetään '%s'\n"
-
-#: ../navit/main.c:303
-#, c-format
-msgid "No instance has been created, exiting\n"
-msgstr "Esimerkkiä ei tehty, lopetetaan\n"
 
 #: ../navit/navigation.c:190
 #, c-format
@@ -285,45 +167,43 @@ msgstr "Käänny %1$s%2$s %3$s%4$s"
 msgid "You have reached your destination %s"
 msgstr "Olet saavuttanut kohteesi %s"
 
-#: ../navit/navit.c:812 ../navit/gui/gtk/gui_gtk_action.c:170
+#: ../navit/navit.c:785 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
 msgstr "Aiemmat kohteet"
 
-#: ../navit/navit.c:829 ../navit/gui/gtk/gui_gtk_action.c:171
+#: ../navit/navit.c:795 ../navit/gui/gtk/gui_gtk_action.c:171
 msgid "Bookmarks"
 msgstr "Kirjanmerkit"
 
-#: ../navit/navit.c:919
+#: ../navit/navit.c:885
 msgid "Command"
 msgstr "Komento"
 
-#: ../navit/navit.c:924
+#: ../navit/navit.c:890
 msgid "Length"
 msgstr "Pituus"
 
-#: ../navit/navit.c:928 ../navit/navit.c:953
+#: ../navit/navit.c:894 ../navit/navit.c:919
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:932 ../navit/navit.c:957
+#: ../navit/navit.c:898 ../navit/navit.c:923
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:938
+#: ../navit/navit.c:904
 msgid "Time"
 msgstr "Aika"
 
-#: ../navit/navit.c:950
-#, fuzzy
+#: ../navit/navit.c:916
 msgid "Destination Length"
 msgstr "Kohde"
 
-#: ../navit/navit.c:963
-#, fuzzy
+#: ../navit/navit.c:929
 msgid "Destination Time"
 msgstr "Kohde"
 
-#: ../navit/navit.c:992 ../navit/gui/gtk/gui_gtk_action.c:179
+#: ../navit/navit.c:958 ../navit/gui/gtk/gui_gtk_action.c:179
 msgid "Roadbook"
 msgstr "Ohjeistaja"
 
@@ -345,7 +225,6 @@ msgid "Point 0x%x 0x%x"
 msgstr "Piste 0x%x 0x%x"
 
 #: ../navit/popup.c:264
-#, fuzzy, c-format
 msgid "Screen coord : %d %d"
 msgstr "Ruutu %d %d"
 
@@ -1580,75 +1459,75 @@ msgstr "Sambia"
 msgid "Zimbabwe"
 msgstr "Zimbabwe"
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:117
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:123
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
 msgid "Car"
 msgstr "Auto"
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso2"
 msgstr "Iso2"
 
-#: ../navit/gui/gtk/destination.c:116
+#: ../navit/gui/gtk/destination.c:122
 msgid "Iso3"
 msgstr "Iso3"
 
-#: ../navit/gui/gtk/destination.c:116 ../navit/gui/gtk/destination.c:422
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:431
 msgid "Country"
 msgstr "Maa"
 
 #
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Postal"
 msgstr "Postinumero"
 
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "Town"
 msgstr "Paikkakunta"
 
 #
-#: ../navit/gui/gtk/destination.c:117 ../navit/gui/gtk/destination.c:118
-#: ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
+#: ../navit/gui/gtk/destination.c:125
 msgid "District"
 msgstr "Alue"
 
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
-#: ../navit/gui/gtk/destination.c:431
+#: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
+#: ../navit/gui/gtk/destination.c:442
 msgid "Street"
 msgstr "Katu"
 
-#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:433
+#: ../navit/gui/gtk/destination.c:125 ../navit/gui/gtk/destination.c:444
 msgid "Number"
 msgstr "Numero"
 
 #
-#: ../navit/gui/gtk/destination.c:417
+#: ../navit/gui/gtk/destination.c:426
 msgid "Enter Destination"
 msgstr "Anna kohde"
 
-#: ../navit/gui/gtk/destination.c:424
+#: ../navit/gui/gtk/destination.c:434
 msgid "Zip Code"
 msgstr "Postinumero"
 
-#: ../navit/gui/gtk/destination.c:426
+#: ../navit/gui/gtk/destination.c:436
 msgid "City"
 msgstr "Kaupunki"
 
-#: ../navit/gui/gtk/destination.c:428
+#: ../navit/gui/gtk/destination.c:439
 msgid "District/Township"
 msgstr "Maakunta"
 
-#: ../navit/gui/gtk/destination.c:456 ../navit/gui/gtk/gui_gtk_action.c:172
+#: ../navit/gui/gtk/destination.c:467 ../navit/gui/gtk/gui_gtk_action.c:172
 msgid "Map"
 msgstr "Kartta"
 
-#: ../navit/gui/gtk/destination.c:457
+#: ../navit/gui/gtk/destination.c:468
 msgid "Bookmark"
 msgstr "Kirjanmerkki"
 
-#: ../navit/gui/gtk/destination.c:458 ../navit/gui/gtk/gui_gtk_action.c:185
+#: ../navit/gui/gtk/destination.c:469 ../navit/gui/gtk/gui_gtk_action.c:185
 msgid "Destination"
 msgstr "Kohde"
 
@@ -1768,3 +1647,109 @@ msgstr "Reitti %4.0fkm, arvioitu aika %02d:%02d"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Reitti 0000km, arvioitu aika 0+00:00"
+
+#~ msgid "Refresh"
+#~ msgstr "Päivitä"
+
+#~ msgid "Clear"
+#~ msgstr "Tyhjennä"
+
+#~ msgid "Tracking"
+#~ msgstr "Reititys"
+
+#~ msgid "Orientation"
+#~ msgstr "Asento"
+
+#~ msgid "Turn %1$s%2$s %3$s"
+#~ msgstr "Käänny %3$s %1$s%2$s"
+
+#~ msgid "Moldova"
+#~ msgstr "Moldova"
+
+#~ msgid "Syria"
+#~ msgstr "Syyria"
+
+#~ msgid "Libia"
+#~ msgstr "Libya"
+
+#~ msgid "Palestinia"
+#~ msgstr "Palestiina"
+
+#~ msgid "Macedonia"
+#~ msgstr "Makedonia"
+
+#~ msgid "VisibleBlocks"
+#~ msgstr "Näkyvät korttelit"
+
+#~ msgid "VisibleTowns"
+#~ msgstr "Näkyvät paikkakunnat"
+
+#~ msgid "VisiblePolys"
+#~ msgstr "Näkyvät monikulmio"
+
+#~ msgid "VisibleStreets"
+#~ msgstr "Näkyvät kadut"
+
+#~ msgid "VisiblePoints"
+#~ msgstr "Näkyvät pisteet"
+
+#~ msgid "RouteGraph"
+#~ msgstr "Tiepiirros"
+
+#~ msgid "two kilometers"
+#~ msgstr "kaksi kilometriä"
+
+#~ msgid "in two kilometers"
+#~ msgstr "kahden kilometrin päästä"
+
+#~ msgid "three kilometers"
+#~ msgstr "kolme kilometriä"
+
+#~ msgid "in three kilometers"
+#~ msgstr "kolmen kilometrin päästä"
+
+#~ msgid "four kilometers"
+#~ msgstr "neljä kilometriä"
+
+#~ msgid "in four kilometers"
+#~ msgstr "neljän kilometrin päästä"
+
+#~ msgid "%d kilometers"
+#~ msgstr "%d kilometriä"
+
+#~ msgid "in %d kilometers"
+#~ msgstr "%d kilometrin päästä"
+
+#~ msgid ""
+#~ "navit usage:\n"
+#~ "navit [options] [configfile]\n"
+#~ "\t-c <file>: use <file> as config file\n"
+#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
+#~ "\t-h: print this usage info and exit.\n"
+#~ "\t-v: Print the version and exit.\n"
+#~ msgstr ""
+#~ "navitin käyttö:\n"
+#~ "navit [valinnat] [asetustiedosto]\n"
+#~ "\t-c <asetustiedosto>\n"
+#~ "\t-d <num.>: aseta vianjäljityksen ulostulon taso. (EI VALMIS)\n"
+#~ "\t-h: tulosta tämä ohje ja poistu.\n"
+#~ "\t-v: tulosta versionumero ja poistu.\n"
+
+#~ msgid ""
+#~ "Running from source directory. Bookmarks, center and destinations will be "
+#~ "r/w from this directory\n"
+#~ msgstr ""
+#~ "Ajetaan lähdehakemistosta. Kirjanmerkit, keskipiste ja kohteet "
+#~ "ylikirjoitetaan tässä hakemistossa.\n"
+
+#~ msgid "No config file navit.xml, navit.xml.local found\n"
+#~ msgstr "Asetustiedostoja navit.xml tai navit.xml.local ei löytynyt.\n"
+
+#~ msgid "Error parsing '%s': %s\n"
+#~ msgstr "Virhe tulkitessa '%s': %s\n"
+
+#~ msgid "Using '%s'\n"
+#~ msgstr "Käytetään '%s'\n"
+
+#~ msgid "No instance has been created, exiting\n"
+#~ msgstr "Esimerkkiä ei tehty, lopetetaan\n"
