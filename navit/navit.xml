@@ -1235,7 +1235,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 					<item type="poi_public_office" order="12-">
 						<icon src="public_office.xpm" />
 					</item>
-					<item type="poi_rail_halt" order="10-">
+					<item type="poi_rail_halt" order="11-">
 						<circle color="#ff0000" radius="3" width="3" />
 						<circle color="#000000" radius="5" width="2" label_size="8" />
 					</item>
