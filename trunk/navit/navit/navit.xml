@@ -993,19 +993,18 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 		</layer>
 		<layer name="points">
 			<item type="mini_roundabout" order="12-">
-                                <icon src="mini_roundabout.xpm" />
-                        </item>
+				<icon src="mini_roundabout.xpm" />
+			</item>
 			<item type="turning_circle" order="12-">
-                                <icon src="mini_roundabout.xpm" />
-                        </item>
+				<icon src="mini_roundabout.xpm" />
+			</item>
 			<item type="track" order="3-">
 				<polyline color="#3f3f3f" width="1" />
 			</item>
-			
 			<item type="poi_airport" order="5-">
 				<icon src="airport.xpm" />
 			</item>
-			<item type="town_ghost" order="0-">
+			<item type="town_ghost" order="10-">
 				<icon src="ghost_town.xpm" />
 			</item>
 			<item type="poi_hotel" order="12-">
@@ -1014,7 +1013,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_car_parking" order="11-">
 				<icon src="parking.xpm" />
 			</item>
-			<item type="poi_car_dealer_parts" order="0-">
+			<item type="poi_car_dealer_parts" order="12-">
 				<icon src="car_dealer.xpm" />
 			</item>
 			<item type="poi_fuel" order="10-">
@@ -1032,7 +1031,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_bar" order="12-">
 				<icon src="bar.xpm" />
 			</item>
-			<item type="poi_bridge" order="0-">
+			<item type="poi_bridge" order="12-">
 				<icon src="bridge.xpm" />
 			</item>
 			<item type="highway_exit" order="11-">
@@ -1047,7 +1046,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_hospital" order="12-">
 				<icon src="hospital.xpm" />
 			</item>
-			<item type="point_unkn" order="0-">
+			<item type="point_unkn" order="9-">
 				<circle color="#8080ff" radius="3" />
 			</item>
 			<item type="poi_dining" order="12-">
@@ -1059,28 +1058,28 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_police" order="12-">
 				<icon src="police.xpm" />
 			</item>
-			<item type="poi_auto_club" order="0-">
+			<item type="poi_auto_club" order="12-">
 				<icon src="auto_club.xpm" />
 			</item>
-			<item type="poi_autoservice" order="0-">
+			<item type="poi_autoservice" order="12-">
 				<icon src="autoservice.xpm" />
 			</item>
 			<item type="poi_bank" order="12-">
 				<icon src="bank.xpm" />
 			</item>
-			<item type="poi_bay" order="0-">
+			<item type="poi_bay" order="12-">
 				<icon src="bay.xpm" />
 			</item>
-			<item type="poi_bend" order="0-">
+			<item type="poi_bend" order="12-">
 				<icon src="bend.xpm" />
 			</item>
-			<item type="poi_boat_ramp" order="0-">
+			<item type="poi_boat_ramp" order="12-">
 				<icon src="boat_ramp.xpm" />
 			</item>
-			<item type="poi_border_station" order="0-">
+			<item type="poi_border_station" order="12-">
 				<icon src="border_station.xpm" />
 			</item>
-			<item type="poi_bowling" order="0-">
+			<item type="poi_bowling" order="12-">
 				<icon src="bowling.xpm" />
 			</item>
 			<item type="poi_bus_station" order="12-">
@@ -1089,19 +1088,19 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_bus_stop" order="12-">
 				<icon src="bus.xpm" />
 			</item>
-			<item type="poi_bussines_service" order="0-">
+			<item type="poi_bussines_service" order="12-">
 				<icon src="bussines_service.xpm" />
 			</item>
-			<item type="poi_car_rent" order="0-">
+			<item type="poi_car_rent" order="12-">
 				<icon src="car_rent.xpm" />
 			</item>
-			<item type="poi_car_wash" order="0-">
+			<item type="poi_car_wash" order="12-">
 				<icon src="car_wash.xpm" />
 			</item>
-			<item type="poi_casino" order="0-">
+			<item type="poi_casino" order="12-">
 				<icon src="casino.xpm" />
 			</item>
-			<item type="poi_cemetery" order="0-">
+			<item type="poi_cemetery" order="12-">
 				<icon src="cemetery.xpm" />
 			</item>
 			<item type="poi_church" order="11-">
@@ -1110,85 +1109,85 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_cinema" order="12-">
 				<icon src="cinema.xpm" />
 			</item>
-			<item type="poi_civil" order="0-">
+			<item type="poi_civil" order="12-">
 				<icon src="civil.xpm" />
 			</item>
-			<item type="poi_communication" order="0-">
+			<item type="poi_communication" order="12-">
 				<icon src="communication.xpm" />
 			</item>
-			<item type="poi_concert" order="0-">
+			<item type="poi_concert" order="12-">
 				<icon src="concert.xpm" />
 			</item>
-			<item type="poi_cove" order="0-">
+			<item type="poi_cove" order="12-">
 				<icon src="cove.xpm" />
 			</item>
-			<item type="poi_crossing" order="0-">
+			<item type="poi_crossing" order="12-">
 				<icon src="crossing.xpm" />
 			</item>
-			<item type="poi_dam" order="0-">
+			<item type="poi_dam" order="12-">
 				<icon src="dam.xpm" />
 			</item>
-			<item type="poi_danger_area" order="0-">
+			<item type="poi_danger_area" order="12-">
 				<icon src="danger_area.xpm" />
 			</item>
-			<item type="poi_dangerous" order="0-">
+			<item type="poi_dangerous" order="12-">
 				<icon src="dangerous.xpm" />
 			</item>
-			<item type="poi_daymark" order="0-">
+			<item type="poi_daymark" order="12-">
 				<icon src="daymark.xpm" />
 			</item>
-			<item type="poi_diving" order="0-">
+			<item type="poi_diving" order="12-">
 				<icon src="diving.xpm" />
 			</item>
-			<item type="poi_drinking_water" order="0-">
+			<item type="poi_drinking_water" order="12-">
 				<icon src="drinking_water.xpm" />
 			</item>
-			<item type="poi_emergency" order="0-">
+			<item type="poi_emergency" order="12-">
 				<icon src="emergency.xpm" />
 			</item>
-			<item type="poi_fair" order="0-">
+			<item type="poi_fair" order="12-">
 				<icon src="fair.xpm" />
 			</item>
 			<item type="poi_firebrigade" order="12-">
 				<icon src="firebrigade.xpm" />
 			</item>
-			<item type="poi_fish" order="0-">
+			<item type="poi_fish" order="9-">
 				<icon src="fish.xpm" />
 			</item>
-			<item type="poi_forbiden_area" order="0-">
+			<item type="poi_forbiden_area" order="12-">
 				<icon src="forbiden_area.xpm" />
 			</item>
-			<item type="poi_garmin" order="0-">
+			<item type="poi_garmin" order="12-">
 				<icon src="garmin.xpm" />
 			</item>
 			<item type="poi_golf" order="12-">
 				<icon src="golf.xpm" />
 			</item>
-			<item type="poi_goverment_building" order="0-">
+			<item type="poi_goverment_building" order="12-">
 				<icon src="goverment_building.xpm" />
 			</item>
-			<item type="poi_height" order="0-">
+			<item type="poi_height" order="12-">
 				<icon src="height.xpm" />
 			</item>
 			<item type="poi_heliport" order="7-">
 				<icon src="heliport.xpm" />
 			</item>
-			<item type="poi_hotspring" order="0-">
+			<item type="poi_hotspring" order="12-">
 				<icon src="hotspring.xpm" />
 			</item>
-			<item type="poi_icesport" order="0-">
+			<item type="poi_icesport" order="12-">
 				<icon src="icesport.xpm" />
 			</item>
 			<item type="poi_information" order="12-">
 				<icon src="information.xpm" />
 			</item>
-			<item type="poi_justice" order="0-">
+			<item type="poi_justice" order="12-">
 				<icon src="justice.xpm" />
 			</item>
-			<item type="poi_landmark" order="0-">
+			<item type="poi_landmark" order="12-">
 				<icon src="landmark.xpm" />
 			</item>
-			<item type="poi_levee" order="0-">
+			<item type="poi_levee" order="12-">
 				<icon src="levee.xpm" />
 			</item>
 			<item type="poi_level_crossing" order="11-">
@@ -1197,43 +1196,43 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_library" order="12-">
 				<icon src="library.xpm" />
 			</item>
-			<item type="poi_locale" order="0-">
+			<item type="poi_locale" order="12-">
 				<icon src="locale.xpm" />
 			</item>
-			<item type="poi_loudspeaker" order="0-">
+			<item type="poi_loudspeaker" order="12-">
 				<icon src="loudspeaker.xpm" />
 			</item>
-			<item type="poi_mall" order="0-">
+			<item type="poi_mall" order="12-">
 				<icon src="mall.xpm" />
 			</item>
-			<item type="poi_manmade_feature" order="0-">
+			<item type="poi_manmade_feature" order="12-">
 				<icon src="manmade_feature.xpm" />
 			</item>
-			<item type="poi_marine" order="0-">
+			<item type="poi_marine" order="12-">
 				<icon src="marine.xpm" />
 			</item>
-			<item type="poi_marine_type" order="0-">
+			<item type="poi_marine_type" order="12-">
 				<icon src="marine_type.xpm" />
 			</item>
-			<item type="poi_mark" order="0-">
+			<item type="poi_mark" order="12-">
 				<icon src="mark.xpm" />
 			</item>
-			<item type="poi_military" order="0-">
+			<item type="poi_military" order="12-">
 				<icon src="military.xpm" />
 			</item>
-			<item type="poi_mine" order="0-">
+			<item type="poi_mine" order="12-">
 				<icon src="mine.xpm" />
 			</item>
-			<item type="poi_nondangerous" order="0-">
+			<item type="poi_nondangerous" order="12-">
 				<icon src="nondangerous.xpm" />
 			</item>
-			<item type="poi_oil_field" order="0-">
+			<item type="poi_oil_field" order="12-">
 				<icon src="oil_field.xpm" />
 			</item>
 			<item type="poi_peak" order="6-">
 				<icon src="peak.xpm" />
 			</item>
-			<item type="poi_personal_service" order="0-">
+			<item type="poi_personal_service" order="12-">
 				<icon src="personal_service.xpm" />
 			</item>
 			<item type="poi_pharmacy" order="12-">
@@ -1242,7 +1241,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_post" order="13-">
 				<icon src="post.xpm" />
 			</item>
-			<item type="poi_public_office" order="0-">
+			<item type="poi_public_office" order="12-">
 				<icon src="public_office.xpm" />
 			</item>
 			<item type="poi_rail_halt" order="10-">
@@ -1260,10 +1259,10 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 				<circle color="#ff0000" radius="3" width="3" />
 				<circle color="#606060" radius="5" width="2" label_size="8" />
 			</item>
-			<item type="poi_repair_service" order="0-">
+			<item type="poi_repair_service" order="12-">
 				<icon src="repair_service.xpm" />
 			</item>
-			<item type="poi_resort" order="0-">
+			<item type="poi_resort" order="12-">
 				<icon src="resort.xpm" />
 			</item>
 			<item type="poi_rest_room" order="13-">
@@ -1272,67 +1271,67 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_restaurant" order="12-">
 				<icon src="restaurant.xpm" />
 			</item>
-			<item type="poi_restricted_area" order="0-">
+			<item type="poi_restricted_area" order="12-">
 				<icon src="restricted_area.xpm" />
 			</item>
 			<item type="poi_restroom" order="13-">
 				<icon src="restroom.xpm" />
 			</item>
-			<item type="poi_sailing" order="0-">
+			<item type="poi_sailing" order="12-">
 				<icon src="sailing.xpm" />
 			</item>
-			<item type="poi_scenic_area" order="0-">
+			<item type="poi_scenic_area" order="12-">
 				<icon src="scenic_area.xpm" />
 			</item>
 			<item type="poi_school" order="12-">
 				<icon src="school.xpm" />
 			</item>
-			<item type="poi_service" order="0-">
+			<item type="poi_service" order="12-">
 				<icon src="service.xpm" />
 			</item>
-			<item type="poi_shop_apparel" order="0-">
+			<item type="poi_shop_apparel" order="12-">
 				<icon src="shop_apparel.xpm" />
 			</item>
-			<item type="poi_shop_computer" order="0-">
+			<item type="poi_shop_computer" order="12-">
 				<icon src="shop_computer.xpm" />
 			</item>
-			<item type="poi_shop_department" order="0-">
+			<item type="poi_shop_department" order="12-">
 				<icon src="shop_department.xpm" />
 			</item>
-			<item type="poi_shop_furnish" order="0-">
+			<item type="poi_shop_furnish" order="12-">
 				<icon src="shop_furnish.xpm" />
 			</item>
-			<item type="poi_shop_grocery" order="0-">
+			<item type="poi_shop_grocery" order="12-">
 				<icon src="shop_grocery.xpm" />
 			</item>
-			<item type="poi_shop_handg" order="0-">
+			<item type="poi_shop_handg" order="12-">
 				<icon src="shop_handg.xpm" />
 			</item>
-			<item type="poi_shop_merchandise" order="0-">
+			<item type="poi_shop_merchandise" order="12-">
 				<icon src="shop_merchandise.xpm" />
 			</item>
-			<item type="poi_shop_retail" order="0-">
+			<item type="poi_shop_retail" order="12-">
 				<icon src="shop_retail.xpm" />
 			</item>
-			<item type="poi_shower" order="0-">
+			<item type="poi_shower" order="12-">
 				<icon src="shower.xpm" />
 			</item>
 			<item type="poi_skiing" order="12-">
 				<icon src="skiing.xpm" />
 			</item>
-			<item type="poi_social_service" order="0-">
+			<item type="poi_social_service" order="12-">
 				<icon src="social_service.xpm" />
 			</item>
-			<item type="poi_sounding" order="0-">
+			<item type="poi_sounding" order="12-">
 				<icon src="sounding.xpm" />
 			</item>
-			<item type="poi_sport" order="0-">
+			<item type="poi_sport" order="12-">
 				<icon src="sport.xpm" />
 			</item>
-			<item type="poi_stadium" order="0-">
+			<item type="poi_stadium" order="12-">
 				<icon src="stadium.xpm" />
 			</item>
-			<item type="poi_subdivision" order="0-">
+			<item type="poi_subdivision" order="12-">
 				<icon src="subdivision.xpm" />
 			</item>
 			<item type="poi_swimming" order="12-">
@@ -1344,7 +1343,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_theater" order="12-">
 				<icon src="theater.xpm" />
 			</item>
-			<item type="poi_tide" order="0-">
+			<item type="poi_tide" order="12-">
 				<icon src="tide.xpm" />
 			</item>
 			<item type="poi_tower" order="13-">
@@ -1353,52 +1352,52 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_townhall" order="12-">
 				<icon src="townhall.xpm" />
 			</item>
-			<item type="poi_trail" order="0-">
+			<item type="poi_trail" order="12-">
 				<icon src="trail.xpm" />
 			</item>
-			<item type="poi_truck_stop" order="0-">
+			<item type="poi_truck_stop" order="12-">
 				<icon src="truck_stop.xpm" />
 			</item>
-			<item type="poi_tunnel" order="0-">
+			<item type="poi_tunnel" order="12-">
 				<icon src="tunnel.xpm" />
 			</item>
-			<item type="poi_wine" order="0-">
+			<item type="poi_wine" order="12-">
 				<icon src="wine.xpm" />
 			</item>
-			<item type="poi_worship" order="0-">
+			<item type="poi_worship" order="9-">
 				<icon src="worship.xpm" />
 			</item>
-			<item type="poi_wrecker" order="0-">
+			<item type="poi_wrecker" order="12-">
 				<icon src="wrecker.xpm" />
 			</item>
-			<item type="poi_zoo" order="0-">
+			<item type="poi_zoo" order="9-">
 				<icon src="zoo.xpm" />
 			</item>
 			<item type="poi_picnic" order="11-">
 				<icon src="picnic.xpm" />
 			</item>
-			<item type="poi_gc_multi" order="0-">
+			<item type="poi_gc_multi" order="12-">
 				<icon src="gc_multi.xpm" />
 			</item>
-			<item type="poi_gc_tradi" order="0-">
+			<item type="poi_gc_tradi" order="12-">
 				<icon src="gc_tradi.xpm" />
 			</item>
-			<item type="poi_gc_event" order="0-">
+			<item type="poi_gc_event" order="12-">
 				<icon src="gc_event.xpm" />
 			</item>
-			<item type="poi_gc_mystery" order="0-">
+			<item type="poi_gc_mystery" order="12-">
 				<icon src="gc_mystery.xpm" />
 			</item>
-			<item type="poi_gc_question" order="0-">
+			<item type="poi_gc_question" order="12-">
 				<icon src="gc_question.xpm" />
 			</item>
-			<item type="poi_gc_stages" order="0-">
+			<item type="poi_gc_stages" order="12-">
 				<icon src="gc_stages.xpm" />
 			</item>
-			<item type="poi_gc_reference" order="0-">
+			<item type="poi_gc_reference" order="12-">
 				<icon src="gc_reference.xpm" />
 			</item>
-			<item type="poi_gc_webcam" order="0-">
+			<item type="poi_gc_webcam" order="12-">
 				<icon src="gc_webcam.xpm" />
 			</item>
 			<item type="traffic_signals" order="13-">
@@ -1407,17 +1406,17 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_wifi" order="11-">
 				<icon src="wifi.xpm" />
 			</item>
-			<item type="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-">
+			<item type="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="9-">
 				<polygon color="#a0a0a0" />
 				<label label_size="5" /> 
 			</item>
-			<item type="poi_image" order="0-">
+			<item type="poi_image" order="12-">
 				<image />
 			</item>
-			<item type="rg_segment" order="0-">
+			<item type="rg_segment" order="12-">
 				<polyline color="#FF089C" width="1" />
 			</item>
-			<item type="rg_point" order="0-">
+			<item type="rg_point" order="12-">
 				<circle color="#FF089C" radius="10"  label_size="7" />
 			</item>
 			
