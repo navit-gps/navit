@@ -9,6 +9,7 @@ xpm_DATA += biergarten.xpm
 xpm_DATA += boat_ramp.xpm
 xpm_DATA += boundary_stone.xpm
 xpm_DATA += bus.xpm
+xpm_DATA += bus_halt.xpm
 xpm_DATA += cafe.xpm
 xpm_DATA += camping.xpm
 xpm_DATA += car_dealer.xpm
