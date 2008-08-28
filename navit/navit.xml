@@ -1077,7 +1077,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 						<icon src="bus.xpm" />
 					</item>
 					<item type="poi_bus_stop" order="12-">
-						<icon src="bus.xpm" />
+						<icon src="bus_halt.xpm" />
 					</item>
 					<item type="poi_bussines_service" order="12-">
 						<icon src="bussines_service.xpm" />
