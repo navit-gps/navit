@@ -1016,13 +1016,13 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_car_dealer_parts" order="12-">
 				<icon src="car_dealer.xpm" />
 			</item>
-			<item type="poi_fuel" order="10-">
+			<item type="poi_fuel" order="12-">
 				<icon src="fuel.xpm" />
 			</item>
-			<item type="poi_shopping" order="10-">
+			<item type="poi_shopping" order="12-">
 				<icon src="shopping.xpm" />
 			</item>
-			<item type="poi_attraction" order="5-">
+			<item type="poi_attraction" order="11-">
 				<icon src="attraction.xpm" />
 			</item>
 			<item type="poi_cafe" order="12-">
@@ -1037,7 +1037,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="highway_exit" order="11-">
 				<icon src="exit.xpm" />
 			</item>
-			<item type="poi_camp_rv" order="9-">
+			<item type="poi_camp_rv" order="12-">
 				<icon src="camping.xpm" />
 			</item>
 			<item type="poi_museum_history" order="12-">
@@ -1364,7 +1364,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_wine" order="12-">
 				<icon src="wine.xpm" />
 			</item>
-			<item type="poi_worship" order="9-">
+			<item type="poi_worship" order="8-">
 				<icon src="worship.xpm" />
 			</item>
 			<item type="poi_wrecker" order="12-">
@@ -1446,7 +1446,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_monument" order="12-">
 				<icon src="memorial.xpm" />
 			</item>
-			<item type="poi_shelter" order="10-">
+			<item type="poi_shelter" order="11-">
 				<icon src="shelter.xpm" />
 			</item>
 			<item type="poi_fountain" order="12-">
