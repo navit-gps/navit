@@ -982,7 +982,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 						<circle color="#000000" radius="3" label_size="15" />
 					</item>
 				</layer>
-				<layer name="points">
+				<layer name="POI Symbols">
 					<item type="mini_roundabout" order="12-">
 						<icon src="mini_roundabout.xpm" />
 					</item>
@@ -1451,6 +1451,13 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 					</item>
 					<item type="poi_viewpoint" order="12-">
 						<icon src="viewpoint.xpm" />
+					</item>
+				</layer>
+				
+				<layer name="POI Labels">
+					<item type="mini_roundabout,turning_circle,track,poi_airport,town_ghost,poi_hotel,poi_car_parking,poi_car_dealer_parts,poi_fuel,poi_shopping,poi_attraction,poi_cafe,poi_bar,poi_bridge,highway_exit,poi_camp_rv,poi_museum_history,poi_hospital,point_unkn,poi_dining,poi_fastfood,poi_police,poi_auto_club,poi_autoservice,poi_bank,poi_bay,poi_bend,poi_boat_ramp,poi_border_station,poi_bowling,poi_bus_station,poi_bus_stop,poi_bussines_service,poi_car_rent,poi_car_wash,poi_casino,poi_cemeter,poi_church,poi_cinema,poi_civil,poi_communication,poi_concert,poi_cove,poi_crossing,poi_dam,poi_danger_area,poi_dangerous,poi_daymark,poi_diving,poi_drinkingater,poi_emergency,poi_fair,poi_firebrigade,poi_fish,poi_forbiden_area,poi_garmin,poi_golf,poi_goverment_building,poi_height,poi_heliport,poi_hotspring,poi_icsport,poi_information,poi_justice,poi_landmark,poi_levee,poi_level_crossing,poi_library,poi_locale,poi_loudspeaker,poi_mall,poi_manmade_feature,poi_marine,poimarine_type,poi_mark,poi_military,poi_mine,poi_nondangerous,poi_oil_field,poi_peak,poi_personal_service,poi_pharmacy,poi_post,poi_public_office,poi_rail_halt,pi_rail_station,poi_rail_tram_stop,poi_rail_tram_stop,poi_repair_service,poi_resort,poi_rest_room,poi_restaurant,poi_restricted_area,poi_restroom,poi_sailing,pi_scenic_area,poi_school,poi_service,poi_shop_apparel,poi_shop_computer,poi_shop_department,poi_shop_furnish,poi_shop_grocery,poi_shop_handg,poi_shop_merchandse,poi_shop_retail,poi_shower,poi_skiing,poi_social_service,poi_sounding,poi_sport,poi_stadium,poi_subdivision,poi_swimming,poi_telephone,poi_theater,poi_tide,poi_tower,poi_townhall,poi_trail,poi_truck_stop,poi_tunnel,poi_wine,poi_worship,poi_wrecker,poi_zoo,poi_picnic,poi_gc_multi,poi_gc_tradi,poi_gc_event,poi_gc_ystery,poi_gc_question,poi_gc_stages,poi_gc_reference,poi_gc_webcam,traffic_signals,poi_wifi,poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra,poi_image,rg_segment,rg_point,poi_bench,poi_biergarten,poi_boundary_stone,poi_castle,poi_ruins,poi_hunting_stand,poi_memorial,poi_monument,poi_shelter,poi_fountain,poi_potable_water,poi_toilets,poi_viewpoint" order="12-">
+						<!-- <circle color="#ff0000" radius="1" width="1" />-->
+						<circle color="#606060" radius="0" width="0" label_size="10" />
 					</item>
 				</layer>
 			</layout>
@@ -2221,7 +2228,8 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 					</item>
 				</layer>
 				
-				<xi:include xpointer="xpointer(/config/navit/layout[@name='Car']/layer[@name='points'])" />
+				<xi:include xpointer="xpointer(/config/navit/layout[@name='Car']/layer[@name='POI Symbols'])" />
+				<xi:include xpointer="xpointer(/config/navit/layout[@name='Car']/layer[@name='POI Labels'])" />
 				
 				<layer name="Unkown Elements">
 					<!--
