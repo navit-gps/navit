@@ -1434,6 +1434,9 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 			<item type="poi_castle" order="12-">
 				<icon src="castle.xpm" />
 			</item>
+			<item type="poi_ruins" order="12-">
+				<icon src="ruins.xpm" />
+			</item>
 			<item type="poi_hunting_stand" order="13-">
 				<icon src="hunting_stand.xpm" />
 			</item>

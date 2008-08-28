@@ -272,6 +272,7 @@ ITEM(poi_fountain)
 ITEM(poi_potable_water)
 ITEM(poi_toilets)
 ITEM(poi_viewpoint)
+ITEM(poi_ruins)
 /* Line */
 ITEM2(0x80000000,line)
 ITEM2(0x80000001,line_unspecified)
