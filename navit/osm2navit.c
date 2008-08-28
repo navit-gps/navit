@@ -144,6 +144,7 @@ static char *attrmap={
 	"n	amenity=biergarten		poi_biergarten\n"
 	"n	historic=boundary_stone		poi_boundary_stone\n"
 	"n	historic=castle		poi_castle\n"
+	"n	historic=ruins		poi_ruins\n"
 	"n	Annehmlichkeit=Hochsitz		poi_hunting_stand\n"
 	"n	amenity=hunting_stand		poi_hunting_stand\n"
 	"n	historic=memorial		poi_memorial\n"
