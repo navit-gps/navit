@@ -130,14 +130,14 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
 void graphics_init(struct graphics *this_)
 {
 	this_->gc[0]=graphics_gc_new(this_);
-	graphics_gc_set_background(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7 });
-	graphics_gc_set_foreground(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7 });
+	graphics_gc_set_background(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7, 0xffff});
+	graphics_gc_set_foreground(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7, 0xffff });
 	this_->gc[1]=graphics_gc_new(this_);
-	graphics_gc_set_background(this_->gc[1], &(struct color) { 0x0000, 0x0000, 0x0000 });
-	graphics_gc_set_foreground(this_->gc[1], &(struct color) { 0xffff, 0xffff, 0xffff });
+	graphics_gc_set_background(this_->gc[1], &(struct color) { 0x0000, 0x0000, 0x0000, 0xffff });
+	graphics_gc_set_foreground(this_->gc[1], &(struct color) { 0xffff, 0xffff, 0xffff, 0xffff });
 	this_->gc[2]=graphics_gc_new(this_);
-	graphics_gc_set_background(this_->gc[2], &(struct color) { 0xffff, 0xffff, 0xffff });
-	graphics_gc_set_foreground(this_->gc[2], &(struct color) { 0xffff, 0xffff, 0xffff });
+	graphics_gc_set_background(this_->gc[2], &(struct color) { 0xffff, 0xffff, 0xffff, 0xffff });
+	graphics_gc_set_foreground(this_->gc[2], &(struct color) { 0x0000, 0x0000, 0x0000, 0xffff });
 	this_->meth.background_gc(this_->priv, this_->gc[0]->priv);
 }
 
