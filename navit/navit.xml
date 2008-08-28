@@ -1062,7 +1062,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 				<icon src="auto_club.xpm" />
 			</item>
 			<item type="poi_autoservice" order="12-">
-				<icon src="autoservice.xpm" />
+				<icon src="car_dealer.xpm" />
 			</item>
 			<item type="poi_bank" order="12-">
 				<icon src="bank.xpm" />
