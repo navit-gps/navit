@@ -1042,9 +1042,7 @@ gui_internal_menu_render(struct gui_priv *this)
 	l=g_list_last(this->root.children);
 	menu=l->data;
 	gui_internal_widget_pack(this, menu);
-	graphics_draw_mode(this->gra, draw_mode_begin);
 	gui_internal_widget_render(this, menu);
-	graphics_draw_mode(this->gra, draw_mode_end);
 }
 
 static void
@@ -2136,6 +2134,7 @@ static void gui_internal_menu_root(struct gui_priv *this)
 {
 	struct widget *w;
 
+	graphics_draw_mode(this->gra, draw_mode_begin);
 	w=gui_internal_menu(this, "Main menu");	
 	w->spx=this->spacing*10;
 	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, "Actions",
@@ -2147,6 +2146,7 @@ static void gui_internal_menu_root(struct gui_priv *this)
 	gui_internal_widget_append(w, gui_internal_button_new(this, "Tools",
 			image_new_l(this, "gui_tools"), gravity_center|orientation_vertical));
 	gui_internal_menu_render(this);
+	graphics_draw_mode(this->gra, draw_mode_end);
 }
 
 static void

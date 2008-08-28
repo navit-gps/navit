@@ -252,28 +252,28 @@ struct graphics_priv {
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_font_priv {
-	int dummy;
-} graphics_font_priv;
+struct graphics_font_priv {
+	QFont *font;
+};
 
 //##############################################################################################################
 //# Description: 
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_gc_priv {
+struct graphics_gc_priv {
 	QPen *pen;
 	QBrush *brush;
-} graphics_gc_priv;
+};
 
 //##############################################################################################################
 //# Description: 
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_image_priv {
+struct graphics_image_priv {
 	QImage *image;
-} graphics_image_priv;
+};
 
 //##############################################################################################################
 //# Description: 
@@ -310,8 +310,10 @@ static struct graphics_font_methods font_methods = {
 //##############################################################################################################
 static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size, int flags)
 {
+	struct graphics_font_priv *ret=g_new0(struct graphics_font_priv, 1);
+	ret->font=new QFont("Arial",size/20);
 	*meth=font_methods;
-	return &graphics_font_priv;
+	return ret;
 }
 
 //##############################################################################################################
@@ -401,7 +403,12 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 //##############################################################################################################
 static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot)
 {
-	struct graphics_image_priv *ret=g_new0(struct graphics_image_priv, 1);
+	struct graphics_image_priv *ret;
+
+	if (strlen(path) > 4 && !strcmp(path+strlen(path)-4, ".svg")) {
+		return NULL;
+	}
+	ret=g_new0(struct graphics_image_priv, 1);
 
 	ret->image=new QImage(path);
 	*w=ret->image->width();
@@ -472,7 +479,7 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
 static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
 	gr->painter->setPen(*gc->pen);
-	gr->painter->drawArc(p->x-r, p->y-r, r*2, r*2, 0, 360*16);
+	gr->painter->drawArc(p->x-r/2, p->y-r/2, r, r, 0, 360*16);
 	
 }
 
@@ -483,8 +490,27 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 //##############################################################################################################
 static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
-	QString tmp = text;
-	gr->painter->drawText(p->x, p->y, tmp);
+	QPainter *painter=gr->painter;
+	QString tmp=QString::fromUtf8(text);
+#ifndef QT_NO_TRANSFORMATIONS
+#if QT_VERSION >= 0x040000
+	QMatrix sav=gr->painter->worldMatrix();
+	QMatrix m(dx/65535.0,dy/65535.0,-dy/65535.0,dx/65535.0,p->x,p->y);
+	painter->setWorldMatrix(m,TRUE);
+#else
+	QWMatrix sav=gr->painter->worldMatrix();
+	QWMatrix m(dx/65535.0,dy/65535.0,-dy/65535.0,dx/65535.0,p->x,p->y);
+	painter->setWorldMatrix(m,TRUE);
+#endif
+	painter->setPen(*fg->pen);
+	painter->setFont(*font->font);
+	painter->drawText(0, 0, tmp);
+	painter->setWorldMatrix(sav);
+#else
+	painter->setPen(*fg->pen);
+	painter->setFont(*font->font);
+	painter->drawText(p->x, p->y, tmp);
+#endif
 }
 
 //##############################################################################################################
@@ -532,7 +558,7 @@ static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 //##############################################################################################################
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-	dbg(0,"mode=%d\n", mode);
+	dbg(1,"mode=%d\n", mode);
 	if (mode == draw_mode_begin) {
 		gr->painter->begin(gr->widget->pixmap);
 #if 0
@@ -615,6 +641,49 @@ static void register_button_callback(struct graphics_priv *this_, void (*callbac
         this_->widget->button_callback_data=data;
 }
 
+static void
+image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
+{
+	delete priv->image;
+	g_free(priv);
+}
+
+static void
+get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret)
+{
+	QPainter *painter=gr->painter;
+	QString tmp=QString::fromUtf8(text);
+	painter->setFont(*font->font);
+	QRect r=painter->boundingRect(0,0,gr->widget->width(),gr->widget->height(),0,tmp);
+	ret[0].x=0;
+	ret[0].y=-r.height();
+	ret[1].x=0;
+	ret[1].y=0;
+	ret[2].x=r.width();
+	ret[2].y=0;
+	ret[3].x=r.width();
+	ret[3].y=-r.height();
+}
+
+
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void overlay_disable(struct graphics_priv *gr, int disable)
+{
+}
+
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void register_keypress_callback(struct graphics_priv *this_, void (*callback)(void *data, char *key), void *data)
+{
+}
+
 //##############################################################################################################
 //# Description: 
 //# Comment: 
@@ -640,6 +709,11 @@ static struct graphics_methods graphics_methods = {
 	register_resize_callback,
 	register_button_callback,
 	register_motion_callback,
+	image_free,
+        get_text_bbox,
+        overlay_disable,
+        register_keypress_callback,
+
 };
 
 //##############################################################################################################
