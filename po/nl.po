@@ -3,20 +3,19 @@
 # This file is distributed under the same license as the navit package.
 # Albert Faber, 2007.
 # Ed Kapitein <Unknown>
-
 msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-27 14:15+0200\n"
-"PO-Revision-Date: 2008-08-10 14:30+0000\n"
-"Last-Translator: Ed Kapitein <Unknown>\n"
+"PO-Revision-Date: 2008-08-27 16:46+0000\n"
+"Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2008-08-17 18:20+0000\n"
+"X-Launchpad-Export-Date: 2008-08-29 13:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../navit/main.c:149
@@ -83,21 +82,25 @@ msgstr "helling"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #: ../navit/navigation.c:498
+#, fuzzy, c-format
 msgid "%sinto the street %s%s%s"
-msgstr "%sin the straat %s%s%s"
+msgstr "%sin de straat %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:502
+#, c-format
 msgid "%sinto the %s%s%s|male form"
 msgstr "%sin de %s%s%s|mannelijke vorm"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:506
+#, c-format
 msgid "%sinto the %s%s%s|female form"
 msgstr "%sin de %s%s%s|vrouwelijke vorm"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:510
+#, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%sin de %s%s%s|neutrale vorm"
 
@@ -119,13 +122,15 @@ msgstr "links"
 
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:552
+#, fuzzy
 msgid "easily "
-msgstr "flauwe "
+msgstr "flauw "
 
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:557
+#, fuzzy
 msgid "strongly "
-msgstr "scherpe "
+msgstr "scherp "
 
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:561
@@ -1646,4 +1651,3 @@ msgstr "Route %4.0fkm    %02d:%02d Aankomsttijd"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Route 0000km  0+00:00 Aankomsttijd"
-
