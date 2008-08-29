@@ -4,21 +4,72 @@
 # This file is distributed under the same license as the navit package.
 # Andrea GHENSI <andrea.ghensi@gmail.com> 2007
 # Niccolo Rigacci <niccolo@rigacci.org>, 2008.
-
 msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-27 14:15+0200\n"
-"PO-Revision-Date: 2008-05-29 14:32+0000\n"
-"Last-Translator: Niccolo Rigacci <niccolo@rigacci.org>\n"
+"PO-Revision-Date: 2008-08-28 20:46+0000\n"
+"Last-Translator: amedeo <Unknown>\n"
 "Language-Team: Italiano\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2008-05-30 21:28+0000\n"
+"X-Launchpad-Export-Date: 2008-08-29 13:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#, c-format
+#~ msgid ""
+#~ "navit usage:\n"
+#~ "navit [options] [configfile]\n"
+#~ "\t-c <file>: use <file> as config file\n"
+#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
+#~ "\t-h: print this usage info and exit.\n"
+#~ "\t-v: Print the version and exit.\n"
+#~ msgstr ""
+#~ "Uso: navit [OPZIONE...] [FILE]\n"
+#~ "\t-c <file>: usa <file> come file di configurazione.\n"
+#~ "\t-d <n>: imposta il livello delle informazioni di debug a <n>. (TODO)\n"
+#~ "\t-h: mostra questo aiuto.\n"
+#~ "\t-v: mostra la versione di Navit ed esce.\n"
+
+#, c-format
+#~ msgid "No config file navit.xml, navit.xml.local found\n"
+#~ msgstr "File di configurazione navit.xml o navit.xml.local non trovato\n"
+
+#, c-format
+#~ msgid "Error parsing '%s': %s\n"
+#~ msgstr "Errore di sintassi in '%s': %s\n"
+
+#, c-format
+#~ msgid "Using '%s'\n"
+#~ msgstr "Lettura di '%s'\n"
+
+#, c-format
+#~ msgid "No instance has been created, exiting\n"
+#~ msgstr "Impossbile creare un'istanza, uscita dal programma\n"
+
+#~ msgid "Refresh"
+#~ msgstr "Aggiorna"
+
+#~ msgid "Clear"
+#~ msgstr "Pulisci"
+
+#~ msgid "Tracking"
+#~ msgstr "Posizione forzata su strada"
+
+#~ msgid "Orientation"
+#~ msgstr "Orienta mappa a nord"
+
+#~ msgid "Turn %1$s%2$s %3$s"
+#~ msgstr "%3$s svoltare %1$sa %2$s"
+
+#~ msgid "Turn %1$s%2$s %3$s onto %4$s"
+#~ msgstr "%3$s svoltare %1$sa %2$s su %4$s"
+
+#~ msgid "Turn %1$s%2$s %3$s into %4$s"
+#~ msgstr "%3$s svoltare %1$sa %2$s in %4$s"
 
 #: ../navit/main.c:149
 #, c-format
@@ -86,31 +137,31 @@ msgstr "rampa"
 #: ../navit/navigation.c:498
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr ""
+msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:502
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr ""
+msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:506
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr ""
+msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:510
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
+msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #: ../navit/navigation.c:517
 #, c-format
 msgid "into the %s"
-msgstr ""
+msgstr "in %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 #: ../navit/navigation.c:539
@@ -162,7 +213,7 @@ msgstr "errore"
 #: ../navit/navigation.c:616
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "Svoltare %1$sa %2$s %3$s%4$s"
 
 #: ../navit/navigation.c:619
 #, c-format
@@ -1464,7 +1515,7 @@ msgstr "Zimbabwe"
 #: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:123
 #: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
 msgid "Car"
-msgstr "Sigla"
+msgstr "Automobile"
 
 #: ../navit/gui/gtk/destination.c:122
 msgid "Iso2"
@@ -1504,11 +1555,11 @@ msgstr "Numero"
 
 #: ../navit/gui/gtk/destination.c:426
 msgid "Enter Destination"
-msgstr "Destinazione"
+msgstr "Inserire la destinazione"
 
 #: ../navit/gui/gtk/destination.c:434
 msgid "Zip Code"
-msgstr "Codice postale"
+msgstr "C.A.P."
 
 #: ../navit/gui/gtk/destination.c:436
 msgid "City"
@@ -1560,7 +1611,7 @@ msgstr "Zoom +"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:178
 msgid "Recalculate"
-msgstr ""
+msgstr "Ricalcola"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:181 ../navit/gui/gtk/gui_gtk_action.c:183
 msgid "Info"
@@ -1568,11 +1619,11 @@ msgstr "Informazioni"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:186
 msgid "Stop Navigation"
-msgstr ""
+msgstr "Interrompi la navigazione"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:187
 msgid "Test"
-msgstr "Test"
+msgstr "Prova"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:188
 msgid "_Quit"
@@ -1583,8 +1634,9 @@ msgid "Cursor"
 msgstr "Posizione attuale"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
+#, fuzzy
 msgid "Lock on Road"
-msgstr ""
+msgstr "Blocca sulla strada"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:197
 msgid "Northing"
@@ -1646,50 +1698,3 @@ msgstr "Percorso %4.0f km, %02d:%02d ETA"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Percorso 0000 km, 00:00 ETA"
-
-#~ msgid "Turn %1$s%2$s %3$s"
-#~ msgstr "%3$s svoltare %1$sa %2$s"
-
-#~ msgid "Turn %1$s%2$s %3$s onto %4$s"
-#~ msgstr "%3$s svoltare %1$sa %2$s su %4$s"
-
-#~ msgid "Turn %1$s%2$s %3$s into %4$s"
-#~ msgstr "%3$s svoltare %1$sa %2$s in %4$s"
-
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "Uso: navit [OPZIONE...] [FILE]\n"
-#~ "\t-c <file>: usa <file> come file di configurazione.\n"
-#~ "\t-d <n>: imposta il livello delle informazioni di debug a <n>. (TODO)\n"
-#~ "\t-h: mostra questo aiuto.\n"
-#~ "\t-v: mostra la versione di Navit ed esce.\n"
-
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "File di configurazione navit.xml o navit.xml.local non trovato\n"
-
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "Errore di sintassi in '%s': %s\n"
-
-#~ msgid "Using '%s'\n"
-#~ msgstr "Lettura di '%s'\n"
-
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "Impossbile creare un'istanza, uscita dal programma\n"
-
-#~ msgid "Refresh"
-#~ msgstr "Aggiorna"
-
-#~ msgid "Clear"
-#~ msgstr "Pulisci"
-
-#~ msgid "Tracking"
-#~ msgstr "Posizione forzata su strada"
-
-#~ msgid "Orientation"
-#~ msgstr "Orienta mappa a nord"

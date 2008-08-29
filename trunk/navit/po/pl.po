@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-27 14:15+0200\n"
-"PO-Revision-Date: 2008-06-02 14:38+0000\n"
+"PO-Revision-Date: 2008-08-28 12:10+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Translators\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2008-06-02 15:16+0000\n"
+"X-Launchpad-Export-Date: 2008-08-29 13:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: POLAND\n"
 "X-Poedit-Language: Polish\n"
@@ -27,14 +27,17 @@ msgid "Running from source directory\n"
 msgstr "Uruchamiam z katalogu źródłowego\n"
 
 #: ../navit/main.c:165
+#, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "ustawiam '%s' na '%s'\n"
 
 #: ../navit/navigation.c:190
+#, c-format
 msgid "%d m"
 msgstr "%d metrów"
 
 #: ../navit/navigation.c:192
+#, c-format
 msgid "in %d m"
 msgstr "za %d metrów"
 
@@ -59,6 +62,7 @@ msgid "in %d.%d kilometers"
 msgstr "za %d.%d kilometrów"
 
 #: ../navit/navigation.c:210
+#, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "jeden kilometr"
@@ -66,6 +70,7 @@ msgstr[1] "%d kilometr"
 msgstr[2] "%d kilometr"
 
 #: ../navit/navigation.c:212
+#, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "za kilometr"
@@ -78,34 +83,35 @@ msgstr "wyjście"
 
 #: ../navit/navigation.c:468
 msgid "ramp"
-msgstr ""
+msgstr "wjazd/zjazd"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #: ../navit/navigation.c:498
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr ""
+msgstr "%s w ulice %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:502
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr ""
+msgstr "%sw %s%s%s|male form"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:506
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr ""
+msgstr "%sw %s%s%s|female form"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:510
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
+msgstr "%sw %s%s%s|neutral form"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #: ../navit/navigation.c:517
+#, c-format
 msgid "into the %s"
 msgstr "w %s"
 
@@ -136,7 +142,7 @@ msgstr "nieznane "
 
 #: ../navit/navigation.c:567
 msgid "When possible, please turn around"
-msgstr "Skręć gdy będzie możliwość"
+msgstr "Zawróc, gdy będzie to możliwe"
 
 #: ../navit/navigation.c:574
 #, c-format
@@ -157,6 +163,7 @@ msgstr "błąd"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #: ../navit/navigation.c:616
+#, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Skręć %1$s%2$s %4$s %3$s"
 
@@ -175,7 +182,7 @@ msgstr "Zakładki"
 
 #: ../navit/navit.c:885
 msgid "Command"
-msgstr "Polska"
+msgstr "Polecenie"
 
 #: ../navit/navit.c:890
 msgid "Length"
@@ -211,7 +218,7 @@ msgstr "Ustaw jako pozycję"
 
 #: ../navit/popup.c:220 ../navit/popup.c:274
 msgid "Set as destination"
-msgstr "Cel"
+msgstr "Ustaw jako cel"
 
 #: ../navit/popup.c:221 ../navit/popup.c:275
 msgid "Add as bookmark"
@@ -1477,7 +1484,7 @@ msgstr "Państwo"
 #: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
 #: ../navit/gui/gtk/destination.c:125
 msgid "Postal"
-msgstr "Portugalia"
+msgstr "Kod Pocztowy"
 
 #: ../navit/gui/gtk/destination.c:123 ../navit/gui/gtk/destination.c:124
 #: ../navit/gui/gtk/destination.c:125
@@ -1500,7 +1507,7 @@ msgstr "Numer"
 
 #: ../navit/gui/gtk/destination.c:426
 msgid "Enter Destination"
-msgstr "Cel"
+msgstr "Podaj cel"
 
 #: ../navit/gui/gtk/destination.c:434
 msgid "Zip Code"
@@ -1556,7 +1563,7 @@ msgstr "Zbliż"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:178
 msgid "Recalculate"
-msgstr ""
+msgstr "Oblicz ponownie"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:181 ../navit/gui/gtk/gui_gtk_action.c:183
 msgid "Info"
@@ -1564,7 +1571,7 @@ msgstr "Info"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:186
 msgid "Stop Navigation"
-msgstr ""
+msgstr "Zatrzymaj nawigację"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:187
 msgid "Test"
@@ -1580,11 +1587,11 @@ msgstr "Kursor"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
 msgid "Lock on Road"
-msgstr ""
+msgstr "Blokada na drodze"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:197
 msgid "Northing"
-msgstr ""
+msgstr "Północ zawsze na górze"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:199 ../navit/gui/gtk/gui_gtk_action.c:201
 msgid "Fullscreen"
@@ -1637,8 +1644,8 @@ msgstr "NW"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:122
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "Trasa %4.0fkm    %02d:%02d ETA"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
+msgstr "Trasa 0000km  0+00:00 ETA"
