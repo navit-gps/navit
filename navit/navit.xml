@@ -1078,7 +1078,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 					<item type="poi_bus_station" order="11-">
 						<icon src="bus.xpm" />
 					</item>
-					<item type="poi_bus_stop" order="11-">
+					<item type="poi_bus_stop" order="12-">
 						<icon src="bus_halt.xpm" />
 					</item>
 					<item type="poi_bussines_service" order="12-">
@@ -1132,7 +1132,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 					<item type="poi_diving" order="12-">
 						<icon src="diving.xpm" />
 					</item>
-					<item type="poi_drinking_water" order="12-">
+					<item type="poi_drinking_water" order="13-">
 						<icon src="drinking_water.xpm" />
 					</item>
 					<item type="poi_emergency" order="12-">
@@ -1393,7 +1393,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 					<item type="poi_gc_webcam" order="12-">
 						<icon src="gc_webcam.xpm" />
 					</item>
-					<item type="traffic_signals" order="12-">
+					<item type="traffic_signals" order="13-">
 						<icon src="traffic_signals.xpm" />
 					</item>
 					<item type="poi_wifi" order="13-">
@@ -1415,7 +1415,7 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 					
 					
 					<!-- I'm not sure if the following stuff should appear in any layout. Maybe portions should only apply to the bicyle layout. -->
-					<item type="poi_bench" order="12-">
+					<item type="poi_bench" order="13-">
 						<icon src="bench.xpm" />
 					</item>
 					<item type="poi_biergarten" order="12-">
@@ -1442,10 +1442,10 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 					<item type="poi_shelter" order="11-">
 						<icon src="shelter.xpm" />
 					</item>
-					<item type="poi_fountain" order="11-">
+					<item type="poi_fountain" order="13-">
 						<icon src="fountain.xpm" />
 					</item>
-					<item type="poi_potable_water" order="11-">
+					<item type="poi_potable_water" order="13-">
 						<icon src="potable_water.xpm" />
 					</item>
 					<item type="poi_toilets" order="12-">
