@@ -1542,16 +1542,33 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 						<polygon color="#ff6347" />
 					</item>
 				</layer>
-				
-				<layer name="Elevation Lines">
-					<item type="height_line_1" order="0-">
-						<polyline color="#000000" width="1" /> 
+
+				<layer name="Contour Lines">
+					<item type="height_line_1" order="8">
+						<polyline color="#A9A9A9" width="1" /> 
+						<label label_size="8" /> 
 					</item>
-					<item type="height_line_2" order="0-">
-						<polyline color="#000000" width="2" /> 
+					<item type="height_line_1" order="9">
+						<polyline color="#A9A9A9" width="2" /> 
+						<label label_size="8" /> 
 					</item>
-				</layer>
-				
+					<item type="height_line_2" order="9">
+						<polyline color="#A9A9A9" width="1" /> 
+						<label label_size="8" /> 
+					</item>
+					<item type="height_line_1" order="10-">
+						<polyline color="#A9A9A9" width="3" /> 
+						<label label_size="8" /> 
+					</item>
+					<item type="height_line_2" order="10-">
+						<polyline color="#A9A9A9" width="2" /> 
+						<label label_size="8" /> 
+					</item>
+					<item type="height_line_3" order="10-">
+						<polyline color="#A9A9A9" width="1" /> 
+					</item>
+				</layer> <!-- "Contour Lines" -->
+
 				<layer name="Waterways">
 					<item type="water_line" order="0-">
 						<polyline color="#82c8ea" width="2" /> 
