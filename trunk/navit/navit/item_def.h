@@ -364,6 +364,7 @@ ITEM(piste_downhill_intermediate)
 ITEM(piste_downhill_advanced)
 ITEM(piste_downhill_expert)
 ITEM(piste_downhill_freeride)
+ITEM(footway_and_piste_nordic)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)
