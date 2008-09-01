@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-27 14:15+0200\n"
+"POT-Creation-Date: 2008-09-01 18:32+0200\n"
 "PO-Revision-Date: 2008-08-21 07:48+0000\n"
 "Last-Translator: Ossi Berg <fso_polonez@msn.com>\n"
 "Language-Team: Ossi Berg <o.berg@mail.com>\n"
@@ -225,6 +225,7 @@ msgid "Point 0x%x 0x%x"
 msgstr "Piste 0x%x 0x%x"
 
 #: ../navit/popup.c:264
+#, c-format
 msgid "Screen coord : %d %d"
 msgstr "Ruutu %d %d"
 

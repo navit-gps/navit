@@ -8,4 +8,6 @@ endif
 if GUI_CLUTTER
   SUBDIRS += clutter
 endif
-
+if GUI_DIRECTFB
+  SUBDIRS += directfb
+endif

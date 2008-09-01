@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-27 14:15+0200\n"
+"POT-Creation-Date: 2008-09-01 18:32+0200\n"
 "PO-Revision-Date: 2008-08-28 20:46+0000\n"
 "Last-Translator: amedeo <Unknown>\n"
 "Language-Team: Italiano\n"
@@ -18,58 +18,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Launchpad-Export-Date: 2008-08-29 13:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#, c-format
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "Uso: navit [OPZIONE...] [FILE]\n"
-#~ "\t-c <file>: usa <file> come file di configurazione.\n"
-#~ "\t-d <n>: imposta il livello delle informazioni di debug a <n>. (TODO)\n"
-#~ "\t-h: mostra questo aiuto.\n"
-#~ "\t-v: mostra la versione di Navit ed esce.\n"
-
-#, c-format
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "File di configurazione navit.xml o navit.xml.local non trovato\n"
-
-#, c-format
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "Errore di sintassi in '%s': %s\n"
-
-#, c-format
-#~ msgid "Using '%s'\n"
-#~ msgstr "Lettura di '%s'\n"
-
-#, c-format
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "Impossbile creare un'istanza, uscita dal programma\n"
-
-#~ msgid "Refresh"
-#~ msgstr "Aggiorna"
-
-#~ msgid "Clear"
-#~ msgstr "Pulisci"
-
-#~ msgid "Tracking"
-#~ msgstr "Posizione forzata su strada"
-
-#~ msgid "Orientation"
-#~ msgstr "Orienta mappa a nord"
-
-#~ msgid "Turn %1$s%2$s %3$s"
-#~ msgstr "%3$s svoltare %1$sa %2$s"
-
-#~ msgid "Turn %1$s%2$s %3$s onto %4$s"
-#~ msgstr "%3$s svoltare %1$sa %2$s su %4$s"
-
-#~ msgid "Turn %1$s%2$s %3$s into %4$s"
-#~ msgstr "%3$s svoltare %1$sa %2$s in %4$s"
 
 #: ../navit/main.c:149
 #, c-format
@@ -1698,3 +1646,50 @@ msgstr "Percorso %4.0f km, %02d:%02d ETA"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Percorso 0000 km, 00:00 ETA"
+
+#~ msgid ""
+#~ "navit usage:\n"
+#~ "navit [options] [configfile]\n"
+#~ "\t-c <file>: use <file> as config file\n"
+#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
+#~ "\t-h: print this usage info and exit.\n"
+#~ "\t-v: Print the version and exit.\n"
+#~ msgstr ""
+#~ "Uso: navit [OPZIONE...] [FILE]\n"
+#~ "\t-c <file>: usa <file> come file di configurazione.\n"
+#~ "\t-d <n>: imposta il livello delle informazioni di debug a <n>. (TODO)\n"
+#~ "\t-h: mostra questo aiuto.\n"
+#~ "\t-v: mostra la versione di Navit ed esce.\n"
+
+#~ msgid "No config file navit.xml, navit.xml.local found\n"
+#~ msgstr "File di configurazione navit.xml o navit.xml.local non trovato\n"
+
+#~ msgid "Error parsing '%s': %s\n"
+#~ msgstr "Errore di sintassi in '%s': %s\n"
+
+#~ msgid "Using '%s'\n"
+#~ msgstr "Lettura di '%s'\n"
+
+#~ msgid "No instance has been created, exiting\n"
+#~ msgstr "Impossbile creare un'istanza, uscita dal programma\n"
+
+#~ msgid "Refresh"
+#~ msgstr "Aggiorna"
+
+#~ msgid "Clear"
+#~ msgstr "Pulisci"
+
+#~ msgid "Tracking"
+#~ msgstr "Posizione forzata su strada"
+
+#~ msgid "Orientation"
+#~ msgstr "Orienta mappa a nord"
+
+#~ msgid "Turn %1$s%2$s %3$s"
+#~ msgstr "%3$s svoltare %1$sa %2$s"
+
+#~ msgid "Turn %1$s%2$s %3$s onto %4$s"
+#~ msgstr "%3$s svoltare %1$sa %2$s su %4$s"
+
+#~ msgid "Turn %1$s%2$s %3$s into %4$s"
+#~ msgstr "%3$s svoltare %1$sa %2$s in %4$s"

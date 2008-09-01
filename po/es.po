@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the navit package.
 # Chris Eubank <cteubank@gmail.com> 2007
 # Emilio Gómez Fernández <Unknown> 2008
-
 msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-27 14:15+0200\n"
+"POT-Creation-Date: 2008-09-01 18:32+0200\n"
 "PO-Revision-Date: 2008-05-30 16:45+0000\n"
 "Last-Translator: Emilio Gómez Fernández <Unknown>\n"
 "Language-Team: Chris Eubank <cteubank@gmail.com>\n"
@@ -31,10 +30,12 @@ msgid "setting '%s' to '%s'\n"
 msgstr ""
 
 #: ../navit/navigation.c:190
+#, c-format
 msgid "%d m"
 msgstr "%d metros"
 
 #: ../navit/navigation.c:192
+#, c-format
 msgid "in %d m"
 msgstr "en %d metros"
 
@@ -59,12 +60,14 @@ msgid "in %d.%d kilometers"
 msgstr "en %d.%d kilómetros"
 
 #: ../navit/navigation.c:210
+#, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "un kilómetro"
 msgstr[1] "%d kilómetro"
 
 #: ../navit/navigation.c:212
+#, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "en un kilómetro"
@@ -223,6 +226,7 @@ msgid "Point 0x%x 0x%x"
 msgstr "Punto 0x%x 0x%x"
 
 #: ../navit/popup.c:264
+#, c-format
 msgid "Screen coord : %d %d"
 msgstr "Coordenadas de pantalla : %d %d"
 
@@ -1641,4 +1645,3 @@ msgstr "Ruta %4.0fkm    %02d:%02d TEL"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Ruta 0000km  0+00:00 TEL"
-
