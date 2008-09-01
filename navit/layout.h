@@ -37,6 +37,7 @@ struct element {
 			int width;
 			int directed;
 			int dash_num;
+			int dash_offset;
 			unsigned char dash_table[4];
 		} polyline;
 		struct element_polygon {
@@ -79,7 +80,7 @@ void layer_add_itemtype(struct layer *layer, struct itemtype *itemtype);
 void itemtype_add_element(struct itemtype *itemtype, struct element *element);
 struct element *polygon_new(struct color *color);
 struct element *polyline_new(struct color *color, int width, int directed,
-                             int *dash_table, int dash_num);
+                             int dash_offset, int *dash_table, int dash_num);
 struct element *circle_new(struct color *color, int radius, int width, int label_size);
 struct element *label_new(int label_size);
 struct element *icon_new(const char *src);

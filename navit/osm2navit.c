@@ -172,6 +172,7 @@ static char *attrmap={
 	"w	highway=path,bicycle=designated	cycleway\n"
 	"w	highway=footway		footway\n"
 	"w	piste:type=nordic	piste_nordic\n"
+	"w	highway=footway,piste:type=nordic	footway_and_piste_nordic\n"
 	"w	route=ski	piste_nordic\n"
 	"w	piste:type=downhill,piste:difficulty=novice	piste_downhill_novice\n"
 	"w	piste:type=downhill,piste:difficulty=easy	piste_downhill_easy\n"
