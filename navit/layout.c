@@ -100,7 +100,7 @@ polygon_new(struct color *color)
 
 struct element *
 polyline_new(struct color *color, int width, int directed,
-             int *dash_table, int dash_num)
+             int dash_offset, int *dash_table, int dash_num)
 {
 	struct element *e;
 	int i;
@@ -110,6 +110,7 @@ polyline_new(struct color *color, int width, int directed,
 	e->color=*color;
 	e->u.polyline.width=width;
 	e->u.polyline.directed=directed;
+	e->u.polyline.dash_offset = dash_offset;
 	e->u.polyline.dash_num=dash_num;
 	for (i=0; i<dash_num; i++)
 		e->u.polyline.dash_table[i] = dash_table[i];

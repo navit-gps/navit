@@ -481,16 +481,38 @@ It's always the top left corner of the icon, so you need to consider the icon's 
 				<polyline color="#696969" width="1" dash="5" />
 			</item>
 			<item type="piste_nordic"  order="10-12">
-				<polyline color="#0000ff" width="1" dash="3,6" />
+				<polyline color="#0000ff" width="1" dash="3,6" offset="4" />
 			</item>
 			<item type="piste_nordic"  order="13-14">
-				<polyline color="#0000ff" width="2" dash="4,8" />
+				<polyline color="#ffffff" width="4" dash="4,8" offset="6" />
+				<polyline color="#0000ff" width="2" dash="4,8" offset="6" />
 			</item>
 			<item type="piste_nordic"  order="15-16">
-				<polyline color="#0000ff" width="3" dash="5,10" />
+				<polyline color="#ffffff" width="5" dash="5,10" offset="7" />
+				<polyline color="#0000ff" width="3" dash="5,10" offset="7" />
 			</item>
 			<item type="piste_nordic"  order="17-">
-				<polyline color="#0000ff" width="5" dash="7,15" />
+				<polyline color="#ffffff" width="7" dash="7,15" offset="10" />
+				<polyline color="#0000ff" width="5" dash="7,15" offset="10" />
+			</item>
+			<item type="footway_and_piste_nordic" order="10-12">
+				<polyline color="#ff0000" width="1" dash="3,15" />
+				<polyline color="#0000ff" width="1" dash="3,15" offset="9" />
+			</item>
+			<item type="footway_and_piste_nordic" order="13-14">
+				<polyline color="#ffffff" width="4" dash="4,8" />
+				<polyline color="#ff0000" width="2" dash="4,20" />
+				<polyline color="#0000ff" width="2" dash="4,20" offset="12" />
+			</item>
+			<item type="footway_and_piste_nordic" order="15-16">
+				<polyline color="#ffffff" width="5" dash="5,10" />
+				<polyline color="#ff0000" width="3" dash="5,25" />
+				<polyline color="#0000ff" width="3" dash="5,25" offset="15" />
+			</item>
+			<item type="footway_and_piste_nordic" order="17-">
+				<polyline color="#ffffff" width="7" dash="7,15" />
+				<polyline color="#ff0000" width="5" dash="7,37" />
+				<polyline color="#0000ff" width="5" dash="7,37" offset="22" />
 			</item>
 			<item type="footway" order="10-12">
 				<polyline color="#ff0000" width="1" dash="3,6" />

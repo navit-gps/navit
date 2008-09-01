@@ -522,8 +522,8 @@ static int
 xmlconfig_polyline(struct xmlstate *state)
 {
 	struct color color;
-	const char *width, *dash, *directed;
-	int w=0, d=0, dt[4], ds=0;
+	const char *width, *dash, *directed, *dash_offset;
+	int w=0, d=0, doff=0, dt[4], ds=0;
 
 	if (! find_color(state, 1, &color))
 		return 0;
@@ -533,11 +533,14 @@ xmlconfig_polyline(struct xmlstate *state)
 	dash=find_attribute(state, "dash", 0);
 	if (dash)
 		ds=convert_number_list(dash, dt, sizeof(dt)/sizeof(*dt));
+	dash_offset=find_attribute(state, "offset", 0);
+	if (dash_offset)
+		doff=convert_number(dash_offset);
 	directed=find_attribute(state, "directed", 0);
 	if (directed) 
 		d=convert_number(directed);
 	
-	state->element_attr.u.data=polyline_new(&color, w, d, dt, ds);
+	state->element_attr.u.data=polyline_new(&color, w, d, doff, dt, ds);
 	if (! state->element_attr.u.data)
 		return 0;
 	itemtype_add_element(state->parent->element_attr.u.data, state->element_attr.u.data);
