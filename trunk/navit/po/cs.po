@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-27 14:15+0200\n"
+"POT-Creation-Date: 2008-09-01 18:32+0200\n"
 "PO-Revision-Date: 2008-06-06 06:20+0000\n"
 "Last-Translator: Vaclav Cerny <vatoz@seznam.cz>\n"
 "Language-Team: Čeština\n"
@@ -84,26 +84,31 @@ msgstr "nájezd"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #: ../navit/navigation.c:498
+#, c-format
 msgid "%sinto the street %s%s%s"
 msgstr "%s do ulice %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:502
+#, c-format
 msgid "%sinto the %s%s%s|male form"
 msgstr "%s o%s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:506
+#, c-format
 msgid "%sinto the %s%s%s|female form"
 msgstr "%s do %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:510
+#, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%s do %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #: ../navit/navigation.c:517
+#, c-format
 msgid "into the %s"
 msgstr "do %s"
 
@@ -155,6 +160,7 @@ msgstr "chyba"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #: ../navit/navigation.c:616
+#, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Zabočte %1$s%2$s %3$s%4$s"
 
@@ -216,6 +222,7 @@ msgid "Add as bookmark"
 msgstr "Použít jako záložku"
 
 #: ../navit/popup.c:263
+#, c-format
 msgid "Point 0x%x 0x%x"
 msgstr "Bod 0x%x 0x%x"
 
@@ -1632,10 +1639,10 @@ msgid "NW"
 msgstr "SZ"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:122
+#, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
 msgstr "Trasa %4.0fkm    %02d:%02d ETA"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:167
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Trasa 0000km  0+00:00 ETA"
-

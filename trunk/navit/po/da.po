@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-27 14:15+0200\n"
+"POT-Creation-Date: 2008-09-01 18:32+0200\n"
 "PO-Revision-Date: 2008-06-21 15:54+0000\n"
 "Last-Translator: Fennek <ng@fennek.dk>\n"
 "Language-Team: Glenn Sommer <glemsom@gmail.com>\n"
@@ -59,12 +59,14 @@ msgid "in %d.%d kilometers"
 msgstr "om %d.%d kilometer"
 
 #: ../navit/navigation.c:210
+#, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "én kilometer"
 msgstr[1] "%d kilometer"
 
 #: ../navit/navigation.c:212
+#, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "om én kilometer"
@@ -223,6 +225,7 @@ msgid "Point 0x%x 0x%x"
 msgstr "Punkt 0x%x 0x%x"
 
 #: ../navit/popup.c:264
+#, c-format
 msgid "Screen coord : %d %d"
 msgstr "Skærm koordinater %d %d"
 
