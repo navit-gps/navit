@@ -12,4 +12,9 @@ else
 	h=$(grep 'height=".*px"' gui_actions.svg | head -n 1 | sed -e 's/px".*//' -e 's/.*"//')
 	svg=${png%.png}
 fi
-ksvgtopng $w $h $svg.svg $png
+if [ -f $png -a ! -f $svg.svg ]
+then
+	touch $png
+else
+	ksvgtopng $w $h $svg.svg $png
+fi
