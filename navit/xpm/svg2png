@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 png=$1
 if [[ "$png" = *_[1-9]*_[1-9]*.png ]]; 
 then
