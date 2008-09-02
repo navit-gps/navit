@@ -112,9 +112,9 @@ AM_CONDITIONAL(GUI_GTK, [test "x$gtk2_pkgconfig" = "xyes"])
 AM_CONDITIONAL(GRAPHICS_GTK_DRAWING_AREA, [test "x$gtk2_pkgconfig" = "xyes"])
 AM_CONDITIONAL(PLUGINS, [test "x$plugins" = "xyes"])
 
-AC_ARG_ENABLE(gui-directfb, [  --disable-gui-directfb             don't create gui directfb ], MODULE_GUI_DIRECTFB=$enableval, MODULE_GUI_DIRECTFB=yes)
+AC_ARG_ENABLE(directfb, [  --enable-directfb             enable directfb gui and graphics], MODULE_DIRECTFB=$enableval, MODULE_DIRECTFB=no)
 
-if test "x$MODULE_GUI_DIRECTFB" = "xyes"; then
+if test "x$MODULE_DIRECTFB" = "xyes"; then
 	PKG_CHECK_MODULES(DIRECTFB, [directfb], [directfb_pkgconfig=yes], [directfb_pkgconfig=no])
 	if test "x$directfb_pkgconfig" = "xyes"; then
 		AC_DEFINE(HAVE_DIRECTFB, 1, [Define to 1 if you have directfb])
@@ -128,8 +128,7 @@ DIRECTFB_CFLAGS="$DIRECTFB_CFLAGS"
 
 AC_SUBST(DIRECTFB_CFLAGS)
 AC_SUBST(DIRECTFB_LIBS)
-AM_CONDITIONAL(GUI_DIRECTFB, [test "x$directfb_pkgconfig" = "xyes"])
-AM_CONDITIONAL(GRAPHICS_DIRECTFB, [test "x$directfb_pkgconfig" = "xyes"])
+AM_CONDITIONAL(DIRECTFB, [test "x$directfb_pkgconfig" = "xyes"])
 
 AC_ARG_ENABLE(graphics-qt-qpainter, [  --disable-graphics-qt-qpainter             don't create graphics qt-qpainter], enable_graphics_qt_qpainter=$enableval, enable_graphics_qt_qpainter=yes)
 if test "x${enable_graphics_qt_qpainter}" = "xyes" ; then
