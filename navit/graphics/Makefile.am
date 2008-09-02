@@ -2,7 +2,7 @@ SUBDIRS=null
 if GRAPHICS_GTK_DRAWING_AREA
   SUBDIRS+=gtk_drawing_area
 endif
-if GRAPHICS_DIRECTFB
+if DIRECTFB
   SUBDIRS+=directfb
 endif
 if GRAPHICS_OPENGL

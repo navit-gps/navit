@@ -249,8 +249,9 @@ static struct graphics_priv *
 graphics_directfb_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
 {
 	fprintf(stderr,"graphics_directfb_new");
+	struct graphics_priv *this=g_new0(struct graphics_priv,1);
 	*meth=graphics_methods;
-	return &graphics_priv;
+	return this;
 }
 
 plugin_init(void)
