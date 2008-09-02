@@ -75,13 +75,13 @@ static int run_main_loop(struct gui_priv *this_)
 {
 	int frames;
 
-	fprintf(stderr,"saucïsse !! \n");		
+	dbg(0,"Entering main directfb loop\n");
 
 	
 	for(frames=0;frames<100;frames++)
 	{
 		sleep(3);
-		fprintf(stderr,"debug >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< frame n° %d",frames);			
+		dbg(0,"debug >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>< frame n° %d",frames);			
 	}
 
 	return 0;
@@ -89,7 +89,7 @@ static int run_main_loop(struct gui_priv *this_)
 
 static void vehicle_callback_handler( struct navit *nav, struct vehicle *v){
 
-	fprintf(stderr,"debut vehicle callback\n");	
+	dbg(0,"debut vehicle callback\n");	
 
 /*	
 	char buffer [50];
@@ -132,14 +132,14 @@ struct gui_methods gui_dfb_methods = {
 static int
 gui_directfb_set_graphics(struct gui_priv *this, struct graphics *gra)
 {
-	fprintf(stderr,"gui_directfb_set_graphics !!!\n");
+	dbg(0,"gui_directfb_set_graphics !!!\n");
 	return 0;
 }
 
 static struct gui_priv *
 gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs) 
 {
-	dbg(1,"Begin DirectFB init\n");
+	dbg(0,"Begin DirectFB init\n");
 	
 
 	struct gui_priv *this_;
@@ -169,19 +169,19 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 
 	if(dfb_gui_navit)
 	{	
-		dbg(1,"VALID navit instance in gui\n");
+		dbg(0,"VALID navit instance in gui\n");
 	}
 	else
 	{
-		dbg(1,"Invalid navit instance in gui\n");
+		dbg(0,"Invalid navit instance in gui\n");
 	}
 	if(nav)
 	{	
-		dbg(1,"VALID source navit instance in gui\n");
+		dbg(0,"VALID source navit instance in gui\n");
 	}
 	else 
 	{
-		dbg(1,"Invalid source navit instance in gui\n");
+		dbg(0,"Invalid source navit instance in gui\n");
 	}
 	
 	*meth=gui_dfb_methods;
@@ -207,7 +207,7 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	DFB_ret = DFB_main__i->GetDisplayLayer( DFB_main__i, DLID_PRIMARY, &DFB_primary_layer__i );
 	if (DFB_ret != DFB_OK) 
 	{
-		D_DERROR( DFB_ret, "IDirectFB::GetDisplayLayer() failed!\n" );
+		dbg( 0, "IDirectFB::GetDisplayLayer() failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
@@ -215,7 +215,7 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	DFB_ret = DFB_primary_layer__i->SetCooperativeLevel(DFB_primary_layer__i,DLSCL_ADMINISTRATIVE);
 	if (DFB_ret != DFB_OK) 
 	{
-		D_DERROR( DFB_ret, "IDirectFB::SetCooperativeLevel() failed!\n" );
+		dbg( 0, "IDirectFB::SetCooperativeLevel() failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
@@ -226,7 +226,7 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	DFB_ret = DFB_primary_layer__i->GetSurface(DFB_primary_layer__i,&DFB_gui_surface__i);
 	if (DFB_ret != DFB_OK)
 	{
-		D_DERROR( DFB_ret, "IDirectFBDisplayLayer::GetSurface failed!\n" );
+		dbg( 0, "IDirectFBDisplayLayer::GetSurface failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
@@ -235,7 +235,7 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	DFB_ret = DFB_primary_layer__i->GetConfiguration(DFB_primary_layer__i,DFB_primary_layer__c);
 	if (DFB_ret != DFB_OK)
 	{
-		D_DERROR( DFB_ret, "IDirectFBDisplayLayer::GetConfiguration failed!\n" );
+		dbg( 0, "IDirectFBDisplayLayer::GetConfiguration failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
@@ -247,19 +247,20 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	DFB_ret = DFB_main__i->CreateFont( DFB_main__i, "/usr/share/fonts/truetype/DejaVuSans.ttf", DFB_primary_layer_surface_font__d, &DFB_primary_layer_surface_font__i );
 	if (DFB_ret != DFB_OK)
 	{
-		D_DERROR( DFB_ret, "IDirectFB : CreateFont failed!\n" );
+		dbg( 0, "IDirectFB : CreateFont failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
 	
-      	DFB_ret = DFB_main__i->CreateImageProvider(DFB_main__i,"/usr/share/navit/xpm/gui_zoom_in_96_96.png",&DFB_zoomin__img);
+      	/* BUTTON TEST
+	 * DFB_ret = DFB_main__i->CreateImageProvider(DFB_main__i,"/usr/share/navit/xpm/gui_zoom_in_96_96.png",&DFB_zoomin__img);
 	if (DFB_ret != DFB_OK)
 	{
-		D_DERROR( DFB_ret, "IDirectFB : CreateImageProvider failed!\n" );
+		dbg( 0, "IDirectFB : CreateImageProvider failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
-
+	*/
 	//DFB_gui_surface__i->SetBlittingFlags(DFB_gui_surface__i,DSBLIT_SRC_COLORKEY);
 	//DFB_gui_surface__i->SetSrcColorKey(DFB_gui_surface__i,0x00,0x00,0x00);
 	DFB_gui_buttons_surface__d.flags = DSDESC_WIDTH|DSDESC_HEIGHT;
@@ -269,7 +270,7 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	DFB_ret = DFB_main__i->CreateSurface(DFB_main__i,&DFB_gui_buttons_surface__d,&DFB_gui_buttons_surface__i);
 	if (DFB_ret != DFB_OK)
 	{
-		D_DERROR( DFB_ret, "IDirectFB : CreateSurface failed!\n" );
+		dbg( 0, "IDirectFB : CreateSurface failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
@@ -280,13 +281,14 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	DFB_gui_surface__i->SetColor(DFB_gui_surface__i,0xff,0xff,0xff,0xff);
 	DFB_gui_surface__i->DrawString(DFB_gui_surface__i,"Navit on DirectFB",-1,0,0,DSTF_LEFT|DSTF_TOP);
 	
+	/*
 	DFB_zoomin_img__zone.x = 0;
 	DFB_zoomin_img__zone.y = 0;
 	DFB_zoomin_img__zone.w = 48;
 	DFB_zoomin_img__zone.h = 48;
 	DFB_zoomin__img->RenderTo(DFB_zoomin__img,DFB_gui_buttons_surface__i,NULL);
 	DFB_gui_surface__i->Blit(DFB_gui_surface__i,DFB_gui_buttons_surface__i,NULL,20,20);
-	
+	*/
 	
 	DFB_gui_surface__i->Flip(DFB_gui_surface__i,NULL,DSFLIP_NONE);
 	
@@ -307,7 +309,7 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	DFB_ret = DFB_primary_layer__i->CreateWindow(DFB_primary_layer__i,DFB_graphics_window__d,&DFB_graphics_window__i);
 	 if (DFB_ret != DFB_OK)
 	{
-		D_DERROR( DFB_ret, "IDirectFBDisplayLayer::CreateWindow failed!\n" );
+		dbg( 0, "IDirectFBDisplayLayer::CreateWindow failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
@@ -315,14 +317,14 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	DFB_ret = DFB_graphics_window__i->Resize(DFB_graphics_window__i,600,400);
 	if (DFB_ret != DFB_OK)
 	{
-		D_DERROR( DFB_ret, "IDirectFBWindow::Resize failed!\n" );
+		dbg( 0, "IDirectFBWindow::Resize failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
 	DFB_ret = DFB_graphics_window__i->MoveTo(DFB_graphics_window__i,20,78);
 	if (DFB_ret != DFB_OK)
 	{
-		D_DERROR( DFB_ret, "IDirectFBWindow::MoveTo failed!\n" );
+		dbg( 0, "IDirectFBWindow::MoveTo failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
@@ -330,7 +332,7 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	DFB_ret = DFB_graphics_window__i->SetOpacity(DFB_graphics_window__i, 0xff );
 	if (DFB_ret != DFB_OK)
 	{
-		D_DERROR( DFB_ret, "IDirectFBWindow::SetOpacity failed!\n" );
+		dbg( 0, "IDirectFBWindow::SetOpacity failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
@@ -338,12 +340,12 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	DFB_ret = DFB_graphics_window__i->GetSurface(DFB_graphics_window__i,&DFB_graphics_surface__i);
 	if (DFB_ret != DFB_OK)
 	{
-		D_DERROR( DFB_ret, "IDirectFBWindow::GetSurface failed!\n" );
+		dbg( 0, "IDirectFBWindow::GetSurface failed!\n" );
 		DFB_main__i->Release(DFB_main__i);
 		return NULL;
 	}
 	
-	fprintf(stderr,"fin new gui\n");	
+	dbg(0,"End of directfb gui initialization\n");
 	
 	
 	/* add callback for position updates */
@@ -351,16 +353,14 @@ gui_directfb_new(struct navit *nav, struct gui_methods *meth, struct attr **attr
 	
 	//navit_add_callback(nav,cb);
 	//this_->nav=nav;
-	//return this_;
-	return NULL;
+	return this_;
 }
 
 
 void
 plugin_init(void)
 {
-	dbg(1,"registering directfb plugin\n");
-	fprintf(stderr,"registering gui directfb\n");	
+	dbg(0,"registering directfb plugin\n");
 	plugin_register_gui_type("directfb", gui_directfb_new);
 }
 
