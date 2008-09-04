@@ -17,52 +17,87 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <glib.h>
+#include <string.h>
+#include <stdlib.h>
 #include "event.h"
+#include "plugin.h"
+#include "debug.h"
 
-static GMainLoop *loop;
+static struct event_methods event_methods;
+static char *e_requestor;
+static char *e_system;
 
 void event_main_loop_run(void)
 {
-	loop = g_main_loop_new (NULL, TRUE);
-        if (g_main_loop_is_running (loop))
-        {
-		g_main_loop_run (loop);
+	if (! event_methods.main_loop_run) {
+		dbg(0,"no event system set\n");
+		exit(1);
 	}
+	event_methods.main_loop_run();
 }
 
 void event_main_loop_quit(void)
 {
-	if (loop)
-		g_main_loop_quit(loop);
-} 
+	event_methods.main_loop_quit();
+}
 
-void *
+struct event_watch *
 event_add_watch(int fd, int w, struct callback *cb)
 {
+	return event_methods.add_watch(fd, w, cb);
 }
 
 void
-event_remove_watch(void *data)
+event_remove_watch(struct event_watch *ev)
 {
+	event_methods.remove_watch(ev);
 }
 
-void *
-event_add_timeout(int timeout, struct callback *cb)
+struct event_timeout *
+event_add_timeout(int timeout, int multi, struct callback *cb)
 {
+	return event_methods.add_timeout(timeout, multi, cb);
 }
 
 void
-event_remove_timeout(void *data)
+event_remove_timeout(struct event_timeout *ev)
 {
+	event_methods.remove_timeout(ev);
 }
 
-void *
+struct event_idle *
 event_add_idle(struct callback *cb)
 {
+	return event_methods.add_idle(cb);
 }
 
 void
-event_remove_idle(void *data)
+event_remove_idle(struct event_idle *ev)
 {
+	event_methods.remove_idle(ev);
 }
+
+int
+event_request_system(char *system, char *requestor)
+{
+	void (*event_type_new)(struct event_methods *meth);
+	if (e_system) {
+		if (strcmp(e_system, system)) {
+			dbg(0,"system '%s' already requested by '%s', can't set to '%s' as requested from '%s'\n", e_system, e_requestor, system, requestor);
+			return 0;
+		}
+		return 1;
+	}
+	event_type_new=plugin_get_event_type(system);
+        if (! event_type_new) {
+		dbg(0,"unsupported event system '%s' requested from '%s'\n", system, requestor);
+                return 0;
+	}
+	event_type_new(&event_methods);
+	e_system=system;
+	e_requestor=requestor;
+	
+	return 1;
+}
+
+

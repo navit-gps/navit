@@ -17,5 +17,30 @@
  * Boston, MA  02110-1301, USA.
  */
 
+struct event_idle;
+struct event_timeout;
+struct event_watch;
+struct callback;
+
+struct event_methods {
+	void (*main_loop_run)(void);
+	void (*main_loop_quit)(void);
+	struct event_watch *(*add_watch)(int fd, int w, struct callback *cb);
+	void (*remove_watch)(struct event_watch *ev);
+	struct event_timeout *(*add_timeout)(int timeout, int multi, struct callback *cb);
+	void (*remove_timeout)(struct event_timeout *ev);
+	struct event_idle *(*add_idle)(struct callback *cb);
+	void (*remove_idle)(struct event_idle *ev);
+};
+
+/* prototypes */
 void event_main_loop_run(void);
 void event_main_loop_quit(void);
+struct event_watch *event_add_watch(int fd, int w, struct callback *cb);
+void event_remove_watch(struct event_watch *ev);
+struct event_timeout *event_add_timeout(int timeout, int multi, struct callback *cb);
+void event_remove_timeout(struct event_timeout *ev);
+struct event_idle *event_add_idle(struct callback *cb);
+void event_remove_idle(struct event_idle *ev);
+int event_request_system(char *system, char *requestor);
+/* end of prototypes */
