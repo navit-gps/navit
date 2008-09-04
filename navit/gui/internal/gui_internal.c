@@ -1967,7 +1967,7 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 		gui_internal_widget_append(w,
 			wc=gui_internal_button_new_with_callback(this, coord,
 				image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
-				gui_internal_cmd_position, NULL));
+				gui_internal_cmd_position, (void *)1));
 		wc->name=g_strdup("Map Point");
 		wc->c=this->clickp;
 		g_free(coord);
