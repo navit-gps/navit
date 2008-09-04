@@ -1468,7 +1468,7 @@ phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
 }
 #endif
 
-static char buffer[150000];
+static char buffer[200000];
 
 int bytes_read=0;
 
@@ -1481,7 +1481,7 @@ read_item(FILE *in)
 	if (r != 1)
 		return NULL;
 	bytes_read+=r;
-	assert((ib->len+1) < sizeof(buffer));
+	assert((ib->len+1)*4 < sizeof(buffer));
 	s=(ib->len+1)*4-sizeof(*ib);
 	r=fread(ib+1, s, 1, in);
 	if (r != 1)
