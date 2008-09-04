@@ -963,6 +963,46 @@ parse_relation(char *p)
 }
 
 static void
+item_buffer_set_type(char *buffer, enum item_type type)
+{
+	struct item_bin *ib=(struct item_bin *) buffer;
+	ib->clen=0;
+	ib->len=2;
+	ib->type=type;
+}
+
+static void
+item_buffer_add_coord(char *buffer, struct coord *c, int count)
+{
+	struct item_bin *ib=(struct item_bin *) buffer;
+	struct coord *c2=(struct coord *)(ib+1);
+	c2+=ib->clen/2;
+	memcpy(c2, c, count*sizeof(struct coord));
+	ib->clen+=count*2;
+	ib->len+=count*2;
+}
+
+static void
+item_buffer_add_attr(char *buffer, struct attr *attr)
+{
+	struct item_bin *ib=(struct item_bin *) buffer;
+	struct attr_bin *ab=(struct attr_bin *)((int *)ib+ib->len+1);
+	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
+		ab->type=attr->type;
+		strcpy((char *)(ab+1),attr->u.str);
+		pad_text_attr(ab, (char *)(ab+1));
+		ib->len+=ab->len+1;
+	}
+}
+
+static void
+item_buffer_write(char *buffer, FILE *out)
+{
+	struct item_bin *ib=(struct item_bin *) buffer;
+	fwrite(buffer, (ib->len+1)*4, 1, out);
+}
+
+static void
 write_attr(FILE *out, struct attr_bin *attr, void *buffer)
 {
 	if (attr->len) {
@@ -1470,6 +1510,33 @@ phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
 
 static char buffer[200000];
 
+static void
+phase1_map(struct map *map, FILE *out_ways, FILE *out_nodes)
+{
+	struct map_rect *mr=map_rect_new(map, NULL);
+	struct item *item;
+	int count,max=16384;
+	struct coord ca[max];
+	struct item_bin ib;
+	struct attr attr;
+	FILE *file;
+
+	while ((item = map_rect_get_item(mr))) {
+		count=item_coord_get(item, ca, item->type < type_line ? 1: max);
+		item_buffer_set_type(buffer, item->type);
+		item_buffer_add_coord(buffer, ca, count);
+		while (item_attr_get(item, attr_any, &attr)) {
+			item_buffer_add_attr(buffer, &attr);
+		}
+                if (item->type >= type_line) 
+			item_buffer_write(buffer, out_ways);
+		else
+			item_buffer_write(buffer, out_nodes);
+	}
+	map_rect_destroy(mr);
+}
+
+
 int bytes_read=0;
 
 static struct item_bin *
@@ -1752,7 +1819,6 @@ write_item(char *tile, struct item_bin *ib)
 		exit(1);
 	}
 }
-
 
 static void
 write_item_part(FILE *out, struct item_bin *orig, int first, int last)
@@ -2580,6 +2646,7 @@ int main(int argc, char **argv)
 	FILE* input_file = stdin;
 	struct plugins *plugins=NULL;
 	struct attr **attrs;
+	struct map *map_handle;
 
 	while (1) {
 #if 0
@@ -2596,6 +2663,7 @@ int main(int argc, char **argv)
 #endif
 			{"dedupe-ways", 0, 0, 'w'},
 			{"dump", 0, 0, 'D'},
+			{"dump-coordinates", 0, 0, 'c'},
 			{"end", 1, 0, 'e'},
 			{"help", 0, 0, 'h'},
 			{"keep-tmpfiles", 0, 0, 'k'},
@@ -2612,7 +2680,7 @@ int main(int argc, char **argv)
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
-					      "e:hi:knm:ps:w", long_options, &option_index);
+					      "e:hi:knm:p:s:w", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
@@ -2650,7 +2718,7 @@ int main(int argc, char **argv)
 				&(struct attr){attr_type,{"textfile"}},
 				&(struct attr){attr_data,{"bookmark.txt"}},
 				NULL};
-			map_new(attrs);
+			map_handle=map_new(attrs);
 			fprintf(stderr,"optarg=%s\n", optarg);
 			break;	
 		case 'n':
@@ -2667,6 +2735,7 @@ int main(int argc, char **argv)
 		case 'p':
 			if (! plugins)
 				plugins=plugins_new();
+			fprintf(stderr,"optarg=%s\n",optarg);
 			attrs=(struct attr*[]){&(struct attr){attr_path,{optarg}},NULL};
 			plugins_add_path(plugins, attrs);	
 			break;
@@ -2719,6 +2788,11 @@ int main(int argc, char **argv)
 			phase1_db(dbstr,ways,nodes);
 		else
 #endif
+		if (map_handle) {
+			phase1_map(map_handle,ways,nodes);
+			map_destroy(map_handle);
+		}
+		else
 			phase1(input_file,ways,nodes);
 		if (ways)
 			fclose(ways);
