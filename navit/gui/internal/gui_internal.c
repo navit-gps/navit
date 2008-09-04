@@ -117,6 +117,7 @@ struct widget {
 	char *prefix;
 	char *name;
 	struct pcoord c;
+	struct item item;
 	int state;
 	struct point p;
 	int wmin,hmin;
@@ -1347,6 +1348,39 @@ gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm)
 	gui_internal_prune_menu(this, NULL);
 }
 
+
+static void
+gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm)
+{
+	struct widget *w,*wb;
+	struct map_rect *mr;
+	struct item *item;
+	struct attr attr;
+	char *text;
+
+	dbg(0,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
+	wb=gui_internal_menu(this, "Attributes");
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	mr=map_rect_new(wm->item.map, NULL);
+	item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
+	dbg(0,"item=%p\n", item);
+	if (item) {
+		while(item_attr_get(item, attr_any, &attr)) {
+			text=g_strdup_printf("%s:%s", attr_to_name(attr.type), attr_to_text(&attr, wm->item.map, 1));
+			gui_internal_widget_append(w,
+			wb=gui_internal_button_new_with_callback(this, text,
+				NULL, gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_view_attributes, NULL));
+			g_free(text);
+		}
+	}
+	map_rect_destroy(mr);
+	gui_internal_menu_render(this);
+}
+
+
+
 static void
 gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 {
@@ -1380,6 +1414,23 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 	coord=coordinates(&wm->c, ' ');
 	gui_internal_widget_append(w, gui_internal_label_new(this, coord));
 	g_free(coord);
+	if (wm->data == 2) {
+		struct map_rect *mr;
+		struct item *item;
+		struct attr attr;
+		mr=map_rect_new(wm->item.map, NULL);
+		item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
+		if (item) {
+			if (item_attr_get(item, attr_description, &attr)) 
+				gui_internal_widget_append(w, gui_internal_label_new(this, attr.u.str));
+			gui_internal_widget_append(w,
+				wb=gui_internal_button_new_with_callback(this, "View Attributes",
+					image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+					gui_internal_cmd_view_attributes, NULL));
+			wb->item=wm->item;
+		}
+		map_rect_destroy(mr);
+	}
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, "Set as destination",
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
@@ -1412,7 +1463,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_view_on_map, wm));
 	}
-	if (wm->data) {
+	if (wm->data == 1) {
 		int i,dist=10;
 		struct mapset *ms;
 		struct mapset_handle *h;
@@ -1455,12 +1506,12 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 					gui_internal_widget_append(w,
 						wc=gui_internal_button_new_with_callback(this, text,
 						image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-						gui_internal_cmd_position, NULL));
-					dbg(0,"x=0x%x y=0x%x\n", data->c[0].x, data->c[0].y);
+						gui_internal_cmd_position, (void *)2));
 					wc->c.x=data->c[0].x;
 					wc->c.y=data->c[0].y;
 					wc->c.pro=pro;
 					wc->name=g_strdup(text);
+					wc->item=*item;
 					g_free(text);
 				}
 				street_data_free(data);
