@@ -15,7 +15,7 @@ EXTRA_DIST = navit.xml
 
 noinst_LTLIBRARIES        = libnavit.la
 libnavit_la_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c data_window.c debug.c \
-	event.c file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
+	event.c event_glib.c file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
 	mapset.c maptype.c menu.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c \
 	profile.c projection.c route.c search.c speech.c transform.c track.c \
 	util.c vehicle.c xmlconfig.c attr.h attr_def.h callback.h color.h compass.h coord.h country.h \

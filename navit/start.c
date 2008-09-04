@@ -30,6 +30,7 @@
 #include "navigation.h"
 #include "debug.h"
 #include "event.h"
+#include "event_glib.h"
 #include "xmlconfig.h"
 #include "file.h"
 #include "search.h"
@@ -71,6 +72,7 @@ int main(int argc, char **argv)
     GList *list = NULL, *li;
 
 
+	event_glib_init();
 	main_init(argv[0]);
 	main_init_nls();
 	debug_init(argv[0]);
@@ -153,6 +155,7 @@ int main(int argc, char **argv)
 		printf(_("No instance has been created, exiting\n"));
 		exit(1);
 	}
+	event_request_system("glib","start");
 	event_main_loop_run();
 
 	return 0;
