@@ -81,6 +81,8 @@ xpm_DATA += zoom_in.xpm
 xpm_DATA += zoom_out.xpm
 xpm_DATA += toggle_fullscreen.xpm
 xpm_DATA += menu.xpm
+xpm_DATA += school.xpm
+xpm_DATA += public_office.xpm
 
 svgs  = gui_actions.svg
 svgs += gui_active.svg
