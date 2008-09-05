@@ -56,7 +56,7 @@
 
 #define _(STRING)    gettext(STRING)
 /**
- * @defgroup navit the navit core instance
+ * @defgroup navit the navit core instance. navit is the object containing nearly everything: A set of maps, one or more vehicle, a graphics object for rendering the map, a gui object for displaying the user interface, a route object, a navigation object and so on. Be warned that it is theoretically possible to have more than one navit object
  * @{
  */
 
@@ -1216,6 +1216,13 @@ navit_init(struct navit *this_)
 		navit_draw(this_);
 }
 
+/**
+ * Change the current zoom level
+ *
+ * @param navit The navit instance
+ * @param center The point where to center the map, including its projection
+ * @returns nothing
+ */
 void
 navit_set_center(struct navit *this_, struct pcoord *center)
 {
