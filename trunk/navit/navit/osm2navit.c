@@ -2646,7 +2646,7 @@ int main(int argc, char **argv)
 	FILE* input_file = stdin;
 	struct plugins *plugins=NULL;
 	struct attr **attrs;
-	struct map *map_handle;
+	struct map *map_handle=NULL;
 
 	while (1) {
 #if 0
