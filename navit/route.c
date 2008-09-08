@@ -260,6 +260,17 @@ route_path_update(struct route *this)
 	}
 }
 
+static void
+route_info_distances(struct route_info *ri, enum projection pro)
+{
+	int npos=ri->pos+1;
+	struct street_data *sd=ri->street;
+	/* 0 1 2 X 3 4 5 6 pos=2 npos=3 count=7 0,1,2 3,4,5,6*/
+	ri->lenextra=transform_distance(pro, &ri->lp, &ri->c);
+	ri->lenneg=transform_polyline_length(pro, sd->c, npos)+transform_distance(pro, &sd->c[ri->pos], &ri->lp);
+	ri->lenpos=transform_polyline_length(pro, sd->c+npos, sd->count-npos)+transform_distance(pro, &sd->c[npos], &ri->lp);
+}
+
 void
 route_set_position(struct route *this, struct pcoord *pos)
 {
@@ -270,6 +281,7 @@ route_set_position(struct route *this, struct pcoord *pos)
 	dbg(1,"this->pos=%p\n", this->pos);
 	if (! this->pos)
 		return;
+	route_info_distances(this->pos, pos->pro);
 	if (this->dst) 
 		route_path_update(this);
 }
@@ -294,6 +306,7 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 	ret->lp=*c;
 	ret->pos=tracking_get_segment_pos(tracking);
 	ret->street=street_data_dup(tracking_get_street_data(tracking));
+	route_info_distances(ret, projection_mg);
 	dbg(3,"c->x=0x%x, c->y=0x%x pos=%d item=(0x%x,0x%x)\n", c->x, c->y, ret->pos, ret->street->item.id_hi, ret->street->item.id_lo);
 	dbg(3,"street 0=(0x%x,0x%x) %d=(0x%x,0x%x)\n", ret->street->c[0].x, ret->street->c[0].y, ret->street->count-1, ret->street->c[ret->street->count-1].x, ret->street->c[ret->street->count-1].y);
 	this->pos=ret;
@@ -378,16 +391,6 @@ route_free_selection(struct map_selection *sel)
 }
 
 
-static void
-route_info_distances(struct route_info *ri, enum projection pro)
-{
-	int npos=ri->pos+1;
-	struct street_data *sd=ri->street;
-	/* 0 1 2 X 3 4 5 6 pos=2 npos=3 count=7 0,1,2 3,4,5,6*/
-	ri->lenextra=transform_distance(pro, &ri->lp, &ri->c);
-	ri->lenneg=transform_polyline_length(pro, sd->c, npos)+transform_distance(pro, &sd->c[ri->pos], &ri->lp);
-	ri->lenpos=transform_polyline_length(pro, sd->c+npos, sd->count-npos)+transform_distance(pro, &sd->c[npos], &ri->lp);
-}
 
 
 void
@@ -1119,7 +1122,6 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 	mapset_close(h);
 	map_selection_destroy(sel);
 
-	route_info_distances(ret, pc->pro);
 	return ret;
 }
 
