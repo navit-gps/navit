@@ -17,8 +17,9 @@ NMEA GPS sensors.
 The routing engine not only calculates an optimal route to your
 destination, but also generates directions and even speaks to you.
 
-Navit currently speaks 22 languages :
+Navit currently speaks 23 languages :
 - Brazilian Portuguese
+- Chinese (Hong Kong)
 - Czech
 - Danish
 - Dutch
