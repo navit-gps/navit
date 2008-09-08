@@ -379,6 +379,10 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 		return 0;
 	}
 #endif
+	if (new->item.type == type_highway_land || new->item.type == type_highway_city || old->item.type == type_highway_land || old->item.type == type_highway_city) {
+		dbg(1, "maneuver_required: highway changed name\n");
+		return 1;
+	}
 	*delta=new->angle_start-old->angle_end;
 	if (*delta < -180)
 		*delta+=360;
