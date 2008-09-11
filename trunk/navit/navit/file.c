@@ -91,14 +91,14 @@ int file_mkdir(char *name, int pflag)
 	next=buffer;
 	while (next=strchr(next, '/')) {
 		*next='\0';
-		ret=file_mkdir(buffer, 0);
-		if (ret)
-			return ret;
+		if (*buffer) {
+			ret=file_mkdir(buffer, 0);
+			if (ret)
+				return ret;
+		}
 		*next++='/';
 	}
-	if (pflag == 1)
-		return mkdir(buffer, 0);
-	return 0;
+	return file_mkdir(buffer, 0);
 }
 
 int
