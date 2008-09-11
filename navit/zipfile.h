@@ -19,6 +19,8 @@
 
 #ifndef __ZIPFILE_H__
 
+#define zip_lfh_sig 0x04034b50
+
 struct zip_lfh {
 	int ziplocsig;
 	short zipver;
@@ -33,6 +35,8 @@ struct zip_lfh {
 	unsigned short zipxtraln;
 	char zipname[0];
 } __attribute__ ((packed));
+
+#define zip_cd_sig 0x2014b50
 
 struct zip_cd {
 	int zipcensig;
@@ -56,6 +60,8 @@ struct zip_cd {
 	unsigned int zipofst;
 	char zipcfn[0];	
 } __attribute__ ((packed));
+
+#define zip_eoc_sig 0x6054b50
 
 struct zip_eoc {
 	int zipesig;
