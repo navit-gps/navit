@@ -1379,6 +1379,32 @@ gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm)
 	gui_internal_menu_render(this);
 }
 
+static void
+gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm)
+{
+	struct widget *w,*wb;
+	struct map_rect *mr;
+	struct item *item;
+	struct attr attr;
+	char *cmd=NULL;
+
+	dbg(0,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
+	mr=map_rect_new(wm->item.map, NULL);
+	item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
+	dbg(0,"item=%p\n", item);
+	if (item) {
+		while(item_attr_get(item, attr_url_local, &attr)) {
+			if (! cmd)
+				cmd=g_strdup_printf("navit-browser.sh '%s' &",attr.u.str);
+		}
+	}
+	map_rect_destroy(mr);
+	if (cmd) {
+		system(cmd);
+		g_free(cmd);
+	}
+}
+
 
 
 static void
@@ -1423,6 +1449,13 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 		if (item) {
 			if (item_attr_get(item, attr_description, &attr)) 
 				gui_internal_widget_append(w, gui_internal_label_new(this, attr.u.str));
+			if (item_attr_get(item, attr_url_local, &attr)) {
+				gui_internal_widget_append(w,
+					wb=gui_internal_button_new_with_callback(this, "View in Browser",
+						image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+						gui_internal_cmd_view_in_browser, NULL));
+				wb->item=wm->item;
+			}
 			gui_internal_widget_append(w,
 				wb=gui_internal_button_new_with_callback(this, "View Attributes",
 					image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
