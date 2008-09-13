@@ -364,6 +364,7 @@ vehicle_file_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
 				vehicle_file_open(priv);
 				break;
 			case 1:
+				return FALSE;
 				break;
 			case 2:
 				exit(0);
