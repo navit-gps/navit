@@ -133,11 +133,13 @@ struct navigation_itm {
 	struct item item;
 	int angle_start;
 	int angle_end;
+	struct coord c;
 	int time;
 	int length;
 	int dest_time;
 	int dest_length;
 	int told;
+	int dest_count;
 	struct navigation_itm *next;
 	struct navigation_itm *prev;
 };
@@ -303,6 +305,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 			l=3;
 		ret->angle_start=road_angle(&c[0], &c[1], 0);
 		ret->angle_end=road_angle(&c[l-1], &c[l], 0);
+		ret->c=c[0];
 		dbg(1,"i=%d start %d end %d '%s' '%s'\n", i, ret->angle_start, ret->angle_end, ret->name1, ret->name2);
 		map_rect_destroy(mr);
 	}
@@ -320,7 +323,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 static void
 calculate_dest_distance(struct navigation *this_, int incr)
 {
-	int len=0, time=0;
+	int len=0, time=0, count=0;
 	struct navigation_itm *next,*itm=this_->last;
 	dbg(1, "enter this_=%p, incr=%d\n", this_, incr);
 	if (incr) {
@@ -333,6 +336,7 @@ calculate_dest_distance(struct navigation *this_, int incr)
 		dbg(2, "itm values: time=%d lenght=%d\n", itm->length, itm->time);
 		dbg(2, "next values: (%p) time=%d lenght=%d\n", next, next->dest_length, next->dest_time);
 		itm->dest_length=next->dest_length+itm->length;
+		itm->dest_count=next->dest_count+1;
 		itm->dest_time=next->dest_time+itm->time;
 		dbg(2, "new values: time=%d lenght=%d\n", itm->dest_length, itm->dest_time);
 		return;
@@ -342,6 +346,7 @@ calculate_dest_distance(struct navigation *this_, int incr)
 		time+=itm->time;
 		itm->dest_length=len;
 		itm->dest_time=time;
+		itm->dest_count=count++;
 		itm=itm->prev;
 	}
 	dbg(1,"len %d time %d\n", len, time);
@@ -368,7 +373,6 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 	dbg(1,"enter %p %p %p\n",old, new, delta);
 	if (new->item.type == old->item.type || (new->item.type != type_ramp && old->item.type != type_ramp)) {
 		if (is_same_street2(old, new)) {
-			dbg(1, "maneuver_required: is_same_street: no\n");
 			return 0;
 		}
 	} else
@@ -863,13 +867,24 @@ struct map_rect_priv {
 	struct navigation_command *cmd_next;
 	struct navigation_itm *itm;
 	struct navigation_itm *itm_next;
+	struct navigation_itm *cmd_itm;
+	struct navigation_itm *cmd_itm_next;
 	struct item item;
+	enum attr_type attr_next;
+	int ccount;
+	int debug_idx;
+	int show_all;
 };
 
 static int
 navigation_map_item_coord_get(void *priv_data, struct coord *c, int count)
 {
-	return 0;
+	struct map_rect_priv *this=priv_data;
+	if (this->ccount || ! count)
+		return 0;
+	*c=this->itm->c;
+	this->ccount=1;
+	return 1;
 }
 
 static int
@@ -877,25 +892,88 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 {
 	struct map_rect_priv *this_=priv_data;
 	attr->type=attr_type;
+	struct navigation_command *cmd=this_->cmd;
+	if (cmd) {
+		if (cmd->itm != this_->itm)
+			cmd=NULL;	
+	}
 	switch(attr_type) {
 	case attr_navigation_short:
+		this_->attr_next=attr_navigation_long;
+		if (cmd) {
+			attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
+			return 1;
+		}
+		return 0;
 	case attr_navigation_long:
+		this_->attr_next=attr_navigation_long_exact;
+		if (cmd) {
+			attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
+			return 1;
+		}
+		return 0;
 	case attr_navigation_long_exact:
+		this_->attr_next=attr_navigation_speech;
+		if (cmd) {
+			attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
+			return 1;
+		}
+		return 0;
 	case attr_navigation_speech:
-		attr->u.str=show_maneuver(this_->nav, this_->itm, this_->cmd, attr_type);
-		return 1;
+		this_->attr_next=attr_length;
+		if (cmd) {
+			attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, this_->cmd, attr_type);
+			return 1;
+		}
+		return 0;
 	case attr_length:
-		attr->u.num=this_->itm->dest_length-this_->cmd->itm->dest_length;
-		return 1;
+		this_->attr_next=attr_time;
+		if (cmd) {
+			attr->u.num=this_->cmd_itm->dest_length-cmd->itm->dest_length;
+			return 1;
+		}
+		return 0;
 	case attr_time:
-		attr->u.num=this_->itm->dest_time-this_->cmd->itm->dest_time;
-		return 1;
+		this_->attr_next=attr_destination_length;
+		if (cmd) {
+			attr->u.num=this_->cmd_itm->dest_time-cmd->itm->dest_time;
+			return 1;
+		}
+		return 0;
 	case attr_destination_length:
 		attr->u.num=this_->itm->dest_length;
+		this_->attr_next=attr_destination_time;
 		return 1;
 	case attr_destination_time:
 		attr->u.num=this_->itm->dest_time;
+		this_->attr_next=attr_street_name;
 		return 1;
+	case attr_street_name:
+		attr->u.str=this_->itm->name1;
+		this_->attr_next=attr_street_name_systematic;
+		return 1;
+	case attr_street_name_systematic:
+		attr->u.str=this_->itm->name2;
+		this_->attr_next=attr_debug;
+		return 1;
+	case attr_debug:
+		switch(this_->debug_idx) {
+		case 0:
+			attr->u.str=g_strdup_printf("%p vs %p\n", this_->itm,this_->cmd->itm);
+			this_->attr_next=attr_none;
+			break;
+		default:
+			this_->attr_next=attr_none;
+			return 0;
+		}
+		this_->debug_idx++;
+		return 1;
+	case attr_any:
+		while (this_->attr_next != attr_none) {
+			if (navigation_map_item_attr_get(priv_data, this_->attr_next, attr))
+				return 1;
+		}
+		return 0;
 	default:
 		attr->type=attr_none;
 		return 0;
@@ -916,14 +994,20 @@ navigation_map_destroy(struct map_priv *priv)
 	g_free(priv);
 }
 
+static void
+navigation_map_rect_init(struct map_rect_priv *priv)
+{
+	priv->cmd_next=priv->nav->cmd_first;
+	priv->cmd_itm_next=priv->itm_next=priv->nav->first;
+}
+
 static struct map_rect_priv *
 navigation_map_rect_new(struct map_priv *priv, struct map_selection *sel)
 {
 	struct navigation *nav=priv->navigation;
 	struct map_rect_priv *ret=g_new0(struct map_rect_priv, 1);
 	ret->nav=nav;
-	ret->cmd_next=nav->cmd_first;
-	ret->itm_next=nav->first;
+	navigation_map_rect_init(ret);
 	ret->item.meth=&navigation_map_item_methods;
 	ret->item.priv_data=ret;
 	return ret;
@@ -938,38 +1022,50 @@ navigation_map_rect_destroy(struct map_rect_priv *priv)
 static struct item *
 navigation_map_get_item(struct map_rect_priv *priv)
 {
-	struct item *ret;
+	struct item *ret=&priv->item;
 	int delta;
-	if (!priv->cmd_next)
+	if (!priv->itm_next)
 		return NULL;
-	ret=&priv->item;	
-	priv->cmd=priv->cmd_next;
 	priv->itm=priv->itm_next;
-	priv->itm_next=priv->cmd->itm;
-	priv->cmd_next=priv->cmd->next;
-
-	delta=priv->cmd->delta;	
-	dbg(1,"delta=%d\n", delta);
-	if (delta < 0) {
-		delta=-delta;
-		if (delta < 45)
-			ret->type=type_nav_left_1;
-		else if (delta < 105)
-			ret->type=type_nav_left_2;
-		else if (delta < 165) 
-			ret->type=type_nav_left_3;
-		else
-			ret->type=type_none;
-	} else {
-		if (delta < 45)
-			ret->type=type_nav_right_1;
-		else if (delta < 105)
-			ret->type=type_nav_right_2;
-		else if (delta < 165) 
-			ret->type=type_nav_right_3;
-		else
-			ret->type=type_none;
+	priv->cmd=priv->cmd_next;
+	priv->cmd_itm=priv->cmd_itm_next;
+	if (!priv->show_all) {
+		if (!priv->cmd)
+			return NULL;
+		priv->itm=priv->cmd->itm;
 	}
+	priv->itm_next=priv->itm->next;
+	ret->type=type_nav_none;
+	if (priv->cmd->itm == priv->itm) {
+		priv->cmd_itm_next=priv->cmd->itm;
+		priv->cmd_next=priv->cmd->next;
+		delta=priv->cmd->delta;	
+		if (delta < 0) {
+			delta=-delta;
+			if (delta < 45)
+				ret->type=type_nav_left_1;
+			else if (delta < 105)
+				ret->type=type_nav_left_2;
+			else if (delta < 165) 
+				ret->type=type_nav_left_3;
+			else
+				ret->type=type_none;
+		} else {
+			if (delta < 45)
+				ret->type=type_nav_right_1;
+			else if (delta < 105)
+				ret->type=type_nav_right_2;
+			else if (delta < 165) 
+				ret->type=type_nav_right_3;
+			else
+				ret->type=type_none;
+		}
+	}
+	priv->ccount=0;
+	priv->debug_idx=0;
+	priv->attr_next=attr_navigation_short;
+
+	ret->id_lo=priv->itm->dest_count;
 	dbg(1,"type=%d\n", ret->type);
 	return ret;
 }
@@ -977,13 +1073,18 @@ navigation_map_get_item(struct map_rect_priv *priv)
 static struct item *
 navigation_map_get_item_byid(struct map_rect_priv *priv, int id_hi, int id_lo)
 {
-	dbg(0,"stub");
+	struct item *ret;
+	navigation_map_rect_init(priv);
+	while ((ret=navigation_map_get_item(priv))) {
+		if (ret->id_hi == id_hi && ret->id_lo == id_lo) 
+			return ret;
+	}
 	return NULL;
 }
 
 static struct map_methods navigation_map_meth = {
 	projection_mg,
-	NULL,
+	"utf-8",
 	navigation_map_destroy,
 	navigation_map_rect_new,
 	navigation_map_rect_destroy,
