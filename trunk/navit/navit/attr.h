@@ -82,7 +82,7 @@ char *attr_to_name(enum attr_type attr);
 struct attr *attr_new_from_text(const char *name, const char *value);
 char *attr_to_text(struct attr *attr, struct map *map, int pretty);
 struct attr *attr_search(struct attr **attrs, struct attr *last, enum attr_type attr);
-int attr_generic_get_attr(struct attr **attrs, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+int attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int attr_data_size(struct attr *attr);
 void *attr_data_get(struct attr *attr);
 void attr_data_set(struct attr *attr, void *data);

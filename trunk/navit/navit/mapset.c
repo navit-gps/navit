@@ -74,13 +74,18 @@ mapset_open(struct mapset *ms)
 struct map * mapset_next(struct mapset_handle *msh, int active)
 {
 	struct map *ret;
+	struct attr active_attr;
 
 	for (;;) {
 		if (!msh->l)
 			return NULL;
 		ret=msh->l->data;
 		msh->l=g_list_next(msh->l);
-		if (!active || map_get_active(ret))
+		if (!active)
+			return ret;			
+		if (!map_get_attr(ret, attr_active, &active_attr, NULL))
+			return ret;
+		if (active_attr.u.num)
 			return ret;
 	}
 }
@@ -117,12 +122,20 @@ struct item *
 mapset_search_get_item(struct mapset_search *this)
 {
 	struct item *ret=NULL;
+	struct attr active_attr;
+
 	while (!this->ms || !(ret=map_search_get_item(this->ms))) {
 		if (this->search_attr->type >= attr_country_all && this->search_attr->type <= attr_country_name)
 			break;
-		do {
+		for (;;) {
 			this->map=g_list_next(this->map);
-		} while (this->map && ! map_get_active(this->map->data));
+			if (! this->map)
+				break;
+			if (!map_get_attr(this->map, attr_active, &active_attr, NULL))
+				break;
+			if (active_attr.u.num)
+				break;
+		}
 		if (! this->map)
 			break;
 		map_search_destroy(this->ms);

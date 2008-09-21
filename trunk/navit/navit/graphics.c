@@ -104,7 +104,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 */
 int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-	return attr_generic_get_attr(this_->attrs, type, attr, iter);
+	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
 /**

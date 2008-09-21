@@ -132,6 +132,7 @@ struct widget {
 	struct callback *cb;
 	struct attr on;
 	struct attr off;
+	int deflt;
 	int is_on;
 	int redraw;
 	GList *children;
@@ -413,6 +414,8 @@ gui_internal_button_attr_update(struct gui_priv *this, struct widget *w)
 
 	if (w->get_attr(w->instance, w->on.type, &curr, NULL))
 		is_on=curr.u.data == w->on.u.data;
+	else
+		is_on=w->deflt;
 	if (is_on != w->is_on) {
 		if (w->redraw)
 			this->redraw=1;
@@ -471,7 +474,7 @@ gui_internal_button_navit_attr_new(struct gui_priv *this, char *text, enum flags
 }
 
 static struct widget *
-gui_internal_button_map_attr_new(struct gui_priv *this, char *text, enum flags flags, struct map *map, struct attr *on, struct attr *off)
+gui_internal_button_map_attr_new(struct gui_priv *this, char *text, enum flags flags, struct map *map, struct attr *on, struct attr *off, int deflt)
 {
 	struct graphics_image *image=image_new_xs(this, "gui_inactive");
 	struct widget *ret;
@@ -480,6 +483,7 @@ gui_internal_button_map_attr_new(struct gui_priv *this, char *text, enum flags f
 		ret->on=*on;
 	if (off)
 		ret->off=*off;
+	ret->deflt=deflt;
 	ret->get_attr=map_get_attr;
 	ret->set_attr=map_set_attr;
 	ret->remove_cb=map_remove_callback;
@@ -2125,11 +2129,10 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 static void
 gui_internal_cmd_maps(struct gui_priv *this, struct widget *wm)
 {
-	struct attr attr;
+	struct attr attr, on, off, description, type, data;
 	struct widget *w,*wb,*wma;
 	char *label;
 	struct attr_iter *iter;
-	struct attr on, off;
 
 
 	wb=gui_internal_menu(this, "Maps");
@@ -2141,9 +2144,17 @@ gui_internal_cmd_maps(struct gui_priv *this, struct widget *wm)
 	on.u.num=1;
 	off.u.num=0;
 	while(navit_get_attr(this->nav, attr_map, &attr, iter)) {
-		label=g_strdup_printf("%s:%s", map_get_type(attr.u.map), map_get_filename(attr.u.map));
+		if (map_get_attr(attr.u.map, attr_description, &description, NULL)) {
+			label=g_strdup(description.u.str);
+		} else {
+			if (!map_get_attr(attr.u.map, attr_type, &type, NULL))
+				type.u.str="";
+			if (!map_get_attr(attr.u.map, attr_data, &data, NULL))
+				data.u.str="";
+			label=g_strdup_printf("%s:%s", type.u.str, data.u.str);
+		}
 		wma=gui_internal_button_map_attr_new(this, label, gravity_left_center|orientation_horizontal|flags_fill,
-			attr.u.map, &on, &off);
+			attr.u.map, &on, &off, 1);
 		gui_internal_widget_append(w, wma);
 		g_free(label);
 	}
