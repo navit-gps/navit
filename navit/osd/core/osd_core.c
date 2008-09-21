@@ -636,7 +636,7 @@ static void
 osd_button_init(struct osd_button *this, struct navit *nav)
 {
 	struct graphics *gra=navit_get_graphics(nav);
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 	this->nav=nav;
 	this->gra=gra;
 	this->gc=graphics_gc_new(gra);
