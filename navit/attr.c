@@ -141,9 +141,14 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 
 	if (type >= attr_type_item_begin && type <= attr_type_item_end) {
 		struct item *item=attr->u.item;
+		struct attr type, data;
 		if (! item)
 			return g_strdup("(nil)");
-		return g_strdup_printf("type=0x%x id=0x%x,0x%x map=%p (%s:%s)", item->type, item->id_hi, item->id_lo, item->map, item->map ? map_get_type(item->map) : "", item->map ? map_get_filename(item->map) : "");
+		if (! item->map || !map_get_attr(item->map, attr_type, &type, NULL))
+			type.u.str="";
+		if (! item->map || !map_get_attr(item->map, attr_data, &data, NULL))
+			data.u.str="";
+		return g_strdup_printf("type=0x%x id=0x%x,0x%x map=%p (%s:%s)", item->type, item->id_hi, item->id_lo, item->map, type.u.str, data.u.str);
 	}
 	if (type >= attr_type_string_begin && type <= attr_type_string_end) {
 		if (map) {
@@ -173,16 +178,46 @@ attr_search(struct attr **attrs, struct attr *last, enum attr_type attr)
 }
 
 int
-attr_generic_get_attr(struct attr **attrs, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-	while (*attrs) {
+	while (attrs && *attrs) {
 		if ((*attrs)->type == type) {
 			*attr=**attrs;
 			return 1;
 		}
 		attrs++;
 	}
+	while (def_attrs && *def_attrs) {
+		if ((*def_attrs)->type == type) {
+			*attr=**def_attrs;
+			return 1;
+		}
+		def_attrs++;
+	}
 	return 0;
+}
+
+struct attr **
+attr_generic_set_attr(struct attr **attrs, struct attr *attr)
+{
+	struct attr **curr=attrs;
+	int i,count=0;
+	while (curr && *curr) {
+		if ((*curr)->type == attr->type) {
+			attr_free(*curr);
+			*curr=attr_dup(attr);
+			return attrs;
+		}
+		curr++;
+		count++;
+	}
+	curr=g_new0(struct attr *, count+2);
+	for (i = 0 ; i < count ; i++)
+		curr[i]=attrs[i];
+	curr[count]=attr_dup(attr);
+	curr[count+1]=NULL;
+	g_free(attrs);
+	return curr;
 }
 
 int

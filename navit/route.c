@@ -1534,13 +1534,14 @@ route_graph_map_new(struct map_methods *meth, struct attr **attrs)
 }
 
 static struct map *
-route_get_map_helper(struct route *this_, struct map **map, char *type)
+route_get_map_helper(struct route *this_, struct map **map, char *type, char *description)
 {
 	if (! *map) 
 		*map=map_new((struct attr*[]){
                                 &(struct attr){attr_type,{type}},
                                 &(struct attr){attr_route,.u.route=this_},
                                 &(struct attr){attr_data,{""}},
+                                &(struct attr){attr_description,{description}},
                                 NULL});
 	return *map;
 }
@@ -1548,14 +1549,14 @@ route_get_map_helper(struct route *this_, struct map **map, char *type)
 struct map *
 route_get_map(struct route *this_)
 {
-	return route_get_map_helper(this_, &this_->map, "route");
+	return route_get_map_helper(this_, &this_->map, "route","Route");
 }
 
 
 struct map *
 route_get_graph_map(struct route *this_)
 {
-	return route_get_map_helper(this_, &this_->graph_map, "route_graph");
+	return route_get_map_helper(this_, &this_->graph_map, "route_graph","Route Graph");
 }
 
 void

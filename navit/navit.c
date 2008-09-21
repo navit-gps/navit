@@ -1176,7 +1176,7 @@ navit_init(struct navit *this_)
 				mapset_add(ms, map);
 			if ((map=route_get_graph_map(this_->route))) {
 				mapset_add(ms, map);
-				map_set_active(map, 0);
+				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 			route_set_mapset(this_->route, ms);
 		}
@@ -1185,7 +1185,7 @@ navit_init(struct navit *this_)
 		if (this_->navigation) {
 			if ((map=navigation_get_map(this_->navigation))) {
 				mapset_add(ms, map);
-				map_set_active(map, 0);
+				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 		}
 		navit_add_bookmarks_from_file(this_);

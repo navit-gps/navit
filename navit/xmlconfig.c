@@ -455,8 +455,6 @@ xmlconfig_map(struct xmlstate *state)
 	state->element_attr.u.data = map_new(attrs);
 	if (! state->element_attr.u.data)
 		return 0;
-	if (!find_boolean(state, "active", 1, 0))
-		map_set_active(state->element_attr.u.data, 0);
 	mapset_add(state->parent->element_attr.u.data, state->element_attr.u.data);
 
 	return 1;

@@ -266,7 +266,10 @@ gui_gtk_add_menu(struct gui_priv *this, char *name, char *label, char *path, int
 static void
 gui_gtk_action_toggled(GtkToggleAction *action, struct action_cb_data *data)
 {
-	map_set_active(data->attr.u.map, gtk_toggle_action_get_active(action));
+	struct attr active;
+	active.type=attr_active;
+	active.u.num=gtk_toggle_action_get_active(action);
+	map_set_attr(data->attr.u.map, &active);
 	navit_draw(data->gui->nav);
 }
 
@@ -374,20 +377,26 @@ static void
 gui_gtk_maps_init(struct gui_priv *this)
 {
 	struct attr_iter *iter;
-	struct attr attr;
-	struct action_cb_data *data;
+	struct attr attr,active,type,data;
+	struct action_cb_data *cb_data;
 	int count=0;
 	char *name, *label;
 
 	iter=navit_attr_iter_new();
 	while(navit_get_attr(this->nav, attr_map, &attr, iter)) {
 		name=g_strdup_printf("Map %d", count++);
-		label=g_strdup_printf("%s:%s", map_get_type(attr.u.map), map_get_filename(attr.u.map));
-		data=g_new(struct action_cb_data, 1);
-		data->gui=this;
-		data->attr.type=attr_map;
-		data->attr.u.map=attr.u.map;
-		gui_gtk_add_toggle_menu(this, name, label, "/ui/MenuBar/Map/MapMenuAdditions", data, map_get_active(attr.u.map));
+		if (! map_get_attr(attr.u.map, attr_type, &type, NULL))
+			type.u.str="";
+		if (! map_get_attr(attr.u.map, attr_data, &data, NULL))
+			data.u.str="";
+		label=g_strdup_printf("%s:%s", type.u.str, data.u.str);
+		cb_data=g_new(struct action_cb_data, 1);
+		cb_data->gui=this;
+		cb_data->attr.type=attr_map;
+		cb_data->attr.u.map=attr.u.map;
+		if (! map_get_attr(attr.u.map, attr_active, &active, NULL))
+			active.u.num=1;
+		gui_gtk_add_toggle_menu(this, name, label, "/ui/MenuBar/Map/MapMenuAdditions", cb_data, active.u.num);
 		g_free(name);
 		g_free(label);
 	}
