@@ -1728,7 +1728,7 @@ navit_block(struct navit *this_, int block)
 int
 navit_command_register(struct navit *this_, char *command, struct callback *cb)
 {
-	dbg(0,"registering '%s'\n", command);
+	dbg(1,"registering '%s'\n", command);
 	g_hash_table_insert(this_->commands, command, cb);
 
 	return 0;
