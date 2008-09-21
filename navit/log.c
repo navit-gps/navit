@@ -193,7 +193,7 @@ log_timer(gpointer data)
 int
 log_get_attr(struct log *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-        return attr_generic_get_attr(this_->attrs, type, attr, iter);
+        return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
 

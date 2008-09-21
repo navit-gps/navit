@@ -34,10 +34,8 @@
 struct map {
 	struct map_methods meth;
 	struct map_priv *priv;
-	char *type;
-	char *filename;
+	struct attr **attrs;
 	struct callback_list *attr_cbl;
-	int active;
 };
 
 struct map_rect {
@@ -50,7 +48,6 @@ map_new(struct attr **attrs)
 {
 	struct map *m;
 	struct map_priv *(*maptype_new)(struct map_methods *meth, struct attr **attrs);
-	struct attr *data=attr_search(attrs, NULL, attr_data);
 	struct attr *type=attr_search(attrs, NULL, attr_type);
 
 	if (! type) {
@@ -64,10 +61,7 @@ map_new(struct attr **attrs)
 	}
 
 	m=g_new0(struct map, 1);
-	m->active=1;
-	m->type=g_strdup(type->u.str);
-	if (data) 
-		m->filename=g_strdup(data->u.str);
+	m->attrs=attr_list_dup(attrs);
 	m->priv=maptype_new(&m->meth, attrs);
 	if (! m->priv) {
 		g_free(m);
@@ -78,60 +72,20 @@ map_new(struct attr **attrs)
 	return m;
 }
 
-char *
-map_get_filename(struct map *this_)
-{
-	return this_->filename;
-}
-
-char *
-map_get_type(struct map *this_)
-{
-	return this_->type;
-}
-
-int
-map_get_active(struct map *this_)
-{
-	return this_->active;
-}
-
-void
-map_set_active(struct map *this_, int active)
-{
-	this_->active=active;
-}
-
 int
 map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-	switch (type) {
-	case attr_active:
-		attr->u.num=this_->active;
-		break;
-	default:
-		return 0;
-	}
-	return 1;
+	return xxx(this_, type, attr, iter);
+#if 0
+	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+#endif
 }
 
 int
 map_set_attr(struct map *this_, struct attr *attr)
 {
-	int attr_updated=0;
-
-	switch (attr->type) {
-	case attr_active:
-		if (this_->active != !!attr->u.num) {
-			this_->active=!!attr->u.num;
-			attr_updated=1;
-		}
-		break;
-	default:
-		return 0;
-	}
-	if (attr_updated)
-		callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
+	this_->attrs=attr_generic_set_attr(this_->attrs, attr);
+	callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
 	return 1;
 }
 
@@ -183,6 +137,7 @@ void
 map_destroy(struct map *m)
 {
 	m->meth.map_destroy(m->priv);
+	attr_list_free(m->attrs);
 	g_free(m);
 }
 
