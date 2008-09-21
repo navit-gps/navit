@@ -170,6 +170,7 @@ struct gui_priv {
 	struct search_list *sl;
 	int ignore_button;
 	int menu_on_map_click;
+	char *country_iso2;
 };
 
 static void gui_internal_widget_render(struct gui_priv *this, struct widget *w);
@@ -1005,6 +1006,7 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	menu->background=this->background;
 	if (this->root.w > 320 || this->root.h > 320) {
 		this->font_size=40;
+		this->icon_xs=32;
 		this->icon_s=48;
 		this->icon_l=96;
 		this->spacing=5;
@@ -1086,10 +1088,10 @@ static void
 gui_internal_cmd_add_bookmark_changed(struct gui_priv *this, struct widget *wm)
 {
 	int len;
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 	if (wm->text) {
 		len=strlen(wm->text);
-		dbg(0,"len=%d\n", len);
+		dbg(1,"len=%d\n", len);
 		if (len && (wm->text[len-1] == '\n' || wm->text[len-1] == '\r')) {
 			wm->text[len-1]='\0';
 			gui_internal_cmd_add_bookmark_do(this, wm);
@@ -1405,7 +1407,13 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm)
 	}
 }
 
+/* wm->data: 0 Nothing special
+	     1 Map Point
+	     2 Item
+	     3 Town 
+*/
 
+static void gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget);
 
 static void
 gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
@@ -1414,6 +1422,10 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 	struct coord_geo g;
 	struct coord c;
 	char *coord,*name;
+	int display_attributes=(wm->data == 2);
+	int display_view_on_map=(wm->data != 1);
+	int display_items=(wm->data == 1);
+	int display_streets=(wm->data == 3);
 
 #if 0
 	switch ((int)wm->data) {
@@ -1440,7 +1452,14 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 	coord=coordinates(&wm->c, ' ');
 	gui_internal_widget_append(w, gui_internal_label_new(this, coord));
 	g_free(coord);
-	if (wm->data == 2) {
+	if (display_streets) {
+		gui_internal_widget_append(w,
+			wc=gui_internal_button_new_with_callback(this, "Streets",
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_search_street_in_town, wm));
+		wc->item=wm->item;
+	}
+	if (display_attributes) {
 		struct map_rect *mr;
 		struct item *item;
 		struct attr attr;
@@ -1490,13 +1509,13 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 		gui_internal_button_new(this, "Add as bookmark",
 			image_new_o(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
 #endif
-	if ((int)wm->data != 1) {
+	if (display_view_on_map) {
 		gui_internal_widget_append(w,
 			gui_internal_button_new_with_callback(this, "View on map",
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_view_on_map, wm));
 	}
-	if (wm->data == 1) {
+	if (display_items) {
 		int i,dist=10;
 		struct mapset *ms;
 		struct mapset_handle *h;
@@ -1704,10 +1723,11 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 			gui_internal_widget_append(this->list,
 				wc=gui_internal_button_new_with_callback(this, text,
 				image_new_xs(this, res->country->flag), gravity_left_center|orientation_horizontal|flags_fill,
-				gui_internal_cmd_position, NULL));
+				gui_internal_cmd_position, (void *)3));
 			g_free(text);
 			wc->name=g_strdup(name);
 			wc->c=*res->c;
+			wc->item.id_lo=res->id;
 		}
 		gui_internal_widget_pack(this, this->list);
 	}
@@ -1870,7 +1890,7 @@ gui_internal_keyboard_change(struct gui_priv *this, struct widget *key)
 static void
 gui_internal_search_list_set_default_country(struct gui_priv *this)
 {
-	struct attr search_attr, country_name, *country_attr;
+	struct attr search_attr, country_name, country_iso2, *country_attr;
 	struct item *item;
 	struct country_search *cs;
 	struct tracking *tracking;
@@ -1889,6 +1909,9 @@ gui_internal_search_list_set_default_country(struct gui_priv *this)
 			search_attr.u.str=country_name.u.str;
 			search_list_search(this->sl, &search_attr, 0);
 			while((res=search_list_get_result(this->sl)));
+			g_free(this->country_iso2);
+			if (item_attr_get(item, attr_country_iso2, &country_iso2)) 
+				this->country_iso2=g_strdup(country_iso2.u.str);
 		}
 		country_search_destroy(cs);
 	} else {
@@ -1921,6 +1944,7 @@ static void
 gui_internal_search(struct gui_priv *this, char *what, char *type)
 {
 	struct widget *wb,*wk,*w,*wr,*we,*wl,*wnext;
+	char *country;
 	gui_internal_search_list_new(this);
 	wb=gui_internal_menu(this, what);
 	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
@@ -1929,7 +1953,11 @@ gui_internal_search(struct gui_priv *this, char *what, char *type)
 	gui_internal_widget_append(w, wr);
 	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	gui_internal_widget_append(wr, we);
-	gui_internal_widget_append(we, gui_internal_image_new(this, image_new_xs(this, "country_DE")));
+	
+	country=g_strdup_printf("country_%s", this->country_iso2);
+	gui_internal_widget_append(we, gui_internal_image_new(this, image_new_xs(this, country)));
+	g_free(country);
+
 	gui_internal_widget_append(we, wk=gui_internal_label_new(this, NULL));
 	gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
 	wnext->state |= STATE_SENSITIVE;
@@ -1949,6 +1977,15 @@ gui_internal_search(struct gui_priv *this, char *what, char *type)
 static void
 gui_internal_search_street(struct gui_priv *this, struct widget *widget)
 {
+	gui_internal_search(this,"Street","Street");
+}
+
+static void
+gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget)
+{
+	dbg(0,"id %d\n", widget->item.id_lo);
+	search_list_select(this->sl, attr_town_name, 0, 0);
+	search_list_select(this->sl, attr_town_name, widget->item.id_lo, 1);
 	gui_internal_search(this,"Street","Street");
 }
 
