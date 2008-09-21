@@ -131,7 +131,7 @@ mapset_search_get_item(struct mapset_search *this)
 			this->map=g_list_next(this->map);
 			if (! this->map)
 				break;
-			if (!map_get_attr(this->map, attr_active, &active_attr, NULL))
+			if (!map_get_attr(this->map->data, attr_active, &active_attr, NULL))
 				break;
 			if (active_attr.u.num)
 				break;
