@@ -75,10 +75,7 @@ map_new(struct attr **attrs)
 int
 map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-	return xxx(this_, type, attr, iter);
-#if 0
 	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
-#endif
 }
 
 int
