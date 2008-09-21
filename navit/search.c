@@ -32,6 +32,7 @@ struct search_list_level {
 	struct item *parent;
 	struct attr attr;
 	int partial;
+	int selected;
 	struct mapset_search *search;
 	GHashTable *hash;
 	GList *list,*curr,*last;
@@ -74,34 +75,37 @@ search_list_new(struct mapset *ms)
 }
 
 static void search_list_search_free(struct search_list *sl, int level);
-void
-search_list_search(struct search_list *this_, struct attr *search_attr, int partial)
+
+static int
+search_list_level(enum attr_type attr_type)
 {
-	int level=-1;
-	struct search_list_level *le;
-	switch(search_attr->type) {
+	switch(attr_type) {
 	case attr_country_all:
 	case attr_country_id:
 	case attr_country_iso2:
 	case attr_country_iso3:
 	case attr_country_car:
 	case attr_country_name:
-		level=0;
-		break;
+		return 0;
 	case attr_town_postal:
-		level=1;
-		break;
+		return 1;
 	case attr_town_name:
-		level=1;
-		break;
+		return 1;
 	case attr_street_name:
-		level=2;
-		break;
+		return 2;
 	default:
-		break;
+		return -1;
 	}
+}
+
+void
+search_list_search(struct search_list *this_, struct attr *search_attr, int partial)
+{
+	struct search_list_level *le;
+	int level=search_list_level(search_attr->type);
 	dbg(0,"level=%d\n", level);
 	if (level != -1) {
+		this_->result.id=0;
 		this_->level=level;
 		le=&this_->levels[level];
 		le->attr=*search_attr;
@@ -115,6 +119,35 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 		}
 		dbg(1,"le=%p partial=%d\n", le, partial);
 	}
+}
+
+int
+search_list_select(struct search_list *this_, enum attr_type attr_type, int id, int mode)
+{
+	int level=search_list_level(attr_type);
+	int num=0;
+	struct search_list_level *le;
+	struct search_list_common *slc;
+	GList *curr;
+	le=&this_->levels[level];
+	curr=le->list;
+	if (mode > 0)
+		le->selected=mode;
+	dbg(0,"enter %d %d\n", id, mode);
+	while (curr) {
+		num++;
+		if (! id || num == id) {
+			slc=curr->data;
+			slc->selected=mode;
+			if (id) {
+				dbg(0,"found\n");
+				return 1;
+			}
+		}
+		curr=g_list_next(curr);
+	}
+	dbg(0,"not found\n");
+	return 0;
 }
 
 static struct search_list_country *
@@ -290,11 +323,19 @@ search_list_get_result(struct search_list *this_)
 			else {
 				leu=&this_->levels[level-1];
 				dbg(1,"leu->curr=%p\n", leu->curr);
-				if (! leu->curr)
-					break;
-				le->parent=leu->curr->data;
-				leu->last=leu->curr;
-				leu->curr=g_list_next(leu->curr);
+				for (;;) {
+					struct search_list_common *slc;
+					if (! leu->curr)
+						return NULL;
+					le->parent=leu->curr->data;
+					leu->last=leu->curr;
+					leu->curr=g_list_next(leu->curr);
+					slc=(struct search_list_common *)(le->parent);
+					if (!slc)
+						break;
+					if (slc->selected == leu->selected)
+						break;
+				}
 			}
 			if (le->parent)
 				dbg(1,"mapset_search_new with item(%d,%d)\n", le->parent->id_hi, le->parent->id_lo);
@@ -332,9 +373,10 @@ search_list_get_result(struct search_list *this_)
 				break;
 			}
 			if (p) {
-				if (search_add_result(le, p)) 
+				if (search_add_result(le, p)) {
+					this_->result.id++;
 					return &this_->result;
-				else 
+				} else 
 					search_list_result_destroy(level, p);
 			}
 		} else {
