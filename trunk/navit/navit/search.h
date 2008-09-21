@@ -23,8 +23,16 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+struct search_list_common {
+	struct item item;
+	int selected;
+	struct pcoord *c;
+};
+
 struct search_list_country {
 	struct item item;
+	int selected;
+	struct pcoord *c;
 	char *car;
 	char *iso2;
 	char *iso3;
@@ -34,8 +42,9 @@ struct search_list_country {
 
 struct search_list_town {
 	struct item item;
-	struct item itemt;
+	int selected;
 	struct pcoord *c;
+	struct item itemt;
 	char *postal;
 	char *name;
 	char *district;
@@ -43,11 +52,13 @@ struct search_list_town {
 
 struct search_list_street {
 	struct item item;
+	int selected;
 	struct pcoord *c;
 	char *name;
 };
 
 struct search_list_result {
+	int id;
 	struct pcoord *c;
 	struct search_list_country *country;
 	struct search_list_town *town;
