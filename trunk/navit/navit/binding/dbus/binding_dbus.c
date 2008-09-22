@@ -28,6 +28,9 @@
 #include "coord.h"
 #include "plugin.h"
 #include "debug.h"
+#include "item.h"
+#include "attr.h"
+#include "layout.h"
 
 
 static DBusConnection *connection;
@@ -206,6 +209,28 @@ request_navit_set_center(DBusConnection *connection, DBusMessage *message)
 }
 
 static DBusHandlerResult
+request_navit_set_layout(DBusConnection *connection, DBusMessage *message)
+{
+	char *new_layout_name;
+	struct navit *navit;
+	struct attr attr;
+	struct attr_iter *iter;
+
+	navit=object_get_from_message(message, "navit");
+	if (! navit)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &new_layout_name, DBUS_TYPE_INVALID))
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	iter=navit_attr_iter_new();
+	while(navit_get_attr(navit, attr_layout, &attr, iter)) {
+		if (strcmp(attr.u.layout->name, new_layout_name) == 0) {
+			navit_set_attr(navit, &attr);
+		}
+	}
+	return empty_reply(connection, message);
+}
+
+static DBusHandlerResult
 navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_data)
 {
 	dbg(0,"type=%s interface=%s path=%s member=%s signature=%s\n", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
@@ -237,6 +262,9 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_center") &&
 		dbus_message_has_signature(message,"(iii)")) 
 		return request_navit_set_center(connection, message);
+	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_layout") &&
+		dbus_message_has_signature(message,"s")) 
+		return request_navit_set_layout(connection, message);
 
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
@@ -268,7 +296,7 @@ void plugin_init(void)
 	dbus_error_init(&error);
 	connection = dbus_bus_get(DBUS_BUS_SESSION, &error);
 	if (!connection) {
-		dbg(0,"Failed to open connection to session message bus: %s", error.message);
+		dbg(0,"Failed to open connection to session message bus: %s\n", error.message);
 		dbus_error_free(&error);
 		return;
 	}
