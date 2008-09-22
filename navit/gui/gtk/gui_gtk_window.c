@@ -166,6 +166,7 @@ gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description)
 	vbox=gtk_vbox_new(FALSE, 0);
 	gtk_container_add (GTK_CONTAINER (gui->dialog_win), vbox);
 	gtk_window_set_title(GTK_WINDOW(gui->dialog_win),_("Add Bookmark"));
+	gtk_window_set_wmclass (GTK_WINDOW (gui->dialog_win), "navit", "Navit");
 	gtk_window_set_transient_for(GTK_WINDOW(gui->dialog_win), GTK_WINDOW(gui->win));
 	gtk_window_set_modal(GTK_WINDOW(gui->dialog_win), TRUE);
 	label=gtk_label_new(_("Name"));
@@ -552,6 +553,7 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	this->vbox = gtk_vbox_new(FALSE, 0);
 	gtk_window_set_default_size(GTK_WINDOW(this->win), w, h);
 	gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
+	gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", "Navit");
 	gtk_widget_realize(this->win);
 	gui_gtk_ui_init(this);
 	if (this->menubar_enable) {
