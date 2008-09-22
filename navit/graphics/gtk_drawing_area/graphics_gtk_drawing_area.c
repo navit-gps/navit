@@ -1024,6 +1024,7 @@ get_data(struct graphics_priv *this, char *type)
 		this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 		gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
 		gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
+		gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", "Navit");
 		gtk_widget_realize(this->win);
 		gtk_container_add(GTK_CONTAINER(this->win), this->widget);
 		gtk_widget_show_all(this->win);

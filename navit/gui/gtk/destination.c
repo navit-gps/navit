@@ -424,6 +424,7 @@ int destination_address(struct navit *nav)
 
 	window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window2),_("Enter Destination"));
+	gtk_window_set_wmclass (GTK_WINDOW (window2), "navit", "Navit");
 	vbox = gtk_vbox_new(FALSE, 0);
 	table = gtk_table_new(3, 8, FALSE);
 
