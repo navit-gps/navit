@@ -171,6 +171,7 @@ gui_gtk_datawindow_new(struct gui_priv *gui, char *name, struct callback *click,
 	win->window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_default_size(GTK_WINDOW(win->window), 320, 200);
 	gtk_window_set_title(GTK_WINDOW(win->window), name);
+	gtk_window_set_wmclass (GTK_WINDOW (win->window), "navit", "Navit");
 
 	win->scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (win->scrolled_window),
