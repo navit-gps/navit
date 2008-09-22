@@ -368,6 +368,19 @@ is_same_street2(struct navigation_itm *old, struct navigation_itm *new)
 }
 
 static int
+is_same_street_systematic(struct navigation_itm *old, struct navigation_itm *new)
+{
+	int slashold,slashnew;
+	if (!old->name2 || !new->name2)
+		return 1;
+	slashold=strcspn(old->name2, "/");
+	slashnew=strcspn(new->name2, "/");
+	if (slashold != slashnew || strncmp(old->name2, new->name2, slashold))
+		return 0;
+	return 1;
+}
+
+static int
 maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *delta)
 {
 	dbg(1,"enter %p %p %p\n",old, new, delta);
@@ -377,13 +390,17 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 		}
 	} else
 		dbg(1, "maneuver_required: old or new is ramp\n");
+	if (old->item.type == type_ramp && (new->item.type == type_highway_city || new->item.type == type_highway_land)) {
+		dbg(1, "no_maneuver_required: old is ramp new is highway\n");
+		return 0;
+	}
 #if 0
 	if (old->crossings_end == 2) {
 		dbg(1, "maneuver_required: only 2 connections: no\n");
 		return 0;
 	}
 #endif
-	if (new->item.type == type_highway_land || new->item.type == type_highway_city || old->item.type == type_highway_land || old->item.type == type_highway_city) {
+	if ((new->item.type == type_highway_land || new->item.type == type_highway_city || old->item.type == type_highway_land || old->item.type == type_highway_city) && (!is_same_street_systematic(old, new) || (old->name2 != NULL && new->name2 == NULL))) {
 		dbg(1, "maneuver_required: highway changed name\n");
 		return 1;
 	}
@@ -874,6 +891,7 @@ struct map_rect_priv {
 	int ccount;
 	int debug_idx;
 	int show_all;
+	char *str;
 };
 
 static int
@@ -893,36 +911,44 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 	struct map_rect_priv *this_=priv_data;
 	attr->type=attr_type;
 	struct navigation_command *cmd=this_->cmd;
+	struct navigation_itm *itm=this_->itm;
+	struct navigation_itm *prev=itm->prev;
+
+	if (this_->str) {
+		g_free(this_->str);
+		this_->str=NULL;
+	}
+
 	if (cmd) {
-		if (cmd->itm != this_->itm)
+		if (cmd->itm != itm)
 			cmd=NULL;	
 	}
 	switch(attr_type) {
 	case attr_navigation_short:
 		this_->attr_next=attr_navigation_long;
 		if (cmd) {
-			attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
+			this_->str=attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
 			return 1;
 		}
 		return 0;
 	case attr_navigation_long:
 		this_->attr_next=attr_navigation_long_exact;
 		if (cmd) {
-			attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
+			this_->str=attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
 			return 1;
 		}
 		return 0;
 	case attr_navigation_long_exact:
 		this_->attr_next=attr_navigation_speech;
 		if (cmd) {
-			attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
+			this_->str=attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
 			return 1;
 		}
 		return 0;
 	case attr_navigation_speech:
 		this_->attr_next=attr_length;
 		if (cmd) {
-			attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, this_->cmd, attr_type);
+			this_->str=attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, this_->cmd, attr_type);
 			return 1;
 		}
 		return 0;
@@ -941,33 +967,49 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 		}
 		return 0;
 	case attr_destination_length:
-		attr->u.num=this_->itm->dest_length;
+		attr->u.num=itm->dest_length;
 		this_->attr_next=attr_destination_time;
 		return 1;
 	case attr_destination_time:
-		attr->u.num=this_->itm->dest_time;
+		attr->u.num=itm->dest_time;
 		this_->attr_next=attr_street_name;
 		return 1;
 	case attr_street_name:
-		attr->u.str=this_->itm->name1;
+		attr->u.str=itm->name1;
 		this_->attr_next=attr_street_name_systematic;
 		return 1;
 	case attr_street_name_systematic:
-		attr->u.str=this_->itm->name2;
+		attr->u.str=itm->name2;
 		this_->attr_next=attr_debug;
 		return 1;
 	case attr_debug:
 		switch(this_->debug_idx) {
 		case 0:
-			attr->u.str=g_strdup_printf("%p vs %p\n", this_->itm,this_->cmd->itm);
-			this_->attr_next=attr_none;
-			break;
+			this_->debug_idx++;
+			this_->str=attr->u.str=g_strdup_printf("item type:%s", item_to_name(itm->item.type));
+			return 1;
+		case 1:
+			this_->debug_idx++;
+			if (prev) {
+				this_->str=attr->u.str=g_strdup_printf("prev street_name:%s", prev->name1);
+				return 1;
+			}
+		case 2:
+			this_->debug_idx++;
+			if (prev) {
+				this_->str=attr->u.str=g_strdup_printf("prev street_name_systematic:%s", prev->name2);
+				return 1;
+			}
+		case 3:
+			this_->debug_idx++;
+			if (prev) {
+				this_->str=attr->u.str=g_strdup_printf("prev item type:%s", item_to_name(prev->item.type));
+				return 1;
+			}
 		default:
 			this_->attr_next=attr_none;
 			return 0;
 		}
-		this_->debug_idx++;
-		return 1;
 	case attr_any:
 		while (this_->attr_next != attr_none) {
 			if (navigation_map_item_attr_get(priv_data, this_->attr_next, attr))
