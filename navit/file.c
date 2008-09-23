@@ -98,6 +98,8 @@ int file_mkdir(char *name, int pflag)
 		}
 		*next++='/';
 	}
+	if (pflag == 2)
+		return 0;
 	return file_mkdir(buffer, 0);
 }
 
