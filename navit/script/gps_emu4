@@ -6,11 +6,23 @@ sub process_one_packet
 {
 	$pos[$idx++]=tell(STDIN);
 	while (<STDIN>) {
-		print $_;
+		if (!defined($match)) {
+			print $_;
+		} else {
+			$buffer.=$_;
+		}
 		if (/^\$GPRMC/) {
 			my($dummy,$time,$dummy)=split(/,/,$_);
 			$entry->set_text($time);
-			return;
+			if (!defined($match)) {
+				return;
+			}
+			if (substr($time,0,length($match)) eq $match) {
+				undef $match;
+				print $buffer;
+				return;
+			}
+			$buffer='';
 		}
 	}
 }
@@ -53,6 +65,13 @@ sub add_timeout
 	}
 }
 
+sub entry
+{
+	$match=$entry->get_text();
+	seek(STDIN,0,SEEK_SET);
+	process_one_packet();
+}
+
 $oldfh = select(STDOUT); $| = 1; select($oldfh);
 $window = Gtk2::Window->new('toplevel');
 $box = Gtk2::HBox->new();
@@ -74,6 +93,7 @@ $button->signal_connect(clicked => sub { add_timeout(0,0) ; backward() });
 $box->add($button);
 $entry = Gtk2::Entry->new();
 $entry->set_text("???");
+$entry->signal_connect(activate => \&entry);
 $box->add($entry);
 $button = Gtk2::Button->new("+");
 $button->signal_connect(clicked => sub { add_timeout(0,0) ; forward() });
