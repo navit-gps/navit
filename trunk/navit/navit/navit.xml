@@ -1434,6 +1434,9 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 				<item type="rg_point" order="12-">
 					<circle color="#FF089C" radius="10"  label_size="7" />
 				</item>
+				<item type="nav_straight,nav_turnaround,nav_right_1,nav_right_2,nav_right_3,nav_left_1,nav_left_2,nav_left_3,nav_roundabout_r1,nav_roundabout_r2,nav_roundabout_r3,nav_roundabout_r4,nav_roundabout_r5,nav_roundabout_r6,nav_roundabout_r7,nav_roundabout_r8,nav_roundabout_l1,nav_roundabout_l2,nav_roundabout_l3,nav_roundabout_l4,nav_roundabout_l5,nav_roundabout_l6,nav_roundabout_l7,nav_roundabout_l8,nav_none" order="0-">
+					<icon src="unknown.xpm" />
+				</item>
 
 
 				<!-- I'm not sure if the following stuff should appear in any layout. Maybe portions should only apply to the bicyle layout. -->
