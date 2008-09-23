@@ -1506,7 +1506,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 					<polygon color="#140f14" />
 				</item>
 				<item type="poly_water" order="0-">
-					<polygon color="#010532" /> 
+					<polygon color="#010321" /> 
 					<label label_size="5" /> 
 				</item>
 				<item type="poly_park" order="0-">
@@ -1595,51 +1595,51 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 					<polyline color="#a0a0a0" width="3" />
 				</item>
 				<item type="water_line" order="0-">
-					<polyline color="#010532" width="1" /> 
+					<polyline color="#010321" width="1" /> 
 					<label label_size="5" /> 
 				</item>
 				<item type="water_river" order="4-5">
-					<polyline color="#010532" width="1" />
+					<polyline color="#010321" width="1" />
 				</item>
 				<item type="water_river" order="6">
-					<polyline color="#010532" width="2" />
+					<polyline color="#010321" width="2" />
 				</item>
 				<item type="water_river" order="7">
-					<polyline color="#010532" width="3" />
+					<polyline color="#010321" width="3" />
 					<label label_size="5" />
 				</item>
 				<item type="water_river" order="8-9">
-					<polyline color="#010532" width="4" />
+					<polyline color="#010321" width="4" />
 					<label label_size="7" />
 				</item>
 				<item type="water_river" order="10-">
-					<polyline color="#010532" width="4" />
+					<polyline color="#010321" width="4" />
 					<label label_size="10" />
 				</item>
 				<item type="water_canal" order="6">
-					<polyline color="#010532" width="1" />
+					<polyline color="#010321" width="1" />
 				</item>
 				<item type="water_canal" order="7">
-					<polyline color="#010532" width="2" />
+					<polyline color="#010321" width="2" />
 					<label label_size="5" />
 				</item>
 				<item type="water_canal" order="8-9">
-					<polyline color="#010532" width="3" />
+					<polyline color="#010321" width="3" />
 					<label label_size="7" />
 				</item>
 				<item type="water_canal" order="10-">
-					<polyline color="#010532" width="3" />
+					<polyline color="#010321" width="3" />
 					<label label_size="10" />
 				</item>
 				<item type="water_stream" order="8-9">
-					<polyline color="#010532" width="1" />
+					<polyline color="#010321" width="1" />
 				</item>
 				<item type="water_stream" order="10-">
-					<polyline color="#010532" width="2" />
+					<polyline color="#010321" width="2" />
 					<label label_size="7" />
 				</item>
 				<item type="water_drain" order="10-">
-					<polyline color="#010532" width="1" />
+					<polyline color="#010321" width="1" />
 					<label label_size="5" />
 				</item>
 				<item type="poly_apron" order="0-">
@@ -2509,19 +2509,19 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 					<icon src="public_office.xpm" />
 				</item>
 				<item type="poi_rail_halt" order="10-">
-					<circle color="#900000" radius="3" width="3" />
-					<circle color="#000000" radius="5" width="2" label_size="8" />
+					<circle color="#000000" radius="3" width="3" />
+					<circle color="#3d3d3d" radius="6" width="2" label_size="8" />
 				</item>
 				<item type="poi_rail_station" order="11-">
-					<circle color="#900000" radius="3" width="3" />
-					<circle color="#000000" radius="6" width="2" label_size="8" />
+					<circle color="#000000" radius="3" width="3" />
+					<circle color="#3d3d3d" radius="6" width="2" label_size="8" />
 				</item>
 				<item type="poi_rail_tram_stop" order="10-11">
-					<circle color="#900000" radius="2" width="2"/>
+					<circle color="#3d3d3d" radius="2" width="2"/>
 				</item>
 				<item type="poi_rail_tram_stop" order="12-">
-					<circle color="#900000" radius="3" width="3" />
-					<circle color="#606060" radius="5" width="2" label_size="8" />
+					<circle color="#000000" radius="3" width="3" />
+					<circle color="#3d3d3d" radius="6" width="2" label_size="8" />
 				</item>
 				<item type="poi_repair_service" order="0-">
 					<icon src="repair_service.xpm" />
