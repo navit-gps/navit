@@ -400,16 +400,16 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 		return 0;
 	}
 #endif
-	if ((new->item.type == type_highway_land || new->item.type == type_highway_city || old->item.type == type_highway_land || old->item.type == type_highway_city) && (!is_same_street_systematic(old, new) || (old->name2 != NULL && new->name2 == NULL))) {
-		dbg(1, "maneuver_required: highway changed name\n");
-		return 1;
-	}
 	*delta=new->angle_start-old->angle_end;
 	if (*delta < -180)
 		*delta+=360;
 	if (*delta > 180)
 		*delta-=360;
 	dbg(1,"delta=%d-%d=%d\n", new->angle_start, old->angle_end, *delta);
+	if ((new->item.type == type_highway_land || new->item.type == type_highway_city || old->item.type == type_highway_land || old->item.type == type_highway_city) && (!is_same_street_systematic(old, new) || (old->name2 != NULL && new->name2 == NULL))) {
+		dbg(1, "maneuver_required: highway changed name\n");
+		return 1;
+	}
 	if (*delta < 20 && *delta >-20) {
 		dbg(1, "maneuver_required: delta(%d) < 20: no\n", *delta);
 		return 0;
@@ -986,21 +986,35 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 		switch(this_->debug_idx) {
 		case 0:
 			this_->debug_idx++;
-			this_->str=attr->u.str=g_strdup_printf("item type:%s", item_to_name(itm->item.type));
+			this_->str=attr->u.str=g_strdup_printf("angle:%d - %d", itm->angle_start, itm->angle_end);
 			return 1;
 		case 1:
+			this_->debug_idx++;
+			this_->str=attr->u.str=g_strdup_printf("item type:%s", item_to_name(itm->item.type));
+			return 1;
+		case 2:
+			this_->debug_idx++;
+			if (cmd) {
+				this_->str=attr->u.str=g_strdup_printf("delta:%d", cmd->delta);
+				return 1;
+			}
+		case 3:
 			this_->debug_idx++;
 			if (prev) {
 				this_->str=attr->u.str=g_strdup_printf("prev street_name:%s", prev->name1);
 				return 1;
 			}
-		case 2:
+		case 4:
 			this_->debug_idx++;
 			if (prev) {
 				this_->str=attr->u.str=g_strdup_printf("prev street_name_systematic:%s", prev->name2);
 				return 1;
 			}
-		case 3:
+		case 5:
+			this_->debug_idx++;
+			this_->str=attr->u.str=g_strdup_printf("prev angle:%d - %d", prev->angle_start, prev->angle_end);
+			return 1;
+		case 6:
 			this_->debug_idx++;
 			if (prev) {
 				this_->str=attr->u.str=g_strdup_printf("prev item type:%s", item_to_name(prev->item.type));
