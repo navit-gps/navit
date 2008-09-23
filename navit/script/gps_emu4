@@ -1,0 +1,94 @@
+#! /usr/bin/perl
+use Glib qw/TRUE FALSE/;
+use Gtk2 '-init';
+
+sub process_one_packet
+{
+	$pos[$idx++]=tell(STDIN);
+	while (<STDIN>) {
+		print $_;
+		if (/^\$GPRMC/) {
+			my($dummy,$time,$dummy)=split(/,/,$_);
+			$label->set_label($time);
+			return;
+		}
+	}
+}
+
+sub process_one_packet_at_idx
+{
+	($idx)=@_;
+	seek(STDIN,$pos[$idx],SEEK_SET);
+	process_one_packet();
+}
+
+sub forward
+{
+	process_one_packet();
+	return 1;
+}
+
+sub backward
+{
+	if ($idx > 1) {
+		process_one_packet_at_idx($idx-2);
+	}
+	return 1;
+}
+
+sub add_timeout
+{
+	my ($interval,$dir)=@_;
+
+	if ($timeout > 0) {
+		Glib::Source->remove($timeout);
+	}
+	if ($dir > 0) {
+		forward();
+		$timeout=Glib::Timeout->add ($interval, \&forward);
+	}
+	if ($dir < 0) {
+		backward();
+		$timeout=Glib::Timeout->add ($interval, \&backward);
+	}
+}
+
+$oldfh = select(STDOUT); $| = 1; select($oldfh);
+$window = Gtk2::Window->new('toplevel');
+$box = Gtk2::HBox->new();
+$window->add($box);
+$button = Gtk2::Button->new("Stop");
+$button->signal_connect(clicked => sub { add_timeout(0,0) });
+$box->add($button);
+$button = Gtk2::Button->new("100 Hz");
+$button->signal_connect(clicked => sub { add_timeout(10,-1); });
+$box->add($button);
+$button = Gtk2::Button->new("10 Hz");
+$button->signal_connect(clicked => sub { add_timeout(100,-1); });
+$box->add($button);
+$button = Gtk2::Button->new("1 Hz");
+$button->signal_connect(clicked => sub { add_timeout(1000,-1); });
+$box->add($button);
+$button = Gtk2::Button->new("-");
+$button->signal_connect(clicked => sub { add_timeout(0,0) ; backward() });
+$box->add($button);
+$label = Gtk2::Button->new("???");
+$box->add($label);
+$button = Gtk2::Button->new("+");
+$button->signal_connect(clicked => sub { add_timeout(0,0) ; forward() });
+$box->add($button);
+$button = Gtk2::Button->new("1 Hz");
+$button->signal_connect(clicked => sub { add_timeout(1000,1); });
+$box->add($button);
+$button = Gtk2::Button->new("10 Hz");
+$button->signal_connect(clicked => sub { add_timeout(100,1); });
+$box->add($button);
+$button = Gtk2::Button->new("100 Hz");
+$button->signal_connect(clicked => sub { add_timeout(10,1); });
+$box->add($button);
+$button = Gtk2::Button->new("Max");
+$button->signal_connect(clicked => sub { add_timeout(1,1); });
+$box->add($button);
+$window->show_all;
+Gtk2->main;
+0;
