@@ -9,7 +9,7 @@ sub process_one_packet
 		print $_;
 		if (/^\$GPRMC/) {
 			my($dummy,$time,$dummy)=split(/,/,$_);
-			$label->set_label($time);
+			$entry->set_text($time);
 			return;
 		}
 	}
@@ -72,8 +72,9 @@ $box->add($button);
 $button = Gtk2::Button->new("-");
 $button->signal_connect(clicked => sub { add_timeout(0,0) ; backward() });
 $box->add($button);
-$label = Gtk2::Button->new("???");
-$box->add($label);
+$entry = Gtk2::Entry->new();
+$entry->set_text("???");
+$box->add($entry);
 $button = Gtk2::Button->new("+");
 $button->signal_connect(clicked => sub { add_timeout(0,0) ; forward() });
 $box->add($button);
