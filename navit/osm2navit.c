@@ -355,18 +355,19 @@ struct country_table {
 	int count;
 	struct rect r;
 } country_table[] = {
-	{ 40,"Austria,�sterreich,AUT"}, 
-	{124,"Canada"}, 
- 	{208,"Denmark,Danmark,DK"}, 
- 	{246,"Finland,Suomi"}, 
- 	{250,"France,R�publique fran�aise,FR"}, 
-	{276,"Germany,Deutschland,Bundesrepublik Deutschland"}, 
- 	{380,"Italy,Italia"}, 
- 	{578,"Norway,Norge,Noreg,NO"}, 
- 	{752,"Sweden,Sverige,Konungariket Sverige,SE"}, 
-	{528,"Nederland,The Netherlands,Niederlande,NL"}, 
- 	{724,"Spain,Espana,Espana,Reino de Espana"}, 
+	{ 40,"Austria,�sterreich,AUT"},
+	{124,"Canada"},
+ 	{208,"Denmark,Danmark,DK"},
+ 	{246,"Finland,Suomi"},
+ 	{250,"France,R�publique fran�aise,FR"},
+	{276,"Germany,Deutschland,Bundesrepublik Deutschland"},
+ 	{380,"Italy,Italia"},
+	{528,"Nederland,The Netherlands,Niederlande,NL"},
+	{578,"Norway,Norge,Noreg,NO"},
+ 	{724,"Spain,Espana,Espana,Reino de Espana"},
+	{752,"Sweden,Sverige,Konungariket Sverige,SE"},
 	{756,"Schweiz"}, 
+	{826,"United Kingdom,UK"},
 	{840,"USA"} 
 };
 
