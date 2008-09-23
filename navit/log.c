@@ -85,6 +85,12 @@ expand_filenames(struct log *this_)
 }
 
 static void
+log_set_last_flush(struct log *this_)
+{
+	gettimeofday(&this_->last_flush, NULL);
+}
+
+static void
 log_open(struct log *this_)
 {
 	char *mode;
@@ -102,7 +108,7 @@ log_open(struct log *this_)
 	if (!this_->overwrite) 
 		fseek(this_->f, 0, SEEK_END);
 	this_->empty = !ftell(this_->f);
-	gettimeofday(&this_->last_flush, NULL);
+	log_set_last_flush(this_);
 }
 
 static void
@@ -147,7 +153,7 @@ log_flush(struct log *this_)
 	g_free(this_->data.data);
 	this_->data.data=NULL;
 	this_->data.max_len=this_->data.len=0;
-	gettimeofday(&this_->last_flush, NULL);
+	log_set_last_flush(this_);
 }
 
 static int
@@ -185,7 +191,7 @@ log_timer(gpointer data)
 	gettimeofday(&tv, NULL);
 	delta=(tv.tv_sec-this_->last_flush.tv_sec)*1000+(tv.tv_usec-this_->last_flush.tv_usec)/1000;
 	dbg(1,"delta=%d flush_time=%d\n", delta, this_->flush_time);
-	if (this_->flush_time && delta > this_->flush_time*1000)
+	if (this_->flush_time && delta >= this_->flush_time*1000)
 		log_flush(this_);
 	return TRUE;
 }
@@ -239,7 +245,9 @@ log_new(struct attr **attrs)
 		ret->timer=g_timeout_add(ret->flush_time*1000, log_timer, ret);
 	}
 	expand_filenames(ret);
-	if (! ret->lazy)
+	if (ret->lazy)
+		log_set_last_flush(ret);
+	else
 		log_open(ret);
 	ret->attrs=attr_list_dup(attrs);
 	return ret;
