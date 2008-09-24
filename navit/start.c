@@ -28,6 +28,7 @@
 #include "main.h"
 #include "route.h"
 #include "navigation.h"
+#include "track.h"
 #include "debug.h"
 #include "event.h"
 #include "event_glib.h"
@@ -82,6 +83,7 @@ int main(int argc, char **argv)
 #endif
 	route_init();
 	navigation_init();
+	tracking_init();
 	search_init();
 	config_file=NULL;
 	opterr=0;  //don't bomb out on errors.

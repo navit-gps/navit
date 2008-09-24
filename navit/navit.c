@@ -1188,6 +1188,12 @@ navit_init(struct navit *this_)
 				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 		}
+		if (this_->tracking) {
+			if ((map=tracking_get_map(this_->tracking))) {
+				mapset_add(ms, map);
+				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
+			}
+		}
 		navit_add_bookmarks_from_file(this_);
 		navit_add_former_destinations_from_file(this_);
 		navit_add_menu_former_destinations(this_, NULL, this_->route);
