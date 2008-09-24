@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-04 10:31+0200\n"
-"PO-Revision-Date: 2008-09-04 02:37+0000\n"
-"Last-Translator: seqizz (gurkanGur) <seqizz@gmail.com>\n"
+"POT-Creation-Date: 2008-09-24 13:36+0200\n"
+"PO-Revision-Date: 2008-09-24 08:45+0000\n"
+"Last-Translator: dentist76 <pilatin@live.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2008-09-04 08:00+0000\n"
+"X-Launchpad-Export-Date: 2008-09-24 09:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../navit/main.c:149
@@ -28,146 +28,146 @@ msgstr "Kaynak klasörden çalıştırılıyor\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "'%s' , '%s' değerine ayarlanıyor\n"
 
-#: ../navit/navigation.c:190
+#: ../navit/navigation.c:192
 #, c-format
 msgid "%d m"
 msgstr "%d m"
 
-#: ../navit/navigation.c:192
+#: ../navit/navigation.c:194
 #, c-format
 msgid "in %d m"
 msgstr "%d m'de"
 
-#: ../navit/navigation.c:196
+#: ../navit/navigation.c:198
 #, c-format
 msgid "%d meters"
 msgstr "%d metre"
 
-#: ../navit/navigation.c:198
+#: ../navit/navigation.c:200
 #, c-format
 msgid "in %d meters"
 msgstr "%d metrede"
 
-#: ../navit/navigation.c:204
+#: ../navit/navigation.c:206
 #, c-format
 msgid "%d.%d kilometer"
 msgstr "%d.%d kilometre"
 
-#: ../navit/navigation.c:206
+#: ../navit/navigation.c:208
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "%d.%d kilometrede"
 
-#: ../navit/navigation.c:210
+#: ../navit/navigation.c:212
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "%d kilometre"
 
-#: ../navit/navigation.c:212
+#: ../navit/navigation.c:214
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "%d kilometrede"
 
-#: ../navit/navigation.c:466
+#: ../navit/navigation.c:491
 msgid "exit"
 msgstr "çıkış"
 
-#: ../navit/navigation.c:468
+#: ../navit/navigation.c:493
 msgid "ramp"
 msgstr "rampa"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:498
+#: ../navit/navigation.c:523
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr ""
+msgstr "%sCaddesi'ne %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:502
+#: ../navit/navigation.c:527
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr ""
+msgstr "%scaddesine %s%s%s|male form"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:506
+#: ../navit/navigation.c:531
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr ""
+msgstr "%scaddesine %s%s%s|female form"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:510
+#: ../navit/navigation.c:535
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
+msgstr "%scaddesine %s%s%s|neutral form"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:517
+#: ../navit/navigation.c:542
 #, c-format
 msgid "into the %s"
 msgstr "%s yoluna"
 
 #. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:539
+#: ../navit/navigation.c:564
 msgid "right"
 msgstr "Sağa"
 
 #. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:547
+#: ../navit/navigation.c:572
 msgid "left"
 msgstr "Sola"
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:552
+#: ../navit/navigation.c:577
 msgid "easily "
 msgstr "kolayca "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:557
+#: ../navit/navigation.c:582
 msgid "strongly "
 msgstr "sertçe "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:561
+#: ../navit/navigation.c:586
 msgid "unknown "
 msgstr "bilinmeyen "
 
-#: ../navit/navigation.c:567
+#: ../navit/navigation.c:592
 msgid "When possible, please turn around"
 msgstr "Müsait olduğunda lütfen yönünü değiştir"
 
-#: ../navit/navigation.c:574
+#: ../navit/navigation.c:599
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Gelecek %s için yolu takip et"
 
-#: ../navit/navigation.c:578
+#: ../navit/navigation.c:603
 msgid "soon"
 msgstr "yakında"
 
-#: ../navit/navigation.c:584
+#: ../navit/navigation.c:609
 msgid "now"
 msgstr "şimdi"
 
-#: ../navit/navigation.c:587
+#: ../navit/navigation.c:612
 msgid "error"
 msgstr "hata"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:616
+#: ../navit/navigation.c:641
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Dönüş %1$s%2$s %3$s%4$s"
 
-#: ../navit/navigation.c:619
+#: ../navit/navigation.c:644
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Hedefinize ulaştınız, %s"
 
 #: ../navit/navit.c:785 ../navit/gui/gtk/gui_gtk_action.c:170
 msgid "Former Destinations"
-msgstr ""
+msgstr "önceki istikamet"
 
 #: ../navit/navit.c:795 ../navit/gui/gtk/gui_gtk_action.c:171
 msgid "Bookmarks"
@@ -245,12 +245,12 @@ msgstr "Afganistan"
 #. 028
 #: ../navit/country.c:46
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "Antigua ve Barbuda"
 
 #. 660
 #: ../navit/country.c:47
 msgid "Anguilla"
-msgstr ""
+msgstr "Angola"
 
 #. 008
 #: ../navit/country.c:48
@@ -265,7 +265,7 @@ msgstr "Ermenistan"
 #. 530
 #: ../navit/country.c:50
 msgid "Netherlands Antilles"
-msgstr ""
+msgstr "Hollanda Antilleri"
 
 #. 024
 #: ../navit/country.c:51
@@ -300,7 +300,7 @@ msgstr "Avustralya"
 #. 533
 #: ../navit/country.c:57
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #. 248
 #: ../navit/country.c:58
@@ -360,7 +360,7 @@ msgstr "Benin"
 #. 652
 #: ../navit/country.c:69
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "Saint Barthelemy"
 
 #. 060
 #: ../navit/country.c:70
@@ -390,7 +390,7 @@ msgstr "Bahamalar"
 #. 064
 #: ../navit/country.c:75
 msgid "Bhutan"
-msgstr ""
+msgstr "Bhutan"
 
 #. 074
 #: ../navit/country.c:76
@@ -485,7 +485,7 @@ msgstr "Küba"
 #. 132
 #: ../navit/country.c:94
 msgid "Cape Verde"
-msgstr ""
+msgstr "Cape Verde"
 
 #. 162
 #: ../navit/country.c:95
@@ -510,7 +510,7 @@ msgstr "Almanya"
 #. 262
 #: ../navit/country.c:99
 msgid "Djibouti"
-msgstr ""
+msgstr "Cibuti"
 
 #. 208
 #: ../navit/country.c:100
@@ -520,7 +520,7 @@ msgstr "Danimarka"
 #. 212
 #: ../navit/country.c:101
 msgid "Dominica"
-msgstr ""
+msgstr "Dominik"
 
 #. 214
 #: ../navit/country.c:102
@@ -600,7 +600,7 @@ msgstr "Fransa"
 #. 266
 #: ../navit/country.c:117
 msgid "Gabon"
-msgstr ""
+msgstr "Gabon"
 
 #. 826
 #: ../navit/country.c:118
@@ -610,7 +610,7 @@ msgstr "Birleşik Krallık"
 #. 308
 #: ../navit/country.c:119
 msgid "Grenada"
-msgstr ""
+msgstr "Granada"
 
 #. 268
 #: ../navit/country.c:120
@@ -655,7 +655,7 @@ msgstr "Gine"
 #. 312
 #: ../navit/country.c:128
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Guadalup"
 
 #. 226
 #: ../navit/country.c:129
@@ -685,7 +685,7 @@ msgstr "Guam"
 #. 624
 #: ../navit/country.c:134
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "Gine-Bissau"
 
 #. 328
 #: ../navit/country.c:135
@@ -740,7 +740,7 @@ msgstr "İsrail"
 #. 833
 #: ../navit/country.c:145
 msgid "Isle of Man"
-msgstr ""
+msgstr "Man adası"
 
 #. 356
 #: ../navit/country.c:146
@@ -750,7 +750,7 @@ msgstr "Hindistan"
 #. 086
 #: ../navit/country.c:147
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "Hint Okyanusu İngiliz Bölgesi"
 
 #. 368
 #: ../navit/country.c:148
@@ -775,7 +775,7 @@ msgstr "İtalya"
 #. 832
 #: ../navit/country.c:152
 msgid "Jersey"
-msgstr ""
+msgstr "Jersey"
 
 #. 388
 #: ../navit/country.c:153
@@ -810,12 +810,12 @@ msgstr "Kamboçya"
 #. 296
 #: ../navit/country.c:159
 msgid "Kiribati"
-msgstr ""
+msgstr "Kiribati"
 
 #. 174
 #: ../navit/country.c:160
 msgid "Comoros"
-msgstr ""
+msgstr "Komoros"
 
 #. 659
 #: ../navit/country.c:161
@@ -840,7 +840,7 @@ msgstr "Kuveyt"
 #. 136
 #: ../navit/country.c:165
 msgid "Cayman Islands"
-msgstr ""
+msgstr "Seyman Adaları"
 
 #. 398
 #: ../navit/country.c:166
@@ -880,7 +880,7 @@ msgstr "Liberya"
 #. 426
 #: ../navit/country.c:173
 msgid "Lesotho"
-msgstr ""
+msgstr "Lesoto"
 
 #. 440
 #: ../navit/country.c:174
@@ -900,7 +900,7 @@ msgstr "Letonya"
 #. 434
 #: ../navit/country.c:177
 msgid "Libyan Arab Jamahiriya"
-msgstr ""
+msgstr "Libya"
 
 #. 504
 #: ../navit/country.c:178
@@ -965,12 +965,12 @@ msgstr "Macao"
 #. 580
 #: ../navit/country.c:190
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "Kuzey Mariana Adaları"
 
 #. 474
 #: ../navit/country.c:191
 msgid "Martinique"
-msgstr ""
+msgstr "Martinik"
 
 #. 478
 #: ../navit/country.c:192
@@ -980,7 +980,7 @@ msgstr "Moritanya"
 #. 500
 #: ../navit/country.c:193
 msgid "Montserrat"
-msgstr ""
+msgstr "Monserat"
 
 #. 470
 #: ../navit/country.c:194
@@ -1070,7 +1070,7 @@ msgstr "Nauru Adası"
 #. 570
 #: ../navit/country.c:211
 msgid "Niue"
-msgstr ""
+msgstr "Niue"
 
 #. 554
 #: ../navit/country.c:212
@@ -1145,7 +1145,7 @@ msgstr "Portekiz"
 #. 585
 #: ../navit/country.c:226
 msgid "Palau"
-msgstr ""
+msgstr "Palau"
 
 #. 600
 #: ../navit/country.c:227
@@ -1195,7 +1195,7 @@ msgstr "Solomon Adaları"
 #. 690
 #: ../navit/country.c:236
 msgid "Seychelles"
-msgstr ""
+msgstr "Seyşel Adaları"
 
 #. 736
 #: ../navit/country.c:237
@@ -1260,7 +1260,7 @@ msgstr "Surinam"
 #. 678
 #: ../navit/country.c:249
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "Sao Tome ve Principe"
 
 #. 222
 #: ../navit/country.c:250
@@ -1280,7 +1280,7 @@ msgstr "Swaziland"
 #. 796
 #: ../navit/country.c:253
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Turks ve Kaykos Adaları"
 
 #. 148
 #: ../navit/country.c:254
@@ -1290,7 +1290,7 @@ msgstr "Çad"
 #. 260
 #: ../navit/country.c:255
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Güney Fransa  Bölgeleri"
 
 #. 768
 #: ../navit/country.c:256
@@ -1310,7 +1310,7 @@ msgstr "Tacikistan"
 #. 772
 #: ../navit/country.c:259
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #. 626
 #: ../navit/country.c:260
@@ -1345,7 +1345,7 @@ msgstr "Trinidad ve Tobago"
 #. 798
 #: ../navit/country.c:266
 msgid "Tuvalu"
-msgstr ""
+msgstr "Tuvalu"
 
 #. 158
 #: ../navit/country.c:267
@@ -1370,7 +1370,7 @@ msgstr "Uganda"
 #. 581
 #: ../navit/country.c:271
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "Küçük Birleşik Devletler adaları"
 
 #. 840
 #: ../navit/country.c:272
@@ -1420,7 +1420,7 @@ msgstr "Vietnam"
 #. 548
 #: ../navit/country.c:281
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #. 876
 #: ../navit/country.c:282
@@ -1440,7 +1440,7 @@ msgstr "Yemen"
 #. 175
 #: ../navit/country.c:285
 msgid "Mayotte"
-msgstr ""
+msgstr "Mayotte"
 
 #. 710
 #: ../navit/country.c:286
@@ -1464,13 +1464,13 @@ msgstr "Araç"
 
 #: ../navit/gui/gtk/destination.c:122
 msgid "Iso2"
-msgstr ""
+msgstr "Iso2"
 
 #: ../navit/gui/gtk/destination.c:122
 msgid "Iso3"
-msgstr ""
+msgstr "Isa3"
 
-#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:431
+#: ../navit/gui/gtk/destination.c:122 ../navit/gui/gtk/destination.c:432
 msgid "Country"
 msgstr "Ülke"
 
@@ -1490,11 +1490,11 @@ msgid "District"
 msgstr "Bölge"
 
 #: ../navit/gui/gtk/destination.c:124 ../navit/gui/gtk/destination.c:125
-#: ../navit/gui/gtk/destination.c:442
+#: ../navit/gui/gtk/destination.c:443
 msgid "Street"
 msgstr "Cadde"
 
-#: ../navit/gui/gtk/destination.c:125 ../navit/gui/gtk/destination.c:444
+#: ../navit/gui/gtk/destination.c:125 ../navit/gui/gtk/destination.c:445
 msgid "Number"
 msgstr "Numara"
 
@@ -1502,27 +1502,27 @@ msgstr "Numara"
 msgid "Enter Destination"
 msgstr "Hedefi Giriniz"
 
-#: ../navit/gui/gtk/destination.c:434
+#: ../navit/gui/gtk/destination.c:435
 msgid "Zip Code"
 msgstr "Zip Kodu"
 
-#: ../navit/gui/gtk/destination.c:436
+#: ../navit/gui/gtk/destination.c:437
 msgid "City"
 msgstr "Şehir"
 
-#: ../navit/gui/gtk/destination.c:439
+#: ../navit/gui/gtk/destination.c:440
 msgid "District/Township"
 msgstr "Bölge/Mahal"
 
-#: ../navit/gui/gtk/destination.c:467 ../navit/gui/gtk/gui_gtk_action.c:172
+#: ../navit/gui/gtk/destination.c:468 ../navit/gui/gtk/gui_gtk_action.c:172
 msgid "Map"
 msgstr "Harita"
 
-#: ../navit/gui/gtk/destination.c:468
+#: ../navit/gui/gtk/destination.c:469
 msgid "Bookmark"
 msgstr "Yer imi"
 
-#: ../navit/gui/gtk/destination.c:469 ../navit/gui/gtk/gui_gtk_action.c:185
+#: ../navit/gui/gtk/destination.c:470 ../navit/gui/gtk/gui_gtk_action.c:185
 msgid "Destination"
 msgstr "Hedef"
 
@@ -1580,7 +1580,7 @@ msgstr "İmleç"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
 msgid "Lock on Road"
-msgstr ""
+msgstr "Kapalı yol"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:197
 msgid "Northing"
@@ -1632,7 +1632,7 @@ msgstr "B"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:65
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:100
 msgid "NW"
-msgstr ""
+msgstr "Kuzey-Batı"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:122
 #, c-format
