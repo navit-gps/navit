@@ -232,6 +232,15 @@ route_contains(struct route *this, struct item *item)
 	return  (int)item_hash_lookup(this->path2->path_hash, item);
 }
 
+int
+route_pos_contains(struct route *this, struct item *item)
+{
+	if (! this->pos)
+		return 0;
+	return item_is_equal(this->pos->street->item, *item);
+}
+
+
 static void
 route_path_update(struct route *this)
 {
