@@ -164,6 +164,7 @@ ATTR(bookmark_map)
 ATTR(former_destination_map)
 ATTR(graphics)
 ATTR(gui)
+ATTR(trackingo) /* fixme */
 ATTR2(0x0008ffff,type_object_end)
 ATTR2(0x00090000,type_coord_begin)
 ATTR2(0x0009ffff,type_coord_end)

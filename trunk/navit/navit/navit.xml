@@ -870,7 +870,39 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 					<polyline color="#8080ff" width="3" /> 
 				</item>
 				-->
-
+				<item type="tracking_0" order="0-">
+					<polyline color="#000000" width="3" /> 
+				</item>
+				<item type="tracking_10" order="0-">
+					<polyline color="#191919" width="3" /> 
+				</item>
+				<item type="tracking_20" order="0-">
+					<polyline color="#333333" width="3" /> 
+				</item>
+				<item type="tracking_30" order="0-">
+					<polyline color="#4c4c4c" width="3" /> 
+				</item>
+				<item type="tracking_40" order="0-">
+					<polyline color="#666666" width="3" /> 
+				</item>
+				<item type="tracking_50" order="0-">
+					<polyline color="#7f7f7f" width="3" /> 
+				</item>
+				<item type="tracking_60" order="0-">
+					<polyline color="#999999" width="3" /> 
+				</item>
+				<item type="tracking_70" order="0-">
+					<polyline color="#b2b2b2" width="3" /> 
+				</item>
+				<item type="tracking_80" order="0-">
+					<polyline color="#cccccc" width="3" /> 
+				</item>
+				<item type="tracking_90" order="0-">
+					<polyline color="#e5e5e5" width="3" /> 
+				</item>
+				<item type="tracking_100" order="0-">
+					<polyline color="#ffffff" width="3" /> 
+				</item>
 				<item type="highway_exit_label" order="10-">
 					<circle color="#000000" radius="3" label_size="7" />
 				</item>
