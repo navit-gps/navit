@@ -155,6 +155,7 @@ main_init(char *program)
 		s=g_strdup_printf("%s/../locale", buffer);
 		setenv("NAVIT_LOCALEDIR", s, 0);
 		g_free(s);
+		setenv("NAVIT_USER_DATADIR", "./", 0);
 	} else {
 		if (!getenv("NAVIT_PREFIX")) {
 			l=strlen(program);
@@ -185,6 +186,7 @@ main_init(char *program)
 		s=g_strdup_printf("%s/lib/navit", getenv("NAVIT_PREFIX"));
 		setenv("NAVIT_LIBDIR", s, 0);
 		g_free(s);
+		setenv("NAVIT_USER_DATADIR", g_strjoin(NULL, get_home_directory(), "/.navit/", NULL), 0);
 	}
 	if (getenv("LC_ALL")) 
 		dbg(0,"Warning: LC_ALL is set, this might lead to problems\n");
