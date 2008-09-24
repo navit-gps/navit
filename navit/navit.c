@@ -607,6 +607,75 @@ parse_line(FILE *f, char *buffer, char **name, struct pcoord *c)
 	return pos;
 }
 
+/*
+ * navit_get_user_data_directory
+ * 
+ * returns the directory used to store user data files (center.txt,
+ * destination.txt, bookmark.txt, ...)
+ *
+ * arg: gboolean create: create the directory if it does not exist
+ */
+static char*
+navit_get_user_data_directory(gboolean create) {
+	char *dir;
+	dir = getenv("NAVIT_USER_DATADIR");
+	if (create && !file_exists(dir)) {
+		dbg(0,"creating dir %s\n", dir);
+		if (file_mkdir(dir,0)) {
+			perror(dir);
+			return;
+		}
+	}
+
+	return dir;
+}
+
+/*
+ * navit_get_destination_file
+ * 
+ * returns the name of the file used to store destinations with its
+ * full path
+ *
+ * arg: gboolean create: create the directory where the file is stored
+ * if it does not exist
+ */
+static char*
+navit_get_destination_file(gboolean create)
+{
+	return g_strjoin(NULL, navit_get_user_data_directory(create), "destination.txt", NULL);
+}
+
+/*
+ * navit_get_bookmark_file
+ * 
+ * returns the name of the file used to store bookmarks with its
+ * full path
+ *
+ * arg: gboolean create: create the directory where the file is stored
+ * if it does not exist
+ */
+static char*
+navit_get_bookmark_file(gboolean create)
+{
+	return g_strjoin(NULL, navit_get_user_data_directory(create), "bookmark.txt", NULL);
+}
+
+
+/*
+ * navit_get_bookmark_file
+ * 
+ * returns the name of the file used to store the center file  with its
+ * full path
+ *
+ * arg: gboolean create: create the directory where the file is stored
+ * if it does not exist
+ */
+static char*
+navit_get_center_file(gboolean create)
+{
+	return g_strjoin(NULL, navit_get_user_data_directory(create), "center.txt", NULL);
+}
+
 
 static void
 navit_set_destination_from_file(struct navit *this_, char *file, int bookmark, int offset)
@@ -632,13 +701,17 @@ navit_set_destination_from_file(struct navit *this_, char *file, int bookmark, i
 static void
 navit_set_destination_from_destination(struct navit *this_, void *offset_p)
 {
-	navit_set_destination_from_file(this_, "destination.txt", 0, (int)offset_p);
+	char *destination_file = navit_get_destination_file(FALSE);
+	navit_set_destination_from_file(this_, destination_file, 0, (int)offset_p);
+	g_free(destination_file);
 }
 
 static void
 navit_set_destination_from_bookmark(struct navit *this_, void *offset_p)
 {
-	navit_set_destination_from_file(this_, "bookmark.txt", 1, (int)offset_p);
+	char *bookmark_file = navit_get_bookmark_file(FALSE);
+	navit_set_destination_from_file(this_, bookmark_file, 1, (int)offset_p);
+	g_free(bookmark_file);
 }
 
 static void
@@ -651,15 +724,11 @@ navit_set_center_from_file(struct navit *this_, char *file)
 	enum projection pro;
 	struct coord *center;
 
-	file = g_strjoin(NULL, get_home_directory(), "/.navit/", file, NULL);
-	if (!file_exists(file)) {
-		g_free(file);
-		return;
-	}
 	f = fopen(file, "r");
+	if (! f)
+		return;
 	getline(&line, &line_size, f);
 	fclose(f);
-	g_free(file);
 	if (line) {
 		center = transform_center(this_->trans);
 		pro = transform_get_projection(this_->trans);
@@ -675,22 +744,7 @@ navit_write_center_to_file(struct navit *this_, char *file)
 	FILE *f;
 	enum projection pro;
 	struct coord *center;
-	char *directory;
- 
-	directory = g_strjoin(NULL, get_home_directory(), "/.navit/", NULL);
-	if (!file_exists(directory)) {
-		if (mkdir(directory,
-			  S_IRUSR|S_IWUSR|S_IXUSR|
-			  S_IRGRP|S_IXGRP|
-			  S_IROTH|S_IXOTH) == -1) {
-			perror(directory);
-			g_free(directory);
-			return;
-		}
-	}
 
-        file = g_strjoin(NULL, directory, file, NULL);
-	g_free(directory);
 	f = fopen(file, "w+");
 	if (f) {
 		center = transform_center(this_->trans);
@@ -700,7 +754,6 @@ navit_write_center_to_file(struct navit *this_, char *file)
 	} else {
 		perror(file);
 	}
-	g_free(file);
 	return;
 }
 
@@ -721,7 +774,9 @@ navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
 		this_->destination_valid=1;
 	} else
 		this_->destination_valid=0;
-	navit_append_coord(this_, "destination.txt", c, "former_destination", description, this_->destinations, NULL, callback_cast(navit_set_destination_from_destination));
+	char *destination_file = navit_get_destination_file(TRUE);
+	navit_append_coord(this_, destination_file, c, "former_destination", description, this_->destinations, NULL, callback_cast(navit_set_destination_from_destination));
+	g_free(destination_file);
 	callback_list_call_attr_1(this_->attr_cbl, attr_destination, this_);
 	if (this_->route) {
 		route_set_destination(this_->route, c);
@@ -742,7 +797,9 @@ navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
 void
 navit_add_bookmark(struct navit *this_, struct pcoord *c, const char *description)
 {
-	navit_append_coord(this_,"bookmark.txt", c, "bookmark", description, this_->bookmarks, this_->bookmarks_hash, callback_cast(navit_set_destination_from_bookmark));
+	char *bookmark_file = navit_get_bookmark_file(TRUE);
+	navit_append_coord(this_,bookmark_file, c, "bookmark", description, this_->bookmarks, this_->bookmarks_hash, callback_cast(navit_set_destination_from_bookmark));
+	g_free(bookmark_file);
 }
 
 struct navit *global_navit;
@@ -785,7 +842,9 @@ navit_add_menu_former_destinations(struct navit *this_, struct menu *men, struct
 		this_->destinations=menu_add(men, _("Former Destinations"), menu_type_submenu, NULL);
 	else
 		this_->destinations=NULL;
-	navit_add_menu_destinations_from_file(this_, "destination.txt", this_->destinations, NULL, route, callback_cast(navit_set_destination_from_destination));
+	char *destination_file = navit_get_destination_file(FALSE);
+	navit_add_menu_destinations_from_file(this_, destination_file, this_->destinations, NULL, route, callback_cast(navit_set_destination_from_destination));
+	g_free(destination_file);
 }
 
 static void
@@ -795,25 +854,31 @@ navit_add_menu_bookmarks(struct navit *this_, struct menu *men)
 		this_->bookmarks=menu_add(men, _("Bookmarks"), menu_type_submenu, NULL);
 	else
 		this_->bookmarks=NULL;
-	navit_add_menu_destinations_from_file(this_, "bookmark.txt", this_->bookmarks, this_->bookmarks_hash, NULL, callback_cast(navit_set_destination_from_bookmark));
+	char *bookmark_file = navit_get_bookmark_file(FALSE);
+	navit_add_menu_destinations_from_file(this_, bookmark_file, this_->bookmarks, this_->bookmarks_hash, NULL, callback_cast(navit_set_destination_from_bookmark));
+	g_free(bookmark_file);
 }
 
 static void
 navit_add_bookmarks_from_file(struct navit *this_)
 {
-	struct attr type={attr_type, {"textfile"}}, data={attr_data, {"bookmark.txt"}};
+	char *bookmark_file = navit_get_bookmark_file(FALSE);
+	struct attr type={attr_type, {"textfile"}}, data={attr_data, {bookmark_file}};
 	struct attr *attrs[]={&type, &data, NULL};
 
 	this_->bookmark=map_new(attrs);
+	g_free(bookmark_file);
 }
 
 static void
 navit_add_former_destinations_from_file(struct navit *this_)
 {
-	struct attr type={attr_type, {"textfile"}}, data={attr_data, {"destination.txt"}};
+	char *destination_file = navit_get_destination_file(FALSE);
+	struct attr type={attr_type, {"textfile"}}, data={attr_data, {destination_file}};
 	struct attr *attrs[]={&type, &data, NULL};
 
 	this_->former_destination=map_new(attrs);
+	g_free(destination_file);
 }
 
 
@@ -1205,7 +1270,9 @@ navit_init(struct navit *this_)
 		this_->nav_speech_cb=callback_new_1(callback_cast(navit_speak), this_);
 		navigation_register_callback(this_->navigation, attr_navigation_speech, this_->nav_speech_cb);
 	}
-	navit_set_center_from_file(this_, "center.txt");
+	char *center_file = navit_get_center_file(FALSE);
+	navit_set_center_from_file(this_, center_file);
+	g_free(center_file);
 #if 0
 	if (this_->menubar) {
 		men=menu_add(this_->menubar, "Data", menu_type_submenu, NULL);
@@ -1769,7 +1836,9 @@ navit_destroy(struct navit *this_)
 {
 	/* TODO: destroy objects contained in this_ */
 	main_remove_navit(this_);
-	navit_write_center_to_file(this_, "center.txt");
+	char *center_file = navit_get_center_file(TRUE);
+	navit_write_center_to_file(this_, center_file);
+	g_free(center_file);
 	callback_destroy(navit_command_unregister(this_, "zoom_in"));
 	callback_destroy(navit_command_unregister(this_, "zoom_out"));
 	g_hash_table_destroy(this_->commands);
