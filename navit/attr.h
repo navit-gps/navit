@@ -69,6 +69,7 @@ struct attr {
 		struct pcoord *pcoord;
 		struct gui *gui;
 		struct graphics *graphics;
+		struct tracking *tracking;
 	} u;
 };
 
