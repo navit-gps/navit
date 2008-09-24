@@ -1180,8 +1180,11 @@ navit_init(struct navit *this_)
 			}
 			route_set_mapset(this_->route, ms);
 		}
-		if (this_->tracking)
+		if (this_->tracking) {
 			tracking_set_mapset(this_->tracking, ms);
+			if (this_->route)
+				tracking_set_route(this_->tracking, this_->route);
+		}
 		if (this_->navigation) {
 			if ((map=navigation_get_map(this_->navigation))) {
 				mapset_add(ms, map);

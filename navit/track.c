@@ -49,6 +49,7 @@ struct tracking_line
 
 struct tracking {
 	struct mapset *ms;
+	struct route *rt;
 	struct map *map;
 #if 0
 	struct transformation t;
@@ -66,10 +67,11 @@ struct tracking {
 };
 
 
-int angle_factor=30;
-int connected_pref=-10;
+int angle_factor=10;
+int connected_pref=10;
 int nostop_pref=10;
 int offroad_limit_pref=5000;
+int route_pref=300;
 
 
 struct coord *
@@ -227,37 +229,58 @@ static int
 tracking_is_connected(struct coord *c1, struct coord *c2)
 {
 	if (c1[0].x == c2[0].x && c1[0].y == c2[0].y)
-		return 1;
+		return 0;
 	if (c1[0].x == c2[1].x && c1[0].y == c2[1].y)
-		return 1;
+		return 0;
 	if (c1[1].x == c2[0].x && c1[1].y == c2[0].y)
-		return 1;
+		return 0;
 	if (c1[1].x == c2[1].x && c1[1].y == c2[1].y)
-		return 1;
+		return 0;
+	return connected_pref;
+}
+
+static int
+tracking_is_no_stop(struct coord *c1, struct coord *c2)
+{
+	if (c1->x == c2->x && c1->y == c2->y)
+		return nostop_pref;
 	return 0;
 }
 
 static int
-tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct coord *lpnt, int flags)
+tracking_is_on_route(struct route *rt, struct item *item)
+{
+	if (! rt)
+		return 0;
+	if (route_pos_contains(rt, item))
+		return 0;
+	if (route_contains(rt, item))
+		return 0;
+	return route_pref;
+}
+
+static int
+tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct coord *lpnt, int min, int flags)
 {
 	int value=0;
 	struct street_data *sd=t->street;
 	dbg(2, "%d: (0x%x,0x%x)-(0x%x,0x%x)\n", offset, sd->c[offset].x, sd->c[offset].y, sd->c[offset+1].x, sd->c[offset+1].y);
-	if (flags & 1) {
+	if (flags & 1) 
 		value+=transform_distance_line_sq(&sd->c[offset], &sd->c[offset+1], &tr->curr_in, lpnt);
-		if (value >= INT_MAX/2)
-			return value;
-	}
+	if (value >= min)
+		return value;
 	if (flags & 2) 
 		value += tracking_angle_delta(tr->curr_angle, t->angle[offset], sd->flags)*angle_factor>>4;
-	if (flags & 4) {
-		if (tracking_is_connected(tr->last, &sd->c[offset]))
-			value += connected_pref;
-	}
-	if (flags & 8) {
-		if (lpnt->x == tr->last_out.x && lpnt->y == tr->last_out.y)
-			value += nostop_pref;
-	}
+	if (value >= min)
+		return value;
+	if (flags & 4) 
+		value += tracking_is_connected(tr->last, &sd->c[offset]);
+	if (flags & 8) 
+		value += tracking_is_no_stop(lpnt, &tr->last_out);
+	if (value >= min)
+		return value;
+	if (flags & 16)
+		value += tracking_is_on_route(tr->rt, &sd->item);
 	return value;
 }
 
@@ -267,7 +290,7 @@ int
 tracking_update(struct tracking *tr, struct coord *c, int angle)
 {
 	struct tracking_line *t;
-	int i,value,min=0;
+	int i,value,min;
 	struct coord lpnt;
 #if 0
 	int min,dist;
@@ -299,6 +322,7 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 	if (! t)
 		return 0;
 	tr->curr_line=NULL;
+	min=INT_MAX/2;
 	while (t) {
 		struct street_data *sd=t->street;
 		if ((sd->flags & 3) == 3) {
@@ -306,8 +330,8 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 			continue;
 		}
 		for (i = 0; i < sd->count-1 ; i++) {
-			value=tracking_value(tr,t,i,&lpnt,-1);
-			if (value < INT_MAX/2 && (! tr->curr_line || value < min)) {
+			value=tracking_value(tr,t,i,&lpnt,min,-1);
+			if (value < min) {
 				tr->curr_line=t;
 				tr->pos=i;
 				tr->curr[0]=sd->c[i];
@@ -325,10 +349,10 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 		}
 		t=t->next;
 	}
-	dbg(0,"tr->curr_line=%p min=%d\n", tr->curr_line, min);
+	dbg(1,"tr->curr_line=%p min=%d\n", tr->curr_line, min);
 	if (!tr->curr_line || min > offroad_limit_pref)
 		return 0;
-	dbg(0,"found 0x%x,0x%x\n", tr->curr_out.x, tr->curr_out.y);
+	dbg(1,"found 0x%x,0x%x\n", tr->curr_out.x, tr->curr_out.y);
 	*c=tr->curr_out;
 	return 1;	
 }
@@ -346,6 +370,12 @@ void
 tracking_set_mapset(struct tracking *this, struct mapset *ms)
 {
 	this->ms=ms;
+}
+
+void
+tracking_set_route(struct tracking *this, struct route *rt)
+{
+	this->rt=rt;
 }
 
 void
@@ -420,12 +450,12 @@ tracking_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct att
 		switch(this_->debug_idx) {
 		case 0:
                         this_->debug_idx++;
-			this_->str=attr->u.str=g_strdup_printf("overall: %d",tracking_value(tr, this_->curr, this_->coord, &lpnt, -1));
+			this_->str=attr->u.str=g_strdup_printf("overall: %d",tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, -1));
                         return 1;
 		case 1:
 			this_->debug_idx++;
 			c=&this_->curr->street->c[this_->coord];
-			value=tracking_value(tr, this_->curr, this_->coord, &lpnt, 1);
+			value=tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, 1);
                         this_->str=attr->u.str=g_strdup_printf("distance: (0x%x,0x%x) from (0x%x,0x%x)-(0x%x,0x%x) at (0x%x,0x%x) %d",
 				tr->curr_in.x, tr->curr_in.y,
 				c[0].x, c[0].y, c[1].x, c[1].y,
@@ -435,9 +465,21 @@ tracking_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct att
 			this_->debug_idx++;
                         this_->str=attr->u.str=g_strdup_printf("angle: %d to %d (flags %d) %d",
 				tr->curr_angle, this_->curr->angle[this_->coord], this_->curr->street->flags & 3,
-				tracking_value(tr, this_->curr, this_->coord, &lpnt, 2));
+				tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, 2));
 			return 1;
 		case 3:
+			this_->debug_idx++;
+                        this_->str=attr->u.str=g_strdup_printf("connected: %d", tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, 4));
+			return 1;
+		case 4:
+			this_->debug_idx++;
+                        this_->str=attr->u.str=g_strdup_printf("no_stop: %d", tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, 8));
+			return 1;
+		case 5:
+			this_->debug_idx++;
+                        this_->str=attr->u.str=g_strdup_printf("route: %d", tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, 16));
+			return 1;
+		case 6:
 			this_->debug_idx++;
                         this_->str=attr->u.str=g_strdup_printf("line %p", this_->curr);
 			return 1;
@@ -519,7 +561,7 @@ tracking_map_get_item(struct map_rect_priv *priv)
 		priv->coord++;
 		priv->item.id_lo++;
 	}
-	value=tracking_value(priv->tracking, priv->curr, priv->coord, &lpnt, -1);
+	value=tracking_value(priv->tracking, priv->curr, priv->coord, &lpnt, INT_MAX/2, -1);
 	if (value < 64) 
 		priv->item.type=type_tracking_100;
 	else if (value < 128)
