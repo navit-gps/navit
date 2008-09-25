@@ -485,6 +485,12 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 			int flags, int offset)
 {
 	struct route_graph_segment *s;
+	s=start->start;
+	while (s) {
+		if (item_is_equal(*item, s->item)) 
+			return;
+		s=s->start_next;
+	}
 	s = g_new0(struct route_graph_segment, 1);
 	if (!s) {
 		printf("%s:Out of memory\n", __FUNCTION__);
@@ -1327,7 +1333,7 @@ rp_coord_get(void *priv_data, struct coord *c, int count)
 	struct map_rect_priv *mr = priv_data;
 	struct route_graph_point *p = mr->point;
 	struct route_graph_segment *seg = mr->rseg;
-	int rc = 0,i;
+	int rc = 0,i,dir;
 	for (i=0; i < count; i++) {
 		if (mr->item.type == type_rg_point) {
 			if (mr->last_coord >= 1)
@@ -1336,7 +1342,12 @@ rp_coord_get(void *priv_data, struct coord *c, int count)
 		} else {
 			if (mr->last_coord >= 2)
 				break;
+			dir=0;
+			if (seg->end->seg == seg)
+				dir=1;
 			if (mr->last_coord)
+				dir=1-dir;
+			if (dir)
 				c[i] = seg->end->c;
 			else
 				c[i] = seg->start->c;
