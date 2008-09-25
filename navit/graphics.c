@@ -630,6 +630,40 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
 	}
 }
 
+static void display_draw_arrow(struct point *p, int dx, int dy, int l, struct graphics_gc *gc, struct graphics *gra)
+{
+	struct point pnt[3];
+	pnt[0]=pnt[1]=pnt[2]=*p;
+	pnt[0].x+=-dx*l/65536+dy*l/65536;
+	pnt[0].y+=-dy*l/65536-dx*l/65536;
+	pnt[2].x+=-dx*l/65536-dy*l/65536;
+	pnt[2].y+=-dy*l/65536+dx*l/65536;
+	gra->meth.draw_lines(gra->priv, gc->priv, pnt, 3);
+}
+
+static void display_draw_arrows(struct displayitem *di, struct graphics_gc *gc, struct graphics *gra)
+{
+	int i,dx,dy,l;
+	struct point p;
+	for (i = 0 ; i < di->count-1 ; i++) {
+		dx=di->pnt[i+1].x-di->pnt[i].x;	
+		dy=di->pnt[i+1].y-di->pnt[i].y;
+		l=sqrt(dx*dx+dy*dy);
+		if (l) {
+			dx=dx*65536/l;
+			dy=dy*65536/l;
+			p=di->pnt[i];
+			p.x+=dx*15/65536;
+			p.y+=dy*15/65536;
+			display_draw_arrow(&p, dx, dy, 10, gc, gra);
+			p=di->pnt[i+1];
+			p.x-=dx*15/65536;
+			p.y-=dy*15/65536;
+			display_draw_arrow(&p, dx, dy, 10, gc, gra);
+		}
+	}
+}
+
 /**
  * FIXME
  * @param <>
@@ -720,6 +754,9 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 						gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, di->pnt, di->count, di->label);
 					else
 						dbg(0,"draw_image_warp not supported by graphics driver drawing '%s'\n", di->label);
+					break;
+				case element_arrows:
+					display_draw_arrows(di,gc,gra);
 					break;
 				default:
 					printf("Unhandled element type %d\n", e->type);

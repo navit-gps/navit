@@ -20,6 +20,7 @@
 #include <glib.h>
 #include <string.h>
 #include "item.h"
+#include "attr.h"
 #include "layout.h"
 
 struct layout * layout_new(struct attr *parent, struct attr **attrs)
@@ -165,6 +166,20 @@ image_new(void)
 
 	e = g_malloc0(sizeof(*e));
 	e->type=element_image;
+
+	return e;	
+}
+
+struct element *
+arrows_new(struct attr **attrs)
+{
+	struct element *e;
+	struct attr *color=attr_search(attrs, NULL, attr_color);
+
+	e = g_malloc0(sizeof(*e));
+	e->type=element_arrows;
+	if (color)
+		e->color=*color->u.color;
 
 	return e;	
 }
