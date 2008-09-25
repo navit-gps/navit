@@ -2,12 +2,19 @@
 use Glib qw/TRUE FALSE/;
 use Gtk2 '-init';
 
+sub exit_with_error
+{
+	my ($error)=@_;
+	print STDERR "$error\n";
+	exit(1);
+}
+
 sub process_one_packet
 {
 	$pos[$idx++]=tell(STDIN);
 	while (<STDIN>) {
 		if (!defined($match)) {
-			print $_;
+			syswrite(STDOUT,$_) or exit_with_error $!;
 		} else {
 			$buffer.=$_;
 		}
@@ -19,7 +26,7 @@ sub process_one_packet
 			}
 			if (substr($time,0,length($match)) eq $match) {
 				undef $match;
-				print $buffer;
+				syswrite(STDOUT,$buffer) or exit_with_error $!;
 				return;
 			}
 			$buffer='';
