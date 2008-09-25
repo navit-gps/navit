@@ -27,7 +27,7 @@ struct element_line;
 struct element_text;
 
 struct element {
-	enum { element_point, element_polyline, element_polygon, element_circle, element_label, element_icon, element_image } type;
+	enum { element_point, element_polyline, element_polygon, element_circle, element_label, element_icon, element_image, element_arrows } type;
 	struct color color;
 	int label_size;
 	union {
