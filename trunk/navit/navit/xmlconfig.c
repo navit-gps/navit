@@ -615,6 +615,17 @@ xmlconfig_image(struct xmlstate *state)
 	return 1;
 }
 
+static int
+xmlconfig_arrows(struct xmlstate *state)
+{
+	state->element_attr.u.data=arrows_new(convert_to_attrs(state));
+	if (! state->element_attr.u.data)
+		return 0;
+	itemtype_add_element(state->parent->element_attr.u.data, state->element_attr.u.data);
+
+	return 1;
+}
+
 #define NEW(x) (void *(*)(struct attr *, struct attr **))(x)
 #define ADD(x) (int (*)(void *, struct attr *attr))(x)
 #define INIT(x) (int (*)(void *))(x)
@@ -628,6 +639,7 @@ struct element_func {
 	int (*init)(void *);
 	void (*destroy)(void *);
 } elements[] = {
+	{ "arrows", "item", xmlconfig_arrows},
 	{ "config", NULL, xmlconfig_config},
 	{ "debug", "config", xmlconfig_debug},
 	{ "navit", "config", NULL, NEW(navit_new), ADD(navit_add_attr), INIT(navit_init), DESTROY(navit_destroy)},
