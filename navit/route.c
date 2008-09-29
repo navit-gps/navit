@@ -78,6 +78,7 @@ struct route_path_segment {
 	struct item item;
 	int length;
 	int offset;
+	int direction;
 	unsigned ncoords;
 	struct coord c[0];
 };
@@ -582,6 +583,7 @@ route_path_add_item(struct route_path *this, struct item *item, int len, struct 
 	
 	segment=g_malloc0(sizeof(*segment) + sizeof(struct coord) * ccount);
 	segment->ncoords=ccount;
+	segment->direction=dir;
 	if (first)
 		segment->c[idx++]=*first;
 	if (dir > 0) {
@@ -623,6 +625,7 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 		printf("%s:Out of memory\n", __FUNCTION__);
 		return;
 	}
+	segment->direction=dir;
 	if (dir > 0) {
 		for (i = 0 ; i < ccnt ; i++)
 			segment->c[i]=ca[i];
@@ -1229,9 +1232,16 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			}
 			return 0;
 		case attr_street_item:
-			mr->attr_next=attr_length;
+			mr->attr_next=attr_direction;
 			if (seg && seg->item.map)
 				attr->u.item=&seg->item;
+			else
+				return 0;
+			return 1;
+		case attr_direction:
+			mr->attr_next=attr_length;
+			if (seg) 
+				attr->u.num=seg->direction;
 			else
 				return 0;
 			return 1;
