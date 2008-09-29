@@ -131,6 +131,7 @@ struct navigation_itm {
 	char *name1;
 	char *name2;
 	struct item item;
+	int direction;
 	int angle_start;
 	int angle_end;
 	struct coord c;
@@ -268,7 +269,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 	struct navigation_itm *ret=g_new0(struct navigation_itm, 1);
 	int l,i=0;
 	struct item *sitem;
-	struct attr street_item;
+	struct attr street_item,direction;
 	struct map_rect *mr;
 	struct attr attr;
 	struct coord c[5];
@@ -279,6 +280,10 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 			dbg(0,"no street item\n");
 			return NULL;
 		}
+		if (item_attr_get(ritem, attr_direction, &direction))
+			ret->direction=direction.u.num;
+		else
+			ret->direction=0;
 		sitem=street_item.u.item;
 		ret->item=*sitem;
 		item_hash_insert(this_->hash, sitem, ret);
@@ -694,7 +699,7 @@ navigation_update(struct navigation *this_, struct route *route)
 	struct map *map;
 	struct map_rect *mr;
 	struct item *ritem,*sitem;
-	struct attr street_item;
+	struct attr street_item,street_direction;
 	struct navigation_itm *itm;
 	int incr=0;
 
@@ -718,10 +723,16 @@ navigation_update(struct navigation *this_, struct route *route)
 				dbg(0,"no street item\n");
 			}	
 		}
+		if (!item_attr_get(ritem, attr_direction, &street_direction))
+			street_direction.u.num=0;
 		sitem=street_item.u.item;
 		dbg(1,"sitem=%p\n", sitem);
 		itm=item_hash_lookup(this_->hash, sitem);
 		dbg(2,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
+		if (itm && itm->direction != street_direction.u.num) {
+			dbg(2,"wrong direction\n");
+			itm=NULL;
+		}
 		navigation_destroy_itms_cmds(this_, itm);
 		if (itm) {
 			incr=1;
