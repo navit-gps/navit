@@ -484,6 +484,30 @@ struct street_name_index {
         char name[0];
 } __attribute__((packed));
 
+static unsigned char 
+latin1_tolower(unsigned char c)
+{
+	if (c >= 'A' && c <= 'Z')
+		return c - 'A' + 'a';
+	if (c == 0xc4 || c == 0xd6 || c == 0xdc)
+		return c+0x20;
+	return c;
+}
+static int
+strncasecmp_latin1(char *str1, char *str2, int len)
+{
+	int d;
+	while (len--) {
+		d=latin1_tolower((unsigned char)(*str1))-latin1_tolower((unsigned char)(*str2));
+		if (d)
+			return d;
+		if (! *str1)
+			return 0;
+		str1++;
+		str2++;
+	}
+	return 0;
+}
 
 static int
 street_search_compare_do(struct map_rect_priv *mr, int country, int town_assoc, char *name)
@@ -498,9 +522,9 @@ street_search_compare_do(struct map_rect_priv *mr, int country, int town_assoc, 
 		if (mr->search_item.id_lo == town_assoc ) {
 			dbg(1,"town_assoc match (0x%x)\n", town_assoc);
 			if (mr->search_partial)
-				d=strncasecmp(mr->search_str, name, strlen(mr->search_str));
+				d=strncasecmp_latin1(mr->search_str, name, strlen(mr->search_str));
 			else
-				d=strcasecmp(mr->search_str, name);
+				d=strncasecmp_latin1(mr->search_str, name, INT_MAX);
 			dbg(1,"string %d\n", d);
 		} else {
 			if (town_assoc < mr->search_item.id_lo)
