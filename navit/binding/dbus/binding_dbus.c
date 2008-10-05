@@ -168,29 +168,46 @@ request_main_iter_destroy(DBusConnection *connection, DBusMessage *message)
 
 	return empty_reply(connection, message);
 }
-static int
-pcoord_get_from_message(DBusMessage *message, struct pcoord *pc)
-{
-	DBusMessageIter iter,iter2;
 
-	dbus_message_iter_init(message, &iter);
-	dbg(0,"%s\n", dbus_message_iter_get_signature(&iter));
-	dbus_message_iter_recurse(&iter, &iter2);
+/**
+ * Extracts a struct pcoord from a DBus message
+ *
+ * @param message The DBus message
+ * @param iter Sort of pointer that points on that (iii)-object in the message
+ * @param pc Pointer where the data should get stored
+ */
+static int
+pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoord *pc)
+{
+	DBusMessageIter iter2;
+
+	dbg(0,"%s\n", dbus_message_iter_get_signature(iter));
+	
+	dbus_message_iter_recurse(iter, &iter2);
 
 	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
 		return 0;
 	dbus_message_iter_get_basic(&iter2, &pc->pro);
+	
 	dbus_message_iter_next(&iter2);
+	
 	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
 		return 0;
 	dbus_message_iter_get_basic(&iter2, &pc->x);
+	
 	dbus_message_iter_next(&iter2);
+
 	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
 		return 0;
 	dbus_message_iter_get_basic(&iter2, &pc->y);
+
+	dbg(0, " pro -> %i x -> %i y -> %i\n", &pc->pro, &pc->x, &pc->y);
+	
 	dbus_message_iter_next(&iter2);
+	
 	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INVALID)
 		return 0;
+
 	return 1;
 }
 
@@ -199,10 +216,15 @@ request_navit_set_center(DBusConnection *connection, DBusMessage *message)
 {
 	struct pcoord pc;
 	struct navit *navit;
+	DBusMessageIter iter;
+
 	navit=object_get_from_message(message, "navit");
 	if (! navit)
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	if (!pcoord_get_from_message(message, &pc))
+
+	dbus_message_iter_init(message, &iter);
+
+	if (!pcoord_get_from_message(message, &iter, &pc))
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 	navit_set_center(navit, &pc);
 	return empty_reply(connection, message);
