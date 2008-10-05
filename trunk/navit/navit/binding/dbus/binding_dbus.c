@@ -293,11 +293,11 @@ static DBusHandlerResult
 request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 {
 	int factor;
-	struct point p;
+	struct point *p = NULL;
 	struct navit *navit;
 	DBusMessageIter iter;
 
-	navit=object_get_from_message(message, "navit");
+	navit = object_get_from_message(message, "navit");
 	if (! navit)
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 
@@ -308,23 +308,18 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 	dbus_message_iter_get_basic(&iter, &factor);
 	
 	// check if there's also a point given
-	if (!dbus_message_iter_has_next(&iter))
+	if (dbus_message_iter_has_next(&iter))
 	{
-		if (factor >= 0)
-            navit_zoom_in(navit, factor, NULL);
-        else
-            navit_zoom_out(navit, 0-factor, NULL);
-		return empty_reply(connection, message);
+        dbus_message_iter_next(&iter);
+        if (!point_get_from_message(message, &iter, p))
+            return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 	}
 
-	dbus_message_iter_next(&iter);
-	if (!point_get_from_message(message, &iter, &p))
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	
-    if (factor >= 0)
-        navit_zoom_in(navit, factor, &p);
-    else
-        navit_zoom_out(navit, 0-factor, &p);
+    if (factor > 1)
+        navit_zoom_in(navit, factor, p);
+    else if (factor < -1)
+        navit_zoom_out(navit, 0-factor, p);
+
 	return empty_reply(connection, message);
 
 }
