@@ -26,6 +26,7 @@
 #include "main.h"
 #include "navit.h"
 #include "coord.h"
+#include "point.h"
 #include "plugin.h"
 #include "debug.h"
 #include "item.h"
@@ -211,6 +212,42 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
 	return 1;
 }
 
+/**
+ * Extracts a struct point from a DBus message
+ *
+ * @param message The DBus message
+ * @param iter Sort of pointer that points on that (ii)-object in the message
+ * @param pc Pointer where the data should get stored
+ */
+static int
+point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point *p)
+{
+	DBusMessageIter iter2;
+
+	dbg(0,"%s\n", dbus_message_iter_get_signature(iter));
+	
+	dbus_message_iter_recurse(iter, &iter2);
+
+	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
+		return 0;
+	dbus_message_iter_get_basic(&iter2, &p->x);
+	
+	dbus_message_iter_next(&iter2);
+	
+	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
+		return 0;
+	dbus_message_iter_get_basic(&iter2, &p->y);
+
+	dbg(0, " x -> %i  y -> %i\n", p->x, p->y);
+	
+	dbus_message_iter_next(&iter2);
+
+	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INVALID)
+		return 0;
+	
+	return 1;
+}
+
 static DBusHandlerResult
 request_navit_set_center(DBusConnection *connection, DBusMessage *message)
 {
@@ -253,6 +290,40 @@ request_navit_set_layout(DBusConnection *connection, DBusMessage *message)
 }
 
 static DBusHandlerResult
+request_navit_zoom_in(DBusConnection *connection, DBusMessage *message)
+{
+	int factor;
+	struct point p;
+	struct navit *navit;
+	DBusMessageIter iter;
+
+	navit=object_get_from_message(message, "navit");
+	if (! navit)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+	dbus_message_iter_init(message, &iter);
+	dbg(0,"%s\n", dbus_message_iter_get_signature(&iter));
+	
+	// get zoom factor
+	dbus_message_iter_get_basic(&iter, &factor);
+	
+	// check if there's also a point given
+	if (!dbus_message_iter_has_next(&iter))
+	{
+		navit_zoom_in(navit, factor, NULL);
+		return empty_reply(connection, message);
+	}
+
+	dbus_message_iter_next(&iter);
+	if (!point_get_from_message(message, &iter, &p))
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	
+	navit_zoom_in(navit, factor, &p);
+	return empty_reply(connection, message);
+
+}
+
+static DBusHandlerResult
 navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_data)
 {
 	dbg(0,"type=%s interface=%s path=%s member=%s signature=%s\n", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
@@ -287,6 +358,12 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_layout") &&
 		dbus_message_has_signature(message,"s")) 
 		return request_navit_set_layout(connection, message);
+	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "zoom_in") &&
+		dbus_message_has_signature(message, "i(ii)")) 
+		return request_navit_zoom_in(connection, message);
+	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "zoom_in") &&
+		dbus_message_has_signature(message, "i")) 
+		return request_navit_zoom_in(connection, message);
 
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
