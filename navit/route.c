@@ -17,6 +17,28 @@
  * Boston, MA  02110-1301, USA.
  */
 
+/** @file route.c
+ * @brief Contains code related to finding a route from a position to a destination
+ *
+ * Routing uses segments, points and items. Items are items from the map: Streets, highways, etc.
+ * Segments represent such items, or parts of it. Generally, a segment is a driveable path. An item
+ * can be represented by more than one segment - in that case it is "segmented". Each segment has an
+ * "offset" associated, that indicates at which position in a segmented item this segment is - a 
+ * segment representing a not-segmented item always has the offset 1.
+ * A point is located at the end of segments, often connecting several segments.
+ * 
+ * The code in this file will make navit find a route between a position and a destination.
+ * It accomplishes this by first building a "route graph". This graph contains segments and
+ * points.
+ *
+ * After building this graph in route_graph_build(), the function route_graph_flood() assigns every 
+ * point and segment a "value" which represents the "costs" of traveling from this point to the
+ * destination. This is done by Dijkstra's algorithm.
+ *
+ * When the graph is built a "route path" is created, which is a path in this graph from a given
+ * position to the destination determined at time of building the graph.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,57 +72,93 @@ struct map_priv {
 
 int debug_route=0;
 
+/**
+ * @brief A point in the route graph
+ *
+ * This represents a point in the route graph. A point usually connects two or more segments,
+ * but there are also points which don't do that (e.g. at the end of a dead-end).
+ */
 struct route_graph_point {
-	struct route_graph_point *next;
-	struct route_graph_point *hash_next;
-	struct route_graph_segment *start;
-	struct route_graph_segment *end;
-	struct route_graph_segment *seg;
-	struct fibheap_el *el;
-	int value;
-	struct coord c;
+	struct route_graph_point *next;		 /** Linked-list pointer to a list of all route_graph_points */
+	struct route_graph_point *hash_next; /** Pointer to a chained hashlist of all route_graph_points with this hash */
+	struct route_graph_segment *start;	 /** Pointer to a list of segments of which this point is the start. The links 
+										  *  of this linked-list are in route_graph_segment->start_next.*/
+	struct route_graph_segment *end;	 /** Pointer to a list of segments of which this pointer is the end. The links
+										  *  of this linked-list are in route_graph_segment->end_next. */
+	struct route_graph_segment *seg;	 /** Pointer to the segment one should use to reach the destination at
+										  *  least costs */
+	struct fibheap_el *el;				 /** When this point is put on a Fibonacci heap, this is a pointer
+										  *  to this point's heap-element */
+	int value;							 /** The cost at which one can reach the destination from this point on */
+	struct coord c;						 /** Coordinates of this point */
 };
 
+/**
+ * @brief A segment in the route graph
+ *
+ * This is a segment in the route graph. A segment represents a driveable way.
+ */
 struct route_graph_segment {
-	struct route_graph_segment *next;
-	struct route_graph_segment *start_next;
-	struct route_graph_segment *end_next;
-	struct route_graph_point *start;
-	struct route_graph_point *end;
-	struct item item;
+	struct route_graph_segment *next;			/** Linked-list pointer to a list of all route_graph_segments */
+	struct route_graph_segment *start_next;		/** Pointer to the next element in the list of segments that start at the 
+												 *  same point. Start of this list is in route_graph_point->start. */
+	struct route_graph_segment *end_next;		/** Pointer to the next element in the list of segments that end at the
+												 *  same point. Start of this list is in route_graph_point->end. */
+	struct route_graph_point *start;			/** Pointer to the point this segment starts at. */
+	struct route_graph_point *end;				/** Pointer to the point this segment ends at. */
+	struct item item;							/** The item (e.g. street) that this segment represents. */
 	int flags;
-	int len;
-	int offset;
+	int len;									/** Length of this segment */
+	int offset;									/** If the item represented by this segment is "segmented" (i.e. 
+												 *  is represented by several segments instead of just one), this 
+												 *  indicates the position of this segment in the item - for items
+												 *  that are not segmented this should always be 1 */
 };
 
+/**
+ * @brief A segment in the route path
+ *
+ * This is a segment in the route path.
+ */
 struct route_path_segment {
-	struct route_path_segment *next;
-	struct item item;
-	int length;
-	int offset;
-	int direction;
-	unsigned ncoords;
-	struct coord c[0];
+	struct route_path_segment *next;	/** Pointer to the next segment in the path */
+	struct item item;					/** The item (e.g. street) this segment represents */
+	int length;							/** Length of the segment */
+	int offset;							/** Same as in route_graph_segment->offset */
+	int direction;						/** Order in which the coordinates are ordered. >0 means "First
+										 *  coordinate of the segment is the first coordinate of the item", <=0 
+										 *  means reverse. */
+	unsigned ncoords;					/** How many coordinates does this segment have? */
+	struct coord c[0];					/** Pointer to the ncoords coordinates of this segment */
 };
 
+/**
+ * @brief Usually represents a destination or position
+ *
+ * This struct usually represents a destination or position
+ */
 struct route_info {
-	struct coord c;
-	struct coord lp;
-	int pos;
+	struct coord c;			 /** The actual destination / position */
+	struct coord lp;		 /** The nearest point on a street to c */
+	int pos; 				 /** The position of lp within the coords of the street */
+	int lenpos; 			 /** Distance between lp and the end of the street */
+	int lenneg; 			 /** Distance between lp and the start of the street */
+	int lenextra;			 /** Distance between lp and c */
 
-	int dist2;
-	int lenpos;
-	int lenneg;
-	int lenextra;
-
-	struct street_data *street;
+	struct street_data *street; /** The street lp is on */
 };
 
+/**
+ * @brief A complete route path
+ *
+ * This structure describes a whole routing path
+ */
 struct route_path {
-	struct route_path_segment *path;
-	struct route_path_segment *path_last;
+	struct route_path_segment *path;			/** The first segment in the path, i.e. the segment one should 
+												 *  drive in next */
+	struct route_path_segment *path_last;		/** The last segment in the path */
 	/* XXX: path_hash is not necessery now */
-	struct item_hash *path_hash;
+	struct item_hash *path_hash;				/** A hashtable of all the items represented by this route's segements */
 };
 
 #define RF_FASTEST	(1<<0)
@@ -124,11 +182,18 @@ struct route {
 	int speedlist[route_item_last-route_item_first+1];
 };
 
+/**
+ * @brief A complete route graph
+ *
+ * This structure describes a whole routing graph
+ */
 struct route_graph {
-	struct route_graph_point *route_points;
-	struct route_graph_segment *route_segments;
+	struct route_graph_point *route_points;		/** Pointer to the first route_graph_point in the linked list of 
+												 *  all points */
+	struct route_graph_segment *route_segments; /** Pointer to the first route_graph_segment in the linked list of all 
+												 *  segments */
 #define HASH_SIZE 8192
-	struct route_graph_point *hash[HASH_SIZE];
+	struct route_graph_point *hash[HASH_SIZE];	/** A hashtable containing all route_graph_points in this graph */
 };
 
 #define HASHCOORD(c) ((((c)->x +(c)->y) * 2654435761UL) & (HASH_SIZE-1))
@@ -141,6 +206,12 @@ static void route_process_street_graph(struct route_graph *this, struct item *it
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this);
 
+/**
+ * @brief Returns the projection used for this route
+ *
+ * @param route The route to return the projection for
+ * @return The projection used for this route
+ */
 static enum projection route_projection(struct route *route)
 {
 	struct street_data *street;
@@ -148,6 +219,11 @@ static enum projection route_projection(struct route *route)
 	return map_projection(street->item.map);
 }
 
+/**
+ * @brief Destroys a route_path
+ *
+ * @param this The route_path to be destroyed
+ */
 static void
 route_path_destroy(struct route_path *this)
 {
@@ -167,6 +243,12 @@ route_path_destroy(struct route_path *this)
 	g_free(this);
 }
 
+/**
+ * @brief Creates a completely new route structure
+ *
+ * @param attrs Not used
+ * @return The newly created route
+ */
 struct route *
 route_new(struct attr **attrs)
 {
@@ -178,42 +260,86 @@ route_new(struct attr **attrs)
 	return this;
 }
 
+/**
+ * @brief Sets the mapset of the route passwd
+ *
+ * @param this The route to set the mapset for
+ * @param ms The mapset to set for this route
+ */
 void
 route_set_mapset(struct route *this, struct mapset *ms)
 {
 	this->ms=ms;
 }
 
+/**
+ * @brief Returns the mapset of the route passed
+ *
+ * @param this The route to get the mapset of
+ * @return The mapset of the route passed
+ */
 struct mapset *
 route_get_mapset(struct route *this)
 {
 	return this->ms;
 }
 
+/**
+ * @brief Returns the current position within the route passed
+ *
+ * @param this The route to get the position for
+ * @return The position within the route passed
+ */
 struct route_info *
 route_get_pos(struct route *this)
 {
 	return this->pos;
 }
 
+/**
+ * @brief Returns the destination of the route passed
+ *
+ * @param this The route to get the destination for
+ * @return The destination of the route passed
+ */
 struct route_info *
 route_get_dst(struct route *this)
 {
 	return this->dst;
 }
 
+/**
+ * @brief Returns the speedlist of the route passed
+ *
+ * @param this The route to get the speedlist for
+ * @return The speedlist of the route passed
+ */
 int *
 route_get_speedlist(struct route *this)
 {
 	return this->speedlist;
 }
 
+/**
+ * @brief Checks if the path is calculated for the route passed
+ *
+ * @param this The route to check
+ * @return True if the path is calculated, false if not
+ */
 int
 route_get_path_set(struct route *this)
 {
 	return this->path2 != NULL;
 }
 
+/**
+ * @brief Sets the driving speed for a certain itemtype
+ *
+ * @param this The route to set the speed for
+ * @param type The itemtype to set the speed for
+ * @param value The speed that should be set
+ * @return True on success, false if the itemtype does not exist
+ */
 int
 route_set_speed(struct route *this, enum item_type type, int value)
 {
@@ -225,6 +351,17 @@ route_set_speed(struct route *this, enum item_type type, int value)
 	return 1;
 }
 
+/**
+ * @brief Checks if the route passed contains a certain item within the route path
+ *
+ * This function checks if a certain items exists in the path that navit will guide
+ * the user to his destination. It does *not* check if this item exists in the route 
+ * graph!
+ *
+ * @param this The route to check for this item
+ * @param item The item to search for
+ * @return True if the item was found, false if the item was not found or the route was not calculated
+ */
 int
 route_contains(struct route *this, struct item *item)
 {
@@ -233,6 +370,13 @@ route_contains(struct route *this, struct item *item)
 	return  (int)item_hash_lookup(this->path2->path_hash, item);
 }
 
+/**
+ * @brief Checks if the current position in a route is a certain item
+ *
+ * @param this The route to check for this item
+ * @param item The item to search for
+ * @return True if the current position is this item, false otherwise
+ */
 int
 route_pos_contains(struct route *this, struct item *item)
 {
@@ -241,7 +385,17 @@ route_pos_contains(struct route *this, struct item *item)
 	return item_is_equal(this->pos->street->item, *item);
 }
 
-
+/**
+ * @brief Updates the route graph and the route path if something changed with the route
+ *
+ * This will update the route graph and the route path of the route if some of the
+ * route's settings (destination, position) have changed. 
+ * 
+ * @attention For this to work the route graph has to be destroyed if the route's 
+ * @attention destination is changed somewhere!
+ *
+ * @param this The route to update
+ */
 static void
 route_path_update(struct route *this)
 {
@@ -270,6 +424,12 @@ route_path_update(struct route *this)
 	}
 }
 
+/** 
+ * @brief This will calculate all the distances stored in a route_info
+ *
+ * @param ri The route_info to calculate the distances for
+ * @param pro The projection used for this route
+ */
 static void
 route_info_distances(struct route_info *ri, enum projection pro)
 {
@@ -281,6 +441,15 @@ route_info_distances(struct route_info *ri, enum projection pro)
 	ri->lenpos=transform_polyline_length(pro, sd->c+npos, sd->count-npos)+transform_distance(pro, &sd->c[npos], &ri->lp);
 }
 
+/**
+ * @brief This sets the current position of the route passed
+ *
+ * This will set the current position of the route passed to the street that is nearest to the
+ * passed coordinates. It also automatically updates the route.
+ *
+ * @param this The route to set the position of
+ * @param pos Coordinates to set as position
+ */
 void
 route_set_position(struct route *this, struct pcoord *pos)
 {
@@ -296,6 +465,12 @@ route_set_position(struct route *this, struct pcoord *pos)
 		route_path_update(this);
 }
 
+/**
+ * @brief Sets a route's current position based on coordinates from tracking
+ *
+ * @param this The route to set the current position of
+ * @param tracking The tracking to get the coordinates from
+ */
 void
 route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 {
@@ -328,6 +503,9 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 /* Used for debuging of route_rect, what routing sees */
 struct map_selection *route_selection;
 
+/**
+ * @brief Returns a single map selection
+ */
 struct map_selection *
 route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs)
 {
@@ -372,6 +550,16 @@ route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs)
 	return sel;
 }
 
+/**
+ * @brief Returns a list of map selections useable to create a route graph
+ *
+ * Returns a list of  map selections useable to get a  map rect from which items can be
+ * retrieved to build a route graph. The selections are a rectangle with
+ * c1 and c2 as two corners.
+ *
+ * @param c1 Corner 1 of the rectangle
+ * @param c2 Corder 2 of the rectangle
+ */
 static struct map_selection *
 route_calc_selection(struct coord *c1, struct coord *c2)
 {
@@ -389,6 +577,11 @@ route_calc_selection(struct coord *c1, struct coord *c2)
 	return ret;
 }
 
+/**
+ * @brief Destroys a list of map selections
+ *
+ * @param sel Start of the list to be destroyed
+ */
 static void
 route_free_selection(struct map_selection *sel)
 {
@@ -401,8 +594,15 @@ route_free_selection(struct map_selection *sel)
 }
 
 
-
-
+/**
+ * @brief Sets the destination of a route
+ *
+ * This sets the destination of a route to the street nearest to the coordinates passed
+ * and updates the route.
+ *
+ * @param this The route to set the destination for
+ * @param dst Coordinates to set as destination
+ */
 void
 route_set_destination(struct route *this, struct pcoord *dst)
 {
@@ -414,12 +614,21 @@ route_set_destination(struct route *this, struct pcoord *dst)
 		this->dst=route_find_nearest_street(this->ms, dst);
 	route_info_distances(this->dst, dst->pro);
 	profile(1,"find_nearest_street");
+
+	/* The graph has to be destroyed and set to NULL, otherwise route_path_update() doesn't work */
 	route_graph_destroy(this->graph);
 	this->graph=NULL;
 	route_path_update(this);
 	profile(0,"end");
 }
 
+/**
+ * @brief Gets the route_graph_point with the specified coordinates
+ *
+ * @param this The route in which to search
+ * @param c Coordinates to search for
+ * @return The point at the specified coordinates or NULL if not found
+ */
 static struct route_graph_point *
 route_graph_get_point(struct route_graph *this, struct coord *c)
 {
@@ -434,7 +643,16 @@ route_graph_get_point(struct route_graph *this, struct coord *c)
 	return NULL;
 }
 
-
+/**
+ * @brief Inserts a point into the route graph at the specified coordinates
+ *
+ * This will insert a point into the route graph at the coordinates passed in f.
+ * Note that the point is not yet linked to any segments.
+ *
+ * @param this The route to insert the point into
+ * @param f The coordinates at which the point should be inserted
+ * @return The point inserted or NULL on failure
+ */
 static struct route_graph_point *
 route_graph_add_point(struct route_graph *this, struct coord *f)
 {
@@ -465,7 +683,11 @@ route_graph_add_point(struct route_graph *this, struct coord *f)
 	return p;
 }
 
-
+/**
+ * @brief Frees all the memory used for points in the route graph passed
+ *
+ * @param this The route graph to delete all points from
+ */
 static void
 route_graph_free_points(struct route_graph *this)
 {
@@ -480,6 +702,20 @@ route_graph_free_points(struct route_graph *this)
 	memset(this->hash, 0, sizeof(this->hash));
 }
 
+/**
+ * @brief Inserts a new segment into the route graph
+ *
+ * This function performs a check if a segment for the item specified already exists, and inserts
+ * a new segment representing this item if it does not.
+ *
+ * @param this The route graph to insert the segment into
+ * @param start The graph point which should be connected to the start of this segment
+ * @param end The graph point which should be connected to the end of this segment
+ * @param len The length of this segment
+ * @param item The item that is represented by this segment
+ * @param flags Flags for this segment
+ * @param offset If the item passed in "item" is segmented (i.e. divided into several segments), this indicates the position of this segment within the item
+ */
 static void
 route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
 			struct route_graph_point *end, int len, struct item *item,
@@ -514,6 +750,23 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 		printf("l (0x%x,0x%x)-(0x%x,0x%x)\n", start->c.x, start->c.y, end->c.x, end->c.y);
 }
 
+/**
+ * @brief Gets all the coordinates of an item
+ *
+ * This will get all the coordinates of the item i and return them in c,
+ * up to max coordinates. Additionally it is possible to limit the coordinates
+ * returned to all the coordinates of the item between the two coordinates
+ * start end end.
+ *
+ * @important Make shure that whatever c points to has enough memory allocated
+ * @important to hold max coordinates!
+ *
+ * @param i The item to get the coordinates of
+ * @param c Pointer to memory allocated for holding the coordinates
+ * @param max Maximum number of coordinates to return
+ * @param start First coordinate to get
+ * @param end Last coordinate to get
+ */
 static int get_item_seg_coords(struct item *i, struct coord *c, int max,
 		struct coord *start, struct coord *end)
 {
@@ -541,6 +794,14 @@ static int get_item_seg_coords(struct item *i, struct coord *c, int max,
 	return p;
 }
 
+/**
+ * @brief Returns and removes one segment from a path
+ *
+ * @param path The path to take the segment from
+ * @param item The item whose segment to remove
+ * @param offset Offset of the segment within the item to remove. If the item is not segmented this should be 1.
+ * @return The segment removed
+ */
 static struct route_path_segment *
 route_extract_segment_from_path(struct route_path *path, struct item *item,
 						 int offset)
@@ -565,6 +826,12 @@ route_extract_segment_from_path(struct route_path *path, struct item *item,
 	return s;
 }
 
+/**
+ * @brief Adds a segment and the end of a path
+ *
+ * @param this The path to add the segment to
+ * @param segment The segment to add
+ */
 static void
 route_path_add_segment(struct route_path *this, struct route_path_segment *segment)
 {
@@ -575,6 +842,21 @@ route_path_add_segment(struct route_path *this, struct route_path_segment *segme
 	this->path_last=segment;
 }
 
+/**
+ * @brief Adds a new item to a path
+ *
+ * This adds a new item to a path, creating a new segment for it. Please note that this function does not check
+ * if the item passed is segmented - it will create exactly one segment.
+ *
+ * @param this The path to add the item to
+ * @param item The item to add
+ * @param len The length of the item
+ * @param first (Optional) coordinate to add to the start of the item. If none should be added, make this NULL.
+ * @param c Pointer to count coordinates of the item.
+ * @param cound Number of coordinates in c
+ * @param last (Optional) coordinate to add to the end of the item. If none should be added, make this NULL.
+ * @param dir Direction to add the coordinates in. Greater than zero means "start with the first coordinate in c", all other values mean "start with the last coordinate in c"
+ */
 static void
 route_path_add_item(struct route_path *this, struct item *item, int len, struct coord *first, struct coord *c, int count, struct coord *last, int dir)
 {
@@ -601,6 +883,25 @@ route_path_add_item(struct route_path *this, struct item *item, int len, struct 
 	route_path_add_segment(this, segment);
 }
 
+/**
+ * @brief Inserts a new item into the path
+ * 
+ * This function does almost the same as "route_apth_add_item()", but identifies
+ * the item to add by a segment from the route graph. Another difference is that it "copies" the
+ * segment from the route graph, i.e. if the item is segmented, only the segment passed in rgs will
+ * be added to the route path, not all segments of the item. 
+ *
+ * The function can be sped up by passing an old path already containing this segment in oldpath - 
+ * the segment will then be extracted from this old path. Please note that in this case the direction
+ * parameter has no effect.
+ *
+ * @param this The path to add the item to
+ * @param oldpath Old path containing the segment to be added. Speeds up the function, but can be NULL.
+ * @param rgs Segment of the route graph that should be "copied" to the route path
+ * @param len Length of the item to be added
+ * @param offset Offset of rgs within the item it represents
+ * @param dir Order in which to add the coordinates. See route_path_add_item()
+ */
 static void
 route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpath,
 		struct route_graph_segment *rgs, int len, int offset, int dir)
@@ -643,6 +944,11 @@ linkold:
 	route_path_add_segment(this, segment);
 }
 
+/**
+ * @brief Destroys all segments of a route graph
+ *
+ * @param this The graph to destroy all segments from
+ */
 static void
 route_graph_free_segments(struct route_graph *this)
 {
@@ -656,6 +962,11 @@ route_graph_free_segments(struct route_graph *this)
 	this->route_segments=NULL;
 }
 
+/**
+ * @brief Destroys a route graph
+ * 
+ * @param this The route graph to be destroyed
+ */
 static void
 route_graph_destroy(struct route_graph *this)
 {
@@ -666,6 +977,14 @@ route_graph_destroy(struct route_graph *this)
 	}
 }
 
+/**
+ * @brief Returns the time needed to drive len on item
+ *
+ * @param speedlist The speedlist that should be used
+ * @param item The item to be driven on
+ * @param len The length to drive
+ * @return The time needed to drive len on item
+ */
 int
 route_time(int *speedlist, struct item *item, int len)
 {
@@ -676,7 +995,14 @@ route_time(int *speedlist, struct item *item, int len)
 	return len*36/speedlist[item->type-route_item_first];
 }
 
-
+/**
+ * @brief Returns the "costs" of driving len on item
+ *
+ * @param speedlist The speedlist that should be used
+ * @param item The item to be driven on
+ * @param len The length to drive
+ * @return The "costs" needed to drive len on item
+ */  
 static int
 route_value(int *speedlist, struct item *item, int len)
 {
@@ -690,6 +1016,15 @@ route_value(int *speedlist, struct item *item, int len)
 	return ret;
 }
 
+/**
+ * @brief Adds an item to the route graph
+ *
+ * This adds an item (e.g. a street) to the route graph, creating as many segments as needed for a
+ * segmented item.
+ *
+ * @param this The route graph to add to
+ * @param item The item to add
+ */
 static void
 route_process_street_graph(struct route_graph *this, struct item *item)
 {
@@ -746,6 +1081,15 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 	}
 }
 
+/**
+ * @brief Compares the costs of reaching the destination from two points on
+ * 
+ * @important Do not pass anything other than route_graph_points in v1 and v2!
+ *
+ * @param v1 Point1 
+ * @param v2 Point2
+ * @return The additional costs of v1 compared to v2 (may be negative)
+ */
 static int
 compare(void *v1, void *v2)
 {
@@ -758,26 +1102,37 @@ compare(void *v1, void *v2)
 	return p1->value-p2->value;
 }
 
+/**
+ * @brief Calculates the routing costs for each point
+ *
+ * This function is the heart of routing. It assigns each point in the route graph a
+ * cost at which one can reach the destination from this point on. Additionally it assigns
+ * each point a segment one should follow from this point on to reach the destination at the
+ * stated costs.
+ * 
+ * This function uses Dijkstra's algorithm to do the routing. To understand it you should have a look
+ * at this algorithm.
+ */
 static void
 route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedlist)
 {
 	struct route_graph_point *p_min,*end=NULL;
 	struct route_graph_segment *s;
 	int min,new,old,val;
-	struct fibheap *heap;
+	struct fibheap *heap; /* This heap will hold all points with "temporarily" calculated costs */
 	struct street_data *sd=dst->street;
 
 	heap = fh_makeheap();   
 	fh_setcmp(heap, compare);
 
-	if (! (sd->flags & AF_ONEWAYREV)) {
+	if (! (sd->flags & AF_ONEWAYREV)) { /* If we may drive in the direction of the coordinates of the item, the first coordinate is one starting point */
 		end=route_graph_get_point(this, &sd->c[0]);
 		g_assert(end != 0);
 		end->value=route_value(speedlist, &sd->item, dst->lenneg);
 		end->el=fh_insert(heap, end);
 	}
 
-	if (! (sd->flags & AF_ONEWAY)) {
+	if (! (sd->flags & AF_ONEWAY)) { /* If we may drive against the direction of the coordinates, the last coordinate is another starting point */
 		end=route_graph_get_point(this, &sd->c[sd->count-1]);
 		g_assert(end != 0);
 		end->value=route_value(speedlist, &sd->item, dst->lenpos);
@@ -786,15 +1141,15 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 
 	dbg(1,"0x%x,0x%x\n", end->c.x, end->c.y);
 	for (;;) {
-		p_min=fh_extractmin(heap);
-		if (! p_min)
+		p_min=fh_extractmin(heap); /* Starting Dijkstra by selecting the point with the minimum costs on the heap */
+		if (! p_min) /* There are no more points with temporarily calculated costs, Dijkstra has finished */
 			break;
 		min=p_min->value;
 		if (debug_route)
 			printf("extract p=%p free el=%p min=%d, 0x%x, 0x%x\n", p_min, p_min->el, min, p_min->c.x, p_min->c.y);
-		p_min->el=NULL;
+		p_min->el=NULL; /* This point is permanently calculated now, we've taken it out of the heap */
 		s=p_min->start;
-		while (s) {
+		while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
 			val=route_value(speedlist, &s->item, s->len);
 #if 0
 			val+=val*2*street_route_contained(s->str->segid);
@@ -802,7 +1157,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 			new=min+val;
 			if (debug_route)
 				printf("begin %d len %d vs %d (0x%x,0x%x)\n",new,val,s->end->value, s->end->c.x, s->end->c.y);
-			if (new < s->end->value && !(s->flags & AF_ONEWAY)) {
+			if (new < s->end->value && !(s->flags & AF_ONEWAY)) { /* We've found a less costly way to reach the end of s, update it */
 				s->end->value=new;
 				s->end->seg=s;
 				if (! s->end->el) {
@@ -823,7 +1178,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 			s=s->start_next;
 		}
 		s=p_min->end;
-		while (s) {
+		while (s) { /* Doing the same as above with the segments leading towards our point */
 			val=route_value(speedlist, &s->item, s->len);
 			new=min+val;
 			if (debug_route)
@@ -853,6 +1208,18 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 	fh_deleteheap(heap);
 }
 
+/**
+ * @brief Starts an "offroad" path
+ *
+ * This starts a path that is not located on a street. It creates a new route path
+ * adding only one segment, that leads from pos to dest, and which is not associated with an item.
+ *
+ * @param this Not used
+ * @param pos The starting position for the new path
+ * @param dst The destination of the new path
+ * @param dir Not used
+ * @return The new path
+ */
 static struct route_path *
 route_path_new_offroad(struct route_graph *this, struct route_info *pos, struct route_info *dst, int dir)
 {
@@ -865,6 +1232,18 @@ route_path_new_offroad(struct route_graph *this, struct route_info *pos, struct 
 	return ret;
 }
 
+/**
+ * @brief Creates a new "trivial" route
+ * 
+ * This function creates a new "trivial" route. A trivial route is a route that starts and ends on the same street,
+ * so there is no routing needed. Depending on pos and dst it can optionally add some "offroad" part to the route.
+ *
+ * @param this The route graph to place the route on
+ * @param pos The starting position for the new path
+ * @param dst The destination of the new path
+ * @param dir Direction of the coordinates to be added
+ * @return The new path
+ */
 static struct route_path *
 route_path_new_trivial(struct route_graph *this, struct route_info *pos, struct route_info *dst, int dir)
 {
@@ -891,6 +1270,19 @@ route_path_new_trivial(struct route_graph *this, struct route_info *pos, struct 
 	return ret;
 }
 
+/**
+ * @brief Creates a new route path
+ * 
+ * This creates a new non-trivial route. It therefore needs the routing information created by route_graph_flood, so
+ * make shure to run route_graph_flood() after changing the destination before using this function.
+ *
+ * @param this The route graph to create the route from
+ * @param oldpath (Optional) old path which may contain parts of the new part - this speeds things up a bit. May be NULL.
+ * @param pos The starting position of the route
+ * @param dst The destination of the route
+ * @param speedlist The speedlist to use
+ * @return The new route path
+ */
 static struct route_path *
 route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, int *speedlist)
 {
@@ -905,7 +1297,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	struct street_data *sd=pos->street;
 	struct route_path *ret;
 
-	if (item_is_equal(pos->street->item, dst->street->item)) {
+	if (item_is_equal(pos->street->item, dst->street->item)) { /* We probably don't have to leave this street and can use a trivial route */
 		if (!(sd->flags & AF_ONEWAY) && pos->lenneg >= dst->lenneg) {
 			return route_path_new_trivial(this, pos, dst, -1);
 		}
@@ -913,14 +1305,14 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 			return route_path_new_trivial(this, pos, dst, 1);
 		}
 	} 
-	if (! (sd->flags & AF_ONEWAY)) {
+	if (! (sd->flags & AF_ONEWAY)) { /* Using the start of the current segment as one starting point */
 		start1=route_graph_get_point(this, &sd->c[0]);
 		if (! start1)
 			return NULL;
 		val1=start1->value+route_value(speedlist, &sd->item, pos->lenneg);
 		dbg(1,"start1: %d(route)+%d=%d\n", start1->value, val1-start1->value, val1);
 	}
-	if (! (sd->flags & AF_ONEWAYREV)) {
+	if (! (sd->flags & AF_ONEWAYREV)) { /* Using the start of the current segment as an alternative starting point */
 		start2=route_graph_get_point(this, &sd->c[sd->count-1]);
 		if (! start2)
 			return NULL;
@@ -948,7 +1340,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		}
 	}
 	ret->path_hash=item_hash_new();
-	while ((s=start->seg)) {
+	while ((s=start->seg)) { /* following start->seg, which indicates the least costly way to reach our destination */
 		segs++;
 #if 0
 		printf("start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
@@ -966,7 +1358,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	sd=dst->street;
 	dbg(1,"start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
 	dbg(1,"dst sd->flags=%d sd->c[0]=0x%x,0x%x sd->c[sd->count-1]=0x%x,0x%x\n", sd->flags, sd->c[0].x,sd->c[0].y, sd->c[sd->count-1].x, sd->c[sd->count-1].y);
-	if (start->c.x == sd->c[0].x && start->c.y == sd->c[0].y) {
+	if (start->c.x == sd->c[0].x && start->c.y == sd->c[0].y) { /* Adding a final segment to reach the destination within the destination street */
 		route_path_add_item(ret, &sd->item, dst->lenneg, &dst->lp, sd->c, dst->pos+1, NULL, -1);
 	} else if (start->c.x == sd->c[sd->count-1].x && start->c.y == sd->c[sd->count-1].y) {
 		route_path_add_item(ret, &sd->item, dst->lenpos, &dst->lp, sd->c+dst->pos+1, sd->count-dst->pos-1, NULL, 1);
@@ -981,6 +1373,21 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	return ret;
 }
 
+/**
+ * @brief Builds a new route graph from a mapset
+ *
+ * This function builds a new route graph from a map. Please note that this function does not
+ * add any routing information to the route graph - this has to be done via the route_graph_flood()
+ * function.
+ *
+ * The function does not create a graph covering the whole map, but only covering the rectangle
+ * between c1 and c2.
+ *
+ * @param ms The mapset to build the route graph from
+ * @param c1 Corner 1 of the rectangle to use from the map
+ * @param c2 Corner 2 of the rectangle to use from the map
+ * @return The new route graph.
+ */
 static struct route_graph *
 route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2)
 {
@@ -1014,6 +1421,14 @@ route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2)
 	return ret;
 }
 
+/**
+ * @brief Updates the route graph
+ *
+ * This updates the route graph after settings in the route have changed. It also
+ * adds routing information afterwards by calling route_graph_flood().
+ * 
+ * @param this The route to update the graph for
+ */
 static void
 route_graph_update(struct route *this)
 {
@@ -1026,6 +1441,12 @@ route_graph_update(struct route *this)
 	this->version++;
 }
 
+/**
+ * @brief Gets street data for an item
+ *
+ * @param item The item to get the data for
+ * @return Street data for the item
+ */
 struct street_data *
 street_get_data (struct item *item)
 {
@@ -1058,6 +1479,12 @@ street_get_data (struct item *item)
 	return ret;
 }
 
+/**
+ * @brief Copies street data
+ * 
+ * @param orig The street data to copy
+ * @return The copied street data
+ */ 
 struct street_data *
 street_data_dup(struct street_data *orig)
 {
@@ -1070,12 +1497,24 @@ street_data_dup(struct street_data *orig)
 	return ret;
 }
 
+/**
+ * @brief Frees street data
+ *
+ * @param sd Street data to be freed
+ */
 void
 street_data_free(struct street_data *sd)
 {
 	g_free(sd);
 }
 
+/**
+ * @brief Finds the nearest street to a given coordinate
+ *
+ * @param ms The mapset to search in for the street
+ * @param pc The coordinate to find a street nearby
+ * @return The nearest street
+ */
 static struct route_info *
 route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 {
@@ -1143,6 +1582,11 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 	return ret;
 }
 
+/**
+ * @brief Destroys a route_info
+ *
+ * @param info The route info to be destroyed
+ */
 void
 route_info_free(struct route_info *inf)
 {
@@ -1154,6 +1598,12 @@ route_info_free(struct route_info *inf)
 
 #include "point.h"
 
+/**
+ * @brief Returns street data for a route info 
+ *
+ * @param rinf The route info to return the street data for
+ * @return Street data for the route info
+ */
 struct street_data *
 route_info_street(struct route_info *rinf)
 {

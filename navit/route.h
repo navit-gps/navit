@@ -30,11 +30,16 @@ struct route_crossings {
 	struct route_crossing crossing[0];
 };
 
+/**
+ * @brief Information about a street
+ *
+ * This contains information about a certain street
+ */
 struct street_data {
-	struct item item;
-	int count;
+	struct item item;	/** The map item for this street */
+	int count;			/** Number of coordinates this street has */
 	int flags;
-	struct coord c[0];
+	struct coord c[0];	/** Pointer to the coordinates of this street */
 };
 
 #define route_item_first type_street_0
