@@ -290,7 +290,7 @@ request_navit_set_layout(DBusConnection *connection, DBusMessage *message)
 }
 
 static DBusHandlerResult
-request_navit_zoom_in(DBusConnection *connection, DBusMessage *message)
+request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 {
 	int factor;
 	struct point p;
@@ -310,7 +310,10 @@ request_navit_zoom_in(DBusConnection *connection, DBusMessage *message)
 	// check if there's also a point given
 	if (!dbus_message_iter_has_next(&iter))
 	{
-		navit_zoom_in(navit, factor, NULL);
+		if (factor >= 0)
+            navit_zoom_in(navit, factor, NULL);
+        else
+            navit_zoom_out(navit, 0-factor, NULL);
 		return empty_reply(connection, message);
 	}
 
@@ -318,7 +321,10 @@ request_navit_zoom_in(DBusConnection *connection, DBusMessage *message)
 	if (!point_get_from_message(message, &iter, &p))
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 	
-	navit_zoom_in(navit, factor, &p);
+    if (factor >= 0)
+        navit_zoom_in(navit, factor, &p);
+    else
+        navit_zoom_out(navit, 0-factor, &p);
 	return empty_reply(connection, message);
 
 }
@@ -358,12 +364,12 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_layout") &&
 		dbus_message_has_signature(message,"s")) 
 		return request_navit_set_layout(connection, message);
-	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "zoom_in") &&
+	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "zoom") &&
 		dbus_message_has_signature(message, "i(ii)")) 
-		return request_navit_zoom_in(connection, message);
-	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "zoom_in") &&
+		return request_navit_zoom(connection, message);
+	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "zoom") &&
 		dbus_message_has_signature(message, "i")) 
-		return request_navit_zoom_in(connection, message);
+		return request_navit_zoom(connection, message);
 
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
