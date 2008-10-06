@@ -125,9 +125,9 @@ request_main_get_navit(DBusConnection *connection, DBusMessage *message)
 	dbus_error_init(&error);
 
 	if (!dbus_message_get_args(message, &error, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID)) {
-            dbg(0,"Error parsing\n");
+		dbg(0,"Error parsing\n");
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-        }
+	}
 	dbg(0,"opath=%s\n", opath);
 	iter=object_get(opath);
 	navit=main_get_navit(iter);
@@ -139,7 +139,7 @@ request_main_get_navit(DBusConnection *connection, DBusMessage *message)
 		dbus_message_unref (reply);
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
 static DBusHandlerResult
@@ -217,7 +217,7 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
  *
  * @param message The DBus message
  * @param iter Sort of pointer that points on that (ii)-object in the message
- * @param pc Pointer where the data should get stored
+ * @param p Pointer where the data should get stored
  */
 static int
 point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point *p)
@@ -268,6 +268,25 @@ request_navit_set_center(DBusConnection *connection, DBusMessage *message)
 }
 
 static DBusHandlerResult
+request_navit_set_center_screen(DBusConnection *connection, DBusMessage *message)
+{
+	struct point p;
+	struct navit *navit;
+	DBusMessageIter iter;
+
+	navit=object_get_from_message(message, "navit");
+	if (! navit)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+	dbus_message_iter_init(message, &iter);
+
+	if (!point_get_from_message(message, &iter, &p))
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	navit_set_center_screen(navit, &p);
+	return empty_reply(connection, message);
+}
+
+static DBusHandlerResult
 request_navit_set_layout(DBusConnection *connection, DBusMessage *message)
 {
 	char *new_layout_name;
@@ -278,9 +297,11 @@ request_navit_set_layout(DBusConnection *connection, DBusMessage *message)
 	navit=object_get_from_message(message, "navit");
 	if (! navit)
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &new_layout_name, DBUS_TYPE_INVALID))
+	
+    if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &new_layout_name, DBUS_TYPE_INVALID))
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	iter=navit_attr_iter_new();
+	
+    iter=navit_attr_iter_new();
 	while(navit_get_attr(navit, attr_layout, &attr, iter)) {
 		if (strcmp(attr.u.layout->name, new_layout_name) == 0) {
 			navit_set_attr(navit, &attr);
@@ -293,7 +314,7 @@ static DBusHandlerResult
 request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 {
 	int factor;
-	struct point *p = NULL;
+	struct point *p = malloc(sizeof(struct point));
 	struct navit *navit;
 	DBusMessageIter iter;
 
@@ -304,24 +325,97 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 	dbus_message_iter_init(message, &iter);
 	dbg(0,"%s\n", dbus_message_iter_get_signature(&iter));
 	
-	// get zoom factor
 	dbus_message_iter_get_basic(&iter, &factor);
 	
-	// check if there's also a point given
 	if (dbus_message_iter_has_next(&iter))
 	{
-        dbus_message_iter_next(&iter);
-        if (!point_get_from_message(message, &iter, p))
-            return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		dbus_message_iter_next(&iter);
+		if (!point_get_from_message(message, &iter, p))
+			return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 	}
 
-    if (factor > 1)
-        navit_zoom_in(navit, factor, p);
-    else if (factor < -1)
-        navit_zoom_out(navit, 0-factor, p);
+	if (factor > 1)
+		navit_zoom_in(navit, factor, p);
+	else if (factor < -1)
+		navit_zoom_out(navit, 0-factor, p);
 
 	return empty_reply(connection, message);
 
+}
+
+static DBusHandlerResult
+request_navit_resize(DBusConnection *connection, DBusMessage *message)
+{
+	struct navit *navit;
+	int w, h;
+	DBusMessageIter iter;
+
+	navit = object_get_from_message(message, "navit");
+	if (! navit)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+	dbus_message_iter_init(message, &iter);
+	dbg(0,"%s\n", dbus_message_iter_get_signature(&iter));
+	
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	dbus_message_iter_get_basic(&iter, &w);
+	
+	dbus_message_iter_next(&iter);
+	
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	dbus_message_iter_get_basic(&iter, &h);
+
+	dbg(0, " w -> %i  h -> %i\n", w, h);
+	
+	navit_resize(navit, w, h);
+
+	return empty_reply(connection, message);
+
+}
+
+static DBusHandlerResult
+request_navit_set_position(DBusConnection *connection, DBusMessage *message)
+{
+	struct navit *navit;
+	struct pcoord c;
+
+	DBusMessageIter iter;
+
+	navit = object_get_from_message(message, "navit");
+	if (! navit)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+	dbus_message_iter_init(message, &iter);
+	pcoord_get_from_message(message, &iter, &c);
+	
+	navit_set_position(navit, &c);
+	return empty_reply(connection, message);
+}
+
+static DBusHandlerResult
+request_navit_set_destination(DBusConnection *connection, DBusMessage *message)
+{
+	struct navit *navit;
+	struct pcoord c;
+	char *description;
+
+	DBusMessageIter iter;
+
+	navit = object_get_from_message(message, "navit");
+	if (! navit)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+	dbus_message_iter_init(message, &iter);
+	pcoord_get_from_message(message, &iter, &c);
+	
+	dbus_message_iter_next(&iter);
+	dbus_message_iter_get_basic(&iter, &description);
+	dbg(0, " destination -> %s\n", description);
+	
+	navit_set_destination(navit, &c, description);
+	return empty_reply(connection, message);
 }
 
 static DBusHandlerResult
@@ -356,6 +450,9 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_center") &&
 		dbus_message_has_signature(message,"(iii)")) 
 		return request_navit_set_center(connection, message);
+	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_center_screen") &&
+		dbus_message_has_signature(message,"(ii)")) 
+		return request_navit_set_center_screen(connection, message);
 	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_layout") &&
 		dbus_message_has_signature(message,"s")) 
 		return request_navit_set_layout(connection, message);
@@ -365,7 +462,15 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "zoom") &&
 		dbus_message_has_signature(message, "i")) 
 		return request_navit_zoom(connection, message);
-
+	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "resize") &&
+		dbus_message_has_signature(message, "ii")) 
+		return request_navit_resize(connection, message);
+	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_position") &&
+		dbus_message_has_signature(message, "(iii)")) 
+		return request_navit_set_position(connection, message);
+	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_destination") &&
+		dbus_message_has_signature(message, "(iii)s")) 
+		return request_navit_set_destination(connection, message);
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
