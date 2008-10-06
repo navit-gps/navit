@@ -314,7 +314,7 @@ static DBusHandlerResult
 request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 {
 	int factor;
-	struct point *p = malloc(sizeof(struct point));
+	struct point *p = NULL;
 	struct navit *navit;
 	DBusMessageIter iter;
 
