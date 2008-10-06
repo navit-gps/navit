@@ -424,8 +424,17 @@ struct dbus_method {
 	char *signature;
 	DBusHandlerResult(*func)(DBusConnection *connection, DBusMessage *message);
 } dbus_methods[] = {
-	{"",		"iter",		"",		request_main_iter},
-	{".navit",	"set_center",	"(iii)",	request_navit_set_center},
+	{"",		"iter",                "",        request_main_iter},
+	{"",        "iter_destroy",        "o",       request_main_iter_destroy},
+	{"",        "get_navit",           "o",       request_main_get_navit},
+	{".navit",	"set_center",          "(iii)",   request_navit_set_center},
+	{".navit",  "set_center_screen",   "(ii)",    request_navit_set_center_screen},
+	{".navit",  "set_layout",          "s",       request_navit_set_layout},
+	{".navit",  "zoom",                "i(ii)",   request_navit_zoom},
+	{".navit",  "zoom",                "i",       request_navit_zoom},
+	{".navit",  "resize",              "ii",      request_navit_resize},
+	{".navit",  "set_position",        "(iii)",   request_navit_set_position},
+	{".navit",  "set_destination",     "(iii)s",  request_navit_set_destination},
 };
 
 static DBusHandlerResult
@@ -441,7 +450,7 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 		dbg(0,"Introspect\n");
 		if (! strcmp(dbus_message_get_path(message), "/org/navit_project/navit")) {
 			g_file_get_contents("binding/dbus/navit.introspect", &idata, NULL, NULL);
-			reply = dbus_message_new_method_return(message);
+			reply = dbus_message_new_method_return(http://www.http.com//message);
 			dbus_message_append_args(reply, DBUS_TYPE_STRING, &idata, DBUS_TYPE_INVALID);
 			dbus_connection_send (connection, reply, NULL);
 			dbus_message_unref (reply);
@@ -459,33 +468,6 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 		}
 		g_free(path);
 	}
-	if (dbus_message_is_method_call (message, "org.navit_project.navit", "iter_destroy") &&
-		dbus_message_has_signature(message, "o"))
-		return request_main_iter_destroy(connection, message);
-	if (dbus_message_is_method_call (message, "org.navit_project.navit", "get_navit") &&
-		dbus_message_has_signature(message,"o")) 
-		return request_main_get_navit(connection, message);
-	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_center_screen") &&
-		dbus_message_has_signature(message,"(ii)")) 
-		return request_navit_set_center_screen(connection, message);
-	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_layout") &&
-		dbus_message_has_signature(message,"s")) 
-		return request_navit_set_layout(connection, message);
-	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "zoom") &&
-		dbus_message_has_signature(message, "i(ii)")) 
-		return request_navit_zoom(connection, message);
-	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "zoom") &&
-		dbus_message_has_signature(message, "i")) 
-		return request_navit_zoom(connection, message);
-	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "resize") &&
-		dbus_message_has_signature(message, "ii")) 
-		return request_navit_resize(connection, message);
-	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_position") &&
-		dbus_message_has_signature(message, "(iii)")) 
-		return request_navit_set_position(connection, message);
-	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_destination") &&
-		dbus_message_has_signature(message, "(iii)s")) 
-		return request_navit_set_destination(connection, message);
 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
