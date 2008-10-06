@@ -418,9 +418,21 @@ request_navit_set_destination(DBusConnection *connection, DBusMessage *message)
 	return empty_reply(connection, message);
 }
 
+struct dbus_method {
+	char *path;
+	char *method;
+	char *signature;
+	DBusHandlerResult(*func)(DBusConnection *connection, DBusMessage *message);
+} dbus_methods[] = {
+	{"",		"iter",		"",		request_main_iter},
+	{".navit",	"set_center",	"(iii)",	request_navit_set_center},
+};
+
 static DBusHandlerResult
 navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_data)
 {
+	int i;
+	char *path;
 	dbg(0,"type=%s interface=%s path=%s member=%s signature=%s\n", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
 #if 0
 	if (dbus_message_is_method_call (message, "org.freedesktop.DBus.Introspectable", "Introspect")) {
@@ -438,18 +450,21 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 		}
 	}
 #endif
-	if (dbus_message_is_method_call (message, "org.navit_project.navit", "iter") &&
-		dbus_message_has_signature(message, ""))
-		return request_main_iter(connection, message);
+	for (i = 0 ; i < sizeof(dbus_methods)/sizeof(struct dbus_method) ; i++) {
+		path=g_strdup_printf("org.navit_project.navit%s", dbus_methods[i].path);
+		if (dbus_message_is_method_call(message, path, dbus_methods[i].method) &&
+		    dbus_message_has_signature(message, dbus_methods[i].signature)) {
+			g_free(path);
+			return dbus_methods[i].func(connection, message);
+		}
+		g_free(path);
+	}
 	if (dbus_message_is_method_call (message, "org.navit_project.navit", "iter_destroy") &&
 		dbus_message_has_signature(message, "o"))
 		return request_main_iter_destroy(connection, message);
 	if (dbus_message_is_method_call (message, "org.navit_project.navit", "get_navit") &&
 		dbus_message_has_signature(message,"o")) 
 		return request_main_get_navit(connection, message);
-	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_center") &&
-		dbus_message_has_signature(message,"(iii)")) 
-		return request_navit_set_center(connection, message);
 	if (dbus_message_is_method_call (message, "org.navit_project.navit.navit", "set_center_screen") &&
 		dbus_message_has_signature(message,"(ii)")) 
 		return request_navit_set_center_screen(connection, message);
