@@ -1133,7 +1133,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 					<icon src="bus.xpm" />
 				</item>
 				<item type="poi_bus_stop" order="12-">
-					<icon src="bus_halt.xpm" />
+					<icon src="bus.xpm" />
 				</item>
 				<item type="poi_bussines_service" order="12-">
 					<icon src="bussines_service.xpm" />
