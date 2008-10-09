@@ -360,6 +360,12 @@ map_search_new_mg(struct map_priv *map, struct item *item, struct attr *search, 
 	dbg(1,"search=%s\n", search->u.str);
 	mr->m=map;
 	mr->search_type=search->type;
+
+	/*
+     * NOTE: If you implement search for other attributes than attr_town_postal, attr_town_name and attr_street_name,
+     * please update this comment and the documentation for map_search_new() in map.c
+     */
+
 	switch (search->type) {
 	case attr_town_postal:
 		if (item->type != type_country_label)
