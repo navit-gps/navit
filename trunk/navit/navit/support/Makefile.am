@@ -1,0 +1,10 @@
+SUBDIRS=
+if SUPPORT_WORDEXP
+  SUBDIRS+=wordexp
+endif
+if SUPPORT_WIN32
+  SUBDIRS+=win32
+endif
+if SUPPORT_ZLIB
+  SUBDIRS+=zlib
+endif
