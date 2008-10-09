@@ -2439,6 +2439,7 @@ write_zipmember(FILE *out, FILE *dir_out, char *name, int filelen, char *data, i
 
 	crc=crc32(0, NULL, 0);
 	crc=crc32(crc, (unsigned char *)data, data_size);
+#ifdef HAVE_LIBZ
 	if (compression_level) {
 		error=compress2_int((Byte *)compbuffer, &destlen, (Bytef *)data, data_size, compression_level);
 		if (error == Z_OK) {
@@ -2450,6 +2451,7 @@ write_zipmember(FILE *out, FILE *dir_out, char *name, int filelen, char *data, i
 			fprintf(stderr,"compress2 returned %d\n", error);
 		}
 	}
+#endif
 	lfh.zipcrc=crc;
 	lfh.zipsize=comp_size;
 	lfh.zipuncmp=data_size;
@@ -2640,7 +2642,11 @@ int main(int argc, char **argv)
 	int i,c,start=1,end=4,dump_coordinates=0;
 	int keep_tmpfiles=0;
 	int process_nodes=1, process_ways=1;
+#ifdef HAVE_LIBZ
 	int compression_level=9;
+#else
+	int compression_level=0;
+#endif
 	int output=0;
 	int input=0;
 	char *result,*dbstr=NULL;
@@ -2754,9 +2760,11 @@ int main(int argc, char **argv)
 			    exit( -1 );
 			}
 			break;
+#ifdef HAVE_LIBZ
 		case 'z':
 			compression_level=atoi(optarg);
 			break;
+#endif
 		case '?':
 			usage(stderr);
 			break;
