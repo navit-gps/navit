@@ -81,8 +81,6 @@ X_CFLAGS="-I$x_includes"
 AS_IF([test -n "$ac_x_libraries"], [X_LIBS="-L$ac_x_libraries"])
 
 PKG_CHECK_MODULES(NAVIT, [glib-2.0 gmodule-2.0 gthread-2.0], [], AC_MSG_ERROR([glib-2.0 or gmodule-2.0 not found. Usually you need to install a package named glib2-devel or libglib2.0-dev]))
-AC_SUBST(NAVIT_CFLAGS)
-AC_SUBST(NAVIT_LIBS)
 
 AC_CHECK_HEADER(
 	zlib.h,
@@ -90,10 +88,15 @@ AC_CHECK_HEADER(
 		[HAVE_ZLIB],
 		[],
 		Define to 1 if you have the <zlib.h> header file.
-		)
-		ZLIB_LIBS="-lz",
-	AC_MSG_WARN([*** no zlib.h\ -- reduced functionality of osm2navit])
 	)
+	ZLIB_LIBS="-lz"
+	zlib=yes,
+	ZLIB_CFLAGS="-I\$(top_srcdir)/navit/support/zlib"
+	ZLIB_LIBS="-L\$(top_builddir)/navit/support/zlib -lsupport_zlib"
+	zlib=no
+)
+AM_CONDITIONAL(SUPPORT_ZLIB, [test "x$zlib" = "xno"])
+AC_SUBST(ZLIB_CFLAGS)
 AC_SUBST(ZLIB_LIBS)
 
 AC_ARG_ENABLE(gui-gtk, [  --disable-gui-gtk             don't create gui gtk ], MODULE_GUI_GTK=$enableval, MODULE_GUI_GTK=yes)
@@ -579,6 +582,29 @@ AC_SUBST(cross_compiling)
 AC_SUBST(CC_FOR_BUILD)
 AC_SUBST(CCLD_FOR_BUILD)
 
+AC_CHECK_HEADER(wordexp.h,wordexp_h=yes,wordexp_h=no;NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/navit/support/wordexp";NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/wordexp -lsupport_wordexp")
+AM_CONDITIONAL(SUPPORT_WORDEXP, [test "x$wordexp_h" = "xno"])
+
+AC_CANONICAL_HOST
+win32=no
+case $host_os in
+wince)
+	win32=yes
+	AC_DEFINE(HAS_WIN32_CE, 1, [Has Windows CE API])
+	;;
+esac
+if test "x$win32" = "xyes"
+then
+	NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/navit/support/win32"
+	NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/win32 -lsupport_win32"
+fi
+AM_CONDITIONAL(SUPPORT_WIN32, [test "x$win32" = "xyes"])
+
+NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/intl"
+NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/intl"
+AC_SUBST(NAVIT_CFLAGS)
+AC_SUBST(NAVIT_LIBS)
+
 AC_CONFIG_FILES([
 Makefile
 navit/Makefile
@@ -614,6 +640,10 @@ navit/osd/core/Makefile
 navit/speech/Makefile
 navit/speech/cmdline/Makefile
 navit/speech/speech_dispatcher/Makefile
+navit/support/Makefile
+navit/support/win32/Makefile
+navit/support/wordexp/Makefile
+navit/support/zlib/Makefile
 navit/vehicle/Makefile
 navit/vehicle/file/Makefile
 navit/vehicle/gpsd/Makefile

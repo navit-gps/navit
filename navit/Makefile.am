@@ -1,11 +1,11 @@
 include $(top_srcdir)/Makefile.inc
 DIST_SUBDIRS=binding data fib-1.1 gui graphics osd speech vehicle xpm maps
-SUBDIRS=binding data fib-1.1 gui graphics osd speech vehicle xpm
+SUBDIRS=binding data fib-1.1 gui graphics osd speech support vehicle xpm
 if BUILD_SAMPLEMAP
   SUBDIRS += maps
 endif
 
-AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ -DPREFIX=\"@prefix@\" -DMODULE=navit
+AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ @ZLIB_CFLAGS@ -DPREFIX=\"@prefix@\" -DMODULE=navit
 BUILT_SOURCES=osm2navit
 bin_PROGRAMS = navit osm2navit
 
@@ -28,7 +28,7 @@ libnavit_la_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c dat
 navit_SOURCES = start.c
 navit_LDADD = libnavit.la @NAVIT_LIBS@ @ZLIB_LIBS@ -Lfib-1.1 -lfib
 
-osm2navit_CPPFLAGS = $(AM_CPPFLAGS) @POSTGRESQL_CFLAGS@
+osm2navit_CPPFLAGS = $(AM_CPPFLAGS) @ZLIB_CFLAGS@ @POSTGRESQL_CFLAGS@
 osm2navit_SOURCES = osm2navit.c
 osm2navit_LDADD = libnavit.la @NAVIT_LIBS@ @ZLIB_LIBS@ @POSTGRESQL_LIBS@
 

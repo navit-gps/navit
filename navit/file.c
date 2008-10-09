@@ -106,7 +106,7 @@ int file_mkdir(char *name, int pflag)
 int
 file_mmap(struct file *file)
 {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CEGCC__)
     file->begin = (char*)mmap_readonly_win32( file->name, &file->map_handle, &file->map_file );
 #else
 	file->begin=mmap(NULL, file->size, PROT_READ|PROT_WRITE, MAP_PRIVATE, file->fd, 0);
@@ -210,7 +210,7 @@ file_exists(char *name)
 void
 file_remap_readonly(struct file *f)
 {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CEGCC__)
 #else
 	void *begin;
 	munmap(f->begin, f->size);
@@ -235,7 +235,7 @@ file_remap_readonly_all(void)
 void
 file_unmap(struct file *f)
 {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__CEGCC__)
     mmap_unmap_win32( f->begin, f->map_handle , f->map_file );
 #else
 	munmap(f->begin, f->size);
