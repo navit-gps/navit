@@ -635,6 +635,10 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 	struct item *town;
 	int i;
 	
+	/*
+     * NOTE: If you implement search for other attributes than attr_town_name and attr_street_name,
+     * please update this comment and the documentation for map_search_new() in map.c
+     */
 	switch (search->type) {
 		case attr_country_name:
 			break;

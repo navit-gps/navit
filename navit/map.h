@@ -26,28 +26,58 @@ struct attr;
 #include "point.h"
 #include "layer.h"
 
+/**
+ * @brief Used to select data from a map
+ *
+ * This struct is used to select data from a map. This one the one hand builds a
+ * rectangle on the map and on the other hand selects an order for items of each
+ * layer. Note that passing NULL instead of a pointer to such a struct often means
+ * "get me everything".
+ *
+ * It's possible to link multiple selections in a linked list, see below.
+ */
 struct map_selection {
-	struct map_selection *next;
+	struct map_selection *next;     /** Linked-List pointer */
 	union {
-		struct coord_rect c_rect;
-		struct point_rect p_rect;
+		struct coord_rect c_rect;   /** For building the rectangle based on coordinates */
+		struct point_rect p_rect;   /** For building the rectangle based on points */
 	} u;
-	int order[layer_end];		
+	int order[layer_end];		    /** Holds the order to be selected for each layer of items */
 };
 
+/**
+ * @brief Holds all functions a map plugin has to implement to be useable
+ *
+ * This structure holds pointers to a map plugin's functions navit's core will call
+ * to communicate with the plugin. For further information look into map.c - there exist
+ * functions with the same names acting more or less as "wrappers" around the functions here.
+ * Especially the arguments (and their meaning) of each function will be described there.
+ */
 struct map_methods {
-	enum projection pro;
-	char *charset;
-	void 			(*map_destroy)(struct map_priv *priv);
-	struct map_rect_priv *  (*map_rect_new)(struct map_priv *map, struct map_selection *sel);
-	void			(*map_rect_destroy)(struct map_rect_priv *mr);
-	struct item *		(*map_rect_get_item)(struct map_rect_priv *mr);
-	struct item *		(*map_rect_get_item_byid)(struct map_rect_priv *mr, int id_hi, int id_lo);
-	struct map_search_priv *(*map_search_new)(struct map_priv *map, struct item *item, struct attr *search, int partial);
-	void			(*map_search_destroy)(struct map_search_priv *ms);
-	struct item *		(*map_search_get_item)(struct map_search_priv *ms);
+	enum projection pro;        /** The projection used for that type of map */
+	char *charset;              /** The charset this map uses - e.g. "iso8859-1" or "utf-8". Please specify this in a form so that g_convert() can handle it. */
+	void 			(*map_destroy)(struct map_priv *priv);  /** Function used to destroy ("close") a map. */
+	struct map_rect_priv *  (*map_rect_new)(struct map_priv *map, struct map_selection *sel); /** Function to create a new map rect on the map. */
+	void			(*map_rect_destroy)(struct map_rect_priv *mr); /** Function to destroy a map rect */
+	struct item *		(*map_rect_get_item)(struct map_rect_priv *mr); /** Function to return the next item from a map rect */
+	struct item *		(*map_rect_get_item_byid)(struct map_rect_priv *mr, int id_hi, int id_lo); /** Function to get an item with a specific ID from a map rect */
+	struct map_search_priv *(*map_search_new)(struct map_priv *map, struct item *item, struct attr *search, int partial); /** Function to start a new search on the map */
+	void			(*map_search_destroy)(struct map_search_priv *ms); /** Function to destroy a map search struct */
+	struct item *		(*map_search_get_item)(struct map_search_priv *ms); /** Function to get the next item of a search on the map */
 };
 
+/**
+ * @brief Checks if a coordinate is within a map selection
+ *
+ * Checks if a coordinate is within a map selection. Note that since a selection of NULL
+ * means "select everything", with sel = NULL this will always return true. If there are
+ * more than one selection in a linked-list, it is sufficient if only one of the selections
+ * contains the coordinate.
+ *
+ * @param sel The selection to check if the point is within
+ * @param c Coordinate to check if it is within the selection
+ * @return True if the coordinate is within one of the selections, False otherwise
+ */
 static inline int
 map_selection_contains_point(struct map_selection *sel, struct coord *c)
 {
@@ -62,6 +92,16 @@ map_selection_contains_point(struct map_selection *sel, struct coord *c)
         return sel ? 0:1;
 }
 
+/**
+ * @brief Checks if a polyline is within a map selection
+ *
+ * @sa Please refer to map_selection_contains_point()
+ *
+ * @param sel The selection to check if the polyline is within
+ * @param c Coordinates of the polyline to check if it is within the selection
+ * @param count Number of coordinates in c
+ * @return True if the polyline is within one of the selections, False otherwise
+ */
 static inline int
 map_selection_contains_polyline(struct map_selection *sel, struct coord *c, int count)
 {
@@ -95,6 +135,15 @@ map_selection_contains_polyline(struct map_selection *sel, struct coord *c, int 
 	return 0;
 }
 
+/**
+ * @brief Checks if a rectangle is within a map selection
+ *
+ * @sa Please refer to map_selection_contains_point()
+ *
+ * @param sel The selection to check if the rectangle is within
+ * @param r Rectangle to be checked for
+ * @return True if the rectangle is within one of the selections, False otherwise
+ */
 static inline int
 map_selection_contains_rect(struct map_selection *sel, struct coord_rect *r)
 {
@@ -118,6 +167,17 @@ map_selection_contains_rect(struct map_selection *sel, struct coord_rect *r)
 	return 0;
 }
 
+
+/**
+ * @brief Checks if a polygon is within a map selection
+ *
+ * @sa Please refer to map_selection_contains_point()
+ *
+ * @param sel The selection to check if the polygon  is within
+ * @param c Pointer to coordinates of the polygon
+ * @param count Number of coordinates in c
+ * @return True if the polygon is within one of the selections, False otherwise
+ */
 static inline int
 map_selection_contains_polygon(struct map_selection *sel, struct coord *c, int count)
 {
