@@ -53,3 +53,20 @@ g_hash_to_list(GHashTable *h)
 
 	return ret;
 }
+
+gchar *
+g_strconcat_printf(gchar *buffer, gchar *fmt, ...)
+{
+	gchar *str,*ret;
+	va_list ap;
+
+	va_start(ap, fmt);
+        str=g_strdup_vprintf(fmt, ap);
+        va_end(ap);
+	if (! buffer)
+		return str;
+	ret=g_strconcat(buffer, str, NULL);
+	g_free(buffer);
+	g_free(str);
+	return ret;
+}

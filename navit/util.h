@@ -25,6 +25,7 @@
 void strtoupper(char *dest, const char *src);
 void strtolower(char *dest, const char *src);
 GList * g_hash_to_list(GHashTable *h);
+gchar * g_strconcat_printf(gchar *buffer, gchar *fmt, ...);
 
 #endif
 
