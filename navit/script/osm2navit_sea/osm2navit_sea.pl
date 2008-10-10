@@ -900,7 +900,7 @@ foreach $tile (values %tiles) {
 		print $output "  <way id=\"".($osm_id--)."\" timestamp=\"2008-07-02T22:57:53Z\" user=\"latouche\">\n";
 		while ($way->is_alive()) {
 
-			$type = "outer" if ($way->type() eq "outer");
+			$type = ($way->type() eq "outer") ? "water" : "land";
 
 			foreach $node ($way->nodes()) {
 				print "undef node in ".$way->id()."\n" unless defined $node;
@@ -910,7 +910,7 @@ foreach $tile (values %tiles) {
 			last if ($way->next() == 0);
 			$way=$new_ways{ $way->next() };
 		}
-		print $output "    <tag k=\"natural\" v=\"coastline_".$type."\"/>\n";
+		print $output "    <tag k=\"natural\" v=\"".$type."\"/>\n";
 		print $output "  </way>\n";
 	}
 }
