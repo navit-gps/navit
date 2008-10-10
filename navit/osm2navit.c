@@ -2439,7 +2439,7 @@ write_zipmember(FILE *out, FILE *dir_out, char *name, int filelen, char *data, i
 
 	crc=crc32(0, NULL, 0);
 	crc=crc32(crc, (unsigned char *)data, data_size);
-#ifdef HAVE_LIBZ
+#ifdef HAVE_ZLIB
 	if (compression_level) {
 		error=compress2_int((Byte *)compbuffer, &destlen, (Bytef *)data, data_size, compression_level);
 		if (error == Z_OK) {
@@ -2642,7 +2642,7 @@ int main(int argc, char **argv)
 	int i,c,start=1,end=4,dump_coordinates=0;
 	int keep_tmpfiles=0;
 	int process_nodes=1, process_ways=1;
-#ifdef HAVE_LIBZ
+#ifdef HAVE_ZLIB
 	int compression_level=9;
 #else
 	int compression_level=0;
@@ -2760,7 +2760,7 @@ int main(int argc, char **argv)
 			    exit( -1 );
 			}
 			break;
-#ifdef HAVE_LIBZ
+#ifdef HAVE_ZLIB
 		case 'z':
 			compression_level=atoi(optarg);
 			break;
