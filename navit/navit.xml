@@ -148,6 +148,11 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 					<polyline color="#5096b8" /> 
 					<label label_size="5" /> 
 				</item>
+				<item type="poly_land" order="0-">
+					<polygon color="#ffefb7" /> 
+					<polyline color="#ffefb7" /> 
+					<label label_size="5" /> 
+				</item>
 				<item type="poly_park" order="0-">
 					<polygon color="#7cc334" /> 
 					<label label_size="5" /> 
@@ -1542,6 +1547,10 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 				</item>
 				<item type="poly_water" order="0-">
 					<polygon color="#010321" /> 
+					<label label_size="5" /> 
+				</item>
+				<item type="poly_land" order="0-">
+					<polygon color="#011001" /> 
 					<label label_size="5" /> 
 				</item>
 				<item type="poly_park" order="0-">
