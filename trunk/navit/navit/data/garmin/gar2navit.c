@@ -156,6 +156,8 @@ enum item_type g2n_get_type(struct gar2nav_conv *c, unsigned int type, unsigned 
 {
 	struct gar2navit *def = NULL;
 	int group;
+	group = (type >> G2N_KIND_SHIFT);
+	type &= ~G2N_KIND_MASK;
 	if (type == G2N_POINT)
 		def = c->points;
 	else if (type == G2N_POLYLINE)
@@ -172,7 +174,6 @@ enum item_type g2n_get_type(struct gar2nav_conv *c, unsigned int type, unsigned 
 		return type_none;
 	}
 
-	group = (type >> G2N_KIND_SHIFT);
 	while (def) {
 		if (def->group == group &&
 			((!def->maxid && def->id == id) || 
