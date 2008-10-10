@@ -673,90 +673,90 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 					<polyline color="#d2d2d2" width="132" /> 
 					<polyline color="#ffffff" width="126" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="7-8">
+				<item type="street_2_city,street_2_land,ramp" order="7-8">
 					<polyline color="#c0c0c0" width="2" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="9">
+				<item type="street_2_city,street_2_land,ramp" order="9">
+					<polyline color="#c0c0c0" width="3" /> 
+					<polyline color="#ffff00" width="1" /> 
+				</item>
+				<item type="street_2_city,street_2_land,ramp" order="10">
 					<polyline color="#c0c0c0" width="4" /> 
 					<polyline color="#ffff00" width="2" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="10">
-					<polyline color="#c0c0c0" width="6" /> 
-					<polyline color="#ffff00" width="4" /> 
+				<item type="street_2_city,street_2_land,ramp" order="11">
+					<polyline color="#c0c0c0" width="5" /> 
+					<polyline color="#ffff00" width="3" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="11">
-					<polyline color="#c0c0c0" width="8" /> 
-					<polyline color="#ffff00" width="6" /> 
+				<item type="street_2_city,street_2_land,ramp" order="12">
+					<polyline color="#c0c0c0" width="7" /> 
+					<polyline color="#ffff00" width="5" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="12">
+				<item type="street_2_city,street_2_land,ramp" order="13">
 					<polyline color="#c0c0c0" width="11" /> 
-					<polyline color="#ffff00" width="9" /> 
+					<polyline color="#ffff00" width="8" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="13">
-					<polyline color="#c0c0c0" width="15" /> 
+				<item type="street_2_city,street_2_land,ramp" order="14">
+					<polyline color="#c0c0c0" width="14" /> 
 					<polyline color="#ffff00" width="11" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="14">
-					<polyline color="#c0c0c0" width="18" /> 
-					<polyline color="#ffff00" width="14" /> 
+				<item type="street_2_city,street_2_land,ramp" order="15">
+					<polyline color="#c0c0c0" width="19" /> 
+					<polyline color="#ffff00" width="15" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="15">
-					<polyline color="#c0c0c0" width="21" /> 
-					<polyline color="#ffff00" width="17" /> 
+				<item type="street_2_city,street_2_land,ramp" order="16">
+					<polyline color="#c0c0c0" width="30" /> 
+					<polyline color="#ffff00" width="26" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="16">
-					<polyline color="#c0c0c0" width="34" /> 
-					<polyline color="#ffff00" width="30" /> 
+				<item type="street_2_city,street_2_land,ramp" order="17">
+					<polyline color="#c0c0c0" width="63" /> 
+					<polyline color="#ffff00" width="57" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="17">
-					<polyline color="#c0c0c0" width="73" /> 
-					<polyline color="#ffff00" width="67" /> 
+				<item type="street_2_city,street_2_land,ramp" order="18">
+					<polyline color="#c0c0c0" width="100" /> 
+					<polyline color="#ffff00" width="90" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="18">
-					<polyline color="#c0c0c0" width="144" /> 
-					<polyline color="#ffff00" width="138" /> 
-				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="7-8">
+				<item type="street_3_city,street_3_land,roundabout" order="7-8">
 					<polyline color="#a0a0a0" width="3" /> 
 					<polyline color="#ffff00" width="1" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="9">
+				<item type="street_3_city,street_3_land,roundabout" order="9">
 					<polyline color="#a0a0a0" width="5" /> 
 					<polyline color="#ffff00" width="3" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="10">
+				<item type="street_3_city,street_3_land,roundabout" order="10">
 					<polyline color="#a0a0a0" width="8" /> 
 					<polyline color="#ffff00" width="6" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="11">
+				<item type="street_3_city,street_3_land,roundabout" order="11">
 					<polyline color="#a0a0a0" width="9" /> 
 					<polyline color="#ffff00" width="7" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="12">
+				<item type="street_3_city,street_3_land,roundabout" order="12">
 					<polyline color="#a0a0a0" width="13" /> 
 					<polyline color="#ffff00" width="9" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="13">
+				<item type="street_3_city,street_3_land,roundabout" order="13">
 					<polyline color="#a0a0a0" width="18" /> 
 					<polyline color="#ffff00" width="14" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="14">
+				<item type="street_3_city,street_3_land,roundabout" order="14">
 					<polyline color="#a0a0a0" width="21" /> 
 					<polyline color="#ffff00" width="17" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="15">
+				<item type="street_3_city,street_3_land,roundabout" order="15">
 					<polyline color="#a0a0a0" width="25" /> 
 					<polyline color="#ffff00" width="21" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="16">
+				<item type="street_3_city,street_3_land,roundabout" order="16">
 					<polyline color="#a0a0a0" width="40" /> 
 					<polyline color="#ffff00" width="34" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="17">
+				<item type="street_3_city,street_3_land,roundabout" order="17">
 					<polyline color="#a0a0a0" width="79" /> 
 					<polyline color="#ffff00" width="73" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="18">
+				<item type="street_3_city,street_3_land,roundabout" order="18">
 					<polyline color="#a0a0a0" width="156" /> 
 					<polyline color="#ffff00" width="150" /> 
 				</item>
@@ -3177,91 +3177,90 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 					<polyline color="#d2d2d2" width="132" /> 
 					<polyline color="#ffffff" width="126" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="7-8">
+				<item type="street_2_city,street_2_land,ramp" order="7-8">
+					<polyline color="#c0c0c0" width="2" /> 
+				</item>
+				<item type="street_2_city,street_2_land,ramp" order="9">
 					<polyline color="#c0c0c0" width="3" /> 
 					<polyline color="#ffff00" width="1" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="9">
+				<item type="street_2_city,street_2_land,ramp" order="10">
 					<polyline color="#c0c0c0" width="4" /> 
 					<polyline color="#ffff00" width="2" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="10">
-					<polyline color="#c0c0c0" width="6" /> 
-					<polyline color="#ffff00" width="4" /> 
+				<item type="street_2_city,street_2_land,ramp" order="11">
+					<polyline color="#c0c0c0" width="5" /> 
+					<polyline color="#ffff00" width="3" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="11">
-					<polyline color="#c0c0c0" width="8" /> 
-					<polyline color="#ffff00" width="6" /> 
+				<item type="street_2_city,street_2_land,ramp" order="12">
+					<polyline color="#c0c0c0" width="7" /> 
+					<polyline color="#ffff00" width="5" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="12">
-					<polyline color="#c0c0c0" width="12" /> 
-					<polyline color="#ffff00" width="9" /> 
+				<item type="street_2_city,street_2_land,ramp" order="13">
+					<polyline color="#c0c0c0" width="11" /> 
+					<polyline color="#ffff00" width="8" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="13">
-					<polyline color="#c0c0c0" width="15" /> 
+				<item type="street_2_city,street_2_land,ramp" order="14">
+					<polyline color="#c0c0c0" width="14" /> 
 					<polyline color="#ffff00" width="11" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="14">
-					<polyline color="#c0c0c0" width="18" /> 
-					<polyline color="#ffff00" width="14" /> 
+				<item type="street_2_city,street_2_land,ramp" order="15">
+					<polyline color="#c0c0c0" width="19" /> 
+					<polyline color="#ffff00" width="15" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="15">
-					<polyline color="#c0c0c0" width="21" /> 
-					<polyline color="#ffff00" width="17" /> 
+				<item type="street_2_city,street_2_land,ramp" order="16">
+					<polyline color="#c0c0c0" width="30" /> 
+					<polyline color="#ffff00" width="26" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="16">
-					<polyline color="#c0c0c0" width="35" /> 
-					<polyline color="#ffff00" width="30" /> 
+				<item type="street_2_city,street_2_land,ramp" order="17">
+					<polyline color="#c0c0c0" width="63" /> 
+					<polyline color="#ffff00" width="57" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="17">
-					<polyline color="#c0c0c0" width="73" /> 
-					<polyline color="#ffff00" width="67" /> 
+				<item type="street_2_city,street_2_land,ramp" order="18">
+					<polyline color="#c0c0c0" width="100" /> 
+					<polyline color="#ffff00" width="90" /> 
 				</item>
-				<item type="street_2_city,street_2_land" order="18">
-					<polyline color="#c0c0c0" width="144" /> 
-					<polyline color="#ffff00" width="138" /> 
-				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="7-8">
+				<item type="street_3_city,street_3_land,roundabout" order="7-8">
 					<polyline color="#a0a0a0" width="3" /> 
 					<polyline color="#ffff00" width="1" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="9">
+				<item type="street_3_city,street_3_land,roundabout" order="9">
 					<polyline color="#a0a0a0" width="5" /> 
 					<polyline color="#ffff00" width="3" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="10">
+				<item type="street_3_city,street_3_land,roundabout" order="10">
 					<polyline color="#a0a0a0" width="8" /> 
 					<polyline color="#ffff00" width="6" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="11">
+				<item type="street_3_city,street_3_land,roundabout" order="11">
 					<polyline color="#a0a0a0" width="9" /> 
 					<polyline color="#ffff00" width="7" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="12">
+				<item type="street_3_city,street_3_land,roundabout" order="12">
 					<polyline color="#a0a0a0" width="13" /> 
 					<polyline color="#ffff00" width="9" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="13">
+				<item type="street_3_city,street_3_land,roundabout" order="13">
 					<polyline color="#a0a0a0" width="18" /> 
 					<polyline color="#ffff00" width="14" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="14">
+				<item type="street_3_city,street_3_land,roundabout" order="14">
 					<polyline color="#a0a0a0" width="21" /> 
 					<polyline color="#ffff00" width="17" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="15">
+				<item type="street_3_city,street_3_land,roundabout" order="15">
 					<polyline color="#a0a0a0" width="25" /> 
 					<polyline color="#ffff00" width="21" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="16">
+				<item type="street_3_city,street_3_land,roundabout" order="16">
 					<polyline color="#a0a0a0" width="40" /> 
 					<polyline color="#ffff00" width="34" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="17">
+				<item type="street_3_city,street_3_land,roundabout" order="17">
 					<polyline color="#a0a0a0" width="79" /> 
 					<polyline color="#ffff00" width="73" /> 
 				</item>
-				<item type="street_3_city,street_3_land,ramp,roundabout" order="18">
+				<item type="street_3_city,street_3_land,roundabout" order="18">
 					<polyline color="#a0a0a0" width="156" /> 
 					<polyline color="#ffff00" width="150" /> 
 				</item>
