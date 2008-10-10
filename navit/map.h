@@ -17,6 +17,14 @@
  * Boston, MA  02110-1301, USA.
  */
 
+/** @file
+ * 
+ * @brief Contains exported functions / structures for map.c
+ *
+ * This file contains code that works together with map.c and that is exported
+ * to other modules.
+ */
+
 #ifndef NAVIT_MAP_H
 #define NAVIT_MAP_H
 
@@ -37,12 +45,12 @@ struct attr;
  * It's possible to link multiple selections in a linked list, see below.
  */
 struct map_selection {
-	struct map_selection *next;     /** Linked-List pointer */
+	struct map_selection *next;     /**< Linked-List pointer */
 	union {
-		struct coord_rect c_rect;   /** For building the rectangle based on coordinates */
-		struct point_rect p_rect;   /** For building the rectangle based on points */
+		struct coord_rect c_rect;   /**< For building the rectangle based on coordinates */
+		struct point_rect p_rect;   /**< For building the rectangle based on points */
 	} u;
-	int order[layer_end];		    /** Holds the order to be selected for each layer of items */
+	int order[layer_end];		    /**< Holds the order to be selected for each layer of items */
 };
 
 /**
@@ -54,16 +62,16 @@ struct map_selection {
  * Especially the arguments (and their meaning) of each function will be described there.
  */
 struct map_methods {
-	enum projection pro;        /** The projection used for that type of map */
-	char *charset;              /** The charset this map uses - e.g. "iso8859-1" or "utf-8". Please specify this in a form so that g_convert() can handle it. */
-	void 			(*map_destroy)(struct map_priv *priv);  /** Function used to destroy ("close") a map. */
-	struct map_rect_priv *  (*map_rect_new)(struct map_priv *map, struct map_selection *sel); /** Function to create a new map rect on the map. */
-	void			(*map_rect_destroy)(struct map_rect_priv *mr); /** Function to destroy a map rect */
-	struct item *		(*map_rect_get_item)(struct map_rect_priv *mr); /** Function to return the next item from a map rect */
-	struct item *		(*map_rect_get_item_byid)(struct map_rect_priv *mr, int id_hi, int id_lo); /** Function to get an item with a specific ID from a map rect */
-	struct map_search_priv *(*map_search_new)(struct map_priv *map, struct item *item, struct attr *search, int partial); /** Function to start a new search on the map */
-	void			(*map_search_destroy)(struct map_search_priv *ms); /** Function to destroy a map search struct */
-	struct item *		(*map_search_get_item)(struct map_search_priv *ms); /** Function to get the next item of a search on the map */
+	enum projection pro;        /**< The projection used for that type of map */
+	char *charset;              /**< The charset this map uses - e.g. "iso8859-1" or "utf-8". Please specify this in a form so that g_convert() can handle it. */
+	void 			(*map_destroy)(struct map_priv *priv);  /**< Function used to destroy ("close") a map. */
+	struct map_rect_priv *  (*map_rect_new)(struct map_priv *map, struct map_selection *sel); /**< Function to create a new map rect on the map. */
+	void			(*map_rect_destroy)(struct map_rect_priv *mr); /**< Function to destroy a map rect */
+	struct item *		(*map_rect_get_item)(struct map_rect_priv *mr); /**< Function to return the next item from a map rect */
+	struct item *		(*map_rect_get_item_byid)(struct map_rect_priv *mr, int id_hi, int id_lo); /**< Function to get an item with a specific ID from a map rect */
+	struct map_search_priv *(*map_search_new)(struct map_priv *map, struct item *item, struct attr *search, int partial); /**< Function to start a new search on the map */
+	void			(*map_search_destroy)(struct map_search_priv *ms); /**< Function to destroy a map search struct */
+	struct item *		(*map_search_get_item)(struct map_search_priv *ms); /**< Function to get the next item of a search on the map */
 };
 
 /**

@@ -17,8 +17,9 @@
  * Boston, MA  02110-1301, USA.
  */
 
-/**
- * @file map.c
+/** @file
+ *
+ * @brief Contains code that makes navit able to load maps
  *
  * This file contains the code that makes navit able to load maps. Because
  * navit is able to open maps in different formats, this code does not handle
@@ -56,10 +57,10 @@
  * This structure holds information about a map.
  */
 struct map {
-	struct map_methods meth;			/** Structure with pointers to the map plugin's functions */
-	struct map_priv *priv;				/** Private data of the map, only known to the map plugin */
-	struct attr **attrs;				/** Attributes of this map */
-	struct callback_list *attr_cbl;		/** List of callbacks that are called when attributes change */
+	struct map_methods meth;			/**< Structure with pointers to the map plugin's functions */
+	struct map_priv *priv;				/**< Private data of the map, only known to the map plugin */
+	struct attr **attrs;				/**< Attributes of this map */
+	struct callback_list *attr_cbl;		/**< List of callbacks that are called when attributes change */
 };
 
 /**
@@ -68,8 +69,8 @@ struct map {
  * This structure describes a rectangular extract of a map.
  */
 struct map_rect {
-	struct map *m;				/** The map this extract is from */
-	struct map_rect_priv *priv; /** Private data of this map rect, only known to the map plugin */
+	struct map *m;				/**< The map this extract is from */
+	struct map_rect_priv *priv; /**< Private data of this map rect, only known to the map plugin */
 };
 
 /**
