@@ -225,7 +225,7 @@ enum item_type g2n_get_type(struct gar2nav_conv *c, int type, unsigned short id)
 		def = def->next;
 	}
 	dlog(5, "Type[%d]:ID:[%04X] unknown\n", type, id);
-	return type_none;
+	return type == G2N_POINT ? type_point_unkn : type_street_unkn;
 }
 
 int g2n_get_routable(struct gar2nav_conv *c, int type, unsigned short id)
