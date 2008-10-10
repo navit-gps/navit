@@ -437,8 +437,10 @@ static struct item_methods methods_garmin_poly = {
 static struct item *
 garmin_poi2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype)
 {
-	if (mr->mpriv->conv)
-		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POINT, otype);
+	if (mr->mpriv->conv) {
+		int mask = gar_object_group(o) << G2N_KIND_SHIFT;
+		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POINT|mask, otype);
+	}
 	mr->item.meth = &methods_garmin_point;
 	return &mr->item;
 }
@@ -446,8 +448,10 @@ garmin_poi2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otyp
 static struct item *
 garmin_pl2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype)
 {
-	if (mr->mpriv->conv)
-		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POLYLINE, otype);
+	if (mr->mpriv->conv) {
+		int mask = gar_object_group(o) << G2N_KIND_SHIFT;
+		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POLYLINE|mask, otype);
+	}
 	mr->item.meth = &methods_garmin_poly;
 	return &mr->item;
 }
@@ -455,8 +459,10 @@ garmin_pl2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype
 static struct item *
 garmin_pg2item(struct map_rect_priv *mr, struct gobject *o, unsigned short otype)
 {
-	if (mr->mpriv->conv)
-		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POLYGONE, otype);
+	if (mr->mpriv->conv) {
+		int mask = gar_object_group(o) << G2N_KIND_SHIFT;
+		mr->item.type = g2n_get_type(mr->mpriv->conv, G2N_POLYGONE|mask, otype);
+	}
 	mr->item.meth = &methods_garmin_poly;
 	return &mr->item;
 }
@@ -745,10 +751,12 @@ gmap_new(struct map_methods *meth, struct attr **attrs)
 	struct map_priv *m;
 	struct attr *data;
 	struct attr *debug;
+	struct attr *flags;
 	char buf[PATH_MAX];
 	struct stat st;
 	int dl = 1;
 	struct gar_config cfg;
+	int debugmask = 0;
 
 	data=attr_search(attrs, NULL, attr_data);
 	if (! data)
@@ -758,6 +766,10 @@ gmap_new(struct map_methods *meth, struct attr **attrs)
 		dl = atoi(debug->u.str);
 		if (!dl)
 			dl = 1;
+	}
+	flags=attr_search(attrs, NULL, attr_flags);
+	if (flags) {
+		debugmask = flags->u.num;
 	}
 	m=g_new(struct map_priv, 1);
 	m->id=++map_id;
@@ -769,6 +781,7 @@ gmap_new(struct map_methods *meth, struct attr **attrs)
 	memset(&cfg, 0, sizeof(struct gar_config));
 	cfg.opm = OPM_GPS;
 	cfg.debuglevel = dl;
+	cfg.debugmask = debugmask;
 	garmin_debug = dl;
 	m->g = gar_init_cfg(NULL, logfn, &cfg);
 	if (!m->g) {
