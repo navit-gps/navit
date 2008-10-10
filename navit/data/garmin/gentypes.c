@@ -21,33 +21,28 @@
 */
 
 /*
- Street's are routable by:
- ALL - by all
- W	pedestrian (1<<0)
- B	bycycle	   (1<<1)
- M	motorcycle (1<<2)
- C	car	   (1<<3)
- T	truck	   (1<<4)
- L	largetruck   (1<<5)
 File format is:
 
 POINT
-0x0100 = town_label_1e5, Megapolis (10M +)
-0x0200 = town_label_5e4, Megapolis (5-10M)
+GROUP,0x0100 = town_label_1e5, Megapolis (10M +)
+GROUP,0x0200 = town_label_5e4, Megapolis (5-10M)
 ...
-0x1e00-0x1e3f = district_label, District, Province, State Name
+GROUP,0x1e00-0x1e3f = district_label, District, Province, State Name
 ...
 POLYLINE
-0x00 = ALL, street_1_land, Road
-0x01 = MCTL, highway_land, Major HWY thick
-0x02 = MCTL, street_4_land, Principal HWY-thick
-0x03 = MCTL, street_2_land, Principal HWY-medium
+GROUP,0x00 = street_1_land, Road
+GROUP,0x01 = highway_land, Major HWY thick
+GROUP,0x02 = street_4_land, Principal HWY-thick
+GROUP,0x03 = street_2_land, Principal HWY-medium
 ....
 POLYGONE
-0x01 = town_poly, City (>200k)
-0x02 = town_poly, City (<200k)
-0x03 = town_poly, Village
+GROUP,0x01 = town_poly, City (>200k)
+GROUP,0x02 = town_poly, City (<200k)
+GROUP,0x03 = town_poly, Village
 
+GROUP is
+0 - good old garmin types in RGN1
+1 - NT types in RGN2-4 5 is completely unknown yet
  */
 
 #include <stdio.h>
@@ -63,34 +58,6 @@ static int add_def(struct gar2nav_conv *conv, int type, unsigned short minid,
 		unsigned short maxid, unsigned int routable, char *ntype,
 		char *descr)
 */
-
-static unsigned int get_rtmask(char *p)
-{
-	char *cp;
-	unsigned int mask = 0;
-	cp = p;
-	while (*cp) {
-		if (!strcasecmp(cp, "none"))
-			return 0;
-		if (!strcasecmp(cp, "all")) {
-			mask = ~0;
-			break;
-		} if (*cp == 'W')
-			mask |= RT_PEDESTRIAN;
-		else if (*cp == 'B')
-			mask |= RT_BYCYCLE;
-		else if (*cp == 'M')
-			mask |= RT_MOTORCYCLE;
-		else if (*cp == 'C')
-			mask |= RT_CAR;
-		else if (*cp == 'T')
-			mask |= RT_TRUCK;
-		else if (*cp == 'L')
-			mask |= RT_LONGTRUCK;
-		cp++;
-	}
-	return mask;
-}
 
 static void print_header(FILE *fp)
 {
@@ -109,9 +76,8 @@ static int load_types_file(char *file, char *out)
 	char buf[4096];
 	char descr[4096];
 	char ntype[4096];
-	char rtby[4096];
 	FILE *fp;
-	unsigned int minid, maxid, routable;
+	unsigned int minid, maxid, group;
 	int rc;
 	int type = -1;
 	FILE *fpout = stdout;
@@ -128,7 +94,6 @@ static int load_types_file(char *file, char *out)
 	while (fgets(buf, sizeof(buf), fp)) {
 		if (*buf == '#' || *buf == '\n')
 			continue;
-		routable = 0;
 		if (!strncasecmp(buf, "POINT", 5)) {
 			type = 1;
 			continue;
@@ -142,35 +107,23 @@ static int load_types_file(char *file, char *out)
 			type = 3;
 			continue;
 		}
-		// assume only lines are routable
-		if (type == 2) {
-			rc = sscanf(buf, "0x%04X = %[^\t, ] , %[^\t, ], %[^\n]",
-					&minid, rtby, ntype, descr);
-				if (rc != 4) {
-					dlog(1, "Invalid line rc=%d:[%s]\n",rc, buf);
-					dlog(1, "minid=%04X ntype=[%s] des=[%s]\n",
-						minid, ntype, descr);
-					continue;
-				}
-				routable = get_rtmask(rtby);
-		} else {
-			rc = sscanf(buf, "0x%04X - 0x%04X = %[^\t , ] , %[^\n]",
-				&minid, &maxid, ntype, descr);
-			if (rc != 4) { 
-				maxid = 0;
-				rc = sscanf(buf, "0x%04X = %[^\t, ], %[^\n]",
-					&minid, ntype, descr);
-				if (rc != 3) {
-					dlog(1, "Invalid line rc=%d:[%s]\n",rc, buf);
-					dlog(1, "minid=%04X ntype=[%s] des=[%s]\n",
-						minid, ntype, descr);
-					continue;
-				}
+
+		rc = sscanf(buf, "%d, 0x%04X - 0x%04X = %[^\t , ] , %[^\n]",
+			&group, &minid, &maxid, ntype, descr);
+		if (rc != 5) { 
+			maxid = 0;
+			rc = sscanf(buf, "%d, 0x%04X = %[^\t, ], %[^\n]",
+				&group,&minid, ntype, descr);
+			if (rc != 4) {
+				dlog(1, "Invalid line rc=%d:[%s]\n",rc, buf);
+				dlog(1, "minid=%04X ntype=[%s] des=[%s]\n",
+					minid, ntype, descr);
+				continue;
 			}
 		}
-		fprintf(fpout, "\tadd_def(conv, %d, %d, %d, %d, \"%s\", \"%s\");\n",
-				type, minid, maxid, routable, ntype, descr);
-			
+
+		fprintf(fpout, "\tadd_def(conv, %d, %#.04x, %#.04x, %d, \"%s\", \"%s\");\n",
+				type, minid, maxid, group, ntype, descr);
 	}
 	fprintf(fpout, "\treturn conv;\n");
 	fprintf(fpout, "}\n");
