@@ -17,7 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
-/** @file route.c
+/** @file
  * @brief Contains code related to finding a route from a position to a destination
  *
  * Routing uses segments, points and items. Items are items from the map: Streets, highways, etc.
@@ -79,18 +79,18 @@ int debug_route=0;
  * but there are also points which don't do that (e.g. at the end of a dead-end).
  */
 struct route_graph_point {
-	struct route_graph_point *next;		 /** Linked-list pointer to a list of all route_graph_points */
-	struct route_graph_point *hash_next; /** Pointer to a chained hashlist of all route_graph_points with this hash */
-	struct route_graph_segment *start;	 /** Pointer to a list of segments of which this point is the start. The links 
+	struct route_graph_point *next;		 /**< Linked-list pointer to a list of all route_graph_points */
+	struct route_graph_point *hash_next; /**< Pointer to a chained hashlist of all route_graph_points with this hash */
+	struct route_graph_segment *start;	 /**< Pointer to a list of segments of which this point is the start. The links 
 										  *  of this linked-list are in route_graph_segment->start_next.*/
-	struct route_graph_segment *end;	 /** Pointer to a list of segments of which this pointer is the end. The links
+	struct route_graph_segment *end;	 /**< Pointer to a list of segments of which this pointer is the end. The links
 										  *  of this linked-list are in route_graph_segment->end_next. */
-	struct route_graph_segment *seg;	 /** Pointer to the segment one should use to reach the destination at
+	struct route_graph_segment *seg;	 /**< Pointer to the segment one should use to reach the destination at
 										  *  least costs */
-	struct fibheap_el *el;				 /** When this point is put on a Fibonacci heap, this is a pointer
+	struct fibheap_el *el;				 /**< When this point is put on a Fibonacci heap, this is a pointer
 										  *  to this point's heap-element */
-	int value;							 /** The cost at which one can reach the destination from this point on */
-	struct coord c;						 /** Coordinates of this point */
+	int value;							 /**< The cost at which one can reach the destination from this point on */
+	struct coord c;						 /**< Coordinates of this point */
 };
 
 /**
@@ -99,17 +99,17 @@ struct route_graph_point {
  * This is a segment in the route graph. A segment represents a driveable way.
  */
 struct route_graph_segment {
-	struct route_graph_segment *next;			/** Linked-list pointer to a list of all route_graph_segments */
-	struct route_graph_segment *start_next;		/** Pointer to the next element in the list of segments that start at the 
+	struct route_graph_segment *next;			/**< Linked-list pointer to a list of all route_graph_segments */
+	struct route_graph_segment *start_next;		/**< Pointer to the next element in the list of segments that start at the 
 												 *  same point. Start of this list is in route_graph_point->start. */
-	struct route_graph_segment *end_next;		/** Pointer to the next element in the list of segments that end at the
+	struct route_graph_segment *end_next;		/**< Pointer to the next element in the list of segments that end at the
 												 *  same point. Start of this list is in route_graph_point->end. */
-	struct route_graph_point *start;			/** Pointer to the point this segment starts at. */
-	struct route_graph_point *end;				/** Pointer to the point this segment ends at. */
-	struct item item;							/** The item (e.g. street) that this segment represents. */
+	struct route_graph_point *start;			/**< Pointer to the point this segment starts at. */
+	struct route_graph_point *end;				/**< Pointer to the point this segment ends at. */
+	struct item item;							/**< The item (e.g. street) that this segment represents. */
 	int flags;
-	int len;									/** Length of this segment */
-	int offset;									/** If the item represented by this segment is "segmented" (i.e. 
+	int len;									/**< Length of this segment */
+	int offset;									/**< If the item represented by this segment is "segmented" (i.e. 
 												 *  is represented by several segments instead of just one), this 
 												 *  indicates the position of this segment in the item - for items
 												 *  that are not segmented this should always be 1 */
@@ -121,15 +121,15 @@ struct route_graph_segment {
  * This is a segment in the route path.
  */
 struct route_path_segment {
-	struct route_path_segment *next;	/** Pointer to the next segment in the path */
-	struct item item;					/** The item (e.g. street) this segment represents */
-	int length;							/** Length of the segment */
-	int offset;							/** Same as in route_graph_segment->offset */
-	int direction;						/** Order in which the coordinates are ordered. >0 means "First
+	struct route_path_segment *next;	/**< Pointer to the next segment in the path */
+	struct item item;					/**< The item (e.g. street) this segment represents */
+	int length;							/**< Length of the segment */
+	int offset;							/**< Same as in route_graph_segment->offset */
+	int direction;						/**< Order in which the coordinates are ordered. >0 means "First
 										 *  coordinate of the segment is the first coordinate of the item", <=0 
 										 *  means reverse. */
-	unsigned ncoords;					/** How many coordinates does this segment have? */
-	struct coord c[0];					/** Pointer to the ncoords coordinates of this segment */
+	unsigned ncoords;					/**< How many coordinates does this segment have? */
+	struct coord c[0];					/**< Pointer to the ncoords coordinates of this segment */
 };
 
 /**
@@ -138,14 +138,14 @@ struct route_path_segment {
  * This struct usually represents a destination or position
  */
 struct route_info {
-	struct coord c;			 /** The actual destination / position */
-	struct coord lp;		 /** The nearest point on a street to c */
-	int pos; 				 /** The position of lp within the coords of the street */
-	int lenpos; 			 /** Distance between lp and the end of the street */
-	int lenneg; 			 /** Distance between lp and the start of the street */
-	int lenextra;			 /** Distance between lp and c */
+	struct coord c;			 /**< The actual destination / position */
+	struct coord lp;		 /**< The nearest point on a street to c */
+	int pos; 				 /**< The position of lp within the coords of the street */
+	int lenpos; 			 /**< Distance between lp and the end of the street */
+	int lenneg; 			 /**< Distance between lp and the start of the street */
+	int lenextra;			 /**< Distance between lp and c */
 
-	struct street_data *street; /** The street lp is on */
+	struct street_data *street; /**< The street lp is on */
 };
 
 /**
@@ -154,11 +154,11 @@ struct route_info {
  * This structure describes a whole routing path
  */
 struct route_path {
-	struct route_path_segment *path;			/** The first segment in the path, i.e. the segment one should 
+	struct route_path_segment *path;			/**< The first segment in the path, i.e. the segment one should 
 												 *  drive in next */
-	struct route_path_segment *path_last;		/** The last segment in the path */
+	struct route_path_segment *path_last;		/**< The last segment in the path */
 	/* XXX: path_hash is not necessery now */
-	struct item_hash *path_hash;				/** A hashtable of all the items represented by this route's segements */
+	struct item_hash *path_hash;				/**< A hashtable of all the items represented by this route's segements */
 };
 
 #define RF_FASTEST	(1<<0)
@@ -168,18 +168,23 @@ struct route_path {
 #define RF_LOCKONROAD	(1<<4)
 #define RF_SHOWGRAPH	(1<<5)
 
+/**
+ * @brief A complete route
+ * 
+ * This struct holds all information about a route.
+ */
 struct route {
-	int version;
-	struct mapset *ms;
+	int version;				/**< Counts how many times this route got updated */
+	struct mapset *ms;			/**< The mapset this route is built upon */
 	unsigned flags;
-	struct route_info *pos;
-	struct route_info *dst;
+	struct route_info *pos;		/**< Current position within this route */
+	struct route_info *dst;		/**< Destination of the route */
 
-	struct route_graph *graph;
-	struct route_path *path2;
-	struct map *map;
+	struct route_graph *graph;	/**< Pointer to the route graph */
+	struct route_path *path2;	/**< Pointer to the route path */
+	struct map *map;			
 	struct map *graph_map;
-	int speedlist[route_item_last-route_item_first+1];
+	int speedlist[route_item_last-route_item_first+1];	/**< The speedlist for this route */
 };
 
 /**
@@ -188,12 +193,10 @@ struct route {
  * This structure describes a whole routing graph
  */
 struct route_graph {
-	struct route_graph_point *route_points;		/** Pointer to the first route_graph_point in the linked list of 
-												 *  all points */
-	struct route_graph_segment *route_segments; /** Pointer to the first route_graph_segment in the linked list of all 
-												 *  segments */
+	struct route_graph_point *route_points;		/**< Pointer to the first route_graph_point in the linked list of  all points */
+   	struct route_graph_segment *route_segments; /**< Pointer to the first route_graph_segment in the linked list of all segments */
 #define HASH_SIZE 8192
-	struct route_graph_point *hash[HASH_SIZE];	/** A hashtable containing all route_graph_points in this graph */
+	struct route_graph_point *hash[HASH_SIZE];	/**< A hashtable containing all route_graph_points in this graph */
 };
 
 #define HASHCOORD(c) ((((c)->x +(c)->y) * 2654435761UL) & (HASH_SIZE-1))

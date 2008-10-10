@@ -17,6 +17,14 @@
  * Boston, MA  02110-1301, USA.
  */
 
+/** @file
+ * 
+ * @brief Contains exported code for route.c
+ *
+ * This file contains code that works together with route.c and that is exported to
+ * other modules.
+ */
+
 #ifndef NAVIT_ROUTE_H
 #define NAVIT_ROUTE_H
 
@@ -36,10 +44,10 @@ struct route_crossings {
  * This contains information about a certain street
  */
 struct street_data {
-	struct item item;	/** The map item for this street */
-	int count;			/** Number of coordinates this street has */
+	struct item item;	/**< The map item for this street */
+	int count;			/**< Number of coordinates this street has */
 	int flags;
-	struct coord c[0];	/** Pointer to the coordinates of this street */
+	struct coord c[0];	/**< Pointer to the coordinates of this street */
 };
 
 #define route_item_first type_street_0
