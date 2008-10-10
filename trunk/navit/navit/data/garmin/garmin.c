@@ -137,18 +137,32 @@ static int
 garmin_object_label(struct gobject *o, struct attr *attr)
 {
 	struct map_rect_priv *mr = o->priv_data;
+	char *codepage;
+	char *label;
 	if (!mr) {
 		dlog(1, "Error object do not have priv_data!!\n");
 		return 0;
 	}
-	if (mr->label)
+	if (mr->label) {
 		free(mr->label);
-	mr->label = gar_get_object_lbl(o);
-#warning FIXME Process label and give only the visible part
+	}
+	label = gar_get_object_lbl(o);
+	if (label) {
+		codepage = gar_obj_codepage(o);
+		if (*codepage != 'a') {
+			mr->label = g_convert(label, -1,"utf-8",codepage,NULL,NULL,NULL);
+			free(label);
+		} else
+			mr->label = label;
+	} else {
+		mr->label = NULL;
+		return 0;
+	}
 	if (mr->label) {
 		char *cp = mr->label;
+#warning FIXME Process label and give only the visible part
 		if (*mr->label == '@' || *mr->label == '^')
-			cp++;
+			cp++; 
 		/* FIXME: If zoomlevel is high convert ^ in the string to spaces */
 		attr->u.str = cp;
 		return 1;
@@ -714,9 +728,8 @@ gmap_destroy(struct map_priv *m)
 
 static struct map_methods map_methods = {
 	projection_garmin,
-//	NULL,	FIXME navit no longer displays labels without charset!
-	"iso8859-1",	// update from the map
-	gmap_destroy,	//
+	"utf-8",
+	gmap_destroy,
 	gmap_rect_new,
 	gmap_rect_destroy,
 	gmap_rect_get_item,
