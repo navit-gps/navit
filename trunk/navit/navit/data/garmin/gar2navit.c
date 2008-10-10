@@ -21,33 +21,28 @@
 */
 
 /*
- Street's are routable by:
- ALL - by all
- W	pedestrian (1<<0)
- B	bycycle	   (1<<1)
- M	motorcycle (1<<2)
- C	car	   (1<<3)
- T	truck	   (1<<4)
- L	largetruck   (1<<5)
 File format is:
 
 POINT
-0x0100 = town_label_1e5, Megapolis (10M +)
-0x0200 = town_label_5e4, Megapolis (5-10M)
+GROUP,0x0100 = town_label_1e5, Megapolis (10M +)
+GROUP,0x0200 = town_label_5e4, Megapolis (5-10M)
 ...
-0x1e00-0x1e3f = district_label, District, Province, State Name
+GROUP,0x1e00-0x1e3f = district_label, District, Province, State Name
 ...
 POLYLINE
-0x00 = ALL, street_1_land, Road
-0x01 = MCTL, highway_land, Major HWY thick
-0x02 = MCTL, street_4_land, Principal HWY-thick
-0x03 = MCTL, street_2_land, Principal HWY-medium
+GROUP,0x00 = ALL, street_1_land, Road
+GROUP,0x01 = MCTL, highway_land, Major HWY thick
+GROUP,0x02 = MCTL, street_4_land, Principal HWY-thick
+GROUP,0x03 = MCTL, street_2_land, Principal HWY-medium
 ....
 POLYGONE
-0x01 = town_poly, City (>200k)
-0x02 = town_poly, City (<200k)
-0x03 = town_poly, Village
+GROUP,0x01 = town_poly, City (>200k)
+GROUP,0x02 = town_poly, City (<200k)
+GROUP,0x03 = town_poly, Village
 
+GROUP is
+0 - RGN1
+1 - RGN2-4
  */
 
 #include <stdio.h>
@@ -59,13 +54,13 @@ POLYGONE
 #include "gar2navit.h"
 
 static int add_def(struct gar2nav_conv *conv, int type, unsigned short minid,
-		unsigned short maxid, unsigned int routable, char *ntype,
+		unsigned short maxid, unsigned int group, char *ntype,
 		char *descr)
 {
 	enum item_type it;
 	struct gar2navit *g2n;
-	dlog(11, "type=%d routable=%u min=%04X max=%04X ntype=%s descr=%s\n",
-		type, routable, minid, maxid, ntype, descr);
+	dlog(11, "group=%d type=%d routable=%u min=%04X max=%04X ntype=%s descr=%s\n",
+		group, type,  minid, maxid, ntype, descr);
 	it = item_from_name(ntype);
 	if (it==type_none) {
 		dlog(1, "Please define: %s\n", ntype);
@@ -77,7 +72,7 @@ static int add_def(struct gar2nav_conv *conv, int type, unsigned short minid,
 	g2n->maxid = maxid;
 	g2n->ntype = it;
 	g2n->descr = strdup(descr);
-	g2n->routable = routable;
+	g2n->group = group;
 	if (type == 1) {
 		g2n->next = conv->points;
 		conv->points = g2n;
@@ -91,42 +86,13 @@ static int add_def(struct gar2nav_conv *conv, int type, unsigned short minid,
 	return 0;
 }
 
-static unsigned int get_rtmask(char *p)
-{
-	char *cp;
-	unsigned int mask = 0;
-	cp = p;
-	while (*cp) {
-		if (!strcasecmp(cp, "none"))
-			return 0;
-		if (!strcasecmp(cp, "all")) {
-			mask = ~0;
-			break;
-		} if (*cp == 'W')
-			mask |= RT_PEDESTRIAN;
-		else if (*cp == 'B')
-			mask |= RT_BYCYCLE;
-		else if (*cp == 'M')
-			mask |= RT_MOTORCYCLE;
-		else if (*cp == 'C')
-			mask |= RT_CAR;
-		else if (*cp == 'T')
-			mask |= RT_TRUCK;
-		else if (*cp == 'L')
-			mask |= RT_LONGTRUCK;
-		cp++;
-	}
-	return mask;
-}
-
 static int load_types_file(char *file, struct gar2nav_conv *conv)
 {
 	char buf[4096];
 	char descr[4096];
 	char ntype[4096];
-	char rtby[4096];
 	FILE *fp;
-	unsigned int minid, maxid, routable;
+	unsigned int minid, maxid, group;
 	int rc;
 	int type = -1;
 
@@ -136,7 +102,6 @@ static int load_types_file(char *file, struct gar2nav_conv *conv)
 	while (fgets(buf, sizeof(buf), fp)) {
 		if (*buf == '#' || *buf == '\n')
 			continue;
-		routable = 0;
 		if (!strncasecmp(buf, "POINT", 5)) {
 			type = 1;
 			continue;
@@ -151,32 +116,20 @@ static int load_types_file(char *file, struct gar2nav_conv *conv)
 			continue;
 		}
 		// assume only lines are routable
-		if (type == 2) {
-			rc = sscanf(buf, "0x%04X = %[^\t, ] , %[^\t, ], %[^\n]",
-					&minid, rtby, ntype, descr);
-				if (rc != 4) {
-					dlog(1, "Invalid line rc=%d:[%s]\n",rc, buf);
-					dlog(1, "minid=%04X ntype=[%s] des=[%s]\n",
-						minid, ntype, descr);
-					continue;
-				}
-				routable = get_rtmask(rtby);
-		} else {
-			rc = sscanf(buf, "0x%04X - 0x%04X = %[^\t , ] , %[^\n]",
-				&minid, &maxid, ntype, descr);
-			if (rc != 4) { 
-				maxid = 0;
-				rc = sscanf(buf, "0x%04X = %[^\t, ], %[^\n]",
-					&minid, ntype, descr);
-				if (rc != 3) {
-					dlog(1, "Invalid line rc=%d:[%s]\n",rc, buf);
-					dlog(1, "minid=%04X ntype=[%s] des=[%s]\n",
-						minid, ntype, descr);
-					continue;
-				}
+		rc = sscanf(buf, "%d, 0x%04X - 0x%04X = %[^\t , ] , %[^\n]",
+			&group, &minid, &maxid, ntype, descr);
+		if (rc != 5) { 
+			maxid = 0;
+			rc = sscanf(buf, "%d,0x%04X = %[^\t, ], %[^\n]",
+				&group, &minid, ntype, descr);
+			if (rc != 4) {
+				dlog(1, "Invalid line rc=%d:[%s]\n",rc, buf);
+				dlog(1, "minid=%04X ntype=[%s] des=[%s]\n",
+					minid, ntype, descr);
+				continue;
 			}
 		}
-		add_def(conv, type, minid, maxid, routable, ntype, descr);
+		add_def(conv, type, minid, maxid, group, ntype, descr);
 	}
 	fclose(fp);
 	return 1;
@@ -199,9 +152,10 @@ struct gar2nav_conv *g2n_conv_load(char *file)
 	return c;
 }
 
-enum item_type g2n_get_type(struct gar2nav_conv *c, int type, unsigned short id)
+enum item_type g2n_get_type(struct gar2nav_conv *c, unsigned int type, unsigned short id)
 {
 	struct gar2navit *def = NULL;
+	int group;
 	if (type == G2N_POINT)
 		def = c->points;
 	else if (type == G2N_POLYLINE)
@@ -218,43 +172,16 @@ enum item_type g2n_get_type(struct gar2nav_conv *c, int type, unsigned short id)
 		return type_none;
 	}
 
+	group = (type >> G2N_KIND_SHIFT);
 	while (def) {
-		if ((!def->maxid && def->id == id) || 
-			(def->id <= id && id <= def->maxid))
+		if (def->group == group &&
+			((!def->maxid && def->id == id) || 
+			(def->id <= id && id <= def->maxid)))
 			return def->ntype;
 		def = def->next;
 	}
 	dlog(5, "Type[%d]:ID:[%04X] unknown\n", type, id);
 	return type == G2N_POINT ? type_point_unkn : type_street_unkn;
-}
-
-int g2n_get_routable(struct gar2nav_conv *c, int type, unsigned short id)
-{
-	struct gar2navit *def = NULL;
-	if (type == G2N_POINT)
-		def = c->points;
-	else if (type == G2N_POLYLINE)
-		def = c->polylines;
-	else if (type == G2N_POLYGONE)
-		def = c->polygons;
-	else {
-		dlog(1, "Unknown conversion type:%d\n", type);
-		return type_none;
-	}
-
-	if (!def) {
-		dlog(5, "No conversion data for %d\n", type);
-		return type_none;
-	}
-
-	while (def) {
-		if ((!def->maxid && def->id == id) || 
-				(def->id <= id && id <= def->maxid))
-			return def->routable;
-		def = def->next;
-	}
-	dlog(5, "Type[%d]:ID:[%04X] unknown\n", type, id);
-	return 0;
 }
 
 char *g2n_get_descr(struct gar2nav_conv *c, int type, unsigned short id)
