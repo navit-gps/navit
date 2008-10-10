@@ -122,7 +122,7 @@ map_new(struct attr **attrs)
  * @param this_ The map the attribute should be read from
  * @param type The type of the attribute to be read
  * @param attr Pointer to an attrib-structure where the attribute should be written to
- * @param iter Not used
+ * @param iter (NOT IMPLEMENTED) Used to iterate through all attributes of a type. Set this to NULL to get the first attribute, set this to an attr_iter to get the next attribute
  * @return True if the attribute type was found, false if not
  */
 int
@@ -140,7 +140,7 @@ map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct a
  *
  * @param this_ The map to set the attribute of
  * @param attr The attribute to set
- * @return True %FIXME why?
+ * @return True if the attr could be set, false otherwise
  */
 int
 map_set_attr(struct map *this_, struct attr *attr)
@@ -198,7 +198,7 @@ map_requires_conversion(struct map *this_)
  *
  * @param this_ The map the string to be converted is from
  * @param str The string to be converted
- * @return The converted string
+ * @return The converted string. It has to be map_convert_free()d after use.
  */
 char *
 map_convert_string(struct map *this_, char *str)
@@ -371,6 +371,9 @@ struct map_search {
  * have a look into country.c for details. Because of that every map plugin has to accept a country item
  * to be passed as "superior item".
  * 
+ * Note: If you change something here, please make shure to also update the documentation of mapset_search_new()
+ * in mapset.c!
+ *
  * @param m The map that should be searched
  * @param item Specifies a superior item to "search within" (see description)
  * @param search_attr Attribute specifying what to search for. See description.

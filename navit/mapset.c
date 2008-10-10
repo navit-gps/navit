@@ -17,6 +17,15 @@
  * Boston, MA  02110-1301, USA.
  */
 
+/** @file
+ * 
+ * @brief Contains code used for loading more than one map
+ *
+ * The code in this file introduces "mapsets", which are collections of several maps.
+ * This enables navit to operate on more than one map at once. See map.c / map.h to learn
+ * how maps are handled.
+ */
+
 #include <string.h>
 #include <glib.h>
 #include <glib/gprintf.h>
@@ -26,10 +35,20 @@
 #include "projection.h"
 #include "map.h"
 
+/**
+ * @brief A mapset
+ *
+ * This structure holds a complete mapset
+ */
 struct mapset {
-	GList *maps;
+	GList *maps; /**< Linked list of all the maps in the mapset */
 };
 
+/**
+ * @brief Creates a new, empty mapset
+ *
+ * @return The new mapset 
+ */
 struct mapset *mapset_new(void)
 {
 	struct mapset *ms;
@@ -39,6 +58,12 @@ struct mapset *mapset_new(void)
 	return ms;
 }
 
+/**
+ * @brief Adds a map to a mapset
+ *
+ * @param ms The mapset to add the map to
+ * @param m The map to be added
+ */
 void mapset_add(struct mapset *ms, struct map *m)
 {
 	ms->maps=g_list_append(ms->maps, m);
@@ -51,15 +76,38 @@ static void mapset_maps_free(struct mapset *ms)
 }
 #endif
 
+/**
+ * @brief Destroys a mapset. 
+ *
+ * This destroys a mapset. Please note that it does not touch the contained maps
+ * in any way.
+ *
+ * @param ms The mapset to be destroyed
+ */
 void mapset_destroy(struct mapset *ms)
 {
 	g_free(ms);
 }
 
+/**
+ * @brief Handle for a mapset in use
+ *
+ * This struct is used for a mapset that is in use. With this it is possible to iterate
+ * all maps in a mapset.
+ */
 struct mapset_handle {
-	GList *l;
+	GList *l;	/**< Pointer to the current (next) map */
 };
 
+/**
+ * @brief Returns a new handle for a mapset
+ *
+ * This returns a new handle for an existing mapset. The new handle points to the first
+ * map in the set.
+ *
+ * @param ms The mapset to get a handle of
+ * @return The new mapset handle
+ */
 struct mapset_handle *
 mapset_open(struct mapset *ms)
 {
@@ -71,6 +119,16 @@ mapset_open(struct mapset *ms)
 	return ret;
 }
 
+/**
+ * @brief Gets the next map from a mapset handle
+ *
+ * If you set active to true, this function will not return any maps that
+ * have the attr_active attribute associated with them and set to false.
+ *
+ * @param msh The mapset handle to get the next map of
+ * @param active Set to true to only get active maps (See description)
+ * @return The next map
+ */
 struct map * mapset_next(struct mapset_handle *msh, int active)
 {
 	struct map *ret;
@@ -90,20 +148,51 @@ struct map * mapset_next(struct mapset_handle *msh, int active)
 	}
 }
 
+/**
+ * @brief Closes a mapset handle after it is no longer used
+ *
+ * @param msh Mapset handle to be closed
+ */
 void 
 mapset_close(struct mapset_handle *msh)
 {
 	g_free(msh);
 }
 
+/**
+ * @brief Holds information about a search in a mapset
+ *
+ * This struct holds information about a search (e.g. for a street) in a mapset. 
+ *
+ * @sa For a more detailed description see the documentation of mapset_search_new().
+ */
 struct mapset_search {
-	GList *map;
-	struct map_search *ms;
-	struct item *item;
-	struct attr *search_attr;
-	int partial;
+	GList *map;					/**< The list of maps to be searched within */
+	struct map_search *ms;		/**< A map search struct for the map currently active */
+	struct item *item;			/**< "Superior" item. */
+	struct attr *search_attr;	/**< Attribute to be searched for. */
+	int partial;				/**< Indicates if one would like to have partial matches */
 };
 
+/**
+ * @brief Starts a search on a mapset
+ *
+ * This function starts a search on a mapset. What attributes one can search for depends on the
+ * map plugin. See the description of map_search_new() in map.c for details.
+ *
+ * If you enable partial matches bear in mind that the search matches only the begin of the
+ * strings - a search for a street named "street" would match to "streetfoo", but not to
+ * "somestreet". Search is case insensitive.
+ *
+ * The item passed to this function specifies a "superior item" to "search within" - e.g. a town 
+ * in which we want to search for a street, or a country in which to search for a town.
+ *
+ * @param ms The mapset that should be searched
+ * @param item Specifies a superior item to "search within" (see description)
+ * @param search_attr Attribute specifying what to search for. See description.
+ * @param partial Set this to true to also have partial matches. See description.
+ * @return A new mapset search struct for this search
+ */
 struct mapset_search *
 mapset_search_new(struct mapset *ms, struct item *item, struct attr *search_attr, int partial)
 {
@@ -118,13 +207,23 @@ mapset_search_new(struct mapset *ms, struct item *item, struct attr *search_attr
 	return this;
 }
 
+/**
+ * @brief Returns the next found item from a mapset search
+ *
+ * This function returns the next item from a mapset search or NULL if there are no more items found.
+ * It automatically iterates through all the maps in the mapset. Please note that maps which have the
+ * attr_active attribute associated with them and set to false are not searched.
+ *
+ * @param this The mapset search to return an item from
+ * @return The next found item or NULL if there are no more items found
+ */
 struct item *
 mapset_search_get_item(struct mapset_search *this)
 {
 	struct item *ret=NULL;
 	struct attr active_attr;
 
-	while (!this->ms || !(ret=map_search_get_item(this->ms))) {
+	while (!this->ms || !(ret=map_search_get_item(this->ms))) { /* The current map has no more items to be returned */
 		if (this->search_attr->type >= attr_country_all && this->search_attr->type <= attr_country_name)
 			break;
 		for (;;) {
@@ -144,6 +243,11 @@ mapset_search_get_item(struct mapset_search *this)
 	return ret;
 }
 
+/**
+ * @brief Destroys a mapset search
+ *
+ * @param this The mapset search to be destroyed
+ */
 void
 mapset_search_destroy(struct mapset_search *this)
 {
