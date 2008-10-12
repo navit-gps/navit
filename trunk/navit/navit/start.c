@@ -77,6 +77,7 @@ int main(int argc, char **argv)
 	main_init(argv[0]);
 	main_init_nls();
 	debug_init(argv[0]);
+	file_init();
 #ifndef USE_PLUGINS
 	extern void builtin_init(void);
 	builtin_init();

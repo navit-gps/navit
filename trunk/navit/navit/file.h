@@ -27,6 +27,7 @@ struct file {
 	unsigned char *end;
 	long long size;
 	char *name;
+	int name_id;
 	int fd;
 #if defined(_WIN32) || defined(__CEGCC__)
     long map_handle;

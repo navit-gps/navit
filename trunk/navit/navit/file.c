@@ -31,6 +31,7 @@
 #include <glib.h>
 #include <zlib.h>
 #include "debug.h"
+#include "cache.h"
 #include "file.h"
 #include "config.h"
 
@@ -43,6 +44,17 @@
 #endif
 
 static struct file *file_list;
+
+static GHashTable *file_name_hash;
+static int file_name_id;
+static struct cache *file_cache;
+
+struct file_cache_id {
+	long long offset;
+	int size;
+	int file_name_id;
+	int method;
+};
 
 struct file *
 file_create(char *name)
@@ -80,7 +92,7 @@ int file_mkdir(char *name, int pflag)
 {
 	char buffer[strlen(name)+1];
 	int ret;
-	char *curr, *next;
+	char *next;
 	dbg(1,"enter %s %d\n",name,pflag);
 	if (!pflag) {
 		if (file_is_dir(name))
@@ -89,7 +101,7 @@ int file_mkdir(char *name, int pflag)
 	}
 	strcpy(buffer, name);
 	next=buffer;
-	while (next=strchr(next, '/')) {
+	while ((next=strchr(next, '/'))) {
 		*next='\0';
 		if (*buffer) {
 			ret=file_mkdir(buffer, 0);
@@ -128,10 +140,14 @@ file_data_read(struct file *file, long long offset, int size)
 	void *ret;
 	if (file->begin)
 		return file->begin+offset;
-	ret=g_malloc(size);
+	if (file_cache) {
+		struct file_cache_id id={offset,size,file->name_id,0};
+		ret=cache_lookup_or_insert(file_cache,&id,size); 
+	} else
+		ret=g_malloc(size);
 	lseek(file->fd, offset, SEEK_SET);
 	if (read(file->fd, ret, size) != size) {
-		g_free(ret);
+		file_data_free(file, ret);
 		ret=NULL;
 	}
 	return ret;
@@ -175,7 +191,11 @@ file_data_read_compressed(struct file *file, long long offset, int size, int siz
 	char buffer[size];
 	uLongf destLen=size_uncomp;
 
-	ret=g_malloc(size_uncomp);
+	if (file_cache) {
+		struct file_cache_id id={offset,size,file->name_id,1};
+		ret=cache_lookup_or_insert(file_cache,&id,size_uncomp); 
+	} else 
+		ret=g_malloc(size_uncomp);
 	lseek(file->fd, offset, SEEK_SET);
 	if (read(file->fd, buffer, size) != size) {
 		g_free(ret);
@@ -195,7 +215,10 @@ file_data_free(struct file *file, unsigned char *data)
 {
 	if (file->begin && data >= file->begin && data < file->end)
 		return;
-	g_free(data);
+	if (file_cache) {
+		cache_entry_destroy(file_cache, data);
+	} else
+		g_free(data);
 }
 
 int
@@ -375,3 +398,13 @@ file_get_param(struct file *file, struct param_list *param, int count)
 	param_add_hex("Size", file->size, &param, &count);
 	return i-count;
 }
+
+void
+file_init(void)
+{
+#if 0
+	file_name_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	file_cache=cache_new(sizeof(struct file_cache_id), 2*1024*1024);
+#endif
+}
+
