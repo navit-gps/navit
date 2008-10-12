@@ -14,11 +14,11 @@ pkgdata_DATA = navit.xml
 EXTRA_DIST = navit.xml 
 
 noinst_LTLIBRARIES        = libnavit.la
-libnavit_la_SOURCES = attr.c callback.c compass.c coord.c country.c cursor.c data_window.c debug.c \
+libnavit_la_SOURCES = attr.c cache.c callback.c compass.c coord.c country.c cursor.c data_window.c debug.c \
 	event.c event_glib.c event_glib.h file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
 	mapset.c maptype.c menu.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c \
 	profile.c projection.c route.c search.c speech.c transform.c track.c \
-	util.c vehicle.c xmlconfig.c attr.h attr_def.h callback.h color.h compass.h coord.h country.h \
+	util.c vehicle.c xmlconfig.c attr.h attr_def.h cache.h callback.h color.h compass.h coord.h country.h \
 	cursor.h data.h data_window.h data_window_int.h debug.h destination.h draw_info.h endianess.h event.h \
 	file.h graphics.h gtkext.h gui.h item.h item_def.h keys.h log.h layer.h layout.h main.h map-share.h map.h\
 	map_data.h mapset.h maptype.h menu.h navigation.h navit.h osd.h \
