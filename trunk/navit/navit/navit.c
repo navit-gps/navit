@@ -898,6 +898,11 @@ navit_textfile_debug_log(struct navit *this_, const char *fmt, ...)
        	va_end(ap);
 }
 
+void
+navit_say(struct navit *this_, char *text)
+{
+	speech_say(this_->speech, text);
+}
 
 void
 navit_speak(struct navit *this_)
