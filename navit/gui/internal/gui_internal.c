@@ -138,6 +138,57 @@ struct widget {
 	GList *children;
 };
 
+/**
+ * @brief A structure to store configuration values.
+ *
+ * This structure stores configuration values for how gui elements in the internal GUI
+ * should be drawn.  
+ */
+struct gui_config_settings {
+  
+  /**
+   * The base size (in fractions of a point) to use for text.
+   */
+  int font_size;
+  /**
+   * The size (in pixels) that xs style icons should be scaled to.
+   */
+  int icon_xs;
+  /**
+   * The size (in pixels) that s style icons (small) should be scaled to
+   */
+  int icon_s;
+  /**
+   * The size (in pixels) that l style icons should be scaled to
+   */
+  int icon_l;
+  /**
+   * The default amount of spacing (in pixels) to place between GUI elements.
+   */
+  int spacing;
+  
+};
+
+/**
+ * Indexes into the config_profiles array.
+ */
+const int LARGE_PROFILE=0;
+const int MEDIUM_PROFILE=1;
+const int SMALL_PROFILE=2;
+
+/**
+ * The default config profiles.
+ * 
+ * [0] =>  LARGE_PROFILE (screens 640 in one dimension)
+ * [1] =>  MEDIUM PROFILE (screens larger than 320 in one dimension
+ * [2] => Small profile (default)
+ */
+static struct gui_config_settings config_profiles[]={
+  {545,32,40,44,2}
+    , {545,32,48,96,5}
+      ,{200,16,32,48,2}
+};
+
 //##############################################################################################################
 //# Description: 
 //# Comment: 
@@ -172,6 +223,11 @@ struct gui_priv {
 	int ignore_button;
 	int menu_on_map_click;
 	char *country_iso2;
+	/**
+	 * The setting information read from the configuration file.
+	 * values of -1 indicate no value was specified in the config file.
+	 */
+        struct gui_config_settings config;
 };
 
 static void gui_internal_widget_render(struct gui_priv *this, struct widget *w);
@@ -179,6 +235,7 @@ static void gui_internal_widget_pack(struct gui_priv *this, struct widget *w);
 static struct widget * gui_internal_box_new(struct gui_priv *this, enum flags flags);
 static void gui_internal_widget_append(struct widget *parent, struct widget *child);
 static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w);
+static void gui_internal_apply_config(struct gui_priv *this);
 
 static struct graphics_image *
 image_new_scaled(struct gui_priv *this, char *name, int w, int h)
@@ -295,16 +352,18 @@ static struct widget *
 gui_internal_label_new(struct gui_priv *this, char *text)
 {
 	struct point p[4];
-	int w=0,h=this->font_size;
-
+	int w=0;
+	int h=0;
+	
 	struct widget *widget=g_new0(struct widget, 1);
 	widget->type=widget_label;
 	if (text) {
 		widget->text=g_strdup(text);
 		graphics_get_text_bbox(this->gra, this->font, text, 0x10000, 0x0, p);
 		w=p[2].x-p[0].x;
+		h=p[0].y-p[2].y;
 	}
-	widget->h=h;
+	widget->h=h+this->spacing;
 	widget->w=w+this->spacing;
 	widget->flags=gravity_center;
 
@@ -1000,36 +1059,101 @@ gui_internal_top_bar(struct gui_priv *this)
 	return w;
 }
 
+
+/**
+ * Applys the configuration values to this based on the settings
+ * specified in the configuration file (this->config) and
+ * the most approriate default profile based on screen resolution.
+ *
+ * This function should be run after this->root is setup and could
+ * be rerun after the window is resized.
+ *
+ * @authors Steve Singer <ssinger_pg@sympatico.ca> (09/2008)
+ */
+static void gui_internal_apply_config(struct gui_priv *this)
+{
+  struct gui_config_settings *  current_config=0;
+
+  /**
+   * Select default values from profile based on the screen.
+   */
+  if(this->root.w > 320 || this->root.h > 320)
+  {
+    if(this->root.w > 640 || this->root.h > 640) 
+    {
+      current_config = &config_profiles[LARGE_PROFILE];
+    }
+    else
+    {
+      current_config = &config_profiles[MEDIUM_PROFILE];
+    }
+  }
+  else
+  {
+    current_config = &config_profiles[SMALL_PROFILE];
+  }
+  
+  /**
+   * Apply override values from config file
+   */
+  if(this->config.font_size == -1 )
+  {
+    this->font_size = current_config->font_size;
+  }
+  else
+  {
+    this->font_size = this->config.font_size;
+  }
+
+  if(this->config.icon_xs == -1 )
+  {
+      this->icon_xs = current_config->icon_xs;
+  }
+  else
+  {
+    this->icon_xs = this->config.icon_xs;
+  }
+  
+  if(this->config.icon_s == -1 )
+  {
+    this->icon_s = current_config->icon_s;
+  }
+  else
+  {
+    this->icon_s = this->config.icon_s;
+  }
+  if(this->config.icon_l == -1 )
+  {
+    this->icon_l = current_config->icon_l;
+  }
+  else
+  {
+    this->icon_l = this->config.icon_l;
+  }
+  if(this->config.spacing == -1 )
+  {
+    this->spacing = current_config->spacing;
+  }
+  else
+  {
+    this->spacing = current_config->spacing;
+  }
+       	
+}
+
 static struct widget *
 gui_internal_menu(struct gui_priv *this, char *label)
 {
 	struct widget *menu,*w;
+	
+
 	menu=gui_internal_box_new_with_label(this, gravity_center|orientation_vertical, label);
 	menu->w=this->root.w;
 	menu->h=this->root.h;
 	menu->background=this->background;
-	if (this->root.w > 320 || this->root.h > 320) {
-		this->font_size=40;
-		this->icon_xs=32;
-		this->icon_s=48;
-		this->icon_l=96;
-		this->spacing=5;
-		this->font=graphics_font_new(this->gra, 545, 1);
-		if (this->root.w > 640 || this->root.h > 640) {
-			this->font_size=36;
-			this->icon_s=40;
-			this->icon_l=44;
-			this->spacing=2;
-			this->font=graphics_font_new(this->gra, 545, 1);
-		}
-	} else {
-		this->font_size=16;
-		this->icon_xs=16;
-		this->icon_s=32;
-		this->icon_l=48;
-		this->spacing=2;
-		this->font=graphics_font_new(this->gra, 200, 1);
-	}
+	gui_internal_apply_config(this);
+	this->font=graphics_font_new(this->gra,this->font_size,1);
+ 
 	gui_internal_widget_append(&this->root, menu);
 	w=gui_internal_top_bar(this);
 	gui_internal_widget_append(menu, w);
@@ -2503,6 +2627,48 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 		this->menu_on_map_click=1;
 	navit_command_register(nav,"gui_internal_menu",callback_new_3(gui_internal_cmd_menu,this,NULL,1));
 	navit_command_register(nav,"gui_internal_fullscreen",callback_new_2(gui_internal_cmd_fullscreen,this,NULL));
+
+	if( (attr=attr_search(attrs,NULL,attr_font_size)))
+        {
+	  this->config.font_size=attr->u.num;
+	}
+	else
+	{
+	  this->config.font_size=-1;
+	}
+	if( (attr=attr_search(attrs,NULL,attr_icon_xs)))
+	{
+	  this->config.icon_xs=attr->u.num;
+	}
+	else
+	{
+	  this->config.icon_xs=-1;
+	}
+	if( (attr=attr_search(attrs,NULL,attr_icon_l)))
+	{
+	  this->config.icon_l=attr->u.num;
+	}
+	else
+        {
+	  this->config.icon_l=-1;
+	}
+	if( (attr=attr_search(attrs,NULL,attr_icon_s)))
+	{
+	  this->config.icon_s=attr->u.num;
+	}
+	else
+        {
+	  this->config.icon_s=-1;
+	}
+	if( (attr=attr_search(attrs,NULL,attr_spacing)))
+	{
+	  this->config.spacing=attr->u.num;
+	}
+	else
+	{
+	  this->config.spacing=-1;	  
+	}
+
 	return this;
 }
 
