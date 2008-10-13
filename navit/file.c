@@ -142,7 +142,10 @@ file_data_read(struct file *file, long long offset, int size)
 		return file->begin+offset;
 	if (file_cache) {
 		struct file_cache_id id={offset,size,file->name_id,0};
-		ret=cache_lookup_or_insert(file_cache,&id,size); 
+		ret=cache_lookup(file_cache,&id); 
+		if (ret)
+			return ret;
+		ret=cache_insert_new(file_cache,&id,size);
 	} else
 		ret=g_malloc(size);
 	lseek(file->fd, offset, SEEK_SET);
@@ -193,7 +196,10 @@ file_data_read_compressed(struct file *file, long long offset, int size, int siz
 
 	if (file_cache) {
 		struct file_cache_id id={offset,size,file->name_id,1};
-		ret=cache_lookup_or_insert(file_cache,&id,size_uncomp); 
+		ret=cache_lookup(file_cache,&id); 
+		if (ret)
+			return ret;
+		ret=cache_insert_new(file_cache,&id,size_uncomp);
 	} else 
 		ret=g_malloc(size_uncomp);
 	lseek(file->fd, offset, SEEK_SET);
