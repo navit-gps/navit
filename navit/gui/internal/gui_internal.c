@@ -595,19 +595,10 @@ gui_internal_find_widget(struct widget *wi, struct point *p, int flags)
 	return NULL;
 	
 }
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-static void gui_internal_highlight(struct gui_priv *this, struct point *p)
-{
-	struct widget *menu,*found=NULL;
 
-	if (p) {
-		menu=g_list_last(this->root.children)->data;
-		found=gui_internal_find_widget(menu, p, STATE_SENSITIVE);
-	}
+static void
+gui_internal_highlight_do(struct gui_priv *this, struct widget *found)
+{
 	if (found == this->highlighted)
 		return;
 	if (this->highlighted) {
@@ -624,6 +615,21 @@ static void gui_internal_highlight(struct gui_priv *this, struct point *p)
 		gui_internal_widget_render(this, this->highlighted);
 		dbg(1,"%d,%d %dx%d\n", found->p.x, found->p.y, found->w, found->h);
 	}
+}
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static void gui_internal_highlight(struct gui_priv *this, struct point *p)
+{
+	struct widget *menu,*found=NULL;
+
+	if (p) {
+		menu=g_list_last(this->root.children)->data;
+		found=gui_internal_find_widget(menu, p, STATE_SENSITIVE);
+	}
+	gui_internal_highlight_do(this, found);
 }
 
 static struct widget *
@@ -2505,6 +2511,100 @@ static void gui_internal_resize(void *data, int w, int h)
 	}
 } 
 
+static void
+gui_internal_keynav_point(struct widget *w, int dx, int dy, struct point *p)
+{
+	p->x=w->p.x+w->w/2;
+	p->y=w->p.y+w->h/2;
+	if (dx < 0)
+		p->x=w->p.x;
+	if (dx > 0)
+		p->x=w->p.x+w->w;
+	if (dy < 0) 
+		p->y=w->p.y;
+	if (dy > 0)
+		p->y=w->p.y+w->h;
+}
+
+static void
+gui_internal_keynav_find_closest(struct widget *wi, struct point *p, int dx, int dy, int *distance, struct widget **result)
+{
+	GList *l=wi->children;
+	if (wi->state & STATE_SENSITIVE) {
+		int dist1,dist2;
+		struct point wp;
+		gui_internal_keynav_point(wi, -dx, -dy, &wp);
+		if (dx) {
+			dist1=(wp.x-p->x)*dx;
+			dist2=wp.y-p->y;
+		} else if (dy) {
+			dist1=(wp.y-p->y)*dy;
+			dist2=wp.x-p->x;
+		} else {
+			dist2=wp.x-p->x;
+			dist1=wp.y-p->y;
+			if (dist1 < 0)
+				dist1=-dist1;
+		}
+		dbg(1,"checking %d,%d %d %d against %d,%d-%d,%d result %d,%d\n", p->x, p->y, dx, dy, wi->p.x, wi->p.y, wi->p.x+wi->w, wi->p.y+wi->h, dist1, dist2);
+		if (dist1 >= 0) {
+			if (dist2 < 0)
+				dist1-=dist2;
+			else
+				dist1+=dist2;
+			if (dist1 < *distance) {
+				*result=wi;
+				*distance=dist1;
+			}
+		}
+	}
+	while (l) {
+		struct widget *child=l->data;
+		gui_internal_keynav_find_closest(child, p, dx, dy, distance, result);
+		l=g_list_next(l);
+	}
+}
+
+static void
+gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy)
+{
+	struct widget *result,*menu=g_list_last(this->root.children)->data;
+	struct point p;
+	int distance;
+	if (this->highlighted && this->highlighted_menu == g_list_last(this->root.children)->data)
+		gui_internal_keynav_point(this->highlighted, dx, dy, &p);
+	else {
+		p.x=0;
+		p.y=0;
+		distance=INT_MAX;
+		result=NULL;
+		gui_internal_keynav_find_closest(menu, &p, 0, 0, &distance, &result);
+		if (result) {
+			gui_internal_keynav_point(result, dx, dy, &p);
+			dbg(1,"result origin=%p p=%d,%d\n", result, p.x, p.y);
+		}
+	}
+	result=NULL;
+	distance=INT_MAX;
+	gui_internal_keynav_find_closest(menu, &p, dx, dy, &distance, &result);
+	dbg(1,"result=%p\n", result);
+	if (! result) {
+		if (dx < 0)
+			p.x=this->root.w;
+		if (dx > 0)
+			p.x=0;
+		if (dy < 0)
+			p.y=this->root.h;
+		if (dy > 0)
+			p.y=0;
+		result=NULL;
+		distance=INT_MAX;
+		gui_internal_keynav_find_closest(menu, &p, dx, dy, &distance, &result);
+		dbg(1,"wraparound result=%p\n", result);
+	}
+	gui_internal_highlight_do(this, result);
+}
+
 //##############################################################################################################
 //# Description: 
 //# Comment: 
@@ -2515,43 +2615,62 @@ static void gui_internal_keypress(void *data, char *key)
 	struct gui_priv *this=data;
 	int w,h;
 	struct point p;
-	transform_get_size(navit_get_trans(this->nav), &w, &h);
-	switch (*key) {
-	case NAVIT_KEY_UP:
-		p.x=w/2;
-                p.y=0;
-                navit_set_center_screen(this->nav, &p);
-                break;
-	case NAVIT_KEY_DOWN:
-                p.x=w/2;
-                p.y=h;
-                navit_set_center_screen(this->nav, &p);
-                break;
-        case NAVIT_KEY_LEFT:
-                p.x=0;
-                p.y=h/2;
-                navit_set_center_screen(this->nav, &p);
-                break;
-        case NAVIT_KEY_RIGHT:
-                p.x=w;
-                p.y=h/2;
-                navit_set_center_screen(this->nav, &p);
-                break;
-        case NAVIT_KEY_ZOOM_IN:
-                navit_zoom_in(this->nav, 2, NULL);
-                break;
-        case NAVIT_KEY_ZOOM_OUT:
-                navit_zoom_out(this->nav, 2, NULL);
-                break;
-	default:
-		dbg(1,"key=%d\n", key, this);
-		dbg(0,"key='%s' len=%d\n", key, strlen(key));
-		if (this->root.children) {
-			graphics_draw_mode(this->gra, draw_mode_begin);
-			gui_internal_keypress_do(this, key);
-			graphics_draw_mode(this->gra, draw_mode_end);
+	if (!this->root.children) {
+		transform_get_size(navit_get_trans(this->nav), &w, &h);
+		switch (*key) {
+		case NAVIT_KEY_UP:
+			p.x=w/2;
+			p.y=0;
+			navit_set_center_screen(this->nav, &p);
+			break;
+		case NAVIT_KEY_DOWN:
+			p.x=w/2;
+			p.y=h;
+			navit_set_center_screen(this->nav, &p);
+			break;
+		case NAVIT_KEY_LEFT:
+			p.x=0;
+			p.y=h/2;
+			navit_set_center_screen(this->nav, &p);
+			break;
+		case NAVIT_KEY_RIGHT:
+			p.x=w;
+			p.y=h/2;
+			navit_set_center_screen(this->nav, &p);
+			break;
+		case NAVIT_KEY_ZOOM_IN:
+			navit_zoom_in(this->nav, 2, NULL);
+			break;
+		case NAVIT_KEY_ZOOM_OUT:
+			navit_zoom_out(this->nav, 2, NULL);
+			break;
 		}
+		return;
 	}
+	graphics_draw_mode(this->gra, draw_mode_begin);
+	switch (*key) {
+	case NAVIT_KEY_LEFT:
+		gui_internal_keynav_highlight_next(this,-1,0);
+		break;
+	case NAVIT_KEY_RIGHT:
+		gui_internal_keynav_highlight_next(this,1,0);
+		break;
+	case NAVIT_KEY_UP:
+		gui_internal_keynav_highlight_next(this,0,-1);
+		break;
+	case NAVIT_KEY_DOWN:
+		gui_internal_keynav_highlight_next(this,0,1);
+		break;
+	case NAVIT_KEY_RETURN:
+		if (this->highlighted && this->highlighted_menu == g_list_last(this->root.children)->data)
+			gui_internal_call_highlighted(this);
+		else
+			gui_internal_keypress_do(this, key);
+		break;
+	default:
+		gui_internal_keypress_do(this, key);
+	}
+	graphics_draw_mode(this->gra, draw_mode_end);
 } 
 
 
