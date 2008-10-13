@@ -334,16 +334,6 @@ cache_insert_new(struct cache *cache, void *id, int size)
 	return data;	
 }
 
-void *
-cache_lookup_or_insert(struct cache *cache, void *id, int size)
-{
-	void *data=cache_lookup(cache, id);
-	if (! data) {
-		data=cache_insert_new(cache, id, size);
-	}
-	return data;
-}
-
 void
 cache_stats(struct cache *cache)
 {
