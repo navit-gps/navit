@@ -116,6 +116,7 @@ struct widget {
 	void (*data_free)(void *data);
 	char *prefix;
 	char *name;
+	char *speech;
 	struct pcoord c;
 	struct item item;
 	int state;
@@ -223,6 +224,7 @@ struct gui_priv {
 	int ignore_button;
 	int menu_on_map_click;
 	char *country_iso2;
+	int speech;
 	/**
 	 * The setting information read from the configuration file.
 	 * values of -1 indicate no value was specified in the config file.
@@ -456,8 +458,10 @@ gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct 
 			gui_internal_widget_append(ret, gui_internal_text_new(this, text));
 		ret->func=func;
 		ret->data=data;
-		if (func) 
+		if (func) {
 			ret->state |= STATE_SENSITIVE;
+			ret->speech=g_strdup(text);
+		}
 	}
 	return ret;
 
@@ -896,6 +900,7 @@ static void gui_internal_widget_children_destroy(struct gui_priv *this, struct w
 static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 {
 	gui_internal_widget_children_destroy(this, w);
+	g_free(w->speech);
 	g_free(w->text);
 	if (w->img)
 		graphics_image_free(this->gra, w->img);
@@ -955,11 +960,29 @@ static void gui_internal_call_highlighted(struct gui_priv *this)
 }
 
 static void
+gui_internal_say(struct gui_priv *this, struct widget *w, int questionmark)
+{
+	char *text=w->speech;
+	if (! this->speech)
+		return;
+	if (!text)
+		text=w->text;
+	if (!text)
+		text=w->name;
+	if (text) {
+		text=g_strdup_printf("%s%c", text, questionmark ? '?':'\0');
+		navit_say(this->nav, text);
+		g_free(text);
+	}
+}
+
+static void
 gui_internal_prune_menu(struct gui_priv *this, struct widget *w)
 {
 	GList *l;
 	while ((l = g_list_last(this->root.children))) {
 		if (l->data == w) {
+			gui_internal_say(this, w, 0);
 			gui_internal_widget_render(this, w);
 			return;
 		}
@@ -995,10 +1018,12 @@ gui_internal_top_bar(struct gui_priv *this)
 	wm=gui_internal_button_new_with_callback(this, NULL,
 		image_new_s(this, "gui_map"), gravity_center|orientation_vertical,
 		gui_internal_cmd_return, NULL);
+	wm->speech=g_strdup("Back to map");
 	gui_internal_widget_pack(this, wm);
 	wh=gui_internal_button_new_with_callback(this, NULL,
 		image_new_s(this, "gui_home"), gravity_center|orientation_vertical,
 		gui_internal_cmd_main_menu, NULL);
+	wh->speech=g_strdup("Main Menu");
 	gui_internal_widget_pack(this, wh);
 	gui_internal_widget_append(w, wm);
 	gui_internal_widget_append(w, wh);
@@ -1178,6 +1203,7 @@ gui_internal_menu_render(struct gui_priv *this)
 
 	l=g_list_last(this->root.children);
 	menu=l->data;
+	gui_internal_say(this, menu, 0);
 	gui_internal_widget_pack(this, menu);
 	gui_internal_widget_render(this, menu);
 }
@@ -2447,6 +2473,22 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 	gui_internal_menu_root(this);
 }
 
+static void
+gui_internal_check_exit(struct gui_priv *this)
+{
+	struct graphics *gra=this->gra;
+	if (! this->root.children) {
+		gui_internal_search_list_destroy(this);
+		graphics_overlay_disable(gra, 0);
+		if (!navit_block(this->nav, 0)) {
+			if (this->redraw)
+				navit_draw(this->nav);
+			else
+				navit_draw_displaylist(this->nav);
+		}
+	}
+}
+
 //##############################################################################################################
 //# Description: Function to handle mouse clicks and scroll wheel movement
 //# Comment: 
@@ -2480,16 +2522,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		gui_internal_call_highlighted(this);
 		gui_internal_highlight(this, NULL);
 		graphics_draw_mode(gra, draw_mode_end);
-		if (! this->root.children) {
-			gui_internal_search_list_destroy(this);
-			graphics_overlay_disable(gra, 0);
-			if (!navit_block(this->nav, 0)) {
-				if (this->redraw)
-					navit_draw(this->nav);
-				else
-					navit_draw_displaylist(this->nav);
-			}
-		}
+		gui_internal_check_exit(this);
 	}
 }
 
@@ -2603,6 +2636,8 @@ gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy)
 		dbg(1,"wraparound result=%p\n", result);
 	}
 	gui_internal_highlight_do(this, result);
+	if (result)
+		gui_internal_say(this, result, 1);
 }
 
 //##############################################################################################################
@@ -2671,6 +2706,7 @@ static void gui_internal_keypress(void *data, char *key)
 		gui_internal_keypress_do(this, key);
 	}
 	graphics_draw_mode(this->gra, draw_mode_end);
+	gui_internal_check_exit(this);
 } 
 
 
@@ -2786,6 +2822,10 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	else
 	{
 	  this->config.spacing=-1;	  
+	}
+	if( (attr=attr_search(attrs,NULL,attr_gui_speech)))
+	{
+	  this->speech=attr->u.num;
 	}
 
 	return this;
