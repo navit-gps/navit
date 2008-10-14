@@ -10,7 +10,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}lib*.so"/>
 		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libgraphics_null.so" active="no" />
 	</plugins>
-	<debug name="navit" level="0" />
+	<debug name="navit:do_draw" level="0" />
 
 	<!--
 	Center coordinates format:
@@ -53,7 +53,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. For cegui, use opengl -->
 		<graphics type="gtk_drawing_area" />
 
-		<vehicle name="Local GPS" enabled="no" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
+		<vehicle name="Local GPS" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
 			<!--Navit can write a tracklog in several formats (gpx, nmea or textfile):
 			<log type="gpx" data="track_%Y%m%d-%i.gpx" flush_size="1000" flush_time="30" />
 			-->
@@ -66,7 +66,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 		<vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1" refresh="1"/>
 		-->
 
-		<vehicle name="Demo" enabled="no" active="1" follow="1" source="demo://" color="#0000aa"/>
+		<vehicle name="Demo" enabled="no" source="demo://" color="#0000aa"/>
 
 		<tracking>
 		</tracking>
@@ -102,13 +102,17 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 		<!--<speech type="cmdline" data="flite -t '%s'" />-->
 
 		<!-- If you have the reiseplaner maps installed, set enabled="yes" in the next line -->
-		<mapset enabled="yes">
-			<map type="mg" enabled="yes" data="/opt/maps/DIRLAN_GER/DEM.map" />
-			<map type="mg" enabled="yes" data="/opt/maps/DIRLAN_GER/DEM.map/smp3.smp" />
+		<mapset enabled="no">
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map" />
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp1.smp" />
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp2.smp" />
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp3.smp" />
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp4.smp" />
+			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map/smp5.smp" />
 		</mapset>
 
 		<!-- If you dont want to use the sample map, either set enabled="no" in the next line or remove the xml file from the maps directory -->
-		<mapset enabled="no">
+		<mapset enabled="yes">
 			<xi:include href="$NAVIT_SHAREDIR/maps/*.xml" />
 		</mapset>
 
