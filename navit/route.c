@@ -615,9 +615,10 @@ route_set_destination(struct route *this, struct pcoord *dst)
 	if (this->dst)
 		route_info_free(this->dst);
 	this->dst=NULL;
-	if (dst)
+	if (dst) {
 		this->dst=route_find_nearest_street(this->ms, dst);
-	route_info_distances(this->dst, dst->pro);
+		route_info_distances(this->dst, dst->pro);
+	}
 	profile(1,"find_nearest_street");
 
 	/* The graph has to be destroyed and set to NULL, otherwise route_path_update() doesn't work */
