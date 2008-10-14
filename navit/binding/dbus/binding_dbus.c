@@ -36,7 +36,7 @@
 
 static DBusConnection *connection;
 
-static char *service_name="org.navit-project.navit";
+static char *service_name="org.navit_project.navit";
 static char *object_path="/org/navit_project/navit";
 
 GHashTable *object_hash;
@@ -448,9 +448,9 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 		DBusMessage *reply;
 		gchar *idata;
 		dbg(0,"Introspect\n");
-		if (! strcmp(dbus_message_get_path(message), "/org/navit_project/navit")) {
+		if (! strcmp(dbus_message_get_path(message), object_path)) {
 			g_file_get_contents("binding/dbus/navit.introspect", &idata, NULL, NULL);
-			reply = dbus_message_new_method_return(http://www.http.com//message);
+			reply = dbus_message_new_method_return(message);
 			dbus_message_append_args(reply, DBUS_TYPE_STRING, &idata, DBUS_TYPE_INVALID);
 			dbus_connection_send (connection, reply, NULL);
 			dbus_message_unref (reply);
@@ -460,7 +460,7 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 	}
 #endif
 	for (i = 0 ; i < sizeof(dbus_methods)/sizeof(struct dbus_method) ; i++) {
-		path=g_strdup_printf("org.navit_project.navit%s", dbus_methods[i].path);
+		path=g_strdup_printf("%s%s", service_name, dbus_methods[i].path);
 		if (dbus_message_is_method_call(message, path, dbus_methods[i].method) &&
 		    dbus_message_has_signature(message, dbus_methods[i].signature)) {
 			g_free(path);
