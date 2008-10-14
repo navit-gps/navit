@@ -36,8 +36,20 @@
 
 static DBusConnection *connection;
 
-static char *service_name="org.navit_project.navit";
-static char *object_path="/org/navit_project/navit";
+static char *service_name = "org.navit_project.navit";
+static char *object_path = "/org/navit_project/navit";
+char *navitintrospectxml_head1 = "<!DOCTYPE node PUBLIC \"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN\"\n"
+                                 "\"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd\">\n"
+                                 "<node name=\"";
+
+char *navitintrospectxml_head2 = "\">\n"
+                                 "  <interface name=\"org.freedesktop.DBus.Introspectable\">\n"
+                                 "    <method name=\"Introspect\">\n"
+                                 "      <arg direction=\"out\" type=\"s\" />\n"
+                                 "    </method>\n"
+                                 "  </interface>\n";
+
+
 
 GHashTable *object_hash;
 GHashTable *object_count;
@@ -422,20 +434,59 @@ struct dbus_method {
 	char *path;
 	char *method;
 	char *signature;
+    char *response;
 	DBusHandlerResult(*func)(DBusConnection *connection, DBusMessage *message);
 } dbus_methods[] = {
-	{"",		"iter",                "",        request_main_iter},
-	{"",        "iter_destroy",        "o",       request_main_iter_destroy},
-	{"",        "get_navit",           "o",       request_main_get_navit},
-	{".navit",	"set_center",          "(iii)",   request_navit_set_center},
-	{".navit",  "set_center_screen",   "(ii)",    request_navit_set_center_screen},
-	{".navit",  "set_layout",          "s",       request_navit_set_layout},
-	{".navit",  "zoom",                "i(ii)",   request_navit_zoom},
-	{".navit",  "zoom",                "i",       request_navit_zoom},
-	{".navit",  "resize",              "ii",      request_navit_resize},
-	{".navit",  "set_position",        "(iii)",   request_navit_set_position},
-	{".navit",  "set_destination",     "(iii)s",  request_navit_set_destination},
+	{"",                                     "iter",                "",        "o",  request_main_iter},
+	{"",                                     "iter_destroy",        "o",       "",   request_main_iter_destroy},
+	{"",                                     "get_navit",           "o",       "o",  request_main_get_navit},
+	{".navit",                               "set_center",          "(iii)",   "",   request_navit_set_center},
+	{".navit",                               "set_center_screen",   "(ii)",    "",   request_navit_set_center_screen},
+	{".navit",                               "set_layout",          "s",       "",   request_navit_set_layout},
+	{".navit",                               "zoom",                "i(ii)",   "",   request_navit_zoom},
+	{".navit",                               "zoom",                "i",       "",   request_navit_zoom},
+	{".navit",                               "resize",              "ii",      "",   request_navit_resize},
+	{".navit",                               "set_position",        "(iii)",   "",   request_navit_set_position},
+	{".navit",                               "set_destination",     "(iii)s",  "",   request_navit_set_destination},
 };
+
+static char *
+generate_navitintrospectxml(void)
+{
+    int i;
+    char *navitintrospectxml;
+    
+    // write header and make navit introspectable
+    navitintrospectxml = g_strdup_printf("%s%s%s\n", navitintrospectxml_head1, object_path, navitintrospectxml_head2);
+    
+    for (i = 0 ; i < sizeof(dbus_methods)/sizeof(struct dbus_method) ; i++) {
+        // start new interface if it's the first method or it changed
+        if ((i == 0) || strcmp(dbus_methods[i-1].path, dbus_methods[i].path))
+            navitintrospectxml = g_strconcat_printf(navitintrospectxml, "  <interface name=\"%s%s\">\n", service_name, dbus_methods[i].path);
+        
+        // start the new method
+        navitintrospectxml = g_strconcat_printf(navitintrospectxml, "    <method name=\"%s\">\n", dbus_methods[i].method);
+
+        // set input signature if existent
+        if (strcmp(dbus_methods[i].signature, ""))
+            navitintrospectxml = g_strconcat_printf(navitintrospectxml, "      <arg direction=\"in\"  type=\"%s\" />\n", dbus_methods[i].signature);
+        
+        // set response signature if existent
+        if (strcmp(dbus_methods[i].response, ""))
+            navitintrospectxml = g_strconcat_printf(navitintrospectxml, "      <arg direction=\"out\" type=\"%s\" />\n", dbus_methods[i].response);
+        
+        // close the method
+        navitintrospectxml = g_strconcat_printf(navitintrospectxml, "    </method>\n");
+        
+        // close the interface if we reached the last method or the interface changes
+        if ((sizeof(dbus_methods)/sizeof(struct dbus_method) == (i+1)) || strcmp(dbus_methods[i+1].path, dbus_methods[i].path))
+            navitintrospectxml = g_strconcat_printf(navitintrospectxml, "  </interface>\n\n");
+    }
+    // close the "mother tag"
+    navitintrospectxml = g_strconcat_printf(navitintrospectxml, "</node>\n");
+    
+    return navitintrospectxml;
+}
 
 static DBusHandlerResult
 navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_data)
@@ -443,23 +494,21 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 	int i;
 	char *path;
 	dbg(0,"type=%s interface=%s path=%s member=%s signature=%s\n", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
-#if 0
 	if (dbus_message_is_method_call (message, "org.freedesktop.DBus.Introspectable", "Introspect")) {
 		DBusMessage *reply;
-		gchar *idata;
 		dbg(0,"Introspect\n");
 		if (! strcmp(dbus_message_get_path(message), object_path)) {
-			g_file_get_contents("binding/dbus/navit.introspect", &idata, NULL, NULL);
+            char *navitintrospectxml = generate_navitintrospectxml();
 			reply = dbus_message_new_method_return(message);
-			dbus_message_append_args(reply, DBUS_TYPE_STRING, &idata, DBUS_TYPE_INVALID);
+			dbus_message_append_args(reply, DBUS_TYPE_STRING, &navitintrospectxml, DBUS_TYPE_INVALID);
 			dbus_connection_send (connection, reply, NULL);
 			dbus_message_unref (reply);
-			g_free(idata);
+            g_free(navitintrospectxml);
 			return DBUS_HANDLER_RESULT_HANDLED;
 		}
 	}
-#endif
-	for (i = 0 ; i < sizeof(dbus_methods)/sizeof(struct dbus_method) ; i++) {
+	
+    for (i = 0 ; i < sizeof(dbus_methods)/sizeof(struct dbus_method) ; i++) {
 		path=g_strdup_printf("%s%s", service_name, dbus_methods[i].path);
 		if (dbus_message_is_method_call(message, path, dbus_methods[i].method) &&
 		    dbus_message_has_signature(message, dbus_methods[i].signature)) {
@@ -492,7 +541,7 @@ void plugin_init(void)
 {
 	DBusError error;
 
-	object_hash=g_hash_table_new(g_str_hash, g_str_equal);
+    object_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	object_count=g_hash_table_new(g_str_hash, g_str_equal);
 	dbg(0,"enter 1\n");
 	dbus_error_init(&error);
