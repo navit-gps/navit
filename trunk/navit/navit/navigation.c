@@ -132,7 +132,6 @@ struct navigation_itm {
 	char *name2;
 	struct item item;
 	int direction;
-	int straight;
 	int angle_start;
 	int angle_end;
 	struct coord c;
@@ -250,7 +249,7 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 static void
 navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 {
-	struct attr length, time, straight;
+	struct attr length, time;
 	if (! item_attr_get(ritem, attr_length, &length)) {
 		dbg(0,"no length\n");
 		return;
@@ -259,13 +258,6 @@ navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 		dbg(0,"no time\n");
 		return;
 	}
-
-	if (item_attr_get(ritem, attr_route_follow_straight, &straight)) {
-		itm->straight = straight.u.num;
-	} else {
-		itm->straight = 0;
-	}
-
 	dbg(1,"length=%d time=%d\n", length.u.num, time.u.num);
 	itm->length=length.u.num;
 	itm->time=time.u.num;
@@ -275,7 +267,7 @@ static struct navigation_itm *
 navigation_itm_new(struct navigation *this_, struct item *ritem)
 {
 	struct navigation_itm *ret=g_new0(struct navigation_itm, 1);
-	int i=0;
+	int l,i=0;
 	struct item *sitem;
 	struct attr street_item,direction;
 	struct map_rect *mr;
@@ -302,10 +294,10 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 		if (item_attr_get(sitem, attr_street_name_systematic, &attr))
 			ret->name2=map_convert_string(sitem->map,attr.u.str);
 		navigation_itm_update(ret, ritem);
-
+		l=-1;
 		while (item_coord_get(ritem, &c[i], 1)) {
 			dbg(1, "coord %d 0x%x 0x%x\n", i, c[i].x ,c[i].y);
-
+			l=i;
 			if (i < 4) 
 				i++;
 			else {
@@ -313,12 +305,11 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 				c[3]=c[4];
 			}
 		}
-		dbg(1,"count=%d\n", i);
-		i--;
-
+		dbg(1,"count=%d\n", l);
+		if (l == 4)
+			l=3;
 		ret->angle_start=road_angle(&c[0], &c[1], 0);
-		ret->angle_end=road_angle(&c[i-1], &c[i], 0);
-
+		ret->angle_end=road_angle(&c[l-1], &c[l], 0);
 		ret->c=c[0];
 		dbg(1,"i=%d start %d end %d '%s' '%s'\n", i, ret->angle_start, ret->angle_end, ret->name1, ret->name2);
 		map_rect_destroy(mr);
@@ -334,17 +325,6 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 	return ret;
 }
 
-/**
- * @brief Calculates distance and time to the destination
- *
- * This function calculates the distance and the time to the destination of a
- * navigation. If incr is set, this is only calculated for the first navigation
- * item, which is a lot faster than re-calculation the whole destination, but works
- * only if the rest of the navigation already has been calculated.
- *
- * @param this_ The navigation whose destination / time should be calculated
- * @param incr Set this to true to only calculate the first item. See description.
- */
 static void
 calculate_dest_distance(struct navigation *this_, int incr)
 {
@@ -377,17 +357,6 @@ calculate_dest_distance(struct navigation *this_, int incr)
 	dbg(1,"len %d time %d\n", len, time);
 }
 
-/**
- * @brief Checks if two navigation items are on the same street
- *
- * This function checks if two navigation items are on the same street. It returns
- * true if either their name or their "systematic name" (e.g. "A6" or "B256") are the
- * same.
- *
- * @param old The first item to be checked
- * @param new The second item to be checked
- * @return True if both old and new are on the same street
- */
 static int
 is_same_street2(struct navigation_itm *old, struct navigation_itm *new)
 {
@@ -403,18 +372,6 @@ is_same_street2(struct navigation_itm *old, struct navigation_itm *new)
 	return 0;
 }
 
-/**
- * @brief Checks if two navigation items are on the same street
- *
- * This function checks if two navigation items are on the same street. It returns
- * true if the first part of their "systematic name" is equal. If the "systematic name" is
- * for example "A352/E3" (a german highway which at the same time is part of the international
- * E-road network), it would only search for "A352" in the second item's systematic name.
- *
- * @param old The first item to be checked
- * @param new The second item to be checked
- * @return True if the "systematic name" of both items matches. See description.
- */
 static int
 is_same_street_systematic(struct navigation_itm *old, struct navigation_itm *new)
 {
@@ -428,17 +385,6 @@ is_same_street_systematic(struct navigation_itm *old, struct navigation_itm *new
 	return 1;
 }
 
-/**
- * @brief Checks if navit has to create a maneuver to drive from old to new
- *
- * This function checks if it has to create a "maneuver" - i.e. guide the user - to drive 
- * from "old" to "new".
- *
- * @param old The old navigation item, where we're coming from
- * @param new The new navigation item, where we're going to
- * @param delta The angle the user has to steer to navigate from old to new
- * @return True if navit should guide the user, false otherwise
- */
 static int
 maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *delta)
 {
@@ -470,11 +416,7 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 		return 1;
 	}
 	if (*delta < 20 && *delta >-20) {
-		if (! new->straight) { /* We're not entering this item straight, so have a maneuver */
-			return 1;
-		}
-
-		dbg(1, "maneuver_required: delta(%d) < 20: no\n", *delta);		
+		dbg(1, "maneuver_required: delta(%d) < 20: no\n", *delta);
 		return 0;
 	}
 	dbg(1, "maneuver_required: delta=%d: yes\n", *delta);
@@ -551,7 +493,7 @@ navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *n
 		if(next->item.type == type_ramp)
 			return NULL;
 		if(itm->item.type == type_highway_city || itm->item.type == type_highway_land )
-			return g_strdup_printf("%s%s",prefix,_("exit"));	/* %FIXME Can this even be reached? */			 
+			return g_strdup_printf("%s%s",prefix,_("exit"));				 
 		else
 			return g_strdup_printf("%s%s",prefix,_("ramp"));
 		
@@ -756,8 +698,7 @@ navigation_update(struct navigation *this_, struct route *route)
 {
 	struct map *map;
 	struct map_rect *mr;
-	struct item *ritem;			/* Holds an item from the route map */
-	struct item *sitem;			/* Holds the corresponding item from the actual map */
+	struct item *ritem,*sitem;
 	struct attr street_item,street_direction;
 	struct navigation_itm *itm;
 	int incr=0;
