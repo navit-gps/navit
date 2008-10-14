@@ -6,7 +6,7 @@ if BUILD_SAMPLEMAP
 endif
 
 AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ @ZLIB_CFLAGS@ -DPREFIX=\"@prefix@\" -DMODULE=navit
-BUILT_SOURCES=osm2navit$(EXEEXT)
+BUILT_SOURCES=osm2navit$(EXEEXT) version.h
 bin_PROGRAMS = navit osm2navit
 
 pkgdata_DATA = navit.xml
@@ -23,7 +23,7 @@ libnavit_la_SOURCES = attr.c cache.c callback.c compass.c coord.c country.c curs
 	file.h graphics.h gtkext.h gui.h item.h item_def.h keys.h log.h layer.h layout.h main.h map-share.h map.h\
 	map_data.h mapset.h maptype.h menu.h navigation.h navit.h osd.h \
 	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h profile.h search.h speech.h \
-	transform.h track.h util.h vehicle.h window.h xmlconfig.h zipfile.h
+	transform.h track.h util.h vehicle.h version.h window.h xmlconfig.h zipfile.h
 
 navit_SOURCES = start.c
 navit_LDADD = libnavit.la @NAVIT_LIBS@ @ZLIB_LIBS@ -Lfib-1.1 -lfib
@@ -36,6 +36,18 @@ if !PLUGINS
   navit_SOURCES += builtin.c
   navit_LDADD += $(wildcard $(top_builddir)/navit/*/*/*.la)
 endif
+
+.PHONY: version.h.tmp
+
+version.h.tmp:
+	echo "#include \"config.h\"" >version.h.tmp
+	echo "#define SVN_VERSION \"$$(LANG=C svnversion)\"" >>version.h.tmp
+	if ! diff version.h.tmp version.h >/dev/null 2>/dev/null; \
+	then \
+		mv version.h.tmp version.h; \
+	fi
+
+version.h: version.h.tmp
 
 builtin.c:
 	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/.la/_init(void);/" -e "s/.*lib/extern void module_/" >builtin.c
