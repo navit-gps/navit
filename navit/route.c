@@ -1316,11 +1316,10 @@ route_road_angle(struct coord *c1, struct coord *c2, int dir)
  *
  * @param seg_from Segment we are driving from
  * @param seg_to Segment we are driving to
- * @param dir Set to true to indicate that seg_from is left throught its "start" instead through its "end"
  * @return True if driving from seg_from to seg_to is "straight", false otherwise
  */
 static int
-route_check_straight(struct route_graph_segment *seg_from, struct route_graph_segment *seg_to, int dir)
+route_check_straight(struct route_graph_segment *seg_from, struct route_graph_segment *seg_to)
 {
 	struct route_graph_segment *curr;
 	struct route_graph_point *conn;
@@ -1328,27 +1327,21 @@ route_check_straight(struct route_graph_segment *seg_from, struct route_graph_se
 	int ccnt;
 	struct coord ca[2048];
 
-	if (!dir) {
-		if ((seg_from->end != seg_to->start) && (seg_from->end != seg_to->end)) {
-			// Not connected!
-			return 0;
-		}
-
+	if ((seg_from->end == seg_to->start) || (seg_from->end == seg_to->end)) {
 		ccnt = get_item_seg_coords(&seg_from->item, ca, 2047, &seg_from->start->c, &seg_from->end->c);
 		from_angle = route_road_angle(&ca[ccnt-2], &ca[ccnt-1],1);
 
 		conn = seg_from->end;
-	} else {
-		if ((seg_from->start != seg_to->start) && (seg_from->start != seg_to->end)) {
-			// Not connected!
-			return 0;
-		}
-
+	} else if ((seg_from->start == seg_to->start) || (seg_from->start == seg_to->end)) {
 		ccnt = get_item_seg_coords(&seg_from->item, ca, 2, &seg_from->start->c, &seg_from->end->c);
 		from_angle = route_road_angle(&ca[1], &ca[0],1);
 
 		conn = seg_from->start;
+	} else {
+		// Not connected!
+		return 1;
 	}
+
 
 	if (seg_to->end == conn) {
 		ccnt = get_item_seg_coords(&seg_to->item, ca, 2047, &seg_to->start->c, &seg_to->end->c);
@@ -1496,7 +1489,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		len+=seg_len;
 		
 		if (lastseg) {
-			is_straight = route_check_straight(lastseg,s,(s->end == start));
+			is_straight = route_check_straight(lastseg,s);
 		} else {
 			is_straight = 0;
 		}
