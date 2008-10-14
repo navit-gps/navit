@@ -129,7 +129,9 @@ struct route_path_segment {
 										 *  coordinate of the segment is the first coordinate of the item", <=0 
 										 *  means reverse. */
 	unsigned ncoords;					/**< How many coordinates does this segment have? */
+	struct attr **attrs;				/**< Attributes of this route path segment */
 	struct coord c[0];					/**< Pointer to the ncoords coordinates of this segment */
+	/* WARNING: There will be coordinates following here, so do not create new fields after c! */
 };
 
 /**
@@ -904,20 +906,23 @@ route_path_add_item(struct route_path *this, struct item *item, int len, struct 
  * @param len Length of the item to be added
  * @param offset Offset of rgs within the item it represents
  * @param dir Order in which to add the coordinates. See route_path_add_item()
+ * @param straight Indicates if this segment is being entered "straight". See route_check_straight().
  */
 static void
 route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpath,
-		struct route_graph_segment *rgs, int len, int offset, int dir)
+				   struct route_graph_segment *rgs, int len, int offset, int dir, int straight)
 {
 	struct route_path_segment *segment;
 	int i,ccnt = 0;
 	struct coord ca[2048];
+	struct attr straight_attr;
 
 	if (oldpath) {
 		ccnt = (int)item_hash_lookup(oldpath->path_hash, &rgs->item);
 		if (ccnt) {
 			segment = route_extract_segment_from_path(oldpath,
 							 &rgs->item, offset);
+			
 			if (segment)
 				goto linkold;
 		}
@@ -944,6 +949,12 @@ linkold:
 	segment->length=len;
 	segment->next=NULL;
 	item_hash_insert(this->path_hash,  &rgs->item, (void *)ccnt);
+
+	straight_attr.type = attr_route_follow_straight;
+	straight_attr.u.num = straight;
+
+	segment->attrs = attr_generic_set_attr(segment->attrs, &straight_attr);
+
 	route_path_add_segment(this, segment);
 }
 
@@ -1274,6 +1285,137 @@ route_path_new_trivial(struct route_graph *this, struct route_info *pos, struct 
 }
 
 /**
+ * @brief Calculates of two coordinates' connection
+ *
+ * This function calculates the angle between coordinates, with north = 0
+ * and east = 90.
+ *
+ * %FIXME This is a duplicate of road_angle() in navigation.c - combine them?
+ *
+ * @param c1 Coordinate 1
+ * @param c2 Coordinate 2
+ * @param dir Set to true if c1 is the prior, and c2 the later coordinate.
+ * @return The angle of the coordinate's connection  
+ */
+static int
+route_road_angle(struct coord *c1, struct coord *c2, int dir)
+{
+	int ret=transform_get_angle_delta(c1, c2, dir);
+	dbg(1, "road_angle(0x%x,0x%x - 0x%x,0x%x)=%d\n", c1->x, c1->y, c2->x, c2->y, ret);
+	return ret;
+}
+
+/**
+ * @brief Checks if entering one segment from another is a "straight" road
+ *
+ * This checks if one can enter seg_to from seg_from by driving "straight" - i.e. 
+ * if seg_to is the segment you can drive to from seg_from by steering less than
+ * all to all other segments.
+ *
+ * This function returns true on failure, so we don't create maneuvers on every error.
+ *
+ * @param seg_from Segment we are driving from
+ * @param seg_to Segment we are driving to
+ * @param dir Set to true to indicate that seg_from is left throught its "start" instead through its "end"
+ * @return True if driving from seg_from to seg_to is "straight", false otherwise
+ */
+static int
+route_check_straight(struct route_graph_segment *seg_from, struct route_graph_segment *seg_to, int dir)
+{
+	struct route_graph_segment *curr;
+	struct route_graph_point *conn;
+	int from_angle, to_angle, curr_angle, angle_diff; 
+	int ccnt;
+	struct coord ca[2048];
+
+	if (!dir) {
+		if ((seg_from->end != seg_to->start) && (seg_from->end != seg_to->end)) {
+			// Not connected!
+			return 0;
+		}
+
+		ccnt = get_item_seg_coords(&seg_from->item, ca, 2047, &seg_from->start->c, &seg_from->end->c);
+		from_angle = route_road_angle(&ca[ccnt-2], &ca[ccnt-1],1);
+
+		conn = seg_from->end;
+	} else {
+		if ((seg_from->start != seg_to->start) && (seg_from->start != seg_to->end)) {
+			// Not connected!
+			return 0;
+		}
+
+		ccnt = get_item_seg_coords(&seg_from->item, ca, 2, &seg_from->start->c, &seg_from->end->c);
+		from_angle = route_road_angle(&ca[1], &ca[0],1);
+
+		conn = seg_from->start;
+	}
+
+	if (seg_to->end == conn) {
+		ccnt = get_item_seg_coords(&seg_to->item, ca, 2047, &seg_to->start->c, &seg_to->end->c);
+		to_angle = route_road_angle(&ca[ccnt-1], &ca[ccnt-2],1);
+	} else {
+		ccnt = get_item_seg_coords(&seg_to->item, ca, 2, &seg_to->start->c, &seg_to->end->c);
+		to_angle = route_road_angle(&ca[0], &ca[1],1);
+	}			
+	
+	
+	angle_diff = from_angle - to_angle;
+	if (angle_diff < 0) {
+		angle_diff *= -1;
+	}
+
+
+	curr = conn->start;
+	while (curr != NULL) {
+		if (curr==seg_to) {
+			curr = curr->start_next;
+			continue;
+		}
+		
+		ccnt = get_item_seg_coords(&curr->item, ca, 2, &curr->start->c, &curr->end->c);
+		curr_angle = route_road_angle(&ca[0], &ca[1], 1);
+
+		curr_angle = from_angle - curr_angle;
+
+		if (curr_angle < 0) {
+			curr_angle *= -1;
+		}
+		
+
+		if (curr_angle <= angle_diff) {
+			return 0;
+		}
+
+		curr = curr->start_next;
+	}
+
+	curr = conn->end;
+	while (curr != NULL) {
+		if (curr==seg_to) {
+			curr = curr->end_next;
+			continue;
+		}
+		
+		ccnt = get_item_seg_coords(&curr->item, ca, 2047, &curr->start->c, &curr->end->c);
+		curr_angle = route_road_angle(&ca[ccnt-1], &ca[ccnt-2], 1);
+
+		curr_angle = from_angle - curr_angle;
+
+		if (curr_angle < 0) {
+			curr_angle *= -1;
+		}
+
+		if (curr_angle <= angle_diff) {
+			return 0;
+		}
+
+		curr = curr->end_next;
+	}
+
+	return 1;
+}
+
+/**
  * @brief Creates a new route path
  * 
  * This creates a new non-trivial route. It therefore needs the routing information created by route_graph_flood, so
@@ -1291,6 +1433,8 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 {
 	struct route_graph_point *start1=NULL,*start2=NULL,*start;
 	struct route_graph_segment *s=NULL;
+	struct route_graph_segment *lastseg = NULL;
+	int is_straight;
 	int len=0,segs=0;
 	int seg_len;
 #if 0
@@ -1350,13 +1494,22 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 #endif
 		seg_len=s->len;
 		len+=seg_len;
-		if (s->start == start) {
-			route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, 1);
+		
+		if (lastseg) {
+			is_straight = route_check_straight(lastseg,s,(s->end == start));
+		} else {
+			is_straight = 0;
+		}
+
+		if (s->start == start) {		
+			route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, 1, is_straight);
 			start=s->end;
 		} else {
-			route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, -1);
+			route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, -1, is_straight);
 			start=s->start;
 		}
+
+		lastseg = s;
 	}
 	sd=dst->street;
 	dbg(1,"start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
@@ -1685,12 +1838,18 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			}
 			return 0;
 		case attr_street_item:
-			mr->attr_next=attr_direction;
+			mr->attr_next=attr_route_follow_straight;
 			if (seg && seg->item.map)
 				attr->u.item=&seg->item;
 			else
 				return 0;
 			return 1;
+		case attr_route_follow_straight:
+			mr->attr_next=attr_direction;
+			if (seg) {
+				return attr_generic_get_attr(seg->attrs,NULL,attr_route_follow_straight,attr,NULL);
+			}
+			return 0;
 		case attr_direction:
 			mr->attr_next=attr_length;
 			if (seg) 
