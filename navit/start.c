@@ -22,7 +22,7 @@
 #include <glib.h>
 #include <getopt.h>
 #include <libintl.h>
-#include "config.h"
+#include "version.h"
 #include "item.h"
 #include "coord.h"
 #include "main.h"
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 				exit(0);
 				break;
 			case 'v':
-				printf("%s %s\n", "navit", "0.0.4+svn"); 
+				printf("%s %s\n", "navit", PACKAGE_VERSION" "SVN_VERSION); 
 				exit(0);
 				break;
 			case 'c':
