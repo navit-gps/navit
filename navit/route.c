@@ -748,7 +748,7 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 	s->end=end;
 	s->end_next=end->end;
 	end->end=s;
-	g_assert(len >= 0);
+	dbg_assert(len >= 0);
 	s->len=len;
 	s->item=*item;
 	s->flags=flags;
@@ -1028,7 +1028,7 @@ route_value(int *speedlist, struct item *item, int len)
 	if (len < 0) {
 		printf("len=%d\n", len);
 	}
-	g_assert(len >= 0);
+	dbg_assert(len >= 0);
 	ret=route_time(speedlist, item, len);
 	dbg(1, "route_value(0x%x, %d)=%d\n", item->type, len, ret);
 	return ret;
@@ -1071,7 +1071,7 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 				l=c;
 			}
 			e_pnt=route_graph_add_point(this,&l);
-			g_assert(len >= 0);
+			dbg_assert(len >= 0);
 			route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset);
 		} else {
 			int isseg,rc;
@@ -1092,7 +1092,7 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 				}
 			} while(rc);
 			e_pnt=route_graph_add_point(this,&l);
-			g_assert(len >= 0);
+			dbg_assert(len >= 0);
 			sc++;
 			route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset);
 		}
@@ -1145,14 +1145,14 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 
 	if (! (sd->flags & AF_ONEWAYREV)) { /* If we may drive in the direction of the coordinates of the item, the first coordinate is one starting point */
 		end=route_graph_get_point(this, &sd->c[0]);
-		g_assert(end != 0);
+		dbg_assert(end != 0);
 		end->value=route_value(speedlist, &sd->item, dst->lenneg);
 		end->el=fh_insert(heap, end);
 	}
 
 	if (! (sd->flags & AF_ONEWAY)) { /* If we may drive against the direction of the coordinates, the last coordinate is another starting point */
 		end=route_graph_get_point(this, &sd->c[sd->count-1]);
-		g_assert(end != 0);
+		dbg_assert(end != 0);
 		end->value=route_value(speedlist, &sd->item, dst->lenpos);
 		end->el=fh_insert(heap, end);
 	}
@@ -1619,7 +1619,7 @@ street_get_data (struct item *item)
 		if (item_attr_get(item, attr_debug, &attr)) 
 			dbg(0,"debug='%s'\n", attr.u.str);
 	}
-	g_assert(count < maxcount);
+	dbg_assert(count < maxcount);
 	ret=g_malloc(sizeof(struct street_data)+count*sizeof(struct coord));
 	ret->item=*item;
 	ret->count=count;
