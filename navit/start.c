@@ -54,7 +54,7 @@ get_home_directory(void)
 	homedir = getenv("HOME");
 	if (!homedir)
 	{
-		g_warning("Could not find home directory. Using current directory as home directory.");
+		dbg(0,"Could not find home directory. Using current directory as home directory.");
 		homedir = ".";
 	} else {
 		homedir=g_strdup(homedir);

@@ -738,7 +738,7 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 						img=graphics_image_new(gra, icon);
 						g_free(icon);
 						if (! img)
-							g_warning("failed to load icon '%s'\n", e->u.icon.src);
+							dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
 					}
 					if (img) {
 						p.x=di->pnt[0].x - img->hot.x;
