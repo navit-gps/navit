@@ -224,6 +224,22 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
 	return 1;
 }
 
+static DBusHandlerResult
+request_navit_draw(DBusConnection *connection, DBusMessage *message)
+{
+	struct navit *navit;
+	DBusMessageIter iter;
+
+	navit=object_get_from_message(message, "navit");
+	if (! navit)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+	navit_draw(navit);
+	
+    return empty_reply(connection, message);
+}
+
+
 /**
  * Extracts a struct point from a DBus message
  *
@@ -440,6 +456,7 @@ struct dbus_method {
 	{"",                                     "iter",                "",        "o",  request_main_iter},
 	{"",                                     "iter_destroy",        "o",       "",   request_main_iter_destroy},
 	{"",                                     "get_navit",           "o",       "o",  request_main_get_navit},
+	{".navit",                               "draw",                "",        "",   request_navit_draw},
 	{".navit",                               "set_center",          "(iii)",   "",   request_navit_set_center},
 	{".navit",                               "set_center_screen",   "(ii)",    "",   request_navit_set_center_screen},
 	{".navit",                               "set_layout",          "s",       "",   request_navit_set_layout},
