@@ -1674,6 +1674,11 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	callback_list_call_attr_2(this_->attr_cbl, attr_position_coord_geo, this_, nv->vehicle);
 	if (pnt)
 		navit_vehicle_draw(this_, nv, pnt);
+
+	/* Finally, if we reached our destination, stop navigation. */
+	if (route_destination_reached(this_->route)) {
+		navit_set_destination(this_, NULL, NULL);
+	}
 }
 
 /**
