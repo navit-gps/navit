@@ -106,4 +106,9 @@ debug_printf(int level, const char *module, const int mlen,const char *function,
 	va_end(ap);
 }
 
-
+void
+debug_assert_fail(char *module, const int mlen,const char *function, const int flen, char *file, int line, char *expr)
+{
+	debug_printf(0,module,mlen,function,flen,1,"%s:%d assertion failed:%s\n", file, line, expr);
+	abort();
+}
