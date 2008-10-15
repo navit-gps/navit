@@ -72,7 +72,7 @@ file_create(char *name)
 	fstat(file->fd, &stat);
 	file->size=stat.st_size;
 	file->name = g_strdup(name);
-	g_assert(file != NULL);
+	dbg_assert(file != NULL);
 	file->next=file_list;
 	file_list=file;
 	return file;
@@ -122,13 +122,13 @@ file_mmap(struct file *file)
     file->begin = (char*)mmap_readonly_win32( file->name, &file->map_handle, &file->map_file );
 #else
 	file->begin=mmap(NULL, file->size, PROT_READ|PROT_WRITE, MAP_PRIVATE, file->fd, 0);
-	g_assert(file->begin != NULL);
+	dbg_assert(file->begin != NULL);
 	if (file->begin == (void *)0xffffffff) {
 		perror("mmap");
 		return 0;
 	}
 #endif
-	g_assert(file->begin != (void *)0xffffffff);
+	dbg_assert(file->begin != (void *)0xffffffff);
 	file->end=file->begin+file->size;
 
 	return 1;
