@@ -71,7 +71,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 		<tracking>
 		</tracking>
 
-		<route>
+		<route destination_distance="50">
 			<speed type="street_0,street_1_city" value="10" />
 			<speed type="street_2_city" value="30" />
 			<speed type="street_3_city" value="40" />
