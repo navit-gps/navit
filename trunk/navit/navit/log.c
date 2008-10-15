@@ -27,6 +27,8 @@
 #include <glib.h>
 #include "file.h"
 #include "item.h"
+#include "event.h"
+#include "callback.h"
 #include "debug.h"
 #include "log.h"
 
@@ -44,7 +46,8 @@ struct log {
 	int mkdir;
 	int flush_size;
 	int flush_time;
-	guint timer;
+	struct event_timeout *timer;
+	struct callback *timer_callback;
 	struct timeval last_flush;
 	char *filename;
 	char *filename_ex1;
@@ -182,10 +185,9 @@ log_change_required(struct log *this_)
 	return (strcmp(this_->filename_ex1, buffer) != 0);
 }
 
-static gboolean
-log_timer(gpointer data)
+static void
+log_timer(struct log *this_)
 {
-	struct log *this_=data;
 	struct timeval tv;
 	int delta;
 	gettimeofday(&tv, NULL);
@@ -193,7 +195,6 @@ log_timer(gpointer data)
 	dbg(1,"delta=%d flush_time=%d\n", delta, this_->flush_time);
 	if (this_->flush_time && delta >= this_->flush_time*1000)
 		log_flush(this_);
-	return TRUE;
 }
 
 int
@@ -242,7 +243,8 @@ log_new(struct attr **attrs)
 		ret->flush_time=flush_time->u.num;
 	if (ret->flush_time) {
 		dbg(1,"interval %d\n", ret->flush_time*1000);
-		ret->timer=g_timeout_add(ret->flush_time*1000, log_timer, ret);
+		ret->timer_callback=callback_new_1(callback_cast(log_timer), ret);
+		ret->timer=event_add_timeout(ret->flush_time*1000, 1, ret->timer_callback);
 	}
 	expand_filenames(ret);
 	if (ret->lazy)
@@ -291,8 +293,8 @@ log_write(struct log *this_, char *data, int len)
 void
 log_destroy(struct log *this_)
 {
-	if (this_->timer)
-		g_source_remove(this_->timer);
+	callback_destroy(this_->timer_callback);
+	event_remove_timeout(this_->timer);
 	log_flush(this_);
 	log_close(this_);
 	g_free(this_);
