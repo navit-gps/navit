@@ -19,8 +19,10 @@
 
 #include <string.h>
 #include <glib.h>
-#include <gmodule.h>
 #include "config.h"
+#ifdef USE_PLUGINS
+#include <gmodule.h>
+#endif
 #include "plugin.h"
 #include "file.h"
 #define PLUGIN_C
@@ -33,7 +35,9 @@ struct plugin {
 	int lazy;
 	int ondemand;
 	char *name;
+#ifdef USE_PLUGINS
 	GModule *mod;
+#endif
 	void (*init)(void);
 };
 
@@ -45,6 +49,7 @@ struct plugins {
 struct plugin *
 plugin_new(char *plugin)
 {
+#ifdef USE_PLUGINS
 	struct plugin *ret;
 	if (! g_module_supported()) {
 		return NULL;
@@ -52,27 +57,30 @@ plugin_new(char *plugin)
 	ret=g_new0(struct plugin, 1);
 	ret->name=g_strdup(plugin);
 	return ret;
-	
+#else
+	return NULL;
+#endif
 }
 
 int
 plugin_load(struct plugin *pl)
 {
+#ifdef USE_PLUGINS
 	gpointer init;
 
 	GModule *mod;
 
 	if (pl->mod) {
-		g_warning("can't load '%s', already loaded\n", pl->name);
+		dbg(0,"can't load '%s', already loaded\n", pl->name);
 		return 0;
 	}
 	mod=g_module_open(pl->name, G_MODULE_BIND_LOCAL | (pl->lazy ? G_MODULE_BIND_LAZY : 0));
 	if (! mod) {
-		g_warning("can't load '%s', Error '%s'\n", pl->name, g_module_error());
+		dbg(0,"can't load '%s', Error '%s'\n", pl->name, g_module_error());
 		return 0;
 	}
 	if (!g_module_symbol(mod, "plugin_init", &init)) {
-		g_warning("can't load '%s', plugin_init not found\n", pl->name);
+		dbg(0,"can't load '%s', plugin_init not found\n", pl->name);
 		g_module_close(mod);
 		return 0;
 	} else {
@@ -80,6 +88,9 @@ plugin_load(struct plugin *pl)
 		pl->init=init;
 	}
 	return 1;
+#else
+	return 0;
+#endif
 }
 
 char *
@@ -106,11 +117,13 @@ plugin_set_lazy(struct plugin *pl, int lazy)
 	pl->lazy=lazy;
 }
 
+#ifdef USE_PLUGINS
 static int
 plugin_get_ondemand(struct plugin *pl)
 {
 	return pl->ondemand;
 }
+#endif
 
 static void
 plugin_set_ondemand(struct plugin *pl, int ondemand)
@@ -127,8 +140,10 @@ plugin_call_init(struct plugin *pl)
 void
 plugin_unload(struct plugin *pl)
 {
+#ifdef USE_PLUGINS
 	g_module_close(pl->mod);
 	pl->mod=NULL;
+#endif
 }
 
 void
@@ -180,7 +195,7 @@ plugins_add_path(struct plugins *pls, struct attr **attrs) {
 		if (! (pl=g_hash_table_lookup(pls->hash, name))) {
 			pl=plugin_new(name);
 			if (! pl) {
-				g_warning("failed to create plugin '%s'\n", name);
+				dbg(0,"failed to create plugin '%s'\n", name);
 				continue;
 			}
 			g_hash_table_insert(pls->hash, plugin_get_name(pl), pl);

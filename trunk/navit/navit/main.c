@@ -52,7 +52,7 @@ struct map_data *map_data_default;
 
 static void sigchld(int sig)
 {
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(__CEGCC__)
 	int status;
 	while (waitpid(-1, &status, WNOHANG) > 0);
 #endif
@@ -67,7 +67,7 @@ gchar *get_home_directory(void)
 	homedir = getenv("HOME");
 	if (!homedir)
 	{
-		g_warning("Could not find home directory. Using current directory as home directory.");
+		dbg(0,"Could not find home directory. Using current directory as home directory.");
 		homedir = ".";
 	} else {
 		homedir=g_strdup(homedir);

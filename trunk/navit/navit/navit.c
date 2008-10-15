@@ -152,7 +152,7 @@ navit_get_mapset(struct navit *this_)
 	if(this_->mapsets){
 		return this_->mapsets->data;
 	} else {
-		g_warning("No mapsets enabled! Is it on purpose? Navit can't draw a map. Please check your navit.xml\n");
+		dbg(0,"No mapsets enabled! Is it on purpose? Navit can't draw a map. Please check your navit.xml\n");
 	}
 	exit(-1);
 }
@@ -473,7 +473,7 @@ navit_set_gui(struct navit *this_, struct gui *gui)
 		if (! main_loop_gui) {
 			main_loop_gui=this_->gui;
 		} else {
-			g_warning("gui with main loop already active, ignoring this instance");
+			dbg(0,"gui with main loop already active, ignoring this instance");
 			return 0;
 		}
 	}
@@ -1202,12 +1202,12 @@ navit_init(struct navit *this_)
 	struct navit_vehicle *nv;
 
 	if (!this_->gui) {
-		g_warning("no gui\n");
+		dbg(0,"no gui\n");
 		navit_destroy(this_);
 		return;
 	}
 	if (!this_->gra) {
-		g_warning("no graphics\n");
+		dbg(0,"no graphics\n");
 		navit_destroy(this_);
 		return;
 	}
@@ -1215,9 +1215,9 @@ navit_init(struct navit *this_)
 		struct attr attr_type_gui, attr_type_graphics;
 		gui_get_attr(this_->gui, attr_type, &attr_type_gui, NULL);
 		graphics_get_attr(this_->gra, attr_type, &attr_type_graphics, NULL);
-		g_warning("failed to connect graphics '%s' to gui '%s'\n", attr_type_graphics.u.str, attr_type_gui.u.str);
-		g_warning(" Please see http://wiki.navit-project.org/index.php/Failed_to_connect_graphics_to_gui\n");
-		g_warning(" for explanations and solutions\n");
+		dbg(0,"failed to connect graphics '%s' to gui '%s'\n", attr_type_graphics.u.str, attr_type_gui.u.str);
+		dbg(0," Please see http://wiki.navit-project.org/index.php/Failed_to_connect_graphics_to_gui\n");
+		dbg(0," for explanations and solutions\n");
 
 		navit_destroy(this_);
 		return;
