@@ -157,7 +157,7 @@ callback_call(struct callback *cb, int pcount, void **p)
 			break;
 		}
 	} else {
-		g_warning("too many parameters for callback (%d+%d)\n", cb->pcount, pcount);
+		dbg(0,"too many parameters for callback (%d+%d)\n", cb->pcount, pcount);
 	}
 }
 
