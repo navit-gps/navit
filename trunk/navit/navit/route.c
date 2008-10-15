@@ -186,6 +186,7 @@ struct route {
 	struct route_path *path2;	/**< Pointer to the route path */
 	struct map *map;			
 	struct map *graph_map;
+	int destination_distance;	/**< Distance to the destination at which the destination is considered "reached" */
 	int speedlist[route_item_last-route_item_first+1];	/**< The speedlist for this route */
 };
 
@@ -261,10 +262,19 @@ struct route *
 route_new(struct attr **attrs)
 {
 	struct route *this=g_new0(struct route, 1);
+	struct attr dest_attr;
+
 	if (!this) {
 		printf("%s:Out of memory\n", __FUNCTION__);
 		return NULL;
 	}
+
+	if (attr_generic_get_attr(attrs, NULL, attr_destination_distance, &dest_attr, NULL)) {
+		this->destination_distance = dest_attr.u.num;
+	} else {
+		this->destination_distance = 50; // Default value
+	}
+
 	return this;
 }
 
@@ -394,6 +404,39 @@ route_pos_contains(struct route *this, struct item *item)
 }
 
 /**
+ * @brief Checks if a route has reached its destination
+ *
+ * @param this The route to be checked
+ * @return True if the destination is "reached", false otherwise.
+ */
+int
+route_destination_reached(struct route *this)
+{
+	struct street_data *sd = this->pos->street;
+
+	if (!this->path2) {
+		return 0;
+	}
+
+	if (! item_is_equal(this->pos->street->item, this->dst->street->item)) { 
+		return 0;
+	}
+
+	if ((sd->flags & AF_ONEWAY) && (this->pos->lenneg >= this->dst->lenneg)) { // We would have to drive against the one-way road
+		return 0;
+	}
+	if ((sd->flags & AF_ONEWAYREV) && (this->pos->lenpos >= this->dst->lenpos)) {
+		return 0;
+	}
+	 
+	if (transform_distance(projection_mg, &this->pos->c, &this->dst->lp) > this->destination_distance) {
+		return 0;
+	}
+	
+	return 1;
+}
+
+/**
  * @brief Updates the route graph and the route path if something changed with the route
  *
  * This will update the route graph and the route path of the route if some of the
@@ -426,6 +469,7 @@ route_path_update(struct route *this)
 		profile(1,"route_path_new");
 		profile(0,"end");
 	}
+
 	if (oldpath) {
 		/* Destroy what's left */
 		route_path_destroy(oldpath);
