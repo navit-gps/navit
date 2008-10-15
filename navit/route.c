@@ -242,6 +242,9 @@ route_path_destroy(struct route_path *this)
 	c=this->path;
 	while (c) {
 		n=c->next;
+		if (c->attrs) { 
+			attr_list_free(c->attrs);
+		}
 		g_free(c);
 		c=n;
 	}
