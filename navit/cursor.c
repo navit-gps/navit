@@ -36,6 +36,7 @@
 #include "color.h"
 #include "cursor.h"
 #include "compass.h"
+#include "event.h"
 /* #include "track.h" */
 
 
@@ -48,7 +49,8 @@ struct cursor {
 	int current_gc;
 	int last_dir;
 	int last_draw_dir;
-	guint animate_timer;	
+	struct callback *animate_callback;
+	struct event_timeout *animate_timer;	
 	struct point cursor_pnt;
 };
 
@@ -120,7 +122,8 @@ cursor_draw(struct cursor *this_, struct point *pnt, int dir, int draw_dir, int 
 	}
 }
 
-static gboolean cursor_animate(struct cursor * this)
+static void
+cursor_animate(struct cursor * this)
 {
 	struct point p;
 	this->current_gc++;
@@ -129,7 +132,6 @@ static gboolean cursor_animate(struct cursor * this)
 	p.x = this->cursor_pnt.x;
 	p.y = this->cursor_pnt.y;
 	cursor_draw(this, &p, this->last_dir, this->last_draw_dir, 1);
-	return TRUE;
 }
 
 struct cursor *
@@ -165,8 +167,10 @@ cursor_new(struct graphics *gra, struct color *c, struct color *c2, int animate)
 			break; // no need to create other GCs if we are not animating
 		}
 	}
-	if (animate)
-		this->animate_timer=g_timeout_add(250, (GSourceFunc)cursor_animate, (gpointer *)this);	
+	if (animate) {
+		this->animate_callback=callback_new_1(callback_cast(cursor_animate), this);
+		this->animate_timer=event_add_timeout(250, 1, this->animate_callback);
+	}
 	this->cursor_pnt.x = 0;
 	this->cursor_pnt.y = 0;
 	dbg(2,"ret=%p\n", this);
@@ -177,12 +181,14 @@ void
 cursor_destroy(struct cursor *this_)
 {
 	int i;
-	if (this_->animate_timer)
-		g_source_remove(this_->animate_timer);
-	for (i=0;i<NUM_GC;i++)
+
+	callback_destroy(this_->animate_callback);
+	event_remove_timeout(this_->animate_timer);
+	for (i=0;i<NUM_GC;i++) {
 		if(this_->cursor_gc[i])
 			graphics_gc_destroy(this_->cursor_gc[i]);
 		if(this_->cursor_gc2[i])
 			graphics_gc_destroy(this_->cursor_gc2[i]);
+	}
 	g_free(this_);
 }

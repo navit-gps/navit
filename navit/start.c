@@ -148,6 +148,7 @@ int main(int argc, char **argv)
 	} while (!file_exists(config_file));
 	g_list_free(list);
 
+	event_request_system("glib","start");
 	if (!config_load(config_file, &error)) {
 		printf(_("Error parsing '%s': %s\n"), config_file, error->message);
 		exit(1);
@@ -158,7 +159,6 @@ int main(int argc, char **argv)
 		printf(_("No instance has been created, exiting\n"));
 		exit(1);
 	}
-	event_request_system("glib","start");
 	event_main_loop_run();
 
 	return 0;
