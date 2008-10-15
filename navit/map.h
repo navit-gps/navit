@@ -251,6 +251,7 @@ struct map_selection *map_selection_dup(struct map_selection *sel);
 void map_selection_destroy(struct map_selection *sel);
 int map_selection_contains_item_rect(struct map_selection *sel, struct item *item);
 int map_priv_is(struct map *map, struct map_priv *priv);
+void map_dump(struct map *map);
 /* end of prototypes */
 
 #endif
