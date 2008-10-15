@@ -117,7 +117,8 @@ struct navit {
 	struct menu *destinations;
 	struct point pressed, last, current;
 	int button_pressed,moved,popped;
-	guint button_timeout, motion_timeout;
+	struct event_timer *button_timeout, *motion_timeout;
+	struct callback *motion_timeout_callback;
 	int ignore_button;
 	struct log *textfile_debug_log;
 	struct pcoord destination;
@@ -223,17 +224,10 @@ navit_popup(void *data)
 {
 	struct navit *this_=data;
 	popup(this_, 1, &this_->pressed);
-	this_->button_timeout=0;
+	this_->button_timeout=NULL;
 	this_->popped=1;
 }
 
-
-static gboolean
-navit_handle_button_timeout(void *data)
-{
-	callback_call_0((struct callback *)data);
-	return FALSE;
-}
 
 int
 navit_ignore_button(struct navit *this_)
@@ -259,7 +253,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			this_->moved=0;
 			this_->popped=0;
 			if (popup_callback)
-				this_->button_timeout=g_timeout_add(500, navit_handle_button_timeout, popup_callback);
+				this_->button_timeout=event_add_timeout(500, 0, popup_callback);
 		}
 		if (button == 2)
 			navit_set_center_screen(this_, p);
@@ -272,15 +266,15 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 	} else {
 		this_->button_pressed=0;
 		if (this_->button_timeout) {
-			g_source_remove(this_->button_timeout);
-			this_->button_timeout=0;
+			event_remove_timeout(this_->button_timeout);
+			this_->button_timeout=NULL;
 			if (! this_->moved && ! transform_within_border(this_->trans, p, border))
 				navit_set_center_screen(this_, p);
 
 		}
 		if (this_->motion_timeout) {
-			g_source_remove(this_->motion_timeout);
-			this_->motion_timeout=0;
+			event_remove_timeout(this_->motion_timeout);
+			this_->motion_timeout=NULL;
 		}
 		if (this_->moved) {
 			struct point pt;
@@ -308,10 +302,9 @@ navit_button(void *data, int pressed, int button, struct point *p)
 }
 
 
-static gboolean
-navit_motion_timeout(void *data)
+static void
+navit_motion_timeout(struct navit *this_)
 {
-	struct navit *this_=data;
 	int dx, dy;
 
 	dx=(this_->current.x-this_->last.x);
@@ -323,7 +316,7 @@ navit_motion_timeout(void *data)
 		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current, 0);
 		this_->moved=1;
 	}
-	this_->motion_timeout=0;
+	this_->motion_timeout=NULL;
 	return FALSE;
 }
 
@@ -337,12 +330,14 @@ navit_handle_motion(struct navit *this_, struct point *p)
 		dy=(p->y-this_->pressed.y);
 		if (dx < -8 || dx > 8 || dy < -8 || dy > 8) {
 			if (this_->button_timeout) {
-				g_source_remove(this_->button_timeout);
-				this_->button_timeout=0;
+				event_remove_timeout(this_->button_timeout);
+				this_->button_timeout=NULL;
 			}
 			this_->current=*p;
+			if (! this_->motion_timeout_callback)
+				this_->motion_timeout_callback=callback_new_1(callback_cast(navit_motion_timeout), this_);
 			if (! this_->motion_timeout)
-				this_->motion_timeout=g_timeout_add(100, navit_motion_timeout, this_);
+				this_->motion_timeout=event_add_timeout(100, 0, this_->motion_timeout_callback);
 		}
 	}
 }

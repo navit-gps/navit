@@ -66,6 +66,8 @@ static void
 event_glib_remove_watch(struct event_watch *ev)
 {
 	GError *error = NULL;
+	if (! ev)
+		return;
 	g_source_remove(ev->source);
 	g_io_channel_shutdown(ev->iochan, 0, &error);
 	g_free(ev);
@@ -73,21 +75,21 @@ event_glib_remove_watch(struct event_watch *ev)
 
 struct event_timeout {
 	guint source;
+	struct callback *cb;
 };
 
 static gboolean
-event_glib_call_timeout_single(gpointer t)
+event_glib_call_timeout_single(struct event_timeout *ev)
 {
-	struct callback *cb=t;
-	callback_call_0(cb);
+	callback_call_0(ev->cb);
+	g_free(ev);
 	return FALSE;
 }
 
 static gboolean
-event_glib_call_timeout_multi(gpointer t)
+event_glib_call_timeout_multi(struct event_timeout *ev)
 {
-	struct callback *cb=t;
-	callback_call_0(cb);
+	callback_call_0(ev->cb);
 	return TRUE;
 }
 
@@ -96,7 +98,8 @@ static struct event_timeout *
 event_glib_add_timeout(int timeout, int multi, struct callback *cb)
 {
 	struct event_timeout *ret=g_new0(struct event_timeout, 1);
-	ret->source = g_timeout_add(timeout, multi ? (GSourceFunc)event_glib_call_timeout_multi : (GSourceFunc)event_glib_call_timeout_single, (gpointer)cb);
+	ret->cb=cb;
+	ret->source = g_timeout_add(timeout, multi ? (GSourceFunc)event_glib_call_timeout_multi : (GSourceFunc)event_glib_call_timeout_single, (gpointer)ret);
 
 	return ret;
 }
@@ -104,6 +107,8 @@ event_glib_add_timeout(int timeout, int multi, struct callback *cb)
 static void
 event_glib_remove_timeout(struct event_timeout *ev)
 {
+	if (! ev)
+		return;
 	g_source_remove(ev->source);
 	g_free(ev);
 }
