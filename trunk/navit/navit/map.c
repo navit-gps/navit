@@ -577,3 +577,27 @@ map_priv_is(struct map *map, struct map_priv *priv)
 {
 	return (map->priv == priv);
 }
+
+void
+map_dump(struct map *map)
+{
+	struct map_rect *mr=map_rect_new(map, NULL);
+	struct item *item;
+	int i,count,max=16384;
+	struct coord ca[max];
+	struct attr attr;
+
+	while ((item = map_rect_get_item(mr))) {
+		count=item_coord_get(item, ca, item->type < type_line ? 1: max);
+		if (item->type < type_line) 
+			printf("mg:0x%x 0x%x ", ca[0].x, ca[0].y);
+		printf("%s", item_to_name(item->type));
+		while (item_attr_get(item, attr_any, &attr)) 
+			printf(" %s='%s'", attr_to_name(attr.type), attr_to_text(&attr, map, 1));
+		printf("\n");
+		if (item->type >= type_line)
+			for (i = 0 ; i < count ; i++)
+				printf("mg:0x%x 0x%x\n", ca[i].x, ca[i].y);
+	}
+	map_rect_destroy(mr);
+}
