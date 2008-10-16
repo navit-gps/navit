@@ -42,6 +42,17 @@
 #include "xmlconfig.h"
 #include "config.h"
 
+#define HAVE_GLIB
+
+#ifdef HAVE_GLIB
+typedef GError xmlerror;
+#define ATTR_DISTANCE 1
+#else
+#include "ezxml.h"
+typedef GError xmlerror;
+#define ATTR_DISTANCE 2
+#endif
+
 struct xistate {
 	struct xistate *parent;
 	struct xistate *child;
@@ -60,13 +71,14 @@ struct xmldocument {
 	int level;
 };
 
+
 struct xmlstate {
 	const gchar **attribute_names;
 	const gchar **attribute_values;
 	struct xmlstate *parent;
 	struct attr element_attr;
 	const gchar *element;
-	GError **error;
+	xmlerror **error;
 	struct element_func *func;
 	struct xmldocument *document;
 };
@@ -678,7 +690,7 @@ start_element(GMarkupParseContext *context,
 		const gchar        **attribute_names,
 		const gchar        **attribute_values,
 		gpointer             user_data,
-		GError             **error)
+		xmlerror             **error)
 {
 	struct xmlstate *new=NULL, **parent = user_data;
 	struct element_func *e=elements,*func=NULL;
@@ -755,7 +767,7 @@ static void
 end_element (GMarkupParseContext *context,
 		const gchar         *element_name,
 		gpointer             user_data,
-		GError             **error)
+		xmlerror             **error)
 {
 	struct xmlstate *curr, **state = user_data;
 
@@ -767,10 +779,10 @@ end_element (GMarkupParseContext *context,
 	g_free(curr);
 }
 
-static gboolean parse_file(struct xmldocument *document, GError **error);
+static gboolean parse_file(struct xmldocument *document, xmlerror **error);
 
 static void
-xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gchar **attribute_values, struct xmldocument *doc_old, GError **error)
+xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gchar **attribute_values, struct xmldocument *doc_old, xmlerror **error)
 {
 	struct xmldocument doc_new;
 	struct file_wordexp *we;
@@ -965,19 +977,19 @@ xi_start_element(GMarkupParseContext *context,
 		const gchar        **attribute_names,
 		const gchar        **attribute_values,
 		gpointer             user_data,
-		GError             **error)
+		xmlerror             **error)
 {
 	struct xmldocument *doc=user_data;
 	struct xistate *xistate;
 	int i,count=0;
-	while (attribute_names[count++]);
+	while (attribute_names[count++*ATTR_DISTANCE]);
 	xistate=g_new0(struct xistate, 1);
 	xistate->element=element_name;
 	xistate->attribute_names=g_new(char *, count);
 	xistate->attribute_values=g_new(char *, count);
 	for (i = 0 ; i < count ; i++) {
-		xistate->attribute_names[i]=g_strdup(attribute_names[i]);
-		xistate->attribute_values[i]=g_strdup(attribute_values[i]);
+		xistate->attribute_names[i]=g_strdup(attribute_names[i*ATTR_DISTANCE]);
+		xistate->attribute_values[i]=g_strdup(attribute_values[i*ATTR_DISTANCE]);
 	}
 	xistate->parent=doc->last;
 	
@@ -988,10 +1000,10 @@ xi_start_element(GMarkupParseContext *context,
 	doc->last=xistate;
 	if (doc->active > 0 || xpointer_match(doc->xpointer, doc->first)) {
 		if(!g_ascii_strcasecmp("xi:include", element_name)) {
-			xinclude(context, attribute_names, attribute_values, doc, error);
+			xinclude(context, xistate->attribute_names, xistate->attribute_values, doc, error);
 			return;
 		}
-		start_element(context, element_name, attribute_names, attribute_values, doc->user_data, error);
+		start_element(context, element_name, xistate->attribute_names, xistate->attribute_values, doc->user_data, error);
 		doc->active++;
 	}
 		
@@ -1001,7 +1013,7 @@ static void
 xi_end_element (GMarkupParseContext *context,
 		const gchar         *element_name,
 		gpointer             user_data,
-		GError             **error)
+		xmlerror             **error)
 {
 	struct xmldocument *doc=user_data;
 	struct xistate *xistate=doc->last;
@@ -1035,7 +1047,7 @@ xi_text (GMarkupParseContext *context,
 		const gchar            *text,
 		gsize                   text_len,
 		gpointer                user_data,
-		GError               **error)
+		xmlerror               **error)
 {
 }
 
@@ -1049,8 +1061,9 @@ static const GMarkupParser parser = {
 	NULL
 };
 
+#ifdef HAVE_GLIB
 static gboolean
-parse_file(struct xmldocument *document, GError **error)
+parse_file(struct xmldocument *document, xmlerror **error)
 {
 	GMarkupParseContext *context;
 	gchar *contents, *message;
@@ -1081,8 +1094,36 @@ parse_file(struct xmldocument *document, GError **error)
 
 	return result;
 }
+#else
+static void
+parse_node(struct xmldocument *document, ezxml_t node)
+{
+	while (node) {
+		xi_start_element(NULL,node->name, node->attr, node->attr+1, document, NULL);
+		if (node->txt)
+			xi_text(NULL,node->txt,strlen(node->txt),document,NULL);
+		if (node->child)
+			parse_node(document, node->child);
+		xi_end_element (NULL,node->name,document,NULL);
+		node=node->ordered;
+	}
+}
 
-gboolean config_load(char *filename, GError **error)
+static gboolean
+parse_file(struct xmldocument *document, xmlerror **error)
+{
+	ezxml_t root = ezxml_parse_file(document->href);
+	document->active=document->xpointer ? 0:1;
+	document->first=NULL;
+	document->last=NULL;
+	
+	parse_node(document, root);	
+	
+	return TRUE;
+}
+#endif
+
+gboolean config_load(char *filename, xmlerror **error)
 {
 	struct xmldocument document;
 	struct xmlstate *curr=NULL;
