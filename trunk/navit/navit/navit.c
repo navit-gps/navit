@@ -1123,7 +1123,9 @@ navit_window_items_open(struct navit *this_, struct navit_window_items *nwi)
 	nwi->win=gui_datawindow_new(this_->gui, nwi->name, nwi->click, NULL);
 	h=mapset_open(navit_get_mapset(this_));
         while ((m=mapset_next(h, 1))) {
+#if 0
 		dbg(2,"m=%p %s\n", m, map_get_filename(m));
+#endif
 		mr=map_rect_new(m, &sel);
 		dbg(2,"mr=%p\n", mr);
 		while ((item=map_rect_get_item(mr))) {
