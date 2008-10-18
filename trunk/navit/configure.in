@@ -630,7 +630,7 @@ AM_CONDITIONAL(VEHICLE_DEMO, test "x${vehicle_demo}" = "xyes")
 AC_ARG_ENABLE(vehicle-file, [  --disable-vehicle-file          disable vehicle type file], vehicle_file=$enableval;vehicle_file_reason="configure parameter", vehicle_file=yes; vehicle_file_reason="default")
 AM_CONDITIONAL(VEHICLE_FILE, test "x${vehicle_file}" = "xyes")
 
-NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/intl"
+NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_builddir)/intl"
 NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/intl"
 AC_SUBST(NAVIT_CFLAGS)
 AC_SUBST(NAVIT_LIBS)
