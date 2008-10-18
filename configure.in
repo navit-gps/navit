@@ -80,7 +80,23 @@ fi
 X_CFLAGS="-I$x_includes"
 AS_IF([test -n "$ac_x_libraries"], [X_LIBS="-L$ac_x_libraries"])
 
-PKG_CHECK_MODULES(NAVIT, [glib-2.0 gmodule-2.0 gthread-2.0], [], AC_MSG_ERROR([glib-2.0 or gmodule-2.0 not found. Usually you need to install a package named glib2-devel or libglib2.0-dev]))
+PKG_CHECK_MODULES(NAVIT, [glib-2.0 gmodule-2.0 gthread-2.0],
+	[
+		glib=yes
+	]
+	[
+	AC_MSG_WARN([glib-2.0 or gmodule-2.0 not found. Usually you need to install a package named glib2-devel or libglib2.0-dev])
+	glib=no
+	NAVIT_CFLAGS="-I\$(top_srcdir)/navit/support -I\$(top_srcdir)/navit/support/glib -I\$(top_srcdir)/navit/support/ezxml"
+	NAVIT_LIBS="-L\$(top_builddir)/navit/support/glib -lsupport_glib -L\$(top_builddir)/navit/support/ezxml -lsupport_ezxml"
+	]
+)
+if test "x$glib" = "xyes"; then
+	AC_DEFINE(HAVE_GLIB, 1, [Define to 1 if you have (external) glib library])
+fi
+AM_CONDITIONAL(EVENT_GLIB, [test "x$glib" = "xyes"])
+AM_CONDITIONAL(SUPPORT_GLIB, [test "x$glib" = "xno"])
+AM_CONDITIONAL(SUPPORT_EZXML, [test "x$glib" = "xno"])
 
 AC_CHECK_HEADER(
 	zlib.h,
@@ -641,6 +657,8 @@ navit/speech/Makefile
 navit/speech/cmdline/Makefile
 navit/speech/speech_dispatcher/Makefile
 navit/support/Makefile
+navit/support/ezxml/Makefile
+navit/support/glib/Makefile
 navit/support/win32/Makefile
 navit/support/wordexp/Makefile
 navit/support/zlib/Makefile
