@@ -42,11 +42,14 @@
 #include <errno.h>
 
 #include "glib.h"
+#if NOT_NEEDED_FOR_NAVIT
 #include "gdebug.h"
+#endif /* NOT_NEEDED_FOR_NAVIT */
 #include "gprintfint.h"
 #include "gthreadprivate.h"
 #include "galias.h"
 
+#if NOT_NEEDED_FOR_NAVIT
 #ifdef G_OS_WIN32
 #include <process.h>		/* For getpid() */
 #include <io.h>
@@ -1053,6 +1056,7 @@ g_printerr (const gchar *format,
   g_free (string);
 }
 
+#endif /* NOT_NEEDED_FOR_NAVIT */
 gsize
 g_printf_string_upper_bound (const gchar *format,
 			     va_list      args)
@@ -1061,6 +1065,7 @@ g_printf_string_upper_bound (const gchar *format,
   return _g_vsnprintf (&c, 1, format, args) + 1;
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 void
 _g_messages_thread_init_nomessage (void)
 {
@@ -1109,6 +1114,7 @@ _g_debug_init (void)
       g_log_set_always_fatal (fatal_mask);
     }
 }
+#endif /* NOT_NEEDED_FOR_NAVIT */
 
 #define __G_MESSAGES_C__
 #include "galiasdef.c"

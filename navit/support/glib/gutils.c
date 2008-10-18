@@ -85,7 +85,9 @@
 #endif /* G_PLATFORM_WIN32 */
 
 #ifdef G_OS_WIN32
+#if NOT_NEEDED_FOR_NAVIT
 #  include <direct.h>
+#endif /* NOT_NEEDED_FOR_NAVIT */
 #  include <shlobj.h>
    /* older SDK (e.g. msvc 5.0) does not have these*/
 #  ifndef CSIDL_MYMUSIC
@@ -124,6 +126,7 @@
 #include <libintl.h>
 #endif
 
+#if NOT_NEEDED_FOR_NAVIT
 const guint glib_major_version = GLIB_MAJOR_VERSION;
 const guint glib_minor_version = GLIB_MINOR_VERSION;
 const guint glib_micro_version = GLIB_MICRO_VERSION;
@@ -3094,6 +3097,7 @@ g_get_language_names (void)
   return (G_CONST_RETURN gchar * G_CONST_RETURN *) cache->language_names;
 }
 
+#endif /* NOT_NEEDED_FOR_NAVIT */
 /**
  * g_direct_hash:
  * @v: a #gpointer key
@@ -3163,6 +3167,7 @@ g_int_hash (gconstpointer v)
   return *(const gint*) v;
 }
 
+#if NOT_NEEDED_FOR_NAVIT 
 /**
  * g_nullify_pointer:
  * @nullify_location: the memory address of the pointer.
@@ -3405,6 +3410,7 @@ g_get_tmp_dir (void)
 }
 
 #endif
+#endif /* NOT_NEEDED_FOR_NAVIT */
 
 #define __G_UTILS_C__
 #include "galiasdef.c"

@@ -99,6 +99,7 @@
  * [4] allocating ca. 8 chunks per block/page keeps a good balance between
  *     external and internal fragmentation (<= 12.5%). [Bonwick94]
  */
+#if NOT_NEEDED_FOR_NAVIT
 
 /* --- macros and constants --- */
 #define LARGEALIGNMENT          (256)
@@ -793,10 +794,12 @@ thread_memory_magazine2_free (ThreadMemory *tmem,
   mag->count++;
 }
 
+#endif /* NOT_NEEDED_FOR_NAVIT */
 /* --- API functions --- */
 gpointer
 g_slice_alloc (gsize mem_size)
 {
+#if NOT_NEEDED_FOR_NAVIT
   gsize chunk_size;
   gpointer mem;
   guint acat;
@@ -825,6 +828,9 @@ g_slice_alloc (gsize mem_size)
   if (G_UNLIKELY (allocator->config.debug_blocks))
     smc_notify_alloc (mem, mem_size);
   return mem;
+#else /* NOT_NEEDED_FOR_NAVIT */
+	return g_malloc(mem_size);
+#endif /* NOT_NEEDED_FOR_NAVIT */
 }
 
 gpointer
@@ -850,6 +856,7 @@ void
 g_slice_free1 (gsize    mem_size,
                gpointer mem_block)
 {
+#if NOT_NEEDED_FOR_NAVIT
   gsize chunk_size = P2ALIGN (mem_size);
   guint acat = allocator_categorize (chunk_size);
   if (G_UNLIKELY (!mem_block))
@@ -885,6 +892,9 @@ g_slice_free1 (gsize    mem_size,
         memset (mem_block, 0, mem_size);
       g_free (mem_block);
     }
+#else /* NOT_NEEDED_FOR_NAVIT */
+	g_free(mem_block);
+#endif /* NOT_NEEDED_FOR_NAVIT */
 }
 
 void
@@ -893,6 +903,7 @@ g_slice_free_chain_with_offset (gsize    mem_size,
                                 gsize    next_offset)
 {
   gpointer slice = mem_chain;
+#if NOT_NEEDED_FOR_NAVIT
   /* while the thread magazines and the magazine cache are implemented so that
    * they can easily be extended to allow for free lists containing more free
    * lists for the first level nodes, which would allow O(1) freeing in this
@@ -949,19 +960,24 @@ g_slice_free_chain_with_offset (gsize    mem_size,
       g_mutex_unlock (allocator->slab_mutex);
     }
   else                                  /* delegate to system malloc */
+#else /* NOT_NEEDED_FOR_NAVIT */
     while (slice)
       {
         guint8 *current = slice;
         slice = *(gpointer*) (current + next_offset);
+#if NOT_NEEDED_FOR_NAVIT
         if (G_UNLIKELY (allocator->config.debug_blocks) &&
             !smc_notify_free (current, mem_size))
           abort();
+#endif /* NOT_NEEDED_FOR_NAVIT */
         if (G_UNLIKELY (g_mem_gc_friendly))
           memset (current, 0, mem_size);
         g_free (current);
       }
+#endif /* NOT_NEEDED_FOR_NAVIT */
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 /* --- single page allocator --- */
 static void
 allocator_slab_stack_push (Allocator *allocator,
@@ -1474,3 +1490,4 @@ g_slice_debug_tree_statistics (void)
 
 #define __G_SLICE_C__
 #include "galiasdef.c"
+#endif /* NOT_NEEDED_FOR_NAVIT */
