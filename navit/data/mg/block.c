@@ -132,10 +132,10 @@ block_rect_print(struct coord_rect *r)
 static void
 block_rect_same(struct coord_rect *r1, struct coord_rect *r2)
 {
-	g_assert(r1->lu.x==r2->lu.x);
-	g_assert(r1->lu.y==r2->lu.y);
-	g_assert(r1->rl.x==r2->rl.x);
-	g_assert(r1->rl.y==r2->rl.y);
+	dbg_assert(r1->lu.x==r2->lu.x);
+	dbg_assert(r1->lu.y==r2->lu.y);
+	dbg_assert(r1->rl.x==r2->rl.x);
+	dbg_assert(r1->rl.y==r2->rl.y);
 }
 
 int
@@ -245,7 +245,7 @@ block_next(struct map_rect_priv *mr)
 				if (coord_rect_overlap(&mr->cur_sel->u.c_rect, &bt->r_curr)) {
 					mr->b.b=block_get_byid(mr->file, blk_num, &mr->b.p);
 					mr->b.block_num=blk_num;
-					g_assert(mr->b.b != NULL);
+					dbg_assert(mr->b.b != NULL);
 					mr->b.block_start=(unsigned char *)(mr->b.b);
 					mr->b.p_start=mr->b.p;
 					mr->b.end=mr->b.block_start+mr->b.b->size;
@@ -262,7 +262,7 @@ block_next(struct map_rect_priv *mr)
 					bt->stack[bt->stackp].rl.y=coord+1;
 				}
 				bt->stackp++;
-				g_assert(bt->stackp < BT_STACK_SIZE);
+				dbg_assert(bt->stackp < BT_STACK_SIZE);
 			} else {
 				if (bt->stackp) {
 					bt->stackp--;
