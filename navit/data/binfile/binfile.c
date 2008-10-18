@@ -119,6 +119,7 @@ static void lfh_to_cpu(struct zip_lfh *lfh) {
 
 static void cd_to_cpu(struct zip_cd *zcd) {
 	dbg_assert(zcd != NULL);
+	zcd->zipcensig = le32_to_cpu(zcd->zipcensig);
 	zcd->zipccrc   = le32_to_cpu(zcd->zipccrc);
 	zcd->zipcsiz   = le32_to_cpu(zcd->zipcsiz);
 	zcd->zipcunc   = le32_to_cpu(zcd->zipcunc);
