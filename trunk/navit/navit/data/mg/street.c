@@ -93,8 +93,8 @@ static int street_get_bytes(struct coord_rect *r)
         bytes=2;
         dx=r->rl.x-r->lu.x;
         dy=r->lu.y-r->rl.y;
-	g_assert(dx > 0);
-	g_assert(dy > 0); 
+	dbg_assert(dx > 0);
+	dbg_assert(dy > 0); 
         if (dx > 32767 || dy > 32767)
                 bytes=3;
         if (dx > 8388608 || dy > 8388608)
@@ -356,7 +356,7 @@ street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *it
 	if (L(street->str->segid) < 0)
 		street->type++;
 #if 0
-	g_assert(street->p != NULL);
+	dbg_assert(street->p != NULL);
 #endif
 	street->next=NULL;
 	street->status_rewind=street->status=L(street->str[1].segid) >= 0 ? 0:1;

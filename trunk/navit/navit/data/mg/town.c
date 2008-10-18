@@ -104,7 +104,7 @@ town_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		twn->attr_next=attr_none;
 		return 1;
 	default:
-		g_assert(1==0);
+		dbg_assert(1==0);
 		return 0;
 	}
 	return 1;

@@ -474,7 +474,7 @@ map_new_mg(struct map_methods *meth, struct attr **attrs)
 			if (! m->file[i]) {
 				maybe_missing=(i == file_border_ply || i == file_height_ply || i == file_sea_ply);
 				if (! maybe_missing)
-					g_warning("Failed to load %s", filename);
+					dbg(0,"Failed to load %s", filename);
 			} else
 				file_mmap(m->file[i]);
 			g_free(filename);
