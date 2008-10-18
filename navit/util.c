@@ -19,6 +19,7 @@
 
 #include <glib.h>
 #include <ctype.h>
+#include <stdarg.h>
 #include "util.h"
 
 void
@@ -72,6 +73,7 @@ g_strconcat_printf(gchar *buffer, gchar *fmt, ...)
 }
 
 #if defined(_WIN32) || defined(__CEGCC__)
+#include <windows.h>
 #include <stdio.h>
 char *stristr(const char *String, const char *Pattern)
 {
@@ -210,4 +212,19 @@ getline (char **lineptr, size_t *n, FILE *stream)
 {
   return getdelim (lineptr, n, '\n', stream);
 }
+
+#if defined(_UNICODE)
+wchar_t* newSysString(const char *toconvert)
+{
+	int newstrlen = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toconvert, -1, 0, 0);
+	wchar_t *newstring = g_new(wchar_t,newstrlen);
+	MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toconvert, -1, newstring, newstrlen) ;
+	return newstring;
+}
+#else
+char * newSysString(const char *toconvert)
+{
+	return g_strdup(toconvert);
+}
+#endif
 #endif

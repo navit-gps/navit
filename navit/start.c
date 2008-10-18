@@ -22,6 +22,7 @@
 #include <glib.h>
 #include <getopt.h>
 #include <libintl.h>
+#include "config.h"
 #include "version.h"
 #include "item.h"
 #include "coord.h"
@@ -73,7 +74,9 @@ int main(int argc, char **argv)
     GList *list = NULL, *li;
 
 
+#ifdef HAVE_GLIB
 	event_glib_init();
+#endif
 	main_init(argv[0]);
 	main_init_nls();
 	debug_init(argv[0]);
@@ -148,7 +151,12 @@ int main(int argc, char **argv)
 	} while (!file_exists(config_file));
 	g_list_free(list);
 
+#ifdef HAVE_GLIB
 	event_request_system("glib","start");
+#endif
+#ifdef __CEGCC__
+	config_file="\\Storage Card\\navit.xml";
+#endif
 	if (!config_load(config_file, &error)) {
 		printf(_("Error parsing '%s': %s\n"), config_file, error->message);
 		exit(1);

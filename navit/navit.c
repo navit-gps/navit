@@ -414,12 +414,14 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->self.u.navit=this_;
 	this_->attr_cbl=callback_list_new();
 
+#if !defined(_WIN32) && !defined(__CEGCC__)
 	f=popen("pidof /usr/bin/ipaq-sleep","r");
 	if (f) {
 		fscanf(f,"%d",&this_->pid);
 		dbg(1,"ipaq_sleep pid=%d\n", this_->pid);
 		pclose(f);
 	}
+#endif
 
 	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
@@ -1246,6 +1248,7 @@ navit_init(struct navit *this_)
 				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 			route_set_mapset(this_->route, ms);
+			route_set_projection(this_->route, transform_get_projection(this_->trans));
 		}
 		if (this_->tracking) {
 			tracking_set_mapset(this_->tracking, ms);
@@ -1538,7 +1541,6 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		return 1;
 	case attr_route:
 		this_->route=attr->u.route;
-		route_set_projection(this_->route, transform_get_projection(this_->trans));
 		break;
 	case attr_navigation:
 		this_->navigation=attr->u.navigation;

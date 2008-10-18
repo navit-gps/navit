@@ -54,6 +54,10 @@
   #define __bswap_16 OSSwapInt16
   #define __bswap_32 OSSwapInt32
   #define __bswap_64 OSSwapInt64
+#elif if defined(_WIN32) || defined(__CEGCC__)
+  #define __BIG_ENDIAN 4321
+  #define __LITTLE_ENDIAN 1234
+  #define __BYTE_ORDER __LITTLE_ENDIAN
 #else
   #define __bswap_16(value)  \
       ((((value) & 0xff) << 8) | ((value) >> 8))
@@ -65,15 +69,16 @@
          << 32) | \
       (uint64_t)bswap_32((uint32_t)((value) >> 32)))
 #endif
+#endif
 
-#if __BYTE_ORDER == __BIG_ENDIAN
+#if  __BYTE_ORDER == __BIG_ENDIAN 
   #define le16_to_cpu(x)	__bswap_16 (x)
   #define le32_to_cpu(x)	__bswap_32 (x)
   #define le64_to_cpu(x)	__bswap_64 (x)
   #define cpu_to_le16(x)	__bswap_16 (x)
   #define cpu_to_le32(x)	__bswap_32 (x)
   #define cpu_to_le64(x)	__bswap_64 (x)
-#elif __BYTE_ORDER == __LITTLE_ENDIAN
+#elif __BYTE_ORDER == __LITTLE_ENDIAN 
   #define le16_to_cpu(x)	(x)
   #define le32_to_cpu(x)	(x)
   #define cpu_to_le16(x)	(x)

@@ -42,15 +42,17 @@
 #include "xmlconfig.h"
 #include "config.h"
 
-#define HAVE_GLIB
-
-#ifdef HAVE_GLIB
 typedef GError xmlerror;
+#ifdef HAVE_GLIB
 #define ATTR_DISTANCE 1
 #else
 #include "ezxml.h"
-typedef GError xmlerror;
 #define ATTR_DISTANCE 2
+#define G_MARKUP_ERROR 0
+#define G_MARKUP_ERROR_INVALID_CONTENT 0
+#define G_MARKUP_ERROR_PARSE 0
+#define G_MARKUP_ERROR_UNKNOWN_ELEMENT 0
+typedef void * GMarkupParseContext;
 #endif
 
 struct xistate {
@@ -1052,6 +1054,7 @@ xi_text (GMarkupParseContext *context,
 }
 
 
+#ifdef HAVE_GLIB
 
 static const GMarkupParser parser = {
 	xi_start_element,
@@ -1061,7 +1064,6 @@ static const GMarkupParser parser = {
 	NULL
 };
 
-#ifdef HAVE_GLIB
 static gboolean
 parse_file(struct xmldocument *document, xmlerror **error)
 {
