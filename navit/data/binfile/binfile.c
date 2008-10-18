@@ -97,13 +97,13 @@ struct map_search_priv {
 
 
 static void minmax_to_cpu(struct minmax * mima) {
-	g_assert(mima  != NULL);
+	dbg_assert(mima  != NULL);
 	mima->min = le16_to_cpu(mima->min);
 	mima->max = le16_to_cpu(mima->max);
 }
 
 static void lfh_to_cpu(struct zip_lfh *lfh) {
-	g_assert(lfh != NULL);
+	dbg_assert(lfh != NULL);
 	lfh->ziplocsig = le32_to_cpu(lfh->ziplocsig);
 	lfh->zipver    = le16_to_cpu(lfh->zipver);
 	lfh->zipgenfld = le16_to_cpu(lfh->zipgenfld);
@@ -118,7 +118,7 @@ static void lfh_to_cpu(struct zip_lfh *lfh) {
 }
 
 static void cd_to_cpu(struct zip_cd *zcd) {
-	g_assert(zcd != NULL);
+	dbg_assert(zcd != NULL);
 	zcd->zipccrc   = le32_to_cpu(zcd->zipccrc);
 	zcd->zipcsiz   = le32_to_cpu(zcd->zipcsiz);
 	zcd->zipcunc   = le32_to_cpu(zcd->zipcunc);
@@ -132,7 +132,7 @@ static void cd_to_cpu(struct zip_cd *zcd) {
 }
 
 static void eoc_to_cpu(struct zip_eoc *eoc) {
-	g_assert(eoc != NULL);
+	dbg_assert(eoc != NULL);
 	eoc->zipesig   = le32_to_cpu(eoc->zipesig);
 	eoc->zipedsk   = le16_to_cpu(eoc->zipedsk);
 	eoc->zipecen   = le16_to_cpu(eoc->zipecen);
@@ -409,7 +409,7 @@ static struct item_methods methods_binfile = {
 static void
 push_tile(struct map_rect_priv *mr, struct tile *t)
 {
-	g_assert(mr->tile_depth < 8);
+	dbg_assert(mr->tile_depth < 8);
 	mr->t=&mr->tiles[mr->tile_depth++];
 	*(mr->t)=*t;
 	mr->t->pos=mr->t->pos_next=mr->t->start;
@@ -510,7 +510,7 @@ setup_pos(struct map_rect_priv *mr)
 #if 0
 		fprintf(stderr,"offset=%d\n", (unsigned char *)(mr->pos)-mr->m->f->begin);
 #endif
-		g_error("size error");
+		dbg(0,"size error");
 	}
 	t->pos_next=t->pos+size;
 	mr->item.type=le32_to_cpu(*(t->pos++));
