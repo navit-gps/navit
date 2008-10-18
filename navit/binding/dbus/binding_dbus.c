@@ -450,21 +450,23 @@ struct dbus_method {
 	char *path;
 	char *method;
 	char *signature;
+    char *signature_name;
     char *response;
+    char *response_name;
 	DBusHandlerResult(*func)(DBusConnection *connection, DBusMessage *message);
 } dbus_methods[] = {
-	{"",                                     "iter",                "",        "o",  request_main_iter},
-	{"",                                     "iter_destroy",        "o",       "",   request_main_iter_destroy},
-	{"",                                     "get_navit",           "o",       "o",  request_main_get_navit},
-	{".navit",                               "draw",                "",        "",   request_navit_draw},
-	{".navit",                               "set_center",          "(iii)",   "",   request_navit_set_center},
-	{".navit",                               "set_center_screen",   "(ii)",    "",   request_navit_set_center_screen},
-	{".navit",                               "set_layout",          "s",       "",   request_navit_set_layout},
-	{".navit",                               "zoom",                "i(ii)",   "",   request_navit_zoom},
-	{".navit",                               "zoom",                "i",       "",   request_navit_zoom},
-	{".navit",                               "resize",              "ii",      "",   request_navit_resize},
-	{".navit",                               "set_position",        "(iii)",   "",   request_navit_set_position},
-	{".navit",                               "set_destination",     "(iii)s",  "",   request_navit_set_destination},
+	{"",        "iter",                "",        "",                                        "o",  "navit", request_main_iter},
+	{"",        "iter_destroy",        "o",       "navit",                                   "",   "",      request_main_iter_destroy},
+	{"",        "get_navit",           "o",       "navit",                                   "o",  "",      request_main_get_navit},
+	{".navit",  "draw",                "",        "",                                        "",   "",      request_navit_draw},
+	{".navit",  "set_center",          "(iii)",   "(projection,longitude,latitude)",         "",   "",      request_navit_set_center},
+	{".navit",  "set_center_screen",   "(ii)",    "(pixel_x,pixel_y)",                       "",   "",      request_navit_set_center_screen},
+	{".navit",  "set_layout",          "s",       "layoutname",                              "",   "",      request_navit_set_layout},
+	{".navit",  "zoom",                "i(ii)",   "factor(pixel_x,pixel_y)",                 "",   "",      request_navit_zoom},
+	{".navit",  "zoom",                "i",       "factor",                                  "",   "",      request_navit_zoom},
+	{".navit",  "resize",              "ii",      "upperleft,lowerright",                    "",   "",      request_navit_resize},
+	{".navit",  "set_position",        "(iii)",   "(projection,longitude,latitude)",         "",   "",      request_navit_set_position},
+	{".navit",  "set_destination",     "(iii)s",  "(projection,longitude,latitude)comment",  "",   "",      request_navit_set_destination},
 };
 
 static char *
@@ -486,11 +488,11 @@ generate_navitintrospectxml(void)
 
         // set input signature if existent
         if (strcmp(dbus_methods[i].signature, ""))
-            navitintrospectxml = g_strconcat_printf(navitintrospectxml, "      <arg direction=\"in\"  type=\"%s\" />\n", dbus_methods[i].signature);
+            navitintrospectxml = g_strconcat_printf(navitintrospectxml, "      <arg direction=\"in\" name=\"%s\" type=\"%s\" />\n", dbus_methods[i].signature_name, dbus_methods[i].signature);
         
         // set response signature if existent
         if (strcmp(dbus_methods[i].response, ""))
-            navitintrospectxml = g_strconcat_printf(navitintrospectxml, "      <arg direction=\"out\" type=\"%s\" />\n", dbus_methods[i].response);
+            navitintrospectxml = g_strconcat_printf(navitintrospectxml, "      <arg direction=\"out\" name=\"%s\" type=\"%s\" />\n", dbus_methods[i].response_name, dbus_methods[i].response);
         
         // close the method
         navitintrospectxml = g_strconcat_printf(navitintrospectxml, "    </method>\n");
