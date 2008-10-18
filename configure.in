@@ -83,7 +83,7 @@ AS_IF([test -n "$ac_x_libraries"], [X_LIBS="-L$ac_x_libraries"])
 PKG_CHECK_MODULES(NAVIT, [glib-2.0 gmodule-2.0 gthread-2.0],
 	[
 		glib=yes
-	]
+	],
 	[
 	AC_MSG_WARN([glib-2.0 or gmodule-2.0 not found. Usually you need to install a package named glib2-devel or libglib2.0-dev])
 	glib=no
