@@ -564,6 +564,15 @@ if test x$enable_nls = xyes; then
  done
 fi
 
+AC_CHECK_HEADER(
+	byteswap.h,
+	AC_DEFINE(
+		[HAVE_BYTESWAP_H],
+		[1],
+		[Define to 1 if you have byteswap.h],
+		)
+		,
+)
 
 AC_SUBST(INTLIBS)
 AC_SUBST(MOFILES)
@@ -798,3 +807,4 @@ if  [ test x"$gtk2_pkgconfig" != xyes ] && [ test x"$sdl" != xyes ] && [ test x"
 	echo "" 
 	exit 1
 fi
+
