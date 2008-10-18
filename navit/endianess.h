@@ -54,7 +54,7 @@
   #define __bswap_16 OSSwapInt16
   #define __bswap_32 OSSwapInt32
   #define __bswap_64 OSSwapInt64
-#elif if defined(_WIN32) || defined(__CEGCC__)
+#elif  defined(_WIN32) || defined(__CEGCC__)
   #define __BIG_ENDIAN 4321
   #define __LITTLE_ENDIAN 1234
   #define __BYTE_ORDER __LITTLE_ENDIAN
@@ -68,7 +68,6 @@
       (((uint64_t)bswap_32((uint32_t)((value) & 0xffffffff)) \
          << 32) | \
       (uint64_t)bswap_32((uint32_t)((value) >> 32)))
-#endif
 #endif
 
 #if  __BYTE_ORDER == __BIG_ENDIAN 
