@@ -157,16 +157,16 @@ map_selection_contains_rect(struct map_selection *sel, struct coord_rect *r)
 {
 	struct map_selection *curr;
 
-	g_assert(r->lu.x <= r->rl.x);
-	g_assert(r->lu.y >= r->rl.y);
+	dbg_assert(r->lu.x <= r->rl.x);
+	dbg_assert(r->lu.y >= r->rl.y);
 
 	if (! sel)
 		return 1;
 	curr=sel;
 	while (curr) {
 		struct coord_rect *sr=&curr->u.c_rect;
-		g_assert(sr->lu.x <= sr->rl.x);
-		g_assert(sr->lu.y >= sr->rl.y);
+		dbg_assert(sr->lu.x <= sr->rl.x);
+		dbg_assert(sr->lu.y >= sr->rl.y);
 		if (r->lu.x <= sr->rl.x && r->rl.x >= sr->lu.x &&
 		    r->lu.y >= sr->rl.y && r->rl.y <= sr->lu.y)
 			return 1;
