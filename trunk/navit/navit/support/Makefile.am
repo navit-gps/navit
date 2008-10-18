@@ -1,4 +1,10 @@
 SUBDIRS=
+if SUPPORT_EZXML
+  SUBDIRS+=ezxml
+endif
+if SUPPORT_GLIB
+  SUBDIRS+=glib
+endif
 if SUPPORT_WORDEXP
   SUBDIRS+=wordexp
 endif

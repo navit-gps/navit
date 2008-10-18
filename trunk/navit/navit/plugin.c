@@ -163,6 +163,7 @@ plugins_new(void)
 
 void
 plugins_add_path(struct plugins *pls, struct attr **attrs) {
+#ifdef USE_PLUGINS 
 	struct attr *path_attr, *attr;
 	struct file_wordexp *we;
 	int active=1; // default active
@@ -209,6 +210,7 @@ plugins_add_path(struct plugins *pls, struct attr **attrs) {
 		plugin_set_ondemand(pl, ondemand);
 	}
 	file_wordexp_destroy(we);
+#endif
 }
 
 void
