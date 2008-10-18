@@ -412,7 +412,12 @@ route_pos_contains(struct route *this, struct item *item)
 int
 route_destination_reached(struct route *this)
 {
-	struct street_data *sd = this->pos->street;
+       struct street_data *sd = NULL;
+
+       if(! this->pos)
+         return 0;
+       
+       sd = this->pos->street;
 
 	if (!this->path2) {
 		return 0;
@@ -664,6 +669,7 @@ route_set_destination(struct route *this, struct pcoord *dst)
 	this->dst=NULL;
 	if (dst) {
 		this->dst=route_find_nearest_street(this->ms, dst);
+		if(this->dst)
 		route_info_distances(this->dst, dst->pro);
 	}
 	profile(1,"find_nearest_street");
