@@ -97,6 +97,7 @@ fi
 AM_CONDITIONAL(EVENT_GLIB, [test "x$glib" = "xyes"])
 AM_CONDITIONAL(SUPPORT_GLIB, [test "x$glib" = "xno"])
 AM_CONDITIONAL(SUPPORT_EZXML, [test "x$glib" = "xno"])
+AM_CONDITIONAL(DATA_POI_GEODOWNLOAD, [test "x$glib" = "xyes"])
 
 AC_CHECK_HEADER(
 	zlib.h,
@@ -232,14 +233,6 @@ fi
 AC_SUBST(IMLIB2_CFLAGS)
 AC_SUBST(IMLIB2_LIBS)
 
-
-AC_ARG_ENABLE(speech-speechd, [  --disable-speech-speechd             don't create speech speechd ], MODULE_SPEECH_SPEECHD=$enableval, MODULE_SPEECH_SPEECHD=yes)
-if test "x$MODULE_SPEECH_SPEECHD" = "xyes"; then
-	AC_CHECK_HEADER(libspeechd.h, AC_DEFINE([HAVE_LIBSPEECHD],[],Define to 1 if you have the <libspeechd.h> header file.) SPEECHD_LIBS="-lspeechd" speechd=yes,  AC_MSG_WARN([*** no libspeechd.h -- Speech output disabled]))
-fi
-AC_SUBST(SPEECHD_CFLAGS)
-AC_SUBST(SPEECHD_LIBS)
-AM_CONDITIONAL(SPEECH_SPEECH_DISPATCHER, [test "x$speechd" = "xyes"])
 
 
 AC_ARG_ENABLE(gui-sdl, [  --disable-gui-sdl             don't create gui sdl ], MODULE_GUI_SDL=$enableval, MODULE_GUI_SDL=yes)
@@ -616,6 +609,27 @@ then
 fi
 AM_CONDITIONAL(SUPPORT_WIN32, [test "x$win32" = "xyes"])
 
+# gui
+AC_ARG_ENABLE(gui-internal, [  --disable-gui-internal          disable gui type internal], gui_internal=$enableval;gui_internal_reason="configure parameter", gui_internal=yes; gui_internal_reason="default")
+AM_CONDITIONAL(GUI_INTERNAL, test "x${gui_internal}" = "xyes")
+
+# speech
+AC_ARG_ENABLE(speech-cmdline, [  --disable-speech-cmdline           disable speech type cmdline], speech_cmdline=$enableval;speech_cmdline_reason="configure parameter", speech_cmdline=yes; speech_cmdline_reason=default)
+AM_CONDITIONAL(SPEECH_CMDLINE, test "x${speech_cmdline}" = "xyes")
+AC_ARG_ENABLE(speech-speechd, [  --disable-speech-speech-dispatcher disable speech type speech-dispatcher], speech_speech_dispatcher=$enableval;speech_speech_dispatcher_reason="configure parameter", speech_speech_dispatcher=yes; speech_speech_dispatcher_reason=default)
+if test "x$speech_speech_dispatcher" = "xyes"; then
+	AC_CHECK_HEADER(libspeechd.h, AC_DEFINE([HAVE_LIBSPEECHD],[],Define to 1 if you have the <libspeechd.h> header file.) SPEECHD_LIBS="-lspeechd",  speech_speech_dispatcher=no; speech_speech_dispatcher_reason="libspeechd.h missing")
+fi
+AC_SUBST(SPEECHD_CFLAGS)
+AC_SUBST(SPEECHD_LIBS)
+AM_CONDITIONAL(SPEECH_SPEECH_DISPATCHER, test "x${speech_speech_dispatcher}" = "xyes")
+
+# vehicle
+AC_ARG_ENABLE(vehicle-demo, [  --disable-vehicle-demo          disable vehicle type demo], vehicle_demo=$enableval;vehicle_demo_reason="configure parameter", vehicle_demo=yes; vehicle_demo_reason="default")
+AM_CONDITIONAL(VEHICLE_DEMO, test "x${vehicle_demo}" = "xyes")
+AC_ARG_ENABLE(vehicle-file, [  --disable-vehicle-file          disable vehicle type file], vehicle_file=$enableval;vehicle_file_reason="configure parameter", vehicle_file=yes; vehicle_file_reason="default")
+AM_CONDITIONAL(VEHICLE_FILE, test "x${vehicle_file}" = "xyes")
+
 NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/intl"
 NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/intl"
 AC_SUBST(NAVIT_CFLAGS)
@@ -744,12 +758,6 @@ if test x"$gpsd" = xyes
 	else
 	echo "GPSD support: DISABLED"
 fi
-if test x"$speechd" = xyes
-	then
-	echo "SPEECHD     : ENABLED"
-	else
-	echo "SPEECHD     : DISABLED"
-fi
 if test x"${USE_GARMIN}" = xyes
 	then
 	if test "x$use_libgarmin" = "xyes"
@@ -767,6 +775,19 @@ if test "x$samplemap" = "xyes"
 	else
 	echo "Samplemap   : DISABLED"
 fi
+
+
+echo "GUI types:"
+echo "  internal: $gui_internal ($gui_internal_reason)"
+
+echo "Speech types:"
+echo "  cmdline: $speech_cmdline ($speech_cmdline_reason)"
+echo "  speech_dispatcher: $speech_speech_dispatcher ($speech_speech_dispatcher_reason)"
+
+echo "Vehicle types:"
+echo "  demo: $vehicle_demo ($vehicle_demo_reason)"
+echo "  file: $vehicle_file ($vehicle_file_reason)"
+
 if  [ test x"$gtk2_pkgconfig" != xyes ] && [ test x"$sdl" != xyes ] && [ test x"$directfb_pkgconfig" != xyes ]
 	then
 	echo ""
