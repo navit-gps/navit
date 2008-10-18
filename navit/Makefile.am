@@ -15,7 +15,7 @@ EXTRA_DIST = navit.xml
 
 noinst_LTLIBRARIES        = libnavit.la
 libnavit_la_SOURCES = attr.c cache.c callback.c compass.c coord.c country.c cursor.c data_window.c debug.c \
-	event.c event_glib.c event_glib.h file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
+	event.c event_glib.h file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
 	mapset.c maptype.c menu.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c \
 	profile.c projection.c route.c search.c speech.c transform.c track.c \
 	util.c vehicle.c xmlconfig.c attr.h attr_def.h cache.h callback.h color.h compass.h coord.h country.h \
@@ -31,6 +31,10 @@ navit_LDADD = libnavit.la @NAVIT_LIBS@ @ZLIB_LIBS@ -Lfib-1.1 -lfib
 osm2navit_CPPFLAGS = $(AM_CPPFLAGS) @ZLIB_CFLAGS@ @POSTGRESQL_CFLAGS@
 osm2navit_SOURCES = osm2navit.c
 osm2navit_LDADD = libnavit.la @NAVIT_LIBS@ @ZLIB_LIBS@ @POSTGRESQL_LIBS@
+
+if EVENT_GLIB
+  libnavit_la_SOURCES += event_glib.c
+endif
 
 if !PLUGINS
   navit_SOURCES += builtin.c
