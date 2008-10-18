@@ -187,8 +187,10 @@ typedef unsigned __int64 guintptr;
 
 #define G_GNUC_INTERNAL
 
+#if NOT_NEEDED_FOR_NAVIT
 #define G_THREADS_ENABLED
 #define G_THREADS_IMPL_WIN32
+#endif /* NOT_NEEDED_FOR_NAVIT */
 typedef struct _GMutex* GStaticMutex;
 #define G_STATIC_MUTEX_INIT NULL
 #define g_static_mutex_get_mutex(mutex) \
@@ -241,6 +243,10 @@ union _GSystemThread
 
 #define G_MODULE_SUFFIX "dll"
 
+#define HAVE_GOOD_PRINTF
+#define NO_SYS_SIGLIST_DECL
+#define GLIB_STATIC_COMPILATION
+#define G_DISABLE_CHECKS
 /* A GPid is an abstraction for a process "handle". It is *not* an
  * abstraction for a process identifier in general. GPid is used in
  * GLib only for descendant processes spawned with the g_spawn*

@@ -132,8 +132,10 @@ g_malloc (gsize n_bytes)
       if (mem)
 	return mem;
 
+#if NOT_NEEDED_FOR_NAVIT
       g_error ("%s: failed to allocate %"G_GSIZE_FORMAT" bytes",
                G_STRLOC, n_bytes);
+#endif /* NOT_NEEDED_FOR_NAVIT */
     }
 
   return NULL;
@@ -152,8 +154,10 @@ g_malloc0 (gsize n_bytes)
       if (mem)
 	return mem;
 
+#if NOT_NEEDED_FOR_NAVIT
       g_error ("%s: failed to allocate %"G_GSIZE_FORMAT" bytes",
                G_STRLOC, n_bytes);
+#endif /* NOT_NEEDED_FOR_NAVIT */
     }
 
   return NULL;
@@ -171,8 +175,10 @@ g_realloc (gpointer mem,
       if (mem)
 	return mem;
 
+#if NOT_NEEDED_FOR_NAVIT
       g_error ("%s: failed to allocate %"G_GSIZE_FORMAT" bytes",
                G_STRLOC, n_bytes);
+#endif /* NOT_NEEDED_FOR_NAVIT */
     }
 
   if (mem)
@@ -278,11 +284,15 @@ g_mem_set_vtable (GMemVTable *vtable)
 	  glib_mem_vtable.try_realloc = vtable->try_realloc ? vtable->try_realloc : glib_mem_vtable.realloc;
 	  vtable_set = TRUE;
 	}
+#if NOT_NEEDED_FOR_NAVIT
       else
 	g_warning (G_STRLOC ": memory allocation vtable lacks one of malloc(), realloc() or free()");
+#endif /* NOT_NEEDED_FOR_NAVIT */
     }
+#if NOT_NEEDED_FOR_NAVIT
   else
     g_warning (G_STRLOC ": memory allocation vtable can only be set once at startup");
+#endif /* NOT_NEEDED_FOR_NAVIT */
 }
 
 
@@ -696,6 +706,7 @@ gboolean g_mem_gc_friendly = FALSE;
 static void
 g_mem_init_nomessage (void)
 {
+#if NOT_NEEDED_FOR_NAVIT
   gchar buffer[1024];
   const gchar *val;
   const GDebugKey keys[] = {
@@ -711,6 +722,7 @@ g_mem_init_nomessage (void)
     {
       g_mem_gc_friendly = TRUE;
     }
+#endif /* NOT_NEEDED_FOR_NAVIT */
   g_mem_initialized = TRUE;
 }
 

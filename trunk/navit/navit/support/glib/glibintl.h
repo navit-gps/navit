@@ -1,9 +1,11 @@
 #ifndef __GLIBINTL_H__
 #define __GLIBINTL_H__
 
+#if NOT_NEEDED_FOR_NAVIT
 #ifndef SIZEOF_CHAR
 #error "config.h must be included prior to glibintl.h"
 #endif
+#endif /* NOT_NEEDED_FOR_NAVIT */
 
 G_CONST_RETURN gchar *glib_gettext (const gchar *str);
 

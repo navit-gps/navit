@@ -378,7 +378,9 @@ g_ascii_strtod (const gchar *nptr,
   decimal_point = locale_data->decimal_point;
   decimal_point_len = strlen (decimal_point);
 
+#if NOT_NEEDED_FOR_NAVIT
   g_assert (decimal_point_len != 0);
+#endif /* NOT_NEEDED_FOR_NAVIT */
   
   decimal_point_pos = NULL;
   end = NULL;
@@ -593,7 +595,9 @@ g_ascii_formatd (gchar       *buffer,
   decimal_point = locale_data->decimal_point;
   decimal_point_len = strlen (decimal_point);
 
+#if NOT_NEEDED_FOR_NAVIT
   g_assert (decimal_point_len != 0);
+#endif /* NOT_NEEDED_FOR_NAVIT */
 
   if (decimal_point[0] != '.' ||
       decimal_point[1] != 0)
@@ -852,6 +856,7 @@ g_ascii_strtoll (const gchar *nptr,
     return (gint64) result;
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 G_CONST_RETURN gchar*
 g_strerror (gint errnum)
 {
@@ -1299,11 +1304,15 @@ g_strerror (gint errnum)
 #endif
     }
 #else /* NO_SYS_ERRLIST */
+#if NOT_NEEDED_FOR_NAVIT
   extern int sys_nerr;
   extern char *sys_errlist[];
 
   if ((errnum > 0) && (errnum <= sys_nerr))
     return sys_errlist [errnum];
+#else /* NOT_NEEDED_FOR_NAVIT */
+  return NULL;
+#endif /* NOT_NEEDED_FOR_NAVIT */
 #endif /* NO_SYS_ERRLIST */
 
   msg = g_static_private_get (&msg_private);
@@ -1449,11 +1458,15 @@ extern const char *strsignal(int);
     }
 #else /* NO_SYS_SIGLIST */
 
+#if NOT_NEEDED_FOR_NAVIT
 #ifdef NO_SYS_SIGLIST_DECL
   extern char *sys_siglist[];	/*(see Tue Jan 19 00:44:24 1999 in changelog)*/
 #endif
 
   return (char*) /* this function should return const --josh */ sys_siglist [signum];
+#else /* NOT_NEEDED_FOR_NAVIT */
+  return NULL;
+#endif /* NOT_NEEDED_FOR_NAVIT */
 #endif /* NO_SYS_SIGLIST */
 
   msg = g_static_private_get (&msg_private);
@@ -1467,6 +1480,7 @@ extern const char *strsignal(int);
   
   return msg;
 }
+#endif /* NOT_NEEDED_FOR_NAVIT */
 
 /* Functions g_strlcpy and g_strlcat were originally developed by
  * Todd C. Miller <Todd.Miller@courtesan.com> to simplify writing secure code.
@@ -2083,7 +2097,9 @@ g_strcompress (const gchar *source)
 	  switch (*p)
 	    {
 	    case '\0':
+#if NOT_NEEDED_FOR_NAVIT
 	      g_warning ("g_strcompress: trailing \\");
+#endif /* NOT_NEEDED_FOR_NAVIT */
 	      goto out;
 	    case '0':  case '1':  case '2':  case '3':  case '4':
 	    case '5':  case '6':  case '7':
@@ -2243,6 +2259,7 @@ g_strchomp (gchar *string)
   return string;
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_strsplit:
  * @string: a string to split.
@@ -2417,6 +2434,7 @@ g_strsplit_set (const gchar *string,
   
   return result;
 }
+#endif /* NOT_NEEDED_FOR_NAVIT */
 
 /**
  * g_strfreev:
@@ -2574,6 +2592,7 @@ g_strjoin (const gchar  *separator,
   return string;
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 
 /**
  * g_strstr_len:
@@ -2630,6 +2649,7 @@ g_strstr_len (const gchar *haystack,
       return NULL;
     }
 }
+#endif /* NOT_NEEDED_FOR_NAVIT */
 
 /**
  * g_strrstr:
@@ -2680,6 +2700,7 @@ g_strrstr (const gchar *haystack,
   return NULL;
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_strrstr_len:
  * @haystack: a nul-terminated string.
@@ -3098,6 +3119,7 @@ g_dngettext (const gchar *domain,
   return dngettext (domain, msgid, msgid_plural, n);
 }
 
+#endif /* NOT_NEEDED_FOR_NAVIT */
 
 #define __G_STRFUNCS_C__
 #include "galiasdef.c"

@@ -47,6 +47,7 @@ g_error_new_valist (GQuark         domain,
   return error;
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_error_new:
  * @domain: error domain 
@@ -175,6 +176,7 @@ g_error_matches (const GError *error,
 #define ERROR_OVERWRITTEN_WARNING "GError set over the top of a previous GError or uninitialized memory.\n" \
                "This indicates a bug in someone's code. You must ensure an error is NULL before it's set.\n" \
                "The overwriting error message was: %s"
+#endif /* NOT_NEEDED_FOR_NAVIT */
 
 /**
  * g_set_error:
@@ -207,10 +209,13 @@ g_set_error (GError      **err,
 
   if (*err == NULL)
     *err = new;
+#if NOT_NEEDED_FOR_NAVIT
   else
     g_warning (ERROR_OVERWRITTEN_WARNING, new->message);    
+#endif /* NOT_NEEDED_FOR_NAVIT */
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_set_error_literal:
  * @err: a return location for a #GError, or %NULL
@@ -371,5 +376,6 @@ g_propagate_prefixed_error (GError      **dest,
     }
 }
 
+#endif /* NOT_NEEDED_FOR_NAVIT */
 #define __G_ERROR_C__
 #include "galiasdef.c"
