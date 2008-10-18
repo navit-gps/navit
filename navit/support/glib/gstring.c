@@ -44,6 +44,7 @@
 
 #include "galias.h"
 
+#if NOT_NEEDED_FOR_NAVIT
 struct _GStringChunk
 {
   GHashTable *const_table;
@@ -52,6 +53,7 @@ struct _GStringChunk
   gsize       this_size;       
   gsize       default_size;    
 };
+#endif /* NOT_NEEDED_FOR_NAVIT */
 
 /* Hash Functions.
  */
@@ -101,6 +103,7 @@ g_str_hash (gconstpointer v)
   return h;
 }
 
+#if NOT_NEEDED_FOR_NAVIT
 #define MY_MAXSIZE ((gsize)-1)
 
 static inline gsize
@@ -1480,5 +1483,6 @@ g_string_append_printf (GString     *string,
   va_end (args);
 }
 
+#endif /* NOT_NEEDED_FOR_NAVIT */
 #define __G_STRING_C__
 #include "galiasdef.c"
