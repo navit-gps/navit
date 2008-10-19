@@ -21,31 +21,12 @@
 static GArray *popup_menu_array;
 #endif
 
-const char g_szClassName[] = "navit_gui_class";
+const TCHAR g_szClassName[] = TEXT("navit_gui_class");
 
 
 static menu_id = 0;
 static POINT menu_pt;
 
-#ifdef HAVE_GLIB
-static gunichar2* g_utf16 = NULL;
-
-static gunichar2* Utf8ToUtf16( const char* str )
-{
-	if ( g_utf16 )
-	{
-		g_free( g_utf16 );
-	}
-	g_utf16 = g_utf8_to_utf16( str, -1, NULL, NULL, NULL );
-	return g_utf16;
-}
-
-static gunichar2* Utf8ToUtf16_nd( const char* str )
-{
-	gunichar2* utf16= g_utf8_to_utf16( str, -1, NULL, NULL, NULL );
-	return utf16;
-}
-#endif
 
 gboolean message_pump( gpointer data )
 {
@@ -101,7 +82,7 @@ static void CreateToolBar(HWND hwnd)
 		hwnd, (HMENU)ID_CHILD_TOOLBAR, GetModuleHandle(NULL), NULL);
 
 	if(hTool == NULL)
-		MessageBox(hwnd, "Could not create tool bar.", "Error", MB_OK | MB_ICONERROR);
+		MessageBox(hwnd, TEXT("Could not create tool bar."), TEXT("Error"), MB_OK | MB_ICONERROR);
 
 	SendMessage(hTool, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 
@@ -117,56 +98,56 @@ static void CreateToolBar(HWND hwnd)
 	tbb[0].fsState = TBSTATE_ENABLED;
 	tbb[0].fsStyle = TBSTYLE_BUTTON;
 	tbb[0].idCommand = ID_DISPLAY_ZOOMIN;
-	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  Utf8ToUtf16( _("ZoomIn" ) ) );
+	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  L"ZoomIn" );
 	tbb[0].iString = iStr;
 
 	tbb[1].iBitmap = iImageOffset+1;
 	tbb[1].fsState = TBSTATE_ENABLED;
 	tbb[1].fsStyle = TBSTYLE_BUTTON;
 	tbb[1].idCommand = ID_DISPLAY_ZOOMOUT;
-	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  Utf8ToUtf16( _("ZoomOut" ) ) );
+	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  L"ZoomOut" );
 	tbb[1].iString = iStr;
 
 	tbb[2].iBitmap = iImageOffset+4;
 	tbb[2].fsState = TBSTATE_ENABLED;
 	tbb[2].fsStyle = TBSTYLE_BUTTON;
 	tbb[2].idCommand = ID_DISPLAY_REFRESH;
-	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  Utf8ToUtf16( _("Refresh" ) ) );
+	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  L"Refresh" );
 	tbb[2].iString = iStr;
 
 	tbb[3].iBitmap = iImageOffset+2;
 	tbb[3].fsState = TBSTATE_ENABLED;
 	tbb[3].fsStyle = TBSTYLE_BUTTON;
 	tbb[3].idCommand = ID_DISPLAY_ZOOMIN;
-	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  Utf8ToUtf16( _("Cursor" ) ) );
+	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  L"Cursor" );
 	tbb[3].iString = iStr;
 
 	tbb[4].iBitmap = iImageOffset+5;
 	tbb[4].fsState = TBSTATE_ENABLED;
 	tbb[4].fsStyle = TBSTYLE_BUTTON;
 	tbb[4].idCommand = ID_DISPLAY_ORIENT;
-	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  Utf8ToUtf16( _("Orientation" ) ) );
+	iStr = SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  L"Orientation" );
 	tbb[4].iString = iStr;
 
 	tbb[5].iBitmap = iImageOffset+8;
 	tbb[5].fsState = TBSTATE_ENABLED;
 	tbb[5].fsStyle = TBSTYLE_BUTTON;
 	tbb[5].idCommand = ID_DISPLAY_ZOOMIN;
-	iStr= SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  Utf8ToUtf16( _("Destination" ) ) );
+	iStr= SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  L"Destination" );
 	tbb[5].iString = iStr;
 
 	tbb[6].iBitmap = iImageOffset+3;
 	tbb[6].fsState = TBSTATE_ENABLED;
 	tbb[6].fsStyle = TBSTYLE_BUTTON;
 	tbb[6].idCommand = ID_DISPLAY_ZOOMIN;
-	iStr= SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  Utf8ToUtf16( _("Roadbook" ) ) );
+	iStr= SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  L"Roadbook" );
 	tbb[6].iString = iStr;
 
 	tbb[7].iBitmap = iImageOffset+9;
 	tbb[7].fsState = TBSTATE_ENABLED;
 	tbb[7].fsStyle = TBSTYLE_BUTTON;
 	tbb[7].idCommand = ID_FILE_EXIT;
-	iStr= SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  Utf8ToUtf16( _("_Quit" ) ) );
+	iStr= SendMessage(hTool, TB_ADDSTRINGW, 0, (LPARAM)  L"_Quit" );
 	tbb[7].iString = iStr;
 
 	SendMessage(hTool, TB_ADDBUTTONS, sizeof(tbb)/sizeof(TBBUTTON), (LPARAM)&tbb);
@@ -219,18 +200,20 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 			hSubMenu = CreatePopupMenu();
 
-			AppendMenuW(hSubMenu, MF_STRING, ID_DISPLAY_ZOOMIN, Utf8ToUtf16( _( "ZoomIn" ) ) );
-			AppendMenuW(hSubMenu, MF_STRING, ID_DISPLAY_ZOOMOUT, Utf8ToUtf16( _( "ZoomOut" ) ) );
-			AppendMenuW(hSubMenu, MF_STRING, ID_DISPLAY_REFRESH, Utf8ToUtf16( _( "Refresh" ) ) );
+			AppendMenuW(hSubMenu, MF_STRING, ID_DISPLAY_ZOOMIN, L"ZoomIn" );
+			AppendMenuW(hSubMenu, MF_STRING, ID_DISPLAY_ZOOMOUT, L"ZoomOut" );
+			AppendMenuW(hSubMenu, MF_STRING, ID_DISPLAY_REFRESH, L"Refresh" );
 			AppendMenuW(hSubMenu, MF_SEPARATOR, 0, NULL );
-			AppendMenuW(hSubMenu, MF_STRING, ID_FILE_EXIT, Utf8ToUtf16( _( "_Quit" ) ) );
+			AppendMenuW(hSubMenu, MF_STRING, ID_FILE_EXIT, L"_Quit" );
 
-			AppendMenuW(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, Utf8ToUtf16( _( "Display" ) ) );
+			AppendMenuW(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, L"Display" );
 			hSubMenu = CreatePopupMenu();
-			AppendMenu(hSubMenu, MF_STRING, ID_STUFF_GO, "&Go");
-			AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, "&Stuff");
+			AppendMenu(hSubMenu, MF_STRING, ID_STUFF_GO, TEXT("&Go"));
+			AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, TEXT("&Stuff"));
 
+#ifndef __CEGCC__
 			SetMenu(hwnd, hMenu);
+#endif
 
 			window_layout( hwnd );
 
@@ -363,30 +346,37 @@ HANDLE CreateWin32Window( void )
 	wc.hIconSm		 = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_NAVIT));
 	wc.hIcon		 = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_NAVIT));
 
+#ifdef __CEGCC__
+	if(!RegisterClass(&wc))
+#else
 	if(!RegisterClassEx(&wc))
+#endif
+
 	{
-		MessageBox(NULL, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		MessageBox(NULL, TEXT("Window Registration Failed!"), TEXT("Error!"), MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 	}
 
 	hwnd = CreateWindowEx(
 		WS_EX_CLIENTEDGE,
 		g_szClassName,
-		_( "Navit" ),
+		TEXT( "Navit" ),
 		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 		CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
 		NULL, NULL, NULL, NULL);
 
 	if(hwnd == NULL)
 	{
-		MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
+		MessageBox(NULL, TEXT("Window Creation Failed!"), TEXT("Error!"), MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 	}
 
 	ShowWindow(hwnd, TRUE);
 	UpdateWindow(hwnd);
 
+#if 0
 	g_idle_add (message_pump, NULL);
+#endif
 
 	return hwnd;
 }
@@ -429,11 +419,13 @@ static struct menu_priv *add_menu(	struct menu_priv *menu,
 	*ret = *menu;
 	*meth = menu_methods;
 
+	TCHAR *menuname = newSysString(name);
+
 	if ( type == menu_type_submenu )
 	{
 		HMENU hSubMenu = NULL;
 		hSubMenu = CreatePopupMenu();
-		AppendMenu(menu->hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, name );
+		AppendMenu(menu->hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, menuname );
 		ret->hMenu = hSubMenu;
 	}
 	else
@@ -549,5 +541,4 @@ static struct gui_priv *win32_gui_new( struct navit *nav, struct gui_methods *me
 void plugin_init(void)
 {
 	plugin_register_gui_type("win32", win32_gui_new);
-	plugin_register_graphics_type("win32_graphics", win32_graphics_new);
 }
