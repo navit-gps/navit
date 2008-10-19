@@ -1,7 +1,7 @@
 #ifndef WIN32_GUI_INCLUDED
 #define WIN32_GUI_INCLUDED
 
-#include "resources\resource.h"
+#include "resources/resource.h"
 #include "coord.h"
 #include "point.h"
 #include "graphics.h"

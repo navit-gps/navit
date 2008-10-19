@@ -641,12 +641,14 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 	font->hfont = CreateFontIndirect (&font->lf);
 	HFONT hOldFont = SelectObject(hMemDC, font->hfont );
 
+#ifdef HAVE_GLIB
 	gunichar2* utf16 = NULL;
 	glong utf16_len = 0;
 
 	utf16 = g_utf8_to_utf16( text, -1, NULL, &utf16_len, NULL );
 	TextOutW(hMemDC, 0,0, utf16, (size_t)utf16_len );
 	g_free( utf16 );
+#endif
 
 
 	SelectObject(hMemDC, hOldFont);
