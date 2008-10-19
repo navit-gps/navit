@@ -250,18 +250,36 @@ gui_gtk_action_activate(GtkAction *action, struct action_cb_data *data)
 		g_free(label);
 	}
 }
+
+struct gui_menu_info {
+	guint merge_id;
+	GtkAction *action;
+};
+
 static void
+gui_gtk_del_menu(struct gui_priv *this, struct gui_menu_info *meninfo)
+{
+	gtk_action_group_remove_action(this->dyn_group, meninfo->action);
+	gtk_ui_manager_remove_ui(this->ui_manager, meninfo->merge_id);
+}
+
+static struct gui_menu_info
 gui_gtk_add_menu(struct gui_priv *this, char *name, char *label, char *path, int submenu, struct action_cb_data *data)
 {
+	struct gui_menu_info meninfo;
 	GtkAction *action;
 	guint merge_id;
 
 	action=gtk_action_new(name, label, NULL, NULL);
+	meninfo.action = action;
 	if (data)
 		g_signal_connect(action, "activate", G_CALLBACK(gui_gtk_action_activate), data);
 	gtk_action_group_add_action(this->dyn_group, action);
-	merge_id=gtk_ui_manager_new_merge_id(this->ui_manager);
+	merge_id =gtk_ui_manager_new_merge_id(this->ui_manager);
+	meninfo.merge_id = merge_id;
 	gtk_ui_manager_add_ui(this->ui_manager, merge_id, path, name, name, submenu ? GTK_UI_MANAGER_MENU : GTK_UI_MANAGER_MENUITEM, FALSE);
+
+	return meninfo;
 }
 
 static void
@@ -406,15 +424,28 @@ gui_gtk_maps_init(struct gui_priv *this)
 }
 
 static void
-gui_gtk_destinations_init(struct gui_priv *this)
+gui_gtk_destinations_update(struct gui_priv *this)
 {
+	GList *curr;
 	struct attr attr;
 	struct action_cb_data *data;
 	struct map_rect *mr=NULL;
 	struct item *item;
+	struct gui_menu_info *meninfo;
 	struct coord c;
 	int count=0;
 	char *name, *label;
+
+	curr = g_list_first(this->dest_menuitems);
+
+	while (curr) {
+		gui_gtk_del_menu(this, (struct gui_menu_info *)curr->data);
+		g_free((struct gui_menu_info *)curr->data);
+		curr = g_list_next(curr);
+	};
+
+	g_list_free(this->dest_menuitems);
+	this->dest_menuitems = NULL;
 
 	if(navit_get_attr(this->nav, attr_former_destination_map, &attr, NULL) && attr.u.map && (mr=map_rect_new(attr.u.map, NULL))) {
 		while ((item=map_rect_get_item(mr))) {
@@ -430,7 +461,10 @@ gui_gtk_destinations_init(struct gui_priv *this)
 			data->attr.u.pcoord->pro=projection_mg;
 			data->attr.u.pcoord->x=c.x;
 			data->attr.u.pcoord->y=c.y;
-			gui_gtk_add_menu(this, name, label, "/ui/MenuBar/Route/FormerDestinations/FormerDestinationMenuAdditions",0,data); 
+			
+			meninfo = g_new(struct gui_menu_info, 1);
+			*meninfo = gui_gtk_add_menu(this, name, label, "/ui/MenuBar/Route/FormerDestinations/FormerDestinationMenuAdditions",0,data); 
+			this->dest_menuitems = g_list_prepend(this->dest_menuitems, meninfo);
 			g_free(name);
 		}
 		map_rect_destroy(mr);
@@ -438,16 +472,36 @@ gui_gtk_destinations_init(struct gui_priv *this)
 }
 
 static void
-gui_gtk_bookmarks_init(struct gui_priv *this)
+gui_gtk_destinations_init(struct gui_priv *this)
 {
+	navit_add_callback(this->nav, callback_new_attr_1(gui_gtk_destinations_update, attr_destination, this));
+	gui_gtk_destinations_update(this);
+}
+
+static void
+gui_gtk_bookmarks_update(struct gui_priv *this)
+{
+	GList *curr;
 	struct attr attr;
 	struct action_cb_data *data;
 	struct map_rect *mr=NULL;
+	struct gui_menu_info *meninfo;
 	struct item *item;
 	struct coord c;
 	int count=0;
 	char *parent, *name, *label, *label_full, *menu_label, *tmp_parent, *s;
 	GHashTable *hash;
+
+	curr = g_list_first(this->bookmarks_menuitems);
+
+	while (curr) {
+		gui_gtk_del_menu(this, (struct gui_menu_info *)curr->data);
+		g_free((struct gui_menu_info *)curr->data);
+		curr = g_list_next(curr);
+	};
+
+	g_list_free(this->bookmarks_menuitems);
+	this->bookmarks_menuitems = NULL;
 
 	if(navit_get_attr(this->nav, attr_bookmark_map, &attr, NULL) && attr.u.map && (mr=map_rect_new(attr.u.map, NULL))) {
 		hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
@@ -466,7 +520,9 @@ gui_gtk_bookmarks_init(struct gui_priv *this)
 					tmp_parent=g_strdup(tmp_parent);
 				} else {
 					name=g_strdup_printf("Bookmark %d", count++);
-					gui_gtk_add_menu(this, name, menu_label+(label-label_full),parent,1,NULL);
+					meninfo = g_new(struct gui_menu_info, 1);
+					*meninfo = gui_gtk_add_menu(this, name, menu_label+(label-label_full),parent,1,NULL);
+					this->bookmarks_menuitems = g_list_prepend(this->bookmarks_menuitems, meninfo);
 					tmp_parent=g_strdup_printf("%s/%s", parent, name);
 					g_hash_table_insert(hash, g_strdup(menu_label), g_strdup(tmp_parent));
 					g_free(name);
@@ -484,12 +540,21 @@ gui_gtk_bookmarks_init(struct gui_priv *this)
 			data->attr.u.pcoord->x=c.x;
 			data->attr.u.pcoord->y=c.y;
 			name=g_strdup_printf("Bookmark %d", count++);
-			gui_gtk_add_menu(this, name, label, parent,0,data); 
+			meninfo = g_new(struct gui_menu_info, 1);
+			*meninfo = gui_gtk_add_menu(this, name, label, parent,0,data);
+			this->bookmarks_menuitems = g_list_prepend(this->bookmarks_menuitems, meninfo);
 			g_free(name);
 			g_free(parent);
 		}
 		g_hash_table_destroy(hash);
 	}
+}
+
+static void
+gui_gtk_bookmarks_init(struct gui_priv *this)
+{
+	navit_add_callback(this->nav, callback_new_attr_1(gui_gtk_bookmarks_update, attr_bookmark_map, this));
+	gui_gtk_bookmarks_update(this);
 }
 
 static void
