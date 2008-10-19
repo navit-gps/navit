@@ -325,11 +325,16 @@ static const char g_szClassName[] = "NAVGRA";
 
 HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 {
+#ifdef __CEGCC__
+	WNDCLASS wc;
+#else
 	WNDCLASSEX wc;
+	wc.cbSize		 = sizeof(WNDCLASSEX);
+	wc.hIconSm		 = NULL;
+#endif
 	HWND hwnd;
     RECT rcParent;
 
-	wc.cbSize		 = sizeof(WNDCLASSEX);
 	wc.style		 = 0;
 	wc.lpfnWndProc	 = WndProc;
 	wc.cbClsExtra	 = 0;
@@ -340,8 +345,6 @@ HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
 	wc.lpszMenuName  = NULL;
 	wc.lpszClassName = g_szClassName;
-	wc.hIconSm		 = NULL;
-
 
 	HANDLE hdl = gr->wnd_parent_handle;
 	GetClientRect( gr->wnd_parent_handle,&rcParent);
@@ -358,6 +361,9 @@ HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 
 	gr->width = rcParent.right - rcParent.left;
 	gr->height  = rcParent.bottom - rcParent.top;
+#if defined(__CEGCC__)
+	(*gr->resize_callback)(gr->resize_callback_data, gr->width, gr->height);
+#endif
 
 	hwnd = CreateWindow( 	g_szClassName,
 							"",
@@ -781,7 +787,10 @@ static struct graphics_priv * graphics_win32_drawing_area_new_helper(struct grap
 
 struct graphics_priv* win32_graphics_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
 {
-	struct graphics_priv* this_=graphics_win32_drawing_area_new_helper(meth);
+	struct graphics_priv* this_;
+	if (!event_request_system("win32","graphics_win32"))
+		return NULL;
+	this_=graphics_win32_drawing_area_new_helper(meth);
 	return this_;
 }
 
