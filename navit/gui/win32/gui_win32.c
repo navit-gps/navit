@@ -155,6 +155,7 @@ static void CreateToolBar(HWND hwnd)
 
 static void window_layout( HWND hwnd )
 {
+#ifndef __CEGCC__
 	RECT rcClient;
 	RECT rcTool;
 	int iToolHeight;
@@ -179,6 +180,7 @@ static void window_layout( HWND hwnd )
 		MoveWindow( hChild,  rcClient.left, rcClient.top, rcClient.right- rcClient.left, rcClient.bottom - rcClient.top, TRUE );
 		PostMessage( hChild, WM_USER+1, 0, 0 );
 	}
+#endif
 }
 
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
@@ -329,11 +331,16 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 HANDLE CreateWin32Window( void )
 {
+#ifdef __CEGCC__
+	WNDCLASS wc;
+#else
 	WNDCLASSEX wc;
+	wc.cbSize		 = sizeof(WNDCLASSEX);
+	wc.hIconSm		 = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_NAVIT));
+#endif
 	HWND hwnd;
 	MSG Msg;
 
-	wc.cbSize		 = sizeof(WNDCLASSEX);
 	wc.style		 = 0;
 	wc.lpfnWndProc	 = WndProc;
 	wc.cbClsExtra	 = 0;
@@ -343,7 +350,6 @@ HANDLE CreateWin32Window( void )
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
 	wc.lpszMenuName  = NULL;
 	wc.lpszClassName = g_szClassName;
-	wc.hIconSm		 = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_NAVIT));
 	wc.hIcon		 = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_NAVIT));
 
 #ifdef __CEGCC__
@@ -361,8 +367,14 @@ HANDLE CreateWin32Window( void )
 		WS_EX_CLIENTEDGE,
 		g_szClassName,
 		TEXT( "Navit" ),
+#if defined(__CEGCC__)
+		WS_SYSMENU | WS_CLIPCHILDREN,
+		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+#else
+
 		WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN,
 		CW_USEDEFAULT, CW_USEDEFAULT, 800, 600,
+#endif
 		NULL, NULL, NULL, NULL);
 
 	if(hwnd == NULL)
@@ -512,8 +524,6 @@ printf( "create popup menu %d \n", ret->hMenu );
 
 struct gui_methods win32_gui_methods = {
 	NULL, // win32_gui_menubar_new,
-	NULL, // win32_gui_toolbar_new,
-	NULL, // win32_gui_statusbar_new,
 	win32_gui_popup_new,
 	win32_gui_set_graphics,
 	NULL,
