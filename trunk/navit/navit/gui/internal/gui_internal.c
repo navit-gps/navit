@@ -2528,13 +2528,11 @@ static void gui_internal_menu_root(struct gui_priv *this)
 			gui_internal_cmd_settings, NULL));
 	gui_internal_widget_append(w, gui_internal_button_new(this, "Tools",
 			image_new_l(this, "gui_tools"), gravity_center|orientation_vertical));
-
-#if 0
+#if 0 
 	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, "Table Test",
 			image_new_l(this, "gui_settings"), gravity_center|orientation_vertical,
 			gui_internal_cmd_route, NULL));
 #endif
-
 							      
 	gui_internal_menu_render(this);
 	graphics_draw_mode(this->gra, draw_mode_end);
@@ -2961,7 +2959,7 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	widget->type=widget_table;
 	widget->flags=flags;
 	widget->data = g_new0(struct table_data,1);
-	widget->data_free=g_free;
+	widget->data_free=gui_internal_table_data_free;
 	data = (struct table_data*)widget->data;
 	
 
@@ -3047,6 +3045,7 @@ static GList * gui_internal_compute_table_dimensions(struct widget * w)
 	GList * cur_column=NULL;
 	struct widget * cell_w=NULL;
 	struct table_column_desc * current_cell=NULL;
+	struct table_data * table_data=NULL;
 	int height=0;
 	int width=0;
 
@@ -3055,11 +3054,15 @@ static GList * gui_internal_compute_table_dimensions(struct widget * w)
 	 * Scroll through the the table and
 	 * 1. Compute the maximum width + height of each column across all rows.
 	 */
-	
+	table_data = (struct table_data*) w->data;
 	for(cur_row=w->children;  cur_row ; cur_row = g_list_next(cur_row) )
 	{
 		cur_row_widget = (struct widget*) cur_row->data;
 		current_desc = column_desc;
+		if(cur_row_widget == table_data->button_box)
+		{
+			continue;
+		}
 		for(cur_column = cur_row_widget->children; cur_column; 
 		    cur_column=g_list_next(cur_column))
 		{
@@ -3125,10 +3128,10 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 			continue;
 		}
 		cell_desc = (struct table_column_desc *) current->data;
-		width = width + cell_desc->width;
+		width = width + cell_desc->width + this->spacing;
 		if(height < cell_desc->height) 
 		{
-			height = cell_desc->height;
+			height = cell_desc->height ;
 		}
 	}
 
@@ -3140,7 +3143,7 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 		}
 	}
 	gui_internal_widget_pack(this,table_data->button_box);  
-	w->h = count * height + table_data->button_box;
+	w->h = count * (height+this->spacing) +  table_data->button_box + this->spacing;
 	
 	if(w->h + w->c.y   > this->root.h   )
 	{
@@ -3151,7 +3154,6 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 		w->h = this->root.h- w->c.y  - height;
 	}
 	w->w = width;
-	
 	
 	/**
 	 * Deallocate column descriptions.
@@ -3209,14 +3211,14 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		current_desc = column_desc;
 		struct widget * cur_row_widget = (struct widget*)cur_row->data;
 		int max_height=0;
-		x =w->p.x;        
+		x =w->p.x+this->spacing;        
 		if(cur_row_widget == table_data->button_box )
 		{
 			continue;
 		}
 		dim = (struct table_column_desc*)current_desc->data;
 		
-		if( y + dim->height + table_data->button_box->h  >= w->p.y + w->h )
+		if( y + dim->height + table_data->button_box->h + this->spacing >= w->p.y + w->h )
 		{
 			/*
 			 * No more drawing space left.
@@ -3250,7 +3252,8 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	}
 	if(table_data  && table_data->button_box )
 	{
-		table_data->button_box->p.y =w->c.y+w->h-table_data->button_box->h;
+		table_data->button_box->p.y =w->p.y+w->h-table_data->button_box->h - 
+			this->spacing;
 		if(table_data->button_box->p.y < y )
 		{
 			table_data->button_box->p.y=y;
@@ -3308,15 +3311,16 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
  */
 void gui_internal_cmd_route(struct gui_priv * this, struct widget * wm)
 {
-#if 0 
+#if 0
+
 	struct widget * menu;
 	struct widget * w;
 	int idx;
 	char buffer[10];
 	
-	w = gui_internal_widget_table_new(this,0);
+	w = gui_internal_widget_table_new(this,gravity_center | orientation_vertical);
 	w->c = wm->c;
-	for(idx=0; idx < 50; idx++)
+	for(idx=0; idx < 52; idx++)
 	{
 		struct widget * row = gui_internal_widget_table_row_new
 			(this,gravity_left_top);
@@ -3423,3 +3427,22 @@ static void gui_internal_table_button_prev(struct gui_priv * this, struct widget
 	gui_internal_menu_render(this);
 }
 
+
+/**
+ * @brief deallocates a table_data structure.
+ *
+ */
+void gui_internal_table_data_free(void * p)
+{
+
+
+	/**
+	 * @note button_box and its children (next_button,prev_button)
+	 * have their memory managed by the table itself.
+	 */
+	struct table_data * table_data =  (struct table_data*) p;
+	g_list_free(table_data->page_headers);
+	g_free(p);
+
+
+}
