@@ -5,6 +5,7 @@
 #include "coord.h"
 #include "point.h"
 #include "graphics.h"
+#include "event.h"
 
 #define ID_CHILD_GFX 100
 #define ID_CHILD_TOOLBAR (ID_CHILD_GFX + 1)
@@ -71,6 +72,6 @@ struct statusbar_priv *gui_gtk_statusbar_new(struct gui_priv *gui, struct status
 struct menu_priv *gui_gtk_popup_new(struct gui_priv *gui, struct menu_methods *meth);
 struct datawindow_priv *gui_gtk_datawindow_new(struct gui_priv *gui, char *name, struct callback *click, struct callback *close, struct datawindow_methods *meth);
 
-struct graphics_priv* win32_graphics_new( struct graphics_methods *meth, struct attr **attrs);
+struct graphics_priv* win32_graphics_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs);
 
 #endif
