@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <wingdi.h>
-#include "Xpm2bmp.h"
+#include "xpm2bmp.h"
 
 #define _DBG
 
