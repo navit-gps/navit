@@ -2,6 +2,7 @@
 #include <process.h>
 #include <windows.h>
 #include <glib.h>
+#include <libintl.h>
 #include "config.h"
 #include "plugin.h"
 #include "gui.h"
@@ -15,14 +16,18 @@
 #include "debug.h"
 
 
+#ifdef HAVE_GLIB
 //static GHashTable *popup_callback_hash = NULL;
 static GArray *popup_menu_array;
+#endif
 
 const char g_szClassName[] = "navit_gui_class";
 
 
 static menu_id = 0;
 static POINT menu_pt;
+
+#ifdef HAVE_GLIB
 static gunichar2* g_utf16 = NULL;
 
 static gunichar2* Utf8ToUtf16( const char* str )
@@ -40,6 +45,7 @@ static gunichar2* Utf8ToUtf16_nd( const char* str )
 	gunichar2* utf16= g_utf8_to_utf16( str, -1, NULL, NULL, NULL );
 	return utf16;
 }
+#endif
 
 gboolean message_pump( gpointer data )
 {
@@ -279,6 +285,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 					return 0;
 				break;
 			}
+#if HAVE_GLIB
 			if ( popup_menu_array )
 			{
 				struct menu_priv* priv = (struct menu_priv*)g_array_index( popup_menu_array, gint, LOWORD(wParam) - POPUP_MENU_OFFSET );
@@ -293,6 +300,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 					}
 				}
 			}
+#endif
 		}
 		break;
 		case WM_USER+ 1:
@@ -434,7 +442,9 @@ static struct menu_priv *add_menu(	struct menu_priv *menu,
 	}
 
 	// g_hash_table_insert( popup_callback_hash, GINT_TO_POINTER( menu_id ),  (gpointer)cb );
+#if HAVE_GLIB
 	g_array_append_val( popup_menu_array, ret );
+#endif
 
 	ret->cb = cb;
 
@@ -488,6 +498,7 @@ struct menu_priv* win32_gui_popup_new(struct gui_priv *this_, struct menu_method
 
 	menu_id = POPUP_MENU_OFFSET;
 
+#if HAVE_GLIB
 	if ( popup_menu_array )
 	{
 		g_array_free (popup_menu_array, TRUE);
@@ -495,6 +506,7 @@ struct menu_priv* win32_gui_popup_new(struct gui_priv *this_, struct menu_method
 	}
 
 	popup_menu_array = g_array_new (FALSE, FALSE, sizeof (gint));
+#endif
 
 	ret->cb = NULL;
 	ret->hMenu = CreatePopupMenu();
