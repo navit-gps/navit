@@ -1,8 +1,8 @@
 SUBDIRS=
-if USE_BINDING_PYTHON
+if BINDING_PYTHON
   SUBDIRS+=python
 endif
-if USE_BINDING_DBUS
+if BINDING_DBUS
   SUBDIRS+=dbus
 endif
 
