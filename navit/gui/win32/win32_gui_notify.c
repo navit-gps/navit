@@ -72,7 +72,9 @@ LRESULT CALLBACK message_handler(HWND hwnd, UINT win_message, WPARAM wParam, LPA
             case NM_DBLCLK:
             {
                 message = DBLCLICK;
+#ifdef LPNMITEMACTIVATE
                 param1 = ((LPNMITEMACTIVATE)lParam)->iItem;
+#endif
             }
             break;
             case NM_CLICK:

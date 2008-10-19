@@ -9,7 +9,7 @@
 #include "debug.h"
 #include "util.h"
 #include "win32_gui_notify.h"
-#include "resources\resource.h"
+#include "resources/resource.h"
 
 static const TCHAR g_szDestinationClassName[] = TEXT("navit_gui_destinationwindow_class");
 
@@ -73,8 +73,10 @@ static void setlayout(struct datawindow_priv *datawindow)
 static void notify_apply(struct datawindow_priv *datawindow, int index, int param2)
 {
     TCHAR txtBuffer[1024];
+    char search_string[1024];
     struct attr search_attr;
     struct search_list_result *res;
+    
 
     if ( index >= 0 )
     {
@@ -145,6 +147,9 @@ static void notify_textchange(struct datawindow_priv *datawindow, int param1, in
 
     struct attr search_attr;
     struct search_list_result *res;
+    char search_string[1024];
+    TCHAR converted_iso2[32];
+    
 
     int lineLength = Edit_LineLength(datawindow->hwndEdit, 0);
     TCHAR line[lineLength + 1];
@@ -384,7 +389,9 @@ HANDLE create_destination_window( struct navit *nav )
                                    NULL,//(HMENU) ID_EDITCHILD,   // edit control ID
                                    (HINSTANCE) GetWindowLong(this_->hwnd, GWL_HINSTANCE),
                                    NULL);       // pointer not needed
+#ifdef LVS_EX_FULLROWSELECT
     (void)ListView_SetExtendedListViewStyle(this_->hwndList,LVS_EX_FULLROWSELECT);
+#endif
 
 
     win32_gui_notify( this_->notifications, this_->hwndEdit, CHANGE, notify_textchange);
