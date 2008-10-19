@@ -4,6 +4,23 @@ AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
 
 
+plugins=yes; plugins_reason=default
+postgresql=yes; postgresql_reason=default
+samplemap=yes; samplemap_reason=default
+binding_dbus=yes; binding_dbus_reason=default
+binding_python=yes; binding_python_reason=default
+gui_gtk=no; gui_gtk_reason=default
+gui_win32=no; gui_win32_reason=default
+gui_internal=yes; gui_internal_reason=default
+graphics_gtk_drawing_area=no; graphics_gtk_drawing_area_reason=default
+graphics_win32=no; graphics_win32_reason=default
+speech_cmdline=yes; speech_cmdline_reason=default
+speech_speech_dispatcher=yes; speech_speech_dispatcher_reason=default
+vehicle_demo=yes; vehicle_demo_reason=default
+vehicle_file=yes; vehicle_file_reason=default
+vehicle_gpsd=yes; vehicle_gpsd_reason=default
+vehicle_gypsy=yes; vehicle_gypsy_reason=default
+
 m4_ifndef([AC_USE_SYSTEM_EXTENSIONS],
 	[AC_DEFUN([AC_USE_SYSTEM_EXTENSIONS], [AC_GNU_SOURCE])])
 
@@ -21,25 +38,19 @@ if eval "test x$GXX = xyes"; then
 fi
 
 PKG_CHECK_EXISTS
-
-AC_ARG_ENABLE(plugins, 	[  --disable-plugins          disable plugins], 
-			[
-				AC_DISABLE_SHARED
-				AC_ENABLE_STATIC
-				plugins=$enableval
-			],
-			[
-				AC_ENABLE_SHARED
-				AC_DISABLE_STATIC
-				AC_DEFINE(
-					[USE_PLUGINS],
-					[],
-					Define to 1 if you have plugins.
-				)
-				plugins=yes
-			]
-)
-AC_PROG_LIBTOOL
+if test "x${cross_compiling}" = "xyes"; then
+	samplemap="no";samplemap_reason="not supported for cross compiling"
+	binding_python="no";binding_python_reason="not supported for cross compiling"
+	postgresql="no";postgresql_reason="not supported for cross compiling"
+	AC_MSG_CHECKING([for a C compiler for build tools])
+	AC_CHECK_PROGS(CC_FOR_BUILD, gcc cc)
+else
+	CC_FOR_BUILD=$CC
+fi
+CCLD_FOR_BUILD="$CC_FOR_BUILD"
+AC_SUBST(cross_compiling)
+AC_SUBST(CC_FOR_BUILD)
+AC_SUBST(CCLD_FOR_BUILD)
 
 AC_ARG_ENABLE(avoid-unaligned, [  --enable-avoid-unaligned          avoid unaligned accesses], AVOID_UNALIGNED=$enableval, AVOID_UNALIGNED=no)
 test x"${AVOID_UNALIGNED}" = xyes && AC_DEFINE(AVOID_UNALIGNED,[],Define to avoid unaligned access)
@@ -61,11 +72,14 @@ if test "x${enable_hildon}" = "xyes" ; then
 fi
 AM_CONDITIONAL(USE_HILDON, test "${enable_hildon}" = "xyes")
 
-AC_ARG_ENABLE(libgps, [  --disable-libgps             don't use libgps], USE_LIBGPS=$enableval, USE_LIBGPS=yes)
-AC_ARG_ENABLE(gypsy, [  --disable-gypsy             don't use gypsy], USE_GYPSY=$enableval, USE_GYPSY=yes)
 AC_ARG_ENABLE(garmin, [  --disable-garmin             disable garmin support], USE_GARMIN=$enableval, USE_GARMIN=yes)
 
-AC_ARG_ENABLE(samplemap, [  --disable-samplemap             don't build the samplemap], samplemap=$enableval, samplemap=yes)
+# samplemap
+AC_PATH_PROG(_PATH_BZCAT,[bzcat])
+if test "x${_PATH_BZCAT}" = "x" ; then
+	samplemap=no; samplemap_reason="bzcat missing"
+fi
+AC_ARG_ENABLE(samplemap, [  --disable-samplemap             don't build the samplemap], samplemap=$enableval;samplemap_reason="configure parameter")
 AM_CONDITIONAL(BUILD_SAMPLEMAP, [test "x$samplemap" = "xyes"])
 
 AC_ARG_ENABLE(fastmath, [  --disable-fastmath             don't build with fastmath], fastmath=$enableval, fastmath=yes)
@@ -80,20 +94,42 @@ fi
 X_CFLAGS="-I$x_includes"
 AS_IF([test -n "$ac_x_libraries"], [X_LIBS="-L$ac_x_libraries"])
 
-PKG_CHECK_MODULES(NAVIT, [glib-2.0 gmodule-2.0 gthread-2.0],
-	[
-		glib=yes
-	],
-	[
-	AC_MSG_WARN([glib-2.0 or gmodule-2.0 not found. Usually you need to install a package named glib2-devel or libglib2.0-dev])
-	glib=no
-	NAVIT_CFLAGS="-I\$(top_srcdir)/navit/support -I\$(top_srcdir)/navit/support/glib -I\$(top_srcdir)/navit/support/ezxml"
-	NAVIT_LIBS="-L\$(top_builddir)/navit/support/glib -lsupport_glib -L\$(top_builddir)/navit/support/ezxml -lsupport_ezxml"
-	]
-)
-if test "x$glib" = "xyes"; then
+PKG_CHECK_MODULES(GLIB, [glib-2.0 gthread-2.0], [glib=yes],[glib=no])
+if test "x${glib}" = "xyes"; then
 	AC_DEFINE(HAVE_GLIB, 1, [Define to 1 if you have (external) glib library])
+else
+	GLIB_CFLAGS="-I\$(top_srcdir)/navit/support -I\$(top_srcdir)/navit/support/glib -I\$(top_srcdir)/navit/support/ezxml"
+	GLIB_LIBS="-L\$(top_builddir)/navit/support/glib -lsupport_glib -L\$(top_builddir)/navit/support/ezxml -lsupport_ezxml"
+	speech_cmdline=no; speech_cmdline_reason="not yet supported without glib"
+	gui_internal=no; gui_internal_reason="not yet supported without glib"
+	vehicle_demo=no; vehicle_demo_reason="not yet supported without glib"
+	vehicle_file=no; vehicle_file_reason="not yet supported without glib"
 fi
+
+# gmodule
+PKG_CHECK_MODULES(GMODULE, [gmodule-2.0], [gmodule=yes], [gmodule=no])
+if test "x${gmodule}" = "xyes"; then
+	AC_DEFINE(HAVE_GMODULE, 1, [Define to 1 if you have gmodule])
+else
+	plugins="no"; plugins_reason="package gmodule missing"
+fi
+# plugins
+AC_ARG_ENABLE(plugins, 	[  --disable-plugins          disable plugins], [ plugins=$enableval;plugin_reason="configure parameter" ])
+if test "x${plugins}" = "xyes"; then
+	AC_ENABLE_SHARED
+	AC_DISABLE_STATIC
+	AC_DEFINE(
+		[USE_PLUGINS],
+		[],
+		Define to 1 if you have plugins.
+	)
+else
+	AC_DISABLE_SHARED
+	AC_ENABLE_STATIC
+fi
+AM_CONDITIONAL(PLUGINS, [test "x$plugins" = "xyes"])
+AC_PROG_LIBTOOL
+
 AM_CONDITIONAL(EVENT_GLIB, [test "x$glib" = "xyes"])
 AM_CONDITIONAL(SUPPORT_GLIB, [test "x$glib" = "xno"])
 AM_CONDITIONAL(SUPPORT_EZXML, [test "x$glib" = "xno"])
@@ -116,21 +152,14 @@ AM_CONDITIONAL(SUPPORT_ZLIB, [test "x$zlib" = "xno"])
 AC_SUBST(ZLIB_CFLAGS)
 AC_SUBST(ZLIB_LIBS)
 
-AC_ARG_ENABLE(gui-gtk, [  --disable-gui-gtk             don't create gui gtk ], MODULE_GUI_GTK=$enableval, MODULE_GUI_GTK=yes)
-if test "x$MODULE_GUI_GTK" = "xyes"; then
-	PKG_CHECK_MODULES(GTK2, [gtk+-2.0], [gtk2_pkgconfig=yes], [gtk2_pkgconfig=no])
-	if test "x$gtk2_pkgconfig" = "xyes"; then
-		AC_DEFINE(HAVE_GTK2, 1, [Define to 1 if you have gtk2])
-	fi
+# gtk
+PKG_CHECK_MODULES(GTK2, [gtk+-2.0], [gtk2_pkgconfig=yes], [gtk2_pkgconfig=no])
+if test "x$gtk2_pkgconfig" = "xyes"; then
+	AC_DEFINE(HAVE_GTK2, 1, [Define to 1 if you have gtk2])
+	graphics_gtk_drawing_area=yes; graphics_gtk_drawing_area_reason="gtk+-2.0 present"
+	gui_gtk=yes; gui_gtk_reason="gtk+-2.0 present"
 fi
 
-GTK2_CFLAGS="$GTK2_CFLAGS -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
-
-AC_SUBST(GTK2_CFLAGS)
-AC_SUBST(GTK2_LIBS)
-AM_CONDITIONAL(GUI_GTK, [test "x$gtk2_pkgconfig" = "xyes"])
-AM_CONDITIONAL(GRAPHICS_GTK_DRAWING_AREA, [test "x$gtk2_pkgconfig" = "xyes"])
-AM_CONDITIONAL(PLUGINS, [test "x$plugins" = "xyes"])
 
 AC_ARG_ENABLE(directfb, [  --enable-directfb             enable directfb gui and graphics], MODULE_DIRECTFB=$enableval, MODULE_DIRECTFB=no)
 
@@ -192,14 +221,19 @@ if test "x${enable_graphics_sdl}" = "xyes" ; then
 fi
 AM_CONDITIONAL(USE_GRAPHICS_SDL, test "x${enable_graphics_sdl}" = "xyes")
 
-AC_ARG_ENABLE(postgresql, [  --disable-postgresql             don't add postgresql support to osm2navit], enable_postgresql=$enableval, enable_postgresql=yes)
-if test "x${enable_postgresql}" = "xyes" ; then
+AC_ARG_ENABLE(postgresql, [  --disable-postgresql             don't add postgresql support to osm2navit], postgresql=$enableval;postgresql_reason="configure parameter")
+if test "x${postgresql}" = "xyes" ; then
 	if test -z "$PG_CONFIG"; then
             AC_PATH_PROG([PG_CONFIG], [pg_config], [])
         fi
         AC_MSG_CHECKING([for PostgreSQL libraries with $PG_CONFIG])
 	if test ! -x "$PG_CONFIG"; then
-	    enable_postgresql = "no"
+	    if test "x${PG_CONFIG}" = "x" ; then
+	    	 postgresql_reason="$PG_CONFIG not executable"
+	    else
+	    	 postgresql_reason="pg_config missing"
+            fi
+	    postgresql=no 
             AC_MSG_RESULT([no])
 	else
 	    POSTGRESQL_CFLAGS="-I`$PG_CONFIG --includedir`"
@@ -210,7 +244,7 @@ if test "x${enable_postgresql}" = "xyes" ; then
             AC_MSG_RESULT([yes])
        	fi 
 fi
-AM_CONDITIONAL(HAVE_POSTGRESQL, test "x${enable_postgresql}" = "xyes")
+AM_CONDITIONAL(HAVE_POSTGRESQL, test "x${postgresql}" = "xyes")
 
 PKG_CHECK_MODULES(FREETYPE2, [freetype2], [freetype2_pkgconfig=yes], [freetype2_pkgconfig=no])
 if test "x$freetype2_pkgconfig" = "xyes"; then
@@ -415,21 +449,7 @@ AC_SUBST(CLUTTER_LIBS)
 AM_CONDITIONAL(GUI_CLUTTER, [test "x$clutter_pkgconfig" = "xyes" -a "x$glc" = "xyes" ])
 	
 
-if test x"${USE_GYPSY}" = xyes
-then
-	PKG_CHECK_MODULES(GYPSY, gypsy, use_gypsy=yes, use_gypsy=no)
-	AC_SUBST(GYPSY_CFLAGS)
-	AC_SUBST(GYPSY_LIBS)
-fi
-AM_CONDITIONAL(VEHICLE_GYPSY, [test "x$use_gypsy" = "xyes"])
 
-if test x"${USE_LIBGPS}" = xyes
-then
-	AC_CHECK_HEADER(gps.h, AC_DEFINE([HAVE_LIBGPS],[],Define to 1 if you have the <gps.h> header file.) GPSD_LIBS="-lgps" gpsd=yes,  AC_MSG_WARN([*** no gps.h -- gpsd support disabled]))
-fi
-AC_SUBST(GPSD_CFLAGS)
-AC_SUBST(GPSD_LIBS)
-AM_CONDITIONAL(VEHICLE_GPSD, [test "x$gpsd" = "xyes"])
 
 if test x"${USE_GARMIN}" = xyes
 then
@@ -440,16 +460,10 @@ then
 fi
 	AM_CONDITIONAL(HAVELIBGARMIN, [test "x$use_libgarmin" = "xyes"])
 
-
-# binding python
-AC_ARG_ENABLE(binding-python, [  --disable-binding-python             don't create binding python], enable_binding_python=$enableval, enable_binding_python=yes)
-if test "x${enable_binding_python}" = "xyes" ; then
-	if test "x${cross_compiling}" = "xyes" ; then
-		AC_MSG_WARN([*** cross compiling, support for python disabled])
-		enable_binding_python="no"
-	fi
-fi
-if test "x${enable_binding_python}" = "xyes"; then
+## binding
+# python
+AC_ARG_ENABLE(binding-python, [  --disable-binding-python             don't create binding python], binding_python=$enableval;binding_python_reason="configure parameter")
+if test "x${binding_python}" = "xyes"; then
 	AC_PATH_PROG(_PATH_PYTHON,[python])
 	dnl Libraries and flags for embedded Python.
 	dnl FIXME: I wish there was a less icky way to get this.
@@ -469,32 +483,32 @@ if test "x${enable_binding_python}" = "xyes"; then
 			PYTHON_LIBS=`echo $PYTHON_LIBS | sed -e 's/[ \\t]*/ /g'`
 			AC_MSG_RESULT($py_libdir)
 		else
-			AC_MSG_WARN([$py_libdir/config/Makefile or $py_prefix/include/python${py_ver}/Python.h missing, support for python disabled])
-			enable_binding_python="no"
+			binding_python="no"
+			binding_python_reason="$py_libdir/config/Makefile or $py_prefix/include/python${py_ver}/Python.h missing"
 		fi
 	else
-		AC_MSG_WARN([no python found, support for python disabled])
-		enable_binding_python="no"
+		binding_python="no"
+		binding_python_reason="python executable missing"
 	fi
 fi
-if test "x${enable_binding_python}" = xyes ; then
+if test "x${binding_python}" = xyes ; then
 	AC_DEFINE(USE_BINDING_PYTHON, 1, [Build with binding python])
-	AC_SUBST(PYTHON_CFLAGS)
-	AC_SUBST(PYTHON_LIBS)
 fi
-AM_CONDITIONAL(USE_BINDING_PYTHON, test "x${enable_binding_python}" = "xyes")
+AC_SUBST(PYTHON_CFLAGS)
+AC_SUBST(PYTHON_LIBS)
+AM_CONDITIONAL(BINDING_PYTHON, test "x${binding_python}" = "xyes")
 
-# binding dbus
-AC_ARG_ENABLE(binding-dbus,   [  --disable-binding-dbus               don't create binding dbus], enable_binding_dbus=$enableval, enable_binding_dbus=yes)
-if test "x${enable_binding_dbus}" = "xyes" ; then
-	PKG_CHECK_MODULES(DBUS, [dbus-glib-1], ,enable_binding_dbus=no)
+# dbus
+AC_ARG_ENABLE(binding-dbus,   [  --disable-binding-dbus               don't create binding dbus], binding_dbus=$enableval;binding_dbus_reason="configure parameter")
+if test "x${binding_dbus}" = "xyes" ; then
+	PKG_CHECK_MODULES(DBUS, [dbus-glib-1], ,binding_dbus=no)
 fi
-if test "x${enable_binding_dbus}" = "xyes" ; then
+if test "x${binding_dbus}" = "xyes" ; then
 	AC_DEFINE(USE_BINDING_DBUS, 1, [Build with binding dbus])
-	AC_SUBST(DBUS_CFLAGS)
-	AC_SUBST(DBUS_LIBS)
 fi
-AM_CONDITIONAL(USE_BINDING_DBUS, test "x${enable_binding_dbus}" = "xyes")
+AC_SUBST(DBUS_CFLAGS)
+AC_SUBST(DBUS_LIBS)
+AM_CONDITIONAL(BINDING_DBUS, test "x${binding_dbus}" = "xyes")
 
 # svg
 AC_ARG_ENABLE(svg, [  --disable-svg        disable Scalable Vector Graphics], enable_svg=$enableval, enable_svg=yes)
@@ -588,18 +602,6 @@ AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
 
-if test "x${cross_compiling}" = "xyes"; then
-  AC_MSG_CHECKING([for a C compiler for build tools])
-  AC_CHECK_PROGS(CC_FOR_BUILD, gcc cc)
-else
-  CC_FOR_BUILD=$CC
-fi
-CCLD_FOR_BUILD="$CC_FOR_BUILD"
-
-AC_SUBST(cross_compiling)
-AC_SUBST(CC_FOR_BUILD)
-AC_SUBST(CCLD_FOR_BUILD)
-
 AC_CHECK_HEADER(wordexp.h,wordexp_h=yes,wordexp_h=no;NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/navit/support/wordexp";NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/wordexp -lsupport_wordexp")
 AM_CONDITIONAL(SUPPORT_WORDEXP, [test "x$wordexp_h" = "xno"])
 
@@ -609,6 +611,8 @@ case $host_os in
 wince)
 	win32=yes
 	AC_DEFINE(HAS_WIN32_CE, 1, [Has Windows CE API])
+	gui_win32=yes; gui_win32_reason="host_os is wince"
+	graphics_win32=yes; graphics_win32_reason="host_os is wince"
 	;;
 esac
 if test "x$win32" = "xyes"
@@ -618,14 +622,31 @@ then
 fi
 AM_CONDITIONAL(SUPPORT_WIN32, [test "x$win32" = "xyes"])
 
-# gui
-AC_ARG_ENABLE(gui-internal, [  --disable-gui-internal          disable gui type internal], gui_internal=$enableval;gui_internal_reason="configure parameter", gui_internal=yes; gui_internal_reason="default")
-AM_CONDITIONAL(GUI_INTERNAL, test "x${gui_internal}" = "xyes")
+## graphics
+# gtk_drawing_area
+AC_ARG_ENABLE(graphics-gtk-drawing-area, [  --disable-graphics-gtk-drawing-area disable graphics type gtk_drawing_area], graphics_gtk_drawing_area=$enableval;graphics_gtk_drawing_area_reason="configure parameter")
+AM_CONDITIONAL(GRAPHICS_GTK_DRAWING_AREA, [test "x${graphics_gtk_drawing_area}" = "xyes"])
+# win32
+AC_ARG_ENABLE(graphics-win32, [  --disable-graphics-win32            disable graphics type win32], graphics_win32=$enableval;graphics_win32_reason="configure parameter")
+AM_CONDITIONAL(GRAPHICS_WIN32, test "x${graphics_win32}" = "xyes")
 
-# speech
-AC_ARG_ENABLE(speech-cmdline, [  --disable-speech-cmdline           disable speech type cmdline], speech_cmdline=$enableval;speech_cmdline_reason="configure parameter", speech_cmdline=yes; speech_cmdline_reason=default)
+## gui
+# gtk
+AC_ARG_ENABLE(gui-gtk, [  --disable-gui-gtk                   disable gui type gtk ], gui_gtk=$enableval)
+AM_CONDITIONAL(GUI_GTK, [test "x${gui_gtk}" = "xyes"])
+# internal
+AC_ARG_ENABLE(gui-internal, [  --disable-gui-internal              disable gui type internal], gui_internal=$enableval;gui_internal_reason="configure parameter")
+AM_CONDITIONAL(GUI_INTERNAL, test "x${gui_internal}" = "xyes")
+# win32
+AC_ARG_ENABLE(gui-win32, [  --disable-gui-win32                 disable gui type win32], gui_win32=$enableval;gui_win32_reason="configure parameter")
+AM_CONDITIONAL(GUI_WIN32, test "x${gui_win32}" = "xyes")
+
+## speech
+# cmdline
+AC_ARG_ENABLE(speech-cmdline, [  --disable-speech-cmdline            disable speech type cmdline], speech_cmdline=$enableval;speech_cmdline_reason="configure parameter")
 AM_CONDITIONAL(SPEECH_CMDLINE, test "x${speech_cmdline}" = "xyes")
-AC_ARG_ENABLE(speech-speechd, [  --disable-speech-speech-dispatcher disable speech type speech-dispatcher], speech_speech_dispatcher=$enableval;speech_speech_dispatcher_reason="configure parameter", speech_speech_dispatcher=yes; speech_speech_dispatcher_reason=default)
+# cmdline
+AC_ARG_ENABLE(speech-speechd, [  --disable-speech-speech-dispatcher  disable speech type speech-dispatcher], speech_speech_dispatcher=$enableval;speech_speech_dispatcher_reason="configure parameter")
 if test "x$speech_speech_dispatcher" = "xyes"; then
 	AC_CHECK_HEADER(libspeechd.h, AC_DEFINE([HAVE_LIBSPEECHD],[],Define to 1 if you have the <libspeechd.h> header file.) SPEECHD_LIBS="-lspeechd",  speech_speech_dispatcher=no; speech_speech_dispatcher_reason="libspeechd.h missing")
 fi
@@ -633,14 +654,33 @@ AC_SUBST(SPEECHD_CFLAGS)
 AC_SUBST(SPEECHD_LIBS)
 AM_CONDITIONAL(SPEECH_SPEECH_DISPATCHER, test "x${speech_speech_dispatcher}" = "xyes")
 
-# vehicle
-AC_ARG_ENABLE(vehicle-demo, [  --disable-vehicle-demo          disable vehicle type demo], vehicle_demo=$enableval;vehicle_demo_reason="configure parameter", vehicle_demo=yes; vehicle_demo_reason="default")
+## vehicle
+# demo
+AC_ARG_ENABLE(vehicle-demo, [  --disable-vehicle-demo              disable vehicle type demo], vehicle_demo=$enableval;vehicle_demo_reason="configure parameter")
 AM_CONDITIONAL(VEHICLE_DEMO, test "x${vehicle_demo}" = "xyes")
-AC_ARG_ENABLE(vehicle-file, [  --disable-vehicle-file          disable vehicle type file], vehicle_file=$enableval;vehicle_file_reason="configure parameter", vehicle_file=yes; vehicle_file_reason="default")
+# file
+AC_ARG_ENABLE(vehicle-file, [  --disable-vehicle-file              disable vehicle type file], vehicle_file=$enableval;vehicle_file_reason="configure parameter")
 AM_CONDITIONAL(VEHICLE_FILE, test "x${vehicle_file}" = "xyes")
+# gpsd
+if test "x${vehicle_gpsd}" = xyes
+then
+	AC_CHECK_HEADER(gps.h, AC_DEFINE([HAVE_LIBGPS],[],Define to 1 if you have the <gps.h> header file.) GPSD_LIBS="-lgps", vehicle_gpsd=no; vehicle_gpsd_reason="no gps.h" )
+fi
+AC_SUBST(GPSD_CFLAGS)
+AC_SUBST(GPSD_LIBS)
+AM_CONDITIONAL(VEHICLE_GPSD, [test "x${vehicle_gpsd}" = "xyes"])
+# gypsy
+AC_ARG_ENABLE(vehicle-gypsy,[  --disable-vehicle-gypsy             disable vehicle type gypsy], vehicle_gypsy=$enableval;vehicle_gypsy_reason="configure parameter")
+if test "x${vehicle_gypsy}" = "xyes"
+then
+	PKG_CHECK_MODULES(GYPSY, gypsy, ,vehicle_gypsy=no;vehicle_gypsy_reason="package gypsy missing")
+fi
+AC_SUBST(GYPSY_CFLAGS)
+AC_SUBST(GYPSY_LIBS)
+AM_CONDITIONAL(VEHICLE_GYPSY, test "x${vehicle_gypsy}" = "xyes")
 
-NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_builddir)/intl"
-NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/intl"
+NAVIT_CFLAGS="$NAVIT_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS -I\$(top_builddir)/intl"
+NAVIT_LIBS="$NAVIT_LIBS $GLIB_LIBS $GMODULE_LIBS -L\$(top_builddir)/intl"
 AC_SUBST(NAVIT_CFLAGS)
 AC_SUBST(NAVIT_LIBS)
 
@@ -667,6 +707,7 @@ navit/graphics/opengl/Makefile
 navit/graphics/null/Makefile
 navit/graphics/sdl/Makefile
 navit/graphics/qt_qpainter/Makefile
+navit/graphics/win32/Makefile
 navit/gui/Makefile
 navit/gui/gtk/Makefile
 navit/gui/internal/Makefile
@@ -674,6 +715,7 @@ navit/gui/clutter/Makefile
 navit/gui/cegui/Makefile
 navit/gui/cegui/datafiles/Makefile
 navit/gui/directfb/Makefile
+navit/gui/win32/Makefile
 navit/osd/Makefile
 navit/osd/core/Makefile
 navit/speech/Makefile
@@ -703,12 +745,6 @@ AC_OUTPUT
 echo ""
 echo ""
 echo "Summary of your installation :"
-if test x"$gtk2_pkgconfig" = xyes
-	then
-	echo "GTK gui     : ENABLED"
-	else
-	echo "GTK gui     : DISABLED : you are missing a dependency. To fix this install a package named gtk2-devel or libgtk2.0-dev"
-fi
 # FIXME : maybe elaborate missing dependencies
 if test x"$sdl" != xyes
 	then
@@ -754,19 +790,6 @@ if test x"$enable_hildon" = xyes
         else
         echo "Maemo/Hildon: DISABLED"
 fi
-
-if test x"$use_gypsy" = xyes
-	then
-	echo "Gypsy support: ENABLED"
-	else
-	echo "Gypsy support: DISABLED"
-fi
-if test x"$gpsd" = xyes
-	then
-	echo "GPSD support: ENABLED"
-	else
-	echo "GPSD support: DISABLED"
-fi
 if test x"${USE_GARMIN}" = xyes
 	then
 	if test "x$use_libgarmin" = "xyes"
@@ -778,26 +801,29 @@ if test x"${USE_GARMIN}" = xyes
 	else 
 		echo "Garmin IMG  : DISABLED (you requested it)"
 fi
-if test "x$samplemap" = "xyes"
-	then
-	echo "Samplemap   : ENABLED"
-	else
-	echo "Samplemap   : DISABLED"
-fi
-
+echo "Plugins:             $plugins ($plugins_reason)"
+echo "Postgresql:          $postgresql ($postgresql_reason)"
+echo "Samplemap:           $samplemap ($samplemap_reason)"
+echo "Graphics types:"
+echo "  gtk_drawing_area:  $graphics_gtk_drawing_area ($graphics_gtk_drawing_area_reason)"
+echo "  win32:             $graphics_win32 ($graphics_win32_reason)"
 
 echo "GUI types:"
-echo "  internal: $gui_internal ($gui_internal_reason)"
+echo "  gtk:               $gui_gtk ($gui_gtk_reason)"
+echo "  internal:          $gui_internal ($gui_internal_reason)"
+echo "  win32:             $gui_win32 ($gui_win32_reason)"
 
 echo "Speech types:"
-echo "  cmdline: $speech_cmdline ($speech_cmdline_reason)"
+echo "  cmdline:           $speech_cmdline ($speech_cmdline_reason)"
 echo "  speech_dispatcher: $speech_speech_dispatcher ($speech_speech_dispatcher_reason)"
 
 echo "Vehicle types:"
-echo "  demo: $vehicle_demo ($vehicle_demo_reason)"
-echo "  file: $vehicle_file ($vehicle_file_reason)"
+echo "  demo:              $vehicle_demo ($vehicle_demo_reason)"
+echo "  file:              $vehicle_file ($vehicle_file_reason)"
+echo "  gpsd:              $vehicle_gpsd ($vehicle_gpsd_reason)"
+echo "  gypsy:             $vehicle_gypsy ($vehicle_gypsy_reason)"
 
-if  [ test x"$gtk2_pkgconfig" != xyes ] && [ test x"$sdl" != xyes ] && [ test x"$directfb_pkgconfig" != xyes ]
+if  [ test x"$gtk2_pkgconfig" != xyes ] && [ test x"$sdl" != xyes ] && [ test x"$directfb_pkgconfig" != xyes ] && [ test x"$gui_win32" != xyes ]
 	then
 	echo ""
 	echo "" 
