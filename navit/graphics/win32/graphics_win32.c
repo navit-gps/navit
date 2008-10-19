@@ -41,10 +41,14 @@ HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
 
      SaveDC (hdc) ;
 
+#ifndef __CEGCC__
      SetGraphicsMode (hdc, GM_ADVANCED) ;
      ModifyWorldTransform (hdc, NULL, MWT_IDENTITY) ;
+#endif
      SetViewportOrgEx (hdc, 0, 0, NULL) ;
+#ifndef __CEGCC__
      SetWindowOrgEx   (hdc, 0, 0, NULL) ;
+#endif
 
      if (fLogRes)
      {
@@ -63,7 +67,9 @@ HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
      pt.x = (int) (iDeciPtWidth  * cxDpi / 72) ;
      pt.y = (int) (iDeciPtHeight * cyDpi / 72) ;
 
+#ifndef __CEGCC__
      DPtoLP (hdc, &pt, 1) ;
+#endif
      lf.lfHeight         = - (int) (fabs (pt.y) / 10.0 + 0.5) ;
      lf.lfWidth          = 0 ;
      lf.lfEscapement     = 0 ;
@@ -340,7 +346,11 @@ HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 	HANDLE hdl = gr->wnd_parent_handle;
 	GetClientRect( gr->wnd_parent_handle,&rcParent);
 
+#ifdef __CEGCC__
+	if(!RegisterClass(&wc))
+#else
 	if(!RegisterClassEx(&wc))
+#endif
 	{
 		ErrorExit( "Window Registration Failed!" );
 		return NULL;
@@ -769,8 +779,90 @@ static struct graphics_priv * graphics_win32_drawing_area_new_helper(struct grap
 	return this_;
 }
 
-struct graphics_priv* win32_graphics_new( struct graphics_methods *meth, struct attr **attrs)
+struct graphics_priv* win32_graphics_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
 {
 	struct graphics_priv* this_=graphics_win32_drawing_area_new_helper(meth);
 	return this_;
+}
+
+static void
+event_win32_main_loop_run(void)
+{
+	MSG      msg;
+
+	dbg(0,"enter\n");
+   while (GetMessage(&msg, 0, 0, 0))
+    {
+        TranslateMessage(&msg);       /*  Keyboard input.      */
+        DispatchMessage(&msg);
+    }
+
+}
+
+static void event_win32_main_loop_quit(void)
+{
+	dbg(0,"enter\n");
+}
+
+static struct event_watch *
+event_win32_add_watch(int fd, int w, struct callback *cb)
+{
+	dbg(0,"enter\n");
+	return NULL;
+}
+
+static void
+event_win32_remove_watch(struct event_watch *ev)
+{
+	dbg(0,"enter\n");
+}
+
+static struct event_timeout *
+event_win32_add_timeout(int timeout, int multi, struct callback *cb)
+{
+	dbg(0,"enter\n");
+	return NULL;
+}
+
+static void
+event_win32_remove_timeout(struct event_timeout *ev)
+{
+	dbg(0,"enter\n");
+}
+
+static struct event_idle *
+event_win32_add_idle(struct callback *cb)
+{
+	dbg(0,"enter\n");
+	return NULL;
+}
+
+static void
+event_win32_remove_idle(struct event_idle *ev)
+{
+	dbg(0,"enter\n");
+}
+
+static struct event_methods event_win32_methods = {
+	event_win32_main_loop_run,
+	event_win32_main_loop_quit,
+	event_win32_add_watch,
+	event_win32_remove_watch,
+	event_win32_add_timeout,
+	event_win32_remove_timeout,
+	event_win32_add_idle,
+	event_win32_remove_idle,
+};
+
+static void
+event_win32_new(struct event_methods *meth)
+{
+        *meth=event_win32_methods;
+}
+
+void
+plugin_init(void)
+{
+	plugin_register_graphics_type("win32", win32_graphics_new);
+        plugin_register_event_type("win32", event_win32_new);
 }
