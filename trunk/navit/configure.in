@@ -557,9 +557,9 @@ if test x$enable_nls = xyes; then
   if test "$XGETTEXT" != "" -a "$HAVEGETTEXT" != ""; then
      PO=""
      if test "$LINGUAS" = ""; then
-           ling=` (cd $srcdir/po; /bin/ls *.po) `
+           ling=` (cd $srcdir/po; /bin/ls *.po.in) `
   	   for l in $ling; do
-	        lcode=`basename $l .po`
+	        lcode=`basename $l .po.in`
 	        LINGUAS="$LINGUAS$lcode "
            done
     fi

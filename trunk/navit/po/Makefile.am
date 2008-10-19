@@ -27,12 +27,7 @@ SUFFIXES = .po .mo
 all: @MOFILES@
 
 @POFILES@: navit.pot
-	if test "$(top_srcdir)" != "$(top_builddir)"; then \
-		$(MSGMERGE) --no-fuzzy-matching --verbose -o $(top_builddir)/po/$@ $(top_srcdir)/po/$@ navit.pot; \
-	else \
-        	$(MSGMERGE) --no-fuzzy-matching --update --verbose $@ navit.pot; \
-        fi
-
+	$(MSGMERGE) --no-fuzzy-matching --verbose -o $(top_builddir)/po/$@ $(top_srcdir)/po/$@.in navit.pot
 
 navit.pot: $(POTFILES)
 	 $(XGETTEXT) --default-domain=navit \
@@ -69,8 +64,6 @@ distclean-local:
 		if test "$$n" -a "$$n" != "__DuMmY" ; then \
 			l=`basename $$n .mo`; \
 			rm -f ../locale/$$l/LC_MESSAGES/navit.mo; \
-			if test "$(top_srcdir)" != "$(top_builddir)"; then \
-				rm -f $$l.po; \
-			fi;\
+			rm -f $$l.po; \
 		fi; \
 	done
