@@ -70,6 +70,7 @@ ATTR(icon_xs)
 ATTR(icon_l)
 ATTR(icon_s)
 ATTR(spacing)
+ATTR(recent_dest)
 ATTR(destination_distance)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
