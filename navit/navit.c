@@ -532,6 +532,8 @@ navit_append_coord(struct navit *this_, char *file, struct pcoord *c, char *type
 	struct callback *cb;
 
 	f=fopen(file, "r");
+	if (!f)
+		goto new_file;
 	if (limit != 0) {
 		prev = '\n';
 		while ((ch = fgetc(f)) != EOF) {
@@ -583,6 +585,7 @@ navit_append_coord(struct navit *this_, char *file, struct pcoord *c, char *type
 		fclose(f);
 	}
 
+new_file:
 	f=fopen(file, "a");
 	if (f) {
 		if (c) {
