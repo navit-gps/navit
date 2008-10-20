@@ -20,6 +20,9 @@
 #ifndef NAVIT_FILE_H
 #define NAVIT_FILE_H
 
+#ifndef __CEGCC__
+#include <time.h>
+#endif
 #include "param.h"
 
 struct file {
@@ -29,9 +32,14 @@ struct file {
 	char *name;
 	int name_id;
 	int fd;
+#ifndef __CEGCC__
+	time_t mtime;
+	time_t ctime;
+	int version;			
+#endif
 #if defined(_WIN32) || defined(__CEGCC__)
-    long map_handle;
-    long map_file;
+	long map_handle;
+	long map_file;
 #endif
 	struct file *next;
 };
@@ -49,9 +57,7 @@ unsigned char *file_data_read_compressed(struct file *file, long long offset, in
 void file_data_free(struct file *file, unsigned char *data);
 int file_exists(char *name);
 void file_remap_readonly(struct file *f);
-void file_remap_readonly_all(void);
 void file_unmap(struct file *f);
-void file_unmap_all(void);
 void *file_opendir(char *dir);
 char *file_readdir(void *hnd);
 void file_closedir(void *hnd);
@@ -62,6 +68,7 @@ int file_wordexp_get_count(struct file_wordexp *wexp);
 char **file_wordexp_get_array(struct file_wordexp *wexp);
 void file_wordexp_destroy(struct file_wordexp *wexp);
 int file_get_param(struct file *file, struct param_list *param, int count);
+int file_version(struct file *file, int byname);
 /* end of prototypes */
 
 #endif

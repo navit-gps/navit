@@ -43,8 +43,6 @@
 #define O_BINARY 0
 #endif
 
-static struct file *file_list;
-
 static GHashTable *file_name_hash;
 static int file_name_id;
 static struct cache *file_cache;
@@ -73,8 +71,6 @@ file_create(char *name)
 	file->size=stat.st_size;
 	file->name = g_strdup(name);
 	dbg_assert(file != NULL);
-	file->next=file_list;
-	file_list=file;
 	return file;
 }
 
@@ -250,18 +246,6 @@ file_remap_readonly(struct file *f)
 }
 
 void
-file_remap_readonly_all(void)
-{
-	struct file *f=file_list;
-	int limit=1000;
-
-	while (f && limit-- > 0) {
-		file_remap_readonly(f);
-		f=f->next;
-	}
-}
-
-void
 file_unmap(struct file *f)
 {
 #if defined(_WIN32) || defined(__CEGCC__)
@@ -270,20 +254,6 @@ file_unmap(struct file *f)
 	munmap(f->begin, f->size);
 #endif
 }
-
-void
-file_unmap_all(void)
-{
-	struct file *f=file_list;
-	int limit=1000;
-
-	while (f && limit-- > 0) {
-		file_unmap(f);
-		f=f->next;
-	}
-}
-
-
 
 void *
 file_opendir(char *dir)
@@ -403,6 +373,28 @@ file_get_param(struct file *file, struct param_list *param, int count)
 	param_add_string("Filename", file->name, &param, &count);
 	param_add_hex("Size", file->size, &param, &count);
 	return i-count;
+}
+
+int
+file_version(struct file *file, int byname)
+{
+#ifndef __CEGCC__
+	struct stat st;
+	int error;
+	if (byname)
+		error=stat(file->name, &st);
+	else
+		error=fstat(file->fd, &st);
+	if (error || !file->version || file->mtime != st.st_mtime || file->ctime != st.st_ctime) {
+		file->mtime=st.st_mtime;
+		file->ctime=st.st_ctime;
+		file->version++;
+		dbg(0,"%s now version %d\n", file->name, file->version);
+	}
+	return file->version;
+#else
+	return 0;
+#endif
 }
 
 void
