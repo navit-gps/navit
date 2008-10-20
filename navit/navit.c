@@ -574,7 +574,9 @@ navit_append_coord(struct navit *this_, char *file, struct pcoord *c, char *type
 			g_free(buffer);
 			fflush(f);
 			ftruncate(fd,(offset-numc));
+#ifndef __CEGCC__
 			fsync(fd);
+#endif
 
 			lines--;
 		}
