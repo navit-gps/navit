@@ -72,6 +72,7 @@ ATTR(icon_s)
 ATTR(spacing)
 ATTR(recent_dest)
 ATTR(destination_distance)
+ATTR(check_version)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
