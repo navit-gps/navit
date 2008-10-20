@@ -38,7 +38,6 @@
 
 static int map_id;
 
-
 struct minmax {
 	short min;
 	short max;
@@ -69,6 +68,8 @@ struct map_priv {
 	unsigned char *search_data;
 	int search_offset;
 	int search_size;
+	int version;
+	int check_version;
 };
 
 struct map_rect_priv {
@@ -143,6 +144,8 @@ static void eoc_to_cpu(struct zip_eoc *eoc) {
 	eoc->zipeofst  = le32_to_cpu(eoc->zipeofst);
 	eoc->zipecoml  = le16_to_cpu(eoc->zipecoml);
 }
+
+static void binfile_check_version(struct map_priv *m);
 
 static struct zip_eoc *
 binfile_read_eoc(struct file *fi)
@@ -469,6 +472,7 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 	struct map_rect_priv *mr;
 	struct tile t;
 
+	binfile_check_version(map);
 	dbg(1,"map_rect_new_binfile\n");
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->m=map;
@@ -799,35 +803,21 @@ binfile_get_index(struct map_priv *m)
 	return 1;
 }
 
-
-static struct map_priv *
-map_new_binfile(struct map_methods *meth, struct attr **attrs)
+static int
+map_binfile_open(struct map_priv *m)
 {
-	struct map_priv *m;
-	struct attr *data=attr_search(attrs, NULL, attr_data);
-	struct file_wordexp *wexp;
-	struct zip_cd *first_cd;
-	char **wexp_data;
 	int *magic;
-	if (! data)
-		return NULL;
+	struct zip_cd *first_cd;
 
-	wexp=file_wordexp_new(data->u.str);
-	wexp_data=file_wordexp_get_array(wexp);
-	dbg(1,"map_new_binfile %s\n", data->u.str);	
-	*meth=map_methods_binfile;
-
-	m=g_new0(struct map_priv, 1);
-	m->id=++map_id;
-	m->filename=g_strdup(wexp_data[0]);
 	dbg(0,"file_create %s\n", m->filename);
 	m->fi=file_create(m->filename);
 	if (! m->fi) {
 		dbg(0,"Failed to load '%s'\n", m->filename);
 		g_free(m);
-		return NULL;
+		return 0;
 	}
-	file_wordexp_destroy(wexp);
+	if (m->check_version)
+		m->version=file_version(m->fi, m->check_version == 2);
 	magic=(int *)file_data_read(m->fi, 0, 4);
 	*magic = le32_to_cpu(*magic);
 	if (*magic == zip_lfh_sig) {
@@ -839,11 +829,72 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 			file_data_free(m->fi, (unsigned char *)first_cd);
 		} else {
 			dbg(0,"invalid file format for '%s'\n", m->filename);
+			return 0;
 		}
 	} else 
 		file_mmap(m->fi);
 	file_data_free(m->fi, (unsigned char *)magic);
 	m->cachedir="/tmp/navit";
+	return 1;
+}
+
+static void
+map_binfile_close(struct map_priv *m)
+{
+	file_data_free(m->fi, (unsigned char *)m->index_cd);
+	file_data_free(m->fi, (unsigned char *)m->eoc);
+	file_destroy(m->fi);
+}
+
+static void
+map_binfile_destroy(struct map_priv *m)
+{
+	g_free(m->filename);
+	g_free(m);
+}
+
+
+static void
+binfile_check_version(struct map_priv *m)
+{
+	int version;
+	if (!m->check_version)
+		return;
+	version=file_version(m->fi, m->check_version == 2);
+	if (version != m->version) {
+		map_binfile_close(m);
+		map_binfile_open(m);
+	}
+}
+
+
+static struct map_priv *
+map_new_binfile(struct map_methods *meth, struct attr **attrs)
+{
+	struct map_priv *m;
+	struct attr *data=attr_search(attrs, NULL, attr_data);
+	struct attr *check_version;
+	struct file_wordexp *wexp;
+	char **wexp_data;
+	if (! data)
+		return NULL;
+
+	wexp=file_wordexp_new(data->u.str);
+	wexp_data=file_wordexp_get_array(wexp);
+	dbg(1,"map_new_binfile %s\n", data->u.str);	
+	*meth=map_methods_binfile;
+
+	m=g_new0(struct map_priv, 1);
+	m->id=++map_id;
+	m->filename=g_strdup(wexp_data[0]);
+	file_wordexp_destroy(wexp);
+	check_version=attr_search(attrs, NULL, attr_check_version);
+	if (check_version) 
+		m->check_version=check_version->u.num;
+	if (!map_binfile_open(m)) {
+		map_binfile_destroy(m);
+		m=NULL;
+	}
 	return m;
 }
 
