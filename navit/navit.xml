@@ -47,6 +47,10 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 		<!--
 		The following line let you select which graphical user interface you'd like to use.
 		Options include internal (optimized for touch screen devices), gtk (useful for desktop computers) and cegui.
+
+		In case of the internal GUI, you can even influence the size of the text and of the icons in the toolbar and the viewport.
+		Here's an example for a freerunner:
+		<gui type="internal" font_size="350" icons_xs="60" icon_s="70" icon_l="70" />
 		-->
 		<gui type="gtk" menubar="1" toolbar="1" statusbar="1" />
 
