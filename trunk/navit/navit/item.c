@@ -62,10 +62,10 @@ item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection 
 }
 
 int 
-item_coord_is_segment(struct item *it)
+item_coord_is_node(struct item *it)
 {
-	if (it->meth->item_coord_is_segment)
-		return it->meth->item_coord_is_segment(it->priv_data);
+	if (it->meth->item_coord_is_node)
+		return it->meth->item_coord_is_node(it->priv_data);
 	return 0;
 }
 

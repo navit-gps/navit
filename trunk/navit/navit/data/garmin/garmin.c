@@ -294,14 +294,14 @@ point_coord_get(void *priv_data, struct coord *c, int count)
 }
 
 static int
-coord_is_segment(void *priv_data)
+coord_is_node(void *priv_data)
 {
 	struct gobject *g = priv_data;
 	struct map_rect_priv *mr = g->priv_data;
 
 	if (mr->last_coord == 0)
-		return 0;
-	return gar_is_object_dcoord_node(mr->gmap, g, mr->last_coord - 1);
+		return 1;
+	return gar_is_object_dcoord_node(mr->gmap, g, mr->last_coord);
 }
 
 static int 
@@ -401,7 +401,7 @@ point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		attr->type = attr_town_name;
 		return garmin_object_label(g, attr);
 	case attr_street_name:
-		attr->type = attr_street_name;
+		attr->type = attr_type;
 		return garmin_object_label(g, attr);
 	case attr_flags:
 		attr->type = attr_flags;
@@ -431,7 +431,7 @@ static struct item_methods methods_garmin_poly = {
 	poly_coord_get,
 	attr_rewind,	// point_attr_rewind,
 	point_attr_get,	// poly_attr_get,
-	coord_is_segment,
+	coord_is_node,
 };
 
 static int

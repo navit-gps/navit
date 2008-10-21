@@ -412,18 +412,18 @@ route_pos_contains(struct route *this, struct item *item)
 int
 route_destination_reached(struct route *this)
 {
-       struct street_data *sd = NULL;
+	struct street_data *sd = NULL;
 
-       if(! this->pos)
-         return 0;
-       
-       sd = this->pos->street;
+	if (!this->pos)
+		return 0;
+
+	sd = this->pos->street;
 
 	if (!this->path2) {
 		return 0;
 	}
 
-	if (! item_is_equal(this->pos->street->item, this->dst->street->item)) { 
+	if (!item_is_equal(this->pos->street->item, this->dst->street->item)) { 
 		return 0;
 	}
 
@@ -434,7 +434,7 @@ route_destination_reached(struct route *this)
 		return 0;
 	}
 	 
-	if (transform_distance(projection_mg, &this->pos->c, &this->dst->lp) > this->destination_distance) {
+	if (transform_distance(route_projection(this), &this->pos->c, &this->dst->lp) > this->destination_distance) {
 		return 0;
 	}
 	
@@ -781,12 +781,17 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 			int flags, int offset)
 {
 	struct route_graph_segment *s;
+/*	
+	FIXME: commented out becouse
+	it is possible to have one item with two different
+	offsets as segments 
 	s=start->start;
 	while (s) {
 		if (item_is_equal(*item, s->item)) 
 			return;
 		s=s->start_next;
-	}
+	} 
+*/
 	s = g_new0(struct route_graph_segment, 1);
 	if (!s) {
 		printf("%s:Out of memory\n", __FUNCTION__);
@@ -1127,7 +1132,7 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 			int isseg,rc;
 			int sc = 0;
 			do {
-				isseg = item_coord_is_segment(item);
+				isseg = item_coord_is_node(item);
 				rc = item_coord_get(item, &c, 1);
 				if (rc) {
 					len+=transform_distance(map_projection(item->map), &l, &c);
@@ -1918,7 +1923,11 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			else
 				return 0;
 			return 1;
+		case attr_label:
+			mr->attr_next=attr_none;
+			return 0;
 		default:
+			mr->attr_next=attr_none;
 			attr->type=attr_none;
 			return 0;
 	}
@@ -1931,6 +1940,9 @@ rm_coord_get(void *priv_data, struct coord *c, int count)
 	struct map_rect_priv *mr = priv_data;
 	struct route_path_segment *seg = mr->seg;
 	int i,rc=0;
+	struct route *r = mr->mpriv->route;
+	enum projection pro = route_projection(r);
+
 	if (! seg)
 		return 0;
 	for (i=0; i < count; i++) {
@@ -1938,7 +1950,11 @@ rm_coord_get(void *priv_data, struct coord *c, int count)
 			break;
 		if (i >= seg->ncoords)
 			break;
-		c[i] = seg->c[mr->last_coord++];
+		if (pro != projection_mg)
+			transform_from_to(&seg->c[mr->last_coord++], pro,
+				&c[i],projection_mg);
+		else
+			c[i] = seg->c[mr->last_coord++];
 		rc++;
 	}
 	dbg(1,"return %d\n",rc);
@@ -1969,9 +1985,10 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	switch (attr_type) {
 	case attr_any:
 		while (mr->attr_next != attr_none) {
-			if (rm_attr_get(priv_data, mr->attr_next, attr))
+			if (rp_attr_get(priv_data, mr->attr_next, attr))
 				return 1;
 		}
+		return 0;
 	case attr_label:
 		attr->type = attr_label;
 		if (mr->str)
@@ -1992,6 +2009,8 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		mr->attr_next=attr_none;
 		return 1;
 	default:
+		mr->attr_next=attr_none;
+		attr->type=attr_none;
 		return 0;
 	}
 }
@@ -2003,11 +2022,18 @@ rp_coord_get(void *priv_data, struct coord *c, int count)
 	struct route_graph_point *p = mr->point;
 	struct route_graph_segment *seg = mr->rseg;
 	int rc = 0,i,dir;
+	struct route *r = mr->mpriv->route;
+	enum projection pro = route_projection(r);
+
 	for (i=0; i < count; i++) {
 		if (mr->item.type == type_rg_point) {
 			if (mr->last_coord >= 1)
 				break;
-			c[i] = p->c;
+			if (pro != projection_mg)
+				transform_from_to(&p->c, pro,
+					&c[i],projection_mg);
+			else
+				c[i] = p->c;
 		} else {
 			if (mr->last_coord >= 2)
 				break;
@@ -2016,10 +2042,19 @@ rp_coord_get(void *priv_data, struct coord *c, int count)
 				dir=1;
 			if (mr->last_coord)
 				dir=1-dir;
-			if (dir)
-				c[i] = seg->end->c;
-			else
-				c[i] = seg->start->c;
+			if (dir) {
+				if (pro != projection_mg)
+					transform_from_to(&seg->end->c, pro,
+						&c[i],projection_mg);
+				else
+					c[i] = seg->end->c;
+			} else {
+				if (pro != projection_mg)
+					transform_from_to(&seg->start->c, pro,
+						&c[i],projection_mg);
+				else
+					c[i] = seg->start->c;
+			}
 		}
 		mr->last_coord++;
 		rc++;
@@ -2157,7 +2192,7 @@ rm_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
 
 static struct map_methods route_meth = {
 	projection_mg,
-	NULL,
+	"utf-8",
 	rm_destroy,
 	rm_rect_new,
 	rm_rect_destroy,
@@ -2170,7 +2205,7 @@ static struct map_methods route_meth = {
 
 static struct map_methods route_graph_meth = {
 	projection_mg,
-	NULL,
+	"utf-8",
 	rm_destroy,
 	rp_rect_new,
 	rm_rect_destroy,
