@@ -54,7 +54,7 @@ struct item_methods {
 	int (*item_coord_get)(void *priv_data, struct coord *c, int count);
 	void (*item_attr_rewind)(void *priv_data);
 	int (*item_attr_get)(void *priv_data, enum attr_type attr_type, struct attr *attr);
-	int (*item_coord_is_segment)(void *priv_data);
+	int (*item_coord_is_node)(void *priv_data);
 };
 
 struct item {
@@ -62,7 +62,7 @@ struct item {
 	int id_hi;
 	int id_lo;
 	struct map *map;
-	struct item_methods *meth;	
+	struct item_methods *meth;
 	void *priv_data;
 };
 
@@ -76,8 +76,8 @@ struct item_hash;
 void item_coord_rewind(struct item *it);
 int item_coord_get(struct item *it, struct coord *c, int count);
 int item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection pro);
-/* does the next returned coordinate mark a segment */
-int item_coord_is_segment(struct item *it);
+/* does the next returned coordinate mark a node */
+int item_coord_is_node(struct item *it);
 void item_attr_rewind(struct item *it);
 int item_attr_get(struct item *it, enum attr_type attr_type, struct attr *attr);
 struct item *item_new(char *type, int zoom);
