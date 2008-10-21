@@ -1434,7 +1434,7 @@ route_check_straight(struct route_graph_segment *seg_from, struct route_graph_se
 		}
 		
 
-		if (curr_angle <= angle_diff) {
+		if (curr_angle < angle_diff) {
 			return 0;
 		}
 
@@ -1457,7 +1457,7 @@ route_check_straight(struct route_graph_segment *seg_from, struct route_graph_se
 			curr_angle *= -1;
 		}
 
-		if (curr_angle <= angle_diff) {
+		if (curr_angle < angle_diff) {
 			return 0;
 		}
 
