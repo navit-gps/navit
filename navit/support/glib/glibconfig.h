@@ -11,6 +11,7 @@
 
 #include <limits.h>
 #include <float.h>
+#include "config.h"
 
 G_BEGIN_DECLS
 
@@ -143,8 +144,10 @@ typedef unsigned __int64 guintptr;
 #define GLIB_MINOR_VERSION 18
 #define GLIB_MICRO_VERSION 1
 
+#ifdef HAVE_API_WIN32_BASE
 #define G_OS_WIN32
 #define G_PLATFORM_WIN32
+#endif
 
 
 #ifndef _MSC_VER
