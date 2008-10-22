@@ -260,6 +260,8 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 	struct name_val *nv;
 	struct plugin *pl;
 	char *mod_name, *filename=NULL, *corename=NULL;
+	if (!pls)
+		return NULL;
 	l=plugin_types[type];
 	while (l) {
 		nv=l->data;
