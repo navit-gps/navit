@@ -1061,9 +1061,12 @@ route_graph_destroy(struct route_graph *this)
 int
 route_time(int *speedlist, struct item *item, int len)
 {
-	if (item->type < route_item_first || item->type > route_item_last
-		|| !speedlist[item->type-route_item_first]) {
-		dbg(0,"street type %d out of range [%d,%d]", item->type, route_item_first, route_item_last);
+	if (item->type < route_item_first || item->type > route_item_last) {
+		dbg(0,"street type %d out of range [%d,%d]\n", item->type, route_item_first, route_item_last);
+		return len*36;
+	}
+	if (!speedlist[item->type-route_item_first]) {
+		dbg(0,"street type %d speed is zero\n", item->type);
 		return len*36;
 	}
 	return len*36/speedlist[item->type-route_item_first];
