@@ -203,7 +203,7 @@ static struct gui_config_settings config_profiles[]={
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 struct gui_priv {
-        struct navit *nav;
+	struct navit *nav;
 	struct window *win;
 	struct graphics *gra;
 	struct graphics_gc *background;
@@ -2370,10 +2370,13 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 		gui_internal_button_new_with_callback(this, "Quit",
 			image_new_l(this, "gui_quit"), gravity_center|orientation_vertical,
 			gui_internal_cmd_quit, NULL));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Stop\nNavigation",
-			image_new_l(this, "gui_stop"), gravity_center|orientation_vertical,
-			gui_internal_cmd_abort_navigation, NULL));
+	
+	if (navit_check_route(this->nav)) {
+		gui_internal_widget_append(w,
+								   gui_internal_button_new_with_callback(this, "Stop\nNavigation",
+								 image_new_l(this, "gui_stop"), gravity_center|orientation_vertical,
+								 gui_internal_cmd_abort_navigation, NULL));
+	}
 	gui_internal_menu_render(this);
 }
 

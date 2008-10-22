@@ -52,6 +52,7 @@ void navit_draw(struct navit *this_);
 void navit_draw_displaylist(struct navit *this_);
 void navit_resize(void *data, int w, int h);
 int navit_get_width(struct navit *this_);
+int navit_check_route(struct navit *this_);
 int navit_get_height(struct navit *this_);
 int navit_ignore_button(struct navit *this_);
 int navit_handle_button(struct navit *this_, int pressed, int button, struct point *p, struct callback *popup_callback);

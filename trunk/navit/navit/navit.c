@@ -781,6 +781,24 @@ navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
 }
 
 /**
+ * @brief Checks if a route is calculated
+ *
+ * This function checks if a route is calculated.
+ *
+ * @param this_ The navit struct whose route should be checked.
+ * @return True if the route is set, false otherwise.
+ */
+int
+navit_check_route(struct navit *this_)
+{
+	if (this_->route) {
+		return route_get_path_set(this_->route);
+	}
+
+	return 0;
+}
+
+/**
  * Record the given set of coordinates as a bookmark
  *
  * @param navit The navit instance
@@ -1577,15 +1595,17 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		route_path_set=route_get_path_set(this_->route);
 	if (this_->tracking && this_->tracking_flag) {
 		if (tracking_update(this_->tracking, &nv->coord, nv->dir)) {
-			if (this_->route && nv->update_curr == 1)
+			if (this_->route && nv->update_curr == 1) {
 				route_set_position_from_tracking(this_->route, this_->tracking);
+				callback_list_call_attr_0(this_->attr_cbl, attr_position);
+			}
 		}
 	} else {
 		if (this_->route && nv->update_curr == 1) {
 			cursor_pc.pro = pro;
 			cursor_pc.x = nv->coord.x;
 			cursor_pc.y = nv->coord.y;
-			route_set_position(this_->route, &cursor_pc);
+			navit_set_position(this_, &cursor_pc);
 		}
 	}
 	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0);
@@ -1644,6 +1664,7 @@ navit_set_position(struct navit *this_, struct pcoord *c)
 {
 	if (this_->route) {
 		route_set_position(this_->route, c);
+		callback_list_call_attr_0(this_->attr_cbl, attr_position);
 		if (this_->navigation) {
 			navigation_update(this_->navigation, this_->route);
 		}
