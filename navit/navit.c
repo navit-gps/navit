@@ -771,8 +771,11 @@ navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 	if (this_->route) {
 		route_set_destination(this_->route, c);
-		if (this_->navigation)
+		if (this_->navigation) {
 			navigation_flush(this_->navigation);
+			navigation_update(this_->navigation, this_->route);
+		}
+
 		navit_draw(this_);
 	}
 }
