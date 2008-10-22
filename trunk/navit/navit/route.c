@@ -1658,31 +1658,36 @@ route_graph_update(struct route *this)
 struct street_data *
 street_get_data (struct item *item)
 {
-	int maxcount=10000;
-	struct coord c[maxcount];
 	int count=0;
-	struct street_data *ret;
+	struct street_data *ret = NULL, *ret1;
 	struct attr attr;
+	const int step = 128;
+	int c;
 
-	while (count < maxcount) {
-		if (!item_coord_get(item, &c[count], 1))
-			break;
-		count++;
+	do {
+		ret1=g_realloc(ret, sizeof(struct street_data)+(count+step)*sizeof(struct coord));
+		if (!ret1) {
+			if (ret)
+				g_free(ret);
+			return NULL;
+		}
+		ret = ret1;
+		c = item_coord_get(item, &ret->c[count], step);
+		count += c;
+	} while (c && c == step);
+	if (!count) {
+		g_free(ret);
+		return NULL;
 	}
-	if (count >= maxcount) {
-		dbg(0, "count=%d maxcount=%d id_hi=0x%x id_lo=0x%x\n", count, maxcount, item->id_hi, item->id_lo);
-		if (item_attr_get(item, attr_debug, &attr)) 
-			dbg(0,"debug='%s'\n", attr.u.str);
-	}
-	dbg_assert(count < maxcount);
-	ret=g_malloc(sizeof(struct street_data)+count*sizeof(struct coord));
+	ret1=g_realloc(ret, sizeof(struct street_data)+count*sizeof(struct coord));
+	if (ret1)
+		ret = ret1;
 	ret->item=*item;
 	ret->count=count;
 	if (item_attr_get(item, attr_flags, &attr)) 
 		ret->flags=attr.u.num;
 	else
 		ret->flags=0;
-	memcpy(ret->c, c, count*sizeof(struct coord));
 
 	return ret;
 }
