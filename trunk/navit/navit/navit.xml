@@ -91,6 +91,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 			<speed type="street_n_lanes" value="120" />
 			<speed type="highway_land" value="120" />
 			<speed type="ramp" value="40" />
+			<speed type="roundabout" value="10" />
 			<speed type="ferry" value="40" />
 		</route>
 
