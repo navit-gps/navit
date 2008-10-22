@@ -403,6 +403,9 @@ point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	case attr_street_name:
 		attr->type = attr_type;
 		return garmin_object_label(g, attr);
+	case attr_street_name_systematic:
+		/* TODO: Get secondary labels of roads */
+		return 0;
 	case attr_flags:
 		attr->type = attr_flags;
 		attr->u.num = 0;
