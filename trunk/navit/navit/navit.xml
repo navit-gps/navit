@@ -7,7 +7,8 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 
 <config xmlns:xi="http://www.w3.org/2001/XInclude">
 	<plugins>
-		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}lib*.so"/>
+		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}lib*.so" ondemand="yes"/>
+		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libbinding_dbus.so" active="no" />
 		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libgraphics_null.so" active="no" />
 	</plugins>
 	<debug name="navit:do_draw" level="0" />
