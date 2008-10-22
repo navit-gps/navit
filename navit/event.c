@@ -38,7 +38,8 @@ void event_main_loop_run(void)
 
 void event_main_loop_quit(void)
 {
-	event_methods.main_loop_quit();
+	if (event_methods.main_loop_quit)
+		event_methods.main_loop_quit();
 }
 
 struct event_watch *
