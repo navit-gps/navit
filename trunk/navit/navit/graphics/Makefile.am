@@ -11,7 +11,7 @@ if GUI_CLUTTER
   SUBDIRS+=cogl
 endif
 endif
-if USE_GRAPHICS_QT_QPAINTER
+if GRAPHICS_QT_QPAINTER
   SUBDIRS+=qt_qpainter
 endif
 if USE_GRAPHICS_SDL
