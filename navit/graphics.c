@@ -47,6 +47,8 @@
 #include "util.h"
 #include "callback.h"
 
+static char *navit_sharedir;
+
 //##############################################################################################################
 //# Description: 
 //# Comment: 
@@ -139,6 +141,7 @@ void graphics_init(struct graphics *this_)
 	graphics_gc_set_background(this_->gc[2], &(struct color) { 0xffff, 0xffff, 0xffff, 0xffff });
 	graphics_gc_set_foreground(this_->gc[2], &(struct color) { 0x0000, 0x0000, 0x0000, 0xffff });
 	this_->meth.background_gc(this_->priv, this_->gc[0]->priv);
+	navit_sharedir = getenv("NAVIT_SHAREDIR");
 }
 
 /**
@@ -678,6 +681,7 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 	struct graphics_gc *gc = NULL;
 	struct graphics_image *img;
 	struct point p;
+	char path[PATH_MAX];
 
 	es=itm->elements;
 	while (es) {
@@ -734,9 +738,8 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 					break;
 				case element_icon:
 					if (!img) {
-						char *icon=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/", e->u.icon.src, NULL);
-						img=graphics_image_new(gra, icon);
-						g_free(icon);
+						sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
+						img=graphics_image_new(gra, path);
 						if (! img)
 							dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
 					}
