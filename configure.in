@@ -101,7 +101,6 @@ if test "x${glib}" = "xyes"; then
 else
 	GLIB_CFLAGS="-I\$(top_srcdir)/navit/support -I\$(top_srcdir)/navit/support/glib -I\$(top_srcdir)/navit/support/ezxml"
 	GLIB_LIBS="-L\$(top_builddir)/navit/support/glib -lsupport_glib -L\$(top_builddir)/navit/support/ezxml -lsupport_ezxml"
-	speech_cmdline=no; speech_cmdline_reason="not yet supported without glib"
 	vehicle_demo=no; vehicle_demo_reason="not yet supported without glib"
 	vehicle_file=no; vehicle_file_reason="not yet supported without glib"
 fi
@@ -169,7 +168,7 @@ AC_TRY_LINK([#include <unistd.h>], [fsync(0);],AC_MSG_RESULT(yes);AC_DEFINE(HAVE
 
 # system
 AC_MSG_CHECKING(for system)
-AC_TRY_LINK([#include <stdlib.h>], [system("/bin/true");],AC_MSG_RESULT(yes);AC_DEFINE(HAVE_SYSTEM, 1, [Define to 1 if you have the `system' function.]),AC_MSG_RESULT(no))
+AC_TRY_LINK([#include <stdlib.h>], [system("/bin/true");],AC_MSG_RESULT(yes);AC_DEFINE(HAVE_SYSTEM, 1, [Define to 1 if you have the `system' function.]),speech_cmdline=no; speech_cmdline_reason="not supported without system()"; AC_MSG_RESULT(no))
 
 AC_ARG_ENABLE(directfb, [  --enable-directfb             enable directfb gui and graphics], MODULE_DIRECTFB=$enableval, MODULE_DIRECTFB=no)
 
