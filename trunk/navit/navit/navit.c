@@ -26,6 +26,7 @@
 #include <glib.h>
 #include <libintl.h>
 #include <math.h>
+#include "config.h"
 #include "debug.h"
 #include "navit.h"
 #include "callback.h"
@@ -576,7 +577,7 @@ navit_append_coord(struct navit *this_, char *file, struct pcoord *c, char *type
 			g_free(buffer);
 			fflush(f);
 			ftruncate(fd,(offset-numc));
-#ifndef __CEGCC__
+#ifdef HAVE_FSYNC
 			fsync(fd);
 #endif
 
