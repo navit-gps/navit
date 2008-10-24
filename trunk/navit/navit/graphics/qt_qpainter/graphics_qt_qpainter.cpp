@@ -35,14 +35,9 @@
 #include "color.h"
 #include "debug.h"
 #include "plugin.h"
+#include "callback.h"
 #include "event.h"
-
-#if 0
-#define QWS
-#define NO_DEBUG
-#endif
-
-#include <qglobal.h>
+#include "window.h"
 
 #if QT_VERSION < 0x040000
 #include <qwidget.h>
@@ -53,6 +48,9 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qlistview.h>
+#ifdef HAVE_QPE
+#include <qpe/qpeapplication.h>
+#endif
 #else
 #include <QApplication>
 #include <QGraphicsScene>
@@ -83,7 +81,10 @@ class RenderArea : public QWidget
      void (*button_callback)(void *data, int press, int button, struct point *p);
      void *button_callback_data;	// struct navit *
 
-
+#if QT_VERSION < 0x040000
+     GHashTable *timer_type;
+     GHashTable *timer_callback;
+#endif
  protected:
      QSize sizeHint() const;
      void paintEvent(QPaintEvent *event);
@@ -93,7 +94,9 @@ class RenderArea : public QWidget
      void mouseReleaseEvent(QMouseEvent *event);
      void mouseMoveEvent(QMouseEvent *event);
      void wheelEvent(QWheelEvent *event);
-
+#if QT_VERSION < 0x040000
+     void timerEvent(QTimerEvent *event);
+#endif
  };
 
 //##############################################################################################################
@@ -105,6 +108,11 @@ RenderArea::RenderArea(QWidget *parent)
 	: QWidget(parent)
 {
 	pixmap = new QPixmap(800, 600);
+	setCaption("Navit");
+#if QT_VERSION < 0x040000
+	timer_type=g_hash_table_new(NULL, NULL);
+	timer_callback=g_hash_table_new(NULL, NULL);
+#endif
 }
 
 //##############################################################################################################
@@ -233,15 +241,17 @@ void RenderArea::wheelEvent(QWheelEvent *event)
 // gc = graphics context = pen to paint on the draw area
 //##############################################################################################################
 
-static int dummy;
-
 //##############################################################################################################
 //# Description: 
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 struct graphics_priv {
+#ifdef HAVE_QPE
+	QPEApplication *app;
+#else
 	QApplication *app;
+#endif
 	RenderArea *widget;
 	QPainter *painter;
 	struct graphics_gc_priv *background_gc;
@@ -594,6 +604,17 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 static int argc=1;
 static char *argv[]={"navit",NULL};
 
+static int
+fullscreen(struct window *win, int on)
+{
+	struct graphics_priv *this_=(struct graphics_priv *)win->priv;
+	if (on)
+		this_->widget->showFullScreen();
+	else
+		this_->widget->showMaximized();
+	return 1;
+}
+
 //##############################################################################################################
 //# Description: 
 //# Comment: 
@@ -601,11 +622,15 @@ static char *argv[]={"navit",NULL};
 //##############################################################################################################
 static void * get_data(struct graphics_priv *this_, char *type)
 {
+	struct window *win;
 	if (strcmp(type, "window"))
 		return NULL;
+	win=g_new(struct window, 1);
 	this_->painter=new QPainter;
-	this_->widget->show();
-	return &dummy;
+	this_->widget->showMaximized();
+	win->priv=this_;
+	win->fullscreen=fullscreen;
+	return win;
 }
 
 
@@ -730,12 +755,12 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 
 #if QT_VERSION < 0x040000
 
+
 static struct graphics_priv *event_gr;
 
 static void
 event_qt_main_loop_run(void)
 {
-	dbg(0,"enter\n");
 	event_gr->app->exec();
 }
 
@@ -760,14 +785,19 @@ event_qt_remove_watch(struct event_watch *ev)
 static struct event_timeout *
 event_qt_add_timeout(int timeout, int multi, struct callback *cb)
 {
-	dbg(0,"enter\n");
-	return NULL;
+	int id;
+	id=event_gr->widget->startTimer(timeout);
+	g_hash_table_insert(event_gr->widget->timer_callback, (void *)id, cb);
+	g_hash_table_insert(event_gr->widget->timer_type, (void *)id, (void *)!!multi);
+	return (struct event_timeout *)id;
 }
 
 static void
 event_qt_remove_timeout(struct event_timeout *ev)
 {
-	dbg(0,"enter\n");
+	event_gr->widget->killTimer((int) ev);
+	g_hash_table_remove(event_gr->widget->timer_callback, ev);
+	g_hash_table_remove(event_gr->widget->timer_type, ev);
 }
 
 static struct event_idle *
@@ -804,6 +834,17 @@ event_qt_new(struct event_methods *meth)
 	*meth=event_qt_methods;
 	return NULL;
 }
+
+void RenderArea::timerEvent(QTimerEvent *event)
+{
+	int id=event->timerId();
+	struct callback *cb=(struct callback *)g_hash_table_lookup(timer_callback, (void *)id);
+	if (cb) 
+		callback_call_0(cb);
+	if (!g_hash_table_lookup(timer_type, (void *)id))
+		event_qt_remove_timeout((struct event_timeout *)id);
+}
+
 #endif
 
 //##############################################################################################################
@@ -824,7 +865,11 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 
 	ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
+#ifdef HAVE_QPE
+	ret->app = new QPEApplication(argc, argv);
+#else
 	ret->app = new QApplication(argc, argv);
+#endif
 	ret->widget= new RenderArea();
 #if QT_VERSION < 0x040000
 	event_gr=ret;
