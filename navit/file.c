@@ -397,6 +397,12 @@ file_version(struct file *file, int byname)
 #endif
 }
 
+void *
+file_get_os_handle(struct file *file)
+{
+	return (void *)(file->fd);
+}
+
 void
 file_init(void)
 {

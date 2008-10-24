@@ -54,11 +54,23 @@ event_glib_call_watch(GIOChannel * iochan, GIOCondition condition, gpointer t)
 }
 
 static struct event_watch *
-event_glib_add_watch(int fd, int w, struct callback *cb)
+event_glib_add_watch(struct file *file, enum event_watch_cond cond, struct callback *cb)
 {
 	struct event_watch *ret=g_new0(struct event_watch, 1);
+	int flags=0,fd=(int)file_get_os_handle(file);
 	ret->iochan = g_io_channel_unix_new(fd);
-	ret->source = g_io_add_watch(ret->iochan, G_IO_IN | G_IO_ERR | G_IO_HUP, event_glib_call_watch, (gpointer)cb);
+	switch (cond) {
+	case event_watch_cond_read:
+		flags=G_IO_IN;
+		break;
+	case event_watch_cond_write:
+		flags=G_IO_OUT;
+		break;
+	case event_watch_cond_except:
+		flags=G_IO_ERR|G_IO_HUP;
+		break;
+	}	
+	ret->source = g_io_add_watch(ret->iochan, cond, event_glib_call_watch, (gpointer)cb);
 	return ret;
 }
 
