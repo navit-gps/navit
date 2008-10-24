@@ -1657,7 +1657,11 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm)
 	}
 	map_rect_destroy(mr);
 	if (cmd) {
+#ifdef HAVE_SYSTEM
 		system(cmd);
+#else
+		dbg(0,"calling external cmd '%s' is not supported\n",cmd);
+#endif
 		g_free(cmd);
 	}
 }
