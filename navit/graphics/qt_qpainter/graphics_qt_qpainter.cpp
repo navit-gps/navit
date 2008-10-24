@@ -108,8 +108,11 @@ RenderArea::RenderArea(QWidget *parent)
 	: QWidget(parent)
 {
 	pixmap = new QPixmap(800, 600);
-	setCaption("Navit");
+#if QT_VERSION > 0x040000
+    setWindowTitle("Navit");
+#endif
 #if QT_VERSION < 0x040000
+	setCaption("Navit");
 	timer_type=g_hash_table_new(NULL, NULL);
 	timer_callback=g_hash_table_new(NULL, NULL);
 #endif
