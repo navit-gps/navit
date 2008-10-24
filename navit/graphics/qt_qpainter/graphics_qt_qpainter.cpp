@@ -39,6 +39,7 @@
 #include "event.h"
 #include "window.h"
 
+#include <qglobal.h>
 #if QT_VERSION < 0x040000
 #include <qwidget.h>
 #include <qapplication.h>
@@ -52,6 +53,7 @@
 #include <qpe/qpeapplication.h>
 #endif
 #else
+#include <QResizeEvent>
 #include <QApplication>
 #include <QGraphicsScene>
 #include <QGraphicsView>
