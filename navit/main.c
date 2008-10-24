@@ -145,9 +145,6 @@ main_init(char *program)
 	setlocale(LC_ALL,"");
 	setlocale(LC_NUMERIC,"C");
 	if (file_exists("navit.c") || file_exists("navit.o") || file_exists("navit.lo")) {
-#ifndef PATH_MAX
-#define PATH_MAX 4096
-#endif
 		char buffer[PATH_MAX];
 		printf(_("Running from source directory\n"));
 		getcwd(buffer, PATH_MAX);

@@ -20,6 +20,9 @@
 #ifndef NAVIT_FILE_H
 #define NAVIT_FILE_H
 
+#ifndef PATH_MAX
+#define PATH_MAX 4096
+#endif
 #ifndef __CEGCC__
 #include <time.h>
 #endif
