@@ -72,6 +72,15 @@ g_strconcat_printf(gchar *buffer, gchar *fmt, ...)
 	return ret;
 }
 
+#ifndef HAVE_GLIB
+int g_utf8_strlen_force_link(gchar *buffer, int max);
+int
+g_utf8_strlen_force_link(gchar *buffer, int max)
+{
+	return g_utf8_strlen(buffer, max);
+}
+#endif
+
 #if defined(_WIN32) || defined(__CEGCC__)
 #include <windows.h>
 #include <stdio.h>
