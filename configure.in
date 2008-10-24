@@ -101,7 +101,6 @@ if test "x${glib}" = "xyes"; then
 else
 	GLIB_CFLAGS="-I\$(top_srcdir)/navit/support -I\$(top_srcdir)/navit/support/glib -I\$(top_srcdir)/navit/support/ezxml"
 	GLIB_LIBS="-L\$(top_builddir)/navit/support/glib -lsupport_glib -L\$(top_builddir)/navit/support/ezxml -lsupport_ezxml"
-	vehicle_demo=no; vehicle_demo_reason="not yet supported without glib"
 	vehicle_file=no; vehicle_file_reason="not yet supported without glib"
 fi
 
