@@ -1679,10 +1679,7 @@ street_get_data (struct item *item)
 		c = item_coord_get(item, &ret->c[count], step);
 		count += c;
 	} while (c && c == step);
-	if (!count) {
-		g_free(ret);
-		return NULL;
-	}
+
 	ret1=g_realloc(ret, sizeof(struct street_data)+count*sizeof(struct coord));
 	if (ret1)
 		ret = ret1;
