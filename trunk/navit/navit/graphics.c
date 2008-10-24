@@ -46,6 +46,7 @@
 #include "route.h"
 #include "util.h"
 #include "callback.h"
+#include "file.h"
 
 static char *navit_sharedir;
 

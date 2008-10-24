@@ -33,6 +33,7 @@
 #include <glib/gerror.h>
 #include <glib/gmessages.h>
 #include <glib/gstrfuncs.h>
+#include <glib/gunicode.h>
 
 #undef __GLIB_H_INSIDE__
 
