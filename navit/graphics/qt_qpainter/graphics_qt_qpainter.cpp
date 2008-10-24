@@ -35,6 +35,7 @@
 #include "color.h"
 #include "debug.h"
 #include "plugin.h"
+#include "event.h"
 
 #if 0
 #define QWS
@@ -727,17 +728,81 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 	return NULL;
 }
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
 #if QT_VERSION < 0x040000
-static gboolean graphics_qt_qpainter_idle(void *data)
+
+static struct graphics_priv *event_gr;
+
+static void
+event_qt_main_loop_run(void)
 {
-	struct graphics_priv *gr=(struct graphics_priv *)data;
-	gr->app->processOneEvent();
-	return TRUE;
+	dbg(0,"enter\n");
+	event_gr->app->exec();
+}
+
+static void event_qt_main_loop_quit(void)
+{
+	dbg(0,"enter\n");
+}
+
+static struct event_watch *
+event_qt_add_watch(int fd, int w, struct callback *cb)
+{
+	dbg(0,"enter\n");
+	return NULL;
+}
+
+static void
+event_qt_remove_watch(struct event_watch *ev)
+{
+	dbg(0,"enter\n");
+}
+
+static struct event_timeout *
+event_qt_add_timeout(int timeout, int multi, struct callback *cb)
+{
+	dbg(0,"enter\n");
+	return NULL;
+}
+
+static void
+event_qt_remove_timeout(struct event_timeout *ev)
+{
+	dbg(0,"enter\n");
+}
+
+static struct event_idle *
+event_qt_add_idle(struct callback *cb)
+{
+	dbg(0,"enter\n");
+	return NULL;
+}
+
+static void
+event_qt_remove_idle(struct event_idle *ev)
+{
+	dbg(0,"enter\n");
+}
+
+static struct event_methods event_qt_methods = {
+	event_qt_main_loop_run,
+	event_qt_main_loop_quit,
+	event_qt_add_watch,
+	event_qt_remove_watch,
+	event_qt_add_timeout,
+	event_qt_remove_timeout,
+	event_qt_add_idle,
+	event_qt_remove_idle,
+};
+
+struct event_priv {
+};
+
+struct event_priv *
+event_qt_new(struct event_methods *meth)
+{
+	dbg(0,"enter\n");
+	*meth=event_qt_methods;
+	return NULL;
 }
 #endif
 
@@ -748,16 +813,27 @@ static gboolean graphics_qt_qpainter_idle(void *data)
 //##############################################################################################################
 static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
 {
-	struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
+	struct graphics_priv *ret;
+	dbg(0,"enter\n");
+#if QT_VERSION < 0x040000
+	if (event_gr)
+		return NULL;
+	if (! event_request_system("qt","graphics_qt_qpainter_new"))
+		return NULL;
+#endif
+
+	ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
 	ret->app = new QApplication(argc, argv);
 	ret->widget= new RenderArea();
 #if QT_VERSION < 0x040000
-	g_idle_add(graphics_qt_qpainter_idle, ret);
+	event_gr=ret;
 #endif
-	
+
+	dbg(0,"return\n");
 	return ret;
 }
+
 
 //##############################################################################################################
 //# Description: 
@@ -767,6 +843,9 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 void plugin_init(void)
 {
         plugin_register_graphics_type("qt_qpainter", graphics_qt_qpainter_new);
+#if QT_VERSION < 0x040000
+        plugin_register_event_type("qt", event_qt_new);
+#endif
 }
 
 
