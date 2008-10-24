@@ -36,6 +36,7 @@
 #undef STRICT
 #endif
 
+#ifdef NOT_NEEDED_FOR_NAVIT
 #include "libcharset/libcharset.h"
 
 #include "glibintl.h"
@@ -103,6 +104,7 @@
      ((Char) & 0xFFFE) != 0xFFFE)
    
      
+#endif
 static const gchar utf8_skip_data[256] = {
   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -248,6 +250,7 @@ g_utf8_strlen (const gchar *p,
   return len;
 }
 
+#ifdef NOT_NEEDED_FOR_NAVIT
 /**
  * g_utf8_get_char:
  * @p: a pointer to Unicode character encoded as UTF-8
@@ -1856,6 +1859,7 @@ _g_utf8_make_valid (const gchar *name)
   return g_string_free (string, FALSE);
 }
 
+#endif
 
 #define __G_UTF8_C__
 #include "galiasdef.c"
