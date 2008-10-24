@@ -629,7 +629,6 @@ AC_ARG_ENABLE(graphics-win32, [  --disable-graphics-win32            disable gra
 AM_CONDITIONAL(GRAPHICS_WIN32, test "x${graphics_win32}" = "xyes")
 # qt_qpainter
 AC_ARG_ENABLE(graphics-qt-qpainter, [  --disable-graphics-qt-qpainter      disable graphics type qt-qpainter], graphics_qt_qpainter=$enableval;graphics_qt_qpainter_reason="configure parameter")
-echo "  qt_qpainter:       $graphics_qt_qpainter ($graphics_qt_qpainter_reason)"
 if test "x${graphics_qt_qpainter}" = "xyes" -a "x${QT_GUI_CFLAGS}" = "x" -a "x${QT_GUI_LIBS}" = "x"; then
 	PKG_CHECK_MODULES(QT_GUI, [QtGui QtCore], ,graphics_qt_qpainter=no,graphics_qt_qpainter_reason="Packages QtGui and/or QtCore missing")
 fi
