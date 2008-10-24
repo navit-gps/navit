@@ -34,6 +34,7 @@
 #include "item.h"
 #include "debug.h"
 
+#ifdef USE_PLUGINS
 #ifndef HAVE_GMODULE
 typedef void * GModule;
 #define G_MODULE_BIND_LOCAL 1
@@ -71,6 +72,7 @@ g_module_close(GModule *handle)
 	dlclose(handle);
 }
 
+#endif
 #endif
 
 struct plugin {
