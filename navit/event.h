@@ -17,6 +17,10 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct event_idle;
 struct event_timeout;
 struct event_watch;
@@ -44,3 +48,6 @@ struct event_idle *event_add_idle(struct callback *cb);
 void event_remove_idle(struct event_idle *ev);
 int event_request_system(char *system, char *requestor);
 /* end of prototypes */
+#ifdef __cplusplus
+}
+#endif
