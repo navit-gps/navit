@@ -30,6 +30,7 @@
 #include "transform.h"
 #include "plugin.h"
 #include "vehicle.h"
+#include "event.h"
 
 struct vehicle_priv {
 	int interval;
@@ -41,6 +42,9 @@ struct vehicle_priv {
 	double config_speed;
 	double speed;
 	double direction;
+	struct callback *timer_callback;
+	struct event_timeout *timer;
+
 };
 
 static void
@@ -87,7 +91,7 @@ struct vehicle_methods vehicle_demo_methods = {
 	vehicle_demo_set_attr,
 };
 
-static int
+static void
 vehicle_demo_timer(struct vehicle_priv *priv)
 {
 	struct coord c, c2, pos, ci;
@@ -154,7 +158,6 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 	}
 	if (mr)
 		map_rect_destroy(mr);
-	return 1;
 }
 
 
@@ -183,7 +186,8 @@ vehicle_demo_new(struct vehicle_methods
 		dbg(0,"position_set %f %f\n", ret->geo.lat, ret->geo.lng);
 	}
 	*meth = vehicle_demo_methods;
-	g_timeout_add(ret->interval, (GSourceFunc) vehicle_demo_timer, ret);
+	ret->timer_callback=callback_new_1(callback_cast(vehicle_demo_timer), ret);
+	ret->timer=event_add_timeout(ret->interval, 1, ret->timer_callback);
 	return ret;
 }
 
