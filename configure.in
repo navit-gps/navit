@@ -111,7 +111,10 @@ PKG_CHECK_MODULES(GMODULE, [gmodule-2.0], [gmodule=yes], [gmodule=no])
 if test "x${gmodule}" = "xyes"; then
 	AC_DEFINE(HAVE_GMODULE, 1, [Define to 1 if you have gmodule])
 else
-	plugins="no"; plugins_reason="package gmodule missing"
+	AC_CHECK_LIB(dl, dlopen,
+		[plugins_reason="default, via dlopen";GMODULE_LIBS="-ldl";AC_DEFINE(HAVE_DLOPEN, 1, [Define to 1 if you have dlopen])], 	 
+		[plugins="no"; plugins_reason="package gmodule and dlopen missing"]
+	)
 fi
 # plugins
 AC_ARG_ENABLE(plugins, 	[  --disable-plugins          disable plugins], [ plugins=$enableval;plugin_reason="configure parameter" ])
@@ -833,7 +836,7 @@ echo "  file:              $vehicle_file ($vehicle_file_reason)"
 echo "  gpsd:              $vehicle_gpsd ($vehicle_gpsd_reason)"
 echo "  gypsy:             $vehicle_gypsy ($vehicle_gypsy_reason)"
 
-if  [ test x"$gtk2_pkgconfig" != xyes ] && [ test x"$sdl" != xyes ] && [ test x"$directfb_pkgconfig" != xyes ] && [ test x"$gui_win32" != xyes ]
+if  test "x${gtk2_pkgconfig}" != "xyes" -a "x${sdl}" != "xyes" -a "x${directfb_pkgconfig}" != "xyes" -a "x${gui_win32}" != "xyes" -a "x${gui_internal}" != "xyes"
 	then
 	echo ""
 	echo "" 

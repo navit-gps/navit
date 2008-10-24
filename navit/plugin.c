@@ -21,7 +21,11 @@
 #include <glib.h>
 #include "config.h"
 #ifdef USE_PLUGINS
+#ifdef HAVE_GMODULE
 #include <gmodule.h>
+#else
+#include <dlfcn.h>
+#endif
 #endif
 #include "plugin.h"
 #include "file.h"
@@ -29,6 +33,45 @@
 #include "plugin.h"
 #include "item.h"
 #include "debug.h"
+
+#ifndef HAVE_GMODULE
+typedef void * GModule;
+#define G_MODULE_BIND_LOCAL 1
+#define G_MODULE_BIND_LAZY 2
+static int
+g_module_supported(void)
+{
+	return 1;
+}
+
+static void *
+g_module_open(char *name, int flags)
+{
+	return dlopen(name,
+		(flags & G_MODULE_BIND_LAZY ? RTLD_LAZY : RTLD_NOW) |
+		(flags & G_MODULE_BIND_LOCAL ? RTLD_LOCAL : RTLD_GLOBAL));
+}
+
+static char *
+g_module_error(void)
+{
+	return dlerror();
+}
+
+static int
+g_module_symbol(GModule *handle, char *symbol, gpointer *addr)
+{
+	*addr=dlsym(handle, symbol);
+	return (*addr != NULL);
+}
+
+static void
+g_module_close(GModule *handle)
+{
+	dlclose(handle);
+}
+
+#endif
 
 struct plugin {
 	int active;
