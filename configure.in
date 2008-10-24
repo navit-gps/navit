@@ -161,6 +161,13 @@ if test "x$gtk2_pkgconfig" = "xyes"; then
 	gui_gtk=yes; gui_gtk_reason="gtk+-2.0 present"
 fi
 
+# fsync
+AC_MSG_CHECKING(for fsync)
+AC_TRY_LINK([#include <unistd.h>], [fsync(0);],AC_MSG_RESULT(yes);AC_DEFINE(HAVE_FSYNC, 1, [Define to 1 if you have the `fsync' function.]),AC_MSG_RESULT(no))
+
+# system
+AC_MSG_CHECKING(for system)
+AC_TRY_LINK([#include <stdlib.h>], [system("/bin/true");],AC_MSG_RESULT(yes);AC_DEFINE(HAVE_SYSTEM, 1, [Define to 1 if you have the `system' function.]),AC_MSG_RESULT(no))
 
 AC_ARG_ENABLE(directfb, [  --enable-directfb             enable directfb gui and graphics], MODULE_DIRECTFB=$enableval, MODULE_DIRECTFB=no)
 
