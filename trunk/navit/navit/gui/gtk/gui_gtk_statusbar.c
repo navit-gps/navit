@@ -124,7 +124,7 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 		strcpy(this->route_text, buffer);
 		gtk_label_set_text(GTK_LABEL(this->route), this->route_text);
 	}
-	if (!vehicle_get_attr(v, attr_position_coord_geo, &attr))
+	if (!vehicle_get_attr(v, attr_position_coord_geo, &attr, NULL))
 		return;
 	lng=attr.u.coord_geo->lng;
 	lat=attr.u.coord_geo->lat;
@@ -136,20 +136,20 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 		lat=-lat;
 		lat_c='S';
 	}
-	if (vehicle_get_attr(v, attr_position_direction, &attr))
+	if (vehicle_get_attr(v, attr_position_direction, &attr, NULL))
 		direction=*(attr.u.numd);
 	direction=fmod(direction,360);
 	if (direction < 0)
 		direction+=360;
 	dir_idx=(direction+22.5)/45;
 	dir=dirs[dir_idx];
-	if (vehicle_get_attr(v, attr_position_height, &attr))
+	if (vehicle_get_attr(v, attr_position_height, &attr, NULL))
 		height=*(attr.u.numd);
-	if (vehicle_get_attr(v, attr_position_speed, &attr))
+	if (vehicle_get_attr(v, attr_position_speed, &attr, NULL))
 		speed=*(attr.u.numd);
-	if (vehicle_get_attr(v, attr_position_sats_used, &attr))
+	if (vehicle_get_attr(v, attr_position_sats_used, &attr, NULL))
 		sats=attr.u.num;
-	if (vehicle_get_attr(v, attr_position_qual, &attr))
+	if (vehicle_get_attr(v, attr_position_qual, &attr, NULL))
 		qual=attr.u.num;
 	sprintf(this->gps_text,"GPS %2d/%1d %02.0f%07.4f%c %03.0f%07.4f%c %4.0fm %3.0f°%-2s %3.0fkm/h", sats, qual, floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c, height, direction, dir, speed);
 	gtk_label_set_text(GTK_LABEL(this->gps), this->gps_text);

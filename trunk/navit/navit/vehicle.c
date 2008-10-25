@@ -114,7 +114,7 @@ vehicle_add_log(struct vehicle *this_, struct log *log)
 }
 
 struct vehicle *
-vehicle_new(struct attr **attrs)
+vehicle_new(struct attr *parent, struct attr **attrs)
 {
 	struct vehicle *this_;
 	struct attr *source;
@@ -164,7 +164,7 @@ vehicle_new(struct attr **attrs)
 }
 
 int
-vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr)
+vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
 	switch (type) {
 	case attr_name:

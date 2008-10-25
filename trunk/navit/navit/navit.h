@@ -80,8 +80,6 @@ void navit_attr_iter_destroy(struct attr_iter *iter);
 void navit_add_callback(struct navit *this_, struct callback *cb);
 void navit_remove_callback(struct navit *this_, struct callback *cb);
 void navit_set_position(struct navit *this_, struct pcoord *c);
-struct navit_vehicle *navit_add_vehicle(struct navit *this_, struct vehicle *v, struct attr **attrs);
-void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 void navit_tracking_add(struct navit *this_, struct tracking *tracking);
 void navit_set_speech(struct navit *this_, struct speech *speech);
 struct gui *navit_get_gui(struct navit *this_);

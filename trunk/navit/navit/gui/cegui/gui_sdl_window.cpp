@@ -757,21 +757,21 @@ static void vehicle_callback_handler( struct navit *nav, struct vehicle *v){
 	struct attr attr;
 	int sats=0, sats_used=0;
 
-	if (vehicle_get_attr(v, attr_position_speed, &attr))
+	if (vehicle_get_attr(v, attr_position_speed, &attr, NULL))
 		sprintf (buffer, "%02.02f km/h", *attr.u.numd);
 	else
 		strcpy (buffer, "N/A");
   	CEGUI::WindowManager::getSingleton().getWindow("OSD/SpeedoMeter")->setText(buffer);
 
-	if (vehicle_get_attr(v, attr_position_height, &attr))
+	if (vehicle_get_attr(v, attr_position_height, &attr, NULL))
 		sprintf (buffer, "%.f m", *attr.u.numd);
 	else
 		strcpy (buffer, "N/A");
  	CEGUI::WindowManager::getSingleton().getWindow("OSD/Altimeter")->setText(buffer);
 
-	if (vehicle_get_attr(v, attr_position_sats, &attr))
+	if (vehicle_get_attr(v, attr_position_sats, &attr, NULL))
 		sats=attr.u.num;
-	if (vehicle_get_attr(v, attr_position_sats_used, &attr))
+	if (vehicle_get_attr(v, attr_position_sats_used, &attr, NULL))
 		sats_used=attr.u.num;
 // 	printf(" sats : %i, used %i: \n",sats,sats_used);
 	// Sat image hardcoded for now. may break the TaharezSkin
