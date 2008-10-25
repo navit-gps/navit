@@ -380,7 +380,7 @@ gui_gtk_vehicles_init(struct gui_priv *this)
 
 	iter=navit_attr_iter_new();
 	while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
-		vehicle_get_attr(attr.u.vehicle, attr_name, &vattr);
+		vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
 		name=g_strdup_printf("Vehicle %d", count++);
 		data=g_new(struct action_cb_data, 1);
 		data->gui=this;

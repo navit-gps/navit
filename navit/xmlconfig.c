@@ -261,52 +261,6 @@ xmlconfig_debug(struct xmlstate *state)
 }
 
 static int
-xmlconfig_vehicle(struct xmlstate *state)
-{
-	struct attr **attrs;
-	attrs=convert_to_attrs(state);
-
-	state->element_attr.u.data = vehicle_new(attrs);
-	if (! state->element_attr.u.data)
-		return 0;
-	navit_add_vehicle(state->parent->element_attr.u.data, state->element_attr.u.data, attrs);
-	return 1;
-}
-
-static int
-xmlconfig_log_vehicle(struct xmlstate *state)
-{
-	struct attr attr;
-	struct attr **attrs;
-	attrs=convert_to_attrs(state);
-	state->element_attr.u.data = log_new(attrs);
-	if (! state->element_attr.u.data)
-		return 0;
-	attr.type=attr_log;
-	attr.u.log=state->element_attr.u.data;
-	if (vehicle_add_attr(state->parent->element_attr.u.data, &attr))
-		return 0;
-	return 1;
-}
-
-static int
-xmlconfig_log_navit(struct xmlstate *state)
-{
-	struct attr attr;
-	struct attr **attrs;
-	attrs=convert_to_attrs(state);
-	state->element_attr.u.data = log_new(attrs);
-	if (! state->element_attr.u.data)
-		return 0;
-	attr.type=attr_log;
-	attr.u.log=state->element_attr.u.data;
-	if (navit_add_attr(state->parent->element_attr.u.data, &attr))
-		return 0;
-	return 1;
-}
-
-
-static int
 xmlconfig_window_items(struct xmlstate *state)
 {
 	int distance=-1;
@@ -677,9 +631,9 @@ struct element_func {
 	{ "tracking", "navit", xmlconfig_tracking},
 	{ "route", "navit", xmlconfig_route},
 	{ "speed", "route", xmlconfig_speed},
-	{ "vehicle", "navit", xmlconfig_vehicle},
-	{ "log", "vehicle", xmlconfig_log_vehicle},
-	{ "log", "navit", xmlconfig_log_navit},
+	{ "vehicle", "navit", NULL, NEW(vehicle_new)},
+	{ "log", "vehicle", NULL, NEW(log_new)},
+	{ "log", "navit", NULL, NEW(log_new)},
 	{ "window_items", "navit", xmlconfig_window_items},
 	{ "plugins", "config", NULL, NEW(plugins_new), NULL, INIT(plugins_init), NULL},
 	{ "plugin", "plugins", xmlconfig_plugin},
