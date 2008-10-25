@@ -2435,7 +2435,7 @@ gui_internal_cmd_vehicle(struct gui_priv *this, struct widget *wm)
 	gui_internal_widget_append(wb, w);
 	iter=navit_attr_iter_new();
 	while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
-		vehicle_get_attr(attr.u.vehicle, attr_name, &vattr);
+		vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
 		wl=gui_internal_button_navit_attr_new(this, vattr.u.str, gravity_left_center|orientation_horizontal|flags_fill,
 			&attr, NULL);
 		gui_internal_widget_append(w, wl);
@@ -2567,7 +2567,7 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 		this->clickp_valid=1;
 	}
 	if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle
-		&& vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp)) {
+		&& vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp, NULL)) {
 		this->vehiclep.pro=transform_get_projection(trans);
 		transform_from_geo(this->vehiclep.pro, attrp.u.coord_geo, &c);
 		this->vehiclep.x=c.x;

@@ -139,6 +139,7 @@ struct attr_iter {
 
 static void navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv);
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt);
+static int navit_add_vehicle(struct navit *this_, struct vehicle *v);
 
 void
 navit_add_mapset(struct navit *this_, struct mapset *ms)
@@ -1510,6 +1511,8 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 	case attr_recent_dest:
 		this_->recentdest_count = attr->u.num;
 		break;
+	case attr_vehicle:
+		return navit_add_vehicle(this_, attr->u.vehicle);
 	default:
 		return 0;
 	}
@@ -1580,9 +1583,9 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	if (this_->ready != 3)
 		return;
 
-	if (! vehicle_get_attr(nv->vehicle, attr_position_direction, &attr_dir) ||
-	    ! vehicle_get_attr(nv->vehicle, attr_position_speed, &attr_speed) ||
-	    ! vehicle_get_attr(nv->vehicle, attr_position_coord_geo, &attr_pos))
+	if (! vehicle_get_attr(nv->vehicle, attr_position_direction, &attr_dir, NULL) ||
+	    ! vehicle_get_attr(nv->vehicle, attr_position_speed, &attr_speed, NULL) ||
+	    ! vehicle_get_attr(nv->vehicle, attr_position_coord_geo, &attr_pos, NULL))
 		return;
 	nv->dir=*attr_dir.u.numd;
 	nv->speed=*attr_speed.u.numd;
@@ -1673,50 +1676,46 @@ navit_set_position(struct navit *this_, struct pcoord *c)
 	navit_draw(this_);
 }
 
+static void
+navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv)
+{
+	this_->vehicle=nv;
+}
+
 /**
  * Register a new vehicle
  *
  * @param navit The navit instance
  * @param v The vehicle instance
- * @param name Guess? :)
- * @param c The color to use for the cursor, currently only used in GTK
- * @param update Wether to refresh the map each time this vehicle position changes (instead of only when it reaches a border)
- * @param follow Wether to center the map on this vehicle position
- * @returns a vehicle instance
+ * @returns 1 for success
  */
-struct navit_vehicle *
-navit_add_vehicle(struct navit *this_, struct vehicle *v, struct attr **attrs)
+static int
+navit_add_vehicle(struct navit *this_, struct vehicle *v)
 {
 	struct navit_vehicle *nv=g_new0(struct navit_vehicle, 1);
-	struct attr *update,*follow,*color,*active, *color2, *animate;
+	struct attr update,follow,color,active, color2, animate;
 	nv->vehicle=v;
 	nv->update=1;
 	nv->follow=0;
 	nv->animate_cursor=0;
-	if ((update=attr_search(attrs, NULL, attr_update)))
-		nv->update=nv->update=update->u.num;
-	if ((follow=attr_search(attrs, NULL, attr_follow)))
-		nv->follow=nv->follow=follow->u.num;
-	if ((color=attr_search(attrs, NULL, attr_color)))
-		nv->c=*(color->u.color);
-	if ((color2=attr_search(attrs, NULL, attr_color2)))
-		nv->c2=color2->u.color;
+	if ((vehicle_get_attr(v, attr_update, &update, NULL)))
+		nv->update=nv->update=update.u.num;
+	if ((vehicle_get_attr(v, attr_follow, &follow, NULL)))
+		nv->follow=nv->follow=follow.u.num;
+	if ((vehicle_get_attr(v, attr_color, &color, NULL)))
+		nv->c=*(color.u.color);
+	if ((vehicle_get_attr(v, attr_color2, &color2, NULL)))
+		nv->c2=color2.u.color;
 	else
 		nv->c2=NULL;
 	nv->update_curr=nv->update;
 	nv->follow_curr=nv->follow;
 	this_->vehicles=g_list_append(this_->vehicles, nv);
-	if ((active=attr_search(attrs, NULL, attr_active)) && active->u.num)
+	if ((vehicle_get_attr(v, attr_active, &active, NULL)) && active.u.num)
 		navit_set_vehicle(this_, nv);
-	if ((animate=attr_search(attrs, NULL, attr_animate)))
-		nv->animate_cursor=animate->u.num;
-	return nv;
-}
-
-void
-navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv)
-{
-	this_->vehicle=nv;
+	if ((vehicle_get_attr(v, attr_animate, &animate, NULL)))
+		nv->animate_cursor=animate.u.num;
+	return 1;
 }
 
 void
