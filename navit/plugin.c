@@ -326,7 +326,7 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 		else
 			mod_name=pl->name;
 		if (!g_ascii_strncasecmp(mod_name, filename, strlen(filename)) || !g_ascii_strncasecmp(mod_name, corename, strlen(filename))) {
-			dbg(0, "Loading module \"%s\"\n",pl->name) ;
+			dbg(1, "Loading module \"%s\"\n",pl->name) ;
 			if (plugin_get_active(pl)) 
 				if (!plugin_load(pl)) 
 					plugin_set_active(pl, 0);
