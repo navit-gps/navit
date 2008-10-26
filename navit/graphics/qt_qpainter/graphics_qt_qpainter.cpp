@@ -76,12 +76,7 @@ class RenderArea : public QWidget
  public:
      RenderArea(QWidget *parent = 0);
      QPixmap *pixmap;
-     void (*resize_callback)(void *data, int w, int h);
-     void *resize_callback_data;
-     void (*motion_callback)(void *data, struct point *p);
-     void *motion_callback_data;
-     void (*button_callback)(void *data, int press, int button, struct point *p);
-     void *button_callback_data;	// struct navit *
+     struct callback_list *cbl;
 
 #if QT_VERSION < 0x040000
      GHashTable *timer_type;
@@ -152,8 +147,7 @@ void RenderArea::resizeEvent(QResizeEvent * event)
 	QSize size=event->size();
 	delete pixmap;
 	pixmap = new QPixmap(size);
-	  if (this->resize_callback)
-                (this->resize_callback)(this->resize_callback_data, size.width(), size.height());
+	callback_list_call_attr_2(this->cbl, attr_resize, (void *)size.width(), (void *)size.height());
 }
 
 //##############################################################################################################
@@ -164,19 +158,17 @@ void RenderArea::resizeEvent(QResizeEvent * event)
 void RenderArea::mouseEvent(int pressed, QMouseEvent *event)
 {
 	struct point p;
-	if (!this->button_callback)
-		return;
 	p.x=event->x();
 	p.y=event->y();
 	switch (event->button()) {
 	case Qt::LeftButton:
-		(this->button_callback)(this->button_callback_data, pressed, 1, &p); // calls navit_button() in navit.c
+		callback_list_call_attr_3(this->cbl, attr_button, (void *)pressed, (void *)1, (void *)&p);
 		break;
 	case Qt::MidButton:
-		(this->button_callback)(this->button_callback_data, pressed, 2, &p);
+		callback_list_call_attr_3(this->cbl, attr_button, (void *)pressed, (void *)2, (void *)&p);
 		break;
 	case Qt::RightButton:
-		(this->button_callback)(this->button_callback_data, pressed, 3, &p);
+		callback_list_call_attr_3(this->cbl, attr_button, (void *)pressed, (void *)3, (void *)&p);
 		break;
 	default:
 		break;
@@ -201,11 +193,9 @@ void RenderArea::mouseReleaseEvent(QMouseEvent *event)
 void RenderArea::mouseMoveEvent(QMouseEvent *event)
 {
 	struct point p;
-	if (!this->motion_callback)
-		return;
 	p.x=event->x();
 	p.y=event->y();
-	(this->motion_callback)(this->motion_callback_data, &p);
+	callback_list_call_attr_1(this->cbl, attr_motion, (void *)&p);
 }
 
 
@@ -219,8 +209,6 @@ void RenderArea::wheelEvent(QWheelEvent *event)
 	struct point p;
 	int button;
 	
-	if (!this->button_callback)
-		return;
 	p.x=event->x();	// xy-coordinates of the mouse pointer
 	p.y=event->y();
 	
@@ -232,8 +220,8 @@ void RenderArea::wheelEvent(QWheelEvent *event)
 		button=-1;
 	
 	if (button != -1) {
-		(*this->button_callback)(this->button_callback_data, 1, button, &p);
-		(*this->button_callback)(this->button_callback_data, 0, button, &p);
+		callback_list_call_attr_3(this->cbl, attr_button, (void *)1, (void *)button, (void *)&p);
+		callback_list_call_attr_3(this->cbl, attr_button, (void *)0, (void *)button, (void *)&p);
 	}
 	
 	event->accept();
@@ -607,7 +595,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h);
 
 static int argc=1;
-static char *argv[]={"navit",NULL};
+static char *argv[]={(char *)"navit",NULL};
 
 static int
 fullscreen(struct window *win, int on)
@@ -636,40 +624,6 @@ static void * get_data(struct graphics_priv *this_, char *type)
 	win->priv=this_;
 	win->fullscreen=fullscreen;
 	return win;
-}
-
-
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-static void register_resize_callback(struct graphics_priv *this_, void (*callback)(void *data, int w, int h), void *data)
-{
-	this_->widget->resize_callback=callback;
-        this_->widget->resize_callback_data=data;
-}
-
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-static void register_motion_callback(struct graphics_priv *this_, void (*callback)(void *data, struct point *p), void *data)
-{
-	this_->widget->motion_callback=callback;
-        this_->widget->motion_callback_data=data;
-}
-
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-static void register_button_callback(struct graphics_priv *this_, void (*callback)(void *data, int press, int button, struct point *p), void *data)
-{
-	this_->widget->button_callback=callback;
-        this_->widget->button_callback_data=data;
 }
 
 static void
@@ -711,15 +665,6 @@ static void overlay_disable(struct graphics_priv *gr, int disable)
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static void register_keypress_callback(struct graphics_priv *this_, void (*callback)(void *data, char *key), void *data)
-{
-}
-
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
 static struct graphics_methods graphics_methods = {
 	graphics_destroy,
 	draw_mode,
@@ -731,20 +676,16 @@ static struct graphics_methods graphics_methods = {
 	draw_image,
 	draw_image_warp,
 	draw_restore,
+	NULL,
 	font_new,
 	gc_new,
 	background_gc,
 	overlay_new,
 	image_new,
 	get_data,
-	register_resize_callback,
-	register_button_callback,
-	register_motion_callback,
 	image_free,
         get_text_bbox,
         overlay_disable,
-        register_keypress_callback,
-
 };
 
 //##############################################################################################################
@@ -857,7 +798,7 @@ void RenderArea::timerEvent(QTimerEvent *event)
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
+static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct graphics_priv *ret;
 	dbg(0,"enter\n");
@@ -876,6 +817,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	ret->app = new QApplication(argc, argv);
 #endif
 	ret->widget= new RenderArea();
+	ret->widget->cbl=cbl;
 #if QT_VERSION < 0x040000
 	event_gr=ret;
 #endif

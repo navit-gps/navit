@@ -83,7 +83,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 {
 	struct graphics *this_;
     	struct attr *type_attr;
-	struct graphics_priv * (*graphicstype_new)(struct navit *nav, struct graphics_methods *meth, struct attr **attrs);
+	struct graphics_priv * (*graphicstype_new)(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl);
 
         if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
                 return NULL;
@@ -94,7 +94,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 		return NULL;
 	this_=g_new0(struct graphics, 1);
 	this_->cbl=callback_list_new();
-	this_->priv=(*graphicstype_new)(parent->u.navit, &this_->meth, attrs);
+	this_->priv=(*graphicstype_new)(parent->u.navit, &this_->meth, attrs, this_->cbl);
 	this_->attrs=attr_list_dup(attrs);
 	return this_;
 }
@@ -154,50 +154,6 @@ void graphics_init(struct graphics *this_)
 void * graphics_get_data(struct graphics *this_, char *type)
 {
 	return (this_->meth.get_data(this_->priv, type));
-}
-
-/**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
-void graphics_register_resize_callback(struct graphics *this_, void (*callback)(void *data, int w, int h), void *data)
-{
-	this_->meth.register_resize_callback(this_->priv, callback, data);
-}
-
-/**
- * Called in navit.c
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
-void graphics_register_button_callback(struct graphics *this_, void (*callback)(void *data, int pressed, int button, struct point *p), void *data)
-{
-	this_->meth.register_button_callback(this_->priv, callback, data);
-}
-
-/**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
-void graphics_register_motion_callback(struct graphics *this_, void (*callback)(void *data, struct point *p), void *data)
-{
-	this_->meth.register_motion_callback(this_->priv, callback, data);
-}
-
-/**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
-void graphics_register_keypress_callback(struct graphics *this_, void (*callback)(void *data, char *key), void *data)
-{
-	this_->meth.register_keypress_callback(this_->priv, callback, data);
 }
 
 void graphics_add_callback(struct graphics *this_, struct callback *cb)
@@ -457,6 +413,21 @@ void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct 
 {
 	this_->meth.draw_image(this_->priv, gc->priv, p, img->priv);
 }
+
+//##############################################################################################################
+//# Description:
+//# Comment:
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+int
+graphics_draw_drag(struct graphics *this_, struct point *p)
+{
+	if (!this_->meth.draw_drag)
+		return 0;
+	this_->meth.draw_drag(this_->priv, p);
+	return 1;
+}
+
 
 #include "attr.h"
 #include "popup.h"

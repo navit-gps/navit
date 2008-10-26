@@ -146,6 +146,15 @@ static inline void callback_list_call_2(struct callback_list *l, void *p1, void 
 	callback_list_call(l, 2, p);
 }
 
+static inline void callback_list_call_attr_3(struct callback_list *l, enum attr_type type, void *p1, void *p2, void *p3)
+{
+	void *p[3];
+	p[0]=p1;
+	p[1]=p2;
+	p[2]=p3;
+	callback_list_call_attr(l, type, 3, p);
+}
+
 static inline void callback_list_call_attr_4(struct callback_list *l, enum attr_type type, void *p1, void *p2, void *p3, void *p4)
 {
 	void *p[4];
