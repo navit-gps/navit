@@ -27,9 +27,9 @@ struct element_line;
 struct element_text;
 
 struct element {
-	enum { element_point, element_polyline, element_polygon, element_circle, element_label, element_icon, element_image, element_arrows } type;
+	enum { element_point, element_polyline, element_polygon, element_circle, element_text, element_icon, element_image, element_arrows } type;
 	struct color color;
-	int label_size;
+	int text_size;
 	union {
 		struct element_point {
 		} point;
@@ -37,7 +37,7 @@ struct element {
 			int width;
 			int directed;
 			int dash_num;
-			int dash_offset;
+			int offset;
 			unsigned char dash_table[4];
 		} polyline;
 		struct element_polygon {
@@ -53,38 +53,36 @@ struct element {
 };
 
 
-struct itemtype { 
-	int order_min, order_max;
+struct itemgra { 
+	struct order order;
 	GList *type;
 	GList *elements;
 };
 
 struct color;
 
-struct layer { char *name; int details; GList *itemtypes; };
+struct layer { char *name; int details; GList *itemgras; };
 
 struct layout { char *name; char *font; struct color color; GList *layers; int order_delta; };
 
 /* prototypes */
 enum item_type;
 struct element;
-struct itemtype;
+struct itemgra;
 struct layer;
 struct layout;
 struct layout *layout_new(struct attr *parent, struct attr **attrs);
-struct layer *layer_new(const char *name, int details);
-void layout_add_layer(struct layout *layout, struct layer *layer);
-struct itemtype *itemtype_new(int order_min, int order_max);
-void itemtype_add_type(struct itemtype *this, enum item_type type);
-void layer_add_itemtype(struct layer *layer, struct itemtype *itemtype);
-void itemtype_add_element(struct itemtype *itemtype, struct element *element);
-struct element *polygon_new(struct color *color);
-struct element *polyline_new(struct color *color, int width, int directed,
-                             int dash_offset, int *dash_table, int dash_num);
-struct element *circle_new(struct color *color, int radius, int width, int label_size);
-struct element *label_new(int label_size);
-struct element *icon_new(const char *src);
-struct element *image_new(void);
-
+int layout_add_attr(struct layout *layout, struct attr *attr);
+struct layer *layer_new(struct attr *parent, struct attr **attrs);
+int layer_add_attr(struct layer *layer, struct attr *attr);
+struct itemgra *itemgra_new(struct attr *parent, struct attr **attrs);
+int itemgra_add_attr(struct itemgra *itemgra, struct attr *attr);
+struct polygon *polygon_new(struct attr *parent, struct attr **attrs);
+struct polyline *polyline_new(struct attr *parent, struct attr **attrs);
+struct circle *circle_new(struct attr *parent, struct attr **attrs);
+struct text *text_new(struct attr *parent, struct attr **attrs);
+struct icon *icon_new(struct attr *parent, struct attr **attrs);
+struct image *image_new(struct attr *parent, struct attr **attrs);
+struct arrows *arrows_new(struct attr *parent, struct attr **attrs);
 #endif
 
