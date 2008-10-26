@@ -775,7 +775,7 @@ static void event_qt_main_loop_quit(void)
 }
 
 static struct event_watch *
-event_qt_add_watch(int fd, int w, struct callback *cb)
+event_qt_add_watch(struct file *f, enum event_watch_cond cond, struct callback *cb)
 {
 	dbg(0,"enter\n");
 	return NULL;
