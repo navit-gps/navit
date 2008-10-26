@@ -49,7 +49,7 @@ struct mapset {
  *
  * @return The new mapset 
  */
-struct mapset *mapset_new(void)
+struct mapset *mapset_new(struct attr *parent, struct attr **attrs)
 {
 	struct mapset *ms;
 
@@ -58,15 +58,23 @@ struct mapset *mapset_new(void)
 	return ms;
 }
 
+
 /**
  * @brief Adds a map to a mapset
  *
  * @param ms The mapset to add the map to
  * @param m The map to be added
  */
-void mapset_add(struct mapset *ms, struct map *m)
+int
+mapset_add_attr(struct mapset *ms, struct attr *attr)
 {
-	ms->maps=g_list_append(ms->maps, m);
+	switch (attr->type) {
+	case attr_map:
+		ms->maps=g_list_append(ms->maps, attr->u.map);
+		return 1;
+	default:
+		return 0;
+	}
 }
 
 #if 0

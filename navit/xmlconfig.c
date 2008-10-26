@@ -205,20 +205,6 @@ xmlconfig_speech(struct xmlstate *state)
 }
 
 static int
-xmlconfig_debug(struct xmlstate *state)
-{
-	const char *name,*level;
-	name=find_attribute(state, "name", 1);
-	if (! name)
-		return 0;
-	level=find_attribute(state, "level", 1);
-	if (! level)
-		return 0;
-	debug_level_set(name, convert_number(level));
-	return 1;
-}
-
-static int
 xmlconfig_window_items(struct xmlstate *state)
 {
 	int distance=-1;
@@ -302,35 +288,6 @@ xmlconfig_speed(struct xmlstate *state)
 
 
 static int
-xmlconfig_navigation(struct xmlstate *state)
-{
-	struct attr **attrs;
-	struct attr navigation_attr;
-
-	attrs=convert_to_attrs(state,NULL);
-	state->element_attr.u.data = navigation_new(attrs);
-	if (! state->element_attr.u.data) {
-		dbg(0,"Failed to create navigation object\n");
-		return 0;
-	}
-	navigation_attr.type=attr_navigation;
-	navigation_attr.u.navigation=state->element_attr.u.data;
-	return navit_add_attr(state->parent->element_attr.u.data, &navigation_attr);
-}
-
-static int
-xmlconfig_osd(struct xmlstate *state)
-{
-	struct attr **attrs;
-	const char *type=find_attribute(state, "type", 1);
-	if (! type)
-		return 0;
-	attrs=convert_to_attrs(state,NULL);
-	state->element_attr.u.data = osd_new(state->parent->element_attr.u.data, type, attrs);
-	return 1;
-}
-
-static int
 xmlconfig_announce(struct xmlstate *state)
 {
 	const char *type,*value;
@@ -362,30 +319,6 @@ xmlconfig_announce(struct xmlstate *state)
 	return 1;
 }
 
-static int
-xmlconfig_mapset(struct xmlstate *state)
-{
-	state->element_attr.u.data = mapset_new();
-	if (! state->element_attr.u.data)
-		return 0;
-	navit_add_mapset(state->parent->element_attr.u.data, state->element_attr.u.data);
-
-	return 1;
-}
-
-static int
-xmlconfig_map(struct xmlstate *state)
-{
-	struct attr **attrs;
-	attrs=convert_to_attrs(state,NULL);
-	state->element_attr.u.data = map_new(attrs);
-	if (! state->element_attr.u.data)
-		return 0;
-	mapset_add(state->parent->element_attr.u.data, state->element_attr.u.data);
-
-	return 1;
-}
-
 #define NEW(x) (void *(*)(struct attr *, struct attr **))(x)
 #define ADD(x) (int (*)(void *, struct attr *attr))(x)
 #define INIT(x) (int (*)(void *))(x)
@@ -400,16 +333,16 @@ struct element_func {
 	void (*destroy)(void *);
 } elements[] = {
 	{ "config", NULL, xmlconfig_config},
-	{ "debug", "config", xmlconfig_debug},
-	{ "mapset", "navit", xmlconfig_mapset},
-	{ "map",  "mapset", xmlconfig_map},
-	{ "navigation", "navit", xmlconfig_navigation},
-	{ "osd", "navit", xmlconfig_osd},
 	{ "announce", "navigation", xmlconfig_announce},
 	{ "speech", "navit", xmlconfig_speech},
 	{ "tracking", "navit", xmlconfig_tracking},
 	{ "route", "navit", xmlconfig_route},
 	{ "speed", "route", xmlconfig_speed},
+	{ "mapset", "navit", NULL, NEW(mapset_new), ADD(mapset_add_attr)},
+	{ "map",  "mapset", NULL, NEW(map_new)},
+	{ "debug", "config", NULL, NEW(debug_new)},
+	{ "osd", "navit", NULL, NEW(osd_new)},
+	{ "navigation", "navit", NULL, NEW(navigation_new)},
 	{ "navit", "config", NULL, NEW(navit_new), ADD(navit_add_attr), INIT(navit_init), DESTROY(navit_destroy)},
 	{ "graphics", "navit", NULL, NEW(graphics_new)},
 	{ "gui", "navit", NULL, NEW(gui_new)},

@@ -2267,7 +2267,7 @@ static struct map *
 route_get_map_helper(struct route *this_, struct map **map, char *type, char *description)
 {
 	if (! *map) 
-		*map=map_new((struct attr*[]){
+		*map=map_new(NULL, (struct attr*[]){
                                 &(struct attr){attr_type,{type}},
                                 &(struct attr){attr_route,.u.route=this_},
                                 &(struct attr){attr_data,{""}},
