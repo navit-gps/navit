@@ -63,6 +63,7 @@ struct attr {
 		struct layout *layout;
 		struct layer *layer;
 		struct map *map;
+		struct mapset *mapset;
 		struct log *log;
 		struct route *route;
 		struct navigation *navigation;

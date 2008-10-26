@@ -88,7 +88,7 @@ struct map_rect {
  * @return The opened map or NULL on failure
  */
 struct map *
-map_new(struct attr **attrs)
+map_new(struct attr *parent, struct attr **attrs)
 {
 	struct map *m;
 	struct map_priv *(*maptype_new)(struct map_methods *meth, struct attr **attrs);

@@ -824,10 +824,11 @@ static void
 navit_add_bookmarks_from_file(struct navit *this_)
 {
 	char *bookmark_file = navit_get_bookmark_file(FALSE);
+	struct attr parent={attr_navit, .u.navit=this_};
 	struct attr type={attr_type, {"textfile"}}, data={attr_data, {bookmark_file}};
 	struct attr *attrs[]={&type, &data, NULL};
 
-	this_->bookmark=map_new(attrs);
+	this_->bookmark=map_new(&parent, attrs);
 	g_free(bookmark_file);
 }
 
@@ -835,10 +836,11 @@ static void
 navit_add_former_destinations_from_file(struct navit *this_)
 {
 	char *destination_file = navit_get_destination_file(FALSE);
+	struct attr parent={attr_navit, .u.navit=this_};
 	struct attr type={attr_type, {"textfile"}}, data={attr_data, {destination_file}};
 	struct attr *attrs[]={&type, &data, NULL};
 
-	this_->former_destination=map_new(attrs);
+	this_->former_destination=map_new(&parent, attrs);
 	g_free(destination_file);
 }
 
@@ -1206,9 +1208,13 @@ navit_init(struct navit *this_)
 		ms=this_->mapsets->data;
 		if (this_->route) {
 			if ((map=route_get_map(this_->route)))
-				mapset_add(ms, map);
+				mapset_add_attr(ms, (struct attr*[]){
+                               	&(struct attr){attr_map,{map}},
+                                NULL});
 			if ((map=route_get_graph_map(this_->route))) {
-				mapset_add(ms, map);
+				mapset_add_attr(ms, (struct attr*[]){
+                               	&(struct attr){attr_map,{map}},
+                                NULL});
 				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 			route_set_mapset(this_->route, ms);
@@ -1221,13 +1227,17 @@ navit_init(struct navit *this_)
 		}
 		if (this_->navigation) {
 			if ((map=navigation_get_map(this_->navigation))) {
-				mapset_add(ms, map);
+				mapset_add_attr(ms, (struct attr*[]){
+                               	&(struct attr){attr_map,{map}},
+                                NULL});
 				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 		}
 		if (this_->tracking) {
 			if ((map=tracking_get_map(this_->tracking))) {
-				mapset_add(ms, map);
+				mapset_add_attr(ms, (struct attr*[]){
+                               	&(struct attr){attr_map,{map}},
+                                NULL});
 				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 		}
@@ -1504,6 +1514,9 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		return 1;
 	case attr_route:
 		this_->route=attr->u.route;
+		break;
+	case attr_mapset:
+		this_->mapsets = g_list_append(this_->mapsets, attr->u.mapset);
 		break;
 	case attr_navigation:
 		this_->navigation=attr->u.navigation;
