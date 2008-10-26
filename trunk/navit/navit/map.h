@@ -224,7 +224,7 @@ struct map_rect;
 struct map_search;
 struct map_selection;
 struct pcoord;
-struct map *map_new(struct attr **attrs);
+struct map *map_new(struct attr *parent, struct attr **attrs);
 int map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int map_set_attr(struct map *this_, struct attr *attr);
 void map_add_callback(struct map *this_, struct callback *cb);

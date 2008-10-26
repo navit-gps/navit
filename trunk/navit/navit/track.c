@@ -389,7 +389,7 @@ struct map *
 tracking_get_map(struct tracking *this_)
 {
 	if (! this_->map)
-		this_->map=map_new((struct attr*[]){
+		this_->map=map_new(NULL, (struct attr*[]){
 			&(struct attr){attr_type,{"tracking"}},
 			&(struct attr){attr_trackingo,.u.tracking=this_},
 			&(struct attr){attr_data,{""}},

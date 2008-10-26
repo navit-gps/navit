@@ -25,10 +25,12 @@
 #include <time.h>
 #include <glib.h>
 #include "file.h"
+#include "item.h"
 #include "debug.h"
 
 
 int debug_level=0,segv_level=0;
+static int dummy;
 static GHashTable *debug_hash;
 static char *gdb_program;
 
@@ -77,6 +79,19 @@ debug_level_set(const char *name, int level)
 			signal(SIGSEGV, NULL);
 	}
 }
+
+struct debug *
+debug_new(struct attr *parent, struct attr **attrs)
+{
+	struct attr *name,*level;
+	name=attr_search(attrs, NULL, attr_name);
+	level=attr_search(attrs, NULL, attr_level);
+	if (!name || !level)
+		return NULL;
+	debug_level_set(name->u.str, level->u.num);
+	return (struct debug *)&dummy;
+}
+
 
 int
 debug_level_get(const char *name)
