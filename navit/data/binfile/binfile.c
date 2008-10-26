@@ -154,7 +154,7 @@ binfile_read_eoc(struct file *fi)
 	eoc=(struct zip_eoc *)file_data_read(fi,fi->size-sizeof(struct zip_eoc), sizeof(struct zip_eoc));
 	if (eoc) {
 		eoc_to_cpu(eoc);
-		dbg(0,"sig 0x%x\n", eoc->zipesig);
+		dbg(1,"sig 0x%x\n", eoc->zipesig);
 		if (eoc->zipesig != zip_eoc_sig) {
 			file_data_free(fi,(unsigned char *)eoc);
 			eoc=NULL;
@@ -176,7 +176,7 @@ binfile_read_cd(struct map_priv *m, int offset, int len)
 	cd=(struct zip_cd *)file_data_read(m->fi,m->eoc->zipeofst+offset, sizeof(*cd)+len);
 	if (cd) {
 		cd_to_cpu(cd);
-		dbg(0,"sig 0x%x\n", cd->zipcensig);
+		dbg(1,"sig 0x%x\n", cd->zipcensig);
 		if (cd->zipcensig != zip_cd_sig) {
 			file_data_free(m->fi,(unsigned char *)cd);
 			cd=NULL;
@@ -809,7 +809,7 @@ map_binfile_open(struct map_priv *m)
 	int *magic;
 	struct zip_cd *first_cd;
 
-	dbg(0,"file_create %s\n", m->filename);
+	dbg(1,"file_create %s\n", m->filename);
 	m->fi=file_create(m->filename);
 	if (! m->fi) {
 		dbg(0,"Failed to load '%s'\n", m->filename);
@@ -824,8 +824,8 @@ map_binfile_open(struct map_priv *m)
 		if ((m->eoc=binfile_read_eoc(m->fi)) && binfile_get_index(m) && (first_cd=binfile_read_cd(m, 0, 0))) {
 			m->cde_size=sizeof(struct zip_cd)+first_cd->zipcfnl;
 			m->zip_members=m->index_offset/m->cde_size+1;
-			printf("cde_size %d\n", m->cde_size);
-			printf("members %d\n",m->zip_members);
+			dbg(1,"cde_size %d\n", m->cde_size);
+			dbg(1,"members %d\n",m->zip_members);
 			file_data_free(m->fi, (unsigned char *)first_cd);
 		} else {
 			dbg(0,"invalid file format for '%s'\n", m->filename);
