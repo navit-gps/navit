@@ -61,6 +61,7 @@ struct attr {
 		struct callback *callback;
 		struct vehicle *vehicle;
 		struct layout *layout;
+		struct layer *layer;
 		struct map *map;
 		struct log *log;
 		struct route *route;
@@ -70,6 +71,20 @@ struct attr {
 		struct gui *gui;
 		struct graphics *graphics;
 		struct tracking *tracking;
+		struct itemgra *itemgra;
+		struct polygon *polygon;
+		struct polyline *polyline;
+		struct circle *circle;
+		struct text *text;
+		struct icon *icon;
+		struct image *image;
+		struct arrows *arrows;
+		struct element *element;
+		struct order {
+			short min, max;
+		} order;
+		int *dash;
+		enum item_type *item_types;
 	} u;
 };
 
