@@ -141,7 +141,7 @@ vehicle_gpsd_try_open(gpointer *data)
 	g_free(source);
 
 	if (!priv->gps){
-		g_warning("gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?\n", priv->source, priv->retry_interval);
+		dbg(0,"gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?\n", priv->source, priv->retry_interval);
 		return TRUE;
 	}
 	gps_query(priv->gps, priv->gpsd_query);
@@ -287,7 +287,7 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 			ret->retry_interval = MIN_RETRY_INTERVAL;
 		}
 	} else {
-		dbg(0, "Retry interval not defined, setting to %d\n", DEFAULT_RETRY_INTERVAL);
+		dbg(1, "Retry interval not defined, setting to %d\n", DEFAULT_RETRY_INTERVAL);
 		ret->retry_interval = DEFAULT_RETRY_INTERVAL;
 	}
 	ret->cbl = cbl;
