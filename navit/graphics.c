@@ -674,7 +674,7 @@ static void display_draw_arrows(struct displayitem *di, struct graphics_gc *gc, 
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct itemtype *itm)
+static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct itemgra *itm)
 {
 	struct element *e;
 	GList *l,*ls,*es,*types;
@@ -713,7 +713,7 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 						gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
 					if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
 						graphics_gc_set_dashes(gc, e->u.polyline.width, 
-								       e->u.polyline.dash_offset,
+								       e->u.polyline.offset,
 						                       e->u.polyline.dash_table,
 						                       e->u.polyline.dash_num);
 					gra->meth.draw_lines(gra->priv, gc->priv, di->pnt, di->count);
@@ -722,19 +722,19 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 					if (e->u.circle.width > 1) 
 						gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
 					gra->meth.draw_circle(gra->priv, gc->priv, &di->pnt[0], e->u.circle.radius);
-					if (di->label && e->label_size) {
+					if (di->label && e->text_size) {
 						p.x=di->pnt[0].x+3;
 						p.y=di->pnt[0].y+10;
-						if (! gra->font[e->label_size])
-							gra->font[e->label_size]=graphics_font_new(gra, e->label_size*20, 0);
-						gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->label_size]->priv, di->label, &p, 0x10000, 0);
+						if (! gra->font[e->text_size])
+							gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
+						gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->text_size]->priv, di->label, &p, 0x10000, 0);
 					}
 					break;
-				case element_label:
+				case element_text:
 					if (di->label) {
-						if (! gra->font[e->label_size])
-							gra->font[e->label_size]=graphics_font_new(gra, e->label_size*20, 0);
-						label_line(gra, gra->gc[2], gra->gc[1], gra->font[e->label_size], di->pnt, di->count, di->label);
+						if (! gra->font[e->text_size])
+							gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
+						label_line(gra, gra->gc[2], gra->gc[1], gra->font[e->text_size], di->pnt, di->count, di->label);
 					}
 					break;
 				case element_icon:
@@ -785,12 +785,12 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 static void xdisplay_draw_layer(GHashTable *display_list, struct graphics *gra, struct layer *lay, int order)
 {
 	GList *itms;
-	struct itemtype *itm;
+	struct itemgra *itm;
 
-	itms=lay->itemtypes;
+	itms=lay->itemgras;
 	while (itms) {
 		itm=itms->data;
-		if (order >= itm->order_min && order <= itm->order_max) 
+		if (order >= itm->order.min && order <= itm->order.max) 
 			xdisplay_draw_elements(gra, display_list, itm);
 		itms=g_list_next(itms);
 	}

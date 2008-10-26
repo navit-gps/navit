@@ -74,6 +74,8 @@ attr_new_from_text(const char *name, const char *value)
 	struct attr *ret;
 	struct coord_geo *g;
 	struct coord c;
+	char *pos,*type_str,*str,*tok,*saveptr;
+	int min,max,count;
 
 	ret=g_new0(struct attr, 1);
 	dbg(1,"enter name='%s' value='%s'\n", name, value);
@@ -82,6 +84,44 @@ attr_new_from_text(const char *name, const char *value)
 	switch (attr) {
 	case attr_item_type:
 		ret->u.item_type=item_from_name(value);
+		break;
+	case attr_item_types:
+		count=0;
+		type_str=g_strdup(value);
+		str=type_str;
+		while ((tok=strtok_r(str, ",", &saveptr))) {
+			ret->u.item_types=g_realloc(ret->u.item_types, (count+2)*sizeof(enum item_type));
+			ret->u.item_types[count++]=item_from_name(tok);
+			ret->u.item_types[count]=type_none;
+        	        str=NULL;
+        	}
+		g_free(type_str);
+		break;
+	case attr_dash:
+		count=0;
+		type_str=g_strdup(value);
+		str=type_str;
+		while ((tok=strtok_r(str, ",", &saveptr))) {
+			ret->u.dash=g_realloc(ret->u.dash, (count+2)*sizeof(int));
+			ret->u.dash[count++]=g_ascii_strtoull(tok,NULL,0);
+			ret->u.dash[count]=0;
+        	        str=NULL;
+        	}
+		g_free(type_str);
+		break;
+	case attr_order:
+		pos=strchr(value, '-');
+		min=0;
+		max=32767;
+		if (! pos) {
+                	sscanf(value,"%d",&min);
+                	max=min;
+		} else if (pos == value)
+			sscanf(value,"-%d",&max);
+		else
+                	sscanf(value,"%d-%d",&min, &max);
+		ret->u.order.min=min;
+		ret->u.order.max=max;
 		break;
 	default:
 		if (attr >= attr_type_string_begin && attr <= attr_type_string_end) {
