@@ -20,6 +20,7 @@
 #include <glib.h>
 #include "debug.h"
 #include "plugin.h"
+#include "item.h"
 #include "osd.h"
 
 
@@ -29,16 +30,19 @@ struct osd {
 };
 
 struct osd *
-osd_new(struct navit *nav, const char *type, struct attr **attrs)
+osd_new(struct attr *parent, struct attr **attrs)
 {
         struct osd *o;
         struct osd_priv *(*new)(struct navit *nav, struct osd_methods *meth, struct attr **attrs);
+	struct attr *type=attr_search(attrs, NULL, attr_type);
 
-        new=plugin_get_osd_type(type);
+	if (! type)
+		return NULL;
+        new=plugin_get_osd_type(type->u.str);
         if (! new)
                 return NULL;
         o=g_new0(struct osd, 1);
-        o->priv=new(nav, &o->meth, attrs);
+        o->priv=new(parent->u.navit, &o->meth, attrs);
         return o;
 }
 
