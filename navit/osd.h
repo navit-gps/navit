@@ -28,7 +28,7 @@ struct osd_methods {
 struct attr;
 struct navit;
 struct osd;
-struct osd *osd_new(struct navit *nav, const char *type, struct attr **attrs);
+struct osd *osd_new(struct attr *parent, struct attr **attrs);
 /* end of prototypes */
 
 #endif
