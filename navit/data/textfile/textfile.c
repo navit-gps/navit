@@ -362,7 +362,7 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs)
 	char **wexp_data;
 	if (! data)
 		return NULL;
-	dbg(0,"map_new_textfile %s\n", data->u.str);	
+	dbg(1,"map_new_textfile %s\n", data->u.str);	
 	wdata=g_strdup_printf(data->u.str);
 	len=strlen(wdata);
 	if (len && wdata[len-1] == '|') {
