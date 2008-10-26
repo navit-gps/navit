@@ -125,7 +125,9 @@ struct navit {
 	int destination_valid;
 	int blocked;
 	int w,h;
+	int drag_bitmap;
 	GHashTable *commands;
+	struct callback *resize_callback,*button_callback,*motion_callback;
 };
 
 struct gui *main_loop_gui;
@@ -285,6 +287,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			pt.y/=2;
 			pt.x-=this_->last.x-this_->pressed.x;
 			pt.y-=this_->last.y-this_->pressed.y;
+			graphics_draw_drag(this_->gra, NULL);
 			graphics_overlay_disable(this_->gra, 0);
 			navit_set_center_screen(this_, &pt);
 		} else
@@ -308,6 +311,18 @@ navit_motion_timeout(struct navit *this_)
 {
 	int dx, dy;
 
+	if (this_->drag_bitmap) {
+		struct point point;
+		point.x=(this_->current.x-this_->pressed.x);
+		point.y=(this_->current.y-this_->pressed.y);
+		if (graphics_draw_drag(this_->gra, &point)) {
+			graphics_overlay_disable(this_->gra, 1);
+			graphics_draw_mode(this_->gra, draw_mode_end);
+			this_->moved=1;
+			this_->motion_timeout=NULL;
+			return;
+		}
+	} 
 	dx=(this_->current.x-this_->last.x);
 	dy=(this_->current.y-this_->last.y);
 	if (dx || dy) {
@@ -318,7 +333,7 @@ navit_motion_timeout(struct navit *this_)
 		this_->moved=1;
 	}
 	this_->motion_timeout=NULL;
-	return FALSE;
+	return;
 }
 
 void
@@ -451,6 +466,9 @@ navit_new(struct attr *parent, struct attr **attrs)
 		case attr_recent_dest:
 			this_->recentdest_count=(*attrs)->u.num;
 			break;
+		case attr_drag_bitmap:
+			this_->drag_bitmap=!!(*attrs)->u.num;
+			break;
 		default:
 			dbg(0, "Unexpected attribute %x\n",(*attrs)->type);
 			break;
@@ -493,9 +511,12 @@ navit_set_graphics(struct navit *this_, struct graphics *gra)
 	if (this_->gra)
 		return 0;
 	this_->gra=gra;
-	graphics_register_resize_callback(this_->gra, navit_resize, this_);
-	graphics_register_button_callback(this_->gra, navit_button, this_);
-	graphics_register_motion_callback(this_->gra, navit_motion, this_);
+	this_->resize_callback=callback_new_attr_1(navit_resize, attr_resize, this_);
+	graphics_add_callback(gra, this_->resize_callback);
+	this_->button_callback=callback_new_attr_1(navit_button, attr_button, this_);
+	graphics_add_callback(gra, this_->button_callback);
+	this_->motion_callback=callback_new_attr_1(navit_motion, attr_motion, this_);
+	graphics_add_callback(gra, this_->motion_callback);
 	return 1;
 }
 
