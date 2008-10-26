@@ -41,6 +41,7 @@
 #include "color.h"
 #include "item.h"
 #include "window.h"
+#include "callback.h"
 #include "keys.h"
 #include "plugin.h"
 
@@ -76,14 +77,7 @@ struct graphics_priv {
 	struct graphics_priv *next;
 	struct graphics_gc_priv *background_gc;
 	enum draw_mode_num mode;
-	void (*resize_callback)(void *data, int w, int h);
-	void *resize_callback_data;
-	void (*motion_callback)(void *data, struct point *p);
-	void *motion_callback_data;
-	void (*button_callback)(void *data, int press, int button, struct point *p);
-	void *button_callback_data;
-	void (*keypress_callback)(void *data, char *key);
-	void *keypress_callback_data;
+	struct callback_list *cbl;
 };
 
 
@@ -763,6 +757,18 @@ draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
 }
 
 static void
+draw_drag(struct graphics_priv *gr, struct point *p)
+{
+	if (p)
+		gr->p=*p;
+	else {
+		gr->p.x=0;
+		gr->p.y=0;
+	}
+}
+
+
+static void
 background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
 	gr->background_gc=gc;
@@ -780,7 +786,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 			gdk_draw_rectangle(gr->drawable, gr->background_gc->gc, TRUE, 0, 0, gr->width, gr->height);
 	}
 #endif
-	if (mode == draw_mode_end && gr->mode == draw_mode_begin) {
+	if (mode == draw_mode_end) {
 		if (gr->parent) {
 			overlay_draw(gr->parent, gr, 1);
 		} else {
@@ -789,10 +795,21 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 				overlay_draw(gr, overlay, 0);
 				overlay=overlay->next;
 			}
+			if (gr->p.x || gr->p.y) {
+				if(!gr->background_ready) {
+					gr->background = gdk_pixmap_new(widget->window, gr->width, gr->width, -1);
+			       		gdk_draw_rectangle(gr->background, gr->background_gc->gc, TRUE, 0, 0, gr->width, gr->height);
+					gr->background_ready = 1;
+				}
+				gdk_draw_drawable(widget->window,
+				       widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+				       gr->background,
+				       0, 0, 0, 0, -1, -1);
+			}
 			gdk_draw_drawable(widget->window,
-                	        widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-                	        gr->drawable,
-                	        0, 0, 0, 0, gr->width, gr->height);
+                	       widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
+                	       gr->drawable,
+                	       0, 0, gr->p.x, gr->p.y, -1, -1);
 		}
 	}
 	gr->mode=mode;
@@ -809,11 +826,14 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	if (gra->drawable != NULL) {
                 g_object_unref(gra->drawable);
         }
+	if(gra->background_ready && gra->background != NULL) {
+	       g_object_unref(gra->background);
+	       gra->background_ready = 0;
+	}
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;
         gra->drawable = gdk_pixmap_new(widget->window, gra->width, gra->height, -1);
-	if (gra->resize_callback)
-		(*gra->resize_callback)(gra->resize_callback_data, gra->width, gra->height);
+	callback_list_call_attr_2(gra->cbl, attr_resize, (void *)gra->width, (void *)gra->height);
 	return TRUE;
 }
 
@@ -859,8 +879,7 @@ button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 
 	p.x=event->x;
 	p.y=event->y;
-	if (this->button_callback)
-		(*this->button_callback)(this->button_callback_data, 1, event->button, &p);
+	callback_list_call_attr_3(this->cbl, attr_button, (void *)1, (void *)event->button, (void *)&p);
 	return FALSE;
 }
 
@@ -872,8 +891,7 @@ button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 
 	p.x=event->x;
 	p.y=event->y;
-	if (this->button_callback)
-		(*this->button_callback)(this->button_callback_data, 0, event->button, &p);
+	callback_list_call_attr_3(this->cbl, attr_button, (void *)0, (void *)event->button, (void *)&p);
 	return FALSE;
 }
 
@@ -888,22 +906,20 @@ scroll(GtkWidget * widget, GdkEventScroll * event, gpointer user_data)
 
 	p.x=event->x;
 	p.y=event->y;
-	if (this->button_callback) {
-		switch (event->direction) {
-		case GDK_SCROLL_UP:
-			button=4;
-			break;
-		case GDK_SCROLL_DOWN:
-			button=5;
-			break;
-		default:
-			button=-1;
-			break;
-		}
-		if (button != -1) {
-			(*this->button_callback)(this->button_callback_data, 1, button, &p);
-			(*this->button_callback)(this->button_callback_data, 0, button, &p);
-		}
+	switch (event->direction) {
+	case GDK_SCROLL_UP:
+		button=4;
+		break;
+	case GDK_SCROLL_DOWN:
+		button=5;
+		break;
+	default:
+		button=-1;
+		break;
+	}
+	if (button != -1) {
+		callback_list_call_attr_3(this->cbl, attr_button, (void *)1, (void *)button, (void *)&p);
+		callback_list_call_attr_3(this->cbl, attr_button, (void *)0, (void *)button, (void *)&p);
 	}
 	return FALSE;
 }
@@ -916,8 +932,7 @@ motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer user_data)
 
 	p.x=event->x;
 	p.y=event->y;
-	if (this->motion_callback)
-		(*this->motion_callback)(this->motion_callback_data, &p);
+	callback_list_call_attr_1(this->cbl, attr_motion, (void *)&p);
 	return FALSE;
 }
 
@@ -927,8 +942,6 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 	struct graphics_priv *this=user_data;
 	int len,ucode;
 	char key[8];
-	if (! this->keypress_callback)
-		return FALSE;
 	ucode=gdk_keyval_to_unicode(event->keyval);
 	len=g_unichar_to_utf8(ucode, key);
 	key[len]='\0';
@@ -969,7 +982,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 		break;
 	}
 	if (key[0])
-		(*this->keypress_callback)(this->keypress_callback_data, key);
+		callback_list_call_attr_1(this->cbl, attr_keypress, (void *)key);
 	else
 		dbg(0,"keyval 0x%x\n", event->keyval);
 	
@@ -1029,44 +1042,15 @@ get_data(struct graphics_priv *this, char *type)
 		gtk_widget_realize(this->win);
 		gtk_container_add(GTK_CONTAINER(this->win), this->widget);
 		gtk_widget_show_all(this->win);
+		GTK_WIDGET_SET_FLAGS (this->widget, GTK_CAN_FOCUS);
+        	gtk_widget_set_sensitive(this->widget, TRUE);
+		gtk_widget_grab_focus(this->widget);
+		g_signal_connect(G_OBJECT(this->widget), "key-press-event", G_CALLBACK(keypress), this);
 		this->window.fullscreen=graphics_gtk_drawing_area_fullscreen;
 		this->window.priv=this;
 		return &this->window;
 	}
 	return NULL;
-}
-
-static void
-register_resize_callback(struct graphics_priv *this, void (*callback)(void *data, int w, int h), void *data)
-{
-	this->resize_callback=callback;
-	this->resize_callback_data=data;
-}
-
-static void
-register_motion_callback(struct graphics_priv *this, void (*callback)(void *data, struct point *p), void *data)
-{
-	this->motion_callback=callback;
-	this->motion_callback_data=data;
-}
-
-static void
-register_button_callback(struct graphics_priv *this, void (*callback)(void *data, int press, int button, struct point *p), void *data)
-{
-	this->button_callback=callback;
-	this->button_callback_data=data;
-}
-
-static void
-register_keypress_callback(struct graphics_priv *this, void (*callback)(void *data, char *key), void *data)
-{
-	dbg(0,"enter\n");
-	GTK_WIDGET_SET_FLAGS (this->widget, GTK_CAN_FOCUS);
-        gtk_widget_set_sensitive(this->widget, TRUE);
-	gtk_widget_grab_focus(this->widget);
-	g_signal_connect(G_OBJECT(this->widget), "key-press-event", G_CALLBACK(keypress), this);
-	this->keypress_callback=callback;
-	this->keypress_callback_data=data;
 }
 
 static struct graphics_methods graphics_methods = {
@@ -1084,19 +1068,16 @@ static struct graphics_methods graphics_methods = {
 	NULL,
 #endif
 	draw_restore,
+	draw_drag,
 	font_new,
 	gc_new,
 	background_gc,
 	overlay_new,
 	image_new,
 	get_data,
-	register_resize_callback,
-	register_button_callback,
-	register_motion_callback,
 	image_free,
 	get_text_bbox,
 	overlay_disable,
-	register_keypress_callback,
 };
 
 static struct graphics_priv *
@@ -1109,7 +1090,7 @@ graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth)
 }
 
 static struct graphics_priv *
-graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
+graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	GtkWidget *draw;
 	struct attr *attr;
@@ -1123,7 +1104,7 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	this->win_h=547;
 	if ((attr=attr_search(attrs, NULL, attr_h))) 
 		this->win_h=attr->u.num;
-
+	this->cbl=cbl;
 	this->colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
 	gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_KEY_PRESS_MASK);
 	g_signal_connect(G_OBJECT(draw), "expose_event", G_CALLBACK(expose), this);

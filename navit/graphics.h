@@ -56,19 +56,16 @@ struct graphics_methods {
 	void (*draw_image)(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img);
 	void (*draw_image_warp)(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, char *data);
 	void (*draw_restore)(struct graphics_priv *gr, struct point *p, int w, int h);
+	void (*draw_drag)(struct graphics_priv *gr, struct point *p);
 	struct graphics_font_priv *(*font_new)(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,  int size, int flags);
 	struct graphics_gc_priv *(*gc_new)(struct graphics_priv *gr, struct graphics_gc_methods *meth);
 	void (*background_gc)(struct graphics_priv *gr, struct graphics_gc_priv *gc);
 	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h);
 	struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot);
 	void *(*get_data)(struct graphics_priv *gr, char *type);
-	void (*register_resize_callback)(struct graphics_priv *gr, void (*callback)(void *data, int w, int h), void *data);
-	void (*register_button_callback)(struct graphics_priv *gr, void (*callback)(void *data, int pressed, int button, struct point *p), void *data);
-	void (*register_motion_callback)(struct graphics_priv *gr, void (*callback)(void *data, struct point *p), void *data);
 	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
 	void (*get_text_bbox)(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret);
 	void (*overlay_disable)(struct graphics_priv *gr, int disable);
-	void (*register_keypress_callback)(struct graphics_priv *gr, void (*callback)(void *data, char *key), void *data);
 };
 
 
