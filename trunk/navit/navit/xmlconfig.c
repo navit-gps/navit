@@ -848,12 +848,15 @@ static gboolean
 parse_file(struct xmldocument *document, xmlerror **error)
 {
 	ezxml_t root = ezxml_parse_file(document->href);
+
+	if (!root)
+		return FALSE;
 	document->active=document->xpointer ? 0:1;
 	document->first=NULL;
 	document->last=NULL;
-	
-	parse_node(document, root);	
-	
+
+	parse_node(document, root);
+
 	return TRUE;
 }
 #endif
