@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <glib.h>
 #include "config.h"
+#include "item.h"
 #include "plugin.h"
 #include "speech.h"
 
@@ -48,12 +49,14 @@ static struct speech_methods speechd_meth = {
 };
 
 static struct speech_priv *
-speechd_new(char *data, struct speech_methods *meth) {
+speechd_new(struct speech_methods *meth, struct attr **attrs) {
 	struct speech_priv *this;
+	struct attr *data;
+	data=attr_search(attrs, NULL, attr_data);
 	if (! data)
 		return NULL;
 	this=g_new(struct speech_priv,1);
-	this->cmdline=g_strdup(data);
+	this->cmdline=g_strdup(data->u.str);
 	*meth=speechd_meth;
 	return this;
 }

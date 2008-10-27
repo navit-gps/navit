@@ -73,6 +73,8 @@ struct attr {
 		struct graphics *graphics;
 		struct tracking *tracking;
 		struct itemgra *itemgra;
+		struct plugin *plugin;
+		struct plugins *plugins;
 		struct polygon *polygon;
 		struct polyline *polyline;
 		struct circle *circle;
@@ -81,6 +83,7 @@ struct attr {
 		struct image *image;
 		struct arrows *arrows;
 		struct element *element;
+		struct speech *speech;
 		struct order {
 			short min, max;
 		} order;

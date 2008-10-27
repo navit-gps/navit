@@ -26,7 +26,7 @@ PLUGIN_TYPE(graphics, (struct navit *nav, struct graphics_methods *meth, struct 
 PLUGIN_TYPE(gui, (struct navit *nav, struct gui_methods *meth, struct attr **attrs)) 
 PLUGIN_TYPE(map, (struct map_methods *meth, struct attr **attrs)) 
 PLUGIN_TYPE(osd, (struct navit *nav, struct osd_methods *meth, struct attr **attrs))
-PLUGIN_TYPE(speech, (char *data, struct speech_methods *meth)) 
+PLUGIN_TYPE(speech, (struct speech_methods *meth, struct attr **attrs)) 
 PLUGIN_TYPE(vehicle, (struct vehicle_methods *meth, struct callback_list *cbl, struct attr **attrs)) 
 PLUGIN_TYPE(event, (struct event_methods *meth)) 
 PLUGIN_TYPE(font, (void *meth)) 

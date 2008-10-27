@@ -259,7 +259,7 @@ route_path_destroy(struct route_path *this)
  * @return The newly created route
  */
 struct route *
-route_new(struct attr **attrs)
+route_new(struct attr *parent, struct attr **attrs)
 {
 	struct route *this=g_new0(struct route, 1);
 	struct attr dest_attr;

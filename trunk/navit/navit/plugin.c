@@ -91,13 +91,13 @@ struct plugins {
 	GList *list;
 } *pls;
 
-struct plugin *
-plugin_new(char *plugin)
+static struct plugin *
+plugin_new_from_path(char *plugin)
 {
 #ifdef USE_PLUGINS
 	struct plugin *ret;
 	if (! g_module_supported()) {
-		return NULL;
+	       return NULL;
 	}
 	ret=g_new0(struct plugin, 1);
 	ret->name=g_strdup(plugin);
@@ -206,9 +206,9 @@ plugins_new(void)
 	return ret;
 }
 
-void
-plugins_add_path(struct plugins *pls, struct attr **attrs) {
-#ifdef USE_PLUGINS 
+struct plugin *
+plugin_new(struct attr *parent, struct attr **attrs) {
+#ifdef USE_PLUGINS
 	struct attr *path_attr, *attr;
 	struct file_wordexp *we;
 	int active=1; // default active
@@ -217,10 +217,13 @@ plugins_add_path(struct plugins *pls, struct attr **attrs) {
 	char **array;
 	char *name;
 	struct plugin *pl;
+	struct plugins *pls;
+
+	pls=parent->u.plugins;
 
 	if (! (path_attr=attr_search(attrs, NULL, attr_path))) {
 		dbg(0,"missing path\n");
-		return;
+		return NULL;
 	}
 	if ( (attr=attr_search(attrs, NULL, attr_active))) {
 		active=attr->u.num;
@@ -239,7 +242,7 @@ plugins_add_path(struct plugins *pls, struct attr **attrs) {
 	for (i = 0 ; i < count ; i++) {
 		name=array[i];
 		if (! (pl=g_hash_table_lookup(pls->hash, name))) {
-			pl=plugin_new(name);
+			pl=plugin_new_from_path(name);
 			if (! pl) {
 				dbg(0,"failed to create plugin '%s'\n", name);
 				continue;
@@ -255,6 +258,7 @@ plugins_add_path(struct plugins *pls, struct attr **attrs) {
 		plugin_set_ondemand(pl, ondemand);
 	}
 	file_wordexp_destroy(we);
+	return pl;
 #endif
 }
 
