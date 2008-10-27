@@ -1537,6 +1537,12 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 	case attr_recent_dest:
 		this_->recentdest_count = attr->u.num;
 		break;
+	case attr_speech:
+		this_->speech=attr->u.speech;
+		break;
+	case attr_tracking:
+		this_->tracking=attr->u.tracking;
+		break;
 	case attr_vehicle:
 		return navit_add_vehicle(this_, attr->u.vehicle);
 	default:
@@ -1744,17 +1750,7 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v)
 	return 1;
 }
 
-void
-navit_tracking_add(struct navit *this_, struct tracking *tracking)
-{
-	this_->tracking=tracking;
-}
 
-void
-navit_set_speech(struct navit *this_, struct speech *speech)
-{
-	this_->speech=speech;
-}
 
 
 struct gui *

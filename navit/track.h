@@ -32,7 +32,7 @@ struct coord *tracking_get_pos(struct tracking *tr);
 int tracking_get_segment_pos(struct tracking *tr);
 struct street_data *tracking_get_street_data(struct tracking *tr);
 int tracking_update(struct tracking *tr, struct coord *c, int angle);
-struct tracking *tracking_new(struct mapset *ms);
+struct tracking *tracking_new(struct attr *parent, struct attr **attrs);
 void tracking_set_mapset(struct tracking *this_, struct mapset *ms);
 void tracking_set_route(struct tracking *this_, struct route *rt);
 int tracking_get_current_attr(struct tracking *_this, enum attr_type type, struct attr *attr);

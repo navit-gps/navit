@@ -59,8 +59,8 @@ struct xistate {
 	struct xistate *parent;
 	struct xistate *child;
 	const gchar *element;
-	gchar **attribute_names;
-	gchar **attribute_values;
+	const gchar **attribute_names;
+	const gchar **attribute_values;
 };
 
 struct xmldocument {
@@ -180,31 +180,6 @@ xmlconfig_config(struct xmlstate *state)
 }
 
 static int
-xmlconfig_plugin(struct xmlstate *state)
-{
-	struct attr **attrs;
-	attrs=convert_to_attrs(state,NULL);
-	plugins_add_path(state->parent->element_attr.u.data, attrs);
-	return 1;
-}
-
-static int
-xmlconfig_speech(struct xmlstate *state)
-{
-	const char *type;
-	const char *data;
-	type=find_attribute(state, "type", 1);
-	if (! type)
-		return 0;
-	data=find_attribute(state, "data", 0);
-	state->element_attr.u.data = speech_new(type, data);
-	if (! state->element_attr.u.data)
-		return 0;
-	navit_set_speech(state->parent->element_attr.u.data, state->element_attr.u.data);
-	return 1;
-}
-
-static int
 xmlconfig_window_items(struct xmlstate *state)
 {
 	int distance=-1;
@@ -230,32 +205,6 @@ xmlconfig_window_items(struct xmlstate *state)
 	navit_add_window_items(state->parent->element_attr.u.data, state->element_attr.u.data);
 
 	return 1;
-}
-
-
-static int
-xmlconfig_tracking(struct xmlstate *state)
-{
-	state->element_attr.u.data = tracking_new(NULL);
-	navit_tracking_add(state->parent->element_attr.u.data, state->element_attr.u.data);
-	return 1;
-}
-
-static int
-xmlconfig_route(struct xmlstate *state)
-{
-	struct attr **attrs;
-	struct attr route_attr;
-
-	attrs=convert_to_attrs(state,NULL);
-	state->element_attr.u.data = route_new(attrs);
-	if (! state->element_attr.u.data) {
-		dbg(0,"Failed to create route object\n");
-		return 0;
-	}
-	route_attr.type=attr_route;
-	route_attr.u.route=state->element_attr.u.data;
-	return navit_add_attr(state->parent->element_attr.u.data, &route_attr);
 }
 
 static int
@@ -334,9 +283,9 @@ struct element_func {
 } elements[] = {
 	{ "config", NULL, xmlconfig_config},
 	{ "announce", "navigation", xmlconfig_announce},
-	{ "speech", "navit", xmlconfig_speech},
-	{ "tracking", "navit", xmlconfig_tracking},
-	{ "route", "navit", xmlconfig_route},
+	{ "speech", "navit", NULL, NEW(speech_new)},
+	{ "tracking", "navit", NULL, NEW(tracking_new)},
+	{ "route", "navit", NULL, NEW(route_new)},
 	{ "speed", "route", xmlconfig_speed},
 	{ "mapset", "navit", NULL, NEW(mapset_new), ADD(mapset_add_attr)},
 	{ "map",  "mapset", NULL, NEW(map_new)},
@@ -361,7 +310,7 @@ struct element_func {
 	{ "log", "navit", NULL, NEW(log_new)},
 	{ "window_items", "navit", xmlconfig_window_items},
 	{ "plugins", "config", NULL, NEW(plugins_new), NULL, INIT(plugins_init)},
-	{ "plugin", "plugins", xmlconfig_plugin},
+	{ "plugin", "plugins", NULL, NEW(plugin_new)},
 	{},
 };
 
@@ -720,8 +669,8 @@ xi_start_element(GMarkupParseContext *context,
 	while (attribute_names[count++*ATTR_DISTANCE]);
 	xistate=g_new0(struct xistate, 1);
 	xistate->element=element_name;
-	xistate->attribute_names=g_new(char *, count);
-	xistate->attribute_values=g_new(char *, count);
+	xistate->attribute_names=g_new(const char *, count);
+	xistate->attribute_values=g_new(const char *, count);
 	for (i = 0 ; i < count ; i++) {
 		xistate->attribute_names[i]=g_strdup(attribute_names[i*ATTR_DISTANCE]);
 		xistate->attribute_values[i]=g_strdup(attribute_values[i*ATTR_DISTANCE]);
@@ -766,8 +715,8 @@ xi_end_element (GMarkupParseContext *context,
 		doc->active--;
 	}
 	while (xistate->attribute_names[i]) {
-		g_free(xistate->attribute_names[i]);
-		g_free(xistate->attribute_values[i]);
+		g_free((char *)(xistate->attribute_names[i]));
+		g_free((char *)(xistate->attribute_values[i]));
 		i++;
 	}
 	g_free(xistate->attribute_names);

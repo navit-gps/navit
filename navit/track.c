@@ -358,10 +358,9 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 }
 
 struct tracking *
-tracking_new(struct mapset *ms)
+tracking_new(struct attr *parent, struct attr **attrs)
 {
 	struct tracking *this=g_new0(struct tracking, 1);
-	this->ms=ms;
 
 	return this;
 }

@@ -28,7 +28,7 @@ struct speech_methods {
 };
 
 /* prototypes */
-struct speech * speech_new(const char *type, const char *data);
+struct speech * speech_new(struct attr *parent, struct attr **attrs);
 int speech_say(struct speech *this_, const char *text);
 int speech_sayf(struct speech *this_, const char *format, ...);
 void speech_destroy(struct speech *this_);

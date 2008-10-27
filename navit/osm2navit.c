@@ -2744,7 +2744,7 @@ int main(int argc, char **argv)
 				plugins=plugins_new();
 			fprintf(stderr,"optarg=%s\n",optarg);
 			attrs=(struct attr*[]){&(struct attr){attr_path,{optarg}},NULL};
-			plugins_add_path(plugins, attrs);	
+			plugin_new(&(struct attr){attr_plugins,.u.plugins=plugins}, attrs);	
 			break;
 		case 's':
 			start=atoi(optarg);
