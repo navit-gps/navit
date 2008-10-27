@@ -55,14 +55,7 @@ struct graphics_priv {
 	HANDLE wnd_parent_handle;
 	HANDLE wnd_handle;
 	COLORREF bg_color;
-
-
-	void (*resize_callback)(void *data, int w, int h);
-	void *resize_callback_data;
-	void (*motion_callback)(void *data, struct point *p);
-	void *motion_callback_data;
-	void (*button_callback)(void *data, int press, int button, struct point *p);
-	void *button_callback_data;
+	struct callback_list *cbl;
 	enum draw_mode_num mode;
 };
 
@@ -72,6 +65,6 @@ struct statusbar_priv *gui_gtk_statusbar_new(struct gui_priv *gui, struct status
 struct menu_priv *gui_gtk_popup_new(struct gui_priv *gui, struct menu_methods *meth);
 struct datawindow_priv *gui_gtk_datawindow_new(struct gui_priv *gui, char *name, struct callback *click, struct callback *close, struct datawindow_methods *meth);
 
-struct graphics_priv* win32_graphics_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs);
+struct graphics_priv* win32_graphics_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl);
 
 #endif
