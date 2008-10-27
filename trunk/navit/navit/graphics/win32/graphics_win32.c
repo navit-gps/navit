@@ -10,7 +10,9 @@
 #include "point.h"
 #include "graphics.h"
 #include "color.h"
+#include "callback.h"
 #include "plugin.h"
+#include "item.h"
 #include "win32_gui.h"
 #include "xpm2bmp.h"
 
@@ -111,7 +113,7 @@ struct graphics_image_priv {
 };
 
 
-void ErrorExit(LPTSTR lpszFunction)
+static void ErrorExit(LPTSTR lpszFunction)
 {
     // Retrieve the system error message for the last-error code
 
@@ -196,12 +198,8 @@ static void HandleButtonClick( struct graphics_priv *gra_priv, int updown, int b
 {
 	int xPos = LOWORD(lParam);
 	int yPos = HIWORD(lParam);
-
-	if (gra_priv->button_callback )
-	{
-		struct point pt = {xPos, yPos};
-		(*gra_priv->button_callback)(gra_priv->button_callback_data, updown, button, &pt);
-	}
+	struct point pt = {xPos, yPos};
+	callback_list_call_attr_3(gra_priv->cbl, attr_button, (void *)updown, (void *)button, (void *)&pt);
 }
 
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
@@ -245,7 +243,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 				hdc = GetDC( hwnd );
 				MakeMemoryDC(hwnd, hdc );
 				ReleaseDC( hwnd, hdc );
-				(*gra_priv->resize_callback)(gra_priv->resize_callback_data, gra_priv->width, gra_priv->height);
+				callback_list_call_attr_2(gra_priv->cbl, attr_resize, (void *)gra_priv->width, (void *)gra_priv->height);
 			}
 		break;
 
@@ -296,7 +294,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			struct point pt = {xPos, yPos};
 
 			// printf( "WM_MOUSEMOVE: %d %d \n", xPos, yPos );
-			(*gra_priv->motion_callback)(gra_priv->motion_callback_data, &pt);
+			callback_list_call_attr_1(gra_priv->cbl, attr_motion, (void *)&pt);
 		}
 
 		break;
@@ -323,7 +321,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 static const char g_szClassName[] = "NAVGRA";
 
-HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
+static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 {
 #ifdef __CEGCC__
 	WNDCLASS wc;
@@ -346,7 +344,6 @@ HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 	wc.lpszMenuName  = NULL;
 	wc.lpszClassName = g_szClassName;
 
-	HANDLE hdl = gr->wnd_parent_handle;
 	GetClientRect( gr->wnd_parent_handle,&rcParent);
 
 #ifdef __CEGCC__
@@ -362,7 +359,7 @@ HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 	gr->width = rcParent.right - rcParent.left;
 	gr->height  = rcParent.bottom - rcParent.top;
 #if defined(__CEGCC__)
-	(*gr->resize_callback)(gr->resize_callback_data, gr->width, gr->height);
+	callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->width, (void *)gr->height);
 #endif
 
 	hwnd = CreateWindow( 	g_szClassName,
@@ -413,7 +410,7 @@ static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 	gc->line_width = w;
 }
 
-static void gc_set_dashes(struct graphics_gc_priv *gc, unsigned char *dash_list, int n)
+static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, unsigned char dash_list[], int n)
 {
 //	gdk_gc_set_dashes(gc->gc, 0, (gint8 *)dash_list, n);
 //	gdk_gc_set_line_attributes(gc->gc, 1, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
@@ -599,24 +596,6 @@ static void * get_data(struct graphics_priv *this_, char *type)
 }
 
 
-static void register_resize_callback(struct graphics_priv *this_, void (*callback)(void *data, int w, int h), void *data)
-{
-	this_->resize_callback=callback;
-	this_->resize_callback_data=data;
-}
-
-static void register_motion_callback(struct graphics_priv *this_, void (*callback)(void *data, struct point *p), void *data)
-{
-	this_->motion_callback=callback;
-	this_->motion_callback_data=data;
-}
-
-static void register_button_callback(struct graphics_priv *this_, void (*callback)(void *data, int press, int button, struct point *p), void *data)
-{
-	this_->button_callback=callback;
-	this_->button_callback_data=data;
-}
-
 static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
 	RECT rcClient;
@@ -691,7 +670,7 @@ static struct graphics_font_methods font_methods = {
 	font_destroy
 };
 
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, int size)
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *name, int size, int flags)
 {
 	struct graphics_font_priv *font=g_new(struct graphics_font_priv, 1);
 	*meth = font_methods;
@@ -704,7 +683,7 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 }
 
 
-void image_cache_hash_add( const char* key, struct graphics_image_priv* val_ptr)
+static void image_cache_hash_add( const char* key, struct graphics_image_priv* val_ptr)
 {
 	if ( image_cache_hash == NULL ) {
 		image_cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
@@ -717,7 +696,7 @@ void image_cache_hash_add( const char* key, struct graphics_image_priv* val_ptr)
 
 }
 
-struct graphics_image_priv* image_cache_hash_lookup( const char* key )
+static struct graphics_image_priv* image_cache_hash_lookup( const char* key )
 {
 	struct graphics_image_priv* val_ptr = NULL;
 
@@ -766,15 +745,13 @@ static struct graphics_methods graphics_methods = {
 	NULL,
 #endif
 	draw_restore,
+	NULL,
 	font_new,
 	gc_new,
 	background_gc,
 	NULL, // overlay_new,
 	image_new,
 	get_data,
-	register_resize_callback,
-	register_button_callback,
-	register_motion_callback,
 };
 
 static struct graphics_priv * graphics_win32_drawing_area_new_helper(struct graphics_methods *meth)
@@ -785,12 +762,13 @@ static struct graphics_priv * graphics_win32_drawing_area_new_helper(struct grap
 	return this_;
 }
 
-struct graphics_priv* win32_graphics_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
+struct graphics_priv* win32_graphics_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct graphics_priv* this_;
 	if (!event_request_system("win32","graphics_win32"))
 		return NULL;
 	this_=graphics_win32_drawing_area_new_helper(meth);
+	this_->cbl=cbl;
 	return this_;
 }
 
@@ -814,7 +792,7 @@ static void event_win32_main_loop_quit(void)
 }
 
 static struct event_watch *
-event_win32_add_watch(int fd, int w, struct callback *cb)
+event_win32_add_watch(struct file *f, enum event_watch_cond cond, struct callback *cb)
 {
 	dbg(0,"enter\n");
 	return NULL;
@@ -863,10 +841,11 @@ static struct event_methods event_win32_methods = {
 	event_win32_remove_idle,
 };
 
-static void
+static struct event_priv *
 event_win32_new(struct event_methods *meth)
 {
         *meth=event_win32_methods;
+	return NULL;
 }
 
 void
