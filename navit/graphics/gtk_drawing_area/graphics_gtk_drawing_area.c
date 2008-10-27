@@ -24,10 +24,6 @@
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
-#include <fontconfig/fontconfig.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <freetype/ftglyph.h>
 #ifdef HAVE_IMLIB2
 #include <Imlib2.h>
 #endif
@@ -44,6 +40,7 @@
 #include "callback.h"
 #include "keys.h"
 #include "plugin.h"
+#include "navit/font/freetype/font_freetype.h"
 
 #ifndef GDK_Book
 #define GDK_Book XF86XK_Book
@@ -63,13 +60,11 @@ struct graphics_priv {
 	GdkDrawable *background;
 	int background_ready;
 	GdkColormap *colormap;
-	FT_Library library;
 	struct point p;
 	int width;
 	int height;
 	int win_w;
 	int win_h;
-	int library_init;
 	int visible;
 	int overlay_disabled;
 	struct graphics_priv *parent;
@@ -78,12 +73,9 @@ struct graphics_priv {
 	struct graphics_gc_priv *background_gc;
 	enum draw_mode_num mode;
 	struct callback_list *cbl;
+	struct font_freetype_methods freetype_methods;
 };
 
-
-struct graphics_font_priv {
-        FT_Face face;
-};
 
 struct graphics_gc_priv {
 	GdkGC *gc;
@@ -100,108 +92,6 @@ struct graphics_image_priv {
 static void
 graphics_destroy(struct graphics_priv *gr)
 {
-	FcFini();
-}
-
-/**
- * List of font families to use, in order of preference
- */
-static char *fontfamilies[]={
-	"Liberation Sans",
-	"Arial",
-	"NcrBI4nh",
-	"luximbi",
-	"FreeSans",
-	"DejaVu Sans",
-	NULL,
-};
-
-static void font_destroy(struct graphics_font_priv *font)
-{
-	g_free(font);
-	/* TODO: free font->face */
-}
-
-static struct graphics_font_methods font_methods = {
-	font_destroy
-};
-
-/**
- * Load a new font using the fontconfig library.
- * First search for each of the font families and require and exact match on family
- * If no font found, let fontconfig pick the best match
- * @param graphics_priv FIXME
- * @param graphics_font_methods FIXME
- * @param fontfamily the preferred font family
- * @param size requested size of fonts
- * @param flags extra flags for the font (bold,etc)
- * @returns <>
-*/
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size, int flags)
-{
-	struct graphics_font_priv *font=g_new(struct graphics_font_priv, 1);
-
-	*meth=font_methods;
-	int exact, found;
-	char **family;
-
-	if (!gr->library_init) {
-		FT_Init_FreeType( &gr->library );
-		gr->library_init=1;
-	}
-	found=0;
-	dbg(2," about to search for fonts, prefered = %s\n",fontfamily);
-	for (exact=1;!found && exact>=0;exact--) {
-		if(fontfamily) { 
-			/* prepend the font passed so we look for it first */ 
-			family = malloc(sizeof(fontfamilies)+sizeof(fontfamily)); 
-			if(!family) { 
-				dbg(0,"Out of memory while creating the font families table\n");
-				return NULL; 
- 			} 
-			memcpy(family, &fontfamily, sizeof(fontfamily)); 
- 			memcpy(family+1, fontfamilies, sizeof(fontfamilies)); 
- 		} else { 
-			family=fontfamilies; 
- 		}
-
-		
-		while (*family && !found) {
-			dbg(2, "Looking for font family %s. exact=%d\n", *family, exact);
-			FcPattern *required = FcPatternBuild(NULL, FC_FAMILY, FcTypeString, *family, NULL);
-			if (flags)
-				FcPatternAddInteger(required,FC_WEIGHT,FC_WEIGHT_BOLD);
-			FcConfigSubstitute(FcConfigGetCurrent(), required, FcMatchFont);
-			FcDefaultSubstitute(required);
-			FcResult result;
-			FcPattern *matched = FcFontMatch(FcConfigGetCurrent(), required, &result);
-			if (matched) {
-				FcValue v1, v2;
-				FcChar8 *fontfile;
-				int fontindex;
-				FcPatternGet(required, FC_FAMILY, 0, &v1);
-				FcPatternGet(matched, FC_FAMILY, 0, &v2);
-				FcResult r1 = FcPatternGetString(matched, FC_FILE, 0, &fontfile);
-				FcResult r2 = FcPatternGetInteger(matched, FC_INDEX, 0, &fontindex);
-				if ((r1 == FcResultMatch) && (r2 == FcResultMatch) && (FcValueEqual(v1,v2) || !exact)) {
-					dbg(2, "About to load font from file %s index %d\n", fontfile, fontindex);
-					FT_New_Face( gr->library, (char *)fontfile, fontindex, &font->face );
-					found=1;
-				}
-				FcPatternDestroy(matched);
-			}
-			FcPatternDestroy(required);
-			family++;
-		}
-	}
-	if (!found) {
-		g_warning("Failed to load font, no labelling");
-		g_free(font);
-		return NULL;
-	}
-        FT_Set_Char_Size(font->face, 0, size, 300, 300);
-	FT_Select_Charmap(font->face, FT_ENCODING_UNICODE);
-	return font;
 }
 
 static void
@@ -346,214 +236,59 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 		gdk_draw_arc(gr->widget->window, gc->gc, FALSE, p->x-r/2, p->y-r/2, r, r, 0, 64*360);
 }
 
-
-struct text_glyph {
-	int x,y,w,h;
-	GdkImage *shadow;
-	unsigned char pixmap[0];
-};
-
-struct text_render {
-	int x1,y1;
-	int x2,y2;
-	int x3,y3;
-	int x4,y4;
-	int glyph_count;
-	struct text_glyph *glyph[0];
-};
-
-#ifndef _WIN32
-static GdkImage *
-display_text_render_shadow(struct text_glyph *g)
+static void
+display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct point *p)
 {
-	int mask0, mask1, mask2, x, y, w=g->w, h=g->h;
-	int str=(g->w+9)/8;
+	int i,x,y;
+	struct font_freetype_glyph *g, **gp;
 	unsigned char *shadow;
-	unsigned char *p, *pm=g->pixmap;
-	GdkImage *ret;
 
-	shadow=malloc(str*(g->h+2)); /* do not use g_malloc() here */
-	memset(shadow, 0, str*(g->h+2));
-	for (y = 0 ; y < h ; y++) {
-		p=shadow+str*y;
-		mask0=0x4000;
-		mask1=0xe000;
-		mask2=0x4000;
-		for (x = 0 ; x < w ; x++) {
-			if (pm[x+y*w]) {
-				p[0]|=(mask0 >> 8);
-				if (mask0 & 0xff)
-					p[1]|=mask0;
-
-				p[str]|=(mask1 >> 8);
-				if (mask1 & 0xff)
-					p[str+1]|=mask1;
-				p[str*2]|=(mask2 >> 8);
-				if (mask2 & 0xff)
-					p[str*2+1]|=mask2;
-			}
-			mask0 >>= 1;
-			mask1 >>= 1;
-			mask2 >>= 1;
-			if (!((mask0 >> 8) | (mask1 >> 8) | (mask2 >> 8))) {
-				mask0<<=8;
-				mask1<<=8;
-				mask2<<=8;
-				p++;
-			}
-		}
-	}
-	ret=gdk_image_new_bitmap(gdk_visual_get_system(), shadow, g->w+2, g->h+2);
-	return ret;
-}
+	gp=text->glyph;
+	i=text->glyph_count;
+	x=p->x << 6;
+	y=p->y << 6;
+	while (i-- > 0)
+	{
+		g=*gp++;
+		if (g->w && g->h) {
+#if 1
+			shadow=g_malloc((g->w+2)*(g->h+2));
+			if (gr->freetype_methods.get_shadow(g, shadow, 8, g->w+2))
+				gdk_draw_gray_image(gr->drawable, bg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, g->w+2);
+			g_free(shadow);
 #else
-static GdkImage *
-display_text_render_shadow(struct text_glyph *g)
-{
-	int mask0, mask1, mask2, x, y, w=g->w, h=g->h;
-	int str=(g->w+9)/8;
-	unsigned char *p, *pm=g->pixmap;
-	GdkImage *ret;
-
-	ret=gdk_image_new( GDK_IMAGE_NORMAL , gdk_visual_get_system(), w+2, h+2);
-
-	for (y = 0 ; y < h ; y++) {
-		p=ret->mem+str*y;
-
-		mask0=0x4000;
-		mask1=0xe000;
-		mask2=0x4000;
-		for (x = 0 ; x < w ; x++) {
-			if (pm[x+y*w]) {
-				p[0]|=(mask0 >> 8);
-				if (mask0 & 0xff)
-					p[1]|=mask0;
-
-				p[str]|=(mask1 >> 8);
-				if (mask1 & 0xff)
-					p[str+1]|=mask1;
-				p[str*2]|=(mask2 >> 8);
-				if (mask2 & 0xff)
-					p[str*2+1]|=mask2;
-			}
-			mask0 >>= 1;
-			mask1 >>= 1;
-			mask2 >>= 1;
-			if (!((mask0 >> 8) | (mask1 >> 8) | (mask2 >> 8))) {
-				mask0<<=8;
-				mask1<<=8;
-				mask2<<=8;
-			}
-		}
-	}
-	return ret;
-}
+			GdkImage *image;
+			stride=(g->w+9)/8;
+			shadow=malloc(stride*(g->h+2));
+			
+			gr->freetype_methods.get_shadow(g, shadow, 1, stride);
+			image=gdk_image_new_bitmap(gdk_visual_get_system(),shadow,g->w+2, g->h+2);
+			gdk_draw_image(gr->drawable, bg->gc, image, 0, 0, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2);
+			g_object_unref(image);
 #endif
-
-static struct text_render *
-display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy, int x, int y)
-{
-       	FT_GlyphSlot  slot = font->face->glyph;  // a small shortcut
-	FT_Matrix matrix;
-	FT_Vector pen;
-	FT_UInt  glyph_index;
-	int n,len;
-	struct text_render *ret;
-	struct text_glyph *curr;
-	char *p=text;
-
-	len=g_utf8_strlen(text, -1);
-	ret=g_malloc(sizeof(*ret)+len*sizeof(struct text_glyph *));
-	ret->glyph_count=len;
-
-	matrix.xx = dx;
-	matrix.xy = dy;
-	matrix.yx = -dy;
-	matrix.yy = dx;
-
-	pen.x = 0 * 64;
-	pen.y = 0 * 64;
-	x <<= 6;
-	y <<= 6;
-	FT_Set_Transform( font->face, &matrix, &pen );
-
-	for ( n = 0; n < len; n++ )
-	{
-
-		glyph_index = FT_Get_Char_Index(font->face, g_utf8_get_char(p));
-		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT );
-		FT_Render_Glyph(font->face->glyph, ft_render_mode_normal );
-
-		curr=g_malloc(sizeof(*curr)+slot->bitmap.rows*slot->bitmap.pitch);
-		ret->glyph[n]=curr;
-
-		curr->x=(x>>6)+slot->bitmap_left;
-		curr->y=(y>>6)-slot->bitmap_top;
-		curr->w=slot->bitmap.width;
-		curr->h=slot->bitmap.rows;
-		if (slot->bitmap.width && slot->bitmap.rows) {
-			memcpy(curr->pixmap, slot->bitmap.buffer, slot->bitmap.rows*slot->bitmap.pitch);
-			curr->shadow=display_text_render_shadow(curr);
+			
 		}
-		else
-			curr->shadow=NULL;
-#if 0
-		printf("height=%d\n", slot->metrics.height);
-		printf("height2=%d\n", face->height);
-		printf("bbox %d %d %d %d\n", face->bbox.xMin, face->bbox.yMin, face->bbox.xMax, face->bbox.yMax);
-#endif
-         	x += slot->advance.x;
-         	y -= slot->advance.y;
-		p=g_utf8_next_char(p);
+		x+=g->dx;
+		y+=g->dy;
 	}
-	return ret;
-}
-
-static void
-display_text_draw(struct text_render *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg)
-{
-	int i;
-	struct text_glyph *g, **gp;
-
+	x=p->x << 6;
+	y=p->y << 6;
 	gp=text->glyph;
 	i=text->glyph_count;
 	while (i-- > 0)
 	{
 		g=*gp++;
-		if (g->shadow && bg)
-			gdk_draw_image(gr->drawable, bg->gc, g->shadow, 0, 0, g->x-1, g->y-1, g->w+2, g->h+2);
+		if (g->w && g->h) 
+			gdk_draw_gray_image(gr->drawable, fg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, g->pixmap, g->w);
+		x+=g->dx;
+		y+=g->dy;
 	}
-	gp=text->glyph;
-	i=text->glyph_count;
-	while (i-- > 0)
-	{
-		g=*gp++;
-		if (g->w && g->h)
-			gdk_draw_gray_image(gr->drawable, fg->gc, g->x, g->y, g->w, g->h, GDK_RGB_DITHER_NONE, g->pixmap, g->w);
-	}
-}
-
-static void
-display_text_free(struct text_render *text)
-{
-	int i;
-	struct text_glyph **gp;
-
-	gp=text->glyph;
-	i=text->glyph_count;
-	while (i-- > 0) {
-		if ((*gp)->shadow) {
-			g_object_unref((*gp)->shadow);
-		}
-		g_free(*gp++);
-	}
-	g_free(text);
 }
 
 static void
 draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
-	struct text_render *t;
+	struct font_freetype_text *t;
 
 	if (! font)
 		return;
@@ -567,74 +302,13 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 		}
 	}
 
-	t=display_text_render(text, font, dx, dy, p->x, p->y);
-	display_text_draw(t, gr, fg, bg);
-	display_text_free(t);
+	t=gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
+	display_text_draw(t, gr, fg, bg, p);
+	gr->freetype_methods.text_destroy(t);
 	if (bg) {
 		gdk_gc_set_function(fg->gc, GDK_COPY);
         	gdk_gc_set_function(bg->gc, GDK_COPY);
 	}
-}
-
-static void
-get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret)
-{
-	char *p=text;
-	FT_BBox bbox;
-	FT_UInt  glyph_index;
-       	FT_GlyphSlot  slot = font->face->glyph;  // a small shortcut
-	FT_Glyph glyph;
-	FT_Matrix matrix;
-	FT_Vector pen;
-	pen.x = 0 * 64;
-	pen.y = 0 * 64;
-	matrix.xx = dx;
-	matrix.xy = dy;
-	matrix.yx = -dy;
-	matrix.yy = dx;
-	int n,len,x=0,y=0;
-
-	bbox.xMin = bbox.yMin = 32000;
-	bbox.xMax = bbox.yMax = -32000; 
-	FT_Set_Transform( font->face, &matrix, &pen );
-	len=g_utf8_strlen(text, -1);
-	for ( n = 0; n < len; n++ ) {
-		FT_BBox glyph_bbox;
-		glyph_index = FT_Get_Char_Index(font->face, g_utf8_get_char(p));
-		p=g_utf8_next_char(p);
-		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT );
-		FT_Get_Glyph(font->face->glyph, &glyph);
-		FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_pixels, &glyph_bbox );
-		FT_Done_Glyph(glyph);
-		glyph_bbox.xMin += x >> 6;
-		glyph_bbox.xMax += x >> 6;
-		glyph_bbox.yMin += y >> 6;
-		glyph_bbox.yMax += y >> 6;
-         	x += slot->advance.x;
-         	y -= slot->advance.y;
-		if ( glyph_bbox.xMin < bbox.xMin )
-			bbox.xMin = glyph_bbox.xMin;
-		if ( glyph_bbox.yMin < bbox.yMin )
-			bbox.yMin = glyph_bbox.yMin;
-		if ( glyph_bbox.xMax > bbox.xMax )
-			bbox.xMax = glyph_bbox.xMax;
-		if ( glyph_bbox.yMax > bbox.yMax )
-			bbox.yMax = glyph_bbox.yMax;
-	} 
-	if ( bbox.xMin > bbox.xMax ) {
-		bbox.xMin = 0;
-		bbox.yMin = 0;
-		bbox.xMax = 0;
-		bbox.yMax = 0;
-	}
-	ret[0].x=bbox.xMin;
-	ret[0].y=-bbox.yMin;
-	ret[1].x=bbox.xMin;
-	ret[1].y=-bbox.yMax;
-	ret[2].x=bbox.xMax;
-	ret[2].y=-bbox.yMax;
-	ret[3].x=bbox.xMax;
-	ret[3].y=-bbox.yMin;
 }
 
 static void
@@ -1069,22 +743,28 @@ static struct graphics_methods graphics_methods = {
 #endif
 	draw_restore,
 	draw_drag,
-	font_new,
+	NULL,
 	gc_new,
 	background_gc,
 	overlay_new,
 	image_new,
 	get_data,
 	image_free,
-	get_text_bbox,
+	NULL,
 	overlay_disable,
 };
 
 static struct graphics_priv *
 graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth)
 {
+	struct font_priv * (*font_freetype_new)(void *meth);
+	font_freetype_new=plugin_get_font_type("freetype");
+	if (!font_freetype_new)
+		return NULL;
 	struct graphics_priv *this=g_new0(struct graphics_priv,1);
+	font_freetype_new(&this->freetype_methods);
 	*meth=graphics_methods;
+	meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))this->freetype_methods.font_new;
 
 	return this;
 }
@@ -1116,8 +796,6 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	g_signal_connect(G_OBJECT(draw), "button_release_event", G_CALLBACK(button_release), this);
 	g_signal_connect(G_OBJECT(draw), "scroll_event", G_CALLBACK(scroll), this);
 	g_signal_connect(G_OBJECT(draw), "motion_notify_event", G_CALLBACK(motion_notify), this);
-	if (FcInit() != FcTrue)
-		dbg(0, "Failed to init fontconfig");
 	return this;
 }
 
