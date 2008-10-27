@@ -20,6 +20,7 @@
 #include <glib.h>
 #include <string.h>
 #include "debug.h"
+#include "item.h"
 #include "speech.h"
 #include "plugin.h"
 
@@ -29,19 +30,26 @@ struct speech {
 };
 
 struct speech *
-speech_new(const char *type, const char *data) 
+speech_new(struct attr *parent, struct attr **attrs) 
 {
 	struct speech *this_;
 	struct speech_priv *(*speech_new)(const char *data, struct speech_methods *meth);
+	struct attr *type;
 
-	dbg(1,"enter type=%s data=%s\n", type, data);
-        speech_new=plugin_get_speech_type(type);
+	type=attr_search(attrs, NULL, attr_type);
+	if (! type) {
+		dbg(0,"type missing\n");
+		return NULL;
+	}
+	dbg(1,"type='%s'\n", type->u.str);
+        speech_new=plugin_get_speech_type(type->u.str);
 	dbg(1,"new=%p\n", speech_new);
         if (! speech_new) {
+		dbg(0,"wrong type '%s'\n", type->u.str);
                 return NULL;
 	}
 	this_=g_new0(struct speech, 1);
-	this_->priv=speech_new(data, &this_->meth);
+	this_->priv=speech_new(attrs, &this_->meth);
 	dbg(1, "say=%p\n", this_->meth.say);
 	dbg(1,"priv=%p\n", this_->priv);
 	if (! this_->priv) {

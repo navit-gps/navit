@@ -136,7 +136,6 @@ struct attr;
 
 /* prototypes */
 void plugin_init(void);
-struct plugin *plugin_new(char *plugin);
 int plugin_load(struct plugin *pl);
 char *plugin_get_name(struct plugin *pl);
 int plugin_get_active(struct plugin *pl);
@@ -146,7 +145,7 @@ void plugin_call_init(struct plugin *pl);
 void plugin_unload(struct plugin *pl);
 void plugin_destroy(struct plugin *pl);
 struct plugins *plugins_new(void);
-void plugins_add_path(struct plugins *pls, struct attr ** attrs);
+struct plugin *plugin_new(struct attr *parent, struct attr ** attrs);
 void plugins_init(struct plugins *pls);
 void plugins_destroy(struct plugins *pls);
 void *plugin_get_type(enum plugin_type type, const char *type_name, const char *name);
