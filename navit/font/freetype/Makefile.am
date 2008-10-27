@@ -5,5 +5,5 @@ if PLUGINS
 else
   noinst_LTLIBRARIES = libfont_freetype.la
 endif
-libfont_freetype_la_SOURCES = font_freetype.c
+libfont_freetype_la_SOURCES = font_freetype.c font_freetype.h
 libfont_freetype_la_LDFLAGS = @FREETYPE2_LIBS@ @FONTCONFIG_LIBS@
