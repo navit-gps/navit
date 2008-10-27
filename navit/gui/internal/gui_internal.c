@@ -237,6 +237,7 @@ struct gui_priv {
 	 * values of -1 indicate no value was specified in the config file.
 	 */
         struct gui_config_settings config;
+	struct callback *motion_cb,*button_cb,*resize_cb,*keypress_cb;
 };
 
 
@@ -2842,10 +2843,14 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	this->gra=gra;
 	this->win=win;
 	transform_get_size(trans, &this->root.w, &this->root.h);
-	graphics_register_resize_callback(gra, gui_internal_resize, this);
-	graphics_register_button_callback(gra, gui_internal_button, this);
-	graphics_register_motion_callback(gra, gui_internal_motion, this);
-	graphics_register_keypress_callback(gra, gui_internal_keypress, this);
+	this->resize_cb=callback_new_attr_1(gui_internal_resize, attr_resize, this);
+	graphics_add_callback(gra, this->resize_cb);
+	this->button_cb=callback_new_attr_1(gui_internal_button, attr_button, this);
+	graphics_add_callback(gra, this->button_cb);
+	this->motion_cb=callback_new_attr_1(gui_internal_motion, attr_motion, this);
+	graphics_add_callback(gra, this->motion_cb);
+	this->keypress_cb=callback_new_attr_1(gui_internal_keypress, attr_keypress, this);
+	graphics_add_callback(gra, this->keypress_cb);
 	this->background=graphics_gc_new(gra);
 	graphics_gc_set_foreground(this->background, &cb);
 	this->background2=graphics_gc_new(gra);
