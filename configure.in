@@ -250,6 +250,7 @@ if test "x$freetype2_pkgconfig" = "xyes"; then
 fi
 AC_SUBST(FREETYPE2_CFLAGS)
 AC_SUBST(FREETYPE2_LIBS)
+AM_CONDITIONAL(FONT_FREETYPE, test "x${freetype2_pkgconfig}" = "xyes")
 
 PKG_CHECK_MODULES(FONTCONFIG, [fontconfig], [fontconfig_pkgconfig=yes], [fontconfig_pkgconfig=no])
 if test "x$fontconfig_pkgconfig" = "xyes"; then
@@ -709,6 +710,8 @@ navit/data/poi_geodownload/Makefile
 navit/data/poi_geodownload/libmdb/Makefile
 navit/data/poi_geodownload/libmdb/include/Makefile
 navit/fib-1.1/Makefile
+navit/font/Makefile
+navit/font/freetype/Makefile
 navit/graphics/Makefile
 navit/graphics/gtk_drawing_area/Makefile
 navit/graphics/directfb/Makefile

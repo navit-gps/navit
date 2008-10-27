@@ -1,5 +1,6 @@
 modulebindingdir=$(pkglibdir)/binding
 moduledatadir=$(pkglibdir)/data
+modulefontdir=$(pkglibdir)/font
 modulegraphicsdir=$(pkglibdir)/graphics
 moduleguidir=$(pkglibdir)/gui
 modulespeechdir=$(pkglibdir)/speech
