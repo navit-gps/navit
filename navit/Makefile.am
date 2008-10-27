@@ -58,7 +58,7 @@ version.h.tmp:
 version.h: version.h.tmp
 
 distclean-local:
-	rm -f version.h version.h.tmp
+	rm -f version.h version.h.tmp builtin.c
 
 builtin.c: $(top_builddir)/config.h
 	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/.la/_init(void);/" -e "s/.*lib/extern void module_/" >builtin.c
