@@ -1229,13 +1229,9 @@ navit_init(struct navit *this_)
 		ms=this_->mapsets->data;
 		if (this_->route) {
 			if ((map=route_get_map(this_->route)))
-				mapset_add_attr(ms, (struct attr*[]){
-                               	&(struct attr){attr_map,{map}},
-                                NULL});
+				mapset_add_attr(ms, &(struct attr){attr_map,.u.map=map});
 			if ((map=route_get_graph_map(this_->route))) {
-				mapset_add_attr(ms, (struct attr*[]){
-                               	&(struct attr){attr_map,{map}},
-                                NULL});
+				mapset_add_attr(ms, &(struct attr){attr_map,.u.map=map});
 				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 			route_set_mapset(this_->route, ms);
@@ -1248,17 +1244,13 @@ navit_init(struct navit *this_)
 		}
 		if (this_->navigation) {
 			if ((map=navigation_get_map(this_->navigation))) {
-				mapset_add_attr(ms, (struct attr*[]){
-                               	&(struct attr){attr_map,{map}},
-                                NULL});
+				mapset_add_attr(ms, &(struct attr){attr_map,.u.map=map});
 				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 		}
 		if (this_->tracking) {
 			if ((map=tracking_get_map(this_->tracking))) {
-				mapset_add_attr(ms, (struct attr*[]){
-                               	&(struct attr){attr_map,{map}},
-                                NULL});
+				mapset_add_attr(ms, &(struct attr){attr_map,.u.map=map});
 				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 		}
