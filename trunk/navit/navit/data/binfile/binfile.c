@@ -813,7 +813,6 @@ map_binfile_open(struct map_priv *m)
 	m->fi=file_create(m->filename);
 	if (! m->fi) {
 		dbg(0,"Failed to load '%s'\n", m->filename);
-		g_free(m);
 		return 0;
 	}
 	if (m->check_version)
