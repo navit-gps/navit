@@ -48,6 +48,7 @@ struct gui_priv {
 	int toolbar_enable;
 	int statusbar_enable;
 	int dyn_counter;
+	struct datawindow_priv *datawindow;
 };
 
 void gui_gtk_ui_init(struct gui_priv *this);
