@@ -853,6 +853,23 @@ navit_add_bookmarks_from_file(struct navit *this_)
 	g_free(bookmark_file);
 }
 
+static int
+navit_former_destinations_active(struct navit *this_)
+{
+	char *destination_file = navit_get_destination_file(FALSE);
+	FILE *f;
+	int active=0;
+	char buffer[3];
+	f=fopen(destination_file,"r");
+	if (f) {
+		if(!fseek(f, -2, SEEK_END) && fread(buffer, 2, 1, f) == 1 && buffer[0]!='\n' || buffer[1]!='\n') 
+			active=1;
+		fclose(f);
+	}
+	g_free(destination_file);
+	return active;
+}
+
 static void
 navit_add_former_destinations_from_file(struct navit *this_)
 {
@@ -860,9 +877,27 @@ navit_add_former_destinations_from_file(struct navit *this_)
 	struct attr parent={attr_navit, .u.navit=this_};
 	struct attr type={attr_type, {"textfile"}}, data={attr_data, {destination_file}};
 	struct attr *attrs[]={&type, &data, NULL};
+	struct map_rect *mr;
+	struct item *item;
+	int valid=0;
+	struct coord c;
+	struct pcoord pc;
 
 	this_->former_destination=map_new(&parent, attrs);
 	g_free(destination_file);
+	if (!this_->route || !navit_former_destinations_active(this_))
+		return;	
+	mr=map_rect_new(this_->former_destination, NULL);
+	while ((item=map_rect_get_item(mr))) {
+		if (item->type == type_former_destination && item_coord_get(item, &c, 1)) 
+			valid=1;
+	}
+	map_rect_destroy(mr);
+	pc.pro=map_projection(this_->former_destination);
+	pc.x=c.x;
+	pc.y=c.y;
+	if (valid) 
+		route_set_destination(this_->route, &pc);
 }
 
 
