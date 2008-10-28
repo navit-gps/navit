@@ -781,10 +781,16 @@ static struct map_methods map_methods_binfile = {
 static int
 binfile_get_index(struct map_priv *m)
 {
-	int len=sizeof("index")-1;
-	int cde_index_size=sizeof(struct zip_cd)+len;
-	int offset=m->eoc->zipecsz-cde_index_size;
-	struct zip_cd *cd=binfile_read_cd(m, offset, len);
+	int len;
+	int cde_index_size;
+	int offset;
+	struct zip_cd *cd;
+
+	len = strlen("index");
+	cde_index_size = sizeof(struct zip_cd)+len;
+	offset = m->eoc->zipecsz-cde_index_size;
+	cd = binfile_read_cd(m, offset, len);
+
 	if (cd) {
 		if (cd->zipcfnl == len && !strncmp(cd->zipcfn, "index", len)) {
 			m->index_offset=offset;
