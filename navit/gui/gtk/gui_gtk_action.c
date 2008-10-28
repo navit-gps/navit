@@ -66,10 +66,23 @@ refresh_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 	navit_draw(gui->nav);
 }
 
+// Forward declarations, these should not be visible outside the GUI, so 
+// they are not in the header files, but here
+void gui_gtk_datawindow_set_button(struct datawindow_priv *this_, GtkWidget *btn);
+void gui_gtk_datawindow_destroy(struct datawindow_priv *win);
+
 static void
 roadbook_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_window_roadbook_new(gui->nav);
+
+	if (! gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w))) {
+		gui_gtk_datawindow_destroy(gui->datawindow);
+	} else {
+		navit_window_roadbook_new(gui->nav);
+		if (gui->datawindow) {
+			gui_gtk_datawindow_set_button(gui->datawindow, w);
+		}
+	}
 }
 
 static void
@@ -176,7 +189,6 @@ static GtkActionEntry entries[] =
 	{ "ZoomOutAction", GTK_STOCK_ZOOM_OUT, _n("ZoomOut"), NULL, NULL, G_CALLBACK(zoom_out_action) },
 	{ "ZoomInAction", GTK_STOCK_ZOOM_IN, _n("ZoomIn"), NULL, NULL, G_CALLBACK(zoom_in_action) },
 	{ "RefreshAction", GTK_STOCK_REFRESH, _n("Recalculate"), NULL, NULL, G_CALLBACK(refresh_action) },
-	{ "RoadbookAction", GTK_STOCK_JUSTIFY_FILL, _n("Roadbook"), NULL, NULL, G_CALLBACK(roadbook_action) },
 #ifdef GTK_STOCK_INFO
 	{ "InfoAction", GTK_STOCK_INFO, _n("Info"), NULL, NULL, G_CALLBACK(info_action) },
 #else
@@ -195,6 +207,7 @@ static GtkToggleActionEntry toggleentries[] =
 	{ "CursorAction", "cursor_icon",_n("Cursor"), NULL, NULL, G_CALLBACK(cursor_action),TRUE },
 	{ "TrackingAction", NULL ,_n("Lock on Road"), NULL, NULL, G_CALLBACK(tracking_action),TRUE },
 	{ "OrientationAction", "orientation_icon", _n("Northing"), NULL, NULL, G_CALLBACK(orient_north_action),FALSE },
+	{ "RoadbookAction", GTK_STOCK_JUSTIFY_FILL, _n("Roadbook"), NULL, NULL, G_CALLBACK(roadbook_action), FALSE },
 #ifdef GTK_STOCK_FULLSCREEN
 	{ "FullscreenAction",GTK_STOCK_FULLSCREEN, _n("Fullscreen"), NULL, NULL, G_CALLBACK(window_fullscreen_action), FALSE }
 #else
@@ -546,6 +559,8 @@ gui_gtk_ui_init(struct gui_priv *this)
 		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "TrackingAction"));
 		gtk_toggle_action_set_active(toggle_action, attr.u.num);
 	}
+	toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "RoadbookAction"));
+	gtk_toggle_action_set_active(toggle_action, 0);
 }
 
 static struct menu_priv *
