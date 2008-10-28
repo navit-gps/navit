@@ -2240,6 +2240,7 @@ write_aux_tiles(FILE *out, FILE *dir_out, int compression_level, int namelen)
 		fread(buffer, at->size, 1, f);
 		fclose(f);
 		write_zipmember(out, dir_out, at->name, namelen, buffer, at->size, compression_level);
+		free(buffer);
 		count++;
 		l=g_list_next(l);
 	}
