@@ -77,6 +77,13 @@ static void CreateToolBar(HWND hwnd)
 	HWND hTool;
 	TBBUTTON tbb[8];
 	TBADDBITMAP tbab;
+#ifdef _WIN32_WCE
+	/* Have to initialize common controls under CE */
+	INITCOMMONCONTROLSEX iccex;
+  	iccex.dwSize = sizeof (INITCOMMONCONTROLSEX);
+	iccex.dwICC = ICC_BAR_CLASSES;
+	InitCommonControlsEx (&iccex);
+#endif
 
 	hTool = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE, 0, 0, 0, 0,
 		hwnd, (HMENU)ID_CHILD_TOOLBAR, GetModuleHandle(NULL), NULL);
