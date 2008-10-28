@@ -329,7 +329,38 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			}
 		}
 		break;
-
+#ifdef __CEGCC__
+		case WM_KEYDOWN:
+			{
+			struct point p;
+			int w,h;
+			struct gui_priv* gui = (struct gui_priv*)GetWindowLongPtr( hwnd , DWLP_USER );
+			transform_get_size(navit_get_trans(gui->nav), &w, &h);
+			
+			if (wParam == VK_LEFT || wParam == '4') {
+				p.x=0;
+				p.y=h/2;
+				navit_set_center_screen(gui->nav, &p);
+			} else if (wParam == VK_RIGHT || wParam == '6') {
+				p.x=w;
+				p.y=h/2;
+				navit_set_center_screen(gui->nav, &p);
+			} else if (wParam == VK_UP || wParam == '2') {
+				p.x=w/2;
+				p.y=0;
+				navit_set_center_screen(gui->nav, &p);
+			} else if (wParam == VK_DOWN || wParam == '8') {
+				p.x=w/2;
+				p.y=h;
+				navit_set_center_screen(gui->nav, &p);
+			} else if (wParam == '1') {
+				navit_zoom_in(gui->nav, 2, NULL);
+			} else if (wParam == '3') {
+				navit_zoom_out(gui->nav, 2, NULL);
+			}
+			}
+		break;
+#endif
 		default:
 			return DefWindowProc(hwnd, Message, wParam, lParam);
 	}
