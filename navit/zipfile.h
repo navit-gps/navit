@@ -18,6 +18,11 @@
  */
 
 #ifndef __ZIPFILE_H__
+#ifdef __CEGCC__
+/* cegcc doesn't honor the __attribute__(packed) need pragma to work */
+#pragma pack(push)
+#pragma pack(1)
+#endif
 
 #define zip_lfh_sig 0x04034b50
 
@@ -36,7 +41,7 @@ struct zip_lfh {
 	char zipname[0];
 } __attribute__ ((packed));
 
-#define zip_cd_sig 0x2014b50
+#define zip_cd_sig 0x02014b50
 
 struct zip_cd {
 	int zipcensig;
@@ -76,5 +81,8 @@ struct zip_eoc {
 } __attribute__ ((packed));
 
 #define __ZIPFILE_H__
+#ifdef __CEGCC__
+#pragma pack(pop)
+#endif
 
 #endif
