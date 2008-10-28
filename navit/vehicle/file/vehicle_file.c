@@ -459,6 +459,10 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 		if (! attr->u.str)
 			return 0;
 		break;
+	case attr_active:
+	  if(priv->watch)
+	    attr->u.num=1;
+	  break;
 	default:
 		return 0;
 	}
