@@ -32,16 +32,12 @@ struct datawindow_priv {
 	GtkWidget *window;
 	GtkWidget *scrolled_window;
 	GtkWidget *treeview;
+	GtkWidget *button;
 	GtkListStore *liststore;
 	GtkTreeModel *sortmodel;
 	struct callback *click, *close;
+	struct gui_priv *gui;
 };
-
-static void
-gui_gtk_datawindow_destroy(struct datawindow_priv *win)
-{
-	return;
-}
 
 static GValue value;
 static void
@@ -139,7 +135,31 @@ gui_gtk_datawindow_delete(GtkWidget *widget, GdkEvent *event, struct datawindow_
 {
 	callback_call_0(win->close);
 
+	if (win->button) {
+		gtk_toggle_action_set_active (GTK_TOGGLE_ACTION(win->button), FALSE);
+	}
+
 	return FALSE;
+}
+
+void
+gui_gtk_datawindow_destroy(struct datawindow_priv *win)
+{
+	if ((!win->gui) || (!win->gui->datawindow)) {
+		return;
+	}
+
+	gui_gtk_datawindow_delete(NULL, NULL, win);
+	gtk_widget_destroy(win->window);
+	win->gui->datawindow = NULL;
+
+	return;
+}
+
+void
+gui_gtk_datawindow_set_button(struct datawindow_priv *this_, GtkWidget *btn)
+{
+	this_->button = btn;
 }
 
 static gboolean
@@ -185,7 +205,9 @@ gui_gtk_datawindow_new(struct gui_priv *gui, char *name, struct callback *click,
 		gtk_window_set_transient_for(GTK_WINDOW((GtkWidget *)(win->window)), GTK_WINDOW(gui->win));
 	g_signal_connect(G_OBJECT(win->window), "delete-event", G_CALLBACK(gui_gtk_datawindow_delete), win);
 	gtk_widget_show_all(win->window);
+
+	win->gui = gui;
+	gui->datawindow = win;
 	return win;
-	return NULL;
 }
 
