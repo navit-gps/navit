@@ -635,6 +635,8 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 
 
 	double angle = -atan2( dy, dx ) * 180 / 3.14159 ;
+	if (angle < 0)
+		angle += 360;
 
 	SetTextAlign (hMemDC, TA_BASELINE) ;
 	SetViewportOrgEx (hMemDC, p->x, p->y, NULL) ;
