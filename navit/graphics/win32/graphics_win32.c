@@ -15,6 +15,9 @@
 #include "item.h"
 #include "win32_gui.h"
 #include "xpm2bmp.h"
+#ifdef _WIN32_WCE
+#include "support/win32/ConvertUTF.h"
+#endif
 
 #ifndef GET_WHEEL_DELTA_WPARAM
 	#define GET_WHEEL_DELTA_WPARAM(wParam)  ((short)HIWORD(wParam))
@@ -621,8 +624,13 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 
 	if ( NULL == font->hfont )
 	{
-		font->hfont = EzCreateFont (hMemDC, TEXT ("Arial"), font->size/2, 0, 0, TRUE) ;
+#ifdef WIN_USE_SYSFONT
+		font->hfont = (HFONT) GetStockObject (SYSTEM_FONT);
+		GetObject (font->hfont, sizeof (LOGFONT), &font->lf);
+#else
+		font->hfont = EzCreateFont (hMemDC, TEXT ("Arial"), font->size/2, 0, 0, TRUE);
 		GetObject ( font->hfont, sizeof (LOGFONT), &font->lf) ;
+#endif
 	}
 
 
@@ -643,6 +651,20 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 	utf16 = g_utf8_to_utf16( text, -1, NULL, &utf16_len, NULL );
 	TextOutW(hMemDC, 0,0, utf16, (size_t)utf16_len );
 	g_free( utf16 );
+#endif
+#ifdef _WIN32_WCE
+	{
+		wchar_t utf16[1024];
+		UTF8 *utf8 = text;
+		UTF16 *utf16p = (UTF16 *) utf16;
+		SetBkMode (hMemDC, TRANSPARENT);
+		if (ConvertUTF8toUTF16(&utf8, utf8+strlen(text),
+			&utf16p, utf16p+sizeof(utf16), 
+			lenientConversion) == conversionOK) {
+			ExtTextOut (hMemDC, 0, 0, 0, NULL,
+				utf16, (wchar_t*) utf16p - utf16, NULL);
+		}
+	}
 #endif
 
 
