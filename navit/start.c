@@ -56,7 +56,11 @@ get_home_directory(void)
 	if (!homedir)
 	{
 		dbg(0,"Could not find home directory. Using current directory as home directory.");
+#ifdef _WIN32_WCE
+		homedir = "/Storage Card/";
+#else
 		homedir = ".";
+#endif
 	} else {
 		homedir=g_strdup(homedir);
 	}
