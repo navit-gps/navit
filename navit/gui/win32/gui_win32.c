@@ -14,7 +14,14 @@
 #include "callback.h"
 #include <commctrl.h>
 #include "debug.h"
+#ifdef __CEGCC__
+#include <sipapi.h>
+#include <aygshell.h>
+#include "ceglue.h"
 
+static int ce_backlight = 1;
+static int ce_fullscreen;
+#endif
 
 #ifdef HAVE_GLIB
 //static GHashTable *popup_callback_hash = NULL;
@@ -189,6 +196,30 @@ static void window_layout( HWND hwnd )
 	}
 #endif
 }
+#ifdef __CEGCC__
+static void toggle_fullscreen(HWND mWnd)
+{
+	if (SHFullScreenPtr) {
+		if (!ce_fullscreen) {
+			(*SHFullScreenPtr)(mWnd, SHFS_HIDETASKBAR |
+			SHFS_HIDESTARTICON | SHFS_HIDESIPBUTTON);
+		} else {
+			(*SHFullScreenPtr)(mWnd, SHFS_HIDESIPBUTTON);
+		}
+		ce_fullscreen = !ce_fullscreen;
+	}
+}
+
+static void toggle_backlight(void)
+{
+	if (ce_backlight)
+		if (CeEnableBacklight(FALSE))
+			ce_backlight = 0;
+	else
+		if (CeEnableBacklight(TRUE))
+			ce_backlight = 1;
+}
+#endif
 
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
@@ -357,6 +388,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 				navit_zoom_in(gui->nav, 2, NULL);
 			} else if (wParam == '3') {
 				navit_zoom_out(gui->nav, 2, NULL);
+			} else if (wParam == '7') {
+				toggle_backlight();
+			} else if (wParam == '9') {
+				toggle_fullscreen(hwnd);
 			}
 			}
 		break;
@@ -584,6 +619,7 @@ static struct gui_priv *win32_gui_new( struct navit *nav, struct gui_methods *me
 		InvalidateRect (prev, NULL, FALSE);
 		exit(0);
 	}
+	InitCeGlue();
 #endif
 
 	*meth=win32_gui_methods;
