@@ -45,6 +45,14 @@ if !PLUGINS
   navit_LDADD += $(wildcard $(top_builddir)/navit/*/*/*.la)
 endif
 
+if SUPPORT_WIN32
+  navit_LDADD += resource.rsc
+  navit_LDADD += -lcommctrl
+
+resource.rsc: $(top_builddir)/navit/gui/win32/resources/resource.rc
+	$(WINDRES) $(top_builddir)/navit/gui/win32/resources/resource.rc resource.rsc
+endif
+
 .PHONY: version.h.tmp
 
 version.h.tmp:
