@@ -30,11 +30,11 @@
 #include "vehicle.h"
 
 struct vehicle {
-	char *name;
 	struct vehicle_priv *priv;
 	struct vehicle_methods meth;
 	struct callback_list *cbl;
 	struct log *nmea_log, *gpx_log;
+	struct attr **attrs;
 };
 
 static void
@@ -124,7 +124,6 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 						 cbl,
 						 struct attr ** attrs);
 	char *type, *colon;
-	struct attr *name;
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
@@ -153,32 +152,22 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 		g_free(this_);
 		return NULL;
 	}
+	this_->attrs=attr_list_dup(attrs);
 	dbg(1, "leave\n");
 
-	if ((name=attr_search(attrs, NULL, attr_name))) {
-		this_->name=g_strdup(name->u.str);
-	} else {
-		this_->name=g_strdup("Noname");
-	}
 	return this_;
 }
 
 int
 vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-	switch (type) {
-	case attr_name:
-		attr->u.str=this_->name;
-		break;
-	default:
-		if (this_->meth.position_attr_get) {
-			return this_->meth.position_attr_get(this_->priv, type, attr);
-		} else {
-			return 0;
-		}
+	int ret;
+	if (this_->meth.position_attr_get) {
+		ret=this_->meth.position_attr_get(this_->priv, type, attr);
+		if (ret)
+			return ret;
 	}
-	attr->type=type;
-	return 1;
+	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
 int
@@ -222,6 +211,6 @@ void
 vehicle_destroy(struct vehicle *this_)
 {
 	callback_list_destroy(this_->cbl);
-	if(this_->name) g_free(this_->name);
+	attr_list_free(this_->attrs);
 	g_free(this_);
 }

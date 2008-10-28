@@ -159,7 +159,7 @@ attr_new_from_text(const char *name, const char *value)
 			}
 			break;
 		}
-		if (attr >= attr_type_coord_geo_start && attr <= attr_type_coord_geo_end) {
+		if (attr >= attr_type_coord_geo_begin && attr <= attr_type_coord_geo_end) {
 			g=g_new(struct coord_geo, 1);
 			ret->u.coord_geo=g;
 			coord_parse(value, projection_mg, &c);
@@ -263,12 +263,17 @@ attr_generic_set_attr(struct attr **attrs, struct attr *attr)
 int
 attr_data_size(struct attr *attr)
 {
-	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
+	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) 
 		return strlen(attr->u.str)+1;
-	}
-	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) {
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
 		return sizeof(attr->u.num);
-	}
+	if (attr->type >= attr_type_coord_geo_begin && attr->type <= attr_type_coord_geo_end) 
+		return sizeof(*attr->u.coord_geo);
+	if (attr->type >= attr_type_color_begin && attr->type <= attr_type_color_end) 
+		return sizeof(*attr->u.color);
+	if (attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end) 
+		return sizeof(void *);
+	dbg(0,"size for %s unknown\n", attr_to_name(attr->type));
 	return 0;
 }
 
