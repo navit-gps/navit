@@ -574,6 +574,17 @@ struct gui_methods win32_gui_methods = {
 static struct gui_priv *win32_gui_new( struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 {
 	struct gui_priv *this_;
+#ifdef __CEGCC__
+	/* Do not run multiple instances under CE */
+	HWND prev;
+	prev = FindWindow(g_szClassName, NULL);
+	if (prev) {
+		ShowWindow(prev, SW_RESTORE);
+		SetForegroundWindow(prev);
+		InvalidateRect (prev, NULL, FALSE);
+		exit(0);
+	}
+#endif
 
 	*meth=win32_gui_methods;
 
