@@ -34,6 +34,8 @@ static int dummy;
 static GHashTable *debug_hash;
 static char *gdb_program;
 
+static FILE *debug_fp;
+
 static void sigsegv(int sig)
 {
 #if defined(_WIN32) || defined(__CEGCC__)
@@ -54,6 +56,7 @@ debug_init(const char *program_name)
 	gdb_program=program_name;
 	signal(SIGSEGV, sigsegv);
 	debug_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	debug_fp = stderr;
 }
 
 
@@ -107,8 +110,9 @@ debug_vprintf(int level, const char *module, const int mlen, const char *functio
 	sprintf(buffer, "%s:%s", module, function);
 	if (debug_level_get(module) >= level || debug_level_get(buffer) >= level) {
 		if (prefix)
-			fprintf(stderr,"%s:",buffer);
-		vfprintf(stderr,fmt, ap);
+			fprintf(debug_fp,"%s:",buffer);
+		vfprintf(debug_fp,fmt, ap);
+		fflush(debug_fp);
 	}
 }
 
@@ -126,4 +130,27 @@ debug_assert_fail(char *module, const int mlen,const char *function, const int f
 {
 	debug_printf(0,module,mlen,function,flen,1,"%s:%d assertion failed:%s\n", file, line, expr);
 	abort();
+}
+
+void
+debug_destroy(void)
+{
+	if (!debug_fp)
+		return;
+	if (debug_fp == stderr || debug_fp == stdout)
+		return;
+	fclose(debug_fp);
+	debug_fp = NULL;
+}
+
+void debug_set_logfile(const char *path)
+{
+	FILE *fp;
+	fp = fopen(path, "a");
+	if (fp) {
+		debug_destroy();
+		debug_fp = fp;
+		fprintf(debug_fp, "Navit log started\n");
+		fflush(debug_fp);
+	}
 }

@@ -35,6 +35,8 @@ extern int debug_level;
 /* prototypes */
 struct attr;
 void debug_init(const char *program_name);
+void debug_destroy(void);
+void debug_set_logfile(const char *path);
 void debug_level_set(const char *name, int level);
 int debug_level_get(const char *name);
 struct debug *debug_new(struct attr *parent, struct attr **attrs);
