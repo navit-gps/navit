@@ -84,6 +84,9 @@ int main(int argc, char **argv)
 	main_init(argv[0]);
 	main_init_nls();
 	debug_init(argv[0]);
+#ifdef __CEGCC__
+	debug_set_logfile("/Storage Card/navit.log");
+#endif
 	file_init();
 #ifndef USE_PLUGINS
 	extern void builtin_init(void);
