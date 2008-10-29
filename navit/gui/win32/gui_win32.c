@@ -391,9 +391,13 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			} else if (wParam == '3') {
 				navit_zoom_out(gui->nav, 2, NULL);
 			} else if (wParam == '7') {
+#if 0
 				toggle_backlight();
+#endif
 			} else if (wParam == '9') {
+#if 0
 				toggle_fullscreen(hwnd);
+#endif
 			}
 			}
 		break;

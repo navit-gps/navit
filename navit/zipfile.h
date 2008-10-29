@@ -18,7 +18,8 @@
  */
 
 #ifndef __ZIPFILE_H__
-#ifdef __CEGCC__
+#ifdef HAVE_API_WIN32_CE
+#warning OK
 /* cegcc doesn't honor the __attribute__(packed) need pragma to work */
 #pragma pack(push)
 #pragma pack(1)
