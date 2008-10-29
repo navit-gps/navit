@@ -57,7 +57,7 @@ get_tag(char *line, char *name, int *pos, char *ret, char *name_ret)
 		if (! *p)
 			return 0;
 		n=p;
-		e=index(p,'=');
+		e=strchr(p,'=');
 		if (! e)
 			return 0;
 		p=e+1;
@@ -284,7 +284,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 				fseek(mr->f, 0, SEEK_SET);
 			get_line(mr);
 		}
-		if ((p=index(mr->line,'\n'))) 
+		if ((p=strchr(mr->line,'\n'))) 
 			*p='\0';
 		if (mr->item.id_hi) {
 			mr->attrs[0]='\0';
