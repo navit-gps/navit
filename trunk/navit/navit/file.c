@@ -63,12 +63,14 @@ file_create(char *name)
 	if (! file)
 		return file;
 	file->fd=open(name, O_RDONLY|O_LARGEFILE | O_BINARY);
-	if (file->fd < 0) {
+	if (file->fd == -1) {
 		g_free(file);
 		return NULL;
 	}
+	dbg(1,"fd=%d\n", file->fd);
 	fstat(file->fd, &stat);
 	file->size=stat.st_size;
+	dbg(1,"size=%Ld\n", file->size);
 	file->name = g_strdup(name);
 	dbg_assert(file != NULL);
 	return file;
