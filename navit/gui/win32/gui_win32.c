@@ -84,12 +84,14 @@ static void CreateToolBar(HWND hwnd)
 	HWND hTool;
 	TBBUTTON tbb[8];
 	TBADDBITMAP tbab;
+#if 0
 #ifdef _WIN32_WCE
 	/* Have to initialize common controls under CE */
 	INITCOMMONCONTROLSEX iccex;
   	iccex.dwSize = sizeof (INITCOMMONCONTROLSEX);
 	iccex.dwICC = ICC_BAR_CLASSES;
 	InitCommonControlsEx (&iccex);
+#endif
 #endif
 
 	hTool = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE, 0, 0, 0, 0,
@@ -169,7 +171,7 @@ static void CreateToolBar(HWND hwnd)
 
 static void window_layout( HWND hwnd )
 {
-#ifndef __CEGCC__
+#ifndef HAVE_API_WIN32_CE
 	RECT rcClient;
 	RECT rcTool;
 	int iToolHeight;
@@ -251,7 +253,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			AppendMenu(hSubMenu, MF_STRING, ID_STUFF_GO, TEXT("&Go"));
 			AppendMenu(hMenu, MF_STRING | MF_POPUP, (UINT)hSubMenu, TEXT("&Stuff"));
 
-#ifndef __CEGCC__
+#ifndef HAVE_API_WIN32_CE
 			SetMenu(hwnd, hMenu);
 #endif
 
@@ -360,7 +362,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			}
 		}
 		break;
-#ifdef __CEGCC__
+#ifdef HAVE_API_WIN32_CE
 		case WM_KEYDOWN:
 			{
 			struct point p;
@@ -404,7 +406,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 HANDLE CreateWin32Window( void )
 {
-#ifdef __CEGCC__
+#ifdef HAVE_API_WIN32_CE
 	WNDCLASS wc;
 #else
 	WNDCLASSEX wc;
@@ -425,7 +427,7 @@ HANDLE CreateWin32Window( void )
 	wc.lpszClassName = g_szClassName;
 	wc.hIcon		 = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_NAVIT));
 
-#ifdef __CEGCC__
+#ifdef HAVE_API_WIN32_CE
 	if(!RegisterClass(&wc))
 #else
 	if(!RegisterClassEx(&wc))
@@ -440,7 +442,7 @@ HANDLE CreateWin32Window( void )
 		WS_EX_CLIENTEDGE,
 		g_szClassName,
 		TEXT( "Navit" ),
-#if defined(__CEGCC__)
+#ifdef HAVE_API_WIN32_CE
 		WS_SYSMENU | WS_CLIPCHILDREN,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 #else
@@ -609,7 +611,7 @@ struct gui_methods win32_gui_methods = {
 static struct gui_priv *win32_gui_new( struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 {
 	struct gui_priv *this_;
-#ifdef __CEGCC__
+#ifdef HAVE_API_WIN32_CE
 	/* Do not run multiple instances under CE */
 	HWND prev;
 	prev = FindWindow(g_szClassName, NULL);

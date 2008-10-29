@@ -48,6 +48,7 @@
 #include "gprintfint.h"
 #include "gthreadprivate.h"
 #include "galias.h"
+#include "config.h"
 
 #if NOT_NEEDED_FOR_NAVIT
 #ifdef G_OS_WIN32
@@ -1061,8 +1062,13 @@ gsize
 g_printf_string_upper_bound (const gchar *format,
 			     va_list      args)
 {
+#ifdef HAVE_API_WIN32_CE
+  gchar c[16384];
+  return _g_vsnprintf (c, 16384, format, args) + 1;
+#else
   gchar c;
   return _g_vsnprintf (&c, 1, format, args) + 1;
+#endif
 }
 
 #if NOT_NEEDED_FOR_NAVIT

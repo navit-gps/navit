@@ -630,7 +630,7 @@ ezxml_t ezxml_parse_fd(int fd)
     size_t l;
     void *m;
 
-    if (fd < 0) return NULL;
+    if (fd == -1) return NULL;
     fstat(fd, &st);
 
 #ifndef EZXML_NOMMAP
