@@ -235,7 +235,7 @@ mapset_add_py(mapsetObject *self, PyObject *args)
 	if (!PyArg_ParseTuple(args, "O:navit.mapset", &map))
 		return NULL;
 	Py_INCREF(map);
-	mapset_add(self->ms, map->m);
+	mapset_add_attr(self->ms, map->m);
 	return Py_BuildValue("");
 }
 
