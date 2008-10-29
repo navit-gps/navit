@@ -305,7 +305,7 @@ struct element_func {
 	{ "polygon", "itemgra", NULL, NEW(polygon_new)},
 	{ "polyline", "itemgra", NULL, NEW(polyline_new)},
 	{ "arrows", "itemgra", NULL, NEW(arrows_new)},
-	{ "vehicle", "navit", NULL, NEW(vehicle_new)},
+	{ "vehicle", "navit", NULL, NEW(vehicle_new), ADD(vehicle_add_attr) },
 	{ "log", "vehicle", NULL, NEW(log_new)},
 	{ "log", "navit", NULL, NEW(log_new)},
 	{ "window_items", "navit", xmlconfig_window_items},
