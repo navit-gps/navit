@@ -161,7 +161,7 @@ int main(int argc, char **argv)
 #ifdef HAVE_GLIB
 	event_request_system("glib","start");
 #endif
-#ifdef __CEGCC__
+#ifdef HAVE_API_WIN32_CE
 	config_file="\\Storage Card\\navit.xml";
 #endif
 	if (!config_load(config_file, &error)) {

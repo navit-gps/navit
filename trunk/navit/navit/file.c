@@ -93,7 +93,11 @@ int file_mkdir(char *name, int pflag)
 	if (!pflag) {
 		if (file_is_dir(name))
 			return 0;
+#ifdef HAVE_API_WIN32_BASE
+		return mkdir(name);
+#else
 		return mkdir(name, 0777);
+#endif
 	}
 	strcpy(buffer, name);
 	next=buffer;
