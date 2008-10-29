@@ -28,6 +28,10 @@
 #include "item.h"
 #include "debug.h"
 
+#ifdef DEBUG_WIN32_CE_MESSAGEBOX
+#include <windows.h>
+#include <windowsx.h>
+#endif
 
 int debug_level=0,segv_level=0;
 static int dummy;
@@ -107,17 +111,35 @@ debug_level_get(const char *name)
 void
 debug_vprintf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap)
 {
+#ifdef HAVE_API_WIN32_CE
+	char buffer[4096];
+#else
 	char buffer[mlen+flen+3];
+#endif
 	FILE *fp=debug_fp;
 
 	sprintf(buffer, "%s:%s", module, function);
 	if (debug_level_get(module) >= level || debug_level_get(buffer) >= level) {
+#ifndef DEBUG_WIN32_CE_MESSAGEBOX
 		if (! fp)
 			fp = stderr;
 		if (prefix)
 			fprintf(fp,"%s:",buffer);
 		vfprintf(fp,fmt, ap);
 		fflush(fp);
+#else
+	wchar_t muni[4096];
+	char xbuffer[4096];
+	int len=0;
+	if (prefix) {
+		strcpy(xbuffer,buffer);
+		len=strlen(buffer);
+		xbuffer[len++]=':';
+	}
+	vsprintf(xbuffer+len,fmt,ap);
+	mbstowcs(muni, xbuffer, strlen(xbuffer)+1);
+	MessageBoxW(NULL, muni, TEXT("Navit - Error"), MB_APPLMODAL|MB_OK|MB_ICONERROR);
+#endif
 	}
 }
 
