@@ -133,7 +133,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	}
 
 	type = g_strdup(source->u.str);
-	colon = index(type, ':');
+	colon = strchr(type, ':');
 	if (colon)
 		*colon = '\0';
 	dbg(1, "source='%s' type='%s'\n", source->u.str, type);
