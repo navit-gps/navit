@@ -139,10 +139,10 @@ char *stristr(const char *String, const char *Pattern)
    necessary.  Returns the number of characters read (not including
    the null terminator), or -1 on error or EOF.  */
 
-ssize_t
+int
 getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
 {
-  ssize_t result;
+  int result;
   size_t cur_len = 0;
 
   if (lineptr == NULL || n == NULL || fp == NULL)
@@ -216,7 +216,7 @@ getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
   return result;
 }
 
-ssize_t
+int
 getline (char **lineptr, size_t *n, FILE *stream)
 {
   return getdelim (lineptr, n, '\n', stream);
