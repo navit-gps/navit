@@ -46,12 +46,12 @@ HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
 
      SaveDC (hdc) ;
 
-#ifndef __CEGCC__
+#ifndef HAVE_API_WIN32_CE
      SetGraphicsMode (hdc, GM_ADVANCED) ;
      ModifyWorldTransform (hdc, NULL, MWT_IDENTITY) ;
 #endif
      SetViewportOrgEx (hdc, 0, 0, NULL) ;
-#ifndef __CEGCC__
+#ifndef HAVE_API_WIN32_CE
      SetWindowOrgEx   (hdc, 0, 0, NULL) ;
 #endif
 
@@ -72,7 +72,7 @@ HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
      pt.x = (int) (iDeciPtWidth  * cxDpi / 72) ;
      pt.y = (int) (iDeciPtHeight * cyDpi / 72) ;
 
-#ifndef __CEGCC__
+#ifndef HAVE_API_WIN32_CE
      DPtoLP (hdc, &pt, 1) ;
 #endif
      lf.lfHeight         = - (int) (fabs (pt.y) / 10.0 + 0.5) ;
@@ -326,7 +326,7 @@ static const char g_szClassName[] = "NAVGRA";
 
 static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 {
-#ifdef __CEGCC__
+#ifdef HAVE_API_WIN32_CE
 	WNDCLASS wc;
 #else
 	WNDCLASSEX wc;
@@ -349,7 +349,7 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 
 	GetClientRect( gr->wnd_parent_handle,&rcParent);
 
-#ifdef __CEGCC__
+#ifdef HAVE_API_WIN32_CE
 	if(!RegisterClass(&wc))
 #else
 	if(!RegisterClassEx(&wc))
@@ -361,7 +361,7 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 
 	gr->width = rcParent.right - rcParent.left;
 	gr->height  = rcParent.bottom - rcParent.top;
-#if defined(__CEGCC__)
+#ifdef HAVE_API_WIN32_CE
 	callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->width, (void *)gr->height);
 #endif
 
