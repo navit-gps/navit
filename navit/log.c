@@ -205,7 +205,7 @@ log_get_attr(struct log *this_, enum attr_type type, struct attr *attr, struct a
 
 
 struct log *
-log_new(struct attr **attrs)
+log_new(struct attr * parent,struct attr **attrs)
 {
 	struct log *ret=g_new0(struct log, 1);
 	struct attr *data,*overwrite,*lazy,*mkdir,*flush_size,*flush_time;
