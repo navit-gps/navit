@@ -99,6 +99,8 @@ debug_new(struct attr *parent, struct attr **attrs)
 int
 debug_level_get(const char *name)
 {
+	if (!debug_hash)
+		return 0;
 	return (int)(g_hash_table_lookup(debug_hash, name));
 }
 
@@ -106,13 +108,16 @@ void
 debug_vprintf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap)
 {
 	char buffer[mlen+flen+3];
+	FILE *fp=debug_fp;
 
 	sprintf(buffer, "%s:%s", module, function);
 	if (debug_level_get(module) >= level || debug_level_get(buffer) >= level) {
+		if (! fp)
+			fp = stderr;
 		if (prefix)
-			fprintf(debug_fp,"%s:",buffer);
-		vfprintf(debug_fp,fmt, ap);
-		fflush(debug_fp);
+			fprintf(fp,"%s:",buffer);
+		vfprintf(fp,fmt, ap);
+		fflush(fp);
 	}
 }
 
