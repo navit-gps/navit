@@ -1,11 +1,10 @@
 [Desktop Entry]
 Version=1.0
-Encoding=UTF-8
 Name=Navit
 Name[de]=Navit
 Name[fr]=Navit
 Comment=The open source vector based navigation program with routing engine
-Comment[de]=Ein vectorbasiertes Navigationsprogramm
+Comment[de]=Ein vektorbasiertes Navigationsprogramm
 Comment[fr]=Le logiciel opensource de navigation vectorielle
 Exec=navit
 Icon=navit
