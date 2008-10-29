@@ -26,6 +26,9 @@
 #include "map.h"
 #include "mapset.h"
 #include "plugin.h"
+#include "debug.h"
+#include "item.h"
+#include "attr.h"
 
 #if defined(MS_WINDOWS) || defined(__CYGWIN__)
 #define Obj_HEAD PyObject_HEAD_INIT(NULL);
@@ -235,7 +238,7 @@ mapset_add_py(mapsetObject *self, PyObject *args)
 	if (!PyArg_ParseTuple(args, "O:navit.mapset", &map))
 		return NULL;
 	Py_INCREF(map);
-	mapset_add_attr(self->ms, map->m);
+	mapset_add_attr(self->ms, &(struct attr){attr_map,.u.map=map->m});
 	return Py_BuildValue("");
 }
 
