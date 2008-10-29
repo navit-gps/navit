@@ -250,7 +250,7 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 	while (i-- > 0)
 	{
 		g=*gp++;
-		if (g->w && g->h) {
+		if (g->w && g->h && bg ) {
 #if 1
 			shadow=g_malloc((g->w+2)*(g->h+2));
 			if (gr->freetype_methods.get_shadow(g, shadow, 8, g->w+2))
