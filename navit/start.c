@@ -165,7 +165,7 @@ int main(int argc, char **argv)
 	config_file="\\Storage Card\\navit.xml";
 #endif
 	if (!config_load(config_file, &error)) {
-		printf(_("Error parsing '%s': %s\n"), config_file, error->message);
+		printf(_("Error parsing '%s': %s\n"), config_file, error ? error->message : "");
 		exit(1);
 	} else {
 		printf(_("Using '%s'\n"), config_file);
