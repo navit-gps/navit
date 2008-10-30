@@ -157,7 +157,7 @@ navit_get_mapset(struct navit *this_)
 	} else {
 		dbg(0,"No mapsets enabled! Is it on purpose? Navit can't draw a map. Please check your navit.xml\n");
 	}
-	exit(-1);
+	return NULL;
 }
 
 struct tracking *
