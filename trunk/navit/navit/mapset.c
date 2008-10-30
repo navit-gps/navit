@@ -119,10 +119,12 @@ struct mapset_handle {
 struct mapset_handle *
 mapset_open(struct mapset *ms)
 {
-	struct mapset_handle *ret;
-
-	ret=g_new(struct mapset_handle, 1);
-	ret->l=ms->maps;
+	struct mapset_handle *ret=NULL;
+	if(ms)
+	{
+		ret=g_new(struct mapset_handle, 1);
+		ret->l=ms->maps;
+	}
 
 	return ret;
 }
@@ -143,7 +145,7 @@ struct map * mapset_next(struct mapset_handle *msh, int active)
 	struct attr active_attr;
 
 	for (;;) {
-		if (!msh->l)
+		if (!msh || !msh->l)
 			return NULL;
 		ret=msh->l->data;
 		msh->l=g_list_next(msh->l);
@@ -207,12 +209,19 @@ mapset_search_new(struct mapset *ms, struct item *item, struct attr *search_attr
 	struct mapset_search *this;
 	dbg(1,"enter(%p,%p,%p,%d)\n", ms, item, search_attr, partial);
 	this=g_new0(struct mapset_search,1);
-	this->map=ms->maps;
-	this->item=item;
-	this->search_attr=search_attr;
-	this->partial=partial;
-	this->ms=map_search_new(this->map->data, item, search_attr, partial);
-	return this;
+	if(this != NULL && ms!=NULL )
+        {
+		this->map=ms->maps;
+		this->item=item;
+		this->search_attr=search_attr;
+		this->partial=partial;
+		this->ms=map_search_new(this->map->data, item, search_attr, partial);
+		return this;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 /**
@@ -231,7 +240,7 @@ mapset_search_get_item(struct mapset_search *this)
 	struct item *ret=NULL;
 	struct attr active_attr;
 
-	while (!this->ms || !(ret=map_search_get_item(this->ms))) { /* The current map has no more items to be returned */
+	while ((this) && (!this->ms || !(ret=map_search_get_item(this->ms)))) { /* The current map has no more items to be returned */
 		if (this->search_attr->type >= attr_country_all && this->search_attr->type <= attr_country_name)
 			break;
 		for (;;) {
