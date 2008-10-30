@@ -456,25 +456,32 @@ map_new_mg(struct map_methods *meth, struct attr **attrs)
 {
 	struct map_priv *m;
 	int i,maybe_missing;
-	struct attr *data;
+	struct attr *data=attr_search(attrs, NULL, attr_data);
 	char *filename;
-	
-	*meth=map_methods_mg;
-	data=attr_search(attrs, NULL, attr_data);
+	struct file_wordexp *wexp;
+	char **wexp_data;
+
 	if (! data)
 		return NULL;
+	
+    wexp=file_wordexp_new(data->u.str);
+	wexp_data=file_wordexp_get_array(wexp);
+
+	*meth=map_methods_mg;
+	data=attr_search(attrs, NULL, attr_data);
 
 	m=g_new(struct map_priv, 1);
 	m->id=++map_id;
-	m->dirname=g_strdup(data->u.str);
+	m->dirname=g_strdup(wexp_data[0]);
+	file_wordexp_destroy(wexp);
 	for (i = 0 ; i < file_end ; i++) {
 		if (file[i]) {
-			filename=g_strdup_printf("%s/%s", data->u.str, file[i]);
+			filename=g_strdup_printf("%s/%s", m->dirname, file[i]);
 			m->file[i]=file_create_caseinsensitive(filename);
 			if (! m->file[i]) {
 				maybe_missing=(i == file_border_ply || i == file_height_ply || i == file_sea_ply);
 				if (! maybe_missing)
-					dbg(0,"Failed to load %s", filename);
+					dbg(0,"Failed to load %s\n", filename);
 			} else
 				file_mmap(m->file[i]);
 			g_free(filename);
