@@ -765,6 +765,7 @@ graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth)
 	font_freetype_new(&this->freetype_methods);
 	*meth=graphics_methods;
 	meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))this->freetype_methods.font_new;
+	meth->get_text_bbox=this->freetype_methods.get_text_bbox;
 
 	return this;
 }
