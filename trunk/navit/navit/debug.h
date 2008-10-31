@@ -25,6 +25,7 @@ extern "C" {
 #endif
 
 #include <stdarg.h>
+#include <string.h>
 extern int debug_level;
 #define dbg_str2(x) #x
 #define dbg_str1(x) dbg_str2(x)
