@@ -601,11 +601,6 @@ AC_CHECK_HEADER(
 		,
 )
 
-LIBS="$LIBS -lm"
-if test "$win32" == "no"; then
-	LIBS="$LIBS -rdynamic"
-fi
-
 PACKAGE=navit
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
 AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
@@ -632,6 +627,12 @@ then
 	NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/win32 -lsupport_win32"
 fi
 AM_CONDITIONAL(SUPPORT_WIN32, [test "x$win32" = "xyes"])
+
+LIBS="$LIBS -lm"
+if test "$win32" == "no"; then
+	LIBS="$LIBS -rdynamic"
+fi
+
 support_libc=no
 AC_ARG_ENABLE(support_libc, [  --enable-support-libc enable builtin mini libc ], support_libc=$enableval)
 AM_CONDITIONAL(SUPPORT_LIBC, [test "x$support_libc" = "xyes"])
