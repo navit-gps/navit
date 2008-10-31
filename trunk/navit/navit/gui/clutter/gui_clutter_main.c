@@ -23,7 +23,6 @@
 
 #include "glib.h"
 #include <stdio.h>
-#include <libintl.h>
 
 #include "navit.h"
 #include "config.h"
@@ -47,6 +46,7 @@
 #include "track.h"
 #include "menu.h"
 #include "map.h"
+#include "navit_nls.h"
 
 // Specific to this gui :
 #include "gui_clutter.h"

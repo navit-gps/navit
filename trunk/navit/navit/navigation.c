@@ -22,7 +22,6 @@
 #include <string.h>
 #include <math.h>
 #include <glib.h>
-#include <libintl.h>
 #include "debug.h"
 #include "profile.h"
 #include "navigation.h"
@@ -36,8 +35,7 @@
 #include "navit.h"
 #include "callback.h"
 #include "plugin.h"
-
-#define _(STRING)    gettext(STRING)
+#include "navit_nls.h"
 
 struct suffix {
 	char *fullname;

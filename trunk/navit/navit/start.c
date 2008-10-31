@@ -21,7 +21,6 @@
 #include <stdlib.h>
 #include <glib.h>
 #include <getopt.h>
-#include <libintl.h>
 #include "config.h"
 #include "version.h"
 #include "item.h"
@@ -36,8 +35,8 @@
 #include "xmlconfig.h"
 #include "file.h"
 #include "search.h"
+#include "navit_nls.h"
 
-#define _(STRING)    gettext(STRING)
 
 static void
 print_usage(void)

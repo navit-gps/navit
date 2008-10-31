@@ -541,9 +541,9 @@ MOFILES=""
 POFILES=""
 LINGUAS=""
 
-if test x$enable_nls = xyes; then
+if test "x$enable_nls" = "xyes"; then
 
-  AC_CHECK_FUNC(gettext, [HAVEGETTEXT="yes"], 
+  AC_CHECK_FUNC(gettext, [HAVEGETTEXT="yes"] 
 	     AC_CHECK_LIB(intl, gettext, [INTLIBS="-lintl" HAVEGETTEXT="yes"],
 		  	 INTLIBS="" ))
 
@@ -573,6 +573,7 @@ if test x$enable_nls = xyes; then
    LINGUAS=""
    PO=""
    echo "xgettext and libintl.a don't both exist; will not build i18n support"
+   enable_nls = no
  fi
  for lang in $LINGUAS; do
     MOFILES="$MOFILES $lang.mo"
@@ -580,8 +581,16 @@ if test x$enable_nls = xyes; then
  for lang in $LINGUAS; do
     POFILES="$POFILES $lang.po"
  done
-fi
 
+AC_SUBST(INTLIBS)
+AC_SUBST(MOFILES)
+AC_SUBST(POFILES)
+AM_GNU_GETTEXT_VERSION
+AM_GNU_GETTEXT(no-libtool, need-ngettext)
+AC_SUBST(LIBINTL)
+AC_SUBST(LTLIBINTL)
+fi
+AM_CONDITIONAL(ENABLE_NLS, [test "x$enable_nls" = "xyes"])
 AC_CHECK_HEADER(
 	byteswap.h,
 	AC_DEFINE(
@@ -592,13 +601,10 @@ AC_CHECK_HEADER(
 		,
 )
 
-AC_SUBST(INTLIBS)
-AC_SUBST(MOFILES)
-AC_SUBST(POFILES)
-AM_GNU_GETTEXT_VERSION
-AM_GNU_GETTEXT
-
-LIBS="$LIBS -lm -rdynamic"
+LIBS="$LIBS -lm"
+if test "$win32" == "no"; then
+	LIBS="$LIBS -rdynamic"
+fi
 
 PACKAGE=navit
 AC_DEFINE_UNQUOTED(PACKAGE, "$PACKAGE")
@@ -701,8 +707,8 @@ AC_SUBST(GYPSY_CFLAGS)
 AC_SUBST(GYPSY_LIBS)
 AM_CONDITIONAL(VEHICLE_GYPSY, test "x${vehicle_gypsy}" = "xyes")
 
-NAVIT_CFLAGS="$NAVIT_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS -I\$(top_builddir)/intl"
-NAVIT_LIBS="$NAVIT_LIBS $GLIB_LIBS $GMODULE_LIBS -L\$(top_builddir)/intl"
+NAVIT_CFLAGS="$NAVIT_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS"
+NAVIT_LIBS="$NAVIT_LIBS $GLIB_LIBS $GMODULE_LIBS $LIBINTL"
 AC_SUBST(NAVIT_CFLAGS)
 AC_SUBST(NAVIT_LIBS)
 
@@ -826,9 +832,16 @@ if test x"${USE_GARMIN}" = xyes
 	else 
 		echo "Garmin IMG  : DISABLED (you requested it)"
 fi
+
+if test x"$LIBINTL" = "x" ;then
+	nls_libs="system gettext support"
+else
+	nls_libs="$LIBINTL"
+fi
 echo "Plugins:             $plugins ($plugins_reason)"
 echo "Postgresql:          $postgresql ($postgresql_reason)"
 echo "Samplemap:           $samplemap ($samplemap_reason)"
+echo "NLS Support:         $enable_nls($nls_libs)"
 echo "Graphics types:"
 echo "  gtk_drawing_area:  $graphics_gtk_drawing_area ($graphics_gtk_drawing_area_reason)"
 echo "  qt_qpainter:       $graphics_qt_qpainter ($graphics_qt_qpainter_reason)"

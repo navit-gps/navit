@@ -19,7 +19,6 @@
 
 #include "glib.h"
 #include <stdio.h>
-#include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -46,7 +45,7 @@
 #include "track.h"
 #include "menu.h"
 #include "map.h"
-
+#include "navit_nls.h"
 
 #include <directfb.h>
 
