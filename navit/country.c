@@ -21,11 +21,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
-#include <libintl.h>
 #include "debug.h"
 #include "item.h"
 #include "country.h"
 #include "search.h"
+#include "navit_nls.h"
 
 struct country {
 	int id;
@@ -34,10 +34,6 @@ struct country {
 	char *iso3;
 	char *name;
 };
-
-#define gettext_noop(String) String
-#define _(STRING)    gettext(STRING)
-#define _n(STRING)    gettext_noop(STRING)
 
 static struct country country[]= {
   { 20,	"AND",	"AD", "AND", /* 020 */ _n("Andorra")},

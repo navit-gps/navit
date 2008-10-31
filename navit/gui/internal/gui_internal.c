@@ -31,7 +31,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <libintl.h>
 #include <glib.h>
 #include "config.h"
 #include "item.h"
@@ -58,6 +57,7 @@
 #include "track.h"
 #include "country.h"
 #include "config.h"
+#include "navit_nls.h"
 
 #define STATE_VISIBLE 1
 #define STATE_SELECTED 2

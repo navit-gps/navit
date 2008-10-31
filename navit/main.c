@@ -32,7 +32,6 @@
 #endif
 
 #include <unistd.h>
-#include <libintl.h>
 #include "config.h"
 #include "file.h"
 #include "debug.h"
@@ -45,8 +44,7 @@
 #include "route.h"
 #include "navigation.h"
 #include "event.h"
-
-#define _(STRING)    gettext(STRING)
+#include "navit_nls.h"
 
 struct map_data *map_data_default;
 

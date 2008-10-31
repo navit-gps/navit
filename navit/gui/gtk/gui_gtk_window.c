@@ -24,7 +24,6 @@
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
-#include <libintl.h>
 #include <gtk/gtk.h>
 #include "config.h"
 #include "item.h"
@@ -43,6 +42,7 @@
 #include "vehicle.h"
 #include "map.h"
 #include "coord.h"
+#include "navit_nls.h"
 
 #ifdef USE_HILDON
 #include "hildon-widgets/hildon-defines.h"
@@ -66,8 +66,6 @@
 #define KEY_LEFT GDK_Left
 #define KEY_RIGHT GDK_Right
 #endif
-
-#define _(text) gettext(text)
 
 static gboolean
 keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)

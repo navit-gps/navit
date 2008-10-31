@@ -22,7 +22,6 @@
 #include <time.h>
 #include <math.h>
 #include <gtk/gtk.h>
-#include <libintl.h>
 #include "item.h"
 #include "coord.h"
 #include "debug.h"
@@ -34,9 +33,7 @@
 #include "map.h"
 #include "navigation.h"
 #include "gui_gtk.h"
-
-
-#define _(STRING) gettext(STRING)
+#include "navit_nls.h"
 
 struct statusbar_priv {
 	struct gui_priv *gui;

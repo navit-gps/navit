@@ -2,7 +2,6 @@
 #include <process.h>
 #include <windows.h>
 #include <glib.h>
-#include <libintl.h>
 #include "config.h"
 #include "plugin.h"
 #include "gui.h"
@@ -14,6 +13,7 @@
 #include "callback.h"
 #include <commctrl.h>
 #include "debug.h"
+#include "navit_nls.h"
 #ifdef __CEGCC__
 #include <sipapi.h>
 #include <aygshell.h>
