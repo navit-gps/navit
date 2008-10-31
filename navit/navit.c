@@ -24,7 +24,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <glib.h>
-#include <libintl.h>
 #include <math.h>
 #include "config.h"
 #include "debug.h"
@@ -54,8 +53,8 @@
 #include "layout.h"
 #include "log.h"
 #include "attr.h"
+#include "navit_nls.h"
 
-#define _(STRING)    gettext(STRING)
 /**
  * @defgroup navit the navit core instance. navit is the object containing nearly everything: A set of maps, one or more vehicle, a graphics object for rendering the map, a gui object for displaying the user interface, a route object, a navigation object and so on. Be warned that it is theoretically possible to have more than one navit object
  * @{

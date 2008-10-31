@@ -21,7 +21,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <libintl.h>
 #include <gtk/gtk.h>
 #include "debug.h"
 #include "destination.h"
@@ -32,12 +31,9 @@
 #include "country.h"
 #include "search.h"
 #include "projection.h"
+#include "navit_nls.h"
 
 #define COL_COUNT 8
-
-#define gettext_noop(String) String
-#define _(STRING)    gettext(STRING)
-#define _n(STRING)    gettext_noop(STRING)
 
 static struct search_param {
 	struct navit *nav;

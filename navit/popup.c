@@ -22,7 +22,6 @@
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <libintl.h>
 #include <glib.h>
 #include "popup.h"
 #include "debug.h"
@@ -38,8 +37,8 @@
 #include "item.h"
 #include "callback.h"
 #include "route.h"
+#include "navit_nls.h"
 
-#define _(STRING)	gettext(STRING)
 #if 0
 static void
 popup_set_no_passing(struct popup_item *item, void *param)
