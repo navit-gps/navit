@@ -75,6 +75,7 @@ struct vehicle_priv {
 	int no_data_count;
 #endif
 	speed_t baudrate;
+	struct attr ** attrs;
 };
 
 #ifdef _WIN32
@@ -438,6 +439,8 @@ static int
 vehicle_file_position_attr_get(struct vehicle_priv *priv,
 			       enum attr_type type, struct attr *attr)
 {
+	struct attr * active=NULL;
+
 	switch (type) {
 	case attr_position_height:
 		attr->u.numd = &priv->height;
@@ -460,11 +463,11 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 			return 0;
 		break;
 	case attr_active:
-	       if(priv->watch)
-		 attr->u.num=1;
-	       else
-		 attr->u.num=0;
-	  break;
+		  if(active != NULL && active->u.num == 1)
+		    return 1;
+		  else
+		    return 0;
+		  break;
 	default:
 		return 0;
 	}
@@ -513,6 +516,7 @@ vehicle_file_new_file(struct vehicle_methods
 #endif
 		}
 	}
+	ret->attrs = attrs;
 	on_eof = attr_search(attrs, NULL, attr_on_eof);
 	if (on_eof && !strcasecmp(on_eof->u.str, "stop"))
 		ret->on_eof=1;
