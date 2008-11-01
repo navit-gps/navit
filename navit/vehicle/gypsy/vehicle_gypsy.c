@@ -51,6 +51,7 @@ static struct vehicle_priv {
 	int sats;
 	int sats_used;
 	guint retry_timer;
+	struct attr ** attrs;
 } *vehicle_last;
 
 #define DEFAULT_RETRY_INTERVAL 10 // seconds
@@ -246,6 +247,7 @@ static int
 vehicle_gypsy_position_attr_get(struct vehicle_priv *priv,
 			       enum attr_type type, struct attr *attr)
 {
+	struct attr * active=NULL;
 	switch (type) {
 	case attr_position_height:
 		attr->u.numd = &priv->height;
@@ -265,6 +267,14 @@ vehicle_gypsy_position_attr_get(struct vehicle_priv *priv,
 	case attr_position_coord_geo:
 		attr->u.coord_geo = &priv->geo;
 		break;
+	case attr_active:
+	  active = attr_search(priv->attrs,NULL,attr_active);
+	  if(active != NULL && active->u.num == 1)
+	    return 1;
+	  else
+	    return 0;
+	       break;
+
 	default:
 		return 0;
 	}
@@ -289,6 +299,7 @@ vehicle_gypsy_new_gypsy(struct vehicle_methods
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->source = g_strdup(source->u.str);
+	ret->attrs = attrs;
 	retry_int = attr_search(attrs, NULL, attr_retry_interval);
 	if (retry_int) {
 		ret->retry_interval = retry_int->u.num;
