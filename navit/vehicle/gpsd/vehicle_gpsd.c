@@ -47,6 +47,7 @@ static struct vehicle_priv {
 	char *nmea_data;
         char *nmea_data_buf;
 	guint retry_timer;
+	struct attr ** attrs;
 } *vehicle_last;
 
 #define DEFAULT_RETRY_INTERVAL 10 // seconds
@@ -224,6 +225,7 @@ static int
 vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
 			       enum attr_type type, struct attr *attr)
 {
+	struct attr * active=NULL;
 	switch (type) {
 	case attr_position_height:
 		attr->u.numd = &priv->height;
@@ -249,10 +251,11 @@ vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
 			return 0;
 		break;
 	case attr_active:
-	       if ( priv->watch)
-		 attr->u.num=1;
-	       else
-		 attr->u.num=0;
+	  active = attr_search(priv->attrs,NULL,attr_active);
+	  if(active != NULL && active->u.num == 1)
+	    return 1;
+	  else
+	    return 0;
 	       break;
 	default:
 		return 0;
@@ -298,6 +301,7 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 	}
 	ret->cbl = cbl;
 	*meth = vehicle_gpsd_methods;
+	ret->attrs = attrs;
 	vehicle_gpsd_open(ret);
 	return ret;
 }
