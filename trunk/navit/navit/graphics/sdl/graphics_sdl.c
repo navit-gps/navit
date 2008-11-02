@@ -1498,7 +1498,104 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
     }
 }
 
-static struct graphics_methods graphics_methods;
+static void overlay_disable(struct graphics_priv *gr, int disable)
+{
+    gr->overlay_enable = !disable;
+}
+
+static void
+register_keypress_callback(struct graphics_priv *this,
+                            void (*callback)(void *data, char *key),
+                            void *data)
+{
+    this->keypress_callback=callback;
+    this->keypress_callback_data=data;
+}
+
+static void
+register_resize_callback(struct graphics_priv *this, void (*callback)(void *data, int w, int h), void *data)
+{
+	this->resize_callback=callback;
+	this->resize_callback_data=data;
+    this->resize_callback_initial=1;
+}
+
+static void
+register_motion_callback(struct graphics_priv *this, void (*callback)(void *data, struct point *p), void *data)
+{
+	this->motion_callback=callback;
+	this->motion_callback_data=data;
+}
+
+static void
+register_button_callback(struct graphics_priv *this, void (*callback)(void *data, int press, int button, struct point *p), void *data)
+{
+	this->button_callback=callback;
+	this->button_callback_data=data;
+}
+
+static struct graphics_priv *
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h);
+
+static int window_fullscreen(struct window *win, int on)
+{
+    /* TODO */
+    return 0;
+}
+
+static struct window sdl_win =
+{
+    NULL,
+    window_fullscreen
+
+};
+
+static void *
+get_data(struct graphics_priv *this, char *type)
+{
+    printf("get_data: %s\n", type);
+
+    if(strcmp(type, "window") == 0)
+    {
+        return &sdl_win;
+    }
+    else
+    {
+    	return &dummy;
+    }
+}
+
+static void draw_drag(struct graphics_priv *gr, struct point *p)
+{
+	// FIXME
+}
+
+static struct graphics_methods graphics_methods = {
+	graphics_destroy,
+	draw_mode,
+	draw_lines,
+	draw_polygon,
+	draw_rectangle,
+	draw_circle,
+	draw_text,
+	draw_image,
+	draw_image_warp,
+	draw_restore,
+	draw_drag,
+	font_new,
+	gc_new,
+	background_gc,
+	overlay_new,
+	image_new,
+	get_data,
+//	register_resize_callback,
+//	register_button_callback,
+//	register_motion_callback,
+	image_free,
+	get_text_bbox,
+	overlay_disable,
+//	register_keypress_callback
+};
 
 static struct graphics_priv *
 overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
@@ -1573,99 +1670,6 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 
     return ov;
 }
-
-static void overlay_disable(struct graphics_priv *gr, int disable)
-{
-    gr->overlay_enable = !disable;
-}
-
-
-static int window_fullscreen(struct window *win, int on)
-{
-    /* TODO */
-    return 0;
-}
-
-static struct window sdl_win =
-{
-    NULL,
-    window_fullscreen
-
-};
-
-static void *
-get_data(struct graphics_priv *this, char *type)
-{
-    printf("get_data: %s\n", type);
-
-    if(strcmp(type, "window") == 0)
-    {
-        return &sdl_win;
-    }
-    else
-    {
-    	return &dummy;
-    }
-}
-
-
-
-static void
-register_resize_callback(struct graphics_priv *this, void (*callback)(void *data, int w, int h), void *data)
-{
-	this->resize_callback=callback;
-	this->resize_callback_data=data;
-    this->resize_callback_initial=1;
-}
-
-static void
-register_motion_callback(struct graphics_priv *this, void (*callback)(void *data, struct point *p), void *data)
-{
-	this->motion_callback=callback;
-	this->motion_callback_data=data;
-}
-
-static void
-register_button_callback(struct graphics_priv *this, void (*callback)(void *data, int press, int button, struct point *p), void *data)
-{
-	this->button_callback=callback;
-	this->button_callback_data=data;
-}
-
-static void
-register_keypress_callback(struct graphics_priv *this,
-                            void (*callback)(void *data, char *key),
-                            void *data)
-{
-    this->keypress_callback=callback;
-    this->keypress_callback_data=data;
-}
-
-static struct graphics_methods graphics_methods = {
-	graphics_destroy,
-	draw_mode,
-	draw_lines,
-	draw_polygon,
-	draw_rectangle,
-	draw_circle,
-	draw_text,
-	draw_image,
-	draw_image_warp,
-	draw_restore,
-	font_new,
-	gc_new,
-	background_gc,
-	overlay_new,
-	image_new,
-	get_data,
-	register_resize_callback,
-	register_button_callback,
-	register_motion_callback,
-	image_free,
-	get_text_bbox,
-	overlay_disable,
-	register_keypress_callback
-};
 
 
 #ifdef LINUX_TOUCHSCREEN
