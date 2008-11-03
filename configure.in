@@ -331,7 +331,7 @@ AC_CHECK_HEADER(
 		Define to 1 if you have the <GL/glut.h> header file.
 		)
 		glut=yes,
-	AC_MSG_WARN([*** no GL/glut.h -- opengl and SDL support disabled];graphics_opengl=no;graphics_opengl_reason="Headers missing")
+	AC_MSG_WARN([*** no GL/glut.h -- opengl and SDL support disabled]);graphics_opengl=no;graphics_opengl_reason="Headers missing"
 )
 
 AC_SUBST(OPENGL_CFLAGS)
@@ -716,6 +716,7 @@ NAVIT_CFLAGS="$NAVIT_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS"
 NAVIT_LIBS="$NAVIT_LIBS $GLIB_LIBS $GMODULE_LIBS $LIBINTL"
 AC_SUBST(NAVIT_CFLAGS)
 AC_SUBST(NAVIT_LIBS)
+AC_SUBST(WINDRES)
 
 AC_CONFIG_FILES([
 Makefile
