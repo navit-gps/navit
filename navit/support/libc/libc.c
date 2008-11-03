@@ -80,3 +80,8 @@ localeconv(void)
 {
 	return &localedata;
 }
+
+void
+alarm(void)
+{
+}

@@ -44,6 +44,8 @@ endif
 if !PLUGINS
   navit_SOURCES += builtin.c
   navit_LDADD += $(wildcard $(top_builddir)/navit/*/*/*.la)
+  osm2navit_SOURCES += support-builtin.c
+  osm2navit_LDADD += $(wildcard $(top_builddir)/navit/support/*/*.la)
 endif
 
 if SUPPORT_WIN32
@@ -75,3 +77,9 @@ builtin.c: $(top_builddir)/config.h
 	echo "void builtin_init(void) {" >>builtin.c
 	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/.la/_init();/" -e "s/.*\\/lib/	module_/" >>builtin.c
 	echo "}" >>builtin.c
+support-builtin.c: $(top_builddir)/config.h
+	ls $(top_builddir)/navit/support/*/*.la | sed -e "s/.la/_init(void);/" -e "s/.*lib/extern void module_/" >support-builtin.c
+	echo "extern void builtin_init(void);" >>support-builtin.c
+	echo "void builtin_init(void) {" >>support-builtin.c
+	ls $(top_builddir)/navit/support/*/*.la | sed -e "s/.la/_init();/" -e "s/.*\\/lib/	module_/" >>support-builtin.c
+	echo "}" >>support-builtin.c
