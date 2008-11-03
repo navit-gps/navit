@@ -2829,7 +2829,7 @@ int main(int argc, char **argv)
 			fclose(ways_split);
 			fclose(ways);
 			if(!keep_tmpfiles)
-				remove("ways.tmp");
+				unlink("ways.tmp");
 		} else
 			fprintf(stderr,"PROGRESS: Skipping Phase 2\n");
 	}
@@ -2896,10 +2896,10 @@ int main(int argc, char **argv)
 		if (ways_split)
 			fclose(ways_split);
 		if(!keep_tmpfiles) {
-			remove("nodes.tmp");
-			remove("ways_split.tmp");
-			remove("tilesdir.tmp");
-			remove("zipdir.tmp");
+			unlink("nodes.tmp");
+			unlink("ways_split.tmp");
+			unlink("tilesdir.tmp");
+			unlink("zipdir.tmp");
 #ifdef GENERATE_INDEX
 			remove_countryfiles();
 #endif
