@@ -786,6 +786,7 @@ navigation_update(struct navigation *this_, struct route *route)
 				dbg(2,"wrong direction\n");
 				itm=NULL;
 			}
+			navigation_destroy_itms_cmds(this_, itm);
 			if (itm) {
 				navigation_itm_update(itm, ritem);
 				break;
