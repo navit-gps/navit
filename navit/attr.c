@@ -192,8 +192,14 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 	}
 	if (type >= attr_type_string_begin && type <= attr_type_string_end) {
 		if (map) {
-			char *mstr=map_convert_string(map, attr->u.str);
-			ret=g_strdup(mstr);
+			char *mstr;
+			if (attr->u.str) {
+				mstr=map_convert_string(map, attr->u.str);
+				ret=g_strdup(mstr);
+				map_convert_free(mstr);
+			} else
+				ret=g_strdup("(null)");
+			
 		} else
 			ret=g_strdup(attr->u.str);
 		return ret;

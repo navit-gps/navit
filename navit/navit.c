@@ -968,10 +968,13 @@ navit_window_roadbook_update(struct navit *this_)
 		while ((item=map_rect_get_item(mr))) {
 			dbg(0,"item=%p\n", item);
 			attr.u.str=NULL;
-			item_attr_get(item, attr_navigation_long, &attr);
-			dbg(2, "Command='%s'\n", attr.u.str);
+			if (item->type != type_nav_position) {
+				item_attr_get(item, attr_navigation_long, &attr);
+				dbg(2, "Command='%s'\n", attr.u.str);
+				param[0].value=g_strdup(attr.u.str);
+			} else
+				param[0].value=_("Position");
 			param[0].name=_("Command");
-			param[0].value=g_strdup(attr.u.str);
 
 			item_attr_get(item, attr_length, &attr);
 			dbg(2, "Length=%d\n", attr.u.num);
@@ -1741,6 +1744,10 @@ navit_set_position(struct navit *this_, struct pcoord *c)
 		callback_list_call_attr_0(this_->attr_cbl, attr_position);
 		if (this_->navigation) {
 			navigation_update(this_->navigation, this_->route);
+#if 0
+			map_dump_file(route_get_map(this_->route), "route.txt");
+			map_dump_file(navigation_get_map(this_->navigation), "navigation.txt");
+#endif
 		}
 	}
 	navit_draw(this_);
