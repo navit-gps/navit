@@ -586,9 +586,13 @@ AC_SUBST(INTLIBS)
 AC_SUBST(MOFILES)
 AC_SUBST(POFILES)
 AM_GNU_GETTEXT_VERSION
-AM_GNU_GETTEXT(no-libtool, need-ngettext)
+AM_GNU_GETTEXT(no-libtool, need-ngettext, \$(top_builddir)/intl/)
 AC_SUBST(LIBINTL)
 AC_SUBST(LTLIBINTL)
+if test x"$LIBINTL" != "x" ;then
+	CFLAGS="$CFLAGS -I\$(top_builddir)/intl/"
+fi
+
 fi
 AM_CONDITIONAL(ENABLE_NLS, [test "x$enable_nls" = "xyes"])
 AC_CHECK_HEADER(
