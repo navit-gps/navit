@@ -1571,9 +1571,9 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	dbg(1,"start->value=%d 0x%x,0x%x\n", start->value, start->c.x, start->c.y);
 	dbg(1,"dst sd->flags=%d sd->c[0]=0x%x,0x%x sd->c[sd->count-1]=0x%x,0x%x\n", sd->flags, sd->c[0].x,sd->c[0].y, sd->c[sd->count-1].x, sd->c[sd->count-1].y);
 	if (start->c.x == sd->c[0].x && start->c.y == sd->c[0].y) { /* Adding a final segment to reach the destination within the destination street */
-		route_path_add_item(ret, &sd->item, dst->lenneg, &dst->lp, sd->c, dst->pos+1, NULL, -1);
+		route_path_add_item(ret, &sd->item, dst->lenneg, NULL, sd->c, dst->pos+1, &dst->lp, 1);
 	} else if (start->c.x == sd->c[sd->count-1].x && start->c.y == sd->c[sd->count-1].y) {
-		route_path_add_item(ret, &sd->item, dst->lenpos, &dst->lp, sd->c+dst->pos+1, sd->count-dst->pos-1, NULL, 1);
+		route_path_add_item(ret, &sd->item, dst->lenpos, NULL, sd->c+dst->pos+1, sd->count-dst->pos-1, &dst->lp, -1);
 	} else {
 		printf("no route found\n");
 		route_path_destroy(ret);
