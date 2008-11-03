@@ -579,7 +579,7 @@ map_priv_is(struct map *map, struct map_priv *priv)
 }
 
 void
-map_dump(struct map *map)
+map_dump_filedesc(struct map *map, FILE *out)
 {
 	struct map_rect *mr=map_rect_new(map, NULL);
 	struct item *item;
@@ -590,14 +590,29 @@ map_dump(struct map *map)
 	while ((item = map_rect_get_item(mr))) {
 		count=item_coord_get(item, ca, item->type < type_line ? 1: max);
 		if (item->type < type_line) 
-			printf("mg:0x%x 0x%x ", ca[0].x, ca[0].y);
-		printf("%s", item_to_name(item->type));
+			fprintf(out,"mg:0x%x 0x%x ", ca[0].x, ca[0].y);
+		fprintf(out,"%s", item_to_name(item->type));
 		while (item_attr_get(item, attr_any, &attr)) 
-			printf(" %s='%s'", attr_to_name(attr.type), attr_to_text(&attr, map, 1));
-		printf("\n");
+			fprintf(out," %s='%s'", attr_to_name(attr.type), attr_to_text(&attr, map, 1));
+		fprintf(out,"\n");
 		if (item->type >= type_line)
 			for (i = 0 ; i < count ; i++)
-				printf("mg:0x%x 0x%x\n", ca[i].x, ca[i].y);
+				fprintf(out,"mg:0x%x 0x%x\n", ca[i].x, ca[i].y);
 	}
 	map_rect_destroy(mr);
+}
+
+void
+map_dump_file(struct map *map, char *file)
+{
+	FILE *f;
+	f=fopen(file,"w");
+	map_dump_filedesc(map, f);
+	fclose(f);
+}
+
+void
+map_dump(struct map *map)
+{
+	map_dump_filedesc(map, stdout);
 }
