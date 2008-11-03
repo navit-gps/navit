@@ -133,7 +133,7 @@ struct navigation_itm {
 	int straight;
 	int angle_start;
 	int angle_end;
-	struct coord c;
+	struct coord start,end;
 	int time;
 	int length;
 	int dest_time;
@@ -317,9 +317,13 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 		ret->angle_start=road_angle(&c[0], &c[1], 0);
 		ret->angle_end=road_angle(&c[i-1], &c[i], 0);
 
-		ret->c=c[0];
+		ret->start=c[0];
+		ret->end=c[i];
 		dbg(1,"i=%d start %d end %d '%s' '%s'\n", i, ret->angle_start, ret->angle_end, ret->name1, ret->name2);
 		map_rect_destroy(mr);
+	} else {
+		if (this_->last)
+			ret->start=ret->end=this_->last->end;
 	}
 	if (! this_->first)
 		this_->first=ret;
@@ -758,7 +762,7 @@ navigation_update(struct navigation *this_, struct route *route)
 	struct item *sitem;			/* Holds the corresponding item from the actual map */
 	struct attr street_item,street_direction;
 	struct navigation_itm *itm;
-	int incr=0;
+	int incr=0,first=1;
 
 	if (! route)
 		return;
@@ -769,39 +773,32 @@ navigation_update(struct navigation *this_, struct route *route)
 	if (! mr)
 		return;
 	dbg(1,"enter\n");
-	ritem=map_rect_get_item(mr);
-	if (ritem) {
-		if (!item_attr_get(ritem, attr_street_item, &street_item)) {
-			ritem=map_rect_get_item(mr);
-			if (! ritem) {
-				return;
+	while ((ritem=map_rect_get_item(mr))) {
+		if (first && item_attr_get(ritem, attr_street_item, &street_item)) {
+			first=0;
+			if (!item_attr_get(ritem, attr_direction, &street_direction))
+				street_direction.u.num=0;
+			sitem=street_item.u.item;
+			dbg(1,"sitem=%p\n", sitem);
+			itm=item_hash_lookup(this_->hash, sitem);
+			dbg(2,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
+			if (itm && itm->direction != street_direction.u.num) {
+				dbg(2,"wrong direction\n");
+				itm=NULL;
 			}
-			if (!item_attr_get(ritem, attr_street_item, &street_item)) {
-				dbg(0,"no street item\n");
-			}	
-		}
-		if (!item_attr_get(ritem, attr_direction, &street_direction))
-			street_direction.u.num=0;
-		sitem=street_item.u.item;
-		dbg(1,"sitem=%p\n", sitem);
-		itm=item_hash_lookup(this_->hash, sitem);
-		dbg(2,"itm for item with id (0x%x,0x%x) is %p\n", sitem->id_hi, sitem->id_lo, itm);
-		if (itm && itm->direction != street_direction.u.num) {
-			dbg(2,"wrong direction\n");
-			itm=NULL;
-		}
-		navigation_destroy_itms_cmds(this_, itm);
-		if (itm) {
-			incr=1;
-			navigation_itm_update(itm, ritem);
-		} else {
+			if (itm) {
+				navigation_itm_update(itm, ritem);
+				break;
+			}
 			dbg(1,"not on track\n");
-			do {
-				dbg(1,"item\n");
-				navigation_itm_new(this_, ritem);
-				ritem=map_rect_get_item(mr);
-			} while (ritem);
-			itm=navigation_itm_new(this_, NULL);
+		}
+		navigation_itm_new(this_, ritem);
+	}
+	if (first) 
+		navigation_destroy_itms_cmds(this_, NULL);
+	else {
+		if (! ritem) {
+			navigation_itm_new(this_, NULL);
 			make_maneuvers(this_);
 		}
 		calculate_dest_distance(this_, incr);
@@ -818,79 +815,8 @@ navigation_update(struct navigation *this_, struct route *route)
 		this_->distance_last=this_->first->dest_length;
 		profile(0,"end");
 		navigation_call_callbacks(this_, FALSE);
-	} else
-		navigation_destroy_itms_cmds(this_, NULL);
+	}
 	map_rect_destroy(mr);
-	
-#if 0
-	struct route_path_handle *rph;
-	struct route_path_segment *s;
-	struct navigation_itm *itm;
-	struct route_info *pos,*dst;
-	struct street_data *sd;
-	int *speedlist;
-	int len,end_flag=0;
-	int incr;
-
-	profile(0,NULL);
-	pos=route_get_pos(route);
-	dst=route_get_dst(route);
-	if (! pos || ! dst)
-		return;
-	speedlist=route_get_speedlist(route);
-	len=route_info_length(pos, dst, 0);
-	dbg(2,"len pos,dst = %d\n", len);
-	if (len == -1) {
-		len=route_info_length(pos, NULL, 0);
-		dbg(2,"len pos = %d\n", len);
-		end_flag=1;
-	}
-	sd=route_info_street(pos);
-	itm=item_hash_lookup(this_->hash, &sd->item);
-	dbg(2,"itm for item with id (0x%x,0x%x) is %p\n", sd->item.id_hi, sd->item.id_lo, itm);
-	navigation_destroy_itms_cmds(this_, itm);
-	if (itm) 
-		incr=1;
-	else {
-		itm=navigation_itm_new(this_, &sd->item, route_info_point(pos, -1));
-		incr=0;
-	}
-	itm->length=len;
-	itm->time=route_time(speedlist, &sd->item, len);
-	dbg(2,"%p time = %d\n", itm, itm->time);
-	if (!incr) {
-		printf("not on track\n");
-		rph=route_path_open(route);
-		if (rph) {
-			while((s=route_path_get_segment(rph))) {
-				itm=navigation_itm_new(this_, route_path_segment_get_item(s),route_path_segment_get_start(s));
-				itm->time=route_path_segment_get_time(s);
-				itm->length=route_path_segment_get_length(s);
-			}
-			route_path_close(rph);
-		}
-		if (end_flag) {
-			len=route_info_length(NULL, dst, 0);
-			dbg(1, "end %d\n", len);
-			sd=route_info_street(dst);
-			itm=navigation_itm_new(this_, &sd->item, route_info_point(pos, 2));
-			itm->length=len;
-			itm->time=route_time(speedlist, &sd->item, len);
-		}
-		itm=navigation_itm_new(this_, NULL, NULL);
-		make_maneuvers(this_);
-	}
-	calculate_dest_distance(this_, incr);
-	dbg(2,"destination distance old=%d new=%d\n", this_->distance_last, this_->first->dest_length);
-	if (this_->first->dest_length > this_->distance_last && this_->distance_last >= 0) 
-		this_->turn_around=1;
-	else
-		this_->turn_around=0;
-	dbg(2,"turn_around=%d\n", this_->turn_around);
-	this_->distance_last=this_->first->dest_length;
-	profile(0,"end");
-	navigation_call_callbacks(this_, FALSE);
-#endif
 }
 
 void
@@ -968,7 +894,7 @@ navigation_map_item_coord_get(void *priv_data, struct coord *c, int count)
 	struct map_rect_priv *this=priv_data;
 	if (this->ccount || ! count)
 		return 0;
-	*c=this->itm->c;
+	*c=this->itm->start;
 	this->ccount=1;
 	return 1;
 }
@@ -1045,11 +971,13 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 	case attr_street_name:
 		attr->u.str=itm->name1;
 		this_->attr_next=attr_street_name_systematic;
-		return 1;
+		if (attr->u.str)
+			return 1;
 	case attr_street_name_systematic:
 		attr->u.str=itm->name2;
 		this_->attr_next=attr_debug;
-		return 1;
+		if (attr->u.str)
+			return 1;
 	case attr_debug:
 		switch(this_->debug_idx) {
 		case 0:
@@ -1080,8 +1008,10 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 			}
 		case 5:
 			this_->debug_idx++;
-			this_->str=attr->u.str=g_strdup_printf("prev angle:%d - %d", prev->angle_start, prev->angle_end);
-			return 1;
+			if (prev) {
+				this_->str=attr->u.str=g_strdup_printf("prev angle:%d - %d", prev->angle_start, prev->angle_end);
+				return 1;
+			}
 		case 6:
 			this_->debug_idx++;
 			if (prev) {
@@ -1153,36 +1083,43 @@ navigation_map_get_item(struct map_rect_priv *priv)
 	priv->itm=priv->itm_next;
 	priv->cmd=priv->cmd_next;
 	priv->cmd_itm=priv->cmd_itm_next;
-	if (!priv->show_all) {
+	if (!priv->show_all && priv->itm->prev != NULL) {
 		if (!priv->cmd)
 			return NULL;
 		priv->itm=priv->cmd->itm;
 	}
 	priv->itm_next=priv->itm->next;
-	ret->type=type_nav_none;
+	if (priv->itm->prev)
+		ret->type=type_nav_none;
+	else
+		ret->type=type_nav_position;
 	if (priv->cmd->itm == priv->itm) {
 		priv->cmd_itm_next=priv->cmd->itm;
 		priv->cmd_next=priv->cmd->next;
-		delta=priv->cmd->delta;	
-		if (delta < 0) {
-			delta=-delta;
-			if (delta < 45)
-				ret->type=type_nav_left_1;
-			else if (delta < 105)
-				ret->type=type_nav_left_2;
-			else if (delta < 165) 
-				ret->type=type_nav_left_3;
-			else
-				ret->type=type_none;
-		} else {
-			if (delta < 45)
-				ret->type=type_nav_right_1;
-			else if (delta < 105)
-				ret->type=type_nav_right_2;
-			else if (delta < 165) 
-				ret->type=type_nav_right_3;
-			else
-				ret->type=type_none;
+		if (priv->cmd_itm_next && !priv->cmd_itm_next->next)
+			ret->type=type_nav_destination;
+		else {
+			delta=priv->cmd->delta;	
+			if (delta < 0) {
+				delta=-delta;
+				if (delta < 45)
+					ret->type=type_nav_left_1;
+				else if (delta < 105)
+					ret->type=type_nav_left_2;
+				else if (delta < 165) 
+					ret->type=type_nav_left_3;
+				else
+					ret->type=type_none;
+			} else {
+				if (delta < 45)
+					ret->type=type_nav_right_1;
+				else if (delta < 105)
+					ret->type=type_nav_right_2;
+				else if (delta < 165) 
+					ret->type=type_nav_right_3;
+				else
+					ret->type=type_none;
+			}
 		}
 	}
 	priv->ccount=0;

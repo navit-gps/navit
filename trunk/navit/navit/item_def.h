@@ -274,6 +274,8 @@ ITEM(poi_toilets)
 ITEM(poi_viewpoint)
 ITEM(poi_ruins)
 ITEM(nav_none)
+ITEM(nav_position)
+ITEM(nav_destination)
 /* Line */
 ITEM2(0x80000000,line)
 ITEM2(0x80000001,line_unspecified)
