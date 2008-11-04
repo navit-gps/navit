@@ -263,7 +263,7 @@ struct icon *
 icon_new(struct attr *parent, struct attr **attrs)
 {
 	struct element *e;
-	struct attr *src;
+	struct attr *src,*w,*h;
 	src=attr_search(attrs, NULL, attr_src);
 	if (! src)
 		return NULL;
@@ -271,6 +271,14 @@ icon_new(struct attr *parent, struct attr **attrs)
 	e = g_malloc0(sizeof(*e)+strlen(src->u.str)+1);
 	e->type=element_icon;
 	e->u.icon.src=(char *)(e+1);
+	if (w=attr_search(attrs, NULL, attr_w))
+		e->u.icon.width=w->u.num;
+	else
+		e->u.icon.width=-1;
+	if (h=attr_search(attrs, NULL, attr_h))
+		e->u.icon.height=h->u.num;
+	else
+		e->u.icon.height=-1;
 	strcpy(e->u.icon.src,src->u.str);
 
 	return (struct icon *)e;	
