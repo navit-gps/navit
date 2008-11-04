@@ -711,7 +711,7 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 				case element_icon:
 					if (!img) {
 						sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
-						img=graphics_image_new(gra, path);
+						img=graphics_image_new_scaled(gra, path, e->u.icon.width, e->u.icon.height);
 						if (! img)
 							dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
 					}
