@@ -53,6 +53,8 @@
 #include "layout.h"
 #include "log.h"
 #include "attr.h"
+#include "event.h"
+#include "file.h"
 #include "navit_nls.h"
 
 /**
@@ -116,7 +118,7 @@ struct navit {
 	GHashTable *bookmarks_hash;
 	struct point pressed, last, current;
 	int button_pressed,moved,popped;
-	struct event_timer *button_timeout, *motion_timeout;
+	struct event_timeout *button_timeout, *motion_timeout;
 	struct callback *motion_timeout_callback;
 	int ignore_button;
 	struct log *textfile_debug_log;
@@ -231,7 +233,7 @@ navit_popup(void *data)
 }
 
 
-int
+void
 navit_ignore_button(struct navit *this_)
 {
 	this_->ignore_button=1;
@@ -242,7 +244,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 {
 	int border=16;
 
-	callback_list_call_attr_4(this_->attr_cbl, attr_button, this_, pressed, button, p);
+	callback_list_call_attr_4(this_->attr_cbl, attr_button, this_, (void *)pressed, (void *)button, p);
 	if (this_->ignore_button) {
 		this_->ignore_button=0;
 		return 0;
@@ -300,7 +302,7 @@ navit_button(void *data, int pressed, int button, struct point *p)
 {
 	struct navit *this=data;
 	if (! this->popup_callback)
-		this->popup_callback=callback_new_1(navit_popup, this);
+		this->popup_callback=callback_new_1(callback_cast(navit_popup), this);
 	navit_handle_button(this, pressed, button, p, this->popup_callback);
 }
 
@@ -482,8 +484,8 @@ navit_new(struct attr *parent, struct attr **attrs)
 	transform_setup(this_->trans, &center, zoom, 0);
 	this_->displaylist=graphics_displaylist_new();
 	this_->commands=g_hash_table_new(g_str_hash, g_str_equal);
-	navit_command_register(this_, "zoom_in", callback_new_3(navit_zoom_in, this_, 2, NULL));
-	navit_command_register(this_, "zoom_out", callback_new_3(navit_zoom_out, this_, 2, NULL));
+	navit_command_register(this_, "zoom_in", callback_new_3(callback_cast(navit_zoom_in), this_, (void *)2, NULL));
+	navit_command_register(this_, "zoom_out", callback_new_3(callback_cast(navit_zoom_out), this_, (void *)2, NULL));
 	return this_;
 }
 
@@ -510,11 +512,11 @@ navit_set_graphics(struct navit *this_, struct graphics *gra)
 	if (this_->gra)
 		return 0;
 	this_->gra=gra;
-	this_->resize_callback=callback_new_attr_1(navit_resize, attr_resize, this_);
+	this_->resize_callback=callback_new_attr_1(callback_cast(navit_resize), attr_resize, this_);
 	graphics_add_callback(gra, this_->resize_callback);
-	this_->button_callback=callback_new_attr_1(navit_button, attr_button, this_);
+	this_->button_callback=callback_new_attr_1(callback_cast(navit_button), attr_button, this_);
 	graphics_add_callback(gra, this_->button_callback);
-	this_->motion_callback=callback_new_attr_1(navit_motion, attr_motion, this_);
+	this_->motion_callback=callback_new_attr_1(callback_cast(navit_motion), attr_motion, this_);
 	graphics_add_callback(gra, this_->motion_callback);
 	return 1;
 }
@@ -542,7 +544,7 @@ navit_projection_set(struct navit *this_, enum projection pro)
  * @param limit Limits the number of entries in the "backlog". Set to 0 for "infinite"
  */
 static void
-navit_append_coord(struct navit *this_, char *file, struct pcoord *c, char *type, char *description, GHashTable *h, int limit)
+navit_append_coord(struct navit *this_, char *file, struct pcoord *c, const char *type, const char *description, GHashTable *h, int limit)
 {
 	FILE *f;
 	int offset=0;
@@ -551,7 +553,6 @@ navit_append_coord(struct navit *this_, char *file, struct pcoord *c, char *type
 	int numc,readc;
 	int fd;
 	const char *prostr;
-	struct callback *cb;
 
 	f=fopen(file, "r");
 	if (!f)
@@ -623,41 +624,6 @@ new_file:
 	}
 }
 
-static int
-parse_line(FILE *f, char *buffer, char **name, struct pcoord *c)
-{
-	int pos;
-	char *s,*i;
-	struct coord co;
-	char *cp;
-	enum projection pro = projection_mg;
-	*name=NULL;
-	if (! fgets(buffer, 2048, f))
-		return -3;
-	cp = buffer;
-	pos=coord_parse(cp, pro, &co);
-	if (!pos)
-		return -2;
-	if (!cp[pos] || cp[pos] == '\n')
-		return -1;
-	cp[strlen(cp)-1]='\0';
-	s=cp+pos+1;
-	if (!strncmp(s,"type=", 5)) {
-		i=strchr(s, '"');
-		if (i) {
-			s=i+1;
-			i=strchr(s, '"');
-			if (i)
-				*i='\0';
-		}
-	}
-	*name=s;
-	c->x = co.x;
-	c->y = co.y;
-	c->pro = pro;
-	return pos;
-}
-
 /*
  * navit_get_user_data_directory
  * 
@@ -673,8 +639,8 @@ navit_get_user_data_directory(gboolean create) {
 	if (create && !file_exists(dir)) {
 		dbg(0,"creating dir %s\n", dir);
 		if (file_mkdir(dir,0)) {
-			perror(dir);
-			return;
+			dbg(0,"failed creating dir %s\n", dir);
+			return NULL;
 		}
 	}
 
@@ -861,7 +827,7 @@ navit_former_destinations_active(struct navit *this_)
 	char buffer[3];
 	f=fopen(destination_file,"r");
 	if (f) {
-		if(!fseek(f, -2, SEEK_END) && fread(buffer, 2, 1, f) == 1 && buffer[0]!='\n' || buffer[1]!='\n') 
+		if(!fseek(f, -2, SEEK_END) && fread(buffer, 2, 1, f) == 1 && (buffer[0]!='\n' || buffer[1]!='\n')) 
 			active=1;
 		fclose(f);
 	}
@@ -1833,7 +1799,7 @@ navit_block(struct navit *this_, int block)
 {
 	if (block) {
 		this_->blocked |= 1;
-		return;
+		return 0;
 	}
 	if (this_->blocked & 2) {
 		this_->blocked=0;
@@ -1872,6 +1838,7 @@ navit_command_call(struct navit *this_, char *command)
 	if (! cb)
 		return 1;
 	callback_call_1(cb, command);
+	return 0;
 }
 
 void

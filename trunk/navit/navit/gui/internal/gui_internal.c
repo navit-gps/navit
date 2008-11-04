@@ -615,11 +615,11 @@ gui_internal_button_navit_attr_new(struct gui_priv *this, char *text, enum flags
 		ret->on=*on;
 	if (off)
 		ret->off=*off;
-	ret->get_attr=navit_get_attr;
-	ret->set_attr=navit_set_attr;
-	ret->remove_cb=navit_remove_callback;
+	ret->get_attr=(int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))navit_get_attr;
+	ret->set_attr=(int (*)(void *, struct attr *))navit_set_attr;
+	ret->remove_cb=(void (*)(void *, struct callback *))navit_remove_callback;
 	ret->instance=this->nav;
-	ret->cb=callback_new_attr_2(gui_internal_button_attr_callback, on->type, this, ret);
+	ret->cb=callback_new_attr_2(callback_cast(gui_internal_button_attr_callback), on->type, this, ret);
 	navit_add_callback(this->nav, ret->cb);
 	gui_internal_button_attr_update(this, ret);
 	return ret;
@@ -636,12 +636,12 @@ gui_internal_button_map_attr_new(struct gui_priv *this, char *text, enum flags f
 	if (off)
 		ret->off=*off;
 	ret->deflt=deflt;
-	ret->get_attr=map_get_attr;
-	ret->set_attr=map_set_attr;
-	ret->remove_cb=map_remove_callback;
+	ret->get_attr=(int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))map_get_attr;
+	ret->set_attr=(int (*)(void *, struct attr *))map_set_attr;
+	ret->remove_cb=(void (*)(void *, struct callback *))map_remove_callback;
 	ret->instance=map;
 	ret->redraw=1;
-	ret->cb=callback_new_attr_2(gui_internal_button_attr_callback, on->type, this, ret);
+	ret->cb=callback_new_attr_2(callback_cast(gui_internal_button_attr_callback), on->type, this, ret);
 	map_add_callback(map, ret->cb);
 	gui_internal_button_attr_update(this, ret);
 	return ret;
@@ -1483,8 +1483,6 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c)
 static struct widget *
 gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, int dist)
 {
-	char coordbuf[64];
-	struct param_list param[5];
 	char distbuf[32];
 	char dirbuf[32];
 	char *type;
@@ -1513,8 +1511,8 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 static gint
 gui_internal_cmd_pois_sort_num(gconstpointer a, gconstpointer b, gpointer user_data)
 {
-	struct widget *wa=a;
-	struct widget *wb=b;
+	const struct widget *wa=a;
+	const struct widget *wb=b;
 	struct widget *wac=wa->children->data;
 	struct widget *wbc=wb->children->data;
 	int ia,ib;
@@ -1640,7 +1638,6 @@ gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm)
 static void
 gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm)
 {
-	struct widget *w,*wb;
 	struct map_rect *mr;
 	struct item *item;
 	struct attr attr;
@@ -1682,10 +1679,10 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 	struct coord_geo g;
 	struct coord c;
 	char *coord,*name;
-	int display_attributes=(wm->data == 2);
-	int display_view_on_map=(wm->data != 1);
-	int display_items=(wm->data == 1);
-	int display_streets=(wm->data == 3);
+	int display_attributes=(wm->data == (void *)2);
+	int display_view_on_map=(wm->data != (void *)1);
+	int display_items=(wm->data == (void *)1);
+	int display_streets=(wm->data == (void *)3);
 
 #if 0
 	switch ((int)wm->data) {
@@ -1956,7 +1953,7 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 {
 	GList *l;
 	gui_internal_widget_children_destroy(this, this->list);
-	char *text, *name;
+	char *text=NULL, *name=NULL;
 	dbg(0,"%s now '%s'\n", wm->name, wm->text);
 	if (wm->text && g_utf8_strlen(wm->text, -1) >= 2) {
 		struct attr search_attr;
@@ -2540,6 +2537,7 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 	struct attr attr,attrp;
 
 	this->ignore_button=ignore;
+	this->clickp_valid=this->vehicle_valid=0;
 
 	navit_block(this->nav, 1);
 	graphics_overlay_disable(gra, 1);
@@ -2630,7 +2628,7 @@ static void gui_internal_resize(void *data, int w, int h)
 	struct gui_priv *this=data;
 	this->root.w=w;
 	this->root.h=h;
-	dbg(0,"w=%d h=%d children=%p\n", w, h, this->root.children);
+	dbg(1,"w=%d h=%d children=%p\n", w, h, this->root.children);
 	navit_resize(this->nav, w, h);
 	if (this->root.children) {
 		gui_internal_prune_menu(this, NULL);
@@ -2773,6 +2771,9 @@ static void gui_internal_keypress(void *data, char *key)
 		case NAVIT_KEY_ZOOM_OUT:
 			navit_zoom_out(this->nav, 2, NULL);
 			break;
+		case NAVIT_KEY_RETURN:
+			gui_internal_cmd_menu(this, NULL, 0);
+			break;
 		}
 		return;
 	}
@@ -2828,13 +2829,13 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	this->gra=gra;
 	this->win=win;
 	transform_get_size(trans, &this->root.w, &this->root.h);
-	this->resize_cb=callback_new_attr_1(gui_internal_resize, attr_resize, this);
+	this->resize_cb=callback_new_attr_1(callback_cast(gui_internal_resize), attr_resize, this);
 	graphics_add_callback(gra, this->resize_cb);
-	this->button_cb=callback_new_attr_1(gui_internal_button, attr_button, this);
+	this->button_cb=callback_new_attr_1(callback_cast(gui_internal_button), attr_button, this);
 	graphics_add_callback(gra, this->button_cb);
-	this->motion_cb=callback_new_attr_1(gui_internal_motion, attr_motion, this);
+	this->motion_cb=callback_new_attr_1(callback_cast(gui_internal_motion), attr_motion, this);
 	graphics_add_callback(gra, this->motion_cb);
-	this->keypress_cb=callback_new_attr_1(gui_internal_keypress, attr_keypress, this);
+	this->keypress_cb=callback_new_attr_1(callback_cast(gui_internal_keypress), attr_keypress, this);
 	graphics_add_callback(gra, this->keypress_cb);
 	this->background=graphics_gc_new(gra);
 	graphics_gc_set_foreground(this->background, &cb);
@@ -2878,8 +2879,8 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 		this->menu_on_map_click=attr->u.num;
 	else
 		this->menu_on_map_click=1;
-	navit_command_register(nav,"gui_internal_menu",callback_new_3(gui_internal_cmd_menu,this,NULL,1));
-	navit_command_register(nav,"gui_internal_fullscreen",callback_new_2(gui_internal_cmd_fullscreen,this,NULL));
+	navit_command_register(nav,"gui_internal_menu",callback_new_3(callback_cast(gui_internal_cmd_menu),this,NULL,(void *)1));
+	navit_command_register(nav,"gui_internal_fullscreen",callback_new_2(callback_cast(gui_internal_cmd_fullscreen),this,NULL));
 
 	if( (attr=attr_search(attrs,NULL,attr_font_size)))
         {
@@ -3011,7 +3012,7 @@ void gui_internal_widget_table_add_row(struct widget * table,  struct widget *  
  * @param flags Sizing flags for the row
  * @returns The new table_row widget.
  */
-struct widget * gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags)
+static struct widget * gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags)
 {
 	struct widget * widget = g_new0(struct widget,1);
 	widget->type=widget_table_row;
@@ -3109,7 +3110,6 @@ static GList * gui_internal_compute_table_dimensions(struct widget * w)
 void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 {
   
-	struct widget * row_widget=NULL;
 	int height=0;
 	int width=0;
 	int count=0;
@@ -3180,7 +3180,6 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	GList * cur_row = NULL;
 	GList * current_desc=NULL;
 	struct table_data * table_data = (struct table_data*)w->data;
-	int idx=0;
 	int is_skipped=0;
 	struct table_column_desc * dim=NULL;
 	
