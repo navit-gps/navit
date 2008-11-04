@@ -48,6 +48,8 @@ struct element {
 		} circle;
 		struct element_icon {
 			char *src;
+			int width;
+			int height;
 		} icon;
 	} u;
 };
