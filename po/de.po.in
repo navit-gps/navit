@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Navit 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-04 16:39+0100\n"
+"POT-Creation-Date: 2008-11-04 16:56+0100\n"
 "PO-Revision-Date: 2008-05-27 22:03+0000\n"
 "Last-Translator: singesang <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -206,14 +206,17 @@ msgid "Roadbook"
 msgstr "Straßenliste"
 
 #: ../navit/popup.c:218 ../navit/popup.c:272
+#: ../navit/gui/internal/gui_internal.c:1751
 msgid "Set as position"
 msgstr "Als Position setzen"
 
 #: ../navit/popup.c:219 ../navit/popup.c:273
+#: ../navit/gui/internal/gui_internal.c:1747
 msgid "Set as destination"
 msgstr "Als Ziel setzen"
 
 #: ../navit/popup.c:220 ../navit/popup.c:274
+#: ../navit/gui/internal/gui_internal.c:1755
 msgid "Add as bookmark"
 msgstr "Als Lesezeichen aufnehmen"
 
@@ -1485,6 +1488,8 @@ msgstr "PLZ"
 
 #: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
 #: ../navit/gui/gtk/destination.c:121
+#: ../navit/gui/internal/gui_internal.c:1967
+#: ../navit/gui/internal/gui_internal.c:1974
 #: ../navit/gui/internal/gui_internal.c:2359
 msgid "Town"
 msgstr "Ort"
@@ -1497,6 +1502,8 @@ msgstr "Ortsteil"
 
 #: ../navit/gui/gtk/destination.c:120 ../navit/gui/gtk/destination.c:121
 #: ../navit/gui/gtk/destination.c:439
+#: ../navit/gui/internal/gui_internal.c:1969
+#: ../navit/gui/internal/gui_internal.c:1978
 msgid "Street"
 msgstr "Straße"
 
@@ -1548,6 +1555,7 @@ msgid "Former Destinations"
 msgstr "Letzte Ziele"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:184
+#: ../navit/gui/internal/gui_internal.c:1852
 #: ../navit/gui/internal/gui_internal.c:2335
 msgid "Bookmarks"
 msgstr "Lesezeichen"
@@ -1674,6 +1682,32 @@ msgstr "Zurück zur Karte"
 #: ../navit/gui/internal/gui_internal.c:1122
 msgid "Main Menu"
 msgstr "Hauptmenü"
+
+#: ../navit/gui/internal/gui_internal.c:1561
+#: ../navit/gui/internal/gui_internal.c:1760
+msgid "POIs"
+msgstr "POIs"
+
+#: ../navit/gui/internal/gui_internal.c:1717
+msgid "Streets"
+msgstr "Straßen"
+
+#: ../navit/gui/internal/gui_internal.c:1733
+msgid "View in Browser"
+msgstr "Im Browser anzeigen"
+
+#: ../navit/gui/internal/gui_internal.c:1739
+msgid "View Attributes"
+msgstr "Attribute anzeigen"
+
+#: ../navit/gui/internal/gui_internal.c:1774
+msgid "View on map"
+msgstr "Auf der Karte zeigen"
+
+#: ../navit/gui/internal/gui_internal.c:1888
+#, c-format
+msgid "Bookmark %s"
+msgstr "Lesezeichen %s"
 
 #: ../navit/gui/internal/gui_internal.c:2300
 msgid "Window Mode"
