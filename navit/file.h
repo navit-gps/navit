@@ -72,6 +72,7 @@ char **file_wordexp_get_array(struct file_wordexp *wexp);
 void file_wordexp_destroy(struct file_wordexp *wexp);
 int file_get_param(struct file *file, struct param_list *param, int count);
 int file_version(struct file *file, int byname);
+void file_init(void);
 /* end of prototypes */
 
 #endif

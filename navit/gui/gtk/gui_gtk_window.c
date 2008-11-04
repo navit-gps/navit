@@ -472,7 +472,7 @@ gui_gtk_destinations_update(struct gui_priv *this)
 static void
 gui_gtk_destinations_init(struct gui_priv *this)
 {
-	navit_add_callback(this->nav, callback_new_attr_1(gui_gtk_destinations_update, attr_destination, this));
+	navit_add_callback(this->nav, callback_new_attr_1(callback_cast(gui_gtk_destinations_update), attr_destination, this));
 	gui_gtk_destinations_update(this);
 }
 
@@ -551,7 +551,7 @@ gui_gtk_bookmarks_update(struct gui_priv *this)
 static void
 gui_gtk_bookmarks_init(struct gui_priv *this)
 {
-	navit_add_callback(this->nav, callback_new_attr_1(gui_gtk_bookmarks_update, attr_bookmark_map, this));
+	navit_add_callback(this->nav, callback_new_attr_1(callback_cast(gui_gtk_bookmarks_update), attr_bookmark_map, this));
 	gui_gtk_bookmarks_update(this);
 }
 

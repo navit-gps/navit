@@ -57,7 +57,7 @@ static void sigchld(int sig)
 }
 
 
-gchar *get_home_directory(void)
+static gchar *get_home_directory(void)
 {
 	static gchar *homedir = NULL;
 
@@ -127,13 +127,8 @@ main_remove_navit(struct navit *nav)
 void
 main_init(char *program)
 {
-	GError *error = NULL;
-	char *config_file = NULL;
 	char *s;
 	int l;
-	int opt;
-    GList *list = NULL, *li;
-
 
 #ifndef _WIN32
 	signal(SIGCHLD, sigchld);
