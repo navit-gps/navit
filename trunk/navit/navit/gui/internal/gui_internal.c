@@ -1558,7 +1558,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm)
 	enum projection pro=wm->c.pro;
 	struct selector *isel=wm->data;
 
-	wb=gui_internal_menu(this, isel ? isel->name : "POIs");	
+	wb=gui_internal_menu(this, isel ? isel->name : _("POIs"));
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
 	if (! isel)
@@ -1714,7 +1714,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 	g_free(coord);
 	if (display_streets) {
 		gui_internal_widget_append(w,
-			wc=gui_internal_button_new_with_callback(this, "Streets",
+			wc=gui_internal_button_new_with_callback(this, _("Streets"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_search_street_in_town, wm));
 		wc->item=wm->item;
@@ -1730,13 +1730,13 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 				gui_internal_widget_append(w, gui_internal_label_new(this, attr.u.str));
 			if (item_attr_get(item, attr_url_local, &attr)) {
 				gui_internal_widget_append(w,
-					wb=gui_internal_button_new_with_callback(this, "View in Browser",
+					wb=gui_internal_button_new_with_callback(this, _("View in Browser"),
 						image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 						gui_internal_cmd_view_in_browser, NULL));
 				wb->item=wm->item;
 			}
 			gui_internal_widget_append(w,
-				wb=gui_internal_button_new_with_callback(this, "View Attributes",
+				wb=gui_internal_button_new_with_callback(this, _("View Attributes"),
 					image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 					gui_internal_cmd_view_attributes, NULL));
 			wb->item=wm->item;
@@ -1744,20 +1744,20 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 		map_rect_destroy(mr);
 	}
 	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Set as destination",
+		gui_internal_button_new_with_callback(this, _("Set as destination"),
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_set_destination, wm));
 	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Set as position",
+		gui_internal_button_new_with_callback(this, _("Set as position"),
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_set_position, wm));
 	gui_internal_widget_append(w,
-		wbc=gui_internal_button_new_with_callback(this, "Add as bookmark",
+		wbc=gui_internal_button_new_with_callback(this, _("Add as bookmark"),
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_add_bookmark, wm));
 	wbc->c=wm->c;
 	gui_internal_widget_append(w,
-		wbc=gui_internal_button_new_with_callback(this, "POIs",
+		wbc=gui_internal_button_new_with_callback(this, _("POIs"),
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_pois, NULL));
 	wbc->c=wm->c;
@@ -1771,7 +1771,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 #endif
 	if (display_view_on_map) {
 		gui_internal_widget_append(w,
-			gui_internal_button_new_with_callback(this, "View on map",
+			gui_internal_button_new_with_callback(this, _("View on map"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_view_on_map, wm));
 	}
@@ -1849,7 +1849,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 	struct coord c;
 
 
-	wb=gui_internal_menu(this, wm->text ? wm->text : "Bookmarks");
+	wb=gui_internal_menu(this, wm->text ? wm->text : _("Bookmarks"));
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
@@ -1885,7 +1885,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm)
 						wbm->c.x=c.x;
 						wbm->c.y=c.y;
 						wbm->c.pro=map_projection(mattr.u.map);
-						wbm->name=g_strdup_printf("Bookmark %s",label_full);
+						wbm->name=g_strdup_printf(_("Bookmark %s"),label_full);
 						wbm->text=g_strdup(l);
 						gui_internal_widget_append(w, wbm);
 						g_hash_table_insert(hash, g_strdup(l), (void *)1);
@@ -1964,18 +1964,18 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 		struct widget *wc;
 
 		dbg(0,"process\n");
-		if (! strcmp(wm->name,"Town"))
+		if (! strcmp(wm->name,_("Town")))
 			search_attr.type=attr_town_name;
-		if (! strcmp(wm->name,"Street"))
+		if (! strcmp(wm->name,_("Street")))
 			search_attr.type=attr_street_name;
 		search_attr.u.str=wm->text;
 		search_list_search(this->sl, &search_attr, 1);
 		while((res=search_list_get_result(this->sl))) {
-			if (! strcmp(wm->name,"Town")) {
+			if (! strcmp(wm->name,_("Town"))) {
 				name=res->town->name;
 				text=g_strdup(name);
 			}
-			if (! strcmp(wm->name,"Street")) {
+			if (! strcmp(wm->name,_("Street"))) {
 				name=res->street->name;
 				text=g_strdup_printf("%s %s", res->town->name, res->street->name);
 			}
