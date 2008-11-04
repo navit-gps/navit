@@ -1114,12 +1114,12 @@ gui_internal_top_bar(struct gui_priv *this)
 	wm=gui_internal_button_new_with_callback(this, NULL,
 		image_new_s(this, "gui_map"), gravity_center|orientation_vertical,
 		gui_internal_cmd_return, NULL);
-	wm->speech=g_strdup("Back to map");
+	wm->speech=g_strdup(_("Back to map"));
 	gui_internal_widget_pack(this, wm);
 	wh=gui_internal_button_new_with_callback(this, NULL,
 		image_new_s(this, "gui_home"), gravity_center|orientation_vertical,
 		gui_internal_cmd_main_menu, NULL);
-	wh->speech=g_strdup("Main Menu");
+	wh->speech=g_strdup(_("Main Menu"));
 	gui_internal_widget_pack(this, wh);
 	gui_internal_widget_append(w, wm);
 	gui_internal_widget_append(w, wh);
@@ -2255,14 +2255,6 @@ gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 	gui_internal_search(this,"Town","Town");
 }
 
-
-static void
-gui_internal_cmd_street(struct gui_priv *this, struct widget *wm)
-{
-	gui_internal_search(this,"Town","Town");
-}
-
-
 static void
 gui_internal_cmd_layout(struct gui_priv *this, struct widget *wm)
 {
@@ -2271,7 +2263,7 @@ gui_internal_cmd_layout(struct gui_priv *this, struct widget *wm)
 	struct attr_iter *iter;
 
 
-	wb=gui_internal_menu(this, "Layout");
+	wb=gui_internal_menu(this, _("Layout"));
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
@@ -2298,19 +2290,19 @@ gui_internal_cmd_display(struct gui_priv *this, struct widget *wm)
 {
 	struct widget *w;
 
-	w=gui_internal_menu(this, "Display");	
+	w=gui_internal_menu(this, _("Display"));	
 	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Layout",
+		gui_internal_button_new_with_callback(this, _("Layout"),
 			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
 			gui_internal_cmd_layout, NULL));
 	if (this->fullscreen) {
 		gui_internal_widget_append(w,
-			gui_internal_button_new_with_callback(this, "Window Mode",
+			gui_internal_button_new_with_callback(this, _("Window Mode"),
 				image_new_l(this, "gui_leave_fullscreen"), gravity_center|orientation_vertical,
 				gui_internal_cmd_fullscreen, NULL));
 	} else {
 		gui_internal_widget_append(w,
-			gui_internal_button_new_with_callback(this, "Fullscreen",
+			gui_internal_button_new_with_callback(this, _("Fullscreen"),
 				image_new_l(this, "gui_fullscreen"), gravity_center|orientation_vertical,
 				gui_internal_cmd_fullscreen, NULL));
 	}
@@ -2338,9 +2330,9 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 	struct widget *w,*wc;
 	char *coord;
 
-	w=gui_internal_menu(this, "Actions");	
+	w=gui_internal_menu(this, _("Actions"));	
 	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Bookmarks",
+		gui_internal_button_new_with_callback(this, _("Bookmarks"),
 			image_new_l(this, "gui_bookmark"), gravity_center|orientation_vertical,
 			gui_internal_cmd_bookmarks, NULL));
 	if (this->clickp_valid) {
@@ -2349,7 +2341,7 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 			wc=gui_internal_button_new_with_callback(this, coord,
 				image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
 				gui_internal_cmd_position, (void *)1));
-		wc->name=g_strdup("Map Point");
+		wc->name=g_strdup(_("Map Point"));
 		wc->c=this->clickp;
 		g_free(coord);
 	}
@@ -2359,26 +2351,22 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 			wc=gui_internal_button_new_with_callback(this, coord,
 				image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
 				gui_internal_cmd_position, NULL));
-		wc->name=g_strdup("Vehicle Position");
+		wc->name=g_strdup(_("Vehicle Position"));
 		wc->c=this->vehiclep;
 		g_free(coord);
 	}
 	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Town",
+		gui_internal_button_new_with_callback(this, _("Town"),
 			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
 			gui_internal_cmd_town, NULL));
 	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Street",
-			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
-			gui_internal_cmd_street, NULL));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Quit",
+		gui_internal_button_new_with_callback(this, _("Quit"),
 			image_new_l(this, "gui_quit"), gravity_center|orientation_vertical,
 			gui_internal_cmd_quit, NULL));
 	
 	if (navit_check_route(this->nav)) {
 		gui_internal_widget_append(w,
-								   gui_internal_button_new_with_callback(this, "Stop\nNavigation",
+								   gui_internal_button_new_with_callback(this, _("Stop\nNavigation"),
 								 image_new_l(this, "gui_stop"), gravity_center|orientation_vertical,
 								 gui_internal_cmd_abort_navigation, NULL));
 	}
@@ -2394,7 +2382,7 @@ gui_internal_cmd_maps(struct gui_priv *this, struct widget *wm)
 	struct attr_iter *iter;
 
 
-	wb=gui_internal_menu(this, "Maps");
+	wb=gui_internal_menu(this, _("Maps"));
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
@@ -2430,7 +2418,7 @@ gui_internal_cmd_vehicle(struct gui_priv *this, struct widget *wm)
 	struct attr_iter *iter;
 
 
-	wb=gui_internal_menu(this, "Vehicle");
+	wb=gui_internal_menu(this, _("Vehicle"));
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
@@ -2451,7 +2439,7 @@ gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm)
 {
 	struct widget *wb,*w;
 	struct attr on,off;
-	wb=gui_internal_menu(this, "Rules");	
+	wb=gui_internal_menu(this, _("Rules"));
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
@@ -2459,19 +2447,16 @@ gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm)
 	off.u.num=0;
 	on.type=off.type=attr_tracking;
 	gui_internal_widget_append(w,
-		gui_internal_button_navit_attr_new(this, "Lock on road", gravity_left_center|orientation_horizontal|flags_fill,
+		gui_internal_button_navit_attr_new(this, _("Lock on road"), gravity_left_center|orientation_horizontal|flags_fill,
 			&on, &off));
 	on.type=off.type=attr_orientation;
 	gui_internal_widget_append(w,
-		gui_internal_button_navit_attr_new(this, "Northing", gravity_left_center|orientation_horizontal|flags_fill,
+		gui_internal_button_navit_attr_new(this, _("Northing"), gravity_left_center|orientation_horizontal|flags_fill,
 			&on, &off));
 	on.type=off.type=attr_cursor;
 	gui_internal_widget_append(w,
-		gui_internal_button_navit_attr_new(this, "Map follows Vehicle", gravity_left_center|orientation_horizontal|flags_fill,
+		gui_internal_button_navit_attr_new(this, _("Map follows Vehicle"), gravity_left_center|orientation_horizontal|flags_fill,
 			&on, &off));
-	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Attack defenseless civilians",
-			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
 	gui_internal_menu_render(this);
 }
 
@@ -2480,21 +2465,21 @@ gui_internal_cmd_settings(struct gui_priv *this, struct widget *wm)
 {
 	struct widget *w;
 
-	w=gui_internal_menu(this, "Settings");	
+	w=gui_internal_menu(this, _("Settings"));	
 	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Display",
+		gui_internal_button_new_with_callback(this, _("Display"),
 			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
 			gui_internal_cmd_display, NULL));
 	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Maps",
+		gui_internal_button_new_with_callback(this, _("Maps"),
 			image_new_l(this, "gui_maps"), gravity_center|orientation_vertical,
 			gui_internal_cmd_maps, NULL));
 	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Vehicle",
+		gui_internal_button_new_with_callback(this, _("Vehicle"),
 			image_new_l(this, "gui_sound"), gravity_center|orientation_vertical,
 			gui_internal_cmd_vehicle, NULL));
 	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, "Rules",
+		gui_internal_button_new_with_callback(this, _("Rules"),
 			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
 			gui_internal_cmd_rules, NULL));
 	gui_internal_menu_render(this);
@@ -2526,15 +2511,15 @@ static void gui_internal_menu_root(struct gui_priv *this)
 	struct widget *w;
 
 	graphics_draw_mode(this->gra, draw_mode_begin);
-	w=gui_internal_menu(this, "Main menu");	
+	w=gui_internal_menu(this, _("Main menu"));
 	w->spx=this->spacing*10;
-	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, "Actions",
+	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Actions"),
 			image_new_l(this, "gui_actions"), gravity_center|orientation_vertical,
 			gui_internal_cmd_actions, NULL));
-	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, "Settings",
+	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Settings"),
 			image_new_l(this, "gui_settings"), gravity_center|orientation_vertical,
 			gui_internal_cmd_settings, NULL));
-	gui_internal_widget_append(w, gui_internal_button_new(this, "Tools",
+	gui_internal_widget_append(w, gui_internal_button_new(this, _("Tools"),
 			image_new_l(this, "gui_tools"), gravity_center|orientation_vertical));
 #if 0 
 	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, "Table Test",
