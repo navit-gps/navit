@@ -1062,7 +1062,7 @@ gsize
 g_printf_string_upper_bound (const gchar *format,
 			     va_list      args)
 {
-#ifdef HAVE_API_WIN32_CE
+#ifdef HAVE_API_WIN32_BASE
   gchar c[16384];
   return _g_vsnprintf (c, 16384, format, args) + 1;
 #else
