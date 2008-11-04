@@ -33,7 +33,7 @@ struct speech *
 speech_new(struct attr *parent, struct attr **attrs) 
 {
 	struct speech *this_;
-	struct speech_priv *(*speech_new)(const char *data, struct speech_methods *meth);
+	struct speech_priv *(*speech_new)(struct speech_methods *meth, struct attr **attrs);
 	struct attr *type;
 
 	type=attr_search(attrs, NULL, attr_type);
@@ -49,7 +49,7 @@ speech_new(struct attr *parent, struct attr **attrs)
                 return NULL;
 	}
 	this_=g_new0(struct speech, 1);
-	this_->priv=speech_new(attrs, &this_->meth);
+	this_->priv=speech_new(&this_->meth, attrs);
 	dbg(1, "say=%p\n", this_->meth.say);
 	dbg(1,"priv=%p\n", this_->priv);
 	if (! this_->priv) {
