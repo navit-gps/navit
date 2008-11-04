@@ -624,6 +624,12 @@ wince)
 	gui_win32=yes; gui_win32_reason="host_os is wince"
 	graphics_win32=yes; graphics_win32_reason="host_os is wince"
 	;;
+mingw32)
+	win32=yes
+	AC_DEFINE(HAVE_API_WIN32_BASE, 1, [Have Windows Base API])
+	AC_DEFINE(HAVE_API_WIN32, 1, [Have Windows API])
+	gui_win32=yes; gui_win32_reason="host_os is mingw32"
+	graphics_win32=yes; graphics_win32_reason="host_os is mingw32"
 esac
 if test "x$win32" = "xyes"
 then
