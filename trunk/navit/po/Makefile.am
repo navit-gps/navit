@@ -13,7 +13,8 @@ POTFILES  = \
 	$(top_srcdir)/navit/country.c \
 	$(top_srcdir)/navit/gui/gtk/destination.c \
 	$(top_srcdir)/navit/gui/gtk/gui_gtk_action.c \
-	$(top_srcdir)/navit/gui/gtk/gui_gtk_statusbar.c
+	$(top_srcdir)/navit/gui/gtk/gui_gtk_statusbar.c \
+	$(top_srcdir)/navit/gui/internal/gui_internal.c
 
 
 SUFFIXES = .po .mo
