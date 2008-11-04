@@ -70,8 +70,6 @@ int main(int argc, char **argv)
 {
 	GError *error = NULL;
 	char *config_file = NULL;
-	char *s;
-	int l;
 	int opt;
 
     GList *list = NULL, *li;

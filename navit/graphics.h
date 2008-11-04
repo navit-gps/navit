@@ -147,6 +147,7 @@ void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct 
 void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy, struct point *ret);
 void graphics_overlay_disable(struct graphics *this_, int disable);
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img);
+int graphics_draw_drag(struct graphics *this_, struct point *p);
 void display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label);
 int graphics_ready(struct graphics *this_);
 void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int callback);
