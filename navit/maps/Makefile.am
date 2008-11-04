@@ -8,7 +8,7 @@ samplemap: $(SAMPLE_MAP).bin
 
 $(SAMPLE_MAP).osm.bz2:
 	echo "Downloading osm sample map"
-	wget -O $(SAMPLE_MAP).osm.bz2.tmp http://navit.sourceforge.net/maps/$(SAMPLE_MAP).osm.bz2
+	wget -O $(SAMPLE_MAP).osm.bz2.tmp http://www.navit-project.org/maps/$(SAMPLE_MAP).osm.bz2
 	mv $(SAMPLE_MAP).osm.bz2.tmp $(SAMPLE_MAP).osm.bz2
 
 $(SAMPLE_MAP).bin $(SAMPLE_MAP).xml: $(SAMPLE_MAP).osm.bz2 $(top_builddir)/navit/osm2navit
