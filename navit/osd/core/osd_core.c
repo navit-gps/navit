@@ -39,6 +39,7 @@
 #include "navigation.h"
 #include "track.h"
 #include "map.h"
+#include "file.h"
 
 struct compass {
 	struct point p;
@@ -346,6 +347,8 @@ osd_eta_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 struct osd_navigation {
 	struct point p;
 	int w,h;
+	char *icon_src;
+	int icon_w, icon_h;
 	struct graphics *gr;
 	struct graphics_gc *bg;
 	struct graphics_gc *white;
@@ -461,6 +464,8 @@ osd_navigation_new(struct navit *nav, struct osd_methods *meth, struct attr **at
 	this->p.y=-80;
 	this->w=60;
 	this->h=60;
+	this->icon_w=-1;
+	this->icon_h=-1;
 	this->active=-1;
 	attr=attr_search(attrs, NULL, attr_x);
 	if (attr)
@@ -468,6 +473,22 @@ osd_navigation_new(struct navit *nav, struct osd_methods *meth, struct attr **at
 	attr=attr_search(attrs, NULL, attr_y);
 	if (attr)
 		this->p.y=attr->u.num;
+	attr=attr_search(attrs, NULL, attr_icon_w);
+	if (attr)
+		this->icon_w=attr->u.num;
+	attr=attr_search(attrs, NULL, attr_icon_h);
+	if (attr)
+		this->icon_h=attr->u.num;
+	attr=attr_search(attrs, NULL, attr_icon_src);
+	if (attr) {
+		struct file_wordexp *we;
+		char **array;
+		we=file_wordexp_new(attr->u.str);
+		array=file_wordexp_get_array(we);
+		this->icon_src=g_strdup(array[0]);
+		file_wordexp_destroy(we);
+	} else
+		this->icon_src=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/%s_32.xpm", NULL);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_navigation_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
