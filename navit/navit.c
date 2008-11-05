@@ -863,6 +863,7 @@ navit_add_former_destinations_from_file(struct navit *this_)
 	pc.y=c.y;
 	if (valid) {
 		route_set_destination(this_->route, &pc);
+		this_->destination=pc;
 		this_->destination_valid=1;
 	}
 }
