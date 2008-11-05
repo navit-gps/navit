@@ -555,7 +555,7 @@ transform_distance(enum projection pro, struct coord *c1, struct coord *c2)
 	} else if (pro == projection_garmin) {
 		return transform_distance_garmin(c1, c2);
 	} else {
-		printf("Unknown projection: %d\n", pro);
+		dbg(0,"Unknown projection: %d\n", pro);
 		return 0;
 	}
 }
