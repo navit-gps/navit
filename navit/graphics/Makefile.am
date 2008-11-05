@@ -20,3 +20,6 @@ endif
 if GRAPHICS_WIN32
   SUBDIRS+=win32
 endif
+if GRAPHICS_GD
+  SUBDIRS+=gd
+endif
