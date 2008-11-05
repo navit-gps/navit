@@ -67,6 +67,7 @@ struct graphics_priv {
 	int win_h;
 	int visible;
 	int overlay_disabled;
+	int a;
 	struct graphics_priv *parent;
 	struct graphics_priv *overlays;
 	struct graphics_priv *next;
@@ -81,6 +82,7 @@ struct graphics_gc_priv {
 	GdkGC *gc;
 	struct graphics_priv *gr;
 	int level;
+	char r,g,b,a;
 };
 
 struct graphics_image_priv {
@@ -122,6 +124,10 @@ gc_set_color(struct graphics_gc_priv *gc, struct color *c, int fg)
 	gdkc.red=c->r;
 	gdkc.green=c->g;
 	gdkc.blue=c->b;
+	gc->r=c->r >> 8;
+	gc->g=c->g >> 8;
+	gc->b=c->b >> 8;
+	gc->a=c->a >> 8;
 	gdk_colormap_alloc_color(gc->gr->colormap, &gdkc, FALSE, TRUE);
 	if (fg) {
 		gdk_gc_set_foreground(gc->gc, &gdkc);
@@ -355,70 +361,65 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 #endif
 
 static void
-overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, int window)
+overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *r)
+{
+	r->x=overlay->p.x;
+	if (r->x < 0)
+		r->x += parent->width;
+	r->y=overlay->p.y;
+	if (r->y < 0)
+		r->y += parent->height;
+	r->width=overlay->width;
+	if (r->width < 0)
+		r->width += parent->width;
+	r->height=overlay->height;
+	if (r->height < 0)
+		r->height += parent->height;
+}
+
+static void
+overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *r, GdkPixmap *pixmap, GdkGC *gc)
 {
 	GdkPixbuf *pixbuf,*pixbuf2;
-	GtkWidget *widget=parent->widget;
 	guchar *pixels1, *pixels2, *p1, *p2;
-	int x,y,w,h;
+	int x,y;
 	int rowstride1,rowstride2;
 	int n_channels1,n_channels2;
+	GdkRectangle or;
+	struct graphics_gc_priv *bg=overlay->background_gc;
 
-	if (! parent->drawable)
-		return;
 	if (parent->overlay_disabled || overlay->overlay_disabled)
 		return;
-	w=overlay->width;
-	if (w < 0)
-		w+=parent->width;
-	h=overlay->height;
-	if (h < 0)
-		h+=parent->height;
-	pixbuf=gdk_pixbuf_get_from_drawable(NULL, overlay->drawable, NULL, 0, 0, 0, 0, w, h);
+	dbg(1,"r->x=%d r->y=%d r->width=%d r->height=%d\n", r->x, r->y, r->width, r->height);
+	overlay_rect(parent, overlay, &or);
+	dbg(1,"or.x=%d or.y=%d or.width=%d or.height=%d\n", or.x, or.y, or.width, or.height);
+	or.x-=r->x;
+	or.y-=r->y;
+	pixbuf=gdk_pixbuf_get_from_drawable(NULL, overlay->drawable, NULL, 0, 0, 0, 0, or.width, or.height);
 	pixbuf2=gdk_pixbuf_new(gdk_pixbuf_get_colorspace(pixbuf), TRUE, gdk_pixbuf_get_bits_per_sample(pixbuf),
-				gdk_pixbuf_get_width(pixbuf), gdk_pixbuf_get_height(pixbuf));
-
+				or.width, or.height);
 	rowstride1 = gdk_pixbuf_get_rowstride (pixbuf);
 	rowstride2 = gdk_pixbuf_get_rowstride (pixbuf2);
 	pixels1=gdk_pixbuf_get_pixels (pixbuf);
 	pixels2=gdk_pixbuf_get_pixels (pixbuf2);
 	n_channels1 = gdk_pixbuf_get_n_channels (pixbuf);
 	n_channels2 = gdk_pixbuf_get_n_channels (pixbuf2);
-	for (y = 0 ; y < h ; y++) {
-		for (x = 0 ; x < w ; x++) {
+	for (y = 0 ; y < or.height ; y++) {
+		for (x = 0 ; x < or.width ; x++) {
 			p1 = pixels1 + y * rowstride1 + x * n_channels1;
 			p2 = pixels2 + y * rowstride2 + x * n_channels2;
 			p2[0]=p1[0];
 			p2[1]=p1[1];
 			p2[2]=p1[2];
-			p2[3]=127;
+			if (bg && p1[0] == bg->r && p1[1] == bg->g && p1[2] == bg->b) 
+				p2[3]=bg->a;
+			else 
+				p2[3]=overlay->a;
 		}
 	}
-	x=overlay->p.x;
-	if (x < 0)
-		x+=parent->width;
-	y=overlay->p.y;
-	if (y < 0)
-		y+=parent->height;
-	if (window) {
-		if (overlay->background_ready)
-			gdk_draw_drawable(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], overlay->background, 0, 0, x, y, w, h);
-	}
-	else {
-		gdk_draw_drawable(overlay->background, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, x, y, 0, 0, w, h);
-		overlay->background_ready=1;
-	}
-	gdk_draw_pixbuf(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], pixbuf2, 0, 0, x, y, w, h, GDK_RGB_DITHER_NONE, 0, 0);
-	if (window)
-		gdk_draw_drawable(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, x, y, x, y, w, h);
+	gdk_draw_pixbuf(pixmap, gc, pixbuf2, 0, 0, or.x, or.y, or.width, or.height, GDK_RGB_DITHER_NONE, 0, 0);
 	g_object_unref(pixbuf);
 	g_object_unref(pixbuf2);
-#if 0
-	gdk_draw_drawable(gr->gra->drawable,
-                        gr->gra->widget->style->fg_gc[GTK_WIDGET_STATE(gr->gra->widget)],
-                        img->gra->drawable,
-                        0, 0, p->x, p->y, img->gra->width, img->gra->height);
-#endif
 }
 
 static void
@@ -451,11 +452,32 @@ background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 }
 
 static void
+gtk_drawing_area_draw(struct graphics_priv *gr, GdkRectangle *r)
+{
+	GdkPixmap *pixmap;
+	GtkWidget *widget=gr->widget;
+	GdkGC *gc=widget->style->fg_gc[GTK_WIDGET_STATE(widget)];
+	struct graphics_priv *overlay;
+
+	if (! gr->drawable)
+		return;
+	pixmap = gdk_pixmap_new(widget->window, r->width, r->height, -1);
+	if ((gr->p.x || gr->p.y) && gr->background_gc) 
+		gdk_draw_rectangle(pixmap, gr->background_gc->gc, TRUE, 0, 0, r->width, r->height);
+	gdk_draw_drawable(pixmap, gc, gr->drawable, r->x, r->y, gr->p.x, gr->p.y, r->width, r->height);
+	overlay=gr->overlays;
+	while (overlay) {
+		overlay_draw(gr,overlay,r,pixmap,gc);
+		overlay=overlay->next;
+	}
+	gdk_draw_drawable(widget->window, gc, pixmap, 0, 0, r->x, r->y, r->width, r->height);
+	g_object_unref(pixmap);
+}
+
+static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-	struct graphics_priv *overlay;
-	GtkWidget *widget=gr->widget;
-
+	GdkRectangle r;
 #if 0
 	if (mode == draw_mode_begin) {
 		if (! gr->parent && gr->background_gc)
@@ -464,28 +486,14 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 #endif
 	if (mode == draw_mode_end && gr->mode != draw_mode_cursor) {
 		if (gr->parent) {
-			overlay_draw(gr->parent, gr, 1);
+			overlay_rect(gr->parent, gr, &r);
+			gtk_drawing_area_draw(gr->parent, &r);
 		} else {
-			overlay=gr->overlays;
-			while (overlay) {
-				overlay_draw(gr, overlay, 0);
-				overlay=overlay->next;
-			}
-			if (gr->p.x || gr->p.y) {
-				if(!gr->background_ready) {
-					gr->background = gdk_pixmap_new(widget->window, gr->width, gr->width, -1);
-			       		gdk_draw_rectangle(gr->background, gr->background_gc->gc, TRUE, 0, 0, gr->width, gr->height);
-					gr->background_ready = 1;
-				}
-				gdk_draw_drawable(widget->window,
-				       widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-				       gr->background,
-				       0, 0, 0, 0, -1, -1);
-			}
-			gdk_draw_drawable(widget->window,
-                	       widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-                	       gr->drawable,
-                	       0, 0, gr->p.x, gr->p.y, -1, -1);
+			r.x=0;
+			r.y=0;
+			r.width=gr->width;
+			r.height=gr->height;
+			gtk_drawing_area_draw(gr, &r);
 		}
 	}
 	gr->mode=mode;
@@ -521,10 +529,13 @@ expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 	gra->visible=1;
 	if (! gra->drawable)
 		configure(widget, NULL, user_data);
+	gtk_drawing_area_draw(gra, &event->area);
+#if 0
         gdk_draw_drawable(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
                         gra->drawable, event->area.x, event->area.y,
                         event->area.x, event->area.y,
                         event->area.width, event->area.height);
+#endif
 
 	return FALSE;
 }
@@ -674,7 +685,7 @@ overlay_disable(struct graphics_priv *gr, int disabled)
 }
 
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha)
 {
 	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
 	this->drawable=gdk_pixmap_new(gr->widget->window, w, h, -1);
@@ -686,6 +697,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	this->parent=gr;
 	this->background=gdk_pixmap_new(gr->widget->window, w, h, -1);
 	this->next=gr->overlays;
+	this->a=alpha >> 8;
 	gr->overlays=this;
 	return this;
 }
