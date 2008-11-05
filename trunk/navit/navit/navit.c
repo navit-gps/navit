@@ -861,8 +861,10 @@ navit_add_former_destinations_from_file(struct navit *this_)
 	pc.pro=map_projection(this_->former_destination);
 	pc.x=c.x;
 	pc.y=c.y;
-	if (valid) 
+	if (valid) {
 		route_set_destination(this_->route, &pc);
+		this_->destination_valid=1;
+	}
 }
 
 
