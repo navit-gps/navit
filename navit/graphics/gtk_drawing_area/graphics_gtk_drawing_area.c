@@ -242,6 +242,8 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 	int i,x,y;
 	struct font_freetype_glyph *g, **gp;
 	unsigned char *shadow;
+	struct color transparent={0x0,0x0,0x0,0x0};
+	struct color white={0xffff,0xffff,0xffff,0xffff};
 
 	gp=text->glyph;
 	i=text->glyph_count;
@@ -253,7 +255,7 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 		if (g->w && g->h && bg ) {
 #if 1
 			shadow=g_malloc((g->w+2)*(g->h+2));
-			if (gr->freetype_methods.get_shadow(g, shadow, 8, g->w+2))
+			if (gr->freetype_methods.get_shadow(g, shadow, 8, g->w+2, &white, &transparent))
 				gdk_draw_gray_image(gr->drawable, bg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, g->w+2);
 			g_free(shadow);
 #else

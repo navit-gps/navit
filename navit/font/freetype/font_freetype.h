@@ -17,10 +17,10 @@ struct font_freetype_methods {
 						font, int dx, int dy);
 	void (*text_destroy) (struct font_freetype_text * text);
 	int (*get_shadow) (struct font_freetype_glyph * glyph,
-			   unsigned char *data, int depth, int stride);
-	int (*get_pixmap) (struct font_freetype_glyph * glyph,
+			   unsigned char *data, int depth, int stride, struct color *fg, struct color *tr);
+	int (*get_glyph) (struct font_freetype_glyph * glyph,
 			   unsigned char *data, int depth, int stride,
-			   struct color * fg, struct color * bg, int inv);
+			   struct color * fg, struct color * bg, struct color *tr);
 };
 
 struct font_freetype_glyph {

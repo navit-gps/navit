@@ -8,6 +8,7 @@
 #include "graphics.h"
 #include "debug.h"
 #include "plugin.h"
+#include "color.h"
 #include "font_freetype.h"
 
 struct font_freetype_font {
@@ -297,30 +298,81 @@ font_freetype_font_new(struct graphics_priv *gr,
 
 static int
 font_freetype_glyph_get_shadow(struct font_freetype_glyph *g,
-			       unsigned char *data, int depth, int stride)
+			       unsigned char *data, int depth, int stride, struct color *foreground, struct color *background)
 {
 	int mask0, mask1, mask2, x, y, w = g->w, h = g->h;
-	unsigned char *pm, *ps;
-	memset(data, 0, (h + 2) * stride);
-	if (depth == 1) {
-		for (y = 0; y < h; y++) {
-			pm = g->pixmap + y * w;
+	unsigned int bg, fg;
+	unsigned char *pm, *psp,*ps,*psn;
+	switch (depth) {
+	case 1:
+		fg=0xff;
+		bg=0x00;
+		break;
+	case 8:
+		fg=foreground->a>>8;
+		bg=background->a>>8;
+		break;
+	case 32:
+		fg=((foreground->a>>8)<<24)|
+		   ((foreground->r>>8)<<16)|
+		   ((foreground->g>>8)<<8)|
+		   ((foreground->b>>8)<<0);
+		bg=((background->a>>8)<<24)|
+		   ((background->r>>8)<<16)|
+		   ((background->g>>8)<<8)|
+		   ((background->b>>8)<<0);
+		break;
+	default:
+		return 0;
+	}
+	for (y = 0; y < h+2; y++) {
+		if (stride) {
 			ps = data + stride * y;
+		} else {
+			unsigned char **dataptr=(unsigned char **)data;
+			ps = dataptr[y];
+		}
+		switch (depth) {
+		case 1:
+			memset(ps, bg, (w+9)/2);
+			break;
+		case 8:
+			memset(ps, bg, w+2);
+			break;
+		case 32:
+			for (x = 0 ; x < w+2 ; x++) 
+				((unsigned int *)ps)[x]=bg;
+			break;
+		}
+	}
+	for (y = 0; y < h; y++) {
+		pm = g->pixmap + y * w;
+		if (stride) {
+			psp = data + stride * y;
+			ps = psp + stride;
+			psn = ps + stride;
+		} else {
+			unsigned char **dataptr=(unsigned char **)data;
+			psp = dataptr[y];
+			ps = dataptr[y+1];
+			psn = dataptr[y+2];
+		}
+		switch (depth) {
+		case 1:
 			mask0 = 0x4000;
 			mask1 = 0xe000;
 			mask2 = 0x4000;
 			for (x = 0; x < w; x++) {
 				if (*pm) {
-					ps[0] |= (mask0 >> 8);
+					psp[0] |= (mask0 >> 8);
 					if (mask0 & 0xff)
-						ps[1] |= mask0;
-					ps[stride] |= (mask1 >> 8);
+						psp[1] |= mask0;
+					ps[0] |= (mask1 >> 8);
 					if (mask1 & 0xff)
-						ps[stride + 1] |= mask1;
-					ps[stride * 2] |= (mask2 >> 8);
+						ps[1] |= mask1;
+					psn[0] |= (mask2 >> 8);
 					if (mask2 & 0xff)
-						ps[stride * 2 + 1] |=
-						    mask2;
+						psn[1] |= mask2;
 				}
 				mask0 >>= 1;
 				mask1 >>= 1;
@@ -331,32 +383,93 @@ font_freetype_glyph_get_shadow(struct font_freetype_glyph *g,
 					mask0 <<= 8;
 					mask1 <<= 8;
 					mask2 <<= 8;
+					psp++;
 					ps++;
+					psn++;
 				}
 				pm++;
 			}
-		}
-		return 1;
-	}
-	if (depth == 8) {
-		for (y = 0; y < h; y++) {
-			pm = g->pixmap + y * w;
-			ps = data + stride * (y + 1) + 1;
+			break;
+		case 8:
 			for (x = 0; x < w; x++) {
 				if (*pm) {
-					ps[-stride] = 255;
-					ps[-1] = 255;
-					ps[0] = 255;
-					ps[1] = 255;
-					ps[stride] = 255;
+					psp[1] = fg;
+					ps[0] = fg;
+					ps[1] = fg;
+					ps[2] = fg;
+					psn[1] = fg;
 				}
+				psp++;
 				ps++;
+				psn++;
 				pm++;
 			}
+			break;
+		case 32:
+			for (x = 0; x < w; x++) {
+				if (*pm) {
+					((unsigned int *)psp)[1]=fg;
+					((unsigned int *)ps)[0]=fg;
+					((unsigned int *)ps)[1]=fg;
+					((unsigned int *)ps)[2]=fg;
+					((unsigned int *)psn)[1]=fg;
+				}
+				psp+=4;
+				ps+=4;
+				psn+=4;
+				pm++;
+			}
+			break;
 		}
-		return 1;
 	}
-	return 0;
+	return 1;
+}
+
+static int
+font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
+			       unsigned char *data, int depth, int stride, struct color *fg, struct color *bg, struct color *transparent)
+{
+	int x, y, w = g->w, h = g->h;
+	unsigned int tr;
+	unsigned char v,vi,*pm, *ps;
+	switch (depth) {
+	case 32:
+		tr=((transparent->a>>8)<<24)|
+		   ((transparent->r>>8)<<16)|
+		   ((transparent->g>>8)<<8)|
+		   ((transparent->b>>8)<<0);
+		break;
+	default:
+		return 0;
+	}
+	for (y = 0; y < h; y++) {
+		pm = g->pixmap + y * w;
+		if (stride) {
+			ps = data + stride*y;
+		} else {
+			unsigned char **dataptr=(unsigned char **)data;
+			ps = dataptr[y];
+		}
+		switch (depth) {
+		case 32:
+			for (x = 0; x < w; x++) {
+				v=*pm;
+				if (v) {
+					vi=255-v;
+					((unsigned int *)ps)[0]=
+						((((fg->a*v+bg->a*vi)/255)>>8)<<24)|
+						((((fg->r*v+bg->r*vi)/255)>>8)<<16)|
+						((((fg->g*v+bg->g*vi)/255)>>8)<<8)|
+						((((fg->b*v+bg->b*vi)/255)>>8)<<0);
+				} else
+					((unsigned int *)ps)[0]=tr;
+				ps+=4;
+				pm++;
+			}
+			break;
+		}
+	}
+	return 1;
 }
 
 static struct font_freetype_methods methods = {
@@ -365,7 +478,7 @@ static struct font_freetype_methods methods = {
 	font_freetype_text_new,
 	font_freetype_text_destroy,
 	font_freetype_glyph_get_shadow,
-	NULL
+	font_freetype_glyph_get_glyph,	
 };
 
 static struct font_priv *
