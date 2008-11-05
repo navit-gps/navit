@@ -12,6 +12,7 @@ binding_python=yes; binding_python_reason=default
 gui_gtk=no; gui_gtk_reason=default
 gui_win32=no; gui_win32_reason=default
 gui_internal=yes; gui_internal_reason=default
+graphics_gd=no; graphics_gd_reason=default
 graphics_gtk_drawing_area=no; graphics_gtk_drawing_area_reason=default
 graphics_qt_qpainter=yes; graphics_qt_qpainter_reason=default
 graphics_opengl=yes; graphics_opengl_reason=default
@@ -651,6 +652,30 @@ if test "x$support_libc" = "xyes"; then
 fi
 
 ## graphics
+# gd
+AC_ARG_ENABLE(graphics-gd, [  --enable-graphics-gd                enable graphics type gd], graphics_gd=$enableval;graphics_gd_reason="configure parameter")
+if test "x${graphics_gd}" = "xyes" ; then
+	if test -z "$GDLIB_CONFIG"; then
+            AC_PATH_PROG([GDLIB_CONFIG], [gdlib-config], [])
+        fi
+	AC_MSG_CHECKING([for gdlib with $GDLIB_CONFIG])
+	if test ! -x "$GDLIB_CONFIG"; then
+	    if test "x${GDLIB_CONFIG}" = "x" ; then
+	    	 graphics_gd_reason="$GDLIB_CONFIG not executable"
+	    else
+	    	 graphics_gd_reason="gdlib-config missing"
+            fi
+	    graphics_gd=no 
+            AC_MSG_RESULT([no])
+	else
+	    GD_CFLAGS="-I`$GDLIB_CONFIG --includedir`"
+	    GD_LIBS="-L`$GDLIB_CONFIG --libdir` -lgd `$GDLIB_CONFIG --libs`"
+	    AC_SUBST(GD_CFLAGS)
+	    AC_SUBST(GD_LIBS)
+            AC_MSG_RESULT([yes])
+       	fi 
+fi
+AM_CONDITIONAL(GRAPHICS_GD, test "x${graphics_gd}" = "xyes")
 # gtk_drawing_area
 AC_ARG_ENABLE(graphics-gtk-drawing-area, [  --disable-graphics-gtk-drawing-area disable graphics type gtk_drawing_area], graphics_gtk_drawing_area=$enableval;graphics_gtk_drawing_area_reason="configure parameter")
 AM_CONDITIONAL(GRAPHICS_GTK_DRAWING_AREA, [test "x${graphics_gtk_drawing_area}" = "xyes"])
@@ -742,6 +767,7 @@ navit/fib-1.1/Makefile
 navit/font/Makefile
 navit/font/freetype/Makefile
 navit/graphics/Makefile
+navit/graphics/gd/Makefile
 navit/graphics/gtk_drawing_area/Makefile
 navit/graphics/directfb/Makefile
 navit/graphics/cogl/Makefile
@@ -859,6 +885,7 @@ echo "  gtk_drawing_area:  $graphics_gtk_drawing_area ($graphics_gtk_drawing_are
 echo "  qt_qpainter:       $graphics_qt_qpainter ($graphics_qt_qpainter_reason)"
 echo "  win32:             $graphics_win32 ($graphics_win32_reason)"
 echo "  OpenGL:            $graphics_opengl ($graphics_opengl_reason)"
+echo "  gd:                $graphics_gd ($graphics_gd_reason)"
 
 echo "GUI types:"
 echo "  gtk:               $gui_gtk ($gui_gtk_reason)"
