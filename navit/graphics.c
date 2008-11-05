@@ -116,11 +116,11 @@ int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h)
+struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int alpha)
 {
 	struct graphics *this_;
 	this_=g_new0(struct graphics, 1);
-	this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, p, w, h);
+	this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, p, w, h, alpha);
 	return this_;
 }
 
@@ -141,7 +141,7 @@ void graphics_init(struct graphics *this_)
 	this_->gc[2]=graphics_gc_new(this_);
 	graphics_gc_set_background(this_->gc[2], &(struct color) { 0xffff, 0xffff, 0xffff, 0xffff });
 	graphics_gc_set_foreground(this_->gc[2], &(struct color) { 0x0000, 0x0000, 0x0000, 0xffff });
-	this_->meth.background_gc(this_->priv, this_->gc[0]->priv);
+	graphics_background_gc(this_, this_->gc[0]);
 	navit_sharedir = getenv("NAVIT_SHAREDIR");
 }
 
@@ -414,6 +414,7 @@ void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct 
 	this_->meth.draw_image(this_->priv, gc->priv, p, img->priv);
 }
 
+
 //##############################################################################################################
 //# Description:
 //# Comment:
@@ -428,6 +429,11 @@ graphics_draw_drag(struct graphics *this_, struct point *p)
 	return 1;
 }
 
+void
+graphics_background_gc(struct graphics *this_, struct graphics_gc *gc)
+{
+	this_->meth.background_gc(this_->priv, gc ? gc->priv : NULL);
+}
 
 #include "attr.h"
 #include "popup.h"
@@ -913,7 +919,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	graphics_gc_set_background(gra->gc[0], &l->color);
 	graphics_gc_set_foreground(gra->gc[0], &l->color);
 	gra->default_font = g_strdup(l->font);
-	gra->meth.background_gc(gra->priv, gra->gc[0]->priv);
+	graphics_background_gc(gra, gra->gc[0]);
 	gra->meth.draw_mode(gra->priv, draw_mode_begin);
 	gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &p, 32767, 32767);
 	xdisplay_draw(displaylist->dl, gra, l, order+l->order_delta);

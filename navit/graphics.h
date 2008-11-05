@@ -60,7 +60,7 @@ struct graphics_methods {
 	struct graphics_font_priv *(*font_new)(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,  int size, int flags);
 	struct graphics_gc_priv *(*gc_new)(struct graphics_priv *gr, struct graphics_gc_methods *meth);
 	void (*background_gc)(struct graphics_priv *gr, struct graphics_gc_priv *gc);
-	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h);
+	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha);
 	struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot);
 	void *(*get_data)(struct graphics_priv *gr, char *type);
 	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
@@ -123,7 +123,7 @@ struct transformation;
 struct callback;
 struct graphics *graphics_new(struct attr *parent, struct attr **attrs);
 int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
-struct graphics *graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h);
+struct graphics *graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int alpha);
 void graphics_init(struct graphics *this_);
 void *graphics_get_data(struct graphics *this_, char *type);
 void graphics_add_callback(struct graphics *this_, struct callback *cb);
@@ -148,6 +148,7 @@ void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, 
 void graphics_overlay_disable(struct graphics *this_, int disable);
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img);
 int graphics_draw_drag(struct graphics *this_, struct point *p);
+void graphics_background_gc(struct graphics *this_, struct graphics_gc *gc);
 void display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label);
 int graphics_ready(struct graphics *this_);
 void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int callback);
