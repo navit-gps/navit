@@ -36,7 +36,7 @@
 int debug_level=0,segv_level=0;
 static int dummy;
 static GHashTable *debug_hash;
-static char *gdb_program;
+static const char *gdb_program;
 
 static FILE *debug_fp;
 
@@ -44,6 +44,7 @@ static void sigsegv(int sig)
 {
 #if defined(_WIN32) || defined(__CEGCC__)
 #else
+#include <unistd.h>
 	char buffer[256];
 	if (segv_level > 1)
 		sprintf(buffer, "gdb -ex bt %s %d", gdb_program, getpid());

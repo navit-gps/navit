@@ -2173,8 +2173,6 @@ rp_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
 static struct item *
 rm_get_item(struct map_rect_priv *mr)
 {
-	struct route *r = mr->mpriv->route;
-	struct route_path_segment *seg = mr->seg;
 	dbg(1,"enter\n", mr->pos);
 
 	mr->seg=mr->seg_next;
