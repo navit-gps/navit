@@ -1517,7 +1517,82 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 				<itemgra item_types="rg_point" order="12-">
 					<circle color="#FF089C" radius="10"  text_size="7" />
 				</itemgra>
-				<itemgra item_types="nav_straight,nav_turnaround,nav_right_1,nav_right_2,nav_right_3,nav_left_1,nav_left_2,nav_left_3,nav_roundabout_r1,nav_roundabout_r2,nav_roundabout_r3,nav_roundabout_r4,nav_roundabout_r5,nav_roundabout_r6,nav_roundabout_r7,nav_roundabout_r8,nav_roundabout_l1,nav_roundabout_l2,nav_roundabout_l3,nav_roundabout_l4,nav_roundabout_l5,nav_roundabout_l6,nav_roundabout_l7,nav_roundabout_l8,nav_none" order="0-">
+				<itemgra item_types="nav_left_1" order="0-">
+					<icon src="nav_left_1_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_left_2" order="0-">
+					<icon src ="nav_left_2_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_left_3" order="0-">
+					<icon src ="nav_left_3_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_right_1" order="0-">
+					<icon src ="nav_right_1_bk.svg" w="32" h="32" />
+				</itemgra>
+				 <itemgra item_types="nav_right_2" order="0-">
+					<icon src ="nav_right_2_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_right_3" order="0-">
+					<icon src ="nav_right_3_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_straight" order="0-">
+					<icon src ="nav_straight_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_turnaround_left" order="0-">
+					<icon src ="nav_turnaround_left_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_turnaround_right" order="0-">
+					<icon src ="nav_turnaround_right_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_l1_bk" order="0-">
+					<icon src ="nav_roundabout_l1_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_r1_bk" order="0-">
+					<icon src ="nav_roundabout_r1_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_l2_bk" order="0-">
+					<icon src ="nav_roundabout_l2_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_r2_bk" order="0-">
+					<icon src ="nav_roundabout_r2_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_l3_bk" order="0-">
+					<icon src ="nav_roundabout_l3_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_r3_bk" order="0-">
+					<icon src ="nav_roundabout_r3_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_l4_bk" order="0-">
+					<icon src ="nav_roundabout_l4_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_r4_bk" order="0-">
+					<icon src ="nav_roundabout_r4_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_l5_bk" order="0-">
+					<icon src ="nav_roundabout_l5_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_r5_bk" order="0-">
+					<icon src ="nav_roundabout_r5_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_l6_bk" order="0-">
+					<icon src ="nav_roundabout_l6_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_r6_bk" order="0-">
+					<icon src ="nav_roundabout_r6_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_l7_bk" order="0-">
+					<icon src ="nav_roundabout_l7_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_r7_bk" order="0-">
+					<icon src ="nav_roundabout_r7_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_l8_bk" order="0-">
+					<icon src ="nav_roundabout_l8_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_roundabout_r8_bk" order="0-">
+					<icon src ="nav_roundabout_r8_bk.svg" w="32" h="32" />
+				</itemgra>
+				<itemgra item_types="nav_none" order="0-">
 					<icon src="unknown.xpm" />
 				</itemgra>
 
