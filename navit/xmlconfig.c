@@ -39,6 +39,7 @@
 #include "gui.h"
 #include "osd.h"
 #include "log.h"
+#include "cursor.h"
 #include "xmlconfig.h"
 #include "config.h"
 
@@ -298,14 +299,19 @@ struct element_func {
 	{ "layout", "navit", NULL, NEW(layout_new), ADD(layout_add_attr)},
 	{ "layer", "layout", NULL, NEW(layer_new), ADD(layer_add_attr)},
 	{ "itemgra", "layer", NULL, NEW(itemgra_new), ADD(itemgra_add_attr)},
-	{ "circle", "itemgra", NULL, NEW(circle_new)},
+	{ "circle", "itemgra", NULL, NEW(circle_new), ADD(element_add_attr)},
+	{ "coord", "circle", NULL, NEW(coord_new_from_attrs)},
 	{ "icon", "itemgra", NULL, NEW(icon_new)},
 	{ "image", "itemgra", NULL, NEW(image_new)},
 	{ "text", "itemgra", NULL, NEW(text_new)},
-	{ "polygon", "itemgra", NULL, NEW(polygon_new)},
-	{ "polyline", "itemgra", NULL, NEW(polyline_new)},
+	{ "polygon", "itemgra", NULL, NEW(polygon_new), ADD(element_add_attr)},
+	{ "coord", "polygon", NULL, NEW(coord_new_from_attrs)},
+	{ "polyline", "itemgra", NULL, NEW(polyline_new), ADD(element_add_attr)},
+	{ "coord", "polyline", NULL, NEW(coord_new_from_attrs)},
 	{ "arrows", "itemgra", NULL, NEW(arrows_new)},
 	{ "vehicle", "navit", NULL, NEW(vehicle_new), ADD(vehicle_add_attr) },
+	{ "cursor", "vehicle", NULL, NEW(cursor_new), ADD(cursor_add_attr)},
+	{ "itemgra", "cursor", NULL, NEW(itemgra_new), ADD(itemgra_add_attr)},
 	{ "log", "vehicle", NULL, NEW(log_new)},
 	{ "log", "navit", NULL, NEW(log_new)},
 	{ "window_items", "navit", xmlconfig_window_items},

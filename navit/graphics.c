@@ -753,6 +753,52 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 		graphics_gc_destroy(gc);
 }
 
+void
+graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t)
+{
+	GList *es;
+	struct point p;
+	char *label=NULL;
+	struct graphics_gc *gc = NULL;
+	es=itm->elements;
+	while (es) {
+		struct element *e=es->data;
+		int count=e->coord_count;
+		struct point pnt[count];
+		transform(t, projection_screen, e->coord, pnt, count, 0);
+		gc=graphics_gc_new(gra);
+		gc->meth.gc_set_foreground(gc->priv, &e->color);
+		switch (e->type) {
+		case element_polyline:
+			if (e->u.polyline.width > 1) 
+				gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
+			if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
+				graphics_gc_set_dashes(gc, e->u.polyline.width, 
+						       e->u.polyline.offset,
+				                       e->u.polyline.dash_table,
+				                       e->u.polyline.dash_num);
+			gra->meth.draw_lines(gra->priv, gc->priv, pnt, count);
+			break;
+		case element_circle:
+			if (e->u.circle.width > 1) 
+				gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
+			gra->meth.draw_circle(gra->priv, gc->priv, &pnt[0], e->u.circle.radius);
+			if (label && e->text_size) {
+				p.x=pnt[0].x+3;
+				p.y=pnt[0].y+10;
+			if (! gra->font[e->text_size])
+				gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
+				gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->text_size]->priv, label, &p, 0x10000, 0);
+			}
+		break;
+		default:
+			dbg(0,"dont know how to draw %d\n", e->type);
+		}
+		graphics_gc_destroy(gc);
+		es=g_list_next(es);
+	}
+}
+
 /**
  * FIXME
  * @param <>

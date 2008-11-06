@@ -34,7 +34,7 @@ struct transformation;
 struct display_list;
 
 enum draw_mode_num {
-	draw_mode_begin, draw_mode_end, draw_mode_cursor
+	draw_mode_begin, draw_mode_end, draw_mode_cursor, draw_mode_end_lazy
 };
 
 struct graphics_priv;

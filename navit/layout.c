@@ -22,6 +22,7 @@
 #include "item.h"
 #include "attr.h"
 #include "layout.h"
+#include "coord.h"
 #include "debug.h"
 
 struct layout * layout_new(struct attr *parent, struct attr **attrs)
@@ -91,19 +92,40 @@ layer_add_attr(struct layer *layer, struct attr *attr)
 struct itemgra * itemgra_new(struct attr *parent, struct attr **attrs)
 {
 	struct itemgra *itm;
-	struct attr *order, *item_types;
+	struct attr *order, *item_types, *speed_range, *angle_range, *sequence_range;
 	enum item_type *type;
+	struct range defrange;
 	
+	itm = g_new0(struct itemgra, 1);
 	order=attr_search(attrs, NULL, attr_order);
 	item_types=attr_search(attrs, NULL, attr_item_types);
-	if (! order || ! item_types)
-		return NULL;
-	itm = g_new0(struct itemgra, 1);
-	itm->order=order->u.order;
-	type=item_types->u.item_types;
-	while (type && *type != type_none) {
-		itm->type=g_list_append(itm->type, GINT_TO_POINTER(*type));
-		type++;
+	speed_range=attr_search(attrs, NULL, attr_speed_range);
+	angle_range=attr_search(attrs, NULL, attr_angle_range);
+	sequence_range=attr_search(attrs, NULL, attr_sequence_range);
+	defrange.min=0;
+	defrange.max=32767;
+	if (order) 
+		itm->order=order->u.range;
+	else 
+		itm->order=defrange;
+	if (speed_range) 
+		itm->speed_range=speed_range->u.range;
+	else 
+		itm->speed_range=defrange;
+	if (angle_range) 
+		itm->angle_range=angle_range->u.range;
+	else 
+		itm->angle_range=defrange;
+	if (sequence_range) 
+		itm->sequence_range=sequence_range->u.range;
+	else 
+		itm->sequence_range=defrange;
+	if (item_types) {
+		type=item_types->u.item_types;
+		while (type && *type != type_none) {
+			itm->type=g_list_append(itm->type, GINT_TO_POINTER(*type));
+			type++;
+		}
 	}
 	return itm;
 }
@@ -236,7 +258,7 @@ struct circle *
 circle_new(struct attr *parent, struct attr **attrs)
 {
 	struct element *e;
-	
+
 	e = g_new0(struct element, 1);
 	e->type=element_circle;
 	element_set_color(e, attrs);
@@ -271,11 +293,11 @@ icon_new(struct attr *parent, struct attr **attrs)
 	e = g_malloc0(sizeof(*e)+strlen(src->u.str)+1);
 	e->type=element_icon;
 	e->u.icon.src=(char *)(e+1);
-	if (w=attr_search(attrs, NULL, attr_w))
+	if ((w=attr_search(attrs, NULL, attr_w)))
 		e->u.icon.width=w->u.num;
 	else
 		e->u.icon.width=-1;
-	if (h=attr_search(attrs, NULL, attr_h))
+	if ((h=attr_search(attrs, NULL, attr_h)))
 		e->u.icon.height=h->u.num;
 	else
 		e->u.icon.height=-1;
@@ -305,3 +327,15 @@ arrows_new(struct attr *parent, struct attr **attrs)
 	return (struct arrows *)e;	
 }
 
+int
+element_add_attr(struct element *e, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_coord:
+		e->coord=g_realloc(e->coord,(e->coord_count+1)*sizeof(struct coord));
+		e->coord[e->coord_count++]=*attr->u.coord;
+		return 1;
+	default:
+		return 0;
+	}
+}

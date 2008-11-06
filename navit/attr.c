@@ -110,6 +110,9 @@ attr_new_from_text(const char *name, const char *value)
 		g_free(type_str);
 		break;
 	case attr_order:
+	case attr_sequence_range:
+	case attr_angle_range:
+	case attr_speed_range:
 		pos=strchr(value, '-');
 		min=0;
 		max=32767;
@@ -120,8 +123,8 @@ attr_new_from_text(const char *name, const char *value)
 			sscanf(value,"-%d",&max);
 		else
                 	sscanf(value,"%d-%d",&min, &max);
-		ret->u.order.min=min;
-		ret->u.order.max=max;
+		ret->u.range.min=min;
+		ret->u.range.max=max;
 		break;
 	default:
 		if (attr >= attr_type_string_begin && attr <= attr_type_string_end) {
@@ -266,6 +269,24 @@ attr_generic_set_attr(struct attr **attrs, struct attr *attr)
 	return curr;
 }
 
+struct attr **
+attr_generic_add_attr(struct attr **attrs, struct attr *attr)
+{
+	struct attr **curr=attrs;
+	int i,count=0;
+	while (curr && *curr) {
+		curr++;
+		count++;
+	}
+	curr=g_new0(struct attr *, count+2);
+	for (i = 0 ; i < count ; i++)
+		curr[i]=attrs[i];
+	curr[count]=attr_dup(attr);
+	curr[count+1]=NULL;
+	g_free(attrs);
+	return curr;
+}
+
 int
 attr_data_size(struct attr *attr)
 {
@@ -322,9 +343,11 @@ attr_dup(struct attr *attr)
 	int size;
 	struct attr *ret=g_new0(struct attr, 1);
 	ret->type=attr->type;
-	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) {
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
 		ret->u.num=attr->u.num;
-	} else {
+	else if (attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end) 
+		ret->u.data=attr->u.data;
+	else {
 		size=attr_data_size(attr);
 		if (size) {
 			ret->u.data=g_malloc(size);
