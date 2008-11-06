@@ -2629,7 +2629,7 @@ static void gui_internal_resize(void *data, int w, int h)
 	this->root.w=w;
 	this->root.h=h;
 	dbg(1,"w=%d h=%d children=%p\n", w, h, this->root.children);
-	navit_resize(this->nav, w, h);
+	navit_handle_resize(this->nav, w, h);
 	if (this->root.children) {
 		gui_internal_prune_menu(this, NULL);
 		gui_internal_menu_root(this);
@@ -2873,6 +2873,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	struct gui_priv *this;
 	struct attr *attr;
 	*meth=gui_internal_methods;
+	navit_ignore_graphics_events(nav, 1);
 	this=g_new0(struct gui_priv, 1);
 	this->nav=nav;
 	if ((attr=attr_search(attrs, NULL, attr_menu_on_map_click)))
