@@ -74,7 +74,7 @@ attr_new_from_text(const char *name, const char *value)
 	struct attr *ret;
 	struct coord_geo *g;
 	struct coord c;
-	char *pos,*type_str,*str,*tok,*saveptr;
+	char *pos,*type_str,*str,*tok,*saveptr=NULL;
 	int min,max,count;
 
 	ret=g_new0(struct attr, 1);

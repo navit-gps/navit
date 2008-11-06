@@ -50,6 +50,7 @@ struct coord *transform_center(struct transformation *this_);
 void transform_set_angle(struct transformation *t, int angle);
 int transform_get_angle(struct transformation *this_, int angle);
 void transform_set_screen_selection(struct transformation *t, struct map_selection *sel);
+void transform_set_screen_center(struct transformation *t, struct point *p);
 void transform_get_size(struct transformation *t, int *width, int *height);
 void transform_setup(struct transformation *t, struct pcoord *c, int scale, int angle);
 void transform_setup_source_rect(struct transformation *t);
@@ -71,6 +72,7 @@ int transform_within_dist_line(struct coord *ref, struct coord *c0, struct coord
 int transform_within_dist_polyline(struct coord *ref, struct coord *c, int count, int close, int dist);
 int transform_within_dist_polygon(struct coord *ref, struct coord *c, int count, int dist);
 int transform_within_dist_item(struct coord *ref, enum item_type type, struct coord *c, int count, int dist);
+void transform_destroy(struct transformation *t);
 /* end of prototypes */
 #ifdef __cplusplus
 }

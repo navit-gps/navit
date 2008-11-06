@@ -216,7 +216,7 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 	int i, count;
 	char **array;
 	char *name;
-	struct plugin *pl;
+	struct plugin *pl=NULL;
 	struct plugins *pls;
 
 	pls=parent->u.plugins;
