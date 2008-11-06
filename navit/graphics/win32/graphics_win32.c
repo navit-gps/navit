@@ -136,9 +136,9 @@ static void ErrorExit(LPTSTR lpszFunction)
 
     lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
         (lstrlen((LPCTSTR)lpMsgBuf)+lstrlen((LPCTSTR)lpszFunction)+40)*sizeof(TCHAR));
-    sprintf((LPTSTR)lpDisplayBuf, TEXT("%s failed with error %d: %s"), lpszFunction, dw, lpMsgBuf);
+    wprintf((LPTSTR)lpDisplayBuf, TEXT("%s failed with error %d: %s"), lpszFunction, dw, lpMsgBuf);
 
-    printf( "%s\n", lpDisplayBuf );
+    dbg(0, "%s\n", lpDisplayBuf );
     MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK);
 
     LocalFree(lpMsgBuf);
@@ -186,7 +186,7 @@ static void MakeMemoryDC(HANDLE hWnd, HDC hdc )
 
 		int Width = rectRgn.right - rectRgn.left;
 		int Height = rectRgn.bottom - rectRgn.top;
-		printf( "resize memDC to: %d %d \n", Width, Height );
+		dbg(0, "resize memDC to: %d %d \n", Width, Height );
 
 		hBitmap = CreateCompatibleBitmap(hdc, Width, Height );
 
@@ -199,9 +199,10 @@ static void MakeMemoryDC(HANDLE hWnd, HDC hdc )
 
 static void HandleButtonClick( struct graphics_priv *gra_priv, int updown, int button, long lParam )
 {
-	int xPos = LOWORD(lParam);
-	int yPos = HIWORD(lParam);
-	struct point pt = {xPos, yPos};
+	POINTS p = MAKEPOINTS(lParam);
+	struct point pt;
+	pt.x = p.x;
+	pt.y = p.y;
 	callback_list_call_attr_3(gra_priv->cbl, attr_button, (void *)updown, (void *)button, (void *)&pt);
 }
 
@@ -272,12 +273,12 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			{
 				gra_priv->width = LOWORD( lParam );
 				gra_priv->height  = HIWORD( lParam );
-				printf( "resize gfx to: %d %d \n", gra_priv->width, gra_priv->height );
+				dbg(0, "resize gfx to: %d %d \n", gra_priv->width, gra_priv->height );
 			}
 		break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
-			exit( 0 );
+			//exit( 0 );
 		break;
 		case WM_PAINT:
 			if ( gra_priv )
@@ -292,21 +293,23 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 		break;
 		case WM_MOUSEMOVE:
 		{
-			int xPos = LOWORD(lParam);
-			int yPos = HIWORD(lParam);
-			struct point pt = {xPos, yPos};
+			POINTS p = MAKEPOINTS(lParam);
+			struct point pt;
+			pt.x = p.x;
+			pt.y = p.y;
 
-			// printf( "WM_MOUSEMOVE: %d %d \n", xPos, yPos );
+			//dbg(1, "WM_MOUSEMOVE: %d %d \n", p.x, p.y );
 			callback_list_call_attr_1(gra_priv->cbl, attr_motion, (void *)&pt);
 		}
-
 		break;
 
 		case WM_LBUTTONDOWN:
-			HandleButtonClick( gra_priv,1, 1,lParam );
+			dbg(1, "LBUTTONDOWN\n");
+			HandleButtonClick( gra_priv, 1, 1, lParam);
 		break;
 		case WM_LBUTTONUP:
-			HandleButtonClick( gra_priv, 0, 1,lParam );
+			dbg(1, "LBUTTONUP\n");
+			HandleButtonClick( gra_priv, 0, 1, lParam);
 		break;
 		case WM_RBUTTONDOWN:
 			HandleButtonClick( gra_priv, 1, 3,lParam );
@@ -314,7 +317,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 		case WM_RBUTTONUP:
 			HandleButtonClick( gra_priv, 0, 3,lParam );
 		break;
-
+		case WM_LBUTTONDBLCLK:
+			dbg(1, "LBUTTONDBLCLK\n");
+			HandleButtonClick( gra_priv, 1, 6,lParam );
+		break;
 		default:
 			return DefWindowProc(hwnd, Message, wParam, lParam);
 	}
@@ -322,7 +328,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 }
 
 
-static const char g_szClassName[] = "NAVGRA";
+static const wchar_t g_szClassName[] = TEXT("NAVGRA");
 
 static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 {
@@ -334,15 +340,15 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 	wc.hIconSm		 = NULL;
 #endif
 	HWND hwnd;
-    RECT rcParent;
+	RECT rcParent;
 
-	wc.style		 = 0;
-	wc.lpfnWndProc	 = WndProc;
-	wc.cbClsExtra	 = 0;
-	wc.cbWndExtra	 = 64;
-	wc.hInstance	 = NULL;
-	wc.hIcon		 = NULL;
-	wc.hCursor		 = LoadCursor(NULL, IDC_ARROW);
+	wc.style	 = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	wc.lpfnWndProc	= WndProc;
+	wc.cbClsExtra	= 0;
+	wc.cbWndExtra	= 64;
+	wc.hInstance	= GetModuleHandle(NULL);
+	wc.hIcon	= NULL;
+	wc.hCursor	= LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
 	wc.lpszMenuName  = NULL;
 	wc.lpszClassName = g_szClassName;
@@ -355,7 +361,7 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 	if(!RegisterClassEx(&wc))
 #endif
 	{
-		ErrorExit( "Window Registration Failed!" );
+		ErrorExit( TEXT("Window Registration Failed!") );
 		return NULL;
 	}
 
@@ -365,30 +371,30 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 	callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->width, (void *)gr->height);
 #endif
 
-	hwnd = CreateWindow( 	g_szClassName,
-							"",
-							WS_CHILD  ,
-							0,
-							0,
-							gr->width,
-							gr->height,
-							gr->wnd_parent_handle,
-							(HMENU)ID_CHILD_GFX,
-							NULL,
-							NULL);
+	hwnd = CreateWindow(g_szClassName,
+				TEXT(""),
+				WS_VISIBLE,
+				0,
+				0,
+				gr->width,
+				gr->height,
+				gr->wnd_parent_handle,
+				(HMENU)ID_CHILD_GFX,
+				GetModuleHandle(NULL),
+				NULL);
 
 	if(hwnd == NULL)
 	{
-		ErrorExit( "Window Creation Failed!" );
+		ErrorExit( TEXT("Window Creation Failed!") );
 		return NULL;
 	}
+	gr->wnd_handle = hwnd;
 
 	SetWindowLongPtr( hwnd , DWLP_USER, gr );
 
 	ShowWindow( hwnd, TRUE );
 	UpdateWindow( hwnd );
 
-	gr->wnd_handle = hwnd;
 
 	PostMessage( gr->wnd_parent_handle, WM_USER + 1, 0, 0 );
 
@@ -466,7 +472,13 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 	HPEN holdpen;
 	HPEN hpen;
 
+#ifdef UNDER_CE
+	/* user styles not supported under CE */
 	hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
+#else
+	hpen = ExtCreatePen(PS_GEOMETRIC|PS_ENDCAP_ROUND|PS_JOIN_ROUND
+		, gc->line_width, NULL, 0, NULL);
+#endif
 	holdpen = SelectObject( hMemDC, hpen );
 
 	SetBkColor( hMemDC, gc->bg_color );
@@ -657,7 +669,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 #ifdef _WIN32_WCE
 	{
 		wchar_t utf16[1024];
-		UTF8 *utf8 = text;
+		const UTF8 *utf8 = (UTF8 *)text;
 		UTF16 *utf16p = (UTF16 *) utf16;
 		SetBkMode (hMemDC, TRANSPARENT);
 		if (ConvertUTF8toUTF16(&utf8, utf8+strlen(text),
@@ -676,10 +688,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 	SetBkMode( hMemDC, prevBkMode );
 
 	SetViewportOrgEx (hMemDC, 0, 0, NULL) ;
-
 }
-
-
 
 static void font_destroy(struct graphics_font_priv *font)
 {
@@ -705,7 +714,6 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 //font( &fontFamily, size, FontStyleRegular, UnitPoint );
 	return font;
 }
-
 
 static void image_cache_hash_add( const char* key, struct graphics_image_priv* val_ptr)
 {
@@ -740,7 +748,7 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
 	if ( NULL == ( ret = image_cache_hash_lookup( name ) ) )
 	{
 		ret = g_new( struct graphics_image_priv, 1 );
-		printf( "loading image '%s'\n", name );
+		dbg(2, "loading image '%s'\n", name );
 		ret->pxpm = Xpm2bmp_new();
 		Xpm2bmp_load( ret->pxpm, name );
 		image_cache_hash_add( name, ret );
@@ -769,7 +777,7 @@ static struct graphics_methods graphics_methods = {
 	NULL,
 #endif
 	draw_restore,
-	NULL,
+	NULL,	// draw_drag
 	font_new,
 	gc_new,
 	background_gc,
@@ -799,20 +807,20 @@ struct graphics_priv* win32_graphics_new( struct navit *nav, struct graphics_met
 static void
 event_win32_main_loop_run(void)
 {
-	MSG      msg;
+	MSG msg;
 
 	dbg(0,"enter\n");
-   while (GetMessage(&msg, 0, 0, 0))
-    {
-        TranslateMessage(&msg);       /*  Keyboard input.      */
-        DispatchMessage(&msg);
-    }
+	while (GetMessage(&msg, 0, 0, 0)) {
+		TranslateMessage(&msg);       /*  Keyboard input.      */
+		DispatchMessage(&msg);
+	}
 
 }
 
 static void event_win32_main_loop_quit(void)
 {
 	dbg(0,"enter\n");
+	PostQuitMessage(0);
 }
 
 static struct event_watch *
@@ -828,17 +836,78 @@ event_win32_remove_watch(struct event_watch *ev)
 	dbg(0,"enter\n");
 }
 
+static GList *timers;
+struct event_timeout {
+	UINT_PTR timer_id;
+	int multi;
+	struct callback *cb;
+	struct event_timeout *next;
+};
+
+static void run_timer(UINT_PTR idEvent)
+{
+	GList *l;
+	struct event_timeout *t;
+	l = timers;
+	while (l) {
+		t = l->data;
+		if (t->timer_id == idEvent) {
+			dbg(1, "run timer:%d\n", idEvent);
+			callback_call_0(t->cb);
+			if (!t->multi) {
+				KillTimer(NULL, t->timer_id);
+				timers = g_list_remove(timers, t);
+				free(t);
+			}
+			return;
+		}
+		l = g_list_next(l);
+	}
+	dbg(0, "timer %d not found\n", idEvent);
+}
+
+static VOID CALLBACK win32_timer_cb(HWND hwnd, UINT uMsg, 
+			UINT_PTR idEvent,
+			DWORD dwTime)
+{
+	run_timer(idEvent);
+}
+
 static struct event_timeout *
 event_win32_add_timeout(int timeout, int multi, struct callback *cb)
 {
-	dbg(0,"enter\n");
-	return NULL;
+	struct event_timeout *t;
+	t = calloc(1, sizeof(*t));
+	if (!t)
+		return t;
+	t->multi = multi;
+	timers = g_list_prepend(timers, t);
+	t->cb = cb;
+	t->timer_id = SetTimer(NULL, 0, timeout, win32_timer_cb);
+	dbg(1, "Started timer %d for %d\n", t->timer_id, timeout);
+	return t;
 }
 
 static void
-event_win32_remove_timeout(struct event_timeout *ev)
+event_win32_remove_timeout(struct event_timeout *to)
 {
-	dbg(0,"enter\n");
+	GList *l;
+	struct event_timeout *t;
+	dbg(1,"enter:%d\n", t->timer_id);
+	l = timers;
+	while (l) {
+		t = l->data;
+		/* Use the pointer not the ID, IDs are reused */
+		if (t == to) {
+			KillTimer(NULL, t->timer_id);
+			timers = g_list_remove(timers, t);
+			free(t);
+			return;
+		}
+		l = g_list_next(l);
+	}
+	dbg(0, "Timer %d not found\n", to->timer_id);
+	free(to);
 }
 
 static struct event_idle *
