@@ -21,6 +21,7 @@
 #include "config.h"
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <stdlib.h>
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
@@ -61,6 +62,8 @@ struct graphics_priv {
 	int background_ready;
 	GdkColormap *colormap;
 	struct point p;
+	struct point pclean;
+	int cleanup;
 	int width;
 	int height;
 	int win_w;
@@ -361,12 +364,17 @@ draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct po
 #endif
 
 static void
-overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *r)
+overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int clean, GdkRectangle *r)
 {
-	r->x=overlay->p.x;
+	if (clean) {
+		r->x=overlay->pclean.x;
+		r->y=overlay->pclean.y;
+	} else {
+		r->x=overlay->p.x;
+		r->y=overlay->p.y;
+	}
 	if (r->x < 0)
 		r->x += parent->width;
-	r->y=overlay->p.y;
 	if (r->y < 0)
 		r->y += parent->height;
 	r->width=overlay->width;
@@ -391,7 +399,7 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
 	if (parent->overlay_disabled || overlay->overlay_disabled)
 		return;
 	dbg(1,"r->x=%d r->y=%d r->width=%d r->height=%d\n", r->x, r->y, r->width, r->height);
-	overlay_rect(parent, overlay, &or);
+	overlay_rect(parent, overlay, 0, &or);
 	dbg(1,"or.x=%d or.y=%d or.width=%d or.height=%d\n", or.x, or.y, or.width, or.height);
 	or.x-=r->x;
 	or.y-=r->y;
@@ -436,6 +444,10 @@ draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
 static void
 draw_drag(struct graphics_priv *gr, struct point *p)
 {
+	if (!gr->cleanup) {
+		gr->pclean=gr->p;
+		gr->cleanup=1;
+	}
 	if (p)
 		gr->p=*p;
 	else {
@@ -478,6 +490,7 @@ static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	GdkRectangle r;
+	struct graphics_priv *overlay;
 #if 0
 	if (mode == draw_mode_begin) {
 		if (! gr->parent && gr->background_gc)
@@ -486,7 +499,12 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 #endif
 	if (mode == draw_mode_end && gr->mode != draw_mode_cursor) {
 		if (gr->parent) {
-			overlay_rect(gr->parent, gr, &r);
+			if (gr->cleanup) {
+				overlay_rect(gr->parent, gr, 1, &r);
+				gtk_drawing_area_draw(gr->parent, &r);
+				gr->cleanup=0;
+			}
+			overlay_rect(gr->parent, gr, 0, &r);
 			gtk_drawing_area_draw(gr->parent, &r);
 		} else {
 			r.x=0;
@@ -494,6 +512,11 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 			r.width=gr->width;
 			r.height=gr->height;
 			gtk_drawing_area_draw(gr, &r);
+			overlay=gr->overlays;
+			while (overlay) {
+				overlay->cleanup=0;
+				overlay=overlay->next;
+			}
 		}
 	}
 	gr->mode=mode;

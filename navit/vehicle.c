@@ -187,16 +187,20 @@ vehicle_set_attr(struct vehicle *this_, struct attr *attr,
 int
 vehicle_add_attr(struct vehicle *this_, struct attr *attr)
 {
+	int ret=1;
 	switch (attr->type) {
 	case attr_callback:
 		callback_list_add(this_->cbl, attr->u.callback);
 		break;
 	case attr_log:
-		return vehicle_add_log(this_, attr->u.log);
+		ret=vehicle_add_log(this_, attr->u.log);
+		break;
 	default:
-		return 0;
+		break;
 	}
-	return 1;
+	if (ret)
+		this_->attrs=attr_generic_add_attr(this_->attrs, attr);
+	return ret;
 }
 
 int
