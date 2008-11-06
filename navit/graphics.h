@@ -61,7 +61,7 @@ struct graphics_methods {
 	struct graphics_gc_priv *(*gc_new)(struct graphics_priv *gr, struct graphics_gc_methods *meth);
 	void (*background_gc)(struct graphics_priv *gr, struct graphics_gc_priv *gc);
 	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha);
-	struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot);
+	struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation);
 	void *(*get_data)(struct graphics_priv *gr, char *type);
 	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
 	void (*get_text_bbox)(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret);

@@ -69,7 +69,7 @@ cursor_draw_do(struct cursor *this_, int lazy)
 		return;
 	if (!this_->gra)
 		return;
-	transform_set_angle(this_->trans, this_->angle);
+	transform_set_angle(this_->trans, -this_->angle);
 	graphics_draw_mode(this_->gra, draw_mode_begin);
 	p.x=0;
 	p.y=0;

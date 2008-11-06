@@ -405,7 +405,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot)
+static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)
 {
 	struct graphics_image_priv *ret;
 

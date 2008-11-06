@@ -50,6 +50,7 @@ struct element {
 			char *src;
 			int width;
 			int height;
+			int rotation;
 		} icon;
 	} u;
 	int coord_count;
