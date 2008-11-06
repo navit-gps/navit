@@ -1339,9 +1339,9 @@ route_path_new_trivial(struct route_graph *this, struct route_info *pos, struct 
 	if (pos->lenextra) 
 		route_path_add_item(ret, NULL, pos->lenextra, &pos->c, NULL, 0, &pos->lp, 1);
 	if (dir > 0)
-		route_path_add_item(ret, &sd->item, pos->lenneg-dst->lenneg, &pos->lp, sd->c+pos->pos+1, dst->pos+pos->pos, &dst->lp, 1);
+		route_path_add_item(ret, &sd->item, pos->lenpos-dst->lenpos, &pos->lp, sd->c+pos->pos+1, dst->pos+pos->pos, &dst->lp, 1);
 	else
-		route_path_add_item(ret, &sd->item, pos->lenpos-dst->lenpos, &pos->lp, sd->c+dst->pos+1, pos->pos-dst->pos, &dst->lp, -1);
+		route_path_add_item(ret, &sd->item, pos->lenneg-dst->lenneg, &pos->lp, sd->c+dst->pos+1, pos->pos-dst->pos, &dst->lp, -1);
 	if (dst->lenextra) 
 		route_path_add_item(ret, NULL, dst->lenextra, &dst->lp, NULL, 0, &dst->c, 1);
 	return ret;
