@@ -36,143 +36,146 @@
 #include "color.h"
 #include "cursor.h"
 #include "compass.h"
+#include "item.h"
+#include "layout.h"
 #include "event.h"
 /* #include "track.h" */
 
 
-
 struct cursor {
+	int w,h;
 	struct graphics *gra;
-#define NUM_GC 5
-	struct graphics_gc *cursor_gc[NUM_GC];
-	struct graphics_gc *cursor_gc2[NUM_GC];
-	int current_gc;
-	int last_dir;
-	int last_draw_dir;
 	struct callback *animate_callback;
 	struct event_timeout *animate_timer;	
 	struct point cursor_pnt;
+	struct graphics_gc *bg;
+	struct attr **attrs;
+	struct transformation *trans;
+	int sequence;
+	int angle;
+	int speed;
 };
 
 
-void
-cursor_draw(struct cursor *this_, struct point *pnt, int dir, int draw_dir, int force)
+
+static void
+cursor_draw_do(struct cursor *this_, int lazy)
 {
-	int x=this_->cursor_pnt.x;
-	int y=this_->cursor_pnt.y;
-	int r=12,lw=2;
-	double dx,dy;
-	double fac1,fac2;
-	struct point cpnt[3];
-	struct graphics *gra=this_->gra;
+	struct point p;
+	int speed=this_->speed;
+	int angle=this_->angle;
 
-	if (pnt && x == pnt->x && y == pnt->y && !force)
+	if (!this_->attrs || !this_->gra)
 		return;
-	if (!graphics_ready(gra))
+	if (!this_->gra)
 		return;
-	this_->last_dir = dir;
-	this_->last_draw_dir = draw_dir;
-	cpnt[0]=this_->cursor_pnt;
-	cpnt[0].x-=r+lw;
-	cpnt[0].y-=r+lw;
-	graphics_draw_restore(gra, &cpnt[0], (r+lw)*2, (r+lw)*2);
-	if (pnt) {
-		graphics_draw_mode(gra, draw_mode_cursor);
-		this_->cursor_pnt=*pnt;
-		x=pnt->x;
-		y=pnt->y;
-		cpnt[0].x=x;
-		cpnt[0].y=y;
-		graphics_draw_circle(gra, this_->cursor_gc[this_->current_gc], &cpnt[0], r*2);
-		if (this_->cursor_gc2[this_->current_gc])
-			graphics_draw_circle(gra, this_->cursor_gc2[this_->current_gc], &cpnt[0], r*2-4);
-		if (draw_dir) {
-			dx=sin(M_PI*dir/180.0);
-			dy=-cos(M_PI*dir/180.0);
-
-			fac1=0.7*r;
-			fac2=0.4*r;	
-			cpnt[0].x=x-dx*fac1+dy*fac2;
-			cpnt[0].y=y-dy*fac1-dx*fac2;
-			cpnt[1].x=x+dx*r;
-			cpnt[1].y=y+dy*r;
-			cpnt[2].x=x-dx*fac1-dy*fac2;
-			cpnt[2].y=y-dy*fac1+dx*fac2;
-			graphics_draw_lines(gra, this_->cursor_gc[this_->current_gc], cpnt, 3);
-
-			if (this_->cursor_gc2[this_->current_gc]) {
-				r-=4;
-				fac1=0.7*r;
-				fac2=0.4*r;	
-				cpnt[0].x=x-dx*fac1+dy*fac2;
-				cpnt[0].y=y-dy*fac1-dx*fac2;
-				cpnt[1].x=x+dx*r;
-				cpnt[1].y=y+dy*r;
-				cpnt[2].x=x-dx*fac1-dy*fac2;
-				cpnt[2].y=y-dy*fac1+dx*fac2;
-				graphics_draw_lines(gra, this_->cursor_gc2[this_->current_gc], cpnt, 3);
+	transform_set_angle(this_->trans, this_->angle);
+	graphics_draw_mode(this_->gra, draw_mode_begin);
+	p.x=0;
+	p.y=0;
+	graphics_draw_rectangle(this_->gra, this_->bg, &p, this_->w, this_->h);
+	for (;;) {
+		struct attr **attr=this_->attrs;
+		int sequence=this_->sequence;
+		int match=0;
+		while (*attr) {
+			if ((*attr)->type == attr_itemgra) {
+				struct itemgra *itm=(*attr)->u.itemgra;
+				dbg(1,"speed %d-%d %d\n", itm->speed_range.min, itm->speed_range.max, speed);
+				if (speed >= itm->speed_range.min && speed <= itm->speed_range.max &&  
+				    angle >= itm->angle_range.min && angle <= itm->angle_range.max &&  
+				    sequence >= itm->sequence_range.min && sequence <= itm->sequence_range.max) {
+					graphics_draw_itemgra(this_->gra, itm, this_->trans);
+					match=1;
+				}
 			}
-		} else {
-			cpnt[1]=cpnt[0];
-			graphics_draw_lines(gra, this_->cursor_gc[this_->current_gc], cpnt, 2);
-			if (this_->cursor_gc2[this_->current_gc])
-				graphics_draw_circle(gra, this_->cursor_gc2[this_->current_gc], &cpnt[0], 4);
+			attr++;
 		}
-		graphics_draw_mode(gra, draw_mode_end);
+		if (match) {
+			break;
+		} else {
+			if (this_->sequence) 
+				this_->sequence=0;
+			else
+				break;
+		}
 	}
+	graphics_draw_drag(this_->gra, &this_->cursor_pnt);
+	graphics_draw_mode(this_->gra, lazy ? draw_mode_end_lazy : draw_mode_end);
+}
+
+void
+cursor_draw(struct cursor *this_, struct graphics *gra, struct point *pnt, int lazy, int angle, int speed)
+{
+	if (angle < 0)
+		angle+=360;
+	dbg(1,"enter this=%p gra=%p pnt=%p lazy=%d dir=%d speed=%d\n", this_, gra, pnt, lazy, angle, speed);
+	dbg(1,"point %d,%d\n", pnt->x, pnt->y);
+	this_->cursor_pnt=*pnt;
+	this_->cursor_pnt.x-=this_->w/2;
+	this_->cursor_pnt.y-=this_->h/2;
+	this_->angle=angle;
+	this_->speed=speed;
+	if (!this_->gra) {
+		struct color c;
+		this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, this_->w, this_->h, 65535);
+		this_->bg=graphics_gc_new(this_->gra);
+		c.r=0; c.g=0; c.b=0; c.a=0;
+		graphics_gc_set_foreground(this_->bg, &c);
+		graphics_background_gc(this_->gra, this_->bg);
+	}
+	cursor_draw_do(this_, lazy);
 }
 
 static void
 cursor_animate(struct cursor * this)
 {
-	struct point p;
-	this->current_gc++;
-	if (this->current_gc >= NUM_GC)
-		this->current_gc=0;
-	p.x = this->cursor_pnt.x;
-	p.y = this->cursor_pnt.y;
-	cursor_draw(this, &p, this->last_dir, this->last_draw_dir, 1);
+	this->sequence++;
+	cursor_draw_do(this, 0);
+}
+
+int
+cursor_add_attr(struct cursor *this_, struct attr *attr)
+{
+        int ret=1;
+        switch (attr->type) {
+        case attr_itemgra:
+                break;
+	default:
+		ret=0;
+        }
+        if (ret)
+                this_->attrs=attr_generic_add_attr(this_->attrs, attr);
+        return ret;
 }
 
 struct cursor *
-cursor_new(struct graphics *gra, struct color *c, struct color *c2, int animate)
+cursor_new(struct attr *parent, struct attr **attrs)
 {
-	unsigned char dash_list[] = { 4, 6 };
-	int i;
-	struct cursor *this=g_new(struct cursor,1);
-	dbg(2,"enter gra=%p c=%p\n", gra, c);
-	this->gra=gra;
-	this->animate_timer=0;
-	for (i=0;i<NUM_GC;i++) {
-		this->cursor_gc[i]=NULL;
-		this->cursor_gc2[i]=NULL;
-	}
-	this->current_gc=0;
-	for (i=0;i<NUM_GC;i++) {
-		this->cursor_gc[i]=graphics_gc_new(gra);
-		graphics_gc_set_foreground(this->cursor_gc[i], c);
-		graphics_gc_set_linewidth(this->cursor_gc[i], 2);
-		if (c2) {
-			this->cursor_gc2[i]=graphics_gc_new(gra);
-			graphics_gc_set_foreground(this->cursor_gc2[i], c2);
-		}
-		if (animate) {
-			graphics_gc_set_dashes(this->cursor_gc[i], 2, (NUM_GC-i)*2, dash_list, 2);
-			if(this->cursor_gc2[i])
-				graphics_gc_set_dashes(this->cursor_gc2[i], 2, i*2, dash_list, 2);
-		} else {
-			graphics_gc_set_linewidth(this->cursor_gc[i], 2);
-			if(this->cursor_gc2[i])
-				graphics_gc_set_linewidth(this->cursor_gc2[i], 2);
-			break; // no need to create other GCs if we are not animating
-		}
-	}
-	if (animate) {
+	struct cursor *this=g_new0(struct cursor,1);
+	struct attr *w,*h, *interval;
+	struct pcoord center;
+	struct point scenter;
+	w=attr_search(attrs, NULL, attr_w);
+	h=attr_search(attrs, NULL, attr_h);
+	if (! w || ! h)
+		return NULL;
+
+	this->w=w->u.num;
+	this->h=h->u.num;
+	this->trans=transform_new();
+	center.pro=projection_screen;
+	center.x=0;
+	center.y=0;
+	transform_setup(this->trans, &center, 16, 0);
+	scenter.x=this->w/2;
+	scenter.y=this->h/2;
+	transform_set_screen_center(this->trans, &scenter);
+	interval=attr_search(attrs, NULL, attr_interval);
+	if (interval) {
 		this->animate_callback=callback_new_1(callback_cast(cursor_animate), this);
-		this->animate_timer=event_add_timeout(250, 1, this->animate_callback);
+		this->animate_timer=event_add_timeout(interval->u.num, 1, this->animate_callback);
 	}
-	this->cursor_pnt.x = 0;
-	this->cursor_pnt.y = 0;
 	dbg(2,"ret=%p\n", this);
 	return this;
 }
@@ -180,15 +183,10 @@ cursor_new(struct graphics *gra, struct color *c, struct color *c2, int animate)
 void
 cursor_destroy(struct cursor *this_)
 {
-	int i;
-
-	callback_destroy(this_->animate_callback);
-	event_remove_timeout(this_->animate_timer);
-	for (i=0;i<NUM_GC;i++) {
-		if(this_->cursor_gc[i])
-			graphics_gc_destroy(this_->cursor_gc[i]);
-		if(this_->cursor_gc2[i])
-			graphics_gc_destroy(this_->cursor_gc2[i]);
+	if (this_->animate_callback) {
+		callback_destroy(this_->animate_callback);
+		event_remove_timeout(this_->animate_timer);
 	}
+	transform_destroy(this_->trans);
 	g_free(this_);
 }

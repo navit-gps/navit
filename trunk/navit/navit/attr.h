@@ -84,9 +84,10 @@ struct attr {
 		struct arrows *arrows;
 		struct element *element;
 		struct speech *speech;
-		struct order {
+		struct cursor *cursor;
+		struct range {
 			short min, max;
-		} order;
+		} range;
 		int *dash;
 		enum item_type *item_types;
 	} u;

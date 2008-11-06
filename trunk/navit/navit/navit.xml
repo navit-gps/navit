@@ -62,17 +62,55 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 			<!--Navit can write a tracklog in several formats (gpx, nmea or textfile):
 			<log type="gpx" data="track_%Y%m%d-%i.gpx" flush_size="1000" flush_time="30" />
 			-->
+		       <cursor w="26" h="26">
+				<itemgra>
+					<circle color="#0000ff" radius="24" width="2">
+						<coord x="0" y="0" />
+					</circle>
+				</itemgra>
+				<itemgra speed_range="-2">
+					<polyline color="#0000ff" width="2" >
+						<coord x="0" y="0" />
+						<coord x="0" y="0" />
+					</polyline>
+				</itemgra>
+				<itemgra speed_range="3-">
+					<polyline color="#0000ff" width="2" >
+						<coord x="-7" y="-10" />
+						<coord x="0" y="12" />
+						<coord x="7" y="-10" />
+					</polyline>
+				</itemgra>
+			</cursor>
 		</vehicle>
 
-		<!-- To improve visibility of the cursor in gtk, you may optionally add:
-		color2="#rrggbb"  - draws a second cursor inside the original, in the specified colour
-		animate="1" - animates the cursor, as series of moving dots
+		<!--
 		For SDL, you should add follow="1" refresh="1" to have the view centered on your position
 		<vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1" refresh="1"/>
 		-->
 
-		<vehicle name="Demo" enabled="no" source="demo://" color="#0000aa"/>
-
+		<vehicle name="Demo" enabled="no" source="demo://"/>
+		       <cursor w="26" h="26">
+				<itemgra>
+					<circle color="#0000ff" radius="24" width="2">
+						<coord x="0" y="0" />
+					</circle>
+				</itemgra>
+				<itemgra speed_range="-2">
+					<polyline color="#0000ff" width="2" >
+						<coord x="0" y="0" />
+						<coord x="0" y="0" />
+					</polyline>
+				</itemgra>
+				<itemgra speed_range="3-">
+					<polyline color="#0000ff" width="2" >
+						<coord x="-7" y="-10" />
+						<coord x="0" y="12" />
+						<coord x="7" y="-10" />
+					</polyline>
+				</itemgra>
+			</cursor>
+		</vehicle>
 		<tracking>
 		</tracking>
 		

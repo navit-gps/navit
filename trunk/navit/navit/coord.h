@@ -60,9 +60,11 @@ struct coord_geo_cart {
 };
 
 enum projection;
+struct attr;
 
 struct coord * coord_get(unsigned char **p);
 struct coord * coord_new(int x, int y);
+struct coord * coord_new_from_attrs(struct attr *parent, struct attr **attrs);
 void coord_destroy(struct coord *c);
 int coord_parse(const char *c_str, enum projection pro, struct coord *c_ret);
 void coord_print(enum projection pro, struct coord *c, FILE *out);

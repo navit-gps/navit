@@ -23,6 +23,7 @@
 #include <string.h>
 #include <math.h>
 #include "debug.h"
+#include "item.h"
 #include "coord.h"
 #include "transform.h"
 #include "projection.h"
@@ -56,6 +57,18 @@ coord_new(int x, int y)
 
 	return c;
 }
+
+struct coord *
+coord_new_from_attrs(struct attr *parent, struct attr **attrs)
+{
+	struct attr *x,*y;
+	x=attr_search(attrs, NULL, attr_x);
+	y=attr_search(attrs, NULL, attr_y);
+	if (!x || !y)
+		return NULL;
+	return coord_new(x->u.num, y->u.num);
+}
+
 
 void
 coord_destroy(struct coord *c)

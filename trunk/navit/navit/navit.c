@@ -178,13 +178,13 @@ navit_draw(struct navit *this_)
 		return;
 	}
 	transform_setup_source_rect(this_->trans);
-	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layout_current);
 	l=this_->vehicles;
 	while (l) {
 		nv=l->data;
 		navit_vehicle_draw(this_, nv, NULL);
 		l=g_list_next(l);
 	}
+	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layout_current);
 }
 
 void
@@ -1228,7 +1228,6 @@ navit_init(struct navit *this_)
 	while (l) {
 		dbg(1,"parsed one vehicle\n");
 		nv=l->data;
-		nv->cursor=cursor_new(this_->gra, &nv->c, nv->c2, nv->animate_cursor);
 		nv->callback.type=attr_callback;
 		nv->callback.u.callback=callback_new_2(callback_cast(navit_vehicle_update), this_, nv);
 		vehicle_add_attr(nv->vehicle, &nv->callback);
@@ -1595,10 +1594,24 @@ navit_remove_callback(struct navit *this_, struct callback *cb)
 static void
 navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt)
 {
-	struct point pnt2;
+	struct point cursor_pnt;
 	enum projection pro;
+	struct attr cursor;
+
 	if (this_->blocked)
 		return;
+	if (! vehicle_get_attr(nv->vehicle, attr_cursor, &cursor, NULL))
+		return;
+	if (! cursor.u.cursor)
+		return;
+	if (pnt)
+		cursor_pnt=*pnt;
+	else {
+		pro=transform_get_projection(this_->trans);
+		transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0);
+	}
+	cursor_draw(cursor.u.cursor, this_->gra, &cursor_pnt, pnt ? 0:1, transform_get_angle(this_->trans, 0)-nv->dir, nv->speed);
+#if 0	
 	if (pnt)
 		pnt2=*pnt;
 	else {
@@ -1609,6 +1622,7 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 	cursor_draw(nv->cursor, &pnt2, nv->dir-transform_get_angle(this_->trans, 0), nv->speed > 2, pnt == NULL);
 #else
 	cursor_draw(nv->cursor, &pnt2, nv->dir-transform_get_angle(this_->trans, 0), nv->speed > 2, 1);
+#endif
 #endif
 }
 

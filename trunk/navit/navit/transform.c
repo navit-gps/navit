@@ -318,6 +318,12 @@ transform_set_screen_selection(struct transformation *t, struct map_selection *s
 	}
 }
 
+void
+transform_set_screen_center(struct transformation *t, struct point *p)
+{
+	t->screen_center=*p;
+}
+
 #if 0
 void
 transform_set_size(struct transformation *t, int width, int height)
@@ -839,6 +845,12 @@ transform_within_dist_item(struct coord *ref, enum item_type type, struct coord 
 	if (type < type_area)
 		return transform_within_dist_polyline(ref, c, count, 0, dist);
 	return transform_within_dist_polygon(ref, c, count, dist);
+}
+
+void
+transform_destroy(struct transformation *t)
+{
+	g_free(t);
 }
 
 

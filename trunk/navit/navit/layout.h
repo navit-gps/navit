@@ -52,11 +52,13 @@ struct element {
 			int height;
 		} icon;
 	} u;
+	int coord_count;
+	struct coord *coord;
 };
 
 
 struct itemgra { 
-	struct order order;
+	struct range order,sequence_range,speed_range,angle_range;
 	GList *type;
 	GList *elements;
 };
@@ -86,5 +88,6 @@ struct text *text_new(struct attr *parent, struct attr **attrs);
 struct icon *icon_new(struct attr *parent, struct attr **attrs);
 struct image *image_new(struct attr *parent, struct attr **attrs);
 struct arrows *arrows_new(struct attr *parent, struct attr **attrs);
+int element_add_attr(struct element *e, struct attr *attr);
 #endif
 
