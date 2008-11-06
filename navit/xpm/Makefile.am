@@ -163,6 +163,12 @@ xpm_DATA += $(addsuffix .png,$(basename $(svgs)))
 if USE_SVG2PNG_SCALES
 xpm_DATA += $(foreach scale, @SVG2PNG_SCALES@, $(addsuffix _$(scale)_$(scale).png,$(basename $(svgs))))
 endif
+if USE_SVG2PNG_SCALES_FLAG
+xpm_DATA += $(foreach scale, @SVG2PNG_SCALES_FLAG@, $(addsuffix _$(scale)_$(scale).png,$(basename $(flag_svgs))))
+endif
+if USE_SVG2PNG_SCALES_NAV
+xpm_DATA += $(foreach scale, @SVG2PNG_SCALES_NAV@, $(addsuffix _$(scale)_$(scale).png,$(basename $(nav_svgs))))
+endif
 endif
 
 DESKTOPFILEdir=$(datadir)/applications
