@@ -1961,18 +1961,18 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 		struct widget *wc;
 
 		dbg(0,"process\n");
-		if (! strcmp(wm->name,_("Town")))
+		if (! strcmp(wm->name,"Town"))
 			search_attr.type=attr_town_name;
-		if (! strcmp(wm->name,_("Street")))
+		if (! strcmp(wm->name,"Street"))
 			search_attr.type=attr_street_name;
 		search_attr.u.str=wm->text;
 		search_list_search(this->sl, &search_attr, 1);
 		while((res=search_list_get_result(this->sl))) {
-			if (! strcmp(wm->name,_("Town"))) {
+			if (! strcmp(wm->name,"Town")) {
 				name=res->town->name;
 				text=g_strdup(name);
 			}
-			if (! strcmp(wm->name,_("Street"))) {
+			if (! strcmp(wm->name,"Street")) {
 				name=res->street->name;
 				text=g_strdup_printf("%s %s", res->town->name, res->street->name);
 			}
@@ -2234,7 +2234,7 @@ gui_internal_search(struct gui_priv *this, char *what, char *type)
 static void
 gui_internal_search_street(struct gui_priv *this, struct widget *widget)
 {
-	gui_internal_search(this,"Street","Street");
+	gui_internal_search(this,_("Street"),"Street");
 }
 
 static void
@@ -2243,13 +2243,13 @@ gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget)
 	dbg(0,"id %d\n", widget->item.id_lo);
 	search_list_select(this->sl, attr_town_name, 0, 0);
 	search_list_select(this->sl, attr_town_name, widget->item.id_lo, 1);
-	gui_internal_search(this,"Street","Street");
+	gui_internal_search(this,_("Street"),"Street");
 }
 
 static void
 gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 {
-	gui_internal_search(this,"Town","Town");
+	gui_internal_search(this,_("Town"),"Town");
 }
 
 static void
