@@ -1,0 +1,20 @@
+<cursor w="48" h="48">
+	<itemgra speed_range="-2"><icon src="cursor_still.svg" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="0-11"><icon src="cursor.svg" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="12-34"><icon src="cursor225.svg" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="35-56"><icon src="cursor450.svg" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="57-75"><icon src="cursor675.svg" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="76-98"><icon src="cursor.svg" rotation="90" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="99-120"><icon src="cursor225.svg" rotation="90" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="121-143"><icon src="cursor450.svg" rotation="90" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="144-165"><icon src="cursor675.svg" rotation="90" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="166-188"><icon src="cursor.svg" rotation="180" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="189-210"><icon src="cursor225.svg" rotation="180" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="211-233"><icon src="cursor450.svg" rotation="180" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="234-255"><icon src="cursor675.svg" rotation="180" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="256-278"><icon src="cursor.svg" rotation="270" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="279-300"><icon src="cursor225.svg" rotation="270" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="301-323"><icon src="cursor450.svg" rotation="270" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="324-345"><icon src="cursor675.svg" rotation="270" w="48" h="48"/></itemgra>
+	<itemgra speed_range="3-" angle_range="346-360"><icon src="cursor.svg" w="48" h="48"/></itemgra>
+</cursor>

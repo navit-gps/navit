@@ -285,7 +285,7 @@ struct icon *
 icon_new(struct attr *parent, struct attr **attrs)
 {
 	struct element *e;
-	struct attr *src,*w,*h;
+	struct attr *src,*w,*h,*rotation;
 	src=attr_search(attrs, NULL, attr_src);
 	if (! src)
 		return NULL;
@@ -301,6 +301,8 @@ icon_new(struct attr *parent, struct attr **attrs)
 		e->u.icon.height=h->u.num;
 	else
 		e->u.icon.height=-1;
+	if ((rotation=attr_search(attrs, NULL, attr_rotation)))
+		e->u.icon.rotation=rotation->u.num;
 	strcpy(e->u.icon.src,src->u.str);
 
 	return (struct icon *)e;	

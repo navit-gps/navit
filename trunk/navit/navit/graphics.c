@@ -281,7 +281,32 @@ struct graphics_image * graphics_image_new_scaled(struct graphics *gra, char *pa
 	this_=g_new0(struct graphics_image,1);
 	this_->height=h;
 	this_->width=w;
-	this_->priv=gra->meth.image_new(gra->priv, &this_->meth, path, &this_->width, &this_->height, &this_->hot);
+	this_->priv=gra->meth.image_new(gra->priv, &this_->meth, path, &this_->width, &this_->height, &this_->hot, 0);
+	if (! this_->priv) {
+		g_free(this_);
+		this_=NULL;
+	}
+	return this_;
+}
+
+/**
+ * Create a new image from file path scaled to w and h pixels and possibly rotated
+ * @param gra the graphics instance
+ * @param path path of the image to load
+ * @param w width to rescale to
+ * @param h height to rescale to
+ * @param rotate angle to rotate the image. Warning, graphics might only support 90 degree steps here
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
+struct graphics_image * graphics_image_new_scaled_rotated(struct graphics *gra, char *path, int w, int h, int rotate)
+{
+	struct graphics_image *this_;
+
+	this_=g_new0(struct graphics_image,1);
+	this_->height=h;
+	this_->width=w;
+	this_->priv=gra->meth.image_new(gra->priv, &this_->meth, path, &this_->width, &this_->height, &this_->hot, rotate);
 	if (! this_->priv) {
 		g_free(this_);
 		this_=NULL;
@@ -717,7 +742,7 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 				case element_icon:
 					if (!img) {
 						sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
-						img=graphics_image_new_scaled(gra, path, e->u.icon.width, e->u.icon.height);
+						img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
 						if (! img)
 							dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
 					}
@@ -758,14 +783,24 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 {
 	GList *es;
 	struct point p;
+	struct coord c;
 	char *label=NULL;
 	struct graphics_gc *gc = NULL;
+	struct graphics_image *img;
+	char path[PATH_MAX];
 	es=itm->elements;
+	c.x=0;
+	c.y=0;
 	while (es) {
 		struct element *e=es->data;
 		int count=e->coord_count;
-		struct point pnt[count];
-		transform(t, projection_screen, e->coord, pnt, count, 0);
+		struct point pnt[count+1];
+		if (count)
+			transform(t, projection_screen, e->coord, pnt, count, 0);
+		else {
+			transform(t, projection_screen, &c, pnt, 1, 0);
+			count=1;
+		}
 		gc=graphics_gc_new(gra);
 		gc->meth.gc_set_foreground(gc->priv, &e->color);
 		switch (e->type) {
@@ -790,7 +825,19 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 				gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
 				gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->text_size]->priv, label, &p, 0x10000, 0);
 			}
-		break;
+			break;
+		case element_icon:
+			sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
+			img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
+			if (! img)
+				dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
+			else {
+				p.x=pnt[0].x - img->hot.x;
+				p.y=pnt[0].y - img->hot.y;
+				gra->meth.draw_image(gra->priv, gc->priv, &p, img->priv);
+				graphics_image_free(gra, img);
+			}
+			break;
 		default:
 			dbg(0,"dont know how to draw %d\n", e->type);
 		}

@@ -1628,7 +1628,7 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 		pro=transform_get_projection(this_->trans);
 		transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0);
 	}
-	cursor_draw(cursor.u.cursor, this_->gra, &cursor_pnt, pnt ? 0:1, transform_get_angle(this_->trans, 0)-nv->dir, nv->speed);
+	cursor_draw(cursor.u.cursor, this_->gra, &cursor_pnt, pnt ? 0:1, nv->dir-transform_get_angle(this_->trans, 0), nv->speed);
 #if 0	
 	if (pnt)
 		pnt2=*pnt;
