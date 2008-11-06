@@ -121,6 +121,7 @@ struct navit {
 	struct event_timeout *button_timeout, *motion_timeout;
 	struct callback *motion_timeout_callback;
 	int ignore_button;
+	int ignore_graphics_events;
 	struct log *textfile_debug_log;
 	struct pcoord destination;
 	int destination_valid;
@@ -195,9 +196,8 @@ navit_draw_displaylist(struct navit *this_)
 }
 
 void
-navit_resize(void *data, int w, int h)
+navit_handle_resize(struct navit *this_, int w, int h)
 {
-	struct navit *this_=data;
 	struct map_selection sel;
 	memset(&sel, 0, sizeof(sel));
 	sel.u.p_rect.rl.x=w;
@@ -208,6 +208,14 @@ navit_resize(void *data, int w, int h)
 	this_->ready |= 2;
 	if (this_->ready == 3)
 		navit_draw(this_);
+}
+
+static void
+navit_resize(void *data, int w, int h)
+{
+	struct navit *this=data;
+	if (!this->ignore_graphics_events)
+		navit_handle_resize(this, w, h);
 }
 
 int
@@ -237,6 +245,12 @@ void
 navit_ignore_button(struct navit *this_)
 {
 	this_->ignore_button=1;
+}
+
+void
+navit_ignore_graphics_events(struct navit *this_, int ignore)
+{
+	this_->ignore_graphics_events=ignore;
 }
 
 int
@@ -301,9 +315,11 @@ static void
 navit_button(void *data, int pressed, int button, struct point *p)
 {
 	struct navit *this=data;
-	if (! this->popup_callback)
-		this->popup_callback=callback_new_1(callback_cast(navit_popup), this);
-	navit_handle_button(this, pressed, button, p, this->popup_callback);
+	if (!this->ignore_graphics_events) {
+		if (! this->popup_callback)
+			this->popup_callback=callback_new_1(callback_cast(navit_popup), this);
+		navit_handle_button(this, pressed, button, p, this->popup_callback);
+	}
 }
 
 
@@ -362,7 +378,9 @@ navit_handle_motion(struct navit *this_, struct point *p)
 static void
 navit_motion(void *data, struct point *p)
 {
-	navit_handle_motion((struct navit *)data, p);
+	struct navit *this=data;
+	if (!this->ignore_graphics_events) 
+		navit_handle_motion(this, p);
 }
 
 static void
