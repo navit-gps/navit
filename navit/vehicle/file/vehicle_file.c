@@ -75,6 +75,7 @@ struct vehicle_priv {
 	int no_data_count;
 #endif
 	speed_t baudrate;
+	int checksum_ignore;
 	struct attr ** attrs;
 };
 
@@ -254,11 +255,11 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	for (i = 1; i < len - 3; i++) {
 		csum ^= (unsigned char) (buffer[i]);
 	}
-	if (!sscanf(buffer + len - 2, "%x", &bcsum)) {
+	if (!sscanf(buffer + len - 2, "%x", &bcsum) && priv->checksum_ignore != 2) {
 		dbg(0, "no checksum in '%s'\n", buffer);
 		return;
 	}
-	if (bcsum != csum) {
+	if (bcsum != csum && priv->checksum_ignore == 0) {
 		dbg(0, "wrong checksum in '%s'\n", buffer);
 		return;
 	}
@@ -490,6 +491,7 @@ vehicle_file_new_file(struct vehicle_methods
 	struct attr *time;
 	struct attr *on_eof;
 	struct attr *baudrate;
+	struct attr *checksum_ignore;
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
@@ -516,6 +518,9 @@ vehicle_file_new_file(struct vehicle_methods
 #endif
 		}
 	}
+	checksum_ignore = attr_search(attrs, NULL, attr_checksum_ignore);
+	if (checksum_ignore)
+		ret->checksum_ignore=checksum_ignore->u.num;
 	ret->attrs = attrs;
 	on_eof = attr_search(attrs, NULL, attr_on_eof);
 	if (on_eof && !strcasecmp(on_eof->u.str, "stop"))
