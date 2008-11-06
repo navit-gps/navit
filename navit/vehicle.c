@@ -56,6 +56,7 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 #ifdef HAVE_GLIB
 	GTimeVal time; 
 	g_get_current_time(&time); 
+	gchar *iso8601 = g_time_val_to_iso8601(&time);
 #endif
 
 	if (!this_->meth.position_attr_get)
@@ -63,8 +64,12 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
 		return;
 #ifdef HAVE_GLIB
-	sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\">\n\t<time>%s</time>\n</trkpt>\n",
-		pos_attr.u.coord_geo->lat, pos_attr.u.coord_geo->lng, g_time_val_to_iso8601(&time));
+	if (iso8601) {
+		sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\">\n\t<time>%s</time>\n</trkpt>\n",
+			pos_attr.u.coord_geo->lat, pos_attr.u.coord_geo->lng, 
+			iso8601);
+		g_free(iso8601);
+	}
 #else
 	sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\">\n</trkpt>\n",
 		pos_attr.u.coord_geo->lat, pos_attr.u.coord_geo->lng);
