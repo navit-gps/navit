@@ -82,6 +82,7 @@ ATTR(level)
 ATTR(icon_w)
 ATTR(icon_h)
 ATTR(rotation)
+ATTR(checksum_ignore)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
