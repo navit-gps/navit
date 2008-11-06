@@ -171,7 +171,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 
 
 static struct graphics_image_priv *
-image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot)
+image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)
 {
 	GdkPixbuf *pixbuf;
 	struct graphics_image_priv *ret;
@@ -183,6 +183,27 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 		pixbuf=gdk_pixbuf_new_from_file_at_size(name, *w, *h, NULL);
 	if (! pixbuf)
 		return NULL;
+	if (rotation) {
+		GdkPixbuf *tmp;
+		switch (rotation) {
+			case 90:
+				rotation=270;
+				break;
+			case 180:
+				break;
+			case 270:
+				rotation=90;
+				break;
+			default:
+				return NULL;
+		}
+		tmp=gdk_pixbuf_rotate_simple(pixbuf, rotation);
+		g_object_unref(pixbuf);
+		if (! tmp) {
+			return NULL;
+		}
+		pixbuf=tmp;
+	}
 	ret=g_new0(struct graphics_image_priv, 1);
 	ret->pixbuf=pixbuf;
 	ret->w=gdk_pixbuf_get_width(pixbuf);

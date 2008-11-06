@@ -81,6 +81,7 @@ ATTR(text_size)
 ATTR(level)
 ATTR(icon_w)
 ATTR(icon_h)
+ATTR(rotation)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
