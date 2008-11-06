@@ -412,12 +412,13 @@ osd_navigation_draw(struct osd_navigation *this, struct navit *navit, struct veh
 		p.y=0;
 		graphics_draw_rectangle(this->gr, this->bg, &p, this->w, this->h);
 		if (this->active) {
-			image=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/", name, "_32.xpm", NULL);
-			gr_image=graphics_image_new(this->gr, image);
+			image=g_strdup_printf(this->icon_src, name);
+			dbg(0,"image=%s\n", image);
+			gr_image=graphics_image_new_scaled(this->gr, image, this->icon_w, this->icon_h);
 			if (! gr_image) {
 				g_free(image);
 				image=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/unknown.xpm", NULL);
-				gr_image=graphics_image_new(this->gr, image);
+				gr_image=graphics_image_new_scaled(this->gr, image, this->icon_w, this->icon_h);
 			}
 			dbg(1,"gr_image=%p\n", gr_image);
 			if (gr_image) {
@@ -426,6 +427,7 @@ osd_navigation_draw(struct osd_navigation *this, struct navit *navit, struct veh
 				graphics_draw_image(this->gr, this->white, &p, gr_image);
 				graphics_image_free(this->gr, gr_image);
 			}
+			g_free(image);
 			p.x=12;
 			p.y=56;
 			graphics_draw_text(this->gr, this->white, NULL, this->font, distance, &p, 0x10000, 0);
