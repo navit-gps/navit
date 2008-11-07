@@ -40,11 +40,16 @@ static const char *gdb_program;
 
 static FILE *debug_fp;
 
+#if defined(_WIN32) || defined(__CEGCC__)
+
 static void sigsegv(int sig)
 {
-#if defined(_WIN32) || defined(__CEGCC__)
+}
+
 #else
 #include <unistd.h>
+static void sigsegv(int sig)
+{
 	char buffer[256];
 	if (segv_level > 1)
 		sprintf(buffer, "gdb -ex bt %s %d", gdb_program, getpid());
@@ -52,8 +57,8 @@ static void sigsegv(int sig)
 		sprintf(buffer, "gdb -ex bt -ex detach -ex quit %s %d", gdb_program, getpid());
 	system(buffer);
 	exit(1);
-#endif
 }
+#endif
 
 void
 debug_init(const char *program_name)
