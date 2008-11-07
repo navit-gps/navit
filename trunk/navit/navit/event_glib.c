@@ -137,7 +137,7 @@ event_glib_remove_idle(struct event_idle *ev)
 }
 
 static void
-event_glib_call_callback(struct callback *cb)
+event_glib_call_callback(struct callback_list *cb)
 {
 /* 
  Idea for implementation:
