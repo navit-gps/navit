@@ -66,6 +66,8 @@
 #include "fib.h"
 
 
+#define DISABLE_STRAIGHT 1 /* Slows down incremental routing by factor of 10 */
+
 struct map_priv {
 	struct route *route;
 };
@@ -129,7 +131,9 @@ struct route_path_segment {
 										 *  coordinate of the segment is the first coordinate of the item", <=0 
 										 *  means reverse. */
 	unsigned ncoords;					/**< How many coordinates does this segment have? */
+#ifndef DISABLE_STRAIGHT
 	struct attr **attrs;				/**< Attributes of this route path segment */
+#endif
 	struct coord c[0];					/**< Pointer to the ncoords coordinates of this segment */
 	/* WARNING: There will be coordinates following here, so do not create new fields after c! */
 };
@@ -243,9 +247,11 @@ route_path_destroy(struct route_path *this)
 	c=this->path;
 	while (c) {
 		n=c->next;
+#ifndef DISABLE_STRAIGHT
 		if (c->attrs) { 
 			attr_list_free(c->attrs);
 		}
+#endif
 		g_free(c);
 		c=n;
 	}
@@ -974,7 +980,9 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 	struct route_path_segment *segment;
 	int i,ccnt = 0;
 	struct coord ca[2048];
+#ifndef DISABLE_STRAIGHT
 	struct attr straight_attr;
+#endif
 
 	if (oldpath) {
 		ccnt = (int)item_hash_lookup(oldpath->path_hash, &rgs->item);
@@ -1009,10 +1017,12 @@ linkold:
 	segment->next=NULL;
 	item_hash_insert(this->path_hash,  &rgs->item, (void *)ccnt);
 
+#ifndef DISABLE_STRAIGHT
 	straight_attr.type = attr_route_follow_straight;
 	straight_attr.u.num = straight;
 
 	segment->attrs = attr_generic_set_attr(segment->attrs, &straight_attr);
+#endif
 
 	route_path_add_segment(this, segment);
 }
@@ -1347,6 +1357,7 @@ route_path_new_trivial(struct route_graph *this, struct route_info *pos, struct 
 	return ret;
 }
 
+#ifndef DISABLE_STRAIGHT
 /**
  * @brief Calculates of two coordinates' connection
  *
@@ -1470,6 +1481,7 @@ route_check_straight(struct route_graph_segment *seg_from, struct route_graph_se
 
 	return 1;
 }
+#endif
 
 /**
  * @brief Creates a new route path
@@ -1490,7 +1502,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	struct route_graph_point *start1=NULL,*start2=NULL,*start;
 	struct route_graph_segment *s=NULL;
 	struct route_graph_segment *lastseg = NULL;
-	int is_straight;
+	int is_straight=0;
 	int len=0,segs=0;
 	int seg_len;
 #if 0
@@ -1550,12 +1562,14 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 #endif
 		seg_len=s->len;
 		len+=seg_len;
-		
+	
+#ifndef DISABLE_STRAIGHT	
 		if (lastseg) {
 			is_straight = route_check_straight(lastseg,s);
 		} else {
 			is_straight = 0;
 		}
+#endif
 
 		if (s->start == start) {		
 			route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, 1, is_straight);
@@ -1896,18 +1910,24 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			}
 			return 0;
 		case attr_street_item:
+#ifndef DISABLE_STRAIGHT
 			mr->attr_next=attr_route_follow_straight;
+#else 
+			mr->attr_next=attr_direction;
+#endif
 			if (seg && seg->item.map)
 				attr->u.item=&seg->item;
 			else
 				return 0;
 			return 1;
+#ifndef DISABLE_STRAIGHT
 		case attr_route_follow_straight:
 			mr->attr_next=attr_direction;
 			if (seg) {
 				return attr_generic_get_attr(seg->attrs,NULL,attr_route_follow_straight,attr,NULL);
 			}
 			return 0;
+#endif
 		case attr_direction:
 			mr->attr_next=attr_length;
 			if (seg) 
