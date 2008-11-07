@@ -62,6 +62,7 @@ double transform_scale(int y);
 double transform_distance(enum projection pro, struct coord *c1, struct coord *c2);
 double transform_polyline_length(enum projection pro, struct coord *c, int count);
 int transform_distance_sq(struct coord *c1, struct coord *c2);
+int transform_distance_sq_pc(struct pcoord *c1, struct pcoord *c2);
 int transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref, struct coord *lpnt);
 int transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, struct coord *lpnt, int *pos);
 void transform_print_deg(double deg);

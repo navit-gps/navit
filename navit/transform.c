@@ -590,6 +590,15 @@ transform_distance_sq(struct coord *c1, struct coord *c2)
 }
 
 int
+transform_distance_sq_pc(struct pcoord *c1, struct pcoord *c2)
+{
+	struct coord p1,p2;
+	p1.x = c1->x; p1.y = c1->y;
+	p2.x = c2->x; p2.y = c2->y;
+	return transform_distance_sq(&p1, &p2);
+}
+
+int
 transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref, struct coord *lpnt)
 {
 	int vx,vy,wx,wy;
