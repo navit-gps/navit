@@ -119,10 +119,12 @@ cursor_draw(struct cursor *this_, struct graphics *gra, struct point *pnt, int l
 	if (!this_->gra) {
 		struct color c;
 		this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, this_->w, this_->h, 65535);
-		this_->bg=graphics_gc_new(this_->gra);
-		c.r=0; c.g=0; c.b=0; c.a=0;
-		graphics_gc_set_foreground(this_->bg, &c);
-		graphics_background_gc(this_->gra, this_->bg);
+		if (this_->gra) {
+			this_->bg=graphics_gc_new(this_->gra);
+			c.r=0; c.g=0; c.b=0; c.a=0;
+			graphics_gc_set_foreground(this_->bg, &c);
+			graphics_background_gc(this_->gra, this_->bg);
+		}
 	}
 	cursor_draw_do(this_, lazy);
 }
