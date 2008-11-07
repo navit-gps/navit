@@ -793,7 +793,6 @@ garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel)
 		&& sel->order[layer_street]) {
 		// Get all roads 
 		flags = GO_GET_ROUTABLE;
-		sel = NULL;
 	} else if (sel)
 		flags = GO_GET_SORTED;
 
