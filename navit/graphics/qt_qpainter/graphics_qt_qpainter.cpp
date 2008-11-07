@@ -760,7 +760,7 @@ event_qt_remove_idle(struct event_idle *ev)
 }
 
 static void
-event_qt_call_callback(struct callback *cb)
+event_qt_call_callback(struct callback_list *cb)
 {
 	dbg(0,"enter\n");
 }
