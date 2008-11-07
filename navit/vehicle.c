@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <glib.h>
+#include <time.h>
 #include "config.h"
 #include "debug.h"
 #include "coord.h"
@@ -52,31 +53,41 @@ static void
 vehicle_log_gpx(struct vehicle *this_, struct log *log)
 {
 	struct attr pos_attr;
+	struct attr time_attr;
 	char buffer[256];
-#ifdef HAVE_GLIB
-	GTimeVal time; 
-	g_get_current_time(&time); 
-	gchar *iso8601 = g_time_val_to_iso8601(&time);
-#endif
+	char tbuf[256];
+	char *timep;
 
 	if (!this_->meth.position_attr_get)
 		return;
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
 		return;
+	if (!this_->meth.position_attr_get(this_->priv, attr_position_time_iso8601, &time_attr)) {
 #ifdef HAVE_GLIB
-	if (iso8601) {
-		sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\">\n\t<time>%s</time>\n</trkpt>\n",
-			pos_attr.u.coord_geo->lat, pos_attr.u.coord_geo->lng, 
-			iso8601);
-		g_free(iso8601);
-	}
+		GTimeVal time; 
+		g_get_current_time(&time); 
+		timep = g_time_val_to_iso8601(&time)
+		sprintf(tbuf, "%s", timep);
+		g_free(timep);
+		timep = tbuf;
 #else
-	sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\">\n</trkpt>\n",
-		pos_attr.u.coord_geo->lat, pos_attr.u.coord_geo->lng);
+		time_t tnow;
+		struct tm *tm;
+		tnow = time(0);
+		tm = gmtime(&tnow);
+		if (tm) {
+			strftime(tbuf, sizeof(tbuf),
+				"%Y-%m-%dT%TZ", tm);
+		}
+		timep = tbuf;
 #endif
+	} else {
+		timep = time_attr.u.str;
+	}
+	sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\">\n\t<time>%s</time>\n</trkpt>\n",
+		pos_attr.u.coord_geo->lat, pos_attr.u.coord_geo->lng, timep);
 	log_write(log, buffer, strlen(buffer));
 }
-
 
 static void
 vehicle_log_textfile(struct vehicle *this_, struct log *log)
