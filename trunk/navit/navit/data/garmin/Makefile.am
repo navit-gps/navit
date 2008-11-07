@@ -15,26 +15,18 @@ gar2navit.l$(OBJEXT): g2nbuiltin.h
 
 CLEANFILES = g2nbuiltin.h
 
-noinst_PROGRAMS=gentypes
+noinst_PROGRAMS=gentypes$(EXEEXT)
 gentypes_SOURCES=gentypes.c
 
 gentypes.$(OBJEXT): gentypes.c
-	if [ "$(cross_compiling)" = "yes" ]; then \
-		$(CC_FOR_BUILD) -I$(top_srcdir)/navit -c -o $@ $<; \
-	else \
-		$(COMPILE) -c -o $@ $<; \
-	fi
+	$(CC_FOR_BUILD) -I$(top_srcdir)/navit -c -o $@ $<
 
 gentypes$(EXEEXT): $(gentypes_OBJECTS) $(gentypes_DEPENDENCIES) 
 	@rm -f gentypes$(EXEEXT)
-	if [ "$(cross_compiling)" = "yes" ]; then \
-		$(CCLD_FOR_BUILD) -o $@ $(gentypes_OBJECTS); \
-	else \
-		$(LINK) $(gentypes_OBJECTS) $(LDADD) $(LIBS); \
-	fi
+	$(CCLD_FOR_BUILD) -o $@ $(gentypes_OBJECTS)
 
-g2nbuiltin.h: gentypes garmintypes.txt
-	./gentypes $(top_srcdir)/navit/data/garmin/garmintypes.txt $@
+g2nbuiltin.h: gentypes$(EXEEXT) garmintypes.txt
+	./gentypes$(EXEEXT) $(top_srcdir)/navit/data/garmin/garmintypes.txt $@
 
 EXTRA_DIST = garmintypes.txt
 
