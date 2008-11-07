@@ -25,6 +25,7 @@
 #include "color.h"
 #include "plugin.h"
 #include "callback.h"
+#include "window.h"
 #include "navit.h"
 #include "debug.h"
 #include "navit/font/freetype/font_freetype.h"
@@ -171,6 +172,7 @@ struct graphics_priv {
 	struct navit *nav;
 	struct graphics_gc_priv *background;
 	struct font_freetype_methods freetype_methods;
+	struct window window;
 };
 
 struct graphics_gc_priv {
@@ -258,7 +260,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 
 
 static struct graphics_image_priv *
-image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot)
+image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)
 {
 	FILE *file;
 	struct graphics_image_priv *ret=NULL;
@@ -424,14 +426,14 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 	}
 }
 
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h);
-
-int dummy;
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha);
 
 static void *
 get_data(struct graphics_priv *this, char *type)
 {
-	return &dummy;
+	if (strcmp(type,"window"))
+		return NULL;
+	return &this->window;
 }
 
 
@@ -474,7 +476,7 @@ static struct graphics_methods graphics_methods = {
 };
 
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha)
 {
 	*meth=graphics_methods;
 	return NULL;
