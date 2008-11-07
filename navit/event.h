@@ -25,6 +25,7 @@ struct event_idle;
 struct event_timeout;
 struct event_watch;
 struct callback;
+struct callback_list;
 struct file;
 
 enum event_watch_cond {
@@ -42,7 +43,7 @@ struct event_methods {
 	void (*remove_timeout)(struct event_timeout *ev);
 	struct event_idle *(*add_idle)(struct callback *cb);
 	void (*remove_idle)(struct event_idle *ev);
-	void (*call_callback)(struct callback *cb);
+	void (*call_callback)(struct callback_list *cb);
 };
 
 
@@ -56,7 +57,7 @@ void event_remove_timeout(struct event_timeout *ev);
 struct event_idle *event_add_idle(struct callback *cb);
 void event_remove_idle(struct event_idle *ev);
 int event_request_system(char *system, char *requestor);
-void event_call_callback(struct callback *cb);
+void event_call_callback(struct callback_list *cb);
 /* end of prototypes */
 #ifdef __cplusplus
 }

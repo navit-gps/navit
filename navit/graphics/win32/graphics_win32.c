@@ -924,7 +924,7 @@ event_win32_remove_idle(struct event_idle *ev)
 }
 
 static void
-event_win32_call_callback(struct callback *cb)
+event_win32_call_callback(struct callback_list *cb)
 {
 	dbg(0,"enter\n");
 }
