@@ -261,7 +261,7 @@ navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 	if (item_attr_get(ritem, attr_route_follow_straight, &straight)) {
 		itm->straight = straight.u.num;
 	} else {
-		itm->straight = 0;
+		itm->straight = 1;
 	}
 
 	dbg(1,"length=%d time=%d\n", length.u.num, time.u.num);
