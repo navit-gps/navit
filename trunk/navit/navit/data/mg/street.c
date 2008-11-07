@@ -230,7 +230,7 @@ street_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	struct street_priv *street=priv_data;
 	int nameid;
 
-	dbg(1,"segid 0x%x\n", street->str->segid);
+	dbg(1,"segid 0x%x\n", L(street->str->segid));
 	attr->type=attr_type;
 	switch (attr_type) {
 	case attr_any:
@@ -466,7 +466,7 @@ street_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi,
 	item->meth=&street_meth;
 	item->priv_data=street;
 	street->str+=(res & 0xfff)-1;
-	dbg(1,"segid 0x%x\n", street->str[1].segid);
+	dbg(1,"segid 0x%x\n", L(street->str[1].segid));
 	return street_get(mr, street, item);
 #if 0
         mr->b.p=mr->b.block_start+(res & 0xffff);
