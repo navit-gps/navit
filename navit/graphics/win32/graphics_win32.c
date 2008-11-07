@@ -938,7 +938,7 @@ event_win32_remove_idle(struct event_idle *ev)
 static void
 event_win32_call_callback(struct callback_list *cb)
 {
-	PostMessage(g_hwnd, WM_USER+2, (WPARAM)cbl , (LPARAM)0);
+	PostMessage(g_hwnd, WM_USER+2, (WPARAM)cb , (LPARAM)0);
 }
 
 static struct event_methods event_win32_methods = {
