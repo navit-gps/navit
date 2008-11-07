@@ -414,7 +414,7 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
 	int x,y;
 	int rowstride1,rowstride2;
 	int n_channels1,n_channels2;
-	GdkRectangle or;
+	GdkRectangle or,ir;
 	struct graphics_gc_priv *bg=overlay->background_gc;
 
 	if (parent->overlay_disabled || overlay->overlay_disabled)
@@ -422,6 +422,8 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
 	dbg(1,"r->x=%d r->y=%d r->width=%d r->height=%d\n", r->x, r->y, r->width, r->height);
 	overlay_rect(parent, overlay, 0, &or);
 	dbg(1,"or.x=%d or.y=%d or.width=%d or.height=%d\n", or.x, or.y, or.width, or.height);
+	if (! gdk_rectangle_intersect(r, &or, &ir))
+		return;
 	or.x-=r->x;
 	or.y-=r->y;
 	pixbuf=gdk_pixbuf_get_from_drawable(NULL, overlay->drawable, NULL, 0, 0, 0, 0, or.width, or.height);
