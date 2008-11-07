@@ -19,6 +19,8 @@
 #include "support/win32/ConvertUTF.h"
 #endif
 
+static HWND g_hwnd;
+
 #ifndef GET_WHEEL_DELTA_WPARAM
 	#define GET_WHEEL_DELTA_WPARAM(wParam)  ((short)HIWORD(wParam))
 #endif
@@ -250,6 +252,16 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 				callback_list_call_attr_2(gra_priv->cbl, attr_resize, (void *)gra_priv->width, (void *)gra_priv->height);
 			}
 		break;
+		case WM_USER+2:
+			{
+				struct callback_list *cbl = wParam;
+#ifdef HAVE_API_WIN32_CE
+				/* FIXME: Reset the idle timer  need a better place */
+				SystemIdleTimerReset();
+#endif
+				callback_list_call_0(cbl);
+			}
+			break;
 
 		case WM_SIZE:
 		/*
@@ -371,7 +383,7 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 	callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->width, (void *)gr->height);
 #endif
 
-	hwnd = CreateWindow(g_szClassName,
+	g_hwnd = hwnd = CreateWindow(g_szClassName,
 				TEXT(""),
 				WS_VISIBLE,
 				0,
@@ -926,7 +938,7 @@ event_win32_remove_idle(struct event_idle *ev)
 static void
 event_win32_call_callback(struct callback_list *cb)
 {
-	dbg(0,"enter\n");
+	PostMessage(g_hwnd, WM_USER+2, (WPARAM)cbl , (LPARAM)0);
 }
 
 static struct event_methods event_win32_methods = {
