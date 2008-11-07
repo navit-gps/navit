@@ -759,6 +759,12 @@ event_qt_remove_idle(struct event_idle *ev)
 	dbg(0,"enter\n");
 }
 
+static void
+event_qt_call_callback(struct callback *cb)
+{
+	dbg(0,"enter\n");
+}
+
 static struct event_methods event_qt_methods = {
 	event_qt_main_loop_run,
 	event_qt_main_loop_quit,
@@ -768,6 +774,7 @@ static struct event_methods event_qt_methods = {
 	event_qt_remove_timeout,
 	event_qt_add_idle,
 	event_qt_remove_idle,
+	event_qt_call_callback,
 };
 
 struct event_priv {
