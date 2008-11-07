@@ -78,6 +78,12 @@ event_remove_idle(struct event_idle *ev)
 	event_methods.remove_idle(ev);
 }
 
+void
+event_call_callback(struct callback *cb)
+{
+	event_methods.call_callback(cb);
+}
+
 int
 event_request_system(char *system, char *requestor)
 {

@@ -136,6 +136,18 @@ event_glib_remove_idle(struct event_idle *ev)
 {
 }
 
+static void
+event_glib_call_callback(struct callback *cb)
+{
+/* 
+ Idea for implementation:
+ Create a pipe then use add_watch
+ add callback to a queue
+ from here write to the pipe to wakeup the pool
+ then from the gui thread process the callback queue
+*/
+}
+
 static struct event_methods event_glib_methods = {
 	event_glib_main_loop_run,
 	event_glib_main_loop_quit,
@@ -145,6 +157,7 @@ static struct event_methods event_glib_methods = {
 	event_glib_remove_timeout,
 	event_glib_add_idle,
 	event_glib_remove_idle,
+	event_glib_call_callback,
 };
 
 static void

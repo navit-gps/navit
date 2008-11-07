@@ -923,6 +923,12 @@ event_win32_remove_idle(struct event_idle *ev)
 	dbg(0,"enter\n");
 }
 
+static void
+event_win32_call_callback(struct callback *cb)
+{
+	dbg(0,"enter\n");
+}
+
 static struct event_methods event_win32_methods = {
 	event_win32_main_loop_run,
 	event_win32_main_loop_quit,
@@ -932,6 +938,7 @@ static struct event_methods event_win32_methods = {
 	event_win32_remove_timeout,
 	event_win32_add_idle,
 	event_win32_remove_idle,
+	event_win32_call_callback,
 };
 
 static struct event_priv *
