@@ -1678,8 +1678,11 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	}
 	if (this_->route)
 		route_path_set=route_get_path_set(this_->route);
+	cursor_pc.x = nv->coord.x;
+	cursor_pc.y = nv->coord.y;
+	cursor_pc.pro = pro;
 	if (this_->tracking && this_->tracking_flag) {
-		if (tracking_update(this_->tracking, &nv->coord, nv->dir)) {
+		if (tracking_update(this_->tracking, &cursor_pc, nv->dir)) {
 			if (this_->route && nv->update_curr == 1) {
 				route_set_position_from_tracking(this_->route, this_->tracking);
 				callback_list_call_attr_0(this_->attr_cbl, attr_position);
@@ -1687,9 +1690,6 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		}
 	} else {
 		if (this_->route && nv->update_curr == 1) {
-			cursor_pc.pro = pro;
-			cursor_pc.x = nv->coord.x;
-			cursor_pc.y = nv->coord.y;
 			navit_set_position(this_, &cursor_pc);
 		}
 	}

@@ -54,16 +54,18 @@ struct tracking {
 #if 0
 	struct transformation t;
 #endif
-	struct coord last_updated;
+	struct pcoord last_updated;
 	struct tracking_line *lines;
 #if 0
 	struct tracking_line **last_ptr;
 #endif
 	struct tracking_line *curr_line;
 	int pos;
-	struct coord curr[2], curr_in, curr_out;
+	struct coord curr[2];
+	struct pcoord curr_in, curr_out;
 	int curr_angle;
-	struct coord last[2], last_in, last_out;
+	struct coord last[2];
+	struct pcoord last_in, last_out;
 };
 
 
@@ -74,7 +76,7 @@ int offroad_limit_pref=5000;
 int route_pref=300;
 
 
-struct coord *
+struct pcoord *
 tracking_get_pos(struct tracking *tr)
 {
 	return &tr->curr_out;
@@ -127,25 +129,31 @@ tracking_get_angles(struct tracking_line *tl)
 }
 
 static void
-tracking_doupdate_lines(struct tracking *tr, struct coord *cc)
+tracking_doupdate_lines(struct tracking *tr, struct pcoord *pc)
 {
 	int max_dist=1000;
-	struct map_selection *sel=route_rect(18, cc, cc, 0, max_dist);
+	struct map_selection *sel;
 	struct mapset_handle *h;
 	struct map *m;
 	struct map_rect *mr;
 	struct item *item;
 	struct street_data *street;
 	struct tracking_line *tl;
-#if 0
-	struct coord c;
-#endif
+	struct coord_geo g;
+	struct coord cc;
 
 	dbg(1,"enter\n");
-        h=mapset_open(tr->ms);
-        while ((m=mapset_next(h,1))) {
+	h=mapset_open(tr->ms);
+	while ((m=mapset_next(h,1))) {
+		cc.x = pc->x;
+		cc.y = pc->y;
+		if (map_projection(m) != pc->pro) {
+			transform_to_geo(pc->pro, &cc, &g);
+			transform_from_geo(map_projection(m), &g, &cc);
+		}
+		sel = route_rect(18, &cc, &cc, 0, max_dist);
 		mr=map_rect_new(m, sel);
-		if (! mr)
+		if (!mr)
 			continue;
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type >= type_street_0 && item->type <= type_ferry) {
@@ -157,10 +165,10 @@ tracking_doupdate_lines(struct tracking *tr, struct coord *cc)
 				tr->lines=tl;
 			}
 		}
+		map_selection_destroy(sel);
 		map_rect_destroy(mr);
 	}
 	mapset_close(h);
-	map_selection_destroy(sel);
 	dbg(1, "exit\n");
 #if 0
 
@@ -240,7 +248,7 @@ tracking_is_connected(struct coord *c1, struct coord *c2)
 }
 
 static int
-tracking_is_no_stop(struct coord *c1, struct coord *c2)
+tracking_is_no_stop(struct coord *c1, struct pcoord *c2)
 {
 	if (c1->x == c2->x && c1->y == c2->y)
 		return nostop_pref;
@@ -264,9 +272,18 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 {
 	int value=0;
 	struct street_data *sd=t->street;
+	struct coord c, c1, c2;
+	c.x = sd->c[offset].x;
+	c.y = sd->c[offset].y;
+	if (flags & 1) {
+		c1.x = sd->c[offset].x;
+		c1.y = sd->c[offset].y;
+	}
+	c2.x = tr->curr_in.x;
+	c2.y = tr->curr_in.y;
 	dbg(2, "%d: (0x%x,0x%x)-(0x%x,0x%x)\n", offset, sd->c[offset].x, sd->c[offset].y, sd->c[offset+1].x, sd->c[offset+1].y);
 	if (flags & 1) 
-		value+=transform_distance_line_sq(&sd->c[offset], &sd->c[offset+1], &tr->curr_in, lpnt);
+		value+=transform_distance_line_sq(&c, &c1, &c2, lpnt);
 	if (value >= min)
 		return value;
 	if (flags & 2) 
@@ -285,36 +302,38 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 }
 
 
-
 int
-tracking_update(struct tracking *tr, struct coord *c, int angle)
+tracking_update(struct tracking *tr, struct pcoord *pc, int angle)
 {
 	struct tracking_line *t;
 	int i,value,min;
 	struct coord lpnt;
+	struct coord cin;
 #if 0
 	int min,dist;
 	int debug=0;
 #endif
-	dbg(1,"enter(%p,%p,%d)\n", tr, c, angle);
-	dbg(1,"c=0x%x,0x%x\n", c->x, c->y);
+	dbg(1,"enter(%p,%p,%d)\n", tr, pc, angle);
+	dbg(1,"c=%d:0x%x,0x%x\n", pc->pro, pc->x, pc->y);
 
-	if (c->x == tr->curr_in.x && c->y == tr->curr_in.y) {
+	if (pc->x == tr->curr_in.x && pc->y == tr->curr_in.y) {
 		if (tr->curr_out.x && tr->curr_out.y)
-			*c=tr->curr_out;
+			*pc=tr->curr_out;
 		return 0;
 	}
 	tr->last_in=tr->curr_in;
 	tr->last_out=tr->curr_out;
 	tr->last[0]=tr->curr[0];
 	tr->last[1]=tr->curr[1];
-	tr->curr_in=*c;
+	tr->curr_in=*pc;
 	tr->curr_angle=angle;
-	if (!tr->lines || transform_distance_sq(&tr->last_updated, c) > 250000) {
+	cin.x = pc->x;
+	cin.y = pc->y;
+	if (!tr->lines || transform_distance_sq_pc(&tr->last_updated, pc) > 250000) {
 		dbg(1, "update\n");
 		tracking_free_lines(tr);
-		tracking_doupdate_lines(tr, c);
-		tr->last_updated=*c;
+		tracking_doupdate_lines(tr, pc);
+		tr->last_updated=*pc;
 		dbg(1,"update end\n");
 	}
 		
@@ -337,13 +356,15 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 				tr->curr[0]=sd->c[i];
 				tr->curr[1]=sd->c[i+1];
 				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
-					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], c, &lpnt),
+					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], &cin, &lpnt),
 					tracking_angle_delta(angle, t->angle[i], 0)*angle_factor,
 					tracking_is_connected(tr->last, &sd->c[i]) ? connected_pref : 0,
 					lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y ? nostop_pref : 0,
 					value
 				);
-				tr->curr_out=lpnt;
+				tr->curr_out.x=lpnt.x;
+				tr->curr_out.y=lpnt.y;
+				tr->curr_out.pro = pc->pro;
 				min=value;
 			}
 		}
@@ -353,7 +374,7 @@ tracking_update(struct tracking *tr, struct coord *c, int angle)
 	if (!tr->curr_line || min > offroad_limit_pref)
 		return 0;
 	dbg(1,"found 0x%x,0x%x\n", tr->curr_out.x, tr->curr_out.y);
-	*c=tr->curr_out;
+	*pc=tr->curr_out;
 	return 1;	
 }
 
@@ -417,9 +438,16 @@ static int
 tracking_map_item_coord_get(void *priv_data, struct coord *c, int count)
 {
 	struct map_rect_priv *this=priv_data;
+	enum projection pro;
 	int ret=0;
 	dbg(1,"enter\n");
 	while (this->ccount < 2 && count > 0) {
+		pro = map_projection(this->curr->street->item.map);
+		if (projection_mg != pro) {
+			transform_from_to(&this->curr->street->c[this->ccount+this->coord],
+				pro,
+				c ,projection_mg);
+		} else
 		*c=this->curr->street->c[this->ccount+this->coord];
 		dbg(1,"coord %d 0x%x,0x%x\n",this->ccount,c->x,c->y);
 		this->ccount++;
