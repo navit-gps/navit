@@ -55,6 +55,7 @@
 #include "attr.h"
 #include "event.h"
 #include "file.h"
+#include "profile.h"
 #include "navit_nls.h"
 
 /**
@@ -1654,19 +1655,25 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	int border=16;
 	int route_path_set=0;
 
-	if (this_->ready != 3)
+	profile(0,NULL);
+	if (this_->ready != 3) {
+		profile(0,"return 1\n");
 		return;
+	}
 
 	if (! vehicle_get_attr(nv->vehicle, attr_position_direction, &attr_dir, NULL) ||
 	    ! vehicle_get_attr(nv->vehicle, attr_position_speed, &attr_speed, NULL) ||
-	    ! vehicle_get_attr(nv->vehicle, attr_position_coord_geo, &attr_pos, NULL))
+	    ! vehicle_get_attr(nv->vehicle, attr_position_coord_geo, &attr_pos, NULL)) {
+		profile(0,"return 2\n");
 		return;
+	}
 	nv->dir=*attr_dir.u.numd;
 	nv->speed=*attr_speed.u.numd;
 	pro=transform_get_projection(this_->trans);
 	transform_from_geo(pro, attr_pos.u.coord_geo, &nv->coord);
 	if (nv != this_->vehicle) {
 		navit_vehicle_draw(this_, nv, NULL);
+		profile(0,"return 3\n");
 		return;
 	}
 	if (this_->route)
@@ -1688,8 +1695,10 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	}
 	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0);
 	if (!transform_within_border(this_->trans, &cursor_pnt, border)) {
-		if (!this_->cursor_flag)
+		if (!this_->cursor_flag) {
+			profile(0,"return 4\n");
 			return;
+		}
 		if (nv->follow_curr != 1) {
 			if (this_->orient_north_flag)
 				navit_set_center_cursor(this_, &nv->coord, 0, 50 - 30.*sin(M_PI*nv->dir/180.), 50 + 30.*cos(M_PI*nv->dir/180.));
@@ -1727,6 +1736,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	if (route_destination_reached(this_->route)) {
 		navit_set_destination(this_, NULL, NULL);
 	}
+	profile(0,"return 5\n");
 }
 
 /**
