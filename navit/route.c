@@ -1759,14 +1759,13 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 	struct coord c;
 	struct coord_geo g;
 
-	c.x = pc->x;
-	c.y = pc->y;
-	/*
-	 * This is not correct for two reasons:
-	 * - You may need to go back first
-	 * - Currently we allow mixing of mapsets
-	 */
-	sel = route_rect(18, &c, &c, 0, max_dist);
+	ret=g_new0(struct route_info, 1);
+	if (!ret) {
+		dbg(0,"Out of memory\n");
+		return ret;
+	}
+	mindist = INT_MAX;
+
 	h=mapset_open(ms);
 	while ((m=mapset_next(h,1))) {
 		c.x = pc->x;
@@ -1775,37 +1774,48 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 			transform_to_geo(pc->pro, &c, &g);
 			transform_from_geo(map_projection(m), &g, &c);
 		}
-		mr=map_rect_new(m, sel);
-		if (! mr)
+		sel = route_rect(18, &c, &c, 0, max_dist);
+		if (!sel)
 			continue;
+		mr=map_rect_new(m, sel);
+		if (!mr) {
+			map_selection_destroy(sel);
+			continue;
+		}
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type >= type_street_0 && item->type <= type_ferry) {
 				sd=street_get_data(item);
+				if (!sd)
+					continue;
 				dist=transform_distance_polyline_sq(sd->c, sd->count, &c, &lp, &pos);
-				if (!ret || dist < mindist) {
-					if (ret) {
+				if (dist < mindist) {
+					mindist = dist;
+					if (ret->street) {
 						street_data_free(ret->street);
-						g_free(ret);
-					}
-					ret=g_new(struct route_info, 1);
-					if (!ret) {
-						printf("%s:Out of memory\n", __FUNCTION__);
-						return ret;
 					}
 					ret->c=c;
 					ret->lp=lp;
 					ret->pos=pos;
-					mindist=dist;
 					ret->street=sd;
 					dbg(1,"dist=%d id 0x%x 0x%x pos=%d\n", dist, item->id_hi, item->id_lo, pos);
-				} else 
+				} else {
 					street_data_free(sd);
+				}
 			}
-		}  
+		}
+		map_selection_destroy(sel);
 		map_rect_destroy(mr);
 	}
 	mapset_close(h);
-	map_selection_destroy(sel);
+
+	if (!ret->street || mindist > max_dist) {
+		if (ret->street) {
+			street_data_free(ret->street);
+			dbg(1,"Much too far %d > %d\n", mindist, max_dist);
+		}
+		g_free(ret);
+		ret = NULL;
+	}
 
 	return ret;
 }
