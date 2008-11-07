@@ -13,17 +13,17 @@
    id="svg5354"
    sodipodi:version="0.32"
    inkscape:version="0.46"
-   sodipodi:docname="nav_left_2_32.svg"
+   sodipodi:docname="nav_left_2_wh.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape">
   <sodipodi:namedview
      id="base"
-     pagecolor="#000000"
+     pagecolor="#ffffff"
      bordercolor="#000000"
      borderopacity="1"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="5.5"
-     inkscape:cx="-10.347054"
+     inkscape:cx="30.454545"
      inkscape:cy="41.090909"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -192,12 +192,12 @@
     <path
        sodipodi:nodetypes="cc"
        id="path7071"
-       d="M 31.999757,42.528303 C 31.999757,31.99843 32.181576,32 21.471697,32"
-       style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
+       d="M 31.99956,43.437394 C 31.99956,32.907521 32.181379,32.909091 21.4715,32.909091"
+       style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        sodipodi:nodetypes="cc"
        id="path8163"
-       d="M 11.954546,32 L 2.800788,32"
-       style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2LendM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       d="M 12.485215,32 L 3.7391576,32"
+       style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:1.99999988;stroke-linecap:butt;stroke-linejoin:miter;marker-end:url(#Arrow2LendM);stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
 </svg>
