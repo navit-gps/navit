@@ -6,7 +6,7 @@
    height="64px">
   <g>
     <path
-       d="M 32,63 L 32,32 C 30,10 38,16 48,26"
+       d="M 32,63 L 32,32 C 30.5,10 38,16 48,26"
        style="fill:none;stroke:#ffffff;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
     <path
          transform="translate(48,26) scale(3) rotate(135)"
