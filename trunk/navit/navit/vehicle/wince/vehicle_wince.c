@@ -331,7 +331,6 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 
 		sscanf(item[6], "%d", &priv->status);
 		sscanf(item[7], "%d", &priv->sats_used);
-		// priv->fixtime = strdup(item[1]);//strtod(item[1], NULL);
 		sscanf(item[8], "%lf", &priv->hdop);
 		strcpy(priv->fixtime, item[1]);
 		sscanf(item[9], "%lf", &priv->height);
