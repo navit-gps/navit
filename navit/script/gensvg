@@ -11,10 +11,10 @@ cat <<EOT
    height="64px">
   <g>
     <path
-       d="M 32,63 L 32,$ya C $xg,$yd $xi,$yc $xe,$yb"
+       d="M $xl0,$yl0 L $xl1,$yl1 C $xcc0,$ycc0 $xcc1,$ycc1 $xc0,$yc0$extra"
        style="fill:none;stroke:#${colval};stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
     <path
-         transform="translate($xe,$yb) scale(3) rotate($angle)"
+         transform="translate($xa0,$ya0) scale(3) rotate($angle)"
          d="M -4,1 L 0,-7 L 4,1 C 2,-1 -2,-1 -4,1"
          style="fill:#${colval};stroke:#${colval};stroke-linejoin:round"
          />
@@ -24,6 +24,7 @@ cat <<EOT
 EOT
 }
 
+yl0=63
 for col in bk wh
 do
 	case $col in
@@ -36,75 +37,108 @@ do
 	esac
 	for dir in left right
 	do
-		case $dir in
-		left)
-			angle=360
-			step=-45
-			xa=33.5
-			xb=26
-			xc=16
-			xd=22
-			xf=32
-			xh=28
-			;;
-		right)
+		xl0=32
+		xl1=32
+		angle=360
+		step=-45
+		xa=33.5
+		xb=26
+		xc=16
+		xd=22
+		xe=32
+		xf=28
+		if [ "$dir" = "right" ]
+		then
 			angle=0
 			step=45
-			xa=30
-			xb=38
-			xc=48
-			xd=42
-			xf=32
-			xh=36
-			;;
-		esac
+			xa=30.5
+			xb=$((64-xb))
+			xc=$((64-xc))
+			xd=$((64-xd))
+			xe=$((64-xe))
+			xf=$((64-xf))
+		fi
 		for st in 1 2 3
 		do
 			case $st in
 			1)
-				ya=42
-				yb=20
-				yc=31
-				yd=31
-				xe=$xd
-				xg=$xf
-				xi=$xf
+				yl1=42
+				yc0=20
+				ycc1=31
+				ycc0=31
+				ya0=20
+				xc0=$xd
+				xa0=$xd
+				xcc0=$xe
+				xcc1=$xe
 				;;
 			2)
-				ya=25
-				yb=20
-				yc=20
-				yd=22
-				xe=$xd
-				xg=$xf
-				xi=$xh
+				yl1=25
+				yc0=20
+				ycc1=20
+				ycc0=22
+				ya0=20
+				xc0=$xd
+				xa0=$xd
+				xcc0=$xe
+				xcc1=$xf
 				;;
 			3)
-				ya=32
-				yb=26
-				yc=16
-				yd=10
-				xe=$xc
-				xg=$xa
-				xi=$xb
+				yl1=32
+				yc0=26
+				ycc1=16
+				ycc0=10
+				ya0=26
+				xc0=$xc
+				xa0=$xc
+				xcc0=$xa
+				xcc1=$xb
 				;;
 			esac
 			angle=$((angle+step))
-				filename="nav_${dir}_${st}_$col.svg"
-				makearrow >$filename
+			filename="nav_${dir}_${st}_$col.svg"
+			extra=""
+			makearrow >$filename
 		done
+		filename="nav_turnaround_${dir}_$col.svg"
+		angle=180
+		xcc0=48
+		xc0=22
+		xcc1=22
+		xl0=48
+		xl1=48
+		xa0=22
+		if [ "$dir" = "right" ]
+		then
+			xcc0=$((64-$xcc0))
+			xc0=$((64-$xc0))
+			xcc1=$((64-$xcc1))
+			xl0=$((64-$xl0))
+			xl1=$((64-$xl1))
+			xa0=$((64-$xa0))
+		fi
+		yl1=20
+		yc0=20
+		ycc1=0
+		ycc0=0
+		ya0=35
+		extra=" L $xc0 $ya0"
+		makearrow >$filename
 	done
 	filename="nav_straight_$col.svg"
-	xa=32
-	xb=32
-	xc=32
-	xd=32
-	xe=32
-	xf=32
-	xg=32
-	xh=32
-	xi=32
+	xl0=32
+	xl1=32	
+	yl1=32
+	xcc0=32
+	ycc0=10
+	xcc1=32
+	ycc1=16
+	xc0=32
+	yc0=26
+	xa0=32
+	ya0=26
 	angle=0
+	extra=""
 	makearrow >$filename
 done
 
