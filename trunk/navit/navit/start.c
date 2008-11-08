@@ -83,7 +83,7 @@ static void setup_dummy_environment(void)
 		if (cp)
 			*cp = '\0';
 		else
-			sprintf(buf, ".");
+			sprintf(basedir, ".");
 	} else {
 		sprintf(basedir, "%s", "/Storage Card/navit");
 	}
