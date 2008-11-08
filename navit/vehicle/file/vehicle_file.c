@@ -18,6 +18,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
@@ -67,16 +68,24 @@ struct vehicle_priv {
 	double speed;
 	double direction;
 	double height;
+	double hdop;
+	double vdop;
+	char fixtime[20];
+	int fixyear;
+	int fixmonth;
+	int fixday;
 	int status;
 	int sats_used;
+	int sats_visible;
 	int time;
 	int on_eof;
 #ifdef _WIN32
 	int no_data_count;
 #endif
 	speed_t baudrate;
-	int checksum_ignore;
 	struct attr ** attrs;
+	char fixiso8601[128];
+	int checksum_ignore;
 };
 
 #ifdef _WIN32
@@ -232,6 +241,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	int i, bcsum;
 	int len = strlen(buffer);
 	unsigned char csum = 0;
+	int valid;
 
 	dbg(1, "buffer='%s'\n", buffer);
 	for (;;) {
@@ -307,7 +317,10 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 
 		sscanf(item[6], "%d", &priv->status);
 		sscanf(item[7], "%d", &priv->sats_used);
-		priv->height = g_ascii_strtod(item[9], NULL);
+		sscanf(item[8], "%lf", &priv->hdop);
+		strcpy(priv->fixtime, item[1]);
+		sscanf(item[9], "%lf", &priv->height);
+
 		g_free(priv->nmea_data);
 		priv->nmea_data=priv->nmea_data_buf;
 		priv->nmea_data_buf=NULL;
@@ -329,8 +342,14 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		   Course Over Ground Degrees True[1],"T"[2],Course Over Ground Degrees Magnetic[3],"M"[4],
 		   Speed in Knots[5],"N"[6],"Speed in KM/H"[7],"K"[8]
 		 */
-		priv->direction = g_ascii_strtod( item[1], NULL );
-		priv->speed = g_ascii_strtod( item[7], NULL );
+		if (item[1] && item[7])
+			valid = 1;
+		if (i == 9 && (*item[9] == 'A' || *item[9] == 'D'))
+			valid = 1;
+		if (valid) {
+			priv->direction = g_ascii_strtod( item[1], NULL );
+			priv->speed = g_ascii_strtod( item[7], NULL );
+		}
 	}
 	if (!strncmp(buffer, "$GPRMC", 6)) {
 		/*                                                           1     1
@@ -339,9 +358,55 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		   Time[1],Active/Void[2],lat[3],N/S[4],long[5],W/E[6],speed in knots[7],track angle[8],date[9],
 		   magnetic variation[10],magnetic variation direction[11]
 		 */
-		priv->direction = g_ascii_strtod( item[8], NULL );
-		priv->speed = g_ascii_strtod( item[7], NULL );
-		priv->speed *= 1.852;
+		if (*item[2] == 'A')
+			valid = 1;
+		if (i == 12 && (*item[12] == 'A' || *item[12] == 'D'))
+			valid = 1; 
+		if (valid) {
+			priv->direction = g_ascii_strtod( item[8], NULL );
+			priv->speed = g_ascii_strtod( item[7], NULL );
+			priv->speed *= 1.852;
+			sscanf(item[9], "%02d%02d%02d",
+				&priv->fixday,
+				&priv->fixmonth,
+				&priv->fixyear);
+			priv->fixyear += 2000;
+		}
+	}
+	if (!strncmp(buffer, "$GPGSV", 6)) {
+	/*
+		0 GSV	   Satellites in view
+		1 2 	   Number of sentences for full data
+		2 1 	   sentence 1 of 2
+		3 08	   Number of satellites in view
+
+		4 01	   Satellite PRN number
+		5 40	   Elevation, degrees
+		6 083	   Azimuth, degrees
+		7 46	   SNR - higher is better
+			   for up to 4 satellites per sentence
+		*75	   the checksum data, always begins with *
+	*/
+		if (item[3]) {
+			sscanf(item[3], "%d", &priv->sats_visible);
+		}
+	}
+	if (!strncmp(buffer, "$GPZDA", 6)) {
+	/*
+		0        1        2  3  4    5  6
+		$GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
+			hhmmss    HrMinSec(UTC)
+			dd,mm,yyy Day,Month,Year
+			xx        local zone hours -13..13
+			yy        local zone minutes 0..59
+	*/
+		if (item[1] && item[2] && item[3] && item[4]) {
+			// priv->fixtime = atof(item[1]);
+			strcpy(priv->fixtime, item[1]);
+			priv->fixday = atoi(item[2]);
+			priv->fixmonth = atoi(item[3]);
+			priv->fixyear = atoi(item[4]);
+		}
 	}
 }
 
@@ -443,6 +508,9 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 	struct attr * active=NULL;
 
 	switch (type) {
+	case attr_position_fix_type:
+		attr->u.num = priv->status;
+		break;
 	case attr_position_height:
 		attr->u.numd = &priv->height;
 		break;
@@ -451,6 +519,12 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 		break;
 	case attr_position_direction:
 		attr->u.numd = &priv->direction;
+		break;
+	case attr_position_hdop:
+		attr->u.numd = &priv->hdop;
+		break;
+	case attr_position_qual:
+		attr->u.num = priv->sats_visible;
 		break;
 	case attr_position_sats_used:
 		attr->u.num = priv->sats_used;
@@ -462,6 +536,14 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 		attr->u.str=priv->nmea_data;
 		if (! attr->u.str)
 			return 0;
+		break;
+	case attr_position_time_iso8601:
+		if (!priv->fixyear || !priv->fixtime[0])
+			return 0;
+		sprintf(priv->fixiso8601, "%04d-%02d-%02dT%sZ",
+			priv->fixyear, priv->fixmonth, priv->fixday,
+			priv->fixtime);
+		attr->u.str=priv->fixiso8601;
 		break;
 	case attr_active:
 		  if(active != NULL && active->u.num == 1)
