@@ -36,7 +36,10 @@
 #include "file.h"
 #include "search.h"
 #include "navit_nls.h"
-
+#ifdef HAVE_API_WIN32_CE
+#include <windows.h>
+#include <winbase.h>
+#endif
 
 static void
 print_usage(void)
@@ -55,11 +58,7 @@ get_home_directory(void)
 	if (!homedir)
 	{
 		dbg(0,"Could not find home directory. Using current directory as home directory.");
-#ifdef _WIN32_WCE
-		homedir = "/Storage Card/";
-#else
 		homedir = ".";
-#endif
 	} else {
 		homedir=g_strdup(homedir);
 	}
@@ -70,20 +69,36 @@ static void setup_dummy_environment(void)
 {
 #ifdef HAVE_API_WIN32_CE
 	char buf[PATH_MAX];
-	/* FIXME: Get this from installation or make it a build option */
-#define NAVITCEDIR "/Storage Card/navit"
-	sprintf(buf, "%s", NAVITCEDIR);
+	wchar_t filename[MAX_PATH + 1];
+	char basedir[MAX_PATH + 1];
+	char *cp;
+	int sz;
+
+	sz = GetModuleFileName(NULL, filename, MAX_PATH);
+	if (sz > 0) {
+		wcstombs(basedir, filename, sz + 1);
+		cp = strrchr(basedir,'/');
+		if (!cp)
+			cp = strrchr(basedir,'\\');
+		if (cp)
+			*cp = '\0';
+		else
+			sprintf(buf, ".");
+	} else {
+		sprintf(basedir, "%s", "/Storage Card/navit");
+	}
+	sprintf(buf, "%s", basedir);
 	setenv("HOME", buf, 0);
 	setenv("NAVIT_PREFIX", buf, 0);
-	sprintf(buf, "%s/lib", NAVITCEDIR);
+	sprintf(buf, "%s/lib", basedir);
 	setenv("NAVIT_LIBDIR", buf, 0);
-	sprintf(buf, "%s/locale", NAVITCEDIR);
+	sprintf(buf, "%s/locale", basedir);
 	setenv("NAVIT_LOCALEDIR", buf, 0);
-	sprintf(buf, "%s/data", NAVITCEDIR);
+	sprintf(buf, "%s/data", basedir);
 	setenv("NAVIT_USER_DATADIR", buf ,0);
-	sprintf(buf, "%s", NAVITCEDIR);
+	sprintf(buf, "%s", basedir);
 	setenv("NAVIT_SHAREDIR", buf, 0);
-	sprintf(buf, "%s/navit.log", NAVITCEDIR);
+	sprintf(buf, "%s/navit.log", basedir);
 	setenv("NAVIT_LOGFILE", buf, 0);
 #endif
 
