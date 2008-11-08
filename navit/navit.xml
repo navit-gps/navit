@@ -12,6 +12,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 		<plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libgraphics_null.so" active="no" />
 	</plugins>
 	<debug name="navit:do_draw" level="0" />
+    <debug name="segv" level="1" />
 
 	<!--
 	Center coordinates format:
