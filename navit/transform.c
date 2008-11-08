@@ -33,14 +33,14 @@
 #include "item.h"
 
 struct transformation {
-	long scale;		/* Scale factor */
 	int angle;		/* Rotation angle */
 	double cos_val,sin_val;	/* cos and sin of rotation angle */
-	enum projection pro;
 	struct map_selection *map_sel;
 	struct map_selection *screen_sel;
 	struct point screen_center;
 	struct coord map_center;	/* Center of source rectangle */
+	enum projection pro;
+	long scale;		/* Scale factor */
 };
 
 struct transformation *

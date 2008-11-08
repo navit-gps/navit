@@ -29,10 +29,10 @@
 #include "param.h"
 
 struct file {
+	struct file *next;
 	unsigned char *begin;
 	unsigned char *end;
 	long long size;
-	char *name;
 	int name_id;
 	int fd;
 #ifndef __CEGCC__
@@ -44,7 +44,7 @@ struct file {
 	long map_handle;
 	long map_file;
 #endif
-	struct file *next;
+	char *name;
 };
 
 /* prototypes */
