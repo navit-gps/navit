@@ -85,8 +85,8 @@ logfn(char *file, int line, int level, char *fmt, ...)
 		return;
 	va_start(ap, fmt);
 	sz = sprintf(fileline, "%s:%d:%d|", file, line, level);
-	debug_vprintf(0, "garmin", strlen("garmin"), fileline, sz,
-		0, fmt, ap);
+	debug_vprintf(0, "", strlen(""), fileline, sz,
+		1, fmt, ap);
 	va_end(ap);
 }
 // need a base map and a map
