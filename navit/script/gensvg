@@ -24,6 +24,32 @@ cat <<EOT
 EOT
 }
 
+makeroundabout()
+{
+cat <<EOT
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="64px"
+   height="64px">
+  <g>
+    <path
+       d="M $xa0 $ya0 A $r $r 0 $long1 $sweep $xl1 $yl1"
+       style="fill:none;stroke:#${colval};stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:2,4" />
+    <path
+       d="M $xl0,$yl0 L $xl1,$yl1 A $r $r 0 $long2 $sweep $xa0 $ya0 L $xl2 $yl2"
+       style="fill:none;stroke:#${colval};stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
+    <path
+         transform="translate($xl2,$yl2) scale(2) rotate($angle)"
+         d="M -4,1 L 0,-7 L 4,1 C 2,-1 -2,-1 -4,1"
+         style="fill:#${colval};stroke:#${colval};stroke-linejoin:round"
+         />
+  </g>
+</svg>
+EOT
+}
+
 yl0=63
 for col in bk wh
 do
@@ -124,6 +150,102 @@ do
 		ya0=35
 		extra=" L $xc0 $ya0"
 		makearrow >$filename
+		xl0=32
+		xl1=32
+		yl1=44
+		r=12
+		letter=l
+		angle=180
+		step=45
+		longa=1
+		longb=0
+		sweep=1
+		xa=26
+		xb=38
+		if [ "$dir" = "right" ]
+		then
+			letter=r
+			step=-45
+			longa=0
+			longb=1
+			sweep=0
+			xa=$((64-xa))
+			xb=$((64-xb))
+		fi
+		for st in 1 2 3 4 5 6 7 8
+		do
+			angle=$((angle+step))
+			if [ $angle -ge 360 ]
+			then
+				angle=$((angle-360))
+			fi
+			if [ $angle -lt 0 ]
+			then
+				angle=$((angle+360))
+			fi
+			xa0=40.46
+			ya0=40.46
+			long1=$longb
+			case $angle in
+			0)
+				xa0=32
+				ya0=20
+				xl2=32
+				yl2=14
+				;;
+			45)
+				xa0=40.46
+				ya0=23.54
+				xl2=44.7
+				yl2=19.3
+				;;
+			90)
+				xa0=44
+				ya0=32
+				xl2=50
+				yl2=32
+				;;
+			135)
+				xa0=40.46
+				ya0=40.46
+				xl2=44.7
+				yl2=44.7
+				;;
+			180)
+				xa0=$xb
+				ya0=44
+				xl0=$xa
+				xl1=$xa
+				xl2=$xb
+				yl2=50
+				long1=0
+				;;
+			225)
+				xa0=23.54
+				ya0=40.46
+				xl2=19.3
+				yl2=44.7
+				long1=$longa
+				;;
+			270)
+				xa0=20
+				ya0=32
+				xl2=14
+				yl2=32
+				long1=$longa
+				;;		
+			315)
+				xa0=23.54
+				ya0=23.54
+				xl2=19.3
+				yl2=19.3
+				long1=$longa
+				;;	
+			esac
+			long2=$((1-long1))
+			filename="nav_roundabout_${letter}${st}_$col.svg"
+			makeroundabout >$filename
+		done
 	done
 	filename="nav_straight_$col.svg"
 	xl0=32
