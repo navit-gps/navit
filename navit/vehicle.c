@@ -66,7 +66,7 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 #ifdef HAVE_GLIB
 		GTimeVal time; 
 		g_get_current_time(&time); 
-		timep = g_time_val_to_iso8601(&time)
+		timep = g_time_val_to_iso8601(&time);
 		sprintf(tbuf, "%s", timep);
 		g_free(timep);
 		timep = tbuf;
