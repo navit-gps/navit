@@ -66,23 +66,52 @@ get_home_directory(void)
 	return homedir;
 }
 
+static void setup_dummy_environment(void)
+{
+#ifdef HAVE_API_WIN32_CE
+	char buf[PATH_MAX];
+	/* FIXME: Get this from installation or make it a build option */
+#define NAVITCEDIR "/Storage Card/navit"
+	sprintf(buf, "%s", NAVITCEDIR);
+	setenv("HOME", buf, 0);
+	setenv("NAVIT_PREFIX", buf, 0);
+	sprintf(buf, "%s/lib", NAVITCEDIR);
+	setenv("NAVIT_LIBDIR", buf, 0);
+	sprintf(buf, "%s/locale", NAVITCEDIR);
+	setenv("NAVIT_LOCALEDIR", buf, 0);
+	sprintf(buf, "%s/data", NAVITCEDIR);
+	setenv("NAVIT_USER_DATADIR", buf ,0);
+	sprintf(buf, "%s", NAVITCEDIR);
+	setenv("NAVIT_SHAREDIR", buf, 0);
+	sprintf(buf, "%s/navit.log", NAVITCEDIR);
+	setenv("NAVIT_LOGFILE", buf, 0);
+#endif
+
+}
 int main(int argc, char **argv)
 {
 	GError *error = NULL;
 	char *config_file = NULL;
 	int opt;
+	char *cp;
 
-    GList *list = NULL, *li;
+	GList *list = NULL, *li;
 
 
 #ifdef HAVE_GLIB
 	event_glib_init();
 #endif
+	setup_dummy_environment();
 	main_init(argv[0]);
 	main_init_nls();
 	debug_init(argv[0]);
-#ifdef __CEGCC__
-	debug_set_logfile("/Storage Card/navit.log");
+	
+	cp = getenv("NAVIT_LOGFILE");
+	if (cp)
+		debug_set_logfile(cp);
+#ifdef HAVE_API_WIN32_CE
+	else
+		debug_set_logfile("/Storage Card/navit.log");
 #endif
 	file_init();
 #ifndef USE_PLUGINS
@@ -162,13 +191,12 @@ int main(int argc, char **argv)
 	config_file="\\Storage Card\\navit.xml";
 #endif
 	if (!config_load(config_file, &error)) {
-		printf(_("Error parsing '%s': %s\n"), config_file, error ? error->message : "");
-		exit(1);
+		dbg(0, _("Error parsing '%s': %s\n"), config_file, error ? error->message : "");
 	} else {
-		printf(_("Using '%s'\n"), config_file);
+		dbg(0, _("Using '%s'\n"), config_file);
 	}
 	if (! main_get_navit(NULL)) {
-		printf(_("No instance has been created, exiting\n"));
+		dbg(0, _("No instance has been created, exiting\n"));
 		exit(1);
 	}
 	event_main_loop_run();
