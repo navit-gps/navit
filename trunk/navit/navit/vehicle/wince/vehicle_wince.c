@@ -32,6 +32,7 @@
 #include "coord.h"
 #include "item.h"
 #include "vehicle.h"
+#include "event.h"
 #include <windows.h>
 #include <windowsx.h>
 #include <io.h>
@@ -87,6 +88,7 @@ struct vehicle_priv {
 	int baudrate;
 	struct attr ** attrs;
 	char fixiso8601[128];
+	int checksum_ignore;
 };
 
 static DWORD WINAPI wince_port_reader_thread (LPVOID lParam)
@@ -102,8 +104,10 @@ static DWORD WINAPI wince_port_reader_thread (LPVOID lParam)
 	char return_buffer[1024];
 	int havedata;
 	HANDLE hGPS;
-	// FIXME
-	wchar_t portname[] = TEXT("GPD1:");
+	// Com ports above 9 should be prefixed - $device/COM123
+	wchar_t portname[64];
+	mbstowcs(portname, pvt->source, strlen(pvt->source)+1);
+	dbg(0, "GPS Port:[%s]\n", pvt->source);
 	pvt->thread_up = 1;
 reconnect_port:
 	/* GPD0 is the control port for the GPS driver */
@@ -220,7 +224,7 @@ vehicle_wince_open(struct vehicle_priv *priv)
 			*strsettings = '\0';
 			strsettings++;
 
-			dbg(1, "serial('%s', '%s')\n", strport, strsettings );
+			dbg(0, "serial('%s', '%s')\n", strport, strsettings );
 		}
 		if (raw_setting_str)
 		g_free( raw_setting_str );
@@ -268,12 +272,12 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 	for (i = 1; i < len - 3; i++) {
 		csum ^= (unsigned char) (buffer[i]);
 	}
-	if (!sscanf(buffer + len - 2, "%x", &bcsum)) {
+	if (!sscanf(buffer + len - 2, "%x", &bcsum)&& priv->checksum_ignore != 2) {
 		dbg(0, "no checksum in '%s'\n", buffer);
 		return ret;
 	}
-	if (bcsum != csum) {
-		dbg(0, "wrong checksum in '%s'\n", buffer);
+	if (bcsum != csum && priv->checksum_ignore == 0) {
+		dbg(0, "wrong checksum in '%s' %x vs %x\n", buffer, bcsum, csum);
 		return ret;
 	}
 // RMC, RMB, VTG, and GLL in nmea 2.3 have status
@@ -328,9 +332,9 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 		sscanf(item[6], "%d", &priv->status);
 		sscanf(item[7], "%d", &priv->sats_used);
 		// priv->fixtime = strdup(item[1]);//strtod(item[1], NULL);
-		sscanf(item[8], "%f", &priv->hdop);
+		sscanf(item[8], "%lf", &priv->hdop);
 		strcpy(priv->fixtime, item[1]);
-		sscanf(item[9], "%f", &priv->height);
+		sscanf(item[9], "%lf", &priv->height);
 		g_free(priv->nmea_data);
 		priv->nmea_data=priv->nmea_data_buf;
 		priv->nmea_data_buf=NULL;
@@ -366,7 +370,6 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 		if (i == 12 && (*item[12] == 'A' || *item[12] == 'D'))
 			valid = 1; 
 		if (valid) {
-			// FIXME speed is in knots .5144444444444444f
 			priv->direction = g_ascii_strtod( item[8], NULL );
 			priv->speed = g_ascii_strtod( item[7], NULL );
 			priv->speed *= 1.852;
@@ -552,13 +555,20 @@ vehicle_wince_new(struct vehicle_methods
 	struct attr *time;
 	struct attr *on_eof;
 	struct attr *baudrate;
+	struct attr *checksum_ignore;
+	char *cp;
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->fd = -1;
 	ret->cbl = cbl;
-	ret->source = g_strdup(source->u.str);
+	cp = strchr(source->u.str,':');
+	if (cp)
+		cp++;
+	else
+		cp = source->u.str;
+	ret->source = g_strdup(cp);
 	ret->buffer = g_malloc(buffer_size);
 	ret->time=1000;
 	ret->baudrate=0;	// do not change the rate if not configured
@@ -571,6 +581,9 @@ vehicle_wince_new(struct vehicle_methods
 		ret->baudrate = baudrate->u.num;
 	}
 	ret->attrs = attrs;
+	checksum_ignore = attr_search(attrs, NULL, attr_checksum_ignore);
+	if (checksum_ignore)
+		ret->checksum_ignore=checksum_ignore->u.num;
 	on_eof = attr_search(attrs, NULL, attr_on_eof);
 	if (on_eof && !strcasecmp(on_eof->u.str, "stop"))
 		ret->on_eof=1;
