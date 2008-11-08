@@ -124,6 +124,7 @@ main_remove_navit(struct navit *nav)
 		event_main_loop_quit();
 }
 
+
 void
 main_init(char *program)
 {
