@@ -23,6 +23,7 @@ vehicle_demo=yes; vehicle_demo_reason=default
 vehicle_file=yes; vehicle_file_reason=default
 vehicle_gpsd=yes; vehicle_gpsd_reason=default
 vehicle_gypsy=yes; vehicle_gypsy_reason=default
+vehicle_wince=no; vehicle_wince_reason=default
 
 m4_ifndef([AC_USE_SYSTEM_EXTENSIONS],
 	[AC_DEFUN([AC_USE_SYSTEM_EXTENSIONS], [AC_GNU_SOURCE])])
@@ -630,6 +631,7 @@ wince)
 	AC_DEFINE(HAVE_API_WIN32_CE, 1, [Have Windows CE API])
 	gui_win32=yes; gui_win32_reason="host_os is wince"
 	graphics_win32=yes; graphics_win32_reason="host_os is wince"
+	vehicle_wince=yes; vehcile_wince_reason="host_os is wince"
 	;;
 mingw32)
 	win32=yes
@@ -748,6 +750,9 @@ fi
 AC_SUBST(GYPSY_CFLAGS)
 AC_SUBST(GYPSY_LIBS)
 AM_CONDITIONAL(VEHICLE_GYPSY, test "x${vehicle_gypsy}" = "xyes")
+# wince
+AC_ARG_ENABLE(vehicle-wince, [  --disable-vehicle-wince             disable vehicle type wince], vehicle_wince=$enableval;vehicle_wince_reason="configure parameter")
+AM_CONDITIONAL(VEHICLE_WINCE, test "x${vehicle_wince}" = "xyes")
 
 NAVIT_CFLAGS="$NAVIT_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS"
 NAVIT_LIBS="$NAVIT_LIBS $GLIB_LIBS $GMODULE_LIBS $LIBINTL"
@@ -807,6 +812,7 @@ navit/vehicle/file/Makefile
 navit/vehicle/gpsd/Makefile
 navit/vehicle/gypsy/Makefile
 navit/vehicle/demo/Makefile
+navit/vehicle/wince/Makefile
 navit/xpm/Makefile
 navit/maps/Makefile
 intl/Makefile
@@ -907,6 +913,7 @@ echo "  demo:              $vehicle_demo ($vehicle_demo_reason)"
 echo "  file:              $vehicle_file ($vehicle_file_reason)"
 echo "  gpsd:              $vehicle_gpsd ($vehicle_gpsd_reason)"
 echo "  gypsy:             $vehicle_gypsy ($vehicle_gypsy_reason)"
+echo "  wince:             $vehicle_wince ($vehicle_wince_reason)"
 
 if  test "x${gtk2_pkgconfig}" != "xyes" -a "x${sdl}" != "xyes" -a "x${directfb_pkgconfig}" != "xyes" -a "x${gui_win32}" != "xyes" -a "x${gui_internal}" != "xyes"
 	then
