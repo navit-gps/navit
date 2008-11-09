@@ -70,7 +70,7 @@ popup_set_destination(struct navit *nav, struct pcoord *pc)
 	c.x = pc->x;
 	c.y = pc->y;
 	transform_to_geo(transform_get_projection(navit_get_trans(nav)), &c, &g);
-	transform_geo_text(&g, buffer_geo);	
+	coord_format(g.lat,g.lng,DEGREES_MINUTES_SECONDS,buffer_geo,sizeof(buffer_geo));
 	sprintf(buffer,"Map Point %s", buffer_geo);
 	navit_set_destination(nav, pc, buffer);
 }
@@ -85,7 +85,7 @@ popup_set_bookmark(struct navit *nav, struct pcoord *pc)
 	c.x = pc->x;
 	c.y = pc->y;
 	transform_to_geo(pc->pro, &c, &g);
-	transform_geo_text(&g, buffer_geo);
+	coord_format(g.lat,g.lng,DEGREES_MINUTES_SECONDS,buffer_geo,sizeof(buffer_geo));
 	sprintf(buffer,"Map Point %s", buffer_geo);
 	if (!gui_add_bookmark(navit_get_gui(nav), pc, buffer)) 
 		navit_add_bookmark(nav, pc, buffer);
@@ -262,7 +262,7 @@ popup(struct navit *nav, int button, struct point *p)
 	men=popup_printf(popup, menu_type_submenu, _("Point 0x%x 0x%x"), co.x, co.y);
 	popup_printf(men, menu_type_menu, _("Screen coord : %d %d"), p->x, p->y);
 	transform_to_geo(transform_get_projection(navit_get_trans(nav)), &co, &g);
-	transform_geo_text(&g, buffer);	
+	coord_format(g.lat,g.lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
 	popup_printf(men, menu_type_menu, "%s", buffer);
 	popup_printf(men, menu_type_menu, "%f %f", g.lat, g.lng);
 	dbg(0,"%p %p\n", nav, &c);

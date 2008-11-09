@@ -280,4 +280,58 @@ coord_print(enum projection pro, struct coord *c, FILE *out) {
 	return;
 }
 
+/**
+ * @brief Converts a lat/lon into a text formatted text string.
+ * @param lat The latitude
+ * @param lng The longitude
+ * @param fmt The format to use. 
+ *    @li DEGREES=>(45.5000N 100.9000S)
+ *    @li DEGREES_MINUTES=>(45 30.))00N 100 120.54.0000S)
+ *    @li DEGREES_MINUTES_SECONDS=>(4530.0000N 12054.0000S)
+ *           
+ * 
+ * @param buffer  A buffer large enough to hold the output + a terminating NULL (26 bytes)
+ * @param size The size of the buffer
+ *
+ */
+void coord_format(float lat,float lng, enum coord_format fmt, char * buffer, int size)
+{
+
+	char lat_c='N';
+  	char lng_c='E';
+	float lat_deg,lat_min,lat_sec;
+	float lng_deg,lng_min,lng_sec;
+
+	if (lng < 0) {
+		lng=-lng;
+		lng_c='W';
+	}
+	if (lat < 0) {
+		lat=-lat;
+		lat_c='S';
+	}
+	lat_deg=lat;
+	lat_min=(lat-floor(lat_deg))*60;
+	lat_sec=fmod(lat*3600,60);
+	lng_deg=lng;
+	lng_min=(lng-floor(lng_deg))*60;
+	lng_sec=fmod(lng*3600,60);
+	switch(fmt)
+	{
+
+	case DEGREES_DECIMAL:
+	  snprintf(buffer,size,"%02.6f%c %03.7f%c",lat,lat_c,lng,lng_c);
+	  break;
+	case DEGREES_MINUTES:
+	  snprintf(buffer,size,"%02.0f %07.4f%c %03.0f %07.4f%c",floor(lat_deg),lat_min , lat_c, floor(lng), lng_min, lng_c);
+		   break;
+	case DEGREES_MINUTES_SECONDS:
+	  snprintf(buffer,size,"%02.0f%07.4f%c %03.0f%07.4f%c",floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c);
+	  break;
+	  
+	
+	}
+	
+}
+
 /** @} */

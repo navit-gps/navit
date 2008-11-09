@@ -59,6 +59,30 @@ struct coord_geo_cart {
 	double z; /*!< Z-Value */
 };
 
+/**
+ * An enumeration of formats for printing geographic coordinates in.
+ *
+ */
+enum coord_format 
+{
+	/**
+	 * Degrees with decimal places.
+	 * Ie 20.5000 N 110.5000 E
+	 */
+	DEGREES_DECIMAL,
+
+	/**
+	 * Degrees and minutes.
+	 * ie 20 30.00 N 110 30.00 E
+	 */
+	DEGREES_MINUTES,
+	/**
+	 * Degrees, minutes and seconds.
+	 * ie 20 30 30.00 N 110 30 30 E
+	 */
+	DEGREES_MINUTES_SECONDS	
+};
+
 enum projection;
 struct attr;
 
@@ -73,6 +97,6 @@ void coord_rect_destroy(struct coord_rect *r);
 int coord_rect_overlap(struct coord_rect *r1, struct coord_rect *r2);
 int coord_rect_contains(struct coord_rect *r, struct coord *c);
 void coord_rect_extend(struct coord_rect *r, struct coord *c);
-
+void coord_format(float lat,float lng, enum coord_format, char * buffer, int size);
 
 #endif
