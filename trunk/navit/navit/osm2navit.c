@@ -2636,6 +2636,18 @@ process_binfile(FILE *in, FILE *out)
 	}
 }
 
+static struct plugins *plugins;
+
+void add_plugin(char *path)
+{
+	struct attr **attrs;
+
+	if (! plugins)
+		plugins=plugins_new();
+	attrs=(struct attr*[]){&(struct attr){attr_path,{path}},NULL};
+	plugin_new(&(struct attr){attr_plugins,.u.plugins=plugins}, attrs);	
+}
+
 int main(int argc, char **argv)
 {
 	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*tilesdir,*zipdir,*res;
@@ -2652,9 +2664,9 @@ int main(int argc, char **argv)
 	int input=0;
 	char *result,*dbstr=NULL;
 	FILE* input_file = stdin;
-	struct plugins *plugins=NULL;
 	struct attr **attrs;
 	struct map *map_handle=NULL;
+	main_init(argv[0]);
 
 	while (1) {
 #if 0
@@ -2724,10 +2736,10 @@ int main(int argc, char **argv)
 		case 'm':
 			attrs=(struct attr*[]){
 				&(struct attr){attr_type,{"textfile"}},
-				&(struct attr){attr_data,{"bookmark.txt"}},
+				&(struct attr){attr_data,{optarg}},
 				NULL};
-			map_handle=map_new(attrs);
-			fprintf(stderr,"optarg=%s\n", optarg);
+			add_plugin("$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libdata_textfile.so");
+			map_handle=map_new(NULL, attrs);
 			break;	
 		case 'n':
 			fprintf(stderr,"I will IGNORE unknown types\n");
@@ -2741,11 +2753,7 @@ int main(int argc, char **argv)
 			coverage=1;
 			break;
 		case 'p':
-			if (! plugins)
-				plugins=plugins_new();
-			fprintf(stderr,"optarg=%s\n",optarg);
-			attrs=(struct attr*[]){&(struct attr){attr_path,{optarg}},NULL};
-			plugin_new(&(struct attr){attr_plugins,.u.plugins=plugins}, attrs);	
+			add_plugin(optarg);
 			break;
 		case 's':
 			start=atoi(optarg);
@@ -2798,6 +2806,7 @@ int main(int argc, char **argv)
 			phase1_db(dbstr,ways,nodes);
 		else
 #endif
+		printf("map_handle=%p\n", map_handle);
 		if (map_handle) {
 			phase1_map(map_handle,ways,nodes);
 			map_destroy(map_handle);
