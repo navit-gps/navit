@@ -440,26 +440,6 @@ transform_get_order(struct transformation *t)
 }
 
 
-void
-transform_geo_text(struct coord_geo *g, char *buffer)
-{
-	double lng=g->lng;
-	double lat=g->lat;
-	char lng_c='E';
-	char lat_c='N';
-
-	if (lng < 0) {
-		lng=-lng;
-		lng_c='W';
-	}
-	if (lat < 0) {
-		lat=-lat;
-		lat_c='S';
-	}
-
-	sprintf(buffer,"%02.0f%07.4f%c %03.0f%07.4f%c", floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c);
-
-}
 
 #define TWOPI (M_PI*2)
 #define GC2RAD(c) ((c) * TWOPI/(1<<24))

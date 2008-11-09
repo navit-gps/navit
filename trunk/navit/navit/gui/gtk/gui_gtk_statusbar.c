@@ -57,23 +57,14 @@ statusbar_destroy(struct statusbar_priv *this)
 static void
 statusbar_gps_update(struct statusbar_priv *this, int sats, int qual, double lng, double lat, double height, double direction, double speed)
 {
-	char lat_c='N';
-	char lng_c='E';
-    char *dirs[]={_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
+	char *dirs[]={_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
 	char *dir;
 	int dir_idx;
+	char pos_text[26];
 
-	if (lng < 0) {
-		lng=-lng;
-		lng_c='W';
-	}
-	if (lat < 0) {
-		lat=-lat;
-		lat_c='S';
-	}
-	dir_idx=(direction+22.5)/45;
+	coord_format(lat,lng,DEGREES_MINUTES_SECONDS,pos_text,sizeof(pos_text));
 	dir=dirs[dir_idx];
-	sprintf(this->gps_text, "GPS %02d/%02d %02.0f%07.4f%c %03.0f%07.4f%c %4.0fm %3.0f°%-2s %3.0fkm/h", sats, qual, floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c, height, direction, dir, speed);
+	sprintf(this->gps_text, "GPS %02d/%02d %s %4.0fm %3.0f°%-2s %3.0fkm/h", sats, qual, pos_text, height, direction, dir, speed);
 	gtk_label_set_text(GTK_LABEL(this->gps), this->gps_text);
 
 }
@@ -103,8 +94,6 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	char buffer[128];
 	double lng, lat, direction=0, height=0, speed=0, hdop=0;
 	int sats=0, qual=0;
-	char lat_c='N';
-	char lng_c='E';
 	int status;
 	char *dirs[]={_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
 	char *dir;
@@ -137,14 +126,6 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 		return;
 	lng=attr.u.coord_geo->lng;
 	lat=attr.u.coord_geo->lat;
-	if (lng < 0) {
-		lng=-lng;
-		lng_c='W';
-	}
-	if (lat < 0) {
-		lat=-lat;
-		lat_c='S';
-	}
 	if (vehicle_get_attr(v, attr_position_fix_type, &attr, NULL))
 		status=attr.u.num;
 	if (vehicle_get_attr(v, attr_position_direction, &attr, NULL))
@@ -164,10 +145,10 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 		sats=attr.u.num;
 	if (vehicle_get_attr(v, attr_position_qual, &attr, NULL))
 		qual=attr.u.num;
-	sprintf(this->gps_text,"GPS:%s %02d/%02d HD:%02.2f %02.0f%07.4f%c %03.0f%07.4f%c %4.0fm %3.0f°%-2s %3.0fkm/h", 
+	coord_format(lat,lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
+	sprintf(this->gps_text,"GPS:%s %02d/%02d HD:%02.2f %s %4.0fm %3.0f°%-2s %3.0fkm/h", 
 			status_fix2str(status),
-			sats, qual, hdop, floor(lat), fmod(lat*60,60),
-			lat_c, floor(lng), fmod(lng*60,60), lng_c, height,
+			sats, qual, hdop, buffer, height,
 			direction, dir, speed);
 	gtk_label_set_text(GTK_LABEL(this->gps), this->gps_text);
 }

@@ -57,7 +57,6 @@ void transform_setup_source_rect(struct transformation *t);
 long transform_get_scale(struct transformation *t);
 void transform_set_scale(struct transformation *t, long scale);
 int transform_get_order(struct transformation *t);
-void transform_geo_text(struct coord_geo *g, char *buffer);
 double transform_scale(int y);
 double transform_distance(enum projection pro, struct coord *c1, struct coord *c2);
 double transform_polyline_length(enum projection pro, struct coord *c, int count);
