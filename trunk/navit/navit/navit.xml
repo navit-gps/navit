@@ -93,7 +93,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 		<vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1" refresh="1"/>
 		-->
 
-		<vehicle name="Demo" source="demo://">
+		<vehicle name="Demo" enabled="no" active="yes" source="demo://">
 		       <cursor w="26" h="26">
 				<itemgra>
 					<circle color="#0000ff" radius="24" width="2">
