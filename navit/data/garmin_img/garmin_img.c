@@ -697,7 +697,8 @@ dump_region_item(struct subdivision *sub, struct file *rgn, struct map_rect_priv
 					g.lng=(triple(&sub->center.lng)+(pnt->lng_delta << shift))*conv;
 					g.lat=(triple(&sub->center.lat)+(pnt->lat_delta << shift))*conv;
 					printf("%f %f\n", g.lng, g.lat);
-					transform_geo_text(&g, buffer);
+					coord_format(g.lat,g.lng,DEGREES_MINUTES_SECONDS,
+						     buffer,sizeof(buffer));
 					printf("%s\n", buffer);
 					dump_label_offset(mr, triple_u(&pnt->lbl_offset));
 					if (pnt->info & 0x80) 
