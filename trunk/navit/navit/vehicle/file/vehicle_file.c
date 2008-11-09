@@ -193,8 +193,8 @@ vehicle_file_open(struct vehicle_priv *priv)
 			cfmakeraw(&tio);
 			cfsetispeed(&tio, priv->baudrate);
 			cfsetospeed(&tio, priv->baudrate);
-			tio.c_cc[VMIN] = 200;
-			tio.c_cc[VTIME] = 0;
+			tio.c_cc[VMIN] = 0;
+			tio.c_cc[VTIME] = 200;
 			tcsetattr(priv->fd, TCSANOW, &tio);
 			priv->file_type = file_type_device;
 		}
