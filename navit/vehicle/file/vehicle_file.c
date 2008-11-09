@@ -49,7 +49,7 @@ enum file_type {
 	file_type_pipe = 1, file_type_device, file_type_file
 };
 
-static int buffer_size = 256;
+static int buffer_size = 1024;
 
 struct vehicle_priv {
 	char *source;
@@ -193,8 +193,8 @@ vehicle_file_open(struct vehicle_priv *priv)
 			cfmakeraw(&tio);
 			cfsetispeed(&tio, priv->baudrate);
 			cfsetospeed(&tio, priv->baudrate);
-			tio.c_cc[VMIN] = 16;
-			tio.c_cc[VTIME] = 1;
+			tio.c_cc[VMIN] = 200;
+			tio.c_cc[VTIME] = 0;
 			tcsetattr(priv->fd, TCSANOW, &tio);
 			priv->file_type = file_type_device;
 		}
