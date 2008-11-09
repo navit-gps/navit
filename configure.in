@@ -440,7 +440,7 @@ AC_SUBST(CEGUI_CFLAGS)
 AC_SUBST(CEGUI_LIBS)
 
 AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$cegui" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" -a "x$xmu" = "xyes" ])
-AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
+AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$glut" = "xyes" - "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
 
 AC_ARG_ENABLE(gui-clutter, [  --disable-gui-clutter             don't create gui clutter ], MODULE_GUI_CLUTTER=$enableval, MODULE_GUI_CLUTTER=yes)
 if test "x$MODULE_GUI_CLUTTER" = "xyes"; then
