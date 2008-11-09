@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <sys/time.h>
 #include <glib.h>
 #include "file.h"
 #include "item.h"
@@ -33,7 +34,10 @@
 #include <windowsx.h>
 #endif
 
-int debug_level=0,segv_level=0;
+int debug_level=0;
+int segv_level=0;
+int timestamp_prefix=0;
+
 static int dummy;
 static GHashTable *debug_hash;
 static const char *gdb_program;
@@ -80,16 +84,18 @@ debug_update_level(gpointer key, gpointer value, gpointer user_data)
 void
 debug_level_set(const char *name, int level)
 {
-	debug_level=0;
-	if (strcmp(name,"segv")) {
-		g_hash_table_insert(debug_hash, g_strdup(name), (gpointer) level);
-		g_hash_table_foreach(debug_hash, debug_update_level, NULL);	
-	} else {
+	if (!strcmp(name, "segv")) {
 		segv_level=level;
 		if (segv_level)
 			signal(SIGSEGV, sigsegv);
 		else
 			signal(SIGSEGV, NULL);
+	} else if (!strcmp(name, "timestamps")) {
+		timestamp_prefix=level;
+	} else {
+		debug_level=0;
+		g_hash_table_insert(debug_hash, g_strdup(name), (gpointer) level);
+		g_hash_table_foreach(debug_hash, debug_update_level, NULL);
 	}
 }
 
@@ -114,6 +120,21 @@ debug_level_get(const char *name)
 	return (int)(g_hash_table_lookup(debug_hash, name));
 }
 
+static void debug_timestamp(FILE *fp)
+{
+	struct timeval tv;
+
+	if (gettimeofday(&tv, NULL) == -1)
+		return;
+	/* Timestamps are UTC */
+	fprintf(fp,
+		"%02d:%02d:%02d.%03d|",
+		(int)(tv.tv_sec/3600)%24,
+		(int)(tv.tv_sec/60)%60,
+		(int)tv.tv_sec % 60,
+		(int)tv.tv_usec/1000);
+}
+
 void
 debug_vprintf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap)
 {
@@ -129,6 +150,8 @@ debug_vprintf(int level, const char *module, const int mlen, const char *functio
 #ifndef DEBUG_WIN32_CE_MESSAGEBOX
 		if (! fp)
 			fp = stderr;
+		if (timestamp_prefix)
+			debug_timestamp(fp);
 		if (prefix)
 			fprintf(fp,"%s:",buffer);
 		vfprintf(fp,fmt, ap);
