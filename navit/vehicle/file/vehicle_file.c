@@ -40,7 +40,7 @@
 
 static void vehicle_file_disable_watch(struct vehicle_priv *priv);
 static void vehicle_file_enable_watch(struct vehicle_priv *priv);
-static void vehicle_file_parse(struct vehicle_priv *priv, char *buffer);
+static int vehicle_file_parse(struct vehicle_priv *priv, char *buffer);
 static int vehicle_file_open(struct vehicle_priv *priv);
 static void vehicle_file_close(struct vehicle_priv *priv);
 
@@ -95,7 +95,8 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
     static char buffer[2048] = {0,};
     static int current_index = 0;
     const int chunk_size = 1024;
-
+    int rc = 0;
+    
     if ( priv->no_data_count > 5 )
     {
         vehicle_file_close( priv );
@@ -128,11 +129,18 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
             return_buffer[ bytes_to_copy + 1 ] = '\0';
 
             // printf( "received %d : '%s' bytes to copy\n", bytes_to_copy, return_buffer );
-            vehicle_file_parse( priv, return_buffer );
+            rc += vehicle_file_parse( priv, return_buffer );
 
             current_index -= bytes_to_copy;
             memmove( buffer, &buffer[ bytes_to_copy ] , sizeof( buffer ) - bytes_to_copy );
         }
+	if (rc) {
+		callback_list_call_0(priv->cbl);
+		if (rc > 1)
+			dbg(0, "Can not keep with gps data delay is %d seconds\n",
+				rc - 1);
+	}
+
 
     }
     else
@@ -233,7 +241,7 @@ vehicle_file_enable_watch_timer(gpointer t)
 }
 
 
-static void
+static int
 vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 {
 	char *nmea_data_buf, *p, *item[16];
@@ -242,12 +250,13 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	int len = strlen(buffer);
 	unsigned char csum = 0;
 	int valid;
+	int ret = 0;
 
 	dbg(1, "buffer='%s'\n", buffer);
 	for (;;) {
 		if (len < 4) {
 			dbg(0, "'%s' too short\n", buffer);
-			return;
+			return ret;
 		}
 		if (buffer[len - 1] == '\r' || buffer[len - 1] == '\n')
 			buffer[--len] = '\0';
@@ -256,22 +265,22 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	}
 	if (buffer[0] != '$') {
 		dbg(0, "no leading $ in '%s'\n", buffer);
-		return;
+		return ret;
 	}
 	if (buffer[len - 3] != '*') {
 		dbg(0, "no *XX in '%s'\n", buffer);
-		return;
+		return ret;
 	}
 	for (i = 1; i < len - 3; i++) {
 		csum ^= (unsigned char) (buffer[i]);
 	}
 	if (!sscanf(buffer + len - 2, "%x", &bcsum) && priv->checksum_ignore != 2) {
 		dbg(0, "no checksum in '%s'\n", buffer);
-		return;
+		return ret;
 	}
 	if (bcsum != csum && priv->checksum_ignore == 0) {
 		dbg(0, "wrong checksum in '%s'\n", buffer);
-		return;
+		return ret;
 	}
 
 	if (!priv->nmea_data_buf || strlen(priv->nmea_data_buf) < 65536) {
@@ -324,8 +333,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		g_free(priv->nmea_data);
 		priv->nmea_data=priv->nmea_data_buf;
 		priv->nmea_data_buf=NULL;
-
-		callback_list_call_0(priv->cbl);
+		ret = 1;
 
 #ifndef _WIN32
 		if (priv->file_type == file_type_file) {
@@ -408,6 +416,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 			priv->fixyear = atoi(item[4]);
 		}
 	}
+	return ret;
 }
 
 #ifndef _WIN32
@@ -415,7 +424,7 @@ static gboolean
 vehicle_file_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
 {
 	struct vehicle_priv *priv = t;
-	int size;
+	int size, rc = 0;
 	char *str, *tok;
 
 	dbg(1, "enter condition=%d\n", condition);
@@ -444,12 +453,13 @@ vehicle_file_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
 		dbg(1, "size=%d pos=%d buffer='%s'\n", size,
 		    priv->buffer_pos, priv->buffer);
 		str = priv->buffer;
-		while ((tok = index(str, '\n'))) {
+		while ((tok = strchr(str, '\n'))) {
 			*tok++ = '\0';
 			dbg(1, "line='%s'\n", str);
-			vehicle_file_parse(priv, str);
+			rc +=vehicle_file_parse(priv, str);
 			str = tok;
 		}
+
 		if (str != priv->buffer) {
 			size = priv->buffer + priv->buffer_pos - str;
 			memmove(priv->buffer, str, size + 1);
@@ -461,6 +471,8 @@ vehicle_file_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
 			    "Overflow. Most likely wrong baud rate or no nmea protocol\n");
 			priv->buffer_pos = 0;
 		}
+		if (rc)
+			callback_list_call_0(priv->cbl);
 		return TRUE;
 	}
 	return FALSE;
