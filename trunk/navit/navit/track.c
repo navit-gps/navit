@@ -272,18 +272,17 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 {
 	int value=0;
 	struct street_data *sd=t->street;
-	struct coord c, c1, c2;
-	c.x = sd->c[offset].x;
-	c.y = sd->c[offset].y;
+	dbg(2, "%d: (0x%x,0x%x)-(0x%x,0x%x)\n", offset, sd->c[offset].x, sd->c[offset].y, sd->c[offset+1].x, sd->c[offset+1].y);
 	if (flags & 1) {
+		struct coord c1, c2, cp;
 		c1.x = sd->c[offset].x;
 		c1.y = sd->c[offset].y;
+		c2.x = sd->c[offset+1].x;
+		c2.y = sd->c[offset+1].y;
+		cp.x = tr->curr_in.x;
+		cp.y = tr->curr_in.y;
+		value+=transform_distance_line_sq(&c1, &c2, &cp, lpnt);
 	}
-	c2.x = tr->curr_in.x;
-	c2.y = tr->curr_in.y;
-	dbg(2, "%d: (0x%x,0x%x)-(0x%x,0x%x)\n", offset, sd->c[offset].x, sd->c[offset].y, sd->c[offset+1].x, sd->c[offset+1].y);
-	if (flags & 1) 
-		value+=transform_distance_line_sq(&c, &c1, &c2, lpnt);
 	if (value >= min)
 		return value;
 	if (flags & 2) 
