@@ -41,13 +41,17 @@ static struct vehicle_priv {
 	double speed;
 	double direction;
 	double height;
+	double hdop;
 	int status;
+	int fix_type;
+	time_t fix_time;
 	int sats;
 	int sats_used;
 	char *nmea_data;
-        char *nmea_data_buf;
+	char *nmea_data_buf;
 	guint retry_timer;
 	struct attr ** attrs;
+	char fixiso8601[128];
 } *vehicle_last;
 
 #define DEFAULT_RETRY_INTERVAL 10 // seconds
@@ -107,8 +111,17 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		priv->status = data->status;
 		data->set &= ~STATUS_SET;
 	}
+	if (data->set & MODE_SET) {
+		priv->fix_type = data->fix.mode - 1;
+		data->set &= ~MODE_SET;
+	}
+	if (data->set & TIME_SET) {
+		priv->fix_time = data->fix.time;
+		data->set &= ~TIME_SET;
+	}
 	if (data->set & PDOP_SET) {
-		dbg(0, "pdop : %g\n", data->pdop);
+		dbg(1, "pdop : %g\n", data->pdop);
+		priv->hdop = data->hdop;
 		data->set &= ~PDOP_SET;
 	}
 	if (data->set & LATLON_SET) {
@@ -227,6 +240,9 @@ vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
 {
 	struct attr * active=NULL;
 	switch (type) {
+	case attr_position_fix_type:
+		attr->u.num = priv->fix_type;
+		break;
 	case attr_position_height:
 		attr->u.numd = &priv->height;
 		break;
@@ -235,6 +251,9 @@ vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
 		break;
 	case attr_position_direction:
 		attr->u.numd = &priv->direction;
+		break;
+	case attr_position_hdop:
+		attr->u.numd = &priv->hdop;
 		break;
 	case attr_position_qual:
 		attr->u.num = priv->sats;
@@ -249,6 +268,19 @@ vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
 		attr->u.str=priv->nmea_data;
 		if (! attr->u.str)
 			return 0;
+		break;
+	case attr_position_time_iso8601:
+		{
+		struct tm tm;
+		if (!priv->fix_time)
+			return 0;
+		if (gmtime_r(&priv->fix_time, &tm)) {
+			strftime(priv->fixiso8601, sizeof(priv->fixiso8601),
+				"%Y-%m-%dT%TZ", &tm);
+			attr->u.str=priv->fixiso8601;
+		} else
+			return 0;
+		}
 		break;
 	case attr_active:
 	  active = attr_search(priv->attrs,NULL,attr_active);
