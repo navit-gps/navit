@@ -1810,7 +1810,7 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 	}
 	mapset_close(h);
 
-	if (!ret->street || mindist > max_dist) {
+	if (!ret->street || mindist > max_dist*max_dist) {
 		if (ret->street) {
 			street_data_free(ret->street);
 			dbg(1,"Much too far %d > %d\n", mindist, max_dist);
