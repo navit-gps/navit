@@ -1517,6 +1517,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 				</itemgra>
 				<itemgra item_types="rg_segment" order="12-">
 					<polyline color="#FF089C" width="1" />
+					<arrows color="#FF089C" width="1" />
 				</itemgra>
 				<itemgra item_types="rg_point" order="12-">
 					<circle color="#FF089C" radius="10"  text_size="7" />
@@ -2848,6 +2849,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 				</itemgra>
 				<itemgra item_types="rg_segment" order="0-">
 					<polyline color="#FF089C" width="1" />
+					<arrows color="#FF089C" width="1" />
 				</itemgra>
 				<itemgra item_types="rg_point" order="0-">
 					<circle color="#FF089C" radius="10"  text_size="7" />
