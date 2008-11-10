@@ -1683,6 +1683,8 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	cursor_pc.pro = pro;
 	if (this_->tracking && this_->tracking_flag) {
 		if (tracking_update(this_->tracking, &cursor_pc, nv->dir)) {
+			nv->coord.x=cursor_pc.x;
+			nv->coord.y=cursor_pc.y;
 			if (this_->route && nv->update_curr == 1) {
 				route_set_position_from_tracking(this_->route, this_->tracking);
 				callback_list_call_attr_0(this_->attr_cbl, attr_position);
