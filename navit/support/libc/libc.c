@@ -4,17 +4,11 @@
 #include <unistd.h>
 int errno;
 
-static int at_exit_registered;
-#define REGISTER_AT_EXIT()					\
-	do {							\
-	if (!at_exit_registered)				\
-		at_exit_registered = !atexit(cleanup_libc);	\
-	} while(0)
-
 #define MAXENV 32
 static char *envnames[MAXENV];
 static char *envvars[MAXENV];
 
+static void cleanup_libc(void) __attribute__((destructor));
 static void cleanup_libc(void)
 {
 	int i;
@@ -27,10 +21,9 @@ static void cleanup_libc(void)
 }
 
 char *
-getenv(char *name)
+getenv(const char *name)
 {
 	int i;
-	REGISTER_AT_EXIT();
 	for (i=0; i < MAXENV; i++) {
 		if (envnames[i] && !strcmp(envnames[i], name))
 			return envvars[i];
@@ -43,7 +36,6 @@ setenv(const char *name, const char *value, int overwrite)
 {
 	int i;
 	char *val;
-	REGISTER_AT_EXIT();
 	for (i=0; i < MAXENV; i++) {
 		if (envnames[i] && !strcmp(envnames[i], name)) {
 			if (overwrite) {
@@ -160,7 +152,7 @@ localeconv(void)
 	return &localedata;
 }
 
-void
-alarm(void)
+unsigned int
+alarm(unsigned int seconds)
 {
 }
