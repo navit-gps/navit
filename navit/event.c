@@ -43,9 +43,9 @@ void event_main_loop_quit(void)
 }
 
 struct event_watch *
-event_add_watch(struct file *file, enum event_watch_cond cond, struct callback *cb)
+event_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
 {
-	return event_methods.add_watch(file, cond, cb);
+	return event_methods.add_watch(fd, cond, cb);
 }
 
 void
