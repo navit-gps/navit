@@ -36,6 +36,7 @@
 #include "plugin.h"
 #include "coord.h"
 #include "item.h"
+#include "event.h"
 #include "vehicle.h"
 
 static void vehicle_file_disable_watch(struct vehicle_priv *priv);
@@ -57,8 +58,8 @@ struct vehicle_priv {
 	struct callback_list *cbl;
 	int fd;
 	FILE *file;
-	guint watch;
-	GIOChannel *iochan;
+	struct callback *cb,*cbt;
+	struct event_watch *watch;
 	char *buffer;
 	int buffer_pos;
 	char *nmea_data;
@@ -205,7 +206,6 @@ vehicle_file_open(struct vehicle_priv *priv)
 		priv->fd = fileno(priv->file);
 		priv->file_type = file_type_pipe;
 	}
-	priv->iochan = g_io_channel_unix_new(priv->fd);
 #endif
 	return 1;
 }
@@ -214,13 +214,9 @@ static void
 vehicle_file_close(struct vehicle_priv *priv)
 {
 #ifdef _WIN32
-    serial_io_shutdown( priv->fd );
+	serial_io_shutdown( priv->fd );
 #else
-	GError *error = NULL;
-	if (priv->iochan) {
-		g_io_channel_shutdown(priv->iochan, 0, &error);
-		priv->iochan = NULL;
-	}
+	vehicle_file_disable_watch(priv);
 	if (priv->file)
 		pclose(priv->file);
 	else if (priv->fd >= 0)
@@ -231,11 +227,10 @@ vehicle_file_close(struct vehicle_priv *priv)
 }
 
 static int
-vehicle_file_enable_watch_timer(gpointer t)
+vehicle_file_enable_watch_timer(struct vehicle_priv *priv)
 {
-	struct vehicle_priv *priv = t;
-	vehicle_file_enable_watch(priv);
 	dbg(1, "enter\n");
+	vehicle_file_enable_watch(priv);
 
 	return FALSE;
 }
@@ -337,10 +332,10 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 
 #ifndef _WIN32
 		if (priv->file_type == file_type_file) {
-			vehicle_file_disable_watch(priv);
-			g_timeout_add(priv->time,
-				      vehicle_file_enable_watch_timer,
-				      priv);
+			if (priv->watch) {
+				vehicle_file_disable_watch(priv);
+				event_add_timeout(priv->time, 0, priv->cbt);
+			}
 		}
 #endif
 	}
@@ -420,62 +415,54 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 }
 
 #ifndef _WIN32
-static gboolean
-vehicle_file_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
+static void
+vehicle_file_io(struct vehicle_priv *priv)
 {
-	struct vehicle_priv *priv = t;
 	int size, rc = 0;
 	char *str, *tok;
 
-	dbg(1, "enter condition=%d\n", condition);
-	if (condition == G_IO_IN) {
-		size =
-		    read(g_io_channel_unix_get_fd(iochan),
-			 priv->buffer + priv->buffer_pos,
-			 buffer_size - priv->buffer_pos - 1);
-		if (size <= 0) {
-			switch (priv->on_eof) {
-			case 0:
-				vehicle_file_close(priv);
-				vehicle_file_open(priv);
-				break;
-			case 1:
-				return FALSE;
-				break;
-			case 2:
-				exit(0);
-				break;
-			}
-			return TRUE;
+	dbg(1, "enter\n");
+	size = read(priv->fd, priv->buffer + priv->buffer_pos, buffer_size - priv->buffer_pos - 1);
+	if (size <= 0) {
+		switch (priv->on_eof) {
+		case 0:
+			vehicle_file_close(priv);
+			vehicle_file_open(priv);
+			break;
+		case 1:
+			vehicle_file_disable_watch(priv);
+			break;
+		case 2:
+			exit(0);
+			break;
 		}
-		priv->buffer_pos += size;
-		priv->buffer[priv->buffer_pos] = '\0';
-		dbg(1, "size=%d pos=%d buffer='%s'\n", size,
-		    priv->buffer_pos, priv->buffer);
-		str = priv->buffer;
-		while ((tok = strchr(str, '\n'))) {
-			*tok++ = '\0';
-			dbg(1, "line='%s'\n", str);
-			rc +=vehicle_file_parse(priv, str);
-			str = tok;
-		}
-
-		if (str != priv->buffer) {
-			size = priv->buffer + priv->buffer_pos - str;
-			memmove(priv->buffer, str, size + 1);
-			priv->buffer_pos = size;
-			dbg(1, "now pos=%d buffer='%s'\n",
-			    priv->buffer_pos, priv->buffer);
-		} else if (priv->buffer_pos == buffer_size - 1) {
-			dbg(0,
-			    "Overflow. Most likely wrong baud rate or no nmea protocol\n");
-			priv->buffer_pos = 0;
-		}
-		if (rc)
-			callback_list_call_0(priv->cbl);
-		return TRUE;
+		return;
 	}
-	return FALSE;
+	priv->buffer_pos += size;
+	priv->buffer[priv->buffer_pos] = '\0';
+	dbg(1, "size=%d pos=%d buffer='%s'\n", size,
+	    priv->buffer_pos, priv->buffer);
+	str = priv->buffer;
+	while ((tok = strchr(str, '\n'))) {
+		*tok++ = '\0';
+		dbg(1, "line='%s'\n", str);
+		rc +=vehicle_file_parse(priv, str);
+		str = tok;
+	}
+
+	if (str != priv->buffer) {
+		size = priv->buffer + priv->buffer_pos - str;
+		memmove(priv->buffer, str, size + 1);
+		priv->buffer_pos = size;
+		dbg(1, "now pos=%d buffer='%s'\n",
+		    priv->buffer_pos, priv->buffer);
+	} else if (priv->buffer_pos == buffer_size - 1) {
+		dbg(0,
+		    "Overflow. Most likely wrong baud rate or no nmea protocol\n");
+		priv->buffer_pos = 0;
+	}
+	if (rc)
+		callback_list_call_0(priv->cbl);
 }
 #endif
 
@@ -485,9 +472,8 @@ vehicle_file_enable_watch(struct vehicle_priv *priv)
 #ifdef _WIN32
 	g_timeout_add(500, vehicle_win32_serial_track, priv);
 #else
-	priv->watch =
-	    g_io_add_watch(priv->iochan, G_IO_IN | G_IO_ERR | G_IO_HUP,
-			   vehicle_file_io, priv);
+	if (! priv->watch)
+		priv->watch = event_add_watch((void *)priv->fd, event_watch_cond_read, priv->cb);
 #endif
 }
 
@@ -496,8 +482,8 @@ vehicle_file_disable_watch(struct vehicle_priv *priv)
 {
 #ifndef _WIN32
 	if (priv->watch)
-		g_source_remove(priv->watch);
-	priv->watch = 0;
+		event_remove_watch(priv->watch);
+	priv->watch = NULL;
 #endif
 }
 
@@ -506,6 +492,8 @@ static void
 vehicle_file_destroy(struct vehicle_priv *priv)
 {
 	vehicle_file_close(priv);
+	callback_destroy(priv->cb);
+	callback_destroy(priv->cbt);
 	if (priv->source)
 		g_free(priv->source);
 	if (priv->buffer)
@@ -623,13 +611,15 @@ vehicle_file_new_file(struct vehicle_methods
 		ret->on_eof=2;
 	dbg(0,"on_eof=%d\n", ret->on_eof);
 	*meth = vehicle_file_methods;
+	ret->cb=callback_new_1(callback_cast(vehicle_file_io), ret);
+	ret->cbt=callback_new_1(callback_cast(vehicle_file_enable_watch_timer), ret);
 	if (vehicle_file_open(ret)) {
 		vehicle_file_enable_watch(ret);
 		return ret;
 	}
 
 #ifdef _WIN32
-    ret->no_data_count = 0;
+	ret->no_data_count = 0;
 #endif
 	dbg(0, "Failed to open '%s'\n", ret->source);
 	vehicle_file_destroy(ret);
