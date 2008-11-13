@@ -731,7 +731,7 @@ overlay_disable(struct graphics_priv *gr, int disabled)
 }
 
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha)
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
 {
 	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
 	this->drawable=gdk_pixmap_new(gr->widget->window, w, h, -1);

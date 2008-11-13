@@ -152,7 +152,7 @@ osd_compass_init(struct compass *this, struct navit *nav)
 	struct graphics *navit_gr;
 	struct color c;
 	navit_gr=navit_get_graphics(nav);
-	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h, 65535);
+	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h, 65535, 1);
 
 	this->bg=graphics_gc_new(this->gr);
 	c.r=0; c.g=0; c.b=0; c.a=32767;
@@ -306,7 +306,7 @@ osd_eta_init(struct eta *this, struct navit *nav)
 	struct color c;
 	char *flag=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/xpm/flag_wh_bk.xpm", NULL);
 	navit_gr=navit_get_graphics(nav);
-	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h, 65535);
+	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h, 65535, 1);
 
 	this->bg=graphics_gc_new(this->gr);
 	c.r=0; c.g=0; c.b=0; c.a=32767;
@@ -442,7 +442,7 @@ osd_navigation_init(struct osd_navigation *this, struct navit *nav)
 	struct graphics *navit_gr;
 	struct color c;
 	navit_gr=navit_get_graphics(nav);
-	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h, 65535);
+	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h, 65535, 1);
 
 	this->bg=graphics_gc_new(this->gr);
 	c.r=0; c.g=0; c.b=0; c.a=32767;
@@ -577,7 +577,7 @@ osd_street_name_init(struct osd_street_name *this, struct navit *nav)
 	struct color c;
 	navit_gr=navit_get_graphics(nav);
 	this->active=-1;
-	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h, 65535);
+	this->gr=graphics_overlay_new(navit_gr, &this->p, this->w, this->h, 65535, 1);
 
 	this->bg=graphics_gc_new(this->gr);
 	c.r=0; c.g=0; c.b=0; c.a=32767;

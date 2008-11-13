@@ -60,7 +60,7 @@ struct graphics_methods {
 	struct graphics_font_priv *(*font_new)(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,  int size, int flags);
 	struct graphics_gc_priv *(*gc_new)(struct graphics_priv *gr, struct graphics_gc_methods *meth);
 	void (*background_gc)(struct graphics_priv *gr, struct graphics_gc_priv *gc);
-	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha);
+	struct graphics_priv *(*overlay_new)(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound);
 	struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation);
 	void *(*get_data)(struct graphics_priv *gr, char *type);
 	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
@@ -124,7 +124,7 @@ struct callback;
 struct itemgra;
 struct graphics *graphics_new(struct attr *parent, struct attr **attrs);
 int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
-struct graphics *graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int alpha);
+struct graphics *graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int alpha, int wraparound);
 void graphics_init(struct graphics *this_);
 void *graphics_get_data(struct graphics *this_, char *type);
 void graphics_add_callback(struct graphics *this_, struct callback *cb);
