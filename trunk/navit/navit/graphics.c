@@ -116,13 +116,13 @@ int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int alpha)
+struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int alpha, int wraparound)
 {
 	struct graphics *this_;
 	if (!parent->meth.overlay_new)
 		return NULL;
 	this_=g_new0(struct graphics, 1);
-	this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, p, w, h, alpha);
+	this_->priv=parent->meth.overlay_new(parent->priv, &this_->meth, p, w, h, alpha, wraparound);
 	if (!this_->priv) {
 		g_free(this_);
 		this_=NULL;

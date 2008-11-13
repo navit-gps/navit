@@ -592,7 +592,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int alpha);
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int alpha, int wraparound);
 
 static int argc=1;
 static char *argv[]={(char *)"navit",NULL};
@@ -693,7 +693,7 @@ static struct graphics_methods graphics_methods = {
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int alpha)
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int alpha,int wraparound)
 {
 	*meth=graphics_methods;
 	return NULL;
