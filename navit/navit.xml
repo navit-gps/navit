@@ -1642,6 +1642,9 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 				<itemgra item_types="poi_viewpoint" order="10-">
 					<icon src="viewpoint.xpm" />
 				</itemgra>
+				<itemgra item_types="tec_common" order="11-">
+					<icon src="tec_common.png" w="24" h="24" />
+				</itemgra>
 			</layer>
 
 			<layer name="POI Labels">
@@ -2892,6 +2895,9 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 				</itemgra>
 				<itemgra item_types="poi_viewpoint" order="12-">
 					<icon src="viewpoint.xpm" />
+				</itemgra>
+				<itemgra item_types="tec_common" order="11-">
+					<icon src="tec_common.png" w="24" h="24" />
 				</itemgra>
 			</layer>
 			<layer name="POI Labels">
