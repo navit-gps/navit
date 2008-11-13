@@ -118,7 +118,7 @@ cursor_draw(struct cursor *this_, struct graphics *gra, struct point *pnt, int l
 	this_->speed=speed;
 	if (!this_->gra) {
 		struct color c;
-		this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, this_->w, this_->h, 65535);
+		this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, this_->w, this_->h, 65535, 0);
 		if (this_->gra) {
 			this_->bg=graphics_gc_new(this_->gra);
 			c.r=0; c.g=0; c.b=0; c.a=0;
