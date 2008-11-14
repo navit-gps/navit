@@ -1,0 +1,66 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+my $write_osm = 0;
+$write_osm = 1 if (defined(@ARGV) && $ARGV[0] eq '-x' && shift);
+
+if (!($#ARGV + 1)) {
+    print "parses one (or multiple) .asc-file(s) (mainly used by poiwarner) and merges the result into one navit binary mapfile. requires osm2navit\n";
+    print "usage: $0 [-x] OUT in1.asc [in2.asc [...]]\n";
+    print "       creates one big file\n";
+    print "usage: $0 [-x] IN.asc\n";
+    print "       creates a file called IN.asc.bin / .osm\n\n";
+    print "  -x   write in osm's xml format instead of navit's\n";
+    exit 0;
+}
+
+# generate the filename
+my $filename;
+if ($#ARGV == 0) {
+    print "one file: $ARGV[0]\n";
+    $filename = "$ARGV[0].bin";
+    $filename = "$ARGV[0].xml" if ($write_osm);
+} else {
+    $filename = $ARGV[0];
+    shift;
+    print "multiple inputfiles: " . join(' ', @ARGV) . "\n";
+}
+
+print "output: $filename\n";
+
+# open a file handle to store the osm data...
+my $pipe;
+if ($write_osm) {
+    open $pipe, ">$filename" or die $!;
+} else {
+# or a direct pipe to osm2navit
+    open $pipe, "| osm2navit $filename" or die $!;
+}
+
+
+# start generating the osm-code
+print $pipe '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+print $pipe '<osm version="0.5">' . "\n";
+
+my $i = 0;
+
+while (my $file = shift){
+    my $filehandle;
+    print "processing $file...\n";
+    open ($filehandle, "<$file") or die $!;
+    my $amenity = 'tec_common';
+    while (<$filehandle>) {
+        m/([0-9\.\-]*), ([0-9\.\-]*), "\[([0-9]*).*/ or next;
+        my ($lon, $lat, $id) = ($1, $2, $3);
+        print $pipe "    <node id=\"-$id\" visible=\"true\" lon=\"$lon\" lat=\"$lat\">\n";
+        print $pipe "        <tag k=\"name\" v=\"\" />\n";
+        print $pipe "        <tag k=\"amenity\" v=\"$amenity\" />\n";
+        print $pipe "    </node>\n";
+        $i++;
+    }
+}
+        
+print $pipe '</osm>';
+print "$i poi's processed\n";
