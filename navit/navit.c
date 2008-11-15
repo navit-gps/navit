@@ -927,7 +927,7 @@ navit_speak(struct navit *this_)
 		while ((item=map_rect_get_item(mr)) && item->type == type_nav_position);
 		if (item && item_attr_get(item, attr_navigation_speech, &attr)) {
 			speech_say(this_->speech, attr.u.str);
-			navit_textfile_debug_log(this_, "item=point_debug debug=\"speech_say('%s')\"", attr.u.str);
+			navit_textfile_debug_log(this_, "type=announcement label=\"%s\"", attr.u.str);
 		}
 		map_rect_destroy(mr);
 	}
@@ -1530,8 +1530,10 @@ navit_add_log(struct navit *this_, struct log *log)
 	if (!log_get_attr(log, attr_type, &type_attr, NULL))
 		return 0;
 	if (!strcmp(type_attr.u.str, "textfile_debug")) {
+		char *header = "type=track_tracked\n";
 		if (this_->textfile_debug_log)
 			return 0;
+		log_set_header(log, header, strlen(header));
 		this_->textfile_debug_log=log;
 		return 1;
 	}
@@ -1695,6 +1697,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 			navit_set_position(this_, &cursor_pc);
 		}
 	}
+	navit_textfile_debug_log(this_, "type=trackpoint_tracked");
 	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0);
 	if (!transform_within_border(this_->trans, &cursor_pnt, border)) {
 		if (!this_->cursor_flag) {
