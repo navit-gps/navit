@@ -1101,6 +1101,9 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 				<itemgra item_types="track" order="7-">
 					<polyline color="#3f3f3f" width="1" />
 				</itemgra>
+				<itemgra item_types="track_tracked" order="7-">
+					<polyline color="#3f3fff" width="3" />
+				</itemgra>
 				<itemgra item_types="poi_airport" order="5-">
 					<icon src="airport.xpm" />
 				</itemgra>
@@ -1599,6 +1602,10 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 				</itemgra>
 				<itemgra item_types="nav_none" order="0-">
 					<icon src="unknown.xpm" />
+				</itemgra>
+				<itemgra item_types="announcement" order="7-">
+					<icon src="gui_sound_32_32.png" />
+					<circle color="#FF089C" radius="10"  text_size="7" />
 				</itemgra>
 
 
