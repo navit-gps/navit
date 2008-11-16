@@ -28,7 +28,7 @@ SUFFIXES = .po .mo
 all: @MOFILES@
 
 @POFILES@: navit.pot
-	$(MSGMERGE) --no-fuzzy-matching --verbose -o $(top_builddir)/po/$@ $(top_srcdir)/po/$@.in navit.pot
+	sed 's/^"Project-Id-Version:.*/"Project-Id-Version: $(PACKAGE_STRING)\\n"/' < $(top_srcdir)/po/$@.in | $(MSGMERGE) --no-fuzzy-matching --verbose -o $(top_builddir)/po/$@ - navit.pot
 
 navit.pot: $(POTFILES)
 	 $(XGETTEXT) --default-domain=navit \
