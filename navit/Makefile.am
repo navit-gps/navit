@@ -60,7 +60,11 @@ endif
 
 version.h.tmp:
 	echo "#include \"config.h\"" >version.h.tmp
+if SOURCE_MODE_SVN
 	echo "#define SVN_VERSION \"$$(LANG=C svnversion 2>/dev/null)\"" >>version.h.tmp
+else
+	echo "#define SVN_VERSION \"@SOURCE_MODE@\"" >>version.h.tmp
+endif
 	if ! diff version.h.tmp version.h >/dev/null 2>/dev/null; \
 	then \
 		mv version.h.tmp version.h; \
