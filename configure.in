@@ -1,6 +1,17 @@
 AC_INIT(navit, 0.1.0)
+SOURCE_MODE=svn
+
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
+
+AC_SUBST(SOURCE_MODE)
+AM_CONDITIONAL(SOURCE_MODE_SVN, [test "x${SOURCE_MODE}" = "xsvn"])
+
+if test "x${SOURCE_MODE}" = "xsvn" ; then
+	USE_MAINTAINER_MODE=yes
+else
+	USE_MAINTAINER_MODE=no
+fi
 
 AC_DEFUN([AM_MAINTAINER_MODE],
 [AC_MSG_CHECKING([whether to enable maintainer-specific portions of Makefiles])
@@ -8,8 +19,7 @@ AC_DEFUN([AM_MAINTAINER_MODE],
   AC_ARG_ENABLE(maintainer-mode,
 [  --enable-maintainer-mode  enable make rules and dependencies not useful
                           (and sometimes confusing) to the casual installer],
-      USE_MAINTAINER_MODE=$enableval,
-      USE_MAINTAINER_MODE=yes)
+      USE_MAINTAINER_MODE=$enableval)
   AC_MSG_RESULT([$USE_MAINTAINER_MODE])
   AM_CONDITIONAL(MAINTAINER_MODE, [test $USE_MAINTAINER_MODE = yes])
   MAINT=$MAINTAINER_MODE_TRUE
