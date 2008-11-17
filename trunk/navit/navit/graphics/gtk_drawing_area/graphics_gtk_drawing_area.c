@@ -324,6 +324,16 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 
 	if (! font)
 		return;
+	/* 
+	 This needs an improvement, no one checks if the strings are visible
+	*/
+	if (p->x > gr->width-50 || p->y > gr->height-50) {
+		return;
+	}
+	if (p->x < -50 || p->y < -50) {
+		return;
+	}
+
 	if (bg) {
 		if (bg->level > 32767) {
 			gdk_gc_set_function(fg->gc, GDK_AND_INVERT);
