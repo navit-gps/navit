@@ -608,18 +608,21 @@ void display_add(struct displaylist *displaylist, struct item *item, int count, 
 */
 static void label_line(struct graphics *gra, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font, struct point *p, int count, char *label)
 {
-	int i,x,y,tl;
-	double dx,dy,l;
+	int i,x,y,tl,tlsq,l;
+	float lsq;
+	double dx,dy;
 	struct point p_t;
 
 	tl=strlen(label)*400;
+	tlsq = tl*tl;
 	for (i = 0 ; i < count-1 ; i++) {
 		dx=p[i+1].x-p[i].x;
 		dx*=100;
 		dy=p[i+1].y-p[i].y;
 		dy*=100;
-		l=(int)sqrt((float)(dx*dx+dy*dy));
-		if (l > tl) {
+		lsq = dx*dx+dy*dy;
+		if (lsq > tlsq) {
+			l=(int)sqrtf(lsq);
 			x=p[i].x;
 			y=p[i].y;
 			if (dx < 0) {
@@ -634,9 +637,9 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
 			y+=dx*45/l/10;
 			p_t.x=x;
 			p_t.y=y;
-	#if 0
-			printf("display_text: '%s', %d, %d, %d, %d %d\n", label, x, y, dx*0x10000/l, dy*0x10000/l, l);
-	#endif
+#if 0
+			dbg(0,"display_text: '%s', %d, %d, %d, %d %d\n", label, x, y, dx*0x10000/l, dy*0x10000/l, l);
+#endif
 			gra->meth.draw_text(gra->priv, fg->priv, bg->priv, font->priv, label, &p_t, dx*0x10000/l, dy*0x10000/l);
 		}
 	}
