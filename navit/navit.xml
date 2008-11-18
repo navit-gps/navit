@@ -30,7 +30,7 @@ http://wiki.navit-project.org/index.php/Configuring_NavIt
 	This line defines which location on the map navit will show after startup.
 	It makes sense to set it to your home coordinates.
 	-->
-	<navit center="4808 N 1134 E" zoom="256" tracking="1" cursor="1" orientation="0" recent_dest="10">
+	<navit center="4808 N 1134 E" zoom="256" tracking="1" cursor="1" orientation="0" recent_dest="10" timeout="10">
 
 
 		<!--
