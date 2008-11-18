@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include <glib.h>
 #include <math.h>
+#include <time.h>
 #include "config.h"
 #include "debug.h"
 #include "navit.h"
@@ -118,7 +119,9 @@ struct navit {
 	struct map *former_destination;
 	GHashTable *bookmarks_hash;
 	struct point pressed, last, current;
-	int button_pressed,moved,popped;
+	int button_pressed,moved,popped,zoomed;
+	time_t last_moved;
+	int center_timeout;
 	struct event_timeout *button_timeout, *motion_timeout;
 	struct callback *motion_timeout_callback;
 	int ignore_button;
@@ -267,6 +270,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 	if (pressed) {
 		this_->pressed=*p;
 		this_->last=*p;
+		this_->zoomed=0;
 		if (button == 1) {
 			this_->button_pressed=1;
 			this_->moved=0;
@@ -278,18 +282,25 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			navit_set_center_screen(this_, p);
 		if (button == 3)
 			popup(this_, button, p);
-		if (button == 4)
+		if (button == 4) {
+			this_->zoomed = 1;
 			navit_zoom_in(this_, 2, p);
-		if (button == 5)
+		}
+		if (button == 5) {
+			this_->zoomed = 1;
 			navit_zoom_out(this_, 2, p);
+		}
 	} else {
 		this_->button_pressed=0;
 		if (this_->button_timeout) {
 			event_remove_timeout(this_->button_timeout);
 			this_->button_timeout=NULL;
-			if (! this_->moved && ! transform_within_border(this_->trans, p, border))
+			if (! this_->moved && ! transform_within_border(this_->trans, p, border)) {
+				if (!this_->zoomed) {
+					this_->last_moved = time(NULL);
+				}
 				navit_set_center_screen(this_, p);
-
+			}
 		}
 		if (this_->motion_timeout) {
 			event_remove_timeout(this_->motion_timeout);
@@ -305,6 +316,9 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			pt.y-=this_->last.y-this_->pressed.y;
 			graphics_draw_drag(this_->gra, NULL);
 			graphics_overlay_disable(this_->gra, 0);
+			if (!this_->zoomed) {
+				this_->last_moved = time(NULL);
+			}
 			navit_set_center_screen(this_, &pt);
 		} else
 			return 1;
@@ -466,6 +480,9 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->tracking_flag=1;
 	this_->recentdest_count=10;
 
+	this_->last_moved = 0;
+	this_->center_timeout = 10;
+
 	for (;*attrs; attrs++) {
 		switch((*attrs)->type) {
 		case attr_zoom:
@@ -488,6 +505,9 @@ navit_new(struct attr *parent, struct attr **attrs)
 			break;
 		case attr_drag_bitmap:
 			this_->drag_bitmap=!!(*attrs)->u.num;
+			break;
+		case attr_timeout:
+			this_->center_timeout = (*attrs)->u.num;
 			break;
 		default:
 			dbg(0, "Unexpected attribute %x\n",(*attrs)->type);
@@ -1575,6 +1595,10 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		break;
 	case attr_vehicle:
 		return navit_add_vehicle(this_, attr->u.vehicle);
+		break;
+	case attr_timeout:
+		this_->center_timeout = attr->u.num;
+		break;
 	default:
 		return 0;
 	}
@@ -1704,7 +1728,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 			profile(0,"return 4\n");
 			return;
 		}
-		if (nv->follow_curr != 1) {
+		if ((nv->follow_curr != 1) && ((time(NULL) - this_->last_moved) > this_->center_timeout) && (this_->button_pressed != 1)) {
 			if (this_->orient_north_flag)
 				navit_set_center_cursor(this_, &nv->coord, 0, 50 - 30.*sin(M_PI*nv->dir/180.), 50 + 30.*cos(M_PI*nv->dir/180.));
 			else
@@ -1719,7 +1743,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 #endif
 	if (this_->route && nv->update_curr == 1)
 		navigation_update(this_->navigation, this_->route);
-	if (this_->cursor_flag && nv->follow_curr == 1) {
+	if (this_->cursor_flag && nv->follow_curr == 1 && ((time(NULL) - this_->last_moved) > this_->center_timeout) && (this_->button_pressed != 1)) {
 		navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
 		pnt=NULL;
 	}
