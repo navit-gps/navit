@@ -239,8 +239,10 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 	we=file_wordexp_new(path_attr->u.str);
 	count=file_wordexp_get_count(we);
 	array=file_wordexp_get_array(we);	
+	dbg(2,"expanded to %d words\n",count);
 	for (i = 0 ; i < count ; i++) {
 		name=array[i];
+		dbg(2,"name[%d]='%s'\n", i, name);
 		if (! (pl=g_hash_table_lookup(pls->hash, name))) {
 			pl=plugin_new_from_path(name);
 			if (! pl) {
@@ -329,6 +331,7 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 			mod_name++;
 		else
 			mod_name=pl->name;
+		dbg(2,"compare '%s' with '%s'\n", mod_name, filename);
 		if (!g_ascii_strncasecmp(mod_name, filename, strlen(filename)) || !g_ascii_strncasecmp(mod_name, corename, strlen(corename))) {
 			dbg(1, "Loading module \"%s\"\n",pl->name) ;
 			if (plugin_get_active(pl)) 
