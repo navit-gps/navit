@@ -84,6 +84,7 @@ ATTR(icon_h)
 ATTR(rotation)
 ATTR(checksum_ignore)
 ATTR(position_fix_type)
+ATTR(timeout)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
