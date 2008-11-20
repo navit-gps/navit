@@ -2446,10 +2446,14 @@ gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm)
 	gui_internal_widget_append(w,
 		gui_internal_button_navit_attr_new(this, _("Lock on road"), gravity_left_center|orientation_horizontal|flags_fill,
 			&on, &off));
+	on.u.num=0;
+	off.u.num=-1;
 	on.type=off.type=attr_orientation;
 	gui_internal_widget_append(w,
 		gui_internal_button_navit_attr_new(this, _("Northing"), gravity_left_center|orientation_horizontal|flags_fill,
 			&on, &off));
+	on.u.num=1;
+	off.u.num=0;
 	on.type=off.type=attr_cursor;
 	gui_internal_widget_append(w,
 		gui_internal_button_navit_attr_new(this, _("Map follows Vehicle"), gravity_left_center|orientation_horizontal|flags_fill,
