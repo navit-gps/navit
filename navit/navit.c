@@ -104,7 +104,7 @@ struct navit {
 	struct displaylist *displaylist;
 	int cursor_flag;
 	int tracking_flag;
-	int orient_north_flag;
+	int orientation;
 	int recentdest_count;
 	GList *vehicles;
 	GList *windows_items;
@@ -476,7 +476,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
 	this_->cursor_flag=1;
-	this_->orient_north_flag=0;
+	this_->orientation=-1;
 	this_->tracking_flag=1;
 	this_->recentdest_count=10;
 
@@ -495,7 +495,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 			this_->cursor_flag=!!(*attrs)->u.num;
 			break;
 		case attr_orientation:
-			this_->orient_north_flag=!!(*attrs)->u.num;
+			this_->orientation=(*attrs)->u.num;
 			break;
 		case attr_tracking:
 			this_->tracking_flag=!!(*attrs)->u.num;
@@ -1410,17 +1410,17 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 		}
 		break;
 	case attr_orientation:
-		orient_old=this_->orient_north_flag;
-		this_->orient_north_flag=!!attr->u.num;
-		if (this_->orient_north_flag) {
-			dir = 0;
+		orient_old=this_->orientation;
+		this_->orientation=attr->u.num;
+		if (this_->orientation != -1) {
+			dir = this_->orientation;
 		} else {
 			if (this_->vehicle) {
 				dir = this_->vehicle->dir;
 			}
 		}
 		transform_set_angle(this_->trans, dir);
-		if (orient_old != this_->orient_north_flag) {
+		if (orient_old != this_->orientation) {
 			navit_draw(this_);
 			attr_updated=1;
 		}
@@ -1506,7 +1506,7 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		}
 		break;
 	case attr_orientation:
-		attr->u.num=this_->orient_north_flag;
+		attr->u.num=this_->orientation;
 		break;
 	case attr_projection:
 		if(this_->trans) {
@@ -1729,8 +1729,10 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 			return;
 		}
 		if ((nv->follow_curr != 1) && ((time(NULL) - this_->last_moved) > this_->center_timeout) && (this_->button_pressed != 1)) {
-			if (this_->orient_north_flag)
-				navit_set_center_cursor(this_, &nv->coord, 0, 50 - 30.*sin(M_PI*nv->dir/180.), 50 + 30.*cos(M_PI*nv->dir/180.));
+			if (this_->orientation != -1) {
+				int dir=nv->dir-this_->orientation;
+				navit_set_center_cursor(this_, &nv->coord, 0, 50 - 30.*sin(M_PI*dir/180.), 50 + 30.*cos(M_PI*dir/180.));
+			}
 			else
 				navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
 			pnt=NULL;
