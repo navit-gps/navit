@@ -593,9 +593,25 @@ vehicle_file_new_file(struct vehicle_methods
 		case 4800:
 			ret->baudrate=B4800;
 			break;
+		case 9600:
+			ret->baudrate=B9600;
+			break;
+		case 19200:
+			ret->baudrate=B19200;
+			break;
+#ifdef B38400
+		case 38400:
+			ret->baudrate=B38400;
+			break;
+#endif
 #ifdef B57600
 		case 57600:
 			ret->baudrate=B57600;
+			break;
+#endif
+#ifdef B115200
+		case 115200:
+			ret->baudrate=B115200;
 			break;
 #endif
 		}
