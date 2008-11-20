@@ -115,7 +115,7 @@ orient_north_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 	struct attr attr;
 
 	attr.type=attr_orientation;
-	attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w));
+	attr.u.num=gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w)) ? 0:-1;
 	if(!navit_set_attr(gui->nav, &attr)) {
 		dbg(0, "Failed to set attr_orientation\n");
 	}
@@ -553,7 +553,7 @@ gui_gtk_ui_init(struct gui_priv *this)
 	}
 	if (navit_get_attr(this->nav, attr_orientation, &attr, NULL)) {
 		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "OrientationAction"));
-		gtk_toggle_action_set_active(toggle_action, attr.u.num);
+		gtk_toggle_action_set_active(toggle_action, attr.u.num != -1);
 	}
 	if (navit_get_attr(this->nav, attr_tracking, &attr, NULL)) {
 		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "TrackingAction"));
