@@ -750,7 +750,10 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 					break;
 				case element_icon:
 					if (!img) {
-						sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
+						if (e->u.icon.src[0] == '/')
+							strcpy(path,e->u.icon.src);
+						else
+							sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
 						img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
 						if (! img)
 							dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
@@ -836,7 +839,10 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 			}
 			break;
 		case element_icon:
-			sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
+			if (e->u.icon.src[0] == '/') 
+				strcpy(path,e->u.icon.src);
+			else
+				sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
 			img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
 			if (! img)
 				dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
