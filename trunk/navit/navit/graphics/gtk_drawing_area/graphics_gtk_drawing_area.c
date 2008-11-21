@@ -324,6 +324,7 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 
 	if (! font)
 		return;
+#if 0 /* Temporarily disabled because it destroys text rendering of overlays and in gui internal in some places */
 	/* 
 	 This needs an improvement, no one checks if the strings are visible
 	*/
@@ -333,6 +334,7 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 	if (p->x < -50 || p->y < -50) {
 		return;
 	}
+#endif
 
 	if (bg) {
 		if (bg->level > 32767) {
