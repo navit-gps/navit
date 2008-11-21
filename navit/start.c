@@ -85,7 +85,7 @@ static void setup_dummy_environment(void)
 		else
 			sprintf(basedir, ".");
 	} else {
-		sprintf(basedir, "%s", "/Storage Card/navit");
+		sprintf(basedir, "%s", PREFIX);
 	}
 	sprintf(buf, "%s", basedir);
 	setenv("HOME", buf, 0);
@@ -201,9 +201,6 @@ int main(int argc, char **argv)
 
 #ifdef HAVE_GLIB
 	event_request_system("glib","start");
-#endif
-#ifdef HAVE_API_WIN32_CE
-	config_file="\\Storage Card\\navit.xml";
 #endif
 	if (!config_load(config_file, &error)) {
 		dbg(0, _("Error parsing '%s': %s\n"), config_file, error ? error->message : "");

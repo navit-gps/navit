@@ -52,8 +52,8 @@ if SUPPORT_WIN32
   navit_LDADD += resource.rsc
   navit_LDADD += -lcommctrl
 
-resource.rsc: $(top_builddir)/navit/gui/win32/resources/resource.rc
-	$(WINDRES) $(top_builddir)/navit/gui/win32/resources/resource.rc resource.rsc
+resource.rsc: $(top_srcdir)/navit/gui/win32/resources/resource.rc
+	$(WINDRES) -I $(top_srcdir)/navit/gui/win32/resources $(top_srcdir)/navit/gui/win32/resources/resource.rc resource.rsc
 endif
 
 .PHONY: version.h.tmp
