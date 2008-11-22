@@ -4,7 +4,7 @@
 #include <wingdi.h>
 #include "xpm2bmp.h"
 
-#define _DBG
+/* #define _DBG */
 
 // function prototypes
 static int CreateBitmapFromXpm( const char* filename, PXPM2BMP pXpm2bmp );

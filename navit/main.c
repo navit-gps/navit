@@ -65,7 +65,7 @@ static gchar *get_home_directory(void)
 	homedir = getenv("HOME");
 	if (!homedir)
 	{
-		dbg(0,"Could not find home directory. Using current directory as home directory.");
+		dbg(0,"Could not find home directory. Using current directory as home directory.\n");
 		homedir = ".";
 	} else {
 		homedir=g_strdup(homedir);
@@ -123,6 +123,16 @@ main_remove_navit(struct navit *nav)
 	if (! navit) 
 		event_main_loop_quit();
 }
+
+#ifdef HAVE_API_WIN32
+void
+setenv(char *var, char *val, int overwrite)
+{
+	char *str=g_strdup_printf("%s=%s",var,val);
+	putenv(str);
+	g_free(str);
+}
+#endif
 
 void
 main_init(char *program)

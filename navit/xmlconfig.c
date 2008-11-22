@@ -196,7 +196,7 @@ xmlconfig_window_items(struct xmlstate *state)
 	state->element_attr.u.data = navit_window_items_new(name, distance);
 	type_str=g_strdup(type);
 	str=type_str;
-	while ((tok=strtok_r(str, ",", &saveptr))) {
+	while ((tok=strtok(str, ","))) {
 		itype=item_from_name(tok);
 		navit_window_items_add_item(state->element_attr.u.data, itype);
 		str=NULL;
@@ -226,7 +226,7 @@ xmlconfig_speed(struct xmlstate *state)
 	v=convert_number(value);
 	type_str=g_strdup(type);
 	str=type_str;
-	while ((tok=strtok_r(str, ",", &saveptr))) {
+	while ((tok=strtok(str, ","))) {
 		itype=item_from_name(tok);
 		route_set_speed(state->parent->element_attr.u.data, itype, v);
 		str=NULL;
@@ -260,7 +260,7 @@ xmlconfig_announce(struct xmlstate *state)
 	}
 	type_str=g_strdup(type);
 	str=type_str;
-	while ((tok=strtok_r(str, ",", &saveptr))) {
+	while ((tok=strtok(str, ","))) {
 		itype=item_from_name(tok);
 		navigation_set_announce(state->parent->element_attr.u.data, itype, level);
 		str=NULL;

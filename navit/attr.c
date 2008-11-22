@@ -89,7 +89,7 @@ attr_new_from_text(const char *name, const char *value)
 		count=0;
 		type_str=g_strdup(value);
 		str=type_str;
-		while ((tok=strtok_r(str, ",", &saveptr))) {
+		while ((tok=strtok(str, ","))) {
 			ret->u.item_types=g_realloc(ret->u.item_types, (count+2)*sizeof(enum item_type));
 			ret->u.item_types[count++]=item_from_name(tok);
 			ret->u.item_types[count]=type_none;
@@ -101,7 +101,7 @@ attr_new_from_text(const char *name, const char *value)
 		count=0;
 		type_str=g_strdup(value);
 		str=type_str;
-		while ((tok=strtok_r(str, ",", &saveptr))) {
+		while ((tok=strtok(str, ","))) {
 			ret->u.dash=g_realloc(ret->u.dash, (count+2)*sizeof(int));
 			ret->u.dash[count++]=g_ascii_strtoull(tok,NULL,0);
 			ret->u.dash[count]=0;
