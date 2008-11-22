@@ -84,7 +84,7 @@ static void CreateToolBar(HWND hwnd)
 	HWND hTool;
 	TBBUTTON tbb[8];
 	TBADDBITMAP tbab;
-#ifdef _WIN32_WCE
+#if 0 /* def _WIN32_WCE */
 	/* Have to initialize common controls under CE */
 	INITCOMMONCONTROLSEX iccex;
   	iccex.dwSize = sizeof (INITCOMMONCONTROLSEX);
