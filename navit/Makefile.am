@@ -50,7 +50,11 @@ endif
 
 if SUPPORT_WIN32
   navit_LDADD += resource.rsc
+if PLUGINS
   navit_LDADD += -lcommctrl
+else
+  navit_LDADD += -lgdi32 -lcomctl32
+endif
 
 resource.rsc: $(top_srcdir)/navit/gui/win32/resources/resource.rc
 	$(WINDRES) -I $(top_srcdir)/navit/gui/win32/resources $(top_srcdir)/navit/gui/win32/resources/resource.rc resource.rsc

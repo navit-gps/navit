@@ -15,9 +15,7 @@
 #include "item.h"
 #include "win32_gui.h"
 #include "xpm2bmp.h"
-#ifdef _WIN32_WCE
 #include "support/win32/ConvertUTF.h"
-#endif
 
 static HWND g_hwnd;
 
@@ -294,13 +292,14 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 		break;
 		case WM_PAINT:
 			if ( gra_priv )
-			{
-				HDC hdc = GetDC(hwnd );
+			{	
+				PAINTSTRUCT ps = { 0 };
+				HDC hdc = BeginPaint(hwnd, &ps);
 				if ( hMemDC )
 				{
 					BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, hMemDC, 0, 0, SRCCOPY );
 				}
-				ReleaseDC( hwnd, hdc );
+				EndPaint(hwnd, &ps);
 			}
 		break;
 		case WM_MOUSEMOVE:
@@ -340,7 +339,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 }
 
 
-static const wchar_t g_szClassName[] = TEXT("NAVGRA");
+static const wchar_t g_szClassName[] = {'N','A','V','G','R','A','\0'};
 
 static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 {
@@ -379,13 +378,15 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 
 	gr->width = rcParent.right - rcParent.left;
 	gr->height  = rcParent.bottom - rcParent.top;
-#ifdef HAVE_API_WIN32_CE
 	callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->width, (void *)gr->height);
-#endif
 
 	g_hwnd = hwnd = CreateWindow(g_szClassName,
 				TEXT(""),
+#ifdef HAVE_API_WIN32_CE
 				WS_VISIBLE,
+#else
+				WS_CHILD,
+#endif
 				0,
 				0,
 				gr->width,
@@ -484,13 +485,7 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 	HPEN holdpen;
 	HPEN hpen;
 
-#ifdef UNDER_CE
-	/* user styles not supported under CE */
 	hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
-#else
-	hpen = ExtCreatePen(PS_GEOMETRIC|PS_ENDCAP_ROUND|PS_JOIN_ROUND
-		, gc->line_width, NULL, 0, NULL);
-#endif
 	holdpen = SelectObject( hMemDC, hpen );
 
 	SetBkColor( hMemDC, gc->bg_color );
@@ -670,15 +665,6 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 	font->hfont = CreateFontIndirect (&font->lf);
 	HFONT hOldFont = SelectObject(hMemDC, font->hfont );
 
-#ifdef HAVE_GLIB
-	gunichar2* utf16 = NULL;
-	glong utf16_len = 0;
-
-	utf16 = g_utf8_to_utf16( text, -1, NULL, &utf16_len, NULL );
-	TextOutW(hMemDC, 0,0, utf16, (size_t)utf16_len );
-	g_free( utf16 );
-#endif
-#ifdef _WIN32_WCE
 	{
 		wchar_t utf16[1024];
 		const UTF8 *utf8 = (UTF8 *)text;
@@ -687,11 +673,15 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 		if (ConvertUTF8toUTF16(&utf8, utf8+strlen(text),
 			&utf16p, utf16p+sizeof(utf16), 
 			lenientConversion) == conversionOK) {
+#ifdef _WIN32_WCE
 			ExtTextOut (hMemDC, 0, 0, 0, NULL,
 				utf16, (wchar_t*) utf16p - utf16, NULL);
+#else
+			ExtTextOutW(hMemDC, 0, 0, 0, NULL,
+				utf16, (wchar_t*) utf16p - utf16, NULL);
+#endif
 		}
 	}
-#endif
 
 
 	SelectObject(hMemDC, hOldFont);
@@ -753,7 +743,7 @@ static struct graphics_image_priv* image_cache_hash_lookup( const char* key )
 
 
 
-static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot)
+static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)
 {
 	struct graphics_image_priv* ret;
 
@@ -836,7 +826,7 @@ static void event_win32_main_loop_quit(void)
 }
 
 static struct event_watch *
-event_win32_add_watch(struct file *f, enum event_watch_cond cond, struct callback *cb)
+event_win32_add_watch(void *h, enum event_watch_cond cond, struct callback *cb)
 {
 	dbg(0,"enter\n");
 	return NULL;
@@ -904,7 +894,7 @@ static void
 event_win32_remove_timeout(struct event_timeout *to)
 {
 	GList *l;
-	struct event_timeout *t;
+	struct event_timeout *t=NULL;
 	dbg(1,"enter:%d\n", t->timer_id);
 	l = timers;
 	while (l) {
