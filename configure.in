@@ -651,9 +651,11 @@ AM_CONDITIONAL(SUPPORT_WORDEXP, [test "x$wordexp_h" = "xno"])
 
 AC_CANONICAL_HOST
 win32=no
+win32ce=no
 case $host_os in
 wince)
 	win32=yes
+	win32ce=yes
 	AC_DEFINE(HAVE_API_WIN32_BASE, 1, [Have Windows Base API])
 	AC_DEFINE(HAVE_API_WIN32_CE, 1, [Have Windows CE API])
 	gui_win32=yes; gui_win32_reason="host_os is wince"
@@ -673,6 +675,7 @@ then
 	NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/win32 -lsupport_win32"
 fi
 AM_CONDITIONAL(SUPPORT_WIN32, [test "x$win32" = "xyes"])
+AM_CONDITIONAL(SUPPORT_WIN32CE, [test "x$win32ce" = "xyes"])
 
 LIBS="$LIBS -lm"
 if test "$win32" == "no"; then
