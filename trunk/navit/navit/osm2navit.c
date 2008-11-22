@@ -500,8 +500,8 @@ sig_alrm(int sig)
 {
 #ifndef _WIN32
 	signal(SIGALRM, sig_alrm);
-#endif
 	alarm(30);
+#endif
 	fprintf(stderr,"PROGRESS%d: Processed %d nodes (%d out) %d ways %d relations %d tiles\n", phase, processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles);
 }
 
@@ -1339,7 +1339,9 @@ phase1(FILE *in, FILE *out_ways, FILE *out_nodes)
 		}
 	}
 	sig_alrm(0);
+#ifndef _WIN32
 	alarm(0);
+#endif
 	return 1;
 }
 
@@ -1875,7 +1877,9 @@ phase2(FILE *in, FILE *out)
 		write_item_part(out, ib, last, ccount-1);
 	}
 	sig_alrm(0);
+#ifndef _WIN32
 	alarm(0);
+#endif
 	return 0;
 }
 
@@ -2304,7 +2308,9 @@ phase34(int phase, int maxnamelen, FILE *ways_in, FILE *nodes_in, FILE *tilesdir
 	if (phase == 3)
 		merge_tiles();
 	sig_alrm(0);
+#ifndef _WIN32
 	alarm(0);
+#endif
 	write_tilesdir(phase, maxnamelen, tilesdir_out);
 
 	return 0;
@@ -2597,7 +2603,9 @@ phase4(FILE *ways_in, FILE *nodes_in, FILE *out, FILE *dir_out, int compression_
 	eoc.zipeofst=zipoffset;
 	fwrite(&eoc, sizeof(eoc), 1, out);
 	sig_alrm(0);
+#ifndef _WIN32
 	alarm(0);
+#endif
 	return 0;
 }
 

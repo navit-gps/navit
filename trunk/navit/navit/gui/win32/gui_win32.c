@@ -84,14 +84,14 @@ static void CreateToolBar(HWND hwnd)
 	HWND hTool;
 	TBBUTTON tbb[8];
 	TBADDBITMAP tbab;
-#if 0
 #ifdef _WIN32_WCE
 	/* Have to initialize common controls under CE */
 	INITCOMMONCONTROLSEX iccex;
   	iccex.dwSize = sizeof (INITCOMMONCONTROLSEX);
 	iccex.dwICC = ICC_BAR_CLASSES;
 	InitCommonControlsEx (&iccex);
-#endif
+#else
+	InitCommonControls();
 #endif
 
 	hTool = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE, 0, 0, 0, 0,
@@ -187,7 +187,7 @@ static void window_layout( HWND hwnd )
 
 	rcClient.top += iToolHeight;
 
-	printf( "resize gui to: %d %d %d %d \n", rcClient.left, rcClient.right, rcClient.top, rcClient.bottom );
+	dbg(0, "resize gui to: %d %d %d %d \n", rcClient.left, rcClient.right, rcClient.top, rcClient.bottom );
 
 
 	hChild = GetDlgItem(hwnd, ID_CHILD_GFX);
