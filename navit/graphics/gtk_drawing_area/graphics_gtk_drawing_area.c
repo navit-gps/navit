@@ -71,6 +71,7 @@ struct graphics_priv {
 	int visible;
 	int overlay_disabled;
 	int a;
+	int wraparound;
 	struct graphics_priv *parent;
 	struct graphics_priv *overlays;
 	struct graphics_priv *next;
@@ -406,14 +407,16 @@ overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int cl
 		r->x=overlay->p.x;
 		r->y=overlay->p.y;
 	}
+	r->width=overlay->width;
+	r->height=overlay->height;
+	if (!overlay->wraparound)
+		return;
 	if (r->x < 0)
 		r->x += parent->width;
 	if (r->y < 0)
 		r->y += parent->height;
-	r->width=overlay->width;
 	if (r->width < 0)
 		r->width += parent->width;
-	r->height=overlay->height;
 	if (r->height < 0)
 		r->height += parent->height;
 }
@@ -756,6 +759,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	this->background=gdk_pixmap_new(gr->widget->window, w, h, -1);
 	this->next=gr->overlays;
 	this->a=alpha >> 8;
+	this->wraparound=wraparound;
 	gr->overlays=this;
 	return this;
 }
