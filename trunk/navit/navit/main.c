@@ -45,6 +45,11 @@
 #include "navigation.h"
 #include "event.h"
 #include "navit_nls.h"
+#if HAVE_API_WIN32_BASE
+#include <windows.h>
+#include <winbase.h>
+#endif
+
 
 struct map_data *map_data_default;
 
@@ -129,10 +134,47 @@ void
 setenv(char *var, char *val, int overwrite)
 {
 	char *str=g_strdup_printf("%s=%s",var,val);
-	putenv(str);
+	if (overwrite || !getenv(var)) 
+		putenv(str);
 	g_free(str);
 }
 #endif
+
+static char *environment_vars[][4]={
+	{"NAVIT_LIBDIR",	":",		":/lib/navit",		":/lib"},
+	{"NAVIT_SHAREDIR",	":",		":/share/navit",	":"},
+	{"NAVIT_LOCALEDIR",	":/../locale",	":/share/locale",	":/locale"},
+	{"NAVIT_USER_DATADIR",	":",		"~/.navit",		":/data"},
+	{"NAVIT_LOGFILE",	NULL,		NULL,			":/navit.log"},
+	{"NAVIT_LIBPREFIX",	"*/.libs/"	"*/.libs/",		NULL},
+	{NULL,			NULL,		NULL,			NULL},
+};
+
+static void
+main_setup_environment(int mode)
+{
+	int i=0;
+	char *var,*val;
+	while ((var=environment_vars[i][0])) {
+		val=environment_vars[i][mode+1];
+		if (val) {
+			switch (val[0]) {
+			case ':':
+				val=g_strdup_printf("%s%s", getenv("NAVIT_PREFIX"), val+1);
+				break;
+			case '~':
+				val=g_strdup_printf("%s%s", getenv("HOME"), val+1);
+				break;
+			default:
+				val=g_strdup(val);
+				break;
+			}
+			setenv(var, val, 0);
+			g_free(val);
+		}
+		i++;
+	}
+}
 
 void
 main_init(char *program)
@@ -152,44 +194,50 @@ main_init(char *program)
 		printf(_("Running from source directory\n"));
 		getcwd(buffer, PATH_MAX);
 		setenv("NAVIT_PREFIX", buffer, 0);
-		setenv("NAVIT_LIBDIR", buffer, 0);
-		setenv("NAVIT_SHAREDIR", buffer, 0);
-		setenv("NAVIT_LIBPREFIX", "*/.libs/", 0);
-		s=g_strdup_printf("%s/../locale", buffer);
-		setenv("NAVIT_LOCALEDIR", s, 0);
-		g_free(s);
-		setenv("NAVIT_USER_DATADIR", "./", 0);
+		main_setup_environment(0);
 	} else {
 		if (!getenv("NAVIT_PREFIX")) {
+			int progpath_len;
+#ifdef HAVE_API_WIN32_BASE
+			wchar_t filename[MAX_PATH + 1];
+			char program[MAX_PATH + 1];
+			char *cp;
+			int sz;
+#ifdef HAVE_API_WIN32
+			char *progpath="\\bin\\navit.exe";
+			sz = GetModuleFileNameW(NULL, filename, MAX_PATH);
+#else
+			char *progpath="\\navit.exe";
+			sz = GetModuleFileName(NULL, filename, MAX_PATH);
+#endif
+			if (sz > 0) 
+				wcstombs(program, filename, sz + 1);
+			else 
+				strcpy(program, PREFIX);
+#else
+			char *progpath="/bin/navit";
+#endif
 			l=strlen(program);
-			if (l > 10 && !strcmp(program+l-10,"/bin/navit")) {
+			progpath_len=strlen(progpath);
+			if (l > progpath_len && !strcmp(program+l-progpath_len,progpath)) {
 				s=g_strdup(program);
-				s[l-10]='\0';
+				s[l-progpath_len]='\0';
 				if (strcmp(s, PREFIX))
 					printf(_("setting '%s' to '%s'\n"), "NAVIT_PREFIX", s);
 				setenv("NAVIT_PREFIX", s, 0);
 				g_free(s);
 			} else
 				setenv("NAVIT_PREFIX", PREFIX, 0);
-		}
-#ifdef _WIN32
-		s=g_strdup_printf("locale");
-#else
-		s=g_strdup_printf("%s/share/locale", getenv("NAVIT_PREFIX"));
+		} 
+#ifdef HAVE_API_WIN32_BASE
+		setenv("HOME", getenv("NAVIT_PREFIX"), 0);
 #endif
-		setenv("NAVIT_LOCALEDIR", s, 0);
-		g_free(s);
-#ifdef _WIN32
-		s=g_strdup_printf(".");
+
+#ifdef HAVE_API_WIN32_CE
+		main_setup_environment(2);
 #else
-		s=g_strdup_printf("%s/share/navit", getenv("NAVIT_PREFIX"));
+		main_setup_environment(1);
 #endif
-		setenv("NAVIT_SHAREDIR", s, 0);
-		g_free(s);
-		s=g_strdup_printf("%s/lib/navit", getenv("NAVIT_PREFIX"));
-		setenv("NAVIT_LIBDIR", s, 0);
-		g_free(s);
-		setenv("NAVIT_USER_DATADIR", g_strjoin(NULL, get_home_directory(), "/.navit/", NULL), 0);
 	}
 	if (getenv("LC_ALL")) 
 		dbg(0,"Warning: LC_ALL is set, this might lead to problems\n");
