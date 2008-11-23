@@ -676,11 +676,13 @@ xi_start_element(GMarkupParseContext *context,
 	while (attribute_names[count++*ATTR_DISTANCE]);
 	xistate=g_new0(struct xistate, 1);
 	xistate->element=element_name;
-	xistate->attribute_names=g_new(const char *, count);
-	xistate->attribute_values=g_new(const char *, count);
+	xistate->attribute_names=g_new0(const char *, count);
+	xistate->attribute_values=g_new0(const char *, count);
 	for (i = 0 ; i < count ; i++) {
-		xistate->attribute_names[i]=g_strdup(attribute_names[i*ATTR_DISTANCE]);
-		xistate->attribute_values[i]=g_strdup(attribute_values[i*ATTR_DISTANCE]);
+		if (attribute_names[i*ATTR_DISTANCE] && attribute_values[i*ATTR_DISTANCE]) {
+			xistate->attribute_names[i]=g_strdup(attribute_names[i*ATTR_DISTANCE]);
+			xistate->attribute_values[i]=g_strdup(attribute_values[i*ATTR_DISTANCE]);
+		}
 	}
 	xistate->parent=doc->last;
 	
