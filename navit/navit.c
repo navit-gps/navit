@@ -698,7 +698,7 @@ navit_get_user_data_directory(gboolean create) {
 static char*
 navit_get_destination_file(gboolean create)
 {
-	return g_strjoin(NULL, navit_get_user_data_directory(create), "destination.txt", NULL);
+	return g_strjoin(NULL, navit_get_user_data_directory(create), "/destination.txt", NULL);
 }
 
 /*
@@ -713,7 +713,7 @@ navit_get_destination_file(gboolean create)
 static char*
 navit_get_bookmark_file(gboolean create)
 {
-	return g_strjoin(NULL, navit_get_user_data_directory(create), "bookmark.txt", NULL);
+	return g_strjoin(NULL, navit_get_user_data_directory(create), "/bookmark.txt", NULL);
 }
 
 
@@ -729,7 +729,7 @@ navit_get_bookmark_file(gboolean create)
 static char*
 navit_get_center_file(gboolean create)
 {
-	return g_strjoin(NULL, navit_get_user_data_directory(create), "center.txt", NULL);
+	return g_strjoin(NULL, navit_get_user_data_directory(create), "/center.txt", NULL);
 }
 
 static void
