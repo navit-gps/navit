@@ -16,5 +16,13 @@ if [ -f $png -a ! -f $svg.svg ]
 then
 	touch $png
 else
-	ksvgtopng $w $h $svg.svg $png
+	if [ -f $svg.svg ]
+	then
+		ksvgtopng $w $h $svg.svg $png
+	elif [ -f $svg.svgz ]
+	then
+		gzip -dc <$svg.svgz >$svg.svg
+		ksvgtopng $w $h $svg.svg $png
+		rm -f $svg.svg
+	fi
 fi
