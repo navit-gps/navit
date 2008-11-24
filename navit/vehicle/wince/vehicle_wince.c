@@ -113,7 +113,13 @@ reconnect_port:
 	/* GPD0 is the control port for the GPS driver */
 	hGPS = CreateFile(L"GPD0:", GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (hGPS != INVALID_HANDLE_VALUE) {
+#ifndef IOCTL_SERVICE_REFRESH
+#define IOCTL_SERVICE_REFRESH 0x4100000C
+#endif
 		DeviceIoControl(hGPS,IOCTL_SERVICE_REFRESH,0,0,0,0,0,0);
+#ifndef IOCTL_SERVICE_START
+#define IOCTL_SERVICE_START 0x41000004
+#endif
 		DeviceIoControl(hGPS,IOCTL_SERVICE_START,0,0,0,0,0,0);
 		CloseHandle(hGPS);
 	}
