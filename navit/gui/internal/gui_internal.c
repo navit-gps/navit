@@ -100,6 +100,12 @@ enum flags {
 };
 
 
+struct menu_data {
+	struct widget *search_list;
+	struct widget *keyboard;
+	int keyboard_mode;
+};
+
 //##############################################################################################################
 //# Description: 
 //# Comment: 
@@ -143,6 +149,7 @@ struct widget {
 	int deflt;
 	int is_on;
 	int redraw;
+	struct menu_data *menu_data;
 	GList *children;  
 };
 
@@ -224,7 +231,6 @@ struct gui_priv {
 	struct widget root;
 	struct widget *highlighted;
 	struct widget *highlighted_menu;
-	struct widget *list;
 	int clickp_valid, vehicle_valid;
 	struct pcoord clickp, vehiclep;
 	struct search_list *sl;
@@ -232,6 +238,7 @@ struct gui_priv {
 	int menu_on_map_click;
 	char *country_iso2;
 	int speech;
+	int keyboard;
 	/**
 	 * The setting information read from the configuration file.
 	 * values of -1 indicate no value was specified in the config file.
@@ -327,6 +334,15 @@ static void gui_internal_table_pack(struct gui_priv * this, struct widget * w);
 static void gui_internal_table_button_next(struct gui_priv * this, struct widget * wm);
 static void gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm);
 static void gui_internal_table_data_free(void * d);
+
+static void gui_internal_search(struct gui_priv *this, char *what, char *type, int flags);
+static void gui_internal_search_street(struct gui_priv *this, struct widget *widget);
+static void gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget);
+static void gui_internal_search_town(struct gui_priv *this, struct widget *wm);
+static void gui_internal_search_town_in_country(struct gui_priv *this, struct widget *wm);
+static void gui_internal_search_country(struct gui_priv *this, struct widget *widget);
+
+static struct widget *gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode);
 
 static struct graphics_image *
 image_new_scaled(struct gui_priv *this, char *name, int w, int h)
@@ -1088,6 +1104,26 @@ gui_internal_prune_menu(struct gui_priv *this, struct widget *w)
 }
 
 static void
+gui_internal_prune_menu_count(struct gui_priv *this, int count, int render)
+{
+	GList *l;
+	while ((l = g_list_last(this->root.children)) && count-- > 0) {
+		gui_internal_widget_destroy(this, l->data);
+		this->root.children=g_list_remove(this->root.children, l->data);
+	}
+	if (l && render) {
+		gui_internal_say(this, l->data, 0);
+		gui_internal_widget_render(this, l->data);
+	}
+}
+
+static void
+gui_internal_back(struct gui_priv *this, struct widget *w)
+{
+	gui_internal_prune_menu_count(this, 1, 1);
+}
+
+static void
 gui_internal_cmd_return(struct gui_priv *this, struct widget *wm)
 {
 	gui_internal_prune_menu(this, wm->data);
@@ -1280,7 +1316,7 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	menu->background=this->background;
 	gui_internal_apply_config(this);
 	this->font=graphics_font_new(this->gra,this->font_size,1);
- 
+ 	menu->menu_data=g_new0(struct menu_data, 1);
 	gui_internal_widget_append(&this->root, menu);
 	w=gui_internal_top_bar(this);
 	gui_internal_widget_append(menu, w);
@@ -1289,6 +1325,17 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	gui_internal_widget_append(menu, w);
 
 	return w;
+}
+
+static struct menu_data *
+gui_internal_menu_data(struct gui_priv *this)
+{
+	GList *l;
+	struct widget *menu;
+
+	l=g_list_last(this->root.children);
+	menu=l->data;
+	return menu->menu_data;
 }
 
 static void
@@ -1379,7 +1426,8 @@ gui_internal_cmd_add_bookmark(struct gui_priv *this, struct widget *wm)
 	wnext->data=wk;
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, wl);
-	gui_internal_widget_append(w, gui_internal_keyboard(this,0));
+	if (this->keyboard)
+		gui_internal_widget_append(w, gui_internal_keyboard(this,2));
 	gui_internal_menu_render(this);
 }
 
@@ -1670,7 +1718,6 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm)
 	     3 Town 
 */
 
-static void gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget);
 
 static void
 gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
@@ -1683,7 +1730,10 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 	int display_view_on_map=(wm->data != (void *)1);
 	int display_items=(wm->data == (void *)1);
 	int display_streets=(wm->data == (void *)3);
-
+	if (wm->data == (void *)4) {
+		gui_internal_search_town_in_country(this, wm);
+		return;
+	}
 #if 0
 	switch ((int)wm->data) {
 		case 0:
@@ -1945,22 +1995,35 @@ static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 static void
 gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm)
 {
+	struct menu_data *md=gui_internal_menu_data(this);
 	gui_internal_keypress_do(this, (char *) wm->data);
+	if (md->keyboard_mode == 2) 
+		gui_internal_keyboard_do(this, md->keyboard, 10);
 }
 
 static void
 gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 {
 	GList *l;
-	gui_internal_widget_children_destroy(this, this->list);
+	struct widget *search_list=gui_internal_menu_data(this)->search_list;
+	gui_internal_widget_children_destroy(this, search_list);
 	char *text=NULL, *name=NULL;
+	int minlen=2;
+	void *param=(void *)3;
+	if (! strcmp(wm->name,"Country")) {
+		param=(void *)4;
+		minlen=1;
+	}
 	dbg(0,"%s now '%s'\n", wm->name, wm->text);
-	if (wm->text && g_utf8_strlen(wm->text, -1) >= 2) {
+
+	if (wm->text && g_utf8_strlen(wm->text, -1) >= minlen) {
 		struct attr search_attr;
 		struct search_list_result *res;
 		struct widget *wc;
 
 		dbg(0,"process\n");
+		if (! strcmp(wm->name,"Country"))
+			search_attr.type=attr_country_all;
 		if (! strcmp(wm->name,"Town"))
 			search_attr.type=attr_town_name;
 		if (! strcmp(wm->name,"Street"))
@@ -1968,6 +2031,10 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 		search_attr.u.str=wm->text;
 		search_list_search(this->sl, &search_attr, 1);
 		while((res=search_list_get_result(this->sl))) {
+			if (! strcmp(wm->name,"Country")) {
+				name=res->country->name;
+				text=g_strdup_printf("%s", res->country->name);
+			}
 			if (! strcmp(wm->name,"Town")) {
 				name=res->town->name;
 				text=g_strdup(name);
@@ -1976,17 +2043,20 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 				name=res->street->name;
 				text=g_strdup_printf("%s %s", res->town->name, res->street->name);
 			}
+#if 0
 			dbg(0,"res=%s\n", res->town->name);
-			gui_internal_widget_append(this->list,
+#endif
+			gui_internal_widget_append(search_list,
 				wc=gui_internal_button_new_with_callback(this, text,
 				image_new_xs(this, res->country->flag), gravity_left_center|orientation_horizontal|flags_fill,
-				gui_internal_cmd_position, (void *)3));
+				gui_internal_cmd_position, param));
 			g_free(text);
 			wc->name=g_strdup(name);
-			wc->c=*res->c;
+			if (res->c)
+				wc->c=*res->c;
 			wc->item.id_lo=res->id;
 		}
-		gui_internal_widget_pack(this, this->list);
+		gui_internal_widget_pack(this, search_list);
 	}
 	l=g_list_last(this->root.children);
 	gui_internal_widget_render(this, l->data);
@@ -2017,20 +2087,21 @@ gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text
 static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key);
 
 static struct widget *
-gui_internal_keyboard_do(struct gui_priv *this, struct widget *key, int mode)
+gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 {
-	struct widget *wkbdb,*wkbd,*wk;
+	struct widget *wkbd,*wk;
+	struct menu_data *md=gui_internal_menu_data(this);
 	int i;
 	int render=0;
 
-	if (key) {
+	if (wkbdb) {
 		gui_internal_highlight(this, NULL);
-		wkbdb=key->data;
-		mode=key->datai;
 		render=1;
 		gui_internal_widget_children_destroy(this, wkbdb);
 	} else
 		wkbdb=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
+	md->keyboard=wkbdb;
+	md->keyboard_mode=mode;
 	wkbd=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
 	wkbd->background=this->background;
 	wkbd->cols=8;
@@ -2074,8 +2145,8 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *key, int mode)
 			wk=gui_internal_keyboard_key_data(this, wkbd, "1", gui_internal_keyboard_change, wkbd, NULL);
 			wk->datai=mode+8;
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard_change,wkbdb,NULL);
-		wk->datai=mode+16;
+		wk=gui_internal_keyboard_key_data(this, wkbd, "ä",gui_internal_keyboard_change,wkbdb,NULL);
+		wk->datai=mode+24;
 		gui_internal_keyboard_key(this, wkbd, "<-","\b");
 	}
 	if (mode >= 16 && mode < 24) {
@@ -2124,6 +2195,17 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *key, int mode)
 		wk->datai=mode-24;
 		gui_internal_keyboard_key(this, wkbd, "<-","\b");
 	}
+	if (mode >= 32 && mode < 40) {
+		gui_internal_keyboard_key(this, wkbd, "ä","ä");
+		gui_internal_keyboard_key(this, wkbd, "ö","ö");
+		gui_internal_keyboard_key(this, wkbd, "ü","ü");
+		for (i = 0 ; i < 27 ; i++) {
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+		}
+		wk=gui_internal_keyboard_key_data(this, wkbd, "a",gui_internal_keyboard_change,wkbdb,NULL);
+		wk->datai=mode-24;
+		gui_internal_keyboard_key(this, wkbd, "<-","\b");
+	}
 	gui_internal_widget_append(wkbdb, wkbd);
 	if (render) {
 		gui_internal_widget_pack(this, wkbdb);
@@ -2141,7 +2223,7 @@ gui_internal_keyboard(struct gui_priv *this, int mode)
 static void
 gui_internal_keyboard_change(struct gui_priv *this, struct widget *key)
 {
-	gui_internal_keyboard_do(this, key, 0);
+	gui_internal_keyboard_do(this, key->data, key->datai);
 }
 
 static void
@@ -2195,12 +2277,11 @@ gui_internal_search_list_destroy(struct gui_priv *this)
 	}
 }
 
-static void gui_internal_search_street(struct gui_priv *this, struct widget *widget);
 
 static void
-gui_internal_search(struct gui_priv *this, char *what, char *type)
+gui_internal_search(struct gui_priv *this, char *what, char *type, int flags)
 {
-	struct widget *wb,*wk,*w,*wr,*we,*wl,*wnext;
+	struct widget *wb,*wk,*w,*wr,*we,*wl,*wnext=NULL;
 	char *country;
 	gui_internal_search_list_new(this);
 	wb=gui_internal_menu(this, what);
@@ -2210,31 +2291,52 @@ gui_internal_search(struct gui_priv *this, char *what, char *type)
 	gui_internal_widget_append(w, wr);
 	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	gui_internal_widget_append(wr, we);
-	
-	country=g_strdup_printf("country_%s", this->country_iso2);
-	gui_internal_widget_append(we, gui_internal_image_new(this, image_new_xs(this, country)));
-	g_free(country);
 
+	if (!strcmp(type,"Country")) {
+		wnext=gui_internal_image_new(this, image_new_xs(this, "gui_select_town"));
+		wnext->func=gui_internal_search_town;
+	} else if (!strcmp(type,"Town")) {
+		if (this->country_iso2)
+			country=g_strdup_printf("country_%s", this->country_iso2);
+		else
+			country=strdup("gui_select_country");
+		gui_internal_widget_append(we, wb=gui_internal_image_new(this, image_new_xs(this, country)));
+		wb->state |= STATE_SENSITIVE;
+		if (flags)
+			wb->func = gui_internal_search_country;
+		else
+			wb->func = gui_internal_back;
+		wnext=gui_internal_image_new(this, image_new_xs(this, "gui_select_street"));
+		wnext->func=gui_internal_search_street;
+		g_free(country);
+	} else if (!strcmp(type,"Street")) {
+		gui_internal_widget_append(we, wb=gui_internal_image_new(this, image_new_xs(this, "gui_select_town")));
+		wb->state |= STATE_SENSITIVE;
+		wb->func = gui_internal_back;
+	}
 	gui_internal_widget_append(we, wk=gui_internal_label_new(this, NULL));
-	gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
-	wnext->state |= STATE_SENSITIVE;
-	wnext->func = gui_internal_search_street;
+	if (wnext) {
+		gui_internal_widget_append(we, wnext);
+		wnext->state |= STATE_SENSITIVE;
+	}
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wr, wl);
-	this->list=wl;
+	gui_internal_menu_data(this)->search_list=wl;
 	wk->state |= STATE_EDIT;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
 	wk->func = gui_internal_search_changed;
 	wk->name=g_strdup(type);
-	gui_internal_widget_append(w, gui_internal_keyboard(this,0));
+	if (this->keyboard)
+		gui_internal_widget_append(w, gui_internal_keyboard(this,0));
 	gui_internal_menu_render(this);
 }
 
 static void
 gui_internal_search_street(struct gui_priv *this, struct widget *widget)
 {
-	gui_internal_search(this,_("Street"),"Street");
+	search_list_select(this->sl, attr_town_name, 0, 0);
+	gui_internal_search(this,_("Street"),"Street",0);
 }
 
 static void
@@ -2243,13 +2345,46 @@ gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget)
 	dbg(0,"id %d\n", widget->item.id_lo);
 	search_list_select(this->sl, attr_town_name, 0, 0);
 	search_list_select(this->sl, attr_town_name, widget->item.id_lo, 1);
-	gui_internal_search(this,_("Street"),"Street");
+	gui_internal_search(this,_("Street"),"Street",0);
+}
+
+static void
+gui_internal_search_town(struct gui_priv *this, struct widget *wm)
+{
+	if (this->sl)
+		search_list_select(this->sl, attr_country_all, 0, 0);
+	g_free(this->country_iso2);
+	this->country_iso2=NULL;
+	gui_internal_search(this,_("Town"),"Town",0);
+}
+
+static void
+gui_internal_search_town_in_country(struct gui_priv *this, struct widget *widget)
+{
+	struct search_list_common *slc;
+	dbg(0,"id %d\n", widget->item.id_lo);
+	search_list_select(this->sl, attr_country_all, 0, 0);
+	slc=search_list_select(this->sl, attr_country_all, widget->item.id_lo, 1);
+	if (slc) {
+		g_free(this->country_iso2);
+		this->country_iso2=((struct search_list_country *)slc)->iso2;
+	}
+	gui_internal_search(this,widget->name,"Town",0);
+}
+
+static void
+gui_internal_search_country(struct gui_priv *this, struct widget *widget)
+{
+	gui_internal_prune_menu_count(this, 1, 0);
+	gui_internal_search(this,_("Country"),"Country",0);
 }
 
 static void
 gui_internal_cmd_town(struct gui_priv *this, struct widget *wm)
 {
-	gui_internal_search(this,_("Town"),"Town");
+	if (this->sl)
+		search_list_select(this->sl, attr_country_all, 0, 0);
+	gui_internal_search(this,_("Town"),"Town",1);
 }
 
 static void
@@ -2931,6 +3066,11 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	{
 	  this->speech=attr->u.num;
 	}
+	if( (attr=attr_search(attrs,NULL,attr_keyboard)))
+	  this->keyboard=attr->u.num;
+        else
+	  this->keyboard=1;
+	
 
 	return this;
 }

@@ -86,6 +86,7 @@ ATTR(checksum_ignore)
 ATTR(position_fix_type)
 ATTR(timeout)
 ATTR(orientation)
+ATTR(keyboard)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
