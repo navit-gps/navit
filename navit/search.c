@@ -121,7 +121,7 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 	}
 }
 
-int
+struct search_list_common *
 search_list_select(struct search_list *this_, enum attr_type attr_type, int id, int mode)
 {
 	int level=search_list_level(attr_type);
@@ -131,23 +131,23 @@ search_list_select(struct search_list *this_, enum attr_type attr_type, int id, 
 	GList *curr;
 	le=&this_->levels[level];
 	curr=le->list;
-	if (mode > 0)
+	if (mode > 0 || !id)
 		le->selected=mode;
-	dbg(0,"enter %d %d\n", id, mode);
+	dbg(1,"enter level=%d %d %d %p\n", level, id, mode, curr);
 	while (curr) {
 		num++;
 		if (! id || num == id) {
 			slc=curr->data;
 			slc->selected=mode;
 			if (id) {
-				dbg(0,"found\n");
-				return 1;
+				dbg(1,"found\n");
+				return slc;
 			}
 		}
 		curr=g_list_next(curr);
 	}
-	dbg(0,"not found\n");
-	return 0;
+	dbg(1,"not found\n");
+	return NULL;
 }
 
 static struct search_list_country *
