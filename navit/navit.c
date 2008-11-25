@@ -1753,9 +1753,13 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 #endif
 	if (this_->route && nv->update_curr == 1)
 		navigation_update(this_->navigation, this_->route);
-	if (this_->cursor_flag && nv->follow_curr == 1 && ((time(NULL) - this_->last_moved) > this_->center_timeout) && (this_->button_pressed != 1)) {
-		navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
-		pnt=NULL;
+	if ((nv->follow_curr == 1) && (!this_->button_pressed)) {
+		if (this_->cursor_flag && ((time(NULL) - this_->last_moved) > this_->center_timeout)) {
+			navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
+			pnt=NULL;
+		} else { // We don't want to center, but redraw because otherwise the old route "lags"
+			navit_draw(this_);
+		}
 	}
 	if (pnt && this_->route && !route_path_set && route_get_path_set(this_->route))
 		navit_draw(this_);
