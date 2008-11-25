@@ -70,8 +70,8 @@
             </cursor>
         </vehicle>
 
-        <!-- For SDL, you should add follow="1" refresh="1" to have the view centered on your position -->
-        <!-- <vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1" refresh="1"/> -->
+        <!-- For SDL, you should add follow="1" to have the view centered on your position -->
+        <!-- <vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1"/> -->
 
         <vehicle name="Demo" enabled="no" active="yes" source="demo://">
             <cursor w="26" h="26">
