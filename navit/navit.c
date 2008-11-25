@@ -132,6 +132,7 @@ struct navit {
 	int blocked;
 	int w,h;
 	int drag_bitmap;
+	int use_mousewheel;
 	GHashTable *commands;
 	struct callback *resize_callback,*button_callback,*motion_callback;
 };
@@ -282,11 +283,11 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			navit_set_center_screen(this_, p);
 		if (button == 3)
 			popup(this_, button, p);
-		if (button == 4) {
+		if (button == 4 && this_->use_mousewheel) {
 			this_->zoomed = 1;
 			navit_zoom_in(this_, 2, p);
 		}
-		if (button == 5) {
+		if (button == 5 && this_->use_mousewheel) {
 			this_->zoomed = 1;
 			navit_zoom_out(this_, 2, p);
 		}
@@ -482,6 +483,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 
 	this_->last_moved = 0;
 	this_->center_timeout = 10;
+	this_->use_mousewheel = 1;
 
 	for (;*attrs; attrs++) {
 		switch((*attrs)->type) {
@@ -505,6 +507,9 @@ navit_new(struct attr *parent, struct attr **attrs)
 			break;
 		case attr_drag_bitmap:
 			this_->drag_bitmap=!!(*attrs)->u.num;
+			break;
+		case attr_use_mousewheel:
+			this_->use_mousewheel=!!(*attrs)->u.num;
 			break;
 		case attr_timeout:
 			this_->center_timeout = (*attrs)->u.num;
