@@ -349,6 +349,7 @@ osd_eta_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 struct osd_navigation {
 	struct point p;
 	int w,h;
+	int font_size;
 	char *icon_src;
 	int icon_w, icon_h;
 	struct graphics *gr;
@@ -454,7 +455,7 @@ osd_navigation_init(struct osd_navigation *this, struct navit *nav)
 	graphics_gc_set_foreground(this->white, &c);
 	graphics_gc_set_linewidth(this->white, 2);
 
-	this->font=graphics_font_new(this->gr, 200, 1);
+	this->font=graphics_font_new(this->gr, this->font_size*10, 1);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_navigation_draw), attr_position_coord_geo, this));
 
 	osd_navigation_draw(this, nav, NULL);
@@ -471,6 +472,7 @@ osd_navigation_new(struct navit *nav, struct osd_methods *meth, struct attr **at
 	this->h=60;
 	this->icon_w=-1;
 	this->icon_h=-1;
+	this->font_size=20;
 	this->active=-1;
 	attr=attr_search(attrs, NULL, attr_x);
 	if (attr)
@@ -478,6 +480,9 @@ osd_navigation_new(struct navit *nav, struct osd_methods *meth, struct attr **at
 	attr=attr_search(attrs, NULL, attr_y);
 	if (attr)
 		this->p.y=attr->u.num;
+	attr=attr_search(attrs, NULL, attr_font_size);
+	if (attr)
+		this->font_size=attr->u.num;
 	attr=attr_search(attrs, NULL, attr_icon_w);
 	if (attr)
 		this->icon_w=attr->u.num;
