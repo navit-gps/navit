@@ -114,6 +114,21 @@ object_get_from_message(DBusMessage *message, char *type)
 }
 
 static DBusHandlerResult
+reply_int_as_variant(DBusConnection *connection, DBusMessage *message, int value)
+{
+	DBusMessage *reply;
+    
+	reply = dbus_message_new_method_return(message);
+    dbus_message_append_args(reply,
+                             DBUS_TYPE_INT32, &value,
+                             DBUS_TYPE_INVALID);
+	dbus_connection_send (connection, reply, NULL);
+	dbus_message_unref (reply);
+
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
+
+static DBusHandlerResult
 empty_reply(DBusConnection *connection, DBusMessage *message)
 {
 	DBusMessage *reply;
@@ -214,7 +229,7 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
 		return 0;
 	dbus_message_iter_get_basic(&iter2, &pc->y);
 
-	dbg(0, " pro -> %i x -> %i y -> %i\n", &pc->pro, &pc->x, &pc->y);
+	dbg(0, " pro -> %x x -> %x y -> %x\n", &pc->pro, &pc->x, &pc->y);
 	
 	dbus_message_iter_next(&iter2);
 	
@@ -228,7 +243,6 @@ static DBusHandlerResult
 request_navit_draw(DBusConnection *connection, DBusMessage *message)
 {
 	struct navit *navit;
-	DBusMessageIter iter;
 
 	navit=object_get_from_message(message, "navit");
 	if (! navit)
@@ -266,7 +280,7 @@ point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point
 		return 0;
 	dbus_message_iter_get_basic(&iter2, &p->y);
 
-	dbg(0, " x -> %i  y -> %i\n", p->x, p->y);
+	dbg(0, " x -> %x  y -> %x\n", p->x, p->y);
 	
 	dbus_message_iter_next(&iter2);
 
@@ -397,10 +411,155 @@ request_navit_resize(DBusConnection *connection, DBusMessage *message)
 
 	dbg(0, " w -> %i  h -> %i\n", w, h);
 	
-	navit_resize(navit, w, h);
+	navit_handle_resize(navit, w, h);
 
 	return empty_reply(connection, message);
 
+}
+
+static DBusHandlerResult
+request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
+{
+    struct navit *navit;
+    DBusMessageIter iter, response;
+    char * attr_type = NULL;
+    struct attr attr;
+    navit = object_get_from_message(message, "navit");
+    if (! navit)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    dbus_message_iter_init(message, &iter);
+    dbus_message_iter_get_basic(&iter, &attr_type);
+    attr.type = attr_from_name(attr_type); 
+    dbg(0, "attr value: 0x%x string: %s\n", attr.type, attr_type);
+    if (attr.type == attr_none)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    
+    if (attr.type > attr_type_item_begin && attr.type < attr_type_item_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if (attr.type > attr_type_int_begin && attr.type < attr_type_boolean_begin)
+    {
+        if(navit_get_attr(navit, attr.type, &attr, NULL)) {
+            dbg(0, "%s = %i\n", attr_type, attr.u.num);
+            return reply_int_as_variant(connection, message, attr.u.num);
+        }
+    }
+    else if(attr.type > attr_type_boolean_begin && attr.type < attr_type_int_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_string_begin && attr.type < attr_type_string_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_special_begin && attr.type < attr_type_special_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_double_begin && attr.type < attr_type_double_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_coord_geo_begin && attr.type < attr_type_coord_geo_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_color_begin && attr.type < attr_type_color_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_object_begin && attr.type < attr_type_object_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_coord_begin && attr.type < attr_type_coord_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_pcoord_begin && attr.type < attr_type_pcoord_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_callback_begin && attr.type < attr_type_callback_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else {
+        dbg(0, "zomg really unhandled111\n");
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    }
+
+    return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
+
+
+static DBusHandlerResult
+request_navit_set_attr(DBusConnection *connection, DBusMessage *message)
+{
+    struct navit *navit;
+	DBusMessageIter iter, iterattr;
+    struct attr attr;
+    char *attr_type;
+
+	navit = object_get_from_message(message, "navit");
+	if (! navit)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    dbus_message_iter_init(message, &iter);
+    dbus_message_iter_get_basic(&iter, &attr_type);
+    attr.type = attr_from_name(attr_type); 
+    dbg(0, "attr value: 0x%x string: %s\n", attr.type, attr_type);
+    
+    if (attr.type == attr_none)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    
+    dbus_message_iter_next(&iter);
+    dbus_message_iter_recurse(&iter, &iterattr);
+    dbg(0, "seems valid. signature: %s\n", dbus_message_iter_get_signature(&iterattr));
+    
+    if (attr.type > attr_type_item_begin && attr.type < attr_type_item_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if (attr.type > attr_type_int_begin && attr.type < attr_type_boolean_begin)
+        if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_INT32)
+        {
+            dbus_message_iter_get_basic(&iterattr, &attr.u.num);
+            if (navit_set_attr(navit, &attr))
+                return empty_reply(connection, message);
+        }
+
+    else if(attr.type > attr_type_boolean_begin && attr.type < attr_type_int_end)
+        if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_BOOLEAN)
+        {
+            dbus_message_iter_get_basic(&iterattr, &attr.u.num);
+            if (navit_set_attr(navit, &attr))
+                return empty_reply(connection, message);
+        }
+
+    else if(attr.type > attr_type_string_begin && attr.type < attr_type_string_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_special_begin && attr.type < attr_type_special_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_double_begin && attr.type < attr_type_double_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_coord_geo_begin && attr.type < attr_type_coord_geo_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_color_begin && attr.type < attr_type_color_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_object_begin && attr.type < attr_type_object_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_coord_begin && attr.type < attr_type_coord_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_pcoord_begin && attr.type < attr_type_pcoord_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else if(attr.type > attr_type_callback_begin && attr.type < attr_type_callback_end)
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+    else {
+        dbg(0, "zomg really unhandled111\n");
+        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    }
+    
+    return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
 static DBusHandlerResult
@@ -465,6 +624,8 @@ struct dbus_method {
 	{".navit",  "zoom",                "i(ii)",   "factor(pixel_x,pixel_y)",                 "",   "",      request_navit_zoom},
 	{".navit",  "zoom",                "i",       "factor",                                  "",   "",      request_navit_zoom},
 	{".navit",  "resize",              "ii",      "upperleft,lowerright",                    "",   "",      request_navit_resize},
+	{".navit",  "get_attr",            "s",       "attribute",                               "v",  "value", request_navit_get_attr},
+	{".navit",  "set_attr",            "sv",      "attribute,value",                         "",   "",      request_navit_set_attr},
 	{".navit",  "set_position",        "(iii)",   "(projection,longitude,latitude)",         "",   "",      request_navit_set_position},
 	{".navit",  "set_destination",     "(iii)s",  "(projection,longitude,latitude)comment",  "",   "",      request_navit_set_destination},
 };
