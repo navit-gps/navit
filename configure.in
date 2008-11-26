@@ -1,5 +1,5 @@
 AC_INIT(navit, 0.1.0)
-SOURCE_MODE=svn
+SOURCE_MODE=tarball
 
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
