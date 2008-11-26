@@ -11,6 +11,6 @@ Icon=navit
 StartupNotify=true
 Terminal=false
 Type=Application
-Categories=GTK;Utility;
+Categories=GTK;Utility;Geography;
 GenericName=Navit
 GenericName[de]=Navit
