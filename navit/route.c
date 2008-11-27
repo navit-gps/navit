@@ -838,6 +838,7 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
  * @param max Maximum number of coordinates to return
  * @param start First coordinate to get
  * @param end Last coordinate to get
+ * @return The number of coordinates returned
  */
 static int get_item_seg_coords(struct item *i, struct coord *c, int max,
 		struct coord *start, struct coord *end)
