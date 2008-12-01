@@ -525,7 +525,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	center.pro = pro;
 
 	this_->trans=transform_new();
-	transform_setup(this_->trans, &center, zoom, 0);
+	transform_setup(this_->trans, &center, zoom, (this_->orientation != -1) ? this_->orientation : 0);
 	this_->displaylist=graphics_displaylist_new();
 	this_->commands=g_hash_table_new(g_str_hash, g_str_equal);
 	navit_command_register(this_, "zoom_in", callback_new_3(callback_cast(navit_zoom_in), this_, (void *)2, NULL));
@@ -1426,7 +1426,8 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 		}
 		transform_set_angle(this_->trans, dir);
 		if (orient_old != this_->orientation) {
-			navit_draw(this_);
+			if (this_->ready == 3)
+				navit_draw(this_);
 			attr_updated=1;
 		}
 		break;
