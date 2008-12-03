@@ -77,6 +77,7 @@ struct navit_vehicle {
 	struct coord coord;
 	int dir;
 	int speed;
+	struct coord last; /*< Position of the last update of this vehicle */
 	struct color c;
 	struct color *c2;
 	struct cursor *cursor;
@@ -1689,6 +1690,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	enum projection pro;
 	int border=16;
 	int route_path_set=0;
+	int recenter = 1; // indicates if we should recenter the map
 
 	profile(0,NULL);
 	if (this_->ready != 3) {
@@ -1711,6 +1713,22 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		profile(0,"return 3\n");
 		return;
 	}
+
+	if (nv->speed < 10) {
+		long long diff,diff_x,diff_y;
+
+		diff_x = abs(nv->coord.x - nv->last.x);
+		diff_y = abs(nv->coord.y - nv->last.y);
+		diff = (diff_x * diff_x) + (diff_y * diff_y);
+
+		if ((diff < 20) && (diff > 0)) { // if our long is only 32 bit wide, we could run into an overflow here
+			recenter = 0;
+		}
+	}
+	if (recenter) {
+		nv->last = nv->coord;
+	}
+
 	if (this_->route)
 		route_path_set=route_get_path_set(this_->route);
 	cursor_pc.x = nv->coord.x;
@@ -1737,7 +1755,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 			profile(0,"return 4\n");
 			return;
 		}
-		if ((nv->follow_curr != 1) && ((time(NULL) - this_->last_moved) > this_->center_timeout) && (this_->button_pressed != 1)) {
+		if ((nv->follow_curr != 1) && ((time(NULL) - this_->last_moved) > this_->center_timeout) && (this_->button_pressed != 1) && (recenter)) {
 			if (this_->orientation != -1) {
 				int dir=nv->dir-this_->orientation;
 				navit_set_center_cursor(this_, &nv->coord, 0, 50 - 30.*sin(M_PI*dir/180.), 50 + 30.*cos(M_PI*dir/180.));
@@ -1755,7 +1773,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	if (this_->route && nv->update_curr == 1)
 		navigation_update(this_->navigation, this_->route);
 	if ((nv->follow_curr == 1) && (!this_->button_pressed)) {
-		if (this_->cursor_flag && ((time(NULL) - this_->last_moved) > this_->center_timeout)) {
+		if (this_->cursor_flag && ((time(NULL) - this_->last_moved) > this_->center_timeout) && (recenter)) {
 			navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
 			pnt=NULL;
 		} else { // We don't want to center, but redraw because otherwise the old route "lags"
@@ -1829,6 +1847,8 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v)
 	nv->vehicle=v;
 	nv->update=1;
 	nv->follow=0;
+	nv->last.x = 0;
+	nv->last.y = 0;
 	nv->animate_cursor=0;
 	if ((vehicle_get_attr(v, attr_update, &update, NULL)))
 		nv->update=nv->update=update.u.num;
