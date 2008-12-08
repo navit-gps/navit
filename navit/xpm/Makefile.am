@@ -161,8 +161,8 @@ if USE_SVG
 endif
 
 if USE_SVG2PNG
-%.png:*.svg
-	$(srcdir)/navit_svg2png "$@"
+%.png:$(srcdir)/*.svg
+	SRCDIR=$(srcdir) $(srcdir)/navit_svg2png "$@"
 xpm_DATA += $(addsuffix .png,$(basename $(svgs)))
 if USE_SVG2PNG_SCALES
 xpm_DATA += $(foreach scale, @SVG2PNG_SCALES@, $(addsuffix _$(scale)_$(scale).png,$(basename $(svgs))))

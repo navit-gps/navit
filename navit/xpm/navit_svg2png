@@ -8,9 +8,11 @@ then
 	h=${h%.png}
 	w=${w##*_}
 else
-	w=$(grep 'width=".*px"' gui_actions.svg | head -n 1 | sed -e 's/px".*//' -e 's/.*"//')
-	h=$(grep 'height=".*px"' gui_actions.svg | head -n 1 | sed -e 's/px".*//' -e 's/.*"//')
 	svg=${png%.png}
+fi
+if [ ! -f $svg.svg -a ! -f $svg.svgz ]
+then
+	svg="$SRCDIR/$svg"
 fi
 if [ -f $png -a ! -f $svg.svg ]
 then
@@ -18,6 +20,14 @@ then
 else
 	if [ -f $svg.svg ]
 	then
+		if [ -z "$w" ]
+		then
+			w=$(grep 'width="[0-9px.]*"' $svg.svg | head -n 1 | sed -e 's/^[^"]*"//' -e 's/[px]*".*//')
+		fi
+		if [ -z "$h" ]
+		then
+			h=$(grep 'height="[0-9px.]*"' $svg.svg | head -n 1 | sed -e 's/^[^"]*"//' -e 's/[px]*".*//')
+		fi
 		ksvgtopng $w $h $svg.svg $png
 	elif [ -f $svg.svgz ]
 	then
