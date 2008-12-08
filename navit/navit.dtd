@@ -1,4 +1,5 @@
 <!ELEMENT config (plugins,debug*,navit)>
+<!ATTLIST config xmlns:xi CDATA #REQUIRED>
 <!ELEMENT plugins (plugin*)>
 <!ELEMENT plugin EMPTY>
 <!ATTLIST plugin path CDATA #REQUIRED>
@@ -12,6 +13,7 @@
 <!ATTLIST navit tracking CDATA #REQUIRED>
 <!ATTLIST navit cursor CDATA #REQUIRED>
 <!ATTLIST navit orientation CDATA #REQUIRED>
+<!ATTLIST navit recent_dest CDATA #IMPLIED>
 <!ELEMENT gui EMPTY>
 <!ATTLIST gui type CDATA #REQUIRED>
 <!ATTLIST gui menubar CDATA #IMPLIED>
@@ -21,14 +23,16 @@
 <!ATTLIST gui fullscreen CDATA #IMPLIED>
 <!ELEMENT graphics EMPTY>
 <!ATTLIST graphics type CDATA #REQUIRED>
-<!ELEMENT vehicle EMPTY>
+<!ELEMENT vehicle (cursor)>
 <!ATTLIST vehicle name CDATA #REQUIRED>
 <!ATTLIST vehicle source CDATA #REQUIRED>
 <!ATTLIST vehicle color CDATA #REQUIRED>
 <!ATTLIST vehicle enabled CDATA #IMPLIED>
 <!ATTLIST vehicle active CDATA #IMPLIED>
 <!ATTLIST vehicle follow CDATA #IMPLIED>
-<!ATTLIST vehicle refresh CDATA #IMPLIED>
+<!ATTLIST vehicle update CDATA #IMPLIED>
+<!ATTLIST vehicle gpsd_query CDATA #IMPLIED>
+<!ELEMENT cursor EMPTY>
 <!ELEMENT tracking ANY>
 <!ELEMENT route (speed+)>
 <!ELEMENT speed EMPTY>
@@ -56,23 +60,34 @@
 <!ATTLIST layout name CDATA #REQUIRED>
 <!ATTLIST layout color CDATA #IMPLIED>
 <!ATTLIST layout font CDATA #IMPLIED>
-<!ELEMENT layer (item+)>
-<!ATTLIST layer name CDATA #REQUIRED>
-<!ATTLIST layer details CDATA #REQUIRED>
-<!ELEMENT item (polygon|polyline|label|circle|icon)*>
-<!ATTLIST item type CDATA #REQUIRED>
-<!ATTLIST item order CDATA #REQUIRED>
+<!ELEMENT layer (itemgra+)>
+<!ATTLIST layer name CDATA #IMPLIED>
+<!ATTLIST layer details CDATA #IMPLIED>
+<!ELEMENT itemgra (polygon|polyline|text|circle|icon|image|arrows)*>
+<!ATTLIST itemgra item_types CDATA #IMPLIED>
+<!ATTLIST itemgra order CDATA #IMPLIED>
+<!ATTLIST itemgra speed_range CDATA #IMPLIED>
 <!ELEMENT polygon EMPTY>
 <!ATTLIST polygon color CDATA #REQUIRED>
 <!ELEMENT polyline EMPTY>
 <!ATTLIST polyline color CDATA #REQUIRED>
 <!ATTLIST polyline width CDATA #IMPLIED>
-<!ELEMENT label EMPTY>
-<!ATTLIST label label_size CDATA #REQUIRED>
+<!ATTLIST polyline dash CDATA #IMPLIED>
+<!ATTLIST polyline offset CDATA #IMPLIED>
+<!ELEMENT text EMPTY>
+<!ATTLIST text text_size CDATA #REQUIRED>
+<!ATTLIST text color CDATA #IMPLIED>
 <!ELEMENT circle EMPTY>
 <!ATTLIST circle color CDATA #REQUIRED>
 <!ATTLIST circle radius CDATA #REQUIRED>
-<!ATTLIST circle label_size CDATA #IMPLIED>
+<!ATTLIST circle width CDATA #IMPLIED>
+<!ATTLIST circle text_size CDATA #IMPLIED>
 <!ELEMENT icon EMPTY>
 <!ATTLIST icon src CDATA #REQUIRED>
+<!ATTLIST icon w CDATA #IMPLIED>
+<!ATTLIST icon h CDATA #IMPLIED>
+<!ELEMENT arrows EMPTY>
+<!ATTLIST arrows color CDATA #REQUIRED>
+<!ATTLIST arrows width CDATA #IMPLIED>
+<!ELEMENT image EMPTY>
 
