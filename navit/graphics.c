@@ -1024,13 +1024,16 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	p.x=0;
 	p.y=0;
 	// FIXME find a better place to set the background color
-	graphics_gc_set_background(gra->gc[0], &l->color);
-	graphics_gc_set_foreground(gra->gc[0], &l->color);
-	gra->default_font = g_strdup(l->font);
+	if (l) {
+		graphics_gc_set_background(gra->gc[0], &l->color);
+		graphics_gc_set_foreground(gra->gc[0], &l->color);
+		gra->default_font = g_strdup(l->font);
+	}
 	graphics_background_gc(gra, gra->gc[0]);
 	gra->meth.draw_mode(gra->priv, draw_mode_begin);
 	gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &p, 32767, 32767);
-	xdisplay_draw(displaylist->dl, gra, l, order+l->order_delta);
+	if (l) 
+		xdisplay_draw(displaylist->dl, gra, l, order+l->order_delta);
 	if (callback)
 		callback_list_call_attr_0(gra->cbl, attr_postdraw);
 	gra->meth.draw_mode(gra->priv, draw_mode_end);
@@ -1084,8 +1087,10 @@ void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList 
 	}
 #endif
 	profile(0,NULL);
-	order+=l->order_delta;
-	do_draw(displaylist, trans, mapsets, order);
+	if (l)
+		order+=l->order_delta;
+	if (mapsets)
+		do_draw(displaylist, trans, mapsets, order);
 //	profile(1,"do_draw");
 	graphics_displaylist_draw(gra, displaylist, trans, l, 1);
 	profile(1,"xdisplay_draw");
