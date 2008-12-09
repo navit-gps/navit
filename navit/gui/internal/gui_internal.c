@@ -1599,7 +1599,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm)
 	struct map *m;
 	struct map_rect *mr;
 	struct item *item;
-	int idist,dist=400000;
+	int idist,dist=4000;
 	struct widget *wi,*w,*w2,*wb;
 	enum projection pro=wm->c.pro;
 	struct selector *isel=wm->data;
