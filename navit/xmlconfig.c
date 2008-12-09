@@ -642,7 +642,7 @@ xpointer_xpointer_match(const char *xpointer, int len, struct xistate *first)
 		c+=s+1;
 		len-=s+1;
 	} while (s < len && first);
-	if (s < len)
+	if (len > 0)
 		return 0;
 	return 1;
 }
