@@ -1795,7 +1795,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		navit_vehicle_draw(this_, nv, pnt);
 
 	/* Finally, if we reached our destination, stop navigation. */
-	if (route_destination_reached(this_->route)) {
+	if (this_->route && route_destination_reached(this_->route)) {
 		navit_set_destination(this_, NULL, NULL);
 	}
 	profile(0,"return 5\n");
