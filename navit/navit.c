@@ -1738,15 +1738,16 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		if (tracking_update(this_->tracking, &cursor_pc, nv->dir)) {
 			nv->coord.x=cursor_pc.x;
 			nv->coord.y=cursor_pc.y;
-			if (this_->route && nv->update_curr == 1) {
+		}
+	}
+	if (nv->update_curr == 1) {
+		if (this_->route) {
+			if (this_->tracking && this_->tracking_flag)
 				route_set_position_from_tracking(this_->route, this_->tracking);
-				callback_list_call_attr_0(this_->attr_cbl, attr_position);
-			}
+			else
+				route_set_position(this_->route, &cursor_pc);
 		}
-	} else {
-		if (this_->route && nv->update_curr == 1) {
-			navit_set_position(this_, &cursor_pc);
-		}
+		callback_list_call_attr_0(this_->attr_cbl, attr_position);
 	}
 	navit_textfile_debug_log(this_, "type=trackpoint_tracked");
 	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0);
