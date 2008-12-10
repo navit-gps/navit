@@ -77,7 +77,7 @@ struct map_rect_priv {
 	int *end;
 	enum attr_type attr_last;
 	int label;
-	int *label_attr[2];
+	int *label_attr[4];
         struct map_selection *sel;
         struct map_priv *m;
         struct item item;
@@ -367,12 +367,14 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		type=le32_to_cpu(t->pos_attr[0]);
 		if (type == attr_label) 
 			mr->label=1;
-		if (type == attr_town_name)
+		if (type == attr_house_number)
 			mr->label_attr[0]=t->pos_attr;
 		if (type == attr_street_name)
-			mr->label_attr[0]=t->pos_attr;
-		if (type == attr_street_name_systematic)
 			mr->label_attr[1]=t->pos_attr;
+		if (type == attr_street_name_systematic)
+			mr->label_attr[2]=t->pos_attr;
+		if (type == attr_town_name)
+			mr->label_attr[3]=t->pos_attr;
 		if (type == attr_type || attr_type == attr_any) {
 			if (attr_type == attr_any) {
 				dbg(1,"pos %p attr %s size %d\n", t->pos_attr-1, attr_to_name(type), size);

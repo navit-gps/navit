@@ -61,6 +61,9 @@ static int ignore_unkown = 0, coverage=0;
 static char *attrmap={
 	"n	*=*			point_unkn\n"
 	"n	Annehmlichkeit=Hochsitz	poi_hunting_stand\n"
+#ifdef HOUSE_NUMBERS
+	"n	addr:housenumber=*	house_number\n"
+#endif
 	"n	aeroway=aerodrome	poi_airport\n"
 	"n	aeroway=airport		poi_airport\n"
 	"n	aeroway=helipad		poi_heliport\n"
@@ -172,6 +175,12 @@ static char *attrmap={
 	"n	tourism=viewpoint	poi_viewpoint\n"
 	"n	tourism=zoo		poi_zoo\n"
 	"w	*=*			street_unkn\n"
+#ifdef HOUSE_NUMBERS
+	"w	addr:interpolation=even	house_number_interpolation_even\n"
+	"w	addr:interpolation=odd	house_number_interpolation_odd\n"
+	"w	addr:interpolation=all	house_number_interpolation_all\n"
+	"w	addr:interpolation=alphabetic	house_number_interpolation_alphabetic\n"
+#endif
 	"w	aerialway=cable_car	lift_cable_car\n"
 	"w	aerialway=chair_lift	lift_chair\n"
 	"w	aerialway=drag_lift	lift_drag\n"
@@ -537,6 +546,14 @@ struct attr_bin label_attr = {
 };
 char label_attr_buffer[BUFFER_SIZE];
 
+#ifdef HOUSE_NUMBERS
+struct attr_bin house_number_attr = {
+	0, attr_house_number
+};
+char house_number_attr_buffer[BUFFER_SIZE];
+#endif
+
+
 struct attr_bin town_name_attr = {
 	0, attr_town_name
 };
@@ -544,6 +561,10 @@ struct attr_bin town_name_attr = {
 struct attr_bin street_name_attr = {
 	0, attr_street_name
 };
+
+#ifdef HOUSE_NUMBERS
+char street_name_attr_buffer[BUFFER_SIZE];
+#endif
 
 struct attr_bin street_name_systematic_attr = {
 	0, attr_street_name_systematic
@@ -665,6 +686,16 @@ add_tag(char *k, char *v)
 		pad_text_attr(&label_attr, label_attr_buffer);
 		level=5;
 	}
+#ifdef HOUSE_NUMBERS
+	if (! strcmp(k,"addr:housenumber")) {
+		strcpy(house_number_attr_buffer, v);
+		pad_text_attr(&house_number_attr, house_number_attr_buffer);
+	}
+	if (! strcmp(k,"addr:street")) {
+		strcpy(street_name_attr_buffer, v);
+		pad_text_attr(&street_name_attr, street_name_attr_buffer);
+	}
+#endif
 	if (! strcmp(k,"ref")) {
 		if (in_way) {
 			strcpy(street_name_systematic_attr_buffer, v);
@@ -843,6 +874,10 @@ add_node(int id, double lat, double lon)
 	nodeid=id;
 	item.type=type_point_unkn;
 	label_attr.len=0;
+#ifdef HOUSE_NUMBERS
+	house_number_attr.len=0;
+	street_name_attr.len=0;
+#endif
 	town_name_attr.len=0;
 	debug_attr.len=0;
 	is_in_buffer[0]='\0';
@@ -956,6 +991,9 @@ add_way(int id)
 	coord_count=0;
 	item.type=type_street_unkn;
 	label_attr.len=0;
+#ifdef HOUSE_NUMBERS
+	house_number_attr.len=0;
+#endif
 	street_name_attr.len=0;
 	street_name_systematic_attr.len=0;
 	debug_attr.len=0;
@@ -1114,6 +1152,12 @@ end_node(FILE *out)
 		alen+=label_attr.len+1;
 	if (debug_attr.len)
 		alen+=debug_attr.len+1;
+#ifdef HOUSE_NUMBERS
+	if (house_number_attr.len)
+		alen+=house_number_attr.len+1;
+	if (street_name_attr.len)
+		alen+=street_name_attr.len+1;
+#endif
 	if (count)
 		item.type=types[0];
 	else
@@ -1127,6 +1171,10 @@ end_node(FILE *out)
 		write_attr(out, &town_name_attr, label_attr_buffer);
 	} else
 		write_attr(out, &label_attr, label_attr_buffer);
+#ifdef HOUSE_NUMBERS
+	write_attr(out, &house_number_attr, house_number_attr_buffer);
+	write_attr(out, &street_name_attr, street_name_attr_buffer);
+#endif
 	write_attr(out, &debug_attr, debug_attr_buffer);
 #ifdef GENERATE_INDEX
 	if (item_is_town(item) && town_name_attr.len) {
@@ -2831,7 +2879,6 @@ int main(int argc, char **argv)
 			phase1_db(dbstr,ways,nodes);
 		else
 #endif
-		printf("map_handle=%p\n", map_handle);
 		if (map_handle) {
 			phase1_map(map_handle,ways,nodes);
 			map_destroy(map_handle);
