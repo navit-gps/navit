@@ -92,7 +92,7 @@ test x"${AVOID_FLOAT}" = xyes && AC_DEFINE(AVOID_FLOAT,[],Define to avoid floati
 
 AC_ARG_ENABLE(hildon, [  --enable-hildon              build with maemo/hildon support], enable_hildon=$enableval, enable_hildon=no)
 if test "x${enable_hildon}" = "xyes" ; then
-	PKG_CHECK_MODULES(enable_hildon, hildon-1 >= 0.9.9, , [
+	PKG_CHECK_MODULES(HILDON, hildon-1 >= 0.9.9, , [
 		AC_MSG_RESULT(no)
 		enable_hildon=no
 	])
