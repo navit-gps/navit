@@ -45,7 +45,7 @@
 #include "navit_nls.h"
 
 #ifdef USE_HILDON
-#include "hildon/hildon-defines.h
+#include "hildon/hildon-defines.h"
 #define KEY_ZOOM_IN HILDON_HARDKEY_INCREASE
 #define KEY_ZOOM_OUT HILDON_HARDKEY_DECREASE
 #define KEY_UP HILDON_HARDKEY_UP
