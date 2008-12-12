@@ -66,8 +66,6 @@
 #include "fib.h"
 
 
-#define DISABLE_STRAIGHT 1 /* Slows down incremental routing by factor of 10 */
-
 struct map_priv {
 	struct route *route;
 };
@@ -131,9 +129,6 @@ struct route_path_segment {
 										 *  coordinate of the segment is the first coordinate of the item", <=0 
 										 *  means reverse. */
 	unsigned ncoords;					/**< How many coordinates does this segment have? */
-#ifndef DISABLE_STRAIGHT
-	struct attr **attrs;				/**< Attributes of this route path segment */
-#endif
 	struct coord c[0];					/**< Pointer to the ncoords coordinates of this segment */
 	/* WARNING: There will be coordinates following here, so do not create new fields after c! */
 };
@@ -188,7 +183,7 @@ struct route {
 
 	struct route_graph *graph;	/**< Pointer to the route graph */
 	struct route_path *path2;	/**< Pointer to the route path */
-	struct map *map;			
+	struct map *map;
 	struct map *graph_map;
 	int destination_distance;	/**< Distance to the destination at which the destination is considered "reached" */
 	int speedlist[route_item_last-route_item_first+1];	/**< The speedlist for this route */
@@ -207,6 +202,18 @@ struct route_graph {
 };
 
 #define HASHCOORD(c) ((((c)->x +(c)->y) * 2654435761UL) & (HASH_SIZE-1))
+
+/**
+ * @brief Iterator to iterate through all route graph segments in a route graph point
+ *
+ * This structure can be used to iterate through all route graph segments connected to a
+ * route graph point. Use this with the rp_iterator_* functions.
+ */
+struct route_graph_point_iterator {
+	struct route_graph_point *p;		/**< The route graph point whose segments should be iterated */
+	int end;							/**< Indicates if we have finished iterating through the "start" segments */
+	struct route_graph_segment *next;	/**< The next segment to be returned */
+};
 
 static struct route_info * route_find_nearest_street(struct mapset *ms, struct pcoord *c);
 static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
@@ -230,6 +237,62 @@ static enum projection route_projection(struct route *route)
 }
 
 /**
+ * @brief Creates a new graph point iterator 
+ *
+ * This function creates a new route graph point iterator, that can be used to
+ * iterate through all segments connected to the point.
+ *
+ * @param p The route graph point to create the iterator from
+ * @return A new iterator.
+ */
+static struct route_graph_point_iterator
+rp_iterator_new(struct route_graph_point *p)
+{
+	struct route_graph_point_iterator it;
+
+	it.p = p;
+	if (p->start) {
+		it.next = p->start;
+		it.end = 0;
+	} else {
+		it.next = p->end;
+		it.end = 1;
+	}
+
+	return it;
+}
+
+/**
+ * @brief Gets the next segment connected to a route graph point from an iterator
+ *
+ * @param it The route graph point iterator to get the segment from
+ * @return The next segment or NULL if there are no more segments
+ */
+static struct route_graph_segment
+*rp_iterator_next(struct route_graph_point_iterator *it) 
+{
+	struct route_graph_segment *ret;
+
+	ret = it->next;
+	if (!ret) {
+		return NULL;
+	}
+
+	if (!it->end) {
+		if (ret->start_next) {
+			it->next = ret->start_next;
+		} else {
+			it->next = it->p->end;
+			it->end = 1;
+		}
+	} else {
+		it->next = ret->end_next;
+	}
+
+	return ret;
+}
+
+/**
  * @brief Destroys a route_path
  *
  * @param this The route_path to be destroyed
@@ -247,11 +310,6 @@ route_path_destroy(struct route_path *this)
 	c=this->path;
 	while (c) {
 		n=c->next;
-#ifndef DISABLE_STRAIGHT
-		if (c->attrs) { 
-			attr_list_free(c->attrs);
-		}
-#endif
 		g_free(c);
 		c=n;
 	}
@@ -983,9 +1041,6 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 	struct route_path_segment *segment;
 	int i,ccnt = 0;
 	struct coord ca[2048];
-#ifndef DISABLE_STRAIGHT
-	struct attr straight_attr;
-#endif
 
 	if (oldpath) {
 		ccnt = (int)item_hash_lookup(oldpath->path_hash, &rgs->item);
@@ -1019,13 +1074,6 @@ linkold:
 	segment->length=len;
 	segment->next=NULL;
 	item_hash_insert(this->path_hash,  &rgs->item, (void *)ccnt);
-
-#ifndef DISABLE_STRAIGHT
-	straight_attr.type = attr_route_follow_straight;
-	straight_attr.u.num = straight;
-
-	segment->attrs = attr_generic_set_attr(segment->attrs, &straight_attr);
-#endif
 
 	route_path_add_segment(this, segment);
 }
@@ -1360,132 +1408,6 @@ route_path_new_trivial(struct route_graph *this, struct route_info *pos, struct 
 	return ret;
 }
 
-#ifndef DISABLE_STRAIGHT
-/**
- * @brief Calculates of two coordinates' connection
- *
- * This function calculates the angle between coordinates, with north = 0
- * and east = 90.
- *
- * %FIXME This is a duplicate of road_angle() in navigation.c - combine them?
- *
- * @param c1 Coordinate 1
- * @param c2 Coordinate 2
- * @param dir Set to true if c1 is the prior, and c2 the later coordinate.
- * @return The angle of the coordinate's connection  
- */
-static int
-route_road_angle(struct coord *c1, struct coord *c2, int dir)
-{
-	int ret=transform_get_angle_delta(c1, c2, dir);
-	dbg(1, "road_angle(0x%x,0x%x - 0x%x,0x%x)=%d\n", c1->x, c1->y, c2->x, c2->y, ret);
-	return ret;
-}
-
-/**
- * @brief Checks if entering one segment from another is a "straight" road
- *
- * This checks if one can enter seg_to from seg_from by driving "straight" - i.e. 
- * if seg_to is the segment you can drive to from seg_from by steering less than
- * all to all other segments.
- *
- * This function returns true on failure, so we don't create maneuvers on every error.
- *
- * @param seg_from Segment we are driving from
- * @param seg_to Segment we are driving to
- * @return True if driving from seg_from to seg_to is "straight", false otherwise
- */
-static int
-route_check_straight(struct route_graph_segment *seg_from, struct route_graph_segment *seg_to)
-{
-	struct route_graph_segment *curr;
-	struct route_graph_point *conn;
-	int from_angle, to_angle, curr_angle, angle_diff; 
-	int ccnt;
-	struct coord ca[2048];
-
-	if ((seg_from->end == seg_to->start) || (seg_from->end == seg_to->end)) {
-		ccnt = get_item_seg_coords(&seg_from->item, ca, 2047, &seg_from->start->c, &seg_from->end->c);
-		from_angle = route_road_angle(&ca[ccnt-2], &ca[ccnt-1],1);
-
-		conn = seg_from->end;
-	} else if ((seg_from->start == seg_to->start) || (seg_from->start == seg_to->end)) {
-		ccnt = get_item_seg_coords(&seg_from->item, ca, 2, &seg_from->start->c, &seg_from->end->c);
-		from_angle = route_road_angle(&ca[1], &ca[0],1);
-
-		conn = seg_from->start;
-	} else {
-		// Not connected!
-		return 1;
-	}
-
-
-	if (seg_to->end == conn) {
-		ccnt = get_item_seg_coords(&seg_to->item, ca, 2047, &seg_to->start->c, &seg_to->end->c);
-		to_angle = route_road_angle(&ca[ccnt-1], &ca[ccnt-2],1);
-	} else {
-		ccnt = get_item_seg_coords(&seg_to->item, ca, 2, &seg_to->start->c, &seg_to->end->c);
-		to_angle = route_road_angle(&ca[0], &ca[1],1);
-	}			
-	
-	
-	angle_diff = from_angle - to_angle;
-	if (angle_diff < 0) {
-		angle_diff *= -1;
-	}
-
-
-	curr = conn->start;
-	while (curr != NULL) {
-		if (curr==seg_to) {
-			curr = curr->start_next;
-			continue;
-		}
-		
-		ccnt = get_item_seg_coords(&curr->item, ca, 2, &curr->start->c, &curr->end->c);
-		curr_angle = route_road_angle(&ca[0], &ca[1], 1);
-
-		curr_angle = from_angle - curr_angle;
-
-		if (curr_angle < 0) {
-			curr_angle *= -1;
-		}
-		
-
-		if (curr_angle < angle_diff) {
-			return 0;
-		}
-
-		curr = curr->start_next;
-	}
-
-	curr = conn->end;
-	while (curr != NULL) {
-		if (curr==seg_to) {
-			curr = curr->end_next;
-			continue;
-		}
-		
-		ccnt = get_item_seg_coords(&curr->item, ca, 2047, &curr->start->c, &curr->end->c);
-		curr_angle = route_road_angle(&ca[ccnt-1], &ca[ccnt-2], 1);
-
-		curr_angle = from_angle - curr_angle;
-
-		if (curr_angle < 0) {
-			curr_angle *= -1;
-		}
-
-		if (curr_angle < angle_diff) {
-			return 0;
-		}
-
-		curr = curr->end_next;
-	}
-
-	return 1;
-}
-#endif
-
 /**
  * @brief Creates a new route path
  * 
@@ -1566,14 +1488,6 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		seg_len=s->len;
 		len+=seg_len;
 	
-#ifndef DISABLE_STRAIGHT	
-		if (lastseg) {
-			is_straight = route_check_straight(lastseg,s);
-		} else {
-			is_straight = 0;
-		}
-#endif
-
 		if (s->start == start) {		
 			route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, 1, is_straight);
 			start=s->end;
@@ -1892,6 +1806,8 @@ struct map_rect_priv {
 	struct route_graph_point *point;
 	struct route_graph_segment *rseg;
 	char *str;
+	struct coord *coord_sel;	/**< Set this to a coordinate if you want to filter for just a single route graph point */
+	struct route_graph_point_iterator it;
 };
 
 static void
@@ -1923,24 +1839,12 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			}
 			return 0;
 		case attr_street_item:
-#ifndef DISABLE_STRAIGHT
-			mr->attr_next=attr_route_follow_straight;
-#else 
 			mr->attr_next=attr_direction;
-#endif
 			if (seg && seg->item.map)
 				attr->u.item=&seg->item;
 			else
 				return 0;
 			return 1;
-#ifndef DISABLE_STRAIGHT
-		case attr_route_follow_straight:
-			mr->attr_next=attr_direction;
-			if (seg) {
-				return attr_generic_get_attr(seg->attrs,NULL,attr_route_follow_straight,attr,NULL);
-			}
-			return 0;
-#endif
 		case attr_direction:
 			mr->attr_next=attr_length;
 			if (seg) 
@@ -2019,16 +1923,19 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
 	struct map_rect_priv *mr = priv_data;
 	struct route_graph_point *p = mr->point;
-	if (mr->item.type != type_rg_point) 
-		return 0;
+	struct route_graph_segment *seg = mr->rseg;
 	switch (attr_type) {
-	case attr_any:
+	case attr_any: // works only with rg_points for now
+		if (mr->item.type != type_rg_point) 
+			return 0;		
 		while (mr->attr_next != attr_none) {
 			if (rp_attr_get(priv_data, mr->attr_next, attr))
 				return 1;
 		}
 		return 0;
 	case attr_label:
+		if (mr->item.type != type_rg_point) 
+			return 0;
 		attr->type = attr_label;
 		if (mr->str)
 			g_free(mr->str);
@@ -2039,7 +1946,31 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		attr->u.str = mr->str;
 		mr->attr_next=attr_none;
 		return 1;
+	case attr_street_item:
+		if (mr->item.type != type_rg_segment) 
+			return 0;
+		mr->attr_next=attr_none;
+		if (seg && seg->item.map)
+			attr->u.item=&seg->item;
+		else
+			return 0;
+		return 1;
+	case attr_direction:
+		// This only works if the map has been opened at a single point, and in that case indicates if the
+		// segment returned last is connected to this point via its start (1) or its end (-1)
+		if (!mr->coord_sel || (mr->item.type != type_rg_segment))
+			return 0;
+		if (seg->start == mr->point) {
+			attr->u.num=1;
+		} else if (seg->end == mr->point) {
+			attr->u.num=-1;
+		} else {
+			return 0;
+		}
+		return 1;
 	case attr_debug:
+		if (mr->item.type != type_rg_point) 
+			return 0;
 		attr->type = attr_debug;
 		if (mr->str)
 			g_free(mr->str);
@@ -2054,6 +1985,14 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	}
 }
 
+/**
+ * @brief Returns the coordinates of a route graph item
+ *
+ * @param priv_data The route graph item's private data
+ * @param c Pointer where to store the coordinates
+ * @param count How many coordinates to get at a max?
+ * @return The number of coordinates retrieved
+ */
 static int
 rp_coord_get(void *priv_data, struct coord *c, int count)
 {
@@ -2109,6 +2048,12 @@ static struct item_methods methods_point_item = {
 };
 
 static void
+rp_destroy(struct map_priv *priv)
+{
+	g_free(priv);
+}
+
+static void
 rm_destroy(struct map_priv *priv)
 {
 	g_free(priv);
@@ -2134,10 +2079,25 @@ rm_rect_new(struct map_priv *priv, struct map_selection *sel)
 	return mr;
 }
 
+/**
+ * @brief Opens a new map rectangle on the route graph's map
+ *
+ * This function opens a new map rectangle on the route graph's map.
+ * The "sel" parameter enables you to only search for a single route graph
+ * point on this map (or exactly: open a map rectangle that only contains
+ * this one point). To do this, pass here a single map selection, whose 
+ * c_rect has both coordinates set to the same point. Otherwise this parameter
+ * has no effect.
+ *
+ * @param priv The route graph map's private data
+ * @param sel Here it's possible to specify a point for which to search. Please read the function's description.
+ * @return A new map rect's private data
+ */
 static struct map_rect_priv * 
 rp_rect_new(struct map_priv *priv, struct map_selection *sel)
 {
 	struct map_rect_priv * mr;
+
 	dbg(1,"enter\n");
 	if (! priv->route->graph || ! priv->route->graph->route_points)
 		return NULL;
@@ -2146,6 +2106,12 @@ rp_rect_new(struct map_priv *priv, struct map_selection *sel)
 	mr->item.priv_data = mr;
 	mr->item.type = type_rg_point;
 	mr->item.meth = &methods_point_item;
+	if (sel) {
+		if ((sel->u.c_rect.lu.x == sel->u.c_rect.rl.x) && (sel->u.c_rect.lu.y == sel->u.c_rect.rl.y)) {
+			mr->coord_sel = g_malloc(sizeof(struct coord));
+			*(mr->coord_sel) = sel->u.c_rect.lu;
+		}
+	}
 	return mr;
 }
 
@@ -2154,6 +2120,10 @@ rm_rect_destroy(struct map_rect_priv *mr)
 {
 	if (mr->str)
 		g_free(mr->str);
+	if (mr->coord_sel) {
+		g_free(mr->coord_sel);
+	}
+
 	g_free(mr);
 }
 
@@ -2165,10 +2135,27 @@ rp_get_item(struct map_rect_priv *mr)
 	struct route_graph_segment *seg = mr->rseg;
 
 	if (mr->item.type == type_rg_point) {
-		if (!p)
-			p = r->graph->route_points;
-		else
-			p = p->next;
+		if (mr->coord_sel) {
+			// We are supposed to return only the point at one specified coordinate...
+			if (!p) {
+				p = r->graph->hash[HASHCOORD(mr->coord_sel)];
+				while ((p) && ((p->c.x != mr->coord_sel->x) || (p->c.y != mr->coord_sel->y))) {
+					p = p->hash_next;
+				}
+				if ((!p) || !((p->c.x == mr->coord_sel->x) && (p->c.y == mr->coord_sel->y))) {
+					mr->point = NULL; // This indicates that no point has been found
+				} else {
+					mr->it = rp_iterator_new(p);
+				}
+			} else {
+				p = NULL;
+			}
+		} else {
+			if (!p)
+				p = r->graph->route_points;
+			else
+				p = p->next;
+		}
 		if (p) {
 			mr->point = p;
 			mr->item.id_lo++;
@@ -2178,10 +2165,19 @@ rp_get_item(struct map_rect_priv *mr)
 		} else
 			mr->item.type = type_rg_segment;
 	}
-	if (!seg)
-		seg=r->graph->route_segments;
-	else
-		seg=seg->next;
+	
+	if (mr->coord_sel) {
+		if (!mr->point) { // This means that no point has been found
+			return NULL;
+		}
+		seg = rp_iterator_next(&(mr->it));
+	} else {
+		if (!seg)
+			seg=r->graph->route_segments;
+		else
+			seg=seg->next;
+	}
+	
 	if (seg) {
 		mr->rseg = seg;
 		mr->item.id_lo++;
@@ -2243,7 +2239,7 @@ static struct map_methods route_meth = {
 static struct map_methods route_graph_meth = {
 	projection_mg,
 	"utf-8",
-	rm_destroy,
+	rp_destroy,
 	rp_rect_new,
 	rm_rect_destroy,
 	rp_get_item,
@@ -2304,9 +2300,20 @@ route_get_map_helper(struct route *this_, struct map **map, char *type, char *de
                                 &(struct attr){attr_data,{""}},
                                 &(struct attr){attr_description,{description}},
                                 NULL});
+ 
 	return *map;
 }
 
+/**
+ * @brief Returns a new map containing the route path
+ *
+ * This function returns a new map containing the route path.
+ *
+ * @important Do not map_destroy() this!
+ *
+ * @param this_ The route to get the map of
+ * @return A new map containing the route path
+ */
 struct map *
 route_get_map(struct route *this_)
 {
@@ -2314,6 +2321,16 @@ route_get_map(struct route *this_)
 }
 
 
+/**
+ * @brief Returns a new map containing the route graph
+ *
+ * This function returns a new map containing the route graph.
+ *
+ * @important Do not map_destroy()  this!
+ *
+ * @param this_ The route to get the map of
+ * @return A new map containing the route graph
+ */
 struct map *
 route_get_graph_map(struct route *this_)
 {
