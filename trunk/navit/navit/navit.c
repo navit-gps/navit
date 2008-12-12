@@ -212,6 +212,7 @@ navit_handle_resize(struct navit *this_, int w, int h)
 	this_->h=h;
 	transform_set_screen_selection(this_->trans, &sel);
 	this_->ready |= 2;
+	graphics_resize(this_->gra, w, h);
 	if (this_->ready == 3)
 		navit_draw(this_);
 }

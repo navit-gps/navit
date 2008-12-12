@@ -13,6 +13,7 @@
 
 struct font_freetype_font {
 	FT_Face face;
+	int size;
 };
 
 struct font_priv {
@@ -38,46 +39,62 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 	FT_Vector pen;
 	pen.x = 0 * 64;
 	pen.y = 0 * 64;
+	int i;
+	struct point pt;
+#if 0
 	matrix.xx = dx;
 	matrix.xy = dy;
 	matrix.yx = -dy;
 	matrix.yy = dx;
+#else
+	matrix.xx = 0x10000;
+	matrix.xy = 0;
+	matrix.yx = 0;
+	matrix.yy = 0x10000;
+#endif
 	int n, len, x = 0, y = 0;
 
-	bbox.xMin = bbox.yMin = 32000;
-	bbox.xMax = bbox.yMax = -32000;
-	FT_Set_Transform(font->face, &matrix, &pen);
 	len = g_utf8_strlen(text, -1);
-	for (n = 0; n < len; n++) {
-		FT_BBox glyph_bbox;
-		glyph_index =
-		    FT_Get_Char_Index(font->face, g_utf8_get_char(p));
-		p = g_utf8_next_char(p);
-		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT);
-		FT_Get_Glyph(font->face->glyph, &glyph);
-		FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_pixels,
-				  &glyph_bbox);
-		FT_Done_Glyph(glyph);
-		glyph_bbox.xMin += x >> 6;
-		glyph_bbox.xMax += x >> 6;
-		glyph_bbox.yMin += y >> 6;
-		glyph_bbox.yMax += y >> 6;
-		x += slot->advance.x;
-		y -= slot->advance.y;
-		if (glyph_bbox.xMin < bbox.xMin)
-			bbox.xMin = glyph_bbox.xMin;
-		if (glyph_bbox.yMin < bbox.yMin)
-			bbox.yMin = glyph_bbox.yMin;
-		if (glyph_bbox.xMax > bbox.xMax)
-			bbox.xMax = glyph_bbox.xMax;
-		if (glyph_bbox.yMax > bbox.yMax)
-			bbox.yMax = glyph_bbox.yMax;
-	}
-	if (bbox.xMin > bbox.xMax) {
+	if (estimate) {
 		bbox.xMin = 0;
 		bbox.yMin = 0;
-		bbox.xMax = 0;
-		bbox.yMax = 0;
+		bbox.yMax = 13*font->size/256;
+		bbox.xMax = 9*font->size*len/256;
+	} else {
+		bbox.xMin = bbox.yMin = 32000;
+		bbox.xMax = bbox.yMax = -32000;
+		FT_Set_Transform(font->face, &matrix, &pen);
+		for (n = 0; n < len; n++) {
+			FT_BBox glyph_bbox;
+			glyph_index =
+			    FT_Get_Char_Index(font->face, g_utf8_get_char(p));
+			p = g_utf8_next_char(p);
+			FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT);
+			FT_Get_Glyph(font->face->glyph, &glyph);
+			FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_pixels,
+					  &glyph_bbox);
+			FT_Done_Glyph(glyph);
+			glyph_bbox.xMin += x >> 6;
+			glyph_bbox.xMax += x >> 6;
+			glyph_bbox.yMin += y >> 6;
+			glyph_bbox.yMax += y >> 6;
+			x += slot->advance.x;
+			y -= slot->advance.y;
+			if (glyph_bbox.xMin < bbox.xMin)
+				bbox.xMin = glyph_bbox.xMin;
+			if (glyph_bbox.yMin < bbox.yMin)
+				bbox.yMin = glyph_bbox.yMin;
+			if (glyph_bbox.xMax > bbox.xMax)
+				bbox.xMax = glyph_bbox.xMax;
+			if (glyph_bbox.yMax > bbox.yMax)
+				bbox.yMax = glyph_bbox.yMax;
+		}
+		if (bbox.xMin > bbox.xMax) {
+			bbox.xMin = 0;
+			bbox.yMin = 0;
+			bbox.xMax = 0;
+			bbox.yMax = 0;
+		}
 	}
 	ret[0].x = bbox.xMin;
 	ret[0].y = -bbox.yMin;
@@ -87,6 +104,13 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 	ret[2].y = -bbox.yMax;
 	ret[3].x = bbox.xMax;
 	ret[3].y = -bbox.yMin;
+	if (dy != 0 || dx != 0x10000) {
+		for (i = 0 ; i < 4 ; i++) {
+			pt=ret[i];
+			ret[i].x=(pt.x*dx-pt.y*dy)/0x10000;
+			ret[i].y=(pt.y*dx+pt.x*dy)/0x10000;
+		}
+	}
 }
 
 static struct font_freetype_text *
@@ -220,6 +244,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 		library_init = 1;
 	}
 	found = 0;
+	font->size=size;
 	dbg(2, " about to search for fonts, prefered = %s\n", fontfamily);
 	for (exact = 1; !found && exact >= 0; exact--) {
 		if (fontfamily) {
