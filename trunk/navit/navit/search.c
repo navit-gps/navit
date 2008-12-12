@@ -21,10 +21,10 @@
 #include <string.h>
 #include "debug.h"
 #include "projection.h"
+#include "item.h"
 #include "map.h"
 #include "mapset.h"
 #include "coord.h"
-#include "item.h"
 #include "search.h"
 
 struct search_list_level {

@@ -26,9 +26,9 @@
 #include "debug.h"
 #include "plugin.h"
 #include "projection.h"
+#include "item.h"
 #include "map.h"
 #include "maptype.h"
-#include "item.h"
 #include "attr.h"
 #include "transform.h"
 #include "file.h"
@@ -226,7 +226,7 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 			g_free(oargs);
 			for (lay=layer_town ; lay < layer_end ; lay++) {
 				oargs=args;
-				args=g_strdup_printf("%s%s%d", oargs, sep, sel->order[lay]);
+				args=g_strdup_printf("%s%s%d", oargs, sep, sel->order);
 				g_free(oargs);
 				sep=",";
 			}

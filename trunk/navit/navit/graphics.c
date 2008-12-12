@@ -36,6 +36,7 @@
 #include "point.h"
 #include "graphics.h"
 #include "projection.h"
+#include "item.h"
 #include "map.h"
 #include "coord.h"
 #include "transform.h"

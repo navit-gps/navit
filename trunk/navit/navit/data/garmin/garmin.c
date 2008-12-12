@@ -774,10 +774,7 @@ struct nl2gl_t nl2gl[] = {
 static int 
 get_level(struct map_selection *sel)
 {
-	int l;
-	l = max(sel->order[layer_town], sel->order[layer_street]);
-	l = max(l, sel->order[layer_poly]);
-	return l;
+	return sel->order;
 }
 
 static int
@@ -792,8 +789,7 @@ garmin_get_selection(struct map_rect_priv *map, struct map_selection *sel)
 			   /* levels we do not deal w/ them
 			*/
 	int flags = 0;
-	if (sel && sel->order[layer_town] == 0 && sel->order[layer_poly] == 0
-		&& sel->order[layer_street]) {
+	if (sel && sel->range.min == type_street_0 && sel->range.max == type_ferry) {
 		// Get all roads 
 		flags = GO_GET_ROUTABLE;
 	} else if (sel)

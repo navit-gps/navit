@@ -3,8 +3,8 @@
 #include "debug.h"
 #include "coord.h"
 #include "projection.h"
-#include "map.h"
 #include "item.h"
+#include "map.h"
 #include "plugin.h"
 
 
