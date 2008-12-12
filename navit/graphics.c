@@ -65,12 +65,22 @@ struct graphics
 	struct attr **attrs;
 	struct callback_list *cbl;
 	int ready;
+	int w;
+	int h;
 };
 
 
 struct displaylist {
 	GHashTable *dl;
 };
+
+
+void
+graphics_resize(struct graphics *gra, int w, int h)
+{
+	gra->w=w;
+	gra->h=h;
+}
 
 /**
  * Creates a new graphics object
@@ -417,9 +427,9 @@ void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct 
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy, struct point *ret)
+void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy, struct point *ret, int estimate)
 {
-	this_->meth.get_text_bbox(this_->priv, font->priv, text, dx, dy, ret);
+	this_->meth.get_text_bbox(this_->priv, font->priv, text, dx, dy, ret, estimate);
 }
 
 /**
@@ -608,18 +618,28 @@ void display_add(struct displaylist *displaylist, struct item *item, int count, 
 */
 static void label_line(struct graphics *gra, struct graphics_gc *fg, struct graphics_gc *bg, struct graphics_font *font, struct point *p, int count, char *label)
 {
-	int i,x,y,tl,tlsq,l;
+	int i,x,y,tl,tlm,th,thm,tlsq,l;
 	float lsq;
 	double dx,dy;
 	struct point p_t;
+	struct point pb[5];
 
-	tl=strlen(label)*400;
-	tlsq = tl*tl;
+	if (gra->meth.get_text_bbox) {
+		gra->meth.get_text_bbox(gra->priv, font->priv, label, 0x10000, 0x0, pb, 1);
+		tl=(pb[2].x-pb[0].x);
+		th=(pb[0].y-pb[1].y);
+	} else {
+		tl=strlen(label)*4;
+		th=8;
+	}
+	tlm=tl*128;
+	thm=th*144;
+	tlsq = tlm*tlm;
 	for (i = 0 ; i < count-1 ; i++) {
 		dx=p[i+1].x-p[i].x;
-		dx*=100;
+		dx*=128;
 		dy=p[i+1].y-p[i].y;
-		dy*=100;
+		dy*=128;
 		lsq = dx*dx+dy*dy;
 		if (lsq > tlsq) {
 			l=(int)sqrtf(lsq);
@@ -631,16 +651,17 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
 				x=p[i+1].x;
 				y=p[i+1].y;
 			}
-			x+=(l-tl)*dx/l/200;
-			y+=(l-tl)*dy/l/200;
-			x-=dy*45/l/10;
-			y+=dx*45/l/10;
+			x+=(l-tlm)*dx/l/256;
+			y+=(l-tlm)*dy/l/256;
+			x-=dy*thm/l/256;
+			y+=dx*thm/l/256;
 			p_t.x=x;
 			p_t.y=y;
 #if 0
 			dbg(0,"display_text: '%s', %d, %d, %d, %d %d\n", label, x, y, dx*0x10000/l, dy*0x10000/l, l);
 #endif
-			gra->meth.draw_text(gra->priv, fg->priv, bg->priv, font->priv, label, &p_t, dx*0x10000/l, dy*0x10000/l);
+			if (x < gra->w && x + tl > 0 && y + tl > 0 && y - tl < gra->h) 
+				gra->meth.draw_text(gra->priv, fg->priv, bg->priv, font->priv, label, &p_t, dx*0x10000/l, dy*0x10000/l);
 		}
 	}
 }

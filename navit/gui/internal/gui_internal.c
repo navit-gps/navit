@@ -466,7 +466,7 @@ gui_internal_label_new(struct gui_priv *this, char *text)
 	widget->type=widget_label;
 	if (text) {
 		widget->text=g_strdup(text);
-		graphics_get_text_bbox(this->gra, this->font, text, 0x10000, 0x0, p);
+		graphics_get_text_bbox(this->gra, this->font, text, 0x10000, 0x0, p, 0);
 		w=p[2].x-p[0].x;
 		h=p[0].y-p[2].y;
 	}

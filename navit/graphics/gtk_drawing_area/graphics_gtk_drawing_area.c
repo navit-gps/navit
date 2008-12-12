@@ -354,6 +354,19 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 		gdk_gc_set_function(fg->gc, GDK_COPY);
         	gdk_gc_set_function(bg->gc, GDK_COPY);
 	}
+#if 0
+	{
+		struct point pnt[5];
+		int i;
+		gr->freetype_methods.get_text_bbox(gr, font, text, dx, dy, pnt, 1);
+		for (i = 0 ; i < 4 ; i++) {
+			pnt[i].x+=p->x;
+			pnt[i].y+=p->y;
+		}
+		pnt[4]=pnt[0];
+		gdk_draw_lines(gr->drawable, fg->gc, (GdkPoint *)pnt, 5);
+	}
+#endif
 }
 
 static void

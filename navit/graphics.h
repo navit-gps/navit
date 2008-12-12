@@ -64,7 +64,7 @@ struct graphics_methods {
 	struct graphics_image_priv *(*image_new)(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation);
 	void *(*get_data)(struct graphics_priv *gr, char *type);
 	void (*image_free)(struct graphics_priv *gr, struct graphics_image_priv *priv);
-	void (*get_text_bbox)(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret);
+	void (*get_text_bbox)(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate);
 	void (*overlay_disable)(struct graphics_priv *gr, int disable);
 };
 
@@ -122,6 +122,7 @@ struct point;
 struct transformation;
 struct callback;
 struct itemgra;
+void graphics_resize(struct graphics *gra, int w, int h);
 struct graphics *graphics_new(struct attr *parent, struct attr **attrs);
 int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 struct graphics *graphics_overlay_new(struct graphics *parent, struct point *p, int w, int h, int alpha, int wraparound);
@@ -146,7 +147,7 @@ void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct 
 void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r);
 void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int w, int h);
 void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct graphics_gc *gc2, struct graphics_font *font, char *text, struct point *p, int dx, int dy);
-void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy, struct point *ret);
+void graphics_get_text_bbox(struct graphics *this_, struct graphics_font *font, char *text, int dx, int dy, struct point *ret, int estimate);
 void graphics_overlay_disable(struct graphics *this_, int disable);
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img);
 int graphics_draw_drag(struct graphics *this_, struct point *p);
