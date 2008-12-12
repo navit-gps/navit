@@ -328,121 +328,122 @@ static unsigned char limit[]={0,0,1,1,1,2,2,4,6,6,12,13,14,20,20,20,20,20,20};
 int
 street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *item)
 {	
-	while (street->more) {
-		struct coord c;
-		street_coord_get(street, &c, 1);
-	}
-	if (mr->b.p == mr->b.p_start) {
-		street_get_data(street, &mr->b.p);
-		street->name_file=mr->m->file[file_strname_stn];
-		if (mr->cur_sel && street->header->order > limit[mr->cur_sel->order])
+	for (;;) {
+		while (street->more) {
+			struct coord c;
+			street_coord_get(street, &c, 1);
+		}
+		if (mr->b.p == mr->b.p_start) {
+			street_get_data(street, &mr->b.p);
+			street->name_file=mr->m->file[file_strname_stn];
+			if (mr->cur_sel && street->header->order > limit[mr->cur_sel->order])
+				return 0;
+			street->end=mr->b.end;
+			street->ref=&mr->b.b->r.lu;
+			street->bytes=street_get_bytes(&mr->b.b->r);
+			street->str_start=street->str=(struct street_str *)mr->b.p;
+			street->coord_begin=mr->b.p;
+			street_coord_get_begin(&street->coord_begin);
+			street->p=street->coord_begin;
+			street->type--; 
+			item->meth=&street_meth;
+			item->priv_data=street;
+		} else {
+			street->str++;
+			street->p=street->next;
+		}
+		if (! L(street->str->segid))
 			return 0;
-		street->end=mr->b.end;
-		street->ref=&mr->b.b->r.lu;
-		street->bytes=street_get_bytes(&mr->b.b->r);
-		street->str_start=street->str=(struct street_str *)mr->b.p;
-		street->coord_begin=mr->b.p;
-		street_coord_get_begin(&street->coord_begin);
-		street->p=street->coord_begin;
-		street->type--; 
-		item->meth=&street_meth;
-		item->priv_data=street;
-	} else {
-		street->str++;
-		street->p=street->next;
-	}
-	if (! L(street->str->segid))
-		return 0;
-	if (L(street->str->segid) < 0)
-		street->type++;
+		if (L(street->str->segid) < 0)
+			street->type++;
 #if 0
-	dbg_assert(street->p != NULL);
+		dbg_assert(street->p != NULL);
 #endif
-	street->next=NULL;
-	street->status_rewind=street->status=L(street->str[1].segid) >= 0 ? 0:1;
+		street->next=NULL;
+		street->status_rewind=street->status=L(street->str[1].segid) >= 0 ? 0:1;
 #if 0
-	if (street->type->country != 0x31) {
-		printf("country=0x%x\n", street->type->country);
-	}
+		if (street->type->country != 0x31) {
+			printf("country=0x%x\n", street->type->country);
+		}
 #endif
-	item->id_hi=street->type->country | (mr->current_file << 16);
-	item->id_lo=L(street->str->segid) > 0 ? L(street->str->segid) : -L(street->str->segid);
-	switch(street->str->type & 0x1f) {
-	case 0xf: /* very small street */
-		if (street->str->limit == 0x33) 
-			item->type=type_street_nopass;
-		else
-			item->type=type_street_0;
-		break;
-	case 0xd:
-		item->type=type_ferry;
-		break;
-	case 0xc: /* small street */
-		item->type=type_street_1_city;
-		break;
-	case 0xb:
-		item->type=type_street_2_city;
-		break;
-	case 0xa:
-		if ((street->str->limit == 0x03 || street->str->limit == 0x30) && street->header->order < 4)
-			item->type=type_street_4_city;
-		else	
-			item->type=type_street_3_city;
-		break;
-	case 0x9:
-		if (street->header->order < 5)
-			item->type=type_street_4_city;
-		else if (street->header->order < 7)
-			item->type=type_street_2_city;
-		else
+		item->id_hi=street->type->country | (mr->current_file << 16);
+		item->id_lo=L(street->str->segid) > 0 ? L(street->str->segid) : -L(street->str->segid);
+		switch(street->str->type & 0x1f) {
+		case 0xf: /* very small street */
+			if (street->str->limit == 0x33) 
+				item->type=type_street_nopass;
+			else
+				item->type=type_street_0;
+			break;
+		case 0xd:
+			item->type=type_ferry;
+			break;
+		case 0xc: /* small street */
 			item->type=type_street_1_city;
-		break;
-	case 0x8:
-		item->type=type_street_2_land;
-		break;
-	case 0x7:
-		if ((street->str->limit == 0x03 || street->str->limit == 0x30) && street->header->order < 4)
-			item->type=type_street_4_city;
-		else
-			item->type=type_street_3_land;
-		break;
-	case 0x6:
-		item->type=type_ramp;
-		break;
-	case 0x5:
-		item->type=type_street_4_land;
-		break;
-	case 0x4:
-		item->type=type_street_4_land;
-		break;
-	case 0x3:
-		item->type=type_street_n_lanes;
-		break;
-	case 0x2:
-		item->type=type_highway_city;
-		break;
-	case 0x1:
-		item->type=type_highway_land;
-		break;
-	default:
-		item->type=type_street_unkn;
-		dbg(0,"unknown type 0x%x\n",street->str->type);
-	}
-	if (!map_selection_contains_item(mr->cur_sel, 0, item->type)) {
-		return 0;
-	}
+			break;
+		case 0xb:
+			item->type=type_street_2_city;
+			break;
+		case 0xa:
+			if ((street->str->limit == 0x03 || street->str->limit == 0x30) && street->header->order < 4)
+				item->type=type_street_4_city;
+			else	
+				item->type=type_street_3_city;
+			break;
+		case 0x9:
+			if (street->header->order < 5)
+				item->type=type_street_4_city;
+			else if (street->header->order < 7)
+				item->type=type_street_2_city;
+			else
+				item->type=type_street_1_city;
+			break;
+		case 0x8:
+			item->type=type_street_2_land;
+			break;
+		case 0x7:
+			if ((street->str->limit == 0x03 || street->str->limit == 0x30) && street->header->order < 4)
+				item->type=type_street_4_city;
+			else
+				item->type=type_street_3_land;
+			break;
+		case 0x6:
+			item->type=type_ramp;
+			break;
+		case 0x5:
+			item->type=type_street_4_land;
+			break;
+		case 0x4:
+			item->type=type_street_4_land;
+			break;
+		case 0x3:
+			item->type=type_street_n_lanes;
+			break;
+		case 0x2:
+			item->type=type_highway_city;
+			break;
+		case 0x1:
+			item->type=type_highway_land;
+			break;
+		default:
+			item->type=type_street_unkn;
+			dbg(0,"unknown type 0x%x\n",street->str->type);
+		}
 #if 0
-	coord_debug=(street->str->unknown2 != 0x40 || street->str->unknown3 != 0x40);
-	if (coord_debug) {
-		item->type=type_street_unkn;
-		printf("%d %02x %02x %02x %02x\n", street->str->segid, street->str->type, street->str->limit, street->str->unknown2, street->str->unknown3);
-	}
+		coord_debug=(street->str->unknown2 != 0x40 || street->str->unknown3 != 0x40);
+		if (coord_debug) {
+			item->type=type_street_unkn;
+			printf("%d %02x %02x %02x %02x\n", street->str->segid, street->str->type, street->str->limit, street->str->unknown2, street->str->unknown3);
+		}
 #endif
-	street->p_rewind=street->p;
-	street->name.len=0;
-	street->attr_next=attr_label;
-	street->more=1;
-	return 1;
+		street->p_rewind=street->p;
+		street->name.len=0;
+		street->attr_next=attr_label;
+		street->more=1;
+		if (!map_selection_contains_item(mr->cur_sel, 0, item->type)) 
+			continue;
+		return 1;
+	}
 }
 
 int
