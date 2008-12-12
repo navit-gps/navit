@@ -43,10 +43,10 @@
 #include "debug.h"
 #include "coord.h"
 #include "projection.h"
+#include "item.h"
 #include "map.h"
 #include "maptype.h"
 #include "transform.h"
-#include "item.h"
 #include "plugin.h"
 #include "callback.h"
 #include "country.h"
@@ -466,9 +466,8 @@ map_selection_rect_new(struct pcoord *center, int distance, int order)
 {
 	int i;
 	struct map_selection *ret=g_new0(struct map_selection, 1);
-	for (i = 0 ; i < layer_end ; i++) {
-		ret->order[i]=order;
-	}
+	ret->order=order;
+	ret->range=item_range_all;
 	ret->u.c_rect.lu.x=center->x-distance;
 	ret->u.c_rect.lu.y=center->y+distance;
 	ret->u.c_rect.rl.x=center->x+distance;
@@ -564,6 +563,64 @@ map_selection_contains_item_rect(struct map_selection *sel, struct item *item)
 	return map_selection_contains_rect(sel, &r);
 
 }
+
+
+/**
+ * @brief Checks if a selection contains a item range
+ *
+ * This function checks if a selection contains at least one of the items in range
+ *
+ * @param sel The selection to be checked
+ * @param follow Whether the next pointer of the selection should be followed
+ * @param ranges The item ranges to be checked
+ * @count the number of elements in ranges
+ * @return True if there is a match, false otherwise
+ */
+
+int
+map_selection_contains_item_range(struct map_selection *sel, int follow, struct item_range *range, int count)
+{
+	int i;
+	if (! sel)
+		return 1;
+	while (sel) {
+		for (i = 0 ; i < count ; i++) {
+			if (item_range_intersects_range(&sel->range, &range[i]))
+				return 1;
+		}
+		if (! follow)
+			break;
+		sel=sel->next;
+	}
+	return 0;
+}
+/**
+ * @brief Checks if a selection contains a item 
+ *
+ * This function checks if a selection contains a item type
+ *
+ * @param sel The selection to be checked
+ * @param follow Whether the next pointer of the selection should be followed
+ * @param item The item type to be checked
+ * @return True if there is a match, false otherwise
+ */
+
+int
+map_selection_contains_item(struct map_selection *sel, int follow, enum item_type type)
+{
+	if (! sel)
+		return 1;
+	while (sel) {
+		if (item_range_contains_item(&sel->range, type))
+			return 1;
+		if (! follow)
+			break;
+		sel=sel->next;
+	}
+	return 0;
+}
+
+
 
 /**
  * @brief Checks if a pointer points to the private data of a map

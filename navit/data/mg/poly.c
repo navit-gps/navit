@@ -132,7 +132,7 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 			poly->poly_num++;
 			r.lu=poly->c[0];
 			r.rl=poly->c[1];
-			if (mr->cur_sel && (poly->order > mr->cur_sel->order[layer_poly]*3 || !coord_rect_overlap(&mr->cur_sel->u.c_rect, &r))) {
+			if (mr->cur_sel && (poly->order > mr->cur_sel->order*3 || !coord_rect_overlap(&mr->cur_sel->u.c_rect, &r))) {
 				poly->subpoly_num_all+=poly->polys;
 				mr->b.p=poly->poly_next;
 				continue;
@@ -227,6 +227,11 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 			default:
 				dbg(0,"Unknown poly type 0x%x '%s' 0x%x,0x%x\n", poly->type,poly->name,r.lu.x,r.lu.y);
 				item->type=type_street_unkn;
+			}
+			if (!map_selection_contains_item(mr->cur_sel, 0, item->type)) {
+				poly->subpoly_num_all+=poly->polys;
+				mr->b.p=poly->poly_next;
+				continue;
 			}
 		} else 
 			mr->b.p=poly->subpoly_next;

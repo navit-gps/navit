@@ -50,7 +50,8 @@ struct map_selection {
 		struct coord_rect c_rect;   /**< For building the rectangle based on coordinates */
 		struct point_rect p_rect;   /**< For building the rectangle based on points */
 	} u;
-	int order[layer_end];		    /**< Holds the order to be selected for each layer of items */
+	int order;		    	/**< Holds the order */
+	struct item_range range;	/**< Range of items which should be delivered */
 };
 
 /**

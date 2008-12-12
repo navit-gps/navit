@@ -54,9 +54,9 @@
 #include "profile.h"
 #include "coord.h"
 #include "projection.h"
+#include "item.h"
 #include "map.h"
 #include "mapset.h"
-#include "item.h"
 #include "route.h"
 #include "track.h"
 #include "point.h"
@@ -638,9 +638,9 @@ route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs)
 		printf("%s:Out of memory\n", __FUNCTION__);
 		return sel;
 	}
-	sel->order[layer_town]=0;
-	sel->order[layer_poly]=0;
-	sel->order[layer_street]=order;
+	sel->order=order;
+	sel->range.min=route_item_first;
+	sel->range.max=route_item_last;
 	dbg(1,"%p %p\n", c1, c2);
 	dx=c1->x-c2->x;
 	dy=c1->y-c2->y;
