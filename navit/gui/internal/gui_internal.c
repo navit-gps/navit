@@ -1823,7 +1823,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 				gui_internal_cmd_view_on_map, wm));
 	}
 	if (display_items) {
-		int i,dist=10;
+		int dist=10;
 		struct mapset *ms;
 		struct mapset_handle *h;
 		struct map_rect *mr;
@@ -1845,9 +1845,8 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm)
 		sel.u.c_rect.lu.y=c.y+dist;
 		sel.u.c_rect.rl.x=c.x+dist;
 		sel.u.c_rect.rl.y=c.y-dist;
-		for (i = 0 ; i < layer_end ; i++) {
-			sel.order[i]=18;
-		}
+		sel.order=18;
+		sel.range=item_range_all;
 		h=mapset_open(ms);
 		while ((m=mapset_next(h,1))) {
 			mr=map_rect_new(m, &sel);

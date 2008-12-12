@@ -155,7 +155,7 @@ town_get(struct map_rect_priv *mr, struct town_priv *twn, struct item *item)
 		twn->cidx=0;
 		twn->aidx=0;
 		twn->attr_next=attr_label;
-		if (! mr->cur_sel || (twn->order <= limit[mr->cur_sel->order[layer_town]] && coord_rect_contains(&mr->cur_sel->u.c_rect,&twn->c))) {
+		if (! mr->cur_sel || (twn->order <= limit[mr->cur_sel->order] && coord_rect_contains(&mr->cur_sel->u.c_rect,&twn->c))) {
 			switch(twn->type) {
 			case 1:
 				size=twn->size;
@@ -183,11 +183,13 @@ town_get(struct map_rect_priv *mr, struct town_priv *twn, struct item *item)
 				printf("unknown town type 0x%x '%s' '%s' 0x%x,0x%x\n", twn->type, twn->name, twn->district, twn->c.x, twn->c.y);
 				item->type=type_town_label;
 			}
-			item->id_hi=twn->country | (mr->current_file << 16);
-			item->id_lo=twn->id;
-			item->priv_data=twn;
-			item->meth=&town_meth;
-			return 1;
+			if (map_selection_contains_item(mr->cur_sel, 0, item->type)) {
+				item->id_hi=twn->country | (mr->current_file << 16);
+				item->id_lo=twn->id;
+				item->priv_data=twn;
+				item->meth=&town_meth;
+				return 1;
+			}
 		}
 	}
 }

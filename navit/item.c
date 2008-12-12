@@ -28,6 +28,8 @@ struct item_name {
         char *name;
 };
 
+struct item_range item_range_all = { type_none, type_last };
+
 
 struct item_name item_names[]={
 #define ITEM2(x,y) ITEM(y)
@@ -181,4 +183,21 @@ item_hash_destroy(struct item_hash *h)
 {
 	g_hash_table_destroy(h->h);
 	g_free(h);
+}
+
+int
+item_range_intersects_range(struct item_range *range1, struct item_range *range2)
+{
+	if (range1->max < range2->min)
+		return 0;
+	if (range1->min > range2->max)
+		return 0;
+	return 1;
+}
+int
+item_range_contains_item(struct item_range *range, enum item_type type)
+{
+	if (type >= range->min && type <= range->max)
+		return 1;
+	return 0;
 }

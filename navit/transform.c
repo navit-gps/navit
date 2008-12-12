@@ -26,11 +26,11 @@
 #include "config.h"
 #include "coord.h"
 #include "debug.h"
+#include "item.h"
 #include "map.h"
 #include "transform.h"
 #include "projection.h"
 #include "point.h"
-#include "item.h"
 
 struct transformation {
 	int angle;		/* Rotation angle */
@@ -264,7 +264,6 @@ transform_get_selection(struct transformation *this_, enum projection pro, int o
 
 	struct map_selection *ret,*curri,*curro;
 	struct coord_geo g;
-	int i;
 	
 	ret=map_selection_dup(this_->map_sel);
 	curri=this_->map_sel;
@@ -279,8 +278,8 @@ transform_get_selection(struct transformation *this_, enum projection pro, int o
 			dbg(1,": - %f,%f\n", g.lat, g.lng);
 		}
 		dbg(1,"transform rect for %d is %d,%d - %d,%d\n", pro, curro->u.c_rect.lu.x, curro->u.c_rect.lu.y, curro->u.c_rect.rl.x, curro->u.c_rect.rl.y);
-		for (i = 0 ; i < layer_end ; i++) 
-			curro->order[i]+=order;
+		curro->order+=order;
+		curro->range=item_range_all;
 		curri=curri->next;
 		curro=curro->next;
 	}

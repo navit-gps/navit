@@ -1154,9 +1154,8 @@ navit_window_items_open(struct navit *this_, struct navit_window_items *nwi)
 	sel.order[layer_street]=18;
 	sel.order[layer_poly]=18;
 #else
-	sel.order[layer_town]=0;
-	sel.order[layer_street]=0;
-	sel.order[layer_poly]=0;
+	sel.order=0;
+	sel.range=item_range_all;
 #endif
 	center=transform_center(this_->trans);
 	sel.u.c_rect.lu.x=center->x-dist;

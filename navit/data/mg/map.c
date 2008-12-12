@@ -156,6 +156,21 @@ static char *mg_country_postal_prefix(int isonum)
 	return NULL;
 }
 
+struct item_range town_ranges[]={
+	{type_town_label,type_port_label},
+};
+
+struct item_range street_ranges[]={
+	{type_street_nopass,type_street_unkn},
+};
+
+struct item_range poly_ranges[]={
+	{type_border_country,type_water_line},
+	{type_street_unkn,type_street_unkn},
+	{type_area,type_last},
+};
+
+
 static int
 file_next(struct map_rect_priv *mr)
 {
@@ -173,16 +188,18 @@ file_next(struct map_rect_priv *mr)
 		case file_strname_stn:
 			continue;
 		case file_town_twn:
-			layer=layer_town;
+			if (mr->cur_sel && !map_selection_contains_item_range(mr->cur_sel, 0, town_ranges, sizeof(town_ranges)/sizeof(struct item_range)))
+				continue;
 			break;
 		case file_street_str:
-			layer=layer_street;
+			if (mr->cur_sel && !map_selection_contains_item_range(mr->cur_sel, 0, street_ranges, sizeof(street_ranges)/sizeof(struct item_range)))
+				continue;
 			break;
 		default:
-			layer=layer_poly;
+			if (mr->cur_sel && !map_selection_contains_item_range(mr->cur_sel, 0, poly_ranges, sizeof(poly_ranges)/sizeof(struct item_range)))
+				continue;
+			break;
 		}
-		if (mr->cur_sel && !mr->cur_sel->order[layer])
-			continue;
 		if (debug)
 			printf("current file: '%s'\n", file[mr->current_file]);
 		mr->cur_sel=mr->xsel;

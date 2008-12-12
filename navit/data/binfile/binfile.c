@@ -26,9 +26,9 @@
 #include "debug.h"
 #include "plugin.h"
 #include "projection.h"
+#include "item.h"
 #include "map.h"
 #include "maptype.h"
-#include "item.h"
 #include "attr.h"
 #include "coord.h"
 #include "transform.h"
@@ -534,11 +534,7 @@ selection_contains(struct map_selection *sel, struct coord_rect *r, struct minma
 		return 1;
 	while (sel) {
 		if (coord_rect_overlap(r, &sel->u.c_rect)) {
-			order=sel->order[0];
-			if (sel->order[1] > order)
-				order=sel->order[1];
-			if (sel->order[2] > order)
-				order=sel->order[2];
+			order=sel->order;
 			dbg(1,"min %d max %d order %d\n", mima->min, mima->max, order);
 			if (!mima->min && !mima->max)
 				return 1;
@@ -640,7 +636,6 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 	struct map_search_priv *msp;
 	struct map_selection *ms;
 	struct item *town;
-	int i;
 	
 	/*
      * NOTE: If you implement search for other attributes than attr_town_name and attr_street_name,
@@ -668,10 +663,8 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 				break;
 			ms = g_new(struct map_selection, 1);
 			ms->next = NULL;
-			for (i = 0; i < layer_end; i++)
-			{
-				ms->order[i] = 18;
-			}
+			ms->range = item_range_all; /* FIXME */
+			ms->order = 18;
 			map_rec = map_rect_new_binfile(map, ms);
 			town = map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo);
 			if (town) {

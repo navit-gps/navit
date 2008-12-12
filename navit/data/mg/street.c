@@ -335,7 +335,7 @@ street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *it
 	if (mr->b.p == mr->b.p_start) {
 		street_get_data(street, &mr->b.p);
 		street->name_file=mr->m->file[file_strname_stn];
-		if (mr->cur_sel && street->header->order > limit[mr->cur_sel->order[layer_street]])
+		if (mr->cur_sel && street->header->order > limit[mr->cur_sel->order])
 			return 0;
 		street->end=mr->b.end;
 		street->ref=&mr->b.b->r.lu;
@@ -427,6 +427,9 @@ street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *it
 	default:
 		item->type=type_street_unkn;
 		dbg(0,"unknown type 0x%x\n",street->str->type);
+	}
+	if (!map_selection_contains_item(mr->cur_sel, 0, item->type)) {
+		return 0;
 	}
 #if 0
 	coord_debug=(street->str->unknown2 != 0x40 || street->str->unknown3 != 0x40);

@@ -20,6 +20,7 @@
 #include <glib.h>
 #include "debug.h"
 #include "projection.h"
+#include "item.h"
 #include "map.h"
 #include "maptype.h"
 
