@@ -106,7 +106,7 @@ ATTR(button)
 ATTR(ondemand)
 ATTR(menu_on_map_click)
 ATTR(direction)
-ATTR(route_follow_straight)
+ATTR(route_follow_straight_REMOVE) // This is to be removed with the next version
 ATTR(gui_speech)
 ATTR(town_id) /* fixme? */
 ATTR(street_id) /* fixme? */  
