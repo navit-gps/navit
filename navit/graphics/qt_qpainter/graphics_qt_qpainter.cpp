@@ -634,7 +634,7 @@ image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 }
 
 static void
-get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret)
+get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)
 {
 	QPainter *painter=gr->painter;
 	QString tmp=QString::fromUtf8(text);
