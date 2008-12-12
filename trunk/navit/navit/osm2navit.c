@@ -43,6 +43,7 @@
 #define BUFFER_SIZE 1280
 
 #define GENERATE_INDEX
+#define HOUSE_NUMBERS
 
 #if 1
 #define debug_tile(x) 0
