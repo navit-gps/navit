@@ -67,9 +67,9 @@ event_remove_timeout(struct event_timeout *ev)
 }
 
 struct event_idle *
-event_add_idle(struct callback *cb)
+event_add_idle(int priority, struct callback *cb)
 {
-	return event_methods.add_idle(cb);
+	return event_methods.add_idle(priority,cb);
 }
 
 void
