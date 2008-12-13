@@ -57,6 +57,7 @@
 #include "track.h"
 #include "country.h"
 #include "config.h"
+#include "event.h"
 #include "navit_nls.h"
 
 #define STATE_VISIBLE 1
@@ -244,7 +245,8 @@ struct gui_priv {
 	 * values of -1 indicate no value was specified in the config file.
 	 */
         struct gui_config_settings config;
-	struct callback *motion_cb,*button_cb,*resize_cb,*keypress_cb;
+	struct event_idle *idle;
+	struct callback *motion_cb,*button_cb,*resize_cb,*keypress_cb,*idle_cb;
 };
 
 
@@ -2001,13 +2003,79 @@ gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm)
 }
 
 static void
+gui_internal_search_idle_end(struct gui_priv *this)
+{
+	if (this->idle) {
+		event_remove_idle(this->idle);
+		this->idle=NULL;
+	}
+	if (this->idle_cb) {
+		callback_destroy(this->idle_cb);
+		this->idle_cb=NULL;
+	}
+}
+
+static void
+gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param)
+{
+	char *text=NULL,*name=NULL;
+	struct search_list_result *res;
+	struct widget *wc;
+	GList *l;
+
+	res=search_list_get_result(this->sl);
+	if (! res) {
+		gui_internal_search_idle_end(this);
+		return;
+	}
+
+	if (! strcmp(wm_name,"Country")) {
+		name=res->country->name;
+		text=g_strdup_printf("%s", res->country->name);
+	}
+	if (! strcmp(wm_name,"Town")) {
+		name=res->town->name;
+		text=g_strdup(name);
+	}
+	if (! strcmp(wm_name,"Street")) {
+		name=res->street->name;
+		text=g_strdup_printf("%s %s", res->town->name, res->street->name);
+	}
+#if 0
+			dbg(0,"res=%s\n", res->town->name);
+#endif
+	gui_internal_widget_append(search_list,
+		wc=gui_internal_button_new_with_callback(this, text,
+		image_new_xs(this, res->country->flag), gravity_left_center|orientation_horizontal|flags_fill,
+		gui_internal_cmd_position, param));
+	g_free(text);
+	wc->name=g_strdup(name);
+	if (res->c)
+		wc->c=*res->c;
+	wc->item.id_lo=res->id;
+	gui_internal_widget_pack(this, search_list);
+	l=g_list_last(this->root.children);
+	graphics_draw_mode(this->gra, draw_mode_begin);
+	gui_internal_widget_render(this, l->data);
+	graphics_draw_mode(this->gra, draw_mode_end);
+}
+
+static void
+gui_internal_search_idle_start(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param)
+{
+	this->idle_cb=callback_new_4(callback_cast(gui_internal_search_idle), this, wm_name, search_list, param);
+	this->idle=event_add_idle(50,this->idle_cb);
+	callback_call_0(this->idle_cb);
+}
+
+
+static void
 gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 {
 	GList *l;
 	struct widget *search_list=gui_internal_menu_data(this)->search_list;
 	gui_internal_widget_children_destroy(this, search_list);
-	char *text=NULL, *name=NULL;
-	int minlen=2;
+	int minlen=1;
 	void *param=(void *)3;
 	if (! strcmp(wm->name,"Country")) {
 		param=(void *)4;
@@ -2015,10 +2083,9 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 	}
 	dbg(0,"%s now '%s'\n", wm->name, wm->text);
 
+	gui_internal_search_idle_end(this);
 	if (wm->text && g_utf8_strlen(wm->text, -1) >= minlen) {
 		struct attr search_attr;
-		struct search_list_result *res;
-		struct widget *wc;
 
 		dbg(0,"process\n");
 		if (! strcmp(wm->name,"Country"))
@@ -2029,33 +2096,7 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 			search_attr.type=attr_street_name;
 		search_attr.u.str=wm->text;
 		search_list_search(this->sl, &search_attr, 1);
-		while((res=search_list_get_result(this->sl))) {
-			if (! strcmp(wm->name,"Country")) {
-				name=res->country->name;
-				text=g_strdup_printf("%s", res->country->name);
-			}
-			if (! strcmp(wm->name,"Town")) {
-				name=res->town->name;
-				text=g_strdup(name);
-			}
-			if (! strcmp(wm->name,"Street")) {
-				name=res->street->name;
-				text=g_strdup_printf("%s %s", res->town->name, res->street->name);
-			}
-#if 0
-			dbg(0,"res=%s\n", res->town->name);
-#endif
-			gui_internal_widget_append(search_list,
-				wc=gui_internal_button_new_with_callback(this, text,
-				image_new_xs(this, res->country->flag), gravity_left_center|orientation_horizontal|flags_fill,
-				gui_internal_cmd_position, param));
-			g_free(text);
-			wc->name=g_strdup(name);
-			if (res->c)
-				wc->c=*res->c;
-			wc->item.id_lo=res->id;
-		}
-		gui_internal_widget_pack(this, search_list);
+		gui_internal_search_idle_start(this, wm->name, search_list, param);
 	}
 	l=g_list_last(this->root.children);
 	gui_internal_widget_render(this, l->data);
