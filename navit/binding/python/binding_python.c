@@ -23,6 +23,8 @@
 #include <fcntl.h>
 #include "coord.h"
 #include "projection.h"
+#include "debug.h"
+#include "item.h"
 #include "map.h"
 #include "mapset.h"
 #include "plugin.h"
