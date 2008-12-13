@@ -41,7 +41,7 @@ struct event_methods {
 	void (*remove_watch)(struct event_watch *ev);
 	struct event_timeout *(*add_timeout)(int timeout, int multi, struct callback *cb);
 	void (*remove_timeout)(struct event_timeout *ev);
-	struct event_idle *(*add_idle)(struct callback *cb);
+	struct event_idle *(*add_idle)(int priority, struct callback *cb);
 	void (*remove_idle)(struct event_idle *ev);
 	void (*call_callback)(struct callback_list *cb);
 };
@@ -54,7 +54,7 @@ struct event_watch *event_add_watch(void *fd, enum event_watch_cond cond, struct
 void event_remove_watch(struct event_watch *ev);
 struct event_timeout *event_add_timeout(int timeout, int multi, struct callback *cb);
 void event_remove_timeout(struct event_timeout *ev);
-struct event_idle *event_add_idle(struct callback *cb);
+struct event_idle *event_add_idle(int priority, struct callback *cb);
 void event_remove_idle(struct event_idle *ev);
 int event_request_system(char *system, char *requestor);
 void event_call_callback(struct callback_list *cb);
