@@ -94,6 +94,16 @@ static inline struct callback *callback_new_3(void (*func)(void), void *p1, void
 	return callback_new(func, 3, p);
 }
 
+static inline struct callback *callback_new_4(void (*func)(void), void *p1, void *p2, void *p3, void *p4)
+{
+	void *p[4];
+	p[0]=p1;
+	p[1]=p2;
+	p[2]=p3;
+	p[3]=p4;
+	return callback_new(func, 4, p);
+}
+
 static inline void callback_call_0(struct callback *cb)
 {
 	callback_call(cb, 0, NULL);
