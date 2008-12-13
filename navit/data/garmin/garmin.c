@@ -32,9 +32,10 @@
 #include "plugin.h"
 #include "data.h"
 #include "projection.h"
+#include "item.h"
+#include "debug.h"
 #include "map.h"
 #include "maptype.h"
-#include "item.h"
 #include "attr.h"
 #include "coord.h"
 #include "transform.h"
@@ -869,10 +870,7 @@ gmap_rect_new(struct map_priv *map, struct map_selection *sel)
 		return mr;
 	} else {
 		while (ms) {
-			dlog(2, "order town:%d street=%d poly=%d\n",
-				ms->order[layer_town],
-				ms->order[layer_street],
-				ms->order[layer_poly]);
+			dlog(2, "order %d\n", ms->order); 
 			if (garmin_get_selection(mr, ms) < 0) {
 			//	free(mr);
 			//	return NULL;
