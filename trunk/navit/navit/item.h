@@ -66,7 +66,7 @@ struct item {
 	void *priv_data;
 };
 
-struct item_range {
+extern struct item_range {
 	enum item_type min,max;
 } item_range_all;
 
