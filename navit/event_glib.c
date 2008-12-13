@@ -125,15 +125,34 @@ event_glib_remove_timeout(struct event_timeout *ev)
 	g_free(ev);
 }
 
-static struct event_idle *
-event_glib_add_idle(struct callback *cb)
+struct event_idle {
+	guint source;
+	struct callback *cb;
+};
+
+static gboolean
+event_glib_call_idle(struct event_idle *ev)
 {
-	return NULL;
+	callback_call_0(ev->cb);
+	return TRUE;
+}
+
+static struct event_idle *
+event_glib_add_idle(int priority, struct callback *cb)
+{
+	struct event_idle *ret=g_new0(struct event_idle, 1);
+	ret->cb=cb;
+	ret->source = g_idle_add_full(priority+100, (GSourceFunc)event_glib_call_idle, (gpointer)ret, NULL);
+	return ret;
 }
 
 static void
 event_glib_remove_idle(struct event_idle *ev)
 {
+	if (! ev)
+		return;
+	g_source_remove(ev->source);
+	g_free(ev);
 }
 
 static void
