@@ -1,4 +1,5 @@
 #! /bin/bash
+ulimit -t 5
 png=$1
 if [[ "$png" = *_[1-9]*_[1-9]*.png ]]; 
 then
@@ -36,3 +37,4 @@ else
 		rm -f $svg.svg
 	fi
 fi
+exit 0
