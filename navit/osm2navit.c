@@ -203,7 +203,9 @@ static char *attrmap={
 	"w	contour_ext=elevation_major	height_line_1\n"
 	"w	contour_ext=elevation_medium	height_line_2\n"
 	"w	contour_ext=elevation_minor	height_line_3\n"
+#if 0 /* FIXME: Implement this as attribute */
 	"w	cycleway=track	        cycleway\n"
+#endif
 	"w	highway=bridleway	bridleway\n"
 	"w	highway=bus_guideway	bus_guideway\n"
 	"w	highway=construction	street_construction\n"
