@@ -337,6 +337,7 @@ static void gui_internal_table_button_next(struct gui_priv * this, struct widget
 static void gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm);
 static void gui_internal_table_data_free(void * d);
 
+static void gui_internal_search_idle_end(struct gui_priv *this);
 static void gui_internal_search(struct gui_priv *this, char *what, char *type, int flags);
 static void gui_internal_search_street(struct gui_priv *this, struct widget *widget);
 static void gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget);
@@ -1094,6 +1095,7 @@ static void
 gui_internal_prune_menu(struct gui_priv *this, struct widget *w)
 {
 	GList *l;
+	gui_internal_search_idle_end(this);
 	while ((l = g_list_last(this->root.children))) {
 		if (l->data == w) {
 			gui_internal_say(this, w, 0);
@@ -1109,6 +1111,7 @@ static void
 gui_internal_prune_menu_count(struct gui_priv *this, int count, int render)
 {
 	GList *l;
+	gui_internal_search_idle_end(this);
 	while ((l = g_list_last(this->root.children)) && count-- > 0) {
 		gui_internal_widget_destroy(this, l->data);
 		this->root.children=g_list_remove(this->root.children, l->data);
@@ -1312,6 +1315,7 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	struct widget *menu,*w;
 	
 
+	gui_internal_search_idle_end(this);
 	menu=gui_internal_box_new_with_label(this, gravity_center|orientation_vertical, label);
 	menu->w=this->root.w;
 	menu->h=this->root.h;
@@ -2749,6 +2753,7 @@ gui_internal_check_exit(struct gui_priv *this)
 {
 	struct graphics *gra=this->gra;
 	if (! this->root.children) {
+		gui_internal_search_idle_end(this);
 		gui_internal_search_list_destroy(this);
 		graphics_overlay_disable(gra, 0);
 		if (!navit_block(this->nav, 0)) {
