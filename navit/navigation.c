@@ -130,7 +130,8 @@ navigation_get_announce_level(struct navigation *this_, enum item_type type, int
  */
 struct navigation_way {
 	struct navigation_way *next;		/**< Pointer to a linked-list of all navigation_ways from this navigation item */ 
-	int angle;			/**< The angle one has to steer to drive from the old item to this street */
+	int angle2;			/**< The angle one has to steer to drive from the old item to this street */
+	struct item item;		/**< The item of the way */
 };
 
 struct navigation_itm {
@@ -332,8 +333,8 @@ navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map)
 
 	// These values cause the code in route.c to get us only the route graph point and connected segments
 	coord_sel.next = NULL;
-	coord_sel.u.c_rect.lu = itm->end;
-	coord_sel.u.c_rect.rl = itm->end;
+	coord_sel.u.c_rect.lu = itm->start;
+	coord_sel.u.c_rect.rl = itm->start;
 	// the selection's order is ignored
 	
 	g_rect = map_rect_new(graph_map, &coord_sel);
@@ -366,14 +367,15 @@ navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map)
 		}
 
 		sitem = sitem_attr.u.item;
-		if (item_is_equal(itm->item,*sitem) || ((itm->next) && item_is_equal(itm->next->item,*sitem))) {
+		if (item_is_equal(itm->item,*sitem) || ((itm->prev) && item_is_equal(itm->prev->item,*sitem))) {
 			continue;
 		}
 
 		l = w;
 		w = g_new(struct navigation_way, 1);
 		angle = calculate_angle(sitem,(direction_attr.u.num <= 0));
-		w->angle = angle - itm->angle_end;
+		w->item = *sitem;
+		w->angle2 = angle;
 		w->next = l;
 	}
 
@@ -649,11 +651,11 @@ entering_straight(struct navigation_itm *old, int delta)
 
 	w = old->ways;
 	while (w) {
-
-		if (w->angle < 0) {
-			curr_diff = w->angle * -1;
+		delta=w->angle2-old->angle_start;
+		if (delta < 0) {
+			curr_diff = delta * -1;
 		} else {
-			curr_diff = w->angle;
+			curr_diff = delta;
 		}
 
 		curr_diff = curr_diff % 180;
@@ -691,7 +693,7 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 
 	if (new->item.type == old->item.type || (new->item.type != type_ramp && old->item.type != type_ramp)) {
 		if (is_same_street2(old, new)) {
-			if (! entering_straight(old, *delta)) {
+			if (! entering_straight(new, *delta)) {
 				dbg(1, "maneuver_required: Not driving straight: yes\n");
 				return 1;
 			}
@@ -885,11 +887,11 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	int strength_needed;
 	struct navigation_way *w;
 	
-	w = itm->ways;
+	w = itm->next->ways;
 	strength_needed = 0;
 	if ((itm->next->angle_start - itm->angle_end) < 0) {
 		while (w) {
-			if (w->angle < 0) {
+			if (w->angle2-itm->next->angle_start < 0) {
 				strength_needed = 1;
 				break;
 			}
@@ -897,7 +899,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		}
 	} else {
 		while (w) {
-			if (w->angle > 0) {
+			if (w->angle2-itm->next->angle_start > 0) {
 				strength_needed = 1;
 				break;
 			}
@@ -1162,6 +1164,7 @@ struct map_rect_priv {
 	enum attr_type attr_next;
 	int ccount;
 	int debug_idx;
+	struct navigation_way *ways;
 	int show_all;
 	char *str;
 };
@@ -1260,7 +1263,7 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 		switch(this_->debug_idx) {
 		case 0:
 			this_->debug_idx++;
-			this_->str=attr->u.str=g_strdup_printf("angle:%d - %d", itm->angle_start, itm->angle_end);
+			this_->str=attr->u.str=g_strdup_printf("angle:%d (- %d)", itm->angle_start, itm->angle_end);
 			return 1;
 		case 1:
 			this_->debug_idx++;
@@ -1287,15 +1290,23 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 		case 5:
 			this_->debug_idx++;
 			if (prev) {
-				this_->str=attr->u.str=g_strdup_printf("prev angle:%d - %d", prev->angle_start, prev->angle_end);
+				this_->str=attr->u.str=g_strdup_printf("prev angle:(%d -) %d", prev->angle_start, prev->angle_end);
 				return 1;
 			}
 		case 6:
 			this_->debug_idx++;
+			this_->ways=itm->ways;
 			if (prev) {
 				this_->str=attr->u.str=g_strdup_printf("prev item type:%s", item_to_name(prev->item.type));
 				return 1;
 			}
+		case 7:
+			if (this_->ways) {
+				this_->str=attr->u.str=g_strdup_printf("other item angle %d type %s id (0x%x,0x%x)", this_->ways->angle2, item_to_name(this_->ways->item.type), this_->ways->item.id_hi, this_->ways->item.id_lo);
+				this_->ways=this_->ways->next;
+				return 1;
+			}
+			this_->debug_idx++;
 		default:
 			this_->attr_next=attr_none;
 			return 0;
