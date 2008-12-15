@@ -1372,11 +1372,10 @@ navigation_map_get_item(struct map_rect_priv *priv)
 	priv->itm=priv->itm_next;
 	priv->cmd=priv->cmd_next;
 	priv->cmd_itm=priv->cmd_itm_next;
-	if (!priv->show_all && priv->itm->prev != NULL) {
-		if (!priv->cmd)
-			return NULL;
+	if (!priv->cmd)
+		return NULL;
+	if (!priv->show_all && priv->itm->prev != NULL) 
 		priv->itm=priv->cmd->itm;
-	}
 	priv->itm_next=priv->itm->next;
 	if (priv->itm->prev)
 		ret->type=type_nav_none;
