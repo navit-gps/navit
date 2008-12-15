@@ -1846,11 +1846,15 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 				return 0;
 			return 1;
 		case attr_direction:
-			mr->attr_next=attr_length;
+			mr->attr_next=attr_route;
 			if (seg) 
 				attr->u.num=seg->direction;
 			else
 				return 0;
+			return 1;
+		case attr_route:
+			mr->attr_next=attr_length;
+			attr->u.route = mr->mpriv->route;
 			return 1;
 		case attr_length:
 			if (seg)

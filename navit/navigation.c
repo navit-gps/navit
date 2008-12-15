@@ -125,6 +125,14 @@ navigation_get_announce_level(struct navigation *this_, enum item_type type, int
 	return i;
 }
 
+/**
+ * @brief Holds a way that one could possibly drive from a navigation item
+ */
+struct navigation_way {
+	struct navigation_way *next;		/**< Pointer to a linked-list of all navigation_ways from this navigation item */ 
+	int angle;			/**< The angle one has to steer to drive from the old item to this street */
+};
+
 struct navigation_itm {
 	char *name1;
 	char *name2;
@@ -141,6 +149,7 @@ struct navigation_itm {
 	int dest_count;
 	struct navigation_itm *next;
 	struct navigation_itm *prev;
+	struct navigation_way *ways;		/**< Pointer to all ways one could drive from here */
 };
 
 /* 0=N,90=E */
@@ -213,6 +222,166 @@ get_distance(int dist, enum attr_type type, int is_length)
 		return g_strdup_printf(ngettext("in one kilometer","in %d kilometers", dist/1000), dist/1000);
 }
 
+
+/**
+ * @brief This calculates the angle with which an item starts or ends
+ *
+ * This function can be used to get the angle an item (from a route graph map)
+ * starts or ends with. Note that the angle will point towards the inner of
+ * the item.
+ *
+ * This is meant to be used with items from a route graph map
+ * With other items this will probably not be optimal...
+ *
+ * @param itm The item to get the start/end angle of
+ * @param reverse Set this to true to get the end instead of the start
+ * @return The angle the item starts/ends with or 361 on error
+ */ 
+static int
+calculate_angle(struct item *itm, int reverse)
+{
+	struct coord cbuf[2];
+	struct item *ritem; // the "real" item
+	struct coord c;
+	struct map_rect *mr;
+
+	mr = map_rect_new(itm->map, NULL);
+	if (!mr)
+		return 361;
+
+	ritem = map_rect_get_item_byid(mr, itm->id_hi, itm->id_lo);
+	if (!ritem) {
+		dbg(1,"Item from segment not found on map!\n");
+		map_rect_destroy(mr);
+		return 361;
+	}
+
+	if (ritem->type < type_line || ritem->type >= type_area) {
+		map_rect_destroy(mr);
+		return 361;
+	}
+	
+	if (reverse) {
+		if (item_coord_get(ritem, cbuf, 2) != 2) {
+			dbg(1,"Using calculate_angle() with a less-than-two-coords-item?\n");
+			map_rect_destroy(mr);
+			return 361; 
+		}
+			
+		while (item_coord_get(ritem, &c, 1)) {
+			cbuf[0] = cbuf[1];
+			cbuf[1] = c;
+		}
+		
+	} else {
+		if (item_coord_get(ritem, cbuf, 2) != 2) {
+			dbg(1,"Using calculate_angle() with a less-than-two-coords-item?\n");
+			map_rect_destroy(mr);
+			return 361; 
+		}
+		c = cbuf[0];
+		cbuf[0] = cbuf[1];
+		cbuf[1] = c;
+	}
+
+	map_rect_destroy(mr);
+
+	return road_angle(&cbuf[1],&cbuf[0],0);
+}
+
+/**
+ * @brief Clears the ways one can drive from itm
+ *
+ * @param itm The item that should have its ways cleared
+ */
+static void
+navigation_itm_ways_clear(struct navigation_itm *itm)
+{
+	struct navigation_way *c,*n;
+
+	c = itm->ways;
+	while (c) {
+		n = c->next;
+		g_free(c);
+		c = n;
+	}
+
+	itm->ways = NULL;
+}
+
+/**
+ * @brief Updates the ways one can drive from itm
+ *
+ * This updates the list of possible ways to drive to from itm. The item "itm" is on
+ * and the next navigation item are excluded.
+ *
+ * @param itm The item that should be updated
+ * @param graph_map The route graph's map that these items are on 
+ */
+static void
+navigation_itm_ways_update(struct navigation_itm *itm, struct map *graph_map) 
+{
+	struct map_selection coord_sel;
+	struct map_rect *g_rect; // Contains a map rectangle from the route graph's map
+	struct item *i,*sitem;
+	int angle;
+	struct attr sitem_attr,direction_attr;
+	struct navigation_way *w,*l;
+
+	navigation_itm_ways_clear(itm);
+
+	// These values cause the code in route.c to get us only the route graph point and connected segments
+	coord_sel.next = NULL;
+	coord_sel.u.c_rect.lu = itm->end;
+	coord_sel.u.c_rect.rl = itm->end;
+	// the selection's order is ignored
+	
+	g_rect = map_rect_new(graph_map, &coord_sel);
+	
+	i = map_rect_get_item(g_rect);
+	if (!i || i->type != type_rg_point) { // probably offroad? 
+		return ;
+	}
+
+	w = NULL;
+	
+	while (1) {
+		i = map_rect_get_item(g_rect);
+
+		if (!i) {
+			break;
+		}
+		
+		if (i->type != type_rg_segment) {
+			continue;
+		}
+		
+		if (!item_attr_get(i,attr_street_item,&sitem_attr)) {
+			dbg(1, "Got no street item for route graph item in entering_straight()\n");
+			continue;
+		}		
+
+		if (!item_attr_get(i,attr_direction,&direction_attr)) {
+			continue;
+		}
+
+		sitem = sitem_attr.u.item;
+		if (item_is_equal(itm->item,*sitem) || ((itm->next) && item_is_equal(itm->next->item,*sitem))) {
+			continue;
+		}
+
+		l = w;
+		w = g_new(struct navigation_way, 1);
+		angle = calculate_angle(sitem,(direction_attr.u.num <= 0));
+		w->angle = angle - itm->angle_end;
+		w->next = l;
+	}
+
+	map_rect_destroy(g_rect);
+	
+	itm->ways = w;
+}
+
 static void
 navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *end)
 {
@@ -235,6 +404,7 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 		}
 		map_convert_free(itm->name1);
 		map_convert_free(itm->name2);
+		navigation_itm_ways_clear(itm);
 		g_free(itm);
 	}
 	if (! this_->first)
@@ -247,7 +417,7 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 static void
 navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 {
-	struct attr length, time, straight;
+	struct attr length, time;
 	if (! item_attr_get(ritem, attr_length, &length)) {
 		dbg(0,"no length\n");
 		return;
@@ -268,7 +438,8 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 	struct navigation_itm *ret=g_new0(struct navigation_itm, 1);
 	int i=0;
 	struct item *sitem;
-	struct attr street_item,direction;
+	struct map *graph_map = NULL;
+	struct attr street_item,direction,route_attr;
 	struct map_rect *mr;
 	struct attr attr;
 	struct coord c[5];
@@ -283,6 +454,10 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 			ret->direction=direction.u.num;
 		else
 			ret->direction=0;
+
+		item_attr_get(ritem, attr_route, &route_attr);
+		graph_map = route_get_graph_map(route_attr.u.route);
+
 		sitem=street_item.u.item;
 		ret->item=*sitem;
 		item_hash_insert(this_->hash, sitem, ret);
@@ -323,6 +498,9 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 	if (this_->last) {
 		this_->last->next=ret;
 		ret->prev=this_->last;
+		if (graph_map) {
+			navigation_itm_ways_update(this_->last,graph_map);
+		}
 	}
 	dbg(1,"ret=%p\n", ret);
 	this_->last=ret;
@@ -424,70 +602,24 @@ is_same_street_systematic(struct navigation_itm *old, struct navigation_itm *new
 }
 
 
-
 /**
- * @brief This calculates the angle with which an item starts or ends
+ * @brief Check if there are multiple possibilities to drive from old
  *
- * This function can be used to get the angle an item (from a route graph map)
- * starts or ends with. 
+ * This function checks, if there are multiple streets connected to the exit of "old".
+ * Sometimes it happens that an item on a map is just segmented, without any other streets
+ * being connected there, and it is not useful if navit creates a maneuver there.
  *
- * This is meant to be used with items from a route graph map
- * With other items this will probably not be optimal...
- *
- * @param itm The item to get the start/end angle of
- * @param reverse Set this to true to get the end instead of the start
- * @return The angle the item starts/ends with or 361 on error
- */ 
-static int
-calculate_angle(struct item *itm, int reverse)
+ * @param old The navigation item we're coming from
+ * @return True if there are multiple streets
+ */
+static int 
+check_multiple_streets(struct navigation_itm *old)
 {
-	struct coord cbuf[2];
-	struct item *ritem; // the "real" item
-	struct coord c;
-	struct map_rect *mr;
-
-	mr = map_rect_new(itm->map, NULL);
-	if (!mr)
-		return 361;
-
-	ritem = map_rect_get_item_byid(mr, itm->id_hi, itm->id_lo);
-	if (!ritem) {
-		dbg(1,"Item from segment not found on map!\n");
-		map_rect_destroy(mr);
-		return 361;
-	}
-
-	if (ritem->type < type_line || ritem->type >= type_area) {
-		map_rect_destroy(mr);
-		return 361;
-	}
-	
-	if (reverse) {
-		if (item_coord_get(ritem, cbuf, 2) != 2) {
-			dbg(1,"Using calculate_angle() with a less-than-two-coords-item?\n");
-			map_rect_destroy(mr);
-			return 361; 
-		}
-			
-		while (item_coord_get(ritem, &c, 1)) {
-			cbuf[0] = cbuf[1];
-			cbuf[1] = c;
-		}
-		
+	if (old->ways) {
+		return 1;
 	} else {
-		if (item_coord_get(ritem, cbuf, 2) != 2) {
-			dbg(1,"Using calculate_angle() with a less-than-two-coords-item?\n");
-			map_rect_destroy(mr);
-			return 361; 
-		}
-		c = cbuf[0];
-		cbuf[0] = cbuf[1];
-		cbuf[1] = c;
+		return 0;
 	}
-
-	map_rect_destroy(mr);
-
-	return road_angle(&cbuf[0],&cbuf[1],0);
 }
 
 /**
@@ -496,98 +628,44 @@ calculate_angle(struct item *itm, int reverse)
  * This function checks if the new item is entered "straight" from the old item, i.e. if there
  * is no other street one could take from the old item on with less steering.
  *
- * @param graph_map An opened route graph map
  * @param old The navigation item we're coming from
- * @param new The navigation item we're driving to
+ * @param delta The angle one needs to steer to drive to the next item
  * @return True if the new item is entered "straight"
  */
 static int 
-entering_straight(struct map *graph_map, struct navigation_itm *old, struct navigation_itm *new)
+entering_straight(struct navigation_itm *old, int delta)
 {
-	struct map_selection coord_sel;
-	struct map_rect *g_rect; // Contains a map rectangle from the route graph's map
-	struct item *i,*sitem;
-	struct attr sitem_attr,direction_attr;
-	int angle_old,angle_new,angle_curr;
-	int diff_oldnew,diff_curr,diff_min;
+	int diff,curr_diff;
+	struct navigation_way *w;
 
-	// We first have to calculate the angle of the old item
-	angle_old = calculate_angle(&old->item,(old->direction >= 1));
-	angle_old += 180; // the old angle is the only one pointing away from the route graph point
-	if (angle_old >= 360) {
-		angle_old -= 360;
+	if (delta < 0) {
+		diff = delta * -1;
+	} else {
+		diff = delta;
 	}
 
-	angle_new = 361;
-	diff_min = 360;
+	// We never turn more than 180 degrees
+	diff = diff % 180;
 
-	// These values cause the code in route.c to get us only the route graph point and connected segments
-	coord_sel.next = NULL;
-	coord_sel.u.c_rect.lu = old->end;
-	coord_sel.u.c_rect.rl = old->end;
-	// the selection's order is ignored
-	
-	g_rect = map_rect_new(graph_map, &coord_sel);
-	
-	i = map_rect_get_item(g_rect);
-	if (!i || i->type != type_rg_point) { // probably offroad? 
-		return 1; // don't cause a right/left navigation on every offroad item
-	}
-	
-	while (1) {
-		i = map_rect_get_item(g_rect);
+	w = old->ways;
+	while (w) {
 
-		if (!i) {
-			break;
+		if (w->angle < 0) {
+			curr_diff = w->angle * -1;
+		} else {
+			curr_diff = w->angle;
 		}
+
+		curr_diff = curr_diff % 180;
 		
-		if (i->type != type_rg_segment) {
-			dbg(1, "Expected to get a route graph segment in entering_straight()\n");
-			continue;
-		}
-		
-		if (!item_attr_get(i,attr_street_item,&sitem_attr)) {
-			dbg(1, "Got no street item for route graph item in entering_straight()\n");
-			continue;
-		}		
-
-		if (!item_attr_get(i,attr_direction,&direction_attr)) {
-			continue;
+		if (curr_diff < diff) {
+			return 0;
 		}
 
-		sitem = sitem_attr.u.item;
-		if (item_is_equal(new->item,*sitem)) {
-			if (angle_new == 361) {
-				angle_new = calculate_angle(sitem,(direction_attr.u.num <= 0));
-			}
-			continue;
-		} else if (item_is_equal(old->item,*sitem)) {
-			continue;
-		}
-
-
-		angle_curr = calculate_angle(sitem,(direction_attr.u.num <= 0));
-		diff_curr = angle_old - angle_curr;
-		if (diff_curr < 0) {
-			diff_curr *= -1;
-		}
-		diff_curr = diff_curr % 180; // We will *never* turn more than 180 degrees
-
-		if (diff_curr < diff_min) {
-			diff_min = diff_curr;
-		}
+		w = w->next;
 	}
-
-	diff_oldnew = angle_old - angle_new;
-	if (diff_oldnew < 0) {
-		diff_oldnew *= -1;
-	}
-	diff_oldnew = diff_oldnew % 180;
-
-	map_rect_destroy(g_rect);
 	
-	// 10 degrees difference should make shure it's clear where to drive
-	return ((diff_oldnew+10) < diff_min);
+	return 1;
 }
 
 /**
@@ -599,11 +677,10 @@ entering_straight(struct map *graph_map, struct navigation_itm *old, struct navi
  * @param old The old navigation item, where we're coming from
  * @param new The new navigation item, where we're going to
  * @param delta The angle the user has to steer to navigate from old to new
- * @param graph_map A pointer to an opened map for the current route graph
  * @return True if navit should guide the user, false otherwise
  */
 static int
-maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *delta, struct map *graph_map)
+maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *delta)
 {
 	dbg(1,"enter %p %p %p\n",old, new, delta);
 	*delta=new->angle_start-old->angle_end;
@@ -614,7 +691,7 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 
 	if (new->item.type == old->item.type || (new->item.type != type_ramp && old->item.type != type_ramp)) {
 		if (is_same_street2(old, new)) {
-			if (! entering_straight(graph_map, old, new)) {
+			if (! entering_straight(old, *delta)) {
 				dbg(1, "maneuver_required: Not driving straight: yes\n");
 				return 1;
 			}
@@ -640,7 +717,7 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 		return 1;
 	}
 	if (*delta < 20 && *delta >-20) {
-		if (! entering_straight(graph_map, old, new)) {
+		if (! entering_straight(old,*delta)) {
 			dbg(1, "maneuver_required: not driving straight: yes\n");
 			return 1;
 		}
@@ -648,6 +725,12 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 		dbg(1, "maneuver_required: delta(%d) < 20: no\n", *delta);		
 		return 0;
 	}
+
+	if (! check_multiple_streets(old)) {
+		dbg(1, "maneuver_required: only one possibility: no\n");
+		return 0;
+	}
+
 	dbg(1, "maneuver_required: delta=%d: yes\n", *delta);
 	return 1;
 }
@@ -672,15 +755,13 @@ static void
 make_maneuvers(struct navigation *this_, struct route *route)
 {
 	struct navigation_itm *itm, *last=NULL, *last_itm=NULL;
-	struct map *graph_map;
 	int delta;
 	itm=this_->first;
 	this_->cmd_last=NULL;
 	this_->cmd_first=NULL;
-	graph_map = route_get_graph_map(route);
 	while (itm) {
 		if (last) {
-			if (maneuver_required2(last_itm, itm, &delta,graph_map)) {
+			if (maneuver_required2(last_itm, itm,&delta)) {
 				command_new(this_, itm, delta);
 			}
 		} else
@@ -801,24 +882,50 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	char *d,*ret;
 	int delta=cmd->delta;
 	int level;
+	int strength_needed;
+	struct navigation_way *w;
+	
+	w = itm->ways;
+	strength_needed = 0;
+	if ((itm->next->angle_start - itm->angle_end) < 0) {
+		while (w) {
+			if (w->angle < 0) {
+				strength_needed = 1;
+				break;
+			}
+			w = w->next;
+		}
+	} else {
+		while (w) {
+			if (w->angle > 0) {
+				strength_needed = 1;
+				break;
+			}
+			w = w->next;
+		}
+	}
+
 	level=1;
 	if (delta < 0) {
 		/* TRANSLATORS: left, as in 'Turn left' */
 		dir=_("left");
 		delta=-delta;
 	}
-	if (delta < 45) {
-		/* TRANSLATORS: Don't forget the ending space */
-		strength=_("easily ");
-	} else if (delta < 105) {
-		strength="";
-	} else if (delta < 165) {
-		/* TRANSLATORS: Don't forget the ending space */
-		strength=_("strongly ");
-	} else {
-		dbg(1,"delta=%d\n", delta);
-		/* TRANSLATORS: Don't forget the ending space */
-		strength=_("unknown ");
+
+	if (strength_needed) {
+		if (delta < 45) {
+			/* TRANSLATORS: Don't forget the ending space */
+			strength=_("easily ");
+		} else if (delta < 105) {
+			strength="";
+		} else if (delta < 165) {
+			/* TRANSLATORS: Don't forget the ending space */
+			strength=_("strongly ");
+		} else {
+			dbg(1,"delta=%d\n", delta);
+			/* TRANSLATORS: Don't forget the ending space */
+			strength=_("unknown ");
+		}
 	}
 	if (type != attr_navigation_long_exact) 
 		distance=round_distance(distance);
@@ -860,7 +967,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			}
 
 			if (level == 0) {
-				if(cmd->itm->told == 0) // we are write at the intersection
+				if(cmd->itm->told == 0) // we are right at the intersection
 					tellstreetname = 1; 
 				else
 					cmd->itm->told = 0;  // reset just in case we come to the same street again
