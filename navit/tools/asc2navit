@@ -1,0 +1,135 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Getopt::Long qw(:config permute);
+use Data::Dumper;
+use Benchmark;
+
+sub show_help;
+sub preprocess_filelist;
+sub open_outputhandle;
+sub process_file;
+sub run;
+
+my $amenity = "point_unkn";
+my $write_osm = 0;
+my %files = ();
+my $filename = "onebigfile";
+my $poicount = 0;
+
+
+GetOptions ('a|amenity=s'      => \$amenity,
+            'x|write-osm!'     => \$write_osm,
+            'h|?|help!'        => \&show_help,
+            'O|output-file=s'  => \$filename,
+            '<>'               => \&preprocess_filelist);
+
+
+# when no file is given...
+show_help() if (keys %files == 0);
+
+# determine filename
+determine_filename();
+
+# open the pipe for the output...
+my $pipe = open_outputhandle();
+
+# ...feed the pipe...
+run();
+
+# ...and close it properly 
+close $pipe;
+
+###############################################################################
+###############################################################################
+###############################################################################
+
+sub show_help {
+    print "parses one (or multiple) .asc-file(s) (mainly used by poiwarner) and\n";
+    print "merges the result into one navit binary mapfile. requires osm2navit (when -x is not set)\n";
+    print "usage: $0 [OPTION] OUT in1.asc [in2.asc [...]]\n";
+    print "       creates one big file called onebigfile\n";
+    print "usage: $0 [OPTION] IN.asc\n";
+    print "       creates a file called IN.asc.bin / .osm\n\n";
+    print "  -h, --help              shows this help\n";
+    print "  -x, --write-osm         write in osm's xml format instead of navit's\n";
+    print "  -a, --amenity=NAME      sets the amenity to NAME. default is point_unk\n";
+    print "                          you can use -a several times for different types of pois\n";
+    print "                          e.g.: $0 -a tec_common speedcamdb1 speedcamdb2 -a poi_biergarten boozestation1 boozestation2\n";
+    print "  -O, --output-file=OUT   write the output to OUT. default for multiple files ist onebigfile\n";
+    exit 0;
+}
+
+sub preprocess_filelist {
+    my ($filename) = @_;
+    push (@{$files{$amenity}}, @_);
+
+}
+
+sub open_outputhandle() {
+    # open the pipe to osm2navit...
+    if (!$write_osm) {
+        open $pipe, "| osm2navit $filename" or die $!;
+    } else {
+    # or a filehandle
+        open $pipe, ">$filename" or die $!;
+    }
+    return $pipe;
+}
+
+sub process_file {
+    my ($file) = @_;
+    my $filehandle;
+    print "$0 processing $file...\n";
+    open ($filehandle, "<$file") or next $!;
+    # for every line in the file...
+    while (<$filehandle>) {
+        # ...check if it's a valid record...
+        m/([0-9\.\-]*), ([0-9\.\-]*), "\[([0-9]*).*/ or next;
+        my ($lon, $lat, $id) = ($1, $2, $3);
+        # ...and write it into the handle then
+        print $pipe "    <node id=\"-$id\" visible=\"true\" lon=\"$lon\" lat=\"$lat\">\n";
+        print $pipe "        <tag k=\"name\" v=\"\" />\n";
+        print $pipe "        <tag k=\"amenity\" v=\"$amenity\" />\n";
+        print $pipe "    </node>\n";
+        $poicount++;
+    }
+}
+
+sub determine_filename {
+    my $filecount = 0;
+    foreach my $amenity (keys %files) {
+        $filecount += $#{$files{$amenity}} + 1;
+    }
+
+    # when it's only one file and no output file has been given...
+    if ($filecount == 1 && $filename eq "") {
+        my $onefile = $files{(keys %files)[0]}[0];
+        # ...generate a new one from the given filename
+        $filename = "$onefile.bin";
+        $filename = "$onefile.xml" if ($write_osm);
+    }
+    
+    print "$0 writing output to $filename\n";
+}
+
+sub run {
+    # write osm header
+    print $pipe '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+    print $pipe '<osm version="0.5">' . "\n";
+
+    # set the amenity and 
+    my @amenities = keys %files;
+    while (my $amenity = shift @amenities) {
+        foreach my $file (@{$files{$amenity}}) {
+            process_file($file);
+        }
+    }
+    
+    # close the osm file
+    print $pipe '</osm>';
+    # and show up some stats
+    print "$0 processed $poicount poi's\n";
+}
+
