@@ -611,13 +611,13 @@ is_same_street_systematic(struct navigation_itm *old, struct navigation_itm *new
  * Sometimes it happens that an item on a map is just segmented, without any other streets
  * being connected there, and it is not useful if navit creates a maneuver there.
  *
- * @param old The navigation item we're coming from
+ * @param new The navigation item we're driving to
  * @return True if there are multiple streets
  */
 static int 
-check_multiple_streets(struct navigation_itm *old)
+check_multiple_streets(struct navigation_itm *new)
 {
-	if (old->ways) {
+	if (new->ways) {
 		return 1;
 	} else {
 		return 0;
@@ -630,28 +630,28 @@ check_multiple_streets(struct navigation_itm *old)
  * This function checks if the new item is entered "straight" from the old item, i.e. if there
  * is no other street one could take from the old item on with less steering.
  *
- * @param old The navigation item we're coming from
- * @param delta The angle one needs to steer to drive to the next item
+ * @param new The navigation item we're driving to
+ * @param delta2 The angle one needs to steer to drive to this item
  * @return True if the new item is entered "straight"
  */
 static int 
-entering_straight(struct navigation_itm *old, int delta)
+entering_straight(struct navigation_itm *new, int delta2)
 {
-	int diff,curr_diff;
+	int diff,curr_diff,delta;
 	struct navigation_way *w;
 
-	if (delta < 0) {
-		diff = delta * -1;
+	if (delta2 < 0) {
+		diff = delta2 * -1;
 	} else {
-		diff = delta;
+		diff = delta2;
 	}
 
 	// We never turn more than 180 degrees
 	diff = diff % 180;
 
-	w = old->ways;
+	w = new->ways;
 	while (w) {
-		delta=w->angle2-old->angle_start;
+		delta=w->angle2-new->angle_start;
 		if (delta < 0) {
 			curr_diff = delta * -1;
 		} else {
@@ -719,7 +719,7 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 		return 1;
 	}
 	if (*delta < 20 && *delta >-20) {
-		if (! entering_straight(old,*delta)) {
+		if (! entering_straight(new,*delta)) {
 			dbg(1, "maneuver_required: not driving straight: yes\n");
 			return 1;
 		}
@@ -728,7 +728,7 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 		return 0;
 	}
 
-	if (! check_multiple_streets(old)) {
+	if (! check_multiple_streets(new)) {
 		dbg(1, "maneuver_required: only one possibility: no\n");
 		return 0;
 	}
