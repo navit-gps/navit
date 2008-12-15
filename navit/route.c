@@ -847,17 +847,14 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 			int flags, int offset)
 {
 	struct route_graph_segment *s;
-/*	
-	FIXME: commented out becouse
-	it is possible to have one item with two different
-	offsets as segments 
+
 	s=start->start;
 	while (s) {
-		if (item_is_equal(*item, s->item)) 
+		if (item_is_equal(*item, s->item) && (s->offset == offset)) 
 			return;
 		s=s->start_next;
 	} 
-*/
+
 	s = g_new0(struct route_graph_segment, 1);
 	if (!s) {
 		printf("%s:Out of memory\n", __FUNCTION__);
