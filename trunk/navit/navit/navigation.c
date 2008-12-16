@@ -501,7 +501,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 		this_->last->next=ret;
 		ret->prev=this_->last;
 		if (graph_map) {
-			navigation_itm_ways_update(this_->last,graph_map);
+			navigation_itm_ways_update(ret,graph_map);
 		}
 	}
 	dbg(1,"ret=%p\n", ret);
@@ -651,7 +651,7 @@ entering_straight(struct navigation_itm *new, int delta2)
 
 	w = new->ways;
 	while (w) {
-		delta=w->angle2-new->angle_start;
+		delta=w->angle2-new->prev->angle_end;
 		if (delta < 0) {
 			curr_diff = delta * -1;
 		} else {
