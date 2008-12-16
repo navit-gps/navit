@@ -46,6 +46,7 @@ static struct vehicle_priv {
 	int fix_type;
 	time_t fix_time;
 	int sats;
+        int sats_signal;
 	int sats_used;
 	char *nmea_data;
 	char *nmea_data_buf;
@@ -67,6 +68,8 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		      int level)
 {
 	char *pos,*nmea_data_buf;
+        int i=0,sats_signal=0;
+       
 	struct vehicle_priv *priv = vehicle_last;
 	if (buf[0] == '$' && len > 0) {
 		char buffer[len+2];
@@ -85,13 +88,10 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		}
 	}	
 	dbg(1,"data->set=0x%x\n", data->set);
-	// If data->fix.speed is NAN, then the drawing gets jumpy. 
-	if (isnan(data->fix.speed)) {
-		return;
-	}
-	dbg(2,"speed ok\n");
 	if (data->set & SPEED_SET) {
 		priv->speed = data->fix.speed * 3.6;
+		if(!isnan(data->fix.speed))
+			callback_list_call_attr_0(priv->cbl, attr_position_speed);
 		data->set &= ~SPEED_SET;
 	}
 	if (data->set & TRACK_SET) {
@@ -103,8 +103,19 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		data->set &= ~ALTITUDE_SET;
 	}
 	if (data->set & SATELLITE_SET) {
-		priv->sats_used = data->satellites_used;
-		priv->sats = data->satellites;
+                if(data->satellites > 0) {
+                        sats_signal=0;
+                        for( i=0;i<data->satellites;i++) {
+                               if (data->ss[i] > 0)
+                                        sats_signal++;
+                        }
+                }
+		if (priv->sats_used != data->satellites_used || priv->sats != data->satellites || priv->sats_signal != sats_signal ) {
+			priv->sats_used = data->satellites_used;
+			priv->sats = data->satellites;
+                        priv->sats_signal = sats_signal;
+			callback_list_call_attr_0(priv->cbl, attr_position_sats);
+		}
 		data->set &= ~SATELLITE_SET;
 	}
 	if (data->set & STATUS_SET) {
@@ -131,9 +142,13 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		g_free(priv->nmea_data);
 		priv->nmea_data=priv->nmea_data_buf;
 		priv->nmea_data_buf=NULL;
-		callback_list_call_0(priv->cbl);
 		data->set &= ~LATLON_SET;
 	}
+	// If data->fix.speed is NAN, then the drawing gets jumpy.
+	if (! isnan(data->fix.speed) && priv->fix_type > 0) {
+		callback_list_call_0(priv->cbl);
+	}
+	dbg(2,"speed ok\n");
 }
 
 /**
@@ -257,6 +272,9 @@ vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
 		break;
 	case attr_position_qual:
 		attr->u.num = priv->sats;
+		break;
+	case attr_position_sats_signal:
+		attr->u.num = priv->sats_signal;
 		break;
 	case attr_position_sats_used:
 		attr->u.num = priv->sats_used;

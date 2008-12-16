@@ -87,6 +87,7 @@ ATTR(position_fix_type)
 ATTR(timeout)
 ATTR(orientation)
 ATTR(keyboard)
+ATTR(position_sats_signal)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
