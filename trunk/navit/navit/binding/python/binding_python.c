@@ -59,6 +59,7 @@ PyTypeObject coord_Type = {
 
 typedef struct {
 	PyObject_HEAD
+	int ref;
 	struct map *m;
 } mapObject;
 
@@ -176,9 +177,20 @@ map_rect_destroy_py(map_rectObject *self)
 
 /* *** map *** */
 
+static PyObject *
+map_dump_file_py(mapObject *self, PyObject *args)
+{
+	const char *s;
+	if (!PyArg_ParseTuple(args, "s",&s))
+		return NULL;
+	map_dump_file(self->m, s);
+	Py_RETURN_NONE;
+}
+
 
 
 static PyMethodDef map_methods[] = {
+	{"dump_file",		(PyCFunction) map_dump_file_py, METH_VARARGS },
 	{"map_rect_new",	(PyCFunction) map_rect_new_py, METH_VARARGS },
 	{NULL, NULL },
 };
@@ -200,13 +212,25 @@ map_new_py(PyObject *self, PyObject *args)
 		return NULL;
 	ret=PyObject_NEW(mapObject, &map_Type);
 	ret->m=map_new(NULL,NULL);
+	ret->ref=0;
+	return (PyObject *)ret;
+}
+
+PyObject *
+map_py_ref(struct map *map)
+{
+	mapObject *ret;
+	ret=PyObject_NEW(mapObject, &map_Type);
+	ret->m=map;
+	ret->ref=1;
 	return (PyObject *)ret;
 }
 
 static void
 map_destroy_py(mapObject *self)
 {
-	map_destroy(self->m);
+	if (!self->ref)
+		map_destroy(self->m);
 }
 
 /* *** mapset *** */
@@ -293,6 +317,21 @@ static PyMethodDef navitMethods[]={
 	{"pcoord", pcoord_py, METH_VARARGS},
 	{NULL, NULL, 0, NULL}
 };
+
+
+PyObject *
+python_object_from_attr(struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_navigation:
+		return navigation_py_ref(attr->u.navigation);
+	case attr_route:
+		return route_py_ref(attr->u.route);
+	default:
+		return NULL;
+	}
+	return NULL;
+}
 
 
 void

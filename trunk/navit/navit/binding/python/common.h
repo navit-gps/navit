@@ -28,9 +28,20 @@
 
 struct navit;
 
+PyObject * python_object_from_attr(struct attr *attr);
+
 PyObject * main_py(PyObject *self, PyObject *args);
+
+struct navigation;
+PyObject * navigation_py(PyObject *self, PyObject *args);
+PyObject * navigation_py_ref(struct navigation *navigation);
+
 PyObject * navit_py(PyObject *self, PyObject *args);
 PyObject * navit_py_ref(struct navit *navit);
 extern PyTypeObject pcoord_Type;
 PyObject * pcoord_py(PyObject *self, PyObject *args);
 struct pcoord *pcoord_py_get(PyObject *self);
+
+struct route;
+PyObject * route_py(PyObject *self, PyObject *args);
+PyObject * route_py_ref(struct route *route);

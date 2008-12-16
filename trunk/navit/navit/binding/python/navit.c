@@ -18,12 +18,28 @@
  */
 
 #include "common.h"
+#include "item.h"
 #include "navit.h"
 
 typedef struct {
 	PyObject_HEAD
 	struct navit *navit;
 } navitObject;
+
+static PyObject *
+navit_get_attr_py(navitObject *self, PyObject *args)
+{
+	char *name;
+	struct attr attr;
+	if (!PyArg_ParseTuple(args, "s", &name))
+		return NULL;
+	if (!navit_get_attr(self->navit, attr_from_name(name), &attr, NULL)) {
+		dbg(0,"get_attr not ok\n");
+		Py_RETURN_NONE;
+	}
+	dbg(0,"get_attr ok\n");
+	return python_object_from_attr(&attr);
+}
 
 static PyObject *
 navit_set_center_py(navitObject *self, PyObject *args)
@@ -60,6 +76,7 @@ navit_set_position_py(navitObject *self, PyObject *args)
 
 
 static PyMethodDef navit_methods[] = {
+	{"get_attr",		(PyCFunction) navit_get_attr_py, METH_VARARGS },
 	{"set_center",		(PyCFunction) navit_set_center_py, METH_VARARGS },
 	{"set_destination",	(PyCFunction) navit_set_destination_py, METH_VARARGS },
 	{"set_position",	(PyCFunction) navit_set_position_py, METH_VARARGS },
