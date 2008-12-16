@@ -1825,7 +1825,7 @@ navit_set_position(struct navit *this_, struct pcoord *c)
 		callback_list_call_attr_0(this_->attr_cbl, attr_position);
 		if (this_->navigation) {
 			navigation_update(this_->navigation, this_->route);
-#if 1
+#if 0
 			map_dump_file(route_get_map(this_->route), "route.txt");
 			map_dump_file(navigation_get_map(this_->navigation), "navigation.txt");
 #endif
