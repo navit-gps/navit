@@ -19,7 +19,7 @@
 
 #include "config.h"
 #include <glib.h>
-#include <Python.h>
+#include "common.h"
 #include <fcntl.h>
 #include "coord.h"
 #include "projection.h"
@@ -272,13 +272,25 @@ mapset_destroy_py(mapsetObject *self)
 	mapset_destroy(self->ms);
 }
 
-
+static PyObject *
+config_load_py(PyObject *self, PyObject *args)
+{
+	const char *file;
+	int ret;
+	if (!PyArg_ParseTuple(args, "s", &file))
+		return NULL;
+	ret=config_load(file, NULL);
+	return Py_BuildValue("i",ret);
+}
 
 static PyMethodDef navitMethods[]={
 	{"coord", coord_new_py, METH_VARARGS, "Create a new coordinate point."},
 	{"coord_rect", coord_rect_new_py, METH_VARARGS, "Create a new coordinate rectangle."},
 	{"map", map_new_py, METH_VARARGS, "Create a new map."},
 	{"mapset", mapset_new_py, METH_VARARGS, "Create a new mapset."},
+	{"config_load", config_load_py, METH_VARARGS, "Load a config"},
+	{"main", main_py, METH_VARARGS, "Get Main Object"},
+	{"pcoord", pcoord_py, METH_VARARGS},
 	{NULL, NULL, 0, NULL}
 };
 
@@ -288,8 +300,6 @@ plugin_init(void)
 {
 	int fd,size;
 	char buffer[65536];
-
-	return;
 
 	Py_Initialize();
 	Py_InitModule("navit", navitMethods);
@@ -303,5 +313,4 @@ plugin_init(void)
 	}
 	
 	Py_Finalize();
-	exit(0);
 }
