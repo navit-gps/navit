@@ -246,7 +246,9 @@ struct gui_priv {
 	 */
         struct gui_config_settings config;
 	struct event_idle *idle;
-	struct callback *motion_cb,*button_cb,*resize_cb,*keypress_cb,*idle_cb;
+	struct callback *motion_cb,*button_cb,*resize_cb,*keypress_cb,*idle_cb, *motion_timeout_callback;
+	struct event_timeout *motion_timeout_event;
+	struct point current;
 };
 
 
@@ -692,9 +694,15 @@ gui_internal_find_widget(struct widget *wi, struct point *p, int flags)
 	struct widget *ret,*child;
 	GList *l=wi->children;
 
-
-	if (p && (wi->p.x > p->x || wi->p.y > p->y || wi->p.x + wi->w < p->x || wi->p.y + wi->h < p->y)) {
-		return NULL;
+	if (p) { 
+		if (wi->p.x > p->x )
+			return NULL;
+		if (wi->p.y > p->y )
+			return NULL;
+		if ( wi->p.x + wi->w < p->x) 
+			return NULL;
+		if ( wi->p.y + wi->h < p->y) 
+			return NULL;
 	}
 	if (wi->state & flags) 
 		return wi;
@@ -715,6 +723,8 @@ gui_internal_highlight_do(struct gui_priv *this, struct widget *found)
 {
 	if (found == this->highlighted)
 		return;
+	
+	graphics_draw_mode(this->gra, draw_mode_begin);
 	if (this->highlighted) {
 		this->highlighted->state &= ~STATE_HIGHLIGHTED;
 		if (this->root.children && this->highlighted_menu == g_list_last(this->root.children)->data) 
@@ -728,22 +738,23 @@ gui_internal_highlight_do(struct gui_priv *this, struct widget *found)
 		this->highlighted->state |= STATE_HIGHLIGHTED;
 		gui_internal_widget_render(this, this->highlighted);
 		dbg(1,"%d,%d %dx%d\n", found->p.x, found->p.y, found->w, found->h);
-	}
+	}	
+	graphics_draw_mode(this->gra, draw_mode_end);
 }
 //##############################################################################################################
 //# Description: 
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static void gui_internal_highlight(struct gui_priv *this, struct point *p)
+static void gui_internal_highlight(struct gui_priv *this)
 {
 	struct widget *menu,*found=NULL;
-
-	if (p) {
+	if (this->current.x > -1 && this->current.y > -1) {
 		menu=g_list_last(this->root.children)->data;
-		found=gui_internal_find_widget(menu, p, STATE_SENSITIVE);
+		found=gui_internal_find_widget(menu, &this->current, STATE_SENSITIVE);
 	}
 	gui_internal_highlight_do(this, found);
+	this->motion_timeout_event=NULL;
 }
 
 static struct widget *
@@ -795,9 +806,20 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 {
 	struct widget *wc;
-	int x0,x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0,count=0,rows=0,cols=w->cols ? w->cols : 3;
+	int x0,x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0,count=0,rows=0,cols=w->cols ? w->cols : 0;
 	GList *l;
 	int orientation=w->flags & 0xffff0000;
+
+	if (!cols) {
+		 height=navit_get_height(this->nav);
+		 width=navit_get_width(this->nav);
+		 if ( (height/width) > 1.0 )
+			 cols=3;
+		 else
+			 cols=2;
+		 width=0;
+		 height=0;
+	}
 
 	
 	l=w->children;
@@ -985,7 +1007,8 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 	}
 }
 
-static void gui_internal_widget_append(struct widget *parent, struct widget *child)
+static void
+gui_internal_widget_append(struct widget *parent, struct widget *child)
 {
 	if (! child->background)
 		child->background=parent->background;
@@ -1029,6 +1052,9 @@ static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 static void
 gui_internal_widget_render(struct gui_priv *this, struct widget *w)
 {
+	if(w->p.x > navit_get_width(this->nav) || w->p.y > navit_get_height(this->nav))
+		return;
+
 	switch (w->type) {
 	case widget_box:
 		gui_internal_box_render(this, w);
@@ -1146,7 +1172,7 @@ gui_internal_top_bar(struct gui_priv *this)
 	struct widget *w,*wm,*wh,*wc,*wcn;
 	int dots_len, sep_len;
 	GList *res=NULL,*l;
-	int width,width_used=0,use_sep,incomplete=0;
+	int width,width_used=0,use_sep=0,incomplete=0;
 
 	w=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	w->bl=this->spacing;
@@ -1527,9 +1553,10 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c)
 	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	for (i = 0 ; i < sizeof(selectors)/sizeof(struct selector) ; i++) {
 	gui_internal_widget_append(wl, wb=gui_internal_button_new_with_callback(this, NULL,
-		image_new_xs(this, selectors[i].icon), gravity_center|orientation_vertical,
+		image_new_xs(this, selectors[i].icon), gravity_left_center|orientation_vertical,
 		gui_internal_cmd_pois, &selectors[i]));
 		wb->c=*c;
+		wb->bt=10;
 	}
 	return wl;
 }
@@ -1542,22 +1569,22 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 	char *type;
 	struct attr attr;
 	struct widget *wl;
+	char *text;
 
 	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 
 	sprintf(distbuf,"%d", dist/1000);
-	gui_internal_widget_append(wl, gui_internal_label_new(this, distbuf));
 	get_direction(dirbuf, transform_get_angle_delta(center, c, 0), 1);
-	gui_internal_widget_append(wl, gui_internal_label_new(this, dirbuf));
 	type=item_to_name(item->type);
-	gui_internal_widget_append(wl, gui_internal_label_new(this, type));
 	if (item_attr_get(item, attr_label, &attr)) {
 		wl->name=g_strdup_printf("%s %s",type,attr.u.str);
 	} else {
 		attr.u.str="";
 		wl->name=g_strdup(type);
 	}
-	gui_internal_widget_append(wl, gui_internal_label_new(this, attr.u.str));
+        text=g_strdup_printf("%s %s %s %s", distbuf, dirbuf, type, attr.u.str);
+	gui_internal_widget_append(wl, gui_internal_label_new(this, text));
+	g_free(text);
 
 	return wl;
 }
@@ -2079,8 +2106,8 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 	GList *l;
 	struct widget *search_list=gui_internal_menu_data(this)->search_list;
 	gui_internal_widget_children_destroy(this, search_list);
-	int minlen=1;
 	void *param=(void *)3;
+	int minlen=1;
 	if (! strcmp(wm->name,"Country")) {
 		param=(void *)4;
 		minlen=1;
@@ -2107,25 +2134,24 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm)
 }
 
 static struct widget *
-gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char *text, void(*func)(struct gui_priv *priv, struct widget *widget), void *data, void (*data_free)(void *data))
+gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char *text, void(*func)(struct gui_priv *priv, struct widget *widget), void *data, void (*data_free)(void *data), int w, int h)
 {
 	struct widget *wk;
-
 	gui_internal_widget_append(wkbd, wk=gui_internal_button_new_with_callback(this, text,
 		NULL, gravity_center|orientation_vertical, func, data));
 	wk->data_free=data_free;
 	wk->background=this->background;
-	wk->bl=6;
-	wk->br=6;
-	wk->bt=6;
-	wk->bb=6;
+	wk->bl=w/2;
+	wk->br=0;
+	wk->bt=h/2;
+	wk->bb=0;
 	return wk;
 }
 
 static struct widget *
-gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text, char *key)
+gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text, char *key, int w, int h)
 {
-	return gui_internal_keyboard_key_data(this, wkbd, text, gui_internal_cmd_keypress, g_strdup(key), g_free);
+	return gui_internal_keyboard_key_data(this, wkbd, text, gui_internal_cmd_keypress, g_strdup(key), g_free,w,h);
 }
 
 static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key);
@@ -2135,11 +2161,13 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 {
 	struct widget *wkbd,*wk;
 	struct menu_data *md=gui_internal_menu_data(this);
-	int i;
+	int i, max_w=navit_get_width(this->nav), max_h=navit_get_height(this->nav);
 	int render=0;
 
 	if (wkbdb) {
-		gui_internal_highlight(this, NULL);
+		this->current.x=-1;
+		this->current.y=-1;
+		gui_internal_highlight(this);
 		render=1;
 		gui_internal_widget_children_destroy(this, wkbdb);
 	} else
@@ -2151,104 +2179,107 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 	wkbd->cols=8;
 	wkbd->spx=3;
 	wkbd->spy=3;
+	max_w=max_w/9;
+	max_h=max_h/6;
+
 	if (mode >= 0 && mode < 8) {
 		for (i = 0 ; i < 26 ; i++) {
 			char text[]={'A'+i,'\0'};
-			gui_internal_keyboard_key(this, wkbd, text, text);
+			gui_internal_keyboard_key(this, wkbd, text, text,max_w,max_h);
 		}
-		gui_internal_keyboard_key(this, wkbd, "_"," ");
+		gui_internal_keyboard_key(this, wkbd, "_"," ",max_w,max_h);
 		if (mode == 0) {
-			gui_internal_keyboard_key(this, wkbd, "-","-");
-			gui_internal_keyboard_key(this, wkbd, "'","'");
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+			gui_internal_keyboard_key(this, wkbd, "-","-",max_w,max_h);
+			gui_internal_keyboard_key(this, wkbd, "'","'",max_w,max_h);
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
 		} else {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
-			wk=gui_internal_keyboard_key_data(this, wkbd, "a", gui_internal_keyboard_change, wkbd, NULL);
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, "a", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode+8;
-			wk=gui_internal_keyboard_key_data(this, wkbd, "1", gui_internal_keyboard_change, wkbd, NULL);
+			wk=gui_internal_keyboard_key_data(this, wkbd, "1", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode+16;
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard_change, wkbdb,NULL);
+		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard_change, wkbdb,NULL,max_w,max_h);
 		wk->datai=mode+24;
-		gui_internal_keyboard_key(this, wkbd, "<-","\b");
+		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
 	}
 	if (mode >= 8 && mode < 16) {
 		for (i = 0 ; i < 26 ; i++) {
 			char text[]={'a'+i,'\0'};
-			gui_internal_keyboard_key(this, wkbd, text, text);
+			gui_internal_keyboard_key(this, wkbd, text, text,max_w,max_h);
 		}
-		gui_internal_keyboard_key(this, wkbd, "_"," ");
+		gui_internal_keyboard_key(this, wkbd, "_"," ",max_w,max_h);
 		if (mode == 8) {
-			gui_internal_keyboard_key(this, wkbd, "-","-");
-			gui_internal_keyboard_key(this, wkbd, "'","'");
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+			gui_internal_keyboard_key(this, wkbd, "-","-",max_w,max_h);
+			gui_internal_keyboard_key(this, wkbd, "'","'",max_w,max_h);
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
 		} else {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
-			wk=gui_internal_keyboard_key_data(this, wkbd, "A", gui_internal_keyboard_change, wkbd, NULL);
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, "A", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode-8;
-			wk=gui_internal_keyboard_key_data(this, wkbd, "1", gui_internal_keyboard_change, wkbd, NULL);
+			wk=gui_internal_keyboard_key_data(this, wkbd, "1", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode+8;
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, "ä",gui_internal_keyboard_change,wkbdb,NULL);
+		wk=gui_internal_keyboard_key_data(this, wkbd, "ä",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
 		wk->datai=mode+24;
-		gui_internal_keyboard_key(this, wkbd, "<-","\b");
+		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
 	}
 	if (mode >= 16 && mode < 24) {
 		for (i = 0 ; i < 10 ; i++) {
 			char text[]={'0'+i,'\0'};
-			gui_internal_keyboard_key(this, wkbd, text, text);
+			gui_internal_keyboard_key(this, wkbd, text, text,max_w,max_h);
 		}
-		gui_internal_keyboard_key(this, wkbd, ".",".");
-		gui_internal_keyboard_key(this, wkbd, "°","°");
-		gui_internal_keyboard_key(this, wkbd, "'","'");
-		gui_internal_keyboard_key(this, wkbd, "\"","\"");
-		gui_internal_keyboard_key(this, wkbd, "-","-");
-		gui_internal_keyboard_key(this, wkbd, "+","+");
-		gui_internal_keyboard_key(this, wkbd, "*","*");
-		gui_internal_keyboard_key(this, wkbd, "/","/");
-		gui_internal_keyboard_key(this, wkbd, "(","(");
-		gui_internal_keyboard_key(this, wkbd, ")",")");
-		gui_internal_keyboard_key(this, wkbd, "=","=");
-		gui_internal_keyboard_key(this, wkbd, "?","?");
+		gui_internal_keyboard_key(this, wkbd, ".",".",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "°","°",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "'","'",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "\"","\"",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "-","-",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "+","+",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "*","*",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "/","/",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "(","(",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, ")",")",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "=","=",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "?","?",max_w,max_h);
 		for (i = 0 ; i < 5 ; i++) {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
 		}
 		if (mode == 8) {
-			gui_internal_keyboard_key(this, wkbd, "-","-");
-			gui_internal_keyboard_key(this, wkbd, "'","'");
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+			gui_internal_keyboard_key(this, wkbd, "-","-",max_w,max_h);
+			gui_internal_keyboard_key(this, wkbd, "'","'",max_w,max_h);
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
 		} else {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
-			wk=gui_internal_keyboard_key_data(this, wkbd, "A", gui_internal_keyboard_change, wkbd, NULL);
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, "A", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode-16;
-			wk=gui_internal_keyboard_key_data(this, wkbd, "a", gui_internal_keyboard_change, wkbd, NULL);
+			wk=gui_internal_keyboard_key_data(this, wkbd, "a", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode-8;
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard_change,wkbdb,NULL);
+		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
 		wk->datai=mode+8;
-		gui_internal_keyboard_key(this, wkbd, "<-","\b");
+		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
 	}
 	if (mode >= 24 && mode < 32) {
-		gui_internal_keyboard_key(this, wkbd, "Ä","Ä");
-		gui_internal_keyboard_key(this, wkbd, "Ö","Ö");
-		gui_internal_keyboard_key(this, wkbd, "Ü","Ü");
+		gui_internal_keyboard_key(this, wkbd, "Ä","Ä",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "Ö","Ö",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "Ü","Ü",max_w,max_h);
 		for (i = 0 ; i < 27 ; i++) {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, "A",gui_internal_keyboard_change,wkbdb,NULL);
+		wk=gui_internal_keyboard_key_data(this, wkbd, "A",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
 		wk->datai=mode-24;
-		gui_internal_keyboard_key(this, wkbd, "<-","\b");
+		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
 	}
 	if (mode >= 32 && mode < 40) {
-		gui_internal_keyboard_key(this, wkbd, "ä","ä");
-		gui_internal_keyboard_key(this, wkbd, "ö","ö");
-		gui_internal_keyboard_key(this, wkbd, "ü","ü");
+		gui_internal_keyboard_key(this, wkbd, "ä","ä",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "ö","ö",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "ü","ü",max_w,max_h);
 		for (i = 0 ; i < 27 ; i++) {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL);
+			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, "a",gui_internal_keyboard_change,wkbdb,NULL);
+		wk=gui_internal_keyboard_key_data(this, wkbd, "a",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
 		wk->datai=mode-24;
-		gui_internal_keyboard_key(this, wkbd, "<-","\b");
+		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
 	}
 	gui_internal_widget_append(wkbdb, wkbd);
 	if (render) {
@@ -2672,6 +2703,7 @@ gui_internal_cmd_settings(struct gui_priv *this, struct widget *wm)
 //##############################################################################################################
 static void gui_internal_motion(void *data, struct point *p)
 {
+
 	struct gui_priv *this=data;
 	if (!this->root.children) {
 		navit_handle_motion(this->nav, p);
@@ -2679,10 +2711,11 @@ static void gui_internal_motion(void *data, struct point *p)
 	}
 	if (!this->pressed)
 		return;
-	graphics_draw_mode(this->gra, draw_mode_begin);
-	gui_internal_highlight(this, p);
-	graphics_draw_mode(this->gra, draw_mode_end);
-	
+	this->current=*p;
+	if(!this->motion_timeout_callback)
+		this->motion_timeout_callback=callback_new_1(callback_cast(gui_internal_highlight), this);
+	if(!this->motion_timeout_event)
+		this->motion_timeout_event=event_add_timeout(100,0, this->motion_timeout_callback);
 }
 
 
@@ -2773,7 +2806,6 @@ gui_internal_check_exit(struct gui_priv *this)
 static void gui_internal_button(void *data, int pressed, int button, struct point *p)
 {
 	struct gui_priv *this=data;
-	struct graphics *gra=this->gra;
 	
 	// if still on the map (not in the menu, yet):
 	if (!this->root.children || this->ignore_button) {
@@ -2789,15 +2821,14 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 	// if already in the menu:
 	if (pressed) {
 		this->pressed=1;
-		graphics_draw_mode(gra, draw_mode_begin);
-		gui_internal_highlight(this, p);
-		graphics_draw_mode(gra, draw_mode_end);
+		this->current=*p;
+		gui_internal_highlight(this);
 	} else {
 		this->pressed=0;
-		graphics_draw_mode(gra, draw_mode_begin);
+		this->current.x=-1;
+		this->current.y=-1;
 		gui_internal_call_highlighted(this);
-		gui_internal_highlight(this, NULL);
-		graphics_draw_mode(gra, draw_mode_end);
+		gui_internal_highlight(this);
 		gui_internal_check_exit(this);
 	}
 }
@@ -2810,6 +2841,10 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 static void gui_internal_resize(void *data, int w, int h)
 {
 	struct gui_priv *this=data;
+
+	if( this->root.w==w && this->root.h==h)
+                return;
+
 	this->root.w=w;
 	this->root.h=h;
 	dbg(1,"w=%d h=%d children=%p\n", w, h, this->root.children);

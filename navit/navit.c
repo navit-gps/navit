@@ -1338,6 +1338,23 @@ navit_init(struct navit *this_)
 		navit_draw(this_);
 }
 
+void
+navit_zoom_to_route(struct navit *this_)
+{
+	struct map *map;
+	struct map_rect *mr;
+	int first=1;
+	if (! this_->route)
+		return;
+	map=route_get_map(this_->route);
+	if (! map)
+		return;
+	mr=map_rect_new(map, NULL);
+	if (! mr)
+		return;
+	
+}
+
 /**
  * Change the current zoom level
  *
