@@ -27,10 +27,13 @@
 #endif
 
 struct navit;
+struct map;
 
 PyObject * python_object_from_attr(struct attr *attr);
 
 PyObject * main_py(PyObject *self, PyObject *args);
+
+PyObject * map_py_ref(struct map *map);
 
 struct navigation;
 PyObject * navigation_py(PyObject *self, PyObject *args);
