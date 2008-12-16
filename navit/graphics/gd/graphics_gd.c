@@ -308,8 +308,8 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 			else
 				cc=gdTransparent;
 		}
+		gdImageSetStyle(gr->im, color, gc->dash_count);
 	}
-	gdImageSetStyle(gr->im, color, gc->dash_count);
 	gdImageSetThickness(gr->im, gc->width);
 	gdImageOpenPolygon(gr->im, (gdPointPtr) p, count, gc->dash_count ? gdStyled : gc->color);  
 }
@@ -332,7 +332,6 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
 static void
 draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
-	gdImageSetStyle(gr->im, NULL, 0);
 	gdImageSetThickness(gr->im, gc->width);
 	gdImageArc(gr->im, p->x, p->y, r, r, 0, 360, gc->color);
 }
