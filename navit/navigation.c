@@ -1342,7 +1342,7 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 				return 1;
 			}
 		case 7:
-			if (this_->ways) {
+			if (this_->ways && prev) {
 				this_->str=attr->u.str=g_strdup_printf("other item angle:%d delta:%d flags:%d dir:%d type:%s id:(0x%x,0x%x)", this_->ways->angle2, angle_delta(prev->angle_end, this_->ways->angle2), this_->ways->flags, this_->ways->dir, item_to_name(this_->ways->item.type), this_->ways->item.id_hi, this_->ways->item.id_lo);
 				this_->ways=this_->ways->next;
 				return 1;
