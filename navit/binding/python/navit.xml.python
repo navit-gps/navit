@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE config SYSTEM "navit.dtd">
+<config xmlns:xi="http://www.w3.org/2001/XInclude">
+    <plugins>
+        <plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libbinding_python.so" active="yes"/>
+    </plugins>
+</config>
