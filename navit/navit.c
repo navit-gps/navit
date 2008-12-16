@@ -1513,6 +1513,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 			return 0;
 		}
 		break;
+	case attr_navigation:
+		attr->u.navigation=this_->navigation;
+		break;
 	case attr_orientation:
 		attr->u.num=this_->orientation;
 		break;
@@ -1522,6 +1525,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		} else {
 			return 0;
 		}
+		break;
+	case attr_route:
+		attr->u.route=this_->route;
 		break;
 	case attr_tracking:
 		attr->u.num=this_->tracking_flag;
@@ -1819,7 +1825,7 @@ navit_set_position(struct navit *this_, struct pcoord *c)
 		callback_list_call_attr_0(this_->attr_cbl, attr_position);
 		if (this_->navigation) {
 			navigation_update(this_->navigation, this_->route);
-#if 0
+#if 1
 			map_dump_file(route_get_map(this_->route), "route.txt");
 			map_dump_file(navigation_get_map(this_->navigation), "navigation.txt");
 #endif
