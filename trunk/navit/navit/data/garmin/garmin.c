@@ -303,8 +303,6 @@ coord_is_node(void *priv_data)
 	struct gobject *g = priv_data;
 	struct map_rect_priv *mr = g->priv_data;
 
-	if (mr->last_coord == 0)
-		return 1;
 	return gar_is_object_dcoord_node(mr->gmap, g, mr->last_coord);
 }
 
