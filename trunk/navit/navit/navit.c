@@ -810,7 +810,8 @@ navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
 			navigation_update(this_->navigation, this_->route);
 		}
 
-		navit_draw(this_);
+		if (this_->ready == 3)
+			navit_draw(this_);
 	}
 }
 
@@ -1824,7 +1825,8 @@ navit_set_position(struct navit *this_, struct pcoord *c)
 #endif
 		}
 	}
-	navit_draw(this_);
+	if (this_->ready == 3)
+		navit_draw(this_);
 }
 
 static void
