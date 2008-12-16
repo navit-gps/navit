@@ -705,10 +705,21 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 				return 1;
 			}
 
-			dbg(1, "maneuver_required: Staying on the same street: no\n");
-			if (reason)
-				*reason="no: Staying on same street";
-			return 0;
+			if (check_multiple_streets(new)) {
+				if (entering_straight(new,abs(*delta)*2)) {
+					if (reason)
+						*reason="no: delta < ext_limit for same name";
+					return 0;
+				}
+				if (reason)	
+					*reason="yes: delta > ext_limit for same name";
+				return 1;
+			} else {
+				dbg(1, "maneuver_required: Staying on the same street: no\n");
+				if (reason)
+					*reason="no: Staying on same street";
+				return 0;
+			}
 		}
 	} else
 		dbg(1, "maneuver_required: old or new is ramp\n");
