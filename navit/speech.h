@@ -32,6 +32,8 @@ struct speech * speech_new(struct attr *parent, struct attr **attrs);
 int speech_say(struct speech *this_, const char *text);
 int speech_sayf(struct speech *this_, const char *format, ...);
 void speech_destroy(struct speech *this_);
+int speech_get_attr(struct speech *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+int speech_set_attr(struct speech *this_, struct attr *attr);
 /* end of prototypes */
 
 #endif
