@@ -37,6 +37,8 @@
 #include "plugin.h"
 #include "navit_nls.h"
 
+/* #define DEBUG */
+
 struct suffix {
 	char *fullname;
 	char *abbrev;
@@ -152,6 +154,8 @@ struct navigation_way {
 	short angle2;			/**< The angle one has to steer to drive from the old item to this street */
 	int flags;			/**< The flags of the way */
 	struct item item;		/**< The item of the way */
+	char *name1;
+	char *name2;
 };
 
 struct navigation_itm {
@@ -309,6 +313,14 @@ calculate_angle(struct navigation_way *w)
 		w->flags=attr.u.num;
 	else
 		w->flags=0;
+	if (item_attr_get(ritem, attr_street_name, &attr))
+		w->name1=map_convert_string(ritem->map,attr.u.str);
+	else
+		w->name1=NULL;
+	if (item_attr_get(ritem, attr_street_name_systematic, &attr))
+		w->name2=map_convert_string(ritem->map,attr.u.str);
+	else
+		w->name2=NULL;
 		
 	if (w->dir < 0) {
 		if (item_coord_get(ritem, cbuf, 2) != 2) {
@@ -351,6 +363,8 @@ navigation_itm_ways_clear(struct navigation_itm *itm)
 	c = itm->ways;
 	while (c) {
 		n = c->next;
+		map_convert_free(c->name1);
+		map_convert_free(c->name2);
 		g_free(c);
 		c = n;
 	}
@@ -718,17 +732,17 @@ calculate_dest_distance(struct navigation *this_, int incr)
  * @return True if both old and new are on the same street
  */
 static int
-is_same_street2(struct navigation_itm *old, struct navigation_itm *new)
+is_same_street2(char *old_name1, char *old_name2, char *new_name1, char *new_name2)
 {
-	if (old->name1 && new->name1 && !strcmp(old->name1, new->name1)) {
-		dbg(1,"is_same_street: '%s' '%s' vs '%s' '%s' yes (1.)\n", old->name2, new->name2, old->name1, new->name1);
+	if (old_name1 && new_name1 && !strcmp(old_name1, new_name1)) {
+		dbg(1,"is_same_street: '%s' '%s' vs '%s' '%s' yes (1.)\n", old_name2, new_name2, old_name1, new_name1);
 		return 1;
 	}
-	if (old->name2 && new->name2 && !strcmp(old->name2, new->name2)) {
-		dbg(1,"is_same_street: '%s' '%s' vs '%s' '%s' yes (2.)\n", old->name2, new->name2, old->name1, new->name1);
+	if (old_name2 && new_name2 && !strcmp(old_name2, new_name2)) {
+		dbg(1,"is_same_street: '%s' '%s' vs '%s' '%s' yes (2.)\n", old_name2, new_name2, old_name1, new_name1);
 		return 1;
 	}
-	dbg(1,"is_same_street: '%s' '%s' vs '%s' '%s' no\n", old->name2, new->name2, old->name1, new->name1);
+	dbg(1,"is_same_street: '%s' '%s' vs '%s' '%s' no\n", old_name2, new_name2, old_name1, new_name1);
 	return 0;
 }
 
@@ -769,7 +783,7 @@ is_same_street_systematic(struct navigation_itm *old, struct navigation_itm *new
  * @return True if there are multiple streets
  */
 static int 
-check_multiple_streets(struct navigation_itm *new)
+maneuver_multiple_streets(struct navigation_itm *new)
 {
 	if (new->ways) {
 		return 1;
@@ -790,7 +804,7 @@ check_multiple_streets(struct navigation_itm *new)
  * @return True if the new item is entered "straight"
  */
 static int 
-entering_straight(struct navigation_itm *new, int diff)
+maneuver_straight(struct navigation_itm *new, int diff)
 {
 	int curr_diff;
 	struct navigation_way *w;
@@ -808,6 +822,46 @@ entering_straight(struct navigation_itm *new, int diff)
 	return 1;
 }
 
+static int maneuver_category(enum item_type type)
+{
+	switch (type) {
+	case type_street_0:
+		return 1;
+	case type_street_1_city:
+		return 2;
+	case type_street_2_city:
+		return 3;
+	case type_street_3_city:
+		return 4;
+	case type_street_4_city:
+		return 5;
+	case type_highway_city:
+		return 7;
+	case type_street_1_land:
+		return 2;
+	case type_street_2_land:
+		return 3;
+	case type_street_3_land:
+		return 4;
+	case type_street_4_land:
+		return 5;
+	case type_street_n_lanes:
+		return 6;
+	case type_highway_land:
+		return 7;
+	case type_ramp:
+		return 0;
+	case type_roundabout:
+		return 0;
+	case type_ferry:
+		return 0;
+	default:
+		return 0;
+	}
+	
+	
+}
+
 /**
  * @brief Checks if navit has to create a maneuver to drive from old to new
  *
@@ -823,22 +877,89 @@ entering_straight(struct navigation_itm *new, int diff)
 static int
 maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *delta, char **reason)
 {
-	int straight_limit=20,ext_straight_limit=45;
+	int ret=0,d,dw,dlim,straight_limit=20,ext_straight_limit=45;
+	char *r=NULL;
+	struct navigation_way *w;
+	int cat,ncat,wcat,maxcat,left=-180,right=180,is_unambigous=0,is_same_street;
 
 	dbg(1,"enter %p %p %p\n",old, new, delta);
-	*delta=angle_delta(old->angle_end, new->angle_start);
-
-	if ((old->flags & AF_ROUNDABOUT) && ! (new->flags & AF_ROUNDABOUT)) {
-		dbg(1, "maneuver_required: leaving roundabout: yes\n");
-		return 1;
-	} else 	if (!(old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) {
-		dbg(1, "maneuver_required: entering roundabout: no\n");
-		return 0;
-	} else if ((old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) {
-		dbg(1, "maneuver_required: staying in roundabout: no\n");
-		return 0;
+	d=angle_delta(old->angle_end, new->angle_start);
+	if (!new->ways) {
+		/* No announcement necessary */
+		r="no: Only one possibility";
+	} else if (!new->ways->next && new->ways->item.type == type_ramp) {
+		/* If the other way is only a ramp and it is one-way in the wrong direction, no announcement necessary */
+		/* TODO: check for one way in wrong direction */
+		r="no: Only ramp";
 	}
+	if (!r && abs(d) > 75) {
+		/* always make an announcement if you have to make a sharp turn */
+		r="yes: delta over 75";
+		ret=1;
+	}
+	if (! r) {
+		if ((old->flags & AF_ROUNDABOUT) && ! (new->flags & AF_ROUNDABOUT)) {
+			r="yes: leaving roundabout";
+			ret=1;
+		} else 	if (!(old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) 
+			r="no: entering roundabout";
+		else if ((old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) 
+			r="no: staying in roundabout";
+	}
+	cat=maneuver_category(old->item.type);
+	ncat=maneuver_category(new->item.type);
+	if (!r) {
+		/* Check whether the street keeps its name */
+		is_same_street=is_same_street2(old->name1, old->name2, new->name1, new->name2);
+		w = new->ways;
+		maxcat=-1;
+		while (w) {
+			dw=angle_delta(old->angle_end, w->angle2);
+			if (dw < 0) {
+				if (dw > left)
+					left=dw;
+			} else {
+				if (dw < right)
+					right=dw;
+			}
+			wcat=maneuver_category(w->item.type);
+			/* If any other street has the same name but isn't a highway (a highway might split up temporarily), then
+			   we can't use the same name criterium  */
+			if (is_same_street && is_same_street2(old->name1, old->name2, w->name1, w->name2) && (cat != 7 || wcat != 7))
+				is_same_street=0;
+			/* Mark if the street has a higher or the same category */
+			if (wcat > maxcat)
+				maxcat=wcat;
+			w = w->next;
+		}
+		/* get the delta limit for checking for other streets. It is lower if the street has no other
+		   streets of the same or higher category */
+		if (ncat < cat)
+			dlim=80;
+		else
+			dlim=120;
+		if ((maxcat == ncat && maxcat == cat) || (ncat == 0 && cat == 0)) 
+			dlim=abs(d)*620/256;
+		else if (maxcat < ncat && maxcat < cat)
+			dlim=abs(d)*128/256;
+		if (left < -dlim && right > dlim) 
+			is_unambigous=1;
+		if (!is_same_street && is_unambigous < 1) {
+			ret=1;
+			r="yes: same street and unambigous";
+		} else
+			r="no: not same street or ambigous";
+#ifdef DEBUG
+		r=g_strdup_printf("yes: d %d left %d right %d dlim=%d cat old:%d new:%d max:%d unambigous=%d same_street=%d", d, left, right, dlim, cat, ncat, maxcat, is_unambigous, is_same_street);
+#endif
+	}
+	*delta=d;
+	if (reason)
+		*reason=r;
+	return ret;
+	
 
+#if 0
 	if (new->item.type == old->item.type || (new->item.type != type_ramp && old->item.type != type_ramp)) {
 		if (is_same_street2(old, new)) {
 			if (! entering_straight(new, abs(*delta))) {
@@ -919,6 +1040,7 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 	if (reason)
 		*reason="yes: delta >= limit";
 	return 1;
+#endif
 }
 
 static struct navigation_command *
@@ -993,7 +1115,7 @@ navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *n
 		if(itm->item.type == type_highway_city || itm->item.type == type_highway_land )
 			return g_strdup_printf("%s%s",prefix,_("exit"));	/* %FIXME Can this even be reached? */			 
 		else
-			return g_strdup_printf("%s%s",prefix,_("ramp"));
+			return g_strdup_printf("%s%s",prefix,_("into the ramp"));
 		
 	}
 	if (!itm->name1 && !itm->name2)
@@ -1042,7 +1164,7 @@ navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *n
 			
 	} else
 		/* TRANSLATORS: gives the name of the next road to turn into (into the E17) */
-		ret=g_strdup_printf(_("into the %s"),itm->name2);
+		ret=g_strdup_printf(_("%sinto the %s"),prefix,itm->name2);
 	name1=ret;
 	while (*name1) {
 		switch (*name1) {
@@ -1135,6 +1257,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		d=get_distance(distance, type, 0);
 		break;
 	case 0:
+#if 0
 		skip_roads = count_possible_turns(nav->first,cmd->itm,cmd->delta);
 		if (skip_roads > 0) {
 			if (get_count_str(skip_roads+1)) {
@@ -1145,8 +1268,11 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 				d = g_strdup_printf(_("after %i roads"), skip_roads);
 			}
 		} else {
+#endif
 			d=g_strdup(_("now"));
+#if 0
 		}
+#endif
 		break;
 	default:
 		d=g_strdup(_("error"));
@@ -1450,11 +1576,13 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 		this_->attr_next=attr_street_name_systematic;
 		if (attr->u.str)
 			return 1;
+		return 0;
 	case attr_street_name_systematic:
 		attr->u.str=itm->name2;
 		this_->attr_next=attr_debug;
 		if (attr->u.str)
 			return 1;
+		return 0;
 	case attr_debug:
 		switch(this_->debug_idx) {
 		case 0:
@@ -1559,7 +1687,7 @@ navigation_map_rect_new(struct map_priv *priv, struct map_selection *sel)
 	navigation_map_rect_init(ret);
 	ret->item.meth=&navigation_map_item_methods;
 	ret->item.priv_data=ret;
-#if 0
+#ifdef DEBUG
 	ret->show_all=1;
 #endif
 	return ret;
