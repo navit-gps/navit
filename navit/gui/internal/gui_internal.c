@@ -3068,6 +3068,9 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	graphics_gc_set_foreground(this->text_background, &cb);
 	this->text_foreground=graphics_gc_new(gra);
 	graphics_gc_set_foreground(this->text_foreground, &cw);
+	
+	// set fullscreen if needed
+	this->win->fullscreen(this->win, this->fullscreen);
 	return 0;
 }
 
@@ -3151,6 +3154,8 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
         else
 	  this->keyboard=1;
 	
+    if( (attr=attr_search(attrs,NULL,attr_fullscreen)))
+      this->fullscreen=attr->u.num;
 
 	return this;
 }
