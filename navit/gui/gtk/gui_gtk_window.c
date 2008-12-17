@@ -79,7 +79,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 	if (event->type != GDK_KEY_PRESS)
 		return FALSE;
 	dbg(1,"keypress 0x%x\n", event->keyval);
-        transform_get_size(navit_get_trans(this->nav), &w, &h);
+	transform_get_size(navit_get_trans(this->nav), &w, &h);
 	switch (event->keyval) {
 	case GDK_KP_Enter:
 		gtk_menu_shell_select_first(GTK_MENU_SHELL(this->menubar), TRUE);
@@ -157,7 +157,7 @@ gui_gtk_add_bookmark_do(struct gui_priv *gui)
 static int
 gui_gtk_add_bookmark(struct gui_priv *gui, struct pcoord *c, char *description)
 {
-        GtkWidget *button_ok,*button_cancel,*label,*vbox,*hbox;
+	GtkWidget *button_ok,*button_cancel,*label,*vbox,*hbox;
 
 	gui->dialog_coord=*c;	
 	gui->dialog_win=gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -578,6 +578,7 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	unsigned xid = 0;
 	struct attr *attr;
 	GtkWidget *widget;
+	int fullscreen = 0;
 
 	if (cp) {
 		xid = strtol(cp, NULL, 0);
@@ -612,6 +613,7 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	else
 		this->win = gtk_plug_new(xid);
 
+	
 	g_signal_connect(G_OBJECT(this->win), "delete-event", G_CALLBACK(gui_gtk_delete), nav);
 	this->vbox = gtk_vbox_new(FALSE, 0);
 	gtk_window_set_default_size(GTK_WINDOW(this->win), w, h);
@@ -640,6 +642,16 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 
 
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(gui_gtk_init), attr_navit, this));
+	
+	if ((attr=attr_search(attrs, NULL, attr_fullscreen)))
+		fullscreen=attr->u.num;
+
+	if (fullscreen) {
+		GtkToggleAction *action;
+		action = GTK_TOGGLE_ACTION (gtk_action_group_get_action (this->base_group, "FullscreenAction"));
+		gtk_toggle_action_set_active (action, fullscreen);
+	}
+
 	return this;
 }
 
