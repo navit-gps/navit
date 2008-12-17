@@ -168,6 +168,7 @@ struct navigation_itm {
 	int dest_length;
 	int told;
 	int dest_count;
+	int flags;
 	struct navigation_itm *next;
 	struct navigation_itm *prev;
 	struct navigation_way *ways;		/**< Pointer to all ways one could drive from here */
@@ -480,6 +481,61 @@ navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 	itm->time=time.u.num;
 }
 
+/**
+ * @brief This check if an item is part of a roundabout
+ *
+ * @param itm The item to be checked
+ * @return True if the item is part of a roundabout
+ */ 
+static int
+check_roundabout(struct navigation_itm *itm, struct map *graph_map)
+{
+	struct map_selection coord_sel;
+	struct map_rect *g_rect; // Contains a map rectangle from the route graph's map
+	struct item *i,*sitem;
+	struct attr sitem_attr,flags_attr;
+
+	// These values cause the code in route.c to get us only the route graph point and connected segments
+	coord_sel.next = NULL;
+	coord_sel.u.c_rect.lu = itm->start;
+	coord_sel.u.c_rect.rl = itm->start;
+	// the selection's order is ignored
+	
+	g_rect = map_rect_new(graph_map, &coord_sel);
+	
+	i = map_rect_get_item(g_rect);
+	if (!i || i->type != type_rg_point) { // probably offroad? 
+		return 0;
+	}
+
+	while (1) {
+		i = map_rect_get_item(g_rect);
+
+		if (!i) {
+			break;
+		}
+		
+		if (i->type != type_rg_segment) {
+			continue;
+		}
+		
+		if (!item_attr_get(i,attr_street_item,&sitem_attr)) {
+			continue;
+		}		
+
+		sitem = sitem_attr.u.item;
+		if (item_is_equal(itm->item,*sitem)) {
+			if (item_attr_get(i,attr_flags,&flags_attr) && (flags_attr.u.num & AF_ROUNDABOUT)) {
+				map_rect_destroy(g_rect);
+				return 1;
+			}
+		}
+	}
+
+	map_rect_destroy(g_rect);
+	return 0;
+}
+
 static struct navigation_itm *
 navigation_itm_new(struct navigation *this_, struct item *ritem)
 {
@@ -502,9 +558,6 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 			ret->direction=direction.u.num;
 		else
 			ret->direction=0;
-
-		item_attr_get(ritem, attr_route, &route_attr);
-		graph_map = route_get_graph_map(route_attr.u.route);
 
 		sitem=street_item.u.item;
 		ret->item=*sitem;
@@ -535,6 +588,13 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 
 		ret->start=c[0];
 		ret->end=c[i];
+
+		item_attr_get(ritem, attr_route, &route_attr);
+		graph_map = route_get_graph_map(route_attr.u.route);
+		if (check_roundabout(ret, graph_map)) {
+			ret->flags |= AF_ROUNDABOUT;
+		}
+
 		dbg(1,"i=%d start %d end %d '%s' '%s'\n", i, ret->angle_start, ret->angle_end, ret->name1, ret->name2);
 		map_rect_destroy(mr);
 	} else {
@@ -718,6 +778,7 @@ check_multiple_streets(struct navigation_itm *new)
 	}
 }
 
+
 /**
  * @brief Check if the new item is entered "straight"
  *
@@ -766,6 +827,17 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 
 	dbg(1,"enter %p %p %p\n",old, new, delta);
 	*delta=angle_delta(old->angle_end, new->angle_start);
+
+	if ((old->flags & AF_ROUNDABOUT) && ! (new->flags & AF_ROUNDABOUT)) {
+		dbg(1, "maneuver_required: leaving roundabout: yes\n");
+		return 1;
+	} else 	if (!(old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) {
+		dbg(1, "maneuver_required: entering roundabout: no\n");
+		return 0;
+	} else if ((old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) {
+		dbg(1, "maneuver_required: staying in roundabout: no\n");
+		return 0;
+	}
 
 	if (new->item.type == old->item.type || (new->item.type != type_ramp && old->item.type != type_ramp)) {
 		if (is_same_street2(old, new)) {
