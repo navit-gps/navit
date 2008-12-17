@@ -947,6 +947,12 @@ navit_speak(struct navit *this_)
 	struct item *item;
 	struct attr attr;
 
+    if (!speech_get_attr(this_->speech, attr_active, &attr, NULL))
+        attr.u.num = 1;
+    dbg(0, "this_.speech->active %i\n", attr.u.num);
+    if(!attr.u.num)
+        return;
+
 	if (nav)
 		map=navigation_get_map(nav);
 	if (map)
