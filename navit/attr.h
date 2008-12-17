@@ -43,7 +43,7 @@ enum attr_type {
 #define AF_NOPASS	(AF_ONEWAY|AF_ONEWAYREV)
 #define AF_ONEWAYMASK	(AF_ONEWAY|AF_ONEWAYREV)
 #define AF_SEGMENTED	(1<<2)
-
+#define AF_ROUNDABOUT (1<<3)
 
 struct attr {
 	enum attr_type type;

@@ -293,6 +293,21 @@ static struct route_graph_segment
 }
 
 /**
+ * @brief Checks if the last segment returned from a route_graph_point_iterator comes from the end
+ *
+ * @param it The route graph point iterator to be checked
+ * @return 1 if the last segment returned comes from the end of the route graph point, 0 otherwise
+ */
+static int
+rp_iterator_end(struct route_graph_point_iterator *it) {
+	if (it->end && (it->next != it->p->end)) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/**
  * @brief Destroys a route_path
  *
  * @param this The route_path to be destroyed
@@ -340,6 +355,66 @@ route_new(struct attr *parent, struct attr **attrs)
 	}
 
 	return this;
+}
+
+/**
+ * @brief Checks if a segment is part of a roundabout
+ *
+ * This function checks if a segment is part of a roundabout.
+ *
+ * @param seg The segment to be checked
+ * @param level How deep to scan the route graph
+ * @param direction Set this to 1 if we're entering the segment through its end, to 0 otherwise
+ * @param origin Used internally, set to NULL
+ * @return 1 If a roundabout was detected, 0 otherwise
+ */
+static int
+route_check_roundabout(struct route_graph_segment *seg, int level, int direction, struct route_graph_segment *origin)
+{
+	struct route_graph_point_iterator it;
+	struct route_graph_segment *cur;
+
+	if (!level) {
+		return 0;
+	}
+	if (!direction && !(seg->flags & AF_ONEWAY)) {
+		return 0;
+	}
+	if (direction && !(seg->flags & AF_ONEWAYREV)) {
+		return 0;
+	}
+	
+	if (!origin) {
+		origin = seg;
+	}
+
+	if (!direction) {
+		it = rp_iterator_new(seg->end);
+	} else {
+		it = rp_iterator_new(seg->start);
+	}
+
+	cur = rp_iterator_next(&it);
+	while (cur) {
+		if (cur == seg) {
+			cur = rp_iterator_next(&it);
+			continue;
+		}
+
+		if (cur == origin) {
+			seg->flags |= AF_ROUNDABOUT;
+			return 1;
+		}
+
+		if (route_check_roundabout(cur, (level-1), rp_iterator_end(&it), origin)) {
+			seg->flags |= AF_ROUNDABOUT;
+			return 1;
+		}
+
+		cur = rp_iterator_next(&it);
+	}
+
+	return 0;
 }
 
 /**
@@ -1065,6 +1140,13 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 			segment->c[i]=ca[ccnt-i-1];
 	}
 	segment->ncoords = ccnt;
+
+	/* We check if the route graph segment is part of a roundabout here, because this
+	 * only matters for route graph segments which form parts of the route path */
+	if (!(rgs->flags & AF_ROUNDABOUT)) { // We identified this roundabout earlier
+		route_check_roundabout(rgs, 5, (dir < 1), NULL);
+	}
+
 	segment->item=rgs->item;
 	segment->offset = offset;
 linkold:
@@ -1955,6 +2037,16 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			attr->u.item=&seg->item;
 		else
 			return 0;
+		return 1;
+	case attr_flags:
+		if (mr->item.type != type_rg_segment)
+			return 0;
+		mr->attr_next = attr_none;
+		if (seg) {
+			attr->u.num = seg->flags;
+		} else {
+			return 0;
+		}
 		return 1;
 	case attr_direction:
 		// This only works if the map has been opened at a single point, and in that case indicates if the
