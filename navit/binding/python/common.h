@@ -48,3 +48,8 @@ struct pcoord *pcoord_py_get(PyObject *self);
 struct route;
 PyObject * route_py(PyObject *self, PyObject *args);
 PyObject * route_py_ref(struct route *route);
+
+extern PyTypeObject attr_Type;
+PyObject * attr_new_py(PyObject *self, PyObject *args);
+PyObject * attr_new_py_ref(struct attr *attr);
+struct attr * attr_py_get(PyObject *self);

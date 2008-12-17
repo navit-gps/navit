@@ -18,16 +18,17 @@
  */
 
 #include "common.h"
-#include "template.h"
+#include "item.h"
+#include "attr.h"
 
 typedef struct {
 	PyObject_HEAD
 	int ref;
-	struct template *template;
-} templateObject;
+	struct attr *attr;
+} attrObject;
 
 static PyObject *
-template_func(templateObject *self, PyObject *args)
+attr_func(attrObject *self, PyObject *args)
 {
 	const char *file;
 	int ret;
@@ -39,58 +40,60 @@ template_func(templateObject *self, PyObject *args)
 
 
 
-static PyMethodDef template_methods[] = {
-	{"func",	(PyCFunction) template_func, METH_VARARGS },
+static PyMethodDef attr_methods[] = {
+	{"func",	(PyCFunction) attr_func, METH_VARARGS },
 	{NULL, NULL },
 };
 
 
 static PyObject *
-template_getattr_py(PyObject *self, char *name)
+attr_getattr_py(PyObject *self, char *name)
 {
-	return Py_FindMethod(template_methods, self, name);
+	return Py_FindMethod(attr_methods, self, name);
 }
 
 static void
-template_destroy_py(templateObject *self)
+attr_destroy_py(attrObject *self)
 {
 	if (! self->ref)
-		template_destroy(self->template);
+		attr_free(self->attr);
 }
 
-PyTypeObject template_Type = {
+PyTypeObject attr_Type = {
 	Obj_HEAD
-	.tp_name="template",
-	.tp_basicsize=sizeof(templateObject),
-	.tp_dealloc=(destructor)template_destroy_py,
-	.tp_getattr=template_getattr_py,
+	.tp_name="attr",
+	.tp_basicsize=sizeof(attrObject),
+	.tp_dealloc=(destructor)attr_destroy_py,
+	.tp_getattr=attr_getattr_py,
 };
 
-struct template *
-template_py_get(PyObject *self)
+struct attr *
+attr_py_get(PyObject *self)
 {
-	return ((templateObject *)self)->template;
+	return ((attrObject *)self)->attr;
 }
 
 PyObject *
-template_new_py(PyObject *self, PyObject *args)
+attr_new_py(PyObject *self, PyObject *args)
 {
-	templateObject *ret;
-
-	ret=PyObject_NEW(templateObject, &template_Type);
-	ret->template=template_new();
+	attrObject *ret;
+	const char *name,*value;
+        if (!PyArg_ParseTuple(args, "ss", &name, &value))
+                return NULL;
+	ret=PyObject_NEW(attrObject, &attr_Type);
+	ret->attr=attr_new_from_text(name, value);
 	ret->ref=0;
 	return (PyObject *)ret;
 }
 
 PyObject *
-template_new_py_ref(struct template *template)
+attr_new_py_ref(struct attr *attr)
 {
-	templateObject *ret;
+	attrObject *ret;
 
-	ret=PyObject_NEW(templateObject, &template_Type);
+	ret=PyObject_NEW(attrObject, &attr_Type);
 	ret->ref=1;
-	ret->template=template;
+	ret->attr=attr;
 	return (PyObject *)ret;
 }
 
