@@ -182,6 +182,29 @@ road_angle(struct coord *c1, struct coord *c2, int dir)
 	return ret;
 }
 
+static char
+*get_count_str(int n) 
+{
+	switch (n) {
+	case 0:
+		return _("zeroth"); // Not shure if this exists, neither if it will ever be needed
+	case 1:
+		return _("first");
+	case 2:
+		return _("second");
+	case 3:
+		return _("third");
+	case 4:
+		return _("fourth");
+	case 5:
+		return _("fifth");
+	case 6:
+		return _("sixth");
+	default: 
+		return NULL;
+	}
+}
+
 static int
 round_distance(int dist)
 {
@@ -530,6 +553,54 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 	dbg(1,"ret=%p\n", ret);
 	this_->last=ret;
 	return ret;
+}
+
+/**
+ * @brief Counts how many times a driver could turn right/left 
+ *
+ * This function counts how many times the driver theoretically could
+ * turn right/left between two navigation items, not counting the final
+ * turn itself.
+ *
+ * @param from The navigation item which should form the start
+ * @param to The navigation item which should form the end
+ * @param direction Set to < 0 to count turns to the left >= 0 for turns to the right
+ * @return The number of possibilities to turn or -1 on error
+ */
+static int
+count_possible_turns(struct navigation_itm *from, struct navigation_itm *to, int direction)
+{
+	int count;
+	struct navigation_itm *curr;
+	struct navigation_way *w;
+
+	count = 0;
+	curr = from->next;
+	while (curr && (curr != to)) {
+		w = curr->ways;
+
+		while (w) {
+			if (direction < 0) {
+				if (angle_delta(curr->prev->angle_end, w->angle2) < 0) {
+					count++;
+					break;
+				}
+			} else {
+				if (angle_delta(curr->prev->angle_end, w->angle2) > 0) {
+					count++;
+					break;
+				}				
+			}
+			w = w->next;
+		}
+		curr = curr->next;
+	}
+
+	if (!curr) { // from does not lead to to?
+		return -1;
+	}
+
+	return count;
 }
 
 /**
@@ -926,6 +997,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	int delta=cmd->delta;
 	int level;
 	int strength_needed;
+	int skip_roads;
 	struct navigation_way *w;
 	
 	w = itm->next->ways;
@@ -991,7 +1063,18 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		d=get_distance(distance, type, 0);
 		break;
 	case 0:
-		d=g_strdup(_("now"));
+		skip_roads = count_possible_turns(nav->first,cmd->itm,cmd->delta);
+		if (skip_roads > 0) {
+			if (get_count_str(skip_roads+1)) {
+				/* TRANSLATORS: First argument is the how manieth street to take, second the direction */ 
+				ret = g_strdup_printf(_("Take the %1$s road to the %2$s"), get_count_str(skip_roads+1), dir);
+				return ret;
+			} else {
+				d = g_strdup_printf(_("after %i roads"), skip_roads);
+			}
+		} else {
+			d=g_strdup(_("now"));
+		}
 		break;
 	default:
 		d=g_strdup(_("error"));
