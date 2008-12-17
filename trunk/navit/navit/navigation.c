@@ -1257,7 +1257,6 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		d=get_distance(distance, type, 0);
 		break;
 	case 0:
-#if 0
 		skip_roads = count_possible_turns(nav->first,cmd->itm,cmd->delta);
 		if (skip_roads > 0) {
 			if (get_count_str(skip_roads+1)) {
@@ -1268,11 +1267,8 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 				d = g_strdup_printf(_("after %i roads"), skip_roads);
 			}
 		} else {
-#endif
 			d=g_strdup(_("now"));
-#if 0
 		}
-#endif
 		break;
 	default:
 		d=g_strdup(_("error"));
