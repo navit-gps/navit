@@ -73,6 +73,17 @@ navit_set_position_py(navitObject *self, PyObject *args)
 }
 
 
+static PyObject *
+navit_zoom_to_route_py(navitObject *self, PyObject *args)
+{
+	PyObject *pcoord;
+	if (!PyArg_ParseTuple(args, ""))
+		return NULL;
+	navit_zoom_to_route(self->navit);
+	Py_RETURN_NONE;
+}
+
+
 
 
 static PyMethodDef navit_methods[] = {
@@ -80,6 +91,7 @@ static PyMethodDef navit_methods[] = {
 	{"set_center",		(PyCFunction) navit_set_center_py, METH_VARARGS },
 	{"set_destination",	(PyCFunction) navit_set_destination_py, METH_VARARGS },
 	{"set_position",	(PyCFunction) navit_set_position_py, METH_VARARGS },
+	{"zoom_to_route",	(PyCFunction) navit_zoom_to_route_py, METH_VARARGS },
 	{NULL, NULL },
 };
 

@@ -188,10 +188,22 @@ map_dump_file_py(mapObject *self, PyObject *args)
 }
 
 
+static PyObject *
+map_set_attr_py(mapObject *self, PyObject *args)
+{
+	PyObject *attr;
+	if (!PyArg_ParseTuple(args, "O!", &attr_Type, &attr))
+		return NULL;
+	map_set_attr(self->m, attr_py_get(attr));
+	Py_RETURN_NONE;
+}
+
+
 
 static PyMethodDef map_methods[] = {
 	{"dump_file",		(PyCFunction) map_dump_file_py, METH_VARARGS },
 	{"map_rect_new",	(PyCFunction) map_rect_new_py, METH_VARARGS },
+	{"set_attr",		(PyCFunction) map_set_attr_py, METH_VARARGS },
 	{NULL, NULL },
 };
 
@@ -308,6 +320,7 @@ config_load_py(PyObject *self, PyObject *args)
 }
 
 static PyMethodDef navitMethods[]={
+	{"attr", attr_new_py, METH_VARARGS},
 	{"coord", coord_new_py, METH_VARARGS, "Create a new coordinate point."},
 	{"coord_rect", coord_rect_new_py, METH_VARARGS, "Create a new coordinate rectangle."},
 	{"map", map_new_py, METH_VARARGS, "Create a new map."},
