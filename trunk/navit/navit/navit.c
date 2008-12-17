@@ -1343,7 +1343,10 @@ navit_zoom_to_route(struct navit *this_)
 {
 	struct map *map;
 	struct map_rect *mr;
-	int first=1;
+	struct item *item;
+	struct coord c,*ct;
+	struct coord_rect r;
+	int count=0,scale=16;
 	if (! this_->route)
 		return;
 	map=route_get_map(this_->route);
@@ -1352,7 +1355,39 @@ navit_zoom_to_route(struct navit *this_)
 	mr=map_rect_new(map, NULL);
 	if (! mr)
 		return;
+	while ((item=map_rect_get_item(mr))) {
+		while (item_coord_get(item, &c, 1)) {
+			if (!count) 
+				r.lu=r.rl=c;
+			else
+				coord_rect_extend(&r, &c);	
+			count++;
+		}
+	}
+	if (! count)
+		return;
+	c.x=(r.rl.x+r.lu.x)/2;
+	c.y=(r.rl.y+r.lu.y)/2;
+	dbg(0,"count=%d\n",count);
+	ct=transform_center(this_->trans);
+	*ct=c;
+	dbg(0,"%x,%x-%x,%x\n", r.rl.x,r.rl.y,r.lu.x,r.lu.y);
+	while (scale < 1<<20) {
+		struct point p1,p2;
+		transform_set_scale(this_->trans, scale);
+		transform_setup_source_rect(this_->trans);
+		transform(this_->trans, transform_get_projection(this_->trans), &r.lu, &p1, 1, 0);
+		transform(this_->trans, transform_get_projection(this_->trans), &r.rl, &p2, 1, 0);
+		dbg(0,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
+		if (p1.x < 0 || p2.x < 0 || p1.x > this_->w || p2.x > this_->w ||
+		    p1.y < 0 || p2.y < 0 || p1.y > this_->h || p2.y > this_->h)
+			scale*=2;
+		else
+			break;
 	
+	}
+	if (this_->ready == 3)
+		navit_draw(this_);
 }
 
 /**

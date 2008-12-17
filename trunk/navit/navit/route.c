@@ -1144,7 +1144,9 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 	/* We check if the route graph segment is part of a roundabout here, because this
 	 * only matters for route graph segments which form parts of the route path */
 	if (!(rgs->flags & AF_ROUNDABOUT)) { // We identified this roundabout earlier
+#if 0
 		route_check_roundabout(rgs, 5, (dir < 1), NULL);
+#endif
 	}
 
 	segment->item=rgs->item;
