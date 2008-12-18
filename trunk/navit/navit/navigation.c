@@ -862,6 +862,19 @@ static int maneuver_category(enum item_type type)
 	
 }
 
+static int
+is_way_allowed(struct navigation_way *way)
+{
+	if (way->dir > 0) {
+		if (way->flags & AF_ONEWAYREV)
+			return 0;
+	} else {
+		if (way->flags & AF_ONEWAY)
+			return 0;
+	}
+	return 1;
+}
+
 /**
  * @brief Checks if navit has to create a maneuver to drive from old to new
  *
@@ -925,7 +938,7 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 			wcat=maneuver_category(w->item.type);
 			/* If any other street has the same name but isn't a highway (a highway might split up temporarily), then
 			   we can't use the same name criterium  */
-			if (is_same_street && is_same_street2(old->name1, old->name2, w->name1, w->name2) && (cat != 7 || wcat != 7))
+			if (is_same_street && is_same_street2(old->name1, old->name2, w->name1, w->name2) && (cat != 7 || wcat != 7) && is_way_allowed(w))
 				is_same_street=0;
 			/* Mark if the street has a higher or the same category */
 			if (wcat > maxcat)
@@ -1077,6 +1090,7 @@ make_maneuvers(struct navigation *this_, struct route *route)
 		last_itm=itm;
 		itm=itm->next;
 	}
+	command_new(this_, last_itm, 0);
 }
 
 static int
@@ -1248,12 +1262,15 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	}
 
 	if (cmd->itm->prev->flags & AF_ROUNDABOUT) {
-		if (level > 0) {
+		switch (level) {
+		case 2:
+			return g_strdup(_("Enter the roundabout soon"));
+		case 1:
 			d = get_distance(distance, type, 1);
 			ret = g_strdup_printf(_("In %s, enter the roundabout"), d);
 			g_free(d);
 			return ret;
-		} else {
+		case 0:
 			cur = cmd->itm->prev;
 			count_roundabout = 0;
 			while (cur && (cur->flags & AF_ROUNDABOUT)) {
@@ -1262,7 +1279,6 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 				}
 				cur = cur->prev;
 			}
-
 			ret = g_strdup_printf(_("Leave the roundabout at the %s exit"), get_count_str(count_roundabout));
 			return ret;
 		}
@@ -1335,7 +1351,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 static void
 navigation_call_callbacks(struct navigation *this_, int force_speech)
 {
-	int distance, level = 0;
+	int distance, level = 0, level2;
 	void *p=this_;
 	if (!this_->cmd_first)
 		return;
@@ -1356,6 +1372,11 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 	} else if (!this_->turn_around_limit || this_->turn_around == -this_->turn_around_limit+1) {
 		this_->distance_turn=50;
 		level=navigation_get_announce_level(this_, this_->first->item.type, distance);
+		if (this_->cmd_first->itm->prev) {
+			level2=navigation_get_announce_level(this_, this_->cmd_first->itm->prev->item.type, distance);
+			if (level2 > level)
+				level=level2;
+		}
 		if (level < this_->level_last) {
 			dbg(1,"level %d < %d\n", level, this_->level_last);
 			this_->level_last=level;
