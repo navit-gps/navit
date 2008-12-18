@@ -886,7 +886,7 @@ osd_nav_distance_to_next_draw(struct osd_nav_distance_to_next *this,
 		mr = map_rect_new(map, NULL);
 	if (mr)
 		while ((item = map_rect_get_item(mr))
-		       && item->type == type_nav_position);
+		       && (item->type == type_nav_position || item->type == type_nav_none));
 
 	if (item) {
 		if (item_attr_get(item, attr_length, &attr)) {
@@ -1284,7 +1284,7 @@ osd_nav_next_turn_draw(struct nav_next_turn *this, struct navit *navit,
 		mr = map_rect_new(map, NULL);
 	if (mr)
 		while ((item = map_rect_get_item(mr))
-		       && item->type == type_nav_position);
+		       && (item->type == type_nav_position || item->type == type_nav_none));
 
 	if (item && item->type != type_nav_destination) {
 		name = item_to_name(item->type);

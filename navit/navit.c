@@ -958,7 +958,7 @@ navit_speak(struct navit *this_)
 	if (map)
 		mr=map_rect_new(map, NULL);
 	if (mr) {
-		while ((item=map_rect_get_item(mr)) && item->type == type_nav_position);
+		while ((item=map_rect_get_item(mr)) && (item->type == type_nav_position || item->type == type_nav_none));
 		if (item && item_attr_get(item, attr_navigation_speech, &attr)) {
 			speech_say(this_->speech, attr.u.str);
 			navit_textfile_debug_log(this_, "type=announcement label=\"%s\"", attr.u.str);
