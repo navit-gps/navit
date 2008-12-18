@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-17 16:40+0100\n"
+"POT-Creation-Date: 2008-12-18 09:48+0100\n"
 "PO-Revision-Date: 2008-05-27 22:03+0000\n"
 "Last-Translator: singesang <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -144,103 +144,113 @@ msgid "right"
 msgstr "rechts"
 
 #. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1220
+#: ../navit/navigation.c:1222
 msgid "left"
 msgstr "links"
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1227
+#: ../navit/navigation.c:1229
 msgid "easily "
 msgstr "leicht "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1232
+#: ../navit/navigation.c:1234
 msgid "strongly "
 msgstr "scharf "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1236
+#: ../navit/navigation.c:1238
 msgid "unknown "
 msgstr "unbekannt "
 
 #
-#: ../navit/navigation.c:1243
+#: ../navit/navigation.c:1245
 msgid "When possible, please turn around"
 msgstr "Wenn möglich bitte wenden"
 
-#: ../navit/navigation.c:1250
+#: ../navit/navigation.c:1253
+#, c-format
+msgid "In %s, enter the roundabout"
+msgstr "In %s in den Kreisverkehr einfahren"
+
+#: ../navit/navigation.c:1266
+#, c-format
+msgid "Leave the roundabout at the %s exit"
+msgstr "Den Kreisverkehr an der %s Ausfahrt verlassen"
+
+#: ../navit/navigation.c:1274
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Dem Straßenverlauf %s folgen"
 
-#: ../navit/navigation.c:1254
+#: ../navit/navigation.c:1278
 msgid "soon"
 msgstr "Demnächst"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1265
+#: ../navit/navigation.c:1288
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Die %1$s Straße %2$s abbiegen"
 
-#: ../navit/navigation.c:1268
+#: ../navit/navigation.c:1291
 #, c-format
 msgid "after %i roads"
 msgstr "nach %i Straßen"
 
-#: ../navit/navigation.c:1272
+#: ../navit/navigation.c:1294
 msgid "now"
 msgstr "Jetzt"
 
-#: ../navit/navigation.c:1278
+#: ../navit/navigation.c:1298
 msgid "error"
 msgstr "Fehler"
 
 # c-format
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:1307
+#: ../navit/navigation.c:1327
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "%3$s %1$s%2$s abbiegen%4$s"
 
-#: ../navit/navigation.c:1310
+#: ../navit/navigation.c:1330
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "%s haben Sie ihr Ziel erreicht"
 
-#: ../navit/navit.c:992
+#: ../navit/navit.c:998
 msgid "Position"
 msgstr "Position"
 
-#: ../navit/navit.c:993
+#: ../navit/navit.c:999
 msgid "Command"
 msgstr "Befehl"
 
-#: ../navit/navit.c:997
+#: ../navit/navit.c:1003
 msgid "Length"
 msgstr "Länge"
 
-#: ../navit/navit.c:1001 ../navit/navit.c:1026
+#: ../navit/navit.c:1007 ../navit/navit.c:1032
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:1005 ../navit/navit.c:1030
+#: ../navit/navit.c:1011 ../navit/navit.c:1036
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:1011
+#: ../navit/navit.c:1017
 msgid "Time"
 msgstr "Zeit"
 
-#: ../navit/navit.c:1023
+#: ../navit/navit.c:1029
 msgid "Destination Length"
 msgstr "Verbleibende Strecke"
 
-#: ../navit/navit.c:1036
+#: ../navit/navit.c:1042
 msgid "Destination Time"
 msgstr "Fahrzeit"
 
-#: ../navit/navit.c:1069 ../navit/gui/gtk/gui_gtk_action.c:210
+#: ../navit/navit.c:1075 ../navit/gui/gtk/gui_gtk_action.c:210
 msgid "Roadbook"
 msgstr "Straßenliste"
 
