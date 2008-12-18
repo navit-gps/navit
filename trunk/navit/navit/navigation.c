@@ -946,9 +946,9 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 			is_unambigous=1;
 		if (!is_same_street && is_unambigous < 1) {
 			ret=1;
-			r="yes: same street and unambigous";
+			r="yes: not same street or ambigous";
 		} else
-			r="no: not same street or ambigous";
+			r="no: same street and unambigous";
 #ifdef DEBUG
 		r=g_strdup_printf("yes: d %d left %d right %d dlim=%d cat old:%d new:%d max:%d unambigous=%d same_street=%d", d, left, right, dlim, cat, ncat, maxcat, is_unambigous, is_same_street);
 #endif
@@ -1192,6 +1192,8 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	int level;
 	int strength_needed;
 	int skip_roads;
+	int count_roundabout;
+	struct navigation_itm *cur;
 	struct navigation_way *w;
 	
 	w = itm->next->ways;
@@ -1244,6 +1246,28 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		level=navigation_get_announce_level(nav, itm->item.type, distance);
 		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, itm->item.type);
 	}
+
+	if (cmd->itm->prev->flags & AF_ROUNDABOUT) {
+		if (level > 0) {
+			d = get_distance(distance, type, 1);
+			ret = g_strdup_printf(_("In %s, enter the roundabout"), d);
+			g_free(d);
+			return ret;
+		} else {
+			cur = cmd->itm->prev;
+			count_roundabout = 0;
+			while (cur && (cur->flags & AF_ROUNDABOUT)) {
+				if (cur->next->ways) { // If the next segment has no exit, don't count it
+					count_roundabout++;
+				}
+				cur = cur->prev;
+			}
+
+			ret = g_strdup_printf(_("Leave the roundabout at the %s exit"), get_count_str(count_roundabout));
+			return ret;
+		}
+	}
+
 	switch(level) {
 	case 3:
 		d=get_distance(distance, type, 1);
