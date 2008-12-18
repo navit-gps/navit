@@ -892,11 +892,6 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 		/* TODO: check for one way in wrong direction */
 		r="no: Only ramp";
 	}
-	if (!r && abs(d) > 75) {
-		/* always make an announcement if you have to make a sharp turn */
-		r="yes: delta over 75";
-		ret=1;
-	}
 	if (! r) {
 		if ((old->flags & AF_ROUNDABOUT) && ! (new->flags & AF_ROUNDABOUT)) {
 			r="yes: leaving roundabout";
@@ -905,6 +900,11 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 			r="no: entering roundabout";
 		else if ((old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) 
 			r="no: staying in roundabout";
+	}
+	if (!r && abs(d) > 75) {
+		/* always make an announcement if you have to make a sharp turn */
+		r="yes: delta over 75";
+		ret=1;
 	}
 	cat=maneuver_category(old->item.type);
 	ncat=maneuver_category(new->item.type);
