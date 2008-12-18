@@ -1285,8 +1285,7 @@ osd_nav_next_turn_draw(struct nav_next_turn *this, struct navit *navit,
 	if (mr)
 		while ((item = map_rect_get_item(mr))
 		       && (item->type == type_nav_position || item->type == type_nav_none));
-
-	if (item && item->type != type_nav_destination) {
+	if (item) {
 		name = item_to_name(item->type);
 		dbg(0, "name=%s\n", name);
 		if (this->active != 1 || this->last_name != name) {
