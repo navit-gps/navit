@@ -3070,7 +3070,8 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	graphics_gc_set_foreground(this->text_foreground, &cw);
 	
 	// set fullscreen if needed
-	this->win->fullscreen(this->win, this->fullscreen);
+	if (this->fullscreen)
+		this->win->fullscreen(this->win, this->fullscreen);
 	return 0;
 }
 
