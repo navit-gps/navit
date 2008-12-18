@@ -76,6 +76,8 @@ struct navigation_command {
 	struct navigation_itm *itm;
 	struct navigation_command *next;
 	int delta;
+	int roundabout_delta;
+	int length;
 };
 
 /**
@@ -1063,6 +1065,27 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 	dbg(1,"enter this_=%p itm=%p delta=%d\n", this_, itm, delta);
 	ret->delta=delta;
 	ret->itm=itm;
+	if (itm && itm->prev && !(itm->flags & AF_ROUNDABOUT) && (itm->prev->flags & AF_ROUNDABOUT)) {
+		int len=0;
+		int angle;
+		struct navigation_itm *itm2=itm->prev;
+		while (itm2 && (itm2->flags & AF_ROUNDABOUT)) {
+			len+=itm2->length;
+			angle=itm2->angle_end;
+			itm2=itm2->prev;
+		}
+		if (itm2) 
+			ret->roundabout_delta=angle_delta(itm2->angle_end, itm->angle_start);
+		else {
+			if (delta > 0) 
+				angle-=90;
+			else
+				angle+=90;
+			ret->roundabout_delta=angle_delta(angle % 360, itm->angle_start);
+		}
+		ret->length=len;
+		
+	}
 	if (this_->cmd_last)
 		this_->cmd_last->next=ret;
 	this_->cmd_last=ret;
@@ -1257,7 +1280,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	if (type == attr_navigation_speech) {
 		if (nav->turn_around && nav->turn_around == nav->turn_around_limit) 
 			return g_strdup(_("When possible, please turn around"));
-		level=navigation_get_announce_level(nav, itm->item.type, distance);
+		level=navigation_get_announce_level(nav, itm->item.type, distance-cmd->length);
 		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, itm->item.type);
 	}
 
@@ -1274,7 +1297,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			cur = cmd->itm->prev;
 			count_roundabout = 0;
 			while (cur && (cur->flags & AF_ROUNDABOUT)) {
-				if (cur->next->ways) { // If the next segment has no exit, don't count it
+				if (cur->next->ways && is_way_allowed(cur->next->ways)) { // If the next segment has no exit or the exit isn't allowed, don't count it
 					count_roundabout++;
 				}
 				cur = cur->prev;
@@ -1371,6 +1394,7 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 		}
 	} else if (!this_->turn_around_limit || this_->turn_around == -this_->turn_around_limit+1) {
 		this_->distance_turn=50;
+		distance-=this_->cmd_first->length;
 		level=navigation_get_announce_level(this_, this_->first->item.type, distance);
 		if (this_->cmd_first->itm->prev) {
 			level2=navigation_get_announce_level(this_, this_->cmd_first->itm->prev->item.type, distance);
@@ -1765,26 +1789,57 @@ navigation_map_get_item(struct map_rect_priv *priv)
 		if (priv->cmd_itm_next && !priv->cmd_itm_next->next)
 			ret->type=type_nav_destination;
 		else {
-			delta=priv->cmd->delta;	
-			if (delta < 0) {
-				delta=-delta;
-				if (delta < 45)
-					ret->type=type_nav_left_1;
-				else if (delta < 105)
-					ret->type=type_nav_left_2;
-				else if (delta < 165) 
-					ret->type=type_nav_left_3;
-				else
-					ret->type=type_none;
+			if (priv->itm && priv->itm->prev && !(priv->itm->flags & AF_ROUNDABOUT) && (priv->itm->prev->flags & AF_ROUNDABOUT)) {
+				
+				switch (((180+22)-priv->cmd->roundabout_delta)/45) {
+				case 0:
+				case 1:
+					ret->type=type_nav_roundabout_r1;
+					break;
+				case 2:
+					ret->type=type_nav_roundabout_r2;
+					break;
+				case 3:
+					ret->type=type_nav_roundabout_r3;
+					break;
+				case 4:
+					ret->type=type_nav_roundabout_r4;
+					break;
+				case 5:
+					ret->type=type_nav_roundabout_r5;
+					break;
+				case 6:
+					ret->type=type_nav_roundabout_r6;
+					break;
+				case 7:
+					ret->type=type_nav_roundabout_r7;
+					break;
+				case 8:
+					ret->type=type_nav_roundabout_r8;
+					break;
+				}
 			} else {
-				if (delta < 45)
-					ret->type=type_nav_right_1;
-				else if (delta < 105)
-					ret->type=type_nav_right_2;
-				else if (delta < 165) 
-					ret->type=type_nav_right_3;
-				else
-					ret->type=type_none;
+				delta=priv->cmd->delta;	
+				if (delta < 0) {
+					delta=-delta;
+					if (delta < 45)
+						ret->type=type_nav_left_1;
+					else if (delta < 105)
+						ret->type=type_nav_left_2;
+					else if (delta < 165) 
+						ret->type=type_nav_left_3;
+					else
+						ret->type=type_none;
+				} else {
+					if (delta < 45)
+						ret->type=type_nav_right_1;
+					else if (delta < 105)
+						ret->type=type_nav_right_2;
+					else if (delta < 165) 
+						ret->type=type_nav_right_3;
+					else
+						ret->type=type_none;
+				}
 			}
 		}
 	}
