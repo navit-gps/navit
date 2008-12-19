@@ -91,7 +91,9 @@ tracking_get_segment_pos(struct tracking *tr)
 struct street_data *
 tracking_get_street_data(struct tracking *tr)
 {
-	return tr->curr_line->street;
+	if (tr->curr_line)
+		return tr->curr_line->street;
+	return NULL;
 }
 
 int

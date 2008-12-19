@@ -679,6 +679,7 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 {
 	struct pcoord *c;
 	struct route_info *ret;
+	struct street_data *sd;
 
 	dbg(2,"enter\n");
 	c=tracking_get_pos(tracking);
@@ -695,7 +696,9 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 	ret->lp.x=c->x;
 	ret->lp.y=c->y;
 	ret->pos=tracking_get_segment_pos(tracking);
-	ret->street=street_data_dup(tracking_get_street_data(tracking));
+	sd=tracking_get_street_data(tracking);
+	if (sd)
+		ret->street=street_data_dup(sd);
 	route_info_distances(ret, c->pro);
 	dbg(3,"c->x=0x%x, c->y=0x%x pos=%d item=(0x%x,0x%x)\n", c->x, c->y, ret->pos, ret->street->item.id_hi, ret->street->item.id_lo);
 	dbg(3,"street 0=(0x%x,0x%x) %d=(0x%x,0x%x)\n", ret->street->c[0].x, ret->street->c[0].y, ret->street->count-1, ret->street->c[ret->street->count-1].x, ret->street->c[ret->street->count-1].y);
