@@ -230,6 +230,7 @@ vehicle_remove_attr(struct vehicle *this_, struct attr *attr)
 void
 vehicle_destroy(struct vehicle *this_)
 {
+	this_->meth.destroy(this_->priv);
 	callback_list_destroy(this_->cbl);
 	attr_list_free(this_->attrs);
 	g_free(this_);
