@@ -953,6 +953,9 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 			dlim=80;
 		else
 			dlim=120;
+		/* if the street is really straight, the others might be closer to straight */
+		if (abs(d) < 20)
+			dlim/=2;
 		if ((maxcat == ncat && maxcat == cat) || (ncat == 0 && cat == 0)) 
 			dlim=abs(d)*620/256;
 		else if (maxcat < ncat && maxcat < cat)
