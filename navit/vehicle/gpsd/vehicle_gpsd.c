@@ -57,6 +57,9 @@ static struct vehicle_priv {
 	guint retry_timer;
 	struct attr ** attrs;
 	char fixiso8601[128];
+#ifdef HAVE_GPSBT
+	gpsbt_t context;
+#endif
 } *vehicle_last;
 
 #define DEFAULT_RETRY_INTERVAL 10 // seconds
