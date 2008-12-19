@@ -201,7 +201,7 @@ vehicle_gpsd_open(struct vehicle_priv *priv)
 	/* We need to start gpsd (via gpsbt) first. */
 	errno = 0;
 	memset(&priv->context, 0, sizeof(gpsbt_t));
-	if(gpsbt_start(NULL, 1, 0, 0, errstr, sizeof(errstr),
+	if(gpsbt_start(NULL, 0, 0, 0, errstr, sizeof(errstr),
 		0, &priv->context) < 0) {
 	       dbg(0,"Error connecting to GPS with gpsbt: (%d) %s (%s)\n",
 		  errno, strerror(errno), errstr);
