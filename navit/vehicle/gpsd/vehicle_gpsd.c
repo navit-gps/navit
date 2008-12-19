@@ -22,6 +22,10 @@
 #include <string.h>
 #include <glib.h>
 #include <math.h>
+#ifdef HAVE_GPSBT
+#include <gpsbt.h>
+#include <errno.h>
+#endif
 #include "debug.h"
 #include "callback.h"
 #include "plugin.h"
@@ -189,6 +193,19 @@ vehicle_gpsd_try_open(gpointer *data)
 static void
 vehicle_gpsd_open(struct vehicle_priv *priv)
 {
+#ifdef HAVE_GPSBT
+	char errstr[256] = "";
+	/* We need to start gpsd (via gpsbt) first. */
+	errno = 0;
+	memset(&priv->context, 0, sizeof(gpsbt_t));
+	if(gpsbt_start(NULL, 1, 0, 0, errstr, sizeof(errstr),
+		0, &priv->context) < 0) {
+	       dbg(0,"Error connecting to GPS with gpsbt: (%d) %s (%s)\n",
+		  errno, strerror(errno), errstr);
+	}
+	sleep(1);       /* give gpsd time to start */
+	dbg(1,"gpsbt_start: completed\n");
+#endif
 	priv->retry_timer=0;
 	if (vehicle_gpsd_try_open((gpointer *)priv)) {
 		priv->retry_timer = g_timeout_add(priv->retry_interval*1000, (GSourceFunc)vehicle_gpsd_try_open, (gpointer *)priv);
@@ -199,6 +216,9 @@ static void
 vehicle_gpsd_close(struct vehicle_priv *priv)
 {
 	GError *error = NULL;
+#ifdef HAVE_GPSBT
+	int err;
+#endif
 
 	if (priv->watch) {
 		g_source_remove(priv->watch);
@@ -216,6 +236,13 @@ vehicle_gpsd_close(struct vehicle_priv *priv)
 		gps_close(priv->gps);
 		priv->gps = NULL;
 	}
+#ifdef HAVE_GPSBT
+	err = gpsbt_stop(&priv->context);
+	if (err < 0) {
+		dbg(0,"Error %d while gpsbt_stop", err);
+	}
+	dbg(1,"gpsbt_stop: completed, (%d)",err);
+#endif
 }
 
 static gboolean
