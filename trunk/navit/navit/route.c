@@ -544,7 +544,7 @@ route_contains(struct route *this, struct item *item)
 int
 route_pos_contains(struct route *this, struct item *item)
 {
-	if (! this->pos)
+	if (! this->pos || !this->pos->street)
 		return 0;
 	return item_is_equal(this->pos->street->item, *item);
 }
