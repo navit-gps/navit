@@ -2021,7 +2021,8 @@ void
 navit_destroy(struct navit *this_)
 {
 	/* TODO: destroy objects contained in this_ */
-	vehicle_destroy(this_->vehicle->vehicle);
+	if (this_->vehicle)
+		vehicle_destroy(this_->vehicle->vehicle);
 	main_remove_navit(this_);
 	char *center_file = navit_get_center_file(TRUE);
 	navit_write_center_to_file(this_, center_file);
