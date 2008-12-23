@@ -701,6 +701,285 @@ static void display_draw_arrows(struct displayitem *di, struct graphics_gc *gc, 
 	}
 }
 
+static int
+intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, int bdy,
+	      struct point * res)
+{
+	int n, a, b;
+	n = bdy * adx - bdx * ady;
+	a = bdx * (a1->y - b1->y) - bdy * (a1->x - b1->x);
+	b = adx * (a1->y - b1->y) - ady * (a1->x - b1->x);
+	if (n < 0) {
+		n = -n;
+		a = -a;
+		b = -b;
+	}
+#if 0
+	if (a < 0 || b < 0)
+		return 0;
+	if (a > n || b > n)
+		return 0;
+#endif
+	if (n == 0)
+		return 0;
+	res->x = a1->x + a * adx / n;
+	res->y = a1->y + a * ady / n;
+	return 1;
+}
+
+struct circle {
+	int x,y,fowler;
+} lw10[]={
+{0,10,0},
+{4,9,56},
+{7,7,128},
+{9,4,200},
+{10,0,256},
+{9,-4,312},
+{7,-7,384},
+{4,-9,456},
+{0,-10,512},
+{-4,-9,568},
+{-7,-7,640},
+{-9,-4,712},
+{-10,0,768},
+{-9,4,824},
+{-7,7,896},
+{-4,9,968},
+};
+
+static void
+draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir)
+{
+	struct circle *c;
+
+#if 0
+	dbg(0,"diameter=%d start=%d len=%d pos=%d dir=%d\n", diameter, start, len, *pos, dir);
+#endif
+	int end=start+len;
+	int i;
+	c=lw10;
+	if (len > 0) {
+		while (start < 0) {
+			start+=1024;
+			end+=1024;
+		}
+		while (end > 0) {
+			for (i = 0 ; i < 16 ; i++) {
+				if (c[i].fowler > start && c[i].fowler < end) {
+					res[*pos].x=pnt->x+c[i].x*diameter/20;
+					res[*pos].y=pnt->y+c[i].y*diameter/20;
+					(*pos)+=dir;
+				}
+			}
+			end-=1024;
+			start-=1024;
+		}
+	} else {
+		while (start > 1024) {
+			start-=1024;
+			end-=1024;
+		}
+		while (end < 1024) {
+			for (i = 15 ; i >= 0 ; i--) {
+					     if (c[i].fowler < start && c[i].fowler > end) {
+					res[*pos].x=pnt->x+c[i].x*diameter/20;
+					res[*pos].y=pnt->y+c[i].y*diameter/20;
+					(*pos)+=dir;
+				}
+			}
+			start+=1024;
+			end+=1024;
+		}
+	}
+}
+
+
+static int
+fowler(int dy, int dx)
+{
+	int adx, ady;		/* Absolute Values of Dx and Dy */
+	int code;		/* Angular Region Classification Code */
+
+	adx = (dx < 0) ? -dx : dx;      /* Compute the absolute values. */
+	ady = (dy < 0) ? -dy : dy;
+
+	code = (adx < ady) ? 1 : 0;
+	if (dx < 0)
+		code += 2;
+	if (dy < 0)
+		code += 4;
+
+	switch (code) {
+	case 0:
+		return (dx == 0) ? 0 : 128*ady / adx;   /* [  0, 45] */
+	case 1:
+		return (256 - (128*adx / ady)); /* ( 45, 90] */
+	case 3:
+		return (256 + (128*adx / ady)); /* ( 90,135) */
+	case 2:
+		return (512 - (128*ady / adx)); /* [135,180] */
+	case 6:
+		return (512 + (128*ady / adx)); /* (180,225] */
+	case 7:
+		return (768 - (128*adx / ady)); /* (225,270) */
+	case 5:
+		return (768 + (128*adx / ady)); /* [270,315) */
+	case 4:
+		return (1024 - (128*ady / adx));/* [315,360) */
+	}
+	return 0;
+}
+static int
+int_sqrt(unsigned int n)
+{
+	unsigned int h, p= 0, q= 1, r= n;
+	while ( q <= n )
+		q <<= 2;
+	while ( q != 1 ) {
+		q >>= 2;
+		h = p + q;
+		p >>= 1;
+		if ( r >= h ) {
+			p += q;
+			r -= h;
+        	}
+	}
+	return p;
+}
+
+struct offset {
+	int px,py,nx,ny;
+};
+
+static void
+calc_offsets(int wi, int l, int dx, int dy, struct offset *res)
+{
+	int x,y;
+	x = (dx * wi) / l;
+	y = (dy * wi) / l;
+	if (x < 0) {
+		res->nx = -x/2;
+		res->px = (x-1)/2;
+	} else {
+		res->nx = -(x+1)/2;
+		res->px = x/2;
+	}
+	if (y < 0) {
+		res->ny = -y/2;
+		res->py = (y-1)/2;
+	} else {
+		res->ny = -(y+1)/2;
+		res->py = y/2;
+	}
+}
+
+static void
+graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int count, int *width, int step)
+{
+	int maxpoints=200;
+	struct point res[maxpoints], pos, poso, neg, nego;
+	int i, j, dx, dy, l, dxo, dyo;
+	struct offset o,oo;
+	int fow, fowo, delta;
+	int wi, ppos = maxpoints/2, npos = maxpoints/2;
+	int state,prec=5;
+	j = 0;
+	int max_circle_points=20;
+#if 0
+	dbg(0,"enter: count=%d\n", count);
+#endif
+	for (i = 0; i < count; i++) {
+		wi=*width;
+		width+=step;
+#if 0
+		dbg(0,"p[%d]=%d,%d wi=%d\n", i,pnt[i].x,pnt[i].y, wi);
+#endif
+		if (i < count - 1) {
+			dx = (pnt[i + 1].x - pnt[i].x);
+			dy = (pnt[i + 1].y - pnt[i].y);
+			l = int_sqrt(dx * dx + dy * dy);
+			fow=fowler(-dy, dx);
+		}
+		if (! l) 
+			l=1;
+		calc_offsets(wi, l, dx, dy, &o);
+		pos.x = pnt[i].x + o.ny;
+		pos.y = pnt[i].y + o.px;
+		neg.x = pnt[i].x + o.py;
+		neg.y = pnt[i].y + o.nx;
+		if (! i)
+			state=0;
+		else if (i == count-1) 
+			state=2;
+		else if (npos < max_circle_points || ppos >= maxpoints-max_circle_points)
+			state=3;
+		else
+			state=1;
+#if 0
+		dbg(0,"state=%d npos=%d ppos=%d\n", state, npos, ppos);
+#endif
+		switch (state) {
+		case 1:
+		       if (fowo != fow) {
+				poso.x = pnt[i].x + oo.ny;
+				poso.y = pnt[i].y + oo.px;
+				nego.x = pnt[i].x + oo.py;
+				nego.y = pnt[i].y + oo.nx;
+				delta=fowo-fow;
+				if (delta < 0)
+					delta+=1024;
+				if (delta < 512) {
+					if (intersection(&pos, dx, dy, &poso, dxo, dyo, &res[ppos]))
+						ppos++;
+					res[--npos] = nego;
+					--npos;
+					draw_circle(&pnt[i], wi, prec, fowo-512, -delta, res, &npos, -1);
+					res[npos] = neg;
+				} else {
+					res[ppos++] = poso;
+					draw_circle(&pnt[i], wi, prec, fowo, 1024-delta, res, &ppos, 1);
+					res[ppos++] = pos;
+					if (intersection(&neg, dx, dy, &nego, dxo, dyo, &res[npos - 1]))
+						npos--;
+				}
+			}
+			break;
+		case 2:
+		case 3:
+			res[--npos] = neg;
+			--npos;
+			draw_circle(&pnt[i], wi, prec, fow-512, -512, res, &npos, -1);
+			res[npos] = pos;
+			res[ppos++] = pos;
+#if 0
+			dbg(0,"npos=%d ppos=%d\n", npos, ppos);
+#endif
+			dbg_assert(npos > 0);
+			dbg_assert(ppos < maxpoints);
+			gra->meth.draw_polygon(gra->priv, gc->priv, res+npos, ppos-npos);
+			if (state == 2)
+				break;
+			npos=maxpoints/2;
+			ppos=maxpoints/2;
+		case 0:
+			res[ppos++] = neg;
+			draw_circle(&pnt[i], wi, prec, fow+512, 512, res, &ppos, 1);
+			res[ppos++] = pos;
+			break;
+		}
+		if (step) {
+			wi=*width;
+			calc_offsets(wi, l, dx, dy, &oo);
+		} else 
+			oo=o;
+		dxo = -dx;
+		dyo = -dy;
+		fowo=fow;
+	}
+}
+
+
 /**
  * FIXME
  * @param <>
@@ -742,14 +1021,24 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 					gra->meth.draw_polygon(gra->priv, gc->priv, di->pnt, di->count);
 					break;
 				case element_polyline:
+#if 0
 					if (e->u.polyline.width > 1) 
-						gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
-					if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
-						graphics_gc_set_dashes(gc, e->u.polyline.width, 
-								       e->u.polyline.offset,
-						                       e->u.polyline.dash_table,
-						                       e->u.polyline.dash_num);
-					gra->meth.draw_lines(gra->priv, gc->priv, di->pnt, di->count);
+						graphics_draw_polyline_as_polygon(gra, gc, di->pnt, di->count, &e->u.polyline.width, 0);
+					else {
+#else
+					{
+						 if (e->u.polyline.width > 1)
+		                                             gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
+
+						
+#endif
+						if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
+							graphics_gc_set_dashes(gc, e->u.polyline.width, 
+									       e->u.polyline.offset,
+									       e->u.polyline.dash_table,
+									       e->u.polyline.dash_num);
+						gra->meth.draw_lines(gra->priv, gc->priv, di->pnt, di->count);
+					}
 					break;
 				case element_circle:
 					if (e->u.circle.width > 1) 
