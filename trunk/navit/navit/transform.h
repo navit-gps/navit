@@ -41,7 +41,7 @@ void transform_from_to(struct coord *cfrom, enum projection from, struct coord *
 void transform_geo_to_cart(struct coord_geo *geo, double a, double b, struct coord_geo_cart *cart);
 void transform_cart_to_geo(struct coord_geo_cart *cart, double a, double b, struct coord_geo *geo);
 void transform_datum(struct coord_geo *from, enum map_datum from_datum, struct coord_geo *to, enum map_datum to_datum);
-int transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int unique);
+int transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int unique, int width, int *width_return);
 void transform_reverse(struct transformation *t, struct point *p, struct coord *c);
 enum projection transform_get_projection(struct transformation *this_);
 void transform_set_projection(struct transformation *this_, enum projection pro);

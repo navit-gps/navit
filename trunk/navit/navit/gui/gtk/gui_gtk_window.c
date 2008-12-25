@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 #include <gdk/gdkkeysyms.h>
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
@@ -71,6 +72,7 @@ static gboolean
 keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 {
 	int w,h;
+	struct transformation *t;
 	#ifdef USE_HILDON
 	GtkToggleAction *action;
 	gboolean *fullscreen;
@@ -109,6 +111,66 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 		break;
 	case KEY_ZOOM_OUT:
 		navit_zoom_out(this->nav, 2, NULL);
+		break;
+	case 'a':
+		t=navit_get_trans(this->nav);
+		transform_set_yaw(t, (transform_get_yaw(t,0)+15)%360);
+		navit_draw(this->nav);
+		break;
+	case 'd':
+		t=navit_get_trans(this->nav);
+		transform_set_yaw(t, (transform_get_yaw(t,0)-15)%360);
+		navit_draw(this->nav);
+		break;
+	case 'w':
+		t=navit_get_trans(this->nav);
+		transform_set_pitch(t, (transform_get_pitch(t,0)+5)%360);
+		navit_draw(this->nav);
+		break;
+	case 'x':
+		t=navit_get_trans(this->nav);
+		transform_set_pitch(t, (transform_get_pitch(t,0)-5)%360);
+		navit_draw(this->nav);
+		break;
+	case 'r':
+		t=navit_get_trans(this->nav);
+		transform_set_distance(t, (transform_get_distance(t,0)-5));
+		navit_draw(this->nav);
+		break;
+	case 'f':
+		t=navit_get_trans(this->nav);
+		transform_set_distance(t, (transform_get_distance(t,0)+5));
+		navit_draw(this->nav);
+		break;
+	case 't':
+		{
+		struct coord *p;
+		struct pcoord pc;
+		t=navit_get_trans(this->nav);
+	 	struct coord *c=transform_center(t);
+		p=transform_center(t);
+		pc.pro=projection_mg;
+		p->y+=50*cos(transform_get_yaw(t, 0)*M_PI/180);
+		p->x+=50*sin(transform_get_yaw(t, 0)*M_PI/180);
+		pc.x=p->x;
+		pc.y=p->y;
+		navit_set_center(this->nav, &pc);
+		}
+		break;
+	case 'g':
+		{
+		struct coord *p;
+		struct pcoord pc;
+		t=navit_get_trans(this->nav);
+	 	struct coord *c=transform_center(t);
+		p=transform_center(t);
+		pc.pro=projection_mg;
+		p->y-=50*cos(transform_get_yaw(t, 0)*M_PI/180);
+		p->x-=50*sin(transform_get_yaw(t, 0)*M_PI/180);
+		pc.x=p->x;
+		pc.y=p->y;
+		navit_set_center(this->nav, &pc);
+		}
 		break;
 	#ifdef USE_HILDON
 	case HILDON_HARDKEY_FULLSCREEN:
