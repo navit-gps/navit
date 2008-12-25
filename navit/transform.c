@@ -32,16 +32,84 @@
 #include "projection.h"
 #include "point.h"
 
+#define POST_SHIFT 8
+
 struct transformation {
-	int angle;		/* Rotation angle */
-	double cos_val,sin_val;	/* cos and sin of rotation angle */
+	int yaw;		/* Rotation angle */
+	int pitch;
+	int roll;
+	int ddd;
+ 	int m00,m01,m10,m11;	/* 2d transformation matrix */
+ 	int m20,m21; 		/* additional 3d parameters */
+ 	double im00,im01,im10,im11;	/* inverse 2d transformation matrix */
 	struct map_selection *map_sel;
 	struct map_selection *screen_sel;
 	struct point screen_center;
+ 	int screen_dist;
+ 	int offx,offy,offz;
 	struct coord map_center;	/* Center of source rectangle */
 	enum projection pro;
-	long scale;		/* Scale factor */
+	double scale;		/* Scale factor */
+	int scale_shift;
+	int order;
 };
+
+static void
+transform_setup_matrix(struct transformation *t)
+{
+	double det;
+	double fac;
+	double yawc=cos(M_PI*t->yaw/180);
+	double yaws=sin(M_PI*t->yaw/180);
+	double pitchc=cos(M_PI*t->pitch/180);
+	double pitchs=sin(M_PI*t->pitch/180);
+
+	int scale=t->scale;
+	int order_dir=-1;
+
+	dbg(1,"yaw=%d pitch=%d center=0x%x,0x%x\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
+	t->scale_shift=0;
+	t->order=14;
+	if (t->scale >= 1) {
+		scale=t->scale;
+	} else {
+		scale=1.0/t->scale;
+		order_dir=1;
+	}
+	while (scale > 1) {
+		if (order_dir < 0)
+			t->scale_shift++;
+		t->order+=order_dir;
+		scale >>= 1;
+	}
+	fac=(1 << POST_SHIFT) * (1 << t->scale_shift) / t->scale;
+	dbg(1,"scale_shift=%d order=%d scale=%f fac=%f\n", t->scale_shift, t->order,t->scale,fac);
+	
+        t->m00=yawc*fac;
+        t->m01=-yaws*fac;
+	t->m10=-pitchc*yaws*fac;
+	t->m11=-pitchc*yawc*fac;
+	t->m20=pitchs*yaws*fac;
+	t->m21=pitchs*yawc*fac;
+	t->offz=0;
+	t->ddd=0;
+	t->offx=t->screen_center.x;
+	t->offy=t->screen_center.y;
+	if (t->pitch) {
+		t->ddd=1;
+		t->offz=t->screen_dist;
+		t->m00*=t->offz;
+		t->m01*=t->offz;
+		t->m10*=t->offz;
+		t->m11*=t->offz;
+	}
+	det=((double)t->m00*(double)t->m11-(double)t->m01*(double)t->m10);
+	dbg(1,"det=%f\n", det);
+	t->im00=t->m11/det;
+	t->im01=-t->m01/det;
+	t->im10=-t->m10/det;
+	t->im11=t->m00/det;
+}
 
 struct transformation *
 transform_new(void)
@@ -49,8 +117,20 @@ transform_new(void)
 	struct transformation *this_;
 
 	this_=g_new0(struct transformation, 1);
-
+	this_->screen_dist=100;
+#if 0
+	this_->pitch=20;
+#endif
+	transform_setup_matrix(this_);
 	return this_;
+}
+
+struct transformation *
+transform_dup(struct transformation *t)
+{
+	struct transformation *ret=g_new0(struct transformation, 1);
+	*ret=*t;
+	return ret;
 }
 
 static const double gar2geo_units = 360.0/(1<<24);
@@ -134,17 +214,23 @@ transform_datum(struct coord_geo *from, enum map_datum from_datum, struct coord_
 }
 
 int
-transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int unique)
+transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int unique, int width, int *width_return)
 {
 	struct coord c1;
 	int xcn, ycn; 
 	struct coord_geo g;
+	int z;
 #ifdef AVOID_FLOAT
-	int xc,yc;
+	int xc,yc,zc,xco,yco,zco;
 #else
-        double xc,yc;
+        int xc,yc,zc,xco,yco,zco,xc2,yc2,zc2;
 #endif
+	int xm,ym,xr,yr,zct;
+	int zlimit=1000;
+	int visible, visibleo=-1;
+	int limit=t->screen_center.y+250;
 	int i,j = 0;
+	dbg(1,"count=%d\n", count);
 	for (i=0; i < count; i++) {
 		if (pro == t->pro) {
 			xc=c[i].x;
@@ -155,44 +241,81 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 			xc=c1.x;
 			yc=c1.y;
 		}
+		xm=xc;
+		ym=yc;
 //		dbg(2,"0x%x, 0x%x - 0x%x,0x%x contains 0x%x,0x%x\n", t->r.lu.x, t->r.lu.y, t->r.rl.x, t->r.rl.y, c->x, c->y);
 //		ret=coord_rect_contains(&t->r, c);
 		xc-=t->map_center.x;
 		yc-=t->map_center.y;
-		yc=-yc;
-		if (t->angle) {
-			xcn=xc*t->cos_val+yc*t->sin_val;
-			ycn=-xc*t->sin_val+yc*t->cos_val;
+		xc >>= t->scale_shift;
+		yc >>= t->scale_shift;
+		xcn=xc*t->m00+yc*t->m01;
+		ycn=xc*t->m10+yc*t->m11;
+
+		if (t->ddd) {
+			zc=(xc*t->m20+yc*t->m21);
+			zct=zc;
+			zc+=t->offz << POST_SHIFT;
+			dbg(1,"zc=%d\n", zc);
+			dbg(1,"zc(%d)=xc(%d)*m20(%d)+yc(%d)*m21(%d)\n", (xc*t->m20+yc*t->m21), xc, t->m20, yc, t->m21);
+			/* visibility */
+			visible=(zc < zlimit ? 0:1);
+			dbg(1,"visible=%d old %d\n", visible, visibleo);
+			if (visible != visibleo && visibleo != -1) { 
+				dbg(1,"clipping (%d,%d,%d)-(%d,%d,%d) (%d,%d,%d)\n", xcn, ycn, zc, xco, yco, zco, xco-xcn, yco-ycn, zco-zc);
+				if (zco != zc) {
+					xcn=xcn+(long long)(xco-xcn)*(zlimit-zc)/(zco-zc);
+					ycn=ycn+(long long)(yco-ycn)*(zlimit-zc)/(zco-zc);
+				}
+				dbg(1,"result (%d,%d,%d) * %d / %d\n", xcn,ycn,zc,zlimit-zc,zco-zc);
+				zc=zlimit;
+				xco=xcn;
+				yco=ycn;
+				zco=zc;
+				if (visible)
+					i--;
+				visibleo=visible;
+			} else {
+				xco=xcn;
+				yco=ycn;
+				zco=zc;
+				visibleo=visible;
+				if (! visible)
+					continue;
+			}
+			dbg(1,"zc=%d\n", zc);
+			dbg(1,"xcn %d ycn %d\n", xcn, ycn);
+			dbg(1,"%d,%d %d\n",xc,yc,zc);
+#if 0
+			dbg(0,"%d/%d=%d %d/%d=%d\n",xcn,xc,xcn/xc,ycn,yc,ycn/yc);
+#endif
+#if 1
+			xc=xcn/zc;
+			yc=ycn/zc;
+#else
+			xc=xcn/(1000+zc);
+			yc=ycn/(1000+zc);
+#endif
+			dbg(1,"%d,%d %d\n",xc,yc,zc);
+		} else {
 			xc=xcn;
 			yc=ycn;
+			xc>>=POST_SHIFT;
+			yc>>=POST_SHIFT;
 		}
-		xc=xc*16;
-		yc=yc*16;
-#ifndef AVOID_FLOAT
-		if (t->scale!=1) {
-			xc=xc/(double)(t->scale);
-			yc=yc/(double)(t->scale);
-		}
-#else
-		if (t->scale!=1) {
-			xc=xc/t->scale;
-			yc=yc/t->scale;
-		}
-#endif
-		xc+=t->screen_center.x;
-		yc+=t->screen_center.y;
-		if (xc < -0x8000)
-			xc=-0x8000;
-		if (xc > 0x7fff) {
-			xc=0x7fff;
-		}
-		if (yc < -0x8000)
-			yc=-0x8000;
-		if (yc > 0x7fff)
-			yc=0x7fff;
+		xc+=t->offx;
+		yc+=t->offy;
+		dbg(1,"xc=%d yc=%d\n", xc, yc);
 		if (j == 0 || !unique || p[j-1].x != xc || p[j-1].y != yc) {
+			struct coord cn;
 			p[j].x=xc;
 			p[j].y=yc;
+			if (width_return) {
+				if (t->ddd) 
+					width_return[j]=width*(t->offz << POST_SHIFT)/zc;
+				else 
+					width_return[j]=width;
+			}
 			j++;
 		}
 	}
@@ -202,22 +325,30 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 void
 transform_reverse(struct transformation *t, struct point *p, struct coord *c)
 {
-        int xc,yc;
-	xc=p->x;
-	yc=p->y;
-	xc-=t->screen_center.x;
-	yc-=t->screen_center.y;
-	xc=xc*t->scale/16;
-	yc=-yc*t->scale/16;
-	if (t->angle) {
-	  	int xcn, ycn; 
-	  	xcn=xc*t->cos_val+yc*t->sin_val;
-	  	ycn=-xc*t->sin_val+yc*t->cos_val;
-	  	xc=xcn;
-	  	yc=ycn;
+        double zc,xc,yc,xcn,ycn,q;
+	xc=p->x - t->offx;
+	yc=p->y - t->offy;
+	if (t->ddd) {
+		double f00=xc*t->im00*t->m20;
+		double f01=yc*t->im01*t->m20;
+		double f10=xc*t->im10*t->m21;
+		double f11=yc*t->im11*t->m21;
+		q=(1-f00-f01-f10-f11);
+		if (q < 0) 
+			q=0.15;
+		zc=(t->offz << POST_SHIFT)*(1+(f00+f01+f10+f11)/q);
+		xcn=xc*zc;
+		ycn=yc*zc;
+		xc=xcn*t->im00+ycn*t->im01;
+		yc=xcn*t->im10+ycn*t->im11;
+	} else {
+		xcn=xc;
+		ycn=yc;
+		xc=(xcn*t->im00+ycn*t->im01)*(1 << POST_SHIFT);
+		yc=(xcn*t->im10+ycn*t->im11)*(1 << POST_SHIFT);
 	}
-	c->x=t->map_center.x+xc;
-	c->y=t->map_center.y+yc;
+	c->x=xc*(1 << t->scale_shift)+t->map_center.x;
+	c->y=yc*(1 << t->scale_shift)+t->map_center.y;
 }
 
 enum projection
@@ -292,18 +423,55 @@ transform_center(struct transformation *this_)
 	return &this_->map_center;
 }
 
-void
-transform_set_angle(struct transformation *t,int angle)
+struct coord *
+transform_get_center(struct transformation *this_)
 {
-        t->angle=angle;
-        t->cos_val=cos(M_PI*t->angle/180);
-        t->sin_val=sin(M_PI*t->angle/180);
+	return &this_->map_center;
+}
+
+void
+transform_set_center(struct transformation *this_, struct coord *c)
+{
+	this_->map_center=*c;
+}
+
+
+void
+transform_set_yaw(struct transformation *t,int yaw)
+{
+	t->yaw=yaw;
+	transform_setup_matrix(t);
 }
 
 int
-transform_get_angle(struct transformation *this_,int angle)
+transform_get_yaw(struct transformation *this_)
 {
-	return this_->angle;
+	return this_->yaw;
+}
+
+void
+transform_set_pitch(struct transformation *this_,int pitch)
+{
+	this_->pitch=pitch;
+	transform_setup_matrix(this_);
+}
+int
+transform_get_pitch(struct transformation *this_,int angle)
+{
+	return this_->pitch;
+}
+
+void
+transform_set_distance(struct transformation *this_,int distance)
+{
+	this_->screen_dist=distance;
+	transform_setup_matrix(this_);
+}
+
+int
+transform_get_distance(struct transformation *this_,int angle)
+{
+	return this_->screen_dist;
 }
 
 void
@@ -314,6 +482,7 @@ transform_set_screen_selection(struct transformation *t, struct map_selection *s
 	if (sel) {
 		t->screen_center.x=(sel->u.p_rect.rl.x-sel->u.p_rect.lu.x)/2;
 		t->screen_center.y=(sel->u.p_rect.rl.y-sel->u.p_rect.lu.y)/2;
+		transform_setup_matrix(t);
 	}
 }
 
@@ -344,13 +513,13 @@ transform_get_size(struct transformation *t, int *width, int *height)
 }
 
 void
-transform_setup(struct transformation *t, struct pcoord *c, int scale, int angle)
+transform_setup(struct transformation *t, struct pcoord *c, int scale, int yaw)
 {
 	t->pro=c->pro;
 	t->map_center.x=c->x;
 	t->map_center.y=c->y;
-	t->scale=scale;
-	transform_set_angle(t, angle);
+	t->scale=scale/16.0;
+	transform_set_yaw(t, yaw);
 }
 
 #if 0
@@ -399,6 +568,7 @@ transform_setup_source_rect(struct transformation *t)
 		screen_pnt[3].y=pr->rl.y;
 		for (i = 0 ; i < 4 ; i++) {
 			transform_reverse(t, &screen_pnt[i], &screen[i]);
+			dbg(1,"map(%d) %d,%d=0x%x,0x%x\n", i,screen_pnt[i].x, screen_pnt[i].y, screen[i].x, screen[i].y);
 		}
 		msm->u.c_rect.lu.x=min4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
 		msm->u.c_rect.rl.x=max4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
@@ -413,29 +583,21 @@ transform_setup_source_rect(struct transformation *t)
 long
 transform_get_scale(struct transformation *t)
 {
-	return t->scale;
+	return (int)(t->scale*16);
 }
 
 void
 transform_set_scale(struct transformation *t, long scale)
 {
-	t->scale=scale;
+	t->scale=scale/16.0;
+	transform_setup_matrix(t);
 }
 
 
 int
 transform_get_order(struct transformation *t)
 {
-	int scale=t->scale;
-	int order=0;
-        while (scale > 1) {
-                order++;
-                scale>>=1;
-        }
-        order=18-order;
-        if (order < 0)
-                order=0;
-	return order;
+	return t->order;
 }
 
 
