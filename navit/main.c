@@ -71,7 +71,7 @@ static gchar *get_home_directory(void)
 	if (!homedir)
 	{
 		dbg(0,"Could not find home directory. Using current directory as home directory.\n");
-		homedir = ".";
+		homedir =g_strdup(".");
 	} else {
 		homedir=g_strdup(homedir);
 	}
