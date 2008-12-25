@@ -192,6 +192,14 @@ navit_draw(struct navit *this_)
 		l=g_list_next(l);
 	}
 	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layout_current);
+#if 0
+	{
+	int i;
+	for (i = 0 ; i < 500 ; i++)
+		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current, 1);
+	exit(0);
+	}
+#endif
 }
 
 void
@@ -206,13 +214,13 @@ navit_handle_resize(struct navit *this_, int w, int h)
 {
 	struct map_selection sel;
 	memset(&sel, 0, sizeof(sel));
-	sel.u.p_rect.rl.x=w;
-	sel.u.p_rect.rl.y=h;
 	this_->w=w;
 	this_->h=h;
+	sel.u.p_rect.rl.x=w;
+	sel.u.p_rect.rl.y=h;
 	transform_set_screen_selection(this_->trans, &sel);
 	this_->ready |= 2;
-	graphics_resize(this_->gra, w, h);
+	graphics_set_rect(this_->gra, &sel.u.p_rect);
 	if (this_->ready == 3)
 		navit_draw(this_);
 }
@@ -258,6 +266,21 @@ void
 navit_ignore_graphics_events(struct navit *this_, int ignore)
 {
 	this_->ignore_graphics_events=ignore;
+}
+
+void
+update_transformation(struct transformation *tr, struct point *old, struct point *new)
+{
+	struct coord co,cn;
+	struct coord c,*cp;
+	int dx,dy;
+	transform_reverse(tr, old, &co);
+	transform_reverse(tr, new, &cn);
+	cp=transform_get_center(tr);
+	c.x=cp->x+co.x-cn.x;
+	c.y=cp->y+co.y-cn.y;
+	dbg(1,"from 0x%x,0x%x to 0x%x,0x%x\n", cp->x, cp->y, c.x, c.y);
+	transform_set_center(tr, &c);
 }
 
 int
@@ -311,18 +334,13 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 		}
 		if (this_->moved) {
 			struct point pt;
-			this_->last=*p;
-			transform_get_size(this_->trans, &pt.x, &pt.y);
-			pt.x/=2;
-			pt.y/=2;
-			pt.x-=this_->last.x-this_->pressed.x;
-			pt.y-=this_->last.y-this_->pressed.y;
+			update_transformation(this_->trans, &this_->pressed, p);
 			graphics_draw_drag(this_->gra, NULL);
 			graphics_overlay_disable(this_->gra, 0);
 			if (!this_->zoomed) {
 				this_->last_moved = time(NULL);
 			}
-			navit_set_center_screen(this_, &pt);
+			navit_draw(this_);
 		} else
 			return 1;
 	}
@@ -361,10 +379,16 @@ navit_motion_timeout(struct navit *this_)
 	dx=(this_->current.x-this_->last.x);
 	dy=(this_->current.y-this_->last.y);
 	if (dx || dy) {
+		struct transformation *tr;
 		this_->last=this_->current;
 		graphics_overlay_disable(this_->gra, 1);
+		tr=transform_dup(this_->trans);
+		update_transformation(tr, &this_->pressed, &this_->current);
+#if 0
 		graphics_displaylist_move(this_->displaylist, dx, dy);
-		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current, 0);
+#endif
+		graphics_displaylist_draw(this_->gra, this_->displaylist, tr, this_->layout_current, 0);
+		transform_destroy(tr);
 		this_->moved=1;
 	}
 	this_->motion_timeout=NULL;
@@ -1382,8 +1406,8 @@ navit_zoom_to_route(struct navit *this_)
 		struct point p1,p2;
 		transform_set_scale(this_->trans, scale);
 		transform_setup_source_rect(this_->trans);
-		transform(this_->trans, transform_get_projection(this_->trans), &r.lu, &p1, 1, 0);
-		transform(this_->trans, transform_get_projection(this_->trans), &r.rl, &p2, 1, 0);
+		transform(this_->trans, transform_get_projection(this_->trans), &r.lu, &p1, 1, 0, 0, NULL);
+		transform(this_->trans, transform_get_projection(this_->trans), &r.rl, &p2, 1, 0, 0, NULL);
 		dbg(0,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
 		if (p1.x < 0 || p2.x < 0 || p1.x > this_->w || p2.x > this_->w ||
 		    p1.y < 0 || p2.y < 0 || p1.y > this_->h || p2.y > this_->h)
@@ -1432,7 +1456,7 @@ navit_set_center_cursor(struct navit *this_, struct coord *cursor, int dir, int 
 
 	transform_get_size(this_->trans, &width, &height);
 	*c=*cursor;
-	transform_set_angle(this_->trans, dir);
+	transform_set_yaw(this_->trans, dir);
 	p.x=(100-xpercent)*width/100;
 	p.y=(100-ypercent)*height/100;
 	transform_reverse(this_->trans, &p, &cnew);
@@ -1484,7 +1508,7 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 				dir = this_->vehicle->dir;
 			}
 		}
-		transform_set_angle(this_->trans, dir);
+		transform_set_yaw(this_->trans, dir);
 		if (orient_old != this_->orientation) {
 			if (this_->ready == 3)
 				navit_draw(this_);
@@ -1728,9 +1752,9 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 		cursor_pnt=*pnt;
 	else {
 		pro=transform_get_projection(this_->trans);
-		transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0);
+		transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	}
-	cursor_draw(cursor.u.cursor, this_->gra, &cursor_pnt, pnt ? 0:1, nv->dir-transform_get_angle(this_->trans, 0), nv->speed);
+	cursor_draw(cursor.u.cursor, this_->gra, &cursor_pnt, pnt ? 0:1, nv->dir-transform_get_yaw(this_->trans, 0), nv->speed);
 #if 0	
 	if (pnt)
 		pnt2=*pnt;
@@ -1815,7 +1839,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		callback_list_call_attr_0(this_->attr_cbl, attr_position);
 	}
 	navit_textfile_debug_log(this_, "type=trackpoint_tracked");
-	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0);
+	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	if (!transform_within_border(this_->trans, &cursor_pnt, border)) {
 		if (!this_->cursor_flag) {
 			profile(0,"return 4\n");

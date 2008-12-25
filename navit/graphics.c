@@ -66,8 +66,7 @@ struct graphics
 	struct attr **attrs;
 	struct callback_list *cbl;
 	int ready;
-	int w;
-	int h;
+	struct point_rect r;
 };
 
 
@@ -77,10 +76,9 @@ struct displaylist {
 
 
 void
-graphics_resize(struct graphics *gra, int w, int h)
+graphics_set_rect(struct graphics *gra, struct point_rect *pr)
 {
-	gra->w=w;
-	gra->h=h;
+	gra->r=*pr;
 }
 
 /**
@@ -495,6 +493,9 @@ static void popup_view_html(struct popup_item *item, char *file)
 	system(command);
 }
 
+struct transformatin *tg;
+enum projection pg;
+
 //##############################################################################################################
 //# Description: 
 //# Comment: 
@@ -538,7 +539,7 @@ struct displayitem {
 	char *label;
 	int displayed;
 	int count;
-	struct point pnt[0];
+	struct coord c[0];
 };
 
 /**
@@ -580,14 +581,14 @@ static void xdisplay_free(GHashTable *display_list)
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void display_add(struct displaylist *displaylist, struct item *item, int count, struct point *pnt, char *label)
+static void display_add(struct displaylist *displaylist, struct item *item, int count, struct coord *c, char *label)
 {
 	struct displayitem *di;
 	int len;
 	GList *l;
 	char *p;
 
-	len=sizeof(*di)+count*sizeof(*pnt);
+	len=sizeof(*di)+count*sizeof(*c);
 	if (label)
 		len+=strlen(label)+1;
 
@@ -595,7 +596,7 @@ void display_add(struct displaylist *displaylist, struct item *item, int count, 
 
 	di=(struct displayitem *)p;
 	di->displayed=0;
-	p+=sizeof(*di)+count*sizeof(*pnt);
+	p+=sizeof(*di)+count*sizeof(*c);
 	di->item=*item;
 	if (label) {
 		di->label=p;
@@ -603,7 +604,7 @@ void display_add(struct displaylist *displaylist, struct item *item, int count, 
 	} else 
 		di->label=NULL;
 	di->count=count;
-	memcpy(di->pnt, pnt, count*sizeof(*pnt));
+	memcpy(di->c, c, count*sizeof(*c));
 
 	l=g_hash_table_lookup(displaylist->dl, GINT_TO_POINTER(item->type));
 	l=g_list_prepend(l, di);
@@ -661,7 +662,7 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
 #if 0
 			dbg(0,"display_text: '%s', %d, %d, %d, %d %d\n", label, x, y, dx*0x10000/l, dy*0x10000/l, l);
 #endif
-			if (x < gra->w && x + tl > 0 && y + tl > 0 && y - tl < gra->h) 
+			if (x < gra->r.rl.x && x + tl > gra->r.lu.x && y + tl > gra->r.lu.y && y - tl < gra->r.rl.y) 
 				gra->meth.draw_text(gra->priv, fg->priv, bg->priv, font->priv, label, &p_t, dx*0x10000/l, dy*0x10000/l);
 		}
 	}
@@ -678,22 +679,22 @@ static void display_draw_arrow(struct point *p, int dx, int dy, int l, struct gr
 	gra->meth.draw_lines(gra->priv, gc->priv, pnt, 3);
 }
 
-static void display_draw_arrows(struct displayitem *di, struct graphics_gc *gc, struct graphics *gra)
+static void display_draw_arrows(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int count)
 {
 	int i,dx,dy,l;
 	struct point p;
-	for (i = 0 ; i < di->count-1 ; i++) {
-		dx=di->pnt[i+1].x-di->pnt[i].x;	
-		dy=di->pnt[i+1].y-di->pnt[i].y;
+	for (i = 0 ; i < count-1 ; i++) {
+		dx=pnt[i+1].x-pnt[i].x;	
+		dy=pnt[i+1].y-pnt[i].y;
 		l=sqrt(dx*dx+dy*dy);
 		if (l) {
 			dx=dx*65536/l;
 			dy=dy*65536/l;
-			p=di->pnt[i];
+			p=pnt[i];
 			p.x+=dx*15/65536;
 			p.y+=dy*15/65536;
 			display_draw_arrow(&p, dx, dy, 10, gc, gra);
-			p=di->pnt[i+1];
+			p=pnt[i+1];
 			p.x-=dx*15/65536;
 			p.y-=dy*15/65536;
 			display_draw_arrow(&p, dx, dy, 10, gc, gra);
@@ -884,17 +885,10 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 	int fow, fowo, delta;
 	int wi, ppos = maxpoints/2, npos = maxpoints/2;
 	int state,prec=5;
-	j = 0;
 	int max_circle_points=20;
-#if 0
-	dbg(0,"enter: count=%d\n", count);
-#endif
 	for (i = 0; i < count; i++) {
 		wi=*width;
 		width+=step;
-#if 0
-		dbg(0,"p[%d]=%d,%d wi=%d\n", i,pnt[i].x,pnt[i].y, wi);
-#endif
 		if (i < count - 1) {
 			dx = (pnt[i + 1].x - pnt[i].x);
 			dy = (pnt[i + 1].y - pnt[i].y);
@@ -903,6 +897,9 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 		}
 		if (! l) 
 			l=1;
+#if 0
+		dbg(0,"p[%d of %d]=%d,%d wi=%d l=%d\n", i,count-1,pnt[i].x,pnt[i].y, wi, l);
+#endif
 		calc_offsets(wi, l, dx, dy, &o);
 		pos.x = pnt[i].x + o.ny;
 		pos.y = pnt[i].y + o.px;
@@ -958,6 +955,10 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 			dbg_assert(npos > 0);
 			dbg_assert(ppos < maxpoints);
 			gra->meth.draw_polygon(gra->priv, gc->priv, res+npos, ppos-npos);
+#if 0
+			for (j = npos ; j < ppos ; j++)
+				dbg(0,"res[%d]=%d,%d\n", j-npos, res[j].x, res[j].y);
+#endif
 			if (state == 2)
 				break;
 			npos=maxpoints/2;
@@ -979,6 +980,260 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 	}
 }
 
+struct transformation *tg;
+enum projection pg;
+
+struct wpoint {
+	int x,y,w;
+};
+
+static int
+clipcode(struct wpoint *p, struct point_rect *r)
+{
+	int code=0;
+	if (p->x < r->lu.x)
+		code=1;
+	if (p->x > r->rl.x)
+		code=2;
+	if (p->y < r->lu.y)
+		code |=4;
+	if (p->y > r->rl.y)
+		code |=8;
+	return code;
+}
+
+
+static int
+clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *r)
+{
+	int code1,code2,ret=1;
+	int dx,dy,dw;
+	code1=clipcode(p1, r);
+	if (code1)
+		ret |= 2;
+	code2=clipcode(p2, r);
+	if (code2)
+		ret |= 4;
+	dx=p2->x-p1->x;
+	dy=p2->y-p1->y;
+	dw=p2->w-p1->w;
+	while (code1 || code2) {
+		if (code1 & code2)
+			return 0;
+		if (code1 & 1) {
+			p1->y+=(r->lu.x-p1->x)*dy/dx;
+			p1->w+=(r->lu.x-p1->x)*dw/dx;
+			p1->x=r->lu.x;
+		} else if (code1 & 2) {
+			p1->y+=(r->rl.x-p1->x)*dy/dx;
+			p1->w+=(r->rl.x-p1->x)*dw/dx;
+			p1->x=r->rl.x;
+		} else if (code1 & 4) {
+			p1->x+=(r->lu.y-p1->y)*dx/dy;
+			p1->w+=(r->lu.y-p1->y)*dw/dy;
+			p1->y=r->lu.y;
+		} else if (code1 & 8) {
+			p1->x+=(r->rl.y-p1->y)*dx/dy;
+			p1->w+=(r->rl.y-p1->y)*dw/dy;
+			p1->y=r->rl.y;
+		}
+		code1=clipcode(p1, r);
+		if (code1 & code2)
+			return 0;
+		if (code2 & 1) {
+			p2->y+=(r->lu.x-p2->x)*dy/dx;
+			p2->w+=(r->lu.x-p2->x)*dw/dx;
+			p2->x=r->lu.x;
+		} else if (code2 & 2) {
+			p2->y+=(r->rl.x-p2->x)*dy/dx;
+			p2->w+=(r->rl.x-p2->x)*dw/dx;
+			p2->x=r->rl.x;
+		} else if (code2 & 4) {
+			p2->x+=(r->lu.y-p2->y)*dx/dy;
+			p2->w+=(r->lu.y-p2->y)*dw/dy;
+			p2->y=r->lu.y;
+		} else if (code2 & 8) {
+			p2->x+=(r->rl.y-p2->y)*dx/dy;
+			p2->w+=(r->rl.y-p2->y)*dw/dy;
+			p2->y=r->rl.y;
+		}
+		code2=clipcode(p2, r);
+	}
+	return ret;
+}
+
+static void
+graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count, int *width, int step, int poly)
+{
+	struct point p[count+1];
+	int w[count*step+1];
+	struct wpoint p1,p2;
+	int i,code,out=0,codeo=0;
+	int dx,dy;
+	int wmax;
+	struct point_rect r=gra->r;
+
+	wmax=width[0];
+	if (step) {
+		for (i = 1 ; i < count ; i++) {
+			if (width[i*step] > wmax)
+				wmax=width[i*step];
+		}
+	}
+	if (wmax <= 0)
+		return;
+	r.lu.x-=wmax;
+	r.lu.y-=wmax;
+	r.rl.x+=wmax;
+	r.rl.y+=wmax;
+#if 0
+	for (i = 0 ; i < count ; i++) {
+		dbg(0,"in[%d]=%d,%d (%d)\n", i, pa[i].x, pa[i].y, width[i*step]);
+	}
+#endif
+	for (i = 0 ; i < count ; i++) {
+		if (i) {
+			p1.x=pa[i-1].x;
+			p1.y=pa[i-1].y;
+			p1.w=width[(i-1)*step];
+			p2.x=pa[i].x;
+			p2.y=pa[i].y;
+			p2.w=width[i*step];
+			/* 0 = invisible, 1 = completely visible, 3 = start point clipped, 5 = end point clipped, 7 both points clipped */
+			code=clip_line(&p1, &p2, &r);
+#if 0
+			dbg(0,"code=%d\n", code);
+#endif
+			if (((code == 1 || code == 5) && i == 1) || (code & 2)) {
+#if 0
+				dbg(0,"start = %d,%d\n", p1.x, p1.y);
+#endif
+				p[out].x=p1.x;
+				p[out].y=p1.y;
+				w[out*step]=p1.w;
+				out++;
+			}
+			if (code) {
+#if 0
+				dbg(0,"end = %d,%d\n", p2.x, p2.y);
+#endif
+				p[out].x=p2.x;
+				p[out].y=p2.y;
+				w[out*step]=p2.w;
+				out++;
+			}
+			if (i == count-1 || (code & 4)) {
+#if 0
+				int j;
+				for (j = 0 ; j < out ; j++) {
+					dbg(0,"out[%d]=%d,%d (%d)\n", j, p[j].x, p[j].y, w[j*step]);
+				}
+#endif
+				if (out > 1) {
+					if (poly) {	
+						graphics_draw_polyline_as_polygon(gra, gc, p, out, w, step);
+					} else
+						gra->meth.draw_lines(gra->priv, gc->priv, p, out);
+					out=0;
+				}
+			}
+		}
+	}
+#if 0
+	dbg(0,"done\n");
+#endif
+}
+
+static int
+is_inside(struct point *p, struct point_rect *r, int edge)
+{
+	switch(edge) {
+	case 0:
+		return p->x >= r->lu.x;
+	case 1:
+		return p->x <= r->rl.x;
+	case 2:
+		return p->y >= r->lu.y;
+	case 3:
+		return p->y <= r->rl.y;
+	}
+}
+
+static void
+poly_intersection(struct point *p1, struct point *p2, struct point_rect *r, int edge, struct point *ret)
+{
+	int dx=p2->x-p1->x;
+	int dy=p2->y-p1->y;
+	switch(edge) {
+	case 0:
+		ret->y=p1->y+(r->lu.x-p1->x)*dy/dx;
+		ret->x=r->lu.x;
+		break;
+	case 1:
+		ret->y=p1->y+(r->rl.x-p1->x)*dy/dx;
+		ret->x=r->rl.x;
+		break;
+	case 2:
+		ret->x=p1->x+(r->lu.y-p1->y)*dx/dy;
+		ret->y=r->lu.y;
+		break;
+	case 3:
+		ret->x=p1->x+(r->rl.y-p1->y)*dx/dy;
+		ret->y=r->rl.y;
+		break;
+	}
+}
+
+static void
+graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in)
+{
+	struct point_rect r=gra->r;
+	struct point *pout,*p,*s,pi;
+	struct point p1[count_in+1];
+	struct point p2[count_in+1];
+	int count_out,edge=3;
+	int i;
+#if 0
+	r.lu.x+=20;
+	r.lu.y+=20;
+	r.rl.x-=20;
+	r.rl.y-=20;
+#endif
+
+	pout=p1;
+	for (edge = 0 ; edge < 4 ; edge++) {
+		p=pin;
+		s=pin+count_in-1;
+		count_out=0;
+		for (i = 0 ; i < count_in ; i++) {
+			if (is_inside(p, &r, edge)) {
+				if (! is_inside(s, &r, edge)) {
+					poly_intersection(s,p,&r,edge,&pi);
+					pout[count_out++]=pi;
+				}
+				pout[count_out++]=*p;
+			} else {
+				if (is_inside(s, &r, edge)) {
+					poly_intersection(p,s,&r,edge,&pi);
+					pout[count_out++]=pi;
+				}
+			}
+			s=p;
+			p++;
+		}
+		count_in=count_out;
+		if (pin == p1) {
+			pin=p2;
+			pout=p1;
+		} else {
+			pin=p1;
+			pout=p2;
+		}
+	}
+	gra->meth.draw_polygon(gra->priv, gc->priv, pin, count_in);
+}
+
+
 
 /**
  * FIXME
@@ -992,9 +1247,12 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 	GList *l,*ls,*es,*types;
 	enum item_type type;
 	struct graphics_gc *gc = NULL;
-	struct graphics_image *img;
+	struct graphics_image *img=NULL;
 	struct point p;
 	char path[PATH_MAX];
+	struct point pa[16384];
+	int width[16384];
+	int count;
 
 	es=itm->elements;
 	while (es) {
@@ -1006,6 +1264,8 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 			l=ls;
 			if (gc)
 				graphics_gc_destroy(gc);
+			if (img)
+				graphics_image_free(gra, img);
 			gc=NULL;
 			img=NULL;
 			while (l) {
@@ -1016,15 +1276,31 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 					gc=graphics_gc_new(gra);
 					gc->meth.gc_set_foreground(gc->priv, &e->color);
 				}
+				if (e->type == element_polyline) {
+					count=transform(tg, pg, di->c, pa, di->count, 1, e->u.polyline.width, width);
+				}
+				else
+					count=transform(tg, pg, di->c, pa, di->count, 1, 0, NULL);
 				switch (e->type) {
 				case element_polygon:
-					gra->meth.draw_polygon(gra->priv, gc->priv, di->pnt, di->count);
+#if 0
+					{
+						int i;
+						for (i = 0 ; i < count ; i++) {
+							dbg(0,"pa[%d]=%d,%d\n", i, pa[i].x, pa[i].y);
+						}
+					}
+					dbg(0,"element_polygon count=%d\n",count);
+#endif
+#if 1
+					graphics_draw_polygon_clipped(gra, gc, pa, count);
+#endif
 					break;
 				case element_polyline:
 #if 0
-					if (e->u.polyline.width > 1) 
-						graphics_draw_polyline_as_polygon(gra, gc, di->pnt, di->count, &e->u.polyline.width, 0);
-					else {
+					if (e->u.polyline.width > 1) {
+						graphics_draw_polyline_as_polygon(gra, gc, pa, count, width, 0);
+					} else {
 #else
 					{
 						 if (e->u.polyline.width > 1)
@@ -1037,55 +1313,64 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 									       e->u.polyline.offset,
 									       e->u.polyline.dash_table,
 									       e->u.polyline.dash_num);
-						gra->meth.draw_lines(gra->priv, gc->priv, di->pnt, di->count);
+#if 0
+						if (di->label && !strcmp(di->label, "Bahnhofstr.") && di->item.type != type_street_1_city) {
+							dbg(0,"0x%x,0x%x %s\n", di->item.id_hi, di->item.id_lo, item_to_name(di->item.type));
+#endif
+						graphics_draw_polyline_clipped(gra, gc, pa, count, width, 1, e->u.polyline.width > 1);
+#if 0
+						}
+#endif
 					}
 					break;
 				case element_circle:
-					if (e->u.circle.width > 1) 
-						gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
-					gra->meth.draw_circle(gra->priv, gc->priv, &di->pnt[0], e->u.circle.radius);
-					if (di->label && e->text_size) {
-						p.x=di->pnt[0].x+3;
-						p.y=di->pnt[0].y+10;
-						if (! gra->font[e->text_size])
-							gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
-						gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->text_size]->priv, di->label, &p, 0x10000, 0);
+					if (count) {
+						if (e->u.circle.width > 1) 
+							gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
+						gra->meth.draw_circle(gra->priv, gc->priv, pa, e->u.circle.radius);
+						if (di->label && e->text_size) {
+							p.x=pa[0].x+3;
+							p.y=pa[0].y+10;
+							if (! gra->font[e->text_size])
+								gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
+							gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->text_size]->priv, di->label, &p, 0x10000, 0);
+						}
 					}
 					break;
 				case element_text:
-					if (di->label) {
+					if (count && di->label) {
 						if (! gra->font[e->text_size])
 							gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
-						label_line(gra, gra->gc[2], gra->gc[1], gra->font[e->text_size], di->pnt, di->count, di->label);
+						label_line(gra, gra->gc[2], gra->gc[1], gra->font[e->text_size], pa, count, di->label);
 					}
 					break;
 				case element_icon:
-					if (!img) {
-						if (e->u.icon.src[0] == '/')
-							strcpy(path,e->u.icon.src);
-						else
-							sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
-						img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
-						if (! img)
-							dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
-					}
-					if (img) {
-						p.x=di->pnt[0].x - img->hot.x;
-						p.y=di->pnt[0].y - img->hot.y;
-						gra->meth.draw_image(gra->priv, gra->gc[0]->priv, &p, img->priv);
-						graphics_image_free(gra, img);
-						img = NULL;
+					if (count) {
+						if (!img) {
+							if (e->u.icon.src[0] == '/')
+								strcpy(path,e->u.icon.src);
+							else
+								sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
+							img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
+							if (! img)
+								dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
+						}
+						if (img) {
+							p.x=pa[0].x - img->hot.x;
+							p.y=pa[0].y - img->hot.y;
+							gra->meth.draw_image(gra->priv, gra->gc[0]->priv, &p, img->priv);
+						}
 					}
 					break;
 				case element_image:
 					dbg(1,"image: '%s'\n", di->label);
 					if (gra->meth.draw_image_warp)
-						gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, di->pnt, di->count, di->label);
+						gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, pa, count, di->label);
 					else
 						dbg(0,"draw_image_warp not supported by graphics driver drawing '%s'\n", di->label);
 					break;
 				case element_arrows:
-					display_draw_arrows(di,gc,gra);
+					display_draw_arrows(gra,gc,pa,count);
 					break;
 				default:
 					printf("Unhandled element type %d\n", e->type);
@@ -1099,6 +1384,8 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 	}
 	if (gc)
 		graphics_gc_destroy(gc);
+	if (img)
+		graphics_image_free(gra, img);
 }
 
 void
@@ -1119,9 +1406,9 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 		int count=e->coord_count;
 		struct point pnt[count+1];
 		if (count)
-			transform(t, projection_screen, e->coord, pnt, count, 0);
+			transform(t, projection_screen, e->coord, pnt, count, 0, 0, NULL);
 		else {
-			transform(t, projection_screen, &c, pnt, 1, 0);
+			transform(t, projection_screen, &c, pnt, 1, 0, 0, NULL);
 			count=1;
 		}
 		gc=graphics_gc_new(gra);
@@ -1231,14 +1518,19 @@ static void do_draw_map(struct displaylist *displaylist, struct transformation *
 	struct map_rect *mr;
 	struct item *item;
 	int conv,count,max=16384;
-	struct point pnt[max];
 	struct coord ca[max];
 	struct attr attr;
 	struct map_selection *sel;
+	int num=0;
 
 	pro=map_projection(m);
 	conv=map_requires_conversion(m);
 	sel=transform_get_selection(t, pro, order);
+	tg=t;
+	pg=pro;
+#if 0
+	sel=NULL;
+#endif
 	if (route_selection)
 		mr=map_rect_new(m, route_selection);
 	else
@@ -1248,6 +1540,15 @@ static void do_draw_map(struct displaylist *displaylist, struct transformation *
 		return;
 	}
 	while ((item=map_rect_get_item(mr))) {
+		num++;
+#if 0
+		if (num < 7599 || num > 7599)
+			continue;
+#endif
+#if 0
+		if (item->id_hi != 0xb0031 || item->id_lo != 0x20c9aeea)
+			continue;
+#endif
 		count=item_coord_get(item, ca, item->type < type_line ? 1: max);
 		if (item->type >= type_line && count < 2) {
 			dbg(1,"poly from map has only %d points\n", count);
@@ -1271,7 +1572,6 @@ static void do_draw_map(struct displaylist *displaylist, struct transformation *
 		}
 		if (count == max) 
 			dbg(0,"point count overflow\n", count);
-		count=transform(t, pro, ca, pnt, count, 1);
 		if (item->type >= type_line && count < 2) {
 			dbg(1,"poly from transform has only %d points\n", count);
 			continue;
@@ -1280,10 +1580,10 @@ static void do_draw_map(struct displaylist *displaylist, struct transformation *
 			attr.u.str=NULL;
 		if (conv && attr.u.str && attr.u.str[0]) {
 			char *str=map_convert_string(m, attr.u.str);
-			display_add(displaylist, item, count, pnt, str);
+			display_add(displaylist, item, count, ca, str);
 			map_convert_free(str);
 		} else
-			display_add(displaylist, item, count, pnt, attr.u.str);
+			display_add(displaylist, item, count, ca, attr.u.str);
 	}
 	map_rect_destroy(mr);
 	map_selection_destroy(sel);
@@ -1332,6 +1632,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 {
 	int order=transform_get_order(trans);
 	struct point p;
+	tg=trans;
 	p.x=0;
 	p.y=0;
 	// FIXME find a better place to set the background color
@@ -1350,6 +1651,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
 
+#if 0
 /**
  * FIXME
  * @param <>
@@ -1371,6 +1673,7 @@ void graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy)
 	}
 	graphics_displaylist_close(dlh);
 }
+#endif
 
 /**
  * FIXME
@@ -1604,11 +1907,16 @@ static int within_dist_polygon(struct point *p, struct point *poly_pnt, int coun
 */
 int graphics_displayitem_within_dist(struct displayitem *di, struct point *p, int dist)
 {
+	struct point pa[16384];
+	int count;
+
+	count=transform(tg, pg, di->c, pa, di->count, 1, 0, NULL);
+	
 	if (di->item.type < type_line) {
-		return within_dist_point(p, &di->pnt[0], dist);
+		return within_dist_point(p, &pa[0], dist);
 	}
 	if (di->item.type < type_area) {
-		return within_dist_polyline(p, di->pnt, di->count, dist, 0);
+		return within_dist_polyline(p, pa, count, dist, 0);
 	}
-	return within_dist_polygon(p, di->pnt, di->count, dist);
+	return within_dist_polygon(p, pa, count, dist);
 }
