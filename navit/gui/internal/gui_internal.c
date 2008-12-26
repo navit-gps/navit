@@ -2491,11 +2491,27 @@ gui_internal_cmd_fullscreen(struct gui_priv *this, struct widget *wm)
 	this->win->fullscreen(this->win, this->fullscreen);
 }
 
+static void
+gui_internal_cmd_2d(struct gui_priv *this, struct widget *wm)
+{
+	struct transformation *trans=navit_get_trans(this->nav);
+	transform_set_pitch(trans, 0);
+	this->redraw=1;
+}
+
+static void
+gui_internal_cmd_3d(struct gui_priv *this, struct widget *wm)
+{
+	struct transformation *trans=navit_get_trans(this->nav);
+	transform_set_pitch(trans, 20);
+	this->redraw=1;
+}
 
 static void
 gui_internal_cmd_display(struct gui_priv *this, struct widget *wm)
 {
 	struct widget *w;
+	struct transformation *trans;
 
 	w=gui_internal_menu(this, _("Display"));	
 	gui_internal_widget_append(w,
@@ -2512,6 +2528,19 @@ gui_internal_cmd_display(struct gui_priv *this, struct widget *wm)
 			gui_internal_button_new_with_callback(this, _("Fullscreen"),
 				image_new_l(this, "gui_fullscreen"), gravity_center|orientation_vertical,
 				gui_internal_cmd_fullscreen, NULL));
+	}
+	trans=navit_get_trans(this->nav);
+	if (transform_get_pitch(trans)) {
+		gui_internal_widget_append(w,
+			gui_internal_button_new_with_callback(this, _("2D"),
+				image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
+				gui_internal_cmd_2d, NULL));
+		
+	} else {
+		gui_internal_widget_append(w,
+			gui_internal_button_new_with_callback(this, _("3D"),
+				image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
+				gui_internal_cmd_3d, NULL));
 	}
 	gui_internal_menu_render(this);
 }
