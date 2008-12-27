@@ -40,6 +40,7 @@ struct transformation {
 	int roll;
 	int ddd;
  	int m00,m01,m10,m11;	/* 2d transformation matrix */
+	int xyscale;
  	int m20,m21; 		/* additional 3d parameters */
  	double im00,im01,im10,im11;	/* inverse 2d transformation matrix */
 	struct map_selection *map_sel;
@@ -92,18 +93,16 @@ transform_setup_matrix(struct transformation *t)
 	t->m20=pitchs*yaws*fac;
 	t->m21=pitchs*yawc*fac;
 	t->offz=0;
+	t->xyscale=1;
 	t->ddd=0;
 	t->offx=t->screen_center.x;
 	t->offy=t->screen_center.y;
 	if (t->pitch) {
 		t->ddd=1;
 		t->offz=t->screen_dist;
-		t->m00*=t->offz;
-		t->m01*=t->offz;
-		t->m10*=t->offz;
-		t->m11*=t->offz;
+		t->xyscale=t->offz;
 	}
-	det=((double)t->m00*(double)t->m11-(double)t->m01*(double)t->m10);
+	det=((double)t->m00*(double)t->m11-(double)t->m01*(double)t->m10)*t->xyscale;
 	dbg(1,"det=%f\n", det);
 	t->im00=t->m11/det;
 	t->im01=-t->m01/det;
@@ -290,8 +289,8 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 			dbg(0,"%d/%d=%d %d/%d=%d\n",xcn,xc,xcn/xc,ycn,yc,ycn/yc);
 #endif
 #if 1
-			xc=xcn/zc;
-			yc=ycn/zc;
+			xc=(long long)xcn*t->xyscale/zc;
+			yc=(long long)ycn*t->xyscale/zc;
 #else
 			xc=xcn/(1000+zc);
 			yc=ycn/(1000+zc);
@@ -574,6 +573,8 @@ transform_setup_source_rect(struct transformation *t)
 		msm->u.c_rect.rl.x=max4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
 		msm->u.c_rect.rl.y=min4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
 		msm->u.c_rect.lu.y=max4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
+		dbg(1,"%dx%d\n", msm->u.c_rect.rl.x-msm->u.c_rect.lu.x,
+				 msm->u.c_rect.lu.y-msm->u.c_rect.rl.y);
 		*msm_last=msm;
 		msm_last=&msm->next;
 		ms=ms->next;
