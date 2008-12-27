@@ -1447,20 +1447,29 @@ navit_set_center(struct navit *this_, struct pcoord *center)
 }
 
 static void
+navit_set_center_coord_screen(struct navit *this_, struct coord *c, struct point *p)
+{
+	int width, height;
+	struct point po;
+	transform_set_center(this_->trans, c);
+	transform_get_size(this_->trans, &width, &height);
+	po.x=width/2;
+	po.y=height/2;
+	update_transformation(this_->trans, &po, p);
+}
+
+static void
 navit_set_center_cursor(struct navit *this_, struct coord *cursor, int dir, int xpercent, int ypercent)
 {
-	struct coord *c=transform_center(this_->trans);
 	int width, height;
-	struct point p;
+	struct point pn;
 	struct coord cnew;
 
 	transform_get_size(this_->trans, &width, &height);
-	*c=*cursor;
 	transform_set_yaw(this_->trans, dir);
-	p.x=(100-xpercent)*width/100;
-	p.y=(100-ypercent)*height/100;
-	transform_reverse(this_->trans, &p, &cnew);
-	*c=cnew;
+	pn.x=xpercent*width/100;
+	pn.y=ypercent*height/100;
+	navit_set_center_coord_screen(this_, cursor, &pn);
 	if (this_->ready == 3)
 		navit_draw(this_);
 }
