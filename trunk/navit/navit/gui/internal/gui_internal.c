@@ -2585,7 +2585,7 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 		coord=coordinates(&this->vehiclep, '\n');
 		gui_internal_widget_append(w,
 			wc=gui_internal_button_new_with_callback(this, coord,
-				image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
+				image_new_l(this, "gui_vehicle"), gravity_center|orientation_vertical,
 				gui_internal_cmd_position, NULL));
 		wc->name=g_strdup(_("Vehicle Position"));
 		wc->c=this->vehiclep;
@@ -2593,7 +2593,7 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm)
 	}
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, _("Town"),
-			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
+			image_new_l(this, "gui_town"), gravity_center|orientation_vertical,
 			gui_internal_cmd_town, NULL));
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, _("Quit"),
@@ -2716,7 +2716,7 @@ gui_internal_cmd_settings(struct gui_priv *this, struct widget *wm)
 			gui_internal_cmd_maps, NULL));
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, _("Vehicle"),
-			image_new_l(this, "gui_sound"), gravity_center|orientation_vertical,
+			image_new_l(this, "gui_vehicle"), gravity_center|orientation_vertical,
 			gui_internal_cmd_vehicle, NULL));
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, _("Rules"),
