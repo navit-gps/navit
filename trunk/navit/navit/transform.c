@@ -33,15 +33,21 @@
 #include "point.h"
 
 #define POST_SHIFT 8
+#define ENABLE_ROLL
 
 struct transformation {
 	int yaw;		/* Rotation angle */
 	int pitch;
-	int roll;
 	int ddd;
  	int m00,m01,m10,m11;	/* 2d transformation matrix */
 	int xyscale;
  	int m20,m21; 		/* additional 3d parameters */
+#ifdef ENABLE_ROLL
+	int roll;
+ 	int m02,m12,m22; 
+	int hog;
+ 	double im02,im12,im20,im21,im22;
+#endif
  	double im00,im01,im10,im11;	/* inverse 2d transformation matrix */
 	struct map_selection *map_sel;
 	struct map_selection *screen_sel;
@@ -62,8 +68,12 @@ transform_setup_matrix(struct transformation *t)
 	double fac;
 	double yawc=cos(M_PI*t->yaw/180);
 	double yaws=sin(M_PI*t->yaw/180);
-	double pitchc=cos(M_PI*t->pitch/180);
-	double pitchs=sin(M_PI*t->pitch/180);
+	double pitchc=cos(-M_PI*t->pitch/180);
+	double pitchs=sin(-M_PI*t->pitch/180);
+#ifdef ENABLE_ROLL	
+	double rollc=cos(M_PI*t->roll/180);
+	double rolls=sin(M_PI*t->roll/180);
+#endif
 
 	int scale=t->scale;
 	int order_dir=-1;
@@ -86,12 +96,24 @@ transform_setup_matrix(struct transformation *t)
 	fac=(1 << POST_SHIFT) * (1 << t->scale_shift) / t->scale;
 	dbg(1,"scale_shift=%d order=%d scale=%f fac=%f\n", t->scale_shift, t->order,t->scale,fac);
 	
+#ifdef ENABLE_ROLL
+        t->m00=rollc*yawc*fac;
+        t->m01=rollc*yaws*fac;
+	t->m02=-rolls*fac;
+	t->m10=(pitchs*rolls*yawc-pitchc*yaws)*(-fac);
+	t->m11=(pitchs*rolls*yaws+pitchc*yawc)*(-fac);
+	t->m12=pitchs*rollc*(-fac);
+	t->m20=(pitchc*rolls*yawc+pitchs*yaws)*fac;
+	t->m21=(pitchc*rolls*yaws-pitchs*yawc)*fac;
+	t->m22=pitchc*rollc*fac;
+#else
         t->m00=yawc*fac;
         t->m01=-yaws*fac;
 	t->m10=-pitchc*yaws*fac;
 	t->m11=-pitchc*yawc*fac;
 	t->m20=pitchs*yaws*fac;
 	t->m21=pitchs*yawc*fac;
+#endif
 	t->offz=0;
 	t->xyscale=1;
 	t->ddd=0;
@@ -102,12 +124,30 @@ transform_setup_matrix(struct transformation *t)
 		t->offz=t->screen_dist;
 		t->xyscale=t->offz;
 	}
+#ifdef ENABLE_ROLL
+	det=(double)t->m00*(double)t->m11*(double)t->m22+
+            (double)t->m01*(double)t->m12*(double)t->m20+
+            (double)t->m02*(double)t->m10*(double)t->m21-
+            (double)t->m02*(double)t->m11*(double)t->m20-
+            (double)t->m01*(double)t->m10*(double)t->m22-
+            (double)t->m00*(double)t->m12*(double)t->m21;
+
+	t->im00=(t->m11*t->m22-t->m12*t->m21)/det;
+	t->im01=(t->m02*t->m21-t->m01*t->m22)/det;
+	t->im02=(t->m01*t->m12-t->m02*t->m11)/det;
+	t->im10=(t->m12*t->m20-t->m10*t->m22)/det;
+	t->im11=(t->m00*t->m22-t->m02*t->m20)/det;
+	t->im12=(t->m02*t->m10-t->m00*t->m12)/det;
+	t->im20=(t->m10*t->m21-t->m11*t->m20)/det;
+	t->im21=(t->m01*t->m20-t->m00*t->m21)/det;
+	t->im22=(t->m00*t->m11-t->m01*t->m10)/det;
+#else
 	det=((double)t->m00*(double)t->m11-(double)t->m01*(double)t->m10)*t->xyscale;
-	dbg(1,"det=%f\n", det);
 	t->im00=t->m11/det;
 	t->im01=-t->m01/det;
 	t->im10=-t->m10/det;
 	t->im11=t->m00/det;
+#endif
 }
 
 struct transformation *
@@ -119,6 +159,10 @@ transform_new(void)
 	this_->screen_dist=100;
 #if 0
 	this_->pitch=20;
+#endif
+#if 0
+	this_->roll=30;
+	this_->hog=1000;
 #endif
 	transform_setup_matrix(this_);
 	return this_;
@@ -248,11 +292,20 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 		yc-=t->map_center.y;
 		xc >>= t->scale_shift;
 		yc >>= t->scale_shift;
+#ifdef ENABLE_ROLL		
+		xcn=xc*t->m00+yc*t->m01+t->hog*t->m02;
+		ycn=xc*t->m10+yc*t->m11+t->hog*t->m12;
+#else
 		xcn=xc*t->m00+yc*t->m01;
 		ycn=xc*t->m10+yc*t->m11;
+#endif
 
 		if (t->ddd) {
+#ifdef ENABLE_ROLL		
+			zc=(xc*t->m20+yc*t->m21+t->hog*t->m22);
+#else
 			zc=(xc*t->m20+yc*t->m21);
+#endif
 			zct=zc;
 			zc+=t->offz << POST_SHIFT;
 			dbg(1,"zc=%d\n", zc);
@@ -325,21 +378,37 @@ void
 transform_reverse(struct transformation *t, struct point *p, struct coord *c)
 {
         double zc,xc,yc,xcn,ycn,q;
+	double offz=t->offz << POST_SHIFT;
 	xc=p->x - t->offx;
 	yc=p->y - t->offy;
 	if (t->ddd) {
+		xc/=t->xyscale;
+		yc/=t->xyscale;
 		double f00=xc*t->im00*t->m20;
 		double f01=yc*t->im01*t->m20;
 		double f10=xc*t->im10*t->m21;
 		double f11=yc*t->im11*t->m21;
-		q=(1-f00-f01-f10-f11);
+#ifdef ENABLE_ROLL	
+		q=(1-f00-f01-t->im02*t->m20-f10-f11-t->im12*t->m21);
 		if (q < 0) 
 			q=0.15;
-		zc=(t->offz << POST_SHIFT)*(1+(f00+f01+f10+f11)/q);
-		xcn=xc*zc;
-		ycn=yc*zc;
+		zc=(offz*((f00+f01+f10+f11))+t->hog*t->m22)/q;
+#else
+		q=(1-f00-f01-f10-f11);
+                if (q < 0) 
+			q=0.15;
+		zc=offz*(f00+f01+f10+f11)/q;
+#endif
+		xcn=xc*(zc+offz);
+		ycn=yc*(zc+offz);
+#ifdef ENABLE_ROLL	
+		xc=xcn*t->im00+ycn*t->im01+zc*t->im02;
+		yc=xcn*t->im10+ycn*t->im11+zc*t->im12;
+#else
 		xc=xcn*t->im00+ycn*t->im01;
 		yc=xcn*t->im10+ycn*t->im11;
+#endif
+
 	} else {
 		xcn=xc;
 		ycn=yc;
