@@ -269,12 +269,20 @@ navit_ignore_graphics_events(struct navit *this_, int ignore)
 }
 
 void
-update_transformation(struct transformation *tr, struct point *old, struct point *new)
+update_transformation(struct transformation *tr, struct point *old, struct point *new, struct point *rot)
 {
 	struct coord co,cn;
 	struct coord c,*cp;
 	int dx,dy;
+	int yaw;
+	double angle;
+
 	transform_reverse(tr, old, &co);
+	if (rot) {
+		angle=atan2(new->x-rot->x, new->y-rot->y)*180/M_PI;
+		yaw=transform_get_yaw(tr)+angle;
+		transform_set_yaw(tr, yaw % 360);
+	}
 	transform_reverse(tr, new, &cn);
 	cp=transform_get_center(tr);
 	c.x=cp->x+co.x-cn.x;
@@ -333,8 +341,14 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			this_->motion_timeout=NULL;
 		}
 		if (this_->moved) {
-			struct point pt;
-			update_transformation(this_->trans, &this_->pressed, p);
+			struct point pt,pr;
+			pr.x=this_->w/2;
+			pr.y=0;
+#if 0
+			update_transformation(this_->trans, &this_->pressed, p, &pr);
+#else
+			update_transformation(this_->trans, &this_->pressed, p, NULL);
+#endif
 			graphics_draw_drag(this_->gra, NULL);
 			graphics_overlay_disable(this_->gra, 0);
 			if (!this_->zoomed) {
@@ -380,10 +394,17 @@ navit_motion_timeout(struct navit *this_)
 	dy=(this_->current.y-this_->last.y);
 	if (dx || dy) {
 		struct transformation *tr;
+		struct point pr;
 		this_->last=this_->current;
 		graphics_overlay_disable(this_->gra, 1);
 		tr=transform_dup(this_->trans);
-		update_transformation(tr, &this_->pressed, &this_->current);
+		pr.x=this_->w/2;
+		pr.y=0;
+#if 0
+		update_transformation(tr, &this_->pressed, &this_->current, &pr);
+#else
+		update_transformation(tr, &this_->pressed, &this_->current, NULL);
+#endif
 #if 0
 		graphics_displaylist_move(this_->displaylist, dx, dy);
 #endif
@@ -1455,7 +1476,7 @@ navit_set_center_coord_screen(struct navit *this_, struct coord *c, struct point
 	transform_get_size(this_->trans, &width, &height);
 	po.x=width/2;
 	po.y=height/2;
-	update_transformation(this_->trans, &po, p);
+	update_transformation(this_->trans, &po, p, NULL);
 }
 
 static void
