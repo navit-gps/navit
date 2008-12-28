@@ -122,6 +122,7 @@ struct point;
 struct transformation;
 struct callback;
 struct itemgra;
+void graphics_set_rect(struct graphics *gra, struct point_rect *pr);
 void graphics_resize(struct graphics *gra, int w, int h);
 struct graphics *graphics_new(struct attr *parent, struct attr **attrs);
 int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);

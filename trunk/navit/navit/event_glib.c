@@ -22,6 +22,7 @@
 #include "event_glib.h"
 #include "debug.h"
 #include "callback.h"
+#include "plugin.h"
 
 static GMainLoop *loop;
 
@@ -77,7 +78,6 @@ event_glib_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
 static void
 event_glib_remove_watch(struct event_watch *ev)
 {
-	GError *error = NULL;
 	if (! ev)
 		return;
 	g_source_remove(ev->source);

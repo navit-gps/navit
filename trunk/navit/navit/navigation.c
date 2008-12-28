@@ -748,6 +748,7 @@ is_same_street2(char *old_name1, char *old_name2, char *new_name1, char *new_nam
 	return 0;
 }
 
+#if 0
 /**
  * @brief Checks if two navigation items are on the same street
  *
@@ -823,6 +824,7 @@ maneuver_straight(struct navigation_itm *new, int diff)
 	}
 	return 1;
 }
+#endif
 
 static int maneuver_category(enum item_type type)
 {
@@ -892,7 +894,7 @@ is_way_allowed(struct navigation_way *way)
 static int
 maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *delta, char **reason)
 {
-	int ret=0,d,dw,dlim,straight_limit=20,ext_straight_limit=45;
+	int ret=0,d,dw,dlim;
 	char *r=NULL;
 	struct navigation_way *w;
 	int cat,ncat,wcat,maxcat,left=-180,right=180,is_unambigous=0,is_same_street;

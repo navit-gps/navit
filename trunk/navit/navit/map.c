@@ -464,7 +464,6 @@ map_search_destroy(struct map_search *this_)
 struct map_selection *
 map_selection_rect_new(struct pcoord *center, int distance, int order)
 {
-	int i;
 	struct map_selection *ret=g_new0(struct map_selection, 1);
 	ret->order=order;
 	ret->range=item_range_all;

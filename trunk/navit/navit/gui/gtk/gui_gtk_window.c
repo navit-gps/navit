@@ -114,32 +114,32 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 		break;
 	case 'a':
 		t=navit_get_trans(this->nav);
-		transform_set_yaw(t, (transform_get_yaw(t,0)+15)%360);
+		transform_set_yaw(t, (transform_get_yaw(t)+15)%360);
 		navit_draw(this->nav);
 		break;
 	case 'd':
 		t=navit_get_trans(this->nav);
-		transform_set_yaw(t, (transform_get_yaw(t,0)-15)%360);
+		transform_set_yaw(t, (transform_get_yaw(t)-15)%360);
 		navit_draw(this->nav);
 		break;
 	case 'w':
 		t=navit_get_trans(this->nav);
-		transform_set_pitch(t, (transform_get_pitch(t,0)+5)%360);
+		transform_set_pitch(t, (transform_get_pitch(t)+5)%360);
 		navit_draw(this->nav);
 		break;
 	case 'x':
 		t=navit_get_trans(this->nav);
-		transform_set_pitch(t, (transform_get_pitch(t,0)-5)%360);
+		transform_set_pitch(t, (transform_get_pitch(t)-5)%360);
 		navit_draw(this->nav);
 		break;
 	case 'r':
 		t=navit_get_trans(this->nav);
-		transform_set_distance(t, (transform_get_distance(t,0)-5));
+		transform_set_distance(t, (transform_get_distance(t)-5));
 		navit_draw(this->nav);
 		break;
 	case 'f':
 		t=navit_get_trans(this->nav);
-		transform_set_distance(t, (transform_get_distance(t,0)+5));
+		transform_set_distance(t, (transform_get_distance(t)+5));
 		navit_draw(this->nav);
 		break;
 	case 't':
@@ -150,8 +150,8 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 	 	struct coord *c=transform_center(t);
 		p=transform_center(t);
 		pc.pro=projection_mg;
-		p->y+=50*cos(transform_get_yaw(t, 0)*M_PI/180);
-		p->x+=50*sin(transform_get_yaw(t, 0)*M_PI/180);
+		p->y+=50*cos(transform_get_yaw(t)*M_PI/180);
+		p->x+=50*sin(transform_get_yaw(t)*M_PI/180);
 		pc.x=p->x;
 		pc.y=p->y;
 		navit_set_center(this->nav, &pc);
@@ -165,8 +165,8 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 	 	struct coord *c=transform_center(t);
 		p=transform_center(t);
 		pc.pro=projection_mg;
-		p->y-=50*cos(transform_get_yaw(t, 0)*M_PI/180);
-		p->x-=50*sin(transform_get_yaw(t, 0)*M_PI/180);
+		p->y-=50*cos(transform_get_yaw(t)*M_PI/180);
+		p->x-=50*sin(transform_get_yaw(t)*M_PI/180);
 		pc.x=p->x;
 		pc.y=p->y;
 		navit_set_center(this->nav, &pc);

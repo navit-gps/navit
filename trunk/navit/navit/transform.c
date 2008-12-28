@@ -262,16 +262,10 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 	struct coord c1;
 	int xcn, ycn; 
 	struct coord_geo g;
-	int z;
-#ifdef AVOID_FLOAT
-	int xc,yc,zc,xco,yco,zco;
-#else
-        int xc,yc,zc,xco,yco,zco,xc2,yc2,zc2;
-#endif
-	int xm,ym,xr,yr,zct;
+	int xc, yc, zc=0, xco=0, yco=0, zco=0;
+	int xm,ym,zct;
 	int zlimit=1000;
 	int visible, visibleo=-1;
-	int limit=t->screen_center.y+250;
 	int i,j = 0;
 	dbg(1,"count=%d\n", count);
 	for (i=0; i < count; i++) {
@@ -359,7 +353,6 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 		yc+=t->offy;
 		dbg(1,"xc=%d yc=%d\n", xc, yc);
 		if (j == 0 || !unique || p[j-1].x != xc || p[j-1].y != yc) {
-			struct coord cn;
 			p[j].x=xc;
 			p[j].y=yc;
 			if (width_return) {
@@ -524,7 +517,7 @@ transform_set_pitch(struct transformation *this_,int pitch)
 	transform_setup_matrix(this_);
 }
 int
-transform_get_pitch(struct transformation *this_,int angle)
+transform_get_pitch(struct transformation *this_)
 {
 	return this_->pitch;
 }
@@ -552,7 +545,7 @@ transform_set_distance(struct transformation *this_,int distance)
 }
 
 int
-transform_get_distance(struct transformation *this_,int angle)
+transform_get_distance(struct transformation *this_)
 {
 	return this_->screen_dist;
 }
