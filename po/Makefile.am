@@ -3,7 +3,7 @@ CATALOGS = @MOFILES@
 CLEANFILES = $(CATALOGS) navit.pot
 
 # keep this sorted
-EXTRA_DIST = @POFILES@
+EXTRA_DIST = @POIFILES@
 
 POTFILES  = \
 	$(top_srcdir)/navit/main.c \

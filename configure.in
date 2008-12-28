@@ -584,6 +584,7 @@ AC_ARG_ENABLE(nls,
 INTLIBS=""
 MOFILES=""
 POFILES=""
+POIFILES=""
 LINGUAS=""
 
 if test "x$enable_nls" = "xyes"; then
@@ -626,10 +627,14 @@ if test "x$enable_nls" = "xyes"; then
  for lang in $LINGUAS; do
     POFILES="$POFILES $lang.po"
  done
+ for lang in $LINGUAS; do
+    POIFILES="$POIFILES $lang.po.in"
+ done
 
 AC_SUBST(INTLIBS)
 AC_SUBST(MOFILES)
 AC_SUBST(POFILES)
+AC_SUBST(POIFILES)
 AM_GNU_GETTEXT_VERSION
 AM_GNU_GETTEXT(no-libtool, need-ngettext, \$(top_builddir)/intl/)
 AC_SUBST(LIBINTL)
