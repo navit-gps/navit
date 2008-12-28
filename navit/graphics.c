@@ -176,6 +176,11 @@ void graphics_add_callback(struct graphics *this_, struct callback *cb)
 	callback_list_add(this_->cbl, cb);
 }
 
+void graphics_remove_callback(struct graphics *this_, struct callback *cb)
+{
+	callback_list_remove(this_->cbl, cb);
+}
+
 /**
  * FIXME
  * @param <>
