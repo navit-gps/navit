@@ -129,6 +129,7 @@ struct graphics *graphics_overlay_new(struct graphics *parent, struct point *p, 
 void graphics_init(struct graphics *this_);
 void *graphics_get_data(struct graphics *this_, char *type);
 void graphics_add_callback(struct graphics *this_, struct callback *cb);
+void graphics_remove_callback(struct graphics *this_, struct callback *cb);
 struct graphics_font *graphics_font_new(struct graphics *gra, int size, int flags);
 void graphics_font_destroy_all(struct graphics *gra); 
 struct graphics_gc *graphics_gc_new(struct graphics *gra);
