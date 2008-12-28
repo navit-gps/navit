@@ -1527,6 +1527,8 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	struct street_data *sd=pos->street;
 	struct route_path *ret;
 
+	if (! pos->street || ! dst->street)
+		return NULL;
 	if (item_is_equal(pos->street->item, dst->street->item)) { /* We probably don't have to leave this street and can use a trivial route */
 		if (!(sd->flags & AF_ONEWAY) && pos->lenneg >= dst->lenneg) {
 			return route_path_new_trivial(this, pos, dst, -1);
