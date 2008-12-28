@@ -33,7 +33,7 @@
 #include "point.h"
 
 #define POST_SHIFT 8
-#define ENABLE_ROLL
+/* #define ENABLE_ROLL */
 
 struct transformation {
 	int yaw;		/* Rotation angle */
@@ -528,6 +528,21 @@ transform_get_pitch(struct transformation *this_,int angle)
 {
 	return this_->pitch;
 }
+
+#ifdef ENABLE_ROLL
+void
+transform_set_roll(struct transformation *this_,int roll)
+{
+	this_->roll=roll;
+	transform_setup_matrix(this_);
+}
+
+void
+transform_get_roll(struct transformation *this_)
+{
+	return this_->roll;
+}
+#endif
 
 void
 transform_set_distance(struct transformation *this_,int distance)
