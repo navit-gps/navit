@@ -87,6 +87,7 @@ struct vehicle_priv {
 	struct attr ** attrs;
 	char fixiso8601[128];
 	int checksum_ignore;
+	int magnetic_direction;
 };
 
 #ifdef _WIN32
@@ -411,6 +412,20 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 			priv->fixyear = atoi(item[4]);
 		}
 	}
+	if (!strncmp(buffer, "$IISMD", 6)) {
+	/*
+		0      1   2     3      4   
+		$IISMD,dir,press,height,temp*CC"
+			dir 	  Direction (0-359)
+			press	  Pressure (hpa, i.e. 1032)
+			height    Barometric height above ground (meter)
+			temp      Temperature (Degree Celsius)
+	*/
+		if (item[1]) {
+			priv->magnetic_direction = g_ascii_strtod( item[1], NULL );
+			dbg(0,"magnetic %d\n", priv->magnetic_direction);
+		}
+	}
 	return ret;
 }
 
@@ -519,6 +534,9 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 		break;
 	case attr_position_direction:
 		attr->u.numd = &priv->direction;
+		break;
+	case attr_position_magnetic_direction:
+		attr->u.num = priv->magnetic_direction;
 		break;
 	case attr_position_hdop:
 		attr->u.numd = &priv->hdop;

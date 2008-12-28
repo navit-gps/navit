@@ -115,6 +115,7 @@ ATTR(district_id) /* fixme? */
 ATTR(drag_bitmap)
 ATTR(use_mousewheel)
 ATTR(fullscreen)
+ATTR(position_magnetic_direction)
 ATTR2(0x0002ffff,type_int_end)
 ATTR2(0x00030000,type_string_begin)
 ATTR(type)
