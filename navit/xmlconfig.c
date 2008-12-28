@@ -181,41 +181,13 @@ xmlconfig_config(struct xmlstate *state)
 }
 
 static int
-xmlconfig_window_items(struct xmlstate *state)
-{
-	int distance=-1;
-	enum item_type itype;
-	const char *name=find_attribute(state, "name", 1);
-	const char *value=find_attribute(state, "distance", 0);
-	const char *type=find_attribute(state, "type", 1);
-	char *tok,*str,*type_str,*saveptr=NULL;
-	if (! name || !type)
-		return 0;
-	if (value) 
-		distance=convert_number(value);
-	state->element_attr.u.data = navit_window_items_new(name, distance);
-	type_str=g_strdup(type);
-	str=type_str;
-	while ((tok=strtok(str, ","))) {
-		itype=item_from_name(tok);
-		navit_window_items_add_item(state->element_attr.u.data, itype);
-		str=NULL;
-	}
-	g_free(type_str);
-
-	navit_add_window_items(state->parent->element_attr.u.data, state->element_attr.u.data);
-
-	return 1;
-}
-
-static int
 xmlconfig_speed(struct xmlstate *state)
 {
 	const char *type;
 	const char *value;
 	int v;
 	enum item_type itype;
-	char *saveptr=NULL, *tok, *type_str, *str;
+	char *tok, *type_str, *str;
 
 	type=find_attribute(state, "type", 1);
 	if (! type)
@@ -245,7 +217,7 @@ xmlconfig_announce(struct xmlstate *state)
 	int level[3];
 	int i;
 	enum item_type itype;
-	char *saveptr=NULL, *tok, *type_str, *str;
+	char *tok, *type_str, *str;
 
 	type=find_attribute(state, "type", 1);
 	if (! type)
@@ -315,7 +287,6 @@ struct element_func {
 	{ "itemgra", "cursor", NULL, NEW(itemgra_new), ADD(itemgra_add_attr)},
 	{ "log", "vehicle", NULL, NEW(log_new)},
 	{ "log", "navit", NULL, NEW(log_new)},
-	{ "window_items", "navit", xmlconfig_window_items},
 	{ "plugins", "config", NULL, NEW(plugins_new), NULL, INIT(plugins_init)},
 	{ "plugin", "plugins", NULL, NEW(plugin_new)},
 	{},

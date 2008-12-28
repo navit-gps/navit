@@ -334,7 +334,7 @@ cache_insert_new(struct cache *cache, void *id, int size)
 	return data;	
 }
 
-void
+static void
 cache_stats(struct cache *cache)
 {
 	dbg(0,"hits %d misses %d hitratio %d size %d entry_size %d id_size %d T1 target %d\n", cache->hits, cache->misses, cache->hits*100/(cache->hits+cache->misses), cache->size, cache->entry_size, cache->id_size, cache->t1_target);

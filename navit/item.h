@@ -92,6 +92,8 @@ void item_hash_insert(struct item_hash *h, struct item *item, void *val);
 int item_hash_remove(struct item_hash *h, struct item *item);
 void *item_hash_lookup(struct item_hash *h, struct item *item);
 void item_hash_destroy(struct item_hash *h);
+int item_range_intersects_range(struct item_range *range1, struct item_range *range2);
+int item_range_contains_item(struct item_range *range, enum item_type type);
 /* end of prototypes */
 
 

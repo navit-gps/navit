@@ -248,7 +248,11 @@ struct map_selection *map_selection_dup_pro(struct map_selection *sel, enum proj
 struct map_selection *map_selection_dup(struct map_selection *sel);
 void map_selection_destroy(struct map_selection *sel);
 int map_selection_contains_item_rect(struct map_selection *sel, struct item *item);
+int map_selection_contains_item_range(struct map_selection *sel, int follow, struct item_range *range, int count);
+int map_selection_contains_item(struct map_selection *sel, int follow, enum item_type type);
 int map_priv_is(struct map *map, struct map_priv *priv);
+void map_dump_filedesc(struct map *map, FILE *out);
+void map_dump_file(struct map *map, char *file);
 void map_dump(struct map *map);
 /* end of prototypes */
 

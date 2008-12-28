@@ -22,6 +22,8 @@
 #include "coord.h"
 #include "debug.h"
 #include "item.h"
+#include "map.h"
+#include "transform.h"
 
 struct item_name {
         enum item_type item;
