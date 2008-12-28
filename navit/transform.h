@@ -35,6 +35,7 @@ struct pcoord;
 struct point;
 struct transformation;
 struct transformation *transform_new(void);
+struct transformation * transform_dup(struct transformation *t);
 void transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g);
 void transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c);
 void transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to);
@@ -45,6 +46,20 @@ int transform(struct transformation *t, enum projection pro, struct coord *c, st
 void transform_reverse(struct transformation *t, struct point *p, struct coord *c);
 enum projection transform_get_projection(struct transformation *this_);
 void transform_set_projection(struct transformation *this_, enum projection pro);
+struct map_selection * transform_get_selection(struct transformation *this_, enum projection pro, int order);
+struct coord * transform_center(struct transformation *this_);
+struct coord * transform_get_center(struct transformation *this_);
+void transform_set_center(struct transformation *this_, struct coord *c);
+void transform_set_yaw(struct transformation *t,int yaw);
+int transform_get_yaw(struct transformation *this_);
+void transform_set_pitch(struct transformation *this_,int pitch);
+int transform_get_pitch(struct transformation *this_);
+#ifdef ENABLE_ROLL
+void transform_set_roll(struct transformation *this_,int roll);
+void transform_get_roll(struct transformation *this_);
+#endif
+void transform_set_distance(struct transformation *this_,int distance);
+int transform_get_distance(struct transformation *this_);
 struct map_selection *transform_get_selection(struct transformation *this_, enum projection pro, int order);
 struct coord *transform_center(struct transformation *this_);
 void transform_set_angle(struct transformation *t, int angle);

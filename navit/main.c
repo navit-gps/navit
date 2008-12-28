@@ -61,7 +61,7 @@ static void sigchld(int sig)
 #endif
 }
 
-
+#if 0
 static gchar *get_home_directory(void)
 {
 	static gchar *homedir = NULL;
@@ -77,6 +77,7 @@ static gchar *get_home_directory(void)
 	}
 	return homedir;
 }
+#endif
 
 static GList *navit;
 

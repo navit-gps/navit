@@ -268,12 +268,11 @@ navit_ignore_graphics_events(struct navit *this_, int ignore)
 	this_->ignore_graphics_events=ignore;
 }
 
-void
+static void
 update_transformation(struct transformation *tr, struct point *old, struct point *new, struct point *rot)
 {
 	struct coord co,cn;
 	struct coord c,*cp;
-	int dx,dy;
 	int yaw;
 	double angle;
 
@@ -341,7 +340,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			this_->motion_timeout=NULL;
 		}
 		if (this_->moved) {
-			struct point pt,pr;
+			struct point pr;
 			pr.x=this_->w/2;
 			pr.y=0;
 #if 0
@@ -1121,176 +1120,6 @@ navit_window_roadbook_new(struct navit *this_)
 	navit_window_roadbook_update(this_);
 }
 
-static void
-get_direction(char *buffer, int angle, int mode)
-{
-	angle=angle%360;
-	switch (mode) {
-	case 0:
-		sprintf(buffer,"%d",angle);
-		break;
-	case 1:
-		if (angle < 69 || angle > 291)
-			*buffer++='N';
-		if (angle > 111 && angle < 249)
-			*buffer++='S';
-		if (angle > 22 && angle < 158)
-			*buffer++='E';
-		if (angle > 202 && angle < 338)
-			*buffer++='W';
-		*buffer++='\0';
-		break;
-	case 2:
-		angle=(angle+15)/30;
-		if (! angle)
-			angle=12;
-		sprintf(buffer,"%d H", angle);
-		break;
-	}
-}
-
-struct navit_window_items {
-	struct datawindow *win;
-	struct callback *click;
-	char *name;
-	int distance;
-	GHashTable *hash;
-	GList *list;
-};
-
-static void
-navit_window_items_click(struct navit *this_, struct navit_window_items *nwi, char **col)
-{
-	struct pcoord c;
-	char *description;
-
-	// FIXME
-	dbg(0,"enter col=%s,%s,%s,%s,%s\n", col[0], col[1], col[2], col[3], col[4]);
-	sscanf(col[4], "0x%x,0x%x", &c.x, &c.y);
-	c.pro = projection_mg;
-	dbg(0,"0x%x,0x%x\n", c.x, c.y);
-	description=g_strdup_printf("%s %s", nwi->name, col[3]);
-	navit_set_destination(this_, &c, description);
-	g_free(description);
-}
-
-static void
-navit_window_items_open(struct navit *this_, struct navit_window_items *nwi)
-{
-	struct map_selection sel;
-	struct coord c,*center;
-	struct mapset_handle *h;
-	struct map *m;
-	struct map_rect *mr;
-	struct item *item;
-	struct attr attr;
-	int idist,dist;
-	struct param_list param[5];
-	char distbuf[32];
-	char dirbuf[32];
-	char coordbuf[64];
-
-	dbg(0, "distance=%d\n", nwi->distance);
-	if (nwi->distance == -1)
-		dist=40000000;
-	else
-		dist=nwi->distance*1000;
-	param[0].name="Distance";
-	param[1].name="Direction";
-	param[2].name="Type";
-	param[3].name="Name";
-	param[4].name=NULL;
-	sel.next=NULL;
-#if 0
-	sel.order[layer_town]=18;
-	sel.order[layer_street]=18;
-	sel.order[layer_poly]=18;
-#else
-	sel.order=0;
-	sel.range=item_range_all;
-#endif
-	center=transform_center(this_->trans);
-	sel.u.c_rect.lu.x=center->x-dist;
-	sel.u.c_rect.lu.y=center->y+dist;
-	sel.u.c_rect.rl.x=center->x+dist;
-	sel.u.c_rect.rl.y=center->y-dist;
-	dbg(2,"0x%x,0x%x - 0x%x,0x%x\n", sel.u.c_rect.lu.x, sel.u.c_rect.lu.y, sel.u.c_rect.rl.x, sel.u.c_rect.rl.y);
-	nwi->click=callback_new_2(callback_cast(navit_window_items_click), this_, nwi);
-	nwi->win=gui_datawindow_new(this_->gui, nwi->name, nwi->click, NULL);
-	h=mapset_open(navit_get_mapset(this_));
-        while ((m=mapset_next(h, 1))) {
-#if 0
-		dbg(2,"m=%p %s\n", m, map_get_filename(m));
-#endif
-		mr=map_rect_new(m, &sel);
-		dbg(2,"mr=%p\n", mr);
-		while ((item=map_rect_get_item(mr))) {
-			if (item_coord_get(item, &c, 1)) {
-				if (coord_rect_contains(&sel.u.c_rect, &c) && g_hash_table_lookup(nwi->hash, &item->type)) {
-					if (! item_attr_get(item, attr_label, &attr))
-						attr.u.str="";
-					idist=transform_distance(map_projection(item->map), center, &c);
-					if (idist < dist) {
-						get_direction(dirbuf, transform_get_angle_delta(center, &c, 0), 1);
-						param[0].value=distbuf;
-						param[1].value=dirbuf;
-						param[2].value=item_to_name(item->type);
-						sprintf(distbuf,"%d", idist/1000);
-						param[3].value=attr.u.str;
-						sprintf(coordbuf, "0x%x,0x%x", c.x, c.y);
-						param[4].value=coordbuf;
-						datawindow_add(nwi->win, param, 5);
-					}
-					/* printf("gefunden %s %s %d\n",item_to_name(item->type), attr.u.str, idist/1000); */
-				}
-				if (item->type >= type_line)
-					while (item_coord_get(item, &c, 1));
-			}
-		}
-		map_rect_destroy(mr);
-	}
-	mapset_close(h);
-}
-
-struct navit_window_items *
-navit_window_items_new(const char *name, int distance)
-{
-	struct navit_window_items *nwi=g_new0(struct navit_window_items, 1);
-	nwi->name=g_strdup(name);
-	nwi->distance=distance;
-	nwi->hash=g_hash_table_new(g_int_hash, g_int_equal);
-
-	return nwi;
-}
-
-void
-navit_window_items_add_item(struct navit_window_items *nwi, enum item_type type)
-{
-	nwi->list=g_list_prepend(nwi->list, (void *)type);
-	g_hash_table_insert(nwi->hash, &nwi->list->data, (void *)1);
-}
-
-void
-navit_add_window_items(struct navit *this_, struct navit_window_items *nwi)
-{
-	this_->windows_items=g_list_append(this_->windows_items, nwi);
-}
-
-static void
-navit_add_menu_windows_items(struct navit *this_, struct menu *men)
-{
-	struct navit_window_items *nwi;
-	struct callback *cb;
-	GList *l;
-	l=this_->windows_items;
-	while (l) {
-		nwi=l->data;
-		cb=callback_new_2(callback_cast(navit_window_items_open), this_, nwi);
-		menu_add(men, nwi->name, menu_type_menu, cb);
-		l=g_list_next(l);
-	}
-}
-
 void
 navit_init(struct navit *this_)
 {
@@ -1484,7 +1313,6 @@ navit_set_center_cursor(struct navit *this_, struct coord *cursor, int dir, int 
 {
 	int width, height;
 	struct point pn;
-	struct coord cnew;
 
 	transform_get_size(this_->trans, &width, &height);
 	transform_set_yaw(this_->trans, dir);
@@ -1784,7 +1612,7 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 		pro=transform_get_projection(this_->trans);
 		transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	}
-	cursor_draw(cursor.u.cursor, this_->gra, &cursor_pnt, pnt ? 0:1, nv->dir-transform_get_yaw(this_->trans, 0), nv->speed);
+	cursor_draw(cursor.u.cursor, this_->gra, &cursor_pnt, pnt ? 0:1, nv->dir-transform_get_yaw(this_->trans), nv->speed);
 #if 0	
 	if (pnt)
 		pnt2=*pnt;

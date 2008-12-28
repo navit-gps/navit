@@ -885,9 +885,9 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 {
 	int maxpoints=200;
 	struct point res[maxpoints], pos, poso, neg, nego;
-	int i, j, dx, dy, l, dxo, dyo;
+	int i, dx=0, dy=0, l=0, dxo=0, dyo=0;
 	struct offset o,oo;
-	int fow, fowo, delta;
+	int fow=0, fowo=0, delta;
 	int wi, ppos = maxpoints/2, npos = maxpoints/2;
 	int state,prec=5;
 	int max_circle_points=20;
@@ -902,9 +902,6 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 		}
 		if (! l) 
 			l=1;
-#if 0
-		dbg(0,"p[%d of %d]=%d,%d wi=%d l=%d\n", i,count-1,pnt[i].x,pnt[i].y, wi, l);
-#endif
 		calc_offsets(wi, l, dx, dy, &o);
 		pos.x = pnt[i].x + o.ny;
 		pos.y = pnt[i].y + o.px;
@@ -918,9 +915,6 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 			state=3;
 		else
 			state=1;
-#if 0
-		dbg(0,"state=%d npos=%d ppos=%d\n", state, npos, ppos);
-#endif
 		switch (state) {
 		case 1:
 		       if (fowo != fow) {
@@ -954,16 +948,9 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 			draw_circle(&pnt[i], wi, prec, fow-512, -512, res, &npos, -1);
 			res[npos] = pos;
 			res[ppos++] = pos;
-#if 0
-			dbg(0,"npos=%d ppos=%d\n", npos, ppos);
-#endif
 			dbg_assert(npos > 0);
 			dbg_assert(ppos < maxpoints);
 			gra->meth.draw_polygon(gra->priv, gc->priv, res+npos, ppos-npos);
-#if 0
-			for (j = npos ; j < ppos ; j++)
-				dbg(0,"res[%d]=%d,%d\n", j-npos, res[j].x, res[j].y);
-#endif
 			if (state == 2)
 				break;
 			npos=maxpoints/2;
@@ -1073,8 +1060,7 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 	struct point p[count+1];
 	int w[count*step+1];
 	struct wpoint p1,p2;
-	int i,code,out=0,codeo=0;
-	int dx,dy;
+	int i,code,out=0;
 	int wmax;
 	struct point_rect r=gra->r;
 
@@ -1091,11 +1077,6 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 	r.lu.y-=wmax;
 	r.rl.x+=wmax;
 	r.rl.y+=wmax;
-#if 0
-	for (i = 0 ; i < count ; i++) {
-		dbg(0,"in[%d]=%d,%d (%d)\n", i, pa[i].x, pa[i].y, width[i*step]);
-	}
-#endif
 	for (i = 0 ; i < count ; i++) {
 		if (i) {
 			p1.x=pa[i-1].x;
@@ -1106,34 +1087,19 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 			p2.w=width[i*step];
 			/* 0 = invisible, 1 = completely visible, 3 = start point clipped, 5 = end point clipped, 7 both points clipped */
 			code=clip_line(&p1, &p2, &r);
-#if 0
-			dbg(0,"code=%d\n", code);
-#endif
 			if (((code == 1 || code == 5) && i == 1) || (code & 2)) {
-#if 0
-				dbg(0,"start = %d,%d\n", p1.x, p1.y);
-#endif
 				p[out].x=p1.x;
 				p[out].y=p1.y;
 				w[out*step]=p1.w;
 				out++;
 			}
 			if (code) {
-#if 0
-				dbg(0,"end = %d,%d\n", p2.x, p2.y);
-#endif
 				p[out].x=p2.x;
 				p[out].y=p2.y;
 				w[out*step]=p2.w;
 				out++;
 			}
 			if (i == count-1 || (code & 4)) {
-#if 0
-				int j;
-				for (j = 0 ; j < out ; j++) {
-					dbg(0,"out[%d]=%d,%d (%d)\n", j, p[j].x, p[j].y, w[j*step]);
-				}
-#endif
 				if (out > 1) {
 					if (poly) {	
 						graphics_draw_polyline_as_polygon(gra, gc, p, out, w, step);
@@ -1144,9 +1110,6 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 			}
 		}
 	}
-#if 0
-	dbg(0,"done\n");
-#endif
 }
 
 static int
@@ -1161,6 +1124,8 @@ is_inside(struct point *p, struct point_rect *r, int edge)
 		return p->y >= r->lu.y;
 	case 3:
 		return p->y <= r->rl.y;
+	default:
+		return 0;
 	}
 }
 
