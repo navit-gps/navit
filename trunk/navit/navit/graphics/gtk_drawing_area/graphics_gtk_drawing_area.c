@@ -588,6 +588,7 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	       g_object_unref(gra->background);
 	       gra->background_ready = 0;
 	}
+	dbg(1,"window=%d\n", GDK_WINDOW_XID(widget->window));
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;
         gra->drawable = gdk_pixmap_new(widget->window, gra->width, gra->height, -1);
