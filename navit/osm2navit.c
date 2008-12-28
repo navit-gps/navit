@@ -34,8 +34,10 @@
 #include <sys/stat.h>
 #include <zlib.h>
 #include "item.h"
+#include "map.h"
 #include "zipfile.h"
 #include "config.h"
+#include "plugin.h"
 #ifdef HAVE_POSTGRESQL
 #include <libpq-fe.h>
 #endif
@@ -56,7 +58,7 @@ static GHashTable *dedupe_ways_hash;
 
 static int attr_debug_level=1;
 static int nodeid,wayid;
-static int report,phase;
+static int phase;
 static int ignore_unkown = 0, coverage=0;
 
 static char *attrmap={
@@ -356,10 +358,7 @@ static char *attrmap={
 	"w	waterway=stream		water_stream\n"
 };
 
-struct coord {
-	int x;
-	int y;
-} coord_buffer[65536];
+struct coord coord_buffer[65536];
 
 #define IS_REF(c) ((c).x >= (1 << 30))
 #define REF(c) ((c).y)
@@ -633,8 +632,6 @@ static int node_is_tagged;
 static void
 add_tag(char *k, char *v)
 {
-	GHashTable *value_hash;
-	enum item_type type;
 	int idx,level=2;
 	char buffer[BUFFER_SIZE*2+2];
 	if (! strcmp(k,"ele"))
@@ -1588,9 +1585,7 @@ phase1_map(struct map *map, FILE *out_ways, FILE *out_nodes)
 	struct item *item;
 	int count,max=16384;
 	struct coord ca[max];
-	struct item_bin ib;
 	struct attr attr;
-	FILE *file;
 
 	while ((item = map_rect_get_item(mr))) {
 		count=item_coord_get(item, ca, item->type < type_line ? 1: max);
@@ -2714,7 +2709,7 @@ process_binfile(FILE *in, FILE *out)
 
 static struct plugins *plugins;
 
-void add_plugin(char *path)
+static void add_plugin(char *path)
 {
 	struct attr **attrs;
 
@@ -2728,7 +2723,7 @@ int main(int argc, char **argv)
 {
 	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*tilesdir,*zipdir,*res;
 	char *map=g_strdup(attrmap);
-	int i,c,start=1,end=4,dump_coordinates=0;
+	int c,start=1,end=4,dump_coordinates=0;
 	int keep_tmpfiles=0;
 	int process_nodes=1, process_ways=1;
 #ifdef HAVE_ZLIB
@@ -2738,7 +2733,10 @@ int main(int argc, char **argv)
 #endif
 	int output=0;
 	int input=0;
-	char *result,*dbstr=NULL;
+	char *result;
+#ifdef HAVE_POSTGRESQL
+	char *dbstr=NULL;
+#endif
 	FILE* input_file = stdin;
 	struct attr **attrs;
 	struct map *map_handle=NULL;
