@@ -33,6 +33,7 @@ struct attr;
 #include "coord.h"
 #include "point.h"
 #include "layer.h"
+#include "debug.h"
 
 /**
  * @brief Used to select data from a map
