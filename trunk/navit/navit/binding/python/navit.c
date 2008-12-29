@@ -76,7 +76,6 @@ navit_set_position_py(navitObject *self, PyObject *args)
 static PyObject *
 navit_zoom_to_route_py(navitObject *self, PyObject *args)
 {
-	PyObject *pcoord;
 	if (!PyArg_ParseTuple(args, ""))
 		return NULL;
 	navit_zoom_to_route(self->navit);

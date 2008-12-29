@@ -147,7 +147,6 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 		struct coord *p;
 		struct pcoord pc;
 		t=navit_get_trans(this->nav);
-	 	struct coord *c=transform_center(t);
 		p=transform_center(t);
 		pc.pro=projection_mg;
 		p->y+=50*cos(transform_get_yaw(t)*M_PI/180);
@@ -162,7 +161,6 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 		struct coord *p;
 		struct pcoord pc;
 		t=navit_get_trans(this->nav);
-	 	struct coord *c=transform_center(t);
 		p=transform_center(t);
 		pc.pro=projection_mg;
 		p->y-=50*cos(transform_get_yaw(t)*M_PI/180);

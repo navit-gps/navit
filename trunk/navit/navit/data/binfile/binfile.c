@@ -472,7 +472,7 @@ static struct map_rect_priv *
 map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 {
 	struct map_rect_priv *mr;
-	struct tile t;
+	struct tile t={};
 
 	binfile_check_version(map);
 	dbg(1,"map_rect_new_binfile\n");

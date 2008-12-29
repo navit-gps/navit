@@ -253,7 +253,7 @@ int map_selection_contains_item_range(struct map_selection *sel, int follow, str
 int map_selection_contains_item(struct map_selection *sel, int follow, enum item_type type);
 int map_priv_is(struct map *map, struct map_priv *priv);
 void map_dump_filedesc(struct map *map, FILE *out);
-void map_dump_file(struct map *map, char *file);
+void map_dump_file(struct map *map, const char *file);
 void map_dump(struct map *map);
 /* end of prototypes */
 
