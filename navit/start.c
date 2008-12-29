@@ -67,7 +67,7 @@ get_home_directory(void)
 
 int main(int argc, char **argv)
 {
-	GError *error = NULL;
+	xmlerror *error = NULL;
 	char *config_file = NULL;
 	int opt;
 	char *cp;

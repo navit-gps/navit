@@ -31,6 +31,7 @@
 #include "debug.h"
 #include "item.h"
 #include "attr.h"
+#include "xmlconfig.h"
 
 #if defined(MS_WINDOWS) || defined(__CYGWIN__)
 #define Obj_HEAD PyObject_HEAD_INIT(NULL);
@@ -313,9 +314,10 @@ config_load_py(PyObject *self, PyObject *args)
 {
 	const char *file;
 	int ret;
+	xmlerror *error;
 	if (!PyArg_ParseTuple(args, "s", &file))
 		return NULL;
-	ret=config_load(file, NULL);
+	ret=config_load(file, &error);
 	return Py_BuildValue("i",ret);
 }
 
