@@ -36,6 +36,7 @@
 #include "item.h"
 #include "map.h"
 #include "zipfile.h"
+#include "main.h"
 #include "config.h"
 #include "plugin.h"
 #ifdef HAVE_POSTGRESQL
@@ -372,7 +373,6 @@ static void bbox_extend(struct coord *c, struct rect *r);
 
 #ifdef GENERATE_INDEX
 
-static GHashTable *aux_tile_hash;
 GList *aux_tile_list;
 
 struct country_table {
@@ -972,6 +972,7 @@ node_item_get(int id)
 	return &ni[p];
 }
 
+#if 0
 static void
 node_ref_way(int id)
 {
@@ -982,7 +983,7 @@ node_ref_way(int id)
 	}
 	ni->ref_way++;
 }
-
+#endif
 
 static void
 add_way(int id)
@@ -2095,12 +2096,14 @@ create_tile_hash_list(GList *list)
 	}
 }
 
+#if 0
 static void
 destroy_tile_hash(void)
 {
 	g_hash_table_destroy(tile_hash2);
 	tile_hash2=NULL;
 }
+#endif
 
 static int zipnum;
 
