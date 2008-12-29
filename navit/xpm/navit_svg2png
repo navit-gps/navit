@@ -23,11 +23,11 @@ else
 	then
 		if [ -z "$w" ]
 		then
-			w=$(grep 'width="[0-9px.]*"' $svg.svg | head -n 1 | sed -e 's/^[^"]*"//' -e 's/[px]*".*//')
+			w=$(grep 'width="[0-9pxt.]*"' $svg.svg | head -n 1 | sed -e 's/.*width="//' -e 's/[pxt]*".*//')
 		fi
 		if [ -z "$h" ]
 		then
-			h=$(grep 'height="[0-9px.]*"' $svg.svg | head -n 1 | sed -e 's/^[^"]*"//' -e 's/[px]*".*//')
+			h=$(grep 'height="[0-9pxt.]*"' $svg.svg | head -n 1 | sed -e 's/.*height="//' -e 's/[pxt]*".*//')
 		fi
 		ksvgtopng $w $h $svg.svg $png
 	elif [ -f $svg.svgz ]
