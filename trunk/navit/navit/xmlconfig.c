@@ -43,7 +43,6 @@
 #include "xmlconfig.h"
 #include "config.h"
 
-typedef GError xmlerror;
 #ifdef HAVE_GLIB
 #define ATTR_DISTANCE 1
 #else
@@ -796,7 +795,7 @@ parse_file(struct xmldocument *document, xmlerror **error)
 }
 #endif
 
-gboolean config_load(char *filename, xmlerror **error)
+gboolean config_load(const char *filename, xmlerror **error)
 {
 	struct xmldocument document;
 	struct xmlstate *curr=NULL;

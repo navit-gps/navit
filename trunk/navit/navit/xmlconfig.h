@@ -20,8 +20,9 @@
 #ifndef NAVIT_XMLCONFIG_H
 #define NAVIT_XMLCONFIG_H
 
+typedef GError xmlerror;
 struct container;
-gboolean config_load(char *filename,GError **error);
+gboolean config_load(const char *filename, xmlerror **error);
 
 #endif
 
