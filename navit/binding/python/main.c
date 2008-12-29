@@ -28,8 +28,6 @@ static PyObject *
 main_navit(PyObject *self, PyObject *args)
 {
 	struct navit *navit;
-	const char *file;
-	int ret=0;
 	navit=main_get_navit(NULL);
 	return navit_py_ref(navit);
 }
