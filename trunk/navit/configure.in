@@ -66,7 +66,7 @@ AM_PROG_CC_C_O
 
 AC_PROG_CXX
 if eval "test x$GXX = xyes"; then
-        CXXFLAGS="$CXXFLAGS -Wall -Wcast-align -Wmissing-prototypes -Wstrict-prototypes -Wpointer-arith -Wreturn-type -D_GNU_SOURCE"
+        CXXFLAGS="$CXXFLAGS -Wall -Wcast-align -Wpointer-arith -Wreturn-type -D_GNU_SOURCE"
 fi
 
 PKG_CHECK_EXISTS
