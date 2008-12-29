@@ -175,7 +175,6 @@ static int
 file_next(struct map_rect_priv *mr)
 {
 	int debug=0;
-	enum layer_type layer;
 
 	for (;;) {
 		mr->current_file++;

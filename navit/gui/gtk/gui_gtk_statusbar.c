@@ -45,9 +45,7 @@ struct statusbar_priv {
 	struct callback *vehicle_cb;
 };
 
-
-
-
+#if 0
 static void
 statusbar_destroy(struct statusbar_priv *this)
 {
@@ -68,6 +66,7 @@ statusbar_gps_update(struct statusbar_priv *this, int sats, int qual, double lng
 	gtk_label_set_text(GTK_LABEL(this->gps), this->gps_text);
 
 }
+#endif
 
 static char *status_fix2str(int type)
 {
@@ -94,7 +93,7 @@ statusbar_route_update(struct statusbar_priv *this, struct navit *navit, struct 
 	char buffer[128];
 	double lng, lat, direction=0, height=0, speed=0, hdop=0;
 	int sats=0, qual=0;
-	int status;
+	int status=0;
 	char *dirs[]={_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
 	char *dir;
 	int dir_idx;

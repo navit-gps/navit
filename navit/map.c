@@ -659,7 +659,7 @@ map_dump_filedesc(struct map *map, FILE *out)
 }
 
 void
-map_dump_file(struct map *map, char *file)
+map_dump_file(struct map *map, const char *file)
 {
 	FILE *f;
 	f=fopen(file,"w");

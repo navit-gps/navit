@@ -836,7 +836,7 @@ navit_write_center_to_file(struct navit *this_, char *file)
  * @returns nothing
  */
 void
-navit_set_destination(struct navit *this_, struct pcoord *c, char *description)
+navit_set_destination(struct navit *this_, struct pcoord *c, const char *description)
 {
 	if (c) {
 		this_->destination=*c;
