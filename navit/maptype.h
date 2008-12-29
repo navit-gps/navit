@@ -21,6 +21,7 @@
 #define NAVIT_MAPTYPE_H
 
 struct map_methods;
+enum projection;
 
 struct maptype {
 	char *name;
@@ -29,7 +30,6 @@ struct maptype {
 };
 
 /* prototypes */
-enum projection;
 struct map_methods;
 struct map_priv;
 struct maptype;
