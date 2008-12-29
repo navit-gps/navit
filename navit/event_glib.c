@@ -59,7 +59,7 @@ event_glib_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
 {
 	struct event_watch *ret=g_new0(struct event_watch, 1);
 	int flags=0;
-	ret->iochan = g_io_channel_unix_new(fd);
+	ret->iochan = g_io_channel_unix_new((int)fd);
 	switch (cond) {
 	case event_watch_cond_read:
 		flags=G_IO_IN;
@@ -179,10 +179,14 @@ static struct event_methods event_glib_methods = {
 	event_glib_call_callback,
 };
 
-static void
+struct event_priv {
+};
+
+static struct event_priv*
 event_glib_new(struct event_methods *meth)
 {
 	*meth=event_glib_methods;
+	return (struct event_priv *)event_glib_new;
 }
 
 void
