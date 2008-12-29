@@ -1912,7 +1912,7 @@ navit_destroy(struct navit *this_)
 	callback_destroy(navit_command_unregister(this_, "zoom_in"));
 	callback_destroy(navit_command_unregister(this_, "zoom_out"));
 	callback_destroy(this_->nav_speech_cb);
-	callback_destroy(this_->roadbook_window);
+	callback_destroy(this_->roadbook_callback);
 	callback_destroy(this_->popup_callback);
 	callback_destroy(this_->motion_timeout_callback);
 	graphics_remove_callback(this_->gra, this_->resize_callback);
