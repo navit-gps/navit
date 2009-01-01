@@ -97,7 +97,7 @@ extern void *vehicle;
 static void
 popup_set_position(struct navit *nav, struct pcoord *pc)
 {
-	dbg(0,"%p %p\n", nav, pc);
+	dbg(1,"%p %p\n", nav, pc);
 	navit_set_position(nav, pc);
 }
 
@@ -130,7 +130,7 @@ popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char
 
 	va_start(ap, fmt);
 	str=g_strdup_vprintf(fmt, ap);
-	dbg(0,"%s\n", str);
+	dbg(1,"%s\n", str);
 	ret=menu_add(menu, str, type, cb);
 	va_end(ap);
 	g_free(str);
@@ -265,7 +265,7 @@ popup(struct navit *nav, int button, struct point *p)
 	coord_format(g.lat,g.lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
 	popup_printf(men, menu_type_menu, "%s", buffer);
 	popup_printf(men, menu_type_menu, "%f %f", g.lat, g.lng);
-	dbg(0,"%p %p\n", nav, &c);
+	dbg(1,"%p %p\n", nav, &c);
 	c.pro = transform_get_projection(navit_get_trans(nav));
 	c.x = co.x;
 	c.y = co.y;
