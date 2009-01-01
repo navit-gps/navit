@@ -1577,7 +1577,7 @@ phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
 }
 #endif
 
-static char buffer[200000];
+static char buffer[400000];
 
 static void
 phase1_map(struct map *map, FILE *out_ways, FILE *out_nodes)
