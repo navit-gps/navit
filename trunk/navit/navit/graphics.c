@@ -1495,7 +1495,6 @@ static void do_draw_map(struct displaylist *displaylist, struct transformation *
 	struct coord ca[max];
 	struct attr attr;
 	struct map_selection *sel;
-	struct coord_rect r;
 
 	pro=map_projection(m);
 	conv=map_requires_conversion(m);
@@ -1522,13 +1521,13 @@ static void do_draw_map(struct displaylist *displaylist, struct transformation *
 		if (item->id_hi != 0xb0031 || item->id_lo != 0x20c9aeea)
 			continue;
 #endif
-		count=item_coord_get_with_bbox(item, ca, item->type < type_line ? 1: max, &r);
+		count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, sel);
+		if (! count)
+			continue;
 		if (item->type >= type_line && count < 2) {
 			dbg(1,"poly from map has only %d points\n", count);
 			continue;
 		}
-		if (! map_selection_contains_rect(sel, &r))
-			continue;
 		if (item->type < type_line) {
 #if 0
 			if (! map_selection_contains_point(sel, &ca[0])) {
@@ -1552,7 +1551,7 @@ static void do_draw_map(struct displaylist *displaylist, struct transformation *
 #endif
 		}
 		if (count == max) 
-			dbg(0,"point count overflow\n", count);
+			dbg(0,"point count overflow %d\n", count);
 		if (!item_attr_get(item, attr_label, &attr))
 			attr.u.str=NULL;
 		if (conv && attr.u.str && attr.u.str[0]) {
