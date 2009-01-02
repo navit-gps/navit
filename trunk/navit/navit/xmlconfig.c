@@ -494,10 +494,12 @@ xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gcha
 		we_files=file_wordexp_get_array(we);
 		count=file_wordexp_get_count(we);
 		dbg(1,"%d results\n", count);
-		for (i = 0 ; i < count ; i++) {
-			dbg(1,"result[%d]='%s'\n", i, we_files[i]);
-			doc_new.href=we_files[i];
-			parse_file(&doc_new, error);
+		if (count != 1 || file_exists(we_files[0])) {
+			for (i = 0 ; i < count ; i++) {
+				dbg(1,"result[%d]='%s'\n", i, we_files[i]);
+				doc_new.href=we_files[i];
+				parse_file(&doc_new, error);
+			}
 		}
 		file_wordexp_destroy(we);	
 		
