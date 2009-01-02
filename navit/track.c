@@ -130,6 +130,39 @@ tracking_get_angles(struct tracking_line *tl)
 		tl->angle[i]=transform_get_angle_delta(&sd->c[i], &sd->c[i+1], 0);
 }
 
+static int
+street_data_within_selection(struct street_data *sd, struct map_selection *sel)
+{
+	struct coord_rect r;
+	struct map_selection *curr;
+	int i;
+
+	if (!sel)
+		return 1;
+	r.lu=sd->c[0];
+	r.rl=sd->c[0];
+	for (i = 1 ; i < sd->count ; i++) {
+		if (r.lu.x > sd->c[i].x)
+			r.lu.x=sd->c[i].x;
+		if (r.rl.x < sd->c[i].x)
+			r.rl.x=sd->c[i].x;
+		if (r.rl.y > sd->c[i].y)
+			r.rl.y=sd->c[i].y;
+		if (r.lu.y < sd->c[i].y)
+			r.lu.y=sd->c[i].y;
+	}
+        curr=sel;
+	while (curr) {
+		struct coord_rect *sr=&curr->u.c_rect;
+		if (r.lu.x <= sr->rl.x && r.rl.x >= sr->lu.x &&
+		    r.lu.y >= sr->rl.y && r.rl.y <= sr->lu.y)
+			return 1;
+		curr=curr->next;
+	}
+        return 0;
+}
+
+
 static void
 tracking_doupdate_lines(struct tracking *tr, struct pcoord *pc)
 {
@@ -160,11 +193,14 @@ tracking_doupdate_lines(struct tracking *tr, struct pcoord *pc)
 		while ((item=map_rect_get_item(mr))) {
 			if (item->type >= type_street_0 && item->type <= type_ferry) {
 				street=street_get_data(item);
-				tl=g_malloc(sizeof(struct tracking_line)+(street->count-1)*sizeof(int));
-				tl->street=street;
-				tracking_get_angles(tl);
-				tl->next=tr->lines;
-				tr->lines=tl;
+				if (street_data_within_selection(street, sel)) {
+					tl=g_malloc(sizeof(struct tracking_line)+(street->count-1)*sizeof(int));
+					tl->street=street;
+					tracking_get_angles(tl);
+					tl->next=tr->lines;
+					tr->lines=tl;
+				} else
+					street_data_free(street);
 			}
 		}
 		map_selection_destroy(sel);

@@ -54,30 +54,34 @@ item_coord_get(struct item *it, struct coord *c, int count)
 }
 
 int
-item_coord_get_with_bbox(struct item *it, struct coord *c, int count, struct coord_rect *r)
+item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel)
 {
 	int i,ret=it->meth->item_coord_get(it->priv_data, c, count);
-	struct coord_rect r2;
-	if (ret <= 0)
+	struct coord_rect r;
+	struct map_selection *curr;
+	if (ret <= 0 || !sel)
 		return ret;
-	if (ret == 1) {
-		r->rl=r->lu=c[0];
-		return ret;	
-	}
-	r2.lu=c[0];
-	r2.rl=c[0];
+	r.lu=c[0];
+	r.rl=c[0];
 	for (i = 1 ; i < ret ; i++) {
-		if (r2.lu.x > c[i].x)
-			r2.lu.x=c[i].x;
-		if (r2.rl.x < c[i].x)
-			r2.rl.x=c[i].x;
-		if (r2.rl.y > c[i].y)
-			r2.rl.y=c[i].y;
-		if (r2.lu.y < c[i].y)
-			r2.lu.y=c[i].y;
+		if (r.lu.x > c[i].x)
+			r.lu.x=c[i].x;
+		if (r.rl.x < c[i].x)
+			r.rl.x=c[i].x;
+		if (r.rl.y > c[i].y)
+			r.rl.y=c[i].y;
+		if (r.lu.y < c[i].y)
+			r.lu.y=c[i].y;
 	}
-	*r=r2;
-	return ret;
+        curr=sel;
+	while (curr) {
+		struct coord_rect *sr=&curr->u.c_rect;
+		if (r.lu.x <= sr->rl.x && r.rl.x >= sr->lu.x &&
+		    r.lu.y >= sr->rl.y && r.rl.y <= sr->lu.y)
+			return ret;
+		curr=curr->next;
+	}
+        return 0;
 }
 
 int
