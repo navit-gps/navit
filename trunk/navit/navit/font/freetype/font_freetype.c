@@ -2,6 +2,10 @@
 #include <ft2build.h>
 #include <glib.h>
 #include FT_FREETYPE_H
+#define USE_CACHING 
+#ifdef USE_CACHING
+#include FT_CACHE_H
+#endif
 #include <freetype/ftglyph.h>
 #include "config.h"
 #include "point.h"
@@ -9,11 +13,17 @@
 #include "debug.h"
 #include "plugin.h"
 #include "color.h"
+#include "atom.h"
 #include "font_freetype.h"
 
 struct font_freetype_font {
-	FT_Face face;
 	int size;
+#ifdef USE_CACHING
+	FTC_ScalerRec scaler;
+	int charmap_index;
+#else
+	FT_Face face;
+#endif
 };
 
 struct font_priv {
@@ -21,6 +31,12 @@ struct font_priv {
 
 static struct font_priv dummy;
 static FT_Library library;
+#ifdef USE_CACHING
+static FTC_Manager manager;
+static FTC_ImageCache image_cache;
+static FTC_CMapCache charmap_cache;
+static FTC_SBitCache sbit_cache;
+#endif
 static int library_init;
 
 
@@ -33,7 +49,6 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 	char *p = text;
 	FT_BBox bbox;
 	FT_UInt glyph_index;
-	FT_GlyphSlot slot = font->face->glyph;	// a small shortcut
 	FT_Glyph glyph;
 	FT_Matrix matrix;
 	FT_Vector pen;
@@ -63,23 +78,36 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 	} else {
 		bbox.xMin = bbox.yMin = 32000;
 		bbox.xMax = bbox.yMax = -32000;
+#ifndef USE_CACHING
 		FT_Set_Transform(font->face, &matrix, &pen);
+#endif
 		for (n = 0; n < len; n++) {
 			FT_BBox glyph_bbox;
-			glyph_index =
-			    FT_Get_Char_Index(font->face, g_utf8_get_char(p));
-			p = g_utf8_next_char(p);
+#ifdef USE_CACHING
+			FTC_Node anode = NULL;
+			glyph_index = FTC_CMapCache_Lookup(charmap_cache, font->scaler.face_id, font->charmap_index, g_utf8_get_char(p));
+			FT_Glyph cached_glyph;
+			FTC_ImageCache_LookupScaler(image_cache, &font->scaler, FT_LOAD_DEFAULT, glyph_index, &cached_glyph, &anode);
+			FT_Glyph_Copy(cached_glyph, &glyph);
+			FT_Glyph_Transform(glyph, &matrix, &pen);
+#else
+			glyph_index = FT_Get_Char_Index(font->face, g_utf8_get_char(p));
 			FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT);
 			FT_Get_Glyph(font->face->glyph, &glyph);
-			FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_pixels,
-					  &glyph_bbox);
+#endif
+			FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_pixels, &glyph_bbox);
+#ifdef USE_CACHING
 			FT_Done_Glyph(glyph);
+			FTC_Node_Unref(anode, manager);
+#else
+			FT_Done_Glyph(glyph);
+#endif
 			glyph_bbox.xMin += x >> 6;
 			glyph_bbox.xMax += x >> 6;
 			glyph_bbox.yMin += y >> 6;
 			glyph_bbox.yMax += y >> 6;
-			x += slot->advance.x;
-			y -= slot->advance.y;
+			x += glyph->advance.x >> 10;
+			y -= glyph->advance.y >> 10;
 			if (glyph_bbox.xMin < bbox.xMin)
 				bbox.xMin = glyph_bbox.xMin;
 			if (glyph_bbox.yMin < bbox.yMin)
@@ -88,6 +116,7 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 				bbox.xMax = glyph_bbox.xMax;
 			if (glyph_bbox.yMax > bbox.yMax)
 				bbox.yMax = glyph_bbox.yMax;
+			p = g_utf8_next_char(p);
 		}
 		if (bbox.xMin > bbox.xMax) {
 			bbox.xMin = 0;
@@ -117,7 +146,6 @@ static struct font_freetype_text *
 font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
 		       int dy)
 {
-	FT_GlyphSlot slot = font->face->glyph;	// a small shortcut
 	FT_Matrix matrix;
 	FT_Vector pen;
 	FT_UInt glyph_index;
@@ -126,6 +154,8 @@ font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
 	struct font_freetype_glyph *curr;
 	char *p = text;
 	unsigned char *gl, *pm;
+	FT_BitmapGlyph glyph_bitmap;
+	FT_Glyph glyph;
 
 	len = g_utf8_strlen(text, -1);
 	ret = g_malloc(sizeof(*ret) + len * sizeof(struct text_glyph *));
@@ -138,17 +168,30 @@ font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
 
 	pen.x = 0 * 64;
 	pen.y = 0 * 64;
+#ifndef USE_CACHING
 	FT_Set_Transform(font->face, &matrix, &pen);
+#endif
 
 	for (n = 0; n < len; n++) {
 
-		glyph_index =
-		    FT_Get_Char_Index(font->face, g_utf8_get_char(p));
+#ifdef USE_CACHING
+		FTC_Node anode=NULL;
+		FT_Glyph cached_glyph;
+		glyph_index = FTC_CMapCache_Lookup(charmap_cache, font->scaler.face_id, font->charmap_index, g_utf8_get_char(p));
+		FTC_ImageCache_LookupScaler(image_cache, &font->scaler, FT_LOAD_DEFAULT, glyph_index, &cached_glyph, &anode);
+		FT_Glyph_Copy(cached_glyph, &glyph);
+		FT_Glyph_Transform(glyph, &matrix, &pen);
+		FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, NULL, TRUE);
+#else
+		glyph_index = FT_Get_Char_Index(font->face, g_utf8_get_char(p));
 		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT);
-		FT_Render_Glyph(font->face->glyph, ft_render_mode_normal);
+		FT_Get_Glyph(font->face->glyph, &glyph);
+#endif
+		FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, NULL, TRUE);
+		glyph_bitmap = (FT_BitmapGlyph)glyph;
 
-		w = slot->bitmap.width;
-		h = slot->bitmap.rows;
+		w = glyph_bitmap->bitmap.width;
+		h = glyph_bitmap->bitmap.rows;
 		if (w && h)
 			pixmap_len = (w + 2) * (h + 2);
 		else
@@ -161,16 +204,20 @@ font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
 		curr->pixmap = (unsigned char *) (curr + 1);
 		ret->glyph[n] = curr;
 
-		curr->x = slot->bitmap_left << 6;
-		curr->y = -slot->bitmap_top << 6;
+		curr->x = glyph_bitmap->left << 6;
+		curr->y = -glyph_bitmap->top << 6;
 		for (y = 0; y < h; y++) {
-			gl = slot->bitmap.buffer + y * slot->bitmap.pitch;
+			gl = glyph_bitmap->bitmap.buffer + y * glyph_bitmap->bitmap.pitch;
 			pm = curr->pixmap + y * w;
 			memcpy(pm, gl, w);
 		}
 
-		curr->dx = slot->advance.x;
-		curr->dy = -slot->advance.y;
+		curr->dx = glyph->advance.x >> 10;
+		curr->dy = -glyph->advance.y >> 10;
+#ifdef USE_CACHING
+		FT_Done_Glyph(glyph);
+		FTC_Node_Unref(anode, manager);
+#endif
 		p = g_utf8_next_char(p);
 	}
 	ret->glyph_count = len;
@@ -215,6 +262,31 @@ font_freetype_text_destroy(struct font_freetype_text *text)
 	g_free(text);
 }
 
+#ifdef USE_CACHING
+static FT_Error face_requester( FTC_FaceID face_id, FT_Library library, FT_Pointer request_data, FT_Face* aface )
+{
+	FT_Error ret;
+	char *fontfile,*fontindex;
+	if (! face_id)
+		return FT_Err_Invalid_Handle;
+	fontfile=g_strdup((char *)face_id);
+	fontindex=strrchr(fontfile,'/');
+	if (! fontindex) {
+		g_free(fontfile);
+		return FT_Err_Invalid_Handle;
+	}
+	*fontindex++='\0';
+	ret = FT_New_Face( library, fontfile, atoi(fontindex), aface );
+	if(ret) {
+	       dbg(0,"Error while creating freetype face: %d\n", ret);
+	       return ret;
+	}
+	if((ret = FT_Select_Charmap(*aface, FT_ENCODING_UNICODE))) {
+	       dbg(0,"Error while creating freetype face: %d\n", ret);
+	}
+	return 0;
+}
+#endif
 
 /**
  * Load a new font using the fontconfig library.
@@ -238,9 +310,19 @@ font_freetype_font_new(struct graphics_priv *gr,
 	*meth = font_methods;
 	int exact, found;
 	char **family;
+#ifdef USE_CACHING
+	char *idstr;
+	FT_Face face;
+#endif
 
 	if (!library_init) {
 		FT_Init_FreeType(&library);
+#ifdef USE_CACHING
+		FTC_Manager_New( library, 0, 0, 0, &face_requester, NULL, &manager);
+		FTC_ImageCache_New( manager, &image_cache);
+		FTC_CMapCache_New( manager, &charmap_cache);
+		FTC_SBitCache_New( manager, &sbit_cache);
+#endif
 		library_init = 1;
 	}
 	found = 0;
@@ -299,10 +381,23 @@ font_freetype_font_new(struct graphics_priv *gr,
 					dbg(2,
 					    "About to load font from file %s index %d\n",
 					    fontfile, fontindex);
+#ifdef USE_CACHING
+					idstr=g_strdup_printf("%s/%d", fontfile, fontindex);
+					font->scaler.face_id=(FTC_FaceID)atom(idstr);
+					g_free(idstr);
+					font->scaler.width=0;
+					font->scaler.height=size;
+					font->scaler.pixel=0;
+					font->scaler.x_res=300;
+					font->scaler.y_res=300;
+					FTC_Manager_LookupFace(manager, font->scaler.face_id, &face);
+					font->charmap_index=face->charmap ? FT_Get_Charmap_Index(face->charmap) : 0;
+#else
 					FT_New_Face(library,
 						    (char *) fontfile,
 						    fontindex,
 						    &font->face);
+#endif
 					found = 1;
 				}
 				FcPatternDestroy(matched);
@@ -316,8 +411,10 @@ font_freetype_font_new(struct graphics_priv *gr,
 		g_free(font);
 		return NULL;
 	}
+#ifndef USE_CACHING
 	FT_Set_Char_Size(font->face, 0, size, 300, 300);
 	FT_Select_Charmap(font->face, FT_ENCODING_UNICODE);
+#endif
 	return font;
 }
 
