@@ -240,26 +240,28 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 	count=file_wordexp_get_count(we);
 	array=file_wordexp_get_array(we);	
 	dbg(2,"expanded to %d words\n",count);
-	for (i = 0 ; i < count ; i++) {
-		name=array[i];
-		dbg(2,"name[%d]='%s'\n", i, name);
-		if (! (pl=g_hash_table_lookup(pls->hash, name))) {
-			pl=plugin_new_from_path(name);
-			if (! pl) {
-				dbg(0,"failed to create plugin '%s'\n", name);
-				continue;
+	if (count != 1 || file_exists(array[0])) {
+		for (i = 0 ; i < count ; i++) {
+			name=array[i];
+			dbg(2,"name[%d]='%s'\n", i, name);
+			if (! (pl=g_hash_table_lookup(pls->hash, name))) {
+				pl=plugin_new_from_path(name);
+				if (! pl) {
+					dbg(0,"failed to create plugin '%s'\n", name);
+					continue;
+				}
+				g_hash_table_insert(pls->hash, plugin_get_name(pl), pl);
+				pls->list=g_list_append(pls->list, pl);
+			} else {
+				pls->list=g_list_remove(pls->list, pl);
+				pls->list=g_list_append(pls->list, pl);
 			}
-			g_hash_table_insert(pls->hash, plugin_get_name(pl), pl);
-			pls->list=g_list_append(pls->list, pl);
-		} else {
-			pls->list=g_list_remove(pls->list, pl);
-			pls->list=g_list_append(pls->list, pl);
+			plugin_set_active(pl, active);
+			plugin_set_lazy(pl, lazy);
+			plugin_set_ondemand(pl, ondemand);
 		}
-		plugin_set_active(pl, active);
-		plugin_set_lazy(pl, lazy);
-		plugin_set_ondemand(pl, ondemand);
+		file_wordexp_destroy(we);
 	}
-	file_wordexp_destroy(we);
 	return pl;
 #endif
 }
