@@ -78,6 +78,7 @@ int main(int argc, char **argv)
 #ifdef HAVE_GLIB
 	event_glib_init();
 #endif
+	atom_init();
 	main_init(argv[0]);
 	main_init_nls();
 	debug_init(argv[0]);
