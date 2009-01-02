@@ -108,11 +108,11 @@ transform_setup_matrix(struct transformation *t)
 	t->m22=pitchc*rollc*fac;
 #else
         t->m00=yawc*fac;
-        t->m01=-yaws*fac;
-	t->m10=-pitchc*yaws*fac;
-	t->m11=-pitchc*yawc*fac;
+        t->m01=yaws*fac;
+	t->m10=(-pitchc*yaws)*(-fac);
+	t->m11=pitchc*yawc*(-fac);
 	t->m20=pitchs*yaws*fac;
-	t->m21=pitchs*yawc*fac;
+	t->m21=(-pitchs*yawc)*fac;
 #endif
 	t->offz=0;
 	t->xyscale=1;
@@ -142,7 +142,7 @@ transform_setup_matrix(struct transformation *t)
 	t->im21=(t->m01*t->m20-t->m00*t->m21)/det;
 	t->im22=(t->m00*t->m11-t->m01*t->m10)/det;
 #else
-	det=((double)t->m00*(double)t->m11-(double)t->m01*(double)t->m10)*t->xyscale;
+	det=((double)t->m00*(double)t->m11-(double)t->m01*(double)t->m10);
 	t->im00=t->m11/det;
 	t->im01=-t->m01/det;
 	t->im10=-t->m10/det;
@@ -530,7 +530,7 @@ transform_set_roll(struct transformation *this_,int roll)
 	transform_setup_matrix(this_);
 }
 
-void
+int
 transform_get_roll(struct transformation *this_)
 {
 	return this_->roll;
