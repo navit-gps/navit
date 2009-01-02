@@ -54,6 +54,33 @@ item_coord_get(struct item *it, struct coord *c, int count)
 }
 
 int
+item_coord_get_with_bbox(struct item *it, struct coord *c, int count, struct coord_rect *r)
+{
+	int i,ret=it->meth->item_coord_get(it->priv_data, c, count);
+	struct coord_rect r2;
+	if (ret <= 0)
+		return ret;
+	if (ret == 1) {
+		r->rl=r->lu=c[0];
+		return ret;	
+	}
+	r2.lu=c[0];
+	r2.rl=c[0];
+	for (i = 1 ; i < ret ; i++) {
+		if (r2.lu.x > c[i].x)
+			r2.lu.x=c[i].x;
+		if (r2.rl.x < c[i].x)
+			r2.rl.x=c[i].x;
+		if (r2.rl.y > c[i].y)
+			r2.rl.y=c[i].y;
+		if (r2.lu.y < c[i].y)
+			r2.lu.y=c[i].y;
+	}
+	*r=r2;
+	return ret;
+}
+
+int
 item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection to)
 {
 	int ret=item_coord_get(it, c, count);
