@@ -771,12 +771,14 @@ draw_circle(struct point *pnt, int diameter, int scale, int start, int len, stru
 			end+=1024;
 		}
 		while (end > 0) {
-			for (i = 0 ; i < 16 ; i++) {
-				if (c[i].fowler > start && c[i].fowler < end) {
-					res[*pos].x=pnt->x+c[i].x*diameter/20;
-					res[*pos].y=pnt->y+c[i].y*diameter/20;
-					(*pos)+=dir;
-				}
+			i=0;
+			while (i < 16 && c[i].fowler <= start)
+				i++;
+			while (i < 16 && c[i].fowler < end) {
+				res[*pos].x=pnt->x+c[i].x*diameter/20;
+				res[*pos].y=pnt->y+c[i].y*diameter/20;
+				(*pos)+=dir;
+				i++;
 			}
 			end-=1024;
 			start-=1024;
@@ -787,12 +789,14 @@ draw_circle(struct point *pnt, int diameter, int scale, int start, int len, stru
 			end-=1024;
 		}
 		while (end < 1024) {
-			for (i = 15 ; i >= 0 ; i--) {
-					     if (c[i].fowler < start && c[i].fowler > end) {
-					res[*pos].x=pnt->x+c[i].x*diameter/20;
-					res[*pos].y=pnt->y+c[i].y*diameter/20;
-					(*pos)+=dir;
-				}
+			i=15;
+			while (i >= 0 && c[i].fowler >= end)
+				i--;
+			while (i >= 0 && c[i].fowler > start) {
+				res[*pos].x=pnt->x+c[i].x*diameter/20;
+				res[*pos].y=pnt->y+c[i].y*diameter/20;
+				(*pos)+=dir;
+				i--;
 			}
 			start+=1024;
 			end+=1024;
@@ -1491,7 +1495,7 @@ static void do_draw_map(struct displaylist *displaylist, struct transformation *
 	struct coord ca[max];
 	struct attr attr;
 	struct map_selection *sel;
-	int num=0;
+	struct coord_rect r;
 
 	pro=map_projection(m);
 	conv=map_requires_conversion(m);
@@ -1510,7 +1514,6 @@ static void do_draw_map(struct displaylist *displaylist, struct transformation *
 		return;
 	}
 	while ((item=map_rect_get_item(mr))) {
-		num++;
 #if 0
 		if (num < 7599 || num > 7599)
 			continue;
@@ -1519,33 +1522,37 @@ static void do_draw_map(struct displaylist *displaylist, struct transformation *
 		if (item->id_hi != 0xb0031 || item->id_lo != 0x20c9aeea)
 			continue;
 #endif
-		count=item_coord_get(item, ca, item->type < type_line ? 1: max);
+		count=item_coord_get_with_bbox(item, ca, item->type < type_line ? 1: max, &r);
 		if (item->type >= type_line && count < 2) {
 			dbg(1,"poly from map has only %d points\n", count);
 			continue;
 		}
+		if (! map_selection_contains_rect(sel, &r))
+			continue;
 		if (item->type < type_line) {
+#if 0
 			if (! map_selection_contains_point(sel, &ca[0])) {
 				dbg(1,"point not visible\n");
 				continue;
 			}
+#endif
 		} else if (item->type < type_area) {
+#if 0
 			if (! map_selection_contains_polyline(sel, ca, count)) {
 				dbg(1,"polyline not visible\n");
 				continue;
 			}
+#endif
 		} else {
+#if 0
 			if (! map_selection_contains_polygon(sel, ca, count)) {
 				dbg(1,"polygon not visible\n");
 				continue;
 			}
+#endif
 		}
 		if (count == max) 
 			dbg(0,"point count overflow\n", count);
-		if (item->type >= type_line && count < 2) {
-			dbg(1,"poly from transform has only %d points\n", count);
-			continue;
-		}
 		if (!item_attr_get(item, attr_label, &attr))
 			attr.u.str=NULL;
 		if (conv && attr.u.str && attr.u.str[0]) {
