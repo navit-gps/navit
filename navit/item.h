@@ -77,9 +77,10 @@ struct attr;
 struct coord;
 struct item;
 struct item_hash;
+struct map_selection;
 void item_coord_rewind(struct item *it);
 int item_coord_get(struct item *it, struct coord *c, int count);
-int item_coord_get_with_bbox(struct item *it, struct coord *c, int count, struct coord_rect *r);
+int item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel);
 int item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection pro);
 /* does the next returned coordinate mark a node */
 int item_coord_is_node(struct item *it);
