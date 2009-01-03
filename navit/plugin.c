@@ -308,7 +308,7 @@ plugins_destroy(struct plugins *pls)
 	void *
 plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 {
-	dbg(0, "type=\"%s\", name=\"%s\"\n", type_name, name);
+	dbg(1, "type=\"%s\", name=\"%s\"\n", type_name, name);
 	GList *l,*lpls;
 	struct name_val *nv;
 	struct plugin *pl;
