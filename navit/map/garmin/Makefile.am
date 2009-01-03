@@ -1,14 +1,14 @@
 include $(top_srcdir)/Makefile.inc
-AM_CPPFLAGS = @NAVIT_CFLAGS@   -I$(top_srcdir)/navit -DMODULE=data_garmin
+AM_CPPFLAGS = @NAVIT_CFLAGS@   -I$(top_srcdir)/navit -DMODULE=map_garmin
 AM_CPPFLAGS+= @LIBGARMIN_CFLAGS@
-INCLUDES=-I$(top_srcdir)/navit/data/garmin/libgarmin
-AM_CPPFLAGS+=-I$(top_srcdir)/navit/data/garmin/libgarmin
+INCLUDES=-I$(top_srcdir)/navit/map/garmin/libgarmin
+AM_CPPFLAGS+=-I$(top_srcdir)/navit/map/garmin/libgarmin
 AM_CPPFLAGS+=-I$(srcdir)
 
-moduledata_LTLIBRARIES = libdata_garmin.la
-libdata_garmin_la_SOURCES = garmin.c garmin.h gar2navit.c gar2navit.h
-libdata_garmin_la_LIBADD = @LIBGARMIN_LIBS@
-nodist_libdata_garmin_la_SOURCES = g2nbuiltin.h
+modulemap_LTLIBRARIES = libmap_garmin.la
+libmap_garmin_la_SOURCES = garmin.c garmin.h gar2navit.c gar2navit.h
+libmap_garmin_la_LIBADD = @LIBGARMIN_LIBS@
+nodist_libmap_garmin_la_SOURCES = g2nbuiltin.h
 builddir = @builddir@
 
 gar2navit.l$(OBJEXT): g2nbuiltin.h
@@ -26,7 +26,7 @@ gentypes$(EXEEXT): $(gentypes_OBJECTS) $(gentypes_DEPENDENCIES)
 	$(CCLD_FOR_BUILD) -o $@ $(gentypes_OBJECTS)
 
 g2nbuiltin.h: gentypes$(EXEEXT) garmintypes.txt
-	./gentypes$(EXEEXT) $(top_srcdir)/navit/data/garmin/garmintypes.txt $@
+	./gentypes$(EXEEXT) $(top_srcdir)/navit/map/garmin/garmintypes.txt $@
 
 EXTRA_DIST = garmintypes.txt
 

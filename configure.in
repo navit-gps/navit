@@ -171,7 +171,7 @@ AC_PROG_LIBTOOL
 AM_CONDITIONAL(EVENT_GLIB, [test "x$glib" = "xyes"])
 AM_CONDITIONAL(SUPPORT_GLIB, [test "x$glib" = "xno"])
 AM_CONDITIONAL(SUPPORT_EZXML, [test "x$glib" = "xno"])
-AM_CONDITIONAL(DATA_POI_GEODOWNLOAD, [test "x$glib" = "xyes"])
+AM_CONDITIONAL(MAP_POI_GEODOWNLOAD, [test "x$glib" = "xyes"])
 
 AC_CHECK_HEADER(
 	zlib.h,
@@ -811,14 +811,14 @@ navit/Makefile
 navit/binding/Makefile
 navit/binding/python/Makefile
 navit/binding/dbus/Makefile
-navit/data/Makefile
-navit/data/mg/Makefile
-navit/data/textfile/Makefile
-navit/data/binfile/Makefile
-navit/data/garmin/Makefile
-navit/data/poi_geodownload/Makefile
-navit/data/poi_geodownload/libmdb/Makefile
-navit/data/poi_geodownload/libmdb/include/Makefile
+navit/map/Makefile
+navit/map/mg/Makefile
+navit/map/textfile/Makefile
+navit/map/binfile/Makefile
+navit/map/garmin/Makefile
+navit/map/poi_geodownload/Makefile
+navit/map/poi_geodownload/libmdb/Makefile
+navit/map/poi_geodownload/libmdb/include/Makefile
 navit/fib-1.1/Makefile
 navit/font/Makefile
 navit/font/freetype/Makefile
