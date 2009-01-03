@@ -308,7 +308,7 @@ plugins_destroy(struct plugins *pls)
 	void *
 plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 {
-	dbg(1, "type=\"%s\", name=\"%s\"\n", type_name, name);
+	dbg(0, "type=\"%s\", name=\"%s\"\n", type_name, name);
 	GList *l,*lpls;
 	struct name_val *nv;
 	struct plugin *pl;
@@ -323,8 +323,6 @@ plugin_get_type(enum plugin_type type, const char *type_name, const char *name)
 	if (!pls)
 		return NULL;
 	lpls=pls->list;
-	if(!g_ascii_strcasecmp(type_name, "map"))
-		type_name="data";
 	filename=g_strjoin("", "lib", type_name, "_", name, NULL);
 	corename=g_strjoin("", "lib", type_name, "_", "core", NULL);
 	while (lpls) {
