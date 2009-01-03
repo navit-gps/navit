@@ -3,7 +3,7 @@ SUBDIRS=mg textfile binfile
 if HAVELIBGARMIN
 SUBDIRS+=garmin
 endif
-if DATA_POI_GEODOWNLOAD
+if MAP_POI_GEODOWNLOAD
 SUBDIRS+=poi_geodownload
 endif
 
