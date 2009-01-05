@@ -506,10 +506,10 @@ navit_new(struct attr *parent, struct attr **attrs)
 	g.lat=53.13;
 	g.lng=11.70;
 
-	main_add_navit(this_);
 	this_->self.type=attr_navit;
 	this_->self.u.navit=this_;
 	this_->attr_cbl=callback_list_new();
+	main_add_navit(this_);
 
 #if !defined(_WIN32) && !defined(__CEGCC__)
 	f=popen("pidof /usr/bin/ipaq-sleep","r");
@@ -1150,6 +1150,7 @@ navit_init(struct navit *this_)
 		return;
 	}
 	graphics_init(this_->gra);
+#if 0
 	l=this_->vehicles;
 	while (l) {
 		dbg(1,"parsed one vehicle\n");
@@ -1160,6 +1161,7 @@ navit_init(struct navit *this_)
 		vehicle_set_attr(nv->vehicle, &this_->self, NULL);
 		l=g_list_next(l);
 	}
+#endif
 	if (this_->mapsets) {
 		ms=this_->mapsets->data;
 		if (this_->route) {
@@ -1816,6 +1818,10 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v)
 		navit_set_vehicle(this_, nv);
 	if ((vehicle_get_attr(v, attr_animate, &animate, NULL)))
 		nv->animate_cursor=animate.u.num;
+	nv->callback.type=attr_callback;
+	nv->callback.u.callback=callback_new_2(callback_cast(navit_vehicle_update), this_, nv);
+	vehicle_add_attr(nv->vehicle, &nv->callback);
+	vehicle_set_attr(nv->vehicle, &this_->self, NULL);
 	return 1;
 }
 
