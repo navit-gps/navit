@@ -34,6 +34,7 @@ int speech_sayf(struct speech *this_, const char *format, ...);
 void speech_destroy(struct speech *this_);
 int speech_get_attr(struct speech *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int speech_set_attr(struct speech *this_, struct attr *attr);
+int speech_estimate_duration(struct speech *this_, char *str);
 /* end of prototypes */
 
 #endif
