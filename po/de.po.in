@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-18 09:48+0100\n"
+"POT-Creation-Date: 2008-12-18 15:09+0100\n"
 "PO-Revision-Date: 2008-05-27 22:03+0000\n"
 "Last-Translator: singesang <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -169,51 +169,55 @@ msgid "When possible, please turn around"
 msgstr "Wenn möglich bitte wenden"
 
 #: ../navit/navigation.c:1253
+msgid "Enter the roundabout soon"
+msgstr "Demnächst in den Kreisverkehr einfahren"
+
+#: ../navit/navigation.c:1256
 #, c-format
 msgid "In %s, enter the roundabout"
 msgstr "In %s in den Kreisverkehr einfahren"
 
-#: ../navit/navigation.c:1266
+#: ../navit/navigation.c:1268
 #, c-format
 msgid "Leave the roundabout at the %s exit"
 msgstr "Den Kreisverkehr an der %s Ausfahrt verlassen"
 
-#: ../navit/navigation.c:1274
+#: ../navit/navigation.c:1276
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Dem Straßenverlauf %s folgen"
 
-#: ../navit/navigation.c:1278
+#: ../navit/navigation.c:1280
 msgid "soon"
 msgstr "Demnächst"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1288
+#: ../navit/navigation.c:1290
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Die %1$s Straße %2$s abbiegen"
 
-#: ../navit/navigation.c:1291
+#: ../navit/navigation.c:1293
 #, c-format
 msgid "after %i roads"
 msgstr "nach %i Straßen"
 
-#: ../navit/navigation.c:1294
+#: ../navit/navigation.c:1296
 msgid "now"
 msgstr "Jetzt"
 
-#: ../navit/navigation.c:1298
+#: ../navit/navigation.c:1300
 msgid "error"
 msgstr "Fehler"
 
 # c-format
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:1327
+#: ../navit/navigation.c:1329
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "%3$s %1$s%2$s abbiegen%4$s"
 
-#: ../navit/navigation.c:1330
+#: ../navit/navigation.c:1332
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "%s haben Sie ihr Ziel erreicht"
