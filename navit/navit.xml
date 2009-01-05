@@ -32,6 +32,8 @@
              In case of the internal GUI, you can even influence the size of the text and of the icons in the toolbar and the viewport.
              Here's an example for a freerunner: -->
         <!-- <gui type="internal" font_size="350" icons_xs="60" icon_s="70" icon_l="70"/> -->
+	<!-- Normally it is sufficient to use -->
+        <!-- <gui type="internal" /> -->
 
         <gui type="gtk" menubar="1" toolbar="1" statusbar="1"/>
 
