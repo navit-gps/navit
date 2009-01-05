@@ -5,7 +5,7 @@ if BUILD_SAMPLEMAP
   SUBDIRS += maps
 endif
 
-AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ @ZLIB_CFLAGS@ -DPREFIX=\"@prefix@\" -DMODULE=navit
+AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ @ZLIB_CFLAGS@ -DPREFIX=\"@prefix@\" -DLIBDIR=\"@libdir@\" -DMODULE=navit
 BUILT_SOURCES = version.h
 if BUILD_SAMPLEMAP
   BUILT_SOURCES += osm2navit$(EXEEXT)
