@@ -511,10 +511,8 @@ if test "x${binding_python}" = "xyes"; then
 		AC_MSG_CHECKING(for Python linkage)
 		py_prefix=`$_PATH_PYTHON -c 'import sys; print sys.prefix'`
 		py_ver=`$_PATH_PYTHON -c 'import sys; print sys.version[[:3]]'`
-		py_libdir="${py_prefix}/lib64/python${py_ver}"
-		if ! test -d $py_libdir; then
-			py_libdir="${py_prefix}/lib/python${py_ver}"
-		fi
+		py_lib=`$_PATH_PYTHON -c 'import sys; print sys.lib'`
+		py_libdir="${py_prefix}/${py_lib}/python${py_ver}"
 		PYTHON_CFLAGS="-I${py_prefix}/include/python${py_ver}"
 		if test -f $py_libdir/config/Makefile -a -f $py_prefix/include/python${py_ver}/Python.h; then
 			py_libs=`grep '^LIBS=' $py_libdir/config/Makefile | sed -e 's/^.*=//'`
