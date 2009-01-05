@@ -175,7 +175,7 @@ setenv(char *var, char *val, int overwrite)
 #endif
 
 static char *environment_vars[][4]={
-	{"NAVIT_LIBDIR",	":",		":/lib/navit",		":/lib"},
+	{"NAVIT_LIBDIR",	":",		"::/navit",		":/lib"},
 	{"NAVIT_SHAREDIR",	":",		":/share/navit",	":"},
 	{"NAVIT_LOCALEDIR",	":/../locale",	":/share/locale",	":/locale"},
 	{"NAVIT_USER_DATADIR",	":",		"~/.navit",		":/data"},
@@ -194,7 +194,10 @@ main_setup_environment(int mode)
 		if (val) {
 			switch (val[0]) {
 			case ':':
-				val=g_strdup_printf("%s%s", getenv("NAVIT_PREFIX"), val+1);
+				if (val[1] == ':')
+					val=g_strdup_printf("%s/%s%s", getenv("NAVIT_PREFIX"), LIBDIR+sizeof(PREFIX), val+2);
+				else
+					val=g_strdup_printf("%s%s", getenv("NAVIT_PREFIX"), val+1);
 				break;
 			case '~':
 				val=g_strdup_printf("%s%s", getenv("HOME"), val+1);
