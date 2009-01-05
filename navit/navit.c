@@ -977,6 +977,12 @@ navit_textfile_debug_log(struct navit *this_, const char *fmt, ...)
        	va_end(ap);
 }
 
+int 
+navit_speech_estimate(struct navit *this_, char *str)
+{
+	return speech_estimate_duration(this_->speech, str);
+}
+
 void
 navit_say(struct navit *this_, char *text)
 {

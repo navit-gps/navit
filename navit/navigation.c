@@ -62,6 +62,7 @@ struct navigation {
 	struct navigation_command *cmd_last;
 	struct callback_list *callback_speech;
 	struct callback_list *callback;
+	struct navit *navit;
 	int level_last;
 	struct item item_last;
 	int turn_around;
@@ -100,7 +101,7 @@ angle_delta(int angle1, int angle2)
 }
 
 struct navigation *
-navigation_new(struct attr **attrs)
+navigation_new(struct attr *parent, struct attr **attrs)
 {
 	int i,j;
 	struct navigation *ret=g_new0(struct navigation, 1);
@@ -111,6 +112,7 @@ navigation_new(struct attr **attrs)
 	ret->distance_last=-2;
 	ret->distance_turn=50;
 	ret->turn_around_limit=3;
+	ret->navit=parent->u.navit;
 
 	for (j = 0 ; j <= route_item_last-route_item_first ; j++) {
 		for (i = 0 ; i < 3 ; i++) {
@@ -1472,7 +1474,8 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 	struct navigation_command *cur,*prev;
 	int distance=itm->dest_length-cmd->itm->dest_length;
 	int l0_dist,level,dist,i,time;
-	char *ret,*old,*buf;
+	int speech_time,time2nav;
+	char *ret,*old,*buf,*next;
 
 	if (type != attr_navigation_speech) {
 		return show_maneuver(nav, itm, cmd, type, 0); // We accumulate maneuvers only in speech navigation
@@ -1489,6 +1492,7 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 	}
 
 	ret = show_maneuver(nav, itm, cmd, type, 0);
+	time2nav = navigation_time(itm,cmd->itm->prev);
 	old = NULL;
 
 	cur = cmd->next;
@@ -1496,14 +1500,23 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 	i = 0;
 	while (cur && cur->itm) {
 		// We don't merge more than 3 announcements...
-		if (i > 1) {
+		if (i > 1) { // if you change this, please also change the value below, that is used to terminate the loop
 			break;
+		}
+		
+		next = show_maneuver(nav,prev->itm, cur, type, 0);
+		speech_time = navit_speech_estimate(nav->navit,next);
+		g_free(next);
+
+		if (speech_time == -1) { // user didn't set cps
+			speech_time = 30; // assume 3 seconds
 		}
 
 		dist = prev->itm->dest_length - cur->itm->dest_length;
 		time = navigation_time(prev->itm,cur->itm->prev);
 
-		if (time > 50) { // For now, we statically use 5 seconds...
+		if (time >= (speech_time + 30)) { // 3 seconds for understanding what has been said
+			printf("Time: %i, speech_time: %i\n", time, speech_time);
 			break;
 		}
 
@@ -1511,10 +1524,16 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 		buf = show_maneuver(nav, prev->itm, cur, type, 1);
 		ret = g_strdup_printf("%s, %s", old, buf);
 		g_free(buf);
-		g_free(old);
+		if (navit_speech_estimate(nav->navit,ret) > time2nav) {
+			g_free(ret);
+			ret = old;
+			i = 2; // This will terminate the loop
+		} else {
+			g_free(old);
+		}
 
 		// If the two maneuvers are *really* close, we shouldn't tell the second one again, because TTS won't be fast enough
-		if (time <= 30) {
+		if (time <= speech_time) {
 			cur->itm->told = 1;
 		}
 
