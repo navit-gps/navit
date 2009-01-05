@@ -55,7 +55,7 @@ int transform_get_yaw(struct transformation *this_);
 void transform_set_pitch(struct transformation *this_,int pitch);
 int transform_get_pitch(struct transformation *this_);
 void transform_set_roll(struct transformation *this_,int roll);
-void transform_get_roll(struct transformation *this_);
+int transform_get_roll(struct transformation *this_);
 void transform_set_distance(struct transformation *this_,int distance);
 int transform_get_distance(struct transformation *this_);
 struct map_selection *transform_get_selection(struct transformation *this_, enum projection pro, int order);
