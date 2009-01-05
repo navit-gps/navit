@@ -44,6 +44,7 @@
 #include "route.h"
 #include "navigation.h"
 #include "event.h"
+#include "callback.h"
 #include "navit_nls.h"
 #if HAVE_API_WIN32_BASE
 #include <windows.h>
@@ -52,6 +53,9 @@
 
 
 struct map_data *map_data_default;
+
+struct callback_list *cbl;
+
 
 static void sigchld(int sig)
 {
@@ -120,15 +124,44 @@ void
 main_add_navit(struct navit *nav)
 {
 	navit=g_list_prepend(navit, nav);
+	callback_list_call_2(cbl, nav, 1);
 }
 
 void
 main_remove_navit(struct navit *nav)
 {
 	navit=g_list_remove(navit, nav);
+	callback_list_call_2(cbl, nav, 0);
 	if (! navit) 
 		event_main_loop_quit();
 }
+
+int
+main_add_attr(struct attr *attr)
+{
+	switch (attr->type)
+	{
+	case attr_callback:
+		callback_list_add(cbl, attr->u.callback);
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+int
+main_remove_attr(struct attr *attr)
+{
+	switch (attr->type)
+	{
+	case attr_callback:
+		callback_list_remove(cbl, attr->u.callback);
+		return 1;
+	default:
+		return 0;
+	}
+}
+
 
 #ifdef HAVE_API_WIN32
 void
@@ -186,7 +219,7 @@ main_init(char *program)
 #ifndef _WIN32
 	signal(SIGCHLD, sigchld);
 #endif
-
+	cbl=callback_list_new();
 	setenv("LC_NUMERIC","C",1);
 	setlocale(LC_ALL,"");
 	setlocale(LC_NUMERIC,"C");
