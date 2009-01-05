@@ -31,7 +31,7 @@ struct callback;
 struct map;
 struct navigation;
 struct route;
-struct navigation *navigation_new(struct attr **attrs);
+struct navigation *navigation_new(struct attr *parent, struct attr **attrs);
 int navigation_set_announce(struct navigation *this_, enum item_type type, int *level);
 void navigation_update(struct navigation *this_, struct route *route);
 void navigation_flush(struct navigation *this_);

@@ -65,6 +65,7 @@ struct graphics *navit_get_graphics(struct navit *this_);
 void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description);
 void navit_add_bookmark(struct navit *this_, struct pcoord *c, const char *description);
 void navit_say(struct navit *this_, char *text);
+int navit_speech_estimate(struct navit *this_, char *str);
 void navit_speak(struct navit *this_);
 void navit_window_roadbook_destroy(struct navit *this_);
 void navit_window_roadbook_new(struct navit *this_);

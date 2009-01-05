@@ -88,6 +88,32 @@ speech_get_attr(struct speech *this_, enum attr_type type, struct attr *attr, st
 }
 
 /**
+ * @brief Tries to estimate how long it will take to speak a certain string
+ *
+ * This function tries to estimate how long it will take to speak a certain string
+ * passed in str. It relies on the "characters per second"-value passed from the
+ * configuration.
+ *
+ * @param this_ The speech whose speed should be used
+ * @param str The string that should be estimated
+ * @return Time in tenth of seconds or -1 on error
+ */
+int
+speech_estimate_duration(struct speech *this_, char *str)
+{
+	int count;
+	struct attr cps_attr;
+   
+	if (!speech_get_attr(this_,attr_cps,&cps_attr,NULL)) {
+		return -1;
+	}
+
+	count = strlen(str);
+	
+	return (count * 10) / cps_attr.u.num;
+}
+
+/**
  * @brief Sets an attribute from an speech plugin
  *
  * This sets an attribute of a speech plugin, overwriting an attribute of the same type if it
