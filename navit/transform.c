@@ -66,8 +66,8 @@ transform_setup_matrix(struct transformation *t)
 {
 	double det;
 	double fac;
-	double yawc=cos(M_PI*t->yaw/180);
-	double yaws=sin(M_PI*t->yaw/180);
+	double yawc=cos(-M_PI*t->yaw/180);
+	double yaws=sin(-M_PI*t->yaw/180);
 	double pitchc=cos(-M_PI*t->pitch/180);
 	double pitchs=sin(-M_PI*t->pitch/180);
 #ifdef ENABLE_ROLL	
