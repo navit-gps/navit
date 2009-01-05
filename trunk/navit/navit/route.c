@@ -1204,10 +1204,13 @@ route_graph_destroy(struct route_graph *this)
 /**
  * @brief Returns the time needed to drive len on item
  *
+ * This function returns the time needed to drive len meters on 
+ * the item passed in item in tenth of seconds.
+ *
  * @param speedlist The speedlist that should be used
  * @param item The item to be driven on
  * @param len The length to drive
- * @return The time needed to drive len on item
+ * @return The time needed to drive len on item in thenth of senconds
  */
 int
 route_time(int *speedlist, struct item *item, int len)
@@ -1220,6 +1223,7 @@ route_time(int *speedlist, struct item *item, int len)
 		dbg(0,"street type %d speed is zero\n", item->type);
 		return len*36;
 	}
+
 	return len*36/speedlist[item->type-route_item_first];
 }
 
