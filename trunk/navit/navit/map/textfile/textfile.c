@@ -363,7 +363,7 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs)
 	if (! data)
 		return NULL;
 	dbg(1,"map_new_textfile %s\n", data->u.str);	
-	wdata=g_strdup_printf(data->u.str);
+	wdata=g_strdup(data->u.str);
 	len=strlen(wdata);
 	if (len && wdata[len-1] == '|') {
 		wdata[len-1]='\0';
