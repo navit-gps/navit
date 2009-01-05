@@ -75,6 +75,7 @@ struct navigation {
 struct navigation_command {
 	struct navigation_itm *itm;
 	struct navigation_command *next;
+	struct navigation_command *prev;
 	int delta;
 	int roundabout_delta;
 	int length;
@@ -172,7 +173,8 @@ struct navigation_itm {
 	int length;
 	int dest_time;
 	int dest_length;
-	int told;
+	int told;							/**< Indicates if this item's announcement has been told earlier and should not be told again*/
+	int streetname_told;				/**< Indicates if this item's streetname has been told in speech navigation*/
 	int dest_count;
 	int flags;
 	struct navigation_itm *next;
@@ -353,6 +355,40 @@ calculate_angle(struct navigation_way *w)
 }
 
 /**
+ * @brief Returns the time (in seconds) one will drive between two navigation items
+ *
+ * This function returns the time needed to drive between two items, including both of them,
+ * in seconds.
+ *
+ * @param from The first item
+ * @param to The last item
+ * @return The travel time in seconds, or -1 on error
+ */
+static int
+navigation_time(struct navigation_itm *from, struct navigation_itm *to)
+{
+	struct navigation_itm *cur;
+	int time;
+
+	time = 0;
+	cur = from;
+	while (cur) {
+		time += cur->time;
+
+		if (cur == to) {
+			break;
+		}
+		cur = cur->next;
+	}
+
+	if (!cur) {
+		return -1;
+	}
+
+	return time;
+}
+
+/**
  * @brief Clears the ways one can drive from itm
  *
  * @param itm The item that should have its ways cleared
@@ -465,6 +501,9 @@ navigation_destroy_itms_cmds(struct navigation *this_, struct navigation_itm *en
 		if (this_->cmd_first && this_->cmd_first->itm == itm->next) {
 			cmd=this_->cmd_first;
 			this_->cmd_first=cmd->next;
+			if (cmd->next) {
+				cmd->next->prev = NULL;
+			}
 			g_free(cmd);
 		}
 		map_convert_free(itm->name1);
@@ -483,6 +522,7 @@ static void
 navigation_itm_update(struct navigation_itm *itm, struct item *ritem)
 {
 	struct attr length, time;
+
 	if (! item_attr_get(ritem, attr_length, &length)) {
 		dbg(0,"no length\n");
 		return;
@@ -565,7 +605,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 	struct coord c[5];
 
 	if (ritem) {
-		ret->told=0;
+		ret->streetname_told=0;
 		if (! item_attr_get(ritem, attr_street_item, &street_item)) {
 			dbg(0,"no street item\n");
 			return NULL;
@@ -1091,8 +1131,10 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 		ret->length=len;
 		
 	}
-	if (this_->cmd_last)
+	if (this_->cmd_last) {
 		this_->cmd_last->next=ret;
+		ret->prev = this_->cmd_last;
+	}
 	this_->cmd_last=ret;
 
 	if (!this_->cmd_first)
@@ -1224,7 +1266,7 @@ navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *n
 }
 
 static char *
-show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum attr_type type)
+show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum attr_type type, int connect)
 {
 	/* TRANSLATORS: right, as in 'Turn right' */
 	char *dir=_("right"),*strength="";
@@ -1238,6 +1280,12 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	struct navigation_itm *cur;
 	struct navigation_way *w;
 	
+	if (connect) {
+		level = -2; // level = -2 means "connect to another maneuver via 'then ...'"
+	} else {
+		level=1;
+	}
+
 	w = itm->next->ways;
 	strength_needed = 0;
 	if ((itm->next->angle_start - itm->angle_end) < 0) {
@@ -1258,7 +1306,6 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		}
 	}
 
-	level=1;
 	if (delta < 0) {
 		/* TRANSLATORS: left, as in 'Turn left' */
 		dir=_("left");
@@ -1285,7 +1332,9 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	if (type == attr_navigation_speech) {
 		if (nav->turn_around && nav->turn_around == nav->turn_around_limit) 
 			return g_strdup(_("When possible, please turn around"));
-		level=navigation_get_announce_level(nav, itm->item.type, distance-cmd->length);
+		if (!connect) {
+			level=navigation_get_announce_level(nav, itm->item.type, distance-cmd->length);
+		}
 		dbg(1,"distance=%d level=%d type=0x%x\n", distance, level, itm->item.type);
 	}
 
@@ -1298,6 +1347,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			ret = g_strdup_printf(_("In %s, enter the roundabout"), d);
 			g_free(d);
 			return ret;
+		case -2:
 		case 0:
 			cur = cmd->itm->prev;
 			count_roundabout = 0;
@@ -1307,7 +1357,14 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 				}
 				cur = cur->prev;
 			}
-			ret = g_strdup_printf(_("Leave the roundabout at the %s exit"), get_count_str(count_roundabout));
+			switch (level) {
+			case 0:
+				ret = g_strdup_printf(_("Leave the roundabout at the %s exit"), get_count_str(count_roundabout));
+				break;
+			case -2:
+				ret = g_strdup_printf(_("then leave the roundabout at the %s exit"), get_count_str(count_roundabout));
+				break;
+			}
 			return ret;
 		}
 	}
@@ -1338,6 +1395,21 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			d=g_strdup(_("now"));
 		}
 		break;
+	case -2:
+		skip_roads = count_possible_turns(cmd->prev->itm,cmd->itm,cmd->delta);
+		if (skip_roads > 0) {
+			/* TRANSLATORS: First argument is the how manieth street to take, second the direction */ 
+			if (get_count_str(skip_roads+1)) {
+				ret = g_strdup_printf(_("then take the %1$s road to the %2$s"), get_count_str(skip_roads+1), dir);
+				return ret;
+			} else {
+				d = g_strdup_printf(_("after %i roads"), skip_roads);
+			}
+
+		} else {
+			d = g_strdup_printf("");
+		}
+		break;
 	default:
 		d=g_strdup(_("error"));
 	}
@@ -1350,15 +1422,15 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			// was skipped
 
 			if (level == 1) { // we are close to the intersection
-				cmd->itm->told = 1; // remeber to be checked when we turn
+				cmd->itm->streetname_told = 1; // remeber to be checked when we turn
 				tellstreetname = 1; // Ok so we tell the name of the street 
 			}
 
 			if (level == 0) {
-				if(cmd->itm->told == 0) // we are right at the intersection
+				if(cmd->itm->streetname_told == 0) // we are right at the intersection
 					tellstreetname = 1; 
 				else
-					cmd->itm->told = 0;  // reset just in case we come to the same street again
+					cmd->itm->streetname_told = 0;  // reset just in case we come to the same street again
 			}
 
 		}
@@ -1367,12 +1439,90 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 
 		if(tellstreetname) 
 			destination=navigation_item_destination(cmd->itm, itm, " ");
-		/* TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street' */
-		ret=g_strdup_printf(_("Turn %1$s%2$s %3$s%4$s"), strength, dir, d, destination ? destination:"");
+		if (level != -2) {
+			/* TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street' */
+			ret=g_strdup_printf(_("Turn %1$s%2$s %3$s%4$s"), strength, dir, d, destination ? destination:"");
+		} else {
+			/* TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination */
+			ret=g_strdup_printf(_("then turn %1$s%2$s %3$s%4$s"), strength, dir, d, destination ? destination:"");
+		}
 		g_free(destination);
-	} else
-		ret=g_strdup_printf(_("You have reached your destination %s"), d);
+	} else {
+		if (!connect) {
+			ret=g_strdup_printf(_("You have reached your destination %s"), d);
+		} else {
+			ret=g_strdup_printf(_("then you have reached your destination."));
+		}
+	}
 	g_free(d);
+	return ret;
+}
+
+/**
+ * @brief Creates announcements for maneuvers, plus maneuvers immediately following the next maneuver
+ *
+ * This function does create an announcement for the current maneuver and for maneuvers
+ * immediately following that maneuver, if these are too close and we're in speech navigation.
+ *
+ * @return An announcement that should be made
+ */
+static char *
+show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct navigation_command *cmd, enum attr_type type)
+{
+	struct navigation_command *cur,*prev;
+	int distance=itm->dest_length-cmd->itm->dest_length;
+	int l0_dist,level,dist,i,time;
+	char *ret,*old,*buf;
+
+	if (type != attr_navigation_speech) {
+		return show_maneuver(nav, itm, cmd, type, 0); // We accumulate maneuvers only in speech navigation
+	}
+
+	level=navigation_get_announce_level(nav, itm->item.type, distance-cmd->length);
+
+	if (level > 1) {
+		return show_maneuver(nav, itm, cmd, type, 0); // We accumulate maneuvers only if they are close
+	}
+
+	if (cmd->itm->told) {
+		return "";
+	}
+
+	ret = show_maneuver(nav, itm, cmd, type, 0);
+	old = NULL;
+
+	cur = cmd->next;
+	prev = cmd;
+	i = 0;
+	while (cur && cur->itm) {
+		// We don't merge more than 3 announcements...
+		if (i > 1) {
+			break;
+		}
+
+		dist = prev->itm->dest_length - cur->itm->dest_length;
+		time = navigation_time(prev->itm,cur->itm->prev);
+
+		if (time > 50) { // For now, we statically use 5 seconds...
+			break;
+		}
+
+		old = ret;
+		buf = show_maneuver(nav, prev->itm, cur, type, 1);
+		ret = g_strdup_printf("%s, %s", old, buf);
+		g_free(buf);
+		g_free(old);
+
+		// If the two maneuvers are *really* close, we shouldn't tell the second one again, because TTS won't be fast enough
+		if (time <= 30) {
+			cur->itm->told = 1;
+		}
+
+		prev = cur;
+		cur = cur->next;
+		i++;
+	}
+
 	return ret;
 }
 
@@ -1594,28 +1744,28 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 	case attr_navigation_short:
 		this_->attr_next=attr_navigation_long;
 		if (cmd) {
-			this_->str=attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
+			this_->str=attr->u.str=show_next_maneuvers(this_->nav, this_->cmd_itm, cmd, attr_type);
 			return 1;
 		}
 		return 0;
 	case attr_navigation_long:
 		this_->attr_next=attr_navigation_long_exact;
 		if (cmd) {
-			this_->str=attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
+			this_->str=attr->u.str=show_next_maneuvers(this_->nav, this_->cmd_itm, cmd, attr_type);
 			return 1;
 		}
 		return 0;
 	case attr_navigation_long_exact:
 		this_->attr_next=attr_navigation_speech;
 		if (cmd) {
-			this_->str=attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, cmd, attr_type);
+			this_->str=attr->u.str=show_next_maneuvers(this_->nav, this_->cmd_itm, cmd, attr_type);
 			return 1;
 		}
 		return 0;
 	case attr_navigation_speech:
 		this_->attr_next=attr_length;
 		if (cmd) {
-			this_->str=attr->u.str=show_maneuver(this_->nav, this_->cmd_itm, this_->cmd, attr_type);
+			this_->str=attr->u.str=show_next_maneuvers(this_->nav, this_->cmd_itm, this_->cmd, attr_type);
 			return 1;
 		}
 		return 0;
