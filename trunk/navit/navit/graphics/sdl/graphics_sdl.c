@@ -29,6 +29,7 @@
 #include "keys.h"
 #include "item.h"
 #include "attr.h"
+#include "callback.h"
 
 #include <SDL/SDL.h>
 #include <math.h>
@@ -111,20 +112,10 @@ struct graphics_priv {
     int overlay_enable;
     enum draw_mode_num draw_mode;
 
-	void (*resize_callback)(void *data, int w, int h);
-	void *resize_callback_data;
 	int resize_callback_initial;
 
-	void (*motion_callback)(void *data, struct point *p);
-	void *motion_callback_data;
-
-	void (*button_callback)(void *data, int press, int button, struct point *p);
-	void *button_callback_data;
-
-	void (*keypress_callback)(void *data, char *key);
-	void *keypress_callback_data;
-
     struct navit *nav;
+    struct callback_list *cbl;
 
 #ifdef LINUX_TOUCHSCREEN
     int ts_fd;
@@ -404,7 +395,7 @@ static struct graphics_image_methods gi_methods =
 
 static struct graphics_image_priv *
 image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h,
-          struct point *hot)
+          struct point *hot, int rotation)
 {
 #ifdef SDL_IMAGE
     struct graphics_image_priv *gi;
@@ -446,7 +437,7 @@ image_free(struct graphics_priv *gr, struct graphics_image_priv * gi)
 }
 
 static void
-get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret)
+get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)
 {
 	char *p=text;
 	FT_BBox bbox;
@@ -1503,39 +1494,8 @@ static void overlay_disable(struct graphics_priv *gr, int disable)
     gr->overlay_enable = !disable;
 }
 
-static void
-register_keypress_callback(struct graphics_priv *this,
-                            void (*callback)(void *data, char *key),
-                            void *data)
-{
-    this->keypress_callback=callback;
-    this->keypress_callback_data=data;
-}
-
-static void
-register_resize_callback(struct graphics_priv *this, void (*callback)(void *data, int w, int h), void *data)
-{
-	this->resize_callback=callback;
-	this->resize_callback_data=data;
-    this->resize_callback_initial=1;
-}
-
-static void
-register_motion_callback(struct graphics_priv *this, void (*callback)(void *data, struct point *p), void *data)
-{
-	this->motion_callback=callback;
-	this->motion_callback_data=data;
-}
-
-static void
-register_button_callback(struct graphics_priv *this, void (*callback)(void *data, int press, int button, struct point *p), void *data)
-{
-	this->button_callback=callback;
-	this->button_callback_data=data;
-}
-
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h);
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound);
 
 static int window_fullscreen(struct window *win, int on)
 {
@@ -1598,7 +1558,7 @@ static struct graphics_methods graphics_methods = {
 };
 
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int alpha, int wraparound)
 {
     struct graphics_priv *ov;
     int i, x, y;
@@ -1851,11 +1811,7 @@ static gboolean graphics_sdl_idle(void *data)
     */
     if(gr->resize_callback_initial != 0)
     {
-        if(gr->resize_callback)
-        {
-            gr->resize_callback(gr->resize_callback_data, gr->screen->w, gr->screen->h);
-        }
-
+        callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
         gr->resize_callback_initial = 0;
     }
 
@@ -1922,24 +1878,14 @@ static gboolean graphics_sdl_idle(void *data)
                     input_ts_map(&p.x, &p.y, gr->ts_x, gr->ts_y);
 
                     /* always send MOUSE_MOTION (first) */
-                    if(gr->motion_callback)
-                    {
-                        gr->motion_callback(gr->motion_callback_data, &p);
-                    }
-
+		    callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p); 
                     if(gr->ts_hit > 0)
                     {
-                        if(gr->button_callback)
-                        {
-                            gr->button_callback(gr->button_callback_data, 1, SDL_BUTTON_LEFT, &p);
-                        }
+		        callback_list_call_attr_3(gr->cbl, attr_button, (void *)1, (void *)SDL_BUTTON_LEFT, (void *)&p); 
                     }
                     else if(gr->ts_hit == 0)
                     {
-                        if(gr->button_callback)
-                        {
-                            gr->button_callback(gr->button_callback_data, 0, SDL_BUTTON_LEFT, &p);
-                        }
+		        callback_list_call_attr_3(gr->cbl, attr_button, (void *)0, (void *)SDL_BUTTON_LEFT, (void *)&p); 
                     }
 
                     /* reset ts_hit */
@@ -1971,10 +1917,7 @@ static gboolean graphics_sdl_idle(void *data)
             {
                 p.x = ev.motion.x;
                 p.y = ev.motion.y;
-                if(gr->motion_callback)
-                {
-                    gr->motion_callback(gr->motion_callback_data, &p);
-                }
+		callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p); 
                 break;
             }
 
@@ -2029,12 +1972,9 @@ static gboolean graphics_sdl_idle(void *data)
                     }
                 }
 
-                if(gr->keypress_callback)
-                {
-                    keybuf[0] = key;
-                    keybuf[1] = '\0';
-                    gr->keypress_callback(gr->keypress_callback_data, keybuf);
-                }
+                keybuf[0] = key;
+                keybuf[1] = '\0';
+		callback_list_call_attr_1(gr->cbl, attr_keypress, (void *)keybuf);
 
                 break;
             }
@@ -2057,10 +1997,7 @@ static gboolean graphics_sdl_idle(void *data)
 
                 p.x = ev.button.x;
                 p.y = ev.button.y;
-                if(gr->button_callback)
-                {
-                    gr->button_callback(gr->button_callback_data, 1, ev.button.button, &p);
-                }
+		callback_list_call_attr_3(gr->cbl, attr_button, (void *)1, (void *)(int)ev.button.button, (void *)&p); 
                 break;
             }
 
@@ -2077,10 +2014,7 @@ static gboolean graphics_sdl_idle(void *data)
 
                 p.x = ev.button.x;
                 p.y = ev.button.y;
-                if(gr->button_callback)
-                {
-                    gr->button_callback(gr->button_callback_data, 0, ev.button.button, &p);
-                }
+		callback_list_call_attr_3(gr->cbl, attr_button, (void *)0, (void *)(int)ev.button.button, (void *)&p); 
                 break;
             }
 
@@ -2100,10 +2034,7 @@ static gboolean graphics_sdl_idle(void *data)
                 }
                 else
                 {
-                    if(gr->resize_callback)
-                    {
-                        gr->resize_callback(gr->resize_callback_data, gr->screen->w, gr->screen->h);
-                    }
+		    callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
                 }
 
                 break;
@@ -2124,13 +2055,14 @@ static gboolean graphics_sdl_idle(void *data)
 
 
 static struct graphics_priv *
-graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
+graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
     struct graphics_priv *this=g_new0(struct graphics_priv, 1);
     struct attr *attr;
     int ret;
 
     this->nav = nav;
+    this->cbl = cbl;
 
     ret = SDL_Init(SDL_INIT_VIDEO);
     if(ret < 0)
@@ -2191,6 +2123,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     if((attr=attr_search(attrs, NULL, attr_antialias)))
         this->aa = attr->u.num;
 
+    this->resize_callback_initial=1;
     return this;
 }
 
