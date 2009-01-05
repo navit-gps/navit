@@ -274,12 +274,13 @@ update_transformation(struct transformation *tr, struct point *old, struct point
 	struct coord co,cn;
 	struct coord c,*cp;
 	int yaw;
-	double angle;
+	double angleo,anglen;
 
 	transform_reverse(tr, old, &co);
 	if (rot) {
-		angle=atan2(new->x-rot->x, new->y-rot->y)*180/M_PI;
-		yaw=transform_get_yaw(tr)+angle;
+		angleo=atan2(old->y-rot->y, old->x-rot->x)*180/M_PI;
+		anglen=atan2(new->y-rot->y, new->x-rot->x)*180/M_PI;
+		yaw=transform_get_yaw(tr)+angleo-anglen;
 		transform_set_yaw(tr, yaw % 360);
 	}
 	transform_reverse(tr, new, &cn);
@@ -342,7 +343,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 		if (this_->moved) {
 			struct point pr;
 			pr.x=this_->w/2;
-			pr.y=0;
+			pr.y=this_->h;
 #if 0
 			update_transformation(this_->trans, &this_->pressed, p, &pr);
 #else
@@ -398,7 +399,7 @@ navit_motion_timeout(struct navit *this_)
 		graphics_overlay_disable(this_->gra, 1);
 		tr=transform_dup(this_->trans);
 		pr.x=this_->w/2;
-		pr.y=0;
+		pr.y=this_->h;
 #if 0
 		update_transformation(tr, &this_->pressed, &this_->current, &pr);
 #else
