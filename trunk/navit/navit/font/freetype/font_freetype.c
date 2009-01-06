@@ -18,7 +18,7 @@
 #include "atom.h"
 #include "font_freetype.h"
 
-#if FREETYPE_MAJOR > 2 || FREETYPE_MINOR > 3 || FREETYPE_PATCH > 4
+#if FREETYPE_MAJOR * 10000 + FREETYPE_MINOR * 100 + FREETYPE_PATCH > 20304
 #define HAVE_LOOKUP_SCALER
 #endif
 
