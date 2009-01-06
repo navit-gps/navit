@@ -8,4 +8,5 @@ moduleosddir=$(pkglibdir)/osd
 modulevehicledir=$(pkglibdir)/vehicle
 pkgdocdir=$(pkgdatadir)
 xpmdir=$(pkgdatadir)/xpm
+fontsdir=$(pkgdatadir)/fonts
 mapsdir=$(pkgdatadir)/maps
