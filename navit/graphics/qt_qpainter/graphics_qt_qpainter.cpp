@@ -28,6 +28,8 @@
 
 
 #include <glib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "config.h"
 #include "point.h"
 #include "item.h"
@@ -38,6 +40,8 @@
 #include "callback.h"
 #include "event.h"
 #include "window.h"
+#include "keys.h"
+#include "navit/font/freetype/font_freetype.h"
 
 #include <qglobal.h>
 #if QT_VERSION < 0x040000
@@ -49,6 +53,8 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qlistview.h>
+#include <qobject.h>
+#include <qsocketnotifier.h>
 #ifdef HAVE_QPE
 #include <qpe/qpeapplication.h>
 #endif
@@ -66,6 +72,7 @@
 #include <QtGui>
 #endif
 
+
 //##############################################################################################################
 //# Description: RenderArea (QWidget) class for the main window (map, menu, ...) 
 //# Comment: 
@@ -73,16 +80,20 @@
 //##############################################################################################################
 class RenderArea : public QWidget
  {
+     Q_OBJECT
  public:
-     RenderArea(QWidget *parent = 0);
+     RenderArea(struct graphics_priv *priv, QWidget *parent = 0, int w=800, int h=800, int overlay=0);
      QPixmap *pixmap;
      struct callback_list *cbl;
+     struct graphics_priv *gra;
 
 #if QT_VERSION < 0x040000
      GHashTable *timer_type;
      GHashTable *timer_callback;
+     GHashTable *watches;
 #endif
  protected:
+     int is_overlay;
      QSize sizeHint() const;
      void paintEvent(QPaintEvent *event);
      void resizeEvent(QResizeEvent *event);
@@ -91,27 +102,151 @@ class RenderArea : public QWidget
      void mouseReleaseEvent(QMouseEvent *event);
      void mouseMoveEvent(QMouseEvent *event);
      void wheelEvent(QWheelEvent *event);
+     void keyPressEvent(QKeyEvent *event);
 #if QT_VERSION < 0x040000
      void timerEvent(QTimerEvent *event);
+ protected slots:
+     void watchEvent(int fd);
 #endif
  };
+
+
+#include "graphics_qt_qpainter.moc"
+
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct graphics_gc_priv {
+	QPen *pen;
+	QBrush *brush;
+	struct color c;
+};
+
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+struct graphics_priv {
+#ifdef HAVE_QPE
+	QPEApplication *app;
+#else
+	QApplication *app;
+#endif
+	RenderArea *widget;
+	QPainter *painter;
+	struct graphics_gc_priv *background_gc;
+	unsigned char rgba[4];
+	enum draw_mode_num mode;
+	struct graphics_priv *parent,*overlays,*next;
+	struct point p,pclean;
+	int cleanup;
+	int overlay_disable;
+	int wraparound;
+	struct font_priv * (*font_freetype_new)(void *meth);
+	struct font_freetype_methods freetype_methods;
+};
+
+static void
+overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int clean, QRect *r)
+{
+	struct point p;
+	int w,h;
+	if (clean) {
+		p=overlay->pclean;
+	} else {
+		p=overlay->p;;
+	}
+	w=overlay->widget->pixmap->width();
+	h=overlay->widget->pixmap->height();
+	if (overlay->wraparound) {
+		if (p.x < 0)
+			p.x+=parent->widget->pixmap->width();
+		if (p.y < 0)
+			p.y+=parent->widget->pixmap->height();
+		if (w < 0)
+			w += parent->widget->pixmap->width();
+		if (h < 0)
+			h += parent->widget->pixmap->height();
+	}
+	r->setRect(p.x, p.y, w, h);
+}
+
+static void
+qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
+{
+	if (!paintev) {
+		dbg(1,"update %d,%d %d x %d\n", r->x(), r->y(), r->width(), r->height());
+		if (r->x() <= -r->width())
+			return;
+		if (r->y() <= -r->height())
+			return;
+		if (r->x() > gr->widget->pixmap->width())
+			return;
+		if (r->y() > gr->widget->pixmap->height())
+			return;
+		dbg(1,"update valid %d,%d %dx%d\n", r->x(), r->y(), r->width(), r->height());
+		gr->widget->update(*r);
+		return;
+	}
+	QPixmap pixmap(r->width(),r->height());
+	QPainter painter(&pixmap);
+	struct graphics_priv *overlay=NULL;
+	if (! gr->overlay_disable)
+		overlay=gr->overlays;
+	if (gr->p.x || gr->p.y && gr->background_gc) {
+		painter.setPen(*gr->background_gc->pen);
+		painter.fillRect(0, 0, gr->widget->pixmap->width(), gr->widget->pixmap->height(), *gr->background_gc->brush);
+	}
+	painter.drawPixmap(QPoint(gr->p.x,gr->p.y), *gr->widget->pixmap, *r);
+	while (overlay) {
+		QRect ovr;
+		overlay_rect(gr, overlay, 0, &ovr);
+		if (!overlay->overlay_disable && r->intersects(ovr)) {
+			unsigned char *data;
+			int i,size=ovr.width()*ovr.height();
+			QImage img=overlay->widget->pixmap->convertToImage();
+			img.setAlphaBuffer(1);
+			data=img.bits();
+			for (i = 0 ; i < size ; i++) {
+				if (data[0] == overlay->rgba[0] && data[1] == overlay->rgba[1] && data[2] == overlay->rgba[2]) 
+					data[3]=overlay->rgba[3];
+				
+				data+=4;
+			}
+			painter.drawImage(QPoint(ovr.x()-r->x(),ovr.y()-r->y()), img, 0);
+		}
+		overlay=overlay->next;
+	}
+	QPainter painterw(gr->widget);
+	painterw.drawPixmap(r->x(), r->y(), pixmap);
+}
+
 
 //##############################################################################################################
 //# Description: Constructor
 //# Comment: Using a QPixmap for rendering the graphics
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-RenderArea::RenderArea(QWidget *parent)
+RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h, int overlay)
 	: QWidget(parent)
 {
-	pixmap = new QPixmap(800, 600);
+	pixmap = new QPixmap(w, h);
+	if (!overlay) {
 #if QT_VERSION > 0x040000
-    setWindowTitle("Navit");
+		setWindowTitle("Navit");
 #endif
 #if QT_VERSION < 0x040000
-	setCaption("Navit");
+		setCaption("Navit");
+	}
+	is_overlay=overlay;
+	gra=priv;
 	timer_type=g_hash_table_new(NULL, NULL);
 	timer_callback=g_hash_table_new(NULL, NULL);
+	watches=g_hash_table_new(NULL, NULL);
+	setBackgroundMode(NoBackground);
 #endif
 }
 
@@ -132,8 +267,11 @@ QSize RenderArea::sizeHint() const
 //##############################################################################################################
 void RenderArea::paintEvent(QPaintEvent * event)
 {
+	qt_qpainter_draw(gra, &event->rect(), 1);
+#if 0
 	QPainter painter(this);
-    painter.drawPixmap(0, 0, *pixmap);
+	painter.drawPixmap(0, 0, *pixmap);
+#endif
 }
 
 
@@ -144,10 +282,18 @@ void RenderArea::paintEvent(QPaintEvent * event)
 //##############################################################################################################
 void RenderArea::resizeEvent(QResizeEvent * event)
 {
-	QSize size=event->size();
-	delete pixmap;
-	pixmap = new QPixmap(size);
-	callback_list_call_attr_2(this->cbl, attr_resize, (void *)size.width(), (void *)size.height());
+	if (!this->is_overlay) {
+		QSize size=event->size();
+		delete pixmap;
+		pixmap=new QPixmap(size);
+		pixmap->fill();
+		QPainter painter(pixmap);
+		QBrush brush;
+		painter.fillRect(0, 0, size.width(), size.height(), brush);
+		dbg(0,"size %dx%d\n", size.width(), size.height());
+		dbg(0,"pixmap %p %dx%d\n", pixmap, pixmap->width(), pixmap->height());
+		callback_list_call_attr_2(this->cbl, attr_resize, (void *)size.width(), (void *)size.height());
+	}
 }
 
 //##############################################################################################################
@@ -227,6 +373,38 @@ void RenderArea::wheelEvent(QWheelEvent *event)
 	event->accept();
 }
 
+void RenderArea::keyPressEvent(QKeyEvent *event)
+{
+	QString str=event->text();
+	QCString cstr=str.utf8();
+	const char *text=cstr;
+	dbg(0,"enter text='%s' 0x%x (%d) key=%d\n", text, text[0], strlen(text), event->key());
+	if (!text || !text[0] || text[0] == 0x7f) {
+		dbg(0,"special key\n");
+		switch (event->key()) {
+		case 4099:
+			text=(char []){NAVIT_KEY_BACKSPACE,'\0'};
+			break;
+		case 4101:
+			text=(char []){NAVIT_KEY_RETURN,'\0'};
+			break;
+		case 4114:
+			text=(char []){NAVIT_KEY_LEFT,'\0'};
+			break;
+		case 4115:
+			text=(char []){NAVIT_KEY_UP,'\0'};
+			break;
+		case 4116:
+			text=(char []){NAVIT_KEY_RIGHT,'\0'};
+			break;
+		case 4117:
+			text=(char []){NAVIT_KEY_DOWN,'\0'};
+			break;
+		}
+	}
+	callback_list_call_attr_1(this->cbl, attr_keypress, (void *)text);
+	event->accept();
+}
 //##############################################################################################################
 // General comments:
 // -----------------
@@ -239,36 +417,10 @@ void RenderArea::wheelEvent(QWheelEvent *event)
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-struct graphics_priv {
-#ifdef HAVE_QPE
-	QPEApplication *app;
-#else
-	QApplication *app;
-#endif
-	RenderArea *widget;
-	QPainter *painter;
-	struct graphics_gc_priv *background_gc;
-	enum draw_mode_num mode;
-};
-
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
 struct graphics_font_priv {
 	QFont *font;
 };
 
-//##############################################################################################################
-//# Description: 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-struct graphics_gc_priv {
-	QPen *pen;
-	QBrush *brush;
-};
 
 //##############################################################################################################
 //# Description: 
@@ -362,6 +514,7 @@ static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 #endif
 	gc->pen->setColor(col);
 	gc->brush->setColor(col);
+	gc->c=*c;
 }
 
 //##############################################################################################################
@@ -472,6 +625,8 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
 //##############################################################################################################
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
+	dbg(1,"gr=%p gc=%p\n", gr, gc);
+	gr->painter->setPen(*gc->pen);
 	gr->painter->fillRect(p->x,p->y, w, h, *gc->brush);
 }
 
@@ -495,6 +650,7 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
 	QPainter *painter=gr->painter;
+#if 0
 	QString tmp=QString::fromUtf8(text);
 #ifndef QT_NO_TRANSFORMATIONS
 #if QT_VERSION >= 0x040000
@@ -514,6 +670,56 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 	painter->setPen(*fg->pen);
 	painter->setFont(*font->font);
 	painter->drawText(p->x, p->y, tmp);
+#endif
+#else
+	struct font_freetype_text *t;
+	struct font_freetype_glyph *g, **gp;
+	struct color transparent = {0x0000, 0x0000, 0x0000, 0x0000};
+	struct color *fgc=&fg->c, *bgc=&bg->c;
+
+	int i,x,y;
+	
+	if (! font)
+		return;
+	t=gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
+	x=p->x << 6;
+	y=p->y << 6;
+	gp=t->glyph;
+	i=t->glyph_count;
+	if (bg) {
+		while (i-- > 0) {
+			g=*gp++;
+			if (g->w && g->h) {
+				unsigned char *data;
+				QImage img(g->w+2, g->h+2, 32);
+				img.setAlphaBuffer(1);
+				data=img.bits();
+				gr->freetype_methods.get_shadow(g,(unsigned char *)(img.jumpTable()),32,0,bgc,&transparent);
+				painter->drawImage(((x+g->x)>>6)-1, ((y+g->y)>>6)-1, img);
+			}
+			x+=g->dx;
+			y+=g->dy;
+		}
+	} else
+		bgc=&transparent;
+	x=p->x << 6;
+	y=p->y << 6;
+	gp=t->glyph;
+	i=t->glyph_count;
+	while (i-- > 0) {
+		g=*gp++;
+		if (g->w && g->h) {
+			unsigned char *data;
+			QImage img(g->w, g->h, 32);
+			img.setAlphaBuffer(1);
+			data=img.bits();
+			gr->freetype_methods.get_glyph(g,(unsigned char *)(img.jumpTable()),32,0,fgc,bgc,&transparent);
+			painter->drawImage((x+g->x)>>6, (y+g->y)>>6, img);
+		}
+                x+=g->dx;
+                y+=g->dy;
+	}
+	gr->freetype_methods.text_destroy(t);
 #endif
 }
 
@@ -545,6 +751,22 @@ static void draw_restore(struct graphics_priv *gr, struct point *p, int w, int h
 {
 }
 
+
+static void
+draw_drag(struct graphics_priv *gr, struct point *p)
+{
+	if (!gr->cleanup) {
+		gr->pclean=gr->p;
+		gr->cleanup=1;
+	}
+	if (p)
+		gr->p=*p;
+	else {
+		gr->p.x=0;
+		gr->p.y=0;
+	}
+}
+
 //##############################################################################################################
 //# Description: 
 //# Comment: 
@@ -553,7 +775,12 @@ static void draw_restore(struct graphics_priv *gr, struct point *p, int w, int h
 static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
 	gr->background_gc=gc;
+	gr->rgba[2]=gc->c.r >> 8;
+	gr->rgba[1]=gc->c.g >> 8;
+	gr->rgba[0]=gc->c.b >> 8;
+	gr->rgba[3]=gc->c.a >> 8;
 }
+
 
 //##############################################################################################################
 //# Description: 
@@ -563,6 +790,7 @@ static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	dbg(1,"mode=%d\n", mode);
+	QRect r;
 	if (mode == draw_mode_begin) {
 		gr->painter->begin(gr->widget->pixmap);
 #if 0
@@ -575,14 +803,30 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 	}
 #endif
 	if (mode == draw_mode_end) {
+#if 0
 		if (gr->mode == draw_mode_begin) {
+#endif
 			gr->painter->end();
-			gr->widget->update();
+			if (gr->parent) {
+				if (gr->cleanup) {
+					overlay_rect(gr->parent, gr, 1, &r);
+					qt_qpainter_draw(gr->parent, &r, 0);
+					gr->cleanup=0;
+				}
+				overlay_rect(gr->parent, gr, 0, &r);	
+				qt_qpainter_draw(gr->parent, &r, 0);
+			} else {
+				dbg(0,"pixmap %p =%dx%d\n", gr->widget->pixmap, gr->widget->pixmap->width(), gr->widget->pixmap->height());
+				r.setRect(0, 0, gr->widget->pixmap->width(), gr->widget->pixmap->height());
+				qt_qpainter_draw(gr, &r, 0);
+			}
+#if 0
 		} else {
 #if QT_VERSION < 0x040000
 			gr->painter->end();
 #endif
 		}
+#endif
 	}
 	gr->mode=mode;
 }
@@ -658,6 +902,7 @@ get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *t
 //##############################################################################################################
 static void overlay_disable(struct graphics_priv *gr, int disable)
 {
+	gr->overlay_disable=disable;
 }
 
 //##############################################################################################################
@@ -676,7 +921,7 @@ static struct graphics_methods graphics_methods = {
 	draw_image,
 	draw_image_warp,
 	draw_restore,
-	NULL,
+	draw_drag,
 	font_new,
 	gc_new,
 	background_gc,
@@ -696,7 +941,21 @@ static struct graphics_methods graphics_methods = {
 static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int alpha,int wraparound)
 {
 	*meth=graphics_methods;
-	return NULL;
+	struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
+	if (gr->font_freetype_new) {
+		ret->font_freetype_new=gr->font_freetype_new;
+        	gr->font_freetype_new(&ret->freetype_methods);
+		meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))ret->freetype_methods.font_new;
+		meth->get_text_bbox=(void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*))ret->freetype_methods.get_text_bbox;
+	}
+	ret->widget= new RenderArea(ret,NULL,w,h,1);
+	ret->wraparound=wraparound;
+	ret->painter=new QPainter;
+	ret->p=*p;
+	ret->parent=gr;
+	ret->next=gr->overlays;
+	gr->overlays=ret;
+	return ret;
 }
 
 #if QT_VERSION < 0x040000
@@ -713,19 +972,35 @@ event_qt_main_loop_run(void)
 static void event_qt_main_loop_quit(void)
 {
 	dbg(0,"enter\n");
+	exit(0);
 }
+
+struct event_watch {
+	QSocketNotifier *sn;
+	struct callback *cb;
+	void *fd;
+};
 
 static struct event_watch *
 event_qt_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
 {
-	dbg(0,"enter\n");
-	return NULL;
+	dbg(1,"enter fd=%d\n",(int)fd);
+	struct event_watch *ret=g_new0(struct event_watch, 1);
+	ret->fd=fd;
+	ret->cb=cb;
+	g_hash_table_insert(event_gr->widget->watches, fd, ret);
+	ret->sn=new QSocketNotifier((int) fd, QSocketNotifier::Read, event_gr->widget);
+	QObject::connect(ret->sn, SIGNAL(activated(int)), event_gr->widget, SLOT(watchEvent(int)));
+	return ret;
 }
 
 static void
 event_qt_remove_watch(struct event_watch *ev)
 {
-	dbg(0,"enter\n");
+	g_hash_table_remove(event_gr->widget->watches, ev->fd);
+	delete(ev->sn);
+	g_free(ev);
+
 }
 
 static struct event_timeout *
@@ -798,6 +1073,13 @@ void RenderArea::timerEvent(QTimerEvent *event)
 		event_qt_remove_timeout((struct event_timeout *)id);
 }
 
+void RenderArea::watchEvent(int fd)
+{
+	struct event_watch *ev=(struct event_watch *)g_hash_table_lookup(watches, (void *)fd);
+	dbg(1,"fd=%d ev=%p cb=%p\n", fd, ev, ev->cb);
+	callback_call_0(ev->cb);
+}
+
 #endif
 
 //##############################################################################################################
@@ -808,6 +1090,8 @@ void RenderArea::timerEvent(QTimerEvent *event)
 static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct graphics_priv *ret;
+	struct font_priv * (*font_freetype_new)(void *meth);
+
 	dbg(0,"enter\n");
 #if QT_VERSION < 0x040000
 	if (event_gr)
@@ -815,15 +1099,26 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	if (! event_request_system("qt","graphics_qt_qpainter_new"))
 		return NULL;
 #endif
-
+#if 1
+        font_freetype_new=(struct font_priv *(*)(void *))plugin_get_font_type("freetype");
+        if (!font_freetype_new)
+                return NULL;
+#endif
 	ret=g_new0(struct graphics_priv, 1);
+	ret->font_freetype_new=font_freetype_new;
 	*meth=graphics_methods;
+#if 1
+        font_freetype_new(&ret->freetype_methods);
+        meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))ret->freetype_methods.font_new;
+        meth->get_text_bbox=(void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*))ret->freetype_methods.get_text_bbox;
+#endif
+
 #ifdef HAVE_QPE
 	ret->app = new QPEApplication(argc, argv);
 #else
 	ret->app = new QApplication(argc, argv);
 #endif
-	ret->widget= new RenderArea();
+	ret->widget= new RenderArea(ret);
 	ret->widget->cbl=cbl;
 #if QT_VERSION < 0x040000
 	event_gr=ret;
