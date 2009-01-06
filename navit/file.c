@@ -413,9 +413,9 @@ file_get_os_handle(struct file *file)
 void
 file_init(void)
 {
-#if 0
+#ifdef CACHE_SIZE
 	file_name_hash=g_hash_table_new(g_str_hash, g_str_equal);
-	file_cache=cache_new(sizeof(struct file_cache_id), 2*1024*1024);
+	file_cache=cache_new(sizeof(struct file_cache_id), CACHE_SIZE);
 #endif
 }
 
