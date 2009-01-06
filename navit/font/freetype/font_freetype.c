@@ -16,10 +16,18 @@
 #include "atom.h"
 #include "font_freetype.h"
 
+#if FREETYPE_MAJOR > 2 || FREETYPE_MINOR > 3 || FREETYPE_PATCH > 4
+#define HAVE_LOOKUP_SCALER
+#endif
+
 struct font_freetype_font {
 	int size;
 #ifdef USE_CACHING
+#ifdef HAVE_LOOKUP_SCALER
 	FTC_ScalerRec scaler;
+#else
+	FTC_ImageTypeRec scaler;
+#endif
 	int charmap_index;
 #else
 	FT_Face face;
@@ -87,7 +95,11 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 			FTC_Node anode = NULL;
 			glyph_index = FTC_CMapCache_Lookup(charmap_cache, font->scaler.face_id, font->charmap_index, g_utf8_get_char(p));
 			FT_Glyph cached_glyph;
+#ifdef HAVE_LOOKUP_SCALER
 			FTC_ImageCache_LookupScaler(image_cache, &font->scaler, FT_LOAD_DEFAULT, glyph_index, &cached_glyph, &anode);
+#else
+			FTC_ImageCache_Lookup(image_cache, &font->scaler, glyph_index, &cached_glyph, &anode);
+#endif
 			FT_Glyph_Copy(cached_glyph, &glyph);
 			FT_Glyph_Transform(glyph, &matrix, &pen);
 #else
@@ -178,7 +190,11 @@ font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
 		FTC_Node anode=NULL;
 		FT_Glyph cached_glyph;
 		glyph_index = FTC_CMapCache_Lookup(charmap_cache, font->scaler.face_id, font->charmap_index, g_utf8_get_char(p));
+#ifdef HAVE_LOOKUP_SCALER
 		FTC_ImageCache_LookupScaler(image_cache, &font->scaler, FT_LOAD_DEFAULT, glyph_index, &cached_glyph, &anode);
+#else
+		FTC_ImageCache_Lookup(image_cache, &font->scaler, glyph_index, &cached_glyph, &anode);
+#endif
 		FT_Glyph_Copy(cached_glyph, &glyph);
 		FT_Glyph_Transform(glyph, &matrix, &pen);
 		FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, NULL, TRUE);
@@ -385,11 +401,17 @@ font_freetype_font_new(struct graphics_priv *gr,
 					idstr=g_strdup_printf("%s/%d", fontfile, fontindex);
 					font->scaler.face_id=(FTC_FaceID)atom(idstr);
 					g_free(idstr);
+#ifdef HAVE_LOOKUP_SCALER
 					font->scaler.width=0;
 					font->scaler.height=size;
 					font->scaler.pixel=0;
 					font->scaler.x_res=300;
 					font->scaler.y_res=300;
+#else
+					font->scaler.width=size/15;
+					font->scaler.height=size/15;
+					font->scaler.flags=FT_LOAD_DEFAULT;
+#endif
 					FTC_Manager_LookupFace(manager, font->scaler.face_id, &face);
 					font->charmap_index=face->charmap ? FT_Get_Charmap_Index(face->charmap) : 0;
 #else
