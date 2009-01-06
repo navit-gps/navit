@@ -23,6 +23,11 @@
 #include "item.h"
 #include "plugin.h"
 #include "speech.h"
+#ifdef USE_EXEC
+#include <sys/types.h>
+#include <unistd.h>
+#include <string.h>
+#endif
 
 struct speech_priv {
 	char *cmdline;
@@ -31,10 +36,39 @@ struct speech_priv {
 static int 
 speechd_say(struct speech_priv *this, const char *text)
 {
+#ifdef USE_EXEC
+	if (!fork()) {
+		char *cmdline=g_strdup_printf(this->cmdline, text);
+                int argcmax=10;
+                char *argv[argcmax];
+                int argc=0;
+                char *pos=cmdline,end;
+                while (*pos && argc < argcmax-1) {
+                        end=' ';
+                        if (*pos == '\'' || *pos == '\"') {
+                                end=*pos++;
+                        }
+                        argv[argc]=pos;
+                        while (*pos && *pos != end)
+                                pos++;
+                        if (*pos)
+                                *pos++='\0';
+                        while (*pos == ' ')
+                                pos++;
+                        if (strcmp(argv[argc], "2>/dev/null") && strcmp(argv[argc],">/dev/null") && strcmp(argv[argc],"&"))
+                                argc++;
+                }
+                argv[argc++]=NULL;
+                execvp(argv[0], argv);
+                exit(1);
+        }
+	return 0;
+#else
 	char *cmdline;
 
 	cmdline=g_strdup_printf(this->cmdline, text);
 	return system(cmdline);
+#endif
 }
 
 static void 
