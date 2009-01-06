@@ -41,6 +41,8 @@
 #include <winbase.h>
 #endif
 
+char *version=PACKAGE_VERSION" "SVN_VERSION; 
+
 static void
 print_usage(void)
 {
@@ -110,7 +112,7 @@ int main(int argc, char **argv)
 				exit(0);
 				break;
 			case 'v':
-				printf("%s %s\n", "navit", PACKAGE_VERSION" "SVN_VERSION); 
+				printf("%s %s\n", "navit", version); 
 				exit(0);
 				break;
 			case 'c':
