@@ -116,6 +116,14 @@ static inline void callback_call_1(struct callback *cb, void *p1)
 	callback_call(cb, 1, p);
 }
 
+static inline void callback_call_2(struct callback *cb, void *p1, void *p2)
+{
+	void *p[2];
+	p[0]=p1;
+	p[1]=p2;
+	callback_call(cb, 2, p);
+}
+
 static inline void callback_list_call_0(struct callback_list *l)
 {
 	callback_list_call(l, 0, NULL);
