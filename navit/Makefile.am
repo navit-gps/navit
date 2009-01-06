@@ -1,5 +1,5 @@
 include $(top_srcdir)/Makefile.inc
-DIST_SUBDIRS=binding map fib-1.1 font gui graphics osd speech support vehicle xpm maps
+DIST_SUBDIRS=binding map fib-1.1 font fonts gui graphics osd speech support vehicle xpm maps
 SUBDIRS=binding map fib-1.1 font gui graphics osd speech support vehicle xpm
 if BUILD_SAMPLEMAP
   SUBDIRS += maps
