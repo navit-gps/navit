@@ -5,6 +5,10 @@ if BUILD_SAMPLEMAP
   SUBDIRS += maps
 endif
 
+if FONTS
+  SUBDIRS += fonts
+endif
+
 AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ @ZLIB_CFLAGS@ -DPREFIX=\"@prefix@\" -DLIBDIR=\"@libdir@\" -DMODULE=navit
 BUILT_SOURCES = version.h
 if BUILD_SAMPLEMAP
