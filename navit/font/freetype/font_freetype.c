@@ -1,4 +1,7 @@
+#include "config.h"
+#ifdef HAVE_FONTCONFIG
 #include <fontconfig/fontconfig.h>
+#endif
 #include <ft2build.h>
 #include <glib.h>
 #include FT_FREETYPE_H
@@ -7,7 +10,6 @@
 #include FT_CACHE_H
 #endif
 #include <freetype/ftglyph.h>
-#include "config.h"
 #include "point.h"
 #include "graphics.h"
 #include "debug.h"
@@ -324,7 +326,8 @@ font_freetype_font_new(struct graphics_priv *gr,
 	    g_new(struct font_freetype_font, 1);
 
 	*meth = font_methods;
-	int exact, found;
+	int exact, found=0;
+	char *name;
 	char **family;
 #ifdef USE_CACHING
 	char *idstr;
@@ -341,7 +344,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 #endif
 		library_init = 1;
 	}
-	found = 0;
+#ifdef HAVE_FONTCONFIG
 	font->size=size;
 	dbg(2, " about to search for fonts, prefered = %s\n", fontfamily);
 	for (exact = 1; !found && exact >= 0; exact--) {
@@ -428,8 +431,14 @@ font_freetype_font_new(struct graphics_priv *gr,
 			family++;
 		}
 	}
+#else
+	name=g_strdup_printf("%s/fonts/%s-%s.ttf",getenv("NAVIT_SHAREDIR"),"LiberationSans",flags ? "Bold":"Regular");
+	if (!FT_New_Face(library, name, 0, &font->face))
+		found=1;
+	g_free(name);
+#endif
 	if (!found) {
-		g_warning("Failed to load font, no labelling");
+		dbg(0,"Failed to load font, no labelling\n");
 		g_free(font);
 		return NULL;
 	}
@@ -636,5 +645,7 @@ void
 plugin_init(void)
 {
 	plugin_register_font_type("freetype", font_freetype_new);
+#ifdef HAVE_FONTCONFIG
 	FcInit();
+#endif
 }
