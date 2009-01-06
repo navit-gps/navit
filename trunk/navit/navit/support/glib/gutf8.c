@@ -41,6 +41,7 @@
 
 #include "glibintl.h"
 #include "galias.h"
+#endif
 
 #define UTF8_COMPUTE(Char, Mask, Len)					      \
   if (Char < 128)							      \
@@ -104,7 +105,6 @@
      ((Char) & 0xFFFE) != 0xFFFE)
    
      
-#endif
 static const gchar utf8_skip_data[256] = {
   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
@@ -250,7 +250,6 @@ g_utf8_strlen (const gchar *p,
   return len;
 }
 
-#ifdef NOT_NEEDED_FOR_NAVIT
 /**
  * g_utf8_get_char:
  * @p: a pointer to Unicode character encoded as UTF-8
@@ -277,6 +276,8 @@ g_utf8_get_char (const gchar *p)
 
   return result;
 }
+
+#ifdef NOT_NEEDED_FOR_NAVIT
 
 /**
  * g_utf8_offset_to_pointer:
