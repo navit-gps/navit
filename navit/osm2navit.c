@@ -357,6 +357,12 @@ static char *attrmap={
 	"w	waterway=river		water_river\n"
 	"w	waterway=riverbank	poly_water\n"
 	"w	waterway=stream		water_stream\n"
+	"w	barrier=ditch	ditch\n"
+	"w	barrier=hedge	hedge\n"
+	"w	barrier=fence	fence\n"
+	"w	barrier=wall	wall\n"
+	"w	barrier=retaining_wall	retaining_wall\n"
+	"w	barrier=city_wall	city_wall\n"
 };
 
 struct coord coord_buffer[65536];
