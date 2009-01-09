@@ -372,19 +372,24 @@ gui_gtk_action_changed(GtkRadioAction *action, GtkRadioAction *current, struct a
 	}
 }
 
-static void
+static struct gui_menu_info
 gui_gtk_add_radio_menu(struct gui_priv *this, char *name, char *label, char *path, struct action_cb_data *data, GSList **g)
 {
+	struct gui_menu_info meninfo;
 	GtkRadioAction *radio_action;
 	guint merge_id;
 
 	radio_action=gtk_radio_action_new(name, label, NULL, NULL, 0);
+	meninfo.action = (GtkAction *)radio_action;
 	gtk_radio_action_set_group(radio_action, *g);
 	*g=gtk_radio_action_get_group(radio_action);
 	g_signal_connect(GTK_ACTION(radio_action), "changed", G_CALLBACK(gui_gtk_action_changed), data);
 	gtk_action_group_add_action(this->dyn_group, GTK_ACTION(radio_action));
 	merge_id=gtk_ui_manager_new_merge_id(this->ui_manager);
+	meninfo.merge_id = merge_id;
 	gtk_ui_manager_add_ui(this->ui_manager, merge_id, path, name, name, GTK_UI_MANAGER_MENUITEM, FALSE);
+
+	return meninfo;
 }
 
 static void
@@ -428,13 +433,27 @@ gui_gtk_projections_init(struct gui_priv *this)
 }
 
 static void
-gui_gtk_vehicles_init(struct gui_priv *this)
+gui_gtk_vehicles_update(struct gui_priv *this)
 {
 	struct attr_iter *iter;
 	struct attr attr,vattr;
 	struct action_cb_data *data;
 	int count=0;
 	char *name;
+	GList *curr;
+	struct gui_menu_info *meninfo;
+	dbg(0,"enter\n");
+
+	curr = g_list_first(this->vehicle_menuitems);
+
+	while (curr) {
+		gui_gtk_del_menu(this, (struct gui_menu_info *)curr->data);
+		g_free((struct gui_menu_info *)curr->data);
+		curr = g_list_next(curr);
+	};
+
+	g_list_free(this->vehicle_menuitems);
+	this->vehicle_menuitems = NULL;
 
 	iter=navit_attr_iter_new();
 	while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
@@ -444,10 +463,19 @@ gui_gtk_vehicles_init(struct gui_priv *this)
 		data->gui=this;
 		data->attr.type=attr_vehicle;
 		data->attr.u.vehicle=attr.u.vehicle;
-		gui_gtk_add_radio_menu(this, name, vattr.u.str, "/ui/MenuBar/Map/Vehicle/VehicleMenuAdditions", data, &this->vehicle_group);
+		meninfo = g_new(struct gui_menu_info, 1);
+		*meninfo = gui_gtk_add_radio_menu(this, name, vattr.u.str, "/ui/MenuBar/Map/Vehicle/VehicleMenuAdditions", data, &this->vehicle_group);
+		this->vehicle_menuitems = g_list_prepend(this->vehicle_menuitems, meninfo);
 		g_free(name);
 	}
 	navit_attr_iter_destroy(iter);
+}
+
+static void
+gui_gtk_vehicles_init(struct gui_priv *this)
+{
+	navit_add_callback(this->nav, callback_new_attr_1(callback_cast(gui_gtk_vehicles_update), attr_vehicle, this));
+	gui_gtk_vehicles_update(this);
 }
 
 static void
