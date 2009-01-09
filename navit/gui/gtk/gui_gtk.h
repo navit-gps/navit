@@ -42,6 +42,7 @@ struct gui_priv {
 	GSList *vehicle_group;
 	GList *dest_menuitems;
 	GList *bookmarks_menuitems;
+	GList *vehicle_menuitems;
 	GtkUIManager *menu_manager; // old
         struct statusbar_priv *statusbar;
 	int menubar_enable;

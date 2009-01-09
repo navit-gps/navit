@@ -1529,18 +1529,23 @@ navit_add_log(struct navit *this_, struct log *log)
 int
 navit_add_attr(struct navit *this_, struct attr *attr)
 {
+	int ret=1;
 	switch (attr->type) {
 	case attr_log:
-		return navit_add_log(this_, attr->u.log);
+		ret=navit_add_log(this_, attr->u.log);
+		break;
 	case attr_gui:
-		return navit_set_gui(this_, attr->u.gui);
+		ret=navit_set_gui(this_, attr->u.gui);
+		break;
 	case attr_graphics:
-		return navit_set_graphics(this_, attr->u.graphics);
+		ret=navit_set_graphics(this_, attr->u.graphics);
+		break;
 	case attr_layout:
 		this_->layouts = g_list_append(this_->layouts, attr->u.layout);
 		if(!this_->layout_current) 
 			this_->layout_current=attr->u.layout;
-		return 1;
+		ret=1;
+		break;
 	case attr_route:
 		this_->route=attr->u.route;
 		break;
@@ -1560,7 +1565,7 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		this_->tracking=attr->u.tracking;
 		break;
 	case attr_vehicle:
-		return navit_add_vehicle(this_, attr->u.vehicle);
+		ret=navit_add_vehicle(this_, attr->u.vehicle);
 		break;
 	case attr_timeout:
 		this_->center_timeout = attr->u.num;
@@ -1568,7 +1573,8 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 	default:
 		return 0;
 	}
-	return 1;
+	callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
+	return ret;
 }
 
 struct attr_iter *
