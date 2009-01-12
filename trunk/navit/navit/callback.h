@@ -32,7 +32,9 @@ struct callback;
 struct callback_list;
 struct callback_list *callback_list_new(void);
 struct callback *callback_new_attr(void (*func)(void), enum attr_type type, int pcount, void **p);
+struct callback *callback_new_attr_args(void (*func)(void), enum attr_type type, int count, ...);
 struct callback *callback_new(void (*func)(void), int pcount, void **p);
+struct callback *callback_new_args(void (*func)(void), int count, ...);
 void callback_destroy(struct callback *cb);
 void callback_set_arg(struct callback *cb, int arg, void *p);
 void callback_list_add(struct callback_list *l, struct callback *cb);
@@ -40,149 +42,43 @@ struct callback *callback_list_add_new(struct callback_list *l, void (*func)(voi
 void callback_list_remove(struct callback_list *l, struct callback *cb);
 void callback_list_remove_destroy(struct callback_list *l, struct callback *cb);
 void callback_call(struct callback *cb, int pcount, void **p);
+void callback_call_args(struct callback *cb, int count, ...);
 void callback_list_call_attr(struct callback_list *l, enum attr_type type, int pcount, void **p);
+void callback_list_call_attr_args(struct callback_list *cbl, enum attr_type type, int count, ...);
 void callback_list_call(struct callback_list *l, int pcount, void **p);
+void callback_list_call_args(struct callback_list *cbl, int count, ...);
 void callback_list_destroy(struct callback_list *l);
 /* end of prototypes */
 
-static inline struct callback *callback_new_attr_0(void (*func)(void), enum attr_type type)
-{
-	return callback_new_attr(func, type, 0, NULL);
-}
+#define callback_new_0(func) callback_new_args(func, 0)
+#define callback_new_1(func,p1) callback_new_args(func, 1, p1)
+#define callback_new_2(func,p1,p2) callback_new_args(func, 2, p1, p2)
+#define callback_new_3(func,p1,p2,p3) callback_new_args(func, 3, p1, p2, p3)
+#define callback_new_4(func,p1,p2,p3,p4) callback_new_args(func, 4, p1, p2, p3, p4)
 
-static inline struct callback *callback_new_0(void (*func)(void))
-{
-	return callback_new(func, 0, NULL);
-}
+#define callback_new_attr_0(func,type) callback_new_attr_args(func, type, 0)
+#define callback_new_attr_1(func,type,p1) callback_new_attr_args(func, type, 1, p1)
+#define callback_new_attr_2(func,type,p1,p2) callback_new_attr_args(func, type, 2, p1, p2)
+#define callback_new_attr_3(func,type,p1,p2,p3) callback_new_attr_args(func, type, 3, p1, p2, p3)
+#define callback_new_attr_4(func,type,p1,p2,p3,p4) callback_new_attr_args(func, type, 4, p1, p2, p3, p4)
 
-static inline struct callback *callback_new_attr_1(void (*func)(void), enum attr_type type, void *p1)
-{
-	void *p[1];
-	p[0]=p1;
-	return callback_new_attr(func, type, 1, p);
-}
+#define callback_call_0(cb) callback_call_args(cb, 0)
+#define callback_call_1(cb,p1) callback_call_args(cb, 1, p1)
+#define callback_call_2(cb,p1,p2) callback_call_args(cb, 2, p1, p2)
+#define callback_call_3(cb,p1,p2,p3) callback_call_args(cb, 3, p1, p2, p3)
+#define callback_call_4(cb,p1,p2,p3,p4) callback_call_args(cb, 4, p1, p2, p3, p4)
 
-static inline struct callback *callback_new_1(void (*func)(void), void *p1)
-{
-	void *p[1];
-	p[0]=p1;
-	return callback_new(func, 1, p);
-}
+#define callback_list_call_0(cbl) callback_list_call_args(cbl, 0)
+#define callback_list_call_1(cbl,p1) callback_list_call_args(cbl, 1, p1)
+#define callback_list_call_2(cbl,p1,p2) callback_list_call_args(cbl, 2, p1, p2)
+#define callback_list_call_3(cbl,p1,p2,p3) callback_list_call_args(cbl, 3, p1, p2, p3)
+#define callback_list_call_4(cbl,p1,p2,p3,p4) callback_list_call_args(cbl, 4, p1, p2, p3, p4)
 
-static inline struct callback *callback_new_attr_2(void (*func)(void), enum attr_type type, void *p1, void *p2)
-{
-	void *p[2];
-	p[0]=p1;
-	p[1]=p2;
-	return callback_new_attr(func, type, 2, p);
-}
-
-static inline struct callback *callback_new_2(void (*func)(void), void *p1, void *p2)
-{
-	void *p[2];
-	p[0]=p1;
-	p[1]=p2;
-	return callback_new(func, 2, p);
-}
-
-static inline struct callback *callback_new_3(void (*func)(void), void *p1, void *p2, void *p3)
-{
-	void *p[3];
-	p[0]=p1;
-	p[1]=p2;
-	p[2]=p3;
-	return callback_new(func, 3, p);
-}
-
-static inline struct callback *callback_new_4(void (*func)(void), void *p1, void *p2, void *p3, void *p4)
-{
-	void *p[4];
-	p[0]=p1;
-	p[1]=p2;
-	p[2]=p3;
-	p[3]=p4;
-	return callback_new(func, 4, p);
-}
-
-static inline void callback_call_0(struct callback *cb)
-{
-	callback_call(cb, 0, NULL);
-}
-
-static inline void callback_call_1(struct callback *cb, void *p1)
-{
-	void *p[1];
-	p[0]=p1;
-	callback_call(cb, 1, p);
-}
-
-static inline void callback_call_2(struct callback *cb, void *p1, void *p2)
-{
-	void *p[2];
-	p[0]=p1;
-	p[1]=p2;
-	callback_call(cb, 2, p);
-}
-
-static inline void callback_list_call_0(struct callback_list *l)
-{
-	callback_list_call(l, 0, NULL);
-}
-
-static inline void callback_list_call_attr_0(struct callback_list *l, enum attr_type type)
-{
-	callback_list_call_attr(l, type, 0, NULL);
-}
-
-static inline void callback_list_call_attr_1(struct callback_list *l, enum attr_type type, void *p1)
-{
-	void *p[1];
-	p[0]=p1;
-	callback_list_call_attr(l, type, 1, p);
-}
-
-static inline void callback_list_call_1(struct callback_list *l, void *p1)
-{
-	void *p[1];
-	p[0]=p1;
-	callback_list_call(l, 1, p);
-}
-
-static inline void callback_list_call_attr_2(struct callback_list *l, enum attr_type type, void *p1, void *p2)
-{
-	void *p[2];
-	p[0]=p1;
-	p[1]=p2;
-	callback_list_call_attr(l, type, 2, p);
-}
-
-static inline void callback_list_call_2(struct callback_list *l, void *p1, void *p2)
-{
-	void *p[2];
-	p[0]=p1;
-	p[1]=p2;
-	callback_list_call(l, 2, p);
-}
-
-static inline void callback_list_call_attr_3(struct callback_list *l, enum attr_type type, void *p1, void *p2, void *p3)
-{
-	void *p[3];
-	p[0]=p1;
-	p[1]=p2;
-	p[2]=p3;
-	callback_list_call_attr(l, type, 3, p);
-}
-
-static inline void callback_list_call_attr_4(struct callback_list *l, enum attr_type type, void *p1, void *p2, void *p3, void *p4)
-{
-	void *p[4];
-	p[0]=p1;
-	p[1]=p2;
-	p[2]=p3;
-	p[3]=p4;
-	callback_list_call_attr(l, type, 4, p);
-}
-
+#define callback_list_call_attr_0(cbl,type) callback_list_call_attr_args(cbl,type, 0)
+#define callback_list_call_attr_1(cbl,type,p1) callback_list_call_attr_args(cbl, type, 1, p1)
+#define callback_list_call_attr_2(cbl,type,p1,p2) callback_list_call_attr_args(cbl, type, 2, p1, p2)
+#define callback_list_call_attr_3(cbl,type,p1,p2,p3) callback_list_call_attr_args(cbl, type, 3, p1, p2, p3)
+#define callback_list_call_attr_4(cbl,type,p1,p2,p3,p4) callback_list_call_attr_args(cbl, type, 4, p1, p2, p3, p4)
 
 #define callback_cast(x) (void (*)(void))(x)
 #ifdef __cplusplus

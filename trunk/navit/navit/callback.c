@@ -60,9 +60,35 @@ callback_new_attr(void (*func)(void), enum attr_type type, int pcount, void **p)
 }
 
 struct callback *
+callback_new_attr_args(void (*func)(void), enum attr_type type, int count, ...)
+{
+	int i;
+	void *p[count];
+	va_list ap;
+	va_start(ap, count);
+	for (i = 0 ; i < count ; i++)
+		p[i]=va_arg(ap, void *);
+	va_end(ap);
+	return callback_new_attr(func, type, count, p);
+}
+
+struct callback *
 callback_new(void (*func)(void), int pcount, void **p)
 {
 	return callback_new_attr(func, attr_none, pcount, p);
+}
+
+struct callback *
+callback_new_args(void (*func)(void), int count, ...)
+{
+	int i;
+	void *p[count];
+	va_list ap;
+	va_start(ap, count);
+	for (i = 0 ; i < count ; i++)
+		p[i]=va_arg(ap, void *);
+	va_end(ap);
+	return callback_new(func, count, p);
 }
 
 void
@@ -162,6 +188,19 @@ callback_call(struct callback *cb, int pcount, void **p)
 }
 
 void
+callback_call_args(struct callback *cb, int count, ...)
+{
+	int i;
+	void *p[count];
+	va_list ap;
+	va_start(ap, count);
+	for (i = 0 ; i < count ; i++)
+		p[i]=va_arg(ap, void *);
+	va_end(ap);
+	callback_call(cb, count, p);
+}
+
+void
 callback_list_call_attr(struct callback_list *l, enum attr_type type, int pcount, void **p)
 {
 	GList *cbi;
@@ -178,11 +217,36 @@ callback_list_call_attr(struct callback_list *l, enum attr_type type, int pcount
 }
 
 void
+callback_list_call_attr_args(struct callback_list *cbl, enum attr_type type, int count, ...)
+{
+	int i;
+	void *p[count];
+	va_list ap;
+	va_start(ap, count);
+	for (i = 0 ; i < count ; i++)
+		p[i]=va_arg(ap, void *);
+	va_end(ap);
+	callback_list_call_attr(cbl, type, count, p);
+}
+
+void
 callback_list_call(struct callback_list *l, int pcount, void **p)
 {
 	callback_list_call_attr(l, attr_any, pcount, p);
 }
 
+void
+callback_list_call_args(struct callback_list *cbl, int count, ...)
+{
+	int i;
+	void *p[count];
+	va_list ap;
+	va_start(ap, count);
+	for (i = 0 ; i < count ; i++)
+		p[i]=va_arg(ap, void *);
+	va_end(ap);
+	callback_list_call(cbl, count, p);
+}
 
 void 
 callback_list_destroy(struct callback_list *l)
