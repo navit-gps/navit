@@ -1908,14 +1908,20 @@ navit_command_unregister(struct navit *this_, char *command)
 }
 
 int
-navit_command_call(struct navit *this_, char *command)
+navit_command_call_attrs(struct navit *this_, char *command, struct attr **in, struct attr ***out)
 {
 	struct callback *cb=g_hash_table_lookup(this_->commands, command);
 	dbg(0,"calling callback %p for '%s'\n", cb, command);
 	if (! cb)
 		return 1;
-	callback_call_1(cb, command);
+	callback_call_args(cb, 3, command, in, out);
 	return 0;
+}
+
+int
+navit_command_call(struct navit *this_, char *command)
+{
+	return navit_command_call_attrs(this_, command, NULL, NULL);
 }
 
 void
