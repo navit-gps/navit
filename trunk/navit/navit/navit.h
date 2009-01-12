@@ -94,6 +94,7 @@ struct displaylist *navit_get_displaylist(struct navit *this_);
 int navit_block(struct navit *this_, int block);
 int navit_command_register(struct navit *this_, char *command, struct callback *cb);
 struct callback *navit_command_unregister(struct navit *this_, char *command);
+int navit_command_call_attrs(struct navit *this_, char *command, struct attr **in, struct attr ***out);
 int navit_command_call(struct navit *this_, char *command);
 void navit_destroy(struct navit *this_);
 /* end of prototypes */
