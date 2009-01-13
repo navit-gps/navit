@@ -288,6 +288,9 @@ void
 main_init_nls(void)
 {
 #ifdef ENABLE_NLS
+#ifdef FORCE_LOCALE
+	setlocale(LC_MESSAGES,FORCE_LOCALE);
+#endif
 	bindtextdomain(PACKAGE, getenv("NAVIT_LOCALEDIR"));
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain(PACKAGE);
