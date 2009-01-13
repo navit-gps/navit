@@ -3074,6 +3074,7 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	win=graphics_get_data(gra, "window");
         if (! win)
                 return 1;
+	navit_ignore_graphics_events(this->nav, 1);
 	this->gra=gra;
 	this->win=win;
 	transform_get_size(trans, &this->root.w, &this->root.h);
@@ -3125,7 +3126,6 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	struct gui_priv *this;
 	struct attr *attr;
 	*meth=gui_internal_methods;
-	navit_ignore_graphics_events(nav, 1);
 	this=g_new0(struct gui_priv, 1);
 	this->nav=nav;
 	if ((attr=attr_search(attrs, NULL, attr_menu_on_map_click)))
