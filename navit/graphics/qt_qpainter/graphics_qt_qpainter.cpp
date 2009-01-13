@@ -1034,16 +1034,17 @@ event_qt_remove_timeout(struct event_timeout *ev)
 }
 
 static struct event_idle *
-event_qt_add_idle(struct callback *cb)
+event_qt_add_idle(int priority, struct callback *cb)
 {
 	dbg(0,"enter\n");
-	return NULL;
+	return (struct event_idle *)event_qt_add_timeout(0, 1, cb);
 }
 
 static void
 event_qt_remove_idle(struct event_idle *ev)
 {
 	dbg(0,"enter\n");
+	event_qt_remove_timeout((struct event_timeout *) ev);
 }
 
 static void
