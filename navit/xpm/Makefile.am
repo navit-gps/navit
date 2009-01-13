@@ -108,6 +108,16 @@ svgs += tec_common.svg
 svgs += gui_select_street.svg
 svgs += gui_select_town.svg
 svgs += gui_select_country.svg
+svgs += gui_arrow_left.svg
+svgs += gui_arrow_right.svg
+svgs += gui_arrow_up.svg
+svgs += gui_arrow_down.svg
+svgs += gui_strength_0.svg
+svgs += gui_strength_1.svg
+svgs += gui_strength_2.svg
+svgs += gui_strength_3.svg
+svgs += gui_strength_4.svg
+svgs += gui_strength_5.svg
 
 nav_svgs =  nav_left_1_bk.svg nav_left_1_wh.svg nav_left_2_bk.svg nav_left_2_wh.svg nav_left_3_bk.svg nav_left_3_wh.svg
 nav_svgs += nav_right_1_bk.svg nav_right_1_wh.svg nav_right_2_bk.svg nav_right_2_wh.svg nav_right_3_bk.svg nav_right_3_wh.svg
