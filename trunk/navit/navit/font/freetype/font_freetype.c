@@ -433,8 +433,25 @@ font_freetype_font_new(struct graphics_priv *gr,
 	}
 #else
 	name=g_strdup_printf("%s/fonts/%s-%s.ttf",getenv("NAVIT_SHAREDIR"),"LiberationSans",flags ? "Bold":"Regular");
+#ifdef USE_CACHING
+	idstr=g_strdup_printf("%s/%d", name, 0);
+	font->scaler.face_id=(FTC_FaceID)atom(idstr);
+	g_free(idstr);
+#ifdef HAVE_LOOKUP_SCALER
+	font->scaler.width=0;
+	font->scaler.height=size;
+	font->scaler.pixel=0;
+	font->scaler.x_res=300;
+	font->scaler.y_res=300;
+#else
+	font->scaler.width=size/15;
+	font->scaler.height=size/15;
+	font->scaler.flags=FT_LOAD_DEFAULT;
+#endif
+#else
 	if (!FT_New_Face(library, name, 0, &font->face))
 		found=1;
+#endif
 	g_free(name);
 #endif
 	if (!found) {
