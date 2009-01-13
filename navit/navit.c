@@ -107,6 +107,7 @@ struct navit {
 	int tracking_flag;
 	int orientation;
 	int recentdest_count;
+	int osd_configuration;
 	GList *vehicles;
 	GList *windows_items;
 	struct navit_vehicle *vehicle;
@@ -150,6 +151,7 @@ struct attr_iter {
 static void navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv);
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt);
 static int navit_add_vehicle(struct navit *this_, struct vehicle *v);
+static void navit_set_attr_cmd(struct navit *this_, char *command, struct attr **in, struct attr ***out);
 
 void
 navit_add_mapset(struct navit *this_, struct mapset *ms)
@@ -527,6 +529,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->orientation=-1;
 	this_->tracking_flag=1;
 	this_->recentdest_count=10;
+	this_->osd_configuration=-1;
 
 	this_->last_moved = 0;
 	this_->center_timeout = 10;
@@ -545,6 +548,9 @@ navit_new(struct attr *parent, struct attr **attrs)
 			break;
 		case attr_orientation:
 			this_->orientation=(*attrs)->u.num;
+			break;
+		case attr_osd_configuration:
+			this_->osd_configuration=(*attrs)->u.num;
 			break;
 		case attr_tracking:
 			this_->tracking_flag=!!(*attrs)->u.num;
@@ -577,6 +583,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->commands=g_hash_table_new(g_str_hash, g_str_equal);
 	navit_command_register(this_, "zoom_in", callback_new_3(callback_cast(navit_zoom_in), this_, (void *)2, NULL));
 	navit_command_register(this_, "zoom_out", callback_new_3(callback_cast(navit_zoom_out), this_, (void *)2, NULL));
+	navit_command_register(this_, "navit_set_attr", callback_new_1(callback_cast(navit_set_attr_cmd), this_));
 	return this_;
 }
 
@@ -1382,6 +1389,12 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 			attr_updated=1;
 		}
 		break;
+	case attr_osd_configuration:
+		dbg(0,"setting osd_configuration to %d (was %d)\n", attr->u.num, this_->osd_configuration);
+		if (this_->osd_configuration != attr->u.num)
+			attr_updated=1;
+		this_->osd_configuration=attr->u.num;
+		break;
 	case attr_projection:
 		if(this_->trans && transform_get_projection(this_->trans) != attr->u.projection) {
 			navit_projection_set(this_, attr->u.projection);
@@ -1412,8 +1425,21 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 	}
 	if (attr_updated) {
 		callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
+		if (attr->type == attr_osd_configuration)
+			graphics_draw_mode(this_->gra, draw_mode_end);
 	}
 	return 1;
+}
+
+static void
+navit_set_attr_cmd(struct navit *this_, char *command, struct attr **in, struct attr ***out)
+{
+	if (! in)
+		return;
+	while (*in) {
+		navit_set_attr(this_,*in);
+		in++;
+	}
 }
 
 int
@@ -1467,6 +1493,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		break;
 	case attr_orientation:
 		attr->u.num=this_->orientation;
+		break;
+	case attr_osd_configuration:
+		attr->u.num=this_->osd_configuration;
 		break;
 	case attr_projection:
 		if(this_->trans) {
@@ -1921,7 +1950,51 @@ navit_command_call_attrs(struct navit *this_, char *command, struct attr **in, s
 int
 navit_command_call(struct navit *this_, char *command)
 {
-	return navit_command_call_attrs(this_, command, NULL, NULL);
+	int len,ret=1;
+	char *str,*args,*next,*name,*val,sep;
+	struct attr *attr,**attrs=NULL;
+	if (! command)
+		return 1;
+	len=strlen(command);
+	if (! len)
+		return 1;
+	if (command[len-1] != ')') 
+		return navit_command_call_attrs(this_, command, NULL, NULL);
+	str=g_strdup(command);
+	args=strchr(str,'(');
+	if (args) {
+		*args++='\0';
+		args[strlen(args)-1]='\0';
+		next=args;
+		while (next) {
+			val=strchr(next,'=');
+			if (val) {
+				name=next;
+				*val++='\0';
+				sep=*val;
+				if (sep == '"' || sep == '\'') {
+					val++;	
+				} else
+					sep=',';
+				next=strchr(val,sep);
+				if (next) {
+					*next++='\0';
+					if (sep != ',' && *next++ != ',')
+						next=NULL;
+				}
+				attr=attr_new_from_text(name,val);
+				if (attr) {
+					attrs=attr_generic_add_attr(attrs, attr);
+					attr_free(attr);
+				}
+			} else
+				break;
+		}
+		ret=navit_command_call_attrs(this_, str, attrs, NULL);
+		attr_list_free(attrs);
+	}
+	g_free(str);
+	return ret;
 }
 
 void
