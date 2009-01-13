@@ -112,6 +112,7 @@ svgs += gui_arrow_left.svg
 svgs += gui_arrow_right.svg
 svgs += gui_arrow_up.svg
 svgs += gui_arrow_down.svg
+svgs += gui_menu.svg
 svgs += gui_strength_0.svg
 svgs += gui_strength_1.svg
 svgs += gui_strength_2.svg
