@@ -5,8 +5,10 @@
 #include <ft2build.h>
 #include <glib.h>
 #include FT_FREETYPE_H
-#define USE_CACHING 
-#ifdef USE_CACHING
+#ifndef USE_CACHING
+#define USE_CACHING 1
+#endif
+#if USE_CACHING
 #include FT_CACHE_H
 #endif
 #include <freetype/ftglyph.h>
@@ -18,14 +20,18 @@
 #include "atom.h"
 #include "font_freetype.h"
 
+#ifndef HAVE_LOOKUP_SCALER
 #if FREETYPE_MAJOR * 10000 + FREETYPE_MINOR * 100 + FREETYPE_PATCH > 20304
-#define HAVE_LOOKUP_SCALER
+#define HAVE_LOOKUP_SCALER 1
+#else
+#define HAVE_LOOJUP_SCALER 0
+#endif
 #endif
 
 struct font_freetype_font {
 	int size;
-#ifdef USE_CACHING
-#ifdef HAVE_LOOKUP_SCALER
+#if USE_CACHING
+#if HAVE_LOOKUP_SCALER
 	FTC_ScalerRec scaler;
 #else
 	FTC_ImageTypeRec scaler;
@@ -41,7 +47,7 @@ struct font_priv {
 
 static struct font_priv dummy;
 static FT_Library library;
-#ifdef USE_CACHING
+#if USE_CACHING
 static FTC_Manager manager;
 static FTC_ImageCache image_cache;
 static FTC_CMapCache charmap_cache;
@@ -88,16 +94,16 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 	} else {
 		bbox.xMin = bbox.yMin = 32000;
 		bbox.xMax = bbox.yMax = -32000;
-#ifndef USE_CACHING
+#if !USE_CACHING
 		FT_Set_Transform(font->face, &matrix, &pen);
 #endif
 		for (n = 0; n < len; n++) {
 			FT_BBox glyph_bbox;
-#ifdef USE_CACHING
+#if USE_CACHING
 			FTC_Node anode = NULL;
 			glyph_index = FTC_CMapCache_Lookup(charmap_cache, font->scaler.face_id, font->charmap_index, g_utf8_get_char(p));
 			FT_Glyph cached_glyph;
-#ifdef HAVE_LOOKUP_SCALER
+#if HAVE_LOOKUP_SCALER
 			FTC_ImageCache_LookupScaler(image_cache, &font->scaler, FT_LOAD_DEFAULT, glyph_index, &cached_glyph, &anode);
 #else
 			FTC_ImageCache_Lookup(image_cache, &font->scaler, glyph_index, &cached_glyph, &anode);
@@ -110,7 +116,7 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 			FT_Get_Glyph(font->face->glyph, &glyph);
 #endif
 			FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_pixels, &glyph_bbox);
-#ifdef USE_CACHING
+#if USE_CACHING
 			FT_Done_Glyph(glyph);
 			FTC_Node_Unref(anode, manager);
 #else
@@ -182,17 +188,17 @@ font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
 
 	pen.x = 0 * 64;
 	pen.y = 0 * 64;
-#ifndef USE_CACHING
+#if !USE_CACHING
 	FT_Set_Transform(font->face, &matrix, &pen);
 #endif
 
 	for (n = 0; n < len; n++) {
 
-#ifdef USE_CACHING
+#if USE_CACHING
 		FTC_Node anode=NULL;
 		FT_Glyph cached_glyph;
 		glyph_index = FTC_CMapCache_Lookup(charmap_cache, font->scaler.face_id, font->charmap_index, g_utf8_get_char(p));
-#ifdef HAVE_LOOKUP_SCALER
+#if HAVE_LOOKUP_SCALER
 		FTC_ImageCache_LookupScaler(image_cache, &font->scaler, FT_LOAD_DEFAULT, glyph_index, &cached_glyph, &anode);
 #else
 		FTC_ImageCache_Lookup(image_cache, &font->scaler, glyph_index, &cached_glyph, &anode);
@@ -232,7 +238,7 @@ font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
 
 		curr->dx = glyph->advance.x >> 10;
 		curr->dy = -glyph->advance.y >> 10;
-#ifdef USE_CACHING
+#if USE_CACHING
 		FT_Done_Glyph(glyph);
 		FTC_Node_Unref(anode, manager);
 #endif
@@ -280,7 +286,7 @@ font_freetype_text_destroy(struct font_freetype_text *text)
 	g_free(text);
 }
 
-#ifdef USE_CACHING
+#if USE_CACHING
 static FT_Error face_requester( FTC_FaceID face_id, FT_Library library, FT_Pointer request_data, FT_Face* aface )
 {
 	FT_Error ret;
@@ -288,12 +294,14 @@ static FT_Error face_requester( FTC_FaceID face_id, FT_Library library, FT_Point
 	if (! face_id)
 		return FT_Err_Invalid_Handle;
 	fontfile=g_strdup((char *)face_id);
+	dbg(0,"fontfile=%s\n", fontfile);
 	fontindex=strrchr(fontfile,'/');
 	if (! fontindex) {
 		g_free(fontfile);
 		return FT_Err_Invalid_Handle;
 	}
 	*fontindex++='\0';
+	dbg(0,"new face %s %d\n", fontfile, atoi(fontindex));
 	ret = FT_New_Face( library, fontfile, atoi(fontindex), aface );
 	if(ret) {
 	       dbg(0,"Error while creating freetype face: %d\n", ret);
@@ -329,14 +337,14 @@ font_freetype_font_new(struct graphics_priv *gr,
 	int exact, found=0;
 	char *name;
 	char **family;
-#ifdef USE_CACHING
+#if USE_CACHING
 	char *idstr;
 	FT_Face face;
 #endif
 
 	if (!library_init) {
 		FT_Init_FreeType(&library);
-#ifdef USE_CACHING
+#if USE_CACHING
 		FTC_Manager_New( library, 0, 0, 0, &face_requester, NULL, &manager);
 		FTC_ImageCache_New( manager, &image_cache);
 		FTC_CMapCache_New( manager, &charmap_cache);
@@ -400,11 +408,11 @@ font_freetype_font_new(struct graphics_priv *gr,
 					dbg(2,
 					    "About to load font from file %s index %d\n",
 					    fontfile, fontindex);
-#ifdef USE_CACHING
+#if USE_CACHING
 					idstr=g_strdup_printf("%s/%d", fontfile, fontindex);
 					font->scaler.face_id=(FTC_FaceID)atom(idstr);
 					g_free(idstr);
-#ifdef HAVE_LOOKUP_SCALER
+#if HAVE_LOOKUP_SCALER
 					font->scaler.width=0;
 					font->scaler.height=size;
 					font->scaler.pixel=0;
@@ -433,11 +441,11 @@ font_freetype_font_new(struct graphics_priv *gr,
 	}
 #else
 	name=g_strdup_printf("%s/fonts/%s-%s.ttf",getenv("NAVIT_SHAREDIR"),"LiberationSans",flags ? "Bold":"Regular");
-#ifdef USE_CACHING
+#if USE_CACHING
 	idstr=g_strdup_printf("%s/%d", name, 0);
 	font->scaler.face_id=(FTC_FaceID)atom(idstr);
 	g_free(idstr);
-#ifdef HAVE_LOOKUP_SCALER
+#if HAVE_LOOKUP_SCALER
 	font->scaler.width=0;
 	font->scaler.height=size;
 	font->scaler.pixel=0;
@@ -448,6 +456,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 	font->scaler.height=size/15;
 	font->scaler.flags=FT_LOAD_DEFAULT;
 #endif
+	found=1;
 #else
 	if (!FT_New_Face(library, name, 0, &font->face))
 		found=1;
@@ -459,7 +468,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 		g_free(font);
 		return NULL;
 	}
-#ifndef USE_CACHING
+#if !USE_CACHING
 	FT_Set_Char_Size(font->face, 0, size, 300, 300);
 	FT_Select_Charmap(font->face, FT_ENCODING_UNICODE);
 #endif
