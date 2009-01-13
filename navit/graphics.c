@@ -1277,8 +1277,12 @@ static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_lis
 					} else {
 #else
 					{
+#if 0
 						 if (e->u.polyline.width > 1)
 		                                             gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
+#else
+		                                gc->meth.gc_set_linewidth(gc->priv, 1);
+#endif
 
 						
 #endif
