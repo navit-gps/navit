@@ -119,6 +119,28 @@ svgs += gui_strength_2.svg
 svgs += gui_strength_3.svg
 svgs += gui_strength_4.svg
 svgs += gui_strength_5.svg
+svgs += gui_minus.svg
+svgs += gui_plus.svg
+
+nav_svgs =  nav_left_1_bk.svg nav_left_1_wh.svg nav_left_2_bk.svg nav_left_2_wh.svg nav_left_3_bk.svg nav_left_3_wh.svg
+nav_svgs += nav_right_1_bk.svg nav_right_1_wh.svg nav_right_2_bk.svg nav_right_2_wh.svg nav_right_3_bk.svg nav_right_3_wh.svg
+nav_svgs += nav_roundabout_l1_bk.svg nav_roundabout_l1_wh.svg nav_roundabout_l2_bk.svg nav_roundabout_l2_wh.svg
+nav_svgs += nav_roundabout_l3_bk.svg nav_roundabout_l3_wh.svg nav_roundabout_l4_bk.svg nav_roundabout_l4_wh.svg
+nav_svgs += nav_roundabout_l5_bk.svg nav_roundabout_l5_wh.svg nav_roundabout_l6_bk.svg nav_roundabout_l6_wh.svg
+nav_svgs += nav_roundabout_l7_bk.svg nav_roundabout_l7_wh.svg nav_roundabout_l8_bk.svg nav_roundabout_l8_wh.svg
+nav_svgs += nav_roundabout_r1_bk.svg nav_roundabout_r1_wh.svg nav_roundabout_r2_bk.svg nav_roundabout_r2_wh.svg
+nav_svgs += nav_roundabout_r3_bk.svg nav_roundabout_r3_wh.svg nav_roundabout_r4_bk.svg nav_roundabout_r4_wh.svg
+nav_svgs += nav_roundabout_r5_bk.svg nav_roundabout_r5_wh.svg nav_roundabout_r6_bk.svg nav_roundabout_r6_wh.svg
+nav_svgs += nav_roundabout_r7_bk.svg nav_roundabout_r7_wh.svg nav_roundabout_r8_bk.svg nav_roundabout_r8_wh.svg
+nav_svgs += nav_straight_bk.svg nav_straight_wh.svg nav_turnaround_left_bk.svg nav_turnaround_left_wh.svg
+nav_svgs += nav_turnaround_right_bk.svg nav_turnaround_right_wh.svg
+
+flag_svgs  = country_AD.svgz country_AE.svgz country_AF.svgz country_AG.svgz country_AI.svgz country_AL.svgz country_AM.svgz
+flag_svgs += country_AN.svgz country_AO.svgz country_AQ.svgz country_AR.svgz country_AS.svgz country_AT.svgz country_AU.svgz country_AW.svgz
+flag_svgs += country_AX.svgz country_AZ.svgz country_BA.svgz country_BB.svgz country_BD.svgz country_BE.svgz country_BF.svgz
+flag_svgs += country_BG.svgz country_BH.svgz country_BI.svgz country_BJ.svgz country_BL.svgz country_BM.svgz country_BN.svgz
+flag_svgs += country_BO.svgz country_BR.svgz country_BS.svgz country_BT.svgz country_BV.svgz country_BW.svgz country_BY.svgz
+flag_svgs += country_BZ.svgz country_CA.svgz country_CC.svgz country_CD.svgz country_CF.svgz country_CG.svgz country_CH.svgz
 
 nav_svgs =  nav_left_1_bk.svg nav_left_1_wh.svg nav_left_2_bk.svg nav_left_2_wh.svg nav_left_3_bk.svg nav_left_3_wh.svg
 nav_svgs += nav_right_1_bk.svg nav_right_1_wh.svg nav_right_2_bk.svg nav_right_2_wh.svg nav_right_3_bk.svg nav_right_3_wh.svg
