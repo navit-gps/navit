@@ -647,7 +647,7 @@ map_dump_filedesc(struct map *map, FILE *out)
 		count=item_coord_get(item, ca, item->type < type_line ? 1: max);
 		if (item->type < type_line) 
 			fprintf(out,"mg:0x%x 0x%x ", ca[0].x, ca[0].y);
-		fprintf(out,"%s", item_to_name(item->type));
+		fprintf(out,"type=%s", item_to_name(item->type));
 		while (item_attr_get(item, attr_any, &attr)) 
 			fprintf(out," %s='%s'", attr_to_name(attr.type), attr_to_text(&attr, map, 1));
 		fprintf(out,"\n");
