@@ -50,7 +50,7 @@
 #undef DEBUG
 #undef PROFILE
 
-#define OVERLAY_MAX 8
+#define OVERLAY_MAX 16
 
 #ifdef RASTER
 #include "raster.h"
