@@ -1182,6 +1182,9 @@ replace_suffix(char *name, char *search, char *replace)
 	char *ret=g_malloc(len+strlen(replace)+1);
 	strncpy(ret, name, len);
 	strcpy(ret+len, replace);
+	if (isupper(name[len])) {
+		ret[len]=toupper(ret[len]);
+	}
 
 	return ret;
 }
@@ -1290,9 +1293,9 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 
 	w = itm->next->ways;
 	strength_needed = 0;
-	if ((itm->next->angle_start - itm->angle_end) < 0) {
+	if (angle_delta(itm->next->angle_start,itm->angle_end) < 0) {
 		while (w) {
-			if (w->angle2-itm->next->angle_start < 0) {
+			if (angle_delta(w->angle2,itm->angle_end) < 0) {
 				strength_needed = 1;
 				break;
 			}
@@ -1300,7 +1303,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		}
 	} else {
 		while (w) {
-			if (w->angle2-itm->next->angle_start > 0) {
+			if (angle_delta(w->angle2,itm->angle_end) > 0) {
 				strength_needed = 1;
 				break;
 			}
