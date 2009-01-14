@@ -734,24 +734,72 @@ intersection(struct point * a1, int adx, int ady, struct point * b1, int bdx, in
 }
 
 struct circle {
-	int x,y,fowler;
-} lw10[]={
-{0,10,0},
-{4,9,56},
-{7,7,128},
-{9,4,200},
-{10,0,256},
-{9,-4,312},
-{7,-7,384},
-{4,-9,456},
-{0,-10,512},
-{-4,-9,568},
-{-7,-7,640},
-{-9,-4,712},
-{-10,0,768},
-{-9,4,824},
-{-7,7,896},
-{-4,9,968},
+	short x,y,fowler;
+} circle64[]={
+{0,128,0},
+{13,127,13},
+{25,126,25},
+{37,122,38},
+{49,118,53},
+{60,113,67},
+{71,106,85},
+{81,99,104},
+{91,91,128},
+{99,81,152},
+{106,71,171},
+{113,60,189},
+{118,49,203},
+{122,37,218},
+{126,25,231},
+{127,13,243},
+{128,0,256},
+{127,-13,269},
+{126,-25,281},
+{122,-37,294},
+{118,-49,309},
+{113,-60,323},
+{106,-71,341},
+{99,-81,360},
+{91,-91,384},
+{81,-99,408},
+{71,-106,427},
+{60,-113,445},
+{49,-118,459},
+{37,-122,474},
+{25,-126,487},
+{13,-127,499},
+{0,-128,512},
+{-13,-127,525},
+{-25,-126,537},
+{-37,-122,550},
+{-49,-118,565},
+{-60,-113,579},
+{-71,-106,597},
+{-81,-99,616},
+{-91,-91,640},
+{-99,-81,664},
+{-106,-71,683},
+{-113,-60,701},
+{-118,-49,715},
+{-122,-37,730},
+{-126,-25,743},
+{-127,-13,755},
+{-128,0,768},
+{-127,13,781},
+{-126,25,793},
+{-122,37,806},
+{-118,49,821},
+{-113,60,835},
+{-106,71,853},
+{-99,81,872},
+{-91,91,896},
+{-81,99,920},
+{-71,106,939},
+{-60,113,957},
+{-49,118,971},
+{-37,122,986},
+{-25,126,999},
+{-13,127,1011},
 };
 
 static void
@@ -762,9 +810,20 @@ draw_circle(struct point *pnt, int diameter, int scale, int start, int len, stru
 #if 0
 	dbg(0,"diameter=%d start=%d len=%d pos=%d dir=%d\n", diameter, start, len, *pos, dir);
 #endif
+	int count=64;
 	int end=start+len;
-	int i;
-	c=lw10;
+	int i,step;
+	c=circle64;
+	if (diameter > 128)
+		step=1;
+	else if (diameter > 64)
+		step=2;
+	else if (diameter > 24)
+		step=4;
+	else if (diameter > 8)
+		step=8;
+	else
+		step=16;
 	if (len > 0) {
 		while (start < 0) {
 			start+=1024;
@@ -772,13 +831,13 @@ draw_circle(struct point *pnt, int diameter, int scale, int start, int len, stru
 		}
 		while (end > 0) {
 			i=0;
-			while (i < 16 && c[i].fowler <= start)
-				i++;
-			while (i < 16 && c[i].fowler < end) {
-				res[*pos].x=pnt->x+c[i].x*diameter/20;
-				res[*pos].y=pnt->y+c[i].y*diameter/20;
+			while (i < count && c[i].fowler <= start)
+				i+=step;
+			while (i < count && c[i].fowler < end) {
+				res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
+				res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
 				(*pos)+=dir;
-				i++;
+				i+=step;
 			}
 			end-=1024;
 			start-=1024;
@@ -789,14 +848,14 @@ draw_circle(struct point *pnt, int diameter, int scale, int start, int len, stru
 			end-=1024;
 		}
 		while (end < 1024) {
-			i=15;
-			while (i >= 0 && c[i].fowler >= end)
-				i--;
-			while (i >= 0 && c[i].fowler > start) {
-				res[*pos].x=pnt->x+c[i].x*diameter/20;
-				res[*pos].y=pnt->y+c[i].y*diameter/20;
+			i=count-1;
+			while (i >= 0 && c[i].fowler >= start)
+				i-=step;
+			while (i >= 0 && c[i].fowler > end) {
+				res[*pos].x=pnt->x+((c[i].x*diameter+128)>>8);
+				res[*pos].y=pnt->y+((c[i].y*diameter+128)>>8);
 				(*pos)+=dir;
-				i--;
+				i-=step;
 			}
 			start+=1024;
 			end+=1024;
