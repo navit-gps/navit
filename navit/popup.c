@@ -130,7 +130,7 @@ popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char
 
 	va_start(ap, fmt);
 	str=g_strdup_vprintf(fmt, ap);
-	dbg(1,"%s\n", str);
+	dbg(0,"%s\n", str);
 	ret=menu_add(menu, str, type, cb);
 	va_end(ap);
 	g_free(str);
