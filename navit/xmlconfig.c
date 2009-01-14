@@ -554,7 +554,13 @@ xpointer_test(const char *test, int len, struct xistate *elem)
 	int eq,i,count,vlen,cond_req=1,cond=0;
 	char c;
 	const char *tmp[16];
+#if 0
+	char test2[len+1];
 
+	strncpy(test2, test, len);
+	test2[len]='\0';
+	dbg(0,"%s\n", test2);
+#endif
 	if (!len)
 		return 0;
 	c=test[len-1];
@@ -581,17 +587,33 @@ xpointer_test(const char *test, int len, struct xistate *elem)
 static int
 xpointer_element_match(const char *xpointer, int len, struct xistate *elem)
 {
-	int len_test;
-	len_test=strcspn(xpointer, "[");
-	if (len_test > len)
-		len_test=len;
-	if (strncmp_len(xpointer, len_test, elem->element) && (len_test != 1 || xpointer[0] != '*'))
+	int start,tlen,tlen2;
+#if 0
+	char test2[len+1];
+
+	strncpy(test2, xpointer, len);
+	test2[len]='\0';
+	dbg(0,"%s\n", test2);
+#endif
+	start=strcspn(xpointer, "[");
+	if (start > len)
+		start=len;
+	if (strncmp_len(xpointer, start, elem->element) && (start != 1 || xpointer[0] != '*'))
 		return 0;
-	if (len_test == len)
+	if (start == len)
 		return 1;
 	if (xpointer[len-1] != ']')
 		return 0;
-	return xpointer_test(xpointer+len_test+1, len-len_test-2, elem);
+	tlen=len-start-2;
+	for (;;) {
+		start++;
+		tlen2=strcspn(xpointer+start,"]");
+		if (start + tlen2 > len)
+			return 1;
+		if (!xpointer_test(xpointer+start, tlen2, elem))
+			return 0;
+		start+=tlen2+1;
+	}
 }
 
 static int
