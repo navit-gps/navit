@@ -352,8 +352,8 @@ font_freetype_font_new(struct graphics_priv *gr,
 #endif
 		library_init = 1;
 	}
-#ifdef HAVE_FONTCONFIG
 	font->size=size;
+#ifdef HAVE_FONTCONFIG
 	dbg(2, " about to search for fonts, prefered = %s\n", fontfamily);
 	for (exact = 1; !found && exact >= 0; exact--) {
 		if (fontfamily) {
