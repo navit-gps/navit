@@ -2835,6 +2835,7 @@ gui_internal_check_exit(struct gui_priv *this)
 static void gui_internal_button(void *data, int pressed, int button, struct point *p)
 {
 	struct gui_priv *this=data;
+	struct graphics *gra=this->gra;
 	
 	// if still on the map (not in the menu, yet):
 	if (!this->root.children || this->ignore_button) {
@@ -2856,8 +2857,10 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		this->pressed=0;
 		this->current.x=-1;
 		this->current.y=-1;
+		graphics_draw_mode(gra, draw_mode_begin);
 		gui_internal_call_highlighted(this);
 		gui_internal_highlight(this);
+		graphics_draw_mode(gra, draw_mode_end);
 		gui_internal_check_exit(this);
 	}
 }
