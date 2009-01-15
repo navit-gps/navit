@@ -5,1535 +5,1555 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
-"POT-Creation-Date: 2009-01-05 15:31+0100\n"
-"PO-Revision-Date: 2008-11-17 09:52+0000\n"
-"Last-Translator: mdhull <Unknown>\n"
+"Project-Id-Version: navit 0.1.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-01-06 11:04+0100\n"
+"PO-Revision-Date: 2009-01-12 23:22+0000\n"
+"Last-Translator: Kobus <Unknown>\n"
 "Language-Team: Afrikaans <af@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-06 08:28+0000\n"
+"X-Launchpad-Export-Date: 2009-01-15 08:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
-#: ../navit/main.c:228
+#: ../navit/main.c:231
 #, c-format
 msgid "Running from source directory\n"
-msgstr ""
+msgstr "Loop vanaf bron gids\n"
 
-#: ../navit/main.c:260
+#: ../navit/main.c:263
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "verander '%s' na '%s'\n"
 
-#: ../navit/navigation.c:197
-msgid "zeroth"
-msgstr ""
-
-#: ../navit/navigation.c:199
-msgid "first"
-msgstr ""
-
 #: ../navit/navigation.c:201
-msgid "second"
-msgstr ""
+msgid "zeroth"
+msgstr "nulste"
 
 #: ../navit/navigation.c:203
-msgid "third"
-msgstr ""
+msgid "first"
+msgstr "eerste"
 
 #: ../navit/navigation.c:205
-msgid "fourth"
-msgstr ""
+msgid "second"
+msgstr "tweede"
 
 #: ../navit/navigation.c:207
-msgid "fifth"
-msgstr ""
+msgid "third"
+msgstr "derde"
 
 #: ../navit/navigation.c:209
-msgid "sixth"
-msgstr ""
+msgid "fourth"
+msgstr "vierde"
 
-#: ../navit/navigation.c:251
+#: ../navit/navigation.c:211
+msgid "fifth"
+msgstr "vyfde"
+
+#: ../navit/navigation.c:213
+msgid "sixth"
+msgstr "sesde"
+
+#: ../navit/navigation.c:255
 #, c-format
 msgid "%d m"
 msgstr "%d meter"
 
-#: ../navit/navigation.c:253
+#: ../navit/navigation.c:257
 #, c-format
 msgid "in %d m"
 msgstr "na %d meter"
 
-#: ../navit/navigation.c:257
+#: ../navit/navigation.c:261
 #, c-format
 msgid "%d meters"
 msgstr "%d meter"
 
-#: ../navit/navigation.c:259
+#: ../navit/navigation.c:263
 #, c-format
 msgid "in %d meters"
 msgstr "na %d meter"
 
-#: ../navit/navigation.c:265
+#: ../navit/navigation.c:269
 #, c-format
 msgid "%d.%d kilometer"
 msgstr "%d.%d kilometer"
 
-#: ../navit/navigation.c:267
+#: ../navit/navigation.c:271
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "na %d.%d kilometer"
 
-#: ../navit/navigation.c:271
+#: ../navit/navigation.c:275
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "een kilometer"
 msgstr[1] "%d kilometer"
 
-#: ../navit/navigation.c:273
+#: ../navit/navigation.c:277
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "na een kilometer"
 msgstr[1] "na %d kilometer"
 
-#: ../navit/navigation.c:1158
+#: ../navit/navigation.c:1202
 msgid "exit"
 msgstr "afrit"
 
-#: ../navit/navigation.c:1160
+#: ../navit/navigation.c:1204
 msgid "into the ramp"
-msgstr ""
+msgstr "na die afrit"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:1190
+#: ../navit/navigation.c:1234
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr ""
+msgstr "%sin die straat %s%s%s in"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1194
+#: ../navit/navigation.c:1238
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr ""
+msgstr "%sin die %s%s%s|"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1198
+#: ../navit/navigation.c:1242
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr ""
+msgstr "%sin die %s%s%s|"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1202
+#: ../navit/navigation.c:1246
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
+msgstr "%sin die %s%s%s|"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1209
+#: ../navit/navigation.c:1253
 #, c-format
 msgid "%sinto the %s"
-msgstr ""
+msgstr "%sin die %s in"
 
 #. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1230
+#: ../navit/navigation.c:1274
 msgid "right"
 msgstr "regs"
 
 #. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1264
+#: ../navit/navigation.c:1313
 msgid "left"
 msgstr "links"
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1271
+#: ../navit/navigation.c:1320
 msgid "easily "
-msgstr ""
+msgstr "maklik "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1276
+#: ../navit/navigation.c:1325
 msgid "strongly "
-msgstr ""
+msgstr "skerp "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1280
+#: ../navit/navigation.c:1329
 msgid "unknown "
 msgstr "onbekend "
 
-#: ../navit/navigation.c:1287
+#: ../navit/navigation.c:1336
 msgid "When possible, please turn around"
 msgstr "Draai asseblief om wanneer moontlik"
 
-#: ../navit/navigation.c:1295
+#: ../navit/navigation.c:1346
 msgid "Enter the roundabout soon"
-msgstr ""
+msgstr "Gaan kortliks in die sirkel in"
 
-#: ../navit/navigation.c:1298
+#: ../navit/navigation.c:1349
 #, c-format
 msgid "In %s, enter the roundabout"
-msgstr ""
+msgstr "In %s, gaan in die sirkel in"
 
-#: ../navit/navigation.c:1310
+#: ../navit/navigation.c:1364
 #, c-format
 msgid "Leave the roundabout at the %s exit"
-msgstr ""
+msgstr "Verlaat die sirkel by die %s uitgang"
 
-#: ../navit/navigation.c:1318
+#: ../navit/navigation.c:1367
+#, c-format
+msgid "then leave the roundabout at the %s exit"
+msgstr "verlaat dan die sirkel by die %s uitgang"
+
+#: ../navit/navigation.c:1377
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr ""
+msgstr "Volg die pad vir die volgende %s"
 
-#: ../navit/navigation.c:1322
+#: ../navit/navigation.c:1381
 msgid "soon"
-msgstr ""
+msgstr "kortliks"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1332
+#: ../navit/navigation.c:1391
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr ""
+msgstr "Neem die %1$s pad na %2$s"
 
-#: ../navit/navigation.c:1335
+#: ../navit/navigation.c:1394 ../navit/navigation.c:1408
 #, c-format
 msgid "after %i roads"
-msgstr ""
+msgstr "na %i paaie"
 
-#: ../navit/navigation.c:1338
+#: ../navit/navigation.c:1397
 msgid "now"
 msgstr "nou"
 
-#: ../navit/navigation.c:1342
+#: ../navit/navigation.c:1405
+#, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr "neem dan die %1$s pad na %2$s"
+
+#: ../navit/navigation.c:1416
 msgid "error"
 msgstr "fout"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:1371
+#: ../navit/navigation.c:1446
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Draai %1$s%2$s %3$s%4$s"
 
-#: ../navit/navigation.c:1374
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#: ../navit/navigation.c:1449
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr "draai dan %1$s%2$s %3$s%4$s"
+
+#: ../navit/navigation.c:1454
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Jy het jou bestemming bereik %s"
 
-#: ../navit/navit.c:1042
-msgid "Position"
-msgstr ""
+#: ../navit/navigation.c:1456
+msgid "then you have reached your destination."
+msgstr "dan het jy jou bestemming bereik."
 
-#: ../navit/navit.c:1043
+#: ../navit/navit.c:1049
+msgid "Position"
+msgstr "Posisie"
+
+#: ../navit/navit.c:1050
 msgid "Command"
 msgstr "Bevel"
 
-#: ../navit/navit.c:1047
+#: ../navit/navit.c:1054
 msgid "Length"
 msgstr "Lengte"
 
-#: ../navit/navit.c:1051 ../navit/navit.c:1076
+#: ../navit/navit.c:1058 ../navit/navit.c:1083
 msgid "km"
 msgstr "kilometer"
 
-#: ../navit/navit.c:1055 ../navit/navit.c:1080
+#: ../navit/navit.c:1062 ../navit/navit.c:1087
 msgid "m"
 msgstr "meter"
 
-#: ../navit/navit.c:1061
+#: ../navit/navit.c:1068
 msgid "Time"
 msgstr "Tyd"
 
-#: ../navit/navit.c:1073
+#: ../navit/navit.c:1080
 msgid "Destination Length"
 msgstr "Bestemming lengte"
 
-#: ../navit/navit.c:1086
+#: ../navit/navit.c:1093
 msgid "Destination Time"
 msgstr "Bestemming tyd"
 
-#: ../navit/navit.c:1119 ../navit/gui/gtk/gui_gtk_action.c:210
+#: ../navit/navit.c:1126 ../navit/gui/gtk/gui_gtk_action.c:210
 msgid "Roadbook"
-msgstr ""
+msgstr "Padkaart"
 
 #: ../navit/popup.c:218 ../navit/popup.c:272
 #: ../navit/gui/internal/gui_internal.c:1831
 msgid "Set as position"
-msgstr ""
+msgstr "Stel as posisie"
 
 #: ../navit/popup.c:219 ../navit/popup.c:273
 #: ../navit/gui/internal/gui_internal.c:1827
 msgid "Set as destination"
-msgstr ""
+msgstr "Stel as bestemming"
 
 #: ../navit/popup.c:220 ../navit/popup.c:274
 #: ../navit/gui/internal/gui_internal.c:1835
 msgid "Add as bookmark"
-msgstr ""
+msgstr "Voeg as boekmerk by"
 
 #: ../navit/popup.c:262
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr ""
+msgstr "Punt 0x%x 0x%x"
 
 #: ../navit/popup.c:263
 #, c-format
 msgid "Screen coord : %d %d"
-msgstr ""
+msgstr "Skerm koordinaat : %d %d"
 
 #. 020
 #: ../navit/country.c:39
 msgid "Andorra"
-msgstr ""
+msgstr "Andorra"
 
 #. 784
 #: ../navit/country.c:40
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "Verenigde Arabiese Emirate"
 
 #. 004
 #: ../navit/country.c:41
 msgid "Afghanistan"
-msgstr ""
+msgstr "Afganistan"
 
 #. 028
 #: ../navit/country.c:42
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "Antigue en Barbuda"
 
 #. 660
 #: ../navit/country.c:43
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguilla"
 
 #. 008
 #: ../navit/country.c:44
 msgid "Albania"
-msgstr ""
+msgstr "Albanië"
 
 #. 051
 #: ../navit/country.c:45
 msgid "Armenia"
-msgstr ""
+msgstr "Armenië"
 
 #. 530
 #: ../navit/country.c:46
 msgid "Netherlands Antilles"
-msgstr ""
+msgstr "Nederland Antille"
 
 #. 024
 #: ../navit/country.c:47
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #. 010
 #: ../navit/country.c:48
 msgid "Antarctica"
-msgstr ""
+msgstr "Antarktika"
 
 #. 032
 #: ../navit/country.c:49
 msgid "Argentina"
-msgstr ""
+msgstr "Argentinië"
 
 #. 016
 #: ../navit/country.c:50
 msgid "American Samoa"
-msgstr ""
+msgstr "Amerikaanse Samoa"
 
 #. 040
 #: ../navit/country.c:51
 msgid "Austria"
-msgstr ""
+msgstr "Oostenryk"
 
 #. 036
 #: ../navit/country.c:52
 msgid "Australia"
-msgstr ""
+msgstr "Australië"
 
 #. 533
 #: ../navit/country.c:53
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #. 248
 #: ../navit/country.c:54
 msgid "Aland Islands"
-msgstr ""
+msgstr "Aland Eiland"
 
 #. 031
 #: ../navit/country.c:55
 msgid "Azerbaijan"
-msgstr ""
+msgstr "Azerbaidjan"
 
 #. 070
 #: ../navit/country.c:56
 msgid "Bosnia and Herzegovina"
-msgstr ""
+msgstr "Bosnië en Herzegowina"
 
 #. 052
 #: ../navit/country.c:57
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #. 050
 #: ../navit/country.c:58
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladesj"
 
 #. 056
 #: ../navit/country.c:59
 msgid "Belgium"
-msgstr ""
+msgstr "België"
 
 #. 854
 #: ../navit/country.c:60
 msgid "Burkina Faso"
-msgstr ""
+msgstr "Boerkina Fasso"
 
 #. 100
 #: ../navit/country.c:61
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bulgarye"
 
 #. 048
 #: ../navit/country.c:62
 msgid "Bahrain"
-msgstr ""
+msgstr "Bahrein"
 
 #. 108
 #: ../navit/country.c:63
 msgid "Burundi"
-msgstr ""
+msgstr "Boeroendi"
 
 #. 204
 #: ../navit/country.c:64
 msgid "Benin"
-msgstr ""
+msgstr "Benin"
 
 #. 652
 #: ../navit/country.c:65
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "St. Barthelemy"
 
 #. 060
 #: ../navit/country.c:66
 msgid "Bermuda"
-msgstr ""
+msgstr "Bermuda"
 
 #. 096
 #: ../navit/country.c:67
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Broenei"
 
 #. 068
 #: ../navit/country.c:68
 msgid "Bolivia"
-msgstr ""
+msgstr "Bolivië"
 
 #. 076
 #: ../navit/country.c:69
 msgid "Brazil"
-msgstr ""
+msgstr "Brasilië"
 
 #. 044
 #: ../navit/country.c:70
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahamas"
 
 #. 064
 #: ../navit/country.c:71
 msgid "Bhutan"
-msgstr ""
+msgstr "Bhoetan"
 
 #. 074
 #: ../navit/country.c:72
 msgid "Bouvet Island"
-msgstr ""
+msgstr "Bouveteiland"
 
 #. 072
 #: ../navit/country.c:73
 msgid "Botswana"
-msgstr ""
+msgstr "Botswana"
 
 #. 112
 #: ../navit/country.c:74
 msgid "Belarus"
-msgstr ""
+msgstr "Wit-Rusland"
 
 #. 084
 #: ../navit/country.c:75
 msgid "Belize"
-msgstr ""
+msgstr "Belize"
 
 #. 124
 #: ../navit/country.c:76
 msgid "Canada"
-msgstr ""
+msgstr "Kanada"
 
 #. 166
 #: ../navit/country.c:77
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "Cocos- (Keeling) eilande"
 
 #. 180
 #: ../navit/country.c:78
 msgid "Congo, Democratic Republic of the"
-msgstr ""
+msgstr "Kongo, Demokratiese Republiek van die"
 
 #. 140
 #: ../navit/country.c:79
 msgid "Central African Republic"
-msgstr ""
+msgstr "Sentraal-Afrikaanse Republiek"
 
 #. 178
 #: ../navit/country.c:80
 msgid "Congo"
-msgstr ""
+msgstr "Kongo"
 
 #. 756
 #: ../navit/country.c:81
 msgid "Switzerland"
-msgstr ""
+msgstr "Switserland"
 
 #. 384
 #: ../navit/country.c:82
 msgid "Cote d'Ivoire"
-msgstr ""
+msgstr "Ivoorkus"
 
 #. 184
 #: ../navit/country.c:83
 msgid "Cook Islands"
-msgstr ""
+msgstr "Cookeilande"
 
 #. 152
 #: ../navit/country.c:84
 msgid "Chile"
-msgstr ""
+msgstr "Chili"
 
 #. 120
 #: ../navit/country.c:85
 msgid "Cameroon"
-msgstr ""
+msgstr "Kameroen"
 
 #. 156
 #: ../navit/country.c:86
 msgid "China"
-msgstr ""
+msgstr "Sjina"
 
 #. 170
 #: ../navit/country.c:87
 msgid "Colombia"
-msgstr ""
+msgstr "Kolombië"
 
 #. 188
 #: ../navit/country.c:88
 msgid "Costa Rica"
-msgstr ""
+msgstr "Costa Rica"
 
 #. 192
 #: ../navit/country.c:89
 msgid "Cuba"
-msgstr ""
+msgstr "Kuba"
 
 #. 132
 #: ../navit/country.c:90
 msgid "Cape Verde"
-msgstr ""
+msgstr "Kaap Verdie"
 
 #. 162
 #: ../navit/country.c:91
 msgid "Christmas Island"
-msgstr ""
+msgstr "Kerseiland"
 
 #. 196
 #: ../navit/country.c:92
 msgid "Cyprus"
-msgstr ""
+msgstr "Siprus"
 
 #. 203
 #: ../navit/country.c:93
 msgid "Czech Republic"
-msgstr ""
+msgstr "Tjeggiese Republiek"
 
 #. 276
 #: ../navit/country.c:94
 msgid "Germany"
-msgstr ""
+msgstr "Duitsland"
 
 #. 262
 #: ../navit/country.c:95
 msgid "Djibouti"
-msgstr ""
+msgstr "Djiboeti"
 
 #. 208
 #: ../navit/country.c:96
 msgid "Denmark"
-msgstr ""
+msgstr "Denemarke"
 
 #. 212
 #: ../navit/country.c:97
 msgid "Dominica"
-msgstr ""
+msgstr "Dominika"
 
 #. 214
 #: ../navit/country.c:98
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Dominikaanse Republiek"
 
 #. 012
 #: ../navit/country.c:99
 msgid "Algeria"
-msgstr ""
+msgstr "Algerië"
 
 #. 218
 #: ../navit/country.c:100
 msgid "Ecuador"
-msgstr ""
+msgstr "Ecuador"
 
 #. 233
 #: ../navit/country.c:101
 msgid "Estonia"
-msgstr ""
+msgstr "Esland"
 
 #. 818
 #: ../navit/country.c:102
 msgid "Egypt"
-msgstr ""
+msgstr "Egipte"
 
 #. 732
 #: ../navit/country.c:103
 msgid "Western Sahara"
-msgstr ""
+msgstr "Wes-Sahara"
 
 #. 232
 #: ../navit/country.c:104
 msgid "Eritrea"
-msgstr ""
+msgstr "Eritrea"
 
 #. 724
 #: ../navit/country.c:105
 msgid "Spain"
-msgstr ""
+msgstr "Spanje"
 
 #. 231
 #: ../navit/country.c:106
 msgid "Ethiopia"
-msgstr ""
+msgstr "Etiopië"
 
 #. 246
 #: ../navit/country.c:107
 msgid "Finland"
-msgstr ""
+msgstr "Finland"
 
 #. 242
 #: ../navit/country.c:108
 msgid "Fiji"
-msgstr ""
+msgstr "Fidji"
 
 #. 238
 #: ../navit/country.c:109
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "Falkland-eiland (Malvinas)"
 
 #. 583
 #: ../navit/country.c:110
 msgid "Micronesia, Federated States of"
-msgstr ""
+msgstr "Mikronesia, Federale state van"
 
 #. 234
 #: ../navit/country.c:111
 msgid "Faroe Islands"
-msgstr ""
+msgstr "Faroëreilande"
 
 #. 250
 #: ../navit/country.c:112
 msgid "France"
-msgstr ""
+msgstr "Frankryk"
 
 #. 266
 #: ../navit/country.c:113
 msgid "Gabon"
-msgstr ""
+msgstr "Gaboen"
 
 #. 826
 #: ../navit/country.c:114
 msgid "United Kingdom"
-msgstr ""
+msgstr "Verenigde Koninkryk"
 
 #. 308
 #: ../navit/country.c:115
 msgid "Grenada"
-msgstr ""
+msgstr "Grenada"
 
 #. 268
 #: ../navit/country.c:116
 msgid "Georgia"
-msgstr ""
+msgstr "Georgië"
 
 #. 254
 #: ../navit/country.c:117
 msgid "French Guiana"
-msgstr ""
+msgstr "Frans-Guyana"
 
 #. 831
 #: ../navit/country.c:118
 msgid "Guernsey"
-msgstr ""
+msgstr "Guernsey"
 
 #. 288
 #: ../navit/country.c:119
 msgid "Ghana"
-msgstr ""
+msgstr "Ghana"
 
 #. 292
 #: ../navit/country.c:120
 msgid "Gibraltar"
-msgstr ""
+msgstr "Gibraltar"
 
 #. 304
 #: ../navit/country.c:121
 msgid "Greenland"
-msgstr ""
+msgstr "Groenland"
 
 #. 270
 #: ../navit/country.c:122
 msgid "Gambia"
-msgstr ""
+msgstr "Gambië"
 
 #. 324
 #: ../navit/country.c:123
 msgid "Guinea"
-msgstr ""
+msgstr "Guinië"
 
 #. 312
 #: ../navit/country.c:124
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Guadeloupe"
 
 #. 226
 #: ../navit/country.c:125
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "Ekwatoriaal-Guinee"
 
 #. 300
 #: ../navit/country.c:126
 msgid "Greece"
-msgstr ""
+msgstr "Griekeland"
 
 #. 239
 #: ../navit/country.c:127
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "South Georgië en die Suid Sandwich Eilande"
 
 #. 320
 #: ../navit/country.c:128
 msgid "Guatemala"
-msgstr ""
+msgstr "Gautemala"
 
 #. 316
 #: ../navit/country.c:129
 msgid "Guam"
-msgstr ""
+msgstr "Guam"
 
 #. 624
 #: ../navit/country.c:130
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "Guinee-Bissau"
 
 #. 328
 #: ../navit/country.c:131
 msgid "Guyana"
-msgstr ""
+msgstr "Guyana"
 
 #. 344
 #: ../navit/country.c:132
 msgid "Hong Kong"
-msgstr ""
+msgstr "Hong Kong"
 
 #. 334
 #: ../navit/country.c:133
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "Heard Eiland en McDonald Eiland"
 
 #. 340
 #: ../navit/country.c:134
 msgid "Honduras"
-msgstr ""
+msgstr "Honduras"
 
 #. 191
 #: ../navit/country.c:135
 msgid "Croatia"
-msgstr ""
+msgstr "Kroasië"
 
 #. 332
 #: ../navit/country.c:136
 msgid "Haiti"
-msgstr ""
+msgstr "Haïti"
 
 #. 348
 #: ../navit/country.c:137
 msgid "Hungary"
-msgstr ""
+msgstr "Hongarye"
 
 #. 360
 #: ../navit/country.c:138
 msgid "Indonesia"
-msgstr ""
+msgstr "Indonesië"
 
 #. 372
 #: ../navit/country.c:139
 msgid "Ireland"
-msgstr ""
+msgstr "Ierland"
 
 #. 376
 #: ../navit/country.c:140
 msgid "Israel"
-msgstr ""
+msgstr "Israel"
 
 #. 833
 #: ../navit/country.c:141
 msgid "Isle of Man"
-msgstr ""
+msgstr "Man eiland"
 
 #. 356
 #: ../navit/country.c:142
 msgid "India"
-msgstr ""
+msgstr "Indië"
 
 #. 086
 #: ../navit/country.c:143
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "Brits Indiese oseaan gebiede"
 
 #. 368
 #: ../navit/country.c:144
 msgid "Iraq"
-msgstr ""
+msgstr "Irak"
 
 #. 364
 #: ../navit/country.c:145
 msgid "Iran, Islamic Republic of"
-msgstr ""
+msgstr "Iran"
 
 #. 352
 #: ../navit/country.c:146
 msgid "Iceland"
-msgstr ""
+msgstr "Ysland"
 
 #. 380
 #: ../navit/country.c:147
 msgid "Italy"
-msgstr ""
+msgstr "Italië"
 
 #. 832
 #: ../navit/country.c:148
 msgid "Jersey"
-msgstr ""
+msgstr "Jersey"
 
 #. 388
 #: ../navit/country.c:149
 msgid "Jamaica"
-msgstr ""
+msgstr "Jamaika"
 
 #. 400
 #: ../navit/country.c:150
 msgid "Jordan"
-msgstr ""
+msgstr "Jordanië"
 
 #. 392
 #: ../navit/country.c:151
 msgid "Japan"
-msgstr ""
+msgstr "Japan"
 
 #. 404
 #: ../navit/country.c:152
 msgid "Kenya"
-msgstr ""
+msgstr "Kenia"
 
 #. 417
 #: ../navit/country.c:153
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "Kyrgyzstan"
 
 #. 116
 #: ../navit/country.c:154
 msgid "Cambodia"
-msgstr ""
+msgstr "Kambodja"
 
 #. 296
 #: ../navit/country.c:155
 msgid "Kiribati"
-msgstr ""
+msgstr "Kiribati"
 
 #. 174
 #: ../navit/country.c:156
 msgid "Comoros"
-msgstr ""
+msgstr "Komoros"
 
 #. 659
 #: ../navit/country.c:157
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "St. Kitts en Nevis"
 
 #. 408
 #: ../navit/country.c:158
 msgid "Korea, Democratic People's Republic of"
-msgstr ""
+msgstr "Noord-Korea"
 
 #. 410
 #: ../navit/country.c:159
 msgid "Korea, Republic of"
-msgstr ""
+msgstr "Suid-Korea"
 
 #. 414
 #: ../navit/country.c:160
 msgid "Kuwait"
-msgstr ""
+msgstr "Koeweit"
 
 #. 136
 #: ../navit/country.c:161
 msgid "Cayman Islands"
-msgstr ""
+msgstr "Kaaimanseilande"
 
 #. 398
 #: ../navit/country.c:162
 msgid "Kazakhstan"
-msgstr ""
+msgstr "Kazakstan"
 
 #. 418
 #: ../navit/country.c:163
 msgid "Lao People's Democratic Republic"
-msgstr ""
+msgstr "Laos"
 
 #. 422
 #: ../navit/country.c:164
 msgid "Lebanon"
-msgstr ""
+msgstr "Libanon"
 
 #. 662
 #: ../navit/country.c:165
 msgid "Saint Lucia"
-msgstr ""
+msgstr "St. Lucia"
 
 #. 438
 #: ../navit/country.c:166
 msgid "Liechtenstein"
-msgstr ""
+msgstr "Liechtenstein"
 
 #. 144
 #: ../navit/country.c:167
 msgid "Sri Lanka"
-msgstr ""
+msgstr "Sri Lanka"
 
 #. 430
 #: ../navit/country.c:168
 msgid "Liberia"
-msgstr ""
+msgstr "Liberië"
 
 #. 426
 #: ../navit/country.c:169
 msgid "Lesotho"
-msgstr ""
+msgstr "Lesotho"
 
 #. 440
 #: ../navit/country.c:170
 msgid "Lithuania"
-msgstr ""
+msgstr "Litoue"
 
 #. 442
 #: ../navit/country.c:171
 msgid "Luxembourg"
-msgstr ""
+msgstr "Luxenburg"
 
 #. 428
 #: ../navit/country.c:172
 msgid "Latvia"
-msgstr ""
+msgstr "Letland"
 
 #. 434
 #: ../navit/country.c:173
 msgid "Libyan Arab Jamahiriya"
-msgstr ""
+msgstr "Libië"
 
 #. 504
 #: ../navit/country.c:174
 msgid "Morocco"
-msgstr ""
+msgstr "Marokko"
 
 #. 492
 #: ../navit/country.c:175
 msgid "Monaco"
-msgstr ""
+msgstr "Monako"
 
 #. 498
 #: ../navit/country.c:176
 msgid "Moldova, Republic of"
-msgstr ""
+msgstr "Moldawië"
 
 #. 499
 #: ../navit/country.c:177
 msgid "Montenegro"
-msgstr ""
+msgstr "Montenegro"
 
 #. 663
 #: ../navit/country.c:178
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "St. Martin"
 
 #. 450
 #: ../navit/country.c:179
 msgid "Madagascar"
-msgstr ""
+msgstr "Madagaskar"
 
 #. 584
 #: ../navit/country.c:180
 msgid "Marshall Islands"
-msgstr ""
+msgstr "Marshall-eilande"
 
 #. 807
 #: ../navit/country.c:181
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr ""
+msgstr "Masedonië"
 
 #. 466
 #: ../navit/country.c:182
 msgid "Mali"
-msgstr ""
+msgstr "Malie"
 
 #. 104
 #: ../navit/country.c:183
 msgid "Myanmar"
-msgstr ""
+msgstr "Mianmar"
 
 #. 496
 #: ../navit/country.c:184
 msgid "Mongolia"
-msgstr ""
+msgstr "Mongolië"
 
 #. 446
 #: ../navit/country.c:185
 msgid "Macao"
-msgstr ""
+msgstr "Makao"
 
 #. 580
 #: ../navit/country.c:186
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "Noordmarianaeilande"
 
 #. 474
 #: ../navit/country.c:187
 msgid "Martinique"
-msgstr ""
+msgstr "Martinique"
 
 #. 478
 #: ../navit/country.c:188
 msgid "Mauritania"
-msgstr ""
+msgstr "Mouritanië"
 
 #. 500
 #: ../navit/country.c:189
 msgid "Montserrat"
-msgstr ""
+msgstr "Montserrat"
 
 #. 470
 #: ../navit/country.c:190
 msgid "Malta"
-msgstr ""
+msgstr "Malta"
 
 #. 480
 #: ../navit/country.c:191
 msgid "Mauritius"
-msgstr ""
+msgstr "Mauritius"
 
 #. 462
 #: ../navit/country.c:192
 msgid "Maldives"
-msgstr ""
+msgstr "Maldive"
 
 #. 454
 #: ../navit/country.c:193
 msgid "Malawi"
-msgstr ""
+msgstr "Malawi"
 
 #. 484
 #: ../navit/country.c:194
 msgid "Mexico"
-msgstr ""
+msgstr "Meksiko"
 
 #. 458
 #: ../navit/country.c:195
 msgid "Malaysia"
-msgstr ""
+msgstr "Maleisië"
 
 #. 508
 #: ../navit/country.c:196
 msgid "Mozambique"
-msgstr ""
+msgstr "Mosambiek"
 
 #. 516
 #: ../navit/country.c:197
 msgid "Namibia"
-msgstr ""
+msgstr "Namibië"
 
 #. 540
 #: ../navit/country.c:198
 msgid "New Caledonia"
-msgstr ""
+msgstr "Nieu-Kaledonië"
 
 #. 562
 #: ../navit/country.c:199
 msgid "Niger"
-msgstr ""
+msgstr "Niger"
 
 #. 574
 #: ../navit/country.c:200
 msgid "Norfolk Island"
-msgstr ""
+msgstr "Norfolk-eiland"
 
 #. 566
 #: ../navit/country.c:201
 msgid "Nigeria"
-msgstr ""
+msgstr "Nigerië"
 
 #. 558
 #: ../navit/country.c:202
 msgid "Nicaragua"
-msgstr ""
+msgstr "Nikaragua"
 
 #. 528
 #: ../navit/country.c:203
 msgid "Netherlands"
-msgstr ""
+msgstr "Nederland"
 
 #. 578
 #: ../navit/country.c:204
 msgid "Norway"
-msgstr ""
+msgstr "Noorweë"
 
 #. 524
 #: ../navit/country.c:205
 msgid "Nepal"
-msgstr ""
+msgstr "Nepal"
 
 #. 520
 #: ../navit/country.c:206
 msgid "Nauru"
-msgstr ""
+msgstr "Naoeroe"
 
 #. 570
 #: ../navit/country.c:207
 msgid "Niue"
-msgstr ""
+msgstr "Niue"
 
 #. 554
 #: ../navit/country.c:208
 msgid "New Zealand"
-msgstr ""
+msgstr "Nieu-Seeland"
 
 #. 512
 #: ../navit/country.c:209
 msgid "Oman"
-msgstr ""
+msgstr "Oman"
 
 #. 591
 #: ../navit/country.c:210
 msgid "Panama"
-msgstr ""
+msgstr "Panama"
 
 #. 604
 #: ../navit/country.c:211
 msgid "Peru"
-msgstr ""
+msgstr "Peru"
 
 #. 258
 #: ../navit/country.c:212
 msgid "French Polynesia"
-msgstr ""
+msgstr "Frans Polinesië"
 
 #. 598
 #: ../navit/country.c:213
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "Papoea Nieu-Guinee"
 
 #. 608
 #: ../navit/country.c:214
 msgid "Philippines"
-msgstr ""
+msgstr "Filippyne"
 
 #. 586
 #: ../navit/country.c:215
 msgid "Pakistan"
-msgstr ""
+msgstr "Pakistan"
 
 #. 616
 #: ../navit/country.c:216
 msgid "Poland"
-msgstr ""
+msgstr "Pole"
 
 #. 666
 #: ../navit/country.c:217
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "St. Pierre en Miquelon"
 
 #. 612
 #: ../navit/country.c:218
 msgid "Pitcairn"
-msgstr ""
+msgstr "Pitcairn Eilande"
 
 #. 630
 #: ../navit/country.c:219
 msgid "Puerto Rico"
-msgstr ""
+msgstr "Puerto Rico"
 
 #. 275
 #: ../navit/country.c:220
 msgid "Palestinian Territory, Occupied"
-msgstr ""
+msgstr "Palestynse Gebied, Besette"
 
 #. 620
 #: ../navit/country.c:221
 msgid "Portugal"
-msgstr ""
+msgstr "Portugal"
 
 #. 585
 #: ../navit/country.c:222
 msgid "Palau"
-msgstr ""
+msgstr "Palau"
 
 #. 600
 #: ../navit/country.c:223
 msgid "Paraguay"
-msgstr ""
+msgstr "Paraguaai"
 
 #. 634
 #: ../navit/country.c:224
 msgid "Qatar"
-msgstr ""
+msgstr "Katar"
 
 #. 638
 #: ../navit/country.c:225
 msgid "Reunion"
-msgstr ""
+msgstr "Réunion"
 
 #. 642
 #: ../navit/country.c:226
 msgid "Romania"
-msgstr ""
+msgstr "Roemenië"
 
 #. 688
 #: ../navit/country.c:227
 msgid "Serbia"
-msgstr ""
+msgstr "Serwië"
 
 #. 643
 #: ../navit/country.c:228
 msgid "Russian Federation"
-msgstr ""
+msgstr "Rusland"
 
 #. 646
 #: ../navit/country.c:229
 msgid "Rwanda"
-msgstr ""
+msgstr "Rwanda"
 
 #. 682
 #: ../navit/country.c:230
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "Saoedi-Arabië"
 
 #. 090
 #: ../navit/country.c:231
 msgid "Solomon Islands"
-msgstr ""
+msgstr "Solomon-eilande"
 
 #. 690
 #: ../navit/country.c:232
 msgid "Seychelles"
-msgstr ""
+msgstr "Seychelle"
 
 #. 736
 #: ../navit/country.c:233
 msgid "Sudan"
-msgstr ""
+msgstr "Soedan"
 
 #. 752
 #: ../navit/country.c:234
 msgid "Sweden"
-msgstr ""
+msgstr "Swede"
 
 #. 702
 #: ../navit/country.c:235
 msgid "Singapore"
-msgstr ""
+msgstr "Singapoer"
 
 #. 654
 #: ../navit/country.c:236
 msgid "Saint Helena"
-msgstr ""
+msgstr "St. Helena"
 
 #. 705
 #: ../navit/country.c:237
 msgid "Slovenia"
-msgstr ""
+msgstr "Slovenië"
 
 #. 744
 #: ../navit/country.c:238
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "Svalbard en Jan Mayen"
 
 #. 703
 #: ../navit/country.c:239
 msgid "Slovakia"
-msgstr ""
+msgstr "Slowakye"
 
 #. 694
 #: ../navit/country.c:240
 msgid "Sierra Leone"
-msgstr ""
+msgstr "Sierra Leone"
 
 #. 674
 #: ../navit/country.c:241
 msgid "San Marino"
-msgstr ""
+msgstr "San Marino"
 
 #. 686
 #: ../navit/country.c:242
 msgid "Senegal"
-msgstr ""
+msgstr "Senegal"
 
 #. 706
 #: ../navit/country.c:243
 msgid "Somalia"
-msgstr ""
+msgstr "Somalië"
 
 #. 740
 #: ../navit/country.c:244
 msgid "Suriname"
-msgstr ""
+msgstr "Suriname"
 
 #. 678
 #: ../navit/country.c:245
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "Sao Tomé en Principe"
 
 #. 222
 #: ../navit/country.c:246
 msgid "El Salvador"
-msgstr ""
+msgstr "Salvador"
 
 #. 760
 #: ../navit/country.c:247
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "Sirië"
 
 #. 748
 #: ../navit/country.c:248
 msgid "Swaziland"
-msgstr ""
+msgstr "Swaziland"
 
 #. 796
 #: ../navit/country.c:249
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Turkse en Caicos Eilande"
 
 #. 148
 #: ../navit/country.c:250
 msgid "Chad"
-msgstr ""
+msgstr "Tsjaad"
 
 #. 260
 #: ../navit/country.c:251
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Franse Suidelike gebiede"
 
 #. 768
 #: ../navit/country.c:252
 msgid "Togo"
-msgstr ""
+msgstr "Togo"
 
 #. 764
 #: ../navit/country.c:253
 msgid "Thailand"
-msgstr ""
+msgstr "Thailand"
 
 #. 762
 #: ../navit/country.c:254
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tadjikistan"
 
 #. 772
 #: ../navit/country.c:255
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #. 626
 #: ../navit/country.c:256
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Oos-Timor"
 
 #. 795
 #: ../navit/country.c:257
 msgid "Turkmenistan"
-msgstr ""
+msgstr "Turkmenistan"
 
 #. 788
 #: ../navit/country.c:258
 msgid "Tunisia"
-msgstr ""
+msgstr "Tunisië"
 
 #. 776
 #: ../navit/country.c:259
 msgid "Tonga"
-msgstr ""
+msgstr "Tonga"
 
 #. 792
 #: ../navit/country.c:260
 msgid "Turkey"
-msgstr ""
+msgstr "Turkye"
 
 #. 780
 #: ../navit/country.c:261
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "Trinidad en Tobago"
 
 #. 798
 #: ../navit/country.c:262
 msgid "Tuvalu"
-msgstr ""
+msgstr "Toewaloe"
 
 #. 158
 #: ../navit/country.c:263
 msgid "Taiwan, Province of China"
-msgstr ""
+msgstr "Taiwan"
 
 #. 834
 #: ../navit/country.c:264
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "Tanzanië"
 
 #. 804
 #: ../navit/country.c:265
 msgid "Ukraine"
-msgstr ""
+msgstr "Oekraïne"
 
 #. 800
 #: ../navit/country.c:266
 msgid "Uganda"
-msgstr ""
+msgstr "Oeganda"
 
 #. 581
 #: ../navit/country.c:267
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "Verenigde State Kleiner uitliggende eilande"
 
 #. 840
 #: ../navit/country.c:268
 msgid "United States"
-msgstr ""
+msgstr "Vereenigde State"
 
 #. 858
 #: ../navit/country.c:269
 msgid "Uruguay"
-msgstr ""
+msgstr "Uruguay"
 
 #. 860
 #: ../navit/country.c:270
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Oesbekistan"
 
 #. 336
 #: ../navit/country.c:271
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "Vatikaan"
 
 #. 670
 #: ../navit/country.c:272
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "St. Vincent en die Grenadine"
 
 #. 862
 #: ../navit/country.c:273
 msgid "Venezuela"
-msgstr ""
+msgstr "Venezuela"
 
 #. 092
 #: ../navit/country.c:274
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "Britse Maagde eilande"
 
 #. 850
 #: ../navit/country.c:275
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "Amerikaanse Maagde eilande"
 
 #. 704
 #: ../navit/country.c:276
 msgid "Viet Nam"
-msgstr ""
+msgstr "Viëtnam"
 
 #. 548
 #: ../navit/country.c:277
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #. 876
 #: ../navit/country.c:278
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "Wallis- en Futuna-eilande"
 
 #. 882
 #: ../navit/country.c:279
 msgid "Samoa"
-msgstr ""
+msgstr "Samoa"
 
 #. 887
 #: ../navit/country.c:280
 msgid "Yemen"
-msgstr ""
+msgstr "Jemen"
 
 #. 175
 #: ../navit/country.c:281
 msgid "Mayotte"
-msgstr ""
+msgstr "Mayotte"
 
 #. 710
 #: ../navit/country.c:282
 msgid "South Africa"
-msgstr ""
+msgstr "Suid-Afrika"
 
 #. 894
 #: ../navit/country.c:283
 msgid "Zambia"
-msgstr ""
+msgstr "Zambië"
 
 #. 716
 #: ../navit/country.c:284
 msgid "Zimbabwe"
-msgstr ""
+msgstr "Zimbabwe"
 
 #: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
 #: ../navit/gui/gtk/destination.c:120 ../navit/gui/gtk/destination.c:121
 msgid "Car"
-msgstr ""
+msgstr "Kar"
 
 #: ../navit/gui/gtk/destination.c:118
 msgid "Iso2"
-msgstr ""
+msgstr "Iso2"
 
 #: ../navit/gui/gtk/destination.c:118
 msgid "Iso3"
-msgstr ""
+msgstr "Iso3"
 
 #: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:428
 #: ../navit/gui/internal/gui_internal.c:2454
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
 #: ../navit/gui/gtk/destination.c:121
 msgid "Postal"
-msgstr ""
+msgstr "Pos"
 
 #: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
 #: ../navit/gui/gtk/destination.c:121
@@ -1541,61 +1561,61 @@ msgstr ""
 #: ../navit/gui/internal/gui_internal.c:2462
 #: ../navit/gui/internal/gui_internal.c:2595
 msgid "Town"
-msgstr ""
+msgstr "Dorp"
 
 #: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
 #: ../navit/gui/gtk/destination.c:121
 msgid "District"
-msgstr ""
+msgstr "Distrik"
 
 #: ../navit/gui/gtk/destination.c:120 ../navit/gui/gtk/destination.c:121
 #: ../navit/gui/gtk/destination.c:439
 #: ../navit/gui/internal/gui_internal.c:2414
 #: ../navit/gui/internal/gui_internal.c:2423
 msgid "Street"
-msgstr ""
+msgstr "Straat"
 
 #: ../navit/gui/gtk/destination.c:121 ../navit/gui/gtk/destination.c:441
 msgid "Number"
-msgstr ""
+msgstr "Nommer"
 
 #: ../navit/gui/gtk/destination.c:422
 msgid "Enter Destination"
-msgstr ""
+msgstr "Kies Bestemming"
 
 #: ../navit/gui/gtk/destination.c:431
 msgid "Zip Code"
-msgstr ""
+msgstr "Poskode"
 
 #: ../navit/gui/gtk/destination.c:433
 msgid "City"
-msgstr ""
+msgstr "Stad"
 
 #: ../navit/gui/gtk/destination.c:436
 msgid "District/Township"
-msgstr ""
+msgstr "Distrik/Kontrei"
 
 #: ../navit/gui/gtk/destination.c:464 ../navit/gui/gtk/gui_gtk_action.c:185
 msgid "Map"
-msgstr ""
+msgstr "Kaart"
 
 #: ../navit/gui/gtk/destination.c:465
 msgid "Bookmark"
-msgstr ""
+msgstr "Boekmerk"
 
 #: ../navit/gui/gtk/destination.c:466 ../navit/gui/gtk/gui_gtk_action.c:197
 msgid "Destination"
-msgstr ""
+msgstr "Bestemming"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:181
 #: ../navit/gui/internal/gui_internal.c:2516
 #: ../navit/gui/internal/gui_internal.c:2710
 msgid "Display"
-msgstr ""
+msgstr "Skerm"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:182
 msgid "Route"
-msgstr ""
+msgstr "Roete"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:183
 msgid "Former Destinations"
@@ -1611,223 +1631,225 @@ msgstr "Boekmerke"
 #: ../navit/gui/internal/gui_internal.c:2473
 #: ../navit/gui/internal/gui_internal.c:2518
 msgid "Layout"
-msgstr ""
+msgstr "Uitleg"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:187
 msgid "Projection"
-msgstr ""
+msgstr "Skatting"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:188
 #: ../navit/gui/internal/gui_internal.c:2657
 #: ../navit/gui/internal/gui_internal.c:2718
 msgid "Vehicle"
-msgstr ""
+msgstr "Voertuig"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:189
 msgid "ZoomOut"
-msgstr ""
+msgstr "ZoomUit"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:190
 msgid "ZoomIn"
-msgstr ""
+msgstr "ZoomIn"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:191
 msgid "Recalculate"
-msgstr ""
+msgstr "Herbereken"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:193 ../navit/gui/gtk/gui_gtk_action.c:195
 msgid "Info"
-msgstr ""
+msgstr "Inligting"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:198
 msgid "Stop Navigation"
-msgstr ""
+msgstr "Stop Navigasie"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:199
 msgid "Test"
-msgstr ""
+msgstr "Toets"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:200
 msgid "_Quit"
-msgstr ""
+msgstr "_Sluit af"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:207
 msgid "Cursor"
-msgstr ""
+msgstr "Plekaanduier"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:208
 msgid "Lock on Road"
-msgstr ""
+msgstr "Koppel aan Pad"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:209
 #: ../navit/gui/internal/gui_internal.c:2692
 msgid "Northing"
-msgstr ""
+msgstr "Draai kaart noord"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:212 ../navit/gui/gtk/gui_gtk_action.c:214
 #: ../navit/gui/internal/gui_internal.c:2528
 msgid "Fullscreen"
-msgstr ""
+msgstr "Volskerm"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:222
 msgid "Data"
-msgstr ""
+msgstr "Data"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:58
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "N"
-msgstr ""
+msgstr "N"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:58
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "NE"
-msgstr ""
+msgstr "NO"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:58
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "E"
-msgstr ""
+msgstr "O"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:58
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "SE"
-msgstr ""
+msgstr "SO"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:58
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:58
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "SW"
-msgstr ""
+msgstr "SW"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:58
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "W"
-msgstr ""
+msgstr "W"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:58
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "NW"
-msgstr ""
+msgstr "NW"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:74
 msgid "No"
-msgstr ""
+msgstr "Nee"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:75
 #: ../navit/gui/internal/gui_internal.c:2535
 msgid "2D"
-msgstr ""
+msgstr "2D"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:76
 #: ../navit/gui/internal/gui_internal.c:2541
 msgid "3D"
-msgstr ""
+msgstr "3D"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:78
 msgid "OT"
-msgstr ""
+msgstr "OT"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "Roete %4.0fkm %02d:%02d aankomstyd"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:164
 msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
+msgstr "Roete 0000km  0+00:00 aankomstyd"
 
 #: ../navit/gui/internal/gui_internal.c:1184
 msgid "Back to map"
-msgstr ""
+msgstr "Terug kaart toe"
 
 #: ../navit/gui/internal/gui_internal.c:1189
 msgid "Main Menu"
-msgstr ""
+msgstr "Hoofkieslys"
 
 #: ../navit/gui/internal/gui_internal.c:1640
 #: ../navit/gui/internal/gui_internal.c:1840
 msgid "POIs"
-msgstr ""
+msgstr "Belangpunte"
 
 #: ../navit/gui/internal/gui_internal.c:1797
 msgid "Streets"
-msgstr ""
+msgstr "Strate"
 
 #: ../navit/gui/internal/gui_internal.c:1813
 msgid "View in Browser"
-msgstr ""
+msgstr "Besigtig in blaaier"
 
 #: ../navit/gui/internal/gui_internal.c:1819
 msgid "View Attributes"
-msgstr ""
+msgstr "Besigtig eienskappe"
 
 #: ../navit/gui/internal/gui_internal.c:1854
 msgid "View on map"
-msgstr ""
+msgstr "Beloer op kaart"
 
 #: ../navit/gui/internal/gui_internal.c:1967
 #, c-format
 msgid "Bookmark %s"
-msgstr ""
+msgstr "Boekmerk %s"
 
 #: ../navit/gui/internal/gui_internal.c:2523
 msgid "Window Mode"
-msgstr ""
+msgstr "Venster Modus"
 
 #: ../navit/gui/internal/gui_internal.c:2569
 #: ../navit/gui/internal/gui_internal.c:2758
 msgid "Actions"
-msgstr ""
+msgstr "Aksies"
 
 #: ../navit/gui/internal/gui_internal.c:2580
 msgid "Map Point"
-msgstr ""
+msgstr "Kaart punt"
 
 #: ../navit/gui/internal/gui_internal.c:2590
 msgid "Vehicle Position"
-msgstr ""
+msgstr "Voertuig posisie"
 
 #: ../navit/gui/internal/gui_internal.c:2599
 msgid "Quit"
-msgstr ""
+msgstr "Verlaat"
 
 #: ../navit/gui/internal/gui_internal.c:2605
 msgid ""
 "Stop\n"
 "Navigation"
 msgstr ""
+"Stop\n"
+"Navigasie"
 
 #: ../navit/gui/internal/gui_internal.c:2621
 #: ../navit/gui/internal/gui_internal.c:2714
 msgid "Maps"
-msgstr ""
+msgstr "Kaarte"
 
 #: ../navit/gui/internal/gui_internal.c:2678
 #: ../navit/gui/internal/gui_internal.c:2722
 msgid "Rules"
-msgstr ""
+msgstr "Reëls"
 
 #: ../navit/gui/internal/gui_internal.c:2686
 msgid "Lock on road"
-msgstr ""
+msgstr "Koppel aan pad"
 
 #: ../navit/gui/internal/gui_internal.c:2698
 msgid "Map follows Vehicle"
-msgstr ""
+msgstr "Kaart volg voertuig"
 
 #: ../navit/gui/internal/gui_internal.c:2708
 #: ../navit/gui/internal/gui_internal.c:2761
 msgid "Settings"
-msgstr ""
+msgstr "Instellings"
 
 #: ../navit/gui/internal/gui_internal.c:2756
 msgid "Main menu"
-msgstr ""
+msgstr "Hoofkieslys"
 
 #: ../navit/gui/internal/gui_internal.c:2764
 msgid "Tools"
-msgstr ""
+msgstr "Gereedskap"
