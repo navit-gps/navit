@@ -8,6 +8,7 @@ AM_CPPFLAGS+=-I$(srcdir)
 modulemap_LTLIBRARIES = libmap_garmin.la
 libmap_garmin_la_SOURCES = garmin.c garmin.h gar2navit.c gar2navit.h
 libmap_garmin_la_LIBADD = @LIBGARMIN_LIBS@
+libmap_garmin_la_LDFLAGS = -module
 nodist_libmap_garmin_la_SOURCES = g2nbuiltin.h
 builddir = @builddir@
 

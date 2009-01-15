@@ -3,4 +3,4 @@ AM_CPPFLAGS = @NAVIT_CFLAGS@ -I$(top_srcdir)/navit -DMODULE=speech_speech_dispat
 modulespeech_LTLIBRARIES = libspeech_speech_dispatcher.la
 libspeech_speech_dispatcher_la_SOURCES = speech_speech_dispatcher.c
 libspeech_speech_dispatcher_la_LIBADD = @SPEECHD_LIBS@
-
+libspeech_speech_dispatcher_la_LDFLAGS = -module
