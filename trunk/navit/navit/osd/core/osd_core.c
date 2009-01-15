@@ -51,12 +51,39 @@ struct osd_item {
 	struct graphics_gc *graphic_bg, *graphic_fg_white;
 	struct graphics_font *font;
 	struct callback *cb;
+	int pressed;
+	char *command;
 };
 
 struct compass {
 	struct osd_item osd_item;
 	struct graphics_gc *green;
 };
+
+static void
+wrap_point(struct point *p, struct navit *nav)
+{
+	if (p->x < 0)
+		p->x += navit_get_width(nav);
+	if (p->y < 0)
+		p->y += navit_get_height(nav);
+
+}
+
+static void
+osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button, struct point *p)
+{
+	struct point bp = this->p;
+	wrap_point(&bp, nav);
+	if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->w || p->y > bp.y + this->h) && !this->pressed)
+		return;
+	navit_ignore_button(nav);
+	this->pressed = pressed;
+	if (pressed) {
+		dbg(0, "calling command '%s'\n", this->command);
+		navit_command_call(nav, this->command);
+	}
+}
 
 static void
 osd_set_std_attr(struct attr **attrs, struct osd_item *item)
@@ -100,7 +127,9 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item)
 	attr=attr_search(attrs, NULL, attr_background_color);
 	if (attr)
 		item->color_bg=*attr->u.color;
-
+	attr = attr_search(attrs, NULL, attr_command);
+	if (attr) 
+		item->command = g_strdup(attr->u.str);
 #if 0
         attr=attr_search(attrs, NULL, attr_text_color);
         if (attr)
@@ -1153,62 +1182,19 @@ osd_street_name_new(struct navit *nav, struct osd_methods *meth,
 
 struct osd_button {
 	int use_overlay;
-	int osd_configuration;
-	struct point p;
-	int w,h;
-	struct navit *nav;
-	struct graphics *gra;
-	struct graphics_gc *gc;
-	struct color c;
-	struct callback *navit_init_cb;
-	struct callback *draw_cb;
+	struct osd_item item;
+	struct callback *draw_cb,*navit_init_cb;
 	struct graphics_image *img;
-	int pressed;
 	char *src;
-	char *command;
 };
 
-static void
-wrap_point(struct point *p, struct navit *nav)
-{
-	if (p->x < 0)
-		p->x += navit_get_width(nav);
-	if (p->y < 0)
-		p->y += navit_get_height(nav);
-
-}
 
 static void
-osd_button_click(struct osd_button *this, struct navit *nav, int pressed,
-		 int button, struct point *p)
+osd_button_draw(struct osd_button *this, struct navit *nav)
 {
-	struct point bp = this->p;
-	wrap_point(&bp, this->nav);
-	if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->w || p->y > bp.y + this->h) && !this->pressed)
-		return;
-	navit_ignore_button(nav);
-	this->pressed = pressed;
-	if (pressed) {
-		dbg(0, "calling command '%s'\n", this->command);
-		navit_command_call(nav, this->command);
-	}
-}
-
-static void
-osd_button_config(struct osd_button *this, struct navit *navit)
-{
-	struct attr osd_configuration;
-	if (!navit_get_attr(navit, attr_osd_configuration, &osd_configuration, NULL))
-		return;
-	graphics_overlay_disable(this->gra, (osd_configuration.u.num & this->osd_configuration) == 0);
-}
-
-static void
-osd_button_draw(struct osd_button *this)
-{
-	struct point bp = this->p;
-	wrap_point(&bp, this->nav);
-	graphics_draw_image(this->gra, this->gc, &bp, this->img);
+	struct point bp = this->item.p;
+	wrap_point(&bp, nav);
+	graphics_draw_image(this->item.gr, this->item.graphic_bg, &bp, this->img);
 }
 
 static void
@@ -1216,41 +1202,32 @@ osd_button_init(struct osd_button *this, struct navit *nav)
 {
 	struct graphics *gra = navit_get_graphics(nav);
 	dbg(1, "enter\n");
-	this->nav = nav;
-	this->gra = gra;
-	this->gc = graphics_gc_new(gra);
 	this->img = graphics_image_new(gra, this->src);
 	if (!this->img) {
 		dbg(0, "failed to load '%s'\n", this->src);
 		return;
 	}
-	this->w=this->img->width;
-	this->h=this->img->height;
+	if (!this->item.w)
+		this->item.w=this->img->width;
+	if (!this->item.h)
+		this->item.h=this->img->height;
 	if (this->use_overlay) {
 		struct graphics_image *img;
 		struct point p;
-		this->gra=graphics_overlay_new(gra, &this->p, this->w, this->h,65535,1);
-		graphics_image_free(gra, this->img);
-		this->img=NULL;
-		this->gc=graphics_gc_new(this->gra);
-		graphics_gc_set_foreground(this->gc, &this->c);
-		graphics_background_gc(this->gra, this->gc);
-		img=graphics_image_new(this->gra, this->src);
-		p.x=0;
-		p.y=0;
-		graphics_draw_mode(this->gra, draw_mode_begin);
-		graphics_draw_rectangle(this->gra, this->gc, &p, this->w, this->h);
-		graphics_draw_image(this->gra, this->gc, &p, img);
-		graphics_draw_mode(this->gra, draw_mode_end);
-		graphics_image_free(this->gra, img);
+		osd_set_std_graphic(nav, &this->item);
+		img=graphics_image_new(this->item.gr, this->src);
+		p.x=(this->item.w-this->img->width)/2;
+		p.y=(this->item.h-this->img->height)/2;
+		osd_std_draw(&this->item);
+		graphics_draw_image(this->item.gr, this->item.graphic_bg, &p, img);
+		graphics_draw_mode(this->item.gr, draw_mode_end);
+		graphics_image_free(this->item.gr, img);
 	} else {
-		this->gra=gra;
-		this->gc=graphics_gc_new(this->gra);
-		graphics_add_callback(gra, this->draw_cb=callback_new_attr_1(callback_cast(osd_button_draw), attr_postdraw, this));
+		this->item.gr=gra;
+		this->item.graphic_bg=graphics_gc_new(this->item.gr);
+		graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, this, nav));
 	}
-	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_button_click), attr_button, this));
-	navit_add_callback(nav, callback_new_attr_2(callback_cast (osd_button_config), attr_osd_configuration, this, nav));
-	osd_button_config(this, nav);
+	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_std_click), attr_button, &this->item));
 }
 
 static struct osd_priv *
@@ -1260,40 +1237,22 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 	struct osd_button *this = g_new0(struct osd_button, 1);
 	struct attr *attr;
 
-	this->osd_configuration=-1;
+	osd_set_std_attr(attrs, &this->item);
+
 	attr=attr_search(attrs, NULL, attr_use_overlay);
 	if (attr)
 		this->use_overlay=attr->u.num;
-	attr=attr_search(attrs, NULL, attr_osd_configuration);
-	if (attr)
-		this->osd_configuration=attr->u.num;
-	attr=attr_search(attrs, NULL, attr_color);
-	if (attr)
-		this->c=*attr->u.color;
-	attr = attr_search(attrs, NULL, attr_x);
-	if (attr)
-		this->p.x = attr->u.num;
-	attr = attr_search(attrs, NULL, attr_y);
-	if (attr)
-		this->p.y = attr->u.num;
-	attr = attr_search(attrs, NULL, attr_command);
-	if (!attr) {
+	if (!this->item.command) {
 		dbg(0, "no command\n");
 		goto error;
 	}
-	this->command = g_strdup(attr->u.str);
 	attr = attr_search(attrs, NULL, attr_src);
 	if (!attr) {
 		dbg(0, "no src\n");
 		goto error;
 	}
-	this->src =
-	    g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/xpm/", attr->u.str,
-		      NULL);
-	navit_add_callback(nav, this->navit_init_cb =
-			   callback_new_attr_1(callback_cast
-					       (osd_button_init),
-					       attr_navit, this));
+	this->src = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/xpm/", attr->u.str, NULL);
+	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_button_init), attr_navit, this));
 
 	return (struct osd_priv *) this;
       error:
