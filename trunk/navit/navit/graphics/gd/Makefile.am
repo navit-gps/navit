@@ -7,3 +7,4 @@ else
 noinst_LTLIBRARIES = libgraphics_gd.la
 endif
 libgraphics_gd_la_SOURCES = graphics_gd.c
+libgraphics_gd_la_LDFLAGS = -module
