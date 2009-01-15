@@ -6,3 +6,4 @@ else
   noinst_LTLIBRARIES = libmap_mg.la
 endif
 libmap_mg_la_SOURCES = map.c block.c town.c tree.c poly.c street.c mg.h
+libmap_mg_la_LDFLAGS = -module

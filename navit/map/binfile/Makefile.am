@@ -6,3 +6,4 @@ else
   noinst_LTLIBRARIES = libmap_binfile.la
 endif
 libmap_binfile_la_SOURCES = binfile.c
+libmap_binfile_la_LDFLAGS = -module

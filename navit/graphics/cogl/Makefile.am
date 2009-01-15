@@ -3,3 +3,4 @@ AM_CPPFLAGS = @NAVIT_CFLAGS@ @CLUTTER_CFLAGS@ @GLC_CFLAGS@ -I$(top_srcdir)/navit
 modulegraphics_LTLIBRARIES = libgraphics_cogl.la
 libgraphics_cogl_la_SOURCES = graphics_cogl.c navit_actor.c navit_actor.h
 libgraphics_cogl_la_LIBADD = @CLUTTER_LIBS@ @GLC_LIBS@
+libgraphics_cogl_la_LDFLAGS = -module
