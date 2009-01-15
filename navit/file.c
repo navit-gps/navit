@@ -43,9 +43,10 @@
 #define O_BINARY 0
 #endif
 
-#if 0
+#ifdef CACHE_SIZE
 static GHashTable *file_name_hash;
 #endif
+
 static struct cache *file_cache;
 
 struct file_cache_id {
