@@ -2254,6 +2254,8 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 static struct widget *
 gui_internal_keyboard(struct gui_priv *this, int mode)
 {
+	if (! this->keyboard)
+		return NULL;
 	return gui_internal_keyboard_do(this, NULL, mode);
 }
 
@@ -3139,15 +3141,69 @@ static struct gui_internal_methods gui_internal_methods_ext = {
 	gui_internal_add_callback,
 	gui_internal_remove_callback,
 	gui_internal_menu_render,
+        image_new_xs,
         image_new_l,
 };
+
+
+static enum flags 
+gui_internal_get_flags(struct widget *widget)
+{
+	return widget->flags;
+}
+
+static void
+gui_internal_set_flags(struct widget *widget, enum flags flags)
+{
+	widget->flags=flags;
+}
+
+static int
+gui_internal_get_state(struct widget *widget)
+{
+	return widget->state;
+}
+
+static void
+gui_internal_set_state(struct widget *widget, int state)
+{
+	widget->state=state;
+}
+
+static void
+gui_internal_set_func(struct widget *widget, void (*func)(struct gui_priv *priv, struct widget *widget, void *data))
+{
+	widget->func=func;
+}
+
+static void
+gui_internal_set_data(struct widget *widget, void *data)
+{
+	widget->data=data;
+}
+
+static void
+gui_internal_set_default_background(struct gui_priv *this, struct widget *widget)
+{
+	widget->background=this->background;
+}
 
 static struct gui_internal_widget_methods gui_internal_widget_methods = {
     	gui_internal_widget_append,
         gui_internal_button_new,
         gui_internal_button_new_with_callback,
+        gui_internal_box_new,
+        gui_internal_label_new,
+        gui_internal_image_new,
+        gui_internal_keyboard,
 	gui_internal_menu,
-
+	gui_internal_get_flags,
+	gui_internal_set_flags,
+	gui_internal_get_state,
+	gui_internal_set_state,
+	gui_internal_set_func,
+	gui_internal_set_data,
+	gui_internal_set_default_background,
 };
 
 
