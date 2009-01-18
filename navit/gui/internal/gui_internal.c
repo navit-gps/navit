@@ -59,47 +59,7 @@
 #include "config.h"
 #include "event.h"
 #include "navit_nls.h"
-
-#define STATE_VISIBLE 1
-#define STATE_SELECTED 2
-#define STATE_HIGHLIGHTED 4
-#define STATE_SENSITIVE 8
-#define STATE_EDIT 16
-#define STATE_CLEAR 32
-
-enum widget_type {
-	widget_box=1,
-	widget_button,
-	widget_label,
-	widget_image,
-	widget_table,
-	widget_table_row
-};
-
-enum flags {
-	gravity_none=0x00,
-	gravity_left=1,
-	gravity_xcenter=2,
-	gravity_right=4,
-	gravity_top=8,
-	gravity_ycenter=16,
-	gravity_bottom=32,
-	gravity_left_top=gravity_left|gravity_top,
-	gravity_top_center=gravity_xcenter|gravity_top,
-	gravity_right_top=gravity_right|gravity_top,
-	gravity_left_center=gravity_left|gravity_ycenter,
-	gravity_center=gravity_xcenter|gravity_ycenter,
-	gravity_right_center=gravity_right|gravity_ycenter,
-	gravity_left_bottom=gravity_left|gravity_bottom,
-	gravity_bottom_center=gravity_xcenter|gravity_bottom,
-	gravity_right_bottom=gravity_right|gravity_bottom,
-	flags_expand=0x100,
-	flags_fill=0x200,
-	orientation_horizontal=0x10000,
-	orientation_vertical=0x20000,
-	orientation_horizontal_vertical=0x40000,
-};
-
+#include "gui_internal.h"
 
 struct menu_data {
 	struct widget *search_list;
@@ -123,7 +83,7 @@ struct widget {
 	  * @li widget The widget that is receiving the button press.
 	  *
 	  */
-	void (*func)(struct gui_priv *priv, struct widget *widget);
+	void (*func)(struct gui_priv *priv, struct widget *widget, void *data);
 	int reason;
 	int datai;
 	void *data;
@@ -249,6 +209,8 @@ struct gui_priv {
 	struct callback *motion_cb,*button_cb,*resize_cb,*keypress_cb,*idle_cb, *motion_timeout_callback;
 	struct event_timeout *motion_timeout_event;
 	struct point current;
+	struct gui_internal_data data;
+	struct callback_list *cbl;
 };
 
 
@@ -1097,7 +1059,7 @@ static void gui_internal_call_highlighted(struct gui_priv *this)
 	if (! this->highlighted || ! this->highlighted->func)
 		return;
 	this->highlighted->reason=1;
-	this->highlighted->func(this, this->highlighted);
+	this->highlighted->func(this, this->highlighted, this->highlighted->data);
 }
 
 static void
@@ -2017,7 +1979,7 @@ static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 		}
 		if (wi->func) {
 			wi->reason=2;
-			wi->func(this, wi);
+			wi->func(this, wi, wi->data);
 		}
 		gui_internal_widget_render(this, wi);
 	}
@@ -2645,6 +2607,32 @@ gui_internal_cmd_maps(struct gui_priv *this, struct widget *wm)
 	gui_internal_menu_render(this);
 	
 }
+static void
+gui_internal_cmd_set_active_vehicle(struct gui_priv *this, struct widget *wm)
+{
+	struct attr vehicle = {attr_vehicle,{wm->data}};
+	navit_set_attr(this->nav, &vehicle);
+}
+
+static void
+gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm)
+{
+	struct widget *w,*wb;
+	struct attr active_vehicle;
+	wb=gui_internal_menu(this, wm->text);
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	if (!navit_get_attr(this->nav, attr_vehicle, &active_vehicle, NULL))
+		active_vehicle.u.vehicle=NULL;
+	if (active_vehicle.u.vehicle != wm->data) {
+		gui_internal_widget_append(w,
+			gui_internal_button_new_with_callback(this, _("Set as active"),
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_set_active_vehicle, wm->data));
+	}
+	callback_list_call_attr_2(this->cbl, attr_vehicle, w, wm->data);
+	gui_internal_menu_render(this);
+}
 
 static void
 gui_internal_cmd_vehicle(struct gui_priv *this, struct widget *wm)
@@ -2652,17 +2640,22 @@ gui_internal_cmd_vehicle(struct gui_priv *this, struct widget *wm)
 	struct attr attr,vattr;
 	struct widget *w,*wb,*wl;
 	struct attr_iter *iter;
+	struct attr active_vehicle;
 
 
 	wb=gui_internal_menu(this, _("Vehicle"));
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
+	if (!navit_get_attr(this->nav, attr_vehicle, &active_vehicle, NULL))
+		active_vehicle.u.vehicle=NULL;
 	iter=navit_attr_iter_new();
 	while(navit_get_attr(this->nav, attr_vehicle, &attr, iter)) {
 		vehicle_get_attr(attr.u.vehicle, attr_name, &vattr, NULL);
-		wl=gui_internal_button_navit_attr_new(this, vattr.u.str, gravity_left_center|orientation_horizontal|flags_fill,
-			&attr, NULL);
+		wl=gui_internal_button_new_with_callback(this, vattr.u.str,
+			image_new_l(this, attr.u.vehicle == active_vehicle.u.vehicle ? "gui_active" : "gui_inactive"), gravity_left_center|orientation_horizontal|flags_fill,
+			gui_internal_cmd_vehicle_settings, attr.u.vehicle);
+		wl->text=g_strdup(vattr.u.str);
 		gui_internal_widget_append(w, wl);
 	}
 	navit_attr_iter_destroy(iter);
@@ -2768,6 +2761,8 @@ static void gui_internal_menu_root(struct gui_priv *this)
 			image_new_l(this, "gui_settings"), gravity_center|orientation_vertical,
 			gui_internal_cmd_route, NULL));
 #endif
+
+	callback_list_call_attr_1(this->cbl, attr_gui, w);
 							      
 	gui_internal_menu_render(this);
 	graphics_draw_mode(this->gra, draw_mode_end);
@@ -3119,6 +3114,43 @@ struct gui_methods gui_internal_methods = {
         gui_internal_set_graphics,
 };
 
+static void
+gui_internal_get_data(struct gui_priv *priv, char *command, struct attr **in, struct attr ***out)
+{
+	struct attr private_data = (struct attr) { attr_private_data, {(void *)&priv->data}};
+	if (out)  
+		*out=attr_generic_add_attr(*out, &private_data);
+}
+
+static void
+gui_internal_add_callback(struct gui_priv *priv, struct callback *cb)
+{
+	callback_list_add(priv->cbl, cb);
+}
+
+static void
+gui_internal_remove_callback(struct gui_priv *priv, struct callback *cb)
+{
+	callback_list_remove(priv->cbl, cb);
+}
+
+
+static struct gui_internal_methods gui_internal_methods_ext = {
+	gui_internal_add_callback,
+	gui_internal_remove_callback,
+	gui_internal_menu_render,
+        image_new_l,
+};
+
+static struct gui_internal_widget_methods gui_internal_widget_methods = {
+    	gui_internal_widget_append,
+        gui_internal_button_new,
+        gui_internal_button_new_with_callback,
+	gui_internal_menu,
+
+};
+
+
 //##############################################################################################################
 //# Description: 
 //# Comment: 
@@ -3137,6 +3169,8 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 		this->menu_on_map_click=1;
 	navit_command_register(nav,"gui_internal_menu",callback_new_3(callback_cast(gui_internal_cmd_menu),this,NULL,(void *)1));
 	navit_command_register(nav,"gui_internal_fullscreen",callback_new_2(callback_cast(gui_internal_cmd_fullscreen),this,NULL));
+	dbg(0,"register\n");
+	navit_command_register(nav,"gui_internal_get_data",callback_new_1(callback_cast(gui_internal_get_data),this));
 
 	if( (attr=attr_search(attrs,NULL,attr_font_size)))
         {
@@ -3189,6 +3223,11 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	
     if( (attr=attr_search(attrs,NULL,attr_fullscreen)))
       this->fullscreen=attr->u.num;
+
+	this->data.priv=this;
+	this->data.gui=&gui_internal_methods_ext;
+	this->data.widget=&gui_internal_widget_methods;
+	this->cbl=callback_list_new();
 
 	return this;
 }
