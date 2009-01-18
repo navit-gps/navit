@@ -1,0 +1,64 @@
+struct widget;
+struct graphics_image;
+
+#define STATE_VISIBLE 1
+#define STATE_SELECTED 2
+#define STATE_HIGHLIGHTED 4
+#define STATE_SENSITIVE 8
+#define STATE_EDIT 16
+#define STATE_CLEAR 32
+
+enum widget_type {
+	widget_box=1,
+	widget_button,
+	widget_label,
+	widget_image,
+	widget_table,
+	widget_table_row
+};
+
+enum flags {
+	gravity_none=0x00,
+	gravity_left=1,
+	gravity_xcenter=2,
+	gravity_right=4,
+	gravity_top=8,
+	gravity_ycenter=16,
+	gravity_bottom=32,
+	gravity_left_top=gravity_left|gravity_top,
+	gravity_top_center=gravity_xcenter|gravity_top,
+	gravity_right_top=gravity_right|gravity_top,
+	gravity_left_center=gravity_left|gravity_ycenter,
+	gravity_center=gravity_xcenter|gravity_ycenter,
+	gravity_right_center=gravity_right|gravity_ycenter,
+	gravity_left_bottom=gravity_left|gravity_bottom,
+	gravity_bottom_center=gravity_xcenter|gravity_bottom,
+	gravity_right_bottom=gravity_right|gravity_bottom,
+	flags_expand=0x100,
+	flags_fill=0x200,
+	orientation_horizontal=0x10000,
+	orientation_vertical=0x20000,
+	orientation_horizontal_vertical=0x40000,
+};
+
+
+struct gui_internal_methods {
+	void (*add_callback)(struct gui_priv *priv, struct callback *cb);
+	void (*remove_callback)(struct gui_priv *priv, struct callback *cb);
+	void (*menu_render)(struct gui_priv *this);
+	struct graphics_image * (*image_new_l)(struct gui_priv *this, char *name);
+};
+
+struct gui_internal_widget_methods {
+	void (*append)(struct widget *parent, struct widget *child);
+	struct widget * (*button_new)(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags);
+	struct widget * (*button_new_with_callback)(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget), void *data);
+	struct widget * (*menu)(struct gui_priv *this, char *label);
+
+};
+
+struct gui_internal_data {
+	struct gui_priv *priv;
+	struct gui_internal_methods *gui;
+	struct gui_internal_widget_methods *widget;
+};
