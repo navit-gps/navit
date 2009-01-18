@@ -46,6 +46,7 @@ struct gui_internal_methods {
 	void (*add_callback)(struct gui_priv *priv, struct callback *cb);
 	void (*remove_callback)(struct gui_priv *priv, struct callback *cb);
 	void (*menu_render)(struct gui_priv *this);
+	struct graphics_image * (*image_new_xs)(struct gui_priv *this, char *name);
 	struct graphics_image * (*image_new_l)(struct gui_priv *this, char *name);
 };
 
@@ -53,7 +54,18 @@ struct gui_internal_widget_methods {
 	void (*append)(struct widget *parent, struct widget *child);
 	struct widget * (*button_new)(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags);
 	struct widget * (*button_new_with_callback)(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget), void *data);
+	struct widget * (*box_new)(struct gui_priv *this, enum flags flags);
+	struct widget * (*label_new)(struct gui_priv *this, char *text);
+	struct widget * (*image_new)(struct gui_priv *this, struct graphics_image *image);
+	struct widget * (*keyboard)(struct gui_priv *this, int mode);
 	struct widget * (*menu)(struct gui_priv *this, char *label);
+	enum flags (*get_flags)(struct widget *widget);
+	void (*set_flags)(struct widget *widget, enum flags flags);
+	int (*get_state)(struct widget *widget);
+	void (*set_state)(struct widget *widget, int state);
+	void (*set_func)(struct widget *widget, void (*func)(struct gui_priv *priv, struct widget *widget, void *data));
+	void (*set_data)(struct widget *widget, void *data);
+	void (*set_default_background)(struct gui_priv *this, struct widget *widget);
 
 };
 
