@@ -147,6 +147,7 @@ struct graphics_priv {
 	int wraparound;
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct font_freetype_methods freetype_methods;
+	int w,h;
 };
 
 static void
@@ -207,18 +208,25 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 		if (!overlay->overlay_disable && r->intersects(ovr)) {
 			unsigned char *data;
 			int i,size=ovr.width()*ovr.height();
-/* FIXME */
 #if QT_VERSION < 0x040000
 			QImage img=overlay->widget->pixmap->convertToImage();
 			img.setAlphaBuffer(1);
+#else
+			QImage img=overlay->widget->pixmap->toImage();
+			QImage alpha=QImage(img.width(),img.height(),QImage::Format_Mono);
+			alpha.fill(1);
+			img.setAlphaChannel(alpha);
+#endif
 			data=img.bits();
 			for (i = 0 ; i < size ; i++) {
 				if (data[0] == overlay->rgba[0] && data[1] == overlay->rgba[1] && data[2] == overlay->rgba[2]) 
 					data[3]=overlay->rgba[3];
-				
 				data+=4;
 			}
+#if QT_VERSION < 0x040000
 			painter.drawImage(QPoint(ovr.x()-r->x(),ovr.y()-r->y()), img, 0);
+#else
+			painter.drawImage(QPoint(ovr.x()-r->x(),ovr.y()-r->y()), img);
 #endif
 		}
 		overlay=overlay->next;
@@ -261,7 +269,7 @@ RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h
 //##############################################################################################################
 QSize RenderArea::sizeHint() const
 {
-	return QSize(800, 600);
+	return QSize(gra->w, gra->h);
 }
 
 //##############################################################################################################
@@ -514,7 +522,7 @@ static void gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsign
 static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
 #if QT_VERSION >= 0x040000
-	QColor col(c->r >> 8, c->g >> 8, c->b >> 8, c->a >> 8); 
+	QColor col(c->r >> 8, c->g >> 8, c->b >> 8 /* , c->a >> 8 */); 
 #else
 	QColor col(c->r >> 8, c->g >> 8, c->b >> 8); 
 #endif
@@ -631,8 +639,7 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
 //##############################################################################################################
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-	dbg(1,"gr=%p gc=%p\n", gr, gc);
-	gr->painter->setPen(*gc->pen);
+	dbg(1,"gr=%p gc=%p %d,%d,%d,%d\n", gr, gc, p->x, p->y, w, h);
 	gr->painter->fillRect(p->x,p->y, w, h, *gc->brush);
 }
 
@@ -696,15 +703,19 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 		while (i-- > 0) {
 			g=*gp++;
 			if (g->w && g->h) {
-/* FIXME */
-#if QT_VERSION < 0x040000
 				unsigned char *data;
+#if QT_VERSION < 0x040000
 				QImage img(g->w+2, g->h+2, 32);
 				img.setAlphaBuffer(1);
 				data=img.bits();
 				gr->freetype_methods.get_shadow(g,(unsigned char *)(img.jumpTable()),32,0,bgc,&transparent);
-				painter->drawImage(((x+g->x)>>6)-1, ((y+g->y)>>6)-1, img);
+#else
+				QImage img(g->w+2, g->h+2, QImage::Format_ARGB32);
+				data=img.bits();
+				gr->freetype_methods.get_shadow(g,(unsigned char *)data,32,img.bytesPerLine(),bgc,&transparent);
 #endif
+
+				painter->drawImage(((x+g->x)>>6)-1, ((y+g->y)>>6)-1, img);
 			}
 			x+=g->dx;
 			y+=g->dy;
@@ -718,15 +729,18 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 	while (i-- > 0) {
 		g=*gp++;
 		if (g->w && g->h) {
-/* FIXME */
-#if QT_VERSION < 0x040000
 			unsigned char *data;
+#if QT_VERSION < 0x040000
 			QImage img(g->w, g->h, 32);
 			img.setAlphaBuffer(1);
 			data=img.bits();
 			gr->freetype_methods.get_glyph(g,(unsigned char *)(img.jumpTable()),32,0,fgc,bgc,&transparent);
-			painter->drawImage((x+g->x)>>6, (y+g->y)>>6, img);
+#else
+			QImage img(g->w, g->h, QImage::Format_ARGB32);
+			data=img.bits();
+			gr->freetype_methods.get_glyph(g,(unsigned char *)data,32,img.bytesPerLine(),fgc,bgc,&transparent);
 #endif
+			painter->drawImage((x+g->x)>>6, (y+g->y)>>6, img);
 		}
                 x+=g->dx;
                 y+=g->dy;
@@ -801,7 +815,7 @@ static void background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 //##############################################################################################################
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-	dbg(1,"mode=%d\n", mode);
+	dbg(1,"mode for %p %d\n", gr, mode);
 	QRect r;
 	if (mode == draw_mode_begin) {
 		gr->painter->begin(gr->widget->pixmap);
@@ -876,7 +890,10 @@ static void * get_data(struct graphics_priv *this_, char *type)
 		return NULL;
 	win=g_new(struct window, 1);
 	this_->painter=new QPainter;
-	this_->widget->showMaximized();
+	if (this_->w && this_->h)
+		this_->widget->show();
+	else
+		this_->widget->showMaximized();
 	win->priv=this_;
 	win->fullscreen=fullscreen;
 	return win;
@@ -1106,6 +1123,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 {
 	struct graphics_priv *ret;
 	struct font_priv * (*font_freetype_new)(void *meth);
+	struct attr *attr;
 
 	dbg(0,"enter\n");
 #if QT_VERSION < 0x040000
@@ -1138,6 +1156,10 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 #if QT_VERSION < 0x040000
 	event_gr=ret;
 #endif
+	if ((attr=attr_search(attrs, NULL, attr_w)))
+		ret->w=attr->u.num;
+	if ((attr=attr_search(attrs, NULL, attr_h)))
+		ret->h=attr->u.num;
 
 	dbg(0,"return\n");
 	return ret;
