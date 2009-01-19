@@ -88,6 +88,7 @@ svgs  = gui_actions.svg
 svgs += gui_active.svg
 svgs += gui_bookmark.svg
 svgs += gui_display.svg
+svgs += gui_help.svg
 svgs += gui_home.svg
 svgs += gui_inactive.svg
 svgs += gui_map.svg
