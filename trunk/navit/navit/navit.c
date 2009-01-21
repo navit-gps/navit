@@ -584,6 +584,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	navit_command_register(this_, "zoom_in", callback_new_3(callback_cast(navit_zoom_in), this_, (void *)2, NULL));
 	navit_command_register(this_, "zoom_out", callback_new_3(callback_cast(navit_zoom_out), this_, (void *)2, NULL));
 	navit_command_register(this_, "navit_set_attr", callback_new_1(callback_cast(navit_set_attr_cmd), this_));
+    navit_command_register(this_, "navit_announcer_toggle", callback_new_1(callback_cast(navit_announcer_toggle), this_));
 	return this_;
 }
 
@@ -997,6 +998,22 @@ navit_say(struct navit *this_, char *text)
 }
 
 void
+navit_announcer_toggle(struct navit *this_)
+{
+    struct attr attr, speechattr;
+    if(!navit_get_attr(this_, attr_speech, &speechattr, NULL))
+        return;
+    if(!speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL))
+        return;
+    
+    attr.u.num = !attr.u.num;
+    
+    if(!speech_set_attr(speechattr.u.speech, &attr))
+        return;
+    callback_list_call_attr_0(this_->attr_cbl, attr_speech);
+}
+
+void
 navit_speak(struct navit *this_)
 {
 	struct navigation *nav=this_->navigation;
@@ -1401,6 +1418,12 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 			attr_updated=1;
 		}
 		break;
+    case attr_speech:
+        if(this_->speech && this_->speech != attr->u.speech) {
+            attr_updated=1;
+            this_->speech = attr->u.speech;
+        }
+        break;
 	case attr_tracking:
 		if (this_->tracking_flag != !!attr->u.num) {
 			this_->tracking_flag=!!attr->u.num;
@@ -1514,6 +1537,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 	case attr_route:
 		attr->u.route=this_->route;
 		break;
+    case attr_speech:
+        attr->u.speech=this_->speech;
+        break;
 	case attr_tracking:
 		attr->u.num=this_->tracking_flag;
 		break;

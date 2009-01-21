@@ -67,6 +67,7 @@ void navit_add_bookmark(struct navit *this_, struct pcoord *c, const char *descr
 void navit_say(struct navit *this_, char *text);
 int navit_speech_estimate(struct navit *this_, char *str);
 void navit_speak(struct navit *this_);
+void navit_announcer_toggle(struct navit *this_);
 void navit_window_roadbook_destroy(struct navit *this_);
 void navit_window_roadbook_new(struct navit *this_);
 struct navit_window_items *navit_window_items_new(const char *name, int distance);
