@@ -319,11 +319,7 @@ osd_compass_init(struct compass *this, struct navit *nav)
 	graphics_gc_set_foreground(this->green, &c);
 	graphics_gc_set_linewidth(this->green, 2);
 
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_compass_draw),
-					       attr_position_coord_geo,
-					       this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_draw), attr_position_coord_geo, this));
 
 	osd_compass_draw(this, nav, NULL);
 }
@@ -339,10 +335,7 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 	this->osd_item.h = 80;
 	this->osd_item.font_size = 200;
 	osd_set_std_attr(attrs, &this->osd_item);
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_compass_init),
-					       attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
 
@@ -469,10 +462,7 @@ osd_eta_init(struct osd_eta *this, struct navit *nav)
 {
 
 	osd_set_std_graphic(nav, &this->osd_item);
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast(osd_eta_draw),
-					       attr_position_coord_geo,
-					       this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_eta_draw), attr_position_coord_geo, this));
 	osd_eta_draw(this, nav, NULL);
 
 }
@@ -499,9 +489,7 @@ osd_eta_new(struct navit *nav, struct osd_methods *meth,
 	else
 		this->test_text = NULL;
 
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast(osd_eta_init),
-					       attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_eta_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
 
@@ -629,10 +617,7 @@ osd_speed_new(struct navit *nav, struct osd_methods *meth,
 	else
 		this->test_text = NULL;
 
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_speed_init),
-					       attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
 
@@ -748,10 +733,7 @@ osd_sats_new(struct navit *nav, struct osd_methods *meth,
 	else
 		this->test_text = NULL;
 
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_sats_init), attr_navit,
-					       this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_sats_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
 
@@ -862,11 +844,7 @@ osd_nav_distance_to_target_init(struct osd_nav_distance_to_target *this,
 
 	osd_set_std_graphic(nav, &this->osd_item);
 
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_nav_distance_to_target_draw),
-					       attr_position_coord_geo,
-					       this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_distance_to_target_draw), attr_position_coord_geo, this));
 
 	osd_nav_distance_to_target_draw(this, nav, NULL);
 
@@ -895,10 +873,7 @@ osd_nav_distance_to_target_new(struct navit *nav, struct osd_methods *meth,
 	else
 		this->test_text = NULL;
 
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_nav_distance_to_target_init),
-					       attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_distance_to_target_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
 
@@ -1002,11 +977,7 @@ osd_nav_distance_to_next_init(struct osd_nav_distance_to_next *this,
 			      struct navit *nav)
 {
 	osd_set_std_graphic(nav, &this->osd_item);
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_nav_distance_to_next_draw),
-					       attr_position_coord_geo,
-					       this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast (osd_nav_distance_to_next_draw), attr_position_coord_geo, this));
 	osd_nav_distance_to_next_draw(this, nav, NULL);
 }
 
@@ -1032,10 +1003,7 @@ osd_nav_distance_to_next_new(struct navit *nav, struct osd_methods *meth,
 	else
 		this->test_text = NULL;
 
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_nav_distance_to_next_init),
-					       attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_distance_to_next_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
 
@@ -1143,11 +1111,7 @@ static void
 osd_street_name_init(struct osd_street_name *this, struct navit *nav)
 {
 	osd_set_std_graphic(nav, &this->osd_item);
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_street_name_draw),
-					       attr_position_coord_geo,
-					       this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_street_name_draw), attr_position_coord_geo, this));
 	osd_street_name_draw(this, nav, NULL);
 }
 
@@ -1173,10 +1137,7 @@ osd_street_name_new(struct navit *nav, struct osd_methods *meth,
 
 	this->active = -1;
 
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_street_name_init),
-					       attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_street_name_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
 
@@ -1357,11 +1318,7 @@ static void
 osd_nav_next_turn_init(struct nav_next_turn *this, struct navit *nav)
 {
 	osd_set_std_graphic(nav, &this->osd_item);
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_nav_next_turn_draw),
-					       attr_position_coord_geo,
-					       this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_turn_draw), attr_position_coord_geo, this));
 	osd_nav_next_turn_draw(this, nav, NULL);
 }
 
@@ -1404,10 +1361,7 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 		    g_strjoin(NULL, getenv("NAVIT_SHAREDIR"),
 			      "/xpm/%s_32.xpm", NULL);
 
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_nav_next_turn_init),
-					       attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_turn_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
 
@@ -1512,11 +1466,7 @@ osd_nav_next_street_name_init(struct nav_next_street_name *this,
 {
 
 	osd_set_std_graphic(nav, &this->osd_item);
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_nav_next_street_name_draw),
-					       attr_position_coord_geo,
-					       this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_street_name_draw), attr_position_coord_geo, this));
 	osd_nav_next_street_name_draw(this, nav);
 }
 
@@ -1545,10 +1495,123 @@ osd_nav_next_street_name_new(struct navit *nav, struct osd_methods *meth,
 	this->active = -1;
 	this->last_street_name = NULL;
 
-	navit_add_callback(nav,
-			   callback_new_attr_1(callback_cast
-					       (osd_nav_next_street_name_init),
-					       attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_street_name_init), attr_navit, this));
+	return (struct osd_priv *) this;
+}
+
+struct nav_toggle_announcer
+{
+	int w,h;
+	struct callback *navit_init_cb;
+	struct osd_item item;
+	char *icon_src;
+	int icon_h, icon_w, active, last_state;
+};
+
+static void
+osd_nav_toggle_announcer_draw(struct nav_toggle_announcer *this, struct navit *navit, struct vehicle *v)
+{
+	struct point p;
+	int do_draw = 0;
+	struct graphics_image *gr_image;
+	char *path;
+	char *gui_sound_off = "gui_sound_off";
+	char *gui_sound_on = "gui_sound";
+    struct attr attr, speechattr;
+
+    if (this->last_state == -1)
+    {
+        if (!navit_get_attr(navit, attr_speech, &speechattr, NULL))
+            if (!speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL))
+                attr.u.num = 1;
+        this->active = attr.u.num;
+    }
+    this->active = !this->active;
+
+    if(this->active != this->last_state)
+    {
+        this->last_state = this->active;
+        do_draw = 1;
+    }
+
+	if (do_draw)
+    {
+		graphics_draw_mode(this->item.gr, draw_mode_begin);
+		p.x = 0;
+		p.y = 0;
+		graphics_draw_rectangle(this->item.gr, this->item.graphic_bg, &p, this->item.w, this->item.h);
+
+		if (this->active)
+            path = g_strdup_printf(this->icon_src, gui_sound_on);
+        else
+            path = g_strdup_printf(this->icon_src, gui_sound_off);
+        
+        gr_image = graphics_image_new_scaled(this->item.gr, path, this->icon_w, this->icon_h);
+        if (!gr_image)
+        {
+            g_free(path);
+            path = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/xpm/unknown.xpm", NULL);
+            gr_image = graphics_image_new_scaled(this->item.gr, path, this->icon_w, this->icon_h);
+        }
+        
+        dbg(1, "gr_image=%p\n", gr_image);
+        
+        if (gr_image)
+        {
+            p.x = (this->item.w - gr_image->width) / 2;
+            p.y = (this->item.h - gr_image->height) / 2;
+            graphics_draw_image(this->item.gr, this->item.graphic_fg_white, &p, gr_image);
+            graphics_image_free(this->item.gr, gr_image);
+        }
+        
+        g_free(path);
+		graphics_draw_mode(this->item.gr, draw_mode_end);
+	}
+}
+
+static void
+osd_nav_toggle_announcer_init(struct nav_toggle_announcer *this, struct navit *nav)
+{
+	osd_set_std_graphic(nav, &this->item);
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_toggle_announcer_draw), attr_speech, this));
+    navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast(osd_std_click), attr_button, &this->item));
+	osd_nav_toggle_announcer_draw(this, nav, NULL);
+}
+
+static struct osd_priv *
+osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
+{
+	struct nav_toggle_announcer *this = g_new0(struct nav_toggle_announcer, 1);
+    struct attr *attr;
+    char *command = "navit_announcer_toggle";
+
+	this->item.w = 48;
+	this->item.h = 48;
+    this->item.p.x = -64;
+    this->item.p.y = 76;
+
+	osd_set_std_attr(attrs, &this->item);
+
+	this->icon_w = -1;
+	this->icon_h = -1;
+    this->last_state = -1;
+
+    attr = attr_search(attrs, NULL, attr_icon_src);
+	if (attr) {
+		struct file_wordexp *we;
+		char **array;
+		we = file_wordexp_new(attr->u.str);
+		array = file_wordexp_get_array(we);
+		this->icon_src = g_strdup(array[0]);
+		file_wordexp_destroy(we);
+	} else
+		this->icon_src =
+		    g_strjoin(NULL, getenv("NAVIT_SHAREDIR"),
+			      "/xpm/%s_32.xpm", NULL);
+
+    this->item.command = g_strdup(command);
+
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_toggle_announcer_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
 
@@ -1569,6 +1632,7 @@ plugin_init(void)
 	plugin_register_osd_type("button", osd_button_new);
 	plugin_register_osd_type("vehicle_gps_satnum", osd_sats_new);
 	plugin_register_osd_type("vehicle_speed", osd_speed_new);
+    plugin_register_osd_type("toggle_announcer", osd_nav_toggle_announcer_new);
 
 /*
         plugin_register_osd_type("position_max_speed", osd_position_max_speed_new);
