@@ -997,19 +997,33 @@ navit_say(struct navit *this_, char *text)
 	speech_say(this_->speech, text);
 }
 
+/**
+ * @brief Toggles the navigation announcer for navit
+ * @param this_ The navit object
+ */
 void
 navit_announcer_toggle(struct navit *this_)
 {
     struct attr attr, speechattr;
+
+    // search for the speech attribute
     if(!navit_get_attr(this_, attr_speech, &speechattr, NULL))
         return;
-    if(!speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL))
-        return;
-    
-    attr.u.num = !attr.u.num;
-    
+    // find out if the corresponding attribute attr_active has been set
+    if(speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL)) {
+        // flip it then...
+        attr.u.num = !attr.u.num;
+    } else {
+        // otherwise disable it because voice is enabled by default
+        attr.type = attr_active;
+        attr.u.num = 0;
+    }
+
+    // apply the new state
     if(!speech_set_attr(speechattr.u.speech, &attr))
         return;
+
+    // announce that the speech attribute has changed
     callback_list_call_attr_0(this_->attr_cbl, attr_speech);
 }
 
