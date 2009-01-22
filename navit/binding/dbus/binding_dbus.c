@@ -114,13 +114,13 @@ object_get_from_message(DBusMessage *message, char *type)
 }
 
 static DBusHandlerResult
-reply_int_as_variant(DBusConnection *connection, DBusMessage *message, int value)
+reply_simple_as_variant(DBusConnection *connection, DBusMessage *message, int value, int dbus_type)
 {
 	DBusMessage *reply;
     
 	reply = dbus_message_new_method_return(message);
     dbus_message_append_args(reply,
-                             DBUS_TYPE_INT32, &value,
+                             dbus_type, &value,
                              DBUS_TYPE_INVALID);
 	dbus_connection_send (connection, reply, NULL);
 	dbus_message_unref (reply);
@@ -203,6 +203,7 @@ request_main_iter_destroy(DBusConnection *connection, DBusMessage *message)
  * @param message The DBus message
  * @param iter Sort of pointer that points on that (iii)-object in the message
  * @param pc Pointer where the data should get stored
+ * @returns Returns 1 when everything went right, otherwise 0
  */
 static int
 pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoord *pc)
@@ -260,6 +261,7 @@ request_navit_draw(DBusConnection *connection, DBusMessage *message)
  * @param message The DBus message
  * @param iter Sort of pointer that points on that (ii)-object in the message
  * @param p Pointer where the data should get stored
+ * @returns Returns 1 when everything went right, otherwise 0
  */
 static int
 point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point *p)
@@ -290,6 +292,13 @@ point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point
 	return 1;
 }
 
+/**
+ * @brief Centers the screen on a specified position \a pc on the world
+ * @param connection The DBusConnection object through which \a message arrived
+ * @param message The DBusMessage containing the coordinates
+ * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
+ */
+
 static DBusHandlerResult
 request_navit_set_center(DBusConnection *connection, DBusMessage *message)
 {
@@ -309,6 +318,12 @@ request_navit_set_center(DBusConnection *connection, DBusMessage *message)
 	return empty_reply(connection, message);
 }
 
+/**
+ * @brief Centers the screen on a specified position \a p shown on the screen
+ * @param connection The DBusConnection object through which \a message arrived
+ * @param message The DBusMessage containing the x and y value
+ * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
+ */
 static DBusHandlerResult
 request_navit_set_center_screen(DBusConnection *connection, DBusMessage *message)
 {
@@ -328,6 +343,12 @@ request_navit_set_center_screen(DBusConnection *connection, DBusMessage *message
 	return empty_reply(connection, message);
 }
 
+/**
+ * @brief Sets the layout to \a new_layout_name extracted from \a message
+ * @param connection The DBusConnection object through which \a message arrived
+ * @param message The DBusMessage containing the name of the layout
+ * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
+ */
 static DBusHandlerResult
 request_navit_set_layout(DBusConnection *connection, DBusMessage *message)
 {
@@ -432,6 +453,7 @@ request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
     dbus_message_iter_get_basic(&iter, &attr_type);
     attr.type = attr_from_name(attr_type); 
     dbg(0, "attr value: 0x%x string: %s\n", attr.type, attr_type);
+
     if (attr.type == attr_none)
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
     
@@ -440,17 +462,32 @@ request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
 
     else if (attr.type > attr_type_int_begin && attr.type < attr_type_boolean_begin)
     {
+        dbg(0, "int detected\n");
         if(navit_get_attr(navit, attr.type, &attr, NULL)) {
             dbg(0, "%s = %i\n", attr_type, attr.u.num);
-            return reply_int_as_variant(connection, message, attr.u.num);
+            return reply_simple_as_variant(connection, message, attr.u.num, DBUS_TYPE_INT32);
         }
     }
+
     else if(attr.type > attr_type_boolean_begin && attr.type < attr_type_int_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    {
+        dbg(0, "bool detected\n");
+        if(navit_get_attr(navit, attr.type, &attr, NULL)) {
+            dbg(0, "%s = %i\n", attr_type, attr.u.num);
+            return reply_simple_as_variant(connection, message, attr.u.num, DBUS_TYPE_BOOLEAN);
+        }
+    }
 
     else if(attr.type > attr_type_string_begin && attr.type < attr_type_string_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    {
+        dbg(0, "string detected\n");
+        if(navit_get_attr(navit, attr.type, &attr, NULL)) {
+            dbg(0, "%s = %s\n", attr_type, &attr.u.layout);
+            return reply_simple_as_variant(connection, message, &attr.u.layout, DBUS_TYPE_STRING);
+        }
+    }
 
+#if 0
     else if(attr.type > attr_type_special_begin && attr.type < attr_type_special_end)
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 
@@ -474,7 +511,7 @@ request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
 
     else if(attr.type > attr_type_callback_begin && attr.type < attr_type_callback_end)
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
+#endif
     else {
         dbg(0, "zomg really unhandled111\n");
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
@@ -527,6 +564,7 @@ request_navit_set_attr(DBusConnection *connection, DBusMessage *message)
                 return empty_reply(connection, message);
         }
 
+#if 0
     else if(attr.type > attr_type_string_begin && attr.type < attr_type_string_end)
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 
@@ -553,7 +591,7 @@ request_navit_set_attr(DBusConnection *connection, DBusMessage *message)
 
     else if(attr.type > attr_type_callback_begin && attr.type < attr_type_callback_end)
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
+#endif
     else {
         dbg(0, "zomg really unhandled111\n");
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
