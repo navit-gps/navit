@@ -36,6 +36,7 @@
 #include "file.h"
 #include "search.h"
 #include "navit_nls.h"
+#include "atom.h"
 #ifdef HAVE_API_WIN32_CE
 #include <windows.h>
 #include <winbase.h>
