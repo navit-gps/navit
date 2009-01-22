@@ -1525,8 +1525,8 @@ osd_nav_toggle_announcer_draw(struct nav_toggle_announcer *this, struct navit *n
             if (!speech_get_attr(speechattr.u.speech, attr_active, &attr, NULL))
                 attr.u.num = 1;
         this->active = attr.u.num;
-    }
-    this->active = !this->active;
+    } else
+        this->active = !this->active;
 
     if(this->active != this->last_state)
     {
