@@ -66,10 +66,6 @@
 
 //! The navit_vehicule
 struct navit_vehicle {
-	int update;
-	/*! Limit of the update counter. See navit_add_vehicle */
-	int update_curr;
-	/*! Deprecated : Update counter itself. When it reaches 'update' counts, route is updated */
 	int follow;
 	/*! Limit of the follow counter. See navit_add_vehicle */
 	int follow_curr;
@@ -113,9 +109,7 @@ struct navit {
 	struct navit_vehicle *vehicle;
 	struct callback_list *attr_cbl;
 	int pid;
-	struct callback *nav_speech_cb;
-	struct callback *roadbook_callback;
-	struct callback *popup_callback;
+	struct callback *nav_speech_cb, *roadbook_callback, *popup_callback, *route_cb;
 	struct datawindow *roadbook_window;
 	struct map *bookmark;
 	struct map *former_destination;
@@ -209,6 +203,22 @@ navit_draw_displaylist(struct navit *this_)
 {
 	if (this_->ready == 3)
 		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current, 1);
+}
+
+static void
+navit_redraw_route(struct navit *this_, int updated)
+{
+	dbg(1,"enter %d\n", updated);
+	if (this_->ready != 3)
+		return;
+	if (updated <= 3)
+		return;
+	if (this_->vehicle) {
+		if (this_->vehicle->follow == 1)
+			return;
+		this_->vehicle->follow_curr=this_->vehicle->follow;
+	}
+	navit_draw(this_);
 }
 
 void
@@ -858,10 +868,6 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 	if (this_->route) {
 		route_set_destination(this_->route, c);
-		if (this_->navigation) {
-			navigation_flush(this_->navigation);
-			navigation_update(this_->navigation, this_->route);
-		}
 
 		if (this_->ready == 3)
 			navit_draw(this_);
@@ -1170,8 +1176,6 @@ navit_init(struct navit *this_)
 {
 	struct mapset *ms;
 	struct map *map;
-	GList *l;
-	struct navit_vehicle *nv;
 
 	if (!this_->gui) {
 		dbg(0,"no gui\n");
@@ -1195,18 +1199,6 @@ navit_init(struct navit *this_)
 		return;
 	}
 	graphics_init(this_->gra);
-#if 0
-	l=this_->vehicles;
-	while (l) {
-		dbg(1,"parsed one vehicle\n");
-		nv=l->data;
-		nv->callback.type=attr_callback;
-		nv->callback.u.callback=callback_new_2(callback_cast(navit_vehicle_update), this_, nv);
-		vehicle_add_attr(nv->vehicle, &nv->callback);
-		vehicle_set_attr(nv->vehicle, &this_->self, NULL);
-		l=g_list_next(l);
-	}
-#endif
 	if (this_->mapsets) {
 		ms=this_->mapsets->data;
 		if (this_->route) {
@@ -1239,9 +1231,17 @@ navit_init(struct navit *this_)
 		navit_add_bookmarks_from_file(this_);
 		navit_add_former_destinations_from_file(this_);
 	}
-	if (this_->navigation && this_->speech) {
-		this_->nav_speech_cb=callback_new_1(callback_cast(navit_speak), this_);
-		navigation_register_callback(this_->navigation, attr_navigation_speech, this_->nav_speech_cb);
+	if (this_->route) {
+		this_->route_cb=callback_new_attr_1(callback_cast(navit_redraw_route), attr_route, this_);
+		route_add_callback(this_->route, this_->route_cb);
+	}
+	if (this_->navigation) {
+		if (this_->speech) {
+			this_->nav_speech_cb=callback_new_1(callback_cast(navit_speak), this_);
+			navigation_register_callback(this_->navigation, attr_navigation_speech, this_->nav_speech_cb);
+		}
+		if (this_->route)
+			navigation_set_route(this_->navigation, this_->route);
 	}
 	char *center_file = navit_get_center_file(FALSE);
 	navit_set_center_from_file(this_, center_file);
@@ -1778,15 +1778,13 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 			nv->coord.y=cursor_pc.y;
 		}
 	}
-	if (nv->update_curr == 1) {
-		if (this_->route) {
-			if (this_->tracking && this_->tracking_flag)
-				route_set_position_from_tracking(this_->route, this_->tracking);
-			else
-				route_set_position(this_->route, &cursor_pc);
-		}
-		callback_list_call_attr_0(this_->attr_cbl, attr_position);
+	if (this_->route) {
+		if (this_->tracking && this_->tracking_flag)
+			route_set_position_from_tracking(this_->route, this_->tracking);
+		else
+			route_set_position(this_->route, &cursor_pc);
 	}
+	callback_list_call_attr_0(this_->attr_cbl, attr_position);
 	navit_textfile_debug_log(this_, "type=trackpoint_tracked");
 	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	if (!transform_within_border(this_->trans, &cursor_pnt, border)) {
@@ -1809,8 +1807,6 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	if (this_->pid && nv->speed > 2)
 		kill(this_->pid, SIGWINCH);
 #endif
-	if (this_->route && nv->update_curr == 1)
-		navigation_update(this_->navigation, this_->route);
 	if ((nv->follow_curr == 1) && (!this_->button_pressed)) {
 		if (this_->cursor_flag && ((time(NULL) - this_->last_moved) > this_->center_timeout) && (recenter)) {
 			navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
@@ -1825,10 +1821,6 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		nv->follow_curr--;
 	else
 		nv->follow_curr=nv->follow;
-	if (nv->update_curr > 1)
-		nv->update_curr--;
-	else
-		nv->update_curr=nv->update;
 	callback_list_call_attr_2(this_->attr_cbl, attr_position_coord_geo, this_, nv->vehicle);
 	if (pnt)
 		navit_vehicle_draw(this_, nv, pnt);
@@ -1854,13 +1846,6 @@ navit_set_position(struct navit *this_, struct pcoord *c)
 	if (this_->route) {
 		route_set_position(this_->route, c);
 		callback_list_call_attr_0(this_->attr_cbl, attr_position);
-		if (this_->navigation) {
-			navigation_update(this_->navigation, this_->route);
-#if 0
-			map_dump_file(route_get_map(this_->route), "route.txt");
-			map_dump_file(navigation_get_map(this_->navigation), "navigation.txt");
-#endif
-		}
 	}
 	if (this_->ready == 3)
 		navit_draw(this_);
@@ -1883,15 +1868,12 @@ static int
 navit_add_vehicle(struct navit *this_, struct vehicle *v)
 {
 	struct navit_vehicle *nv=g_new0(struct navit_vehicle, 1);
-	struct attr update,follow,color,active, color2, animate;
+	struct attr follow,color,active, color2, animate;
 	nv->vehicle=v;
-	nv->update=1;
 	nv->follow=0;
 	nv->last.x = 0;
 	nv->last.y = 0;
 	nv->animate_cursor=0;
-	if ((vehicle_get_attr(v, attr_update, &update, NULL)))
-		nv->update=nv->update=update.u.num;
 	if ((vehicle_get_attr(v, attr_follow, &follow, NULL)))
 		nv->follow=nv->follow=follow.u.num;
 	if ((vehicle_get_attr(v, attr_color, &color, NULL)))
@@ -1900,7 +1882,6 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v)
 		nv->c2=color2.u.color;
 	else
 		nv->c2=NULL;
-	nv->update_curr=nv->update;
 	nv->follow_curr=nv->follow;
 	this_->vehicles=g_list_append(this_->vehicles, nv);
 	if ((vehicle_get_attr(v, attr_active, &active, NULL)) && active.u.num)

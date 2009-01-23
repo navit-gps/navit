@@ -64,6 +64,8 @@
 #include "transform.h"
 #include "plugin.h"
 #include "fib.h"
+#include "event.h"
+#include "callback.h"
 
 
 struct map_priv {
@@ -155,6 +157,7 @@ struct route_info {
  * This structure describes a whole routing path
  */
 struct route_path {
+	int updated;						/**< The path has only been updated */
 	struct route_path_segment *path;			/**< The first segment in the path, i.e. the segment one should 
 												 *  drive in next */
 	struct route_path_segment *path_last;		/**< The last segment in the path */
@@ -175,7 +178,6 @@ struct route_path {
  * This struct holds all information about a route.
  */
 struct route {
-	int version;				/**< Counts how many times this route got updated */
 	struct mapset *ms;			/**< The mapset this route is built upon */
 	unsigned flags;
 	struct route_info *pos;		/**< Current position within this route */
@@ -185,6 +187,9 @@ struct route {
 	struct route_path *path2;	/**< Pointer to the route path */
 	struct map *map;
 	struct map *graph_map;
+	struct callback * route_graph_done_cb ; /**< Callback when route graph is done */
+	struct callback * route_graph_flood_done_cb ; /**< Callback when route graph flooding is done */
+	struct callback_list *cbl;	/**< Callback list to call when route changes */
 	int destination_distance;	/**< Distance to the destination at which the destination is considered "reached" */
 	int speedlist[route_item_last-route_item_first+1];	/**< The speedlist for this route */
 };
@@ -195,6 +200,14 @@ struct route {
  * This structure describes a whole routing graph
  */
 struct route_graph {
+	int busy;					/**< The graph is being built */
+	struct map_selection *sel;			/**< The rectangle selection for the graph */
+	struct mapset_handle *h;			/**< Handle to the mapset */	
+	struct map *m;					/**< Pointer to the currently active map */	
+	struct map_rect *mr;				/**< Pointer to the currently active map rectangle */	
+	struct callback *idle_cb;			/**< Idle callback to process the graph */
+	struct callback *done_cb;			/**< Callback when graph is done */
+	struct event_idle *idle_ev;			/**< The pointer to the idle event */
 	struct route_graph_point *route_points;		/**< Pointer to the first route_graph_point in the linked list of  all points */
    	struct route_graph_segment *route_segments; /**< Pointer to the first route_graph_segment in the linked list of all segments */
 #define HASH_SIZE 8192
@@ -217,11 +230,12 @@ struct route_graph_point_iterator {
 
 static struct route_info * route_find_nearest_street(struct mapset *ms, struct pcoord *c);
 static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
-static void route_graph_update(struct route *this);
+static void route_graph_update(struct route *this, struct callback *cb);
+static void route_graph_build_done(struct route_graph *rg, int cancel);
 static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, int *speedlist);
 static void route_process_street_graph(struct route_graph *this, struct item *item);
 static void route_graph_destroy(struct route_graph *this);
-static void route_path_update(struct route *this);
+static void route_path_update(struct route *this, int cancel);
 
 /**
  * @brief Returns the projection used for this route
@@ -343,16 +357,12 @@ route_new(struct attr *parent, struct attr **attrs)
 	struct route *this=g_new0(struct route, 1);
 	struct attr dest_attr;
 
-	if (!this) {
-		printf("%s:Out of memory\n", __FUNCTION__);
-		return NULL;
-	}
-
 	if (attr_generic_get_attr(attrs, NULL, attr_destination_distance, &dest_attr, NULL)) {
 		this->destination_distance = dest_attr.u.num;
 	} else {
 		this->destination_distance = 50; // Default value
 	}
+	this->cbl=callback_list_new();
 
 	return this;
 }
@@ -587,6 +597,24 @@ route_destination_reached(struct route *this)
 	return 1;
 }
 
+static void
+route_path_update_done(struct route *this, int new_graph)
+{
+	struct route_path *oldpath=this->path2;
+	int val;
+
+	this->path2=route_path_new(this->graph, oldpath, this->pos, this->dst, this->speedlist);
+	route_path_destroy(oldpath);
+	if (this->path2) {
+		if (new_graph)
+			val=4;
+		else
+			val=2+!this->path2->updated;
+	} else
+		val=1;
+	callback_list_call_attr_1(this->cbl, attr_route, (void *)val);
+}
+
 /**
  * @brief Updates the route graph and the route path if something changed with the route
  *
@@ -599,31 +627,25 @@ route_destination_reached(struct route *this)
  * @param this The route to update
  */
 static void
-route_path_update(struct route *this)
+route_path_update(struct route *this, int cancel)
 {
-	struct route_path *oldpath = NULL;
 	if (! this->pos || ! this->dst) {
 		route_path_destroy(this->path2);
 		this->path2 = NULL;
 		return;
 	}
 	/* the graph is destroyed when setting the destination */
-	if (this->graph && this->pos && this->dst && this->path2) {
+	if (this->graph && !cancel) {
 		// we can try to update
-		oldpath = this->path2;
+		route_path_update_done(this, 0);
+	} else {
+		route_path_destroy(this->path2);
 		this->path2 = NULL;
 	}
-	if (! this->graph || !(this->path2=route_path_new(this->graph, oldpath, this->pos, this->dst, this->speedlist))) {
-		profile(0,NULL);
-		route_graph_update(this);
-		this->path2=route_path_new(this->graph, oldpath, this->pos, this->dst, this->speedlist);
-		profile(1,"route_path_new");
-		profile(0,"end");
-	}
-
-	if (oldpath) {
-		/* Destroy what's left */
-		route_path_destroy(oldpath);
+	if (! this->graph || !this->path2) {
+		if (! this->route_graph_flood_done_cb)
+			this->route_graph_flood_done_cb=callback_new_2(callback_cast(route_path_update_done), this, 1);
+		route_graph_update(this, this->route_graph_flood_done_cb);
 	}
 }
 
@@ -664,8 +686,7 @@ route_set_position(struct route *this, struct pcoord *pos)
 	if (! this->pos)
 		return;
 	route_info_distances(this->pos, pos->pro);
-	if (this->dst) 
-		route_path_update(this);
+	route_path_update(this, 0);
 }
 
 /**
@@ -705,7 +726,7 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 	dbg(3,"street 0=(0x%x,0x%x) %d=(0x%x,0x%x)\n", ret->street->c[0].x, ret->street->c[0].y, ret->street->count-1, ret->street->c[ret->street->count-1].x, ret->street->c[ret->street->count-1].y);
 	this->pos=ret;
 	if (this->dst) 
-		route_path_update(this);
+		route_path_update(this, 0);
 	dbg(2,"ret\n");
 }
 
@@ -822,14 +843,15 @@ route_set_destination(struct route *this, struct pcoord *dst)
 	if (dst) {
 		this->dst=route_find_nearest_street(this->ms, dst);
 		if(this->dst)
-		route_info_distances(this->dst, dst->pro);
-	}
+			route_info_distances(this->dst, dst->pro);
+	} else 
+		callback_list_call_attr_1(this->cbl, attr_route, (void *)0);
 	profile(1,"find_nearest_street");
 
 	/* The graph has to be destroyed and set to NULL, otherwise route_path_update() doesn't work */
 	route_graph_destroy(this->graph);
 	this->graph=NULL;
-	route_path_update(this);
+	route_path_update(this, 1);
 	profile(0,"end");
 }
 
@@ -1117,12 +1139,12 @@ route_path_add_item(struct route_path *this, struct item *item, int len, struct 
  * @param dir Order in which to add the coordinates. See route_path_add_item()
  * @param straight Indicates if this segment is being entered "straight". See route_check_straight().
  */
-static void
+static int
 route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpath,
 				   struct route_graph_segment *rgs, int len, int offset, int dir, int straight)
 {
 	struct route_path_segment *segment;
-	int i,ccnt = 0;
+	int i,ccnt = 0, ret=1;
 	struct coord ca[2048];
 
 	if (oldpath) {
@@ -1131,17 +1153,13 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 			segment = route_extract_segment_from_path(oldpath,
 							 &rgs->item, offset);
 			
-			if (segment)
+			if (segment) 
 				goto linkold;
 		}
 	}
 
 	ccnt = get_item_seg_coords(&rgs->item, ca, 2047, &rgs->start->c, &rgs->end->c);
 	segment= g_malloc0(sizeof(*segment) + sizeof(struct coord) * ccnt);
-	if (!segment) {
-		printf("%s:Out of memory\n", __FUNCTION__);
-		return;
-	}
 	segment->direction=dir;
 	if (dir > 0) {
 		for (i = 0 ; i < ccnt ; i++)
@@ -1158,6 +1176,7 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 		route_check_roundabout(rgs, 13, (dir < 1), NULL);
 	}
 
+	ret=0;
 	segment->item=rgs->item;
 	segment->offset = offset;
 linkold:
@@ -1166,6 +1185,8 @@ linkold:
 	item_hash_insert(this->path_hash,  &rgs->item, (void *)ccnt);
 
 	route_path_add_segment(this, segment);
+
+	return ret;
 }
 
 /**
@@ -1195,6 +1216,7 @@ static void
 route_graph_destroy(struct route_graph *this)
 {
 	if (this) {
+		route_graph_build_done(this, 1);
 		route_graph_free_points(this);
 		route_graph_free_segments(this);
 		g_free(this);
@@ -1346,7 +1368,7 @@ compare(void *v1, void *v2)
  * at this algorithm.
  */
 static void
-route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedlist)
+route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedlist, struct callback *cb)
 {
 	struct route_graph_point *p_min,*end=NULL;
 	struct route_graph_segment *s;
@@ -1438,6 +1460,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 		}
 	}
 	fh_deleteheap(heap);
+	callback_call_0(cb);
 }
 
 /**
@@ -1460,6 +1483,7 @@ route_path_new_offroad(struct route_graph *this, struct route_info *pos, struct 
 	ret=g_new0(struct route_path, 1);
 	ret->path_hash=item_hash_new();
 	route_path_add_item(ret, NULL, pos->lenextra+dst->lenextra, &pos->c, NULL, 0, &dst->c, 1);
+	ret->updated=1;
 
 	return ret;
 }
@@ -1499,6 +1523,7 @@ route_path_new_trivial(struct route_graph *this, struct route_info *pos, struct 
 		route_path_add_item(ret, &sd->item, pos->lenneg-dst->lenneg, &pos->lp, sd->c+dst->pos+1, pos->pos-dst->pos, &dst->lp, -1);
 	if (dst->lenextra) 
 		route_path_add_item(ret, NULL, dst->lenextra, &dst->lp, NULL, 0, &dst->c, 1);
+	ret->updated=1;
 	return ret;
 }
 
@@ -1561,6 +1586,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		val2=start2->end->end->value;
 	}
 	ret=g_new0(struct route_path, 1);
+	ret->updated=1;
 	if (pos->lenextra) 
 		route_path_add_item(ret, NULL, pos->lenextra, &pos->c, NULL, 0, &pos->lp, 1);
 	if (start1 && (val1 < val2)) {
@@ -1585,10 +1611,12 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		len+=seg_len;
 	
 		if (s->start == start) {		
-			route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, 1, is_straight);
+			if (!route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, 1, is_straight))
+				ret->updated=0;
 			start=s->end;
 		} else {
-			route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, -1, is_straight);
+			if (!route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, -1, is_straight))
+				ret->updated=0;
 			start=s->start;
 		}
 
@@ -1612,6 +1640,61 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	return ret;
 }
 
+static int
+route_graph_build_next_map(struct route_graph *rg)
+{
+	do {
+		rg->m=mapset_next(rg->h, 1);
+		if (! rg->m)
+			return 0;
+		map_rect_destroy(rg->mr);
+		rg->mr=map_rect_new(rg->m, rg->sel);
+	} while (!rg->mr);
+		
+	return 1;
+}
+
+static void
+route_graph_build_done(struct route_graph *rg, int cancel)
+{
+	dbg(1,"cancel=%d\n",cancel);
+	event_remove_idle(rg->idle_ev);
+	callback_destroy(rg->idle_cb);
+	map_rect_destroy(rg->mr);
+        mapset_close(rg->h);
+	route_free_selection(rg->sel);
+	rg->idle_ev=NULL;
+	rg->idle_cb=NULL;
+	rg->mr=NULL;
+	rg->h=NULL;
+	rg->sel=NULL;
+	if (! cancel)
+		callback_call_0(rg->done_cb);
+	rg->busy=0;
+}
+
+static void
+route_graph_build_idle(struct route_graph *rg)
+{
+	int count=1000;
+	struct item *item;
+
+	while (count > 0) {
+		for (;;) {	
+			item=map_rect_get_item(rg->mr);
+			if (item)
+				break;
+			if (!route_graph_build_next_map(rg)) {
+				route_graph_build_done(rg, 0);
+				return;
+			}
+		}
+		if (item->type >= type_street_0 && item->type <= type_ferry) 
+			route_process_street_graph(rg, item);
+		count--;
+	}
+}
+
 /**
  * @brief Builds a new route graph from a mapset
  *
@@ -1625,39 +1708,33 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
  * @param ms The mapset to build the route graph from
  * @param c1 Corner 1 of the rectangle to use from the map
  * @param c2 Corner 2 of the rectangle to use from the map
+ * @param done_cb The callback which will be called when graph is complete
  * @return The new route graph.
  */
 static struct route_graph *
-route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2)
+route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2, struct callback *done_cb)
 {
 	struct route_graph *ret=g_new0(struct route_graph, 1);
-	struct map_selection *sel;
-	struct mapset_handle *h;
-	struct map_rect *mr;
-	struct map *m;
-	struct item *item;
 
-	if (!ret) {
-		printf("%s:Out of memory\n", __FUNCTION__);
-		return ret;
-	}
-	sel=route_calc_selection(c1, c2);
-	h=mapset_open(ms);
-	while ((m=mapset_next(h,1))) {
-		mr=map_rect_new(m, sel);
-		if (! mr)
-			continue;
-		while ((item=map_rect_get_item(mr))) {
-			if (item->type >= type_street_0 && item->type <= type_ferry) {
-				route_process_street_graph(ret, item);
-			}
-		}
-		map_rect_destroy(mr);
-        }
-        mapset_close(h);
-	route_free_selection(sel);
+	dbg(1,"enter\n");
+
+	ret->sel=route_calc_selection(c1, c2);
+	ret->h=mapset_open(ms);
+	ret->done_cb=done_cb;
+	ret->busy=1;
+	if (route_graph_build_next_map(ret)) {
+		ret->idle_cb=callback_new_1(callback_cast(route_graph_build_idle), ret);
+		ret->idle_ev=event_add_idle(50, ret->idle_cb);
+	} else
+		route_graph_build_done(ret, 0);
 
 	return ret;
+}
+
+static void
+route_graph_update_done(struct route *this, struct callback *cb)
+{
+	route_graph_flood(this->graph, this->dst, this->speedlist, cb);
 }
 
 /**
@@ -1669,15 +1746,13 @@ route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2)
  * @param this The route to update the graph for
  */
 static void
-route_graph_update(struct route *this)
+route_graph_update(struct route *this, struct callback *cb)
 {
 	route_graph_destroy(this->graph);
-	profile(1,"graph_free");
-	this->graph=route_graph_build(this->ms, &this->pos->c, &this->dst->c);
-	profile(1,"route_graph_build");
-	route_graph_flood(this->graph, this->dst, this->speedlist);
-	profile(1,"route_graph_flood");
-	this->version++;
+	callback_destroy(this->route_graph_done_cb);
+	this->route_graph_done_cb=callback_new_2(callback_cast(route_graph_update_done), this, cb);
+	callback_list_call_attr_1(this->cbl, attr_route, (void *)0);
+	this->graph=route_graph_build(this->ms, &this->pos->c, &this->dst->c, this->route_graph_done_cb);
 }
 
 /**
@@ -2451,6 +2526,19 @@ void
 route_set_projection(struct route *this_, enum projection pro)
 {
 }
+
+void
+route_add_callback(struct route *this_, struct callback *cb)
+{
+	callback_list_add(this_->cbl, cb);
+}
+
+void
+route_remove_callback(struct route *this_, struct callback *cb)
+{
+	callback_list_remove(this_->cbl, cb);
+}
+
 
 void
 route_init(void)
