@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
 #include <glib.h>
 #include "debug.h"
 #include "profile.h"
@@ -54,6 +55,7 @@ struct suffix {
 };
 
 struct navigation {
+	struct route *route;
 	struct map *map;
 	struct item_hash *hash;
 	struct navigation_itm *first;
@@ -69,6 +71,7 @@ struct navigation {
 	int turn_around_limit;
 	int distance_turn;
 	int distance_last;
+	struct callback *route_cb;
 	int announce[route_item_last-route_item_first+1][3];
 };
 
@@ -81,6 +84,8 @@ struct navigation_command {
 	int roundabout_delta;
 	int length;
 };
+
+static void navigation_flush(struct navigation *this_);
 
 /**
  * @brief Calculates the delta between two angles
@@ -1413,7 +1418,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			}
 
 		} else {
-			d = g_strdup_printf("");
+			d = g_strdup("");
 		}
 		break;
 	default:
@@ -1597,8 +1602,8 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 	}
 }
 
-void
-navigation_update(struct navigation *this_, struct route *route)
+static void
+navigation_update(struct navigation *this_, int mode)
 {
 	struct map *map;
 	struct map_rect *mr;
@@ -1608,9 +1613,15 @@ navigation_update(struct navigation *this_, struct route *route)
 	struct navigation_itm *itm;
 	int incr=0,first=1;
 
-	if (! route)
+	dbg(1,"enter %d\n", mode);
+	if (mode < 2 || mode == 4) 
+		navigation_flush(this_);
+	if (mode < 2)
 		return;
-	map=route_get_map(route);
+		
+	if (! this_->route)
+		return;
+	map=route_get_map(this_->route);
 	if (! map)
 		return;
 	mr=map_rect_new(map, NULL);
@@ -1644,7 +1655,7 @@ navigation_update(struct navigation *this_, struct route *route)
 	else {
 		if (! ritem) {
 			navigation_itm_new(this_, NULL);
-			make_maneuvers(this_,route);
+			make_maneuvers(this_,this_->route);
 		}
 		calculate_dest_distance(this_, incr);
 		dbg(2,"destination distance old=%d new=%d\n", this_->distance_last, this_->first->dest_length);
@@ -1664,7 +1675,7 @@ navigation_update(struct navigation *this_, struct route *route)
 	map_rect_destroy(mr);
 }
 
-void
+static void
 navigation_flush(struct navigation *this_)
 {
 	navigation_destroy_itms_cmds(this_, NULL);
@@ -2071,6 +2082,13 @@ navigation_map_new(struct map_methods *meth, struct attr **attrs)
 	return ret;
 }
 
+void
+navigation_set_route(struct navigation *this_, struct route *route)
+{
+	this_->route=route;
+	this_->route_cb=callback_new_attr_1(callback_cast(navigation_update), attr_route, this_);
+	route_add_callback(route, this_->route_cb);
+}
 
 void
 navigation_init(void)
