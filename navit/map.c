@@ -335,8 +335,10 @@ map_rect_get_item_byid(struct map_rect *mr, int id_hi, int id_lo)
 void
 map_rect_destroy(struct map_rect *mr)
 {
-	mr->m->meth.map_rect_destroy(mr->priv);
-	g_free(mr);
+	if (mr) {
+		mr->m->meth.map_rect_destroy(mr->priv);
+		g_free(mr);
+	}
 }
 
 /**

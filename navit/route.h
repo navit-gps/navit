@@ -110,6 +110,8 @@ struct map *route_get_graph_map(struct route *route);
 void route_toggle_routegraph_display(struct route *route);
 void route_set_projection(struct route *this_, enum projection pro);
 int route_destination_reached(struct route *this);
+void route_add_callback(struct route *this_, struct callback *cb);
+void route_remove_callback(struct route *this_, struct callback *cb);
 void route_init(void);
 int route_pos_contains(struct route *this, struct item *item);
 
