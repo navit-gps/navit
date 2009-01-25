@@ -629,22 +629,35 @@ route_path_update_done(struct route *this, int new_graph)
 static void
 route_path_update(struct route *this, int cancel)
 {
+	dbg(1,"enter %d\n", cancel);
 	if (! this->pos || ! this->dst) {
+		dbg(1,"destroy\n");
 		route_path_destroy(this->path2);
 		this->path2 = NULL;
 		return;
 	}
+	if (cancel) {
+		route_graph_destroy(this->graph);
+		this->graph=NULL;
+	}
 	/* the graph is destroyed when setting the destination */
-	if (this->graph && !cancel) {
+	if (this->graph) {
+		if (this->graph->busy) {
+			dbg(1,"busy building graph\n");
+			return;
+		}
 		// we can try to update
+		dbg(1,"try update\n");
 		route_path_update_done(this, 0);
 	} else {
 		route_path_destroy(this->path2);
 		this->path2 = NULL;
 	}
-	if (! this->graph || !this->path2) {
+	if (!this->graph || !this->path2) {
+		dbg(1,"rebuild graph\n");
 		if (! this->route_graph_flood_done_cb)
 			this->route_graph_flood_done_cb=callback_new_2(callback_cast(route_path_update_done), this, 1);
+		dbg(1,"route_graph_update\n");
 		route_graph_update(this, this->route_graph_flood_done_cb);
 	}
 }
