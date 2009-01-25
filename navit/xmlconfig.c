@@ -17,10 +17,15 @@
  * Boston, MA  02110-1301, USA.
  */
 
+/* see http://library.gnome.org/devel/glib/stable/glib-Simple-XML-Subset-Parser.html
+ * for details on how the xml file parser works.
+ */
+
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <string.h>
 #include "debug.h"
+#include "config.h"
 #include "file.h"
 #include "coord.h"
 #include "layout.h"
@@ -41,7 +46,6 @@
 #include "log.h"
 #include "cursor.h"
 #include "xmlconfig.h"
-#include "config.h"
 
 #ifdef HAVE_GLIB
 #define ATTR_DISTANCE 1
@@ -163,6 +167,12 @@ find_boolean(struct xmlstate *state, const char *attribute, int deflt, int requi
 	return 0;
 }
 
+/**
+ * * Convert a string number to int
+ * *
+ * * @param val the string value to convert
+ * * @returns int value of converted string
+ * */
 static int
 convert_number(const char *val)
 {
@@ -239,6 +249,10 @@ xmlconfig_announce(struct xmlstate *state)
 	g_free(type_str);
 	return 1;
 }
+/**
+ * * Define the elements in our config
+ * *
+ * */
 
 #define NEW(x) (void *(*)(struct attr *, struct attr **))(x)
 #define ADD(x) (int (*)(void *, struct attr *attr))(x)
@@ -322,6 +336,17 @@ static char *element_fixmes[]={
 	"label","text",
 	NULL,NULL,
 };
+/**
+ * * Parse the opening tag of a config element
+ * *
+ * * @param context document parse context
+ * * @param element_name the current tag name
+ * * @param attribute_names ptr to return the set of attribute names
+ * * @param attribute_values ptr return the set of attribute values
+ * * @param user_data ptr to xmlstate structure
+ * * @param error ptr return error context
+ * * @returns nothing
+ * */
 
 static void
 start_element(GMarkupParseContext *context,
@@ -341,6 +366,7 @@ start_element(GMarkupParseContext *context,
 	char *s,*sep="",*possible_parents;
 	dbg(2,"name='%s' parent='%s'\n", element_name, *parent ? (*parent)->element:NULL);
 
+	/* determine if we have to fix any attributes */
 	while (attr_fixme[0].element) {
 		if (!strcmp(element_name,attr_fixme[0].element))
 			break;
@@ -349,6 +375,7 @@ start_element(GMarkupParseContext *context,
 	if (!attr_fixme[0].element)
 		attr_fixme=NULL;
 	
+	/* tell user to fix  deprecated element names */
 	while (element_fixme[0]) {
 		if (!strcmp(element_name,element_fixme[0])) {
 			element_name=element_fixme[1];
@@ -357,6 +384,8 @@ start_element(GMarkupParseContext *context,
 		}
 		element_fixme+=2;
 	}
+	/* validate that this element is valid
+	 * and that the element has a valid parent */
 	possible_parents=g_strdup("");
 	if (*parent)
 		parent_name=(*parent)->element;
@@ -695,6 +724,15 @@ xi_start_element(GMarkupParseContext *context,
 	}
 		
 }
+/**
+ * * Reached closing tag of a config element
+ * *
+ * * @param context
+ * * @param element name
+ * * @param user_data ptr to xmldocument
+ * * @param error ptr to struct for error information
+ * * @returns nothing
+ * */
 
 static void
 xi_end_element (GMarkupParseContext *context,
@@ -748,6 +786,13 @@ static const GMarkupParser parser = {
 	NULL,
 	NULL
 };
+/**
+ * * Parse the contents of the configuration file
+ * *
+ * * @param document struct holding info  about the config file
+ * * @param error info on any errors detected
+ * * @returns boolean TRUE or FALSE
+ * */
 
 static gboolean
 parse_file(struct xmldocument *document, xmlerror **error)
@@ -818,6 +863,14 @@ parse_file(struct xmldocument *document, xmlerror **error)
 	return TRUE;
 }
 #endif
+
+/**
+ * * Load and parse the master config file
+ * *
+ * * @param filename FQFN of the file
+ * * @param error ptr to error details, if any
+ * * @returns boolean TRUE or FALSE (if error detected)
+ * */
 
 gboolean config_load(const char *filename, xmlerror **error)
 {
