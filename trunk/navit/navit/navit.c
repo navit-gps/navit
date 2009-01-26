@@ -171,7 +171,7 @@ navit_get_tracking(struct navit *this_)
 }
 
 void
-navit_draw(struct navit *this_)
+navit_draw_async(struct navit *this_, int async)
 {
 	GList *l;
 	struct navit_vehicle *nv;
@@ -187,16 +187,15 @@ navit_draw(struct navit *this_)
 		navit_vehicle_draw(this_, nv, NULL);
 		l=g_list_next(l);
 	}
-	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layout_current);
-#if 0
-	{
-	int i;
-	for (i = 0 ; i < 500 ; i++)
-		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current, 1);
-	exit(0);
-	}
-#endif
+	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layout_current, async, NULL);
 }
+
+void
+navit_draw(struct navit *this_)
+{
+	navit_draw_async(this_, 0);
+}
+
 
 void
 navit_draw_displaylist(struct navit *this_)
@@ -1367,7 +1366,7 @@ navit_set_center_cursor(struct navit *this_, struct coord *cursor, int dir, int 
 	pn.y=ypercent*height/100;
 	navit_set_center_coord_screen(this_, cursor, &pn);
 	if (this_->ready == 3)
-		navit_draw(this_);
+		navit_draw_async(this_, 1);
 }
 
 
