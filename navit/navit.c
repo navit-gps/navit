@@ -1932,6 +1932,8 @@ navit_block(struct navit *this_, int block)
 {
 	if (block) {
 		this_->blocked |= 1;
+		if (graphics_draw_cancel(this_->gra, this_->displaylist))
+			this_->blocked |= 2;
 		return 0;
 	}
 	if (this_->blocked & 2) {
