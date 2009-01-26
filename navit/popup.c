@@ -238,7 +238,7 @@ popup_display(struct navit *nav, void *popup, struct point *p)
 	display=navit_get_displaylist(nav);
 	dlh=graphics_displaylist_open(display);
 	while ((di=graphics_displaylist_next(dlh))) {
-		if (graphics_displayitem_within_dist(di, p, 5)) {
+		if (graphics_displayitem_within_dist(display, di, p, 5)) {
 			popup_show_item(nav, popup, di);
 		}
 	}
