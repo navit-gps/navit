@@ -48,6 +48,7 @@
 #include "util.h"
 #include "callback.h"
 #include "file.h"
+#include "event.h"
 
 static char *navit_sharedir;
 
@@ -1593,9 +1594,8 @@ do_draw(struct displaylist *displaylist, int cancel)
 	struct attr attr;
 
 	while (!cancel) {
-		if (!displaylist->msh) {
+		if (!displaylist->msh) 
 			displaylist->msh=mapset_open(displaylist->ms);
-		}
 		if (!displaylist->m) {
 			displaylist->m=mapset_next(displaylist->msh, 1);
 			if (!displaylist->m) {
@@ -1637,13 +1637,15 @@ do_draw(struct displaylist *displaylist, int cancel)
 	event_remove_idle(displaylist->idle_ev);
 	displaylist->idle_ev=NULL;
 	displaylist->busy=0;
-	graphics_displaylist_draw(displaylist->dc.gra, displaylist, displaylist->dc.trans, displaylist->layout, 1);
+	if (! cancel) 
+		graphics_displaylist_draw(displaylist->dc.gra, displaylist, displaylist->dc.trans, displaylist->layout, 1);
 	map_rect_destroy(displaylist->mr);
 	map_selection_destroy(displaylist->sel);
 	mapset_close(displaylist->msh);
 	displaylist->mr=NULL;
 	displaylist->sel=NULL;
 	displaylist->m=NULL;
+	displaylist->msh=NULL;
 	callback_call_1(displaylist->cb, cancel);
 }
 
@@ -1687,8 +1689,11 @@ void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList 
 	int order=transform_get_order(trans);
 
 	dbg(1,"enter");
-	if (async == 1 && displaylist->busy)
-		return;
+	if (displaylist->busy) {
+		if (async == 1)
+			return;
+		do_draw(displaylist, 1);
+	}
 	xdisplay_free(displaylist->dl);
 	dbg(1,"order=%d\n", order);
 
@@ -1704,10 +1709,19 @@ void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList 
 	displaylist->layout=l;
 	if (async) {
 		if (! displaylist->idle_cb)
-			displaylist->idle_cb=callback_new_2(do_draw, displaylist, 0);
+			displaylist->idle_cb=callback_new_2(callback_cast(do_draw), displaylist, 0);
 		displaylist->idle_ev=event_add_idle(50, displaylist->idle_cb);
 	} else
 		do_draw(displaylist, 0);
+}
+
+int
+graphics_draw_cancel(struct graphics *gra, struct displaylist *displaylist)
+{
+	if (!displaylist->busy)
+		return 0;
+	do_draw(displaylist, 1);
+	return 1;
 }
 
 /**
