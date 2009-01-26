@@ -159,6 +159,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 void graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy);
 void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t);
 void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l, int async, struct callback *cb);
+int graphics_draw_cancel(struct graphics *gra, struct displaylist *displaylist);
 struct displaylist_handle *graphics_displaylist_open(struct displaylist *displaylist);
 struct displayitem *graphics_displaylist_next(struct displaylist_handle *dlh);
 void graphics_displaylist_close(struct displaylist_handle *dlh);
