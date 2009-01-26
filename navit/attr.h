@@ -90,6 +90,7 @@ struct attr {
 		} range;
 		int *dash;
 		enum item_type *item_types;
+		long long *num64;
 	} u;
 };
 

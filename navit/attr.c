@@ -209,6 +209,8 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 	}
 	if (type >= attr_type_int_begin && type <= attr_type_int_end) 
 		return g_strdup_printf("%d", attr->u.num);
+	if (type >= attr_type_int64_begin && type <= attr_type_int64_end) 
+		return g_strdup_printf("%Ld", *attr->u.num64);
 	return g_strdup("(no text)");	
 }
 
@@ -307,24 +309,18 @@ attr_data_size(struct attr *attr)
 void *
 attr_data_get(struct attr *attr)
 {
-	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
-		return attr->u.str;
-	}
-	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) {
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
 		return &attr->u.num;
-	}
-	return NULL;
+	return attr->u.data;
 }
 
 void
 attr_data_set(struct attr *attr, void *data)
 {
-	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
-		attr->u.str=data;
-	}
-	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) {
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
 		attr->u.num=*((int *)data);
-	}
+	else
+		attr->u.data=data;
 }
 
 void

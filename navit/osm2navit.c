@@ -590,6 +590,9 @@ struct attr_bin flags_attr = {
 };
 int flags_attr_value;
 
+struct attr_bin osmid_attr;
+long int osmid_attr_value;
+
 char is_in_buffer[BUFFER_SIZE];
 
 
@@ -888,7 +891,10 @@ add_node(int id, double lat, double lon)
 	town_name_attr.len=0;
 	debug_attr.len=0;
 	is_in_buffer[0]='\0';
-	sprintf(debug_attr_buffer,"nodeid=%d", nodeid);
+	debug_attr_buffer[0]='\0';
+	osmid_attr.type=attr_osm_nodeid;	
+	osmid_attr.len=3;
+	osmid_attr_value=id;
 	ni=(struct node_item *)(node_buffer.base+node_buffer.size);
 	ni->id=id;
 	ni->ref_node=0;
@@ -1006,7 +1012,10 @@ add_way(int id)
 	street_name_systematic_attr.len=0;
 	debug_attr.len=0;
 	flags_attr.len=0;
-	sprintf(debug_attr_buffer,"wayid=%d", wayid);
+	debug_attr_buffer[0]='\0';
+	osmid_attr.type=attr_osm_wayid;	
+	osmid_attr.len=3;
+	osmid_attr_value=id;
 }
 
 static int
@@ -1126,6 +1135,8 @@ end_way(FILE *out)
 		alen+=debug_attr.len+1;
 	if (flags_attr.len)
 		alen+=flags_attr.len+1;
+	if (osmid_attr.len)
+		alen+=osmid_attr.len+1;
 	if (count)
 		item.type=types[0];
 	else
@@ -1142,6 +1153,7 @@ end_way(FILE *out)
 	} else
 		write_attr(out, &label_attr, label_attr_buffer);
 	write_attr(out, &street_name_systematic_attr, street_name_systematic_attr_buffer);
+	write_attr(out, &osmid_attr, &osmid_attr_value);
 	write_attr(out, &debug_attr, debug_attr_buffer);
 	write_attr(out, &flags_attr, &flags_attr_value);
 }
@@ -1166,6 +1178,8 @@ end_node(FILE *out)
 	if (street_name_attr.len)
 		alen+=street_name_attr.len+1;
 #endif
+	if (osmid_attr.len)
+		alen+=osmid_attr.len+1;
 	if (count)
 		item.type=types[0];
 	else
@@ -1183,6 +1197,7 @@ end_node(FILE *out)
 	write_attr(out, &house_number_attr, house_number_attr_buffer);
 	write_attr(out, &street_name_attr, street_name_attr_buffer);
 #endif
+	write_attr(out, &osmid_attr, &osmid_attr_value);
 	write_attr(out, &debug_attr, debug_attr_buffer);
 #ifdef GENERATE_INDEX
 	if (item_is_town(item) && town_name_attr.len) {
