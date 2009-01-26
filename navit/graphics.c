@@ -555,17 +555,9 @@ struct displayitem {
 */
 static int xdisplay_free_list(gpointer key, gpointer value, gpointer user_data)
 {
-	GList *h, *l;
-	h=value;
-	l=h;
-	while (l) {
-		struct displayitem *di=l->data;
-		if (! di->displayed && di->item.type < type_line) 
-			dbg(1,"warning: item '%s' not displayed\n", item_to_name(di->item.type));
-		g_free(l->data);
-		l=g_list_next(l);
-	}
-	g_list_free(h);
+	GHashTable *hash=value;
+	if (hash) 
+		g_hash_table_destroy(hash);
 	return TRUE;
 }
 
@@ -580,6 +572,24 @@ static void xdisplay_free(GHashTable *display_list)
 	g_hash_table_foreach_remove(display_list, xdisplay_free_list, NULL);
 }
 
+static guint
+displayitem_hash(gconstpointer key)
+{
+	const struct displayitem *di=key;
+	return (di->item.id_hi^di->item.id_lo^((int) di->item.map));
+}
+
+static gboolean
+displayitem_equal(gconstpointer a, gconstpointer b)
+{
+	const struct displayitem *dia=a;
+	const struct displayitem *dib=b;
+	if (item_is_equal(dia->item, dib->item))
+                return TRUE;
+        return FALSE;
+}
+
+
 /**
  * FIXME
  * @param <>
@@ -590,7 +600,7 @@ static void display_add(struct displaylist *displaylist, struct item *item, int 
 {
 	struct displayitem *di;
 	int len;
-	GList *l;
+	GHashTable *h;
 	char *p;
 
 	len=sizeof(*di)+count*sizeof(*c);
@@ -611,9 +621,12 @@ static void display_add(struct displaylist *displaylist, struct item *item, int 
 	di->count=count;
 	memcpy(di->c, c, count*sizeof(*c));
 
-	l=g_hash_table_lookup(displaylist->dl, GINT_TO_POINTER(item->type));
-	l=g_list_prepend(l, di);
-	g_hash_table_insert(displaylist->dl, GINT_TO_POINTER(item->type), l);
+	h=g_hash_table_lookup(displaylist->dl, GINT_TO_POINTER(item->type));
+	if (! h) {
+		h=g_hash_table_new_full(displayitem_hash, displayitem_equal, g_free, NULL);
+		g_hash_table_insert(displaylist->dl, GINT_TO_POINTER(item->type), h);
+	}
+	g_hash_table_replace(h, di, NULL);
 }
 
 
@@ -1266,8 +1279,156 @@ graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, stru
 	gra->meth.draw_polygon(gra->priv, gc->priv, pin, count_in);
 }
 
+struct display_context
+{
+	struct graphics *gra;
+	struct element *e;
+	struct graphics_gc *gc;
+	struct graphics_image *img;
+};
 
+static void
+display_context_init(struct display_context *dc)
+{
+	dc->gc=NULL;
+	dc->img=NULL;
+}
 
+static void
+display_context_free(struct display_context *dc)
+{
+	g_free(dc->gc);
+	g_free(dc->img);
+	dc->gc=NULL;
+	dc->img=NULL;
+}
+
+static void
+displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc)
+{
+	int width[16384];
+	int count;
+	struct point pa[16384];
+	struct graphics *gra=dc->gra;
+	struct graphics_gc *gc=dc->gc;
+	struct element *e=dc->e;
+	struct graphics_image *img=dc->img;
+	struct point p;
+	char path[PATH_MAX];
+
+	di->displayed=1;
+	if (! gc) {
+		gc=graphics_gc_new(gra);
+		gc->meth.gc_set_foreground(gc->priv, &e->color);
+		dc->gc=gc;
+	}
+	if (dc->e->type == element_polyline) {
+		count=transform(tg, pg, di->c, pa, di->count, 1, e->u.polyline.width, width);
+	}
+	else
+		count=transform(tg, pg, di->c, pa, di->count, 1, 0, NULL);
+	switch (e->type) {
+	case element_polygon:
+#if 0
+		{
+			int i;
+			for (i = 0 ; i < count ; i++) {
+				dbg(0,"pa[%d]=%d,%d\n", i, pa[i].x, pa[i].y);
+			}
+		}
+		dbg(0,"element_polygon count=%d\n",count);
+#endif
+#if 1
+		graphics_draw_polygon_clipped(gra, gc, pa, count);
+#endif
+		break;
+	case element_polyline:
+#if 0
+		if (e->u.polyline.width > 1) {
+			graphics_draw_polyline_as_polygon(gra, gc, pa, count, width, 0);
+		} else {
+#else
+		{
+#if 0
+			 if (e->u.polyline.width > 1)
+				     gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
+#else
+			gc->meth.gc_set_linewidth(gc->priv, 1);
+#endif
+
+			
+#endif
+			if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
+				graphics_gc_set_dashes(gc, e->u.polyline.width, 
+						       e->u.polyline.offset,
+						       e->u.polyline.dash_table,
+						       e->u.polyline.dash_num);
+#if 0
+			if (di->label && !strcmp(di->label, "Bahnhofstr.") && di->item.type != type_street_1_city) {
+				dbg(0,"0x%x,0x%x %s\n", di->item.id_hi, di->item.id_lo, item_to_name(di->item.type));
+#endif
+			graphics_draw_polyline_clipped(gra, gc, pa, count, width, 1, e->u.polyline.width > 1);
+#if 0
+			}
+#endif
+		}
+		break;
+	case element_circle:
+		if (count) {
+			if (e->u.circle.width > 1) 
+				gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
+			gra->meth.draw_circle(gra->priv, gc->priv, pa, e->u.circle.radius);
+			if (di->label && e->text_size) {
+				p.x=pa[0].x+3;
+				p.y=pa[0].y+10;
+				if (! gra->font[e->text_size])
+					gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
+				gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->text_size]->priv, di->label, &p, 0x10000, 0);
+			}
+		}
+		break;
+	case element_text:
+		if (count && di->label) {
+			if (! gra->font[e->text_size])
+				gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
+			label_line(gra, gra->gc[2], gra->gc[1], gra->font[e->text_size], pa, count, di->label);
+		}
+		break;
+	case element_icon:
+		if (count) {
+			if (!img) {
+				if (e->u.icon.src[0] == '/')
+					strcpy(path,e->u.icon.src);
+				else
+					sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
+				img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
+				if (img)
+					dc->img=img;
+				else
+					dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
+			}
+			if (img) {
+				p.x=pa[0].x - img->hot.x;
+				p.y=pa[0].y - img->hot.y;
+				gra->meth.draw_image(gra->priv, gra->gc[0]->priv, &p, img->priv);
+			}
+		}
+		break;
+	case element_image:
+		dbg(1,"image: '%s'\n", di->label);
+		if (gra->meth.draw_image_warp)
+			gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, pa, count, di->label);
+		else
+			dbg(0,"draw_image_warp not supported by graphics driver drawing '%s'\n", di->label);
+		break;
+	case element_arrows:
+		display_draw_arrows(gra,gc,pa,count);
+		break;
+	default:
+		printf("Unhandled element type %d\n", e->type);
+	
+	}
+}
 /**
  * FIXME
  * @param <>
@@ -1277,152 +1438,30 @@ graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, stru
 static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct itemgra *itm)
 {
 	struct element *e;
-	GList *l,*ls,*es,*types;
+	GList *es,*types;
+	GHashTable *h;
 	enum item_type type;
-	struct graphics_gc *gc = NULL;
-	struct graphics_image *img=NULL;
-	struct point p;
-	char path[PATH_MAX];
-	struct point pa[16384];
-	int width[16384];
-	int count;
+	struct display_context dc;
+	display_context_init(&dc);
+
+	dc.gra=gra;
 
 	es=itm->elements;
 	while (es) {
 		e=es->data;
+		dc.e=e;
 		types=itm->type;
 		while (types) {
 			type=GPOINTER_TO_INT(types->data);
-			ls=g_hash_table_lookup(display_list, GINT_TO_POINTER(type));
-			l=ls;
-			if (gc)
-				graphics_gc_destroy(gc);
-			if (img)
-				graphics_image_free(gra, img);
-			gc=NULL;
-			img=NULL;
-			while (l) {
-				struct displayitem *di;
-				di=l->data;
-				di->displayed=1;
-				if (! gc) {
-					gc=graphics_gc_new(gra);
-					gc->meth.gc_set_foreground(gc->priv, &e->color);
-				}
-				if (e->type == element_polyline) {
-					count=transform(tg, pg, di->c, pa, di->count, 1, e->u.polyline.width, width);
-				}
-				else
-					count=transform(tg, pg, di->c, pa, di->count, 1, 0, NULL);
-				switch (e->type) {
-				case element_polygon:
-#if 0
-					{
-						int i;
-						for (i = 0 ; i < count ; i++) {
-							dbg(0,"pa[%d]=%d,%d\n", i, pa[i].x, pa[i].y);
-						}
-					}
-					dbg(0,"element_polygon count=%d\n",count);
-#endif
-#if 1
-					graphics_draw_polygon_clipped(gra, gc, pa, count);
-#endif
-					break;
-				case element_polyline:
-#if 0
-					if (e->u.polyline.width > 1) {
-						graphics_draw_polyline_as_polygon(gra, gc, pa, count, width, 0);
-					} else {
-#else
-					{
-#if 0
-						 if (e->u.polyline.width > 1)
-		                                             gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
-#else
-		                                gc->meth.gc_set_linewidth(gc->priv, 1);
-#endif
-
-						
-#endif
-						if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
-							graphics_gc_set_dashes(gc, e->u.polyline.width, 
-									       e->u.polyline.offset,
-									       e->u.polyline.dash_table,
-									       e->u.polyline.dash_num);
-#if 0
-						if (di->label && !strcmp(di->label, "Bahnhofstr.") && di->item.type != type_street_1_city) {
-							dbg(0,"0x%x,0x%x %s\n", di->item.id_hi, di->item.id_lo, item_to_name(di->item.type));
-#endif
-						graphics_draw_polyline_clipped(gra, gc, pa, count, width, 1, e->u.polyline.width > 1);
-#if 0
-						}
-#endif
-					}
-					break;
-				case element_circle:
-					if (count) {
-						if (e->u.circle.width > 1) 
-							gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
-						gra->meth.draw_circle(gra->priv, gc->priv, pa, e->u.circle.radius);
-						if (di->label && e->text_size) {
-							p.x=pa[0].x+3;
-							p.y=pa[0].y+10;
-							if (! gra->font[e->text_size])
-								gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
-							gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->text_size]->priv, di->label, &p, 0x10000, 0);
-						}
-					}
-					break;
-				case element_text:
-					if (count && di->label) {
-						if (! gra->font[e->text_size])
-							gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
-						label_line(gra, gra->gc[2], gra->gc[1], gra->font[e->text_size], pa, count, di->label);
-					}
-					break;
-				case element_icon:
-					if (count) {
-						if (!img) {
-							if (e->u.icon.src[0] == '/')
-								strcpy(path,e->u.icon.src);
-							else
-								sprintf(path,"%s/xpm/%s", navit_sharedir, e->u.icon.src);
-							img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
-							if (! img)
-								dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
-						}
-						if (img) {
-							p.x=pa[0].x - img->hot.x;
-							p.y=pa[0].y - img->hot.y;
-							gra->meth.draw_image(gra->priv, gra->gc[0]->priv, &p, img->priv);
-						}
-					}
-					break;
-				case element_image:
-					dbg(1,"image: '%s'\n", di->label);
-					if (gra->meth.draw_image_warp)
-						gra->meth.draw_image_warp(gra->priv, gra->gc[0]->priv, pa, count, di->label);
-					else
-						dbg(0,"draw_image_warp not supported by graphics driver drawing '%s'\n", di->label);
-					break;
-				case element_arrows:
-					display_draw_arrows(gra,gc,pa,count);
-					break;
-				default:
-					printf("Unhandled element type %d\n", e->type);
-				
-				}
-				l=g_list_next(l);
+			h=g_hash_table_lookup(display_list, GINT_TO_POINTER(type));
+			if (h) {
+				g_hash_table_foreach(h, (GHFunc)displayitem_draw, &dc);
+				display_context_free(&dc);
 			}
 			types=g_list_next(types);
 		}
 		es=g_list_next(es);
 	}
-	if (gc)
-		graphics_gc_destroy(gc);
-	if (img)
-		graphics_image_free(gra, img);
 }
 
 void
@@ -1729,7 +1768,7 @@ void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList 
 #if 0
 	printf("scale=%d center=0x%x,0x%x mercator scale=%f\n", scale, co->trans->center.x, co->trans->center.y, transform_scale(co->trans->center.y));
 #endif
-	
+
 	xdisplay_free(displaylist->dl);
 	dbg(1,"order=%d\n", order);
 
@@ -1764,7 +1803,7 @@ void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList 
  * @author Martin Schaller (04/2008)
 */
 struct displaylist_handle {
-	GList *hl_head,*hl,*l;
+	GList *hl_head,*hl,*l_head,*l;
 };
 
 /**
@@ -1779,6 +1818,7 @@ struct displaylist_handle * graphics_displaylist_open(struct displaylist *displa
 
 	ret=g_new0(struct displaylist_handle, 1);
 	ret->hl_head=ret->hl=g_hash_to_list(displaylist->dl);
+	ret->l_head=ret->l=g_hash_to_list_keys(ret->hl->data);
 
 	return ret;
 }
@@ -1793,10 +1833,11 @@ struct displayitem * graphics_displaylist_next(struct displaylist_handle *dlh)
 {
 	struct displayitem *ret;
 	if (! dlh->l) {
+		dlh->hl=g_list_next(dlh->hl);
 		if (!dlh->hl)
 			return NULL;
-		dlh->l=dlh->hl->data;
-		dlh->hl=g_list_next(dlh->hl);
+		g_list_free(dlh->l_head);
+		dlh->l_head=dlh->l=g_hash_to_list_keys(dlh->hl->data);
 	}
 	ret=dlh->l->data;
 	dlh->l=g_list_next(dlh->l);
@@ -1812,6 +1853,7 @@ struct displayitem * graphics_displaylist_next(struct displaylist_handle *dlh)
 void graphics_displaylist_close(struct displaylist_handle *dlh)
 {
 	g_list_free(dlh->hl_head);
+	g_list_free(dlh->l_head);
 	g_free(dlh);
 }
 
