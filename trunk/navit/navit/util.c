@@ -55,6 +55,22 @@ g_hash_to_list(GHashTable *h)
 	return ret;
 }
 
+static void
+hash_callback_key(gpointer key, gpointer value, gpointer user_data)
+{
+	GList **l=user_data;
+	*l=g_list_prepend(*l, key);
+}
+
+GList *
+g_hash_to_list_keys(GHashTable *h)
+{
+	GList *ret=NULL;
+	g_hash_table_foreach(h, hash_callback_key, &ret);
+
+	return ret;
+}
+
 gchar *
 g_strconcat_printf(gchar *buffer, gchar *fmt, ...)
 {
