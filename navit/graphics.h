@@ -158,14 +158,14 @@ int graphics_ready(struct graphics *this_);
 void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int callback);
 void graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy);
 void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t);
-void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l);
+void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l, int async, struct callback *cb);
 struct displaylist_handle *graphics_displaylist_open(struct displaylist *displaylist);
 struct displayitem *graphics_displaylist_next(struct displaylist_handle *dlh);
 void graphics_displaylist_close(struct displaylist_handle *dlh);
 struct displaylist *graphics_displaylist_new(void);
 struct item *graphics_displayitem_get_item(struct displayitem *di);
 char *graphics_displayitem_get_label(struct displayitem *di);
-int graphics_displayitem_within_dist(struct displayitem *di, struct point *p, int dist);
+int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p, int dist);
 /* end of prototypes */
 #ifdef __cplusplus
 }

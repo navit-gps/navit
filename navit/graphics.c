@@ -65,13 +65,35 @@ struct graphics
 	struct graphics_gc *gc[3];
 	struct attr **attrs;
 	struct callback_list *cbl;
-	int ready;
 	struct point_rect r;
 };
 
+struct display_context
+{
+	struct graphics *gra;
+	struct element *e;
+	struct graphics_gc *gc;
+	struct graphics_image *img;
+	enum projection pro;
+	struct transformation *trans;
+};
 
 struct displaylist {
 	GHashTable *dl;
+	int busy;
+	int workload;
+	struct callback *cb;
+	struct layout *layout;
+	struct display_context dc;
+	int order;
+	struct mapset *ms;
+	struct mapset_handle *msh;
+	struct map *m;
+	int conv;
+	struct map_selection *sel;
+	struct map_rect *mr;
+	struct callback *idle_cb;
+	struct event_idle *idle_ev;
 };
 
 
@@ -1048,8 +1070,6 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 	}
 }
 
-struct transformation *tg;
-enum projection pg;
 
 struct wpoint {
 	int x,y,w;
@@ -1279,20 +1299,6 @@ graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, stru
 	gra->meth.draw_polygon(gra->priv, gc->priv, pin, count_in);
 }
 
-struct display_context
-{
-	struct graphics *gra;
-	struct element *e;
-	struct graphics_gc *gc;
-	struct graphics_image *img;
-};
-
-static void
-display_context_init(struct display_context *dc)
-{
-	dc->gc=NULL;
-	dc->img=NULL;
-}
 
 static void
 display_context_free(struct display_context *dc)
@@ -1323,10 +1329,10 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		dc->gc=gc;
 	}
 	if (dc->e->type == element_polyline) {
-		count=transform(tg, pg, di->c, pa, di->count, 1, e->u.polyline.width, width);
+		count=transform(dc->trans, dc->pro, di->c, pa, di->count, 1, e->u.polyline.width, width);
 	}
 	else
-		count=transform(tg, pg, di->c, pa, di->count, 1, 0, NULL);
+		count=transform(dc->trans, dc->pro, di->c, pa, di->count, 1, 0, NULL);
 	switch (e->type) {
 	case element_polygon:
 #if 0
@@ -1435,28 +1441,24 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void xdisplay_draw_elements(struct graphics *gra, GHashTable *display_list, struct itemgra *itm)
+static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *display_list, struct itemgra *itm)
 {
 	struct element *e;
 	GList *es,*types;
 	GHashTable *h;
 	enum item_type type;
-	struct display_context dc;
-	display_context_init(&dc);
-
-	dc.gra=gra;
 
 	es=itm->elements;
 	while (es) {
 		e=es->data;
-		dc.e=e;
+		display_list->dc.e=e;
 		types=itm->type;
 		while (types) {
 			type=GPOINTER_TO_INT(types->data);
-			h=g_hash_table_lookup(display_list, GINT_TO_POINTER(type));
+			h=g_hash_table_lookup(display_list->dl, GINT_TO_POINTER(type));
 			if (h) {
-				g_hash_table_foreach(h, (GHFunc)displayitem_draw, &dc);
-				display_context_free(&dc);
+				g_hash_table_foreach(h, (GHFunc)displayitem_draw, &display_list->dc);
+				display_context_free(&display_list->dc);
 			}
 			types=g_list_next(types);
 		}
@@ -1541,7 +1543,7 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void xdisplay_draw_layer(GHashTable *display_list, struct graphics *gra, struct layer *lay, int order)
+static void xdisplay_draw_layer(struct displaylist *display_list, struct graphics *gra, struct layer *lay, int order)
 {
 	GList *itms;
 	struct itemgra *itm;
@@ -1561,7 +1563,7 @@ static void xdisplay_draw_layer(GHashTable *display_list, struct graphics *gra, 
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void xdisplay_draw(GHashTable *display_list, struct graphics *gra, struct layout *l, int order)
+static void xdisplay_draw(struct displaylist *display_list, struct graphics *gra, struct layout *l, int order)
 {
 	GList *lays;
 	struct layer *lay;
@@ -1582,122 +1584,68 @@ static void xdisplay_draw(GHashTable *display_list, struct graphics *gra, struct
 */
 extern void *route_selection;
 
-/**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
-static void do_draw_map(struct displaylist *displaylist, struct transformation *t, struct map *m, int order)
+static void
+do_draw(struct displaylist *displaylist, int cancel)
 {
-	enum projection pro;
-	struct map_rect *mr;
 	struct item *item;
-	int conv,count,max=16384;
+	int count,max=16384,workload=0;
 	struct coord ca[max];
 	struct attr attr;
-	struct map_selection *sel;
 
-	pro=map_projection(m);
-	conv=map_requires_conversion(m);
-	sel=transform_get_selection(t, pro, order);
-	tg=t;
-	pg=pro;
-#if 0
-	sel=NULL;
-#endif
-	if (route_selection)
-		mr=map_rect_new(m, route_selection);
-	else
-		mr=map_rect_new(m, sel);
-	if (! mr) {
-		map_selection_destroy(sel);
-		return;
-	}
-	while ((item=map_rect_get_item(mr))) {
-#if 0
-		if (num < 7599 || num > 7599)
-			continue;
-#endif
-#if 0
-		if (item->id_hi != 0xb0031 || item->id_lo != 0x20c9aeea)
-			continue;
-#endif
-		count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, sel);
-		if (! count)
-			continue;
-		if (item->type >= type_line && count < 2) {
-			dbg(1,"poly from map has only %d points\n", count);
-			continue;
+	fprintf(stderr,"d\n");
+	while (!cancel) {
+		if (!displaylist->msh) {
+			displaylist->msh=mapset_open(displaylist->ms);
 		}
-		if (item->type < type_line) {
-#if 0
-			if (! map_selection_contains_point(sel, &ca[0])) {
-				dbg(1,"point not visible\n");
-				continue;
+		if (!displaylist->m) {
+			displaylist->m=mapset_next(displaylist->msh, 1);
+			if (!displaylist->m) {
+				mapset_close(displaylist->msh);
+				displaylist->msh=NULL;
+				break;
 			}
-#endif
-		} else if (item->type < type_area) {
-#if 0
-			if (! map_selection_contains_polyline(sel, ca, count)) {
-				dbg(1,"polyline not visible\n");
-				continue;
-			}
-#endif
-		} else {
-#if 0
-			if (! map_selection_contains_polygon(sel, ca, count)) {
-				dbg(1,"polygon not visible\n");
-				continue;
-			}
-#endif
+			displaylist->dc.pro=map_projection(displaylist->m);
+			displaylist->conv=map_requires_conversion(displaylist->m);
+			displaylist->sel=transform_get_selection(displaylist->dc.trans, displaylist->dc.pro, displaylist->order);
+			displaylist->mr=map_rect_new(displaylist->m, displaylist->sel);
 		}
-		if (count == max) 
-			dbg(0,"point count overflow %d\n", count);
-		if (!item_attr_get(item, attr_label, &attr))
-			attr.u.str=NULL;
-		if (conv && attr.u.str && attr.u.str[0]) {
-			char *str=map_convert_string(m, attr.u.str);
-			display_add(displaylist, item, count, ca, str);
-			map_convert_free(str);
-		} else
-			display_add(displaylist, item, count, ca, attr.u.str);
+		if (displaylist->mr) {
+			while ((item=map_rect_get_item(displaylist->mr))) {
+				count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);
+				if (! count)
+					continue;
+				if (count == max) 
+					dbg(0,"point count overflow %d\n", count);
+				if (!item_attr_get(item, attr_label, &attr))
+					attr.u.str=NULL;
+				if (displaylist->conv && attr.u.str && attr.u.str[0]) {
+					char *str=map_convert_string(displaylist->m, attr.u.str);
+					display_add(displaylist, item, count, ca, str);
+					map_convert_free(str);
+				} else
+					display_add(displaylist, item, count, ca, attr.u.str);
+				workload++;
+				if (workload == displaylist->workload)
+					return;
+			}
+			map_rect_destroy(displaylist->mr);
+		}
+		map_selection_destroy(displaylist->sel);
+		displaylist->mr=NULL;
+		displaylist->sel=NULL;
+		displaylist->m=NULL;
 	}
-	map_rect_destroy(mr);
-	map_selection_destroy(sel);
-}
-
-/**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
-static void do_draw(struct displaylist *displaylist, struct transformation *t, GList *mapsets, int order)
-{
-	struct mapset *ms;
-	struct map *m;
-	struct mapset_handle *h;
-
-	if (! mapsets)
-		return;
-	ms=mapsets->data;
-	h=mapset_open(ms);
-	while ((m=mapset_next(h, 1))) {
-		do_draw_map(displaylist, t, m, order);
-	}
-	mapset_close(h);
-}
-
-/**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
-int graphics_ready(struct graphics *this_)
-{
-	return this_->ready;
+	event_remove_idle(displaylist->idle_ev);
+	displaylist->idle_ev=NULL;
+	displaylist->busy=0;
+	graphics_displaylist_draw(displaylist->dc.gra, displaylist, displaylist->dc.trans, displaylist->layout, 1);
+	map_rect_destroy(displaylist->mr);
+	map_selection_destroy(displaylist->sel);
+	mapset_close(displaylist->msh);
+	displaylist->mr=NULL;
+	displaylist->sel=NULL;
+	displaylist->m=NULL;
+	callback_call_1(displaylist->cb, cancel);
 }
 
 /**
@@ -1710,7 +1658,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 {
 	int order=transform_get_order(trans);
 	struct point p;
-	tg=trans;
+	displaylist->dc.trans=trans;
 	p.x=0;
 	p.y=0;
 	// FIXME find a better place to set the background color
@@ -1723,77 +1671,44 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	gra->meth.draw_mode(gra->priv, draw_mode_begin);
 	gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &p, 32767, 32767);
 	if (l) 
-		xdisplay_draw(displaylist->dl, gra, l, order+l->order_delta);
+		xdisplay_draw(displaylist, gra, l, order+l->order_delta);
 	if (callback)
 		callback_list_call_attr_0(gra->cbl, attr_postdraw);
 	gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
 
-#if 0
 /**
  * FIXME
  * @param <>
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_displaylist_move(struct displaylist *displaylist, int dx, int dy)
-{
-	struct displaylist_handle *dlh;
-	struct displayitem *di;
-	int i;
-
-	dlh=graphics_displaylist_open(displaylist);
-	while ((di=graphics_displaylist_next(dlh))) {
-		for (i = 0 ; i < di->count ; i++) {
-			di->pnt[i].x+=dx;
-			di->pnt[i].y+=dy;
-		}
-	}
-	graphics_displaylist_close(dlh);
-}
-#endif
-
-/**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
-void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l)
+void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l, int async, struct callback *cb)
 {
 	int order=transform_get_order(trans);
 
 	dbg(1,"enter");
-
-#if 0
-	printf("scale=%d center=0x%x,0x%x mercator scale=%f\n", scale, co->trans->center.x, co->trans->center.y, transform_scale(co->trans->center.y));
-#endif
-
+	if (async == 1 && displaylist->busy)
+		return;
 	xdisplay_free(displaylist->dl);
 	dbg(1,"order=%d\n", order);
 
-
-#if 0
-	for (i = 0 ; i < data_window_type_end; i++) {
-		data_window_begin(co->data_window[i]);	
-	}
-#endif
-	profile(0,NULL);
+	displaylist->dc.gra=gra;
+	displaylist->ms=mapsets->data;
+	displaylist->dc.trans=trans;
+	displaylist->workload=async ? 1000 : 0;
+	displaylist->cb=cb;
 	if (l)
 		order+=l->order_delta;
-	if (mapsets)
-		do_draw(displaylist, trans, mapsets, order);
-//	profile(1,"do_draw");
-	graphics_displaylist_draw(gra, displaylist, trans, l, 1);
-	profile(1,"xdisplay_draw");
-	profile(0,"end");
-  
-#if 0
-	for (i = 0 ; i < data_window_type_end; i++) {
-		data_window_end(co->data_window[i]);	
-	}
-#endif
-	gra->ready=1;
+	displaylist->order=order;
+	displaylist->busy=1;
+	displaylist->layout=l;
+	if (async) {
+		if (! displaylist->idle_cb)
+			displaylist->idle_cb=callback_new_2(do_draw, displaylist, 0);
+		displaylist->idle_ev=event_add_idle(50, displaylist->idle_cb);
+	} else
+		do_draw(displaylist, 0);
 }
 
 /**
@@ -1865,7 +1780,7 @@ void graphics_displaylist_close(struct displaylist_handle *dlh)
 */
 struct displaylist * graphics_displaylist_new(void)
 {
-	struct displaylist *ret=g_new(struct displaylist, 1);
+	struct displaylist *ret=g_new0(struct displaylist, 1);
 
 	ret->dl=g_hash_table_new(NULL,NULL);
 
@@ -1986,12 +1901,12 @@ static int within_dist_polygon(struct point *p, struct point *poly_pnt, int coun
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-int graphics_displayitem_within_dist(struct displayitem *di, struct point *p, int dist)
+int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p, int dist)
 {
 	struct point pa[16384];
 	int count;
 
-	count=transform(tg, pg, di->c, pa, di->count, 1, 0, NULL);
+	count=transform(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 1, 0, NULL);
 	
 	if (di->item.type < type_line) {
 		return within_dist_point(p, &pa[0], dist);
