@@ -1592,7 +1592,6 @@ do_draw(struct displaylist *displaylist, int cancel)
 	struct coord ca[max];
 	struct attr attr;
 
-	fprintf(stderr,"d\n");
 	while (!cancel) {
 		if (!displaylist->msh) {
 			displaylist->msh=mapset_open(displaylist->ms);
