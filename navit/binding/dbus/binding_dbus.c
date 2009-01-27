@@ -230,7 +230,7 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
 		return 0;
 	dbus_message_iter_get_basic(&iter2, &pc->y);
 
-	dbg(0, " pro -> %x x -> %x y -> %x\n", &pc->pro, &pc->x, &pc->y);
+	dbg(0, " pro -> 0x%x x -> 0x%x y -> 0x%x\n", pc->pro, pc->x, pc->y);
 	
 	dbus_message_iter_next(&iter2);
 	
@@ -666,6 +666,10 @@ struct dbus_method {
 	{".navit",  "set_attr",            "sv",      "attribute,value",                         "",   "",      request_navit_set_attr},
 	{".navit",  "set_position",        "(iii)",   "(projection,longitude,latitude)",         "",   "",      request_navit_set_position},
 	{".navit",  "set_destination",     "(iii)s",  "(projection,longitude,latitude)comment",  "",   "",      request_navit_set_destination},
+#if 0
+    {".navit",  "toggle_announcer",    "",        "",                                        "",   "",      request_navit_toggle_announcer},
+	{".navit",  "toggle_announcer",    "i",       "",                                        "",   "",      request_navit_toggle_announcer},
+#endif
 };
 
 static char *
