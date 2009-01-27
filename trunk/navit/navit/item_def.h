@@ -413,6 +413,8 @@ ITEM(fence)
 ITEM(wall)
 ITEM(retaining_wall)
 ITEM(city_wall)
+ITEM(street_turn_restriction_no)
+ITEM(street_turn_restriction_only)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)
