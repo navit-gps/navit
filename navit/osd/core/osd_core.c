@@ -237,30 +237,37 @@ handle(struct graphics *gr, struct graphics_gc *gc, struct point *p, int r,
 	graphics_draw_lines(gr, gc, ph, 3);
 }
 
-static void
-format_distance(char *buffer, double distance)
+static char *
+format_distance(double distance, char *sep)
 {
 	if (distance >= 100000)
-		sprintf(buffer, "%.0fkm", distance / 1000);
+		return g_strdup_printf("%.0f%skm", distance / 1000, sep);
 	else if (distance >= 10000)
-		sprintf(buffer, "%.1fkm", distance / 1000);
+		return g_strdup_printf("%.1f%skm", distance / 1000, sep);
 	else if (distance >= 300)
-		sprintf(buffer, "%.0fm", round(distance / 25) * 25);
+		return g_strdup_printf("%.0f%sm", round(distance / 25) * 25, sep);
 	else if (distance >= 50)
-		sprintf(buffer, "%.0fm", round(distance / 10) * 10);
+		return g_strdup_printf("%.0f%sm", round(distance / 10) * 10, sep);
 	else if (distance >= 10)
-		sprintf(buffer, "%.0fm", distance);
+		return g_strdup_printf("%.0f%sm", distance, sep);
 	else
-		sprintf(buffer, "%.1fm", distance);
+		return g_strdup_printf("%.1f%sm", distance, sep);
 }
 
-#if 0
-static void
-format_speed(char *buffer, double speed)
+static char * 
+format_time(struct tm *tm, int days)
 {
-	printf(buffer, "%.0f", speed);
+	if (days)
+		return g_strdup_printf("%d+%02d:%02d", days, tm->tm_hour, tm->tm_min);
+	else
+		return g_strdup_printf("%02d:%02d", tm->tm_hour, tm->tm_min);
 }
-#endif
+
+static char * 
+format_speed(double speed, char *sep)
+{
+	return g_strdup_printf("%.0f%skm/h", speed, sep);
+}
 
 static void
 osd_compass_draw(struct compass *this, struct navit *nav,
@@ -269,7 +276,7 @@ osd_compass_draw(struct compass *this, struct navit *nav,
 	struct point p;
 	struct attr attr_dir, destination_attr, position_attr;
 	double dir, vdir = 0;
-	char buffer[16];
+	char *buffer;
 	struct coord c1, c2;
 	enum projection pro;
 
@@ -301,13 +308,13 @@ osd_compass_draw(struct compass *this, struct navit *nav,
 			dir -= vdir;
 			handle(this->osd_item.gr, this->green, &p, 20,
 			       dir);
-			format_distance(buffer,
-					transform_distance(pro, &c1, &c2));
+			buffer=format_distance(transform_distance(pro, &c1, &c2),"");
 			p.x = 8;
 			p.y = 72;
 			graphics_draw_text(this->osd_item.gr, this->green,
 					   NULL, this->osd_item.font,
 					   buffer, &p, 0x10000, 0);
+			g_free(buffer);
 		}
 	}
 	graphics_draw_mode(this->osd_item.gr, draw_mode_end);
@@ -351,808 +358,6 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 	return (struct osd_priv *) this;
 }
 
-struct osd_eta {
-	struct osd_item osd_item;
-	int active;
-	char *test_text;
-	char last_eta[16];
-};
-
-static void
-osd_eta_draw(struct osd_eta *this, struct navit *navit, struct vehicle *v)
-{
-	struct point p, p2[4];
-	char eta[16];
-	int days = 0, do_draw = 0;
-	time_t etat;
-	struct tm tm, eta_tm, eta_tm0;
-	struct attr attr;
-	struct navigation *nav = NULL;
-	struct map *map = NULL;
-	struct map_rect *mr = NULL;
-	struct item *item = NULL;
-
-
-	eta[0] = '\0';
-
-	if (navit)
-		nav = navit_get_navigation(navit);
-	if (nav)
-		map = navigation_get_map(nav);
-	if (map)
-		mr = map_rect_new(map, NULL);
-
-	if (mr)
-		item = map_rect_get_item(mr);
-
-	if (item) {
-		if (item_attr_get(item, attr_destination_time, &attr)) {
-			etat = time(NULL);
-			tm = *localtime(&etat);
-			etat += attr.u.num / 10;
-			eta_tm = *localtime(&etat);
-			if (tm.tm_year != eta_tm.tm_year
-			    || tm.tm_mon != eta_tm.tm_mon
-			    || tm.tm_mday != eta_tm.tm_mday) {
-				eta_tm0 = eta_tm;
-				eta_tm0.tm_sec = 0;
-				eta_tm0.tm_min = 0;
-				eta_tm0.tm_hour = 0;
-				tm.tm_sec = 0;
-				tm.tm_min = 0;
-				tm.tm_hour = 0;
-				days =
-				    (mktime(&eta_tm0) - mktime(&tm) +
-				     43200) / 86400;
-			}
-			if (days)
-				sprintf(eta, "%d+%02d:%02d", days,
-					eta_tm.tm_hour, eta_tm.tm_min);
-			else
-				sprintf(eta, "%02d:%02d", eta_tm.tm_hour,
-					eta_tm.tm_min);
-		}
-		if (this->active != 1 || strcmp(this->last_eta, eta)) {
-			this->active = 1;
-			strcpy(this->last_eta, eta);
-			do_draw = 1;
-		}
-	} else {
-		if (this->active != 0) {
-			this->active = 0;
-			do_draw = 1;
-		}
-	}
-
-	if (mr)
-		map_rect_destroy(mr);
-
-	if (do_draw || this->test_text) {
-		osd_std_draw(&this->osd_item);
-		if (this->active) {
-			if (*eta) {
-				graphics_get_text_bbox(this->osd_item.gr,
-						       this->osd_item.font,
-						       eta, 0x10000, 0x0,
-						       p2, 0);
-				p.y =
-				    ((p2[0].y - p2[2].y) / 2) +
-				    (this->osd_item.h / 2);
-				p.x =
-				    ((p2[0].x - p2[2].x) / 2) +
-				    (this->osd_item.w / 2);
-				graphics_draw_text(this->osd_item.gr,
-						   this->osd_item.
-						   graphic_fg_white, NULL,
-						   this->osd_item.font,
-						   eta, &p, 0x10000, 0);
-			}
-		} else if (this->test_text) {
-			graphics_get_text_bbox(this->osd_item.gr,
-					       this->osd_item.font,
-					       this->test_text, 0x10000,
-					       0x0, p2, 0);
-			p.y =
-			    ((p2[0].y - p2[2].y) / 2) +
-			    (this->osd_item.h / 2);
-			p.x =
-			    ((p2[0].x - p2[2].x) / 2) +
-			    (this->osd_item.w / 2);
-			graphics_draw_text(this->osd_item.gr,
-					   this->osd_item.graphic_fg_white,
-					   NULL, this->osd_item.font,
-					   this->test_text, &p, 0x10000,
-					   0);
-		}
-		graphics_draw_mode(this->osd_item.gr, draw_mode_end);
-	}
-
-}
-
-static void
-osd_eta_init(struct osd_eta *this, struct navit *nav)
-{
-
-	osd_set_std_graphic(nav, &this->osd_item);
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_eta_draw), attr_position_coord_geo, this));
-	osd_eta_draw(this, nav, NULL);
-
-}
-
-static struct osd_priv *
-osd_eta_new(struct navit *nav, struct osd_methods *meth,
-	    struct attr **attrs)
-{
-	struct osd_eta *this = g_new0(struct osd_eta, 1);
-	struct attr *attr;
-
-	this->osd_item.p.x = -80;
-	this->osd_item.p.y = 20;
-	this->osd_item.w = 60;
-	this->osd_item.h = 20;
-	this->osd_item.font_size = 200;
-	osd_set_std_attr(attrs, &this->osd_item, 2);
-
-	this->active = -1;
-
-	attr = attr_search(attrs, NULL, attr_label);
-	if (attr)
-		this->test_text = g_strdup(attr->u.str);
-	else
-		this->test_text = NULL;
-
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_eta_init), attr_navit, this));
-	return (struct osd_priv *) this;
-}
-
-struct osd_speed {
-	struct osd_item osd_item;
-	int active;
-	char *test_text;
-	double last_speed;
-};
-
-static void
-osd_speed_draw(struct osd_speed *this, struct navit *nav)
-{
-	struct point p, p2[4];
-	struct attr attr;
-	double speed = 0;
-	int speed_max = 0;
-	int do_draw = 0;
-	char buffer[16];
-	struct route *r=NULL;
-	int *speedlist=NULL;
-	struct tracking *tr=NULL;
-	struct item *item=NULL;
-	struct vehicle *v=NULL;
-
-
-	if (nav) {
-		if (navit_get_attr(nav, attr_vehicle, &attr, NULL)) {
-			v = attr.u.vehicle;
-		}
-		r = navit_get_route(nav);
-		tr = navit_get_tracking(nav);
-	}
-
-	if (r)
-		speedlist = route_get_speedlist(r);
-
-	if (tr)
-		item = tracking_get_current_item(tr);
-
-	if (item && speedlist) {
-		speed_max = speedlist[item->type - route_item_first];
-	}
-
-	if (v) {
-		if (vehicle_get_attr(v, attr_position_speed, &attr, NULL)) {
-			speed = *attr.u.numd;
-		}
-		if (this->active != 1 || this->last_speed != speed) {
-			this->last_speed = speed;
-			this->active = 1;
-			do_draw = 1;
-		}
-	} else {
-		if (this->active != 0) {
-			this->active = 0;
-			do_draw = 1;
-		}
-	}
-
-	if (do_draw) {
-		osd_std_draw(&this->osd_item);
-		if (this->active) {
-			sprintf(buffer, "%.0f/%i", speed, speed_max);
-			graphics_get_text_bbox(this->osd_item.gr,
-					       this->osd_item.font, buffer,
-					       0x10000, 0x0, p2, 0);
-			p.y =
-			    ((p2[0].y - p2[2].y) / 2) +
-			    (this->osd_item.h / 2);
-			graphics_draw_text(this->osd_item.gr,
-					   this->osd_item.graphic_fg_white,
-					   NULL, this->osd_item.font,
-					   buffer, &p, 0x10000, 0);
-		}
-		graphics_draw_mode(this->osd_item.gr, draw_mode_end);
-	}
-}
-
-static void
-osd_speed_init(struct osd_speed *this, struct navit *nav)
-{
-	struct attr attr, attr_cb;
-	struct vehicle *v = NULL;
-
-	osd_set_std_graphic(nav, &this->osd_item);
-
-	if (nav) {
-		if (navit_get_attr(nav, attr_vehicle, &attr, NULL)) {
-			v = attr.u.vehicle;
-		}
-	}
-
-	if (v) {
-		attr_cb.type = attr_callback;
-		attr_cb.u.callback =
-		    callback_new_attr_2(callback_cast(osd_speed_draw),
-					attr_position_speed, this, nav);
-		if (!vehicle_add_attr(v, &attr_cb)) {
-			dbg(0, "failed register callback\n");
-		}
-	}
-	osd_speed_draw(this, nav);
-}
-
-static struct osd_priv *
-osd_speed_new(struct navit *nav, struct osd_methods *meth,
-	      struct attr **attrs)
-{
-	struct osd_speed *this = g_new0(struct osd_speed, 1);
-	struct attr *attr;
-
-	this->osd_item.p.x = 0;
-	this->osd_item.p.y = -40;
-	this->osd_item.w = 150;
-	this->osd_item.h = 40;
-	this->osd_item.font_size = 200;
-	osd_set_std_attr(attrs, &this->osd_item, 2);
-
-	this->active = -1;
-
-	attr = attr_search(attrs, NULL, attr_label);
-	if (attr)
-		this->test_text = g_strdup(attr->u.str);
-	else
-		this->test_text = NULL;
-
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_init), attr_navit, this));
-	return (struct osd_priv *) this;
-}
-
-struct osd_sats {
-	struct osd_item osd_item;
-	int active;
-	char *test_text;
-	int last_sats, last_sats_used, last_sats_signal;
-};
-
-static void
-osd_sats_draw(struct osd_sats *this, struct vehicle *v)
-{
-	struct point p, p2[4];
-	struct attr attr;
-	int satelites = 0, satelites_used = 0, do_draw =
-	    0, satelites_signal = 0;
-	char buffer[16];
-
-	if (v) {
-		if (vehicle_get_attr(v, attr_position_qual, &attr, NULL)) {
-			satelites = attr.u.num;
-		}
-		if (vehicle_get_attr
-		    (v, attr_position_sats_used, &attr, NULL)) {
-			satelites_used = attr.u.num;
-		}
-		if (vehicle_get_attr
-		    (v, attr_position_sats_signal, &attr, NULL)) {
-			satelites_signal = attr.u.num;
-		}
-		if (this->active != 1 || this->last_sats != satelites
-		    || this->last_sats_used != satelites_used
-		    || this->last_sats_signal != satelites_signal) {
-			this->last_sats = satelites;
-			this->last_sats_used = satelites_used;
-			this->last_sats_signal = satelites_signal;
-			this->active = 1;
-			do_draw = 1;
-		}
-	} else {
-		if (this->active != 0) {
-			this->active = 0;
-			do_draw = 1;
-		}
-	}
-
-	if (do_draw) {
-		osd_std_draw(&this->osd_item);
-		if (this->active) {
-			sprintf(buffer, "%i/%i/%i", satelites_used,
-				satelites_signal, satelites);
-			graphics_get_text_bbox(this->osd_item.gr,
-					       this->osd_item.font, buffer,
-					       0x10000, 0x0, p2, 0);
-			p.y =
-			    ((p2[0].y - p2[2].y) / 2) +
-			    (this->osd_item.h / 2);
-			graphics_draw_text(this->osd_item.gr,
-					   this->osd_item.graphic_fg_white,
-					   NULL, this->osd_item.font,
-					   buffer, &p, 0x10000, 0);
-		}
-		graphics_draw_mode(this->osd_item.gr, draw_mode_end);
-	}
-}
-
-static void
-osd_sats_init(struct osd_sats *this, struct navit *nav)
-{
-	struct attr attr, attr_cb;
-	struct vehicle *v = NULL;
-
-	osd_set_std_graphic(nav, &this->osd_item);
-
-	if (nav) {
-		if (navit_get_attr(nav, attr_vehicle, &attr, NULL)) {
-			v = attr.u.vehicle;
-		}
-	}
-
-	if (v) {
-		attr_cb.type = attr_callback;
-		attr_cb.u.callback =
-		    callback_new_attr_2(callback_cast(osd_sats_draw),
-					attr_position_sats, this, v);
-		if (!vehicle_add_attr(v, &attr_cb)) {
-			dbg(0, "failed register callback\n");
-		}
-	}
-	osd_sats_draw(this, v);
-}
-
-static struct osd_priv *
-osd_sats_new(struct navit *nav, struct osd_methods *meth,
-	     struct attr **attrs)
-{
-	struct osd_sats *this = g_new0(struct osd_sats, 1);
-	struct attr *attr;
-
-	this->osd_item.p.x = 0;
-	this->osd_item.p.y = -40;
-	this->osd_item.w = 150;
-	this->osd_item.h = 40;
-	this->osd_item.font_size = 200;
-	osd_set_std_attr(attrs, &this->osd_item, 2);
-
-	this->active = -1;
-
-	attr = attr_search(attrs, NULL, attr_label);
-	if (attr)
-		this->test_text = g_strdup(attr->u.str);
-	else
-		this->test_text = NULL;
-
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_sats_init), attr_navit, this));
-	return (struct osd_priv *) this;
-}
-
-struct osd_nav_distance_to_target {
-	struct osd_item osd_item;
-	int active;
-	char *test_text;
-	char last_distance[16];
-};
-
-
-static void
-osd_nav_distance_to_target_draw(struct osd_nav_distance_to_target *this,
-				struct navit *navit, struct vehicle *v)
-{
-	struct point p, p2[4];
-	char distance[16];
-	int do_draw = 0;
-	struct attr attr;
-	struct navigation *nav = NULL;
-	struct map *map = NULL;
-	struct map_rect *mr = NULL;
-	struct item *item = NULL;
-
-
-	distance[0] = '\0';
-
-	if (navit)
-		nav = navit_get_navigation(navit);
-	if (nav)
-		map = navigation_get_map(nav);
-	if (map)
-		mr = map_rect_new(map, NULL);
-
-	if (mr)
-		item = map_rect_get_item(mr);
-
-	if (item) {
-		if (item_attr_get(item, attr_destination_length, &attr)) {
-			format_distance(distance, attr.u.num);
-		}
-		if (this->active != 1
-		    || strcmp(this->last_distance, distance)) {
-			this->active = 1;
-			strcpy(this->last_distance, distance);
-			do_draw = 1;
-		}
-	} else {
-		if (this->active != 0) {
-			this->active = 0;
-			do_draw = 1;
-		}
-	}
-
-	if (mr)
-		map_rect_destroy(mr);
-
-
-	if (do_draw || this->test_text) {
-		osd_std_draw(&this->osd_item);
-		if (this->active || this->test_text) {
-			if (this->test_text) {
-				graphics_get_text_bbox(this->osd_item.gr,
-						       this->osd_item.font,
-						       this->test_text,
-						       0x10000, 0x0, p2,
-						       0);
-				p.x =
-				    ((p2[0].x - p2[2].x) / 2) +
-				    (this->osd_item.w / 2);
-				p.y =
-				    ((p2[0].y - p2[2].y) / 2) +
-				    (this->osd_item.h / 2);
-				graphics_draw_text(this->osd_item.gr,
-						   this->osd_item.
-						   graphic_fg_white, NULL,
-						   this->osd_item.font,
-						   this->test_text, &p,
-						   0x10000, 0);
-			} else if (*distance) {
-				graphics_get_text_bbox(this->osd_item.gr,
-						       this->osd_item.font,
-						       distance, 0x10000,
-						       0x0, p2, 0);
-				p.x =
-				    ((p2[0].x - p2[2].x) / 2) +
-				    (this->osd_item.w / 2);
-				p.y =
-				    ((p2[0].y - p2[2].y) / 2) +
-				    (this->osd_item.h / 2);
-				graphics_draw_text(this->osd_item.gr,
-						   this->osd_item.
-						   graphic_fg_white, NULL,
-						   this->osd_item.font,
-						   distance, &p, 0x10000,
-						   0);
-			}
-		}
-		graphics_draw_mode(this->osd_item.gr, draw_mode_end);
-	}
-}
-
-
-static void
-osd_nav_distance_to_target_init(struct osd_nav_distance_to_target *this,
-				struct navit *nav)
-{
-
-	osd_set_std_graphic(nav, &this->osd_item);
-
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_distance_to_target_draw), attr_position_coord_geo, this));
-
-	osd_nav_distance_to_target_draw(this, nav, NULL);
-
-}
-
-static struct osd_priv *
-osd_nav_distance_to_target_new(struct navit *nav, struct osd_methods *meth,
-			       struct attr **attrs)
-{
-	struct osd_nav_distance_to_target *this =
-	    g_new0(struct osd_nav_distance_to_target, 1);
-	struct attr *attr;
-
-	this->osd_item.p.x = -80;
-	this->osd_item.p.y = 40;
-	this->osd_item.w = 60;
-	this->osd_item.h = 20;
-	this->osd_item.font_size = 200;
-	osd_set_std_attr(attrs, &this->osd_item, 2);
-
-	this->active = -1;
-
-	attr = attr_search(attrs, NULL, attr_label);
-	if (attr)
-		this->test_text = g_strdup(attr->u.str);
-	else
-		this->test_text = NULL;
-
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_distance_to_target_init), attr_navit, this));
-	return (struct osd_priv *) this;
-}
-
-struct osd_nav_distance_to_next {
-	struct osd_item osd_item;
-	int active;
-	char last_distance[16];
-	char *test_text;
-};
-
-static void
-osd_nav_distance_to_next_draw(struct osd_nav_distance_to_next *this,
-			      struct navit *navit, struct vehicle *v)
-{
-	struct point p, p2[4];
-	char distance[16];
-	int do_draw = 0;
-	struct attr attr;
-	struct navigation *nav = NULL;
-	struct map *map = NULL;
-	struct map_rect *mr = NULL;
-	struct item *item = NULL;
-
-	distance[0] = '\0';
-
-	if (navit)
-		nav = navit_get_navigation(navit);
-	if (nav)
-		map = navigation_get_map(nav);
-	if (map)
-		mr = map_rect_new(map, NULL);
-	if (mr)
-		while ((item = map_rect_get_item(mr))
-		       && (item->type == type_nav_position || item->type == type_nav_none));
-
-	if (item) {
-		if (item_attr_get(item, attr_length, &attr)) {
-			format_distance(distance, attr.u.num);
-		}
-		if (this->active != 1
-		    || strcmp(this->last_distance, distance)) {
-			this->active = 1;
-			strcpy(this->last_distance, distance);
-			do_draw = 1;
-		}
-	} else {
-		if (this->active != 0) {
-			this->active = 0;
-			do_draw = 1;
-		}
-	}
-	if (mr)
-		map_rect_destroy(mr);
-
-	if (do_draw || this->test_text) {
-		osd_std_draw(&this->osd_item);
-		if (this->active || this->test_text) {
-			if (this->test_text) {
-				graphics_get_text_bbox(this->osd_item.gr,
-						       this->osd_item.font,
-						       this->test_text,
-						       0x10000, 0x0, p2,
-						       0);
-				p.x =
-				    ((p2[0].x - p2[2].x) / 2) +
-				    (this->osd_item.w / 2);
-				p.y =
-				    ((p2[0].y - p2[2].y) / 2) +
-				    (this->osd_item.h / 2);
-				graphics_draw_text(this->osd_item.gr,
-						   this->osd_item.
-						   graphic_fg_white, NULL,
-						   this->osd_item.font,
-						   this->test_text, &p,
-						   0x10000, 0);
-			} else if (*distance) {
-				graphics_get_text_bbox(this->osd_item.gr,
-						       this->osd_item.font,
-						       distance, 0x10000,
-						       0x0, p2, 0);
-				p.x =
-				    ((p2[0].x - p2[2].x) / 2) +
-				    (this->osd_item.w / 2);
-				p.y =
-				    ((p2[0].y - p2[2].y) / 2) +
-				    (this->osd_item.h / 2);
-				graphics_draw_text(this->osd_item.gr,
-						   this->osd_item.
-						   graphic_fg_white, NULL,
-						   this->osd_item.font,
-						   distance, &p, 0x10000,
-						   0);
-			}
-		}
-		graphics_draw_mode(this->osd_item.gr, draw_mode_end);
-	}
-}
-
-static void
-osd_nav_distance_to_next_init(struct osd_nav_distance_to_next *this,
-			      struct navit *nav)
-{
-	osd_set_std_graphic(nav, &this->osd_item);
-	navit_add_callback(nav, callback_new_attr_1(callback_cast (osd_nav_distance_to_next_draw), attr_position_coord_geo, this));
-	osd_nav_distance_to_next_draw(this, nav, NULL);
-}
-
-static struct osd_priv *
-osd_nav_distance_to_next_new(struct navit *nav, struct osd_methods *meth,
-			     struct attr **attrs)
-{
-	struct osd_nav_distance_to_next *this =
-	    g_new0(struct osd_nav_distance_to_next, 1);
-	struct attr *attr;
-
-	this->osd_item.p.x = 20;
-	this->osd_item.p.y = -40;
-	this->osd_item.w = 60;
-	this->osd_item.h = 20;
-	this->osd_item.font_size = 200;
-	osd_set_std_attr(attrs, &this->osd_item, 2);
-	this->active = -1;
-
-	attr = attr_search(attrs, NULL, attr_label);
-	if (attr)
-		this->test_text = g_strdup(attr->u.str);
-	else
-		this->test_text = NULL;
-
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_distance_to_next_init), attr_navit, this));
-	return (struct osd_priv *) this;
-}
-
-struct osd_street_name {
-	struct osd_item osd_item;
-	int active;
-	struct item item;
-	char *test_text;
-};
-
-static void
-osd_street_name_draw(struct osd_street_name *this, struct navit *navit,
-		     struct vehicle *v)
-{
-	struct point p, p2[4];
-	char distance[16];
-	int do_draw = 0;
-	struct attr attr_name1, attr_name2;
-	char *name1 = NULL, *name2 = NULL;
-	struct tracking *tr = NULL;
-	struct map_rect *mr = NULL;
-	struct item *item = NULL;
-	char *name = NULL;
-
-	distance[0] = '\0';
-	if (navit)
-		tr = navit_get_tracking(navit);
-
-	if (tr)
-		item = tracking_get_current_item(tr);
-
-	dbg(1, "navit=%p tr=%p item=%p\n", navit, tr, item);
-	if (item) {
-		if (!item_is_equal(*item, this->item)) {
-			do_draw = 1;
-			this->item = *item;
-			mr = map_rect_new(item->map, NULL);
-			item =
-			    map_rect_get_item_byid(mr, item->id_hi,
-						   item->id_lo);
-			if (item_attr_get
-			    (item, attr_street_name, &attr_name1))
-				name1 =
-				    map_convert_string(item->map,
-						       attr_name1.u.str);
-			if (item_attr_get
-			    (item, attr_street_name_systematic,
-			     &attr_name2))
-				name2 =
-				    map_convert_string(item->map,
-						       attr_name2.u.str);
-			printf("name1=%s name2=%s\n", name1, name2);
-			map_rect_destroy(mr);
-			if (name1 && name2)
-				name =
-				    g_strdup_printf("%s/%s", name2, name1);
-			else
-				name = g_strdup(name1 ? name1 : name2);
-			map_convert_free(name1);
-			map_convert_free(name2);
-			this->active = 1;
-		}
-	} else {
-		if (this->item.map || this->active)
-			do_draw = 1;
-		this->active = 0;
-		memset(&this->item, 0, sizeof(this->item));
-		name = NULL;
-	}
-
-	if (do_draw) {
-		dbg(1, "name=%s\n", name);
-		osd_std_draw(&this->osd_item);
-		if (this->test_text) {
-			graphics_get_text_bbox(this->osd_item.gr,
-					       this->osd_item.font,
-					       this->test_text, 0x10000,
-					       0x0, p2, 0);
-			p.y =
-			    ((p2[0].y - p2[2].y) / 2) +
-			    (this->osd_item.h / 2);
-			graphics_draw_text(this->osd_item.gr,
-					   this->osd_item.graphic_fg_white,
-					   NULL, this->osd_item.font,
-					   this->test_text, &p, 0x10000,
-					   0);
-		} else if (name) {
-			graphics_get_text_bbox(this->osd_item.gr,
-					       this->osd_item.font, name,
-					       0x10000, 0x0, p2, 0);
-			p.y =
-			    ((p2[0].y - p2[2].y) / 2) +
-			    (this->osd_item.h / 2);
-			graphics_draw_text(this->osd_item.gr,
-					   this->osd_item.graphic_fg_white,
-					   NULL, this->osd_item.font, name,
-					   &p, 0x10000, 0);
-		}
-		graphics_draw_mode(this->osd_item.gr, draw_mode_end);
-	}
-	g_free(name);
-}
-
-static void
-osd_street_name_init(struct osd_street_name *this, struct navit *nav)
-{
-	osd_set_std_graphic(nav, &this->osd_item);
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_street_name_draw), attr_position_coord_geo, this));
-	osd_street_name_draw(this, nav, NULL);
-}
-
-static struct osd_priv *
-osd_street_name_new(struct navit *nav, struct osd_methods *meth,
-		    struct attr **attrs)
-{
-	struct osd_street_name *this = g_new0(struct osd_street_name, 1);
-	struct attr *attr;
-
-	this->osd_item.p.x = 0;
-	this->osd_item.p.y = -40;
-	this->osd_item.w = 150;
-	this->osd_item.h = 40;
-	this->osd_item.font_size = 200;
-	osd_set_std_attr(attrs, &this->osd_item, 2);
-
-	attr = attr_search(attrs, NULL, attr_label);
-	if (attr)
-		this->test_text = g_strdup(attr->u.str);
-	else
-		this->test_text = NULL;
-
-	this->active = -1;
-
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_street_name_init), attr_navit, this));
-	return (struct osd_priv *) this;
-}
-
 struct osd_button {
 	int use_overlay;
 	struct osd_item item;
@@ -1160,7 +365,6 @@ struct osd_button {
 	struct graphics_image *img;
 	char *src;
 };
-
 
 static void
 osd_button_draw(struct osd_button *this, struct navit *nav)
@@ -1377,140 +581,6 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 	return (struct osd_priv *) this;
 }
 
-struct nav_next_street_name {
-	struct osd_item osd_item;
-	int active;
-	char *last_street_name;
-	char *test_text;
-};
-
-static void
-osd_nav_next_street_name_draw(struct nav_next_street_name *this,
-			      struct navit *navit)
-{
-
-	int do_draw = 0;
-	char *name_next = NULL;
-	struct navigation *nav = NULL;
-	struct map *map = NULL;
-	struct map_rect *mr = NULL;
-	struct item *item = NULL;
-	struct attr attr;
-	struct point p, p2[4];
-
-	if (navit)
-		nav = navit_get_navigation(navit);
-
-	if (nav)
-		map = navigation_get_map(nav);
-
-	if (map)
-		mr = map_rect_new(map, NULL);
-
-	if (mr)
-		while ((item = map_rect_get_item(mr))
-		       && item->type == type_nav_position);
-
-	if (item && item_attr_get(item, attr_street_name, &attr)) {
-		if (item->type == type_nav_destination) {
-			name_next = _("reaching destination");
-		} else {
-			name_next = attr.u.str;
-		}
-
-		if (this->active != 1
-		    || strcmp(this->last_street_name, name_next)) {
-			this->active = 1;
-			if (this->last_street_name)
-				g_free(this->last_street_name);
-			this->last_street_name = g_strdup(name_next);
-			do_draw = 1;
-		}
-	} else {
-		if (this->active != 0) {
-			this->active = 0;
-			do_draw = 1;
-		}
-	}
-
-	if (mr)
-		map_rect_destroy(mr);
-
-	if (do_draw || this->test_text) {
-		osd_std_draw(&this->osd_item);
-		if (this->active) {
-			if (name_next) {
-				graphics_get_text_bbox(this->osd_item.gr,
-						       this->osd_item.font,
-						       name_next, 0x10000,
-						       0x0, p2, 0);
-				p.y =
-				    ((p2[0].y - p2[2].y) / 2) +
-				    (this->osd_item.h / 2);
-				graphics_draw_text(this->osd_item.gr,
-						   this->osd_item.
-						   graphic_fg_white, NULL,
-						   this->osd_item.font,
-						   name_next, &p, 0x10000,
-						   0);
-			}
-		} else if (this->test_text) {
-			graphics_get_text_bbox(this->osd_item.gr,
-					       this->osd_item.font,
-					       this->test_text, 0x10000,
-					       0x0, p2, 0);
-			p.y =
-			    ((p2[0].y - p2[2].y) / 2) + (this->osd_item.h / 2);
-			graphics_draw_text(this->osd_item.gr,
-					   this->osd_item.graphic_fg_white,
-					   NULL, this->osd_item.font,
-					   this->test_text, &p, 0x10000,
-					   0);
-		}
-		graphics_draw_mode(this->osd_item.gr, draw_mode_end);
-	}
-
-}
-
-static void
-osd_nav_next_street_name_init(struct nav_next_street_name *this,
-			      struct navit *nav)
-{
-
-	osd_set_std_graphic(nav, &this->osd_item);
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_street_name_draw), attr_position_coord_geo, this));
-	osd_nav_next_street_name_draw(this, nav);
-}
-
-static struct osd_priv *
-osd_nav_next_street_name_new(struct navit *nav, struct osd_methods *meth,
-			     struct attr **attrs)
-{
-
-	struct nav_next_street_name *this =
-	    g_new0(struct nav_next_street_name, 1);
-	struct attr *attr;
-
-	this->osd_item.p.x = 0;
-	this->osd_item.p.y = -40;
-	this->osd_item.w = 150;
-	this->osd_item.h = 40;
-	this->osd_item.font_size = 200;
-	osd_set_std_attr(attrs, &this->osd_item, 2);
-
-	attr = attr_search(attrs, NULL, attr_label);
-	if (attr)
-		this->test_text = g_strdup(attr->u.str);
-	else
-		this->test_text = NULL;
-
-	this->active = -1;
-	this->last_street_name = NULL;
-
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_street_name_init), attr_navit, this));
-	return (struct osd_priv *) this;
-}
-
 struct nav_toggle_announcer
 {
 	int w,h;
@@ -1686,29 +756,268 @@ osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **
 	return (struct osd_priv *) this;
 }
 
+struct osd_text {
+	struct osd_item osd_item;
+	int active;
+	char *text;
+	int align;
+	char last_text[16];
+};
+
+static char *
+osd_text_format_attr(struct attr *attr, char *format)
+{
+	struct tm tm, text_tm, text_tm0;
+	time_t textt;
+	int days=0;
+
+	switch (attr->type) {
+	case attr_position_speed:
+		return format_speed(*attr->u.numd,"");
+	case attr_destination_time:
+		if (!format || (strcmp(format,"arrival") && strcmp(format,"remaining")))
+			break;
+		textt = time(NULL);
+		tm = *localtime(&textt);
+		if (!strcmp(format,"remaining")) {
+			textt-=tm.tm_hour*3600+tm.tm_min*60+tm.tm_sec;
+			tm = *localtime(&textt);
+		}
+		textt += attr->u.num / 10;
+		text_tm = *localtime(&textt);
+		if (tm.tm_year != text_tm.tm_year || tm.tm_mon != text_tm.tm_mon || tm.tm_mday != text_tm.tm_mday) {
+			text_tm0 = text_tm;
+			text_tm0.tm_sec = 0;
+			text_tm0.tm_min = 0;
+			text_tm0.tm_hour = 0;
+			tm.tm_sec = 0;
+			tm.tm_min = 0;
+			tm.tm_hour = 0;
+			days = (mktime(&text_tm0) - mktime(&tm) + 43200) / 86400;
+       		}
+		return format_time(&text_tm, days);
+	case attr_destination_length:
+		if (!format || strcmp(format,"named"))
+			break;
+		return format_distance(attr->u.num,"");
+	default:
+		break;
+	}
+	return attr_to_text(attr, NULL, 1);
+}
+
+static char *
+osd_text_split(char *in, char **index)
+{
+	char *pos;
+	int len;
+	if (index)
+		*index=NULL;
+	len=strcspn(in,"[.");
+	in+=len;
+	switch (in[0]) {
+	case '\0':
+		return in;
+	case '.':
+		*in++='\0';
+		return in;
+	case '[':
+		if (!index)
+			return NULL;
+		*in++='\0';
+		*index=in;
+		pos=strchr(in,']');
+		if (pos) {
+			*pos++='\0';
+			if (*pos == '.') {
+				*pos++='\0';
+			}
+			return pos;
+		}
+		return NULL;
+	}
+	return NULL;
+}
+
+static void
+osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
+{
+	struct point p, p2[4];
+	char *str,*next,*start,*end,*key,*subkey,*index,*value;
+	int do_draw = 0;
+	struct attr attr, vehicle_attr;
+	struct navigation *nav = NULL;
+	struct tracking *tracking = NULL;
+	struct route *route = NULL;
+	struct map *nav_map = NULL;
+	struct map_rect *nav_mr = NULL;
+	struct item *item;
+	int offset;
+	int *speedlist = NULL;
+	enum attr_type attr_type;
+
+	vehicle_attr.u.vehicle=NULL;
+	do_draw=1;
+	str=g_strdup(this->text);
+	while ((start=strstr(str, "${"))) {
+		item=NULL;
+		end=strstr(str,"}");
+		if (! end)
+			break;
+		*end++='\0';
+		value=NULL;
+		key=start+2;
+		subkey=osd_text_split(key,NULL);
+		if (!strcmp(key,"navigation") && subkey) {
+			if (navit && !nav)
+				nav = navit_get_navigation(navit);
+			if (nav && !nav_map)
+				nav_map = navigation_get_map(nav);
+			if (nav_map) 
+				key=osd_text_split(subkey,&index);
+			if (nav_map && !strcmp(subkey,"item")) {
+				if (nav_map)
+					nav_mr = map_rect_new(nav_map, NULL);
+				if (nav_mr) {
+					item = map_rect_get_item(nav_mr);
+				}
+				offset=0;
+				if (index)
+					offset=atoi(index);
+				while (item) {
+					if (item->type == type_nav_none) 
+						item=map_rect_get_item(nav_mr);
+					else if (!offset)
+						break;
+					else {
+						offset--;
+						item=map_rect_get_item(nav_mr);
+					}
+				}
+				if (item) {
+					dbg(0,"name %s\n", item_to_name(item->type));
+					subkey=osd_text_split(key,&index);
+					attr_type=attr_from_name(key);
+					dbg(0,"type %s\n", attr_to_name(attr_type));
+					if (item_attr_get(item, attr_type, &attr)) 
+						value=osd_text_format_attr(&attr, index);
+					else
+						dbg(0,"failed\n");
+				}
+			}
+		} else if (!strcmp(key,"tracking") && subkey) {
+			if (navit) {
+				tracking = navit_get_tracking(navit);
+				route = navit_get_route(navit);
+			}
+			if (tracking) {
+				key=osd_text_split(subkey,&index);
+				if (!strcmp(subkey, "item") && key) {
+					item=tracking_get_current_item(tracking);
+					if (item && !strcmp(key,"route_speed")) {
+						if (route && (speedlist=route_get_speedlist(route))) {
+							if (item->type >= route_item_first && item->type <= route_item_last) {
+								double routespeed=speedlist[item->type-route_item_first];
+								value=format_speed(routespeed,"");
+							}
+						}
+					}
+				}
+			}
+		} else if (!strcmp(key,"vehicle") && subkey) {
+			if (navit && !vehicle_attr.u.vehicle) {
+				navit_get_attr(navit, attr_vehicle, &vehicle_attr, NULL);
+			}
+			if (vehicle_attr.u.vehicle) {
+				key=osd_text_split(subkey,&index);
+				attr_type=attr_from_name(subkey);
+				if (vehicle_get_attr(vehicle_attr.u.vehicle, attr_type, &attr, NULL)) {
+					value=osd_text_format_attr(&attr, index);
+				}
+			}
+				
+		}
+		*start='\0';
+		next=g_strdup_printf("%s%s%s",str,value,end);
+		g_free(value);
+		g_free(str);
+		str=next;
+	}
+	p.y=0;
+	if (do_draw) {
+		osd_std_draw(&this->osd_item);
+		while (str) {
+			next=strstr(str, "\\n");
+			if (next) {
+				*next='\0';
+				next+=2;
+			}
+			graphics_get_text_bbox(this->osd_item.gr,
+					       this->osd_item.font,
+					       str, 0x10000,
+					       0x0, p2, 0);
+			p.x = ((p2[0].x - p2[2].x) / 2) + (this->osd_item.w / 2);
+			p.y += p2[0].y - p2[2].y;
+			graphics_draw_text(this->osd_item.gr,
+					   this->osd_item.graphic_fg_text,
+					   NULL, this->osd_item.font,
+					   str, &p, 0x10000,
+					   0);
+			str=next;
+		}
+		graphics_draw_mode(this->osd_item.gr, draw_mode_end);
+	}
+
+}
+
+static void
+osd_text_init(struct osd_text *this, struct navit *nav)
+{
+
+	osd_set_std_graphic(nav, &this->osd_item);
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_text_draw), attr_position_coord_geo, this));
+	osd_text_draw(this, nav, NULL);
+
+}
+
+static struct osd_priv *
+osd_text_new(struct navit *nav, struct osd_methods *meth,
+	    struct attr **attrs)
+{
+	struct osd_text *this = g_new0(struct osd_text, 1);
+	struct attr *attr;
+
+	this->osd_item.p.x = -80;
+	this->osd_item.p.y = 20;
+	this->osd_item.w = 60;
+	this->osd_item.h = 20;
+	this->osd_item.font_size = 200;
+	osd_set_std_attr(attrs, &this->osd_item, 2);
+
+	this->active = -1;
+
+	attr = attr_search(attrs, NULL, attr_label);
+	if (attr)
+		this->text = g_strdup(attr->u.str);
+	else
+		this->text = NULL;
+	attr = attr_search(attrs, NULL, attr_align);
+	if (attr)
+		this->align=attr->u.num;
+
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_text_init), attr_navit, this));
+	return (struct osd_priv *) this;
+}
+
 
 void
 plugin_init(void)
 {
 	plugin_register_osd_type("compass", osd_compass_new);
-	plugin_register_osd_type("eta", osd_eta_new);
-	plugin_register_osd_type("navigation_distance_to_target",
-				 osd_nav_distance_to_target_new);
-	plugin_register_osd_type("navigation_distance_to_next",
-				 osd_nav_distance_to_next_new);
 	plugin_register_osd_type("navigation_next_turn",
 				 osd_nav_next_turn_new);
-	plugin_register_osd_type("street_name", osd_street_name_new);
-	plugin_register_osd_type("navigation_next_street_name",
-				 osd_nav_next_street_name_new);
 	plugin_register_osd_type("button", osd_button_new);
-	plugin_register_osd_type("vehicle_gps_satnum", osd_sats_new);
-	plugin_register_osd_type("vehicle_speed", osd_speed_new);
-    plugin_register_osd_type("toggle_announcer", osd_nav_toggle_announcer_new);
-    plugin_register_osd_type("speed_warner", osd_speed_warner_new);
-
-/*
-        plugin_register_osd_type("position_max_speed", osd_position_max_speed_new);
-        plugin_register_osd_type("vehicle_pos", osd_vehicle_pos_new);
-*/
+    	plugin_register_osd_type("toggle_announcer", osd_nav_toggle_announcer_new);
+    	plugin_register_osd_type("speed_warner", osd_speed_warner_new);
+    	plugin_register_osd_type("text", osd_text_new);
 }
