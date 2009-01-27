@@ -212,10 +212,7 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 			QImage img=overlay->widget->pixmap->convertToImage();
 			img.setAlphaBuffer(1);
 #else
-			QImage img=overlay->widget->pixmap->toImage();
-			QImage alpha=QImage(img.width(),img.height(),QImage::Format_Mono);
-			alpha.fill(1);
-			img.setAlphaChannel(alpha);
+			QImage img=overlay->widget->pixmap->toImage().convertToFormat(QImage::Format_ARGB32);
 #endif
 			data=img.bits();
 			for (i = 0 ; i < size ; i++) {
@@ -1160,6 +1157,8 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 #if QT_VERSION < 0x040000
 	event_gr=ret;
 #endif
+	ret->w=800;
+	ret->h=600;
 	if ((attr=attr_search(attrs, NULL, attr_w)))
 		ret->w=attr->u.num;
 	if ((attr=attr_search(attrs, NULL, attr_h)))
