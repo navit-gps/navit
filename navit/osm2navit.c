@@ -365,6 +365,9 @@ static char *attrmap={
 	"w	barrier=city_wall	city_wall\n"
 };
 
+
+static char buffer[400000];
+
 struct coord coord_buffer[65536];
 
 #define IS_REF(c) ((c).x >= (1 << 30))
@@ -599,6 +602,54 @@ char is_in_buffer[BUFFER_SIZE];
 static void write_zipmember(FILE *out, FILE *dir_out, char *name, int filelen, char *data, int data_size, int compression_level);
 
 static void
+item_buffer_set_type(char *buffer, enum item_type type)
+{
+	struct item_bin *ib=(struct item_bin *) buffer;
+	ib->clen=0;
+	ib->len=2;
+	ib->type=type;
+}
+
+static void
+item_buffer_change_type(char *buffer, enum item_type type)
+{
+	struct item_bin *ib=(struct item_bin *) buffer;
+	ib->type=type;
+}
+
+static void
+item_buffer_add_coord(char *buffer, struct coord *c, int count)
+{
+	struct item_bin *ib=(struct item_bin *) buffer;
+	struct coord *c2=(struct coord *)(ib+1);
+	c2+=ib->clen/2;
+	memcpy(c2, c, count*sizeof(struct coord));
+	ib->clen+=count*2;
+	ib->len+=count*2;
+}
+
+static void
+item_buffer_add_attr(char *buffer, struct attr *attr)
+{
+	struct item_bin *ib=(struct item_bin *) buffer;
+	struct attr_bin *ab=(struct attr_bin *)((int *)ib+ib->len+1);
+	int size=attr_data_size(attr);
+	int pad=(4-(size%4))%4;
+	ab->type=attr->type;
+	memcpy(ab+1, attr_data_get(attr), size);
+	memset((unsigned char *)(ab+1)+size, 0, pad);
+	ab->len=(size+pad)/4+1;
+	ib->len+=ab->len+1;
+}
+
+static void
+item_buffer_write(char *buffer, FILE *out)
+{
+	struct item_bin *ib=(struct item_bin *) buffer;
+	fwrite(buffer, (ib->len+1)*4, 1, out);
+}
+
+static void
 pad_text_attr(struct attr_bin *a, char *buffer)
 {
 	int l;
@@ -638,6 +689,7 @@ xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size)
 }
 
 static int node_is_tagged;
+static void relation_add_tag(char *k, char *v);
 
 static void
 add_tag(char *k, char *v)
@@ -801,7 +853,10 @@ parse_tag(char *p)
 	if (!xml_get_attribute(p, "v", v_buffer, BUFFER_SIZE))
 		return 0;
 	decode_entities(v_buffer);
-	add_tag(k_buffer, v_buffer);
+	if (in_relation)
+		relation_add_tag(k_buffer, v_buffer);
+	else
+		add_tag(k_buffer, v_buffer);
 	return 1;
 }
 
@@ -1029,51 +1084,77 @@ parse_way(char *p)
 }
 
 static int
+add_id_attr(char *p, enum attr_type attr_type)
+{
+	long long id;
+	struct attr idattr = { attr_type };
+	char id_buffer[BUFFER_SIZE];
+	if (!xml_get_attribute(p, "id", id_buffer, BUFFER_SIZE))
+		return 0;
+	id=atoll(id_buffer);
+	idattr.u.num64=&id;
+	item_buffer_add_attr(buffer, &idattr);
+	return 1;
+}
+
+char relation_type[BUFFER_SIZE];
+
+
+static int
 parse_relation(char *p)
 {
 	debug_attr_buffer[0]='\0';
+	relation_type[0]='\0';
+	item_buffer_set_type(buffer, type_none);
+	if (!add_id_attr(p, attr_osm_relationid))
+		return 0;
 	return 1;
 }
 
 static void
-item_buffer_set_type(char *buffer, enum item_type type)
+end_relation(FILE *turn_restrictions)
 {
-	struct item_bin *ib=(struct item_bin *) buffer;
-	ib->clen=0;
-	ib->len=2;
-	ib->type=type;
+	struct item_bin *ib=(struct item_bin *)buffer;
+	if (!strcmp(relation_type, "restriction") && (ib->type == type_street_turn_restriction_no || ib->type == type_street_turn_restriction_only))
+		item_buffer_write(buffer, turn_restrictions);
 }
 
-static void
-item_buffer_add_coord(char *buffer, struct coord *c, int count)
+static int
+parse_member(char *p)
 {
-	struct item_bin *ib=(struct item_bin *) buffer;
-	struct coord *c2=(struct coord *)(ib+1);
-	c2+=ib->clen/2;
-	memcpy(c2, c, count*sizeof(struct coord));
-	ib->clen+=count*2;
-	ib->len+=count*2;
+	char type_buffer[BUFFER_SIZE];
+	char ref_buffer[BUFFER_SIZE];
+	char role_buffer[BUFFER_SIZE];
+	char member_buffer[BUFFER_SIZE*3+3];
+	struct attr memberattr = { attr_osm_member };
+	if (!xml_get_attribute(p, "type", type_buffer, BUFFER_SIZE))
+		return 0;
+	if (!xml_get_attribute(p, "ref", ref_buffer, BUFFER_SIZE))
+		return 0;
+	if (!xml_get_attribute(p, "role", role_buffer, BUFFER_SIZE))
+		return 0;
+	sprintf(member_buffer,"%s:%s:%s", type_buffer, ref_buffer, role_buffer);
+	memberattr.u.str=member_buffer;
+	item_buffer_add_attr(buffer, &memberattr);
+	
+	return 1;
 }
 
+
 static void
-item_buffer_add_attr(char *buffer, struct attr *attr)
+relation_add_tag(char *k, char *v)
 {
-	struct item_bin *ib=(struct item_bin *) buffer;
-	struct attr_bin *ab=(struct attr_bin *)((int *)ib+ib->len+1);
-	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
-		ab->type=attr->type;
-		strcpy((char *)(ab+1),attr->u.str);
-		pad_text_attr(ab, (char *)(ab+1));
-		ib->len+=ab->len+1;
+	if (!strcmp(k,"type")) 
+		strcpy(relation_type, v);
+	else if (!strcmp(k,"restriction")) {
+		if (strncmp(k,"no_",3)) {
+			item_buffer_change_type(buffer, type_street_turn_restriction_no);
+		} else if (strncmp(k,"only_",5)) {
+			item_buffer_change_type(buffer, type_street_turn_restriction_only);
+		}
 	}
 }
 
-static void
-item_buffer_write(char *buffer, FILE *out)
-{
-	struct item_bin *ib=(struct item_bin *) buffer;
-	fwrite(buffer, (ib->len+1)*4, 1, out);
-}
 
 static void
 write_attr(FILE *out, struct attr_bin *attr, void *buffer)
@@ -1375,7 +1456,7 @@ load_buffer(char *filename, struct buffer *b)
 }
 
 static int
-phase1(FILE *in, FILE *out_ways, FILE *out_nodes)
+phase1(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions)
 {
 	int size=4096;
 	char buffer[size];
@@ -1412,6 +1493,8 @@ phase1(FILE *in, FILE *out_ways, FILE *out_nodes)
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 			processed_relations++;
 		} else if (!strncmp(p, "<member ",8)) {
+			if (!parse_member(p))
+				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 		} else if (!strncmp(p, "</node>",7)) {
 			in_node=0;
 			end_node(out_nodes);
@@ -1420,6 +1503,7 @@ phase1(FILE *in, FILE *out_ways, FILE *out_nodes)
 			end_way(out_ways);
 		} else if (!strncmp(p, "</relation>",11)) {
 			in_relation=0;
+			end_relation(out_turn_restrictions);
 		} else if (!strncmp(p, "</osm>",6)) {
 		} else {
 			fprintf(stderr,"WARNING: unknown tag in %s\n", buffer);
@@ -1599,7 +1683,6 @@ phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
 }
 #endif
 
-static char buffer[400000];
 
 static void
 phase1_map(struct map *map, FILE *out_ways, FILE *out_nodes)
@@ -1910,7 +1993,7 @@ write_item(char *tile, struct item_bin *ib)
 }
 
 static void
-write_item_part(FILE *out, struct item_bin *orig, int first, int last)
+write_item_part(FILE *out, FILE *out_graph, struct item_bin *orig, int first, int last)
 {
 	struct item_bin new;
 	struct coord *c=(struct coord *)(orig+1);
@@ -1926,10 +2009,15 @@ write_item_part(FILE *out, struct item_bin *orig, int first, int last)
 	fwrite(&new, sizeof(new), 1, out);
 	fwrite(c+first, new.clen*4, 1, out);
 	fwrite(attr, attr_len*4, 1, out);
+#if 0
+		fwrite(&new, sizeof(new), 1, out_graph);
+		fwrite(c+first, new.clen*4, 1, out_graph);
+		fwrite(attr, attr_len*4, 1, out_graph);
+#endif
 }
 
 static int
-phase2(FILE *in, FILE *out)
+phase2(FILE *in, FILE *out, FILE *out_graph)
 {
 	struct coord *c;
 	int i,ccount,last,ndref;
@@ -1943,6 +2031,8 @@ phase2(FILE *in, FILE *out)
 		fprintf(stderr,"type 0x%x len %d clen %d\n", ib->type, ib->len, ib->clen);
 #endif
 		ccount=ib->clen/2;
+		if (ccount <= 1)
+			continue;
 		c=(struct coord *)(ib+1);
 		last=0;
 		for (i = 0 ; i < ccount ; i++) {
@@ -1954,12 +2044,13 @@ phase2(FILE *in, FILE *out)
 #endif
 				c[i]=ni->c;
 				if (ni->ref_way > 1 && i != 0 && i != ccount-1 && item_is_street(*ib)) {
-					write_item_part(out, ib, last, i);
+					write_item_part(out, out_graph, ib, last, i);
 					last=i;
 				}
 			}
 		}
-		write_item_part(out, ib, last, ccount-1);
+		if (ccount)
+			write_item_part(out, out_graph, ib, last, ccount-1);
 	}
 	sig_alrm(0);
 #ifndef _WIN32
@@ -2746,7 +2837,7 @@ static void add_plugin(char *path)
 
 int main(int argc, char **argv)
 {
-	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*tilesdir,*zipdir,*res;
+	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*tilesdir,*zipdir,*res;
 	char *map=g_strdup(attrmap);
 	int c,start=1,end=4,dump_coordinates=0;
 	int keep_tmpfiles=0;
@@ -2898,6 +2989,8 @@ int main(int argc, char **argv)
 			ways=fopen("ways.tmp","wb+");
 		if (process_nodes)
 			nodes=fopen("nodes.tmp","wb+");
+		if (process_ways && process_nodes) 
+			turn_restrictions=fopen("turn_restrictions.tmp","wb+");
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
 #ifdef HAVE_POSTGRESQL
@@ -2910,11 +3003,13 @@ int main(int argc, char **argv)
 			map_destroy(map_handle);
 		}
 		else
-			phase1(input_file,ways,nodes);
+			phase1(input_file,ways,nodes,turn_restrictions);
 		if (ways)
 			fclose(ways);
 		if (nodes)
 			fclose(nodes);
+		if (turn_restrictions)
+			fclose(turn_restrictions);
 #ifdef GENERATE_INDEX
 		fprintf(stderr,"PROGRESS: Phase 1: sorting countries\n");
 		sort_countries();
@@ -2930,11 +3025,13 @@ int main(int argc, char **argv)
 		if (process_ways) {
 			ways=fopen("ways.tmp","rb");
 			ways_split=fopen("ways_split.tmp","wb+");
+			graph=fopen("graph.tmp","wb+");
 			phase=2;
 			fprintf(stderr,"PROGRESS: Phase 2: finding intersections\n");
-			phase2(ways,ways_split);
+			phase2(ways,ways_split,graph);
 			fclose(ways_split);
 			fclose(ways);
+			fclose(graph);
 			if(!keep_tmpfiles)
 				unlink("ways.tmp");
 		} else
@@ -2965,6 +3062,13 @@ int main(int argc, char **argv)
 			if (ways_split) {
 				dump(ways_split);
 				fclose(ways_split);
+			}
+		}
+		if (process_ways && process_nodes) {
+			turn_restrictions=fopen("turn_restrictions.tmp","rb");
+			if (turn_restrictions) {
+				dump(turn_restrictions);
+				fclose(turn_restrictions);
 			}
 		}
 		exit(0);
@@ -3005,6 +3109,8 @@ int main(int argc, char **argv)
 		if(!keep_tmpfiles) {
 			unlink("nodes.tmp");
 			unlink("ways_split.tmp");
+			unlink("turn_restrictions.tmp");
+			unlink("graph.tmp");
 			unlink("tilesdir.tmp");
 			unlink("zipdir.tmp");
 #ifdef GENERATE_INDEX

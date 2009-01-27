@@ -302,6 +302,8 @@ attr_data_size(struct attr *attr)
 		return sizeof(*attr->u.color);
 	if (attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end) 
 		return sizeof(void *);
+	if (attr->type >= attr_type_int64_begin && attr->type <= attr_type_int64_end) 
+		return sizeof(*attr->u.num64);
 	dbg(0,"size for %s unknown\n", attr_to_name(attr->type));
 	return 0;
 }
