@@ -28,6 +28,8 @@
 #include "color.h"
 #include "attr.h"
 #include "map.h"
+#include "config.h"
+#include "endianess.h"
 
 struct attr_name {
 	enum attr_type attr;
@@ -323,6 +325,18 @@ attr_data_set(struct attr *attr, void *data)
 		attr->u.num=*((int *)data);
 	else
 		attr->u.data=data;
+}
+
+void
+attr_data_set_le(struct attr * attr, void * data)
+{
+  	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
+		attr->u.str=data;
+	}
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) {
+		attr->u.num=le32_to_cpu(*((int *)data));
+	}
+
 }
 
 void
