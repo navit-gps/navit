@@ -379,8 +379,8 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			if (attr_type == attr_any) {
 				dbg(1,"pos %p attr %s size %d\n", t->pos_attr-1, attr_to_name(type), size);
 			}
-			attr->type=type;
-			attr_data_set(attr, t->pos_attr+1);
+			attr->type=type;			
+			attr_data_set_le(attr, t->pos_attr+1); 
 			if (type == attr_url_local) {
 				g_free(mr->url);
 				mr->url=binfile_extract(mr->m, mr->m->cachedir, attr->u.str, 1);
@@ -394,10 +394,10 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	}
 	if (!mr->label && (attr_type == attr_any || attr_type == attr_label)) {
 		for (i = 0 ; i < sizeof(mr->label_attr)/sizeof(int *) ; i++) {
-			if (mr->label_attr[i]) {
+			if (le32_to_cpu(mr->label_attr[i])) {
 				mr->label=1;
 				attr->type=attr_label;
-				attr_data_set(attr, mr->label_attr[i]+1);
+				attr_data_set_le(attr,mr->label_attr[i]+1);
 				return 1;
 			}
 		}

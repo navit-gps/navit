@@ -110,6 +110,7 @@ struct attr **attr_generic_add_attr(struct attr **attrs, struct attr *attr);
 int attr_data_size(struct attr *attr);
 void *attr_data_get(struct attr *attr);
 void attr_data_set(struct attr *attr, void *data);
+void attr_data_set_le(struct attr * attr, void * data);
 void attr_free(struct attr *attr);
 struct attr *attr_dup(struct attr *attr);
 void attr_list_free(struct attr **attrs);
