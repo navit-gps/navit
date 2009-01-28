@@ -796,6 +796,7 @@ osd_text_format_attr(struct attr *attr, char *format)
 			days = (mktime(&text_tm0) - mktime(&tm) + 43200) / 86400;
        		}
 		return format_time(&text_tm, days);
+	case attr_length:
 	case attr_destination_length:
 		if (!format || strcmp(format,"named"))
 			break;
@@ -938,7 +939,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 				
 		}
 		*start='\0';
-		next=g_strdup_printf("%s%s%s",str,value,end);
+		next=g_strdup_printf("%s%s%s",str,value ? value:" ",end);
 		g_free(value);
 		g_free(str);
 		str=next;
