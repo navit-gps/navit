@@ -24,6 +24,7 @@ ITEM(town_streets)
 ITEM(street_name)
 ITEM(street_name_numbers)
 ITEM(street_number)
+ITEM(position_sat)
 /* Point */
 ITEM2(0x00010000,town_label)
 ITEM2(0x00010001,town_label_0e0)

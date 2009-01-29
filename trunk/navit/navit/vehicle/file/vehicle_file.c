@@ -52,6 +52,14 @@ enum file_type {
 
 static int buffer_size = 1024;
 
+struct gps_sat {
+	int prn;
+	int elevation;
+	int azimuth;
+	int snr;
+};
+
+
 struct vehicle_priv {
 	char *source;
 	enum file_type file_type;
@@ -78,6 +86,7 @@ struct vehicle_priv {
 	int status;
 	int sats_used;
 	int sats_visible;
+	int sats_signal;
 	int time;
 	int on_eof;
 #ifdef _WIN32
@@ -88,6 +97,11 @@ struct vehicle_priv {
 	char fixiso8601[128];
 	int checksum_ignore;
 	int magnetic_direction;
+	int current_count;
+	struct gps_sat current[24];
+	int next_count;
+	struct gps_sat next[24];
+	struct item sat_item;
 };
 
 #ifdef _WIN32
@@ -240,9 +254,9 @@ vehicle_file_enable_watch_timer(struct vehicle_priv *priv)
 static int
 vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 {
-	char *nmea_data_buf, *p, *item[16];
+	char *nmea_data_buf, *p, *item[32];
 	double lat, lng;
-	int i, bcsum;
+	int i, j, bcsum;
 	int len = strlen(buffer);
 	unsigned char csum = 0;
 	int valid;
@@ -288,7 +302,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	}
 	i = 0;
 	p = buffer;
-	while (i < 16) {
+	while (i < 31) {
 		item[i++] = p;
 		while (*p && *p != ',')
 			p++;
@@ -377,7 +391,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 			priv->fixyear += 2000;
 		}
 	}
-	if (!strncmp(buffer, "$GPGSV", 6)) {
+	if (!strncmp(buffer, "$GPGSV", 6) && i >= 4) {
 	/*
 		0 GSV	   Satellites in view
 		1 2 	   Number of sentences for full data
@@ -393,6 +407,25 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	*/
 		if (item[3]) {
 			sscanf(item[3], "%d", &priv->sats_visible);
+		}
+		j=4;
+		while (j+4 <= i && priv->current_count < 24) {
+			struct gps_sat *sat=&priv->next[priv->next_count++];
+			sat->prn=atoi(item[j]);
+			sat->elevation=atoi(item[j+1]);
+			sat->azimuth=atoi(item[j+2]);
+			sat->snr=atoi(item[j+3]);
+			j+=4;
+		}
+		if (!strcmp(item[1], item[2])) {
+			priv->sats_signal=0;
+			for (i = 0 ; i < priv->next_count ; i++) {
+				priv->current[i]=priv->next[i];
+				if (priv->current[i].snr)
+					priv->sats_signal++;
+			}
+			priv->current_count=priv->next_count;
+			priv->next_count=0;
 		}
 	}
 	if (!strncmp(buffer, "$GPZDA", 6)) {
@@ -520,8 +553,6 @@ static int
 vehicle_file_position_attr_get(struct vehicle_priv *priv,
 			       enum attr_type type, struct attr *attr)
 {
-	struct attr * active=NULL;
-
 	switch (type) {
 	case attr_position_fix_type:
 		attr->u.num = priv->status;
@@ -544,6 +575,9 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 	case attr_position_qual:
 		attr->u.num = priv->sats_visible;
 		break;
+	case attr_position_sats_signal:
+		attr->u.num = priv->sats_signal;
+		break;
 	case attr_position_sats_used:
 		attr->u.num = priv->sats_used;
 		break;
@@ -563,12 +597,46 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 			priv->fixtime);
 		attr->u.str=priv->fixiso8601;
 		break;
-	case attr_active:
-		  if(active != NULL && active->u.num == 1)
-		    return 1;
-		  else
-		    return 0;
-		  break;
+	case attr_position_sat_item:
+		dbg(0,"at here\n");
+		priv->sat_item.id_lo++;
+		if (priv->sat_item.id_lo > priv->current_count) {
+			priv->sat_item.id_lo=0;
+			return 0;
+		}
+		attr->u.item=&priv->sat_item;
+		break;
+	default:
+		return 0;
+	}
+	if (type != attr_position_sat_item)
+		priv->sat_item.id_lo=0;
+	attr->type = type;
+	return 1;
+}
+
+static int
+vehicle_file_sat_attr_get(void *priv_data, enum attr_type type, struct attr *attr)
+{
+	struct vehicle_priv *priv=priv_data;
+	if (priv->sat_item.id_lo < 1)
+		return 0;
+	if (priv->sat_item.id_lo > priv->current_count)
+		return 0;
+	struct gps_sat *sat=&priv->current[priv->sat_item.id_lo-1];
+	switch (type) {
+	case attr_sat_prn:
+		attr->u.num=sat->prn;
+		break;
+	case attr_sat_elevation:
+		attr->u.num=sat->elevation;
+		break;
+	case attr_sat_azimuth:
+		attr->u.num=sat->azimuth;
+		break;
+	case attr_sat_snr:
+		attr->u.num=sat->snr;
+		break;
 	default:
 		return 0;
 	}
@@ -576,7 +644,14 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 	return 1;
 }
 
-struct vehicle_methods vehicle_file_methods = {
+static struct item_methods vehicle_file_sat_methods = {
+	NULL,
+	NULL,
+	NULL,
+	vehicle_file_sat_attr_get,
+};
+
+static struct vehicle_methods vehicle_file_methods = {
 	vehicle_file_destroy,
 	vehicle_file_position_attr_get,
 };
@@ -647,6 +722,10 @@ vehicle_file_new_file(struct vehicle_methods
 	*meth = vehicle_file_methods;
 	ret->cb=callback_new_1(callback_cast(vehicle_file_io), ret);
 	ret->cbt=callback_new_1(callback_cast(vehicle_file_enable_watch_timer), ret);
+	ret->sat_item.type=type_position_sat;
+	ret->sat_item.id_hi=ret->sat_item.id_lo=0;
+	ret->sat_item.priv_data=ret;
+	ret->sat_item.meth=&vehicle_file_sat_methods;
 	if (vehicle_file_open(ret)) {
 		vehicle_file_enable_watch(ret);
 		return ret;
