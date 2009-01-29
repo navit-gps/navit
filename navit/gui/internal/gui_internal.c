@@ -67,6 +67,8 @@ struct menu_data {
 	struct widget *keyboard;
 	struct widget *button_bar;
 	int keyboard_mode;
+	void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
+	struct widget *redisplay_widget;
 };
 
 //##############################################################################################################
@@ -300,13 +302,14 @@ static void gui_internal_widget_append(struct widget *parent, struct widget *chi
 static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w);
 static void gui_internal_apply_config(struct gui_priv *this);
 
-static struct widget* gui_internal_widget_table_new(struct gui_priv * this, enum flags flags);
+static struct widget* gui_internal_widget_table_new(struct gui_priv * this, enum flags flags, int buttons);
 static void gui_internal_widget_table_add_row(struct widget * table,  struct widget * row);
 static void gui_internal_table_render(struct gui_priv * this, struct widget * w);
 static void gui_internal_cmd_route(struct gui_priv * this, struct widget * w);
 static void gui_internal_table_pack(struct gui_priv * this, struct widget * w);
 static void gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void *data);
 static void gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm, void *data);
+static struct widget * gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags);
 static void gui_internal_table_data_free(void * d);
 
 static void gui_internal_search_idle_end(struct gui_priv *this);
@@ -524,10 +527,10 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
 }
 
 static struct widget *
-gui_internal_text_new(struct gui_priv *this, char *text)
+gui_internal_text_new(struct gui_priv *this, char *text, enum flags flags)
 {
 	char *s=g_strdup(text),*s2,*tok;
-	struct widget *ret=gui_internal_box_new(this, gravity_center|orientation_vertical);
+	struct widget *ret=gui_internal_box_new(this, flags);
 	s2=s;
 	while ((tok=strtok(s2,"\n"))) {
 		gui_internal_widget_append(ret, gui_internal_label_new(this, tok));
@@ -546,7 +549,7 @@ gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct 
 		if (image)
 			gui_internal_widget_append(ret, gui_internal_image_new(this, image));
 		if (text)
-			gui_internal_widget_append(ret, gui_internal_text_new(this, text));
+			gui_internal_widget_append(ret, gui_internal_text_new(this, text, gravity_center|orientation_vertical));
 		ret->func=func;
 		ret->data=data;
 		if (func) {
@@ -1117,11 +1120,21 @@ static void
 gui_internal_prune_menu(struct gui_priv *this, struct widget *w)
 {
 	GList *l;
+	struct widget *wr;
 	gui_internal_search_idle_end(this);
 	while ((l = g_list_last(this->root.children))) {
 		if (l->data == w) {
+			void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
 			gui_internal_say(this, w, 0);
-			gui_internal_widget_render(this, w);
+			redisplay=w->menu_data->redisplay;
+			wr=w->menu_data->redisplay_widget;
+			if (!w->menu_data->redisplay) {
+				gui_internal_widget_render(this, w);
+				return;
+			}
+			gui_internal_widget_destroy(this, l->data);
+			this->root.children=g_list_remove(this->root.children, l->data);
+			redisplay(this, wr, wr->data);
 			return;
 		}
 		gui_internal_widget_destroy(this, l->data);
@@ -2790,20 +2803,88 @@ gui_internal_cmd_set_active_vehicle(struct gui_priv *this, struct widget *wm, vo
 }
 
 static void
+gui_internal_cmd_show_satellite_status(struct gui_priv *this, struct widget *wm, void *data)
+{
+	struct widget *w,*wb,*row;
+	struct attr attr,sat_attr;
+	struct vehicle *v=wm->data;
+	char *str;
+	int i;
+	enum attr_type types[]={attr_sat_prn, attr_sat_elevation, attr_sat_azimuth, attr_sat_snr};
+
+	wb=gui_internal_menu(this, _("Show Satellite Status"));
+	gui_internal_menu_data(this)->redisplay=gui_internal_cmd_show_satellite_status;
+	gui_internal_menu_data(this)->redisplay_widget=wm;
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	w = gui_internal_widget_table_new(this,gravity_center | orientation_vertical | flags_expand | flags_fill, 0);
+	row = gui_internal_widget_table_row_new(this,gravity_left_top);
+	gui_internal_widget_append(row, gui_internal_label_new(this, " PRN "));
+	gui_internal_widget_append(row, gui_internal_label_new(this, " Elevation "));
+	gui_internal_widget_append(row, gui_internal_label_new(this, " Azimuth "));
+	gui_internal_widget_append(row, gui_internal_label_new(this, " SNR "));
+	gui_internal_widget_append(w,row);
+	while (vehicle_get_attr(v, attr_position_sat_item, &attr, NULL)) {
+		row = gui_internal_widget_table_row_new(this,gravity_left_top);
+		for (i = 0 ; i < sizeof(types)/sizeof(enum attr_type) ; i++) {
+			if (item_attr_get(attr.u.item, types[i], &sat_attr)) 
+				str=g_strdup_printf("%d", sat_attr.u.num);
+			else
+				str=g_strdup("");
+			gui_internal_widget_append(row, gui_internal_label_new(this, str));
+			g_free(str);
+		}
+		gui_internal_widget_append(w,row);
+	}
+	gui_internal_widget_append(wb, w);
+	gui_internal_menu_render(this);
+}
+
+static void
+gui_internal_cmd_show_nmea_data(struct gui_priv *this, struct widget *wm, void *data)
+{
+	struct widget *w,*wb;
+	struct attr attr;
+	struct vehicle *v=wm->data;
+	wb=gui_internal_menu(this, _("Show NMEA Data"));
+	gui_internal_menu_data(this)->redisplay=gui_internal_cmd_show_nmea_data;
+	gui_internal_menu_data(this)->redisplay_widget=wm;
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	if (vehicle_get_attr(v, attr_position_nmea, &attr, NULL)) 
+		gui_internal_widget_append(w, gui_internal_text_new(this, attr.u.str, gravity_left_center|orientation_vertical));
+	gui_internal_menu_render(this);
+}
+
+
+static void
 gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct widget *w,*wb;
-	struct attr active_vehicle;
+	struct attr attr,active_vehicle;
+	struct vehicle *v=wm->data;
 	wb=gui_internal_menu(this, wm->text);
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
 	if (!navit_get_attr(this->nav, attr_vehicle, &active_vehicle, NULL))
 		active_vehicle.u.vehicle=NULL;
-	if (active_vehicle.u.vehicle != wm->data) {
+	if (active_vehicle.u.vehicle != v) {
 		gui_internal_widget_append(w,
 			gui_internal_button_new_with_callback(this, _("Set as active"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_set_active_vehicle, wm->data));
+	}
+	if (vehicle_get_attr(v, attr_position_sat_item, &attr, NULL)) {
+		gui_internal_widget_append(w,
+			gui_internal_button_new_with_callback(this, _("Show Satellite status"),
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_show_satellite_status, wm->data));
+	}
+	if (vehicle_get_attr(v, attr_position_nmea, &attr, NULL)) {
+		gui_internal_widget_append(w,
+			gui_internal_button_new_with_callback(this, _("Show NMEA data"),
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_show_nmea_data, wm->data));
 	}
 	callback_list_call_attr_2(this->cbl, attr_vehicle, w, wm->data);
 	gui_internal_menu_render(this);
@@ -3501,7 +3582,7 @@ void plugin_init(void)
  * @param flags widget sizing flags.
  * @returns The newly created widget
  */
-struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags flags)
+struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags flags, int buttons)
 {
 	struct widget * widget = g_new0(struct widget,1);
 	struct table_data * data = NULL;
@@ -3512,6 +3593,7 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	data = (struct table_data*)widget->data;
 	
 
+	if (buttons) {
 	data->next_button = gui_internal_button_new_with_callback
 		(this,"Next",image_new_xs(this, "gui_active") ,
 		 gravity_left_center  |orientation_vertical,
@@ -3539,22 +3621,10 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	data->button_box->bl=this->spacing;
 	widget->children=g_list_append(widget->children,data->button_box);
 	gui_internal_widget_pack(this,data->button_box);
+	}
 	
 	return widget;
 
-}
-
-/**
- *
- * @brief Adds a row to a table_widget.
- *
- * @param table The table to add the row to.
- * @param row A table_row widget that will be added to the table.
- */
-void gui_internal_widget_table_add_row(struct widget * table,  struct widget *  row)
-{
-  table->children=g_list_append(table->children,row);
-  
 }
 
 /**
@@ -3690,7 +3760,8 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 			count++;
 		}
 	}
-	gui_internal_widget_pack(this,table_data->button_box);  
+	if (table_data->button_box)
+		gui_internal_widget_pack(this,table_data->button_box);  
 	w->h = count * (height+this->spacing) +  table_data->button_box + this->spacing;
 	
 	if(w->h + w->c.y   > this->root.h   )
@@ -3765,7 +3836,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		}
 		dim = (struct table_column_desc*)current_desc->data;
 		
-		if( y + dim->height + table_data->button_box->h + this->spacing >= w->p.y + w->h )
+		if( y + dim->height + (table_data->button_box ? table_data->button_box->h : 0) + this->spacing >= w->p.y + w->h )
 		{
 			/*
 			 * No more drawing space left.
