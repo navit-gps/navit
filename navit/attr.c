@@ -213,6 +213,8 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 		return g_strdup_printf("%d", attr->u.num);
 	if (type >= attr_type_int64_begin && type <= attr_type_int64_end) 
 		return g_strdup_printf("%Ld", *attr->u.num64);
+	if (type >= attr_type_double_begin && type <= attr_type_double_end) 
+		return g_strdup_printf("%f", *attr->u.numd);
 	return g_strdup("(no text)");	
 }
 
