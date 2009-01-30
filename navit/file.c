@@ -50,10 +50,10 @@ static GHashTable *file_name_hash;
 static struct cache *file_cache;
 
 struct file_cache_id {
+	long long offset;
 	int size;
 	int file_name_id;
 	int method;
-	long long offset;
 };
 
 struct file *
