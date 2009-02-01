@@ -61,6 +61,7 @@
 #include "event.h"
 #include "navit_nls.h"
 #include "gui_internal.h"
+#include "command.h"
 
 struct menu_data {
 	struct widget *search_list;
@@ -3067,6 +3068,12 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 }
 
 static void
+gui_internal_cmd_menu2(struct gui_priv *this)
+{
+	gui_internal_cmd_menu(this, NULL, 1);
+}
+
+static void
 gui_internal_check_exit(struct gui_priv *this)
 {
 	struct graphics *gra=this->gra;
@@ -3464,6 +3471,12 @@ static struct gui_internal_widget_methods gui_internal_widget_methods = {
 	gui_internal_set_default_background,
 };
 
+static struct command_table commands[] = {
+	{"menu",gui_internal_cmd_menu2},
+	{"fullscreen",gui_internal_cmd_fullscreen},
+	{"get_data",gui_internal_get_data},
+};
+
 
 //##############################################################################################################
 //# Description: 
@@ -3481,10 +3494,10 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 		this->menu_on_map_click=attr->u.num;
 	else
 		this->menu_on_map_click=1;
-	navit_command_register(nav,"gui_internal_menu",callback_new_3(callback_cast(gui_internal_cmd_menu),this,NULL,(void *)1));
-	navit_command_register(nav,"gui_internal_fullscreen",callback_new_2(callback_cast(gui_internal_cmd_fullscreen),this,NULL));
-	dbg(0,"register\n");
-	navit_command_register(nav,"gui_internal_get_data",callback_new_1(callback_cast(gui_internal_get_data),this));
+	if ((attr=attr_search(attrs, NULL, attr_callback_list))) {
+		dbg(0,"register\n");
+		command_add_table(attr->u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), this);
+	}
 
 	if( (attr=attr_search(attrs,NULL,attr_font_size)))
         {
