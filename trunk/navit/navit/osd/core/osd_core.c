@@ -41,6 +41,7 @@
 #include "map.h"
 #include "file.h"
 #include "attr.h"
+#include "command.h"
 #include "navit_nls.h"
 
 struct osd_item {
@@ -80,8 +81,11 @@ osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button,
 	navit_ignore_button(nav);
 	this->pressed = pressed;
 	if (pressed) {
+		struct attr navit;
+		navit.type=attr_navit;
+		navit.u.navit=nav;
 		dbg(0, "calling command '%s'\n", this->command);
-		navit_command_call(nav, this->command);
+		command_evaluate_to_void(&navit, this->command);
 	}
 }
 

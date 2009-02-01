@@ -59,6 +59,7 @@ struct attr {
 		struct coord_geo *coord_geo;
 		struct navit *navit;
 		struct callback *callback;
+		struct callback_list *callback_list;
 		struct vehicle *vehicle;
 		struct layout *layout;
 		struct layer *layer;

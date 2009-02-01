@@ -375,7 +375,7 @@ void
 attr_list_free(struct attr **attrs)
 {
 	int count=0;
-	while (attrs[count]) {
+	while (attrs && attrs[count]) {
 		attr_free(attrs[count++]);
 	}
 	g_free(attrs);

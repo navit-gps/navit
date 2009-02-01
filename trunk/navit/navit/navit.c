@@ -57,6 +57,7 @@
 #include "event.h"
 #include "file.h"
 #include "profile.h"
+#include "command.h"
 #include "navit_nls.h"
 
 /**
@@ -129,7 +130,6 @@ struct navit {
 	int w,h;
 	int drag_bitmap;
 	int use_mousewheel;
-	GHashTable *commands;
 	struct callback *resize_callback,*button_callback,*motion_callback;
 };
 
@@ -145,7 +145,6 @@ struct attr_iter {
 static void navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv);
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt);
 static int navit_add_vehicle(struct navit *this_, struct vehicle *v);
-static void navit_set_attr_cmd(struct navit *this_, char *command, struct attr **in, struct attr ***out);
 
 void
 navit_add_mapset(struct navit *this_, struct mapset *ms)
@@ -505,6 +504,26 @@ navit_zoom_out(struct navit *this_, int factor, struct point *p)
 	navit_scale(this_, scale, p);
 }
 
+static int
+navit_cmd_zoom_in(struct navit *this_)
+{
+	navit_zoom_in(this_, 2, NULL);
+	return 0;
+}
+
+static int
+navit_cmd_zoom_out(struct navit *this_)
+{
+	navit_zoom_out(this_, 2, NULL);
+	return 0;
+}
+
+static struct command_table commands[] = {
+	{"zoom_in",navit_cmd_zoom_in},
+	{"zoom_out",navit_cmd_zoom_out},
+};
+	
+
 struct navit *
 navit_new(struct attr *parent, struct attr **attrs)
 {
@@ -589,11 +608,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->trans=transform_new();
 	transform_setup(this_->trans, &center, zoom, (this_->orientation != -1) ? this_->orientation : 0);
 	this_->displaylist=graphics_displaylist_new();
-	this_->commands=g_hash_table_new(g_str_hash, g_str_equal);
-	navit_command_register(this_, "zoom_in", callback_new_3(callback_cast(navit_zoom_in), this_, (void *)2, NULL));
-	navit_command_register(this_, "zoom_out", callback_new_3(callback_cast(navit_zoom_out), this_, (void *)2, NULL));
-	navit_command_register(this_, "navit_set_attr", callback_new_1(callback_cast(navit_set_attr_cmd), this_));
-    navit_command_register(this_, "navit_announcer_toggle", callback_new_1(callback_cast(navit_announcer_toggle), this_));
+	command_add_table(this_->attr_cbl, commands, sizeof(commands)/sizeof(struct command_table), this_);
 	return this_;
 }
 
@@ -1474,23 +1489,15 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 	return 1;
 }
 
-static void
-navit_set_attr_cmd(struct navit *this_, char *command, struct attr **in, struct attr ***out)
-{
-	if (! in)
-		return;
-	while (*in) {
-		navit_set_attr(this_,*in);
-		in++;
-	}
-}
-
 int
 navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
 	switch (type) {
 	case attr_bookmark_map:
 		attr->u.map=this_->bookmark;
+		break;
+	case attr_callback_list:
+		attr->u.callback_list=this_->attr_cbl;
 		break;
 	case attr_cursor:
 		attr->u.num=this_->cursor_flag;
@@ -1502,6 +1509,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		break;
 	case attr_former_destination_map:
 		attr->u.map=this_->former_destination;
+		break;
+	case attr_gui:
+		attr->u.gui=this_->gui;
 		break;
 	case attr_layout:
 		if (iter) {
@@ -1550,9 +1560,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 	case attr_route:
 		attr->u.route=this_->route;
 		break;
-    case attr_speech:
-        attr->u.speech=this_->speech;
-        break;
+	case attr_speech:
+	        attr->u.speech=this_->speech;
+	        break;
 	case attr_tracking:
 		attr->u.num=this_->tracking_flag;
 		break;
@@ -1945,87 +1955,6 @@ navit_block(struct navit *this_, int block)
 	return 0;
 }
 
-int
-navit_command_register(struct navit *this_, char *command, struct callback *cb)
-{
-	dbg(1,"registering '%s'\n", command);
-	g_hash_table_insert(this_->commands, command, cb);
-
-	return 0;
-}
-
-struct callback *
-navit_command_unregister(struct navit *this_, char *command)
-{
-	struct callback *ret=g_hash_table_lookup(this_->commands, command);
-	if (ret) {
-		g_hash_table_remove(this_->commands, command);
-	}
-
-	return ret;
-}
-
-int
-navit_command_call_attrs(struct navit *this_, char *command, struct attr **in, struct attr ***out)
-{
-	struct callback *cb=g_hash_table_lookup(this_->commands, command);
-	dbg(0,"calling callback %p for '%s'\n", cb, command);
-	if (! cb)
-		return 1;
-	callback_call_args(cb, 3, command, in, out);
-	return 0;
-}
-
-int
-navit_command_call(struct navit *this_, char *command)
-{
-	int len,ret=1;
-	char *str,*args,*next,*name,*val,sep;
-	struct attr *attr,**attrs=NULL;
-	if (! command)
-		return 1;
-	len=strlen(command);
-	if (! len)
-		return 1;
-	if (command[len-1] != ')') 
-		return navit_command_call_attrs(this_, command, NULL, NULL);
-	str=g_strdup(command);
-	args=strchr(str,'(');
-	if (args) {
-		*args++='\0';
-		args[strlen(args)-1]='\0';
-		next=args;
-		while (next) {
-			val=strchr(next,'=');
-			if (val) {
-				name=next;
-				*val++='\0';
-				sep=*val;
-				if (sep == '"' || sep == '\'') {
-					val++;	
-				} else
-					sep=',';
-				next=strchr(val,sep);
-				if (next) {
-					*next++='\0';
-					if (sep != ',' && *next++ != ',')
-						next=NULL;
-				}
-				attr=attr_new_from_text(name,val);
-				if (attr) {
-					attrs=attr_generic_add_attr(attrs, attr);
-					attr_free(attr);
-				}
-			} else
-				break;
-		}
-		ret=navit_command_call_attrs(this_, str, attrs, NULL);
-		attr_list_free(attrs);
-	}
-	g_free(str);
-	return ret;
-}
-
 void
 navit_destroy(struct navit *this_)
 {
@@ -2036,8 +1965,6 @@ navit_destroy(struct navit *this_)
 	char *center_file = navit_get_center_file(TRUE);
 	navit_write_center_to_file(this_, center_file);
 	g_free(center_file);
-	callback_destroy(navit_command_unregister(this_, "zoom_in"));
-	callback_destroy(navit_command_unregister(this_, "zoom_out"));
 	callback_destroy(this_->nav_speech_cb);
 	callback_destroy(this_->roadbook_callback);
 	callback_destroy(this_->popup_callback);
@@ -2048,7 +1975,6 @@ navit_destroy(struct navit *this_)
 	callback_destroy(this_->button_callback);
 	graphics_remove_callback(this_->gra, this_->motion_callback);
 	callback_destroy(this_->motion_callback);
-	g_hash_table_destroy(this_->commands);
 	g_free(this_);
 }
 
