@@ -618,6 +618,7 @@ void command(struct attr *attr, char *expr)
 	dump(&res);
 	printf("%s\n", get_string(&ctx, &res));
 }
+#endif
 
 void
 command_evaluate_to_void(struct attr *attr, char *expr)
@@ -634,6 +635,7 @@ command_evaluate_to_void(struct attr *attr, char *expr)
 	resolve(&ctx, &res, NULL);
 }
 
+#if 0
 void
 command_interpreter(struct attr *attr)
 {
