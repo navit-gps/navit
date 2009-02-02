@@ -393,22 +393,34 @@ void RenderArea::keyPressEvent(QKeyEvent *event)
 		dbg(0,"special key\n");
 		switch (event->key()) {
 		case 4099:
-			text=(char []){NAVIT_KEY_BACKSPACE,'\0'};
+			{
+				text=(char []){NAVIT_KEY_BACKSPACE,'\0'};
+			}
 			break;
 		case 4101:
-			text=(char []){NAVIT_KEY_RETURN,'\0'};
+			{
+				text=(char []){NAVIT_KEY_RETURN,'\0'};
+			}
 			break;
 		case 4114:
-			text=(char []){NAVIT_KEY_LEFT,'\0'};
+			{
+				text=(char []){NAVIT_KEY_LEFT,'\0'};
+			}
 			break;
 		case 4115:
-			text=(char []){NAVIT_KEY_UP,'\0'};
+			{
+				text=(char []){NAVIT_KEY_UP,'\0'};
+			}
 			break;
 		case 4116:
-			text=(char []){NAVIT_KEY_RIGHT,'\0'};
+			{
+				text=(char []){NAVIT_KEY_RIGHT,'\0'};
+			}
 			break;
 		case 4117:
-			text=(char []){NAVIT_KEY_DOWN,'\0'};
+			{
+				text=(char []){NAVIT_KEY_DOWN,'\0'};
+			}
 			break;
 		}
 	}
