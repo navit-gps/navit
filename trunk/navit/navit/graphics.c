@@ -98,6 +98,7 @@ struct displaylist {
 };
 
 
+static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
 void
 graphics_set_rect(struct graphics *gra, struct point_rect *pr)
 {
@@ -436,6 +437,28 @@ void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, str
 {
 	this_->meth.draw_rectangle(this_->priv, gc->priv, p, w, h);
 }
+
+void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc *gc, struct point *plu, int w, int h, int r, int fill)
+{
+	struct point p[r*4+32];
+	struct point pi0={plu->x+r,plu->y+r};
+	struct point pi1={plu->x+w-r,plu->y+r};
+	struct point pi2={plu->x+w-r,plu->y+h-r};
+	struct point pi3={plu->x+r,plu->y+h-r};
+	int i=0;
+
+	draw_circle(&pi2, r*2, 0, -1, 258, p, &i, 1);
+	draw_circle(&pi1, r*2, 0, 255, 258, p, &i, 1);
+	draw_circle(&pi0, r*2, 0, 511, 258, p, &i, 1);
+	draw_circle(&pi3, r*2, 0, 767, 258, p, &i, 1);
+	p[i]=p[0];
+	i++;
+	if (fill)
+		this_->meth.draw_polygon(this_->priv, gc->priv, p, i);
+	else
+		this_->meth.draw_lines(this_->priv, gc->priv, p, i);
+}
+
 
 /**
  * FIXME
