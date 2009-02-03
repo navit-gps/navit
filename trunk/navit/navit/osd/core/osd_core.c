@@ -105,9 +105,9 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 	item->text_color.b = 0xffff;
 	item->text_color.a = 0xffff;
 	if (flags & 1) {
-		item->color_bg.r = 0x0101;
-		item->color_bg.g = 0x0101;
-		item->color_bg.b = 0xfefe;
+		item->color_bg.r = 0x0808;
+		item->color_bg.g = 0x0808;
+		item->color_bg.b = 0xf8f8;
 		item->color_bg.a = 0x0000;
 	} else {
 		item->color_bg.r = 0x0;
