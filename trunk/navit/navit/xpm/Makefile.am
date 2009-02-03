@@ -202,14 +202,16 @@ if USE_SVG2PNG
 %.png:$(srcdir)/*.svg
 	SRCDIR=$(srcdir) $(srcdir)/navit_svg2png "$@"
 xpm_DATA += $(addsuffix .png,$(basename $(svgs)))
+xsize=$(firstword $(subst x, ,$(scale)))
+ysize=$(lastword $(subst x, ,$(scale)))
 if USE_SVG2PNG_SCALES
-xpm_DATA += $(foreach scale, @SVG2PNG_SCALES@, $(addsuffix _$(scale)_$(scale).png,$(basename $(svgs))))
+xpm_DATA += $(foreach scale, @SVG2PNG_SCALES@, $(addsuffix _$(xsize)_$(ysize).png,$(basename $(svgs))))
 endif
 if USE_SVG2PNG_SCALES_FLAG
-xpm_DATA += $(foreach scale, @SVG2PNG_SCALES_FLAG@, $(addsuffix _$(scale)_$(scale).png,$(basename $(flag_svgs))))
+xpm_DATA += $(foreach scale, @SVG2PNG_SCALES_FLAG@, $(addsuffix _$(xsize)_$(ysize).png,$(basename $(flag_svgs))))
 endif
 if USE_SVG2PNG_SCALES_NAV
-xpm_DATA += $(foreach scale, @SVG2PNG_SCALES_NAV@, $(addsuffix _$(scale)_$(scale).png,$(basename $(nav_svgs))))
+xpm_DATA += $(foreach scale, @SVG2PNG_SCALES_NAV@, $(addsuffix _$(xsize)_$(ysize).png,$(basename $(nav_svgs))))
 endif
 endif
 
