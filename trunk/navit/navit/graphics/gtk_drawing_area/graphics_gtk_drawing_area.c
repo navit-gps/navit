@@ -86,7 +86,7 @@ struct graphics_gc_priv {
 	GdkGC *gc;
 	struct graphics_priv *gr;
 	int level;
-	char r,g,b,a;
+	unsigned char r,g,b,a;
 };
 
 struct graphics_image_priv {
