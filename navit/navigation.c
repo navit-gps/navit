@@ -1525,7 +1525,6 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 		time = navigation_time(prev->itm,cur->itm->prev);
 
 		if (time >= (speech_time + 30)) { // 3 seconds for understanding what has been said
-			printf("Time: %i, speech_time: %i\n", time, speech_time);
 			break;
 		}
 
