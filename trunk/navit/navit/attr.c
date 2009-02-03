@@ -332,12 +332,11 @@ attr_data_set(struct attr *attr, void *data)
 void
 attr_data_set_le(struct attr * attr, void * data)
 {
-  	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
-		attr->u.str=data;
-	}
-	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) {
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
 		attr->u.num=le32_to_cpu(*((int *)data));
-	}
+	else
+/* Fixme: Handle long long */
+		attr->u.data=data;
 
 }
 
