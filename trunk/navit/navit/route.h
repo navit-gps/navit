@@ -114,6 +114,7 @@ void route_add_callback(struct route *this_, struct callback *cb);
 void route_remove_callback(struct route *this_, struct callback *cb);
 void route_init(void);
 int route_pos_contains(struct route *this, struct item *item);
+struct coord route_get_coord_dist(struct route *this_, int dist);
 
 /* end of prototypes */
 

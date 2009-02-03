@@ -86,6 +86,7 @@ int transform_within_dist_polyline(struct coord *ref, struct coord *c, int count
 int transform_within_dist_polygon(struct coord *ref, struct coord *c, int count, int dist);
 int transform_within_dist_item(struct coord *ref, enum item_type type, struct coord *c, int count, int dist);
 void transform_destroy(struct transformation *t);
+double transform_get_autozoom_factor(struct transformation *this_, struct point *center, struct coord *c);
 /* end of prototypes */
 #ifdef __cplusplus
 }

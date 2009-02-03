@@ -1541,6 +1541,61 @@ route_path_new_trivial(struct route_graph *this, struct route_info *pos, struct 
 }
 
 /**
+ * @brief Returns a coordinate at a given distance
+ *
+ * This function returns the coordinate, where the user will be if he
+ * follows the current route for a certain distance.
+ *
+ * @param this_ The route we're driving upon
+ * @param dist The distance in meters
+ * @return The coordinate where the user will be in that distance
+ */
+struct coord
+route_get_coord_dist(struct route *this_, int dist)
+{
+	int d,l,i,len;
+	int dx,dy;
+	double frac;
+	struct route_path_segment *cur;
+	struct coord ret;
+
+	d = dist;
+
+	if (!this_->path2) {
+		return this_->pos->c;
+	}
+	
+	ret = this_->pos->c;
+	cur = this_->path2->path;
+	while (cur) {
+		if (cur->length < d) {
+			d -= cur->length;
+		} else {
+			for (i=0; i < (cur->ncoords-1); i++) {
+				l = d;
+				len = (int)transform_polyline_length(route_projection(this_), (cur->c + i), 2);
+				d -= len;
+				if (d <= 0) { 
+					// We interpolate a bit here...
+					frac = (double)l / len;
+					
+					dx = (cur->c + i + 1)->x - (cur->c + i)->x;
+					dy = (cur->c + i + 1)->y - (cur->c + i)->y;
+					
+					ret.x = (cur->c + i)->x + (frac * dx);
+					ret.y = (cur->c + i)->y + (frac * dy);
+					return ret;
+				}
+			}
+			return cur->c[(cur->ncoords-1)];
+		}
+		cur = cur->next;
+	}
+
+	return this_->dst->c;
+}
+
+/**
  * @brief Creates a new route path
  * 
  * This creates a new non-trivial route. It therefore needs the routing information created by route_graph_flood, so
