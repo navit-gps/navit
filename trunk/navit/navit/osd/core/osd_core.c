@@ -46,7 +46,7 @@
 
 struct osd_item {
 	struct point p;
-	int flags, w, h, fg_line_width, font_size, osd_configuration, configured;
+	int flags, attr_flags, w, h, fg_line_width, font_size, osd_configuration, configured;
 	struct color color_bg, color_white, text_color;
 	struct graphics *gr;
 	struct graphics_gc *graphic_bg, *graphic_fg_white, *graphic_fg_text;
@@ -149,6 +149,9 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
         attr=attr_search(attrs, NULL, attr_text_color);
         if (attr)
                 item->text_color=*attr->u.color;
+        attr=attr_search(attrs, NULL, attr_flags);
+        if (attr)
+                item->attr_flags=attr->u.num;
 
 }
 
@@ -192,11 +195,28 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item)
 static void
 osd_std_draw(struct osd_item *item)
 {
-        struct point p;
+        struct point p[2];
+	int flags=item->attr_flags;
         graphics_draw_mode(item->gr, draw_mode_begin);
-        p.x=0;
-        p.y=0;
-        graphics_draw_rectangle(item->gr, item->graphic_bg, &p, item->w, item->h);
+        p[0].x=0;
+        p[0].y=0;
+        graphics_draw_rectangle(item->gr, item->graphic_bg, p, item->w, item->h);
+	p[1].x=item->w-1;
+	p[1].y=0;
+	if (flags & 1) 
+		graphics_draw_lines(item->gr, item->graphic_fg_text, p, 2);
+	p[0].x=item->w-1;
+	p[0].y=item->h-1;
+	if (flags & 2) 
+		graphics_draw_lines(item->gr, item->graphic_fg_text, p, 2);
+	p[1].x=0;
+	p[1].y=item->h-1;
+	if (flags & 4) 
+		graphics_draw_lines(item->gr, item->graphic_fg_text, p, 2);
+	p[0].x=0;
+	p[0].y=0;
+	if (flags & 8) 
+		graphics_draw_lines(item->gr, item->graphic_fg_text, p, 2);
 }
 
 
@@ -857,8 +877,11 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 	struct map *nav_map = NULL;
 	struct map_rect *nav_mr = NULL;
 	struct item *item;
-	int offset;
+	int offset,lines;
 	int *speedlist = NULL;
+	int height=this->osd_item.font_size*13/256;
+	int yspacing=height/2;
+	int xspacing=height/4;
 	enum attr_type attr_type;
 
 	vehicle_attr.u.vehicle=NULL;
@@ -948,7 +971,23 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 		g_free(str);
 		str=next;
 	}
-	p.y=0;
+	lines=1;
+	next=str;
+	while ((next=strstr(next, "\\n"))) {
+		lines++;
+		next++;
+	}
+	dbg(0,"this->align=%d\n", this->align);
+	switch (this->align & 3) {
+	case 1:
+		p.y=0;
+		break;
+	case 2:
+		p.y=(this->osd_item.h-lines*(height+yspacing)-yspacing);
+		break;
+	default:
+		p.y=(this->osd_item.h-lines*(height+yspacing)-yspacing)/2;
+	}
 	if (do_draw) {
 		osd_std_draw(&this->osd_item);
 		while (str) {
@@ -961,8 +1000,17 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 					       this->osd_item.font,
 					       str, 0x10000,
 					       0x0, p2, 0);
-			p.x = ((p2[0].x - p2[2].x) / 2) + (this->osd_item.w / 2);
-			p.y += p2[0].y - p2[2].y;
+			switch (this->align & 12) {
+			case 4:
+				p.x=xspacing;
+				break;
+			case 8:
+				p.x=this->osd_item.w-(p2[2].x-p2[0].x)-xspacing;
+				break;
+			default:
+				p.x = ((p2[0].x - p2[2].x) / 2) + (this->osd_item.w / 2);
+			}
+			p.y += height+yspacing;
 			graphics_draw_text(this->osd_item.gr,
 					   this->osd_item.graphic_fg_text,
 					   NULL, this->osd_item.font,
