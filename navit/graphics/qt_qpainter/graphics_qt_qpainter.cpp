@@ -585,12 +585,14 @@ static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct g
 {
 	struct graphics_image_priv *ret;
 
-	if (strlen(path) > 4 && !strcmp(path+strlen(path)-4, ".svg")) {
-		return NULL;
-	}
 	ret=g_new0(struct graphics_image_priv, 1);
 
 	ret->image=new QImage(path);
+	if (ret->image->isNull()) {
+		delete(ret->image);
+		g_free(ret);
+		return NULL;
+	}
 	*w=ret->image->width();
 	*h=ret->image->height();
 	if (hot) {
