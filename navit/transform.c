@@ -853,6 +853,42 @@ transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref
 	return transform_distance_sq(&l, ref);
 }
 
+double
+transform_get_autozoom_factor(struct transformation *this_, struct point *center, struct coord *c)
+{
+	struct point p;
+	struct map_selection *ms=this_->screen_sel;
+	double fx=0,fy=0,nfx,nfy;
+
+	transform(this_, transform_get_projection(this_), c, &p, 1, 0, 0, NULL);
+
+	while (ms) {
+		struct point_rect *r=&ms->u.p_rect;
+		if (p.x > center->x) {
+			nfx = (double)(p.x - center->x) / (r->rl.x - center->x);
+		} else {
+			nfx = (double)(p.x - center->x) / (r->lu.x - center->x);
+		}
+
+		if (p.y < center->y) {
+			nfy = (double)(p.y - center->y) / (double)(r->lu.y - center->y) ;
+		} else {
+			nfy =  (double)(p.y - center->y) / (double)(r->rl.y - center->y);
+		}
+		
+		if ((nfx < fx) || (fx == 0)) {
+			fx = nfx;
+		}
+		if ((nfy < fy) || (fy == 0)) {
+			fy = nfy;
+		}
+
+		ms=ms->next;
+	}
+
+	return (fy < fx) ? fx : fy;
+}
+
 int
 transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, struct coord *lpnt, int *pos)
 {
