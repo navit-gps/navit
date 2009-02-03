@@ -119,6 +119,7 @@ struct navit {
 	int button_pressed,moved,popped,zoomed;
 	time_t last_moved;
 	int center_timeout;
+	int autozoom_secs;
 	struct event_timeout *button_timeout, *motion_timeout;
 	struct callback *motion_timeout_callback;
 	int ignore_button;
@@ -473,6 +474,49 @@ navit_scale(struct navit *this_, long scale, struct point *p)
 }
 
 /**
+ * @brief Automatically adjusts zoom level
+ *
+ * This function automatically adjusts the current
+ * zoom level according to the current speed.
+ *
+ * @param this_ The navit struct
+ * @param speed The vehicles speed in meters per second
+ */
+static void
+navit_autozoom(struct navit *this_, struct coord *center, int speed)
+{
+	struct coord c;
+	struct point pc;
+	int distance;
+	long scale;
+	double factor;
+
+	if (this_->autozoom_secs <= 0) {
+		return;
+	}
+
+	distance = speed * this_->autozoom_secs;
+
+	if (route_get_path_set(this_->route)) {
+		c = route_get_coord_dist(this_->route, distance);
+	} else {
+		return;
+	}
+
+	transform(this_->trans, transform_get_projection(this_->trans), center, &pc, 1, 0, 0, NULL);
+	factor = transform_get_autozoom_factor(this_->trans, &pc, &c);
+	
+	if ((factor < 1.1) && (factor > 0.9)) {
+		return;
+	}
+
+	scale = transform_get_scale(this_->trans);
+	scale = (scale * factor);
+
+	navit_scale(this_, scale, &pc);
+}
+
+/**
  * Change the current zoom level, zooming closer to the ground
  *
  * @param navit The navit instance
@@ -562,6 +606,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->last_moved = 0;
 	this_->center_timeout = 10;
 	this_->use_mousewheel = 1;
+	this_->autozoom_secs = 0;
 
 	for (;*attrs; attrs++) {
 		switch((*attrs)->type) {
@@ -595,6 +640,8 @@ navit_new(struct attr *parent, struct attr **attrs)
 		case attr_timeout:
 			this_->center_timeout = (*attrs)->u.num;
 			break;
+		case attr_autozoom:
+			this_->autozoom_secs = (*attrs)->u.num;
 		default:
 			dbg(0, "Unexpected attribute %x\n",(*attrs)->type);
 			break;
@@ -1655,6 +1702,9 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 	case attr_timeout:
 		this_->center_timeout = attr->u.num;
 		break;
+	case attr_autozoom:
+		this_->autozoom_secs = attr->u.num;
+		break;
 	default:
 		return 0;
 	}
@@ -1819,6 +1869,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	if ((nv->follow_curr == 1) && (!this_->button_pressed)) {
 		if (this_->cursor_flag && ((time(NULL) - this_->last_moved) > this_->center_timeout) && (recenter)) {
 			navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
+			navit_autozoom(this_, &nv->coord, nv->speed);
 			pnt=NULL;
 		} else { // We don't want to center, but redraw because otherwise the old route "lags"
 			navit_draw(this_);
