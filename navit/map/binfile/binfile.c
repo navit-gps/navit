@@ -394,7 +394,7 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	}
 	if (!mr->label && (attr_type == attr_any || attr_type == attr_label)) {
 		for (i = 0 ; i < sizeof(mr->label_attr)/sizeof(int *) ; i++) {
-			if (le32_to_cpu(mr->label_attr[i])) {
+			if (mr->label_attr[i]) {
 				mr->label=1;
 				attr->type=attr_label;
 				attr_data_set_le(attr,mr->label_attr[i]+1);
