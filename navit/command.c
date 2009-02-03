@@ -562,6 +562,7 @@ eval_assignment(struct context *ctx, struct result *res)
 	if (!get_op(ctx,0,"=",NULL)) return;
     	eval_conditional(ctx, &tmp);
 	if (ctx->error) return;
+	resolve_object(ctx, res);
 	command_set_attr(ctx, res, &tmp);
 }
 
