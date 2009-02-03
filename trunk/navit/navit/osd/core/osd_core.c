@@ -822,9 +822,22 @@ osd_text_format_attr(struct attr *attr, char *format)
 		return format_time(&text_tm, days);
 	case attr_length:
 	case attr_destination_length:
-		if (!format || strcmp(format,"named"))
+		if (!format)
 			break;
-		return format_distance(attr->u.num,"");
+		if (!strcmp(format,"named"))
+			return format_distance(attr->u.num,"");
+		if (!strcmp(format,"value") || !strcmp(format,"unit")) {
+			char *ret,*tmp=format_distance(attr->u.num," ");
+			char *pos=strchr(tmp,' ');
+			if (! pos)
+				return tmp;
+			*pos++='\0';
+			if (!strcmp(format,"value"))
+				return tmp;
+			ret=g_strdup(pos);
+			g_free(tmp);
+			return ret;
+		}
 	default:
 		break;
 	}
