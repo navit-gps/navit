@@ -16,13 +16,16 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
  */
-
 #ifndef __ENDIANESS_HANDLER__
 
   /* The following is based on xorg/xserver/GL/glx/glxbyteorder.h 
    * which is (c) IBM Corp. 2006,2007 and originally licensed under the following
    * BSD-license. All modifications in navit are licensed under the GNU GPL as 
    * described in file "COPYRIGHT".
+   *
+   * Portions also from GNU C Library include/bits/byteswap.h Also licsend
+   * under the GPL.
+   *
    * --------------------------
    * Permission is hereby granted, free of charge, to any person obtaining a
    * copy of this software and associated documentation files (the "Software"),
@@ -43,7 +46,6 @@
    * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
    * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    */
-
 #if HAVE_BYTESWAP_H
   /* machine dependent versions of byte swapping functions.  GNU extension.*/
   #include <byteswap.h>
@@ -59,15 +61,13 @@
   #define __LITTLE_ENDIAN 1234
   #define __BYTE_ORDER __LITTLE_ENDIAN
 #else
-  #define __bswap_16(value)  \
-      ((((value) & 0xff) << 8) | ((value) >> 8))
-  #define __bswap_32(value) \
-      (((uint32_t)bswap_16((uint16_t)((value) & 0xffff)) << 16) | \
-      (uint32_t)bswap_16((uint16_t)((value) >> 16)))
-  #define __bswap_64(value) \
-      (((uint64_t)bswap_32((uint32_t)((value) & 0xffffffff)) \
-         << 32) | \
-      (uint64_t)bswap_32((uint32_t)((value) >> 32)))
+  #define __bswap_16(__bsx) ((((__bsx) >> 8) & 0xff) | (((__bsx) & 0xff) << 8))
+  #define __bswap_32(__bsx) ((((__bsx) & 0xff000000) >> 24) | \
+			     (((__bsx) & 0x00ff0000) >>  8) |\
+			     (((__bsx) & 0x0000ff00) <<  8) | \
+			     (((__bsx) & 0x000000ff) << 24))
+
+
 #endif
 
 #if  __BYTE_ORDER == __BIG_ENDIAN 
