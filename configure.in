@@ -562,11 +562,12 @@ AC_ARG_ENABLE(svg2png-scaling, [  --enable-svg2png-scaling   enable conversion o
 AC_ARG_ENABLE(svg2png-scaling-flag, [  --enable-svg2png-scaling-flag   enable conversion of flag svgs to pngs with specified sizes], SVG2PNG_SCALES_FLAG=$enableval, SVG2PNG_SCALES_FLAG="")
 AC_ARG_ENABLE(svg2png-scaling-nav, [  --enable-svg2png-scaling-nav   enable conversion of nav svgs to pngs with specified sizes], SVG2PNG_SCALES_NAV=$enableval, SVG2PNG_SCALES_NAV="")
 if test "x${enable_svg2png}" = "xyes" ; then
-	AC_PATH_PROG([KSVGTOPNG], [ksvgtopng], [])
-	if test ! -x "$KSVGTOPNG"; then
-	    enable_svg2png="no"
-        fi
+	AC_PATH_PROGS([SVG2PNG], [ksvgtopng ksvgtopng4 rsvg-convert inkscape], [none])
+	if test "x${SVG2PNG}" = "xnone"; then
+		enable_svg2png="no"
+	fi
 fi
+AC_SUBST(SVG2PNG)
 AC_SUBST(SVG2PNG_SCALES)
 AC_SUBST(SVG2PNG_SCALES_FLAG)
 AC_SUBST(SVG2PNG_SCALES_NAV)
