@@ -128,11 +128,12 @@ gc_set_color(struct graphics_gc_priv *gc, struct color *c, int fg)
 	gdkc.red=c->r;
 	gdkc.green=c->g;
 	gdkc.blue=c->b;
-	gc->r=c->r >> 8;
-	gc->g=c->g >> 8;
-	gc->b=c->b >> 8;
-	gc->a=c->a >> 8;
 	gdk_colormap_alloc_color(gc->gr->colormap, &gdkc, FALSE, TRUE);
+	gdk_colormap_query_color(gc->gr->colormap, gdkc.pixel, &gdkc);
+	gc->r=gdkc.red >> 8;
+	gc->g=gdkc.green >> 8;
+	gc->b=gdkc.blue >> 8;
+	gc->a=c->a >> 8;
 	if (fg) {
 		gdk_gc_set_foreground(gc->gc, &gdkc);
 		gc->level=(c->r+c->g+c->b)/3;
