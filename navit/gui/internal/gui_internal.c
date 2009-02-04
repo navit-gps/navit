@@ -222,6 +222,7 @@ struct gui_priv {
 	struct callback_list *cbl;
 	int flags;
 	int cols;
+	struct attr osd_configuration;
 };
 
 
@@ -1194,6 +1195,7 @@ gui_internal_top_bar(struct gui_priv *this)
 	64:Show time
 	128:Show help
 	256:Use background for menu headline
+	512:Set osd_configuration and zoom to route when setting position
 */
 
 	w=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|(this->flags & 1 ? 0:flags_fill));
@@ -1537,6 +1539,10 @@ gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void 
 	struct widget *w=wm->data;
 	dbg(0,"c=%d:0x%x,0x%x\n", w->c.pro, w->c.x, w->c.y);
 	navit_set_destination(this->nav, &w->c, w->name);
+	if (this->flags & 512) {
+		navit_set_attr(this->nav, &this->osd_configuration);
+		navit_zoom_to_route(this->nav);
+	}	
 	gui_internal_prune_menu(this, NULL);
 }
 
@@ -3567,6 +3573,8 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	      this->text_foreground_color=(struct color){0xffff,0xffff,0xffff,0xffff};
 	if( (attr=attr_search(attrs,NULL,attr_columns)))
 	      this->cols=attr->u.num;
+	if( (attr=attr_search(attrs,NULL,attr_osd_configuration)))
+	      this->osd_configuration=*attr;
 	this->data.priv=this;
 	this->data.gui=&gui_internal_methods_ext;
 	this->data.widget=&gui_internal_widget_methods;
