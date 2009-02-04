@@ -135,8 +135,6 @@ static void set_columns(struct search_param *param, int mode)
 	}
 	g_list_free(columns_list);
 	while (*column_text) {
-		printf("column_text=%p\n", column_text);
-		printf("*column_text=%s\n", *column_text);
 		GtkCellRenderer *cell=gtk_cell_renderer_text_new();
 		gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (param->treeview),-1, gettext(*column_text), cell, "text", i, NULL);
 		i++;
