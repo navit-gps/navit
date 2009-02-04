@@ -1166,7 +1166,7 @@ osd_gps_status_new(struct navit *nav, struct osd_methods *meth,
 	this->icon_w = -1;
 	this->icon_h = -1;
 	this->active = -1;
-	this->strength = -1;
+	this->strength = -2;
 
 	attr = attr_search(attrs, NULL, attr_icon_w);
 	if (attr)
