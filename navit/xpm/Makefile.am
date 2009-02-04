@@ -200,7 +200,7 @@ endif
 
 if USE_SVG2PNG
 %.png:$(srcdir)/*.svg
-	SRCDIR=$(srcdir) $(srcdir)/navit_svg2png "$@"
+	SRCDIR=$(srcdir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
 xpm_DATA += $(addsuffix .png,$(basename $(svgs)))
 xsize=$(firstword $(subst x, ,$(scale)))
 ysize=$(lastword $(subst x, ,$(scale)))
