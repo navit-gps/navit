@@ -1628,6 +1628,8 @@ navigation_update(struct navigation *this_, int mode)
 		return;
 	dbg(1,"enter\n");
 	while ((ritem=map_rect_get_item(mr))) {
+		if (ritem->type != type_street_route)
+			continue;
 		if (first && item_attr_get(ritem, attr_street_item, &street_item)) {
 			first=0;
 			if (!item_attr_get(ritem, attr_direction, &street_direction))

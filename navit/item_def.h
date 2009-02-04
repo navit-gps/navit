@@ -300,6 +300,8 @@ ITEM(poi_climbing)
 ITEM(poi_motor_sport)
 ITEM(poi_tennis)
 ITEM(house_number)
+ITEM(route_start)
+ITEM(route_end)
 /* Line */
 ITEM2(0x80000000,line)
 ITEM2(0x80000001,line_unspecified)

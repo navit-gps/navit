@@ -2069,6 +2069,8 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	struct map_rect_priv *mr = priv_data;
 	struct route_path_segment *seg=mr->seg;
 	struct route *route=mr->mpriv->route;
+	if (mr->item.type != type_street_route)
+		return 0;
 	attr->type=attr_type;
 	switch (attr_type) {
 		case attr_any:
@@ -2129,6 +2131,16 @@ rm_coord_get(void *priv_data, struct coord *c, int count)
 	struct route *r = mr->mpriv->route;
 	enum projection pro = route_projection(r);
 
+	if (mr->item.type == type_route_start || mr->item.type == type_route_end) {
+		if (! count || mr->last_coord)
+			return 0;
+		mr->last_coord=1;
+		if (mr->item.type == type_route_start)
+			c[0]=r->pos->c;
+		else
+			c[0]=r->dst->c;
+		return 1;
+	}
 	if (! seg)
 		return 0;
 	for (i=0; i < count; i++) {
@@ -2321,14 +2333,19 @@ rm_rect_new(struct map_priv *priv, struct map_selection *sel)
 		return NULL;
 	if (! route_get_dst(priv->route))
 		return NULL;
+#if 0
 	if (! priv->route->path2)
 		return NULL;
+#endif
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->mpriv = priv;
 	mr->item.priv_data = mr;
-	mr->item.type = type_street_route;
+	mr->item.type = type_none;
 	mr->item.meth = &methods_route_item;
-	mr->seg_next=priv->route->path2->path;
+	if (priv->route->path2)
+		mr->seg_next=priv->route->path2->path;
+	else
+		mr->seg_next=NULL;
 	return mr;
 }
 
@@ -2457,10 +2474,24 @@ rm_get_item(struct map_rect_priv *mr)
 {
 	dbg(1,"enter\n", mr->pos);
 
-	mr->seg=mr->seg_next;
-	if (! mr->seg)
+	switch (mr->item.type) {
+	case type_none:
+		mr->item.type=type_route_start;
+		if (mr->mpriv->route->pos) 
+			break;
+	default:
+		mr->item.type=type_street_route;
+		mr->seg=mr->seg_next;
+		if (mr->seg) {
+			mr->seg_next=mr->seg->next;
+			break;
+		}
+		mr->item.type=type_route_end;
+		if (mr->mpriv->route->dst)
+			break;
+	case type_route_end:
 		return NULL;
-	mr->seg_next=mr->seg->next;
+	}
 	mr->last_coord = 0;
 	mr->item.id_lo++;
 	rm_attr_rewind(mr);

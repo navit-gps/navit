@@ -1330,26 +1330,30 @@ void
 navit_zoom_to_route(struct navit *this_)
 {
 	struct map *map;
-	struct map_rect *mr;
+	struct map_rect *mr=NULL;
 	struct item *item;
 	struct coord c,*ct;
 	struct coord_rect r;
 	int count=0,scale=16;
 	if (! this_->route)
 		return;
+	dbg(0,"enter\n");
 	map=route_get_map(this_->route);
-	if (! map)
-		return;
-	mr=map_rect_new(map, NULL);
-	if (! mr)
-		return;
-	while ((item=map_rect_get_item(mr))) {
-		while (item_coord_get(item, &c, 1)) {
-			if (!count) 
-				r.lu=r.rl=c;
-			else
-				coord_rect_extend(&r, &c);	
-			count++;
+	dbg(0,"map=%p\n",map);
+	if (map)
+		mr=map_rect_new(map, NULL);
+	dbg(0,"mr=%p\n",mr);
+	if (mr) {
+		while ((item=map_rect_get_item(mr))) {
+			dbg(0,"item=%s\n", item_to_name(item->type));
+			while (item_coord_get(item, &c, 1)) {
+				dbg(0,"coord\n");
+				if (!count) 
+					r.lu=r.rl=c;
+				else
+					coord_rect_extend(&r, &c);	
+				count++;
+			}
 		}
 	}
 	if (! count)
