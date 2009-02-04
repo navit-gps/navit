@@ -1,6 +1,23 @@
 #! /bin/bash
+
+function svgtopng
+{
+	case $svgtopng in
+	*ksvgtopng|*ksvgtopng4)
+		$svgtopng $*
+		;;
+	*rsvg-convert)
+		$svgtopng --width=$1 --height=$2 --output $4 $3
+		;;
+	*inkscape)
+		$svgtopng --without-gui --export-width=$1 --export-height=$2 --export-png=$4 $3
+		;;
+	esac
+}
+
 ulimit -t 5
-png=$1
+svgtopng=$1
+png=$2
 if [[ "$png" = *_[1-9]*_[1-9]*.png ]]; 
 then
         svg=${png%_*_*.png};
@@ -29,11 +46,11 @@ else
 		then
 			h=$(grep 'height="[0-9pxt.]*"' $svg.svg | head -n 1 | sed -e 's/.*height="//' -e 's/[pxt]*".*//')
 		fi
-		ksvgtopng $w $h $svg.svg $png
+		svgtopng $w $h $svg.svg $png
 	elif [ -f $svg.svgz ]
 	then
 		gzip -dc <$svg.svgz >$svg.svg
-		ksvgtopng $w $h $svg.svg $png
+		svgtopng $w $h $svg.svg $png
 		rm -f $svg.svg
 	fi
 fi
