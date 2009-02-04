@@ -324,7 +324,15 @@ static void gui_internal_search_country(struct gui_priv *this, struct widget *wi
 
 static struct widget *gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode);
 static struct menu_data * gui_internal_menu_data(struct gui_priv *this);
-
+/*
+ * * Display image scaled to specific size
+ * * searches for scaleable and pre-scaled image
+ * * @param this Our gui context
+ * * @param name image name
+ * * @param w desired width of image
+ * * @param h desired height of image
+ * * @returns image_struct Ptr to scaled image struct or NULL if not scaled or found
+ * */
 static struct graphics_image *
 image_new_scaled(struct gui_priv *this, char *name, int w, int h)
 {
@@ -335,13 +343,13 @@ image_new_scaled(struct gui_priv *this, char *name, int w, int h)
 	for (i = 1 ; i < 6 ; i++) {
 		full_name=NULL;
 		switch (i) {
-		case 1:
+		case 3:
 			full_name=g_strdup_printf("%s/xpm/%s.svg", getenv("NAVIT_SHAREDIR"), name);
 			break;
 		case 2:
 			full_name=g_strdup_printf("%s/xpm/%s.svgz", getenv("NAVIT_SHAREDIR"), name);
 			break;
-		case 3:
+		case 1:
 			if (w != -1 && h != -1) {
 				full_name=g_strdup_printf("%s/xpm/%s_%d_%d.png", getenv("NAVIT_SHAREDIR"), name, w, h);
 			}

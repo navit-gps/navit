@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
-<svg width="48pt" height="48pt" viewBox="0 0 256 256" overflow="visible" enable-background="new 0 0 256 256" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" id="svg548" sodipodi:version="0.32" sodipodi:docname="/home/cschalle/gnome-themes-extras/Nuvola/icons/scalable/stock/stock_quit.svg" sodipodi:docbase="/home/cschalle/gnome-themes-extras/Nuvola/icons/scalable/stock">
+<svg 
+	width="48px"
+	height="48px"
+	viewBox="0 0 256 256"
+	overflow="visible"
+	enable-background="new 0 0 256 256"
+	xml:space="preserve"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace"
+	xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+       	xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+       	xmlns:xlink="http://www.w3.org/1999/xlink"
+       	id="svg548" sodipodi:version="0.32"
+       	sodipodi:docname="/home/cschalle/gnome-themes-extras/Nuvola/icons/scalable/stock/stock_quit.svg" sodipodi:docbase="/home/cschalle/gnome-themes-extras/Nuvola/icons/scalable/stock">
   <defs id="defs600"/>
   <sodipodi:namedview id="base"/>
   <g id="Layer_1" stroke="#000000">
