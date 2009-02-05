@@ -42,6 +42,7 @@
 #include "keys.h"
 #include "plugin.h"
 #include "navit/font/freetype/font_freetype.h"
+#include "navit.h"
 
 #ifndef GDK_Book
 #define GDK_Book XF86XK_Book
@@ -79,6 +80,7 @@ struct graphics_priv {
 	enum draw_mode_num mode;
 	struct callback_list *cbl;
 	struct font_freetype_methods freetype_methods;
+	struct navit *nav;
 };
 
 
@@ -325,7 +327,10 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 	struct font_freetype_text *t;
 
 	if (! font)
+	{
+		dbg(0,"no font, returning\n");
 		return;
+	}
 #if 0 /* Temporarily disabled because it destroys text rendering of overlays and in gui internal in some places */
 	/* 
 	 This needs an improvement, no one checks if the strings are visible
@@ -699,6 +704,20 @@ motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer user_data)
 	return FALSE;
 }
 
+/* *
+ * * Exit navit (X pressed)
+ * * @param widget active widget
+ * * @param event the event (delete_event)
+ * * @param nav our Navit context
+ * * @returns TRUE
+ * */
+static gint
+delete(GtkWidget *widget, GdkEventKey *event, struct navit *nav)
+{
+	navit_destroy(nav);
+	return TRUE;
+}
+
 static gint
 keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
@@ -736,10 +755,16 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 		key[1]='\0';
 		break;
 	case GDK_Book:
+#ifdef USE_HILDON
+	case GDK_F7:
+#endif
 		key[0]=NAVIT_KEY_ZOOM_IN;
 		key[1]='\0';
 		break;
 	case GDK_Calendar:
+#ifdef USE_HILDON
+	case GDK_F8:
+#endif
 		key[0]=NAVIT_KEY_ZOOM_OUT;
 		key[1]='\0';
 		break;
@@ -802,6 +827,7 @@ get_data(struct graphics_priv *this, char *type)
 	if (!strcmp(type,"window")) {
 		this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 		gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
+		dbg(1,"h= %i, w= %i\n",this->win_h, this->win_w);
 		gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
 		gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", "Navit");
 		gtk_widget_realize(this->win);
@@ -811,6 +837,7 @@ get_data(struct graphics_priv *this, char *type)
         	gtk_widget_set_sensitive(this->widget, TRUE);
 		gtk_widget_grab_focus(this->widget);
 		g_signal_connect(G_OBJECT(this->widget), "key-press-event", G_CALLBACK(keypress), this);
+	g_signal_connect(G_OBJECT(this->win), "delete_event", G_CALLBACK(delete), this->nav);
 		this->window.fullscreen=graphics_gtk_drawing_area_fullscreen;
 		this->window.priv=this;
 		return &this->window;
@@ -869,6 +896,7 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 
 	draw=gtk_drawing_area_new();
 	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
+	this->nav = nav;
 	this->widget=draw;
 	this->win_w=792;
 	if ((attr=attr_search(attrs, NULL, attr_w))) 
@@ -888,6 +916,7 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	g_signal_connect(G_OBJECT(draw), "button_release_event", G_CALLBACK(button_release), this);
 	g_signal_connect(G_OBJECT(draw), "scroll_event", G_CALLBACK(scroll), this);
 	g_signal_connect(G_OBJECT(draw), "motion_notify_event", G_CALLBACK(motion_notify), this);
+	g_signal_connect(G_OBJECT(draw), "delete_event", G_CALLBACK(delete), nav);
 	return this;
 }
 
