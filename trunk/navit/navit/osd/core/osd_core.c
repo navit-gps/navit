@@ -571,8 +571,8 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 
 	this->osd_item.p.x = 20;
 	this->osd_item.p.y = -80;
-	this->osd_item.w = 60;
-	this->osd_item.h = 40;
+	this->osd_item.w = 70;
+	this->osd_item.h = 70;
 	this->osd_item.font_size = 200;
 	osd_set_std_attr(attrs, &this->osd_item, 0);
 
@@ -599,7 +599,7 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 	} else
 		this->icon_src =
 		    g_strjoin(NULL, getenv("NAVIT_SHAREDIR"),
-			      "/xpm/%s_32.xpm", NULL);
+			      "/xpm/%s_wh.svg", NULL);
 
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_turn_init), attr_navit, this));
 	return (struct osd_priv *) this;
