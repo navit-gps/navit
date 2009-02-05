@@ -38,7 +38,7 @@
 #include "plugin.h"
 #include "navit_nls.h"
 
-/* #define DEBUG */
+#define DEBUG
 
 struct suffix {
 	char *fullname;
@@ -103,6 +103,24 @@ angle_delta(int angle1, int angle2)
 	if (delta > 180)
 		delta-=360;
 	return delta;
+}
+
+static int
+angle_median(int angle1, int angle2)
+{
+	int delta=angle_delta(angle1, angle2);
+	int ret=angle1+delta/2;
+	if (ret < 0)
+		ret+=360;
+	if (ret > 360)
+		ret-=360;
+	return ret;
+}
+
+static int
+angle_opposite(int angle)
+{
+	return ((angle+180)%360);
 }
 
 struct navigation *
@@ -1120,21 +1138,21 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 	if (itm && itm->prev && !(itm->flags & AF_ROUNDABOUT) && (itm->prev->flags & AF_ROUNDABOUT)) {
 		int len=0;
 		int angle;
+		int entry_angle;
 		struct navigation_itm *itm2=itm->prev;
+		int exit_angle=angle_median(itm->prev->angle_end, itm->ways->angle2);
 		while (itm2 && (itm2->flags & AF_ROUNDABOUT)) {
 			len+=itm2->length;
 			angle=itm2->angle_end;
 			itm2=itm2->prev;
 		}
-		if (itm2) 
-			ret->roundabout_delta=angle_delta(itm2->angle_end, itm->angle_start);
-		else {
-			if (delta > 0) 
-				angle-=90;
-			else
-				angle+=90;
-			ret->roundabout_delta=angle_delta(angle % 360, itm->angle_start);
+		if (itm2 && itm2->next && itm2->next->next) {
+			itm2=itm2->next->next;
+			entry_angle=angle_median(angle_opposite(itm2->angle_start), itm2->ways->angle2);
+		} else {
+			entry_angle=angle_opposite(angle);
 		}
+		ret->roundabout_delta=angle_delta(entry_angle, exit_angle);
 		ret->length=len;
 		
 	}
@@ -1980,7 +1998,7 @@ navigation_map_get_item(struct map_rect_priv *priv)
 			ret->type=type_nav_destination;
 		else {
 			if (priv->itm && priv->itm->prev && !(priv->itm->flags & AF_ROUNDABOUT) && (priv->itm->prev->flags & AF_ROUNDABOUT)) {
-				
+			
 				switch (((180+22)-priv->cmd->roundabout_delta)/45) {
 				case 0:
 				case 1:
