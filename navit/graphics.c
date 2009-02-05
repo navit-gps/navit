@@ -1013,18 +1013,19 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 	int wi, ppos = maxpoints/2, npos = maxpoints/2;
 	int state,prec=5;
 	int max_circle_points=20;
+	int lscale=16;
 	for (i = 0; i < count; i++) {
 		wi=*width;
 		width+=step;
 		if (i < count - 1) {
 			dx = (pnt[i + 1].x - pnt[i].x);
 			dy = (pnt[i + 1].y - pnt[i].y);
-			l = int_sqrt(dx * dx + dy * dy);
+			l = int_sqrt(dx * dx * lscale * lscale + dy * dy * lscale * lscale);
 			fow=fowler(-dy, dx);
 		}
 		if (! l) 
 			l=1;
-		calc_offsets(wi, l, dx, dy, &o);
+		calc_offsets(wi*lscale, l, dx, dy, &o);
 		pos.x = pnt[i].x + o.ny;
 		pos.y = pnt[i].y + o.px;
 		neg.x = pnt[i].x + o.py;
@@ -1085,7 +1086,7 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 		}
 		if (step) {
 			wi=*width;
-			calc_offsets(wi, l, dx, dy, &oo);
+			calc_offsets(wi*lscale, l, dx, dy, &oo);
 		} else 
 			oo=o;
 		dxo = -dx;
