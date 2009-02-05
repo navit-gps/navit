@@ -626,7 +626,6 @@ command_evaluate_to_void(struct attr *attr, char *expr)
 {
 	struct result res;
 	struct context ctx;
-	dbg(0,"command=%s attr.type=%s\n", expr, attr_to_name(attr->type));
 	memset(&res, 0, sizeof(res));
 	memset(&ctx, 0, sizeof(ctx));
 	ctx.attr=attr;
@@ -634,6 +633,27 @@ command_evaluate_to_void(struct attr *attr, char *expr)
 	ctx.expr=expr;
 	eval_comma(&ctx,&res);
 	resolve(&ctx, &res, NULL);
+}
+
+void
+command_evaluate(struct attr *attr, char *expr)
+{
+	struct result res;
+	struct context ctx;
+	memset(&res, 0, sizeof(res));
+	memset(&ctx, 0, sizeof(ctx));
+	ctx.attr=attr;
+	ctx.error=0;
+	ctx.expr=expr;
+	for (;;) {
+		eval_comma(&ctx,&res);
+		if (ctx.error)
+			return;
+		resolve(&ctx, &res, NULL);
+		if (ctx.error)
+			return;
+		if (!get_op(&ctx,0,";",NULL)) return;
+	}
 }
 
 #if 0

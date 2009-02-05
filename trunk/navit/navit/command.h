@@ -7,5 +7,6 @@ struct command_table {
 #define command_cast(x) (int (*)(void *, char *, struct attr **, struct attr ***))(x)
 
 void command_evaluate_to_void(struct attr *attr, char *expr);
+void command_evaluate(struct attr *attr, char *expr);
 void command_add_table(struct callback_list *cbl, struct command_table *table, int count, void *data);
 
