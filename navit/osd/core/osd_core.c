@@ -85,7 +85,7 @@ osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button,
 		navit.type=attr_navit;
 		navit.u.navit=nav;
 		dbg(0, "calling command '%s'\n", this->command);
-		command_evaluate_to_void(&navit, this->command);
+		command_evaluate(&navit, this->command);
 	}
 }
 
@@ -159,7 +159,7 @@ static void
 osd_std_config(struct osd_item *item, struct navit *navit)
 {
 	struct attr osd_configuration;
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 	if (!navit_get_attr(navit, attr_osd_configuration, &osd_configuration, NULL))
 		return;
 	item->configured = !!(osd_configuration.u.num & item->osd_configuration);
@@ -405,7 +405,7 @@ osd_button_init(struct osd_button *this, struct navit *nav)
 	dbg(1, "enter\n");
 	this->img = graphics_image_new(gra, this->src);
 	if (!this->img) {
-		dbg(0, "failed to load '%s'\n", this->src);
+		dbg(1, "failed to load '%s'\n", this->src);
 		return;
 	}
 	if (!this->item.w)
@@ -495,7 +495,7 @@ osd_nav_next_turn_draw(struct nav_next_turn *this, struct navit *navit,
 		       && (item->type == type_nav_position || item->type == type_nav_none));
 	if (item) {
 		name = item_to_name(item->type);
-		dbg(0, "name=%s\n", name);
+		dbg(1, "name=%s\n", name);
 		if (this->active != 1 || this->last_name != name) {
 			this->active = 1;
 			this->last_name = name;
@@ -514,7 +514,7 @@ osd_nav_next_turn_draw(struct nav_next_turn *this, struct navit *navit,
 		osd_std_draw(&this->osd_item);
 		if (this->active) {
 			image = g_strdup_printf(this->icon_src, name);
-			dbg(0, "image=%s\n", image);
+			dbg(1, "image=%s\n", image);
 			gr_image =
 			    graphics_image_new_scaled(this->osd_item.gr,
 						      image, this->icon_w,
@@ -936,14 +936,14 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 					}
 				}
 				if (item) {
-					dbg(0,"name %s\n", item_to_name(item->type));
+					dbg(1,"name %s\n", item_to_name(item->type));
 					subkey=osd_text_split(key,&index);
 					attr_type=attr_from_name(key);
-					dbg(0,"type %s\n", attr_to_name(attr_type));
+					dbg(1,"type %s\n", attr_to_name(attr_type));
 					if (item_attr_get(item, attr_type, &attr)) 
 						value=osd_text_format_attr(&attr, index);
 					else
-						dbg(0,"failed\n");
+						dbg(1,"failed\n");
 				}
 			}
 		} else if (!strcmp(key,"tracking") && subkey) {
@@ -990,7 +990,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 		lines++;
 		next++;
 	}
-	dbg(0,"this->align=%d\n", this->align);
+	dbg(1,"this->align=%d\n", this->align);
 	switch (this->align & 3) {
 	case 1:
 		p.y=0;
@@ -1100,7 +1100,7 @@ osd_gps_status_draw(struct gps_status *this, struct navit *navit,
 			case 2:
 				strength=2;
 				if (vehicle_get_attr(vehicle_attr.u.vehicle, attr_position_sats_used, &attr, NULL)) {
-					dbg(0,"num=%d\n", attr.u.num);
+					dbg(1,"num=%d\n", attr.u.num);
 					if (attr.u.num >= 3) 
 						strength=attr.u.num-1;
 					if (strength > 5)
