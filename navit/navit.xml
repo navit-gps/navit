@@ -35,7 +35,7 @@
 	<!-- Normally it is sufficient to use -->
         <!-- <gui type="internal" /> -->
 
-        <gui type="gtk" menubar="1" toolbar="1" statusbar="1"/>
+        <gui type="internal" menubar="1" toolbar="1" statusbar="1"/>
 
         <!-- osd items allow to position display and control items directly on top of the map: -->
         <osd enabled="no" type="compass"/>
