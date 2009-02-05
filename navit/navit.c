@@ -100,7 +100,6 @@ struct navit {
 	int ready;
 	struct window *win;
 	struct displaylist *displaylist;
-	int cursor_flag;
 	int tracking_flag;
 	int orientation;
 	int recentdest_count;
@@ -117,7 +116,6 @@ struct navit {
 	GHashTable *bookmarks_hash;
 	struct point pressed, last, current;
 	int button_pressed,moved,popped,zoomed;
-	time_t last_moved;
 	int center_timeout;
 	int autozoom_secs;
 	struct event_timeout *button_timeout, *motion_timeout;
@@ -146,6 +144,7 @@ struct attr_iter {
 static void navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv);
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt);
 static int navit_add_vehicle(struct navit *this_, struct vehicle *v);
+static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init);
 
 void
 navit_add_mapset(struct navit *this_, struct mapset *ms)
@@ -336,14 +335,17 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			navit_zoom_out(this_, 2, p);
 		}
 	} else {
+		struct attr follow;
+		follow.type=attr_follow;
+		follow.u.num=this_->center_timeout;
+
 		this_->button_pressed=0;
 		if (this_->button_timeout) {
 			event_remove_timeout(this_->button_timeout);
 			this_->button_timeout=NULL;
 			if (! this_->moved && ! transform_within_border(this_->trans, p, border)) {
-				if (!this_->zoomed) {
-					this_->last_moved = time(NULL);
-				}
+				if (!this_->zoomed) 
+					navit_set_attr(this_, &follow);
 				navit_set_center_screen(this_, p);
 			}
 		}
@@ -362,9 +364,8 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 #endif
 			graphics_draw_drag(this_->gra, NULL);
 			graphics_overlay_disable(this_->gra, 0);
-			if (!this_->zoomed) {
-				this_->last_moved = time(NULL);
-			}
+			if (!this_->zoomed) 
+				navit_set_attr(this_, &follow);
 			navit_draw(this_);
 		} else
 			return 1;
@@ -458,7 +459,7 @@ navit_motion(void *data, struct point *p)
 }
 
 static void
-navit_scale(struct navit *this_, long scale, struct point *p)
+navit_scale(struct navit *this_, long scale, struct point *p, int draw)
 {
 	struct coord c1, c2, *center;
 	if (p)
@@ -470,7 +471,8 @@ navit_scale(struct navit *this_, long scale, struct point *p)
 		center->x += c1.x - c2.x;
 		center->y += c1.y - c2.y;
 	}
-	navit_draw(this_);
+	if (draw)
+		navit_draw(this_);
 }
 
 /**
@@ -483,7 +485,7 @@ navit_scale(struct navit *this_, long scale, struct point *p)
  * @param speed The vehicles speed in meters per second
  */
 static void
-navit_autozoom(struct navit *this_, struct coord *center, int speed)
+navit_autozoom(struct navit *this_, struct coord *center, int speed, int draw)
 {
 	struct coord c;
 	struct point pc;
@@ -513,7 +515,7 @@ navit_autozoom(struct navit *this_, struct coord *center, int speed)
 	scale = transform_get_scale(this_->trans);
 	scale = (scale * factor);
 
-	navit_scale(this_, scale, &pc);
+	navit_scale(this_, scale, &pc, draw);
 }
 
 /**
@@ -530,7 +532,7 @@ navit_zoom_in(struct navit *this_, int factor, struct point *p)
 	long scale=transform_get_scale(this_->trans)/factor;
 	if (scale < 1)
 		scale=1;
-	navit_scale(this_, scale, p);
+	navit_scale(this_, scale, p, 1);
 }
 
 /**
@@ -545,7 +547,7 @@ void
 navit_zoom_out(struct navit *this_, int factor, struct point *p)
 {
 	long scale=transform_get_scale(this_->trans)*factor;
-	navit_scale(this_, scale, p);
+	navit_scale(this_, scale, p, 1);
 }
 
 static int
@@ -597,63 +599,24 @@ navit_new(struct attr *parent, struct attr **attrs)
 
 	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
-	this_->cursor_flag=1;
 	this_->orientation=-1;
 	this_->tracking_flag=1;
 	this_->recentdest_count=10;
 	this_->osd_configuration=-1;
 
-	this_->last_moved = 0;
 	this_->center_timeout = 10;
 	this_->use_mousewheel = 1;
 	this_->autozoom_secs = 0;
 
-	for (;*attrs; attrs++) {
-		switch((*attrs)->type) {
-		case attr_zoom:
-			zoom=(*attrs)->u.num;
-			break;
-		case attr_center:
-			g=*((*attrs)->u.coord_geo);
-			break;
-		case attr_cursor:
-			this_->cursor_flag=!!(*attrs)->u.num;
-			break;
-		case attr_orientation:
-			this_->orientation=(*attrs)->u.num;
-			break;
-		case attr_osd_configuration:
-			this_->osd_configuration=(*attrs)->u.num;
-			break;
-		case attr_tracking:
-			this_->tracking_flag=!!(*attrs)->u.num;
-			break;
-		case attr_recent_dest:
-			this_->recentdest_count=(*attrs)->u.num;
-			break;
-		case attr_drag_bitmap:
-			this_->drag_bitmap=!!(*attrs)->u.num;
-			break;
-		case attr_use_mousewheel:
-			this_->use_mousewheel=!!(*attrs)->u.num;
-			break;
-		case attr_timeout:
-			this_->center_timeout = (*attrs)->u.num;
-			break;
-		case attr_autozoom:
-			this_->autozoom_secs = (*attrs)->u.num;
-		default:
-			dbg(0, "Unexpected attribute %x\n",(*attrs)->type);
-			break;
-		}
-	}
+	this_->trans=transform_new();
 	transform_from_geo(pro, &g, &co);
 	center.x=co.x;
 	center.y=co.y;
 	center.pro = pro;
-
-	this_->trans=transform_new();
 	transform_setup(this_->trans, &center, zoom, (this_->orientation != -1) ? this_->orientation : 0);
+	for (;*attrs; attrs++) {
+		navit_set_attr_do(this_, *attrs, 1);
+	}
 	this_->displaylist=graphics_displaylist_new();
 	command_add_table(this_->attr_cbl, commands, sizeof(commands)/sizeof(struct command_table), this_);
 	return this_;
@@ -1421,16 +1384,26 @@ navit_set_center_coord_screen(struct navit *this_, struct coord *c, struct point
 }
 
 static void
-navit_set_center_cursor(struct navit *this_, struct coord *cursor, int dir, int xpercent, int ypercent)
+navit_set_center_cursor(struct navit *this_)
 {
-	int width, height;
+	int width, height, dir;
+	struct navit_vehicle *nv=this_->vehicle;
 	struct point pn;
-
+	dbg(0,"enter\n");
 	transform_get_size(this_->trans, &width, &height);
+	if (this_->orientation == -1) {
+		pn.x=50*width/100;
+		pn.y=80*height/100;
+		dir=nv->dir;
+	} else {
+		dir=nv->dir-this_->orientation;
+		pn.x=(50 - 30.*sin(M_PI*dir/180.))*width/100;
+		pn.y=(50 + 30.*cos(M_PI*dir/180.))*height/100;
+		dir=this_->orientation;
+	}
 	transform_set_yaw(this_->trans, dir);
-	pn.x=xpercent*width/100;
-	pn.y=ypercent*height/100;
-	navit_set_center_coord_screen(this_, cursor, &pn);
+	navit_set_center_coord_screen(this_, &nv->coord, &pn);
+	navit_autozoom(this_, &nv->coord, nv->speed, 0);
 	if (this_->ready == 3)
 		navit_draw_async(this_, 1);
 }
@@ -1448,17 +1421,42 @@ navit_set_center_screen(struct navit *this_, struct point *p)
 	navit_set_center(this_, &pc);
 }
 
-int
-navit_set_attr(struct navit *this_, struct attr *attr)
+#if 0
+		switch((*attrs)->type) {
+		case attr_zoom:
+			zoom=(*attrs)->u.num;
+			break;
+		case attr_center:
+			g=*((*attrs)->u.coord_geo);
+			break;
+#endif
+
+static int
+navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 {
 	int dir=0, orient_old=0, attr_updated=0;
+	struct coord co;
+	long zoom;
 
 	switch (attr->type) {
-	case attr_cursor:
-		if (this_->cursor_flag != !!attr->u.num) {
-			this_->cursor_flag=!!attr->u.num;
-			attr_updated=1;
-		}
+	case attr_autozoom:
+		attr_updated=(this_->autozoom_secs != attr->u.num);
+		this_->autozoom_secs = attr->u.num;
+		break;
+	case attr_center:
+		transform_from_geo(transform_get_projection(this_->trans), attr->u.coord_geo, &co);
+		dbg(0,"0x%x,0x%x\n",co.x,co.y);
+		transform_set_center(this_->trans, &co);
+		break;
+	case attr_drag_bitmap:
+		attr_updated=(this_->drag_bitmap != !!attr->u.num);
+		this_->drag_bitmap=!!attr->u.num;
+		break;
+	case attr_follow:
+		if (!this_->vehicle)
+			return 0;
+		attr_updated=(this_->vehicle->follow_curr != attr->u.num);
+		this_->vehicle->follow_curr = attr->u.num;
 		break;
 	case attr_layout:
 		if(this_->layout_current!=attr->u.layout) {
@@ -1471,24 +1469,25 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 	case attr_orientation:
 		orient_old=this_->orientation;
 		this_->orientation=attr->u.num;
-		if (this_->orientation != -1) {
-			dir = this_->orientation;
-		} else {
-			if (this_->vehicle) {
-				dir = this_->vehicle->dir;
+		if (!init) {
+			if (this_->orientation != -1) {
+				dir = this_->orientation;
+			} else {
+				if (this_->vehicle) {
+					dir = this_->vehicle->dir;
+				}
 			}
-		}
-		transform_set_yaw(this_->trans, dir);
-		if (orient_old != this_->orientation) {
-			if (this_->ready == 3)
-				navit_draw(this_);
-			attr_updated=1;
+			transform_set_yaw(this_->trans, dir);
+			if (orient_old != this_->orientation) {
+				if (this_->ready == 3)
+					navit_draw(this_);
+				attr_updated=1;
+			}
 		}
 		break;
 	case attr_osd_configuration:
 		dbg(0,"setting osd_configuration to %d (was %d)\n", attr->u.num, this_->osd_configuration);
-		if (this_->osd_configuration != attr->u.num)
-			attr_updated=1;
+		attr_updated=(this_->osd_configuration != attr->u.num);
 		this_->osd_configuration=attr->u.num;
 		break;
 	case attr_projection:
@@ -1497,17 +1496,27 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 			attr_updated=1;
 		}
 		break;
-    case attr_speech:
-        if(this_->speech && this_->speech != attr->u.speech) {
-            attr_updated=1;
-            this_->speech = attr->u.speech;
-        }
-        break;
-	case attr_tracking:
-		if (this_->tracking_flag != !!attr->u.num) {
-			this_->tracking_flag=!!attr->u.num;
+	case attr_recent_dest:
+		attr_updated=(this_->recentdest_count != attr->u.num);
+		this_->recentdest_count=attr->u.num;
+		break;
+	case attr_speech:
+        	if(this_->speech && this_->speech != attr->u.speech) {
 			attr_updated=1;
-		}
+			this_->speech = attr->u.speech;
+        	}
+		break;
+	case attr_timeout:
+		attr_updated=(this_->center_timeout != attr->u.num);
+		this_->center_timeout = attr->u.num;
+		break;
+	case attr_tracking:
+		attr_updated=(this_->tracking_flag != !!attr->u.num);
+		this_->tracking_flag=!!attr->u.num;
+		break;
+	case attr_use_mousewheel:
+		attr_updated=(this_->use_mousewheel != !!attr->u.num);
+		this_->use_mousewheel=!!attr->u.num;
 		break;
 	case attr_vehicle:
 		if (!this_->vehicle || this_->vehicle->vehicle != attr->u.vehicle) {
@@ -1529,15 +1538,28 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 			}
 		}
 		break;
+	case attr_zoom:
+		zoom=transform_get_scale(this_->trans);
+		attr_updated=(zoom != attr->u.num);
+		transform_set_scale(this_->trans, attr->u.num);
+		if (attr_updated && !init) 
+			navit_draw(this_);
+		break;
 	default:
 		return 0;
 	}
-	if (attr_updated) {
+	if (attr_updated && !init) {
 		callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
 		if (attr->type == attr_osd_configuration)
 			graphics_draw_mode(this_->gra, draw_mode_end);
 	}
 	return 1;
+}
+
+int
+navit_set_attr(struct navit *this_, struct attr *attr)
+{
+	return navit_set_attr_do(this_, attr, 0);
 }
 
 int
@@ -1549,9 +1571,6 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		break;
 	case attr_callback_list:
 		attr->u.callback_list=this_->attr_cbl;
-		break;
-	case attr_cursor:
-		attr->u.num=this_->cursor_flag;
 		break;
 	case attr_destination:
 		if (! this_->destination_valid)
@@ -1703,12 +1722,6 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 	case attr_vehicle:
 		ret=navit_add_vehicle(this_, attr->u.vehicle);
 		break;
-	case attr_timeout:
-		this_->center_timeout = attr->u.num;
-		break;
-	case attr_autozoom:
-		this_->autozoom_secs = attr->u.num;
-		break;
 	default:
 		return 0;
 	}
@@ -1790,7 +1803,6 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	struct point cursor_pnt, *pnt=&cursor_pnt;
 	enum projection pro;
 	int border=16;
-	int route_path_set=0;
 	int recenter = 1; // indicates if we should recenter the map
 
 	profile(0,NULL);
@@ -1830,8 +1842,6 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		nv->last = nv->coord;
 	}
 
-	if (this_->route)
-		route_path_set=route_get_path_set(this_->route);
 	cursor_pc.x = nv->coord.x;
 	cursor_pc.y = nv->coord.y;
 	cursor_pc.pro = pro;
@@ -1849,45 +1859,22 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	}
 	callback_list_call_attr_0(this_->attr_cbl, attr_position);
 	navit_textfile_debug_log(this_, "type=trackpoint_tracked");
-	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
-	if (!transform_within_border(this_->trans, &cursor_pnt, border)) {
-		if (!this_->cursor_flag) {
-			profile(0,"return 4\n");
-			return;
-		}
-		if ((nv->follow_curr != 1) && ((time(NULL) - this_->last_moved) > this_->center_timeout) && (this_->button_pressed != 1) && (recenter)) {
-			if (this_->orientation != -1) {
-				int dir=nv->dir-this_->orientation;
-				navit_set_center_cursor(this_, &nv->coord, 0, 50 - 30.*sin(M_PI*dir/180.), 50 + 30.*cos(M_PI*dir/180.));
-			}
-			else
-				navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
-			pnt=NULL;
-		}
-	}
-
 #ifndef _WIN32
 	if (this_->pid && nv->speed > 2)
 		kill(this_->pid, SIGWINCH);
 #endif
-	if ((nv->follow_curr == 1) && (!this_->button_pressed)) {
-		if (this_->cursor_flag && ((time(NULL) - this_->last_moved) > this_->center_timeout) && (recenter)) {
-			navit_set_center_cursor(this_, &nv->coord, nv->dir, 50, 80);
-			navit_autozoom(this_, &nv->coord, nv->speed);
-			pnt=NULL;
-		} else { // We don't want to center, but redraw because otherwise the old route "lags"
-			navit_draw(this_);
-		}
-	}
-	if (pnt && this_->route && !route_path_set && route_get_path_set(this_->route))
-		navit_draw(this_);
+
+	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
+	if (this_->button_pressed != 1 && nv->follow_curr <= nv->follow && 
+		(nv->follow_curr == 1 || !transform_within_border(this_->trans, &cursor_pnt, border)))
+		navit_set_center_cursor(this_);
+	else
+		navit_vehicle_draw(this_, nv, pnt);
 	if (nv->follow_curr > 1)
 		nv->follow_curr--;
 	else
 		nv->follow_curr=nv->follow;
 	callback_list_call_attr_2(this_->attr_cbl, attr_position_coord_geo, this_, nv->vehicle);
-	if (pnt)
-		navit_vehicle_draw(this_, nv, pnt);
 
 	/* Finally, if we reached our destination, stop navigation. */
 	if (this_->route && route_destination_reached(this_->route)) {
