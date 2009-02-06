@@ -289,7 +289,8 @@ main_init_nls(void)
 {
 #ifdef ENABLE_NLS
 #ifdef FORCE_LOCALE
-#define STRINGIFY(x) #x
+#define STRINGIFY2(x) #x
+#define STRINGIFY(x) STRINGIFY2(x)
 	setlocale(LC_MESSAGES,STRINGIFY(FORCE_LOCALE));
 #endif
 	bindtextdomain(PACKAGE, getenv("NAVIT_LOCALEDIR"));
