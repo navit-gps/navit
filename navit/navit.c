@@ -145,6 +145,9 @@ static void navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv);
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt);
 static int navit_add_vehicle(struct navit *this_, struct vehicle *v);
 static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init);
+static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir);
+static void navit_cmd_zoom_to_route(struct navit *this);
+static void navit_cmd_set_center_cursor(struct navit *this_);
 
 void
 navit_add_mapset(struct navit *this_, struct mapset *ms)
@@ -212,9 +215,10 @@ navit_redraw_route(struct navit *this_, int updated)
 	if (updated <= 3)
 		return;
 	if (this_->vehicle) {
-		if (this_->vehicle->follow == 1)
+		if (this_->vehicle->follow_curr == 1)
 			return;
-		this_->vehicle->follow_curr=this_->vehicle->follow;
+		if (this_->vehicle->follow_curr <= this_->vehicle->follow)
+			this_->vehicle->follow_curr=this_->vehicle->follow;
 	}
 	navit_draw(this_);
 }
@@ -266,10 +270,13 @@ navit_popup(void *data)
 }
 
 
-void
+int
 navit_ignore_button(struct navit *this_)
 {
+	if (this_->ignore_button)
+		return 1;
 	this_->ignore_button=1;
+	return 0;
 }
 
 void
@@ -553,20 +560,32 @@ navit_zoom_out(struct navit *this_, int factor, struct point *p)
 static int
 navit_cmd_zoom_in(struct navit *this_)
 {
-	navit_zoom_in(this_, 2, NULL);
+	struct point p;
+	if (this_->vehicle && this_->vehicle->follow_curr == 1 && navit_get_cursor_pnt(this_, &p, NULL)) {
+		navit_zoom_in(this_, 2, &p);
+		this_->vehicle->follow_curr=this_->vehicle->follow;
+	} else
+		navit_zoom_in(this_, 2, NULL);
 	return 0;
 }
 
 static int
 navit_cmd_zoom_out(struct navit *this_)
 {
-	navit_zoom_out(this_, 2, NULL);
+	struct point p;
+	if (this_->vehicle && this_->vehicle->follow_curr == 1 && navit_get_cursor_pnt(this_, &p, NULL)) {
+		navit_zoom_out(this_, 2, &p);
+		this_->vehicle->follow_curr=this_->vehicle->follow;
+	} else
+		navit_zoom_out(this_, 2, NULL);
 	return 0;
 }
 
 static struct command_table commands[] = {
 	{"zoom_in",navit_cmd_zoom_in},
 	{"zoom_out",navit_cmd_zoom_out},
+	{"zoom_to_route",navit_cmd_zoom_to_route},
+	{"set_center_cursor",navit_cmd_set_center_cursor},
 };
 	
 
@@ -1290,27 +1309,27 @@ navit_init(struct navit *this_)
 }
 
 void
-navit_zoom_to_route(struct navit *this_)
+navit_zoom_to_route(struct navit *this_, int orientation)
 {
 	struct map *map;
 	struct map_rect *mr=NULL;
 	struct item *item;
-	struct coord c,*ct;
+	struct coord c;
 	struct coord_rect r;
 	int count=0,scale=16;
 	if (! this_->route)
 		return;
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 	map=route_get_map(this_->route);
-	dbg(0,"map=%p\n",map);
+	dbg(1,"map=%p\n",map);
 	if (map)
 		mr=map_rect_new(map, NULL);
-	dbg(0,"mr=%p\n",mr);
+	dbg(1,"mr=%p\n",mr);
 	if (mr) {
 		while ((item=map_rect_get_item(mr))) {
-			dbg(0,"item=%s\n", item_to_name(item->type));
+			dbg(1,"item=%s\n", item_to_name(item->type));
 			while (item_coord_get(item, &c, 1)) {
-				dbg(0,"coord\n");
+				dbg(1,"coord\n");
 				if (!count) 
 					r.lu=r.rl=c;
 				else
@@ -1323,17 +1342,18 @@ navit_zoom_to_route(struct navit *this_)
 		return;
 	c.x=(r.rl.x+r.lu.x)/2;
 	c.y=(r.rl.y+r.lu.y)/2;
-	dbg(0,"count=%d\n",count);
-	ct=transform_center(this_->trans);
-	*ct=c;
-	dbg(0,"%x,%x-%x,%x\n", r.rl.x,r.rl.y,r.lu.x,r.lu.y);
+	dbg(1,"count=%d\n",count);
+	if (orientation != -1)
+		transform_set_yaw(this_->trans, orientation);
+	transform_set_center(this_->trans, &c);
+	dbg(1,"%x,%x-%x,%x\n", r.rl.x,r.rl.y,r.lu.x,r.lu.y);
 	while (scale < 1<<20) {
 		struct point p1,p2;
 		transform_set_scale(this_->trans, scale);
 		transform_setup_source_rect(this_->trans);
 		transform(this_->trans, transform_get_projection(this_->trans), &r.lu, &p1, 1, 0, 0, NULL);
 		transform(this_->trans, transform_get_projection(this_->trans), &r.rl, &p2, 1, 0, 0, NULL);
-		dbg(0,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
+		dbg(1,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
 		if (p1.x < 0 || p2.x < 0 || p1.x > this_->w || p2.x > this_->w ||
 		    p1.y < 0 || p2.y < 0 || p1.y > this_->h || p2.y > this_->h)
 			scale*=2;
@@ -1342,7 +1362,13 @@ navit_zoom_to_route(struct navit *this_)
 	
 	}
 	if (this_->ready == 3)
-		navit_draw(this_);
+		navit_draw_async(this_,0);
+}
+
+static void
+navit_cmd_zoom_to_route(struct navit *this)
+{
+	navit_zoom_to_route(this, 0);
 }
 
 /**
@@ -1383,24 +1409,34 @@ navit_set_center_coord_screen(struct navit *this_, struct coord *c, struct point
 	update_transformation(this_->trans, &po, p, NULL);
 }
 
+static int
+navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir)
+{
+	int width, height;
+	struct navit_vehicle *nv=this_->vehicle;
+	transform_get_size(this_->trans, &width, &height);
+	if (this_->orientation == -1) {
+		p->x=50*width/100;
+		p->y=80*height/100;
+		if (dir)
+			*dir=nv->dir;
+	} else {
+		int mdir=nv->dir-this_->orientation;
+		p->x=(50 - 30.*sin(M_PI*mdir/180.))*width/100;
+		p->y=(50 + 30.*cos(M_PI*mdir/180.))*height/100;
+		if (dir)
+			*dir=this_->orientation;
+	}
+	return 1;
+}
+
 static void
 navit_set_center_cursor(struct navit *this_)
 {
-	int width, height, dir;
-	struct navit_vehicle *nv=this_->vehicle;
+	int dir;
 	struct point pn;
-	dbg(0,"enter\n");
-	transform_get_size(this_->trans, &width, &height);
-	if (this_->orientation == -1) {
-		pn.x=50*width/100;
-		pn.y=80*height/100;
-		dir=nv->dir;
-	} else {
-		dir=nv->dir-this_->orientation;
-		pn.x=(50 - 30.*sin(M_PI*dir/180.))*width/100;
-		pn.y=(50 + 30.*cos(M_PI*dir/180.))*height/100;
-		dir=this_->orientation;
-	}
+	struct navit_vehicle *nv=this_->vehicle;
+	navit_get_cursor_pnt(this_, &pn, &dir);
 	transform_set_yaw(this_->trans, dir);
 	navit_set_center_coord_screen(this_, &nv->coord, &pn);
 	navit_autozoom(this_, &nv->coord, nv->speed, 0);
@@ -1408,6 +1444,11 @@ navit_set_center_cursor(struct navit *this_)
 		navit_draw_async(this_, 1);
 }
 
+static void
+navit_cmd_set_center_cursor(struct navit *this_)
+{
+	navit_set_center_cursor(this_);
+}
 
 void
 navit_set_center_screen(struct navit *this_, struct point *p)

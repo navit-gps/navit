@@ -54,7 +54,7 @@ void navit_handle_resize(struct navit *this_, int w, int h);
 int navit_get_width(struct navit *this_);
 int navit_check_route(struct navit *this_);
 int navit_get_height(struct navit *this_);
-void navit_ignore_button(struct navit *this_);
+int navit_ignore_button(struct navit *this_);
 void navit_ignore_graphics_events(struct navit *this_, int ignore);
 int navit_handle_button(struct navit *this_, int pressed, int button, struct point *p, struct callback *popup_callback);
 void navit_handle_motion(struct navit *this_, struct point *p);
@@ -74,7 +74,7 @@ struct navit_window_items *navit_window_items_new(const char *name, int distance
 void navit_window_items_add_item(struct navit_window_items *nwi, enum item_type type);
 void navit_add_window_items(struct navit *this_, struct navit_window_items *nwi);
 void navit_init(struct navit *this_);
-void navit_zoom_to_route(struct navit *this_);
+void navit_zoom_to_route(struct navit *this_, int orientation);
 void navit_set_center(struct navit *this_, struct pcoord *center);
 void navit_set_center_screen(struct navit *this_, struct point *p);
 int navit_set_attr(struct navit *this_, struct attr *attr);
