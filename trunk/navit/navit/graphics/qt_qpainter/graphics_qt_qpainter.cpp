@@ -892,6 +892,15 @@ fullscreen(struct window *win, int on)
 	return 1;
 }
 
+static void
+disable_suspend(struct window *win)
+{
+#ifdef HAVE_QPE
+	struct graphics_priv *this_=(struct graphics_priv *)win->priv;
+	this_->app->setTempScreenSaverMode(QPEApplication::DisableLightOff);
+#endif
+}
+
 //##############################################################################################################
 //# Description: 
 //# Comment: 
@@ -910,6 +919,7 @@ static void * get_data(struct graphics_priv *this_, char *type)
 		this_->widget->showMaximized();
 	win->priv=this_;
 	win->fullscreen=fullscreen;
+	win->disable_suspend=disable_suspend;
 	return win;
 }
 
