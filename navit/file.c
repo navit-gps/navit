@@ -54,7 +54,7 @@ struct file_cache_id {
 	int size;
 	int file_name_id;
 	int method;
-};
+} __attribute__ ((packed));
 
 struct file *
 file_create(char *name)
