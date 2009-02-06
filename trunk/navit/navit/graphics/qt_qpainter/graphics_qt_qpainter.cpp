@@ -853,7 +853,6 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 				overlay_rect(gr->parent, gr, 0, &r);	
 				qt_qpainter_draw(gr->parent, &r, 0);
 			} else {
-				dbg(0,"pixmap %p =%dx%d\n", gr->widget->pixmap, gr->widget->pixmap->width(), gr->widget->pixmap->height());
 				r.setRect(0, 0, gr->widget->pixmap->width(), gr->widget->pixmap->height());
 				qt_qpainter_draw(gr, &r, 0);
 			}

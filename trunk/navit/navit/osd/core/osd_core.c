@@ -76,9 +76,10 @@ osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button,
 {
 	struct point bp = this->p;
 	wrap_point(&bp, nav);
-	if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->w || p->y > bp.y + this->h) && !this->pressed)
+	if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->w || p->y > bp.y + this->h || !this->configured) && !this->pressed)
 		return;
-	navit_ignore_button(nav);
+	if (navit_ignore_button(nav))
+		return;
 	this->pressed = pressed;
 	if (pressed) {
 		struct attr navit;

@@ -1135,7 +1135,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 	dbg(1,"enter this_=%p itm=%p delta=%d\n", this_, itm, delta);
 	ret->delta=delta;
 	ret->itm=itm;
-	if (itm && itm->prev && !(itm->flags & AF_ROUNDABOUT) && (itm->prev->flags & AF_ROUNDABOUT)) {
+	if (itm && itm->prev && itm->prev->ways && !(itm->flags & AF_ROUNDABOUT) && (itm->prev->flags & AF_ROUNDABOUT)) {
 		int len=0;
 		int angle;
 		int entry_angle;
@@ -1146,7 +1146,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 			angle=itm2->angle_end;
 			itm2=itm2->prev;
 		}
-		if (itm2 && itm2->next && itm2->next->next) {
+		if (itm2 && itm2->next && itm2->next->next && itm2->ways) {
 			itm2=itm2->next->next;
 			entry_angle=angle_median(angle_opposite(itm2->angle_start), itm2->ways->angle2);
 		} else {

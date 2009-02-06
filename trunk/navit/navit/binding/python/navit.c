@@ -78,7 +78,7 @@ navit_zoom_to_route_py(navitObject *self, PyObject *args)
 {
 	if (!PyArg_ParseTuple(args, ""))
 		return NULL;
-	navit_zoom_to_route(self->navit);
+	navit_zoom_to_route(self->navit,0);
 	Py_RETURN_NONE;
 }
 
