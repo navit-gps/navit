@@ -129,6 +129,13 @@ gui_set_graphics(struct gui *this_, struct graphics *gra)
 	return this_->meth.set_graphics(this_->priv, gra);
 }
 
+void
+gui_disable_suspend(struct gui *this_)
+{
+	if (this_->meth.disable_suspend)
+		this_->meth.disable_suspend(this_->priv);
+}
+
 int
 gui_has_main_loop(struct gui *this_)
 {

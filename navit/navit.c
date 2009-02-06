@@ -108,7 +108,6 @@ struct navit {
 	GList *windows_items;
 	struct navit_vehicle *vehicle;
 	struct callback_list *attr_cbl;
-	int pid;
 	struct callback *nav_speech_cb, *roadbook_callback, *popup_callback, *route_cb;
 	struct datawindow *roadbook_window;
 	struct map *bookmark;
@@ -598,7 +597,6 @@ navit_new(struct attr *parent, struct attr **attrs)
 	struct coord_geo g;
 	enum projection pro=projection_mg;
 	int zoom = 256;
-	FILE *f;
 	g.lat=53.13;
 	g.lng=11.70;
 
@@ -606,15 +604,6 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->self.u.navit=this_;
 	this_->attr_cbl=callback_list_new();
 	main_add_navit(this_);
-
-#if !defined(_WIN32) && !defined(__CEGCC__)
-	f=popen("pidof /usr/bin/ipaq-sleep","r");
-	if (f) {
-		fscanf(f,"%d",&this_->pid);
-		dbg(1,"ipaq_sleep pid=%d\n", this_->pid);
-		pclose(f);
-	}
-#endif
 
 	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
@@ -1900,10 +1889,8 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	}
 	callback_list_call_attr_0(this_->attr_cbl, attr_position);
 	navit_textfile_debug_log(this_, "type=trackpoint_tracked");
-#ifndef _WIN32
-	if (this_->pid && nv->speed > 2)
-		kill(this_->pid, SIGWINCH);
-#endif
+	if (this_->gui && nv->speed > 2)
+		gui_disable_suspend(this_->gui);
 
 	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	if (this_->button_pressed != 1 && nv->follow_curr <= nv->follow && 
