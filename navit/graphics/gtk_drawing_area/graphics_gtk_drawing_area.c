@@ -22,6 +22,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <stdlib.h>
+#include <signal.h>
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
@@ -81,6 +82,7 @@ struct graphics_priv {
 	struct callback_list *cbl;
 	struct font_freetype_methods freetype_methods;
 	struct navit *nav;
+	int pid;
 };
 
 
@@ -819,9 +821,18 @@ graphics_gtk_drawing_area_fullscreen(struct window *w, int on)
 	return 1;
 }		
 
+static void
+graphics_gtk_drawing_area_disable_suspend(struct window *w)
+{
+	struct graphics_priv *gr=w->priv;
+	if (gr->pid)
+		kill(gr->pid, SIGWINCH);
+}		
+
 static void *
 get_data(struct graphics_priv *this, char *type)
 {
+	FILE *f;
 	if (!strcmp(type,"gtk_widget"))
 		return this->widget;
 	if (!strcmp(type,"window")) {
@@ -839,7 +850,16 @@ get_data(struct graphics_priv *this, char *type)
 		g_signal_connect(G_OBJECT(this->widget), "key-press-event", G_CALLBACK(keypress), this);
 	g_signal_connect(G_OBJECT(this->win), "delete_event", G_CALLBACK(delete), this->nav);
 		this->window.fullscreen=graphics_gtk_drawing_area_fullscreen;
+		this->window.disable_suspend=graphics_gtk_drawing_area_disable_suspend;
 		this->window.priv=this;
+#if !defined(_WIN32) && !defined(__CEGCC__)
+		f=popen("pidof /usr/bin/ipaq-sleep","r");
+		if (f) {
+			fscanf(f,"%d",&this->pid);
+			dbg(1,"ipaq_sleep pid=%d\n", this->pid);
+			pclose(f);
+		}
+#endif
 		return &this->window;
 	}
 	return NULL;
