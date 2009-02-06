@@ -1146,7 +1146,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 			angle=itm2->angle_end;
 			itm2=itm2->prev;
 		}
-		if (itm2 && itm2->next && itm2->next->next && itm2->ways) {
+		if (itm2 && itm2->next && itm2->next->next && itm2->next->next->ways) {
 			itm2=itm2->next->next;
 			entry_angle=angle_median(angle_opposite(itm2->angle_start), itm2->ways->angle2);
 		} else {
