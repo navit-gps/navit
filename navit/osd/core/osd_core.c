@@ -162,7 +162,7 @@ osd_std_config(struct osd_item *item, struct navit *navit)
 	struct attr osd_configuration;
 	dbg(1,"enter\n");
 	if (!navit_get_attr(navit, attr_osd_configuration, &osd_configuration, NULL))
-		return;
+		osd_configuration.u.num=-1;
 	item->configured = !!(osd_configuration.u.num & item->osd_configuration);
 	graphics_overlay_disable(item->gr, !item->configured);
 }
@@ -425,6 +425,7 @@ osd_button_init(struct osd_button *this, struct navit *nav)
 		graphics_draw_mode(this->item.gr, draw_mode_end);
 		graphics_image_free(this->item.gr, img);
 	} else {
+		this->item.configured=1;
 		this->item.gr=gra;
 		this->item.graphic_bg=graphics_gc_new(this->item.gr);
 		graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, this, nav));
