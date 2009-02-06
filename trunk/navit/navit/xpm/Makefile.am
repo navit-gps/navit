@@ -192,7 +192,7 @@ if USE_SVG2PNG_SCALES_FLAG
 xpm_DATA += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_FLAG@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(flag_svgs))))
 endif
 if USE_SVG2PNG_SCALES_NAV
-xpm_DATA += $(foreach scale, $(subst ($comma), ,@SVG2PNG_SCALES_NAV@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(nav_svgs))))
+xpm_DATA += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_NAV@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(nav_svgs))))
 endif
 endif
 
