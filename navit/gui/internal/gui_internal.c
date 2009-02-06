@@ -1548,8 +1548,12 @@ gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void 
 	dbg(0,"c=%d:0x%x,0x%x\n", w->c.pro, w->c.x, w->c.y);
 	navit_set_destination(this->nav, &w->c, w->name);
 	if (this->flags & 512) {
+		struct attr follow;
+		follow.type=attr_follow;
+		follow.u.num=180;
 		navit_set_attr(this->nav, &this->osd_configuration);
-		navit_zoom_to_route(this->nav);
+		navit_set_attr(this->nav, &follow);
+		navit_zoom_to_route(this->nav, 0);
 	}	
 	gui_internal_prune_menu(this, NULL);
 }

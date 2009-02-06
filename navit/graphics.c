@@ -1280,8 +1280,8 @@ graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, stru
 {
 	struct point_rect r=gra->r;
 	struct point *pout,*p,*s,pi;
-	struct point p1[count_in+1];
-	struct point p2[count_in+1];
+	struct point p1[count_in*8+1];
+	struct point p2[count_in*8+1];
 	int count_out,edge=3;
 	int i;
 #if 0
