@@ -151,7 +151,12 @@
             <xi:include href="$NAVIT_SHAREDIR/maps/*.xml"/>
         </mapset>
 
-        <!-- Sample mapset for garmin maps -->
+				<!-- Mapset template for openstreetmaps -->
+				<mapset enabled="no">
+					<map type="binfile" enabled="yes" data="/media/mmc2/MapsNavit/osm_europe.bin"/>
+        </mapset>
+
+				<!-- Mapset template for openstreetmaps -->
         <mapset enabled="no">
             <map type="garmin" enabled="yes" data="/path/to/img" debug="4"/>
         </mapset>
