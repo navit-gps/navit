@@ -156,7 +156,7 @@
 					<map type="binfile" enabled="yes" data="/media/mmc2/MapsNavit/osm_europe.bin"/>
         </mapset>
 
-				<!-- Mapset template for openstreetmaps -->
+				<!-- Mapset template for garmin maps -->
         <mapset enabled="no">
             <map type="garmin" enabled="yes" data="/path/to/img" debug="4"/>
         </mapset>
