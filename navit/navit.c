@@ -2039,11 +2039,14 @@ navit_destroy(struct navit *this_)
 	callback_destroy(this_->roadbook_callback);
 	callback_destroy(this_->popup_callback);
 	callback_destroy(this_->motion_timeout_callback);
-	graphics_remove_callback(this_->gra, this_->resize_callback);
+	if(this_->gra)
+	  graphics_remove_callback(this_->gra, this_->resize_callback);
 	callback_destroy(this_->resize_callback);
-	graphics_remove_callback(this_->gra, this_->button_callback);
+	if(this_->gra)
+	  graphics_remove_callback(this_->gra, this_->button_callback);
 	callback_destroy(this_->button_callback);
-	graphics_remove_callback(this_->gra, this_->motion_callback);
+	if(this_->gra)
+	  graphics_remove_callback(this_->gra, this_->motion_callback);
 	callback_destroy(this_->motion_callback);
 	g_free(this_);
 }
