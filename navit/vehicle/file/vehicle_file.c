@@ -259,7 +259,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	int i, j, bcsum;
 	int len = strlen(buffer);
 	unsigned char csum = 0;
-	int valid;
+	int valid=0;
 	int ret = 0;
 
 	dbg(1, "buffer='%s'\n", buffer);
