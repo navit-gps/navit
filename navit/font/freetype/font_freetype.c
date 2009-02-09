@@ -116,12 +116,7 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 			FT_Get_Glyph(font->face->glyph, &glyph);
 #endif
 			FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_pixels, &glyph_bbox);
-#if USE_CACHING
-			FT_Done_Glyph(glyph);
-			FTC_Node_Unref(anode, manager);
-#else
-			FT_Done_Glyph(glyph);
-#endif
+
 			glyph_bbox.xMin += x >> 6;
 			glyph_bbox.xMax += x >> 6;
 			glyph_bbox.yMin += y >> 6;
@@ -137,6 +132,12 @@ font_freetype_get_text_bbox(struct graphics_priv *gr,
 			if (glyph_bbox.yMax > bbox.yMax)
 				bbox.yMax = glyph_bbox.yMax;
 			p = g_utf8_next_char(p);
+#if USE_CACHING
+			FT_Done_Glyph(glyph);
+			FTC_Node_Unref(anode, manager);
+#else
+			FT_Done_Glyph(glyph);
+#endif
 		}
 		if (bbox.xMin > bbox.xMax) {
 			bbox.xMin = 0;
