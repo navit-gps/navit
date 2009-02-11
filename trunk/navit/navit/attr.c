@@ -308,6 +308,8 @@ attr_data_size(struct attr *attr)
 		return sizeof(void *);
 	if (attr->type >= attr_type_int64_begin && attr->type <= attr_type_int64_end) 
 		return sizeof(*attr->u.num64);
+	if (attr->type == attr_order)
+		return sizeof(attr->u.range);
 	dbg(0,"size for %s unknown\n", attr_to_name(attr->type));
 	return 0;
 }
@@ -317,6 +319,8 @@ attr_data_get(struct attr *attr)
 {
 	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
 		return &attr->u.num;
+	if (attr->type == attr_order)
+		return &attr->u.range;
 	return attr->u.data;
 }
 
