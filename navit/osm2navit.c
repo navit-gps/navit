@@ -2060,12 +2060,38 @@ phase2(FILE *in, FILE *out, FILE *out_graph)
 	return 0;
 }
 
+struct tile_info {
+	int write;
+	int maxlen;
+	char *suffix;
+	GList *tiles_list;
+	FILE *tilesdir_out;
+};
+
 static void
-phase34_process_file(int phase, FILE *in, char *suffix)
+tile_write_item_to_tile(struct tile_info *info, struct item_bin *ib, char *name)
 {
-	struct item_bin *ib;
+	if (info->write)
+		write_item(name, ib);
+	else
+		tile_extend(name, ib, &info->tiles_list);
+}
+
+static void
+tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, int min, int max)
+{
 	struct rect r;
 	char buffer[1024];
+	bbox((struct coord *)(ib+1), ib->clen/2, &r);
+	buffer[0]='\0';
+	tile(&r, info->suffix, buffer, max);
+	tile_write_item_to_tile(info, ib, buffer);
+}
+
+static void
+phase34_process_file(struct tile_info *info, FILE *in)
+{
+	struct item_bin *ib;
 	int max;
 
 	while ((ib=read_item(in))) {
@@ -2073,38 +2099,25 @@ phase34_process_file(int phase, FILE *in, char *suffix)
 			processed_nodes++;
 		else
 			processed_ways++;
-		bbox((struct coord *)(ib+1), ib->clen/2, &r);
-		buffer[0]='\0';
 		max=14;
 		if (ib->type == type_street_n_lanes || ib->type == type_highway_city || ib->type == type_highway_land || ib->type == type_ramp)
 			max=8;
 		if (ib->type == type_street_3_city || ib->type == type_street_4_city || ib->type == type_street_3_land || ib->type == type_street_4_land)
 			max=12;
-
-		tile(&r, suffix, buffer, max);
-#if 0
-		fprintf(stderr,"%s\n", buffer);
-#endif
-		if (phase == 3)
-			tile_extend(buffer, ib, NULL);
-		else
-			write_item(buffer, ib);
+		tile_write_item_minmax(info, ib, 0, max);
 	}
 }
 
 static void
-index_init(int phase, int version, GList **tiles_list)
+index_init(struct tile_info *info, int version)
 {
 	item_bin_init(item_bin, type_map_information);
 	item_bin_add_attr_int(item_bin, attr_version, version);
-	if (phase == 3)
-		tile_extend("", item_bin, tiles_list);
-	else
-		write_item("", item_bin);
+	tile_write_item_to_tile(info, item_bin, "");
 }
 
 static void
-index_submap_add(int phase, char *suffix, struct tile_head *th, GList **tiles_list)
+index_submap_add(struct tile_info *info, struct tile_head *th)
 {
 	int tlen=tile_len(th->name);
 	int len=tlen;
@@ -2121,15 +2134,11 @@ index_submap_add(int phase, char *suffix, struct tile_head *th, GList **tiles_li
 		strcat(index_tile, suffix);
 	tile_bbox(th->name, &r);
 
-	fprintf(stderr,"index_tile for %s is %s\n", th->name, index_tile);
 	item_bin_init(item_bin, type_submap);
 	item_bin_add_coord_rect(item_bin, &r);
 	item_bin_add_attr_range(item_bin, attr_order, (tlen > 4)?tlen-4 : 0, 255);
 	item_bin_add_attr_int(item_bin, attr_zipfile_ref, th->zipnum);
-	if (phase == 3)
-		tile_extend(index_tile, item_bin, tiles_list);
-	else
-		write_item(index_tile, item_bin);
+	tile_write_item_to_tile(info, item_bin, index_tile);
 }
 
 static int
@@ -2186,7 +2195,6 @@ create_tile_hash_list(GList *list)
 
 	tile_hash2=g_hash_table_new(g_str_hash, g_str_equal);
 
-	fprintf(stderr,"list=%p\n", list);
 	next=g_list_first(list);
 	while (next) {
 		th=g_hash_table_lookup(tile_hash, next->data);
@@ -2212,20 +2220,21 @@ static int zipnum;
 static void write_countrydir(int phase, int maxnamelen);
 
 static void
-write_tilesdir(int phase, char *suffix, int maxlen, FILE *out)
+write_tilesdir(struct tile_info *info, FILE *out)
 {
-	int idx,len;
-	GList *tiles_list,*next;
+	int idx,len,maxlen;
+	GList *next;
 	char **data;
 	struct tile_head *th,**last=NULL;
 	zipnum=0;
 
-	tiles_list=get_tiles_list();
+	info->tiles_list=get_tiles_list();
 	if (phase == 3)
-		create_tile_hash_list(tiles_list);
-	next=g_list_first(tiles_list);
+		create_tile_hash_list(info->tiles_list);
+	next=g_list_first(info->tiles_list);
 	last=&tile_head_root;
-	index_init(phase, 1, &tiles_list);
+	index_init(info, 1);
+	maxlen=info->maxlen;
 	if (! maxlen) {
 		while (next) {
 			if (strlen(next->data) > maxlen)
@@ -2240,7 +2249,7 @@ write_tilesdir(int phase, char *suffix, int maxlen, FILE *out)
 #endif
 		if (! len)
 			write_countrydir(phase, maxlen);
-		next=g_list_first(tiles_list);
+		next=g_list_first(info->tiles_list);
 		while (next) {
 			if (strlen(next->data) == len) {
 				th=g_hash_table_lookup(tile_hash, next->data);
@@ -2259,7 +2268,7 @@ write_tilesdir(int phase, char *suffix, int maxlen, FILE *out)
 					fprintf(out,"\n");
 				}
 				if (th->name[0])
-					index_submap_add(phase, suffix, th, &tiles_list);
+					index_submap_add(info, th);
 				zipnum++;
 				processed_tiles++;
 			}
@@ -2270,7 +2279,7 @@ write_tilesdir(int phase, char *suffix, int maxlen, FILE *out)
 }
 
 static void
-merge_tiles(void)
+merge_tiles(struct tile_info *info)
 {
 	struct tile_head *th;
 	char basetile[1024];
@@ -2291,15 +2300,15 @@ merge_tiles(void)
 			zip_size+=th->total_size;
 			last=g_list_previous(last);
 		}
-		fprintf(stderr,"DEBUG: size=%Ld\n", zip_size);
 		last=g_list_last(tiles_list_sorted);
 		work_done=0;
 		while (last) {
 			processed_tiles++;
-			len=strlen(last->data);
+			len=tile_len(last->data);
 			if (len >= 1) {
 				strcpy(basetile,last->data);
 				basetile[len-1]='\0';
+				strcat(basetile, info->suffix);
 				strcpy(subtile,last->data);
 				for (i = 0 ; i < 4 ; i++) {
 					subtile[len-1]='a'+i;
@@ -2432,7 +2441,6 @@ write_countrydir(int phase, int maxnamelen)
 			tilename[0]='\0';
 			sprintf(suffix,"s%d", 0);
 			tile(&co->r, suffix, tilename, max);
-			fprintf(stderr,"suffix=%s tilename=%s\n", suffix, tilename);
 			sprintf(filename,"country_%d.bin", co->countryid);
 			zipnum=add_aux_tile(phase, tilename, filename, co->size);
 			index_country_add(phase,co->countryid,zipnum);
@@ -2457,26 +2465,25 @@ remove_countryfiles(void)
 }
 
 static int
-phase34(int phase, int maxnamelen, FILE *ways_in, FILE *nodes_in, char *suffix, FILE *tilesdir_out)
+phase34(struct tile_info *info, FILE *ways_in, FILE *nodes_in)
 {
 
 	processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
 	bytes_read=0;
 	sig_alrm(0);
-	if (phase == 3)
+	if (! info->write)
 		tile_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	if (ways_in)
-		phase34_process_file(phase, ways_in, suffix);
+		phase34_process_file(info, ways_in);
 	if (nodes_in)
-		phase34_process_file(phase, nodes_in, suffix);
-	fprintf(stderr,"read %d bytes\n", bytes_read);
-	if (phase == 3)
-		merge_tiles();
+		phase34_process_file(info, nodes_in);
+	if (! info->write)
+		merge_tiles(info);
 	sig_alrm(0);
 #ifndef _WIN32
 	alarm(0);
 #endif
-	write_tilesdir(phase, suffix, maxnamelen, tilesdir_out);
+	write_tilesdir(info, info->tilesdir_out);
 
 	return 0;
 
@@ -2530,9 +2537,15 @@ dump(FILE *in)
 }
 
 static int
-phase3(FILE *ways_in, FILE *nodes_in, char *suffix, FILE *tilesdir_out)
+phase4(FILE *ways_in, FILE *nodes_in, char *suffix, FILE *tilesdir_out)
 {
-	return phase34(3, 0, ways_in, nodes_in, suffix, tilesdir_out);
+	struct tile_info info;
+	info.write=0;
+	info.maxlen=0;
+	info.suffix=suffix;
+	info.tiles_list=NULL;
+	info.tilesdir_out=tilesdir_out;
+	return phase34(&info, ways_in, nodes_in);
 }
 
 static long long zipoffset;
@@ -2654,6 +2667,7 @@ process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, char *suf
 	struct tile_head *th;
 	char *slice_data,*zip_data;
 	int zipfiles=0;
+	struct tile_info info;
 
 	slice_data=malloc(size);
 	assert(slice_data != NULL);
@@ -2670,7 +2684,12 @@ process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, char *suf
 		fseek(ways_in, 0, SEEK_SET);
 	if (nodes_in)
 		fseek(nodes_in, 0, SEEK_SET);
-	phase34(4, maxnamelen, ways_in, nodes_in, suffix, NULL);
+	info.write=1;
+	info.maxlen=maxnamelen;
+	info.suffix=suffix;
+	info.tiles_list=NULL;
+	info.tilesdir_out=NULL;
+	phase34(&info, ways_in, nodes_in);
 
 	th=tile_head_root;
 	while (th) {
@@ -2706,7 +2725,7 @@ cat(FILE *in, FILE *out)
 }
 
 static int
-phase4(FILE *ways_in, FILE *nodes_in, char *suffix, FILE *out, FILE *dir_out, int compression_level)
+phase5(FILE *ways_in, FILE *nodes_in, char *suffix, FILE *out, FILE *dir_out, int compression_level)
 {
 	int slice_size=1024*1024*1024;
 	int maxnamelen,size,slices;
@@ -2824,7 +2843,7 @@ int main(int argc, char **argv)
 {
 	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*tilesdir,*zipdir,*res;
 	char *map=g_strdup(attrmap);
-	int c,start=1,end=4,dump_coordinates=0;
+	int c,start=1,end=99,dump_coordinates=0;
 	int keep_tmpfiles=0;
 	int process_nodes=1, process_ways=1;
 #ifdef HAVE_ZLIB
@@ -2993,8 +3012,6 @@ int main(int argc, char **argv)
 			fclose(nodes);
 		if (turn_restrictions)
 			fclose(turn_restrictions);
-		fprintf(stderr,"PROGRESS: Phase 1: sorting countries\n");
-		sort_countries();
 	}
 	if (end == 1 || dump_coordinates)
 		save_buffer("coords.tmp",&node_buffer);
@@ -3029,8 +3046,14 @@ int main(int argc, char **argv)
 		process_binfile(stdin, ways_split);
 		fclose(ways_split);
 	}
+	if (start <= 3) {
+		fprintf(stderr,"PROGRESS: Phase 3: sorting countries\n");
+		sort_countries();
+	}
+	if (end == 3)
+		exit(0);
 	if (output == 1) {
-		fprintf(stderr,"PROGRESS: Phase 3: dumping\n");
+		fprintf(stderr,"PROGRESS: Phase 4: dumping\n");
 		if (process_nodes) {
 			nodes=fopen("nodes.tmp","rb");
 			if (nodes) {
@@ -3054,33 +3077,33 @@ int main(int argc, char **argv)
 		}
 		exit(0);
 	}
-	if (start <= 3) {
+	if (start <= 4) {
 		phase=3;
-		fprintf(stderr,"PROGRESS: Phase 3: generating tiles\n");
+		fprintf(stderr,"PROGRESS: Phase 4: generating tiles\n");
 		if (process_ways)
 			ways_split=fopen("ways_split.tmp","rb");
 		if (process_nodes)
 			nodes=fopen("nodes.tmp","rb");
 		tilesdir=fopen("tilesdir.tmp","wb+");
-		phase3(ways_split,nodes,suffix,tilesdir);
+		phase4(ways_split,nodes,suffix,tilesdir);
 		fclose(tilesdir);
 		if (nodes)
 			fclose(nodes);
 		if (ways_split)
 			fclose(ways_split);
 	}
-	if (end == 3)
+	if (end == 4)
 		exit(0);
-	if (start <= 4) {
+	if (start <= 5) {
 		phase=4;
-		fprintf(stderr,"PROGRESS: Phase 4: assembling map\n");
+		fprintf(stderr,"PROGRESS: Phase 5: assembling map\n");
 		if (process_ways)
 			ways_split=fopen("ways_split.tmp","rb");
 		if (process_nodes)
 			nodes=fopen("nodes.tmp","rb");
 		res=fopen(result,"wb+");
 		zipdir=fopen("zipdir.tmp","wb+");
-		phase4(ways_split,nodes,suffix,res,zipdir,compression_level);
+		phase5(ways_split,nodes,suffix,res,zipdir,compression_level);
 		fclose(zipdir);
 		fclose(res);
 		if (nodes)
