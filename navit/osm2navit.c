@@ -364,7 +364,7 @@ static struct item_bin *item_bin=(struct item_bin *)(void *)buffer;
 
 struct coord coord_buffer[65536];
 
-char *suffix="m0l0";
+char *suffix="";
 
 #define IS_REF(c) ((c).x >= (1 << 30))
 #define REF(c) ((c).y)
@@ -382,8 +382,7 @@ struct country_table {
 	int countryid;
 	char *names;
 	FILE *file;
-	int size;
-	int count;
+	unsigned int size;
 	struct rect r;
 } country_table[] = {
 	{ 40,"Austria,�sterreich,AUT"},
@@ -1299,8 +1298,6 @@ end_node(FILE *out)
 				fwrite(&item, sizeof(item), 1, result->file);
 				fwrite(&ni->c, 1*sizeof(struct coord), 1, result->file);
 				write_attr(result->file, &town_name_attr, label_attr_buffer);
-				result->count++;
-				result->size+=(item.clen+3+label_attr.len+1)*4;
 			}
 			
 		}
@@ -1332,7 +1329,7 @@ sort_countries_compare(const void *p1, const void *p2)
 static void
 sort_countries(void)
 {
-	int i,j;
+	int i,j,count;
 	struct country_table *co;
 	struct coord *c;
 	struct item_bin *ib;
@@ -1344,27 +1341,28 @@ sort_countries(void)
 			fclose(co->file);
 			co->file=NULL;
 		}
-		if (co->size) {
-			buffer=malloc(co->size);
-			assert(buffer != NULL);
-			idx=malloc(co->count*sizeof(void *));
-			assert(idx != NULL);
-			name=g_strdup_printf("country_%d.bin.unsorted", co->countryid);
-			f=fopen(name,"r");
-			assert(f != NULL);
-			fread(buffer, co->size, 1, f);
-			fclose(f);
+		name=g_strdup_printf("country_%d.bin.unsorted", co->countryid);
+		if (g_file_get_contents(name, &buffer, &co->size, NULL)) {
 			unlink(name);
 			g_free(name);
+			ib=(struct item_bin *)buffer;
 			p=buffer;
-			for (j = 0 ; j < co->count ; j++) {
+			count=0;
+			while (p < buffer+co->size) {
+				count++;
+				p+=(*((int *)p)+1)*4;
+			}
+			idx=malloc(count*sizeof(void *));
+			assert(idx != NULL);
+			p=buffer;
+			for (j = 0 ; j < count ; j++) {
 				idx[j]=p;
 				p+=(*((int *)p)+1)*4;
 			}
-			qsort(idx, co->count, sizeof(void *), sort_countries_compare);
+			qsort(idx, count, sizeof(void *), sort_countries_compare);
 			name=g_strdup_printf("country_%d.bin", co->countryid);
 			f=fopen(name,"w");
-			for (j = 0 ; j < co->count ; j++) {
+			for (j = 0 ; j < count ; j++) {
 				ib=(struct item_bin *)(idx[j]);
 				c=(struct coord *)(ib+1);
 				fwrite(ib, (ib->len+1)*4, 1, f);
@@ -1376,6 +1374,7 @@ sort_countries(void)
 			}
 			fclose(f);
 		}
+		g_free(name);
 	}
 }
 
@@ -2839,6 +2838,22 @@ static void add_plugin(char *path)
 	plugin_new(&(struct attr){attr_plugins,.u.plugins=plugins}, attrs);	
 }
 
+static FILE *
+tempfile(char *suffix, char *name, int write)
+{
+	char buffer[4096];
+	sprintf(buffer,"%s_%s.tmp",name, suffix);
+	return fopen(buffer,write ? "wb+": "rb");
+}
+
+static void
+tempfile_unlink(char *suffix, char *name)
+{
+	char buffer[4096];
+	sprintf(buffer,"%s_%s.tmp",name, suffix);
+	unlink(buffer);
+}
+
 int main(int argc, char **argv)
 {
 	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*tilesdir,*zipdir,*res;
@@ -2988,11 +3003,11 @@ int main(int argc, char **argv)
 	if (input == 0) {
 	if (start == 1) {
 		if (process_ways)
-			ways=fopen("ways.tmp","wb+");
+			ways=tempfile("ways",suffix,1);
 		if (process_nodes)
-			nodes=fopen("nodes.tmp","wb+");
+			nodes=tempfile("nodes",suffix,1);
 		if (process_ways && process_nodes) 
-			turn_restrictions=fopen("turn_restrictions.tmp","wb+");
+			turn_restrictions=tempfile("turn_restrictions",suffix,1);
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
 #ifdef HAVE_POSTGRESQL
@@ -3021,9 +3036,9 @@ int main(int argc, char **argv)
 		load_buffer("coords.tmp",&node_buffer);
 	if (start <= 2) {
 		if (process_ways) {
-			ways=fopen("ways.tmp","rb");
-			ways_split=fopen("ways_split.tmp","wb+");
-			graph=fopen("graph.tmp","wb+");
+			ways=tempfile("ways",suffix,0);
+			ways_split=tempfile("ways_split",suffix,1);
+			graph=tempfile("graph",suffix,1);
 			phase=2;
 			fprintf(stderr,"PROGRESS: Phase 2: finding intersections\n");
 			phase2(ways,ways_split,graph);
@@ -3042,7 +3057,7 @@ int main(int argc, char **argv)
 	if (end == 2)
 		exit(0);
 	} else {
-		ways_split=fopen("ways_split.tmp","wb+");
+		ways_split=tempfile("ways_split",suffix,0);
 		process_binfile(stdin, ways_split);
 		fclose(ways_split);
 	}
@@ -3055,21 +3070,21 @@ int main(int argc, char **argv)
 	if (output == 1) {
 		fprintf(stderr,"PROGRESS: Phase 4: dumping\n");
 		if (process_nodes) {
-			nodes=fopen("nodes.tmp","rb");
+			nodes=tempfile("nodes",suffix,0);
 			if (nodes) {
 				dump(nodes);
 				fclose(nodes);
 			}
 		}
 		if (process_ways) {
-			ways_split=fopen("ways_split.tmp","rb");
+			ways_split=tempfile("ways_split",suffix,0);
 			if (ways_split) {
 				dump(ways_split);
 				fclose(ways_split);
 			}
 		}
 		if (process_ways && process_nodes) {
-			turn_restrictions=fopen("turn_restrictions.tmp","rb");
+			turn_restrictions=tempfile("turn_restrictions",suffix,0);
 			if (turn_restrictions) {
 				dump(turn_restrictions);
 				fclose(turn_restrictions);
@@ -3081,10 +3096,10 @@ int main(int argc, char **argv)
 		phase=3;
 		fprintf(stderr,"PROGRESS: Phase 4: generating tiles\n");
 		if (process_ways)
-			ways_split=fopen("ways_split.tmp","rb");
+			ways_split=tempfile("ways_split",suffix,0);
 		if (process_nodes)
-			nodes=fopen("nodes.tmp","rb");
-		tilesdir=fopen("tilesdir.tmp","wb+");
+			nodes=tempfile("nodes",suffix,0);
+		tilesdir=tempfile("tilesdir",suffix,1);
 		phase4(ways_split,nodes,suffix,tilesdir);
 		fclose(tilesdir);
 		if (nodes)
@@ -3098,11 +3113,11 @@ int main(int argc, char **argv)
 		phase=4;
 		fprintf(stderr,"PROGRESS: Phase 5: assembling map\n");
 		if (process_ways)
-			ways_split=fopen("ways_split.tmp","rb");
+			ways_split=tempfile("ways_split",suffix,0);
 		if (process_nodes)
-			nodes=fopen("nodes.tmp","rb");
+			nodes=tempfile("nodes",suffix,0);
 		res=fopen(result,"wb+");
-		zipdir=fopen("zipdir.tmp","wb+");
+		zipdir=tempfile("zipdir",suffix,1);
 		phase5(ways_split,nodes,suffix,res,zipdir,compression_level);
 		fclose(zipdir);
 		fclose(res);
@@ -3111,12 +3126,12 @@ int main(int argc, char **argv)
 		if (ways_split)
 			fclose(ways_split);
 		if(!keep_tmpfiles) {
-			unlink("nodes.tmp");
-			unlink("ways_split.tmp");
-			unlink("turn_restrictions.tmp");
-			unlink("graph.tmp");
-			unlink("tilesdir.tmp");
-			unlink("zipdir.tmp");
+			tempfile_unlink("nodes",suffix);
+			tempfile_unlink("ways_split",suffix);
+			tempfile_unlink("turn_restrictions",suffix);
+			tempfile_unlink("graph",suffix);
+			tempfile_unlink("tilesdir",suffix);
+			tempfile_unlink("zipdir",suffix);
 			remove_countryfiles();
 		}
 	}
