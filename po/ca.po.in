@@ -5,255 +5,276 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
-"POT-Creation-Date: 2009-01-05 15:31+0100\n"
-"PO-Revision-Date: 2008-10-14 16:56+0000\n"
-"Last-Translator: Peremayol <peremayol@gmail.com>\n"
+"Project-Id-Version: navit 0.1.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-01-15 09:53+0100\n"
+"PO-Revision-Date: 2009-01-26 11:22+0000\n"
+"Last-Translator: Sid <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-06 08:28+0000\n"
+"X-Launchpad-Export-Date: 2009-02-11 10:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
-#: ../navit/main.c:228
+#: ../navit/main.c:231
 #, c-format
 msgid "Running from source directory\n"
 msgstr "Executant-se des de directori arrel\n"
 
-#: ../navit/main.c:260
+#: ../navit/main.c:263
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr ""
 
-#: ../navit/navigation.c:197
+#: ../navit/navigation.c:201
 msgid "zeroth"
 msgstr ""
 
-#: ../navit/navigation.c:199
-msgid "first"
-msgstr ""
-
-#: ../navit/navigation.c:201
-msgid "second"
-msgstr ""
-
 #: ../navit/navigation.c:203
-msgid "third"
-msgstr ""
+msgid "first"
+msgstr "primera"
 
 #: ../navit/navigation.c:205
+msgid "second"
+msgstr "segona"
+
+#: ../navit/navigation.c:207
+msgid "third"
+msgstr "tercera"
+
+#: ../navit/navigation.c:209
 msgid "fourth"
 msgstr ""
 
-#: ../navit/navigation.c:207
+#: ../navit/navigation.c:211
 msgid "fifth"
 msgstr ""
 
-#: ../navit/navigation.c:209
+#: ../navit/navigation.c:213
 msgid "sixth"
 msgstr ""
 
-#: ../navit/navigation.c:251
+#: ../navit/navigation.c:255
 #, c-format
 msgid "%d m"
 msgstr ""
 
-#: ../navit/navigation.c:253
+#: ../navit/navigation.c:257
 #, c-format
 msgid "in %d m"
 msgstr ""
 
-#: ../navit/navigation.c:257
+#: ../navit/navigation.c:261
 #, c-format
 msgid "%d meters"
 msgstr ""
 
-#: ../navit/navigation.c:259
+#: ../navit/navigation.c:263
 #, c-format
 msgid "in %d meters"
 msgstr ""
 
-#: ../navit/navigation.c:265
+#: ../navit/navigation.c:269
 #, c-format
 msgid "%d.%d kilometer"
 msgstr ""
 
-#: ../navit/navigation.c:267
+#: ../navit/navigation.c:271
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr ""
 
-#: ../navit/navigation.c:271
+#: ../navit/navigation.c:275
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../navit/navigation.c:273
+#: ../navit/navigation.c:277
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../navit/navigation.c:1158
+#: ../navit/navigation.c:1205
 msgid "exit"
-msgstr ""
+msgstr "sortir"
 
-#: ../navit/navigation.c:1160
+#: ../navit/navigation.c:1207
 msgid "into the ramp"
 msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:1190
+#: ../navit/navigation.c:1237
 #, c-format
 msgid "%sinto the street %s%s%s"
 msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1194
+#: ../navit/navigation.c:1241
 #, c-format
 msgid "%sinto the %s%s%s|male form"
 msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1198
+#: ../navit/navigation.c:1245
 #, c-format
 msgid "%sinto the %s%s%s|female form"
 msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1202
+#: ../navit/navigation.c:1249
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr ""
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1209
+#: ../navit/navigation.c:1256
 #, c-format
 msgid "%sinto the %s"
 msgstr ""
 
 #. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1230
+#: ../navit/navigation.c:1277
 msgid "right"
-msgstr ""
+msgstr "dreta"
 
 #. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1264
+#: ../navit/navigation.c:1316
 msgid "left"
-msgstr ""
+msgstr "esquerra"
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1271
+#: ../navit/navigation.c:1323
 msgid "easily "
-msgstr ""
+msgstr "fàcilment "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1276
+#: ../navit/navigation.c:1328
 msgid "strongly "
 msgstr ""
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1280
+#: ../navit/navigation.c:1332
 msgid "unknown "
-msgstr ""
+msgstr "desconegut "
 
-#: ../navit/navigation.c:1287
+#: ../navit/navigation.c:1339
 msgid "When possible, please turn around"
 msgstr ""
 
-#: ../navit/navigation.c:1295
+#: ../navit/navigation.c:1349
 msgid "Enter the roundabout soon"
 msgstr ""
 
-#: ../navit/navigation.c:1298
+#. TRANSLATORS: %s is the distance to the roundabout
+#: ../navit/navigation.c:1353
 #, c-format
 msgid "In %s, enter the roundabout"
 msgstr ""
 
-#: ../navit/navigation.c:1310
+#: ../navit/navigation.c:1368
 #, c-format
 msgid "Leave the roundabout at the %s exit"
 msgstr ""
 
-#: ../navit/navigation.c:1318
+#: ../navit/navigation.c:1371
+#, c-format
+msgid "then leave the roundabout at the %s exit"
+msgstr ""
+
+#: ../navit/navigation.c:1381
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr ""
 
-#: ../navit/navigation.c:1322
+#: ../navit/navigation.c:1385
 msgid "soon"
 msgstr ""
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1332
+#: ../navit/navigation.c:1395
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr ""
 
-#: ../navit/navigation.c:1335
+#: ../navit/navigation.c:1398 ../navit/navigation.c:1412
 #, c-format
 msgid "after %i roads"
 msgstr ""
 
-#: ../navit/navigation.c:1338
+#: ../navit/navigation.c:1401
 msgid "now"
+msgstr "ara"
+
+#: ../navit/navigation.c:1409
+#, c-format
+msgid "then take the %1$s road to the %2$s"
 msgstr ""
 
-#: ../navit/navigation.c:1342
+#: ../navit/navigation.c:1420
 msgid "error"
-msgstr ""
+msgstr "error"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:1371
+#: ../navit/navigation.c:1450
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr ""
 
-#: ../navit/navigation.c:1374
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#: ../navit/navigation.c:1453
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr ""
+
+#: ../navit/navigation.c:1458
 #, c-format
 msgid "You have reached your destination %s"
 msgstr ""
 
-#: ../navit/navit.c:1042
+#: ../navit/navigation.c:1460
+msgid "then you have reached your destination."
+msgstr ""
+
+#: ../navit/navit.c:1056
 msgid "Position"
-msgstr ""
+msgstr "Posició"
 
-#: ../navit/navit.c:1043
+#: ../navit/navit.c:1057
 msgid "Command"
-msgstr ""
+msgstr "Ordre"
 
-#: ../navit/navit.c:1047
+#: ../navit/navit.c:1061
 msgid "Length"
-msgstr ""
+msgstr "Durada"
 
-#: ../navit/navit.c:1051 ../navit/navit.c:1076
+#: ../navit/navit.c:1065 ../navit/navit.c:1090
 msgid "km"
 msgstr ""
 
-#: ../navit/navit.c:1055 ../navit/navit.c:1080
+#: ../navit/navit.c:1069 ../navit/navit.c:1094
 msgid "m"
-msgstr ""
+msgstr "m"
 
-#: ../navit/navit.c:1061
+#: ../navit/navit.c:1075
 msgid "Time"
-msgstr ""
+msgstr "Temps"
 
-#: ../navit/navit.c:1073
+#: ../navit/navit.c:1087
 msgid "Destination Length"
 msgstr ""
 
-#: ../navit/navit.c:1086
+#: ../navit/navit.c:1100
 msgid "Destination Time"
 msgstr ""
 
-#: ../navit/navit.c:1119 ../navit/gui/gtk/gui_gtk_action.c:210
+#: ../navit/navit.c:1133 ../navit/gui/gtk/gui_gtk_action.c:210
 msgid "Roadbook"
 msgstr ""
 
@@ -285,17 +306,17 @@ msgstr ""
 #. 020
 #: ../navit/country.c:39
 msgid "Andorra"
-msgstr ""
+msgstr "Andorra"
 
 #. 784
 #: ../navit/country.c:40
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "Unió dels Emirats Àrabs"
 
 #. 004
 #: ../navit/country.c:41
 msgid "Afghanistan"
-msgstr ""
+msgstr "Afganistan"
 
 #. 028
 #: ../navit/country.c:42
@@ -310,7 +331,7 @@ msgstr ""
 #. 008
 #: ../navit/country.c:44
 msgid "Albania"
-msgstr ""
+msgstr "Albània"
 
 #. 051
 #: ../navit/country.c:45
@@ -320,12 +341,12 @@ msgstr ""
 #. 530
 #: ../navit/country.c:46
 msgid "Netherlands Antilles"
-msgstr ""
+msgstr "Antilles Holandeses"
 
 #. 024
 #: ../navit/country.c:47
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #. 010
 #: ../navit/country.c:48
@@ -335,7 +356,7 @@ msgstr ""
 #. 032
 #: ../navit/country.c:49
 msgid "Argentina"
-msgstr ""
+msgstr "Argentina"
 
 #. 016
 #: ../navit/country.c:50
@@ -345,7 +366,7 @@ msgstr ""
 #. 040
 #: ../navit/country.c:51
 msgid "Austria"
-msgstr ""
+msgstr "Àustria"
 
 #. 036
 #: ../navit/country.c:52
@@ -370,22 +391,22 @@ msgstr ""
 #. 070
 #: ../navit/country.c:56
 msgid "Bosnia and Herzegovina"
-msgstr ""
+msgstr "Bòsnia i Hercegovina"
 
 #. 052
 #: ../navit/country.c:57
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #. 050
 #: ../navit/country.c:58
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladesh"
 
 #. 056
 #: ../navit/country.c:59
 msgid "Belgium"
-msgstr ""
+msgstr "Bèlgica"
 
 #. 854
 #: ../navit/country.c:60
@@ -395,7 +416,7 @@ msgstr ""
 #. 100
 #: ../navit/country.c:61
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bulgària"
 
 #. 048
 #: ../navit/country.c:62
@@ -405,7 +426,7 @@ msgstr ""
 #. 108
 #: ../navit/country.c:63
 msgid "Burundi"
-msgstr ""
+msgstr "Burundi"
 
 #. 204
 #: ../navit/country.c:64
@@ -420,22 +441,22 @@ msgstr ""
 #. 060
 #: ../navit/country.c:66
 msgid "Bermuda"
-msgstr ""
+msgstr "Illes Bermudes"
 
 #. 096
 #: ../navit/country.c:67
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunei"
 
 #. 068
 #: ../navit/country.c:68
 msgid "Bolivia"
-msgstr ""
+msgstr "Bolívia"
 
 #. 076
 #: ../navit/country.c:69
 msgid "Brazil"
-msgstr ""
+msgstr "Brasil"
 
 #. 044
 #: ../navit/country.c:70
@@ -445,7 +466,7 @@ msgstr ""
 #. 064
 #: ../navit/country.c:71
 msgid "Bhutan"
-msgstr ""
+msgstr "Bhutan"
 
 #. 074
 #: ../navit/country.c:72
@@ -455,7 +476,7 @@ msgstr ""
 #. 072
 #: ../navit/country.c:73
 msgid "Botswana"
-msgstr ""
+msgstr "Botswana"
 
 #. 112
 #: ../navit/country.c:74
@@ -470,7 +491,7 @@ msgstr ""
 #. 124
 #: ../navit/country.c:76
 msgid "Canada"
-msgstr ""
+msgstr "Canadà"
 
 #. 166
 #: ../navit/country.c:77
@@ -480,7 +501,7 @@ msgstr ""
 #. 180
 #: ../navit/country.c:78
 msgid "Congo, Democratic Republic of the"
-msgstr ""
+msgstr "Congo, República Democràtica del"
 
 #. 140
 #: ../navit/country.c:79
@@ -490,22 +511,22 @@ msgstr ""
 #. 178
 #: ../navit/country.c:80
 msgid "Congo"
-msgstr ""
+msgstr "Congo"
 
 #. 756
 #: ../navit/country.c:81
 msgid "Switzerland"
-msgstr ""
+msgstr "Suïssa"
 
 #. 384
 #: ../navit/country.c:82
 msgid "Cote d'Ivoire"
-msgstr ""
+msgstr "Costa d'Ivori"
 
 #. 184
 #: ../navit/country.c:83
 msgid "Cook Islands"
-msgstr ""
+msgstr "Illes Cook"
 
 #. 152
 #: ../navit/country.c:84
@@ -520,22 +541,22 @@ msgstr ""
 #. 156
 #: ../navit/country.c:86
 msgid "China"
-msgstr ""
+msgstr "Xina"
 
 #. 170
 #: ../navit/country.c:87
 msgid "Colombia"
-msgstr ""
+msgstr "Colòmbia"
 
 #. 188
 #: ../navit/country.c:88
 msgid "Costa Rica"
-msgstr ""
+msgstr "Costa Rica"
 
 #. 192
 #: ../navit/country.c:89
 msgid "Cuba"
-msgstr ""
+msgstr "Cuba"
 
 #. 132
 #: ../navit/country.c:90
