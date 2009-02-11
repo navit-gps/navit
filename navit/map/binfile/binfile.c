@@ -38,11 +38,6 @@
 
 static int map_id;
 
-struct minmax {
-	short min;
-	short max;
-};
-
 struct tile {
 	int *start;
 	int *end;
@@ -96,12 +91,6 @@ struct map_search_priv {
 	GHashTable *search_results;
 };
 
-
-static void minmax_to_cpu(struct minmax * mima) {
-	dbg_assert(mima  != NULL);
-	mima->min = le16_to_cpu(mima->min);
-	mima->max = le16_to_cpu(mima->max);
-}
 
 static void lfh_to_cpu(struct zip_lfh *lfh) {
 	dbg_assert(lfh != NULL);
@@ -527,7 +516,7 @@ setup_pos(struct map_rect_priv *mr)
 }
 
 static int
-selection_contains(struct map_selection *sel, struct coord_rect *r, struct minmax *mima)
+selection_contains(struct map_selection *sel, struct coord_rect *r, struct range *mima)
 {
 	int order;
 	if (! sel)
@@ -561,11 +550,32 @@ map_parse_country_binfile(struct map_rect_priv *mr)
 	}
 }
 
+static void
+map_parse_submap(struct map_rect_priv *mr)
+{
+	struct coord_rect r;
+	struct coord c[2];
+	struct attr at;
+	if (binfile_coord_get(mr->item.priv_data, c, 2) != 2)
+		return;
+	r.lu.x=c[0].x;
+	r.lu.y=c[1].y;
+	r.rl.x=c[1].x;
+	r.rl.y=c[0].y;
+	if (!binfile_attr_get(mr->item.priv_data, attr_order, &at))
+		return;
+	if (!mr->m->eoc || !selection_contains(mr->sel, &r, &at.u.range))
+		return;
+	if (!binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
+		return;
+	dbg(1,"pushing zipfile %d from %d\n", at.u.num, mr->t->zipfile_num);
+	push_zipfile_tile(mr, at.u.num);
+}
+
 static struct item *
 map_rect_get_item_binfile(struct map_rect_priv *mr)
 {
 	struct tile *t;
-	struct minmax *mima;
 	for (;;) {
 		t=mr->t;
 		if (! t)
@@ -582,20 +592,8 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 		memset(mr->label_attr, 0, sizeof(mr->label_attr));
 		setup_pos(mr);
 		if ((mr->item.type == type_submap) && (!mr->country_id)) {
-			struct coord_rect r;
-			r.lu.x=le32_to_cpu(t->pos_coord[0]);
-			r.lu.y=le32_to_cpu(t->pos_coord[3]);
-			r.rl.x=le32_to_cpu(t->pos_coord[2]);
-			r.rl.y=le32_to_cpu(t->pos_coord[1]);
-			mima=(struct minmax *)(t->pos_attr+2);
-			minmax_to_cpu(mima);
-			if (!mr->m->eoc || !selection_contains(mr->sel, &r, mima)) {
-				continue;
-			}
-			dbg(1,"pushing zipfile %d from %d\n", le32_to_cpu(t->pos_attr[5]), t->zipfile_num);
-			push_zipfile_tile(mr, le32_to_cpu(t->pos_attr[5]));
+			map_parse_submap(mr);
 			continue;
-				
 		}
 		if (mr->country_id)
 		{

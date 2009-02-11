@@ -334,6 +334,11 @@ attr_data_set_le(struct attr * attr, void * data)
 {
 	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
 		attr->u.num=le32_to_cpu(*((int *)data));
+	else if (attr->type == attr_order) {
+		attr->u.num=le32_to_cpu(*((int *)data));
+		attr->u.range.min=le16_to_cpu(attr->u.range.min);
+		attr->u.range.max=le16_to_cpu(attr->u.range.max);
+	}
 	else
 /* Fixme: Handle long long */
 		attr->u.data=data;
