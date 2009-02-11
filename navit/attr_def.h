@@ -99,6 +99,7 @@ ATTR(sat_elevation)
 ATTR(sat_azimuth)
 ATTR(sat_snr)
 ATTR(autozoom)
+ATTR(version)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
