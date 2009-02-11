@@ -78,7 +78,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
         int i=0,sats_signal=0;
        
 	struct vehicle_priv *priv = vehicle_last;
-	if (buf[0] == '$' && len > 0) {
+	if( len > 0 && buf[0] == '$' ) {
 		char buffer[len+2];
 		buffer[len+1]='\0';
 		memcpy(buffer, buf, len);
