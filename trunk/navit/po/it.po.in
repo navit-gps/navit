@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-06 11:04+0100\n"
-"PO-Revision-Date: 2009-01-10 10:27+0000\n"
-"Last-Translator: bud <Unknown>\n"
+"POT-Creation-Date: 2009-01-15 09:53+0100\n"
+"PO-Revision-Date: 2009-02-06 16:06+0000\n"
+"Last-Translator: ernia <monghitri@aruba.it>\n"
 "Language-Team: Italiano\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-01-15 08:20+0000\n"
+"X-Launchpad-Export-Date: 2009-02-11 10:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -32,7 +32,7 @@ msgstr "impostazione di '%s' a '%s'\n"
 
 #: ../navit/navigation.c:201
 msgid "zeroth"
-msgstr ""
+msgstr "zeresimo"
 
 #: ../navit/navigation.c:203
 msgid "first"
@@ -102,179 +102,180 @@ msgid_plural "in %d kilometers"
 msgstr[0] "fra un chilometro"
 msgstr[1] "fra %d chilometri"
 
-#: ../navit/navigation.c:1202
+#: ../navit/navigation.c:1205
 msgid "exit"
 msgstr "esci"
 
-#: ../navit/navigation.c:1204
+#: ../navit/navigation.c:1207
 msgid "into the ramp"
 msgstr "nella rampa"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:1234
+#: ../navit/navigation.c:1237
 #, c-format
 msgid "%sinto the street %s%s%s"
 msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1238
+#: ../navit/navigation.c:1241
 #, c-format
 msgid "%sinto the %s%s%s|male form"
 msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1242
+#: ../navit/navigation.c:1245
 #, c-format
 msgid "%sinto the %s%s%s|female form"
 msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1246
+#: ../navit/navigation.c:1249
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%sin %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1253
+#: ../navit/navigation.c:1256
 #, c-format
 msgid "%sinto the %s"
-msgstr ""
+msgstr "%s nella %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1274
+#: ../navit/navigation.c:1277
 msgid "right"
 msgstr "destra"
 
 #. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1313
+#: ../navit/navigation.c:1316
 msgid "left"
 msgstr "sinistra"
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1320
+#: ../navit/navigation.c:1323
 msgid "easily "
 msgstr "leggermente "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1325
+#: ../navit/navigation.c:1328
 msgid "strongly "
 msgstr "decisamente "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1329
+#: ../navit/navigation.c:1332
 msgid "unknown "
 msgstr "facendo quasi inversione "
 
-#: ../navit/navigation.c:1336
+#: ../navit/navigation.c:1339
 msgid "When possible, please turn around"
 msgstr "Appena possibile, invertire il senso di marcia"
 
-#: ../navit/navigation.c:1346
+#: ../navit/navigation.c:1349
 msgid "Enter the roundabout soon"
 msgstr "Entrare in rotatoria"
 
-#: ../navit/navigation.c:1349
+#. TRANSLATORS: %s is the distance to the roundabout
+#: ../navit/navigation.c:1353
 #, c-format
 msgid "In %s, enter the roundabout"
-msgstr ""
+msgstr "Tra %s entrare nella rotonda"
 
-#: ../navit/navigation.c:1364
+#: ../navit/navigation.c:1368
 #, c-format
 msgid "Leave the roundabout at the %s exit"
 msgstr "lasciare la rotatoria alla %s uscita"
 
-#: ../navit/navigation.c:1367
+#: ../navit/navigation.c:1371
 #, c-format
 msgid "then leave the roundabout at the %s exit"
 msgstr "poi lasciare la rotatoria alla %s uscita"
 
-#: ../navit/navigation.c:1377
+#: ../navit/navigation.c:1381
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Seguire la strada per i prossimi %s"
 
-#: ../navit/navigation.c:1381
+#: ../navit/navigation.c:1385
 msgid "soon"
 msgstr "tra poco"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1391
+#: ../navit/navigation.c:1395
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Prendere la %1$s strada a %2$s"
 
-#: ../navit/navigation.c:1394 ../navit/navigation.c:1408
+#: ../navit/navigation.c:1398 ../navit/navigation.c:1412
 #, c-format
 msgid "after %i roads"
 msgstr "tra %i roads"
 
-#: ../navit/navigation.c:1397
+#: ../navit/navigation.c:1401
 msgid "now"
 msgstr "adesso"
 
-#: ../navit/navigation.c:1405
+#: ../navit/navigation.c:1409
 #, c-format
 msgid "then take the %1$s road to the %2$s"
 msgstr "poi prendere la %1$s strada a %2$s"
 
-#: ../navit/navigation.c:1416
+#: ../navit/navigation.c:1420
 msgid "error"
 msgstr "errore"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:1446
+#: ../navit/navigation.c:1450
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Svoltare %1$sa %2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#: ../navit/navigation.c:1449
+#: ../navit/navigation.c:1453
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
 msgstr "poi girare %1$s%2$s %3$s%4$s"
 
-#: ../navit/navigation.c:1454
+#: ../navit/navigation.c:1458
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Destinazione raggiunta %s"
 
-#: ../navit/navigation.c:1456
+#: ../navit/navigation.c:1460
 msgid "then you have reached your destination."
-msgstr ""
+msgstr "poi sarete arrivati a destinazione"
 
-#: ../navit/navit.c:1049
+#: ../navit/navit.c:1056
 msgid "Position"
 msgstr "Posizione"
 
-#: ../navit/navit.c:1050
+#: ../navit/navit.c:1057
 msgid "Command"
 msgstr "Indicazione"
 
-#: ../navit/navit.c:1054
+#: ../navit/navit.c:1061
 msgid "Length"
 msgstr "Distanza"
 
-#: ../navit/navit.c:1058 ../navit/navit.c:1083
+#: ../navit/navit.c:1065 ../navit/navit.c:1090
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:1062 ../navit/navit.c:1087
+#: ../navit/navit.c:1069 ../navit/navit.c:1094
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:1068
+#: ../navit/navit.c:1075
 msgid "Time"
 msgstr "Tempo"
 
-#: ../navit/navit.c:1080
+#: ../navit/navit.c:1087
 msgid "Destination Length"
 msgstr "Distanza all'arrivo"
 
-#: ../navit/navit.c:1093
+#: ../navit/navit.c:1100
 msgid "Destination Time"
 msgstr "Tempo all'arrivo"
 
-#: ../navit/navit.c:1126 ../navit/gui/gtk/gui_gtk_action.c:210
+#: ../navit/navit.c:1133 ../navit/gui/gtk/gui_gtk_action.c:210
 msgid "Roadbook"
 msgstr "Quaderno di viaggio"
 
@@ -1806,7 +1807,7 @@ msgstr "Azioni"
 
 #: ../navit/gui/internal/gui_internal.c:2580
 msgid "Map Point"
-msgstr ""
+msgstr "Punto sulla mappa"
 
 #: ../navit/gui/internal/gui_internal.c:2590
 msgid "Vehicle Position"
@@ -1820,7 +1821,7 @@ msgstr "Esci"
 msgid ""
 "Stop\n"
 "Navigation"
-msgstr ""
+msgstr "Stop"
 
 #: ../navit/gui/internal/gui_internal.c:2621
 #: ../navit/gui/internal/gui_internal.c:2714
@@ -1834,11 +1835,11 @@ msgstr "Regole"
 
 #: ../navit/gui/internal/gui_internal.c:2686
 msgid "Lock on road"
-msgstr ""
+msgstr "Blocca sulla strada"
 
 #: ../navit/gui/internal/gui_internal.c:2698
 msgid "Map follows Vehicle"
-msgstr ""
+msgstr "La mappa segue il veicolo"
 
 #: ../navit/gui/internal/gui_internal.c:2708
 #: ../navit/gui/internal/gui_internal.c:2761
