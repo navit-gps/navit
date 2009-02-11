@@ -45,9 +45,6 @@
 
 #define BUFFER_SIZE 1280
 
-#define GENERATE_INDEX
-#define HOUSE_NUMBERS
-
 #if 1
 #define debug_tile(x) 0
 #else
@@ -65,9 +62,7 @@ static int ignore_unkown = 0, coverage=0;
 static char *attrmap={
 	"n	*=*			point_unkn\n"
 	"n	Annehmlichkeit=Hochsitz	poi_hunting_stand\n"
-#ifdef HOUSE_NUMBERS
 	"n	addr:housenumber=*	house_number\n"
-#endif
 	"n	aeroway=aerodrome	poi_airport\n"
 	"n	aeroway=airport		poi_airport\n"
 	"n	aeroway=helipad		poi_heliport\n"
@@ -179,12 +174,10 @@ static char *attrmap={
 	"n	tourism=viewpoint	poi_viewpoint\n"
 	"n	tourism=zoo		poi_zoo\n"
 	"w	*=*			street_unkn\n"
-#ifdef HOUSE_NUMBERS
 	"w	addr:interpolation=even	house_number_interpolation_even\n"
 	"w	addr:interpolation=odd	house_number_interpolation_odd\n"
 	"w	addr:interpolation=all	house_number_interpolation_all\n"
 	"w	addr:interpolation=alphabetic	house_number_interpolation_alphabetic\n"
-#endif
 	"w	aerialway=cable_car	lift_cable_car\n"
 	"w	aerialway=chair_lift	lift_chair\n"
 	"w	aerialway=drag_lift	lift_drag\n"
@@ -367,8 +360,11 @@ static char *attrmap={
 
 
 static char buffer[400000];
+static struct item_bin *item_bin=(struct item_bin *)(void *)buffer;
 
 struct coord coord_buffer[65536];
+
+char *suffix="m0l0";
 
 #define IS_REF(c) ((c).x >= (1 << 30))
 #define REF(c) ((c).y)
@@ -379,8 +375,6 @@ struct rect {
 };
 
 static void bbox_extend(struct coord *c, struct rect *r);
-
-#ifdef GENERATE_INDEX
 
 GList *aux_tile_list;
 
@@ -410,7 +404,6 @@ struct country_table {
 };
 
 static GHashTable *country_table_hash;
-#endif
 
 struct attr_mapping {
 	enum item_type type;
@@ -509,7 +502,6 @@ build_attrmap(char *map)
 	attr_present=g_malloc0(sizeof(*attr_present)*attr_present_count);
 }
 
-#ifdef GENERATE_INDEX
 static void
 build_countrytable(void)
 {
@@ -525,7 +517,6 @@ build_countrytable(void)
 		}
 	}
 }
-#endif
 
 
 
@@ -558,12 +549,10 @@ struct attr_bin label_attr = {
 };
 char label_attr_buffer[BUFFER_SIZE];
 
-#ifdef HOUSE_NUMBERS
 struct attr_bin house_number_attr = {
 	0, attr_house_number
 };
 char house_number_attr_buffer[BUFFER_SIZE];
-#endif
 
 
 struct attr_bin town_name_attr = {
@@ -574,9 +563,7 @@ struct attr_bin street_name_attr = {
 	0, attr_street_name
 };
 
-#ifdef HOUSE_NUMBERS
 char street_name_attr_buffer[BUFFER_SIZE];
-#endif
 
 struct attr_bin street_name_systematic_attr = {
 	0, attr_street_name_systematic
@@ -602,25 +589,16 @@ char is_in_buffer[BUFFER_SIZE];
 static void write_zipmember(FILE *out, FILE *dir_out, char *name, int filelen, char *data, int data_size, int compression_level);
 
 static void
-item_buffer_set_type(char *buffer, enum item_type type)
+item_bin_init(struct item_bin *ib, enum item_type type)
 {
-	struct item_bin *ib=(struct item_bin *) buffer;
 	ib->clen=0;
 	ib->len=2;
 	ib->type=type;
 }
 
 static void
-item_buffer_change_type(char *buffer, enum item_type type)
+item_bin_add_coord(struct item_bin *ib, struct coord *c, int count)
 {
-	struct item_bin *ib=(struct item_bin *) buffer;
-	ib->type=type;
-}
-
-static void
-item_buffer_add_coord(char *buffer, struct coord *c, int count)
-{
-	struct item_bin *ib=(struct item_bin *) buffer;
 	struct coord *c2=(struct coord *)(ib+1);
 	c2+=ib->clen/2;
 	memcpy(c2, c, count*sizeof(struct coord));
@@ -629,9 +607,15 @@ item_buffer_add_coord(char *buffer, struct coord *c, int count)
 }
 
 static void
-item_buffer_add_attr(char *buffer, struct attr *attr)
+item_bin_add_coord_rect(struct item_bin *ib, struct rect *r)
 {
-	struct item_bin *ib=(struct item_bin *) buffer;
+	item_bin_add_coord(ib, &r->l, 1);
+	item_bin_add_coord(ib, &r->h, 1);
+}
+
+static void
+item_bin_add_attr(struct item_bin *ib, struct attr *attr)
+{
 	struct attr_bin *ab=(struct attr_bin *)((int *)ib+ib->len+1);
 	int size=attr_data_size(attr);
 	int pad=(4-(size%4))%4;
@@ -643,9 +627,27 @@ item_buffer_add_attr(char *buffer, struct attr *attr)
 }
 
 static void
-item_buffer_write(char *buffer, FILE *out)
+item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val)
 {
-	struct item_bin *ib=(struct item_bin *) buffer;
+	struct attr attr;
+	attr.type=type;
+	attr.u.num=val;
+	item_bin_add_attr(ib, &attr);
+}
+
+static void
+item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, short max)
+{
+	struct attr attr;
+	attr.type=type;
+	attr.u.range.min=min;
+	attr.u.range.max=max;
+	item_bin_add_attr(ib, &attr);
+}
+
+static void
+item_bin_write(struct item_bin *ib, FILE *out)
+{
 	fwrite(buffer, (ib->len+1)*4, 1, out);
 }
 
@@ -748,7 +750,6 @@ add_tag(char *k, char *v)
 		pad_text_attr(&label_attr, label_attr_buffer);
 		level=5;
 	}
-#ifdef HOUSE_NUMBERS
 	if (! strcmp(k,"addr:housenumber")) {
 		strcpy(house_number_attr_buffer, v);
 		pad_text_attr(&house_number_attr, house_number_attr_buffer);
@@ -757,7 +758,6 @@ add_tag(char *k, char *v)
 		strcpy(street_name_attr_buffer, v);
 		pad_text_attr(&street_name_attr, street_name_attr_buffer);
 	}
-#endif
 	if (! strcmp(k,"ref")) {
 		if (in_way) {
 			strcpy(street_name_systematic_attr_buffer, v);
@@ -939,10 +939,8 @@ add_node(int id, double lat, double lon)
 	nodeid=id;
 	item.type=type_point_unkn;
 	label_attr.len=0;
-#ifdef HOUSE_NUMBERS
 	house_number_attr.len=0;
 	street_name_attr.len=0;
-#endif
 	town_name_attr.len=0;
 	debug_attr.len=0;
 	is_in_buffer[0]='\0';
@@ -1060,9 +1058,7 @@ add_way(int id)
 	coord_count=0;
 	item.type=type_street_unkn;
 	label_attr.len=0;
-#ifdef HOUSE_NUMBERS
 	house_number_attr.len=0;
-#endif
 	street_name_attr.len=0;
 	street_name_systematic_attr.len=0;
 	debug_attr.len=0;
@@ -1093,7 +1089,7 @@ add_id_attr(char *p, enum attr_type attr_type)
 		return 0;
 	id=atoll(id_buffer);
 	idattr.u.num64=&id;
-	item_buffer_add_attr(buffer, &idattr);
+	item_bin_add_attr(item_bin, &idattr);
 	return 1;
 }
 
@@ -1105,7 +1101,7 @@ parse_relation(char *p)
 {
 	debug_attr_buffer[0]='\0';
 	relation_type[0]='\0';
-	item_buffer_set_type(buffer, type_none);
+	item_bin_init(item_bin, type_none);
 	if (!add_id_attr(p, attr_osm_relationid))
 		return 0;
 	return 1;
@@ -1116,7 +1112,7 @@ end_relation(FILE *turn_restrictions)
 {
 	struct item_bin *ib=(struct item_bin *)buffer;
 	if (!strcmp(relation_type, "restriction") && (ib->type == type_street_turn_restriction_no || ib->type == type_street_turn_restriction_only))
-		item_buffer_write(buffer, turn_restrictions);
+		item_bin_write(item_bin, turn_restrictions);
 }
 
 static int
@@ -1135,7 +1131,7 @@ parse_member(char *p)
 		return 0;
 	sprintf(member_buffer,"%s:%s:%s", type_buffer, ref_buffer, role_buffer);
 	memberattr.u.str=member_buffer;
-	item_buffer_add_attr(buffer, &memberattr);
+	item_bin_add_attr(item_bin, &memberattr);
 	
 	return 1;
 }
@@ -1148,9 +1144,9 @@ relation_add_tag(char *k, char *v)
 		strcpy(relation_type, v);
 	else if (!strcmp(k,"restriction")) {
 		if (strncmp(k,"no_",3)) {
-			item_buffer_change_type(buffer, type_street_turn_restriction_no);
+			item_bin->type=type_street_turn_restriction_no;
 		} else if (strncmp(k,"only_",5)) {
-			item_buffer_change_type(buffer, type_street_turn_restriction_only);
+			item_bin->type=type_street_turn_restriction_only;
 		}
 	}
 }
@@ -1253,12 +1249,10 @@ end_node(FILE *out)
 		alen+=label_attr.len+1;
 	if (debug_attr.len)
 		alen+=debug_attr.len+1;
-#ifdef HOUSE_NUMBERS
 	if (house_number_attr.len)
 		alen+=house_number_attr.len+1;
 	if (street_name_attr.len)
 		alen+=street_name_attr.len+1;
-#endif
 	if (osmid_attr.len)
 		alen+=osmid_attr.len+1;
 	if (count)
@@ -1274,13 +1268,10 @@ end_node(FILE *out)
 		write_attr(out, &town_name_attr, label_attr_buffer);
 	} else
 		write_attr(out, &label_attr, label_attr_buffer);
-#ifdef HOUSE_NUMBERS
 	write_attr(out, &house_number_attr, house_number_attr_buffer);
 	write_attr(out, &street_name_attr, street_name_attr_buffer);
-#endif
 	write_attr(out, &osmid_attr, &osmid_attr_value);
 	write_attr(out, &debug_attr, debug_attr_buffer);
-#ifdef GENERATE_INDEX
 	if (item_is_town(item) && town_name_attr.len) {
 		char *tok,*buf=is_in_buffer;
 		while ((tok=strtok(buf, ","))) {
@@ -1314,7 +1305,6 @@ end_node(FILE *out)
 			
 		}
 	}
-#endif
 	processed_nodes_out++;
 }
 
@@ -1339,7 +1329,6 @@ sort_countries_compare(const void *p1, const void *p2)
 	return 0;
 }
 
-#ifdef GENERATE_INDEX
 static void
 sort_countries(void)
 {
@@ -1389,7 +1378,6 @@ sort_countries(void)
 		}
 	}
 }
-#endif
 
 static void
 add_nd(char *p, int ref)
@@ -1695,15 +1683,15 @@ phase1_map(struct map *map, FILE *out_ways, FILE *out_nodes)
 
 	while ((item = map_rect_get_item(mr))) {
 		count=item_coord_get(item, ca, item->type < type_line ? 1: max);
-		item_buffer_set_type(buffer, item->type);
-		item_buffer_add_coord(buffer, ca, count);
+		item_bin_init(item_bin, item->type);
+		item_bin_add_coord(item_bin, ca, count);
 		while (item_attr_get(item, attr_any, &attr)) {
-			item_buffer_add_attr(buffer, &attr);
+			item_bin_add_attr(item_bin, &attr);
 		}
                 if (item->type >= type_line) 
-			item_buffer_write(buffer, out_ways);
+			item_bin_write(item_bin, out_ways);
 		else
-			item_buffer_write(buffer, out_nodes);
+			item_bin_write(item_bin, out_nodes);
 	}
 	map_rect_destroy(mr);
 }
@@ -1779,7 +1767,7 @@ struct rect world_bbox = {
 };
 
 static void
-tile(struct rect *r, char *ret, int max)
+tile(struct rect *r, char *suffix, char *ret, int max)
 {
 	int x0,x1,x2,x3,x4;
 	int y0,y1,y2,y3,y4;
@@ -1811,9 +1799,11 @@ tile(struct rect *r, char *ret, int max)
 			strcat(ret,"a");
                         x0=x2;
                         y0=y2;
-		} else
-			return;
+		} else 
+			break;
 	}
+	if (suffix)
+		strcat(ret,suffix);
 }
 
 static void
@@ -1844,6 +1834,17 @@ tile_bbox(char *tile, struct rect *r)
 		}
 		tile++;
 	}
+}
+
+static int
+tile_len(char *tile)
+{
+	int ret=0;
+	while (tile[0] >= 'a' && tile[0] <= 'd') {
+		tile++;
+		ret++;
+	}
+	return ret;
 }
 
 GHashTable *tile_hash;
@@ -2060,7 +2061,7 @@ phase2(FILE *in, FILE *out, FILE *out_graph)
 }
 
 static void
-phase34_process_file(int phase, FILE *in)
+phase34_process_file(int phase, FILE *in, char *suffix)
 {
 	struct item_bin *ib;
 	struct rect r;
@@ -2080,7 +2081,7 @@ phase34_process_file(int phase, FILE *in)
 		if (ib->type == type_street_3_city || ib->type == type_street_4_city || ib->type == type_street_3_land || ib->type == type_street_4_land)
 			max=12;
 
-		tile(&r, buffer, max);
+		tile(&r, suffix, buffer, max);
 #if 0
 		fprintf(stderr,"%s\n", buffer);
 #endif
@@ -2091,56 +2092,44 @@ phase34_process_file(int phase, FILE *in)
 	}
 }
 
-struct index_item {
-	struct item_bin item;
-	struct rect r;
-	struct attr_bin attr_order;
-	short min;
-	short max;
-	struct attr_bin attr_zipfile_ref;
-	int zipfile_ref;
-};
+static void
+index_init(int phase, int version, GList **tiles_list)
+{
+	item_bin_init(item_bin, type_map_information);
+	item_bin_add_attr_int(item_bin, attr_version, version);
+	if (phase == 3)
+		tile_extend("", item_bin, tiles_list);
+	else
+		write_item("", item_bin);
+}
 
 static void
-index_submap_add(int phase, struct tile_head *th, GList **tiles_list)
+index_submap_add(int phase, char *suffix, struct tile_head *th, GList **tiles_list)
 {
-	struct index_item ii;
-	int len=strlen(th->name);
-	char index_tile[len+1];
+	int tlen=tile_len(th->name);
+	int len=tlen;
+	char index_tile[len+1+strlen(suffix)];
+	struct rect r;
 
-	ii.min=(len > 4) ? len-4 : 0;
-	ii.max=255;
 	strcpy(index_tile, th->name);
 	if (len > 6)
 		len=6;
 	else
 		len=0;
 	index_tile[len]=0;
-	tile_bbox(th->name, &ii.r);
+	if (tlen)
+		strcat(index_tile, suffix);
+	tile_bbox(th->name, &r);
 
-	ii.item.len=sizeof(ii)/4-1;
-	ii.item.type=type_submap;
-	ii.item.clen=4;
-
-	ii.attr_order.len=2;
-	ii.attr_order.type=attr_order;
-
-	ii.attr_zipfile_ref.len=2;
-	ii.attr_zipfile_ref.type=attr_zipfile_ref;
-	ii.zipfile_ref=th->zipnum;
-
+	fprintf(stderr,"index_tile for %s is %s\n", th->name, index_tile);
+	item_bin_init(item_bin, type_submap);
+	item_bin_add_coord_rect(item_bin, &r);
+	item_bin_add_attr_range(item_bin, attr_order, (tlen > 4)?tlen-4 : 0, 255);
+	item_bin_add_attr_int(item_bin, attr_zipfile_ref, th->zipnum);
 	if (phase == 3)
-		tile_extend(index_tile, (struct item_bin *)&ii, tiles_list);
+		tile_extend(index_tile, item_bin, tiles_list);
 	else
-		write_item(index_tile, (struct item_bin *)&ii);
-#if 0
-	unsigned int *c=(unsigned int *)&ii;
-	int i;
-	for (i = 0 ; i < sizeof(ii)/4 ; i++) {
-		fprintf(stderr,"%08x ", c[i]);
-	}
-	fprintf(stderr,"\n");
-#endif
+		write_item(index_tile, item_bin);
 }
 
 static int
@@ -2223,7 +2212,7 @@ static int zipnum;
 static void write_countrydir(int phase, int maxnamelen);
 
 static void
-write_tilesdir(int phase, int maxlen, FILE *out)
+write_tilesdir(int phase, char *suffix, int maxlen, FILE *out)
 {
 	int idx,len;
 	GList *tiles_list,*next;
@@ -2236,6 +2225,7 @@ write_tilesdir(int phase, int maxlen, FILE *out)
 		create_tile_hash_list(tiles_list);
 	next=g_list_first(tiles_list);
 	last=&tile_head_root;
+	index_init(phase, 1, &tiles_list);
 	if (! maxlen) {
 		while (next) {
 			if (strlen(next->data) > maxlen)
@@ -2248,10 +2238,8 @@ write_tilesdir(int phase, int maxlen, FILE *out)
 #if 0
 		fprintf(stderr,"PROGRESS: collecting tiles with len=%d\n", len);
 #endif
-#ifdef GENERATE_INDEX
 		if (! len)
 			write_countrydir(phase, maxlen);
-#endif
 		next=g_list_first(tiles_list);
 		while (next) {
 			if (strlen(next->data) == len) {
@@ -2271,7 +2259,7 @@ write_tilesdir(int phase, int maxlen, FILE *out)
 					fprintf(out,"\n");
 				}
 				if (th->name[0])
-					index_submap_add(phase, th, &tiles_list);
+					index_submap_add(phase, suffix, th, &tiles_list);
 				zipnum++;
 				processed_tiles++;
 			}
@@ -2384,7 +2372,6 @@ index_country_add(int phase, int country_id, int zipnum)
 		write_item(index_tile, (struct item_bin *)&ii);
 }
 
-#ifdef GENERATE_INDEX
 struct aux_tile {
 	char *name;
 	char *filename;
@@ -2436,17 +2423,18 @@ write_countrydir(int phase, int maxnamelen)
 	int i,zipnum;
 	int max=11;
 	char tilename[32];
-	char searchtile[32];
 	char filename[32];
+	char suffix[32];
 	struct country_table *co;
 	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
 		co=&country_table[i];
 		if (co->size) {
 			tilename[0]='\0';
-			tile(&co->r, tilename, max);
-			sprintf(searchtile,"%ss%d", tilename, 0);
+			sprintf(suffix,"s%d", 0);
+			tile(&co->r, suffix, tilename, max);
+			fprintf(stderr,"suffix=%s tilename=%s\n", suffix, tilename);
 			sprintf(filename,"country_%d.bin", co->countryid);
-			zipnum=add_aux_tile(phase, searchtile, filename, co->size);
+			zipnum=add_aux_tile(phase, tilename, filename, co->size);
 			index_country_add(phase,co->countryid,zipnum);
 		}
 	}
@@ -2467,10 +2455,9 @@ remove_countryfiles(void)
 		}
 	}
 }
-#endif
 
 static int
-phase34(int phase, int maxnamelen, FILE *ways_in, FILE *nodes_in, FILE *tilesdir_out)
+phase34(int phase, int maxnamelen, FILE *ways_in, FILE *nodes_in, char *suffix, FILE *tilesdir_out)
 {
 
 	processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
@@ -2479,9 +2466,9 @@ phase34(int phase, int maxnamelen, FILE *ways_in, FILE *nodes_in, FILE *tilesdir
 	if (phase == 3)
 		tile_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	if (ways_in)
-		phase34_process_file(phase, ways_in);
+		phase34_process_file(phase, ways_in, suffix);
 	if (nodes_in)
-		phase34_process_file(phase, nodes_in);
+		phase34_process_file(phase, nodes_in, suffix);
 	fprintf(stderr,"read %d bytes\n", bytes_read);
 	if (phase == 3)
 		merge_tiles();
@@ -2489,7 +2476,7 @@ phase34(int phase, int maxnamelen, FILE *ways_in, FILE *nodes_in, FILE *tilesdir
 #ifndef _WIN32
 	alarm(0);
 #endif
-	write_tilesdir(phase, maxnamelen, tilesdir_out);
+	write_tilesdir(phase, suffix, maxnamelen, tilesdir_out);
 
 	return 0;
 
@@ -2543,9 +2530,9 @@ dump(FILE *in)
 }
 
 static int
-phase3(FILE *ways_in, FILE *nodes_in, FILE *tilesdir_out)
+phase3(FILE *ways_in, FILE *nodes_in, char *suffix, FILE *tilesdir_out)
 {
-	return phase34(3, 0, ways_in, nodes_in, tilesdir_out);
+	return phase34(3, 0, ways_in, nodes_in, suffix, tilesdir_out);
 }
 
 static long long zipoffset;
@@ -2662,7 +2649,7 @@ write_zipmember(FILE *out, FILE *dir_out, char *name, int filelen, char *data, i
 }
 
 static int
-process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, FILE *out, FILE *dir_out, int compression_level)
+process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, char *suffix, FILE *out, FILE *dir_out, int compression_level)
 {
 	struct tile_head *th;
 	char *slice_data,*zip_data;
@@ -2683,15 +2670,13 @@ process_slice(FILE *ways_in, FILE *nodes_in, int size, int maxnamelen, FILE *out
 		fseek(ways_in, 0, SEEK_SET);
 	if (nodes_in)
 		fseek(nodes_in, 0, SEEK_SET);
-	phase34(4, maxnamelen, ways_in, nodes_in, NULL);
+	phase34(4, maxnamelen, ways_in, nodes_in, suffix, NULL);
 
 	th=tile_head_root;
 	while (th) {
 		if (th->process) {
-#ifdef GENERATE_INDEX
 			if (! strlen(th->name)) 
 				zipfiles+=write_aux_tiles(out, dir_out, compression_level, maxnamelen);
-#endif
 			if (th->total_size != th->total_size_used) {
 				fprintf(stderr,"Size error '%s': %d vs %d\n", th->name, th->total_size, th->total_size_used);
 				exit(1);
@@ -2721,7 +2706,7 @@ cat(FILE *in, FILE *out)
 }
 
 static int
-phase4(FILE *ways_in, FILE *nodes_in, FILE *out, FILE *dir_out, int compression_level)
+phase4(FILE *ways_in, FILE *nodes_in, char *suffix, FILE *out, FILE *dir_out, int compression_level)
 {
 	int slice_size=1024*1024*1024;
 	int maxnamelen,size,slices;
@@ -2770,7 +2755,7 @@ phase4(FILE *ways_in, FILE *nodes_in, FILE *out, FILE *dir_out, int compression_
 			th->process=1;
 			th=th->next;
 		}
-		zipfiles+=process_slice(ways_in, nodes_in, size, maxnamelen, out, dir_out, compression_level);
+		zipfiles+=process_slice(ways_in, nodes_in, size, maxnamelen, suffix, out, dir_out, compression_level);
 		slices++;
 	}
 	fseek(dir_out, 0, SEEK_SET);
@@ -2978,9 +2963,7 @@ int main(int argc, char **argv)
 		plugins_init(plugins);
 	result=argv[optind];
 	build_attrmap(map);
-#ifdef GENERATE_INDEX
 	build_countrytable();
-#endif
 
 
 	if (input == 0) {
@@ -3010,10 +2993,8 @@ int main(int argc, char **argv)
 			fclose(nodes);
 		if (turn_restrictions)
 			fclose(turn_restrictions);
-#ifdef GENERATE_INDEX
 		fprintf(stderr,"PROGRESS: Phase 1: sorting countries\n");
 		sort_countries();
-#endif
 	}
 	if (end == 1 || dump_coordinates)
 		save_buffer("coords.tmp",&node_buffer);
@@ -3081,7 +3062,7 @@ int main(int argc, char **argv)
 		if (process_nodes)
 			nodes=fopen("nodes.tmp","rb");
 		tilesdir=fopen("tilesdir.tmp","wb+");
-		phase3(ways_split,nodes,tilesdir);
+		phase3(ways_split,nodes,suffix,tilesdir);
 		fclose(tilesdir);
 		if (nodes)
 			fclose(nodes);
@@ -3099,7 +3080,7 @@ int main(int argc, char **argv)
 			nodes=fopen("nodes.tmp","rb");
 		res=fopen(result,"wb+");
 		zipdir=fopen("zipdir.tmp","wb+");
-		phase4(ways_split,nodes,res,zipdir,compression_level);
+		phase4(ways_split,nodes,suffix,res,zipdir,compression_level);
 		fclose(zipdir);
 		fclose(res);
 		if (nodes)
@@ -3113,9 +3094,7 @@ int main(int argc, char **argv)
 			unlink("graph.tmp");
 			unlink("tilesdir.tmp");
 			unlink("zipdir.tmp");
-#ifdef GENERATE_INDEX
 			remove_countryfiles();
-#endif
 		}
 	}
 	return 0;
