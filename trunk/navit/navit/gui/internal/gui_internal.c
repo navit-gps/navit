@@ -2340,6 +2340,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 #if 0
 			dbg(0,"res=%s\n", res->town->name);
 #endif
+	dbg(1,"res->country->flag=%s\n", res->country->flag);
 	gui_internal_widget_append(search_list,
 		wc=gui_internal_button_new_with_callback(this, text,
 		image_new_xs(this, res->country->flag), gravity_left_center|orientation_horizontal|flags_fill,
