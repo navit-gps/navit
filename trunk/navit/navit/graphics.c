@@ -1328,8 +1328,10 @@ graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, stru
 static void
 display_context_free(struct display_context *dc)
 {
-	g_free(dc->gc);
-	g_free(dc->img);
+	if (dc->gc)
+		graphics_gc_destroy(dc->gc);
+	if (dc->img)
+		graphics_image_free(dc->gra, dc->img);
 	dc->gc=NULL;
 	dc->img=NULL;
 }
