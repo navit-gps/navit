@@ -246,6 +246,8 @@ static void route_path_update(struct route *this, int cancel);
 static enum projection route_projection(struct route *route)
 {
 	struct street_data *street;
+	if (!route->pos && !route->dst)
+		return projection_none;
 	street = route->pos ? route->pos->street : route->dst->street;
 	return map_projection(street->item.map);
 }
@@ -569,6 +571,7 @@ int
 route_destination_reached(struct route *this)
 {
 	struct street_data *sd = NULL;
+	enum projection pro;
 
 	if (!this->pos)
 		return 0;
@@ -589,8 +592,11 @@ route_destination_reached(struct route *this)
 	if ((sd->flags & AF_ONEWAYREV) && (this->pos->lenpos >= this->dst->lenpos)) {
 		return 0;
 	}
+	pro=route_projection(this);
+	if (pro == projection_none)
+		return 0;
 	 
-	if (transform_distance(route_projection(this), &this->pos->c, &this->dst->lp) > this->destination_distance) {
+	if (transform_distance(pro, &this->pos->c, &this->dst->lp) > this->destination_distance) {
 		return 0;
 	}
 	
@@ -1550,7 +1556,7 @@ route_path_new_trivial(struct route_graph *this, struct route_info *pos, struct 
  * @param dist The distance in meters
  * @return The coordinate where the user will be in that distance
  */
-struct coord
+struct coord 
 route_get_coord_dist(struct route *this_, int dist)
 {
 	int d,l,i,len;
@@ -1558,10 +1564,11 @@ route_get_coord_dist(struct route *this_, int dist)
 	double frac;
 	struct route_path_segment *cur;
 	struct coord ret;
+	enum projection pro=route_projection(this_);
 
 	d = dist;
 
-	if (!this_->path2) {
+	if (!this_->path2 || pro == projection_none) {
 		return this_->pos->c;
 	}
 	
@@ -1573,7 +1580,7 @@ route_get_coord_dist(struct route *this_, int dist)
 		} else {
 			for (i=0; i < (cur->ncoords-1); i++) {
 				l = d;
-				len = (int)transform_polyline_length(route_projection(this_), (cur->c + i), 2);
+				len = (int)transform_polyline_length(pro, (cur->c + i), 2);
 				d -= len;
 				if (d <= 0) { 
 					// We interpolate a bit here...
@@ -2131,6 +2138,8 @@ rm_coord_get(void *priv_data, struct coord *c, int count)
 	struct route *r = mr->mpriv->route;
 	enum projection pro = route_projection(r);
 
+	if (pro == projection_none)
+		return 0;
 	if (mr->item.type == type_route_start || mr->item.type == type_route_end) {
 		if (! count || mr->last_coord)
 			return 0;
@@ -2268,6 +2277,8 @@ rp_coord_get(void *priv_data, struct coord *c, int count)
 	struct route *r = mr->mpriv->route;
 	enum projection pro = route_projection(r);
 
+	if (pro == projection_none)
+		return 0;
 	for (i=0; i < count; i++) {
 		if (mr->item.type == type_rg_point) {
 			if (mr->last_coord >= 1)
