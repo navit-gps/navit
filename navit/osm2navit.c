@@ -33,6 +33,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <zlib.h>
+#include "file.h"
 #include "item.h"
 #include "map.h"
 #include "zipfile.h"
@@ -382,7 +383,7 @@ struct country_table {
 	int countryid;
 	char *names;
 	FILE *file;
-	unsigned int size;
+	int size;
 	struct rect r;
 } country_table[] = {
 	{ 40,"Austria,�sterreich,AUT"},
@@ -1334,7 +1335,8 @@ sort_countries(void)
 	struct coord *c;
 	struct item_bin *ib;
 	FILE *f;
-	char *p,*buffer,**idx,*name;
+	char *name;
+	unsigned char *p,**idx,*buffer;
 	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
 		co=&country_table[i];
 		if (co->file) {
@@ -1342,7 +1344,7 @@ sort_countries(void)
 			co->file=NULL;
 		}
 		name=g_strdup_printf("country_%d.bin.unsorted", co->countryid);
-		if (g_file_get_contents(name, &buffer, &co->size, NULL)) {
+		if (file_get_contents(name, &buffer, &co->size)) {
 			unlink(name);
 			g_free(name);
 			ib=(struct item_bin *)buffer;
