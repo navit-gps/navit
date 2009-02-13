@@ -2392,7 +2392,15 @@ static int
 add_aux_tile(int phase, char *name, char *filename, int size)
 {
 	struct aux_tile *at;
+	GList *l;
 	if (phase == 3) {
+		l=aux_tile_list;
+		while (l) {
+			at=l->data;
+			if (!strcmp(at->filename, filename))
+				return -1;
+			l=g_list_next(l);
+		}
 		at=g_new0(struct aux_tile, 1);
 		at->name=g_strdup(name);
 		at->filename=g_strdup(filename);
@@ -2430,7 +2438,7 @@ write_aux_tiles(FILE *out, FILE *dir_out, int compression_level, int namelen)
 static void
 write_countrydir(int phase, int maxnamelen)
 {
-	int i,zipnum;
+	int i,zipnum,num=0;
 	int max=11;
 	char tilename[32];
 	char filename[32];
@@ -2439,11 +2447,14 @@ write_countrydir(int phase, int maxnamelen)
 	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
 		co=&country_table[i];
 		if (co->size) {
-			tilename[0]='\0';
-			sprintf(suffix,"s%d", 0);
-			tile(&co->r, suffix, tilename, max);
-			sprintf(filename,"country_%d.bin", co->countryid);
-			zipnum=add_aux_tile(phase, tilename, filename, co->size);
+			do {
+				tilename[0]='\0';
+				sprintf(suffix,"s%d", num);
+				num++;
+				tile(&co->r, suffix, tilename, max);
+				sprintf(filename,"country_%d.bin", co->countryid);
+				zipnum=add_aux_tile(phase, tilename, filename, co->size);
+			} while (zipnum == -1);
 			index_country_add(phase,co->countryid,zipnum);
 		}
 	}
