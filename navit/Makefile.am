@@ -73,7 +73,7 @@ if SOURCE_MODE_SVN
 else
 	echo "#define SVN_VERSION \"@SOURCE_MODE@\"" >>version.h.tmp
 endif
-	echo "#define VARIANT \"@VARIANT@\"" >>version.h.tmp
+	echo "#define NAVIT_VARIANT \"@NAVIT_VARIANT@\"" >>version.h.tmp
 	if ! diff version.h.tmp version.h >/dev/null 2>/dev/null; \
 	then \
 		mv version.h.tmp version.h; \
