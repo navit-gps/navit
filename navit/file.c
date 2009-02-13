@@ -62,8 +62,6 @@ file_create(char *name)
 	struct stat stat;
 	struct file *file= g_new0(struct file,1);
 
-	if (! file)
-		return file;
 	file->fd=open(name, O_RDONLY|O_LARGEFILE | O_BINARY);
 	if (file->fd == -1) {
 		g_free(file);
@@ -86,6 +84,12 @@ int file_is_dir(char *name)
 	}
 	return 0;
 
+}
+
+int
+file_size(struct file *file)
+{
+	return file->size;
 }
 
 int file_mkdir(char *name, int pflag)
@@ -160,6 +164,26 @@ file_data_read(struct file *file, long long offset, int size)
 	return ret;
 
 }
+
+unsigned char *
+file_data_read_all(struct file *file)
+{
+	return file_data_read(file, 0, file->size);
+}
+
+int
+file_get_contents(char *name, unsigned char **buffer, int *size)
+{
+	struct file *file;
+	file=file_create(name);
+	if (!file)
+		return 0;
+	*size=file_size(file);
+	*buffer=file_data_read_all(file);
+	file_destroy(file);
+	return 1;	
+}
+
 
 static int
 uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen)
