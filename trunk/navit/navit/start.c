@@ -42,7 +42,7 @@
 #include <winbase.h>
 #endif
 
-char *version=PACKAGE_VERSION" "SVN_VERSION""VARIANT; 
+char *version=PACKAGE_VERSION" "SVN_VERSION""NAVIT_VARIANT; 
 
 static void
 print_usage(void)

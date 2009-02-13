@@ -85,8 +85,8 @@ AC_SUBST(cross_compiling)
 AC_SUBST(CC_FOR_BUILD)
 AC_SUBST(CCLD_FOR_BUILD)
 
-AC_ARG_ENABLE(variant, [  --enable-variant=something          set variant], VARIANT=$enableval)
-AC_SUBST(variant)
+AC_ARG_ENABLE(variant, [  --enable-variant=something          set variant], NAVIT_VARIANT=$enableval)
+AC_SUBST(NAVIT_VARIANT)
 
 AC_ARG_ENABLE(avoid-unaligned, [  --enable-avoid-unaligned          avoid unaligned accesses], AVOID_UNALIGNED=$enableval, AVOID_UNALIGNED=no)
 test x"${AVOID_UNALIGNED}" = xyes && AC_DEFINE(AVOID_UNALIGNED,[],Define to avoid unaligned access)
