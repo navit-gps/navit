@@ -3048,7 +3048,7 @@ int main(int argc, char **argv)
 			fclose(ways);
 			fclose(graph);
 			if(!keep_tmpfiles)
-				unlink("ways.tmp");
+				tempfile_unlink("ways",suffix);
 		} else
 			fprintf(stderr,"PROGRESS: Skipping Phase 2\n");
 	}
