@@ -249,6 +249,8 @@ static enum projection route_projection(struct route *route)
 	if (!route->pos && !route->dst)
 		return projection_none;
 	street = route->pos ? route->pos->street : route->dst->street;
+	if (!street || !street->item.map)
+		return projection_none;
 	return map_projection(street->item.map);
 }
 
