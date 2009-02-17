@@ -86,6 +86,21 @@ roadbook_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 }
 
 static void
+autozoom_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
+{
+	struct attr autozoom_attr;
+
+	autozoom_attr.type = attr_autozoom_active;
+	if (! gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(w))) {
+		autozoom_attr.u.num = 0;
+	} else {
+		autozoom_attr.u.num = 1;
+	}
+	
+	navit_set_attr(gui->nav, &autozoom_attr);
+}
+
+static void
 cursor_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
 	struct attr attr;
@@ -208,6 +223,7 @@ static GtkToggleActionEntry toggleentries[] =
 	{ "TrackingAction", NULL ,_n("Lock on Road"), NULL, NULL, G_CALLBACK(tracking_action),TRUE },
 	{ "OrientationAction", "orientation_icon", _n("Northing"), NULL, NULL, G_CALLBACK(orient_north_action),FALSE },
 	{ "RoadbookAction", GTK_STOCK_JUSTIFY_FILL, _n("Roadbook"), NULL, NULL, G_CALLBACK(roadbook_action), FALSE },
+	{ "AutozoomAction", GTK_STOCK_ZOOM_FIT, _n("Autozoom"), NULL, NULL, G_CALLBACK(autozoom_action), FALSE },
 #ifdef GTK_STOCK_FULLSCREEN
 	{ "FullscreenAction",GTK_STOCK_FULLSCREEN, _n("Fullscreen"), NULL, NULL, G_CALLBACK(window_fullscreen_action), FALSE }
 #else
@@ -358,6 +374,7 @@ static char layout[] =
 				<menuitem name=\"Tracking\" action=\"TrackingAction\"/>\
 				<menuitem name=\"Orientation\" action=\"OrientationAction\"/>\
 				<menuitem name=\"Roadbook\" action=\"RoadbookAction\"/>\
+				<menuitem name=\"Autozoom\" action=\"AutozoomAction\"/>\
 				<menuitem name=\"Fullscreen\" action=\"FullscreenAction\"/>\
 				<menuitem name=\"Quit\" action=\"QuitAction\" />\
 				<placeholder name=\"RouteMenuAdditions\" />\
@@ -401,6 +418,7 @@ static char layout[] =
 				<toolitem name=\"Destination\" action=\"DestinationAction\"/>\
 				<!-- <toolitem name=\"Info\" action=\"InfoAction\"/> -->\
 				<toolitem name=\"Roadbook\" action=\"RoadbookAction\"/>\
+				<toolitem name=\"Autozoom\" action=\"AutozoomAction\"/>\
 				<toolitem name=\"Quit\" action=\"QuitAction\"/>\
 				<separator/>\
 			</placeholder>\
@@ -561,6 +579,12 @@ gui_gtk_ui_init(struct gui_priv *this)
 	}
 	toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "RoadbookAction"));
 	gtk_toggle_action_set_active(toggle_action, 0);
+
+	if (navit_get_attr(this->nav, attr_autozoom_active, &attr, NULL)) {
+		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "AutozoomAction"));
+		gtk_toggle_action_set_active(toggle_action, attr.u.num);
+	}
+
 }
 
 static struct menu_priv *

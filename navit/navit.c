@@ -117,6 +117,8 @@ struct navit {
 	int button_pressed,moved,popped,zoomed;
 	int center_timeout;
 	int autozoom_secs;
+	int autozoom_min;
+	int autozoom_active;
 	struct event_timeout *button_timeout, *motion_timeout;
 	struct callback *motion_timeout_callback;
 	int ignore_button;
@@ -488,40 +490,51 @@ navit_scale(struct navit *this_, long scale, struct point *p, int draw)
  * zoom level according to the current speed.
  *
  * @param this_ The navit struct
+ * @param center The "immovable" point - i.e. the vehicles position if we're centering on the vehicle
  * @param speed The vehicles speed in meters per second
+ * @param dir The direction into which the vehicle moves
  */
 static void
 navit_autozoom(struct navit *this_, struct coord *center, int speed, int draw)
 {
 	struct coord c;
 	struct point pc;
-	int distance;
+	int distance,w,h;
+	double new_scale;
 	long scale;
-	double factor;
 
-	if (this_->autozoom_secs <= 0) {
+	if (! this_->autozoom_active) {
 		return;
 	}
 
 	distance = speed * this_->autozoom_secs;
 
-	if (route_get_path_set(this_->route)) {
-		c = route_get_coord_dist(this_->route, distance);
-	} else {
-		return;
-	}
-
+	transform_get_size(this_->trans, &w, &h);
 	transform(this_->trans, transform_get_projection(this_->trans), center, &pc, 1, 0, 0, NULL);
-	factor = transform_get_autozoom_factor(this_->trans, &pc, &c);
+	scale = transform_get_scale(this_->trans);
+
+	/* We make shure that the point we want to see is within a certain range
+	 * around the vehicle. The radius of this circle is the size of the
+	 * screen. This doesn't necessarily mean the point is visible because of
+	 * perspective etc. Quite rough, but should be enough. */
 	
-	if ((factor < 1.1) && (factor > 0.9)) {
-		return;
+	if (w > h) {
+		new_scale = (double)distance / h * 16; 
+	} else {
+		new_scale = (double)distance / w * 16; 
 	}
 
-	scale = transform_get_scale(this_->trans);
-	scale = (scale * factor);
-
-	navit_scale(this_, scale, &pc, draw);
+	if (abs(new_scale - scale) < 2) { 
+		return; // Smoothing
+	}
+	
+	if (new_scale >= this_->autozoom_min) {
+		navit_scale(this_, (long)new_scale, &pc, 0);
+	} else {
+		if (scale != this_->autozoom_min) {
+			navit_scale(this_, this_->autozoom_min, &pc, 0);
+		}
+	}
 }
 
 /**
@@ -614,13 +627,16 @@ navit_new(struct attr *parent, struct attr **attrs)
 
 	this_->center_timeout = 10;
 	this_->use_mousewheel = 1;
-	this_->autozoom_secs = 0;
+	this_->autozoom_secs = 10;
+	this_->autozoom_min = 7;
+	this_->autozoom_active = 0;
 
-	this_->trans=transform_new();
+	this_->trans = transform_new();
 	transform_from_geo(pro, &g, &co);
 	center.x=co.x;
 	center.y=co.y;
 	center.pro = pro;
+
 	transform_setup(this_->trans, &center, zoom, (this_->orientation != -1) ? this_->orientation : 0);
 	for (;*attrs; attrs++) {
 		navit_set_attr_do(this_, *attrs, 1);
@@ -1473,6 +1489,10 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		attr_updated=(this_->autozoom_secs != attr->u.num);
 		this_->autozoom_secs = attr->u.num;
 		break;
+	case attr_autozoom_active:
+		attr_updated=(this_->autozoom_active != attr->u.num);
+		this_->autozoom_active = attr->u.num;
+		break;
 	case attr_center:
 		transform_from_geo(transform_get_projection(this_->trans), attr->u.coord_geo, &co);
 		dbg(0,"0x%x,0x%x\n",co.x,co.y);
@@ -1687,6 +1707,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 	case attr_zoom:
 		attr->u.num=transform_get_scale(this_->trans);
 		break;
+	case attr_autozoom_active:
+		attr->u.num=this_->autozoom_active;
+		break;
 	default:
 		return 0;
 	}
@@ -1752,6 +1775,9 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 	case attr_vehicle:
 		ret=navit_add_vehicle(this_, attr->u.vehicle);
 		break;
+	case attr_autozoom_min:
+		this_->autozoom_min = attr->u.num;
+		break;
 	default:
 		return 0;
 	}
@@ -1815,7 +1841,7 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 		pnt2=*pnt;
 	else {
 		pro=transform_get_projection(this_->trans);
-		transform(this_->trans, pro, &nv->coord, &pnt2, 1, 0);
+		transform(this_->trans, pro, &nv->coord, &pnt2, 1);
 	}
 #if 1
 	cursor_draw(nv->cursor, &pnt2, nv->dir-transform_get_angle(this_->trans, 0), nv->speed > 2, pnt == NULL);
@@ -1898,6 +1924,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		navit_set_center_cursor(this_);
 	else
 		navit_vehicle_draw(this_, nv, pnt);
+
 	if (nv->follow_curr > 1)
 		nv->follow_curr--;
 	else
