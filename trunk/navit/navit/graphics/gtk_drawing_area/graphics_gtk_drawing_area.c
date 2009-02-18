@@ -836,7 +836,14 @@ get_data(struct graphics_priv *this, char *type)
 	if (!strcmp(type,"gtk_widget"))
 		return this->widget;
 	if (!strcmp(type,"window")) {
-		this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+		char *cp = getenv("NAVIT_XID");
+		unsigned xid = 0;
+		if (cp) 
+			xid = strtol(cp, NULL, 0);
+		if (!xid)
+			this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+		else
+			this->win = gtk_plug_new(xid);
 		gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
 		dbg(1,"h= %i, w= %i\n",this->win_h, this->win_w);
 		gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
