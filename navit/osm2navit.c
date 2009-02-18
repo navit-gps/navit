@@ -2439,7 +2439,7 @@ write_aux_tiles(FILE *out, FILE *dir_out, int compression_level, int namelen)
 static void
 write_countrydir(int phase, int maxnamelen)
 {
-	int i,zipnum,num=0;
+	int i,zipnum,num;
 	int max=11;
 	char tilename[32];
 	char filename[32];
@@ -2448,6 +2448,7 @@ write_countrydir(int phase, int maxnamelen)
 	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
 		co=&country_table[i];
 		if (co->size) {
+			num=0;
 			do {
 				tilename[0]='\0';
 				sprintf(suffix,"s%d", num);
