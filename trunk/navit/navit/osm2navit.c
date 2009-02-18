@@ -2065,7 +2065,7 @@ struct tile_info {
 	int write;
 	int maxlen;
 	char *suffix;
-	GList *tiles_list;
+	GList **tiles_list;
 	FILE *tilesdir_out;
 };
 
@@ -2075,7 +2075,7 @@ tile_write_item_to_tile(struct tile_info *info, struct item_bin *ib, char *name)
 	if (info->write)
 		write_item(name, ib);
 	else
-		tile_extend(name, ib, &info->tiles_list);
+		tile_extend(name, ib, info->tiles_list);
 }
 
 static void
@@ -2224,15 +2224,16 @@ static void
 write_tilesdir(struct tile_info *info, FILE *out)
 {
 	int idx,len,maxlen;
-	GList *next;
+	GList *next,*tiles_list;
 	char **data;
 	struct tile_head *th,**last=NULL;
 	zipnum=0;
 
-	info->tiles_list=get_tiles_list();
+	tiles_list=get_tiles_list();
+	info->tiles_list=&tiles_list;
 	if (phase == 3)
-		create_tile_hash_list(info->tiles_list);
-	next=g_list_first(info->tiles_list);
+		create_tile_hash_list(tiles_list);
+	next=g_list_first(tiles_list);
 	last=&tile_head_root;
 	index_init(info, 1);
 	maxlen=info->maxlen;
@@ -2250,7 +2251,7 @@ write_tilesdir(struct tile_info *info, FILE *out)
 #endif
 		if (! len)
 			write_countrydir(phase, maxlen);
-		next=g_list_first(info->tiles_list);
+		next=g_list_first(tiles_list);
 		while (next) {
 			if (strlen(next->data) == len) {
 				th=g_hash_table_lookup(tile_hash, next->data);
