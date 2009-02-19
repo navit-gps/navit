@@ -120,7 +120,6 @@ svgs += fastfood.svg
 svgs += firebrigade.svg
 svgs += fuel.svg
 svgs += hospital.svg
-svgs += parking.svg
 svgs += peak.svg
 svgs += police.svg
 svgs += post.svg
