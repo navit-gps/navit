@@ -362,7 +362,7 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			mr->label_attr[1]=t->pos_attr;
 		if (type == attr_street_name_systematic)
 			mr->label_attr[2]=t->pos_attr;
-		if (type == attr_town_name)
+		if (type == attr_town_name && mr->item.type < type_line)
 			mr->label_attr[3]=t->pos_attr;
 		if (type == attr_type || attr_type == attr_any) {
 			if (attr_type == attr_any) {
