@@ -111,12 +111,11 @@ struct route_graph_segment {
 	struct item item;							/**< The item (e.g. street) that this segment represents. */
 	int flags;
 	int len;									/**< Length of this segment */
-	int maxspeed;								/**< Maximum allowed speed on this segment in km/h. 0 if none, -1 if
-												 *   unkown. */
-	int offset;									/**< If the item represented by this segment is "segmented" (i.e. 
-												 *  is represented by several segments instead of just one), this 
-												 *  indicates the position of this segment in the item - for items
-												 *  that are not segmented this should always be 1 */
+	/*NOTE: After a segment, various fields may follow, depending on what flags are set. Order of fields:
+				1.) maxspeed			Maximum allowed speed on this segment. Present if AF_SPEED_LIMIT is set.
+				2.) offset				If the item is segmented (i.e. represented by more than one segment), this
+										indicates the position of this segment in the item. Present if AF_SEGMENTED is set.
+	 */
 };
 
 /**
@@ -960,6 +959,120 @@ route_graph_free_points(struct route_graph *this)
 }
 
 /**
+ * @brief Returns the position of a certain field appended to a route graph segment
+ *
+ * This function returns a pointer to a field that is appended to a route graph
+ * segment.
+ *
+ * @param seg The route graph segment the field is appended to
+ * @param type Type of the field that should be returned
+ * @return A pointer to a field of a certain type, or NULL if no such field is present
+ */
+static void
+*route_graph_segment_field_pos(struct route_graph_segment *seg, enum attr_type type)
+{
+	unsigned char *ptr;
+	
+	ptr = ((unsigned char*)seg) + sizeof(struct route_graph_segment);
+
+	if (type == attr_maxspeed) {
+		return (void*)ptr;
+	}
+
+	if (seg->flags & AF_SPEED_LIMIT) {
+		ptr += sizeof(int);
+	}
+
+	if (type == attr_offset) {
+		return (void*)ptr;
+	}
+
+	return NULL;
+}
+
+/**
+ * @brief Retrieves the value of a certain field appended to a route graph segment
+ * 
+ * This function tries to retrieve the value of a certain field, that is appended
+ * to a route graph segment. The type of the field to be retrieved is determined
+ * via the type attribute of the attr passed. Returns 0 if the value could not be
+ * retrieved (e.g. because there is no such field with this route graph segment).
+ *
+ * @param seg The segment to retrieve the field from
+ * @param field Specifies the type of the field to be retrieved. The value is returned within this attribute.
+ * @return 1 if the value could be retrieved, 0 if not
+ */
+static int
+route_graph_segment_get_field(struct route_graph_segment *seg, struct attr *field)
+{
+	int *num;
+
+	switch (field->type) {
+	case attr_maxspeed:
+		if (!(seg->flags & AF_SPEED_LIMIT)) {
+			return 0;
+		}
+
+		num = (int *)route_graph_segment_field_pos(seg, field->type);
+		field->u.num = *num;
+		return 1;
+
+	case attr_offset:
+		if (!(seg->flags & AF_SEGMENTED)) {
+			return 0;
+		}
+
+		num = (int *)route_graph_segment_field_pos(seg, field->type);
+		field->u.num = *num;
+		return 1;
+	default:
+		return 0;
+	}
+
+	return 0;
+}
+
+/**
+ * @brief Sets the value of a certain field appended to a route graph segment
+ *
+ * This function sets the value of a field, whose type is specified via the type attribute
+ * of the passed attr. Returns 1 if the value could be set, 0 if not (e.g. if this
+ * field is not present in this segment).
+ * 
+ * @param seg The segment the field is appended to
+ * @param field Contains the type of the field to set and the value to set.
+ * @return 1 if value could be set, 0 if not.
+ */ 
+static int
+route_graph_segment_set_field(struct route_graph_segment *seg, struct attr *field)
+{
+	int *num;
+
+	switch (field->type) {
+	case attr_maxspeed:
+		if (!(seg->flags & AF_SPEED_LIMIT)) {
+			return 0;
+		}
+		
+		num = (int *)route_graph_segment_field_pos(seg, field->type);
+		*num = field->u.num;
+		return 1;
+	case attr_offset:
+		if (!(seg->flags & AF_SEGMENTED)) {
+			return 0;
+		}
+		
+		num = (int *)route_graph_segment_field_pos(seg, field->type);
+		*num = field->u.num;
+		return 1;
+	default:
+		return 0;
+	}
+	
+	return 0;
+}
+
+/**
  * @brief Inserts a new segment into the route graph
  *
  * This function performs a check if a segment for the item specified already exists, and inserts
@@ -980,15 +1093,35 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 			int flags, int offset, int maxspeed)
 {
 	struct route_graph_segment *s;
+	int size;
+	struct attr maxspeed_attr, offset_attr;
 
 	s=start->start;
+	offset_attr.type = attr_offset;
 	while (s) {
-		if (item_is_equal(*item, s->item) && (s->offset == offset)) 
-			return;
+		if (item_is_equal(*item, s->item)) {
+			if (flags & AF_SEGMENTED) {
+				if (route_graph_segment_get_field(s,&offset_attr) && offset_attr.u.num == offset) {
+					return;
+				}
+			} else {
+				return;
+			}
+		}
 		s=s->start_next;
 	} 
 
-	s = g_new0(struct route_graph_segment, 1);
+	size = sizeof(struct route_graph_segment);
+	
+	if (flags & AF_SPEED_LIMIT) {
+		size += sizeof(int);
+	}
+
+	if (flags & AF_SEGMENTED) {
+		size += sizeof(int);
+	}
+
+	s = g_malloc0(size);
 	if (!s) {
 		printf("%s:Out of memory\n", __FUNCTION__);
 		return;
@@ -1003,8 +1136,20 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 	s->len=len;
 	s->item=*item;
 	s->flags=flags;
-	s->offset = offset;
-	s->maxspeed = maxspeed;
+
+	if (flags & AF_SPEED_LIMIT) {
+		maxspeed_attr.type = attr_maxspeed;
+		maxspeed_attr.u.num = maxspeed;
+
+		route_graph_segment_set_field(s, &maxspeed_attr);
+	}
+
+	if (flags & AF_SEGMENTED) {
+		offset_attr.type = attr_offset;
+		offset_attr.u.num = offset;
+		
+		route_graph_segment_set_field(s, &offset_attr);
+	}
 
 	s->next=this->route_segments;
 	this->route_segments=s;
@@ -1177,6 +1322,7 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 	struct route_path_segment *segment;
 	int i,ccnt = 0, ret=1;
 	struct coord ca[2048];
+	struct attr maxspeed_attr, offset_attr;
 
 	if (oldpath) {
 		ccnt = (int)item_hash_lookup(oldpath->path_hash, &rgs->item);
@@ -1209,8 +1355,29 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 
 	ret=0;
 	segment->item=rgs->item;
-	segment->maxspeed = rgs->maxspeed;
-	segment->offset = offset;
+	
+	if (rgs->flags & AF_SPEED_LIMIT) {
+		maxspeed_attr.type = attr_maxspeed;
+		if (route_graph_segment_get_field(rgs, &maxspeed_attr)) {
+			segment->maxspeed = maxspeed_attr.u.num;
+		} else {
+			segment->maxspeed = -1;
+		}
+	} else {
+		segment->maxspeed = -1;
+	}
+
+	if (rgs->flags & AF_SPEED_LIMIT) {
+		offset_attr.type = attr_offset;
+		if (route_graph_segment_get_field(rgs, &offset_attr)) {
+			segment->offset = offset_attr.u.num;
+		} else {
+			segment->offset = 1;
+		}
+	} else {
+		segment->offset = 1;
+	}
+	
 linkold:
 	segment->length=len;
 	segment->next=NULL;
@@ -1421,6 +1588,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 	int min,new,old,val;
 	struct fibheap *heap; /* This heap will hold all points with "temporarily" calculated costs */
 	struct street_data *sd=dst->street;
+	struct attr maxspeed_attr;
 
 	heap = fh_makeheap();   
 	fh_setcmp(heap, compare);
@@ -1450,7 +1618,15 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 		p_min->el=NULL; /* This point is permanently calculated now, we've taken it out of the heap */
 		s=p_min->start;
 		while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
-			val=route_value(speedlist, &s->item, s->len, s->maxspeed);
+			if (s->flags & AF_SPEED_LIMIT) {
+				maxspeed_attr.type = attr_maxspeed;
+				if (!route_graph_segment_get_field(s, &maxspeed_attr)) {
+					maxspeed_attr.u.num = -1;
+				}
+			} else {
+				maxspeed_attr.u.num = -1;
+			}
+			val=route_value(speedlist, &s->item, s->len, maxspeed_attr.u.num);
 #if 0
 			val+=val*2*street_route_contained(s->str->segid);
 #endif
@@ -1479,7 +1655,15 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, int *speedli
 		}
 		s=p_min->end;
 		while (s) { /* Doing the same as above with the segments leading towards our point */
-			val=route_value(speedlist, &s->item, s->len, s->maxspeed);
+			if (s->flags & AF_SPEED_LIMIT) {
+				maxspeed_attr.type = attr_maxspeed;
+				if (!route_graph_segment_get_field(s, &maxspeed_attr)) {
+					maxspeed_attr.u.num = -1;
+				}
+			} else {
+				maxspeed_attr.u.num = -1;
+			}
+			val=route_value(speedlist, &s->item, s->len, maxspeed_attr.u.num);
 			new=min+val;
 			if (debug_route)
 				printf("end %d len %d vs %d (0x%x,0x%x)\n",new,val,s->start->value,s->start->c.x, s->start->c.y);
@@ -1657,6 +1841,9 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	unsigned int val1=0xffffffff,val2=0xffffffff;
 	struct street_data *sd=pos->street;
 	struct route_path *ret;
+	struct attr offset_attr;
+
+	offset_attr.type = attr_offset;
 
 	if (! pos->street || ! dst->street)
 		return NULL;
@@ -1711,13 +1898,17 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 #endif
 		seg_len=s->len;
 		len+=seg_len;
+
+		if (!route_graph_segment_get_field(s, &offset_attr)) {
+			offset_attr.u.num = 1;
+		}
 	
 		if (s->start == start) {		
-			if (!route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, 1, is_straight))
+			if (!route_path_add_item_from_graph(ret, oldpath, s, seg_len, offset_attr.u.num, 1, is_straight))
 				ret->updated=0;
 			start=s->end;
 		} else {
-			if (!route_path_add_item_from_graph(ret, oldpath, s, seg_len, s->offset, -1, is_straight))
+			if (!route_path_add_item_from_graph(ret, oldpath, s, seg_len, offset_attr.u.num, -1, is_straight))
 				ret->updated=0;
 			start=s->start;
 		}
@@ -2155,9 +2346,9 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			return 1;
 		case attr_time:
 			mr->attr_next=attr_none;
-			if (seg)
+			if (seg) {
 				attr->u.num=route_time(route->speedlist, &seg->item, seg->length, seg->maxspeed);
-			else
+			} else
 				return 0;
 			return 1;
 		case attr_label:
@@ -2244,7 +2435,11 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		if (mr->item.type != type_rg_segment) 
 			return 0;
 		if (seg) {
-			attr->u.num = seg->maxspeed;
+			attr->type = attr_maxspeed;
+			if (!route_graph_segment_get_field(seg,attr)) {
+				attr->u.num = -1;
+			}
+			return 1;
 		} else {
 			return 0;
 		}
