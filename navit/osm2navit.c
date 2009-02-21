@@ -549,6 +549,11 @@ struct attr_bin label_attr = {
 };
 char label_attr_buffer[BUFFER_SIZE];
 
+struct attr_bin maxspeed_attr = {
+	0, attr_maxspeed
+};
+int maxspeed_attr_value;
+
 struct attr_bin house_number_attr = {
 	0, attr_house_number
 };
@@ -716,11 +721,11 @@ add_tag(char *k, char *v)
 		v="1";
 	if (! strcmp(k,"oneway")) {
 		if (!strcmp(v,"1")) {
-			flags_attr_value=AF_ONEWAY;
+			flags_attr_value |= AF_ONEWAY;
 			flags_attr.len=2;
 		}
 		if (! strcmp(v,"-1")) {
-			flags_attr_value=AF_ONEWAYREV;
+			flags_attr_value |= AF_ONEWAYREV;
 			flags_attr.len=2;
 		}
 		if (!in_way)
@@ -730,11 +735,17 @@ add_tag(char *k, char *v)
 	}
 	if (! strcmp(k,"junction")) {
 		if (! strcmp(v,"roundabout")) {
-			flags_attr_value=AF_ONEWAY;
+			flags_attr_value |= AF_ONEWAY;
 			flags_attr.len=2;
 		}
 	}
 	if (! strcmp(k,"maxspeed")) {
+		maxspeed_attr_value = atoi(v);
+		if (maxspeed_attr_value) {
+			maxspeed_attr.len = 2;
+			flags_attr_value |= AF_SPEED_LIMIT;
+			flags_attr.len = 2;
+		}
 		level=5;
 	}
 	if (! strcmp(k,"bicycle")) {
@@ -1062,7 +1073,9 @@ add_way(int id)
 	street_name_attr.len=0;
 	street_name_systematic_attr.len=0;
 	debug_attr.len=0;
+	maxspeed_attr.len=0;
 	flags_attr.len=0;
+	flags_attr_value = 0;
 	debug_attr_buffer[0]='\0';
 	osmid_attr.type=attr_osm_wayid;	
 	osmid_attr.len=3;
@@ -1212,6 +1225,8 @@ end_way(FILE *out)
 		alen+=debug_attr.len+1;
 	if (flags_attr.len)
 		alen+=flags_attr.len+1;
+	if (maxspeed_attr.len) 
+		alen+=maxspeed_attr.len+1;
 	if (osmid_attr.len)
 		alen+=osmid_attr.len+1;
 	if (count)
@@ -1233,6 +1248,7 @@ end_way(FILE *out)
 	write_attr(out, &osmid_attr, &osmid_attr_value);
 	write_attr(out, &debug_attr, debug_attr_buffer);
 	write_attr(out, &flags_attr, &flags_attr_value);
+	write_attr(out, &maxspeed_attr, &maxspeed_attr_value);
 }
 
 static void
