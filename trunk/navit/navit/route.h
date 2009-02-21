@@ -47,7 +47,9 @@ struct street_data {
 	struct item item;	/**< The map item for this street */
 	int count;			/**< Number of coordinates this street has */
 	int flags;
-	struct coord c[0];	/**< Pointer to the coordinates of this street */
+	int maxspeed;		/**< Maximum speed allowed on this street. */
+	struct coord c[0];	/**< Pointer to the coordinates of this street.
+						 *   DO NOT INSERT FIELDS AFTER THIS. */
 };
 
 #define route_item_first type_street_0
@@ -93,7 +95,7 @@ void route_path_close(struct route_path_handle *h);
 struct route_path_coord_handle *route_path_coord_open(struct route *this);
 struct coord *route_path_coord_get(struct route_path_coord_handle *h);
 void route_path_coord_close(struct route_path_coord_handle *h);
-int route_time(int *speedlist, struct item *item, int len);
+int route_time(int *speedlist, struct item *item, int len, int maxspeed);
 int route_info_length(struct route_info *pos, struct route_info *dst, int dir);
 struct street_data *street_get_data(struct item *item);
 struct street_data *street_data_dup(struct street_data *orig);
