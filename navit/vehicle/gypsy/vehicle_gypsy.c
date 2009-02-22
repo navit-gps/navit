@@ -47,11 +47,14 @@ static struct vehicle_priv {
 	double speed;
 	double direction;
 	double height;
-	int status;
+	int fix_type;
+	time_t fix_time;
+	char fixiso8601[128];
 	int sats;
 	int sats_used;
 	guint retry_timer;
 	struct attr ** attrs;
+	int have_cords;
 } *vehicle_last;
 
 #define DEFAULT_RETRY_INTERVAL 10 // seconds
@@ -64,11 +67,12 @@ vehicle_gypsy_fixstatus_changed(GypsyDevice *device,
 {
 	struct vehicle_priv *priv = vehicle_last;
 
-	if (fixstatus==GYPSY_DEVICE_FIX_STATUS_3D || 
-			fixstatus==GYPSY_DEVICE_FIX_STATUS_2D)
-		priv->status=1; // from gpsd: 1=fix ; 2=DGPS fix
+	if (fixstatus==GYPSY_DEVICE_FIX_STATUS_3D)
+		priv->fix_type = 3;
+	else if (fixstatus==GYPSY_DEVICE_FIX_STATUS_2D)
+		priv->fix_type = 1;
 	else
-		priv->status=0;
+		priv->fix_type = 0;
 
 	callback_list_call_0(priv->cbl);
 }
@@ -81,6 +85,9 @@ vehicle_gypsy_position_changed(GypsyPosition *position,
 {
 	struct vehicle_priv *priv = vehicle_last;
 	int cb = FALSE;
+
+	if (timestamp > 0)
+		priv->fix_time = timestamp;
 
 	if (fields_set & GYPSY_POSITION_FIELDS_LATITUDE)
 	{
@@ -99,7 +106,10 @@ vehicle_gypsy_position_changed(GypsyPosition *position,
 	}
 
 	if (cb)
+	{
+		priv->have_cords = 1;
 		callback_list_call_0(priv->cbl);
+	}
 }
 
 static void 
@@ -249,6 +259,9 @@ vehicle_gypsy_position_attr_get(struct vehicle_priv *priv,
 {
 	struct attr * active=NULL;
 	switch (type) {
+	case attr_position_fix_type:
+		attr->u.num = priv->fix_type;
+		break;
 	case attr_position_height:
 		attr->u.numd = &priv->height;
 		break;
@@ -266,7 +279,21 @@ vehicle_gypsy_position_attr_get(struct vehicle_priv *priv,
 		break;
 	case attr_position_coord_geo:
 		attr->u.coord_geo = &priv->geo;
+		if (!priv->have_cords)
+			return 0;
 		break;
+	case attr_position_time_iso8601:
+		{
+		struct tm tm;
+		if (!priv->fix_time)
+			return 0;
+		if (gmtime_r(&priv->fix_time, &tm)) {
+			strftime(priv->fixiso8601, sizeof(priv->fixiso8601),
+					"%Y-%m-%dT%TZ", &tm);
+			attr->u.str=priv->fixiso8601;
+		} else
+			return 0;
+		}
 	case attr_active:
 	  active = attr_search(priv->attrs,NULL,attr_active);
 	  if(active != NULL && active->u.num == 1)
@@ -298,6 +325,7 @@ vehicle_gypsy_new_gypsy(struct vehicle_methods
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
+	ret->have_cords = 0;
 	ret->source = g_strdup(source->u.str);
 	ret->attrs = attrs;
 	retry_int = attr_search(attrs, NULL, attr_retry_interval);
