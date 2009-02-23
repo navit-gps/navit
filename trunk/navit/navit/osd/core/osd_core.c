@@ -454,7 +454,12 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 		dbg(0, "no src\n");
 		goto error;
 	}
+
 	this->src = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/xpm/", attr->u.str, NULL);
+    // TODO make ~ and/or $HOME work too
+    if (!file_exists(this->src))
+        this->src = g_strjoin(NULL, attr->u.str, NULL);
+
 	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_button_init), attr_navit, this));
 
 	return (struct osd_priv *) this;
