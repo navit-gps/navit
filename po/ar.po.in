@@ -1,0 +1,1902 @@
+# Arabic translation for navit
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the navit package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: navit\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-02-19 13:51+0100\n"
+"PO-Revision-Date: 2009-02-18 16:15+0000\n"
+"Last-Translator: metehyi <Unknown>\n"
+"Language-Team: Arabic <ar@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
+"3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
+"X-Launchpad-Export-Date: 2009-02-23 15:16+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: ../navit/main.c:231
+#, c-format
+msgid "Running from source directory\n"
+msgstr "جاري التنفيذ من المجلد المصدر\n"
+
+#: ../navit/main.c:263
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "وضع حالة  '%s' إلى '%s'\n"
+
+#: ../navit/navigation.c:224
+msgid "zeroth"
+msgstr "(الرقم) صفر"
+
+#: ../navit/navigation.c:226
+msgid "first"
+msgstr "الأوّل"
+
+#: ../navit/navigation.c:228
+msgid "second"
+msgstr "الثّاني"
+
+#: ../navit/navigation.c:230
+msgid "third"
+msgstr "الثّالث"
+
+#: ../navit/navigation.c:232
+msgid "fourth"
+msgstr "الرّابع"
+
+#: ../navit/navigation.c:234
+msgid "fifth"
+msgstr "الخامس"
+
+#: ../navit/navigation.c:236
+msgid "sixth"
+msgstr "السادس"
+
+#: ../navit/navigation.c:278
+#, c-format
+msgid "%d m"
+msgstr "%d م"
+
+#: ../navit/navigation.c:280
+#, c-format
+msgid "in %d m"
+msgstr "بعد %d متر"
+
+#: ../navit/navigation.c:284
+#, c-format
+msgid "%d meters"
+msgstr "%d متر"
+
+#: ../navit/navigation.c:286
+#, c-format
+msgid "in %d meters"
+msgstr "بعد %d متر"
+
+#: ../navit/navigation.c:292
+#, c-format
+msgid "%d.%d kilometer"
+msgstr "%d.%d كلم"
+
+#: ../navit/navigation.c:294
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "بعد %d%d كلم"
+
+#: ../navit/navigation.c:298
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "كلم واحد"
+msgstr[1] "%d كلم"
+msgstr[2] "%d كلم"
+msgstr[3] "%d كلم"
+msgstr[4] "%d كلم"
+msgstr[5] "%d كلم"
+
+#: ../navit/navigation.c:300
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "بعد كلم واحد"
+msgstr[1] "بعد %d كلم"
+msgstr[2] "بعد %d كلم"
+msgstr[3] "بعد %d كلم"
+msgstr[4] "بعد %d كلم"
+msgstr[5] "بعد %d كلم"
+
+#: ../navit/navigation.c:1228
+msgid "exit"
+msgstr "خروج"
+
+#: ../navit/navigation.c:1230
+msgid "into the ramp"
+msgstr "إلى داخل الطريق المنحدر"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#: ../navit/navigation.c:1260
+#, c-format
+msgid "%sinto the street %s%s%s"
+msgstr "%s إلى داخل الشارع %s%s%s"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:1264
+#, c-format
+msgid "%sinto the %s%s%s|male form"
+msgstr "%sإلى داخل %s%s%s|صفة الذكر"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:1268
+#, c-format
+msgid "%sinto the %s%s%s|female form"
+msgstr "%sإلى داخل %s%s%s|صفة الأنثى"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:1272
+#, c-format
+msgid "%sinto the %s%s%s|neutral form"
+msgstr "%sإلى داخل %s%s%s|غير محدد الجنس"
+
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#: ../navit/navigation.c:1279
+#, c-format
+msgid "%sinto the %s"
+msgstr "%s إلى داخل %s"
+
+#. TRANSLATORS: right, as in 'Turn right'
+#: ../navit/navigation.c:1300
+msgid "right"
+msgstr "إلى اليمين"
+
+#. TRANSLATORS: left, as in 'Turn left'
+#: ../navit/navigation.c:1339
+msgid "left"
+msgstr "إلى اليسار"
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1346
+msgid "easily "
+msgstr "بسهولة "
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1351
+msgid "strongly "
+msgstr "بكل شدة "
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1355
+msgid "unknown "
+msgstr "غير معروف "
+
+#: ../navit/navigation.c:1362
+msgid "When possible, please turn around"
+msgstr "حيث ممكن الرجاء اللف"
+
+#: ../navit/navigation.c:1372
+msgid "Enter the roundabout soon"
+msgstr "قريباً الدخول إلى المستديرة"
+
+#. TRANSLATORS: %s is the distance to the roundabout
+#: ../navit/navigation.c:1376
+#, c-format
+msgid "In %s, enter the roundabout"
+msgstr "بعد %s ، أدخل المسستديرة"
+
+#: ../navit/navigation.c:1391
+#, c-format
+msgid "Leave the roundabout at the %s exit"
+msgstr "أخرج من المستديرة عند المخرج %s"
+
+#: ../navit/navigation.c:1394
+#, c-format
+msgid "then leave the roundabout at the %s exit"
+msgstr "ثم أخرد من المستديرة عند المخرج %s"
+
+#: ../navit/navigation.c:1404
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "تابع الطريق لل- %s التالية"
+
+#: ../navit/navigation.c:1408
+msgid "soon"
+msgstr "قريبا"
+
+#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+#: ../navit/navigation.c:1418
+#, c-format
+msgid "Take the %1$s road to the %2$s"
+msgstr "خذ الطريق %1$s إلى ال%2$s"
+
+#: ../navit/navigation.c:1421 ../navit/navigation.c:1435
+#, c-format
+msgid "after %i roads"
+msgstr "بعد %i طرقات"
+
+#: ../navit/navigation.c:1424
+msgid "now"
+msgstr "الآن"
+
+#: ../navit/navigation.c:1432
+#, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr "ثم خذ الطريق %1$s إلى ال- %2$s"
+
+#: ../navit/navigation.c:1443
+msgid "error"
+msgstr "خطء"
+
+#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+#: ../navit/navigation.c:1473
+#, c-format
+msgid "Turn %1$s%2$s %3$s%4$s"
+msgstr "حوّل %1$s%2$s %3$s%4$s"
+
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#: ../navit/navigation.c:1476
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr "ثم حوّل %1$s%2$s %3$s%4$s"
+
+#: ../navit/navigation.c:1481
+#, c-format
+msgid "You have reached your destination %s"
+msgstr "لقد وصلت إلى هدفك %s"
+
+#: ../navit/navigation.c:1483
+msgid "then you have reached your destination."
+msgstr "و بعدها تكون قد وصلت إلى هدفك"
+
+#: ../navit/navit.c:1141
+msgid "Position"
+msgstr "الموقع"
+
+#: ../navit/navit.c:1142
+msgid "Command"
+msgstr "الأمر"
+
+#: ../navit/navit.c:1146
+msgid "Length"
+msgstr "الطول"
+
+#: ../navit/navit.c:1150 ../navit/navit.c:1175
+msgid "km"
+msgstr "كلم"
+
+#: ../navit/navit.c:1154 ../navit/navit.c:1179
+msgid "m"
+msgstr "م."
+
+#: ../navit/navit.c:1160
+msgid "Time"
+msgstr "الوقت"
+
+#: ../navit/navit.c:1172
+msgid "Destination Length"
+msgstr "بُعد الهدف"
+
+#: ../navit/navit.c:1185
+msgid "Destination Time"
+msgstr "الوقت في مكان الوصول"
+
+#: ../navit/navit.c:1218 ../navit/gui/gtk/gui_gtk_action.c:225
+msgid "Roadbook"
+msgstr "سجل خريطة الطريق"
+
+#: ../navit/popup.c:218 ../navit/popup.c:272
+#: ../navit/gui/internal/gui_internal.c:2095
+msgid "Set as position"
+msgstr "عين كموقع حالي"
+
+#: ../navit/popup.c:219 ../navit/popup.c:273
+#: ../navit/gui/internal/gui_internal.c:2091
+msgid "Set as destination"
+msgstr "عيّن كهدف"
+
+#: ../navit/popup.c:220 ../navit/popup.c:274
+#: ../navit/gui/internal/gui_internal.c:2099
+msgid "Add as bookmark"
+msgstr "أضف كعلامة مراجعة"
+
+#: ../navit/popup.c:262
+#, c-format
+msgid "Point 0x%x 0x%x"
+msgstr "الموقع 0x%x 0x%x"
+
+#: ../navit/popup.c:263
+#, c-format
+msgid "Screen coord : %d %d"
+msgstr "إحداثيات الشاشة :%d %d"
+
+#. 020
+#: ../navit/country.c:39
+msgid "Andorra"
+msgstr "أندورا"
+
+#. 784
+#: ../navit/country.c:40
+msgid "United Arab Emirates"
+msgstr "الإمارات العربيّة المتّحدة"
+
+#. 004
+#: ../navit/country.c:41
+msgid "Afghanistan"
+msgstr "أفغانستان"
+
+#. 028
+#: ../navit/country.c:42
+msgid "Antigua and Barbuda"
+msgstr "أنتيغوا وباربودا"
+
+#. 660
+#: ../navit/country.c:43
+msgid "Anguilla"
+msgstr "أنغويلا"
+
+#. 008
+#: ../navit/country.c:44
+msgid "Albania"
+msgstr "ألبانيا"
+
+#. 051
+#: ../navit/country.c:45
+msgid "Armenia"
+msgstr "أرمينيا"
+
+#. 530
+#: ../navit/country.c:46
+msgid "Netherlands Antilles"
+msgstr "الأنتيل الهولندية"
+
+#. 024
+#: ../navit/country.c:47
+msgid "Angola"
+msgstr "أنغولا"
+
+#. 010
+#: ../navit/country.c:48
+msgid "Antarctica"
+msgstr "أنتاركتيكا"
+
+#. 032
+#: ../navit/country.c:49
+msgid "Argentina"
+msgstr "الأرجنتين"
+
+#. 016
+#: ../navit/country.c:50
+msgid "American Samoa"
+msgstr "ساموا الأميركية"
+
+#. 040
+#: ../navit/country.c:51
+msgid "Austria"
+msgstr "النمسا"
+
+#. 036
+#: ../navit/country.c:52
+msgid "Australia"
+msgstr "أستراليا"
+
+#. 533
+#: ../navit/country.c:53
+msgid "Aruba"
+msgstr "أروبا"
+
+#. 248
+#: ../navit/country.c:54
+msgid "Aland Islands"
+msgstr "جزر أولان"
+
+#. 031
+#: ../navit/country.c:55
+msgid "Azerbaijan"
+msgstr "أذربيجان"
+
+#. 070
+#: ../navit/country.c:56
+msgid "Bosnia and Herzegovina"
+msgstr "البوسنة والهرسك"
+
+#. 052
+#: ../navit/country.c:57
+msgid "Barbados"
+msgstr "بربادوس"
+
+#. 050
+#: ../navit/country.c:58
+msgid "Bangladesh"
+msgstr "بنغلادش"
+
+#. 056
+#: ../navit/country.c:59
+msgid "Belgium"
+msgstr "بلجيكا"
+
+#. 854
+#: ../navit/country.c:60
+msgid "Burkina Faso"
+msgstr "بوركينا فاسو"
+
+#. 100
+#: ../navit/country.c:61
+msgid "Bulgaria"
+msgstr "بلغاريا"
+
+#. 048
+#: ../navit/country.c:62
+msgid "Bahrain"
+msgstr "البحرين"
+
+#. 108
+#: ../navit/country.c:63
+msgid "Burundi"
+msgstr "بوروندي"
+
+#. 204
+#: ../navit/country.c:64
+msgid "Benin"
+msgstr "البنين"
+
+#. 652
+#: ../navit/country.c:65
+msgid "Saint Barthelemy"
+msgstr "سانت بارتيليمي"
+
+#. 060
+#: ../navit/country.c:66
+msgid "Bermuda"
+msgstr "جزر البرمودا"
+
+#. 096
+#: ../navit/country.c:67
+msgid "Brunei Darussalam"
+msgstr "بروناي دار السّلام"
+
+#. 068
+#: ../navit/country.c:68
+msgid "Bolivia"
+msgstr "بوليفيا"
+
+#. 076
+#: ../navit/country.c:69
+msgid "Brazil"
+msgstr "البرازيل"
+
+#. 044
+#: ../navit/country.c:70
+msgid "Bahamas"
+msgstr "جزر البهاما"
+
+#. 064
+#: ../navit/country.c:71
+msgid "Bhutan"
+msgstr "بوتان"
+
+#. 074
+#: ../navit/country.c:72
+msgid "Bouvet Island"
+msgstr "جزيرة بوفيت"
+
+#. 072
+#: ../navit/country.c:73
+msgid "Botswana"
+msgstr "بوتسوانا"
+
+#. 112
+#: ../navit/country.c:74
+msgid "Belarus"
+msgstr "روسيا البيضاء \\ بيلاروس"
+
+#. 084
+#: ../navit/country.c:75
+msgid "Belize"
+msgstr "بيليز"
+
+#. 124
+#: ../navit/country.c:76
+msgid "Canada"
+msgstr "كندا"
+
+#. 166
+#: ../navit/country.c:77
+msgid "Cocos (Keeling) Islands"
+msgstr "جزر الكوكوس (كيلنك)"
+
+#. 180
+#: ../navit/country.c:78
+msgid "Congo, Democratic Republic of the"
+msgstr "جمهورية الكونغو الديمقراطيه"
+
+#. 140
+#: ../navit/country.c:79
+msgid "Central African Republic"
+msgstr "جمهورية إفريقيا الوسطى"
+
+#. 178
+#: ../navit/country.c:80
+msgid "Congo"
+msgstr "الكونغو"
+
+#. 756
+#: ../navit/country.c:81
+msgid "Switzerland"
+msgstr "سويسرا"
+
+#. 384
+#: ../navit/country.c:82
+msgid "Cote d'Ivoire"
+msgstr "ساحل العاج"
+
+#. 184
+#: ../navit/country.c:83
+msgid "Cook Islands"
+msgstr "جزر كوك"
+
+#. 152
+#: ../navit/country.c:84
+msgid "Chile"
+msgstr "تشيلي"
+
+#. 120
+#: ../navit/country.c:85
+msgid "Cameroon"
+msgstr "الكامرون"
+
+#. 156
+#: ../navit/country.c:86
+msgid "China"
+msgstr "الصين"
+
+#. 170
+#: ../navit/country.c:87
+msgid "Colombia"
+msgstr "كولومبيا"
+
+#. 188
+#: ../navit/country.c:88
+msgid "Costa Rica"
+msgstr "كوستاريكا"
+
+#. 192
+#: ../navit/country.c:89
+msgid "Cuba"
+msgstr "كوبا"
+
+#. 132
+#: ../navit/country.c:90
+msgid "Cape Verde"
+msgstr "الرأس الاخضر   كاب فيردي"
+
+#. 162
+#: ../navit/country.c:91
+msgid "Christmas Island"
+msgstr "جزر الكريسماس"
+
+#. 196
+#: ../navit/country.c:92
+msgid "Cyprus"
+msgstr "قبرص"
+
+#. 203
+#: ../navit/country.c:93
+msgid "Czech Republic"
+msgstr "جمهورية التشيك"
+
+#. 276
+#: ../navit/country.c:94
+msgid "Germany"
+msgstr "ألمانيا"
+
+#. 262
+#: ../navit/country.c:95
+msgid "Djibouti"
+msgstr "جيبوتي"
+
+#. 208
+#: ../navit/country.c:96
+msgid "Denmark"
+msgstr "الدنمارك"
+
+#. 212
+#: ../navit/country.c:97
+msgid "Dominica"
+msgstr "الدّومينيكا"
+
+#. 214
+#: ../navit/country.c:98
+msgid "Dominican Republic"
+msgstr "جمهورية الدومينيكان"
+
+#. 012
+#: ../navit/country.c:99
+msgid "Algeria"
+msgstr "الجزائر"
+
+#. 218
+#: ../navit/country.c:100
+msgid "Ecuador"
+msgstr "الإكوادور"
+
+#. 233
+#: ../navit/country.c:101
+msgid "Estonia"
+msgstr "أستونيا"
+
+#. 818
+#: ../navit/country.c:102
+msgid "Egypt"
+msgstr "جمهورية مصر العربية"
+
+#. 732
+#: ../navit/country.c:103
+msgid "Western Sahara"
+msgstr "الصحراء الغربية"
+
+#. 232
+#: ../navit/country.c:104
+msgid "Eritrea"
+msgstr "أريتريا"
+
+#. 724
+#: ../navit/country.c:105
+msgid "Spain"
+msgstr "إسبانيا"
+
+#. 231
+#: ../navit/country.c:106
+msgid "Ethiopia"
+msgstr "الحبشة"
+
+#. 246
+#: ../navit/country.c:107
+msgid "Finland"
+msgstr "فنلندا"
+
+#. 242
+#: ../navit/country.c:108
+msgid "Fiji"
+msgstr "فيجي"
+
+#. 238
+#: ../navit/country.c:109
+msgid "Falkland Islands (Malvinas)"
+msgstr "جزر فولكلاند (مالفيناس)"
+
+#. 583
+#: ../navit/country.c:110
+msgid "Micronesia, Federated States of"
+msgstr "ميكرونيزيا، ولايات ميكرونيزيا الفدرالية"
+
+#. 234
+#: ../navit/country.c:111
+msgid "Faroe Islands"
+msgstr "جزر الفارو"
+
+#. 250
+#: ../navit/country.c:112
+msgid "France"
+msgstr "فرنسا"
+
+#. 266
+#: ../navit/country.c:113
+msgid "Gabon"
+msgstr "الغابون"
+
+#. 826
+#: ../navit/country.c:114
+msgid "United Kingdom"
+msgstr "المملكة المتّحدة"
+
+#. 308
+#: ../navit/country.c:115
+msgid "Grenada"
+msgstr "غرناطة"
+
+#. 268
+#: ../navit/country.c:116
+msgid "Georgia"
+msgstr "جورجيا"
+
+#. 254
+#: ../navit/country.c:117
+msgid "French Guiana"
+msgstr "جويانا الفرنسية"
+
+#. 831
+#: ../navit/country.c:118
+msgid "Guernsey"
+msgstr "غويرنسي"
+
+#. 288
+#: ../navit/country.c:119
+msgid "Ghana"
+msgstr "غانا"
+
+#. 292
+#: ../navit/country.c:120
+msgid "Gibraltar"
+msgstr "جبل طارق"
+
+#. 304
+#: ../navit/country.c:121
+msgid "Greenland"
+msgstr "جرينلاندا"
+
+#. 270
+#: ../navit/country.c:122
+msgid "Gambia"
+msgstr "غامبيا"
+
+#. 324
+#: ../navit/country.c:123
+msgid "Guinea"
+msgstr "غينيا"
+
+#. 312
+#: ../navit/country.c:124
+msgid "Guadeloupe"
+msgstr "جوادلوب"
+
+#. 226
+#: ../navit/country.c:125
+msgid "Equatorial Guinea"
+msgstr "غينيا الاستوائيه"
+
+#. 300
+#: ../navit/country.c:126
+msgid "Greece"
+msgstr "اليونان"
+
+#. 239
+#: ../navit/country.c:127
+msgid "South Georgia and the South Sandwich Islands"
+msgstr "جورجيا الجنوبيّة و جزر ساندويتش الجنوبيّة"
+
+#. 320
+#: ../navit/country.c:128
+msgid "Guatemala"
+msgstr "جواتيمالا"
+
+#. 316
+#: ../navit/country.c:129
+msgid "Guam"
+msgstr "غوام"
+
+#. 624
+#: ../navit/country.c:130
+msgid "Guinea-Bissau"
+msgstr "غينيا بيساو"
+
+#. 328
+#: ../navit/country.c:131
+msgid "Guyana"
+msgstr "غيانا"
+
+#. 344
+#: ../navit/country.c:132
+msgid "Hong Kong"
+msgstr "هونغ كونغ"
+
+#. 334
+#: ../navit/country.c:133
+msgid "Heard Island and McDonald Islands"
+msgstr "جزيرة هيرد وجزر مَكْدونالد"
+
+#. 340
+#: ../navit/country.c:134
+msgid "Honduras"
+msgstr "الهوندوراس"
+
+#. 191
+#: ../navit/country.c:135
+msgid "Croatia"
+msgstr "كرواتيا"
+
+#. 332
+#: ../navit/country.c:136
+msgid "Haiti"
+msgstr "هايتي"
+
+#. 348
+#: ../navit/country.c:137
+msgid "Hungary"
+msgstr "المجر (هنغاريا)"
+
+#. 360
+#: ../navit/country.c:138
+msgid "Indonesia"
+msgstr "إندونيسيا"
+
+#. 372
+#: ../navit/country.c:139
+msgid "Ireland"
+msgstr "إيرلندا"
+
+#. 376
+#: ../navit/country.c:140
+msgid "Israel"
+msgstr "فلسطين المحتلة"
+
+#. 833
+#: ../navit/country.c:141
+msgid "Isle of Man"
+msgstr "جزيرة مان"
+
+#. 356
+#: ../navit/country.c:142
+msgid "India"
+msgstr "الهند"
+
+#. 086
+#: ../navit/country.c:143
+msgid "British Indian Ocean Territory"
+msgstr "مقاطعة المحيط الهندي البريطانيّة"
+
+#. 368
+#: ../navit/country.c:144
+msgid "Iraq"
+msgstr "العراق"
+
+#. 364
+#: ../navit/country.c:145
+msgid "Iran, Islamic Republic of"
+msgstr "إيران، الجمهوريّة الإسلاميّة الإيرانيّة"
+
+#. 352
+#: ../navit/country.c:146
+msgid "Iceland"
+msgstr "آيسلندا"
+
+#. 380
+#: ../navit/country.c:147
+msgid "Italy"
+msgstr "إيطاليا"
+
+#. 832
+#: ../navit/country.c:148
+msgid "Jersey"
+msgstr "جيرسي"
+
+#. 388
+#: ../navit/country.c:149
+msgid "Jamaica"
+msgstr "جامايكا"
+
+#. 400
+#: ../navit/country.c:150
+msgid "Jordan"
+msgstr "الأردن"
+
+#. 392
+#: ../navit/country.c:151
+msgid "Japan"
+msgstr "اليابان"
+
+#. 404
+#: ../navit/country.c:152
+msgid "Kenya"
+msgstr "كينيا"
+
+#. 417
+#: ../navit/country.c:153
+msgid "Kyrgyzstan"
+msgstr "قرغيزستان"
+
+#. 116
+#: ../navit/country.c:154
+msgid "Cambodia"
+msgstr "كامبوديا"
+
+#. 296
+#: ../navit/country.c:155
+msgid "Kiribati"
+msgstr "كيريباتي"
+
+#. 174
+#: ../navit/country.c:156
+msgid "Comoros"
+msgstr "جزر القمر"
+
+#. 659
+#: ../navit/country.c:157
+msgid "Saint Kitts and Nevis"
+msgstr "سانت كيتس ونيفيس"
+
+#. 408
+#: ../navit/country.c:158
+msgid "Korea, Democratic People's Republic of"
+msgstr "كوريا، جمهورية كوريا الشّعبيّة الدّيموقراطيّة"
+
+#. 410
+#: ../navit/country.c:159
+msgid "Korea, Republic of"
+msgstr "كوريا، جمهوريّة كوريا"
+
+#. 414
+#: ../navit/country.c:160
+msgid "Kuwait"
+msgstr "الكويت"
+
+#. 136
+#: ../navit/country.c:161
+msgid "Cayman Islands"
+msgstr "جزر الكايمان"
+
+#. 398
+#: ../navit/country.c:162
+msgid "Kazakhstan"
+msgstr "كازاخستان"
+
+#. 418
+#: ../navit/country.c:163
+msgid "Lao People's Democratic Republic"
+msgstr "جمهوريّة لاو الدّيموقراطيّة الشّعبيّة"
+
+#. 422
+#: ../navit/country.c:164
+msgid "Lebanon"
+msgstr "لبنان"
+
+#. 662
+#: ../navit/country.c:165
+msgid "Saint Lucia"
+msgstr "سانت لوسيا"
+
+#. 438
+#: ../navit/country.c:166
+msgid "Liechtenstein"
+msgstr "ليشتنشتاين"
+
+#. 144
+#: ../navit/country.c:167
+msgid "Sri Lanka"
+msgstr "سريلانكا"
+
+#. 430
+#: ../navit/country.c:168
+msgid "Liberia"
+msgstr "ليبريا"
+
+#. 426
+#: ../navit/country.c:169
+msgid "Lesotho"
+msgstr "ليسوتو"
+
+#. 440
+#: ../navit/country.c:170
+msgid "Lithuania"
+msgstr "ليثوانيا"
+
+#. 442
+#: ../navit/country.c:171
+msgid "Luxembourg"
+msgstr "اللكسمبورغ"
+
+#. 428
+#: ../navit/country.c:172
+msgid "Latvia"
+msgstr "لاتفيا"
+
+#. 434
+#: ../navit/country.c:173
+msgid "Libyan Arab Jamahiriya"
+msgstr "الجماهيريّة العربيّة اللّيبيّة"
+
+#. 504
+#: ../navit/country.c:174
+msgid "Morocco"
+msgstr "المغرب"
+
+#. 492
+#: ../navit/country.c:175
+msgid "Monaco"
+msgstr "موناكو"
+
+#. 498
+#: ../navit/country.c:176
+msgid "Moldova, Republic of"
+msgstr "مولدوفا، جمهوريّة مولدوفا"
+
+#. 499
+#: ../navit/country.c:177
+msgid "Montenegro"
+msgstr "المونتنيغرو"
+
+#. 663
+#: ../navit/country.c:178
+msgid "Saint Martin (French part)"
+msgstr "سانت مارتين (القطاع الفرنسي)"
+
+#. 450
+#: ../navit/country.c:179
+msgid "Madagascar"
+msgstr "مدغشقر"
+
+#. 584
+#: ../navit/country.c:180
+msgid "Marshall Islands"
+msgstr "جزر المارشال"
+
+#. 807
+#: ../navit/country.c:181
+msgid "Macedonia, the former Yugoslav Republic of"
+msgstr "مقدونيا"
+
+#. 466
+#: ../navit/country.c:182
+msgid "Mali"
+msgstr "مالي"
+
+#. 104
+#: ../navit/country.c:183
+msgid "Myanmar"
+msgstr "مينامار"
+
+#. 496
+#: ../navit/country.c:184
+msgid "Mongolia"
+msgstr "منغوليا"
+
+#. 446
+#: ../navit/country.c:185
+msgid "Macao"
+msgstr "ماكاو"
+
+#. 580
+#: ../navit/country.c:186
+msgid "Northern Mariana Islands"
+msgstr "جزر ماريانا الشّمالية"
+
+#. 474
+#: ../navit/country.c:187
+msgid "Martinique"
+msgstr "مارتينيك"
+
+#. 478
+#: ../navit/country.c:188
+msgid "Mauritania"
+msgstr "موريتانيا"
+
+#. 500
+#: ../navit/country.c:189
+msgid "Montserrat"
+msgstr "مونتسيرات"
+
+#. 470
+#: ../navit/country.c:190
+msgid "Malta"
+msgstr "مالطة"
+
+#. 480
+#: ../navit/country.c:191
+msgid "Mauritius"
+msgstr "موريشيوس"
+
+#. 462
+#: ../navit/country.c:192
+msgid "Maldives"
+msgstr "جزر المالديف"
+
+#. 454
+#: ../navit/country.c:193
+msgid "Malawi"
+msgstr "مالاوي"
+
+#. 484
+#: ../navit/country.c:194
+msgid "Mexico"
+msgstr "المكسيك"
+
+#. 458
+#: ../navit/country.c:195
+msgid "Malaysia"
+msgstr "ماليزيا"
+
+#. 508
+#: ../navit/country.c:196
+msgid "Mozambique"
+msgstr "الموزمبيق"
+
+#. 516
+#: ../navit/country.c:197
+msgid "Namibia"
+msgstr "ناميبيا"
+
+#. 540
+#: ../navit/country.c:198
+msgid "New Caledonia"
+msgstr "قلدونيا الجديدة"
+
+#. 562
+#: ../navit/country.c:199
+msgid "Niger"
+msgstr "النّيجر"
+
+#. 574
+#: ../navit/country.c:200
+msgid "Norfolk Island"
+msgstr "جزيرة نورفولك"
+
+#. 566
+#: ../navit/country.c:201
+msgid "Nigeria"
+msgstr "نيجيريا"
+
+#. 558
+#: ../navit/country.c:202
+msgid "Nicaragua"
+msgstr "نيكاراغوا"
+
+#. 528
+#: ../navit/country.c:203
+msgid "Netherlands"
+msgstr "هولندا"
+
+#. 578
+#: ../navit/country.c:204
+msgid "Norway"
+msgstr "النروج"
+
+#. 524
+#: ../navit/country.c:205
+msgid "Nepal"
+msgstr "نيبال"
+
+#. 520
+#: ../navit/country.c:206
+msgid "Nauru"
+msgstr "ناورو"
+
+#. 570
+#: ../navit/country.c:207
+msgid "Niue"
+msgstr "نيوي"
+
+#. 554
+#: ../navit/country.c:208
+msgid "New Zealand"
+msgstr "نيوزيلاندا"
+
+#. 512
+#: ../navit/country.c:209
+msgid "Oman"
+msgstr "عُمان"
+
+#. 591
+#: ../navit/country.c:210
+msgid "Panama"
+msgstr "باناما"
+
+#. 604
+#: ../navit/country.c:211
+msgid "Peru"
+msgstr "البيرو"
+
+#. 258
+#: ../navit/country.c:212
+msgid "French Polynesia"
+msgstr "بولينيزيا الفرنسية"
+
+#. 598
+#: ../navit/country.c:213
+msgid "Papua New Guinea"
+msgstr "بابوا غينيا الجديدة"
+
+#. 608
+#: ../navit/country.c:214
+msgid "Philippines"
+msgstr "الفلبّين"
+
+#. 586
+#: ../navit/country.c:215
+msgid "Pakistan"
+msgstr "باكستان"
+
+#. 616
+#: ../navit/country.c:216
+msgid "Poland"
+msgstr "بولونيا"
+
+#. 666
+#: ../navit/country.c:217
+msgid "Saint Pierre and Miquelon"
+msgstr "سانت بيير وميكولون"
+
+#. 612
+#: ../navit/country.c:218
+msgid "Pitcairn"
+msgstr "بتكايرن"
+
+#. 630
+#: ../navit/country.c:219
+msgid "Puerto Rico"
+msgstr "بورتوريكو"
+
+#. 275
+#: ../navit/country.c:220
+msgid "Palestinian Territory, Occupied"
+msgstr "فلسطين المحتلّة، الأراضي الفلسطينيّة المحتلّة"
+
+#. 620
+#: ../navit/country.c:221
+msgid "Portugal"
+msgstr "البرتغال"
+
+#. 585
+#: ../navit/country.c:222
+msgid "Palau"
+msgstr "بالاو"
+
+#. 600
+#: ../navit/country.c:223
+msgid "Paraguay"
+msgstr "الباراغواي"
+
+#. 634
+#: ../navit/country.c:224
+msgid "Qatar"
+msgstr "قطر"
+
+#. 638
+#: ../navit/country.c:225
+msgid "Reunion"
+msgstr "ريونيون"
+
+#. 642
+#: ../navit/country.c:226
+msgid "Romania"
+msgstr "رومانيا"
+
+#. 688
+#: ../navit/country.c:227
+msgid "Serbia"
+msgstr "صربيا"
+
+#. 643
+#: ../navit/country.c:228
+msgid "Russian Federation"
+msgstr "الإتّحاد الروسي"
+
+#. 646
+#: ../navit/country.c:229
+msgid "Rwanda"
+msgstr "رواندا"
+
+#. 682
+#: ../navit/country.c:230
+msgid "Saudi Arabia"
+msgstr "المملكة العربيّة السّعوديّة"
+
+#. 090
+#: ../navit/country.c:231
+msgid "Solomon Islands"
+msgstr "جزر سليمان"
+
+#. 690
+#: ../navit/country.c:232
+msgid "Seychelles"
+msgstr "السّيشل"
+
+#. 736
+#: ../navit/country.c:233
+msgid "Sudan"
+msgstr "السودان"
+
+#. 752
+#: ../navit/country.c:234
+msgid "Sweden"
+msgstr "السّويد"
+
+#. 702
+#: ../navit/country.c:235
+msgid "Singapore"
+msgstr "سنغفورة"
+
+#. 654
+#: ../navit/country.c:236
+msgid "Saint Helena"
+msgstr "سانت هيلينا"
+
+#. 705
+#: ../navit/country.c:237
+msgid "Slovenia"
+msgstr "سلوفينيا"
+
+#. 744
+#: ../navit/country.c:238
+msgid "Svalbard and Jan Mayen"
+msgstr "سفالبارد وجان مايان"
+
+#. 703
+#: ../navit/country.c:239
+msgid "Slovakia"
+msgstr "سلوفاكيا"
+
+#. 694
+#: ../navit/country.c:240
+msgid "Sierra Leone"
+msgstr "سيراليون"
+
+#. 674
+#: ../navit/country.c:241
+msgid "San Marino"
+msgstr "سان مارينو"
+
+#. 686
+#: ../navit/country.c:242
+msgid "Senegal"
+msgstr "السنيغال"
+
+#. 706
+#: ../navit/country.c:243
+msgid "Somalia"
+msgstr "الصّومال"
+
+#. 740
+#: ../navit/country.c:244
+msgid "Suriname"
+msgstr "سورينام"
+
+#. 678
+#: ../navit/country.c:245
+msgid "Sao Tome and Principe"
+msgstr "ساو تومي وبرينسيبي"
+
+#. 222
+#: ../navit/country.c:246
+msgid "El Salvador"
+msgstr "السلفادور"
+
+#. 760
+#: ../navit/country.c:247
+msgid "Syrian Arab Republic"
+msgstr "الجمهوريّة العربيّة السّوريّة"
+
+#. 748
+#: ../navit/country.c:248
+msgid "Swaziland"
+msgstr "السّوازيلاند"
+
+#. 796
+#: ../navit/country.c:249
+msgid "Turks and Caicos Islands"
+msgstr "جزر تركس وكايكوس"
+
+#. 148
+#: ../navit/country.c:250
+msgid "Chad"
+msgstr "التشاد"
+
+#. 260
+#: ../navit/country.c:251
+msgid "French Southern Territories"
+msgstr "المقاطعات الجنوبية الفرنسية"
+
+#. 768
+#: ../navit/country.c:252
+msgid "Togo"
+msgstr "توغو"
+
+#. 764
+#: ../navit/country.c:253
+msgid "Thailand"
+msgstr "تايلندا"
+
+#. 762
+#: ../navit/country.c:254
+msgid "Tajikistan"
+msgstr "طاجكستان"
+
+#. 772
+#: ../navit/country.c:255
+msgid "Tokelau"
+msgstr "توكلو"
+
+#. 626
+#: ../navit/country.c:256
+msgid "Timor-Leste"
+msgstr "تيمور الشرقية"
+
+#. 795
+#: ../navit/country.c:257
+msgid "Turkmenistan"
+msgstr "تركمانستان"
+
+#. 788
+#: ../navit/country.c:258
+msgid "Tunisia"
+msgstr "تونس"
+
+#. 776
+#: ../navit/country.c:259
+msgid "Tonga"
+msgstr "تونجا"
+
+#. 792
+#: ../navit/country.c:260
+msgid "Turkey"
+msgstr "تركيا"
+
+#. 780
+#: ../navit/country.c:261
+msgid "Trinidad and Tobago"
+msgstr "ترينيداد وتوباغو"
+
+#. 798
+#: ../navit/country.c:262
+msgid "Tuvalu"
+msgstr "توفالو"
+
+#. 158
+#: ../navit/country.c:263
+msgid "Taiwan, Province of China"
+msgstr "تايوان، محافظة صينية"
+
+#. 834
+#: ../navit/country.c:264
+msgid "Tanzania, United Republic of"
+msgstr "تنزانيا، جمهوريّة تنزانيا المتّحدة"
+
+#. 804
+#: ../navit/country.c:265
+msgid "Ukraine"
+msgstr "أوكرانيا"
+
+#. 800
+#: ../navit/country.c:266
+msgid "Uganda"
+msgstr "اوغندا"
+
+#. 581
+#: ../navit/country.c:267
+msgid "United States Minor Outlying Islands"
+msgstr "جزر الولايات المتحدة البعيدة الصغيرة"
+
+#. 840
+#: ../navit/country.c:268
+msgid "United States"
+msgstr "الولايات المتّحدة الأمريكية"
+
+#. 858
+#: ../navit/country.c:269
+msgid "Uruguay"
+msgstr "الأوروغواي"
+
+#. 860
+#: ../navit/country.c:270
+msgid "Uzbekistan"
+msgstr "أوزبكستان"
+
+#. 336
+#: ../navit/country.c:271
+msgid "Holy See (Vatican City State)"
+msgstr "الكرسي الرسولي (دولة الفاتيكان)"
+
+#. 670
+#: ../navit/country.c:272
+msgid "Saint Vincent and the Grenadines"
+msgstr "سانت فنسنت والجرينادينز"
+
+#. 862
+#: ../navit/country.c:273
+msgid "Venezuela"
+msgstr "فنزويلا"
+
+#. 092
+#: ../navit/country.c:274
+msgid "Virgin Islands, British"
+msgstr "جزر فيرجن البريطانية"
+
+#. 850
+#: ../navit/country.c:275
+msgid "Virgin Islands, U.S."
+msgstr "جزر فيرجن ، الولايات المتحدة"
+
+#. 704
+#: ../navit/country.c:276
+msgid "Viet Nam"
+msgstr "الفييتنام"
+
+#. 548
+#: ../navit/country.c:277
+msgid "Vanuatu"
+msgstr "فانواتو"
+
+#. 876
+#: ../navit/country.c:278
+msgid "Wallis and Futuna"
+msgstr "واليس و فوتونا"
+
+#. 882
+#: ../navit/country.c:279
+msgid "Samoa"
+msgstr "ساموا"
+
+#. 887
+#: ../navit/country.c:280
+msgid "Yemen"
+msgstr "اليمن"
+
+#. 175
+#: ../navit/country.c:281
+msgid "Mayotte"
+msgstr "مايوت"
+
+#. 710
+#: ../navit/country.c:282
+msgid "South Africa"
+msgstr "جنوب إفريقيا"
+
+#. 894
+#: ../navit/country.c:283
+msgid "Zambia"
+msgstr "زامبيا"
+
+#. 716
+#: ../navit/country.c:284
+msgid "Zimbabwe"
+msgstr "زيمبابوي"
+
+#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
+#: ../navit/gui/gtk/destination.c:120 ../navit/gui/gtk/destination.c:121
+msgid "Car"
+msgstr "سيارة"
+
+#: ../navit/gui/gtk/destination.c:118
+msgid "Iso2"
+msgstr "Iso2"
+
+#: ../navit/gui/gtk/destination.c:118
+msgid "Iso3"
+msgstr "Iso3"
+
+#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:426
+#: ../navit/gui/internal/gui_internal.c:2730
+msgid "Country"
+msgstr "الدولة"
+
+#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
+#: ../navit/gui/gtk/destination.c:121
+msgid "Postal"
+msgstr "بريدي"
+
+#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
+#: ../navit/gui/gtk/destination.c:121
+#: ../navit/gui/internal/gui_internal.c:2709
+#: ../navit/gui/internal/gui_internal.c:2738
+#: ../navit/gui/internal/gui_internal.c:2871
+msgid "Town"
+msgstr "البلدة"
+
+#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
+#: ../navit/gui/gtk/destination.c:121
+msgid "District"
+msgstr "حي"
+
+#: ../navit/gui/gtk/destination.c:120 ../navit/gui/gtk/destination.c:121
+#: ../navit/gui/gtk/destination.c:437
+#: ../navit/gui/internal/gui_internal.c:2690
+#: ../navit/gui/internal/gui_internal.c:2699
+msgid "Street"
+msgstr "الشارع"
+
+#: ../navit/gui/gtk/destination.c:121 ../navit/gui/gtk/destination.c:439
+msgid "Number"
+msgstr "الرقم"
+
+#: ../navit/gui/gtk/destination.c:420
+msgid "Enter Destination"
+msgstr "أدخل الهدف"
+
+#: ../navit/gui/gtk/destination.c:429
+msgid "Zip Code"
+msgstr "الرمز البريدي"
+
+#: ../navit/gui/gtk/destination.c:431
+msgid "City"
+msgstr "المدينة"
+
+#: ../navit/gui/gtk/destination.c:434
+msgid "District/Township"
+msgstr "الحي/البلدة"
+
+#: ../navit/gui/gtk/destination.c:462 ../navit/gui/gtk/gui_gtk_action.c:200
+msgid "Map"
+msgstr "الخريطة"
+
+#: ../navit/gui/gtk/destination.c:463
+msgid "Bookmark"
+msgstr "إشارة مرجعية"
+
+#: ../navit/gui/gtk/destination.c:464 ../navit/gui/gtk/gui_gtk_action.c:212
+msgid "Destination"
+msgstr "الهدف"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:196
+#: ../navit/gui/internal/gui_internal.c:2792
+#: ../navit/gui/internal/gui_internal.c:3085
+msgid "Display"
+msgstr "المظهار"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:197
+msgid "Route"
+msgstr "الطريق"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:198
+msgid "Former Destinations"
+msgstr "الأهداف السابقة"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:199
+#: ../navit/gui/internal/gui_internal.c:2195
+#: ../navit/gui/internal/gui_internal.c:2847
+msgid "Bookmarks"
+msgstr "إشارات مرجعية"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:201
+#: ../navit/gui/internal/gui_internal.c:2749
+#: ../navit/gui/internal/gui_internal.c:2794
+msgid "Layout"
+msgstr "التصميم"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:202
+msgid "Projection"
+msgstr "الإسقاط"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:203
+#: ../navit/gui/internal/gui_internal.c:3028
+#: ../navit/gui/internal/gui_internal.c:3093
+msgid "Vehicle"
+msgstr "وسيلة التنقل"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:204
+msgid "ZoomOut"
+msgstr "صغّر الروئية"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:205
+msgid "ZoomIn"
+msgstr "كبّر الروئية"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:206
+msgid "Recalculate"
+msgstr "إعادة الحساب"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:208 ../navit/gui/gtk/gui_gtk_action.c:210
+msgid "Info"
+msgstr "معلومات"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:213
+msgid "Stop Navigation"
+msgstr "قف الملاحة"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:214
+msgid "Test"
+msgstr "اختبار"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:215
+msgid "_Quit"
+msgstr "_إنهاء"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:222
+msgid "Cursor"
+msgstr "المزلاق"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:223
+msgid "Lock on Road"
+msgstr "إقفال على الطريق"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:224
+#: ../navit/gui/internal/gui_internal.c:3067
+msgid "Northing"
+msgstr "شمالي دائم"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
+#: ../navit/gui/internal/gui_internal.c:2804
+msgid "Fullscreen"
+msgstr "ملء الشاشة"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:238
+msgid "Data"
+msgstr "المعطيات"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
+msgid "N"
+msgstr "ش."
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
+msgid "NE"
+msgstr "ش. ش."
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
+msgid "E"
+msgstr "ش."
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
+msgid "SE"
+msgstr "ج. ش."
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
+msgid "S"
+msgstr "ج."
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
+msgid "SW"
+msgstr "ج. غ."
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
+msgid "W"
+msgstr "غ."
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
+msgid "NW"
+msgstr "ش. غ."
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:74
+msgid "No"
+msgstr "لا"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:75
+#: ../navit/gui/internal/gui_internal.c:2811
+msgid "2D"
+msgstr "ثنائي الأبعاد"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:76
+#: ../navit/gui/internal/gui_internal.c:2817
+msgid "3D"
+msgstr "ثلاثي الأبعاد"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
+msgid "OT"
+msgstr "OT"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:119
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr "Route %4.0fكلم    %02d:%02d ETA"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:164
+msgid "Route 0000km  0+00:00 ETA"
+msgstr "الطريك 0000كلم  0+00:00 ETA"
+
+#: ../navit/gui/internal/gui_internal.c:1321
+msgid "Back to map"
+msgstr "إرجع إلى الخريطة"
+
+#: ../navit/gui/internal/gui_internal.c:1330
+msgid "Main Menu"
+msgstr "اللائحة الرئيسية"
+
+#: ../navit/gui/internal/gui_internal.c:1450
+msgid "Help"
+msgstr "المساعدة"
+
+#: ../navit/gui/internal/gui_internal.c:1600
+msgid "Back"
+msgstr "السابق"
+
+#: ../navit/gui/internal/gui_internal.c:1904
+#: ../navit/gui/internal/gui_internal.c:2104
+msgid "POIs"
+msgstr "مواقع ذات أهمية"
+
+#: ../navit/gui/internal/gui_internal.c:2061
+msgid "Streets"
+msgstr "الشوارع"
+
+#: ../navit/gui/internal/gui_internal.c:2077
+msgid "View in Browser"
+msgstr "أعرض في المتصفح"
+
+#: ../navit/gui/internal/gui_internal.c:2083
+msgid "View Attributes"
+msgstr "أعرض الصفات"
+
+#: ../navit/gui/internal/gui_internal.c:2118
+msgid "View on map"
+msgstr "أعرض على الخريطة"
+
+#: ../navit/gui/internal/gui_internal.c:2231
+#, c-format
+msgid "Bookmark %s"
+msgstr "علّم %s كإشارة مرجعية"
+
+#: ../navit/gui/internal/gui_internal.c:2799
+msgid "Window Mode"
+msgstr "نمط النافذة"
+
+#: ../navit/gui/internal/gui_internal.c:2845
+#: ../navit/gui/internal/gui_internal.c:3133
+msgid "Actions"
+msgstr "أفعال"
+
+#: ../navit/gui/internal/gui_internal.c:2856
+msgid "Map Point"
+msgstr "النقطة على الخريطة"
+
+#: ../navit/gui/internal/gui_internal.c:2866
+msgid "Vehicle Position"
+msgstr "موقع وسيلة التنقل"
+
+#: ../navit/gui/internal/gui_internal.c:2875
+msgid "Quit"
+msgstr "أخرج"
+
+#: ../navit/gui/internal/gui_internal.c:2881
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr "قفّ"
+
+#: ../navit/gui/internal/gui_internal.c:2897
+#: ../navit/gui/internal/gui_internal.c:3089
+msgid "Maps"
+msgstr "الخرائط"
+
+#: ../navit/gui/internal/gui_internal.c:2941
+msgid "Show Satellite Status"
+msgstr "أعرض حالة القمر الإسطناعي"
+
+#: ../navit/gui/internal/gui_internal.c:2975
+msgid "Show NMEA Data"
+msgstr "أعرض المعطيات NMEA"
+
+#: ../navit/gui/internal/gui_internal.c:2999
+msgid "Set as active"
+msgstr "عيّن كــفعلي"
+
+#: ../navit/gui/internal/gui_internal.c:3005
+msgid "Show Satellite status"
+msgstr "أعرض حالة القمر الإسطناعي"
+
+#: ../navit/gui/internal/gui_internal.c:3011
+msgid "Show NMEA data"
+msgstr "أعرض المعطيات NMEA"
+
+#: ../navit/gui/internal/gui_internal.c:3053
+#: ../navit/gui/internal/gui_internal.c:3097
+msgid "Rules"
+msgstr "القواعد"
+
+#: ../navit/gui/internal/gui_internal.c:3061
+msgid "Lock on road"
+msgstr "إقفال على الطريق"
+
+#: ../navit/gui/internal/gui_internal.c:3073
+msgid "Map follows Vehicle"
+msgstr "الخريطة تتبع وسيلة التنقل"
+
+#: ../navit/gui/internal/gui_internal.c:3083
+#: ../navit/gui/internal/gui_internal.c:3141
+msgid "Settings"
+msgstr "الإعدادات"
+
+#: ../navit/gui/internal/gui_internal.c:3131
+msgid "Main menu"
+msgstr "اللائحة الرئيسية"
+
+#: ../navit/gui/internal/gui_internal.c:3137
+msgid ""
+"Show\n"
+"Map"
+msgstr ""
+"أعرض\n"
+"الخريطة"
+
+#: ../navit/gui/internal/gui_internal.c:3144
+msgid "Tools"
+msgstr "العدة"
