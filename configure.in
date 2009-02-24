@@ -966,6 +966,10 @@ echo "  gtk:               $gui_gtk ($gui_gtk_reason)"
 echo "  internal:          $gui_internal ($gui_internal_reason)"
 echo "  win32:             $gui_win32 ($gui_win32_reason)"
 
+echo "Bindings:"
+echo "  dbus:              $binding_dbus ($binding_dbus_reason)"
+echo "  python:            $binding_python ($binding_python_reason)"
+
 echo "Speech types:"
 echo "  cmdline:           $speech_cmdline ($speech_cmdline_reason)"
 echo "  speech_dispatcher: $speech_speech_dispatcher ($speech_speech_dispatcher_reason)"
