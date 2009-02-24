@@ -177,7 +177,7 @@ flag_svgs += country_VA.svgz country_VC.svgz country_VE.svgz country_VG.svgz cou
 flag_svgs += country_WF.svgz country_WS.svgz country_YE.svgz country_YT.svgz country_ZA.svgz country_ZM.svgz country_ZW.svgz
 
 if USE_SVG
-   xpm_DATA += $(svgs)
+   xpm_DATA += $(svgs) $(nav_svgs) $(flag_svgs)
 endif
 
 if USE_SVG2PNG
@@ -194,6 +194,7 @@ if USE_SVG2PNG_SCALES_FLAG
 xpm_DATA += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_FLAG@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(flag_svgs))))
 endif
 if USE_SVG2PNG_SCALES_NAV
+xpm_DATA += $(addsuffix .png,$(basename $(nav_svgs)))
 xpm_DATA += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_NAV@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(nav_svgs))))
 endif
 endif
