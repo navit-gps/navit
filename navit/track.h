@@ -37,6 +37,7 @@ void tracking_set_mapset(struct tracking *this_, struct mapset *ms);
 void tracking_set_route(struct tracking *this_, struct route *rt);
 int tracking_get_current_attr(struct tracking *_this, enum attr_type type, struct attr *attr);
 struct item *tracking_get_current_item(struct tracking *_this);
+int tracking_get_current_flags(struct tracking *_this);
 void tracking_destroy(struct tracking *tr);
 struct map * tracking_get_map(struct tracking *this_);
 void tracking_init(void);

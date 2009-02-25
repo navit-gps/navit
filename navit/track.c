@@ -121,6 +121,14 @@ tracking_get_current_item(struct tracking *_this)
 	return &_this->curr_line->street->item;
 }
 
+int
+tracking_get_current_flags(struct tracking *_this)
+{
+	if (! _this->curr_line || ! _this->curr_line->street)
+		return NULL;
+	return &_this->curr_line->street->flags;
+}
+
 static void
 tracking_get_angles(struct tracking_line *tl)
 {
