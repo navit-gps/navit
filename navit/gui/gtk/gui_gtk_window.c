@@ -668,6 +668,9 @@ gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 	GtkWidget *widget;
 	int fullscreen = 0;
 
+        if (! event_request_system("glib","gui_gtk_new"))
+                return NULL;
+
 	if (cp) {
 		xid = strtol(cp, NULL, 0);
 	}
