@@ -890,7 +890,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 	struct point p, p2[4];
 	char *str,*next,*start,*end,*key,*subkey,*index,*value;
 	int do_draw = 0;
-	struct attr attr, vehicle_attr, flags_attr, maxspeed_attr;
+	struct attr attr, vehicle_attr, maxspeed_attr;
 	struct navigation *nav = NULL;
 	struct tracking *tracking = NULL;
 	struct route *route = NULL;
@@ -964,11 +964,9 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 					item=tracking_get_current_item(tracking);
 					if (item && !strcmp(key,"route_speed")) {
 						double routespeed = -1;
-						if (item_attr_get(item, attr_flags, &flags_attr) && (flags_attr.u.num & AF_SPEED_LIMIT)) {
-							if (item_attr_get(item, attr_maxspeed, &maxspeed_attr)) {
-								routespeed = maxspeed_attr.u.num;
-								value = format_speed(routespeed, "");
-							}
+						if ((tracking_get_current_flags(tracking) & AF_SPEED_LIMIT) && tracking_get_current_attr(tracking, attr_maxspeed, &maxspeed_attr)) {
+							routespeed = maxspeed_attr.u.num;
+							value = format_speed(routespeed, "");
 						} 
 
 						if ((routespeed == -1) && route && (speedlist=route_get_speedlist(route))) {
