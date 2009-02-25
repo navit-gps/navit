@@ -184,7 +184,7 @@ const int SMALL_PROFILE=2;
  * [2] => Small profile (default)
  */
 static struct gui_config_settings config_profiles[]={
-  {545,32,40,44,2}
+      {545,32,48,96,10}
     , {545,32,48,96,5}
       ,{200,16,32,48,2}
 };
