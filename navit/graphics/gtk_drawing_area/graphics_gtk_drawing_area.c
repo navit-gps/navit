@@ -921,6 +921,9 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	GtkWidget *draw;
 	struct attr *attr;
 
+	if (! event_request_system("glib","graphics_gtk_drawing_area_new"))
+		return NULL;
+
 	draw=gtk_drawing_area_new();
 	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
 	this->nav = nav;
