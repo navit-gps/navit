@@ -1155,6 +1155,9 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 		return NULL;
 	if (! event_request_system("qt","graphics_qt_qpainter_new"))
 		return NULL;
+#else
+	if (! event_request_system("glib","graphics_qt_qpainter_new"))
+		return NULL;
 #endif
 #if 1
         font_freetype_new=(struct font_priv *(*)(void *))plugin_get_font_type("freetype");

@@ -164,9 +164,6 @@ int main(int argc, char **argv)
 	} while (!file_exists(config_file));
 	g_list_free(list);
 
-#ifdef HAVE_GLIB
-	event_request_system("glib","start");
-#endif
 	if (!config_load(config_file, &error)) {
 		dbg(0, _("Error parsing '%s': %s\n"), config_file, error ? error->message : "");
 	} else {
