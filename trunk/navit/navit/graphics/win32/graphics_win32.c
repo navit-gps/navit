@@ -520,15 +520,21 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
 			points[i].x = p[i].x;
 			points[i].y = p[i].y;
 		}
+		HPEN hpen;
 		HBRUSH holdbrush;
 		HBRUSH hbrush;
 
 		SetBkColor( hMemDC, gc->bg_color );
 
+		hpen = CreatePen( PS_NULL, gc->line_width, gc->fg_color );
+		SelectObject( hMemDC, hpen );
 		hbrush = CreateSolidBrush( gc->fg_color );
 		holdbrush = SelectObject( hMemDC, hbrush );
+		
 		Polygon( hMemDC, points,count );
+		
 		SelectObject( hMemDC, holdbrush );
+		DeleteObject( hbrush );
 		DeleteObject( hbrush );
 	}
 }
