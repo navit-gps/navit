@@ -1,4 +1,6 @@
-/**
+/** @file vehicle_gypsy.c
+ * @brief gypsy uses dbus signals
+ *
  * Navit, a modular navigation system.
  * Copyright (C) 2005-2008 Navit Team
  *
@@ -15,6 +17,9 @@
  * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301, USA.
+ *
+ * @Author Tim Niemeyer <reddog@mastersword.de>
+ * @date 2008-2009
  */
 
 #include <config.h>
@@ -60,6 +65,23 @@ static struct vehicle_priv {
 #define DEFAULT_RETRY_INTERVAL 10 // seconds
 #define MIN_RETRY_INTERVAL 1 // seconds
 
+/**
+ * @brief When the fixstatus has changed, this function get called
+ *
+ * fixstatus can be one of this:
+ * GYPSY_DEVICE_FIX_STATUS_INVALID = 0
+ * GYPSY_DEVICE_FIX_STATUS_NONE = 1
+ * GYPSY_DEVICE_FIX_STATUS_2D = 2
+ * GYPSY_DEVICE_FIX_STATUS_3D = 3
+ *
+ * Anytime this functions get called, we have to call the global
+ * callback.
+ * 
+ * @param device The GypsyDevice
+ * @param fixstatus The fisstatus 0, 1, 2 or 3
+ * @param userdata
+ * @returns nothing
+ */
 static void
 vehicle_gypsy_fixstatus_changed(GypsyDevice *device,
 		gint fixstatus,
@@ -77,6 +99,27 @@ vehicle_gypsy_fixstatus_changed(GypsyDevice *device,
 	callback_list_call_0(priv->cbl);
 }
 
+/**
+ * @brief When the position has changed, this function get called
+ *
+ * The fields_set can hold:
+ * GYPSY_POSITION_FIELDS_NONE = 1 << 0,
+ * GYPSY_POSITION_FIELDS_LATITUDE = 1 << 1,
+ * GYPSY_POSITION_FIELDS_LONGITUDE = 1 << 2,
+ * GYPSY_POSITION_FIELDS_ALTITUDE = 1 << 3
+ *
+ * If we get any new information, we have to call the global
+ * callback.
+ * 
+ * @param position The GypsyPosition
+ * @param fields_set Bitmask indicating what field was set 
+ * @param timestamp the time since Unix Epoch
+ * @param latitude 
+ * @param longitude 
+ * @param altitude
+ * @param userdata
+ * @returns nothing
+ */
 static void 
 vehicle_gypsy_position_changed(GypsyPosition *position, 
 		GypsyPositionFields fields_set, int timestamp, 
@@ -112,6 +155,19 @@ vehicle_gypsy_position_changed(GypsyPosition *position,
 	}
 }
 
+/**
+ * @brief Everytime any Sat-Details are changed, this function get called
+ *
+ * Going through all Sats, counting those wich are in use.
+ *
+ * Anytime this functions get called, we have to call the global
+ * callback.
+ *
+ * @param satellite The GypsySatellite 
+ * @param satellites An GPtrArray wich hold information of all sats
+ * @param userdata
+ * @returns nothing
+ */
 static void 
 vehicle_gypsy_satellite_changed(GypsySatellite *satellite, 
 		GPtrArray *satellites,
@@ -134,6 +190,23 @@ vehicle_gypsy_satellite_changed(GypsySatellite *satellite,
 	callback_list_call_0(priv->cbl);
 }
 
+/**
+ * @brief When the course or speed has changed, this function get called
+ *
+ * Only speed and direction are used!
+ *
+ * If we get any new information, we have to call the global
+ * callback.
+ * 
+ * @param course The GypsyCourse
+ * @param fields Bitmask indicating what field was set 
+ * @param timestamp the time since Unix Epoch
+ * @param speed
+ * @param direction
+ * @param climb
+ * @param userdata
+ * @returns nothing
+ */
 static void 
 vehicle_gypsy_course_changed (GypsyCourse *course, 
 		GypsyCourseFields fields,
@@ -162,9 +235,12 @@ vehicle_gypsy_course_changed (GypsyCourse *course,
 }
 
 /**
- * Attempt to open the gps device.
- * Return FALSE if retry not required
- * Return TRUE to try again
+ * @brief Attempt to open the gypsy device.
+ * 
+ * Tells gypsy wich functions to call when anything occours.
+ *
+ * @param data
+ * @returns TRUE to try again; FALSE if retry not required
  */
 static gboolean
 vehicle_gypsy_try_open(gpointer *data)
@@ -207,7 +283,10 @@ vehicle_gypsy_try_open(gpointer *data)
 }
 
 /**
- * Open a connection to gypsy. Will re-try the connection if it fails
+ * @brief Open a connection to gypsy. Will re-try the connection if it fails
+ * 
+ * @param priv
+ * @returns nothing
  */
 static void
 vehicle_gypsy_open(struct vehicle_priv *priv)
@@ -218,6 +297,12 @@ vehicle_gypsy_open(struct vehicle_priv *priv)
 	}
 }
 
+/**
+ * @brief Stop retry timer; Free alloced memory
+ * 
+ * @param priv
+ * @returns nothing
+ */
 static void
 vehicle_gypsy_close(struct vehicle_priv *priv)
 {
@@ -244,6 +329,12 @@ vehicle_gypsy_close(struct vehicle_priv *priv)
 		g_object_unref(G_OBJECT (priv->control));
 }
 
+/**
+ * @brief Free the gypsy_vehicle
+ * 
+ * @param priv
+ * @returns nothing
+ */
 static void
 vehicle_gypsy_destroy(struct vehicle_priv *priv)
 {
@@ -253,6 +344,14 @@ vehicle_gypsy_destroy(struct vehicle_priv *priv)
 	g_free(priv);
 }
 
+/**
+ * @brief Provide the outside with information
+ * 
+ * @param priv
+ * @param type TODO: What can this be?
+ * @param attr
+ * @returns true/false
+ */
 static int
 vehicle_gypsy_position_attr_get(struct vehicle_priv *priv,
 			       enum attr_type type, struct attr *attr)
@@ -314,10 +413,18 @@ struct vehicle_methods vehicle_gypsy_methods = {
 	vehicle_gypsy_position_attr_get,
 };
 
+/**
+ * @brief Create gypsy_vehicle
+ * 
+ * @param meth
+ * @param cbl
+ * @param attrs
+ * @returns vehicle_priv
+ */
 static struct vehicle_priv *
-vehicle_gypsy_new_gypsy(struct vehicle_methods
-		      *meth, struct callback_list
-		      *cbl, struct attr **attrs)
+vehicle_gypsy_new_gypsy(struct vehicle_methods *meth,
+	       		struct callback_list *cbl,
+		       	struct attr **attrs)
 {
 	struct vehicle_priv *ret;
 	struct attr *source, *retry_int;
@@ -345,6 +452,11 @@ vehicle_gypsy_new_gypsy(struct vehicle_methods
 	return ret;
 }
 
+/**
+ * @brief register vehicle_gypsy
+ * 
+ * @returns nothing
+ */
 void
 plugin_init(void)
 {
