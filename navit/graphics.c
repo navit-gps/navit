@@ -1724,7 +1724,8 @@ void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList 
 	dbg(1,"order=%d\n", order);
 
 	displaylist->dc.gra=gra;
-	displaylist->ms=mapsets->data;
+	if(mapsets)
+		displaylist->ms=mapsets->data;
 	displaylist->dc.trans=trans;
 	displaylist->workload=async ? 100 : 0;
 	displaylist->cb=cb;
