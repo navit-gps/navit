@@ -9,43 +9,43 @@ osm2navit \- parse osm textfile and converts to NavIt binfile format
 osm2navit parses osm textfile and converts to NavIt binfile format
 .SH OPTIONS
 .TP
-\-h (--help)
+\-h (\-\-help)
 display a short help message
 .TP
-\-N (--nodes-only)
+\-N (\-\-nodes-only)
 process only nodes
 .TP
-\-W (--ways-only)
+\-W (\-\-ways-only)
 process only ways
 .TP
-\-a (--attr-debug-level)
+\-a (\-\-attr-debug-level)
 control which data is included in the debug attribute
 .TP
-\-c (--dump-coordinates)
+\-c (\-\-dump-coordinates)
 dump coordinates after phase 1
 .TP
-\-d (--db) <connect string>
+\-d (\-\-db) <connect string>
 get osm data out of a postgresql database with osm simple scheme and given connect string
 .TP
-\-e (--end) <phase>
+\-e (\-\-end) <phase>
 end at specified phase
 .TP
-\-k (--keep-tmpfiles)
+\-k (\-\-keep-tmpfiles)
 do not delete tmp files after processing. useful to reuse them
 .TP
-\-o (--coverage)
+\-o (\-\-coverage)
 map every street to item overage
 .TP 
-\-s (--start) <phase>
+\-s (\-\-start) <phase>
 start at specified phase
 .TP
-\-i (--input-file) <file>
+\-i (\-\-input-file) <file>
 specify the input file name (OSM), overrules default stdin
 .TP
-\-w (--dedupe-ways)
+\-w (\-\-dedupe-ways)
 ensure no duplicate ways or nodes. useful when using several input files
 .TP
-\-z (--compression-level) <level>
+\-z (\-\-compression-level) <level>
 set the compression level
 .SH BUGS
 Should you find one, please report it :
