@@ -2537,7 +2537,10 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		gui_internal_keyboard_key(this, wkbd, "Ä","Ä",max_w,max_h);
 		gui_internal_keyboard_key(this, wkbd, "Ö","Ö",max_w,max_h);
 		gui_internal_keyboard_key(this, wkbd, "Ü","Ü",max_w,max_h);
-		for (i = 0 ; i < 27 ; i++) {
+		gui_internal_keyboard_key(this, wkbd, "Æ","Æ",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "Ø","Ø",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "Å","Å",max_w,max_h);
+		for (i = 0 ; i < 23 ; i++) {
 			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
 		}
 		wk=gui_internal_keyboard_key_data(this, wkbd, "A",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
@@ -2548,7 +2551,10 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		gui_internal_keyboard_key(this, wkbd, "ä","ä",max_w,max_h);
 		gui_internal_keyboard_key(this, wkbd, "ö","ö",max_w,max_h);
 		gui_internal_keyboard_key(this, wkbd, "ü","ü",max_w,max_h);
-		for (i = 0 ; i < 27 ; i++) {
+		gui_internal_keyboard_key(this, wkbd, "æ","æ",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "ø","ø",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, "å","å",max_w,max_h);
+		for (i = 0 ; i < 23 ; i++) {
 			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
 		}
 		wk=gui_internal_keyboard_key_data(this, wkbd, "a",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
