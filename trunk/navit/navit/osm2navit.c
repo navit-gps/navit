@@ -3193,8 +3193,10 @@ int main(int argc, char **argv)
 	fclose(zip_info.index);
 	fclose(zip_info.dir);
 	fclose(zip_info.res);
-	if (!keep_tmpfiles)
+	if (!keep_tmpfiles) {
 		remove_countryfiles();
+		tempfile_unlink("index","");
+	}
 		}
 	}
 	}
