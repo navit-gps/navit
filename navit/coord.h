@@ -91,6 +91,7 @@ struct coord * coord_new(int x, int y);
 struct coord * coord_new_from_attrs(struct attr *parent, struct attr **attrs);
 void coord_destroy(struct coord *c);
 int coord_parse(const char *c_str, enum projection pro, struct coord *c_ret);
+int pcoord_parse(const char *c_str, enum projection pro, struct pcoord *c_ret);
 void coord_print(enum projection pro, struct coord *c, FILE *out);
 struct coord_rect * coord_rect_new(struct coord *lu, struct coord *rl);
 void coord_rect_destroy(struct coord_rect *r);
