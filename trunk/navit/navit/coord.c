@@ -145,16 +145,19 @@ coord_rect_extend(struct coord_rect *r, struct coord *c)
 		r->lu.y=c->y;
 }
 
-	/* [Proj:][Ð]DMM.ss[S][S]... N/S [D][D]DMM.ss[S][S]... E/W */
-	/* [Proj:][-][D]D.d[d]... [-][D][D]D.d[d]... */
-	/* [Proj:][-]0xX [-]0xX */
-/*
- * Currently supported:
- * 	[Proj:]-0xX [-]0xX 
- * 	- where Proj can be mg/garmin, defaults to mg
- * 	[Proj:][D][D]Dmm.ss[S][S] N/S [D][D]DMM.ss[S][S]... E/W
- * 	[Proj:][-][D]D.d[d]... [-][D][D]D.d[d]
- * 	- where Proj can be geo
+/**
+ * Parses \c char \a *c_str and writes back the coordinates to \c coord \a *c_ret. Uses \c projection \a pro if no projection is given in \c char \a *c_str.
+ * The format for \a *c_str can be: 
+ * 	\li [Proj:]-0xX [-]0xX 
+ * 	    - where Proj can be mg/garmin, defaults to mg
+ * 	\li [Proj:][D][D]Dmm.ss[S][S] N/S [D][D]DMM.ss[S][S]... E/W
+ * 	\li [Proj:][-][D]D.d[d]... [-][D][D]D.d[d]
+ * 	    - where Proj can be geo
+ *
+ * @param *c_str String to be parsed
+ * @param pro Projection of the string
+ * @param *pc_ret Where the \a pcoord should get stored
+ * @returns The lenght of the parsed string
  */
 
 int
@@ -252,6 +255,26 @@ out:
 	if (proj)
 		free(proj);
 	return ret;
+}
+
+/**
+ * A wrapper for pcoord_parse that also return the projection
+ * @param *c_str String to be parsed
+ * @param pro Projection of the string
+ * @param *pc_ret Where the \a pcoord should get stored
+ * @returns The lenght of the parsed string
+ */
+
+int
+pcoord_parse(const char *c_str, enum projection pro, struct pcoord *pc_ret)
+{
+    struct coord c;
+    int ret;
+    ret = coord_parse(c_str, pro, &c);
+    pc_ret->x = c.x;
+    pc_ret->y = c.y;
+    pc_ret->pro = pro;
+    return ret;
 }
 
 void
