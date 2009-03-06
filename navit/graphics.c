@@ -67,6 +67,7 @@ struct graphics
 	struct attr **attrs;
 	struct callback_list *cbl;
 	struct point_rect r;
+	GList *selection;
 };
 
 struct display_context
@@ -99,6 +100,8 @@ struct displaylist {
 
 
 static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
+static void graphics_process_selection(struct graphics *gra, struct displaylist *dl);
+
 void
 graphics_set_rect(struct graphics *gra, struct point_rect *pr)
 {
@@ -672,7 +675,7 @@ static void display_add(struct displaylist *displaylist, struct item *item, int 
 		h=g_hash_table_new_full(displayitem_hash, displayitem_equal, g_free, NULL);
 		g_hash_table_insert(displaylist->dl, GINT_TO_POINTER(item->type), h);
 	}
-	g_hash_table_replace(h, di, NULL);
+	g_hash_table_replace(h, di, di);
 }
 
 
@@ -1663,6 +1666,7 @@ do_draw(struct displaylist *displaylist, int cancel)
 	event_remove_idle(displaylist->idle_ev);
 	displaylist->idle_ev=NULL;
 	displaylist->busy=0;
+	graphics_process_selection(displaylist->dc.gra, displaylist);
 	if (! cancel) 
 		graphics_displaylist_draw(displaylist->dc.gra, displaylist, displaylist->dc.trans, displaylist->layout, 1);
 	map_rect_destroy(displaylist->mr);
@@ -1955,4 +1959,102 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
 		return within_dist_polyline(p, pa, count, dist, 0);
 	}
 	return within_dist_polygon(p, pa, count, dist);
+}
+
+
+static enum item_type
+graphics_selection_type(enum item_type type)
+{
+	if (type < type_line) 
+		return type_selected_point;
+	if (type < type_area) 
+		return type_selected_line;
+	return type_selected_area;
+	
+}
+
+
+static void
+graphics_process_selection_item(struct displaylist *dl, struct item *item)
+{
+	struct displayitem di,*di_res;
+	GHashTable *h;
+
+	di.item=*item;
+	di.label=NULL;
+	di.displayed=0;
+	di.count=0;
+	h=g_hash_table_lookup(dl->dl, GINT_TO_POINTER(di.item.type));
+	if (h) {
+		di_res=g_hash_table_lookup(h, &di);
+		if (di_res) {
+			di.item.type=graphics_selection_type(di.item.type);
+			display_add(dl, &di.item, di_res->count, di_res->c, NULL);
+		}
+	}
+}
+
+void
+graphics_add_selection(struct graphics *gra, struct item *item, struct displaylist *dl)
+{
+	struct item *item_dup=g_new(struct item, 1);
+	*item_dup=*item;
+	gra->selection=g_list_append(gra->selection, item_dup);
+	if (dl)
+		graphics_process_selection_item(dl, item_dup);
+}
+
+void
+graphics_remove_selection(struct graphics *gra, struct item *item, struct displaylist *dl)
+{
+	GList *curr;
+	int found;
+
+	for (;;) {
+		curr=gra->selection;
+		found=0;
+		while (curr) {
+			struct item *sitem=curr->data;
+			if (item_is_equal(*item,*sitem)) {
+				if (dl) {
+					struct displayitem di;
+					GHashTable *h;
+					di.item=*sitem;
+					di.label=NULL;
+					di.displayed=0;
+					di.count=0;
+					di.item.type=graphics_selection_type(di.item.type);
+					h=g_hash_table_lookup(dl->dl, GINT_TO_POINTER(di.item.type));
+					if (h)
+						g_hash_table_remove(h, &di);
+				}
+				g_free(sitem);
+				gra->selection=g_list_remove(gra->selection, curr->data);
+				found=1;
+				break;
+			}
+		}
+		if (!found)
+			return;
+	}
+}
+
+void
+graphics_clear_selection(struct graphics *gra, struct displaylist *dl)
+{
+	while (gra->selection) 
+		graphics_remove_selection(gra, (struct item *)gra->selection->data, dl);
+}
+
+static void
+graphics_process_selection(struct graphics *gra, struct displaylist *dl)
+{
+	GList *curr;
+
+	curr=gra->selection;
+	while (curr) {
+		struct item *item=curr->data;
+		graphics_process_selection_item(dl, item);
+		curr=g_list_next(curr);
+	}
 }
