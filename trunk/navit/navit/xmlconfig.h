@@ -20,9 +20,23 @@
 #ifndef NAVIT_XMLCONFIG_H
 #define NAVIT_XMLCONFIG_H
 
+struct object_func {
+	enum attr_type type;
+	void *(*new)(struct attr *parent, struct attr **attrs);
+	int (*get_attr)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+	struct attr_iter *(*iter_new)(void *);
+	void (*iter_destroy)(struct attr_iter *);
+	int (*set_attr)(void *, struct attr *attr);
+	int (*add_attr)(void *, struct attr *attr);
+	int (*remove_attr)(void *, struct attr *attr);
+	int (*init)(void *);
+	void (*destroy)(void *);
+};
+
 typedef GError xmlerror;
 struct container;
 gboolean config_load(const char *filename, xmlerror **error);
+struct object_func *object_func_lookup(enum attr_type type);
 
 #endif
 
