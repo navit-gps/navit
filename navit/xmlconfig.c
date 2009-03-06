@@ -86,6 +86,7 @@ struct xmlstate {
 	const gchar *element;
 	xmlerror **error;
 	struct element_func *func;
+	struct object_func *object_func;
 	struct xmldocument *document;
 };
 
@@ -255,53 +256,97 @@ xmlconfig_announce(struct xmlstate *state)
  * */
 
 #define NEW(x) (void *(*)(struct attr *, struct attr **))(x)
+#define GET(x) (int (*)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter))(x)
+#define ITERN(x) (struct attr_iter * (*)(void *))(x) 
+#define ITERD(x) (void (*)(struct attr_iter *iter))(x) 
+#define SET(x) (int (*)(void *, struct attr *attr))(x)
 #define ADD(x) (int (*)(void *, struct attr *attr))(x)
+#define REMOVE(x) (int (*)(void *, struct attr *attr))(x)
 #define INIT(x) (int (*)(void *))(x)
 #define DESTROY(x) (void (*)(void *))(x)
+
+static struct object_func object_funcs[] = {
+	{ attr_arrows,     NEW(arrows_new)},
+	{ attr_circle,     NEW(circle_new),   NULL, NULL, NULL, NULL, ADD(element_add_attr)},
+	{ attr_coord,      NEW(coord_new_from_attrs)},
+	{ attr_cursor,     NEW(cursor_new),   NULL, NULL, NULL, NULL, ADD(cursor_add_attr)},
+	{ attr_debug,      NEW(debug_new)},
+	{ attr_graphics,   NEW(graphics_new)},
+	{ attr_gui,        NEW(gui_new), GET(gui_get_attr)},
+	{ attr_icon,       NEW(icon_new),     NULL, NULL, NULL, NULL, ADD(element_add_attr)},
+	{ attr_image,      NEW(image_new)},
+	{ attr_itemgra,    NEW(itemgra_new),  NULL, NULL, NULL, NULL, ADD(itemgra_add_attr)},
+	{ attr_layer,      NEW(layer_new),    NULL, NULL, NULL, NULL, ADD(layer_add_attr)},
+	{ attr_layout,     NEW(layout_new),   NULL, NULL, NULL, NULL, ADD(layout_add_attr)},
+	{ attr_log,        NEW(log_new)},
+	{ attr_map,        NEW(map_new)},
+	{ attr_mapset,     NEW(mapset_new),   NULL, NULL, NULL, NULL, ADD(mapset_add_attr)},
+	{ attr_navigation, NEW(navigation_new)},
+	{ attr_navit,      NEW(navit_new), GET(navit_get_attr), ITERN(navit_attr_iter_new), ITERD(navit_attr_iter_destroy), SET(navit_set_attr), ADD(navit_add_attr), REMOVE(navit_remove_attr), INIT(navit_init), DESTROY(navit_destroy)},
+	{ attr_osd,        NEW(osd_new)},
+	{ attr_plugins,    NEW(plugins_new),  NULL, NULL, NULL, NULL, NULL, NULL, INIT(plugins_init)},
+	{ attr_plugin,     NEW(plugin_new)},
+	{ attr_polygon,    NEW(polygon_new),  NULL, NULL, NULL, NULL, ADD(element_add_attr)},
+	{ attr_polyline,   NEW(polyline_new), NULL, NULL, NULL, NULL, ADD(element_add_attr)},
+	{ attr_route,      NEW(route_new)},
+	{ attr_speech,     NEW(speech_new), GET(speech_get_attr), NULL, NULL, SET(speech_set_attr)},
+	{ attr_text,       NEW(text_new)},
+	{ attr_tracking,   NEW(tracking_new)},
+	{ attr_vehicle,    NEW(vehicle_new),  GET(vehicle_get_attr), NULL, NULL, NULL, ADD(vehicle_add_attr) },
+};
+
+struct object_func *
+object_func_lookup(enum attr_type type)
+{
+	int i;
+	for (i = 0 ; i < sizeof(object_funcs)/sizeof(struct object_func); i++) {
+		if (object_funcs[i].type == type)
+			return &object_funcs[i];
+	}
+	return NULL;
+}
+
 struct element_func {
 	char *name;
 	char *parent;
 	int (*func)(struct xmlstate *state);
-	void *(*new)(struct attr *parent, struct attr **attrs);
-	int (*add_attr)(void *, struct attr *attr);
-	int (*init)(void *);
-	void (*destroy)(void *);
+	enum attr_type type;
 } elements[] = {
 	{ "config", NULL, xmlconfig_config},
 	{ "announce", "navigation", xmlconfig_announce},
-	{ "speech", "navit", NULL, NEW(speech_new)},
-	{ "tracking", "navit", NULL, NEW(tracking_new)},
-	{ "route", "navit", NULL, NEW(route_new)},
+	{ "speech", "navit", NULL, attr_speech},
+	{ "tracking", "navit", NULL, attr_tracking},
+	{ "route", "navit", NULL, attr_route},
 	{ "speed", "route", xmlconfig_speed},
-	{ "mapset", "navit", NULL, NEW(mapset_new), ADD(mapset_add_attr)},
-	{ "map",  "mapset", NULL, NEW(map_new)},
-	{ "debug", "config", NULL, NEW(debug_new)},
-	{ "osd", "navit", NULL, NEW(osd_new)},
-	{ "navigation", "navit", NULL, NEW(navigation_new)},
-	{ "navit", "config", NULL, NEW(navit_new), ADD(navit_add_attr), INIT(navit_init), DESTROY(navit_destroy)},
-	{ "graphics", "navit", NULL, NEW(graphics_new)},
-	{ "gui", "navit", NULL, NEW(gui_new)},
-	{ "layout", "navit", NULL, NEW(layout_new), ADD(layout_add_attr)},
-	{ "layer", "layout", NULL, NEW(layer_new), ADD(layer_add_attr)},
-	{ "itemgra", "layer", NULL, NEW(itemgra_new), ADD(itemgra_add_attr)},
-	{ "circle", "itemgra", NULL, NEW(circle_new), ADD(element_add_attr)},
-	{ "coord", "circle", NULL, NEW(coord_new_from_attrs)},
-	{ "icon", "itemgra", NULL, NEW(icon_new), ADD(element_add_attr)},
-	{ "coord", "icon", NULL, NEW(coord_new_from_attrs)},
-	{ "image", "itemgra", NULL, NEW(image_new)},
-	{ "text", "itemgra", NULL, NEW(text_new)},
-	{ "polygon", "itemgra", NULL, NEW(polygon_new), ADD(element_add_attr)},
-	{ "coord", "polygon", NULL, NEW(coord_new_from_attrs)},
-	{ "polyline", "itemgra", NULL, NEW(polyline_new), ADD(element_add_attr)},
-	{ "coord", "polyline", NULL, NEW(coord_new_from_attrs)},
-	{ "arrows", "itemgra", NULL, NEW(arrows_new)},
-	{ "vehicle", "navit", NULL, NEW(vehicle_new), ADD(vehicle_add_attr) },
-	{ "cursor", "vehicle", NULL, NEW(cursor_new), ADD(cursor_add_attr)},
-	{ "itemgra", "cursor", NULL, NEW(itemgra_new), ADD(itemgra_add_attr)},
-	{ "log", "vehicle", NULL, NEW(log_new)},
-	{ "log", "navit", NULL, NEW(log_new)},
-	{ "plugins", "config", NULL, NEW(plugins_new), NULL, INIT(plugins_init)},
-	{ "plugin", "plugins", NULL, NEW(plugin_new)},
+	{ "mapset", "navit", NULL, attr_mapset},
+	{ "map",  "mapset", NULL, attr_map},
+	{ "debug", "config", NULL, attr_debug},
+	{ "osd", "navit", NULL, attr_osd},
+	{ "navigation", "navit", NULL, attr_navigation},
+	{ "navit", "config", NULL, attr_navit},
+	{ "graphics", "navit", NULL, attr_graphics},
+	{ "gui", "navit", NULL, attr_gui},
+	{ "layout", "navit", NULL, attr_layout},
+	{ "layer", "layout", NULL, attr_layer},
+	{ "itemgra", "layer", NULL, attr_itemgra},
+	{ "circle", "itemgra", NULL, attr_circle},
+	{ "coord", "circle", NULL, attr_coord},
+	{ "icon", "itemgra", NULL, attr_icon},
+	{ "coord", "icon", NULL, attr_coord},
+	{ "image", "itemgra", NULL, attr_image},
+	{ "text", "itemgra", NULL, attr_text},
+	{ "polygon", "itemgra", NULL, attr_polygon},
+	{ "coord", "polygon", NULL, attr_coord},
+	{ "polyline", "itemgra", NULL, attr_polyline},
+	{ "coord", "polyline", NULL, attr_coord},
+	{ "arrows", "itemgra", NULL, attr_arrows},
+	{ "vehicle", "navit", NULL, attr_vehicle},
+	{ "cursor", "vehicle", NULL, attr_cursor},
+	{ "itemgra", "cursor", NULL, attr_itemgra},
+	{ "log", "vehicle", NULL, attr_log},
+	{ "log", "navit", NULL, attr_log},
+	{ "plugins", "config", NULL, attr_plugins},
+	{ "plugin", "plugins", NULL, attr_plugin},
 	{},
 };
 
@@ -425,6 +470,7 @@ start_element(GMarkupParseContext *context,
 	new->element=element_name;
 	new->error=error;
 	new->func=func;
+	new->object_func=NULL;
 	*parent=new;
 	if (!find_boolean(new, "enabled", 1, 0))
 		return;
@@ -437,16 +483,19 @@ start_element(GMarkupParseContext *context,
 	} else {
 		struct attr **attrs;
 
+		new->object_func=object_func_lookup(func->type);
+		if (! new->object_func)
+			return;
 		attrs=convert_to_attrs(new,attr_fixme);
 		new->element_attr.type=attr_none;
-		new->element_attr.u.data = func->new(&new->parent->element_attr, attrs);
+		new->element_attr.u.data = new->object_func->new(&new->parent->element_attr, attrs);
 		if (! new->element_attr.u.data)
 			return;
 		new->element_attr.type=attr_from_name(element_name);
 		if (new->element_attr.type == attr_none) 
 			dbg(0,"failed to create object of type '%s'\n", element_name);
-		if (new->parent->func->add_attr) 
-			new->parent->func->add_attr(new->parent->element_attr.u.data, &new->element_attr);
+		if (new->parent->object_func && new->parent->object_func->add_attr) 
+			new->parent->object_func->add_attr(new->parent->element_attr.u.data, &new->element_attr);
 	}
 	return;
 }
@@ -463,8 +512,8 @@ end_element (GMarkupParseContext *context,
 
 	dbg(2,"name='%s'\n", element_name);
 	curr=*state;
-	if (curr->func->init)
-		curr->func->init(curr->element_attr.u.data);
+	if (curr->object_func && curr->object_func->init)
+		curr->object_func->init(curr->element_attr.u.data);
 	*state=curr->parent;
 	g_free(curr);
 }

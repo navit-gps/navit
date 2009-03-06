@@ -3,7 +3,9 @@
 #include <string.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <glib.h>
 #include "item.h"
+#include "xmlconfig.h"
 #include "main.h"
 #include "navit.h"
 #include "vehicle.h"
@@ -107,18 +109,10 @@ command_attr_type(struct result *res)
 static int
 command_object_get_attr(struct attr *object, enum attr_type attr_type, struct attr *ret)
 {
-	switch (object->type) {
-	case attr_gui:
-		return gui_get_attr(object->u.gui, attr_type, ret, NULL);
-	case attr_navit:
-		return navit_get_attr(object->u.navit, attr_type, ret, NULL);
-	case attr_speech:
-		return speech_get_attr(object->u.speech, attr_type, ret, NULL);
-	case attr_vehicle:
-		return vehicle_get_attr(object->u.vehicle, attr_type, ret, NULL);
-	default:
+	struct object_func *func=object_func_lookup(object->type);
+	if (!func || !func->get_attr)
 		return 0;
-	}
+	return func->get_attr(object->u.data, attr_type, ret, NULL);
 }
 
 static void
@@ -145,17 +139,11 @@ command_set_attr(struct context *ctx, struct result *res, struct result *newres)
 {
 	int result=0;
 	enum attr_type attr_type=command_attr_type(res);
+	struct object_func *func=object_func_lookup(res->attr.type);
+	if (!func || !func->set_attr)
+		return;
 	newres->attr.type=attr_type;
-	switch (res->attr.type) {
-	case attr_navit:
-		result=navit_set_attr(res->attr.u.navit, &newres->attr);
-		break;
-	case attr_speech:
-		result=speech_set_attr(res->attr.u.speech, &newres->attr);
-		break;
-	default:
-		break;
-	}
+	result=func->set_attr(res->attr.u.data, &newres->attr);
 	*res=*newres;
 }
 
