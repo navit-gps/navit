@@ -80,6 +80,7 @@ void navit_set_center_screen(struct navit *this_, struct point *p);
 int navit_set_attr(struct navit *this_, struct attr *attr);
 int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int navit_add_attr(struct navit *this_, struct attr *attr);
+int navit_remove_attr(struct navit *this_, struct attr *attr);
 struct attr_iter *navit_attr_iter_new(void);
 void navit_attr_iter_destroy(struct attr_iter *iter);
 void navit_add_callback(struct navit *this_, struct callback *cb);

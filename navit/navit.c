@@ -1785,6 +1785,12 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 	return ret;
 }
 
+int
+navit_remove_attr(struct navit *this_, struct attr *attr)
+{
+	return 0;
+}
+
 struct attr_iter *
 navit_attr_iter_new()
 {
