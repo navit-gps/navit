@@ -111,6 +111,7 @@ struct widget {
 	char *speech;
 	struct pcoord c;
 	struct item item;
+	int selection_id;
 	int state;
 	struct point p;
 	int wmin,hmin;
@@ -1945,6 +1946,11 @@ static void
 gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct widget *w=wm->data;
+	int highlight=(w->data == (void *)2 || w->data == (void *)3 || w->data == (void *)4);
+	if (highlight) {
+		graphics_clear_selection(this->gra, NULL);
+		graphics_add_selection(this->gra, &w->item, NULL);
+	}
 	navit_set_center(this->nav, &w->c);
 	gui_internal_prune_menu(this, NULL);
 }
@@ -2317,6 +2323,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	char *text=NULL,*name=NULL;
 	struct search_list_result *res;
 	struct widget *wc;
+	struct item *item=NULL;
 	GList *l;
 
 	res=search_list_get_result(this->sl);
@@ -2327,14 +2334,17 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 
 	if (! strcmp(wm_name,"Country")) {
 		name=res->country->name;
+		item=&res->country->item;
 		text=g_strdup_printf("%s", res->country->name);
 	}
 	if (! strcmp(wm_name,"Town")) {
 		name=res->town->name;
+		item=&res->town->item;
 		text=g_strdup(name);
 	}
 	if (! strcmp(wm_name,"Street")) {
 		name=res->street->name;
+		item=&res->street->item;
 		text=g_strdup_printf("%s %s", res->town->name, res->street->name);
 	}
 #if 0
@@ -2350,7 +2360,9 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	wc->name=g_strdup(name);
 	if (res->c)
 	  wc->c=*res->c;
-	wc->item.id_lo=res->id;
+	wc->selection_id=res->id;
+	if (item)
+		wc->item=*item;
 	gui_internal_widget_pack(this, search_list);
 	l=g_list_last(this->root.children);
 	graphics_draw_mode(this->gra, draw_mode_begin);
@@ -2699,9 +2711,9 @@ gui_internal_search_street(struct gui_priv *this, struct widget *widget, void *d
 static void
 gui_internal_search_street_in_town(struct gui_priv *this, struct widget *widget, void *data)
 {
-	dbg(0,"id %d\n", widget->item.id_lo);
+	dbg(0,"id %d\n", widget->selection_id);
 	search_list_select(this->sl, attr_town_name, 0, 0);
-	search_list_select(this->sl, attr_town_name, widget->item.id_lo, 1);
+	search_list_select(this->sl, attr_town_name, widget->selection_id, 1);
 	gui_internal_search(this,_("Street"),"Street",0);
 }
 
@@ -2719,9 +2731,9 @@ static void
 gui_internal_search_town_in_country(struct gui_priv *this, struct widget *widget)
 {
 	struct search_list_common *slc;
-	dbg(0,"id %d\n", widget->item.id_lo);
+	dbg(0,"id %d\n", widget->selection_id);
 	search_list_select(this->sl, attr_country_all, 0, 0);
-	slc=search_list_select(this->sl, attr_country_all, widget->item.id_lo, 1);
+	slc=search_list_select(this->sl, attr_country_all, widget->selection_id, 1);
 	if (slc) {
 		g_free(this->country_iso2);
 		this->country_iso2=((struct search_list_country *)slc)->iso2;
