@@ -414,6 +414,45 @@
                 <itemgra item_types="street_route" order="18">
                     <polyline color="#0000a0" width="530"/>
                 </itemgra>
+		<itemgra item_types="selected_line" order="2">
+                    <polyline color="#ba00b8" width="4"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="3-5">
+                    <polyline color="#ba00b8" width="8"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="6">
+                    <polyline color="#ba00b8" width="10"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="7-8">
+                    <polyline color="#ba00b8" width="16"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="9-10">
+                    <polyline color="#ba00b8" width="20"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="11">
+                    <polyline color="#ba00b8" width="28"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="12">
+                    <polyline color="#ba00b8" width="32"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="13">
+                    <polyline color="#ba00b8" width="52"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="14">
+                    <polyline color="#ba00b8" width="64"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="15">
+                    <polyline color="#ba00b8" width="68"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="16">
+                    <polyline color="#ba00b8" width="132"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="17">
+                    <polyline color="#ba00b8" width="268"/>
+                </itemgra>
+                <itemgra item_types="selected_line" order="18">
+                    <polyline color="#ba00b8" width="530"/>
+                </itemgra>
                 <itemgra item_types="street_nopass" order="10-">
                     <polyline color="#000000" width="1"/>
                 </itemgra>
