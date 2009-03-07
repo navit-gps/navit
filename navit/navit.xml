@@ -3041,6 +3041,35 @@
                 </itemgra>
             </layer>
             <!-- "Contour Lines" -->
+
+            <layer name="Barriers">
+              <itemgra item_types="ditch" order="8-">
+                <polyline color="#B8860B" width="1"/>
+                <text text_size="8"/>
+              </itemgra>
+              <itemgra item_types="hedge" order="8-">
+                <polyline color="#90EE90" width="1"/>
+                <text text_size="8"/>
+              </itemgra>
+              <itemgra item_types="fence" order="8-">
+                <polyline color="#808080" width="1"/>
+                <text text_size="8"/>
+              </itemgra>
+              <itemgra item_types="wall" order="8-">
+                <polyline color="#808080" width="1"/>
+                <text text_size="8"/>
+              </itemgra>
+              <itemgra item_types="retaining_wall" order="8-">
+                <polyline color="#808080" width="1"/>
+                <text text_size="8"/>
+              </itemgra>
+              <itemgra item_types="city_wall" order="8-">
+                <polyline color="#CD5C5C" width="1"/>
+                <text text_size="8"/>
+              </itemgra>
+            </layer>
+            <!-- "Barriers" -->
+
             <layer name="Waterways">
                 <itemgra item_types="water_line" order="0-">
                     <polyline color="#82c8ea" width="2"/>
