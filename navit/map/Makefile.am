@@ -1,4 +1,4 @@
-SUBDIRS=mg textfile binfile
+SUBDIRS=mg textfile binfile shapefile
 #  garmin_img
 if HAVELIBGARMIN
 SUBDIRS+=garmin
