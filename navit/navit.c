@@ -1426,7 +1426,13 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir)
 		if (dir)
 			*dir=nv->dir;
 	} else {
-		int mdir=nv->dir-this_->orientation;
+		int mdir;
+		if (this_->tracking && this_->tracking_flag) {
+			mdir = tracking_get_angle(this_->tracking) - this_->orientation;
+		} else {
+			mdir=nv->dir-this_->orientation;
+		}
+
 		p->x=(50 - 30.*sin(M_PI*mdir/180.))*width/100;
 		p->y=(50 + 30.*cos(M_PI*mdir/180.))*height/100;
 		if (dir)
@@ -1860,11 +1866,13 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 static void
 navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 {
-	struct attr attr_dir, attr_speed, attr_pos;
+	struct attr attr_dir, attr_speed, attr_pos, attr_hdop, attr_time;
 	struct pcoord cursor_pc;
 	struct point cursor_pnt, *pnt=&cursor_pnt;
 	enum projection pro;
 	int border=16;
+	time_t fixtime;
+	struct tm fixtime_tm;
 	int recenter = 1; // indicates if we should recenter the map
 
 	profile(0,NULL);
@@ -1908,7 +1916,18 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	cursor_pc.y = nv->coord.y;
 	cursor_pc.pro = pro;
 	if (this_->tracking && this_->tracking_flag) {
-		if (tracking_update(this_->tracking, &cursor_pc, nv->dir)) {
+		if (! vehicle_get_attr(nv->vehicle, attr_position_hdop, &attr_hdop, NULL)) {
+			attr_hdop.u.numd = -1;
+		}
+
+		if (! vehicle_get_attr(nv->vehicle, attr_position_time_iso8601, &attr_time, NULL)) {
+			fixtime = time(NULL);
+		} else {
+			strptime(attr_time.u.str, "%Y-%m-%dT%TZ", &fixtime_tm);
+			fixtime = mktime(&fixtime_tm);
+		}
+
+		if (tracking_update(this_->tracking, &cursor_pc, nv->dir, attr_hdop.u.numd, nv->speed, fixtime)) {
 			nv->coord.x=cursor_pc.x;
 			nv->coord.y=cursor_pc.y;
 		}

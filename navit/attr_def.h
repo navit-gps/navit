@@ -102,6 +102,7 @@ ATTR(autozoom)
 ATTR(version)
 ATTR(autozoom_min)
 ATTR(maxspeed)
+ATTR(cdf_histsize)
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
