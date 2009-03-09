@@ -19,6 +19,8 @@
 
 #include <glib.h>
 #include <string.h>
+#include <time.h>
+#include <math.h>
 #include "item.h"
 #include "attr.h"
 #include "track.h"
@@ -47,6 +49,38 @@ struct tracking_line
 };
 
 
+/**
+ * @brief Conatins a list of previous speeds
+ *
+ * This structure is used to hold a list of previously reported
+ * speeds. This data is used by the CDF.
+ */
+struct cdf_speed {
+	struct cdf_speed *next;
+	int speed;
+	time_t time;
+};
+
+/**
+ * @brief Contains data for the CDF
+ *
+ * This structure holds all data needed by the
+ * cumulative displacement filter.
+ */
+struct cdf_data {
+	int extrapolating;
+	int available;
+	int first_pos;
+	int poscount;
+	int hist_size;
+	struct cdf_speed *speed_hist;
+	struct pcoord *pos_hist;
+	int *dir_hist;
+	double last_dist;
+	struct pcoord last_out; 
+	int last_dir;
+};
+
 struct tracking {
 	struct mapset *ms;
 	struct route *rt;
@@ -66,6 +100,7 @@ struct tracking {
 	int curr_angle;
 	struct coord last[2];
 	struct pcoord last_in, last_out;
+	struct cdf_data cdf;
 };
 
 
@@ -75,6 +110,186 @@ int nostop_pref=10;
 int offroad_limit_pref=5000;
 int route_pref=300;
 
+
+static void
+tracking_init_cdf(struct cdf_data *cdf, int hist_size)
+{
+	cdf->extrapolating = 0;
+	cdf->available = 0;
+	cdf->poscount = 0;
+	cdf->last_dist = 0;
+	cdf->hist_size = hist_size;
+
+	cdf->pos_hist = g_new0(struct pcoord, hist_size);
+	cdf->dir_hist = g_new0(int, hist_size);
+}
+
+// Variables for finetuning the CDF
+
+// Minimum average speed
+#define CDF_MINAVG 1.f
+// Maximum average speed
+#define CDF_MAXAVG 6.f // only ~ 20 km/h 
+		// We need a low value here because otherwise we would extrapolate whenever we are not accelerating
+
+// Mininum distance (square of it..), below which we ignore gps updates
+#define CDF_MINDIST 49 // 7 meters, I guess this value has to be changed for pedestrians.
+
+static void
+tracking_process_cdf(struct cdf_data *cdf, struct pcoord *pin, struct pcoord *pout, int dirin, int *dirout, int cur_speed, time_t fixtime)
+{
+	struct cdf_speed *speed,*sc,*sl;
+	double speed_avg;
+	int speed_num,i;
+
+	if (cdf->hist_size == 0) {
+		printf("No CDF.\n");
+		*pout = *pin;
+		*dirout = dirin;
+		return;
+	}
+
+	speed = g_new0(struct cdf_speed, 1);
+	speed->speed = cur_speed;
+	speed->time = fixtime;
+
+	speed->next = cdf->speed_hist;
+	cdf->speed_hist = speed;
+
+	sc = speed;
+	sl = NULL;
+	speed_num = 0;
+	speed_avg = 0;
+	while (sc && ((fixtime - speed->time) < 4)) { // FIXME static maxtime
+		speed_num++;
+		speed_avg += sc->speed;
+		sl = sc;
+		sc = sc->next;
+	}
+
+	speed_avg /= (double)speed_num;
+
+	if (sl) {
+		sl->next = NULL;
+	}
+   
+	while (sc) {
+		sl = sc->next;
+		g_free(sc);
+		sc = sl;
+	}
+
+	if (speed_avg < CDF_MINAVG) {
+		speed_avg = CDF_MINAVG;
+	} else if (speed_avg > CDF_MAXAVG) { 
+		speed_avg = CDF_MAXAVG;
+	}
+
+
+	if (cur_speed >= speed_avg) {
+		if (cdf->extrapolating) {
+			cdf->poscount = 0;
+			cdf->extrapolating = 0;
+		}
+
+		cdf->first_pos--;
+		if (cdf->first_pos < 0) {
+			cdf->first_pos = cdf->hist_size - 1;
+		}
+
+		if (cdf->poscount < cdf->hist_size) {
+			cdf->poscount++;
+		}
+
+		cdf->pos_hist[cdf->first_pos] = *pin;
+		cdf->dir_hist[cdf->first_pos] = dirin;
+		
+		*pout = *pin;
+		*dirout = dirin;
+	} else if (cdf->poscount > 0) {
+		
+		double mx,my; // Average position's x and y values
+		double sx,sy; // Support vector
+		double dx,dy; // Difference between average and current position
+		double len;   // Length of support vector
+		double dist;  
+
+		mx = my = 0;
+		sx = sy = 0;
+
+		for (i = 0; i < cdf->poscount; i++) {
+			mx += (double)cdf->pos_hist[((cdf->first_pos + i) % cdf->hist_size)].x / cdf->poscount; 
+			my += (double)cdf->pos_hist[((cdf->first_pos + i) % cdf->hist_size)].y / cdf->poscount; 
+
+			
+			if (i != 0) {
+				sx += cdf->pos_hist[((cdf->first_pos + i) % cdf->hist_size)].x - cdf->pos_hist[((cdf->first_pos + i - 1) % cdf->hist_size)].x;
+				sy += cdf->pos_hist[((cdf->first_pos + i) % cdf->hist_size)].y - cdf->pos_hist[((cdf->first_pos + i - 1) % cdf->hist_size)].y;
+			}
+			
+		}
+
+		if (cdf->poscount > 1) {
+			// Normalize the support vector
+			len = sqrt(sx * sx + sy * sy);
+			sx /= len;
+			sy /= len;
+
+			// Calculate the new direction
+			*dirout = (int)rint(atan(sx / sy) / M_PI * 180 + 180);
+		} else {
+			// If we only have one position, we can't use differences of positions, but we have to use the reported
+			// direction of that position
+			sx = sin((double)cdf->dir_hist[cdf->first_pos] / 180 * M_PI);
+			sy = cos((double)cdf->dir_hist[cdf->first_pos] / 180 * M_PI);
+			*dirout = cdf->dir_hist[cdf->first_pos];	
+		}
+
+		
+		dx = pin->x - mx;
+		dy = pin->y - my;
+		dist = dx * sx + dy * sy;
+
+		if (cdf->extrapolating && (dist < cdf->last_dist)) {
+			dist = cdf->last_dist;
+		} 
+
+		cdf->last_dist = dist;
+		cdf->extrapolating = 1;
+
+	  pout->x = (int)rint(mx + sx * dist);
+	  pout->y = (int)rint(my + sy * dist);
+		pout->pro = pin->pro;
+		
+	} else {
+		// We should extrapolate, but don't have an old position available
+		*pout = *pin;
+		*dirout = dirin;
+	}
+
+	if (cdf->available) {
+		int dx,dy;
+		
+		dx = pout->x - cdf->last_out.x;
+		dy = pout->y - cdf->last_out.y;
+
+		if ((dx*dx + dy*dy) < CDF_MINDIST) {
+			*pout = cdf->last_out;
+			*dirout = cdf->last_dir;
+		}
+	}
+
+	cdf->last_out = *pout;
+	cdf->last_dir = *dirout;
+
+	cdf->available = 1;
+} 
+
+int
+tracking_get_angle(struct tracking *tr)
+{
+	return tr->curr_angle;
+}
 
 struct pcoord *
 tracking_get_pos(struct tracking *tr)
@@ -348,12 +563,14 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 
 
 int
-tracking_update(struct tracking *tr, struct pcoord *pc, int angle)
+tracking_update(struct tracking *tr, struct pcoord *pc, int angle, double *hdop, int speed, time_t fixtime)
 {
 	struct tracking_line *t;
 	int i,value,min;
 	struct coord lpnt;
 	struct coord cin;
+	struct pcoord pcf; // Coordinate filtered through the CDF
+	int anglef;				// Angle filtered through the CDF
 #if 0
 	int min,dist;
 	int debug=0;
@@ -366,19 +583,27 @@ tracking_update(struct tracking *tr, struct pcoord *pc, int angle)
 			*pc=tr->curr_out;
 		return 0;
 	}
+
+	if (*hdop > 3.5f) { // This value has been taken from julien cayzac's CDF implementation
+		*pc = tr->curr_out;
+		return 0;
+	}
+
+	tracking_process_cdf(&tr->cdf, pc, &pcf, angle, &anglef, speed, fixtime);
+
 	tr->last_in=tr->curr_in;
 	tr->last_out=tr->curr_out;
 	tr->last[0]=tr->curr[0];
 	tr->last[1]=tr->curr[1];
-	tr->curr_in=*pc;
-	tr->curr_angle=angle;
-	cin.x = pc->x;
-	cin.y = pc->y;
-	if (!tr->lines || transform_distance_sq_pc(&tr->last_updated, pc) > 250000) {
+	tr->curr_in=pcf;
+	tr->curr_angle=anglef;
+	cin.x = pcf.x;
+	cin.y = pcf.y;
+	if (!tr->lines || transform_distance_sq_pc(&tr->last_updated, &pcf) > 250000) {
 		dbg(1, "update\n");
 		tracking_free_lines(tr);
-		tracking_doupdate_lines(tr, pc);
-		tr->last_updated=*pc;
+		tracking_doupdate_lines(tr, &pcf);
+		tr->last_updated=pcf;
 		dbg(1,"update end\n");
 	}
 		
@@ -402,14 +627,14 @@ tracking_update(struct tracking *tr, struct pcoord *pc, int angle)
 				tr->curr[1]=sd->c[i+1];
 				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
 					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], &cin, &lpnt),
-					tracking_angle_delta(angle, t->angle[i], 0)*angle_factor,
+					tracking_angle_delta(anglef, t->angle[i], 0)*angle_factor,
 					tracking_is_connected(tr->last, &sd->c[i]) ? connected_pref : 0,
 					lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y ? nostop_pref : 0,
 					value
 				);
 				tr->curr_out.x=lpnt.x;
 				tr->curr_out.y=lpnt.y;
-				tr->curr_out.pro = pc->pro;
+				tr->curr_out.pro = pcf.pro;
 				min=value;
 			}
 		}
@@ -427,6 +652,13 @@ struct tracking *
 tracking_new(struct attr *parent, struct attr **attrs)
 {
 	struct tracking *this=g_new0(struct tracking, 1);
+	struct attr hist_size;
+
+	if (! attr_generic_get_attr(attrs, NULL, attr_cdf_histsize, &hist_size, NULL)) {
+		hist_size.u.num = 0;
+	}
+
+	tracking_init_cdf(&this->cdf, hist_size.u.num);
 
 	return this;
 }
