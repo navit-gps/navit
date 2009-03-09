@@ -571,11 +571,19 @@ AC_ARG_ENABLE(svg2png, [  --disable-svg2png        disable conversion of svgs to
 AC_ARG_ENABLE(svg2png-scaling, [  --enable-svg2png-scaling   enable conversion of svgs to pngs with specified sizes], SVG2PNG_SCALES=$enableval, SVG2PNG_SCALES="8 16 32 48 96")
 AC_ARG_ENABLE(svg2png-scaling-flag, [  --enable-svg2png-scaling-flag   enable conversion of flag svgs to pngs with specified sizes], SVG2PNG_SCALES_FLAG=$enableval, SVG2PNG_SCALES_FLAG="")
 AC_ARG_ENABLE(svg2png-scaling-nav, [  --enable-svg2png-scaling-nav   enable conversion of nav svgs to pngs with specified sizes], SVG2PNG_SCALES_NAV=$enableval, SVG2PNG_SCALES_NAV="")
+AC_ARG_WITH(svg2png-use-convert, [  --with-svg2png-use-convert   use imagemagick's convert for png creation], SVG2PNG_CONVERTER="convert")
+AC_ARG_WITH(svg2png-use-rsvg-convert, [  --with-svg2png-use-rsvg-convert   use librsvg's rsvg-convert for png creation], SVG2PNG_CONVERTER="rsvg-convert")
+AC_ARG_WITH(svg2png-use-inkscape, [  --with-svg2png-use-inkscape   use inkscapes internal convert routines for png creation], SVG2PNG_CONVERTER="inkscape")
+AC_ARG_WITH(svg2png-use-ksvgtopng4, [  --with-svg2png-use-ksvgtopng4   use kde4's ksvgtopng4 for png creation], SVG2PNG_CONVERTER="ksvgtopng4")
+AC_ARG_WITH(svg2png-use-ksvgtopng, [  --with-svg2png-use-ksvgtopng   use kde3's convert for png creation], SVG2PNG_CONVERTER="ksvgtopng")
 if test "x${enable_svg2png}" = "xyes" ; then
-	AC_PATH_PROGS([SVG2PNG], [ksvgtopng ksvgtopng4 rsvg-convert inkscape], [none])
-	if test "x${SVG2PNG}" = "xnone"; then
-		enable_svg2png="no"
-	fi
+    if test "x${SVG2PNG_CONVERTER}" = "x"; then
+        SVG2PNG_CONVERTER="ksvgtopng ksvgtopng4 rsvg-convert inkscape convert"
+    fi
+    AC_PATH_PROGS([SVG2PNG], "${SVG2PNG_CONVERTER}", [none])
+    if test "x${SVG2PNG}" = "xnone"; then
+        enable_svg2png="no"
+    fi
 fi
 AC_SUBST(SVG2PNG)
 AC_SUBST(SVG2PNG_SCALES)
