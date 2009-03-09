@@ -123,6 +123,22 @@ angle_opposite(int angle)
 	return ((angle+180)%360);
 }
 
+int
+navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	dbg(0,"enter %s\n", attr_to_name(type));
+	switch (type) {
+	case attr_map:
+		attr->u.map=this_->map;
+		break;
+	default:
+		return 0;	
+	}
+	attr->type=type;
+	return 1;
+}
+
+
 struct navigation *
 navigation_new(struct attr *parent, struct attr **attrs)
 {
@@ -969,9 +985,8 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 	if (!new->ways) {
 		/* No announcement necessary */
 		r="no: Only one possibility";
-	} else if (!new->ways->next && new->ways->item.type == type_ramp) {
+	} else if (!new->ways->next && new->ways->item.type == type_ramp && !is_way_allowed(new->ways)) {
 		/* If the other way is only a ramp and it is one-way in the wrong direction, no announcement necessary */
-		/* TODO: check for one way in wrong direction */
 		r="no: Only ramp";
 	}
 	if (! r) {
