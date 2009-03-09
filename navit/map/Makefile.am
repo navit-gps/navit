@@ -7,5 +7,5 @@ if MAP_POI_GEODOWNLOAD
 SUBDIRS+=poi_geodownload
 endif
 
-DIST_SUBDIRS=mg textfile poi_geodownload binfile garmin
+DIST_SUBDIRS=mg textfile poi_geodownload binfile garmin shapefile
 
