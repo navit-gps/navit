@@ -159,6 +159,8 @@ struct route_info {
  * This structure describes a whole routing path
  */
 struct route_path {
+	int in_use;						/**< The path is in use and can not be updated */
+	int update_required;					/**< The path needs to be updated after it is no longer in use */
 	int updated;						/**< The path has only been updated */
 	struct route_path_segment *path;			/**< The first segment in the path, i.e. the segment one should 
 												 *  drive in next */
@@ -612,6 +614,10 @@ route_path_update_done(struct route *this, int new_graph)
 {
 	struct route_path *oldpath=this->path2;
 	int val;
+	if (this->path2 && this->path2->in_use) {
+		this->path2->update_required=1+new_graph;
+		return;
+	}
 
 	this->path2=route_path_new(this->graph, oldpath, this->pos, this->dst, this->speedlist);
 	route_path_destroy(oldpath);
@@ -2273,6 +2279,7 @@ struct map_rect_priv {
 	struct item item;
 	int length;
 	unsigned int last_coord;
+	struct route_path *path;
 	struct route_path_segment *seg,*seg_next;
 	struct route_graph_point *point;
 	struct route_graph_segment *rseg;
@@ -2600,9 +2607,11 @@ rm_rect_new(struct map_priv *priv, struct map_selection *sel)
 	mr->item.priv_data = mr;
 	mr->item.type = type_none;
 	mr->item.meth = &methods_route_item;
-	if (priv->route->path2)
-		mr->seg_next=priv->route->path2->path;
-	else
+	if (priv->route->path2) {
+		mr->path=priv->route->path2;
+		mr->seg_next=mr->path->path;
+		mr->path->in_use++;
+	} else
 		mr->seg_next=NULL;
 	return mr;
 }
@@ -2650,6 +2659,11 @@ rm_rect_destroy(struct map_rect_priv *mr)
 		g_free(mr->str);
 	if (mr->coord_sel) {
 		g_free(mr->coord_sel);
+	}
+	if (mr->path) {
+		mr->path->in_use--;
+		if (mr->path->update_required && !mr->path->in_use) 
+			route_path_update_done(mr->mpriv->route, mr->path->update_required-1);
 	}
 
 	g_free(mr);
