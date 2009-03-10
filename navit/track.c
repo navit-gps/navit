@@ -143,7 +143,7 @@ tracking_process_cdf(struct cdf_data *cdf, struct pcoord *pin, struct pcoord *po
 	int speed_num,i;
 
 	if (cdf->hist_size == 0) {
-		printf("No CDF.\n");
+		dbg(1,"No CDF.\n");
 		*pout = *pin;
 		*dirout = dirin;
 		return;
