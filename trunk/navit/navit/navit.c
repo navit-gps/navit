@@ -59,6 +59,7 @@
 #include "profile.h"
 #include "command.h"
 #include "navit_nls.h"
+#include "util.h"
 
 /**
  * @defgroup navit the navit core instance. navit is the object containing nearly everything: A set of maps, one or more vehicle, a graphics object for rendering the map, a gui object for displaying the user interface, a route object, a navigation object and so on. Be warned that it is theoretically possible to have more than one navit object
@@ -1872,7 +1873,6 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	enum projection pro;
 	int border=16;
 	time_t fixtime;
-	struct tm fixtime_tm;
 	int recenter = 1; // indicates if we should recenter the map
 
 	profile(0,NULL);
@@ -1917,14 +1917,13 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	cursor_pc.pro = pro;
 	if (this_->tracking && this_->tracking_flag) {
 		if (! vehicle_get_attr(nv->vehicle, attr_position_hdop, &attr_hdop, NULL)) {
-			attr_hdop.u.numd = -1;
+			attr_hdop.u.numd = NULL;
 		}
 
 		if (! vehicle_get_attr(nv->vehicle, attr_position_time_iso8601, &attr_time, NULL)) {
 			fixtime = time(NULL);
 		} else {
-			strptime(attr_time.u.str, "%Y-%m-%dT%TZ", &fixtime_tm);
-			fixtime = mktime(&fixtime_tm);
+			fixtime = iso8601_to_secs(attr_time.u.str);
 		}
 
 		if (tracking_update(this_->tracking, &cursor_pc, nv->dir, attr_hdop.u.numd, nv->speed, fixtime)) {
