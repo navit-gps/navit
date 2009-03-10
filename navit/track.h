@@ -19,7 +19,7 @@
 
 #ifndef NAVIT_TRACK_H
 #define NAVIT_TRACK_H
-
+#include <time.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
