@@ -19,6 +19,7 @@
 
 #include <glib.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include "util.h"
 
@@ -253,3 +254,30 @@ char * newSysString(const char *toconvert)
 }
 #endif
 #endif
+
+unsigned int
+iso8601_to_secs(char *iso8601)
+{
+	int a,b,d,val[6],i=0;
+	char *start=iso8601,*pos=iso8601;
+	while (*pos && i < 6) {
+		if (*pos < '0' || *pos > '9') {
+			val[i++]=atoi(start);
+			pos++;
+			start=pos;
+		} 
+		pos++;
+	}
+	
+	a=val[0]/100;
+	b=2-a+a/4;
+
+	if (val[1] < 2) {
+		val[0]--;
+		val[1]+=12;
+	}
+
+	d=1461*(val[0]+4716)/4+306001*(val[1]+1)/10000+val[2]+b-2442112;
+
+	return ((d*24+val[3])*60+val[4])*60+val[5];
+}
