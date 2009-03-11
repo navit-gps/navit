@@ -124,13 +124,33 @@ popup_break_crossing(struct display_list *l)
 static void *
 popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char *fmt, ...)
 {
-	gchar *str;
+	gchar *str,*us;
+	int usc=0;
 	va_list ap;
 	void *ret;
 
 	va_start(ap, fmt);
 	str=g_strdup_vprintf(fmt, ap);
 	dbg(0,"%s\n", str);
+	us=str;
+	while (*us) {
+		if (*us == '_')
+			usc++;
+		us++;
+	}
+	if (usc) {
+		gchar *str2=g_malloc(strlen(str)+us+1);
+		gchar *us2=str2;
+		us=str;
+		while (*us) {
+			if (*us == '_')
+				*us2++=*us;
+			*us2++=*us++;
+		}
+		*us2='\0';
+		g_free(str);
+		str=str2;
+	}
 	ret=menu_add(menu, str, type, cb);
 	va_end(ap);
 	g_free(str);
