@@ -592,7 +592,7 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 	case attr_position_time_iso8601:
 		if (!priv->fixyear || !priv->fixtime[0])
 			return 0;
-		sprintf(priv->fixiso8601, "%04d-%02d-%02dT%.2s:%.2s:%.2sZ",
+		sprintf(priv->fixiso8601, "%04d-%02d-%02dT%.2s:%.2s:%sZ",
 			priv->fixyear, priv->fixmonth, priv->fixday,
 						priv->fixtime, (priv->fixtime+2), (priv->fixtime+4));
 		attr->u.str=priv->fixiso8601;
