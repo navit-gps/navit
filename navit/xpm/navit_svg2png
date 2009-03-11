@@ -12,6 +12,9 @@ function svgtopng
 	*inkscape)
 		$svgtopng --without-gui --export-width=$1 --export-height=$2 --export-png=$4 $3
 		;;
+	*convert)
+		$svgtopng $3 -resize $1x$2 $4
+		;; 
 	esac
 }
 
