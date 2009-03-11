@@ -255,6 +255,28 @@ static char
 	}
 }
 
+static char
+*get_exit_count_str(int n) 
+{
+	switch (n) {
+	case 0:
+		return _("zeroth exit"); // Not shure if this exists, neither if it will ever be needed
+	case 1:
+		return _("first exit");
+	case 2:
+		return _("second exit");
+	case 3:
+		return _("third exit");
+	case 4:
+		return _("fourth exit");
+	case 5:
+		return _("fifth exit");
+	case 6:
+		return _("sixth exit");
+	default: 
+		return NULL;
+	}
+}
 static int
 round_distance(int dist)
 {
@@ -1156,17 +1178,20 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 		int entry_angle;
 		struct navigation_itm *itm2=itm->prev;
 		int exit_angle=angle_median(itm->prev->angle_end, itm->ways->angle2);
+		dbg(1,"exit %d median from %d,%d\n", exit_angle,itm->prev->angle_end, itm->ways->angle2);
 		while (itm2 && (itm2->flags & AF_ROUNDABOUT)) {
 			len+=itm2->length;
 			angle=itm2->angle_end;
 			itm2=itm2->prev;
 		}
-		if (itm2 && itm2->next && itm2->next->next && itm2->next->next->ways) {
-			itm2=itm2->next->next;
+		if (itm2 && itm2->next && itm2->next->ways) {
+			itm2=itm2->next;
 			entry_angle=angle_median(angle_opposite(itm2->angle_start), itm2->ways->angle2);
+			dbg(1,"entry %d median from %d(%d),%d\n", entry_angle,angle_opposite(itm2->angle_start), itm2->angle_start, itm2->ways->angle2);
 		} else {
 			entry_angle=angle_opposite(angle);
 		}
+		dbg(0,"entry %d exit %d\n", entry_angle, exit_angle);
 		ret->roundabout_delta=angle_delta(entry_angle, exit_angle);
 		ret->length=len;
 		
@@ -1403,10 +1428,10 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			}
 			switch (level) {
 			case 0:
-				ret = g_strdup_printf(_("Leave the roundabout at the %s exit"), get_count_str(count_roundabout));
+				ret = g_strdup_printf(_("Leave the roundabout at the %s"), get_exit_count_str(count_roundabout));
 				break;
 			case -2:
-				ret = g_strdup_printf(_("then leave the roundabout at the %s exit"), get_count_str(count_roundabout));
+				ret = g_strdup_printf(_("then leave the roundabout at the %s"), get_exit_count_str(count_roundabout));
 				break;
 			}
 			return ret;
