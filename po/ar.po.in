@@ -1,14 +1,14 @@
 # Arabic translation for navit
 # Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the navit package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# Metehyi, 2009
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-02-19 13:51+0100\n"
-"PO-Revision-Date: 2009-02-18 16:15+0000\n"
+"Project-Id-Version: navit 0.1.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-02-23 17:01+0100\n"
+"PO-Revision-Date: 2009-02-28 22:09+0000\n"
 "Last-Translator: metehyi <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"X-Launchpad-Export-Date: 2009-02-23 15:16+0000\n"
+"X-Launchpad-Export-Date: 2009-03-09 09:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+"X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 #: ../navit/main.c:231
 #, c-format
@@ -1695,7 +1696,7 @@ msgstr "شمالي دائم"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:226
 msgid "Autozoom"
-msgstr ""
+msgstr "تكبير/تصغير تلقائي"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2804
