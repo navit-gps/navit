@@ -217,25 +217,6 @@ AC_TRY_LINK([#include <unistd.h>], [fsync(0);],AC_MSG_RESULT(yes);AC_DEFINE(HAVE
 AC_MSG_CHECKING(for system)
 AC_TRY_LINK([#include <stdlib.h>], [system("/bin/true");],AC_MSG_RESULT(yes);AC_DEFINE(HAVE_SYSTEM, 1, [Define to 1 if you have the `system' function.]),speech_cmdline=no; speech_cmdline_reason="not supported without system()"; AC_MSG_RESULT(no))
 
-AC_ARG_ENABLE(directfb, [  --enable-directfb             enable directfb gui and graphics], MODULE_DIRECTFB=$enableval, MODULE_DIRECTFB=no)
-
-if test "x$MODULE_DIRECTFB" = "xyes"; then
-	PKG_CHECK_MODULES(DIRECTFB, [directfb], [directfb_pkgconfig=yes], [directfb_pkgconfig=no])
-	if test "x$directfb_pkgconfig" = "xyes"; then
-		AC_DEFINE(HAVE_DIRECTFB, 1, [Define to 1 if you have directfb])
-	fi
-fi
-
-DIRECTFB_CFLAGS="$DIRECTFB_CFLAGS"
-
-#DIRECTFB_CFLAGS="-D_REENTRANT -I/data/oe/tmp/staging/arm-angstrom-linux-gnueabi/usr/include/directfb/"
-#DIRECTFB_LIBS="-L/data/oe/tmp/staging/arm-angstrom-linux-gnueabi/usr/lib/ -ldirectfb -lfusion -ldirect -lpthread"
-
-AC_SUBST(DIRECTFB_CFLAGS)
-AC_SUBST(DIRECTFB_LIBS)
-AM_CONDITIONAL(DIRECTFB, [test "x$directfb_pkgconfig" = "xyes"])
-
-
 AC_ARG_ENABLE(graphics-sdl, [  --disable-graphics-sdl             don't create graphics sdl], enable_graphics_sdl=$enableval, enable_graphics_sdl=yes)
 if test "x${enable_graphics_sdl}" = "xyes" ; then
 	if test -z "$SDL_CONFIG"; then
@@ -737,7 +718,6 @@ navit/fonts/Makefile
 navit/graphics/Makefile
 navit/graphics/gd/Makefile
 navit/graphics/gtk_drawing_area/Makefile
-navit/graphics/directfb/Makefile
 navit/graphics/cogl/Makefile
 navit/graphics/opengl/Makefile
 navit/graphics/null/Makefile
@@ -747,7 +727,6 @@ navit/graphics/win32/Makefile
 navit/gui/Makefile
 navit/gui/gtk/Makefile
 navit/gui/internal/Makefile
-navit/gui/directfb/Makefile
 navit/gui/win32/Makefile
 navit/osd/Makefile
 navit/osd/core/Makefile
@@ -802,12 +781,6 @@ if test -z "$sdl_failures"
         echo "OpenGL gui  : ENABLED, with $CEGUI_LIBS"
         else
 	         echo "OpenGL gui  : DISABLED : you are missing $sdl_failures"
-fi
-if test x"$directfb_pkgconfig" = xyes
-	then
-	echo "DIRECTFB    : ENABLED"
-	else
-	echo "DIRECTFB    : DISABLED"
 fi
 if test x"$enable_hildon" = xyes
 	then
@@ -865,7 +838,6 @@ echo "  gpsd:              $vehicle_gpsd ($vehicle_gpsd_reason)"
 echo "  gypsy:             $vehicle_gypsy ($vehicle_gypsy_reason)"
 echo "  wince:             $vehicle_wince ($vehicle_wince_reason)"
 
-if  test "x${gtk2_pkgconfig}" != "xyes" -a "x${sdl}" != "xyes" -a "x${directfb_pkgconfig}" != "xyes" -a "x${gui_win32}" != "xyes" -a "x${gui_internal}" != "xyes"
 	then
 	echo ""
 	echo "" 
