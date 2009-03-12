@@ -2945,7 +2945,7 @@ int main(int argc, char **argv)
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
-					      "e:hi:knm:p:s:w", long_options, &option_index);
+					      "e:hi:knm:p:s:wz:", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
