@@ -838,7 +838,8 @@ echo "  gpsd:              $vehicle_gpsd ($vehicle_gpsd_reason)"
 echo "  gypsy:             $vehicle_gypsy ($vehicle_gypsy_reason)"
 echo "  wince:             $vehicle_wince ($vehicle_wince_reason)"
 
-	then
+if  test "x${gtk2_pkgconfig}" != "xyes" -a "x${gui_win32}" != "xyes" -a "x${gui_internal}" != "xyes"
+then
 	echo ""
 	echo "" 
 	echo "*** WARNING! you have no gui that can be built! ***"
