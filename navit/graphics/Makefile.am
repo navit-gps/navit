@@ -7,9 +7,6 @@ if DIRECTFB
 endif
 if GRAPHICS_OPENGL
   SUBDIRS+=opengl
-if GUI_CLUTTER
-  SUBDIRS+=cogl
-endif
 endif
 if GRAPHICS_QT_QPAINTER
   SUBDIRS+=qt_qpainter
