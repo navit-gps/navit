@@ -392,8 +392,8 @@ if test "x${binding_python}" = "xyes"; then
 	dnl FIXME: I wish there was a less icky way to get this.
 	if test "x${_PATH_PYTHON}" != "x" ; then
 		AC_MSG_CHECKING(for Python linkage)
-		PYTHON_CFLAGS="`python-config --cflags`"
-		PYTHON_LIBS="`python-config --ldflags`"
+		PYTHON_CFLAGS="`$PYTHON-config --cflags`"
+		PYTHON_LIBS="`$PYTHON-config --ldflags`"
 	else
 		binding_python="no"
 		binding_python_reason="python executable missing"
