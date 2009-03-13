@@ -392,8 +392,31 @@ if test "x${binding_python}" = "xyes"; then
 	dnl FIXME: I wish there was a less icky way to get this.
 	if test "x${_PATH_PYTHON}" != "x" ; then
 		AC_MSG_CHECKING(for Python linkage)
-		PYTHON_CFLAGS="`$PYTHON-config --cflags`"
-		PYTHON_LIBS="`$PYTHON-config --ldflags`"
+		AC_PATH_PROG([PYTHONCONFIG], [python-config], [])
+		if test "x${PYTHONCONFIG}" = "x" ; then
+			py_prefix=`$_PATH_PYTHON -c 'import sys; print sys.prefix'`
+			py_ver=`$_PATH_PYTHON -c 'import sys; print sys.version[[:3]]'`
+			py_lib=`$_PATH_PYTHON -c 'import sys; print sys.lib'`
+			py_libdir="${py_prefix}/${py_lib}/python${py_ver}"
+			PYTHON_CFLAGS="-I${py_prefix}/include/python${py_ver}"
+			if test -f $py_libdir/config/Makefile -a -f $py_prefix/include/python${py_ver}/Python.h; then
+				py_libs=`grep '^LIBS=' $py_libdir/config/Makefile | sed -e 's/^.*=//'`
+				py_libc=`grep '^LIBC=' $py_libdir/config/Makefile | sed -e 's/^.*=//'`
+				py_libm=`grep '^LIBM=' $py_libdir/config/Makefile | sed -e 's/^.*=//'`
+				py_liblocalmod=`grep '^LOCALMODLIBS=' $py_libdir/config/Makefile | sed -e 's/^.*=//'`
+				py_libbasemod=`grep '^BASEMODLIBS=' $py_libdir/config/Makefile | sed -e 's/^.*=//'`
+				PYTHON_LIBS="-L$py_libdir/config $py_libs $py_libc $py_libm -lpython$py_ver $py_liblocalmod $py_libbasemod"
+				PYTHON_LIBS=`echo $PYTHON_LIBS | sed -e 's/[ \\t]*/ /g'`
+				AC_MSG_RESULT($py_libdir)
+			else
+				binding_python="no"
+				binding_python_reason="$py_libdir/config/Makefile or $py_prefix/include/python${py_ver}/Python.h missing"
+			fi
+
+		else
+			PYTHON_CFLAGS="`${PYTHONCONFIG} --cflags`"
+			PYTHON_LIBS="`${PYTHONCONFIG} --ldflags`"
+		fi
 	else
 		binding_python="no"
 		binding_python_reason="python executable missing"
