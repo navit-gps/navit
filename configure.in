@@ -718,7 +718,6 @@ navit/fonts/Makefile
 navit/graphics/Makefile
 navit/graphics/gd/Makefile
 navit/graphics/gtk_drawing_area/Makefile
-navit/graphics/cogl/Makefile
 navit/graphics/opengl/Makefile
 navit/graphics/null/Makefile
 navit/graphics/sdl/Makefile
