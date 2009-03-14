@@ -27,9 +27,12 @@
 #        node is added. Those components are then added to the output file during 
 #        the last section of this script. This allow to detects islands in such tiles
 #        as islands and not sea
+#  v4: 2009/03/14
+#      - new way to compute the intersection of a segment and the border of a tile
+#      - don't use nodes that are out of the bbox specified as argument
+#      - use lazy regex to parse the .osm file
 #
 # TODO:
-#  - better intersec_way_tiles (cf this fuction for more info)
 #  - better lookup_handler (cf this fuction for more info)
 #  - detect clockwise/anticlockwise ways => sea or land
 #     for now -> every closed area is considered as land which is false.
@@ -60,10 +63,15 @@ $minlong=$ARGV[1];
 $maxlat=$ARGV[2];
 $maxlong=$ARGV[3];
 
-$minlat2=int($minlat*2)/2;
-$minlong2=int($minlong*2)/2;
-$maxlat2=ceil($maxlat*2)/2;
-$maxlong2=ceil($maxlong*2)/2;
+#$minlat2=int($minlat*2)/2;
+#$minlong2=int($minlong*2)/2;
+#$maxlat2=ceil($maxlat*2)/2;
+#$maxlong2=ceil($maxlong*2)/2;
+
+$minlat2=$minlat;
+$minlong2=$minlong;
+$maxlat2=$maxlat;
+$maxlong2=$maxlong;
 
 
 #$rect_length=2*abs($maxlong-$minlong) + 2*abs($maxlat-$minlat);
@@ -295,47 +303,41 @@ sub lookup_handler {
 }
 
 
-# return the intersection of a segment with the frontier
-# between to tiles
-# Doesn't handle the following cases:
-# X    X
-#  Y, Y , ...
-#  Should return two nodes, one for the 1st tile, and an other one for
-#  the second tile
+# return the intersection of a segment with the border of a tile
 sub intersec_way_tiles {
-	my ($node1_lat, $node1_lon,
-		$node2_lat,$node2_lon,
-		$tile1_minlat, $tile1_minlon, $tile1_maxlat, $tile1_maxlon,
-		$tile2_minlat, $tile2_minlon, $tile2_maxlat, $tile2_maxlon) = @_;
+	my ($node_in_lat, $node_in_lon,
+		$node_ext_lat,$node_ext_lon,
+		$tile_minlat, $tile_minlon, $tile_maxlat, $tile_maxlon) = @_;
 	my ($lat, $lon);
 
-	print "intersec_way_tiles - $node1_lat, $node1_lon && $node2_lat,$node2_lon && $tile1_minlat, $tile1_minlon, $tile1_maxlat, $tile1_maxlon && $tile2_minlat, $tile2_minlon, $tile2_maxlat, $tile2_maxlon\n";
+	debug "intersec_way_tiles - $node_in_lat, $node_in_lon && $node_ext_lat,$node_ext_lon && $tile_minlat, $tile_minlon, $tile_maxlat, $tile_maxlon\n";
 
-	if ( $tile1_minlat == $tile2_minlat ) { # tiles are side by side XY or YX
-		$lon = ($tile1_minlon>$tile2_minlon) ? $tile1_minlon : $tile2_minlon;
-		print "same lon: $lon\n";
-
-		if ($node2_lon != $node1_lon) {
-			$lat = $node1_lat + ($lon - $node1_lon) * ($node2_lat - $node1_lat) / ($node2_lon - $node1_lon); # thales
-		} else {
-			print "intersec_way_tiles - nodes with same lon... $node1_lat, $node1_lon & $node2_lat,$node2_lon\n";
-			$lat = ($node2_lat + $node1_lat)/2;
+	# case #1: node_ext above tile - try intersec with the top of the tile
+	if ($node_ext_lat > $tile_maxlat || $node_ext_lat < $tile_minlat) {
+		$lat = ($node_ext_lat > $tile_maxlat) ? $tile_maxlat : $tile_minlat;
+		if ($node_in_lat != $node_ext_lat) {
+			$lon = $node_in_lon + ($lat - $node_in_lat) * ($node_ext_lon - $node_in_lon) / ($node_ext_lat - $node_in_lat);
+		} else { # node_ext == node
+			$lon = $node_in_lon;
 		}
-		print "lat: $lat\n";
-	} else { # one tile is above the other
-		$lat = ($tile1_minlat>$tile2_minlat) ? $tile1_minlat : $tile2_minlat;
-		print "same lat: $lat\n";
-
-		if ($node2_lon != $node1_lon) {
-			$lon = $node1_lon + ($lat - $node1_lat) * ($node2_lon - $node1_lon) / ($node2_lat - $node1_lat);
-		} else {
-			print "intersec_way_tiles - nodes with same lat... $node1_lon, $node1_lon & $node2_lat,$node2_lon\n";
-			$lon = ($node2_lon + $node1_lon)/2;
+		if ($lon > $tile_minlon && $lon < $tile_maxlon) {
+			return ($lat, $lon);
 		}
-		print "lon: $lon\n";
 	}
+	# case #2: node ext on the left or on the right of the tile
+	if ($node_ext_lon > $tile_maxlon || $node_ext_lon < $tile_minlon) {
+		$lon = ($node_ext_lon > $tile_maxlon) ? $tile_maxlon : $tile_minlon;
+		if ($node_in_lon != $node_ext_lon) {
+			$lat = $node_in_lat + ($lon - $node_in_lon) * ($node_ext_lat - $node_in_lat) / ($node_ext_lon - $node_in_lon); # thales
+		} else { # node_ext == node
+			$lat = $node_in_lat;
+		}                                               
+		if ($lat > $tile_minlat && $lat < $tile_maxlat) {
+			return ($lat, $lon);
+		}
+	}   
 
-	return ($lat, $lon);
+	return ($node_ext_lat, $node_ext_lon);
 }
 
 # tells if a node is inside a polygon or not
@@ -413,13 +415,13 @@ my $is_coastline=0;
 my @nodes;
 while (<$input>) {
 
-	if ( /<way id=["'](\d+)["']/) {
+	if ( /<way id=["'](\d+?)["']/) {
 		$way_id=$1;
 		$is_coastline=0;
 		@nodes=();
 	}
 	if ($way_id != 0) {
-		if ( /<nd ref=["'](\d+)["']/) {
+		if ( /<nd ref=["'](\d+?)["']/) {
 			push(@nodes, $1);
 		}
 		if ( /<tag k=["']natural["'] v=["']coastline["']/) {
@@ -462,7 +464,7 @@ open($output, ">$destination") or die "Can't open $destination: $!";
 
 $i=0;
 while (<$input>) {
-	if ( /<node id=['"](\d+)['"].* lat=['"](.+)['"] lon=['"](.+)['"]/ ) {
+	if ( /<node id=['"](\d+?)['"].* lat=['"](.+?)['"] lon=['"](.+?)['"]/ ) {
 		if ( exists($nodes{$1}) ) {
 			$nodes{$1}->{"id"}=$1;
 			$nodes{$1}->{"lat"}=$2;
@@ -494,57 +496,131 @@ foreach $way (values %ways) {
 	my $prev_node;
 
 	foreach $node ($way->nodes()) {
-		my $tile_lat = int( ($maxlat2 - $nodes{$node}->{"lat"} ) / 0.5);
-		my $tile_lon = int( ($nodes{$node}->{"lon"} - $minlong2) / 0.5);
-		$new_tile_id = $nb_tiles_x * $tile_lon + $tile_lat;
 
-		if ( $tile_id == -1 ) {
-			$tile_id = $new_tile_id;
-		}
-		# we have reach an other tile
-		if ( $new_tile_id != $tile_id ) {
+		# node out of bbox -> skip the nodes until we reenter the bbox
+		if ($nodes{$node}->{"lat"} < $minlat2 || $nodes{$node}->{"lat"} > $maxlat2
+			|| $nodes{$node}->{"lon"} < $minlong2 || $nodes{$node}->{"lon"} > $maxlong2) {
+			
+			# previous node already skiped or 1st node out of the bbox
+			if ( $tile_id == -1 ) {
+				$prev_node = $node;
 
+
+			} else { # previous node in bbox, we add a node at the intersection of the current tile border and the segment [$node, $prev_node]
+
+				# find the intersection of the current way with the tiles
 				my $tile = $tiles{$tile_id};
-				my $new_tile = $tiles{$new_tile_id};
-
-				# find the intersection of the way with the tiles
 				my ($lat, $lon) = intersec_way_tiles (
-					$nodes{$node}->{"lat"}, $nodes{$node}->{"lon"},
 					$nodes{$prev_node}->{"lat"}, $nodes{$prev_node}->{"lon"},
-					$tile->{"lat"}-0.5, $tile->{"lon"}, $tile->{"lat"}, $tile->{"lon"}+0.5,
-					$new_tile->{"lat"}-0.5, $new_tile->{"lon"}, $new_tile->{"lat"}, $new_tile->{"lon"}+0.5);
+					$nodes{$node}->{"lat"}, $nodes{$node}->{"lon"},
+					$tile->{"lat"}-0.5, $tile->{"lon"}, $tile->{"lat"}, $tile->{"lon"}+0.5);
 				my $mid_node = {"lat" => $lat, "lon" => $lon, "id" => $osm_id-- };
 
 				$nodes{ $mid_node->{"id"} } = $mid_node;
 				push( @new_nodes, $mid_node );
 
 				push ( @way_nodes, $mid_node->{"id"} );
-			
+
+				# end way here
+				$new_way->nodes(@way_nodes);
+				$new_ways{$new_way->id()} = $new_way;	
+				$ways{$new_way->id()} = $new_way;
+				push( @{$tiles{$tile_id}->{"ways"}}, $new_way->id());
+				$tiles{$tile_id}->{"crossed"}=1;
+
+				# begin new way
+				$new_way = way->new($osm_id--);
+				@way_nodes = ();
+
+				# reset title_id
+				$tile_id = -1;
+
+			}
+		} else {
+
+			my $tile_lat = int( ($maxlat2 - $nodes{$node}->{"lat"} ) / 0.5);
+			my $tile_lon = int( ($nodes{$node}->{"lon"} - $minlong2) / 0.5);
+			$new_tile_id = $nb_tiles_x * $tile_lon + $tile_lat;
+
+			if ( $tile_id == -1 ) {
+				$tile_id = $new_tile_id;
+
+				# we have reentered a tile -> add a node on its border at the intersec of the segment [$prev_node, $node]
+				if (defined $prev_node) {
+					# find the intersection of the current way with the tiles
+					my $tile = $tiles{$tile_id};
+					my ($lat, $lon) = intersec_way_tiles (
+						$nodes{$node}->{"lat"}, $nodes{$node}->{"lon"},
+						$nodes{$prev_node}->{"lat"}, $nodes{$prev_node}->{"lon"},
+						$tile->{"lat"}-0.5, $tile->{"lon"}, $tile->{"lat"}, $tile->{"lon"}+0.5);
+					my $mid_node = {"lat" => $lat, "lon" => $lon, "id" => $osm_id-- };
+
+					$nodes{ $mid_node->{"id"} } = $mid_node;
+					push( @new_nodes, $mid_node );
+
+					push ( @way_nodes, $mid_node->{"id"} );
+
+					$tiles{$tile_id}->{"crossed"}=1;
+				}
+			}
+			# we have reach an other tile
+			if ( $new_tile_id != $tile_id ) {
+
+				my $tile = $tiles{$tile_id};
+				my $new_tile = $tiles{$new_tile_id};
+
+				# find the intersection of the way with the tiles
+				my ($lat, $lon) = intersec_way_tiles (
+					$nodes{$prev_node}->{"lat"}, $nodes{$prev_node}->{"lon"},
+					$nodes{$node}->{"lat"}, $nodes{$node}->{"lon"},
+					$tile->{"lat"}-0.5, $tile->{"lon"}, $tile->{"lat"}, $tile->{"lon"}+0.5);
+				my $mid_node = {"lat" => $lat, "lon" => $lon, "id" => $osm_id-- };
+
+				$nodes{ $mid_node->{"id"} } = $mid_node;
+				push( @new_nodes, $mid_node );
+
+				push ( @way_nodes, $mid_node->{"id"} );
+
 				$new_way->nodes(@way_nodes);
 				$new_ways{$new_way->id()} = $new_way;	
 				$ways{$new_way->id()} = $new_way;
 				push( @{$tiles{$tile_id}->{"ways"}}, $new_way->id());
 
-			# set both new and old tile as crossed by a way
-			# the new one is important because when we rich the end
-			# of the coast, there will be no "next way" to set it as
-			# crossed
-			$tiles{$tile_id}->{"crossed"}=1;
-			$tiles{$new_tile_id}->{"crossed"}=1;
+				# set both new and old tile as crossed by a way
+				# the new one is important because when we rich the end
+				# of the coast, there will be no "next way" to set it as
+				# crossed
+				$tiles{$tile_id}->{"crossed"}=1;
+				$tiles{$new_tile_id}->{"crossed"}=1;
 
-			$new_way = way->new($osm_id--);
+				$new_way = way->new($osm_id--);
 
-			@way_nodes=();
-			push ( @way_nodes, $mid_node->{"id"} );
+				@way_nodes=();
 
-			$tile_id = $new_tile_id;
+
+				# first node on tile border
+				($lat, $lon) = intersec_way_tiles (
+					$nodes{$node}->{"lat"}, $nodes{$node}->{"lon"},
+					$nodes{$prev_node}->{"lat"}, $nodes{$prev_node}->{"lon"},
+					$new_tile->{"lat"}-0.5, $new_tile->{"lon"}, $new_tile->{"lat"}, $new_tile->{"lon"}+0.5);
+				my $mid_node2 = {"lat" => $lat, "lon" => $lon, "id" => $osm_id-- };
+
+				$nodes{ $mid_node2->{"id"} } = $mid_node2;
+				push( @new_nodes, $mid_node2 );
+
+				push ( @way_nodes, $mid_node2->{"id"} );
+
+				$tile_id = $new_tile_id;
+			}
+
+			push (@way_nodes, $node);
+			#print "Node $node added to tile $tile_id\n";
+			$prev_node=$node;
 		}
-
-		push (@way_nodes, $node);
-		#print "Node $node added to tile $tile_id\n";
-		$prev_node=$node;
 	}
-	if ( scalar(@way_nodes) > 1) {
+
+	# if new way not empty, add it
+	if ( scalar(@way_nodes) > 1 && $tile_id != -1) {
 		$new_way->nodes(@way_nodes);
 		$new_ways{$new_way->id()} = $new_way;	
 		$ways{$new_way->id()} = $new_way;
@@ -568,7 +644,7 @@ print "\n\nWorking on tiles:\n";
 #$tile = $tiles{54};
 foreach $tile (values %tiles) {
 
-	debug( "->tile: ".$tile->{"id"}."\n");
+	print( "->tile: ".$tile->{"id"}."\n");
 
 	my @box = ($tile->{"lat"}-0.5, $tile->{"lon"}, $tile->{"lat"}, $tile->{"lon"}+0.5);
 
@@ -631,7 +707,7 @@ foreach $tile (values %tiles) {
 
 	#========================================
 	# merge ways that can be merged
-	print "\tBuilding tree:\n";
+	debug "\tBuilding tree:\n";
 
 	foreach (@{$tile->{"ways"}}) {	
 		$way = $new_ways{$_};
@@ -665,7 +741,7 @@ foreach $tile (values %tiles) {
 	# if some ways are not closed, we need to close them.
 	# It is done by adding new nodes on the border of the tile
 	# and joining them
-	print ("\n\nClosing loops:\n");
+	debug ("\n\nClosing loops:\n");
 
 	my (@first_nodes, @last_nodes);
 
@@ -715,7 +791,7 @@ foreach $tile (values %tiles) {
 
 	my $last;
 	foreach $last (@last_nodes) {
-		print "Looking for path ...\n";
+		debug "Looking for path ...\n";
 		my ($path1, $path2);
 		$path1=0;
 
@@ -772,7 +848,7 @@ foreach $tile (values %tiles) {
 
 	# linking the ways
 	# This time all ways should be loops because of the ways we added before
-	print "\n\nBuilding tree with new ways:\n";
+	debug "\n\nBuilding tree with new ways:\n";
 
 	foreach (@{$tile->{"ways"}}) {	
 		my $way = $new_ways{$_};
@@ -805,7 +881,7 @@ foreach $tile (values %tiles) {
 
 
 	#merge ways to have only simple ways that are circular
-	print "merge ways\n";
+	debug "merge ways\n";
 
 	# copy into @a because we add new ways to the array inside the loop
 	# -> otherwise it creates an infinite loop
@@ -892,7 +968,7 @@ foreach $node (@new_nodes) {
 
 # add new ways to output file
 foreach $tile (values %tiles) {
-	debug( "Writing tile: ".$tile->{"id"}."\n");
+	print( "Writing tile: ".$tile->{"id"}."\n");
 	foreach (@{$tile->{"ways"}}) {
 		my $way = $new_ways{$_};
 		my $type = "inner";
