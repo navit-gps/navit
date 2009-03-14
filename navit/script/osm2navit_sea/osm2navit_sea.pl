@@ -10,6 +10,9 @@
 #
 # To avoid big polygons, the map is divided into small tiles (0.5°x0.5°)
 #
+# usage:
+#   osm2navit_sea.pl minlat minlon maxlat maxlon source_file output_file
+#
 # lisense: GPL
 #
 # history:
@@ -46,7 +49,11 @@ use Math::Trig;
 use POSIX qw(ceil);
 use way;
 
-if ( @ARGV ne 6 ) {
+# lon € [-180, 180]
+# lat € [-85.0511, 85.0511]
+if ( @ARGV ne 6 || 
+	abs($ARGV[0]) > 85.0511 || abs($ARGV[2]) > 85.0511 ||
+	abs($ARGV[1]) > 180 || abs($ARGV[3]) > 180) {
 	print "Usage: osm2navit_sea.pl minlat minlon maxlat maxlon source_file output_file\n";
 	exit(1);
 }
