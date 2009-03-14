@@ -1916,8 +1916,10 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	cursor_pc.y = nv->coord.y;
 	cursor_pc.pro = pro;
 	if (this_->tracking && this_->tracking_flag) {
+		double zero;
 		if (! vehicle_get_attr(nv->vehicle, attr_position_hdop, &attr_hdop, NULL)) {
-			attr_hdop.u.numd = NULL;
+			zero = 0.f;
+			attr_hdop.u.numd = &zero;
 		}
 
 		if (! vehicle_get_attr(nv->vehicle, attr_position_time_iso8601, &attr_time, NULL)) {
