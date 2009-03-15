@@ -209,24 +209,13 @@ static int
 pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoord *pc)
 {
 
-	dbg(0,"signature %s\n", dbus_message_iter_get_signature(iter));
-    
-	if(!strcmp(dbus_message_iter_get_signature(iter), "(is)")){
-        dbg(0, "es ist (is)\n");
-    }
-
-    dbg(0, "bla1\n");
-    
     if(!strcmp(dbus_message_iter_get_signature(iter), "s")) {
         char *coordstring;
 
-        dbg(0, "bla_1\n");
         dbus_message_iter_get_basic(iter, &coordstring);
-        dbg(0, "parsing (s) %s\n", coordstring);
         if(!pcoord_parse(coordstring, projection_mg, pc))
             return 0;
-        dbg(0, "parsed\n");
-        dbg(0, " pro -> 0x%x x -> 0x%x y -> 0x%x\n", &pc->pro, &pc->x, &pc->y);
+        
         return 1;
     } else {
         
@@ -235,36 +224,29 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
         if(!strcmp(dbus_message_iter_get_signature(iter), "(is)")) {
             char *coordstring;
             int projection;
-            dbg(0, "bla21\n");
-    //        dbus_message_iter_init(message, &iter2);
-            dbg(0, "bla22\n");
+            
             dbus_message_iter_get_basic(&iter2, &projection);
 
-            dbg(0, "bla23\n");
             dbus_message_iter_next(&iter2);
-            dbg(0, "bla24\n");
             dbus_message_iter_get_basic(&iter2, &coordstring);
 
-            dbg(0, "parsing (is) %s\n", coordstring);
             if(!pcoord_parse(coordstring, projection, pc))
                 return 0;
 
             return 1;
         } else if(!strcmp(dbus_message_iter_get_signature(iter), "(iii)")) {
-            dbg(0, "(sss)\n");
             
             dbus_message_iter_get_basic(&iter2, &pc->pro);
+            
             dbus_message_iter_next(&iter2);
-
             dbus_message_iter_get_basic(&iter2, &pc->x);
+            
             dbus_message_iter_next(&iter2);
-
             dbus_message_iter_get_basic(&iter2, &pc->y);
-            dbg(0, " pro -> 0x%x x -> 0x%x y -> 0x%x\n", &pc->pro, &pc->x, &pc->y);
+
             return 1;
         }
     }
-    dbg(0, "zomg null\n");
     return 0;
     
 }
