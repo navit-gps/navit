@@ -95,7 +95,7 @@ message_cleanup(struct messagelist *this_)
 
 	i = 0;
 	while (msg && (i < this_->maxnum)) {
-		if ((now - msg->time) > this_->maxage) {
+		if ((this_->maxage > 0) && (now - msg->time) > this_->maxage) {
 			break;
 		}
 

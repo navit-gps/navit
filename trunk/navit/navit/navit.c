@@ -1623,6 +1623,9 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		if (attr_updated && !init) 
 			navit_draw(this_);
 		break;
+	case attr_message:
+		navit_add_message(this_, attr->u.str);
+		break;
 	default:
 		return 0;
 	}
@@ -1643,7 +1646,37 @@ navit_set_attr(struct navit *this_, struct attr *attr)
 int
 navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
+	struct message *msg;
+	int len,offset;
+
 	switch (type) {
+	case attr_message:
+		msg = navit_get_messages(this_);
+		
+		if (!msg) {
+			return 0;
+		}
+
+		len = 0;
+		while (msg) {
+			len += strlen(msg->text) + 1;
+			msg = msg->next;
+		}
+		attr->u.str = g_malloc(len + 1);
+		
+		msg = navit_get_messages(this_);
+		offset = 0;
+		while (msg) {
+			g_stpcpy((attr->u.str + offset), msg->text);
+			offset += strlen(msg->text);
+			attr->u.str[offset] = '\n';
+			offset++;
+
+			msg = msg->next;
+		}
+
+		attr->u.str[len] = '\0';
+		break;
 	case attr_bookmark_map:
 		attr->u.map=this_->bookmark;
 		break;
