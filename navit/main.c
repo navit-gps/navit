@@ -277,7 +277,7 @@ main_init(char *program)
 #endif
 	}
 	if (getenv("LC_ALL")) 
-		dbg(0,"Warning: LC_ALL is set, this might lead to problems\n");
+		dbg(0,"Warning: LC_ALL is set, this might lead to problems (e.g. strange positions from GPS)\n");
 	s = getenv("NAVIT_WID");
 	if (s) {
 		setenv("SDL_WINDOWID", s, 0);
