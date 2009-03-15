@@ -385,7 +385,7 @@ sub polygon_contains_node {
 print "initialising tiles\n";
 
 
-debug("there will be ".ceil(abs($maxlong2-$minlong2)/0.5)."x".ceil(abs($maxlat2-$minlat2)/0.5)." tiles\n");
+print "There will be ".ceil(abs($maxlong2-$minlong2)/0.5)."x".ceil(abs($maxlat2-$minlat2)/0.5)." tiles\n";
 
 my $nb_tiles_x = ceil(abs($maxlat2-$minlat2)/0.5);
 my $nb_tiles_y = ceil(abs($maxlong2-$minlong2)/0.5);
@@ -400,7 +400,11 @@ for ($j=0; $j<$nb_tiles_x; $j++) {
 		print "L" if $type eq "01";
 		print "B" if $type eq "11";
 		print "?" if $type eq "00";
-		$tiles{$nb_tiles_x * $i+$j} = { "lon" => $minlong2+0.5*$i, "lat" => $maxlat2-0.5*$j, "type" => $type, "id" => ($nb_tiles_x * $i+$j), "crossed" => 0};
+		my $tile_maxlon = $minlong2+0.5*$i + 0.5 > $maxlong2 ? $maxlong2 : $minlong2+0.5*$i + 0.5;
+		my $tile_minlat = $maxlat2-0.5*$j-0.5 < $minlat2 ? $minlat2 : $maxlat2-0.5*$j-0.5;
+		$tiles{$nb_tiles_x * $i+$j} = { "minlon" => $minlong2+0.5*$i, "maxlat" => $maxlat2-0.5*$j,
+		   "maxlon" => $tile_maxlon, "minlat" => $tile_minlat,
+	   	   "type" => $type, "id" => ($nb_tiles_x * $i+$j), "crossed" => 0};
 	}
 	print "\n";
 }
@@ -520,7 +524,7 @@ foreach $way (values %ways) {
 				my ($lat, $lon) = intersec_way_tiles (
 					$nodes{$prev_node}->{"lat"}, $nodes{$prev_node}->{"lon"},
 					$nodes{$node}->{"lat"}, $nodes{$node}->{"lon"},
-					$tile->{"lat"}-0.5, $tile->{"lon"}, $tile->{"lat"}, $tile->{"lon"}+0.5);
+					$tile->{"minlat"}, $tile->{"minlon"}, $tile->{"maxlat"}, $tile->{"maxlon"});
 				my $mid_node = {"lat" => $lat, "lon" => $lon, "id" => $osm_id-- };
 
 				$nodes{ $mid_node->{"id"} } = $mid_node;
@@ -559,7 +563,7 @@ foreach $way (values %ways) {
 					my ($lat, $lon) = intersec_way_tiles (
 						$nodes{$node}->{"lat"}, $nodes{$node}->{"lon"},
 						$nodes{$prev_node}->{"lat"}, $nodes{$prev_node}->{"lon"},
-						$tile->{"lat"}-0.5, $tile->{"lon"}, $tile->{"lat"}, $tile->{"lon"}+0.5);
+						$tile->{"minlat"}, $tile->{"minlon"}, $tile->{"maxlat"}, $tile->{"maxlon"});
 					my $mid_node = {"lat" => $lat, "lon" => $lon, "id" => $osm_id-- };
 
 					$nodes{ $mid_node->{"id"} } = $mid_node;
@@ -580,7 +584,7 @@ foreach $way (values %ways) {
 				my ($lat, $lon) = intersec_way_tiles (
 					$nodes{$prev_node}->{"lat"}, $nodes{$prev_node}->{"lon"},
 					$nodes{$node}->{"lat"}, $nodes{$node}->{"lon"},
-					$tile->{"lat"}-0.5, $tile->{"lon"}, $tile->{"lat"}, $tile->{"lon"}+0.5);
+					$tile->{"minlat"}, $tile->{"minlon"}, $tile->{"maxlat"}, $tile->{"maxlon"});
 				my $mid_node = {"lat" => $lat, "lon" => $lon, "id" => $osm_id-- };
 
 				$nodes{ $mid_node->{"id"} } = $mid_node;
@@ -609,7 +613,7 @@ foreach $way (values %ways) {
 				($lat, $lon) = intersec_way_tiles (
 					$nodes{$node}->{"lat"}, $nodes{$node}->{"lon"},
 					$nodes{$prev_node}->{"lat"}, $nodes{$prev_node}->{"lon"},
-					$new_tile->{"lat"}-0.5, $new_tile->{"lon"}, $new_tile->{"lat"}, $new_tile->{"lon"}+0.5);
+					$new_tile->{"minlat"}, $new_tile->{"minlon"}, $new_tile->{"maxlat"}, $new_tile->{"maxlon"});
 				my $mid_node2 = {"lat" => $lat, "lon" => $lon, "id" => $osm_id-- };
 
 				$nodes{ $mid_node2->{"id"} } = $mid_node2;
@@ -653,7 +657,7 @@ foreach $tile (values %tiles) {
 
 	print( "->tile: ".$tile->{"id"}."\n");
 
-	my @box = ($tile->{"lat"}-0.5, $tile->{"lon"}, $tile->{"lat"}, $tile->{"lon"}+0.5);
+	my @box = ($tile->{"minlat"}, $tile->{"minlon"}, $tile->{"maxlat"}, $tile->{"maxlon"});
 
 	# No way going through the tile -> guess if it is sea or lanf
 	# SHould check if it containds nodes -> type unknown + nodes should mean sea + islands
@@ -672,10 +676,10 @@ foreach $tile (values %tiles) {
 		} elsif ($tile->{"type"} ne "01") { # not land
 
 			my %temp = ("00"=>0, "10"=>0, "01"=>0, "11"=>0);
-			$temp{lookup_handler($tile->{"lat"}, $tile->{"lon"}, -1, 0)}++;
-			$temp{lookup_handler($tile->{"lat"}, $tile->{"lon"}, +1, 0)}++;
-			$temp{lookup_handler($tile->{"lat"}, $tile->{"lon"}, 0, -1)}++;
-			$temp{lookup_handler($tile->{"lat"}, $tile->{"lon"}, 0, +1)}++;
+			$temp{lookup_handler($tile->{"maxlat"}, $tile->{"minlon"}, -1, 0)}++;
+			$temp{lookup_handler($tile->{"maxlat"}, $tile->{"minlon"}, +1, 0)}++;
+			$temp{lookup_handler($tile->{"maxlat"}, $tile->{"minlon"}, 0, -1)}++;
+			$temp{lookup_handler($tile->{"maxlat"}, $tile->{"minlon"}, 0, +1)}++;
 
 			if( $temp{"10"} > $temp{"01"} ) {
 				$tile_is_sea=1;
@@ -690,10 +694,10 @@ foreach $tile (values %tiles) {
 		if ($tile_is_sea) {
 			my @way_nodes_id = ( $osm_id, $osm_id-1, $osm_id-2, $osm_id-3);
 			my @way_nodes = (
-				{ "lat" => $tile->{"lat"}, "lon" => $tile->{"lon"}, "id" => $osm_id--},
-				{ "lat" => $tile->{"lat"}, "lon" => $tile->{"lon"}+0.5, "id" => $osm_id--},
-				{ "lat" => $tile->{"lat"}-0.5, "lon" => $tile->{"lon"}+0.5, "id" => $osm_id--},
-				{ "lat" => $tile->{"lat"}-0.5, "lon" => $tile->{"lon"}, "id" => $osm_id--});
+				{ "lat" => $tile->{"maxlat"}, "lon" => $tile->{"minlon"}, "id" => $osm_id--},
+				{ "lat" => $tile->{"maxlat"}, "lon" => $tile->{"maxlon"}, "id" => $osm_id--},
+				{ "lat" => $tile->{"minlat"}, "lon" => $tile->{"maxlon"}, "id" => $osm_id--},
+				{ "lat" => $tile->{"minlat"}, "lon" => $tile->{"minlon"}, "id" => $osm_id--});
 
 			my $way = way->new($osm_id--);
 			$way->nodes(@way_nodes_id);
@@ -765,7 +769,7 @@ foreach $tile (values %tiles) {
 
 			my $lat = $nodes{$way_nodes[0]}->{"lat"};
 			my $lon = $nodes{$way_nodes[0]}->{"lon"};
-			($lat, $lon) = get_projection( $lat, $lon, $tile->{"lat"}-0.5, $tile->{"lon"}, $tile->{"lat"}, $tile->{"lon"}+0.5 );
+			($lat, $lon) = get_projection( $lat, $lon, $tile->{"minlat"}, $tile->{"minlon"}, $tile->{"maxlat"}, $tile->{"maxlon"} );
 			my $node = { "lat" => $lat, "lon" => $lon, "id" => ($osm_id--)};
 			unshift( @way_nodes, $node->{"id"} );
 			push( @new_nodes, $node );
@@ -780,7 +784,7 @@ foreach $tile (values %tiles) {
 
 			my $lat = $nodes{$way_nodes[ @way_nodes - 1 ]}->{"lat"};
 			my $lon = $nodes{$way_nodes[ @way_nodes - 1 ]}->{"lon"};
-			($lat, $lon) = get_projection( $lat, $lon, $tile->{"lat"}-0.5, $tile->{"lon"}, $tile->{"lat"}, $tile->{"lon"}+0.5 );
+			($lat, $lon) = get_projection( $lat, $lon, $tile->{"minlat"}, $tile->{"minlon"}, $tile->{"maxlat"}, $tile->{"maxlon"} );
 			my $node = { "lat" => $lat, "lon" => $lon, "id" => $osm_id--};
 			push( @way_nodes, $node->{"id"} );
 			push( @new_nodes, $node );
