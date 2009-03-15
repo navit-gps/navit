@@ -13,7 +13,7 @@
 # usage:
 #   osm2navit_sea.pl minlat minlon maxlat maxlon source_file output_file
 #
-# lisense: GPL
+# license: GPL
 #
 # history:
 #  v1: first release
