@@ -43,6 +43,7 @@
 #include "attr.h"
 #include "command.h"
 #include "navit_nls.h"
+#include "messages.h"
 
 struct osd_item {
 	struct point p;
@@ -990,6 +991,37 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 				}
 			}
 				
+		} else if (!strcmp(key,"navit") && subkey) {
+			if (navit) {
+				key = osd_text_split(subkey, &index);
+				if (!strcmp(subkey,"messages")) {
+					struct message *msg;
+					int len,offset;
+					char *tmp;
+					
+					msg = navit_get_messages(navit);
+					len = 0;
+					while (msg) {
+						len+= strlen(msg->text) + 2;
+
+						msg = msg->next;
+					}
+
+					value = g_malloc(len +1);
+
+					msg = navit_get_messages(navit);
+					offset = 0;
+					while (msg) {
+						tmp = g_stpcpy((value+offset), msg->text);
+						g_stpcpy(tmp, "\\n");
+						offset += strlen(msg->text) + 2;
+
+						msg = msg->next;
+					}
+
+					value[len] = '\0';
+				}
+			}
 		}
 		*start='\0';
 		next=g_strdup_printf("%s%s%s",str,value ? value:" ",end);
