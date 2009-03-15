@@ -60,6 +60,7 @@
 #include "command.h"
 #include "navit_nls.h"
 #include "util.h"
+#include "messages.h"
 
 /**
  * @defgroup navit the navit core instance. navit is the object containing nearly everything: A set of maps, one or more vehicle, a graphics object for rendering the map, a gui object for displaying the user interface, a route object, a navigation object and so on. Be warned that it is theoretically possible to have more than one navit object
@@ -131,6 +132,7 @@ struct navit {
 	int w,h;
 	int drag_bitmap;
 	int use_mousewheel;
+	struct messagelist *messages;
 	struct callback *resize_callback,*button_callback,*motion_callback;
 };
 
@@ -644,6 +646,9 @@ navit_new(struct attr *parent, struct attr **attrs)
 	}
 	this_->displaylist=graphics_displaylist_new();
 	command_add_table(this_->attr_cbl, commands, sizeof(commands)/sizeof(struct command_table), this_);
+
+	this_->messages = messagelist_new(attrs);
+	
 	return this_;
 }
 
@@ -662,6 +667,18 @@ navit_set_gui(struct navit *this_, struct gui *gui)
 		}
 	}
 	return 1;
+}
+
+void 
+navit_add_message(struct navit *this_, char *message)
+{
+	message_new(this_->messages, message);
+}
+
+struct message
+*navit_get_messages(struct navit *this_)
+{
+	return message_get(this_->messages);
 }
 
 static int
@@ -1105,6 +1122,7 @@ navit_speak(struct navit *this_)
 		while ((item=map_rect_get_item(mr)) && (item->type == type_nav_position || item->type == type_nav_none));
 		if (item && item_attr_get(item, attr_navigation_speech, &attr)) {
 			speech_say(this_->speech, attr.u.str);
+			navit_add_message(this_, attr.u.str);
 			navit_textfile_debug_log(this_, "type=announcement label=\"%s\"", attr.u.str);
 		}
 		map_rect_destroy(mr);
@@ -1310,6 +1328,9 @@ navit_init(struct navit *this_)
 #endif
 	callback_list_call_attr_1(this_->attr_cbl, attr_navit, this_);
 	this_->ready|=1;
+
+	messagelist_init(this_->messages);
+
 	if (this_->ready == 3)
 		navit_draw(this_);
 }
