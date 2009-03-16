@@ -52,9 +52,6 @@ struct street_data {
 						 *   DO NOT INSERT FIELDS AFTER THIS. */
 };
 
-#define route_item_first type_street_0
-#define route_item_last type_ferry
-
 /* prototypes */
 enum item_type;
 struct coord;
@@ -68,6 +65,7 @@ struct route_info_handle;
 struct route_path_coord_handle;
 struct route_path_handle;
 struct route_path_segment;
+struct route_preferences;
 struct street_data;
 struct tracking;
 struct transformation;
@@ -95,7 +93,7 @@ void route_path_close(struct route_path_handle *h);
 struct route_path_coord_handle *route_path_coord_open(struct route *this);
 struct coord *route_path_coord_get(struct route_path_coord_handle *h);
 void route_path_coord_close(struct route_path_coord_handle *h);
-int route_time(int *speedlist, struct item *item, int len, int maxspeed);
+int route_time(struct route_preferences *preferences, struct item *item, int len, int maxspeed);
 int route_info_length(struct route_info *pos, struct route_info *dst, int dir);
 struct street_data *street_get_data(struct item *item);
 struct street_data *street_data_dup(struct street_data *orig);

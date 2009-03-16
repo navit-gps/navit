@@ -580,6 +580,8 @@ struct attr_bin debug_attr = {
 };
 char debug_attr_buffer[BUFFER_SIZE];
 
+int flags[4];
+
 struct attr_bin flags_attr = {
 	0, attr_flags
 };
@@ -686,7 +688,7 @@ xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size)
 	if (! i)
 		return 0;
 	if (i - pos > buffer_size) {
-		fprintf(stderr,"Buffer overflow %ld vs %d\n", i-pos, buffer_size);
+		fprintf(stderr,"Buffer overflow %ld vs %d\n", (long)(i-pos), buffer_size);
 		return 0;
 	}
 	strncpy(buffer, pos, i-pos);
@@ -697,6 +699,29 @@ xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size)
 static int node_is_tagged;
 static void relation_add_tag(char *k, char *v);
 
+static int
+access_value(char *v)
+{
+	if (!strcmp(v,"yes"))
+		return 1;
+	if (!strcmp(v,"designated"))
+		return 1;
+	if (!strcmp(v,"permissive"))
+		return 1;
+	if (!strcmp(v,"no"))
+		return 2;
+	if (!strcmp(v,"agricultural"))
+		return 2;
+	if (!strcmp(v,"forestry"))
+		return 2;
+	if (!strcmp(v,"private"))
+		return 2;
+	if (!strcmp(v,"delivery"))
+		return 2;
+	if (!strcmp(v,"destination"))
+		return 2;
+	return 3;
+}
 static void
 add_tag(char *k, char *v)
 {
@@ -720,12 +745,10 @@ add_tag(char *k, char *v)
 		v="1";
 	if (! strcmp(k,"oneway")) {
 		if (!strcmp(v,"1")) {
-			flags_attr_value |= AF_ONEWAY;
-			flags_attr.len=2;
+			flags[0] |= AF_ONEWAY | AF_ROUNDABOUT_VALID;
 		}
 		if (! strcmp(v,"-1")) {
-			flags_attr_value |= AF_ONEWAYREV;
-			flags_attr.len=2;
+			flags[0] |= AF_ONEWAYREV | AF_ROUNDABOUT_VALID;
 		}
 		if (!in_way)
 			level=6;
@@ -733,24 +756,79 @@ add_tag(char *k, char *v)
 			level=5;
 	}
 	if (! strcmp(k,"junction")) {
-		if (! strcmp(v,"roundabout")) {
-			flags_attr_value |= AF_ONEWAY;
-			flags_attr.len=2;
-		}
+		if (! strcmp(v,"roundabout")) 
+			flags[0] |= AF_ONEWAY | AF_ROUNDABOUT | AF_ROUNDABOUT_VALID;
 	}
 	if (! strcmp(k,"maxspeed")) {
 		maxspeed_attr_value = atoi(v);
 		if (maxspeed_attr_value) {
 			maxspeed_attr.len = 2;
-			flags_attr_value |= AF_SPEED_LIMIT;
-			flags_attr.len = 2;
+			flags[0] |= AF_SPEED_LIMIT;
 		}
 		level=5;
 	}
+	if (! strcmp(k,"access")) {
+		flags[access_value(v)] |= AF_DANGEROUS_GOODS|AF_EMERGENCY_VEHICLES|AF_TRANSPORT_TRUCK|AF_DELIVERY_TRUCK|AF_PUBLIC_BUS|AF_TAXI|AF_HIGH_OCCUPANCY_CAR|AF_CAR|AF_MOTORCYCLE|AF_MOPED|AF_HORSE|AF_BIKE|AF_PEDESTRIAN;
+		level=5;
+	}
+	if (! strcmp(k,"vehicle")) {
+		flags[access_value(v)] |= AF_DANGEROUS_GOODS|AF_EMERGENCY_VEHICLES|AF_TRANSPORT_TRUCK|AF_DELIVERY_TRUCK|AF_PUBLIC_BUS|AF_TAXI|AF_HIGH_OCCUPANCY_CAR|AF_CAR|AF_MOTORCYCLE|AF_MOPED|AF_BIKE;
+		level=5;
+	}
+	if (! strcmp(k,"motorvehicle")) {
+		flags[access_value(v)] |= AF_DANGEROUS_GOODS|AF_EMERGENCY_VEHICLES|AF_TRANSPORT_TRUCK|AF_DELIVERY_TRUCK|AF_PUBLIC_BUS|AF_TAXI|AF_HIGH_OCCUPANCY_CAR|AF_CAR|AF_MOTORCYCLE|AF_MOPED;
+		level=5;
+	}
 	if (! strcmp(k,"bicycle")) {
+		flags[access_value(v)] |= AF_BIKE;
 		level=5;
 	}
 	if (! strcmp(k,"foot")) {
+		flags[access_value(v)] |= AF_PEDESTRIAN;
+		level=5;
+	}
+	if (! strcmp(k,"horse")) {
+		flags[access_value(v)] |= AF_HORSE;
+		level=5;
+	}
+	if (! strcmp(k,"moped")) {
+		flags[access_value(v)] |= AF_MOPED;
+		level=5;
+	}
+	if (! strcmp(k,"motorcycle")) {
+		flags[access_value(v)] |= AF_MOTORCYCLE;
+		level=5;
+	}
+	if (! strcmp(k,"motorcar")) {
+		flags[access_value(v)] |= AF_CAR;
+		level=5;
+	}
+	if (! strcmp(k,"hov")) {
+		flags[access_value(v)] |= AF_HIGH_OCCUPANCY_CAR;
+		level=5;
+	}
+	if (! strcmp(k,"bus")) {
+		flags[access_value(v)] |= AF_PUBLIC_BUS;
+		level=5;
+	}
+	if (! strcmp(k,"taxi")) {
+		flags[access_value(v)] |= AF_TAXI;
+		level=5;
+	}
+	if (! strcmp(k,"goods")) {
+		flags[access_value(v)] |= AF_DELIVERY_TRUCK;
+		level=5;
+	}
+	if (! strcmp(k,"hgv")) {
+		flags[access_value(v)] |= AF_TRANSPORT_TRUCK;
+		level=5;
+	}
+	if (! strcmp(k,"emergency")) {
+		flags[access_value(v)] |= AF_EMERGENCY_VEHICLES;
+		level=5;
+	}
+	if (! strcmp(k,"hazmat")) {
+		flags[access_value(v)] |= AF_DANGEROUS_GOODS;
 		level=5;
 	}
 	if (! strcmp(k,"note"))
@@ -1075,6 +1153,7 @@ add_way(int id)
 	maxspeed_attr.len=0;
 	flags_attr.len=0;
 	flags_attr_value = 0;
+	memset(flags, 0, sizeof(flags));
 	debug_attr_buffer[0]='\0';
 	osmid_attr.type=attr_osm_wayid;	
 	osmid_attr.len=3;
@@ -1222,8 +1301,6 @@ end_way(FILE *out)
 		alen+=street_name_systematic_attr.len+1;
 	if (debug_attr.len)
 		alen+=debug_attr.len+1;
-	if (flags_attr.len)
-		alen+=flags_attr.len+1;
 	if (maxspeed_attr.len) 
 		alen+=maxspeed_attr.len+1;
 	if (osmid_attr.len)
@@ -1234,6 +1311,14 @@ end_way(FILE *out)
 		item.type=type_street_unkn;
 	if (coverage && item_is_street(item))
 		item.type=type_coverage;
+	if (item.type >= route_item_first && item.type <= route_item_last) {
+		int def_flags=default_flags[item.type-route_item_first];
+		flags_attr_value=(def_flags | flags[0] | flags[1]) & ~flags[2];
+		if (flags_attr_value != def_flags) {
+			flags_attr.len=2;
+			alen+=flags_attr.len+1;
+		}
+	}
 	item.clen=coord_count*2;
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);

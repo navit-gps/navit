@@ -272,13 +272,7 @@ street_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		attr->u.str=street->name.name1;
 		return ((attr->u.str && attr->u.str[0]) ? 1:0);
 	case attr_flags:
-		if (street->str->type & 0x40) {
-			attr->u.num=(street->str->limit & 0x30) ? AF_ONEWAYREV:0;
-			attr->u.num|=(street->str->limit & 0x03) ? AF_ONEWAY:0;
-		} else {
-			attr->u.num=(street->str->limit & 0x30) ? AF_ONEWAY:0;
-			attr->u.num|=(street->str->limit & 0x03) ? AF_ONEWAYREV:0;
-		}
+		attr->u.num=street->flags;
 		street->attr_next=attr_country_id;
 		return 1;
 	case attr_country_id:
@@ -428,6 +422,17 @@ street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *it
 		default:
 			item->type=type_street_unkn;
 			dbg(0,"unknown type 0x%x\n",street->str->type);
+		}
+		if (item->type >= route_item_first && item->type <= route_item_last)
+			street->flags=default_flags[item->type-route_item_first];
+		else
+			street->flags=0;
+		if (street->str->type & 0x40) {
+			street->flags|=(street->str->limit & 0x30) ? AF_ONEWAYREV:0;
+			street->flags|=(street->str->limit & 0x03) ? AF_ONEWAY:0;
+		} else {
+			street->flags|=(street->str->limit & 0x30) ? AF_ONEWAY:0;
+			street->flags|=(street->str->limit & 0x03) ? AF_ONEWAYREV:0;
 		}
 #if 0
 		coord_debug=(street->str->unknown2 != 0x40 || street->str->unknown3 != 0x40);

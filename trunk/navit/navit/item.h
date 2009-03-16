@@ -32,6 +32,10 @@ enum item_type {
 #undef ITEM
 };
 
+#define route_item_first type_street_0
+#define route_item_last type_ferry
+extern int default_flags[];
+
 #include "attr.h"
 
 

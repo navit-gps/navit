@@ -180,6 +180,7 @@ struct street_priv {
 	struct coord *ref;
 	int bytes;
 	int more;
+	int flags;
 	struct street_name name;
 	enum attr_type attr_next;
 	char debug[256];
