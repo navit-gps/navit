@@ -457,7 +457,7 @@ route_check_roundabout(struct route_graph_segment *seg, int level, int direction
 			continue;
 		}
 
-		if (cur->item.type != origin->item.type) {
+		if (cur->data.item.type != origin->data.item.type) {
 			// This street is of another type, can't be part of the roundabout
 			cur = rp_iterator_next(&it);
 			continue;
