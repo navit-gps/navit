@@ -1883,6 +1883,29 @@ static int within_dist_line(struct point *p, struct point *line_p0, struct point
 	int c1,c2;
 	struct point line_p;
 
+	if (line_p0->x < line_p1->x) {
+		if (p->x < line_p0->x - dist)
+			return 0;
+		if (p->x > line_p1->x + dist)
+			return 0;
+	} else {
+		if (p->x < line_p1->x - dist)
+			return 0;
+		if (p->x > line_p0->x + dist)
+			return 0;
+	}
+	if (line_p0->y < line_p1->y) {
+		if (p->y < line_p0->y - dist)
+			return 0;
+		if (p->y > line_p1->y + dist)
+			return 0;
+	} else {
+		if (p->y < line_p1->y - dist)
+			return 0;
+		if (p->y > line_p0->y + dist)
+			return 0;
+	}
+		
 	vx=line_p1->x-line_p0->x;
 	vy=line_p1->y-line_p0->y;
 	wx=p->x-line_p0->x;
