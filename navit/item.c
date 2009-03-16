@@ -32,6 +32,30 @@ struct item_name {
 
 struct item_range item_range_all = { type_none, type_last };
 
+#define AF_PBH (AF_PEDESTRIAN|AF_BIKE|AF_HORSE)
+#define AF_MOTORIZED_FAST (AF_MOTORCYCLE|AF_CAR|AF_HIGH_OCCUPANCY_CAR|AF_TAXI|AF_PUBLIC_BUS|AF_DELIVERY_TRUCK|AF_TRANSPORT_TRUCK|AF_EMERGENCY_VEHICLES|AF_DANGEROUS_GOODS)
+#define AF_ALL (AF_PBH|AF_MOPED|AF_MOTORIZED_FAST)
+
+
+int default_flags[]={
+	/* AF_PBH, street_nopass */
+	AF_ALL, /* street_0 */
+	AF_ALL, /* street_1_city */
+	AF_ALL, /* street_2_city */
+	AF_ALL, /* street_3_city */
+	AF_ALL, /* street_4_city */
+	AF_MOTORIZED_FAST, /* highway_city */
+	AF_ALL, /* street_1_land */
+	AF_ALL, /* street_2_land */
+	AF_ALL, /* street_3_land */
+	AF_ALL, /* street_4_land */
+	AF_MOTORIZED_FAST, /* street_n_lanes */
+	AF_MOTORIZED_FAST, /* highway_land */
+	AF_MOTORIZED_FAST, /* ramp */
+	AF_ALL, /* roundabout */
+	AF_ALL, /* ferry */
+};
+
 
 struct item_name item_names[]={
 #define ITEM2(x,y) ITEM(y)
