@@ -209,6 +209,8 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 			ret=g_strdup(attr->u.str);
 		return ret;
 	}
+	if (type == attr_flags)
+		return g_strdup_printf("0x%x", attr->u.num);
 	if (type >= attr_type_int_begin && type <= attr_type_int_end) 
 		return g_strdup_printf("%d", attr->u.num);
 	if (type >= attr_type_int64_begin && type <= attr_type_int64_end) 
