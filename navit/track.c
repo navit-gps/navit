@@ -584,7 +584,7 @@ tracking_update(struct tracking *tr, struct pcoord *pc, int angle, double *hdop,
 		return 0;
 	}
 
-	if (*hdop > 3.5f) { // This value has been taken from julien cayzac's CDF implementation
+	if (hdop && *hdop > 3.5f) { // This value has been taken from julien cayzac's CDF implementation
 		*pc = tr->curr_out;
 		return 0;
 	}
