@@ -195,14 +195,20 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item)
 }
 
 static void
+osd_std_resize(struct osd_item *item)
+{
+	graphics_overlay_resize(item->gr, &item->p, item->w, item->h, 65535, 1);
+}
+
+static void
 osd_std_draw(struct osd_item *item)
 {
-        struct point p[2];
+	struct point p[2];
 	int flags=item->attr_flags;
-        graphics_draw_mode(item->gr, draw_mode_begin);
-        p[0].x=0;
-        p[0].y=0;
-        graphics_draw_rectangle(item->gr, item->graphic_bg, p, item->w, item->h);
+	graphics_draw_mode(item->gr, draw_mode_begin);
+	p[0].x=0;
+	p[0].y=0;
+	graphics_draw_rectangle(item->gr, item->graphic_bg, p, item->w, item->h);
 	p[1].x=item->w-1;
 	p[1].y=0;
 	if (flags & 1) 
@@ -1036,13 +1042,19 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 		next++;
 	}
 	dbg(1,"this->align=%d\n", this->align);
-	switch (this->align & 3) {
+	switch (this->align & 51) {
 	case 1:
 		p.y=0;
 		break;
 	case 2:
 		p.y=(this->osd_item.h-lines*(height+yspacing)-yspacing);
 		break;
+	case 16: // Grow from top to bottom
+		p.y = 0;
+		this->osd_item.h = lines * (height+yspacing);
+		if (do_draw) {
+			osd_std_resize(&this->osd_item);
+		}
 	default:
 		p.y=(this->osd_item.h-lines*(height+yspacing)-yspacing)/2;
 	}
