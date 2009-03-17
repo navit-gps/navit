@@ -167,6 +167,27 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
 }
 
 /**
+ * @brief Alters the size, position, alpha and wraparound for an overlay
+ *
+ * @param this_ The overlay's graphics struct
+ * @param p The new position of the overlay
+ * @param w The new width of the overlay
+ * @param h The new height of the overlay
+ * @param alpha The new alpha of the overlay
+ * @param wraparound The new wraparound of the overlay
+ */
+void 
+graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, int alpha, int wraparound)
+{
+	if (! this_->meth.overlay_resize) {
+		return;
+	}
+	
+	this_->meth.overlay_resize(this_->priv, p, w, h, alpha, wraparound);
+}
+
+
+/**
  * FIXME
  * @param <>
  * @returns <>

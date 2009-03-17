@@ -787,6 +787,16 @@ overlay_disable(struct graphics_priv *gr, int disabled)
 	gr->overlay_disabled=disabled;
 }
 
+static void
+overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int alpha, int wraparound)
+{
+	this->p = *p;
+	this->width = w;
+	this->height = h;
+	this->a = alpha >> 8;
+	this->wraparound = wraparound;
+}
+
 static struct graphics_priv *
 overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
 {
@@ -897,6 +907,7 @@ static struct graphics_methods graphics_methods = {
 	image_free,
 	NULL,
 	overlay_disable,
+	overlay_resize,
 };
 
 static struct graphics_priv *
