@@ -1020,7 +1020,7 @@ route_segment_data_field_pos(struct route_segment_data *seg, enum attr_type type
 {
 	unsigned char *ptr;
 	
-	ptr = ((unsigned char*)seg) + sizeof(struct route_graph_segment);
+	ptr = ((unsigned char*)seg) + sizeof(struct route_segment_data);
 
 	if (seg->flags & AF_SPEED_LIMIT) {
 		if (type == attr_maxspeed) 
@@ -1300,9 +1300,9 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 			}
 		} else {
 			extra=1;
-			dbg(0,"pos dir=%d\n", dir);
-			dbg(0,"pos pos=%d\n", pos->pos);
-			dbg(0,"pos count=%d\n", pos->street->count);
+			dbg(1,"pos dir=%d\n", dir);
+			dbg(1,"pos pos=%d\n", pos->pos);
+			dbg(1,"pos count=%d\n", pos->street->count);
 			if (dir > 0) {
 				c=pos->street->c+pos->pos+1;
 				ccnt=pos->street->count-pos->pos-1;
@@ -1313,8 +1313,8 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 		}
 	} else 	if (dst) {
 		extra=1;
-		dbg(0,"dst dir=%d\n", dir);
-		dbg(0,"dst pos=%d\n", dst->pos);
+		dbg(1,"dst dir=%d\n", dir);
+		dbg(1,"dst pos=%d\n", dst->pos);
 		if (dir > 0) {
 			c=dst->street->c;
 			ccnt=dst->pos+1;
@@ -1666,7 +1666,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct route
 	}
 	fh_deleteheap(heap);
 	callback_call_0(cb);
-	dbg(0,"return\n");
+	dbg(1,"return\n");
 }
 
 /**
@@ -2057,10 +2057,6 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 	struct coord_geo g;
 
 	ret=g_new0(struct route_info, 1);
-	if (!ret) {
-		dbg(0,"Out of memory\n");
-		return ret;
-	}
 	mindist = INT_MAX;
 
 	h=mapset_open(ms);
