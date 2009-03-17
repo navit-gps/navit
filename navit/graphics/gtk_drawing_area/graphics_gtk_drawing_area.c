@@ -790,11 +790,32 @@ overlay_disable(struct graphics_priv *gr, int disabled)
 static void
 overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int alpha, int wraparound)
 {
+	int changed = 0;
+
 	this->p = *p;
-	this->width = w;
-	this->height = h;
+	if (this->width != w) {
+		this->width = w;
+		changed = 1;
+	}
+
+	if (this->height != h) {
+		this->height = h;
+		changed = 1;
+	}
+
 	this->a = alpha >> 8;
 	this->wraparound = wraparound;
+
+	if (changed) {
+		// Set the drawables to the right sizes
+		g_object_unref(this->drawable);
+		g_object_unref(this->background);
+
+		this->drawable=gdk_pixmap_new(this->parent->widget->window, w, h, -1);
+		this->background=gdk_pixmap_new(this->parent->widget->window, w, h, -1);
+
+		callback_list_call_attr_2(this->cbl, attr_resize, (void *)this->width, (void *)this->height);
+	}
 }
 
 static struct graphics_priv *
