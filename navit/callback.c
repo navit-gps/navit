@@ -206,6 +206,10 @@ callback_list_call_attr(struct callback_list *l, enum attr_type type, int pcount
 	GList *cbi;
 	struct callback *cb;
 
+	if (!l) {
+		return;
+	}
+
 	cbi=l->list;
 	while (cbi) {
 		cb=cbi->data;
