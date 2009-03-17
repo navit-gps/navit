@@ -987,6 +987,7 @@ static void
 calc_offsets(int wi, int l, int dx, int dy, struct offset *res)
 {
 	int x,y;
+	
 	x = (dx * wi) / l;
 	y = (dy * wi) / l;
 	if (x < 0) {
@@ -1017,7 +1018,8 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 	int state,prec=5;
 	int max_circle_points=20;
 	int lscale=16;
-	for (i = 0; i < count; i++) {
+	i=0;
+	for (;;) {
 		wi=*width;
 		width+=step;
 		if (i < count - 1) {
@@ -1028,6 +1030,7 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 		}
 		if (! l) 
 			l=1;
+		dbg_assert(wi*lscale < 10000);
 		calc_offsets(wi*lscale, l, dx, dy, &o);
 		pos.x = pnt[i].x + o.ny;
 		pos.y = pnt[i].y + o.px;
@@ -1087,6 +1090,9 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 			res[ppos++] = pos;
 			break;
 		}
+		i++;
+		if (i >= count)
+			break;
 		if (step) {
 			wi=*width;
 			calc_offsets(wi*lscale, l, dx, dy, &oo);
