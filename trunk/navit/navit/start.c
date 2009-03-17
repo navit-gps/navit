@@ -151,7 +151,7 @@ int main(int argc, char **argv)
 		#endif
 	}
 	li = list;
-	do {
+	for (;;) {
 		if (li == NULL) {
 			// We have not found an existing config file from all possibilities
 			printf(_("No config file navit.xml, navit.xml.local found\n"));
@@ -159,16 +159,23 @@ int main(int argc, char **argv)
 		}
         // Try the next config file possibility from the list
 		config_file = li->data;
-		if (!file_exists(config_file)) g_free(config_file);
+		if (file_exists(config_file))
+			break;
+		else
+			g_free(config_file);
 		li = g_list_next(li);
-	} while (!file_exists(config_file));
-	g_list_free(list);
+	}
 
 	if (!config_load(config_file, &error)) {
 		dbg(0, _("Error parsing '%s': %s\n"), config_file, error ? error->message : "");
 	} else {
 		dbg(0, _("Using '%s'\n"), config_file);
 	}
+	while (li) {
+		g_free(li->data);
+		li = g_list_next(li);
+	}
+	g_list_free(list);
 	if (! main_get_navit(NULL)) {
 		dbg(0, _("No instance has been created, exiting\n"));
 		exit(1);
