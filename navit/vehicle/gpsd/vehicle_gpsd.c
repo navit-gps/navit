@@ -332,9 +332,10 @@ vehicle_gpsd_position_attr_get(struct vehicle_priv *priv,
 		break;
 	case attr_active:
 	  active = attr_search(priv->attrs,NULL,attr_active);
-	  if(active != NULL && active->u.num == 1)
+	  if(active != NULL) {
+		attr->u.num=active->u.num;
 	    return 1;
-	  else
+	  } else
 	    return 0;
 	       break;
 	default:
