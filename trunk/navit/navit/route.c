@@ -1269,17 +1269,17 @@ static int
 route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpath, struct route_graph_segment *rgs, int dir, struct route_info *pos, struct route_info *dst)
 {
 	struct route_path_segment *segment;
-	int i,ccnt = 0, extra=0, ret=1;
+	int i, ccnt, extra=0, ret=1;
 	struct coord *c,*cd,ca[2048];
 	int offset=1;
 	int seg_size,seg_dat_size;
 	if (rgs->data.flags & AF_SEGMENTED) 
 		offset=RSD_OFFSET(&rgs->data);
 
-	dbg(1,"enter (0x%x,0x%x)\n", rgs->data.item.id_hi, rgs->data.item.id_lo);
-	if (oldpath) {
-		ccnt = (int)item_hash_lookup(oldpath->path_hash, &rgs->data.item);
-		if (ccnt) {
+	dbg(1,"enter (0x%x,0x%x) dir=%d pos=%p dst=%p\n", rgs->data.item.id_hi, rgs->data.item.id_lo, dir, pos, dst);
+	if (oldpath && !pos) {
+		segment=item_hash_lookup(oldpath->path_hash, &rgs->data.item);
+		if (segment && segment->direction == dir) {
 			segment = route_extract_segment_from_path(oldpath, &rgs->data.item, offset);
 			if (segment) 
 				goto linkold;
@@ -1357,7 +1357,7 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 linkold:
 	segment->data->len=rgs->data.len;
 	segment->next=NULL;
-	item_hash_insert(this->path_hash,  &rgs->data.item, (void *)ccnt);
+	item_hash_insert(this->path_hash,  &rgs->data.item, segment);
 
 	route_path_add_segment(this, segment);
 
