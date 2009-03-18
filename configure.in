@@ -456,7 +456,7 @@ if test "x${enable_svg2png}" = "xyes" ; then
     if test "x${SVG2PNG_CONVERTER}" = "x"; then
         SVG2PNG_CONVERTER="ksvgtopng ksvgtopng4 rsvg-convert inkscape convert"
     fi
-    AC_PATH_PROGS([SVG2PNG], "${SVG2PNG_CONVERTER}", [none])
+    AC_PATH_PROGS([SVG2PNG], ${SVG2PNG_CONVERTER}, [none])
     if test "x${SVG2PNG}" = "xnone"; then
         enable_svg2png="no"
     fi
