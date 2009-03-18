@@ -304,6 +304,34 @@ point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point
 }
 
 /**
+ * @brief Shows up a message
+ * @param connection The DBusConnection object through which \a message arrived
+ * @param message The DBusMessage containing the coordinates
+ * @returns An empty reply if everything went right, otherwise DBUS_HANDLER_RESULT_NOT_YET_HANDLED
+ */
+
+static DBusHandlerResult
+request_navit_add_message(DBusConnection *connection, DBusMessage *message)
+{
+	struct navit *navit;
+	char *usermessage;
+    
+    DBusMessageIter iter;
+
+	navit=object_get_from_message(message, "navit");
+	if (! navit)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+	dbus_message_iter_init(message, &iter);
+	dbus_message_iter_get_basic(&iter, &usermessage);
+	
+    navit_add_message(navit, usermessage);
+	
+    return empty_reply(connection, message);
+}
+
+
+/**
  * @brief Centers the screen on a specified position \a pc on the world
  * @param connection The DBusConnection object through which \a message arrived
  * @param message The DBusMessage containing the coordinates
@@ -668,6 +696,7 @@ struct dbus_method {
 	{"",        "iter_destroy",        "o",       "navit",                                   "",   "",      request_main_iter_destroy},
 	{"",        "get_navit",           "o",       "navit",                                   "o",  "",      request_main_get_navit},
 	{".navit",  "draw",                "",        "",                                        "",   "",      request_navit_draw},
+	{".navit",  "add_message",         "s",       "message",                                 "",   "",      request_navit_add_message},
 	{".navit",  "set_center",          "s",       "(coordinates)",                           "",   "",      request_navit_set_center},
 	{".navit",  "set_center",          "(is)",    "(projection,coordinates)",                "",   "",      request_navit_set_center},
 	{".navit",  "set_center",          "(iii)",   "(projection,longitude,latitude)",         "",   "",      request_navit_set_center},
