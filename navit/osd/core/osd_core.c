@@ -301,6 +301,12 @@ format_speed(double speed, char *sep)
 	return g_strdup_printf("%.0f%skm/h", speed, sep);
 }
 
+static char *
+format_float(double num)
+{
+	return g_strdup_printf("%f", num);
+}
+
 static void
 osd_compass_draw(struct compass *this, struct navit *nav,
 		 struct vehicle *v)
@@ -808,10 +814,17 @@ osd_text_format_attr(struct attr *attr, char *format)
 	struct tm tm, text_tm, text_tm0;
 	time_t textt;
 	int days=0;
+	char buffer[1024];
 
 	switch (attr->type) {
 	case attr_position_speed:
 		return format_speed(*attr->u.numd,"");
+	case attr_position_height:
+	case attr_position_direction:
+		return format_float(*attr->u.numd);
+	case attr_position_coord_geo:
+		coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
+		return g_strdup(buffer);
 	case attr_destination_time:
 		if (!format || (strcmp(format,"arrival") && strcmp(format,"remaining")))
 			break;
