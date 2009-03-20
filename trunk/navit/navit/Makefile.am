@@ -10,7 +10,7 @@ if FONTS
 endif
 
 AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ @ZLIB_CFLAGS@ -DPREFIX=\"@prefix@\" -DLIBDIR=\"@libdir@\" -DMODULE=navit
-BUILT_SOURCES = version.h
+BUILT_SOURCES = version.h navit_config.h
 if BUILD_SAMPLEMAP
   BUILT_SOURCES += osm2navit$(EXEEXT)
 endif
@@ -80,6 +80,14 @@ endif
 	fi
 
 version.h: version.h.tmp
+
+navit_config.h: ../config.h
+	cp ../config.h navit_config.h.tmp
+	if ! diff navit_config.h.tmp navit_config.h >/dev/null 2>/dev/null; \
+	then \
+		mv navit_config.h.tmp navit_config.h; \
+	fi
+
 
 distclean-local:
 	rm -f version.h version.h.tmp builtin.c support-builtin.c
