@@ -193,7 +193,7 @@ navit_draw_async(struct navit *this_, int async)
 		navit_vehicle_draw(this_, nv, NULL);
 		l=g_list_next(l);
 	}
-	graphics_draw(this_->gra, this_->displaylist, this_->mapsets, this_->trans, this_->layout_current, async, NULL);
+	graphics_draw(this_->gra, this_->displaylist, this_->mapsets->data, this_->trans, this_->layout_current, async, NULL);
 }
 
 void

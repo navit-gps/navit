@@ -32,6 +32,7 @@ struct graphics_font;
 struct graphics_image;
 struct transformation;
 struct display_list;
+struct mapset;
 
 enum draw_mode_num {
 	draw_mode_begin, draw_mode_end, draw_mode_cursor, draw_mode_end_lazy
@@ -159,7 +160,7 @@ int graphics_draw_drag(struct graphics *this_, struct point *p);
 void graphics_background_gc(struct graphics *this_, struct graphics_gc *gc);
 void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t);
 void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int callback);
-void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l, int async, struct callback *cb);
+void graphics_draw(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb);
 int graphics_draw_cancel(struct graphics *gra, struct displaylist *displaylist);
 struct displaylist_handle *graphics_displaylist_open(struct displaylist *displaylist);
 struct displayitem *graphics_displaylist_next(struct displaylist_handle *dlh);

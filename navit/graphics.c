@@ -1717,6 +1717,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	int order=transform_get_order(trans);
 	struct point p;
 	displaylist->dc.trans=trans;
+	displaylist->dc.gra=gra;
 	p.x=0;
 	p.y=0;
 	// FIXME find a better place to set the background color
@@ -1741,7 +1742,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList *mapsets, struct transformation *trans, struct layout *l, int async, struct callback *cb)
+void graphics_draw(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb)
 {
 	int order=transform_get_order(trans);
 
@@ -1755,8 +1756,7 @@ void graphics_draw(struct graphics *gra, struct displaylist *displaylist, GList 
 	dbg(1,"order=%d\n", order);
 
 	displaylist->dc.gra=gra;
-	if(mapsets)
-		displaylist->ms=mapsets->data;
+	displaylist->ms=mapset;
 	displaylist->dc.trans=trans;
 	displaylist->workload=async ? 100 : 0;
 	displaylist->cb=cb;
