@@ -734,7 +734,7 @@ transform_set_scale(struct transformation *t, long scale)
 int
 transform_get_order(struct transformation *t)
 {
-	dbg(0,"order %d\n", t->order);
+	dbg(1,"order %d\n", t->order);
 	return t->order;
 }
 
