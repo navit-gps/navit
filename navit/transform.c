@@ -33,7 +33,6 @@
 #include "point.h"
 
 #define POST_SHIFT 8
-/* #define ENABLE_ROLL */
 
 struct transformation {
 	int yaw;		/* Rotation angle */
@@ -82,7 +81,6 @@ transform_setup_matrix(struct transformation *t)
 	dbg(1,"yaw=%d pitch=%d center=0x%x,0x%x\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
 	t->scale_shift=0;
 	t->order=t->order_base;
-	dbg(0,"scale_shift=%d order_base=%d scale=%f fac=%f\n", t->scale_shift, t->order_base,t->scale,fac);
 	if (t->scale >= 1) {
 		scale=t->scale;
 	} else {
@@ -96,7 +94,7 @@ transform_setup_matrix(struct transformation *t)
 		scale >>= 1;
 	}
 	fac=(1 << POST_SHIFT) * (1 << t->scale_shift) / t->scale;
-	dbg(0,"scale_shift=%d order=%d scale=%f fac=%f\n", t->scale_shift, t->order,t->scale,fac);
+	dbg(1,"scale_shift=%d order=%d scale=%f fac=%f\n", t->scale_shift, t->order,t->scale,fac);
 	
 #ifdef ENABLE_ROLL
         t->m00=rollc*yawc*fac;
@@ -196,6 +194,7 @@ transform_get_hog(struct transformation *this_)
 void
 transform_set_hog(struct transformation *this_, int hog)
 {
+	dbg(0,"not supported\n");
 }
 
 #endif
@@ -580,6 +579,21 @@ transform_get_roll(struct transformation *this_)
 {
 	return this_->roll;
 }
+
+#else
+
+void
+transform_set_roll(struct transformation *this_,int roll)
+{
+	dbg(0,"not supported\n");
+}
+
+int
+transform_get_roll(struct transformation *this_)
+{
+	return 0;
+}
+
 #endif
 
 void
