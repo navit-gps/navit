@@ -40,6 +40,33 @@ struct coord_rect {
 	struct coord rl;
 };
 
+
+#ifdef AVOID_FLOAT
+/**
+ * On platforms where we are trying to avoid floats, sometimes we can't.
+ * It is better on these platforms to use single precision floating points
+ * over double percision ones since performance is much better.
+ */
+typedef float navit_float;
+#define navit_sin(x) sinf(x)
+#define navit_cos(x) cosf(x)
+#define navit_tan(x) tanf(x)
+#define navit_atan(x) atanf(x)
+#define navit_acos(x) acosf(x)
+#define navit_asin(x) asinf(x)
+#define navit_sqrt(x) sqrtf(x)
+#else
+typedef  double navit_float;
+#define navit_sin(x) sin(x)
+#define navit_cos(x) cos(x)
+#define navit_tan(x) tan(x)
+#define navit_atan(x) atan(x)
+#define navit_acos(x) acos(x)
+#define navit_asin(x) asin(x)
+#define navit_sqrt(x) sqrt(x)
+#endif
+
+
 //! A double mercator coordinate
 struct coord_d {
 	double x; /*!< X-Value */
@@ -48,15 +75,15 @@ struct coord_d {
 
 //! A WGS84 coordinate
 struct coord_geo {
-	double lng; /*!< Longitude */
-	double lat; /*!< Latitude */
+	navit_float lng; /*!< Longitude */
+	navit_float lat; /*!< Latitude */
 };
 
 //! A cartesian coordinate 
 struct coord_geo_cart {
-	double x; /*!< X-Value */
-	double y; /*!< Y-Value */
-	double z; /*!< Z-Value */
+	navit_float x; /*!< X-Value */
+	navit_float y; /*!< Y-Value */
+	navit_float z; /*!< Z-Value */
 };
 
 /**
