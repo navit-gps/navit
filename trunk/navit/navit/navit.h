@@ -34,6 +34,7 @@ struct displaylist;
 struct graphics;
 struct gui;
 struct mapset;
+struct message;
 struct navigation;
 struct navit;
 struct navit_vehicle;
@@ -98,6 +99,7 @@ int navit_command_register(struct navit *this_, char *command, struct callback *
 struct callback *navit_command_unregister(struct navit *this_, char *command);
 int navit_command_call_attrs(struct navit *this_, char *command, struct attr **in, struct attr ***out);
 int navit_command_call(struct navit *this_, char *command);
+struct message *navit_get_messages(struct navit *this_);
 void navit_destroy(struct navit *this_);
 /* end of prototypes */
 #ifdef __cplusplus
