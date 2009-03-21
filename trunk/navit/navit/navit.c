@@ -1688,9 +1688,15 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 			return 0;
 		attr->u.pcoord=&this_->destination;
 		break;
+	case attr_displaylist:
+		attr->u.displaylist=this_->displaylist;
+		return (attr->u.displaylist != NULL);
 	case attr_former_destination_map:
 		attr->u.map=this_->former_destination;
 		break;
+	case attr_graphics:
+		attr->u.graphics=this_->gra;
+		return (attr->u.graphics != NULL);
 	case attr_gui:
 		attr->u.gui=this_->gui;
 		break;
@@ -1722,6 +1728,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 			return 0;
 		}
 		break;
+	case attr_mapset:
+		attr->u.mapset=this_->mapsets->data;
+		return (attr->u.mapset != NULL);
 	case attr_navigation:
 		attr->u.navigation=this_->navigation;
 		break;
@@ -1746,6 +1755,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 	        break;
 	case attr_tracking:
 		attr->u.num=this_->tracking_flag;
+		break;
+	case attr_transformation:
+		attr->u.transformation=this_->trans;
 		break;
 	case attr_vehicle:
 		if(iter) {
@@ -1800,6 +1812,9 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 {
 	int ret=1;
 	switch (attr->type) {
+	case attr_callback:
+		navit_add_callback(this_, attr->u.callback);
+		break;
 	case attr_log:
 		ret=navit_add_log(this_, attr->u.log);
 		break;
@@ -1813,7 +1828,6 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		this_->layouts = g_list_append(this_->layouts, attr->u.layout);
 		if(!this_->layout_current) 
 			this_->layout_current=attr->u.layout;
-		ret=1;
 		break;
 	case attr_route:
 		this_->route=attr->u.route;
@@ -1849,7 +1863,15 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 int
 navit_remove_attr(struct navit *this_, struct attr *attr)
 {
-	return 0;
+	int ret=1;
+	switch (attr->type) {
+	case attr_callback:
+		navit_remove_callback(this_, attr->u.callback);
+		break;
+	default:
+		return 0;
+	}
+	return ret;
 }
 
 struct attr_iter *

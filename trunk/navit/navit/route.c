@@ -2807,10 +2807,21 @@ route_remove_callback(struct route *this_, struct callback *cb)
 	callback_list_remove(this_->cbl, cb);
 }
 
-
+int
+route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	switch (type) {
+	case attr_map:
+		attr->u.map=route_get_map(this_);
+		return attr->u.map != NULL;
+	default:
+		return 0;
+	}
+}
 void
 route_init(void)
 {
 	plugin_register_map_type("route", route_map_new);
 	plugin_register_map_type("route_graph", route_graph_map_new);
 }
+
