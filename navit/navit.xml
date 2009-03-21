@@ -105,7 +105,7 @@
         </vehicle>
 
 				<!-- For the cumulative displacement filter to be enabled, set cdf_hist="x" here, with x being an integer somewhere around 4 -->
-        <tracking cdf_hist="0"/>
+        <tracking cdf_histsize="0"/>
 
         <route destination_distance="50">
             <speed type="street_0,street_1_city" value="10"/>
