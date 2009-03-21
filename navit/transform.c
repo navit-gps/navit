@@ -45,9 +45,9 @@ struct transformation {
 	int roll;
  	int m02,m12,m22; 
 	int hog;
- 	double im02,im12,im20,im21,im22;
+ 	navit_float im02,im12,im20,im21,im22;
 #endif
- 	double im00,im01,im10,im11;	/* inverse 2d transformation matrix */
+ 	navit_float im00,im01,im10,im11;	/* inverse 2d transformation matrix */
 	struct map_selection *map_sel;
 	struct map_selection *screen_sel;
 	struct point screen_center;
@@ -55,24 +55,26 @@ struct transformation {
  	int offx,offy,offz;
 	struct coord map_center;	/* Center of source rectangle */
 	enum projection pro;
-	double scale;		/* Scale factor */
+	navit_float scale;		/* Scale factor */
 	int scale_shift;
 	int order;
 	int order_base;
 };
 
+
+
 static void
 transform_setup_matrix(struct transformation *t)
 {
-	double det;
-	double fac;
-	double yawc=cos(-M_PI*t->yaw/180);
-	double yaws=sin(-M_PI*t->yaw/180);
-	double pitchc=cos(-M_PI*t->pitch/180);
-	double pitchs=sin(-M_PI*t->pitch/180);
+	navit_float det;
+	navit_float fac;
+	navit_float yawc=navit_cos(-M_PI*t->yaw/180);
+	navit_float yaws=navit_sin(-M_PI*t->yaw/180);
+	navit_float pitchc=navit_cos(-M_PI*t->pitch/180);
+	navit_float pitchs=navit_sin(-M_PI*t->pitch/180);
 #ifdef ENABLE_ROLL	
-	double rollc=cos(M_PI*t->roll/180);
-	double rolls=sin(M_PI*t->roll/180);
+	navit_float rollc=navit_cos(M_PI*t->roll/180);
+	navit_float rolls=navit_sin(M_PI*t->roll/180);
 #endif
 
 	int scale=t->scale;
@@ -125,12 +127,12 @@ transform_setup_matrix(struct transformation *t)
 		t->xyscale=t->offz;
 	}
 #ifdef ENABLE_ROLL
-	det=(double)t->m00*(double)t->m11*(double)t->m22+
-            (double)t->m01*(double)t->m12*(double)t->m20+
-            (double)t->m02*(double)t->m10*(double)t->m21-
-            (double)t->m02*(double)t->m11*(double)t->m20-
-            (double)t->m01*(double)t->m10*(double)t->m22-
-            (double)t->m00*(double)t->m12*(double)t->m21;
+	det=(navit_float)t->m00*(navit_float)t->m11*(navit_float)t->m22+
+            (navit_float)t->m01*(navit_float)t->m12*(navit_float)t->m20+
+            (navit_float)t->m02*(navit_float)t->m10*(navit_float)t->m21-
+            (navit_float)t->m02*(navit_float)t->m11*(navit_float)t->m20-
+            (navit_float)t->m01*(navit_float)t->m10*(navit_float)t->m22-
+            (navit_float)t->m00*(navit_float)t->m12*(navit_float)t->m21;
 
 	t->im00=(t->m11*t->m22-t->m12*t->m21)/det;
 	t->im01=(t->m02*t->m21-t->m01*t->m22)/det;
@@ -142,7 +144,7 @@ transform_setup_matrix(struct transformation *t)
 	t->im21=(t->m01*t->m20-t->m00*t->m21)/det;
 	t->im22=(t->m00*t->m11-t->m01*t->m10)/det;
 #else
-	det=((double)t->m00*(double)t->m11-(double)t->m01*(double)t->m10);
+	det=((navit_float)t->m00*(navit_float)t->m11-(navit_float)t->m01*(navit_float)t->m10);
 	t->im00=t->m11/det;
 	t->im01=-t->m01/det;
 	t->im10=-t->m10/det;
@@ -220,8 +222,8 @@ transform_dup(struct transformation *t)
 	return ret;
 }
 
-static const double gar2geo_units = 360.0/(1<<24);
-static const double geo2gar_units = 1/(360.0/(1<<24));
+static const navit_float gar2geo_units = 360.0/(1<<24);
+static const navit_float geo2gar_units = 1/(360.0/(1<<24));
 
 void
 transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g)
@@ -229,7 +231,7 @@ transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g)
 	switch (pro) {
 	case projection_mg:
 		g->lng=c->x/6371000.0/M_PI*180;
-		g->lat=atan(exp(c->y/6371000.0))/M_PI*360-90;
+		g->lat=navit_atan(exp(c->y/6371000.0))/M_PI*360-90;
 		break;
 	case projection_garmin:
 		g->lng=c->x*gar2geo_units;
@@ -246,7 +248,7 @@ transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c)
 	switch (pro) {
 	case projection_mg:
 		c->x=g->lng*6371000.0*M_PI/180;
-		c->y=log(tan(M_PI_4+g->lat*M_PI/360))*6371000.0;
+		c->y=log(navit_tan(M_PI_4+g->lat*M_PI/360))*6371000.0;
 		break;
 	case projection_garmin:
 		c->x=g->lng*geo2gar_units;
@@ -266,27 +268,27 @@ transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, 
 }
 
 void
-transform_geo_to_cart(struct coord_geo *geo, double a, double b, struct coord_geo_cart *cart)
+transform_geo_to_cart(struct coord_geo *geo, navit_float a, navit_float b, struct coord_geo_cart *cart)
 {
-	double n,ee=1-b*b/(a*a);
-	n = a/sqrt(1-ee*sin(geo->lat)*sin(geo->lat));
-        cart->x=n*cos(geo->lat)*cos(geo->lng);
-        cart->y=n*cos(geo->lat)*sin(geo->lng);
-        cart->z=n*(1-ee)*sin(geo->lat);
+	navit_float n,ee=1-b*b/(a*a);
+	n = a/sqrtf(1-ee*navit_sin(geo->lat)*navit_sin(geo->lat));
+        cart->x=n*navit_cos(geo->lat)*navit_cos(geo->lng);
+        cart->y=n*navit_cos(geo->lat)*navit_sin(geo->lng);
+        cart->z=n*(1-ee)*navit_sin(geo->lat);
 }
 
 void
-transform_cart_to_geo(struct coord_geo_cart *cart, double a, double b, struct coord_geo *geo)
+transform_cart_to_geo(struct coord_geo_cart *cart, navit_float a, navit_float b, struct coord_geo *geo)
 {
-	double lat,lati,n,ee=1-b*b/(a*a), lng = atan(cart->y/cart->x);
+	navit_float lat,lati,n,ee=1-b*b/(a*a), lng = navit_tan(cart->y/cart->x);
 
-        lat = atan(cart->z / sqrt((cart->x * cart->x) + (cart->y * cart->y)));
+        lat = navit_tan(cart->z / navit_sqrt((cart->x * cart->x) + (cart->y * cart->y)));
         do
         {
                 lati = lat;
 
-                n = a / sqrt(1-ee*sin(lat)*sin(lat));
-                lat = atan((cart->z + ee * n * sin(lat)) / sqrt(cart->x * cart->x + cart->y * cart->y));
+                n = a / navit_sqrt(1-ee*navit_sin(lat)*navit_sin(lat));
+                lat = navit_atan((cart->z + ee * n * navit_sin(lat)) / navit_sqrt(cart->x * cart->x + cart->y * cart->y));
         }
         while (fabs(lat - lati) >= 0.000000000000001);
 
@@ -752,22 +754,22 @@ transform_distance_garmin(struct coord *c1, struct coord *c2)
 // static const int earth_radius  = 3960; //miles
  
 //Point 1 cords
-	float lat1  = GC2RAD(c1->y);
-	float long1 = GC2RAD(c1->x);
+	navit_float lat1  = GC2RAD(c1->y);
+	navit_float long1 = GC2RAD(c1->x);
 
 //Point 2 cords
-	float lat2  = GC2RAD(c2->y);
-	float long2 = GC2RAD(c2->x);
+	navit_float lat2  = GC2RAD(c2->y);
+	navit_float long2 = GC2RAD(c2->x);
 
 //Haversine Formula
-	float dlong = long2-long1;
-	float dlat  = lat2-lat1;
+	navit_float dlong = long2-long1;
+	navit_float dlat  = lat2-lat1;
 
-	float sinlat  = sinf(dlat/2);
-	float sinlong = sinf(dlong/2);
+	navit_float sinlat  = navit_sin(dlat/2);
+	navit_float sinlong = navit_sin(dlong/2);
  
-	float a=(sinlat*sinlat)+cosf(lat1)*cosf(lat2)*(sinlong*sinlong);
-	float c=2*asinf(minf(1,sqrt(a)));
+	navit_float a=(sinlat*sinlat)+navit_cos(lat1)*navit_cos(lat2)*(sinlong*sinlong);
+	navit_float c=2*navit_asin(minf(1,navit_sqrt(a)));
 #ifdef AVOID_FLOAT
 	return round(earth_radius*c);
 #else
@@ -775,10 +777,10 @@ transform_distance_garmin(struct coord *c1, struct coord *c2)
 #endif
 #else
 #define GMETER 2.3887499999999999
-	double dx,dy;
+	navit_float dx,dy;
 	dx=c1->x-c2->x;
 	dy=c1->y-c2->y;
-	return sqrt(dx*dx+dy*dy)*GMETER;
+	return navit_sqrt(dx*dx+dy*dy)*GMETER;
 #undef GMETER
 #endif
 }
@@ -791,7 +793,7 @@ transform_scale(int y)
 	c.x=0;
 	c.y=y;
 	transform_to_geo(projection_mg, &c, &g);
-	return 1/cos(g.lat/180*M_PI);
+	return 1/navit_cos(g.lat/180*M_PI);
 }
 
 #ifdef AVOID_FLOAT
