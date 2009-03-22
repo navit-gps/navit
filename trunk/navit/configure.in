@@ -247,7 +247,7 @@ if test "x${enable_graphics_sdl}" = "xyes" ; then
 	CPPFLAGS=$save_CPPFLAGS
 fi
 if test "x${enable_graphics_sdl}" = "xyes" ; then
-	AC_DEFINE(USE_GRAPICS_SDL, 1, [Build with graphics sdl])
+	AC_DEFINE(USE_GRAPHICS_SDL, 1, [Build with graphics sdl])
 fi
 AM_CONDITIONAL(USE_GRAPHICS_SDL, test "x${enable_graphics_sdl}" = "xyes")
 
