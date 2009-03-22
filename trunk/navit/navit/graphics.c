@@ -1559,6 +1559,9 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 				                       e->u.polyline.dash_num);
 			gra->meth.draw_lines(gra->priv, gc->priv, pnt, count);
 			break;
+		case element_polygon:
+			gra->meth.draw_polygon(gra->priv, gc->priv, pnt, count);
+			break;
 		case element_circle:
 			if (e->u.circle.width > 1) 
 				gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
@@ -1736,13 +1739,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
 
-/**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
-void graphics_draw(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb)
+void graphics_load_mapset(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb)
 {
 	int order=transform_get_order(trans);
 
@@ -1769,7 +1766,18 @@ void graphics_draw(struct graphics *gra, struct displaylist *displaylist, struct
 		if (! displaylist->idle_cb)
 			displaylist->idle_cb=callback_new_2(callback_cast(do_draw), displaylist, 0);
 		displaylist->idle_ev=event_add_idle(50, displaylist->idle_cb);
-	} else
+	}
+}
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
+void graphics_draw(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb)
+{
+	graphics_load_mapset(gra, displaylist, mapset, trans, l, async, cb);
+	if (! async)
 		do_draw(displaylist, 0);
 }
 
