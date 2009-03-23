@@ -2781,8 +2781,10 @@ gui_internal_cmd_layout(struct gui_priv *this, struct widget *wm, void *data)
 static void
 gui_internal_cmd_fullscreen(struct gui_priv *this, struct widget *wm, void *data)
 {
+	graphics_draw_mode(this->gra, draw_mode_end);
 	this->fullscreen=!this->fullscreen;
 	this->win->fullscreen(this->win, this->fullscreen);
+	graphics_draw_mode(this->gra, draw_mode_begin);
 }
 
 static void
