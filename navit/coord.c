@@ -220,6 +220,7 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		dbg(1,"lat=%f %c lon=%f %c\n", lat, ns, lng, ew);
 		if (args < 4)
 			goto out;
+		dbg(1,"projection=%d str_pro=%d projection_none=%d\n", pro, str_pro, projection_none);
 		if (str_pro == projection_none) {
 			g.lat=floor(lat/100);
 			lat-=g.lat*100;
@@ -231,7 +232,9 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 				g.lat=-g.lat;
 			if (ew == 'w' || ew == 'W')
 				g.lng=-g.lng;
+			dbg(1,"transform_from_geo(%f,%f)",g.lat,g.lng);
 			transform_from_geo(pro, &g, c_ret);
+			dbg(1,"result 0x%x,0x%x\n", c_ret->x,c_ret->y);
 		}
 		dbg(3,"str='%s' x=%f ns=%c y=%f ew=%c c=%d\n", str, lng, ns, lat, ew, ret);
 		dbg(3,"rest='%s'\n", str+ret);
