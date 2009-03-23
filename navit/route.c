@@ -1233,6 +1233,7 @@ route_path_add_line(struct route_path *this, struct coord *start, struct coord *
 	struct route_path_segment *segment;
 	int seg_size,seg_dat_size;
 
+	dbg(0,"line from 0x%x,0x%x-0x%x,0x%x\n", start->x, start->y, end->x, end->y);
 	seg_size=sizeof(*segment) + sizeof(struct coord) * ccnt;
         seg_dat_size=sizeof(struct route_segment_data);
         segment=g_malloc0(seg_size + seg_dat_size);
@@ -1344,6 +1345,10 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 	if (dst && (cd[-1].x != dst->lp.x || cd[-1].y != dst->lp.y)) 
 		*cd++=dst->lp;
 	segment->ncoords=cd-segment->c;
+	if (segment->ncoords <= 1) {
+		g_free(segment);
+		return ret;
+	}
 
 	/* We check if the route graph segment is part of a roundabout here, because this
 	 * only matters for route graph segments which form parts of the route path */
