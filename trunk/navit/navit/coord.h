@@ -19,7 +19,9 @@
 
 #ifndef NAVIT_COORD_H
 #define NAVIT_COORD_H
+
 #include <stdio.h>
+#include "config.h"
 #include "projection.h"
 
 /*! A integer mercator coordinate */
