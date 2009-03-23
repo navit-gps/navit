@@ -32,12 +32,14 @@
 #include "coord.h"
 #include "item.h"
 #include "vehicle.h"
+#include "event.h"
 
 static struct vehicle_priv {
 	char *source;
 	char *gpsd_query;
 	struct callback_list *cbl;
-	GIOChannel *iochan;
+	struct callback *cb;
+	struct event_watch *evwatch;
 	guint retry_interval;
 	guint watch;
 	struct gps_data_t *gps;
@@ -65,10 +67,7 @@ static struct vehicle_priv {
 #define DEFAULT_RETRY_INTERVAL 10 // seconds
 #define MIN_RETRY_INTERVAL 1 // seconds
 
-static gboolean vehicle_gpsd_io(GIOChannel * iochan,
-				GIOCondition condition, gpointer t);
-
-
+static void vehicle_gpsd_io(struct vehicle_priv *priv);
 
 static void
 vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
@@ -182,11 +181,9 @@ vehicle_gpsd_try_open(gpointer *data)
 	}
 	gps_query(priv->gps, priv->gpsd_query);
 	gps_set_raw_hook(priv->gps, vehicle_gpsd_callback);
-	priv->iochan = g_io_channel_unix_new(priv->gps->gps_fd);
-	priv->watch =
-	    g_io_add_watch(priv->iochan, G_IO_IN | G_IO_ERR | G_IO_HUP,
-			   vehicle_gpsd_io, priv);
-	dbg(0,"Connected to gpsd fd=%d iochan=%p watch=%p\n", priv->gps->gps_fd, priv->iochan, priv->watch);
+	priv->cb = callback_new_1(callback_cast(vehicle_gpsd_io), priv);
+	priv->evwatch = event_add_watch((void *)priv->gps->gps_fd, event_watch_cond_read, priv->cb);
+	dbg(0,"Connected to gpsd fd=%d evwatch=%p watch=%p\n", priv->gps->gps_fd, priv->evwatch, priv->watch);
 	return FALSE;
 }
 
@@ -218,7 +215,6 @@ vehicle_gpsd_open(struct vehicle_priv *priv)
 static void
 vehicle_gpsd_close(struct vehicle_priv *priv)
 {
-	GError *error = NULL;
 #ifdef HAVE_GPSBT
 	int err;
 #endif
@@ -231,9 +227,13 @@ vehicle_gpsd_close(struct vehicle_priv *priv)
 		g_source_remove(priv->retry_timer);
 		priv->retry_timer=0;
 	}
-	if (priv->iochan) {
-		g_io_channel_shutdown(priv->iochan, 0, &error);
-		priv->iochan = NULL;
+	if (priv->evwatch) {
+		event_remove_watch(priv->evwatch);
+		priv->evwatch = NULL;
+	}
+	if (priv->cb) {
+		callback_destroy(priv->cb);
+		priv->cb = NULL;
 	}
 	if (priv->gps) {
 		gps_close(priv->gps);
@@ -248,24 +248,18 @@ vehicle_gpsd_close(struct vehicle_priv *priv)
 #endif
 }
 
-static gboolean
-vehicle_gpsd_io(GIOChannel * iochan, GIOCondition condition, gpointer t)
+static void
+vehicle_gpsd_io(struct vehicle_priv *priv)
 {
-	struct vehicle_priv *priv = t;
-
-	dbg(1, "enter condition=%d\n", condition);
-	if (condition == G_IO_IN) {
-		if (priv->gps) {
-			vehicle_last = priv;
-                        if (gps_poll(priv->gps)) {
-                               g_warning("gps_poll failed\n");
-                               vehicle_gpsd_close(priv);
-                               vehicle_gpsd_open(priv);
-                        }
-		}
-		return TRUE;
+	dbg(1, "enter\n");
+	if (priv->gps) {
+	 	vehicle_last = priv;
+                if (gps_poll(priv->gps)) {
+			g_warning("gps_poll failed\n");
+			vehicle_gpsd_close(priv);
+			vehicle_gpsd_open(priv);
+                }
 	}
-	return FALSE;
 }
 
 static void
