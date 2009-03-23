@@ -216,6 +216,8 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		char ns, ew;
 		dbg(1,"str='%s'\n", str);
 		args=sscanf(str, "%lf %c %lf %c%n", &lat, &ns, &lng, &ew, &ret);
+		dbg(1,"args=%d\n", args);
+		dbg(1,"lat=%f %c lon=%f %c\n", lat, ns, lng, ew);
 		if (args < 4)
 			goto out;
 		if (str_pro == projection_none) {
