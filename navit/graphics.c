@@ -310,6 +310,19 @@ void graphics_gc_set_background(struct graphics_gc *gc, struct color *c)
 	gc->meth.gc_set_background(gc->priv, c);
 }
 
+
+/**
+ * FIXME
+ * @param <>
+ * @returns <>
+ * @author Martin Schaller (04/2008)
+*/
+void graphics_gc_set_stipple(struct graphics_gc *gc, struct graphics_image *img) 
+{
+	gc->meth.gc_set_stipple(gc->priv, img ? img->priv : NULL);
+}
+
+
 /**
  * FIXME
  * @param <>
