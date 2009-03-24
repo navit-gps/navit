@@ -651,6 +651,8 @@ osd_text_format_attr(struct attr *attr, char *format)
 	case attr_position_height:
 	case attr_position_direction:
 		return format_float_0(*attr->u.numd);
+	case attr_position_magnetic_direction:
+		return g_strdup_printf("%d",attr->u.num);
 	case attr_position_coord_geo:
 		coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
 		return g_strdup(buffer);
