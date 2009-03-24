@@ -86,6 +86,7 @@ struct graphics_gc_methods {
 	void (*gc_set_dashes)(struct graphics_gc_priv *gc, int width, int offset, unsigned char dash_list[], int n);
 	void (*gc_set_foreground)(struct graphics_gc_priv *gc, struct color *c);
 	void (*gc_set_background)(struct graphics_gc_priv *gc, struct color *c);
+	void (*gc_set_stipple)(struct graphics_gc_priv *gc, struct graphics_image_priv *img);
 };
 
 struct graphics_gc {
