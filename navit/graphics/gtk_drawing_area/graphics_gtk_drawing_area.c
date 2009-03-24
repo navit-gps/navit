@@ -866,6 +866,8 @@ get_data(struct graphics_priv *this, char *type)
 	FILE *f;
 	if (!strcmp(type,"gtk_widget"))
 		return this->widget;
+	if (!strcmp(type,"xwindow_id"))
+		return (void *)GDK_WINDOW_XID(this->widget->window);
 	if (!strcmp(type,"window")) {
 		char *cp = getenv("NAVIT_XID");
 		unsigned xid = 0;
