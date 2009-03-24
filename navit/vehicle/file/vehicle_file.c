@@ -456,7 +456,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 	*/
 		if (item[1]) {
 			priv->magnetic_direction = g_ascii_strtod( item[1], NULL );
-			dbg(0,"magnetic %d\n", priv->magnetic_direction);
+			dbg(1,"magnetic %d\n", priv->magnetic_direction);
 		}
 	}
 	return ret;
