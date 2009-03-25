@@ -32,6 +32,7 @@
 #include "item.h"
 #include "attr.h"
 #include "layout.h"
+#include "command.h"
 
 
 static DBusConnection *connection;
@@ -683,6 +684,36 @@ request_navit_set_destination(DBusConnection *connection, DBusMessage *message)
 	return empty_reply(connection, message);
 }
 
+static DBusHandlerResult
+request_navit_evaluate(DBusConnection *connection, DBusMessage *message)
+{
+	struct pcoord pc;
+	struct navit *navit;
+	char *command;
+	char *result;
+	struct attr attr;
+	DBusMessage *reply;
+	int error;
+
+	navit = object_get_from_message(message, "navit");
+	if (! navit)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+	attr.type=attr_navit;
+	attr.u.navit=navit;
+        if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &command, DBUS_TYPE_INVALID))
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	result=command_evaluate_to_string(&attr, command, &error);
+	reply = dbus_message_new_method_return(message);
+	if (error)
+		dbus_message_append_args(reply, DBUS_TYPE_INT32, &error, DBUS_TYPE_INVALID);
+	else
+		dbus_message_append_args(reply, DBUS_TYPE_STRING, &result, DBUS_TYPE_INVALID);
+	dbus_connection_send (connection, reply, NULL);
+	dbus_message_unref (reply);
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
+
 struct dbus_method {
 	char *path;
 	char *method;
@@ -713,6 +744,7 @@ struct dbus_method {
 	{".navit",  "set_destination",     "ss",      "coordinates,comment",                     "",   "",      request_navit_set_destination},
 	{".navit",  "set_destination",     "(is)s",   "(projection,coordinates)comment",         "",   "",      request_navit_set_destination},
 	{".navit",  "set_destination",     "(iii)s",  "(projection,longitude,latitude)comment",  "",   "",      request_navit_set_destination},
+	{".navit",  "evaluate", 	   "s",	      "command",				 "s",  "",     request_navit_evaluate},
 #if 0
     {".navit",  "toggle_announcer",    "",        "",                                        "",   "",      request_navit_toggle_announcer},
 	{".navit",  "toggle_announcer",    "i",       "",                                        "",   "",      request_navit_toggle_announcer},

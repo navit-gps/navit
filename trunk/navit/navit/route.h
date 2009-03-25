@@ -28,6 +28,15 @@
 #ifndef NAVIT_ROUTE_H
 #define NAVIT_ROUTE_H
 
+enum route_status {
+	route_status_no_destination=0,
+	route_status_not_found=1|2,
+	route_status_building_path=1|4,
+	route_status_building_graph=1|4|8,
+	route_status_path_done_new=1|16,
+	route_status_path_done_incremental=1|32,
+};
+
 struct route_crossing {
 	long segid;
 	int dir;
@@ -110,8 +119,10 @@ struct map *route_get_graph_map(struct route *route);
 void route_toggle_routegraph_display(struct route *route);
 void route_set_projection(struct route *this_, enum projection pro);
 int route_destination_reached(struct route *this);
-void route_add_callback(struct route *this_, struct callback *cb);
-void route_remove_callback(struct route *this_, struct callback *cb);
+int route_set_attr(struct route *this_, struct attr *attr);
+int route_add_attr(struct route *this_, struct attr *attr);
+int route_remove_attr(struct route *this_, struct attr *attr);
+int route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 void route_init(void);
 int route_pos_contains(struct route *this, struct item *item);
 struct coord route_get_coord_dist(struct route *this_, int dist);

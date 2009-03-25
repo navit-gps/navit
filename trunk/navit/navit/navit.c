@@ -212,12 +212,15 @@ navit_draw_displaylist(struct navit *this_)
 }
 
 static void
-navit_redraw_route(struct navit *this_, int updated)
+navit_redraw_route(struct navit *this_, struct route *route, struct attr *attr)
 {
-	dbg(1,"enter %d\n", updated);
+	int updated;
+	if (attr->type != attr_route_status)
+		return;
+	updated=attr->u.num;
 	if (this_->ready != 3)
 		return;
-	if (updated <= 3)
+	if (updated != route_status_path_done_new)
 		return;
 	if (this_->vehicle) {
 		if (this_->vehicle->follow_curr == 1)
@@ -1300,8 +1303,11 @@ navit_init(struct navit *this_)
 		navit_add_former_destinations_from_file(this_);
 	}
 	if (this_->route) {
-		this_->route_cb=callback_new_attr_1(callback_cast(navit_redraw_route), attr_route, this_);
-		route_add_callback(this_->route, this_->route_cb);
+		struct attr callback;
+		this_->route_cb=callback_new_attr_1(callback_cast(navit_redraw_route), attr_route_status, this_);
+		callback.type=attr_callback;
+		callback.u.callback=this_->route_cb;
+		route_add_attr(this_->route, &callback);
 	}
 	if (this_->navigation) {
 		if (this_->speech) {
@@ -1656,6 +1662,7 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 {
 	struct message *msg;
 	int len,offset;
+	int ret=1;
 
 	switch (type) {
 	case attr_message:
@@ -1704,9 +1711,11 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		break;
 	case attr_graphics:
 		attr->u.graphics=this_->gra;
-		return (attr->u.graphics != NULL);
+		ret=(attr->u.graphics != NULL);
+		break;
 	case attr_gui:
 		attr->u.gui=this_->gui;
+		ret=(attr->u.gui != NULL);
 		break;
 	case attr_layout:
 		if (iter) {
@@ -1795,7 +1804,7 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		return 0;
 	}
 	attr->type=type;
-	return 1;
+	return ret;
 }
 
 static int
