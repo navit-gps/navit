@@ -253,6 +253,7 @@ struct gui_priv {
 	int flags;
 	int cols;
 	struct attr osd_configuration;
+	int pitch;
 };
 
 
@@ -2799,7 +2800,7 @@ static void
 gui_internal_cmd_3d(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct transformation *trans=navit_get_trans(this->nav);
-	transform_set_pitch(trans, 20);
+	transform_set_pitch(trans, this->pitch);
 	this->redraw=1;
 }
 
@@ -3724,6 +3725,11 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	      this->cols=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_osd_configuration)))
 	      this->osd_configuration=*attr;
+
+	if( (attr=attr_search(attrs,NULL,attr_pitch)))
+	      this->pitch=attr->u.num;
+	else
+		this->pitch=20;
 	this->data.priv=this;
 	this->data.gui=&gui_internal_methods_ext;
 	this->data.widget=&gui_internal_widget_methods;
