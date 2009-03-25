@@ -134,6 +134,7 @@ struct navit {
 	int use_mousewheel;
 	struct messagelist *messages;
 	struct callback *resize_callback,*button_callback,*motion_callback;
+	int pitch;
 };
 
 struct gui *main_loop_gui;
@@ -1567,6 +1568,13 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		dbg(0,"setting osd_configuration to %d (was %d)\n", attr->u.num, this_->osd_configuration);
 		attr_updated=(this_->osd_configuration != attr->u.num);
 		this_->osd_configuration=attr->u.num;
+		break;
+	case attr_pitch:
+		attr_updated=(this_->pitch != attr->u.num);
+		this_->pitch=attr->u.num;
+		transform_set_pitch(this_->trans, this_->pitch);
+		if (!init && attr_updated && this_->ready == 3)
+			navit_draw(this_);
 		break;
 	case attr_projection:
 		if(this_->trans && transform_get_projection(this_->trans) != attr->u.projection) {
