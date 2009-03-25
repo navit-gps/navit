@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
@@ -35,6 +34,7 @@ struct result {
 	int varlen;
 	char *attrn;
 	int attrnlen;
+	int allocated;
 };
 
 struct context {
@@ -50,6 +50,11 @@ enum error {
 
 static void eval_comma(struct context *ctx, struct result *res);
 static struct attr ** eval_list(struct context *ctx);
+
+static void
+result_free(struct result *res)
+{
+}
 
 static char *
 get_op(struct context *ctx, int test, ...)
@@ -206,12 +211,14 @@ get_string(struct context *ctx, struct result *res)
 static void
 set_double(struct context *ctx, struct result *res, double val)
 {
+	result_free(res);
 	res->val=val;
 }
 
 static void
 set_int(struct context *ctx, struct result *res, int val)
 {
+	result_free(res);
 	res->attr.type=attr_type_int_begin;
 	res->attr.u.num=val;
 }
@@ -220,7 +227,7 @@ set_int(struct context *ctx, struct result *res, int val)
 static void
 eval_value(struct context *ctx, struct result *res) {
 	char *op;
-	int dots=0;
+	int len,dots=0;
 	op=ctx->expr;
 	res->varlen=0;
 	res->var=NULL;
@@ -237,8 +244,10 @@ eval_value(struct context *ctx, struct result *res) {
 		return;
 	}
 	if ((op[0] >= '0' && op[0] <= '9') ||
-	    (op[0] == '.' && op[1] >= '0' && op[1] <= '9')) {
-		while ((op[0] >= '0' && op[0] <= '9') || op[0] == '.') {
+	    (op[0] == '.' && op[1] >= '0' && op[1] <= '9') ||
+	    (op[0] == '-' && op[1] >= '0' && op[1] <= '9') ||
+	    (op[0] == '-' && op[1] == '.' && op[2] >= '0' && op[2] <= '9')) {
+		while ((op[0] >= '0' && op[0] <= '9') || op[0] == '.' || (res->varlen == 0 && op[0] == '-')) {
 			if (op[0] == '.')
 				dots++;
 			if (dots > 1) {
@@ -256,6 +265,19 @@ eval_value(struct context *ctx, struct result *res) {
 			res->attr.type=attr_type_int_begin;
 			res->attr.u.num=atoi(ctx->expr);
 		}
+		ctx->expr=op;
+		return;
+	}
+	if (op[0] == '"') {
+		do {
+			op++;
+		} while (op[0] != '"');
+		res->attr.type=attr_type_string_begin;
+		len=op-ctx->expr-1;
+		res->attr.u.str=g_malloc(len+1);
+		strncpy(res->attr.u.str, ctx->expr+1, len);
+		res->attr.u.str[len]='\0';
+		op++;
 		ctx->expr=op;
 		return;
 	}
@@ -428,6 +450,7 @@ eval_equality(struct context *ctx, struct result *res)
 			set_int(ctx, res, (get_int(ctx, res) == get_int(ctx, &tmp)));
 		else
 			set_int(ctx, res, (get_int(ctx, res) != get_int(ctx, &tmp)));
+		result_free(&tmp);
 	}
 }
 
@@ -610,17 +633,44 @@ void command(struct attr *attr, char *expr)
 #endif
 
 void
-command_evaluate_to_void(struct attr *attr, char *expr)
+command_evaluate_to(struct attr *attr, char *expr, struct context *ctx, struct result *res)
+{
+	memset(res, 0, sizeof(*res));
+	memset(ctx, 0, sizeof(*ctx));
+	ctx->attr=attr;
+	ctx->expr=expr;
+	eval_comma(ctx,res);
+}
+
+void
+command_evaluate_to_void(struct attr *attr, char *expr, int **error)
 {
 	struct result res;
 	struct context ctx;
-	memset(&res, 0, sizeof(res));
-	memset(&ctx, 0, sizeof(ctx));
-	ctx.attr=attr;
-	ctx.error=0;
-	ctx.expr=expr;
-	eval_comma(&ctx,&res);
-	resolve(&ctx, &res, NULL);
+	command_evaluate_to(attr, expr, &ctx, &res);
+	if (!ctx.error)
+		resolve(&ctx, &res, NULL);
+	if (error)
+		*error=ctx.error;
+
+}
+
+char *
+command_evaluate_to_string(struct attr *attr, char *expr, int **error)
+{
+	struct result res;
+	struct context ctx;
+	char *ret;
+
+	command_evaluate_to(attr, expr, &ctx, &res);
+	if (error)
+		*error=ctx.error;
+	if (!ctx.error)
+		ret=get_string(&ctx, &res);
+	if (ctx.error)
+		return NULL;
+	else
+		return ret;
 }
 
 void

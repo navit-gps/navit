@@ -1660,7 +1660,7 @@ navigation_call_callbacks(struct navigation *this_, int force_speech)
 }
 
 static void
-navigation_update(struct navigation *this_, int mode)
+navigation_update(struct navigation *this_, struct route *route, struct attr *attr)
 {
 	struct map *map;
 	struct map_rect *mr;
@@ -1668,12 +1668,14 @@ navigation_update(struct navigation *this_, int mode)
 	struct item *sitem;			/* Holds the corresponding item from the actual map */
 	struct attr street_item,street_direction;
 	struct navigation_itm *itm;
-	int incr=0,first=1;
+	int mode,incr=0,first=1;
+	if (attr->type != attr_route_status)
+		return;
 
 	dbg(1,"enter %d\n", mode);
-	if (mode < 2 || mode == 4) 
+	if (attr->u.num == route_status_no_destination || attr->u.num == route_status_not_found || attr->u.num == route_status_path_done_new) 
 		navigation_flush(this_);
-	if (mode < 2)
+	if (attr->u.num != route_status_path_done_new && attr->u.num != route_status_path_done_incremental)
 		return;
 		
 	if (! this_->route)
@@ -2144,9 +2146,12 @@ navigation_map_new(struct map_methods *meth, struct attr **attrs)
 void
 navigation_set_route(struct navigation *this_, struct route *route)
 {
+	struct attr callback;
 	this_->route=route;
-	this_->route_cb=callback_new_attr_1(callback_cast(navigation_update), attr_route, this_);
-	route_add_callback(route, this_->route_cb);
+	this_->route_cb=callback_new_attr_1(callback_cast(navigation_update), attr_route_status, this_);
+	callback.type=attr_callback;
+	callback.u.callback=this_->route_cb;
+	route_add_attr(route, &callback);
 }
 
 void

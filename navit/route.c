@@ -221,9 +221,10 @@ struct route {
 	struct map *graph_map;
 	struct callback * route_graph_done_cb ; /**< Callback when route graph is done */
 	struct callback * route_graph_flood_done_cb ; /**< Callback when route graph flooding is done */
-	struct callback_list *cbl;	/**< Callback list to call when route changes */
+	struct callback_list *cbl2;	/**< Callback list to call when route changes */
 	int destination_distance;	/**< Distance to the destination at which the destination is considered "reached" */
 	struct route_preferences preferences; /**< Routing preferences */
+	int route_status;		/**< Route Status */
 };
 
 /**
@@ -398,7 +399,7 @@ route_new(struct attr *parent, struct attr **attrs)
 	} else {
 		this->destination_distance = 50; // Default value
 	}
-	this->cbl=callback_list_new();
+	this->cbl2=callback_list_new();
 	this->preferences.flags_forward_mask=AF_ONEWAYREV|AF_CAR;
 	this->preferences.flags_reverse_mask=AF_ONEWAY|AF_CAR;
 	this->preferences.flags=AF_CAR;
@@ -650,22 +651,25 @@ static void
 route_path_update_done(struct route *this, int new_graph)
 {
 	struct route_path *oldpath=this->path2;
-	int val;
+	struct attr route_status;
+	route_status.type=attr_route_status;
 	if (this->path2 && this->path2->in_use) {
 		this->path2->update_required=1+new_graph;
 		return;
 	}
+	route_status.u.num=route_status_building_path;
+	route_set_attr(this, &route_status);
 
 	this->path2=route_path_new(this->graph, oldpath, this->pos, this->dst, &this->preferences);
 	route_path_destroy(oldpath);
 	if (this->path2) {
-		if (new_graph)
-			val=4;
+		if (!new_graph && this->path2->updated)
+			route_status.u.num=route_status_path_done_incremental;
 		else
-			val=2+!this->path2->updated;
+			route_status.u.num=route_status_path_done_new;
 	} else
-		val=1;
-	callback_list_call_attr_1(this->cbl, attr_route, (void *)val);
+		route_status.u.num=route_status_not_found;
+	route_set_attr(this, &route_status);
 }
 
 /**
@@ -914,8 +918,12 @@ route_set_destination(struct route *this, struct pcoord *dst)
 		this->dst=route_find_nearest_street(this->ms, dst);
 		if(this->dst)
 			route_info_distances(this->dst, dst->pro);
-	} else 
-		callback_list_call_attr_1(this->cbl, attr_route, (void *)0);
+	} else  {
+		struct attr route_status;
+		route_status.type=attr_route_status;
+		route_status.u.num=route_status_no_destination;
+		route_set_attr(this, &route_status);
+	}
 	profile(1,"find_nearest_street");
 
 	/* The graph has to be destroyed and set to NULL, otherwise route_path_update() doesn't work */
@@ -1233,7 +1241,7 @@ route_path_add_line(struct route_path *this, struct coord *start, struct coord *
 	struct route_path_segment *segment;
 	int seg_size,seg_dat_size;
 
-	dbg(0,"line from 0x%x,0x%x-0x%x,0x%x\n", start->x, start->y, end->x, end->y);
+	dbg(1,"line from 0x%x,0x%x-0x%x,0x%x\n", start->x, start->y, end->x, end->y);
 	seg_size=sizeof(*segment) + sizeof(struct coord) * ccnt;
         seg_dat_size=sizeof(struct route_segment_data);
         segment=g_malloc0(seg_size + seg_dat_size);
@@ -1270,7 +1278,7 @@ static int
 route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpath, struct route_graph_segment *rgs, int dir, struct route_info *pos, struct route_info *dst)
 {
 	struct route_path_segment *segment;
-	int i, ccnt, extra=0, ret=1;
+	int i, ccnt, extra=0, ret=0;
 	struct coord *c,*cd,ca[2048];
 	int offset=1;
 	int seg_size,seg_dat_size;
@@ -1278,12 +1286,15 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 		offset=RSD_OFFSET(&rgs->data);
 
 	dbg(1,"enter (0x%x,0x%x) dir=%d pos=%p dst=%p\n", rgs->data.item.id_hi, rgs->data.item.id_lo, dir, pos, dst);
-	if (oldpath && !pos) {
+	if (oldpath) {
 		segment=item_hash_lookup(oldpath->path_hash, &rgs->data.item);
 		if (segment && segment->direction == dir) {
 			segment = route_extract_segment_from_path(oldpath, &rgs->data.item, offset);
-			if (segment) 
-				goto linkold;
+			if (segment) {
+				ret=1;
+				if (!pos)
+					goto linkold;
+			}
 		}
 	}
 
@@ -1356,7 +1367,6 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 		route_check_roundabout(rgs, 13, (dir < 1), NULL);
 	}
 
-	ret=0;
 	memcpy(segment->data, &rgs->data, seg_dat_size);
 
 linkold:
@@ -1955,10 +1965,14 @@ route_graph_update_done(struct route *this, struct callback *cb)
 static void
 route_graph_update(struct route *this, struct callback *cb)
 {
+	struct attr route_status;
+
+	route_status.type=attr_route_status;
 	route_graph_destroy(this->graph);
 	callback_destroy(this->route_graph_done_cb);
 	this->route_graph_done_cb=callback_new_2(callback_cast(route_graph_update_done), this, cb);
-	callback_list_call_attr_1(this->cbl, attr_route, (void *)0);
+	route_status.u.num=route_status_building_graph;
+	route_set_attr(this, &route_status);
 	this->graph=route_graph_build(this->ms, &this->pos->c, &this->dst->c, this->route_graph_done_cb);
 }
 
@@ -2800,29 +2814,67 @@ route_set_projection(struct route *this_, enum projection pro)
 {
 }
 
-void
-route_add_callback(struct route *this_, struct callback *cb)
+int
+route_set_attr(struct route *this_, struct attr *attr)
 {
-	callback_list_add(this_->cbl, cb);
+	int attr_updated=0;
+	switch (attr->type) {
+	case attr_route_status:
+		attr_updated = (this_->route_status != attr->u.num);
+		this_->route_status = attr->u.num;
+		break;
+	default:
+		return 0;
+	}
+	if (attr_updated)
+		callback_list_call_attr_2(this_->cbl2, attr->type, this_, attr);
+	return 1;
 }
 
-void
-route_remove_callback(struct route *this_, struct callback *cb)
+int
+route_add_attr(struct route *this_, struct attr *attr)
 {
-	callback_list_remove(this_->cbl, cb);
+	switch (attr->type) {
+	case attr_callback:
+		dbg(0,"add\n");
+		callback_list_add(this_->cbl2, attr->u.callback);
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+int
+route_remove_attr(struct route *this_, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_callback:
+		callback_list_remove(this_->cbl2, attr->u.callback);
+		return 1;
+	default:
+		return 0;
+	}
 }
 
 int
 route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
+	int ret=1;
 	switch (type) {
 	case attr_map:
 		attr->u.map=route_get_map(this_);
-		return attr->u.map != NULL;
+		ret=(attr->u.map != NULL);
+		break;
+	case attr_route_status:
+		attr->u.num=this_->route_status;
+		break;
 	default:
 		return 0;
 	}
+	attr->type=type;
+	return ret;
 }
+
 void
 route_init(void)
 {

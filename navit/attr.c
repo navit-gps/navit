@@ -297,6 +297,38 @@ attr_generic_add_attr(struct attr **attrs, struct attr *attr)
 	return curr;
 }
 
+enum attr_type
+attr_type_begin(enum attr_type type)
+{
+	if (type < attr_type_item_begin)
+		return attr_none;
+	if (type < attr_type_int_begin)
+		return attr_type_item_begin;
+	if (type < attr_type_string_begin)
+		return attr_type_int_begin;
+	if (type < attr_type_special_begin)
+		return attr_type_string_begin;
+	if (type < attr_type_double_begin)
+		return attr_type_special_begin;
+	if (type < attr_type_coord_geo_begin)
+		return attr_type_double_begin;
+	if (type < attr_type_color_begin)
+		return attr_type_coord_geo_begin;
+	if (type < attr_type_object_begin)
+		return attr_type_color_begin;
+	if (type < attr_type_coord_begin)
+		return attr_type_object_begin;
+	if (type < attr_type_pcoord_begin)
+		return attr_type_coord_begin;
+	if (type < attr_type_callback_begin)
+		return attr_type_pcoord_begin;
+	if (type < attr_type_int64_begin)
+		return attr_type_callback_begin;
+	if (type <= attr_type_int64_end)
+		return attr_type_int64_begin;
+	return attr_none;
+}
+
 int
 attr_data_size(struct attr *attr)
 {
