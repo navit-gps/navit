@@ -30,7 +30,7 @@ struct messagelist {
 	int maxage;								/**< Maximum age of messages */
 	int maxnum;								/**< Maximum number of messages */
 	struct callback *msg_cleanup_cb;			/**< Callback to clean up the messages */
-	struct event_idle *msg_cleanup_ev;		/**< Idle event to clean up the messages */
+	struct event_timeout *msg_cleanup_to;		/**< Idle event to clean up the messages */
 };
 
 int
@@ -145,7 +145,7 @@ void
 messagelist_init(struct messagelist *this_)
 {
 	this_->msg_cleanup_cb = callback_new_1(callback_cast(message_cleanup), this_);
-	this_->msg_cleanup_ev = event_add_idle(150, this_->msg_cleanup_cb);
+	this_->msg_cleanup_to = event_add_timeout(1000, 1, this_->msg_cleanup_cb);
 }
 
 struct message 
