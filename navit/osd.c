@@ -38,8 +38,8 @@ struct osd {
 struct osd *
 osd_new(struct attr *parent, struct attr **attrs)
 {
-        struct osd *o;
-        struct osd_priv *(*new)(struct navit *nav, struct osd_methods *meth, struct attr **attrs);
+	struct osd *o;
+	struct osd_priv *(*new)(struct navit *nav, struct osd_methods *meth, struct attr **attrs);
 	struct attr *type=attr_search(attrs, NULL, attr_type);
 
 	if (! type)
@@ -82,6 +82,41 @@ osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button,
 }
 
 void
+osd_std_resize(struct osd_item *item)
+{
+ 	graphics_overlay_resize(item->gr, &item->p, item->w, item->h, 65535, 1);
+}
+ 
+void
+osd_std_calculate_sizes(struct osd_item *item, struct osd_priv *priv, int w, int h) 
+{
+	struct attr vehicle_attr;
+
+ 	if (item->rel_w) {
+		item->w = (item->rel_w * w) / 100;
+ 	}
+ 
+ 	if (item->rel_h) {
+		item->h = (item->rel_h * h) / 100;
+ 	}
+ 
+ 	if (item->rel_x) {
+		item->p.x = (item->rel_x * w) / 100;
+ 	}
+ 
+ 	if (item->rel_y) {
+		item->p.y = (item->rel_y * h) / 100;
+ 	}
+
+	osd_std_resize(item);
+	if (item->meth.draw) {
+		if (navit_get_attr(item->navit, attr_vehicle, &vehicle_attr, NULL)) {
+			item->meth.draw(priv, item->navit, vehicle_attr.u.vehicle);
+		}
+	}
+}
+
+void
 osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 {
 	struct attr *attr;
@@ -113,38 +148,61 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 		item->osd_configuration = attr->u.num;
 
 	attr = attr_search(attrs, NULL, attr_w);
-	if (attr)
-		item->w = attr->u.num;
+	if (attr) {
+		if (attr->u.num > ATTR_REL_MAXABS) {
+			item->rel_w = attr->u.num - ATTR_REL_RELSHIFT;
+		} else {
+			item->rel_w = 0;
+			item->w = attr->u.num;
+		}
+	}
 
 	attr = attr_search(attrs, NULL, attr_h);
-	if (attr)
-		item->h = attr->u.num;
+	if (attr) {
+		if (attr->u.num > ATTR_REL_MAXABS) {
+			item->rel_h = attr->u.num - ATTR_REL_RELSHIFT;
+		} else {
+			item->rel_h = 0;
+			item->h = attr->u.num;
+		}
+	}
 
 	attr = attr_search(attrs, NULL, attr_x);
-	if (attr)
-		item->p.x = attr->u.num;
+	if (attr) {
+		if (attr->u.num > ATTR_REL_MAXABS) {
+			item->rel_x = attr->u.num - ATTR_REL_RELSHIFT;
+		} else {
+			item->rel_x = 0;
+			item->p.x = attr->u.num;
+		}
+	}
 
 	attr = attr_search(attrs, NULL, attr_y);
-	if (attr)
-		item->p.y = attr->u.num;
+	if (attr) {
+		if (attr->u.num > ATTR_REL_MAXABS) {
+			item->rel_y = attr->u.num - ATTR_REL_RELSHIFT;
+		} else {
+			item->rel_y = 0;
+			item->p.y = attr->u.num;
+		}
+	}
 
 	attr = attr_search(attrs, NULL, attr_font_size);
 	if (attr)
 		item->font_size = attr->u.num;
-
+	
 	attr=attr_search(attrs, NULL, attr_background_color);
 	if (attr)
 		item->color_bg=*attr->u.color;
 	attr = attr_search(attrs, NULL, attr_command);
 	if (attr) 
 		item->command = g_strdup(attr->u.str);
-        attr=attr_search(attrs, NULL, attr_text_color);
-        if (attr)
-                item->text_color=*attr->u.color;
-        attr=attr_search(attrs, NULL, attr_flags);
-        if (attr)
-                item->attr_flags=attr->u.num;
-
+	attr=attr_search(attrs, NULL, attr_text_color);
+	if (attr)
+		item->text_color=*attr->u.color;
+	attr=attr_search(attrs, NULL, attr_flags);
+	if (attr)
+		item->attr_flags=attr->u.num;
 }
 
 void
@@ -159,7 +217,7 @@ osd_std_config(struct osd_item *item, struct navit *navit)
 }
 
 void
-osd_set_std_graphic(struct navit *nav, struct osd_item *item)
+osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv)
 {
 	struct graphics *navit_gr;
 
@@ -181,13 +239,11 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item)
 
 	item->cb = callback_new_attr_2(callback_cast(osd_std_config), attr_osd_configuration, item, nav);
 	navit_add_callback(nav, item->cb);
-	osd_std_config(item, nav);
-}
 
-void
-osd_std_resize(struct osd_item *item)
-{
-	graphics_overlay_resize(item->gr, &item->p, item->w, item->h, 65535, 1);
+	item->resize_cb = callback_new_attr_2(callback_cast(osd_std_calculate_sizes), attr_resize, item, priv);
+	graphics_add_callback(navit_gr, item->resize_cb);
+
+	osd_std_config(item, nav);
 }
 
 void
@@ -195,6 +251,7 @@ osd_std_draw(struct osd_item *item)
 {
 	struct point p[2];
 	int flags=item->attr_flags;
+
 	graphics_draw_mode(item->gr, draw_mode_begin);
 	p[0].x=0;
 	p[0].y=0;
