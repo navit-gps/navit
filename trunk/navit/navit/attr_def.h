@@ -33,12 +33,12 @@ ATTR(position_sat_item)
 ATTR2(0x0001ffff,type_item_end)
 
 ATTR2(0x00020000,type_int_begin)
-ATTR(h)
+ATTR(h_remove)
 ATTR(id)
 ATTR(flags)
-ATTR(w)
-ATTR(x)
-ATTR(y)
+ATTR(w_remove)
+ATTR(x_remove)
+ATTR(y_remove)
 ATTR(flush_size)
 ATTR(flush_time)
 ATTR(zipfile_ref)
@@ -65,7 +65,7 @@ ATTR(announce_name_systematic_first)
 ATTR(antialias)
 ATTR(order_delta)
 ATTR(baudrate)
-ATTR(font_size)
+ATTR(font_size_remove)
 ATTR(icon_xs)
 ATTR(icon_l)
 ATTR(icon_s)
@@ -109,6 +109,21 @@ ATTR(pitch)
 ATTR(roll)
 ATTR(yaw)
 ATTR(route_status)
+
+ATTR2(0x00027500,type_rel_abs_begin)
+/* These attributes are int that can either hold relative		*
+ * or absolute values. A relative value is indicated by 		*
+ * adding 0x60000000.																				*
+ *																													*
+ * The range of valid absolute values is -0x40000000 to			*
+ * 0x40000000, the range of relative values is from					*
+ * -0x20000000 to 0x20000000.																*/
+ATTR(h)
+ATTR(w)
+ATTR(x)
+ATTR(y)
+ATTR(font_size)
+
 ATTR2(0x00028000,type_boolean_begin)
 /* boolean */
 ATTR(overwrite)
