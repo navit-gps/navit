@@ -183,20 +183,20 @@ endif
 if USE_SVG2PNG
 %.png:$(srcdir)/*.svg
 	SRCDIR=$(srcdir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
-xpm_DATA += $(addsuffix .png,$(basename $(svgs)))
+pngs = $(addsuffix .png,$(basename $(svgs)))
 xsize=$(firstword $(subst x, ,$(scale)))
 ysize=$(lastword $(subst x, ,$(scale)))
 comma=,
 if USE_SVG2PNG_SCALES
-xpm_DATA += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(svgs))))
+pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(svgs))))
 endif
 if USE_SVG2PNG_SCALES_FLAG
-xpm_DATA += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_FLAG@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(flag_svgs))))
+pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_FLAG@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(flag_svgs))))
 endif
 if USE_SVG2PNG_SCALES_NAV
-xpm_DATA += $(addsuffix .png,$(basename $(nav_svgs)))
-xpm_DATA += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_NAV@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(nav_svgs))))
+pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_NAV@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(nav_svgs))))
 endif
+xpm_DATA += $(pngs)
 endif
 
 DESKTOPFILEdir=$(datadir)/applications
@@ -211,3 +211,8 @@ ICON22_DATA = desktop_icons/22x22/navit.png
 EXTRA_DIST = $(xpm_DATA) $(DESKTOPFILE_DATA) $(ICON128_DATA) $(ICON22_DATA) navit_svg2png
 #burgerking.ico:
 #	wget http://www.burgerking.de/favicon.ico -O burgerking.ico
+
+if USE_SVG2PNG
+distclean-local:
+	rm -f $(pngs)
+endif
