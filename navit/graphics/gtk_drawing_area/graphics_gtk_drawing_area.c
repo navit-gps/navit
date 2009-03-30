@@ -72,6 +72,7 @@ struct graphics_priv {
 	int win_h;
 	int visible;
 	int overlay_disabled;
+	int overlay_autodisabled;
 	int a;
 	int wraparound;
 	struct graphics_priv *parent;
@@ -465,7 +466,7 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
 	GdkRectangle or,ir;
 	struct graphics_gc_priv *bg=overlay->background_gc;
 
-	if (parent->overlay_disabled || overlay->overlay_disabled)
+	if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
 		return;
 	dbg(1,"r->x=%d r->y=%d r->width=%d r->height=%d\n", r->x, r->y, r->width, r->height);
 	overlay_rect(parent, overlay, 0, &or);
@@ -803,15 +804,28 @@ static void
 overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int alpha, int wraparound)
 {
 	int changed = 0;
+	int w2,h2;
+
+	if (w == 0) {
+		w2 = 1;
+	} else {
+		w2 = w;
+	}
+
+	if (h == 0) {
+		h2 = 1;
+	} else {
+		h2 = h;
+	}
 
 	this->p = *p;
-	if (this->width != w) {
-		this->width = w;
+	if (this->width != w2) {
+		this->width = w2;
 		changed = 1;
 	}
 
-	if (this->height != h) {
-		this->height = h;
+	if (this->height != h2) {
+		this->height = h2;
 		changed = 1;
 	}
 
@@ -823,8 +837,14 @@ overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int al
 		g_object_unref(this->drawable);
 		g_object_unref(this->background);
 
-		this->drawable=gdk_pixmap_new(this->parent->widget->window, w, h, -1);
-		this->background=gdk_pixmap_new(this->parent->widget->window, w, h, -1);
+		this->drawable=gdk_pixmap_new(this->parent->widget->window, w2, h2, -1);
+		this->background=gdk_pixmap_new(this->parent->widget->window, w2, h2, -1);
+
+		if ((w == 0) || (h == 0)) {
+			this->overlay_autodisabled = 1;
+		} else {
+			this->overlay_autodisabled = 0;
+		}
 
 		callback_list_call_attr_2(this->cbl, attr_resize, (void *)this->width, (void *)this->height);
 	}
@@ -833,15 +853,38 @@ overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int al
 static struct graphics_priv *
 overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
 {
+	int w2,h2;
 	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
-	this->drawable=gdk_pixmap_new(gr->widget->window, w, h, -1);
 	this->colormap=gr->colormap;
 	this->widget=gr->widget;
 	this->p=*p;
 	this->width=w;
 	this->height=h;
 	this->parent=gr;
-	this->background=gdk_pixmap_new(gr->widget->window, w, h, -1);
+
+	/* If either height or width is 0, we set it to 1 to avoid warnings, and
+	 * disable the overlay. */
+	if (h == 0) {
+		h2 = 1;
+	} else {
+		h2 = h;
+	}
+
+	if (w == 0) {
+		w2 = 1;
+	} else {
+		w2 = w;
+	}
+
+	this->background=gdk_pixmap_new(gr->widget->window, w2, h2, -1);
+	this->drawable=gdk_pixmap_new(gr->widget->window, w2, h2, -1);
+
+	if ((w == 0) || (h == 0)) {
+		this->overlay_autodisabled = 1;
+	} else {
+		this->overlay_autodisabled = 0;
+	}
+
 	this->next=gr->overlays;
 	this->a=alpha >> 8;
 	this->wraparound=wraparound;
