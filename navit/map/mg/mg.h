@@ -151,6 +151,11 @@ struct street_name_numbers {
 	int tmp_len;
 	unsigned char *tmp_data;
 };
+static inline void street_name_numbers_get_coord(struct street_name_numbers * str, struct coord * c) {
+	unsigned char *p=(unsigned char *)str->c;
+	c->x=get_u32_unal(&p);
+	c->y=get_u32_unal(&p);
+}
 
 struct street_name_number {
         int len;
@@ -240,10 +245,12 @@ struct block_priv {
 };
 
 struct block_offset {
-	unsigned short offset;
-	unsigned short block;
+/*	unsigned short offset;
+	unsigned short block;*/
+	unsigned char p[4];
 };
-
+static inline unsigned short block_offset_get_offset(struct block_offset * blk) { unsigned char *p = blk->p; return get_u16_unal(&p); }
+static inline unsigned short block_offset_get_block(struct block_offset * blk) { unsigned char *p = blk->p+2; return get_u16_unal(&p); }
 
 struct tree_search_node {
 	struct tree_hdr *hdr;
