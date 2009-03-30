@@ -53,6 +53,15 @@ get_u24(unsigned char **p) {
 
 
 static inline unsigned int
+get_u24_unal(unsigned char **p) {
+	unsigned long ret;
+	ret=get_u16_unal(p);
+	ret|=*((*p)++) << 16;
+	return ret;
+}
+
+
+static inline unsigned int
 get_u32(unsigned char **p) {
 	unsigned long ret;
 	ret=*((unsigned int *)*p);

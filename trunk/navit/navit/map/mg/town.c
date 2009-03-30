@@ -275,9 +275,9 @@ town_search_get_item(struct map_rect_priv *mr)
 	}
 	if (! mr->search_blk_count)
 		return NULL;
-	dbg(1,"block 0x%x offset 0x%x\n", mr->search_blk_off->block, mr->search_blk_off->offset);
-	block_get_byindex(mr->m->file[mr->current_file], mr->search_blk_off->block, &mr->b);
-	mr->b.p=mr->b.block_start+mr->search_blk_off->offset;
+	dbg(1,"block 0x%x offset 0x%x\n", block_offset_get_block(mr->search_blk_off), block_offset_get_offset(mr->search_blk_off));
+	block_get_byindex(mr->m->file[mr->current_file], block_offset_get_block(mr->search_blk_off), &mr->b);
+	mr->b.p=mr->b.block_start+block_offset_get_offset(mr->search_blk_off);
 	town_get(mr, &mr->town, &mr->item);
 	mr->search_blk_off++;
 	mr->search_blk_count--;
