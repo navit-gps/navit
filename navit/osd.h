@@ -44,6 +44,7 @@ struct osd_item {
 	struct callback *resize_cb;
 	int pressed;
 	char *command;
+	char *enable_expression;
 };
 
 /* prototypes */
