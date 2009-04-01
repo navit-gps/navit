@@ -147,6 +147,10 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 	if (attr)
 		item->osd_configuration = attr->u.num;
 
+	attr=attr_search(attrs, NULL, attr_enable_expression);
+	if (attr)
+		item->enable_expression = g_strdup(attr->u.str);
+
 	attr = attr_search(attrs, NULL, attr_w);
 	if (attr) {
 		if (attr->u.num > ATTR_REL_MAXABS) {
@@ -208,11 +212,23 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 void
 osd_std_config(struct osd_item *item, struct navit *navit)
 {
-	struct attr osd_configuration;
+	struct attr attr;
 	dbg(1,"enter\n");
-	if (!navit_get_attr(navit, attr_osd_configuration, &osd_configuration, NULL))
-		osd_configuration.u.num=-1;
-	item->configured = !!(osd_configuration.u.num & item->osd_configuration);
+	if (item->enable_expression) {
+		int error,configured;
+		attr.type=attr_navit;
+		attr.u.navit=navit;
+		configured=command_evaluate_to_int(&navit, item->enable_expression, &error);
+		if (error) {
+			dbg(0,"evaluating %s resulted in error %d\n", item->enable_expression, error);
+			configured=0;
+		}
+		item->configured = !!configured;
+	} else {
+		if (!navit_get_attr(navit, attr_osd_configuration, &attr, NULL))
+			attr.u.num=-1;
+		item->configured = !!(attr.u.num & item->osd_configuration);
+	}
 	graphics_overlay_disable(item->gr, !item->configured);
 }
 
