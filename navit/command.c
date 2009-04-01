@@ -112,7 +112,7 @@ command_attr_type(struct result *res)
 }
 
 static int
-command_object_get_attr(struct attr *object, enum attr_type attr_type, struct attr *ret)
+command_object_get_attr(struct context *ctx, struct attr *object, enum attr_type attr_type, struct attr *ret)
 {
 	struct object_func *func=object_func_lookup(object->type);
 	if (!func || !func->get_attr)
@@ -125,7 +125,7 @@ command_get_attr(struct context *ctx, struct result *res)
 {
 	int result;
 	enum attr_type attr_type=command_attr_type(res);
-	result=command_object_get_attr(&res->attr, attr_type, &res->attr);
+	result=command_object_get_attr(ctx, &res->attr, attr_type, &res->attr);
 	if (result) {
 		res->var=res->attrn;
 		res->varlen=res->attrnlen;
@@ -314,7 +314,7 @@ command_call_function(struct context *ctx, struct result *res)
 		ctx->error=missing_closing_brace;
 		return;
 	}
-	if (command_object_get_attr(&res->attr, attr_callback_list, &cbl)) {
+	if (command_object_get_attr(ctx, &res->attr, attr_callback_list, &cbl)) {
 		int valid;
 		dbg(0,"function call %s from %s\n",function, attr_to_name(res->attr.type));
 		callback_list_call_attr_4(cbl.u.callback_list, attr_command, function, list, NULL, &valid);
@@ -663,12 +663,30 @@ command_evaluate_to_string(struct attr *attr, char *expr, int **error)
 	char *ret;
 
 	command_evaluate_to(attr, expr, &ctx, &res);
-	if (error)
-		*error=ctx.error;
 	if (!ctx.error)
 		ret=get_string(&ctx, &res);
+	if (error)
+		*error=ctx.error;
 	if (ctx.error)
 		return NULL;
+	else
+		return ret;
+}
+
+int
+command_evaluate_to_int(struct attr *attr, char *expr, int **error)
+{
+	struct result res;
+	struct context ctx;
+	char *ret;
+
+	command_evaluate_to(attr, expr, &ctx, &res);
+	if (!ctx.error)
+		ret=get_int(&ctx, &res);
+	if (error)
+		*error=ctx.error;
+	if (ctx.error)
+		return 0;
 	else
 		return ret;
 }
