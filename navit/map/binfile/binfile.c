@@ -65,6 +65,7 @@ struct map_priv {
 	int search_size;
 	int version;
 	int check_version;
+	int map_version;
 };
 
 struct map_rect_priv {
@@ -375,6 +376,8 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 				mr->url=binfile_extract(mr->m, mr->m->cachedir, attr->u.str, 1);
 				attr->u.str=mr->url;
 			}
+			if (type == attr_flags && mr->m->map_version < 1) 
+				attr->u.num |= AF_CAR;
 			t->pos_attr+=size;
 			return 1;
 		} else {
@@ -807,6 +810,9 @@ map_binfile_open(struct map_priv *m)
 {
 	int *magic;
 	struct zip_cd *first_cd;
+	struct map_rect_priv *mr;
+	struct item *item;
+	struct attr attr;
 
 	dbg(1,"file_create %s\n", m->filename);
 	m->fi=file_create(m->filename);
@@ -833,6 +839,15 @@ map_binfile_open(struct map_priv *m)
 		file_mmap(m->fi);
 	file_data_free(m->fi, (unsigned char *)magic);
 	m->cachedir="/tmp/navit";
+	m->map_version=0;
+	mr=map_rect_new_binfile(m, NULL);
+	if (mr) {
+		item=map_rect_get_item_binfile(mr);
+		if (item && item->type == type_map_information) 
+			if (binfile_attr_get(item->priv_data, attr_version, &attr))
+				m->map_version=attr.u.num;
+		map_rect_destroy_binfile(mr);
+	}
 	return 1;
 }
 
