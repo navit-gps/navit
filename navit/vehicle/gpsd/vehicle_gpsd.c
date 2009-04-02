@@ -41,7 +41,6 @@ static struct vehicle_priv {
 	struct callback *cb;
 	struct event_watch *evwatch;
 	guint retry_interval;
-	guint watch;
 	struct gps_data_t *gps;
 	struct coord_geo geo;
 	double speed;
@@ -183,7 +182,10 @@ vehicle_gpsd_try_open(gpointer *data)
 	gps_set_raw_hook(priv->gps, vehicle_gpsd_callback);
 	priv->cb = callback_new_1(callback_cast(vehicle_gpsd_io), priv);
 	priv->evwatch = event_add_watch((void *)priv->gps->gps_fd, event_watch_cond_read, priv->cb);
-	dbg(0,"Connected to gpsd fd=%d evwatch=%p watch=%p\n", priv->gps->gps_fd, priv->evwatch, priv->watch);
+	if (!priv->gps->gps_fd) {
+		dbg(0,"Warning: gps_fd is 0, most likely you have used a gps.h incompatible to libgps");
+	}
+	dbg(0,"Connected to gpsd fd=%d evwatch=%p\n", priv->gps->gps_fd, priv->evwatch);
 	return FALSE;
 }
 
@@ -219,10 +221,6 @@ vehicle_gpsd_close(struct vehicle_priv *priv)
 	int err;
 #endif
 
-	if (priv->watch) {
-		g_source_remove(priv->watch);
-		priv->watch = 0;
-	}
 	if (priv->retry_timer) {
 		g_source_remove(priv->retry_timer);
 		priv->retry_timer=0;
