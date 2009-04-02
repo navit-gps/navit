@@ -312,6 +312,32 @@ attr_generic_add_attr(struct attr **attrs, struct attr *attr)
 	return curr;
 }
 
+struct attr **
+attr_generic_remove_attr(struct attr **attrs, struct attr *attr)
+{
+	struct attr **curr=attrs;
+	int i,j,count=0,found=0;
+	while (curr && *curr) {
+		if ((*curr)->type == attr->type && (*curr)->u.data == attr->u.data)
+			found=1;
+		curr++;
+		count++;
+	}
+	if (!found == -1)
+		return attrs;
+	curr=g_new0(struct attr *, count);
+	j=0;
+	for (i = 0 ; i < count ; i++) {
+		if ((*curr)->type != attr->type || (*curr)->u.data != attr->u.data)
+			curr[j++]=attrs[i];
+		else
+			attr_free(attrs[i]);
+	}
+	curr[j]=NULL;
+	g_free(attrs);
+	return curr;
+}
+
 enum attr_type
 attr_type_begin(enum attr_type type)
 {
@@ -361,6 +387,11 @@ attr_data_size(struct attr *attr)
 		return sizeof(*attr->u.num64);
 	if (attr->type == attr_order)
 		return sizeof(attr->u.range);
+	if (attr->type == attr_item_types) {
+		int i=0;
+		while (attr->u.item_types[i++] != type_none);
+		return i*sizeof(enum item_type);
+	}
 	dbg(0,"size for %s unknown\n", attr_to_name(attr->type));
 	return 0;
 }
