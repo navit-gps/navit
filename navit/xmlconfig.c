@@ -45,6 +45,9 @@
 #include "osd.h"
 #include "log.h"
 #include "cursor.h"
+#include "announcement.h"
+#include "vehicleprofile.h"
+#include "roadprofile.h"
 #include "xmlconfig.h"
 
 #ifdef HAVE_GLIB
@@ -266,6 +269,7 @@ xmlconfig_announce(struct xmlstate *state)
 #define DESTROY(x) (void (*)(void *))(x)
 
 static struct object_func object_funcs[] = {
+	{ attr_announcement,NEW(announcement_new),  GET(announcement_get_attr), NULL, NULL, SET(announcement_set_attr), ADD(announcement_add_attr) },
 	{ attr_arrows,     NEW(arrows_new)},
 	{ attr_circle,     NEW(circle_new),   NULL, NULL, NULL, NULL, ADD(element_add_attr)},
 	{ attr_coord,      NEW(coord_new_from_attrs)},
@@ -288,11 +292,13 @@ static struct object_func object_funcs[] = {
 	{ attr_plugin,     NEW(plugin_new)},
 	{ attr_polygon,    NEW(polygon_new),  NULL, NULL, NULL, NULL, ADD(element_add_attr)},
 	{ attr_polyline,   NEW(polyline_new), NULL, NULL, NULL, NULL, ADD(element_add_attr)},
+	{ attr_roadprofile,NEW(roadprofile_new),  GET(roadprofile_get_attr), NULL, NULL, SET(roadprofile_set_attr), ADD(roadprofile_add_attr) },
 	{ attr_route,      NEW(route_new), GET(route_get_attr)},
 	{ attr_speech,     NEW(speech_new), GET(speech_get_attr), NULL, NULL, SET(speech_set_attr)},
 	{ attr_text,       NEW(text_new)},
 	{ attr_tracking,   NEW(tracking_new)},
 	{ attr_vehicle,    NEW(vehicle_new),  GET(vehicle_get_attr), NULL, NULL, NULL, ADD(vehicle_add_attr) },
+	{ attr_vehicleprofile, NEW(vehicleprofile_new),  GET(vehicleprofile_get_attr), NULL, NULL, SET(vehicleprofile_set_attr), ADD(vehicleprofile_add_attr) },
 };
 
 struct object_func *
@@ -341,6 +347,9 @@ struct element_func {
 	{ "coord", "polyline", NULL, attr_coord},
 	{ "arrows", "itemgra", NULL, attr_arrows},
 	{ "vehicle", "navit", NULL, attr_vehicle},
+	{ "vehicleprofile", "navit", NULL, attr_vehicleprofile},
+	{ "roadprofile", "vehicleprofile", NULL, attr_roadprofile},
+	{ "announcement", "roadprofile", NULL, attr_announcement},
 	{ "cursor", "vehicle", NULL, attr_cursor},
 	{ "itemgra", "cursor", NULL, attr_itemgra},
 	{ "log", "vehicle", NULL, attr_log},

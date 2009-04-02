@@ -22,16 +22,16 @@ pkgdata_DATA = navit.xml
 EXTRA_DIST = navit.xml 
 
 noinst_LTLIBRARIES        = libnavit.la
-libnavit_la_SOURCES = atom.c attr.c cache.c callback.c command.c compass.c coord.c country.c cursor.c data_window.c debug.c \
+libnavit_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c compass.c coord.c country.c cursor.c data_window.c debug.c \
 	event.c event_glib.h file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
 	mapset.c maptype.c menu.c messages.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c \
-	profile.c projection.c route.c search.c speech.c transform.c track.c \
-	util.c vehicle.c xmlconfig.c atom.h attr.h attr_def.h cache.h callback.h color.h command.h compass.h coord.h country.h \
+	profile.c projection.c roadprofile.c route.c search.c speech.c transform.c track.c \
+	util.c vehicle.c vehicleprofile.c xmlconfig.c announcement.h atom.h attr.h attr_def.h cache.h callback.h color.h command.h compass.h coord.h country.h \
 	cursor.h data.h data_window.h data_window_int.h debug.h destination.h draw_info.h endianess.h event.h \
 	file.h graphics.h gtkext.h gui.h item.h item_def.h keys.h log.h layer.h layout.h main.h map-share.h map.h\
 	map_data.h mapset.h maptype.h menu.h messages.h navigation.h navit.h osd.h \
-	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h profile.h search.h speech.h \
-	transform.h track.h util.h vehicle.h window.h xmlconfig.h zipfile.h \
+	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h profile.h roadprofile.h search.h speech.h \
+	transform.h track.h util.h vehicle.h vehicleprofile.h window.h xmlconfig.h zipfile.h \
 	navit_nls.h
 
 navit_SOURCES = start.c
