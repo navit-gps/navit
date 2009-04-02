@@ -43,6 +43,7 @@
 #include "vehicle.h"
 #include "map.h"
 #include "coord.h"
+#include "event.h"
 #include "navit_nls.h"
 
 #ifdef USE_HILDON
@@ -277,7 +278,7 @@ gui_gtk_toggle_init(struct gui_priv *this)
 		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "CursorAction"));
 		gtk_toggle_action_set_active(toggle_action, attr.u.num);
 	} else {
-		dbg(0, "Unable to locate CursorAction\n");
+		dbg(1, "Unable to locate CursorAction\n");
 	}
 	if (navit_get_attr(this->nav, attr_orientation, &attr, NULL)) {
 		toggle_action = GTK_TOGGLE_ACTION(gtk_action_group_get_action(this->base_group, "OrientationAction"));
@@ -442,7 +443,7 @@ gui_gtk_vehicles_update(struct gui_priv *this)
 	char *name;
 	GList *curr;
 	struct gui_menu_info *meninfo;
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 
 	curr = g_list_first(this->vehicle_menuitems);
 
