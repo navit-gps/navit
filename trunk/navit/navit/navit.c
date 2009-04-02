@@ -1530,7 +1530,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		break;
 	case attr_center:
 		transform_from_geo(transform_get_projection(this_->trans), attr->u.coord_geo, &co);
-		dbg(0,"0x%x,0x%x\n",co.x,co.y);
+		dbg(1,"0x%x,0x%x\n",co.x,co.y);
 		transform_set_center(this_->trans, &co);
 		break;
 	case attr_drag_bitmap:

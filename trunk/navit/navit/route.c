@@ -2836,7 +2836,7 @@ route_add_attr(struct route *this_, struct attr *attr)
 {
 	switch (attr->type) {
 	case attr_callback:
-		dbg(0,"add\n");
+		dbg(1,"add\n");
 		callback_list_add(this_->cbl2, attr->u.callback);
 		return 1;
 	default:
