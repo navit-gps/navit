@@ -44,8 +44,28 @@ struct context {
 	struct result res;
 };
 
+struct command_saved_cb {
+	struct callback *cb;
+	struct attr attr;
+};
+
+struct command_saved {
+	struct context ctx;
+	struct result res;
+	char *command;				// The command string itself
+	struct event_idle *idle_ev;		// Event to update this command
+	struct callback *idle_cb;
+	struct callback *register_cb;			// Callback to register all the callbacks
+	struct event_idle *register_ev;		// Idle event to register all the callbacks
+	struct attr navit;
+	int num_cbs;
+	struct command_saved_cb *cbs;		// List of callbacks for this saved command
+	struct callback *cb; // Callback that should be called when we re-evaluate
+	int error;
+};
+
 enum error {
-	no_error=0,missing_closing_brace, missing_colon, wrong_type, illegal_number_format, illegal_character, missing_closing_bracket, invalid_type
+	no_error=0,missing_closing_brace, missing_colon, wrong_type, illegal_number_format, illegal_character, missing_closing_bracket, invalid_type, not_ready
 };
 
 static void eval_comma(struct context *ctx, struct result *res);
@@ -54,6 +74,56 @@ static struct attr ** eval_list(struct context *ctx);
 static void
 result_free(struct result *res)
 {
+}
+
+static int command_register_callbacks(struct command_saved *cs);
+
+static int
+get_next_object(struct context *ctx, struct result *res) {
+	char *op, *tmp;
+	op=ctx->expr;
+	res->varlen=0;
+	res->var=NULL;
+	res->attrnlen=0;
+	res->attrn=NULL;
+	
+	while (*op) {
+		if (op[0] == '"') {
+			while (*op && (op[0] != '"')) {
+				op++;
+			}
+		}
+
+		if (op[0] >= 'a' && op[0] <= 'z') {
+			res->attr.type=attr_none;
+			res->var=op;
+			while ((op[0] >= 'a' && op[0] <= 'z') || op[0] == '_') {
+				res->varlen++;
+				op++;
+			}
+
+			// If there is a bracket following, this is a function
+			tmp = op;
+			while (*tmp && g_ascii_isspace(*tmp)) {
+				tmp++;
+			}
+			if (tmp[0] == '(') {
+				continue;
+			}
+
+			ctx->expr=op;
+
+			if (op[0] == '.') {
+				return 2;				// 2 means "more object names following"
+			} else {
+				return 1;				// 1 means "no more object names following"
+			}
+		}
+		
+		op++;
+	}
+
+	return 0;
 }
 
 static char *
@@ -165,7 +235,7 @@ resolve_object(struct context *ctx, struct result *res)
 }
 
 static void
-resolve(struct context *ctx, struct result *res, struct attr *parent)
+resolve(struct context *ctx, struct result *res, struct attr *parent) //FIXME What is that parent for?
 {
 	resolve_object(ctx, res);
 	if (res->attr.type >= attr_type_object_begin && res->attr.type <= attr_type_object_end) {
@@ -443,13 +513,34 @@ eval_equality(struct context *ctx, struct result *res)
     	eval_additive(ctx, res);
 	if (ctx->error) return;
 	for (;;) {
-		if (!(op=get_op(ctx,0,"==","!=",NULL))) return;
+		if (!(op=get_op(ctx,0,"==","!=","<=",">=","<",">",NULL))) return;
     		eval_additive(ctx, &tmp);
 		if (ctx->error) return;
-		if (op[0]  == '=') 
+
+		switch (op[0]) {
+		case '=':
 			set_int(ctx, res, (get_int(ctx, res) == get_int(ctx, &tmp)));
-		else
+			break;
+		case '!':
 			set_int(ctx, res, (get_int(ctx, res) != get_int(ctx, &tmp)));
+			break;
+		case '<':
+			if (op[1] == '=') {
+				set_int(ctx, res, (get_int(ctx, res) <= get_int(ctx, &tmp)));
+			} else {
+				set_int(ctx, res, (get_int(ctx, res) < get_int(ctx, &tmp)));
+			}
+			break;
+		case '>':
+			if (op[1] == '=') {
+				set_int(ctx, res, (get_int(ctx, res) >= get_int(ctx, &tmp)));
+			} else {
+				set_int(ctx, res, (get_int(ctx, res) > get_int(ctx, &tmp)));
+			}
+			break;
+		default:
+			break;
+		}
 		result_free(&tmp);
 	}
 }
@@ -583,7 +674,7 @@ eval_comma(struct context *ctx, struct result *res)
 {
 	struct result tmp;
 
-    	eval_assignment(ctx, res);
+	eval_assignment(ctx, res);
 	if (ctx->error) return;
 	for (;;) {
 		if (!get_op(ctx,0,",",NULL)) return;
@@ -750,3 +841,184 @@ command_add_table(struct callback_list *cbl, struct command_table *table, int co
 	callback_list_add(cbl, cb);
 }
 
+void
+command_saved_set_cb (struct command_saved *cs, struct callback *cb)
+{
+	cs->cb = cb;
+}
+
+int
+command_saved_get_int (struct command_saved *cs)
+{
+	return get_int(&cs->ctx, &cs->res);
+}
+
+int 
+command_saved_error (struct command_saved *cs)
+{
+	return cs->error;
+}
+
+static void
+command_saved_evaluate_idle (struct command_saved *cs) 
+{
+	// Only run once at a time
+	if (cs->idle_ev) {
+		event_remove_idle(cs->idle_ev);
+		cs->idle_ev = NULL;
+	}
+
+	command_evaluate_to(&cs->navit, cs->command, &cs->ctx, &cs->res);
+
+	if (!cs->ctx.error) {
+		cs->error = 0;
+
+		if (cs->cb) {
+			callback_call_1(cs->cb, cs);
+		}
+	} else {
+		cs->error = cs->ctx.error;
+	}
+}
+
+static void
+command_saved_evaluate(struct command_saved *cs)
+{	
+	if (cs->idle_ev) {
+		// We're already scheduled for reevaluation
+		return;
+	}
+
+	if (!cs->idle_cb) {
+		cs->idle_cb = callback_new_1(callback_cast(command_saved_evaluate_idle), cs);
+	}
+
+	cs->idle_ev = event_add_idle(100, cs->idle_cb);
+}
+
+static void
+command_saved_callbacks_changed(struct command_saved *cs)
+{
+	// For now, we delete each and every callback and then re-create them
+	int i;
+	struct object_func *func;
+	struct attr attr;
+
+	if (cs->register_ev) {
+		event_remove_idle(cs->register_ev);
+		cs->register_ev = NULL;
+	}
+
+	attr.type = attr_callback;
+
+	for (i = 0; i < cs->num_cbs; i++) {
+		func = object_func_lookup(cs->cbs[i].attr.type);
+		
+		if (!func->remove_attr) {
+			dbg(0, "Could not remove command-evaluation callback because remove_attr is missing for type %i!\n", cs->cbs[i].attr.type);
+			continue;
+		}
+
+		attr.u.callback = cs->cbs[i].cb;
+
+		func->remove_attr(cs->cbs[i].attr.u.data, &attr);
+		callback_destroy(cs->cbs[i].cb);
+	}
+
+	g_free(cs->cbs);
+	cs->cbs = NULL;
+	cs->num_cbs = 0;
+
+	// Now, re-create all the callbacks
+	command_register_callbacks(cs);
+}
+
+static int
+command_register_callbacks(struct command_saved *cs)
+{
+	struct attr prev,cb_attr,attr;
+	int status;
+	struct object_func *func;
+	struct callback *cb;
+	
+	attr = cs->navit;
+	cs->ctx.expr = cs->command;
+	cs->ctx.attr = &attr;
+	prev = cs->navit;	
+
+	while ((status = get_next_object(&cs->ctx, &cs->res)) != 0) {
+		resolve(&cs->ctx, &cs->res, NULL);
+
+		if (cs->ctx.error || (cs->res.attr.type == attr_none)) {
+			// We could not resolve an object, perhaps because it has not been created
+			return 0;
+		}
+
+		if (prev.type != attr_none) {
+			func = object_func_lookup(prev.type);
+
+			if (func->add_attr) {
+				if (status == 2) { // This is not the final attribute name
+					cb = callback_new_attr_1(callback_cast(command_saved_callbacks_changed), cs->res.attr.type, (void*)cs);
+					attr = cs->res.attr;
+				} else if (status == 1) { // This is the final attribute name
+					cb = callback_new_attr_1(callback_cast(command_saved_evaluate), cs->res.attr.type, (void*)cs);
+					cs->ctx.attr = &cs->navit;
+				} else {
+					dbg(0, "Error: Strange status returned from get_next_object()\n");
+				}
+
+				cs->num_cbs++;
+				cs->cbs = g_realloc(cs->cbs, (sizeof(struct command_saved_cb) * cs->num_cbs));
+				cs->cbs[cs->num_cbs-1].cb = cb;
+				cs->cbs[cs->num_cbs-1].attr = prev;
+					
+				cb_attr.u.callback = cb;
+				cb_attr.type = attr_callback;
+
+				func->add_attr(prev.u.data, &cb_attr);
+
+			} else {
+				dbg(0, "Could not add callback because add_attr is missing for type %i}n", prev.type);
+			}
+		}
+
+		if (status == 2) {
+			prev = cs->res.attr;
+		} else {
+			prev = cs->navit;
+		}
+	}
+
+	command_saved_evaluate_idle(cs);
+
+	return 1;
+}
+
+struct command_saved
+*command_saved_new(char *command, struct navit *navit, struct callback *cb)
+{
+	struct command_saved *ret;
+
+	ret = g_new0(struct command_saved, 1);
+	ret->command = g_strdup(command);
+	ret->navit.u.navit = navit;
+	ret->navit.type = attr_navit;
+	ret->cb = cb;
+	ret->error = not_ready;
+
+	if (!command_register_callbacks(ret)) {
+		// We try this as an idle call again
+		ret->register_cb = callback_new_1(callback_cast(command_saved_callbacks_changed), ret);
+		ret->register_ev = event_add_idle(300, ret->register_cb);
+	}		
+
+	return ret;
+}
+
+void 
+command_saved_destroy(struct command_saved *cs)
+{
+	g_free(cs->command);
+	g_free(cs);
+}

@@ -116,6 +116,16 @@ osd_std_calculate_sizes(struct osd_item *item, struct osd_priv *priv, int w, int
 	}
 }
 
+static void
+osd_std_reconfigure(struct osd_item *item, struct command_saved *cs)
+{
+	if (!command_saved_error(cs)) {
+		graphics_overlay_disable(item->gr, !command_saved_get_int(cs));
+	} else {
+		dbg(0, "Error in saved command: %i\n", command_saved_error(cs));
+	}
+}
+
 void
 osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 {
@@ -148,8 +158,9 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 		item->osd_configuration = attr->u.num;
 
 	attr=attr_search(attrs, NULL, attr_enable_expression);
-	if (attr)
-		item->enable_expression = g_strdup(attr->u.str);
+	if (attr) {
+		item->enable_cs = command_saved_new(attr->u.str, item->navit, NULL);
+	}
 
 	attr = attr_search(attrs, NULL, attr_w);
 	if (attr) {
@@ -214,16 +225,15 @@ osd_std_config(struct osd_item *item, struct navit *navit)
 {
 	struct attr attr;
 	dbg(1,"enter\n");
-	if (item->enable_expression) {
-		int error,configured;
-		attr.type=attr_navit;
-		attr.u.navit=navit;
-		configured=command_evaluate_to_int(&navit, item->enable_expression, &error);
-		if (error) {
-			dbg(0,"evaluating %s resulted in error %d\n", item->enable_expression, error);
-			configured=0;
+	if (item->enable_cs) {
+		item->reconfig_cb = callback_new_1(callback_cast(osd_std_reconfigure), item);
+		command_saved_set_cb(item->enable_cs, item->reconfig_cb);
+
+		if (!command_saved_error(item->enable_cs)) {
+			item->configured = !! command_saved_get_int(item->enable_cs);
+		} else {
+			dbg(0, "Error in saved command: %i.\n", command_saved_error(item->enable_cs));
 		}
-		item->configured = !!configured;
 	} else {
 		if (!navit_get_attr(navit, attr_osd_configuration, &attr, NULL))
 			attr.u.num=-1;
