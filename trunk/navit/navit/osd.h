@@ -42,9 +42,10 @@ struct osd_item {
 	struct graphics_font *font;
 	struct callback *cb;
 	struct callback *resize_cb;
+	struct callback *reconfig_cb;
 	int pressed;
 	char *command;
-	char *enable_expression;
+	struct command_saved *enable_cs;
 };
 
 /* prototypes */
