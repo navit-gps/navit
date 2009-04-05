@@ -78,54 +78,6 @@ result_free(struct result *res)
 
 static int command_register_callbacks(struct command_saved *cs);
 
-static int
-get_next_object(struct context *ctx, struct result *res) {
-	char *op, *tmp;
-	op=ctx->expr;
-	res->varlen=0;
-	res->var=NULL;
-	res->attrnlen=0;
-	res->attrn=NULL;
-	
-	while (*op) {
-		if (op[0] == '"') {
-			while (*op && (op[0] != '"')) {
-				op++;
-			}
-		}
-
-		if (op[0] >= 'a' && op[0] <= 'z') {
-			res->attr.type=attr_none;
-			res->var=op;
-			while ((op[0] >= 'a' && op[0] <= 'z') || op[0] == '_') {
-				res->varlen++;
-				op++;
-			}
-
-			// If there is a bracket following, this is a function
-			tmp = op;
-			while (*tmp && g_ascii_isspace(*tmp)) {
-				tmp++;
-			}
-			if (tmp[0] == '(') {
-				continue;
-			}
-
-			ctx->expr=op;
-
-			if (op[0] == '.') {
-				return 2;				// 2 means "more object names following"
-			} else {
-				return 1;				// 1 means "no more object names following"
-			}
-		}
-		
-		op++;
-	}
-
-	return 0;
-}
-
 static char *
 get_op(struct context *ctx, int test, ...)
 {
@@ -362,6 +314,32 @@ eval_value(struct context *ctx, struct result *res) {
 		return;
 	}
 	ctx->error=illegal_character;
+}
+
+static int
+get_next_object(struct context *ctx, struct result *res) {
+	
+	while (*ctx->expr) {
+		res->varlen = 0;
+		ctx->error = 0;
+
+		eval_value(ctx,res);
+		
+		if ((res->attr.type == attr_none) && (res->varlen > 0)) {
+			if (ctx->expr[0] != '.') {
+				return 1;		// 1 means "this is the final object name"
+			} else {
+				return 2;		// 2 means "there are more object names following" (e.g. we just hit 'vehicle' in 'vehicle.position_speed'
+			}
+		}
+
+		if (ctx->error) {
+			// Probably hit an operator
+			ctx->expr++;
+		}
+	}
+
+	return 0;
 }
 
 static void
