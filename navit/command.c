@@ -131,6 +131,11 @@ get_op(struct context *ctx, int test, ...)
 {
 	char *op,*ret=NULL;
 	va_list ap;
+
+	while (g_ascii_isspace(*ctx->expr)) {
+		ctx->expr++;
+	}
+
 	va_start(ap, test);
 	while ((op = va_arg(ap, char *))) {
 		if (!strncmp(ctx->expr, op, strlen(op))) {
@@ -303,6 +308,11 @@ eval_value(struct context *ctx, struct result *res) {
 	res->var=NULL;
 	res->attrnlen=0;
 	res->attrn=NULL;
+
+	while (g_ascii_isspace(*op)) {
+		op++;
+	}
+
 	if (op[0] >= 'a' && op[0] <= 'z') {
 		res->attr.type=attr_none;
 		res->var=op;
