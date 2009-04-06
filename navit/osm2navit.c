@@ -389,6 +389,7 @@ struct country_table {
 	{ 40,"Austria,Österreich,AUT"},
 	{ 56,"Belgium"},
 	{124,"Canada"},
+	{203,"Czech Republic"},
  	{208,"Denmark,Danmark,DK"},
  	{246,"Finland,Suomi"},
  	{250,"France,République française,FR"},
