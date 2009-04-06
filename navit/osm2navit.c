@@ -2923,7 +2923,7 @@ usage(FILE *f)
 #endif
 	fprintf(f,"-e (--end)               : end at specified phase\n");
 	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
-	fprintf(f,"-o (--coverage)          : map every street to item overage\n");
+	fprintf(f,"-o (--coverage)          : map every street to item coverage\n");
 	fprintf(f,"-s (--start)             : start at specified phase\n");
 	fprintf(f,"-i (--input-file)        : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-w (--dedupe-ways)       : ensure no duplicate ways or nodes. useful when using several input files\n");
