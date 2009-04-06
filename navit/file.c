@@ -219,7 +219,7 @@ unsigned char *
 file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp)
 {
 	void *ret;
-	char buffer[size];
+	char *buffer = 0;
 	uLongf destLen=size_uncomp;
 
 	if (file_cache) {
@@ -231,6 +231,8 @@ file_data_read_compressed(struct file *file, long long offset, int size, int siz
 	} else 
 		ret=g_malloc(size_uncomp);
 	lseek(file->fd, offset, SEEK_SET);
+
+	buffer = (char *)g_malloc(size);
 	if (read(file->fd, buffer, size) != size) {
 		g_free(ret);
 		ret=NULL;
@@ -241,6 +243,8 @@ file_data_read_compressed(struct file *file, long long offset, int size, int siz
 			ret=NULL;
 		}
 	}
+	g_free(buffer);
+
 	return ret;
 }
 
