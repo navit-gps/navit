@@ -2625,6 +2625,13 @@ gui_internal_search_list_set_default_country(struct gui_priv *this)
 		country_search_destroy(cs);
 	} else {
 		dbg(0,"warning: no default country found\n");
+		if (this->country_iso2) {
+		    dbg(0,"attempting to use country '%s'\n",this->country_iso2);
+		    search_attr.type=attr_country_iso2;
+		    search_attr.u.str=this->country_iso2;
+            search_list_search(this->sl, &search_attr, 0);
+            while((res=search_list_get_result(this->sl)));
+		}
 	}
 }
 
