@@ -609,7 +609,9 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	       g_object_unref(gra->background);
 	       gra->background_ready = 0;
 	}
+#ifndef _WIN32
 	dbg(1,"window=%d\n", GDK_WINDOW_XID(widget->window));
+#endif
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;
         gra->drawable = gdk_pixmap_new(widget->window, gra->width, gra->height, -1);
@@ -911,8 +913,13 @@ static void
 graphics_gtk_drawing_area_disable_suspend(struct window *w)
 {
 	struct graphics_priv *gr=w->priv;
+
+#ifndef _WIN32
 	if (gr->pid)
 		kill(gr->pid, SIGWINCH);
+#else
+    dbg(1, "failed to kill() under Windows\n");
+#endif
 }		
 
 static void *
@@ -921,8 +928,10 @@ get_data(struct graphics_priv *this, char *type)
 	FILE *f;
 	if (!strcmp(type,"gtk_widget"))
 		return this->widget;
+#ifndef _WIN32
 	if (!strcmp(type,"xwindow_id"))
 		return (void *)GDK_WINDOW_XID(this->widget->window);
+#endif
 	if (!strcmp(type,"window")) {
 		char *cp = getenv("NAVIT_XID");
 		unsigned xid = 0;
