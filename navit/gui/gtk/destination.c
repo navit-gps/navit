@@ -70,10 +70,19 @@ static void button_map(GtkWidget *widget, struct search_param *search)
 static char *description(struct search_param *search, GtkTreeIter *iter)
 {
 	char *desc,*car,*postal,*town,*street;
+	char empty='\0';
+		
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), iter, 0, &car, -1);
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), iter, 1, &postal, -1);
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), iter, 2, &town, -1);
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), iter, 4, &street, -1);
+	
+	/* protect against nulls */
+    if (car==0) car=&empty;
+    if (postal==0) postal=&empty;    
+    if (town==0) town=&empty;
+    if (street==0) street=&empty;
+	
 	if (search->attr.type == attr_town_name)
 		desc=g_strdup_printf("%s-%s %s", car, postal, town);
 	else
