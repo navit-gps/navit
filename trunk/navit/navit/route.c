@@ -72,7 +72,7 @@ struct map_priv {
 	struct route *route;
 };
 
-int debug_route=0;
+int debug_route=1;
 
 /**
  * @brief A point in the route graph
@@ -1536,27 +1536,6 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 	}
 }
 
-/**
- * @brief Compares the costs of reaching the destination from two points on
- * 
- * @important Do not pass anything other than route_graph_points in v1 and v2!
- *
- * @param v1 Point1 
- * @param v2 Point2
- * @return The additional costs of v1 compared to v2 (may be negative)
- */
-static int
-compare(void *v1, void *v2)
-{
-	struct route_graph_point *p1=v1;
-	struct route_graph_point *p2=v2;
-#if 0
-	if (debug_route)
-		printf("compare %d (%p) vs %d (%p)\n", p1->value,p1,p2->value,p2);
-#endif
-	return p1->value-p2->value;
-}
-
 static struct route_graph_segment *
 route_graph_get_segment(struct route_graph *graph, struct street_data *sd)
 {
@@ -1590,9 +1569,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct route
 	int min,new,old,val;
 	struct fibheap *heap; /* This heap will hold all points with "temporarily" calculated costs */
 
-	heap = fh_makeheap();   
-	fh_setcmp(heap, compare);
-	
+	heap = fh_makekeyheap();   
 
 	s=route_graph_get_segment(this, dst->street);
 	if (!s) {
@@ -1604,14 +1581,14 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct route
 		val=val*(100-dst->percent)/100;
 		s->end->seg=s;
 		s->end->value=val;
-		s->end->el=fh_insert(heap, s->end);
+		s->end->el=fh_insertkey(heap, s->end->value, s->end);
 	}
 	val=route_value_seg(preferences, NULL, &s->data, -1);
 	if (val != INT_MAX) {
 		val=val*dst->percent/100;
 		s->start->seg=s;
 		s->start->value=val;
-		s->start->el=fh_insert(heap, s->start);
+		s->start->el=fh_insertkey(heap, s->start->value, s->start);
 	}
 	for (;;) {
 		p_min=fh_extractmin(heap); /* Starting Dijkstra by selecting the point with the minimum costs on the heap */
@@ -1634,14 +1611,14 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct route
 					if (! s->end->el) {
 						if (debug_route)
 							printf("insert_end p=%p el=%p val=%d ", s->end, s->end->el, s->end->value);
-						s->end->el=fh_insert(heap, s->end);
+						s->end->el=fh_insertkey(heap, new, s->end);
 						if (debug_route)
 							printf("el new=%p\n", s->end->el);
 					}
 					else {
 						if (debug_route)
 							printf("replace_end p=%p el=%p val=%d\n", s->end, s->end->el, s->end->value);
-						fh_replacedata(heap, s->end->el, s->end);
+						fh_replacekey(heap, s->end->el, new);
 					}
 				}
 				if (debug_route)
@@ -1663,14 +1640,14 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct route
 					if (! s->start->el) {
 						if (debug_route)
 							printf("insert_start p=%p el=%p val=%d ", s->start, s->start->el, s->start->value);
-						s->start->el=fh_insert(heap, s->start);
+						s->start->el=fh_insertkey(heap, new, s->start);
 						if (debug_route)
 							printf("el new=%p\n", s->start->el);
 					}
 					else {
 						if (debug_route)
 							printf("replace_start p=%p el=%p val=%d\n", s->start, s->start->el, s->start->value);
-						fh_replacedata(heap, s->start->el, s->start);
+						fh_replacekey(heap, s->start->el, new);
 					}
 				}
 				if (debug_route)
