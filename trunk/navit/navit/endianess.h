@@ -56,6 +56,20 @@
   #define __bswap_16 OSSwapInt16
   #define __bswap_32 OSSwapInt32
   #define __bswap_64 OSSwapInt64
+
+#ifndef __BYTE_ORDER
+  #define __LITTLE_ENDIAN 1234
+  #define __BIG_ENDIAN 4321
+
+  #if defined(__LITTLE_ENDIAN__)
+    #define __BYTE_ORDER __LITTLE_ENDIAN
+  #elif defined(__BIG_ENDIAN__)
+    #define __BYTE_ORDER __BIG_ENDIAN
+  #else
+    #error "No endianness defined for Mac OS!"
+  #endif
+#endif
+
 #elif  defined(_WIN32) || defined(__CEGCC__)
   #define __BIG_ENDIAN 4321
   #define __LITTLE_ENDIAN 1234
