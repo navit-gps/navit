@@ -1541,6 +1541,11 @@ route_graph_get_segment(struct route_graph *graph, struct street_data *sd)
 {
 	struct route_graph_point *start=route_graph_get_point(graph, &sd->c[0]);
 	struct route_graph_segment *s;
+
+	if (!start) {
+	  return NULL;
+	}
+
 	s=start->start;
 	while (s) {
 		if (item_is_equal(sd->item, s->data.item))
