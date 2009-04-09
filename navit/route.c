@@ -72,7 +72,7 @@ struct map_priv {
 	struct route *route;
 };
 
-int debug_route=1;
+int debug_route=0;
 
 /**
  * @brief A point in the route graph
