@@ -8,31 +8,31 @@ msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-03-12 14:11+0100\n"
-"PO-Revision-Date: 2009-02-27 11:00+0000\n"
-"Last-Translator: Eddy Petrisor <eddy.petrisor@gmail.com>\n"
+"PO-Revision-Date: 2009-03-22 04:55+0000\n"
+"Last-Translator: Daniel Ursache Dogariu <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2009-03-12 22:28+0000\n"
+"X-Launchpad-Export-Date: 2009-04-06 12:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 #: ../navit/main.c:231
 #, c-format
 msgid "Running from source directory\n"
-msgstr ""
+msgstr "Rulează din directorul sursă\n"
 
 #: ../navit/main.c:263
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "se configurează „%s” ls „%s”\n"
+msgstr "se setează „%s” ca „%s”\n"
 
 #: ../navit/navigation.c:240
 msgid "zeroth"
-msgstr ""
+msgstr "zero"
 
 #: ../navit/navigation.c:242
 msgid "first"
@@ -60,31 +60,31 @@ msgstr "a șasea"
 
 #: ../navit/navigation.c:263
 msgid "zeroth exit"
-msgstr ""
+msgstr "ieșirea zero"
 
 #: ../navit/navigation.c:265
 msgid "first exit"
-msgstr ""
+msgstr "prima ieșire"
 
 #: ../navit/navigation.c:267
 msgid "second exit"
-msgstr ""
+msgstr "a doua ieșire"
 
 #: ../navit/navigation.c:269
 msgid "third exit"
-msgstr ""
+msgstr "a treia ieșire"
 
 #: ../navit/navigation.c:271
 msgid "fourth exit"
-msgstr ""
+msgstr "a patra ieșire"
 
 #: ../navit/navigation.c:273
 msgid "fifth exit"
-msgstr ""
+msgstr "a cincea ieșire"
 
 #: ../navit/navigation.c:275
 msgid "sixth exit"
-msgstr ""
+msgstr "a șasea ieșire"
 
 #: ../navit/navigation.c:316
 #, c-format
@@ -168,7 +168,7 @@ msgstr "%s pe %s%s%s"
 #: ../navit/navigation.c:1319
 #, c-format
 msgid "%sinto the %s"
-msgstr ""
+msgstr "%s spre %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 #: ../navit/navigation.c:1340
@@ -197,11 +197,11 @@ msgstr "necunoscut "
 
 #: ../navit/navigation.c:1402
 msgid "When possible, please turn around"
-msgstr "Când este posibil, vă rog să vă întoarceţi"
+msgstr "Când este posibil, întoarceţi"
 
 #: ../navit/navigation.c:1412
 msgid "Enter the roundabout soon"
-msgstr ""
+msgstr "Intrați în curând în giratoriu"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #: ../navit/navigation.c:1416
@@ -212,12 +212,12 @@ msgstr "În %s, intrați în sensul giratoriu"
 #: ../navit/navigation.c:1431
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr ""
+msgstr "Ieșiți din giratoriu la %s"
 
 #: ../navit/navigation.c:1434
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr ""
+msgstr "apoi ieșiți din giratoriu la %s"
 
 #: ../navit/navigation.c:1444
 #, c-format
@@ -246,7 +246,7 @@ msgstr "acum"
 #: ../navit/navigation.c:1472
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr "apoi luați-o %2s pe %1s stradă"
+msgstr "apoi faceți %2s pe %1s stradă"
 
 #: ../navit/navigation.c:1483
 msgid "error"
@@ -256,13 +256,13 @@ msgstr "eroare"
 #: ../navit/navigation.c:1513
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Virează %1$s%2$s %3$s%4$s"
+msgstr "Virați %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
 #: ../navit/navigation.c:1516
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "apoi virați %1$s%2$s %3$s%4$s"
 
 #: ../navit/navigation.c:1521
 #, c-format
@@ -1598,7 +1598,7 @@ msgstr "Oraş"
 #: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
 #: ../navit/gui/gtk/destination.c:121
 msgid "District"
-msgstr "District"
+msgstr "Cartier"
 
 #: ../navit/gui/gtk/destination.c:120 ../navit/gui/gtk/destination.c:121
 #: ../navit/gui/gtk/destination.c:437
@@ -1613,11 +1613,11 @@ msgstr "Număr"
 
 #: ../navit/gui/gtk/destination.c:420
 msgid "Enter Destination"
-msgstr "Introdu destinaţia"
+msgstr "Introduceți destinaţia"
 
 #: ../navit/gui/gtk/destination.c:429
 msgid "Zip Code"
-msgstr "Cod poştal"
+msgstr "Cod poștal"
 
 #: ../navit/gui/gtk/destination.c:431
 msgid "City"
@@ -1625,7 +1625,7 @@ msgstr "Oraș"
 
 #: ../navit/gui/gtk/destination.c:434
 msgid "District/Township"
-msgstr "District/Reşedinţă"
+msgstr "District/Reședință"
 
 #: ../navit/gui/gtk/destination.c:462 ../navit/gui/gtk/gui_gtk_action.c:200
 msgid "Map"
@@ -1651,7 +1651,7 @@ msgstr "Traseu"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:198
 msgid "Former Destinations"
-msgstr "Destinaţii anterioare"
+msgstr "Destinații anterioare"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:199
 #: ../navit/gui/internal/gui_internal.c:2201
@@ -1663,11 +1663,11 @@ msgstr "Semne de carte"
 #: ../navit/gui/internal/gui_internal.c:2767
 #: ../navit/gui/internal/gui_internal.c:2812
 msgid "Layout"
-msgstr "Faţetă"
+msgstr "Dispunere"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:202
 msgid "Projection"
-msgstr "Proiecţie"
+msgstr "Proiecție"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:203
 #: ../navit/gui/internal/gui_internal.c:3046
@@ -1689,11 +1689,11 @@ msgstr "Recalculează"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:208 ../navit/gui/gtk/gui_gtk_action.c:210
 msgid "Info"
-msgstr "Informaţii"
+msgstr "Informații"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:213
 msgid "Stop Navigation"
-msgstr "Opreşte Navigarea"
+msgstr "Oprește navigarea"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:214
 msgid "Test"
@@ -1701,7 +1701,7 @@ msgstr "Testează"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:215
 msgid "_Quit"
-msgstr "_Ieşire"
+msgstr "_Ieșire"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:222
 msgid "Cursor"
@@ -1709,7 +1709,7 @@ msgstr "Cursor"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:223
 msgid "Lock on Road"
-msgstr "Fixează Strada"
+msgstr "Fixează strada"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:224
 #: ../navit/gui/internal/gui_internal.c:3085
@@ -1718,7 +1718,7 @@ msgstr "Nimic"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:226
 msgid "Autozoom"
-msgstr ""
+msgstr "Autozoom"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2822
@@ -1771,7 +1771,7 @@ msgstr "NV"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:74
 msgid "No"
-msgstr ""
+msgstr "Nu"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:75
 #: ../navit/gui/internal/gui_internal.c:2829
@@ -1785,16 +1785,16 @@ msgstr "3D"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:78
 msgid "OT"
-msgstr ""
+msgstr "Glob"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr "Ruta %4.0f km sosire la %02d:%02d"
+msgstr "Rută %4.0f km sosire estimată %02d:%02d"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:164
 msgid "Route 0000km  0+00:00 ETA"
-msgstr "Ruta 0000 km sosire la 0+00:00"
+msgstr "Rută 0000 km sosire estimată 0+00:00"
 
 #: ../navit/gui/internal/gui_internal.c:1322
 msgid "Back to map"
@@ -1802,20 +1802,20 @@ msgstr "Înapoi la hartă"
 
 #: ../navit/gui/internal/gui_internal.c:1331
 msgid "Main Menu"
-msgstr ""
+msgstr "Meniu principal"
 
 #: ../navit/gui/internal/gui_internal.c:1451
 msgid "Help"
-msgstr ""
+msgstr "Ajutor"
 
 #: ../navit/gui/internal/gui_internal.c:1601
 msgid "Back"
-msgstr ""
+msgstr "Înapoi"
 
 #: ../navit/gui/internal/gui_internal.c:1905
 #: ../navit/gui/internal/gui_internal.c:2110
 msgid "POIs"
-msgstr ""
+msgstr "Puncte de interes"
 
 #: ../navit/gui/internal/gui_internal.c:2067
 msgid "Streets"
@@ -1836,7 +1836,7 @@ msgstr "Arată pe hartă"
 #: ../navit/gui/internal/gui_internal.c:2237
 #, c-format
 msgid "Bookmark %s"
-msgstr ""
+msgstr "%s ca semn de carte"
 
 #: ../navit/gui/internal/gui_internal.c:2817
 msgid "Window Mode"
@@ -1849,7 +1849,7 @@ msgstr "Acțiuni"
 
 #: ../navit/gui/internal/gui_internal.c:2874
 msgid "Map Point"
-msgstr ""
+msgstr "Locație pe hartă"
 
 #: ../navit/gui/internal/gui_internal.c:2884
 msgid "Vehicle Position"
@@ -1865,7 +1865,7 @@ msgid ""
 "Navigation"
 msgstr ""
 "Oprește\n"
-"Navigația"
+"navigația"
 
 #: ../navit/gui/internal/gui_internal.c:2915
 #: ../navit/gui/internal/gui_internal.c:3107
@@ -1899,7 +1899,7 @@ msgstr "Reguli"
 
 #: ../navit/gui/internal/gui_internal.c:3079
 msgid "Lock on road"
-msgstr "Legat de drum"
+msgstr "Fixează strada"
 
 #: ../navit/gui/internal/gui_internal.c:3091
 msgid "Map follows Vehicle"
@@ -1912,7 +1912,7 @@ msgstr "Configurații"
 
 #: ../navit/gui/internal/gui_internal.c:3149
 msgid "Main menu"
-msgstr "Meniul principal"
+msgstr "Meniu principal"
 
 #: ../navit/gui/internal/gui_internal.c:3155
 msgid ""
@@ -1920,7 +1920,7 @@ msgid ""
 "Map"
 msgstr ""
 "Afișează\n"
-"Harta"
+"hartă"
 
 #: ../navit/gui/internal/gui_internal.c:3162
 msgid "Tools"
