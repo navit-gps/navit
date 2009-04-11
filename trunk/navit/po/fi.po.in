@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-11 11:28+0100\n"
-"PO-Revision-Date: 2009-02-12 14:08+0000\n"
+"POT-Creation-Date: 2009-03-12 14:11+0100\n"
+"PO-Revision-Date: 2009-03-19 09:53+0000\n"
 "Last-Translator: Timo Jyrinki <timo.jyrinki@iki.fi>\n"
 "Language-Team: Ossi Berg <o.berg@mail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-02-13 06:28+0000\n"
+"X-Launchpad-Export-Date: 2009-04-06 12:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -29,276 +29,304 @@ msgstr "Ajetaan lähdehakemistosta\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "asetetaan '%s' arvoon '%s'\n"
 
-#: ../navit/navigation.c:224
+#: ../navit/navigation.c:240
 msgid "zeroth"
 msgstr "nollas"
 
-#: ../navit/navigation.c:226
+#: ../navit/navigation.c:242
 msgid "first"
 msgstr "ensimmäinen"
 
-#: ../navit/navigation.c:228
+#: ../navit/navigation.c:244
 msgid "second"
 msgstr "toinen"
 
-#: ../navit/navigation.c:230
+#: ../navit/navigation.c:246
 msgid "third"
 msgstr "kolmas"
 
-#: ../navit/navigation.c:232
+#: ../navit/navigation.c:248
 msgid "fourth"
 msgstr "neljäs"
 
-#: ../navit/navigation.c:234
+#: ../navit/navigation.c:250
 msgid "fifth"
 msgstr "viides"
 
-#: ../navit/navigation.c:236
+#: ../navit/navigation.c:252
 msgid "sixth"
 msgstr "kuudes"
 
-#: ../navit/navigation.c:278
+#: ../navit/navigation.c:263
+msgid "zeroth exit"
+msgstr "nollannesta liittymästä"
+
+#: ../navit/navigation.c:265
+msgid "first exit"
+msgstr "ensimmäisestä liittymästä"
+
+#: ../navit/navigation.c:267
+msgid "second exit"
+msgstr "toisesta liittymästä"
+
+#: ../navit/navigation.c:269
+msgid "third exit"
+msgstr "kolmannesta liittymästä"
+
+#: ../navit/navigation.c:271
+msgid "fourth exit"
+msgstr "neljännestä liittymästä"
+
+#: ../navit/navigation.c:273
+msgid "fifth exit"
+msgstr "viidennestä liittymästä"
+
+#: ../navit/navigation.c:275
+msgid "sixth exit"
+msgstr "kuudennesta liittymästä"
+
+#: ../navit/navigation.c:316
 #, c-format
 msgid "%d m"
 msgstr "%d m"
 
-#: ../navit/navigation.c:280
+#: ../navit/navigation.c:318
 #, c-format
 msgid "in %d m"
 msgstr "%d m päästä"
 
-#: ../navit/navigation.c:284
+#: ../navit/navigation.c:322
 #, c-format
 msgid "%d meters"
 msgstr "%d metriä"
 
-#: ../navit/navigation.c:286
+#: ../navit/navigation.c:324
 #, c-format
 msgid "in %d meters"
 msgstr "%d metrin päästä"
 
-#: ../navit/navigation.c:292
+#: ../navit/navigation.c:330
 #, c-format
 msgid "%d.%d kilometer"
 msgstr "%d,%d kilometri"
 
-#: ../navit/navigation.c:294
+#: ../navit/navigation.c:332
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "%d,%d kilometrin päästä"
 
-#: ../navit/navigation.c:298
+#: ../navit/navigation.c:336
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "yksi kilometri"
 msgstr[1] "%d kilometriä"
 
-#: ../navit/navigation.c:300
+#: ../navit/navigation.c:338
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "Yhden kilometrin päästä"
 msgstr[1] "%d kilometrin päästä"
 
-#: ../navit/navigation.c:1228
+#: ../navit/navigation.c:1268
 msgid "exit"
 msgstr "poistumistie"
 
-#: ../navit/navigation.c:1230
+#: ../navit/navigation.c:1270
 msgid "into the ramp"
 msgstr "rampille"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:1260
+#: ../navit/navigation.c:1300
 #, c-format
 msgid "%sinto the street %s%s%s"
 msgstr "%skadulle %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1264
+#: ../navit/navigation.c:1304
 #, c-format
 msgid "%sinto the %s%s%s|male form"
 msgstr "%skadulle %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1268
+#: ../navit/navigation.c:1308
 #, c-format
 msgid "%sinto the %s%s%s|female form"
 msgstr "%skadulle %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1272
+#: ../navit/navigation.c:1312
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%skadulle %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1279
+#: ../navit/navigation.c:1319
 #, c-format
 msgid "%sinto the %s"
 msgstr "%stielle %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1300
+#: ../navit/navigation.c:1340
 msgid "right"
 msgstr "oikealle"
 
 #. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1339
+#: ../navit/navigation.c:1379
 msgid "left"
 msgstr "vasemmalle"
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1346
+#: ../navit/navigation.c:1386
 msgid "easily "
 msgstr "loivasti "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1351
+#: ../navit/navigation.c:1391
 msgid "strongly "
 msgstr "jyrkästi "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1355
+#: ../navit/navigation.c:1395
 msgid "unknown "
 msgstr "tuntematon "
 
-#: ../navit/navigation.c:1362
+#: ../navit/navigation.c:1402
 msgid "When possible, please turn around"
 msgstr "Kun mahdollista, tee u-käännös"
 
-#: ../navit/navigation.c:1372
+#: ../navit/navigation.c:1412
 msgid "Enter the roundabout soon"
 msgstr "Liity liikenneympyrään pian"
 
 #. TRANSLATORS: %s is the distance to the roundabout
-#: ../navit/navigation.c:1376
+#: ../navit/navigation.c:1416
 #, c-format
 msgid "In %s, enter the roundabout"
 msgstr "%s, liity liikenneympyrään"
 
-#: ../navit/navigation.c:1391
+#: ../navit/navigation.c:1431
 #, c-format
-msgid "Leave the roundabout at the %s exit"
-msgstr "Poistu liikenneympyrästä, %s poistumistie"
+msgid "Leave the roundabout at the %s"
+msgstr "Poistu liikenneympyrästä %s"
 
-#: ../navit/navigation.c:1394
+#: ../navit/navigation.c:1434
 #, c-format
-msgid "then leave the roundabout at the %s exit"
-msgstr "poistu sitten liikenneympyrästä, %s poistumistie"
+msgid "then leave the roundabout at the %s"
+msgstr "poistu sitten liikenneympyrästä %s"
 
-#: ../navit/navigation.c:1404
+#: ../navit/navigation.c:1444
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Seuraa tätä tietä %s"
 
-#: ../navit/navigation.c:1408
+#: ../navit/navigation.c:1448
 msgid "soon"
 msgstr "pian"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1418
+#: ../navit/navigation.c:1458
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Valitse %1$s tie suuntaan %2$s"
 
-#: ../navit/navigation.c:1421 ../navit/navigation.c:1435
+#: ../navit/navigation.c:1461 ../navit/navigation.c:1475
 #, c-format
 msgid "after %i roads"
 msgstr "%i tien jälkeen"
 
-#: ../navit/navigation.c:1424
+#: ../navit/navigation.c:1464
 msgid "now"
 msgstr "nyt"
 
-#: ../navit/navigation.c:1432
+#: ../navit/navigation.c:1472
 #, c-format
 msgid "then take the %1$s road to the %2$s"
 msgstr "valitse sitten %1$s tie suuntaan %2$s"
 
-#: ../navit/navigation.c:1443
+#: ../navit/navigation.c:1483
 msgid "error"
 msgstr "virhe"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:1473
+#: ../navit/navigation.c:1513
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Käänny %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#: ../navit/navigation.c:1476
+#: ../navit/navigation.c:1516
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
 msgstr "käänny sitten %1$s%2$s %3$s%4$s"
 
-#: ../navit/navigation.c:1481
+#: ../navit/navigation.c:1521
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Olet saavuttanut kohteesi %s"
 
-#: ../navit/navigation.c:1483
+#: ../navit/navigation.c:1523
 msgid "then you have reached your destination."
 msgstr "sitten olet perillä."
 
-#: ../navit/navit.c:1125
+#: ../navit/navit.c:1142
 msgid "Position"
 msgstr "Sijainti"
 
-#: ../navit/navit.c:1126
+#: ../navit/navit.c:1143
 msgid "Command"
 msgstr "Komento"
 
-#: ../navit/navit.c:1130
+#: ../navit/navit.c:1147
 msgid "Length"
 msgstr "Pituus"
 
-#: ../navit/navit.c:1134 ../navit/navit.c:1159
+#: ../navit/navit.c:1151 ../navit/navit.c:1176
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:1138 ../navit/navit.c:1163
+#: ../navit/navit.c:1155 ../navit/navit.c:1180
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:1144
+#: ../navit/navit.c:1161
 msgid "Time"
 msgstr "Aika"
 
-#: ../navit/navit.c:1156
+#: ../navit/navit.c:1173
 msgid "Destination Length"
 msgstr "Kohde"
 
-#: ../navit/navit.c:1169
+#: ../navit/navit.c:1186
 msgid "Destination Time"
 msgstr "Kohde"
 
-#: ../navit/navit.c:1202 ../navit/gui/gtk/gui_gtk_action.c:210
+#: ../navit/navit.c:1219 ../navit/gui/gtk/gui_gtk_action.c:225
 msgid "Roadbook"
 msgstr "Ohjeistaja"
 
-#: ../navit/popup.c:218 ../navit/popup.c:272
-#: ../navit/gui/internal/gui_internal.c:2095
+#: ../navit/popup.c:238 ../navit/popup.c:292
+#: ../navit/gui/internal/gui_internal.c:2101
 msgid "Set as position"
 msgstr "Aseta sijainniksi"
 
-#: ../navit/popup.c:219 ../navit/popup.c:273
-#: ../navit/gui/internal/gui_internal.c:2091
+#: ../navit/popup.c:239 ../navit/popup.c:293
+#: ../navit/gui/internal/gui_internal.c:2097
 msgid "Set as destination"
 msgstr "Aseta kohteeksi"
 
-#: ../navit/popup.c:220 ../navit/popup.c:274
-#: ../navit/gui/internal/gui_internal.c:2099
+#: ../navit/popup.c:240 ../navit/popup.c:294
+#: ../navit/gui/internal/gui_internal.c:2105
 msgid "Add as bookmark"
 msgstr "Lisää kirjanmerkiksi"
 
-#: ../navit/popup.c:262
+#: ../navit/popup.c:282
 #, c-format
 msgid "Point 0x%x 0x%x"
 msgstr "Piste 0x%x 0x%x"
 
-#: ../navit/popup.c:263
+#: ../navit/popup.c:283
 #, c-format
 msgid "Screen coord : %d %d"
 msgstr "Ruutu %d %d"
@@ -1548,7 +1576,7 @@ msgid "Iso3"
 msgstr "Iso3"
 
 #: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:426
-#: ../navit/gui/internal/gui_internal.c:2729
+#: ../navit/gui/internal/gui_internal.c:2748
 msgid "Country"
 msgstr "Maa"
 
@@ -1560,9 +1588,9 @@ msgstr "Postinumero"
 
 #: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
 #: ../navit/gui/gtk/destination.c:121
-#: ../navit/gui/internal/gui_internal.c:2708
-#: ../navit/gui/internal/gui_internal.c:2737
-#: ../navit/gui/internal/gui_internal.c:2870
+#: ../navit/gui/internal/gui_internal.c:2727
+#: ../navit/gui/internal/gui_internal.c:2756
+#: ../navit/gui/internal/gui_internal.c:2889
 msgid "Town"
 msgstr "Paikkakunta"
 
@@ -1574,8 +1602,8 @@ msgstr "Alue"
 
 #: ../navit/gui/gtk/destination.c:120 ../navit/gui/gtk/destination.c:121
 #: ../navit/gui/gtk/destination.c:437
-#: ../navit/gui/internal/gui_internal.c:2689
-#: ../navit/gui/internal/gui_internal.c:2698
+#: ../navit/gui/internal/gui_internal.c:2708
+#: ../navit/gui/internal/gui_internal.c:2717
 msgid "Street"
 msgstr "Katu"
 
@@ -1600,7 +1628,7 @@ msgstr "Kaupunki"
 msgid "District/Township"
 msgstr "Maakunta"
 
-#: ../navit/gui/gtk/destination.c:462 ../navit/gui/gtk/gui_gtk_action.c:185
+#: ../navit/gui/gtk/destination.c:462 ../navit/gui/gtk/gui_gtk_action.c:200
 msgid "Map"
 msgstr "Kartta"
 
@@ -1608,93 +1636,97 @@ msgstr "Kartta"
 msgid "Bookmark"
 msgstr "Kirjanmerkki"
 
-#: ../navit/gui/gtk/destination.c:464 ../navit/gui/gtk/gui_gtk_action.c:197
+#: ../navit/gui/gtk/destination.c:464 ../navit/gui/gtk/gui_gtk_action.c:212
 msgid "Destination"
 msgstr "Kohde"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:181
-#: ../navit/gui/internal/gui_internal.c:2791
-#: ../navit/gui/internal/gui_internal.c:3084
+#: ../navit/gui/gtk/gui_gtk_action.c:196
+#: ../navit/gui/internal/gui_internal.c:2810
+#: ../navit/gui/internal/gui_internal.c:3103
 msgid "Display"
 msgstr "Näyttö"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:182
+#: ../navit/gui/gtk/gui_gtk_action.c:197
 msgid "Route"
 msgstr "Reitti"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:183
+#: ../navit/gui/gtk/gui_gtk_action.c:198
 msgid "Former Destinations"
 msgstr "Aiemmat kohteet"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:184
-#: ../navit/gui/internal/gui_internal.c:2195
-#: ../navit/gui/internal/gui_internal.c:2846
+#: ../navit/gui/gtk/gui_gtk_action.c:199
+#: ../navit/gui/internal/gui_internal.c:2201
+#: ../navit/gui/internal/gui_internal.c:2865
 msgid "Bookmarks"
 msgstr "Kirjanmerkit"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:186
-#: ../navit/gui/internal/gui_internal.c:2748
-#: ../navit/gui/internal/gui_internal.c:2793
+#: ../navit/gui/gtk/gui_gtk_action.c:201
+#: ../navit/gui/internal/gui_internal.c:2767
+#: ../navit/gui/internal/gui_internal.c:2812
 msgid "Layout"
 msgstr "Pohja"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:187
+#: ../navit/gui/gtk/gui_gtk_action.c:202
 msgid "Projection"
 msgstr "Projektio"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:188
-#: ../navit/gui/internal/gui_internal.c:3027
-#: ../navit/gui/internal/gui_internal.c:3092
+#: ../navit/gui/gtk/gui_gtk_action.c:203
+#: ../navit/gui/internal/gui_internal.c:3046
+#: ../navit/gui/internal/gui_internal.c:3111
 msgid "Vehicle"
 msgstr "Kulkuneuvo"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:189
+#: ../navit/gui/gtk/gui_gtk_action.c:204
 msgid "ZoomOut"
 msgstr "Loitonna"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:190
+#: ../navit/gui/gtk/gui_gtk_action.c:205
 msgid "ZoomIn"
 msgstr "Lähennä"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:191
+#: ../navit/gui/gtk/gui_gtk_action.c:206
 msgid "Recalculate"
 msgstr "Laske uudelleen"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:193 ../navit/gui/gtk/gui_gtk_action.c:195
+#: ../navit/gui/gtk/gui_gtk_action.c:208 ../navit/gui/gtk/gui_gtk_action.c:210
 msgid "Info"
 msgstr "Info"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:198
+#: ../navit/gui/gtk/gui_gtk_action.c:213
 msgid "Stop Navigation"
 msgstr "Lopeta navigointi"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:199
+#: ../navit/gui/gtk/gui_gtk_action.c:214
 msgid "Test"
 msgstr "Testi"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:200
+#: ../navit/gui/gtk/gui_gtk_action.c:215
 msgid "_Quit"
 msgstr "Sulje"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:207
+#: ../navit/gui/gtk/gui_gtk_action.c:222
 msgid "Cursor"
 msgstr "Osoitin"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:208
+#: ../navit/gui/gtk/gui_gtk_action.c:223
 msgid "Lock on Road"
 msgstr "Lukitse tiehen"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:209
-#: ../navit/gui/internal/gui_internal.c:3066
+#: ../navit/gui/gtk/gui_gtk_action.c:224
+#: ../navit/gui/internal/gui_internal.c:3085
 msgid "Northing"
 msgstr "Pohjoinen ylhäällä"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:212 ../navit/gui/gtk/gui_gtk_action.c:214
-#: ../navit/gui/internal/gui_internal.c:2803
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr "Autom. suurennus"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
+#: ../navit/gui/internal/gui_internal.c:2822
 msgid "Fullscreen"
 msgstr "Koko ruutu"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:222
+#: ../navit/gui/gtk/gui_gtk_action.c:238
 msgid "Data"
 msgstr "Tieto"
 
@@ -1743,12 +1775,12 @@ msgid "No"
 msgstr "Ei"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:75
-#: ../navit/gui/internal/gui_internal.c:2810
+#: ../navit/gui/internal/gui_internal.c:2829
 msgid "2D"
 msgstr "2D"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:76
-#: ../navit/gui/internal/gui_internal.c:2816
+#: ../navit/gui/internal/gui_internal.c:2835
 msgid "3D"
 msgstr "3D"
 
@@ -1765,70 +1797,70 @@ msgstr "Reitti %4.0fkm, arvioitu aika %02d:%02d"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Reitti 0000km, arvioitu aika 0+00:00"
 
-#: ../navit/gui/internal/gui_internal.c:1321
+#: ../navit/gui/internal/gui_internal.c:1322
 msgid "Back to map"
 msgstr "Takaisin karttaan"
 
-#: ../navit/gui/internal/gui_internal.c:1330
+#: ../navit/gui/internal/gui_internal.c:1331
 msgid "Main Menu"
 msgstr "Päävalikko"
 
-#: ../navit/gui/internal/gui_internal.c:1450
+#: ../navit/gui/internal/gui_internal.c:1451
 msgid "Help"
 msgstr "Ohje"
 
-#: ../navit/gui/internal/gui_internal.c:1600
+#: ../navit/gui/internal/gui_internal.c:1601
 msgid "Back"
 msgstr "Takaisin"
 
-#: ../navit/gui/internal/gui_internal.c:1904
-#: ../navit/gui/internal/gui_internal.c:2104
+#: ../navit/gui/internal/gui_internal.c:1905
+#: ../navit/gui/internal/gui_internal.c:2110
 msgid "POIs"
 msgstr "POIt"
 
-#: ../navit/gui/internal/gui_internal.c:2061
+#: ../navit/gui/internal/gui_internal.c:2067
 msgid "Streets"
 msgstr "Kadut"
 
-#: ../navit/gui/internal/gui_internal.c:2077
+#: ../navit/gui/internal/gui_internal.c:2083
 msgid "View in Browser"
 msgstr "Näytä selaimessa"
 
-#: ../navit/gui/internal/gui_internal.c:2083
+#: ../navit/gui/internal/gui_internal.c:2089
 msgid "View Attributes"
 msgstr "Näytä ominaisuudet"
 
-#: ../navit/gui/internal/gui_internal.c:2118
+#: ../navit/gui/internal/gui_internal.c:2124
 msgid "View on map"
 msgstr "Näytä kartalla"
 
-#: ../navit/gui/internal/gui_internal.c:2231
+#: ../navit/gui/internal/gui_internal.c:2237
 #, c-format
 msgid "Bookmark %s"
 msgstr "Tee kirjanmerkki %s"
 
-#: ../navit/gui/internal/gui_internal.c:2798
+#: ../navit/gui/internal/gui_internal.c:2817
 msgid "Window Mode"
 msgstr "Ikkunatila"
 
-#: ../navit/gui/internal/gui_internal.c:2844
-#: ../navit/gui/internal/gui_internal.c:3132
+#: ../navit/gui/internal/gui_internal.c:2863
+#: ../navit/gui/internal/gui_internal.c:3151
 msgid "Actions"
 msgstr "Toiminnat"
 
-#: ../navit/gui/internal/gui_internal.c:2855
+#: ../navit/gui/internal/gui_internal.c:2874
 msgid "Map Point"
 msgstr "Karttapiste"
 
-#: ../navit/gui/internal/gui_internal.c:2865
+#: ../navit/gui/internal/gui_internal.c:2884
 msgid "Vehicle Position"
 msgstr "Ajoneuvon sijainti"
 
-#: ../navit/gui/internal/gui_internal.c:2874
+#: ../navit/gui/internal/gui_internal.c:2893
 msgid "Quit"
 msgstr "Lopeta"
 
-#: ../navit/gui/internal/gui_internal.c:2880
+#: ../navit/gui/internal/gui_internal.c:2899
 msgid ""
 "Stop\n"
 "Navigation"
@@ -1836,54 +1868,54 @@ msgstr ""
 "Lopeta\n"
 "Suunnistus"
 
-#: ../navit/gui/internal/gui_internal.c:2896
-#: ../navit/gui/internal/gui_internal.c:3088
+#: ../navit/gui/internal/gui_internal.c:2915
+#: ../navit/gui/internal/gui_internal.c:3107
 msgid "Maps"
 msgstr "Kartat"
 
-#: ../navit/gui/internal/gui_internal.c:2940
+#: ../navit/gui/internal/gui_internal.c:2959
 msgid "Show Satellite Status"
 msgstr "Näytä satelliittien tila"
 
-#: ../navit/gui/internal/gui_internal.c:2974
+#: ../navit/gui/internal/gui_internal.c:2993
 msgid "Show NMEA Data"
 msgstr "Näytä NMEA-tiedot"
 
-#: ../navit/gui/internal/gui_internal.c:2998
+#: ../navit/gui/internal/gui_internal.c:3017
 msgid "Set as active"
 msgstr "Aseta aktiiviseksi"
 
-#: ../navit/gui/internal/gui_internal.c:3004
+#: ../navit/gui/internal/gui_internal.c:3023
 msgid "Show Satellite status"
 msgstr "Näytä satelliittien tila"
 
-#: ../navit/gui/internal/gui_internal.c:3010
+#: ../navit/gui/internal/gui_internal.c:3029
 msgid "Show NMEA data"
 msgstr "Näytä NMEA-tiedot"
 
-#: ../navit/gui/internal/gui_internal.c:3052
-#: ../navit/gui/internal/gui_internal.c:3096
+#: ../navit/gui/internal/gui_internal.c:3071
+#: ../navit/gui/internal/gui_internal.c:3115
 msgid "Rules"
 msgstr "Säännöt"
 
-#: ../navit/gui/internal/gui_internal.c:3060
+#: ../navit/gui/internal/gui_internal.c:3079
 msgid "Lock on road"
 msgstr "Lukitse tiehen"
 
-#: ../navit/gui/internal/gui_internal.c:3072
+#: ../navit/gui/internal/gui_internal.c:3091
 msgid "Map follows Vehicle"
 msgstr "Kartta seuraa ajoneuvoa"
 
-#: ../navit/gui/internal/gui_internal.c:3082
-#: ../navit/gui/internal/gui_internal.c:3140
+#: ../navit/gui/internal/gui_internal.c:3101
+#: ../navit/gui/internal/gui_internal.c:3159
 msgid "Settings"
 msgstr "Asetukset"
 
-#: ../navit/gui/internal/gui_internal.c:3130
+#: ../navit/gui/internal/gui_internal.c:3149
 msgid "Main menu"
 msgstr "Päävalikko"
 
-#: ../navit/gui/internal/gui_internal.c:3136
+#: ../navit/gui/internal/gui_internal.c:3155
 msgid ""
 "Show\n"
 "Map"
@@ -1891,7 +1923,7 @@ msgstr ""
 "Näytä\n"
 "kartta"
 
-#: ../navit/gui/internal/gui_internal.c:3143
+#: ../navit/gui/internal/gui_internal.c:3162
 msgid "Tools"
 msgstr "Työkalut"
 
@@ -2013,3 +2045,11 @@ msgstr "Työkalut"
 #~ msgstr ""
 #~ "Ajetaan lähdehakemistosta. Kirjanmerkit, keskipiste ja kohteet "
 #~ "ylikirjoitetaan tässä hakemistossa.\n"
+
+#, c-format
+#~ msgid "Leave the roundabout at the %s exit"
+#~ msgstr "Poistu liikenneympyrästä, %s poistumistie"
+
+#, c-format
+#~ msgid "then leave the roundabout at the %s exit"
+#~ msgstr "poistu sitten liikenneympyrästä, %s poistumistie"
