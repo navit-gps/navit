@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-12 14:11+0100\n"
+"POT-Creation-Date: 2009-04-09 11:52+0200\n"
 "PO-Revision-Date: 2009-03-13 15:35+0000\n"
 "Last-Translator: metehyi <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"X-Launchpad-Export-Date: 2009-04-06 12:48+0000\n"
+"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -279,54 +279,54 @@ msgstr "لقد وصلت إلى هدفك %s"
 msgid "then you have reached your destination."
 msgstr "و بعدها تكون قد وصلت إلى هدفك"
 
-#: ../navit/navit.c:1142
+#: ../navit/navit.c:1164
 msgid "Position"
 msgstr "الموقع"
 
-#: ../navit/navit.c:1143
+#: ../navit/navit.c:1165
 msgid "Command"
 msgstr "الأمر"
 
-#: ../navit/navit.c:1147
+#: ../navit/navit.c:1169
 msgid "Length"
 msgstr "الطول"
 
-#: ../navit/navit.c:1151 ../navit/navit.c:1176
+#: ../navit/navit.c:1173 ../navit/navit.c:1198
 msgid "km"
 msgstr "كلم"
 
-#: ../navit/navit.c:1155 ../navit/navit.c:1180
+#: ../navit/navit.c:1177 ../navit/navit.c:1202
 msgid "m"
 msgstr "م."
 
-#: ../navit/navit.c:1161
+#: ../navit/navit.c:1183
 msgid "Time"
 msgstr "الوقت"
 
-#: ../navit/navit.c:1173
+#: ../navit/navit.c:1195
 msgid "Destination Length"
 msgstr "بُعد الهدف"
 
-#: ../navit/navit.c:1186
+#: ../navit/navit.c:1208
 msgid "Destination Time"
 msgstr "الوقت في مكان الوصول"
 
-#: ../navit/navit.c:1219 ../navit/gui/gtk/gui_gtk_action.c:225
+#: ../navit/navit.c:1241 ../navit/gui/gtk/gui_gtk_action.c:225
 msgid "Roadbook"
 msgstr "سجل خريطة الطريق"
 
 #: ../navit/popup.c:238 ../navit/popup.c:292
-#: ../navit/gui/internal/gui_internal.c:2101
+#: ../navit/gui/internal/gui_internal.c:2102
 msgid "Set as position"
 msgstr "عين كموقع حالي"
 
 #: ../navit/popup.c:239 ../navit/popup.c:293
-#: ../navit/gui/internal/gui_internal.c:2097
+#: ../navit/gui/internal/gui_internal.c:2098
 msgid "Set as destination"
 msgstr "عيّن كهدف"
 
 #: ../navit/popup.c:240 ../navit/popup.c:294
-#: ../navit/gui/internal/gui_internal.c:2105
+#: ../navit/gui/internal/gui_internal.c:2106
 msgid "Add as bookmark"
 msgstr "أضف كعلامة مراجعة"
 
@@ -1570,84 +1570,84 @@ msgstr "زامبيا"
 msgid "Zimbabwe"
 msgstr "زيمبابوي"
 
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:119
-#: ../navit/gui/gtk/destination.c:120 ../navit/gui/gtk/destination.c:121
+#: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:128
+#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
 msgid "Car"
 msgstr "سيارة"
 
-#: ../navit/gui/gtk/destination.c:118
+#: ../navit/gui/gtk/destination.c:127
 msgid "Iso2"
 msgstr "Iso2"
 
-#: ../navit/gui/gtk/destination.c:118
+#: ../navit/gui/gtk/destination.c:127
 msgid "Iso3"
 msgstr "Iso3"
 
-#: ../navit/gui/gtk/destination.c:118 ../navit/gui/gtk/destination.c:426
-#: ../navit/gui/internal/gui_internal.c:2748
+#: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:435
+#: ../navit/gui/internal/gui_internal.c:2756
 msgid "Country"
 msgstr "الدولة"
 
-#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
-#: ../navit/gui/gtk/destination.c:121
+#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
+#: ../navit/gui/gtk/destination.c:130
 msgid "Postal"
 msgstr "بريدي"
 
-#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
-#: ../navit/gui/gtk/destination.c:121
-#: ../navit/gui/internal/gui_internal.c:2727
-#: ../navit/gui/internal/gui_internal.c:2756
-#: ../navit/gui/internal/gui_internal.c:2889
+#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
+#: ../navit/gui/gtk/destination.c:130
+#: ../navit/gui/internal/gui_internal.c:2735
+#: ../navit/gui/internal/gui_internal.c:2764
+#: ../navit/gui/internal/gui_internal.c:2899
 msgid "Town"
 msgstr "البلدة"
 
-#: ../navit/gui/gtk/destination.c:119 ../navit/gui/gtk/destination.c:120
-#: ../navit/gui/gtk/destination.c:121
+#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
+#: ../navit/gui/gtk/destination.c:130
 msgid "District"
 msgstr "حي"
 
-#: ../navit/gui/gtk/destination.c:120 ../navit/gui/gtk/destination.c:121
-#: ../navit/gui/gtk/destination.c:437
-#: ../navit/gui/internal/gui_internal.c:2708
-#: ../navit/gui/internal/gui_internal.c:2717
+#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
+#: ../navit/gui/gtk/destination.c:446
+#: ../navit/gui/internal/gui_internal.c:2716
+#: ../navit/gui/internal/gui_internal.c:2725
 msgid "Street"
 msgstr "الشارع"
 
-#: ../navit/gui/gtk/destination.c:121 ../navit/gui/gtk/destination.c:439
+#: ../navit/gui/gtk/destination.c:130 ../navit/gui/gtk/destination.c:448
 msgid "Number"
 msgstr "الرقم"
 
-#: ../navit/gui/gtk/destination.c:420
+#: ../navit/gui/gtk/destination.c:429
 msgid "Enter Destination"
 msgstr "أدخل الهدف"
 
-#: ../navit/gui/gtk/destination.c:429
+#: ../navit/gui/gtk/destination.c:438
 msgid "Zip Code"
 msgstr "الرمز البريدي"
 
-#: ../navit/gui/gtk/destination.c:431
+#: ../navit/gui/gtk/destination.c:440
 msgid "City"
 msgstr "المدينة"
 
-#: ../navit/gui/gtk/destination.c:434
+#: ../navit/gui/gtk/destination.c:443
 msgid "District/Township"
 msgstr "الحي/البلدة"
 
-#: ../navit/gui/gtk/destination.c:462 ../navit/gui/gtk/gui_gtk_action.c:200
+#: ../navit/gui/gtk/destination.c:471 ../navit/gui/gtk/gui_gtk_action.c:200
 msgid "Map"
 msgstr "الخريطة"
 
-#: ../navit/gui/gtk/destination.c:463
+#: ../navit/gui/gtk/destination.c:472
 msgid "Bookmark"
 msgstr "إشارة مرجعية"
 
-#: ../navit/gui/gtk/destination.c:464 ../navit/gui/gtk/gui_gtk_action.c:212
+#: ../navit/gui/gtk/destination.c:473 ../navit/gui/gtk/gui_gtk_action.c:212
 msgid "Destination"
 msgstr "الهدف"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
-#: ../navit/gui/internal/gui_internal.c:2810
-#: ../navit/gui/internal/gui_internal.c:3103
+#: ../navit/gui/internal/gui_internal.c:2820
+#: ../navit/gui/internal/gui_internal.c:3113
 msgid "Display"
 msgstr "المظهار"
 
@@ -1660,14 +1660,14 @@ msgid "Former Destinations"
 msgstr "الأهداف السابقة"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:199
-#: ../navit/gui/internal/gui_internal.c:2201
-#: ../navit/gui/internal/gui_internal.c:2865
+#: ../navit/gui/internal/gui_internal.c:2202
+#: ../navit/gui/internal/gui_internal.c:2875
 msgid "Bookmarks"
 msgstr "إشارات مرجعية"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:201
-#: ../navit/gui/internal/gui_internal.c:2767
-#: ../navit/gui/internal/gui_internal.c:2812
+#: ../navit/gui/internal/gui_internal.c:2775
+#: ../navit/gui/internal/gui_internal.c:2822
 msgid "Layout"
 msgstr "التصميم"
 
@@ -1676,8 +1676,8 @@ msgid "Projection"
 msgstr "الإسقاط"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:203
-#: ../navit/gui/internal/gui_internal.c:3046
-#: ../navit/gui/internal/gui_internal.c:3111
+#: ../navit/gui/internal/gui_internal.c:3056
+#: ../navit/gui/internal/gui_internal.c:3121
 msgid "Vehicle"
 msgstr "وسيلة التنقل"
 
@@ -1718,7 +1718,7 @@ msgid "Lock on Road"
 msgstr "إقفال على الطريق"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:224
-#: ../navit/gui/internal/gui_internal.c:3085
+#: ../navit/gui/internal/gui_internal.c:3095
 msgid "Northing"
 msgstr "شمالي دائم"
 
@@ -1727,7 +1727,7 @@ msgid "Autozoom"
 msgstr "تكبير/تصغير تلقائي"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
-#: ../navit/gui/internal/gui_internal.c:2822
+#: ../navit/gui/internal/gui_internal.c:2832
 msgid "Fullscreen"
 msgstr "ملء الشاشة"
 
@@ -1780,12 +1780,12 @@ msgid "No"
 msgstr "لا"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:75
-#: ../navit/gui/internal/gui_internal.c:2829
+#: ../navit/gui/internal/gui_internal.c:2839
 msgid "2D"
 msgstr "ثنائي الأبعاد"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:76
-#: ../navit/gui/internal/gui_internal.c:2835
+#: ../navit/gui/internal/gui_internal.c:2845
 msgid "3D"
 msgstr "ثلاثي الأبعاد"
 
@@ -1802,123 +1802,123 @@ msgstr "Route %4.0fكلم    %02d:%02d ETA"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "الطريك 0000كلم  0+00:00 ETA"
 
-#: ../navit/gui/internal/gui_internal.c:1322
+#: ../navit/gui/internal/gui_internal.c:1323
 msgid "Back to map"
 msgstr "إرجع إلى الخريطة"
 
-#: ../navit/gui/internal/gui_internal.c:1331
+#: ../navit/gui/internal/gui_internal.c:1332
 msgid "Main Menu"
 msgstr "اللائحة الرئيسية"
 
-#: ../navit/gui/internal/gui_internal.c:1451
+#: ../navit/gui/internal/gui_internal.c:1452
 msgid "Help"
 msgstr "المساعدة"
 
-#: ../navit/gui/internal/gui_internal.c:1601
+#: ../navit/gui/internal/gui_internal.c:1602
 msgid "Back"
 msgstr "السابق"
 
-#: ../navit/gui/internal/gui_internal.c:1905
-#: ../navit/gui/internal/gui_internal.c:2110
+#: ../navit/gui/internal/gui_internal.c:1906
+#: ../navit/gui/internal/gui_internal.c:2111
 msgid "POIs"
 msgstr "مواقع ذات أهمية"
 
-#: ../navit/gui/internal/gui_internal.c:2067
+#: ../navit/gui/internal/gui_internal.c:2068
 msgid "Streets"
 msgstr "الشوارع"
 
-#: ../navit/gui/internal/gui_internal.c:2083
+#: ../navit/gui/internal/gui_internal.c:2084
 msgid "View in Browser"
 msgstr "أعرض في المتصفح"
 
-#: ../navit/gui/internal/gui_internal.c:2089
+#: ../navit/gui/internal/gui_internal.c:2090
 msgid "View Attributes"
 msgstr "أعرض الصفات"
 
-#: ../navit/gui/internal/gui_internal.c:2124
+#: ../navit/gui/internal/gui_internal.c:2125
 msgid "View on map"
 msgstr "أعرض على الخريطة"
 
-#: ../navit/gui/internal/gui_internal.c:2237
+#: ../navit/gui/internal/gui_internal.c:2238
 #, c-format
 msgid "Bookmark %s"
 msgstr "علّم %s كإشارة مرجعية"
 
-#: ../navit/gui/internal/gui_internal.c:2817
+#: ../navit/gui/internal/gui_internal.c:2827
 msgid "Window Mode"
 msgstr "نمط النافذة"
 
-#: ../navit/gui/internal/gui_internal.c:2863
-#: ../navit/gui/internal/gui_internal.c:3151
+#: ../navit/gui/internal/gui_internal.c:2873
+#: ../navit/gui/internal/gui_internal.c:3161
 msgid "Actions"
 msgstr "أفعال"
 
-#: ../navit/gui/internal/gui_internal.c:2874
+#: ../navit/gui/internal/gui_internal.c:2884
 msgid "Map Point"
 msgstr "النقطة على الخريطة"
 
-#: ../navit/gui/internal/gui_internal.c:2884
+#: ../navit/gui/internal/gui_internal.c:2894
 msgid "Vehicle Position"
 msgstr "موقع وسيلة التنقل"
 
-#: ../navit/gui/internal/gui_internal.c:2893
+#: ../navit/gui/internal/gui_internal.c:2903
 msgid "Quit"
 msgstr "أخرج"
 
-#: ../navit/gui/internal/gui_internal.c:2899
+#: ../navit/gui/internal/gui_internal.c:2909
 msgid ""
 "Stop\n"
 "Navigation"
 msgstr "قفّ"
 
-#: ../navit/gui/internal/gui_internal.c:2915
-#: ../navit/gui/internal/gui_internal.c:3107
+#: ../navit/gui/internal/gui_internal.c:2925
+#: ../navit/gui/internal/gui_internal.c:3117
 msgid "Maps"
 msgstr "الخرائط"
 
-#: ../navit/gui/internal/gui_internal.c:2959
+#: ../navit/gui/internal/gui_internal.c:2969
 msgid "Show Satellite Status"
 msgstr "أعرض حالة القمر الإسطناعي"
 
-#: ../navit/gui/internal/gui_internal.c:2993
+#: ../navit/gui/internal/gui_internal.c:3003
 msgid "Show NMEA Data"
 msgstr "أعرض المعطيات NMEA"
 
-#: ../navit/gui/internal/gui_internal.c:3017
+#: ../navit/gui/internal/gui_internal.c:3027
 msgid "Set as active"
 msgstr "عيّن كــفعلي"
 
-#: ../navit/gui/internal/gui_internal.c:3023
+#: ../navit/gui/internal/gui_internal.c:3033
 msgid "Show Satellite status"
 msgstr "أعرض حالة القمر الإسطناعي"
 
-#: ../navit/gui/internal/gui_internal.c:3029
+#: ../navit/gui/internal/gui_internal.c:3039
 msgid "Show NMEA data"
 msgstr "أعرض المعطيات NMEA"
 
-#: ../navit/gui/internal/gui_internal.c:3071
-#: ../navit/gui/internal/gui_internal.c:3115
+#: ../navit/gui/internal/gui_internal.c:3081
+#: ../navit/gui/internal/gui_internal.c:3125
 msgid "Rules"
 msgstr "القواعد"
 
-#: ../navit/gui/internal/gui_internal.c:3079
+#: ../navit/gui/internal/gui_internal.c:3089
 msgid "Lock on road"
 msgstr "إقفال على الطريق"
 
-#: ../navit/gui/internal/gui_internal.c:3091
+#: ../navit/gui/internal/gui_internal.c:3101
 msgid "Map follows Vehicle"
 msgstr "الخريطة تتبع وسيلة التنقل"
 
-#: ../navit/gui/internal/gui_internal.c:3101
-#: ../navit/gui/internal/gui_internal.c:3159
+#: ../navit/gui/internal/gui_internal.c:3111
+#: ../navit/gui/internal/gui_internal.c:3169
 msgid "Settings"
 msgstr "الإعدادات"
 
-#: ../navit/gui/internal/gui_internal.c:3149
+#: ../navit/gui/internal/gui_internal.c:3159
 msgid "Main menu"
 msgstr "اللائحة الرئيسية"
 
-#: ../navit/gui/internal/gui_internal.c:3155
+#: ../navit/gui/internal/gui_internal.c:3165
 msgid ""
 "Show\n"
 "Map"
@@ -1926,7 +1926,7 @@ msgstr ""
 "أعرض\n"
 "الخريطة"
 
-#: ../navit/gui/internal/gui_internal.c:3162
+#: ../navit/gui/internal/gui_internal.c:3172
 msgid "Tools"
 msgstr "العدة"
 
