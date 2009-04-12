@@ -1769,6 +1769,7 @@ struct selector {
 		type_poi_hotel,type_poi_camp_rv,
 		type_poi_camping,type_poi_camping,
 		type_poi_resort,type_poi_resort,
+		type_poi_motel,type_poi_hostel,
 		type_none}},
 	{"restaurant","Restaurant",(enum item_type []) {
 		type_poi_bar,type_poi_picnic,
@@ -1805,7 +1806,8 @@ struct selector {
 		type_poi_mall+1,type_poi_personal_service-1,
 		type_poi_restaurant+1,type_poi_restroom-1,
 		type_poi_restroom+1,type_poi_shop_grocery-1,
-		type_poi_shop_grocery+1,type_poi_wifi,
+		type_poi_shop_grocery+1,type_poi_motel-1,
+		type_poi_hostel+1,type_selected_point,
 		type_none}},
 };
 
@@ -1898,7 +1900,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	struct map *m;
 	struct map_rect *mr;
 	struct item *item;
-	int idist,dist=4000;
+	int idist,dist=20000;
 	struct widget *wi,*w,*w2,*wb;
 	enum projection pro=wm->c.pro;
 	struct selector *isel=wm->data;
@@ -1927,6 +1929,8 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 				    (idist=transform_distance(pro, &center, &c)) < dist) {
 					gui_internal_widget_append(w2, wi=gui_internal_cmd_pois_item(this, &center, item, &c, idist));
 					wi->func=gui_internal_cmd_position;
+					wi->data=(void *)2;
+					wi->item=*item;
 					wi->state |= STATE_SENSITIVE;
 					wi->c.x=c.x;
 					wi->c.y=c.y;
