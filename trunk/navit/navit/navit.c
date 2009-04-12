@@ -134,6 +134,7 @@ struct navit {
 	int use_mousewheel;
 	struct messagelist *messages;
 	struct callback *resize_callback,*button_callback,*motion_callback;
+	struct vehicleprofile *vehicleprofile;
 	int pitch;
 };
 
@@ -1281,6 +1282,7 @@ navit_init(struct navit *this_)
 			}
 			route_set_mapset(this_->route, ms);
 			route_set_projection(this_->route, transform_get_projection(this_->trans));
+			route_set_profile(this_->route, this_->vehicleprofile);
 		}
 		if (this_->tracking) {
 			tracking_set_mapset(this_->tracking, ms);
@@ -1866,6 +1868,9 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		break;
 	case attr_vehicle:
 		ret=navit_add_vehicle(this_, attr->u.vehicle);
+		break;
+	case attr_vehicleprofile:
+		this_->vehicleprofile=attr->u.vehicleprofile;
 		break;
 	case attr_autozoom_min:
 		this_->autozoom_min = attr->u.num;

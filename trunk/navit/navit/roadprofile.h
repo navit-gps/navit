@@ -17,6 +17,12 @@
  * Boston, MA  02110-1301, USA.
  */
 
+struct roadprofile {
+	struct attr **attrs;
+        int speed;
+        int route_weight;
+};
+
 struct roadprofile * roadprofile_new(struct attr *parent, struct attr **attrs);
 int roadprofile_get_attr(struct roadprofile *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int roadprofile_set_attr(struct roadprofile *this_, struct attr *attr);

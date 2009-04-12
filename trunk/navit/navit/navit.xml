@@ -107,7 +107,7 @@
 				<!-- For the cumulative displacement filter to be enabled, set cdf_hist="x" here, with x being an integer somewhere around 4 -->
         <tracking cdf_histsize="0"/>
 
-	<vehicleprofile name="car" flags="0x40000000" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0">
+	<vehicleprofile name="car" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0">
 	    <roadprofile item_types="street_0,street_1_city" speed="10" route_weight="10">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
@@ -171,23 +171,37 @@
             <roadprofile item_types="roundabout" speed="10" route_weight="10"/>
             <roadprofile item_types="ferry" speed="40" route_weight="40"/>
 	</vehicleprofile>
+	<vehicleprofile enabled="no" name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="0" route_mode="0">
+	    <roadprofile item_types="cycleway" speed="20" route_weight="20">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <roadprofile item_types="street_0,street_1_city,street_2_city" speed="20" route_weight="14">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <roadprofile item_types="street_3_city,street_4_city" speed="20" route_weight="7">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+            <roadprofile item_types="street_1_land,street_2_land" speed="20" route_weight="14">
+            	<announcement level="0" distance_metric="100"/>
+            	<announcement level="1" distance_metric="400"/>
+            	<announcement level="2" distance_metric="1000"/>
+	    </roadprofile>
+            <roadprofile item_types="street_3_land,street_4_land" speed="20" route_weight="7">
+            	<announcement level="0" distance_metric="100"/>
+            	<announcement level="1" distance_metric="400"/>
+            	<announcement level="2" distance_metric="1000"/>
+	    </roadprofile>
+            <roadprofile item_types="roundabout" speed="20" route_weight="10"/>
+            <roadprofile item_types="ferry" speed="40" route_weight="40"/>
+	</vehicleprofile>
 
-        <route destination_distance="50">
-            <speed type="street_0,street_1_city" value="10"/>
-            <speed type="street_2_city" value="30"/>
-            <speed type="street_3_city" value="40"/>
-            <speed type="street_4_city" value="50"/>
-            <speed type="highway_city" value="80"/>
-            <speed type="street_1_land" value="60"/>
-            <speed type="street_2_land" value="65"/>
-            <speed type="street_3_land" value="70"/>
-            <speed type="street_4_land" value="80"/>
-            <speed type="street_n_lanes" value="120"/>
-            <speed type="highway_land" value="120"/>
-            <speed type="ramp" value="40"/>
-            <speed type="roundabout" value="10"/>
-            <speed type="ferry" value="40"/>
-        </route>
+        <route destination_distance="50"/>
 
         <navigation>
             <announce type="street_0,street_1_city" level0="25" level1="100" level2="200" unit="m"/>
