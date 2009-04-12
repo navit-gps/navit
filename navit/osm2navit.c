@@ -141,6 +141,7 @@ static char *attrmap={
 	"n	place=suburb		district_label\n"
 	"n	place=town		town_label_2e4\n"
 	"n	place=village		town_label_2e3\n"
+	"n	power=tower		power_tower\n"
 	"n	railway=halt		poi_rail_halt\n"
 	"n	railway=level_crossing	poi_level_crossing\n"
 	"n	railway=station		poi_rail_station\n"
@@ -555,12 +556,6 @@ struct attr_bin maxspeed_attr = {
 };
 int maxspeed_attr_value;
 
-struct attr_bin house_number_attr = {
-	0, attr_house_number
-};
-char house_number_attr_buffer[BUFFER_SIZE];
-
-
 struct attr_bin town_name_attr = {
 	0, attr_town_name
 };
@@ -593,7 +588,36 @@ long int osmid_attr_value;
 
 char is_in_buffer[BUFFER_SIZE];
 
+char attr_strings_buffer[BUFFER_SIZE*16];
+int attr_strings_buffer_len;
 
+enum attr_strings {
+	attr_string_phone,
+	attr_string_fax,
+	attr_string_email,
+	attr_string_url,
+	attr_string_street_name,
+	attr_string_house_number,
+	attr_string_label,
+	attr_string_last,
+};
+
+char *attr_strings[attr_string_last];
+
+static void
+attr_strings_clear(void)
+{
+	attr_strings_buffer_len=0;
+	memset(attr_strings, 0, sizeof(attr_strings));
+}
+
+static void
+attr_strings_save(enum attr_strings id, char *str)
+{
+	attr_strings[id]=attr_strings_buffer+attr_strings_buffer_len;
+	strcpy(attr_strings[id], str);
+	attr_strings_buffer_len+=strlen(str)+1;
+}
 
 static void
 item_bin_init(struct item_bin *ib, enum item_type type)
@@ -639,6 +663,26 @@ item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val)
 	struct attr attr;
 	attr.type=type;
 	attr.u.num=val;
+	item_bin_add_attr(ib, &attr);
+}
+
+static void
+item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long long val)
+{
+	struct attr attr;
+	attr.type=type;
+	attr.u.num64=&val;
+	item_bin_add_attr(ib, &attr);
+}
+
+static void
+item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str)
+{
+	struct attr attr;
+	if (! str)
+		return;
+	attr.type=type;
+	attr.u.str=str;
 	item_bin_add_attr(ib, &attr);
 }
 
@@ -723,6 +767,7 @@ access_value(char *v)
 		return 2;
 	return 3;
 }
+
 static void
 add_tag(char *k, char *v)
 {
@@ -837,15 +882,30 @@ add_tag(char *k, char *v)
 	if (! strcmp(k,"name")) {
 		strcpy(label_attr_buffer, v);
 		pad_text_attr(&label_attr, label_attr_buffer);
+		attr_strings_save(attr_string_label, v);
+		level=5;
+	}
+	if (! strcmp(k,"addr:email")) {
+		attr_strings_save(attr_string_email, v);
 		level=5;
 	}
 	if (! strcmp(k,"addr:housenumber")) {
-		strcpy(house_number_attr_buffer, v);
-		pad_text_attr(&house_number_attr, house_number_attr_buffer);
+		attr_strings_save(attr_string_house_number, v);
+		level=5;
 	}
 	if (! strcmp(k,"addr:street")) {
+		attr_strings_save(attr_string_street_name, v);
 		strcpy(street_name_attr_buffer, v);
 		pad_text_attr(&street_name_attr, street_name_attr_buffer);
+		level=5;
+	}
+	if (! strcmp(k,"phone")) {
+		attr_strings_save(attr_string_phone, v);
+		level=5;
+	}
+	if (! strcmp(k,"fax")) {
+		attr_strings_save(attr_string_fax, v);
+		level=5;
 	}
 	if (! strcmp(k,"ref")) {
 		if (in_way) {
@@ -1024,11 +1084,11 @@ add_node(int id, double lat, double lon)
 {
 	if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced)
 		extend_buffer(&node_buffer);
+	attr_strings_clear();
 	node_is_tagged=0;
 	nodeid=id;
 	item.type=type_point_unkn;
 	label_attr.len=0;
-	house_number_attr.len=0;
 	street_name_attr.len=0;
 	town_name_attr.len=0;
 	debug_attr.len=0;
@@ -1145,9 +1205,9 @@ add_way(int id)
 {
 	wayid=id;
 	coord_count=0;
+	attr_strings_clear();
 	item.type=type_street_unkn;
 	label_attr.len=0;
-	house_number_attr.len=0;
 	street_name_attr.len=0;
 	street_name_systematic_attr.len=0;
 	debug_attr.len=0;
@@ -1285,6 +1345,7 @@ static void
 end_way(FILE *out)
 {
 	int alen=0,count;
+	int *def_flags;
 	enum item_type types[5];
 
 	if (! out)
@@ -1312,9 +1373,9 @@ end_way(FILE *out)
 		item.type=type_street_unkn;
 	if (coverage && item_is_street(item))
 		item.type=type_coverage;
-	if (item.type >= route_item_first && item.type <= route_item_last) {
-		int def_flags=default_flags[item.type-route_item_first];
-		flags_attr_value=(def_flags | flags[0] | flags[1]) & ~flags[2];
+	def_flags=item_get_default_flags(item.type);
+	if (def_flags) {
+		flags_attr_value=(*def_flags | flags[0] | flags[1]) & ~flags[2];
 		if (flags_attr_value != def_flags) {
 			flags_attr.len=2;
 			alen+=flags_attr.len+1;
@@ -1339,40 +1400,30 @@ end_way(FILE *out)
 static void
 end_node(FILE *out)
 {
-	int alen=0,conflict=0,count;
+	int conflict=0,count;
 	enum item_type types[5];
 	struct country_table *result=NULL, *lookup;
 	if (!out || ! node_is_tagged || ! nodeid)
 		return;
 	count=attr_longest_match(attr_mapping_node, attr_mapping_node_count, types, sizeof(types)/sizeof(enum item_type));
-	pad_text_attr(&debug_attr, debug_attr_buffer);
-	if (label_attr.len)
-		alen+=label_attr.len+1;
-	if (debug_attr.len)
-		alen+=debug_attr.len+1;
-	if (house_number_attr.len)
-		alen+=house_number_attr.len+1;
-	if (street_name_attr.len)
-		alen+=street_name_attr.len+1;
-	if (osmid_attr.len)
-		alen+=osmid_attr.len+1;
 	if (count)
-		item.type=types[0];
+		item_bin_init(item_bin, types[0]);
 	else
-		item.type=type_point_unkn;
-	item.clen=2;
-	item.len=item.clen+2+alen;
-	fwrite(&item, sizeof(item), 1, out);
-	fwrite(&ni->c, 1*sizeof(struct coord), 1, out);
-	if (item_is_town(item)) {
-		town_name_attr.len=label_attr.len;
-		write_attr(out, &town_name_attr, label_attr_buffer);
-	} else
-		write_attr(out, &label_attr, label_attr_buffer);
-	write_attr(out, &house_number_attr, house_number_attr_buffer);
-	write_attr(out, &street_name_attr, street_name_attr_buffer);
-	write_attr(out, &osmid_attr, &osmid_attr_value);
-	write_attr(out, &debug_attr, debug_attr_buffer);
+		item_bin_init(item_bin, type_point_unkn);
+	item_bin_add_coord(item_bin, &ni->c, 1);
+	if (osmid_attr_value == 368279467) {
+		fprintf(stderr,"%s\n", attr_strings[attr_string_label]);
+	}
+	item_bin_add_attr_string(item_bin, item_is_town(item) ? attr_town_name : attr_label, attr_strings[attr_string_label]);
+	item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
+	item_bin_add_attr_string(item_bin, attr_street_name, attr_strings[attr_string_street_name]);
+	item_bin_add_attr_string(item_bin, attr_phone, attr_strings[attr_string_phone]);
+	item_bin_add_attr_string(item_bin, attr_fax, attr_strings[attr_string_fax]);
+	item_bin_add_attr_string(item_bin, attr_email, attr_strings[attr_string_email]);
+	item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
+	item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
+	item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
+	item_bin_write(item_bin,out);
 	if (item_is_town(item) && town_name_attr.len) {
 		char *tok,*buf=is_in_buffer;
 		while ((tok=strtok(buf, ","))) {

@@ -194,35 +194,6 @@ xmlconfig_config(struct xmlstate *state)
 }
 
 static int
-xmlconfig_speed(struct xmlstate *state)
-{
-	const char *type;
-	const char *value;
-	int v;
-	enum item_type itype;
-	char *tok, *type_str, *str;
-
-	type=find_attribute(state, "type", 1);
-	if (! type)
-		return 0;
-	value=find_attribute(state, "value", 1);
-	if (! value)
-		return 0;
-	v=convert_number(value);
-	type_str=g_strdup(type);
-	str=type_str;
-	while ((tok=strtok(str, ","))) {
-		itype=item_from_name(tok);
-		route_set_speed(state->parent->element_attr.u.data, itype, v);
-		str=NULL;
-	}
-	g_free(type_str);
-
-	return 1;
-}
-
-
-static int
 xmlconfig_announce(struct xmlstate *state)
 {
 	const char *type,*value;
@@ -323,7 +294,6 @@ struct element_func {
 	{ "speech", "navit", NULL, attr_speech},
 	{ "tracking", "navit", NULL, attr_tracking},
 	{ "route", "navit", NULL, attr_route},
-	{ "speed", "route", xmlconfig_speed},
 	{ "mapset", "navit", NULL, attr_mapset},
 	{ "map",  "mapset", NULL, attr_map},
 	{ "debug", "config", NULL, attr_debug},

@@ -17,6 +17,16 @@
  * Boston, MA  02110-1301, USA.
  */
 
+struct vehicleprofile {
+	int mode;                                               /**< 0 = Auto, 1 = On-Road, 2 = Off-Road */
+	int flags_forward_mask;                                 /**< Flags mask for moving in positive direction */
+	int flags_reverse_mask;                                 /**< Flags mask for moving in reverse direction */
+	int flags;                                              /**< Required flags to move through a segment */
+	int maxspeed_handling;                                  /**< 0 = Always, 1 = Only if lower, 2 = Never */
+        struct attr **attrs;
+	GHashTable *roadprofile_hash;
+};
+
 struct vehicleprofile * vehicleprofile_new(struct attr *parent, struct attr **attrs);
 int vehicleprofile_get_attr(struct vehicleprofile *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int vehicleprofile_set_attr(struct vehicleprofile *this_, struct attr *attr);

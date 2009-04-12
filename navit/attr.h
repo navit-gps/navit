@@ -114,6 +114,8 @@ struct attr {
 		struct cursor *cursor;
 		struct displaylist *displaylist;
 		struct transformation *transformation;
+		struct vehicleprofile *vehicleprofile;
+		struct roadprofile *roadprofile;
 		struct range {
 			short min, max;
 		} range;

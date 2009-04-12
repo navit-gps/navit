@@ -66,6 +66,8 @@
 #include "fib.h"
 #include "event.h"
 #include "callback.h"
+#include "vehicleprofile.h"
+#include "roadprofile.h"
 
 
 struct map_priv {
@@ -190,21 +192,6 @@ struct route_path {
 #define RF_SHOWGRAPH	(1<<5)
 
 /**
- * @brief Routing preferences
- * 
- * This struct holds all information about route preferences (fastest, shortest, etc)
- */
-
-struct route_preferences {
-	int mode;						/**< 0 = Auto, 1 = On-Road, 2 = Off-Road */
-	int flags_forward_mask;					/**< Flags mask for moving in positive direction */
-	int flags_reverse_mask;					/**< Flags mask for moving in reverse direction */
-	int flags;						/**< Required flags to move through a segment */
-	int maxspeed_handling;					/**< 0 = Always, 1 = Only if lower, 2 = Never */
-	int speedlist[route_item_last-route_item_first+1];	/**< The speedlist for this route */
-};
-
-/**
  * @brief A complete route
  * 
  * This struct holds all information about a route.
@@ -223,7 +210,7 @@ struct route {
 	struct callback * route_graph_flood_done_cb ; /**< Callback when route graph flooding is done */
 	struct callback_list *cbl2;	/**< Callback list to call when route changes */
 	int destination_distance;	/**< Distance to the destination at which the destination is considered "reached" */
-	struct route_preferences preferences; /**< Routing preferences */
+	struct vehicleprofile *vehicleprofile; /**< Routing preferences */
 	int route_status;		/**< Route Status */
 };
 
@@ -237,7 +224,8 @@ struct route_graph {
 	struct map_selection *sel;			/**< The rectangle selection for the graph */
 	struct mapset_handle *h;			/**< Handle to the mapset */	
 	struct map *m;					/**< Pointer to the currently active map */	
-	struct map_rect *mr;				/**< Pointer to the currently active map rectangle */	
+	struct map_rect *mr;				/**< Pointer to the currently active map rectangle */
+	struct vehicleprofile *vehicleprofile;		/**< The vehicle profile */
 	struct callback *idle_cb;			/**< Idle callback to process the graph */
 	struct callback *done_cb;			/**< Callback when graph is done */
 	struct event_idle *idle_ev;			/**< The pointer to the idle event */
@@ -265,7 +253,7 @@ static struct route_info * route_find_nearest_street(struct mapset *ms, struct p
 static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
 static void route_graph_update(struct route *this, struct callback *cb);
 static void route_graph_build_done(struct route_graph *rg, int cancel);
-static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct route_preferences *pref);
+static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct vehicleprofile *profile);
 static void route_process_street_graph(struct route_graph *this, struct item *item);
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this, int cancel);
@@ -400,9 +388,6 @@ route_new(struct attr *parent, struct attr **attrs)
 		this->destination_distance = 50; // Default value
 	}
 	this->cbl2=callback_list_new();
-	this->preferences.flags_forward_mask=AF_ONEWAYREV|AF_CAR;
-	this->preferences.flags_reverse_mask=AF_ONEWAY|AF_CAR;
-	this->preferences.flags=AF_CAR;
 
 	return this;
 }
@@ -493,6 +478,19 @@ route_set_mapset(struct route *this, struct mapset *ms)
 }
 
 /**
+ * @brief Sets the vehicle profile of a route
+ *
+ * @param this The route to set the profile for
+ * @param prof The vehicle profile
+ */
+
+void
+route_set_profile(struct route *this, struct vehicleprofile *prof)
+{
+	this->vehicleprofile=prof;
+}
+
+/**
  * @brief Returns the mapset of the route passed
  *
  * @param this The route to get the mapset of
@@ -529,18 +527,6 @@ route_get_dst(struct route *this)
 }
 
 /**
- * @brief Returns the speedlist of the route passed
- *
- * @param this The route to get the speedlist for
- * @return The speedlist of the route passed
- */
-int *
-route_get_speedlist(struct route *this)
-{
-	return this->preferences.speedlist;
-}
-
-/**
  * @brief Checks if the path is calculated for the route passed
  *
  * @param this The route to check
@@ -550,25 +536,6 @@ int
 route_get_path_set(struct route *this)
 {
 	return this->path2 != NULL;
-}
-
-/**
- * @brief Sets the driving speed for a certain itemtype
- *
- * @param this The route to set the speed for
- * @param type The itemtype to set the speed for
- * @param value The speed that should be set
- * @return True on success, false if the itemtype does not exist
- */
-int
-route_set_speed(struct route *this, enum item_type type, int value)
-{
-	if (type < route_item_first || type > route_item_last) {
-		dbg(0,"street type %d out of range [%d,%d]", type, route_item_first, route_item_last);
-		return 0;
-	}
-	this->preferences.speedlist[type-route_item_first]=value;
-	return 1;
 }
 
 /**
@@ -660,7 +627,7 @@ route_path_update_done(struct route *this, int new_graph)
 	route_status.u.num=route_status_building_path;
 	route_set_attr(this, &route_status);
 
-	this->path2=route_path_new(this->graph, oldpath, this->pos, this->dst, &this->preferences);
+	this->path2=route_path_new(this->graph, oldpath, this->pos, this->dst, this->vehicleprofile);
 	route_path_destroy(oldpath);
 	if (this->path2) {
 		if (!new_graph && this->path2->updated)
@@ -1419,22 +1386,24 @@ route_graph_destroy(struct route_graph *this)
  * This function returns the time needed to drive len meters on 
  * the item passed in item in tenth of seconds.
  *
- * @param preferences The routing preferences
+ * @param profile The routing preferences
  * @param over The segment which is passed
  * @return The time needed to drive len on item in thenth of senconds
  */
 
 static int
-route_time_seg(struct route_preferences *preferences, struct route_segment_data *over)
+route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over)
 {
-	int pspeed=preferences->speedlist[over->item.type-route_item_first];
-	int speed=pspeed;
-	if (preferences->maxspeed_handling != 2 && (over->flags & AF_SPEED_LIMIT)) {
+	struct roadprofile *roadprofile=vehicleprofile_get_roadprofile(profile, over->item.type);
+	int speed;
+	if (!roadprofile || !roadprofile->route_weight)
+		return INT_MAX;
+	if (profile->maxspeed_handling != 2 && (over->flags & AF_SPEED_LIMIT)) {
 		speed=RSD_MAXSPEED(over);
-		if (preferences->maxspeed_handling == 1 && speed > pspeed)
-			speed=pspeed;
+		if (profile->maxspeed_handling == 1 && speed > roadprofile->route_weight)
+			speed=roadprofile->route_weight;
 	} else
-		speed=preferences->speedlist[over->item.type-route_item_first];
+		speed=roadprofile->route_weight;
 	if (!speed)
 		return INT_MAX;	
 	return over->len*36/speed;
@@ -1443,7 +1412,7 @@ route_time_seg(struct route_preferences *preferences, struct route_segment_data 
 /**
  * @brief Returns the "costs" of driving from point from over segment over in direction dir
  *
- * @param preferences The routing preferences
+ * @param profile The routing preferences
  * @param from The point where we are starting
  * @param over The segment we are using
  * @param dir The direction of segment which we are driving
@@ -1451,14 +1420,14 @@ route_time_seg(struct route_preferences *preferences, struct route_segment_data 
  */  
 
 static int
-route_value_seg(struct route_preferences *preferences, struct route_graph_point *from, struct route_segment_data *over, int dir)
+route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, struct route_segment_data *over, int dir)
 {
 #if 0
 	dbg(0,"flags 0x%x mask 0x%x flags 0x%x\n", over->flags, dir >= 0 ? preferences->flags_forward_mask : preferences->flags_reverse_mask, preferences->flags);
 #endif
-	if ((over->flags & (dir >= 0 ? preferences->flags_forward_mask : preferences->flags_reverse_mask)) != preferences->flags)
+	if ((over->flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
 		return INT_MAX;
-	return route_time_seg(preferences, over);
+	return route_time_seg(profile, over);
 }
 
 /**
@@ -1487,12 +1456,15 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 	int maxspeed = -1;
 	
 	if (item_coord_get(item, &l, 1)) {
+		int *default_flags=item_get_default_flags(item->type);
+		if (! default_flags)
+			return;
 		if (item_attr_get(item, attr_flags, &flags_attr)) {
 			flags = flags_attr.u.num;
 			if (flags & AF_SEGMENTED)
 				segmented = 1;
 		} else
-			flags = default_flags[item->type-route_item_first];
+			flags = *default_flags;
 		
 
 		if (flags & AF_SPEED_LIMIT) {
@@ -1567,7 +1539,7 @@ route_graph_get_segment(struct route_graph *graph, struct street_data *sd)
  * at this algorithm.
  */
 static void
-route_graph_flood(struct route_graph *this, struct route_info *dst, struct route_preferences *preferences, struct callback *cb)
+route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile, struct callback *cb)
 {
 	struct route_graph_point *p_min;
 	struct route_graph_segment *s;
@@ -1581,14 +1553,14 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct route
 		dbg(0,"no segment for destination found\n");
 		return;
 	}
-	val=route_value_seg(preferences, NULL, &s->data, 1);
+	val=route_value_seg(profile, NULL, &s->data, 1);
 	if (val != INT_MAX) {
 		val=val*(100-dst->percent)/100;
 		s->end->seg=s;
 		s->end->value=val;
 		s->end->el=fh_insertkey(heap, s->end->value, s->end);
 	}
-	val=route_value_seg(preferences, NULL, &s->data, -1);
+	val=route_value_seg(profile, NULL, &s->data, -1);
 	if (val != INT_MAX) {
 		val=val*dst->percent/100;
 		s->start->seg=s;
@@ -1605,7 +1577,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct route
 		p_min->el=NULL; /* This point is permanently calculated now, we've taken it out of the heap */
 		s=p_min->start;
 		while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
-			val=route_value_seg(preferences, p_min, &s->data, -1);
+			val=route_value_seg(profile, p_min, &s->data, -1);
 			if (val != INT_MAX) {
 				new=min+val;
 				if (debug_route)
@@ -1633,7 +1605,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct route
 		}
 		s=p_min->end;
 		while (s) { /* Doing the same as above with the segments leading towards our point */
-			val=route_value_seg(preferences, p_min, &s->data, 1);
+			val=route_value_seg(profile, p_min, &s->data, 1);
 			if (val != INT_MAX) {
 				new=min+val;
 				if (debug_route)
@@ -1761,7 +1733,7 @@ route_get_coord_dist(struct route *this_, int dist)
  * @return The new route path
  */
 static struct route_path *
-route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct route_preferences *preferences)
+route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct vehicleprofile *profile)
 {
 	struct route_graph_segment *first,*s=NULL;
 	struct route_graph_point *start;
@@ -1774,7 +1746,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	if (! pos->street || ! dst->street)
 		return NULL;
 
-	if (preferences->mode == 2 || (preferences->mode == 0 && pos->lenextra + dst->lenextra + pos->lenpos-dst->lenpos > transform_distance(map_projection(pos->street->item.map), &pos->c, &dst->c)))
+	if (profile->mode == 2 || (profile->mode == 0 && pos->lenextra + dst->lenextra + pos->lenpos-dst->lenpos > transform_distance(map_projection(pos->street->item.map), &pos->c, &dst->c)))
 		return route_path_new_offroad(this, pos, dst);
 	
 	s=route_graph_get_segment(this, pos->street);
@@ -1782,12 +1754,12 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		dbg(0,"no segment for position found\n");
 		return NULL;
 	}
-	val=route_value_seg(preferences, NULL, &s->data, -1);
+	val=route_value_seg(profile, NULL, &s->data, -1);
 	if (val != INT_MAX) {
 		val=val*(100-pos->percent)/100;
 		val1=s->end->value+val;
 	}
-	val=route_value_seg(preferences, NULL, &s->data, 1);
+	val=route_value_seg(profile, NULL, &s->data, 1);
 	if (val != INT_MAX) {
 		val=val*pos->percent/100;
 		val2=s->start->value+val;
@@ -1888,8 +1860,7 @@ route_graph_build_idle(struct route_graph *rg)
 				return;
 			}
 		}
-		if (item->type >= route_item_first && item->type <= route_item_last) 
-			route_process_street_graph(rg, item);
+		route_process_street_graph(rg, item);
 		count--;
 	}
 }
@@ -1933,7 +1904,7 @@ route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2, struct 
 static void
 route_graph_update_done(struct route *this, struct callback *cb)
 {
-	route_graph_flood(this->graph, this->dst, &this->preferences, cb);
+	route_graph_flood(this->graph, this->dst, this->vehicleprofile, cb);
 }
 
 /**
@@ -2255,7 +2226,7 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		case attr_time:
 			mr->attr_next=attr_none;
 			if (seg) {
-				attr->u.num=route_time_seg(&route->preferences, seg->data);
+				attr->u.num=route_time_seg(route->vehicleprofile, seg->data);
 			} else
 				return 0;
 			return 1;

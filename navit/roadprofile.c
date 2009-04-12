@@ -22,17 +22,30 @@
 #include "item.h"
 #include "roadprofile.h"
 
-struct roadprofile {
-	struct attr **attrs;
-};
+static void
+roadprofile_set_attr_do(struct roadprofile *this, struct attr *attr)
+{	
+	switch (attr->type) {
+	case attr_speed:
+		this->speed=attr->u.num;
+		break;
+	case attr_route_weight:
+		this->route_weight=attr->u.num;
+		break;
+	default:
+		break;
+	}
+}
 
 struct roadprofile *
 roadprofile_new(struct attr *parent, struct attr **attrs)
 {
 	struct roadprofile *this_;
-	struct attr *type_attr;
+	struct attr **attr;
 	this_=g_new0(struct roadprofile, 1);
 	this_->attrs=attr_list_dup(attrs);
+	for (attr=attrs;*attr; attr++) 
+		roadprofile_set_attr_do(this_, *attr);
 	return this_;
 }
 
@@ -45,6 +58,7 @@ roadprofile_get_attr(struct roadprofile *this_, enum attr_type type, struct attr
 int
 roadprofile_set_attr(struct roadprofile *this_, struct attr *attr)
 {
+	roadprofile_set_attr_do(this_, attr);
 	this_->attrs=attr_generic_set_attr(this_->attrs, attr);
 	return 1;
 }
