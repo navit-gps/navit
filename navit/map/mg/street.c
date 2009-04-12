@@ -322,6 +322,7 @@ static unsigned char limit[]={0,0,1,1,1,2,2,4,6,6,12,13,14,20,20,20,20,20,20};
 int
 street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *item)
 {	
+	int *flags;
 	for (;;) {
 		while (street->more) {
 			struct coord c;
@@ -423,8 +424,9 @@ street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *it
 			item->type=type_street_unkn;
 			dbg(0,"unknown type 0x%x\n",street->str->type);
 		}
-		if (item->type >= route_item_first && item->type <= route_item_last)
-			street->flags=default_flags[item->type-route_item_first];
+		flags=item_get_default_flags(item->type);
+		if (flags)
+			street->flags=*flags;
 		else
 			street->flags=0;
 		if (street->str->type & 0x40) {
