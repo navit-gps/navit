@@ -37,24 +37,31 @@ struct item_range item_range_all = { type_none, type_last };
 #define AF_ALL (AF_PBH|AF_MOPED|AF_MOTORIZED_FAST)
 
 
-int default_flags[]={
-	/* AF_PBH, street_nopass */
-	AF_ALL, /* street_0 */
-	AF_ALL, /* street_1_city */
-	AF_ALL, /* street_2_city */
-	AF_ALL, /* street_3_city */
-	AF_ALL, /* street_4_city */
-	AF_MOTORIZED_FAST, /* highway_city */
-	AF_ALL, /* street_1_land */
-	AF_ALL, /* street_2_land */
-	AF_ALL, /* street_3_land */
-	AF_ALL, /* street_4_land */
-	AF_MOTORIZED_FAST, /* street_n_lanes */
-	AF_MOTORIZED_FAST, /* highway_land */
-	AF_MOTORIZED_FAST, /* ramp */
-	AF_ALL, /* roundabout */
-	AF_ALL, /* ferry */
+struct default_flags {
+	enum item_type type;
+	int flags;
 };
+
+struct default_flags default_flags2[]={
+	{type_street_nopass, AF_PBH},
+	{type_street_0, AF_ALL},
+	{type_street_1_city, AF_ALL},
+	{type_street_2_city, AF_ALL},
+	{type_street_3_city, AF_ALL},
+	{type_street_4_city, AF_ALL},
+	{type_highway_city, AF_MOTORIZED_FAST}, 
+	{type_street_1_land, AF_ALL},
+	{type_street_2_land, AF_ALL},
+	{type_street_3_land, AF_ALL},
+	{type_street_4_land, AF_ALL},
+	{type_street_n_lanes, AF_MOTORIZED_FAST},
+	{type_highway_land, AF_MOTORIZED_FAST},
+	{type_ramp, AF_MOTORIZED_FAST},
+	{type_roundabout, AF_ALL},
+	{type_ferry, AF_ALL},
+	{type_cycleway, AF_ALL},
+};
+
 
 
 struct item_name item_names[]={
@@ -64,6 +71,21 @@ struct item_name item_names[]={
 #undef ITEM2
 #undef ITEM
 };
+
+static GHashTable *default_flags_hash;
+
+int *
+item_get_default_flags(enum item_type type)
+{
+	if (!default_flags_hash) {
+		int i;
+		default_flags_hash=g_hash_table_new(NULL, NULL);
+		for (i = 0 ; i < sizeof(default_flags2)/sizeof(struct default_flags); i++) {
+			g_hash_table_insert(default_flags_hash, (void *)(long)default_flags2[i].type, &default_flags2[i].flags);
+		}
+	}
+	return g_hash_table_lookup(default_flags_hash, (void *)(long)type);
+}
 
 void
 item_coord_rewind(struct item *it)
