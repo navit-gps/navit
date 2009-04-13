@@ -4184,7 +4184,8 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
  * @param wm The button that was pressed.
  * @param v Unused
  */
-void gui_internal_cmd_route(struct gui_priv * this, struct widget * wm,void *v)
+static void
+gui_internal_cmd_route_description(struct gui_priv * this, struct widget * wm,void *v)
 {
 
 
@@ -4208,7 +4209,7 @@ void gui_internal_cmd_route(struct gui_priv * this, struct widget * wm,void *v)
 	row = gui_internal_widget_table_row_new(this,gravity_left | orientation_horizontal | flags_fill);
 
 
-	menu=gui_internal_menu(this,"Route");
+	menu=gui_internal_menu(this,"Route Description");
 	
 	menu->free=gui_internal_route_screen_free;
 	this->route_data.route_showing=1;
@@ -4225,6 +4226,266 @@ void gui_internal_cmd_route(struct gui_priv * this, struct widget * wm,void *v)
 	gui_internal_widget_append(menu,box);
 	gui_internal_populate_route_table(this,this->nav);
 	gui_internal_menu_render(this);
+
+}
+
+static int
+line_intersection(struct coord* a1, struct coord *a2, struct coord * b1, struct coord *b2, struct coord *res)
+{
+        int n, a, b;
+	int adx=a2->x-a1->x;
+	int ady=a2->y-a1->y;
+	int bdx=b2->x-b1->x;
+	int bdy=b2->y-b1->y;
+        n = bdy * adx - bdx * ady;
+        a = bdx * (a1->y - b1->y) - bdy * (a1->x - b1->x);
+        b = adx * (a1->y - b1->y) - ady * (a1->x - b1->x);
+        if (n < 0) {
+                n = -n;
+                a = -a;
+                b = -b;
+        }
+        if (a < 0 || b < 0)
+                return 0;
+        if (a > n || b > n)
+                return 0;
+	if (n == 0) {
+		dbg(0,"a=%d b=%d n=%d\n", a, b, n);
+		dbg(0,"a1=0x%x,0x%x ad %d,%d\n", a1->x, a1->y, adx, ady);
+		dbg(0,"b1=0x%x,0x%x bd %d,%d\n", b1->x, b1->y, bdx, bdy);
+		dbg_assert(n != 0);
+	}
+        res->x = a1->x + a * adx / n;
+        res->y = a1->y + a * ady / n;
+        return 1;
+}
+
+struct heightline {
+	struct heightline *next;
+	int height;
+	struct coord_rect bbox;
+	int count;
+	struct coord c[0];
+};
+
+struct diagram_point {
+	struct diagram_point *next;
+	struct coord c;
+};
+
+static struct heightline *
+item_get_heightline(struct item *item)
+{
+	struct heightline *ret=NULL;
+	struct street_data *sd;
+	struct attr attr;
+	int i,height;
+
+	if (item_attr_get(item, attr_label, &attr)) {
+		height=atoi(attr.u.str);
+		sd=street_get_data(item);
+		if (sd && sd->count > 1) {
+			ret=g_malloc(sizeof(struct heightline)+sd->count*sizeof(struct coord));
+			ret->bbox.lu=sd->c[0];
+			ret->bbox.rl=sd->c[0];
+			ret->count=sd->count;
+			ret->height=height;
+			for (i = 0 ; i < sd->count ; i++) {
+				ret->c[i]=sd->c[i];
+				coord_rect_extend(&ret->bbox, sd->c+i);
+			}
+		}
+		street_data_free(sd);
+	}
+	return ret;
+}
+
+
+/**
+ * @brief Displays Route Height Profile
+ *
+ * @li The name of the active vehicle
+ * @param wm The button that was pressed.
+ * @param v Unused
+ */
+static void gui_internal_cmd_route_height_profile(struct gui_priv * this, struct widget * wm,void *v)
+{
+
+
+	struct widget * menu, *box;
+
+	struct map * map=NULL;
+	struct map_rect * mr=NULL;
+	struct route * route;
+	struct item * item =NULL;
+	struct mapset *ms;
+	struct mapset_handle *msh;
+	int x,i,first=1,dist=0;
+	struct coord c,last,res;
+	struct coord_rect rbbox,dbbox;
+	struct map_selection sel;
+	struct heightline *heightline,*heightlines=NULL;
+	struct diagram_point *min,*diagram_point,*diagram_points=NULL;
+	sel.next=NULL;
+	sel.order=18;
+	sel.range.min=type_height_line_1;
+	sel.range.max=type_height_line_3;
+	
+
+	menu=gui_internal_menu(this,_("Height Profile"));
+	box = gui_internal_box_new(this, gravity_left_top| orientation_vertical | flags_fill | flags_expand);
+	gui_internal_widget_append(menu, box);
+	route = navit_get_route(this->nav);
+	if (route)
+		map = route_get_map(route);
+	if(map)
+		mr = map_rect_new(map,NULL);
+	if(mr) {
+		while((item = map_rect_get_item(mr))) {
+			while (item_coord_get(item, &c, 1)) {
+				if (first) {
+					first=0;
+					sel.u.c_rect.lu=c;
+					sel.u.c_rect.rl=c;
+				} else 
+					coord_rect_extend(&sel.u.c_rect, &c);
+			}
+		}
+		map_rect_destroy(mr);
+		ms=navit_get_mapset(this->nav);
+		if (!first && ms) {
+			msh=mapset_open(ms);
+			while ((map=mapset_next(msh, 1))) {
+				mr=map_rect_new(map, &sel);
+				if (mr) {
+					while((item = map_rect_get_item(mr))) {
+						if (item->type >= sel.range.min && item->type <= sel.range.max) {
+							heightline=item_get_heightline(item);
+							if (heightline) {
+								heightline->next=heightlines;
+								heightlines=heightline;
+							}
+						}
+					}
+					map_rect_destroy(mr);
+				}
+			}
+			mapset_close(msh);	
+		}
+	}
+	map=NULL;
+	mr=NULL;
+	if (route)
+		map = route_get_map(route);
+	if(map)
+		mr = map_rect_new(map,NULL);
+	if(mr && heightlines) {
+		while((item = map_rect_get_item(mr))) {
+			first=1;
+			while (item_coord_get(item, &c, 1)) {
+				if (first) 
+					first=0;
+				else {
+					heightline=heightlines;
+					rbbox.lu=last;
+					rbbox.rl=last;
+					coord_rect_extend(&rbbox, &c);
+					while (heightline) {
+						if (coord_rect_overlap(&rbbox, &heightline->bbox)) {
+							for (i = 0 ; i < heightline->count - 1; i++) {
+								if (heightline->c[i].x != heightline->c[i+1].x || heightline->c[i].y != heightline->c[i+1].y) {
+									if (line_intersection(heightline->c+i, heightline->c+i+1, &last, &c, &res)) {
+										diagram_point=g_new(struct diagram_point, 1);
+										diagram_point->c.x=dist+transform_distance(projection_mg, &last, &res);
+										diagram_point->c.y=heightline->height;
+										diagram_point->next=diagram_points;
+										diagram_points=diagram_point;
+										dbg(0,"%d %d\n", diagram_point->c.x, diagram_point->c.y);
+									}
+								}
+							}
+						}
+						heightline=heightline->next;
+					}
+					dist+=transform_distance(projection_mg, &last, &c);
+				}
+				last=c;
+			}
+			
+		}
+		map_rect_destroy(mr);
+	}
+	
+	
+	gui_internal_menu_render(this);
+	first=1;
+	diagram_point=diagram_points;
+	while (diagram_point) {
+		if (first) {
+			dbbox.lu=diagram_point->c;
+			dbbox.rl=diagram_point->c;
+			first=0;
+		} else
+			coord_rect_extend(&dbbox, &diagram_point->c);
+		diagram_point=diagram_point->next;
+	}
+	dbg(0,"%d %d %d %d\n", dbbox.lu.x, dbbox.lu.y, dbbox.rl.x, dbbox.rl.y);
+	if (dbbox.rl.x > dbbox.lu.x && dbbox.lu.x*100/(dbbox.rl.x-dbbox.lu.x) <= 25)
+		dbbox.lu.x=0;
+	if (dbbox.lu.y > dbbox.rl.y && dbbox.rl.y*100/(dbbox.lu.y-dbbox.rl.y) <= 25)
+		dbbox.rl.y=0;
+	dbg(0,"%d,%d %dx%d\n", box->p.x, box->p.y, box->w, box->h);
+	x=dbbox.lu.x;
+	first=1;
+	for (;;) {
+		struct point p[2];
+		min=NULL;
+		diagram_point=diagram_points;
+		while (diagram_point) {
+			if (diagram_point->c.x >= x && (!min || min->c.x > diagram_point->c.x)) 
+				min=diagram_point;
+			diagram_point=diagram_point->next;
+		}
+		if (! min)
+			break;
+		p[1].x=(min->c.x-dbbox.lu.x)*(box->w-10)/(dbbox.rl.x-dbbox.lu.x)+box->p.x+5;
+		p[1].y=(min->c.y-dbbox.rl.y)*(box->h-10)/(dbbox.lu.y-dbbox.rl.y)+box->p.y+5;
+		dbg(0,"%d,%d=%d,%d\n",min->c.x, min->c.y, p[1].x,p[1].y);
+		graphics_draw_circle(this->gra, this->foreground, &p[1], 2);
+		if (first)
+			first=0;
+		else
+			graphics_draw_lines(this->gra, this->foreground, p, 2);
+		p[0]=p[1];
+		x=min->c.x+1;
+	}
+	
+
+}
+
+/**
+ * @brief Displays Route information
+ *
+ * @li The name of the active vehicle
+ * @param wm The button that was pressed.
+ * @param v Unused
+ 		*/
+void gui_internal_cmd_route(struct gui_priv * this, struct widget * wm,void *v)
+{
+	struct widget *w;
+
+	graphics_draw_mode(this->gra, draw_mode_begin);
+	w=gui_internal_menu(this, _("Route"));
+	w->spx=this->spacing*10;
+	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Description"),
+			image_new_l(this, "gui_actions"), gravity_center|orientation_vertical,
+			gui_internal_cmd_route_description, NULL));
+	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Height Profile"),
+			image_new_l(this, "gui_actions"), gravity_center|orientation_vertical,
+			gui_internal_cmd_route_height_profile, NULL));
+	gui_internal_menu_render(this);
+	gui_internal_menu_render(this);
+	graphics_draw_mode(this->gra, draw_mode_end);
 
 }
 
