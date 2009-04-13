@@ -90,7 +90,6 @@ vehicleprofile_add_attr(struct vehicleprofile *this_, struct attr *attr)
 				g_hash_table_insert(this_->roadprofile_hash, (void *)(long)(*types), attr->u.roadprofile);
 				types++;
 			}
-			dbg(0,"ok\n");
 		}
 		break;
 	default:
