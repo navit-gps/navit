@@ -60,6 +60,7 @@ struct default_flags default_flags2[]={
 	{type_roundabout, AF_ALL},
 	{type_ferry, AF_ALL},
 	{type_cycleway, AF_ALL},
+	{type_track_gravelled, AF_ALL},
 };
 
 
