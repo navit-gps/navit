@@ -119,7 +119,7 @@ msgstr "за %d.%d кілометрів"
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "один кілометр"
+msgstr[0] "%d кілометр"
 msgstr[1] "%d кілометри"
 msgstr[2] "%d кілометрів"
 
@@ -127,7 +127,7 @@ msgstr[2] "%d кілометрів"
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "за один кілометр"
+msgstr[0] "за %d кілометр"
 msgstr[1] "за %d кілометри"
 msgstr[2] "за %d кілометрів"
 
