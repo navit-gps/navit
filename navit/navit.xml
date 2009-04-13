@@ -53,7 +53,7 @@
         <osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.xpm"/>
         <osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.xpm"/> 
 
-        <vehicle name="Local GPS" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
+        <vehicle name="Local GPS" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
             <!-- Navit can write a tracklog in several formats (gpx, nmea or textfile): -->
             <!-- <log type="gpx" data="track_%Y%m%d-%i.gpx" flush_size="1000" flush_time="30"/> -->
             <cursor w="26" h="26">
@@ -81,7 +81,7 @@
         <!-- For SDL, you should add follow="1" to have the view centered on your position -->
         <!-- <vehicle name="Meins" enabled="yes" source="gpsd://localhost" color="#0000ff" follow="1"/> -->
 
-        <vehicle name="Demo" enabled="no" active="yes" source="demo://">
+        <vehicle name="Demo" profilename="car" enabled="no" active="yes" source="demo://">
             <cursor w="26" h="26">
                 <itemgra>
                     <circle color="#0000ff" radius="24" width="2">
@@ -107,7 +107,7 @@
 				<!-- For the cumulative displacement filter to be enabled, set cdf_hist="x" here, with x being an integer somewhere around 4 -->
         <tracking cdf_histsize="0"/>
 
-	<vehicleprofile enabled="yes" name="car" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0">
+	<vehicleprofile name="car" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0">
 	    <roadprofile item_types="street_0,street_1_city" speed="10" route_weight="10">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
@@ -171,7 +171,7 @@
             <roadprofile item_types="roundabout" speed="10" route_weight="10"/>
             <roadprofile item_types="ferry" speed="40" route_weight="40"/>
 	</vehicleprofile>
-	<vehicleprofile enabled="no" name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="0" route_mode="0">
+	<vehicleprofile name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="0" route_mode="0">
 	    <roadprofile item_types="track_gravelled" speed="17" route_weight="17">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>

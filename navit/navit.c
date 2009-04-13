@@ -135,6 +135,7 @@ struct navit {
 	struct messagelist *messages;
 	struct callback *resize_callback,*button_callback,*motion_callback;
 	struct vehicleprofile *vehicleprofile;
+	GList *vehicleprofiles;
 	int pitch;
 };
 
@@ -154,6 +155,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init);
 static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir);
 static void navit_cmd_zoom_to_route(struct navit *this);
 static void navit_cmd_set_center_cursor(struct navit *this_);
+static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 
 void
 navit_add_mapset(struct navit *this_, struct mapset *ms)
@@ -1271,6 +1273,8 @@ navit_init(struct navit *this_)
 		return;
 	}
 	graphics_init(this_->gra);
+	if (this_->vehicle)
+		navit_set_vehicle(this_, this_->vehicle);
 	if (this_->mapsets) {
 		ms=this_->mapsets->data;
 		if (this_->route) {
@@ -1282,7 +1286,6 @@ navit_init(struct navit *this_)
 			}
 			route_set_mapset(this_->route, ms);
 			route_set_projection(this_->route, transform_get_projection(this_->trans));
-			route_set_profile(this_->route, this_->vehicleprofile);
 		}
 		if (this_->tracking) {
 			tracking_set_mapset(this_->tracking, ms);
@@ -1625,7 +1628,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 						vehicle_set_attr(this_->vehicle->vehicle, &active, NULL);
 					active.u.num=1;
 					vehicle_set_attr(nv->vehicle, &active, NULL);
-					this_->vehicle=nv;
+					navit_set_vehicle(this_, nv);
 					attr_updated=1;
 				}
 				l=g_list_next(l);
@@ -1870,7 +1873,7 @@ navit_add_attr(struct navit *this_, struct attr *attr)
 		ret=navit_add_vehicle(this_, attr->u.vehicle);
 		break;
 	case attr_vehicleprofile:
-		this_->vehicleprofile=attr->u.vehicleprofile;
+		this_->vehicleprofiles=g_list_prepend(this_->vehicleprofiles, attr->u.vehicleprofile);
 		break;
 	case attr_autozoom_min:
 		this_->autozoom_min = attr->u.num;
@@ -2081,10 +2084,36 @@ navit_set_position(struct navit *this_, struct pcoord *c)
 		navit_draw(this_);
 }
 
+static int
+navit_set_vehicleprofile(struct navit *this_, char *name)
+{
+	struct attr attr;
+	GList *l;
+	l=this_->vehicleprofiles;
+	while (l) {
+		if (vehicleprofile_get_attr(l->data, attr_name, &attr, NULL)) {
+			if (!strcmp(attr.u.str, name)) {
+				this_->vehicleprofile=l->data;
+				if (this_->route)
+					route_set_profile(this_->route, this_->vehicleprofile);
+				return 1;
+			}
+		}
+		l=g_list_next(l);
+	}
+	return 0;
+}
+
 static void
 navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv)
 {
+	struct attr attr;
 	this_->vehicle=nv;
+	if (vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
+		if (navit_set_vehicleprofile(this_, attr.u.str))
+			return;
+	}
+	navit_set_vehicleprofile(this_,"car");
 }
 
 /**
