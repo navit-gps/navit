@@ -107,7 +107,7 @@
 				<!-- For the cumulative displacement filter to be enabled, set cdf_hist="x" here, with x being an integer somewhere around 4 -->
         <tracking cdf_histsize="0"/>
 
-	<vehicleprofile name="car" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0">
+	<vehicleprofile enabled="yes" name="car" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0">
 	    <roadprofile item_types="street_0,street_1_city" speed="10" route_weight="10">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
@@ -172,6 +172,11 @@
             <roadprofile item_types="ferry" speed="40" route_weight="40"/>
 	</vehicleprofile>
 	<vehicleprofile enabled="no" name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="0" route_mode="0">
+	    <roadprofile item_types="track_gravelled" speed="17" route_weight="17">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
 	    <roadprofile item_types="cycleway" speed="20" route_weight="20">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
@@ -448,10 +453,13 @@
                     <polyline color="#808080" width="1"/>
                 </itemgra>
                 <itemgra item_types="height_line_1" order="0-">
-                    <polyline color="#000000" width="1"/>
+                    <polyline color="#000000" width="4"/>
                 </itemgra>
                 <itemgra item_types="height_line_2" order="0-">
                     <polyline color="#000000" width="2"/>
+                </itemgra>
+                <itemgra item_types="height_line_3" order="0-">
+                    <polyline color="#000000" width="1"/>
                 </itemgra>
             </layer>
             <layer name="streets">
