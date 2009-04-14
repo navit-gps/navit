@@ -2782,7 +2782,13 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	char filename[filelen+1];
 	int error,crc,len,comp_size=data_size;
 	uLongf destlen=data_size+data_size/500+12;
-	char compbuffer[destlen];
+	char *compbuffer;
+
+	compbuffer = malloc(destlen);
+	if (!compbuffer) {
+	  fprintf(stderr, "No more memory.\n");
+	  exit (1);
+	}
 
 	crc=crc32(0, NULL, 0);
 	crc=crc32(crc, (unsigned char *)data, data_size);
@@ -2820,6 +2826,8 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	fwrite(&cd, sizeof(cd), 1, zip_info->dir);
 	fwrite(filename, filelen, 1, zip_info->dir);
 	zip_info->dir_size+=sizeof(cd)+filelen;
+	
+	free(compbuffer);
 }
 
 static int
