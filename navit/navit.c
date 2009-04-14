@@ -709,6 +709,12 @@ navit_get_graphics(struct navit *this_)
 	return this_->gra;
 }
 
+struct vehicleprofile *
+navit_get_vehicleprofile(struct navit *this_)
+{
+	return this_->vehicleprofile;
+}
+
 static void
 navit_projection_set(struct navit *this_, enum projection pro)
 {
