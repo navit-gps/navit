@@ -105,7 +105,7 @@ vehicleprofile_remove_attr(struct vehicleprofile *this_, struct attr *attr)
 	return 1;
 }
 
-struct roadprofile_data *
+struct roadprofile *
 vehicleprofile_get_roadprofile(struct vehicleprofile *this_, enum item_type type)
 {
 	return g_hash_table_lookup(this_->roadprofile_hash, (void *)(long)type);

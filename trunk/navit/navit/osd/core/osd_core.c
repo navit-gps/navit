@@ -44,6 +44,8 @@
 #include "command.h"
 #include "navit_nls.h"
 #include "messages.h"
+#include "vehicleprofile.h"
+#include "roadprofile.h"
 #include "osd.h"
 
 struct compass {
@@ -760,7 +762,6 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 	struct map_rect *nav_mr = NULL;
 	struct item *item;
 	int offset,lines;
-	int *speedlist = NULL;
 	int height=this->osd_item.font_size*13/256;
 	int yspacing=height/2;
 	int xspacing=height/4;
@@ -831,9 +832,13 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 							value = format_speed(routespeed, "");
 						} 
 
-						if ((routespeed == -1) && route && (speedlist=route_get_speedlist(route))) {
-							if (item->type >= route_item_first && item->type <= route_item_last) {
-								routespeed=speedlist[item->type-route_item_first];
+						if (routespeed == -1) {
+							struct vehicleprofile *prof=navit_get_vehicleprofile(navit);
+							struct roadprofile *rprof=NULL;
+							if (prof)
+								rprof=vehicleprofile_get_roadprofile(prof, item->type);
+							if (rprof) {
+								routespeed=rprof->speed;
 								value=format_speed(routespeed,"");
 							}
 						}
