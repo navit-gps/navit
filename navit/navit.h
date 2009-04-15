@@ -99,8 +99,10 @@ int navit_command_register(struct navit *this_, char *command, struct callback *
 struct callback *navit_command_unregister(struct navit *this_, char *command);
 int navit_command_call_attrs(struct navit *this_, char *command, struct attr **in, struct attr ***out);
 int navit_command_call(struct navit *this_, char *command);
+void navit_add_message(struct navit *this_, char *message);
 struct message *navit_get_messages(struct navit *this_);
 void navit_destroy(struct navit *this_);
+struct vehicleprofile * navit_get_vehicleprofile(struct navit *this_);
 /* end of prototypes */
 #ifdef __cplusplus
 }

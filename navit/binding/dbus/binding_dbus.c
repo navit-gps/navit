@@ -33,6 +33,7 @@
 #include "attr.h"
 #include "layout.h"
 #include "command.h"
+#include "util.h"
 
 
 static DBusConnection *connection;

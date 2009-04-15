@@ -13,6 +13,7 @@
 #include "debug.h"
 #include "callback.h"
 #include "command.h"
+#include "event.h"
 
 /*
 gui.fullscreen()

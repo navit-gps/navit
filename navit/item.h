@@ -82,6 +82,7 @@ struct coord;
 struct item;
 struct item_hash;
 struct map_selection;
+int *item_get_default_flags(enum item_type type);
 void item_coord_rewind(struct item *it);
 int item_coord_get(struct item *it, struct coord *c, int count);
 int item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel);
