@@ -58,6 +58,7 @@ struct menu *gui_popup_new(struct gui *gui);
 struct datawindow *gui_datawindow_new(struct gui *gui, char *name, struct callback *click, struct callback *close);
 int gui_add_bookmark(struct gui *gui, struct pcoord *c, char *description);
 int gui_set_graphics(struct gui *this_, struct graphics *gra);
+void gui_disable_suspend(struct gui *this_);
 int gui_has_main_loop(struct gui *this_);
 int gui_run_main_loop(struct gui *this_);
 /* end of prototypes */

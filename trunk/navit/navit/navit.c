@@ -61,6 +61,7 @@
 #include "navit_nls.h"
 #include "util.h"
 #include "messages.h"
+#include "vehicleprofile.h"
 
 /**
  * @defgroup navit the navit core instance. navit is the object containing nearly everything: A set of maps, one or more vehicle, a graphics object for rendering the map, a gui object for displaying the user interface, a route object, a navigation object and so on. Be warned that it is theoretically possible to have more than one navit object

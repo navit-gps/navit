@@ -80,6 +80,7 @@ struct tracking;
 struct transformation;
 struct route *route_new(struct attr *parent, struct attr **attrs);
 void route_set_mapset(struct route *this, struct mapset *ms);
+void route_set_profile(struct route *this, struct vehicleprofile *prof);
 struct mapset *route_get_mapset(struct route *this);
 struct route_info *route_get_pos(struct route *this);
 struct route_info *route_get_dst(struct route *this);
