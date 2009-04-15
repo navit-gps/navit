@@ -47,6 +47,7 @@
 #include "vehicleprofile.h"
 #include "roadprofile.h"
 #include "osd.h"
+#include "speech.h"
 
 struct compass {
 	struct osd_item osd_item;
