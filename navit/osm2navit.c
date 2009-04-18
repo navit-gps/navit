@@ -387,6 +387,7 @@ struct country_table {
 	int size;
 	struct rect r;
 } country_table[] = {
+	{ 36,"Australia,AUS"},
 	{ 40,"Austria,Österreich,AUT"},
 	{ 56,"Belgium"},
 	{124,"Canada"},
@@ -1443,7 +1444,7 @@ end_node(FILE *out)
 		if (result && !conflict) {
 			if (!result->file) {
 				char *name=g_strdup_printf("country_%d.bin.unsorted", result->countryid);
-				result->file=fopen(name,"w");
+				result->file=fopen(name,"wb");
 				g_free(name);
 			}
 			if (result->file) {
@@ -1517,7 +1518,7 @@ sort_countries(int keep_tmpfiles)
 			}
 			qsort(idx, count, sizeof(void *), sort_countries_compare);
 			name=g_strdup_printf("country_%d.bin", co->countryid);
-			f=fopen(name,"w");
+			f=fopen(name,"wb");
 			for (j = 0 ; j < count ; j++) {
 				ib=(struct item_bin *)(idx[j]);
 				c=(struct coord *)(ib+1);
@@ -2562,7 +2563,7 @@ write_aux_tiles(struct zip_info *zip_info)
 		at=l->data;
 		buffer=malloc(at->size);
 		assert(buffer != NULL);
-		f=fopen(at->filename,"r");
+		f=fopen(at->filename,"rb");
 		assert(f != NULL);
 		fread(buffer, at->size, 1, f);
 		fclose(f);
@@ -2895,6 +2896,7 @@ phase5(FILE *ways_in, FILE *nodes_in, char *suffix, struct zip_info *zip_info)
 {
 	int slice_size=1024*1024*1024;
 	int size,slices;
+	int zipnum,written_tiles;
 	struct tile_head *th,*th2;
 	create_tile_hash();
 
@@ -2928,7 +2930,10 @@ phase5(FILE *ways_in, FILE *nodes_in, char *suffix, struct zip_info *zip_info)
 			th->process=1;
 			th=th->next;
 		}
-		zip_info->zipnum+=process_slice(ways_in, nodes_in, size, suffix, zip_info);
+		/* process_slice() modifies zip_info, but need to retain old info */
+		zipnum=zip_info->zipnum;
+		written_tiles=process_slice(ways_in, nodes_in, size, suffix, zip_info);
+		zip_info->zipnum=zipnum+written_tiles;
 		slices++;
 	}
 	return 0;
