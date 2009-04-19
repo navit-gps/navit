@@ -828,7 +828,8 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 					item=tracking_get_current_item(tracking);
 					if (item && !strcmp(key,"route_speed")) {
 						double routespeed = -1;
-						if ((tracking_get_current_flags(tracking) & AF_SPEED_LIMIT) && tracking_get_current_attr(tracking, attr_maxspeed, &maxspeed_attr)) {
+						int *flags=tracking_get_current_flags(tracking);
+						if (flags && (*flags & AF_SPEED_LIMIT) && tracking_get_current_attr(tracking, attr_maxspeed, &maxspeed_attr)) {
 							routespeed = maxspeed_attr.u.num;
 							value = format_speed(routespeed, "");
 						} 

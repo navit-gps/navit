@@ -249,7 +249,7 @@ struct route_graph_point_iterator {
 	struct route_graph_segment *next;	/**< The next segment to be returned */
 };
 
-static struct route_info * route_find_nearest_street(struct mapset *ms, struct pcoord *c);
+static struct route_info * route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *ms, struct pcoord *c);
 static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
 static void route_graph_update(struct route *this, struct callback *cb);
 static void route_graph_build_done(struct route_graph *rg, int cancel);
@@ -722,7 +722,7 @@ route_set_position(struct route *this, struct pcoord *pos)
 	if (this->pos)
 		route_info_free(this->pos);
 	this->pos=NULL;
-	this->pos=route_find_nearest_street(this->ms, pos);
+	this->pos=route_find_nearest_street(this->vehicleprofile, this->ms, pos);
 	dbg(1,"this->pos=%p\n", this->pos);
 	if (! this->pos)
 		return;
@@ -882,7 +882,7 @@ route_set_destination(struct route *this, struct pcoord *dst)
 		route_info_free(this->dst);
 	this->dst=NULL;
 	if (dst) {
-		this->dst=route_find_nearest_street(this->ms, dst);
+		this->dst=route_find_nearest_street(this->vehicleprofile, this->ms, dst);
 		if(this->dst)
 			route_info_distances(this->dst, dst->pro);
 	} else  {
@@ -1249,6 +1249,7 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 	struct coord *c,*cd,ca[2048];
 	int offset=1;
 	int seg_size,seg_dat_size;
+	int len=rgs->data.len;
 	if (rgs->data.flags & AF_SEGMENTED) 
 		offset=RSD_OFFSET(&rgs->data);
 
@@ -1272,10 +1273,12 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 				dir=1;
 				ccnt=dst->pos-pos->pos;
 				c=pos->street->c+pos->pos+1;
+				len=dst->lenneg-pos->lenneg;
 			} else {
 				dir=-1;
 				ccnt=pos->pos-dst->pos;
 				c=pos->street->c+dst->pos+1;
+				len=pos->lenneg-dst->lenneg;
 			}
 		} else {
 			extra=1;
@@ -1285,9 +1288,11 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 			if (dir > 0) {
 				c=pos->street->c+pos->pos+1;
 				ccnt=pos->street->count-pos->pos-1;
+				len=pos->lenpos;
 			} else {
 				c=pos->street->c;
 				ccnt=pos->pos+1;
+				len=pos->lenneg;
 			}
 		}
 	} else 	if (dst) {
@@ -1297,9 +1302,11 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 		if (dir > 0) {
 			c=dst->street->c;
 			ccnt=dst->pos+1;
+			len=dst->lenpos;
 		} else {
 			c=dst->street->c+dst->pos+1;
 			ccnt=dst->street->count-dst->pos-1;
+			len=dst->lenneg;
 		}
 	} else {
 		ccnt=get_item_seg_coords(&rgs->data.item, ca, 2047, &rgs->start->c, &rgs->end->c);
@@ -1335,9 +1342,8 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 	}
 
 	memcpy(segment->data, &rgs->data, seg_dat_size);
-
 linkold:
-	segment->data->len=rgs->data.len;
+	segment->data->len=len;
 	segment->next=NULL;
 	item_hash_insert(this->path_hash,  &rgs->data.item, segment);
 
@@ -1423,7 +1429,7 @@ static int
 route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, struct route_segment_data *over, int dir)
 {
 #if 0
-	dbg(0,"flags 0x%x mask 0x%x flags 0x%x\n", over->flags, dir >= 0 ? preferences->flags_forward_mask : preferences->flags_reverse_mask, preferences->flags);
+	dbg(0,"flags 0x%x mask 0x%x flags 0x%x\n", over->flags, dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask, profile->flags);
 #endif
 	if ((over->flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
 		return INT_MAX;
@@ -1553,14 +1559,14 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 		dbg(0,"no segment for destination found\n");
 		return;
 	}
-	val=route_value_seg(profile, NULL, &s->data, 1);
+	val=route_value_seg(profile, NULL, &s->data, -1);
 	if (val != INT_MAX) {
 		val=val*(100-dst->percent)/100;
 		s->end->seg=s;
 		s->end->value=val;
 		s->end->el=fh_insertkey(heap, s->end->value, s->end);
 	}
-	val=route_value_seg(profile, NULL, &s->data, -1);
+	val=route_value_seg(profile, NULL, &s->data, 1);
 	if (val != INT_MAX) {
 		val=val*dst->percent/100;
 		s->start->seg=s;
@@ -1746,7 +1752,7 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	if (! pos->street || ! dst->street)
 		return NULL;
 
-	if (profile->mode == 2 || (profile->mode == 0 && pos->lenextra + dst->lenextra + pos->lenpos-dst->lenpos > transform_distance(map_projection(pos->street->item.map), &pos->c, &dst->c)))
+	if (profile->mode == 2 || (profile->mode == 0 && pos->lenextra + dst->lenextra > transform_distance(map_projection(pos->street->item.map), &pos->c, &dst->c)))
 		return route_path_new_offroad(this, pos, dst);
 	
 	s=route_graph_get_segment(this, pos->street);
@@ -1754,12 +1760,12 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		dbg(0,"no segment for position found\n");
 		return NULL;
 	}
-	val=route_value_seg(profile, NULL, &s->data, -1);
+	val=route_value_seg(profile, NULL, &s->data, 1);
 	if (val != INT_MAX) {
 		val=val*(100-pos->percent)/100;
 		val1=s->end->value+val;
 	}
-	val=route_value_seg(profile, NULL, &s->data, 1);
+	val=route_value_seg(profile, NULL, &s->data, -1);
 	if (val != INT_MAX) {
 		val=val*pos->percent/100;
 		val2=s->start->value+val;
@@ -2013,7 +2019,7 @@ street_data_free(struct street_data *sd)
  * @return The nearest street
  */
 static struct route_info *
-route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
+route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *ms, struct pcoord *pc)
 {
 	struct route_info *ret=NULL;
 	int max_dist=1000;
@@ -2048,12 +2054,14 @@ route_find_nearest_street(struct mapset *ms, struct pcoord *pc)
 			continue;
 		}
 		while ((item=map_rect_get_item(mr))) {
-			if (item->type >= route_item_first && item->type <= route_item_last) {
+			if (item_get_default_flags(item->type)) {
 				sd=street_get_data(item);
 				if (!sd)
 					continue;
 				dist=transform_distance_polyline_sq(sd->c, sd->count, &c, &lp, &pos);
-				if (dist < mindist) {
+				if (dist < mindist && (
+					(sd->flags & vehicleprofile->flags_forward_mask) == vehicleprofile->flags ||
+					(sd->flags & vehicleprofile->flags_reverse_mask) == vehicleprofile->flags)) {
 					mindist = dist;
 					if (ret->street) {
 						street_data_free(ret->street);
@@ -2148,7 +2156,6 @@ struct map_rect_priv {
 	int pos;
 	struct map_priv *mpriv;
 	struct item item;
-	int length;
 	unsigned int last_coord;
 	struct route_path *path;
 	struct route_path_segment *seg,*seg_next;
@@ -2217,17 +2224,17 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			attr->u.route = mr->mpriv->route;
 			return 1;
 		case attr_length:
+			mr->attr_next=attr_time;
 			if (seg)
 				attr->u.num=seg->data->len;
 			else
-				attr->u.num=mr->length;
-			mr->attr_next=attr_time;
+				return 0;
 			return 1;
 		case attr_time:
 			mr->attr_next=attr_none;
-			if (seg) {
+			if (seg)
 				attr->u.num=route_time_seg(route->vehicleprofile, seg->data);
-			} else
+			else
 				return 0;
 			return 1;
 		case attr_label:
