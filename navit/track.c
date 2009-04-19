@@ -32,18 +32,11 @@
 #include "map.h"
 #include "mapset.h"
 #include "plugin.h"
+#include "vehicleprofile.h"
 
 struct tracking_line
 {
 	struct street_data *street;
-#if 0
-	long segid;
-	int linenum;
-	struct coord c[2];
-	struct coord lpnt;
-	int value;
-	int dir;
-#endif
 	struct tracking_line *next;
 	int angle[0];
 };
@@ -85,14 +78,9 @@ struct tracking {
 	struct mapset *ms;
 	struct route *rt;
 	struct map *map;
-#if 0
-	struct transformation t;
-#endif
+	struct vehicleprofile *vehicleprofile;
 	struct pcoord last_updated;
 	struct tracking_line *lines;
-#if 0
-	struct tracking_line **last_ptr;
-#endif
 	struct tracking_line *curr_line;
 	int pos;
 	struct coord curr[2];
@@ -336,7 +324,7 @@ tracking_get_current_item(struct tracking *_this)
 	return &_this->curr_line->street->item;
 }
 
-int
+int *
 tracking_get_current_flags(struct tracking *_this)
 {
 	if (! _this->curr_line || ! _this->curr_line->street)
@@ -414,7 +402,7 @@ tracking_doupdate_lines(struct tracking *tr, struct pcoord *pc)
 		if (!mr)
 			continue;
 		while ((item=map_rect_get_item(mr))) {
-			if (item->type >= type_street_0 && item->type <= type_ferry) {
+			if (item_get_default_flags(item->type)) {
 				street=street_get_data(item);
 				if (street_data_within_selection(street, sel)) {
 					tl=g_malloc(sizeof(struct tracking_line)+(street->count-1)*sizeof(int));
@@ -431,19 +419,6 @@ tracking_doupdate_lines(struct tracking *tr, struct pcoord *pc)
 	}
 	mapset_close(h);
 	dbg(1, "exit\n");
-#if 0
-
-	struct transformation t;
-
-	tr->last_ptr=&tr->lines;
-	transform_setup_source_rect_limit(&t,c,1000);
-	transform_setup_source_rect_limit(&tr->t,c,1000);
-
-
-	profile_timer(NULL);
-	street_get_block(tr->ma,&t,tst_callback,tr);
-	profile_timer("end");
-#endif
 }
 
 
@@ -477,20 +452,20 @@ tracking_angle_abs_diff(int a1, int a2, int full)
 }
 
 static int
-tracking_angle_delta(int vehicle_angle, int street_angle, int flags)
+tracking_angle_delta(struct tracking *tr, int vehicle_angle, int street_angle, int flags)
 {
-	int full=180;
-	int ret;
-	if (flags) {
-		full=360;
-		if (flags & 2) {
-			street_angle=(street_angle+180)%360;
-			if (flags & 1)
-				return 360*360;
+	int full=180,ret=360,fwd,rev;
+	struct vehicleprofile *profile=tr->vehicleprofile;
+	fwd=((flags & profile->flags_forward_mask) == profile->flags);
+	rev=((flags & profile->flags_reverse_mask) == profile->flags);
+	if (fwd || rev) {
+		if (!fwd || !rev) {
+			full=360;
+			if (rev) 
+				street_angle=(street_angle+180)%360;
 		}
+		ret=tracking_angle_abs_diff(vehicle_angle, street_angle, full);
 	}
-	ret=tracking_angle_abs_diff(vehicle_angle, street_angle, full);
-	
 	return ret*ret;
 }
 
@@ -547,7 +522,7 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 	if (value >= min)
 		return value;
 	if (flags & 2) 
-		value += tracking_angle_delta(tr->curr_angle, t->angle[offset], sd->flags)*angle_factor>>4;
+		value += tracking_angle_delta(tr, tr->curr_angle, t->angle[offset], sd->flags)*angle_factor>>4;
 	if (value >= min)
 		return value;
 	if (flags & 4) 
@@ -563,7 +538,7 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 
 
 int
-tracking_update(struct tracking *tr, struct pcoord *pc, int angle, double *hdop, int speed, time_t fixtime)
+tracking_update(struct tracking *tr, struct vehicleprofile *vehicleprofile, struct pcoord *pc, int angle, double *hdop, int speed, time_t fixtime)
 {
 	struct tracking_line *t;
 	int i,value,min;
@@ -571,12 +546,9 @@ tracking_update(struct tracking *tr, struct pcoord *pc, int angle, double *hdop,
 	struct coord cin;
 	struct pcoord pcf; // Coordinate filtered through the CDF
 	int anglef;				// Angle filtered through the CDF
-#if 0
-	int min,dist;
-	int debug=0;
-#endif
 	dbg(1,"enter(%p,%p,%d)\n", tr, pc, angle);
 	dbg(1,"c=%d:0x%x,0x%x\n", pc->pro, pc->x, pc->y);
+	tr->vehicleprofile=vehicleprofile;
 
 	if (pc->x == tr->curr_in.x && pc->y == tr->curr_in.y) {
 		if (tr->curr_out.x && tr->curr_out.y)
@@ -614,10 +586,6 @@ tracking_update(struct tracking *tr, struct pcoord *pc, int angle, double *hdop,
 	min=INT_MAX/2;
 	while (t) {
 		struct street_data *sd=t->street;
-		if ((sd->flags & 3) == 3) {
-			t=t->next;
-			continue;
-		}
 		for (i = 0; i < sd->count-1 ; i++) {
 			value=tracking_value(tr,t,i,&lpnt,min,-1);
 			if (value < min) {
@@ -627,7 +595,7 @@ tracking_update(struct tracking *tr, struct pcoord *pc, int angle, double *hdop,
 				tr->curr[1]=sd->c[i+1];
 				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
 					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], &cin, &lpnt),
-					tracking_angle_delta(anglef, t->angle[i], 0)*angle_factor,
+					tracking_angle_delta(tr, anglef, t->angle[i], 0)*angle_factor,
 					tracking_is_connected(tr->last, &sd->c[i]) ? connected_pref : 0,
 					lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y ? nostop_pref : 0,
 					value

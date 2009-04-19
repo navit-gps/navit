@@ -26,6 +26,7 @@
 void
 vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 {
+	dbg(1,"%s:%d\n", attr_to_name(attr->type), attr->u.num);
 	switch (attr->type) {
 	case attr_flags:
 		this_->flags=attr->u.num;
@@ -34,7 +35,7 @@ vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 		this_->flags_forward_mask=attr->u.num;
 		break;
 	case attr_flags_reverse_mask:
-		this_->flags_forward_mask=attr->u.num;
+		this_->flags_reverse_mask=attr->u.num;
 		break;
 	case attr_maxspeed_handling:
 		this_->maxspeed_handling=attr->u.num;
