@@ -1944,7 +1944,7 @@ route_graph_update(struct route *this, struct callback *cb)
 struct street_data *
 street_get_data (struct item *item)
 {
-	int count=0;
+	int count=0,*flags;
 	struct street_data *ret = NULL, *ret1;
 	struct attr flags_attr, maxspeed_attr;
 	const int step = 128;
@@ -1969,8 +1969,13 @@ street_get_data (struct item *item)
 	ret->count=count;
 	if (item_attr_get(item, attr_flags, &flags_attr)) 
 		ret->flags=flags_attr.u.num;
-	else
-		ret->flags=0;
+	else {
+		flags=item_get_default_flags(item->type);
+		if (flags)
+			ret->flags=*flags;
+		else
+			ret->flags=0;
+	}
 
 	ret->maxspeed = -1;
 	if (ret->flags & AF_SPEED_LIMIT) {

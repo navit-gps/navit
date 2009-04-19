@@ -134,7 +134,10 @@ attr_new_from_text(const char *name, const char *value)
 			break;
 		}
 		if (attr >= attr_type_int_begin && attr <= attr_type_int_end) {
-			ret->u.num=strtol(value, NULL, 0);
+			if (value[0] == '0' && value[1] == 'x')
+				ret->u.num=strtoul(value, NULL, 0);
+			else
+				ret->u.num=strtol(value, NULL, 0);
 			
 			if ((attr >= attr_type_rel_abs_begin) && (attr < attr_type_boolean_begin)) {
 				/* Absolute values are from -0x40000000 - 0x40000000, with 0x0 being 0 (who would have thought that?)

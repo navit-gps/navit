@@ -59,8 +59,9 @@ struct default_flags default_flags2[]={
 	{type_ramp, AF_MOTORIZED_FAST},
 	{type_roundabout, AF_ALL},
 	{type_ferry, AF_ALL},
-	{type_cycleway, AF_ALL},
+	{type_cycleway, AF_PBH},
 	{type_track_gravelled, AF_ALL},
+	{type_footway, AF_PBH},
 };
 
 
