@@ -1280,8 +1280,7 @@ navit_init(struct navit *this_)
 		return;
 	}
 	graphics_init(this_->gra);
-	if (this_->vehicle)
-		navit_set_vehicle(this_, this_->vehicle);
+	navit_set_vehicle(this_, this_->vehicle);
 	if (this_->mapsets) {
 		ms=this_->mapsets->data;
 		if (this_->route) {
@@ -2036,7 +2035,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 			fixtime = iso8601_to_secs(attr_time.u.str);
 		}
 
-		if (tracking_update(this_->tracking, &cursor_pc, nv->dir, attr_hdop.u.numd, nv->speed, fixtime)) {
+		if (tracking_update(this_->tracking, this_->vehicleprofile, &cursor_pc, nv->dir, attr_hdop.u.numd, nv->speed, fixtime)) {
 			nv->coord.x=cursor_pc.x;
 			nv->coord.y=cursor_pc.y;
 		}
@@ -2116,7 +2115,7 @@ navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv)
 {
 	struct attr attr;
 	this_->vehicle=nv;
-	if (vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
+	if (nv && vehicle_get_attr(nv->vehicle, attr_profilename, &attr, NULL)) {
 		if (navit_set_vehicleprofile(this_, attr.u.str))
 			return;
 	}
