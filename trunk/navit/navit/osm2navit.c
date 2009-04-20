@@ -1378,7 +1378,7 @@ end_way(FILE *out)
 	def_flags=item_get_default_flags(item.type);
 	if (def_flags) {
 		flags_attr_value=(*def_flags | flags[0] | flags[1]) & ~flags[2];
-		if (flags_attr_value != def_flags) {
+		if (flags_attr_value != *def_flags) {
 			flags_attr.len=2;
 			alen+=flags_attr.len+1;
 		}
@@ -1416,7 +1416,7 @@ end_node(FILE *out)
 	if (osmid_attr_value == 368279467) {
 		fprintf(stderr,"%s\n", attr_strings[attr_string_label]);
 	}
-	item_bin_add_attr_string(item_bin, item_is_town(item) ? attr_town_name : attr_label, attr_strings[attr_string_label]);
+	item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_name : attr_label, attr_strings[attr_string_label]);
 	item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
 	item_bin_add_attr_string(item_bin, attr_street_name, attr_strings[attr_string_street_name]);
 	item_bin_add_attr_string(item_bin, attr_phone, attr_strings[attr_string_phone]);
@@ -1426,7 +1426,7 @@ end_node(FILE *out)
 	item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
 	item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
 	item_bin_write(item_bin,out);
-	if (item_is_town(item) && town_name_attr.len) {
+	if (item_is_town(*item_bin) && attr_strings[attr_string_label]) {
 		char *tok,*buf=is_in_buffer;
 		while ((tok=strtok(buf, ","))) {
 			while (*tok==' ')
@@ -1448,11 +1448,10 @@ end_node(FILE *out)
 				g_free(name);
 			}
 			if (result->file) {
-				item.clen=2;
-				item.len=item.clen+2+label_attr.len+1;
-				fwrite(&item, sizeof(item), 1, result->file);
-				fwrite(&ni->c, 1*sizeof(struct coord), 1, result->file);
-				write_attr(result->file, &town_name_attr, label_attr_buffer);
+				item_bin_init(&item, item_bin->type);
+				item_bin_add_coord(&item, &ni->c, 1);
+				item_bin_add_attr_string(&item, attr_town_name, attr_strings[attr_string_label]);
+				fwrite(&item, (item.len+1)*4, 1, result->file);
 			}
 			
 		}
