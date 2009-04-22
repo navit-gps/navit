@@ -30,6 +30,8 @@
 #include <wordexp.h>
 #include <glib.h>
 #include <zlib.h>
+#include <LzmaTypes.h>
+#include <LzmaDec.h>
 #include "debug.h"
 #include "cache.h"
 #include "file.h"
@@ -186,7 +188,7 @@ file_get_contents(char *name, unsigned char **buffer, int *size)
 
 
 static int
-uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen)
+uncompress_int_zip(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen)
 {
 	z_stream stream;
 	int err;
@@ -212,11 +214,28 @@ uncompress_int(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLe
 	*destLen = stream.total_out;
 
 	err = inflateEnd(&stream);
-	return err;
+	return (err == Z_OK);
+}
+
+static int
+uncompress_int_lzma(Bytef *dest, uLongf *destLen, const Bytef *source, uLong sourceLen)
+{
+	SRes res;
+	void *SzAlloc(void *p, size_t size) { p = p; return g_malloc(size); }
+	void SzFree(void *p, void *address) { p = p; g_free(address); }
+	ISzAlloc alloc = { SzAlloc, SzFree };
+	ELzmaStatus status;
+	size_t srcLen;
+
+	srcLen = (sourceLen - LZMA_PROPS_SIZE);
+
+	res = LzmaDecode(dest, destLen, (source + LZMA_PROPS_SIZE), &srcLen, source, LZMA_PROPS_SIZE, LZMA_FINISH_ANY, &status, &alloc);
+
+	return ((res == SZ_OK) && (status != LZMA_STATUS_NOT_FINISHED));
 }
 
 unsigned char *
-file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp)
+file_data_read_compressed(struct file *file, long long offset, int method, int size, int size_uncomp)
 {
 	void *ret;
 	char *buffer = 0;
@@ -237,10 +256,25 @@ file_data_read_compressed(struct file *file, long long offset, int size, int siz
 		g_free(ret);
 		ret=NULL;
 	} else {
-		if (uncompress_int(ret, &destLen, (Bytef *)buffer, size) != Z_OK) {
-			dbg(0,"uncompress failed\n");
+		switch (method) {
+		case 8: // Deflate
+			if (!uncompress_int_zip(ret, &destLen, (Bytef *)buffer, size)) {
+				dbg(0,"uncompress zip failed\n");
+				g_free(ret);
+				ret=NULL;
+			}
+			break;
+		case 13: // LZMA
+			if (!uncompress_int_lzma(ret, &destLen, (Bytef *)buffer, size)) {
+				dbg(0,"uncompress lzma failed\n");
+				g_free(ret);
+				ret=NULL;
+			}
+			break;
+		default:
+			dbg(0, "unknown compression method\n");
 			g_free(ret);
-			ret=NULL;
+			ret = NULL;
 		}
 	}
 	g_free(buffer);
