@@ -108,7 +108,7 @@
         <tracking cdf_histsize="0"/>
 
 	<vehicleprofile name="car" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0">
-	    <roadprofile item_types="street_0,street_1_city" speed="10" route_weight="10">
+	    <roadprofile item_types="street_0,street_1_city,living_street" speed="10" route_weight="10">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
@@ -168,6 +168,11 @@
             	<announcement level="1" distance_metric="200"/>
             	<announcement level="2" distance_metric="500"/>
 	    </roadprofile>
+            <roadprofile item_types="street_service" speed="10" route_weight="10">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
             <roadprofile item_types="roundabout" speed="10" route_weight="10"/>
             <roadprofile item_types="ferry" speed="40" route_weight="40"/>
 	</vehicleprofile>
@@ -182,12 +187,12 @@
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
 	    </roadprofile>
-	    <roadprofile item_types="street_0,street_1_city,street_2_city" speed="20" route_weight="14">
+	    <roadprofile item_types="street_0,street_1_city,street_2_city,living_street" speed="20" route_weight="14">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
 	    </roadprofile>
-	    <roadprofile item_types="street_3_city,street_4_city" speed="20" route_weight="7">
+	    <roadprofile item_types="street_3_city,street_4_city,street_service" speed="20" route_weight="7">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
@@ -211,6 +216,11 @@
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
 	    </roadprofile>
+	    <roadprofile item_types="living_street,street_pedestrian" speed="5" route_weight="5">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
 	    <roadprofile item_types="track_gravelled" speed="5" route_weight="5">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
@@ -226,7 +236,7 @@
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
 	    </roadprofile>
-	    <roadprofile item_types="street_3_city,street_4_city" speed="5" route_weight="5">
+	    <roadprofile item_types="street_3_city,street_4_city,street_service" speed="5" route_weight="5">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
