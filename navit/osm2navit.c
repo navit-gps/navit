@@ -33,8 +33,6 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <zlib.h>
-#include <LzmaTypes.h>
-#include <LzmaEnc.h>
 #include "file.h"
 #include "item.h"
 #include "map.h"
@@ -2716,35 +2714,8 @@ phase4(FILE *ways_in, FILE *nodes_in, char *suffix, FILE *tilesdir_out, struct z
 }
 
 static int
-compress2_int_lzma(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen)
+compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level)
 {
-	CLzmaEncProps props;
-	Byte props_enc[LZMA_PROPS_SIZE];
-	size_t prop_size = LZMA_PROPS_SIZE;
-	SRes result;
-	size_t dstLen;
-	int i;
-
-	void *SzAlloc(void *p, size_t size) { p = p; return malloc(size); }
-	void SzFree(void *p, void *address) { p = p; free(address); }
-	ISzAlloc alloc = { SzAlloc, SzFree };
-
-	dstLen = *destLen - LZMA_PROPS_SIZE;
-
-	LzmaEncProps_Init(&props);
-	result = LzmaEncode((dest + LZMA_PROPS_SIZE), &dstLen, source, sourceLen, &props, props_enc, &prop_size, 0, NULL, &alloc, &alloc);
-	*destLen = dstLen;
-
-	memcpy(dest, props_enc, LZMA_PROPS_SIZE);
-	*destLen += LZMA_PROPS_SIZE;
-
-	return (result == SZ_OK);
-}
-
-static int
-compress2_int_zip(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level)
-{
-#ifdef HAVE_ZLIB
 	z_stream stream;
 	int err;
 
@@ -2769,21 +2740,7 @@ compress2_int_zip(Byte *dest, uLongf *destLen, const Bytef *source, uLong source
 	*destLen = stream.total_out;
 
 	err = deflateEnd(&stream);
-	return (err == Z_OK);
-#else 
-	return 1;
-#endif
-}
-
-static int
-compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level)
-{
-	// zlib handles compression levels from 0 to 9. Compression level 10 means "use LZMA compression".
-	if (level < 10) {
-		return compress2_int_zip(dest, destLen, source, sourceLen, level);
-	} else {
-		return compress2_int_lzma(dest, destLen, source, sourceLen);
-	}
+	return err;
 }
 
 static void
@@ -2824,7 +2781,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		zip_info->offset,
 	};
 	char filename[filelen+1];
-	int res,crc,len,comp_size=data_size;
+	int error,crc,len,comp_size=data_size;
 	uLongf destlen=data_size+data_size/500+12;
 	char *compbuffer;
 
@@ -2836,39 +2793,27 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 
 	crc=crc32(0, NULL, 0);
 	crc=crc32(crc, (unsigned char *)data, data_size);
+#ifdef HAVE_ZLIB
 	if (zip_info->compression_level) {
-		res=compress2_int((Byte *)compbuffer, &destlen, (Bytef *)data, data_size, zip_info->compression_level);
-		if (res) {
+		error=compress2_int((Byte *)compbuffer, &destlen, (Bytef *)data, data_size, zip_info->compression_level);
+		if (error == Z_OK) {
 			if (destlen < data_size) {
 				data=compbuffer;
 				comp_size=destlen;
 			}
 		} else {
-			fprintf(stderr,"compress2 returned %d\n", res);
+			fprintf(stderr,"compress2 returned %d\n", error);
 		}
 	}
+#endif
 	lfh.zipcrc=crc;
 	lfh.zipsize=comp_size;
 	lfh.zipuncmp=data_size;
-
-	if (zip_info->compression_level) {
-		if (zip_info->compression_level > 9) {
-			// Zip-Method Nr. 13 should be undefined, 12 is bzip2. We use it to indicate "lzma"
-			lfh.zipmthd = 13;
-			cd.zipcmthd = 13;
-		} else {
-			// This is deflate
-			lfh.zipmthd = 8;
-			cd.zipcmthd = 8;
-		}
-	} else {
-		lfh.zipmthd = 0;
-		cd.zipcmthd = 0;
-	}
-
+	lfh.zipmthd=zip_info->compression_level ? 8:0;
 	cd.zipccrc=crc;
 	cd.zipcsiz=comp_size;
 	cd.zipcunc=data_size;
+	cd.zipcmthd=zip_info->compression_level ? 8:0;
 	strcpy(filename, name);
 	len=strlen(filename);
 	while (len < filelen) {
@@ -3219,9 +3164,11 @@ int main(int argc, char **argv)
 			    exit( -1 );
 			}
 			break;
+#ifdef HAVE_ZLIB
 		case 'z':
 			compression_level=atoi(optarg);
 			break;
+#endif
 		case '?':
 			usage(stderr);
 			break;
