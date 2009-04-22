@@ -3527,7 +3527,7 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	return 0;
 }
 
-static int gui_internal_disable_suspend(struct gui_priv *this)
+static void gui_internal_disable_suspend(struct gui_priv *this)
 {
 	if (this->win->disable_suspend)
 		this->win->disable_suspend(this->win);
