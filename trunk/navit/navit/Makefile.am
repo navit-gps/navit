@@ -9,7 +9,7 @@ if FONTS
   SUBDIRS += fonts
 endif
 
-AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ @ZLIB_CFLAGS@ -DPREFIX=\"@prefix@\" -DLIBDIR=\"@libdir@\" -DMODULE=navit
+AM_CPPFLAGS = -I$(top_srcdir)/navit/lzma -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ @ZLIB_CFLAGS@ -DPREFIX=\"@prefix@\" -DLIBDIR=\"@libdir@\" -DMODULE=navit
 BUILT_SOURCES = version.h navit_config.h
 if BUILD_SAMPLEMAP
   BUILT_SOURCES += osm2navit$(EXEEXT)
@@ -23,7 +23,7 @@ EXTRA_DIST = navit.xml
 
 noinst_LTLIBRARIES        = libnavit.la
 libnavit_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c compass.c coord.c country.c cursor.c data_window.c debug.c \
-	event.c event_glib.h file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
+	event.c event_glib.h file.c graphics.c gui.c item.c layout.c log.c lzma/LzmaDec.c lzma/LzmaEnc.c lzma/LzFind.c main.c map.c \
 	mapset.c maptype.c menu.c messages.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c \
 	profile.c projection.c roadprofile.c route.c search.c speech.c transform.c track.c \
 	util.c vehicle.c vehicleprofile.c xmlconfig.c announcement.h atom.h attr.h attr_def.h cache.h callback.h color.h command.h compass.h coord.h country.h \
