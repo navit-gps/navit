@@ -731,7 +731,7 @@ command_evaluate_to_void(struct attr *attr, char *expr, int **error)
 	if (!ctx.error)
 		resolve(&ctx, &res, NULL);
 	if (error)
-		*error=ctx.error;
+		*error=&ctx.error;
 
 }
 
@@ -746,7 +746,7 @@ command_evaluate_to_string(struct attr *attr, char *expr, int **error)
 	if (!ctx.error)
 		ret=get_string(&ctx, &res);
 	if (error)
-		*error=ctx.error;
+		*error=&ctx.error;
 	if (ctx.error)
 		return NULL;
 	else
@@ -758,13 +758,13 @@ command_evaluate_to_int(struct attr *attr, char *expr, int **error)
 {
 	struct result res;
 	struct context ctx;
-	char *ret;
+	int ret;
 
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (!ctx.error)
 		ret=get_int(&ctx, &res);
 	if (error)
-		*error=ctx.error;
+		*error=&ctx.error;
 	if (ctx.error)
 		return 0;
 	else
