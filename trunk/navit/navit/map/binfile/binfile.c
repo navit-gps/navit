@@ -199,9 +199,7 @@ binfile_read_content(struct file *fi, int offset, struct zip_lfh *lfh)
 	case 0:
 		return file_data_read(fi,offset, lfh->zipuncmp);
 	case 8:
-		return file_data_read_compressed(fi,offset, 8, lfh->zipsize, lfh->zipuncmp);
-	case 13:
-		return file_data_read_compressed(fi,offset, 13, lfh->zipsize, lfh->zipuncmp);
+		return file_data_read_compressed(fi,offset, lfh->zipsize, lfh->zipuncmp);
 	default:
 		dbg(0,"Unknown compression method %d\n", lfh->zipmthd);
 		return NULL;
