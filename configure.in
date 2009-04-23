@@ -374,7 +374,7 @@ AC_SUBST(GLC_LIBS)
 fi
 
 AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" -a "x$xmu" = "xyes" ])
-AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$glut" = "xyes" - "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
+AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$glut" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
 
 
 if test x"${USE_GARMIN}" = xyes
