@@ -435,6 +435,7 @@ tracking_free_lines(struct tracking *tr)
 		tl=next;
 	}
 	tr->lines=NULL;
+	tr->curr_line = NULL;
 }
 
 static int
