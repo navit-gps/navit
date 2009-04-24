@@ -176,7 +176,7 @@ binfile_read_cd(struct map_priv *m, int offset, int len)
 }
 
 static struct zip_lfh *
-binfile_read_lfh(struct file *fi, int offset)
+binfile_read_lfh(struct file *fi, unsigned int offset)
 {
 	struct zip_lfh *lfh;
 
