@@ -124,5 +124,9 @@ $button = Gtk2::Button->new("Max");
 $button->signal_connect(clicked => sub { add_timeout(1,1); });
 $box->add($button);
 $window->show_all;
+if ($ARGV[0]) {
+	$match=$ARGV[0];
+	process_one_packet();
+}
 Gtk2->main;
 0;
