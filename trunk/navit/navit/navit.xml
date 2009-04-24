@@ -176,8 +176,13 @@
             <roadprofile item_types="roundabout" speed="10" route_weight="10"/>
             <roadprofile item_types="ferry" speed="40" route_weight="40"/>
 	</vehicleprofile>
-	<vehicleprofile name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="0" route_mode="0">
+	<vehicleprofile name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="1" route_mode="0">
 	    <roadprofile item_types="track_gravelled" speed="17" route_weight="17">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <roadprofile item_types="track_paved" speed="20" route_weight="18">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
@@ -210,7 +215,7 @@
             <roadprofile item_types="roundabout" speed="20" route_weight="10"/>
             <roadprofile item_types="ferry" speed="40" route_weight="40"/>
 	</vehicleprofile>
-	<vehicleprofile name="pedestrian" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" maxspeed_handling="0" route_mode="0">
+	<vehicleprofile name="pedestrian" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" maxspeed_handling="1" route_mode="0">
 	    <roadprofile item_types="footway" speed="5" route_weight="5">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
@@ -222,6 +227,11 @@
             	<announcement level="2" distance_metric="200"/>
 	    </roadprofile>
 	    <roadprofile item_types="track_gravelled" speed="5" route_weight="5">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <roadprofile item_types="track_paved" speed="5" route_weight="5">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
