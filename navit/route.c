@@ -1404,6 +1404,7 @@ route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over)
 	int speed;
 	if (!roadprofile || !roadprofile->route_weight)
 		return INT_MAX;
+	/* maxspeed_handling: 0=always, 1 only if maxspeed restricts the speed, 2 never */
 	if (profile->maxspeed_handling != 2 && (over->flags & AF_SPEED_LIMIT)) {
 		speed=RSD_MAXSPEED(over);
 		if (profile->maxspeed_handling == 1 && speed > roadprofile->route_weight)
@@ -2312,11 +2313,13 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	struct map_rect_priv *mr = priv_data;
 	struct route_graph_point *p = mr->point;
 	struct route_graph_segment *seg = mr->rseg;
+	struct route *route=mr->mpriv->route;
+
+	attr->type=attr_type;
 	switch (attr_type) {
 	case attr_any: // works only with rg_points for now
-		if (mr->item.type != type_rg_point) 
-			return 0;		
 		while (mr->attr_next != attr_none) {
+			dbg(0,"querying %s\n", attr_to_name(mr->attr_next));
 			if (rp_attr_get(priv_data, mr->attr_next, attr))
 				return 1;
 		}
@@ -2333,6 +2336,7 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			return 0;
 		}
 	case attr_label:
+		mr->attr_next=attr_street_item;
 		if (mr->item.type != type_rg_point) 
 			return 0;
 		attr->type = attr_label;
@@ -2343,21 +2347,20 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		else
 			mr->str=g_strdup("-");
 		attr->u.str = mr->str;
-		mr->attr_next=attr_none;
 		return 1;
 	case attr_street_item:
+		mr->attr_next=attr_flags;
 		if (mr->item.type != type_rg_segment) 
 			return 0;
-		mr->attr_next=attr_none;
 		if (seg && seg->data.item.map)
 			attr->u.item=&seg->data.item;
 		else
 			return 0;
 		return 1;
 	case attr_flags:
+		mr->attr_next = attr_direction;
 		if (mr->item.type != type_rg_segment)
 			return 0;
-		mr->attr_next = attr_none;
 		if (seg) {
 			attr->u.num = seg->data.flags;
 		} else {
@@ -2365,6 +2368,7 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		}
 		return 1;
 	case attr_direction:
+		mr->attr_next = attr_debug;
 		// This only works if the map has been opened at a single point, and in that case indicates if the
 		// segment returned last is connected to this point via its start (1) or its end (-1)
 		if (!mr->coord_sel || (mr->item.type != type_rg_segment))
@@ -2378,15 +2382,24 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		}
 		return 1;
 	case attr_debug:
-		if (mr->item.type != type_rg_point) 
-			return 0;
-		attr->type = attr_debug;
+		mr->attr_next=attr_none;
 		if (mr->str)
 			g_free(mr->str);
-		mr->str=g_strdup_printf("x=%d y=%d", p->c.x, p->c.y);
-		attr->u.str = mr->str;
-		mr->attr_next=attr_none;
-		return 1;
+		switch (mr->item.type) {
+		case type_rg_point:
+			mr->str=g_strdup_printf("x=%d y=%d", p->c.x, p->c.y);
+			attr->u.str = mr->str;
+			return 1;
+		case type_rg_segment:
+			if (! seg)
+				return 0;
+			mr->str=g_strdup_printf("len %d time %d",seg->data.len, route_time_seg(route->vehicleprofile, &seg->data));
+			attr->u.str = mr->str;
+			return 1;
+		default:
+			return 0;
+		}
+		return 0;
 	default:
 		mr->attr_next=attr_none;
 		attr->type=attr_none;
