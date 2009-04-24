@@ -1373,21 +1373,23 @@ end_way(FILE *out)
 		item.type=types[0];
 	else
 		item.type=type_street_unkn;
-	if (coverage && item_is_street(item))
-		item.type=type_coverage;
 	def_flags=item_get_default_flags(item.type);
 	if (def_flags) {
-		flags_attr_value=(*def_flags | flags[0] | flags[1]) & ~flags[2];
-		if (flags_attr_value != *def_flags) {
-			flags_attr.len=2;
-			alen+=flags_attr.len+1;
+		if (coverage) {
+			item.type=type_coverage;
+		} else {
+			flags_attr_value=(*def_flags | flags[0] | flags[1]) & ~flags[2];
+			if (flags_attr_value != *def_flags) {
+				flags_attr.len=2;
+				alen+=flags_attr.len+1;
+			}
 		}
 	}
 	item.clen=coord_count*2;
 	item.len=item.clen+2+alen;
 	fwrite(&item, sizeof(item), 1, out);
 	fwrite(coord_buffer, coord_count*sizeof(struct coord), 1, out);
-	if (item_is_street(item)) {
+	if (def_flags) {
 		street_name_attr.len=label_attr.len;
 		write_attr(out, &street_name_attr, label_attr_buffer);
 	} else
@@ -2199,7 +2201,7 @@ phase2(FILE *in, FILE *out, FILE *out_graph)
 				fprintf(stderr,"ni=%p\n", ni);
 #endif
 				c[i]=ni->c;
-				if (ni->ref_way > 1 && i != 0 && i != ccount-1 && item_is_street(*ib)) {
+				if (ni->ref_way > 1 && i != 0 && i != ccount-1 && item_get_default_flags(ib->type)) {
 					write_item_part(out, out_graph, ib, last, i);
 					last=i;
 				}
