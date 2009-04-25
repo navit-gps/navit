@@ -1383,7 +1383,7 @@ static void
 displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc)
 {
 	int width[16384];
-	int count;
+	int i,count;
 	struct point pa[16384];
 	struct graphics *gra=dc->gra;
 	struct graphics_gc *gc=dc->gc;
@@ -1443,6 +1443,10 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 			if (di->label && !strcmp(di->label, "Bahnhofstr.") && di->item.type != type_street_1_city) {
 				dbg(0,"0x%x,0x%x %s\n", di->item.id_hi, di->item.id_lo, item_to_name(di->item.type));
 #endif
+			for (i = 0 ; i < count ; i++) {
+				if (width[i] < 2)
+					width[i]=2;
+			}
 			graphics_draw_polyline_clipped(gra, gc, pa, count, width, 1, e->u.polyline.width > 1);
 #if 0
 			}
