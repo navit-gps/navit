@@ -712,7 +712,7 @@ void command(struct attr *attr, char *expr)
 }
 #endif
 
-void
+static void
 command_evaluate_to(struct attr *attr, char *expr, struct context *ctx, struct result *res)
 {
 	memset(res, 0, sizeof(*res));
@@ -740,7 +740,7 @@ command_evaluate_to_string(struct attr *attr, char *expr, int **error)
 {
 	struct result res;
 	struct context ctx;
-	char *ret;
+	char *ret=NULL;
 
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (!ctx.error)
@@ -758,7 +758,7 @@ command_evaluate_to_int(struct attr *attr, char *expr, int **error)
 {
 	struct result res;
 	struct context ctx;
-	int ret;
+	int ret=0;
 
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (!ctx.error)

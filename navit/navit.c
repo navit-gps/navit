@@ -181,7 +181,7 @@ navit_get_tracking(struct navit *this_)
 	return this_->tracking;
 }
 
-void
+static void
 navit_draw_async(struct navit *this_, int async)
 {
 	GList *l;
@@ -508,7 +508,6 @@ navit_scale(struct navit *this_, long scale, struct point *p, int draw)
 static void
 navit_autozoom(struct navit *this_, struct coord *center, int speed, int draw)
 {
-	struct coord c;
 	struct point pc;
 	int distance,w,h;
 	double new_scale;
@@ -605,10 +604,10 @@ navit_cmd_zoom_out(struct navit *this_)
 }
 
 static struct command_table commands[] = {
-	{"zoom_in",navit_cmd_zoom_in},
-	{"zoom_out",navit_cmd_zoom_out},
-	{"zoom_to_route",navit_cmd_zoom_to_route},
-	{"set_center_cursor",navit_cmd_set_center_cursor},
+	{"zoom_in",command_cast(navit_cmd_zoom_in)},
+	{"zoom_out",command_cast(navit_cmd_zoom_out)},
+	{"zoom_to_route",command_cast(navit_cmd_zoom_to_route)},
+	{"set_center_cursor",command_cast(navit_cmd_set_center_cursor)},
 };
 	
 
