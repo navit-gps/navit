@@ -1174,7 +1174,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 	ret->itm=itm;
 	if (itm && itm->prev && itm->prev->ways && !(itm->flags & AF_ROUNDABOUT) && (itm->prev->flags & AF_ROUNDABOUT)) {
 		int len=0;
-		int angle;
+		int angle=0;
 		int entry_angle;
 		struct navigation_itm *itm2=itm->prev;
 		int exit_angle=angle_median(itm->prev->angle_end, itm->ways->angle2);
@@ -1339,7 +1339,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	/* TRANSLATORS: right, as in 'Turn right' */
 	char *dir=_("right"),*strength="";
 	int distance=itm->dest_length-cmd->itm->dest_length;
-	char *d,*ret;
+	char *d,*ret=NULL;
 	int delta=cmd->delta;
 	int level;
 	int strength_needed;
@@ -1540,7 +1540,7 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 {
 	struct navigation_command *cur,*prev;
 	int distance=itm->dest_length-cmd->itm->dest_length;
-	int l0_dist,level,dist,i,time;
+	int level, dist, i, time;
 	int speech_time,time2nav;
 	char *ret,*old,*buf,*next;
 
@@ -1668,7 +1668,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 	struct item *sitem;			/* Holds the corresponding item from the actual map */
 	struct attr street_item,street_direction;
 	struct navigation_itm *itm;
-	int mode,incr=0,first=1;
+	int mode=0, incr=0, first=1;
 	if (attr->type != attr_route_status)
 		return;
 

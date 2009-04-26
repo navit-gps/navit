@@ -87,7 +87,7 @@ osd_std_resize(struct osd_item *item)
  	graphics_overlay_resize(item->gr, &item->p, item->w, item->h, 65535, 1);
 }
  
-void
+static void
 osd_std_calculate_sizes(struct osd_item *item, struct osd_priv *priv, int w, int h) 
 {
 	struct attr vehicle_attr;
