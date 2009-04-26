@@ -21,9 +21,10 @@
 #include <string.h>
 #include "debug.h"
 #include "item.h"
+#include "roadprofile.h"
 #include "vehicleprofile.h"
 
-void
+static void
 vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 {
 	dbg(1,"%s:%d\n", attr_to_name(attr->type), attr->u.num);
@@ -85,7 +86,7 @@ vehicleprofile_add_attr(struct vehicleprofile *this_, struct attr *attr)
 	struct attr item_types_attr;
 	switch (attr->type) {
 	case attr_roadprofile:
-		if (roadprofile_get_attr(attr->u.roadprofile, attr_item_types, &item_types_attr)) {
+		if (roadprofile_get_attr(attr->u.roadprofile, attr_item_types, &item_types_attr, NULL)) {
 			enum item_type *types=item_types_attr.u.item_types;
 			while (*types != type_none) {
 				g_hash_table_insert(this_->roadprofile_hash, (void *)(long)(*types), attr->u.roadprofile);
