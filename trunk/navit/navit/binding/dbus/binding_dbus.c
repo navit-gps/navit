@@ -484,7 +484,7 @@ static DBusHandlerResult
 request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
 {
     struct navit *navit;
-    DBusMessageIter iter, response;
+    DBusMessageIter iter;
     char * attr_type = NULL;
     struct attr attr;
     navit = object_get_from_message(message, "navit");
@@ -590,22 +590,22 @@ request_navit_set_attr(DBusConnection *connection, DBusMessage *message)
     if (attr.type > attr_type_item_begin && attr.type < attr_type_item_end)
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 
-    else if (attr.type > attr_type_int_begin && attr.type < attr_type_boolean_begin)
+    else if (attr.type > attr_type_int_begin && attr.type < attr_type_boolean_begin) {
         if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_INT32)
         {
             dbus_message_iter_get_basic(&iterattr, &attr.u.num);
             if (navit_set_attr(navit, &attr))
                 return empty_reply(connection, message);
         }
-
-    else if(attr.type > attr_type_boolean_begin && attr.type < attr_type_int_end)
+    }
+    else if(attr.type > attr_type_boolean_begin && attr.type < attr_type_int_end) {
         if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_BOOLEAN)
         {
             dbus_message_iter_get_basic(&iterattr, &attr.u.num);
             if (navit_set_attr(navit, &attr))
                 return empty_reply(connection, message);
         }
-
+    }
 #if 0
     else if(attr.type > attr_type_string_begin && attr.type < attr_type_string_end)
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
@@ -688,7 +688,6 @@ request_navit_set_destination(DBusConnection *connection, DBusMessage *message)
 static DBusHandlerResult
 request_navit_evaluate(DBusConnection *connection, DBusMessage *message)
 {
-	struct pcoord pc;
 	struct navit *navit;
 	char *command;
 	char *result;

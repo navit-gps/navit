@@ -415,12 +415,13 @@ image_new_scaled(struct gui_priv *this, char *name, int w, int h)
 	return NULL;
 }
 
-
+#if 0
 static struct graphics_image *
 image_new_o(struct gui_priv *this, char *name)
 {
 	return image_new_scaled(this, name, -1, -1);
 }
+#endif
 
 static struct graphics_image *
 image_new_xs(struct gui_priv *this, char *name)
@@ -711,6 +712,7 @@ gui_internal_button_new(struct gui_priv *this, char *text, struct graphics_image
 	return gui_internal_button_new_with_callback(this, text, image, flags, NULL, NULL);
 }
 
+#if 0
 //##############################################################################################################
 //# Description: 
 //# Comment: 
@@ -724,6 +726,7 @@ static void gui_internal_clear(struct gui_priv *this)
 	pnt.y=0;
 	graphics_draw_rectangle(gra, this->background, &pnt, this->root.w, this->root.h);
 }
+#endif
 
 static struct widget *
 gui_internal_find_widget(struct widget *wi, struct point *p, int flags)
@@ -1419,10 +1422,7 @@ gui_internal_top_bar(struct gui_priv *this)
 static struct widget *
 gui_internal_time_help(struct gui_priv *this)
 {
-	struct widget *w,*wm,*wh,*wc,*wcn;
-	int dots_len, sep_len;
-	GList *res=NULL,*l;
-	int width,width_used=0,use_sep,incomplete=0;
+	struct widget *w,*wc,*wcn;
 	char timestr[64];
 	struct tm *tm;
 	time_t timep;
@@ -1586,7 +1586,7 @@ gui_internal_menu(struct gui_priv *this, char *label)
 	w->w=menu->w;
 	gui_internal_widget_append(menu, w);
 	if (this->flags & 16) {
-		struct widget *wl,*wlb,*wb,*wm=w;
+		struct widget *wlb,*wb,*wm=w;
 		wm->flags=gravity_center|orientation_vertical|flags_expand|flags_fill;
 		w=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_expand|flags_fill);
 		dbg(0,"topbox->menu_data=%p\n", topbox->menu_data);
@@ -3488,8 +3488,6 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	struct window *win;
 	struct color cbh={0x9fff,0x9fff,0x9fff,0xffff};
 	struct color cf={0xbfff,0xbfff,0xbfff,0xffff};
-	struct color cw={0xffff,0xffff,0xffff,0xffff};
-	struct color cbl={0x0000,0x0000,0x0000,0xffff};
 	struct transformation *trans=navit_get_trans(this->nav);
 	
 	win=graphics_get_data(gra, "window");
@@ -3639,9 +3637,9 @@ static struct gui_internal_widget_methods gui_internal_widget_methods = {
 };
 
 static struct command_table commands[] = {
-	{"menu",gui_internal_cmd_menu2},
-	{"fullscreen",gui_internal_cmd_fullscreen},
-	{"get_data",gui_internal_get_data},
+	{"menu",command_cast(gui_internal_cmd_menu2)},
+	{"fullscreen",command_cast(gui_internal_cmd_fullscreen)},
+	{"get_data",command_cast(gui_internal_get_data)},
 };
 
 
