@@ -1832,13 +1832,13 @@ phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
 static void
 phase1_map(struct map *map, FILE *out_ways, FILE *out_nodes)
 {
-	struct map_rect *mr=(struct map_rect *)map_rect_new(map, NULL);
+	struct map_rect *mr=map_rect_new(map, NULL);
 	struct item *item;
 	int count,max=16384;
 	struct coord ca[max];
 	struct attr attr;
 
-	while ((item = (struct item *)map_rect_get_item(mr))) {
+	while ((item = map_rect_get_item(mr))) {
 		count=item_coord_get(item, ca, item->type < type_line ? 1: max);
 		item_bin_init(item_bin, item->type);
 		item_bin_add_coord(item_bin, ca, count);
@@ -3013,7 +3013,7 @@ static void add_plugin(char *path)
 	struct attr **attrs;
 
 	if (! plugins)
-		plugins=(struct plugins *)plugins_new();
+		plugins=plugins_new();
 	attrs=(struct attr*[]){&(struct attr){attr_path,{path}},NULL};
 	plugin_new(&(struct attr){attr_plugins,.u.plugins=plugins}, attrs);	
 }
@@ -3136,7 +3136,7 @@ int main(int argc, char **argv)
 				&(struct attr){attr_data,{optarg}},
 				NULL};
 			add_plugin("$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libdata_textfile.so");
-			map_handle=(struct map *)map_new(NULL, attrs);
+			map_handle=map_new(NULL, attrs);
 			break;	
 		case 'n':
 			fprintf(stderr,"I will IGNORE unknown types\n");
