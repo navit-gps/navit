@@ -139,7 +139,7 @@ popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char
 		us++;
 	}
 	if (usc) {
-		gchar *str2=g_malloc(strlen(str)+us+1);
+		gchar *str2=g_malloc(strlen(str)+usc+1);
 		gchar *us2=str2;
 		us=str;
 		while (*us) {
