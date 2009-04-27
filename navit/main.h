@@ -23,6 +23,7 @@
 /* prototypes */
 struct navit;
 struct iter;
+struct attr;
 struct iter * main_iter_new(void);
 void main_iter_destroy(struct iter *iter);
 struct navit * main_get_navit(struct iter *iter);

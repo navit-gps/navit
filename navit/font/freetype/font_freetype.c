@@ -336,7 +336,6 @@ font_freetype_font_new(struct graphics_priv *gr,
 
 	*meth = font_methods;
 	int exact, found=0;
-	char *name;
 	char **family;
 #if USE_CACHING
 	char *idstr;
