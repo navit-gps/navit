@@ -197,7 +197,7 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 	struct graphics_priv *overlay=NULL;
 	if (! gr->overlay_disable)
 		overlay=gr->overlays;
-	if (gr->p.x || gr->p.y && gr->background_gc) {
+	if ((gr->p.x || gr->p.y) && gr->background_gc) {
 		painter.setPen(*gr->background_gc->pen);
 		painter.fillRect(0, 0, gr->widget->pixmap->width(), gr->widget->pixmap->height(), *gr->background_gc->brush);
 	}
