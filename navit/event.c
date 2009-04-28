@@ -24,8 +24,8 @@
 #include "debug.h"
 
 static struct event_methods event_methods;
-static char *e_requestor;
-static char *e_system;
+static const char *e_requestor;
+static const char *e_system;
 
 void event_main_loop_run(void)
 {
@@ -85,7 +85,7 @@ event_call_callback(struct callback_list *cb)
 }
 
 int
-event_request_system(char *system, char *requestor)
+event_request_system(const char *system, const char *requestor)
 {
 	void (*event_type_new)(struct event_methods *meth);
 	if (e_system) {
