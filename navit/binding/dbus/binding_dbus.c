@@ -693,7 +693,7 @@ request_navit_evaluate(DBusConnection *connection, DBusMessage *message)
 	char *result;
 	struct attr attr;
 	DBusMessage *reply;
-	int error;
+	int *error;
 
 	navit = object_get_from_message(message, "navit");
 	if (! navit)
@@ -706,7 +706,7 @@ request_navit_evaluate(DBusConnection *connection, DBusMessage *message)
 	result=command_evaluate_to_string(&attr, command, &error);
 	reply = dbus_message_new_method_return(message);
 	if (error)
-		dbus_message_append_args(reply, DBUS_TYPE_INT32, &error, DBUS_TYPE_INVALID);
+		dbus_message_append_args(reply, DBUS_TYPE_INT32, error, DBUS_TYPE_INVALID);
 	else
 		dbus_message_append_args(reply, DBUS_TYPE_STRING, &result, DBUS_TYPE_INVALID);
 	dbus_connection_send (connection, reply, NULL);

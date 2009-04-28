@@ -224,7 +224,7 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 	this->osd_item.h = 80;
 	this->osd_item.navit = nav;
 	this->osd_item.font_size = 200;
-	this->osd_item.meth.draw = &osd_compass_draw;
+	this->osd_item.meth.draw = osd_draw_cast(osd_compass_draw);
 	osd_set_std_attr(attrs, &this->osd_item, 2);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_init), attr_navit, this));
 	return (struct osd_priv *) this;
@@ -288,7 +288,7 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 	struct attr *attr;
 
 	this->item.navit = nav;
-	this->item.meth.draw = &osd_button_draw;
+	this->item.meth.draw = osd_draw_cast(osd_button_draw);
 
 	osd_set_std_attr(attrs, &this->item, 1);
 
@@ -432,7 +432,7 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 	this->osd_item.navit = nav;
 	this->osd_item.h = 70;
 	this->osd_item.font_size = 200;
-	this->osd_item.meth.draw = &osd_nav_next_turn_draw;
+	this->osd_item.meth.draw = osd_draw_cast(osd_nav_next_turn_draw);
 	osd_set_std_attr(attrs, &this->osd_item, 0);
 
 	this->icon_w = -1;
@@ -555,7 +555,7 @@ osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct
 	this->item.p.x = -64;
 	this->item.navit = nav;
 	this->item.p.y = 76;
-	this->item.meth.draw = &osd_nav_toggle_announcer_draw;
+	this->item.meth.draw = osd_draw_cast(osd_nav_toggle_announcer_draw);
 
 	osd_set_std_attr(attrs, &this->item, 0);
 
@@ -633,7 +633,7 @@ osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **
 	this->item.navit = nav;
 	this->item.h=60;
 	this->active=-1;
-	this->item.meth.draw = &osd_speed_warner_draw;
+	this->item.meth.draw = osd_draw_cast(osd_speed_warner_draw);
 	osd_set_std_attr(attrs, &this->item, 2);
 	this->d=this->item.w;
 	if (this->item.h < this->d)
@@ -994,7 +994,7 @@ osd_text_new(struct navit *nav, struct osd_methods *meth,
 	this->osd_item.h = 20;
 	this->osd_item.navit = nav;
 	this->osd_item.font_size = 200;
-	this->osd_item.meth.draw = &osd_text_draw;
+	this->osd_item.meth.draw = osd_draw_cast(osd_text_draw);
 	osd_set_std_attr(attrs, &this->osd_item, 2);
 
 	this->active = -1;
@@ -1099,7 +1099,7 @@ osd_gps_status_new(struct navit *nav, struct osd_methods *meth,
 	this->osd_item.navit = nav;
 	this->osd_item.h = 40;
 	this->osd_item.font_size = 200;
-	this->osd_item.meth.draw = &osd_gps_status_draw;
+	this->osd_item.meth.draw = osd_draw_cast(osd_gps_status_draw);
 	osd_set_std_attr(attrs, &this->osd_item, 0);
 
 	this->icon_w = -1;
@@ -1202,7 +1202,7 @@ osd_volume_new(struct navit *nav, struct osd_methods *meth,
 	this->osd_item.navit = nav;
 	this->osd_item.h = 40;
 	this->osd_item.font_size = 200;
-	this->osd_item.meth.draw = &osd_volume_draw;
+	this->osd_item.meth.draw = osd_draw_cast(osd_volume_draw);
 	osd_set_std_attr(attrs, &this->osd_item, 0);
 
 	this->icon_w = -1;

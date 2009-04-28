@@ -33,6 +33,7 @@
 #ifndef _WIN32
 #include <gdk/gdkx.h>
 #endif
+#include "event.h"
 #include "debug.h"
 #include "point.h"
 #include "graphics.h"
@@ -160,7 +161,7 @@ gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 }
 
 static void
-gc_set_stipple(struct graphics_gc_priv *gc, struct graphics_image *img)
+gc_set_stipple(struct graphics_gc_priv *gc, struct graphics_image_priv *img)
 {
 	char data[2]={0x2,0x1};
 	gdk_gc_set_fill(gc->gc, GDK_STIPPLED);
@@ -186,8 +187,6 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 	gc->gr=gr;
 	return gc;
 }
-
-
 
 static struct graphics_image_priv *
 image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)
