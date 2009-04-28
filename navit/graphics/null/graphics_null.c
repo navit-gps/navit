@@ -55,7 +55,7 @@ static struct graphics_font_methods font_methods = {
 	font_destroy
 };
 
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size)
+static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *font,  int size, int flags)
 {
 	*meth=font_methods;
 	return &graphics_font_priv;
@@ -100,9 +100,8 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 	return &graphics_gc_priv;
 }
 
-
 static struct graphics_image_priv *
-image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h)
+image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)
 {
 	return &graphics_image_priv;
 }
@@ -148,6 +147,10 @@ draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
 {
 }
 
+static void draw_drag(struct graphics_priv *gr, struct point *p)
+{
+}
+
 static void
 background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
@@ -158,7 +161,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 }
 
-static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h);
+static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound);
 
 static void *
 get_data(struct graphics_priv *this, char *type)
@@ -166,20 +169,19 @@ get_data(struct graphics_priv *this, char *type)
 	return &dummy;
 }
 
-
-
-static void
-register_resize_callback(struct graphics_priv *this, void (*callback)(void *data, int w, int h), void *data)
+static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 {
 }
 
-static void
-register_motion_callback(struct graphics_priv *this, void (*callback)(void *data, struct point *p), void *data)
+static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)
 {
 }
 
-static void
-register_button_callback(struct graphics_priv *this, void (*callback)(void *data, int press, int button, struct point *p), void *data)
+static void overlay_disable(struct graphics_priv *gr, int disable)
+{
+}
+
+static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int alpha, int wraparound)
 {
 }
 
@@ -194,19 +196,21 @@ static struct graphics_methods graphics_methods = {
 	draw_image,
 	draw_image_warp,
 	draw_restore,
+	draw_drag,
 	font_new,
 	gc_new,
 	background_gc,
 	overlay_new,
 	image_new,
 	get_data,
-	register_resize_callback,
-	register_button_callback,
-	register_motion_callback,
+	image_free,
+	get_text_bbox,
+	overlay_disable,
+	overlay_resize,
 };
 
 static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
+overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
 {
 	*meth=graphics_methods;
 	return &graphics_priv;
@@ -214,7 +218,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 
 
 static struct graphics_priv *
-graphics_null_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
+graphics_null_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	*meth=graphics_methods;
 	return &graphics_priv;
