@@ -29,7 +29,7 @@ mdb_unicode2ascii(MdbHandle *mdb, unsigned char *buf, int offset, unsigned int l
 	unsigned int i;
 
 	if (buf[offset]==0xff && buf[offset+1]==0xfe) {
-		strncpy(dest, &buf[offset+2], len-2);
+		strncpy(dest, (char*) &buf[offset+2], len-2);
 		dest[len-2]='\0';
 	} else {
 		/* convert unicode to ascii, rather sloppily */
@@ -48,12 +48,12 @@ mdb_ascii2unicode(MdbHandle *mdb, unsigned char *buf, int offset, unsigned int l
 	if (!buf) return 0;
 
 	if (IS_JET3(mdb)) {
-		strncpy(dest, &buf[offset], len);
+		strncpy(dest, (char*) &buf[offset], len);
 		dest[len]='\0';
 		return strlen(dest);
 	}
 
-	while (i<strlen(&buf[offset]) && (i*2+2)<len) {
+	while (i<strlen((char*)&buf[offset]) && (i*2+2)<len) {
 		dest[i*2] = buf[offset+i];
 		dest[i*2+1] = 0;
 		i++;

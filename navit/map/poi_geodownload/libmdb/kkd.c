@@ -29,7 +29,8 @@
 **       KKD structures.
 */
 
-GArray *mdb_get_column_props(MdbCatalogEntry *entry, int start)
+#if 0
+static GArray *mdb_get_column_props(MdbCatalogEntry *entry, int start)
 {
 int pos, cnt=0;
 int len, tmp, cplen;
@@ -53,7 +54,7 @@ MdbHandle *mdb = entry->mdb;
 	return entry->props;
 }
 
-GHashTable *mdb_get_column_def(MdbCatalogEntry *entry, int start)
+static GHashTable *mdb_get_column_def(MdbCatalogEntry *entry, int start)
 {
 GHashTable *hash = NULL;
 MdbHandle *mdb = entry->mdb;
@@ -99,7 +100,8 @@ int end;
 	}
 	return hash;
 }
-void mdb_kkd_dump(MdbCatalogEntry *entry)
+
+static void mdb_kkd_dump(MdbCatalogEntry *entry)
 {
 int rows;
 int kkd_start, kkd_end;
@@ -146,4 +148,4 @@ int rowid = entry->kkd_rowid;
 		mdb_get_column_def(entry, datapos);
 	}
 }
-
+#endif

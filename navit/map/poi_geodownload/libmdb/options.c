@@ -33,7 +33,7 @@
 static unsigned long opts;
 static int optset;
 
-static void load_options();
+static void load_options(void);
 
 void
 mdb_debug(int klass, char *fmt, ...)
@@ -52,7 +52,7 @@ mdb_debug(int klass, char *fmt, ...)
 }
 
 static void
-load_options()
+load_options(void)
 {
 	char *opt;
 	char *s;
