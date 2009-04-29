@@ -211,7 +211,7 @@
             <roadprofile item_types="ferry" speed="40" route_weight="40"/>
 	</vehicleprofile>
 	<vehicleprofile name="pedestrian" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" maxspeed_handling="1" route_mode="0">
-	    <roadprofile item_types="footway" speed="5" route_weight="5">
+	    <roadprofile item_types="footway,bridleway,path" speed="5" route_weight="5">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
@@ -257,6 +257,60 @@
             	<announcement level="2" distance_metric="1000"/>
 	    </roadprofile>
             <roadprofile item_types="roundabout" speed="5" route_weight="5"/>
+            <roadprofile item_types="ferry" speed="40" route_weight="40"/>
+	</vehicleprofile>
+	<vehicleprofile name="horse" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" maxspeed_handling="1" route_mode="0">
+	    <roadprofile item_types="bridleway" speed="10" route_weight="10">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <roadprofile item_types="footway,path" speed="5" route_weight="5">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <roadprofile item_types="living_street,street_pedestrian" speed="5" route_weight="4">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <roadprofile item_types="track_gravelled" speed="5" route_weight="5">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <roadprofile item_types="track_paved" speed="5" route_weight="5">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <roadprofile item_types="cycleway" speed="5" route_weight="5">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <roadprofile item_types="street_0,street_1_city,street_2_city" speed="5" route_weight="2">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <roadprofile item_types="street_3_city,street_4_city,street_service" speed="5" route_weight="4">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+            <roadprofile item_types="street_1_land,street_2_land" speed="5" route_weight="2">
+            	<announcement level="0" distance_metric="100"/>
+            	<announcement level="1" distance_metric="400"/>
+            	<announcement level="2" distance_metric="1000"/>
+	    </roadprofile>
+            <roadprofile item_types="street_3_land,street_4_land" speed="5" route_weight="4">
+            	<announcement level="0" distance_metric="100"/>
+            	<announcement level="1" distance_metric="400"/>
+            	<announcement level="2" distance_metric="1000"/>
+	    </roadprofile>
+            <roadprofile item_types="roundabout" speed="5" route_weight="2"/>
             <roadprofile item_types="ferry" speed="40" route_weight="40"/>
 	</vehicleprofile>
 
