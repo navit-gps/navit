@@ -168,7 +168,7 @@ int lastchar;
 	}
 	return 1;
 }
-int
+static int
 mdb_find_field(int col_num, MdbField *fields, int num_fields)
 {
 	int i;
@@ -178,7 +178,7 @@ mdb_find_field(int col_num, MdbField *fields, int num_fields)
 	}
 	return -1;
 }
-int
+static int
 mdb_test_sarg_node(MdbHandle *mdb, MdbSargNode *node, MdbField *fields, int num_fields)
 {
 	int elem;

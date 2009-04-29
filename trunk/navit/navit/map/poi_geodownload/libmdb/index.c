@@ -73,7 +73,7 @@ mdb_read_indices(MdbTableDef *table)
 	int idx_num, key_num, col_num;
 	int cur_pos, name_sz, idx2_sz, type_offset;
 	int index_start_pg = mdb->cur_pg;
-	gchar *tmpbuf;
+	guchar *tmpbuf;
 
         table->indices = g_ptr_array_new();
 
@@ -87,7 +87,7 @@ mdb_read_indices(MdbTableDef *table)
 		type_offset = 19;
 	}
 
-	tmpbuf = (gchar *) g_malloc(idx2_sz);
+	tmpbuf = (guchar *) g_malloc(idx2_sz);
 	for (i=0;i<table->num_idxs;i++) {
 		read_pg_if_n(mdb, tmpbuf, &cur_pos, idx2_sz);
 		cur_pos += idx2_sz;
@@ -112,7 +112,7 @@ mdb_read_indices(MdbTableDef *table)
 		} else {
 			read_pg_if(mdb, &cur_pos, 0);
 			name_sz=mdb->pg_buf[cur_pos++];
-			read_pg_if_n(mdb, pidx->name, &cur_pos, name_sz);
+			read_pg_if_n(mdb, (unsigned char *) pidx->name, &cur_pos, name_sz);
 			cur_pos += name_sz;
 			pidx->name[name_sz]='\0';		
 		}
@@ -172,13 +172,13 @@ mdb_index_hash_text(guchar *text, guchar *hash)
 {
 	unsigned int k;
 
-	for (k=0;k<strlen(text);k++) {
+	for (k=0;k<strlen((char*) text);k++) {
 		hash[k] = idx_to_text[text[k]];
 		if (!(hash[k])) fprintf(stderr, 
 				"No translation available for %02x %d\n", 
 				text[k],text[k]);
 	}
-	hash[strlen(text)]=0;
+	hash[strlen((char*) text)]=0;
 }
 void
 mdb_index_swap_n(unsigned char *src, int sz, unsigned char *dest)
@@ -189,7 +189,7 @@ mdb_index_swap_n(unsigned char *src, int sz, unsigned char *dest)
 		dest[j++] = src[i];
 	}
 }
-void 
+static void 
 mdb_index_cache_sarg(MdbColumn *col, MdbSarg *sarg, MdbSarg *idx_sarg)
 {
 	//guint32 cache_int;
@@ -197,7 +197,7 @@ mdb_index_cache_sarg(MdbColumn *col, MdbSarg *sarg, MdbSarg *idx_sarg)
 
 	switch (col->col_type) {
 		case MDB_TEXT:
-		mdb_index_hash_text(sarg->value.s, idx_sarg->value.s);
+		mdb_index_hash_text((unsigned char*) sarg->value.s, (unsigned char*) idx_sarg->value.s);
 		break;
 
 		case MDB_LONGINT:
@@ -244,7 +244,7 @@ int lastchar;
 	return 1;
 }
 #endif
-int
+static int
 mdb_index_test_sargs(MdbHandle *mdb, MdbIndex *idx, unsigned char *buf, int len)
 {
 	unsigned int i, j;
@@ -271,7 +271,7 @@ mdb_index_test_sargs(MdbHandle *mdb, MdbIndex *idx, unsigned char *buf, int len)
 		 */
 		if (col->col_type==MDB_TEXT) {
 			//c_len = strlen(&mdb->pg_buf[offset + c_offset]);
-			c_len = strlen(buf);
+			c_len = strlen((char*) buf);
 		} else {
 			c_len = col->col_size;
 			//fprintf(stderr,"Only text types currently supported.  How did we get here?\n");
@@ -308,6 +308,7 @@ mdb_index_test_sargs(MdbHandle *mdb, MdbIndex *idx, unsigned char *buf, int len)
 	}
 	return 1;
 }
+#if 0
 /*
  * pack the pages bitmap
  */
@@ -346,10 +347,11 @@ mdb_index_pack_bitmap(MdbHandle *mdb, MdbIndexPage *ipg)
 	}
 	return 0;
 }
+#endif
 /*
  * unpack the pages bitmap
  */
-int
+static int
 mdb_index_unpack_bitmap(MdbHandle *mdb, MdbIndexPage *ipg)
 {
 	int mask_bit = 0;
@@ -426,7 +428,7 @@ void mdb_index_page_init(MdbIndexPage *ipg)
  * find the next leaf page if any given a chain. Assumes any exhausted leaf 
  * pages at the end of the chain have been peeled off before the call.
  */
-MdbIndexPage *
+static MdbIndexPage *
 mdb_find_next_leaf(MdbHandle *mdb, MdbIndex *idx, MdbIndexChain *chain)
 {
 	MdbIndexPage *ipg, *newipg;
@@ -700,7 +702,7 @@ mdb_index_find_row(MdbHandle *mdb, MdbIndex *idx, MdbIndexChain *chain, guint32 
 	return 1;
 }
 
-void mdb_index_walk(MdbTableDef *table, MdbIndex *idx)
+static void mdb_index_walk(MdbTableDef *table, MdbIndex *idx)
 {
 MdbHandle *mdb = table->entry->mdb;
 int cur_pos = 0;
@@ -749,7 +751,7 @@ mdb_index_dump(MdbTableDef *table, MdbIndex *idx)
  * Unique indexes are preferred over non-uniques
  * Operator preference is equal, like, isnull, others 
  */
-int mdb_index_compute_cost(MdbTableDef *table, MdbIndex *idx)
+static int mdb_index_compute_cost(MdbTableDef *table, MdbIndex *idx)
 {
 	unsigned int i;
 	MdbColumn *col;
@@ -844,7 +846,7 @@ int mdb_index_compute_cost(MdbTableDef *table, MdbIndex *idx)
  *
  * Returns strategy to use (table scan, or index scan)
  */
-MdbStrategy 
+static MdbStrategy 
 mdb_choose_index(MdbTableDef *table, int *choice)
 {
 	unsigned int i;

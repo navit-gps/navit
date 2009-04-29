@@ -29,14 +29,14 @@
 //static int mdb_copy_index_pg(MdbTableDef *table, MdbIndex *idx, MdbIndexPage *ipg);
 static int mdb_add_row_to_leaf_pg(MdbTableDef *table, MdbIndex *idx, MdbIndexPage *ipg, MdbField *idx_fields);
 
-void
+static void
 _mdb_put_int16(unsigned char *buf, guint32 offset, guint32 value)
 {
 	buf[offset] = value % 256;
 	value /= 256;
 	buf[offset+1] = value % 256;
 }
-void
+static void
 _mdb_put_int32(unsigned char *buf, guint32 offset, guint32 value)
 {
 	buf[offset] = value % 256;
@@ -47,7 +47,7 @@ _mdb_put_int32(unsigned char *buf, guint32 offset, guint32 value)
 	value /= 256;
 	buf[offset+3] = value % 256;
 }
-ssize_t
+static ssize_t
 mdb_write_pg(MdbHandle *mdb, unsigned long pg)
 {
 	ssize_t len;
@@ -115,7 +115,7 @@ mdb_crack_row4(MdbTableDef *table, int row_start, int row_end, MdbField *fields)
 	/* read table of variable column locations */
 	if (table->num_var_cols > 0) {
 		row_var_cols = mdb_pg_get_int16(mdb, row_end - bitmask_sz - 1);
-		var_col_offsets = (int *)g_malloc((row_var_cols+1)*sizeof(int));
+		var_col_offsets = (unsigned int *)g_malloc((row_var_cols+1)*sizeof(int));
 		for (i=0; i<row_var_cols+1; i++) {
 			var_col_offsets[i] = mdb_pg_get_int16(mdb,
 				row_end - bitmask_sz - 3 - (i*2));
@@ -198,7 +198,7 @@ mdb_crack_row3(MdbTableDef *table, int row_start, int row_end, MdbField *fields)
 		if ((col_ptr-row_start-row_var_cols)/256 < num_jumps)
 			num_jumps--;
 
-		var_col_offsets = (int *)g_malloc((row_var_cols+1)*sizeof(int));
+		var_col_offsets = (unsigned int *)g_malloc((row_var_cols+1)*sizeof(int));
 		jumps_used = 0;
 		for (i=0; i<row_var_cols+1; i++) {
 			if ((jumps_used < num_jumps)
@@ -475,7 +475,7 @@ mdb_pg_get_freespace(MdbHandle *mdb)
 	mdb_debug(MDB_DEBUG_WRITE,"free space left on page = %d", free_end - free_start);
 	return (free_end - free_start);
 }
-unsigned char *
+static unsigned char *
 mdb_new_leaf_pg(MdbCatalogEntry *entry)
 {
 	MdbHandle *mdb = entry->mdb;
@@ -505,7 +505,8 @@ mdb_new_data_pg(MdbCatalogEntry *entry)
 	return new_pg;
 }
 
-int
+#if 0
+static int
 mdb_update_indexes(MdbTableDef *table, int num_fields, MdbField *fields, guint32 pgnum, guint16 rownum)
 {
 	unsigned int i;
@@ -521,7 +522,7 @@ mdb_update_indexes(MdbTableDef *table, int num_fields, MdbField *fields, guint32
 	return 1;
 }
 
-int
+static int
 mdb_init_index_chain(MdbTableDef *table, MdbIndex *idx)
 {
 	MdbCatalogEntry *entry = table->entry;
@@ -534,6 +535,7 @@ mdb_init_index_chain(MdbTableDef *table, MdbIndex *idx)
 
 	return 1;
 }
+#endif
 
 int
 mdb_update_index(MdbTableDef *table, MdbIndex *idx, unsigned int num_fields, MdbField *fields, guint32 pgnum, guint16 rownum)
@@ -577,7 +579,8 @@ mdb_update_index(MdbTableDef *table, MdbIndex *idx, unsigned int num_fields, Mdb
 	return 1;
 }
 
-int
+#if 0
+static int
 mdb_insert_row(MdbTableDef *table, int num_fields, MdbField *fields)
 {
 	int new_row_size;
@@ -618,6 +621,8 @@ mdb_insert_row(MdbTableDef *table, int num_fields, MdbField *fields)
  
 	return 1;
 }
+#endif
+
 /*
  * Assumes caller has verfied space is available on page and adds the new 
  * row to the current pg_buf.

@@ -95,7 +95,7 @@ mdb_map_find_next(MdbHandle *mdb, unsigned char *map, unsigned int map_sz, guint
 	fprintf(stderr, "Warning: unrecognized usage map type: %d\n", map[0]);
 	return -1;
 }
-guint32
+static guint32
 mdb_alloc_page(MdbTableDef *table)
 {
 	printf("Allocating new page\n");

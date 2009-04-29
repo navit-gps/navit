@@ -65,7 +65,7 @@ static ssize_t _mdb_read_pg(MdbHandle *mdb, unsigned char *pg_buf, unsigned long
  * freeing.
  **/
 
-static gchar *mdb_find_file(char *file_name)
+static gchar *mdb_find_file(const char *file_name)
 {
 	struct stat status;
 	gchar *mdbpath, **dir, *tmpfname;
@@ -105,7 +105,7 @@ static gchar *mdb_find_file(char *file_name)
  *
  * Return value: pointer to MdbHandle structure.
  **/
-MdbHandle *mdb_open(char *filename, MdbFileFlags flags)
+MdbHandle *mdb_open(const char *filename, MdbFileFlags flags)
 {
 	MdbHandle *mdb;
 
@@ -361,7 +361,7 @@ double mdb_pg_get_double(MdbHandle *mdb, int offset)
 	return mdb_get_double(mdb->pg_buf, offset);
 }
 
-
+#if 0
 int 
 mdb_set_pos(MdbHandle *mdb, int pos)
 {
@@ -370,7 +370,10 @@ mdb_set_pos(MdbHandle *mdb, int pos)
 	mdb->cur_pos=pos;
 	return pos;
 }
+
 int mdb_get_pos(MdbHandle *mdb)
 {
 	return mdb->cur_pos;
 }
+#endif
+

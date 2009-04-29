@@ -87,7 +87,7 @@ MdbColumn *col;
  * 
  * Returns: 0 on success.  1 on failure.
  */
-int mdb_find_pg_row(MdbHandle *mdb, int pg_row, char **buf, int *off, int *len)
+int mdb_find_pg_row(MdbHandle *mdb, int pg_row, unsigned char **buf, int *off, size_t *len)
 {
 	unsigned int pg = pg_row >> 8;
 	unsigned int row = pg_row & 0xff;
@@ -137,7 +137,8 @@ mdb_find_end_of_row(MdbHandle *mdb, int row)
 	return row_end;
 #endif
 }
-int mdb_is_null(unsigned char *null_mask, int col_num)
+#if 0
+static int mdb_is_null(unsigned char *null_mask, int col_num)
 {
 int byte_num = (col_num - 1) / 8;
 int bit_num = (col_num - 1) % 8;
@@ -148,6 +149,7 @@ int bit_num = (col_num - 1) % 8;
 		return 1;
 	}
 }
+#endif
 /* bool has to be handled specially because it uses the null bit to store its 
 ** value*/
 static int 
@@ -292,7 +294,7 @@ static int _mdb_attempt_bind(MdbHandle *mdb,
 	}
 	return 1;
 }
-int mdb_read_next_dpg(MdbTableDef *table)
+static int mdb_read_next_dpg(MdbTableDef *table)
 {
 	MdbCatalogEntry *entry = table->entry;
 	MdbHandle *mdb = entry->mdb;
@@ -427,14 +429,14 @@ int i;
 	return text;
 }
 #endif
-int 
+size_t 
 mdb_ole_read_next(MdbHandle *mdb, MdbColumn *col, void *ole_ptr)
 {
 	guint16 ole_len;
 	guint16 ole_flags;
-	char *buf;
+	unsigned char *buf;
 	int pg_row, row_start;
-	int len;
+	size_t len;
 
 	ole_len = mdb_get_int16(ole_ptr, 0);
 	ole_flags = mdb_get_int16(ole_ptr, 2);
@@ -461,14 +463,14 @@ mdb_ole_read_next(MdbHandle *mdb, MdbColumn *col, void *ole_ptr)
 	}
 	return 0;
 }
-int 
+size_t
 mdb_ole_read(MdbHandle *mdb, MdbColumn *col, void *ole_ptr, int chunk_size)
 {
 	guint16 ole_len;
 	guint16 ole_flags;
-	char *buf;
+	unsigned char *buf;
 	int pg_row, row_start;
-	int len;
+	size_t len;
 
 	ole_len = mdb_get_int16(ole_ptr, 0);
 	ole_flags = mdb_get_int16(ole_ptr, 2);
@@ -534,9 +536,9 @@ int mdb_copy_ole(MdbHandle *mdb, char *dest, int start, int size)
 {
 	guint16 ole_len;
 	guint16 ole_flags;
-	guint32 row_start, pg_row;
-	guint32 len;
-	char *buf;
+	gint32 row_start, pg_row;
+	size_t len;
+	unsigned char *buf;
 
 	if (size<MDB_MEMO_OVERHEAD) {
 		return 0;
@@ -597,9 +599,9 @@ static char *mdb_memo_to_string(MdbHandle *mdb, int start, int size)
 	guint16 memo_len;
 	static char text[MDB_BIND_SIZE];
 	guint16 memo_flags;
-	guint32 row_start, pg_row;
-	guint32 len;
-	char *buf;
+	gint32 row_start, pg_row;
+	size_t len;
+	unsigned char *buf;
 
 	if (size<MDB_MEMO_OVERHEAD) {
 		return "";
@@ -617,7 +619,7 @@ static char *mdb_memo_to_string(MdbHandle *mdb, int start, int size)
 
 	if (memo_flags & 0x8000) {
 		/* inline memo field */
-		strncpy(text, &mdb->pg_buf[start + MDB_MEMO_OVERHEAD],
+		strncpy(text, (char *)&mdb->pg_buf[start + MDB_MEMO_OVERHEAD],
 			size - MDB_MEMO_OVERHEAD);
 		text[size - MDB_MEMO_OVERHEAD]='\0';
 		return text;
@@ -635,7 +637,7 @@ static char *mdb_memo_to_string(MdbHandle *mdb, int start, int size)
 		buffer_dump(mdb->pg_buf, row_start, row_start + len);
 #endif
 		if (IS_JET3(mdb)) {
-			strncpy(text, buf + row_start, len);
+			strncpy(text, (char*) buf + row_start, len);
 			text[len]='\0';
 		} else {
 			mdb_unicode2ascii(mdb, buf, row_start, len, text);
@@ -655,7 +657,7 @@ static char *mdb_memo_to_string(MdbHandle *mdb, int start, int size)
 			printf("row num %d start %d len %d\n",
 				pg_row & 0xff, row_start, len);
 #endif
-			strncat(text, buf + row_start + 4, 
+			strncat(text, (char*) buf + row_start + 4, 
 				strlen(text) + len - 4 > MDB_BIND_SIZE ?
 				MDB_BIND_SIZE - strlen(text) : len - 4);
 
@@ -752,7 +754,7 @@ char *mdb_col_to_string(MdbHandle *mdb, unsigned char *buf, int start, int datat
 */
 				mdb_unicode2ascii(mdb, mdb->pg_buf, start, size, text);
 			} else {
-				strncpy(text, &buf[start], size);
+				strncpy(text,(char*) &buf[start], size);
 				text[size]='\0';
 			}
 			return text;

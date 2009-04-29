@@ -74,7 +74,7 @@ MdbTableDef *mdb_read_table(MdbCatalogEntry *entry)
 	MdbHandle *mdb = entry->mdb;
 	MdbFormatConstants *fmt = mdb->fmt;
 	int len, row_start, pg_row;
-	char *buf;
+	unsigned char *buf;
 
 	table = mdb_alloc_tabledef(entry);
 
@@ -269,10 +269,10 @@ GPtrArray *mdb_read_columns(MdbTableDef *table)
 		pcol = g_ptr_array_index(table->columns, i);
 
 		if (IS_JET4(mdb)) {
-			char *tmp_buf;
+			unsigned char *tmp_buf;
 			name_sz = read_pg_if_16(mdb, &cur_pos);
 			cur_pos += 2;
-			tmp_buf = (char *) g_malloc(name_sz);
+			tmp_buf = (unsigned char *) g_malloc(name_sz);
 			read_pg_if_n(mdb, tmp_buf, &cur_pos, name_sz);
 			mdb_unicode2ascii(mdb, tmp_buf, 0, name_sz, pcol->name);
 			g_free(tmp_buf);
@@ -281,7 +281,7 @@ GPtrArray *mdb_read_columns(MdbTableDef *table)
 			read_pg_if(mdb, &cur_pos, 0);
 			name_sz = mdb->pg_buf[cur_pos];
 			cur_pos++;
-			read_pg_if_n(mdb, pcol->name, &cur_pos, name_sz);
+			read_pg_if_n(mdb, (unsigned char*) pcol->name, &cur_pos, name_sz);
 			pcol->name[name_sz]='\0';
 			cur_pos += name_sz;
 		} else {
