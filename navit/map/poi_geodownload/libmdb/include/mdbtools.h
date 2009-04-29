@@ -16,10 +16,12 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
-
 #ifndef _mdbtools_h_
 #define _mdbtools_h_
 
+#ifdef __cplusplus
+  extern "C" {
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -120,7 +122,8 @@ enum {
 	MDB_DEBUG_USAGE = 0x0004,
 	MDB_DEBUG_OLE = 0x0008,
 	MDB_DEBUG_ROW = 0x0010,
-	MDB_USE_INDEX = 0x0020
+	MDB_USE_INDEX = 0x0020,
+	MDB_NO_MEMO = 0x0040 /* don't follow memo fields */
 };
 
 #define mdb_is_logical_op(x) (x == MDB_OR || \
@@ -192,7 +195,7 @@ typedef struct {
 
 /* offset to row count on data pages...version dependant */
 typedef struct {
-	int		pg_size;
+	ssize_t		pg_size;
 	guint16		row_count_offset; 
 	guint16		tab_num_rows_offset;
 	guint16		tab_num_cols_offset;
@@ -226,6 +229,7 @@ typedef struct {
 	MdbFormatConstants *fmt;
 	MdbStatistics *stats;
 #ifdef HAVE_ICONV
+	iconv_t	iconv_in;
 	iconv_t	iconv_out;
 #endif
 } MdbHandle; 
@@ -273,7 +277,7 @@ typedef struct {
 	int 		cur_value_len;
 	/* MEMO/OLE readers */
 	guint32		cur_blob_pg;
-	int		cur_blob_row;
+	guint32		cur_blob_row;
 	int		chunk_size;
 	/* numerics only */
 	int		col_prec;
@@ -281,7 +285,7 @@ typedef struct {
 	MdbProperties	*props;
 	/* info needed for handling deleted/added columns */
 	int 		fixed_offset;
-	int 		var_col_num;
+	unsigned int	var_col_num;
 	/* row_col_num is the row column number order, 
 	 * including deleted columns */
 	int		row_col_num;
@@ -305,7 +309,7 @@ typedef struct {
 	unsigned char cache_value[256];
 } MdbIndexPage;
 
-typedef int (*MdbSargTreeFunc)(MdbSargNode *, gpointer *data);
+typedef int (*MdbSargTreeFunc)(MdbSargNode *, gpointer data);
 
 #define MDB_MAX_INDEX_DEPTH 10
 
@@ -404,7 +408,7 @@ extern long   mdb_pg_get_int32(MdbHandle *mdb, int offset);
 extern float  mdb_pg_get_single(MdbHandle *mdb, int offset);
 extern double mdb_pg_get_double(MdbHandle *mdb, int offset);
 extern gint32 mdb_pg_get_int24_msb(MdbHandle *mdb, int offset);
-extern MdbHandle *mdb_open(char *filename, MdbFileFlags flags);
+extern MdbHandle *mdb_open(const char *filename, MdbFileFlags flags);
 extern void mdb_close(MdbHandle *mdb);
 extern MdbHandle *mdb_clone_handle(MdbHandle *mdb);
 extern void mdb_swap_pgbuf(MdbHandle *mdb);
@@ -440,13 +444,13 @@ extern int mdb_rewind_table(MdbTableDef *table);
 extern int mdb_fetch_row(MdbTableDef *table);
 extern int mdb_is_fixed_col(MdbColumn *col);
 extern char *mdb_col_to_string(MdbHandle *mdb, unsigned char *buf, int start, int datatype, int size);
-extern int mdb_find_pg_row(MdbHandle *mdb, int pg_row, char **buf, int *off, int *len);
+extern int mdb_find_pg_row(MdbHandle *mdb, int pg_row, unsigned char **buf, int *off, size_t *len);
 extern int mdb_find_end_of_row(MdbHandle *mdb, int row);
 extern int mdb_col_fixed_size(MdbColumn *col);
 extern int mdb_col_disp_size(MdbColumn *col);
 extern void mdb_bind_len(MdbTableDef *table, int col_num, int *len_ptr);
-extern int mdb_ole_read_next(MdbHandle *mdb, MdbColumn *col, void *ole_ptr);
-extern int mdb_ole_read(MdbHandle *mdb, MdbColumn *col, void *ole_ptr, int chunk_size);
+extern size_t mdb_ole_read_next(MdbHandle *mdb, MdbColumn *col, void *ole_ptr);
+extern size_t mdb_ole_read(MdbHandle *mdb, MdbColumn *col, void *ole_ptr, int chunk_size);
 extern void mdb_set_date_fmt(const char *);
 extern int mdb_read_row(MdbTableDef *table, unsigned int row);
 
@@ -511,7 +515,7 @@ extern unsigned char *mdb_new_data_pg(MdbCatalogEntry *entry);
 
 /* map.c */
 extern guint32 mdb_map_find_next_freepage(MdbTableDef *table, int row_size);
-guint32 mdb_map_find_next(MdbHandle *mdb, unsigned char *map, unsigned int map_sz, guint32 start_pg);
+extern guint32 mdb_map_find_next(MdbHandle *mdb, unsigned char *map, unsigned int map_sz, guint32 start_pg);
 
 /* props.c */
 extern GPtrArray *mdb_read_props_list(gchar *kkd, int len);
@@ -532,5 +536,9 @@ extern void mdb_debug(int klass, char *fmt, ...);
 /* iconv.c */
 extern int mdb_unicode2ascii(MdbHandle *mdb, unsigned char *buf, int offset, unsigned int len, char *dest);
 extern int mdb_ascii2unicode(MdbHandle *mdb, unsigned char *buf, int offset, unsigned int len, char *dest);
+
+#ifdef __cplusplus
+  }
+#endif
 
 #endif /* _mdbtools_h_ */
