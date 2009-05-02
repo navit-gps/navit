@@ -1450,10 +1450,10 @@ end_node(FILE *out)
 				g_free(name);
 			}
 			if (result->file) {
-				item_bin_init(&item, item_bin->type);
-				item_bin_add_coord(&item, &ni->c, 1);
-				item_bin_add_attr_string(&item, attr_town_name, attr_strings[attr_string_label]);
-				fwrite(&item, (item.len+1)*4, 1, result->file);
+				item_bin_init(item_bin, item_bin->type);
+				item_bin_add_coord(item_bin, &ni->c, 1);
+				item_bin_add_attr_string(item_bin, attr_town_name, attr_strings[attr_string_label]);
+				item_bin_write(item_bin, result->file);
 			}
 			
 		}
