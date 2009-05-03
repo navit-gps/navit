@@ -2073,6 +2073,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_search_street_in_town, wm));
 		wc->item=wm->item;
+		wc->selection_id=wm->selection_id;
 	}
 	if (display_attributes) {
 		struct map_rect *mr;
