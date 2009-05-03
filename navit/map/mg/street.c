@@ -509,7 +509,6 @@ static unsigned char
 latin1_tolower_ascii(unsigned char c)
 {
 	unsigned char ret=latin1_tolower(c);
-	dbg(0,"ret=0x%x\n",ret);
 	switch (ret) {
 	case 0xe4:
 		return 'a';
@@ -561,7 +560,7 @@ strncasecmp_latin1_ascii(char *str1, char *str2, int len)
 static int
 street_search_compare_do(struct map_rect_priv *mr, int country, int town_assoc, char *name)
 {
-        int d;
+        int d,len;
 
 	dbg(1,"enter");
 	dbg(1,"country 0x%x town_assoc 0x%x name '%s'\n", country, town_assoc, name);
@@ -570,10 +569,10 @@ street_search_compare_do(struct map_rect_priv *mr, int country, int town_assoc, 
 	if (!d) {
 		if (mr->search_item.id_lo == town_assoc ) {
 			dbg(1,"town_assoc match (0x%x)\n", town_assoc);
-			if (mr->search_partial)
-				d=strncasecmp_latin1_ascii(mr->search_str, name, strlen(mr->search_str));
-			else
-				d=strncasecmp_latin1_ascii(mr->search_str, name, INT_MAX);
+			len=mr->search_partial ? strlen(mr->search_str):INT_MAX;
+			d=strncasecmp_latin1(mr->search_str, name, len);
+			if (!strncasecmp_latin1_ascii(mr->search_str, name, len))
+				d=0;
 			dbg(1,"string %d\n", d);
 		} else {
 			if (town_assoc < mr->search_item.id_lo)
