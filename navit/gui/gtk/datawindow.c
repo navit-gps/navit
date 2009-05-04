@@ -168,7 +168,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct datawindow_priv *win)
 	if (event->type != GDK_KEY_PRESS)
 		return FALSE;
 	if (event->keyval == GDK_Cancel) {
-		gui_gtk_datawindow_delete(widget, event, win);
+		gui_gtk_datawindow_delete(widget, (GdkEvent *)event, win);
 		gtk_widget_destroy(win->window);
 	}
 	return FALSE;
