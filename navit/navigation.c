@@ -1555,7 +1555,7 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 	}
 
 	if (cmd->itm->told) {
-		return "";
+		return g_strdup("");
 	}
 
 	ret = show_maneuver(nav, itm, cmd, type, 0);
