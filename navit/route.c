@@ -554,7 +554,7 @@ route_contains(struct route *this, struct item *item)
 {
 	if (! this->path2 || !this->path2->path_hash)
 		return 0;
-	return  (int)item_hash_lookup(this->path2->path_hash, item);
+	return  (int)(long)item_hash_lookup(this->path2->path_hash, item);
 }
 
 /**
@@ -680,7 +680,7 @@ route_path_update(struct route *this, int cancel, int async)
 	if (!this->graph || !this->path2) {
 		dbg(1,"rebuild graph\n");
 		if (! this->route_graph_flood_done_cb)
-			this->route_graph_flood_done_cb=callback_new_2(callback_cast(route_path_update_done), this, 1);
+			this->route_graph_flood_done_cb=callback_new_2(callback_cast(route_path_update_done), this, (long)1);
 		dbg(1,"route_graph_update\n");
 		route_graph_update(this, this->route_graph_flood_done_cb, async);
 	}
@@ -1836,8 +1836,10 @@ static void
 route_graph_build_done(struct route_graph *rg, int cancel)
 {
 	dbg(1,"cancel=%d\n",cancel);
-	event_remove_idle(rg->idle_ev);
-	callback_destroy(rg->idle_cb);
+	if (rg->idle_ev)
+		event_remove_idle(rg->idle_ev);
+	if (rg->idle_cb)
+		callback_destroy(rg->idle_cb);
 	map_rect_destroy(rg->mr);
         mapset_close(rg->h);
 	route_free_selection(rg->sel);
@@ -1903,9 +1905,6 @@ route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2, struct 
 		if (async) {
 			ret->idle_cb=callback_new_1(callback_cast(route_graph_build_idle), ret);
 			ret->idle_ev=event_add_idle(50, ret->idle_cb);
-		} else {
-			while (ret->busy) 
-				route_graph_build_idle(ret);
 		}
 	} else
 		route_graph_build_done(ret, 0);
@@ -1939,6 +1938,10 @@ route_graph_update(struct route *this, struct callback *cb, int async)
 	route_status.u.num=route_status_building_graph;
 	route_set_attr(this, &route_status);
 	this->graph=route_graph_build(this->ms, &this->pos->c, &this->dst->c, this->route_graph_done_cb, async);
+	if (! async) {
+		while (this->graph->busy) 
+			route_graph_build_idle(this->graph);
+	}
 }
 
 /**
