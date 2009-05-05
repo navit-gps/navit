@@ -176,7 +176,7 @@ info_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 static void
 route_clear_action(GtkWidget *w, struct gui_priv *gui, void *dummy)
 {
-	navit_set_destination(gui->nav, NULL, NULL);
+	navit_set_destination(gui->nav, NULL, NULL, 0);
 }
 
 static void

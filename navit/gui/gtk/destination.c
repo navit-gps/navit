@@ -101,7 +101,7 @@ static void button_destination(GtkWidget *widget, struct search_param *search)
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, COL_COUNT, &c, -1);
 	if (c) {
 		desc=description(search, &iter);
-		navit_set_destination(search->nav, c, desc);
+		navit_set_destination(search->nav, c, desc, 1);
 		g_free(desc);
 	}
 }

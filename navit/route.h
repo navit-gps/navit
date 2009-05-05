@@ -91,7 +91,7 @@ int route_contains(struct route *this, struct item *item);
 void route_set_position(struct route *this, struct pcoord *pos);
 void route_set_position_from_tracking(struct route *this, struct tracking *tracking);
 struct map_selection *route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs);
-void route_set_destination(struct route *this, struct pcoord *dst);
+void route_set_destination(struct route *this, struct pcoord *dst, int async);
 struct route_path_handle *route_path_open(struct route *this);
 struct route_path_segment *route_path_get_segment(struct route_path_handle *h);
 struct coord *route_path_segment_get_start(struct route_path_segment *s);
