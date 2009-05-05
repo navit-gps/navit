@@ -494,6 +494,7 @@ graphics_gd_new(struct navit *nav, struct graphics_methods *meth, struct attr **
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct graphics_priv *ret;
 	struct attr *attr;
+	event_request_system("glib","graphics_gtk_drawing_area_new");
         font_freetype_new=plugin_get_font_type("freetype");
         if (!font_freetype_new)
                 return NULL;
