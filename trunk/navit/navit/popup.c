@@ -72,7 +72,7 @@ popup_set_destination(struct navit *nav, struct pcoord *pc)
 	transform_to_geo(transform_get_projection(navit_get_trans(nav)), &c, &g);
 	coord_format(g.lat,g.lng,DEGREES_MINUTES_SECONDS,buffer_geo,sizeof(buffer_geo));
 	sprintf(buffer,"Map Point %s", buffer_geo);
-	navit_set_destination(nav, pc, buffer);
+	navit_set_destination(nav, pc, buffer, 1);
 }
 
 static void

@@ -1646,7 +1646,7 @@ gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void 
 {
 	struct widget *w=wm->data;
 	dbg(0,"c=%d:0x%x,0x%x\n", w->c.pro, w->c.x, w->c.y);
-	navit_set_destination(this->nav, &w->c, w->name);
+	navit_set_destination(this->nav, &w->c, w->name, 1);
 	if (this->flags & 512) {
 		struct attr follow;
 		follow.type=attr_follow;
@@ -2865,7 +2865,7 @@ gui_internal_cmd_quit(struct gui_priv *this, struct widget *wm, void *data)
 static void
 gui_internal_cmd_abort_navigation(struct gui_priv *this, struct widget *wm, void *data)
 {
-	navit_set_destination(this->nav, NULL, NULL);
+	navit_set_destination(this->nav, NULL, NULL, 0);
 }
 
 

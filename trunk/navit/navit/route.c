@@ -251,12 +251,12 @@ struct route_graph_point_iterator {
 
 static struct route_info * route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *ms, struct pcoord *c);
 static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
-static void route_graph_update(struct route *this, struct callback *cb);
+static void route_graph_update(struct route *this, struct callback *cb, int async);
 static void route_graph_build_done(struct route_graph *rg, int cancel);
 static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct vehicleprofile *profile);
 static void route_process_street_graph(struct route_graph *this, struct item *item);
 static void route_graph_destroy(struct route_graph *this);
-static void route_path_update(struct route *this, int cancel);
+static void route_path_update(struct route *this, int cancel, int async);
 
 /**
  * @brief Returns the projection used for this route
@@ -651,7 +651,7 @@ route_path_update_done(struct route *this, int new_graph)
  * @param this The route to update
  */
 static void
-route_path_update(struct route *this, int cancel)
+route_path_update(struct route *this, int cancel, int async)
 {
 	dbg(1,"enter %d\n", cancel);
 	if (! this->pos || ! this->dst) {
@@ -682,7 +682,7 @@ route_path_update(struct route *this, int cancel)
 		if (! this->route_graph_flood_done_cb)
 			this->route_graph_flood_done_cb=callback_new_2(callback_cast(route_path_update_done), this, 1);
 		dbg(1,"route_graph_update\n");
-		route_graph_update(this, this->route_graph_flood_done_cb);
+		route_graph_update(this, this->route_graph_flood_done_cb, async);
 	}
 }
 
@@ -727,7 +727,7 @@ route_set_position(struct route *this, struct pcoord *pos)
 	if (! this->pos)
 		return;
 	route_info_distances(this->pos, pos->pro);
-	route_path_update(this, 0);
+	route_path_update(this, 0, 1);
 }
 
 /**
@@ -767,7 +767,7 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking)
 	dbg(3,"street 0=(0x%x,0x%x) %d=(0x%x,0x%x)\n", ret->street->c[0].x, ret->street->c[0].y, ret->street->count-1, ret->street->c[ret->street->count-1].x, ret->street->c[ret->street->count-1].y);
 	this->pos=ret;
 	if (this->dst) 
-		route_path_update(this, 0);
+		route_path_update(this, 0, 1);
 	dbg(2,"ret\n");
 }
 
@@ -875,7 +875,7 @@ route_free_selection(struct map_selection *sel)
  * @param dst Coordinates to set as destination
  */
 void
-route_set_destination(struct route *this, struct pcoord *dst)
+route_set_destination(struct route *this, struct pcoord *dst, int async)
 {
 	profile(0,NULL);
 	if (this->dst)
@@ -896,7 +896,7 @@ route_set_destination(struct route *this, struct pcoord *dst)
 	/* The graph has to be destroyed and set to NULL, otherwise route_path_update() doesn't work */
 	route_graph_destroy(this->graph);
 	this->graph=NULL;
-	route_path_update(this, 1);
+	route_path_update(this, 1, async);
 	profile(0,"end");
 }
 
@@ -1889,7 +1889,7 @@ route_graph_build_idle(struct route_graph *rg)
  * @return The new route graph.
  */
 static struct route_graph *
-route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2, struct callback *done_cb)
+route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2, struct callback *done_cb, int async)
 {
 	struct route_graph *ret=g_new0(struct route_graph, 1);
 
@@ -1900,8 +1900,13 @@ route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2, struct 
 	ret->done_cb=done_cb;
 	ret->busy=1;
 	if (route_graph_build_next_map(ret)) {
-		ret->idle_cb=callback_new_1(callback_cast(route_graph_build_idle), ret);
-		ret->idle_ev=event_add_idle(50, ret->idle_cb);
+		if (async) {
+			ret->idle_cb=callback_new_1(callback_cast(route_graph_build_idle), ret);
+			ret->idle_ev=event_add_idle(50, ret->idle_cb);
+		} else {
+			while (ret->busy) 
+				route_graph_build_idle(ret);
+		}
 	} else
 		route_graph_build_done(ret, 0);
 
@@ -1923,7 +1928,7 @@ route_graph_update_done(struct route *this, struct callback *cb)
  * @param this The route to update the graph for
  */
 static void
-route_graph_update(struct route *this, struct callback *cb)
+route_graph_update(struct route *this, struct callback *cb, int async)
 {
 	struct attr route_status;
 
@@ -1933,7 +1938,7 @@ route_graph_update(struct route *this, struct callback *cb)
 	this->route_graph_done_cb=callback_new_2(callback_cast(route_graph_update_done), this, cb);
 	route_status.u.num=route_status_building_graph;
 	route_set_attr(this, &route_status);
-	this->graph=route_graph_build(this->ms, &this->pos->c, &this->dst->c, this->route_graph_done_cb);
+	this->graph=route_graph_build(this->ms, &this->pos->c, &this->dst->c, this->route_graph_done_cb, async);
 }
 
 /**
