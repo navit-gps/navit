@@ -681,7 +681,7 @@ request_navit_set_destination(DBusConnection *connection, DBusMessage *message)
 	dbus_message_iter_get_basic(&iter, &description);
 	dbg(0, " destination -> %s\n", description);
 	
-	navit_set_destination(navit, &pc, description);
+	navit_set_destination(navit, &pc, description, 1);
 	return empty_reply(connection, message);
 }
 

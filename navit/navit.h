@@ -63,7 +63,7 @@ void navit_zoom_in(struct navit *this_, int factor, struct point *p);
 void navit_zoom_out(struct navit *this_, int factor, struct point *p);
 struct navit *navit_new(struct attr *parent, struct attr **attrs);
 struct graphics *navit_get_graphics(struct navit *this_);
-void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description);
+void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async);
 void navit_add_bookmark(struct navit *this_, struct pcoord *c, const char *description);
 void navit_say(struct navit *this_, char *text);
 int navit_speech_estimate(struct navit *this_, char *str);

@@ -934,7 +934,7 @@ navit_write_center_to_file(struct navit *this_, char *file)
  * @returns nothing
  */
 void
-navit_set_destination(struct navit *this_, struct pcoord *c, const char *description)
+navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async)
 {
 	if (c) {
 		this_->destination=*c;
@@ -946,7 +946,7 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 	g_free(destination_file);
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 	if (this_->route) {
-		route_set_destination(this_->route, c);
+		route_set_destination(this_->route, c, async);
 
 		if (this_->ready == 3)
 			navit_draw(this_);
@@ -1047,7 +1047,7 @@ navit_add_former_destinations_from_file(struct navit *this_)
 	pc.x=c.x;
 	pc.y=c.y;
 	if (valid) {
-		route_set_destination(this_->route, &pc);
+		route_set_destination(this_->route, &pc, 1);
 		this_->destination=pc;
 		this_->destination_valid=1;
 	}
@@ -2065,7 +2065,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 
 	/* Finally, if we reached our destination, stop navigation. */
 	if (this_->route && route_destination_reached(this_->route)) {
-		navit_set_destination(this_, NULL, NULL);
+		navit_set_destination(this_, NULL, NULL, 0);
 	}
 	profile(0,"return 5\n");
 }

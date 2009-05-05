@@ -56,9 +56,10 @@ navit_set_destination_py(navitObject *self, PyObject *args)
 {
 	PyObject *pcoord;
 	const char *description;
-	if (!PyArg_ParseTuple(args, "O!s", &pcoord_Type, &pcoord, &description))
+	int async;
+	if (!PyArg_ParseTuple(args, "O!si", &pcoord_Type, &pcoord, &description, &async))
 		return NULL;
-	navit_set_destination(self->navit, pcoord_py_get(pcoord), description);
+	navit_set_destination(self->navit, pcoord_py_get(pcoord), description, async);
 	Py_RETURN_NONE;
 }
 
