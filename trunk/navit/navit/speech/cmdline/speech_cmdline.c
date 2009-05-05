@@ -23,6 +23,10 @@
 #include "item.h"
 #include "plugin.h"
 #include "speech.h"
+#ifdef HAVE_API_WIN32_BASE
+#include <windows.h>
+#include "util.h"
+#endif
 #ifdef USE_EXEC
 #include <sys/types.h>
 #include <unistd.h>
@@ -64,10 +68,31 @@ speechd_say(struct speech_priv *this, const char *text)
         }
 	return 0;
 #else
+#ifdef HAVE_API_WIN32_BASE
+	char *cmdline,*p;
+	PROCESS_INFORMATION pr;
+	LPCWSTR cmd,arg;
+	int ret;
+
+
+	cmdline=g_strdup_printf(this->cmdline, text);
+	p=cmdline;
+	while (*p != ' ' && *p != '\0')
+		p++;
+	if (*p == ' ')
+		*p++='\0';
+	cmd = newSysString(cmdline);
+	arg = newSysString(p);
+	ret=!CreateProcess(cmd, arg, NULL, NULL, 0, CREATE_NEW_CONSOLE, NULL, NULL, NULL, &pr);
+	g_free(cmd);
+	g_free(arg);
+	return ret;
+#else
 	char *cmdline;
 
 	cmdline=g_strdup_printf(this->cmdline, text);
 	return system(cmdline);
+#endif
 #endif
 }
 
