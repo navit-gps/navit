@@ -105,7 +105,7 @@ static void notify_apply(struct datawindow_priv *datawindow, int index, int para
     break;
     case attr_street_name:
     {
-        navit_set_destination(datawindow->nav, res->c, "Mein Test");
+        navit_set_destination(datawindow->nav, res->c, "Mein Test", 1);
         DestroyWindow(datawindow->hwnd);
     }
     break;
