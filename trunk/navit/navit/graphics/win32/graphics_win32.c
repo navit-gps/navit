@@ -13,9 +13,25 @@
 #include "callback.h"
 #include "plugin.h"
 #include "item.h"
+#include "window.h"
 #include "win32_gui.h"
 #include "xpm2bmp.h"
 #include "support/win32/ConvertUTF.h"
+
+struct graphics_priv {
+	struct navit *nav;
+	struct window window;
+	struct point p;
+	int width;
+	int height;
+	int library_init;
+	int visible;
+	HANDLE wnd_parent_handle;
+	HANDLE wnd_handle;
+	COLORREF bg_color;
+	struct callback_list *cbl;
+	enum draw_mode_num mode;
+};
 
 static HWND g_hwnd;
 
@@ -138,7 +154,7 @@ static void ErrorExit(LPTSTR lpszFunction)
         (lstrlen((LPCTSTR)lpMsgBuf)+lstrlen((LPCTSTR)lpszFunction)+40)*sizeof(TCHAR));
     wprintf((LPTSTR)lpDisplayBuf, TEXT("%s failed with error %d: %s"), lpszFunction, dw, lpMsgBuf);
 
-    dbg(0, "%s\n", lpDisplayBuf );
+    dbg(0, "%s failed with error %d: %s", lpszFunction, dw, lpMsgBuf);
     MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK);
 
     LocalFree(lpMsgBuf);
@@ -384,15 +400,25 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 				TEXT(""),
 #ifdef HAVE_API_WIN32_CE
 				WS_VISIBLE,
-#else
+#elif 0
 				WS_CHILD,
+#else
+				WS_OVERLAPPEDWINDOW,
 #endif
 				0,
 				0,
 				gr->width,
 				gr->height,
+#if 0
 				gr->wnd_parent_handle,
+#else
+				NULL,
+#endif
+#if 0
 				(HMENU)ID_CHILD_GFX,
+#else
+				NULL,
+#endif
 				GetModuleHandle(NULL),
 				NULL);
 
@@ -611,14 +637,92 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 
 static void * get_data(struct graphics_priv *this_, char *type)
 {
-	if ( strcmp( "wnd_parent_handle_ptr", type ) == 0 )
-	{
+	if ( strcmp( "wnd_parent_handle_ptr", type ) == 0 ) {
 		return &( this_->wnd_parent_handle );
 	}
-	if ( strcmp( "START_CLIENT", type ) == 0 )
-	{
+	if ( strcmp( "START_CLIENT", type ) == 0 ) {
 		CreateGraphicsWindows( this_ );
 		return NULL;
+	}
+	if (!strcmp(type, "window")) {
+#ifdef HAVE_API_WIN32_CE
+	WNDCLASS wc;
+#else
+	WNDCLASSEX wc;
+	wc.cbSize		 = sizeof(WNDCLASSEX);
+	wc.hIconSm		 = NULL;
+#endif
+	HWND hwnd;
+	RECT rcParent;
+
+	wc.style	 = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	wc.lpfnWndProc	= WndProc;
+	wc.cbClsExtra	= 0;
+	wc.cbWndExtra	= 64;
+	wc.hInstance	= GetModuleHandle(NULL);
+	wc.hIcon	= NULL;
+	wc.hCursor	= LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	wc.lpszMenuName  = NULL;
+	wc.lpszClassName = g_szClassName;
+
+	GetClientRect( this_->wnd_parent_handle,&rcParent);
+
+#ifdef HAVE_API_WIN32_CE
+	if(!RegisterClass(&wc))
+#else
+	if(!RegisterClassEx(&wc))
+#endif
+	{
+		ErrorExit( TEXT("Window Registration Failed!") );
+		return NULL;
+	}
+
+	callback_list_call_attr_2(this_->cbl, attr_resize, (void *)this_->width, (void *)this_->height);
+
+	g_hwnd = hwnd = CreateWindow(g_szClassName,
+				TEXT(""),
+#ifdef HAVE_API_WIN32_CE
+				WS_VISIBLE,
+#elif 0
+				WS_CHILD,
+#else
+				WS_OVERLAPPEDWINDOW,
+#endif
+				0,
+				0,
+				this_->width,
+				this_->height,
+#if 0
+				this_->wnd_parent_handle,
+#else
+				NULL,
+#endif
+#if 0
+				(HMENU)ID_CHILD_GFX,
+#else
+				NULL,
+#endif
+				GetModuleHandle(NULL),
+				NULL);
+
+	if(hwnd == NULL)
+	{
+		ErrorExit( TEXT("Window Creation Failed!") );
+		return NULL;
+	}
+	this_->wnd_handle = hwnd;
+
+	SetWindowLongPtr( hwnd , DWLP_USER, this_ );
+
+	ShowWindow( hwnd, TRUE );
+	UpdateWindow( hwnd );
+
+
+	PostMessage( this_->wnd_parent_handle, WM_USER + 1, 0, 0 );
+
+		this_->window.priv=this_;
+		return &this_->window;
 	}
 	return NULL;
 }
@@ -794,7 +898,8 @@ static struct graphics_methods graphics_methods = {
 	get_data,
 };
 
-static struct graphics_priv * graphics_win32_drawing_area_new_helper(struct graphics_methods *meth)
+static struct graphics_priv *
+graphics_win32_new_helper(struct graphics_methods *meth)
 {
 	struct graphics_priv *this_=g_new0(struct graphics_priv,1);
 	*meth=graphics_methods;
@@ -802,12 +907,23 @@ static struct graphics_priv * graphics_win32_drawing_area_new_helper(struct grap
 	return this_;
 }
 
-struct graphics_priv* win32_graphics_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
+static struct graphics_priv*
+graphics_win32_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
+	struct attr *attr;
+
 	struct graphics_priv* this_;
 	if (!event_request_system("win32","graphics_win32"))
 		return NULL;
-	this_=graphics_win32_drawing_area_new_helper(meth);
+	this_=graphics_win32_new_helper(meth);
+	this_->nav=nav;
+	this_->width=792;
+	if ((attr=attr_search(attrs, NULL, attr_w)))
+		this_->width=attr->u.num;
+	this_->height=547;
+	if ((attr=attr_search(attrs, NULL, attr_h)))
+		this_->height=attr->u.num;
+
 	this_->cbl=cbl;
 	return this_;
 }
@@ -959,6 +1075,6 @@ event_win32_new(struct event_methods *meth)
 void
 plugin_init(void)
 {
-	plugin_register_graphics_type("win32", win32_graphics_new);
+	plugin_register_graphics_type("win32", graphics_win32_new);
         plugin_register_event_type("win32", event_win32_new);
 }
