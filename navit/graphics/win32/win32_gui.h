@@ -46,18 +46,7 @@ struct gui_priv {
 };
 
 
-struct graphics_priv {
-	struct point p;
-	int width;
-	int height;
-	int library_init;
-	int visible;
-	HANDLE wnd_parent_handle;
-	HANDLE wnd_handle;
-	COLORREF bg_color;
-	struct callback_list *cbl;
-	enum draw_mode_num mode;
-};
+struct graphics_priv;
 
 struct menu_priv *gui_gtk_menubar_new(struct gui_priv *gui, struct menu_methods *meth);
 struct menu_priv *gui_gtk_toolbar_new(struct gui_priv *gui, struct menu_methods *meth);
