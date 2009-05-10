@@ -46,6 +46,9 @@
 
 #define BUFFER_SIZE 1280
 
+typedef long int osmid;
+
+
 #if 1
 #define debug_tile(x) 0
 #else
@@ -59,6 +62,10 @@ static int attr_debug_level=1;
 static int nodeid,wayid;
 static int phase;
 static int ignore_unkown = 0, coverage=0;
+
+long long slice_size=1024*1024*1024;
+int slices;
+
 
 static char *attrmap={
 	"n	*=*			point_unkn\n"
@@ -668,6 +675,31 @@ item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val)
 	item_bin_add_attr(ib, &attr);
 }
 
+static void *
+item_bin_get_attr(struct item_bin *ib, enum attr_type type)
+{
+	unsigned char *s=(unsigned char *)ib;
+	unsigned char *e=(unsigned char *)(ib+(ib->len+1)*4);
+	s+=sizeof(struct item_bin)+ib->clen*4;
+	while (s < e) {
+		struct attr_bin *ab=(struct attr_bin *)s;
+		s+=(ab->len+1)*4;
+		if (ab->type == type) {
+			return (ab+1);
+		}	
+	}
+	return NULL;
+}
+
+static long long
+item_bin_get_wayid(struct item_bin *ib)
+{
+	long long *ret=item_bin_get_attr(ib, attr_osm_wayid);
+	if (ret)
+		return *ret;
+	return 0;
+}
+
 static void
 item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long long val)
 {
@@ -702,6 +734,18 @@ static void
 item_bin_write(struct item_bin *ib, FILE *out)
 {
 	fwrite(buffer, (ib->len+1)*4, 1, out);
+}
+
+static int
+item_bin_read(struct item_bin *ib, FILE *in)
+{
+	if (fread(ib, 4, 1, in) == 0)
+		return 0;
+	if (!ib->len)
+		return 1;
+	if (fread((unsigned char *)ib+4, ib->len*4, 1, in))
+		return 2;
+	return 0;
 }
 
 static void
@@ -1014,10 +1058,12 @@ parse_tag(char *p)
 
 struct buffer {
 	int malloced_step;
-	size_t malloced;
+	long long malloced;
 	unsigned char *base;
-	size_t size;
+	long long size;
 };
+
+static void save_buffer(char *filename, struct buffer *b, long long offset);
 
 static struct tile_head {
 	int num_subtiles;
@@ -1082,6 +1128,17 @@ node_buffer_to_hash(void)
 static struct node_item *ni;
 
 static void
+flush_nodes(int final)
+{
+	fprintf(stderr,"flush_nodes %d\n",final);
+	save_buffer("coords.tmp",&node_buffer,slices*slice_size);
+	if (!final) {
+		node_buffer.size=0;
+	}
+	slices++;
+}
+
+static void
 add_node(int id, double lat, double lon)
 {
 	if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced)
@@ -1099,6 +1156,9 @@ add_node(int id, double lat, double lon)
 	osmid_attr.type=attr_osm_nodeid;	
 	osmid_attr.len=3;
 	osmid_attr_value=id;
+	if (node_buffer.size + sizeof(struct node_item) > slice_size) {
+		flush_nodes(0);
+	}
 	ni=(struct node_item *)(node_buffer.base+node_buffer.size);
 	ni->id=id;
 	ni->ref_node=0;
@@ -1155,6 +1215,10 @@ node_item_get(int id)
 		i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)id));
 		return ni+i;
 	}
+	if (ni[0].id > id)
+		return NULL;
+	if (ni[count-1].id < id)
+		return NULL;
 	while (ni[p].id != id) {
 #if 0
 		fprintf(stderr,"p=%d count=%d interval=%d id=%d ni[p].id=%d\n", p, count, interval, id, ni[p].id);
@@ -1188,19 +1252,6 @@ node_item_get(int id)
 
 	return &ni[p];
 }
-
-#if 0
-static void
-node_ref_way(int id)
-{
-	struct node_item *ni=node_item_get(id);
-	if (! ni) {
-		fprintf(stderr,"WARNING: node id %d not found\n", id);
-		return;
-	}
-	ni->ref_way++;
-}
-#endif
 
 static void
 add_way(int id)
@@ -1415,9 +1466,6 @@ end_node(FILE *out)
 	else
 		item_bin_init(item_bin, type_point_unkn);
 	item_bin_add_coord(item_bin, &ni->c, 1);
-	if (osmid_attr_value == 368279467) {
-		fprintf(stderr,"%s\n", attr_strings[attr_string_label]);
-	}
 	item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_name : attr_label, attr_strings[attr_string_label]);
 	item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
 	item_bin_add_attr_string(item_bin, attr_street_name, attr_strings[attr_string_street_name]);
@@ -1537,25 +1585,45 @@ sort_countries(int keep_tmpfiles)
 }
 
 static void
-add_nd(char *p, int ref)
+node_ref_way(osmid node)
 {
-	int len;
 	struct node_item *ni;
-	ni=node_item_get(ref);
-	if (ni) {
-#if 0
-		coord_buffer[coord_count++]=ni->c;
-#else
-		SET_REF(coord_buffer[coord_count], ref);
-		coord_count++;
-#endif
-		ni->ref_way++;
-	} else {
-		len=strlen(p);
-		if (len > 0 && p[len-1]=='\n')
-			p[len-1]='\0';
-		fprintf(stderr,"WARNING: way %d: node %d not found (%s)\n",wayid,ref,p);
+	ni=node_item_get(node);
+	if (ni) 
+		ni->ref_way++; 
+}
+
+static int
+resolve_ways(FILE *in, FILE *out)
+{
+	struct item_bin *ib=(struct item_bin *)buffer;
+	struct coord *c;
+	int i;
+
+	fseek(in, 0, SEEK_SET);
+	for (;;) {
+		switch (item_bin_read(ib, in)) {
+		case 0:
+			return 0;
+		case 2:
+			c=(struct coord *)(ib+1);
+			for (i = 0 ; i < ib->clen/2 ; i++) {
+				node_ref_way(REF(c[i]));
+			}
+		default:
+			continue;
+		}
 	}
+	
+	
+}
+
+static void
+add_nd(char *p, osmid ref)
+{
+	SET_REF(coord_buffer[coord_count], ref);
+	node_ref_way(ref);
+	coord_count++;
 	if (coord_count > 65536) {
 		fprintf(stderr,"ERROR: Overflow\n");
 		exit(1);
@@ -1574,26 +1642,38 @@ parse_nd(char *p)
 
 
 static void
-save_buffer(char *filename, struct buffer *b)
+save_buffer(char *filename, struct buffer *b, long long offset)
 {
 	FILE *f;
-	f=fopen(filename,"wb+");
+	f=fopen(filename,"rb+");
+	if (! f)
+		f=fopen(filename,"wb+");
+		
+	assert(f != NULL);
+	fseek(f, offset, SEEK_SET);
 	fwrite(b->base, b->size, 1, f);
 	fclose(f);
 }
 
 static void
-load_buffer(char *filename, struct buffer *b)
+load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 {
 	FILE *f;
+	long long len;
+	int ret;
 	if (b->base)
 		free(b->base);
 	b->malloced=0;
 	f=fopen(filename,"rb");
 	fseek(f, 0, SEEK_END);
-	b->size=b->malloced=ftell(f);
-	fprintf(stderr,"reading %d bytes from %s\n", (int)b->size, filename);
-	fseek(f, 0, SEEK_SET);
+	len=ftell(f);
+	if (offset+size > len) {
+		size=len-offset;
+		ret=1;
+	}
+	b->size=b->malloced=size;
+	fprintf(stderr,"reading %Ld bytes from %s at %Ld\n", b->size, filename, offset);
+	fseek(f, offset, SEEK_SET);
 	b->base=malloc(b->size);
 	assert(b->base != NULL);
 	fread(b->base, b->size, 1, f);
@@ -2175,10 +2255,11 @@ write_item_part(FILE *out, FILE *out_graph, struct item_bin *orig, int first, in
 }
 
 static int
-phase2(FILE *in, FILE *out, FILE *out_graph)
+phase2(FILE *in, FILE *out, FILE *out_graph, int final)
 {
 	struct coord *c;
-	int i,ccount,last,ndref;
+	int i,ccount,last,remaining;
+	osmid ndref;
 	struct item_bin *ib;
 	struct node_item *ni;
 
@@ -2197,13 +2278,20 @@ phase2(FILE *in, FILE *out, FILE *out_graph)
 			if (IS_REF(c[i])) {
 				ndref=REF(c[i]);
 				ni=node_item_get(ndref);
-#if 0
-				fprintf(stderr,"ni=%p\n", ni);
-#endif
-				c[i]=ni->c;
-				if (ni->ref_way > 1 && i != 0 && i != ccount-1 && item_get_default_flags(ib->type)) {
-					write_item_part(out, out_graph, ib, last, i);
-					last=i;
+				if (ni) {
+					c[i]=ni->c;
+					if (ni->ref_way > 1 && i != 0 && i != ccount-1 && i != last && item_get_default_flags(ib->type)) {
+						write_item_part(out, out_graph, ib, last, i);
+						last=i;
+					}
+				} else if (final) {
+					fprintf(stderr,"Non-existing node %Ld referenced from way %Ld\n", (long long)ndref, item_bin_get_wayid(ib));
+					remaining=(ib->len+1)*4-sizeof(struct item_bin)-i*sizeof(struct coord);
+					memmove(&c[i], &c[i+1], remaining);
+					ib->clen-=2;
+					ib->len-=2;
+					i--;
+					ccount--;
 				}
 			}
 		}
@@ -2834,7 +2922,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 }
 
 static int
-process_slice(FILE *ways_in, FILE *nodes_in, int size, char *suffix, struct zip_info *zip_info)
+process_slice(FILE *ways_in, FILE *nodes_in, long long size, char *suffix, struct zip_info *zip_info)
 {
 	struct tile_head *th;
 	char *slice_data,*zip_data;
@@ -2895,8 +2983,8 @@ cat(FILE *in, FILE *out)
 static int
 phase5(FILE *ways_in, FILE *nodes_in, char *suffix, struct zip_info *zip_info)
 {
-	int slice_size=1024*1024*1024;
-	int size,slices;
+	long long size;
+	int slices;
 	int zipnum,written_tiles;
 	struct tile_head *th,*th2;
 	create_tile_hash();
@@ -2904,10 +2992,10 @@ phase5(FILE *ways_in, FILE *nodes_in, char *suffix, struct zip_info *zip_info)
 	th=tile_head_root;
 	size=0;
 	slices=0;
-	fprintf(stderr, "Maximum slice size %d\n", slice_size);
+	fprintf(stderr, "Maximum slice size %Ld\n", slice_size);
 	while (th) {
 		if (size + th->total_size > slice_size) {
-			fprintf(stderr,"Slice %d is of size %d\n", slices, size);
+			fprintf(stderr,"Slice %d is of size %Ld\n", slices, size);
 			size=0;
 			slices++;
 		}
@@ -2915,7 +3003,7 @@ phase5(FILE *ways_in, FILE *nodes_in, char *suffix, struct zip_info *zip_info)
 		th=th->next;
 	}
 	if (size)
-		fprintf(stderr,"Slice %d is of size %d\n", slices, size);
+		fprintf(stderr,"Slice %d is of size %Ld\n", slices, size);
 	th=tile_head_root;
 	size=0;
 	slices=0;
@@ -3034,6 +3122,16 @@ tempfile_unlink(char *suffix, char *name)
 	unlink(buffer);
 }
 
+static void
+tempfile_rename(char *suffix, char *from, char *to)
+{
+	char buffer_from[4096],buffer_to[4096];
+	sprintf(buffer_from,"%s_%s.tmp",from,suffix);
+	sprintf(buffer_to,"%s_%s.tmp",to,suffix);
+	assert(rename(buffer_from, buffer_to) == 0);
+	
+}
+
 int main(int argc, char **argv)
 {
 	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*tilesdir;
@@ -3091,9 +3189,10 @@ int main(int argc, char **argv)
 			{"input-file", 1, 0, 'i'},
 			{"ignore-unknown", 0, 0, 'n'},
 			{"ways-only", 0, 0, 'W'},
+			{"slice-size", 1, 0, 'S'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "DNWa:bc"
+		c = getopt_long (argc, argv, "DNWS:a:bc"
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
@@ -3106,6 +3205,9 @@ int main(int argc, char **argv)
 			break;
 		case 'N':
 			process_ways=0;
+			break;
+		case 'S':
+			slice_size=atoll(optarg);
 			break;
 		case 'W':
 			process_nodes=0;
@@ -3190,12 +3292,13 @@ int main(int argc, char **argv)
 
 	if (input == 0) {
 	if (start == 1) {
+		unlink("coords.tmp");
 		if (process_ways)
-			ways=tempfile("ways",suffix,1);
+			ways=tempfile(suffix,"ways",1);
 		if (process_nodes)
-			nodes=tempfile("nodes",suffix,1);
+			nodes=tempfile(suffix,"nodes",1);
 		if (process_ways && process_nodes) 
-			turn_restrictions=tempfile("turn_restrictions",suffix,1);
+			turn_restrictions=tempfile(suffix,"turn_restrictions",1);
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
 #ifdef HAVE_POSTGRESQL
@@ -3209,6 +3312,16 @@ int main(int argc, char **argv)
 		}
 		else
 			phase1(input_file,ways,nodes,turn_restrictions);
+		if (slices) {
+			fprintf(stderr,"%d slices\n",slices);
+			flush_nodes(1);
+			for (i = slices-2 ; i>=0 ; i--) {
+				fprintf(stderr, "slice %d of %d\n",slices-i-1,slices-1);
+				load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
+				resolve_ways(ways, NULL);
+				save_buffer("coords.tmp",&node_buffer, i*slice_size);
+			}
+		}
 		if (ways)
 			fclose(ways);
 		if (nodes)
@@ -3216,25 +3329,40 @@ int main(int argc, char **argv)
 		if (turn_restrictions)
 			fclose(turn_restrictions);
 	}
-	if (end == 1 || dump_coordinates)
-		save_buffer("coords.tmp",&node_buffer);
+	if (!slices) {
+		if (end == 1 || dump_coordinates)
+			flush_nodes(1);
+		else
+			slices++;
+	}
 	if (end == 1)
 		exit(0);
-	if (start == 2)
-		load_buffer("coords.tmp",&node_buffer);
+	if (start == 2) {
+		load_buffer("coords.tmp",&node_buffer,0, slice_size);
+	}
 	if (start <= 2) {
 		if (process_ways) {
-			ways=tempfile("ways",suffix,0);
-			ways_split=tempfile("ways_split",suffix,1);
-			graph=tempfile("graph",suffix,1);
+			ways=tempfile(suffix,"ways",0);
 			phase=2;
 			fprintf(stderr,"PROGRESS: Phase 2: finding intersections\n");
-			phase2(ways,ways_split,graph);
-			fclose(ways_split);
-			fclose(ways);
-			fclose(graph);
+			for (i = 0 ; i < slices ; i++) {
+				int final=(i >= slices-1);
+				ways_split=tempfile(suffix,"ways_split",1);
+				graph=tempfile(suffix,"graph",1);
+				if (i) 
+					load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
+				phase2(ways,ways_split,graph, final);
+				fclose(ways_split);
+				fclose(ways);
+				fclose(graph);
+				if (! final) {
+					tempfile_rename(suffix,"ways_split","ways_to_resolve");
+					ways=tempfile(suffix,"ways_to_resolve",0);
+				}
+			}
 			if(!keep_tmpfiles)
-				tempfile_unlink("ways",suffix);
+				tempfile_unlink(suffix,"ways");
+			tempfile_unlink(suffix,"ways_to_resolve");
 		} else
 			fprintf(stderr,"PROGRESS: Skipping Phase 2\n");
 	}
@@ -3245,7 +3373,7 @@ int main(int argc, char **argv)
 	if (end == 2)
 		exit(0);
 	} else {
-		ways_split=tempfile("ways_split",suffix,0);
+		ways_split=tempfile(suffix,"ways_split",0);
 		process_binfile(stdin, ways_split);
 		fclose(ways_split);
 	}
@@ -3258,21 +3386,21 @@ int main(int argc, char **argv)
 	if (output == 1) {
 		fprintf(stderr,"PROGRESS: Phase 4: dumping\n");
 		if (process_nodes) {
-			nodes=tempfile("nodes",suffix,0);
+			nodes=tempfile(suffix,"nodes",0);
 			if (nodes) {
 				dump(nodes);
 				fclose(nodes);
 			}
 		}
 		if (process_ways) {
-			ways_split=tempfile("ways_split",suffix,0);
+			ways_split=tempfile(suffix,"ways_split",0);
 			if (ways_split) {
 				dump(ways_split);
 				fclose(ways_split);
 			}
 		}
 		if (process_ways && process_nodes) {
-			turn_restrictions=tempfile("turn_restrictions",suffix,0);
+			turn_restrictions=tempfile(suffix,"turn_restrictions",0);
 			if (turn_restrictions) {
 				dump(turn_restrictions);
 				fclose(turn_restrictions);
@@ -3290,10 +3418,10 @@ int main(int argc, char **argv)
 		zipnum=zip_info.zipnum;
 		fprintf(stderr,"PROGRESS: Phase 4: generating tiles %s\n",suffix);
 		if (process_ways)
-			ways_split=tempfile("ways_split",suffix,0);
+			ways_split=tempfile(suffix,"ways_split",0);
 		if (process_nodes)
-			nodes=tempfile("nodes",suffix,0);
-		tilesdir=tempfile("tilesdir",suffix,1);
+			nodes=tempfile(suffix,"nodes",0);
+		tilesdir=tempfile(suffix,"tilesdir",1);
 		phase4(ways_split,nodes,suffix,tilesdir,&zip_info);
 		fclose(tilesdir);
 		if (nodes)
@@ -3308,9 +3436,9 @@ int main(int argc, char **argv)
 		phase=4;
 		fprintf(stderr,"PROGRESS: Phase 5: assembling map %s\n",suffix);
 		if (process_ways)
-			ways_split=tempfile("ways_split",suffix,0);
+			ways_split=tempfile(suffix,"ways_split",0);
 		if (process_nodes)
-			nodes=tempfile("nodes",suffix,0);
+			nodes=tempfile(suffix,"nodes",0);
 		if (i == 0) {
 			zip_info.dir_size=0;
 			zip_info.offset=0;
@@ -3328,12 +3456,13 @@ int main(int argc, char **argv)
 		if (ways_split)
 			fclose(ways_split);
 		if(!keep_tmpfiles) {
-			tempfile_unlink("nodes",suffix);
-			tempfile_unlink("ways_split",suffix);
-			tempfile_unlink("turn_restrictions",suffix);
-			tempfile_unlink("graph",suffix);
-			tempfile_unlink("tilesdir",suffix);
-			tempfile_unlink("zipdir",suffix);
+			tempfile_unlink(suffix,"nodes");
+			tempfile_unlink(suffix,"ways_split");
+			tempfile_unlink(suffix,"turn_restrictions");
+			tempfile_unlink(suffix,"graph");
+			tempfile_unlink(suffix,"tilesdir");
+			tempfile_unlink("zipdir","");
+			unlink("coords.tmp");
 		}
 		if (i == suffix_count-1) {
 	zipnum=zip_info.zipnum;
