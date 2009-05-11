@@ -341,6 +341,9 @@ font_freetype_font_new(struct graphics_priv *gr,
 	char *idstr;
 	FT_Face face;
 #endif
+#ifndef HAVE_FONTCONFIG
+	char *name;
+#endif
 
 	if (!library_init) {
 		FT_Init_FreeType(&library);
