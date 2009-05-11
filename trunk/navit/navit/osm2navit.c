@@ -1574,9 +1574,10 @@ sort_countries(int keep_tmpfiles)
 				fwrite(ib, (ib->len+1)*4, 1, f);
 				if (j) 
 					bbox_extend(c, &co->r);
-				else
+				else {
 					co->r.l=*c;
 					co->r.h=*c;
+				}
 			}
 			fclose(f);
 		}
