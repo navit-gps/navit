@@ -2004,11 +2004,14 @@ struct rect world_bbox = {
 	{  20000000,  20000000},
 };
 
+int overlap=0;
+
 static void
 tile(struct rect *r, char *suffix, char *ret, int max)
 {
-	int x0,x1,x2,x3,x4;
-	int y0,y1,y2,y3,y4;
+	int x0,x2,x4;
+	int y0,y2,y4;
+	int xo,yo;
 	int i;
 	x0=world_bbox.l.x;
 	y0=world_bbox.l.y;
@@ -2017,26 +2020,24 @@ tile(struct rect *r, char *suffix, char *ret, int max)
 	for (i = 0 ; i < max ; i++) {
 		x2=(x0+x4)/2;
                 y2=(y0+y4)/2;
-                x1=(x0+x2)/2;
-                y1=(y0+y2)/2;
-                x3=(x2+x4)/2;
-                y3=(y2+y4)/2;
-     		if (     contains_bbox(x0,y0,x2,y2,r)) {
+		xo=(x4-x0)*overlap/100;
+		yo=(y4-y0)*overlap/100;
+     		if (     contains_bbox(x0,y0,x2+xo,y2+yo,r)) {
 			strcat(ret,"d");
-                        x4=x2;
-                        y4=y2;
-                } else if (contains_bbox(x2,y0,x4,y2,r)) {
+                        x4=x2+xo;
+                        y4=y2+yo;
+                } else if (contains_bbox(x2-xo,y0,x4,y2+yo,r)) {
 			strcat(ret,"c");
-                        x0=x2;
-                        y4=y2;
-                } else if (contains_bbox(x0,y2,x2,y4,r)) {
+                        x0=x2-xo;
+                        y4=y2+yo;
+                } else if (contains_bbox(x0,y2-yo,x2+xo,y4,r)) {
 			strcat(ret,"b");
-                        x4=x2;
-                        y0=y2;
-                } else if (contains_bbox(x2,y2,x4,y4,r)) {
+                        x4=x2+xo;
+                        y0=y2-yo;
+                } else if (contains_bbox(x2-xo,y2-yo,x4,y4,r)) {
 			strcat(ret,"a");
-                        x0=x2;
-                        y0=y2;
+                        x0=x2-xo;
+                        y0=y2-yo;
 		} else 
 			break;
 	}
@@ -2048,26 +2049,29 @@ static void
 tile_bbox(char *tile, struct rect *r)
 {
 	struct coord c;
+	int xo,yo;
 	*r=world_bbox;
 	while (*tile) {
 		c.x=(r->l.x+r->h.x)/2;
 		c.y=(r->l.y+r->h.y)/2;
+		xo=(r->h.x-r->l.x)*overlap/100;
+		yo=(r->h.x-r->l.x)*overlap/100;
 		switch (*tile) {
 		case 'a':
-			r->l.x=c.x;
-			r->l.y=c.y;
+			r->l.x=c.x-xo;
+			r->l.y=c.y-yo;
 			break;
 		case 'b':
-			r->h.x=c.x;
-			r->l.y=c.y;
+			r->h.x=c.x+xo;
+			r->l.y=c.y-yo;
 			break;
 		case 'c':
-			r->l.x=c.x;
-			r->h.y=c.y;
+			r->l.x=c.x-xo;
+			r->h.y=c.y+yo;
 			break;
 		case 'd':
-			r->h.x=c.x;
-			r->h.y=c.y;
+			r->h.x=c.x+xo;
+			r->h.y=c.y+yo;
 			break;
 		}
 		tile++;
