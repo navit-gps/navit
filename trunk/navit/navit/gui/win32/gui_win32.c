@@ -5,7 +5,7 @@
 #include "config.h"
 #include "plugin.h"
 #include "gui.h"
-#include "win32_gui.h"
+#include "../../graphics/win32/graphics_win32.h"
 #include "point.h"
 #include "menu.h"
 #include "item.h"
@@ -13,6 +13,8 @@
 #include "callback.h"
 #include <commctrl.h>
 #include "debug.h"
+#include "util.h"
+#include "navit.h"
 #include "navit_nls.h"
 #ifdef __CEGCC__
 #include <sipapi.h>
@@ -31,11 +33,10 @@ static GArray *popup_menu_array;
 const TCHAR g_szClassName[] = TEXT("navit_gui_class");
 
 
-static menu_id = 0;
-static POINT menu_pt;
+static UINT_PTR menu_id = 0;
 
-
-gboolean message_pump( gpointer data )
+#if 0
+static gboolean message_pump( gpointer data )
 {
     MSG messages;
 
@@ -52,11 +53,7 @@ gboolean message_pump( gpointer data )
 	return TRUE;
 }
 
-
-
-//extern struct graphics_priv *g_gra;
-
-BOOL CALLBACK EnumChildProc(HWND hwndChild, LPARAM lParam)
+static BOOL CALLBACK EnumChildProc(HWND hwndChild, LPARAM lParam)
 {
     LPRECT rcParent;
     int idChild;
@@ -73,6 +70,7 @@ BOOL CALLBACK EnumChildProc(HWND hwndChild, LPARAM lParam)
 
     return TRUE;
 }
+#endif
 
 #ifndef GET_WHEEL_DELTA_WPARAM
 	#define GET_WHEEL_DELTA_WPARAM(wParam)  ((short)HIWORD(wParam))
@@ -408,7 +406,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 	return 0;
 }
 
-HANDLE CreateWin32Window( void )
+static HANDLE CreateWin32Window( void )
 {
 #ifdef HAVE_API_WIN32_CE
 	WNDCLASS wc;
@@ -418,7 +416,7 @@ HANDLE CreateWin32Window( void )
 	wc.hIconSm		 = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_NAVIT));
 #endif
 	HWND hwnd;
-	MSG Msg;
+//	MSG Msg;
 
 	wc.style		 = 0;
 	wc.lpfnWndProc	 = WndProc;
@@ -572,7 +570,7 @@ static void popup_deactivate( struct menu_priv *menu )
 	DestroyMenu( menu->hMenu );
 }
 
-struct menu_priv* win32_gui_popup_new(struct gui_priv *this_, struct menu_methods *meth)
+static struct menu_priv* win32_gui_popup_new(struct gui_priv *this_, struct menu_methods *meth)
 {
 	struct menu_priv* ret = NULL;
 
@@ -634,7 +632,7 @@ static struct gui_priv *win32_gui_new( struct navit *nav, struct gui_methods *me
 	this_->nav=nav;
 
 	this_->hwnd = CreateWin32Window();
-	SetWindowLongPtr( this_->hwnd , DWLP_USER, this_ );
+	SetWindowLongPtr( this_->hwnd , DWLP_USER, (LONG_PTR)this_ );
 
 	return this_;
 }

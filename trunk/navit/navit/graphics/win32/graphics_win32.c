@@ -14,7 +14,7 @@
 #include "plugin.h"
 #include "item.h"
 #include "window.h"
-#include "win32_gui.h"
+#include "graphics_win32.h"
 #include "xpm2bmp.h"
 #include "support/win32/ConvertUTF.h"
 
@@ -331,12 +331,16 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 		break;
 
 		case WM_LBUTTONDOWN:
+		{
 			dbg(1, "LBUTTONDOWN\n");
 			HandleButtonClick( gra_priv, 1, 1, lParam);
+		}
 		break;
 		case WM_LBUTTONUP:
+		{
 			dbg(1, "LBUTTONUP\n");
 			HandleButtonClick( gra_priv, 0, 1, lParam);
+		}
 		break;
 		case WM_RBUTTONDOWN:
 			HandleButtonClick( gra_priv, 1, 3,lParam );
@@ -400,7 +404,7 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 				TEXT(""),
 #ifdef HAVE_API_WIN32_CE
 				WS_VISIBLE,
-#elif 0
+#elif 1
 				WS_CHILD,
 #else
 				WS_OVERLAPPEDWINDOW,
@@ -409,12 +413,12 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 				0,
 				gr->width,
 				gr->height,
-#if 0
+#if 1
 				gr->wnd_parent_handle,
 #else
 				NULL,
 #endif
-#if 0
+#if 1
 				(HMENU)ID_CHILD_GFX,
 #else
 				NULL,
@@ -637,14 +641,14 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 
 static void * get_data(struct graphics_priv *this_, char *type)
 {
-	if ( strcmp( "wnd_parent_handle_ptr", type ) == 0 ) {
-		return &( this_->wnd_parent_handle );
-	}
-	if ( strcmp( "START_CLIENT", type ) == 0 ) {
-		CreateGraphicsWindows( this_ );
-		return NULL;
-	}
-	if (!strcmp(type, "window")) {
+    if ( strcmp( "wnd_parent_handle_ptr", type ) == 0 ) {
+	return &( this_->wnd_parent_handle );
+    }
+    if ( strcmp( "START_CLIENT", type ) == 0 ) {
+	CreateGraphicsWindows( this_ );
+	return NULL;
+    }
+    if (!strcmp(type, "window")) {
 #ifdef HAVE_API_WIN32_CE
 	WNDCLASS wc;
 #else
@@ -674,42 +678,32 @@ static void * get_data(struct graphics_priv *this_, char *type)
 	if(!RegisterClassEx(&wc))
 #endif
 	{
-		ErrorExit( TEXT("Window Registration Failed!") );
-		return NULL;
+	    ErrorExit( TEXT("Window Registration Failed!") );
+	    return NULL;
 	}
 
 	callback_list_call_attr_2(this_->cbl, attr_resize, (void *)this_->width, (void *)this_->height);
 
 	g_hwnd = hwnd = CreateWindow(g_szClassName,
-				TEXT(""),
+		TEXT(""),
 #ifdef HAVE_API_WIN32_CE
-				WS_VISIBLE,
-#elif 0
-				WS_CHILD,
+		WS_VISIBLE,
 #else
-				WS_OVERLAPPEDWINDOW,
+		WS_OVERLAPPEDWINDOW,
 #endif
-				0,
-				0,
-				this_->width,
-				this_->height,
-#if 0
-				this_->wnd_parent_handle,
-#else
-				NULL,
-#endif
-#if 0
-				(HMENU)ID_CHILD_GFX,
-#else
-				NULL,
-#endif
-				GetModuleHandle(NULL),
-				NULL);
+		0,
+		0,
+		this_->width,
+		this_->height,
+		this_->wnd_parent_handle,
+		NULL,
+		GetModuleHandle(NULL),
+		NULL);
 
 	if(hwnd == NULL)
 	{
-		ErrorExit( TEXT("Window Creation Failed!") );
-		return NULL;
+	    ErrorExit( TEXT("Window Creation Failed!") );
+	    return NULL;
 	}
 	this_->wnd_handle = hwnd;
 
@@ -721,10 +715,10 @@ static void * get_data(struct graphics_priv *this_, char *type)
 
 	PostMessage( this_->wnd_parent_handle, WM_USER + 1, 0, 0 );
 
-		this_->window.priv=this_;
-		return &this_->window;
-	}
-	return NULL;
+	this_->window.priv=this_;
+	return &this_->window;
+    }
+    return NULL;
 }
 
 
