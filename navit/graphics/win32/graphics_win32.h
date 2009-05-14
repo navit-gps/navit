@@ -23,7 +23,7 @@
 #define ID_FILE_EXIT 		9001
 #define ID_STUFF_GO 		9002
 
-#define _(text) gettext(text)
+//#define _(text) gettext(text)
 
 #define POPUP_MENU_OFFSET  4000
 

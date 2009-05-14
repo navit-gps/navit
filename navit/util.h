@@ -27,6 +27,13 @@ void strtolower(char *dest, const char *src);
 GList * g_hash_to_list(GHashTable *h);
 GList * g_hash_to_list_keys(GHashTable *h);
 gchar * g_strconcat_printf(gchar *buffer, gchar *fmt, ...);
+#if defined(_WIN32) || defined(__CEGCC__) || defined (__APPLE__)
+#if defined(_UNICODE)
+wchar_t* newSysString(const char *toconvert);
+#else
+char * newSysString(const char *toconvert);
+#endif
+#endif
 unsigned int iso8601_to_secs(char *iso8601);
 
 #endif
