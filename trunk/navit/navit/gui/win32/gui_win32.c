@@ -5,7 +5,7 @@
 #include "config.h"
 #include "plugin.h"
 #include "gui.h"
-#include "../../graphics/win32/graphics_win32.h"
+#include "graphics_win32.h"
 #include "point.h"
 #include "menu.h"
 #include "item.h"
