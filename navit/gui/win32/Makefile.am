@@ -1,5 +1,5 @@
 include $(top_srcdir)/Makefile.inc
-AM_CPPFLAGS = -I$(top_srcdir)/navit @NAVIT_CFLAGS@ -DMODULE=gui_win32
+AM_CPPFLAGS = -I$(top_srcdir)/navit -I$(top_srcdir)/navit/graphics/win32 @NAVIT_CFLAGS@ -DMODULE=gui_win32
 if PLUGINS
 modulegui_LTLIBRARIES = libgui_win32.la
 else
