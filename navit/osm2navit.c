@@ -1687,7 +1687,7 @@ load_buffer(char *filename, struct buffer *b, long long offset, long long size)
 static int
 phase1(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions)
 {
-	int size=4096;
+	int size=BUFFER_SIZE;
 	char buffer[size];
 	char *p;
 	sig_alrm(0);
