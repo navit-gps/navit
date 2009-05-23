@@ -189,7 +189,6 @@ struct route_path {
 #define RF_AVOIDHW	(1<<2)
 #define RF_AVOIDPAID	(1<<3)
 #define RF_LOCKONROAD	(1<<4)
-#define RF_SHOWGRAPH	(1<<5)
 
 /**
  * @brief A complete route
@@ -2706,16 +2705,6 @@ static struct map_methods route_graph_meth = {
 	NULL,
 	NULL,
 };
-
-void 
-route_toggle_routegraph_display(struct route *route)
-{
-	if (route->flags & RF_SHOWGRAPH) {
-		route->flags &= ~RF_SHOWGRAPH;
-	} else {
-		route->flags |= RF_SHOWGRAPH;
-	}
-}
 
 static struct map_priv *
 route_map_new_helper(struct map_methods *meth, struct attr **attrs, int graph)

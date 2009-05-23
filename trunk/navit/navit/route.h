@@ -117,7 +117,6 @@ void route_info_close(struct route_info_handle *h);
 void route_draw(struct route *this, struct transformation *t, struct displaylist *dsp);
 struct map *route_get_map(struct route *route);
 struct map *route_get_graph_map(struct route *route);
-void route_toggle_routegraph_display(struct route *route);
 void route_set_projection(struct route *this_, enum projection pro);
 int route_destination_reached(struct route *this);
 int route_set_attr(struct route *this_, struct attr *attr);
