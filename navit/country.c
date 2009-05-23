@@ -282,6 +282,7 @@ static struct country country[]= {
   {710,	"ZA",	"ZA", "ZAF", /* 710 */ _n("South Africa") },
   {894,	"Z",	"ZM", "ZMB", /* 894 */ _n("Zambia")},
   {716,	"ZW",	"ZW", "ZWE", /* 716 */ _n("Zimbabwe")},
+  {999, "*",    "*",  "*",             _n("* Unknown, add is_in tags to those cities")},
 };
 
 
