@@ -1389,6 +1389,9 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		} else if (delta < 165) {
 			/* TRANSLATORS: Don't forget the ending space */
 			strength=_("strongly ");
+		} else if (delta < 180) {
+			/* TRANSLATORS: Don't forget the ending space */
+			strength=_("really strongly ");
 		} else {
 			dbg(1,"delta=%d\n", delta);
 			/* TRANSLATORS: Don't forget the ending space */
