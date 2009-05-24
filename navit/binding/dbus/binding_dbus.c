@@ -77,6 +77,36 @@ object_get(const char *path)
 }
 
 static void *
+resolve_object(const char *opath, char *type)
+{
+	char *prefix;
+	void *ret=NULL;
+	char *def_navit="/default_navit";
+
+	if (strncmp(opath, object_path, strlen(object_path))) {
+		dbg(0,"wrong object path %s\n",opath);
+		return NULL;
+	}
+	prefix=g_strdup_printf("%s/%s/", object_path, type);
+	if (!strncmp(prefix, opath, strlen(prefix))) {
+		ret=object_get(opath);
+		g_free(prefix);
+		return ret;
+	}
+	g_free(prefix);
+	prefix=opath+strlen(object_path);
+	if (!strncmp(prefix,def_navit,strlen(def_navit))) {
+		prefix+=strlen(def_navit);
+		struct navit *navit=main_get_navit(NULL);
+		if (!prefix[0]) {
+			dbg(0,"default_navit\n");
+			return navit;
+		}
+	}
+	return NULL;
+}
+
+static void *
 object_get_from_message_arg(DBusMessage *message, char *type)
 {
 	char *opath;
@@ -90,29 +120,13 @@ object_get_from_message_arg(DBusMessage *message, char *type)
 		dbg(0,"wrong arg type\n");
 		return NULL;
 	}
-	prefix=g_strdup_printf("%s/%s/", object_path, type);
-	if (!strncmp(prefix, opath, strlen(prefix)))
-		ret=object_get(opath);
-	else
-		dbg(0,"wrong object type\n");
-	g_free(prefix);
-	return ret;
+	return resolve_object(opath, type);
 }
 
 static void *
 object_get_from_message(DBusMessage *message, char *type)
 {
-	const char *opath=dbus_message_get_path(message);
-	char *prefix;
-	void *ret=NULL;
-
-	prefix=g_strdup_printf("%s/%s/", object_path, type);
-	if (!strncmp(prefix, opath, strlen(prefix)))
-		ret=object_get(opath);
-	else
-		dbg(0,"wrong object type\n");
-	g_free(prefix);
-	return ret;
+	return resolve_object(dbus_message_get_path(message), type);
 }
 
 static DBusHandlerResult
@@ -752,18 +766,59 @@ struct dbus_method {
 };
 
 static char *
-generate_navitintrospectxml(void)
+introspect_path(char *object)
 {
-    int i;
+	char *ret,*s,*d;
+	int i;
+	char *def=".default_";
+	int def_len=strlen(def);
+	if (strncmp(object, object_path, strlen(object_path)))
+		return NULL;
+	ret=g_strdup(object+strlen(object_path));
+	dbg(0,"path=%s\n",ret);
+	for (i = strlen(ret)-1 ; i >= 0 ; i--) {
+		if (ret[i] == '/' || (ret[i] >= '0' && ret[i] <= '9'))
+			ret[i]='\0';
+		else
+			break;
+	}
+	for (i = 0 ; i < strlen(ret); i++)
+		if (ret[i] == '/')
+			ret[i]='.';
+	s=d=ret;
+	while (*s) {
+		dbg(0,"%s %s %s %d\n",ret,s,def,def_len);
+		if (!strncmp(s,def,def_len)) {
+			s+=def_len;
+			dbg(0,"match %d from %s to %s\n",strlen(s)+1,s,d+1);
+			memmove(d+1,s,strlen(s)+1);
+		}
+		s++;
+		d++;
+	}
+	return ret;	
+}
+
+static char *
+generate_navitintrospectxml(char *object)
+{
+    int i,n=0;
     char *navitintrospectxml;
+    char *path=introspect_path(object);
+    if (!path)
+	return NULL;
+    dbg(0,"path=%s\n",path);
     
     // write header and make navit introspectable
-    navitintrospectxml = g_strdup_printf("%s%s%s\n", navitintrospectxml_head1, object_path, navitintrospectxml_head2);
+    navitintrospectxml = g_strdup_printf("%s%s%s\n", navitintrospectxml_head1, object, navitintrospectxml_head2);
     
     for (i = 0 ; i < sizeof(dbus_methods)/sizeof(struct dbus_method) ; i++) {
         // start new interface if it's the first method or it changed
-        if ((i == 0) || strcmp(dbus_methods[i-1].path, dbus_methods[i].path))
+	if (strcmp(dbus_methods[i].path, path))
+		continue;
+        if ((n == 0) || strcmp(dbus_methods[i-1].path, dbus_methods[i].path))
             navitintrospectxml = g_strconcat_printf(navitintrospectxml, "  <interface name=\"%s%s\">\n", service_name, dbus_methods[i].path);
+	n++;
         
         // start the new method
         navitintrospectxml = g_strconcat_printf(navitintrospectxml, "    <method name=\"%s\">\n", dbus_methods[i].method);
@@ -797,16 +852,17 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 	dbg(0,"type=%s interface=%s path=%s member=%s signature=%s\n", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
 	if (dbus_message_is_method_call (message, "org.freedesktop.DBus.Introspectable", "Introspect")) {
 		DBusMessage *reply;
-		dbg(0,"Introspect\n");
-		if (! strcmp(dbus_message_get_path(message), object_path)) {
-            char *navitintrospectxml = generate_navitintrospectxml();
+            	char *navitintrospectxml = generate_navitintrospectxml(dbus_message_get_path(message));
+		dbg(0,"Introspect %s:Result:%s\n",dbus_message_get_path(message), navitintrospectxml);
+		if (navitintrospectxml) {
 			reply = dbus_message_new_method_return(message);
 			dbus_message_append_args(reply, DBUS_TYPE_STRING, &navitintrospectxml, DBUS_TYPE_INVALID);
 			dbus_connection_send (connection, reply, NULL);
 			dbus_message_unref (reply);
-            g_free(navitintrospectxml);
+			g_free(navitintrospectxml);
 			return DBUS_HANDLER_RESULT_HANDLED;
 		}
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 	}
 	
     for (i = 0 ; i < sizeof(dbus_methods)/sizeof(struct dbus_method) ; i++) {
