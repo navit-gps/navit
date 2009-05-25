@@ -33,6 +33,7 @@
 #include "attr.h"
 #include "layout.h"
 #include "command.h"
+#include "graphics.h"
 #include "util.h"
 
 
@@ -82,6 +83,8 @@ resolve_object(const char *opath, char *type)
 	char *prefix;
 	void *ret=NULL;
 	char *def_navit="/default_navit";
+	char *def_graphics="/default_graphics";
+	struct attr attr;
 
 	if (strncmp(opath, object_path, strlen(object_path))) {
 		dbg(0,"wrong object path %s\n",opath);
@@ -101,6 +104,12 @@ resolve_object(const char *opath, char *type)
 		if (!prefix[0]) {
 			dbg(0,"default_navit\n");
 			return navit;
+		}
+		if (!strncmp(prefix,def_graphics,strlen(def_graphics))) {
+			if (navit_get_attr(navit, attr_graphics, &attr, NULL)) {
+				return attr.u.graphics;
+			}
+			return NULL;
 		}
 	}
 	return NULL;
@@ -728,6 +737,42 @@ request_navit_evaluate(DBusConnection *connection, DBusMessage *message)
 	return DBUS_HANDLER_RESULT_HANDLED;
 }
 
+static DBusHandlerResult
+request_graphics_get_data(DBusConnection *connection, DBusMessage *message)
+{
+	struct graphics *graphics;
+	char *data;
+	struct graphics_data_image *image;
+	struct attr attr;
+	DBusMessage *reply;
+	int *error;
+	int i;
+
+	graphics = object_get_from_message(message, "graphics");
+	if (! graphics)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+
+        if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &data, DBUS_TYPE_INVALID))
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	image=graphics_get_data(graphics, data);
+	if (image) {
+		DBusMessageIter iter1,iter2;
+		reply = dbus_message_new_method_return(message);
+#if 0
+		dbus_message_append_args(reply, DBUS_TYPE_STRING, &result, DBUS_TYPE_INVALID);
+#endif
+		dbus_message_iter_init_append(reply, &iter1);
+		dbus_message_iter_open_container(&iter1, DBUS_TYPE_ARRAY, "y", &iter2);
+		if (image->data && image->size) 
+			dbus_message_iter_append_fixed_array(&iter2, DBUS_TYPE_BYTE, &image->data, image->size);
+		dbus_message_iter_close_container(&iter1, &iter2);
+		dbus_connection_send (connection, reply, NULL);
+		dbus_message_unref (reply);
+		return DBUS_HANDLER_RESULT_HANDLED;
+	}
+	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
+
 struct dbus_method {
 	char *path;
 	char *method;
@@ -759,6 +804,7 @@ struct dbus_method {
 	{".navit",  "set_destination",     "(is)s",   "(projection,coordinates)comment",         "",   "",      request_navit_set_destination},
 	{".navit",  "set_destination",     "(iii)s",  "(projection,longitude,latitude)comment",  "",   "",      request_navit_set_destination},
 	{".navit",  "evaluate", 	   "s",	      "command",				 "s",  "",     request_navit_evaluate},
+	{".graphics","get_data", 	   "s",	      "type",				 	 "ay",  "data", request_graphics_get_data},
 #if 0
     {".navit",  "toggle_announcer",    "",        "",                                        "",   "",      request_navit_toggle_announcer},
 	{".navit",  "toggle_announcer",    "i",       "",                                        "",   "",      request_navit_toggle_announcer},
@@ -785,18 +831,14 @@ introspect_path(char *object)
 	for (i = 0 ; i < strlen(ret); i++)
 		if (ret[i] == '/')
 			ret[i]='.';
-	s=d=ret;
-	while (*s) {
-		dbg(0,"%s %s %s %d\n",ret,s,def,def_len);
-		if (!strncmp(s,def,def_len)) {
-			s+=def_len;
-			dbg(0,"match %d from %s to %s\n",strlen(s)+1,s,d+1);
-			memmove(d+1,s,strlen(s)+1);
+	
+	for (i = strlen(ret)-1 ; i >= 0 ; i--) {
+		if (!strncmp(ret+i, def, def_len)) {
+			memmove(ret+1,ret+i+def_len,strlen(ret+i+def_len)+1);
+			break;
 		}
-		s++;
-		d++;
 	}
-	return ret;	
+	return ret;
 }
 
 static char *
