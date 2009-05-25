@@ -173,6 +173,7 @@ struct graphics_priv {
 	struct graphics_gc_priv *background;
 	struct font_freetype_methods freetype_methods;
 	struct window window;
+	struct graphics_data_image image;
 };
 
 struct graphics_gc_priv {
@@ -324,9 +325,7 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-#if 0
 	gdImageFilledRectangle(gr->im, p->x, p->y, p->x+w, p->y+h, gc->color);
-#endif
 }
 
 static void
@@ -414,11 +413,13 @@ static void
 draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	FILE *pngout;
-	dbg(0,"enter\n");
+#if 0
 	if (mode == draw_mode_begin && gr->background) {
 		gdImageFilledRectangle(gr->im, 0, 0, gr->w, gr->h, gr->background->color);
 	}
+#endif
 	if (mode == draw_mode_end) {
+		rename("test.png","test.png.old");
 		pngout=fopen("test.png", "wb");
 		gdImagePng(gr->im, pngout);
 		fclose(pngout);
@@ -430,9 +431,27 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 static void *
 get_data(struct graphics_priv *this, char *type)
 {
-	if (strcmp(type,"window"))
-		return NULL;
-	return &this->window;
+	int b;
+	 struct point p;
+	if (!strcmp(type,"window"))
+		return &this->window;
+	if (!strcmp(type,"image_png")) {
+		if (this->image.data)
+			gdFree(this->image.data);
+		this->image.data=gdImagePngPtr(this->im, &this->image.size);
+		return &this->image;
+	}
+	if (sscanf(type,"click_%d_%d_%d",&p.x,&p.y,&b) == 3) {
+		if (this->image.data)
+			gdFree(this->image.data);
+		this->image.data=0;
+		this->image.size=0;
+
+        	callback_list_call_attr_3(this->cbl, attr_button, (void *)b, (void *)1, (void *)&p);
+
+		return &this->image;
+	}
+	return NULL;
 }
 
 
@@ -499,7 +518,7 @@ graphics_gd_new(struct navit *nav, struct graphics_methods *meth, struct attr **
         if (!font_freetype_new)
                 return NULL;
 	*meth=graphics_methods;
-	ret=g_new(struct graphics_priv, 1);
+	ret=g_new0(struct graphics_priv, 1);
         font_freetype_new(&ret->freetype_methods);
         meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))ret->freetype_methods.font_new;
         meth->get_text_bbox=ret->freetype_methods.get_text_bbox;

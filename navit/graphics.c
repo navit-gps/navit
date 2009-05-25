@@ -1735,11 +1735,8 @@ do_draw(struct displaylist *displaylist, int cancel)
 void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int callback)
 {
 	int order=transform_get_order(trans);
-	struct point p;
 	displaylist->dc.trans=trans;
 	displaylist->dc.gra=gra;
-	p.x=0;
-	p.y=0;
 	// FIXME find a better place to set the background color
 	if (l) {
 		graphics_gc_set_background(gra->gc[0], &l->color);
@@ -1748,7 +1745,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	}
 	graphics_background_gc(gra, gra->gc[0]);
 	gra->meth.draw_mode(gra->priv, draw_mode_begin);
-	gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &p, 32767, 32767);
+	gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &gra->r.lu, gra->r.rl.x-gra->r.lu.x, gra->r.rl.y-gra->r.lu.y);
 	if (l) 
 		xdisplay_draw(displaylist, gra, l, order+l->order_delta);
 	if (callback)

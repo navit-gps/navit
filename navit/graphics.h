@@ -106,6 +106,11 @@ struct graphics_image {
 	struct point hot;
 };
 
+struct graphics_data_image {
+	void *data;
+	int size;
+};
+
 /* prototypes */
 enum attr_type;
 enum draw_mode_num;
