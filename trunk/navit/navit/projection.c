@@ -45,13 +45,11 @@ projection_from_name(const char *name, struct coord *offset)
 	int zone;
 	char ns;
 
-	dbg(0,"name=%s\n",name);
 	for (i=0 ; i < sizeof(projection_names)/sizeof(struct projection_name) ; i++) {
 		if (! strcmp(projection_names[i].name, name))
 			return projection_names[i].projection;
 	}
 	if (offset) {
-		dbg(0,"%s %d\n",name,sscanf(name,"utm%d%c",&zone,&ns));
 		if (sscanf(name,"utm%d%c",&zone,&ns) == 2 && zone > 0 && zone <= 60 && (ns == 'n' || ns == 's')) {
                 	offset->x=zone*1000000;
 			offset->y=(ns == 's' ? -10000000:0);
