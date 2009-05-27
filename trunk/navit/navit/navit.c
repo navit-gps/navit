@@ -439,6 +439,7 @@ navit_motion_timeout(struct navit *this_)
 #if 0
 		graphics_displaylist_move(this_->displaylist, dx, dy);
 #endif
+		graphics_draw_cancel(this_->gra, this_->displaylist);
 		graphics_displaylist_draw(this_->gra, this_->displaylist, tr, this_->layout_current, 0);
 		transform_destroy(tr);
 		this_->moved=1;
