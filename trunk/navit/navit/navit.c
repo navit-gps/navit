@@ -1257,6 +1257,7 @@ navit_init(struct navit *this_)
 	struct mapset *ms;
 	struct map *map;
 
+	dbg(2,"enter gui %p graphics %p\n",this_->gui,this_->gra);
 	if (!this_->gui) {
 		dbg(0,"no gui\n");
 		navit_destroy(this_);
@@ -1267,6 +1268,7 @@ navit_init(struct navit *this_)
 		navit_destroy(this_);
 		return;
 	}
+	dbg(2,"Connecting gui to graphics\n");
 	if (gui_set_graphics(this_->gui, this_->gra)) {
 		struct attr attr_type_gui, attr_type_graphics;
 		gui_get_attr(this_->gui, attr_type, &attr_type_gui, NULL);
@@ -1278,8 +1280,11 @@ navit_init(struct navit *this_)
 		navit_destroy(this_);
 		return;
 	}
+	dbg(2,"Initializing graphics\n");
 	graphics_init(this_->gra);
+	dbg(2,"Setting Vehicle\n");
 	navit_set_vehicle(this_, this_->vehicle);
+	dbg(2,"Adding dynamic maps to mapset %p\n",this_->mapsets);
 	if (this_->mapsets) {
 		ms=this_->mapsets->data;
 		if (this_->route) {
@@ -1327,6 +1332,7 @@ navit_init(struct navit *this_)
 		if (this_->route)
 			navigation_set_route(this_->navigation, this_->route);
 	}
+	dbg(2,"Setting Center\n");
 	char *center_file = navit_get_center_file(FALSE);
 	navit_set_center_from_file(this_, center_file);
 	g_free(center_file);
@@ -1348,6 +1354,7 @@ navit_init(struct navit *this_)
 
 	messagelist_init(this_->messages);
 
+	dbg(2,"ready=%d\n",this_->ready);
 	if (this_->ready == 3)
 		navit_draw(this_);
 }
