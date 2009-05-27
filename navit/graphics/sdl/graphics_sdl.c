@@ -72,6 +72,7 @@
 #include FT_FREETYPE_H
 #include <freetype/ftglyph.h>
 #endif
+#include <event.h>
 
 #ifdef SDL_IMAGE
 #include <SDL/SDL_image.h>
@@ -2082,6 +2083,10 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 #else
     FT_Init_FreeType( &this->library );
 #endif
+
+    if (! event_request_system("glib","graphics_sdl_new"))
+        return NULL;
+
 
     /* TODO: xml params for W/H/BPP */
 
