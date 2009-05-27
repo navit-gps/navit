@@ -44,6 +44,10 @@ struct map_priv {
 	DBFHandle hDBF;
 	int nShapeType, nEntities, nFields;
 	double adfMinBound[4], adfMaxBound[4];
+	struct longest_match *lm;
+	char *dbfmap_data;
+	struct coord offset;
+	enum projection pro;
 };
 
 
@@ -77,17 +81,24 @@ static int
 shapefile_coord_get(void *priv_data, struct coord *c, int count)
 {
 	struct map_rect_priv *mr=priv_data;
+	struct coord cs;
 	int ret=0;
 	int idx;
+	
 	struct coord_geo g;
 	SHPObject *psShape=mr->psShape;
 	while (count) {
 		idx=mr->cidx;
 		if (idx >= psShape->nVertices)
 			break;
-		g.lng=psShape->padfX[idx];
-		g.lat=psShape->padfY[idx];
-		transform_from_geo(projection_mg, &g, c);
+		cs.x=psShape->padfX[idx]+mr->m->offset.x;
+		cs.y=psShape->padfY[idx]+mr->m->offset.y;
+		if (!mr->m->pro) {
+			g.lng=cs.x;
+			g.lat=cs.y;
+			transform_from_geo(projection_mg, &g, c);
+		} else
+			transform_from_to(&cs, mr->m->pro, c, projection_mg);
 		mr->cidx++;
 		ret++;
 		c++;
@@ -102,6 +113,253 @@ shapefile_attr_rewind(void *priv_data)
 	struct map_rect_priv *mr=priv_data;
 	mr->aidx=0;
 	mr->anext=attr_debug;
+}
+
+
+struct longest_match_list_item {
+	void *data;
+	int match_idx_count;
+	int *match_idx;	
+};
+
+struct longest_match_list {
+	GList *longest_match_list_items;
+};
+
+
+struct longest_match {
+	GHashTable *match_hash;
+	char *match_present;
+	int match_present_count;
+	GList *longest_match_lists;
+	int longest_match_list_count;
+};
+
+static void
+longest_match_add_match(struct longest_match *lm, struct longest_match_list_item *lmi, char *match)
+{
+	int idx;
+	if (!(idx=(int)(long)g_hash_table_lookup(lm->match_hash, match))) {
+		idx=lm->match_present_count++;
+		lm->match_present=g_renew(char, lm->match_present, lm->match_present_count);
+		g_hash_table_insert(lm->match_hash, g_strdup(match), (gpointer)(long)idx);
+	}
+	lmi->match_idx=g_renew(int, lmi->match_idx, lmi->match_idx_count+1);
+	lmi->match_idx[lmi->match_idx_count++]=idx;
+}
+
+static void
+longest_match_item_destroy(struct longest_match_list_item *lmi, long flags)
+{
+	if (!lmi)
+		return;
+	if (flags & 2) {
+		g_free(lmi->data);
+	}
+	g_free(lmi->match_idx);
+	g_free(lmi);
+}
+
+static struct longest_match_list_item *
+longest_match_item_new(struct longest_match_list *lml, void *data)
+{
+	struct longest_match_list_item *ret=g_new0(struct longest_match_list_item,1);
+	lml->longest_match_list_items=g_list_append(lml->longest_match_list_items, ret);
+	ret->data=data;
+
+	return ret;
+}
+
+static struct longest_match_list *
+longest_match_list_new(struct longest_match *lm)
+{
+	struct longest_match_list *ret=g_new0(struct longest_match_list,1);
+	lm->longest_match_lists=g_list_append(lm->longest_match_lists, ret);
+	return ret;
+}
+
+static void
+longest_match_list_destroy(struct longest_match_list *lml, long flags)
+{
+	if (!lml)
+		return;
+	if (flags & 1) {
+		g_list_foreach(lml->longest_match_list_items, (GFunc)longest_match_item_destroy, (gpointer)flags);
+		g_list_free(lml->longest_match_list_items);
+	}
+	g_free(lml);
+}
+
+static struct longest_match_list *
+longest_match_get_list(struct longest_match *lm, int list)
+{
+	GList *l=lm->longest_match_lists;
+	while (l && list > 0) {
+		l=g_list_next(l);
+		list++;
+	}
+	if (l)
+		return l->data;
+	return NULL;
+}
+
+static struct longest_match *
+longest_match_new(void)
+{
+	struct longest_match *ret=g_new0(struct longest_match,1);
+	ret->match_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	ret->match_present_count=1;
+	return ret;
+}
+
+static void
+longest_match_destroy(struct longest_match *lm, long flags)
+{
+	if (!lm)
+		return;
+	if (flags & 1) {
+		g_list_foreach(lm->longest_match_lists, (GFunc)longest_match_list_destroy, (gpointer)flags);
+		g_list_free(lm->longest_match_lists);
+	}
+	g_hash_table_destroy(lm->match_hash);
+	g_free(lm->match_present);
+	g_free(lm);
+}
+
+static void
+longest_match_clear(struct longest_match *lm)
+{
+	if (lm->match_present)
+		memset(lm->match_present, 0, lm->match_present_count);
+}
+
+static void
+longest_match_add_key_value(struct longest_match *lm, char *k, char *v)
+{
+	char buffer[strlen(k)+strlen(v)+2];
+	int idx;
+
+	strcpy(buffer,"*=*");
+       	if ((idx=(int)(long)g_hash_table_lookup(lm->match_hash, buffer)))
+       	        lm->match_present[idx]=1;
+
+       	sprintf(buffer,"%s=*", k);
+	if ((idx=(int)(long)g_hash_table_lookup(lm->match_hash, buffer)))
+       	        lm->match_present[idx]=2;
+
+	sprintf(buffer,"*=%s", v);
+	if ((idx=(int)(long)g_hash_table_lookup(lm->match_hash, buffer)))
+		lm->match_present[idx]=2;
+
+	sprintf(buffer,"%s=%s", k, v);
+	if ((idx=(int)(long)g_hash_table_lookup(lm->match_hash, buffer)))
+		lm->match_present[idx]=4;
+}
+
+static int
+longest_match_list_find(struct longest_match *lm, struct longest_match_list *lml, void **list, int max_list_len)
+{
+	int j,longest=0,ret=0,sum,val;
+	struct longest_match_list_item *curr;
+	GList *l=lml->longest_match_list_items;
+
+	
+	while (l) {	
+		sum=0;
+		curr=l->data;
+		for (j = 0 ; j < curr->match_idx_count ; j++) {
+			val=lm->match_present[curr->match_idx[j]];
+			if (val)
+				sum+=val;
+			else {
+				sum=-1;
+				break;
+			}
+		}
+		if (sum > longest) {
+			longest=sum;
+			ret=0;
+		}
+		if (sum > 0 && sum == longest && ret < max_list_len) 
+			list[ret++]=curr->data;
+		l=g_list_next(l);
+	}
+	return ret;
+}
+
+
+static void
+build_match(struct longest_match *lm, struct longest_match_list *lml, char *line)
+{
+	char *kvl=NULL,*i=NULL,*p,*kv;
+	dbg(1,"line=%s\n",line);
+	struct longest_match_list_item *lmli;
+	kvl=line;
+	p=strchr(line,'\t');
+	if (p) {
+		while (*p == '\t')
+			*p++='\0';
+		i=p;
+	}
+	lmli=longest_match_item_new(lml,(void *)(long)item_from_name(i));
+	while ((kv=strtok(kvl, ","))) {
+		kvl=NULL;
+		longest_match_add_match(lm, lmli, kv);
+	}
+}
+
+static void
+build_matches(struct map_priv *m,char *matches)
+{
+	char *matches2=g_strdup(matches);
+	char *l=matches2,*p;
+	struct longest_match_list *lml;
+
+	m->lm=longest_match_new();
+	lml=longest_match_list_new(m->lm);
+	while (l) {
+		p=strchr(l,'\n');
+		if (p)
+			*p++='\0';
+		if (strlen(l))
+			build_match(m->lm,lml,l);
+		l=p;
+	}
+	g_free(matches2);
+}
+
+static void
+process_fields(struct map_priv *m, int id)
+{
+	int i;
+	char szTitle[12],*pszTypeName,*str;
+	int nWidth, nDecimals;
+
+	for (i = 0 ; i < m->nFields ; i++) {
+
+		switch (DBFGetFieldInfo(m->hDBF, i, szTitle, &nWidth, &nDecimals )) {
+		case FTString:
+			pszTypeName = "String";
+			str=g_strdup(DBFReadStringAttribute( m->hDBF, id, i ));
+			break;
+		case FTInteger:
+			pszTypeName = "Integer";
+			str=g_strdup_printf("%d",DBFReadIntegerAttribute( m->hDBF, id, i ));
+			break;
+		case FTDouble:
+			pszTypeName = "Double";
+			str=g_strdup_printf("%lf",DBFReadDoubleAttribute( m->hDBF, id, i ));
+			break;
+		case FTInvalid:
+			pszTypeName = "Invalid";
+			str=NULL;
+			break;
+		default:
+			pszTypeName = "Unknown";
+			str=NULL;
+		}
+		longest_match_add_key_value(m->lm, szTitle, str);
+	}
 }
 
 static int
@@ -168,7 +426,40 @@ static struct map_rect_priv *
 map_rect_new_shapefile(struct map_priv *map, struct map_selection *sel)
 {
 	struct map_rect_priv *mr;
-
+	char *dbfmapfile=g_strdup_printf("%s.dbfmap", map->filename);
+	void *data;
+	struct file *file;
+	int size;
+	int changed=0;
+	if ((file=file_create(dbfmapfile))) {
+        	size=file_size(file);
+        	data=file_data_read_all(file);
+		if (data) {
+			if (!map->dbfmap_data || size != strlen(map->dbfmap_data) || strncmp(data,map->dbfmap_data,size)) {
+				g_free(map->dbfmap_data);
+				map->dbfmap_data=g_malloc(size+1);
+				memcpy(map->dbfmap_data, data, size);
+				map->dbfmap_data[size]='\0';
+				changed=1;
+			}
+			file_data_free(file, data);
+		}
+        	file_destroy(file);
+	} else {
+		if (map->dbfmap_data) {
+			changed=1;
+			g_free(map->dbfmap_data);
+			map->dbfmap_data=NULL;
+		}
+	}
+	dbg(1,"%s changed %d old %p\n",dbfmapfile,changed,map->dbfmap_data);
+	if (changed) {
+		longest_match_destroy(map->lm,1);
+		map->lm=NULL;
+		if (map->dbfmap_data) {
+			build_matches(map,map->dbfmap_data);
+		}
+	}
 	dbg(1,"map_rect_new_shapefile\n");
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->m=map;
@@ -177,6 +468,7 @@ map_rect_new_shapefile(struct map_priv *map, struct map_selection *sel)
 	mr->item.id_hi=0;
 	mr->item.meth=&methods_shapefile;
 	mr->item.priv_data=mr;
+	g_free(dbfmapfile);
 	return mr;
 }
 
@@ -194,13 +486,29 @@ static struct item *
 map_rect_get_item_shapefile(struct map_rect_priv *mr)
 {
 	struct map_priv *m=mr->m;
+	void *types[5];
+	struct longest_match_list *lml;
+	int count;
+
 	if (mr->idx >= m->nEntities)
 		return NULL;
-	mr->item.type=type_street_unkn;
 	mr->item.id_lo=mr->idx;
 	if (mr->psShape)
 		SHPDestroyObject(mr->psShape);
 	mr->psShape=SHPReadObject(m->hSHP, mr->idx);
+	if (mr->psShape->nVertices > 1)
+		mr->item.type=type_street_unkn;
+	else
+		mr->item.type=type_point_unkn;
+	if (m->lm) {
+		longest_match_clear(m->lm);
+		process_fields(m, mr->idx);
+
+		lml=longest_match_get_list(m->lm, 0);
+		count=longest_match_list_find(m->lm, lml, types, sizeof(types)/sizeof(void *));
+		if (count)
+			mr->item.type=(int)(long)types[0];
+	}
 	mr->idx++;
 	shapefile_coord_rewind(mr);
 	shapefile_attr_rewind(mr);
@@ -230,6 +538,7 @@ map_new_shapefile(struct map_methods *meth, struct attr **attrs)
 	struct map_priv *m;
 	struct attr *data=attr_search(attrs, NULL, attr_data);
 	struct attr *charset=attr_search(attrs, NULL, attr_charset);
+	struct attr *projectionname=attr_search(attrs, NULL, attr_projectionname);
 	struct file_wordexp *wexp;
 	char *wdata;
 	char **wexp_data;
@@ -257,6 +566,8 @@ map_new_shapefile(struct map_methods *meth, struct attr **attrs)
 		m->charset=g_strdup(charset->u.str);
 		meth->charset=m->charset;
 	}
+	if (projectionname) 
+		m->pro=projection_from_name(projectionname->u.str, &m->offset);
 	file_wordexp_destroy(wexp);
 	return m;
 }
