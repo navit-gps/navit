@@ -800,7 +800,7 @@ new_file:
 	f=fopen(file, "a");
 	if (f) {
 		if (c) {
-			prostr = projection_to_name(c->pro);
+			prostr = projection_to_name(c->pro,NULL);
 			fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
 				 prostr, *prostr ? ":" : "", 
 				 c->x >= 0 ? "":"-", c->x >= 0 ? c->x : -c->x, 
