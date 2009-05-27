@@ -47,6 +47,7 @@ void transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *
 void transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to);
 void transform_geo_to_cart(struct coord_geo *geo, navit_float a, navit_float b, struct coord_geo_cart *cart);
 void transform_cart_to_geo(struct coord_geo_cart *cart, navit_float a, navit_float b, struct coord_geo *geo);
+void transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int ZoneNumber, int NorthernHemisphere, struct coord_geo *geo);
 void transform_datum(struct coord_geo *from, enum map_datum from_datum, struct coord_geo *to, enum map_datum to_datum);
 int transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int unique, int width, int *width_return);
 void transform_reverse(struct transformation *t, struct point *p, struct coord *c);
