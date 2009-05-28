@@ -38,6 +38,7 @@ samplemap=yes; samplemap_reason=default
 binding_dbus=yes; binding_dbus_reason=default
 binding_python=yes; binding_python_reason=default
 font_freetype=yes; font_freetype_reason=default
+fontconfig=yes; fontconfig_reason=default
 gui_gtk=no; gui_gtk_reason=default
 gui_win32=no; gui_win32_reason=default
 gui_internal=yes; gui_internal_reason=default
@@ -290,14 +291,17 @@ AC_SUBST(FREETYPE2_CFLAGS)
 AC_SUBST(FREETYPE2_LIBS)
 AM_CONDITIONAL(FONT_FREETYPE, test "x${font_freetype}" = "xyes")
 
-PKG_CHECK_MODULES(FONTCONFIG, [fontconfig], [fontconfig_pkgconfig=yes], [fontconfig_pkgconfig=no])
-if test "x$fontconfig_pkgconfig" = "xyes"; then
+AC_ARG_ENABLE(fontconfig, [  --disable-fontconfig             don't add fontconfig support], fontconfig=$enableval;fontconfig_reason="configure parameter")
+if test "x${fontconfig}" = "xyes"; then
+	PKG_CHECK_MODULES(FONTCONFIG, [fontconfig], [fontconfig=yes], [fontconfig=no])
+fi
+if test "x$fontconfig" = "xyes"; then
    AC_DEFINE(HAVE_FONTCONFIG, 1, [Define to 1 if you have fontconfig])
 fi
 AC_SUBST(FONTCONFIG_CFLAGS)
 AC_SUBST(FONTCONFIG_LIBS)
 
-AM_CONDITIONAL(FONTS, test "x${font_freetype}" = "xyes" -a "x$fontconfig_pkgconfig" != "xyes")
+AM_CONDITIONAL(FONTS, test "x${font_freetype}" = "xyes" -a "x$fontconfig" != "xyes")
 
 PKG_CHECK_MODULES(IMLIB2, [imlib2], [imlib2_pkgconfig=yes], [imlib2_pkgconfig=no])
 if test "x$imlib2_pkgconfig" = "xyes"; then
