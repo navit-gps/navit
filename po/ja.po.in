@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2008-09-12 05:04+0000\n"
 "Last-Translator: MontBlanc <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
@@ -15,157 +15,24 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
-
-#: ../navit/main.c:231
-#, c-format
-msgid "Running from source directory\n"
-msgstr ""
-
-#: ../navit/main.c:263
-#, c-format
-msgid "setting '%s' to '%s'\n"
-msgstr ""
-
-#: ../navit/navigation.c:240
-msgid "zeroth"
-msgstr ""
-
-#: ../navit/navigation.c:242
-msgid "first"
-msgstr ""
-
-#: ../navit/navigation.c:244
-msgid "second"
-msgstr ""
-
-#: ../navit/navigation.c:246
-msgid "third"
-msgstr ""
-
-#: ../navit/navigation.c:248
-msgid "fourth"
-msgstr ""
-
-#: ../navit/navigation.c:250
-msgid "fifth"
-msgstr ""
-
-#: ../navit/navigation.c:252
-msgid "sixth"
-msgstr ""
-
-#: ../navit/navigation.c:263
-msgid "zeroth exit"
-msgstr ""
-
-#: ../navit/navigation.c:265
-msgid "first exit"
-msgstr ""
-
-#: ../navit/navigation.c:267
-msgid "second exit"
-msgstr ""
-
-#: ../navit/navigation.c:269
-msgid "third exit"
-msgstr ""
-
-#: ../navit/navigation.c:271
-msgid "fourth exit"
-msgstr ""
-
-#: ../navit/navigation.c:273
-msgid "fifth exit"
-msgstr ""
-
-#: ../navit/navigation.c:275
-msgid "sixth exit"
-msgstr ""
 
 #: ../navit/navigation.c:316
 #, c-format
 msgid "%d m"
 msgstr "%d m"
 
-#: ../navit/navigation.c:318
-#, c-format
-msgid "in %d m"
-msgstr ""
-
 #: ../navit/navigation.c:322
 #, c-format
 msgid "%d meters"
 msgstr "%d メートル"
 
-#: ../navit/navigation.c:324
-#, c-format
-msgid "in %d meters"
-msgstr ""
-
 #: ../navit/navigation.c:330
 #, c-format
 msgid "%d.%d kilometer"
 msgstr "%d.%d キロメートル"
-
-#: ../navit/navigation.c:332
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr ""
-
-#: ../navit/navigation.c:336
-#, c-format
-msgid "one kilometer"
-msgid_plural "%d kilometers"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../navit/navigation.c:338
-#, c-format
-msgid "in one kilometer"
-msgid_plural "in %d kilometers"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../navit/navigation.c:1268
-msgid "exit"
-msgstr ""
-
-#: ../navit/navigation.c:1270
-msgid "into the ramp"
-msgstr ""
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:1300
-#, c-format
-msgid "%sinto the street %s%s%s"
-msgstr ""
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1304
-#, c-format
-msgid "%sinto the %s%s%s|male form"
-msgstr ""
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1308
-#, c-format
-msgid "%sinto the %s%s%s|female form"
-msgstr ""
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1312
-#, c-format
-msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
-
-#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1319
-#, c-format
-msgid "%sinto the %s"
-msgstr ""
 
 #. TRANSLATORS: right, as in 'Turn right'
 #: ../navit/navigation.c:1340
@@ -177,110 +44,22 @@ msgstr "右"
 msgid "left"
 msgstr "左"
 
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1386
-msgid "easily "
-msgstr ""
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1391
-msgid "strongly "
-msgstr ""
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1395
-msgid "unknown "
-msgstr ""
-
-#: ../navit/navigation.c:1402
-msgid "When possible, please turn around"
-msgstr ""
-
-#: ../navit/navigation.c:1412
-msgid "Enter the roundabout soon"
-msgstr ""
-
-#. TRANSLATORS: %s is the distance to the roundabout
-#: ../navit/navigation.c:1416
-#, c-format
-msgid "In %s, enter the roundabout"
-msgstr ""
-
-#: ../navit/navigation.c:1431
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr ""
-
-#: ../navit/navigation.c:1434
-#, c-format
-msgid "then leave the roundabout at the %s"
-msgstr ""
-
-#: ../navit/navigation.c:1444
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr ""
-
 #: ../navit/navigation.c:1448
 msgid "soon"
 msgstr "まもなく"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1458
-#, c-format
-msgid "Take the %1$s road to the %2$s"
-msgstr ""
-
-#: ../navit/navigation.c:1461 ../navit/navigation.c:1475
-#, c-format
-msgid "after %i roads"
-msgstr ""
-
 #: ../navit/navigation.c:1464
 msgid "now"
 msgstr "今"
-
-#: ../navit/navigation.c:1472
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
-
-#: ../navit/navigation.c:1483
-msgid "error"
-msgstr ""
-
-#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:1513
-#, c-format
-msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
-
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#: ../navit/navigation.c:1516
-#, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
 
 #: ../navit/navigation.c:1521
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "目的地の%sにつきました"
 
-#: ../navit/navigation.c:1523
-msgid "then you have reached your destination."
-msgstr ""
-
-#: ../navit/navit.c:1164
-msgid "Position"
-msgstr ""
-
 #: ../navit/navit.c:1165
 msgid "Command"
 msgstr "コマンド"
-
-#: ../navit/navit.c:1169
-msgid "Length"
-msgstr ""
 
 #: ../navit/navit.c:1173 ../navit/navit.c:1198
 msgid "km"
@@ -289,22 +68,6 @@ msgstr "km"
 #: ../navit/navit.c:1177 ../navit/navit.c:1202
 msgid "m"
 msgstr "m"
-
-#: ../navit/navit.c:1183
-msgid "Time"
-msgstr ""
-
-#: ../navit/navit.c:1195
-msgid "Destination Length"
-msgstr ""
-
-#: ../navit/navit.c:1208
-msgid "Destination Time"
-msgstr ""
-
-#: ../navit/navit.c:1241 ../navit/gui/gtk/gui_gtk_action.c:225
-msgid "Roadbook"
-msgstr ""
 
 #: ../navit/popup.c:238 ../navit/popup.c:292
 #: ../navit/gui/internal/gui_internal.c:2102
@@ -315,21 +78,6 @@ msgstr "現在地として設定"
 #: ../navit/gui/internal/gui_internal.c:2098
 msgid "Set as destination"
 msgstr "目的地として設定"
-
-#: ../navit/popup.c:240 ../navit/popup.c:294
-#: ../navit/gui/internal/gui_internal.c:2106
-msgid "Add as bookmark"
-msgstr ""
-
-#: ../navit/popup.c:282
-#, c-format
-msgid "Point 0x%x 0x%x"
-msgstr ""
-
-#: ../navit/popup.c:283
-#, c-format
-msgid "Screen coord : %d %d"
-msgstr ""
 
 #. 020
 #: ../navit/country.c:39
@@ -460,11 +208,6 @@ msgstr "ブルンジ"
 #: ../navit/country.c:64
 msgid "Benin"
 msgstr "ベナン"
-
-#. 652
-#: ../navit/country.c:65
-msgid "Saint Barthelemy"
-msgstr ""
 
 #. 060
 #: ../navit/country.c:66
@@ -921,11 +664,6 @@ msgstr "キリバス共和国"
 msgid "Comoros"
 msgstr "コモロ"
 
-#. 659
-#: ../navit/country.c:157
-msgid "Saint Kitts and Nevis"
-msgstr ""
-
 #. 408
 #: ../navit/country.c:158
 msgid "Korea, Democratic People's Republic of"
@@ -1001,11 +739,6 @@ msgstr "ルクセンブルク"
 msgid "Latvia"
 msgstr "ラトビア"
 
-#. 434
-#: ../navit/country.c:173
-msgid "Libyan Arab Jamahiriya"
-msgstr ""
-
 #. 504
 #: ../navit/country.c:174
 msgid "Morocco"
@@ -1026,11 +759,6 @@ msgstr "モルドバ共和国"
 msgid "Montenegro"
 msgstr "モンテネグロ"
 
-#. 663
-#: ../navit/country.c:178
-msgid "Saint Martin (French part)"
-msgstr ""
-
 #. 450
 #: ../navit/country.c:179
 msgid "Madagascar"
@@ -1040,11 +768,6 @@ msgstr "マダガスカル"
 #: ../navit/country.c:180
 msgid "Marshall Islands"
 msgstr "マーシャル諸島"
-
-#. 807
-#: ../navit/country.c:181
-msgid "Macedonia, the former Yugoslav Republic of"
-msgstr ""
 
 #. 466
 #: ../navit/country.c:182
@@ -1326,11 +1049,6 @@ msgstr "セントヘレナ"
 msgid "Slovenia"
 msgstr "スロベニア"
 
-#. 744
-#: ../navit/country.c:238
-msgid "Svalbard and Jan Mayen"
-msgstr ""
-
 #. 703
 #: ../navit/country.c:239
 msgid "Slovakia"
@@ -1451,11 +1169,6 @@ msgstr "トリニダード・トバゴ"
 msgid "Tuvalu"
 msgstr "ツバル"
 
-#. 158
-#: ../navit/country.c:263
-msgid "Taiwan, Province of China"
-msgstr ""
-
 #. 834
 #: ../navit/country.c:264
 msgid "Tanzania, United Republic of"
@@ -1491,16 +1204,6 @@ msgstr "ウルグアイ"
 msgid "Uzbekistan"
 msgstr "ウズベキスタン"
 
-#. 336
-#: ../navit/country.c:271
-msgid "Holy See (Vatican City State)"
-msgstr ""
-
-#. 670
-#: ../navit/country.c:272
-msgid "Saint Vincent and the Grenadines"
-msgstr ""
-
 #. 862
 #: ../navit/country.c:273
 msgid "Venezuela"
@@ -1526,11 +1229,6 @@ msgstr "ベトナム"
 msgid "Vanuatu"
 msgstr "バヌアツ"
 
-#. 876
-#: ../navit/country.c:278
-msgid "Wallis and Futuna"
-msgstr ""
-
 #. 882
 #: ../navit/country.c:279
 msgid "Samoa"
@@ -1540,11 +1238,6 @@ msgstr "サモア"
 #: ../navit/country.c:280
 msgid "Yemen"
 msgstr "イエメン"
-
-#. 175
-#: ../navit/country.c:281
-msgid "Mayotte"
-msgstr ""
 
 #. 710
 #: ../navit/country.c:282
@@ -1561,52 +1254,10 @@ msgstr "ザンビア"
 msgid "Zimbabwe"
 msgstr "ジンバブエ"
 
-#: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:128
-#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
-msgid "Car"
-msgstr ""
-
-#: ../navit/gui/gtk/destination.c:127
-msgid "Iso2"
-msgstr ""
-
-#: ../navit/gui/gtk/destination.c:127
-msgid "Iso3"
-msgstr ""
-
 #: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:435
 #: ../navit/gui/internal/gui_internal.c:2756
 msgid "Country"
 msgstr "国"
-
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
-msgid "Postal"
-msgstr ""
-
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
-#: ../navit/gui/internal/gui_internal.c:2735
-#: ../navit/gui/internal/gui_internal.c:2764
-#: ../navit/gui/internal/gui_internal.c:2899
-msgid "Town"
-msgstr ""
-
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
-msgid "District"
-msgstr ""
-
-#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
-#: ../navit/gui/gtk/destination.c:446
-#: ../navit/gui/internal/gui_internal.c:2716
-#: ../navit/gui/internal/gui_internal.c:2725
-msgid "Street"
-msgstr ""
-
-#: ../navit/gui/gtk/destination.c:130 ../navit/gui/gtk/destination.c:448
-msgid "Number"
-msgstr ""
 
 #: ../navit/gui/gtk/destination.c:429
 msgid "Enter Destination"
@@ -1615,14 +1266,6 @@ msgstr "目的地を入力"
 #: ../navit/gui/gtk/destination.c:438
 msgid "Zip Code"
 msgstr "郵便番号"
-
-#: ../navit/gui/gtk/destination.c:440
-msgid "City"
-msgstr ""
-
-#: ../navit/gui/gtk/destination.c:443
-msgid "District/Township"
-msgstr ""
 
 #: ../navit/gui/gtk/destination.c:471 ../navit/gui/gtk/gui_gtk_action.c:200
 msgid "Map"
@@ -1635,12 +1278,6 @@ msgstr "ブックマーク"
 #: ../navit/gui/gtk/destination.c:473 ../navit/gui/gtk/gui_gtk_action.c:212
 msgid "Destination"
 msgstr "目的地"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:196
-#: ../navit/gui/internal/gui_internal.c:2820
-#: ../navit/gui/internal/gui_internal.c:3113
-msgid "Display"
-msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_action.c:197
 msgid "Route"
@@ -1656,22 +1293,6 @@ msgstr "前の目的地"
 msgid "Bookmarks"
 msgstr "ブックマーク"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:201
-#: ../navit/gui/internal/gui_internal.c:2775
-#: ../navit/gui/internal/gui_internal.c:2822
-msgid "Layout"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:202
-msgid "Projection"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:203
-#: ../navit/gui/internal/gui_internal.c:3056
-#: ../navit/gui/internal/gui_internal.c:3121
-msgid "Vehicle"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_action.c:204
 msgid "ZoomOut"
 msgstr "ズームアウト"
@@ -1684,10 +1305,6 @@ msgstr "ズームイン"
 msgid "Recalculate"
 msgstr "再計算"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:208 ../navit/gui/gtk/gui_gtk_action.c:210
-msgid "Info"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_action.c:213
 msgid "Stop Navigation"
 msgstr "案内中止"
@@ -1696,35 +1313,10 @@ msgstr "案内中止"
 msgid "Test"
 msgstr "テスト"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:215
-msgid "_Quit"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:222
-msgid "Cursor"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:223
-msgid "Lock on Road"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:224
-#: ../navit/gui/internal/gui_internal.c:3095
-msgid "Northing"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:226
-msgid "Autozoom"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2832
 msgid "Fullscreen"
 msgstr "全画面表示"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:238
-msgid "Data"
-msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:58
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:97
@@ -1765,6 +1357,414 @@ msgstr "西"
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "NW"
 msgstr "北西"
+
+#: ../navit/main.c:231
+#, c-format
+msgid "Running from source directory\n"
+msgstr ""
+
+#: ../navit/main.c:263
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr ""
+
+#: ../navit/navigation.c:240
+msgid "zeroth"
+msgstr ""
+
+#: ../navit/navigation.c:242
+msgid "first"
+msgstr ""
+
+#: ../navit/navigation.c:244
+msgid "second"
+msgstr ""
+
+#: ../navit/navigation.c:246
+msgid "third"
+msgstr ""
+
+#: ../navit/navigation.c:248
+msgid "fourth"
+msgstr ""
+
+#: ../navit/navigation.c:250
+msgid "fifth"
+msgstr ""
+
+#: ../navit/navigation.c:252
+msgid "sixth"
+msgstr ""
+
+#: ../navit/navigation.c:263
+msgid "zeroth exit"
+msgstr ""
+
+#: ../navit/navigation.c:265
+msgid "first exit"
+msgstr ""
+
+#: ../navit/navigation.c:267
+msgid "second exit"
+msgstr ""
+
+#: ../navit/navigation.c:269
+msgid "third exit"
+msgstr ""
+
+#: ../navit/navigation.c:271
+msgid "fourth exit"
+msgstr ""
+
+#: ../navit/navigation.c:273
+msgid "fifth exit"
+msgstr ""
+
+#: ../navit/navigation.c:275
+msgid "sixth exit"
+msgstr ""
+
+#: ../navit/navigation.c:318
+#, c-format
+msgid "in %d m"
+msgstr ""
+
+#: ../navit/navigation.c:324
+#, c-format
+msgid "in %d meters"
+msgstr ""
+
+#: ../navit/navigation.c:332
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr ""
+
+#: ../navit/navigation.c:336
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../navit/navigation.c:338
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../navit/navigation.c:1268
+msgid "exit"
+msgstr ""
+
+#: ../navit/navigation.c:1270
+msgid "into the ramp"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#: ../navit/navigation.c:1300
+#, c-format
+msgid "%sinto the street %s%s%s"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:1304
+#, c-format
+msgid "%sinto the %s%s%s|male form"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:1308
+#, c-format
+msgid "%sinto the %s%s%s|female form"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:1312
+#, c-format
+msgid "%sinto the %s%s%s|neutral form"
+msgstr ""
+
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#: ../navit/navigation.c:1319
+#, c-format
+msgid "%sinto the %s"
+msgstr ""
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1386
+msgid "easily "
+msgstr ""
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1391
+msgid "strongly "
+msgstr ""
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1395
+msgid "unknown "
+msgstr ""
+
+#: ../navit/navigation.c:1402
+msgid "When possible, please turn around"
+msgstr ""
+
+#: ../navit/navigation.c:1412
+msgid "Enter the roundabout soon"
+msgstr ""
+
+#. TRANSLATORS: %s is the distance to the roundabout
+#: ../navit/navigation.c:1416
+#, c-format
+msgid "In %s, enter the roundabout"
+msgstr ""
+
+#: ../navit/navigation.c:1431
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr ""
+
+#: ../navit/navigation.c:1434
+#, c-format
+msgid "then leave the roundabout at the %s"
+msgstr ""
+
+#: ../navit/navigation.c:1444
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr ""
+
+#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+#: ../navit/navigation.c:1458
+#, c-format
+msgid "Take the %1$s road to the %2$s"
+msgstr ""
+
+#: ../navit/navigation.c:1461 ../navit/navigation.c:1475
+#, c-format
+msgid "after %i roads"
+msgstr ""
+
+#: ../navit/navigation.c:1472
+#, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#: ../navit/navigation.c:1483
+msgid "error"
+msgstr ""
+
+#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+#: ../navit/navigation.c:1513
+#, c-format
+msgid "Turn %1$s%2$s %3$s%4$s"
+msgstr ""
+
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#: ../navit/navigation.c:1516
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr ""
+
+#: ../navit/navigation.c:1523
+msgid "then you have reached your destination."
+msgstr ""
+
+#: ../navit/navit.c:1164
+msgid "Position"
+msgstr ""
+
+#: ../navit/navit.c:1169
+msgid "Length"
+msgstr ""
+
+#: ../navit/navit.c:1183
+msgid "Time"
+msgstr ""
+
+#: ../navit/navit.c:1195
+msgid "Destination Length"
+msgstr ""
+
+#: ../navit/navit.c:1208
+msgid "Destination Time"
+msgstr ""
+
+#: ../navit/navit.c:1241 ../navit/gui/gtk/gui_gtk_action.c:225
+msgid "Roadbook"
+msgstr ""
+
+#: ../navit/popup.c:240 ../navit/popup.c:294
+#: ../navit/gui/internal/gui_internal.c:2106
+msgid "Add as bookmark"
+msgstr ""
+
+#: ../navit/popup.c:282
+#, c-format
+msgid "Point 0x%x 0x%x"
+msgstr ""
+
+#: ../navit/popup.c:283
+#, c-format
+msgid "Screen coord : %d %d"
+msgstr ""
+
+#. 652
+#: ../navit/country.c:65
+msgid "Saint Barthelemy"
+msgstr ""
+
+#. 659
+#: ../navit/country.c:157
+msgid "Saint Kitts and Nevis"
+msgstr ""
+
+#. 434
+#: ../navit/country.c:173
+msgid "Libyan Arab Jamahiriya"
+msgstr ""
+
+#. 663
+#: ../navit/country.c:178
+msgid "Saint Martin (French part)"
+msgstr ""
+
+#. 807
+#: ../navit/country.c:181
+msgid "Macedonia, the former Yugoslav Republic of"
+msgstr ""
+
+#. 744
+#: ../navit/country.c:238
+msgid "Svalbard and Jan Mayen"
+msgstr ""
+
+#. 158
+#: ../navit/country.c:263
+msgid "Taiwan, Province of China"
+msgstr ""
+
+#. 336
+#: ../navit/country.c:271
+msgid "Holy See (Vatican City State)"
+msgstr ""
+
+#. 670
+#: ../navit/country.c:272
+msgid "Saint Vincent and the Grenadines"
+msgstr ""
+
+#. 876
+#: ../navit/country.c:278
+msgid "Wallis and Futuna"
+msgstr ""
+
+#. 175
+#: ../navit/country.c:281
+msgid "Mayotte"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:128
+#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
+msgid "Car"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:127
+msgid "Iso2"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:127
+msgid "Iso3"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
+#: ../navit/gui/gtk/destination.c:130
+msgid "Postal"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
+#: ../navit/gui/gtk/destination.c:130
+#: ../navit/gui/internal/gui_internal.c:2735
+#: ../navit/gui/internal/gui_internal.c:2764
+#: ../navit/gui/internal/gui_internal.c:2899
+msgid "Town"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
+#: ../navit/gui/gtk/destination.c:130
+msgid "District"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
+#: ../navit/gui/gtk/destination.c:446
+#: ../navit/gui/internal/gui_internal.c:2716
+#: ../navit/gui/internal/gui_internal.c:2725
+msgid "Street"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:130 ../navit/gui/gtk/destination.c:448
+msgid "Number"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:440
+msgid "City"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:443
+msgid "District/Township"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:196
+#: ../navit/gui/internal/gui_internal.c:2820
+#: ../navit/gui/internal/gui_internal.c:3113
+msgid "Display"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:201
+#: ../navit/gui/internal/gui_internal.c:2775
+#: ../navit/gui/internal/gui_internal.c:2822
+msgid "Layout"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:202
+msgid "Projection"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:203
+#: ../navit/gui/internal/gui_internal.c:3056
+#: ../navit/gui/internal/gui_internal.c:3121
+msgid "Vehicle"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:208 ../navit/gui/gtk/gui_gtk_action.c:210
+msgid "Info"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:215
+msgid "_Quit"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:222
+msgid "Cursor"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:223
+msgid "Lock on Road"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:224
+#: ../navit/gui/internal/gui_internal.c:3095
+msgid "Northing"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:238
+msgid "Data"
+msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:74
 msgid "No"
@@ -1918,6 +1918,3 @@ msgstr ""
 #: ../navit/gui/internal/gui_internal.c:3172
 msgid "Tools"
 msgstr ""
-
-#~ msgid "ramp"
-#~ msgstr "ランプ"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-03-15 22:22+0000\n"
 "Last-Translator: Mads Konradsen <Unknown>\n"
 "Language-Team: Glenn Sommer <glemsom@gmail.com>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -28,10 +28,6 @@ msgstr "Kører fra kildekode mappen\n"
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "sætter '%s' til '%s'\n"
-
-#: ../navit/navigation.c:240
-msgid "zeroth"
-msgstr ""
 
 #: ../navit/navigation.c:242
 msgid "first"
@@ -56,10 +52,6 @@ msgstr "fifth"
 #: ../navit/navigation.c:252
 msgid "sixth"
 msgstr "sixth"
-
-#: ../navit/navigation.c:263
-msgid "zeroth exit"
-msgstr ""
 
 #: ../navit/navigation.c:265
 msgid "first exit"
@@ -1708,15 +1700,6 @@ msgstr "Markør"
 msgid "Lock on Road"
 msgstr "Stop Navigation"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:224
-#: ../navit/gui/internal/gui_internal.c:3095
-msgid "Northing"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:226
-msgid "Autozoom"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2832
 msgid "Fullscreen"
@@ -1780,10 +1763,6 @@ msgstr "2D"
 msgid "3D"
 msgstr "3D"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
-msgid "OT"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
@@ -1809,11 +1788,6 @@ msgstr "Hjælp"
 msgid "Back"
 msgstr "Tilbage"
 
-#: ../navit/gui/internal/gui_internal.c:1906
-#: ../navit/gui/internal/gui_internal.c:2111
-msgid "POIs"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:2068
 msgid "Streets"
 msgstr "Gader"
@@ -1821,10 +1795,6 @@ msgstr "Gader"
 #: ../navit/gui/internal/gui_internal.c:2084
 msgid "View in Browser"
 msgstr "Vis i Browser"
-
-#: ../navit/gui/internal/gui_internal.c:2090
-msgid "View Attributes"
-msgstr ""
 
 #: ../navit/gui/internal/gui_internal.c:2125
 msgid "View on map"
@@ -1923,94 +1893,32 @@ msgstr ""
 msgid "Tools"
 msgstr "Værktøjer"
 
-#, c-format
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "navit anvendelse:\n"
-#~ "navit [parametre] [konfigurations fil]\n"
-#~ "\t-c <file>: brug <file> som konfigurations fil\n"
-#~ "\t-d <n>: indstil niveau for debugging beskeder <n>. (TODO)\n"
-#~ "\t-h: Udskriv anvendelses information og afslut.\n"
-#~ "\t-v: Udskriv versions nr. og afslut.\n"
+#: ../navit/navigation.c:240
+msgid "zeroth"
+msgstr ""
 
-#, c-format
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Ingen konfigurationsfil navit.xml eller navit.xml.local fundet\n"
+#: ../navit/navigation.c:263
+msgid "zeroth exit"
+msgstr ""
 
-#, c-format
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "Fejl ved analyse '%s': %s\n"
+#: ../navit/gui/gtk/gui_gtk_action.c:224
+#: ../navit/gui/internal/gui_internal.c:3095
+msgid "Northing"
+msgstr ""
 
-#, c-format
-#~ msgid "Using '%s'\n"
-#~ msgstr "Bruger '%s'\n"
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr ""
 
-#, c-format
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "Ingen instanser er oprettet, afslutter\n"
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
+msgid "OT"
+msgstr ""
 
-#~ msgid "ramp"
-#~ msgstr "afkørsel"
+#: ../navit/gui/internal/gui_internal.c:1906
+#: ../navit/gui/internal/gui_internal.c:2111
+msgid "POIs"
+msgstr ""
 
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "ind i %s"
-
-#~ msgid "Refresh"
-#~ msgstr "Forny"
-
-#~ msgid "Clear"
-#~ msgstr "Ryd"
-
-#~ msgid "Tracking"
-#~ msgstr "Sporing"
-
-#~ msgid "Orientation"
-#~ msgstr "Retning"
-
-#~ msgid "Turn %1$s%2$s %3$s"
-#~ msgstr "Drej %1$s til %2$s %3$s"
-
-#~ msgid "Moldova"
-#~ msgstr "Moldova"
-
-#~ msgid "Syria"
-#~ msgstr "Syrien"
-
-#~ msgid "Libia"
-#~ msgstr "Liberia"
-
-#~ msgid "Palestinia"
-#~ msgstr "Palæstina"
-
-#~ msgid "Macedonia"
-#~ msgstr "Makedonien"
-
-#~ msgid "VisibleBlocks"
-#~ msgstr "Synlige Blokke"
-
-#~ msgid "VisibleTowns"
-#~ msgstr "Synlige byer"
-
-#~ msgid "VisiblePolys"
-#~ msgstr "Synlige Polygomer"
-
-#~ msgid "VisibleStreets"
-#~ msgstr "Synlige veje"
-
-#~ msgid "VisiblePoints"
-#~ msgstr "Synlige punkter"
-
-#, c-format
-#~ msgid "Leave the roundabout at the %s exit"
-#~ msgstr "Forlad rundkørslen ved %s afkørsel"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %s exit"
-#~ msgstr "forlad så rundkørslen ved den %s afkørsel"
+#: ../navit/gui/internal/gui_internal.c:2090
+msgid "View Attributes"
+msgstr ""

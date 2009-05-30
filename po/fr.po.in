@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-03-13 15:37+0000\n"
 "Last-Translator: metehyi <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -1786,10 +1786,6 @@ msgstr "2D"
 msgid "3D"
 msgstr "3D"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
-msgid "OT"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
@@ -1929,120 +1925,6 @@ msgstr ""
 msgid "Tools"
 msgstr "Outils"
 
-#, c-format
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "utilisation de navit:\n"
-#~ "navit [options] [fichier de configuration]\n"
-#~ "\t-c <fichier>: utiliser <fichier> comme source de configuration\n"
-#~ "\t-d <n>: définir le niveau de verbosité à <n>. (non implémenté)\n"
-#~ "\t-h: afficher ce message et quitter\n"
-#~ "\t-v: afficher la version et quitter\n"
-
-#, c-format
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Fichier de configuration navit.xml ou navit.xml.local non trouvé\n"
-
-#, c-format
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "Erreur lors du traitement de '%s': %s\n"
-
-#, c-format
-#~ msgid "Using '%s'\n"
-#~ msgstr "Utilisation de '%s'\n"
-
-#, c-format
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "Pas d'instance créée, sortie\n"
-
-# sémantique foireuse. c'est "turn left ramp", en français ça sortait "tournez à droite bretelle", donc j'ai remplacé par "sur la bretelle"
-#~ msgid "ramp"
-#~ msgstr "sur la bretelle"
-
-# utilisé pour les "références" de route. Par exemple, "tournez sur la 43".
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "sur la %s"
-
-#~ msgid "Refresh"
-#~ msgstr "Rafraîchir"
-
-#~ msgid "Clear"
-#~ msgstr "Effacer"
-
-#~ msgid "Tracking"
-#~ msgstr "Coller le curseur à la route"
-
-#~ msgid "Orientation"
-#~ msgstr "Conserver l'orientation vers le Nord"
-
-#~ msgid "Moldova"
-#~ msgstr "Moldavie"
-
-#~ msgid "Palestinia"
-#~ msgstr "Palestine"
-
-#~ msgid "VisibleBlocks"
-#~ msgstr "Blocs visibles"
-
-#~ msgid "VisibleTowns"
-#~ msgstr "Villes visibles"
-
-#~ msgid "VisiblePolys"
-#~ msgstr "Polys visibles"
-
-#~ msgid "VisibleStreets"
-#~ msgstr "Rues visibles"
-
-#~ msgid "VisiblePoints"
-#~ msgstr "Points visibles"
-
-#~ msgid "RouteGraph"
-#~ msgstr "RouteGraph"
-
-#~ msgid "two kilometers"
-#~ msgstr "deux kilomètres"
-
-#~ msgid "in two kilometers"
-#~ msgstr "dans deux kilomètres"
-
-#~ msgid "three kilometers"
-#~ msgstr "trois kilomètres"
-
-#~ msgid "in three kilometers"
-#~ msgstr "dans trois kilomètres"
-
-#~ msgid "four kilometers"
-#~ msgstr "quatre kilomètres"
-
-#~ msgid "in four kilometers"
-#~ msgstr "dans quatre kilomètres"
-
-#~ msgid "%d kilometers"
-#~ msgstr "%d kilomètres"
-
-#~ msgid "in %d kilometers"
-#~ msgstr "dans %d kilomètres"
-
-#~ msgid "strength_pos"
-#~ msgstr "2"
-
-#~ msgid "direction_pos"
-#~ msgstr "3"
-
-#~ msgid "distance_pos"
-#~ msgstr "1"
-
-#, c-format
-#~ msgid "Leave the roundabout at the %s exit"
-#~ msgstr "Prenez la sortie %s du rond-point"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %s exit"
-#~ msgstr "puis quittez le rond-point à la sortie %s"
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
+msgid "OT"
+msgstr ""

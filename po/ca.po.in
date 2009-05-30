@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
-"PO-Revision-Date: 2009-01-26 11:22+0000\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
+"PO-Revision-Date: 2009-04-12 11:02+0000\n"
 "Last-Translator: Sid <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -23,15 +23,6 @@ msgstr ""
 #, c-format
 msgid "Running from source directory\n"
 msgstr "Executant-se des de directori arrel\n"
-
-#: ../navit/main.c:263
-#, c-format
-msgid "setting '%s' to '%s'\n"
-msgstr ""
-
-#: ../navit/navigation.c:240
-msgid "zeroth"
-msgstr ""
 
 #: ../navit/navigation.c:242
 msgid "first"
@@ -47,42 +38,253 @@ msgstr "tercera"
 
 #: ../navit/navigation.c:248
 msgid "fourth"
-msgstr ""
+msgstr "quarta"
 
 #: ../navit/navigation.c:250
 msgid "fifth"
-msgstr ""
+msgstr "cinquena"
 
 #: ../navit/navigation.c:252
 msgid "sixth"
+msgstr "sisena"
+
+#: ../navit/navigation.c:265
+msgid "first exit"
+msgstr "primera sortida"
+
+#: ../navit/navigation.c:267
+msgid "second exit"
+msgstr "segona sortida"
+
+#: ../navit/navigation.c:269
+msgid "third exit"
+msgstr "tercera sortida"
+
+#: ../navit/navigation.c:271
+msgid "fourth exit"
+msgstr "cuarta sortida"
+
+#: ../navit/navigation.c:273
+msgid "fifth exit"
+msgstr "cinquena sortida"
+
+#: ../navit/navigation.c:275
+msgid "sixth exit"
+msgstr "sisena sortida"
+
+#: ../navit/navigation.c:1268
+msgid "exit"
+msgstr "sortir"
+
+#. TRANSLATORS: right, as in 'Turn right'
+#: ../navit/navigation.c:1340
+msgid "right"
+msgstr "dreta"
+
+#. TRANSLATORS: left, as in 'Turn left'
+#: ../navit/navigation.c:1379
+msgid "left"
+msgstr "esquerra"
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1386
+msgid "easily "
+msgstr "fàcilment "
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1395
+msgid "unknown "
+msgstr "desconegut "
+
+#: ../navit/navigation.c:1464
+msgid "now"
+msgstr "ara"
+
+#: ../navit/navigation.c:1483
+msgid "error"
+msgstr "error"
+
+#: ../navit/navit.c:1164
+msgid "Position"
+msgstr "Posició"
+
+#: ../navit/navit.c:1165
+msgid "Command"
+msgstr "Ordre"
+
+#: ../navit/navit.c:1169
+msgid "Length"
+msgstr "Durada"
+
+#: ../navit/navit.c:1177 ../navit/navit.c:1202
+msgid "m"
+msgstr "m"
+
+#: ../navit/navit.c:1183
+msgid "Time"
+msgstr "Temps"
+
+#. 020
+#: ../navit/country.c:39
+msgid "Andorra"
+msgstr "Andorra"
+
+#. 784
+#: ../navit/country.c:40
+msgid "United Arab Emirates"
+msgstr "Unió dels Emirats Àrabs"
+
+#. 004
+#: ../navit/country.c:41
+msgid "Afghanistan"
+msgstr "Afganistan"
+
+#. 008
+#: ../navit/country.c:44
+msgid "Albania"
+msgstr "Albània"
+
+#. 530
+#: ../navit/country.c:46
+msgid "Netherlands Antilles"
+msgstr "Antilles Holandeses"
+
+#. 024
+#: ../navit/country.c:47
+msgid "Angola"
+msgstr "Angola"
+
+#. 032
+#: ../navit/country.c:49
+msgid "Argentina"
+msgstr "Argentina"
+
+#. 040
+#: ../navit/country.c:51
+msgid "Austria"
+msgstr "Àustria"
+
+#. 070
+#: ../navit/country.c:56
+msgid "Bosnia and Herzegovina"
+msgstr "Bòsnia i Hercegovina"
+
+#. 052
+#: ../navit/country.c:57
+msgid "Barbados"
+msgstr "Barbados"
+
+#. 050
+#: ../navit/country.c:58
+msgid "Bangladesh"
+msgstr "Bangladesh"
+
+#. 056
+#: ../navit/country.c:59
+msgid "Belgium"
+msgstr "Bèlgica"
+
+#. 100
+#: ../navit/country.c:61
+msgid "Bulgaria"
+msgstr "Bulgària"
+
+#. 108
+#: ../navit/country.c:63
+msgid "Burundi"
+msgstr "Burundi"
+
+#. 060
+#: ../navit/country.c:66
+msgid "Bermuda"
+msgstr "Illes Bermudes"
+
+#. 096
+#: ../navit/country.c:67
+msgid "Brunei Darussalam"
+msgstr "Brunei"
+
+#. 068
+#: ../navit/country.c:68
+msgid "Bolivia"
+msgstr "Bolívia"
+
+#. 076
+#: ../navit/country.c:69
+msgid "Brazil"
+msgstr "Brasil"
+
+#. 064
+#: ../navit/country.c:71
+msgid "Bhutan"
+msgstr "Bhutan"
+
+#. 072
+#: ../navit/country.c:73
+msgid "Botswana"
+msgstr "Botswana"
+
+#. 124
+#: ../navit/country.c:76
+msgid "Canada"
+msgstr "Canadà"
+
+#. 180
+#: ../navit/country.c:78
+msgid "Congo, Democratic Republic of the"
+msgstr "Congo, República Democràtica del"
+
+#. 178
+#: ../navit/country.c:80
+msgid "Congo"
+msgstr "Congo"
+
+#. 756
+#: ../navit/country.c:81
+msgid "Switzerland"
+msgstr "Suïssa"
+
+#. 384
+#: ../navit/country.c:82
+msgid "Cote d'Ivoire"
+msgstr "Costa d'Ivori"
+
+#. 184
+#: ../navit/country.c:83
+msgid "Cook Islands"
+msgstr "Illes Cook"
+
+#. 156
+#: ../navit/country.c:86
+msgid "China"
+msgstr "Xina"
+
+#. 170
+#: ../navit/country.c:87
+msgid "Colombia"
+msgstr "Colòmbia"
+
+#. 188
+#: ../navit/country.c:88
+msgid "Costa Rica"
+msgstr "Costa Rica"
+
+#. 192
+#: ../navit/country.c:89
+msgid "Cuba"
+msgstr "Cuba"
+
+#: ../navit/main.c:263
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr ""
+
+#: ../navit/navigation.c:240
+msgid "zeroth"
 msgstr ""
 
 #: ../navit/navigation.c:263
 msgid "zeroth exit"
-msgstr ""
-
-#: ../navit/navigation.c:265
-msgid "first exit"
-msgstr ""
-
-#: ../navit/navigation.c:267
-msgid "second exit"
-msgstr ""
-
-#: ../navit/navigation.c:269
-msgid "third exit"
-msgstr ""
-
-#: ../navit/navigation.c:271
-msgid "fourth exit"
-msgstr ""
-
-#: ../navit/navigation.c:273
-msgid "fifth exit"
-msgstr ""
-
-#: ../navit/navigation.c:275
-msgid "sixth exit"
 msgstr ""
 
 #: ../navit/navigation.c:316
@@ -129,10 +331,6 @@ msgid_plural "in %d kilometers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../navit/navigation.c:1268
-msgid "exit"
-msgstr "sortir"
-
 #: ../navit/navigation.c:1270
 msgid "into the ramp"
 msgstr ""
@@ -167,30 +365,10 @@ msgstr ""
 msgid "%sinto the %s"
 msgstr ""
 
-#. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1340
-msgid "right"
-msgstr "dreta"
-
-#. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1379
-msgid "left"
-msgstr "esquerra"
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1386
-msgid "easily "
-msgstr "fàcilment "
-
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1391
 msgid "strongly "
 msgstr ""
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1395
-msgid "unknown "
-msgstr "desconegut "
 
 #: ../navit/navigation.c:1402
 msgid "When possible, please turn around"
@@ -236,18 +414,10 @@ msgstr ""
 msgid "after %i roads"
 msgstr ""
 
-#: ../navit/navigation.c:1464
-msgid "now"
-msgstr "ara"
-
 #: ../navit/navigation.c:1472
 #, c-format
 msgid "then take the %1$s road to the %2$s"
 msgstr ""
-
-#: ../navit/navigation.c:1483
-msgid "error"
-msgstr "error"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #: ../navit/navigation.c:1513
@@ -270,29 +440,9 @@ msgstr ""
 msgid "then you have reached your destination."
 msgstr ""
 
-#: ../navit/navit.c:1164
-msgid "Position"
-msgstr "Posició"
-
-#: ../navit/navit.c:1165
-msgid "Command"
-msgstr "Ordre"
-
-#: ../navit/navit.c:1169
-msgid "Length"
-msgstr "Durada"
-
 #: ../navit/navit.c:1173 ../navit/navit.c:1198
 msgid "km"
 msgstr ""
-
-#: ../navit/navit.c:1177 ../navit/navit.c:1202
-msgid "m"
-msgstr "m"
-
-#: ../navit/navit.c:1183
-msgid "Time"
-msgstr "Temps"
 
 #: ../navit/navit.c:1195
 msgid "Destination Length"
@@ -331,21 +481,6 @@ msgstr ""
 msgid "Screen coord : %d %d"
 msgstr ""
 
-#. 020
-#: ../navit/country.c:39
-msgid "Andorra"
-msgstr "Andorra"
-
-#. 784
-#: ../navit/country.c:40
-msgid "United Arab Emirates"
-msgstr "Unió dels Emirats Àrabs"
-
-#. 004
-#: ../navit/country.c:41
-msgid "Afghanistan"
-msgstr "Afganistan"
-
 #. 028
 #: ../navit/country.c:42
 msgid "Antigua and Barbuda"
@@ -356,45 +491,20 @@ msgstr ""
 msgid "Anguilla"
 msgstr ""
 
-#. 008
-#: ../navit/country.c:44
-msgid "Albania"
-msgstr "Albània"
-
 #. 051
 #: ../navit/country.c:45
 msgid "Armenia"
 msgstr ""
-
-#. 530
-#: ../navit/country.c:46
-msgid "Netherlands Antilles"
-msgstr "Antilles Holandeses"
-
-#. 024
-#: ../navit/country.c:47
-msgid "Angola"
-msgstr "Angola"
 
 #. 010
 #: ../navit/country.c:48
 msgid "Antarctica"
 msgstr ""
 
-#. 032
-#: ../navit/country.c:49
-msgid "Argentina"
-msgstr "Argentina"
-
 #. 016
 #: ../navit/country.c:50
 msgid "American Samoa"
 msgstr ""
-
-#. 040
-#: ../navit/country.c:51
-msgid "Austria"
-msgstr "Àustria"
 
 #. 036
 #: ../navit/country.c:52
@@ -416,45 +526,15 @@ msgstr ""
 msgid "Azerbaijan"
 msgstr ""
 
-#. 070
-#: ../navit/country.c:56
-msgid "Bosnia and Herzegovina"
-msgstr "Bòsnia i Hercegovina"
-
-#. 052
-#: ../navit/country.c:57
-msgid "Barbados"
-msgstr "Barbados"
-
-#. 050
-#: ../navit/country.c:58
-msgid "Bangladesh"
-msgstr "Bangladesh"
-
-#. 056
-#: ../navit/country.c:59
-msgid "Belgium"
-msgstr "Bèlgica"
-
 #. 854
 #: ../navit/country.c:60
 msgid "Burkina Faso"
 msgstr ""
 
-#. 100
-#: ../navit/country.c:61
-msgid "Bulgaria"
-msgstr "Bulgària"
-
 #. 048
 #: ../navit/country.c:62
 msgid "Bahrain"
 msgstr ""
-
-#. 108
-#: ../navit/country.c:63
-msgid "Burundi"
-msgstr "Burundi"
 
 #. 204
 #: ../navit/country.c:64
@@ -466,45 +546,15 @@ msgstr ""
 msgid "Saint Barthelemy"
 msgstr ""
 
-#. 060
-#: ../navit/country.c:66
-msgid "Bermuda"
-msgstr "Illes Bermudes"
-
-#. 096
-#: ../navit/country.c:67
-msgid "Brunei Darussalam"
-msgstr "Brunei"
-
-#. 068
-#: ../navit/country.c:68
-msgid "Bolivia"
-msgstr "Bolívia"
-
-#. 076
-#: ../navit/country.c:69
-msgid "Brazil"
-msgstr "Brasil"
-
 #. 044
 #: ../navit/country.c:70
 msgid "Bahamas"
 msgstr ""
 
-#. 064
-#: ../navit/country.c:71
-msgid "Bhutan"
-msgstr "Bhutan"
-
 #. 074
 #: ../navit/country.c:72
 msgid "Bouvet Island"
 msgstr ""
-
-#. 072
-#: ../navit/country.c:73
-msgid "Botswana"
-msgstr "Botswana"
 
 #. 112
 #: ../navit/country.c:74
@@ -516,45 +566,15 @@ msgstr ""
 msgid "Belize"
 msgstr ""
 
-#. 124
-#: ../navit/country.c:76
-msgid "Canada"
-msgstr "Canadà"
-
 #. 166
 #: ../navit/country.c:77
 msgid "Cocos (Keeling) Islands"
 msgstr ""
 
-#. 180
-#: ../navit/country.c:78
-msgid "Congo, Democratic Republic of the"
-msgstr "Congo, República Democràtica del"
-
 #. 140
 #: ../navit/country.c:79
 msgid "Central African Republic"
 msgstr ""
-
-#. 178
-#: ../navit/country.c:80
-msgid "Congo"
-msgstr "Congo"
-
-#. 756
-#: ../navit/country.c:81
-msgid "Switzerland"
-msgstr "Suïssa"
-
-#. 384
-#: ../navit/country.c:82
-msgid "Cote d'Ivoire"
-msgstr "Costa d'Ivori"
-
-#. 184
-#: ../navit/country.c:83
-msgid "Cook Islands"
-msgstr "Illes Cook"
 
 #. 152
 #: ../navit/country.c:84
@@ -565,26 +585,6 @@ msgstr ""
 #: ../navit/country.c:85
 msgid "Cameroon"
 msgstr ""
-
-#. 156
-#: ../navit/country.c:86
-msgid "China"
-msgstr "Xina"
-
-#. 170
-#: ../navit/country.c:87
-msgid "Colombia"
-msgstr "Colòmbia"
-
-#. 188
-#: ../navit/country.c:88
-msgid "Costa Rica"
-msgstr "Costa Rica"
-
-#. 192
-#: ../navit/country.c:89
-msgid "Cuba"
-msgstr "Cuba"
 
 #. 132
 #: ../navit/country.c:90

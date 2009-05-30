@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2008-09-06 13:58+0000\n"
 "Last-Translator: వీవెన్ (Veeven) <Unknown>\n"
 "Language-Team: Telugu <te@li.org>\n"
@@ -15,9 +15,720 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
+
+#: ../navit/navigation.c:322
+#, c-format
+msgid "%d meters"
+msgstr "%d మీటర్లు"
+
+#: ../navit/navigation.c:336
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "ఒక కిలోమీటరు"
+msgstr[1] "%d కిలోమీటర్లు"
+
+#. TRANSLATORS: right, as in 'Turn right'
+#: ../navit/navigation.c:1340
+msgid "right"
+msgstr "కుడి"
+
+#. TRANSLATORS: left, as in 'Turn left'
+#: ../navit/navigation.c:1379
+msgid "left"
+msgstr "ఎడమ"
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1386
+msgid "easily "
+msgstr "తేలికగా "
+
+#: ../navit/navigation.c:1448
+msgid "soon"
+msgstr "త్వరలో"
+
+#: ../navit/navigation.c:1464
+msgid "now"
+msgstr "ఇప్పుడు"
+
+#: ../navit/navigation.c:1483
+msgid "error"
+msgstr "పొరపాటు"
+
+#: ../navit/navigation.c:1521
+#, c-format
+msgid "You have reached your destination %s"
+msgstr "మీరు మీ గమ్యస్థానం %s చేరారు"
+
+#: ../navit/navit.c:1165
+msgid "Command"
+msgstr "ఆదేశం"
+
+#: ../navit/navit.c:1169
+msgid "Length"
+msgstr "పొడవు"
+
+#: ../navit/navit.c:1173 ../navit/navit.c:1198
+msgid "km"
+msgstr "కిమీ"
+
+#: ../navit/navit.c:1183
+msgid "Time"
+msgstr "సమయం"
+
+#. 020
+#: ../navit/country.c:39
+msgid "Andorra"
+msgstr "అండోరా"
+
+#. 784
+#: ../navit/country.c:40
+msgid "United Arab Emirates"
+msgstr "యునైటెడ్ అరబ్ ఎమిరేట్స్"
+
+#. 004
+#: ../navit/country.c:41
+msgid "Afghanistan"
+msgstr "ఆఫ్ఘనిస్తాన్"
+
+#. 008
+#: ../navit/country.c:44
+msgid "Albania"
+msgstr "అల్బేనియా"
+
+#. 051
+#: ../navit/country.c:45
+msgid "Armenia"
+msgstr "అర్మేనియా"
+
+#. 024
+#: ../navit/country.c:47
+msgid "Angola"
+msgstr "అంగోలా"
+
+#. 010
+#: ../navit/country.c:48
+msgid "Antarctica"
+msgstr "అంటార్కిటికా"
+
+#. 032
+#: ../navit/country.c:49
+msgid "Argentina"
+msgstr "అర్జెంటీనా"
+
+#. 050
+#: ../navit/country.c:58
+msgid "Bangladesh"
+msgstr "బంగ్లాదేశ్"
+
+#. 056
+#: ../navit/country.c:59
+msgid "Belgium"
+msgstr "బెల్జియం"
+
+#. 100
+#: ../navit/country.c:61
+msgid "Bulgaria"
+msgstr "బల్గేరియా"
+
+#. 060
+#: ../navit/country.c:66
+msgid "Bermuda"
+msgstr "బెర్ముడా"
+
+#. 068
+#: ../navit/country.c:68
+msgid "Bolivia"
+msgstr "బొలీవియా"
+
+#. 076
+#: ../navit/country.c:69
+msgid "Brazil"
+msgstr "బ్రెజిల్"
+
+#. 044
+#: ../navit/country.c:70
+msgid "Bahamas"
+msgstr "బహమాస్"
+
+#. 064
+#: ../navit/country.c:71
+msgid "Bhutan"
+msgstr "భూటాన్"
+
+#. 112
+#: ../navit/country.c:74
+msgid "Belarus"
+msgstr "బెలారస్"
+
+#. 124
+#: ../navit/country.c:76
+msgid "Canada"
+msgstr "కెనడా"
+
+#. 140
+#: ../navit/country.c:79
+msgid "Central African Republic"
+msgstr "మధ్య ఆఫ్రికన్ రిపబ్లిక్"
+
+#. 178
+#: ../navit/country.c:80
+msgid "Congo"
+msgstr "కాంగో"
+
+#. 756
+#: ../navit/country.c:81
+msgid "Switzerland"
+msgstr "స్విట్జర్లాండ్"
+
+#. 152
+#: ../navit/country.c:84
+msgid "Chile"
+msgstr "చిలీ"
+
+#. 120
+#: ../navit/country.c:85
+msgid "Cameroon"
+msgstr "కామెరూన్"
+
+#. 156
+#: ../navit/country.c:86
+msgid "China"
+msgstr "చైనా"
+
+#. 170
+#: ../navit/country.c:87
+msgid "Colombia"
+msgstr "కొలంబియా"
+
+#. 188
+#: ../navit/country.c:88
+msgid "Costa Rica"
+msgstr "కోస్టారికా"
+
+#. 192
+#: ../navit/country.c:89
+msgid "Cuba"
+msgstr "క్యూబా"
+
+#. 196
+#: ../navit/country.c:92
+msgid "Cyprus"
+msgstr "సైప్రస్"
+
+#. 276
+#: ../navit/country.c:94
+msgid "Germany"
+msgstr "జర్మనీ"
+
+#. 208
+#: ../navit/country.c:96
+msgid "Denmark"
+msgstr "డెన్మార్క్"
+
+#. 212
+#: ../navit/country.c:97
+msgid "Dominica"
+msgstr "డొమినికా"
+
+#. 214
+#: ../navit/country.c:98
+msgid "Dominican Republic"
+msgstr "డొమినికన్ రిపబ్లిక్"
+
+#. 012
+#: ../navit/country.c:99
+msgid "Algeria"
+msgstr "అల్జీరియా"
+
+#. 218
+#: ../navit/country.c:100
+msgid "Ecuador"
+msgstr "ఈక్విడార్"
+
+#. 233
+#: ../navit/country.c:101
+msgid "Estonia"
+msgstr "ఎస్టోనియా"
+
+#. 818
+#: ../navit/country.c:102
+msgid "Egypt"
+msgstr "ఈజిప్ట్"
+
+#. 732
+#: ../navit/country.c:103
+msgid "Western Sahara"
+msgstr "పశ్చిమ సహారా"
+
+#. 724
+#: ../navit/country.c:105
+msgid "Spain"
+msgstr "స్పెయిన్"
+
+#. 231
+#: ../navit/country.c:106
+msgid "Ethiopia"
+msgstr "ఇథియోపియా"
+
+#. 246
+#: ../navit/country.c:107
+msgid "Finland"
+msgstr "ఫిన్లాండ్"
+
+#. 242
+#: ../navit/country.c:108
+msgid "Fiji"
+msgstr "ఫిజీ"
+
+#. 250
+#: ../navit/country.c:112
+msgid "France"
+msgstr "ఫ్రాన్స్"
+
+#. 268
+#: ../navit/country.c:116
+msgid "Georgia"
+msgstr "జార్జియా"
+
+#. 254
+#: ../navit/country.c:117
+msgid "French Guiana"
+msgstr "ఫ్రెంచ్   గయానా"
+
+#. 288
+#: ../navit/country.c:119
+msgid "Ghana"
+msgstr "ఘనా"
+
+#. 304
+#: ../navit/country.c:121
+msgid "Greenland"
+msgstr "గ్రీన్‌లాండ్"
+
+#. 270
+#: ../navit/country.c:122
+msgid "Gambia"
+msgstr "జాంబియా"
+
+#. 300
+#: ../navit/country.c:126
+msgid "Greece"
+msgstr "గ్రీస్"
+
+#. 328
+#: ../navit/country.c:131
+msgid "Guyana"
+msgstr "గయానా"
+
+#. 344
+#: ../navit/country.c:132
+msgid "Hong Kong"
+msgstr "హాంకాంగ్"
+
+#. 191
+#: ../navit/country.c:135
+msgid "Croatia"
+msgstr "క్రోయేషియా"
+
+#. 348
+#: ../navit/country.c:137
+msgid "Hungary"
+msgstr "హంగరీ"
+
+#. 360
+#: ../navit/country.c:138
+msgid "Indonesia"
+msgstr "ఇండోనేషియా"
+
+#. 372
+#: ../navit/country.c:139
+msgid "Ireland"
+msgstr "ఐర్లాండ్"
+
+#. 356
+#: ../navit/country.c:142
+msgid "India"
+msgstr "భారతదేశం"
+
+#. 368
+#: ../navit/country.c:144
+msgid "Iraq"
+msgstr "ఇరాక్"
+
+#. 380
+#: ../navit/country.c:147
+msgid "Italy"
+msgstr "ఇటలీ"
+
+#. 388
+#: ../navit/country.c:149
+msgid "Jamaica"
+msgstr "జమైకా"
+
+#. 400
+#: ../navit/country.c:150
+msgid "Jordan"
+msgstr "జోర్డాన్"
+
+#. 392
+#: ../navit/country.c:151
+msgid "Japan"
+msgstr "జపాన్"
+
+#. 404
+#: ../navit/country.c:152
+msgid "Kenya"
+msgstr "కెన్యా"
+
+#. 116
+#: ../navit/country.c:154
+msgid "Cambodia"
+msgstr "కాంబోడియా"
+
+#. 414
+#: ../navit/country.c:160
+msgid "Kuwait"
+msgstr "కువైట్"
+
+#. 136
+#: ../navit/country.c:161
+msgid "Cayman Islands"
+msgstr "కేమన్ దీవులు"
+
+#. 398
+#: ../navit/country.c:162
+msgid "Kazakhstan"
+msgstr "కజకిస్తాన్"
+
+#. 422
+#: ../navit/country.c:164
+msgid "Lebanon"
+msgstr "లెబనాన్"
+
+#. 144
+#: ../navit/country.c:167
+msgid "Sri Lanka"
+msgstr "శ్రీలంక"
+
+#. 428
+#: ../navit/country.c:172
+msgid "Latvia"
+msgstr "లాత్వియా"
+
+#. 504
+#: ../navit/country.c:174
+msgid "Morocco"
+msgstr "మొరాకో"
+
+#. 492
+#: ../navit/country.c:175
+msgid "Monaco"
+msgstr "మొనాకో"
+
+#. 450
+#: ../navit/country.c:179
+msgid "Madagascar"
+msgstr "మడగాస్కర్"
+
+#. 104
+#: ../navit/country.c:183
+msgid "Myanmar"
+msgstr "మియన్మార్"
+
+#. 496
+#: ../navit/country.c:184
+msgid "Mongolia"
+msgstr "మంగోలియా"
+
+#. 470
+#: ../navit/country.c:190
+msgid "Malta"
+msgstr "మాల్టా"
+
+#. 480
+#: ../navit/country.c:191
+msgid "Mauritius"
+msgstr "మారిషస్"
+
+#. 462
+#: ../navit/country.c:192
+msgid "Maldives"
+msgstr "మాల్దీవులు"
+
+#. 484
+#: ../navit/country.c:194
+msgid "Mexico"
+msgstr "మెక్సికో"
+
+#. 458
+#: ../navit/country.c:195
+msgid "Malaysia"
+msgstr "మలేషియా"
+
+#. 516
+#: ../navit/country.c:197
+msgid "Namibia"
+msgstr "నమీబియా"
+
+#. 566
+#: ../navit/country.c:201
+msgid "Nigeria"
+msgstr "నైజీరియా"
+
+#. 578
+#: ../navit/country.c:204
+msgid "Norway"
+msgstr "నార్వే"
+
+#. 524
+#: ../navit/country.c:205
+msgid "Nepal"
+msgstr "నేపాల్"
+
+#. 554
+#: ../navit/country.c:208
+msgid "New Zealand"
+msgstr "న్యూజిలాండ్"
+
+#. 591
+#: ../navit/country.c:210
+msgid "Panama"
+msgstr "పనామా"
+
+#. 604
+#: ../navit/country.c:211
+msgid "Peru"
+msgstr "పెరూ"
+
+#. 608
+#: ../navit/country.c:214
+msgid "Philippines"
+msgstr "ఫిలిప్ఫీన్స్"
+
+#. 586
+#: ../navit/country.c:215
+msgid "Pakistan"
+msgstr "పాకిస్తాన్"
+
+#. 616
+#: ../navit/country.c:216
+msgid "Poland"
+msgstr "పోలాండ్"
+
+#. 620
+#: ../navit/country.c:221
+msgid "Portugal"
+msgstr "పోర్చుగల్"
+
+#. 600
+#: ../navit/country.c:223
+msgid "Paraguay"
+msgstr "పరాగ్వే"
+
+#. 634
+#: ../navit/country.c:224
+msgid "Qatar"
+msgstr "ఖతార్"
+
+#. 642
+#: ../navit/country.c:226
+msgid "Romania"
+msgstr "రొమేనియా"
+
+#. 688
+#: ../navit/country.c:227
+msgid "Serbia"
+msgstr "సెర్బియా"
+
+#. 646
+#: ../navit/country.c:229
+msgid "Rwanda"
+msgstr "రువాండా"
+
+#. 682
+#: ../navit/country.c:230
+msgid "Saudi Arabia"
+msgstr "సౌది అరేబియా"
+
+#. 736
+#: ../navit/country.c:233
+msgid "Sudan"
+msgstr "సూడాన్"
+
+#. 752
+#: ../navit/country.c:234
+msgid "Sweden"
+msgstr "స్వీడన్"
+
+#. 702
+#: ../navit/country.c:235
+msgid "Singapore"
+msgstr "సింగపూర్"
+
+#. 703
+#: ../navit/country.c:239
+msgid "Slovakia"
+msgstr "స్లొవేకియా"
+
+#. 706
+#: ../navit/country.c:243
+msgid "Somalia"
+msgstr "సోమాలియా"
+
+#. 748
+#: ../navit/country.c:248
+msgid "Swaziland"
+msgstr "స్వాజిలాండ్"
+
+#. 768
+#: ../navit/country.c:252
+msgid "Togo"
+msgstr "టోగో"
+
+#. 764
+#: ../navit/country.c:253
+msgid "Thailand"
+msgstr "థాయిలాండ్"
+
+#. 762
+#: ../navit/country.c:254
+msgid "Tajikistan"
+msgstr "తజకిస్తాన్"
+
+#. 804
+#: ../navit/country.c:265
+msgid "Ukraine"
+msgstr "ఉక్రేయిన్"
+
+#. 800
+#: ../navit/country.c:266
+msgid "Uganda"
+msgstr "ఉగాండా"
+
+#. 840
+#: ../navit/country.c:268
+msgid "United States"
+msgstr "యునైటెడ్ స్టేట్స్ ఆఫ్ అమెరికా"
+
+#. 858
+#: ../navit/country.c:269
+msgid "Uruguay"
+msgstr "ఉరూగ్వే"
+
+#. 860
+#: ../navit/country.c:270
+msgid "Uzbekistan"
+msgstr "ఉజ్బెకిస్తాన్"
+
+#. 862
+#: ../navit/country.c:273
+msgid "Venezuela"
+msgstr "వెనిజులా"
+
+#. 704
+#: ../navit/country.c:276
+msgid "Viet Nam"
+msgstr "వియత్నాం"
+
+#. 710
+#: ../navit/country.c:282
+msgid "South Africa"
+msgstr "దక్షిణ ఆఫ్రికా"
+
+#. 894
+#: ../navit/country.c:283
+msgid "Zambia"
+msgstr "జాంబియా"
+
+#. 716
+#: ../navit/country.c:284
+msgid "Zimbabwe"
+msgstr "జింబాబ్వే"
+
+#: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:435
+#: ../navit/gui/internal/gui_internal.c:2756
+msgid "Country"
+msgstr "దేశం"
+
+#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
+#: ../navit/gui/gtk/destination.c:130
+msgid "Postal"
+msgstr "తపాలా"
+
+#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
+#: ../navit/gui/gtk/destination.c:130
+#: ../navit/gui/internal/gui_internal.c:2735
+#: ../navit/gui/internal/gui_internal.c:2764
+#: ../navit/gui/internal/gui_internal.c:2899
+msgid "Town"
+msgstr "పట్టణం"
+
+#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
+#: ../navit/gui/gtk/destination.c:130
+msgid "District"
+msgstr "జిల్లా"
+
+#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
+#: ../navit/gui/gtk/destination.c:446
+#: ../navit/gui/internal/gui_internal.c:2716
+#: ../navit/gui/internal/gui_internal.c:2725
+msgid "Street"
+msgstr "వీధి"
+
+#: ../navit/gui/gtk/destination.c:130 ../navit/gui/gtk/destination.c:448
+msgid "Number"
+msgstr "సంఖ్య"
+
+#: ../navit/gui/gtk/destination.c:440
+msgid "City"
+msgstr "నగరం"
+
+#: ../navit/gui/gtk/destination.c:471 ../navit/gui/gtk/gui_gtk_action.c:200
+msgid "Map"
+msgstr "పటం"
+
+#: ../navit/gui/gtk/destination.c:473 ../navit/gui/gtk/gui_gtk_action.c:212
+msgid "Destination"
+msgstr "గమ్యం"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:199
+#: ../navit/gui/internal/gui_internal.c:2202
+#: ../navit/gui/internal/gui_internal.c:2875
+msgid "Bookmarks"
+msgstr "పేజీకలు"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:201
+#: ../navit/gui/internal/gui_internal.c:2775
+#: ../navit/gui/internal/gui_internal.c:2822
+msgid "Layout"
+msgstr "కూర్పు"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:203
+#: ../navit/gui/internal/gui_internal.c:3056
+#: ../navit/gui/internal/gui_internal.c:3121
+msgid "Vehicle"
+msgstr "వాహనం"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:208 ../navit/gui/gtk/gui_gtk_action.c:210
+msgid "Info"
+msgstr "సమాచారం"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:214
+msgid "Test"
+msgstr "పరీక్ష"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
+#: ../navit/gui/internal/gui_internal.c:2832
+msgid "Fullscreen"
+msgstr "నిండు తెర"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:238
+msgid "Data"
+msgstr "దత్తాంశం"
 
 #: ../navit/main.c:231
 #, c-format
@@ -95,11 +806,6 @@ msgstr ""
 msgid "in %d m"
 msgstr ""
 
-#: ../navit/navigation.c:322
-#, c-format
-msgid "%d meters"
-msgstr "%d మీటర్లు"
-
 #: ../navit/navigation.c:324
 #, c-format
 msgid "in %d meters"
@@ -114,13 +820,6 @@ msgstr ""
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr ""
-
-#: ../navit/navigation.c:336
-#, c-format
-msgid "one kilometer"
-msgid_plural "%d kilometers"
-msgstr[0] "ఒక కిలోమీటరు"
-msgstr[1] "%d కిలోమీటర్లు"
 
 #: ../navit/navigation.c:338
 #, c-format
@@ -167,21 +866,6 @@ msgstr ""
 msgid "%sinto the %s"
 msgstr ""
 
-#. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1340
-msgid "right"
-msgstr "కుడి"
-
-#. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1379
-msgid "left"
-msgstr "ఎడమ"
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1386
-msgid "easily "
-msgstr "తేలికగా "
-
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1391
 msgid "strongly "
@@ -221,10 +905,6 @@ msgstr ""
 msgid "Follow the road for the next %s"
 msgstr ""
 
-#: ../navit/navigation.c:1448
-msgid "soon"
-msgstr "త్వరలో"
-
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #: ../navit/navigation.c:1458
 #, c-format
@@ -236,18 +916,10 @@ msgstr ""
 msgid "after %i roads"
 msgstr ""
 
-#: ../navit/navigation.c:1464
-msgid "now"
-msgstr "ఇప్పుడు"
-
 #: ../navit/navigation.c:1472
 #, c-format
 msgid "then take the %1$s road to the %2$s"
 msgstr ""
-
-#: ../navit/navigation.c:1483
-msgid "error"
-msgstr "పొరపాటు"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #: ../navit/navigation.c:1513
@@ -261,11 +933,6 @@ msgstr ""
 msgid "then turn %1$s%2$s %3$s%4$s"
 msgstr ""
 
-#: ../navit/navigation.c:1521
-#, c-format
-msgid "You have reached your destination %s"
-msgstr "మీరు మీ గమ్యస్థానం %s చేరారు"
-
 #: ../navit/navigation.c:1523
 msgid "then you have reached your destination."
 msgstr ""
@@ -274,25 +941,9 @@ msgstr ""
 msgid "Position"
 msgstr ""
 
-#: ../navit/navit.c:1165
-msgid "Command"
-msgstr "ఆదేశం"
-
-#: ../navit/navit.c:1169
-msgid "Length"
-msgstr "పొడవు"
-
-#: ../navit/navit.c:1173 ../navit/navit.c:1198
-msgid "km"
-msgstr "కిమీ"
-
 #: ../navit/navit.c:1177 ../navit/navit.c:1202
 msgid "m"
 msgstr ""
-
-#: ../navit/navit.c:1183
-msgid "Time"
-msgstr "సమయం"
 
 #: ../navit/navit.c:1195
 msgid "Destination Length"
@@ -331,21 +982,6 @@ msgstr ""
 msgid "Screen coord : %d %d"
 msgstr ""
 
-#. 020
-#: ../navit/country.c:39
-msgid "Andorra"
-msgstr "అండోరా"
-
-#. 784
-#: ../navit/country.c:40
-msgid "United Arab Emirates"
-msgstr "యునైటెడ్ అరబ్ ఎమిరేట్స్"
-
-#. 004
-#: ../navit/country.c:41
-msgid "Afghanistan"
-msgstr "ఆఫ్ఘనిస్తాన్"
-
 #. 028
 #: ../navit/country.c:42
 msgid "Antigua and Barbuda"
@@ -356,35 +992,10 @@ msgstr ""
 msgid "Anguilla"
 msgstr ""
 
-#. 008
-#: ../navit/country.c:44
-msgid "Albania"
-msgstr "అల్బేనియా"
-
-#. 051
-#: ../navit/country.c:45
-msgid "Armenia"
-msgstr "అర్మేనియా"
-
 #. 530
 #: ../navit/country.c:46
 msgid "Netherlands Antilles"
 msgstr ""
-
-#. 024
-#: ../navit/country.c:47
-msgid "Angola"
-msgstr "అంగోలా"
-
-#. 010
-#: ../navit/country.c:48
-msgid "Antarctica"
-msgstr "అంటార్కిటికా"
-
-#. 032
-#: ../navit/country.c:49
-msgid "Argentina"
-msgstr "అర్జెంటీనా"
 
 #. 016
 #: ../navit/country.c:50
@@ -426,25 +1037,10 @@ msgstr ""
 msgid "Barbados"
 msgstr ""
 
-#. 050
-#: ../navit/country.c:58
-msgid "Bangladesh"
-msgstr "బంగ్లాదేశ్"
-
-#. 056
-#: ../navit/country.c:59
-msgid "Belgium"
-msgstr "బెల్జియం"
-
 #. 854
 #: ../navit/country.c:60
 msgid "Burkina Faso"
 msgstr ""
-
-#. 100
-#: ../navit/country.c:61
-msgid "Bulgaria"
-msgstr "బల్గేరియా"
 
 #. 048
 #: ../navit/country.c:62
@@ -466,35 +1062,10 @@ msgstr ""
 msgid "Saint Barthelemy"
 msgstr ""
 
-#. 060
-#: ../navit/country.c:66
-msgid "Bermuda"
-msgstr "బెర్ముడా"
-
 #. 096
 #: ../navit/country.c:67
 msgid "Brunei Darussalam"
 msgstr ""
-
-#. 068
-#: ../navit/country.c:68
-msgid "Bolivia"
-msgstr "బొలీవియా"
-
-#. 076
-#: ../navit/country.c:69
-msgid "Brazil"
-msgstr "బ్రెజిల్"
-
-#. 044
-#: ../navit/country.c:70
-msgid "Bahamas"
-msgstr "బహమాస్"
-
-#. 064
-#: ../navit/country.c:71
-msgid "Bhutan"
-msgstr "భూటాన్"
 
 #. 074
 #: ../navit/country.c:72
@@ -506,20 +1077,10 @@ msgstr ""
 msgid "Botswana"
 msgstr ""
 
-#. 112
-#: ../navit/country.c:74
-msgid "Belarus"
-msgstr "బెలారస్"
-
 #. 084
 #: ../navit/country.c:75
 msgid "Belize"
 msgstr ""
-
-#. 124
-#: ../navit/country.c:76
-msgid "Canada"
-msgstr "కెనడా"
 
 #. 166
 #: ../navit/country.c:77
@@ -531,21 +1092,6 @@ msgstr ""
 msgid "Congo, Democratic Republic of the"
 msgstr ""
 
-#. 140
-#: ../navit/country.c:79
-msgid "Central African Republic"
-msgstr "మధ్య ఆఫ్రికన్ రిపబ్లిక్"
-
-#. 178
-#: ../navit/country.c:80
-msgid "Congo"
-msgstr "కాంగో"
-
-#. 756
-#: ../navit/country.c:81
-msgid "Switzerland"
-msgstr "స్విట్జర్లాండ్"
-
 #. 384
 #: ../navit/country.c:82
 msgid "Cote d'Ivoire"
@@ -555,36 +1101,6 @@ msgstr ""
 #: ../navit/country.c:83
 msgid "Cook Islands"
 msgstr ""
-
-#. 152
-#: ../navit/country.c:84
-msgid "Chile"
-msgstr "చిలీ"
-
-#. 120
-#: ../navit/country.c:85
-msgid "Cameroon"
-msgstr "కామెరూన్"
-
-#. 156
-#: ../navit/country.c:86
-msgid "China"
-msgstr "చైనా"
-
-#. 170
-#: ../navit/country.c:87
-msgid "Colombia"
-msgstr "కొలంబియా"
-
-#. 188
-#: ../navit/country.c:88
-msgid "Costa Rica"
-msgstr "కోస్టారికా"
-
-#. 192
-#: ../navit/country.c:89
-msgid "Cuba"
-msgstr "క్యూబా"
 
 #. 132
 #: ../navit/country.c:90
@@ -596,90 +1112,20 @@ msgstr ""
 msgid "Christmas Island"
 msgstr ""
 
-#. 196
-#: ../navit/country.c:92
-msgid "Cyprus"
-msgstr "సైప్రస్"
-
 #. 203
 #: ../navit/country.c:93
 msgid "Czech Republic"
 msgstr ""
-
-#. 276
-#: ../navit/country.c:94
-msgid "Germany"
-msgstr "జర్మనీ"
 
 #. 262
 #: ../navit/country.c:95
 msgid "Djibouti"
 msgstr ""
 
-#. 208
-#: ../navit/country.c:96
-msgid "Denmark"
-msgstr "డెన్మార్క్"
-
-#. 212
-#: ../navit/country.c:97
-msgid "Dominica"
-msgstr "డొమినికా"
-
-#. 214
-#: ../navit/country.c:98
-msgid "Dominican Republic"
-msgstr "డొమినికన్ రిపబ్లిక్"
-
-#. 012
-#: ../navit/country.c:99
-msgid "Algeria"
-msgstr "అల్జీరియా"
-
-#. 218
-#: ../navit/country.c:100
-msgid "Ecuador"
-msgstr "ఈక్విడార్"
-
-#. 233
-#: ../navit/country.c:101
-msgid "Estonia"
-msgstr "ఎస్టోనియా"
-
-#. 818
-#: ../navit/country.c:102
-msgid "Egypt"
-msgstr "ఈజిప్ట్"
-
-#. 732
-#: ../navit/country.c:103
-msgid "Western Sahara"
-msgstr "పశ్చిమ సహారా"
-
 #. 232
 #: ../navit/country.c:104
 msgid "Eritrea"
 msgstr ""
-
-#. 724
-#: ../navit/country.c:105
-msgid "Spain"
-msgstr "స్పెయిన్"
-
-#. 231
-#: ../navit/country.c:106
-msgid "Ethiopia"
-msgstr "ఇథియోపియా"
-
-#. 246
-#: ../navit/country.c:107
-msgid "Finland"
-msgstr "ఫిన్లాండ్"
-
-#. 242
-#: ../navit/country.c:108
-msgid "Fiji"
-msgstr "ఫిజీ"
 
 #. 238
 #: ../navit/country.c:109
@@ -696,11 +1142,6 @@ msgstr ""
 msgid "Faroe Islands"
 msgstr ""
 
-#. 250
-#: ../navit/country.c:112
-msgid "France"
-msgstr "ఫ్రాన్స్"
-
 #. 266
 #: ../navit/country.c:113
 msgid "Gabon"
@@ -716,40 +1157,15 @@ msgstr ""
 msgid "Grenada"
 msgstr ""
 
-#. 268
-#: ../navit/country.c:116
-msgid "Georgia"
-msgstr "జార్జియా"
-
-#. 254
-#: ../navit/country.c:117
-msgid "French Guiana"
-msgstr "ఫ్రెంచ్   గయానా"
-
 #. 831
 #: ../navit/country.c:118
 msgid "Guernsey"
 msgstr ""
 
-#. 288
-#: ../navit/country.c:119
-msgid "Ghana"
-msgstr "ఘనా"
-
 #. 292
 #: ../navit/country.c:120
 msgid "Gibraltar"
 msgstr ""
-
-#. 304
-#: ../navit/country.c:121
-msgid "Greenland"
-msgstr "గ్రీన్‌లాండ్"
-
-#. 270
-#: ../navit/country.c:122
-msgid "Gambia"
-msgstr "జాంబియా"
 
 #. 324
 #: ../navit/country.c:123
@@ -765,11 +1181,6 @@ msgstr ""
 #: ../navit/country.c:125
 msgid "Equatorial Guinea"
 msgstr ""
-
-#. 300
-#: ../navit/country.c:126
-msgid "Greece"
-msgstr "గ్రీస్"
 
 #. 239
 #: ../navit/country.c:127
@@ -791,16 +1202,6 @@ msgstr ""
 msgid "Guinea-Bissau"
 msgstr ""
 
-#. 328
-#: ../navit/country.c:131
-msgid "Guyana"
-msgstr "గయానా"
-
-#. 344
-#: ../navit/country.c:132
-msgid "Hong Kong"
-msgstr "హాంకాంగ్"
-
 #. 334
 #: ../navit/country.c:133
 msgid "Heard Island and McDonald Islands"
@@ -811,30 +1212,10 @@ msgstr ""
 msgid "Honduras"
 msgstr ""
 
-#. 191
-#: ../navit/country.c:135
-msgid "Croatia"
-msgstr "క్రోయేషియా"
-
 #. 332
 #: ../navit/country.c:136
 msgid "Haiti"
 msgstr ""
-
-#. 348
-#: ../navit/country.c:137
-msgid "Hungary"
-msgstr "హంగరీ"
-
-#. 360
-#: ../navit/country.c:138
-msgid "Indonesia"
-msgstr "ఇండోనేషియా"
-
-#. 372
-#: ../navit/country.c:139
-msgid "Ireland"
-msgstr "ఐర్లాండ్"
 
 #. 376
 #: ../navit/country.c:140
@@ -846,20 +1227,10 @@ msgstr ""
 msgid "Isle of Man"
 msgstr ""
 
-#. 356
-#: ../navit/country.c:142
-msgid "India"
-msgstr "భారతదేశం"
-
 #. 086
 #: ../navit/country.c:143
 msgid "British Indian Ocean Territory"
 msgstr ""
-
-#. 368
-#: ../navit/country.c:144
-msgid "Iraq"
-msgstr "ఇరాక్"
 
 #. 364
 #: ../navit/country.c:145
@@ -871,45 +1242,15 @@ msgstr ""
 msgid "Iceland"
 msgstr ""
 
-#. 380
-#: ../navit/country.c:147
-msgid "Italy"
-msgstr "ఇటలీ"
-
 #. 832
 #: ../navit/country.c:148
 msgid "Jersey"
 msgstr ""
 
-#. 388
-#: ../navit/country.c:149
-msgid "Jamaica"
-msgstr "జమైకా"
-
-#. 400
-#: ../navit/country.c:150
-msgid "Jordan"
-msgstr "జోర్డాన్"
-
-#. 392
-#: ../navit/country.c:151
-msgid "Japan"
-msgstr "జపాన్"
-
-#. 404
-#: ../navit/country.c:152
-msgid "Kenya"
-msgstr "కెన్యా"
-
 #. 417
 #: ../navit/country.c:153
 msgid "Kyrgyzstan"
 msgstr ""
-
-#. 116
-#: ../navit/country.c:154
-msgid "Cambodia"
-msgstr "కాంబోడియా"
 
 #. 296
 #: ../navit/country.c:155
@@ -936,30 +1277,10 @@ msgstr ""
 msgid "Korea, Republic of"
 msgstr ""
 
-#. 414
-#: ../navit/country.c:160
-msgid "Kuwait"
-msgstr "కువైట్"
-
-#. 136
-#: ../navit/country.c:161
-msgid "Cayman Islands"
-msgstr "కేమన్ దీవులు"
-
-#. 398
-#: ../navit/country.c:162
-msgid "Kazakhstan"
-msgstr "కజకిస్తాన్"
-
 #. 418
 #: ../navit/country.c:163
 msgid "Lao People's Democratic Republic"
 msgstr ""
-
-#. 422
-#: ../navit/country.c:164
-msgid "Lebanon"
-msgstr "లెబనాన్"
 
 #. 662
 #: ../navit/country.c:165
@@ -970,11 +1291,6 @@ msgstr ""
 #: ../navit/country.c:166
 msgid "Liechtenstein"
 msgstr ""
-
-#. 144
-#: ../navit/country.c:167
-msgid "Sri Lanka"
-msgstr "శ్రీలంక"
 
 #. 430
 #: ../navit/country.c:168
@@ -996,25 +1312,10 @@ msgstr ""
 msgid "Luxembourg"
 msgstr ""
 
-#. 428
-#: ../navit/country.c:172
-msgid "Latvia"
-msgstr "లాత్వియా"
-
 #. 434
 #: ../navit/country.c:173
 msgid "Libyan Arab Jamahiriya"
 msgstr ""
-
-#. 504
-#: ../navit/country.c:174
-msgid "Morocco"
-msgstr "మొరాకో"
-
-#. 492
-#: ../navit/country.c:175
-msgid "Monaco"
-msgstr "మొనాకో"
 
 #. 498
 #: ../navit/country.c:176
@@ -1031,11 +1332,6 @@ msgstr ""
 msgid "Saint Martin (French part)"
 msgstr ""
 
-#. 450
-#: ../navit/country.c:179
-msgid "Madagascar"
-msgstr "మడగాస్కర్"
-
 #. 584
 #: ../navit/country.c:180
 msgid "Marshall Islands"
@@ -1050,16 +1346,6 @@ msgstr ""
 #: ../navit/country.c:182
 msgid "Mali"
 msgstr ""
-
-#. 104
-#: ../navit/country.c:183
-msgid "Myanmar"
-msgstr "మియన్మార్"
-
-#. 496
-#: ../navit/country.c:184
-msgid "Mongolia"
-msgstr "మంగోలియా"
 
 #. 446
 #: ../navit/country.c:185
@@ -1086,45 +1372,15 @@ msgstr ""
 msgid "Montserrat"
 msgstr ""
 
-#. 470
-#: ../navit/country.c:190
-msgid "Malta"
-msgstr "మాల్టా"
-
-#. 480
-#: ../navit/country.c:191
-msgid "Mauritius"
-msgstr "మారిషస్"
-
-#. 462
-#: ../navit/country.c:192
-msgid "Maldives"
-msgstr "మాల్దీవులు"
-
 #. 454
 #: ../navit/country.c:193
 msgid "Malawi"
 msgstr ""
 
-#. 484
-#: ../navit/country.c:194
-msgid "Mexico"
-msgstr "మెక్సికో"
-
-#. 458
-#: ../navit/country.c:195
-msgid "Malaysia"
-msgstr "మలేషియా"
-
 #. 508
 #: ../navit/country.c:196
 msgid "Mozambique"
 msgstr ""
-
-#. 516
-#: ../navit/country.c:197
-msgid "Namibia"
-msgstr "నమీబియా"
 
 #. 540
 #: ../navit/country.c:198
@@ -1141,11 +1397,6 @@ msgstr ""
 msgid "Norfolk Island"
 msgstr ""
 
-#. 566
-#: ../navit/country.c:201
-msgid "Nigeria"
-msgstr "నైజీరియా"
-
 #. 558
 #: ../navit/country.c:202
 msgid "Nicaragua"
@@ -1155,16 +1406,6 @@ msgstr ""
 #: ../navit/country.c:203
 msgid "Netherlands"
 msgstr ""
-
-#. 578
-#: ../navit/country.c:204
-msgid "Norway"
-msgstr "నార్వే"
-
-#. 524
-#: ../navit/country.c:205
-msgid "Nepal"
-msgstr "నేపాల్"
 
 #. 520
 #: ../navit/country.c:206
@@ -1176,25 +1417,10 @@ msgstr ""
 msgid "Niue"
 msgstr ""
 
-#. 554
-#: ../navit/country.c:208
-msgid "New Zealand"
-msgstr "న్యూజిలాండ్"
-
 #. 512
 #: ../navit/country.c:209
 msgid "Oman"
 msgstr ""
-
-#. 591
-#: ../navit/country.c:210
-msgid "Panama"
-msgstr "పనామా"
-
-#. 604
-#: ../navit/country.c:211
-msgid "Peru"
-msgstr "పెరూ"
 
 #. 258
 #: ../navit/country.c:212
@@ -1205,21 +1431,6 @@ msgstr ""
 #: ../navit/country.c:213
 msgid "Papua New Guinea"
 msgstr ""
-
-#. 608
-#: ../navit/country.c:214
-msgid "Philippines"
-msgstr "ఫిలిప్ఫీన్స్"
-
-#. 586
-#: ../navit/country.c:215
-msgid "Pakistan"
-msgstr "పాకిస్తాన్"
-
-#. 616
-#: ../navit/country.c:216
-msgid "Poland"
-msgstr "పోలాండ్"
 
 #. 666
 #: ../navit/country.c:217
@@ -1241,55 +1452,20 @@ msgstr ""
 msgid "Palestinian Territory, Occupied"
 msgstr ""
 
-#. 620
-#: ../navit/country.c:221
-msgid "Portugal"
-msgstr "పోర్చుగల్"
-
 #. 585
 #: ../navit/country.c:222
 msgid "Palau"
 msgstr ""
-
-#. 600
-#: ../navit/country.c:223
-msgid "Paraguay"
-msgstr "పరాగ్వే"
-
-#. 634
-#: ../navit/country.c:224
-msgid "Qatar"
-msgstr "ఖతార్"
 
 #. 638
 #: ../navit/country.c:225
 msgid "Reunion"
 msgstr ""
 
-#. 642
-#: ../navit/country.c:226
-msgid "Romania"
-msgstr "రొమేనియా"
-
-#. 688
-#: ../navit/country.c:227
-msgid "Serbia"
-msgstr "సెర్బియా"
-
 #. 643
 #: ../navit/country.c:228
 msgid "Russian Federation"
 msgstr ""
-
-#. 646
-#: ../navit/country.c:229
-msgid "Rwanda"
-msgstr "రువాండా"
-
-#. 682
-#: ../navit/country.c:230
-msgid "Saudi Arabia"
-msgstr "సౌది అరేబియా"
 
 #. 090
 #: ../navit/country.c:231
@@ -1300,21 +1476,6 @@ msgstr ""
 #: ../navit/country.c:232
 msgid "Seychelles"
 msgstr ""
-
-#. 736
-#: ../navit/country.c:233
-msgid "Sudan"
-msgstr "సూడాన్"
-
-#. 752
-#: ../navit/country.c:234
-msgid "Sweden"
-msgstr "స్వీడన్"
-
-#. 702
-#: ../navit/country.c:235
-msgid "Singapore"
-msgstr "సింగపూర్"
 
 #. 654
 #: ../navit/country.c:236
@@ -1331,11 +1492,6 @@ msgstr ""
 msgid "Svalbard and Jan Mayen"
 msgstr ""
 
-#. 703
-#: ../navit/country.c:239
-msgid "Slovakia"
-msgstr "స్లొవేకియా"
-
 #. 694
 #: ../navit/country.c:240
 msgid "Sierra Leone"
@@ -1350,11 +1506,6 @@ msgstr ""
 #: ../navit/country.c:242
 msgid "Senegal"
 msgstr ""
-
-#. 706
-#: ../navit/country.c:243
-msgid "Somalia"
-msgstr "సోమాలియా"
 
 #. 740
 #: ../navit/country.c:244
@@ -1376,11 +1527,6 @@ msgstr ""
 msgid "Syrian Arab Republic"
 msgstr ""
 
-#. 748
-#: ../navit/country.c:248
-msgid "Swaziland"
-msgstr "స్వాజిలాండ్"
-
 #. 796
 #: ../navit/country.c:249
 msgid "Turks and Caicos Islands"
@@ -1395,21 +1541,6 @@ msgstr ""
 #: ../navit/country.c:251
 msgid "French Southern Territories"
 msgstr ""
-
-#. 768
-#: ../navit/country.c:252
-msgid "Togo"
-msgstr "టోగో"
-
-#. 764
-#: ../navit/country.c:253
-msgid "Thailand"
-msgstr "థాయిలాండ్"
-
-#. 762
-#: ../navit/country.c:254
-msgid "Tajikistan"
-msgstr "తజకిస్తాన్"
 
 #. 772
 #: ../navit/country.c:255
@@ -1461,35 +1592,10 @@ msgstr ""
 msgid "Tanzania, United Republic of"
 msgstr ""
 
-#. 804
-#: ../navit/country.c:265
-msgid "Ukraine"
-msgstr "ఉక్రేయిన్"
-
-#. 800
-#: ../navit/country.c:266
-msgid "Uganda"
-msgstr "ఉగాండా"
-
 #. 581
 #: ../navit/country.c:267
 msgid "United States Minor Outlying Islands"
 msgstr ""
-
-#. 840
-#: ../navit/country.c:268
-msgid "United States"
-msgstr "యునైటెడ్ స్టేట్స్ ఆఫ్ అమెరికా"
-
-#. 858
-#: ../navit/country.c:269
-msgid "Uruguay"
-msgstr "ఉరూగ్వే"
-
-#. 860
-#: ../navit/country.c:270
-msgid "Uzbekistan"
-msgstr "ఉజ్బెకిస్తాన్"
 
 #. 336
 #: ../navit/country.c:271
@@ -1501,11 +1607,6 @@ msgstr ""
 msgid "Saint Vincent and the Grenadines"
 msgstr ""
 
-#. 862
-#: ../navit/country.c:273
-msgid "Venezuela"
-msgstr "వెనిజులా"
-
 #. 092
 #: ../navit/country.c:274
 msgid "Virgin Islands, British"
@@ -1515,11 +1616,6 @@ msgstr ""
 #: ../navit/country.c:275
 msgid "Virgin Islands, U.S."
 msgstr ""
-
-#. 704
-#: ../navit/country.c:276
-msgid "Viet Nam"
-msgstr "వియత్నాం"
 
 #. 548
 #: ../navit/country.c:277
@@ -1546,21 +1642,6 @@ msgstr ""
 msgid "Mayotte"
 msgstr ""
 
-#. 710
-#: ../navit/country.c:282
-msgid "South Africa"
-msgstr "దక్షిణ ఆఫ్రికా"
-
-#. 894
-#: ../navit/country.c:283
-msgid "Zambia"
-msgstr "జాంబియా"
-
-#. 716
-#: ../navit/country.c:284
-msgid "Zimbabwe"
-msgstr "జింబాబ్వే"
-
 #: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:128
 #: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
 msgid "Car"
@@ -1574,40 +1655,6 @@ msgstr ""
 msgid "Iso3"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:435
-#: ../navit/gui/internal/gui_internal.c:2756
-msgid "Country"
-msgstr "దేశం"
-
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
-msgid "Postal"
-msgstr "తపాలా"
-
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
-#: ../navit/gui/internal/gui_internal.c:2735
-#: ../navit/gui/internal/gui_internal.c:2764
-#: ../navit/gui/internal/gui_internal.c:2899
-msgid "Town"
-msgstr "పట్టణం"
-
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
-msgid "District"
-msgstr "జిల్లా"
-
-#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
-#: ../navit/gui/gtk/destination.c:446
-#: ../navit/gui/internal/gui_internal.c:2716
-#: ../navit/gui/internal/gui_internal.c:2725
-msgid "Street"
-msgstr "వీధి"
-
-#: ../navit/gui/gtk/destination.c:130 ../navit/gui/gtk/destination.c:448
-msgid "Number"
-msgstr "సంఖ్య"
-
 #: ../navit/gui/gtk/destination.c:429
 msgid "Enter Destination"
 msgstr ""
@@ -1616,25 +1663,13 @@ msgstr ""
 msgid "Zip Code"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:440
-msgid "City"
-msgstr "నగరం"
-
 #: ../navit/gui/gtk/destination.c:443
 msgid "District/Township"
 msgstr ""
 
-#: ../navit/gui/gtk/destination.c:471 ../navit/gui/gtk/gui_gtk_action.c:200
-msgid "Map"
-msgstr "పటం"
-
 #: ../navit/gui/gtk/destination.c:472
 msgid "Bookmark"
 msgstr ""
-
-#: ../navit/gui/gtk/destination.c:473 ../navit/gui/gtk/gui_gtk_action.c:212
-msgid "Destination"
-msgstr "గమ్యం"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
 #: ../navit/gui/internal/gui_internal.c:2820
@@ -1650,27 +1685,9 @@ msgstr ""
 msgid "Former Destinations"
 msgstr ""
 
-#: ../navit/gui/gtk/gui_gtk_action.c:199
-#: ../navit/gui/internal/gui_internal.c:2202
-#: ../navit/gui/internal/gui_internal.c:2875
-msgid "Bookmarks"
-msgstr "పేజీకలు"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:201
-#: ../navit/gui/internal/gui_internal.c:2775
-#: ../navit/gui/internal/gui_internal.c:2822
-msgid "Layout"
-msgstr "కూర్పు"
-
 #: ../navit/gui/gtk/gui_gtk_action.c:202
 msgid "Projection"
 msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:203
-#: ../navit/gui/internal/gui_internal.c:3056
-#: ../navit/gui/internal/gui_internal.c:3121
-msgid "Vehicle"
-msgstr "వాహనం"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:204
 msgid "ZoomOut"
@@ -1684,17 +1701,9 @@ msgstr ""
 msgid "Recalculate"
 msgstr ""
 
-#: ../navit/gui/gtk/gui_gtk_action.c:208 ../navit/gui/gtk/gui_gtk_action.c:210
-msgid "Info"
-msgstr "సమాచారం"
-
 #: ../navit/gui/gtk/gui_gtk_action.c:213
 msgid "Stop Navigation"
 msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:214
-msgid "Test"
-msgstr "పరీక్ష"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:215
 msgid "_Quit"
@@ -1716,15 +1725,6 @@ msgstr ""
 #: ../navit/gui/gtk/gui_gtk_action.c:226
 msgid "Autozoom"
 msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
-#: ../navit/gui/internal/gui_internal.c:2832
-msgid "Fullscreen"
-msgstr "నిండు తెర"
-
-#: ../navit/gui/gtk/gui_gtk_action.c:238
-msgid "Data"
-msgstr "దత్తాంశం"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:58
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:97

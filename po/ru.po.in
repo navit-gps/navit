@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
-"PO-Revision-Date: 2009-03-07 19:28+0000\n"
-"Last-Translator: edilion <Unknown>\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
+"PO-Revision-Date: 2009-05-05 12:27+0000\n"
+"Last-Translator: Artiom <Unknown>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -32,59 +32,59 @@ msgstr "установка '%s' в '%s'\n"
 
 #: ../navit/navigation.c:240
 msgid "zeroth"
-msgstr ""
+msgstr "нулевой"
 
 #: ../navit/navigation.c:242
 msgid "first"
-msgstr ""
+msgstr "первый"
 
 #: ../navit/navigation.c:244
 msgid "second"
-msgstr ""
+msgstr "второй"
 
 #: ../navit/navigation.c:246
 msgid "third"
-msgstr ""
+msgstr "третий"
 
 #: ../navit/navigation.c:248
 msgid "fourth"
-msgstr ""
+msgstr "четвертый"
 
 #: ../navit/navigation.c:250
 msgid "fifth"
-msgstr ""
+msgstr "пятый"
 
 #: ../navit/navigation.c:252
 msgid "sixth"
-msgstr ""
+msgstr "шестой"
 
 #: ../navit/navigation.c:263
 msgid "zeroth exit"
-msgstr ""
+msgstr "нулевой выезд"
 
 #: ../navit/navigation.c:265
 msgid "first exit"
-msgstr ""
+msgstr "первый  выезд"
 
 #: ../navit/navigation.c:267
 msgid "second exit"
-msgstr ""
+msgstr "второй  выезд"
 
 #: ../navit/navigation.c:269
 msgid "third exit"
-msgstr ""
+msgstr "третий  выезд"
 
 #: ../navit/navigation.c:271
 msgid "fourth exit"
-msgstr ""
+msgstr "четвертый  выезд"
 
 #: ../navit/navigation.c:273
 msgid "fifth exit"
-msgstr ""
+msgstr "пятый  выезд"
 
 #: ../navit/navigation.c:275
 msgid "sixth exit"
-msgstr ""
+msgstr "шестой  выезд"
 
 #: ../navit/navigation.c:316
 #, c-format
@@ -138,37 +138,31 @@ msgstr "съезд"
 
 #: ../navit/navigation.c:1270
 msgid "into the ramp"
-msgstr ""
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:1300
-#, c-format
-msgid "%sinto the street %s%s%s"
-msgstr ""
+msgstr "съезд на"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:1304
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr ""
+msgstr "%s на %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:1308
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr ""
+msgstr "%s на %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:1312
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
+msgstr "%s на %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #: ../navit/navigation.c:1319
 #, c-format
 msgid "%sinto the %s"
-msgstr ""
+msgstr "%s на %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 #: ../navit/navigation.c:1340
@@ -199,26 +193,6 @@ msgstr "неизвестно "
 msgid "When possible, please turn around"
 msgstr "Развернитесь, пожалуйста, если это возможно"
 
-#: ../navit/navigation.c:1412
-msgid "Enter the roundabout soon"
-msgstr ""
-
-#. TRANSLATORS: %s is the distance to the roundabout
-#: ../navit/navigation.c:1416
-#, c-format
-msgid "In %s, enter the roundabout"
-msgstr ""
-
-#: ../navit/navigation.c:1431
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr ""
-
-#: ../navit/navigation.c:1434
-#, c-format
-msgid "then leave the roundabout at the %s"
-msgstr ""
-
 #: ../navit/navigation.c:1444
 #, c-format
 msgid "Follow the road for the next %s"
@@ -228,25 +202,9 @@ msgstr "Двигайтесь по дороге следующие %s"
 msgid "soon"
 msgstr "скоро"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1458
-#, c-format
-msgid "Take the %1$s road to the %2$s"
-msgstr ""
-
-#: ../navit/navigation.c:1461 ../navit/navigation.c:1475
-#, c-format
-msgid "after %i roads"
-msgstr ""
-
 #: ../navit/navigation.c:1464
 msgid "now"
 msgstr "сейчас"
-
-#: ../navit/navigation.c:1472
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
 
 #: ../navit/navigation.c:1483
 msgid "error"
@@ -258,24 +216,10 @@ msgstr "ошибка"
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Поверните %1$s%2$s %3$s%4$s"
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#: ../navit/navigation.c:1516
-#, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
-
 #: ../navit/navigation.c:1521
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Вы прибыли в пункт назначения %s"
-
-#: ../navit/navigation.c:1523
-msgid "then you have reached your destination."
-msgstr ""
-
-#: ../navit/navit.c:1164
-msgid "Position"
-msgstr ""
 
 #: ../navit/navit.c:1165
 msgid "Command"
@@ -1707,19 +1651,6 @@ msgstr "_Выход"
 msgid "Cursor"
 msgstr "Курсор"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:223
-msgid "Lock on Road"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:224
-#: ../navit/gui/internal/gui_internal.c:3095
-msgid "Northing"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:226
-msgid "Autozoom"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2832
 msgid "Fullscreen"
@@ -1769,24 +1700,6 @@ msgstr "З"
 msgid "NW"
 msgstr "СЗ"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:74
-msgid "No"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:75
-#: ../navit/gui/internal/gui_internal.c:2839
-msgid "2D"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:76
-#: ../navit/gui/internal/gui_internal.c:2845
-msgid "3D"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
-msgid "OT"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
@@ -1796,104 +1709,202 @@ msgstr "Маршрут %4.0fкм    %02d:%02d РВП"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Маршрут 0000км  0+00:00 РВП"
 
-#: ../navit/gui/internal/gui_internal.c:1323
-msgid "Back to map"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:1332
 msgid "Main Menu"
-msgstr ""
+msgstr "Главное меню"
 
 #: ../navit/gui/internal/gui_internal.c:1452
 msgid "Help"
-msgstr ""
+msgstr "Справка"
 
 #: ../navit/gui/internal/gui_internal.c:1602
 msgid "Back"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:1906
-#: ../navit/gui/internal/gui_internal.c:2111
-msgid "POIs"
-msgstr ""
+msgstr "Назад"
 
 #: ../navit/gui/internal/gui_internal.c:2068
 msgid "Streets"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:2084
-msgid "View in Browser"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:2090
-msgid "View Attributes"
-msgstr ""
+msgstr "Улицы"
 
 #: ../navit/gui/internal/gui_internal.c:2125
 msgid "View on map"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:2238
-#, c-format
-msgid "Bookmark %s"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:2827
-msgid "Window Mode"
-msgstr ""
+msgstr "Показать на карте"
 
 #: ../navit/gui/internal/gui_internal.c:2873
 #: ../navit/gui/internal/gui_internal.c:3161
 msgid "Actions"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:2884
-msgid "Map Point"
-msgstr ""
+msgstr "Команды"
 
 #: ../navit/gui/internal/gui_internal.c:2894
 msgid "Vehicle Position"
-msgstr ""
+msgstr "Местоположение автомобиля"
 
 #: ../navit/gui/internal/gui_internal.c:2903
 msgid "Quit"
-msgstr ""
+msgstr "Выход"
 
 #: ../navit/gui/internal/gui_internal.c:2909
 msgid ""
 "Stop\n"
 "Navigation"
 msgstr ""
+"Прекращение\n"
+"навигации"
 
 #: ../navit/gui/internal/gui_internal.c:2925
 #: ../navit/gui/internal/gui_internal.c:3117
 msgid "Maps"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:2969
-msgid "Show Satellite Status"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3003
-msgid "Show NMEA Data"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3027
-msgid "Set as active"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3033
-msgid "Show Satellite status"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3039
-msgid "Show NMEA data"
-msgstr ""
+msgstr "Карты"
 
 #: ../navit/gui/internal/gui_internal.c:3081
 #: ../navit/gui/internal/gui_internal.c:3125
 msgid "Rules"
+msgstr "Правила"
+
+#: ../navit/gui/internal/gui_internal.c:3111
+#: ../navit/gui/internal/gui_internal.c:3169
+msgid "Settings"
+msgstr "Настройки"
+
+#: ../navit/gui/internal/gui_internal.c:3159
+msgid "Main menu"
+msgstr "Главное меню"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#: ../navit/navigation.c:1300
+#, c-format
+msgid "%sinto the street %s%s%s"
+msgstr "%s на улицу %s%s%s"
+
+#: ../navit/navigation.c:1412
+msgid "Enter the roundabout soon"
+msgstr "Скоро круговое движение"
+
+#. TRANSLATORS: %s is the distance to the roundabout
+#: ../navit/navigation.c:1416
+#, c-format
+msgid "In %s, enter the roundabout"
+msgstr "Круговое движение через %s"
+
+#: ../navit/navigation.c:1431
+#, c-format
+msgid "Leave the roundabout at the %s"
 msgstr ""
+
+#: ../navit/navigation.c:1434
+#, c-format
+msgid "then leave the roundabout at the %s"
+msgstr ""
+
+#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+#: ../navit/navigation.c:1458
+#, c-format
+msgid "Take the %1$s road to the %2$s"
+msgstr "Выезжайте на %1$s дорогу в направлении %2$s"
+
+#: ../navit/navigation.c:1461 ../navit/navigation.c:1475
+#, c-format
+msgid "after %i roads"
+msgstr "после %i дорог"
+
+#: ../navit/navigation.c:1472
+#, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr "после чего выезайте на %1$s дорогу в направлении %2$s"
+
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#: ../navit/navigation.c:1516
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr "после чего поверните на %1$s%2$s %3$s%4$s"
+
+#: ../navit/navigation.c:1523
+msgid "then you have reached your destination."
+msgstr "после чего вы на месте."
+
+#: ../navit/navit.c:1164
+msgid "Position"
+msgstr "Позиция"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:223
+msgid "Lock on Road"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:224
+#: ../navit/gui/internal/gui_internal.c:3095
+msgid "Northing"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr "Автомасштабирование"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:74
+msgid "No"
+msgstr "Нет"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:75
+#: ../navit/gui/internal/gui_internal.c:2839
+msgid "2D"
+msgstr "2D"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:76
+#: ../navit/gui/internal/gui_internal.c:2845
+msgid "3D"
+msgstr "3D"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
+msgid "OT"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:1323
+msgid "Back to map"
+msgstr "Назад к карте"
+
+#: ../navit/gui/internal/gui_internal.c:1906
+#: ../navit/gui/internal/gui_internal.c:2111
+msgid "POIs"
+msgstr "POIs"
+
+#: ../navit/gui/internal/gui_internal.c:2084
+msgid "View in Browser"
+msgstr "Просмотреть в браузере"
+
+#: ../navit/gui/internal/gui_internal.c:2090
+msgid "View Attributes"
+msgstr "Просмотреть Атрибуты"
+
+#: ../navit/gui/internal/gui_internal.c:2238
+#, c-format
+msgid "Bookmark %s"
+msgstr "Закладка %s"
+
+#: ../navit/gui/internal/gui_internal.c:2827
+msgid "Window Mode"
+msgstr "Режим окна"
+
+#: ../navit/gui/internal/gui_internal.c:2884
+msgid "Map Point"
+msgstr "Точка на карте"
+
+#: ../navit/gui/internal/gui_internal.c:2969
+msgid "Show Satellite Status"
+msgstr "Показать Состояние Спутников"
+
+#: ../navit/gui/internal/gui_internal.c:3003
+msgid "Show NMEA Data"
+msgstr "Показать Данные NMEA"
+
+#: ../navit/gui/internal/gui_internal.c:3027
+msgid "Set as active"
+msgstr "Сделать активным"
+
+#: ../navit/gui/internal/gui_internal.c:3033
+msgid "Show Satellite status"
+msgstr "Показать состояние Спутников"
+
+#: ../navit/gui/internal/gui_internal.c:3039
+msgid "Show NMEA data"
+msgstr "Показать данные NMEA"
 
 #: ../navit/gui/internal/gui_internal.c:3089
 msgid "Lock on road"
@@ -1901,94 +1912,16 @@ msgstr ""
 
 #: ../navit/gui/internal/gui_internal.c:3101
 msgid "Map follows Vehicle"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3111
-#: ../navit/gui/internal/gui_internal.c:3169
-msgid "Settings"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3159
-msgid "Main menu"
-msgstr ""
+msgstr "Карта следует за машиной"
 
 #: ../navit/gui/internal/gui_internal.c:3165
 msgid ""
 "Show\n"
 "Map"
 msgstr ""
+"Показать\n"
+"Карту"
 
 #: ../navit/gui/internal/gui_internal.c:3172
 msgid "Tools"
-msgstr ""
-
-#, c-format
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "использование navit:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: использовать <file> как файл конфигурации\n"
-#~ "\t-d <n>: задать уровень отладочных сообщений <n>. (TODO)\n"
-#~ "\t-h: вывести эту информацию и выйти.\n"
-#~ "\t-v: вывести версию и выйти.\n"
-
-#, c-format
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Не найден конфигурационный файл navit.xml, navit.xml.local\n"
-
-#, c-format
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "Ошибка разбора '%s': %s\n"
-
-#, c-format
-#~ msgid "Using '%s'\n"
-#~ msgstr "Используется '%s'\n"
-
-#, c-format
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "Экземпляр не создан, выходим\n"
-
-#~ msgid "ramp"
-#~ msgstr "въезд"
-
-#~ msgid "Refresh"
-#~ msgstr "Обновить"
-
-#~ msgid "Clear"
-#~ msgstr "Очистить"
-
-#~ msgid "Tracking"
-#~ msgstr "Слежение"
-
-#~ msgid "Orientation"
-#~ msgstr "Ориентация"
-
-#~ msgid "Turn %1$s%2$s %3$s"
-#~ msgstr "Поверните %1$s%2$s %3$s"
-
-#~ msgid "Moldova"
-#~ msgstr "Молдавия"
-
-#~ msgid "Palestinia"
-#~ msgstr "Палестина"
-
-#~ msgid "VisibleBlocks"
-#~ msgstr "ВидимыеБлоки"
-
-#~ msgid "VisibleTowns"
-#~ msgstr "ВидимыеГорода"
-
-#~ msgid "VisiblePolys"
-#~ msgstr "ВидимыеПолигоны"
-
-#~ msgid "VisibleStreets"
-#~ msgstr "ВидимыеУлицы"
-
-#~ msgid "VisiblePoints"
-#~ msgstr "ВидимыеТочки"
+msgstr "Инструменты"

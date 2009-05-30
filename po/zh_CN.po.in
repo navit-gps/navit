@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-02-14 13:57+0000\n"
 "Last-Translator: rainofchaos <rainofchaos@gmail.com>\n"
 "Language-Team: Simplified Chinese <zh_CN@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -28,6 +28,77 @@ msgstr "从根目录执行\n"
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "'%s' 设置为 '%s'\n"
+
+#: ../navit/navigation.c:316
+#, c-format
+msgid "%d m"
+msgstr "%d米"
+
+#: ../navit/navigation.c:318
+#, c-format
+msgid "in %d m"
+msgstr "距离%d米"
+
+#: ../navit/navigation.c:322
+#, c-format
+msgid "%d meters"
+msgstr "%d米"
+
+#: ../navit/navigation.c:324
+#, c-format
+msgid "in %d meters"
+msgstr "距离%d米"
+
+#: ../navit/navigation.c:330
+#, c-format
+msgid "%d.%d kilometer"
+msgstr "%d.%d千米"
+
+#: ../navit/navigation.c:332
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "距离%d.%d千米"
+
+#: ../navit/navigation.c:336
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "%d千米"
+
+#: ../navit/navigation.c:338
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "距离%d千米"
+
+#: ../navit/navigation.c:1268
+msgid "exit"
+msgstr "退出"
+
+#. TRANSLATORS: right, as in 'Turn right'
+#: ../navit/navigation.c:1340
+msgid "right"
+msgstr "右"
+
+#. TRANSLATORS: left, as in 'Turn left'
+#: ../navit/navigation.c:1379
+msgid "left"
+msgstr "左"
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1386
+msgid "easily "
+msgstr "轻轻 "
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1391
+msgid "strongly "
+msgstr "大幅度 "
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1395
+msgid "unknown "
+msgstr "未知 "
 
 #: ../navit/navigation.c:240
 msgid "zeroth"
@@ -85,52 +156,6 @@ msgstr ""
 msgid "sixth exit"
 msgstr ""
 
-#: ../navit/navigation.c:316
-#, c-format
-msgid "%d m"
-msgstr "%d米"
-
-#: ../navit/navigation.c:318
-#, c-format
-msgid "in %d m"
-msgstr "距离%d米"
-
-#: ../navit/navigation.c:322
-#, c-format
-msgid "%d meters"
-msgstr "%d米"
-
-#: ../navit/navigation.c:324
-#, c-format
-msgid "in %d meters"
-msgstr "距离%d米"
-
-#: ../navit/navigation.c:330
-#, c-format
-msgid "%d.%d kilometer"
-msgstr "%d.%d千米"
-
-#: ../navit/navigation.c:332
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "距离%d.%d千米"
-
-#: ../navit/navigation.c:336
-#, c-format
-msgid "one kilometer"
-msgid_plural "%d kilometers"
-msgstr[0] "%d千米"
-
-#: ../navit/navigation.c:338
-#, c-format
-msgid "in one kilometer"
-msgid_plural "in %d kilometers"
-msgstr[0] "距离%d千米"
-
-#: ../navit/navigation.c:1268
-msgid "exit"
-msgstr "退出"
-
 #: ../navit/navigation.c:1270
 msgid "into the ramp"
 msgstr ""
@@ -164,31 +189,6 @@ msgstr ""
 #, c-format
 msgid "%sinto the %s"
 msgstr ""
-
-#. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1340
-msgid "right"
-msgstr "右"
-
-#. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1379
-msgid "left"
-msgstr "左"
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1386
-msgid "easily "
-msgstr "轻轻 "
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1391
-msgid "strongly "
-msgstr "大幅度 "
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1395
-msgid "unknown "
-msgstr "未知 "
 
 #: ../navit/navigation.c:1402
 msgid "When possible, please turn around"

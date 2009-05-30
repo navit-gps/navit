@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2008-08-27 17:47+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -15,9 +15,81 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
+
+#: ../navit/navigation.c:324
+#, c-format
+msgid "in %d meters"
+msgstr "em %d metros"
+
+#: ../navit/navigation.c:330
+#, c-format
+msgid "%d.%d kilometer"
+msgstr "%d.%d kilometros"
+
+#: ../navit/navigation.c:332
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "em %d.%d kilometros"
+
+#: ../navit/navigation.c:336
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "um kilometro"
+msgstr[1] "%d kilometros"
+
+#: ../navit/navigation.c:338
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "em um kilometro"
+msgstr[1] "em %d kilometros"
+
+#: ../navit/navigation.c:1268
+msgid "exit"
+msgstr "saída"
+
+#. TRANSLATORS: left, as in 'Turn left'
+#: ../navit/navigation.c:1379
+msgid "left"
+msgstr "esquerda"
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1386
+msgid "easily "
+msgstr "facilmente "
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1395
+msgid "unknown "
+msgstr "desconhecido "
+
+#: ../navit/navigation.c:1402
+msgid "When possible, please turn around"
+msgstr "retorne assim que possivel"
+
+#: ../navit/navigation.c:1448
+msgid "soon"
+msgstr "em breve"
+
+#: ../navit/navigation.c:1464
+msgid "now"
+msgstr "agora"
+
+#: ../navit/navigation.c:1483
+msgid "error"
+msgstr "erro"
+
+#: ../navit/navit.c:1173 ../navit/navit.c:1198
+msgid "km"
+msgstr "km"
+
+#: ../navit/navit.c:1177 ../navit/navit.c:1202
+msgid "m"
+msgstr "m"
 
 #: ../navit/main.c:231
 #, c-format
@@ -100,39 +172,6 @@ msgstr ""
 msgid "%d meters"
 msgstr ""
 
-#: ../navit/navigation.c:324
-#, c-format
-msgid "in %d meters"
-msgstr "em %d metros"
-
-#: ../navit/navigation.c:330
-#, c-format
-msgid "%d.%d kilometer"
-msgstr "%d.%d kilometros"
-
-#: ../navit/navigation.c:332
-#, c-format
-msgid "in %d.%d kilometers"
-msgstr "em %d.%d kilometros"
-
-#: ../navit/navigation.c:336
-#, c-format
-msgid "one kilometer"
-msgid_plural "%d kilometers"
-msgstr[0] "um kilometro"
-msgstr[1] "%d kilometros"
-
-#: ../navit/navigation.c:338
-#, c-format
-msgid "in one kilometer"
-msgid_plural "in %d kilometers"
-msgstr[0] "em um kilometro"
-msgstr[1] "em %d kilometros"
-
-#: ../navit/navigation.c:1268
-msgid "exit"
-msgstr "saída"
-
 #: ../navit/navigation.c:1270
 msgid "into the ramp"
 msgstr ""
@@ -172,29 +211,10 @@ msgstr ""
 msgid "right"
 msgstr ""
 
-#. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1379
-msgid "left"
-msgstr "esquerda"
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1386
-msgid "easily "
-msgstr "facilmente "
-
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1391
 msgid "strongly "
 msgstr ""
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1395
-msgid "unknown "
-msgstr "desconhecido "
-
-#: ../navit/navigation.c:1402
-msgid "When possible, please turn around"
-msgstr "retorne assim que possivel"
 
 #: ../navit/navigation.c:1412
 msgid "Enter the roundabout soon"
@@ -221,10 +241,6 @@ msgstr ""
 msgid "Follow the road for the next %s"
 msgstr ""
 
-#: ../navit/navigation.c:1448
-msgid "soon"
-msgstr "em breve"
-
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #: ../navit/navigation.c:1458
 #, c-format
@@ -236,18 +252,10 @@ msgstr ""
 msgid "after %i roads"
 msgstr ""
 
-#: ../navit/navigation.c:1464
-msgid "now"
-msgstr "agora"
-
 #: ../navit/navigation.c:1472
 #, c-format
 msgid "then take the %1$s road to the %2$s"
 msgstr ""
-
-#: ../navit/navigation.c:1483
-msgid "error"
-msgstr "erro"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #: ../navit/navigation.c:1513
@@ -281,14 +289,6 @@ msgstr ""
 #: ../navit/navit.c:1169
 msgid "Length"
 msgstr ""
-
-#: ../navit/navit.c:1173 ../navit/navit.c:1198
-msgid "km"
-msgstr "km"
-
-#: ../navit/navit.c:1177 ../navit/navit.c:1202
-msgid "m"
-msgstr "m"
 
 #: ../navit/navit.c:1183
 msgid "Time"
@@ -1918,15 +1918,3 @@ msgstr ""
 #: ../navit/gui/internal/gui_internal.c:3172
 msgid "Tools"
 msgstr ""
-
-#, c-format
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr ""
-#~ "Arquivo de configuracao (navit.xml, navit.xml.local) nao encontrado\n"
-
-#, c-format
-#~ msgid "Using '%s'\n"
-#~ msgstr "Usando '%s'\n"
-
-#~ msgid "ramp"
-#~ msgstr "rampa"

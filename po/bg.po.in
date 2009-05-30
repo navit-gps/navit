@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-04-03 17:37+0000\n"
 "Last-Translator: Anton Todorov <Unknown>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
@@ -15,19 +15,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
-
-#: ../navit/main.c:231
-#, c-format
-msgid "Running from source directory\n"
-msgstr ""
-
-#: ../navit/main.c:263
-#, c-format
-msgid "setting '%s' to '%s'\n"
-msgstr ""
 
 #: ../navit/navigation.c:240
 msgid "zeroth"
@@ -137,36 +127,6 @@ msgstr "изход"
 msgid "into the ramp"
 msgstr "на рампата"
 
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:1300
-#, c-format
-msgid "%sinto the street %s%s%s"
-msgstr ""
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1304
-#, c-format
-msgid "%sinto the %s%s%s|male form"
-msgstr ""
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1308
-#, c-format
-msgid "%sinto the %s%s%s|female form"
-msgstr ""
-
-#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1312
-#, c-format
-msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
-
-#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1319
-#, c-format
-msgid "%sinto the %s"
-msgstr ""
-
 #. TRANSLATORS: right, as in 'Turn right'
 #: ../navit/navigation.c:1340
 msgid "right"
@@ -186,11 +146,6 @@ msgstr "леко "
 #: ../navit/navigation.c:1391
 msgid "strongly "
 msgstr "силно "
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1395
-msgid "unknown "
-msgstr ""
 
 #: ../navit/navigation.c:1402
 msgid "When possible, please turn around"
@@ -224,12 +179,6 @@ msgstr "Следвайте пътя през следващите %s"
 #: ../navit/navigation.c:1448
 msgid "soon"
 msgstr "скоро"
-
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1458
-#, c-format
-msgid "Take the %1$s road to the %2$s"
-msgstr ""
 
 #: ../navit/navigation.c:1461 ../navit/navigation.c:1475
 #, c-format
@@ -1566,14 +1515,6 @@ msgstr "Зимбабве"
 msgid "Car"
 msgstr "Автомобил"
 
-#: ../navit/gui/gtk/destination.c:127
-msgid "Iso2"
-msgstr ""
-
-#: ../navit/gui/gtk/destination.c:127
-msgid "Iso3"
-msgstr ""
-
 #: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:435
 #: ../navit/gui/internal/gui_internal.c:2756
 msgid "Country"
@@ -1708,15 +1649,6 @@ msgstr "Курсор"
 msgid "Lock on Road"
 msgstr "Придържай към пътя"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:224
-#: ../navit/gui/internal/gui_internal.c:3095
-msgid "Northing"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:226
-msgid "Autozoom"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2832
 msgid "Fullscreen"
@@ -1766,33 +1698,6 @@ msgstr "З"
 msgid "NW"
 msgstr "СЗ"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:74
-msgid "No"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:75
-#: ../navit/gui/internal/gui_internal.c:2839
-msgid "2D"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:76
-#: ../navit/gui/internal/gui_internal.c:2845
-msgid "3D"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
-msgid "OT"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:119
-#, c-format
-msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:164
-msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:1323
 msgid "Back to map"
 msgstr "Обратно към картата"
@@ -1808,11 +1713,6 @@ msgstr "Помощ"
 #: ../navit/gui/internal/gui_internal.c:1602
 msgid "Back"
 msgstr "Назад"
-
-#: ../navit/gui/internal/gui_internal.c:1906
-#: ../navit/gui/internal/gui_internal.c:2111
-msgid "POIs"
-msgstr ""
 
 #: ../navit/gui/internal/gui_internal.c:2068
 msgid "Streets"
@@ -1894,10 +1794,6 @@ msgstr "Покажи NMEA Данни"
 msgid "Rules"
 msgstr "Правила"
 
-#: ../navit/gui/internal/gui_internal.c:3089
-msgid "Lock on road"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:3101
 msgid "Map follows Vehicle"
 msgstr "Картата следва Автомобила"
@@ -1922,3 +1818,107 @@ msgstr ""
 #: ../navit/gui/internal/gui_internal.c:3172
 msgid "Tools"
 msgstr "Инструменти"
+
+#: ../navit/main.c:231
+#, c-format
+msgid "Running from source directory\n"
+msgstr ""
+
+#: ../navit/main.c:263
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#: ../navit/navigation.c:1300
+#, c-format
+msgid "%sinto the street %s%s%s"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:1304
+#, c-format
+msgid "%sinto the %s%s%s|male form"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:1308
+#, c-format
+msgid "%sinto the %s%s%s|female form"
+msgstr ""
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
+#: ../navit/navigation.c:1312
+#, c-format
+msgid "%sinto the %s%s%s|neutral form"
+msgstr ""
+
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#: ../navit/navigation.c:1319
+#, c-format
+msgid "%sinto the %s"
+msgstr ""
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1395
+msgid "unknown "
+msgstr ""
+
+#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+#: ../navit/navigation.c:1458
+#, c-format
+msgid "Take the %1$s road to the %2$s"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:127
+msgid "Iso2"
+msgstr ""
+
+#: ../navit/gui/gtk/destination.c:127
+msgid "Iso3"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:224
+#: ../navit/gui/internal/gui_internal.c:3095
+msgid "Northing"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:74
+msgid "No"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:75
+#: ../navit/gui/internal/gui_internal.c:2839
+msgid "2D"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:76
+#: ../navit/gui/internal/gui_internal.c:2845
+msgid "3D"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
+msgid "OT"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:119
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:164
+msgid "Route 0000km  0+00:00 ETA"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:1906
+#: ../navit/gui/internal/gui_internal.c:2111
+msgid "POIs"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:3089
+msgid "Lock on road"
+msgstr ""

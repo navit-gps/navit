@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
-"PO-Revision-Date: 2009-01-08 10:57+0000\n"
-"Last-Translator: seqizz (gurkanGur) <seqizz@gmail.com>\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
+"PO-Revision-Date: 2009-05-16 08:43+0000\n"
+"Last-Translator: Abesis <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -56,34 +56,6 @@ msgstr "beşinci"
 #: ../navit/navigation.c:252
 msgid "sixth"
 msgstr "altıncı"
-
-#: ../navit/navigation.c:263
-msgid "zeroth exit"
-msgstr ""
-
-#: ../navit/navigation.c:265
-msgid "first exit"
-msgstr ""
-
-#: ../navit/navigation.c:267
-msgid "second exit"
-msgstr ""
-
-#: ../navit/navigation.c:269
-msgid "third exit"
-msgstr ""
-
-#: ../navit/navigation.c:271
-msgid "fourth exit"
-msgstr ""
-
-#: ../navit/navigation.c:273
-msgid "fifth exit"
-msgstr ""
-
-#: ../navit/navigation.c:275
-msgid "sixth exit"
-msgstr ""
 
 #: ../navit/navigation.c:316
 #, c-format
@@ -159,12 +131,6 @@ msgstr "%scaddesine %s%s%s|female form"
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%scaddesine %s%s%s|neutral form"
 
-#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1319
-#, c-format
-msgid "%sinto the %s"
-msgstr ""
-
 #. TRANSLATORS: right, as in 'Turn right'
 #: ../navit/navigation.c:1340
 msgid "right"
@@ -194,26 +160,6 @@ msgstr "bilinmeyen "
 msgid "When possible, please turn around"
 msgstr "Müsait olduğunda lütfen yönünü değiştir"
 
-#: ../navit/navigation.c:1412
-msgid "Enter the roundabout soon"
-msgstr ""
-
-#. TRANSLATORS: %s is the distance to the roundabout
-#: ../navit/navigation.c:1416
-#, c-format
-msgid "In %s, enter the roundabout"
-msgstr ""
-
-#: ../navit/navigation.c:1431
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr ""
-
-#: ../navit/navigation.c:1434
-#, c-format
-msgid "then leave the roundabout at the %s"
-msgstr ""
-
 #: ../navit/navigation.c:1444
 #, c-format
 msgid "Follow the road for the next %s"
@@ -223,12 +169,6 @@ msgstr "Gelecek %s için yolu takip et"
 msgid "soon"
 msgstr "yakında"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1458
-#, c-format
-msgid "Take the %1$s road to the %2$s"
-msgstr ""
-
 #: ../navit/navigation.c:1461 ../navit/navigation.c:1475
 #, c-format
 msgid "after %i roads"
@@ -237,11 +177,6 @@ msgstr "%i yol sonra"
 #: ../navit/navigation.c:1464
 msgid "now"
 msgstr "şimdi"
-
-#: ../navit/navigation.c:1472
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
 
 #: ../navit/navigation.c:1483
 msgid "error"
@@ -263,10 +198,6 @@ msgstr "sonra %1$s%2$s %3$s%4$s dönün"
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Hedefinize ulaştınız, %s"
-
-#: ../navit/navigation.c:1523
-msgid "then you have reached your destination."
-msgstr ""
 
 #: ../navit/navit.c:1164
 msgid "Position"
@@ -1711,10 +1642,6 @@ msgstr "Kapalı yol"
 msgid "Northing"
 msgstr "Kuzey mesafesi"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:226
-msgid "Autozoom"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2832
 msgid "Fullscreen"
@@ -1764,10 +1691,6 @@ msgstr "B"
 msgid "NW"
 msgstr "Kuzey-Batı"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:74
-msgid "No"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:75
 #: ../navit/gui/internal/gui_internal.c:2839
 msgid "2D"
@@ -1777,10 +1700,6 @@ msgstr "2B"
 #: ../navit/gui/internal/gui_internal.c:2845
 msgid "3D"
 msgstr "3B"
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
-msgid "OT"
-msgstr ""
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
@@ -1798,19 +1717,6 @@ msgstr "Haritaya dön"
 #: ../navit/gui/internal/gui_internal.c:1332
 msgid "Main Menu"
 msgstr "Ana Menü"
-
-#: ../navit/gui/internal/gui_internal.c:1452
-msgid "Help"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:1602
-msgid "Back"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:1906
-#: ../navit/gui/internal/gui_internal.c:2111
-msgid "POIs"
-msgstr ""
 
 #: ../navit/gui/internal/gui_internal.c:2068
 msgid "Streets"
@@ -1867,35 +1773,6 @@ msgstr ""
 msgid "Maps"
 msgstr "Haritalar"
 
-#: ../navit/gui/internal/gui_internal.c:2969
-msgid "Show Satellite Status"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3003
-msgid "Show NMEA Data"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3027
-msgid "Set as active"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3033
-msgid "Show Satellite status"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3039
-msgid "Show NMEA data"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3081
-#: ../navit/gui/internal/gui_internal.c:3125
-msgid "Rules"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3089
-msgid "Lock on road"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:3101
 msgid "Map follows Vehicle"
 msgstr "Harita aracı takip etsin"
@@ -1909,19 +1786,137 @@ msgstr "Ayarlar"
 msgid "Main menu"
 msgstr "Ana menü"
 
+#: ../navit/gui/internal/gui_internal.c:3172
+msgid "Tools"
+msgstr "Araçlar"
+
+#: ../navit/navigation.c:263
+msgid "zeroth exit"
+msgstr "sıfırıncı çıkış"
+
+#: ../navit/navigation.c:265
+msgid "first exit"
+msgstr "ilk çıkış"
+
+#: ../navit/navigation.c:267
+msgid "second exit"
+msgstr "ikinci çıkış"
+
+#: ../navit/navigation.c:269
+msgid "third exit"
+msgstr "üçüncü çıkış"
+
+#: ../navit/navigation.c:271
+msgid "fourth exit"
+msgstr "dördüncü çıkış"
+
+#: ../navit/navigation.c:273
+msgid "fifth exit"
+msgstr "beşinci çıkış"
+
+#: ../navit/navigation.c:275
+msgid "sixth exit"
+msgstr "altıncı çıkış"
+
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#: ../navit/navigation.c:1319
+#, c-format
+msgid "%sinto the %s"
+msgstr "%s%s yoluna"
+
+#: ../navit/navigation.c:1412
+msgid "Enter the roundabout soon"
+msgstr "Yakındaki kavşağa girin"
+
+#. TRANSLATORS: %s is the distance to the roundabout
+#: ../navit/navigation.c:1416
+#, c-format
+msgid "In %s, enter the roundabout"
+msgstr "%s içerisinde kavşağa girin"
+
+#: ../navit/navigation.c:1431
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "%s'de kavşaktan çıkın"
+
+#: ../navit/navigation.c:1434
+#, c-format
+msgid "then leave the roundabout at the %s"
+msgstr "ardından %s'de kavşaktan çıkın"
+
+#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+#: ../navit/navigation.c:1458
+#, c-format
+msgid "Take the %1$s road to the %2$s"
+msgstr "%1$s yolunda  %2$s yönüne dönün"
+
+#: ../navit/navigation.c:1472
+#, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr "ardından %1$s yolunda  %2$s yönüne dönün"
+
+#: ../navit/navigation.c:1523
+msgid "then you have reached your destination."
+msgstr "ardından hedefinize ulaşacaksınız"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr "Oto-yaklaş"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:74
+msgid "No"
+msgstr "Hayır"
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
+msgid "OT"
+msgstr "OT"
+
+#: ../navit/gui/internal/gui_internal.c:1452
+msgid "Help"
+msgstr "Yardım"
+
+#: ../navit/gui/internal/gui_internal.c:1602
+msgid "Back"
+msgstr "Geri"
+
+#: ../navit/gui/internal/gui_internal.c:1906
+#: ../navit/gui/internal/gui_internal.c:2111
+msgid "POIs"
+msgstr "İlgi Noktaları"
+
+#: ../navit/gui/internal/gui_internal.c:2969
+msgid "Show Satellite Status"
+msgstr "Uydu durumunu göster"
+
+#: ../navit/gui/internal/gui_internal.c:3003
+msgid "Show NMEA Data"
+msgstr "NMEA verisi göster"
+
+#: ../navit/gui/internal/gui_internal.c:3027
+msgid "Set as active"
+msgstr "Etkin olarak ata"
+
+#: ../navit/gui/internal/gui_internal.c:3033
+msgid "Show Satellite status"
+msgstr "Uydu durumunuı göster"
+
+#: ../navit/gui/internal/gui_internal.c:3039
+msgid "Show NMEA data"
+msgstr "NMEA verisi göster"
+
+#: ../navit/gui/internal/gui_internal.c:3081
+#: ../navit/gui/internal/gui_internal.c:3125
+msgid "Rules"
+msgstr "Kurallar"
+
+#: ../navit/gui/internal/gui_internal.c:3089
+msgid "Lock on road"
+msgstr "Yola Kilitlen"
+
 #: ../navit/gui/internal/gui_internal.c:3165
 msgid ""
 "Show\n"
 "Map"
 msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3172
-msgid "Tools"
-msgstr "Araçlar"
-
-#~ msgid "ramp"
-#~ msgstr "rampa"
-
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "%s yoluna"
+"Goster\n"
+"Harita"

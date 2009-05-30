@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-04-06 10:31+0000\n"
 "Last-Translator: Roschkor <Unknown>\n"
 "Language-Team: German, Low <nds@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../navit/main.c:231
@@ -253,12 +253,6 @@ msgstr "Fehler"
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "In %3$s %1$s%2$s %4$s abbiegen"
-
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#: ../navit/navigation.c:1516
-#, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
 
 #: ../navit/navigation.c:1521
 #, c-format
@@ -1921,3 +1915,9 @@ msgstr ""
 #: ../navit/gui/internal/gui_internal.c:3172
 msgid "Tools"
 msgstr "Werkzeuge"
+
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#: ../navit/navigation.c:1516
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-03-19 09:53+0000\n"
 "Last-Translator: Timo Jyrinki <timo.jyrinki@iki.fi>\n"
 "Language-Team: Ossi Berg <o.berg@mail.com>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -1784,10 +1784,6 @@ msgstr "2D"
 msgid "3D"
 msgstr "3D"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
-msgid "OT"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
@@ -1927,129 +1923,6 @@ msgstr ""
 msgid "Tools"
 msgstr "Työkalut"
 
-#, c-format
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "navitin käyttö:\n"
-#~ "navit [valinnat] [asetustiedosto]\n"
-#~ "\t-c <asetustiedosto>\n"
-#~ "\t-d <num.>: aseta vianjäljityksen ulostulon taso. (EI VALMIS)\n"
-#~ "\t-h: tulosta tämä ohje ja poistu.\n"
-#~ "\t-v: tulosta versionumero ja poistu.\n"
-
-#, c-format
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Asetustiedostoja navit.xml tai navit.xml.local ei löytynyt.\n"
-
-#, c-format
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "Virhe tulkitessa '%s': %s\n"
-
-#, c-format
-#~ msgid "Using '%s'\n"
-#~ msgstr "Käytetään '%s'\n"
-
-#, c-format
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "Esimerkkiä ei tehty, lopetetaan\n"
-
-#~ msgid "ramp"
-#~ msgstr "ramppi"
-
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "kadulle %s"
-
-#~ msgid "Refresh"
-#~ msgstr "Päivitä"
-
-#~ msgid "Clear"
-#~ msgstr "Tyhjennä"
-
-#~ msgid "Tracking"
-#~ msgstr "Reititys"
-
-#~ msgid "Orientation"
-#~ msgstr "Asento"
-
-#~ msgid "Turn %1$s%2$s %3$s"
-#~ msgstr "Käänny %3$s %1$s%2$s"
-
-#~ msgid "Moldova"
-#~ msgstr "Moldova"
-
-#~ msgid "Syria"
-#~ msgstr "Syyria"
-
-#~ msgid "Libia"
-#~ msgstr "Libya"
-
-#~ msgid "Palestinia"
-#~ msgstr "Palestiina"
-
-#~ msgid "Macedonia"
-#~ msgstr "Makedonia"
-
-#~ msgid "VisibleBlocks"
-#~ msgstr "Näkyvät korttelit"
-
-#~ msgid "VisibleTowns"
-#~ msgstr "Näkyvät paikkakunnat"
-
-#~ msgid "VisiblePolys"
-#~ msgstr "Näkyvät monikulmio"
-
-#~ msgid "VisibleStreets"
-#~ msgstr "Näkyvät kadut"
-
-#~ msgid "VisiblePoints"
-#~ msgstr "Näkyvät pisteet"
-
-#~ msgid "RouteGraph"
-#~ msgstr "Tiepiirros"
-
-#~ msgid "two kilometers"
-#~ msgstr "kaksi kilometriä"
-
-#~ msgid "in two kilometers"
-#~ msgstr "kahden kilometrin päästä"
-
-#~ msgid "three kilometers"
-#~ msgstr "kolme kilometriä"
-
-#~ msgid "in three kilometers"
-#~ msgstr "kolmen kilometrin päästä"
-
-#~ msgid "four kilometers"
-#~ msgstr "neljä kilometriä"
-
-#~ msgid "in four kilometers"
-#~ msgstr "neljän kilometrin päästä"
-
-#~ msgid "%d kilometers"
-#~ msgstr "%d kilometriä"
-
-#~ msgid "in %d kilometers"
-#~ msgstr "%d kilometrin päästä"
-
-#, c-format
-#~ msgid ""
-#~ "Running from source directory. Bookmarks, center and destinations will be "
-#~ "r/w from this directory\n"
-#~ msgstr ""
-#~ "Ajetaan lähdehakemistosta. Kirjanmerkit, keskipiste ja kohteet "
-#~ "ylikirjoitetaan tässä hakemistossa.\n"
-
-#, c-format
-#~ msgid "Leave the roundabout at the %s exit"
-#~ msgstr "Poistu liikenneympyrästä, %s poistumistie"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %s exit"
-#~ msgstr "poistu sitten liikenneympyrästä, %s poistumistie"
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
+msgid "OT"
+msgstr ""
