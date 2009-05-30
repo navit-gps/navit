@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-03-13 07:03+0000\n"
 "Last-Translator: talmik <Unknown>\n"
 "Language-Team: Čeština\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -135,10 +135,6 @@ msgstr[2] "za %d kilometrů"
 msgid "exit"
 msgstr "konec"
 
-#: ../navit/navigation.c:1270
-msgid "into the ramp"
-msgstr ""
-
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #: ../navit/navigation.c:1300
 #, c-format
@@ -162,12 +158,6 @@ msgstr "%s do %s%s%s"
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%s do %s%s%s"
-
-#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1319
-#, c-format
-msgid "%sinto the %s"
-msgstr ""
 
 #. TRANSLATORS: right, as in 'Turn right'
 #: ../navit/navigation.c:1340
@@ -198,26 +188,6 @@ msgstr "neurčitě "
 msgid "When possible, please turn around"
 msgstr "Až to bude možné, otočte se"
 
-#: ../navit/navigation.c:1412
-msgid "Enter the roundabout soon"
-msgstr ""
-
-#. TRANSLATORS: %s is the distance to the roundabout
-#: ../navit/navigation.c:1416
-#, c-format
-msgid "In %s, enter the roundabout"
-msgstr ""
-
-#: ../navit/navigation.c:1431
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr ""
-
-#: ../navit/navigation.c:1434
-#, c-format
-msgid "then leave the roundabout at the %s"
-msgstr ""
-
 #: ../navit/navigation.c:1444
 #, c-format
 msgid "Follow the road for the next %s"
@@ -227,25 +197,9 @@ msgstr "Pokračujte po další %s"
 msgid "soon"
 msgstr "brzy"
 
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1458
-#, c-format
-msgid "Take the %1$s road to the %2$s"
-msgstr ""
-
-#: ../navit/navigation.c:1461 ../navit/navigation.c:1475
-#, c-format
-msgid "after %i roads"
-msgstr ""
-
 #: ../navit/navigation.c:1464
 msgid "now"
 msgstr "nyní"
-
-#: ../navit/navigation.c:1472
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
 
 #: ../navit/navigation.c:1483
 msgid "error"
@@ -257,20 +211,10 @@ msgstr "chyba"
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Zabočte %1$s%2$s %3$s%4$s"
 
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#: ../navit/navigation.c:1516
-#, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
-
 #: ../navit/navigation.c:1521
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Dorazili jste do cíle %s"
-
-#: ../navit/navigation.c:1523
-msgid "then you have reached your destination."
-msgstr ""
 
 #: ../navit/navit.c:1164
 msgid "Position"
@@ -1715,10 +1659,6 @@ msgstr "Jet jen po silnici"
 msgid "Northing"
 msgstr "Severně"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:226
-msgid "Autozoom"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2832
 msgid "Fullscreen"
@@ -1871,25 +1811,9 @@ msgstr ""
 msgid "Maps"
 msgstr "Mapy"
 
-#: ../navit/gui/internal/gui_internal.c:2969
-msgid "Show Satellite Status"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3003
-msgid "Show NMEA Data"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:3027
 msgid "Set as active"
 msgstr "Nastavit jako aktivní"
-
-#: ../navit/gui/internal/gui_internal.c:3033
-msgid "Show Satellite status"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3039
-msgid "Show NMEA data"
-msgstr ""
 
 #: ../navit/gui/internal/gui_internal.c:3081
 #: ../navit/gui/internal/gui_internal.c:3125
@@ -1913,19 +1837,88 @@ msgstr "Nastavení"
 msgid "Main menu"
 msgstr "Hlavní menu"
 
+#: ../navit/gui/internal/gui_internal.c:3172
+msgid "Tools"
+msgstr "Nástroje"
+
+#: ../navit/navigation.c:1270
+msgid "into the ramp"
+msgstr ""
+
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#: ../navit/navigation.c:1319
+#, c-format
+msgid "%sinto the %s"
+msgstr ""
+
+#: ../navit/navigation.c:1412
+msgid "Enter the roundabout soon"
+msgstr ""
+
+#. TRANSLATORS: %s is the distance to the roundabout
+#: ../navit/navigation.c:1416
+#, c-format
+msgid "In %s, enter the roundabout"
+msgstr ""
+
+#: ../navit/navigation.c:1431
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr ""
+
+#: ../navit/navigation.c:1434
+#, c-format
+msgid "then leave the roundabout at the %s"
+msgstr ""
+
+#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+#: ../navit/navigation.c:1458
+#, c-format
+msgid "Take the %1$s road to the %2$s"
+msgstr ""
+
+#: ../navit/navigation.c:1461 ../navit/navigation.c:1475
+#, c-format
+msgid "after %i roads"
+msgstr ""
+
+#: ../navit/navigation.c:1472
+#, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#: ../navit/navigation.c:1516
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr ""
+
+#: ../navit/navigation.c:1523
+msgid "then you have reached your destination."
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:2969
+msgid "Show Satellite Status"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:3003
+msgid "Show NMEA Data"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:3033
+msgid "Show Satellite status"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:3039
+msgid "Show NMEA data"
+msgstr ""
+
 #: ../navit/gui/internal/gui_internal.c:3165
 msgid ""
 "Show\n"
 "Map"
 msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3172
-msgid "Tools"
-msgstr "Nástroje"
-
-#~ msgid "ramp"
-#~ msgstr "nájezd"
-
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "do %s"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
-"PO-Revision-Date: 2009-03-17 00:59+0000\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
+"PO-Revision-Date: 2009-04-29 17:43+0000\n"
 "Last-Translator: Squall Leonhart <webmaster@square-one.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -31,7 +31,7 @@ msgstr "sätter '%s' till '%s'\n"
 
 #: ../navit/navigation.c:240
 msgid "zeroth"
-msgstr ""
+msgstr "nollte"
 
 #: ../navit/navigation.c:242
 msgid "first"
@@ -234,7 +234,7 @@ msgstr "Ta %1$s vägen till %2$s"
 #: ../navit/navigation.c:1461 ../navit/navigation.c:1475
 #, c-format
 msgid "after %i roads"
-msgstr ""
+msgstr "efter %i vägar"
 
 #: ../navit/navigation.c:1464
 msgid "now"
@@ -1782,7 +1782,7 @@ msgstr "3D"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:78
 msgid "OT"
-msgstr ""
+msgstr "OT"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
@@ -1922,10 +1922,3 @@ msgstr ""
 #: ../navit/gui/internal/gui_internal.c:3172
 msgid "Tools"
 msgstr "Verktyg"
-
-#~ msgid "ramp"
-#~ msgstr "påfart"
-
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "in på %s"

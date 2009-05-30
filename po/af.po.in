@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
-"PO-Revision-Date: 2009-01-12 23:22+0000\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
+"PO-Revision-Date: 2009-04-15 11:56+0000\n"
 "Last-Translator: Kobus <Unknown>\n"
 "Language-Team: Afrikaans <af@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -59,31 +59,31 @@ msgstr "sesde"
 
 #: ../navit/navigation.c:263
 msgid "zeroth exit"
-msgstr ""
+msgstr "nulste uitgang"
 
 #: ../navit/navigation.c:265
 msgid "first exit"
-msgstr ""
+msgstr "eerste  uitgang"
 
 #: ../navit/navigation.c:267
 msgid "second exit"
-msgstr ""
+msgstr "tweede uitgang"
 
 #: ../navit/navigation.c:269
 msgid "third exit"
-msgstr ""
+msgstr "derde uitgang"
 
 #: ../navit/navigation.c:271
 msgid "fourth exit"
-msgstr ""
+msgstr "vierde uitgang"
 
 #: ../navit/navigation.c:273
 msgid "fifth exit"
-msgstr ""
+msgstr "vyfde uitgang"
 
 #: ../navit/navigation.c:275
 msgid "sixth exit"
-msgstr ""
+msgstr "sesde uitgang"
 
 #: ../navit/navigation.c:316
 #, c-format
@@ -209,12 +209,12 @@ msgstr "In %s, gaan in die sirkel in"
 #: ../navit/navigation.c:1431
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr ""
+msgstr "Verlaat die sirkel by die %s"
 
 #: ../navit/navigation.c:1434
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr ""
+msgstr "verlaat dan die sirkel by die %s"
 
 #: ../navit/navigation.c:1444
 #, c-format
@@ -1715,7 +1715,7 @@ msgstr "Draai kaart noord"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:226
 msgid "Autozoom"
-msgstr ""
+msgstr "Outozoom"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2832
@@ -1803,11 +1803,11 @@ msgstr "Hoofkieslys"
 
 #: ../navit/gui/internal/gui_internal.c:1452
 msgid "Help"
-msgstr ""
+msgstr "Hulp"
 
 #: ../navit/gui/internal/gui_internal.c:1602
 msgid "Back"
-msgstr ""
+msgstr "Terug"
 
 #: ../navit/gui/internal/gui_internal.c:1906
 #: ../navit/gui/internal/gui_internal.c:2111
@@ -1871,23 +1871,23 @@ msgstr "Kaarte"
 
 #: ../navit/gui/internal/gui_internal.c:2969
 msgid "Show Satellite Status"
-msgstr ""
+msgstr "Wys Satelliet Inligting"
 
 #: ../navit/gui/internal/gui_internal.c:3003
 msgid "Show NMEA Data"
-msgstr ""
+msgstr "Wys NMEA data"
 
 #: ../navit/gui/internal/gui_internal.c:3027
 msgid "Set as active"
-msgstr ""
+msgstr "Maak aktief"
 
 #: ../navit/gui/internal/gui_internal.c:3033
 msgid "Show Satellite status"
-msgstr ""
+msgstr "Wys satelliet inligting"
 
 #: ../navit/gui/internal/gui_internal.c:3039
 msgid "Show NMEA data"
-msgstr ""
+msgstr "Wys NMEA data"
 
 #: ../navit/gui/internal/gui_internal.c:3081
 #: ../navit/gui/internal/gui_internal.c:3125
@@ -1916,15 +1916,9 @@ msgid ""
 "Show\n"
 "Map"
 msgstr ""
+"Wys\n"
+"Kaart"
 
 #: ../navit/gui/internal/gui_internal.c:3172
 msgid "Tools"
 msgstr "Gereedskap"
-
-#, c-format
-#~ msgid "Leave the roundabout at the %s exit"
-#~ msgstr "Verlaat die sirkel by die %s uitgang"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %s exit"
-#~ msgstr "verlaat dan die sirkel by die %s uitgang"

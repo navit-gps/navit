@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-03-12 14:45+0000\n"
 "Last-Translator: laimonas <laimonas.mockus@gmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "(n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -57,34 +57,6 @@ msgstr "penktas"
 #: ../navit/navigation.c:252
 msgid "sixth"
 msgstr "šeštas"
-
-#: ../navit/navigation.c:263
-msgid "zeroth exit"
-msgstr ""
-
-#: ../navit/navigation.c:265
-msgid "first exit"
-msgstr ""
-
-#: ../navit/navigation.c:267
-msgid "second exit"
-msgstr ""
-
-#: ../navit/navigation.c:269
-msgid "third exit"
-msgstr ""
-
-#: ../navit/navigation.c:271
-msgid "fourth exit"
-msgstr ""
-
-#: ../navit/navigation.c:273
-msgid "fifth exit"
-msgstr ""
-
-#: ../navit/navigation.c:275
-msgid "sixth exit"
-msgstr ""
 
 #: ../navit/navigation.c:316
 #, c-format
@@ -209,6 +181,47 @@ msgstr "Netrukus įsukite į žiedą"
 msgid "In %s, enter the roundabout"
 msgstr "Už %s, įsukite į žiedą"
 
+#: ../navit/navigation.c:1444
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Laikykitės kelio sekančius %s"
+
+#: ../navit/navigation.c:1448
+msgid "soon"
+msgstr "netrukus"
+
+#: ../navit/navigation.c:1464
+msgid "now"
+msgstr "dabar"
+
+#: ../navit/navigation.c:263
+msgid "zeroth exit"
+msgstr ""
+
+#: ../navit/navigation.c:265
+msgid "first exit"
+msgstr ""
+
+#: ../navit/navigation.c:267
+msgid "second exit"
+msgstr ""
+
+#: ../navit/navigation.c:269
+msgid "third exit"
+msgstr ""
+
+#: ../navit/navigation.c:271
+msgid "fourth exit"
+msgstr ""
+
+#: ../navit/navigation.c:273
+msgid "fifth exit"
+msgstr ""
+
+#: ../navit/navigation.c:275
+msgid "sixth exit"
+msgstr ""
+
 #: ../navit/navigation.c:1431
 #, c-format
 msgid "Leave the roundabout at the %s"
@@ -218,15 +231,6 @@ msgstr ""
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr ""
-
-#: ../navit/navigation.c:1444
-#, c-format
-msgid "Follow the road for the next %s"
-msgstr "Laikykitės kelio sekančius %s"
-
-#: ../navit/navigation.c:1448
-msgid "soon"
-msgstr "netrukus"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #: ../navit/navigation.c:1458
@@ -238,10 +242,6 @@ msgstr ""
 #, c-format
 msgid "after %i roads"
 msgstr ""
-
-#: ../navit/navigation.c:1464
-msgid "now"
-msgstr "dabar"
 
 #: ../navit/navigation.c:1472
 #, c-format
@@ -1921,11 +1921,3 @@ msgstr ""
 #: ../navit/gui/internal/gui_internal.c:3172
 msgid "Tools"
 msgstr ""
-
-#, c-format
-#~ msgid "Leave the roundabout at the %s exit"
-#~ msgstr "%s išvažiavime išsukite iš žiedo"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %s exit"
-#~ msgstr "tada %s išvažiavime išsukite iš žiedo"

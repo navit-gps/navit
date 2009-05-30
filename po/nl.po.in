@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
-"PO-Revision-Date: 2009-03-22 20:53+0000\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
+"PO-Revision-Date: 2009-05-25 10:56+0000\n"
 "Last-Translator: Ed Kapitein <Unknown>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -56,10 +56,6 @@ msgstr "vijfde"
 #: ../navit/navigation.c:252
 msgid "sixth"
 msgstr "zesde"
-
-#: ../navit/navigation.c:263
-msgid "zeroth exit"
-msgstr ""
 
 #: ../navit/navigation.c:265
 msgid "first exit"
@@ -1810,10 +1806,6 @@ msgstr "Hoofdmenu"
 msgid "Help"
 msgstr "Hulp"
 
-#: ../navit/gui/internal/gui_internal.c:1602
-msgid "Back"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:1906
 #: ../navit/gui/internal/gui_internal.c:2111
 msgid "POIs"
@@ -1855,7 +1847,7 @@ msgstr "punt op de kaart"
 
 #: ../navit/gui/internal/gui_internal.c:2894
 msgid "Vehicle Position"
-msgstr "voortuig positie"
+msgstr "voertuig positie"
 
 #: ../navit/gui/internal/gui_internal.c:2903
 msgid "Quit"
@@ -1874,25 +1866,9 @@ msgstr ""
 msgid "Maps"
 msgstr "Kaarten"
 
-#: ../navit/gui/internal/gui_internal.c:2969
-msgid "Show Satellite Status"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3003
-msgid "Show NMEA Data"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:3027
 msgid "Set as active"
 msgstr "activeren"
-
-#: ../navit/gui/internal/gui_internal.c:3033
-msgid "Show Satellite status"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3039
-msgid "Show NMEA data"
-msgstr ""
 
 #: ../navit/gui/internal/gui_internal.c:3081
 #: ../navit/gui/internal/gui_internal.c:3125
@@ -1916,27 +1892,38 @@ msgstr "Instellingen"
 msgid "Main menu"
 msgstr "Hoofdmenu"
 
+#: ../navit/gui/internal/gui_internal.c:3172
+msgid "Tools"
+msgstr "Gereedschappen"
+
+#: ../navit/navigation.c:263
+msgid "zeroth exit"
+msgstr "nulde afrit"
+
+#: ../navit/gui/internal/gui_internal.c:1602
+msgid "Back"
+msgstr "terug"
+
+#: ../navit/gui/internal/gui_internal.c:2969
+msgid "Show Satellite Status"
+msgstr "Toon satelliet status"
+
+#: ../navit/gui/internal/gui_internal.c:3003
+msgid "Show NMEA Data"
+msgstr "NMEA data weergeven"
+
+#: ../navit/gui/internal/gui_internal.c:3033
+msgid "Show Satellite status"
+msgstr "satelliet status weergeven"
+
+#: ../navit/gui/internal/gui_internal.c:3039
+msgid "Show NMEA data"
+msgstr ""
+
 #: ../navit/gui/internal/gui_internal.c:3165
 msgid ""
 "Show\n"
 "Map"
 msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3172
-msgid "Tools"
-msgstr "Gereedschappen"
-
-#~ msgid "ramp"
-#~ msgstr "helling"
-
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "in de %s"
-
-#, c-format
-#~ msgid "Leave the roundabout at the %s exit"
-#~ msgstr "Verlaat de rotonde op de %s uitrit"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %s exit"
-#~ msgstr "verlaat daarna de rotonde op de %s uitrit"
+"Kaart\n"
+"Weergeven"

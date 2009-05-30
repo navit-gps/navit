@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-03-30 08:40+0000\n"
 "Last-Translator: helix84 <Unknown>\n"
 "Language-Team: Slovenčina\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -134,10 +134,6 @@ msgstr[2] "o %d kilometre"
 #: ../navit/navigation.c:1268
 msgid "exit"
 msgstr "výjazd"
-
-#: ../navit/navigation.c:1270
-msgid "into the ramp"
-msgstr ""
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #: ../navit/navigation.c:1300
@@ -1782,10 +1778,6 @@ msgstr "2D"
 msgid "3D"
 msgstr "3D"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
-msgid "OT"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
@@ -1925,102 +1917,10 @@ msgstr ""
 msgid "Tools"
 msgstr "Nástroje"
 
-#, c-format
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "použitie navitu:\n"
-#~ "navit [voľby] [konfiguračný súbor]\n"
-#~ "\t-c <súbor>: použije <súbor> ako konfiguračný súbor\n"
-#~ "\t-d <n>: nastaví úroveň ladiacích hlásení na <n>. (TODO)\n"
-#~ "\t-h: zobrazí tento informačný text a skončí.\n"
-#~ "\t-v: vypíše verziu programu a skončí.\n"
+#: ../navit/navigation.c:1270
+msgid "into the ramp"
+msgstr ""
 
-#, c-format
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "Nenašiel sa konfiguračný súbor navit.xml ani navit.xml.local\n"
-
-#, c-format
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "Chyba pri spracovávaní '%s': %s\n"
-
-#, c-format
-#~ msgid "Using '%s'\n"
-#~ msgstr "Používam '%s'\n"
-
-#, c-format
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "Nebola vytvorená žiadna inštancia, ukončujem beh\n"
-
-#~ msgid "ramp"
-#~ msgstr "nájazd"
-
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "do %s"
-
-#~ msgid "Refresh"
-#~ msgstr "Obnoviť"
-
-#~ msgid "Clear"
-#~ msgstr "Zmazať"
-
-#~ msgid "Tracking"
-#~ msgstr "Stopovanie"
-
-#~ msgid "Orientation"
-#~ msgstr "Orientácia"
-
-#~ msgid "Turn %1$s%2$s %3$s"
-#~ msgstr "Odbočte %1$s%2$s %3$s"
-
-#~ msgid "Moldova"
-#~ msgstr "Moldavsko"
-
-#~ msgid "Syria"
-#~ msgstr "Sýria"
-
-#~ msgid "Libia"
-#~ msgstr "Líbya"
-
-#~ msgid "Palestinia"
-#~ msgstr "Palestína"
-
-#~ msgid "Macedonia"
-#~ msgstr "Macedónsko"
-
-#~ msgid "VisibleBlocks"
-#~ msgstr "Viditeľné bloky"
-
-#~ msgid "VisibleTowns"
-#~ msgstr "Viditeľné mestá"
-
-#~ msgid "VisiblePolys"
-#~ msgstr "Viditeľné polygony"
-
-#~ msgid "VisibleStreets"
-#~ msgstr "Viditeľné ulice"
-
-#~ msgid "VisiblePoints"
-#~ msgstr "Viditeľné body"
-
-#, c-format
-#~ msgid ""
-#~ "Running from source directory. Bookmarks, center and destinations will be "
-#~ "r/w from this directory\n"
-#~ msgstr ""
-#~ "Spustený zo zdrojového adresára. Záložky, poloha a cieľe budú "
-#~ "čítane/zapisované do tohto adresára\n"
-
-#, c-format
-#~ msgid "Leave the roundabout at the %s exit"
-#~ msgstr "Opustite kruhový objaz na %s výjazde"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %s exit"
-#~ msgstr "potom opustite kruhový objazd na %s výjazde"
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
+msgid "OT"
+msgstr ""

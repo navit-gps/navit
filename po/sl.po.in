@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-01-14 16:08+0000\n"
 "Last-Translator: Štefan Baebler <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
 "n%100==4 ? 3 : 0);\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -57,34 +57,6 @@ msgstr "pet"
 #: ../navit/navigation.c:252
 msgid "sixth"
 msgstr "šest"
-
-#: ../navit/navigation.c:263
-msgid "zeroth exit"
-msgstr ""
-
-#: ../navit/navigation.c:265
-msgid "first exit"
-msgstr ""
-
-#: ../navit/navigation.c:267
-msgid "second exit"
-msgstr ""
-
-#: ../navit/navigation.c:269
-msgid "third exit"
-msgstr ""
-
-#: ../navit/navigation.c:271
-msgid "fourth exit"
-msgstr ""
-
-#: ../navit/navigation.c:273
-msgid "fifth exit"
-msgstr ""
-
-#: ../navit/navigation.c:275
-msgid "sixth exit"
-msgstr ""
 
 #: ../navit/navigation.c:316
 #, c-format
@@ -138,10 +110,6 @@ msgstr[3] "Čez %d kilometre"
 msgid "exit"
 msgstr "odcep"
 
-#: ../navit/navigation.c:1270
-msgid "into the ramp"
-msgstr ""
-
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #: ../navit/navigation.c:1300
 #, c-format
@@ -165,12 +133,6 @@ msgstr "%sna %s%s%s"
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%sna %s%s%s"
-
-#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1319
-#, c-format
-msgid "%sinto the %s"
-msgstr ""
 
 #. TRANSLATORS: right, as in 'Turn right'
 #: ../navit/navigation.c:1340
@@ -210,16 +172,6 @@ msgstr "Kmalu zapeljite v krožišče"
 #, c-format
 msgid "In %s, enter the roundabout"
 msgstr "Čez %s zapeljite v krožišče"
-
-#: ../navit/navigation.c:1431
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr ""
-
-#: ../navit/navigation.c:1434
-#, c-format
-msgid "then leave the roundabout at the %s"
-msgstr ""
 
 #: ../navit/navigation.c:1444
 #, c-format
@@ -1718,10 +1670,6 @@ msgstr "Ostani na cesti"
 msgid "Northing"
 msgstr "Sever zgoraj"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:226
-msgid "Autozoom"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2832
 msgid "Fullscreen"
@@ -1785,10 +1733,6 @@ msgstr "2D"
 msgid "3D"
 msgstr "3D"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
-msgid "OT"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
@@ -1805,19 +1749,6 @@ msgstr "Nazaj na zemljevid"
 #: ../navit/gui/internal/gui_internal.c:1332
 msgid "Main Menu"
 msgstr "Glavni meni"
-
-#: ../navit/gui/internal/gui_internal.c:1452
-msgid "Help"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:1602
-msgid "Back"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:1906
-#: ../navit/gui/internal/gui_internal.c:2111
-msgid "POIs"
-msgstr ""
 
 #: ../navit/gui/internal/gui_internal.c:2068
 msgid "Streets"
@@ -1849,10 +1780,6 @@ msgstr "Okenski način"
 msgid "Actions"
 msgstr "Dejanja"
 
-#: ../navit/gui/internal/gui_internal.c:2884
-msgid "Map Point"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:2894
 msgid "Vehicle Position"
 msgstr "Položaj vozila"
@@ -1861,36 +1788,10 @@ msgstr "Položaj vozila"
 msgid "Quit"
 msgstr "Izhod"
 
-#: ../navit/gui/internal/gui_internal.c:2909
-msgid ""
-"Stop\n"
-"Navigation"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:2925
 #: ../navit/gui/internal/gui_internal.c:3117
 msgid "Maps"
 msgstr "Zemljevidi"
-
-#: ../navit/gui/internal/gui_internal.c:2969
-msgid "Show Satellite Status"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3003
-msgid "Show NMEA Data"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3027
-msgid "Set as active"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3033
-msgid "Show Satellite status"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3039
-msgid "Show NMEA data"
-msgstr ""
 
 #: ../navit/gui/internal/gui_internal.c:3081
 #: ../navit/gui/internal/gui_internal.c:3125
@@ -1914,80 +1815,111 @@ msgstr "Nastavitve"
 msgid "Main menu"
 msgstr "Glavni meni"
 
+#: ../navit/gui/internal/gui_internal.c:3172
+msgid "Tools"
+msgstr "Orodja"
+
+#: ../navit/navigation.c:263
+msgid "zeroth exit"
+msgstr ""
+
+#: ../navit/navigation.c:265
+msgid "first exit"
+msgstr ""
+
+#: ../navit/navigation.c:267
+msgid "second exit"
+msgstr ""
+
+#: ../navit/navigation.c:269
+msgid "third exit"
+msgstr ""
+
+#: ../navit/navigation.c:271
+msgid "fourth exit"
+msgstr ""
+
+#: ../navit/navigation.c:273
+msgid "fifth exit"
+msgstr ""
+
+#: ../navit/navigation.c:275
+msgid "sixth exit"
+msgstr ""
+
+#: ../navit/navigation.c:1270
+msgid "into the ramp"
+msgstr ""
+
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#: ../navit/navigation.c:1319
+#, c-format
+msgid "%sinto the %s"
+msgstr ""
+
+#: ../navit/navigation.c:1431
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr ""
+
+#: ../navit/navigation.c:1434
+#, c-format
+msgid "then leave the roundabout at the %s"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
+msgid "OT"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:1452
+msgid "Help"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:1602
+msgid "Back"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:1906
+#: ../navit/gui/internal/gui_internal.c:2111
+msgid "POIs"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:2884
+msgid "Map Point"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:2909
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:2969
+msgid "Show Satellite Status"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:3003
+msgid "Show NMEA Data"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:3027
+msgid "Set as active"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:3033
+msgid "Show Satellite status"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:3039
+msgid "Show NMEA data"
+msgstr ""
+
 #: ../navit/gui/internal/gui_internal.c:3165
 msgid ""
 "Show\n"
 "Map"
 msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3172
-msgid "Tools"
-msgstr "Orodja"
-
-#, c-format
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "uporaba navit-a:\n"
-#~ "navit [možnosti] [nastavitvenadatoteka]\n"
-#~ "\t-c <datoteka>: prebere nastavitve iz datoteke <datoteka>\n"
-#~ "\t-d <n>: nastavi podrobnosti izpisa na nivo <n>. (TODO)\n"
-#~ "\t-h: izpiše ta navodila in zaključi.\n"
-#~ "\t-v: izpiše verzijo in zaključi.\n"
-
-#, c-format
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr ""
-#~ "Datoteke z nastavitvami navit.xml ni, najdena datoteka navit.xml.local\n"
-
-#, c-format
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "Napaka pri razčlenjevanju '%s': %s\n"
-
-#, c-format
-#~ msgid "Using '%s'\n"
-#~ msgstr "Uporabljam '%s'\n"
-
-#, c-format
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "Instanca ni bila ustvarjena, sledi izhod\n"
-
-#~ msgid "ramp"
-#~ msgstr "priključek"
-
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "na %s"
-
-#~ msgid "Refresh"
-#~ msgstr "Osveži"
-
-#~ msgid "Clear"
-#~ msgstr "Počisti"
-
-#~ msgid "Tracking"
-#~ msgstr "Sledenje"
-
-#~ msgid "Orientation"
-#~ msgstr "Orientacija"
-
-#, c-format
-#~ msgid ""
-#~ "Running from source directory. Bookmarks, center and destinations will be "
-#~ "r/w from this directory\n"
-#~ msgstr ""
-#~ "Zagon iz mape z izvorno kodo. Zaznamki in trenutni položaj bodo shranjeni v "
-#~ "tej mapi.\n"
-
-#, c-format
-#~ msgid "Leave the roundabout at the %s exit"
-#~ msgstr "Krožišče zapustite pri %sem izvozu"
-
-#, c-format
-#~ msgid "then leave the roundabout at the %s exit"
-#~ msgstr "nato zapustite krožišče pri %sem izvozu"

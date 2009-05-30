@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-03-06 20:51+0000\n"
 "Last-Translator: skrzat <Unknown>\n"
 "Language-Team: Translators\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: POLAND\n"
 "X-Poedit-Language: Polish\n"
@@ -59,34 +59,6 @@ msgstr "piąty"
 #: ../navit/navigation.c:252
 msgid "sixth"
 msgstr "szósty"
-
-#: ../navit/navigation.c:263
-msgid "zeroth exit"
-msgstr ""
-
-#: ../navit/navigation.c:265
-msgid "first exit"
-msgstr ""
-
-#: ../navit/navigation.c:267
-msgid "second exit"
-msgstr ""
-
-#: ../navit/navigation.c:269
-msgid "third exit"
-msgstr ""
-
-#: ../navit/navigation.c:271
-msgid "fourth exit"
-msgstr ""
-
-#: ../navit/navigation.c:273
-msgid "fifth exit"
-msgstr ""
-
-#: ../navit/navigation.c:275
-msgid "sixth exit"
-msgstr ""
 
 #: ../navit/navigation.c:316
 #, c-format
@@ -210,16 +182,6 @@ msgstr "Wjazd na rondo wkrótce"
 #, c-format
 msgid "In %s, enter the roundabout"
 msgstr "Wjedź na rondo za %s"
-
-#: ../navit/navigation.c:1431
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr ""
-
-#: ../navit/navigation.c:1434
-#, c-format
-msgid "then leave the roundabout at the %s"
-msgstr ""
 
 #: ../navit/navigation.c:1444
 #, c-format
@@ -1718,10 +1680,6 @@ msgstr "Trzymaj się drogi"
 msgid "Northing"
 msgstr "Północ zawsze na górze"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:226
-msgid "Autozoom"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2832
 msgid "Fullscreen"
@@ -1928,17 +1886,44 @@ msgstr ""
 msgid "Tools"
 msgstr "Narzędzia"
 
-#~ msgid "ramp"
-#~ msgstr "wjazd/zjazd"
+#: ../navit/navigation.c:263
+msgid "zeroth exit"
+msgstr ""
 
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "w %s"
+#: ../navit/navigation.c:265
+msgid "first exit"
+msgstr ""
 
-#, c-format
-#~ msgid "Leave the roundabout at the %s exit"
-#~ msgstr "Opuść rondo, %s zjazd"
+#: ../navit/navigation.c:267
+msgid "second exit"
+msgstr ""
 
+#: ../navit/navigation.c:269
+msgid "third exit"
+msgstr ""
+
+#: ../navit/navigation.c:271
+msgid "fourth exit"
+msgstr ""
+
+#: ../navit/navigation.c:273
+msgid "fifth exit"
+msgstr ""
+
+#: ../navit/navigation.c:275
+msgid "sixth exit"
+msgstr ""
+
+#: ../navit/navigation.c:1431
 #, c-format
-#~ msgid "then leave the roundabout at the %s exit"
-#~ msgstr "następnie opuść rondo %s zjazd"
+msgid "Leave the roundabout at the %s"
+msgstr ""
+
+#: ../navit/navigation.c:1434
+#, c-format
+msgid "then leave the roundabout at the %s"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr ""

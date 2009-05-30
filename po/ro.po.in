@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-03-22 04:55+0000\n"
 "Last-Translator: Daniel Ursache Dogariu <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -1925,52 +1925,3 @@ msgstr ""
 #: ../navit/gui/internal/gui_internal.c:3172
 msgid "Tools"
 msgstr "Unelte"
-
-#, c-format
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "utilizare navit:\n"
-#~ "navit [opțiuni] [fișier-de-configurație]\n"
-#~ "\t-c <fișier>: utilizează <fișier> ca fișier de configurație\n"
-#~ "\t-d <n>: setează nivelul de ieșire a informației depanate cu <n>. (DE "
-#~ "FĂCUT)\n"
-#~ "\t-h: listează această informație de utilizare și ieși..\n"
-#~ "\t-v: Listează versiunea și ieși.\n"
-
-#, c-format
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr ""
-#~ "Nu există fișierul configurație navit.xml, a fost găsit navit.xml.local\n"
-
-#, c-format
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "Eroare la parsare '%s': %s\n"
-
-#, c-format
-#~ msgid "Using '%s'\n"
-#~ msgstr "Folosind '%s'\n"
-
-#, c-format
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "Nu s-a creat nici o instanță, se iese\n"
-
-#~ msgid "ramp"
-#~ msgstr "rampă"
-
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "pe %s"
-
-#, c-format
-#~ msgid ""
-#~ "Running from source directory. Bookmarks, center and destinations will be "
-#~ "r/w from this directory\n"
-#~ msgstr ""
-#~ "Rulare din directorul sursă. Semne de carte, centru și destinațiile vor fi "
-#~ "scrise-citite din acest director\n"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-02-11 15:34+0000\n"
 "Last-Translator: Yaron <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -56,34 +56,6 @@ msgstr "חמישי"
 #: ../navit/navigation.c:252
 msgid "sixth"
 msgstr "שישי"
-
-#: ../navit/navigation.c:263
-msgid "zeroth exit"
-msgstr ""
-
-#: ../navit/navigation.c:265
-msgid "first exit"
-msgstr ""
-
-#: ../navit/navigation.c:267
-msgid "second exit"
-msgstr ""
-
-#: ../navit/navigation.c:269
-msgid "third exit"
-msgstr ""
-
-#: ../navit/navigation.c:271
-msgid "fourth exit"
-msgstr ""
-
-#: ../navit/navigation.c:273
-msgid "fifth exit"
-msgstr ""
-
-#: ../navit/navigation.c:275
-msgid "sixth exit"
-msgstr ""
 
 #: ../navit/navigation.c:316
 #, c-format
@@ -205,16 +177,6 @@ msgstr "הכנס לכיכר הקרובה"
 #, c-format
 msgid "In %s, enter the roundabout"
 msgstr "ב%s, הכנס לכיכר"
-
-#: ../navit/navigation.c:1431
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr ""
-
-#: ../navit/navigation.c:1434
-#, c-format
-msgid "then leave the roundabout at the %s"
-msgstr ""
 
 #: ../navit/navigation.c:1444
 #, c-format
@@ -1713,10 +1675,6 @@ msgstr "הנעל על הדרך"
 msgid "Northing"
 msgstr "הצפנה"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:226
-msgid "Autozoom"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2832
 msgid "Fullscreen"
@@ -1923,55 +1881,44 @@ msgstr ""
 msgid "Tools"
 msgstr "כלים"
 
-#, c-format
-#~ msgid ""
-#~ "navit usage:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: set the debug output level to <n>. (TODO)\n"
-#~ "\t-h: print this usage info and exit.\n"
-#~ "\t-v: Print the version and exit.\n"
-#~ msgstr ""
-#~ "השימוש ב-navit:\n"
-#~ "navit [options] [configfile]\n"
-#~ "\t-c <file>: use <file> as config file\n"
-#~ "\t-d <n>: קבע רמת  הודעות בדיקה ל <n>. (TODO)\n"
-#~ "\t-h: הדפס הודעה זו וצא.\n"
-#~ "\t-v: הדפס גרסה וצא.\n"
+#: ../navit/navigation.c:263
+msgid "zeroth exit"
+msgstr ""
 
-#, c-format
-#~ msgid "No config file navit.xml, navit.xml.local found\n"
-#~ msgstr "לא נמצא קובץ תצורה בשם navit.xml או  navit.xml.local .\n"
+#: ../navit/navigation.c:265
+msgid "first exit"
+msgstr ""
 
-#, c-format
-#~ msgid "Error parsing '%s': %s\n"
-#~ msgstr "שגיאה בפירוש '%s': %s\n"
+#: ../navit/navigation.c:267
+msgid "second exit"
+msgstr ""
 
-#, c-format
-#~ msgid "Using '%s'\n"
-#~ msgstr "משתמש ב-'%s'\n"
+#: ../navit/navigation.c:269
+msgid "third exit"
+msgstr ""
 
-#, c-format
-#~ msgid "No instance has been created, exiting\n"
-#~ msgstr "לא נוצר אף עצם (instance), יוצא\n"
+#: ../navit/navigation.c:271
+msgid "fourth exit"
+msgstr ""
 
-#~ msgid "ramp"
-#~ msgstr "שיפוע"
+#: ../navit/navigation.c:273
+msgid "fifth exit"
+msgstr ""
 
-#, c-format
-#~ msgid "into the %s"
-#~ msgstr "אל %s"
+#: ../navit/navigation.c:275
+msgid "sixth exit"
+msgstr ""
 
+#: ../navit/navigation.c:1431
 #, c-format
-#~ msgid ""
-#~ "Running from source directory. Bookmarks, center and destinations will be "
-#~ "r/w from this directory\n"
-#~ msgstr "פועל מספריית המקור. סימניות, מרכז ויעדים יקראו/יכתבו במקום זה.\n"
+msgid "Leave the roundabout at the %s"
+msgstr ""
 
+#: ../navit/navigation.c:1434
 #, c-format
-#~ msgid "Leave the roundabout at the %s exit"
-#~ msgstr "עזוב את הכיכר ביציאה ה%s"
+msgid "then leave the roundabout at the %s"
+msgstr ""
 
-#, c-format
-#~ msgid "then leave the roundabout at the %s exit"
-#~ msgstr "ואז עזוב את הכיכר ביציאה ה%s"
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr ""

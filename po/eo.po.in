@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2008-09-24 13:33+0000\n"
 "Last-Translator: OlivierWeb <olivierweb@ifrance.com>\n"
 "Language-Team: Esperanto <eo@li.org>\n"
@@ -15,9 +15,104 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
+
+#: ../navit/navigation.c:322
+#, c-format
+msgid "%d meters"
+msgstr "%d metroj"
+
+#: ../navit/navigation.c:336
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "unu kilometro"
+msgstr[1] "%d kilometroj"
+
+#. TRANSLATORS: right, as in 'Turn right'
+#: ../navit/navigation.c:1340
+msgid "right"
+msgstr "dekstren"
+
+#. TRANSLATORS: left, as in 'Turn left'
+#: ../navit/navigation.c:1379
+msgid "left"
+msgstr "maldekstren"
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1386
+msgid "easily "
+msgstr "facile "
+
+#: ../navit/navigation.c:1448
+msgid "soon"
+msgstr "baldaŭ"
+
+#: ../navit/navigation.c:1464
+msgid "now"
+msgstr "nun"
+
+#: ../navit/navigation.c:1483
+msgid "error"
+msgstr "eraro"
+
+#: ../navit/navit.c:1165
+msgid "Command"
+msgstr "Komando"
+
+#: ../navit/navit.c:1169
+msgid "Length"
+msgstr "Longo"
+
+#: ../navit/navit.c:1173 ../navit/navit.c:1198
+msgid "km"
+msgstr "km"
+
+#: ../navit/navit.c:1177 ../navit/navit.c:1202
+msgid "m"
+msgstr "m"
+
+#: ../navit/navit.c:1183
+msgid "Time"
+msgstr "Horo"
+
+#. 020
+#: ../navit/country.c:39
+msgid "Andorra"
+msgstr "Andoro"
+
+#. 784
+#: ../navit/country.c:40
+msgid "United Arab Emirates"
+msgstr "Unuiĝintaj Arabaj Emirlandoj"
+
+#. 004
+#: ../navit/country.c:41
+msgid "Afghanistan"
+msgstr "Afganio"
+
+#. 028
+#: ../navit/country.c:42
+msgid "Antigua and Barbuda"
+msgstr "Antigvo-Barbudo"
+
+#. 660
+#: ../navit/country.c:43
+msgid "Anguilla"
+msgstr "Angvilo"
+
+#. 008
+#: ../navit/country.c:44
+msgid "Albania"
+msgstr "Albanio"
+
+#: ../navit/gui/gtk/gui_gtk_action.c:199
+#: ../navit/gui/internal/gui_internal.c:2202
+#: ../navit/gui/internal/gui_internal.c:2875
+msgid "Bookmarks"
+msgstr "Legosignoj"
 
 #: ../navit/main.c:231
 #, c-format
@@ -95,11 +190,6 @@ msgstr ""
 msgid "in %d m"
 msgstr ""
 
-#: ../navit/navigation.c:322
-#, c-format
-msgid "%d meters"
-msgstr "%d metroj"
-
 #: ../navit/navigation.c:324
 #, c-format
 msgid "in %d meters"
@@ -114,13 +204,6 @@ msgstr ""
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr ""
-
-#: ../navit/navigation.c:336
-#, c-format
-msgid "one kilometer"
-msgid_plural "%d kilometers"
-msgstr[0] "unu kilometro"
-msgstr[1] "%d kilometroj"
 
 #: ../navit/navigation.c:338
 #, c-format
@@ -167,21 +250,6 @@ msgstr ""
 msgid "%sinto the %s"
 msgstr ""
 
-#. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1340
-msgid "right"
-msgstr "dekstren"
-
-#. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1379
-msgid "left"
-msgstr "maldekstren"
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1386
-msgid "easily "
-msgstr "facile "
-
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1391
 msgid "strongly "
@@ -221,10 +289,6 @@ msgstr ""
 msgid "Follow the road for the next %s"
 msgstr ""
 
-#: ../navit/navigation.c:1448
-msgid "soon"
-msgstr "baldaŭ"
-
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #: ../navit/navigation.c:1458
 #, c-format
@@ -236,18 +300,10 @@ msgstr ""
 msgid "after %i roads"
 msgstr ""
 
-#: ../navit/navigation.c:1464
-msgid "now"
-msgstr "nun"
-
 #: ../navit/navigation.c:1472
 #, c-format
 msgid "then take the %1$s road to the %2$s"
 msgstr ""
-
-#: ../navit/navigation.c:1483
-msgid "error"
-msgstr "eraro"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #: ../navit/navigation.c:1513
@@ -273,26 +329,6 @@ msgstr ""
 #: ../navit/navit.c:1164
 msgid "Position"
 msgstr ""
-
-#: ../navit/navit.c:1165
-msgid "Command"
-msgstr "Komando"
-
-#: ../navit/navit.c:1169
-msgid "Length"
-msgstr "Longo"
-
-#: ../navit/navit.c:1173 ../navit/navit.c:1198
-msgid "km"
-msgstr "km"
-
-#: ../navit/navit.c:1177 ../navit/navit.c:1202
-msgid "m"
-msgstr "m"
-
-#: ../navit/navit.c:1183
-msgid "Time"
-msgstr "Horo"
 
 #: ../navit/navit.c:1195
 msgid "Destination Length"
@@ -330,36 +366,6 @@ msgstr ""
 #, c-format
 msgid "Screen coord : %d %d"
 msgstr ""
-
-#. 020
-#: ../navit/country.c:39
-msgid "Andorra"
-msgstr "Andoro"
-
-#. 784
-#: ../navit/country.c:40
-msgid "United Arab Emirates"
-msgstr "Unuiĝintaj Arabaj Emirlandoj"
-
-#. 004
-#: ../navit/country.c:41
-msgid "Afghanistan"
-msgstr "Afganio"
-
-#. 028
-#: ../navit/country.c:42
-msgid "Antigua and Barbuda"
-msgstr "Antigvo-Barbudo"
-
-#. 660
-#: ../navit/country.c:43
-msgid "Anguilla"
-msgstr "Angvilo"
-
-#. 008
-#: ../navit/country.c:44
-msgid "Albania"
-msgstr "Albanio"
 
 #. 051
 #: ../navit/country.c:45
@@ -1649,12 +1655,6 @@ msgstr ""
 #: ../navit/gui/gtk/gui_gtk_action.c:198
 msgid "Former Destinations"
 msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:199
-#: ../navit/gui/internal/gui_internal.c:2202
-#: ../navit/gui/internal/gui_internal.c:2875
-msgid "Bookmarks"
-msgstr "Legosignoj"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:201
 #: ../navit/gui/internal/gui_internal.c:2775

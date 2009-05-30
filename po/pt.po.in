@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 11:52+0200\n"
+"POT-Creation-Date: 2009-04-11 10:33+0200\n"
 "PO-Revision-Date: 2009-03-29 22:55+0000\n"
 "Last-Translator: Diogo Lavareda <diogolavareda9@hotmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
@@ -15,23 +15,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-04-11 06:48+0000\n"
+"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
-
-#: ../navit/main.c:231
-#, c-format
-msgid "Running from source directory\n"
-msgstr ""
 
 #: ../navit/main.c:263
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "ajuste '%s' to '%s'\n"
-
-#: ../navit/navigation.c:240
-msgid "zeroth"
-msgstr ""
 
 #: ../navit/navigation.c:242
 msgid "first"
@@ -56,10 +47,6 @@ msgstr "quinta"
 #: ../navit/navigation.c:252
 msgid "sixth"
 msgstr "sexto"
-
-#: ../navit/navigation.c:263
-msgid "zeroth exit"
-msgstr ""
 
 #: ../navit/navigation.c:265
 msgid "first exit"
@@ -161,12 +148,6 @@ msgstr "%sna %s%s%s|formulário feminino"
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%sna %s%s%s|formulário neutral"
 
-#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1319
-#, c-format
-msgid "%sinto the %s"
-msgstr ""
-
 #. TRANSLATORS: right, as in 'Turn right'
 #: ../navit/navigation.c:1340
 msgid "right"
@@ -195,16 +176,6 @@ msgstr "desconhecido "
 #: ../navit/navigation.c:1402
 msgid "When possible, please turn around"
 msgstr "Quando for possível"
-
-#: ../navit/navigation.c:1412
-msgid "Enter the roundabout soon"
-msgstr ""
-
-#. TRANSLATORS: %s is the distance to the roundabout
-#: ../navit/navigation.c:1416
-#, c-format
-msgid "In %s, enter the roundabout"
-msgstr ""
 
 #: ../navit/navigation.c:1431
 #, c-format
@@ -1780,10 +1751,6 @@ msgstr "2D"
 msgid "3D"
 msgstr "3D"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
-msgid "OT"
-msgstr ""
-
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
@@ -1809,18 +1776,9 @@ msgstr "Ajuda"
 msgid "Back"
 msgstr "Voltar"
 
-#: ../navit/gui/internal/gui_internal.c:1906
-#: ../navit/gui/internal/gui_internal.c:2111
-msgid "POIs"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:2068
 msgid "Streets"
 msgstr "Ruas"
-
-#: ../navit/gui/internal/gui_internal.c:2084
-msgid "View in Browser"
-msgstr ""
 
 #: ../navit/gui/internal/gui_internal.c:2090
 msgid "View Attributes"
@@ -1843,10 +1801,6 @@ msgstr "Modo de Janela"
 #: ../navit/gui/internal/gui_internal.c:3161
 msgid "Actions"
 msgstr "Acções"
-
-#: ../navit/gui/internal/gui_internal.c:2884
-msgid "Map Point"
-msgstr ""
 
 #: ../navit/gui/internal/gui_internal.c:2894
 msgid "Vehicle Position"
@@ -1894,14 +1848,6 @@ msgstr "Mostrar dados NMEA"
 msgid "Rules"
 msgstr "Regras"
 
-#: ../navit/gui/internal/gui_internal.c:3089
-msgid "Lock on road"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3101
-msgid "Map follows Vehicle"
-msgstr ""
-
 #: ../navit/gui/internal/gui_internal.c:3111
 #: ../navit/gui/internal/gui_internal.c:3169
 msgid "Settings"
@@ -1923,9 +1869,56 @@ msgstr ""
 msgid "Tools"
 msgstr "Ferramentas"
 
-#~ msgid "ramp"
-#~ msgstr "rampa"
-
+#: ../navit/main.c:231
 #, c-format
-#~ msgid "into the %s"
-#~ msgstr "na %s"
+msgid "Running from source directory\n"
+msgstr ""
+
+#: ../navit/navigation.c:240
+msgid "zeroth"
+msgstr ""
+
+#: ../navit/navigation.c:263
+msgid "zeroth exit"
+msgstr ""
+
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#: ../navit/navigation.c:1319
+#, c-format
+msgid "%sinto the %s"
+msgstr ""
+
+#: ../navit/navigation.c:1412
+msgid "Enter the roundabout soon"
+msgstr ""
+
+#. TRANSLATORS: %s is the distance to the roundabout
+#: ../navit/navigation.c:1416
+#, c-format
+msgid "In %s, enter the roundabout"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
+msgid "OT"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:1906
+#: ../navit/gui/internal/gui_internal.c:2111
+msgid "POIs"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:2084
+msgid "View in Browser"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:2884
+msgid "Map Point"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:3089
+msgid "Lock on road"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:3101
+msgid "Map follows Vehicle"
+msgstr ""
