@@ -83,7 +83,6 @@ int debug_route=0;
  * but there are also points which don't do that (e.g. at the end of a dead-end).
  */
 struct route_graph_point {
-	struct route_graph_point *next;		 /**< Linked-list pointer to a list of all route_graph_points */
 	struct route_graph_point *hash_next; /**< Pointer to a chained hashlist of all route_graph_points with this hash */
 	struct route_graph_segment *start;	 /**< Pointer to a list of segments of which this point is the start. The links 
 										  *  of this linked-list are in route_graph_segment->start_next.*/
@@ -228,7 +227,6 @@ struct route_graph {
 	struct callback *idle_cb;			/**< Idle callback to process the graph */
 	struct callback *done_cb;			/**< Callback when graph is done */
 	struct event_idle *idle_ev;			/**< The pointer to the idle event */
-	struct route_graph_point *route_points;		/**< Pointer to the first route_graph_point in the linked list of  all points */
    	struct route_graph_segment *route_segments; /**< Pointer to the first route_graph_segment in the linked list of all segments */
 #define HASH_SIZE 8192
 	struct route_graph_point *hash[HASH_SIZE];	/**< A hashtable containing all route_graph_points in this graph */
@@ -948,14 +946,12 @@ route_graph_add_point(struct route_graph *this, struct coord *f)
 		}
 		p->hash_next=this->hash[hashval];
 		this->hash[hashval]=p;
-		p->next=this->route_points;
 		p->el=NULL;
 		p->start=NULL;
 		p->end=NULL;
 		p->seg=NULL;
 		p->value=INT_MAX;
 		p->c=*f;
-		this->route_points=p;
 	}
 	return p;
 }
@@ -969,14 +965,16 @@ static void
 route_graph_free_points(struct route_graph *this)
 {
 	struct route_graph_point *curr,*next;
-	curr=this->route_points;
-	while (curr) {
-		next=curr->next;
-		g_free(curr);
-		curr=next;
+	int i;
+	for (i = 0 ; i < HASH_SIZE ; i++) {
+		curr=this->hash[i];
+		while (curr) {
+			next=curr->hash_next;
+			g_free(curr);
+			curr=next;
+		}
+		this->hash[i]=NULL;
 	}
-	this->route_points=NULL;
-	memset(this->hash, 0, sizeof(this->hash));
 }
 
 /**
@@ -2175,6 +2173,7 @@ struct map_rect_priv {
 	struct route_graph_point *point;
 	struct route_graph_segment *rseg;
 	char *str;
+	int hash_bucket;
 	struct coord *coord_sel;	/**< Set this to a coordinate if you want to filter for just a single route graph point */
 	struct route_graph_point_iterator it;
 };
@@ -2537,7 +2536,7 @@ rp_rect_new(struct map_priv *priv, struct map_selection *sel)
 	struct map_rect_priv * mr;
 
 	dbg(1,"enter\n");
-	if (! priv->route->graph || ! priv->route->graph->route_points)
+	if (! priv->route->graph)
 		return NULL;
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->mpriv = priv;
@@ -2594,10 +2593,17 @@ rp_get_item(struct map_rect_priv *mr)
 				p = NULL;
 			}
 		} else {
-			if (!p)
-				p = r->graph->route_points;
-			else
-				p = p->next;
+			if (!p) {
+				mr->hash_bucket=0;
+				p = r->graph->hash[0];
+			} else 
+				p=p->hash_next;
+			while (!p) {
+				mr->hash_bucket++;
+				if (mr->hash_bucket >= HASH_SIZE)
+					break;
+				p = r->graph->hash[mr->hash_bucket];
+			}
 		}
 		if (p) {
 			mr->point = p;
