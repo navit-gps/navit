@@ -646,6 +646,7 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 		case attr_country_name:
 			break;
 		case attr_town_name:
+		case attr_town_or_district_name:
 			msp = g_new(struct map_search_priv, 1);
 			msp->search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 			map_rec = map_rect_new_binfile(map, NULL);
@@ -724,8 +725,11 @@ binmap_search_get_item(struct map_search_priv *map_search)
 {
 	struct item* it;
 	while ((it  = map_rect_get_item_binfile(map_search->mr))) {
-		if (map_search->search->type == attr_town_name) {
-			if (item_is_town(*it)) {
+		switch (map_search->search->type) {
+		case attr_town_name:
+		case attr_district_name:
+		case attr_town_or_district_name:
+			if ((item_is_town(*it) && map_search->search->type != attr_district_name) || (item_is_district(*it) && map_search->search->type != attr_town_name)) {
 				struct attr at;
 				if (binfile_attr_get(it->priv_data, attr_label, &at)) {
 					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
@@ -733,7 +737,8 @@ binmap_search_get_item(struct map_search_priv *map_search)
 					}
 				}
 			}
-		} else if (map_search->search->type == attr_street_name) {
+			break;
+		case attr_street_name:
 			if ((it->type == type_street_3_city) || (it->type == type_street_2_city) || (it->type == type_street_1_city)) {
 				struct attr at;
 				if (map_selection_contains_item_rect(map_search->mr->sel, it) && binfile_attr_get(it->priv_data, attr_label, &at)) {
@@ -747,6 +752,9 @@ binmap_search_get_item(struct map_search_priv *map_search)
 					}
 				}
 			}
+			break;
+		default:
+			return NULL;
 		}
 	}
 	return NULL;

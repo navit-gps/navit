@@ -24,15 +24,17 @@
 extern "C" {
 #endif
 struct search_list_common {
-	struct item item;
+	struct item unique,item;
 	int selected;
 	struct pcoord *c;
+	char *town_name;
+	char *district_name;
+	char *postal;
+	char *postal_mask;
 };
 
 struct search_list_country {
-	struct item item;
-	int selected;
-	struct pcoord *c;
+	struct search_list_common common;
 	char *car;
 	char *iso2;
 	char *iso3;
@@ -41,20 +43,20 @@ struct search_list_country {
 };
 
 struct search_list_town {
-	struct item item;
-	int selected;
-	struct pcoord *c;
+	struct search_list_common common;
 	struct item itemt;
-	char *postal;
 	char *name;
 	char *district;
 };
 
 struct search_list_street {
-	struct item item;
-	int selected;
-	struct pcoord *c;
+	struct search_list_common common;
 	char *name;
+};
+
+struct search_list_house_number {
+	struct search_list_common common;
+	char *house_number;
 };
 
 struct search_list_result {
@@ -63,6 +65,7 @@ struct search_list_result {
 	struct search_list_country *country;
 	struct search_list_town *town;
 	struct search_list_street *street;
+	struct search_list_house_number *house_number;
 };
 
 /* prototypes */

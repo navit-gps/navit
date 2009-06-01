@@ -136,14 +136,19 @@ struct street_name {
 	unsigned char *tmp_data;
 };
 
+struct housenumber {
+	int number;
+	char *suffix;
+};
+
 struct street_name_numbers {
 	int len;
 	int tag;
 	int dist;
 	int country;
 	struct coord *c;
-	int first;
-	int last;
+	struct housenumber first;
+	struct housenumber last;
 	int segment_count;
 	struct street_name_segment *segments;
 	int aux_len;
@@ -161,8 +166,8 @@ struct street_name_number {
         int len;
         int tag;
         struct coord *c;
-        int first;
-        int last;
+	struct housenumber first;
+	struct housenumber last;
         struct street_name_segment *segment;
 };
 
@@ -186,9 +191,20 @@ struct street_priv {
 	int bytes;
 	int more;
 	int flags;
+	int housenumber;
+	int cidx;
+	struct coord hnc[100];
+	struct housenumber hn[100];
+	int hn_count;
 	struct street_name name;
+	struct street_name_numbers name_numbers;
+	struct street_name_number name_number;
 	enum attr_type attr_next;
 	char debug[256];
+	char first_number[32];
+	char last_number[32];
+	char current_number[32];
+	GHashTable *streetname_hash;
 };
 
 enum file_index {
@@ -209,7 +225,13 @@ enum file_index {
         file_tunnel_ply,
         file_water_ply,
         file_woodland_ply,
-        file_end
+        file_end,
+	file_town_twn_alt1,
+	file_town_twn_alt2,
+	file_street_str_alt1,
+	file_street_str_alt2,
+	file_street_str_alt3,
+	file_street_str_alt4,
 };
 
 struct map_priv {
@@ -286,12 +308,15 @@ struct map_rect_priv {
 	struct tree_search ts;
 	int search_country;
 	struct item search_item;
+	struct attr *search_attr;
 	char *search_str;
 	int search_partial;
 	int search_linear;
 	unsigned char *search_p;
 	int search_blk_count;
-	enum attr_type search_type;
+	enum attr_type search_type,search_type_next;
+	struct map_rect_priv *search_mr_tmp;
+	struct item *search_item_tmp;
 	struct block_offset *search_blk_off;
 	int search_block;
 	GHashTable *block_hash[file_end];
@@ -315,6 +340,7 @@ int poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item
 int poly_get_byid(struct map_rect_priv *mr, struct poly_priv *poly, int id_hi, int id_lo, struct item *item);
 int street_get(struct map_rect_priv *mr, struct street_priv *street, struct item *item);
 int street_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi, int id_lo, struct item *item);
+int street_name_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi, int id_lo, struct item *item);
 struct item * street_search_get_item(struct map_rect_priv *mr);
 void tree_search_init(char *dirname, char *filename, struct tree_search *ts, int offset);
 void tree_search_free(struct tree_search *ts);
