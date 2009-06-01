@@ -143,6 +143,16 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 		transform_set_distance(t, (transform_get_distance(t)+5));
 		navit_draw(this->nav);
 		break;
+	case 'z':
+		t=navit_get_trans(this->nav);
+		transform_set_hog(t, (transform_get_hog(t)+1));
+		navit_draw(this->nav);
+		break;
+	case 'h':
+		t=navit_get_trans(this->nav);
+		transform_set_hog(t, (transform_get_hog(t)-1));
+		navit_draw(this->nav);
+		break;
 	case 't':
 		{
 		struct coord *p;

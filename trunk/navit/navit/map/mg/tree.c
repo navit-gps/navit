@@ -259,5 +259,6 @@ tree_search_init(char *dirname, char *filename, struct tree_search *ts, int offs
 void
 tree_search_free(struct tree_search *ts)
 {
-	file_destroy(ts->f);
+	if (ts->f)
+		file_destroy(ts->f);
 }
