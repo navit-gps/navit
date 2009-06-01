@@ -79,6 +79,7 @@ town_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		twn->attr_next=attr_town_postal;
 		return ((attr->u.str && attr->u.str[0]) ? 1:0);
 	case attr_town_postal:
+	case attr_postal:
 		strncpy(twn->postal, twn->postal_code1, 32);
 		attr->u.str=twn->postal;
 		len=mg_country_postal_len(twn->country);
@@ -252,7 +253,7 @@ town_search_get_item(struct map_rect_priv *mr)
 		if (! mr->search_linear) {
 			while ((leaf=tree_search_next(&mr->ts, &mr->search_p, dir)) != -1) {
 				dir=town_search_compare(&mr->search_p, mr);
-				if (! dir && leaf) {
+				if (! dir) {
 					mr->search_linear=1;
 					mr->search_p=NULL;
 					break;
