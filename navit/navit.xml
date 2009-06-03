@@ -1194,6 +1194,45 @@
                 <itemgra item_types="street_nopass,street_0,street_1_city,street_1_land" order="12-18">
                     <text text_size="9"/>
                 </itemgra>
+                <itemgra item_types="traffic_distortion" order="2">
+                    <polyline color="#ff9000" width="2"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="3-5">
+                    <polyline color="#ff9000" width="4"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="6">
+                    <polyline color="#ff9000" width="5"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="7-8">
+                    <polyline color="#ff9000" width="8"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="9-10">
+                    <polyline color="#ff9000" width="10"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="11">
+                    <polyline color="#ff9000" width="14"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="12">
+                    <polyline color="#ff9000" width="16"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="13">
+                    <polyline color="#ff9000" width="26"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="14">
+                    <polyline color="#ff9000" width="32"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="15">
+                    <polyline color="#ff9000" width="34"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="16">
+                    <polyline color="#ff9000" width="66"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="17">
+                    <polyline color="#ff9000" width="134"/>
+                </itemgra>
+                <itemgra item_types="traffic_distortion" order="18">
+                    <polyline color="#ff9000" width="265"/>
+                </itemgra>
             </layer>
             <layer name="polylines">
                 <itemgra item_types="aeroway_taxiway" order="10">

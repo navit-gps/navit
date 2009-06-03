@@ -118,6 +118,7 @@ ATTR(flags_reverse_mask)
 ATTR(house_number_interpolation)
 ATTR(house_number_left_interpolation)
 ATTR(house_number_right_interpolation)
+ATTR(delay)
 
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
