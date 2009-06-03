@@ -98,6 +98,8 @@ struct route_graph_point {
 };
 
 #define RP_TRAFFIC_DISTORTION 1
+#define RP_TURN_RESTRICTION 2
+#define RP_TURN_RESTRICTION_RESOLVED 4
 
 /**
  * @brief A segment in the route graph or path
@@ -924,6 +926,55 @@ route_graph_get_point(struct route_graph *this, struct coord *c)
 	return NULL;
 }
 
+
+/**
+ * @brief Gets the last route_graph_point with the specified coordinates 
+ *
+ * @param this The route in which to search
+ * @param c Coordinates to search for
+ * @return The point at the specified coordinates or NULL if not found
+ */
+static struct route_graph_point *
+route_graph_get_point_last(struct route_graph *this, struct coord *c)
+{
+	struct route_graph_point *p,*ret=NULL;
+	int hashval=HASHCOORD(c);
+	p=this->hash[hashval];
+	while (p) {
+		if (p->c.x == c->x && p->c.y == c->y)
+			ret=p;
+		p=p->hash_next;
+	}
+	return ret;
+}
+
+
+
+/**
+ * @brief Create a new point for the route graph with the specified coordinates
+ *
+ * @param this The route to insert the point into
+ * @param f The coordinates at which the point should be created
+ * @return The point created
+ */
+
+static struct route_graph_point *
+route_graph_point_new(struct route_graph *this, struct coord *f)
+{
+	int hashval;
+	struct route_graph_point *p;
+
+	hashval=HASHCOORD(f);
+	if (debug_route)
+		printf("p (0x%x,0x%x)\n", f->x, f->y);
+	p=g_new0(struct route_graph_point,1);
+	p->hash_next=this->hash[hashval];
+	this->hash[hashval]=p;
+	p->value=INT_MAX;
+	p->c=*f;
+	return p;
+}
+
 /**
  * @brief Inserts a point into the route graph at the specified coordinates
  *
@@ -937,24 +988,11 @@ route_graph_get_point(struct route_graph *this, struct coord *c)
 static struct route_graph_point *
 route_graph_add_point(struct route_graph *this, struct coord *f)
 {
-	int hashval;
 	struct route_graph_point *p;
 
 	p=route_graph_get_point(this,f);
-	if (!p) {
-		hashval=HASHCOORD(f);
-		if (debug_route)
-			printf("p (0x%x,0x%x)\n", f->x, f->y);
-		p=g_new0(struct route_graph_point,1);
-		if (!p) {
-			printf("%s:Out of memory\n", __FUNCTION__);
-			return p;
-		}
-		p->hash_next=this->hash[hashval];
-		this->hash[hashval]=p;
-		p->value=INT_MAX;
-		p->c=*f;
-	}
+	if (!p)
+		p=route_graph_point_new(this,f);
 	return p;
 }
 
@@ -1027,6 +1065,25 @@ route_segment_data_size(int flags)
 }
 
 
+static int
+route_graph_segment_is_duplicate(struct route_graph_point *start, struct item *item, int flags, int offset)
+{
+	struct route_graph_segment *s;
+	s=start->start;
+	while (s) {
+		if (item_is_equal(*item, s->data.item)) {
+			if (flags & AF_SEGMENTED) {
+				if (RSD_OFFSET(&s->data) == offset) {
+					return 1;
+				}
+			} else
+				return 1;
+		}
+		s=s->start_next;
+	} 
+	return 0;
+}
+
 /**
  * @brief Inserts a new segment into the route graph
  *
@@ -1049,18 +1106,6 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 {
 	struct route_graph_segment *s;
 	int size;
-	s=start->start;
-	while (s) {
-		if (item_is_equal(*item, s->data.item)) {
-			if (flags & AF_SEGMENTED) {
-				if (RSD_OFFSET(&s->data) == offset) {
-					return;
-				}
-			} else
-				return;
-		}
-		s=s->start_next;
-	} 
 
 	size = sizeof(struct route_graph_segment)-sizeof(struct route_segment_data)+route_segment_data_size(flags);
 	s = g_malloc0(size);
@@ -1469,6 +1514,12 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 #endif
 	if ((over->data.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
 		return INT_MAX;
+	if (dir > 0 && (over->start->flags & RP_TURN_RESTRICTION))
+		return INT_MAX;
+	if (dir < 0 && (over->end->flags & RP_TURN_RESTRICTION))
+		return INT_MAX;
+	if (from && from->seg == over)
+		return INT_MAX;
 	if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION)) {
 		struct route_traffic_distortion dist;
 		if (route_get_traffic_distortion(over, &dist))
@@ -1510,6 +1561,31 @@ route_process_traffic_distortion(struct route_graph *this, struct item *item)
 			len=delay_attr.u.num;
 		route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
 	}
+}
+
+/**
+ * @brief Adds a route distortion item to the route graph
+ *
+ * @param this The route graph to add to
+ * @param item The item to add
+ */
+static void
+route_process_turn_restriction(struct route_graph *this, struct item *item)
+{
+	struct route_graph_point *pnt[3];
+	struct coord c[4];
+	int i,count;
+
+	count=item_coord_get(item, c, 4);
+	if (count != 3) {
+		dbg(0,"wrong count %d\n",count);
+		return;
+	}
+	for (i = 0 ; i < 3 ; i++) 
+		pnt[i]=route_graph_add_point(this,&c[i]);
+	pnt[1]->flags |= RP_TURN_RESTRICTION;
+	route_graph_add_segment(this, pnt[0], pnt[1], 0, item, 0, 0, 0);
+	route_graph_add_segment(this, pnt[1], pnt[2], 0, item, 0, 0, 0);
 }
 
 /**
@@ -1563,7 +1639,8 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 			}
 			e_pnt=route_graph_add_point(this,&l);
 			dbg_assert(len >= 0);
-			route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
+			if (!route_graph_segment_is_duplicate(s_pnt, item, flags, offset))
+				route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
 		} else {
 			int isseg,rc;
 			int sc = 0;
@@ -1575,7 +1652,8 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 					l=c;
 					if (isseg) {
 						e_pnt=route_graph_add_point(this,&l);
-						route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
+						if (!route_graph_segment_is_duplicate(s_pnt, item, flags, offset))
+							route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
 						offset++;
 						s_pnt=route_graph_add_point(this,&l);
 						len = 0;
@@ -1585,7 +1663,8 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 			e_pnt=route_graph_add_point(this,&l);
 			dbg_assert(len >= 0);
 			sc++;
-			route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
+			if (!route_graph_segment_is_duplicate(s_pnt, item, flags, offset))
+				route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
 		}
 	}
 }
@@ -1907,6 +1986,132 @@ route_graph_build_next_map(struct route_graph *rg)
 	return 1;
 }
 
+
+static int
+is_turn_allowed(struct route_graph_point *p, struct route_graph_segment *from, struct route_graph_segment *to)
+{
+	struct route_graph_point *prev,*next;
+	struct route_graph_segment *tmp1,*tmp2;
+	int found;
+	if (from->start == p)
+		prev=from->end;
+	else
+		prev=from->start;
+	if (to->start == p)
+		next=to->end;
+	else
+		next=to->start;
+	dbg(1,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x\n",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,next->c.y);
+	tmp1=prev->start;
+	while (tmp1) {
+		if (tmp1->end == p && 
+			(tmp1->data.item.type == type_street_turn_restriction_no ||
+			tmp1->data.item.type == type_street_turn_restriction_only)) {
+			tmp2=next->end;
+			found=0;
+			while (tmp2) {
+				if (tmp2->start == p && item_is_equal(tmp1->data.item, tmp2->data.item)) {
+					found=1;
+					break;
+				}
+				tmp2=tmp2->end_next;
+			}
+			if (tmp1->data.item.type == type_street_turn_restriction_no && found) {
+				dbg(1,"not allowed\n");
+				return 0;
+			}
+			if (tmp1->data.item.type == type_street_turn_restriction_only && !found) {
+				dbg(1,"not allowed\n");
+				return 0;
+			}
+		}
+		tmp1=tmp1->start_next;
+	}
+	return 1;
+}
+
+static void
+route_graph_clone_segment(struct route_graph *this, struct route_graph_segment *s, struct route_graph_point *start, struct route_graph_point *end, int flags)
+{
+	int offset=0;
+	int maxspeed=0;
+	if (s->data.flags & AF_SPEED_LIMIT)
+		maxspeed=RSD_MAXSPEED(&s->data);
+	if (s->data.flags & AF_SEGMENTED) 
+		offset=RSD_OFFSET(&s->data);
+	dbg(1,"cloning segment from %p (0x%x,0x%x) to %p (0x%x,0x%x)\n",start,start->c.x,start->c.y, end, end->c.x, end->c.y);
+	route_graph_add_segment(this, start, end, s->data.len+1, &s->data.item, s->data.flags | flags, offset, maxspeed);
+}
+
+static void
+route_graph_process_restriction_segment(struct route_graph *this, struct route_graph_point *p, struct route_graph_segment *s, int dir)
+{
+	struct route_graph_segment *tmp;
+	struct route_graph_point *pn;
+	dbg(1,"From %s\n",item_to_name(s->data.item.type));
+	pn=route_graph_point_new(this, &p->c);
+	if (dir > 0)
+		route_graph_clone_segment(this, s, pn, s->end, AF_ONEWAY);
+	else
+		route_graph_clone_segment(this, s, s->start, pn, AF_ONEWAYREV);
+	tmp=p->start;
+	while (tmp) {
+		if (tmp != s && tmp->data.item.type != type_street_turn_restriction_no &&
+			tmp->data.item.type != type_street_turn_restriction_only &&
+			is_turn_allowed(p, s, tmp))
+			route_graph_clone_segment(this, tmp, pn, tmp->end, AF_ONEWAYREV);
+			dbg(1,"To start %s\n",item_to_name(tmp->data.item.type));
+		tmp=tmp->start_next;
+	}
+	tmp=p->end;
+	while (tmp) {
+		if (tmp != s && tmp->data.item.type != type_street_turn_restriction_no &&
+			tmp->data.item.type != type_street_turn_restriction_only &&
+			is_turn_allowed(p, s, tmp))
+			route_graph_clone_segment(this, tmp, tmp->start, pn, AF_ONEWAY);
+			dbg(1,"To end %s\n",item_to_name(tmp->data.item.type));
+		tmp=tmp->end_next;
+	}
+}
+
+static void
+route_graph_process_restriction_point(struct route_graph *this, struct route_graph_point *p)
+{
+	struct route_graph_segment *tmp;
+	tmp=p->start;
+	dbg(1,"node 0x%x,0x%x\n",p->c.x,p->c.y);
+	while (tmp) {
+		if (tmp->data.item.type != type_street_turn_restriction_no &&
+			tmp->data.item.type != type_street_turn_restriction_only)
+			route_graph_process_restriction_segment(this, p, tmp, 1);
+		tmp=tmp->start_next;
+	}
+	tmp=p->end;
+	while (tmp) {
+		if (tmp->data.item.type != type_street_turn_restriction_no &&
+			tmp->data.item.type != type_street_turn_restriction_only)
+			route_graph_process_restriction_segment(this, p, tmp, -1);
+		tmp=tmp->end_next;
+	}
+	p->flags |= RP_TURN_RESTRICTION_RESOLVED;
+}
+
+static void
+route_graph_process_restrictions(struct route_graph *this)
+{
+	struct route_graph_point *curr;
+	int i;
+	dbg(1,"enter\n");
+	for (i = 0 ; i < HASH_SIZE ; i++) {
+		curr=this->hash[i];
+		while (curr) {
+			if (curr->flags & RP_TURN_RESTRICTION) 
+				route_graph_process_restriction_point(this, curr);
+			curr=curr->hash_next;
+		}
+	}
+}
+
 static void
 route_graph_build_done(struct route_graph *rg, int cancel)
 {
@@ -1923,6 +2128,7 @@ route_graph_build_done(struct route_graph *rg, int cancel)
 	rg->mr=NULL;
 	rg->h=NULL;
 	rg->sel=NULL;
+	route_graph_process_restrictions(rg);
 	if (! cancel)
 		callback_call_0(rg->done_cb);
 	rg->busy=0;
@@ -1946,6 +2152,8 @@ route_graph_build_idle(struct route_graph *rg)
 		}
 		if (item->type == type_traffic_distortion)
 			route_process_traffic_distortion(rg, item);
+		else if (item->type == type_street_turn_restriction_no || item->type == type_street_turn_restriction_only)
+			route_process_turn_restriction(rg, item);
 		else
 			route_process_street_graph(rg, item);
 		count--;
@@ -2474,13 +2682,28 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			g_free(mr->str);
 		switch (mr->item.type) {
 		case type_rg_point:
-			mr->str=g_strdup_printf("x=%d y=%d", p->c.x, p->c.y);
+		{
+			struct route_graph_segment *tmp;
+			int start=0;
+			int end=0;
+			tmp=p->start;
+			while (tmp) {
+				start++;
+				tmp=tmp->start_next;
+			}
+			tmp=p->end;
+			while (tmp) {
+				end++;
+				tmp=tmp->end_next;
+			}
+			mr->str=g_strdup_printf("%d %d %p (0x%x,0x%x)", start, end, p, p->c.x, p->c.y);
 			attr->u.str = mr->str;
+		}
 			return 1;
 		case type_rg_segment:
 			if (! seg)
 				return 0;
-			mr->str=g_strdup_printf("len %d time %d",seg->data.len, route_time_seg(route->vehicleprofile, &seg->data, NULL));
+			mr->str=g_strdup_printf("len %d time %d start %p end %p",seg->data.len, route_time_seg(route->vehicleprofile, &seg->data, NULL), seg->start, seg->end);
 			attr->u.str = mr->str;
 			return 1;
 		default:
@@ -2661,11 +2884,8 @@ rp_get_item(struct map_rect_priv *mr)
 		if (mr->coord_sel) {
 			// We are supposed to return only the point at one specified coordinate...
 			if (!p) {
-				p = r->graph->hash[HASHCOORD(mr->coord_sel)];
-				while ((p) && ((p->c.x != mr->coord_sel->x) || (p->c.y != mr->coord_sel->y))) {
-					p = p->hash_next;
-				}
-				if ((!p) || !((p->c.x == mr->coord_sel->x) && (p->c.y == mr->coord_sel->y))) {
+				p = route_graph_get_point_last(r->graph, mr->coord_sel);
+				if (!p) {
 					mr->point = NULL; // This indicates that no point has been found
 				} else {
 					mr->it = rp_iterator_new(p);
