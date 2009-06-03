@@ -61,6 +61,44 @@ popup_set_no_passing(struct popup_item *item, void *param)
 #endif
 
 static void
+popup_traffic_distortion(struct item *item, char *attr)
+{
+	FILE *map=fopen("distortion.txt","a");
+	struct coord c;
+	struct map_rect *mr;
+	fprintf(map,"type=traffic_distortion %s\n",attr);
+	mr=map_rect_new(item->map,NULL);
+	item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+	while (item_coord_get(item, &c, 1)) {
+		fprintf(map,"0x%x 0x%x\n",c.x,c.y);
+	}
+	fclose(map);
+}
+
+static void
+popup_traffic_distortion_blocked(struct item *item)
+{
+	dbg(0,"item=%p\n",item);
+	popup_traffic_distortion(item, "maxspeed=0");
+}
+
+static void
+popup_traffic_distortion_speed(struct item *item, int maxspeed)
+{
+	char buffer[256];
+	sprintf(buffer,"maxspeed=%d",maxspeed);
+	popup_traffic_distortion(item,buffer);
+}
+
+static void
+popup_traffic_distortion_delay(struct item *item, int delay)
+{
+	char buffer[256];
+	sprintf(buffer,"delay=%d",delay*600);
+	popup_traffic_distortion(item,buffer);
+}
+
+static void
 popup_set_destination(struct navit *nav, struct pcoord *pc)
 {
 	struct coord c;
@@ -207,23 +245,23 @@ static void
 popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 {
 	struct map_rect *mr;
-	void *menu, *menu_map, *menu_item;
+	void *menu, *menu_map, *menu_item, *menu_dist;
 	char *label;
-	struct item *item;
+	struct item *item,*diitem;
 
 	label=graphics_displayitem_get_label(di);
-	item=graphics_displayitem_get_item(di);
+	diitem=graphics_displayitem_get_item(di);
 
 	if (label) 
-		menu=popup_printf(popup, menu_type_submenu, "%s '%s'", item_to_name(item->type), label);
+		menu=popup_printf(popup, menu_type_submenu, "%s '%s'", item_to_name(diitem->type), label);
 	else
-		menu=popup_printf(popup, menu_type_submenu, "%s", item_to_name(item->type));
+		menu=popup_printf(popup, menu_type_submenu, "%s", item_to_name(diitem->type));
 	menu_item=popup_printf(menu, menu_type_submenu, "Item");
-	popup_printf(menu_item, menu_type_menu, "type: 0x%x", item->type);
-	popup_printf(menu_item, menu_type_menu, "id: 0x%x 0x%x", item->id_hi, item->id_lo);
-	if (item->map) {
-		mr=map_rect_new(item->map,NULL);
-		item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+	popup_printf(menu_item, menu_type_menu, "type: 0x%x", diitem->type);
+	popup_printf(menu_item, menu_type_menu, "id: 0x%x 0x%x", diitem->id_hi, diitem->id_lo);
+	if (diitem->map) {
+		mr=map_rect_new(diitem->map,NULL);
+		item=map_rect_get_item_byid(mr, diitem->id_hi, diitem->id_lo);
 		dbg(1,"item=%p\n", item);
 		if (item) {
 			popup_show_attrs(item->map, menu_item, item);
@@ -246,6 +284,22 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 	} else {
 		popup_printf(menu, menu_type_menu, "(No map)");
 	}
+	if (diitem && item_get_default_flags(diitem->type)) {
+		int speeds[]={5,10,20,30,40,50,60,70,80,90,100};
+		int delays[]={1,2,3,5,10,15,20,30,45,60,75,90,120,150,180,240,300};
+		int i;
+		menu_dist=popup_printf(menu, menu_type_submenu, "Traffic distortion");
+		popup_printf_cb(menu_dist, menu_type_menu, callback_new_1(callback_cast(popup_traffic_distortion_blocked), diitem), "Blocked");
+		menu_item=popup_printf(menu_dist, menu_type_submenu,"Max speed");
+		for (i = 0 ; i < sizeof(speeds)/sizeof(int); i++) {
+			popup_printf_cb(menu_item, menu_type_menu, callback_new_2(callback_cast(popup_traffic_distortion_speed), diitem, speeds[i]), "%d km/h",speeds[i]);
+		}
+		menu_item=popup_printf(menu_dist, menu_type_submenu,"Delay");
+		for (i = 0 ; i < sizeof(delays)/sizeof(int); i++) {
+			popup_printf_cb(menu_item, menu_type_menu, callback_new_2(callback_cast(popup_traffic_distortion_delay), diitem, delays[i]*600), "%d min",delays[i]);
+		}
+	}
+
 }
 
 static void

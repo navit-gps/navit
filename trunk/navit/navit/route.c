@@ -94,8 +94,10 @@ struct route_graph_point {
 										  *  to this point's heap-element */
 	int value;							 /**< The cost at which one can reach the destination from this point on */
 	struct coord c;						 /**< Coordinates of this point */
+	int flags;						/**< Flags for this point (eg traffic distortion) */
 };
 
+#define RP_TRAFFIC_DISTORTION 1
 
 /**
  * @brief A segment in the route graph or path
@@ -133,6 +135,16 @@ struct route_graph_segment {
 	struct route_graph_point *start;			/**< Pointer to the point this segment starts at. */
 	struct route_graph_point *end;				/**< Pointer to the point this segment ends at. */
 	struct route_segment_data data;				/**< The segment data */
+};
+
+/**
+ * @brief A traffic distortion
+ *
+ * This is distortion in the traffic where you can't drive as fast as usual or have to wait for some time
+ */
+struct route_traffic_distortion {
+	int maxspeed;					/**< Maximum speed possible in km/h */
+	int delay;					/**< Delay in tenths of seconds */
 };
 
 /**
@@ -182,12 +194,6 @@ struct route_path {
 	/* XXX: path_hash is not necessery now */
 	struct item_hash *path_hash;				/**< A hashtable of all the items represented by this route's segements */
 };
-
-#define RF_FASTEST	(1<<0)
-#define RF_SHORTEST	(1<<1)
-#define RF_AVOIDHW	(1<<2)
-#define RF_AVOIDPAID	(1<<3)
-#define RF_LOCKONROAD	(1<<4)
 
 /**
  * @brief A complete route
@@ -939,17 +945,13 @@ route_graph_add_point(struct route_graph *this, struct coord *f)
 		hashval=HASHCOORD(f);
 		if (debug_route)
 			printf("p (0x%x,0x%x)\n", f->x, f->y);
-		p=g_new(struct route_graph_point,1);
+		p=g_new0(struct route_graph_point,1);
 		if (!p) {
 			printf("%s:Out of memory\n", __FUNCTION__);
 			return p;
 		}
 		p->hash_next=this->hash[hashval];
 		this->hash[hashval]=p;
-		p->el=NULL;
-		p->start=NULL;
-		p->end=NULL;
-		p->seg=NULL;
 		p->value=INT_MAX;
 		p->c=*f;
 	}
@@ -1395,22 +1397,58 @@ route_graph_destroy(struct route_graph *this)
  */
 
 static int
-route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over)
+route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, struct route_traffic_distortion *dist)
 {
 	struct roadprofile *roadprofile=vehicleprofile_get_roadprofile(profile, over->item.type);
-	int speed;
+	int speed,maxspeed;
 	if (!roadprofile || !roadprofile->route_weight)
 		return INT_MAX;
 	/* maxspeed_handling: 0=always, 1 only if maxspeed restricts the speed, 2 never */
-	if (profile->maxspeed_handling != 2 && (over->flags & AF_SPEED_LIMIT)) {
-		speed=RSD_MAXSPEED(over);
-		if (profile->maxspeed_handling == 1 && speed > roadprofile->route_weight)
-			speed=roadprofile->route_weight;
-	} else
-		speed=roadprofile->route_weight;
+	speed=roadprofile->route_weight;
+	if (profile->maxspeed_handling != 2) {
+		if (over->flags & AF_SPEED_LIMIT) {
+			maxspeed=RSD_MAXSPEED(over);
+			if (!profile->maxspeed_handling)
+				speed=maxspeed;
+		} else
+			maxspeed=INT_MAX;
+		if (dist && maxspeed > dist->maxspeed)
+			maxspeed=dist->maxspeed;
+		if (maxspeed != INT_MAX && (profile->maxspeed_handling != 1 || maxspeed < speed))
+			speed=maxspeed;
+	}
 	if (!speed)
-		return INT_MAX;	
-	return over->len*36/speed;
+		return INT_MAX;
+	return over->len*36/speed+(dist ? dist->delay : 0);
+}
+
+static int
+route_get_traffic_distortion(struct route_graph_segment *seg, struct route_traffic_distortion *ret)
+{
+	struct route_graph_point *start=seg->start;
+	struct route_graph_point *end=seg->end;
+	struct route_graph_segment *tmp,*found=NULL;
+	tmp=start->start;
+	while (tmp && !found) {
+		if (tmp->data.item.type == type_traffic_distortion && tmp->start == start && tmp->end == end)
+			found=tmp;
+		tmp=tmp->start_next;
+	}
+	tmp=start->end;
+	while (tmp && !found) {
+		if (tmp->data.item.type == type_traffic_distortion && tmp->end == start && tmp->start == end) 
+			found=tmp;
+		tmp=tmp->end_next;
+	}
+	if (found) {
+		ret->delay=found->data.len;
+		if (found->data.flags & AF_SPEED_LIMIT)
+			ret->maxspeed=RSD_MAXSPEED(&found->data);
+		else
+			ret->maxspeed=INT_MAX;
+		return 1;
+	}
+	return 0;
 }
 
 /**
@@ -1424,14 +1462,54 @@ route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over)
  */  
 
 static int
-route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, struct route_segment_data *over, int dir)
+route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, struct route_graph_segment *over, int dir)
 {
 #if 0
 	dbg(0,"flags 0x%x mask 0x%x flags 0x%x\n", over->flags, dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask, profile->flags);
 #endif
-	if ((over->flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
+	if ((over->data.flags & (dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask)) != profile->flags)
 		return INT_MAX;
-	return route_time_seg(profile, over);
+	if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION)) {
+		struct route_traffic_distortion dist;
+		if (route_get_traffic_distortion(over, &dist))
+			return route_time_seg(profile, &over->data, &dist);
+	}
+	return route_time_seg(profile, &over->data, NULL);
+}
+
+/**
+ * @brief Adds a route distortion item to the route graph
+ *
+ * @param this The route graph to add to
+ * @param item The item to add
+ */
+static void
+route_process_traffic_distortion(struct route_graph *this, struct item *item)
+{
+	struct route_graph_point *s_pnt,*e_pnt;
+	struct coord c,l;
+	struct attr delay_attr, maxspeed_attr;
+	int len=0;
+	int flags = 0;
+	int offset = 1;
+	int maxspeed = INT_MAX;
+
+	if (item_coord_get(item, &l, 1)) {
+		s_pnt=route_graph_add_point(this,&l);
+		while (item_coord_get(item, &c, 1)) {
+			l=c;
+		}
+		e_pnt=route_graph_add_point(this,&l);
+		s_pnt->flags |= RP_TRAFFIC_DISTORTION;
+		e_pnt->flags |= RP_TRAFFIC_DISTORTION;
+		if (item_attr_get(item, attr_maxspeed, &maxspeed_attr)) {
+			flags |= AF_SPEED_LIMIT;
+			maxspeed=maxspeed_attr.u.num;
+		}
+		if (item_attr_get(item, attr_delay, &delay_attr))
+			len=delay_attr.u.num;
+		route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
+	}
 }
 
 /**
@@ -1458,7 +1536,7 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 	int segmented = 0;
 	int offset = 1;
 	int maxspeed = -1;
-	
+
 	if (item_coord_get(item, &l, 1)) {
 		int *default_flags=item_get_default_flags(item->type);
 		if (! default_flags)
@@ -1557,14 +1635,14 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 		dbg(0,"no segment for destination found\n");
 		return;
 	}
-	val=route_value_seg(profile, NULL, &s->data, -1);
+	val=route_value_seg(profile, NULL, s, -1);
 	if (val != INT_MAX) {
 		val=val*(100-dst->percent)/100;
 		s->end->seg=s;
 		s->end->value=val;
 		s->end->el=fh_insertkey(heap, s->end->value, s->end);
 	}
-	val=route_value_seg(profile, NULL, &s->data, 1);
+	val=route_value_seg(profile, NULL, s, 1);
 	if (val != INT_MAX) {
 		val=val*dst->percent/100;
 		s->start->seg=s;
@@ -1581,7 +1659,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 		p_min->el=NULL; /* This point is permanently calculated now, we've taken it out of the heap */
 		s=p_min->start;
 		while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
-			val=route_value_seg(profile, p_min, &s->data, -1);
+			val=route_value_seg(profile, p_min, s, -1);
 			if (val != INT_MAX) {
 				new=min+val;
 				if (debug_route)
@@ -1609,7 +1687,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 		}
 		s=p_min->end;
 		while (s) { /* Doing the same as above with the segments leading towards our point */
-			val=route_value_seg(profile, p_min, &s->data, 1);
+			val=route_value_seg(profile, p_min, s, 1);
 			if (val != INT_MAX) {
 				new=min+val;
 				if (debug_route)
@@ -1758,12 +1836,12 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 		dbg(0,"no segment for position found\n");
 		return NULL;
 	}
-	val=route_value_seg(profile, NULL, &s->data, 1);
+	val=route_value_seg(profile, NULL, s, 1);
 	if (val != INT_MAX) {
 		val=val*(100-pos->percent)/100;
 		val1=s->end->value+val;
 	}
-	val=route_value_seg(profile, NULL, &s->data, -1);
+	val=route_value_seg(profile, NULL, s, -1);
 	if (val != INT_MAX) {
 		val=val*pos->percent/100;
 		val2=s->start->value+val;
@@ -1866,7 +1944,10 @@ route_graph_build_idle(struct route_graph *rg)
 				return;
 			}
 		}
-		route_process_street_graph(rg, item);
+		if (item->type == type_traffic_distortion)
+			route_process_traffic_distortion(rg, item);
+		else
+			route_process_street_graph(rg, item);
 		count--;
 	}
 }
@@ -2245,7 +2326,7 @@ rm_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		case attr_time:
 			mr->attr_next=attr_none;
 			if (seg)
-				attr->u.num=route_time_seg(route->vehicleprofile, seg->data);
+				attr->u.num=route_time_seg(route->vehicleprofile, seg->data, NULL);
 			else
 				return 0;
 			return 1;
@@ -2399,7 +2480,7 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		case type_rg_segment:
 			if (! seg)
 				return 0;
-			mr->str=g_strdup_printf("len %d time %d",seg->data.len, route_time_seg(route->vehicleprofile, &seg->data));
+			mr->str=g_strdup_printf("len %d time %d",seg->data.len, route_time_seg(route->vehicleprofile, &seg->data, NULL));
 			attr->u.str = mr->str;
 			return 1;
 		default:
