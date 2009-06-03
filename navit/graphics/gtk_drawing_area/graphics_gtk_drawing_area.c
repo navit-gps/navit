@@ -85,6 +85,7 @@ struct graphics_priv {
 	struct font_freetype_methods freetype_methods;
 	struct navit *nav;
 	int pid;
+	char button[8];
 };
 
 
@@ -664,6 +665,8 @@ button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 
 	p.x=event->x;
 	p.y=event->y;
+	if (event->button < 8) 
+		this->button[event->button]=1;
 	callback_list_call_attr_3(this->cbl, attr_button, (void *)1, (void *)event->button, (void *)&p);
 	return FALSE;
 }
@@ -674,6 +677,11 @@ button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 	struct graphics_priv *this=user_data;
 	struct point p;
 
+	if (event->button < 8) {
+		if (!this->button[event->button])
+			return;
+		this->button[event->button]=0;
+	}
 	p.x=event->x;
 	p.y=event->y;
 	callback_list_call_attr_3(this->cbl, attr_button, (void *)0, (void *)event->button, (void *)&p);
