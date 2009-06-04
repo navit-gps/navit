@@ -1376,7 +1376,7 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 	segment->ncoords=cd-segment->c;
 	if (segment->ncoords <= 1) {
 		g_free(segment);
-		return ret;
+		return 1;
 	}
 
 	/* We check if the route graph segment is part of a roundabout here, because this
