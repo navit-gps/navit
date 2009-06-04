@@ -362,7 +362,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		 */
 		if (item[1] && item[7])
 			valid = 1;
-		if (i == 9 && (*item[9] == 'A' || *item[9] == 'D'))
+		if (i >= 10 && (*item[9] == 'A' || *item[9] == 'D'))
 			valid = 1;
 		if (valid) {
 			priv->direction = g_ascii_strtod( item[1], NULL );
@@ -378,7 +378,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		 */
 		if (*item[2] == 'A')
 			valid = 1;
-		if (i == 12 && (*item[12] == 'A' || *item[12] == 'D'))
+		if (i >= 13 && (*item[12] == 'A' || *item[12] == 'D'))
 			valid = 1; 
 		if (valid) {
 			priv->direction = g_ascii_strtod( item[8], NULL );
