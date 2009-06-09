@@ -878,9 +878,9 @@ int transform_int_scale(int y)
 	if (y < 0)
 		y=-y;
 	i=y/tab_int_step;
-	if (i >= size)
-		i=size-1;
-	return tab_int_scale[i];
+	if (i < size-1) 
+		return tab_int_scale[i]+((tab_int_scale[i+1]-tab_int_scale[i])*(y-i*tab_int_step))/tab_int_step;
+	return tab_int_scale[size-1];
 }
 #endif
 
