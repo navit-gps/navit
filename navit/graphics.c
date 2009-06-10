@@ -62,7 +62,8 @@ struct graphics
 	struct graphics_priv *priv;
 	struct graphics_methods meth;
 	char *default_font;
-	struct graphics_font *font[16];
+	int font_len;
+	struct graphics_font **font;
 	struct graphics_gc *gc[3];
 	struct attr **attrs;
 	struct callback_list *cbl;
@@ -254,7 +255,7 @@ struct graphics_font * graphics_font_new(struct graphics *gra, int size, int fla
 void graphics_font_destroy_all(struct graphics *gra) 
 { 
 	int i; 
-	for(i = 0 ; i < sizeof(gra->font) / sizeof(gra->font[0]); i++) { 
+	for(i = 0 ; i < gra->font_len; i++) { 
  		if(!gra->font[i]) continue; 
  		gra->font[i]->meth.font_destroy(gra->font[i]->priv); 
              	gra->font[i] = NULL; 
@@ -1379,6 +1380,22 @@ display_context_free(struct display_context *dc)
 	dc->img=NULL;
 }
 
+static struct graphics_font *
+get_font(struct graphics *gra, int size)
+{
+	if (size > 64)
+		size=64;
+	if (size >= gra->font_len) {
+		gra->font=g_renew(struct graphics_font *, gra->font, size+1);
+		while (gra->font_len <= size) 
+			gra->font[gra->font_len++]=NULL;
+	}
+	if (! gra->font[size])
+		gra->font[size]=graphics_font_new(gra, size*20, 0);
+	return gra->font[size];
+}
+
+
 static void
 displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc)
 {
@@ -1459,19 +1476,23 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 				gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
 			gra->meth.draw_circle(gra->priv, gc->priv, pa, e->u.circle.radius);
 			if (di->label && e->text_size) {
+				struct graphics_font *font=get_font(gra, e->text_size);
 				p.x=pa[0].x+3;
 				p.y=pa[0].y+10;
-				if (! gra->font[e->text_size])
-					gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
-				gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->text_size]->priv, di->label, &p, 0x10000, 0);
+				if (font)
+					gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, font->priv, di->label, &p, 0x10000, 0);
+				else
+					dbg(0,"Failed to get font with size %d\n",e->text_size);
 			}
 		}
 		break;
 	case element_text:
 		if (count && di->label) {
-			if (! gra->font[e->text_size])
-				gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
-			label_line(gra, gra->gc[2], gra->gc[1], gra->font[e->text_size], pa, count, di->label);
+			struct graphics_font *font=get_font(gra, e->text_size);
+			if (font)
+				label_line(gra, gra->gc[2], gra->gc[1], font, pa, count, di->label);
+			else
+				dbg(0,"Failed to get font with size %d\n",e->text_size);
 		}
 		break;
 	case element_icon:
@@ -1584,11 +1605,13 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 				gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
 			gra->meth.draw_circle(gra->priv, gc->priv, &pnt[0], e->u.circle.radius);
 			if (label && e->text_size) {
+				struct graphics_font *font=get_font(gra, e->text_size);
 				p.x=pnt[0].x+3;
 				p.y=pnt[0].y+10;
-			if (! gra->font[e->text_size])
-				gra->font[e->text_size]=graphics_font_new(gra, e->text_size*20, 0);
-				gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, gra->font[e->text_size]->priv, label, &p, 0x10000, 0);
+				if (font) 
+					gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, font->priv, label, &p, 0x10000, 0);
+				else
+					dbg(0,"Failed to get font with size %d\n",e->text_size);
 			}
 			break;
 		case element_icon:
