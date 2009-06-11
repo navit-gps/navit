@@ -2319,6 +2319,8 @@ gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data)
 	gui_internal_keypress_do(this, (char *) wm->data);
 	if (md->keyboard_mode == 2) 
 		gui_internal_keyboard_do(this, md->keyboard, 10);
+	if (md->keyboard_mode == 26) 
+		gui_internal_keyboard_do(this, md->keyboard, 34);
 }
 
 static void
@@ -2574,7 +2576,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		gui_internal_keyboard_key(this, wkbd, "Æ","Æ",max_w,max_h);
 		gui_internal_keyboard_key(this, wkbd, "Ø","Ø",max_w,max_h);
 		gui_internal_keyboard_key(this, wkbd, "Å","Å",max_w,max_h);
-		for (i = 0 ; i < 23 ; i++) {
+		for (i = 0 ; i < 24 ; i++) {
 			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
 		}
 		wk=gui_internal_keyboard_key_data(this, wkbd, "A",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
@@ -2588,7 +2590,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		gui_internal_keyboard_key(this, wkbd, "æ","æ",max_w,max_h);
 		gui_internal_keyboard_key(this, wkbd, "ø","ø",max_w,max_h);
 		gui_internal_keyboard_key(this, wkbd, "å","å",max_w,max_h);
-		for (i = 0 ; i < 23 ; i++) {
+		for (i = 0 ; i < 24 ; i++) {
 			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
 		}
 		wk=gui_internal_keyboard_key_data(this, wkbd, "a",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
@@ -2732,7 +2734,7 @@ gui_internal_search(struct gui_priv *this, char *what, char *type, int flags)
 	wk->func = gui_internal_search_changed;
 	wk->name=g_strdup(type);
 	if (this->keyboard)
-		gui_internal_widget_append(w, gui_internal_keyboard(this,0));
+		gui_internal_widget_append(w, gui_internal_keyboard(this,2));
 	gui_internal_menu_render(this);
 }
 
