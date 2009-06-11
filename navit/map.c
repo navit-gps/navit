@@ -641,22 +641,9 @@ map_dump_filedesc(struct map *map, FILE *out)
 {
 	struct map_rect *mr=map_rect_new(map, NULL);
 	struct item *item;
-	int i,count,max=16384;
-	struct coord ca[max];
-	struct attr attr;
 
-	while ((item = map_rect_get_item(mr))) {
-		count=item_coord_get(item, ca, item->type < type_line ? 1: max);
-		if (item->type < type_line) 
-			fprintf(out,"mg:0x%x 0x%x ", ca[0].x, ca[0].y);
-		fprintf(out,"type=%s", item_to_name(item->type));
-		while (item_attr_get(item, attr_any, &attr)) 
-			fprintf(out," %s='%s'", attr_to_name(attr.type), attr_to_text(&attr, map, 1));
-		fprintf(out,"\n");
-		if (item->type >= type_line)
-			for (i = 0 ; i < count ; i++)
-				fprintf(out,"mg:0x%x 0x%x\n", ca[i].x, ca[i].y);
-	}
+	while ((item = map_rect_get_item(mr))) 
+		item_dump_filedesc(item, map, out);
 	map_rect_destroy(mr);
 }
 

@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include <stdio.h>
 #include <string.h>
 #include <glib.h>
 #include "coord.h"
@@ -110,6 +111,14 @@ item_coord_get(struct item *it, struct coord *c, int count)
 }
 
 int
+item_coord_set(struct item *it, struct coord *c, int count, enum change_mode mode)
+{
+	if (!it->meth->item_coord_set)
+		return 0;
+	return it->meth->item_coord_set(it->priv_data, c, count, mode);
+}
+
+int
 item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel)
 {
 	int i,ret=it->meth->item_coord_get(it->priv_data, c, count);
@@ -165,10 +174,19 @@ item_attr_rewind(struct item *it)
 {
 	it->meth->item_attr_rewind(it->priv_data);
 }
+
 int
 item_attr_get(struct item *it, enum attr_type attr_type, struct attr *attr)
 {
 	return it->meth->item_attr_get(it->priv_data, attr_type, attr);
+}
+
+int
+item_attr_set(struct item *it, struct attr *attr, enum change_mode mode)
+{
+	if (!it->meth->item_attr_set)
+		return 0;
+	return it->meth->item_attr_set(it->priv_data, attr, mode);
 }
 
 struct item * item_new(char *type, int zoom)
@@ -289,4 +307,24 @@ item_range_contains_item(struct item_range *range, enum item_type type)
 	if (type >= range->min && type <= range->max)
 		return 1;
 	return 0;
+}
+
+void
+item_dump_filedesc(struct item *item, struct map *map, FILE *out)
+{
+
+	int i,count,max=16384;
+	struct coord ca[max];
+	struct attr attr;
+
+	count=item_coord_get(item, ca, item->type < type_line ? 1: max);
+	if (item->type < type_line) 
+		fprintf(out,"mg:0x%x 0x%x ", ca[0].x, ca[0].y);
+	fprintf(out,"type=%s", item_to_name(item->type));
+	while (item_attr_get(item, attr_any, &attr)) 
+		fprintf(out," %s='%s'", attr_to_name(attr.type), attr_to_text(&attr, map, 1));
+	fprintf(out,"\n");
+	if (item->type >= type_line)
+		for (i = 0 ; i < count ; i++)
+			fprintf(out,"mg:0x%x 0x%x\n", ca[i].x, ca[i].y);
 }
