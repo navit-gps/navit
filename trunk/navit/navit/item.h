@@ -24,6 +24,8 @@
 extern "C" {
 #endif
 
+#include <stdio.h>
+
 enum item_type {
 #define ITEM2(x,y) type_##y=x,
 #define ITEM(x) type_##x,
@@ -53,12 +55,27 @@ extern int default_flags[];
 
 struct coord;
 
+enum change_mode {
+	change_mode_delete,
+	change_mode_modify,
+	change_mode_append,
+	change_mode_prepend,
+};
+
 struct item_methods {
 	void (*item_coord_rewind)(void *priv_data);
 	int (*item_coord_get)(void *priv_data, struct coord *c, int count);
 	void (*item_attr_rewind)(void *priv_data);
 	int (*item_attr_get)(void *priv_data, enum attr_type attr_type, struct attr *attr);
 	int (*item_coord_is_node)(void *priv_data);
+	int (*item_attr_set)(void *priv_data, struct attr *attr, enum change_mode mode);
+	int (*item_coord_set)(void *priv_data, struct coord *c, int count, enum change_mode mode);
+	int (*item_type_set)(void *priv_data, enum item_type type);
+};
+
+struct item_id {
+	int id_hi;
+	int id_lo;
 };
 
 struct item {
@@ -85,12 +102,14 @@ struct map_selection;
 int *item_get_default_flags(enum item_type type);
 void item_coord_rewind(struct item *it);
 int item_coord_get(struct item *it, struct coord *c, int count);
+int item_coord_set(struct item *it, struct coord *c, int count, enum change_mode mode);
 int item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel);
 int item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection pro);
 /* does the next returned coordinate mark a node */
 int item_coord_is_node(struct item *it);
 void item_attr_rewind(struct item *it);
 int item_attr_get(struct item *it, enum attr_type attr_type, struct attr *attr);
+int item_attr_set(struct item *it, struct attr *attr, enum change_mode mode);
 struct item *item_new(char *type, int zoom);
 enum item_type item_from_name(const char *name);
 char *item_to_name(enum item_type item);
@@ -101,6 +120,7 @@ void *item_hash_lookup(struct item_hash *h, struct item *item);
 void item_hash_destroy(struct item_hash *h);
 int item_range_intersects_range(struct item_range *range1, struct item_range *range2);
 int item_range_contains_item(struct item_range *range, enum item_type type);
+void item_dump_filedesc(struct item *item, struct map *map, FILE *out);
 /* end of prototypes */
 
 
