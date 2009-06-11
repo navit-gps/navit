@@ -48,6 +48,7 @@ struct tile {
 	int *pos_attr;
 	int *pos_next;
 	int zipfile_num;
+	int mode;
 };
 
 struct map_priv {
@@ -66,6 +67,7 @@ struct map_priv {
 	int version;
 	int check_version;
 	int map_version;
+	GHashTable *changes;
 };
 
 struct map_rect_priv {
@@ -92,6 +94,9 @@ struct map_search_priv {
 	GHashTable *search_results;
 };
 
+
+static void push_tile(struct map_rect_priv *mr, struct tile *t);
+static void setup_pos(struct map_rect_priv *mr);
 
 static void lfh_to_cpu(struct zip_lfh *lfh) {
 	dbg_assert(lfh != NULL);
@@ -290,6 +295,8 @@ binfile_attr_rewind(void *priv_data)
 	struct map_rect_priv *mr=priv_data;
 	struct tile *t=mr->t;
 	t->pos_attr=t->pos_attr_start;
+	mr->label=0;
+	memset(mr->label_attr, 0, sizeof(mr->label_attr));
 	
 }
 
@@ -397,11 +404,254 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	return 0;
 }
 
+struct binfile_hash_entry {
+	struct item_id id;
+	int flags;
+	int data[0];
+};
+
+static guint
+binfile_hash_entry_hash(gconstpointer key)
+{
+	const struct binfile_hash_entry *entry=key;
+	return (entry->id.id_hi ^ entry->id.id_lo);
+}
+
+static gboolean
+binfile_hash_entry_equal(gconstpointer a, gconstpointer b)
+{
+	const struct binfile_hash_entry *entry1=a,*entry2=b;
+	return (entry1->id.id_hi==entry2->id.id_hi && entry1->id.id_lo == entry2->id.id_lo);
+}
+
+static int *
+binfile_item_dup(struct map_priv *m, struct item *item, struct tile *t, int extend)
+{
+	int size=le32_to_cpu(t->pos[0]);
+	struct binfile_hash_entry *entry=g_malloc(sizeof(struct binfile_hash_entry)+(size+1+extend)*sizeof(int));
+	void *ret=entry->data;
+	entry->id.id_hi=item->id_hi;
+	entry->id.id_lo=item->id_lo;
+	entry->flags=1;
+	dbg(0,"id 0x%x,0x%x\n",entry->id.id_hi,entry->id.id_lo);
+	
+	memcpy(ret, t->pos, (size+1)*sizeof(int));
+	if (!m->changes) 
+		m->changes=g_hash_table_new_full(binfile_hash_entry_hash, binfile_hash_entry_equal, g_free, NULL);
+	g_hash_table_replace(m->changes, entry, entry);
+	dbg(0,"ret %p\n",ret);
+	return ret;
+}
+
+static int
+binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode mode)
+{
+	struct map_rect_priv *mr=priv_data;
+	struct tile *t=mr->t,*tn,new;
+	int i,delta,move_len;
+	int write_offset,move_offset,aoffset,coffset,clen;
+	int *data;
+
+	{
+		int *i=t->pos,j=0;
+		dbg(0,"Before: pos_coord=%d\n",t->pos_coord-i);
+		while (i < t->pos_next) 
+			dbg(0,"%d:0x%x\n",j++,*i++);
+		
+	}
+	aoffset=t->pos_attr-t->pos_attr_start;
+	coffset=t->pos_coord-t->pos_coord_start-2;
+	clen=t->pos_attr_start-t->pos_coord+2;
+	dbg(0,"coffset=%d clen=%d\n",coffset,clen);
+	switch (mode) {
+	case change_mode_delete:
+		if (count*2 > clen)
+			count=clen/2;
+		delta=-count*2;
+		move_offset=coffset+count*2;
+		move_len=t->pos_next-t->pos_coord_start-move_offset;
+		write_offset=0;
+		break;
+	case change_mode_modify:
+		write_offset=coffset;
+		if (count*2 > clen) {
+			delta=count*2-clen;
+			move_offset=t->pos_attr_start-t->pos_coord_start;
+			move_len=t->pos_next-t->pos_coord_start-move_offset;
+		} else {
+			move_len=0;
+			move_offset=0;
+			delta=0;
+		}
+		break;
+	case change_mode_prepend:
+		delta=count*2;
+		move_offset=coffset-2;
+		move_len=t->pos_next-t->pos_coord_start-move_offset;
+		write_offset=coffset-2;
+		break;
+	case change_mode_append:
+		delta=count*2;
+		move_offset=coffset;
+		move_len=t->pos_next-t->pos_coord_start-move_offset;
+		write_offset=coffset;
+		break;
+	default:
+		return 0;
+	}
+	dbg(0,"delta %d\n",delta);
+	data=binfile_item_dup(mr->m, &mr->item, t, delta > 0 ? delta:0);
+	data[0]=cpu_to_le32(le32_to_cpu(data[0])+delta);
+	data[2]=cpu_to_le32(le32_to_cpu(data[2])+delta);
+	new.pos=new.start=data;
+	new.zipfile_num=t->zipfile_num;
+	new.mode=2;
+	push_tile(mr, &new);
+	setup_pos(mr);
+	tn=mr->t;
+	tn->pos_coord=tn->pos_coord_start+coffset;
+	tn->pos_attr=tn->pos_attr_start+aoffset;
+	dbg(0,"moving %d ints from offset %d to %d\n",move_len,tn->pos_coord_start+move_offset-data,tn->pos_coord_start+move_offset+delta-data);
+	memmove(tn->pos_coord_start+move_offset+delta, tn->pos_coord_start+move_offset, move_len*4);
+	{
+		int *i=tn->pos,j=0;
+		dbg(0,"After move: pos_coord=%d\n",tn->pos_coord-i);
+		while (i < tn->pos_next) 
+			dbg(0,"%d:0x%x\n",j++,*i++);
+	}
+	if (mode != change_mode_append)
+		tn->pos_coord+=move_offset;
+	if (mode != change_mode_delete) {
+		dbg(0,"writing %d ints at offset %d\n",count*2,write_offset+tn->pos_coord_start-data);
+		for (i = 0 ; i < count ; i++) {
+			tn->pos_coord_start[write_offset++]=c[i].x;
+			tn->pos_coord_start[write_offset++]=c[i].y;
+		}
+			
+	}
+	{
+		int *i=tn->pos,j=0;
+		dbg(0,"After: pos_coord=%d\n",tn->pos_coord-i);
+		while (i < tn->pos_next) 
+			dbg(0,"%d:0x%x\n",j++,*i++);
+	}
+	return 1;
+}
+
+static int
+binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
+{
+	struct map_rect_priv *mr=priv_data;
+	struct tile *t=mr->t,*tn,new;
+	int extend,offset,delta,move_len;
+	int write_offset,move_offset,naoffset,coffset,oattr_len;
+	int nattr_size,nattr_len,pad;
+	int *data;
+
+	{
+		int *i=t->pos,j=0;
+		dbg(0,"Before: pos_attr=%d\n",t->pos_attr-i);
+		while (i < t->pos_next) 
+			dbg(0,"%d:0x%x\n",j++,*i++);
+		
+	}
+
+	write_offset=0;	
+	naoffset=t->pos_attr-t->pos_attr_start;
+	coffset=t->pos_coord-t->pos_coord_start;
+	offset=0;
+	oattr_len=0;
+	if (!naoffset) {
+		if (mode == change_mode_delete || mode == change_mode_modify) {
+			dbg(0,"no attribute selected\n");
+			return 0;
+		}
+		if (mode == change_mode_append)
+			naoffset=t->pos_next-t->pos_attr_start;
+	}
+	while (offset < naoffset) {
+		oattr_len=le32_to_cpu(t->pos_attr_start[offset])+1;
+		dbg(0,"len %d\n",oattr_len);
+		write_offset=offset;
+		offset+=oattr_len;
+	}
+	move_len=t->pos_next-t->pos_attr_start-offset;
+	move_offset=offset;
+	switch (mode) {
+	case change_mode_delete:
+		nattr_size=0;
+		nattr_len=0;
+		pad=0;
+		extend=0;
+		break;
+	case change_mode_modify:
+	case change_mode_prepend:
+	case change_mode_append:
+		nattr_size=attr_data_size(attr);
+		pad=(4-(nattr_size%4))%4;
+		nattr_len=(nattr_size+pad)/4+2;
+		if (mode == change_mode_prepend) {
+			move_offset=write_offset;
+			move_len+=oattr_len;
+		}
+		if (mode == change_mode_append) {
+			write_offset=move_offset;
+		}
+		break;
+	default:
+		return 0;
+	}
+	if (mode == change_mode_delete || mode == change_mode_modify) 
+		delta=nattr_len-oattr_len;
+	else
+		delta=nattr_len;
+	dbg(0,"delta %d oattr_len %d nattr_len %d\n",delta,oattr_len, nattr_len);
+	data=binfile_item_dup(mr->m, &mr->item, t, delta > 0 ? delta:0);
+	data[0]=cpu_to_le32(le32_to_cpu(data[0])+delta);
+	new.pos=new.start=data;
+	new.zipfile_num=t->zipfile_num;
+	new.mode=2;
+	push_tile(mr, &new);
+	setup_pos(mr);
+	tn=mr->t;
+	tn->pos_coord=tn->pos_coord_start+coffset;
+	tn->pos_attr=tn->pos_attr_start+offset;
+	dbg(0,"attr start %d offset %d\n",tn->pos_attr_start-data,offset);
+	dbg(0,"moving %d ints from offset %d to %d\n",move_len,tn->pos_attr_start+move_offset-data,tn->pos_attr_start+move_offset+delta-data);
+	memmove(tn->pos_attr_start+move_offset+delta, tn->pos_attr_start+move_offset, move_len*4);
+	if (mode != change_mode_append)
+		tn->pos_attr+=delta;
+	{
+		int *i=tn->pos,j=0;
+		dbg(0,"After move: pos_attr=%d\n",tn->pos_attr-i);
+		while (i < tn->pos_next) 
+			dbg(0,"%d:0x%x\n",j++,*i++);
+	}
+	if (nattr_len) {
+		int *nattr=tn->pos_attr_start+write_offset;
+		dbg(0,"writing %d ints at %d\n",nattr_len,nattr-data);
+		nattr[0]=cpu_to_le32(nattr_len-1);
+		nattr[1]=cpu_to_le32(attr->type);
+		memcpy(nattr+2, attr_data_get(attr), nattr_size);
+		memset((unsigned char *)(nattr+2)+nattr_size, 0, pad);
+	}
+	{
+		int *i=tn->pos,j=0;
+		dbg(0,"After: pos_attr=%d\n",tn->pos_attr-i);
+		while (i < tn->pos_next) 
+			dbg(0,"%d:0x%x\n",j++,*i++);
+	}
+	return 1;
+}
+
 static struct item_methods methods_binfile = {
         binfile_coord_rewind,
         binfile_coord_get,
         binfile_attr_rewind,
         binfile_attr_get,
+	NULL,
+        binfile_attr_set,
+        binfile_coord_set,
 };
 
 static void
@@ -418,7 +668,8 @@ pop_tile(struct map_rect_priv *mr)
 {
 	if (mr->tile_depth <= 1)
 		return 0;
-	file_data_free(mr->m->fi, (unsigned char *)(mr->t->start));
+	if (mr->t->mode < 2)
+		file_data_free(mr->m->fi, (unsigned char *)(mr->t->start));
 	mr->t=&mr->tiles[--mr->tile_depth-1];
 	return 1;
 }
@@ -433,6 +684,7 @@ zipfile_to_tile(struct file *f, struct zip_cd *cd, struct tile *t)
 	dbg(1,"enter %p %p %p\n", f, cd, t);
 	dbg(1,"cd->zipofst=0x%x\n", cd->zipofst);
 	t->start=NULL;
+	t->mode=1;
 	lfh=binfile_read_lfh(f, cd->zipofst);
 	zipfn=(char *)(file_data_read(f,cd->zipofst+sizeof(struct zip_lfh), lfh->zipfnln));
 	strncpy(buffer, zipfn, lfh->zipfnln);
@@ -481,6 +733,7 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 		t.start=(int *)d;
 		t.end=(int *)(d+map->fi->size);
 		t.zipfile_num=0;
+		t.mode=0;
 		push_tile(mr, &t);
 	}
 	mr->item.meth=&methods_binfile;
@@ -488,10 +741,63 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 	return mr;
 }
 
+static void
+write_changes_do(gpointer key, gpointer value, gpointer user_data)
+{
+	struct binfile_hash_entry *entry=key;
+	FILE *out=user_data;
+	if (entry->flags) {
+		entry->flags=0;
+		fwrite(entry, sizeof(*entry)+(le32_to_cpu(entry->data[0])+1)*4, 1, out);
+		dbg(0,"yes\n");
+	}
+}
+
+static void
+write_changes(struct map_priv *m)
+{
+	FILE *changes;
+	char *changes_file;
+	if (!m->changes)
+		return;
+	changes_file=g_strdup_printf("%s.log",m->filename);
+	changes=fopen(changes_file,"ab");
+	g_hash_table_foreach(m->changes, write_changes_do, changes);
+	fclose(changes);
+	g_free(changes_file);
+}
+
+static void
+load_changes(struct map_priv *m)
+{
+	FILE *changes;
+	char *changes_file;
+	struct binfile_hash_entry entry,*e;
+	int size;
+	changes_file=g_strdup_printf("%s.log",m->filename);
+	changes=fopen(changes_file,"rb");
+	if (! changes)
+		return;
+	m->changes=g_hash_table_new_full(binfile_hash_entry_hash, binfile_hash_entry_equal, g_free, NULL);
+	while (fread(&entry, sizeof(entry), 1, changes) == 1) {
+		if (fread(&size, sizeof(size), 1, changes) != 1)
+			break;
+		e=g_malloc(sizeof(struct binfile_hash_entry)+(le32_to_cpu(size)+1)*4);
+		*e=entry;
+		e->data[0]=size;
+		if (fread(e->data+1, le32_to_cpu(size)*4, 1, changes) != 1)
+			break;
+		g_hash_table_replace(m->changes, e, e);
+	}
+	fclose(changes);
+	g_free(changes_file);
+}
+
 
 static void
 map_rect_destroy_binfile(struct map_rect_priv *mr)
 {
+	write_changes(mr->m);
 	while (pop_tile(mr));
 	file_data_free(mr->m->fi, (unsigned char *)(mr->tiles[0].start));
 	g_free(mr->url);
@@ -503,7 +809,7 @@ setup_pos(struct map_rect_priv *mr)
 {
 	int size,coord_size;
 	struct tile *t=mr->t;
-	size=le32_to_cpu(*(t->pos++));
+	size=le32_to_cpu(t->pos[0]);
 	if (size > 1024*1024 || size < 0) {
 		dbg(0,"size=0x%x\n", size);
 #if 0
@@ -511,11 +817,11 @@ setup_pos(struct map_rect_priv *mr)
 #endif
 		dbg(0,"size error");
 	}
-	t->pos_next=t->pos+size;
-	mr->item.type=le32_to_cpu(*(t->pos++));
-	coord_size=le32_to_cpu(*(t->pos++));
-	t->pos_coord_start=t->pos_coord=t->pos;
-	t->pos_attr_start=t->pos_attr=t->pos_coord+coord_size;
+	t->pos_next=t->pos+size+1;
+	mr->item.type=le32_to_cpu(t->pos[1]);
+	coord_size=le32_to_cpu(t->pos[2]);
+	t->pos_coord_start=t->pos+3;
+	t->pos_attr_start=t->pos_coord_start+coord_size;
 }
 
 static int
@@ -575,6 +881,26 @@ map_parse_submap(struct map_rect_priv *mr)
 	push_zipfile_tile(mr, at.u.num);
 }
 
+static int
+push_modified_item(struct map_rect_priv *mr)
+{
+	struct item_id id;
+	struct binfile_hash_entry *entry;
+	id.id_hi=mr->item.id_hi;
+	id.id_lo=mr->item.id_lo;
+	entry=g_hash_table_lookup(mr->m->changes, &id);
+	if (entry) {
+		struct tile tn;
+		tn.pos_next=tn.pos=tn.start=entry->data;
+		tn.zipfile_num=mr->item.id_hi;
+		tn.mode=2;
+		tn.end=tn.start+le32_to_cpu(entry->data[0])+1;
+		push_tile(mr, &tn);
+		return 1;
+	}
+	return 0;
+}
+
 static struct item *
 map_rect_get_item_binfile(struct map_rect_priv *mr)
 {
@@ -589,14 +915,18 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 				continue;
 			return NULL;
 		}
-		mr->item.id_hi=t->zipfile_num;
-		mr->item.id_lo=t->pos-t->start;
-		mr->label=0;
-		memset(mr->label_attr, 0, sizeof(mr->label_attr));
 		setup_pos(mr);
+		binfile_coord_rewind(mr);
+		binfile_attr_rewind(mr);
 		if ((mr->item.type == type_submap) && (!mr->country_id)) {
 			map_parse_submap(mr);
 			continue;
+		}
+		if (t->mode != 2) {
+			mr->item.id_hi=t->zipfile_num;
+			mr->item.id_lo=t->pos-t->start;
+			if (mr->m->changes && push_modified_item(mr))
+				continue;
 		}
 		if (mr->country_id)
 		{
@@ -624,9 +954,11 @@ map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 	t->pos=t->start+id_lo;
 	mr->item.id_hi=id_hi;
 	mr->item.id_lo=id_lo;
-	mr->label=0;
-	memset(mr->label_attr, 0, sizeof(mr->label_attr));
+	if (mr->m->changes)
+		push_modified_item(mr);
 	setup_pos(mr);
+	binfile_coord_rewind(mr);
+	binfile_attr_rewind(mr);
 	return &mr->item;
 }
 
@@ -916,6 +1248,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 		map_binfile_destroy(m);
 		m=NULL;
 	}
+	load_changes(m);
 	return m;
 }
 
