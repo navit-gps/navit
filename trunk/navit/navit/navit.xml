@@ -104,7 +104,7 @@
             </cursor>
         </vehicle>
 
-				<!-- For the cumulative displacement filter to be enabled, set cdf_hist="x" here, with x being an integer somewhere around 4 -->
+				<!-- For the cumulative displacement filter to be enabled, set cdf_histsize="x" here, with x being an integer somewhere around 4 -->
         <tracking cdf_histsize="0"/>
 
 	<vehicleprofile name="car" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0">
