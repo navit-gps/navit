@@ -78,17 +78,23 @@ struct tracking {
 	struct mapset *ms;
 	struct route *rt;
 	struct map *map;
+	struct vehicle *vehicle;
 	struct vehicleprofile *vehicleprofile;
-	struct pcoord last_updated;
+	struct coord last_updated;
 	struct tracking_line *lines;
 	struct tracking_line *curr_line;
 	int pos;
-	struct coord curr[2];
-	struct pcoord curr_in, curr_out;
+	struct coord curr[2], curr_in, curr_out;
 	int curr_angle;
-	struct coord last[2];
-	struct pcoord last_in, last_out;
+	struct coord last[2], last_in, last_out;
 	struct cdf_data cdf;
+	struct attr *attr;
+	int valid;
+	double direction;
+	double speed;
+	int coord_geo_valid;
+	struct coord_geo coord_geo;
+	enum projection pro;
 };
 
 
@@ -279,7 +285,7 @@ tracking_get_angle(struct tracking *tr)
 	return tr->curr_angle;
 }
 
-struct pcoord *
+struct coord *
 tracking_get_pos(struct tracking *tr)
 {
 	return &tr->curr_out;
@@ -300,20 +306,50 @@ tracking_get_street_data(struct tracking *tr)
 }
 
 int
-tracking_get_current_attr(struct tracking *_this, enum attr_type type, struct attr *attr)
+tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *attr, struct attr_iter *attr_iter)
 {
 	struct item *item;
 	struct map_rect *mr;
 	int result=0;
-	if (! _this->curr_line || ! _this->curr_line->street)
-		return 0;
-	item=&_this->curr_line->street->item;
-	mr=map_rect_new(item->map,NULL);
-	item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-	if (item_attr_get(item, type, attr))
-		result=1;
-	map_rect_destroy(mr);
-	return result;
+	dbg(1,"enter %s\n",attr_to_name(type));
+	if (_this->attr) {
+		attr_free(_this->attr);
+		_this->attr=NULL;
+	}
+	switch (type) {
+	case attr_position_valid:
+		attr->u.num=_this->valid;
+		return 1;
+	case attr_position_direction:
+		attr->u.numd=&_this->direction;
+		return 1;
+	case attr_position_speed:
+		attr->u.numd=&_this->speed;
+		return 1;
+	case attr_position_coord_geo:
+		if (!_this->coord_geo_valid) {
+			struct coord c;
+			c.x=_this->curr_out.x;
+			c.y=_this->curr_out.y;
+			transform_to_geo(_this->pro, &c, &_this->coord_geo);
+			_this->coord_geo_valid=1;
+		}
+		attr->u.coord_geo=&_this->coord_geo;
+		return 1;
+	default:
+		if (! _this->curr_line || ! _this->curr_line->street)
+			return 0;
+		item=&_this->curr_line->street->item;
+		mr=map_rect_new(item->map,NULL);
+		item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+		if (item_attr_get(item, type, attr)) {
+			_this->attr=attr_dup(attr);
+			*attr=*_this->attr;
+			result=1;
+		}
+		map_rect_destroy(mr);
+		return result;
+	}
 }
 
 struct item *
@@ -375,7 +411,7 @@ street_data_within_selection(struct street_data *sd, struct map_selection *sel)
 
 
 static void
-tracking_doupdate_lines(struct tracking *tr, struct pcoord *pc)
+tracking_doupdate_lines(struct tracking *tr, struct coord *pc, enum projection pro)
 {
 	int max_dist=1000;
 	struct map_selection *sel;
@@ -393,8 +429,8 @@ tracking_doupdate_lines(struct tracking *tr, struct pcoord *pc)
 	while ((m=mapset_next(h,1))) {
 		cc.x = pc->x;
 		cc.y = pc->y;
-		if (map_projection(m) != pc->pro) {
-			transform_to_geo(pc->pro, &cc, &g);
+		if (map_projection(m) != pro) {
+			transform_to_geo(pro, &cc, &g);
 			transform_from_geo(map_projection(m), &g, &cc);
 		}
 		sel = route_rect(18, &cc, &cc, 0, max_dist);
@@ -485,7 +521,7 @@ tracking_is_connected(struct coord *c1, struct coord *c2)
 }
 
 static int
-tracking_is_no_stop(struct coord *c1, struct pcoord *c2)
+tracking_is_no_stop(struct coord *c1, struct coord *c2)
 {
 	if (c1->x == c2->x && c1->y == c2->y)
 		return nostop_pref;
@@ -496,8 +532,6 @@ static int
 tracking_is_on_route(struct route *rt, struct item *item)
 {
 	if (! rt)
-		return 0;
-	if (route_pos_contains(rt, item))
 		return 0;
 	if (route_contains(rt, item))
 		return 0;
@@ -538,51 +572,59 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 }
 
 
-int
-tracking_update(struct tracking *tr, struct vehicleprofile *vehicleprofile, struct pcoord *pc, int angle, double *hdop, int speed, time_t fixtime)
+void
+tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *vehicleprofile, enum projection pro)
 {
 	struct tracking_line *t;
 	int i,value,min;
 	struct coord lpnt;
 	struct coord cin;
-	struct pcoord pcf; // Coordinate filtered through the CDF
-	int anglef;				// Angle filtered through the CDF
-	dbg(1,"enter(%p,%p,%d)\n", tr, pc, angle);
-	dbg(1,"c=%d:0x%x,0x%x\n", pc->pro, pc->x, pc->y);
-	tr->vehicleprofile=vehicleprofile;
+	struct attr valid,speed,direction,coord_geo;
+	if (v)
+		tr->vehicle=v;
+	if (vehicleprofile)
+		tr->vehicleprofile=vehicleprofile;
 
-	if (pc->x == tr->curr_in.x && pc->y == tr->curr_in.y) {
-		if (tr->curr_out.x && tr->curr_out.y)
-			*pc=tr->curr_out;
-		return 0;
+	if (! tr->vehicle)
+		return;
+	if (!vehicle_get_attr(tr->vehicle, attr_position_valid, &valid, NULL))
+		valid.u.num=attr_position_valid_valid;
+	if (valid.u.num == attr_position_valid_invalid) {
+		tr->valid=valid.u.num;
+		return;
 	}
-
-	if (hdop && *hdop > 3.5f) { // This value has been taken from julien cayzac's CDF implementation
-		*pc = tr->curr_out;
-		return 0;
+	if (!vehicle_get_attr(tr->vehicle, attr_position_speed, &speed, NULL) ||
+	    !vehicle_get_attr(tr->vehicle, attr_position_direction, &direction, NULL) ||
+	    !vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL))
+		return;
+	tr->valid=attr_position_valid_valid;
+	transform_from_geo(pro, coord_geo.u.coord_geo, &tr->curr_in);
+	if ((*speed.u.numd < 3 && transform_distance(pro, &tr->last_in, &tr->curr_in) < 10 )) {
+		dbg(1,"static speed %f coord 0x%x,0x%x vs 0x%x,0x%x\n",*speed.u.numd,tr->last_in.x,tr->last_in.y, tr->curr_in.x, tr->curr_in.y);
+		tr->valid=attr_position_valid_static;
+		tr->speed=0;
+		return;
 	}
+	tr->pro=pro;
+#if 0
 
 	tracking_process_cdf(&tr->cdf, pc, &pcf, angle, &anglef, speed, fixtime);
-
+#endif
+	tr->curr_angle=tr->direction=*direction.u.numd;
+	tr->speed=*speed.u.numd;
 	tr->last_in=tr->curr_in;
 	tr->last_out=tr->curr_out;
 	tr->last[0]=tr->curr[0];
 	tr->last[1]=tr->curr[1];
-	tr->curr_in=pcf;
-	tr->curr_angle=anglef;
-	cin.x = pcf.x;
-	cin.y = pcf.y;
-	if (!tr->lines || transform_distance_sq_pc(&tr->last_updated, &pcf) > 250000) {
+	if (!tr->lines || transform_distance(pro, &tr->last_updated, &tr->curr_in) > 500) {
 		dbg(1, "update\n");
 		tracking_free_lines(tr);
-		tracking_doupdate_lines(tr, &pcf);
-		tr->last_updated=pcf;
+		tracking_doupdate_lines(tr, &tr->curr_in, pro);
+		tr->last_updated=tr->curr_in;
 		dbg(1,"update end\n");
 	}
-		
+	
 	t=tr->lines;
-	if (! t)
-		return 0;
 	tr->curr_line=NULL;
 	min=INT_MAX/2;
 	while (t) {
@@ -596,25 +638,25 @@ tracking_update(struct tracking *tr, struct vehicleprofile *vehicleprofile, stru
 				tr->curr[1]=sd->c[i+1];
 				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
 					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], &cin, &lpnt),
-					tracking_angle_delta(tr, anglef, t->angle[i], 0)*angle_factor,
+					tracking_angle_delta(tr, tr->curr_angle, t->angle[i], 0)*angle_factor,
 					tracking_is_connected(tr->last, &sd->c[i]) ? connected_pref : 0,
 					lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y ? nostop_pref : 0,
 					value
 				);
 				tr->curr_out.x=lpnt.x;
 				tr->curr_out.y=lpnt.y;
-				tr->curr_out.pro = pcf.pro;
+				tr->coord_geo_valid=0;
 				min=value;
 			}
 		}
 		t=t->next;
 	}
 	dbg(1,"tr->curr_line=%p min=%d\n", tr->curr_line, min);
-	if (!tr->curr_line || min > offroad_limit_pref)
-		return 0;
+	if (!tr->curr_line || min > offroad_limit_pref) {
+		tr->curr_out=tr->curr_in;
+		tr->coord_geo_valid=0;
+	}
 	dbg(1,"found 0x%x,0x%x\n", tr->curr_out.x, tr->curr_out.y);
-	*pc=tr->curr_out;
-	return 1;	
 }
 
 struct tracking *

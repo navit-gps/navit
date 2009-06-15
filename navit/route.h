@@ -89,7 +89,7 @@ int route_get_path_set(struct route *this);
 int route_set_speed(struct route *this, enum item_type type, int value);
 int route_contains(struct route *this, struct item *item);
 void route_set_position(struct route *this, struct pcoord *pos);
-void route_set_position_from_tracking(struct route *this, struct tracking *tracking);
+void route_set_position_from_tracking(struct route *this, struct tracking *tracking, enum projection pro);
 struct map_selection *route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs);
 void route_set_destination(struct route *this, struct pcoord *dst, int async);
 struct route_path_handle *route_path_open(struct route *this);
