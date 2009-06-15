@@ -71,6 +71,14 @@ enum attr_type {
 #define ATTR_REL_MAXABS			0x40000000
 #define ATTR_REL_RELSHIFT		0x60000000
 
+enum attr_position_valid {
+	attr_position_valid_invalid,
+	attr_position_valid_static,
+	attr_position_valid_extrapolated_time,
+	attr_position_valid_extrapolated_spatial,
+	attr_position_valid_valid,
+};
+
 struct attr {
 	enum attr_type type;
 	union {
