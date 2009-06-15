@@ -2630,7 +2630,7 @@ gui_internal_search_list_set_default_country(struct gui_priv *this)
 
 	country_attr=country_default();
 	tracking=navit_get_tracking(this->nav);
-	if (tracking && tracking_get_current_attr(tracking, attr_country_id, &search_attr))
+	if (tracking && tracking_get_attr(tracking, attr_country_id, &search_attr, NULL))
 		country_attr=&search_attr;
 	if (country_attr) {
 		cs=country_search_new(country_attr, 0);

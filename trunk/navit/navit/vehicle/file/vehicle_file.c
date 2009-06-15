@@ -102,6 +102,7 @@ struct vehicle_priv {
 	int next_count;
 	struct gps_sat next[24];
 	struct item sat_item;
+	int valid;
 };
 
 #ifdef _WIN32
@@ -318,33 +319,39 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		   UTC of Fix[1],Latitude[2],N/S[3],Longitude[4],E/W[5],Quality(0=inv,1=gps,2=dgps)[6],Satelites used[7],
 		   HDOP[8],Altitude[9],"M"[10],height of geoid[11], "M"[12], time since dgps update[13], dgps ref station [14]
 		 */
-		lat = g_ascii_strtod(item[2], NULL);
-		priv->geo.lat = floor(lat / 100);
-		lat -= priv->geo.lat * 100;
-		priv->geo.lat += lat / 60;
+		if (*item[2] && *item[3] && *item[4] && *item[5]) {
+			lat = g_ascii_strtod(item[2], NULL);
+			priv->geo.lat = floor(lat / 100);
+			lat -= priv->geo.lat * 100;
+			priv->geo.lat += lat / 60;
 
-		if (!strcasecmp(item[3],"S"))
-			priv->geo.lat=-priv->geo.lat;
+			if (!strcasecmp(item[3],"S"))
+				priv->geo.lat=-priv->geo.lat;
 
-		lng = g_ascii_strtod(item[4], NULL);
-		priv->geo.lng = floor(lng / 100);
-		lng -= priv->geo.lng * 100;
-		priv->geo.lng += lng / 60;
+			lng = g_ascii_strtod(item[4], NULL);
+			priv->geo.lng = floor(lng / 100);
+			lng -= priv->geo.lng * 100;
+			priv->geo.lng += lng / 60;
 
-		if (!strcasecmp(item[5],"W"))
-			priv->geo.lng=-priv->geo.lng;
-
-		sscanf(item[6], "%d", &priv->status);
+			if (!strcasecmp(item[5],"W"))
+				priv->geo.lng=-priv->geo.lng;
+			priv->valid=attr_position_valid_valid;
+		} else
+			priv->valid=attr_position_valid_invalid;
+		if (*item[6])
+			sscanf(item[6], "%d", &priv->status);
+		if (*item[7])
 		sscanf(item[7], "%d", &priv->sats_used);
-		sscanf(item[8], "%lf", &priv->hdop);
-		strcpy(priv->fixtime, item[1]);
-		sscanf(item[9], "%lf", &priv->height);
+		if (*item[8])
+			sscanf(item[8], "%lf", &priv->hdop);
+		if (*item[1])
+			strcpy(priv->fixtime, item[1]);
+		if (*item[9])
+			sscanf(item[9], "%lf", &priv->height);
 
 		g_free(priv->nmea_data);
 		priv->nmea_data=priv->nmea_data_buf;
 		priv->nmea_data_buf=NULL;
-		ret = 1;
-
 #ifndef _WIN32
 		if (priv->file_type == file_type_file) {
 			if (priv->watch) {
@@ -390,6 +397,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 				&priv->fixyear);
 			priv->fixyear += 2000;
 		}
+		ret = 1;
 	}
 	if (!strncmp(buffer, "$GPGSV", 6) && i >= 4) {
 	/*
@@ -605,6 +613,9 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 			return 0;
 		}
 		attr->u.item=&priv->sat_item;
+		break;
+	case attr_position_valid:
+		attr->u.num=priv->valid;
 		break;
 	default:
 		return 0;

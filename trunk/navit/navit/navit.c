@@ -1981,75 +1981,53 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 static void
 navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 {
-	struct attr attr_dir, attr_speed, attr_pos, attr_hdop, attr_time;
+	struct attr attr_valid, attr_dir, attr_speed, attr_pos;
 	struct pcoord cursor_pc;
 	struct point cursor_pnt, *pnt=&cursor_pnt;
-	enum projection pro;
+	struct tracking *tracking=NULL;
+	enum projection pro=transform_get_projection(this_->trans);
 	int border=16;
-	time_t fixtime;
-	int recenter = 1; // indicates if we should recenter the map
+	int (*get_attr)(void *, enum attr_type, struct attr *, struct attr_iter *);
+	void *attr_object;
 
 	profile(0,NULL);
 	if (this_->ready != 3) {
 		profile(0,"return 1\n");
 		return;
 	}
-
-	if (! vehicle_get_attr(nv->vehicle, attr_position_direction, &attr_dir, NULL) ||
-	    ! vehicle_get_attr(nv->vehicle, attr_position_speed, &attr_speed, NULL) ||
-	    ! vehicle_get_attr(nv->vehicle, attr_position_coord_geo, &attr_pos, NULL)) {
+	if (this_->vehicle == nv && this_->tracking_flag)
+		tracking=this_->tracking;
+	if (tracking) {
+		tracking_update(tracking, nv->vehicle, this_->vehicleprofile, pro);
+		attr_object=tracking;
+		get_attr=(int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))tracking_get_attr;
+	} else {
+		attr_object=nv->vehicle;
+		get_attr=(int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))vehicle_get_attr;
+	}
+	if (get_attr(attr_object, attr_position_valid, &attr_valid, NULL))
+		if (!attr_valid.u.num != attr_position_valid_invalid)
+			return;
+	if (! get_attr(attr_object, attr_position_direction, &attr_dir, NULL) ||
+	    ! get_attr(attr_object, attr_position_speed, &attr_speed, NULL) ||
+	    ! get_attr(attr_object, attr_position_coord_geo, &attr_pos, NULL)) {
 		profile(0,"return 2\n");
 		return;
 	}
 	nv->dir=*attr_dir.u.numd;
 	nv->speed=*attr_speed.u.numd;
-	pro=transform_get_projection(this_->trans);
 	transform_from_geo(pro, attr_pos.u.coord_geo, &nv->coord);
 	if (nv != this_->vehicle) {
 		navit_vehicle_draw(this_, nv, NULL);
 		profile(0,"return 3\n");
 		return;
 	}
-
-	if (nv->speed < 10) {
-		long long diff,diff_x,diff_y;
-
-		diff_x = abs(nv->coord.x - nv->last.x);
-		diff_y = abs(nv->coord.y - nv->last.y);
-		diff = (diff_x * diff_x) + (diff_y * diff_y);
-
-		if ((diff < 20) && (diff > 0)) { // if our long is only 32 bit wide, we could run into an overflow here
-			recenter = 0;
-		}
-	}
-	if (recenter) {
-		nv->last = nv->coord;
-	}
-
 	cursor_pc.x = nv->coord.x;
 	cursor_pc.y = nv->coord.y;
 	cursor_pc.pro = pro;
-	if (this_->tracking && this_->tracking_flag) {
-		double zero;
-		if (! vehicle_get_attr(nv->vehicle, attr_position_hdop, &attr_hdop, NULL)) {
-			zero = 0.f;
-			attr_hdop.u.numd = &zero;
-		}
-
-		if (! vehicle_get_attr(nv->vehicle, attr_position_time_iso8601, &attr_time, NULL)) {
-			fixtime = time(NULL);
-		} else {
-			fixtime = iso8601_to_secs(attr_time.u.str);
-		}
-
-		if (tracking_update(this_->tracking, this_->vehicleprofile, &cursor_pc, nv->dir, attr_hdop.u.numd, nv->speed, fixtime)) {
-			nv->coord.x=cursor_pc.x;
-			nv->coord.y=cursor_pc.y;
-		}
-	}
 	if (this_->route) {
-		if (this_->tracking && this_->tracking_flag)
-			route_set_position_from_tracking(this_->route, this_->tracking);
+		if (tracking)
+			route_set_position_from_tracking(this_->route, tracking, pro);
 		else
 			route_set_position(this_->route, &cursor_pc);
 	}
