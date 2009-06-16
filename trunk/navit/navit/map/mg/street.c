@@ -1360,7 +1360,7 @@ house_number_next(char *number, char *first, char *last, int interpolation, int 
 		if (len) 
 			*percentage=delta*100/len;
 		else
-			percentage=50;
+			*percentage=50;
 	}
 	return 1;
 }
