@@ -236,8 +236,8 @@ static int street_get_coord(unsigned char **pos, int bytes, struct coord *ref, s
 	if (f) {
 		f->x=ref[0].x+x;
 		f->y=ref[1].y+y;
+		dbg(1,"0x%x,0x%x + 0x%x,0x%x = 0x%x,0x%x\n", x, y, ref[0].x, ref[1].y, f->x, f->y);
 	}
-	dbg(1,"0x%x,0x%x + 0x%x,0x%x = 0x%x,0x%x\n", x, y, ref[0].x, ref[1].y, f->x, f->y);
 	*pos=p;
 	return flags;
 }
