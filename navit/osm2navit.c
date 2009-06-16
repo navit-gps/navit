@@ -853,7 +853,11 @@ add_tag(char *k, char *v)
 			flags[0] |= AF_ONEWAY | AF_ROUNDABOUT | AF_ROUNDABOUT_VALID;
 	}
 	if (! strcmp(k,"maxspeed")) {
-		maxspeed_attr_value = atoi(v);
+		if (strstr(v, "mph")) {
+			maxspeed_attr_value = (int)floor(atof(v) * 1.609344);
+		} else {
+			maxspeed_attr_value = atoi(v);
+		}
 		if (maxspeed_attr_value) {
 			maxspeed_attr.len = 2;
 			flags[0] |= AF_SPEED_LIMIT;
