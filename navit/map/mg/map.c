@@ -209,7 +209,7 @@ file_next(struct map_rect_priv *mr)
 	}
 }
 
-void
+static void
 map_destroy_mg(struct map_priv *m)
 {
 	int i;
@@ -316,7 +316,7 @@ map_rect_get_item_byid_mg(struct map_rect_priv *mr, int id_hi, int id_lo)
 }
 
 
-void
+static void
 map_rect_destroy_mg(struct map_rect_priv *mr)
 {
 	int i;
