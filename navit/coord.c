@@ -192,8 +192,10 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 			goto out;
 		}
 	}
-	if (! s)
-		return 0;
+	if (! s) {
+		ret=0;
+		goto out;
+	}
 	while (*s == ' ') {
 		s++;
 	}
