@@ -1242,7 +1242,7 @@ navit_window_roadbook_destroy(struct navit *this_)
 void
 navit_window_roadbook_new(struct navit *this_)
 {
-	if (this_->roadbook_callback || this_->roadbook_window) {
+	if (!gui || this_->roadbook_callback || this_->roadbook_window) {
 		return;
 	}
 
