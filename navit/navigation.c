@@ -1318,7 +1318,7 @@ navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *n
 		/* TRANSLATORS: gives the name of the next road to turn into (into the E17) */
 		ret=g_strdup_printf(_("%sinto the %s"),prefix,itm->name2);
 	name1=ret;
-	while (*name1) {
+	while (name1 && *name1) {
 		switch (*name1) {
 		case '|':
 			*name1='\0';
