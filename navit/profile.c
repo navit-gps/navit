@@ -37,8 +37,8 @@ profile_timer(int level, const char *module, const char *function, const char *f
 	va_start(ap, fmt);
 	if (level < 0)
 		level=0;
-	if (level > 10)
-		level=10;
+	if (level > 9)
+		level=9;
 	if (fmt) {
 		gettimeofday(&curr, NULL);
 		msec=(curr.tv_usec-last[level].tv_usec)/1000+
