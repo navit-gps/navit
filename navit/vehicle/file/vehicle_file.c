@@ -681,6 +681,10 @@ vehicle_file_new_file(struct vehicle_methods
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
+	if(source == NULL){
+		 dbg(0,"Missing source attribute");
+		 return NULL;
+		 }
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->fd = -1;
 	ret->cbl = cbl;
