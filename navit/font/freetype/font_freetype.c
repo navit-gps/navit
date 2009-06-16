@@ -336,7 +336,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 
 	*meth = font_methods;
 	int exact, found=0;
-	char **family;
+	char **family, **family_sav;
 #if USE_CACHING
 	char *idstr;
 	FT_Face face;
@@ -358,23 +358,16 @@ font_freetype_font_new(struct graphics_priv *gr,
 	font->size=size;
 #ifdef HAVE_FONTCONFIG
 	dbg(2, " about to search for fonts, prefered = %s\n", fontfamily);
+	family = g_malloc(sizeof(fontfamilies) + sizeof(fontfamily));
+	if (fontfamily) {
+		memcpy(family, &fontfamily, sizeof(fontfamily));
+		memcpy(family + 1, fontfamilies, sizeof(fontfamilies));
+	} else {
+		memcpy(family, fontfamilies, sizeof(fontfamilies));
+	}
+	family_sav=family;
 	for (exact = 1; !found && exact >= 0; exact--) {
-		if (fontfamily) {
-			/* prepend the font passed so we look for it first */
-			family =
-			    malloc(sizeof(fontfamilies) +
-				   sizeof(fontfamily));
-			if (!family) {
-				dbg(0,
-				    "Out of memory while creating the font families table\n");
-				return NULL;
-			}
-			memcpy(family, &fontfamily, sizeof(fontfamily));
-			memcpy(family + 1, fontfamilies,
-			       sizeof(fontfamilies));
-		} else {
-			family = fontfamilies;
-		}
+		family=family_sav;
 
 
 		while (*family && !found) {
@@ -442,6 +435,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 			family++;
 		}
 	}
+	g_free(family_sav);
 #else
 	name=g_strdup_printf("%s/fonts/%s-%s.ttf",getenv("NAVIT_SHAREDIR"),"LiberationSans",flags ? "Bold":"Regular");
 #if USE_CACHING
