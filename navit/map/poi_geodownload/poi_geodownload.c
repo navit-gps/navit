@@ -754,7 +754,7 @@ map_new_poi_geodownload(struct map_methods *meth, struct attr **attrs)
 		entry = catalog->pdata[i];
 		dbg(1,"object name '%s'\n", entry->object_name);
 		if (!strcasecmp(entry->object_name, "_INDEXDATA")) {
-			if (load_poi_table(m, entry)) {
+			if (m && load_poi_table(m, entry)) {
 				printf("%s invalid\n", filename);
 				g_free(m);
 				m=NULL;
