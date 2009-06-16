@@ -669,8 +669,11 @@ gui_internal_button_attr_pressed(struct gui_priv *this, struct widget *w, void *
 static struct widget *
 gui_internal_button_navit_attr_new(struct gui_priv *this, char *text, enum flags flags, struct attr *on, struct attr *off)
 {
-	struct graphics_image *image=image_new_xs(this, "gui_inactive");
+	struct graphics_image *image=NULL;
 	struct widget *ret;
+	if (!on && !off)
+		return NULL;
+	image=image_new_xs(this, "gui_inactive");
 	ret=gui_internal_button_new_with_callback(this, text, image, flags, gui_internal_button_attr_pressed, NULL);
 	if (on)
 		ret->on=*on;
@@ -680,7 +683,7 @@ gui_internal_button_navit_attr_new(struct gui_priv *this, char *text, enum flags
 	ret->set_attr=(int (*)(void *, struct attr *))navit_set_attr;
 	ret->remove_cb=(void (*)(void *, struct callback *))navit_remove_callback;
 	ret->instance=this->nav;
-	ret->cb=callback_new_attr_2(callback_cast(gui_internal_button_attr_callback), on->type, this, ret);
+	ret->cb=callback_new_attr_2(callback_cast(gui_internal_button_attr_callback), on?on->type:off->type, this, ret);
 	navit_add_callback(this->nav, ret->cb);
 	gui_internal_button_attr_update(this, ret);
 	return ret;
@@ -689,8 +692,11 @@ gui_internal_button_navit_attr_new(struct gui_priv *this, char *text, enum flags
 static struct widget *
 gui_internal_button_map_attr_new(struct gui_priv *this, char *text, enum flags flags, struct map *map, struct attr *on, struct attr *off, int deflt)
 {
-	struct graphics_image *image=image_new_xs(this, "gui_inactive");
+	struct graphics_image *image=NULL;
 	struct widget *ret;
+	image=image_new_xs(this, "gui_inactive");
+	if (!on && !off)
+		return NULL;
 	ret=gui_internal_button_new_with_callback(this, text, image, flags, gui_internal_button_attr_pressed, NULL);
 	if (on)
 		ret->on=*on;
@@ -702,7 +708,7 @@ gui_internal_button_map_attr_new(struct gui_priv *this, char *text, enum flags f
 	ret->remove_cb=(void (*)(void *, struct callback *))map_remove_callback;
 	ret->instance=map;
 	ret->redraw=1;
-	ret->cb=callback_new_attr_2(callback_cast(gui_internal_button_attr_callback), on->type, this, ret);
+	ret->cb=callback_new_attr_2(callback_cast(gui_internal_button_attr_callback), on?on->type:off->type, this, ret);
 	map_add_callback(map, ret->cb);
 	gui_internal_button_attr_update(this, ret);
 	return ret;
