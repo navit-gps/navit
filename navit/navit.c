@@ -809,8 +809,8 @@ new_file:
 				 type, description);
 		} else
 			fprintf(f,"\n");
-		fclose(f);
 	}
+	fclose(f);
 }
 
 /*
