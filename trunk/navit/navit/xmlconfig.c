@@ -702,9 +702,10 @@ static int
 xpointer_match(const char *xpointer, struct xistate *first)
 {
 	char *prefix="xpointer(";
-	int len=strlen(xpointer);
+	int len;
 	if (! xpointer)
 		return 1;
+	len=strlen(xpointer);
 	if (strncmp(xpointer,prefix,strlen(prefix)))
 		return 0;
 	if (xpointer[len-1] != ')')
