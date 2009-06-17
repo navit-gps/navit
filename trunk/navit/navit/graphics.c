@@ -1604,6 +1604,8 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 			if (e->u.circle.width > 1) 
 				gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
 			gra->meth.draw_circle(gra->priv, gc->priv, &pnt[0], e->u.circle.radius);
+			#if 0
+			// Leftover code,  displayitem_draw is intended to be merged with with graphics_draw_itemgra
 			if (label && e->text_size) {
 				struct graphics_font *font=get_font(gra, e->text_size);
 				p.x=pnt[0].x+3;
@@ -1613,6 +1615,7 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 				else
 					dbg(0,"Failed to get font with size %d\n",e->text_size);
 			}
+			# endif
 			break;
 		case element_icon:
 			if (e->u.icon.src[0] == '/') 
