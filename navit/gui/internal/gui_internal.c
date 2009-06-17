@@ -4674,9 +4674,9 @@ static void gui_internal_table_button_prev(struct gui_priv * this, struct widget
 	if(table_widget)
 	{
 		table_data = (struct table_data*) table_widget->data;
-		current_page_top = table_data->top_row;
 		if(table_data) 
 		{
+			current_page_top = table_data->top_row;
 			for(iterator = table_data->page_headers; iterator != NULL;
 			    iterator = g_list_next(iterator))
 			{
