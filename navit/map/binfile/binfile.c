@@ -1247,8 +1247,9 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 	if (!map_binfile_open(m)) {
 		map_binfile_destroy(m);
 		m=NULL;
+	} else {
+		load_changes(m);
 	}
-	load_changes(m);
 	return m;
 }
 
