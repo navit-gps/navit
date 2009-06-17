@@ -458,7 +458,7 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 	if (dbus_message_iter_has_next(&iter))
 	{
 		dbus_message_iter_next(&iter);
-		if (!point_get_from_message(message, &iter, p))
+		if (p && !point_get_from_message(message, &iter, p))
 			return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 	}
 
