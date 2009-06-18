@@ -2628,7 +2628,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		for (i = 0 ; i < 5 ; i++) {
 			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
 		}
-		if (mode == 8) {
+		if (mode == 16) {
 			gui_internal_keyboard_key(this, wkbd, "-","-",max_w,max_h);
 			gui_internal_keyboard_key(this, wkbd, "'","'",max_w,max_h);
 			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
