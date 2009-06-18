@@ -259,7 +259,7 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 	menu_item=popup_printf(menu, menu_type_submenu, "Item");
 	popup_printf(menu_item, menu_type_menu, "type: 0x%x", diitem->type);
 	popup_printf(menu_item, menu_type_menu, "id: 0x%x 0x%x", diitem->id_hi, diitem->id_lo);
-	if (diitem->map) {
+	if (diitem && diitem->map) {
 		mr=map_rect_new(diitem->map,NULL);
 		item=map_rect_get_item_byid(mr, diitem->id_hi, diitem->id_lo);
 		dbg(1,"item=%p\n", item);
