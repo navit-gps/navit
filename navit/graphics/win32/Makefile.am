@@ -6,4 +6,4 @@ else
 noinst_LTLIBRARIES = libgraphics_win32.la
 endif
 libgraphics_win32_la_SOURCES = graphics_win32.c xpm2bmp.c
-libgraphics_win32_la_LDFLAGS = -module
+libgraphics_win32_la_LDFLAGS = -module -avoid-version

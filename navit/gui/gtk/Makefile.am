@@ -3,4 +3,4 @@ AM_CPPFLAGS = -I$(top_srcdir)/navit @NAVIT_CFLAGS@ @HILDON_CFLAGS@ @GTK2_CFLAGS@
 modulegui_LTLIBRARIES = libgui_gtk.la
 libgui_gtk_la_SOURCES = datawindow.c destination.c gui_gtk_statusbar.c gui_gtk_action.c gui_gtk_window.c gui_gtk.h
 libgui_gtk_la_LIBADD = @GTK2_LIBS@
-libgui_gtk_la_LDFLAGS = -module
+libgui_gtk_la_LDFLAGS = -module -avoid-version
