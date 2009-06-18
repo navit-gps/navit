@@ -119,9 +119,7 @@ static void *
 object_get_from_message_arg(DBusMessage *message, char *type)
 {
 	char *opath;
-	char *prefix;
 	DBusError error;
-	void *ret=NULL;
 
 	dbus_error_init(&error);
 	if (!dbus_message_get_args(message, &error, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID)) {
@@ -743,10 +741,7 @@ request_graphics_get_data(DBusConnection *connection, DBusMessage *message)
 	struct graphics *graphics;
 	char *data;
 	struct graphics_data_image *image;
-	struct attr attr;
 	DBusMessage *reply;
-	int *error;
-	int i;
 
 	graphics = object_get_from_message(message, "graphics");
 	if (! graphics)
@@ -814,7 +809,7 @@ struct dbus_method {
 static char *
 introspect_path(char *object)
 {
-	char *ret,*s,*d;
+	char *ret;
 	int i;
 	char *def=".default_";
 	int def_len=strlen(def);
@@ -878,7 +873,7 @@ generate_navitintrospectxml(char *object)
         navitintrospectxml = g_strconcat_printf(navitintrospectxml, "    </method>\n");
         
         // close the interface if we reached the last method or the interface changes
-        if ((methods_size == i+1) || (methods_size > i+1) && strcmp(dbus_methods[i+1].path, dbus_methods[i].path))
+        if ((methods_size == i+1) || ((methods_size > i+1) && strcmp(dbus_methods[i+1].path, dbus_methods[i].path)))
             navitintrospectxml = g_strconcat_printf(navitintrospectxml, "  </interface>\n\n");
     }
     // close the "mother tag"

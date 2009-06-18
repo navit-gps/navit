@@ -82,7 +82,9 @@
 #include <cpl_error.h>
 #endif
 
+#if 0
 SHP_CVSID("$Id: shptree.c,v 1.12 2008/11/12 15:39:50 fwarmerdam Exp $")
+#endif
 
 #ifndef TRUE
 #  define TRUE 1

@@ -348,4 +348,6 @@ int tree_search_next(struct tree_search *ts, unsigned char **p, int dir);
 int tree_search_next_lin(struct tree_search *ts, unsigned char **p);
 struct item * housenumber_search_get_item(struct map_rect_priv *mr);
 struct map_rect_priv * map_rect_new_mg(struct map_priv *map, struct map_selection *sel);
+void map_rect_destroy_mg(struct map_rect_priv *mr);
 struct item *map_rect_get_item_byid_mg(struct map_rect_priv *mr, int id_hi, int id_lo);
+int housenumber_search_setup(struct map_rect_priv *mr);
