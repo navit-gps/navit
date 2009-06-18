@@ -844,7 +844,7 @@ introspect_path(char *object)
 static char *
 generate_navitintrospectxml(char *object)
 {
-    int i,n=0;
+    int i,methods_size,n=0;
     char *navitintrospectxml;
     char *path=introspect_path(object);
     if (!path)
@@ -854,7 +854,8 @@ generate_navitintrospectxml(char *object)
     // write header and make navit introspectable
     navitintrospectxml = g_strdup_printf("%s%s%s\n", navitintrospectxml_head1, object, navitintrospectxml_head2);
     
-    for (i = 0 ; i < sizeof(dbus_methods)/sizeof(struct dbus_method) ; i++) {
+    methods_size=sizeof(dbus_methods)/sizeof(struct dbus_method);
+    for (i = 0 ; i < methods_size ; i++) {
         // start new interface if it's the first method or it changed
 	if (strcmp(dbus_methods[i].path, path))
 		continue;
@@ -877,7 +878,7 @@ generate_navitintrospectxml(char *object)
         navitintrospectxml = g_strconcat_printf(navitintrospectxml, "    </method>\n");
         
         // close the interface if we reached the last method or the interface changes
-        if ((sizeof(dbus_methods)/sizeof(struct dbus_method) == (i+1)) || strcmp(dbus_methods[i+1].path, dbus_methods[i].path))
+        if ((methods_size == i+1) || (methods_size > i+1) && strcmp(dbus_methods[i+1].path, dbus_methods[i].path))
             navitintrospectxml = g_strconcat_printf(navitintrospectxml, "  </interface>\n\n");
     }
     // close the "mother tag"
