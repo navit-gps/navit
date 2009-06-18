@@ -33,6 +33,7 @@
 #include "mapset.h"
 #include "plugin.h"
 #include "vehicleprofile.h"
+#include "vehicle.h"
 
 struct tracking_line
 {
@@ -129,6 +130,7 @@ tracking_init_cdf(struct cdf_data *cdf, int hist_size)
 // Mininum distance (square of it..), below which we ignore gps updates
 #define CDF_MINDIST 49 // 7 meters, I guess this value has to be changed for pedestrians.
 
+#if 0
 static void
 tracking_process_cdf(struct cdf_data *cdf, struct pcoord *pin, struct pcoord *pout, int dirin, int *dirout, int cur_speed, time_t fixtime)
 {
@@ -278,6 +280,7 @@ tracking_process_cdf(struct cdf_data *cdf, struct pcoord *pin, struct pcoord *po
 
 	cdf->available = 1;
 } 
+#endif
 
 int
 tracking_get_angle(struct tracking *tr)

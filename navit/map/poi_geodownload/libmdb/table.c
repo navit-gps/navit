@@ -34,6 +34,7 @@ static gint mdb_col_comparer(MdbColumn **a, MdbColumn **b)
 		return 0;
 }
 
+#if 0
 static unsigned char mdb_col_needs_size(int col_type)
 {
 	if (col_type == MDB_TEXT) {
@@ -42,6 +43,7 @@ static unsigned char mdb_col_needs_size(int col_type)
 		return FALSE;
 	}
 }
+#endif
 
 MdbTableDef *mdb_alloc_tabledef(MdbCatalogEntry *entry)
 {
