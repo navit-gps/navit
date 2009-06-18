@@ -7,4 +7,4 @@ noinst_LTLIBRARIES = libgui_win32.la
 endif
 libgui_win32_la_SOURCES = gui_win32.c win32_gui_destination.c win32_gui_notify.c ceglue.h ceglue.c
 libgui_win32_la_LIBADD = 
-libgui_win32_la_LDFLAGS = -module
+libgui_win32_la_LDFLAGS = -module -avoid-version
