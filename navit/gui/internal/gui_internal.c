@@ -4167,6 +4167,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	int is_first_page=1;
 	struct table_column_desc * dim=NULL;
 	
+	dbg_assert(table_data);
 	column_desc = gui_internal_compute_table_dimensions(this,w);
 	y=w->p.y;
 	
@@ -4234,7 +4235,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		table_data->bottom_row=cur_row;
 		current_desc = g_list_next(current_desc);
 	}
-	if(table_data  && table_data->button_box && (is_skipped || !is_first_page)  )
+	if(table_data->button_box && (is_skipped || !is_first_page)  )
 	{
 		table_data->button_box->p.y =w->p.y+w->h-table_data->button_box->h - 
 			this->spacing;
