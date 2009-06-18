@@ -316,7 +316,7 @@ map_rect_get_item_byid_mg(struct map_rect_priv *mr, int id_hi, int id_lo)
 }
 
 
-static void
+void
 map_rect_destroy_mg(struct map_rect_priv *mr)
 {
 	int i;

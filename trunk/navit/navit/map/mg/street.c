@@ -17,6 +17,7 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -986,6 +987,7 @@ street_name_coord_get(void *priv_data, struct coord *c, int count)
 	return 0;
 }
 
+#if 0
 static void
 debug(struct map_rect_priv *mr)
 {
@@ -1027,13 +1029,12 @@ debug(struct map_rect_priv *mr)
 				}
 			}
 }
+#endif
 
 static int
 street_name_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
 	struct map_rect_priv *mr=priv_data;
-	struct item *item;
-	struct attr attrd;
 
 	attr->type=attr_type;
 	switch (attr_type) {
@@ -1171,7 +1172,7 @@ static int
 street_name_numbers_get_next(struct map_rect_priv *mr, struct street_name *name, char *start, char **p, int mode, int *id, struct street_name_numbers *ret)
 {
 	struct street_name_numbers tmp;
-	char *s,*ps,*pt;
+	char *ps,*pt;
 	int found;
 	while (*p < name->aux_data+name->aux_len) {
 		ps=*p;
@@ -1199,8 +1200,6 @@ street_name_numbers_get_next(struct map_rect_priv *mr, struct street_name *name,
 static struct item *
 street_search_get_item_street_name_district(struct map_rect_priv *mr, int flag)
 {
-	struct street_name_numbers name_numbers;
-	int id=mr->item.id_hi & 0xff;
 	if (street_name_eod(&mr->street.name))
 		return NULL;
 	if (!street_name_numbers_get_next(mr, &mr->street.name, NULL, &mr->street.name.tmp_data, 1, &mr->item.id_hi, &mr->street.name_numbers))
@@ -1272,9 +1271,7 @@ housenumber_coord_get(void *priv_data, struct coord *c, int count)
 static int
 housenumber_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
-	struct map_rect_priv *mr=priv_data,*mrt;
-	struct item *item;
-	struct attr attrn;
+	struct map_rect_priv *mr=priv_data;
 	attr->type=attr_type;
 	switch (attr_type) {
 	case attr_house_number:
@@ -1337,7 +1334,7 @@ housenumber_search_setup(struct map_rect_priv *mr)
 	return 1;
 }
 
-int
+static int
 house_number_next(char *number, char *first, char *last, int interpolation, int *percentage)
 {
 	int firstn=atoi(first);

@@ -665,7 +665,7 @@ button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 
 	if (event->button < 8) {
 		if (this->button[event->button])
-			return;
+			return FALSE;
 		this->button[event->button]=1;
 	}
 	p.x=event->x;
@@ -682,7 +682,7 @@ button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 
 	if (event->button < 8) {
 		if (!this->button[event->button])
-			return;
+			return FALSE;
 		this->button[event->button]=0;
 	}
 	p.x=event->x;
@@ -1048,9 +1048,6 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_KEY_PRESS_MASK);
 	g_signal_connect(G_OBJECT(draw), "expose_event", G_CALLBACK(expose), this);
         g_signal_connect(G_OBJECT(draw), "configure_event", G_CALLBACK(configure), this);
-#if 0
-        g_signal_connect(G_OBJECT(draw), "realize_event", G_CALLBACK(realize), co);
-#endif
 	g_signal_connect(G_OBJECT(draw), "button_press_event", G_CALLBACK(button_press), this);
 	g_signal_connect(G_OBJECT(draw), "button_release_event", G_CALLBACK(button_release), this);
 	g_signal_connect(G_OBJECT(draw), "scroll_event", G_CALLBACK(scroll), this);

@@ -1567,7 +1567,9 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 	GList *es;
 	struct point p;
 	struct coord c;
+#if 0
 	char *label=NULL;
+#endif
 	struct graphics_gc *gc = NULL;
 	struct graphics_image *img;
 	char path[PATH_MAX];
