@@ -252,6 +252,8 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 	label=graphics_displayitem_get_label(di);
 	diitem=graphics_displayitem_get_item(di);
 
+	dbg_assert(diitem);
+
 	if (label) 
 		menu=popup_printf(popup, menu_type_submenu, "%s '%s'", item_to_name(diitem->type), label);
 	else
@@ -259,7 +261,7 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 	menu_item=popup_printf(menu, menu_type_submenu, "Item");
 	popup_printf(menu_item, menu_type_menu, "type: 0x%x", diitem->type);
 	popup_printf(menu_item, menu_type_menu, "id: 0x%x 0x%x", diitem->id_hi, diitem->id_lo);
-	if (diitem && diitem->map) {
+	if (diitem->map) {
 		mr=map_rect_new(diitem->map,NULL);
 		item=map_rect_get_item_byid(mr, diitem->id_hi, diitem->id_lo);
 		dbg(1,"item=%p\n", item);
@@ -284,7 +286,7 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 	} else {
 		popup_printf(menu, menu_type_menu, "(No map)");
 	}
-	if (diitem && item_get_default_flags(diitem->type)) {
+	if (item_get_default_flags(diitem->type)) {
 		int speeds[]={5,10,20,30,40,50,60,70,80,90,100};
 		int delays[]={1,2,3,5,10,15,20,30,45,60,75,90,120,150,180,240,300};
 		int i;
@@ -299,7 +301,6 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 			popup_printf_cb(menu_item, menu_type_menu, callback_new_2(callback_cast(popup_traffic_distortion_delay), diitem, delays[i]*600), "%d min",delays[i]);
 		}
 	}
-
 }
 
 static void
