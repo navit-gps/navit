@@ -1,4 +1,4 @@
-#!usr/bin/perl -w
+#!/usr/bin/perl -w
 #
 # Vincent "latouche" Touchard, vtouchar@latouche.info
 # 2008/09/10
