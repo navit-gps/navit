@@ -53,7 +53,82 @@
         <osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.xpm"/>
         <osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.xpm"/> 
 
-        <vehicle name="Local GPS" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
+        <vehicle name="Car" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
+            <!-- Navit can write a tracklog in several formats (gpx, nmea or textfile): -->
+            <!-- <log type="gpx" data="track_%Y%m%d-%i.gpx" flush_size="1000" flush_time="30"/> -->
+            <cursor w="26" h="26">
+                <itemgra>
+                    <circle color="#0000ff" radius="24" width="2">
+                        <coord x="0" y="0"/>
+                    </circle>
+                </itemgra>
+                <itemgra speed_range="-2">
+                    <polyline color="#0000ff" width="2">
+                        <coord x="0" y="0"/>
+                        <coord x="0" y="0"/>
+                    </polyline>
+                </itemgra>
+                <itemgra speed_range="3-">
+                    <polyline color="#0000ff" width="2">
+                        <coord x="-7" y="-10"/>
+                        <coord x="0" y="12"/>
+                        <coord x="7" y="-10"/>
+                    </polyline>
+                </itemgra>
+            </cursor>
+        </vehicle>
+
+        <vehicle name="Bike" profilename="bike" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
+            <!-- Navit can write a tracklog in several formats (gpx, nmea or textfile): -->
+            <!-- <log type="gpx" data="track_%Y%m%d-%i.gpx" flush_size="1000" flush_time="30"/> -->
+            <cursor w="26" h="26">
+                <itemgra>
+                    <circle color="#0000ff" radius="24" width="2">
+                        <coord x="0" y="0"/>
+                    </circle>
+                </itemgra>
+                <itemgra speed_range="-2">
+                    <polyline color="#0000ff" width="2">
+                        <coord x="0" y="0"/>
+                        <coord x="0" y="0"/>
+                    </polyline>
+                </itemgra>
+                <itemgra speed_range="3-">
+                    <polyline color="#0000ff" width="2">
+                        <coord x="-7" y="-10"/>
+                        <coord x="0" y="12"/>
+                        <coord x="7" y="-10"/>
+                    </polyline>
+                </itemgra>
+            </cursor>
+        </vehicle>
+
+        <vehicle name="Horse" profilename="horse" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
+            <!-- Navit can write a tracklog in several formats (gpx, nmea or textfile): -->
+            <!-- <log type="gpx" data="track_%Y%m%d-%i.gpx" flush_size="1000" flush_time="30"/> -->
+            <cursor w="26" h="26">
+                <itemgra>
+                    <circle color="#0000ff" radius="24" width="2">
+                        <coord x="0" y="0"/>
+                    </circle>
+                </itemgra>
+                <itemgra speed_range="-2">
+                    <polyline color="#0000ff" width="2">
+                        <coord x="0" y="0"/>
+                        <coord x="0" y="0"/>
+                    </polyline>
+                </itemgra>
+                <itemgra speed_range="3-">
+                    <polyline color="#0000ff" width="2">
+                        <coord x="-7" y="-10"/>
+                        <coord x="0" y="12"/>
+                        <coord x="7" y="-10"/>
+                    </polyline>
+                </itemgra>
+            </cursor>
+        </vehicle>
+
+        <vehicle name="Pedestrian" profilename="pedestrian" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
             <!-- Navit can write a tracklog in several formats (gpx, nmea or textfile): -->
             <!-- <log type="gpx" data="track_%Y%m%d-%i.gpx" flush_size="1000" flush_time="30"/> -->
             <cursor w="26" h="26">
@@ -171,38 +246,60 @@
             <roadprofile item_types="roundabout" speed="10" route_weight="10"/>
             <roadprofile item_types="ferry" speed="40" route_weight="40"/>
 	</vehicleprofile>
+
 	<vehicleprofile name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="1" route_mode="0">
-	    <roadprofile item_types="track_gravelled" speed="17" route_weight="17">
+	    <roadprofile item_types="steps" speed="2" route_weight="5">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
 	    </roadprofile>
-	    <roadprofile item_types="track_paved" speed="20" route_weight="18">
+	    <roadprofile item_types="street_pedestrian,footway" speed="5" route_weight="10">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
 	    </roadprofile>
-	    <roadprofile item_types="cycleway" speed="20" route_weight="20">
+	    <roadprofile item_types="path,track_ground" speed="12" route_weight="12">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
 	    </roadprofile>
-	    <roadprofile item_types="street_0,street_1_city,street_2_city,living_street" speed="20" route_weight="14">
+	    <roadprofile item_types="track_gravelled" speed="17" route_weight="15">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
 	    </roadprofile>
-	    <roadprofile item_types="street_3_city,street_4_city,street_service" speed="20" route_weight="7">
+	    <!-- cycleways, paved tracks, serviceways etc. are the favourite ways -->
+	    <roadprofile item_types="track_paved,cycleway,street_service,street_parking_lane" speed="22" route_weight="20">
             	<announcement level="0" distance_metric="25"/>
             	<announcement level="1" distance_metric="100"/>
             	<announcement level="2" distance_metric="200"/>
 	    </roadprofile>
-            <roadprofile item_types="street_1_land,street_2_land" speed="20" route_weight="14">
-            	<announcement level="0" distance_metric="100"/>
-            	<announcement level="1" distance_metric="400"/>
-            	<announcement level="2" distance_metric="1000"/>
+	    <!-- residential, unclassified, living street etc. -->
+	    <roadprofile item_types="street_0,street_1_city,living_street" speed="20" route_weight="15">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
 	    </roadprofile>
-            <roadprofile item_types="street_3_land,street_4_land" speed="20" route_weight="7">
+	    <!-- tertiary and minor roads are acceptable, but should be avoided in favour of tracks and cycleways -->
+	    <roadprofile item_types="street_2_city,street_1_land,street_2_land" speed="22" route_weight="12">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <!-- secondary etc. are acceptable when necessary -->
+	    <roadprofile item_types="street_3_city" speed="22" route_weight="10">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <!-- primary, trunk etc. should be avoided -->
+	    <roadprofile item_types="street_4_city,ramp" speed="22" route_weight="7">
+            	<announcement level="0" distance_metric="25"/>
+            	<announcement level="1" distance_metric="100"/>
+            	<announcement level="2" distance_metric="200"/>
+	    </roadprofile>
+	    <!-- Those types do not appear in osm2navit.c and therefore are not used ATM -->
+      <roadprofile item_types="street_3_land,street_4_land" speed="20" route_weight="7">
             	<announcement level="0" distance_metric="100"/>
             	<announcement level="1" distance_metric="400"/>
             	<announcement level="2" distance_metric="1000"/>
@@ -210,6 +307,7 @@
             <roadprofile item_types="roundabout" speed="20" route_weight="10"/>
             <roadprofile item_types="ferry" speed="40" route_weight="40"/>
 	</vehicleprofile>
+
 	<vehicleprofile name="pedestrian" flags="0x20000000" flags_forward_mask="0x20000000" flags_reverse_mask="0x20000000" maxspeed_handling="1" route_mode="0">
 	    <roadprofile item_types="footway,bridleway,path" speed="5" route_weight="5">
             	<announcement level="0" distance_metric="25"/>
