@@ -1,4 +1,4 @@
-AC_INIT(navit, 0.1.1)
+AC_INIT(navit, 0.2.0)
 SOURCE_MODE=svn
 
 AM_INIT_AUTOMAKE
