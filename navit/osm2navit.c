@@ -2062,7 +2062,7 @@ tile_bbox(char *tile, struct rect *r)
 		c.x=(r->l.x+r->h.x)/2;
 		c.y=(r->l.y+r->h.y)/2;
 		xo=(r->h.x-r->l.x)*overlap/100;
-		yo=(r->h.x-r->l.x)*overlap/100;
+		yo=(r->h.y-r->l.y)*overlap/100;
 		switch (*tile) {
 		case 'a':
 			r->l.x=c.x-xo;
