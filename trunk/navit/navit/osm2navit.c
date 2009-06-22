@@ -2011,7 +2011,7 @@ struct rect world_bbox = {
 	{  20000000,  20000000},
 };
 
-int overlap=0;
+int overlap=1;
 
 static void
 tile(struct rect *r, char *suffix, char *ret, int max)
