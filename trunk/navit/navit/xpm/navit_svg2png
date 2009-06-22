@@ -53,6 +53,14 @@ else
 	elif [ -f $svg.svgz ]
 	then
 		gzip -dc <$svg.svgz >$svg.svg
+		if [ -z "$w" ]
+		then
+			w=$(grep 'width="[0-9pxt.]*"' $svg.svg | head -n 1 | sed -e 's/.*width="//' -e 's/[pxt]*".*//')
+		fi
+		if [ -z "$h" ]
+		then
+			h=$(grep 'height="[0-9pxt.]*"' $svg.svg | head -n 1 | sed -e 's/.*height="//' -e 's/[pxt]*".*//')
+		fi
 		svgtopng $w $h $svg.svg $png
 		rm -f $svg.svg
 	fi
