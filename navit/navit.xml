@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE config SYSTEM "navit.dtd">
 <!-- For configuration options used in this file, please read
-     http://wiki.navit-project.org/index.php/Configuring_NavIt -->
+     http://wiki.navit-project.org/index.php/Configuring_NavIt 
+     Do not edit /usr/share/navit/navit.xml : changes would be lost
+     on upgrade. Rather copy it to ~/.navit/. Please read wiki -->
 <config xmlns:xi="http://www.w3.org/2001/XInclude">
     <plugins>
         <plugin path="$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}lib*.so" ondemand="yes"/>
