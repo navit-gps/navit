@@ -140,7 +140,7 @@ nav_svgs += nav_roundabout_r7_bk.svg nav_roundabout_r7_wh.svg nav_roundabout_r8_
 nav_svgs += nav_straight_bk.svg nav_straight_wh.svg nav_turnaround_left_bk.svg nav_turnaround_left_wh.svg
 nav_svgs += nav_turnaround_right_bk.svg nav_turnaround_right_wh.svg
 
-flag_svgs  = country_AD.svgz country_AE.svgz country_AF.svgz country_AG.svgz country_AI.svgz country_AL.svgz country_AM.svgz
+flag_svgs  = country_.svgz country_AD.svgz country_AE.svgz country_AF.svgz country_AG.svgz country_AI.svgz country_AL.svgz country_AM.svgz
 flag_svgs += country_AN.svgz country_AO.svgz country_AQ.svgz country_AR.svgz country_AS.svgz country_AT.svgz country_AU.svgz country_AW.svgz
 flag_svgs += country_AX.svgz country_AZ.svgz country_BA.svgz country_BB.svgz country_BD.svgz country_BE.svgz country_BF.svgz
 flag_svgs += country_BG.svgz country_BH.svgz country_BI.svgz country_BJ.svgz country_BL.svgz country_BM.svgz country_BN.svgz
@@ -181,11 +181,13 @@ if USE_SVG
 endif
 
 if USE_SVG2PNG
+%.png:$(srcdir)/*.svgz
+	SRCDIR=$(srcdir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
 %.png:$(srcdir)/*.svg
 	SRCDIR=$(srcdir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
-pngs = $(addsuffix .png,$(basename $(svgs)))
-xsize=$(firstword $(subst x, ,$(scale)))
-ysize=$(lastword $(subst x, ,$(scale)))
+pngs = $(addsuffix .png,$(basename $(svgs) $(nav_svgs) $(flag_svgs)))
+xsize=$(word 1,$(subst x, ,$(scale)))
+ysize=$(word $(words $(scale)),$(subst x, ,$(scale)))
 comma=,
 if USE_SVG2PNG_SCALES
 pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(svgs))))
