@@ -185,7 +185,7 @@ if USE_SVG2PNG
 	SRCDIR=$(srcdir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
 %.png:$(srcdir)/*.svg
 	SRCDIR=$(srcdir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
-pngs = $(addsuffix .png,$(basename $(svgs) $(nav_svgs) $(flag_svgs)))
+pngs = $(addsuffix .png,$(basename $(svgs)))
 xsize=$(word 1,$(subst x, ,$(scale)))
 ysize=$(word $(words $(scale)),$(subst x, ,$(scale)))
 comma=,
