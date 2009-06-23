@@ -2352,74 +2352,64 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	GList *l;
 	static int cpt_res = 0;
 	cpt_res ++;
-          static char possible_keys[256]="";
+	static char possible_keys[256]="";
 
 	res=search_list_get_result(this->sl);
-	if (res) 
-	{
+	if (res) {
 		gchar* trunk_name = NULL;
-		
+
 		struct widget *menu=g_list_last(this->root.children)->data;
 		struct widget *wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
-		
+
 		if (! strcmp(wm_name,"Town")) 
 			trunk_name = g_strrstr(res->town->name, wi->text);
 		if (! strcmp(wm_name,"Street")) 
 			trunk_name = g_strrstr(name=res->street->name, wi->text);
-			
-		if (trunk_name)
-		{
+
+		if (trunk_name) {
 			char next_char = trunk_name[strlen(wi->text)];
 			int i;
 			int len = strlen(possible_keys);
 			for(i = 0; (i<len) && (possible_keys[i] != next_char) ;i++) ;
-			if (i==len || !len)
-			{
+			if (i==len || !len) {
 				possible_keys[len]=trunk_name[strlen(wi->text)];
 				possible_keys[len+1]='\0';
-				
+
 			}
-				dbg(1,"%s %s possible_keys:%s \n", wi->text, res->town->name, possible_keys);
+			dbg(1,"%s %s possible_keys:%s \n", wi->text, res->town->name, possible_keys);
 		}
 	}
-	
+
 	if (! res) {
 		gui_internal_search_idle_end(this);
 		cpt_res = 0;
 
 		struct menu_data *md=gui_internal_menu_data(this);
-		GList *lk=md->keyboard->children;
-		graphics_draw_mode(this->gra, draw_mode_begin);
-		while (lk) {
-			struct widget *child=lk->data;
-			GList *lk2=child->children;
-			while (lk2) {
-				struct widget *child_=lk2->data;
-				lk2=g_list_next(lk2);
-				if (child_->data && strcmp("\b", child_->data) /*c != NAVIT_KEY_BACKSPACE*/
-)
-				{
-					if (strlen(possible_keys) == 0)
-						child_->state|= STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SENSITIVE|STATE_CLEAR
-;
-					else if (g_strrstr(possible_keys, child_->data)!=NULL )
-					{
-						child_->state|= STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SENSITIVE|STATE_CLEAR
-;
+		if (md && md->keyboard) {
+			GList *lk=md->keyboard->children;
+			graphics_draw_mode(this->gra, draw_mode_begin);
+			while (lk) {
+				struct widget *child=lk->data;
+				GList *lk2=child->children;
+				while (lk2) {
+					struct widget *child_=lk2->data;
+					lk2=g_list_next(lk2);
+					if (child_->data && strcmp("\b", child_->data)) { // FIXME don't disable special keys
+						if (strlen(possible_keys) == 0)
+							child_->state|= STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SENSITIVE|STATE_CLEAR ;
+						else if (g_strrstr(possible_keys, child_->data)!=NULL ) {
+							child_->state|= STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SENSITIVE|STATE_CLEAR ;
+						} else {
+							child_->state&= ~(STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SENSITIVE|STATE_SELECTED) ;
+						}
+						gui_internal_widget_render(this,child_);
 					}
-					else
-					{
-						//child_->state&= ~STATE_HIGHLIGHTED|~STATE_VISIBLE|~STATE_SENSITIVE|~STATE_SELECTED ;
-						child_->state = 0;
-					}
-					gui_internal_widget_render(this,child_);
-			//	gui_internal_widget_pack(this,child_);
 				}
+				lk=g_list_next(lk);
 			}
-			lk=g_list_next(lk);
+			gui_internal_widget_render(this,md->keyboard);
+			graphics_draw_mode(this->gra, draw_mode_end);		
 		}
-		gui_internal_widget_render(this,md->keyboard);
-		graphics_draw_mode(this->gra, draw_mode_end);		
 
 		possible_keys[0]='\0'; 
 		return;
@@ -2444,16 +2434,15 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		text=g_strdup_printf("%s %s", res->town->name, res->street->name);
 	}
 	dbg(1,"res->country->flag=%s\n", res->country->flag);
-	if (cpt_res <= 2)
-	{
+	if (cpt_res <= 2) {
 		gui_internal_widget_append(search_list,
-			wc=gui_internal_button_new_with_callback(this, text,
-			image_new_xs(this, res->country->flag),
-gravity_left_center|orientation_horizontal|flags_fill,
-			gui_internal_cmd_position, param));
+				wc=gui_internal_button_new_with_callback(this, text,
+					image_new_xs(this, res->country->flag),
+					gravity_left_center|orientation_horizontal|flags_fill,
+					gui_internal_cmd_position, param));
 		wc->name=g_strdup(name);
 		if (res->c)
-		  wc->c=*res->c;
+			wc->c=*res->c;
 		wc->selection_id=res->id;
 		if (item)
 			wc->item=*item;
