@@ -35,7 +35,8 @@ linguistics_expand_special(char *str, int mode)
 	char *out,*ret;
 	int found=0;
 	out=ret=g_strdup(str);
-	mode++;
+	if (!mode) 
+		return ret;
 	while (*in) {
 		char *next=g_utf8_find_next_char(in, NULL);
 		int i,len=next-in;
