@@ -39,6 +39,7 @@
 #include "zipfile.h"
 #include "main.h"
 #include "config.h"
+#include "linguistics.h"
 #include "plugin.h"
 #ifdef HAVE_POSTGRESQL
 #include <libpq-fe.h>
@@ -1509,10 +1510,20 @@ end_node(FILE *out)
 				g_free(name);
 			}
 			if (result->file) {
-				item_bin_init(item_bin, item_bin->type);
-				item_bin_add_coord(item_bin, &ni->c, 1);
-				item_bin_add_attr_string(item_bin, attr_town_name, attr_strings[attr_string_label]);
-				item_bin_write(item_bin, result->file);
+				int i;
+				for (i = 0 ; i < 3 ; i++) {
+					char *town_name=attr_strings[attr_string_label];
+					char *str=linguistics_expand_special(town_name, i);
+					if (str) {
+						item_bin_init(item_bin, item_bin->type);
+						item_bin_add_coord(item_bin, &ni->c, 1);
+						if (i)
+							item_bin_add_attr_string(item_bin, attr_town_name_match, str);
+						item_bin_add_attr_string(item_bin, attr_town_name, town_name);
+						item_bin_write(item_bin, result->file);
+						g_free(str);
+					}
+				}
 			}
 			
 		}
@@ -1530,8 +1541,8 @@ sort_countries_compare(const void *p1, const void *p2)
 	assert(ib2->clen==2);
 	attr1=(struct attr_bin *)((int *)(ib1+1)+ib1->clen);
 	attr2=(struct attr_bin *)((int *)(ib2+1)+ib1->clen);
-	assert(attr1->type == attr_town_name);
-	assert(attr2->type == attr_town_name);
+	assert(attr1->type == attr_town_name || attr1->type == attr_town_name_match);
+	assert(attr2->type == attr_town_name || attr2->type == attr_town_name_match);
 	s1=(char *)(attr1+1);
 	s2=(char *)(attr2+1);
 	return strcmp(s1, s2);
