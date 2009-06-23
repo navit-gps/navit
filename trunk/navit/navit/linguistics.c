@@ -5,11 +5,15 @@
 #include "linguistics.h"
 
 static const char *special[][3]={
+/* Capital Diacritics */
+/* ¨ Diaresis */
 {"Ä","A","AE"},
 {"Ö","O","OE"},
 {"Ü","U","UE"},
+/* ˝ Double Acute Accent */
 {"Ő","O"},
 {"Ű","U"},
+/* ´ Acute Accent */
 {"Á","A"},
 {"Ć","C"},
 {"É","E"},
@@ -18,16 +22,35 @@ static const char *special[][3]={
 {"Ó","O"},
 {"Ś","S"},
 {"Ú","U"},
+{"Ý","Y"},
 {"Ź","Z"},
+/* ˛ Ogonek */
 {"Ą","A"},
 {"Ę","E"},
+/* ˙ Dot */
 {"Ż","Z"},
+/* – Stroke */
 {"Ł","L"},
+/* ˚ Ring */
+{"Ů","U"},
+/* ˇ Caron */
+{"Č","C"},
+{"Ď","D"},
+{"Ě","E"},
+{"Ň","N"},
+{"Ř","R"},
+{"Š","S"},
+{"Ť","T"},
+{"Ž","Z"},
+/* Small Diacritics */
+/* ¨ Diaresis */
 {"ä","a","ae"},
 {"ö","o","oe"},
 {"ü","u","ue"},
+/* ˝ Double Acute Accent */
 {"ő","o"},
 {"ű","u"},
+/* ´ Acute Accent */
 {"á","a"},
 {"ć","c"},
 {"é","e"},
@@ -36,11 +59,27 @@ static const char *special[][3]={
 {"ó","o"},
 {"ś","s"},
 {"ú","u"},
+{"ý","y"},
 {"ź","z"},
+/* ˛ Ogonek */
 {"ą","a"},
 {"ę","e"},
+/* ˙ Dot */
 {"ż","z"},
+/* – Stroke */
 {"ł","l"},
+/* ˚ Ring */
+{"ů","u"},
+/* ˇ Caron */
+{"č","c"},
+{"ď","d"},
+{"ě","e"},
+{"Ň","N"},
+{"ř","r"},
+{"š","s"},
+{"ť","t"},
+{"ž","z"},
+/* ligatures */
 {"ß","s","ss"},
 };
 
