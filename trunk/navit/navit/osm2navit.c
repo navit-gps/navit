@@ -1931,7 +1931,9 @@ phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
 		exit(1);
 	}
 	sig_alrm(0);
+#ifndef _WIN32
 	alarm(0);
+#endif
 	return 1;
 }
 #endif
