@@ -102,6 +102,7 @@ int main(int argc, char **argv)
 	navigation_init();
 	tracking_init();
 	search_init();
+	linguistics_init();
 	config_file=NULL;
 	opterr=0;  //don't bomb out on errors.
 	if (argc > 1) {

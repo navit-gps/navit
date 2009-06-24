@@ -34,6 +34,7 @@
 #include "transform.h"
 #include "file.h"
 #include "zipfile.h"
+#include "linguistics.h"
 #include "endianess.h"
 
 static int map_id;
@@ -84,6 +85,9 @@ struct map_rect_priv {
 	struct tile *t;
 	int country_id;
 	char *url;
+#ifdef DEBUG_SIZE
+	int size;
+#endif
 };
 
 struct map_search_priv {
@@ -706,6 +710,9 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, sizeof(struct zip_cd)));
 	cd_to_cpu(cd);
 	dbg(1,"enter %p %d\n", mr, zipfile);
+#ifdef DEBUG_SIZE
+	mr->size+=cd->zipcunc;
+#endif
 	t.zipfile_num=zipfile;
 	if (zipfile_to_tile(f, cd, &t))
 		push_tile(mr, &t);
@@ -799,6 +806,9 @@ map_rect_destroy_binfile(struct map_rect_priv *mr)
 {
 	write_changes(mr->m);
 	while (pop_tile(mr));
+#ifdef DEBUG_SIZE
+	dbg(0,"size=%d kb\n",mr->size/1024);
+#endif
 	file_data_free(mr->m->fi, (unsigned char *)(mr->tiles[0].start));
 	g_free(mr->url);
         g_free(mr);
@@ -1061,9 +1071,17 @@ binmap_search_get_item(struct map_search_priv *map_search)
 		case attr_town_name:
 		case attr_district_name:
 		case attr_town_or_district_name:
-			if ((item_is_town(*it) && map_search->search->type != attr_district_name) || (item_is_district(*it) && map_search->search->type != attr_town_name)) {
+			if (item_is_town(*it) && map_search->search->type != attr_district_name) {
 				struct attr at;
-				if (binfile_attr_get(it->priv_data, attr_label, &at)) {
+				if (binfile_attr_get(it->priv_data, attr_town_name_match, &at) || binfile_attr_get(it->priv_data, attr_town_name, &at)) {
+					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
+						return it;
+					}
+				}
+			}
+			if (item_is_district(*it) && map_search->search->type != attr_town_name) {
+				struct attr at;
+				if (binfile_attr_get(it->priv_data, attr_district_name_match, &at) || binfile_attr_get(it->priv_data, attr_district_name, &at)) {
 					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
 						return it;
 					}
@@ -1074,13 +1092,28 @@ binmap_search_get_item(struct map_search_priv *map_search)
 			if ((it->type == type_street_3_city) || (it->type == type_street_2_city) || (it->type == type_street_1_city)) {
 				struct attr at;
 				if (map_selection_contains_item_rect(map_search->mr->sel, it) && binfile_attr_get(it->priv_data, attr_label, &at)) {
-					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
-						if (!g_hash_table_lookup(map_search->search_results, at.u.str)) {
-							item_coord_rewind(it);
-							item_attr_rewind(it);
-							g_hash_table_insert(map_search->search_results, g_strdup(at.u.str), "");
-							return it;
+					int i,match=0;
+					char *str=g_strdup(at.u.str);
+					char *word=str;
+					do {
+						for (i = 0 ; i < 3 ; i++) {
+							char *name=linguistics_expand_special(word,i);
+							if (name && !ascii_cmp(name, map_search->search->u.str, map_search->partial))
+								match=1;
+							g_free(name);
+							if (match)
+								break;
 						}
+						if (match)
+							break;
+						word=linguistics_next_word(word);
+					} while (word);
+					g_free(str);
+					if (match && !g_hash_table_lookup(map_search->search_results, at.u.str)) {
+						item_coord_rewind(it);
+						item_attr_rewind(it);
+						g_hash_table_insert(map_search->search_results, g_strdup(at.u.str), "");
+						return it;
 					}
 				}
 			}
