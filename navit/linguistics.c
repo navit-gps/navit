@@ -104,7 +104,7 @@ linguistics_expand_special(char *str, int mode)
 					if (replace) {
 						int replace_len=strlen(replace);
 						dbg_assert(replace_len <= len);
-						dbg(1,"found %s %s %s\n",in,search,replace);
+						dbg(1,"found %s %s %d %s %d\n",in,search,len,replace,replace_len);
 						strcpy(out, replace);
 						out+=replace_len;
 						match=1;
@@ -112,11 +112,11 @@ linguistics_expand_special(char *str, int mode)
 					}
 				}
 			}
-			in=next;
 		}
-		if (match) 
+		if (match) {
 			found=1;
-		else {	
+			in=next;
+		} else {
 			while (len-- > 0) 
 				*out++=*in++;
 		}
