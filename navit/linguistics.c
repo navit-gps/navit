@@ -32,6 +32,7 @@ static const char *special[][3]={
 /* – Stroke */
 {"Ł","L"},
 /* ˚ Ring */
+{"Å","A","AA"},
 {"Ů","U"},
 /* ˇ Caron */
 {"Č","C"},
@@ -42,6 +43,10 @@ static const char *special[][3]={
 {"Š","S"},
 {"Ť","T"},
 {"Ž","Z"},
+/* / Slash */
+{"Ø","O","OE"},
+/* ligatures */
+{"Æ","A","AE"},
 /* Small Diacritics */
 /* ¨ Diaresis */
 {"ä","a","ae"},
@@ -70,6 +75,7 @@ static const char *special[][3]={
 {"ł","l"},
 /* ˚ Ring */
 {"ů","u"},
+{"å","a", "aa"},
 /* ˇ Caron */
 {"č","c"},
 {"ď","d"},
@@ -79,7 +85,10 @@ static const char *special[][3]={
 {"š","s"},
 {"ť","t"},
 {"ž","z"},
+/* / Slash */
+{"ø","o", "oe"},
 /* ligatures */
+{"æ","a","ae"},
 {"ß","s","ss"},
 };
 
