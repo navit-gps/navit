@@ -426,6 +426,8 @@ route_check_roundabout(struct route_graph_segment *seg, int level, int direction
 	if (direction && !(seg->data.flags & AF_ONEWAYREV)) {
 		return 0;
 	}
+	if (seg->data.flags & AF_ROUNDABOUT_VALID)
+		return 0;
 	
 	if (!origin) {
 		origin = seg;
