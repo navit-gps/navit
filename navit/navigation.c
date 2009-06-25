@@ -70,7 +70,6 @@ struct navigation {
 	int turn_around;
 	int turn_around_limit;
 	int distance_turn;
-	int distance_last;
 	struct callback *route_cb;
 	int announce[route_item_last-route_item_first+1][3];
 };
@@ -148,7 +147,6 @@ navigation_new(struct attr *parent, struct attr **attrs)
 	ret->callback=callback_list_new();
 	ret->callback_speech=callback_list_new();
 	ret->level_last=-2;
-	ret->distance_last=-2;
 	ret->distance_turn=50;
 	ret->turn_around_limit=3;
 	ret->navit=parent->u.navit;
@@ -1691,6 +1689,10 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 		return;
 	dbg(1,"enter\n");
 	while ((ritem=map_rect_get_item(mr))) {
+		if (ritem->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
+			this_->turn_around--;
+		if (ritem->type == type_route_start_reverse && this_->turn_around < this_->turn_around_limit)
+			this_->turn_around++;
 		if (ritem->type != type_street_route)
 			continue;
 		if (first && item_attr_get(ritem, attr_street_item, &street_item)) {
@@ -1714,6 +1716,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 		}
 		navigation_itm_new(this_, ritem);
 	}
+	dbg(2,"turn_around=%d\n", this_->turn_around);
 	if (first) 
 		navigation_destroy_itms_cmds(this_, NULL);
 	else {
@@ -1722,17 +1725,6 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 			make_maneuvers(this_,this_->route);
 		}
 		calculate_dest_distance(this_, incr);
-		dbg(2,"destination distance old=%d new=%d\n", this_->distance_last, this_->first->dest_length);
-		if (this_->first->dest_length > this_->distance_last && this_->distance_last >= 0) 
-			this_->turn_around++;
-		else
-			this_->turn_around--;
-		if (this_->turn_around > this_->turn_around_limit)
-			this_->turn_around=this_->turn_around_limit;
-		else if (this_->turn_around < -this_->turn_around_limit+1)
-			this_->turn_around=-this_->turn_around_limit+1;
-		dbg(2,"turn_around=%d\n", this_->turn_around);
-		this_->distance_last=this_->first->dest_length;
 		profile(0,"end");
 		navigation_call_callbacks(this_, FALSE);
 	}
