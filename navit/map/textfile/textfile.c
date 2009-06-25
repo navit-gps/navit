@@ -95,8 +95,12 @@ static void
 get_line(struct map_rect_priv *mr)
 {
 	if(mr->f) {
-		mr->pos=ftell(mr->f);
+		if (!mr->m->is_pipe) 
+			mr->pos=ftell(mr->f);
+		else
+			mr->pos+=mr->lastlen;
 		fgets(mr->line, SIZE, mr->f);
+		mr->lastlen=strlen(mr->line)+1;
 		if (strlen(mr->line) >= SIZE-1) 
 			printf("line too long\n");
 	}
@@ -235,6 +239,8 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 		dbg(1,"popen args %s\n", args);
 		mr->args=args;
 		mr->f=popen(mr->args, "r");
+		mr->pos=0;
+		mr->lastlen=0;
 	} else {
 		mr->f=fopen(map->filename, "r");
 	}
@@ -280,6 +286,8 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 			if (mr->m->is_pipe) {
 				pclose(mr->f);
 				mr->f=popen(mr->args, "r");
+				mr->pos=0;
+				mr->lastlen=0;
 			} else
 				fseek(mr->f, 0, SEEK_SET);
 			get_line(mr);
@@ -333,6 +341,8 @@ map_rect_get_item_byid_textfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 	if (mr->m->is_pipe) {
 		pclose(mr->f);
 		mr->f=popen(mr->args, "r");
+		mr->pos=0;
+		mr->lastlen=0;
 	} else
 		fseek(mr->f, id_lo, SEEK_SET);
 	get_line(mr);
