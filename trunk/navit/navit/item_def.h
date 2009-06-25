@@ -304,6 +304,7 @@ ITEM(route_start)
 ITEM(route_end)
 ITEM(selected_point)
 ITEM(power_tower)
+ITEM(route_start_reverse)
 /* Line */
 ITEM2(0x80000000,line)
 ITEM2(0x80000001,line_unspecified)

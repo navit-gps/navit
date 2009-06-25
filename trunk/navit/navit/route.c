@@ -179,6 +179,8 @@ struct route_info {
 	int lenextra;			 /**< Distance between lp and c */
 	int percent;			 /**< ratio of lenneg to lenght of whole street in percent */
 	struct street_data *street; /**< The street lp is on */
+	int street_direction;	/**< Direction of vehicle on street -1 = Negative direction, 1 = Positive direction, 0 = Unknown */
+	int dir;		/**< Direction to take when following the route -1 = Negative direction, 1 = Positive direction */
 };
 
 /**
@@ -718,6 +720,7 @@ route_set_position(struct route *this, struct pcoord *pos)
 		route_info_free(this->pos);
 	this->pos=NULL;
 	this->pos=route_find_nearest_street(this->vehicleprofile, this->ms, pos);
+	this->pos->street_direction=0;
 	dbg(1,"this->pos=%p\n", this->pos);
 	if (! this->pos)
 		return;
@@ -751,6 +754,7 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking, 
 	ret->c=*c;
 	ret->lp=*c;
 	ret->pos=tracking_get_segment_pos(tracking);
+	ret->street_direction=tracking_get_street_direction(tracking);
 	sd=tracking_get_street_data(tracking);
 	if (sd) {
 		ret->street=street_data_dup(sd);
@@ -1327,6 +1331,7 @@ route_path_add_item_from_graph(struct route_path *this, struct route_path *oldpa
 				len=pos->lenneg;
 			}
 		}
+		pos->dir=dir;
 	} else 	if (dst) {
 		extra=1;
 		dbg(1,"dst dir=%d\n", dir);
@@ -2548,11 +2553,11 @@ rm_coord_get(void *priv_data, struct coord *c, int count)
 
 	if (pro == projection_none)
 		return 0;
-	if (mr->item.type == type_route_start || mr->item.type == type_route_end) {
+	if (mr->item.type == type_route_start || mr->item.type == type_route_start_reverse || mr->item.type == type_route_end) {
 		if (! count || mr->last_coord)
 			return 0;
 		mr->last_coord=1;
-		if (mr->item.type == type_route_start)
+		if (mr->item.type == type_route_start || mr->item.type == type_route_start_reverse)
 			c[0]=r->pos->c;
 		else
 			c[0]=r->dst->c;
@@ -2940,12 +2945,16 @@ rp_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
 static struct item *
 rm_get_item(struct map_rect_priv *mr)
 {
+	struct route *route=mr->mpriv->route;
 	dbg(1,"enter\n", mr->pos);
 
 	switch (mr->item.type) {
 	case type_none:
-		mr->item.type=type_route_start;
-		if (mr->mpriv->route->pos) 
+		if (route->pos && route->pos->street_direction && route->pos->street_direction != route->pos->dir)
+			mr->item.type=type_route_start_reverse;
+		else
+			mr->item.type=type_route_start;
+		if (route->pos) 
 			break;
 	default:
 		mr->item.type=type_street_route;

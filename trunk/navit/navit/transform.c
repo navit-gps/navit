@@ -930,6 +930,24 @@ transform_distance(enum projection pro, struct coord *c1, struct coord *c2)
 	}
 }
 
+void
+transform_project(enum projection pro, struct coord *c, int distance, int angle, struct coord *res)
+{
+	double scale;
+	switch (pro) {
+	case projection_mg:
+		scale=transform_scale(c->y);
+		res->x=c->x+distance*sin(angle*M_PI/180)*scale;
+		res->y=c->y+distance*cos(angle*M_PI/180)*scale;
+		break;
+	default:
+		dbg(0,"Unsupported projection: %d\n", pro);
+		return;
+	}
+	
+}
+
+
 double
 transform_polyline_length(enum projection pro, struct coord *c, int count)
 {
