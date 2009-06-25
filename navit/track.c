@@ -34,6 +34,7 @@
 #include "plugin.h"
 #include "vehicleprofile.h"
 #include "vehicle.h"
+#include "util.h"
 
 struct tracking_line
 {
@@ -91,11 +92,13 @@ struct tracking {
 	struct cdf_data cdf;
 	struct attr *attr;
 	int valid;
+	int time;
 	double direction;
 	double speed;
 	int coord_geo_valid;
 	struct coord_geo coord_geo;
 	enum projection pro;
+	int street_direction;
 };
 
 
@@ -295,6 +298,12 @@ tracking_get_pos(struct tracking *tr)
 }
 
 int
+tracking_get_street_direction(struct tracking *tr)
+{
+	return tr->street_direction;
+}
+
+int
 tracking_get_segment_pos(struct tracking *tr)
 {
 	return tr->pos;
@@ -478,16 +487,22 @@ tracking_free_lines(struct tracking *tr)
 }
 
 static int
+tracking_angle_diff(int a1, int a2, int full)
+{
+	int ret=(a1-a2)%full;
+	if (ret > full/2)
+		ret-=full;
+	if (ret < -full/2)
+		ret+=full;
+	return ret;
+}
+
+static int
 tracking_angle_abs_diff(int a1, int a2, int full)
 {
-	int ret;
-
-	if (a2 > a1)
-		ret=(a2-a1)%full;
-	else
-		ret=(a1-a2)%full;
-	if (ret > full/2)
-		ret=full-ret;
+	int ret=tracking_angle_diff(a1, a2, full);
+	if (ret < 0)
+		ret=-ret;
 	return ret;
 }
 
@@ -579,10 +594,11 @@ void
 tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *vehicleprofile, enum projection pro)
 {
 	struct tracking_line *t;
-	int i,value,min;
+	int i,value,min,time;
 	struct coord lpnt;
 	struct coord cin;
-	struct attr valid,speed,direction,coord_geo;
+	struct attr valid,speed_attr,direction_attr,coord_geo,lag,time_attr;
+	double speed, direction;
 	if (v)
 		tr->vehicle=v;
 	if (vehicleprofile)
@@ -596,25 +612,50 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		tr->valid=valid.u.num;
 		return;
 	}
-	if (!vehicle_get_attr(tr->vehicle, attr_position_speed, &speed, NULL) ||
-	    !vehicle_get_attr(tr->vehicle, attr_position_direction, &direction, NULL) ||
-	    !vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL))
+	if (!vehicle_get_attr(tr->vehicle, attr_position_speed, &speed_attr, NULL) ||
+	    !vehicle_get_attr(tr->vehicle, attr_position_direction, &direction_attr, NULL) ||
+	    !vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL) ||
+	    !vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL)) {
+		dbg(0,"failed to get position data\n");
 		return;
+	}
+	time=iso8601_to_secs(time_attr.u.str);
+	speed=*speed_attr.u.numd;
+	direction=*direction_attr.u.numd;
 	tr->valid=attr_position_valid_valid;
 	transform_from_geo(pro, coord_geo.u.coord_geo, &tr->curr_in);
-	if ((*speed.u.numd < 3 && transform_distance(pro, &tr->last_in, &tr->curr_in) < 10 )) {
-		dbg(1,"static speed %f coord 0x%x,0x%x vs 0x%x,0x%x\n",*speed.u.numd,tr->last_in.x,tr->last_in.y, tr->curr_in.x, tr->curr_in.y);
+	if ((speed < 3 && transform_distance(pro, &tr->last_in, &tr->curr_in) < 10 )) {
+		dbg(1,"static speed %f coord 0x%x,0x%x vs 0x%x,0x%x\n",speed,tr->last_in.x,tr->last_in.y, tr->curr_in.x, tr->curr_in.y);
 		tr->valid=attr_position_valid_static;
 		tr->speed=0;
 		return;
 	}
+	if (vehicle_get_attr(tr->vehicle, attr_lag, &lag, NULL) && lag.u.num > 0) {
+		double espeed;
+		int edirection;
+		if (time-tr->time == 1) {
+			dbg(1,"extrapolating speed from %f and %f (%f)\n",tr->speed, speed, speed-tr->speed);
+			espeed=speed+(speed-tr->speed)*lag.u.num/10;
+			dbg(1,"extrapolating angle from %f and %f (%d)\n",tr->direction, direction, tracking_angle_diff(direction,tr->direction,360));
+			edirection=direction+tracking_angle_diff(direction,tr->direction,360)*lag.u.num/10;
+		} else {
+			dbg(1,"no speed and direction extrapolation\n");
+			espeed=speed;
+			edirection=direction;
+		}
+		dbg(1,"lag %d speed %f direction %d\n",lag.u.num,espeed,edirection);
+		dbg(1,"old 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
+		transform_project(pro, &tr->curr_in, espeed*lag.u.num/36, edirection, &tr->curr_in);
+		dbg(1,"new 0x%x,0x%x\n",tr->curr_in.x, tr->curr_in.y);
+	}
+	tr->time=time;
 	tr->pro=pro;
 #if 0
 
 	tracking_process_cdf(&tr->cdf, pc, &pcf, angle, &anglef, speed, fixtime);
 #endif
-	tr->curr_angle=tr->direction=*direction.u.numd;
-	tr->speed=*speed.u.numd;
+	tr->curr_angle=tr->direction=direction;
+	tr->speed=speed;
 	tr->last_in=tr->curr_in;
 	tr->last_out=tr->curr_out;
 	tr->last[0]=tr->curr[0];
@@ -635,6 +676,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		for (i = 0; i < sd->count-1 ; i++) {
 			value=tracking_value(tr,t,i,&lpnt,min,-1);
 			if (value < min) {
+				int angle_delta=tracking_angle_abs_diff(tr->curr_angle, t->angle[i], 360);
 				tr->curr_line=t;
 				tr->pos=i;
 				tr->curr[0]=sd->c[i];
@@ -649,6 +691,12 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 				tr->curr_out.x=lpnt.x;
 				tr->curr_out.y=lpnt.y;
 				tr->coord_geo_valid=0;
+				if (angle_delta < 70)
+					tr->street_direction=1;
+				else if (angle_delta > 110)
+					tr->street_direction=-1;
+				else
+					tr->street_direction=0;
 				min=value;
 			}
 		}
