@@ -51,6 +51,7 @@
 
 struct compass {
 	struct osd_item osd_item;
+	int width;
 	struct graphics_gc *green;
 };
 
@@ -143,7 +144,7 @@ static void
 osd_compass_draw(struct compass *this, struct navit *nav,
 		 struct vehicle *v)
 {
-	struct point p;
+	struct point p,bbox[4];
 	struct attr attr_dir, destination_attr, position_attr;
 	double dir, vdir = 0;
 	char *buffer;
@@ -151,39 +152,30 @@ osd_compass_draw(struct compass *this, struct navit *nav,
 	enum projection pro;
 
 	osd_std_draw(&this->osd_item);
-	p.x = 30;
-	p.y = 30;
+	p.x = this->osd_item.w/2;
+	p.y = this->osd_item.w/2;
 	graphics_draw_circle(this->osd_item.gr,
-			     this->osd_item.graphic_fg_white, &p, 50);
+			     this->osd_item.graphic_fg_white, &p, this->osd_item.w*5/6);
 	if (v) {
-		if (vehicle_get_attr
-		    (v, attr_position_direction, &attr_dir, NULL)) {
+		if (vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL)) {
 			vdir = *attr_dir.u.numd;
-			handle(this->osd_item.gr,
-			       this->osd_item.graphic_fg_white, &p, 20,
-			       -vdir);
+			handle(this->osd_item.gr, this->osd_item.graphic_fg_white, &p, this->osd_item.w/3, -vdir);
 		}
 
-		if (navit_get_attr
-		    (nav, attr_destination, &destination_attr, NULL)
-		    && vehicle_get_attr(v, attr_position_coord_geo,
-					&position_attr, NULL)) {
+		if (navit_get_attr(nav, attr_destination, &destination_attr, NULL)
+		    && vehicle_get_attr(v, attr_position_coord_geo,&position_attr, NULL)) {
 			pro = destination_attr.u.pcoord->pro;
-			transform_from_geo(pro, position_attr.u.coord_geo,
-					   &c1);
+			transform_from_geo(pro, position_attr.u.coord_geo, &c1);
 			c2.x = destination_attr.u.pcoord->x;
 			c2.y = destination_attr.u.pcoord->y;
-			dir =
-			    atan2(c2.x - c1.x, c2.y - c1.y) * 180.0 / M_PI;
+			dir = atan2(c2.x - c1.x, c2.y - c1.y) * 180.0 / M_PI;
 			dir -= vdir;
-			handle(this->osd_item.gr, this->green, &p, 20,
-			       dir);
+			handle(this->osd_item.gr, this->green, &p, this->osd_item.w/3, dir);
 			buffer=format_distance(transform_distance(pro, &c1, &c2),"");
-			p.x = 8;
-			p.y = 72;
-			graphics_draw_text(this->osd_item.gr, this->green,
-					   NULL, this->osd_item.font,
-					   buffer, &p, 0x10000, 0);
+			graphics_get_text_bbox(this->osd_item.gr, this->osd_item.font, buffer, 0x10000, 0, bbox, 0);
+			p.x=(this->osd_item.w-bbox[2].x)/2;
+			p.y = this->osd_item.h-this->osd_item.h/10;
+			graphics_draw_text(this->osd_item.gr, this->green, NULL, this->osd_item.font, buffer, &p, 0x10000, 0);
 			g_free(buffer);
 		}
 	}
@@ -205,8 +197,8 @@ osd_compass_init(struct compass *this, struct navit *nav)
 	c.b = 0;
 	c.a = 65535;
 	graphics_gc_set_foreground(this->green, &c);
-	graphics_gc_set_linewidth(this->green, 2);
-	graphics_gc_set_linewidth(this->osd_item.graphic_fg_white, 2);
+	graphics_gc_set_linewidth(this->green, this->width);
+	graphics_gc_set_linewidth(this->osd_item.graphic_fg_white, this->width);
 
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_draw), attr_position_coord_geo, this));
 
@@ -218,6 +210,7 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 		struct attr **attrs)
 {
 	struct compass *this = g_new0(struct compass, 1);
+	struct attr *attr;
 	this->osd_item.p.x = 20;
 	this->osd_item.p.y = 20;
 	this->osd_item.w = 60;
@@ -226,6 +219,8 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 	this->osd_item.font_size = 200;
 	this->osd_item.meth.draw = osd_draw_cast(osd_compass_draw);
 	osd_set_std_attr(attrs, &this->osd_item, 2);
+	attr = attr_search(attrs, NULL, attr_width);
+	this->width=attr ? attr->u.num : 2;
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_init), attr_navit, this));
 	return (struct osd_priv *) this;
 }
