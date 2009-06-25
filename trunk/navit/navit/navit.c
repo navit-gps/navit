@@ -1055,7 +1055,7 @@ navit_add_former_destinations_from_file(struct navit *this_)
 }
 
 
-static void
+void
 navit_textfile_debug_log(struct navit *this_, const char *fmt, ...)
 {
 	va_list ap;
