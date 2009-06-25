@@ -360,6 +360,7 @@ static void gui_internal_search_street_in_town(struct gui_priv *this, struct wid
 static void gui_internal_search_town(struct gui_priv *this, struct widget *wm, void *data);
 static void gui_internal_search_town_in_country(struct gui_priv *this, struct widget *wm);
 static void gui_internal_search_country(struct gui_priv *this, struct widget *widget, void *data);
+static void gui_internal_check_exit(struct gui_priv *this);
 
 static struct widget *gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode);
 static struct menu_data * gui_internal_menu_data(struct gui_priv *this);
@@ -3292,18 +3293,33 @@ static void gui_internal_menu_root(struct gui_priv *this)
 }
 
 static void
-gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
+gui_internal_enter(struct gui_priv *this, int ignore)
 {
 	struct graphics *gra=this->gra;
-	struct transformation *trans;
-	struct coord c;
-	struct attr attr,attrp;
-
 	this->ignore_button=ignore;
 	this->clickp_valid=this->vehicle_valid=0;
 
 	navit_block(this->nav, 1);
 	graphics_overlay_disable(gra, 1);
+	this->root.p.x=0;
+	this->root.p.y=0;
+	this->root.background=this->background;
+}
+
+static void
+gui_internal_leave(struct gui_priv *this)
+{
+	graphics_draw_mode(this->gra, draw_mode_end);
+}
+
+static void
+gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
+{
+	struct transformation *trans;
+	struct coord c;
+	struct attr attr,attrp;
+
+	gui_internal_enter(this, ignore);
 	trans=navit_get_trans(this->nav);
 	if (p) {
 		transform_reverse(trans, p, &c);
@@ -3322,9 +3338,6 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 		this->vehicle_valid=1;
 	}	
 	// draw menu
-	this->root.p.x=0;
-	this->root.p.y=0;
-	this->root.background=this->background;
 	gui_internal_menu_root(this);
 }
 
@@ -3332,6 +3345,65 @@ static void
 gui_internal_cmd_menu2(struct gui_priv *this)
 {
 	gui_internal_cmd_menu(this, NULL, 1);
+}
+
+
+static void
+gui_internal_cmd_log_do(struct gui_priv *this, struct widget *widget)
+{
+	if (widget->text && strlen(widget->text)) 
+		navit_textfile_debug_log(this->nav, "type=log_entry label=\"%s\"",widget->text);
+	g_free(widget->text);
+	widget->text=NULL;
+	gui_internal_prune_menu(this, NULL);
+	gui_internal_check_exit(this);
+}
+
+static void
+gui_internal_cmd_log_clicked(struct gui_priv *this, struct widget *widget, void *data)
+{
+	gui_internal_cmd_log_do(this, widget->data);
+}
+
+static void
+gui_internal_cmd_log_changed(struct gui_priv *this, struct widget *wm, void *data)
+{
+	int len;
+	if (wm->text) {
+		len=strlen(wm->text);
+		if (len && (wm->text[len-1] == '\n' || wm->text[len-1] == '\r')) {
+			wm->text[len-1]='\0';
+			gui_internal_cmd_log_do(this, wm);
+		}
+	}
+}
+
+
+static void
+gui_internal_cmd_log(struct gui_priv *this)
+{
+	struct widget *w,*wb,*wk,*wl,*we,*wnext;
+	gui_internal_enter(this, 1);
+	wb=gui_internal_menu(this, "Log Message");
+	w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	gui_internal_widget_append(w, we);
+	gui_internal_widget_append(we, wk=gui_internal_label_new(this, _("Message")));
+	wk->state |= STATE_EDIT|STATE_CLEAR;
+	wk->background=this->background;
+	wk->flags |= flags_expand|flags_fill;
+	wk->func = gui_internal_cmd_log_changed;
+	gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
+	wnext->state |= STATE_SENSITIVE;
+	wnext->func = gui_internal_cmd_log_clicked;
+	wnext->data=wk;
+	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(w, wl);
+	if (this->keyboard)
+		gui_internal_widget_append(w, gui_internal_keyboard(this,2));
+	gui_internal_menu_render(this);
+	gui_internal_leave(this);
 }
 
 static void
@@ -3744,6 +3816,7 @@ static struct command_table commands[] = {
 	{"menu",command_cast(gui_internal_cmd_menu2)},
 	{"fullscreen",command_cast(gui_internal_cmd_fullscreen)},
 	{"get_data",command_cast(gui_internal_get_data)},
+	{"log",command_cast(gui_internal_cmd_log)},
 };
 
 
