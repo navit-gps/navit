@@ -2061,6 +2061,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     struct graphics_priv *this=g_new0(struct graphics_priv, 1);
     struct attr *attr;
     int ret;
+    int w=DISPLAY_W,h=DISPLAY_H;
 
     this->nav = nav;
     this->cbl = cbl;
@@ -2088,9 +2089,14 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
         return NULL;
 
 
-    /* TODO: xml params for W/H/BPP */
+    /* TODO: xml params for BPP */
+    if ((attr=attr_search(attrs, NULL, attr_w)))
+        w=attr->u.num;
+    if ((attr=attr_search(attrs, NULL, attr_h)))
+        h=attr->u.num;
 
-    this->screen = SDL_SetVideoMode(DISPLAY_W, DISPLAY_H, 16, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
+    
+    this->screen = SDL_SetVideoMode(w, h, 16, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
     if(this->screen == NULL)
     {
         g_free(this);
