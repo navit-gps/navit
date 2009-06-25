@@ -37,9 +37,10 @@
 	<!-- Normally it is sufficient to use -->
         <!-- <gui type="internal" /> -->
 
-        <log type="textfile_debug" data="debug_%Y%m%d-%i.txt" flush_size="1000" flush_time="30"/>
         <gui type="gtk" menubar="1" toolbar="1" statusbar="1"/>
 
+	<!-- for a debug log -->
+        <log enabled="no" type="textfile_debug" data="debug_%Y%m%d-%i.txt" flush_size="1000" flush_time="30"/>
         <!-- osd items allow to position display and control items directly on top of the map: -->
         <osd enabled="no" type="compass"/>
         <osd enabled="no" type="eta"/> 
