@@ -46,5 +46,6 @@ struct map_rect_priv {
 	struct map_priv *m;
 	struct item item;
 	char *args;
+	int lastlen;
 };
 
