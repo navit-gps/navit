@@ -92,7 +92,7 @@ msgstr "už %d.%d kilometrų"
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "vienas kilometras"
+msgstr[0] "%d kilometras"
 msgstr[1] "%d kilometrai"
 msgstr[2] "%d kilometrai"
 
@@ -100,7 +100,7 @@ msgstr[2] "%d kilometrai"
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "už vieno kilometro"
+msgstr[0] "už %d kilometro"
 msgstr[1] "už %d kilometrų"
 msgstr[2] "už %d kilometrų"
 
