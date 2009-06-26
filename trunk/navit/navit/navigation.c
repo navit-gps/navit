@@ -1170,7 +1170,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 	dbg(1,"enter this_=%p itm=%p delta=%d\n", this_, itm, delta);
 	ret->delta=delta;
 	ret->itm=itm;
-	if (itm && itm->prev && itm->prev->ways && !(itm->flags & AF_ROUNDABOUT) && (itm->prev->flags & AF_ROUNDABOUT)) {
+	if (itm && itm->prev && itm->ways && itm->prev->ways && !(itm->flags & AF_ROUNDABOUT) && (itm->prev->flags & AF_ROUNDABOUT)) {
 		int len=0;
 		int angle=0;
 		int entry_angle;
