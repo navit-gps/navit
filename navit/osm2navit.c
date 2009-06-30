@@ -1221,6 +1221,11 @@ node_item_get(int id)
 	int count=node_buffer.size/sizeof(struct node_item);
 	int interval=count/4;
 	int p=count/2;
+	if(interval==0) {
+		// If fewer than 4 nodes defined so far set interval to 1 to
+		// avoid infinite loop
+		interval = 1;
+	}
 	if (node_hash) {
 		int i;
 		i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)id));
