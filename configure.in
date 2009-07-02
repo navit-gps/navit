@@ -653,6 +653,8 @@ if test "x${graphics_qt_qpainter}" = "xyes" -a "x${QT_GUI_CFLAGS}" = "x" -a "x${
 fi
 if test "x${graphics_qt_qpainter}" = "xyes" ; then
 	AC_DEFINE(USE_GRAPICS_QT_QPAINTER, 1, [Build with graphics qt_qpainter])
+	MOC=`pkg-config QtGui --variable=moc_location`
+	AC_SUBST(MOC)
 fi
 AC_SUBST(QT_GUI_CFLAGS)
 AC_SUBST(QT_GUI_LIBS)
