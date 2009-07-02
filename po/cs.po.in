@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-21 23:46+0200\n"
-"PO-Revision-Date: 2009-06-23 11:55+0000\n"
-"Last-Translator: Tomas Kukol <Unknown>\n"
+"POT-Creation-Date: 2009-06-26 07:37+0200\n"
+"PO-Revision-Date: 2009-06-26 09:01+0000\n"
+"Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Čeština\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-06-25 21:48+0000\n"
+"X-Launchpad-Export-Date: 2009-07-02 18:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -29,93 +29,93 @@ msgstr "Běží ze zdrojového adresáře\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "nastavuji '%s' na '%s\n"
 
-#: ../navit/navigation.c:240
+#: ../navit/navigation.c:238
 msgid "zeroth"
 msgstr "nultý"
 
-#: ../navit/navigation.c:242
+#: ../navit/navigation.c:240
 msgid "first"
 msgstr "první"
 
-#: ../navit/navigation.c:244
+#: ../navit/navigation.c:242
 msgid "second"
 msgstr "druhý"
 
-#: ../navit/navigation.c:246
+#: ../navit/navigation.c:244
 msgid "third"
 msgstr "třetí"
 
-#: ../navit/navigation.c:248
+#: ../navit/navigation.c:246
 msgid "fourth"
 msgstr "čtvrtý"
 
-#: ../navit/navigation.c:250
+#: ../navit/navigation.c:248
 msgid "fifth"
 msgstr "pátý"
 
-#: ../navit/navigation.c:252
+#: ../navit/navigation.c:250
 msgid "sixth"
 msgstr "šestý"
 
-#: ../navit/navigation.c:263
+#: ../navit/navigation.c:261
 msgid "zeroth exit"
 msgstr "nultý exit"
 
-#: ../navit/navigation.c:265
+#: ../navit/navigation.c:263
 msgid "first exit"
 msgstr "první exit"
 
-#: ../navit/navigation.c:267
+#: ../navit/navigation.c:265
 msgid "second exit"
 msgstr "druhý exit"
 
-#: ../navit/navigation.c:269
+#: ../navit/navigation.c:267
 msgid "third exit"
 msgstr "třetí exit"
 
-#: ../navit/navigation.c:271
+#: ../navit/navigation.c:269
 msgid "fourth exit"
 msgstr "čtvrtý exit"
 
-#: ../navit/navigation.c:273
+#: ../navit/navigation.c:271
 msgid "fifth exit"
 msgstr "pátý exit"
 
-#: ../navit/navigation.c:275
+#: ../navit/navigation.c:273
 msgid "sixth exit"
 msgstr "šestý exit"
 
-#: ../navit/navigation.c:316
+#: ../navit/navigation.c:314
 #, c-format
 msgid "%d m"
 msgstr "%d m"
 
-#: ../navit/navigation.c:318
+#: ../navit/navigation.c:316
 #, c-format
 msgid "in %d m"
 msgstr "za %d m"
 
-#: ../navit/navigation.c:322
+#: ../navit/navigation.c:320
 #, c-format
 msgid "%d meters"
 msgstr "%d metrů"
 
-#: ../navit/navigation.c:324
+#: ../navit/navigation.c:322
 #, c-format
 msgid "in %d meters"
 msgstr "za %d metrů"
 
-#: ../navit/navigation.c:330
+#: ../navit/navigation.c:328
 #, c-format
 msgid "%d.%d kilometer"
 msgstr "%d.%d kilometrů"
 
-#: ../navit/navigation.c:332
+#: ../navit/navigation.c:330
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "za %d.%d kilometrů"
 
-#: ../navit/navigation.c:336
+#: ../navit/navigation.c:334
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
@@ -123,7 +123,7 @@ msgstr[0] "%d kilometr"
 msgstr[1] "%d kilometry"
 msgstr[2] "%d  kilometrů"
 
-#: ../navit/navigation.c:338
+#: ../navit/navigation.c:336
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
@@ -131,149 +131,149 @@ msgstr[0] "za %d  kilometr"
 msgstr[1] "za %d  kilometry"
 msgstr[2] "za %d kilometrů"
 
-#: ../navit/navigation.c:1268
+#: ../navit/navigation.c:1266
 msgid "exit"
 msgstr "konec"
 
-#: ../navit/navigation.c:1270
+#: ../navit/navigation.c:1268
 msgid "into the ramp"
 msgstr "na přivadeč"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:1300
+#: ../navit/navigation.c:1298
 #, c-format
 msgid "%sinto the street %s%s%s"
 msgstr "%s do ulice %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1304
+#: ../navit/navigation.c:1302
 #, c-format
 msgid "%sinto the %s%s%s|male form"
 msgstr "%s o%s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1308
+#: ../navit/navigation.c:1306
 #, c-format
 msgid "%sinto the %s%s%s|female form"
 msgstr "%s do %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1312
+#: ../navit/navigation.c:1310
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%s do %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1319
+#: ../navit/navigation.c:1317
 #, c-format
 msgid "%sinto the %s"
 msgstr "%sna %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1340
+#: ../navit/navigation.c:1338
 msgid "right"
 msgstr "vpravo"
 
 #. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1379
+#: ../navit/navigation.c:1377
 msgid "left"
 msgstr "vlevo"
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1386
+#: ../navit/navigation.c:1384
 msgid "easily "
 msgstr "mírně "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1391
+#: ../navit/navigation.c:1389
 msgid "strongly "
 msgstr "silně "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1394
+#: ../navit/navigation.c:1392
 msgid "really strongly "
 msgstr "opravdu silně "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1398
+#: ../navit/navigation.c:1396
 msgid "unknown "
 msgstr "neurčitě "
 
-#: ../navit/navigation.c:1405
+#: ../navit/navigation.c:1403
 msgid "When possible, please turn around"
 msgstr "Až to bude možné, otočte se"
 
-#: ../navit/navigation.c:1415
+#: ../navit/navigation.c:1413
 msgid "Enter the roundabout soon"
 msgstr "Brzy najeďte na kruhový objezd"
 
 #. TRANSLATORS: %s is the distance to the roundabout
-#: ../navit/navigation.c:1419
+#: ../navit/navigation.c:1417
 #, c-format
 msgid "In %s, enter the roundabout"
 msgstr "Za %s, najeďte na kruhový objezd"
 
-#: ../navit/navigation.c:1434
+#: ../navit/navigation.c:1432
 #, c-format
 msgid "Leave the roundabout at the %s"
 msgstr "Opusťte kruhový objezd na výjezdu %s"
 
-#: ../navit/navigation.c:1437
+#: ../navit/navigation.c:1435
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "pak opusťte kruhový objezd na výjezdu %s"
 
-#: ../navit/navigation.c:1447
+#: ../navit/navigation.c:1445
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Pokračujte po další %s"
 
-#: ../navit/navigation.c:1451
+#: ../navit/navigation.c:1449
 msgid "soon"
 msgstr "brzy"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1461
+#: ../navit/navigation.c:1459
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Jeďte na %1$s silnici %2$s"
 
-#: ../navit/navigation.c:1464 ../navit/navigation.c:1478
+#: ../navit/navigation.c:1462 ../navit/navigation.c:1476
 #, c-format
 msgid "after %i roads"
 msgstr "za %i silnice"
 
-#: ../navit/navigation.c:1467
+#: ../navit/navigation.c:1465
 msgid "now"
 msgstr "nyní"
 
-#: ../navit/navigation.c:1475
+#: ../navit/navigation.c:1473
 #, c-format
 msgid "then take the %1$s road to the %2$s"
 msgstr "pak jeďte %1$s silnici %2$s"
 
-#: ../navit/navigation.c:1486
+#: ../navit/navigation.c:1484
 msgid "error"
 msgstr "chyba"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:1516
+#: ../navit/navigation.c:1514
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Zabočte %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#: ../navit/navigation.c:1519
+#: ../navit/navigation.c:1517
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
 msgstr "pak odbočte %1$s%2$s %3$s%4$s"
 
-#: ../navit/navigation.c:1524
+#: ../navit/navigation.c:1522
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "%s dorazíte do cíle"
 
-#: ../navit/navigation.c:1526
+#: ../navit/navigation.c:1524
 msgid "then you have reached your destination."
 msgstr "pak budete v cíli."
 
@@ -314,17 +314,17 @@ msgid "Roadbook"
 msgstr "Itinerář"
 
 #: ../navit/popup.c:278 ../navit/popup.c:347
-#: ../navit/gui/internal/gui_internal.c:2124
+#: ../navit/gui/internal/gui_internal.c:2125
 msgid "Set as position"
 msgstr "Použít jako pozici"
 
 #: ../navit/popup.c:279 ../navit/popup.c:348
-#: ../navit/gui/internal/gui_internal.c:2120
+#: ../navit/gui/internal/gui_internal.c:2121
 msgid "Set as destination"
 msgstr "Nastavit jako cíl"
 
 #: ../navit/popup.c:280 ../navit/popup.c:349
-#: ../navit/gui/internal/gui_internal.c:2128
+#: ../navit/gui/internal/gui_internal.c:2129
 msgid "Add as bookmark"
 msgstr "Použít jako záložku"
 
@@ -1586,7 +1586,7 @@ msgid "Iso3"
 msgstr "Iso3"
 
 #: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:435
-#: ../navit/gui/internal/gui_internal.c:2875
+#: ../navit/gui/internal/gui_internal.c:2865
 msgid "Country"
 msgstr "Země"
 
@@ -1597,9 +1597,9 @@ msgstr "Poštovní"
 
 #: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
 #: ../navit/gui/gtk/destination.c:130
-#: ../navit/gui/internal/gui_internal.c:2854
-#: ../navit/gui/internal/gui_internal.c:2883
-#: ../navit/gui/internal/gui_internal.c:3018
+#: ../navit/gui/internal/gui_internal.c:2844
+#: ../navit/gui/internal/gui_internal.c:2873
+#: ../navit/gui/internal/gui_internal.c:3008
 msgid "Town"
 msgstr "Město"
 
@@ -1610,8 +1610,8 @@ msgstr "Kraj/Okres"
 
 #: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
 #: ../navit/gui/gtk/destination.c:446
-#: ../navit/gui/internal/gui_internal.c:2835
-#: ../navit/gui/internal/gui_internal.c:2844
+#: ../navit/gui/internal/gui_internal.c:2825
+#: ../navit/gui/internal/gui_internal.c:2834
 msgid "Street"
 msgstr "Ulice"
 
@@ -1648,13 +1648,13 @@ msgid "Destination"
 msgstr "Cíl"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
-#: ../navit/gui/internal/gui_internal.c:2939
-#: ../navit/gui/internal/gui_internal.c:3232
+#: ../navit/gui/internal/gui_internal.c:2929
+#: ../navit/gui/internal/gui_internal.c:3222
 msgid "Display"
 msgstr "Zobrazit"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:197
-#: ../navit/gui/internal/gui_internal.c:4592
+#: ../navit/gui/internal/gui_internal.c:4654
 msgid "Route"
 msgstr "Trasa"
 
@@ -1663,14 +1663,14 @@ msgid "Former Destinations"
 msgstr "Minulé cíle"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:199
-#: ../navit/gui/internal/gui_internal.c:2224
-#: ../navit/gui/internal/gui_internal.c:2994
+#: ../navit/gui/internal/gui_internal.c:2225
+#: ../navit/gui/internal/gui_internal.c:2984
 msgid "Bookmarks"
 msgstr "Záložky"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:201
-#: ../navit/gui/internal/gui_internal.c:2894
-#: ../navit/gui/internal/gui_internal.c:2941
+#: ../navit/gui/internal/gui_internal.c:2884
+#: ../navit/gui/internal/gui_internal.c:2931
 msgid "Layout"
 msgstr "Rozvržení"
 
@@ -1679,8 +1679,8 @@ msgid "Projection"
 msgstr "Projekce"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:203
-#: ../navit/gui/internal/gui_internal.c:3175
-#: ../navit/gui/internal/gui_internal.c:3240
+#: ../navit/gui/internal/gui_internal.c:3165
+#: ../navit/gui/internal/gui_internal.c:3230
 msgid "Vehicle"
 msgstr "Vozidlo"
 
@@ -1721,7 +1721,7 @@ msgid "Lock on Road"
 msgstr "Jet jen po silnici"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:224
-#: ../navit/gui/internal/gui_internal.c:3214
+#: ../navit/gui/internal/gui_internal.c:3204
 msgid "Northing"
 msgstr "Severně"
 
@@ -1730,7 +1730,7 @@ msgid "Autozoom"
 msgstr "Autozoom"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
-#: ../navit/gui/internal/gui_internal.c:2951
+#: ../navit/gui/internal/gui_internal.c:2941
 msgid "Fullscreen"
 msgstr "Celá obrazovka"
 
@@ -1783,12 +1783,12 @@ msgid "No"
 msgstr "Ne"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:75
-#: ../navit/gui/internal/gui_internal.c:2958
+#: ../navit/gui/internal/gui_internal.c:2948
 msgid "2D"
 msgstr "2D"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:76
-#: ../navit/gui/internal/gui_internal.c:2964
+#: ../navit/gui/internal/gui_internal.c:2954
 msgid "3D"
 msgstr "3D"
 
@@ -1805,79 +1805,79 @@ msgstr "Trasa %4.0fkm    %02d:%02d ETA"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Trasa 0000km  0+00:00 ETA"
 
-#: ../navit/gui/internal/gui_internal.c:1334
+#: ../navit/gui/internal/gui_internal.c:1335
 msgid "Back to map"
 msgstr "Zpět na mapu"
 
-#: ../navit/gui/internal/gui_internal.c:1343
+#: ../navit/gui/internal/gui_internal.c:1344
 msgid "Main Menu"
 msgstr "Hlavní menu"
 
-#: ../navit/gui/internal/gui_internal.c:1460
+#: ../navit/gui/internal/gui_internal.c:1461
 msgid "Help"
 msgstr "Nápověda"
 
-#: ../navit/gui/internal/gui_internal.c:1610
+#: ../navit/gui/internal/gui_internal.c:1611
 msgid "Back"
 msgstr "Zpět"
 
-#: ../navit/gui/internal/gui_internal.c:1916
-#: ../navit/gui/internal/gui_internal.c:2133
+#: ../navit/gui/internal/gui_internal.c:1917
+#: ../navit/gui/internal/gui_internal.c:2134
 msgid "POIs"
 msgstr "Body zájmu"
 
-#: ../navit/gui/internal/gui_internal.c:2081
+#: ../navit/gui/internal/gui_internal.c:2082
 msgid "Streets"
 msgstr "Ulice"
 
-#: ../navit/gui/internal/gui_internal.c:2089
+#: ../navit/gui/internal/gui_internal.c:2090
 msgid "House numbers"
 msgstr "Čísla domů"
 
-#: ../navit/gui/internal/gui_internal.c:2106
+#: ../navit/gui/internal/gui_internal.c:2107
 msgid "View in Browser"
 msgstr "Zobrazit v prohlížeči"
 
-#: ../navit/gui/internal/gui_internal.c:2112
+#: ../navit/gui/internal/gui_internal.c:2113
 msgid "View Attributes"
 msgstr "Zobrazit atributy"
 
-#: ../navit/gui/internal/gui_internal.c:2147
+#: ../navit/gui/internal/gui_internal.c:2148
 msgid "View on map"
 msgstr "Zobrazit na mapě"
 
-#: ../navit/gui/internal/gui_internal.c:2260
+#: ../navit/gui/internal/gui_internal.c:2261
 #, c-format
 msgid "Bookmark %s"
 msgstr "Záložka %s"
 
-#: ../navit/gui/internal/gui_internal.c:2819
-#: ../navit/gui/internal/gui_internal.c:2828
+#: ../navit/gui/internal/gui_internal.c:2809
+#: ../navit/gui/internal/gui_internal.c:2818
 msgid "House number"
 msgstr "Číslo domu"
 
-#: ../navit/gui/internal/gui_internal.c:2946
+#: ../navit/gui/internal/gui_internal.c:2936
 msgid "Window Mode"
 msgstr "V okně"
 
-#: ../navit/gui/internal/gui_internal.c:2992
-#: ../navit/gui/internal/gui_internal.c:3280
+#: ../navit/gui/internal/gui_internal.c:2982
+#: ../navit/gui/internal/gui_internal.c:3270
 msgid "Actions"
 msgstr "Akce"
 
-#: ../navit/gui/internal/gui_internal.c:3003
+#: ../navit/gui/internal/gui_internal.c:2993
 msgid "Map Point"
 msgstr "Bod na mapě"
 
-#: ../navit/gui/internal/gui_internal.c:3013
+#: ../navit/gui/internal/gui_internal.c:3003
 msgid "Vehicle Position"
 msgstr "Poloha vozidla"
 
-#: ../navit/gui/internal/gui_internal.c:3022
+#: ../navit/gui/internal/gui_internal.c:3012
 msgid "Quit"
 msgstr "Konec"
 
-#: ../navit/gui/internal/gui_internal.c:3028
+#: ../navit/gui/internal/gui_internal.c:3018
 msgid ""
 "Stop\n"
 "Navigation"
@@ -1885,54 +1885,54 @@ msgstr ""
 "Ukonči\n"
 "Navigaci"
 
-#: ../navit/gui/internal/gui_internal.c:3044
-#: ../navit/gui/internal/gui_internal.c:3236
+#: ../navit/gui/internal/gui_internal.c:3034
+#: ../navit/gui/internal/gui_internal.c:3226
 msgid "Maps"
 msgstr "Mapy"
 
-#: ../navit/gui/internal/gui_internal.c:3088
+#: ../navit/gui/internal/gui_internal.c:3078
 msgid "Show Satellite Status"
 msgstr "Ukázat stav satelitu"
 
-#: ../navit/gui/internal/gui_internal.c:3122
+#: ../navit/gui/internal/gui_internal.c:3112
 msgid "Show NMEA Data"
 msgstr "Ukázat NMEA data"
 
-#: ../navit/gui/internal/gui_internal.c:3146
+#: ../navit/gui/internal/gui_internal.c:3136
 msgid "Set as active"
 msgstr "Nastavit jako aktivní"
 
-#: ../navit/gui/internal/gui_internal.c:3152
+#: ../navit/gui/internal/gui_internal.c:3142
 msgid "Show Satellite status"
 msgstr "Ukázat stav satelitu"
 
-#: ../navit/gui/internal/gui_internal.c:3158
+#: ../navit/gui/internal/gui_internal.c:3148
 msgid "Show NMEA data"
 msgstr "Ukázat NMEA data"
 
-#: ../navit/gui/internal/gui_internal.c:3200
-#: ../navit/gui/internal/gui_internal.c:3244
+#: ../navit/gui/internal/gui_internal.c:3190
+#: ../navit/gui/internal/gui_internal.c:3234
 msgid "Rules"
 msgstr "Pravidla"
 
-#: ../navit/gui/internal/gui_internal.c:3208
+#: ../navit/gui/internal/gui_internal.c:3198
 msgid "Lock on road"
 msgstr "Uchytit na cestu"
 
-#: ../navit/gui/internal/gui_internal.c:3220
+#: ../navit/gui/internal/gui_internal.c:3210
 msgid "Map follows Vehicle"
 msgstr "Mapa sleduje vozidlo"
 
-#: ../navit/gui/internal/gui_internal.c:3230
-#: ../navit/gui/internal/gui_internal.c:3288
+#: ../navit/gui/internal/gui_internal.c:3220
+#: ../navit/gui/internal/gui_internal.c:3278
 msgid "Settings"
 msgstr "Nastavení"
 
-#: ../navit/gui/internal/gui_internal.c:3278
+#: ../navit/gui/internal/gui_internal.c:3268
 msgid "Main menu"
 msgstr "Hlavní menu"
 
-#: ../navit/gui/internal/gui_internal.c:3284
+#: ../navit/gui/internal/gui_internal.c:3274
 msgid ""
 "Show\n"
 "Map"
@@ -1940,15 +1940,19 @@ msgstr ""
 "Ukázat\n"
 "mapu"
 
-#: ../navit/gui/internal/gui_internal.c:3291
+#: ../navit/gui/internal/gui_internal.c:3281
 msgid "Tools"
 msgstr "Nástroje"
 
-#: ../navit/gui/internal/gui_internal.c:4449
-#: ../navit/gui/internal/gui_internal.c:4597
+#: ../navit/gui/internal/gui_internal.c:3392
+msgid "Message"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:4511
+#: ../navit/gui/internal/gui_internal.c:4659
 msgid "Height Profile"
 msgstr "Výška profilu"
 
-#: ../navit/gui/internal/gui_internal.c:4594
+#: ../navit/gui/internal/gui_internal.c:4656
 msgid "Description"
 msgstr "Popis"

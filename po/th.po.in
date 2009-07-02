@@ -7,194 +7,329 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-11 10:33+0200\n"
-"PO-Revision-Date: 2008-09-03 03:29+0000\n"
+"POT-Creation-Date: 2009-06-26 07:37+0200\n"
+"PO-Revision-Date: 2009-06-21 22:41+0000\n"
 "Last-Translator: mansv68 <mansv68@yahoo.co.th>\n"
 "Language-Team: Thai <th@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2009-05-30 06:32+0000\n"
+"X-Launchpad-Export-Date: 2009-07-02 18:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
+
+#: ../navit/main.c:231
+#, c-format
+msgid "Running from source directory\n"
+msgstr ""
 
 #: ../navit/main.c:263
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "กำหนด '%s' ถึง '%s'\n"
 
-#: ../navit/navigation.c:316
+#: ../navit/navigation.c:238
+msgid "zeroth"
+msgstr ""
+
+#: ../navit/navigation.c:240
+msgid "first"
+msgstr ""
+
+#: ../navit/navigation.c:242
+msgid "second"
+msgstr ""
+
+#: ../navit/navigation.c:244
+msgid "third"
+msgstr ""
+
+#: ../navit/navigation.c:246
+msgid "fourth"
+msgstr ""
+
+#: ../navit/navigation.c:248
+msgid "fifth"
+msgstr ""
+
+#: ../navit/navigation.c:250
+msgid "sixth"
+msgstr ""
+
+#: ../navit/navigation.c:261
+msgid "zeroth exit"
+msgstr ""
+
+#: ../navit/navigation.c:263
+msgid "first exit"
+msgstr ""
+
+#: ../navit/navigation.c:265
+msgid "second exit"
+msgstr ""
+
+#: ../navit/navigation.c:267
+msgid "third exit"
+msgstr ""
+
+#: ../navit/navigation.c:269
+msgid "fourth exit"
+msgstr ""
+
+#: ../navit/navigation.c:271
+msgid "fifth exit"
+msgstr ""
+
+#: ../navit/navigation.c:273
+msgid "sixth exit"
+msgstr ""
+
+#: ../navit/navigation.c:314
 #, c-format
 msgid "%d m"
 msgstr "%d เมตร"
 
-#: ../navit/navigation.c:318
+#: ../navit/navigation.c:316
 #, c-format
 msgid "in %d m"
 msgstr "อีก %d เมตร"
 
-#: ../navit/navigation.c:322
+#: ../navit/navigation.c:320
 #, c-format
 msgid "%d meters"
 msgstr "%d เมตร"
 
-#: ../navit/navigation.c:324
+#: ../navit/navigation.c:322
 #, c-format
 msgid "in %d meters"
 msgstr "อีก %d เมตร"
 
-#: ../navit/navigation.c:330
+#: ../navit/navigation.c:328
 #, c-format
 msgid "%d.%d kilometer"
 msgstr "%d.%d  กิโลเมตร"
 
-#: ../navit/navigation.c:332
+#: ../navit/navigation.c:330
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "อีก %d.%d กิโลเมตร"
 
-#: ../navit/navigation.c:336
+#: ../navit/navigation.c:334
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "%d กิโลเมตร"
 
-#: ../navit/navigation.c:338
+#: ../navit/navigation.c:336
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "อีก %d กิโลเมตร"
 
-#: ../navit/navigation.c:1268
+#: ../navit/navigation.c:1266
 msgid "exit"
 msgstr "ทางออก"
 
+#: ../navit/navigation.c:1268
+msgid "into the ramp"
+msgstr ""
+
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:1300
+#: ../navit/navigation.c:1298
 #, c-format
 msgid "%sinto the street %s%s%s"
 msgstr "%s เข้าสู่ถนน %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1304
+#: ../navit/navigation.c:1302
 #, c-format
 msgid "%sinto the %s%s%s|male form"
 msgstr "%s เข้าสู่ %s%s%s| จาก"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1308
+#: ../navit/navigation.c:1306
 #, c-format
 msgid "%sinto the %s%s%s|female form"
 msgstr "%s เข้าสู %s%s%s| จาก"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1312
+#: ../navit/navigation.c:1310
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%s เข้าสู่ %s%s%s| จาก"
 
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#: ../navit/navigation.c:1317
+#, c-format
+msgid "%sinto the %s"
+msgstr ""
+
 #. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1340
+#: ../navit/navigation.c:1338
 msgid "right"
 msgstr "ขวา"
 
 #. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1379
+#: ../navit/navigation.c:1377
 msgid "left"
 msgstr "ซ้าย"
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1391
+#: ../navit/navigation.c:1384
+msgid "easily "
+msgstr ""
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1389
 msgid "strongly "
 msgstr "อย่างเคร่งคัด "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1395
+#: ../navit/navigation.c:1392
+msgid "really strongly "
+msgstr ""
+
+#. TRANSLATORS: Don't forget the ending space
+#: ../navit/navigation.c:1396
 msgid "unknown "
 msgstr "ไม่ทราบ "
 
-#: ../navit/navigation.c:1402
+#: ../navit/navigation.c:1403
 msgid "When possible, please turn around"
 msgstr "ถ้าเป็นไปได้ ให้กลับรถ"
 
-#: ../navit/navigation.c:1444
+#: ../navit/navigation.c:1413
+msgid "Enter the roundabout soon"
+msgstr ""
+
+#. TRANSLATORS: %s is the distance to the roundabout
+#: ../navit/navigation.c:1417
+#, c-format
+msgid "In %s, enter the roundabout"
+msgstr ""
+
+#: ../navit/navigation.c:1432
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr ""
+
+#: ../navit/navigation.c:1435
+#, c-format
+msgid "then leave the roundabout at the %s"
+msgstr ""
+
+#: ../navit/navigation.c:1445
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "ตรงไปตามถนน แล้ว %s"
 
-#: ../navit/navigation.c:1448
+#: ../navit/navigation.c:1449
 msgid "soon"
 msgstr "ในไม่ช้า"
 
-#: ../navit/navigation.c:1464
+#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+#: ../navit/navigation.c:1459
+#, c-format
+msgid "Take the %1$s road to the %2$s"
+msgstr ""
+
+#: ../navit/navigation.c:1462 ../navit/navigation.c:1476
+#, c-format
+msgid "after %i roads"
+msgstr ""
+
+#: ../navit/navigation.c:1465
 msgid "now"
 msgstr "เดี๋ยวนี้"
 
-#: ../navit/navigation.c:1483
+#: ../navit/navigation.c:1473
+#, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr ""
+
+#: ../navit/navigation.c:1484
 msgid "error"
 msgstr "ข้อผิดพลาด"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:1513
+#: ../navit/navigation.c:1514
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "เลี้ยว %1$s%2$s %3$s%4$s"
 
-#: ../navit/navigation.c:1521
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#: ../navit/navigation.c:1517
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr ""
+
+#: ../navit/navigation.c:1522
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "คุณได้ถึงที่หมายแล้ว %s"
 
-#: ../navit/navit.c:1165
+#: ../navit/navigation.c:1524
+msgid "then you have reached your destination."
+msgstr ""
+
+#: ../navit/navit.c:1174
+msgid "Position"
+msgstr ""
+
+#: ../navit/navit.c:1175
 msgid "Command"
 msgstr "คำสั่ง"
 
-#: ../navit/navit.c:1169
+#: ../navit/navit.c:1179
 msgid "Length"
 msgstr "ความยาว"
 
-#: ../navit/navit.c:1173 ../navit/navit.c:1198
+#: ../navit/navit.c:1183 ../navit/navit.c:1208
 msgid "km"
 msgstr "กม."
 
-#: ../navit/navit.c:1177 ../navit/navit.c:1202
+#: ../navit/navit.c:1187 ../navit/navit.c:1212
 msgid "m"
 msgstr "เมตร"
 
-#: ../navit/navit.c:1183
+#: ../navit/navit.c:1193
 msgid "Time"
 msgstr "เวลา"
 
-#: ../navit/navit.c:1195
+#: ../navit/navit.c:1205
 msgid "Destination Length"
 msgstr "ระยะทาง ถึงที่หมาย"
 
-#: ../navit/navit.c:1208
+#: ../navit/navit.c:1218
 msgid "Destination Time"
 msgstr "เวลา ถึงที่หมาย"
 
-#: ../navit/popup.c:238 ../navit/popup.c:292
-#: ../navit/gui/internal/gui_internal.c:2102
+#: ../navit/navit.c:1251 ../navit/gui/gtk/gui_gtk_action.c:225
+msgid "Roadbook"
+msgstr ""
+
+#: ../navit/popup.c:278 ../navit/popup.c:347
+#: ../navit/gui/internal/gui_internal.c:2125
 msgid "Set as position"
 msgstr "กำหนดตำแหน่ง"
 
-#: ../navit/popup.c:239 ../navit/popup.c:293
-#: ../navit/gui/internal/gui_internal.c:2098
+#: ../navit/popup.c:279 ../navit/popup.c:348
+#: ../navit/gui/internal/gui_internal.c:2121
 msgid "Set as destination"
 msgstr "กำหนดเป็นที่หมาย"
 
-#: ../navit/popup.c:240 ../navit/popup.c:294
-#: ../navit/gui/internal/gui_internal.c:2106
+#: ../navit/popup.c:280 ../navit/popup.c:349
+#: ../navit/gui/internal/gui_internal.c:2129
 msgid "Add as bookmark"
 msgstr "เพิ่มใน บุกมาร์ก"
 
-#: ../navit/popup.c:282
+#: ../navit/popup.c:337
 #, c-format
 msgid "Point 0x%x 0x%x"
 msgstr "จุด 0x%x 0x%x"
 
-#: ../navit/popup.c:283
+#: ../navit/popup.c:338
 #, c-format
 msgid "Screen coord : %d %d"
 msgstr "พิกัดหน้าจอ : %d %d"
@@ -329,6 +464,11 @@ msgstr "บูรันดิ"
 msgid "Benin"
 msgstr "เบนิน"
 
+#. 652
+#: ../navit/country.c:65
+msgid "Saint Barthelemy"
+msgstr ""
+
 #. 060
 #: ../navit/country.c:66
 msgid "Bermuda"
@@ -388,6 +528,11 @@ msgstr "แคนาดา"
 #: ../navit/country.c:77
 msgid "Cocos (Keeling) Islands"
 msgstr "หมู่เกาะโคโคส (คีลิง)"
+
+#. 180
+#: ../navit/country.c:78
+msgid "Congo, Democratic Republic of the"
+msgstr ""
 
 #. 140
 #: ../navit/country.c:79
@@ -719,6 +864,11 @@ msgstr "บริติชอินเดียนโอเชียนเทร
 msgid "Iraq"
 msgstr "อิรัก"
 
+#. 364
+#: ../navit/country.c:145
+msgid "Iran, Islamic Republic of"
+msgstr ""
+
 #. 352
 #: ../navit/country.c:146
 msgid "Iceland"
@@ -893,6 +1043,11 @@ msgstr "มาดากัสกา"
 #: ../navit/country.c:180
 msgid "Marshall Islands"
 msgstr "หมู่เกาะมาแชล"
+
+#. 807
+#: ../navit/country.c:181
+msgid "Macedonia, the former Yugoslav Republic of"
+msgstr ""
 
 #. 466
 #: ../navit/country.c:182
@@ -1184,6 +1339,11 @@ msgstr "สฟาลบาร์ และ ยานไมเอน"
 msgid "Slovakia"
 msgstr "สโลวาเกีย"
 
+#. 694
+#: ../navit/country.c:240
+msgid "Sierra Leone"
+msgstr ""
+
 #. 674
 #: ../navit/country.c:241
 msgid "San Marino"
@@ -1404,6 +1564,10 @@ msgstr "แซมเบีย"
 msgid "Zimbabwe"
 msgstr "ซิมบับเว"
 
+#: ../navit/country.c:285
+msgid "* Unknown, add is_in tags to those cities"
+msgstr ""
+
 #: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:128
 #: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
 msgid "Car"
@@ -1418,7 +1582,7 @@ msgid "Iso3"
 msgstr "ISO3"
 
 #: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:435
-#: ../navit/gui/internal/gui_internal.c:2756
+#: ../navit/gui/internal/gui_internal.c:2865
 msgid "Country"
 msgstr "ประเทศ"
 
@@ -1429,9 +1593,9 @@ msgstr "ไปรษณีย์"
 
 #: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
 #: ../navit/gui/gtk/destination.c:130
-#: ../navit/gui/internal/gui_internal.c:2735
-#: ../navit/gui/internal/gui_internal.c:2764
-#: ../navit/gui/internal/gui_internal.c:2899
+#: ../navit/gui/internal/gui_internal.c:2844
+#: ../navit/gui/internal/gui_internal.c:2873
+#: ../navit/gui/internal/gui_internal.c:3008
 msgid "Town"
 msgstr "เมือง"
 
@@ -1442,8 +1606,8 @@ msgstr "เขต"
 
 #: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
 #: ../navit/gui/gtk/destination.c:446
-#: ../navit/gui/internal/gui_internal.c:2716
-#: ../navit/gui/internal/gui_internal.c:2725
+#: ../navit/gui/internal/gui_internal.c:2825
+#: ../navit/gui/internal/gui_internal.c:2834
 msgid "Street"
 msgstr "ถนน"
 
@@ -1463,21 +1627,30 @@ msgstr "รหัสไปรษณีย์"
 msgid "City"
 msgstr "เมือง"
 
+#: ../navit/gui/gtk/destination.c:443
+msgid "District/Township"
+msgstr ""
+
 #: ../navit/gui/gtk/destination.c:471 ../navit/gui/gtk/gui_gtk_action.c:200
 msgid "Map"
 msgstr "แผนที่"
+
+#: ../navit/gui/gtk/destination.c:472
+msgid "Bookmark"
+msgstr ""
 
 #: ../navit/gui/gtk/destination.c:473 ../navit/gui/gtk/gui_gtk_action.c:212
 msgid "Destination"
 msgstr "จุดหมาย"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
-#: ../navit/gui/internal/gui_internal.c:2820
-#: ../navit/gui/internal/gui_internal.c:3113
+#: ../navit/gui/internal/gui_internal.c:2929
+#: ../navit/gui/internal/gui_internal.c:3222
 msgid "Display"
 msgstr "แสดง"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:197
+#: ../navit/gui/internal/gui_internal.c:4654
 msgid "Route"
 msgstr "เส้นทาง"
 
@@ -1486,14 +1659,14 @@ msgid "Former Destinations"
 msgstr "ก่อนถึง ที่หมาย"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:199
-#: ../navit/gui/internal/gui_internal.c:2202
-#: ../navit/gui/internal/gui_internal.c:2875
+#: ../navit/gui/internal/gui_internal.c:2225
+#: ../navit/gui/internal/gui_internal.c:2984
 msgid "Bookmarks"
 msgstr "บุ๊กมาร์ก"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:201
-#: ../navit/gui/internal/gui_internal.c:2775
-#: ../navit/gui/internal/gui_internal.c:2822
+#: ../navit/gui/internal/gui_internal.c:2884
+#: ../navit/gui/internal/gui_internal.c:2931
 msgid "Layout"
 msgstr "การจัดเรียง"
 
@@ -1502,8 +1675,8 @@ msgid "Projection"
 msgstr "การฉายแผนที่"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:203
-#: ../navit/gui/internal/gui_internal.c:3056
-#: ../navit/gui/internal/gui_internal.c:3121
+#: ../navit/gui/internal/gui_internal.c:3165
+#: ../navit/gui/internal/gui_internal.c:3230
 msgid "Vehicle"
 msgstr "ยานพาหนะ"
 
@@ -1539,13 +1712,21 @@ msgstr "_ออกจากโปรแกรม"
 msgid "Cursor"
 msgstr "เคอร์เซอร์"
 
+#: ../navit/gui/gtk/gui_gtk_action.c:223
+msgid "Lock on Road"
+msgstr ""
+
 #: ../navit/gui/gtk/gui_gtk_action.c:224
-#: ../navit/gui/internal/gui_internal.c:3095
+#: ../navit/gui/internal/gui_internal.c:3204
 msgid "Northing"
 msgstr "ทางทิศเหนือ"
 
+#: ../navit/gui/gtk/gui_gtk_action.c:226
+msgid "Autozoom"
+msgstr ""
+
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
-#: ../navit/gui/internal/gui_internal.c:2832
+#: ../navit/gui/internal/gui_internal.c:2941
 msgid "Fullscreen"
 msgstr "แสดงผลเต็มจอภาพ"
 
@@ -1593,6 +1774,24 @@ msgstr "ตะวันตก"
 msgid "NW"
 msgstr "ตะวันออกเฉียงเหนือ"
 
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:74
+msgid "No"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:75
+#: ../navit/gui/internal/gui_internal.c:2948
+msgid "2D"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:76
+#: ../navit/gui/internal/gui_internal.c:2954
+msgid "3D"
+msgstr ""
+
+#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
+msgid "OT"
+msgstr ""
+
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
@@ -1602,317 +1801,150 @@ msgstr "เส้นทาง %4.0f กม. %02d:%02d ETA"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "เส้นทาง 0000km 0+00:00 ETA"
 
-#: ../navit/main.c:231
-#, c-format
-msgid "Running from source directory\n"
-msgstr ""
-
-#: ../navit/navigation.c:240
-msgid "zeroth"
-msgstr ""
-
-#: ../navit/navigation.c:242
-msgid "first"
-msgstr ""
-
-#: ../navit/navigation.c:244
-msgid "second"
-msgstr ""
-
-#: ../navit/navigation.c:246
-msgid "third"
-msgstr ""
-
-#: ../navit/navigation.c:248
-msgid "fourth"
-msgstr ""
-
-#: ../navit/navigation.c:250
-msgid "fifth"
-msgstr ""
-
-#: ../navit/navigation.c:252
-msgid "sixth"
-msgstr ""
-
-#: ../navit/navigation.c:263
-msgid "zeroth exit"
-msgstr ""
-
-#: ../navit/navigation.c:265
-msgid "first exit"
-msgstr ""
-
-#: ../navit/navigation.c:267
-msgid "second exit"
-msgstr ""
-
-#: ../navit/navigation.c:269
-msgid "third exit"
-msgstr ""
-
-#: ../navit/navigation.c:271
-msgid "fourth exit"
-msgstr ""
-
-#: ../navit/navigation.c:273
-msgid "fifth exit"
-msgstr ""
-
-#: ../navit/navigation.c:275
-msgid "sixth exit"
-msgstr ""
-
-#: ../navit/navigation.c:1270
-msgid "into the ramp"
-msgstr ""
-
-#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1319
-#, c-format
-msgid "%sinto the %s"
-msgstr ""
-
-#. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1386
-msgid "easily "
-msgstr ""
-
-#: ../navit/navigation.c:1412
-msgid "Enter the roundabout soon"
-msgstr ""
-
-#. TRANSLATORS: %s is the distance to the roundabout
-#: ../navit/navigation.c:1416
-#, c-format
-msgid "In %s, enter the roundabout"
-msgstr ""
-
-#: ../navit/navigation.c:1431
-#, c-format
-msgid "Leave the roundabout at the %s"
-msgstr ""
-
-#: ../navit/navigation.c:1434
-#, c-format
-msgid "then leave the roundabout at the %s"
-msgstr ""
-
-#. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1458
-#, c-format
-msgid "Take the %1$s road to the %2$s"
-msgstr ""
-
-#: ../navit/navigation.c:1461 ../navit/navigation.c:1475
-#, c-format
-msgid "after %i roads"
-msgstr ""
-
-#: ../navit/navigation.c:1472
-#, c-format
-msgid "then take the %1$s road to the %2$s"
-msgstr ""
-
-#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#: ../navit/navigation.c:1516
-#, c-format
-msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
-
-#: ../navit/navigation.c:1523
-msgid "then you have reached your destination."
-msgstr ""
-
-#: ../navit/navit.c:1164
-msgid "Position"
-msgstr ""
-
-#: ../navit/navit.c:1241 ../navit/gui/gtk/gui_gtk_action.c:225
-msgid "Roadbook"
-msgstr ""
-
-#. 652
-#: ../navit/country.c:65
-msgid "Saint Barthelemy"
-msgstr ""
-
-#. 180
-#: ../navit/country.c:78
-msgid "Congo, Democratic Republic of the"
-msgstr ""
-
-#. 364
-#: ../navit/country.c:145
-msgid "Iran, Islamic Republic of"
-msgstr ""
-
-#. 807
-#: ../navit/country.c:181
-msgid "Macedonia, the former Yugoslav Republic of"
-msgstr ""
-
-#. 694
-#: ../navit/country.c:240
-msgid "Sierra Leone"
-msgstr ""
-
-#: ../navit/gui/gtk/destination.c:443
-msgid "District/Township"
-msgstr ""
-
-#: ../navit/gui/gtk/destination.c:472
-msgid "Bookmark"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:223
-msgid "Lock on Road"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_action.c:226
-msgid "Autozoom"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:74
-msgid "No"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:75
-#: ../navit/gui/internal/gui_internal.c:2839
-msgid "2D"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:76
-#: ../navit/gui/internal/gui_internal.c:2845
-msgid "3D"
-msgstr ""
-
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
-msgid "OT"
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:1323
+#: ../navit/gui/internal/gui_internal.c:1335
 msgid "Back to map"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:1332
+#: ../navit/gui/internal/gui_internal.c:1344
 msgid "Main Menu"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:1452
+#: ../navit/gui/internal/gui_internal.c:1461
 msgid "Help"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:1602
+#: ../navit/gui/internal/gui_internal.c:1611
 msgid "Back"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:1906
-#: ../navit/gui/internal/gui_internal.c:2111
+#: ../navit/gui/internal/gui_internal.c:1917
+#: ../navit/gui/internal/gui_internal.c:2134
 msgid "POIs"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2068
+#: ../navit/gui/internal/gui_internal.c:2082
 msgid "Streets"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2084
+#: ../navit/gui/internal/gui_internal.c:2090
+msgid "House numbers"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:2107
 msgid "View in Browser"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2090
+#: ../navit/gui/internal/gui_internal.c:2113
 msgid "View Attributes"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2125
+#: ../navit/gui/internal/gui_internal.c:2148
 msgid "View on map"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2238
+#: ../navit/gui/internal/gui_internal.c:2261
 #, c-format
 msgid "Bookmark %s"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2827
+#: ../navit/gui/internal/gui_internal.c:2809
+#: ../navit/gui/internal/gui_internal.c:2818
+msgid "House number"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:2936
 msgid "Window Mode"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2873
-#: ../navit/gui/internal/gui_internal.c:3161
+#: ../navit/gui/internal/gui_internal.c:2982
+#: ../navit/gui/internal/gui_internal.c:3270
 msgid "Actions"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2884
+#: ../navit/gui/internal/gui_internal.c:2993
 msgid "Map Point"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2894
+#: ../navit/gui/internal/gui_internal.c:3003
 msgid "Vehicle Position"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2903
+#: ../navit/gui/internal/gui_internal.c:3012
 msgid "Quit"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2909
+#: ../navit/gui/internal/gui_internal.c:3018
 msgid ""
 "Stop\n"
 "Navigation"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2925
-#: ../navit/gui/internal/gui_internal.c:3117
+#: ../navit/gui/internal/gui_internal.c:3034
+#: ../navit/gui/internal/gui_internal.c:3226
 msgid "Maps"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2969
+#: ../navit/gui/internal/gui_internal.c:3078
 msgid "Show Satellite Status"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3003
+#: ../navit/gui/internal/gui_internal.c:3112
 msgid "Show NMEA Data"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3027
+#: ../navit/gui/internal/gui_internal.c:3136
 msgid "Set as active"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3033
+#: ../navit/gui/internal/gui_internal.c:3142
 msgid "Show Satellite status"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3039
+#: ../navit/gui/internal/gui_internal.c:3148
 msgid "Show NMEA data"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3081
-#: ../navit/gui/internal/gui_internal.c:3125
+#: ../navit/gui/internal/gui_internal.c:3190
+#: ../navit/gui/internal/gui_internal.c:3234
 msgid "Rules"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3089
+#: ../navit/gui/internal/gui_internal.c:3198
 msgid "Lock on road"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3101
+#: ../navit/gui/internal/gui_internal.c:3210
 msgid "Map follows Vehicle"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3111
-#: ../navit/gui/internal/gui_internal.c:3169
+#: ../navit/gui/internal/gui_internal.c:3220
+#: ../navit/gui/internal/gui_internal.c:3278
 msgid "Settings"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3159
+#: ../navit/gui/internal/gui_internal.c:3268
 msgid "Main menu"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3165
+#: ../navit/gui/internal/gui_internal.c:3274
 msgid ""
 "Show\n"
 "Map"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3172
+#: ../navit/gui/internal/gui_internal.c:3281
 msgid "Tools"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:3392
+msgid "Message"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:4511
+#: ../navit/gui/internal/gui_internal.c:4659
+msgid "Height Profile"
+msgstr ""
+
+#: ../navit/gui/internal/gui_internal.c:4656
+msgid "Description"
 msgstr ""
