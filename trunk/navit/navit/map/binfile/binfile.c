@@ -1220,6 +1220,10 @@ map_binfile_open(struct map_priv *m)
 			if (binfile_attr_get(item->priv_data, attr_version, &attr))
 				m->map_version=attr.u.num;
 		map_rect_destroy_binfile(mr);
+		if (m->map_version >= 16) {
+			dbg(0,"Warning: This map is incompatible with your navit version. Please update navit.\n");
+			return 0;
+		}
 	}
 	return 1;
 }
