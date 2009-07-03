@@ -3211,7 +3211,7 @@ int main(int argc, char **argv)
 				&(struct attr){attr_type,{"textfile"}},
 				&(struct attr){attr_data,{optarg}},
 				NULL};
-			add_plugin("$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libdata_textfile.so");
+			add_plugin("$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libmap_textfile.so");
 			map_handle=map_new(NULL, attrs);
 			break;	
 		case 'n':
