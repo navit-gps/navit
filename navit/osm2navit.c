@@ -562,41 +562,12 @@ struct attr_bin {
 	enum attr_type type;
 };
 
-struct attr_bin label_attr = {
-	0, attr_label
-};
-char label_attr_buffer[BUFFER_SIZE];
-
-struct attr_bin maxspeed_attr = {
-	0, attr_maxspeed
-};
 int maxspeed_attr_value;
 
-struct attr_bin town_name_attr = {
-	0, attr_town_name
-};
-
-struct attr_bin street_name_attr = {
-	0, attr_street_name
-};
-
-char street_name_attr_buffer[BUFFER_SIZE];
-
-struct attr_bin street_name_systematic_attr = {
-	0, attr_street_name_systematic
-};
-char street_name_systematic_attr_buffer[BUFFER_SIZE];
-
-struct attr_bin debug_attr = {
-	0, attr_debug
-};
 char debug_attr_buffer[BUFFER_SIZE];
 
 int flags[4];
 
-struct attr_bin flags_attr = {
-	0, attr_flags
-};
 int flags_attr_value;
 
 struct attr_bin osmid_attr;
@@ -613,6 +584,7 @@ enum attr_strings {
 	attr_string_email,
 	attr_string_url,
 	attr_string_street_name,
+	attr_string_street_name_systematic,
 	attr_string_house_number,
 	attr_string_label,
 	attr_string_last,
@@ -755,19 +727,6 @@ item_bin_read(struct item_bin *ib, FILE *in)
 	return 0;
 }
 
-static void
-pad_text_attr(struct attr_bin *a, char *buffer)
-{
-	int l;
-	if (buffer && buffer[0]) {
-		l=strlen(buffer)+1;
-		while (l % 4)
-			buffer[l++]='\0';
-		a->len=l/4+1;
-	} else
-		a->len=0;
-}
-
 static int
 xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size)
 {
@@ -864,10 +823,8 @@ add_tag(char *k, char *v)
 		} else {
 			maxspeed_attr_value = atoi(v);
 		}
-		if (maxspeed_attr_value) {
-			maxspeed_attr.len = 2;
+		if (maxspeed_attr_value) 
 			flags[0] |= AF_SPEED_LIMIT;
-		}
 		level=5;
 	}
 	if (! strcmp(k,"access")) {
@@ -937,8 +894,6 @@ add_tag(char *k, char *v)
 	if (! strcmp(k,"note"))
 		level=5;
 	if (! strcmp(k,"name")) {
-		strcpy(label_attr_buffer, v);
-		pad_text_attr(&label_attr, label_attr_buffer);
 		attr_strings_save(attr_string_label, v);
 		level=5;
 	}
@@ -952,8 +907,6 @@ add_tag(char *k, char *v)
 	}
 	if (! strcmp(k,"addr:street")) {
 		attr_strings_save(attr_string_street_name, v);
-		strcpy(street_name_attr_buffer, v);
-		pad_text_attr(&street_name_attr, street_name_attr_buffer);
 		level=5;
 	}
 	if (! strcmp(k,"phone")) {
@@ -965,10 +918,8 @@ add_tag(char *k, char *v)
 		level=5;
 	}
 	if (! strcmp(k,"ref")) {
-		if (in_way) {
-			strcpy(street_name_systematic_attr_buffer, v);
-			pad_text_attr(&street_name_systematic_attr, street_name_systematic_attr_buffer);
-		}
+		if (in_way) 
+			attr_strings_save(attr_string_street_name_systematic, v);
 		level=5;
 	}
 	if (! strcmp(k,"is_in")) {
@@ -1158,10 +1109,7 @@ add_node(int id, double lat, double lon)
 	node_is_tagged=0;
 	nodeid=id;
 	item.type=type_point_unkn;
-	label_attr.len=0;
-	street_name_attr.len=0;
-	town_name_attr.len=0;
-	debug_attr.len=0;
+	debug_attr_buffer[0]='\0';
 	is_in_buffer[0]='\0';
 	debug_attr_buffer[0]='\0';
 	osmid_attr.type=attr_osm_nodeid;	
@@ -1276,17 +1224,11 @@ add_way(int id)
 	coord_count=0;
 	attr_strings_clear();
 	item.type=type_street_unkn;
-	label_attr.len=0;
-	street_name_attr.len=0;
-	street_name_systematic_attr.len=0;
-	debug_attr.len=0;
-	maxspeed_attr.len=0;
-	flags_attr.len=0;
+	debug_attr_buffer[0]='\0';
+	maxspeed_attr_value=0;
 	flags_attr_value = 0;
 	memset(flags, 0, sizeof(flags));
 	debug_attr_buffer[0]='\0';
-	osmid_attr.type=attr_osm_wayid;	
-	osmid_attr.len=3;
 	osmid_attr_value=id;
 }
 
@@ -1373,15 +1315,6 @@ relation_add_tag(char *k, char *v)
 }
 
 
-static void
-write_attr(FILE *out, struct attr_bin *attr, void *buffer)
-{
-	if (attr->len) {
-		fwrite(attr, sizeof(*attr), 1, out);
-		fwrite(buffer, (attr->len-1)*4, 1, out);
-	}
-}
-
 static int
 attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_type *types, int types_count)
 {
@@ -1413,9 +1346,9 @@ attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_t
 static void
 end_way(FILE *out)
 {
-	int alen=0,count;
-	int *def_flags;
-	enum item_type types[5];
+	int i,count;
+	int *def_flags,add_flags;
+	enum item_type types[10];
 
 	if (! out)
 		return;
@@ -1425,118 +1358,115 @@ end_way(FILE *out)
 		g_hash_table_insert(dedupe_ways_hash, (gpointer)(long)wayid, (gpointer)1);
 	}
 	count=attr_longest_match(attr_mapping_way, attr_mapping_way_count, types, sizeof(types)/sizeof(enum item_type));
-	pad_text_attr(&debug_attr, debug_attr_buffer);
-	if (label_attr.len)
-		alen+=label_attr.len+1;
-	if (street_name_systematic_attr.len)
-		alen+=street_name_systematic_attr.len+1;
-	if (debug_attr.len)
-		alen+=debug_attr.len+1;
-	if (maxspeed_attr.len) 
-		alen+=maxspeed_attr.len+1;
-	if (osmid_attr.len)
-		alen+=osmid_attr.len+1;
-	if (count)
-		item.type=types[0];
-	else
-		item.type=type_street_unkn;
-	def_flags=item_get_default_flags(item.type);
-	if (def_flags) {
-		if (coverage) {
-			item.type=type_coverage;
-		} else {
-			flags_attr_value=(*def_flags | flags[0] | flags[1]) & ~flags[2];
-			if (flags_attr_value != *def_flags) {
-				flags_attr.len=2;
-				alen+=flags_attr.len+1;
+	if (!count) {
+		count=1;
+		types[0]=type_street_unkn;
+	}
+	if (count >= 10) {
+		fprintf(stderr,"way id %ld\n",osmid_attr_value);	
+		assert(count < 10);
+	}
+	for (i = 0 ; i < count ; i++) {
+		add_flags=0;
+		item_bin_init(item_bin,types[i]);
+		item_bin_add_coord(item_bin, coord_buffer, coord_count);
+		def_flags=item_get_default_flags(types[i]);
+		if (def_flags) {
+			if (coverage) {
+				item.type=type_coverage;
+			} else {
+				flags_attr_value=(*def_flags | flags[0] | flags[1]) & ~flags[2];
+				if (flags_attr_value != *def_flags)
+					add_flags=1;
 			}
 		}
+		item_bin_add_attr_string(item_bin, def_flags ? attr_street_name : attr_label, attr_strings[attr_string_label]);
+		item_bin_add_attr_string(item_bin, attr_street_name_systematic, attr_strings[attr_string_street_name_systematic]);
+		item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
+		if (debug_attr_buffer[0])
+			item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
+		if (add_flags) 
+			item_bin_add_attr_int(item_bin, attr_flags, flags_attr_value);
+		if (maxspeed_attr_value)
+			item_bin_add_attr_int(item_bin, attr_maxspeed, maxspeed_attr_value);
+		item_bin_write(item_bin,out);
 	}
-	item.clen=coord_count*2;
-	item.len=item.clen+2+alen;
-	fwrite(&item, sizeof(item), 1, out);
-	fwrite(coord_buffer, coord_count*sizeof(struct coord), 1, out);
-	if (def_flags) {
-		street_name_attr.len=label_attr.len;
-		write_attr(out, &street_name_attr, label_attr_buffer);
-	} else
-		write_attr(out, &label_attr, label_attr_buffer);
-	write_attr(out, &street_name_systematic_attr, street_name_systematic_attr_buffer);
-	write_attr(out, &osmid_attr, &osmid_attr_value);
-	write_attr(out, &debug_attr, debug_attr_buffer);
-	write_attr(out, &flags_attr, &flags_attr_value);
-	write_attr(out, &maxspeed_attr, &maxspeed_attr_value);
 }
 
 static void
 end_node(FILE *out)
 {
-	int conflict=0,count;
-	enum item_type types[5];
+	int conflict,count,i;
+	enum item_type types[10];
 	struct country_table *result=NULL, *lookup;
 	if (!out || ! node_is_tagged || ! nodeid)
 		return;
 	count=attr_longest_match(attr_mapping_node, attr_mapping_node_count, types, sizeof(types)/sizeof(enum item_type));
-	if (count)
-		item_bin_init(item_bin, types[0]);
-	else
-		item_bin_init(item_bin, type_point_unkn);
-	item_bin_add_coord(item_bin, &ni->c, 1);
-	item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_name : attr_label, attr_strings[attr_string_label]);
-	item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
-	item_bin_add_attr_string(item_bin, attr_street_name, attr_strings[attr_string_street_name]);
-	item_bin_add_attr_string(item_bin, attr_phone, attr_strings[attr_string_phone]);
-	item_bin_add_attr_string(item_bin, attr_fax, attr_strings[attr_string_fax]);
-	item_bin_add_attr_string(item_bin, attr_email, attr_strings[attr_string_email]);
-	item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
-	item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
-	item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
-	item_bin_write(item_bin,out);
-	if (item_is_town(*item_bin) && attr_strings[attr_string_label]) {
-		char *tok,*buf=is_in_buffer;
-		if (!buf[0])
-			strcpy(is_in_buffer, "Unknown");
-		while ((tok=strtok(buf, ","))) {
-			while (*tok==' ')
-				tok++;
-			lookup=g_hash_table_lookup(country_table_hash,tok);
-			if (lookup) {
-				if (result && result->countryid != lookup->countryid) {
-					fprintf(stderr,"conflict for %s %s country %d vs %d\n", label_attr_buffer, debug_attr_buffer, lookup->countryid, result->countryid);
-					conflict=1;
-				} else
-					result=lookup;
+	if (!count) {
+		types[0]=type_point_unkn;
+		count=1;
+	}
+	assert(count < 10);
+	for (i = 0 ; i < count ; i++) {
+		conflict=0;
+		item_bin_init(item_bin, types[i]);
+		item_bin_add_coord(item_bin, &ni->c, 1);
+		item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_name : attr_label, attr_strings[attr_string_label]);
+		item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
+		item_bin_add_attr_string(item_bin, attr_street_name, attr_strings[attr_string_street_name]);
+		item_bin_add_attr_string(item_bin, attr_phone, attr_strings[attr_string_phone]);
+		item_bin_add_attr_string(item_bin, attr_fax, attr_strings[attr_string_fax]);
+		item_bin_add_attr_string(item_bin, attr_email, attr_strings[attr_string_email]);
+		item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
+		item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
+		item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
+		item_bin_write(item_bin,out);
+		if (item_is_town(*item_bin) && attr_strings[attr_string_label]) {
+			char *tok,*buf=is_in_buffer;
+			if (!buf[0])
+				strcpy(is_in_buffer, "Unknown");
+			while ((tok=strtok(buf, ","))) {
+				while (*tok==' ')
+					tok++;
+				lookup=g_hash_table_lookup(country_table_hash,tok);
+				if (lookup) {
+					if (result && result->countryid != lookup->countryid) {
+						fprintf(stderr,"conflict for %s %s country %d vs %d\n", attr_strings[attr_string_label], debug_attr_buffer, lookup->countryid, result->countryid);
+						conflict=1;
+					} else
+						result=lookup;
+				}
+				buf=NULL;
 			}
-			buf=NULL;
-		}
-		if (result && !conflict) {
-			if (!result->file) {
-				char *name=g_strdup_printf("country_%d.bin.unsorted", result->countryid);
-				result->file=fopen(name,"wb");
-				g_free(name);
-			}
-			if (result->file) {
-				int i,words=0;
-				char *town_name=attr_strings[attr_string_label];
-				char *word=town_name;
-				do  {
-					for (i = 0 ; i < 3 ; i++) {
-						char *str=linguistics_expand_special(word, i);
-						if (str) {
-							item_bin_init(item_bin, item_bin->type);
-							item_bin_add_coord(item_bin, &ni->c, 1);
-							if (i || words)
-								item_bin_add_attr_string(item_bin, attr_town_name_match, str);
-							item_bin_add_attr_string(item_bin, attr_town_name, town_name);
-							item_bin_write(item_bin, result->file);
-							g_free(str);
+			if (result && !conflict) {
+				if (!result->file) {
+					char *name=g_strdup_printf("country_%d.bin.unsorted", result->countryid);
+					result->file=fopen(name,"wb");
+					g_free(name);
+				}
+				if (result->file) {
+					int i,words=0;
+					char *town_name=attr_strings[attr_string_label];
+					char *word=town_name;
+					do  {
+						for (i = 0 ; i < 3 ; i++) {
+							char *str=linguistics_expand_special(word, i);
+							if (str) {
+								item_bin_init(item_bin, item_bin->type);
+								item_bin_add_coord(item_bin, &ni->c, 1);
+								if (i || words)
+									item_bin_add_attr_string(item_bin, attr_town_name_match, str);
+								item_bin_add_attr_string(item_bin, attr_town_name, town_name);
+								item_bin_write(item_bin, result->file);
+								g_free(str);
+							}
 						}
-					}
-					word=linguistics_next_word(word);
-					words++;
-				} while (word);
-			}
+						word=linguistics_next_word(word);
+						words++;
+					} while (word);
+				}
 			
+			}
 		}
 	}
 	processed_nodes_out++;
@@ -2295,7 +2225,7 @@ write_item_part(FILE *out, FILE *out_graph, struct item_bin *orig, int first, in
 }
 
 static int
-phase2(FILE *in, FILE *out, FILE *out_graph, int final)
+phase2(FILE *in, FILE *out, FILE *out_graph, FILE *out_coastline, int final)
 {
 	struct coord *c;
 	int i,ccount,last,remaining;
@@ -2335,8 +2265,12 @@ phase2(FILE *in, FILE *out, FILE *out_graph, int final)
 				}
 			}
 		}
-		if (ccount)
+		if (ccount) {
 			write_item_part(out, out_graph, ib, last, ccount-1);
+			if (final && ib->type == type_water_line && out_coastline) {
+				write_item_part(out_coastline, NULL, ib, last, ccount-1);
+			}
+		}
 	}
 	sig_alrm(0);
 #ifndef _WIN32
@@ -3174,7 +3108,7 @@ tempfile_rename(char *suffix, char *from, char *to)
 
 int main(int argc, char **argv)
 {
-	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*tilesdir;
+	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*coastline=NULL,*tilesdir;
 	char *map=g_strdup(attrmap);
 	int zipnum,c,start=1,end=99,dump_coordinates=0;
 	int keep_tmpfiles=0;
@@ -3389,9 +3323,10 @@ int main(int argc, char **argv)
 				int final=(i >= slices-1);
 				ways_split=tempfile(suffix,"ways_split",1);
 				graph=tempfile(suffix,"graph",1);
+				/* coastline=tempfile(suffix,"coastline",1); */
 				if (i) 
 					load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
-				phase2(ways,ways_split,graph, final);
+				phase2(ways,ways_split,graph,coastline,final);
 				fclose(ways_split);
 				fclose(ways);
 				fclose(graph);
