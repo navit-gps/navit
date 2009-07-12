@@ -1,5 +1,11 @@
 #!/bin/sh
-for pkg in pkg-config libtool automake aclocal autoreconf:autoconf autopoint:gettext
+if [ `uname` == Darwin ]; then
+	LIBTOOL=glibtool
+else
+	LIBTOOL=libtool
+fi
+
+for pkg in pkg-config $LIBTOOL automake aclocal autoreconf:autoconf autopoint:gettext
 do
 	if ! ${pkg%%:*} --version >/dev/null 
 	then
