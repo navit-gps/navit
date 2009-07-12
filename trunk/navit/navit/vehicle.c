@@ -57,36 +57,23 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 	char buffer[256];
 	char tbuf[256];
 	char *timep;
+	int free=0;
 
 	if (!this_->meth.position_attr_get)
 		return;
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
 		return;
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_time_iso8601, &time_attr)) {
-#ifdef HAVE_GLIB
-		GTimeVal time; 
-		g_get_current_time(&time); 
-		timep = g_time_val_to_iso8601(&time);
-		sprintf(tbuf, "%s", timep);
-		g_free(timep);
-		timep = tbuf;
-#else
-		time_t tnow;
-		struct tm *tm;
-		tnow = time(0);
-		tm = gmtime(&tnow);
-		if (tm) {
-			strftime(tbuf, sizeof(tbuf),
-				"%Y-%m-%dT%TZ", tm);
-		}
-		timep = tbuf;
-#endif
+		timep = current_to_iso8601();
+		free=1;
 	} else {
 		timep = time_attr.u.str;
 	}
 	sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\">\n\t<time>%s</time>\n</trkpt>\n",
 		pos_attr.u.coord_geo->lat, pos_attr.u.coord_geo->lng, timep);
 	log_write(log, buffer, strlen(buffer));
+	if (free)
+		g_free(timep);
 }
 
 static void
