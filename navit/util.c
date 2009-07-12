@@ -284,3 +284,25 @@ iso8601_to_secs(char *iso8601)
 
 	return ((d*24+val[3])*60+val[4])*60+val[5];
 }
+
+char *
+current_to_iso8601(void)
+{
+	char buffer[32];
+	char *timep=NULL;
+#ifdef HAVE_GLIB
+	GTimeVal time; 
+	g_get_current_time(&time); 
+	timep = g_time_val_to_iso8601(&time);
+#else
+	time_t tnow;
+	struct tm *tm;
+	tnow = time(0);
+	tm = gmtime(&tnow);
+	if (tm) {
+		strftime(buffer, sizeof(buffer), "%Y-%m-%dT%TZ", tm);
+		timep=g_strdup(buffer);	
+	}
+#endif
+	return timep;
+}
