@@ -62,6 +62,9 @@ m4_ifndef([AC_USE_SYSTEM_EXTENSIONS],
 AC_USE_SYSTEM_EXTENSIONS
 
 AC_PROG_CC
+if eval "test x`uname` = xDarwin"; then
+	CFLAGS="$CFLAGS -I/opt/local/include -L/opt/local/lib"
+fi
 if eval "test x$GCC = xyes"; then
         CFLAGS="$CFLAGS -Wall -Wcast-align -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wpointer-arith -Wreturn-type -D_GNU_SOURCE"
 fi
