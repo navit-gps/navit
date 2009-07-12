@@ -35,6 +35,6 @@ char * newSysString(const char *toconvert);
 #endif
 #endif
 unsigned int iso8601_to_secs(char *iso8601);
-
+char * current_to_iso8601(void);
 #endif
 

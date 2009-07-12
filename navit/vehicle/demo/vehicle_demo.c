@@ -44,6 +44,7 @@ struct vehicle_priv {
 	double direction;
 	struct callback *timer_callback;
 	struct event_timeout *timer;
+	char *timep;
 
 };
 
@@ -66,6 +67,11 @@ vehicle_demo_position_attr_get(struct vehicle_priv *priv,
 		break;
 	case attr_position_coord_geo:
 		attr->u.coord_geo = &priv->geo;
+		break;
+	case attr_position_time_iso8601:
+		g_free(priv->timep);
+		priv->timep=current_to_iso8601();
+		attr->u.str=priv->timep;
 		break;
 	default:
 		return 0;
