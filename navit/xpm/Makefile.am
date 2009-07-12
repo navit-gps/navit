@@ -139,7 +139,7 @@ nav_svgs += nav_roundabout_r3_bk.svg nav_roundabout_r3_wh.svg nav_roundabout_r4_
 nav_svgs += nav_roundabout_r5_bk.svg nav_roundabout_r5_wh.svg nav_roundabout_r6_bk.svg nav_roundabout_r6_wh.svg
 nav_svgs += nav_roundabout_r7_bk.svg nav_roundabout_r7_wh.svg nav_roundabout_r8_bk.svg nav_roundabout_r8_wh.svg
 nav_svgs += nav_straight_bk.svg nav_straight_wh.svg nav_turnaround_left_bk.svg nav_turnaround_left_wh.svg
-nav_svgs += nav_turnaround_right_bk.svg nav_turnaround_right_wh.svg
+nav_svgs += nav_turnaround_right_bk.svg nav_turnaround_right_wh.svg nav_destination_bk.svg nav_destination_wh.svg
 
 flag_svgs  = country_.svgz country_AD.svgz country_AE.svgz country_AF.svgz country_AG.svgz country_AI.svgz country_AL.svgz country_AM.svgz
 flag_svgs += country_AN.svgz country_AO.svgz country_AQ.svgz country_AR.svgz country_AS.svgz country_AT.svgz country_AU.svgz country_AW.svgz
