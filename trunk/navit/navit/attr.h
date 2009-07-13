@@ -155,6 +155,7 @@ void attr_free(struct attr *attr);
 struct attr *attr_dup(struct attr *attr);
 void attr_list_free(struct attr **attrs);
 struct attr **attr_list_dup(struct attr **attrs);
+int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret);
 /* end of prototypes */
 #endif
 #ifdef __cplusplus
