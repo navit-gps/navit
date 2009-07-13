@@ -437,6 +437,8 @@ attr_data_set_le(struct attr * attr, void * data)
 void
 attr_free(struct attr *attr)
 {
+	if (!attr)
+		return;
 	if (attr->type == attr_position_coord_geo)
 		g_free(attr->u.coord_geo);
 	if (attr->type >= attr_type_color_begin && attr->type <= attr_type_color_end) 
@@ -486,4 +488,59 @@ attr_list_dup(struct attr **attrs)
 	for (i = 0 ; i < count ; i++)
 		ret[i]=attr_dup(attrs[i]);
 	return ret;
+}
+
+
+int
+attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret)
+{
+	int len=0,quoted;
+	char *p,*e,*n;
+
+	dbg(1,"get_tag %s from %s\n", name, line); 
+	if (name)
+		len=strlen(name);
+	if (pos) 
+		p=line+*pos;
+	else
+		p=line;
+	for(;;) {
+		while (*p == ' ') {
+			p++;
+		}
+		if (! *p)
+			return 0;
+		n=p;
+		e=strchr(p,'=');
+		if (! e)
+			return 0;
+		p=e+1;
+		quoted=0;
+		while (*p) {
+			if (*p == ' ' && !quoted)
+				break;
+			if (*p == '"')
+				quoted=1-quoted;
+			p++;
+		}
+		if (name == NULL || (e-n == len && !strncmp(n, name, len))) {
+			if (name_ret) {
+				len=e-n;
+				strncpy(name_ret, n, len);
+				name_ret[len]='\0';
+			}
+			e++;
+			len=p-e;
+			if (e[0] == '"') {
+				e++;
+				len-=2;
+			}
+			strncpy(val_ret, e, len);
+			val_ret[len]='\0';
+			if (pos)
+				*pos=p-line;
+			return 1;
+		}
+	}	
+	return 0;
 }

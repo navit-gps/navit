@@ -61,6 +61,9 @@ struct map_rect_priv {
 	enum attr_type anext;
 	SHPObject *psShape;
 	char *str;
+	char *line;
+	int attr_pos;
+	struct attr *attr;
 };
 
 static void
@@ -112,6 +115,7 @@ shapefile_attr_rewind(void *priv_data)
 {
 	struct map_rect_priv *mr=priv_data;
 	mr->aidx=0;
+	mr->attr_pos=0;
 	mr->anext=attr_debug;
 }
 
@@ -301,7 +305,7 @@ build_match(struct longest_match *lm, struct longest_match_list *lml, char *line
 			*p++='\0';
 		i=p;
 	}
-	lmli=longest_match_item_new(lml,(void *)(long)item_from_name(i));
+	lmli=longest_match_item_new(lml,g_strdup(i));
 	while ((kv=strtok(kvl, ","))) {
 		kvl=NULL;
 		longest_match_add_match(lm, lmli, kv);
@@ -363,16 +367,60 @@ process_fields(struct map_priv *m, int id)
 }
 
 static int
+attr_resolve(struct map_rect_priv *mr, enum attr_type attr_type, struct attr *attr)
+{
+	char name[1024];
+	char value[1024];
+	char szTitle[12];
+	const char *str;
+	char *col,*type=NULL;
+	int i,len, nWidth, nDecimals;
+	if (!mr->line)
+		return 0;
+	if (attr_type != attr_any)
+		type=attr_to_name(attr_type);
+	if (attr_from_line(mr->line,type,&mr->attr_pos,value,name)) {
+		len=strlen(value);	
+		if (value[0] == '$' && value[1] == '{' && value[len-1] == '}') {
+			value[len-1]='\0';
+			col=value+2;
+			for (i = 0 ; i < mr->m->nFields ; i++) {
+				if (DBFGetFieldInfo(mr->m->hDBF, i, szTitle, &nWidth, &nDecimals ) == FTString && !strcmp(szTitle,col)) {
+					str=DBFReadStringAttribute( mr->m->hDBF, mr->item.id_lo, i);
+					strcpy(value,str);
+					break;
+				}
+			}
+		}
+		if (!value[0])
+			return -1;
+		dbg(1,"name=%s value=%s\n",name,value);
+		attr_free(mr->attr);
+		mr->attr=attr_new_from_text(name,value);
+		if (mr->attr) {
+			*attr=*mr->attr;
+			return 1;
+		}
+		return -1;
+	}
+	return 0;
+}
+
+static int
 shapefile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {	
 	struct map_rect_priv *mr=priv_data;
 	struct map_priv *m=mr->m;
-	char szTitle[12],*pszTypeName,*str;
-	int ret, nWidth, nDecimals;
+	char szTitle[12],*pszTypeName, *str;
+	int code, ret, nWidth, nDecimals;
 
 	attr->type=attr_type;
 	switch (attr_type) {
 	case attr_any:
+		while ((code=attr_resolve(mr, attr_type, attr))) {
+			if (code == 1)
+				return 1;
+		}
 		while (mr->anext != attr_none) {
 			ret=shapefile_attr_get(priv_data, mr->anext, attr);
 			if (ret)
@@ -411,7 +459,7 @@ shapefile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		mr->aidx++;
 		return 1;
 	default:
-		return 0;
+		return attr_resolve(mr, attr_type, attr);
 	}
 }
 
@@ -478,6 +526,7 @@ map_rect_destroy_shapefile(struct map_rect_priv *mr)
 {
 	if (mr->psShape)
 		SHPDestroyObject(mr->psShape);
+	attr_free(mr->attr);
 	g_free(mr->str);
         g_free(mr);
 }
@@ -486,9 +535,10 @@ static struct item *
 map_rect_get_item_shapefile(struct map_rect_priv *mr)
 {
 	struct map_priv *m=mr->m;
-	void *types[5];
+	void *lines[5];
 	struct longest_match_list *lml;
 	int count;
+	char type[1024];
 
 	if (mr->idx >= m->nEntities)
 		return NULL;
@@ -505,9 +555,17 @@ map_rect_get_item_shapefile(struct map_rect_priv *mr)
 		process_fields(m, mr->idx);
 
 		lml=longest_match_get_list(m->lm, 0);
-		count=longest_match_list_find(m->lm, lml, types, sizeof(types)/sizeof(void *));
-		if (count)
-			mr->item.type=(int)(long)types[0];
+		count=longest_match_list_find(m->lm, lml, lines, sizeof(lines)/sizeof(void *));
+		if (count) {
+			mr->line=lines[0];
+			if (attr_from_line(mr->line,"type",NULL,type,NULL)) {
+				dbg(1,"type='%s'\n", type);
+				mr->item.type=item_from_name(type);
+				if (mr->item.type == type_none)
+					dbg(0,"Warning: type '%s' unknown\n", type);
+			}
+		} else
+			mr->line=NULL;
 	}
 	mr->idx++;
 	shapefile_coord_rewind(mr);
