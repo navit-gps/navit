@@ -29,6 +29,7 @@
 #include "callback.h"
 #include "plugin.h"
 #include "vehicle.h"
+#include "util.h"
 
 struct vehicle {
 	struct vehicle_priv *priv;
@@ -55,7 +56,6 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 	struct attr pos_attr;
 	struct attr time_attr;
 	char buffer[256];
-	char tbuf[256];
 	char *timep;
 	int free=0;
 
