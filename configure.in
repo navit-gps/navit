@@ -659,7 +659,7 @@ if test "x${graphics_qt_qpainter}" = "xyes" -a "x${QT_GUI_CFLAGS}" = "x" -a "x${
 fi
 if test "x${graphics_qt_qpainter}" = "xyes" ; then
 	AC_DEFINE(USE_GRAPICS_QT_QPAINTER, 1, [Build with graphics qt_qpainter])
-	MOC=`$PKGCONFIG QtGui --variable=moc_location`
+	MOC=`$PKG_CONFIG QtGui --variable=moc_location`
 	if test "x${MOC}" = "x"; then
 		AC_CHECK_PROG(MOC, moc, moc)
 	fi
