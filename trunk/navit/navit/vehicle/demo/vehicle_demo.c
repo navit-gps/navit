@@ -31,6 +31,7 @@
 #include "plugin.h"
 #include "vehicle.h"
 #include "event.h"
+#include "util.h"
 
 struct vehicle_priv {
 	int interval;
