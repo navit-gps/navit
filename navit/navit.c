@@ -1168,6 +1168,9 @@ navit_window_roadbook_update(struct navit *this_)
 			attr.u.str=NULL;
 			if (item->type != type_nav_position) {
 				item_attr_get(item, attr_navigation_long, &attr);
+				if (attr.u.str == NULL) {
+					continue;
+				}
 				dbg(2, "Command='%s'\n", attr.u.str);
 				param[0].value=g_strdup(attr.u.str);
 			} else
