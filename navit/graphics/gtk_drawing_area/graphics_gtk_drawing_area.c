@@ -23,6 +23,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <sys/time.h>
 #if !defined(GDK_Book) || !defined(GDK_Calendar)
 #include <X11/XF86keysym.h>
 #endif
@@ -85,7 +86,8 @@ struct graphics_priv {
 	struct font_freetype_methods freetype_methods;
 	struct navit *nav;
 	int pid;
-	char button[8];
+	struct timeval button_press[8];
+	struct timeval button_release[8];
 };
 
 
@@ -662,11 +664,15 @@ button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 {
 	struct graphics_priv *this=user_data;
 	struct point p;
+	struct timeval tv;
+	struct timezone tz;
+
+	gettimeofday(&tv, &tz);
 
 	if (event->button < 8) {
-		if (this->button[event->button])
+		if ((this->button_press[event->button].tv_sec == tv.tv_sec) && ((this->button_press[event->button].tv_usec - tv.tv_usec) < 100000))
 			return FALSE;
-		this->button[event->button]=1;
+		this->button_press[event->button]= tv;
 	}
 	p.x=event->x;
 	p.y=event->y;
@@ -679,11 +685,15 @@ button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 {
 	struct graphics_priv *this=user_data;
 	struct point p;
+	struct timeval tv;
+	struct timezone tz;
+
+	gettimeofday(&tv, &tz);
 
 	if (event->button < 8) {
-		if (!this->button[event->button])
+		if ((this->button_release[event->button].tv_sec == tv.tv_sec) && ((this->button_release[event->button].tv_usec - tv.tv_usec) < 100000))
 			return FALSE;
-		this->button[event->button]=0;
+		this->button_release[event->button]= tv;
 	}
 	p.x=event->x;
 	p.y=event->y;
@@ -1027,6 +1037,7 @@ graphics_gtk_drawing_area_new_helper(struct graphics_methods *meth)
 static struct graphics_priv *
 graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
+	int i;
 	GtkWidget *draw;
 	struct attr *attr;
 
@@ -1053,6 +1064,14 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	g_signal_connect(G_OBJECT(draw), "scroll_event", G_CALLBACK(scroll), this);
 	g_signal_connect(G_OBJECT(draw), "motion_notify_event", G_CALLBACK(motion_notify), this);
 	g_signal_connect(G_OBJECT(draw), "delete_event", G_CALLBACK(delete), nav);
+
+	for (i = 0; i < 8; i++) {
+		this->button_press[i].tv_sec = 0;
+		this->button_press[i].tv_usec = 0;
+		this->button_release[i].tv_sec = 0;
+		this->button_release[i].tv_usec = 0;
+	}
+
 	return this;
 }
 
