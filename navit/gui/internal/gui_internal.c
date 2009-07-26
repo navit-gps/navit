@@ -2401,7 +2401,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 						else if (g_strrstr(possible_keys, child_->data)!=NULL ) {
 							child_->state|= STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SENSITIVE|STATE_CLEAR ;
 						} else {
-							child_->state&= ~(STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SENSITIVE|STATE_SELECTED) ;
+							child_->state&= ~(STATE_HIGHLIGHTED|STATE_VISIBLE|STATE_SELECTED) ;
 						}
 						gui_internal_widget_render(this,child_);
 					}
