@@ -716,6 +716,12 @@ navit_get_vehicleprofile(struct navit *this_)
 	return this_->vehicleprofile;
 }
 
+GList *
+navit_get_vehicleprofiles(struct navit *this_)
+{
+	return this_->vehicleprofiles;
+}
+
 static void
 navit_projection_set(struct navit *this_, enum projection pro)
 {

@@ -42,6 +42,13 @@ struct route;
 struct tracking;
 struct transformation;
 struct vehicleprofile;
+
+// defined in glib.h.
+#ifndef __G_LIST_H__
+struct _GList;
+typedef struct _GList GList;
+#endif
+
 void navit_add_mapset(struct navit *this_, struct mapset *ms);
 struct mapset *navit_get_mapset(struct navit *this_);
 struct tracking *navit_get_tracking(struct navit *this_);
@@ -61,6 +68,10 @@ void navit_add_message(struct navit *this_, char *message);
 struct message *navit_get_messages(struct navit *this_);
 struct graphics *navit_get_graphics(struct navit *this_);
 struct vehicleprofile *navit_get_vehicleprofile(struct navit *this_);
+
+//! Returns a list of 'struct vehicleprofile *'
+GList *navit_get_vehicleprofiles(struct navit *this_);
+
 void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async);
 int navit_check_route(struct navit *this_);
 void navit_add_bookmark(struct navit *this_, struct pcoord *c, const char *description);
