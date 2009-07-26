@@ -55,7 +55,7 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 {
 	struct attr pos_attr;
 	struct attr time_attr;
-	char buffer[256];
+	struct attr *profile_attr;
 	char *timep;
 	int free=0;
 
@@ -69,9 +69,21 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 	} else {
 		timep = time_attr.u.str;
 	}
-	sprintf(buffer,"<trkpt lat=\"%f\" lon=\"%f\">\n\t<time>%s</time>\n</trkpt>\n",
-		pos_attr.u.coord_geo->lat, pos_attr.u.coord_geo->lng, timep);
-	log_write(log, buffer, strlen(buffer));
+
+	// get the profile name attribute
+	profile_attr = attr_search(this_->attrs, NULL, attr_profilename);
+
+	log_printf(log,
+			"<trkpt lat=\"%f\" lon=\"%f\">\n"
+			"\t<time>%s</time>\n"
+			"\t<extensions><navit:profilename>%s</navit:profilename></extensions>\n"
+			"</trkpt>\n",
+		pos_attr.u.coord_geo->lat,
+		pos_attr.u.coord_geo->lng,
+		timep,
+		profile_attr->u.str
+	);
+
 	if (free)
 		g_free(timep);
 }
@@ -100,8 +112,14 @@ vehicle_add_log(struct vehicle *this_, struct log *log)
 	if (!strcmp(type_attr.u.str, "nmea")) {
 		cb=callback_new_2(callback_cast(vehicle_log_nmea), this_, log);
 	} else if (!strcmp(type_attr.u.str, "gpx")) {
-		char *header =
-		    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gpx version=\"1.0\" creator=\"Navit http://navit.sourceforge.net\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.topografix.com/GPX/1/0\" xsi:schemaLocation=\"http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd\">\n<trk>\n<trkseg>\n";
+		char *header = "<?xml version='1.0' encoding='UTF-8'?>\n"
+			"<gpx version='1.1' creator='Navit http://navit.sourceforge.net'\n"
+			"     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n"
+			"     xmlns:navit='http://www.navit-project.org/schema/navit'\n"
+			"     xmlns='http://www.topografix.com/GPX/1/1'\n"
+			"     xsi:schemaLocation='http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd'>\n"
+			"<trk>\n"
+			"<trkseg>\n";
 		char *trailer = "</trkseg>\n</trk>\n</gpx>\n";
 		log_set_header(log, header, strlen(header));
 		log_set_trailer(log, trailer, strlen(trailer));

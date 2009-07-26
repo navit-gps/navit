@@ -19,6 +19,7 @@
 
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -288,6 +289,22 @@ log_write(struct log *this_, char *data, int len)
 	this_->data.len+=len;
 	if (log_flush_required(this_))
 		log_flush(this_);
+}
+
+void
+log_printf(struct log *this_, char *fmt, ...)
+{
+	char buffer[LOG_BUFFER_SIZE];
+	int size;
+	va_list ap;
+
+	va_start(ap, fmt);
+
+	// Format the string and write it to the log
+	size = vsnprintf(buffer, LOG_BUFFER_SIZE, fmt, ap);
+	log_write(this_, buffer, size);
+
+	va_end(ap);
 }
 
 void
