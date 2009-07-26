@@ -141,25 +141,25 @@ msgstr "naar de afslag"
 #: ../navit/navigation.c:1298
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr "%sin de straat %s%s%s"
+msgstr "%sde straat %s%s%s in"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:1302
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr "%sin de %s%s%s|mannelijke vorm"
+msgstr "%sde %s%s%s in|mannelijke vorm"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:1306
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr "%sin de %s%s%s|vrouwelijke vorm"
+msgstr "%sde %s%s%s in|vrouwelijke vorm"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:1310
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr "%sin de %s%s%s|neutrale vorm"
+msgstr "%sde %s%s%s in|neutrale vorm"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #: ../navit/navigation.c:1317
@@ -325,7 +325,7 @@ msgstr "Zet als bestemming"
 #: ../navit/popup.c:280 ../navit/popup.c:349
 #: ../navit/gui/internal/gui_internal.c:2129
 msgid "Add as bookmark"
-msgstr "Opnemen als bladwijzer"
+msgstr "Opslaan als favoriet"
 
 #: ../navit/popup.c:337
 #, c-format
@@ -1669,7 +1669,7 @@ msgstr "Vorige bestemmingen"
 #: ../navit/gui/internal/gui_internal.c:2225
 #: ../navit/gui/internal/gui_internal.c:2984
 msgid "Bookmarks"
-msgstr "Bookmarks"
+msgstr "Favorieten"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:201
 #: ../navit/gui/internal/gui_internal.c:2884
@@ -1721,16 +1721,16 @@ msgstr "Cursor"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:223
 msgid "Lock on Road"
-msgstr "houd de weg aan"
+msgstr "Blijf op de weg"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:224
 #: ../navit/gui/internal/gui_internal.c:3204
 msgid "Northing"
-msgstr "Kaart richting"
+msgstr "Noord boven"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:226
 msgid "Autozoom"
-msgstr "automatisch vergroten/verkleinen"
+msgstr "Autozoom"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
 #: ../navit/gui/internal/gui_internal.c:2941
@@ -1822,16 +1822,16 @@ msgstr "Hulp"
 
 #: ../navit/gui/internal/gui_internal.c:1611
 msgid "Back"
-msgstr "terug"
+msgstr "Terug"
 
 #: ../navit/gui/internal/gui_internal.c:1917
 #: ../navit/gui/internal/gui_internal.c:2134
 msgid "POIs"
-msgstr "bezienswaardigheden"
+msgstr "Bezienswaardigheden"
 
 #: ../navit/gui/internal/gui_internal.c:2082
 msgid "Streets"
-msgstr "straten"
+msgstr "Straten"
 
 #: ../navit/gui/internal/gui_internal.c:2090
 msgid "House numbers"
@@ -1839,20 +1839,20 @@ msgstr ""
 
 #: ../navit/gui/internal/gui_internal.c:2107
 msgid "View in Browser"
-msgstr "bekijk in browser"
+msgstr "Bekijk in browser"
 
 #: ../navit/gui/internal/gui_internal.c:2113
 msgid "View Attributes"
-msgstr "bekijk eigenschappen"
+msgstr "Bekijk eigenschappen"
 
 #: ../navit/gui/internal/gui_internal.c:2148
 msgid "View on map"
-msgstr "bekijk op de kaart"
+msgstr "Bekijk op de kaart"
 
 #: ../navit/gui/internal/gui_internal.c:2261
 #, c-format
 msgid "Bookmark %s"
-msgstr "favoriet %s"
+msgstr "Favoriet %s"
 
 #: ../navit/gui/internal/gui_internal.c:2809
 #: ../navit/gui/internal/gui_internal.c:2818
@@ -1870,11 +1870,11 @@ msgstr "Acties"
 
 #: ../navit/gui/internal/gui_internal.c:2993
 msgid "Map Point"
-msgstr "punt op de kaart"
+msgstr "Punt op de kaart"
 
 #: ../navit/gui/internal/gui_internal.c:3003
 msgid "Vehicle Position"
-msgstr "voertuig positie"
+msgstr "Voertuigpositie"
 
 #: ../navit/gui/internal/gui_internal.c:3012
 msgid "Quit"
@@ -1885,7 +1885,7 @@ msgid ""
 "Stop\n"
 "Navigation"
 msgstr ""
-"stop\n"
+"Stop\n"
 "navigatie"
 
 #: ../navit/gui/internal/gui_internal.c:3034
@@ -1903,15 +1903,15 @@ msgstr "NMEA data weergeven"
 
 #: ../navit/gui/internal/gui_internal.c:3136
 msgid "Set as active"
-msgstr "activeren"
+msgstr "Activeren"
 
 #: ../navit/gui/internal/gui_internal.c:3142
 msgid "Show Satellite status"
-msgstr "satelliet status weergeven"
+msgstr "Satellietstatus weergeven"
 
 #: ../navit/gui/internal/gui_internal.c:3148
 msgid "Show NMEA data"
-msgstr ""
+msgstr "Toon NMEA data"
 
 #: ../navit/gui/internal/gui_internal.c:3190
 #: ../navit/gui/internal/gui_internal.c:3234
@@ -1920,11 +1920,11 @@ msgstr "Regels"
 
 #: ../navit/gui/internal/gui_internal.c:3198
 msgid "Lock on road"
-msgstr "volg de weg"
+msgstr "Huidige locatie altijd op de weg"
 
 #: ../navit/gui/internal/gui_internal.c:3210
 msgid "Map follows Vehicle"
-msgstr "kaart volgt voertuig"
+msgstr "Kaart volgt voertuig"
 
 #: ../navit/gui/internal/gui_internal.c:3220
 #: ../navit/gui/internal/gui_internal.c:3278
