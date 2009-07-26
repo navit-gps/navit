@@ -51,7 +51,7 @@ static struct vehicle_priv {
 	int fix_type;
 	time_t fix_time;
 	int sats;
-        int sats_signal;
+	int sats_signal;
 	int sats_used;
 	char *nmea_data;
 	char *nmea_data_buf;

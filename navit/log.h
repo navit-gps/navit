@@ -30,5 +30,14 @@ void log_set_header(struct log *this_, char *data, int len);
 void log_set_trailer(struct log *this_, char *data, int len);
 void log_write(struct log *this_, char *data, int len);
 void log_destroy(struct log *this_);
+
+#define LOG_BUFFER_SIZE 256
+/**
+ * printf-style writing to the log file. A buffer of LOG_BUFFER_SIZE
+ * bytes is preallocated for the complete format message, longer
+ * messages will be truncated.
+ */
+void log_printf(struct log *this_, char *fmt, ...);
+
 /* end of prototypes */
 #endif
