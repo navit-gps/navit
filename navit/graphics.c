@@ -736,14 +736,14 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
 		tl=strlen(label)*4;
 		th=8;
 	}
-	tlm=tl*128;
-	thm=th*144;
+	tlm=tl*32;
+	thm=th*36;
 	tlsq = tlm*tlm;
 	for (i = 0 ; i < count-1 ; i++) {
 		dx=p[i+1].x-p[i].x;
-		dx*=128;
+		dx*=32;
 		dy=p[i+1].y-p[i].y;
-		dy*=128;
+		dy*=32;
 		lsq = dx*dx+dy*dy;
 		if (lsq > tlsq) {
 			l=(int)sqrtf(lsq);
@@ -755,10 +755,10 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
 				x=p[i+1].x;
 				y=p[i+1].y;
 			}
-			x+=(l-tlm)*dx/l/256;
-			y+=(l-tlm)*dy/l/256;
-			x-=dy*thm/l/256;
-			y+=dx*thm/l/256;
+			x+=(l-tlm)*dx/l/64;
+			y+=(l-tlm)*dy/l/64;
+			x-=dy*thm/l/64;
+			y+=dx*thm/l/64;
 			p_t.x=x;
 			p_t.y=y;
 #if 0
