@@ -37,6 +37,7 @@
 #include "item.h"
 #include "file.h"
 #include "navit.h"
+#include "navit_nls.h"
 #include "debug.h"
 #include "gui.h"
 #include "coord.h"
@@ -49,6 +50,7 @@
 #include "layout.h"
 #include "callback.h"
 #include "vehicle.h"
+#include "vehicleprofile.h"
 #include "window.h"
 #include "main.h"
 #include "keys.h"
@@ -3119,6 +3121,98 @@ gui_internal_cmd_show_nmea_data(struct gui_priv *this, struct widget *wm, void *
 	gui_internal_menu_render(this);
 }
 
+/**
+ * A container to hold the selected vehicle and the desired profile in
+ * one data item.
+ */
+struct vehicle_and_profilename {
+	struct vehicle *vehicle;
+	char *profilename;
+};
+
+/**
+ * Reacts to a button press that changes a vehicle's active profile.
+ *
+ * @see gui_internal_add_vehicle_profile
+ */
+static void
+gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
+		widget *wm, void *data)
+{
+	struct vehicle_and_profilename *vapn = data;
+	struct vehicle *v = vapn->vehicle;
+	char *profilename = vapn->profilename;
+	struct attr vehicle_name_attr;
+	char *vehicle_name = NULL;
+
+	// Get the vehicle name
+	vehicle_get_attr(v, attr_name, &vehicle_name_attr, NULL);
+	vehicle_name = vehicle_name_attr.u.str;
+
+	dbg(0, "Changing vehicle %s to profile %s\n", vehicle_name,
+			profilename);
+
+	// Change the profile name
+	struct attr profilename = {attr_profilename, {profilename}};
+	vehicle_set_attr(v, &profilename, NULL);
+}
+
+/**
+ * Adds the vehicle profile to the GUI, allowing the user to pick a
+ * profile for the currently selected vehicle.
+ */
+static void 
+gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
+		*parent, struct vehicle *v, struct vehicleprofile *profile)
+{
+	// Just here to show up in the translation file, nice and close to
+	// where the translations are actually used.
+	struct attr profile_attr;
+	struct attr *attr = NULL;
+	char *name = NULL;
+	char *active_profile = NULL;
+	char *label = NULL;
+	int active;
+	struct vehicle_and_profilename *context = NULL;
+
+	static char *__profile_translations[] = {
+		_n("car"), _n("bike"), _n("pedestrian")
+	};
+
+	// Figure out the profile name
+	attr = attr_search(profile->attrs, NULL, attr_name);
+	name = attr->u.str;
+
+	// Determine whether the profile is the active one
+	vehicle_get_attr(v, attr_profilename, &profile_attr, NULL);
+	active_profile = profile_attr.u.str;
+	active = strcmp(name, active_profile) == 0;
+
+	dbg(0, "Adding vehicle profile %s, active=%s/%i\n", name,
+			active_profile, active);
+
+	// Build a translatable label.
+	if(active) {
+		label = g_strdup_printf(_("Current profile: %s"), _(name));
+	} else {
+		label = g_strdup_printf(_("Change profile to: %s"), _(name));
+	}
+
+	// Create the context object (the vehicle and the desired profile)
+	context = g_new0(struct vehicle_and_profilename, 1);
+	context->vehicle = v;
+	context->profilename = name;
+
+	// Add the button
+	gui_internal_widget_append(parent,
+		gui_internal_button_new_with_callback(
+			this, label,
+			image_new_xs(this, active ? "gui_active" : "gui_inactive"),
+			gravity_left_center|orientation_horizontal|flags_fill,
+			gui_internal_cmd_set_active_profile, context));
+
+	free(label);
+}
 
 static void
 gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void *data)
@@ -3126,6 +3220,8 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 	struct widget *w,*wb;
 	struct attr attr,active_vehicle;
 	struct vehicle *v=wm->data;
+    struct vehicleprofile *profile = NULL;
+
 	wb=gui_internal_menu(this, wm->text);
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
@@ -3149,6 +3245,15 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_show_nmea_data, wm->data));
 	}
+
+    // Add all the possible vehicle profiles to the menu
+	GList *profiles = navit_get_vehicleprofiles(this->nav);
+    while(profiles) {
+        profile = (struct vehicleprofile *)profiles->data;
+        gui_internal_add_vehicle_profile(this, w, v, profile);
+		profiles = g_list_next(profiles);
+    }
+
 	callback_list_call_attr_2(this->cbl, attr_vehicle, w, wm->data);
 	gui_internal_menu_render(this);
 }

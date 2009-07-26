@@ -25,7 +25,8 @@ struct vehicleprofile {
 	int maxspeed_handling;                                  /**< 0 = Always, 1 = Only if lower, 2 = Never */
 	int static_speed;					/**< Maximum speed of vehicle to consider it stationary */
 	int static_distance;					/**< Maximum distance of previous position of vehicle to consider it stationary */
-        struct attr **attrs;
+	char *name; // the vehicle profile name
+	struct attr **attrs;
 	GHashTable *roadprofile_hash;
 };
 
@@ -35,3 +36,6 @@ int vehicleprofile_set_attr(struct vehicleprofile *this_, struct attr *attr);
 int vehicleprofile_add_attr(struct vehicleprofile *this_, struct attr *attr);
 int vehicleprofile_remove_attr(struct vehicleprofile *this_, struct attr *attr);
 struct roadprofile * vehicleprofile_get_roadprofile(struct vehicleprofile *this_, enum item_type type);
+
+//! Returns the vehicle profile's name.
+char * vehicleprofile_get_name(struct vehicleprofile *this_);
