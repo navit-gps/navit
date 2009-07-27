@@ -20,6 +20,12 @@
 #ifndef NAVIT_DATA_H
 #define NAVIT_DATA_H
 
+#include "config.h"
+
+#ifdef WORDS_BIGENDIAN
+#include <byteswap.h>
+#endif
+
 static inline unsigned char
 get_u8(unsigned char **p)
 {
@@ -31,7 +37,11 @@ get_u16(unsigned char **p) {
 	unsigned short ret;
 	ret=*((unsigned short *)*p);
 	*p+=sizeof(unsigned short);
+#ifdef WORDS_BIGENDIAN
+	return __bswap_16(ret);
+#else
 	return ret;
+#endif
 }
 
 static inline unsigned short
@@ -66,7 +76,11 @@ get_u32(unsigned char **p) {
 	unsigned long ret;
 	ret=*((unsigned int *)*p);
 	*p+=sizeof(unsigned int);
+#ifdef WORDS_BIGENDIAN
+	return __bswap_32(ret);
+#else
 	return ret;
+#endif
 }
 
 static inline unsigned int

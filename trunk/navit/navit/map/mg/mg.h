@@ -31,12 +31,18 @@ struct block_data {
 };
 
 struct block {
-	int blocks;
+/*	int blocks;
 	int size;
 	int next;
 	struct coord_rect r;
-	int count;
+	int count;*/
+	unsigned char p[32];
 };
+static inline int block_get_blocks(struct block * blk) { unsigned char *p = blk->p; return get_u32(&p); }
+static inline int block_get_size(struct block * blk) { unsigned char *p = blk->p+4; return get_u32(&p); }
+static inline int block_get_next(struct block * blk) { unsigned char *p = blk->p+8; return get_u32(&p); }
+static inline int block_get_count(struct block * blk) { unsigned char *p = blk->p+28; return get_u32(&p); }
+static inline void block_get_r(struct block * blk, struct coord_rect * r) { unsigned char *p = blk->p+12; r ->lu.x = get_u32(&p); r ->lu.y = get_u32(&p); r ->rl.x = get_u32(&p); r ->rl.y = get_u32(&p); }
 
 struct item_priv {
 	int cidx;
@@ -93,14 +99,20 @@ struct poly_priv {
 };
 
 struct street_header {
-        unsigned char order;
-        int count;
+        /*unsigned char order;
+        int count;*/
+	unsigned char p[5];
 } __attribute__((packed));
+static inline unsigned char street_header_get_order(struct street_header * str) { return *str->p; }
+static inline int street_header_get_count(struct street_header * str) { unsigned char *p = str->p+1; return get_u32_unal(&p); }
 
 struct street_type {
-        unsigned char order;
-        unsigned short country;
+        /*unsigned char order;
+        unsigned short country;*/
+	unsigned char p[3];
 } __attribute__((packed));
+static inline unsigned char street_type_get_order(struct street_type * str) { return *str->p; }
+static inline unsigned short street_type_get_country(struct street_type * str) { unsigned char *p = str->p+1; return get_u16_unal(&p); }
 
 struct street_header_type {
 	struct street_header *header;
@@ -109,13 +121,20 @@ struct street_header_type {
 };
 
 struct street_str {
-        int segid;
-        unsigned char limit;            /* 0x03,0x30=One Way,0x33=No Passing */
-        unsigned char unknown2;
+        /*int segid;
+        unsigned char limit;*/            /* 0x03,0x30=One Way,0x33=No Passing */
+        /*unsigned char unknown2;
         unsigned char unknown3;
         unsigned char type;
-        unsigned int nameid;
+        unsigned int nameid;*/
+	unsigned char p[12];
 };
+static inline int street_str_get_segid(struct street_str * str) { unsigned char *p = str->p; return get_u32_unal(&p); }
+static inline unsigned char street_str_get_limit(struct street_str * str) { return str->p[4]; }
+static inline unsigned char street_str_get_unknown2(struct street_str * str) { return str->p[5]; }
+static inline unsigned char street_str_get_unknown3(struct street_str * str) { return str->p[6]; }
+static inline unsigned char street_str_get_type(struct street_str * str) { return str->p[7]; }
+static inline unsigned int street_str_get_nameid(struct street_str * str) { unsigned char *p = str->p+8; return get_u32_unal(&p); }
 
 struct street_name_segment {
 	int segid;
@@ -187,7 +206,7 @@ struct street_priv {
 	unsigned char *next;
 	int status;
 	int status_rewind;
-	struct coord *ref;
+	struct coord_rect ref;
 	int bytes;
 	int more;
 	int flags;
