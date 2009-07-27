@@ -122,7 +122,7 @@ poly_get(struct map_rect_priv *mr, struct poly_priv *poly, struct item *item)
 			poly->poly_next=mr->b.p;
 			item->meth=&poly_meth;
 		}
-		if (poly->poly_num >= mr->b.b->count)
+		if (poly->poly_num >= block_get_count(mr->b.b))
 			return 0;
 		if (!poly->subpoly_num) {
 			mr->b.p=poly->poly_next;

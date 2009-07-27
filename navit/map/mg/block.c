@@ -26,16 +26,24 @@
 int block_lin_count,block_idx_count,block_active_count,block_mem,block_active_mem;
 
 struct block_index_item {
-	unsigned int blocknum;
-	unsigned int blocks;
+	/*unsigned int blocknum;
+	unsigned int blocks;*/
+	unsigned char p[8];
 };
+static inline unsigned int block_index_item_get_blocknum(struct block_index_item * blk) { unsigned char *p = blk->p; return get_u32(&p); }
+static inline unsigned int block_index_item_get_blocks(struct block_index_item * blk) { unsigned char *p = blk->p+4; return get_u32(&p); }
 
 struct block_index {
-	unsigned int blocks;
+/*	unsigned int blocks;
         unsigned int size;
         unsigned int next;      
-	struct block_index_item list[0];
+	struct block_index_item list[0];*/
+	unsigned char p[12];
 };
+static inline unsigned int block_index_get_blocks(struct block_index * blk) { unsigned char *p = blk->p; return get_u32(&p); }
+static inline unsigned int block_index_get_size(struct block_index * blk) { unsigned char *p = blk->p+4; return get_u32(&p); }
+static inline unsigned int block_index_get_next(struct block_index * blk) { unsigned char *p = blk->p+8; return get_u32(&p); }
+static inline struct block_index_item * block_index_get_list(struct block_index * blk) { return (struct block_index_item *)(blk->p+12); }
 
 static struct block *
 block_get(unsigned char **p)
@@ -54,13 +62,13 @@ block_get_byid(struct file *file, int id, unsigned char **p_ret)
 
 
 	blk_idx=(struct block_index *)(file->begin+0x1000);
-	max=(blk_idx->size-sizeof(struct block_index))/sizeof(struct block_index_item);
+	max=(block_index_get_size(blk_idx)-sizeof(struct block_index))/sizeof(struct block_index_item);
 	block_mem+=24;
 	while (id >= max) {
-		blk_idx=(struct block_index *)(file->begin+blk_idx->next*512);
+		blk_idx=(struct block_index *)(file->begin+block_index_get_next(blk_idx)*512);
 		id-=max;
 	}
-	blk_num=blk_idx->list[id].blocknum;
+	blk_num=block_index_item_get_blocknum(&block_index_get_list(blk_idx)[id]);
 
 	*p_ret=file->begin+blk_num*512;
 	return block_get(p_ret);
@@ -73,7 +81,7 @@ block_get_byindex(struct file *file, int idx, struct block_priv *blk)
 	blk->b=block_get_byid(file, idx, &blk->p);
 	blk->block_start=(unsigned char *)(blk->b);
 	blk->p_start=blk->p;
-	blk->end=blk->block_start+blk->b->size;
+	blk->end=blk->block_start+block_get_size(blk->b);
 
 	return 1;
 }
@@ -159,6 +167,7 @@ block_init(struct map_rect_priv *mr)
 int
 block_next_lin(struct map_rect_priv *mr)
 {
+	struct coord_rect r;
 	for (;;) {
 		block_lin_count++;
 		block_mem+=sizeof(struct block *);
@@ -166,7 +175,7 @@ block_next_lin(struct map_rect_priv *mr)
 		if (! mr->b.block_num) 
 			mr->b.p=mr->file->begin+0x2000;
 		else
-			mr->b.p=mr->b.block_start+mr->b.b->blocks*512;
+			mr->b.p=mr->b.block_start+block_get_blocks(mr->b.b)*512;
 		if (mr->b.p >= mr->file->end) {
 			dbg(1,"end of blocks %p vs %p\n", mr->b.p, mr->file->end);
 			return 0;
@@ -174,14 +183,15 @@ block_next_lin(struct map_rect_priv *mr)
 		mr->b.block_start=mr->b.p;
 		mr->b.b=block_get(&mr->b.p);
 		mr->b.p_start=mr->b.p;
-		mr->b.end=mr->b.block_start+mr->b.b->size;
-		if (mr->b.b->count == -1) {
+		mr->b.end=mr->b.block_start+block_get_size(mr->b.b);
+		if (block_get_count(mr->b.b) == -1) {
 			dbg(1,"empty blocks\n");
 			return 0;
 		}
-		if (!mr->cur_sel || coord_rect_overlap(&mr->cur_sel->u.c_rect, &mr->b.b->r)) {
+		block_get_r(mr->b.b, &r);
+		if (!mr->cur_sel || coord_rect_overlap(&mr->cur_sel->u.c_rect, &r)) {
 			block_active_count++;
-			block_active_mem+=mr->b.b->blocks*512-sizeof(struct block *);
+			block_active_mem+=block_get_blocks(mr->b.b)*512-sizeof(struct block *);
 			dbg(1,"block ok\n");
 			return 1;
 		}
@@ -194,6 +204,7 @@ block_next(struct map_rect_priv *mr)
 {
 	int blk_num,coord,r_h,r_w;
 	struct block_bt_priv *bt=&mr->b.bt;
+	struct coord_rect r;
 
 	if (!mr->b.binarytree || ! mr->cur_sel)
 		return block_next_lin(mr);
@@ -203,10 +214,10 @@ block_next(struct map_rect_priv *mr)
 			if (bt->next == -1)
 				return 0;
 			bt->b=block_get_byid(mr->file, bt->next, &bt->p);
-			bt->end=(unsigned char *)mr->b.bt.b+mr->b.bt.b->size;
-			bt->next=bt->b->next;
+			bt->end=(unsigned char *)mr->b.bt.b+block_get_size(mr->b.bt.b);
+			bt->next=block_get_next(bt->b);
 			bt->order=0;
-			dbg(1,"size 0x%x next 0x%x\n", bt->b->size, bt->b->next);
+			dbg(1,"size 0x%x next 0x%x\n", block_get_size(bt->b), block_get_next(bt->b));
 			if (! mr->b.bt.block_count) {
 #if 0
 				if (debug) {
@@ -214,7 +225,7 @@ block_next(struct map_rect_priv *mr)
 					block_rect_print(&mr->b.bt.b->r);
 				}
 #endif
-				bt->r=bt->b->r;
+				block_get_r(bt->b, &bt->r);
 				bt->r_curr=bt->r;
 				coord=get_u32(&mr->b.bt.p);
 			} else {
@@ -248,8 +259,9 @@ block_next(struct map_rect_priv *mr)
 					dbg_assert(mr->b.b != NULL);
 					mr->b.block_start=(unsigned char *)(mr->b.b);
 					mr->b.p_start=mr->b.p;
-					mr->b.end=mr->b.block_start+mr->b.b->size;
-					block_rect_same(&mr->b.b->r, &bt->r_curr);
+					mr->b.end=mr->b.block_start+block_get_size(mr->b.b);
+					block_get_r(mr->b.b, &r);
+					block_rect_same(&r, &bt->r_curr);
 				}
 			}
 			if (coord != -1) {
@@ -276,7 +288,7 @@ block_next(struct map_rect_priv *mr)
 			}
 			if (mr->b.b) {
 				block_active_count++;
-				block_active_mem+=mr->b.b->blocks*512;
+				block_active_mem+=block_get_blocks(mr->b.b)*512;
 				return 1;
 			}
 		}
