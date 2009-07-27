@@ -295,6 +295,11 @@ current_to_iso8601(void)
 	g_get_current_time(&time); 
 	timep = g_time_val_to_iso8601(&time);
 #else
+#ifdef HAVE_API_WIN32_BASE
+	SYSTEMTIME ST;
+	GetSystemTime(&ST);
+	timep=g_strdup_printf("%d-%02d-%02dT%02d:%02d:%02dZ",ST.wYear,ST.wMonth,ST.wDay,ST.wHour,ST.wMinute,ST.wSecond);
+#else
 	time_t tnow;
 	struct tm *tm;
 	tnow = time(0);
@@ -303,6 +308,7 @@ current_to_iso8601(void)
 		strftime(buffer, sizeof(buffer), "%Y-%m-%dT%TZ", tm);
 		timep=g_strdup(buffer);	
 	}
+#endif
 #endif
 	return timep;
 }
