@@ -659,6 +659,14 @@ button_timeout(gpointer user_data)
 }
 #endif
 
+static int
+tv_delta(struct timeval *old, struct timeval *new)
+{
+	if (new->tv_sec-old->tv_sec >= INT_MAX/1000)
+		return INT_MAX;
+	return (new->tv_sec-old->tv_sec)*1000+(new->tv_usec-old->tv_usec)/1000;
+}
+
 static gint
 button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 {
@@ -670,9 +678,11 @@ button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 	gettimeofday(&tv, &tz);
 
 	if (event->button < 8) {
-		if ((this->button_press[event->button].tv_sec == tv.tv_sec) && ((this->button_press[event->button].tv_usec - tv.tv_usec) < 100000))
+		if (tv_delta(&this->button_press[event->button], &tv) < 100)
 			return FALSE;
 		this->button_press[event->button]= tv;
+		this->button_release[event->button].tv_sec=0;
+		this->button_release[event->button].tv_usec=0;
 	}
 	p.x=event->x;
 	p.y=event->y;
@@ -691,9 +701,11 @@ button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 	gettimeofday(&tv, &tz);
 
 	if (event->button < 8) {
-		if ((this->button_release[event->button].tv_sec == tv.tv_sec) && ((this->button_release[event->button].tv_usec - tv.tv_usec) < 100000))
+		if (tv_delta(&this->button_release[event->button], &tv) < 100)
 			return FALSE;
 		this->button_release[event->button]= tv;
+		this->button_press[event->button].tv_sec=0;
+		this->button_press[event->button].tv_usec=0;
 	}
 	p.x=event->x;
 	p.y=event->y;
