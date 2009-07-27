@@ -496,7 +496,12 @@ route_set_mapset(struct route *this, struct mapset *ms)
 void
 route_set_profile(struct route *this, struct vehicleprofile *prof)
 {
-	this->vehicleprofile=prof;
+	if (this->vehicleprofile != prof) {
+		this->vehicleprofile=prof;
+		route_path_destroy(this->path2);
+		this->path2 = NULL;
+		route_path_update(this, 0, 0);
+	}
 }
 
 /**
