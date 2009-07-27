@@ -85,11 +85,9 @@ static int
 vehicle_demo_set_attr(struct vehicle_priv *priv, struct attr *attr,
 		      struct attr **attrs)
 {
-	if (attr->type == attr_navit) {
+	if (attr->type == attr_navit) 
 		priv->navit = attr->u.navit;
-		return 1;
-	}
-	return 0;
+	return 1;
 }
 
 struct vehicle_methods vehicle_demo_methods = {
