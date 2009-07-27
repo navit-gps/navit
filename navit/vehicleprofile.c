@@ -45,14 +45,12 @@ vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 	case attr_route_mode:
 		this_->mode=attr->u.num;
 		break;
-    case attr_name:
-        if(this_->name) free(this_->name);
-
-        // Only copy the first 1024 characters. Should be enough for
-        // normal use, but still prevent ludicrous memory allocations
-        // in case of a bug somewhere.
-        this_->name = strndup(attr->u.str, 2);
-        break;
+	case attr_name:
+		if(this_->name)
+			g_free(this_->name);
+		/* previously used strdupn not available on win32 */
+		this_->name = g_strdup(attr->u.str);
+		break;
 	default:
 		break;
 	}
