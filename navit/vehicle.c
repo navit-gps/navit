@@ -195,9 +195,12 @@ int
 vehicle_set_attr(struct vehicle *this_, struct attr *attr,
 		 struct attr **attrs)
 {
+	int ret=1;
 	if (this_->meth.set_attr)
-		return this_->meth.set_attr(this_->priv, attr, attrs);
-	return 0;
+		ret=this_->meth.set_attr(this_->priv, attr, attrs);
+	if (ret == 1 && attr->type != attr_navit)
+		this_->attrs=attr_generic_set_attr(this_->attrs, attr);
+	return ret != 0;
 }
 
 int
