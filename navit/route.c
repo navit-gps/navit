@@ -498,9 +498,7 @@ route_set_profile(struct route *this, struct vehicleprofile *prof)
 {
 	if (this->vehicleprofile != prof) {
 		this->vehicleprofile=prof;
-		route_path_destroy(this->path2);
-		this->path2 = NULL;
-		route_path_update(this, 0, 0);
+		route_path_update(this, 1, 1);
 	}
 }
 
