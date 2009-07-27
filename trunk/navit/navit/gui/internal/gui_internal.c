@@ -366,6 +366,9 @@ static void gui_internal_check_exit(struct gui_priv *this);
 
 static struct widget *gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode);
 static struct menu_data * gui_internal_menu_data(struct gui_priv *this);
+
+static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle *vehicle);
+
 /*
  * * Display image scaled to specific size
  * * searches for scaleable and pre-scaled image
@@ -3131,6 +3134,24 @@ struct vehicle_and_profilename {
 };
 
 /**
+ * Figures out whether the given vehicle is the active vehicle.
+ *
+ * @return true if the vehicle is active, false otherwise.
+ */
+static int
+gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle
+        *vehicle)
+{
+	struct attr active_vehicle;
+
+	if (!navit_get_attr(this->nav, attr_vehicle, &active_vehicle, NULL))
+        active_vehicle.u.vehicle=NULL;
+
+	return active_vehicle.u.vehicle == vehicle;
+}
+
+
+/**
  * Reacts to a button press that changes a vehicle's active profile.
  *
  * @see gui_internal_add_vehicle_profile
@@ -3157,6 +3178,13 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 	if(!vehicle_set_attr(v, &profilename_attr, NULL)) {
 		dbg(0, "Unable to set the vehicle's profile name\n");
 	}
+
+    // Notify Navit that the routing should be re-done if this is the
+    // active vehicle.
+    if(gui_internal_is_active_vehicle(this, v)) {
+        struct attr vehicle = {attr_vehicle, {v}};
+        navit_set_attr(this->nav, &vehicle);
+    }
 }
 
 /**
@@ -3220,21 +3248,23 @@ static void
 gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct widget *w,*wb;
-	struct attr attr,active_vehicle;
+	struct attr attr;
 	struct vehicle *v=wm->data;
     struct vehicleprofile *profile = NULL;
 
 	wb=gui_internal_menu(this, wm->text);
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
-	if (!navit_get_attr(this->nav, attr_vehicle, &active_vehicle, NULL))
-		active_vehicle.u.vehicle=NULL;
-	if (active_vehicle.u.vehicle != v) {
+
+    // Add the "Set as active" button if this isn't the active
+    // vehicle.
+	if (!gui_internal_is_active_vehicle(this, v)) {
 		gui_internal_widget_append(w,
 			gui_internal_button_new_with_callback(this, _("Set as active"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_set_active_vehicle, wm->data));
 	}
+
 	if (vehicle_get_attr(v, attr_position_sat_item, &attr, NULL)) {
 		gui_internal_widget_append(w,
 			gui_internal_button_new_with_callback(this, _("Show Satellite status"),
