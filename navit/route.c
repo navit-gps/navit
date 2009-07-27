@@ -725,10 +725,12 @@ route_set_position(struct route *this, struct pcoord *pos)
 		route_info_free(this->pos);
 	this->pos=NULL;
 	this->pos=route_find_nearest_street(this->vehicleprofile, this->ms, pos);
+
+	// If there is no nearest street, bail out.
+	if (!this->pos) return;
+
 	this->pos->street_direction=0;
 	dbg(1,"this->pos=%p\n", this->pos);
-	if (! this->pos)
-		return;
 	route_info_distances(this->pos, pos->pro);
 	route_path_update(this, 0, 1);
 }
