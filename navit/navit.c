@@ -1545,6 +1545,9 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 	int dir=0, orient_old=0, attr_updated=0;
 	struct coord co;
 	long zoom;
+	GList *l;
+	struct navit_vehicle *nv;
+	struct attr active=(struct attr){attr_active,{(void *)0}};
 
 	switch (attr->type) {
 	case attr_autozoom:
@@ -1638,23 +1641,20 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		this_->use_mousewheel=!!attr->u.num;
 		break;
 	case attr_vehicle:
-		if (!this_->vehicle || this_->vehicle->vehicle != attr->u.vehicle) {
-			GList *l;
-			struct navit_vehicle *nv;
-			struct attr active=(struct attr){attr_active,{(void *)0}};
-			l=this_->vehicles;
-			while(l) {
-				nv=l->data;
-				if (nv->vehicle == attr->u.vehicle) {
+		l=this_->vehicles;
+		while(l) {
+			nv=l->data;
+			if (nv->vehicle == attr->u.vehicle) {
+				if (!this_->vehicle || this_->vehicle->vehicle != attr->u.vehicle) {
 					if (this_->vehicle)
 						vehicle_set_attr(this_->vehicle->vehicle, &active, NULL);
 					active.u.num=1;
 					vehicle_set_attr(nv->vehicle, &active, NULL);
-					navit_set_vehicle(this_, nv);
 					attr_updated=1;
 				}
-				l=g_list_next(l);
+				navit_set_vehicle(this_, nv);
 			}
+			l=g_list_next(l);
 		}
 		break;
 	case attr_zoom:
