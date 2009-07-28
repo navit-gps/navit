@@ -76,8 +76,8 @@ struct menu_data {
 };
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 struct widget {
@@ -103,7 +103,7 @@ struct widget {
 
 	/**
 	 * @brief a function that will be called as the widget is being destroyed.
-	 * This function can act as a destructor for the widget. It allows for 
+	 * This function can act as a destructor for the widget. It allows for
 	 * on deallocation actions to be specified on a per widget basis.
 	 * This function will call g_free on the widget (if required).
 	 */
@@ -138,17 +138,17 @@ struct widget {
 	int is_on;
 	int redraw;
 	struct menu_data *menu_data;
-	GList *children;  
+	GList *children;
 };
 
 /**
  * @brief A structure to store configuration values.
  *
  * This structure stores configuration values for how gui elements in the internal GUI
- * should be drawn.  
+ * should be drawn.
  */
 struct gui_config_settings {
-  
+
   /**
    * The base size (in fractions of a point) to use for text.
    */
@@ -169,7 +169,7 @@ struct gui_config_settings {
    * The default amount of spacing (in pixels) to place between GUI elements.
    */
   int spacing;
-  
+
 };
 
 /**
@@ -181,7 +181,7 @@ const int SMALL_PROFILE=2;
 
 /**
  * The default config profiles.
- * 
+ *
  * [0] =>  LARGE_PROFILE (screens 640 in one dimension)
  * [1] =>  MEDIUM PROFILE (screens larger than 320 in one dimension
  * [2] => Small profile (default)
@@ -199,8 +199,8 @@ struct route_data {
 };
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 struct gui_priv {
@@ -266,7 +266,7 @@ struct gui_priv {
  * table widget.
  *
  * The table_data structure needs to be freed with data_free along with the widget.
- * 
+ *
  */
 struct table_data
 {
@@ -302,7 +302,7 @@ struct table_data
    * A button widget to handle 'previous page' requests.
    */
   struct widget * prev_button;
-    
+
 
   /**
    * a pointer to the gui context.
@@ -416,8 +416,8 @@ image_new_scaled(struct gui_priv *this, char *name, int w, int h)
 		ret=graphics_image_new_scaled(this->gra, full_name, w, h);
 		dbg(1,"ret=%p\n", ret);
 		g_free(full_name);
-		if (ret) 
-			return ret;	
+		if (ret)
+			return ret;
 	}
 	dbg(0,"failed to load %s with %d,%d\n", name, w, h);
 	return NULL;
@@ -483,7 +483,7 @@ static void
 gui_internal_background_render(struct gui_priv *this, struct widget *w)
 {
 	struct point pnt=w->p;
-	if (w->state & STATE_HIGHLIGHTED) 
+	if (w->state & STATE_HIGHLIGHTED)
 		graphics_draw_rectangle(this->gra, this->highlight_background, &pnt, w->w, w->h);
 	else {
 		if (w->background)
@@ -496,7 +496,7 @@ gui_internal_label_new(struct gui_priv *this, char *text)
 	struct point p[4];
 	int w=0;
 	int h=0;
-	
+
 	struct widget *widget=g_new0(struct widget, 1);
 	widget->type=widget_label;
 	if (text) {
@@ -664,12 +664,12 @@ gui_internal_button_attr_callback(struct gui_priv *this, struct widget *w)
 static void
 gui_internal_button_attr_pressed(struct gui_priv *this, struct widget *w, void *data)
 {
-	if (w->is_on) 
+	if (w->is_on)
 		w->set_attr(w->instance, &w->off);
 	else
 		w->set_attr(w->instance, &w->on);
 	gui_internal_button_attr_update(this, w);
-	
+
 }
 
 static struct widget *
@@ -728,8 +728,8 @@ gui_internal_button_new(struct gui_priv *this, char *text, struct graphics_image
 
 #if 0
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 static void gui_internal_clear(struct gui_priv *this)
@@ -748,17 +748,17 @@ gui_internal_find_widget(struct widget *wi, struct point *p, int flags)
 	struct widget *ret,*child;
 	GList *l=wi->children;
 
-	if (p) { 
+	if (p) {
 		if (wi->p.x > p->x )
 			return NULL;
 		if (wi->p.y > p->y )
 			return NULL;
-		if ( wi->p.x + wi->w < p->x) 
+		if ( wi->p.x + wi->w < p->x)
 			return NULL;
-		if ( wi->p.y + wi->h < p->y) 
+		if ( wi->p.y + wi->h < p->y)
 			return NULL;
 	}
-	if (wi->state & flags) 
+	if (wi->state & flags)
 		return wi;
 	while (l) {
 		child=l->data;
@@ -769,7 +769,7 @@ gui_internal_find_widget(struct widget *wi, struct point *p, int flags)
 		l=g_list_next(l);
 	}
 	return NULL;
-	
+
 }
 
 static void
@@ -777,11 +777,11 @@ gui_internal_highlight_do(struct gui_priv *this, struct widget *found)
 {
 	if (found == this->highlighted)
 		return;
-	
+
 	graphics_draw_mode(this->gra, draw_mode_begin);
 	if (this->highlighted) {
 		this->highlighted->state &= ~STATE_HIGHLIGHTED;
-		if (this->root.children && this->highlighted_menu == g_list_last(this->root.children)->data) 
+		if (this->root.children && this->highlighted_menu == g_list_last(this->root.children)->data)
 			gui_internal_widget_render(this, this->highlighted);
 		this->highlighted=NULL;
 		this->highlighted_menu=NULL;
@@ -792,12 +792,12 @@ gui_internal_highlight_do(struct gui_priv *this, struct widget *found)
 		this->highlighted->state |= STATE_HIGHLIGHTED;
 		gui_internal_widget_render(this, this->highlighted);
 		dbg(1,"%d,%d %dx%d\n", found->p.x, found->p.y, found->w, found->h);
-	}	
+	}
 	graphics_draw_mode(this->gra, draw_mode_end);
 }
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 static void gui_internal_highlight(struct gui_priv *this)
@@ -816,7 +816,7 @@ gui_internal_box_new_with_label(struct gui_priv *this, enum flags flags, char *l
 {
 	struct widget *widget=g_new0(struct widget, 1);
 
-	if (label) 
+	if (label)
 		widget->text=g_strdup(label);
 	widget->type=widget_box;
 	widget->flags=flags;
@@ -855,7 +855,7 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 
 	l=w->children;
 	while (l) {
-		wc=l->data;	
+		wc=l->data;
 		gui_internal_widget_render(this, wc);
 		l=g_list_next(l);
 	}
@@ -886,8 +886,8 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		 width=0;
 		 height=0;
 	}
-	
-	
+
+
 	/**
 	 * count the number of children
 	 */
@@ -902,7 +902,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 	case orientation_horizontal:
 		/**
 		 * For horizontal orientation:
-		 * pack each child and find the largest height and 
+		 * pack each child and find the largest height and
 		 * compute the total width. x spacing (spx) is considered
 		 *
 		 * If any children want to be expanded
@@ -972,7 +972,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 			gui_internal_widget_pack(this, wc);
 			if (height < wc->h)
 				height=wc->h;
-			if (width < wc->w) 
+			if (width < wc->w)
 				width=wc->w;
 			l=g_list_next(l);
 			count++;
@@ -1011,7 +1011,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 	 * widths and coordinates to each child widget.
 	 */
 
-	if (w->flags & gravity_left) 
+	if (w->flags & gravity_left)
 		x=w->p.x+w->bl;
 	if (w->flags & gravity_xcenter)
 		x=w->p.x+w->w/2-owidth/2;
@@ -1019,9 +1019,9 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		x=w->p.x+w->w-w->br-owidth;
 	if (w->flags & gravity_top)
 		y=w->p.y+w->bt;
-	if (w->flags & gravity_ycenter) 
+	if (w->flags & gravity_ycenter)
 		y=w->p.y+w->h/2-oheight/2;
-	if (w->flags & gravity_bottom) 
+	if (w->flags & gravity_bottom)
 		y=w->p.y+w->h-w->bb-oheight;
 	l=w->children;
 	switch (orientation) {
@@ -1037,11 +1037,11 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 					wc->w=1;
 				wc->w=wc->w*expand/100;
 			}
-			if (w->flags & gravity_top) 
+			if (w->flags & gravity_top)
 				wc->p.y=y;
-			if (w->flags & gravity_ycenter) 
+			if (w->flags & gravity_ycenter)
 				wc->p.y=y-wc->h/2;
-			if (w->flags & gravity_bottom) 
+			if (w->flags & gravity_bottom)
 				wc->p.y=y-wc->h;
 			x+=wc->w+w->spx;
 			l=g_list_next(l);
@@ -1059,11 +1059,11 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 					wc->h=1;
 				wc->h=wc->h*expand/100;
 			}
-			if (w->flags & gravity_left) 
+			if (w->flags & gravity_left)
 				wc->p.x=x;
-			if (w->flags & gravity_xcenter) 
+			if (w->flags & gravity_xcenter)
 				wc->p.x=x-wc->w/2;
-			if (w->flags & gravity_right) 
+			if (w->flags & gravity_right)
 				wc->p.x=x-wc->w;
 			y+=wc->h+w->spy;
 			l=g_list_next(l);
@@ -1083,17 +1083,17 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 				wc->w=width;
 				wc->h=height;
 			}
-			if (w->flags & gravity_left) 
+			if (w->flags & gravity_left)
 				wc->p.x=x;
-			if (w->flags & gravity_xcenter) 
+			if (w->flags & gravity_xcenter)
 				wc->p.x=x+(width-wc->w)/2;
-			if (w->flags & gravity_right) 
+			if (w->flags & gravity_right)
 				wc->p.x=x+width-wc->w;
-			if (w->flags & gravity_top) 
+			if (w->flags & gravity_top)
 				wc->p.y=y;
-			if (w->flags & gravity_ycenter) 
+			if (w->flags & gravity_ycenter)
 				wc->p.y=y+(height-wc->h)/2;
-			if (w->flags & gravity_bottom) 
+			if (w->flags & gravity_bottom)
 				wc->p.y=y-height-wc->h;
 			x+=width;
 			if (++count == cols) {
@@ -1114,7 +1114,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 	 */
 	l=w->children;
 	while (l) {
-		wc=l->data;		
+		wc=l->data;
 		gui_internal_widget_pack(this, wc);
 		l=g_list_next(l);
 	}
@@ -1213,8 +1213,8 @@ gui_internal_widget_pack(struct gui_priv *this, struct widget *w)
 }
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 static void gui_internal_call_highlighted(struct gui_priv *this)
@@ -1367,7 +1367,7 @@ gui_internal_top_bar(struct gui_priv *this)
 			wc=l->data;
 			wcn=gui_internal_label_new(this, wc->text);
 			wcn->foreground=foreground;
-			if (g_list_next(l)) 
+			if (g_list_next(l))
 				use_sep=1;
 			else
 				use_sep=0;
@@ -1391,7 +1391,7 @@ gui_internal_top_bar(struct gui_priv *this)
 			}
 			res=g_list_prepend(res, wcn);
 			if (this->flags & 8)
-				break;	
+				break;
 		}
 		l=g_list_previous(l);
 	}
@@ -1503,7 +1503,7 @@ static void gui_internal_apply_config(struct gui_priv *this)
   {
     current_config = &config_profiles[SMALL_PROFILE];
   }
-  
+
   /**
    * Apply override values from config file
    */
@@ -1524,7 +1524,7 @@ static void gui_internal_apply_config(struct gui_priv *this)
   {
     this->icon_xs = this->config.icon_xs;
   }
-  
+
   if(this->config.icon_s == -1 )
   {
     this->icon_s = current_config->icon_s;
@@ -1549,7 +1549,7 @@ static void gui_internal_apply_config(struct gui_priv *this)
   {
     this->spacing = current_config->spacing;
   }
-       	
+
 }
 
 static struct widget *
@@ -1668,7 +1668,7 @@ gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void 
 		navit_set_attr(this->nav, &this->osd_configuration);
 		navit_set_attr(this->nav, &follow);
 		navit_zoom_to_route(this->nav, 0);
-	}	
+	}
 	gui_internal_prune_menu(this, NULL);
 }
 
@@ -1685,7 +1685,7 @@ gui_internal_cmd_add_bookmark_do(struct gui_priv *this, struct widget *widget)
 {
 	GList *l;
 	dbg(0,"text='%s'\n", widget->text);
-	if (widget->text && strlen(widget->text)) 
+	if (widget->text && strlen(widget->text))
 		navit_add_bookmark(this->nav, &widget->c, widget->text);
 	g_free(widget->text);
 	widget->text=NULL;
@@ -1721,7 +1721,7 @@ static void
 gui_internal_cmd_add_bookmark(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct widget *w,*wb,*wk,*wl,*we,*wnext,*wp=wm->data;
-	wb=gui_internal_menu(this, "Add Bookmark");	
+	wb=gui_internal_menu(this, "Add Bookmark");
 	w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
 	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
@@ -1898,8 +1898,8 @@ gui_internal_cmd_pois_item_selected(struct selector *sel, enum item_type type)
 		if (type >= types[0] && type <= types[1]) {
 			return 1;
 		}
-		types+=2;	
-	}	
+		types+=2;
+	}
 	return 0;
 }
 
@@ -1937,9 +1937,9 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		dbg(2,"mr=%p\n", mr);
 		if (mr) {
 			while ((item=map_rect_get_item(mr))) {
-				if (gui_internal_cmd_pois_item_selected(isel, item->type) && 
-				    item_coord_get_pro(item, &c, 1, pro) && 
-				    coord_rect_contains(&sel->u.c_rect, &c) && 
+				if (gui_internal_cmd_pois_item_selected(isel, item->type) &&
+				    item_coord_get_pro(item, &c, 1, pro) &&
+				    coord_rect_contains(&sel->u.c_rect, &c) &&
 				    (idist=transform_distance(pro, &center, &c)) < dist) {
 					gui_internal_widget_append(w2, wi=gui_internal_cmd_pois_item(this, &center, item, &c, idist));
 					wi->func=gui_internal_cmd_position;
@@ -2037,7 +2037,7 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 /* wm->data: 0 Nothing special
 	     1 Map Point
 	     2 Item
-	     3 Town 
+	     3 Town
 */
 
 
@@ -2105,7 +2105,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		mr=map_rect_new(wm->item.map, NULL);
 		item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
 		if (item) {
-			if (item_attr_get(item, attr_description, &attr)) 
+			if (item_attr_get(item, attr_description, &attr))
 				gui_internal_widget_append(w, gui_internal_label_new(this, attr.u.str));
 			if (item_attr_get(item, attr_url_local, &attr)) {
 				gui_internal_widget_append(w,
@@ -2191,7 +2191,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 						label=map_convert_string(m, attr.u.str);
 						text=g_strdup_printf("%s %s", item_to_name(item->type), label);
 						map_convert_free(label);
-					} else 
+					} else
 						text=g_strdup_printf("%s", item_to_name(item->type));
 					gui_internal_widget_append(w,
 						wc=gui_internal_button_new_with_callback(this, text,
@@ -2210,7 +2210,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		}
 		mapset_close(h);
 	}
-	
+
 	gui_internal_menu_render(this);
 }
 
@@ -2296,7 +2296,7 @@ static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 			dbg(0,"backspace\n");
 			if (wi->text && wi->text[0]) {
 				len=g_utf8_prev_char(wi->text+strlen(wi->text))-wi->text;
-				wi->text[len]=' ';	
+				wi->text[len]=' ';
 				text=g_strdup_printf("%s ", wi->text);
 			}
 		} else {
@@ -2329,9 +2329,9 @@ gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct menu_data *md=gui_internal_menu_data(this);
 	gui_internal_keypress_do(this, (char *) wm->data);
-	if (md->keyboard_mode == 2) 
+	if (md->keyboard_mode == 2)
 		gui_internal_keyboard_do(this, md->keyboard, 10);
-	if (md->keyboard_mode == 26) 
+	if (md->keyboard_mode == 26)
 		gui_internal_keyboard_do(this, md->keyboard, 34);
 }
 
@@ -2367,9 +2367,9 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		struct widget *menu=g_list_last(this->root.children)->data;
 		struct widget *wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
 
-		if (! strcmp(wm_name,"Town")) 
+		if (! strcmp(wm_name,"Town"))
 			trunk_name = g_strrstr(res->town->name, wi->text);
-		if (! strcmp(wm_name,"Street")) 
+		if (! strcmp(wm_name,"Street"))
 			trunk_name = g_strrstr(name=res->street->name, wi->text);
 
 		if (trunk_name) {
@@ -2414,10 +2414,10 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 				lk=g_list_next(lk);
 			}
 			gui_internal_widget_render(this,md->keyboard);
-			graphics_draw_mode(this->gra, draw_mode_end);		
+			graphics_draw_mode(this->gra, draw_mode_end);
 		}
 
-		possible_keys[0]='\0'; 
+		possible_keys[0]='\0';
 		return;
 	}
 
@@ -2711,7 +2711,7 @@ gui_internal_search_list_set_default_country(struct gui_priv *this)
 			search_list_search(this->sl, &search_attr, 0);
 			while((res=search_list_get_result(this->sl)));
 			g_free(this->country_iso2);
-			if (item_attr_get(item, attr_country_iso2, &country_iso2)) 
+			if (item_attr_get(item, attr_country_iso2, &country_iso2))
 				this->country_iso2=g_strdup(country_iso2.u.str);
 		}
 		country_search_destroy(cs);
@@ -2953,7 +2953,7 @@ gui_internal_cmd_display(struct gui_priv *this, struct widget *wm, void *data)
 			gui_internal_button_new_with_callback(this, _("2D"),
 				image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
 				gui_internal_cmd_2d, NULL));
-		
+
 	} else {
 		gui_internal_widget_append(w,
 			gui_internal_button_new_with_callback(this, _("3D"),
@@ -3017,7 +3017,7 @@ gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm, void *data)
 		gui_internal_button_new_with_callback(this, _("Quit"),
 			image_new_l(this, "gui_quit"), gravity_center|orientation_vertical,
 			gui_internal_cmd_quit, NULL));
-	
+
 	if (navit_check_route(this->nav)) {
 		gui_internal_widget_append(w,
 								   gui_internal_button_new_with_callback(this, _("Stop\nNavigation"),
@@ -3061,7 +3061,7 @@ gui_internal_cmd_maps(struct gui_priv *this, struct widget *wm, void *wdata)
 	}
 	navit_attr_iter_destroy(iter);
 	gui_internal_menu_render(this);
-	
+
 }
 static void
 gui_internal_cmd_set_active_vehicle(struct gui_priv *this, struct widget *wm, void *data)
@@ -3095,7 +3095,7 @@ gui_internal_cmd_show_satellite_status(struct gui_priv *this, struct widget *wm,
 	while (vehicle_get_attr(v, attr_position_sat_item, &attr, NULL)) {
 		row = gui_internal_widget_table_row_new(this,gravity_left_top);
 		for (i = 0 ; i < sizeof(types)/sizeof(enum attr_type) ; i++) {
-			if (item_attr_get(attr.u.item, types[i], &sat_attr)) 
+			if (item_attr_get(attr.u.item, types[i], &sat_attr))
 				str=g_strdup_printf("%d", sat_attr.u.num);
 			else
 				str=g_strdup("");
@@ -3119,7 +3119,7 @@ gui_internal_cmd_show_nmea_data(struct gui_priv *this, struct widget *wm, void *
 	gui_internal_menu_data(this)->redisplay_widget=wm;
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
-	if (vehicle_get_attr(v, attr_position_nmea, &attr, NULL)) 
+	if (vehicle_get_attr(v, attr_position_nmea, &attr, NULL))
 		gui_internal_widget_append(w, gui_internal_text_new(this, attr.u.str, gravity_left_center|orientation_vertical));
 	gui_internal_menu_render(this);
 }
@@ -3191,7 +3191,7 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
  * Adds the vehicle profile to the GUI, allowing the user to pick a
  * profile for the currently selected vehicle.
  */
-static void 
+static void
 gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 		*parent, struct vehicle *v, struct vehicleprofile *profile)
 {
@@ -3354,7 +3354,7 @@ gui_internal_cmd_settings(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct widget *w;
 
-	w=gui_internal_menu(this, _("Settings"));	
+	w=gui_internal_menu(this, _("Settings"));
 	gui_internal_widget_append(w,
 		gui_internal_button_new_with_callback(this, _("Display"),
 			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
@@ -3375,8 +3375,8 @@ gui_internal_cmd_settings(struct gui_priv *this, struct widget *wm, void *data)
 }
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 static void gui_internal_motion(void *data, struct point *p)
@@ -3424,7 +3424,7 @@ static void gui_internal_menu_root(struct gui_priv *this)
 
 
 	callback_list_call_attr_1(this->cbl, attr_gui, w);
-							      
+
 	gui_internal_menu_render(this);
 	graphics_draw_mode(this->gra, draw_mode_end);
 }
@@ -3473,7 +3473,7 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 		this->vehiclep.x=c.x;
 		this->vehiclep.y=c.y;
 		this->vehicle_valid=1;
-	}	
+	}
 	// draw menu
 	gui_internal_menu_root(this);
 }
@@ -3488,7 +3488,7 @@ gui_internal_cmd_menu2(struct gui_priv *this)
 static void
 gui_internal_cmd_log_do(struct gui_priv *this, struct widget *widget)
 {
-	if (widget->text && strlen(widget->text)) 
+	if (widget->text && strlen(widget->text))
 		navit_textfile_debug_log(this->nav, "type=log_entry label=\"%s\"",widget->text);
 	g_free(widget->text);
 	widget->text=NULL;
@@ -3562,27 +3562,27 @@ gui_internal_check_exit(struct gui_priv *this)
 
 //##############################################################################################################
 //# Description: Function to handle mouse clicks and scroll wheel movement
-//# Comment: 
+//# Comment:
 //# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
 //##############################################################################################################
 static void gui_internal_button(void *data, int pressed, int button, struct point *p)
 {
 	struct gui_priv *this=data;
 	struct graphics *gra=this->gra;
-	
+
 	dbg(1,"enter %d %d\n", pressed, button);
 	// if still on the map (not in the menu, yet):
 	if (!this->root.children || this->ignore_button) {
 		this->ignore_button=0;
-		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel 
+		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel
 		if (!navit_handle_button(this->nav, pressed, button, p, NULL) || button >=4) // Maybe there's a better way to do this
 			return;
 		if (this->menu_on_map_click)
-			gui_internal_cmd_menu(this, p, 0);	
+			gui_internal_cmd_menu(this, p, 0);
 		return;
 	}
-	
-	
+
+
 	// if already in the menu:
 	if (pressed) {
 		this->pressed=1;
@@ -3601,8 +3601,8 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 }
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 static void gui_internal_resize(void *data, int w, int h)
@@ -3620,7 +3620,7 @@ static void gui_internal_resize(void *data, int w, int h)
 		gui_internal_prune_menu(this, NULL);
 		gui_internal_menu_root(this);
 	}
-} 
+}
 
 static void
 gui_internal_keynav_point(struct widget *w, int dx, int dy, struct point *p)
@@ -3631,7 +3631,7 @@ gui_internal_keynav_point(struct widget *w, int dx, int dy, struct point *p)
 		p->x=w->p.x;
 	if (dx > 0)
 		p->x=w->p.x+w->w;
-	if (dy < 0) 
+	if (dy < 0)
 		p->y=w->p.y;
 	if (dy > 0)
 		p->y=w->p.y+w->h;
@@ -3719,8 +3719,8 @@ gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy)
 }
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 static void gui_internal_keypress(void *data, char *key)
@@ -3788,12 +3788,12 @@ static void gui_internal_keypress(void *data, char *key)
 	}
 	graphics_draw_mode(this->gra, draw_mode_end);
 	gui_internal_check_exit(this);
-} 
+}
 
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra)
@@ -3802,7 +3802,7 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	struct color cbh={0x9fff,0x9fff,0x9fff,0xffff};
 	struct color cf={0xbfff,0xbfff,0xbfff,0xffff};
 	struct transformation *trans=navit_get_trans(this->nav);
-	
+
 	win=graphics_get_data(gra, "window");
         if (! win)
                 return 1;
@@ -3831,7 +3831,7 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	graphics_gc_set_foreground(this->background2, &this->background2_color);
 	graphics_gc_set_foreground(this->text_background, &this->text_background_color);
 	graphics_gc_set_foreground(this->text_foreground, &this->text_foreground_color);
-	
+
 	// set fullscreen if needed
 	if (this->fullscreen)
 		this->win->fullscreen(this->win, this->fullscreen);
@@ -3845,8 +3845,8 @@ static void gui_internal_disable_suspend(struct gui_priv *this)
 }
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 struct gui_methods gui_internal_methods = {
@@ -3863,7 +3863,7 @@ static void
 gui_internal_get_data(struct gui_priv *priv, char *command, struct attr **in, struct attr ***out)
 {
 	struct attr private_data = (struct attr) { attr_private_data, {(void *)&priv->data}};
-	if (out)  
+	if (out)
 		*out=attr_generic_add_attr(*out, &private_data);
 }
 
@@ -3889,7 +3889,7 @@ static struct gui_internal_methods gui_internal_methods_ext = {
 };
 
 
-static enum flags 
+static enum flags
 gui_internal_get_flags(struct widget *widget)
 {
 	return widget->flags;
@@ -3958,11 +3958,11 @@ static struct command_table commands[] = {
 
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs) 
+static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
 {
 	struct gui_priv *this;
 	struct attr *attr;
@@ -4016,7 +4016,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	}
 	else
 	{
-	  this->config.spacing=-1;	  
+	  this->config.spacing=-1;
 	}
 	if( (attr=attr_search(attrs,NULL,attr_gui_speech)))
 	{
@@ -4026,7 +4026,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	  this->keyboard=attr->u.num;
         else
 	  this->keyboard=1;
-	
+
     if( (attr=attr_search(attrs,NULL,attr_fullscreen)))
       this->fullscreen=attr->u.num;
 
@@ -4036,7 +4036,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	      this->background_color=*attr->u.color;
 	else
 	      this->background_color=(struct color){0x0,0x0,0x0,0xffff};
-	if( (attr=attr_search(attrs,NULL,attr_background_color2))) 
+	if( (attr=attr_search(attrs,NULL,attr_background_color2)))
 		this->background2_color=*attr->u.color;
 	else
 		this->background2_color=(struct color){0x4141,0x4141,0x4141,0xffff};
@@ -4062,8 +4062,8 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 }
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 void plugin_init(void)
@@ -4073,10 +4073,10 @@ void plugin_init(void)
 
 /**
  * @brief Creates a new table widget.
- * 
+ *
  * Creates and returns a new table widget.  This function will
  * setup next/previous buttons as children.
- * 
+ *
  * @param this The graphics context.
  * @param flags widget sizing flags.
  * @returns The newly created widget
@@ -4090,7 +4090,7 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	widget->data = g_new0(struct table_data,1);
 	widget->data_free=gui_internal_table_data_free;
 	data = (struct table_data*)widget->data;
-	
+
 
 	if (buttons) {
 	data->next_button = gui_internal_button_new_with_callback
@@ -4098,18 +4098,18 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 		 gravity_left_center  |orientation_vertical,
 		 gui_internal_table_button_next,NULL);
 	data->next_button->data=widget;
-	
-  
+
+
 	data->prev_button =  gui_internal_button_new_with_callback
 		(this,"Prev",
 		 image_new_xs(this, "gui_active")
 		 ,gravity_right_center |orientation_vertical,
 		 gui_internal_table_button_prev,NULL);
-	
+
 	data->prev_button->data=widget;
-	
+
 	data->this=this;
-	
+
 	data->button_box=gui_internal_box_new(this,
 					      gravity_center|orientation_horizontal);
 	data->button_box->children=g_list_append(data->button_box->children,
@@ -4121,7 +4121,7 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	widget->children=g_list_append(widget->children,data->button_box);
 	gui_internal_widget_pack(this,data->button_box);
 	}
-	
+
 	return widget;
 
 }
@@ -4135,23 +4135,23 @@ void gui_internal_widget_table_clear(struct gui_priv * this,struct widget * tabl
 {
   GList * iter;
   struct table_data * table_data = (struct table_data* ) table->data;
-  
-  iter = table->children; 
+
+  iter = table->children;
   while(iter ) {
-	  if(iter->data != table_data->button_box) {		  
+	  if(iter->data != table_data->button_box) {
 		  struct widget * child = (struct widget*)iter->data;
 		  gui_internal_widget_destroy(this,child);
-		  if(table->children == iter) {			  
+		  if(table->children == iter) {
 			  table->children = g_list_remove(iter,iter->data);
 			  iter=table->children;
 		  }
-		  else 
+		  else
 			  iter = g_list_remove(iter,iter->data);
 	  }
 	  else {
 		  iter = g_list_next(iter);
 	  }
-    
+
   }
   table_data->top_row=NULL;
   table_data->bottom_row=NULL;
@@ -4190,7 +4190,7 @@ struct widget * gui_internal_widget_table_row_new(struct gui_priv * this, enum f
  */
 static GList * gui_internal_compute_table_dimensions(struct gui_priv * this,struct widget * w)
 {
-  
+
 	GList * column_desc = NULL;
 	GList * current_desc=NULL;
 	GList * cur_row = w->children;
@@ -4203,7 +4203,7 @@ static GList * gui_internal_compute_table_dimensions(struct gui_priv * this,stru
 	int width=0;
 	int total_width=0;
 	int column_count=0;
-  
+
 	/**
 	 * Scroll through the the table and
 	 * 1. Compute the maximum width + height of each column across all rows.
@@ -4218,20 +4218,20 @@ static GList * gui_internal_compute_table_dimensions(struct gui_priv * this,stru
 			continue;
 		}
 		column_count=0;
-		for(cur_column = cur_row_widget->children; cur_column; 
+		for(cur_column = cur_row_widget->children; cur_column;
 		    cur_column=g_list_next(cur_column))
 		{
 			cell_w = (struct widget*) cur_column->data;
 			gui_internal_widget_pack(this,cell_w);
-			if(current_desc == 0) 
+			if(current_desc == 0)
 			{
-				current_cell = g_new0(struct table_column_desc,1);	
+				current_cell = g_new0(struct table_column_desc,1);
 				column_desc = g_list_append(column_desc,current_cell);
 				current_desc = g_list_last(column_desc);
-				current_cell->height=cell_w->h; 
-				current_cell->width=cell_w->w; 
+				current_cell->height=cell_w->h;
+				current_cell->width=cell_w->w;
 				total_width+=cell_w->w;
-				
+
 			}
 			else
 			{
@@ -4248,14 +4248,14 @@ static GList * gui_internal_compute_table_dimensions(struct gui_priv * this,stru
 					current_cell->width = width;
 
 
-					
+
 				}
 				current_desc = g_list_next(current_desc);
 			}
 			column_count++;
-			
+
 		}/* column loop */
-		
+
 	} /*row loop */
 
 
@@ -4265,7 +4265,7 @@ static GList * gui_internal_compute_table_dimensions(struct gui_priv * this,stru
 	 *
 	 */
 	if(total_width+(this->spacing*column_count) < w->w ) {
-		for(current_desc=column_desc; current_desc; current_desc=g_list_next(current_desc)) { 
+		for(current_desc=column_desc; current_desc; current_desc=g_list_next(current_desc)) {
 			current_cell = (struct table_column_desc*) current_desc->data;
 			current_cell->width= ( (current_cell->width+this->spacing)/(float)total_width) * w->w ;
 		}
@@ -4287,7 +4287,7 @@ static GList * gui_internal_compute_table_dimensions(struct gui_priv * this,stru
  */
 void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 {
-  
+
 	int height=0;
 	int width=0;
 	int count=0;
@@ -4295,7 +4295,7 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 	GList * current=0;
 	struct table_column_desc * cell_desc=0;
 	struct table_data * table_data = (struct table_data*)w->data;
-	
+
 	for(current = column_data; current; current=g_list_next(current))
 	{
 		if(table_data->button_box == current->data )
@@ -4304,7 +4304,7 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 		}
 		cell_desc = (struct table_column_desc *) current->data;
 		width = width + cell_desc->width + this->spacing;
-		if(height < cell_desc->height) 
+		if(height < cell_desc->height)
 		{
 			height = cell_desc->height ;
 		}
@@ -4320,7 +4320,7 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 		}
 	}
 	if (table_data->button_box)
-		gui_internal_widget_pack(this,table_data->button_box);  
+		gui_internal_widget_pack(this,table_data->button_box);
 
 
 
@@ -4328,12 +4328,12 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 	{
 		/**
 		 * Do not allow the widget to exceed the screen.
-		 * 
+		 *
 		 */
 		w->h = this->root.h- w->c.y  - height;
 	}
 	w->w = width;
-	
+
 	/**
 	 * Deallocate column descriptions.
 	 */
@@ -4342,14 +4342,14 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 	{
 		current = g_list_remove(current,current->data);
 	}
-	
+
 }
 
 
 
 /**
  * @brief Renders a table widget.
- * 
+ *
  * @param this The graphics context
  * @param w The table widget to render.
  */
@@ -4365,11 +4365,11 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	int is_skipped=0;
 	int is_first_page=1;
 	struct table_column_desc * dim=NULL;
-	
+
 	dbg_assert(table_data);
 	column_desc = gui_internal_compute_table_dimensions(this,w);
 	y=w->p.y;
-	
+
 	/**
 	 * Skip rows that are on previous pages.
 	 */
@@ -4379,10 +4379,10 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		cur_row = table_data->top_row;
 		is_first_page=0;
 	}
-	
-	
+
+
 	/**
-	 * Loop through each row.  Drawing each cell with the proper sizes, 
+	 * Loop through each row.  Drawing each cell with the proper sizes,
 	 * at the proper positions.
 	 */
 	for(table_data->top_row=cur_row; cur_row; cur_row = g_list_next(cur_row))
@@ -4391,13 +4391,13 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		current_desc = column_desc;
 		struct widget * cur_row_widget = (struct widget*)cur_row->data;
 		int max_height=0;
-		x =w->p.x+this->spacing;        
+		x =w->p.x+this->spacing;
 		if(cur_row_widget == table_data->button_box )
 		{
 			continue;
 		}
 		dim = (struct table_column_desc*)current_desc->data;
-		
+
 		if( y + dim->height + (table_data->button_box ? table_data->button_box->h : 0) + this->spacing >= w->p.y + w->h )
 		{
 			/*
@@ -4405,26 +4405,26 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 			 */
 			is_skipped=1;
 			break;
-			
-		}      
-		for(cur_column = cur_row_widget->children; cur_column; 
+
+		}
+		for(cur_column = cur_row_widget->children; cur_column;
 		    cur_column=g_list_next(cur_column))
 		{
 			struct  widget * cur_widget = (struct widget*) cur_column->data;
 			dim = (struct table_column_desc*)current_desc->data;
-			
+
 			cur_widget->p.x=x;
 			cur_widget->w=dim->width;
 			cur_widget->p.y=y;
 			cur_widget->h=dim->height;
 			x=x+cur_widget->w;
 			max_height = dim->height;
-			/* We pack the widget before rendering to ensure that the x and y 
+			/* We pack the widget before rendering to ensure that the x and y
 			 * coordinates get pushed down.
 			 */
 			gui_internal_widget_pack(this,cur_widget);
 			gui_internal_widget_render(this,cur_widget);
-      
+
 			if(dim->height > max_height)
 			{
 				max_height = dim->height;
@@ -4436,28 +4436,28 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	}
 	if(table_data->button_box && (is_skipped || !is_first_page)  )
 	{
-		table_data->button_box->p.y =w->p.y+w->h-table_data->button_box->h - 
+		table_data->button_box->p.y =w->p.y+w->h-table_data->button_box->h -
 			this->spacing;
 		if(table_data->button_box->p.y < y )
 		{
 			table_data->button_box->p.y=y;
-		}	
+		}
 		table_data->button_box->p.x = w->p.x;
 		table_data->button_box->w = w->w;
 		//    table_data->button_box->h = w->h - y;
-		//    table_data->next_button->h=table_data->button_box->h;    
+		//    table_data->next_button->h=table_data->button_box->h;
 		//    table_data->prev_button->h=table_data->button_box->h;
-		//    table_data->next_button->c.y=table_data->button_box->c.y;    
-		//    table_data->prev_button->c.y=table_data->button_box->c.y;    
+		//    table_data->next_button->c.y=table_data->button_box->c.y;
+		//    table_data->prev_button->c.y=table_data->button_box->c.y;
 
 		gui_internal_widget_pack(this,table_data->button_box);
 		if(table_data->next_button->p.y > w->p.y + w->h + table_data->next_button->h)
 		{
-		
-			table_data->button_box->p.y = w->p.y + w->h - 
+
+			table_data->button_box->p.y = w->p.y + w->h -
 				table_data->button_box->h;
 		}
-		if(is_skipped) 
+		if(is_skipped)
 	        {
 			table_data->next_button->state|= STATE_SENSITIVE;
 		}
@@ -4465,7 +4465,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		{
 			table_data->next_button->state&= ~STATE_SENSITIVE;
 		}
-		
+
 		if(table_data->top_row != w->children)
 		{
 			table_data->prev_button->state|= STATE_SENSITIVE;
@@ -4475,10 +4475,10 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 			table_data->prev_button->state&= ~STATE_SENSITIVE;
 		}
 		gui_internal_widget_render(this,table_data->button_box);
-		
+
 
 	}
-	
+
 	/**
 	 * Deallocate column descriptions.
 	 */
@@ -4515,7 +4515,7 @@ gui_internal_cmd_route_description(struct gui_priv * this, struct widget * wm,vo
 						       attr_position_coord_geo,this);
 	  navit_add_callback(this->nav,this->vehicle_cb);
 	}
-	
+
 	this->route_data.route_table = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
 	row = gui_internal_widget_table_row_new(this,gravity_left | orientation_horizontal | flags_fill);
 
@@ -4523,12 +4523,12 @@ gui_internal_cmd_route_description(struct gui_priv * this, struct widget * wm,vo
 
 
 	menu=gui_internal_menu(this,"Route Description");
-	
+
 	menu->free=gui_internal_route_screen_free;
 	this->route_data.route_showing=1;
 	this->route_data.route_table->spx = this->spacing;
 
-	
+
 	struct widget * box = gui_internal_box_new(this, gravity_left_top| orientation_vertical | flags_fill | flags_expand);
 
 	//	gui_internal_widget_append(box,gui_internal_box_new_with_label(this,"Test"));
@@ -4643,7 +4643,7 @@ static void gui_internal_cmd_route_height_profile(struct gui_priv * this, struct
 	sel.order=18;
 	sel.range.min=type_height_line_1;
 	sel.range.max=type_height_line_3;
-	
+
 
 	menu=gui_internal_menu(this,_("Height Profile"));
 	box = gui_internal_box_new(this, gravity_left_top| orientation_vertical | flags_fill | flags_expand);
@@ -4660,7 +4660,7 @@ static void gui_internal_cmd_route_height_profile(struct gui_priv * this, struct
 					first=0;
 					sel.u.c_rect.lu=c;
 					sel.u.c_rect.rl=c;
-				} else 
+				} else
 					coord_rect_extend(&sel.u.c_rect, &c);
 			}
 		}
@@ -4683,7 +4683,7 @@ static void gui_internal_cmd_route_height_profile(struct gui_priv * this, struct
 					map_rect_destroy(mr);
 				}
 			}
-			mapset_close(msh);	
+			mapset_close(msh);
 		}
 	}
 	map=NULL;
@@ -4696,7 +4696,7 @@ static void gui_internal_cmd_route_height_profile(struct gui_priv * this, struct
 		while((item = map_rect_get_item(mr))) {
 			first=1;
 			while (item_coord_get(item, &c, 1)) {
-				if (first) 
+				if (first)
 					first=0;
 				else {
 					heightline=heightlines;
@@ -4724,12 +4724,12 @@ static void gui_internal_cmd_route_height_profile(struct gui_priv * this, struct
 				}
 				last=c;
 			}
-			
+
 		}
 		map_rect_destroy(mr);
 	}
-	
-	
+
+
 	gui_internal_menu_render(this);
 	first=1;
 	diagram_point=diagram_points;
@@ -4755,7 +4755,7 @@ static void gui_internal_cmd_route_height_profile(struct gui_priv * this, struct
 		min=NULL;
 		diagram_point=diagram_points;
 		while (diagram_point) {
-			if (diagram_point->c.x >= x && (!min || min->c.x > diagram_point->c.x)) 
+			if (diagram_point->c.x >= x && (!min || min->c.x > diagram_point->c.x))
 				min=diagram_point;
 			diagram_point=diagram_point->next;
 		}
@@ -4772,7 +4772,7 @@ static void gui_internal_cmd_route_height_profile(struct gui_priv * this, struct
 		p[0]=p[1];
 		x=min->c.x+1;
 	}
-	
+
 
 }
 
@@ -4818,17 +4818,17 @@ static void gui_internal_table_button_next(struct gui_priv * this, struct widget
 	struct table_data * table_data = NULL;
 	int found=0;
 	GList * iterator;
-	
+
 	if(table_widget)
 	{
 		table_data = (struct table_data*) table_widget->data;
-		
+
 	}
 	if(table_data)
 	{
 		/**
 		 * Before advancing to the next page we need to ensure
-		 * that the current top_row is in the list of previous top_rows 
+		 * that the current top_row is in the list of previous top_rows
 		 * so previous page can work.
 		 *
 		 */
@@ -4840,14 +4840,14 @@ static void gui_internal_table_button_next(struct gui_priv * this, struct widget
 				found=1;
 				break;
 			}
-			
+
 		}
 		if( ! found)
 		{
 			table_data->page_headers=g_list_append(table_data->page_headers,
 							       table_data->top_row);
 		}
-		
+
 		table_data->top_row = g_list_next(table_data->bottom_row);
 	}
 	wm->state&= ~STATE_HIGHLIGHTED;
@@ -4874,7 +4874,7 @@ static void gui_internal_table_button_prev(struct gui_priv * this, struct widget
 	if(table_widget)
 	{
 		table_data = (struct table_data*) table_widget->data;
-		if(table_data) 
+		if(table_data)
 		{
 			current_page_top = table_data->top_row;
 			for(iterator = table_data->page_headers; iterator != NULL;
@@ -4920,20 +4920,20 @@ void gui_internal_route_update(struct gui_priv * this, struct navit * navit, str
 {
 
 	if(this->route_data.route_showing) {
-		gui_internal_populate_route_table(this,navit);	  
+		gui_internal_populate_route_table(this,navit);
 		graphics_draw_mode(this->gra, draw_mode_begin);
 		gui_internal_menu_render(this);
 		graphics_draw_mode(this->gra, draw_mode_end);
 	}
 
-	
+
 }
 
 
 /**
  * @brief Called when the route screen is closed (deallocated).
  *
- * The main purpose of this function is to remove the widgets from 
+ * The main purpose of this function is to remove the widgets from
  * references route_data because those widgets are about to be freed.
  */
 void gui_internal_route_screen_free(struct gui_priv * this_,struct widget * w)
@@ -4943,7 +4943,7 @@ void gui_internal_route_screen_free(struct gui_priv * this_,struct widget * w)
 		this_->route_data.route_table=NULL;
 		g_free(w);
 	}
-  
+
 }
 
 /**
@@ -4975,14 +4975,14 @@ void gui_internal_populate_route_table(struct gui_priv * this,
 			if(item_attr_get(item,attr_navigation_long,&attr)) {
 			  label = gui_internal_label_new(this,attr.u.str);
 			  row = gui_internal_widget_table_row_new(this,
-								  gravity_left 
-								  | flags_fill 
+								  gravity_left
+								  | flags_fill
 								  | orientation_horizontal);
 			  row->children=g_list_append(row->children,label);
 			  gui_internal_widget_append(this->route_data.route_table,row);
 			}
-			
+
 		}
-		
-	}       	             
+
+	}
 }
