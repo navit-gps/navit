@@ -2535,6 +2535,10 @@ gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text
 
 static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *data);
 
+// Some macros that make the keyboard layout easier to visualise in
+// the source code. The macros are #undef'd after this function.
+#define KEY(x) gui_internal_keyboard_key(this, wkbd, (x), (x), max_w, max_h)
+#define SPACER() gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h)
 static struct widget *
 gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 {
@@ -2564,15 +2568,15 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 	if (mode >= 0 && mode < 8) {
 		for (i = 0 ; i < 26 ; i++) {
 			char text[]={'A'+i,'\0'};
-			gui_internal_keyboard_key(this, wkbd, text, text,max_w,max_h);
+			KEY(text);
 		}
 		gui_internal_keyboard_key(this, wkbd, "_"," ",max_w,max_h);
 		if (mode == 0) {
-			gui_internal_keyboard_key(this, wkbd, "-","-",max_w,max_h);
-			gui_internal_keyboard_key(this, wkbd, "'","'",max_w,max_h);
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
+			KEY("-");
+			KEY("'");
+			SPACER();
 		} else {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
+			SPACER();
 			wk=gui_internal_keyboard_key_data(this, wkbd, "a", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode+8;
 			wk=gui_internal_keyboard_key_data(this, wkbd, "1", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
@@ -2585,15 +2589,15 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 	if (mode >= 8 && mode < 16) {
 		for (i = 0 ; i < 26 ; i++) {
 			char text[]={'a'+i,'\0'};
-			gui_internal_keyboard_key(this, wkbd, text, text,max_w,max_h);
+			KEY(text);
 		}
 		gui_internal_keyboard_key(this, wkbd, "_"," ",max_w,max_h);
 		if (mode == 8) {
-			gui_internal_keyboard_key(this, wkbd, "-","-",max_w,max_h);
-			gui_internal_keyboard_key(this, wkbd, "'","'",max_w,max_h);
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
+			KEY("-");
+			KEY("'");
+			SPACER();
 		} else {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
+			SPACER();
 			wk=gui_internal_keyboard_key_data(this, wkbd, "A", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode-8;
 			wk=gui_internal_keyboard_key_data(this, wkbd, "1", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
@@ -2606,29 +2610,19 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 	if (mode >= 16 && mode < 24) {
 		for (i = 0 ; i < 10 ; i++) {
 			char text[]={'0'+i,'\0'};
-			gui_internal_keyboard_key(this, wkbd, text, text,max_w,max_h);
+			KEY(text);
 		}
-		gui_internal_keyboard_key(this, wkbd, ".",".",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "°","°",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "'","'",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "\"","\"",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "-","-",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "+","+",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "*","*",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "/","/",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "(","(",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, ")",")",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "=","=",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "?","?",max_w,max_h);
-		for (i = 0 ; i < 5 ; i++) {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
-		}
+		KEY("."); KEY("°"); KEY("'"); KEY("\""); KEY("-"); KEY("+");
+		KEY("*"); KEY("/"); KEY("("); KEY(")"); KEY("="); KEY("?");
+
+		for (i = 0 ; i < 5 ; i++) SPACER();
+
 		if (mode == 16) {
-			gui_internal_keyboard_key(this, wkbd, "-","-",max_w,max_h);
-			gui_internal_keyboard_key(this, wkbd, "'","'",max_w,max_h);
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
+			KEY("-");
+			KEY("'");
+			SPACER();
 		} else {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
+			SPACER();
 			wk=gui_internal_keyboard_key_data(this, wkbd, "A", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode-16;
 			wk=gui_internal_keyboard_key_data(this, wkbd, "a", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
@@ -2639,31 +2633,25 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
 	}
 	if (mode >= 24 && mode < 32) {
-		gui_internal_keyboard_key(this, wkbd, "Ä","Ä",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "Ö","Ö",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "Ü","Ü",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "Æ","Æ",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "Ø","Ø",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "Å","Å",max_w,max_h);
-		for (i = 0 ; i < 24 ; i++) {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
-		}
+		KEY("Ä"); KEY("Ë"); KEY("Ï"); KEY("Ö"); KEY("Ü"); KEY("Æ"); KEY("Ø"); KEY("Å");
+		KEY("Á"); KEY("É"); KEY("Í"); KEY("Ó"); KEY("Ú"); KEY("Š"); KEY("Č"); KEY("Ž");
+		KEY("À"); KEY("È"); KEY("Ì"); KEY("Ò"); KEY("Ù"); KEY("Ś"); KEY("Ć"); KEY("Ź");
+		KEY("Â"); KEY("Ê"); KEY("Î"); KEY("Ô"); KEY("Û"); SPACER();
+
 		wk=gui_internal_keyboard_key_data(this, wkbd, "A",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
 		wk->datai=mode-24;
+
 		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
 	}
 	if (mode >= 32 && mode < 40) {
-		gui_internal_keyboard_key(this, wkbd, "ä","ä",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "ö","ö",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "ü","ü",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "æ","æ",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "ø","ø",max_w,max_h);
-		gui_internal_keyboard_key(this, wkbd, "å","å",max_w,max_h);
-		for (i = 0 ; i < 24 ; i++) {
-			gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h);
-		}
+		KEY("ä"); KEY("ë"); KEY("ï"); KEY("ö"); KEY("ü"); KEY("æ"); KEY("ø"); KEY("å");
+		KEY("á"); KEY("é"); KEY("í"); KEY("ó"); KEY("ú"); KEY("š"); KEY("č"); KEY("ž");
+		KEY("à"); KEY("è"); KEY("ì"); KEY("ò"); KEY("ù"); KEY("ś"); KEY("ć"); KEY("ź");
+		KEY("â"); KEY("ê"); KEY("î"); KEY("ô"); KEY("û"); SPACER();
+
 		wk=gui_internal_keyboard_key_data(this, wkbd, "a",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
 		wk->datai=mode-24;
+
 		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
 	}
 	gui_internal_widget_append(wkbdb, wkbd);
@@ -2673,6 +2661,8 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 	}
 	return wkbdb;
 }
+#undef KEY
+#undef SPACER
 
 static struct widget *
 gui_internal_keyboard(struct gui_priv *this, int mode)
