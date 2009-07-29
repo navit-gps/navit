@@ -63,7 +63,7 @@ static void button_map(GtkWidget *widget, struct search_param *search)
 		return;
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, COL_COUNT, &c, -1);
 	if (c) {
-		navit_set_center(search->nav, c);
+		navit_set_center(search->nav, c, 1);
 	}
 }
 
