@@ -90,22 +90,22 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 	case KEY_UP:
 		p.x=w/2;
 		p.y=0;
-		navit_set_center_screen(this->nav, &p);
+		navit_set_center_screen(this->nav, &p, 1);
 		break;
 	case KEY_DOWN:
 		p.x=w/2;
 		p.y=h;
-		navit_set_center_screen(this->nav, &p);
+		navit_set_center_screen(this->nav, &p, 1);
 		break;
 	case KEY_LEFT:
 		p.x=0;
 		p.y=h/2;
-		navit_set_center_screen(this->nav, &p);
+		navit_set_center_screen(this->nav, &p, 1);
 		break;
 	case KEY_RIGHT:
 		p.x=w;
 		p.y=h/2;
-		navit_set_center_screen(this->nav, &p);
+		navit_set_center_screen(this->nav, &p, 1);
 		break;
 	case KEY_ZOOM_IN:
 		navit_zoom_in(this->nav, 2, NULL);
@@ -164,7 +164,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 		p->x+=50*sin(transform_get_yaw(t)*M_PI/180);
 		pc.x=p->x;
 		pc.y=p->y;
-		navit_set_center(this->nav, &pc);
+		navit_set_center(this->nav, &pc, 1);
 		}
 		break;
 	case 'g':
@@ -178,7 +178,7 @@ keypress(GtkWidget *widget, GdkEventKey *event, struct gui_priv *this)
 		p->x-=50*sin(transform_get_yaw(t)*M_PI/180);
 		pc.x=p->x;
 		pc.y=p->y;
-		navit_set_center(this->nav, &pc);
+		navit_set_center(this->nav, &pc, 1);
 		}
 		break;
 	#ifdef USE_HILDON

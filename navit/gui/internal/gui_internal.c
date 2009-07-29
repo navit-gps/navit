@@ -1970,7 +1970,7 @@ gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *dat
 		graphics_clear_selection(this->gra, NULL);
 		graphics_add_selection(this->gra, &w->item, NULL);
 	}
-	navit_set_center(this->nav, &w->c);
+	navit_set_center(this->nav, &w->c, 1);
 	gui_internal_prune_menu(this, NULL);
 }
 
@@ -3724,22 +3724,22 @@ static void gui_internal_keypress(void *data, char *key)
 		case NAVIT_KEY_UP:
 			p.x=w/2;
 			p.y=0;
-			navit_set_center_screen(this->nav, &p);
+			navit_set_center_screen(this->nav, &p, 1);
 			break;
 		case NAVIT_KEY_DOWN:
 			p.x=w/2;
 			p.y=h;
-			navit_set_center_screen(this->nav, &p);
+			navit_set_center_screen(this->nav, &p, 1);
 			break;
 		case NAVIT_KEY_LEFT:
 			p.x=0;
 			p.y=h/2;
-			navit_set_center_screen(this->nav, &p);
+			navit_set_center_screen(this->nav, &p, 1);
 			break;
 		case NAVIT_KEY_RIGHT:
 			p.x=w;
 			p.y=h/2;
-			navit_set_center_screen(this->nav, &p);
+			navit_set_center_screen(this->nav, &p, 1);
 			break;
 		case NAVIT_KEY_ZOOM_IN:
 			navit_zoom_in(this->nav, 2, NULL);

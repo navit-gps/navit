@@ -377,7 +377,7 @@ request_navit_set_center(DBusConnection *connection, DBusMessage *message)
 	if (!pcoord_get_from_message(message, &iter, &pc))
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
     
-	navit_set_center(navit, &pc);
+	navit_set_center(navit, &pc, 0);
 	return empty_reply(connection, message);
 }
 
@@ -402,7 +402,7 @@ request_navit_set_center_screen(DBusConnection *connection, DBusMessage *message
 
 	if (!point_get_from_message(message, &iter, &p))
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	navit_set_center_screen(navit, &p);
+	navit_set_center_screen(navit, &p, 0);
 	return empty_reply(connection, message);
 }
 

@@ -371,19 +371,19 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			if (wParam == VK_LEFT || wParam == '4') {
 				p.x=0;
 				p.y=h/2;
-				navit_set_center_screen(gui->nav, &p);
+				navit_set_center_screen(gui->nav, &p, 1);
 			} else if (wParam == VK_RIGHT || wParam == '6') {
 				p.x=w;
 				p.y=h/2;
-				navit_set_center_screen(gui->nav, &p);
+				navit_set_center_screen(gui->nav, &p, 1);
 			} else if (wParam == VK_UP || wParam == '2') {
 				p.x=w/2;
 				p.y=0;
-				navit_set_center_screen(gui->nav, &p);
+				navit_set_center_screen(gui->nav, &p, 1);
 			} else if (wParam == VK_DOWN || wParam == '8') {
 				p.x=w/2;
 				p.y=h;
-				navit_set_center_screen(gui->nav, &p);
+				navit_set_center_screen(gui->nav, &p, 1);
 			} else if (wParam == '1') {
 				navit_zoom_in(gui->nav, 2, NULL);
 			} else if (wParam == '3') {
