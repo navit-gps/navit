@@ -47,7 +47,7 @@ navit_set_center_py(navitObject *self, PyObject *args)
 	PyObject *pcoord;
 	if (!PyArg_ParseTuple(args, "O!", &pcoord_Type, &pcoord))
 		return NULL;
-	navit_set_center(self->navit, pcoord_py_get(pcoord));
+	navit_set_center(self->navit, pcoord_py_get(pcoord), 0);
 	Py_RETURN_NONE;
 }
 
