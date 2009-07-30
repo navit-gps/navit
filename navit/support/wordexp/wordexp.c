@@ -1,3 +1,6 @@
+
+#include <config.h>
+
 #include <sys/types.h>
 #include <assert.h>
 #include <fcntl.h>
@@ -6,6 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "wordexp.h"
+#include "glob.h"
 
 
 static int
@@ -19,6 +23,13 @@ is_valid_variable_char(char c, int pos)
 	return 0;
 }
 
+/*
+ * @brief replace all names of $NAME ${NAME}
+ * with the corresponding environment variable 
+ * @ param in: the string to be checked
+ * @ return the expanded string or a copy of the existing string
+ * must be free() by the calling function 
+*/
 static char *
 expand_variables(const char *in)
 {
@@ -60,47 +71,64 @@ expand_variables(const char *in)
 	return ret;
 }
 
-int wordexp(const char * words, wordexp_t * we, int flags)
-{
-	int error=0;
-	char *words_expanded;
+/*
+ * @brief minimal realization of wordexp according to IEEE standard
+ * shall perform word expansion as described in the Shell
+ * expansion of ´$NAME´ or ´${NAME}´
+ * expansion of ´*´ and ´?´
+ * @param words: pointer to a string containing one or more words to be expanded
+ * but here only one word supported
+ */
+int 
+wordexp(const char *words, wordexp_t *we, int flags)
+{	
+	int     i;
+	int     error;	
+	char   *words_expanded;
+	glob_t  pglob;
 
 	assert(we != NULL);
 	assert(words != NULL);
-
+ 
+	/* expansion of ´$NAME´ or ´${NAME}´ */
 	words_expanded=expand_variables(words);
 
-	we->we_wordc = 1;
-	we->we_wordv = NULL;
-	we->we_strings = NULL;
-	we->we_nbytes = 0;
+	/* expansion of ´*´, ´?´ */
+	error=glob(words_expanded, 0, NULL, &pglob);
+	if (!error)
+	{
+		/* copy the content of struct of glob into struct of wordexp */
+		we->we_wordc = pglob.gl_pathc;
+		we->we_offs = pglob.gl_offs;
+		we->we_wordv = malloc(we->we_wordc * sizeof(char*));
+		for (i=0; i<we->we_wordc; i++)
+		{
+			we->we_wordv[i] = strdup(pglob.gl_pathv[i]);
+		}		
+		globfree(&pglob);
+		free(words_expanded);
+	}
+	else
+	{
+		we->we_wordc = 1;		
+		we->we_wordv = malloc(sizeof(char*));	
+		we->we_wordv[0] = words_expanded;
+	}
 
-	we->we_wordv = malloc( we->we_wordc * sizeof( char* ) );
 
-	we->we_nbytes = strlen( words_expanded ) + 1;
-	we->we_strings = malloc( we->we_nbytes );
-
-	we->we_wordv[0] = &we->we_strings[0];
-
-	// copy string & terminate
-	memcpy( we->we_strings, words_expanded, we->we_nbytes -1 );
-	we->we_strings[ we->we_nbytes -1 ] = '\0';
-	free(words_expanded);
-
-	return error;
+	return error;	
 }
+
 
 void wordfree(wordexp_t *we)
 {
-	assert(we != NULL);
+	int i;
 
-	if ( we->we_wordv )
-        	free(we->we_wordv);
-	if ( we->we_strings )
-        	free(we->we_strings);
-
-	we->we_wordv = NULL;
-	we->we_strings = NULL;
-	we->we_nbytes = 0;
+	for (i=0; i < we->we_wordc; i++)
+	{
+		free (we->we_wordv[i]);
+	}
+	
+	free (we->we_wordv);
 	we->we_wordc = 0;
 }
