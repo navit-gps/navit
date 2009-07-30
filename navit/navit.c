@@ -138,6 +138,7 @@ struct navit {
 	struct vehicleprofile *vehicleprofile;
 	GList *vehicleprofiles;
 	int pitch;
+	int follow_cursor;
 };
 
 struct gui *main_loop_gui;
@@ -645,6 +646,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->autozoom_secs = 10;
 	this_->autozoom_min = 7;
 	this_->autozoom_active = 0;
+	this_->follow_cursor = 1;
 
 	this_->trans = transform_new();
 	transform_from_geo(pro, &g, &co);
@@ -1676,6 +1678,10 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 	case attr_message:
 		navit_add_message(this_, attr->u.str);
 		break;
+	case attr_follow_cursor:
+		attr_updated=(this_->follow_cursor != !!attr->u.num);
+		this_->follow_cursor=!!attr->u.num;
+		break;
 	default:
 		return 0;
 	}
@@ -2055,7 +2061,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		gui_disable_suspend(this_->gui);
 
 	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
-	if (this_->button_pressed != 1 && nv->follow_curr <= nv->follow && 
+	if (this_->button_pressed != 1 && this_->follow_cursor && nv->follow_curr <= nv->follow && 
 		(nv->follow_curr == 1 || !transform_within_border(this_->trans, &cursor_pnt, border)))
 		navit_set_center_cursor(this_);
 	else
