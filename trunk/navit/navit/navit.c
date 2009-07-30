@@ -326,6 +326,7 @@ navit_set_timeout(struct navit *this_)
 	struct attr follow;
 	follow.type=attr_follow;
 	follow.u.num=this_->center_timeout;
+	navit_set_attr(this_, &follow);
 }
 
 int
