@@ -1842,6 +1842,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 	case attr_autozoom_active:
 		attr->u.num=this_->autozoom_active;
 		break;
+	case attr_follow_cursor:
+		attr->u.num=this_->follow_cursor;
+		break;
 	default:
 		return 0;
 	}
