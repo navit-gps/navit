@@ -3332,7 +3332,7 @@ gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm, void *data)
 			&on, &off));
 	on.u.num=1;
 	off.u.num=0;
-	on.type=off.type=attr_cursor;
+	on.type=off.type=attr_follow_cursor;
 	gui_internal_widget_append(w,
 		gui_internal_button_navit_attr_new(this, _("Map follows Vehicle"), gravity_left_center|orientation_horizontal|flags_fill,
 			&on, &off));
