@@ -5,9 +5,9 @@
 #ifdef __MINGW32__
 
 typedef struct {
-  size_t gl_pathc;
-  char **gl_pathv;
-  size_t gl_offs;
+  size_t   gl_pathc;  /* count of file names */
+  char   **gl_pathv;  /* list of file names */
+  size_t   gl_offs;   /* slots to reserve in gl_pathv */
 } glob_t;
 
 int  glob(const char *pattern, int flags, int (*errfunc)(const char *epath, int eerrno), glob_t *pglob);
