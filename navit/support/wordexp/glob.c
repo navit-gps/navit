@@ -62,15 +62,14 @@ int glob(const char *pattern, int flags,
 		return 1;
 	}
 	/* store the path information */
-	if (NULL == (pathend = strrchr (pattern, '\\')))	/* windows */
-		if (NULL == (pathend = strrchr (pattern, '/')))	/* UNIX in windows is sometimes allowed also*/
+	if (NULL == (pathend = max (strrchr (pattern, '\\'), strrchr (pattern, '/'))))
 			pathend = (char *) pattern;
 	pathlen = pathend - pattern + 1;
 
 	/* glob */
 	pglob->gl_pathc = 0;    /* number of founded files */
 	pglob->gl_offs = 0;     /* not needed */
-	pglob->gl_pathv = malloc(sizeof(char*));
+	pglob->gl_pathv = malloc(sizeof(char*));	/* list of file names */
 
 	do
 	{
