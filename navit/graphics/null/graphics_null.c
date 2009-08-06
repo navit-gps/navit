@@ -18,11 +18,14 @@
  */
 
 #include <glib.h>
+#include <unistd.h>
 #include "config.h"
 #include "point.h"
 #include "graphics.h"
 #include "color.h"
 #include "plugin.h"
+#include "event.h"
+#include "debug.h"
 
 static int dummy;
 static struct graphics_priv {
@@ -221,11 +224,96 @@ static struct graphics_priv *
 graphics_null_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	*meth=graphics_methods;
+	if (!event_request_system("null","graphics_null"))
+		return NULL;
 	return &graphics_priv;
 }
+
+static void
+event_null_main_loop_run(void)
+{
+
+        dbg(0,"enter\n");
+	for (;;)
+		sleep(1);
+
+}
+
+static void event_null_main_loop_quit(void)
+{
+        dbg(0,"enter\n");
+}
+
+static struct event_watch *
+event_null_add_watch(void *h, enum event_watch_cond cond, struct callback *cb)
+{
+        dbg(0,"enter\n");
+        return NULL;
+}
+
+static void
+event_null_remove_watch(struct event_watch *ev)
+{
+        dbg(0,"enter\n");
+}
+
+
+static struct event_timeout *
+event_null_add_timeout(int timeout, int multi, struct callback *cb)
+{
+        dbg(0,"enter\n");
+	return NULL;
+}
+
+static void
+event_null_remove_timeout(struct event_timeout *to)
+{
+        dbg(0,"enter\n");
+}
+
+
+static struct event_idle *
+event_null_add_idle(int priority, struct callback *cb)
+{
+        dbg(0,"enter\n");
+        return NULL;
+}
+
+static void
+event_null_remove_idle(struct event_idle *ev)
+{
+        dbg(0,"enter\n");
+}
+
+static void
+event_null_call_callback(struct callback_list *cb)
+{
+        dbg(0,"enter\n");
+}
+
+static struct event_methods event_null_methods = {
+        event_null_main_loop_run,
+        event_null_main_loop_quit,
+        event_null_add_watch,
+        event_null_remove_watch,
+        event_null_add_timeout,
+        event_null_remove_timeout,
+        event_null_add_idle,
+        event_null_remove_idle,
+        event_null_call_callback,
+};
+
+static struct event_priv *
+event_null_new(struct event_methods *meth)
+{
+        *meth=event_null_methods;
+        return NULL;
+}
+
 
 void
 plugin_init(void)
 {
         plugin_register_graphics_type("null", graphics_null_new);
+	plugin_register_event_type("null", event_null_new);
 }
