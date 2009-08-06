@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-26 07:37+0200\n"
-"PO-Revision-Date: 2009-07-02 15:07+0000\n"
-"Last-Translator: Nadav <Unknown>\n"
+"POT-Creation-Date: 2009-07-02 20:42+0200\n"
+"PO-Revision-Date: 2009-07-31 06:15+0000\n"
+"Last-Translator: lielf <Unknown>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-07-02 18:08+0000\n"
+"X-Launchpad-Export-Date: 2009-08-05 05:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -190,7 +190,7 @@ msgstr "בצורה חדה "
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1392
 msgid "really strongly "
-msgstr ""
+msgstr "באופן חזק מאד "
 
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1396
@@ -214,7 +214,7 @@ msgstr "ב%s, הכנס לכיכר"
 #: ../navit/navigation.c:1432
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr ""
+msgstr "צא מהכיכר ב%s"
 
 #: ../navit/navigation.c:1435
 #, c-format
@@ -1568,7 +1568,7 @@ msgstr "זימבבואה"
 
 #: ../navit/country.c:285
 msgid "* Unknown, add is_in tags to those cities"
-msgstr ""
+msgstr "*לא ידוע,הוסף תגי is_in לערים אלו"
 
 #: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:128
 #: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
@@ -1949,7 +1949,7 @@ msgstr "הודעה"
 #: ../navit/gui/internal/gui_internal.c:4511
 #: ../navit/gui/internal/gui_internal.c:4659
 msgid "Height Profile"
-msgstr ""
+msgstr "פרופיל גובה"
 
 #: ../navit/gui/internal/gui_internal.c:4656
 msgid "Description"
