@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-26 07:37+0200\n"
-"PO-Revision-Date: 2009-06-21 22:39+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"POT-Creation-Date: 2009-07-02 20:42+0200\n"
+"PO-Revision-Date: 2009-07-25 20:55+0000\n"
+"Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2009-07-02 18:08+0000\n"
+"X-Launchpad-Export-Date: 2009-08-05 05:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -1833,7 +1833,7 @@ msgstr "Улицы"
 
 #: ../navit/gui/internal/gui_internal.c:2090
 msgid "House numbers"
-msgstr ""
+msgstr "Номера домов"
 
 #: ../navit/gui/internal/gui_internal.c:2107
 msgid "View in Browser"
@@ -1855,7 +1855,7 @@ msgstr "Закладка %s"
 #: ../navit/gui/internal/gui_internal.c:2809
 #: ../navit/gui/internal/gui_internal.c:2818
 msgid "House number"
-msgstr ""
+msgstr "Номер дома"
 
 #: ../navit/gui/internal/gui_internal.c:2936
 msgid "Window Mode"
@@ -1947,13 +1947,13 @@ msgstr "Инструменты"
 
 #: ../navit/gui/internal/gui_internal.c:3392
 msgid "Message"
-msgstr ""
+msgstr "Сообщение"
 
 #: ../navit/gui/internal/gui_internal.c:4511
 #: ../navit/gui/internal/gui_internal.c:4659
 msgid "Height Profile"
-msgstr ""
+msgstr "Профиль высот"
 
 #: ../navit/gui/internal/gui_internal.c:4656
 msgid "Description"
-msgstr ""
+msgstr "Описание"
