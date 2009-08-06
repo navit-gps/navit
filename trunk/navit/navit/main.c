@@ -118,7 +118,7 @@ main_get_navit(struct iter *iter)
 			iter->list=g_list_next(iter->list);
 	}
 	return ret;
-	
+
 }
 void
 main_add_navit(struct navit *nav)
@@ -132,7 +132,7 @@ main_remove_navit(struct navit *nav)
 {
 	navit=g_list_remove(navit, nav);
 	callback_list_call_2(cbl, nav, 0);
-	if (! navit) 
+	if (! navit)
 		event_main_loop_quit();
 }
 
@@ -168,20 +168,26 @@ void
 setenv(char *var, char *val, int overwrite)
 {
 	char *str=g_strdup_printf("%s=%s",var,val);
-	if (overwrite || !getenv(var)) 
+	if (overwrite || !getenv(var))
 		putenv(str);
 	g_free(str);
 }
 #endif
 
+/*
+ * environment_vars[][0:name,1-3:mode]
+ * ':'  replaced with NAVIT_PREFIX
+ * '::' replaced with NAVIT_PREFIX and LIBDIR
+ * '~'  replaced with HOME
+*/
 static char *environment_vars[][4]={
-	{"NAVIT_LIBDIR",	":",		"::/navit",		":/lib"},
-	{"NAVIT_SHAREDIR",	":",		":/share/navit",	":"},
-	{"NAVIT_LOCALEDIR",	":/../locale",	":/share/locale",	":/locale"},
-	{"NAVIT_USER_DATADIR",	":",		"~/.navit",		":/data"},
-	{"NAVIT_LOGFILE",	NULL,		NULL,			":/navit.log"},
-	{"NAVIT_LIBPREFIX",	"*/.libs/",	NULL,			NULL},
-	{NULL,			NULL,		NULL,			NULL},
+	{"NAVIT_LIBDIR",      ":",          "::/navit",      ":\\lib"},
+	{"NAVIT_SHAREDIR",    ":",          ":/share/navit", ":"},
+	{"NAVIT_LOCALEDIR",   ":/../locale",":/share/locale",":\\locale"},
+	{"NAVIT_USER_DATADIR",":",          "~/.navit",      ":\\data"},
+	{"NAVIT_LOGFILE",     NULL,         NULL,            ":\\navit.log"},
+	{"NAVIT_LIBPREFIX",   "*/.libs/",   NULL,            NULL},
+	{NULL,                NULL,         NULL,            NULL},
 };
 
 static void
@@ -226,34 +232,17 @@ main_init(char *program)
 	setenv("LC_NUMERIC","C",1);
 	setlocale(LC_ALL,"");
 	setlocale(LC_NUMERIC,"C");
+#if !defined _WIN32 && !defined _WIN32_WCE
 	if (file_exists("navit.c") || file_exists("navit.o") || file_exists("navit.lo")) {
 		char buffer[PATH_MAX];
 		printf(_("Running from source directory\n"));
-		getcwd(buffer, PATH_MAX);
+		getcwd(buffer, PATH_MAX);		/* libc of navit returns "dummy" */
 		setenv("NAVIT_PREFIX", buffer, 0);
 		main_setup_environment(0);
 	} else {
 		if (!getenv("NAVIT_PREFIX")) {
-			int progpath_len;
-#ifdef HAVE_API_WIN32_BASE
-			wchar_t filename[MAX_PATH + 1];
-			char program[MAX_PATH + 1];
-			char *cp;
-			int sz;
-#ifdef HAVE_API_WIN32
-			char *progpath="\\bin\\navit.exe";
-			sz = GetModuleFileNameW(NULL, filename, MAX_PATH);
-#else
-			char *progpath="\\navit.exe";
-			sz = GetModuleFileName(NULL, filename, MAX_PATH);
-#endif
-			if (sz > 0) 
-				wcstombs(program, filename, sz + 1);
-			else 
-				strcpy(program, PREFIX);
-#else
+		int progpath_len;
 			char *progpath="/bin/navit";
-#endif
 			l=strlen(program);
 			progpath_len=strlen(progpath);
 			if (l > progpath_len && !strcmp(program+l-progpath_len,progpath)) {
@@ -265,18 +254,38 @@ main_init(char *program)
 				g_free(s);
 			} else
 				setenv("NAVIT_PREFIX", PREFIX, 0);
-		} 
-#ifdef HAVE_API_WIN32_BASE
-		setenv("HOME", getenv("NAVIT_PREFIX"), 0);
-#endif
-
-#ifdef HAVE_API_WIN32_CE
-		main_setup_environment(2);
-#else
+		}
 		main_setup_environment(1);
-#endif
 	}
-	if (getenv("LC_ALL")) 
+
+#else		/* _WIN32 || _WIN32_WCE */
+	if (!getenv("NAVIT_PREFIX"))
+	{
+		char  filename[MAX_PATH + 1],
+		     *end;
+
+		*filename = '\0';
+#ifdef _UNICODE		/* currently for wince */
+		wchar_t wfilename[MAX_PATH + 1];
+		if (GetModuleFileNameW(NULL, wfilename, MAX_PATH))
+		{
+			wcstombs(filename, wfilename, MAX_PATH);
+#else
+		if (GetModuleFileName(NULL, filename, MAX_PATH))
+		{
+#endif
+			end = strrchr(filename, L'\\');	/* eliminate the file name which is on the right side */
+			if(end)
+				*end = '\0';
+		}
+		setenv("NAVIT_PREFIX", filename, 0);
+	}
+	if (!getenv("HOME"))
+		setenv("HOME", getenv("NAVIT_PREFIX"), 0);
+	main_setup_environment(2);
+#endif	/* _WIN32 || _WIN32_WCE */
+
+	if (getenv("LC_ALL"))
 		dbg(0,"Warning: LC_ALL is set, this might lead to problems (e.g. strange positions from GPS)\n");
 	s = getenv("NAVIT_WID");
 	if (s) {
