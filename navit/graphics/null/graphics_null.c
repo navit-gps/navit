@@ -27,7 +27,8 @@
 #include "event.h"
 #include "debug.h"
 #if defined(WINDOWS) || defined(WIN32)
-# define sleep(i) Sleep(i)
+#include <windows.h>
+# define sleep(i) Sleep(i * 1000)
 #endif
 
 static int dummy;
