@@ -26,6 +26,9 @@
 #include "plugin.h"
 #include "event.h"
 #include "debug.h"
+#if defined(WINDOWS) || defined(WIN32)
+# define sleep(i) Sleep(i)
+#endif
 
 static int dummy;
 static struct graphics_priv {
