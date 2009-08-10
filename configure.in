@@ -752,6 +752,7 @@ navit/font/Makefile
 navit/font/freetype/Makefile
 navit/fonts/Makefile
 navit/graphics/Makefile
+navit/graphics/android/Makefile
 navit/graphics/gd/Makefile
 navit/graphics/gtk_drawing_area/Makefile
 navit/graphics/opengl/Makefile
