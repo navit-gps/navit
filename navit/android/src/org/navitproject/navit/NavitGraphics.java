@@ -19,45 +19,71 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.*;
 import android.os.Bundle;
-import android.view.View;
+import android.os.Debug;
+import android.view.*;
 import android.util.Log;
 
 public class NavitGraphics extends View {
 	public NavitGraphics(Activity activity) {
 		super(activity);
-		Log.e("NavitGraphics", "constructor");
 	}
 	public native void SizeChangedCallback(int id, int x, int y);
+	public native void ButtonCallback(int id, int pressed, int button, int x, int y);
+	public native void MotionCallback(int id, int x, int y);
 	private Canvas draw_canvas;
 	private Bitmap draw_bitmap;
-	private int SizeChangedCallbackID;
+	private int SizeChangedCallbackID,ButtonCallbackID,MotionCallbackID;
+	// private int count;
 
 	@Override protected void onDraw(Canvas canvas)
 	{
 		super.onDraw(canvas);
-		Log.e("NavitGraphics", "onDraw");
 		canvas.drawBitmap(draw_bitmap, 0, 0, null);
 	}
-	protected void onSizeChanged(int w, int h, int oldw, int oldh)
+	@Override protected void onSizeChanged(int w, int h, int oldw, int oldh)
 	{
-		Log.e("NavitGraphics", "onSizeChanged "+SizeChangedCallbackID+" "+w+" "+h);
+		super.onSizeChanged(w, h, oldw, oldh);
 		draw_bitmap=Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 		draw_canvas=new Canvas(draw_bitmap);
-		int c[]={10,20,30,40};
-		draw_polyline(c);
 		SizeChangedCallback(SizeChangedCallbackID, w, h);
 	}
+        @Override public boolean onTouchEvent(MotionEvent event)
+	{
+		int action = event.getAction();
+		int x=(int)event.getX();
+		int y=(int)event.getY();
+		if (action == MotionEvent.ACTION_DOWN) {
+			Log.e("NavitGraphics", "onTouch down");
+			ButtonCallback(ButtonCallbackID, 1, 1, x, y);
+		}
+		if (action == MotionEvent.ACTION_UP) {
+			Log.e("NavitGraphics", "onTouch up");
+			ButtonCallback(ButtonCallbackID, 0, 1, x, y);
+			// if (++count == 3)
+		        //	Debug.stopMethodTracing();
+		}
+		if (action == MotionEvent.ACTION_MOVE) {
+			Log.e("NavitGraphics", "onTouch move");
+			MotionCallback(MotionCallbackID, x, y);
+		}
+		return true;
+	} 
 	public void setSizeChangedCallback(int id)
 	{
 		SizeChangedCallbackID=id;
 	}
-
-	protected void draw_polyline(int c[])
+	public void setButtonCallback(int id)
 	{
-		Paint paint = new Paint();
+		ButtonCallbackID=id;
+	}
+	public void setMotionCallback(int id)
+	{
+		MotionCallbackID=id;
+	}
+
+	protected void draw_polyline(Paint paint,int c[])
+	{
 		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(2);
-		paint.setColor(Color.BLUE);
 		Path path = new Path();
 		path.moveTo(c[0], c[1]);
 		for (int i = 2 ; i < c.length ; i+=2) {
@@ -66,17 +92,46 @@ public class NavitGraphics extends View {
 		draw_canvas.drawPath(path, paint);
 	}
 
-	protected void draw_polygon(int c[])
+	protected void draw_polygon(Paint paint,int c[])
 	{
-		Paint paint = new Paint();
-		paint.setStyle(Paint.Style.STROKE);
-		paint.setStrokeWidth(2);
-		paint.setColor(Color.BLUE);
+		paint.setStyle(Paint.Style.FILL);
 		Path path = new Path();
 		path.moveTo(c[0], c[1]);
 		for (int i = 2 ; i < c.length ; i+=2) {
 			path.lineTo(c[i], c[i+1]);
 		}
 		draw_canvas.drawPath(path, paint);
+	}
+	protected void draw_rectangle(Paint paint,int x, int y, int w, int h)
+	{
+		Rect r = new Rect(x, y, x+w, y+h);
+		paint.setStyle(Paint.Style.FILL);
+		draw_canvas.drawRect(r, paint);		
+	}
+	protected void draw_circle(Paint paint,int x, int y, int r)
+	{
+		float fx=x;
+		float fy=y;
+		float fr=r/2;
+		paint.setStyle(Paint.Style.STROKE);
+		draw_canvas.drawCircle(fx, fy, fr, paint);
+	}
+	protected void draw_text(Paint paint,int x, int y, String text)
+	{
+		float fx=x;
+		float fy=y;
+		draw_canvas.drawText(text, fx, fy, paint);
+	}
+	protected void draw_image(Paint paint, int x, int y, Bitmap bitmap)
+	{
+		float fx=x;
+		float fy=y;
+		draw_canvas.drawBitmap(bitmap, fx, fy, paint);
+	}
+	protected void draw_mode(int mode)
+	{
+		if (mode == 1)
+			invalidate();
+			
 	}
 }

@@ -18,6 +18,7 @@ package org.navitproject.navit;
 import android.app.Activity;
 import android.widget.TextView;
 import android.os.Bundle;
+import android.os.Debug;
 import android.content.Context;
 import android.util.Log;
 
@@ -29,9 +30,8 @@ public class Navit extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-	Log.e("Navit", "onCreate");
+	// Debug.startMethodTracing("calc");
         NavitMain(this);
-	Log.e("Navit", "onCreate end");
     }
 
     /* A native method that is implemented by the
