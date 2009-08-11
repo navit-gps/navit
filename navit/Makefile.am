@@ -15,13 +15,19 @@ if BUILD_SAMPLEMAP
   BUILT_SOURCES += osm2navit$(EXEEXT)
 endif
 
-bin_PROGRAMS = navit osm2navit
+if SUPPORT_ANDROID
+  lib_LTLIBRARIES        = libnavit.la
+  libnavit_la_LDFLAGS = -module -avoid-version @MODULE_LDFLAGS@
+
+else
+  bin_PROGRAMS = navit osm2navit
+  noinst_LTLIBRARIES        = libnavit.la
+endif
 
 pkgdata_DATA = navit.xml
 
 EXTRA_DIST = navit.xml 
 
-noinst_LTLIBRARIES        = libnavit.la
 libnavit_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c compass.c coord.c country.c cursor.c data_window.c debug.c \
 	event.c event_glib.h file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
 	linguistics.c mapset.c maptype.c menu.c messages.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c \
@@ -34,12 +40,31 @@ libnavit_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c 
 	transform.h track.h util.h vehicle.h vehicleprofile.h window.h xmlconfig.h zipfile.h \
 	navit_nls.h
 
+if SUPPORT_ANDROID
+  libnavit_la_SOURCES += android.c
+  navit_SOURCES =
+  navit_LDADD =
+  osm2navit_SOURCES =
+  osm2navit_LDADD =
+
+android/build.xml: android/AndroidManifest.xml
+	android update project -t 3 -p android
+
+apk: all-am android/build.xml
+	mkdir -p android/libs/armeabi
+	cp .libs/*.so */*/.libs/*.so android/libs/armeabi
+	for i in $(shell cd xpm && echo *.xpm); do convert xpm/$$i android/res/drawable/$${i%.xpm}.png; done 
+	cp xpm/*.png android/res/drawable
+	cd android && ant debug
+
+else
 navit_SOURCES = start.c
 navit_LDADD = libnavit.la @NAVIT_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib
 
 osm2navit_CPPFLAGS = $(AM_CPPFLAGS) @ZLIB_CFLAGS@ @POSTGRESQL_CFLAGS@
 osm2navit_SOURCES = osm2navit.c
 osm2navit_LDADD = libnavit.la @NAVIT_LIBS@ @ZLIB_LIBS@ @POSTGRESQL_LIBS@ @INTLLIBS@
+endif
 
 if EVENT_GLIB
   libnavit_la_SOURCES += event_glib.c
