@@ -6,4 +6,4 @@ else
   noinst_LTLIBRARIES = libmap_shapefile.la
 endif
 libmap_shapefile_la_SOURCES = shapefile.c dbfopen.c shpopen.c shptree.c shapefil.h
-libmap_shapefile_la_LDFLAGS = -module -avoid-version
+libmap_shapefile_la_LDFLAGS = -module -avoid-version @MODULE_LDFLAGS@
