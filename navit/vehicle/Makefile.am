@@ -1,4 +1,7 @@
 SUBDIRS=
+if VEHICLE_ANDROID
+  SUBDIRS += android
+endif
 if VEHICLE_DEMO
   SUBDIRS += demo
 endif

@@ -55,6 +55,54 @@ vehicle_file=yes; vehicle_file_reason=default
 vehicle_gpsd=yes; vehicle_gpsd_reason=default
 vehicle_gypsy=yes; vehicle_gypsy_reason=default
 vehicle_wince=no; vehicle_wince_reason=default
+vehicle_android=no; vehicle_android_reason=default
+graphics_android=no; graphics_android_reason=default
+
+AC_CANONICAL_HOST
+win32=no
+win32ce=no
+case $host_os in
+wince)
+	win32=yes
+	win32ce=yes
+	AC_DEFINE(HAVE_API_WIN32_BASE, 1, [Have Windows Base API])
+	AC_DEFINE(HAVE_API_WIN32_CE, 1, [Have Windows CE API])
+	gui_win32=yes; gui_win32_reason="host_os is wince"
+	graphics_win32=yes; graphics_win32_reason="host_os is wince"
+	vehicle_wince=yes; vehcile_wince_reason="host_os is wince"
+	;;
+mingw32)
+	win32=yes
+	AC_DEFINE(HAVE_API_WIN32_BASE, 1, [Have Windows Base API])
+	AC_DEFINE(HAVE_API_WIN32, 1, [Have Windows API])
+	gui_win32=yes; gui_win32_reason="host_os is mingw32"
+	graphics_win32=yes; graphics_win32_reason="host_os is mingw32"
+	;;
+linux*_android)
+	android=yes
+	AC_DEFINE(HAVE_API_ANDROID, 1, [Have Android API])
+	echo "void dl_unwind_find_exidx(void) {}" >crt0.c
+	$CC -c crt0.c
+	$AR r libg.a crt0.a
+	vehicle_android=yes; vehicle_android_reason="host_os is android"
+	graphics_android=yes; graphics_android_reason="host_os is android"
+	MODULE_LDFLAGS="-Xcompiler -nostdlib"
+	;;
+esac
+if test "x$win32" = "xyes"
+then
+	NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/navit/support/win32"
+	NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/win32 -lsupport_win32"
+fi
+AM_CONDITIONAL(SUPPORT_WIN32, [test "x$win32" = "xyes"])
+AM_CONDITIONAL(SUPPORT_WIN32CE, [test "x$win32ce" = "xyes"])
+AM_CONDITIONAL(SUPPORT_ANDROID, [test "x$android" =" xyes"])
+AC_SUBST(MODULE_LDFLAGS)
+
+LIBS="$LIBS -lm"
+if test "$win32" == "no"; then
+	LIBS="$LIBS -rdynamic"
+fi
 
 m4_ifndef([AC_USE_SYSTEM_EXTENSIONS],
 	[AC_DEFUN([AC_USE_SYSTEM_EXTENSIONS], [AC_GNU_SOURCE])])
@@ -582,39 +630,6 @@ AC_SUBST(VERSION)
 AC_CHECK_HEADER(wordexp.h,wordexp_h=yes,wordexp_h=no;NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/navit/support/wordexp";NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/wordexp -lsupport_wordexp")
 AM_CONDITIONAL(SUPPORT_WORDEXP, [test "x$wordexp_h" = "xno"])
 
-AC_CANONICAL_HOST
-win32=no
-win32ce=no
-case $host_os in
-wince)
-	win32=yes
-	win32ce=yes
-	AC_DEFINE(HAVE_API_WIN32_BASE, 1, [Have Windows Base API])
-	AC_DEFINE(HAVE_API_WIN32_CE, 1, [Have Windows CE API])
-	gui_win32=yes; gui_win32_reason="host_os is wince"
-	graphics_win32=yes; graphics_win32_reason="host_os is wince"
-	vehicle_wince=yes; vehcile_wince_reason="host_os is wince"
-	;;
-mingw32)
-	win32=yes
-	AC_DEFINE(HAVE_API_WIN32_BASE, 1, [Have Windows Base API])
-	AC_DEFINE(HAVE_API_WIN32, 1, [Have Windows API])
-	gui_win32=yes; gui_win32_reason="host_os is mingw32"
-	graphics_win32=yes; graphics_win32_reason="host_os is mingw32"
-esac
-if test "x$win32" = "xyes"
-then
-	NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/navit/support/win32"
-	NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/win32 -lsupport_win32"
-fi
-AM_CONDITIONAL(SUPPORT_WIN32, [test "x$win32" = "xyes"])
-AM_CONDITIONAL(SUPPORT_WIN32CE, [test "x$win32ce" = "xyes"])
-
-LIBS="$LIBS -lm"
-if test "$win32" == "no"; then
-	LIBS="$LIBS -rdynamic"
-fi
-
 support_libc=no
 AC_ARG_ENABLE(support_libc, [  --enable-support-libc enable builtin mini libc ], support_libc=$enableval)
 AM_CONDITIONAL(SUPPORT_LIBC, [test "x$support_libc" = "xyes"])
@@ -623,6 +638,9 @@ if test "x$support_libc" = "xyes"; then
 fi
 
 ## graphics
+# android
+AC_ARG_ENABLE(graphics-android, [  --disable-graphics-android            disable graphics type android], graphics_android=$enableval;graphics_android_reason="configure parameter")
+AM_CONDITIONAL(GRAPHICS_ANDROID, test "x${graphics_android}" = "xyes")
 # gd
 AC_ARG_ENABLE(graphics-gd, [  --enable-graphics-gd                enable graphics type gd], graphics_gd=$enableval;graphics_gd_reason="configure parameter")
 if test "x${graphics_gd}" = "xyes" ; then
@@ -698,6 +716,9 @@ AC_SUBST(SPEECHD_LIBS)
 AM_CONDITIONAL(SPEECH_SPEECH_DISPATCHER, test "x${speech_speech_dispatcher}" = "xyes")
 
 ## vehicle
+# android
+AC_ARG_ENABLE(vehicle-android, [  --disable-vehicle-android             disable vehicle type android], vehicle_android=$enableval;vehicle_android_reason="configure parameter")
+AM_CONDITIONAL(VEHICLE_ANDROID, test "x${vehicle_android}" = "xyes")
 # demo
 AC_ARG_ENABLE(vehicle-demo, [  --disable-vehicle-demo              disable vehicle type demo], vehicle_demo=$enableval;vehicle_demo_reason="configure parameter")
 AM_CONDITIONAL(VEHICLE_DEMO, test "x${vehicle_demo}" = "xyes")
@@ -777,6 +798,7 @@ navit/support/win32/Makefile
 navit/support/wordexp/Makefile
 navit/support/zlib/Makefile
 navit/vehicle/Makefile
+navit/vehicle/android/Makefile
 navit/vehicle/file/Makefile
 navit/vehicle/gpsd/Makefile
 navit/vehicle/gypsy/Makefile
@@ -848,6 +870,7 @@ echo "NLS Support:         $enable_nls ($nls_libs)"
 echo "Font renderers:"
 echo "  freetype:          $font_freetype ($font_freetype_reason)"
 echo "Graphics types:"
+echo "  android:  $graphics_android ($graphics_android_reason)"
 echo "  gtk_drawing_area:  $graphics_gtk_drawing_area ($graphics_gtk_drawing_area_reason)"
 echo "  qt_qpainter:       $graphics_qt_qpainter ($graphics_qt_qpainter_reason)"
 echo "  win32:             $graphics_win32 ($graphics_win32_reason)"
@@ -869,6 +892,7 @@ echo "  cmdline:           $speech_cmdline ($speech_cmdline_reason)"
 echo "  speech_dispatcher: $speech_speech_dispatcher ($speech_speech_dispatcher_reason)"
 
 echo "Vehicle types:"
+echo "  android:           $vehicle_android ($vehicle_android_reason)"
 echo "  demo:              $vehicle_demo ($vehicle_demo_reason)"
 echo "  file:              $vehicle_file ($vehicle_file_reason)"
 echo "  gpsd:              $vehicle_gpsd ($vehicle_gpsd_reason)"
