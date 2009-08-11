@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.navitproject.navitgraphics;
+package org.navitproject.navit;
 
 import android.app.Activity;
 import android.content.Context;
