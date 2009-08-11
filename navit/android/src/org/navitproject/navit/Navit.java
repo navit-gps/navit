@@ -19,6 +19,8 @@ import android.app.Activity;
 import android.widget.TextView;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.Message;
+import android.os.Handler;
 import android.content.Context;
 import android.util.Log;
 
@@ -38,7 +40,7 @@ public class Navit extends Activity
      * 'hello-jni' native library, which is packaged
      * with this application.
      */
-    public native void NavitMain(Activity x);
+    public native void NavitMain(Navit x);
 
     /* this is used to load the 'hello-jni' library on application
      * startup. The library has already been unpacked into
