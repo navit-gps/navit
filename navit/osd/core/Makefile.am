@@ -6,5 +6,5 @@ else
   noinst_LTLIBRARIES = libosd_core.la
 endif
 libosd_core_la_SOURCES = osd_core.c
-libosd_core_la_LDFLAGS = -module -avoid-version
+libosd_core_la_LDFLAGS = -module -avoid-version @MODULE_LDFLAGS@
 

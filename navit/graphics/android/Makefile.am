@@ -6,11 +6,4 @@ else
 noinst_LTLIBRARIES = libgraphics_android.la
 endif
 libgraphics_android_la_SOURCES = graphics_android.c
-libgraphics_android_la_LDFLAGS = -module -avoid-version  -Xcompiler -nostdlib
-
-android: libgraphics_android.la
-	mkdir -p ../../android/libs/armeabi/navit/graphics
-	cp .libs/libgraphics_android.so ../../android/libs/armeabi
-
-push: libgraphics_android.la
-	adb push .libs/libgraphics_android.so /data/data/org.navitproject.navit/lib
+libgraphics_android_la_LDFLAGS = -module -avoid-version @MODULE_LDFLAGS@
