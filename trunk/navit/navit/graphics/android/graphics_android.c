@@ -41,10 +41,17 @@ struct graphics_priv {
 	jobject NavitGraphics;
 	
 	jclass BitmapFactoryClass;	
-	jmethodID BitmapFactory_decodeFile;
+	jmethodID BitmapFactory_decodeFile, BitmapFactory_decodeResource;
 
 	jclass BitmapClass;
 	jmethodID Bitmap_getHeight, Bitmap_getWidth;
+
+	jclass ContextClass;
+	jmethodID Context_getResources;
+
+	jclass ResourcesClass;
+	jobject Resources;
+	jmethodID Resources_getIdentifier;
 
 	struct callback_list *cbl;
 };
@@ -172,7 +179,8 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 
 static void image_destroy(struct graphics_image_priv *img)
 {
-	dbg(0,"enter\n");
+	(*jnienv)->DeleteGlobalRef(jnienv, img->Bitmap);
+	g_free(img);
 }
 
 static struct graphics_image_methods image_methods = {
@@ -184,11 +192,31 @@ static struct graphics_image_priv *
 image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)
 {
 	struct graphics_image_priv *ret=g_new0(struct graphics_image_priv, 1);
-	dbg(0,"enter\n");
+	jstring string;
+	int id;
+
+	dbg(0,"enter %s\n",path);
 	*meth=image_methods;
-	jstring string = (*jnienv)->NewStringUTF(jnienv, path);
-	dbg(0,"%p %p %p\n",gra->BitmapFactoryClass, gra->BitmapFactory_decodeFile, string);
-	ret->Bitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeFile, string);
+	if (!strncmp(path,"res/drawable/",13)) {
+		jstring a=(*jnienv)->NewStringUTF(jnienv, "drawable");
+		jstring b=(*jnienv)->NewStringUTF(jnienv, "org.navitproject.navit");
+		char *path_noext=g_strdup(path+13);
+		char *pos=strrchr(path_noext, '.');
+		if (pos) 
+			*pos='\0';
+		dbg(0,"path_noext=%s\n",path_noext);
+		string = (*jnienv)->NewStringUTF(jnienv, path_noext);
+		g_free(path_noext);
+		id=(*jnienv)->CallIntMethod(jnienv, gra->Resources, gra->Resources_getIdentifier, string, a, b);
+		dbg(0,"id=%d\n",id);
+		if (id)
+			ret->Bitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeResource, gra->Resources, id);
+		(*jnienv)->DeleteLocalRef(jnienv, b);
+		(*jnienv)->DeleteLocalRef(jnienv, a);
+	} else {
+		string = (*jnienv)->NewStringUTF(jnienv, path);
+		ret->Bitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeFile, string);
+	}
 	dbg(0,"result=%p\n",ret->Bitmap);
 	if (ret->Bitmap) {
 		(*jnienv)->NewGlobalRef(jnienv, ret->Bitmap);
@@ -215,6 +243,8 @@ draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point 
 	jintArray points = (*jnienv)->NewIntArray(jnienv,count*2);
 	jint pc[count*2];
 	int i;
+	if (count <= 0)
+		return;
 	for (i = 0 ; i < count ; i++) {
 		pc[i*2]=p[i].x;
 		pc[i*2+1]=p[i].y;
@@ -230,6 +260,8 @@ draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct poin
 	jintArray points = (*jnienv)->NewIntArray(jnienv,count*2);
 	jint pc[count*2];
 	int i;
+	if (count <= 0)
+		return;
 	for (i = 0 ; i < count ; i++) {
 		pc[i*2]=p[i].x;
 		pc[i*2+1]=p[i].y;
@@ -439,6 +471,8 @@ graphics_android_init(struct graphics_priv *ret)
 		return 0;
 	if (!find_static_method(ret->BitmapFactoryClass, "decodeFile", "(Ljava/lang/String;)Landroid/graphics/Bitmap;", &ret->BitmapFactory_decodeFile))
 		return 0;
+	if (!find_static_method(ret->BitmapFactoryClass, "decodeResource", "(Landroid/content/res/Resources;I)Landroid/graphics/Bitmap;", &ret->BitmapFactory_decodeResource))
+		return 0;
 
 	if (!find_class_global("android/graphics/Bitmap", &ret->BitmapClass))
 		return 0;
@@ -447,7 +481,21 @@ graphics_android_init(struct graphics_priv *ret)
 	if (!find_method(ret->BitmapClass, "getWidth", "()I", &ret->Bitmap_getWidth))
 		return 0;
 
-	if (!find_class_global("org/navitproject/navitgraphics/NavitGraphics", &ret->NavitGraphicsClass))
+	if (!find_class_global("android/content/Context", &ret->ContextClass))
+		return 0;
+	if (!find_method(ret->ContextClass, "getResources", "()Landroid/content/res/Resources;", &ret->Context_getResources))
+		return 0;
+	
+
+	ret->Resources=(*jnienv)->CallObjectMethod(jnienv, android_activity, ret->Context_getResources);
+	if (ret->Resources)
+		(*jnienv)->NewGlobalRef(jnienv, ret->Resources);
+	if (!find_class_global("android/content/res/Resources", &ret->ResourcesClass))
+		return 0;
+	if (!find_method(ret->ResourcesClass, "getIdentifier", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I", &ret->Resources_getIdentifier))
+		return 0;
+
+	if (!find_class_global("org/navitproject/navit/NavitGraphics", &ret->NavitGraphicsClass))
 		return 0;
 	dbg(0,"at 3\n");
 	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "<init>", "(Landroid/app/Activity;)V");
@@ -519,6 +567,7 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 	}
 }
 
+
 static void
 event_android_main_loop_run(void)
 {
@@ -543,18 +592,30 @@ event_android_remove_watch(struct event_watch *ev)
         dbg(0,"enter\n");
 }
 
+static jclass NavitTimeoutClass;
+static jmethodID NavitTimeout_init;
+static jmethodID NavitTimeout_remove;
 
 static struct event_timeout *
 event_android_add_timeout(int timeout, int multi, struct callback *cb)
 {
-        dbg(0,"enter\n");
-	return NULL;
+	jobject ret;
+	ret=(*jnienv)->NewObject(jnienv, NavitTimeoutClass, NavitTimeout_init, timeout, multi, (int)cb);
+	dbg(0,"result for %d,%d,%p=%p\n",timeout,multi,cb,ret);
+	if (ret)
+		(*jnienv)->NewGlobalRef(jnienv, ret);
+	return (struct event_timeout *)ret;
 }
 
 static void
 event_android_remove_timeout(struct event_timeout *to)
 {
-        dbg(0,"enter\n");
+	dbg(0,"enter %p\n",to);
+	if (to) {
+		jobject obj=(jobject )to;
+		(*jnienv)->CallVoidMethod(jnienv, obj, NavitTimeout_remove);
+		(*jnienv)->DeleteGlobalRef(jnienv, obj);
+	}
 }
 
 
@@ -592,6 +653,16 @@ static struct event_methods event_android_methods = {
 static struct event_priv *
 event_android_new(struct event_methods *meth)
 {
+	dbg(0,"enter\n");
+	if (!find_class_global("org/navitproject/navit/NavitTimeout", &NavitTimeoutClass))
+		return NULL;
+	NavitTimeout_init = (*jnienv)->GetMethodID(jnienv, NavitTimeoutClass, "<init>", "(IZI)V");
+	if (NavitTimeout_init == NULL) 
+		return NULL;
+	NavitTimeout_remove = (*jnienv)->GetMethodID(jnienv, NavitTimeoutClass, "remove", "()V");
+	if (NavitTimeout_remove == NULL) 
+		return NULL;
+	dbg(0,"ok\n");
         *meth=event_android_methods;
         return NULL;
 }
