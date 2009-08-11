@@ -28,5 +28,22 @@ JNIEXPORT void JNICALL
 Java_org_navitproject_navitgraphics_NavitGraphics_SizeChangedCallback( JNIEnv* env, jobject thiz, int id, int w, int h)
 {
 	dbg(0,"enter %p %d %d\n",(struct callback *)id,w,h);
-	callback_call_2((struct callback *)id,w,h);
+	if (id)
+		callback_call_2((struct callback *)id,w,h);
+}
+
+JNIEXPORT void JNICALL
+Java_org_navitproject_navitgraphics_NavitGraphics_ButtonCallback( JNIEnv* env, jobject thiz, int id, int pressed, int button, int x, int y)
+{
+	dbg(0,"enter %p %d %d\n",(struct callback *)id,pressed,button);
+	if (id)
+		callback_call_4((struct callback *)id,pressed,button,x,y);
+}
+
+JNIEXPORT void JNICALL
+Java_org_navitproject_navitgraphics_NavitGraphics_MotionCallback( JNIEnv* env, jobject thiz, int id, int x, int y)
+{
+	dbg(0,"enter %p %d %d\n",(struct callback *)id,x,y);
+	if (id)
+		callback_call_2((struct callback *)id,x,y);
 }
