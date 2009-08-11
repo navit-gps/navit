@@ -374,9 +374,14 @@ g_ascii_strtod (const gchar *nptr,
 
   fail_pos = NULL;
 
+#ifdef HAVE_API_ANDROID
+  decimal_point = ".";
+  decimal_point_len = 1;
+#else
   locale_data = localeconv ();
   decimal_point = locale_data->decimal_point;
   decimal_point_len = strlen (decimal_point);
+#endif
 
 #if NOT_NEEDED_FOR_NAVIT
   g_assert (decimal_point_len != 0);
@@ -591,9 +596,14 @@ g_ascii_formatd (gchar       *buffer,
       
   _g_snprintf (buffer, buf_len, format, d);
 
+#ifdef HAVE_API_ANDROID
+  decimal_point = ".";
+  decimal_point_len = 1;
+#else
   locale_data = localeconv ();
   decimal_point = locale_data->decimal_point;
   decimal_point_len = strlen (decimal_point);
+#endif
 
 #if NOT_NEEDED_FOR_NAVIT
   g_assert (decimal_point_len != 0);

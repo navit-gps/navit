@@ -96,7 +96,7 @@ then
 fi
 AM_CONDITIONAL(SUPPORT_WIN32, [test "x$win32" = "xyes"])
 AM_CONDITIONAL(SUPPORT_WIN32CE, [test "x$win32ce" = "xyes"])
-AM_CONDITIONAL(SUPPORT_ANDROID, [test "x$android" =" xyes"])
+AM_CONDITIONAL(SUPPORT_ANDROID, [test "x$android" = "xyes"])
 AC_SUBST(MODULE_LDFLAGS)
 
 LIBS="$LIBS -lm"

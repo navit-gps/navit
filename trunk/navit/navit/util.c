@@ -21,6 +21,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <time.h>
 #include "util.h"
 
 void

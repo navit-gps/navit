@@ -897,6 +897,7 @@ navit_get_center_file(gboolean create)
 static void
 navit_set_center_from_file(struct navit *this_, char *file)
 {
+#ifndef HAVE_API_ANDROID
 	FILE *f;
 	char *line = NULL;
 
@@ -916,6 +917,7 @@ navit_set_center_from_file(struct navit *this_, char *file)
 		free(line);
 	}
 	return;
+#endif
 }
  
 static void
