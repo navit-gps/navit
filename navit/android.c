@@ -49,6 +49,7 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 	__android_log_print(ANDROID_LOG_ERROR,"test","called");
 	jnienv=env;
 	android_activity=activity;
+	(*jnienv)->NewGlobalRef(jnienv, activity);
 	dbg(0,"enter env=%p thiz=%p activity=%p\n",env,thiz,activity);
 	main(1, strings);
 }
@@ -91,3 +92,11 @@ Java_org_navitproject_navit_NavitVehicle_VehicleCallback( JNIEnv * env, jobject 
 {
 	callback_call_1((struct callback *)id, (void *)location);
 } 
+
+JNIEXPORT void JNICALL
+Java_org_navitproject_navit_NavitIdle_IdleCallback( JNIEnv* env, jobject thiz, int id)
+{
+	dbg(1,"enter %p %p\n",thiz, (void *)id);
+	callback_call_0((struct callback *)id);
+}
+

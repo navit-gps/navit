@@ -20,6 +20,7 @@
 #include <glib.h>
 #include <unistd.h>
 #include "config.h"
+#include "window.h"
 #include "point.h"
 #include "graphics.h"
 #include "color.h"
@@ -54,6 +55,7 @@ struct graphics_priv {
 	jmethodID Resources_getIdentifier;
 
 	struct callback_list *cbl;
+	struct window win;
 };
 
 struct graphics_font_priv {
@@ -195,7 +197,7 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 	jstring string;
 	int id;
 
-	dbg(0,"enter %s\n",path);
+	dbg(1,"enter %s\n",path);
 	*meth=image_methods;
 	if (!strncmp(path,"res/drawable/",13)) {
 		jstring a=(*jnienv)->NewStringUTF(jnienv, "drawable");
@@ -204,11 +206,11 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 		char *pos=strrchr(path_noext, '.');
 		if (pos) 
 			*pos='\0';
-		dbg(0,"path_noext=%s\n",path_noext);
+		dbg(1,"path_noext=%s\n",path_noext);
 		string = (*jnienv)->NewStringUTF(jnienv, path_noext);
 		g_free(path_noext);
 		id=(*jnienv)->CallIntMethod(jnienv, gra->Resources, gra->Resources_getIdentifier, string, a, b);
-		dbg(0,"id=%d\n",id);
+		dbg(1,"id=%d\n",id);
 		if (id)
 			ret->Bitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeResource, gra->Resources, id);
 		(*jnienv)->DeleteLocalRef(jnienv, b);
@@ -217,12 +219,12 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 		string = (*jnienv)->NewStringUTF(jnienv, path);
 		ret->Bitmap=(*jnienv)->CallStaticObjectMethod(jnienv, gra->BitmapFactoryClass, gra->BitmapFactory_decodeFile, string);
 	}
-	dbg(0,"result=%p\n",ret->Bitmap);
+	dbg(1,"result=%p\n",ret->Bitmap);
 	if (ret->Bitmap) {
 		(*jnienv)->NewGlobalRef(jnienv, ret->Bitmap);
 		*w=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getWidth);
 		*h=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getHeight);
-		dbg(0,"w=%d h=%d for %s\n",*w,*h,path);
+		dbg(1,"w=%d h=%d for %s\n",*w,*h,path);
 		*w=64;
 		*h=64;
 		hot->x=*w/2;
@@ -332,7 +334,9 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 static void *
 get_data(struct graphics_priv *this, char *type)
 {
-	return &dummy;
+	if (strcmp(type,"window"))
+		return NULL;
+	return &this->win;
 }
 
 static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
@@ -498,13 +502,13 @@ graphics_android_init(struct graphics_priv *ret)
 	if (!find_class_global("org/navitproject/navit/NavitGraphics", &ret->NavitGraphicsClass))
 		return 0;
 	dbg(0,"at 3\n");
-	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "<init>", "(Landroid/app/Activity;)V");
+	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "<init>", "(Landroid/app/Activity;Lorg/navitproject/navit/NavitGraphics;)V");
 	if (cid == NULL) {
 		dbg(0,"no method found\n");
 		return 0; /* exception thrown */
 	}
 	dbg(0,"at 4 android_activity=%p\n",android_activity);
-	ret->NavitGraphics=(*jnienv)->NewObject(jnienv, ret->NavitGraphicsClass, cid, android_activity);
+	ret->NavitGraphics=(*jnienv)->NewObject(jnienv, ret->NavitGraphicsClass, cid, android_activity, NULL);
 	dbg(0,"result=%p\n",ret->NavitGraphics);
 	if (ret->NavitGraphics)
 		(*jnienv)->NewGlobalRef(jnienv, ret->NavitGraphics);
@@ -551,6 +555,23 @@ graphics_android_init(struct graphics_priv *ret)
 	return 1;
 }
 
+static int
+graphics_android_fullscreen(struct window *win, int on)
+{
+	return 1;
+}
+
+static jclass NavitClass;
+static jmethodID Navit_disableSuspend;
+
+static void
+graphics_android_disable_suspend(struct window *win)
+{
+	dbg(1,"enter\n");
+	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_disableSuspend);
+}
+
+
 
 static struct graphics_priv *
 graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
@@ -559,6 +580,9 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 
 	ret->cbl=cbl;
 	*meth=graphics_methods;
+	ret->win.priv=ret;
+	ret->win.fullscreen=graphics_android_fullscreen;
+	ret->win.disable_suspend=graphics_android_disable_suspend;
 	if (graphics_android_init(ret)) {
 		return ret;
 	} else {
@@ -592,9 +616,14 @@ event_android_remove_watch(struct event_watch *ev)
         dbg(0,"enter\n");
 }
 
+
 static jclass NavitTimeoutClass;
 static jmethodID NavitTimeout_init;
 static jmethodID NavitTimeout_remove;
+
+static jclass NavitIdleClass;
+static jmethodID NavitIdle_init;
+static jmethodID NavitIdle_remove;
 
 static struct event_timeout *
 event_android_add_timeout(int timeout, int multi, struct callback *cb)
@@ -622,14 +651,24 @@ event_android_remove_timeout(struct event_timeout *to)
 static struct event_idle *
 event_android_add_idle(int priority, struct callback *cb)
 {
-        dbg(0,"enter\n");
-        return NULL;
+	jobject ret;
+        dbg(1,"enter\n");
+	ret=(*jnienv)->NewObject(jnienv, NavitIdleClass, NavitIdle_init, (int)cb);
+	dbg(1,"result for %p=%p\n",cb,ret);
+	if (ret)
+		(*jnienv)->NewGlobalRef(jnienv, ret);
+	return (struct event_idle *)ret;
 }
 
 static void
 event_android_remove_idle(struct event_idle *ev)
 {
-        dbg(0,"enter\n");
+	dbg(1,"enter %p\n",ev);
+	if (ev) {
+		jobject obj=(jobject )ev;
+		(*jnienv)->CallVoidMethod(jnienv, obj, NavitIdle_remove);
+		(*jnienv)->DeleteGlobalRef(jnienv, obj);
+	}
 }
 
 static void
@@ -661,6 +700,19 @@ event_android_new(struct event_methods *meth)
 		return NULL;
 	NavitTimeout_remove = (*jnienv)->GetMethodID(jnienv, NavitTimeoutClass, "remove", "()V");
 	if (NavitTimeout_remove == NULL) 
+		return NULL;
+	if (!find_class_global("org/navitproject/navit/NavitIdle", &NavitIdleClass))
+		return NULL;
+	NavitIdle_init = (*jnienv)->GetMethodID(jnienv, NavitIdleClass, "<init>", "(I)V");
+	if (NavitIdle_init == NULL) 
+		return NULL;
+	NavitIdle_remove = (*jnienv)->GetMethodID(jnienv, NavitIdleClass, "remove", "()V");
+	if (NavitIdle_remove == NULL) 
+		return NULL;
+	if (!find_class_global("org/navitproject/navit/Navit", &NavitClass))
+		return NULL;
+	Navit_disableSuspend = (*jnienv)->GetMethodID(jnienv, NavitClass, "disableSuspend", "()V");
+	if (Navit_disableSuspend == NULL) 
 		return NULL;
 	dbg(0,"ok\n");
         *meth=event_android_methods;
