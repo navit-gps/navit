@@ -81,7 +81,7 @@ vehicle_android_position_attr_get(struct vehicle_priv *priv,
 			       enum attr_type type, struct attr *attr)
 {
 	struct attr * active=NULL;
-	dbg(0,"enter %s\n",attr_to_name(type));
+	dbg(1,"enter %s\n",attr_to_name(type));
 	switch (type) {
 #if 0
 	case attr_position_fix_type:
@@ -116,7 +116,7 @@ vehicle_android_position_attr_get(struct vehicle_priv *priv,
 	default:
 		return 0;
 	}
-	dbg(0,"ok\n");
+	dbg(1,"ok\n");
 	attr->type = type;
 	return 1;
 }
@@ -131,7 +131,7 @@ vehicle_android_callback(struct vehicle_priv *v, jobject location)
 {
 	time_t tnow;
 	struct tm *tm;
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 
 	v->geo.lat = (*jnienv)->CallDoubleMethod(jnienv, location, v->Location_getLatitude);
 	v->geo.lng = (*jnienv)->CallDoubleMethod(jnienv, location, v->Location_getLongitude);
@@ -141,7 +141,7 @@ vehicle_android_callback(struct vehicle_priv *v, jobject location)
 	tnow=(*jnienv)->CallLongMethod(jnienv, location, v->Location_getTime)/1000;
 	tm = gmtime(&tnow);
 	strftime(v->fixiso8601, sizeof(v->fixiso8601), "%Y-%m-%dT%TZ", tm);
-	dbg(0,"time %s\n",v->fixiso8601);
+	dbg(1,"lat %f lon %f time %s\n",v->geo.lat,v->geo.lng,v->fixiso8601);
 	v->have_coords=1;
 	callback_list_call_0(v->cbl);
 }

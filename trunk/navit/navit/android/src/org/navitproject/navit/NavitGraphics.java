@@ -24,8 +24,10 @@ import android.view.*;
 import android.util.Log;
 
 public class NavitGraphics extends View {
-	public NavitGraphics(Activity activity) {
+	private NavitGraphics parent_graphics;
+	public NavitGraphics(Activity activity, NavitGraphics parent) {
 		super(activity);
+		parent_graphics=parent;
 	}
 	public native void SizeChangedCallback(int id, int x, int y);
 	public native void ButtonCallback(int id, int pressed, int button, int x, int y);

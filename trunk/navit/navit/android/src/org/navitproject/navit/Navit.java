@@ -21,19 +21,35 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.os.Message;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.content.Context;
 import android.util.Log;
 
 
 public class Navit extends Activity
 {
+    public Handler handler;
+    private PowerManager.WakeLock wl;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+	PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);  
+	wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE, "NavitDoNotDimScreen"); 
+	handler =new Handler() {
+		public void handleMessage(Message m) {
+			Log.e("Navit","Handler received message");
+		}
+	};
 	// Debug.startMethodTracing("calc");
         NavitMain(this);
+    }
+
+    public void disableSuspend()
+    {
+	wl.acquire();
+	wl.release();
     }
 
     /* A native method that is implemented by the
