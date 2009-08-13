@@ -651,6 +651,7 @@ event_android_remove_timeout(struct event_timeout *to)
 static struct event_idle *
 event_android_add_idle(int priority, struct callback *cb)
 {
+#if 0
 	jobject ret;
         dbg(1,"enter\n");
 	ret=(*jnienv)->NewObject(jnienv, NavitIdleClass, NavitIdle_init, (int)cb);
@@ -658,17 +659,22 @@ event_android_add_idle(int priority, struct callback *cb)
 	if (ret)
 		(*jnienv)->NewGlobalRef(jnienv, ret);
 	return (struct event_idle *)ret;
+#endif
+	return (struct event_idle *)event_android_add_timeout(1, 1, cb);
 }
 
 static void
 event_android_remove_idle(struct event_idle *ev)
 {
+#if 0
 	dbg(1,"enter %p\n",ev);
 	if (ev) {
 		jobject obj=(jobject )ev;
 		(*jnienv)->CallVoidMethod(jnienv, obj, NavitIdle_remove);
 		(*jnienv)->DeleteGlobalRef(jnienv, obj);
 	}
+#endif
+	event_android_remove_timeout((struct event_timeout *)ev);
 }
 
 static void
@@ -701,6 +707,7 @@ event_android_new(struct event_methods *meth)
 	NavitTimeout_remove = (*jnienv)->GetMethodID(jnienv, NavitTimeoutClass, "remove", "()V");
 	if (NavitTimeout_remove == NULL) 
 		return NULL;
+#if 0
 	if (!find_class_global("org/navitproject/navit/NavitIdle", &NavitIdleClass))
 		return NULL;
 	NavitIdle_init = (*jnienv)->GetMethodID(jnienv, NavitIdleClass, "<init>", "(I)V");
@@ -709,6 +716,8 @@ event_android_new(struct event_methods *meth)
 	NavitIdle_remove = (*jnienv)->GetMethodID(jnienv, NavitIdleClass, "remove", "()V");
 	if (NavitIdle_remove == NULL) 
 		return NULL;
+#endif
+
 	if (!find_class_global("org/navitproject/navit/Navit", &NavitClass))
 		return NULL;
 	Navit_disableSuspend = (*jnienv)->GetMethodID(jnienv, NavitClass, "disableSuspend", "()V");
