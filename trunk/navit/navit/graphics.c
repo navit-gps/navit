@@ -1000,8 +1000,13 @@ static int
 int_sqrt(unsigned int n)
 {
 	unsigned int h, p= 0, q= 1, r= n;
-	while ( q <= n )
+	while ( q <= n ) {
 		q <<= 2;
+                if(q == 0) { 
+                        return (int) sqrtf( (float) n ); /* use float sqrt if we reach q MAX */ 
+                } 
+        } 
+
 	while ( q != 1 ) {
 		q >>= 2;
 		h = p + q;
