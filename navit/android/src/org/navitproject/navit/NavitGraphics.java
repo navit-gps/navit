@@ -22,31 +22,49 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.view.*;
 import android.util.Log;
+import java.util.ArrayList;
 
-public class NavitGraphics extends View {
+public class NavitGraphics {
 	private NavitGraphics parent_graphics;
-	public NavitGraphics(Activity activity, NavitGraphics parent) {
-		super(activity);
-		parent_graphics=parent;
-	}
-	public native void SizeChangedCallback(int id, int x, int y);
-	public native void ButtonCallback(int id, int pressed, int button, int x, int y);
-	public native void MotionCallback(int id, int x, int y);
-	private Canvas draw_canvas;
-	private Bitmap draw_bitmap;
-	private int SizeChangedCallbackID,ButtonCallbackID,MotionCallbackID;
-	// private int count;
-
+	private ArrayList overlays=new ArrayList();
+	int bitmap_w;
+	int bitmap_h;
+	int pos_x;
+	int pos_y;
+	int pos_wraparound;
+	int overlay_disabled;
+	View view;
+	public NavitGraphics(Activity activity, NavitGraphics parent, int x, int y, int w, int h, int alpha, int wraparound) {
+		if (parent == null) {
+			view=new View(activity) {
 	@Override protected void onDraw(Canvas canvas)
 	{
 		super.onDraw(canvas);
-		canvas.drawBitmap(draw_bitmap, 0, 0, null);
+		canvas.drawBitmap(draw_bitmap, pos_x, pos_y, null);
+		if (overlay_disabled == 0) {
+			Object overlays_array[];
+			overlays_array=overlays.toArray();
+			for (Object overlay : overlays_array) {
+				NavitGraphics overlay_graphics=(NavitGraphics)overlay;
+				if (overlay_graphics.overlay_disabled == 0) {
+					int x=overlay_graphics.pos_x;
+					int y=overlay_graphics.pos_y;
+					if (overlay_graphics.pos_wraparound != 0 && x < 0)
+						x+=bitmap_w;
+					if (overlay_graphics.pos_wraparound != 0 && y < 0)
+						y+=bitmap_h;
+					canvas.drawBitmap(overlay_graphics.draw_bitmap, x, y, null);
+				}
+			}
+		}
 	}
 	@Override protected void onSizeChanged(int w, int h, int oldw, int oldh)
 	{
 		super.onSizeChanged(w, h, oldw, oldh);
 		draw_bitmap=Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 		draw_canvas=new Canvas(draw_bitmap);
+		bitmap_w=w;
+		bitmap_h=h;
 		SizeChangedCallback(SizeChangedCallbackID, w, h);
 	}
         @Override public boolean onTouchEvent(MotionEvent event)
@@ -70,6 +88,44 @@ public class NavitGraphics extends View {
 		}
 		return true;
 	} 
+	@Override public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		Log.e("NavitGraphics","onKeyDown"+keyCode);
+		return true;
+	}
+	@Override public boolean onKeyUp(int keyCode, KeyEvent event)
+	{
+		Log.e("NavitGraphics","onKeyUp"+keyCode);
+		return true;
+	}
+	@Override public boolean onTrackballEvent(MotionEvent event)
+	{
+		Log.e("NavitGraphics","onTrackball");
+		return true;
+	}
+			};
+			view.setFocusable(true);
+			activity.setContentView(view);
+		} else {
+			draw_bitmap=Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+			bitmap_w=w;
+			bitmap_h=h;
+			pos_x=x;
+			pos_y=y;
+			pos_wraparound=wraparound;
+			draw_canvas=new Canvas(draw_bitmap);
+			parent.overlays.add(this);		
+		}
+		parent_graphics=parent;
+	}
+	public native void SizeChangedCallback(int id, int x, int y);
+	public native void ButtonCallback(int id, int pressed, int button, int x, int y);
+	public native void MotionCallback(int id, int x, int y);
+	private Canvas draw_canvas;
+	private Bitmap draw_bitmap;
+	private int SizeChangedCallbackID,ButtonCallbackID,MotionCallbackID;
+	// private int count;
+
 	public void setSizeChangedCallback(int id)
 	{
 		SizeChangedCallbackID=id;
@@ -132,8 +188,24 @@ public class NavitGraphics extends View {
 	}
 	protected void draw_mode(int mode)
 	{
-		if (mode == 1)
-			invalidate();
+		if (mode == 1 && parent_graphics == null)
+			view.invalidate();
+		if (mode == 0 && parent_graphics != null)
+			draw_bitmap.eraseColor(0);
 			
+	}
+	protected void draw_drag(int x, int y)
+	{
+		pos_x=x;
+		pos_y=y;
+	}
+	protected void overlay_disable(int disable)
+	{
+		overlay_disabled=disable;
+	}
+	protected void overlay_resize(int x, int y, int w, int h, int alpha, int wraparond)
+	{
+		pos_x=x;
+		pos_y=y;
 	}
 }
