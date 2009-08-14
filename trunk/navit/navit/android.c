@@ -43,14 +43,18 @@ android_find_static_method(jclass class, char *name, char *args, jmethodID *ret)
 }
 
 JNIEXPORT void JNICALL
-Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity)
+Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity, jobject lang)
 {
 	char *strings[]={"/data/data/org.navitproject.navit/bin/navit",NULL};
+	char *langstr;
 	__android_log_print(ANDROID_LOG_ERROR,"test","called");
 	jnienv=env;
 	android_activity=activity;
 	(*jnienv)->NewGlobalRef(jnienv, activity);
-	dbg(0,"enter env=%p thiz=%p activity=%p\n",env,thiz,activity);
+	langstr=(*env)->GetStringUTFChars(env, lang, NULL);
+	setenv("LANG",langstr,1);
+	dbg(0,"enter env=%p thiz=%p activity=%p lang=%s\n",env,thiz,activity,langstr);
+	(*env)->ReleaseStringUTFChars(env, lang, langstr);
 	main(1, strings);
 }
 
