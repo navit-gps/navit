@@ -25,9 +25,14 @@
 #include <time.h>
 #include <sys/time.h>
 #include <glib.h>
+#include "config.h"
 #include "file.h"
 #include "item.h"
 #include "debug.h"
+
+#ifdef HAVE_API_ANDROID
+#include <android/log.h>
+#endif
 
 #ifdef DEBUG_WIN32_CE_MESSAGEBOX
 #include <windows.h>
@@ -147,7 +152,24 @@ debug_vprintf(int level, const char *module, const int mlen, const char *functio
 
 	sprintf(buffer, "%s:%s", module, function);
 	if (debug_level_get(module) >= level || debug_level_get(buffer) >= level) {
-#ifndef DEBUG_WIN32_CE_MESSAGEBOX
+#if defined(DEBUG_WIN32_CE_MESSAGEBOX) || defined(HAVE_API_ANDROID)
+		char xbuffer[4096];
+		wchar_t muni[4096];
+		int len=0;
+		if (prefix) {
+			strcpy(xbuffer,buffer);
+			len=strlen(buffer);
+			xbuffer[len++]=':';
+		}
+		vsprintf(xbuffer+len,fmt,ap);
+#endif
+#ifdef DEBUG_WIN32_CE_MESSAGEBOX
+		mbstowcs(muni, xbuffer, strlen(xbuffer)+1);
+		MessageBoxW(NULL, muni, TEXT("Navit - Error"), MB_APPLMODAL|MB_OK|MB_ICONERROR);
+#else
+#ifdef HAVE_API_ANDROID
+		__android_log_print(ANDROID_LOG_ERROR,"navit", "%s", xbuffer);
+#else
 		if (! fp)
 			fp = stderr;
 		if (timestamp_prefix)
@@ -156,18 +178,7 @@ debug_vprintf(int level, const char *module, const int mlen, const char *functio
 			fprintf(fp,"%s:",buffer);
 		vfprintf(fp,fmt, ap);
 		fflush(fp);
-#else
-	wchar_t muni[4096];
-	char xbuffer[4096];
-	int len=0;
-	if (prefix) {
-		strcpy(xbuffer,buffer);
-		len=strlen(buffer);
-		xbuffer[len++]=':';
-	}
-	vsprintf(xbuffer+len,fmt,ap);
-	mbstowcs(muni, xbuffer, strlen(xbuffer)+1);
-	MessageBoxW(NULL, muni, TEXT("Navit - Error"), MB_APPLMODAL|MB_OK|MB_ICONERROR);
+#endif
 #endif
 	}
 }
