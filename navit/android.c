@@ -55,7 +55,7 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 	setenv("LANG",langstr,1);
 	dbg(0,"enter env=%p thiz=%p activity=%p lang=%s\n",env,thiz,activity,langstr);
 	(*env)->ReleaseStringUTFChars(env, lang, langstr);
-	main(1, strings);
+	main_real(1, strings);
 }
 
 JNIEXPORT void JNICALL

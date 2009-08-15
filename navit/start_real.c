@@ -68,7 +68,7 @@ get_home_directory(void)
 	return homedir;
 }
 
-int main(int argc, char **argv)
+int main_real(int argc, char **argv)
 {
 	xmlerror *error = NULL;
 	char *config_file = NULL;
@@ -147,16 +147,19 @@ int main(int argc, char **argv)
 		list = g_list_append(list,g_strdup("navit.xml"));
 		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml.local" , NULL));
 		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml" , NULL));
-		#ifndef _WIN32
+#ifndef _WIN32
 		list = g_list_append(list,g_strdup("/etc/navit/navit.xml"));
-		#endif
+#endif
+#ifdef HAVE_API_ANDROID
+		list = g_list_append(list,g_strdup("/sdcard/navit.xml"));
+#endif
 	}
 	li = list;
 	for (;;) {
 		if (li == NULL) {
 			// We have not found an existing config file from all possibilities
-			printf(_("No config file navit.xml, navit.xml.local found\n"));
-			exit(1);
+			dbg(0,_("No config file navit.xml, navit.xml.local found\n"));
+			return 1;
 		}
         // Try the next config file possibility from the list
 		config_file = li->data;
