@@ -31,7 +31,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 
-public class Navit extends Activity
+public class Navit extends Activity implements Handler.Callback
 {
     public Handler handler;
     private PowerManager.WakeLock wl;
@@ -42,11 +42,6 @@ public class Navit extends Activity
         super.onCreate(savedInstanceState);
 	PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);  
 	wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE, "NavitDoNotDimScreen"); 
-	handler =new Handler() {
-		public void handleMessage(Message m) {
-			Log.e("Navit","Handler received message");
-		}
-	};
 	Locale locale=java.util.Locale.getDefault();
 	String lang=locale.getLanguage();
 	String langu=lang;
@@ -104,6 +99,11 @@ public class Navit extends Activity
     {
 	wl.acquire();
 	wl.release();
+    }
+
+    public boolean handleMessage(Message m) {
+	Log.e("Navit","Handler received message");
+	return true;
     }
 
     /* A native method that is implemented by the

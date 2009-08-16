@@ -1,7 +1,9 @@
 #include <string.h>
+#include <poll.h>
 #include "android.h"
 #include <android/log.h>
 #include "debug.h"
+#include "event.h"
 #include "callback.h"
 
 JNIEnv *jnienv;
@@ -103,4 +105,35 @@ Java_org_navitproject_navit_NavitIdle_IdleCallback( JNIEnv* env, jobject thiz, i
 	dbg(1,"enter %p %p\n",thiz, (void *)id);
 	callback_call_0((struct callback *)id);
 }
+
+JNIEXPORT void JNICALL
+Java_org_navitproject_navit_NavitWatch_poll( JNIEnv* env, jobject thiz, int fd, int cond)
+{
+	struct pollfd pfd;
+	pfd.fd=fd;
+	dbg(0,"%p poll called for %d %d\n",env, fd, cond);
+	switch ((enum event_watch_cond)cond) {
+	case event_watch_cond_read:
+		pfd.events=POLLIN;
+		break;
+	case event_watch_cond_write:
+		pfd.events=POLLOUT;
+		break;
+	case event_watch_cond_except:
+		pfd.events=POLLERR;
+		break;
+	default:
+		pfd.events=0;
+	}
+	pfd.revents=0;
+	poll(&pfd, 1, -1);
+}
+
+JNIEXPORT void JNICALL
+Java_org_navitproject_navit_NavitWatch_WatchCallback( JNIEnv* env, jobject thiz, int id)
+{
+	dbg(1,"enter %p %p\n",thiz, (void *)id);
+	callback_call_0((struct callback *)id);
+}
+
 

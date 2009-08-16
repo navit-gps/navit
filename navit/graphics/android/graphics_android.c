@@ -617,19 +617,6 @@ static void event_android_main_loop_quit(void)
         dbg(0,"enter\n");
 }
 
-static struct event_watch *
-event_android_add_watch(void *h, enum event_watch_cond cond, struct callback *cb)
-{
-        dbg(0,"enter\n");
-        return NULL;
-}
-
-static void
-event_android_remove_watch(struct event_watch *ev)
-{
-        dbg(0,"enter\n");
-}
-
 
 static jclass NavitTimeoutClass;
 static jmethodID NavitTimeout_init;
@@ -638,6 +625,32 @@ static jmethodID NavitTimeout_remove;
 static jclass NavitIdleClass;
 static jmethodID NavitIdle_init;
 static jmethodID NavitIdle_remove;
+
+static jclass NavitWatchClass;
+static jmethodID NavitWatch_init;
+static jmethodID NavitWatch_remove;
+
+static struct event_watch *
+event_android_add_watch(void *h, enum event_watch_cond cond, struct callback *cb)
+{
+	jobject ret;
+	ret=(*jnienv)->NewObject(jnienv, NavitWatchClass, NavitWatch_init, (int) h, (int) cond, (int)cb);
+	dbg(0,"result for %p,%d,%p=%p\n",h,cond,cb,ret);
+	if (ret)
+		(*jnienv)->NewGlobalRef(jnienv, ret);
+	return (struct event_watch *)ret;
+}
+
+static void
+event_android_remove_watch(struct event_watch *ev)
+{
+	dbg(0,"enter %p\n",ev);
+	if (ev) {
+		jobject obj=(jobject )ev;
+		(*jnienv)->CallVoidMethod(jnienv, obj, NavitWatch_remove);
+		(*jnienv)->DeleteGlobalRef(jnienv, obj);
+	}
+}
 
 static struct event_timeout *
 event_android_add_timeout(int timeout, int multi, struct callback *cb)
@@ -731,6 +744,15 @@ event_android_new(struct event_methods *meth)
 	if (NavitIdle_remove == NULL) 
 		return NULL;
 #endif
+
+	if (!find_class_global("org/navitproject/navit/NavitWatch", &NavitWatchClass))
+		return NULL;
+	NavitWatch_init = (*jnienv)->GetMethodID(jnienv, NavitWatchClass, "<init>", "(III)V");
+	if (NavitWatch_init == NULL) 
+		return NULL;
+	NavitWatch_remove = (*jnienv)->GetMethodID(jnienv, NavitWatchClass, "remove", "()V");
+	if (NavitWatch_remove == NULL) 
+		return NULL;
 
 	if (!find_class_global("org/navitproject/navit/Navit", &NavitClass))
 		return NULL;
