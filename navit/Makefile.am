@@ -18,7 +18,7 @@ endif
 if SUPPORT_ANDROID
   lib_LTLIBRARIES        = libnavit.la
   libnavit_la_LDFLAGS = -module -avoid-version @MODULE_LDFLAGS@ -Wl,--no-undefined
-  libnavit_la_LIBADD = @NAVIT_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib -llog
+  libnavit_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib -llog
 
 else
   bin_PROGRAMS = navit osm2navit
