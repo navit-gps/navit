@@ -1404,7 +1404,7 @@ get_font(struct graphics *gra, int size)
 char *
 graphics_icon_path(char *icon)
 {
-	dbg(0,"enter %s\n",icon);
+	dbg(1,"enter %s\n",icon);
 	if (icon[0] == '/')
 		return g_strdup(icon);
 	else

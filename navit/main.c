@@ -180,14 +180,14 @@ setenv(char *var, char *val, int overwrite)
  * '::' replaced with NAVIT_PREFIX and LIBDIR
  * '~'  replaced with HOME
 */
-static char *environment_vars[][4]={
-	{"NAVIT_LIBDIR",      ":",          "::/navit",      ":\\lib"},
-	{"NAVIT_SHAREDIR",    ":",          ":/share/navit", ":"},
-	{"NAVIT_LOCALEDIR",   ":/../locale",":/share/locale",":\\locale"},
-	{"NAVIT_USER_DATADIR",":",          "~/.navit",      ":\\data"},
-	{"NAVIT_LOGFILE",     NULL,         NULL,            ":\\navit.log"},
-	{"NAVIT_LIBPREFIX",   "*/.libs/",   NULL,            NULL},
-	{NULL,                NULL,         NULL,            NULL},
+static char *environment_vars[][5]={
+	{"NAVIT_LIBDIR",      ":",          "::/navit",      ":\\lib",      ":/lib"},
+	{"NAVIT_SHAREDIR",    ":",          ":/share/navit", ":",           ":"},
+	{"NAVIT_LOCALEDIR",   ":/../locale",":/share/locale",":\\locale",   ":/locale"},
+	{"NAVIT_USER_DATADIR",":",          "~/.navit",      ":\\data",     ":/home"},
+	{"NAVIT_LOGFILE",     NULL,         NULL,            ":\\navit.log",NULL},
+	{"NAVIT_LIBPREFIX",   "*/.libs/",   NULL,            NULL,          NULL},
+	{NULL,                NULL,         NULL,            NULL,          NULL},
 };
 
 static void
@@ -255,7 +255,11 @@ main_init(char *program)
 			} else
 				setenv("NAVIT_PREFIX", PREFIX, 0);
 		}
+#ifdef HAVE_API_ANDROID
+		main_setup_environment(3);
+#else
 		main_setup_environment(1);
+#endif
 	}
 
 #else		/* _WIN32 || _WIN32_WCE */
