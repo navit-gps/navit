@@ -65,6 +65,7 @@
 #include "navigation.h"
 #include "gui_internal.h"
 #include "command.h"
+#include "util.h"
 
 struct menu_data {
 	struct widget *search_list;
@@ -383,38 +384,44 @@ image_new_scaled(struct gui_priv *this, char *name, int w, int h)
 {
 	struct graphics_image *ret=NULL;
 	char *full_name=NULL;
+	char *full_path=NULL;
 	int i;
 
 	for (i = 1 ; i < 6 ; i++) {
 		full_name=NULL;
 		switch (i) {
 		case 3:
-			full_name=g_strdup_printf("%s/xpm/%s.svg", getenv("NAVIT_SHAREDIR"), name);
+			full_name=g_strdup_printf("%s.svg", name);
 			break;
 		case 2:
-			full_name=g_strdup_printf("%s/xpm/%s.svgz", getenv("NAVIT_SHAREDIR"), name);
+			full_name=g_strdup_printf("%s.svgz", name);
 			break;
 		case 1:
 			if (w != -1 && h != -1) {
-				full_name=g_strdup_printf("%s/xpm/%s_%d_%d.png", getenv("NAVIT_SHAREDIR"), name, w, h);
+				full_name=g_strdup_printf("%s_%d_%d.png", name, w, h);
 			}
 			break;
 		case 4:
-			full_name=g_strdup_printf("%s/xpm/%s.png", getenv("NAVIT_SHAREDIR"), name);
+			full_name=g_strdup_printf("%s.png", name);
 			break;
 		case 5:
-			full_name=g_strdup_printf("%s/xpm/%s.xpm", getenv("NAVIT_SHAREDIR"), name);
+			full_name=g_strdup_printf("%s.xpm", name);
 			break;
 		}
 		dbg(1,"trying '%s'\n", full_name);
 		if (! full_name)
 			continue;
+#if 0
+		/* needs to be checked in the driver */
 		if (!file_exists(full_name)) {
 			g_free(full_name);
 			continue;
 		}
-		ret=graphics_image_new_scaled(this->gra, full_name, w, h);
+#endif
+		full_path=graphics_icon_path(full_name);
+		ret=graphics_image_new_scaled(this->gra, full_path, w, h);
 		dbg(1,"ret=%p\n", ret);
+		g_free(full_path);
 		g_free(full_name);
 		if (ret)
 			return ret;
@@ -2755,9 +2762,15 @@ gui_internal_search(struct gui_priv *this, char *what, char *type, int flags)
 		wnext=gui_internal_image_new(this, image_new_xs(this, "gui_select_town"));
 		wnext->func=gui_internal_search_town;
 	} else if (!strcmp(type,"Town")) {
-		if (this->country_iso2)
+		if (this->country_iso2) {
+#if HAVE_API_ANDROID
+			char country_iso2[strlen(this->country_iso2)+1];
+			strtolower(country_iso2, this->country_iso2);
+			country=g_strdup_printf("country_%s", country_iso2);
+#else
 			country=g_strdup_printf("country_%s", this->country_iso2);
-		else
+#endif
+		} else
 			country=strdup("gui_select_country");
 		gui_internal_widget_append(we, wb=gui_internal_image_new(this, image_new_xs(this, country)));
 		wb->state |= STATE_SENSITIVE;
@@ -3565,9 +3578,9 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 	if (!this->root.children || this->ignore_button) {
 		this->ignore_button=0;
 		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel
-		if (!navit_handle_button(this->nav, pressed, button, p, NULL) || button >=4) // Maybe there's a better way to do this
+		if (!navit_handle_button(this->nav, pressed, button, p, NULL))
 			return;
-		if (this->menu_on_map_click)
+		if (this->menu_on_map_click && button == 1)
 			gui_internal_cmd_menu(this, p, 0);
 		return;
 	}
