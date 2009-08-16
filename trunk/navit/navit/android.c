@@ -54,7 +54,6 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 	android_activity=activity;
 	(*jnienv)->NewGlobalRef(jnienv, activity);
 	langstr=(*env)->GetStringUTFChars(env, lang, NULL);
-	setenv("LANG",langstr,1);
 	dbg(0,"enter env=%p thiz=%p activity=%p lang=%s\n",env,thiz,activity,langstr);
 	(*env)->ReleaseStringUTFChars(env, lang, langstr);
 	main_real(1, strings);
@@ -71,7 +70,7 @@ Java_org_navitproject_navit_NavitGraphics_SizeChangedCallback( JNIEnv* env, jobj
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_ButtonCallback( JNIEnv* env, jobject thiz, int id, int pressed, int button, int x, int y)
 {
-	dbg(0,"enter %p %d %d\n",(struct callback *)id,pressed,button);
+	dbg(1,"enter %p %d %d\n",(struct callback *)id,pressed,button);
 	if (id)
 		callback_call_4((struct callback *)id,pressed,button,x,y);
 }
@@ -79,7 +78,7 @@ Java_org_navitproject_navit_NavitGraphics_ButtonCallback( JNIEnv* env, jobject t
 JNIEXPORT void JNICALL
 Java_org_navitproject_navit_NavitGraphics_MotionCallback( JNIEnv* env, jobject thiz, int id, int x, int y)
 {
-	dbg(0,"enter %p %d %d\n",(struct callback *)id,x,y);
+	dbg(1,"enter %p %d %d\n",(struct callback *)id,x,y);
 	if (id)
 		callback_call_2((struct callback *)id,x,y);
 }
@@ -111,7 +110,7 @@ Java_org_navitproject_navit_NavitWatch_poll( JNIEnv* env, jobject thiz, int fd, 
 {
 	struct pollfd pfd;
 	pfd.fd=fd;
-	dbg(0,"%p poll called for %d %d\n",env, fd, cond);
+	dbg(1,"%p poll called for %d %d\n",env, fd, cond);
 	switch ((enum event_watch_cond)cond) {
 	case event_watch_cond_read:
 		pfd.events=POLLIN;
