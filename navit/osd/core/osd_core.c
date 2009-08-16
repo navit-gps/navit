@@ -300,10 +300,7 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 		goto error;
 	}
 
-	this->src = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/xpm/", attr->u.str, NULL);
-    // TODO make ~ and/or $HOME work too
-    if (!file_exists(this->src))
-        this->src = g_strjoin(NULL, attr->u.str, NULL);
+	this->src = graphics_icon_path(attr->u.str);
 
 	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_button_init), attr_navit, this));
 
@@ -373,10 +370,7 @@ osd_nav_next_turn_draw(struct nav_next_turn *this, struct navit *navit,
 						      this->icon_h);
 			if (!gr_image) {
 				g_free(image);
-				image =
-				    g_strjoin(NULL,
-					      getenv("NAVIT_SHAREDIR"),
-					      "/xpm/unknown.xpm", NULL);
+				image = graphics_icon_path("unknown.xpm");
 				gr_image =
 				    graphics_image_new_scaled(this->
 							      osd_item.gr,
@@ -448,12 +442,11 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 		char **array;
 		we = file_wordexp_new(attr->u.str);
 		array = file_wordexp_get_array(we);
-		this->icon_src = g_strdup(array[0]);
+		this->icon_src = graphics_icon_path(array[0]);
 		file_wordexp_destroy(we);
-	} else
-		this->icon_src =
-		    g_strjoin(NULL, getenv("NAVIT_SHAREDIR"),
-			      "/xpm/%s_wh.svg", NULL);
+	} else {
+		this->icon_src = graphics_icon_path("%s_wh.svg");
+	}
 
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_turn_init), attr_navit, this));
 	return (struct osd_priv *) this;
@@ -510,7 +503,7 @@ osd_nav_toggle_announcer_draw(struct nav_toggle_announcer *this, struct navit *n
         if (!gr_image)
         {
             g_free(path);
-            path = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/xpm/unknown.xpm", NULL);
+            path = graphics_icon_path("unknown.xpm");
             gr_image = graphics_image_new_scaled(this->item.gr, path, this->icon_w, this->icon_h);
         }
         
@@ -567,9 +560,7 @@ osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct
 		this->icon_src = g_strdup(array[0]);
 		file_wordexp_destroy(we);
 	} else
-		this->icon_src =
-		    g_strjoin(NULL, getenv("NAVIT_SHAREDIR"),
-			      "/xpm/%s_32.xpm", NULL);
+		this->icon_src = graphics_icon_path("%s_32.xpm");
 
     this->item.command = g_strdup(command);
 
@@ -1119,7 +1110,7 @@ osd_gps_status_new(struct navit *nav, struct osd_methods *meth,
 		this->icon_src = g_strdup(array[0]);
 		file_wordexp_destroy(we);
 	} else
-		this->icon_src = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/xpm/gui_strength_%d_32_32.png", NULL);
+		this->icon_src = graphics_icon_path("gui_strength_%d_32_32.png");
 
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_init), attr_navit, this));
 	return (struct osd_priv *) this;
@@ -1222,7 +1213,7 @@ osd_volume_new(struct navit *nav, struct osd_methods *meth,
 		this->icon_src = g_strdup(array[0]);
 		file_wordexp_destroy(we);
 	} else
-		this->icon_src = g_strjoin(NULL, getenv("NAVIT_SHAREDIR"), "/xpm/gui_strength_%d_32_32.png", NULL);
+		this->icon_src = graphics_icon_path("gui_strength_%d_32_32.png");
 
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_volume_init), attr_navit, this));
 	return (struct osd_priv *) this;
