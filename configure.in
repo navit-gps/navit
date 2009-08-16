@@ -624,7 +624,7 @@ AC_DEFINE_UNQUOTED(VERSION, "$VERSION")
 AC_SUBST(PACKAGE)
 AC_SUBST(VERSION)
 
-AC_CHECK_HEADER(wordexp.h,wordexp_h=yes,wordexp_h=no;NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/navit/support/wordexp";NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/wordexp -lsupport_wordexp")
+AC_CHECK_HEADER(wordexp.h,wordexp_h=yes,wordexp_h=no;NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/navit/support/wordexp";WORDEXP_LIBS="-L\$(top_builddir)/navit/support/wordexp -lsupport_wordexp")
 AM_CONDITIONAL(SUPPORT_WORDEXP, [test "x$wordexp_h" = "xno"])
 
 support_libc=no
@@ -748,6 +748,7 @@ NAVIT_CFLAGS="$NAVIT_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS"
 NAVIT_LIBS="$NAVIT_LIBS $GLIB_LIBS $GMODULE_LIBS $LIBINTL"
 AC_SUBST(NAVIT_CFLAGS)
 AC_SUBST(NAVIT_LIBS)
+AC_SUBST(WORDEXP_LIBS)
 AC_SUBST(WINDRES)
 
 AC_CONFIG_FILES([
