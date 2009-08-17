@@ -35,12 +35,10 @@ public class NavitTimeout implements Runnable {
 	private boolean event_multi;
 	private int event_callbackid;
 	private int event_timeout;
-	private Runnable runnable;
 	public native void TimeoutCallback(int del, int id);
 
 	NavitTimeout(int timeout, boolean multi, int callbackid) 
 	{
-		final NavitTimeout navittimeout=this;
 		event_timeout=timeout;	
 		event_multi=multi;
 		event_callbackid=callbackid;
@@ -56,7 +54,7 @@ public class NavitTimeout implements Runnable {
 	}
 	public void remove()
 	{
-		handler.removeCallbacks(runnable);
+		handler.removeCallbacks(this);
 	}
 }
 

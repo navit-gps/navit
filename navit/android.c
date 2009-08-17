@@ -88,7 +88,7 @@ Java_org_navitproject_navit_NavitTimeout_TimeoutCallback( JNIEnv* env, jobject t
 {
 	dbg(1,"enter %p %d %p\n",thiz, delete, (void *)id);
 	callback_call_0((struct callback *)id);
-	if (delete)
+	if (delete) 
 		(*jnienv)->DeleteGlobalRef(jnienv, thiz);
 }
 
