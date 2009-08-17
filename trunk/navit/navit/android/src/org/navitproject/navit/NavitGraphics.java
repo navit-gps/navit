@@ -94,11 +94,39 @@ public class NavitGraphics {
 	@Override public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		int i;
+		String s=null;
 		i=event.getUnicodeChar();
 		Log.e("NavitGraphics","onKeyDown "+keyCode+" "+i);
 		// Log.e("NavitGraphics","Unicode "+event.getUnicodeChar());
-		if (i != 0) {
-			String s=java.lang.String.valueOf((char)i);
+		if (i == 0) {
+			if (keyCode == android.view.KeyEvent.KEYCODE_DEL) {
+				s=java.lang.String.valueOf((char)8);
+			} else if (keyCode == android.view.KeyEvent.KEYCODE_MENU) {
+				s=java.lang.String.valueOf((char)1);
+			} else if (keyCode == android.view.KeyEvent.KEYCODE_SEARCH) {
+				s=java.lang.String.valueOf((char)19);
+			} else if (keyCode == android.view.KeyEvent.KEYCODE_BACK) {
+				s=java.lang.String.valueOf((char)27);
+			} else if (keyCode == android.view.KeyEvent.KEYCODE_CALL) {
+			} else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP) {
+			} else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN) {
+			} else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER) {
+				s=java.lang.String.valueOf((char)13);
+			} else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
+				s=java.lang.String.valueOf((char)16);
+			} else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT) {
+				s=java.lang.String.valueOf((char)2);
+			} else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT) {
+				s=java.lang.String.valueOf((char)6);
+			} else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_UP) {
+				s=java.lang.String.valueOf((char)16);
+			}
+		} else if (i == 10) {
+			s=java.lang.String.valueOf((char)13);
+		} else {
+			s=java.lang.String.valueOf((char)i);
+		}
+		if (s != null) {
 			KeypressCallback(KeypressCallbackID, s);
 		}
 		return true;
@@ -110,26 +138,31 @@ public class NavitGraphics {
 	}
 	@Override public boolean onTrackballEvent(MotionEvent event)
 	{
-		Log.e("NavitGraphics","onTrackball "+event.getX()+" "+event.getY());
-		trackball_x+=event.getX();
-		trackball_y+=event.getY();
+		Log.e("NavitGraphics","onTrackball "+event.getAction() + " " +event.getX()+" "+event.getY());
 		String s=null;
-		Log.e("NavitGraphics","trackball "+trackball_x+" "+trackball_y);
-		if (trackball_x <= -1) {
-			s=java.lang.String.valueOf((char)2);
-			trackball_x+=1;
+		if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+			s=java.lang.String.valueOf((char)13);
 		}
-		if (trackball_x >= 1) {
-			s=java.lang.String.valueOf((char)6);
-			trackball_x-=1;
-		}
-		if (trackball_y <= -1) {
-			s=java.lang.String.valueOf((char)16);
-			trackball_y+=1;
-		}
-		if (trackball_y >= 1) {
-			s=java.lang.String.valueOf((char)14);
-			trackball_y-=1;
+		if (event.getAction() == android.view.MotionEvent.ACTION_MOVE) {
+			trackball_x+=event.getX();
+			trackball_y+=event.getY();
+			Log.e("NavitGraphics","trackball "+trackball_x+" "+trackball_y);
+			if (trackball_x <= -1) {
+				s=java.lang.String.valueOf((char)2);
+				trackball_x+=1;
+			}
+			if (trackball_x >= 1) {
+				s=java.lang.String.valueOf((char)6);
+				trackball_x-=1;
+			}
+			if (trackball_y <= -1) {
+				s=java.lang.String.valueOf((char)16);
+				trackball_y+=1;
+			}
+			if (trackball_y >= 1) {
+				s=java.lang.String.valueOf((char)14);
+				trackball_y-=1;
+			}
 		}
 		if (s != null) {
 			KeypressCallback(KeypressCallbackID, s);
@@ -219,11 +252,21 @@ public class NavitGraphics {
 		paint.setStyle(Paint.Style.STROKE);
 		draw_canvas.drawCircle(fx, fy, fr, paint);
 	}
-	protected void draw_text(Paint paint,int x, int y, String text)
+	protected void draw_text(Paint paint,int x, int y, String text, int size, int dx, int dy)
 	{
 		float fx=x;
 		float fy=y;
-		draw_canvas.drawText(text, fx, fy, paint);
+		// Log.e("NavitGraphics","Text size "+size + " vs " + paint.getTextSize());
+		paint.setTextSize((float)size/15);
+		if (dx == 0x10000 && dy == 0) {
+			draw_canvas.drawText(text, fx, fy, paint);
+		} else {
+			Path path = new Path();
+			path.moveTo(x, y);
+			path.rLineTo(dx, dy);
+			paint.setTextAlign(android.graphics.Paint.Align.LEFT);
+			draw_canvas.drawTextOnPath(text, path, 0, 0, paint);
+		}
 	}
 	protected void draw_image(Paint paint, int x, int y, Bitmap bitmap)
 	{

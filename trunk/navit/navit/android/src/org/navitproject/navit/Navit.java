@@ -98,11 +98,46 @@ public class Navit extends Activity implements Handler.Callback
 	// Debug.startMethodTracing("calc");
         NavitMain(this, langu);
     }
+    @Override public void onStart()
+    {
+        super.onStart();
+	Log.e("Navit","OnStart");
+    }
+    @Override public void onRestart()
+    {
+        super.onRestart();
+	Log.e("Navit","OnRestart");
+    }
+    @Override public void onResume()
+    {
+        super.onResume();
+	Log.e("Navit","OnResume");
+    }
+    @Override public void onPause()
+    {
+	super.onPause();
+	Log.e("Navit","OnPause");
+    }
+    @Override public void onStop()
+    {
+	super.onStop();
+	Log.e("Navit","OnStop");
+    }
+    @Override public void onDestroy()
+    {
+	super.onDestroy();
+	Log.e("Navit","OnDestroy");
+    }
 
     public void disableSuspend()
     {
 	wl.acquire();
 	wl.release();
+    }
+
+    public void exit()
+    {
+	finish();
     }
 
     public boolean handleMessage(Message m) {
