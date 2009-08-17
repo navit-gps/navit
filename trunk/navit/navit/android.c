@@ -55,6 +55,7 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 	(*jnienv)->NewGlobalRef(jnienv, activity);
 	langstr=(*env)->GetStringUTFChars(env, lang, NULL);
 	dbg(0,"enter env=%p thiz=%p activity=%p lang=%s\n",env,thiz,activity,langstr);
+	setenv("LANG",langstr,1);
 	(*env)->ReleaseStringUTFChars(env, lang, langstr);
 	main_real(1, strings);
 }
@@ -81,6 +82,18 @@ Java_org_navitproject_navit_NavitGraphics_MotionCallback( JNIEnv* env, jobject t
 	dbg(1,"enter %p %d %d\n",(struct callback *)id,x,y);
 	if (id)
 		callback_call_2((struct callback *)id,x,y);
+}
+
+JNIEXPORT void JNICALL
+Java_org_navitproject_navit_NavitGraphics_KeypressCallback( JNIEnv* env, jobject thiz, int id, jobject str)
+{
+	char *s;
+	dbg(0,"enter %p %p\n",(struct callback *)id,str);
+	s=(*env)->GetStringUTFChars(env, str, NULL);
+	dbg(0,"key=%s\n",s);
+	if (id)
+		callback_call_1((struct callback *)id,s);
+	(*env)->ReleaseStringUTFChars(env, str, s);
 }
 
 JNIEXPORT void JNICALL

@@ -50,6 +50,10 @@ public class Navit extends Activity implements Handler.Callback
 	if (pos != -1) {
 		langc=langu.substring(0, pos);
 		langu=langc + langu.substring(pos).toUpperCase(locale);
+	} else {
+		String country=locale.getCountry();
+		Log.e("Navit","Country "+country);
+		langu=langc + "_" + country.toUpperCase(locale);
 	}
 	Log.e("Navit","Language " + lang);
 	Resources res=getResources();
