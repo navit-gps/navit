@@ -189,7 +189,7 @@ const int SMALL_PROFILE=2;
  */
 static struct gui_config_settings config_profiles[]={
       {545,32,48,96,10}
-    , {545,32,48,96,5}
+    , {300,32,48,64,3}
       ,{200,16,32,48,2}
 };
 
@@ -884,9 +884,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 	if (!cols)
 		cols=this->cols;
 	if (!cols) {
-		 height=navit_get_height(this->nav);
-		 width=navit_get_width(this->nav);
-		 if ( (height/width) > 1.0 )
+		 if ( this->root.w > this->root.h )
 			 cols=3;
 		 else
 			 cols=2;
@@ -1184,7 +1182,7 @@ static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 static void
 gui_internal_widget_render(struct gui_priv *this, struct widget *w)
 {
-	if(w->p.x > navit_get_width(this->nav) || w->p.y > navit_get_height(this->nav))
+	if(w->p.x > this->root.w || w->p.y > this->root.h)
 		return;
 
 	switch (w->type) {
@@ -2529,7 +2527,7 @@ gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char 
 	wk->background=this->background;
 	wk->bl=w/2;
 	wk->br=0;
-	wk->bt=h/2;
+	wk->bt=h/3;
 	wk->bb=0;
 	return wk;
 }
@@ -2551,7 +2549,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 {
 	struct widget *wkbd,*wk;
 	struct menu_data *md=gui_internal_menu_data(this);
-	int i, max_w=navit_get_width(this->nav), max_h=navit_get_height(this->nav);
+	int i, max_w=this->root.w, max_h=this->root.h;
 	int render=0;
 
 	if (wkbdb) {
@@ -2654,7 +2652,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		KEY("ä"); KEY("ë"); KEY("ï"); KEY("ö"); KEY("ü"); KEY("æ"); KEY("ø"); KEY("å");
 		KEY("á"); KEY("é"); KEY("í"); KEY("ó"); KEY("ú"); KEY("š"); KEY("č"); KEY("ž");
 		KEY("à"); KEY("è"); KEY("ì"); KEY("ò"); KEY("ù"); KEY("ś"); KEY("ć"); KEY("ź");
-		KEY("â"); KEY("ê"); KEY("î"); KEY("ô"); KEY("û"); SPACER();
+		KEY("â"); KEY("ê"); KEY("î"); KEY("ô"); KEY("û"); KEY("ß");
 
 		wk=gui_internal_keyboard_key_data(this, wkbd, "a",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
 		wk->datai=mode-24;
