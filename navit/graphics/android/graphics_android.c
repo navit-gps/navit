@@ -289,7 +289,7 @@ draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphic
 {
 	dbg(1,"enter %s\n", text);
 	jstring string = (*jnienv)->NewStringUTF(jnienv, text);
-	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_text, fg->Paint, p->x, p->y, string);
+	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_text, fg->Paint, p->x, p->y, string, font->size, dx, dy);
 	(*jnienv)->DeleteLocalRef(jnienv, string);
 }
 
@@ -548,7 +548,7 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 		return 0;
 	if (!find_method(ret->NavitGraphicsClass, "draw_circle", "(Landroid/graphics/Paint;III)V", &ret->NavitGraphics_draw_circle))
 		return 0;
-	if (!find_method(ret->NavitGraphicsClass, "draw_text", "(Landroid/graphics/Paint;IILjava/lang/String;)V", &ret->NavitGraphics_draw_text))
+	if (!find_method(ret->NavitGraphicsClass, "draw_text", "(Landroid/graphics/Paint;IILjava/lang/String;III)V", &ret->NavitGraphics_draw_text))
 		return 0;
 	if (!find_method(ret->NavitGraphicsClass, "draw_image", "(Landroid/graphics/Paint;IILandroid/graphics/Bitmap;)V", &ret->NavitGraphics_draw_image))
 		return 0;
@@ -573,7 +573,7 @@ graphics_android_fullscreen(struct window *win, int on)
 }
 
 static jclass NavitClass;
-static jmethodID Navit_disableSuspend;
+static jmethodID Navit_disableSuspend, Navit_exit;
 
 static void
 graphics_android_disable_suspend(struct window *win)
@@ -630,6 +630,7 @@ event_android_main_loop_run(void)
 static void event_android_main_loop_quit(void)
 {
         dbg(0,"enter\n");
+	(*jnienv)->CallVoidMethod(jnienv, android_activity, Navit_exit);
 }
 
 
@@ -773,6 +774,9 @@ event_android_new(struct event_methods *meth)
 		return NULL;
 	Navit_disableSuspend = (*jnienv)->GetMethodID(jnienv, NavitClass, "disableSuspend", "()V");
 	if (Navit_disableSuspend == NULL) 
+		return NULL;
+	Navit_exit = (*jnienv)->GetMethodID(jnienv, NavitClass, "exit", "()V");
+	if (Navit_exit == NULL) 
 		return NULL;
 	dbg(0,"ok\n");
         *meth=event_android_methods;
