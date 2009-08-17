@@ -73,17 +73,17 @@ public class NavitGraphics {
 		int x=(int)event.getX();
 		int y=(int)event.getY();
 		if (action == MotionEvent.ACTION_DOWN) {
-			Log.e("NavitGraphics", "onTouch down");
+			// Log.e("NavitGraphics", "onTouch down");
 			ButtonCallback(ButtonCallbackID, 1, 1, x, y);
 		}
 		if (action == MotionEvent.ACTION_UP) {
-			Log.e("NavitGraphics", "onTouch up");
+			// Log.e("NavitGraphics", "onTouch up");
 			ButtonCallback(ButtonCallbackID, 0, 1, x, y);
 			// if (++count == 3)
 		        //	Debug.stopMethodTracing();
 		}
 		if (action == MotionEvent.ACTION_MOVE) {
-			Log.e("NavitGraphics", "onTouch move");
+			// Log.e("NavitGraphics", "onTouch move");
 			MotionCallback(MotionCallbackID, x, y);
 		}
 		return true;
