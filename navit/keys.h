@@ -6,3 +6,4 @@
 #define NAVIT_KEY_ZOOM_OUT 15
 #define NAVIT_KEY_UP 16
 #define NAVIT_KEY_ZOOM_IN 17
+#define NAVIT_KEY_MENU 1
