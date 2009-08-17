@@ -98,7 +98,7 @@ msgstr "in %d m"
 #: ../navit/navigation.c:320
 #, c-format
 msgid "%d meters"
-msgstr "%d Metern"
+msgstr "%d Meter"
 
 #: ../navit/navigation.c:322
 #, c-format
@@ -185,12 +185,12 @@ msgstr "leicht "
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1389
 msgid "strongly "
-msgstr "stark "
+msgstr "scharf "
 
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1392
 msgid "really strongly "
-msgstr "Übersetz: "
+msgstr "scharf "
 
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1396
