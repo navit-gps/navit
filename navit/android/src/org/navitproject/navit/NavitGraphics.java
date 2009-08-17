@@ -23,6 +23,7 @@ import android.os.Debug;
 import android.view.*;
 import android.util.Log;
 import java.util.ArrayList;
+import java.lang.String;
 
 public class NavitGraphics {
 	private NavitGraphics parent_graphics;
@@ -33,6 +34,7 @@ public class NavitGraphics {
 	int pos_y;
 	int pos_wraparound;
 	int overlay_disabled;
+	float trackball_x,trackball_y;
 	View view;
 	public NavitGraphics(Activity activity, NavitGraphics parent, int x, int y, int w, int h, int alpha, int wraparound) {
 		if (parent == null) {
@@ -69,6 +71,7 @@ public class NavitGraphics {
 	}
         @Override public boolean onTouchEvent(MotionEvent event)
 	{
+		super.onTouchEvent(event);
 		int action = event.getAction();
 		int x=(int)event.getX();
 		int y=(int)event.getY();
@@ -90,22 +93,59 @@ public class NavitGraphics {
 	} 
 	@Override public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
-		Log.e("NavitGraphics","onKeyDown"+keyCode);
+		int i;
+		i=event.getUnicodeChar();
+		Log.e("NavitGraphics","onKeyDown "+keyCode+" "+i);
+		// Log.e("NavitGraphics","Unicode "+event.getUnicodeChar());
+		if (i != 0) {
+			String s=java.lang.String.valueOf((char)i);
+			KeypressCallback(KeypressCallbackID, s);
+		}
 		return true;
 	}
 	@Override public boolean onKeyUp(int keyCode, KeyEvent event)
 	{
-		Log.e("NavitGraphics","onKeyUp"+keyCode);
+		Log.e("NavitGraphics","onKeyUp "+keyCode);
 		return true;
 	}
 	@Override public boolean onTrackballEvent(MotionEvent event)
 	{
-		Log.e("NavitGraphics","onTrackball");
+		Log.e("NavitGraphics","onTrackball "+event.getX()+" "+event.getY());
+		trackball_x+=event.getX();
+		trackball_y+=event.getY();
+		String s=null;
+		Log.e("NavitGraphics","trackball "+trackball_x+" "+trackball_y);
+		if (trackball_x <= -1) {
+			s=java.lang.String.valueOf((char)2);
+			trackball_x+=1;
+		}
+		if (trackball_x >= 1) {
+			s=java.lang.String.valueOf((char)6);
+			trackball_x-=1;
+		}
+		if (trackball_y <= -1) {
+			s=java.lang.String.valueOf((char)16);
+			trackball_y+=1;
+		}
+		if (trackball_y >= 1) {
+			s=java.lang.String.valueOf((char)14);
+			trackball_y-=1;
+		}
+		if (s != null) {
+			KeypressCallback(KeypressCallbackID, s);
+		}
 		return true;
+	}
+	@Override protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect)
+	{
+		super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+		Log.e("NavitGraphics","FocusChange "+gainFocus);
 	}
 			};
 			view.setFocusable(true);
+			view.setFocusableInTouchMode(true);
 			activity.setContentView(view);
+			view.requestFocus();
 		} else {
 			draw_bitmap=Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 			bitmap_w=w;
@@ -121,9 +161,10 @@ public class NavitGraphics {
 	public native void SizeChangedCallback(int id, int x, int y);
 	public native void ButtonCallback(int id, int pressed, int button, int x, int y);
 	public native void MotionCallback(int id, int x, int y);
+	public native void KeypressCallback(int id, String s);
 	private Canvas draw_canvas;
 	private Bitmap draw_bitmap;
-	private int SizeChangedCallbackID,ButtonCallbackID,MotionCallbackID;
+	private int SizeChangedCallbackID,ButtonCallbackID,MotionCallbackID,KeypressCallbackID;
 	// private int count;
 
 	public void setSizeChangedCallback(int id)
@@ -137,6 +178,10 @@ public class NavitGraphics {
 	public void setMotionCallback(int id)
 	{
 		MotionCallbackID=id;
+	}
+	public void setKeypressCallback(int id)
+	{
+		KeypressCallbackID=id;
 	}
 
 	protected void draw_polyline(Paint paint,int c[])

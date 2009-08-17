@@ -52,7 +52,7 @@ android/build.xml: android/AndroidManifest.xml
 	if [ "$(builddir)" != "$(srcdir)" ]; then cp -rp $(srcdir)/android $(builddir)/android; fi
 	android update project -t 3 -p android
 
-apk: all-am android/build.xml
+apk: all android/build.xml
 	mkdir -p android/libs/armeabi
 	cp .libs/*.so */*/.libs/*.so android/libs/armeabi
 	for i in $(shell cd $(srcdir)/xpm && echo *.xpm); do convert $(srcdir)/xpm/$$i android/res/drawable/$${i%.xpm}.png; done 

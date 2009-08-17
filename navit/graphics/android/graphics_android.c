@@ -410,6 +410,13 @@ motion_callback(struct graphics_priv *gra, int x, int y)
 }
 
 static void
+keypress_callback(struct graphics_priv *gra, char *s)
+{
+	dbg(0,"enter %s\n",s);
+	callback_list_call_attr_1(gra->cbl, attr_keypress, s);
+}
+
+static void
 button_callback(struct graphics_priv *gra, int pressed, int button, int x, int y)
 {
 	struct point p;
@@ -523,6 +530,14 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 		return 0; /* exception thrown */
 	}
 	cb=callback_new_1(callback_cast(motion_callback), ret);
+	(*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (int)cb);
+
+	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setKeypressCallback", "(I)V");
+	if (cid == NULL) {
+		dbg(0,"no SetKeypressCallback method found\n");
+		return 0; /* exception thrown */
+	}
+	cb=callback_new_1(callback_cast(keypress_callback), ret);
 	(*jnienv)->CallVoidMethod(jnienv, ret->NavitGraphics, cid, (int)cb);
 
 	if (!find_method(ret->NavitGraphicsClass, "draw_polyline", "(Landroid/graphics/Paint;[I)V", &ret->NavitGraphics_draw_polyline))
