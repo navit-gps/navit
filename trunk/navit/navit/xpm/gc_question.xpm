@@ -4,7 +4,7 @@ static char *gc_question[] = {
 "16 16 3 1",
 "  c black",
 ". c none",
-"X c gray100",
+"X c #FFFFFF",
 /* pixels */
 ".....XXXX.......",
 "....XX  XX......",
