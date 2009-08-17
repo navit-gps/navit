@@ -55,7 +55,7 @@ android/build.xml: android/AndroidManifest.xml
 apk: all-am android/build.xml
 	mkdir -p android/libs/armeabi
 	cp .libs/*.so */*/.libs/*.so android/libs/armeabi
-	for i in $(shell cd $(srcdir)/xpm && echo *.xpm); do convert $(srcdir)xpm/$$i android/res/drawable/$${i%.xpm}.png; done 
+	for i in $(shell cd $(srcdir)/xpm && echo *.xpm); do convert $(srcdir)/xpm/$$i android/res/drawable/$${i%.xpm}.png; done 
 	for i in $(shell cd $(srcdir)/xpm && echo *.png); do cp $(srcdir)/xpm/$$i android/res/drawable/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
 	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do cp $(builddir)/xpm/$$i android/res/drawable/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
 	mkdir -p android/res/raw
