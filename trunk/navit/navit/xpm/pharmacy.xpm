@@ -18,7 +18,7 @@ static char *pharmacy[] = {
 "- c #DAF8DA",
 "; c #E7FAE7",
 ": c #FDFFFD",
-"> c gray100",
+"> c #FFFFFF",
 /* pixels */
 "#             O-",
 " ;>>>>>>>>>>>>$$",
