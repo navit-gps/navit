@@ -1488,10 +1488,25 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir)
 {
 	int width, height;
 	struct navit_vehicle *nv=this_->vehicle;
+
+        float offset;               // Cursor offset from the center of the screen (percent).
+        float min_offset = 0.;      // Percent offset at min_offset_speed.
+        float max_offset = 30.;     // Percent offset at max_offset_speed.
+        int min_offset_speed = 2;   // Speed in km/h
+        int max_offset_speed = 50;  // Speed ini km/h
+        // Calculate cursor offset from the center of the screen, upon speed.
+        if (nv->speed <= min_offset_speed) {
+            offset = min_offset;
+        } else if (nv->speed > max_offset_speed) {
+            offset = max_offset;
+        } else {
+            offset = (max_offset - min_offset) / (max_offset_speed - min_offset_speed) * (nv->speed - min_offset_speed);
+        }
+
 	transform_get_size(this_->trans, &width, &height);
 	if (this_->orientation == -1) {
 		p->x=50*width/100;
-		p->y=80*height/100;
+		p->y=(50 + offset)*height/100;
 		if (dir)
 			*dir=nv->dir;
 	} else {
@@ -1502,8 +1517,8 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir)
 			mdir=nv->dir-this_->orientation;
 		}
 
-		p->x=(50 - 30.*sin(M_PI*mdir/180.))*width/100;
-		p->y=(50 + 30.*cos(M_PI*mdir/180.))*height/100;
+		p->x=(50 - offset*sin(M_PI*mdir/180.))*width/100;
+		p->y=(50 + offset*cos(M_PI*mdir/180.))*height/100;
 		if (dir)
 			*dir=this_->orientation;
 	}
