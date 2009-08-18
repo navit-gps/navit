@@ -19,7 +19,7 @@ static char *gc_reference[] = {
 "; c #D5D5D5",
 ": c #FFFFD5",
 "> c #E6E6E6",
-", c #FFFFFF",
+", c gray100",
 /* pixels */
 "%%%%%%%%%%%%%%%%",
 "%%%%%**&$*;%%%%%",
