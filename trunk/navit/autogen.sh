@@ -14,4 +14,4 @@ do
 	fi
 done
 
-autoreconf --force --install -I m4
+autoreconf --install -I m4
