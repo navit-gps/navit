@@ -71,7 +71,7 @@ event_glib_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
 		flags=G_IO_ERR|G_IO_HUP;
 		break;
 	}	
-	ret->source = g_io_add_watch(ret->iochan, cond, event_glib_call_watch, (gpointer)cb);
+	ret->source = g_io_add_watch(ret->iochan, flags, event_glib_call_watch, (gpointer)cb);
 	return ret;
 }
 
