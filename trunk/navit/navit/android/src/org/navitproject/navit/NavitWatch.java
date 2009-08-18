@@ -31,6 +31,7 @@ public class NavitWatch implements Runnable {
 	private int watch_fd;
 	private int watch_cond;
 	private int watch_callbackid;
+	private boolean callback_pending;
 	private Runnable callback_runnable;
 	public native void poll(int fd, int cond);
 	public native void WatchCallback(int id);
@@ -59,11 +60,15 @@ public class NavitWatch implements Runnable {
 			// Log.e("NavitWatch","poll returned");
 			if (removed)
 				break;
+			callback_pending=true;
 			handler.post(callback_runnable);	
 			try {
+				// Log.e("NavitWatch","wait");
 				synchronized(this) {
-					this.wait();
+					if (callback_pending) 
+						this.wait();
 				}
+				// Log.e("NavitWatch","wait returned");
 			} catch (Exception e) {
 				Log.e("NavitWatch","Exception "+e.getMessage());
 			}
@@ -77,6 +82,8 @@ public class NavitWatch implements Runnable {
 		if (!removed)
 			WatchCallback(watch_callbackid);
 		synchronized(this) {
+			callback_pending=false;
+			// Log.e("NavitWatch","Waking up");
 			this.notify();
 		}
 	}
