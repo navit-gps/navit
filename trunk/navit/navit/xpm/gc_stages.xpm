@@ -24,7 +24,7 @@ static char *gc_stages[] = {
 "1 c #C0C0C0",
 "2 c #C0DCC0",
 "3 c #FFFBF0",
-"4 c #FFFFFF",
+"4 c gray100",
 /* pixels */
 "                ",
 " 41-:3444434434 ",

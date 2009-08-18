@@ -26,10 +26,10 @@ static char *gc_multi[] = {
 "3 c #BDCA00",
 "4 c #FF9500",
 "5 c #FFCA00",
-"6 c #FFFF00",
+"6 c yellow",
 "7 c #838383",
 "8 c #BDCAB4",
-"9 c #FFFFFF",
+"9 c gray100",
 /* pixels */
 "1111111111111111",
 "1111111111111111",

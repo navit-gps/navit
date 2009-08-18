@@ -20,7 +20,7 @@ static char *gc_event[] = {
 ": c #BDCAB4",
 "> c #FFCA8B",
 ", c #C5C5C5",
-"< c #FFFFFF",
+"< c gray100",
 /* pixels */
 "****************",
 "****************",
