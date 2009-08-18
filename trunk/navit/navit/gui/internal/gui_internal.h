@@ -1,4 +1,4 @@
-struct widget; // defined in gui_internal.h
+struct widget; // defined in gui_internal.c
 struct graphics_image;
 
 #define STATE_VISIBLE 1
