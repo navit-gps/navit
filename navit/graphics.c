@@ -1413,8 +1413,8 @@ graphics_icon_path(char *icon)
 		if (! navit_sharedir)
 			navit_sharedir = getenv("NAVIT_SHAREDIR");
 		return g_strdup_printf("%s/xpm/%s", navit_sharedir, icon);
-	}
 #endif
+	}
 }
 
 
