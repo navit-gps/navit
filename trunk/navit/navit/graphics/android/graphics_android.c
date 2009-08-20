@@ -240,11 +240,12 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 static void
 draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	jintArray points = (*jnienv)->NewIntArray(jnienv,count*2);
 	jint pc[count*2];
 	int i;
+	jintArray points;
 	if (count <= 0)
 		return;
+	points = (*jnienv)->NewIntArray(jnienv,count*2);
 	for (i = 0 ; i < count ; i++) {
 		pc[i*2]=p[i].x;
 		pc[i*2+1]=p[i].y;
@@ -257,11 +258,12 @@ draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point 
 static void
 draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	jintArray points = (*jnienv)->NewIntArray(jnienv,count*2);
 	jint pc[count*2];
 	int i;
+	jintArray points;
 	if (count <= 0)
 		return;
+	points = (*jnienv)->NewIntArray(jnienv,count*2);
 	for (i = 0 ; i < count ; i++) {
 		pc[i*2]=p[i].x;
 		pc[i*2+1]=p[i].y;
