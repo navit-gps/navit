@@ -65,24 +65,6 @@ static void sigchld(int sig)
 #endif
 }
 
-#if 0
-static gchar *get_home_directory(void)
-{
-	static gchar *homedir = NULL;
-
-	if (homedir) return homedir;
-	homedir = getenv("HOME");
-	if (!homedir)
-	{
-		dbg(0,"Could not find home directory. Using current directory as home directory.\n");
-		homedir =g_strdup(".");
-	} else {
-		homedir=g_strdup(homedir);
-	}
-	return homedir;
-}
-#endif
-
 static GList *navit;
 
 struct iter {
@@ -194,7 +176,7 @@ static void
 main_setup_environment(int mode)
 {
 	int i=0;
-	char *var,*val;
+	char *var,*val,*homedir;
 	while ((var=environment_vars[i][0])) {
 		val=environment_vars[i][mode+1];
 		if (val) {
@@ -206,7 +188,10 @@ main_setup_environment(int mode)
 					val=g_strdup_printf("%s%s", getenv("NAVIT_PREFIX"), val+1);
 				break;
 			case '~':
-				val=g_strdup_printf("%s%s", getenv("HOME"), val+1);
+				homedir=getenv("HOME");
+				if (!homedir)
+					homedir="./";
+				val=g_strdup_printf("%s%s", homedir, val+1);
 				break;
 			default:
 				val=g_strdup(val);
