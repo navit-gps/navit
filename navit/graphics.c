@@ -51,7 +51,6 @@
 #include "file.h"
 #include "event.h"
 
-static char *navit_sharedir;
 
 //##############################################################################################################
 //# Description: 
@@ -207,7 +206,6 @@ void graphics_init(struct graphics *this_)
 	graphics_gc_set_background(this_->gc[2], &(struct color) { 0xffff, 0xffff, 0xffff, 0xffff });
 	graphics_gc_set_foreground(this_->gc[2], &(struct color) { 0x0000, 0x0000, 0x0000, 0xffff });
 	graphics_background_gc(this_, this_->gc[0]);
-	navit_sharedir = getenv("NAVIT_SHAREDIR");
 }
 
 /**
@@ -1404,14 +1402,18 @@ get_font(struct graphics *gra, int size)
 char *
 graphics_icon_path(char *icon)
 {
+	static char *navit_sharedir;
 	dbg(1,"enter %s\n",icon);
 	if (icon[0] == '/')
 		return g_strdup(icon);
-	else
+	else {
 #ifdef HAVE_API_ANDROID
 		return g_strdup_printf("res/drawable/%s", icon);
 #else
+		if (! navit_sharedir)
+			navit_sharedir = getenv("NAVIT_SHAREDIR");
 		return g_strdup_printf("%s/xpm/%s", navit_sharedir, icon);
+	}
 #endif
 }
 
