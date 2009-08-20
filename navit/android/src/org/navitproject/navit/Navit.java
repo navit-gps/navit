@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.util.Log;
 import java.util.Locale;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
@@ -35,6 +36,85 @@ public class Navit extends Activity implements Handler.Callback
 {
     public Handler handler;
     private PowerManager.WakeLock wl;
+    private boolean extractRes(String resname, String result)
+    {
+	int slash=-1;
+	boolean needs_update=false;
+	File resultfile;
+	Resources res=getResources();
+	Log.e("Navit","Res Name " + resname);
+	Log.e("Navit","result " + result);
+	int id=res.getIdentifier(resname,"raw","org.navitproject.navit");
+	Log.e("Navit","Res ID " + id);
+	if (id == 0)
+		return false;
+	while ((slash=result.indexOf("/",slash+1)) != -1) {
+		if (slash != 0) {
+			Log.e("Navit","Checking "+result.substring(0,slash));
+			resultfile=new File(result.substring(0,slash));
+			if (!resultfile.exists()) {
+				Log.e("Navit","Creating dir");
+				if (!resultfile.mkdir())
+					return false;
+				needs_update=true;
+			}
+		}
+	}
+	resultfile=new File(result);
+	if (!resultfile.exists())
+		needs_update=true;
+	if (!needs_update) {
+		try {
+			InputStream resourcestream=res.openRawResource(id);
+			FileInputStream resultfilestream=new FileInputStream(resultfile);
+			byte[] resourcebuf = new byte[1024];
+			byte[] resultbuf = new byte[1024];
+			int i = 0;
+			while ((i = resourcestream.read(resourcebuf)) != -1) {
+				if (resultfilestream.read(resultbuf) != i) {
+					Log.e("Navit","Result is too short");
+					needs_update=true;
+					break;
+				}
+				for (int j = 0 ; j < i ; j++) {
+					if (resourcebuf[j] != resultbuf[j]) {
+						Log.e("Navit","Result is different");
+						needs_update=true;
+						break;
+					}
+				}
+				if (needs_update)
+					break;
+			}
+			if (!needs_update && resultfilestream.read(resultbuf) != -1) {
+				Log.e("Navit","Result is too long");
+				needs_update=true;
+			}
+		} 
+		catch (Exception e) {
+			Log.e("Navit","Exception "+e.getMessage());
+			return false;
+		}
+	}
+	if (needs_update) {
+		Log.e("Navit","Extracting resource");
+		
+		try {
+			InputStream resourcestream=res.openRawResource(id);
+			FileOutputStream resultfilestream=new FileOutputStream(resultfile);
+			byte[] buf = new byte[1024];
+			int i = 0;
+			while ((i = resourcestream.read(buf)) != -1) {
+				resultfilestream.write(buf, 0, i);
+			}
+		} 
+		catch (Exception e) {
+			Log.e("Navit","Exception "+e.getMessage());
+			return false;
+		}
+	}
+	return true;
+    }
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -56,44 +136,12 @@ public class Navit extends Activity implements Handler.Callback
 		langu=langc + "_" + country.toUpperCase(locale);
 	}
 	Log.e("Navit","Language " + lang);
-	Resources res=getResources();
-	String resname=langc;
-	
-	Log.e("Navit","Res Name " + resname);
-	int id=res.getIdentifier(resname,"raw","org.navitproject.navit");
-	Log.e("Navit","Res ID " + id);
-	if (id != 0) {
-		Log.e("Navit","at 1");
-		InputStream fis=res.openRawResource(id);
-		Log.e("Navit","at 2");
-		String data="/data/data/org.navitproject.navit/locale";
-		Log.e("Navit","at 3");
-		File file=new File(data);
-		Log.e("Navit","at 4");
-		file.mkdir();
-		Log.e("Navit","at 5");
-		data+="/"+resname;
-		Log.e("Navit","at 6");
-		file=new File(data);
-		Log.e("Navit","at 7");
-		file.mkdir();
-		Log.e("Navit","at 8");
-		data+="/LC_MESSAGES";
-		file=new File(data);
-		file.mkdir();
-		data+="/navit.mo";
-		file=new File(data);
-		try {
-			FileOutputStream fos=new FileOutputStream(file);
-			byte[] buf = new byte[1024];
-			int i = 0;
-			while ((i = fis.read(buf)) != -1) {
-				fos.write(buf, 0, i);
-			}
-		} 
-		catch (Exception e) {
-			Log.e("Navit","Exception "+e.getMessage());
-		}
+
+	if (!extractRes(langc,"/data/data/org.navitproject.navit/locale/"+langc+"/LC_MESSAGES/navit.mo")) {
+		Log.e("Navit","Failed to extract language resource "+langc);
+	}
+	if (!extractRes("navit","/data/data/org.navitproject.navit/share/navit.xml")) {
+		Log.e("Navit","Failed to extract navit.xml");
 	}
 	// Debug.startMethodTracing("calc");
         NavitMain(this, langu);
