@@ -182,7 +182,7 @@ setenv(char *var, char *val, int overwrite)
 */
 static char *environment_vars[][5]={
 	{"NAVIT_LIBDIR",      ":",          "::/navit",      ":\\lib",      ":/lib"},
-	{"NAVIT_SHAREDIR",    ":",          ":/share/navit", ":",           ":"},
+	{"NAVIT_SHAREDIR",    ":",          ":/share/navit", ":",           ":/share"},
 	{"NAVIT_LOCALEDIR",   ":/../locale",":/share/locale",":\\locale",   ":/locale"},
 	{"NAVIT_USER_DATADIR",":",          "~/.navit",      ":\\data",     ":/home"},
 	{"NAVIT_LOGFILE",     NULL,         NULL,            ":\\navit.log",NULL},
