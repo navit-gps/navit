@@ -27,7 +27,7 @@ endif
 
 pkgdata_DATA = navit.xml
 
-EXTRA_DIST = navit_shipped.xml 
+EXTRA_DIST = navit_shipped.xml navit.dtd
 
 libnavit_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c compass.c coord.c country.c cursor.c data_window.c debug.c \
 	event.c event_glib.h file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
