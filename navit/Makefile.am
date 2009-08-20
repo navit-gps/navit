@@ -27,7 +27,7 @@ endif
 
 pkgdata_DATA = navit.xml
 
-EXTRA_DIST = navit.xml 
+EXTRA_DIST = navit_shipped.xml 
 
 libnavit_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c compass.c coord.c country.c cursor.c data_window.c debug.c \
 	event.c event_glib.h file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
@@ -41,6 +41,14 @@ libnavit_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c 
 	transform.h track.h util.h vehicle.h vehicleprofile.h window.h xmlconfig.h zipfile.h \
 	navit_nls.h
 
+comma=,
+navit.xml: navit_shipped.xml  $(foreach xslt, $(subst $(comma), ,@XSLTS@), $(addsuffix .xslt,$(addprefix xslt/,$(xslt))))
+	cp $< navit.xml.tmp
+	cp $< navit.xml.new
+	for i in $^; do if [ "$${i%.xslt}" != "$$i" ]; then saxon -snone navit.xml.tmp $$i >navit.xml.new || exit ; fi ; done
+	mv navit.xml.new navit.xml
+	
+
 if SUPPORT_ANDROID
   libnavit_la_SOURCES += android.c
   navit_SOURCES =
@@ -52,7 +60,7 @@ android/build.xml: android/AndroidManifest.xml
 	if [ "$(builddir)" != "$(srcdir)" ]; then cp -rp $(srcdir)/android $(builddir)/android; fi
 	android update project -t 3 -p android
 
-apk: all android/build.xml
+apk: all android/build.xml navit.xml
 	mkdir -p android/libs/armeabi
 	cp .libs/*.so */*/.libs/*.so android/libs/armeabi
 	for i in $(shell cd $(srcdir)/xpm && echo *.xpm); do convert $(srcdir)/xpm/$$i android/res/drawable/$${i%.xpm}.png; done 
@@ -60,6 +68,7 @@ apk: all android/build.xml
 	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do cp $(builddir)/xpm/$$i android/res/drawable/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
 	mkdir -p android/res/raw
 	for i in $(shell cd ../po && echo *.mo); do cp ../po/$$i android/res/raw/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
+	cp navit.xml android/res/raw
 	cd android && ant debug
 
 else

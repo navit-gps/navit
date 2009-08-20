@@ -540,6 +540,10 @@ AM_CONDITIONAL(USE_SVG2PNG_SCALES_NAV, test "x${SVG2PNG_SCALES_NAV}" != "xyes" -
 AM_CONDITIONAL(USE_SVG2PNG, test "x${enable_svg2png}" = "xyes")
 AM_CONDITIONAL(USE_SVG, test "x${enable_svg}" = "xyes")
 
+# XSLTS
+AC_ARG_WITH(xslts, [  --with-xslts   enable processing of navit.xml with given xslt scripts], XSLTS=$withval, XSLTS="")
+AC_SUBST(XSLTS)
+
 # NLS
 
 AC_ARG_ENABLE(nls,
