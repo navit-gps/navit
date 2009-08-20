@@ -51,23 +51,6 @@ print_usage(void)
 }
 
 
-static gchar *
-get_home_directory(void)
-{
-	static gchar *homedir = NULL;
-
-	if (homedir) return homedir;
-	homedir = getenv("HOME");
-	if (!homedir)
-	{
-		dbg(0,"Could not find home directory. Using current directory as home directory.\n");
-		homedir = ".";
-	} else {
-		homedir=g_strdup(homedir);
-	}
-	return homedir;
-}
-
 int main_real(int argc, char **argv)
 {
 	xmlerror *error = NULL;
@@ -142,16 +125,16 @@ int main_real(int argc, char **argv)
     // if config file is explicitely given only look for it, otherwise try std paths
 	if (config_file) list = g_list_append(list,g_strdup(config_file));
     else {
-		list = g_list_append(list,g_strjoin(NULL,get_home_directory(), "/.navit/navit.xml" , NULL));
+		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_USER_DATADIR"), "navit.xml" , NULL));
 		list = g_list_append(list,g_strdup("navit.xml.local"));
 		list = g_list_append(list,g_strdup("navit.xml"));
+#ifdef HAVE_API_ANDROID
+		list = g_list_append(list,g_strdup("/sdcard/navit.xml"));
+#endif
 		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml.local" , NULL));
 		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_SHAREDIR"), "/navit.xml" , NULL));
 #ifndef _WIN32
 		list = g_list_append(list,g_strdup("/etc/navit/navit.xml"));
-#endif
-#ifdef HAVE_API_ANDROID
-		list = g_list_append(list,g_strdup("/sdcard/navit.xml"));
 #endif
 	}
 	li = list;
