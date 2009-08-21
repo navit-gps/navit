@@ -76,6 +76,7 @@ file_create(char *name)
 	return file;
 }
 
+#if 0
 struct file *
 file_create_url(char *url)
 {
@@ -88,6 +89,7 @@ file_create_url(char *url)
 	g_free(cmd);
 	return file;
 }
+#endif
 
 int file_is_dir(char *name)
 {
