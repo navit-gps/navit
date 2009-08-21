@@ -81,6 +81,13 @@ struct zip_eoc {
 	char zipecom[0];
 } __attribute__ ((packed));
 
+struct zip64_eocl {
+	int zip64lsig;
+	int zip64ldsk;
+	long long zip64lofst;
+	int zip74lnum;
+} __attribute__ ((packed));
+
 #define __ZIPFILE_H__
 #ifdef __CEGCC__
 #pragma pack(pop)
