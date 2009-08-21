@@ -125,7 +125,7 @@ int main_real(int argc, char **argv)
     // if config file is explicitely given only look for it, otherwise try std paths
 	if (config_file) list = g_list_append(list,g_strdup(config_file));
     else {
-		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_USER_DATADIR"), "navit.xml" , NULL));
+		list = g_list_append(list,g_strjoin(NULL,getenv("NAVIT_USER_DATADIR"), "/navit.xml" , NULL));
 		list = g_list_append(list,g_strdup("navit.xml.local"));
 		list = g_list_append(list,g_strdup("navit.xml"));
 #ifdef HAVE_API_ANDROID
