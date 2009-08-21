@@ -712,15 +712,45 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 #if 0
 	if (!cd->zipcunc) {
 		char tilename[cd->zipcfnl+1];
+		char *url;
+		long long offset;
+		struct file *tile;
+		struct zip_lfh *lfh;
 		struct zip_cd *cd_copy=g_malloc(m->cde_size);
+		struct zip_eoc *eoc,*eoc_copy=g_malloc(sizeof(struct zip_eoc));
 		memcpy(cd_copy, cd, m->cde_size);
 		file_data_free(f, (unsigned char *)cd);
 		cd=NULL;
 		strncpy(tilename,(char *)(cd_copy+1),cd_copy->zipcfnl);
 		tilename[cd_copy->zipcfnl]='\0';
-		dbg(0,"encountered missing tile %s, downloading at %Ld\n",tilename,file_size(m->file));
+		url=g_strdup_printf("http://maps.navit-project.org/api/map/?memberid=%d",zipfile);
+		offset=file_size(f);
+		offset-=sizeof(struct zip_eoc);
+		eoc=(struct zip_eoc *)file_data_read(f, offset, sizeof(struct zip_eoc));
+		memcpy(eoc_copy, eoc, sizeof(struct zip_eoc));
+		file_data_free(f, (unsigned char *)eoc);
+		dbg(0,"encountered missing tile %s(%s), downloading at %Ld\n",url,tilename,offset);
+		cd_copy->zipofst=offset;
+		tile=file_create_url(url);
+		for (;;) {
+			int size=64*1024,size_ret;
+			unsigned char *data;
+			data=file_data_read_special(tile, size, &size_ret);
+			dbg(1,"got %d bytes\n",size_ret);
+			if (size_ret <= 0)
+				break;
+			file_data_write(f, offset, size_ret, data);
+			offset+=size_ret;
+		}
+		file_data_write(f, offset, sizeof(struct zip_eoc), eoc_copy);
+		lfh=(char *)(file_data_read(f,cd_copy->zipofst, sizeof(struct zip_lfh)));
+		cd_copy->zipcsiz=lfh->zipsize;
+		cd_copy->zipcunc=lfh->zipuncmp;
+		file_data_write(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size, cd_copy);
+		g_free(url);
 		g_free(cd_copy);
-		
+		cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size));
+		dbg(0,"Offset %d\n",cd->zipofst);
 	}
 #endif
 	dbg(1,"enter %p %d\n", mr, zipfile);

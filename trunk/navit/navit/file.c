@@ -161,6 +161,8 @@ unsigned char *
 file_data_read(struct file *file, long long offset, int size)
 {
 	void *ret;
+	if (file->special)
+		return NULL;
 	if (file->begin)
 		return file->begin+offset;
 	if (file_cache) {
@@ -181,6 +183,17 @@ file_data_read(struct file *file, long long offset, int size)
 }
 
 unsigned char *
+file_data_read_special(struct file *file, int size, int *size_ret)
+{
+	void *ret;
+	if (!file->special)
+		return NULL;
+	ret=g_malloc(size);
+	*size_ret=read(file->fd, ret, size);
+	return ret;
+}
+
+unsigned char *
 file_data_read_all(struct file *file)
 {
 	return file_data_read(file, 0, file->size);
@@ -196,6 +209,8 @@ file_data_write(struct file *file, long long offset, int size, unsigned char *da
 	lseek(file->fd, offset, SEEK_SET);
 	if (write(file->fd, data, size) != size)
 		return 0;
+	if (file->size < offset+size)
+		file->size=offset+size;
 	return 1;
 }
 
@@ -382,7 +397,16 @@ file_create_caseinsensitive(char *name)
 void
 file_destroy(struct file *f)
 {
-	close(f->fd);
+	switch (f->special) {
+	case 0:
+		close(f->fd);
+		break;
+#if 0
+	case 1:
+		pclose(f->stdfile);
+		break;
+#endif
+	}
 
     if ( f->begin != NULL )
     {
