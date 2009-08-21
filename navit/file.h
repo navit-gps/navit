@@ -27,6 +27,7 @@
 #include <time.h>
 #endif
 #include "param.h"
+#include <stdio.h>
 
 struct file {
 	struct file *next;
@@ -45,6 +46,8 @@ struct file {
 	long map_file;
 #endif
 	char *name;
+	FILE *stdfile;
+	int special;
 };
 
 /* prototypes */
@@ -53,11 +56,12 @@ struct file_wordexp;
 struct param_list;
 struct file *file_create(char *name);
 int file_is_dir(char *name);
-int file_size(struct file *file);
+long long file_size(struct file *file);
 int file_mkdir(char *name, int pflag);
 int file_mmap(struct file *file);
 unsigned char *file_data_read(struct file *file, long long offset, int size);
 unsigned char *file_data_read_all(struct file *file);
+int file_data_write(struct file *file, long long offset, int size, unsigned char *data);
 int file_get_contents(char *name, unsigned char **buffer, int *size);
 unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp);
 void file_data_free(struct file *file, unsigned char *data);

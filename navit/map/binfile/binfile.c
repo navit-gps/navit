@@ -707,8 +707,20 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
         struct map_priv *m=mr->m;
 	struct file *f=m->fi;
 	struct tile t;
-	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, sizeof(struct zip_cd)));
+	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size));
 	cd_to_cpu(cd);
+	if (!cd->zipcunc) {
+		char tilename[cd->zipcfnl+1];
+		struct zip_cd *cd_copy=g_malloc(m->cde_size);
+		memcpy(cd_copy, cd, m->cde_size);
+		file_data_free(f, (unsigned char *)cd);
+		cd=NULL;
+		strncpy(tilename,(char *)(cd_copy+1),cd_copy->zipcfnl);
+		tilename[cd_copy->zipcfnl]='\0';
+		dbg(0,"encountered missing tile %s, downloading at %Ld\n",tilename,file_size(m->file));
+		g_free(cd_copy);
+		
+	}
 	dbg(1,"enter %p %d\n", mr, zipfile);
 #ifdef DEBUG_SIZE
 	mr->size+=cd->zipcunc;
