@@ -709,6 +709,7 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 	struct tile t;
 	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size));
 	cd_to_cpu(cd);
+#if 0
 	if (!cd->zipcunc) {
 		char tilename[cd->zipcfnl+1];
 		struct zip_cd *cd_copy=g_malloc(m->cde_size);
@@ -721,6 +722,7 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 		g_free(cd_copy);
 		
 	}
+#endif
 	dbg(1,"enter %p %d\n", mr, zipfile);
 #ifdef DEBUG_SIZE
 	mr->size+=cd->zipcunc;
