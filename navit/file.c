@@ -76,6 +76,19 @@ file_create(char *name)
 	return file;
 }
 
+struct file *
+file_create_url(char *url)
+{
+	struct file *file= g_new0(struct file,1);
+	char *cmd=g_strdup_printf("curl %s",url);
+	file->name = g_strdup(url);
+	file->stdfile=popen(cmd,"r");
+	file->fd=fileno(file->stdfile);
+	file->special=1;
+	g_free(cmd);
+	return file;
+}
+
 int file_is_dir(char *name)
 {
 	struct stat buf;
@@ -86,7 +99,7 @@ int file_is_dir(char *name)
 
 }
 
-int
+long long
 file_size(struct file *file)
 {
 	return file->size;
@@ -169,6 +182,19 @@ unsigned char *
 file_data_read_all(struct file *file)
 {
 	return file_data_read(file, 0, file->size);
+}
+
+int
+file_data_write(struct file *file, long long offset, int size, unsigned char *data)
+{
+	if (file_cache) {
+		struct file_cache_id id={offset,size,file->name_id,0};
+		cache_flush(file_cache,&id);
+	}
+	lseek(file->fd, offset, SEEK_SET);
+	if (write(file->fd, data, size) != size)
+		return 0;
+	return 1;
 }
 
 int

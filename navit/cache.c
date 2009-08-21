@@ -248,6 +248,14 @@ cache_replace(struct cache *cache)
 	return 1;
 }
 
+void
+cache_flush(struct cache *cache, void *id)
+{
+	struct cache_entry *entry=g_hash_table_lookup(cache->hash, id);
+	if (entry)
+		cache_remove(cache, entry);
+}
+
 
 void *
 cache_lookup(struct cache *cache, void *id) {
