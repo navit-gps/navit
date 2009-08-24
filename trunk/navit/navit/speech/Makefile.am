@@ -1,4 +1,7 @@
 SUBDIRS=
+if SPEECH_ANDROID
+  SUBDIRS += android
+endif
 if SPEECH_CMDLINE
   SUBDIRS += cmdline
 endif
