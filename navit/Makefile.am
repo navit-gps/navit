@@ -44,10 +44,9 @@ libnavit_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c 
 comma=,
 XSLTS=@XSLTS@
 navit.xml: navit_shipped.xml  $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(addsuffix .xslt,$(addprefix xslt/,$(xslt))))
-	cp $< navit.xml.tmp
 	cp $< navit.xml.new
 	if [ "$(builddir)" != "$(srcdir)" ]; then cp $(srcdir)/navit.dtd $(builddir)/navit.dtd; fi
-	for i in $^; do if [ "$${i%.xslt}" != "$$i" ]; then echo "Applying $$i" ; saxon -snone navit.xml.tmp $$i >navit.xml.new || exit ; fi ; done
+	for i in $^; do if [ "$${i%.xslt}" != "$$i" ]; then echo "Applying $$i" ; saxon -snone navit.xml.new $$i >navit.xml.tmp || exit ; mv navit.xml.tmp navit.xml.new || exit ; fi ; done
 	mv navit.xml.new navit.xml
 	rm -f navit.xml.tmp
 	
