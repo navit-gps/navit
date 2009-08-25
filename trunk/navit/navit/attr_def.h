@@ -120,7 +120,7 @@ ATTR(house_number_left_interpolation)
 ATTR(house_number_right_interpolation)
 ATTR(delay)
 ATTR(lag)
-
+ATTR(bpp)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
@@ -167,6 +167,7 @@ ATTR(use_overlay)
 ATTR(night_mode)
 ATTR(autozoom_active)
 ATTR(position_valid)
+ATTR(frame)
 ATTR2(0x0002ffff,type_int_end)
 ATTR2(0x00030000,type_string_begin)
 ATTR(type)
