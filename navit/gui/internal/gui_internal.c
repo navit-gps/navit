@@ -2900,8 +2900,9 @@ static void
 gui_internal_cmd_fullscreen(struct gui_priv *this, struct widget *wm, void *data)
 {
 	graphics_draw_mode(this->gra, draw_mode_end);
-	this->fullscreen=!this->fullscreen;
-	this->win->fullscreen(this->win, this->fullscreen);
+	if (this->fullscreen != 2)
+		this->fullscreen=!this->fullscreen;
+	this->win->fullscreen(this->win, this->fullscreen != 0);
 	graphics_draw_mode(this->gra, draw_mode_begin);
 }
 
@@ -2932,16 +2933,19 @@ gui_internal_cmd_display(struct gui_priv *this, struct widget *wm, void *data)
 		gui_internal_button_new_with_callback(this, _("Layout"),
 			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
 			gui_internal_cmd_layout, NULL));
-	if (this->fullscreen) {
-		gui_internal_widget_append(w,
-			gui_internal_button_new_with_callback(this, _("Window Mode"),
-				image_new_l(this, "gui_leave_fullscreen"), gravity_center|orientation_vertical,
-				gui_internal_cmd_fullscreen, NULL));
-	} else {
-		gui_internal_widget_append(w,
-			gui_internal_button_new_with_callback(this, _("Fullscreen"),
-				image_new_l(this, "gui_fullscreen"), gravity_center|orientation_vertical,
-				gui_internal_cmd_fullscreen, NULL));
+
+	if(this->fullscreen != 2) {
+		if (this->fullscreen) {
+			gui_internal_widget_append(w,
+					gui_internal_button_new_with_callback(this, _("Window Mode"),
+						image_new_l(this, "gui_leave_fullscreen"), gravity_center|orientation_vertical,
+						gui_internal_cmd_fullscreen, NULL));
+		} else {
+			gui_internal_widget_append(w,
+					gui_internal_button_new_with_callback(this, _("Fullscreen"),
+						image_new_l(this, "gui_fullscreen"), gravity_center|orientation_vertical,
+						gui_internal_cmd_fullscreen, NULL));
+		}
 	}
 	trans=navit_get_trans(this->nav);
 	if (transform_get_pitch(trans)) {
@@ -3833,7 +3837,7 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 
 	// set fullscreen if needed
 	if (this->fullscreen)
-		this->win->fullscreen(this->win, this->fullscreen);
+		this->win->fullscreen(this->win, this->fullscreen != 0);
 	return 0;
 }
 
