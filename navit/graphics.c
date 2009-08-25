@@ -999,21 +999,25 @@ static int
 int_sqrt(unsigned int n)
 {
 	unsigned int h, p= 0, q= 1, r= n;
-	while ( q <= n ) {
-		q <<= 2;
-                if(q == 0) { 
-                        return (int) sqrtf( (float) n ); /* use float sqrt if we reach q MAX */ 
-                } 
-        } 
 
-	while ( q != 1 ) {
+	/* avoid q rollover */
+	if(n > (1<<(sizeof(n)*8-1))) {
+		q = 1<<(sizeof(n)*8-1);
+	} else {
+		while ( q <= n ) {
+			q <<= 2;
+		}
 		q >>= 2;
+	}
+
+	while ( q != 0 ) {
 		h = p + q;
 		p >>= 1;
 		if ( r >= h ) {
 			p += q;
 			r -= h;
-        	}
+		}
+		q >>= 2;
 	}
 	return p;
 }
