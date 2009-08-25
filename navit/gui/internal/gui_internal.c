@@ -2361,8 +2361,6 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	struct widget *wc;
 	struct item *item=NULL;
 	GList *l;
-	static int cpt_res = 0;
-	cpt_res ++;
 	static char possible_keys[256]="";
 
 	res=search_list_get_result(this->sl);
@@ -2393,7 +2391,6 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 
 	if (! res) {
 		gui_internal_search_idle_end(this);
-		cpt_res = 0;
 
 		struct menu_data *md=gui_internal_menu_data(this);
 		if (md && md->keyboard) {
@@ -2445,7 +2442,6 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		text=g_strdup_printf("%s %s", res->town->name, res->street->name);
 	}
 	dbg(1,"res->country->flag=%s\n", res->country->flag);
-	if (cpt_res <= 2) {
 		gui_internal_widget_append(search_list,
 				wc=gui_internal_button_new_with_callback(this, text,
 					image_new_xs(this, res->country->flag),
@@ -2462,7 +2458,6 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		graphics_draw_mode(this->gra, draw_mode_begin);
 		gui_internal_widget_render(this, l->data);
 		graphics_draw_mode(this->gra, draw_mode_end);
-	}
 	g_free(text);
 }
 
