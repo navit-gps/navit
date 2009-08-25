@@ -72,6 +72,7 @@ struct navigation {
 	int distance_turn;
 	struct callback *route_cb;
 	int announce[route_item_last-route_item_first+1][3];
+	int tell_street_name;
 };
 
 
@@ -142,6 +143,7 @@ struct navigation *
 navigation_new(struct attr *parent, struct attr **attrs)
 {
 	int i,j;
+	struct attr * attr;
 	struct navigation *ret=g_new0(struct navigation, 1);
 	ret->hash=item_hash_new();
 	ret->callback=callback_list_new();
@@ -150,11 +152,16 @@ navigation_new(struct attr *parent, struct attr **attrs)
 	ret->distance_turn=50;
 	ret->turn_around_limit=3;
 	ret->navit=parent->u.navit;
+	ret->tell_street_name=1;
 
 	for (j = 0 ; j <= route_item_last-route_item_first ; j++) {
 		for (i = 0 ; i < 3 ; i++) {
 			ret->announce[j][i]=-1;
 		}
+	}
+
+	if ((attr=attr_search(attrs, NULL, attr_tell_street_name))) {
+		ret->tell_street_name = attr->u.num;
 	}
 
 	return ret;	
@@ -1485,7 +1492,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	}
 	if (cmd->itm->next) {
 		int tellstreetname = 0;
-		char *destination = NULL; 
+		char *destination = NULL;
  
 		if(type == attr_navigation_speech) { // In voice mode
 			// In Voice Mode only tell the street name in level 1 or in level 0 if level 1
@@ -1507,8 +1514,9 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		else
 		     tellstreetname = 1;
 
-		if(tellstreetname) 
+		if(nav->tell_street_name && tellstreetname)
 			destination=navigation_item_destination(cmd->itm, itm, " ");
+
 		if (level != -2) {
 			/* TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street' */
 			ret=g_strdup_printf(_("Turn %1$s%2$s %3$s%4$s"), strength, dir, d, destination ? destination:"");
