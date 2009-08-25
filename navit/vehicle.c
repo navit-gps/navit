@@ -54,15 +54,27 @@ static void
 vehicle_log_gpx(struct vehicle *this_, struct log *log)
 {
 	struct attr pos_attr;
+	struct attr radius_attr;
 	struct attr time_attr;
 	struct attr *profile_attr;
+	struct attr speed_attr;
+	struct attr course_attr;
+	char buffer[256];
+	char tbuf[256];
 	char *timep;
+	double zero = 0.0f;
 	int free=0;
 
 	if (!this_->meth.position_attr_get)
 		return;
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
 		return;
+	if (!this_->meth.position_attr_get(this_->priv, attr_position_radius, &radius_attr))
+		radius_attr.u.numd = &zero;
+	if (!this_->meth.position_attr_get(this_->priv, attr_position_speed, &speed_attr))
+		speed_attr.u.numd = &zero;
+	if (!this_->meth.position_attr_get(this_->priv, attr_position_direction, &course_attr))
+		course_attr.u.numd = &zero;
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_time_iso8601, &time_attr)) {
 		timep = current_to_iso8601();
 		free=1;
@@ -76,11 +88,19 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 	log_printf(log,
 			"<trkpt lat=\"%f\" lon=\"%f\">\n"
 			"\t<time>%s</time>\n"
-			"\t<extensions><navit:profilename>%s</navit:profilename></extensions>\n"
+			"\t<course>%.1f</course>\n"
+			"\t<speed>%.2f</speed>\n"
+			"\t<extensions>"
+			"\t\t<radius>%.2f</radius>\n"
+			"\t\t<navit:profilename>%s</navit:profilename>\n"
+			"\t</extensions>\n"
 			"</trkpt>\n",
 		pos_attr.u.coord_geo->lat,
 		pos_attr.u.coord_geo->lng,
 		timep,
+		(*course_attr.u.numd),
+		(*speed_attr.u.numd),
+		(*radius_attr.u.numd),
 		profile_attr->u.str
 	);
 
