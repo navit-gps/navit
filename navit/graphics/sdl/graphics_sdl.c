@@ -1662,6 +1662,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 			rmask, gmask, bmask, amask);
 
 	ov->overlay_mode = 1;
+	ov->overlay_enable = 1;
 	ov->overlay_x = p->x;
 	ov->overlay_y = p->y;
 	ov->overlay_parent = gr;
