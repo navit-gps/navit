@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-02 20:42+0200\n"
-"PO-Revision-Date: 2009-07-10 14:24+0000\n"
-"Last-Translator: Ed Kapitein <Unknown>\n"
+"POT-Creation-Date: 2009-07-27 13:19+0200\n"
+"PO-Revision-Date: 2009-05-30 08:54+0000\n"
+"Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-08-05 05:52+0000\n"
+"X-Launchpad-Export-Date: 2009-07-02 18:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -141,25 +141,25 @@ msgstr "naar de afslag"
 #: ../navit/navigation.c:1298
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr "%sin de straat %s%s%s"
+msgstr "%sde straat %s%s%s in"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:1302
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr "%sin de %s%s%s|mannelijke vorm"
+msgstr "%sde %s%s%s in|mannelijke vorm"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:1306
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr "%sin de %s%s%s|vrouwelijke vorm"
+msgstr "%sde %s%s%s in|vrouwelijke vorm"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:1310
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr "%sin de %s%s%s|neutrale vorm"
+msgstr "%sde %s%s%s in|neutrale vorm"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #: ../navit/navigation.c:1317
@@ -276,56 +276,56 @@ msgstr "%s bestemming bereikt"
 msgid "then you have reached your destination."
 msgstr "daarna bent u op uw besteming"
 
-#: ../navit/navit.c:1174
+#: ../navit/navit.c:1183
 msgid "Position"
 msgstr "Positie"
 
-#: ../navit/navit.c:1175
+#: ../navit/navit.c:1184
 msgid "Command"
 msgstr "Opdracht"
 
-#: ../navit/navit.c:1179
+#: ../navit/navit.c:1188
 msgid "Length"
 msgstr "Lengte"
 
-#: ../navit/navit.c:1183 ../navit/navit.c:1208
+#: ../navit/navit.c:1192 ../navit/navit.c:1217
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:1187 ../navit/navit.c:1212
+#: ../navit/navit.c:1196 ../navit/navit.c:1221
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:1193
+#: ../navit/navit.c:1202
 msgid "Time"
 msgstr "Tijd"
 
-#: ../navit/navit.c:1205
+#: ../navit/navit.c:1214
 msgid "Destination Length"
 msgstr "Afstand"
 
-#: ../navit/navit.c:1218
+#: ../navit/navit.c:1227
 msgid "Destination Time"
 msgstr "Aankomsttijd"
 
-#: ../navit/navit.c:1251 ../navit/gui/gtk/gui_gtk_action.c:225
+#: ../navit/navit.c:1260 ../navit/gui/gtk/gui_gtk_action.c:225
 msgid "Roadbook"
 msgstr "Route"
 
 #: ../navit/popup.c:278 ../navit/popup.c:347
-#: ../navit/gui/internal/gui_internal.c:2125
+#: ../navit/gui/internal/gui_internal.c:2130
 msgid "Set as position"
 msgstr "Zet als positie"
 
 #: ../navit/popup.c:279 ../navit/popup.c:348
-#: ../navit/gui/internal/gui_internal.c:2121
+#: ../navit/gui/internal/gui_internal.c:2126
 msgid "Set as destination"
 msgstr "Zet als bestemming"
 
 #: ../navit/popup.c:280 ../navit/popup.c:349
-#: ../navit/gui/internal/gui_internal.c:2129
+#: ../navit/gui/internal/gui_internal.c:2134
 msgid "Add as bookmark"
-msgstr "Opnemen als bladwijzer"
+msgstr "Opslaan als favoriet"
 
 #: ../navit/popup.c:337
 #, c-format
@@ -1570,7 +1570,7 @@ msgstr "Zimbabwe"
 
 #: ../navit/country.c:285
 msgid "* Unknown, add is_in tags to those cities"
-msgstr "onbekend, voegt is_in label toe aan deze steden"
+msgstr ""
 
 #: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:128
 #: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
@@ -1586,7 +1586,7 @@ msgid "Iso3"
 msgstr "Iso3"
 
 #: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:435
-#: ../navit/gui/internal/gui_internal.c:2865
+#: ../navit/gui/internal/gui_internal.c:2870
 msgid "Country"
 msgstr "Land"
 
@@ -1598,9 +1598,9 @@ msgstr "Postcode"
 
 #: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
 #: ../navit/gui/gtk/destination.c:130
-#: ../navit/gui/internal/gui_internal.c:2844
-#: ../navit/gui/internal/gui_internal.c:2873
-#: ../navit/gui/internal/gui_internal.c:3008
+#: ../navit/gui/internal/gui_internal.c:2849
+#: ../navit/gui/internal/gui_internal.c:2878
+#: ../navit/gui/internal/gui_internal.c:3013
 msgid "Town"
 msgstr "Plaats"
 
@@ -1612,8 +1612,8 @@ msgstr "District"
 
 #: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
 #: ../navit/gui/gtk/destination.c:446
-#: ../navit/gui/internal/gui_internal.c:2825
-#: ../navit/gui/internal/gui_internal.c:2834
+#: ../navit/gui/internal/gui_internal.c:2830
+#: ../navit/gui/internal/gui_internal.c:2839
 msgid "Street"
 msgstr "Straat"
 
@@ -1651,13 +1651,13 @@ msgid "Destination"
 msgstr "Bestemming"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:196
-#: ../navit/gui/internal/gui_internal.c:2929
-#: ../navit/gui/internal/gui_internal.c:3222
+#: ../navit/gui/internal/gui_internal.c:2934
+#: ../navit/gui/internal/gui_internal.c:3359
 msgid "Display"
 msgstr "Tonen"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:197
-#: ../navit/gui/internal/gui_internal.c:4654
+#: ../navit/gui/internal/gui_internal.c:4791
 msgid "Route"
 msgstr "Route"
 
@@ -1666,14 +1666,14 @@ msgid "Former Destinations"
 msgstr "Vorige bestemmingen"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:199
-#: ../navit/gui/internal/gui_internal.c:2225
-#: ../navit/gui/internal/gui_internal.c:2984
+#: ../navit/gui/internal/gui_internal.c:2230
+#: ../navit/gui/internal/gui_internal.c:2989
 msgid "Bookmarks"
-msgstr "Bookmarks"
+msgstr "Favorieten"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:201
-#: ../navit/gui/internal/gui_internal.c:2884
-#: ../navit/gui/internal/gui_internal.c:2931
+#: ../navit/gui/internal/gui_internal.c:2889
+#: ../navit/gui/internal/gui_internal.c:2936
 msgid "Layout"
 msgstr "Opmaak"
 
@@ -1682,8 +1682,8 @@ msgid "Projection"
 msgstr "Projectie"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:203
-#: ../navit/gui/internal/gui_internal.c:3165
-#: ../navit/gui/internal/gui_internal.c:3230
+#: ../navit/gui/internal/gui_internal.c:3302
+#: ../navit/gui/internal/gui_internal.c:3367
 msgid "Vehicle"
 msgstr "Voertuig"
 
@@ -1721,19 +1721,19 @@ msgstr "Cursor"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:223
 msgid "Lock on Road"
-msgstr "houd de weg aan"
+msgstr "Blijf op de weg"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:224
-#: ../navit/gui/internal/gui_internal.c:3204
+#: ../navit/gui/internal/gui_internal.c:3341
 msgid "Northing"
-msgstr "Kaart richting"
+msgstr "Noord boven"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:226
 msgid "Autozoom"
-msgstr "automatisch vergroten/verkleinen"
+msgstr "Autozoom"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
-#: ../navit/gui/internal/gui_internal.c:2941
+#: ../navit/gui/internal/gui_internal.c:2946
 msgid "Fullscreen"
 msgstr "Beeldvullend"
 
@@ -1786,12 +1786,12 @@ msgid "No"
 msgstr "Nee"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:75
-#: ../navit/gui/internal/gui_internal.c:2948
+#: ../navit/gui/internal/gui_internal.c:2953
 msgid "2D"
 msgstr "2D"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:76
-#: ../navit/gui/internal/gui_internal.c:2954
+#: ../navit/gui/internal/gui_internal.c:2959
 msgid "3D"
 msgstr "3D"
 
@@ -1808,134 +1808,156 @@ msgstr "Route %4.0fkm    %02d:%02d Aankomsttijd"
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Route 0000km  0+00:00 Aankomsttijd"
 
-#: ../navit/gui/internal/gui_internal.c:1335
+#: ../navit/gui/internal/gui_internal.c:1340
 msgid "Back to map"
 msgstr "Terug naar de kaart"
 
-#: ../navit/gui/internal/gui_internal.c:1344
+#: ../navit/gui/internal/gui_internal.c:1349
 msgid "Main Menu"
 msgstr "Hoofdmenu"
 
-#: ../navit/gui/internal/gui_internal.c:1461
+#: ../navit/gui/internal/gui_internal.c:1466
 msgid "Help"
 msgstr "Hulp"
 
-#: ../navit/gui/internal/gui_internal.c:1611
+#: ../navit/gui/internal/gui_internal.c:1616
 msgid "Back"
-msgstr "terug"
+msgstr "Terug"
 
-#: ../navit/gui/internal/gui_internal.c:1917
-#: ../navit/gui/internal/gui_internal.c:2134
+#: ../navit/gui/internal/gui_internal.c:1922
+#: ../navit/gui/internal/gui_internal.c:2139
 msgid "POIs"
-msgstr "bezienswaardigheden"
+msgstr "Bezienswaardigheden"
 
-#: ../navit/gui/internal/gui_internal.c:2082
+#: ../navit/gui/internal/gui_internal.c:2087
 msgid "Streets"
-msgstr "straten"
+msgstr "Straten"
 
-#: ../navit/gui/internal/gui_internal.c:2090
+#: ../navit/gui/internal/gui_internal.c:2095
 msgid "House numbers"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2107
+#: ../navit/gui/internal/gui_internal.c:2112
 msgid "View in Browser"
-msgstr "bekijk in browser"
+msgstr "Bekijk in browser"
 
-#: ../navit/gui/internal/gui_internal.c:2113
+#: ../navit/gui/internal/gui_internal.c:2118
 msgid "View Attributes"
-msgstr "bekijk eigenschappen"
+msgstr "Bekijk eigenschappen"
 
-#: ../navit/gui/internal/gui_internal.c:2148
+#: ../navit/gui/internal/gui_internal.c:2153
 msgid "View on map"
-msgstr "bekijk op de kaart"
+msgstr "Bekijk op de kaart"
 
-#: ../navit/gui/internal/gui_internal.c:2261
+#: ../navit/gui/internal/gui_internal.c:2266
 #, c-format
 msgid "Bookmark %s"
-msgstr "favoriet %s"
+msgstr "Favoriet %s"
 
-#: ../navit/gui/internal/gui_internal.c:2809
-#: ../navit/gui/internal/gui_internal.c:2818
+#: ../navit/gui/internal/gui_internal.c:2814
+#: ../navit/gui/internal/gui_internal.c:2823
 msgid "House number"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2936
+#: ../navit/gui/internal/gui_internal.c:2941
 msgid "Window Mode"
 msgstr "Venstermodus"
 
-#: ../navit/gui/internal/gui_internal.c:2982
-#: ../navit/gui/internal/gui_internal.c:3270
+#: ../navit/gui/internal/gui_internal.c:2987
+#: ../navit/gui/internal/gui_internal.c:3407
 msgid "Actions"
 msgstr "Acties"
 
-#: ../navit/gui/internal/gui_internal.c:2993
+#: ../navit/gui/internal/gui_internal.c:2998
 msgid "Map Point"
-msgstr "punt op de kaart"
+msgstr "Punt op de kaart"
 
-#: ../navit/gui/internal/gui_internal.c:3003
+#: ../navit/gui/internal/gui_internal.c:3008
 msgid "Vehicle Position"
-msgstr "voertuig positie"
+msgstr "Voertuigpositie"
 
-#: ../navit/gui/internal/gui_internal.c:3012
+#: ../navit/gui/internal/gui_internal.c:3017
 msgid "Quit"
 msgstr "Afsluiten"
 
-#: ../navit/gui/internal/gui_internal.c:3018
+#: ../navit/gui/internal/gui_internal.c:3023
 msgid ""
 "Stop\n"
 "Navigation"
 msgstr ""
-"stop\n"
+"Stop\n"
 "navigatie"
 
-#: ../navit/gui/internal/gui_internal.c:3034
-#: ../navit/gui/internal/gui_internal.c:3226
+#: ../navit/gui/internal/gui_internal.c:3039
+#: ../navit/gui/internal/gui_internal.c:3363
 msgid "Maps"
 msgstr "Kaarten"
 
-#: ../navit/gui/internal/gui_internal.c:3078
+#: ../navit/gui/internal/gui_internal.c:3083
 msgid "Show Satellite Status"
 msgstr "Toon satelliet status"
 
-#: ../navit/gui/internal/gui_internal.c:3112
+#: ../navit/gui/internal/gui_internal.c:3117
 msgid "Show NMEA Data"
 msgstr "NMEA data weergeven"
 
-#: ../navit/gui/internal/gui_internal.c:3136
+#: ../navit/gui/internal/gui_internal.c:3209
+msgid "car"
+msgstr "Auto"
+
+#: ../navit/gui/internal/gui_internal.c:3209
+msgid "bike"
+msgstr "Fiets"
+
+#: ../navit/gui/internal/gui_internal.c:3209
+msgid "pedestrian"
+msgstr "Voetganger"
+
+#: ../navit/gui/internal/gui_internal.c:3226
+#, c-format
+msgid "Current profile: %s"
+msgstr "Huidig profiel: %s"
+
+#: ../navit/gui/internal/gui_internal.c:3228
+#, c-format
+msgid "Change profile to: %s"
+msgstr "Verander profiel naar: %s"
+
+#: ../navit/gui/internal/gui_internal.c:3263
 msgid "Set as active"
-msgstr "activeren"
+msgstr "Activeren"
 
-#: ../navit/gui/internal/gui_internal.c:3142
+#: ../navit/gui/internal/gui_internal.c:3270
 msgid "Show Satellite status"
-msgstr "satelliet status weergeven"
+msgstr "Satellietstatus weergeven"
 
-#: ../navit/gui/internal/gui_internal.c:3148
+#: ../navit/gui/internal/gui_internal.c:3276
 msgid "Show NMEA data"
-msgstr ""
+msgstr "Toon NMEA data"
 
-#: ../navit/gui/internal/gui_internal.c:3190
-#: ../navit/gui/internal/gui_internal.c:3234
+#: ../navit/gui/internal/gui_internal.c:3327
+#: ../navit/gui/internal/gui_internal.c:3371
 msgid "Rules"
 msgstr "Regels"
 
-#: ../navit/gui/internal/gui_internal.c:3198
+#: ../navit/gui/internal/gui_internal.c:3335
 msgid "Lock on road"
-msgstr "volg de weg"
+msgstr "Huidige locatie altijd op de weg"
 
-#: ../navit/gui/internal/gui_internal.c:3210
+#: ../navit/gui/internal/gui_internal.c:3347
 msgid "Map follows Vehicle"
-msgstr "kaart volgt voertuig"
+msgstr "Kaart volgt voertuig"
 
-#: ../navit/gui/internal/gui_internal.c:3220
-#: ../navit/gui/internal/gui_internal.c:3278
+#: ../navit/gui/internal/gui_internal.c:3357
+#: ../navit/gui/internal/gui_internal.c:3415
 msgid "Settings"
 msgstr "Instellingen"
 
-#: ../navit/gui/internal/gui_internal.c:3268
+#: ../navit/gui/internal/gui_internal.c:3405
 msgid "Main menu"
 msgstr "Hoofdmenu"
 
-#: ../navit/gui/internal/gui_internal.c:3274
+#: ../navit/gui/internal/gui_internal.c:3411
 msgid ""
 "Show\n"
 "Map"
@@ -1943,19 +1965,19 @@ msgstr ""
 "Kaart\n"
 "Weergeven"
 
-#: ../navit/gui/internal/gui_internal.c:3281
+#: ../navit/gui/internal/gui_internal.c:3418
 msgid "Tools"
 msgstr "Gereedschappen"
 
-#: ../navit/gui/internal/gui_internal.c:3392
+#: ../navit/gui/internal/gui_internal.c:3529
 msgid "Message"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:4511
-#: ../navit/gui/internal/gui_internal.c:4659
+#: ../navit/gui/internal/gui_internal.c:4648
+#: ../navit/gui/internal/gui_internal.c:4796
 msgid "Height Profile"
-msgstr ""
+msgstr "Hoogteprofiel"
 
-#: ../navit/gui/internal/gui_internal.c:4656
+#: ../navit/gui/internal/gui_internal.c:4793
 msgid "Description"
-msgstr ""
+msgstr "Omschrijving"
