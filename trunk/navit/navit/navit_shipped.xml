@@ -1351,35 +1351,56 @@
 		<itemgra item_types="house_number" order="15-">
 			<circle color="#000000" radius="3" text_size="7"/>
 		</itemgra>
-                <itemgra item_types="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="12-">
+                <itemgra item_types="town_label,district_label,town_label_0e0,town_label_1e0,town_label_2e0,town_label_5e0,town_label_1e1,town_label_2e1,town_label_5e1,town_label_1e2,town_label_2e2,town_label_5e2,district_label_0e0,district_label_1e0,district_label_2e0,district_label_5e0,district_label_1e1,district_label_2e1,district_label_5e1,district_label_1e2,district_label_2e2,district_label_5e2" order="11-">
                     <circle color="#000000" radius="3" text_size="7"/>
                 </itemgra>
-                <itemgra item_types="district_label_1e3,district_label_2e3,district_label_5e3" order="11-">
+                <itemgra item_types="district_label_1e3,district_label_2e3,district_label_5e3" order="10-">
                     <circle color="#000000" radius="3" text_size="7"/>
                 </itemgra>
-                <itemgra item_types="town_label_1e3,town_label_2e3,town_label_5e3" order="10-">
-                    <circle color="#000000" radius="3" text_size="7"/>
+                <itemgra item_types="town_label_1e3" order="10-">
+                    <circle color="#000000" radius="3" text_size="10"/>
                 </itemgra>
                 <itemgra item_types="district_label_1e4,district_label_2e4,district_label_5e4" order="9-">
                     <circle color="#000000" radius="3" text_size="7"/>
                 </itemgra>
-                <itemgra item_types="town_label_1e4,town_label_2e4,town_label_5e4" order="8-">
+                <itemgra item_types="town_label_2e3" order="9-">
+                    <circle color="#000000" radius="3" text_size="10"/>
+                </itemgra>
+                <itemgra item_types="town_label_5e3,town_label_1e4,town_label_2e4,town_label_5e4" order="9-">
+                    <circle color="#000000" radius="3" text_size="15"/>
+                </itemgra>
+                <itemgra item_types="district_label_1e5,district_label_2e5,district_label_5e5" order="8-">
                     <circle color="#000000" radius="3" text_size="7"/>
                 </itemgra>
-                <itemgra item_types="district_label_1e5,district_label_2e5,district_label_5e5" order="6-">
+                <itemgra item_types="town_label_2e3" order="8">
+                    <circle color="#000000" radius="3" text_size="7"/>
+		</itemgra>
+                <itemgra item_types="district_label_1e6,district_label_2e6,district_label_5e6,district_label_1e7" order="7-">
+                    <circle color="#000000" radius="3" text_size="7"/>
+                </itemgra>
+                <itemgra item_types="town_label_5e3" order="7-8">
                     <circle color="#000000" radius="3" text_size="10"/>
                 </itemgra>
-                <itemgra item_types="town_label_1e5,town_label_2e5,town_label_5e5" order="4-">
+                <itemgra item_types="town_label_1e4" order="6-8">
                     <circle color="#000000" radius="3" text_size="10"/>
                 </itemgra>
-                <itemgra item_types="district_label_1e6,district_label_2e6,district_label_5e6" order="3-">
+                <itemgra item_types="town_label_2e4,town_label_5e4" order="5-8">
+                    <circle color="#000000" radius="3" text_size="10"/>
+                </itemgra>
+                <itemgra item_types="town_label_1e5,town_label_2e5,town_label_5e5" order="5-">
                     <circle color="#000000" radius="3" text_size="15"/>
                 </itemgra>
-                <itemgra item_types="town_label_1e6,town_label_2e6,town_label_5e6" order="2-">
+                <itemgra item_types="town_label_1e6,town_label_2e6,town_label_5e6,town_label_1e7" order="5-">
+                    <circle color="#000000" radius="3" text_size="20"/>
+                </itemgra>
+                <itemgra item_types="town_label_1e5,town_label_2e5,town_label_5e5" order="3-4">
+                    <circle color="#000000" radius="3" text_size="10"/>
+                </itemgra>
+                <itemgra item_types="town_label_1e6,town_label_2e6,town_label_5e6,town_label_1e7" order="3-4">
                     <circle color="#000000" radius="3" text_size="15"/>
                 </itemgra>
-                <itemgra item_types="town_label_1e7,district_label_1e7" order="1-">
-                    <circle color="#000000" radius="3" text_size="15"/>
+                <itemgra item_types="town_label_1e6,town_label_2e6,town_label_5e6,town_label_1e7" order="0-2">
+                    <circle color="#000000" radius="3" text_size="10"/>
                 </itemgra>
             </layer>
 	    <layer name="Internal">
