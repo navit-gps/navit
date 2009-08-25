@@ -99,6 +99,9 @@ struct graphics_priv;
 struct graphics_priv {
     SDL_Surface *screen;
     int aa;
+    /* video modes */
+    uint32_t video_flags;
+    int video_bpp;
 
     /* <overlay> */
     int overlay_mode;
@@ -408,7 +411,9 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
     if(gi->img)
     {
         /* TBD: improves blit performance? */
+#if !SDL_VERSION_ATLEAST(1,3,0)
         SDL_SetColorKey(gi->img, SDL_RLEACCEL, gi->img->format->colorkey);
+#endif
         *w=gi->img->w;
         *h=gi->img->h;
         hot->x=*w/2;
@@ -536,18 +541,20 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
     if(gr->aa)
     {
         raster_aapolygon(gr->screen, count, vx, vy,
-                       SDL_MapRGB(gr->screen->format,
+                       SDL_MapRGBA(gr->screen->format,
                                   gc->fore_r,
                                   gc->fore_g,
-                                  gc->fore_b));
+                                  gc->fore_b,
+                                  gc->fore_a));
     }
     else
     {
         raster_polygon(gr->screen, count, vx, vy,
-                       SDL_MapRGB(gr->screen->format,
+                       SDL_MapRGBA(gr->screen->format,
                                   gc->fore_r,
                                   gc->fore_g,
-                                  gc->fore_b));
+                                  gc->fore_b,
+                                  gc->fore_a));
     }
 #else
 #ifdef SDL_SGE
@@ -600,10 +607,11 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
 
 #ifdef RASTER
     raster_rect(gr->screen, p->x, p->y, w, h,
-                SDL_MapRGB(gr->screen->format,
+                SDL_MapRGBA(gr->screen->format,
                            gc->fore_r,
                            gc->fore_g,
-                           gc->fore_b));
+                           gc->fore_b,
+                           gc->fore_a));
 #else
 #ifdef SDL_SGE
 #ifdef ALPHA
@@ -652,14 +660,20 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
         if(gr->aa)
         {
             raster_aacircle(gr->screen, p->x, p->y, r,
-                            SDL_MapRGB(gr->screen->format,
-                                       gc->fore_r, gc->fore_g, gc->fore_b));
+                            SDL_MapRGBA(gr->screen->format,
+                                       gc->fore_r,
+                                       gc->fore_g,
+                                       gc->fore_b,
+                                       gc->fore_a));
         }
         else
         {
             raster_circle(gr->screen, p->x, p->y, r,
-                          SDL_MapRGB(gr->screen->format,
-                                     gc->fore_r, gc->fore_g, gc->fore_b));
+                          SDL_MapRGBA(gr->screen->format,
+                                     gc->fore_r,
+                                     gc->fore_g,
+                                     gc->fore_b,
+                                     gc->fore_a));
         }
 #else
 #ifdef SDL_SGE
@@ -776,14 +790,20 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
             if(gr->aa)
             {
                 raster_aaline(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
-                         SDL_MapRGB(gr->screen->format,
-                                    gc->fore_r, gc->fore_g, gc->fore_b));
+                         SDL_MapRGBA(gr->screen->format,
+                                    gc->fore_r,
+                                    gc->fore_g,
+                                    gc->fore_b,
+                                    gc->fore_a));
             }
             else
             {
                 raster_line(gr->screen, p[i].x, p[i].y, p[i+1].x, p[i+1].y,
-                         SDL_MapRGB(gr->screen->format,
-                                    gc->fore_r, gc->fore_g, gc->fore_b));
+                         SDL_MapRGBA(gr->screen->format,
+                                    gc->fore_r,
+                                    gc->fore_g,
+                                    gc->fore_b,
+                                    gc->fore_a));
             }
 #else
 #ifdef SDL_SGE
@@ -1161,7 +1181,7 @@ display_text_draw(struct text_render *text, struct graphics_priv *gr, struct gra
     int i, x, y, poff, soff, col_lev;
     struct text_glyph *gly, **gp;
     Uint32 pix;
-    Uint8 r, g, b;
+    Uint8 r, g, b, a;
 
 #if 0
     dbg(0,"%u %u %u %u, %u %u %u %u\n",
@@ -1245,11 +1265,12 @@ display_text_draw(struct text_render *text, struct graphics_priv *gr, struct gra
                         }
                     }
 
-                    SDL_GetRGB(pix,
+                    SDL_GetRGBA(pix,
                                gr->screen->format,
                                &r,
                                &g,
-                               &b);
+                               &b,
+                               &a);
 
 #ifdef DEBUG
                     printf("%u %u -> %u off\n",
@@ -1273,15 +1294,17 @@ display_text_draw(struct text_render *text, struct graphics_priv *gr, struct gra
                         {
                             if(col_lev >= 3*0x80)
                             {
-                                r |= bg->fore_r;
-                                g |= bg->fore_g;
-                                b |= bg->fore_b;
+                                r = bg->fore_r;
+                                g = bg->fore_g;
+                                b = bg->fore_b;
+                                a = bg->fore_a;
                             }
                             else
                             {
                                 r &= ~bg->fore_r;
                                 g &= ~bg->fore_g;
                                 b &= ~bg->fore_b;
+                                a &= ~bg->fore_a;
                             }
                         }
                     }
@@ -1310,10 +1333,11 @@ display_text_draw(struct text_render *text, struct graphics_priv *gr, struct gra
                            r, g, b);
 #endif
 
-                    pix = SDL_MapRGB(gr->screen->format,
+                    pix = SDL_MapRGBA(gr->screen->format,
                                      r,
                                      g,
-                                     b);
+                                     b,
+                                     a);
 
                     switch(gr->screen->format->BytesPerPixel)
                     {
@@ -1463,7 +1487,9 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
                     if(ov)
                     {
                         rect.x = ov->overlay_x;
+                        if(rect.x<0) rect.x += gr->screen->w;
                         rect.y = ov->overlay_y;
+                        if(rect.y<0) rect.y += gr->screen->h;
                         rect.w = ov->screen->w;
                         rect.h = ov->screen->h;
                         SDL_BlitSurface(ov->screen, NULL,
@@ -1500,35 +1526,47 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 
 static int window_fullscreen(struct window *win, int on)
 {
-    /* TODO */
-    return 0;
+	struct graphics_priv *gr=(struct graphics_priv *)win->priv;
+
+	/* Update video flags */
+	if(on) {
+		gr->video_flags |= SDL_FULLSCREEN;
+	} else {
+		gr->video_flags &= ~SDL_FULLSCREEN;
+	}
+
+	/* Update video mode */
+	gr->screen = SDL_SetVideoMode(gr->screen->w, gr->screen->h, gr->video_bpp, gr->video_flags);
+	if(gr->screen == NULL) {
+		navit_destroy(gr->nav);
+	} 
+	else {
+		callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
+	}
+	return 1;
 }
-
-static struct window sdl_win =
-{
-    NULL,
-    window_fullscreen
-
-};
 
 static void *
 get_data(struct graphics_priv *this, char *type)
 {
-    printf("get_data: %s\n", type);
-
-    if(strcmp(type, "window") == 0)
-    {
-        return &sdl_win;
-    }
-    else
-    {
-    	return &dummy;
-    }
+	if(strcmp(type, "window") == 0) {
+		struct window *win;
+		win=g_new(struct window, 1);
+		win->priv=this;
+		win->fullscreen=window_fullscreen;
+		win->disable_suspend=NULL;
+		return win;
+	} else {
+		return &dummy;
+	}
 }
 
 static void draw_drag(struct graphics_priv *gr, struct point *p)
 {
-	// FIXME
+	if(p) {
+	    gr->overlay_x = p->x;
+	    gr->overlay_y = p->y;
+	}
 }
 
 static struct graphics_methods graphics_methods = {
@@ -1561,75 +1599,77 @@ static struct graphics_methods graphics_methods = {
 static struct graphics_priv *
 overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h,int alpha, int wraparound)
 {
-    struct graphics_priv *ov;
-    int i, x, y;
+	struct graphics_priv *ov;
+	Uint32 rmask, gmask, bmask, amask;
+	int i;
 
-    for(i = 0; i < OVERLAY_MAX; i++)
-    {
-        if(gr->overlay_array[i] == NULL)
-        {
-            break;
-        }
-    }
-    if(i == OVERLAY_MAX)
-    {
-        dbg(0, "too many overlays! increase OVERLAY_MAX\n");
-        return NULL;
-    }
-    dbg(0, "x %d y %d\n", p->x, p->y);
+	for(i = 0; i < OVERLAY_MAX; i++)
+	{
+		if(gr->overlay_array[i] == NULL)
+		{
+			break;
+		}
+	}
+	if(i == OVERLAY_MAX)
+	{
+		dbg(0, "too many overlays! increase OVERLAY_MAX\n");
+		return NULL;
+	}
 
-    if(p->x < 0)
-    {
-        x = gr->screen->w + p->x;
-    }
-    else
-    {
-        x = p->x;
-    }
-    if(p->y < 0)
-    {
-        y = gr->screen->h + p->y;
-    }
-    else
-    {
-        y = p->y;
-    }
+	dbg(1, "overlay_new %d %d %d %u %u (%x, %x, %x ,%x, %d)\n", i,
+			p->x,
+			p->y,
+			w,
+			h,
+			gr->screen->format->Rmask,
+			gr->screen->format->Gmask,
+			gr->screen->format->Bmask,
+			gr->screen->format->Amask,
+			gr->screen->format->BitsPerPixel
+	   );
 
-    dbg(1, "overlay_new %d %d %d %u %u\n", i,
-        x,
-        y,
-        w,
-        h);
+	ov = g_new0(struct graphics_priv, 1);
 
-    ov = g_new0(struct graphics_priv, 1);
+	switch(gr->screen->format->BitsPerPixel) {
+	case 8:
+		rmask = 0xc0;
+		gmask = 0x30;
+		bmask = 0x0c;
+		amask = 0x03;
+		break;
+	case 16:
+		rmask = 0xf000;
+		gmask = 0x0f00;
+		bmask = 0x00f0;
+		amask = 0x000f;
+		break;
+	case 32:
+		rmask = 0xff000000;
+		gmask = 0x00ff0000;
+		bmask = 0x0000ff00;
+		amask = 0x000000ff;
+		break;
+	default:
+		rmask = gr->screen->format->Rmask;
+		gmask = gr->screen->format->Gmask;
+		bmask = gr->screen->format->Bmask;
+		amask = gr->screen->format->Amask;
+	}
 
-    ov->screen = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCALPHA, 
-                                      w, h,
-#if 1 
-                                      gr->screen->format->BitsPerPixel,
-                                      gr->screen->format->Rmask,
-                                      gr->screen->format->Gmask,
-                                      gr->screen->format->Bmask,
-                                      0x00000000);
-#else
-                                      0x00ff0000,
-                                      0x0000ff00,
-                                      0x000000ff,
-                                      0xff000000);
-#endif
-    SDL_SetAlpha(ov->screen, SDL_SRCALPHA, 128);
+	ov->screen = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCALPHA, 
+			w, h,
+			gr->screen->format->BitsPerPixel,
+			rmask, gmask, bmask, amask);
 
-    ov->overlay_mode = 1;
-    ov->overlay_x = x;
-    ov->overlay_y = y;
-    ov->overlay_parent = gr;
-    ov->overlay_idx = i;
-
-    gr->overlay_array[i] = ov;
-
+	ov->overlay_mode = 1;
+	ov->overlay_x = p->x;
+	ov->overlay_y = p->y;
+	ov->overlay_parent = gr;
+	ov->overlay_idx = i;
+	gr->overlay_array[i] = ov;
 	*meth=graphics_methods;
 
-    return ov;
+	return ov;
 }
 
 
@@ -2028,7 +2068,7 @@ static gboolean graphics_sdl_idle(void *data)
             case SDL_VIDEORESIZE:
             {
 
-                gr->screen = SDL_SetVideoMode(ev.resize.w, ev.resize.h, 16, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
+                gr->screen = SDL_SetVideoMode(ev.resize.w, ev.resize.h, gr->video_bpp, gr->video_flags);
                 if(gr->screen == NULL)
                 {
                     navit_destroy(gr->nav);
@@ -2088,15 +2128,25 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     if (! event_request_system("glib","graphics_sdl_new"))
         return NULL;
 
+    this->video_bpp = 16;
+    this->video_flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE;
 
-    /* TODO: xml params for BPP */
     if ((attr=attr_search(attrs, NULL, attr_w)))
         w=attr->u.num;
     if ((attr=attr_search(attrs, NULL, attr_h)))
         h=attr->u.num;
+    if (attr=attr_search(attrs, NULL, attr_bpp))
+        this->video_bpp=attr->u.num;
+    if (attr=attr_search(attrs, NULL, attr_frame))
+        if(!attr->u.num)
+            this->video_flags |= SDL_NOFRAME;
 
-    
-    this->screen = SDL_SetVideoMode(w, h, 16, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE);
+    this->screen = SDL_SetVideoMode(w, h, this->video_bpp, this->video_flags);
+
+    /* Use screen size instead of requested */
+    w = this->screen->w;
+    h = this->screen->h;
+
     if(this->screen == NULL)
     {
         g_free(this);
@@ -2126,7 +2176,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 
 	*meth=graphics_methods;
 
-    g_timeout_add(10, graphics_sdl_idle, this);
+    g_timeout_add(G_PRIORITY_DEFAULT+10, graphics_sdl_idle, this);
 
     this->overlay_enable = 1;
 
