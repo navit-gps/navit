@@ -2912,6 +2912,7 @@ gui_internal_cmd_2d(struct gui_priv *this, struct widget *wm, void *data)
 	struct transformation *trans=navit_get_trans(this->nav);
 	transform_set_pitch(trans, 0);
 	this->redraw=1;
+	gui_internal_prune_menu(this, NULL);
 }
 
 static void
@@ -2920,6 +2921,7 @@ gui_internal_cmd_3d(struct gui_priv *this, struct widget *wm, void *data)
 	struct transformation *trans=navit_get_trans(this->nav);
 	transform_set_pitch(trans, this->pitch);
 	this->redraw=1;
+	gui_internal_prune_menu(this, NULL);
 }
 
 static void
