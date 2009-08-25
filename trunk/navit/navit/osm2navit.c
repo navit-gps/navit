@@ -221,7 +221,7 @@ static char *attrmap={
 	"w	highway=footway,piste:type=nordic	footway_and_piste_nordic\n"
 	"w	highway=living_street	living_street\n"
 	"w	highway=minor		street_1_land\n"
-	"w	highway=motorway	highway_city\n"
+	"w	highway=motorway	highway_land\n"
 	"w	highway=motorway_link	ramp\n"
 	"w	highway=parking_lane	street_parking_lane\n"
 	"w	highway=path		path\n"
@@ -237,19 +237,22 @@ static char *attrmap={
 	"w	highway=pedestrian	street_pedestrian\n"
 	"w	highway=pedestrian,area=1	poly_pedestrian\n"
 	"w	highway=plaza		poly_plaza\n"
-	"w	highway=primary		street_4_city\n"
+	"w	highway=primary,name=*	street_4_city\n"
+	"w	highway=primary		street_4_land\n"
 	"w	highway=primary_link	ramp\n"
 	"w	highway=residential	street_1_city\n"
 	"w	highway=residential,area=1	poly_street_1\n"
 	"w	highway=road		street_1_city\n"
-	"w	highway=secondary	street_3_city\n"
+	"w	highway=secondary	street_3_land\n"
+	"w	highway=secondary,name=*	street_3_city\n"
 	"w	highway=secondary,area=1	poly_street_3\n"
 	"w	highway=secondary_link	ramp\n"
 	"w	highway=service		street_service\n"
 	"w	highway=service,area=1	poly_service\n"
 	"w	highway=service,service=parking_aisle	street_parking_lane\n"
 	"w	highway=steps		steps\n"
-	"w	highway=tertiary	street_2_city\n"
+	"w	highway=tertiary	street_2_land\n"
+	"w	highway=tertiary,name=*	street_2_city\n"
 	"w	highway=tertiary,area=1	poly_street_2\n"
 	"w	highway=tertiary_link	ramp\n"
 	"w	highway=track		track_gravelled\n"
@@ -263,7 +266,8 @@ static char *attrmap={
 	"w	highway=track,tracktype=grade3		track_unpaved\n"
 	"w	highway=track,tracktype=grade4		track_ground\n"
 	"w	highway=track,tracktype=grade5		track_grass\n"
-	"w	highway=trunk		street_4_city\n"
+	"w	highway=trunk,name=*	street_4_city\n"
+	"w	highway=trunk		street_4_land\n"
 	"w	highway=trunk_link	ramp\n"
 	"w	highway=unclassified	street_1_city\n"
 	"w	highway=unclassified,area=1	poly_street_1\n"
@@ -587,6 +591,8 @@ enum attr_strings {
 	attr_string_street_name_systematic,
 	attr_string_house_number,
 	attr_string_label,
+	attr_string_postal,
+	attr_string_population,
 	attr_string_last,
 };
 
@@ -608,12 +614,19 @@ attr_strings_save(enum attr_strings id, char *str)
 }
 
 static void
+item_bin_set_type(struct item_bin *ib, enum item_type type)
+{
+	ib->type=type;
+}
+
+static void
 item_bin_init(struct item_bin *ib, enum item_type type)
 {
 	ib->clen=0;
 	ib->len=2;
-	ib->type=type;
+	item_bin_set_type(ib, type);
 }
+
 
 static void
 item_bin_add_coord(struct item_bin *ib, struct coord *c, int count)
@@ -917,6 +930,22 @@ add_tag(char *k, char *v)
 		attr_strings_save(attr_string_fax, v);
 		level=5;
 	}
+	if (! strcmp(k,"postal")) {
+		attr_strings_save(attr_string_postal, v);
+		level=5;
+	}
+	if (! strcmp(k,"openGeoDB:postal_codes") && !attr_strings[attr_string_postal]) {
+		attr_strings_save(attr_string_postal, v);
+		level=5;
+	}
+	if (! strcmp(k,"population")) {
+		attr_strings_save(attr_string_population, v);
+		level=5;
+	}
+	if (! strcmp(k,"openGeoDB:population") && !attr_strings[attr_string_population]) {
+		attr_strings_save(attr_string_population, v);
+		level=5;
+	}
 	if (! strcmp(k,"ref")) {
 		if (in_way) 
 			attr_strings_save(attr_string_street_name_systematic, v);
@@ -948,16 +977,15 @@ add_tag(char *k, char *v)
 	}
 	if (level < 6)
 		node_is_tagged=1;
-	if (level >= 5)
-		return;
 
 	strcpy(buffer,"*=*");
 	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
 		attr_present[idx]=1;
 
 	sprintf(buffer,"%s=*", k);
-	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
+	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer))) {
 		attr_present[idx]=2;
+	}
 
 	sprintf(buffer,"*=%s", v);
 	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
@@ -1393,10 +1421,68 @@ end_way(FILE *out)
 	}
 }
 
+struct population_table {
+	enum item_type type;
+	int population;
+};
+
+static struct population_table town_population[] = {
+	{type_town_label_0e0,0},
+	{type_town_label_1e0,1},
+	{type_town_label_2e0,2},
+	{type_town_label_5e0,5},
+	{type_town_label_1e1,10},
+	{type_town_label_2e1,20},
+	{type_town_label_5e1,50},
+	{type_town_label_1e2,100},
+	{type_town_label_2e2,200},
+	{type_town_label_5e2,500},
+	{type_town_label_1e3,1000},
+	{type_town_label_2e3,2000},
+	{type_town_label_5e3,5000},
+	{type_town_label_1e4,10000},
+	{type_town_label_2e4,20000},
+	{type_town_label_5e4,50000},
+	{type_town_label_1e5,100000},
+	{type_town_label_2e5,200000},
+	{type_town_label_5e5,500000},
+	{type_town_label_1e6,1000000},
+	{type_town_label_2e6,2000000},
+	{type_town_label_5e6,5000000},
+	{type_town_label_1e7,1000000},
+};
+
+static struct population_table district_population[] = {
+	{type_district_label_0e0,0},
+	{type_district_label_1e0,1},
+	{type_district_label_2e0,2},
+	{type_district_label_5e0,5},
+	{type_district_label_1e1,10},
+	{type_district_label_2e1,20},
+	{type_district_label_5e1,50},
+	{type_district_label_1e2,100},
+	{type_district_label_2e2,200},
+	{type_district_label_5e2,500},
+	{type_district_label_1e3,1000},
+	{type_district_label_2e3,2000},
+	{type_district_label_5e3,5000},
+	{type_district_label_1e4,10000},
+	{type_district_label_2e4,20000},
+	{type_district_label_5e4,50000},
+	{type_district_label_1e5,100000},
+	{type_district_label_2e5,200000},
+	{type_district_label_5e5,500000},
+	{type_district_label_1e6,1000000},
+	{type_district_label_2e6,2000000},
+	{type_district_label_5e6,5000000},
+	{type_district_label_1e7,1000000},
+};
+
 static void
 end_node(FILE *out)
 {
 	int conflict,count,i;
+	char *postal;
 	enum item_type types[10];
 	struct country_table *result=NULL, *lookup;
 	if (!out || ! node_is_tagged || ! nodeid)
@@ -1410,6 +1496,24 @@ end_node(FILE *out)
 	for (i = 0 ; i < count ; i++) {
 		conflict=0;
 		item_bin_init(item_bin, types[i]);
+		if (item_is_town(*item_bin) && attr_strings[attr_string_population]) {
+			int i,count,population=atoi(attr_strings[attr_string_population]);
+			struct population_table *table;
+			if (population < 0)
+				population=0;
+			if (item_is_district(*item_bin)) {
+				table=district_population;
+				count=sizeof(district_population)/sizeof(district_population[0]);
+			} else {
+				table=town_population;
+				count=sizeof(town_population)/sizeof(town_population[0]);
+			}
+			for (i = 0 ; i < count ; i++) {
+				if (population < table[i].population)
+					break;
+			}
+			item_bin_set_type(item_bin, table[i-1].type);
+		}
 		item_bin_add_coord(item_bin, &ni->c, 1);
 		item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_name : attr_label, attr_strings[attr_string_label]);
 		item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
@@ -1420,6 +1524,13 @@ end_node(FILE *out)
 		item_bin_add_attr_string(item_bin, attr_url, attr_strings[attr_string_url]);
 		item_bin_add_attr_longlong(item_bin, attr_osm_nodeid, osmid_attr_value);
 		item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
+		postal=attr_strings[attr_string_postal];
+		if (postal) {
+			char *sep=strchr(postal,',');
+			if (sep)
+				*sep='\0';
+			item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_postal : attr_postal, postal);
+		}
 		item_bin_write(item_bin,out);
 		if (item_is_town(*item_bin) && attr_strings[attr_string_label]) {
 			char *tok,*buf=is_in_buffer;
@@ -1457,6 +1568,7 @@ end_node(FILE *out)
 								if (i || words)
 									item_bin_add_attr_string(item_bin, attr_town_name_match, str);
 								item_bin_add_attr_string(item_bin, attr_town_name, town_name);
+								item_bin_add_attr_string(item_bin, attr_town_postal, postal);
 								item_bin_write(item_bin, result->file);
 								g_free(str);
 							}
@@ -2332,10 +2444,52 @@ phase34_process_file(struct tile_info *info, FILE *in)
 		else
 			processed_ways++;
 		max=14;
-		if (ib->type == type_street_n_lanes || ib->type == type_highway_city || ib->type == type_highway_land || ib->type == type_ramp)
+		switch (ib->type) {
+		case type_town_label_1e7:
+		case type_town_label_5e6:
+		case type_town_label_2e6:
+		case type_town_label_1e6:
+		case type_town_label_5e5:
+		case type_district_label_1e7:
+		case type_district_label_5e6:
+		case type_district_label_2e6:
+		case type_district_label_1e6:
+		case type_district_label_5e5:
+			max=6;
+			break;
+		case type_town_label_2e5:
+		case type_town_label_1e5:
+		case type_district_label_2e5:
+		case type_district_label_1e5:
+		case type_street_n_lanes:
+		case type_highway_city:
+		case type_highway_land:
+		case type_ramp:
 			max=8;
-		if (ib->type == type_street_3_city || ib->type == type_street_4_city || ib->type == type_street_3_land || ib->type == type_street_4_land)
+			break;
+		case type_town_label_5e4:
+		case type_town_label_2e4:
+		case type_town_label_1e4:
+		case type_district_label_5e4:
+		case type_district_label_2e4:
+		case type_district_label_1e4:
+			max=9;
+			break;
+		case type_town_label_5e3:
+		case type_town_label_2e3:
+		case type_town_label_1e3:
+		case type_district_label_5e3:
+		case type_district_label_2e3:
+		case type_district_label_1e3:
+		case type_street_3_city:
+		case type_street_4_city:
+		case type_street_3_land:
+		case type_street_4_land:
 			max=12;
+			break;
+		default:
+			break;
+		}
 		tile_write_item_minmax(info, ib, 0, max);
 	}
 }
