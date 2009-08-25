@@ -157,6 +157,7 @@ static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init);
 static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir);
 static void navit_cmd_zoom_to_route(struct navit *this);
 static void navit_cmd_set_center_cursor(struct navit *this_);
+static void navit_cmd_announcer_toggle(struct navit *this_);
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
 
 void
@@ -614,6 +615,7 @@ static struct command_table commands[] = {
 	{"zoom_out",command_cast(navit_cmd_zoom_out)},
 	{"zoom_to_route",command_cast(navit_cmd_zoom_to_route)},
 	{"set_center_cursor",command_cast(navit_cmd_set_center_cursor)},
+	{"announcer_toggle",command_cast(navit_cmd_announcer_toggle)},
 };
 	
 
@@ -1102,7 +1104,7 @@ navit_say(struct navit *this_, char *text)
  * @param this_ The navit object
  */
 void
-navit_announcer_toggle(struct navit *this_)
+navit_cmd_announcer_toggle(struct navit *this_)
 {
     struct attr attr, speechattr;
 
