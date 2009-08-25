@@ -536,7 +536,7 @@ osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct
 {
 	struct nav_toggle_announcer *this = g_new0(struct nav_toggle_announcer, 1);
     struct attr *attr;
-    char *command = "navit_announcer_toggle";
+    char *command = "announcer_toggle()";
 
 	this->item.w = 48;
 	this->item.h = 48;
