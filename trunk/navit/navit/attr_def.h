@@ -121,6 +121,7 @@ ATTR(house_number_right_interpolation)
 ATTR(delay)
 ATTR(lag)
 ATTR(bpp)
+ATTR(fullscreen)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
@@ -161,7 +162,7 @@ ATTR(street_id) /* fixme? */
 ATTR(district_id) /* fixme? */
 ATTR(drag_bitmap)
 ATTR(use_mousewheel)
-ATTR(fullscreen)
+ATTR(fullscreen_old)
 ATTR(position_magnetic_direction)
 ATTR(use_overlay)
 ATTR(night_mode)
