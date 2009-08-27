@@ -1,5 +1,5 @@
 #! /usr/bin/perl
-use Geo::OSM::APIClientV5;
+use Geo::OSM::APIClientV6;
 use Data::Dumper;
 
 sub print_error
@@ -42,7 +42,15 @@ sub cmd_delete
 	my($type,$id)=@_;
 	my($res);
 	$res=$api->get($type,$id);
+	if (!$api->create_changeset()) {
+		print_error();
+		return 1;
+	}
 	if (!$api->delete($res)) {
+		print_error();
+		return 1;
+	}
+	if (!$api->close_changeset()) {
 		print_error();
 		return 1;
 	}
@@ -88,7 +96,15 @@ sub cmd_reload
 {
 	my($type,$id)=@_;
 	$res=$api->get($type,$id);
+	if (!$api->create_changeset()) {
+		print_error();
+		return 1;
+	}
 	if (!$api->modify($res)) {
+		print_error();
+		return 1;
+	}
+	if (!$api->close_changeset()) {
 		print_error();
 		return 1;
 	}
@@ -122,5 +138,5 @@ while (substr($ARGV[0],0,2) eq '--') {
 	$attr{$key}=$value;
 	shift;
 }
-$api=new Geo::OSM::APIClient(api=>'http://www.openstreetmap.org/api/0.5',%attr);
+$api=new Geo::OSM::APIClient(api=>'http://www.openstreetmap.org/api/0.6',%attr);
 command(@ARGV);
