@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <xsl:transform version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xi="http://www.w3.org/2001/XInclude">
         <xsl:output method="xml" doctype-system="navit.dtd" />
+        <xsl:variable name="OSD_SIZE">1.33</xsl:variable>
 	<xsl:include href="default_plugins.xslt"/>
 	<xsl:include href="gui_internal.xslt"/>
 	<xsl:include href="map_sdcard_navitmap_bin.xslt"/>
