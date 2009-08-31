@@ -129,6 +129,7 @@ struct attr {
 		} range;
 		int *dash;
 		enum item_type *item_types;
+		enum attr_type *attr_types;
 		long long *num64;
 	} u;
 };
@@ -147,15 +148,18 @@ int attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum att
 struct attr **attr_generic_set_attr(struct attr **attrs, struct attr *attr);
 struct attr **attr_generic_add_attr(struct attr **attrs, struct attr *attr);
 struct attr **attr_generic_remove_attr(struct attr **attrs, struct attr *attr);
+enum attr_type attr_type_begin(enum attr_type type);
 int attr_data_size(struct attr *attr);
 void *attr_data_get(struct attr *attr);
 void attr_data_set(struct attr *attr, void *data);
-void attr_data_set_le(struct attr * attr, void * data);
+void attr_data_set_le(struct attr *attr, void *data);
 void attr_free(struct attr *attr);
 struct attr *attr_dup(struct attr *attr);
 void attr_list_free(struct attr **attrs);
 struct attr **attr_list_dup(struct attr **attrs);
 int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret);
+int attr_types_contains(enum attr_type *types, enum attr_type type);
+int attr_types_contains_default(enum attr_type *types, enum attr_type type, int deflt);
 /* end of prototypes */
 #endif
 #ifdef __cplusplus
