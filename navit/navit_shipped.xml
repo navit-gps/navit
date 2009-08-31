@@ -59,7 +59,7 @@
 
         <vehicle name="Local GPS" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj" color="#0000ff">
             <!-- Navit can write a tracklog in several formats (gpx, nmea or textfile): -->
-            <!-- <log type="gpx" data="track_%Y%m%d-%i.gpx" flush_size="1000" flush_time="30"/> -->
+            <!-- <log type="gpx" attr_types="position_time_iso8601,position_direction,position_speed,profilename,position_radius" data="track_%Y%m%d-%i.gpx" flush_size="1000" flush_time="30"/> -->
             <cursor w="26" h="26">
                 <itemgra>
                     <circle color="#0000ff" radius="24" width="2">

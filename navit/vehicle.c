@@ -53,59 +53,48 @@ vehicle_log_nmea(struct vehicle *this_, struct log *log)
 static void
 vehicle_log_gpx(struct vehicle *this_, struct log *log)
 {
-	struct attr pos_attr;
-	struct attr radius_attr;
-	struct attr time_attr;
-	struct attr *profile_attr;
-	struct attr speed_attr;
-	struct attr course_attr;
-	char buffer[256];
-	char tbuf[256];
-	char *timep;
-	double zero = 0.0f;
-	int free=0;
+	struct attr attr,*attrp;
+	enum attr_type *attr_types;
+	char *logstr;
+	char *extensions="\t<extensions>\n";
 
 	if (!this_->meth.position_attr_get)
 		return;
-	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
+	if (log_get_attr(log, attr_attr_types, &attr, NULL))
+		attr_types=attr.u.attr_types;
+	else
+		attr_types=NULL;
+	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &attr))
 		return;
-	if (!this_->meth.position_attr_get(this_->priv, attr_position_radius, &radius_attr))
-		radius_attr.u.numd = &zero;
-	if (!this_->meth.position_attr_get(this_->priv, attr_position_speed, &speed_attr))
-		speed_attr.u.numd = &zero;
-	if (!this_->meth.position_attr_get(this_->priv, attr_position_direction, &course_attr))
-		course_attr.u.numd = &zero;
-	if (!this_->meth.position_attr_get(this_->priv, attr_position_time_iso8601, &time_attr)) {
-		timep = current_to_iso8601();
-		free=1;
-	} else {
-		timep = time_attr.u.str;
+	logstr=g_strdup_printf("<trkpt lat=\"%f\" lon=\"%f\">\n",attr.u.coord_geo->lat,attr.u.coord_geo->lng);
+	if (attr_types && attr_types_contains_default(attr_types, attr_position_time_iso8601, 0)) {
+		if (this_->meth.position_attr_get(this_->priv, attr_position_time_iso8601, &attr)) {
+			logstr=g_strconcat_printf(logstr,"\t<time>%s</time>\n",attr.u.str);
+		} else {
+			char *timep = current_to_iso8601();
+			logstr=g_strconcat_printf(logstr,"\t<time>%s</time>\n",timep);
+			g_free(timep);
+		}
 	}
-
-	// get the profile name attribute
-	profile_attr = attr_search(this_->attrs, NULL, attr_profilename);
-
-	log_printf(log,
-			"<trkpt lat=\"%f\" lon=\"%f\">\n"
-			"\t<time>%s</time>\n"
-			"\t<course>%.1f</course>\n"
-			"\t<speed>%.2f</speed>\n"
-			"\t<extensions>"
-			"\t\t<radius>%.2f</radius>\n"
-			"\t\t<navit:profilename>%s</navit:profilename>\n"
-			"\t</extensions>\n"
-			"</trkpt>\n",
-		pos_attr.u.coord_geo->lat,
-		pos_attr.u.coord_geo->lng,
-		timep,
-		(*course_attr.u.numd),
-		(*speed_attr.u.numd),
-		(*radius_attr.u.numd),
-		profile_attr->u.str
-	);
-
-	if (free)
-		g_free(timep);
+	if (attr_types_contains_default(attr_types, attr_position_direction,0) && this_->meth.position_attr_get(this_->priv, attr_position_direction, &attr))
+		logstr=g_strconcat_printf(logstr,"\t<course>%.1f</course>\n",*attr.u.numd);
+	if (attr_types_contains_default(attr_types, attr_position_speed, 0) && this_->meth.position_attr_get(this_->priv, attr_position_speed, &attr))
+		logstr=g_strconcat_printf(logstr,"\t<speed>%.2f</speed>\n",*attr.u.numd);
+	if (attr_types_contains_default(attr_types, attr_profilename, 0) && (attrp=attr_search(this_->attrs, NULL, attr_profilename))) {
+		logstr=g_strconcat_printf(logstr,"%s\t\t<navit:profilename>%s</navit:profilename>\n",extensions,attrp->u.str);
+		extensions="";
+	}
+	if (attr_types_contains_default(attr_types, attr_position_radius, 0) && this_->meth.position_attr_get(this_->priv, attr_position_radius, &attr)) {
+		logstr=g_strconcat_printf(logstr,"%s\t\t<navit:radius>%.2f</navit:radius>\n",extensions,*attr.u.numd);
+		extensions="";
+	}
+	if (!strcmp(extensions,"")) {
+		logstr=g_strconcat_printf(logstr,"\t</extensions>\n");
+		
+	}
+	logstr=g_strconcat_printf(logstr,"</trkpt>\n");
+	log_printf(log,"%s",logstr);
+	g_free(logstr);
 }
 
 static void

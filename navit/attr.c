@@ -99,6 +99,18 @@ attr_new_from_text(const char *name, const char *value)
         	}
 		g_free(type_str);
 		break;
+	case attr_attr_types:
+		count=0;
+		type_str=g_strdup(value);
+		str=type_str;
+		while ((tok=strtok(str, ","))) {
+			ret->u.attr_types=g_realloc(ret->u.attr_types, (count+2)*sizeof(enum attr_type));
+			ret->u.attr_types[count++]=attr_from_name(tok);
+			ret->u.attr_types[count]=attr_none;
+        	        str=NULL;
+        	}
+		g_free(type_str);
+		break;
 	case attr_dash:
 		count=0;
 		type_str=g_strdup(value);
@@ -395,6 +407,11 @@ attr_data_size(struct attr *attr)
 		while (attr->u.item_types[i++] != type_none);
 		return i*sizeof(enum item_type);
 	}
+	if (attr->type == attr_attr_types) {
+		int i=0;
+		while (attr->u.attr_types[i++] != attr_none);
+		return i*sizeof(enum attr_type);
+	}
 	dbg(0,"size for %s unknown\n", attr_to_name(attr->type));
 	return 0;
 }
@@ -543,4 +560,24 @@ attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret)
 		}
 	}	
 	return 0;
+}
+
+int
+attr_types_contains(enum attr_type *types, enum attr_type type)
+{
+	while (types && *types != attr_none) {
+		if (*types == type)
+			return 1;
+		types++;
+	}
+	return 0;
+}
+
+int
+attr_types_contains_default(enum attr_type *types, enum attr_type type, int deflt)
+{
+	if (!types) {
+		return deflt;
+	}
+	return attr_types_contains(types, type);	
 }
