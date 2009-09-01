@@ -90,10 +90,10 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 	}
 	if (!strcmp(extensions,"")) {
 		logstr=g_strconcat_printf(logstr,"\t</extensions>\n");
-		
 	}
 	logstr=g_strconcat_printf(logstr,"</trkpt>\n");
-	log_printf(log,"%s",logstr);
+	callback_list_call_attr_1(this_->cbl, attr_log_gpx, &logstr);
+	log_write(log, logstr, strlen(logstr));
 	g_free(logstr);
 }
 
@@ -101,13 +101,14 @@ static void
 vehicle_log_textfile(struct vehicle *this_, struct log *log)
 {
 	struct attr pos_attr;
-	char buffer[256];
+	char *logstr;
 	if (!this_->meth.position_attr_get)
 		return;
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
 		return;
-	sprintf(buffer,"%f %f type=trackpoint\n", pos_attr.u.coord_geo->lng, pos_attr.u.coord_geo->lat);
-	log_write(log, buffer, strlen(buffer));
+	logstr=g_strdup_printf("%f %f type=trackpoint\n", pos_attr.u.coord_geo->lng, pos_attr.u.coord_geo->lat);
+	callback_list_call_attr_1(this_->cbl, attr_log_textfile, &logstr);
+	log_write(log, logstr, strlen(logstr));
 }
 
 static int
