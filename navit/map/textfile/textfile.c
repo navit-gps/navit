@@ -278,7 +278,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 	}
 	for(;;) {
 		if (feof(mr->f)) {
-			dbg(1,"map_rect_get_item_textfile: eof\n");
+			dbg(1,"map_rect_get_item_textfile: eof %d\n",mr->item.id_hi);
 			if (mr->item.id_hi) {
 				return NULL;
 			}
@@ -288,8 +288,10 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 				mr->f=popen(mr->args, "r");
 				mr->pos=0;
 				mr->lastlen=0;
-			} else
+			} else {
 				fseek(mr->f, 0, SEEK_SET);
+				clearerr(mr->f);
+			}
 			get_line(mr);
 		}
 		if ((p=strchr(mr->line,'\n'))) 
