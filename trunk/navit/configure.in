@@ -813,6 +813,7 @@ navit/support/Makefile
 navit/support/ezxml/Makefile
 navit/support/glib/Makefile
 navit/support/libc/Makefile
+navit/support/libpng/Makefile
 navit/support/win32/Makefile
 navit/support/wordexp/Makefile
 navit/support/zlib/Makefile
