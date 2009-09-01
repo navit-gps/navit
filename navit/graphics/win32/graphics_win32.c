@@ -663,6 +663,12 @@ static void draw_restore(struct graphics_priv *gr, struct point *p, int w, int h
 	InvalidateRect( gr->wnd_handle, NULL, FALSE );
 }
 
+static void draw_drag(struct graphics_priv *gr, struct point *p)
+{
+	gr->p.x    = p->x;
+	gr->p.y    = p->y;
+}
+
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
 	dbg( 0, "set draw_mode to %x, %d\n", gr, (int)mode );
@@ -1049,7 +1055,7 @@ static struct graphics_methods graphics_methods =
 	NULL,
 #endif
 	draw_restore,
-	NULL,	// draw_drag
+	draw_drag,
 	font_new,
 	gc_new,
 	background_gc,
