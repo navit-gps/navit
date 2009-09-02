@@ -632,7 +632,7 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
 	SelectObject( gr->hMemDC, hbrush );
 	SetBkColor( gr->hMemDC, gc->bg_color );
 
-	Rectangle(gr->hMemDC, p->x, p->y, w, h);
+	Rectangle(gr->hMemDC, p->x, p->y, p->x+w, p->y+h);
 
 	DeleteObject( hpen );
 	DeleteObject( hbrush );
@@ -687,10 +687,12 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 			if ( gr->hMemDC )
 			{
 				dbg(0, "Erase dc: %x, w: %d, h: %d, bg_color: %x\n", gr, gr->width, gr->height, gr->bg_color);
+#if 0
 				RECT rcClient = { 0, 0, gr->width, gr->height};
 				HBRUSH bgBrush = CreateSolidBrush( gr->bg_color  );
 				FillRect( gr->hMemDC, &rcClient, bgBrush );
 				DeleteObject( bgBrush );
+#endif
 				if ( gr->hPrebuildDC )
 				{
 					DeleteBitmap(gr->hPrebuildBitmap);
@@ -1133,8 +1135,8 @@ pngdecode(char *name, struct graphics_image_priv *img)
   if (png_pixels != (unsigned char*) NULL)
     free (png_pixels);
 #endif
-  img->hot.x=img->width/2;
-  img->hot.y=img->height/2;
+  img->hot.x=img->width/2-1;
+  img->hot.y=img->height/2-1;
 dbg(0,"ok\n");
   fclose(png_file);
   return TRUE;
