@@ -139,6 +139,9 @@ HFONT EzCreateFont (HDC hdc, TCHAR * szFaceName, int iDeciPtHeight,
 struct graphics_image_priv
 {
 	PXPM2BMP pxpm;
+	int width,height,row_bytes,channels;
+	unsigned char *png_pixels;
+	struct point hot;
 };
 
 
@@ -932,34 +935,299 @@ static struct graphics_image_priv* image_cache_hash_lookup( const char* key )
 
 
 
+#include "png.h"
+
+static int
+pngdecode(char *name, struct graphics_image_priv *img)
+{
+  png_struct    *png_ptr = NULL;
+  png_info	*info_ptr = NULL;
+  png_byte      buf[8];
+  png_byte      **row_pointers = NULL;
+  png_byte      *pix_ptr = NULL;
+
+  int           bit_depth;
+  int           color_type;
+  int           alpha_present;
+  int           row, col;
+  int           ret;
+  int           i;
+  long          dep_16;
+  FILE *png_file;
+
+	dbg(0,"enter %s\n",name);
+  png_file=fopen(name, "rb");
+  if (!png_file) 
+    return FALSE;
+   
+
+  /* read and check signature in PNG file */
+  ret = fread (buf, 1, 8, png_file);
+  if (ret != 8) {
+    fclose(png_file);
+    return FALSE;
+  }
+
+  ret = png_check_sig (buf, 8);
+  if (!ret) {
+    fclose(png_file);
+    return FALSE;
+  }
+
+  /* create png and info structures */
+
+  png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING,
+    NULL, NULL, NULL);
+  if (!png_ptr) {
+    fclose(png_file);
+    return FALSE;   /* out of memory */
+  }
+
+  info_ptr = png_create_info_struct (png_ptr);
+  if (!info_ptr)
+  {
+    fclose(png_file);
+    png_destroy_read_struct (&png_ptr, NULL, NULL);
+    return FALSE;   /* out of memory */
+  }
+
+  if (setjmp (png_jmpbuf(png_ptr)))
+  {
+    fclose(png_file);
+    png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
+    return FALSE;
+  }
+
+  /* set up the input control for C streams */
+  png_init_io (png_ptr, png_file);
+  png_set_sig_bytes (png_ptr, 8);  /* we already read the 8 signature bytes */
+
+  /* read the file information */
+  png_read_info (png_ptr, info_ptr);
+
+  /* get size and bit-depth of the PNG-image */
+  png_get_IHDR (png_ptr, info_ptr,
+    &img->width, &img->height, &bit_depth, &color_type,
+    NULL, NULL, NULL);
+
+  /* set-up the transformations */
+
+  /* transform paletted images into full-color rgb */
+  if (color_type == PNG_COLOR_TYPE_PALETTE)
+    png_set_expand (png_ptr);
+  /* expand images to bit-depth 8 (only applicable for grayscale images) */
+  if (color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
+    png_set_expand (png_ptr);
+  /* transform transparency maps into full alpha-channel */
+  if (png_get_valid (png_ptr, info_ptr, PNG_INFO_tRNS))
+    png_set_expand (png_ptr);
+
+  /* all transformations have been registered; now update info_ptr data,
+   * get rowbytes and channels, and allocate image memory */
+
+  png_read_update_info (png_ptr, info_ptr);
+
+  /* get the new color-type and bit-depth (after expansion/stripping) */
+  png_get_IHDR (png_ptr, info_ptr, &img->width, &img->height, &bit_depth, &color_type,
+    NULL, NULL, NULL);
+
+  /* calculate new number of channels and store alpha-presence */
+  if (color_type == PNG_COLOR_TYPE_GRAY)
+    img->channels = 1;
+  else if (color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+    img->channels = 2;
+  else if (color_type == PNG_COLOR_TYPE_RGB)
+    img->channels = 3;
+  else if (color_type == PNG_COLOR_TYPE_RGB_ALPHA)
+    img->channels = 4;
+  else
+    img->channels = 0; /* should never happen */
+  alpha_present = (img->channels - 1) % 2;
+
+  /* row_bytes is the width x number of channels x (bit-depth / 8) */
+  img->row_bytes = png_get_rowbytes (png_ptr, info_ptr);
+
+  if ((img->png_pixels = (png_byte *) malloc (img->row_bytes * img->height * sizeof (png_byte))) == NULL) {
+    fclose(png_file);
+    png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
+    return FALSE;
+  }
+
+  if ((row_pointers = (png_byte **) malloc (img->height * sizeof (png_bytep))) == NULL)
+  {
+    fclose(png_file);
+    png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
+    free (img->png_pixels);
+    img->png_pixels = NULL;
+    return FALSE;
+  }
+
+  /* set the individual row_pointers to point at the correct offsets */
+  for (i = 0; i < (img->height); i++)
+    row_pointers[i] = img->png_pixels + i * img->row_bytes;
+
+  /* now we can go ahead and just read the whole image */
+  png_read_image (png_ptr, row_pointers);
+
+  /* read rest of file, and get additional chunks in info_ptr - REQUIRED */
+  png_read_end (png_ptr, info_ptr);
+
+  /* clean up after the read, and free any memory allocated - REQUIRED */
+  png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp) NULL);
+
+#if 0
+  pix_ptr = png_pixels;
+
+  for (row = 0; row < height; row++)
+  {
+    for (col = 0; col < width; col++)
+    {
+      for (i = 0; i < (channels - alpha_present); i++)
+      {
+        if (raw)
+          fputc ((int) *pix_ptr++ , pnm_file);
+        else
+          if (bit_depth == 16){
+	    dep_16 = (long) *pix_ptr++;
+            fprintf (pnm_file, "%ld ", (dep_16 << 8) + ((long) *pix_ptr++));
+          }
+          else
+            fprintf (pnm_file, "%ld ", (long) *pix_ptr++);
+      }
+      if (alpha_present)
+      {
+        if (!alpha)
+        {
+          pix_ptr++; /* alpha */
+          if (bit_depth == 16)
+            pix_ptr++;
+        }
+        else /* output alpha-channel as pgm file */
+        {
+          if (raw)
+            fputc ((int) *pix_ptr++ , alpha_file);
+          else
+            if (bit_depth == 16){
+	      dep_16 = (long) *pix_ptr++;
+              fprintf (alpha_file, "%ld ", (dep_16 << 8) + (long) *pix_ptr++);
+	    }  
+            else
+              fprintf (alpha_file, "%ld ", (long) *pix_ptr++);
+        }
+      } /* if alpha_present */
+
+      if (!raw)
+        if (col % 4 == 3)
+          fprintf (pnm_file, "\n");
+    } /* end for col */
+
+    if (!raw)
+      if (col % 4 != 0)
+        fprintf (pnm_file, "\n");
+  } /* end for row */
+
+#endif
+  if (row_pointers != (unsigned char**) NULL)
+    free (row_pointers);
+#if 0
+  if (png_pixels != (unsigned char*) NULL)
+    free (png_pixels);
+#endif
+  img->hot.x=img->width/2;
+  img->hot.y=img->height/2;
+dbg(0,"ok\n");
+  fclose(png_file);
+  return TRUE;
+
+} /* end of source */
+
+static void
+pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int y0)
+{
+	int x,y;
+	HDC hdc=gr->hMemDC;
+	int w=gr->width;
+	int h=gr->height;
+  	png_byte *pix_ptr = img->png_pixels;
+
+	dbg(0,"enter %d,%d %dx%d %d\n",x0,y0,img->width,img->height,img->channels);	
+	
+	for (y=0 ; y < img->width ; y++) {
+		for (x=0 ; x < img->height ; x++) {
+			int xdst=x0+x,ydst=y0+y;
+			if (xdst >= 0 && ydst >= 0 && xdst < w && ydst < h) {
+				COLORREF newColor, origColor;
+				int a=pix_ptr[3];
+				if (a != 0xff) {
+					int ai=0xff-a;
+					origColor = GetPixel( hdc, xdst, ydst);
+					newColor = RGB ( (pix_ptr[0]*a+GetRValue(origColor)*ai)/255,
+					                 (pix_ptr[1]*a+GetGValue(origColor)*ai)/255,
+					                 (pix_ptr[2]*a+GetBValue(origColor)*ai)/255);
+				} else
+					newColor = RGB ( pix_ptr[0], pix_ptr[1], pix_ptr[2]);
+                                SetPixel( hdc, xdst, ydst, newColor);
+			}
+			pix_ptr+=4;
+		}
+	}
+}
+
+static int
+xpmdecode(char *name, struct graphics_image_priv *img)
+{
+	img->pxpm = Xpm2bmp_new();
+	if (Xpm2bmp_load( img->pxpm, name ) != 0) {
+		free(img->pxpm);
+		return FALSE;
+	}
+	img->width=img->pxpm->size_x;
+	img->height=img->pxpm->size_y;
+	img->hot.x=img->pxpm->hotspot_x;
+	img->hot.y=img->pxpm->hotspot_y;
+	return TRUE;
+}
+
+
 static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h, struct point *hot, int rotation)
 {
 	struct graphics_image_priv* ret;
-
+	int len=strlen(name);
+	char *ext;
+	int rc=0;
+	
+	if (len < 4)
+		return NULL;
+	ext=name+len-4;
 	if ( NULL == ( ret = image_cache_hash_lookup( name ) ) )
 	{
-		ret = g_new( struct graphics_image_priv, 1 );
+		ret = g_new0( struct graphics_image_priv, 1 );
 		dbg(2, "loading image '%s'\n", name );
-		ret->pxpm = Xpm2bmp_new();
-		if ( Xpm2bmp_load( ret->pxpm, name ) != 0 )
-		{
-			dbg (0, "Failed loading image: %s\n", name);
-			free(ret->pxpm);
-			g_free(ret);
-			ret = NULL;
-		} else {
-			*w=ret->pxpm->size_x;
-			*h=ret->pxpm->size_y;
+		if (!strcmp(ext,".xpm")) {
+			rc=xpmdecode(name, ret);
+		} else if (!strcmp(ext,".png")) { 
+			rc=pngdecode(name, ret);
 		}
-		image_cache_hash_add( name, ret );
+		if (rc) {
+			image_cache_hash_add( name, ret );
+		} else {
+			g_free(ret);
+			ret=NULL;
+		}
 	}
-
+	*w=ret->width;
+	*h=ret->height;
+	if (hot) 
+		*hot=ret->hot;
 	return ret;
 }
 
 static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
 {
-	Xpm2bmp_paint( img->pxpm , gr->hMemDC, p->x, p->y );
+	if (img->pxpm)
+		Xpm2bmp_paint( img->pxpm , gr->hMemDC, p->x, p->y );
+	if (img->png_pixels)
+		pngrender(img, gr, p->x, p->y);
 }
 
 static struct graphics_priv *
