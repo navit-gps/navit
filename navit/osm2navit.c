@@ -415,6 +415,7 @@ struct country_table {
 	{528,"Nederland,The Netherlands,Niederlande,NL"},
 	{578,"Norway,Norge,Noreg,NO"},
 	{616,"Poland,Polska,PL"},
+	{642,"România,Romania,RO"},
 	{703,"Slovakia,Slovensko,SK"},
 	{705,"Slovenia,Republika Slovenija,SI"},
  	{724,"Spain,Espana,Espana,Reino de Espana"},
