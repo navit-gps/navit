@@ -1396,6 +1396,8 @@ end_way(FILE *out)
 	}
 	for (i = 0 ; i < count ; i++) {
 		add_flags=0;
+		if (types[i] == type_none)
+			continue;
 		item_bin_init(item_bin,types[i]);
 		item_bin_add_coord(item_bin, coord_buffer, coord_count);
 		def_flags=item_get_default_flags(types[i]);
@@ -1495,6 +1497,8 @@ end_node(FILE *out)
 	assert(count < 10);
 	for (i = 0 ; i < count ; i++) {
 		conflict=0;
+		if (types[i] == type_none)
+			continue;
 		item_bin_init(item_bin, types[i]);
 		if (item_is_town(*item_bin) && attr_strings[attr_string_population]) {
 			int i,count,population=atoi(attr_strings[attr_string_population]);
