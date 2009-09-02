@@ -311,7 +311,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 						overlay->hPrebuildBitmap = CreateBitmap(overlay->width,overlay->height,1,1,NULL);
 						overlay->hPrebuildDC = CreateCompatibleDC(NULL);
 						SelectObject(overlay->hPrebuildDC,overlay->hPrebuildBitmap);
-						SetBkColor(overlay->hMemDC,RGB(overlay->transparent_color.r,overlay->transparent_color.g,overlay->transparent_color.b));
+						SetBkColor(overlay->hMemDC,RGB(overlay->transparent_color.r >> 8,overlay->transparent_color.g >> 8,overlay->transparent_color.b >> 8));
 						BitBlt(overlay->hPrebuildDC,0,0,overlay->width,overlay->height,overlay->hMemDC,0,0,SRCCOPY);
 						BitBlt(overlay->hMemDC,0,0,overlay->width,overlay->height,overlay->hPrebuildDC,0,0,SRCINVERT);
 					}
@@ -320,7 +320,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 					int x;
 					int y;
 					COLORREF newColor;
-					const COLORREF transparent_color = RGB(overlay->transparent_color.r,overlay->transparent_color.g,overlay->transparent_color.b);
+					const COLORREF transparent_color = RGB(overlay->transparent_color.r >> 8,overlay->transparent_color.g >> 8,overlay->transparent_color.b >> 8);
 
 					overlay->hPrebuildBitmap =  CreateCompatibleBitmap(overlay->hMemDC, overlay->width, overlay->height );
 					overlay->hPrebuildDC = CreateCompatibleDC(NULL);
@@ -526,7 +526,7 @@ static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, un
 
 static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
-	gc->fg_color = RGB( c->r, c->g, c->b );
+	gc->fg_color = RGB( c->r >> 8, c->g >> 8, c->b >> 8);
 	gc->fg_alpha = c->a;
 
 	if ( gc->gr && c->a < 0xFFFF )
@@ -538,7 +538,7 @@ static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 
 static void gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 {
-	gc->bg_color = RGB( c->r, c->g, c->b );
+	gc->bg_color = RGB( c->r >> 8, c->g >> 8, c->b >> 8);
 	if ( gc->gr && gc->gr->hMemDC )
 		SetBkColor( gc->gr->hMemDC, gc->bg_color );
 
@@ -648,7 +648,7 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 	hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
 	SelectObject( gr->hMemDC, hpen );
 
-	hbrush = CreateSolidBrush( RGB(gr->transparent_color.r, gr->transparent_color.g, gr->transparent_color.b) );
+	hbrush = CreateSolidBrush( RGB(gr->transparent_color.r >> 8, gr->transparent_color.g >> 8, gr->transparent_color.b >> 8) );
 	SelectObject( gr->hMemDC, hbrush );
 
 	SetBkColor( gr->hMemDC, gc->bg_color );
