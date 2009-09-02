@@ -17,4 +17,7 @@ endif
 if SUPPORT_LIBC
  SUBDIRS+=libc
 endif
-DIST_SUBDIRS=ezxml glib wordexp win32 zlib libc
+if SUPPORT_LIBPNG
+ SUBDIRS+=libpng
+endif
+DIST_SUBDIRS=ezxml glib wordexp win32 zlib libc libpng
