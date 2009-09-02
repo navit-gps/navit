@@ -1,5 +1,5 @@
 include $(top_srcdir)/Makefile.inc
-AM_CPPFLAGS = @NAVIT_CFLAGS@ -I$(top_srcdir)/navit -DMODULE=graphics_win32
+AM_CPPFLAGS = @NAVIT_CFLAGS@ @ZLIB_CFLAGS@ -I$(top_srcdir)/navit -DMODULE=graphics_win32
 if PLUGINS
 modulegraphics_LTLIBRARIES = libgraphics_win32.la
 else

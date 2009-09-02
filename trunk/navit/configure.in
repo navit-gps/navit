@@ -72,6 +72,7 @@ wince)
 	gui_win32=yes; gui_win32_reason="host_os is wince"
 	graphics_win32=yes; graphics_win32_reason="host_os is wince"
 	vehicle_wince=yes; vehcile_wince_reason="host_os is wince"
+	support_libpng=yes
 	;;
 mingw32)
 	win32=yes
@@ -79,6 +80,7 @@ mingw32)
 	AC_DEFINE(HAVE_API_WIN32, 1, [Have Windows API])
 	gui_win32=yes; gui_win32_reason="host_os is mingw32"
 	graphics_win32=yes; graphics_win32_reason="host_os is mingw32"
+	support_libpng=yes
 	;;
 linux*_android)
 	android=yes
@@ -97,9 +99,19 @@ then
 	NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/navit/support/win32"
 	NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/win32 -lsupport_win32"
 fi
+
+
 AM_CONDITIONAL(SUPPORT_WIN32, [test "x$win32" = "xyes"])
 AM_CONDITIONAL(SUPPORT_WIN32CE, [test "x$win32ce" = "xyes"])
 AM_CONDITIONAL(SUPPORT_ANDROID, [test "x$android" = "xyes"])
+
+if test "x$support_libpng" = "xyes"
+then
+	NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/navit/support/libpng"
+	NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/libpng -lsupport_libpng"
+fi
+AM_CONDITIONAL(SUPPORT_LIBPNG, [test "x$support_libpng" = "xyes"])
+
 AC_SUBST(MODULE_LDFLAGS)
 
 LIBS="$LIBS -lm"
