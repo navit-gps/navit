@@ -297,7 +297,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			dbg(0, "WM_PAINT\n");
 			struct graphics_priv* overlay = gra_priv->overlays;
 
-			while ( overlay && !overlay->disabled )
+			while ( !gra_priv->disabled && overlay && !overlay->disabled )
 			{
 				if ( overlay->p.x < gra_priv->width && overlay->p.y < gra_priv->height )
 				{
@@ -352,7 +352,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			HDC hdc = BeginPaint(hwnd, &ps);
 			BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY );
 
-			while ( overlay && !overlay->disabled )
+			while ( !gra_priv->disabled && overlay && !overlay->disabled )
 			{
 				if ( overlay->p.x < gra_priv->width && overlay->p.y < gra_priv->height )
 				{
@@ -947,6 +947,9 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
 			free(ret->pxpm);
 			g_free(ret);
 			ret = NULL;
+		} else {
+			*w=ret->pxpm->size_x;
+			*h=ret->pxpm->size_y;
 		}
 		image_cache_hash_add( name, ret );
 	}
