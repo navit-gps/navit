@@ -831,6 +831,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 	RECT rcClient;
 	GetClientRect( gr->wnd_handle, &rcClient );
 
+	SetTextColor(gr->hMemDC, fg->fg_color);
 	int prevBkMode = SetBkMode( gr->hMemDC, TRANSPARENT );
 
 	if ( NULL == font->hfont )
