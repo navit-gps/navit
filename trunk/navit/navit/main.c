@@ -167,7 +167,7 @@ static char *environment_vars[][5]={
 	{"NAVIT_SHAREDIR",    ":",          ":/share/navit", ":",           ":/share"},
 	{"NAVIT_LOCALEDIR",   ":/../locale",":/share/locale",":\\locale",   ":/locale"},
 	{"NAVIT_USER_DATADIR",":",          "~/.navit",      ":\\data",     ":/home"},
-#if 0
+#if 1
 	{"NAVIT_LOGFILE",     NULL,         NULL,            ":\\navit.log",NULL},
 #endif
 	{"NAVIT_LIBPREFIX",   "*/.libs/",   NULL,            NULL,          NULL},
