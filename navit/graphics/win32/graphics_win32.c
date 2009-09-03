@@ -960,9 +960,9 @@ pngdecode(char *name, struct graphics_image_priv *img)
 
 	dbg(0,"enter %s\n",name);
   png_file=fopen(name, "rb");
-  if (!png_file) 
+  if (!png_file)
     return FALSE;
-   
+
 
   /* read and check signature in PNG file */
   ret = fread (buf, 1, 8, png_file);
@@ -1113,7 +1113,7 @@ pngdecode(char *name, struct graphics_image_priv *img)
             if (bit_depth == 16){
 	      dep_16 = (long) *pix_ptr++;
               fprintf (alpha_file, "%ld ", (dep_16 << 8) + (long) *pix_ptr++);
-	    }  
+	    }
             else
               fprintf (alpha_file, "%ld ", (long) *pix_ptr++);
         }
@@ -1153,8 +1153,8 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int 
 	int h=gr->height;
   	png_byte *pix_ptr = img->png_pixels;
 
-	dbg(0,"enter %d,%d %dx%d %d\n",x0,y0,img->width,img->height,img->channels);	
-	
+	dbg(0,"enter %d,%d %dx%d %d\n",x0,y0,img->width,img->height,img->channels);
+
 	for (y=0 ; y < img->width ; y++) {
 		for (x=0 ; x < img->height ; x++) {
 			int xdst=x0+x,ydst=y0+y;
@@ -1198,7 +1198,7 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
 	int len=strlen(name);
 	char *ext;
 	int rc=0;
-	
+
 	if (len < 4)
 		return NULL;
 	ext=name+len-4;
@@ -1208,20 +1208,20 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
 		dbg(2, "loading image '%s'\n", name );
 		if (!strcmp(ext,".xpm")) {
 			rc=xpmdecode(name, ret);
-		} else if (!strcmp(ext,".png")) { 
+		} else if (!strcmp(ext,".png")) {
 			rc=pngdecode(name, ret);
 		}
 		if (rc) {
 			image_cache_hash_add( name, ret );
+			*w=ret->width;
+			*h=ret->height;
+			if (hot)
+				*hot=ret->hot;
 		} else {
 			g_free(ret);
 			ret=NULL;
 		}
 	}
-	*w=ret->width;
-	*h=ret->height;
-	if (hot) 
-		*hot=ret->hot;
 	return ret;
 }
 
