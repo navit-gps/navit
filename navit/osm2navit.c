@@ -418,7 +418,7 @@ struct country_table {
 	{642,"România,Romania,RO"},
 	{703,"Slovakia,Slovensko,SK"},
 	{705,"Slovenia,Republika Slovenija,SI"},
- 	{724,"Spain,Espana,Espana,Reino de Espana"},
+ 	{724,"Spain,Espana,España,Reino de Espana"},
 	{752,"Sweden,Sverige,Konungariket Sverige,SE"},
 	{756,"Schweiz"}, 
 	{826,"United Kingdom,UK"},
