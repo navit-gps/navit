@@ -668,8 +668,11 @@ static void draw_restore(struct graphics_priv *gr, struct point *p, int w, int h
 
 static void draw_drag(struct graphics_priv *gr, struct point *p)
 {
-	gr->p.x    = p->x;
-	gr->p.y    = p->y;
+	if ( p )
+	{
+		gr->p.x    = p->x;
+		gr->p.y    = p->y;
+	}
 }
 
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
@@ -1333,7 +1336,7 @@ static struct graphics_methods graphics_methods =
 	font_new,
 	gc_new,
 	background_gc,
-	overlay_new, // overlay_new,
+	overlay_new,
 	image_new,
 	get_data,
 	NULL,   //image_free
