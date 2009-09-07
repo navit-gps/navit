@@ -2185,7 +2185,7 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v)
 	if ((vehicle_get_attr(v, attr_animate, &animate, NULL)))
 		nv->animate_cursor=animate.u.num;
 	nv->callback.type=attr_callback;
-	nv->callback.u.callback=callback_new_2(callback_cast(navit_vehicle_update), this_, nv);
+	nv->callback.u.callback=callback_new_attr_2(callback_cast(navit_vehicle_update), attr_position_coord_geo, this_, nv);
 	vehicle_add_attr(nv->vehicle, &nv->callback);
 	vehicle_set_attr(nv->vehicle, &this_->self, NULL);
 	return 1;

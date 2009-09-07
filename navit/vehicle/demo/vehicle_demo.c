@@ -155,13 +155,13 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 				dbg(1, "ci=0x%x,0x%x\n", ci.x, ci.y);
 				transform_to_geo(projection_mg, &ci,
 						 &priv->geo);
-				callback_list_call_0(priv->cbl);
+				callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 				break;
 			}
 		}
 	} else {
 		if (priv->position_set) 
-			callback_list_call_0(priv->cbl);
+			callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 	}
 	if (mr)
 		map_rect_destroy(mr);

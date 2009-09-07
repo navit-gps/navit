@@ -143,7 +143,7 @@ vehicle_android_callback(struct vehicle_priv *v, jobject location)
 	strftime(v->fixiso8601, sizeof(v->fixiso8601), "%Y-%m-%dT%TZ", tm);
 	dbg(1,"lat %f lon %f time %s\n",v->geo.lat,v->geo.lng,v->fixiso8601);
 	v->have_coords=1;
-	callback_list_call_0(v->cbl);
+	callback_list_call_attr_0(v->cbl, attr_position_coord_geo);
 }
 
 static int

@@ -120,7 +120,7 @@ vehicle_add_log(struct vehicle *this_, struct log *log)
                 return 1;
 
 	if (!strcmp(type_attr.u.str, "nmea")) {
-		cb=callback_new_2(callback_cast(vehicle_log_nmea), this_, log);
+		cb=callback_new_attr_2(callback_cast(vehicle_log_nmea), attr_position_coord_geo, this_, log);
 	} else if (!strcmp(type_attr.u.str, "gpx")) {
 		char *header = "<?xml version='1.0' encoding='UTF-8'?>\n"
 			"<gpx version='1.1' creator='Navit http://navit.sourceforge.net'\n"
@@ -133,11 +133,11 @@ vehicle_add_log(struct vehicle *this_, struct log *log)
 		char *trailer = "</trkseg>\n</trk>\n</gpx>\n";
 		log_set_header(log, header, strlen(header));
 		log_set_trailer(log, trailer, strlen(trailer));
-		cb=callback_new_2(callback_cast(vehicle_log_gpx), this_, log);
+		cb=callback_new_attr_2(callback_cast(vehicle_log_gpx), attr_position_coord_geo, this_, log);
 	} else if (!strcmp(type_attr.u.str, "textfile")) {
 		char *header = "type=track\n";
 		log_set_header(log, header, strlen(header));
-		cb=callback_new_2(callback_cast(vehicle_log_textfile), this_, log);
+		cb=callback_new_attr_2(callback_cast(vehicle_log_textfile), attr_position_coord_geo, this_, log);
 	} else
 		return 1;
 	callback_list_add(this_->cbl, cb);

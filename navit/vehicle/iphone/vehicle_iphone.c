@@ -121,7 +121,7 @@ vehicle_iphone_update(void *arg,
 	priv->radius = radius;
 
 	dbg(0,"position_get lat:%f lng:%f (spd:%f dir:%f time:%s)\n", priv->geo.lat, priv->geo.lng, priv->speed, priv->direction, priv->str_time);
-	callback_list_call_0(priv->cbl);
+	callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
 
 
