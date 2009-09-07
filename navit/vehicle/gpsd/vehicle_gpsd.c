@@ -151,7 +151,7 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 	}
 	// If data->fix.speed is NAN, then the drawing gets jumpy.
 	if (! isnan(data->fix.speed) && priv->fix_type > 0) {
-		callback_list_call_0(priv->cbl);
+		callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 	}
 	dbg(2,"speed ok\n");
 }
