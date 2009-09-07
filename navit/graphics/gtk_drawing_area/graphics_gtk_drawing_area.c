@@ -88,6 +88,7 @@ struct graphics_priv {
 	int pid;
 	struct timeval button_press[8];
 	struct timeval button_release[8];
+	int timeout;
 };
 
 
@@ -678,7 +679,7 @@ button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 	gettimeofday(&tv, &tz);
 
 	if (event->button < 8) {
-		if (tv_delta(&this->button_press[event->button], &tv) < 100)
+		if (tv_delta(&this->button_press[event->button], &tv) < this->timeout)
 			return FALSE;
 		this->button_press[event->button]= tv;
 		this->button_release[event->button].tv_sec=0;
@@ -701,7 +702,7 @@ button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 	gettimeofday(&tv, &tz);
 
 	if (event->button < 8) {
-		if (tv_delta(&this->button_release[event->button], &tv) < 100)
+		if (tv_delta(&this->button_release[event->button], &tv) < this->timeout)
 			return FALSE;
 		this->button_release[event->button]= tv;
 		this->button_press[event->button].tv_sec=0;
@@ -1066,6 +1067,9 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	this->win_h=547;
 	if ((attr=attr_search(attrs, NULL, attr_h))) 
 		this->win_h=attr->u.num;
+	this->timeout=100;
+	if ((attr=attr_search(attrs, NULL, attr_timeout))) 
+		this->timeout=attr->u.num;
 	this->cbl=cbl;
 	this->colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
 	gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_KEY_PRESS_MASK);
