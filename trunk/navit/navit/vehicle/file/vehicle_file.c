@@ -152,7 +152,7 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
             memmove( buffer, &buffer[ bytes_to_copy ] , sizeof( buffer ) - bytes_to_copy );
         }
 	if (rc) {
-		callback_list_call_0(priv->cbl);
+		callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 		if (rc > 1)
 			dbg(0, "Can not keep with gps data delay is %d seconds\n",
 				rc - 1);
@@ -518,7 +518,7 @@ vehicle_file_io(struct vehicle_priv *priv)
 		priv->buffer_pos = 0;
 	}
 	if (rc)
-		callback_list_call_0(priv->cbl);
+		callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
 #endif
 

@@ -96,7 +96,7 @@ vehicle_gypsy_fixstatus_changed(GypsyDevice *device,
 	else
 		priv->fix_type = 0;
 
-	callback_list_call_0(priv->cbl);
+	callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
 
 /**
@@ -151,7 +151,7 @@ vehicle_gypsy_position_changed(GypsyPosition *position,
 	if (cb)
 	{
 		priv->have_cords = 1;
-		callback_list_call_0(priv->cbl);
+		callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 	}
 }
 
@@ -187,7 +187,7 @@ vehicle_gypsy_satellite_changed(GypsySatellite *satellite,
 	priv->sats_used = used;
 	priv->sats = sats;
 	
-	callback_list_call_0(priv->cbl);
+	callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
 
 /**
@@ -231,7 +231,7 @@ vehicle_gypsy_course_changed (GypsyCourse *course,
 	}
 
 	if (cb)
-		callback_list_call_0(priv->cbl);
+		callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
 }
 
 /**
