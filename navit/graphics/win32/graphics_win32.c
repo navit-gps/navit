@@ -18,6 +18,7 @@
 #include "graphics_win32.h"
 #include "xpm2bmp.h"
 #include "support/win32/ConvertUTF.h"
+#include "profile.h"
 
 struct graphics_priv
 {
@@ -297,16 +298,37 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 	case WM_PAINT:
 		if ( gra_priv && gra_priv->hMemDC)
 		{
+			profile(0, NULL);
 			dbg(0, "WM_PAINT\n");
 			struct graphics_priv* overlay = gra_priv->overlays;
 
+#ifndef FAST_TRANSPARENCY
+			DWORD * pGrPixelData;
+			BITMAPINFO bGrInfo;
+			HBITMAP     hBitmap, hOldBitmap;
+			memset(&bGrInfo, 0, sizeof(BITMAPINFO));
+			bGrInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+
+			GetDIBits( gra_priv->hMemDC, gra_priv->hBitmap,  0,  gra_priv->height, NULL, &bGrInfo, DIB_RGB_COLORS);
+
+			bGrInfo.bmiHeader.biCompression = BI_RGB;
+			bGrInfo.bmiHeader.biHeight = - bGrInfo.bmiHeader.biHeight;
+			pGrPixelData = malloc(bGrInfo.bmiHeader.biSizeImage);
+
+			hBitmap = CreateCompatibleBitmap(gra_priv->hMemDC, gra_priv->width, gra_priv->height);
+			hOldBitmap = SelectBitmap(gra_priv->hMemDC, hBitmap);
+
+			int lines = GetDIBits( gra_priv->hMemDC, hOldBitmap,  0,  gra_priv->height, pGrPixelData, &bGrInfo, DIB_RGB_COLORS);
+			(void)SelectBitmap(gra_priv->hMemDC, hOldBitmap);
+			dbg(1,"Lines: %d", lines);
+#endif
 			while ( !gra_priv->disabled && overlay && !overlay->disabled )
 			{
 				if ( overlay->p.x < gra_priv->width && overlay->p.y < gra_priv->height )
 				{
 
 #ifdef  FAST_TRANSPARENCY
-					if ( !overlay->hMaskDC )
+					if ( !overlay->hPrebuildDC )
 					{
 						overlay->hPrebuildBitmap = CreateBitmap(overlay->width,overlay->height,1,1,NULL);
 						overlay->hPrebuildDC = CreateCompatibleDC(NULL);
@@ -317,33 +339,54 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 					}
 
 #else
-					int x;
-					int y;
-					COLORREF newColor;
 					const COLORREF transparent_color = RGB(overlay->transparent_color.r >> 8,overlay->transparent_color.g >> 8,overlay->transparent_color.b >> 8);
+					DWORD* pOverlayPixelData;
+					BITMAPINFO bOverlayInfo;
 
-					overlay->hPrebuildBitmap =  CreateCompatibleBitmap(overlay->hMemDC, overlay->width, overlay->height );
-					overlay->hPrebuildDC = CreateCompatibleDC(NULL);
-					SelectObject(overlay->hPrebuildDC,overlay->hPrebuildBitmap);
+					memset(&bOverlayInfo, 0, sizeof(BITMAPINFO));
+					bOverlayInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 
+
+					HBITMAP hOverlayBitmap = CreateCompatibleBitmap(overlay->hMemDC, overlay->width, overlay->height);
+					(void)SelectBitmap(overlay->hMemDC, hOverlayBitmap);
+
+					GetDIBits( overlay->hMemDC, overlay->hBitmap,  0,  overlay->height, NULL, &bOverlayInfo, DIB_RGB_COLORS);
+
+					bOverlayInfo.bmiHeader.biCompression = BI_RGB;
+					bOverlayInfo.bmiHeader.biHeight = - bOverlayInfo.bmiHeader.biHeight;
+					pOverlayPixelData = g_malloc(bOverlayInfo.bmiHeader.biSizeImage);
+
+
+					lines = GetDIBits( overlay->hMemDC, overlay->hBitmap,  0,  overlay->height, pOverlayPixelData, &bOverlayInfo, DIB_RGB_COLORS);
+					dbg(0,"LinesOverlay: %d\n", lines);
+					(void)SelectBitmap(overlay->hMemDC, overlay->hBitmap);
+
+					int x,y;
+					int destPixel, srcPixel;
 					for ( y = 0; y < overlay->height;y++ )
 					{
 						for ( x = 0; x < overlay->width; x++ )
 						{
-							newColor = GetPixel( overlay->hMemDC, x, y);
-
-							if ( newColor == transparent_color )
+							srcPixel = y*overlay->width+x;
+							destPixel = ((overlay->p.y + y) * gra_priv->width) + (overlay->p.x + x);
+							if ( pOverlayPixelData[srcPixel] == transparent_color )
 							{
-								COLORREF origColor = GetPixel( overlay->parent->hMemDC, x + overlay->p.x, y + overlay->p.y );
-								newColor = RGB ( ((65535 - overlay->transparent_color.a) * GetRValue(origColor) + overlay->transparent_color.a * GetRValue(newColor)) / 65535,
-												 ((65535 - overlay->transparent_color.a) * GetGValue(origColor) + overlay->transparent_color.a * GetGValue(newColor)) / 65535,
-												 ((65535 - overlay->transparent_color.a) * GetBValue(origColor) + overlay->transparent_color.a * GetBValue(newColor)) / 65535);
-							}
+								destPixel = ((overlay->p.y + y) * gra_priv->width) + (overlay->p.x + x);
 
-							SetPixel( overlay->hPrebuildDC, x , y , newColor);
+
+								pGrPixelData[destPixel] = RGB ( ((65535 - overlay->transparent_color.a) * GetRValue(pGrPixelData[destPixel]) + overlay->transparent_color.a * GetRValue(pOverlayPixelData[srcPixel])) / 65535,
+																((65535 - overlay->transparent_color.a) * GetGValue(pGrPixelData[destPixel]) + overlay->transparent_color.a * GetGValue(pOverlayPixelData[srcPixel])) / 65535,
+																((65535 - overlay->transparent_color.a) * GetBValue(pGrPixelData[destPixel]) + overlay->transparent_color.a * GetBValue(pOverlayPixelData[srcPixel])) / 65535);
+
+							}
+							else
+							{
+								pGrPixelData[destPixel] = pOverlayPixelData[srcPixel];
+							}
 						}
 
 					}
+					g_free(pOverlayPixelData);
 #endif
 				}
 				overlay = overlay->next;
@@ -352,23 +395,34 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			PAINTSTRUCT ps = { 0 };
 			overlay = gra_priv->overlays;
 
+
+#ifndef FAST_TRANSPARENCY
+			HDC hImageDC = CreateCompatibleDC(gra_priv->hMemDC);
+
+			lines = SetDIBits(hImageDC, hBitmap, 0, gra_priv->height, pGrPixelData, &bGrInfo, DIB_RGB_COLORS );
+			dbg(0,"lines2:%d\n",lines);
+			(void)SelectBitmap(hImageDC,hBitmap);
 			HDC hdc = BeginPaint(hwnd, &ps);
+			BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, hImageDC, 0, 0, SRCCOPY );
+
+			g_free(pGrPixelData);
+#else
+			HDC hdc = BeginPaint(hwnd, &ps);
+
 			BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY );
 
 			while ( !gra_priv->disabled && overlay && !overlay->disabled )
 			{
 				if ( overlay->p.x < gra_priv->width && overlay->p.y < gra_priv->height )
 				{
-#ifdef  FAST_TRANSPARENCY
 					BitBlt(hdc,overlay->p.x,overlay->p.y,overlay->width,overlay->height,overlay->hPrebuildDC,0,0,SRCAND);
 					BitBlt(hdc,overlay->p.x,overlay->p.y,overlay->width,overlay->height,overlay->hMemDC,0,0,SRCPAINT);
-#else
-					BitBlt(hdc,overlay->p.x,overlay->p.y,overlay->width,overlay->height, overlay->hPrebuildDC, 0, 0,SRCCOPY);
-#endif
 				}
 				overlay = overlay->next;
 			}
+#endif
 			EndPaint(hwnd, &ps);
+			profile(0, "WM_PAINT\n");
 		}
 		break;
 	case WM_MOUSEMOVE:
@@ -1298,7 +1352,7 @@ static void overlay_disable(struct graphics_priv *gr, int disable)
 
 static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)
 {
-	dbg(1, "Get bbox for %s\n", text);
+	dbg(2, "Get bbox for %s\n", text);
 	int len = g_utf8_strlen(text, -1);
 	int xMin = 0;
 	int yMin = 0;
