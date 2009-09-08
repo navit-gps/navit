@@ -308,19 +308,17 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			HBITMAP     hBitmap, hOldBitmap;
 			memset(&bGrInfo, 0, sizeof(BITMAPINFO));
 			bGrInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-
-			GetDIBits( gra_priv->hMemDC, gra_priv->hBitmap,  0,  gra_priv->height, NULL, &bGrInfo, DIB_RGB_COLORS);
-
+			bGrInfo.bmiHeader.biWidth = gra_priv->width;
+			bGrInfo.bmiHeader.biHeight =  -gra_priv->height;
 			bGrInfo.bmiHeader.biCompression = BI_RGB;
-			bGrInfo.bmiHeader.biHeight = - bGrInfo.bmiHeader.biHeight;
-			pGrPixelData = malloc(bGrInfo.bmiHeader.biSizeImage);
+			bGrInfo.bmiHeader.biBitCount = 32;
+			bGrInfo.bmiHeader.biPlanes = 1;
 
-			hBitmap = CreateCompatibleBitmap(gra_priv->hMemDC, gra_priv->width, gra_priv->height);
-			hOldBitmap = SelectBitmap(gra_priv->hMemDC, hBitmap);
+			HDC hImageDC = CreateCompatibleDC(gra_priv->hMemDC);
+			hBitmap = CreateDIBSection(gra_priv->hMemDC, &bGrInfo, DIB_RGB_COLORS , (void **)&pGrPixelData, NULL, 0);
+			hOldBitmap = SelectBitmap(hImageDC, hBitmap);
+			BitBlt( hImageDC, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY);
 
-			int lines = GetDIBits( gra_priv->hMemDC, hOldBitmap,  0,  gra_priv->height, pGrPixelData, &bGrInfo, DIB_RGB_COLORS);
-			(void)SelectBitmap(gra_priv->hMemDC, hOldBitmap);
-			dbg(1,"Lines: %d", lines);
 #endif
 			while ( !gra_priv->disabled && overlay && !overlay->disabled )
 			{
@@ -342,24 +340,24 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 					const COLORREF transparent_color = RGB(overlay->transparent_color.r >> 8,overlay->transparent_color.g >> 8,overlay->transparent_color.b >> 8);
 					DWORD* pOverlayPixelData;
 					BITMAPINFO bOverlayInfo;
+					HBITMAP hOverlayBitmap;
 
 					memset(&bOverlayInfo, 0, sizeof(BITMAPINFO));
 					bOverlayInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-
-
-					HBITMAP hOverlayBitmap = CreateCompatibleBitmap(overlay->hMemDC, overlay->width, overlay->height);
-					(void)SelectBitmap(overlay->hMemDC, hOverlayBitmap);
-
-					GetDIBits( overlay->hMemDC, overlay->hBitmap,  0,  overlay->height, NULL, &bOverlayInfo, DIB_RGB_COLORS);
-
+					bOverlayInfo.bmiHeader.biWidth = overlay->width;
+					bOverlayInfo.bmiHeader.biHeight = -overlay->height;
+					bOverlayInfo.bmiHeader.biBitCount = 32;
 					bOverlayInfo.bmiHeader.biCompression = BI_RGB;
-					bOverlayInfo.bmiHeader.biHeight = - bOverlayInfo.bmiHeader.biHeight;
-					pOverlayPixelData = g_malloc(bOverlayInfo.bmiHeader.biSizeImage);
+					bOverlayInfo.bmiHeader.biPlanes = 1;
 
 
-					lines = GetDIBits( overlay->hMemDC, overlay->hBitmap,  0,  overlay->height, pOverlayPixelData, &bOverlayInfo, DIB_RGB_COLORS);
-					dbg(0,"LinesOverlay: %d\n", lines);
-					(void)SelectBitmap(overlay->hMemDC, overlay->hBitmap);
+					hOverlayBitmap = CreateDIBSection(overlay->hMemDC, &bOverlayInfo, DIB_RGB_COLORS , (void **)&pOverlayPixelData, NULL, 0);
+					if ( !overlay->hPrebuildDC)
+					{
+						overlay->hPrebuildDC = CreateCompatibleDC(NULL);
+					}
+					(void)SelectBitmap(overlay->hPrebuildDC, hOverlayBitmap);
+					BitBlt( overlay->hPrebuildDC, 0, 0, overlay->width , overlay->height, overlay->hMemDC, 0, 0, SRCCOPY);
 
 					int x,y;
 					int destPixel, srcPixel;
@@ -373,7 +371,6 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 							{
 								destPixel = ((overlay->p.y + y) * gra_priv->width) + (overlay->p.x + x);
 
-
 								pGrPixelData[destPixel] = RGB ( ((65535 - overlay->transparent_color.a) * GetRValue(pGrPixelData[destPixel]) + overlay->transparent_color.a * GetRValue(pOverlayPixelData[srcPixel])) / 65535,
 																((65535 - overlay->transparent_color.a) * GetGValue(pGrPixelData[destPixel]) + overlay->transparent_color.a * GetGValue(pOverlayPixelData[srcPixel])) / 65535,
 																((65535 - overlay->transparent_color.a) * GetBValue(pGrPixelData[destPixel]) + overlay->transparent_color.a * GetBValue(pOverlayPixelData[srcPixel])) / 65535);
@@ -386,7 +383,8 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 						}
 
 					}
-					g_free(pOverlayPixelData);
+					(void)SelectBitmap(overlay->hPrebuildDC, NULL );
+					DeleteObject(hOverlayBitmap);
 #endif
 				}
 				overlay = overlay->next;
@@ -397,15 +395,13 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 
 #ifndef FAST_TRANSPARENCY
-			HDC hImageDC = CreateCompatibleDC(gra_priv->hMemDC);
-
-			lines = SetDIBits(hImageDC, hBitmap, 0, gra_priv->height, pGrPixelData, &bGrInfo, DIB_RGB_COLORS );
-			dbg(0,"lines2:%d\n",lines);
-			(void)SelectBitmap(hImageDC,hBitmap);
 			HDC hdc = BeginPaint(hwnd, &ps);
 			BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, hImageDC, 0, 0, SRCCOPY );
+			EndPaint(hwnd, &ps);
 
-			g_free(pGrPixelData);
+			(void)SelectBitmap(hImageDC, hOldBitmap);
+			DeleteObject(hBitmap);
+			DeleteDC(hImageDC);
 #else
 			HDC hdc = BeginPaint(hwnd, &ps);
 
@@ -420,8 +416,8 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 				}
 				overlay = overlay->next;
 			}
-#endif
 			EndPaint(hwnd, &ps);
+#endif
 			profile(0, "WM_PAINT\n");
 		}
 		break;
@@ -1228,7 +1224,7 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int 
 					newColor = RGB ( pix_ptr[0], pix_ptr[1], pix_ptr[2]);
                                 SetPixel( hdc, xdst, ydst, newColor);
 			}
-			pix_ptr+=4;
+			pix_ptr+=img->channels;
 		}
 	}
 }
