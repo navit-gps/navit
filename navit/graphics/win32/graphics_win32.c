@@ -37,6 +37,7 @@ struct graphics_priv
 	struct graphics_priv *overlays;
 	struct graphics_priv *next;
 	struct color transparent_color;
+	DWORD* pPixelData;
 	HDC hMemDC;
 	HDC hPrebuildDC;
 	HBITMAP hBitmap;
@@ -191,35 +192,48 @@ struct graphics_gc_priv
 
 static void create_memory_dc(struct graphics_priv *gr)
 {
+
+	if ( gr->hMemDC )
+	{
+		(void)SelectBitmap( gr->hMemDC, 0 );
+		DeleteBitmap( gr->hBitmap );
+		DeleteDC( gr->hMemDC );
+		gr->hMemDC = 0;
+
+		(void)SelectBitmap( gr->hPrebuildDC, 0 );
+		DeleteBitmap( gr->hPrebuildBitmap );
+		DeleteDC( gr->hPrebuildDC );
+		gr->hPrebuildDC = 0;
+	}
+
+
 	HDC hdc;
 	hdc = GetDC( gr->wnd_handle );
 	// Creates memory DC
 	gr->hMemDC = CreateCompatibleDC(hdc);
-	if ( gr->hMemDC )
+	dbg(0, "resize memDC to: %d %d \n", gr->width, gr->height );
+
+
+#ifndef  FAST_TRANSPARENCY
+
+	BITMAPINFO bOverlayInfo;
+
+	memset(&bOverlayInfo, 0, sizeof(BITMAPINFO));
+	bOverlayInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bOverlayInfo.bmiHeader.biWidth = gr->width;
+	bOverlayInfo.bmiHeader.biHeight = -gr->height;
+	bOverlayInfo.bmiHeader.biBitCount = 32;
+	bOverlayInfo.bmiHeader.biCompression = BI_RGB;
+	bOverlayInfo.bmiHeader.biPlanes = 1;
+	gr->hPrebuildDC = CreateCompatibleDC(NULL);
+	gr->hPrebuildBitmap = CreateDIBSection(gr->hMemDC, &bOverlayInfo, DIB_RGB_COLORS , (void **)&gr->pPixelData, NULL, 0);
+	(void)SelectBitmap(gr->hPrebuildDC, gr->hPrebuildBitmap);
+#endif
+	gr->hBitmap = CreateCompatibleBitmap(hdc, gr->width, gr->height );
+
+	if ( gr->hBitmap )
 	{
-		RECT rectRgn;
-		GetClientRect( gr->wnd_handle, &rectRgn );
-
-		int Width = rectRgn.right - rectRgn.left;
-		int Height = rectRgn.bottom - rectRgn.top;
-
-		if ( gr->parent )
-		{
-			Width = gr->width;
-			Height = gr->height;
-			dbg(0, "resize overlay memDC to: %d %d \n", Width, Height );
-		}
-		else
-		{
-			dbg(0, "resize memDC to: %d %d \n", Width, Height );
-		}
-
-		gr->hBitmap = CreateCompatibleBitmap(hdc, Width, Height );
-
-		if ( gr->hBitmap )
-		{
-			SelectObject( gr->hMemDC, gr->hBitmap);
-		}
+		SelectObject( gr->hMemDC, gr->hBitmap);
 	}
 	ReleaseDC( gr->wnd_handle, hdc );
 }
@@ -244,6 +258,11 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 	{
 		if ( gra_priv )
 		{
+			RECT rc ;
+
+			GetClientRect( hwnd, &rc );
+			gra_priv->width = rc.right;
+			gra_priv->height = rc.bottom;
 			create_memory_dc(gra_priv);
 		}
 	}
@@ -303,22 +322,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 			struct graphics_priv* overlay = gra_priv->overlays;
 
 #ifndef FAST_TRANSPARENCY
-			DWORD * pGrPixelData;
-			BITMAPINFO bGrInfo;
-			HBITMAP     hBitmap, hOldBitmap;
-			memset(&bGrInfo, 0, sizeof(BITMAPINFO));
-			bGrInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-			bGrInfo.bmiHeader.biWidth = gra_priv->width;
-			bGrInfo.bmiHeader.biHeight =  -gra_priv->height;
-			bGrInfo.bmiHeader.biCompression = BI_RGB;
-			bGrInfo.bmiHeader.biBitCount = 32;
-			bGrInfo.bmiHeader.biPlanes = 1;
-
-			HDC hImageDC = CreateCompatibleDC(gra_priv->hMemDC);
-			hBitmap = CreateDIBSection(gra_priv->hMemDC, &bGrInfo, DIB_RGB_COLORS , (void **)&pGrPixelData, NULL, 0);
-			hOldBitmap = SelectBitmap(hImageDC, hBitmap);
-			BitBlt( hImageDC, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY);
-
+			BitBlt( gra_priv->hPrebuildDC, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY);
 #endif
 			while ( !gra_priv->disabled && overlay && !overlay->disabled )
 			{
@@ -338,25 +342,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 #else
 					const COLORREF transparent_color = RGB(overlay->transparent_color.r >> 8,overlay->transparent_color.g >> 8,overlay->transparent_color.b >> 8);
-					DWORD* pOverlayPixelData;
-					BITMAPINFO bOverlayInfo;
-					HBITMAP hOverlayBitmap;
 
-					memset(&bOverlayInfo, 0, sizeof(BITMAPINFO));
-					bOverlayInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-					bOverlayInfo.bmiHeader.biWidth = overlay->width;
-					bOverlayInfo.bmiHeader.biHeight = -overlay->height;
-					bOverlayInfo.bmiHeader.biBitCount = 32;
-					bOverlayInfo.bmiHeader.biCompression = BI_RGB;
-					bOverlayInfo.bmiHeader.biPlanes = 1;
-
-
-					hOverlayBitmap = CreateDIBSection(overlay->hMemDC, &bOverlayInfo, DIB_RGB_COLORS , (void **)&pOverlayPixelData, NULL, 0);
-					if ( !overlay->hPrebuildDC)
-					{
-						overlay->hPrebuildDC = CreateCompatibleDC(NULL);
-					}
-					(void)SelectBitmap(overlay->hPrebuildDC, hOverlayBitmap);
 					BitBlt( overlay->hPrebuildDC, 0, 0, overlay->width , overlay->height, overlay->hMemDC, 0, 0, SRCCOPY);
 
 					int x,y;
@@ -367,46 +353,39 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 						{
 							srcPixel = y*overlay->width+x;
 							destPixel = ((overlay->p.y + y) * gra_priv->width) + (overlay->p.x + x);
-							if ( pOverlayPixelData[srcPixel] == transparent_color )
+							if ( overlay->pPixelData[srcPixel] == transparent_color )
 							{
 								destPixel = ((overlay->p.y + y) * gra_priv->width) + (overlay->p.x + x);
 
-								pGrPixelData[destPixel] = RGB ( ((65535 - overlay->transparent_color.a) * GetRValue(pGrPixelData[destPixel]) + overlay->transparent_color.a * GetRValue(pOverlayPixelData[srcPixel])) / 65535,
-																((65535 - overlay->transparent_color.a) * GetGValue(pGrPixelData[destPixel]) + overlay->transparent_color.a * GetGValue(pOverlayPixelData[srcPixel])) / 65535,
-																((65535 - overlay->transparent_color.a) * GetBValue(pGrPixelData[destPixel]) + overlay->transparent_color.a * GetBValue(pOverlayPixelData[srcPixel])) / 65535);
+								gra_priv->pPixelData[destPixel] = RGB ( ((65535 - overlay->transparent_color.a) * GetRValue(gra_priv->pPixelData[destPixel]) + overlay->transparent_color.a * GetRValue(overlay->pPixelData[srcPixel])) / 65535,
+																((65535 - overlay->transparent_color.a) * GetGValue(gra_priv->pPixelData[destPixel]) + overlay->transparent_color.a * GetGValue(overlay->pPixelData[srcPixel])) / 65535,
+																((65535 - overlay->transparent_color.a) * GetBValue(gra_priv->pPixelData[destPixel]) + overlay->transparent_color.a * GetBValue(overlay->pPixelData[srcPixel])) / 65535);
 
 							}
 							else
 							{
-								pGrPixelData[destPixel] = pOverlayPixelData[srcPixel];
+								gra_priv->pPixelData[destPixel] = overlay->pPixelData[srcPixel];
 							}
 						}
 
 					}
-					(void)SelectBitmap(overlay->hPrebuildDC, NULL );
-					DeleteObject(hOverlayBitmap);
 #endif
 				}
 				overlay = overlay->next;
 			}
 
 			PAINTSTRUCT ps = { 0 };
-			overlay = gra_priv->overlays;
 
 
 #ifndef FAST_TRANSPARENCY
 			HDC hdc = BeginPaint(hwnd, &ps);
-			BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, hImageDC, 0, 0, SRCCOPY );
-			EndPaint(hwnd, &ps);
-
-			(void)SelectBitmap(hImageDC, hOldBitmap);
-			DeleteObject(hBitmap);
-			DeleteDC(hImageDC);
+			BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hPrebuildDC, 0, 0, SRCCOPY );
 #else
 			HDC hdc = BeginPaint(hwnd, &ps);
 
 			BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY );
 
+			overlay = gra_priv->overlays;
 			while ( !gra_priv->disabled && overlay && !overlay->disabled )
 			{
 				if ( overlay->p.x < gra_priv->width && overlay->p.y < gra_priv->height )
@@ -416,8 +395,8 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 				}
 				overlay = overlay->next;
 			}
-			EndPaint(hwnd, &ps);
 #endif
+			EndPaint(hwnd, &ps);
 			profile(0, "WM_PAINT\n");
 		}
 		break;
@@ -461,11 +440,24 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 	return 0;
 }
 
+static int fullscreen(struct window *win, int on)
+{
+	HWND hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
+	if (on) {
+		ShowWindow(hwndTaskbar, SW_HIDE);
+		ShowWindow(g_hwnd, SW_MAXIMIZE);
+	} else {
+		ShowWindow(hwndTaskbar, SW_SHOW);
+		ShowWindow(g_hwnd, SW_RESTORE);
+	}
+	return 0;
+}
 
 static const TCHAR g_szClassName[] = {'N','A','V','G','R','A','\0'};
 
-static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
+static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
 {
+	int wStyle = WS_VISIBLE;
 #ifdef HAVE_API_WIN32_CE
 	WNDCLASS wc;
 #else
@@ -474,7 +466,6 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 	wc.hIconSm		 = NULL;
 #endif
 	HWND hwnd;
-	RECT rcParent;
 
 	wc.style	 = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
 	wc.lpfnWndProc	= WndProc;
@@ -487,7 +478,11 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 	wc.lpszMenuName  = NULL;
 	wc.lpszClassName = g_szClassName;
 
-	GetClientRect( gr->wnd_parent_handle,&rcParent);
+
+#ifdef HAVE_API_WIN32_CE
+	gr->width = GetSystemMetrics(SM_CXSCREEN);
+	gr->height = GetSystemMetrics(SM_CYSCREEN);
+#endif
 
 #ifdef HAVE_API_WIN32_CE
 	if (!RegisterClass(&wc))
@@ -495,23 +490,18 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 	if (!RegisterClassEx(&wc))
 #endif
 	{
-		ErrorExit( TEXT("Window Registration Failed!") );
+		dbg(0, "Window registration failed\n");
 		return NULL;
 	}
 
-	gr->width = rcParent.right - rcParent.left;
-	gr->height  = rcParent.bottom - rcParent.top;
-	callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->width, (void *)gr->height);
+	if ( hMenu )
+	{
+		wStyle = WS_CHILD;
+	}
 
 	g_hwnd = hwnd = CreateWindow(g_szClassName,
 								 TEXT(""),
-#ifdef HAVE_API_WIN32_CE
-								 WS_VISIBLE,
-#elif 1
-								 WS_CHILD,
-#else
-								 WS_OVERLAPPEDWINDOW,
-#endif
+								 wStyle,
 								 0,
 								 0,
 								 gr->width,
@@ -521,29 +511,26 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr )
 #else
 								 NULL,
 #endif
-#if 1
-								 (HMENU)ID_CHILD_GFX,
-#else
-								 NULL,
-#endif
+								 hMenu,
 								 GetModuleHandle(NULL),
 								 NULL);
 
 	if (hwnd == NULL)
 	{
-		ErrorExit( TEXT("Window Creation Failed!") );
+		dbg(0, "Window creation failed: %d\n",  GetLastError());
 		return NULL;
 	}
 	gr->wnd_handle = hwnd;
 
+	callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->width, (void *)gr->height);
 	create_memory_dc(gr);
 
 	SetWindowLongPtr( hwnd , DWLP_USER, (LONG_PTR)gr );
 
-	ShowWindow( hwnd, TRUE );
+	ShowWindow( hwnd, SW_SHOW );
 	UpdateWindow( hwnd );
 
-
+	fullscreen(0, FALSE);
 	PostMessage( gr->wnd_parent_handle, WM_USER + 1, 0, 0 );
 
 	return hwnd;
@@ -733,7 +720,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 	{
 		if ( gr->wnd_handle == NULL )
 		{
-			CreateGraphicsWindows( gr );
+			CreateGraphicsWindows( gr, (HMENU)ID_CHILD_GFX );
 		}
 		if ( gr->mode != draw_mode_begin )
 		{
@@ -746,20 +733,26 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 				FillRect( gr->hMemDC, &rcClient, bgBrush );
 				DeleteObject( bgBrush );
 #endif
+#ifdef  FAST_TRANSPARENCY
 				if ( gr->hPrebuildDC )
 				{
+					(void)SelectBitmap(gr->hPrebuildDC, NULL );
 					DeleteBitmap(gr->hPrebuildBitmap);
 					DeleteDC(gr->hPrebuildDC);
 					gr->hPrebuildDC = 0;
 				}
+#endif
 			}
 		}
+#ifdef  FAST_TRANSPARENCY
 		else if ( gr->hPrebuildDC )
 		{
+			(void)SelectBitmap(gr->hPrebuildDC, NULL );
 			DeleteBitmap(gr->hPrebuildBitmap);
 			DeleteDC(gr->hPrebuildDC);
 			gr->hPrebuildDC = 0;
 		}
+#endif
 	}
 
 	// force paint
@@ -781,77 +774,14 @@ static void * get_data(struct graphics_priv *this_, char *type)
 	}
 	if ( strcmp( "START_CLIENT", type ) == 0 )
 	{
-		CreateGraphicsWindows( this_ );
+		CreateGraphicsWindows( this_, (HMENU)ID_CHILD_GFX );
 		return NULL;
 	}
 	if (!strcmp(type, "window"))
 	{
-#ifdef HAVE_API_WIN32_CE
-		WNDCLASS wc;
-#else
-		WNDCLASSEX wc;
-		wc.cbSize		 = sizeof(WNDCLASSEX);
-		wc.hIconSm		 = NULL;
-#endif
-		HWND hwnd;
-		RECT rcParent;
+		CreateGraphicsWindows( this_ , NULL);
 
-		wc.style	 = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-		wc.lpfnWndProc	= WndProc;
-		wc.cbClsExtra	= 0;
-		wc.cbWndExtra	= 64;
-		wc.hInstance	= GetModuleHandle(NULL);
-		wc.hIcon	= NULL;
-		wc.hCursor	= LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-		wc.lpszMenuName  = NULL;
-		wc.lpszClassName = g_szClassName;
-
-		GetClientRect( this_->wnd_parent_handle,&rcParent);
-
-#ifdef HAVE_API_WIN32_CE
-		if (!RegisterClass(&wc))
-#else
-		if (!RegisterClassEx(&wc))
-#endif
-		{
-			ErrorExit( TEXT("Window Registration Failed!") );
-			return NULL;
-		}
-
-		callback_list_call_attr_2(this_->cbl, attr_resize, (void *)this_->width, (void *)this_->height);
-
-		g_hwnd = hwnd = CreateWindow(g_szClassName,
-									 TEXT(""),
-#ifdef HAVE_API_WIN32_CE
-									 WS_VISIBLE,
-#else
-									 WS_OVERLAPPEDWINDOW,
-#endif
-									 0,
-									 0,
-									 this_->width,
-									 this_->height,
-									 this_->wnd_parent_handle,
-									 NULL,
-									 GetModuleHandle(NULL),
-									 NULL);
-
-		if (hwnd == NULL)
-		{
-			ErrorExit( TEXT("Window Creation Failed!") );
-			return NULL;
-		}
-		this_->wnd_handle = hwnd;
-
-		SetWindowLongPtr( hwnd , DWLP_USER, (LONG_PTR)this_ );
-
-		ShowWindow( hwnd, TRUE );
-		UpdateWindow( hwnd );
-
-		create_memory_dc(this_);
-
-		PostMessage( this_->wnd_parent_handle, WM_USER + 1, 0, 0 );
+		this_->window.fullscreen = fullscreen;
 
 		this_->window.priv=this_;
 		return &this_->window;
@@ -1482,13 +1412,15 @@ static void run_timer(UINT_PTR idEvent)
 		t = l->data;
 		if (t->timer_id == idEvent)
 		{
-			callback_call_0(t->cb);
+			struct callback *cb = t->cb;
+			dbg(2, "Timer %d (multi: %d)\n", t->timer_id, t->multi);
 			if (!t->multi)
 			{
 				KillTimer(NULL, t->timer_id);
 				timers = g_list_remove(timers, t);
 				free(t);
 			}
+			callback_call_0(cb);
 			return;
 		}
 		l = g_list_next(l);
@@ -1514,16 +1446,16 @@ static struct event_timeout *
 	timers = g_list_prepend(timers, t);
 	t->cb = cb;
 	t->timer_id = SetTimer(NULL, 0, timeout, win32_timer_cb);
-	dbg(1, "Started timer %d for %d\n", t->timer_id, timeout);
+	dbg(1, "Started timer %d for %d (multi: %d)\n", t->timer_id, timeout, multi);
 	return t;
 }
 
 static void
 event_win32_remove_timeout(struct event_timeout *to)
 {
-	dbg(0,"enter:\n");
 	if (to)
 	{
+		dbg(1, "Try stopping timer %d\n", to->timer_id);
 		GList *l;
 		struct event_timeout *t=NULL;
 		l = timers;
