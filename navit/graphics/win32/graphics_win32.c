@@ -1196,14 +1196,18 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
 		}
 		if (rc) {
 			image_cache_hash_add( name, ret );
-			*w=ret->width;
-			*h=ret->height;
 			if (hot)
 				*hot=ret->hot;
 		} else {
 			g_free(ret);
 			ret=NULL;
 		}
+	}
+	if (ret) {
+		*w=ret->width;
+		*h=ret->height;
+		if (hot)
+			*hot=ret->hot;
 	}
 	return ret;
 }
