@@ -669,7 +669,7 @@ item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val)
 }
 
 static void *
-item_bin_get_attr(struct item_bin *ib, enum attr_type type)
+item_bin_get_attr(struct item_bin *ib, enum attr_type type, void *last)
 {
 	unsigned char *s=(unsigned char *)ib;
 	unsigned char *e=(unsigned char *)(ib+(ib->len+1)*4);
@@ -677,7 +677,7 @@ item_bin_get_attr(struct item_bin *ib, enum attr_type type)
 	while (s < e) {
 		struct attr_bin *ab=(struct attr_bin *)s;
 		s+=(ab->len+1)*4;
-		if (ab->type == type) {
+		if (ab->type == type && (void *)(ab+1) > last) {
 			return (ab+1);
 		}	
 	}
@@ -687,7 +687,7 @@ item_bin_get_attr(struct item_bin *ib, enum attr_type type)
 static long long
 item_bin_get_wayid(struct item_bin *ib)
 {
-	long long *ret=item_bin_get_attr(ib, attr_osm_wayid);
+	long long *ret=item_bin_get_attr(ib, attr_osm_wayid, NULL);
 	if (ret)
 		return *ret;
 	return 0;
@@ -1105,7 +1105,7 @@ extend_buffer(struct buffer *b)
 }
 
 int nodeid_last;
-GHashTable *node_hash;
+GHashTable *node_hash,*way_hash;
 
 static void
 node_buffer_to_hash(void)
@@ -1246,9 +1246,25 @@ node_item_get(int id)
 	return &ni[p];
 }
 
+static int
+node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
+{
+	if (node_hash) {
+		int i;
+		i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)id));
+		fseek(coords, i*sizeof(*ret), SEEK_SET);
+		if (fread(ret, sizeof(*ret), 1, coords) == 1)
+			return 1;
+		else
+			return 0;
+	}
+	return 0;
+}
+
 static void
 add_way(int id)
 {
+	static int wayid_last;
 	wayid=id;
 	coord_count=0;
 	attr_strings_clear();
@@ -1259,6 +1275,11 @@ add_way(int id)
 	memset(flags, 0, sizeof(flags));
 	debug_attr_buffer[0]='\0';
 	osmid_attr_value=id;
+	if (wayid < wayid_last && !way_hash) {
+		fprintf(stderr,"INFO: Ways out of sequence (new %d vs old %d), adding hash\n", wayid, wayid_last);
+		way_hash=g_hash_table_new(NULL, NULL);
+	}
+	wayid_last=wayid;
 }
 
 static int
@@ -1314,6 +1335,7 @@ parse_member(char *p)
 	char ref_buffer[BUFFER_SIZE];
 	char role_buffer[BUFFER_SIZE];
 	char member_buffer[BUFFER_SIZE*3+3];
+	int type;
 	struct attr memberattr = { attr_osm_member };
 	if (!xml_get_attribute(p, "type", type_buffer, BUFFER_SIZE))
 		return 0;
@@ -1321,7 +1343,17 @@ parse_member(char *p)
 		return 0;
 	if (!xml_get_attribute(p, "role", role_buffer, BUFFER_SIZE))
 		return 0;
-	sprintf(member_buffer,"%s:%s:%s", type_buffer, ref_buffer, role_buffer);
+	if (!strcmp(type_buffer,"node")) 
+		type=1;
+	else if (!strcmp(type_buffer,"way")) 
+		type=2;
+	else if (!strcmp(type_buffer,"relation")) 
+		type=3;
+	else {
+		fprintf(stderr,"Unknown type %s\n",type_buffer);
+		type=0;
+	}
+	sprintf(member_buffer,"%d:%s:%s", type, ref_buffer, role_buffer);
 	memberattr.u.str=member_buffer;
 	item_bin_add_attr(item_bin, &memberattr);
 	
@@ -1335,7 +1367,7 @@ relation_add_tag(char *k, char *v)
 	if (!strcmp(k,"type")) 
 		strcpy(relation_type, v);
 	else if (!strcmp(k,"restriction")) {
-		if (strncmp(k,"no_",3)) {
+		if (!strncmp(k,"no_",3)) {
 			item_bin->type=type_street_turn_restriction_no;
 		} else if (strncmp(k,"only_",5)) {
 			item_bin->type=type_street_turn_restriction_only;
@@ -1662,6 +1694,129 @@ sort_countries(int keep_tmpfiles)
 			fclose(f);
 		}
 		g_free(name);
+	}
+}
+
+struct relation_member {
+	int type;
+	long long id;
+	char *role;
+};
+
+static int
+get_relation_member(char *str, struct relation_member *memb)
+{
+	int len;
+	sscanf(str,"%d:%Ld:%n",&memb->type,&memb->id,&len);
+	memb->role=str+len;
+	return 1;
+}
+
+static int
+search_relation_member(struct item_bin *ib, char *role, struct relation_member *memb)
+{
+	char *str=NULL;
+	while ((str=item_bin_get_attr(ib, attr_osm_member, str))) {
+		if (!get_relation_member(str, memb))
+			return 0;
+		if (!strcmp(memb->role, role))
+			return 1;
+	}
+	return 0;
+}
+
+static int
+seek_to_way(FILE *way, long long wayid)
+{
+	long offset;
+	if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long)wayid, NULL, (gpointer)&offset)))
+		return 0;
+	fseek(way, offset, SEEK_SET);
+	return 1;
+}
+
+static struct coord *
+get_way(FILE *way, struct coord *c, long long wayid, struct item_bin *ret)
+{
+	long long currid;
+	int last;
+	struct coord *ic;
+	if (!seek_to_way(way, wayid))
+		return NULL;
+	while (item_bin_read(ret, way)) {
+		currid=item_bin_get_wayid(ret);
+		if (currid != wayid)
+			return NULL;
+		ic=(struct coord *)(ret+1);
+		last=ret->clen/2-1;
+		if (ic[0].x == c->x && ic[0].y == c->y) 
+			return &ic[last];
+		if (ic[last].x == c->x && ic[last].y == c->y) 
+			return &ic[0];
+	}
+	return NULL;
+}
+
+
+static void
+process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out)
+{
+	struct relation_member fromm,tom,viam;
+	struct node_item ni;
+	char from_buffer[65536],to_buffer[65536];
+	struct item_bin *ib=(struct item_bin *)buffer,*from=(struct item_bin *)from_buffer,*to=(struct item_bin *)to_buffer;
+	struct coord *fromc,*toc;
+	fseek(in, 0, SEEK_SET);
+	while (item_bin_read(ib, in)) {
+		if (!search_relation_member(ib, "from",&fromm)) {
+			fprintf(stderr,"from member missing in turn restriction\n");
+			continue;
+		}
+		if (!search_relation_member(ib, "to",&tom)) {
+			fprintf(stderr,"to member missing in turn restriction\n");
+			continue;
+		}
+		if (!search_relation_member(ib, "via",&viam)) {
+			fprintf(stderr,"via member missing in turn restriction\n");
+			continue;
+		}
+		if (fromm.type != 2) {
+			fprintf(stderr,"from member has wrong type in turn restriction\n");
+			continue;
+		}
+		if (tom.type != 2) {
+			fprintf(stderr,"to member has wrong type in turn restriction\n");
+			continue;
+		}
+		if (viam.type != 1) {
+			fprintf(stderr,"via member has wrong type in turn restriction\n");
+			continue;
+		}
+		if (!node_item_get_from_file(coords, viam.id, &ni)) {
+			fprintf(stderr,"failed to get via in turn restriction\n");
+			continue;
+		}
+#if 0
+		fprintf(stderr,"via %Ld vs %d\n",viam.id, ni.id);
+		fprintf(stderr,"coord 0x%x,0x%x\n",ni.c.x,ni.c.y);	
+		fprintf(stderr,"Lookup %Ld\n",fromm.id);
+#endif
+		if (!(fromc=get_way(ways, &ni.c, fromm.id, from))) {
+			fprintf(stderr,"failed to get from in turn restriction\n");
+			continue;
+		}
+		if (!(toc=get_way(ways, &ni.c, tom.id, to))) {
+			fprintf(stderr,"failed to get to in turn restriction\n");
+			continue;
+		}
+#if 0
+		fprintf(stderr,"(0x%x,0x%x)-(0x%x,0x%x)-(0x%x,0x%x)\n",fromc->x,fromc->y, ni.c.x, ni.c.y, toc->x, toc->y);
+#endif
+		item_bin_init(ib,ib->type);
+		item_bin_add_coord(ib, fromc, 1);
+		item_bin_add_coord(ib, &ni.c, 1);
+		item_bin_add_coord(ib, toc, 1);
+		item_bin_write(item_bin, out);
 	}
 }
 
@@ -2318,7 +2473,7 @@ write_item(char *tile, struct item_bin *ib)
 }
 
 static void
-write_item_part(FILE *out, FILE *out_graph, struct item_bin *orig, int first, int last)
+write_item_part(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *orig, int first, int last)
 {
 	struct item_bin new;
 	struct coord *c=(struct coord *)(orig+1);
@@ -2328,6 +2483,18 @@ write_item_part(FILE *out, FILE *out_graph, struct item_bin *orig, int first, in
 	new.type=orig->type;
 	new.clen=(last-first+1)*2;
 	new.len=new.clen+attr_len+2;
+	if (out_index) {
+		long long idx[2];
+		idx[0]=item_bin_get_wayid(orig);
+		idx[1]=ftell(out);
+		if (way_hash) {
+			if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long)idx[0], NULL, NULL)))
+				g_hash_table_insert(way_hash, (gpointer)(long)idx[0], (gpointer)(long)idx[1]);
+		} else {
+			fwrite(idx, sizeof(idx), 1, out_index);
+		}
+
+	}
 #if 0
 	fprintf(stderr,"first %d last %d type 0x%x len %d clen %d attr_len %d\n", first, last, new.type, new.len, new.clen, attr_len);
 #endif
@@ -2342,7 +2509,7 @@ write_item_part(FILE *out, FILE *out_graph, struct item_bin *orig, int first, in
 }
 
 static int
-phase2(FILE *in, FILE *out, FILE *out_graph, FILE *out_coastline, int final)
+phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final)
 {
 	struct coord *c;
 	int i,ccount,last,remaining;
@@ -2368,7 +2535,7 @@ phase2(FILE *in, FILE *out, FILE *out_graph, FILE *out_coastline, int final)
 				if (ni) {
 					c[i]=ni->c;
 					if (ni->ref_way > 1 && i != 0 && i != ccount-1 && i != last && item_get_default_flags(ib->type)) {
-						write_item_part(out, out_graph, ib, last, i);
+						write_item_part(out, out_index, out_graph, ib, last, i);
 						last=i;
 					}
 				} else if (final) {
@@ -2383,9 +2550,9 @@ phase2(FILE *in, FILE *out, FILE *out_graph, FILE *out_coastline, int final)
 			}
 		}
 		if (ccount) {
-			write_item_part(out, out_graph, ib, last, ccount-1);
+			write_item_part(out, out_index, out_graph, ib, last, ccount-1);
 			if (final && ib->type == type_water_line && out_coastline) {
-				write_item_part(out_coastline, NULL, ib, last, ccount-1);
+				write_item_part(out_coastline, NULL, NULL, ib, last, ccount-1);
 			}
 		}
 	}
@@ -2853,7 +3020,7 @@ remove_countryfiles(void)
 }
 
 static int
-phase34(struct tile_info *info, struct zip_info *zip_info, FILE *ways_in, FILE *nodes_in)
+phase34(struct tile_info *info, struct zip_info *zip_info, FILE *relations_in, FILE *ways_in, FILE *nodes_in)
 {
 
 	processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
@@ -2861,6 +3028,8 @@ phase34(struct tile_info *info, struct zip_info *zip_info, FILE *ways_in, FILE *
 	sig_alrm(0);
 	if (! info->write)
 		tile_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	if (relations_in)
+		phase34_process_file(info, relations_in);
 	if (ways_in)
 		phase34_process_file(info, ways_in);
 	if (nodes_in)
@@ -2894,7 +3063,9 @@ dump(FILE *in)
 	int *attr_end;
 	int i;
 	char *str;
+	fprintf(stderr,"enter\n");
 	while ((ib=read_item(in))) {
+		fprintf(stderr,"read item\n");
 		c=(struct coord *)(ib+1);
 		if (ib->type < type_line) {
 			dump_coord(c);
@@ -2925,7 +3096,7 @@ dump(FILE *in)
 }
 
 static int
-phase4(FILE *ways_in, FILE *nodes_in, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info)
+phase4(FILE *relations_in, FILE *ways_in, FILE *nodes_in, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info)
 {
 	struct tile_info info;
 	info.write=0;
@@ -2933,7 +3104,7 @@ phase4(FILE *ways_in, FILE *nodes_in, char *suffix, FILE *tilesdir_out, struct z
 	info.suffix=suffix;
 	info.tiles_list=NULL;
 	info.tilesdir_out=tilesdir_out;
-	return phase34(&info, zip_info, ways_in, nodes_in);
+	return phase34(&info, zip_info, relations_in, ways_in, nodes_in);
 }
 
 static int
@@ -3055,7 +3226,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 }
 
 static int
-process_slice(FILE *ways_in, FILE *nodes_in, long long size, char *suffix, struct zip_info *zip_info)
+process_slice(FILE *relations_in, FILE *ways_in, FILE *nodes_in, long long size, char *suffix, struct zip_info *zip_info)
 {
 	struct tile_head *th;
 	char *slice_data,*zip_data;
@@ -3082,7 +3253,7 @@ process_slice(FILE *ways_in, FILE *nodes_in, long long size, char *suffix, struc
 	info.suffix=suffix;
 	info.tiles_list=NULL;
 	info.tilesdir_out=NULL;
-	phase34(&info, zip_info, ways_in, nodes_in);
+	phase34(&info, zip_info, relations_in, ways_in, nodes_in);
 
 	th=tile_head_root;
 	while (th) {
@@ -3114,7 +3285,7 @@ cat(FILE *in, FILE *out)
 }
 
 static int
-phase5(FILE *ways_in, FILE *nodes_in, char *suffix, struct zip_info *zip_info)
+phase5(FILE *relations_in, FILE *ways_in, FILE *nodes_in, char *suffix, struct zip_info *zip_info)
 {
 	long long size;
 	int slices;
@@ -3154,7 +3325,7 @@ phase5(FILE *ways_in, FILE *nodes_in, char *suffix, struct zip_info *zip_info)
 		}
 		/* process_slice() modifies zip_info, but need to retain old info */
 		zipnum=zip_info->zipnum;
-		written_tiles=process_slice(ways_in, nodes_in, size, suffix, zip_info);
+		written_tiles=process_slice(relations_in, ways_in, nodes_in, size, suffix, zip_info);
 		zip_info->zipnum=zipnum+written_tiles;
 		slices++;
 	}
@@ -3267,11 +3438,11 @@ tempfile_rename(char *suffix, char *from, char *to)
 
 int main(int argc, char **argv)
 {
-	FILE *ways=NULL,*ways_split=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*coastline=NULL,*tilesdir;
+	FILE *ways=NULL,*ways_split=NULL,*ways_split_index=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*coastline=NULL,*tilesdir,*coords,*relations=NULL;
 	char *map=g_strdup(attrmap);
 	int zipnum,c,start=1,end=99,dump_coordinates=0;
 	int keep_tmpfiles=0;
-	int process_nodes=1, process_ways=1;
+	int process_nodes=1, process_ways=1, process_relations=0;
 #ifdef HAVE_ZLIB
 	int compression_level=9;
 #else
@@ -3338,6 +3509,9 @@ int main(int argc, char **argv)
 			break;
 		case 'N':
 			process_ways=0;
+			break;
+		case 'R':
+			process_relations=0;
 			break;
 		case 'S':
 			slice_size=atoll(optarg);
@@ -3454,7 +3628,8 @@ int main(int argc, char **argv)
 				resolve_ways(ways, NULL);
 				save_buffer("coords.tmp",&node_buffer, i*slice_size);
 			}
-		}
+		} else
+			save_buffer("coords.tmp",&node_buffer, 0);
 		if (ways)
 			fclose(ways);
 		if (nodes)
@@ -3481,12 +3656,15 @@ int main(int argc, char **argv)
 			for (i = 0 ; i < slices ; i++) {
 				int final=(i >= slices-1);
 				ways_split=tempfile(suffix,"ways_split",1);
+				ways_split_index=final ? tempfile(suffix,"ways_split_index",1) : NULL;
 				graph=tempfile(suffix,"graph",1);
 				/* coastline=tempfile(suffix,"coastline",1); */
 				if (i) 
 					load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
-				phase2(ways,ways_split,graph,coastline,final);
+				phase2(ways,ways_split,ways_split_index,graph,coastline,final);
 				fclose(ways_split);
+				if (ways_split_index)
+					fclose(ways_split_index);
 				fclose(ways);
 				fclose(graph);
 				if (! final) {
@@ -3512,8 +3690,25 @@ int main(int argc, char **argv)
 		fclose(ways_split);
 	}
 	if (start <= 3) {
-		fprintf(stderr,"PROGRESS: Phase 3: sorting countries\n");
+		fprintf(stderr,"PROGRESS: Phase 3: sorting countries, generating turn restrictions\n");
 		sort_countries(keep_tmpfiles);
+		if (process_relations) {
+			turn_restrictions=tempfile(suffix,"turn_restrictions",0);
+			relations=tempfile(suffix,"relations",1);
+			coords=fopen("coords.tmp","rb");
+			ways_split=tempfile(suffix,"ways_split",0);
+			ways_split_index=tempfile(suffix,"ways_split",0);
+			process_turn_restrictions(turn_restrictions,coords,ways_split,ways_split_index,relations);
+			fclose(ways_split_index);
+			fclose(ways_split);
+			fclose(coords);
+			fclose(relations);
+			fclose(turn_restrictions);
+			if(!keep_tmpfiles)
+				tempfile_unlink(suffix,"turn_restrictions");
+		}
+		if(!keep_tmpfiles)
+			tempfile_unlink(suffix,"ways_split_index");
 	}
 	if (end == 3)
 		exit(0);
@@ -3533,11 +3728,12 @@ int main(int argc, char **argv)
 				fclose(ways_split);
 			}
 		}
-		if (process_ways && process_nodes) {
-			turn_restrictions=tempfile(suffix,"turn_restrictions",0);
-			if (turn_restrictions) {
-				dump(turn_restrictions);
-				fclose(turn_restrictions);
+		if (process_relations) {
+			relations=tempfile(suffix,"relations",0);
+			fprintf(stderr,"Relations=%p\n",relations);
+			if (relations) {
+				dump(relations);
+				fclose(relations);
 			}
 		}
 		exit(0);
@@ -3551,12 +3747,14 @@ int main(int argc, char **argv)
 		}
 		zipnum=zip_info.zipnum;
 		fprintf(stderr,"PROGRESS: Phase 4: generating tiles %s\n",suffix);
+		if (process_relations)
+			relations=tempfile(suffix,"relations",0);
 		if (process_ways)
 			ways_split=tempfile(suffix,"ways_split",0);
 		if (process_nodes)
 			nodes=tempfile(suffix,"nodes",0);
 		tilesdir=tempfile(suffix,"tilesdir",1);
-		phase4(ways_split,nodes,suffix,tilesdir,&zip_info);
+		phase4(relations,ways_split,nodes,suffix,tilesdir,&zip_info);
 		fclose(tilesdir);
 		if (nodes)
 			fclose(nodes);
@@ -3569,6 +3767,8 @@ int main(int argc, char **argv)
 	if (start <= 5) {
 		phase=4;
 		fprintf(stderr,"PROGRESS: Phase 5: assembling map %s\n",suffix);
+		if (process_relations)
+			relations=tempfile(suffix,"relations",0);
 		if (process_ways)
 			ways_split=tempfile(suffix,"ways_split",0);
 		if (process_nodes)
@@ -3584,12 +3784,13 @@ int main(int argc, char **argv)
 			zip_info.res=fopen(result,"wb+");
 			index_init(&zip_info, 1);
 		}
-		phase5(ways_split,nodes,suffix,&zip_info);
+		phase5(relations,ways_split,nodes,suffix,&zip_info);
 		if (nodes)
 			fclose(nodes);
 		if (ways_split)
 			fclose(ways_split);
 		if(!keep_tmpfiles) {
+			tempfile_unlink(suffix,"relations");
 			tempfile_unlink(suffix,"nodes");
 			tempfile_unlink(suffix,"ways_split");
 			tempfile_unlink(suffix,"turn_restrictions");
