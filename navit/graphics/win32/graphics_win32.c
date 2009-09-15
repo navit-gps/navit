@@ -225,9 +225,9 @@ static void create_memory_dc(struct graphics_priv *gr)
 	bOverlayInfo.bmiHeader.biBitCount = 32;
 	bOverlayInfo.bmiHeader.biCompression = BI_RGB;
 	bOverlayInfo.bmiHeader.biPlanes = 1;
-	gr->hPrebuildDC = CreateCompatibleDC(NULL);
+		gr->hPrebuildDC = CreateCompatibleDC(NULL);
 	gr->hPrebuildBitmap = CreateDIBSection(gr->hMemDC, &bOverlayInfo, DIB_RGB_COLORS , (void **)&gr->pPixelData, NULL, 0);
-	(void)SelectBitmap(gr->hPrebuildDC, gr->hPrebuildBitmap);
+		(void)SelectBitmap(gr->hPrebuildDC, gr->hPrebuildBitmap);
 #endif
 	gr->hBitmap = CreateCompatibleBitmap(hdc, gr->width, gr->height );
 
@@ -709,6 +709,15 @@ static void draw_drag(struct graphics_priv *gr, struct point *p)
 	{
 		gr->p.x    = p->x;
 		gr->p.y    = p->y;
+
+		if ( p->x < 0 || p->y < 0 )
+		{
+			gr->disabled = TRUE;
+		}
+		else
+		{
+			gr->disabled = FALSE;
+		}
 	}
 }
 
@@ -1196,8 +1205,6 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
 		}
 		if (rc) {
 			image_cache_hash_add( name, ret );
-			if (hot)
-				*hot=ret->hot;
 		} else {
 			g_free(ret);
 			ret=NULL;
