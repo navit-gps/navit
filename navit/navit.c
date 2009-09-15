@@ -1491,7 +1491,8 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir)
 	int width, height;
 	struct navit_vehicle *nv=this_->vehicle;
 
-        float offset;               // Cursor offset from the center of the screen (percent).
+        float offset=30;            // Cursor offset from the center of the screen (percent).
+#if 0 /* Better improve track.c to get that issue resolved or make it configurable with being off the default, the jumping back to the center is a bit annoying */
         float min_offset = 0.;      // Percent offset at min_offset_speed.
         float max_offset = 30.;     // Percent offset at max_offset_speed.
         int min_offset_speed = 2;   // Speed in km/h
@@ -1504,6 +1505,7 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir)
         } else {
             offset = (max_offset - min_offset) / (max_offset_speed - min_offset_speed) * (nv->speed - min_offset_speed);
         }
+#endif
 
 	transform_get_size(this_->trans, &width, &height);
 	if (this_->orientation == -1) {
