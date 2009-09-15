@@ -93,7 +93,7 @@ struct map_rect_priv {
 struct map_search_priv {
 	struct map_rect_priv *mr;
 	struct attr *search;
-	struct map_selection *ms;
+	struct map_selection ms;
 	int partial;
 	GHashTable *search_results;
 };
@@ -1021,7 +1021,6 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 {
 	struct map_rect_priv *map_rec;
 	struct map_search_priv *msp;
-	struct map_selection *ms;
 	struct item *town;
 	
 	/*
@@ -1049,40 +1048,82 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 				break;
 			if (!map_priv_is(item->map, map))
 				break;
-			ms = g_new(struct map_selection, 1);
-			ms->next = NULL;
-			ms->range = item_range_all; /* FIXME */
-			ms->order = 18;
-			map_rec = map_rect_new_binfile(map, ms);
+			map_rec = map_rect_new_binfile(map, NULL);
 			town = map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo);
 			if (town) {
 				struct map_search_priv *msp = g_new(struct map_search_priv, 1);
-				struct coord *c = g_new(struct coord, 1);
-				int size = 10000;
-				switch (town->type) {
-					case type_town_label_2e5:
-						size = 10000;
-						break;
-					case type_town_label_2e4:
-						size = 5000;
-						break;
-					case type_town_label_2e3:
-						size = 2500;
-						break;
-					case type_town_label_2e2:
-						size = 1000;
-						break;
-					default:
-						break;
+				struct coord c;
+				struct map_rect_priv *map_rec2;
+				struct attr town_name, poly_town_name;
+				struct item *place;
+				int place_found=0;
+				item_coord_get(town, &c, 1);
+				if (item_attr_get(town, attr_label, &town_name)) {
+					msp->ms.range = item_range_all;
+					msp->ms.order = 18;
+					msp->ms.next = NULL;
+					msp->ms.u.c_rect.lu=c;
+					msp->ms.u.c_rect.rl=c;
+					map_rec2=map_rect_new_binfile(map, &msp->ms);
+					while ((place=map_rect_get_item_binfile(map_rec2))) {
+						if (item_is_poly_place(*place) &&
+						    item_attr_get(place, attr_label, &poly_town_name) && 
+						    !strcmp(poly_town_name.u.str,town_name.u.str)) {
+							struct coord c[128];
+							int i,count;
+							place_found=1;
+							while ((count=item_coord_get(place, c, 128))) {
+								for (i = 0 ; i < count ; i++)
+									coord_rect_extend(&msp->ms.u.c_rect, &c[i]);
+							}
+						}
+					}
+					map_rect_destroy_binfile(map_rec2);
 				}
-				item_coord_get(town, c, 1);
-				ms->u.c_rect.lu.x = c->x-size;
-				ms->u.c_rect.lu.y = c->y+size;
-				ms->u.c_rect.rl.x = c->x+size;
-				ms->u.c_rect.rl.y = c->y-size;
-				
+				if (!place_found) {
+					int size = 10000;
+					switch (town->type) {
+						case type_town_label_1e7:
+						case type_town_label_5e6:
+						case type_town_label_2e6:
+						case type_town_label_1e6:
+						case type_town_label_5e5:
+						case type_town_label_2e5:
+							size = 10000;
+							break;
+						case type_town_label_1e5:
+						case type_town_label_5e4:
+						case type_town_label_2e4:
+							size = 5000;
+							break;
+						case type_town_label_1e4:
+						case type_town_label_5e3:
+						case type_town_label_2e3:
+							size = 2500;
+							break;
+						case type_town_label_1e3:
+						case type_town_label_5e2:
+						case type_town_label_2e2:
+						case type_town_label_1e2:
+						case type_town_label_5e1:
+						case type_town_label_2e1:
+						case type_town_label_1e1:
+						case type_town_label_5e0:
+						case type_town_label_2e0:
+						case type_town_label_1e0:
+						case type_town_label_0e0:
+							size = 1000;
+							break;
+						default:
+							break;
+					}
+					msp->ms.u.c_rect.lu.x = c.x-size;
+					msp->ms.u.c_rect.lu.y = c.y+size;
+					msp->ms.u.c_rect.rl.x = c.x+size;
+					msp->ms.u.c_rect.rl.y = c.y-size;
+				}
 				map_rect_destroy_binfile(map_rec);
-				map_rec = map_rect_new_binfile(map, ms);
+				map_rec = map_rect_new_binfile(map, &msp->ms);
 				msp->mr = map_rec;
 				msp->search = search;
 				msp->partial = partial;
@@ -1090,7 +1131,6 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 				return msp;
 			}
 			map_rect_destroy_binfile(map_rec);
-			g_free(ms);
 			break;
 		default:
 			break;
@@ -1173,7 +1213,6 @@ static void
 binmap_search_destroy(struct map_search_priv *ms)
 {
 	g_hash_table_destroy(ms->search_results);
-	g_free(ms->mr->sel);
 	map_rect_destroy_binfile(ms->mr);
 	g_free(ms);
 }
