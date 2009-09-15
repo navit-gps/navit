@@ -35,7 +35,7 @@
 #include "event.h"
 #include <windows.h>
 #include <windowsx.h>
-#include <io.h>
+#include <sys/io.h>
 #include <winioctl.h>
 #include <winbase.h>
 #include "support/win32/ConvertUTF.h"
@@ -125,7 +125,7 @@ reconnect_port:
 	}
 
 	while (pvt->is_running &&
-		(pvt->m_hGPSDevice = CreateFile(portname, 
+		(pvt->m_hGPSDevice = CreateFile(portname,
 			GENERIC_READ, 0,
 			NULL, OPEN_EXISTING, 0, 0)) == INVALID_HANDLE_VALUE) {
 		Sleep(1000);
@@ -164,7 +164,7 @@ reconnect_port:
 			current_index = 0;
 			memset(buffer, 0, sizeof(buffer));
 		}
-		status = ReadFile(pvt->m_hGPSDevice, 
+		status = ReadFile(pvt->m_hGPSDevice,
 			&buffer[current_index], chunk_size,
 			&dwBytes, NULL);
 		if (!status) {
@@ -195,7 +195,7 @@ reconnect_port:
 				}
 				consumed = pos + strspn(buffer+pos, "\r\n");
 				current_index -= consumed;
-				memmove(buffer,&buffer[consumed] , 
+				memmove(buffer,&buffer[consumed] ,
 					sizeof(buffer) - consumed);
 				buffer[current_index] = '\0';
 			}
@@ -287,7 +287,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 		return ret;
 	}
 // RMC, RMB, VTG, and GLL in nmea 2.3 have status
-// A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator. 
+// A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator.
 // Only A and D are valid
 	if (!priv->nmea_data_buf || strlen(priv->nmea_data_buf) < 65536) {
 		nmea_data_buf=g_strconcat(priv->nmea_data_buf ? priv->nmea_data_buf : "", buffer, "\n", NULL);
@@ -300,7 +300,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 	p = buffer;
 	while (i < 16) {
 		item[i++] = p;
-		while (*p && *p != ',')
+		while (*p && *p != ',' && *p != '\r')
 			p++;
 		if (!*p)
 			break;
@@ -348,7 +348,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 		return 1;
 	}
 	if (!strncmp(buffer, "$GPVTG", 6)) {
-		
+
 		/* 0      1      2 34 5    6 7   8
 		   $GPVTG,143.58,T,,M,0.26,N,0.5,K*6A
 		   Course Over Ground Degrees True[1],"T"[2],Course Over Ground Degrees Magnetic[3],"M"[4],
@@ -362,6 +362,12 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 			priv->direction = g_ascii_strtod( item[1], NULL );
 			priv->speed = g_ascii_strtod( item[7], NULL );
 		}
+		else {
+			dbg(0, "GPVTG is invalid\n");
+			int dbgItemIndex;
+            for (dbgItemIndex=0; dbgItemIndex < i; dbgItemIndex++)
+                dbg(1,"[%d] = %s\n", dbgItemIndex, item[dbgItemIndex]);
+		}
 	}
 	if (!strncmp(buffer, "$GPRMC", 6)) {
 		/*                                                           1     1
@@ -372,8 +378,8 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 		*/
 		if (*item[2] == 'A')
 			valid = 1;
-		if (i == 12 && (*item[12] == 'A' || *item[12] == 'D'))
-			valid = 1; 
+		if (i == 13 && (*item[12] == 'A' || *item[12] == 'D'))
+			valid = 1;
 		if (valid) {
 			priv->direction = g_ascii_strtod( item[8], NULL );
 			priv->speed = g_ascii_strtod( item[7], NULL );
@@ -384,17 +390,23 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 				&priv->fixyear);
 			priv->fixyear += 2000;
 		}
+		else {
+			dbg(0, "GPMRC is invalid\n");
+			int dbgItemIndex;
+            for (dbgItemIndex=0; dbgItemIndex < i; dbgItemIndex++)
+                dbg(1,"[%d] = %s\n", dbgItemIndex, item[dbgItemIndex]);
+		}
 	}
 	if (!strncmp(buffer, "$GPGSA", 6)) {
 	/*
 		GSA      Satellite status
-		A        Auto selection of 2D or 3D fix (M = manual) 
+		A        Auto selection of 2D or 3D fix (M = manual)
 		3        3D fix - values include:	1 = no fix
 							2 = 2D fix
 							3 = 3D fix
-		04,05... PRNs of satellites used for fix (space for 12) 
-		2.5      PDOP (dilution of precision) 
-		1.3      Horizontal dilution of precision (HDOP) 
+		04,05... PRNs of satellites used for fix (space for 12)
+		2.5      PDOP (dilution of precision)
+		1.3      Horizontal dilution of precision (HDOP)
 		2.1      Vertical dilution of precision (VDOP)
 		*39      the checksum data, always begins with *
 	*/
@@ -459,7 +471,7 @@ vehicle_wince_disable_watch(struct vehicle_priv *priv)
 	priv->is_running = 0;
 //	DWORD res;
 //	res = WaitForSingleObject(priv->m_hGPSThread, 2000);
-//	
+//
 	while (wait-- > 0 && priv->thread_up) {
 		SwitchToThread();
 	}
