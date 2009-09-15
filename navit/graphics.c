@@ -78,6 +78,7 @@ struct display_context
 	struct graphics_gc *gc;
 	struct graphics_image *img;
 	enum projection pro;
+	int mindist;
 	struct transformation *trans;
 };
 
@@ -1442,10 +1443,10 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		dc->gc=gc;
 	}
 	if (dc->e->type == element_polyline) {
-		count=transform(dc->trans, dc->pro, di->c, pa, di->count, 1, e->u.polyline.width, width);
+		count=transform(dc->trans, dc->pro, di->c, pa, di->count, dc->mindist, e->u.polyline.width, width);
 	}
 	else
-		count=transform(dc->trans, dc->pro, di->c, pa, di->count, 1, 0, NULL);
+		count=transform(dc->trans, dc->pro, di->c, pa, di->count, dc->mindist, 0, NULL);
 	switch (e->type) {
 	case element_polygon:
 #if 0
@@ -1792,6 +1793,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	int order=transform_get_order(trans);
 	displaylist->dc.trans=trans;
 	displaylist->dc.gra=gra;
+	displaylist->dc.mindist=transform_get_scale(trans)/2;
 	// FIXME find a better place to set the background color
 	if (l) {
 		graphics_gc_set_background(gra->gc[0], &l->color);
