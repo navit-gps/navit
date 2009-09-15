@@ -372,7 +372,7 @@ transform_datum(struct coord_geo *from, enum map_datum from_datum, struct coord_
 }
 
 int
-transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int unique, int width, int *width_return)
+transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int mindist, int width, int *width_return)
 {
 	struct coord c1;
 	int xcn, ycn; 
@@ -381,7 +381,7 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 	int xm,ym,zct;
 	int zlimit=1000;
 	int visible, visibleo=-1;
-	int i,j = 0;
+	int i,j = 0,k=0;
 	dbg(1,"count=%d\n", count);
 	for (i=0; i < count; i++) {
 		if (pro == t->pro) {
@@ -392,6 +392,11 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 			transform_from_geo(t->pro, &g, &c1);
 			xc=c1.x;
 			yc=c1.y;
+		}
+		if (i != 0 && i != count-1 && mindist) {
+			if (xc > c[k].x-mindist && xc < c[k].x+mindist && yc > c[k].y-mindist && yc < c[k].y+mindist) 
+				continue;
+			k=i;
 		}
 		xm=xc;
 		ym=yc;
@@ -467,17 +472,15 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 		xc+=t->offx;
 		yc+=t->offy;
 		dbg(1,"xc=%d yc=%d\n", xc, yc);
-		if (j == 0 || !unique || p[j-1].x != xc || p[j-1].y != yc) {
-			p[j].x=xc;
-			p[j].y=yc;
-			if (width_return) {
-				if (t->ddd) 
-					width_return[j]=width*(t->offz << POST_SHIFT)/zc;
-				else 
-					width_return[j]=width;
-			}
-			j++;
+		p[j].x=xc;
+		p[j].y=yc;
+		if (width_return) {
+			if (t->ddd) 
+				width_return[j]=width*(t->offz << POST_SHIFT)/zc;
+			else 
+				width_return[j]=width;
 		}
+		j++;
 	}
 	return j;
 }
