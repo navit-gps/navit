@@ -1367,10 +1367,13 @@ relation_add_tag(char *k, char *v)
 	if (!strcmp(k,"type")) 
 		strcpy(relation_type, v);
 	else if (!strcmp(k,"restriction")) {
-		if (!strncmp(k,"no_",3)) {
+		if (!strncmp(v,"no_",3)) {
 			item_bin->type=type_street_turn_restriction_no;
-		} else if (strncmp(k,"only_",5)) {
+		} else if (!strncmp(v,"only_",5)) {
 			item_bin->type=type_street_turn_restriction_only;
+		} else {
+			item_bin->type=type_none;
+			fprintf(stderr,"Unknown restriction %s\n",v);
 		}
 	}
 }
