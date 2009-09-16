@@ -35,7 +35,7 @@
 #include "event.h"
 #include <windows.h>
 #include <windowsx.h>
-#include <sys/io.h>
+#include <io.h>
 #include <winioctl.h>
 #include <winbase.h>
 #include "support/win32/ConvertUTF.h"
