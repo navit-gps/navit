@@ -236,28 +236,28 @@ static char *attrmap={
 	"w	highway=pedestrian,area=1		poly_pedestrian\n"
 	"w	highway=plaza				poly_plaza\n"
 	"w	highway=motorway			highway_land\n"
-	"w	highway=motorway,rural=no		highway_city\n"
+	"w	highway=motorway,rural=0		highway_city\n"
 	"w	highway=motorway_link			ramp\n"
 	"w	highway=trunk				street_4_land\n"
-	"w	highway=trunk,name=*,rural=yes		street_4_land\n"
+	"w	highway=trunk,name=*,rural=1		street_4_land\n"
 	"w	highway=trunk,name=*			street_4_city\n"
-	"w	highway=trunk,rural=no			street_4_city\n"
+	"w	highway=trunk,rural=0			street_4_city\n"
 	"w	highway=trunk_link			ramp\n"
 	"w	highway=primary				street_4_land\n"
-	"w	highway=primary,name=*,rural=yes	street_4_land\n"
+	"w	highway=primary,name=*,rural=1		street_4_land\n"
 	"w	highway=primary,name=*			street_4_city\n"
-	"w	highway=primary,rural=no		street_4_city\n"
+	"w	highway=primary,rural=0			street_4_city\n"
 	"w	highway=primary_link			ramp\n"
 	"w	highway=secondary			street_3_land\n"
-	"w	highway=secondary,name=*,rural=yes	street_3_land\n"
+	"w	highway=secondary,name=*,rural=1	street_3_land\n"
 	"w	highway=secondary,name=*		street_3_city\n"
-	"w	highway=secondary,rural=no		street_3_city\n"
+	"w	highway=secondary,rural=0		street_3_city\n"
 	"w	highway=secondary,area=1		poly_street_3\n"
 	"w	highway=secondary_link			ramp\n"
 	"w	highway=tertiary			street_2_land\n"
-	"w	highway=tertiary,name=*,rural=yes	street_2_land\n"
+	"w	highway=tertiary,name=*,rural=1		street_2_land\n"
 	"w	highway=tertiary,name=*			street_2_city\n"
-	"w	highway=tertiary,rural=no		street_2_city\n"
+	"w	highway=tertiary,rural=0		street_2_city\n"
 	"w	highway=tertiary,area=1			poly_street_2\n"
 	"w	highway=tertiary_link			ramp\n"
 	"w	highway=residential			street_1_city\n"
@@ -706,6 +706,15 @@ item_bin_get_wayid(struct item_bin *ib)
 	return 0;
 }
 
+static long long
+item_bin_get_relationid(struct item_bin *ib)
+{
+	long long *ret=item_bin_get_attr(ib, attr_osm_relationid, NULL);
+	if (ret)
+		return *ret;
+	return 0;
+}
+
 static void
 item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long long val)
 {
@@ -828,6 +837,8 @@ add_tag(char *k, char *v)
 		level=7;
 	if (! strcasecmp(v,"true") || ! strcasecmp(v,"yes"))
 		v="1";
+	if (! strcasecmp(v,"false") || ! strcasecmp(v,"no"))
+		v="0";
 	if (! strcmp(k,"oneway")) {
 		if (!strcmp(v,"1")) {
 			flags[0] |= AF_ONEWAY | AF_ROUNDABOUT_VALID;
@@ -997,9 +1008,8 @@ add_tag(char *k, char *v)
 		attr_present[idx]=1;
 
 	sprintf(buffer,"%s=*", k);
-	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer))) {
+	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
 		attr_present[idx]=2;
-	}
 
 	sprintf(buffer,"*=%s", v);
 	if ((idx=(int)(long)g_hash_table_lookup(attr_hash, buffer)))
@@ -1262,6 +1272,9 @@ node_item_get(int id)
 static int
 node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
 {
+	int count;
+	int interval;
+	int p;
 	if (node_hash) {
 		int i;
 		i=(int)(long)(g_hash_table_lookup(node_hash, (gpointer)(long)id));
@@ -1271,7 +1284,50 @@ node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
 		else
 			return 0;
 	}
-	return 0;
+	
+	fseek(coords, 0, SEEK_END);
+	count=ftell(coords)/sizeof(struct node_item);
+	interval=count/4;
+	p=count/2;
+	if(interval==0) {
+		// If fewer than 4 nodes defined so far set interval to 1 to
+		// avoid infinite loop
+		interval = 1;
+	}
+	for (;;) {
+		fseek(coords, p*sizeof(struct node_item), SEEK_SET);
+		if (fread(ret, sizeof(*ret), 1, coords) != 1) {
+			fprintf(stderr,"read failed\n");
+			return 0;
+		}
+		if (ret->id == id)
+			return 1;
+		if (ret->id < id) {
+			p+=interval;
+			if (interval == 1) {
+				if (p >= count)
+					return 0;
+				if (ret->id > id)
+					return 0;
+			} else {
+				if (p >= count)
+					p=count-1;
+			}
+		} else {
+			p-=interval;
+			if (interval == 1) {
+				if (p < 0)
+					return 0;
+				if (ret->id < id)
+					return 0;
+			} else {
+				if (p < 0)
+					p=0;
+			}
+		}
+		if (interval > 1)
+			interval/=2;
+	}
 }
 
 static void
@@ -1742,29 +1798,82 @@ search_relation_member(struct item_bin *ib, char *role, struct relation_member *
 }
 
 static int
-seek_to_way(FILE *way, long long wayid)
+seek_to_way(FILE *way, FILE *ways_index, long long wayid)
 {
 	long offset;
-	if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long)wayid, NULL, (gpointer)&offset)))
-		return 0;
-	fseek(way, offset, SEEK_SET);
-	return 1;
+	long long idx[2];
+	int count,interval,p;
+	if (way_hash) {
+		if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long)wayid, NULL, (gpointer)&offset)))
+			return 0;
+		fseek(way, offset, SEEK_SET);
+		return 1;
+	}
+	fseek(ways_index, 0, SEEK_END);
+	count=ftell(ways_index)/sizeof(idx);
+	interval=count/4;
+	p=count/2;
+	if(interval==0) {
+		// If fewer than 4 nodes defined so far set interval to 1 to
+		// avoid infinite loop
+		interval = 1;
+	}
+	for (;;) {
+		fseek(ways_index, p*sizeof(idx), SEEK_SET);
+		if (fread(idx, sizeof(idx), 1, ways_index) != 1) {
+			fprintf(stderr,"read failed\n");
+			return 0;
+		}
+		if (idx[0] == wayid) {
+			fseek(way, idx[1], SEEK_SET);
+			return 1;
+		}
+		if (idx[0] < wayid) {
+			p+=interval;
+			if (interval == 1) {
+				if (p >= count)
+					return 0;
+				if (idx[0] > wayid)
+					return 0;
+			} else {
+				if (p >= count)
+					p=count-1;
+			}
+		} else {
+			p-=interval;
+			if (interval == 1) {
+				if (p < 0)
+					return 0;
+				if (idx[0] < wayid)
+					return 0;
+			} else {
+				if (p < 0)
+					p=0;
+			}
+		}
+		if (interval > 1)
+			interval/=2;
+	}
 }
 
 static struct coord *
-get_way(FILE *way, struct coord *c, long long wayid, struct item_bin *ret)
+get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct item_bin *ret)
 {
 	long long currid;
 	int last;
 	struct coord *ic;
-	if (!seek_to_way(way, wayid))
+	if (!seek_to_way(way, ways_index, wayid))
 		return NULL;
 	while (item_bin_read(ret, way)) {
 		currid=item_bin_get_wayid(ret);
-		if (currid != wayid)
+		if (currid != wayid) {
+			fprintf(stderr,"Wayid mismatch %Ld vs %Ld\n",currid,wayid);
 			return NULL;
+		}
 		ic=(struct coord *)(ret+1);
 		last=ret->clen/2-1;
+		if (!c) 
+			return &ic[0];
 		if (ic[0].x == c->x && ic[0].y == c->y) 
 			return &ic[last];
 		if (ic[last].x == c->x && ic[last].y == c->y) 
@@ -1774,55 +1883,79 @@ get_way(FILE *way, struct coord *c, long long wayid, struct item_bin *ret)
 }
 
 
+
 static void
 process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out)
 {
 	struct relation_member fromm,tom,viam;
 	struct node_item ni;
-	char from_buffer[65536],to_buffer[65536];
-	struct item_bin *ib=(struct item_bin *)buffer,*from=(struct item_bin *)from_buffer,*to=(struct item_bin *)to_buffer;
-	struct coord *fromc,*toc;
+	long long relid;
+	char from_buffer[65536],to_buffer[65536],via_buffer[65536];
+	struct item_bin *ib=(struct item_bin *)buffer,*from=(struct item_bin *)from_buffer,*to=(struct item_bin *)to_buffer,*via=(struct item_bin *)via_buffer;
+	struct coord *fromc,*toc,*viafrom,*viato,*tmp;
 	fseek(in, 0, SEEK_SET);
 	while (item_bin_read(ib, in)) {
+		relid=item_bin_get_relationid(ib);
 		if (!search_relation_member(ib, "from",&fromm)) {
-			fprintf(stderr,"from member missing in turn restriction\n");
+			fprintf(stderr,"from member missing in turn restriction %Ld\n",relid);
 			continue;
 		}
 		if (!search_relation_member(ib, "to",&tom)) {
-			fprintf(stderr,"to member missing in turn restriction\n");
+			fprintf(stderr,"to member missing in turn restriction %Ld\n",relid);
 			continue;
 		}
 		if (!search_relation_member(ib, "via",&viam)) {
-			fprintf(stderr,"via member missing in turn restriction\n");
+			fprintf(stderr,"via member missing in turn restriction %Ld\n",relid);
 			continue;
 		}
 		if (fromm.type != 2) {
-			fprintf(stderr,"from member has wrong type in turn restriction\n");
+			fprintf(stderr,"from member has wrong type %d in turn restriction %Ld\n",fromm.type,relid);
 			continue;
 		}
 		if (tom.type != 2) {
-			fprintf(stderr,"to member has wrong type in turn restriction\n");
+			fprintf(stderr,"to member has wrong type %d in turn restriction %Ld\n",tom.type,relid);
 			continue;
 		}
-		if (viam.type != 1) {
-			fprintf(stderr,"via member has wrong type in turn restriction\n");
+		if (viam.type != 1 && viam.type != 2) {
+			fprintf(stderr,"via member has wrong type %d in turn restriction %Ld\n",viam.type,relid);
 			continue;
 		}
-		if (!node_item_get_from_file(coords, viam.id, &ni)) {
-			fprintf(stderr,"failed to get via in turn restriction\n");
-			continue;
+		if (viam.type == 1) {
+			if (!node_item_get_from_file(coords, viam.id, &ni)) {
+				fprintf(stderr,"failed to get via node %Ld in turn restriction %Ld\n",viam.id,relid);
+				continue;
+			}
+			viafrom=&ni.c;
+			viato=&ni.c;
+		} else {
+			if (!(viafrom=get_way(ways, ways_index, NULL, viam.id, via))) {
+				fprintf(stderr,"failed to get via way %Ld in turn restriction %Ld\n",viam.id,relid);
+				continue;
+			}
+			if (!(viato=get_way(ways, ways_index, viafrom, viam.id, via))) {
+				fprintf(stderr,"failed to get via way %Ld in turn restriction %Ld\n",viam.id,relid);
+				continue;
+			}
+				
 		}
 #if 0
 		fprintf(stderr,"via %Ld vs %d\n",viam.id, ni.id);
 		fprintf(stderr,"coord 0x%x,0x%x\n",ni.c.x,ni.c.y);	
 		fprintf(stderr,"Lookup %Ld\n",fromm.id);
 #endif
-		if (!(fromc=get_way(ways, &ni.c, fromm.id, from))) {
-			fprintf(stderr,"failed to get from in turn restriction\n");
-			continue;
+		if (!(fromc=get_way(ways, ways_index, viafrom, fromm.id, from))) {
+			if (viam.type == 1 || !(fromc=get_way(ways, ways_index, viato, fromm.id, from))) {
+				fprintf(stderr,"from id %d %Ld\n",viam.type,viam.id);
+				fprintf(stderr,"failed to get from %Ld in turn restriction %Ld\n",fromm.id,relid);
+					continue;
+			} else {
+				tmp=viato;
+				viato=viafrom;
+				viafrom=tmp;
+			}
 		}
-		if (!(toc=get_way(ways, &ni.c, tom.id, to))) {
-			fprintf(stderr,"failed to get to in turn restriction\n");
+		if (!(toc=get_way(ways, ways_index, viato, tom.id, to))) {
+			fprintf(stderr,"failed to get to %Ld in turn restriction %Ld\n",tom.id,relid);
 			continue;
 		}
 #if 0
@@ -1830,7 +1963,9 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 #endif
 		item_bin_init(ib,ib->type);
 		item_bin_add_coord(ib, fromc, 1);
-		item_bin_add_coord(ib, &ni.c, 1);
+		item_bin_add_coord(ib, viafrom, 1);
+		if (viam.type == 2)
+			item_bin_add_coord(ib, viato, 1);
 		item_bin_add_coord(ib, toc, 1);
 		item_bin_write(item_bin, out);
 	}
@@ -2532,6 +2667,7 @@ phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastlin
 	osmid ndref;
 	struct item_bin *ib;
 	struct node_item *ni;
+	FILE *out_index_tmp;
 
 	processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
 	sig_alrm(0);
@@ -2539,6 +2675,7 @@ phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastlin
 #if 0
 		fprintf(stderr,"type 0x%x len %d clen %d\n", ib->type, ib->len, ib->clen);
 #endif
+		out_index_tmp=out_index;
 		ccount=ib->clen/2;
 		if (ccount <= 1)
 			continue;
@@ -2551,7 +2688,8 @@ phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastlin
 				if (ni) {
 					c[i]=ni->c;
 					if (ni->ref_way > 1 && i != 0 && i != ccount-1 && i != last && item_get_default_flags(ib->type)) {
-						write_item_part(out, out_index, out_graph, ib, last, i);
+						write_item_part(out, out_index_tmp, out_graph, ib, last, i);
+						out_index_tmp=NULL;
 						last=i;
 					}
 				} else if (final) {
@@ -2566,7 +2704,7 @@ phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastlin
 			}
 		}
 		if (ccount) {
-			write_item_part(out, out_index, out_graph, ib, last, ccount-1);
+			write_item_part(out, out_index_tmp, out_graph, ib, last, ccount-1);
 			if (final && ib->type == type_water_line && out_coastline) {
 				write_item_part(out_coastline, NULL, NULL, ib, last, ccount-1);
 			}
@@ -3713,7 +3851,7 @@ int main(int argc, char **argv)
 			relations=tempfile(suffix,"relations",1);
 			coords=fopen("coords.tmp","rb");
 			ways_split=tempfile(suffix,"ways_split",0);
-			ways_split_index=tempfile(suffix,"ways_split",0);
+			ways_split_index=tempfile(suffix,"ways_split_index",0);
 			process_turn_restrictions(turn_restrictions,coords,ways_split,ways_split_index,relations);
 			fclose(ways_split_index);
 			fclose(ways_split);
