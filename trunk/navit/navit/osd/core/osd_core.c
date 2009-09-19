@@ -963,6 +963,7 @@ osd_text_init(struct osd_text *this, struct navit *nav)
 
 	osd_set_std_graphic(nav, &this->osd_item, (struct osd_priv *)this);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_text_draw), attr_position_coord_geo, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_std_click), attr_button, &this->osd_item));
 	osd_text_draw(this, nav, NULL);
 
 }
