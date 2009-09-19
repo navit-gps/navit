@@ -3458,6 +3458,7 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 	struct coord c;
 	struct attr attr,attrp;
 
+	dbg(1,"enter\n");
 	gui_internal_enter(this, ignore);
 	trans=navit_get_trans(this->nav);
 	if (p) {
@@ -3574,12 +3575,16 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 
 	dbg(1,"enter %d %d\n", pressed, button);
 	// if still on the map (not in the menu, yet):
+	dbg(1,"children=%p ignore_button=%d\n",this->root.children,this->ignore_button);
 	if (!this->root.children || this->ignore_button) {
 		this->ignore_button=0;
 		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel
-		if (!navit_handle_button(this->nav, pressed, button, p, NULL))
+		if (!navit_handle_button(this->nav, pressed, button, p, NULL)) {
+			dbg(1,"navit has handled button\n");
 			return;
-		if (this->menu_on_map_click && button == 1)
+		}
+		dbg(1,"menu_on_map_click=%d\n",this->menu_on_map_click);
+		if (this->menu_on_map_click && button == 1) 
 			gui_internal_cmd_menu(this, p, 0);
 		return;
 	}
