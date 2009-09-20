@@ -41,6 +41,7 @@ struct vehicle_priv {
 	double speed;
 	double direction;
 	double height;
+	double radius;
 	int fix_type;
 	time_t fix_time;
 	char fixiso8601[128];
@@ -52,7 +53,7 @@ struct vehicle_priv {
 	jclass NavitVehicleClass;
 	jobject NavitVehicle;
 	jclass LocationClass;
-	jmethodID Location_getLatitude, Location_getLongitude, Location_getSpeed, Location_getBearing, Location_getAltitude, Location_getTime;
+	jmethodID Location_getLatitude, Location_getLongitude, Location_getSpeed, Location_getBearing, Location_getAltitude, Location_getTime, Location_getAccuracy;
 };
 
 /**
@@ -80,7 +81,6 @@ static int
 vehicle_android_position_attr_get(struct vehicle_priv *priv,
 			       enum attr_type type, struct attr *attr)
 {
-	struct attr * active=NULL;
 	dbg(1,"enter %s\n",attr_to_name(type));
 	switch (type) {
 #if 0
@@ -97,6 +97,10 @@ vehicle_android_position_attr_get(struct vehicle_priv *priv,
 	case attr_position_direction:
 		attr->u.numd = &priv->direction;
 		break;
+	case attr_position_radius:
+		attr->u.numd = &priv->radius;
+		break;
+
 #if 0
 	case attr_position_qual:
 		attr->u.num = priv->sats;
@@ -138,6 +142,7 @@ vehicle_android_callback(struct vehicle_priv *v, jobject location)
 	v->speed = (*jnienv)->CallFloatMethod(jnienv, location, v->Location_getSpeed)*3.6;
 	v->direction = (*jnienv)->CallFloatMethod(jnienv, location, v->Location_getBearing);
 	v->height = (*jnienv)->CallDoubleMethod(jnienv, location, v->Location_getAltitude);
+	v->radius = (*jnienv)->CallFloatMethod(jnienv, location, v->Location_getAccuracy);
 	tnow=(*jnienv)->CallLongMethod(jnienv, location, v->Location_getTime)/1000;
 	tm = gmtime(&tnow);
 	strftime(v->fixiso8601, sizeof(v->fixiso8601), "%Y-%m-%dT%TZ", tm);
@@ -164,6 +169,8 @@ vehicle_android_init(struct vehicle_priv *ret)
 	if (!android_find_method(ret->LocationClass, "getAltitude", "()D", &ret->Location_getAltitude))
                 return 0;
 	if (!android_find_method(ret->LocationClass, "getTime", "()J", &ret->Location_getTime))
+                return 0;
+	if (!android_find_method(ret->LocationClass, "getAccuracy", "()F", &ret->Location_getAccuracy))
                 return 0;
 	if (!android_find_class_global("org/navitproject/navit/NavitVehicle", &ret->NavitVehicleClass))
                 return 0;
