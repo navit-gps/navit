@@ -22,6 +22,7 @@
 /* common */
 ATTR2(0x00000000,none)
 ATTR(any)
+ATTR(any_xml)
 
 ATTR2(0x00010000,type_item_begin)
 ATTR(town_streets_item)
