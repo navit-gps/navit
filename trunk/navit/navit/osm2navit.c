@@ -65,8 +65,10 @@ static int phase;
 static int ignore_unkown = 0, coverage=0;
 
 long long slice_size=1024*1024*1024;
+long long current_id;
 int slices;
 
+char *osm_types[]={"unknown","node","way","relation"};
 
 static char *attrmap={
 	"n	*=*			point_unkn\n"
@@ -459,6 +461,16 @@ static GHashTable *attr_hash;
 
 static GHashTable *strings_hash = NULL;
 
+static void
+osm_warning(char *type, long long id, int cont, char *fmt, ...)
+{
+	char str[4096];
+	va_list ap;
+        va_start(ap, fmt);
+        vsnprintf(str, sizeof(str), fmt, ap);
+        va_end(ap);
+	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/%Ld %s",cont ? "":"OSM Warning:",type,id,str);
+}
 
 static char* string_hash_lookup( const char* key )
 {
@@ -685,14 +697,14 @@ static void *
 item_bin_get_attr(struct item_bin *ib, enum attr_type type, void *last)
 {
 	unsigned char *s=(unsigned char *)ib;
-	unsigned char *e=(unsigned char *)(ib+(ib->len+1)*4);
+	unsigned char *e=s+(ib->len+1)*4;
 	s+=sizeof(struct item_bin)+ib->clen*4;
 	while (s < e) {
 		struct attr_bin *ab=(struct attr_bin *)s;
 		s+=(ab->len+1)*4;
 		if (ab->type == type && (void *)(ab+1) > last) {
 			return (ab+1);
-		}	
+		}
 	}
 	return NULL;
 }
@@ -1364,13 +1376,12 @@ parse_way(char *p)
 static int
 add_id_attr(char *p, enum attr_type attr_type)
 {
-	long long id;
 	struct attr idattr = { attr_type };
 	char id_buffer[BUFFER_SIZE];
 	if (!xml_get_attribute(p, "id", id_buffer, BUFFER_SIZE))
 		return 0;
-	id=atoll(id_buffer);
-	idattr.u.num64=&id;
+	current_id=atoll(id_buffer);
+	idattr.u.num64=&current_id;
 	item_bin_add_attr(item_bin, &idattr);
 	return 1;
 }
@@ -1442,7 +1453,7 @@ relation_add_tag(char *k, char *v)
 			item_bin->type=type_street_turn_restriction_only;
 		} else {
 			item_bin->type=type_none;
-			fprintf(stderr,"Unknown restriction %s\n",v);
+			osm_warning("relation", current_id, 0, "Unknown restriction %s\n",v);
 		}
 	}
 }
@@ -1789,6 +1800,7 @@ search_relation_member(struct item_bin *ib, char *role, struct relation_member *
 {
 	char *str=NULL;
 	while ((str=item_bin_get_attr(ib, attr_osm_member, str))) {
+		fprintf(stderr,"str=%s\n",str);
 		if (!get_relation_member(str, memb))
 			return 0;
 		if (!strcmp(memb->role, role))
@@ -1866,10 +1878,8 @@ get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct it
 		return NULL;
 	while (item_bin_read(ret, way)) {
 		currid=item_bin_get_wayid(ret);
-		if (currid != wayid) {
-			fprintf(stderr,"Wayid mismatch %Ld vs %Ld\n",currid,wayid);
+		if (currid != wayid) 
 			return NULL;
-		}
 		ic=(struct coord *)(ret+1);
 		last=ret->clen/2-1;
 		if (!c) 
@@ -1896,44 +1906,51 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 	fseek(in, 0, SEEK_SET);
 	while (item_bin_read(ib, in)) {
 		relid=item_bin_get_relationid(ib);
+		fprintf(stderr,"Relation %Ld\n",relid);
 		if (!search_relation_member(ib, "from",&fromm)) {
-			fprintf(stderr,"from member missing in turn restriction %Ld\n",relid);
+			osm_warning("relation",relid,0,"turn restriction: from member missing\n");
 			continue;
 		}
 		if (!search_relation_member(ib, "to",&tom)) {
-			fprintf(stderr,"to member missing in turn restriction %Ld\n",relid);
+			osm_warning("relation",relid,0,"turn restriction: to member missing\n");
 			continue;
 		}
 		if (!search_relation_member(ib, "via",&viam)) {
-			fprintf(stderr,"via member missing in turn restriction %Ld\n",relid);
+			osm_warning("relation",relid,0,"turn restriction: via member missing\n");
 			continue;
 		}
 		if (fromm.type != 2) {
-			fprintf(stderr,"from member has wrong type %d in turn restriction %Ld\n",fromm.type,relid);
+			osm_warning("relation",relid,0,"turn restriction: wrong type for from member ");
+			osm_warning(osm_types[fromm.type],fromm.id,1,"\n");
 			continue;
 		}
 		if (tom.type != 2) {
-			fprintf(stderr,"to member has wrong type %d in turn restriction %Ld\n",tom.type,relid);
+			osm_warning("relation",relid,0,"turn restriction: wrong type for to member ");
+			osm_warning(osm_types[tom.type],tom.id,1,"\n");
 			continue;
 		}
 		if (viam.type != 1 && viam.type != 2) {
-			fprintf(stderr,"via member has wrong type %d in turn restriction %Ld\n",viam.type,relid);
+			osm_warning("relation",relid,0,"turn restriction: wrong type for via member ");
+			osm_warning(osm_types[viam.type],viam.id,1,"\n");
 			continue;
 		}
 		if (viam.type == 1) {
 			if (!node_item_get_from_file(coords, viam.id, &ni)) {
-				fprintf(stderr,"failed to get via node %Ld in turn restriction %Ld\n",viam.id,relid);
+				osm_warning("relation",relid,0,"turn restriction: failed to get via member ");
+				osm_warning(osm_types[viam.type],viam.id,1,"\n");
 				continue;
 			}
 			viafrom=&ni.c;
 			viato=&ni.c;
 		} else {
 			if (!(viafrom=get_way(ways, ways_index, NULL, viam.id, via))) {
-				fprintf(stderr,"failed to get via way %Ld in turn restriction %Ld\n",viam.id,relid);
+				osm_warning("relation",relid,0,"turn restriction: failed to get first via coordinate from ");
+				osm_warning(osm_types[viam.type],viam.id,1,"\n");
 				continue;
 			}
 			if (!(viato=get_way(ways, ways_index, viafrom, viam.id, via))) {
-				fprintf(stderr,"failed to get via way %Ld in turn restriction %Ld\n",viam.id,relid);
+				osm_warning("relation",relid,0,"turn restriction: failed to get last via coordinate from ");
+				osm_warning(osm_types[viam.type],viam.id,1,"\n");
 				continue;
 			}
 				
@@ -1945,9 +1962,10 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 #endif
 		if (!(fromc=get_way(ways, ways_index, viafrom, fromm.id, from))) {
 			if (viam.type == 1 || !(fromc=get_way(ways, ways_index, viato, fromm.id, from))) {
-				fprintf(stderr,"from id %d %Ld\n",viam.type,viam.id);
-				fprintf(stderr,"failed to get from %Ld in turn restriction %Ld\n",fromm.id,relid);
-					continue;
+				osm_warning("relation",relid,0,"turn restriction: failed to connect via ");
+				osm_warning(osm_types[viam.type],viam.id,1," to from member ");
+				osm_warning(osm_types[fromm.type],fromm.id,1,"\n");
+				continue;
 			} else {
 				tmp=viato;
 				viato=viafrom;
@@ -1955,7 +1973,9 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 			}
 		}
 		if (!(toc=get_way(ways, ways_index, viato, tom.id, to))) {
-			fprintf(stderr,"failed to get to %Ld in turn restriction %Ld\n",tom.id,relid);
+			osm_warning("relation",relid,0,"turn restriction: failed to connect via ");
+			osm_warning(osm_types[viam.type],viam.id,1," to to member ");
+			osm_warning(osm_types[tom.type],tom.id,1,"\n");
 			continue;
 		}
 #if 0
@@ -2693,7 +2713,8 @@ phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastlin
 						last=i;
 					}
 				} else if (final) {
-					fprintf(stderr,"Non-existing node %Ld referenced from way %Ld\n", (long long)ndref, item_bin_get_wayid(ib));
+					osm_warning("way",item_bin_get_wayid(ib),0,"Non-existing reference to ");
+					osm_warning("node",ndref,1,"\n");
 					remaining=(ib->len+1)*4-sizeof(struct item_bin)-i*sizeof(struct coord);
 					memmove(&c[i], &c[i+1], remaining);
 					ib->clen-=2;
