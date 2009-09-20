@@ -189,6 +189,19 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	return this_;
 }
 
+struct attr_iter *
+vehicle_attr_iter_new(void)
+{
+	return g_new0(void *,1);
+}
+
+void
+vehicle_attr_iter_destroy(struct attr_iter *iter)
+{
+	g_free(iter);
+}
+
+
 int
 vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
