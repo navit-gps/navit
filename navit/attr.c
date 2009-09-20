@@ -249,6 +249,12 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 		return g_strdup_printf("%f", *attr->u.numd);
 	if (type >= attr_type_object_begin && type <= attr_type_object_end) 
 		return g_strdup_printf("(object[%s])", attr_to_name(type));
+	if (type >= attr_type_color_begin && type <= attr_type_color_end) {
+		if (attr->u.color->a != 65535) 
+			return g_strdup_printf("#%02x%02x%02x%02x", attr->u.color->r>>8,attr->u.color->g>>8,attr->u.color->b>>8, attr->u.color->a>>8);
+		else
+			return g_strdup_printf("#%02x%02x%02x", attr->u.color->r>>8,attr->u.color->g>>8,attr->u.color->b>>8);
+	}
 	return g_strdup_printf("(no text[%s])", attr_to_name(type));	
 }
 
@@ -267,15 +273,40 @@ attr_search(struct attr **attrs, struct attr *last, enum attr_type attr)
 }
 
 int
+attr_match(enum attr_type search, enum attr_type found)
+{
+	switch (search) {
+	case attr_any:
+		return 1;
+	case attr_any_xml:
+		switch (found) {
+		case attr_callback:
+			return 0;
+		default:
+			return 1;
+		}
+	default:
+		return search == found;
+	}
+}
+
+int
 attr_generic_get_attr(struct attr **attrs, struct attr **def_attrs, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
 	while (attrs && *attrs) {
-		if ((*attrs)->type == type) {
+		if (attr_match(type,(*attrs)->type)) {
 			*attr=**attrs;
-			return 1;
+			if (!iter)
+				return 1;
+			if (*((void **)iter) < (void *)attrs) {
+				*((void **)iter)=(void *)attrs;
+				return 1;
+			}
 		}
 		attrs++;
 	}
+	if (type == attr_any || type == attr_any_xml)
+		return 0;
 	while (def_attrs && *def_attrs) {
 		if ((*def_attrs)->type == type) {
 			*attr=**def_attrs;
