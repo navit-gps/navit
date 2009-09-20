@@ -909,22 +909,32 @@ route_set_destination(struct route *this, struct pcoord *dst, int async)
  *
  * @param this The route in which to search
  * @param c Coordinates to search for
+ * @param last The last route graph point returned to iterate over multiple points with the same coordinates
  * @return The point at the specified coordinates or NULL if not found
  */
 static struct route_graph_point *
-route_graph_get_point(struct route_graph *this, struct coord *c)
+route_graph_get_point_next(struct route_graph *this, struct coord *c, struct route_graph_point *last)
 {
 	struct route_graph_point *p;
-	int hashval=HASHCOORD(c);
+	int seen=0,hashval=HASHCOORD(c);
 	p=this->hash[hashval];
 	while (p) {
-		if (p->c.x == c->x && p->c.y == c->y) 
-			return p;
+		if (p->c.x == c->x && p->c.y == c->y) {
+			if (!last || seen)
+				return p;
+			if (p == last)
+				seen=1;
+		}
 		p=p->hash_next;
 	}
 	return NULL;
 }
 
+static struct route_graph_point *
+route_graph_get_point(struct route_graph *this, struct coord *c)
+{
+	return route_graph_get_point_next(this, c, NULL);
+}
 
 /**
  * @brief Gets the last route_graph_point with the specified coordinates 
@@ -1572,20 +1582,29 @@ route_process_traffic_distortion(struct route_graph *this, struct item *item)
 static void
 route_process_turn_restriction(struct route_graph *this, struct item *item)
 {
-	struct route_graph_point *pnt[3];
-	struct coord c[4];
+	struct route_graph_point *pnt[4];
+	struct coord c[5];
 	int i,count;
 
-	count=item_coord_get(item, c, 4);
-	if (count != 3) {
+	count=item_coord_get(item, c, 5);
+	if (count != 3 && count != 4) {
 		dbg(0,"wrong count %d\n",count);
 		return;
 	}
-	for (i = 0 ; i < 3 ; i++) 
+	if (count == 4)
+		return;
+	for (i = 0 ; i < count ; i++) 
 		pnt[i]=route_graph_add_point(this,&c[i]);
-	pnt[1]->flags |= RP_TURN_RESTRICTION;
+	dbg(1,"%s: (0x%x,0x%x)-(0x%x,0x%x)-(0x%x,0x%x) %p-%p-%p\n",item_to_name(item->type),c[0].x,c[0].y,c[1].x,c[1].y,c[2].x,c[2].y,pnt[0],pnt[1],pnt[2]);
 	route_graph_add_segment(this, pnt[0], pnt[1], 0, item, 0, 0, 0);
 	route_graph_add_segment(this, pnt[1], pnt[2], 0, item, 0, 0, 0);
+	if (count == 4) {
+		pnt[1]->flags |= RP_TURN_RESTRICTION;
+		pnt[2]->flags |= RP_TURN_RESTRICTION;
+		route_graph_add_segment(this, pnt[2], pnt[3], 0, item, 0, 0, 0);
+	} else 
+		pnt[1]->flags |= RP_TURN_RESTRICTION;
+	
 }
 
 /**
@@ -1670,20 +1689,23 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 }
 
 static struct route_graph_segment *
-route_graph_get_segment(struct route_graph *graph, struct street_data *sd)
+route_graph_get_segment(struct route_graph *graph, struct street_data *sd, struct route_graph_segment *last)
 {
-	struct route_graph_point *start=route_graph_get_point(graph, &sd->c[0]);
+	struct route_graph_point *start=NULL;
 	struct route_graph_segment *s;
+	int seen=0;
 
-	if (!start) {
-	  return NULL;
-	}
-
-	s=start->start;
-	while (s) {
-		if (item_is_equal(sd->item, s->data.item))
-			return s;
-		s=s->start_next;
+	while ((start=route_graph_get_point_next(graph, &sd->c[0], start))) {
+		s=start->start;
+		while (s) {
+			if (item_is_equal(sd->item, s->data.item)) {
+				if (!last || seen)
+					return s;
+				if (last == s)
+					seen=1;
+			}
+			s=s->start_next;
+		}
 	}
 	return NULL;
 }
@@ -1703,30 +1725,27 @@ static void
 route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile, struct callback *cb)
 {
 	struct route_graph_point *p_min;
-	struct route_graph_segment *s;
+	struct route_graph_segment *s=NULL;
 	int min,new,old,val;
 	struct fibheap *heap; /* This heap will hold all points with "temporarily" calculated costs */
 
 	heap = fh_makekeyheap();   
 
-	s=route_graph_get_segment(this, dst->street);
-	if (!s) {
-		dbg(0,"no segment for destination found\n");
-		return;
-	}
-	val=route_value_seg(profile, NULL, s, -1);
-	if (val != INT_MAX) {
-		val=val*(100-dst->percent)/100;
-		s->end->seg=s;
-		s->end->value=val;
-		s->end->el=fh_insertkey(heap, s->end->value, s->end);
-	}
-	val=route_value_seg(profile, NULL, s, 1);
-	if (val != INT_MAX) {
-		val=val*dst->percent/100;
-		s->start->seg=s;
-		s->start->value=val;
-		s->start->el=fh_insertkey(heap, s->start->value, s->start);
+	while ((s=route_graph_get_segment(this, dst->street, s))) {
+		val=route_value_seg(profile, NULL, s, -1);
+		if (val != INT_MAX) {
+			val=val*(100-dst->percent)/100;
+			s->end->seg=s;
+			s->end->value=val;
+			s->end->el=fh_insertkey(heap, s->end->value, s->end);
+		}
+		val=route_value_seg(profile, NULL, s, 1);
+		if (val != INT_MAX) {
+			val=val*dst->percent/100;
+			s->start->seg=s;
+			s->start->value=val;
+			s->start->el=fh_insertkey(heap, s->start->value, s->start);
+		}
 	}
 	for (;;) {
 		p_min=fh_extractmin(heap); /* Starting Dijkstra by selecting the point with the minimum costs on the heap */
@@ -1910,18 +1929,18 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	if (profile->mode == 2 || (profile->mode == 0 && pos->lenextra + dst->lenextra > transform_distance(map_projection(pos->street->item.map), &pos->c, &dst->c)))
 		return route_path_new_offroad(this, pos, dst);
 	
-	s=route_graph_get_segment(this, pos->street);
+	s=route_graph_get_segment(this, pos->street, NULL);
 	if (!s) {
 		dbg(0,"no segment for position found\n");
 		return NULL;
 	}
 	val=route_value_seg(profile, NULL, s, 1);
-	if (val != INT_MAX) {
+	if (val != INT_MAX && s->end->value != INT_MAX) {
 		val=val*(100-pos->percent)/100;
 		val1=s->end->value+val;
 	}
 	val=route_value_seg(profile, NULL, s, -1);
-	if (val != INT_MAX) {
+	if (val != INT_MAX && s->start->value != INT_MAX) {
 		val=val*pos->percent/100;
 		val2=s->start->value+val;
 	}
@@ -1992,7 +2011,6 @@ is_turn_allowed(struct route_graph_point *p, struct route_graph_segment *from, s
 {
 	struct route_graph_point *prev,*next;
 	struct route_graph_segment *tmp1,*tmp2;
-	int found;
 	if (from->start == p)
 		prev=from->end;
 	else
@@ -2001,32 +2019,35 @@ is_turn_allowed(struct route_graph_point *p, struct route_graph_segment *from, s
 		next=to->end;
 	else
 		next=to->start;
-	dbg(1,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x\n",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,next->c.y);
-	tmp1=prev->start;
+	tmp1=p->end;
 	while (tmp1) {
-		if (tmp1->end == p && 
+		if (tmp1->start->c.x == prev->c.x && tmp1->start->c.y == prev->c.y &&
 			(tmp1->data.item.type == type_street_turn_restriction_no ||
 			tmp1->data.item.type == type_street_turn_restriction_only)) {
-			tmp2=next->end;
-			found=0;
+			tmp2=p->start;
+			dbg(1,"found %s (0x%x,0x%x) (0x%x,0x%x)-(0x%x,0x%x) %p-%p\n",item_to_name(tmp1->data.item.type),tmp1->data.item.id_hi,tmp1->data.item.id_lo,tmp1->start->c.x,tmp1->start->c.y,tmp1->end->c.x,tmp1->end->c.y,tmp1->start,tmp1->end);
 			while (tmp2) {
-				if (tmp2->start == p && item_is_equal(tmp1->data.item, tmp2->data.item)) {
-					found=1;
+				dbg(1,"compare %s (0x%x,0x%x) (0x%x,0x%x)-(0x%x,0x%x) %p-%p\n",item_to_name(tmp2->data.item.type),tmp2->data.item.id_hi,tmp2->data.item.id_lo,tmp2->start->c.x,tmp2->start->c.y,tmp2->end->c.x,tmp2->end->c.y,tmp2->start,tmp2->end);
+				if (item_is_equal(tmp1->data.item, tmp2->data.item)) 
 					break;
-				}
-				tmp2=tmp2->end_next;
+				tmp2=tmp2->start_next;
 			}
-			if (tmp1->data.item.type == type_street_turn_restriction_no && found) {
-				dbg(1,"not allowed\n");
+			dbg(1,"tmp2=%p\n",tmp2);
+			if (tmp2) {
+				dbg(1,"%s tmp2->end=%p next=%p\n",item_to_name(tmp1->data.item.type),tmp2->end,next);
+			}
+			if (tmp1->data.item.type == type_street_turn_restriction_no && tmp2 && tmp2->end->c.x == next->c.x && tmp2->end->c.y == next->c.y) {
+				dbg(1,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x not allowed (no)\n",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,next->c.y);
 				return 0;
 			}
-			if (tmp1->data.item.type == type_street_turn_restriction_only && !found) {
-				dbg(1,"not allowed\n");
+			if (tmp1->data.item.type == type_street_turn_restriction_only && tmp2 && (tmp2->end->c.x != next->c.x || tmp2->end->c.y != next->c.y)) {
+				dbg(1,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x not allowed (only)\n",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,next->c.y);
 				return 0;
 			}
 		}
-		tmp1=tmp1->start_next;
+		tmp1=tmp1->end_next;
 	}
+	dbg(1,"from 0x%x,0x%x over 0x%x,0x%x to 0x%x,0x%x allowed\n",prev->c.x,prev->c.y,p->c.x,p->c.y,next->c.x,next->c.y);
 	return 1;
 }
 
@@ -2048,28 +2069,48 @@ route_graph_process_restriction_segment(struct route_graph *this, struct route_g
 {
 	struct route_graph_segment *tmp;
 	struct route_graph_point *pn;
-	dbg(1,"From %s\n",item_to_name(s->data.item.type));
-	pn=route_graph_point_new(this, &p->c);
-	if (dir > 0)
-		route_graph_clone_segment(this, s, pn, s->end, AF_ONEWAY);
-	else
-		route_graph_clone_segment(this, s, s->start, pn, AF_ONEWAYREV);
+	struct coord c=p->c;
+	int dx=(rand()%32)-16;
+	int dy=(rand()%32)-16;
+	dx=0;
+	dy=0;
+	c.x+=dx;
+	c.y+=dy;
+	dbg(1,"From %s %d,%d\n",item_to_name(s->data.item.type),dx,dy);
+	pn=route_graph_point_new(this, &c);
+	if (dir > 0) { /* going away */
+		dbg(1,"other 0x%x,0x%x\n",s->end->c.x,s->end->c.y);
+		if (s->data.flags & AF_ONEWAY) {
+			dbg(1,"Not possible\n");
+			return;
+		}
+		route_graph_clone_segment(this, s, pn, s->end, AF_ONEWAYREV);
+	} else { /* coming in */
+		dbg(1,"other 0x%x,0x%x\n",s->start->c.x,s->start->c.y);
+		if (s->data.flags & AF_ONEWAYREV) {
+			dbg(1,"Not possible\n");
+			return;
+		}
+		route_graph_clone_segment(this, s, s->start, pn, AF_ONEWAY);
+	}
 	tmp=p->start;
 	while (tmp) {
 		if (tmp != s && tmp->data.item.type != type_street_turn_restriction_no &&
 			tmp->data.item.type != type_street_turn_restriction_only &&
-			is_turn_allowed(p, s, tmp))
-			route_graph_clone_segment(this, tmp, pn, tmp->end, AF_ONEWAYREV);
+			!(tmp->data.flags & AF_ONEWAYREV) && is_turn_allowed(p, s, tmp)) {
+			route_graph_clone_segment(this, tmp, pn, tmp->end, AF_ONEWAY);
 			dbg(1,"To start %s\n",item_to_name(tmp->data.item.type));
+		}
 		tmp=tmp->start_next;
 	}
 	tmp=p->end;
 	while (tmp) {
 		if (tmp != s && tmp->data.item.type != type_street_turn_restriction_no &&
 			tmp->data.item.type != type_street_turn_restriction_only &&
-			is_turn_allowed(p, s, tmp))
-			route_graph_clone_segment(this, tmp, tmp->start, pn, AF_ONEWAY);
+			!(tmp->data.flags & AF_ONEWAY) && is_turn_allowed(p, s, tmp)) {
+			route_graph_clone_segment(this, tmp, tmp->start, pn, AF_ONEWAYREV);
 			dbg(1,"To end %s\n",item_to_name(tmp->data.item.type));
+		}
 		tmp=tmp->end_next;
 	}
 }
