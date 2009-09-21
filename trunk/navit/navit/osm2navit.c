@@ -56,6 +56,11 @@ typedef long int osmid;
 #define debug_tile(x) (!strcmp(x,"bcdbd") || !strcmp(x,"bcdbd") || !strcmp(x,"bcdbda") || !strcmp(x,"bcdbdb") || !strcmp(x,"bcdbdba") || !strcmp(x,"bcdbdbb") || !strcmp(x,"bcdbdbba") || !strcmp(x,"bcdbdbaa") || !strcmp(x,"bcdbdbacaa") || !strcmp(x,"bcdbdbacab") || !strcmp(x,"bcdbdbacaba") || !strcmp(x,"bcdbdbacabaa") || !strcmp(x,"bcdbdbacabab") || !strcmp(x,"bcdbdbacababb") || !strcmp(x,"bcdbdbacababba") || !strcmp(x,"bcdbdbacababbb") || !strcmp(x,"bcdbdbacababbd") || !strcmp(x,"bcdbdbacababaa") || !strcmp(x,"bcdbdbacababab") || !strcmp(x,"bcdbdbacababac") || !strcmp(x,"bcdbdbacababad") || !strcmp(x,"bcdbdbacabaaa") || !strcmp(x,"bcdbdbacabaaba") || !strcmp(x,"bcdbdbacabaabb") || !strcmp(x,"bcdbdbacabaabc") || !strcmp(x,"bcdbdbacabaabd") || !strcmp(x,"bcdbdbacabaaaa") || !strcmp(x,"bcdbdbacabaaab") || !strcmp(x,"bcdbdbacabaaac") || !strcmp(x,"bcdbdbacabaaad") || 0)
 #endif
 
+#if 1
+#define debug_itembin(ib) 0
+#else
+#define debug_itembin(ib) ((ib)->type == 0x80000071 && (ib)->len == 8 && ((struct coord *)((ib)+1))->x == 0xfffbe05f)
+#endif
 
 static GHashTable *dedupe_ways_hash;
 
@@ -461,6 +466,7 @@ static GHashTable *attr_hash;
 
 static GHashTable *strings_hash = NULL;
 
+static void dump_itembin(struct item_bin *ib);
 static void
 osm_warning(char *type, long long id, int cont, char *fmt, ...)
 {
@@ -710,6 +716,15 @@ item_bin_get_attr(struct item_bin *ib, enum attr_type type, void *last)
 }
 
 static long long
+item_bin_get_nodeid(struct item_bin *ib)
+{
+	long long *ret=item_bin_get_attr(ib, attr_osm_nodeid, NULL);
+	if (ret)
+		return *ret;
+	return 0;
+}
+
+static long long
 item_bin_get_wayid(struct item_bin *ib)
 {
 	long long *ret=item_bin_get_attr(ib, attr_osm_wayid, NULL);
@@ -725,6 +740,18 @@ item_bin_get_relationid(struct item_bin *ib)
 	if (ret)
 		return *ret;
 	return 0;
+}
+
+static long long
+item_bin_get_id(struct item_bin *ib)
+{
+	long long ret;
+	if (ib->type < 0x80000000)
+		return item_bin_get_nodeid(ib);
+	ret=item_bin_get_wayid(ib);
+	if (!ret)
+		ret=item_bin_get_relationid(ib);
+	return ret;
 }
 
 static void
@@ -2503,7 +2530,7 @@ tile_extend(char *tile, struct item_bin *ib, GList **tiles_list)
 {
 	struct tile_head *th=NULL;
 	if (debug_tile(tile))
-		fprintf(stderr,"Tile:Writing %d bytes to '%s' (%p,%p)\n", (ib->len+1)*4, tile, g_hash_table_lookup(tile_hash, tile), tile_hash2 ? g_hash_table_lookup(tile_hash2, tile) : NULL);
+		fprintf(stderr,"Tile:Writing %d bytes to '%s' (%p,%p) 0x%x %Ld\n", (ib->len+1)*4, tile, g_hash_table_lookup(tile_hash, tile), tile_hash2 ? g_hash_table_lookup(tile_hash2, tile) : NULL, ib->type, item_bin_get_id(ib));
 	if (tile_hash2)
 		th=g_hash_table_lookup(tile_hash2, tile);
 	if (!th)
@@ -2616,9 +2643,16 @@ write_item(char *tile, struct item_bin *ib)
 	int size;
 
 	th=g_hash_table_lookup(tile_hash2, tile);
+	if (debug_itembin(ib)) {
+		fprintf(stderr,"tile head %p\n",th);
+	}
 	if (! th)
 		th=g_hash_table_lookup(tile_hash, tile);
 	if (th) {
+		if (debug_itembin(ib)) {
+			fprintf(stderr,"Match %s %d %s\n",tile,th->process,th->name);
+			dump_itembin(ib);
+		}
 		if (th->process != 0 && th->process != 1) {
 			fprintf(stderr,"error with tile '%s' of length %d\n", tile, (int)strlen(tile));
 			abort();
@@ -2626,7 +2660,7 @@ write_item(char *tile, struct item_bin *ib)
 		if (! th->process)
 			return;
 		if (debug_tile(tile))
-			fprintf(stderr,"Data:Writing %d bytes to '%s' (%p,%p)\n", (ib->len+1)*4, tile, g_hash_table_lookup(tile_hash, tile), tile_hash2 ? g_hash_table_lookup(tile_hash2, tile) : NULL);
+			fprintf(stderr,"Data:Writing %d bytes to '%s' (%p,%p) 0x%x\n", (ib->len+1)*4, tile, g_hash_table_lookup(tile_hash, tile), tile_hash2 ? g_hash_table_lookup(tile_hash2, tile) : NULL, ib->type);
 		size=(ib->len+1)*4;
 		if (th->total_size_used+size > th->total_size) {
 			fprintf(stderr,"Overflow in tile %s (used %d max %d item %d)\n", tile, th->total_size_used, th->total_size, size);
@@ -2885,7 +2919,7 @@ add_tile_hash(struct tile_head *th)
 
         data = th_get_subtile( th, idx );
 
-		if (debug_tile(data) || debug_tile(th->name)) {
+		if (debug_tile(((char *)data)) || debug_tile(th->name)) {
 			fprintf(stderr,"Parent for '%s' is '%s'\n", *data, th->name);
 		}
 
@@ -3226,9 +3260,8 @@ dump_coord(struct coord *c)
 }
 
 static void
-dump(FILE *in)
+dump_itembin(struct item_bin *ib)
 {
-	struct item_bin *ib;
 	struct coord *c;
 	struct attr_bin *a;
 	struct attr attr;
@@ -3236,35 +3269,42 @@ dump(FILE *in)
 	int *attr_end;
 	int i;
 	char *str;
+	c=(struct coord *)(ib+1);
+	if (ib->type < type_line) {
+		dump_coord(c);
+		printf(" ");
+	}
+	attr_start=(int *)(ib+1)+ib->clen;
+	attr_end=(int *)ib+ib->len+1;
+	printf("type=%s", item_to_name(ib->type));
+	fprintf(stderr,"type=%s\n",item_to_name(ib->type));
+	while (attr_start < attr_end) {
+		a=(struct attr_bin *)(attr_start);
+		attr_start+=a->len+1;
+		attr.type=a->type;
+		attr_data_set(&attr, (a+1));
+		str=attr_to_text(&attr, NULL, 1);
+		printf(" %s=\"%s\"", attr_to_name(a->type), str);
+		g_free(str);
+	}
+	printf(" debug=\"length=%d\"", ib->len);
+	printf("\n");
+	if (ib->type >= type_line) {
+		for (i = 0 ; i < ib->clen/2 ; i++) {
+			dump_coord(c+i);
+			printf("\n");
+		}
+		
+	}
+}
+
+static void
+dump(FILE *in)
+{
+	struct item_bin *ib;
 	fprintf(stderr,"enter\n");
 	while ((ib=read_item(in))) {
-		fprintf(stderr,"read item\n");
-		c=(struct coord *)(ib+1);
-		if (ib->type < type_line) {
-			dump_coord(c);
-			printf(" ");
-		}
-		attr_start=(int *)(ib+1)+ib->clen;
-		attr_end=(int *)ib+ib->len+1;
-		printf("type=%s", item_to_name(ib->type));
-		while (attr_start < attr_end) {
-			a=(struct attr_bin *)(attr_start);
-			attr_start+=a->len+1;
-			attr.type=a->type;
-			attr_data_set(&attr, (a+1));
-			str=attr_to_text(&attr, NULL, 1);
-			printf(" %s=\"%s\"", attr_to_name(a->type), str);
-			g_free(str);
-		}
-		printf(" debug=\"length=%d\"", ib->len);
-		printf("\n");
-		if (ib->type >= type_line) {
-			for (i = 0 ; i < ib->clen/2 ; i++) {
-				dump_coord(c+i);
-				printf("\n");
-			}
-			
-		}
+		dump_itembin(ib);
 	}
 }
 
@@ -3417,6 +3457,8 @@ process_slice(FILE *relations_in, FILE *ways_in, FILE *nodes_in, long long size,
 		}
 		th=th->next;
 	}
+	if (relations_in)
+		fseek(relations_in, 0, SEEK_SET);
 	if (ways_in)
 		fseek(ways_in, 0, SEEK_SET);
 	if (nodes_in)
@@ -3615,7 +3657,7 @@ int main(int argc, char **argv)
 	char *map=g_strdup(attrmap);
 	int zipnum,c,start=1,end=99,dump_coordinates=0;
 	int keep_tmpfiles=0;
-	int process_nodes=1, process_ways=1, process_relations=0;
+	int process_nodes=1, process_ways=1, process_relations=1;
 #ifdef HAVE_ZLIB
 	int compression_level=9;
 #else
@@ -3933,6 +3975,8 @@ int main(int argc, char **argv)
 			fclose(nodes);
 		if (ways_split)
 			fclose(ways_split);
+		if (relations)
+			fclose(relations);
 		zip_info.zipnum=zipnum;
 	}
 	if (end == 4)
@@ -3957,11 +4001,14 @@ int main(int argc, char **argv)
 			zip_info.res=fopen(result,"wb+");
 			index_init(&zip_info, 1);
 		}
+		fprintf(stderr,"Slice %d\n",i);
 		phase5(relations,ways_split,nodes,suffix,&zip_info);
 		if (nodes)
 			fclose(nodes);
 		if (ways_split)
 			fclose(ways_split);
+		if (relations)
+			fclose(relations);
 		if(!keep_tmpfiles) {
 			tempfile_unlink(suffix,"relations");
 			tempfile_unlink(suffix,"nodes");
