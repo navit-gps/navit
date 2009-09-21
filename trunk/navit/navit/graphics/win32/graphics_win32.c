@@ -42,6 +42,8 @@ struct graphics_priv
 	HDC hPrebuildDC;
 	HBITMAP hBitmap;
 	HBITMAP hPrebuildBitmap;
+	HBITMAP hOldBitmap;
+	HBITMAP hOldPrebuildBitmap;
 };
 
 static HWND g_hwnd = NULL;
@@ -193,17 +195,15 @@ struct graphics_gc_priv
 static void create_memory_dc(struct graphics_priv *gr)
 {
 
-	if ( gr->hMemDC )
+	if (gr->hMemDC)
 	{
-		(void)SelectBitmap( gr->hMemDC, 0 );
-		DeleteBitmap( gr->hBitmap );
-		DeleteDC( gr->hMemDC );
-		gr->hMemDC = 0;
+		SelectBitmap(gr->hMemDC, gr->hOldBitmap);
+		DeleteBitmap(gr->hBitmap);
+		DeleteDC(gr->hMemDC);
 
-		(void)SelectBitmap( gr->hPrebuildDC, 0 );
-		DeleteBitmap( gr->hPrebuildBitmap );
-		DeleteDC( gr->hPrebuildDC );
-		gr->hPrebuildDC = 0;
+		SelectBitmap(gr->hPrebuildDC, gr->hOldPrebuildBitmap);
+		DeleteBitmap(gr->hPrebuildBitmap);
+		DeleteDC(gr->hPrebuildDC);
 	}
 
 
@@ -225,15 +225,16 @@ static void create_memory_dc(struct graphics_priv *gr)
 	bOverlayInfo.bmiHeader.biBitCount = 32;
 	bOverlayInfo.bmiHeader.biCompression = BI_RGB;
 	bOverlayInfo.bmiHeader.biPlanes = 1;
-		gr->hPrebuildDC = CreateCompatibleDC(NULL);
+	gr->hPrebuildDC = CreateCompatibleDC(NULL);
 	gr->hPrebuildBitmap = CreateDIBSection(gr->hMemDC, &bOverlayInfo, DIB_RGB_COLORS , (void **)&gr->pPixelData, NULL, 0);
-		(void)SelectBitmap(gr->hPrebuildDC, gr->hPrebuildBitmap);
+	gr->hOldPrebuildBitmap = SelectBitmap(gr->hPrebuildDC, gr->hPrebuildBitmap);
+
 #endif
 	gr->hBitmap = CreateCompatibleBitmap(hdc, gr->width, gr->height );
 
 	if ( gr->hBitmap )
 	{
-		SelectObject( gr->hMemDC, gr->hBitmap);
+		gr->hOldBitmap = SelectBitmap( gr->hMemDC, gr->hBitmap);
 	}
 	ReleaseDC( gr->wnd_handle, hdc );
 }
@@ -610,7 +611,7 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 	HPEN hpen;
 
 	hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
-	SelectObject( gr->hMemDC, hpen );
+	HPEN hOldPen = SelectObject( gr->hMemDC, hpen );
 
 	SetBkColor( gr->hMemDC, gc->bg_color );
 
@@ -628,6 +629,7 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 		}
 	}
 
+	SelectObject( gr->hMemDC, hOldPen );
 	DeleteObject( hpen );
 }
 
@@ -647,12 +649,14 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
 	SetBkColor( gr->hMemDC, gc->bg_color );
 
 	hpen = CreatePen( PS_NULL, gc->line_width, gc->fg_color );
-	SelectObject( gr->hMemDC, hpen );
+	HPEN hOldPen = SelectObject( gr->hMemDC, hpen );
 	hbrush = CreateSolidBrush( gc->fg_color );
-	SelectObject( gr->hMemDC, hbrush );
+	HBRUSH hOldBrush = SelectObject( gr->hMemDC, hbrush );
 
 	Polygon( gr->hMemDC, points,count );
 
+	SelectObject( gr->hMemDC, hOldPen );
+	SelectObject( gr->hMemDC, hOldBrush );
 	DeleteObject( hbrush );
 	DeleteObject( hpen );
 }
@@ -664,13 +668,15 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
 	HBRUSH hbrush;
 
 	hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
-	SelectObject( gr->hMemDC, hpen );
+	HPEN hOldPen = SelectObject( gr->hMemDC, hpen );
 	hbrush = CreateSolidBrush( gc->fg_color );
-	SelectObject( gr->hMemDC, hbrush );
+	HBRUSH hOldBrush = SelectObject( gr->hMemDC, hbrush );
 	SetBkColor( gr->hMemDC, gc->bg_color );
 
 	Rectangle(gr->hMemDC, p->x, p->y, p->x+w, p->y+h);
 
+	SelectObject( gr->hMemDC, hOldPen );
+	SelectObject( gr->hMemDC, hOldBrush );
 	DeleteObject( hpen );
 	DeleteObject( hbrush );
 
@@ -683,15 +689,17 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 	r=r/2;
 
 	hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
-	SelectObject( gr->hMemDC, hpen );
+	HPEN hOldPen = SelectObject( gr->hMemDC, hpen );
 
 	hbrush = CreateSolidBrush( RGB(gr->transparent_color.r >> 8, gr->transparent_color.g >> 8, gr->transparent_color.b >> 8) );
-	SelectObject( gr->hMemDC, hbrush );
+	HBRUSH hOldBrush = SelectObject( gr->hMemDC, hbrush );
 
 	SetBkColor( gr->hMemDC, gc->bg_color );
 
 	Ellipse( gr->hMemDC, p->x - r, p->y -r, p->x + r, p->y + r );
 
+	SelectObject( gr->hMemDC, hOldPen );
+	SelectObject( gr->hMemDC, hOldBrush );
 	DeleteObject( hpen );
 	DeleteObject( hbrush );
 }
