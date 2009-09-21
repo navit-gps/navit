@@ -1800,7 +1800,6 @@ search_relation_member(struct item_bin *ib, char *role, struct relation_member *
 {
 	char *str=NULL;
 	while ((str=item_bin_get_attr(ib, attr_osm_member, str))) {
-		fprintf(stderr,"str=%s\n",str);
 		if (!get_relation_member(str, memb))
 			return 0;
 		if (!strcmp(memb->role, role))
@@ -1906,7 +1905,6 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 	fseek(in, 0, SEEK_SET);
 	while (item_bin_read(ib, in)) {
 		relid=item_bin_get_relationid(ib);
-		fprintf(stderr,"Relation %Ld\n",relid);
 		if (!search_relation_member(ib, "from",&fromm)) {
 			osm_warning("relation",relid,0,"turn restriction: from member missing\n");
 			continue;
