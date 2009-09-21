@@ -38,7 +38,7 @@
 #include "plugin.h"
 #include "navit_nls.h"
 
-#define DEBUG
+/* #define DEBUG */
 
 struct suffix {
 	char *fullname;
