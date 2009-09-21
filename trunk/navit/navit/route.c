@@ -2070,10 +2070,8 @@ route_graph_process_restriction_segment(struct route_graph *this, struct route_g
 	struct route_graph_segment *tmp;
 	struct route_graph_point *pn;
 	struct coord c=p->c;
-	int dx=(rand()%32)-16;
-	int dy=(rand()%32)-16;
-	dx=0;
-	dy=0;
+	int dx=0;
+	int dy=0;
 	c.x+=dx;
 	c.y+=dy;
 	dbg(1,"From %s %d,%d\n",item_to_name(s->data.item.type),dx,dy);
