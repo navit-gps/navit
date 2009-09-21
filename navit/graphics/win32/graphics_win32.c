@@ -443,14 +443,29 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 static int fullscreen(struct window *win, int on)
 {
+
+#ifdef HAVE_API_WIN32_CE
 	HWND hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
+
 	if (on) {
 		ShowWindow(hwndTaskbar, SW_HIDE);
-		ShowWindow(g_hwnd, SW_MAXIMIZE);
+		MoveWindow(g_hwnd, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), FALSE);
 	} else {
 		ShowWindow(hwndTaskbar, SW_SHOW);
+		RECT taskbar_rect;
+		GetWindowRect(  hwndTaskbar, &taskbar_rect);
+		MoveWindow(g_hwnd, 0, taskbar_rect.bottom, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) - taskbar_rect.bottom, FALSE);
+	}
+
+#else
+	if (on) {
+		ShowWindow(g_hwnd, SW_MAXIMIZE);
+	} else {
 		ShowWindow(g_hwnd, SW_RESTORE);
 	}
+
+#endif
+
 	return 0;
 }
 
@@ -483,6 +498,15 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
 #ifdef HAVE_API_WIN32_CE
 	gr->width = GetSystemMetrics(SM_CXSCREEN);
 	gr->height = GetSystemMetrics(SM_CYSCREEN);
+
+	HWND hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
+	RECT taskbar_rect;
+	GetWindowRect(  hwndTaskbar, &taskbar_rect);
+
+	gr->height -= taskbar_rect.bottom;
+
+
+
 #endif
 
 #ifdef HAVE_API_WIN32_CE
@@ -504,7 +528,11 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
 								 TEXT(""),
 								 wStyle,
 								 0,
+#ifdef HAVE_API_WIN32_CE
+								 taskbar_rect.bottom,
+#else
 								 0,
+#endif
 								 gr->width,
 								 gr->height,
 #if 1
@@ -531,7 +559,6 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
 	ShowWindow( hwnd, SW_SHOW );
 	UpdateWindow( hwnd );
 
-	fullscreen(0, FALSE);
 	PostMessage( gr->wnd_parent_handle, WM_USER + 1, 0, 0 );
 
 	return hwnd;
@@ -1396,6 +1423,11 @@ event_win32_main_loop_run(void)
 static void event_win32_main_loop_quit(void)
 {
 	dbg(0,"enter\n");
+#ifdef HAVE_API_WIN32_CE
+	HWND hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
+	ShowWindow(hwndTaskbar, SW_SHOW);
+#endif
+
 	PostQuitMessage(0);
 }
 
