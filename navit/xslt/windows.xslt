@@ -3,6 +3,7 @@
         <xsl:output method="xml" doctype-system="navit.dtd" />
         <xsl:include href="samplemap.xslt"/>
         <xsl:include href="gui_internal.xslt"/>
+        <xsl:include href="osd_enable_zoom.xslt"/>
         <xsl:template match="/config/navit/graphics">
                 <graphics type="win32" />
         </xsl:template>
