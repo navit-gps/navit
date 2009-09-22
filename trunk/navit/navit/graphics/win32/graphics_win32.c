@@ -332,7 +332,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 #endif
 			while ( !gra_priv->disabled && overlay && !overlay->disabled )
 			{
-				if ( overlay->p.x < gra_priv->width && overlay->p.y < gra_priv->height )
+				if ( overlay->p.x > 0 &&
+					 overlay->p.y > 0 &&
+					 overlay->p.x + overlay->width < gra_priv->width &&
+					 overlay->p.y + overlay->height < gra_priv->height )
 				{
 
 #ifdef  FAST_TRANSPARENCY
@@ -755,7 +758,8 @@ static void draw_drag(struct graphics_priv *gr, struct point *p)
 		gr->p.x    = p->x;
 		gr->p.y    = p->y;
 
-		if ( p->x < 0 || p->y < 0 )
+		if ( p->x < 0 || p->y < 0 ||
+		( gr->parent && ((p->x + gr->width > gr->parent->width) || (p->y + gr->height > gr->parent->height) )))
 		{
 			gr->disabled = TRUE;
 		}
