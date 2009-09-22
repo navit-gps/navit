@@ -212,7 +212,6 @@ char *nls_table[][3]={
 	{"DEA","AUT","de_AT"},
 	{NULL,NULL,NULL},
 };
-#endif
 
 static void
 win_set_nls(void)
@@ -235,6 +234,7 @@ win_set_nls(void)
 	}
 	dbg(0,"Lang %s Country %s not found\n",lang,country);
 }
+#endif
 
 void
 main_init(char *program)
