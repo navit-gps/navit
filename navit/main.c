@@ -206,6 +206,36 @@ main_setup_environment(int mode)
 	}
 }
 
+#ifdef HAVE_API_WIN32_BASE
+char *nls_table[][3]={
+	{"DEU","DEU","de_DE"},
+	{"DEA","AUT","de_AT"},
+	{NULL,NULL,NULL},
+};
+#endif
+
+static void
+win_set_nls(void)
+{
+	wchar_t wcountry[32],wlang[32];	
+	char country[32],lang[32];
+	int i=0;
+
+	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, wlang, sizeof(wlang));
+	WideCharToMultiByte(CP_ACP,0,wlang,-1,lang,sizeof(lang),NULL,NULL);
+	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, wcountry, sizeof(wcountry));
+	WideCharToMultiByte(CP_ACP,0,wcountry,-1,country,sizeof(country),NULL,NULL);
+	while (nls_table[i][0]) {
+		if (!strcmp(nls_table[i][0], lang) && !(strcmp(nls_table[i][1], country))) {
+			dbg(0,"Setting LANG=%s for Lang %s Country %s\n",nls_table[i][2], lang, country);
+			setenv("LANG",nls_table[i][2]);
+			return;
+		}
+		i++;
+	}
+	dbg(0,"Lang %s Country %s not found\n",lang,country);
+}
+
 void
 main_init(char *program)
 {
@@ -216,6 +246,9 @@ main_init(char *program)
 	signal(SIGCHLD, sigchld);
 #endif
 	cbl=callback_list_new();
+#ifdef HAVE_API_WIN32_BASE
+	win_set_nls();
+#endif
 	setenv("LC_NUMERIC","C",1);
 	setlocale(LC_ALL,"");
 	setlocale(LC_NUMERIC,"C");
