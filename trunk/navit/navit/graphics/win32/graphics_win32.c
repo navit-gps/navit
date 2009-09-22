@@ -1192,34 +1192,9 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int 
 {
 	int x,y;
 	HDC hdc=gr->hMemDC;
-	int w=gr->width;
-	int h=gr->height;
   	png_byte *pix_ptr = img->png_pixels;
 	COLORREF *pixeldata;
 
-#if 0
-	dbg(1,"enter %d,%d %dx%d %d\n",x0,y0,img->width,img->height,img->channels);
-
-	for (y=0 ; y < img->width ; y++) {
-		for (x=0 ; x < img->height ; x++) {
-			int xdst=x0+x,ydst=y0+y;
-			if (xdst >= 0 && ydst >= 0 && xdst < w && ydst < h) {
-				COLORREF newColor, origColor;
-				int a=pix_ptr[3];
-				if (a != 0xff) {
-					int ai=0xff-a;
-					origColor = GetPixel( hdc, xdst, ydst);
-					newColor = RGB ( (pix_ptr[0]*a+GetRValue(origColor)*ai)/255,
-					                 (pix_ptr[1]*a+GetGValue(origColor)*ai)/255,
-					                 (pix_ptr[2]*a+GetBValue(origColor)*ai)/255);
-				} else
-					newColor = RGB ( pix_ptr[0], pix_ptr[1], pix_ptr[2]);
-                                SetPixel( hdc, xdst, ydst, newColor);
-			}
-			pix_ptr+=img->channels;
-		}
-	}
-#endif
 	BITMAPINFO pnginfo;
 
 	memset(&pnginfo, 0, sizeof(pnginfo));
@@ -1231,7 +1206,7 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int 
 	pnginfo.bmiHeader.biPlanes = 1;
 	HDC dc = CreateCompatibleDC(NULL);
 	HBITMAP bitmap = CreateDIBSection(hdc, &pnginfo, DIB_RGB_COLORS , (void **)&pixeldata, NULL, 0);
-	SelectBitmap(dc, bitmap);
+	HBITMAP oldBitmap = SelectBitmap(dc, bitmap);
 	BitBlt(dc, 0, 0, img->width, img->height, hdc, x0, y0, SRCCOPY);
 	for (y=0 ; y < img->width ; y++) {
 		for (x=0 ; x < img->height ; x++) {
@@ -1255,8 +1230,11 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int 
 			pix_ptr+=img->channels;
 		}
 	}
-	
+
 	BitBlt(hdc, x0, y0, img->width, img->height, dc, 0, 0, SRCCOPY);
+	(void)SelectBitmap(dc, oldBitmap);
+	DeleteBitmap(bitmap);
+	DeleteDC(dc);
 }
 
 static int
@@ -1625,7 +1603,7 @@ static struct event_priv *
 void
 plugin_init(void)
 {
-	wchar_t wbuffer[32];	
+	wchar_t wbuffer[32];
 	char buffer[32];
 	plugin_register_graphics_type("win32", graphics_win32_new);
 	plugin_register_event_type("win32", event_win32_new);
