@@ -243,8 +243,13 @@ static void HandleButtonClick( struct graphics_priv *gra_priv, int updown, int b
 {
 	POINTS p = MAKEPOINTS(lParam);
 	struct point pt;
+#if HAVE_API_WIN32_CE
+	pt.x=LOWORD(lParam);
+	pt.y=HIWORD(lParam);
+#else
 	pt.x = p.x;
 	pt.y = p.y;
+#endif
 	callback_list_call_attr_3(gra_priv->cbl, attr_button, (void *)updown, (void *)button, (void *)&pt);
 }
 
@@ -319,7 +324,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 		if ( gra_priv && gra_priv->hMemDC)
 		{
 			profile(0, NULL);
-			dbg(0, "WM_PAINT\n");
+			dbg(1, "WM_PAINT\n");
 			struct graphics_priv* overlay = gra_priv->overlays;
 
 #ifndef FAST_TRANSPARENCY
@@ -405,8 +410,13 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 	{
 		POINTS p = MAKEPOINTS(lParam);
 		struct point pt;
+#if HAVE_API_WIN32_CE
+		pt.x=LOWORD(lParam);
+		pt.y=HIWORD(lParam);
+#else
 		pt.x = p.x;
 		pt.y = p.y;
+#endif
 
 		//dbg(1, "WM_MOUSEMOVE: %d %d \n", p.x, p.y );
 		callback_list_call_attr_1(gra_priv->cbl, attr_motion, (void *)&pt);
@@ -770,7 +780,7 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 		{
 			if ( gr->hMemDC )
 			{
-				dbg(0, "Erase dc: %x, w: %d, h: %d, bg_color: %x\n", gr, gr->width, gr->height, gr->bg_color);
+				dbg(1, "Erase dc: %x, w: %d, h: %d, bg_color: %x\n", gr, gr->width, gr->height, gr->bg_color);
 #if 0
 				RECT rcClient = { 0, 0, gr->width, gr->height};
 				HBRUSH bgBrush = CreateSolidBrush( gr->bg_color  );
@@ -985,10 +995,12 @@ pngdecode(char *name, struct graphics_image_priv *img)
   long          dep_16;
   FILE *png_file;
 
-	dbg(0,"enter %s\n",name);
+	dbg(1,"enter %s\n",name);
   png_file=fopen(name, "rb");
-  if (!png_file)
+  if (!png_file) {
+    dbg(0,"failed to open %s\n",name);
     return FALSE;
+  }
 
 
   /* read and check signature in PNG file */
@@ -1165,7 +1177,7 @@ pngdecode(char *name, struct graphics_image_priv *img)
 #endif
   img->hot.x=img->width/2-1;
   img->hot.y=img->height/2-1;
-dbg(0,"ok\n");
+dbg(1,"ok\n");
   fclose(png_file);
   return TRUE;
 
@@ -1179,8 +1191,10 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int 
 	int w=gr->width;
 	int h=gr->height;
   	png_byte *pix_ptr = img->png_pixels;
+	COLORREF *pixeldata;
 
-	dbg(0,"enter %d,%d %dx%d %d\n",x0,y0,img->width,img->height,img->channels);
+#if 0
+	dbg(1,"enter %d,%d %dx%d %d\n",x0,y0,img->width,img->height,img->channels);
 
 	for (y=0 ; y < img->width ; y++) {
 		for (x=0 ; x < img->height ; x++) {
@@ -1201,6 +1215,44 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int 
 			pix_ptr+=img->channels;
 		}
 	}
+#endif
+	BITMAPINFO pnginfo;
+
+	memset(&pnginfo, 0, sizeof(pnginfo));
+	pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	pnginfo.bmiHeader.biWidth = img->width;
+	pnginfo.bmiHeader.biHeight = -img->height;
+	pnginfo.bmiHeader.biBitCount = 32;
+	pnginfo.bmiHeader.biCompression = BI_RGB;
+	pnginfo.bmiHeader.biPlanes = 1;
+	HDC dc = CreateCompatibleDC(NULL);
+	HBITMAP bitmap = CreateDIBSection(hdc, &pnginfo, DIB_RGB_COLORS , (void **)&pixeldata, NULL, 0);
+	SelectBitmap(dc, bitmap);
+	BitBlt(dc, 0, 0, img->width, img->height, hdc, x0, y0, SRCCOPY);
+	for (y=0 ; y < img->width ; y++) {
+		for (x=0 ; x < img->height ; x++) {
+			int ai,a=pix_ptr[3];
+			int r,g,b;
+			if (a == 0xff) {
+				r=pix_ptr[0];
+				g=pix_ptr[1];
+				b=pix_ptr[2];
+			} else {
+				int p=*pixeldata;
+				ai=0xff-a;
+				r=(p >> 16) & 0xff;
+				g=(p >> 8) & 0xff;
+				b=(p >> 0) & 0xff;
+				r=(pix_ptr[0]*a+((p >> 16) & 0xff)*ai)/255;
+				g=(pix_ptr[1]*a+((p >>  8) & 0xff)*ai)/255;
+				b=(pix_ptr[2]*a+((p >>  0) & 0xff)*ai)/255;
+			}
+			*pixeldata++=(r << 16) | (g << 8) | b;
+			pix_ptr+=img->channels;
+		}
+	}
+	
+	BitBlt(hdc, x0, y0, img->width, img->height, dc, 0, 0, SRCCOPY);
 }
 
 static int
@@ -1267,7 +1319,7 @@ static struct graphics_priv *
 
 static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int alpha, int wraparound)
 {
-	dbg(0, "resize overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", gr, p->x, p->y, w, h, alpha, wraparound);
+	dbg(1, "resize overlay: %x, x: %d, y: %d, w: %d, h: %d, alpha: %x, wraparound: %d\n", gr, p->x, p->y, w, h, alpha, wraparound);
 
 	if ( gr->width != w || gr->height != h )
 	{
@@ -1569,6 +1621,8 @@ static struct event_priv *
 void
 plugin_init(void)
 {
+	wchar_t wbuffer[32];	
+	char buffer[32];
 	plugin_register_graphics_type("win32", graphics_win32_new);
 	plugin_register_event_type("win32", event_win32_new);
 }
