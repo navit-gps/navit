@@ -226,13 +226,13 @@ win_set_nls(void)
 	WideCharToMultiByte(CP_ACP,0,wcountry,-1,country,sizeof(country),NULL,NULL);
 	while (nls_table[i][0]) {
 		if (!strcmp(nls_table[i][0], lang) && !(strcmp(nls_table[i][1], country))) {
-			dbg(0,"Setting LANG=%s for Lang %s Country %s\n",nls_table[i][2], lang, country);
+			dbg(1,"Setting LANG=%s for Lang %s Country %s\n",nls_table[i][2], lang, country);
 			setenv("LANG",nls_table[i][2]);
 			return;
 		}
 		i++;
 	}
-	dbg(0,"Lang %s Country %s not found\n",lang,country);
+	dbg(1,"Lang %s Country %s not found\n",lang,country);
 }
 #endif
 
