@@ -728,7 +728,7 @@ AM_CONDITIONAL(SPEECH_ANDROID, test "x${speech_android}" = "xyes")
 AC_ARG_ENABLE(speech-cmdline, [  --disable-speech-cmdline            disable speech type cmdline], speech_cmdline=$enableval;speech_cmdline_reason="configure parameter")
 AM_CONDITIONAL(SPEECH_CMDLINE, test "x${speech_cmdline}" = "xyes")
 # cmdline
-AC_ARG_ENABLE(speech-speechd, [  --disable-speech-speech-dispatcher  disable speech type speech-dispatcher], speech_speech_dispatcher=$enableval;speech_speech_dispatcher_reason="configure parameter")
+AC_ARG_ENABLE(speech-speech-dispatcher, [  --disable-speech-speech-dispatcher  disable speech type speech-dispatcher], speech_speech_dispatcher=$enableval;speech_speech_dispatcher_reason="configure parameter")
 if test "x$speech_speech_dispatcher" = "xyes"; then
 	AC_CHECK_HEADER(libspeechd.h, AC_DEFINE([HAVE_LIBSPEECHD],[],Define to 1 if you have the <libspeechd.h> header file.) SPEECHD_LIBS="-lspeechd",  speech_speech_dispatcher=no; speech_speech_dispatcher_reason="libspeechd.h missing")
 fi
