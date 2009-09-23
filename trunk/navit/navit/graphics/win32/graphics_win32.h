@@ -7,6 +7,14 @@
 #include "graphics.h"
 #include "event.h"
 
+#ifdef UNICODE
+#include <wchar.h>
+#define _tprintf wprintf
+#else
+#define _tprintf printf
+#endif
+
+
 #define ID_CHILD_GFX 100
 #define ID_CHILD_TOOLBAR (ID_CHILD_GFX + 1)
 #define ID_CHILD_1 (ID_CHILD_TOOLBAR + 1)
