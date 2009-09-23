@@ -227,7 +227,7 @@ win_set_nls(void)
 	while (nls_table[i][0]) {
 		if (!strcmp(nls_table[i][0], lang) && !(strcmp(nls_table[i][1], country))) {
 			dbg(1,"Setting LANG=%s for Lang %s Country %s\n",nls_table[i][2], lang, country);
-			setenv("LANG",nls_table[i][2]);
+			setenv("LANG",nls_table[i][2],0);
 			return;
 		}
 		i++;
