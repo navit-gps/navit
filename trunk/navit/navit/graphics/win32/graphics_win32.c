@@ -512,11 +512,13 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
 	gr->width = GetSystemMetrics(SM_CXSCREEN);
 	gr->height = GetSystemMetrics(SM_CYSCREEN);
 
+#if 0
 	HWND hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
 	RECT taskbar_rect;
 	GetWindowRect(  hwndTaskbar, &taskbar_rect);
 
 	gr->height -= taskbar_rect.bottom;
+#endif
 
 
 
@@ -535,19 +537,25 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
 	if ( hMenu )
 	{
 		wStyle = WS_CHILD;
+	} else {
+		wStyle = WS_OVERLAPPED|WS_VISIBLE;
 	}
 
 	g_hwnd = hwnd = CreateWindow(g_szClassName,
-								 TEXT(""),
+								 TEXT("Navit"),
 								 wStyle,
-								 0,
 #ifdef HAVE_API_WIN32_CE
-								 taskbar_rect.bottom,
+								CW_USEDEFAULT,
+								CW_USEDEFAULT,
+								CW_USEDEFAULT,
+								CW_USEDEFAULT,
+								 
 #else
 								 0,
-#endif
+								 0,
 								 gr->width,
 								 gr->height,
+#endif
 #if 1
 								 gr->wnd_parent_handle,
 #else
