@@ -5,7 +5,6 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "config.h"
 #include "debug.h"
 #include "point.h"
@@ -45,6 +44,11 @@ struct graphics_priv
 	HBITMAP hPrebuildBitmap;
 	HBITMAP hOldBitmap;
 	HBITMAP hOldPrebuildBitmap;
+};
+
+struct window_priv
+{
+	HANDLE hBackLight;
 };
 
 static HWND g_hwnd = NULL;
@@ -170,7 +174,7 @@ static void ErrorExit(LPTSTR lpszFunction)
 
 	lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
 									  (lstrlen((LPCTSTR)lpMsgBuf)+lstrlen((LPCTSTR)lpszFunction)+40)*sizeof(TCHAR));
-	wprintf((LPTSTR)lpDisplayBuf, TEXT("%s failed with error %d: %s"), lpszFunction, dw, lpMsgBuf);
+	_tprintf((LPTSTR)lpDisplayBuf, TEXT("%s failed with error %d: %s"), lpszFunction, dw, lpMsgBuf);
 
 	dbg(0, "%s failed with error %d: %s", lpszFunction, dw, lpMsgBuf);
 	MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK);
@@ -198,11 +202,11 @@ static void create_memory_dc(struct graphics_priv *gr)
 
 	if (gr->hMemDC)
 	{
-		SelectBitmap(gr->hMemDC, gr->hOldBitmap);
+		(void)SelectBitmap(gr->hMemDC, gr->hOldBitmap);
 		DeleteBitmap(gr->hBitmap);
 		DeleteDC(gr->hMemDC);
 
-		SelectBitmap(gr->hPrebuildDC, gr->hOldPrebuildBitmap);
+		(void)SelectBitmap(gr->hPrebuildDC, gr->hOldPrebuildBitmap);
 		DeleteBitmap(gr->hPrebuildBitmap);
 		DeleteDC(gr->hPrebuildDC);
 	}
@@ -242,15 +246,7 @@ static void create_memory_dc(struct graphics_priv *gr)
 
 static void HandleButtonClick( struct graphics_priv *gra_priv, int updown, int button, long lParam )
 {
-	POINTS p = MAKEPOINTS(lParam);
-	struct point pt;
-#if HAVE_API_WIN32_CE
-	pt.x=LOWORD(lParam);
-	pt.y=HIWORD(lParam);
-#else
-	pt.x = p.x;
-	pt.y = p.y;
-#endif
+	struct point pt = { LOWORD(lParam), HIWORD(lParam) };
 	callback_list_call_attr_3(gra_priv->cbl, attr_button, (void *)updown, (void *)button, (void *)&pt);
 }
 
@@ -357,6 +353,16 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 		}
 		break;
 	case WM_DESTROY:
+#ifdef HAVE_API_WIN32_CE
+		if ( gra_priv && gra_priv->window.priv )
+		{
+			struct window_priv *win_priv = gra_priv->window.priv;
+			if (win_priv->hBackLight)
+			{
+				ReleasePowerRequirement(win_priv->hBackLight);
+			}
+		}
+#endif
 		PostQuitMessage(0);
 		break;
 	case WM_PAINT:
@@ -450,17 +456,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 		break;
 	case WM_MOUSEMOVE:
 	{
-		POINTS p = MAKEPOINTS(lParam);
-		struct point pt;
-#if HAVE_API_WIN32_CE
-		pt.x=LOWORD(lParam);
-		pt.y=HIWORD(lParam);
-#else
-		pt.x = p.x;
-		pt.y = p.y;
-#endif
-
-		//dbg(1, "WM_MOUSEMOVE: %d %d \n", p.x, p.y );
+		struct point pt = { LOWORD(lParam), HIWORD(lParam) };
 		callback_list_call_attr_1(gra_priv->cbl, attr_motion, (void *)&pt);
 	}
 	break;
@@ -525,6 +521,24 @@ static int fullscreen(struct window *win, int on)
 #endif
 
 	return 0;
+}
+
+extern void WINAPI SystemIdleTimerReset(void);
+static struct event_timeout *
+			event_win32_add_timeout(int timeout, int multi, struct callback *cb);
+
+static void disable_suspend(struct window *win)
+{
+#ifdef HAVE_API_WIN32_CE
+	struct window_priv *win_priv = win->priv;
+	if ( win_priv && !win_priv->hBackLight )
+	{
+		win_priv->hBackLight = SetPowerRequirement(TEXT("BKL1:"), 0, 0x01, NULL, 0);
+		event_win32_add_timeout(29000, 1, callback_new(SystemIdleTimerReset, 0, NULL));
+	}
+
+	SystemIdleTimerReset();
+#endif
 }
 
 static const TCHAR g_szClassName[] = {'N','A','V','G','R','A','\0'};
@@ -893,8 +907,10 @@ static void * get_data(struct graphics_priv *this_, char *type)
 		CreateGraphicsWindows( this_ , NULL);
 
 		this_->window.fullscreen = fullscreen;
+		this_->window.disable_suspend = disable_suspend;
 
-		this_->window.priv=this_;
+		this_->window.priv=g_new0(struct window_priv, 1);
+
 		return &this_->window;
 	}
 	return NULL;
@@ -1041,15 +1057,12 @@ pngdecode(char *name, struct graphics_image_priv *img)
   png_info	*info_ptr = NULL;
   png_byte      buf[8];
   png_byte      **row_pointers = NULL;
-  png_byte      *pix_ptr = NULL;
 
   int           bit_depth;
   int           color_type;
   int           alpha_present;
-  int           row, col;
   int           ret;
   int           i;
-  long          dep_16;
   FILE *png_file;
 
 	dbg(1,"enter %s\n",name);
@@ -1106,7 +1119,7 @@ pngdecode(char *name, struct graphics_image_priv *img)
 
   /* get size and bit-depth of the PNG-image */
   png_get_IHDR (png_ptr, info_ptr,
-    &img->width, &img->height, &bit_depth, &color_type,
+    (png_uint_32*)&img->width, (png_uint_32*)&img->height, &bit_depth, &color_type,
     NULL, NULL, NULL);
 
   /* set-up the transformations */
@@ -1127,7 +1140,7 @@ pngdecode(char *name, struct graphics_image_priv *img)
   png_read_update_info (png_ptr, info_ptr);
 
   /* get the new color-type and bit-depth (after expansion/stripping) */
-  png_get_IHDR (png_ptr, info_ptr, &img->width, &img->height, &bit_depth, &color_type,
+  png_get_IHDR (png_ptr, info_ptr, (png_uint_32*)&img->width, (png_uint_32*)&img->height, &bit_depth, &color_type,
     NULL, NULL, NULL);
 
   /* calculate new number of channels and store alpha-presence */
@@ -1174,64 +1187,8 @@ pngdecode(char *name, struct graphics_image_priv *img)
   /* clean up after the read, and free any memory allocated - REQUIRED */
   png_destroy_read_struct (&png_ptr, &info_ptr, (png_infopp) NULL);
 
-#if 0
-  pix_ptr = png_pixels;
-
-  for (row = 0; row < height; row++)
-  {
-    for (col = 0; col < width; col++)
-    {
-      for (i = 0; i < (channels - alpha_present); i++)
-      {
-        if (raw)
-          fputc ((int) *pix_ptr++ , pnm_file);
-        else
-          if (bit_depth == 16){
-	    dep_16 = (long) *pix_ptr++;
-            fprintf (pnm_file, "%ld ", (dep_16 << 8) + ((long) *pix_ptr++));
-          }
-          else
-            fprintf (pnm_file, "%ld ", (long) *pix_ptr++);
-      }
-      if (alpha_present)
-      {
-        if (!alpha)
-        {
-          pix_ptr++; /* alpha */
-          if (bit_depth == 16)
-            pix_ptr++;
-        }
-        else /* output alpha-channel as pgm file */
-        {
-          if (raw)
-            fputc ((int) *pix_ptr++ , alpha_file);
-          else
-            if (bit_depth == 16){
-	      dep_16 = (long) *pix_ptr++;
-              fprintf (alpha_file, "%ld ", (dep_16 << 8) + (long) *pix_ptr++);
-	    }
-            else
-              fprintf (alpha_file, "%ld ", (long) *pix_ptr++);
-        }
-      } /* if alpha_present */
-
-      if (!raw)
-        if (col % 4 == 3)
-          fprintf (pnm_file, "\n");
-    } /* end for col */
-
-    if (!raw)
-      if (col % 4 != 0)
-        fprintf (pnm_file, "\n");
-  } /* end for row */
-
-#endif
   if (row_pointers != (unsigned char**) NULL)
     free (row_pointers);
-#if 0
-  if (png_pixels != (unsigned char*) NULL)
-    free (png_pixels);
-#endif
   img->hot.x=img->width/2-1;
   img->hot.y=img->height/2-1;
 dbg(1,"ok\n");
@@ -1489,6 +1446,7 @@ static struct graphics_priv*
 	this_->overlays = NULL;
 	this_->cbl=cbl;
 	this_->parent = NULL;
+	this_->window.priv = NULL;
 	return this_;
 }
 
@@ -1515,7 +1473,7 @@ static void event_win32_main_loop_quit(void)
 	ShowWindow(hwndTaskbar, SW_SHOW);
 #endif
 
-	PostQuitMessage(0);
+	DestroyWindow(g_hwnd);
 }
 
 static struct event_watch *
@@ -1577,7 +1535,7 @@ static struct event_timeout *
 			event_win32_add_timeout(int timeout, int multi, struct callback *cb)
 {
 	struct event_timeout *t;
-	t = calloc(1, sizeof(*t));
+	t = g_new0(struct event_timeout, 1);
 	if (!t)
 		return t;
 	t->multi = multi;
@@ -1611,7 +1569,7 @@ event_win32_remove_timeout(struct event_timeout *to)
 			l = g_list_next(l);
 		}
 		dbg(0, "Timer %d not found\n", to->timer_id);
-		free(to);
+		g_free(to);
 	}
 }
 
@@ -1656,8 +1614,6 @@ static struct event_priv *
 void
 plugin_init(void)
 {
-	wchar_t wbuffer[32];
-	char buffer[32];
 	plugin_register_graphics_type("win32", graphics_win32_new);
 	plugin_register_event_type("win32", event_win32_new);
 }
