@@ -19,6 +19,7 @@
 #include "xpm2bmp.h"
 #include "support/win32/ConvertUTF.h"
 #include "profile.h"
+#include "keys.h"
 
 struct graphics_priv
 {
@@ -253,6 +254,44 @@ static void HandleButtonClick( struct graphics_priv *gra_priv, int updown, int b
 	callback_list_call_attr_3(gra_priv->cbl, attr_button, (void *)updown, (void *)button, (void *)&pt);
 }
 
+static void HandleKeyChar(struct graphics_priv *gra_priv, WPARAM wParam)
+{
+	TCHAR key = (TCHAR) wParam;
+	char *s=NULL;
+	dbg(0,"HandleKey %d\n",key);	
+	switch (key) {
+	default:
+		s=(char []){key, 0};
+		break;
+	}
+	if (s) 
+		callback_list_call_attr_1(gra_priv->cbl, attr_keypress, (void *)s);
+}
+
+static void HandleKeyDown(struct graphics_priv *gra_priv, WPARAM wParam)
+{
+	int key = (int) wParam;
+	dbg(0,"HandleKey %d\n",key);	
+	char *s=NULL;
+	switch (key) {
+	case 37:
+		s=(char []){NAVIT_KEY_LEFT, 0};
+		break;
+	case 38:
+		s=(char []){NAVIT_KEY_UP, 0};
+		break;
+	case 39:
+		s=(char []){NAVIT_KEY_RIGHT, 0};
+		break;
+	case 40:
+		s=(char []){NAVIT_KEY_DOWN, 0};
+		break;
+	}
+	if (s) 
+		callback_list_call_attr_1(gra_priv->cbl, attr_keypress, (void *)s);
+}
+
+
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
 
@@ -447,6 +486,12 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 	case WM_LBUTTONDBLCLK:
 		dbg(1, "LBUTTONDBLCLK\n");
 		HandleButtonClick( gra_priv, 1, 6,lParam );
+		break;
+	case WM_CHAR:
+		HandleKeyChar( gra_priv, wParam);
+		break;
+	case WM_KEYDOWN:
+		HandleKeyDown( gra_priv, wParam);
 		break;
 	default:
 		return DefWindowProc(hwnd, Message, wParam, lParam);
