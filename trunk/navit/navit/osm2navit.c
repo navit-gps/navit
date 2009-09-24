@@ -1309,6 +1309,17 @@ node_item_get(int id)
 }
 
 static int
+load_node(FILE *coords, int p, struct node_item *ret)
+{
+	fseek(coords, p*sizeof(struct node_item), SEEK_SET);
+	if (fread(ret, sizeof(*ret), 1, coords) != 1) {
+		fprintf(stderr,"read failed\n");
+		return 0;
+	}
+	return 1;
+}
+
+static int
 node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
 {
 	int count;
@@ -1333,12 +1344,9 @@ node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
 		// avoid infinite loop
 		interval = 1;
 	}
+	if (!load_node(coords, p, ret))
+		return 0;
 	for (;;) {
-		fseek(coords, p*sizeof(struct node_item), SEEK_SET);
-		if (fread(ret, sizeof(*ret), 1, coords) != 1) {
-			fprintf(stderr,"read failed\n");
-			return 0;
-		}
 		if (ret->id == id)
 			return 1;
 		if (ret->id < id) {
@@ -1346,22 +1354,30 @@ node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
 			if (interval == 1) {
 				if (p >= count)
 					return 0;
+				if (!load_node(coords, p, ret))
+					return 0;
 				if (ret->id > id)
 					return 0;
 			} else {
 				if (p >= count)
 					p=count-1;
+				if (!load_node(coords, p, ret))
+					return 0;
 			}
 		} else {
 			p-=interval;
 			if (interval == 1) {
 				if (p < 0)
 					return 0;
+				if (!load_node(coords, p, ret))
+					return 0;
 				if (ret->id < id)
 					return 0;
 			} else {
 				if (p < 0)
 					p=0;
+				if (!load_node(coords, p, ret))
+					return 0;
 			}
 		}
 		if (interval > 1)
