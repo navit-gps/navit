@@ -405,7 +405,7 @@ typedef struct {
 #define NUM_SEP_SPACE  0x1000    // allow space as thousands separator (in addition to langopts.thousands_sep)
 #define NUM_DEC_IT     0x2000    // (LANG=it) speak post-decimal-point digits as a combined number not as single digits
 
-struct Translator
+typedef struct Translator
 {//=============
 
 	LANGUAGE_OPTIONS langopts;
@@ -469,7 +469,7 @@ struct Translator
 	int prepause_timeout;
 	int end_stressed_vowel;  // word ends with stressed vowel
 	int prev_dict_flags;     // dictionary flags from previous word
-}; //  end of class Translator
+} Translator; //  end of class Translator
 
 
 extern int option_tone2;
@@ -513,8 +513,8 @@ extern char skip_marker[N_MARKER_LENGTH];
 extern wchar_t option_punctlist[N_PUNCTLIST];  // which punctuation characters to announce
 extern unsigned char punctuation_to_tone[INTONATION_TYPES][PUNCT_INTONATIONS];
 
-extern Translator *translator;
-extern Translator *translator2;
+extern struct Translator *translator;
+extern struct Translator *translator2;
 extern const unsigned short *charsets[N_CHARSETS];
 extern char dictionary_name[40];
 extern char ctrl_embedded;    // to allow an alternative CTRL for embedded commands
@@ -524,7 +524,7 @@ extern int dictionary_skipwords;
 
 extern int (* uri_callback)(int, const char *, const char *);
 extern int (* phoneme_callback)(const char *);
-extern void SetLengthMods(Translator *tr, int value);
+extern void SetLengthMods(struct Translator *tr, int value);
 
 void LoadConfig(void);
 int TransposeAlphabet(char *text, int offset, int min, int max);
@@ -545,10 +545,10 @@ int isspace2(unsigned int c);
 int towlower2(unsigned int c);
 void GetTranslatedPhonemeString(char *phon_out, int n_phon_out);
 
-Translator *SelectTranslator(const char *name);
+struct Translator *SelectTranslator(const char *name);
 int SetTranslator2(const char *name);
-void DeleteTranslator(Translator *tr);
-int Lookup(Translator *tr, const char *word, char *ph_out);
+void DeleteTranslator(struct Translator *tr);
+int Lookup(struct Translator *tr, const char *word, char *ph_out);
 
 int TranslateNumber(Translator *tr, char *word1, char *ph_out, unsigned int *flags, int wflags);
 int TranslateRoman(Translator *tr, char *word, char *ph_out);
@@ -573,7 +573,7 @@ void CalcPitches(Translator *tr, int clause_tone);
 
 int RemoveEnding(Translator *tr, char *word, int end_type, char *word_copy);
 int Unpronouncable(Translator *tr, char *word);
-void SetWordStress(Translator *tr, char *output, unsigned int &dictionary_flags, int tonic, int prev_stress);
+void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags, int tonic, int prev_stress);
 int TranslateRules(Translator *tr, char *p, char *phonemes, int size, char *end_phonemes, int end_flags, unsigned int *dict_flags);
 int TranslateWord(Translator *tr, char *word1, int next_pause, WORD_TAB *wtab);
 void *TranslateClause(Translator *tr, FILE *f_text, const void *vp_input, int *tone, char **voice_change);

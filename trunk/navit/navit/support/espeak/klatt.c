@@ -468,8 +468,8 @@ static int parwave(klatt_frame_ptr frame)
 			temp =  32767.0;
 		}
 	
-		*out_ptr++ = int(temp);   // **JSD
-		*out_ptr++ = int(temp) >> 8;
+		*out_ptr++ = (int)(temp);   // **JSD
+		*out_ptr++ = (int)(temp) >> 8;
 		sample_count++;
 		if(out_ptr >= out_end)
 		{
@@ -959,7 +959,7 @@ static double DBtoLIN(long dB)
 		return(0);
 	}
 	
-	return(double(amptable[dB]) * 0.001);
+	return((double)(amptable[dB]) * 0.001);
 }
 
 
@@ -1035,7 +1035,7 @@ int Wavegen_Klatt(int resume)
 		for(ix=0; ix < N_KLATTP; ix++)
 		{
 			klattp1[ix] += klattp_inc[ix];
-			klattp[ix] = int(klattp1[ix]);
+			klattp[ix] = (int)(klattp1[ix]);
 		}
 
 		for(ix=0; ix<=6; ix++)
@@ -1174,7 +1174,7 @@ void SetSynth_Klatt(int length, int modn, frame_t *fr1, frame_t *fr2, voice_t *v
 		else
 		{
 			klattp1[ix] = klattp[ix] = fr1->klattp[ix];
-			klattp_inc[ix] = double((fr2->klattp[ix] - klattp[ix]) * STEPSIZE)/length;
+			klattp_inc[ix] = (double)((fr2->klattp[ix] - klattp[ix]) * STEPSIZE)/length;
 		}
 
 		// get klatt parameter adjustments for the voice
@@ -1187,7 +1187,7 @@ void SetSynth_Klatt(int length, int modn, frame_t *fr1, frame_t *fr2, voice_t *v
 	for(ix=1; ix < 6; ix++)
 	{
 		peaks[ix].freq1 = (fr1->ffreq[ix] * v->freq[ix] / 256.0) + v->freqadd[ix];
-		peaks[ix].freq = int(peaks[ix].freq1);
+		peaks[ix].freq = (int)(peaks[ix].freq1);
 		next = (fr2->ffreq[ix] * v->freq[ix] / 256.0) + v->freqadd[ix];
 		peaks[ix].freq_inc =  ((next - peaks[ix].freq1) * STEPSIZE) / length;
 
@@ -1195,7 +1195,7 @@ void SetSynth_Klatt(int length, int modn, frame_t *fr1, frame_t *fr2, voice_t *v
 		{
 			// klatt bandwidth for f1, f2, f3 (others are fixed)
 			peaks[ix].bw1 = fr1->bw[ix] * 2;
-			peaks[ix].bw = int(peaks[ix].bw1);
+			peaks[ix].bw = (int)(peaks[ix].bw1);
 			next = fr2->bw[ix] * 2;
 			peaks[ix].bw_inc =  ((next - peaks[ix].bw1) * STEPSIZE) / length;
 		}
@@ -1203,7 +1203,7 @@ void SetSynth_Klatt(int length, int modn, frame_t *fr1, frame_t *fr2, voice_t *v
 
 	// nasal zero frequency
 	peaks[0].freq1 = fr1->klattp[KLATT_FNZ] * 2;
-	peaks[0].freq = int(peaks[0].freq1);
+	peaks[0].freq = (int)(peaks[0].freq1);
 	next = fr2->klattp[KLATT_FNZ] * 2;
 	peaks[0].freq_inc = ((next - peaks[0].freq1) * STEPSIZE) / length;
 
@@ -1217,12 +1217,12 @@ void SetSynth_Klatt(int length, int modn, frame_t *fr1, frame_t *fr2, voice_t *v
 		for(ix=1; ix < 7; ix++)
 		{
 			peaks[ix].bp1 = fr1->klatt_bp[ix] * 4;  // parallel bandwidth
-			peaks[ix].bp = int(peaks[ix].bp1);
+			peaks[ix].bp = (int)(peaks[ix].bp1);
 			next = fr2->klatt_bp[ix] * 2;
 			peaks[ix].bp_inc =  ((next - peaks[ix].bp1) * STEPSIZE) / length;
 
 			peaks[ix].ap1 = fr1->klatt_ap[ix];   // parallal amplitude
-			peaks[ix].ap = int(peaks[ix].ap1);
+			peaks[ix].ap = (int)(peaks[ix].ap1);
 			next = fr2->klatt_ap[ix] * 2;
 			peaks[ix].ap_inc =  ((next - peaks[ix].ap1) * STEPSIZE) / length;
 		}

@@ -1069,7 +1069,7 @@ strcpy(phonemes2,phonemes);
 		{
 			char *p;
 			// German, keep a secondary stress on the stem
-			SetWordStress(tr, phonemes, dictionary_flags[0], 3, 0);
+			SetWordStress(tr, phonemes, &dictionary_flags[0], 3, 0);
 
 			// reduce all but the first primary stress
 			ix=0;
@@ -1085,22 +1085,22 @@ strcpy(phonemes2,phonemes);
 			}
 			strcpy(word_phonemes,prefix_phonemes);
 			strcat(word_phonemes,phonemes);
-			SetWordStress(tr, word_phonemes, dictionary_flags[0], -1, 0);
+			SetWordStress(tr, word_phonemes, &dictionary_flags[0], -1, 0);
 		}
 		else
 		{
 			// stress position affects the whole word, including prefix
 			strcpy(word_phonemes,prefix_phonemes);
 			strcat(word_phonemes,phonemes);
-			SetWordStress(tr, word_phonemes, dictionary_flags[0], -1, tr->prev_last_stress);
+			SetWordStress(tr, word_phonemes, &dictionary_flags[0], -1, tr->prev_last_stress);
 		}
 	}
 	else
 	{
 		if(prefix_phonemes[0] == 0)
-			SetWordStress(tr, phonemes, dictionary_flags[0], -1, tr->prev_last_stress);
+			SetWordStress(tr, phonemes, &dictionary_flags[0], -1, tr->prev_last_stress);
 		else
-			SetWordStress(tr, phonemes, dictionary_flags[0], -1, 0);
+			SetWordStress(tr, phonemes, &dictionary_flags[0], -1, 0);
 		strcpy(word_phonemes,prefix_phonemes);
 		strcat(word_phonemes,phonemes);
 	}
@@ -1732,7 +1732,7 @@ static int TranslateWord2(Translator *tr, char *word, WORD_TAB *wtab, int pre_pa
 
 
 
-static int EmbeddedCommand(unsigned int &source_index)
+static int EmbeddedCommand(unsigned int *source_index)
 {//===================================================
 	// An embedded command to change the pitch, volume, etc.
 	// returns number of commands added to embedded_list
@@ -1745,27 +1745,27 @@ static int EmbeddedCommand(unsigned int &source_index)
 	char *p;
 	int cmd;
 
-	c = source[source_index];
+	c = source[*source_index];
 	if(c == '+')
 	{
 		sign = 0x40;
-		source_index++;
+		(*source_index)++;
 	}
 	else
 	if(c == '-')
 	{
 		sign = 0x60;
-		source_index++;
+		(*source_index)++;
 	}
 
-	if(isdigit(source[source_index]))
+	if(isdigit(source[*source_index]))
 	{
-		value = atoi(&source[source_index]);
-		while(isdigit(source[source_index]))
+		value = atoi(&source[*source_index]);
+		while(isdigit(source[*source_index]))
 			source_index++;
 	}
 
-	c = source[source_index++];
+	c = source[(*source_index)++];
 	if(embedded_ix >= (N_EMBEDDED_LIST - 2))
 		return(0);  // list is full
 
@@ -2131,7 +2131,7 @@ void *TranslateClause(Translator *tr, FILE *f_text, const void *vp_input, int *t
 			}
 			else
 			{
-				embedded_count += EmbeddedCommand(source_index);
+				embedded_count += EmbeddedCommand(&source_index);
 				prev_in2 = prev_in;
 				// replace the embedded command by spaces
 				memset(&source[srcix],' ',source_index-srcix);
