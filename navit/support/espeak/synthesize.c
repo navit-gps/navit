@@ -69,7 +69,7 @@ SOUND_ICON soundicon_tab[N_SOUNDICON_TAB];
 
 #define VOWEL_FRONT_LENGTH  50
 
-
+#define long(x) ((long)(x))
 
 // a dummy phoneme_list entry which looks like a pause
 static PHONEME_LIST next_pause;
@@ -491,7 +491,7 @@ static int VowelCloseness(frame_t *fr)
 }
 
 
-int FormantTransition2(frameref_t *seq, int &n_frames, unsigned int data1, unsigned int data2, PHONEME_TAB *other_ph, int which)
+int FormantTransition2(frameref_t *seq, int *n_frames, unsigned int data1, unsigned int data2, PHONEME_TAB *other_ph, int which)
 {//==============================================================================================================================
 	int ix;
 	int formant;
@@ -517,7 +517,7 @@ static short vcolouring[N_VCOLOUR][5] = {
 
 	frame_t *fr = NULL;
 
-	if(n_frames < 2)
+	if(*n_frames < 2)
 		return(0);
 
 	len = (data1 & 0x3f) * 2;
@@ -591,8 +591,8 @@ if(voice->klattv[0])
 
 			if(flags & 8)
 			{
-				fr = CopyFrame(seq[n_frames-1].frame,0);
-				seq[n_frames-1].frame = fr;
+				fr = CopyFrame(seq[*n_frames-1].frame,0);
+				seq[*n_frames-1].frame = fr;
 				rms = RMS_GLOTTAL1;
 	
 				// degree of glottal-stop effect depends on closeness of vowel (indicated by f1 freq)
@@ -600,7 +600,7 @@ if(voice->klattv[0])
 			}
 			else
 			{
-				fr = DuplicateLastFrame(seq,n_frames++,len);
+				fr = DuplicateLastFrame(seq,(*n_frames)++,len);
 				if(len > 36)
 					seq_len_adjust += (len - 36);
 	
@@ -614,7 +614,7 @@ if(voice->klattv[0])
 
 			if((vcolour > 0) && (vcolour <= N_VCOLOUR))
 			{
-				for(ix=0; ix<n_frames; ix++)
+				for(ix=0; ix<*n_frames; ix++)
 				{
 					fr = CopyFrame(seq[ix].frame,0);
 					seq[ix].frame = fr;
@@ -1051,7 +1051,7 @@ void DoVoiceChange(voice_t *v)
 }
 
 
-static void DoEmbedded(int &embix, int sourceix)
+static void DoEmbedded(int *embix, int sourceix)
 {//=============================================
 	// There were embedded commands in the text at this point
 	unsigned int word;  // bit 7=last command for this word, bits 5,6 sign, bits 0-4 command
@@ -1059,7 +1059,7 @@ static void DoEmbedded(int &embix, int sourceix)
 	int command;
 
 	do {
-		word = embedded_list[embix++];
+		word = embedded_list[(*embix)++];
 		value = word >> 8;
 		command = word & 0x7f;
 
@@ -1171,7 +1171,7 @@ int Generate(PHONEME_LIST *phoneme_list, int *n_ph, int resume)
 
 		if(p->synthflags & SFLAG_EMBEDDED)
 		{
-			DoEmbedded(embedded_ix, p->sourceix);
+			DoEmbedded(&embedded_ix, p->sourceix);
 		}
 
 		if(p->newword)

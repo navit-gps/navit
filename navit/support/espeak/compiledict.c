@@ -711,7 +711,7 @@ static char group_name[LEN_GROUP_NAME+1];
 
 
 
-static void copy_rule_string(char *string, int &state)
+static void copy_rule_string(char *string, int *state)
 {//===================================================
 // state 0: conditional, 1=pre, 2=match, 3=post, 4=phonemes
 	static char *outbuf[5] = {rule_cond, rule_pre, rule_match, rule_post, rule_phonemes};
@@ -727,8 +727,8 @@ static void copy_rule_string(char *string, int &state)
 
 	if(string[0] == 0) return;
 
-	output = outbuf[state];
-	if(state==4)
+	output = outbuf[*state];
+	if(*state==4)
 	{
 		// append to any previous phoneme string, i.e. allow spaces in the phoneme string
 		len = strlen(rule_phonemes);
@@ -754,7 +754,7 @@ static void copy_rule_string(char *string, int &state)
 			literal = 1;
 		}
 
-		if((state==1) || (state==3))
+		if(((*state)==1) || ((*state)==3))
 		{
 			// replace special characters (note: 'E' is reserved for a replaced silent 'e')
 			if(literal == 0)
@@ -774,7 +774,7 @@ static void copy_rule_string(char *string, int &state)
 				case 'H':
 				case 'F':
 				case 'G':
-					if(state == 1)
+					if((*state) == 1)
 					{
 						// pre-rule, put the number before the RULE_LETTERGP;
 						output[ix++] = lettergp_letters[c-'A'] + 'A';
@@ -846,7 +846,7 @@ static void copy_rule_string(char *string, int &state)
 						error_count++;
 					}
 					c += 'A';
-					if(state == 1)
+					if((*state) == 1)
 					{
 						// pre-rule, put the group number before the RULE_LETTERGP command
 						output[ix++] = c;
@@ -916,7 +916,7 @@ static void copy_rule_string(char *string, int &state)
 		if(c == 0) break;
 	}
 
-	state = next_state[state];
+	*state = next_state[*state];
 }  //  end of copy_rule_string
 
 
@@ -956,14 +956,14 @@ static char *compile_rule(char *input)
 			*p = 0;
 			state = 1;
 			pre_bracket = 1;
-			copy_rule_string(buf,state);
+			copy_rule_string(buf,&state);
 			p = buf;
 			break;
 			
 		case '(':		// start of suffix section
 			*p = 0;
 			state = 2;
-			copy_rule_string(buf,state);
+			copy_rule_string(buf,&state);
 			state = 3;
 			p = buf;
 			break;
@@ -972,14 +972,14 @@ static char *compile_rule(char *input)
 		case '\r':
 		case 0:			// end of line
 			*p = 0;
-			copy_rule_string(buf,state);
+			copy_rule_string(buf,&state);
 			finish=1;
 			break;
 			
 		case '\t':		// end of section section
 		case ' ':
 			*p = 0;
-			copy_rule_string(buf,state);
+			copy_rule_string(buf,&state);
 			p = buf;
 			break;
 			
@@ -1563,7 +1563,9 @@ static int compile_dictrules(FILE *f_in, FILE *f_out, char *fname_temp)
 	fputc(0,f_out);
 
 	fclose(f_temp);
+#if 0
 	remove(fname_temp);
+#endif
 
 	fprintf(f_log,"\t%d rules, %d groups\n\n",count,n_rgroups);
 	return(0);

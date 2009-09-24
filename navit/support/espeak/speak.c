@@ -340,12 +340,14 @@ static void init_path(char *argv0, char *path_specified)
 	char *env;
 	unsigned char buf[sizeof(path_home)-12];
 
+#if 0
 	if(((env = getenv("ESPEAK_DATA_PATH")) != NULL) && ((strlen(env)+12) < sizeof(path_home)))
 	{
 		sprintf(path_home,"%s\\espeak-data",env);
 		if(GetFileLength(path_home) == -2)
 			return;   // an espeak-data directory exists in the directory specified by environment variable
 	}
+#endif
 
 	strcpy(path_home,argv0);
 	if((p = strrchr(path_home,'\\')) != NULL)
@@ -368,18 +370,22 @@ static void init_path(char *argv0, char *path_specified)
 		strcpy(path_home,PATH_ESPEAK_DATA);
 #else
 	char *env;
+#if 0
 	if((env = getenv("ESPEAK_DATA_PATH")) != NULL)
 	{
 		snprintf(path_home,sizeof(path_home),"%s/espeak-data",env);
 		if(GetFileLength(path_home) == -2)
 			return;   // an espeak-data directory exists 
 	}
+#endif
 
+#if 0
 	snprintf(path_home,sizeof(path_home),"%s/espeak-data",getenv("HOME"));
 	if(access(path_home,R_OK) != 0)
 	{
 		strcpy(path_home,PATH_ESPEAK_DATA);
 	}
+#endif
 #endif
 #endif
 }
@@ -396,11 +402,13 @@ static int initialise(void)
 #ifdef PLATFORM_RISCOS
    setlocale(LC_CTYPE,"ISO8859-1");
 #else
+#if 0
 	if(setlocale(LC_CTYPE,"en_US.UTF-8") == NULL)
 	{
 		if(setlocale(LC_CTYPE,"UTF-8") == NULL)
 			setlocale(LC_CTYPE,"");
 	}
+#endif
 #endif
 
 
@@ -428,12 +436,12 @@ static int initialise(void)
 
 static void StopSpeak(int unused)
 {//==============================
-	signal(SIGINT,SIG_IGN);
+//	signal(SIGINT,SIG_IGN);
 	// DEBUG
 //	printf("\n*** Interrupting speech output (use Ctrl-D to actually quit).\n");
 	fflush(stdout);
 	SpeakNextClause(NULL,NULL,5);
-	signal(SIGINT,StopSpeak);
+//	signal(SIGINT,StopSpeak);
 }  //  end of StopSpeak()
 
 #ifdef NEED_GETOPT
@@ -566,7 +574,7 @@ int main (int argc, char **argv)
 			}
 		}
 #else
-	while(true)
+	while(1)
 	{
 		c = getopt_long (argc, argv, "a:b:f:g:hk:l:p:qs:v:w:xXmz",   // NOTE: also change arg_opts to indicate which commands have a numeric value
 					long_options, &option_index);

@@ -839,7 +839,7 @@ return(0);
 
 
 
-static int GetVowelStress(Translator *tr, unsigned char *phonemes, unsigned char *vowel_stress, int &vowel_count, int &stressed_syllable, int control)
+static int GetVowelStress(Translator *tr, unsigned char *phonemes, unsigned char *vowel_stress, int *vowel_count, int *stressed_syllable, int control)
 {//====================================================================================================================================================
 // control = 1, set stress to 1 for forced unstressed vowels
 	unsigned char phcode;
@@ -866,7 +866,7 @@ static int GetVowelStress(Translator *tr, unsigned char *phonemes, unsigned char
 			{
 				/* primary stress on preceeding vowel */
 				j = count - 1;
-				while((j > 0) && (stressed_syllable == 0) && (vowel_stress[j] < 4))
+				while((j > 0) && (*stressed_syllable == 0) && (vowel_stress[j] < 4))
 				{
 					if(vowel_stress[j] != 1)
 					{
@@ -892,7 +892,7 @@ static int GetVowelStress(Translator *tr, unsigned char *phonemes, unsigned char
 			}
 			else
 			{
-				if((ph->std_length < 4) || (stressed_syllable == 0))
+				if((ph->std_length < 4) || (*stressed_syllable == 0))
 				{
 					stress = ph->std_length;
 
@@ -933,14 +933,14 @@ static int GetVowelStress(Translator *tr, unsigned char *phonemes, unsigned char
 	*ph_out = 0;
 
 	/* has the position of the primary stress been specified by $1, $2, etc? */
-	if(stressed_syllable > 0)
+	if(*stressed_syllable > 0)
 	{
-		if(stressed_syllable >= count)
-			stressed_syllable = count-1;   // the final syllable
+		if(*stressed_syllable >= count)
+			*stressed_syllable = count-1;   // the final syllable
 
-		vowel_stress[stressed_syllable] = 4;
+		vowel_stress[*stressed_syllable] = 4;
 		max_stress = 4;
-		primary_posn = stressed_syllable;
+		primary_posn = *stressed_syllable;
 	}
 
 	if(max_stress == 5)
@@ -965,8 +965,8 @@ static int GetVowelStress(Translator *tr, unsigned char *phonemes, unsigned char
 		max_stress = 4;
 	}
 
-	stressed_syllable = primary_posn;
-	vowel_count = count;
+	*stressed_syllable = primary_posn;
+	*vowel_count = count;
 	return(max_stress);
 }  // end of GetVowelStress
 
@@ -987,7 +987,7 @@ void ChangeWordStress(Translator *tr, char *word, int new_stress)
 	unsigned char vowel_stress[N_WORD_PHONEMES/2];
 
 	strcpy((char *)phonetic,word);
-	max_stress = GetVowelStress(tr, phonetic, vowel_stress, vowel_count, stressed_syllable, 0);
+	max_stress = GetVowelStress(tr, phonetic, vowel_stress, &vowel_count, &stressed_syllable, 0);
 
 	if(new_stress >= 4)
 	{
@@ -1030,7 +1030,7 @@ void ChangeWordStress(Translator *tr, char *word, int new_stress)
 
 
 
-void SetWordStress(Translator *tr, char *output, unsigned int &dictionary_flags, int tonic, int prev_stress)
+void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags, int tonic, int prev_stress)
 {//=========================================================================================================
 /* Guess stress pattern of word.  This is language specific
 
@@ -1099,21 +1099,21 @@ void SetWordStress(Translator *tr, char *output, unsigned int &dictionary_flags,
 	max_output = output + (N_WORD_PHONEMES-3);   /* check for overrun */
 
 	// any stress position marked in the xx_list dictionary ? 
-	stressed_syllable = dictionary_flags & 0x7;
-	if(dictionary_flags & 0x8)
+	stressed_syllable = (*dictionary_flags) & 0x7;
+	if((*dictionary_flags) & 0x8)
 	{
 		// this indicates a word without a primary stress
-		stressed_syllable = dictionary_flags & 0x3;
+		stressed_syllable = (*dictionary_flags) & 0x3;
 		unstressed_word = 1;
 	}
 
-	max_stress = GetVowelStress(tr, phonetic, vowel_stress, vowel_count, stressed_syllable, 1);
+	max_stress = GetVowelStress(tr, phonetic, vowel_stress, &vowel_count, &stressed_syllable, 1);
 
 	if((max_stress == 0) && (tr->langopts.stress_flags & 1) && (vowel_count == 2))
 	{
 		// option: don't stress monosyllables except at end-of-clause
 		vowel_stress[1] = 1;
-		dictionary_flags |= FLAG_STRESS_END2;
+		(*dictionary_flags) |= FLAG_STRESS_END2;
 	}
 
 	// heavy or light syllables

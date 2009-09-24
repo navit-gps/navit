@@ -41,7 +41,7 @@
 #include <locale.h>
 #define N_XML_BUF   256
 
-
+#define double(x) ((double)(x))
 static const char *xmlbase = "";    // base URL from <speak>
 
 static int namedata_ix=0;
@@ -557,7 +557,7 @@ static const char *LookupSpecial(Translator *tr, const char *string, char* text_
 
 	if(LookupDictList(tr,&string1,phonemes,flags,0,NULL))
 	{
-		SetWordStress(tr, phonemes, flags[0], -1, 0);
+		SetWordStress(tr, phonemes, &flags[0], -1, 0);
 		DecodePhonemes(phonemes,phonemes2);
 		sprintf(text_out,"[[%s]]",phonemes2);
 		option_phoneme_input |= 2;
@@ -627,14 +627,14 @@ static const char *LookupCharName(Translator *tr, int c)
 	{
 		if(lang_name)
 		{
-			SetWordStress(translator2, phonemes, flags[0], -1, 0);
+			SetWordStress(translator2, phonemes, &flags[0], -1, 0);
 			DecodePhonemes(phonemes,phonemes2);
 			sprintf(buf,"[[_^_%s %s _^_%s]]","en",phonemes2,WordToString2(tr->translator_name));
 			SelectPhonemeTable(voice->phoneme_tab_ix);  // revert to original phoneme table
 		}
 		else
 		{
-			SetWordStress(tr, phonemes, flags[0], -1, 0);
+			SetWordStress(tr, phonemes, &flags[0], -1, 0);
 			DecodePhonemes(phonemes,phonemes2);
 			sprintf(buf,"[[%s]] ",phonemes2);
 		}
@@ -749,7 +749,9 @@ static int LoadSoundFile(const char *fname, int index)
 	}
 	fread(p,length,1,f);
 	fclose(f);
+#if 0
 	remove(fname_temp);
+#endif
 
 	ip = (int *)(&p[40]);
 	soundicon_tab[index].length = (*ip) / 2;  // length in samples
@@ -1002,7 +1004,7 @@ static const char *VoiceFromStack()
 
 
 
-static void ProcessParamStack(char *outbuf, int &outix)
+static void ProcessParamStack(char *outbuf, int *outix)
 {//====================================================
 // Set the speech parameters from the parameter stack
 	int param;
@@ -1051,8 +1053,8 @@ static void ProcessParamStack(char *outbuf, int &outix)
 			}
 
 			speech_parameters[param] = new_parameters[param];
-			strcpy(&outbuf[outix],buf);
-			outix += strlen(buf);
+			strcpy(&outbuf[*outix],buf);
+			(*outix) += strlen(buf);
 		}
 	}
 }  // end of ProcessParamStack
@@ -1076,7 +1078,7 @@ static PARAM_STACK *PushParamStack(int tag_type)
 }  //  end of PushParamStack
 
 
-static void PopParamStack(int tag_type, char *outbuf, int &outix)
+static void PopParamStack(int tag_type, char *outbuf, int *outix)
 {//==============================================================
 	// unwind the stack up to and including the previous tag of this type
 	int ix;
@@ -1466,7 +1468,7 @@ static void SetProsodyParameter(int param_type, wchar_t *attr1, PARAM_STACK *sp)
 
 
 
-static int ProcessSsmlTag(wchar_t *xml_buf, char *outbuf, int &outix, int n_outbuf, int self_closing)
+static int ProcessSsmlTag(wchar_t *xml_buf, char *outbuf, int *outix, int n_outbuf, int self_closing)
 {//==================================================================================================
 // xml_buf is the tag and attributes with a zero terminator in place of the original '>'
 // returns a clause terminator value.
@@ -1647,15 +1649,15 @@ static int ProcessSsmlTag(wchar_t *xml_buf, char *outbuf, int &outix, int n_outb
 		}
 
 		sprintf(buf,"%c%dY",CTRL_EMBEDDED,value);
-		strcpy(&outbuf[outix],buf);
-		outix += strlen(buf);
+		strcpy(&outbuf[*outix],buf);
+		(*outix) += strlen(buf);
 
 		sayas_mode = value;   // punctuation doesn't end clause during SAY-AS
 		break;
 
 	case SSML_SAYAS + SSML_CLOSE:
-		outbuf[outix++] = CTRL_EMBEDDED;
-		outbuf[outix++] = 'Y';
+		outbuf[(*outix)++] = CTRL_EMBEDDED;
+		outbuf[(*outix)++] = 'Y';
 		sayas_mode = 0;
 		break;
 
@@ -1664,7 +1666,7 @@ static int ProcessSsmlTag(wchar_t *xml_buf, char *outbuf, int &outix, int n_outb
 		{
 			// use the alias  rather than the text
 			ignore_text = 1;
-			outix += attrcopy_utf8(&outbuf[outix],attr1,n_outbuf-outix);
+			(*outix) += attrcopy_utf8(&outbuf[*outix],attr1,n_outbuf-*outix);
 		}
 		break;
 
@@ -1694,8 +1696,8 @@ static int ProcessSsmlTag(wchar_t *xml_buf, char *outbuf, int &outix, int n_outb
 			if((index = AddNameData(buf,0)) >= 0)
 			{
 				sprintf(buf,"%c%dM",CTRL_EMBEDDED,index);
-				strcpy(&outbuf[outix],buf);
-				outix += strlen(buf);
+				strcpy(&outbuf[*outix],buf);
+				(*outix) += strlen(buf);
 			}
 		}
 		break;
@@ -1722,8 +1724,8 @@ static int ProcessSsmlTag(wchar_t *xml_buf, char *outbuf, int &outix, int n_outb
 				if(index >= 0)
 				{
 					sprintf(buf,"%c%dI",CTRL_EMBEDDED,index);
-					strcpy(&outbuf[outix],buf);
-					outix += strlen(buf);
+					strcpy(&outbuf[*outix],buf);
+					(*outix) += strlen(buf);
 					sp->parameter[espeakSILENCE] = 1;
 				}
 			}
@@ -1735,8 +1737,8 @@ static int ProcessSsmlTag(wchar_t *xml_buf, char *outbuf, int &outix, int n_outb
 					if(uri_callback(1,uri,xmlbase) == 0)
 					{
 						sprintf(buf,"%c%dU",CTRL_EMBEDDED,index);
-						strcpy(&outbuf[outix],buf);
-						outix += strlen(buf);
+						strcpy(&outbuf[*outix],buf);
+						(*outix) += strlen(buf);
 						sp->parameter[espeakSILENCE] = 1;
 					}
 				}
@@ -1763,8 +1765,8 @@ static int ProcessSsmlTag(wchar_t *xml_buf, char *outbuf, int &outix, int n_outb
 			if(value < 3)
 			{
 				// adjust prepause on the following word
-				sprintf(&outbuf[outix],"%c%dB",CTRL_EMBEDDED,value);
-				outix += 3;
+				sprintf(&outbuf[*outix],"%c%dB",CTRL_EMBEDDED,value);
+				(*outix) += 3;
 				terminator = 0;
 			}
 			value = break_value[value];

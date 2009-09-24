@@ -65,7 +65,7 @@ int vowel_transition[4];
 int vowel_transition0;
 int vowel_transition1;
 
-int FormantTransition2(frameref_t *seq, int &n_frames, unsigned int data1, unsigned int data2, PHONEME_TAB *other_ph, int which);
+int FormantTransition2(frameref_t *seq, int *n_frames, unsigned int data1, unsigned int data2, PHONEME_TAB *other_ph, int which);
 
 
 
@@ -438,7 +438,7 @@ frameref_t *LookupSpect(PHONEME_TAB *this_ph, PHONEME_TAB *prev_ph, PHONEME_TAB 
 			if((*match_level == 0) || (next_ph->type == phNASAL))
 			{
 				LookupSound(next_ph,this_ph,1,NULL,1);
-				seq_len_adjust += FormantTransition2(frames,nf,vowel_transition[2],vowel_transition[3],next_ph,which);
+				seq_len_adjust += FormantTransition2(frames,&nf,vowel_transition[2],vowel_transition[3],next_ph,which);
 			}
 			else
 			if(next_ph->phflags == phVOWEL2)
@@ -448,14 +448,14 @@ frameref_t *LookupSpect(PHONEME_TAB *this_ph, PHONEME_TAB *prev_ph, PHONEME_TAB 
 				{
 					next2_ph = plist[2].ph;
 					LookupSound(next2_ph,next_ph,1,NULL,1);
-					seq_len_adjust += FormantTransition2(frames,nf,vowel_transition[2],vowel_transition[3],next2_ph,which);
+					seq_len_adjust += FormantTransition2(frames,&nf,vowel_transition[2],vowel_transition[3],next2_ph,which);
 				}
 			}
 		}
 		else
 		{
 			if(*match_level == 0)
-				seq_len_adjust = FormantTransition2(frames,nf,vowel_transition0,vowel_transition1,prev_ph,which);
+				seq_len_adjust = FormantTransition2(frames,&nf,vowel_transition0,vowel_transition1,prev_ph,which);
 		}
 	}
 
