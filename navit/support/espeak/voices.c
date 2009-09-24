@@ -42,6 +42,8 @@
 #include "voice.h"
 #include "translate.h"
 
+#define int(x) ((int)(x))
+#define double(x) ((double)(x))
 
 MNEM_TAB genders [] = {
 	{"unknown", 0},
@@ -1254,7 +1256,7 @@ static int SetVoiceScores(espeak_VOICE *voice_select, espeak_VOICE **voices, int
 		return(0);
 
 	// sort the selected voices by their score
-	qsort(voices,nv,sizeof(espeak_VOICE *),(int (__cdecl *)(const void *,const void *))VoiceScoreSorter);
+	qsort(voices,nv,sizeof(espeak_VOICE *),VoiceScoreSorter);
 
 	return(nv);
 }  // end of SetVoiceScores
@@ -1680,7 +1682,7 @@ espeak_ERROR SetVoiceByProperties(espeak_VOICE *voice_selector)
 #pragma GCC visibility push(default)
 
 
-ESPEAK_API const espeak_VOICE **espeak_ListVoices(espeak_VOICE *voice_spec)
+const espeak_VOICE **espeak_ListVoices(espeak_VOICE *voice_spec)
 {//========================================================================
 #ifndef PLATFORM_RISCOS
 	int ix;
@@ -1705,8 +1707,7 @@ ESPEAK_API const espeak_VOICE **espeak_ListVoices(espeak_VOICE *voice_spec)
 	voices_list[n_voices_list] = NULL;  // voices list terminator
 
 	// sort the voices list
-	qsort(voices_list,n_voices_list,sizeof(espeak_VOICE *),
-		(int (__cdecl *)(const void *,const void *))VoiceNameSorter);
+	qsort(voices_list,n_voices_list,sizeof(espeak_VOICE *),VoiceNameSorter);
 
 
 	if(voice_spec)
@@ -1734,7 +1735,7 @@ ESPEAK_API const espeak_VOICE **espeak_ListVoices(espeak_VOICE *voice_spec)
 
 
 
-ESPEAK_API espeak_VOICE *espeak_GetCurrentVoice(void)
+espeak_VOICE *espeak_GetCurrentVoice(void)
 {//==================================================
 	return(&voice_selected);
 }

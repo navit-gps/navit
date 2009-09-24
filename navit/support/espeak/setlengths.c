@@ -247,14 +247,14 @@ void SetParameter(int parameter, int value, int relative)
 
 
 
-static void DoEmbedded2(int &embix)
+static void DoEmbedded2(int *embix)
 {//================================
 	// There were embedded commands in the text at this point
 
 	unsigned int word;
 
 	do {
-		word = embedded_list[embix++];
+		word = embedded_list[(*embix)++];
 
 		if((word & 0x1f) == EMBED_S)
 		{
@@ -305,7 +305,7 @@ void CalcLengths(Translator *tr)
 
 		if(p->synthflags & SFLAG_EMBEDDED)
 		{
-			DoEmbedded2(embedded_ix);
+			DoEmbedded2(&embedded_ix);
 		}
 
 		type = p->type;
