@@ -822,6 +822,7 @@ navit/speech/android/Makefile
 navit/speech/cmdline/Makefile
 navit/speech/speech_dispatcher/Makefile
 navit/support/Makefile
+navit/support/espeak/Makefile
 navit/support/ezxml/Makefile
 navit/support/glib/Makefile
 navit/support/libc/Makefile

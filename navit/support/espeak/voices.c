@@ -44,6 +44,7 @@
 
 #define int(x) ((int)(x))
 #define double(x) ((double)(x))
+#define __cdecl
 
 MNEM_TAB genders [] = {
 	{"unknown", 0},
