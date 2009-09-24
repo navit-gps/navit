@@ -52,6 +52,8 @@ static int hash_counts[N_HASH_DICT];
 static char *hash_chains[N_HASH_DICT];
 static char letterGroupsDefined[N_LETTER_GROUPS];
 
+#define __cdecl
+
 MNEM_TAB mnem_flags[] = {
 	// these in the first group put a value in bits0-3 of dictionary_flags
 	{"$1", 0x41},           // stress on 1st syllable
