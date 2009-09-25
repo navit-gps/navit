@@ -1,4 +1,7 @@
 SUBDIRS=
+if SUPPORT_ESPEAK
+  SUBDIRS+=espeak
+endif
 if SUPPORT_EZXML
   SUBDIRS+=ezxml
 endif
@@ -20,4 +23,4 @@ endif
 if SUPPORT_LIBPNG
  SUBDIRS+=libpng
 endif
-DIST_SUBDIRS=ezxml glib wordexp win32 zlib libc libpng
+DIST_SUBDIRS=espeak ezxml glib wordexp win32 zlib libc libpng
