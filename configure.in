@@ -735,6 +735,7 @@ fi
 AC_SUBST(SPEECHD_CFLAGS)
 AC_SUBST(SPEECHD_LIBS)
 AM_CONDITIONAL(SPEECH_SPEECH_DISPATCHER, test "x${speech_speech_dispatcher}" = "xyes")
+AM_CONDITIONAL(SUPPORT_ESPEAK, text "x${support_espeak}" = "xyes")
 
 ## vehicle
 # android
