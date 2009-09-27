@@ -167,11 +167,13 @@ vehicle_gpsd_try_open(gpointer *data)
 	struct vehicle_priv *priv = (struct vehicle_priv *)data;
 	char *source = g_strdup(priv->source);
 	char *colon = index(source + 7, ':');
+	char *port=NULL;
 	if (colon) {
 		*colon = '\0';
-		priv->gps = gps_open(source + 7, colon + 1);
-	} else
-		priv->gps = gps_open(source + 7, NULL);
+		port=colon+1;
+	}
+	dbg(0,"Trying to connect to %s:%s\n",source+7,port?port:"default");
+	priv->gps = gps_open(source + 7, port);
 	g_free(source);
 
 	if (!priv->gps){
