@@ -300,39 +300,42 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 
 const char* getPrimitiveType(GLenum type)
 {
+    char *ret;
+
     switch(type)
     {
     case 0x0000:
-        return "GL_POINTS"; 
+        ret="GL_POINTS"; 
         break;
     case 0x0001:
-        return "GL_LINES";
+        ret="GL_LINES";
         break;
     case 0x0002:
-        return "GL_LINE_LOOP";
+        ret= "GL_LINE_LOOP";
         break;
     case 0x0003:
-        return "GL_LINE_STRIP";
+        ret="GL_LINE_STRIP";
         break;
     case 0x0004:
-        return "GL_TRIANGLES";
+        ret="GL_TRIANGLES";
         break;
     case 0x0005:
-        return "GL_TRIANGLE_STRIP";
+        ret="GL_TRIANGLE_STRIP";
         break;
     case 0x0006:
-        return "GL_TRIANGLE_FAN";
+        ret="GL_TRIANGLE_FAN";
         break;
     case 0x0007:
-        return "GL_QUADS";
+        ret="GL_QUADS";
         break;
     case 0x0008:
-        return "GL_QUAD_STRIP";
+        ret="GL_QUAD_STRIP";
         break;
     case 0x0009:
-        return "GL_POLYGON";
+        ret="GL_POLYGON";
         break;
     }
+return ret;
 }
 
 void CALLBACK tessBeginCB(GLenum which)
