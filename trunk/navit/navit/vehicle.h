@@ -27,6 +27,7 @@ struct vehicle;
 struct vehicle_priv;
 enum attr_type;
 struct attr;
+struct attr_iter;
 
 struct vehicle_methods {
 	void (*destroy)(struct vehicle_priv *priv);
@@ -37,11 +38,13 @@ struct vehicle_methods {
 
 /* prototypes */
 struct vehicle *vehicle_new(struct attr *parent, struct attr **attrs);
+struct attr_iter *vehicle_attr_iter_new(void); 
 int vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int vehicle_set_attr(struct vehicle *this_, struct attr *attr, struct attr **attrs);
 int vehicle_add_attr(struct vehicle *this_, struct attr *attr);
 int vehicle_remove_attr(struct vehicle *this_, struct attr *attr);
 void vehicle_destroy(struct vehicle *this_);
+void vehicle_attr_iter_destroy(struct attr_iter *iter); 
 /* end of prototypes */
 #ifdef __cplusplus
 }
