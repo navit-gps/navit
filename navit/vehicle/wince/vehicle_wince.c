@@ -38,9 +38,23 @@
 #include <io.h>
 #include <winioctl.h>
 #include <winbase.h>
+#include <wchar.h>
 #include "support/win32/ConvertUTF.h"
 
 #define SwitchToThread() Sleep(0)
+
+typedef int (WINAPI *PFN_BthSetMode)(DWORD pBthMode);
+typedef int (WINAPI *PFN_BthGetMode)(DWORD* pBthMode);
+
+char *_convert = NULL;
+wchar_t *_wconvert = NULL;
+#define W2A(lpw) (\
+    ((LPCSTR)lpw == NULL) ? NULL : (\
+          _convert = alloca(wcslen(lpw)+1),  wcstombs(_convert, lpw, wcslen(lpw) + 1), _convert) )
+
+#define A2W(lpa) (\
+    ((LPCSTR)lpa == NULL) ? NULL : (\
+          _wconvert = alloca(strlen(lpa)*2+1),  mbstowcs(_wconvert, lpa, strlen(lpa) * 2 + 1), _wconvert) )
 
 static void vehicle_wince_disable_watch(struct vehicle_priv *priv);
 static void vehicle_wince_enable_watch(struct vehicle_priv *priv);
@@ -48,7 +62,7 @@ static int vehicle_wince_parse(struct vehicle_priv *priv, char *buffer);
 static int vehicle_wince_open(struct vehicle_priv *priv);
 static void vehicle_wince_close(struct vehicle_priv *priv);
 
-static int buffer_size = 256;
+static const int buffer_size = 256;
 
 struct vehicle_priv {
 	char *source;
@@ -59,13 +73,8 @@ struct vehicle_priv {
 	HANDLE			m_hGPSDevice;		// Handle to the device
 	HANDLE			m_hGPSThread;		// Handle to the thread
 	DWORD			m_dwGPSThread;		// Thread id
-	HANDLE			m_hEventPosition;	// Handle to the position event
-	HANDLE			m_hEventState;		// Handle to the state event
-	HANDLE			m_hEventStop;		// Handle to the stop event
-	DWORD			m_dwError;			// Last error code
 
 	char *buffer;
-	int buffer_pos;
 	char *nmea_data;
 	char *nmea_data_buf;
 
@@ -84,12 +93,52 @@ struct vehicle_priv {
 	int sats_visible;
 	int time;
 	int on_eof;
-	int no_data_count;
 	int baudrate;
 	struct attr ** attrs;
 	char fixiso8601[128];
 	int checksum_ignore;
+	HMODULE hBthDll;
+	PFN_BthSetMode BthSetMode;
 };
+
+static void initBth(struct vehicle_priv *priv)
+{
+
+	BOOL succeeded = FALSE;
+	priv->hBthDll = LoadLibrary(TEXT("bthutil.dll"));
+	if ( priv->hBthDll )
+	{
+		DWORD bthMode;
+		PFN_BthGetMode BthGetMode  = (PFN_BthGetMode)GetProcAddress(priv->hBthDll, TEXT("BthGetMode") );
+
+		if ( BthGetMode && BthGetMode(&bthMode) == ERROR_SUCCESS && bthMode == 0 )
+		{
+			priv->BthSetMode  = (PFN_BthSetMode)GetProcAddress(priv->hBthDll, TEXT("BthSetMode") );
+			if( priv->BthSetMode &&  priv->BthSetMode(1) == ERROR_SUCCESS )
+			{
+				dbg(1, "bluetooth activated\n");
+				succeeded = TRUE;
+			}
+		}
+
+	}
+	else
+	{
+		dbg(0, "Bluetooth library notfound\n");
+	}
+
+	if ( !succeeded )
+	{
+
+		dbg(1, "Bluetooth already enabled or failed to enable it.\n");
+		priv->BthSetMode = NULL;
+		if ( priv->hBthDll )
+		{
+			FreeLibrary(priv->hBthDll);
+		}
+	}
+}
+
 
 static DWORD WINAPI wince_port_reader_thread (LPVOID lParam)
 {
@@ -105,8 +154,6 @@ static DWORD WINAPI wince_port_reader_thread (LPVOID lParam)
 	int havedata;
 	HANDLE hGPS;
 	// Com ports above 9 should be prefixed - $device/COM123
-	wchar_t portname[64];
-	mbstowcs(portname, pvt->source, strlen(pvt->source)+1);
 	dbg(0, "GPS Port:[%s]\n", pvt->source);
 	pvt->thread_up = 1;
 reconnect_port:
@@ -125,7 +172,7 @@ reconnect_port:
 	}
 
 	while (pvt->is_running &&
-		(pvt->m_hGPSDevice = CreateFile(portname,
+		(pvt->m_hGPSDevice = CreateFile(A2W(pvt->source),
 			GENERIC_READ, 0,
 			NULL, OPEN_EXISTING, 0, 0)) == INVALID_HANDLE_VALUE) {
 		Sleep(1000);
@@ -204,13 +251,49 @@ reconnect_port:
 				// the ui thread
 				event_call_callback(pvt->cbl);
 			}
-		} else {
-			pvt->no_data_count++;
 		}
 	}
 	CloseHandle(pvt->m_hGPSDevice);
 	pvt->m_hGPSDevice = NULL;
 	pvt->thread_up = 0;
+	return 0;
+}
+
+static int
+vehicle_wince_available_ports(void)
+{
+	DWORD regkey_length = 20;
+	DWORD regdevtype_length = 100;
+	HKEY hkResult;
+	HKEY hkSubResult;
+	wchar_t keyname[regkey_length];
+	wchar_t devicename[regkey_length];
+	wchar_t devicetype[regdevtype_length];
+	int index = 0;
+
+	RegOpenKeyEx( HKEY_LOCAL_MACHINE, TEXT("Drivers\\Active"), 0, 0, &hkResult);
+	while (RegEnumKeyEx( hkResult, index++, keyname, &regkey_length, NULL, NULL, NULL, NULL) == ERROR_SUCCESS )
+	{
+		if (RegOpenKeyEx( hkResult, keyname, 0, 0, &hkSubResult) == ERROR_SUCCESS )
+		{
+			regkey_length = 20;
+			if ( RegQueryValueEx( hkSubResult,  L"Name", NULL, NULL, devicename, &regkey_length) == ERROR_SUCCESS )
+			{
+				if ( RegQueryValueEx( hkSubResult, L"Key", NULL, NULL, devicetype, &regdevtype_length) == ERROR_SUCCESS )
+				{
+					dbg(0, "Found device '%s' (%s)\n", W2A(devicename), W2A(devicetype));
+				}
+				else
+				{
+					dbg(0, "Found device '%s'\n", W2A(devicename));
+				}
+			}
+			RegCloseKey(hkSubResult);
+		}
+		regkey_length = 20;
+	}
+
+	RegCloseKey(hkResult);
 	return 0;
 }
 
@@ -221,6 +304,13 @@ vehicle_wince_open(struct vehicle_priv *priv)
 	dbg(1, "enter vehicle_wince_open, priv->source='%s'\n", priv->source);
 
 	if (priv->source ) {
+
+		if ( strcmp(priv->source, "list") == 0 )
+		{
+			vehicle_wince_available_ports();
+			return 0;
+		}
+
 		char* raw_setting_str = g_strdup( priv->source );
 		char* strport = strchr(raw_setting_str, ':' );
 		char* strsettings = strchr(raw_setting_str, ' ' );
@@ -242,6 +332,11 @@ static void
 vehicle_wince_close(struct vehicle_priv *priv)
 {
 	vehicle_wince_disable_watch(priv);
+	if (priv->BthSetMode)
+	{
+		(void)priv->BthSetMode(0);
+		FreeLibrary(priv->hBthDll);
+	}
 }
 
 static int
@@ -469,9 +564,6 @@ vehicle_wince_disable_watch(struct vehicle_priv *priv)
 {
 	int wait = 5000;
 	priv->is_running = 0;
-//	DWORD res;
-//	res = WaitForSingleObject(priv->m_hGPSThread, 2000);
-//
 	while (wait-- > 0 && priv->thread_up) {
 		SwitchToThread();
 	}
@@ -573,6 +665,7 @@ vehicle_wince_new(struct vehicle_methods
 	struct attr *on_eof;
 	struct attr *baudrate;
 	struct attr *checksum_ignore;
+	struct attr *handle_bluetooth;
 	char *cp;
 
 	dbg(1, "enter\n");
@@ -589,7 +682,7 @@ vehicle_wince_new(struct vehicle_methods
 	ret->buffer = g_malloc(buffer_size);
 	ret->time=1000;
 	ret->baudrate=0;	// do not change the rate if not configured
-	// ret->fixtime = 0.0f;
+
 	time = attr_search(attrs, NULL, attr_time);
 	if (time)
 		ret->time=time->u.num;
@@ -607,12 +700,17 @@ vehicle_wince_new(struct vehicle_methods
 	if (on_eof && !strcasecmp(on_eof->u.str, "exit"))
 		ret->on_eof=2;
 	dbg(0,"on_eof=%d\n", ret->on_eof);
+
+
+	handle_bluetooth = attr_search(attrs, NULL, attr_bluetooth);
+	if ( handle_bluetooth && handle_bluetooth->u.num == 1 )
+		initBth(ret);
+
 	*meth = vehicle_wince_methods;
 	if (vehicle_wince_open(ret)) {
 		vehicle_wince_enable_watch(ret);
 		return ret;
 	}
-	ret->no_data_count = 0;
 	dbg(0, "Failed to open '%s'\n", ret->source);
 	vehicle_wince_destroy(ret);
 	return NULL;

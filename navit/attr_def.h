@@ -159,7 +159,7 @@ ATTR(direction)
 ATTR(route_follow_straight_REMOVE) // This is to be removed with the next version
 ATTR(gui_speech)
 ATTR(town_id) /* fixme? */
-ATTR(street_id) /* fixme? */  
+ATTR(street_id) /* fixme? */
 ATTR(district_id) /* fixme? */
 ATTR(drag_bitmap)
 ATTR(use_mousewheel)
@@ -171,6 +171,7 @@ ATTR(autozoom_active)
 ATTR(position_valid)
 ATTR(frame)
 ATTR(tell_street_name)
+ATTR(bluetooth)
 ATTR2(0x0002ffff,type_int_end)
 ATTR2(0x00030000,type_string_begin)
 ATTR(type)
