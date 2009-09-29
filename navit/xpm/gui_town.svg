@@ -1,13 +1,80 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.0" width="180" height="200" id="svg2006">
-  <defs id="defs2008"/>
-  <g transform="translate(-262.487, -353.979)" id="layer1">
-    <g transform="matrix(9, 0, 0, 9, -2287.46, -1926.28)" style="opacity: 1;" id="g1978">
-      <g transform="translate(0.0668287, 0.000457222)" id="g2084">
-        <rect width="17.999981" height="17.999981" x="284.26093" y="255.07872" style="opacity: 1; fill: rgb(195, 215, 235); fill-opacity: 1; stroke: none; stroke-width: 2; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4; stroke-dasharray: none; stroke-opacity: 1;" id="rect5453"/>
-        <path d="M 290.63841,259.35139 L 295.05402,256.20842 L 298.46279,257.68362 L 300.17752,260.56527 L 300.67227,268.08928 L 297.80771,270.24944 L 290.67064,268.80589 L 285.84987,264.26648 L 286.41339,260.48177 L 290.63841,259.35139 z " style="opacity: 1; fill: gray; fill-opacity: 1; fill-rule: evenodd; stroke: none; stroke-width: 1px; stroke-linecap: butt; stroke-linejoin: miter; stroke-opacity: 1;" id="path5463"/>
-        <path d="M 289.53125,253.4375 C 289.53515,257.64346 291.65509,260.23937 292.59375,263.16328 C 293.1102,264.772 293.41458,265.85533 293.25,267.22578 C 293.08542,268.59623 292.41574,270.43919 290.5,273.25703 L 293.8125,275.50703 C 295.93452,272.38578 296.95037,269.96061 297.21875,267.72578 C 297.48713,265.49095 296.94611,263.62619 296.40625,261.94453 C 295.23231,258.2877 293.53379,256.1759 293.53125,253.4375 L 289.53125,253.4375 z " style="opacity: 1; fill: rgb(32, 74, 135); fill-opacity: 1; fill-rule: evenodd; stroke: none; stroke-width: 4; stroke-linecap: butt; stroke-linejoin: round; stroke-miterlimit: 4; stroke-opacity: 1;" id="path5455"/>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="48"
+   height="48"
+   id="svg2006"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   sodipodi:docname="gui_town.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   sodipodi:docbase="/home/martin/map/sf/navit-test/navit/xpm">
+  <metadata
+     id="metadata11">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:window-height="954"
+     inkscape:window-width="1280"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     width="48px"
+     height="48px"
+     inkscape:zoom="10"
+     inkscape:cx="24.803347"
+     inkscape:cy="32.662819"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:current-layer="svg2006" />
+  <defs
+     id="defs2008" />
+  <g
+     transform="matrix(0.240149,0,0,0.240149,-60.65005,-85.021524)"
+     id="layer1">
+    <g
+       transform="matrix(9,0,0,9,-2287.46,-1926.28)"
+       style="opacity:1"
+       id="g1978">
+      <g
+         transform="translate(6.68287e-2,4.57222e-4)"
+         id="g2084">
+        <rect
+           width="17.999981"
+           height="17.999981"
+           x="284.26093"
+           y="255.07872"
+           style="opacity:1;fill:#c3d7eb;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="rect5453" />
+        <path
+           d="M 290.63841,259.35139 L 295.05402,256.20842 L 298.46279,257.68362 L 300.17752,260.56527 L 300.67227,268.08928 L 297.80771,270.24944 L 290.67064,268.80589 L 285.84987,264.26648 L 286.41339,260.48177 L 290.63841,259.35139 z "
+           style="opacity:1;fill:#808080;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           id="path5463" />
+        <path
+           d="M 289.53125,253.4375 C 289.53515,257.64346 291.65509,260.23937 292.59375,263.16328 C 293.1102,264.772 293.41458,265.85533 293.25,267.22578 C 293.08542,268.59623 292.41574,270.43919 290.5,273.25703 L 293.8125,275.50703 C 295.93452,272.38578 296.95037,269.96061 297.21875,267.72578 C 297.48713,265.49095 296.94611,263.62619 296.40625,261.94453 C 295.23231,258.2877 293.53379,256.1759 293.53125,253.4375 L 289.53125,253.4375 z "
+           style="opacity:1;fill:#204a87;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:4;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
+           id="path5455" />
       </g>
     </g>
   </g>
