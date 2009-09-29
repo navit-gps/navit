@@ -373,7 +373,7 @@ struct map_search {
  * have a look into country.c for details. Because of that every map plugin has to accept a country item
  * to be passed as "superior item".
  * 
- * Note: If you change something here, please make shure to also update the documentation of mapset_search_new()
+ * Note: If you change something here, please make sure to also update the documentation of mapset_search_new()
  * in mapset.c!
  *
  * @param m The map that should be searched
