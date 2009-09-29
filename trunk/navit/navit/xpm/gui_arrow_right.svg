@@ -8,14 +8,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="64px"
-   height="64px"
+   width="48"
+   height="48"
    id="svg2175"
    sodipodi:version="0.32"
    inkscape:version="0.45.1"
-   sodipodi:docbase="/tmp"
+   sodipodi:docbase="/home/martin/map/sf/navit-test/navit/xpm"
    sodipodi:docname="gui_arrow_right.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   version="1.0">
   <defs
      id="defs2177" />
   <sodipodi:namedview
@@ -45,7 +46,9 @@
      inkscape:window-width="1280"
      inkscape:window-height="954"
      inkscape:window-x="0"
-     inkscape:window-y="0" />
+     inkscape:window-y="0"
+     width="48px"
+     height="48px" />
   <metadata
      id="metadata2180">
     <rdf:RDF>
@@ -62,8 +65,8 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
     <path
-       style="fill:#c0c0c0;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-       d="M 2.000498,3.5218412 L 33,32 L 2.0000035,60.60573 L 2.000498,3.5218412 z "
+       style="fill:#c0c0c0;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1.12537,2.5935415 L 24.374996,23.95216 L 1.125,45.406458 L 1.12537,2.5935415 z "
        id="path2185"
        sodipodi:nodetypes="cccc" />
   </g>
