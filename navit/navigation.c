@@ -242,7 +242,7 @@ static char
 {
 	switch (n) {
 	case 0:
-		return _("zeroth"); // Not shure if this exists, neither if it will ever be needed
+		return _("zeroth"); // Not sure if this exists, neither if it will ever be needed
 	case 1:
 		return _("first");
 	case 2:
@@ -265,7 +265,7 @@ static char
 {
 	switch (n) {
 	case 0:
-		return _("zeroth exit"); // Not shure if this exists, neither if it will ever be needed
+		return _("zeroth exit"); // Not sure if this exists, neither if it will ever be needed
 	case 1:
 		return _("first exit");
 	case 2:

@@ -526,7 +526,7 @@ navit_autozoom(struct navit *this_, struct coord *center, int speed, int draw)
 	transform(this_->trans, transform_get_projection(this_->trans), center, &pc, 1, 0, 0, NULL);
 	scale = transform_get_scale(this_->trans);
 
-	/* We make shure that the point we want to see is within a certain range
+	/* We make sure that the point we want to see is within a certain range
 	 * around the vehicle. The radius of this circle is the size of the
 	 * screen. This doesn't necessarily mean the point is visible because of
 	 * perspective etc. Quite rough, but should be enough. */
