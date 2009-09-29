@@ -1,12 +1,12 @@
 #!/bin/sh
 
 # This script is part of navit, a navigation system.
-# It can be used to make shure that navit is only started
+# It can be used to make sure that navit is only started
 # once. If navit is already running it will be brought to
 # the front.
 
 # Set this to a place where a pidfile should be stored.
-# Make shure you have write access...
+# Make sure you have write access...
 PIDFILE="/var/run/navit/navit.pid"
 
 # Set this to navit's executable.

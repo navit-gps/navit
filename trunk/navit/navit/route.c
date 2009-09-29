@@ -1152,7 +1152,7 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
  * returned to all the coordinates of the item between the two coordinates
  * start end end.
  *
- * @important Make shure that whatever c points to has enough memory allocated
+ * @important Make sure that whatever c points to has enough memory allocated
  * @important to hold max coordinates!
  *
  * @param i The item to get the coordinates of
@@ -1903,7 +1903,7 @@ route_get_coord_dist(struct route *this_, int dist)
  * @brief Creates a new route path
  * 
  * This creates a new non-trivial route. It therefore needs the routing information created by route_graph_flood, so
- * make shure to run route_graph_flood() after changing the destination before using this function.
+ * make sure to run route_graph_flood() after changing the destination before using this function.
  *
  * @param this The route graph to create the route from
  * @param oldpath (Optional) old path which may contain parts of the new part - this speeds things up a bit. May be NULL.

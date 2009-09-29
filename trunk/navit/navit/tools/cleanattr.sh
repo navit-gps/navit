@@ -16,14 +16,14 @@ TMPFILE2=$TMPDIR/navit-cleanattr.tmp2
 
 if [ -f $TMPFILE ] ; then
 		echo "Temporary file $TMPFILE already exists."
-		echo "Please don't run this tool twice at the same time. If you are shure that no other instance of this tool is running, remove the file."
+		echo "Please don't run this tool twice at the same time. If you are sure that no other instance of this tool is running, remove the file."
 		exit 1;
 fi
 
 touch $TMPFILE
 if [ $? -ne 0 ] ; then
 		echo "Could not write to temporary file $TEMPFILE."
-		echo "Please make shure you have write access to the temporary directory."
+		echo "Please make sure you have write access to the temporary directory."
 		exit 1;
 fi
 
