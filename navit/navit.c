@@ -50,7 +50,6 @@
 #include "speech.h"
 #include "track.h"
 #include "vehicle.h"
-#include "color.h"
 #include "layout.h"
 #include "log.h"
 #include "attr.h"
@@ -78,9 +77,6 @@ struct navit_vehicle {
 	int dir;
 	int speed;
 	struct coord last; /*< Position of the last update of this vehicle */
-	struct color c;
-	struct color *c2;
-	struct cursor *cursor;
 	struct vehicle *vehicle;
 	struct attr callback;
 	int animate_cursor;
@@ -2166,7 +2162,7 @@ static int
 navit_add_vehicle(struct navit *this_, struct vehicle *v)
 {
 	struct navit_vehicle *nv=g_new0(struct navit_vehicle, 1);
-	struct attr follow,color,active, color2, animate;
+	struct attr follow, active, animate;
 	nv->vehicle=v;
 	nv->follow=0;
 	nv->last.x = 0;
@@ -2174,12 +2170,6 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v)
 	nv->animate_cursor=0;
 	if ((vehicle_get_attr(v, attr_follow, &follow, NULL)))
 		nv->follow=nv->follow=follow.u.num;
-	if ((vehicle_get_attr(v, attr_color, &color, NULL)))
-		nv->c=*(color.u.color);
-	if ((vehicle_get_attr(v, attr_color2, &color2, NULL)))
-		nv->c2=color2.u.color;
-	else
-		nv->c2=NULL;
 	nv->follow_curr=nv->follow;
 	this_->vehicles=g_list_append(this_->vehicles, nv);
 	if ((vehicle_get_attr(v, attr_active, &active, NULL)) && active.u.num)
