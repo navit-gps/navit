@@ -8,14 +8,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="64px"
-   height="64px"
+   width="48"
+   height="48"
    id="svg2175"
    sodipodi:version="0.32"
    inkscape:version="0.45.1"
    sodipodi:docbase="/home/martin/map/sf/navit-test/navit/xpm"
    sodipodi:docname="gui_arrow_down.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   version="1.0">
   <defs
      id="defs2177" />
   <sodipodi:namedview
@@ -25,9 +26,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="9.5760562"
+     inkscape:zoom="4.7880281"
      inkscape:cx="32"
-     inkscape:cy="32"
+     inkscape:cy="65.416679"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:document-units="px"
@@ -45,7 +46,9 @@
      inkscape:window-width="1280"
      inkscape:window-height="954"
      inkscape:window-x="0"
-     inkscape:window-y="0" />
+     inkscape:window-y="0"
+     width="48px"
+     height="48px" />
   <metadata
      id="metadata2180">
     <rdf:RDF>
@@ -62,8 +65,8 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
     <path
-       style="fill:#c0c0c0;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 60.541944,1.500495 L 32.063785,32.499997 L 3.4580555,1.5 L 60.541944,1.500495 z "
+       style="fill:#c0c0c0;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:2.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 45.406458,1.1253713 L 24.047839,24.374997 L 2.593542,1.125 L 45.406458,1.1253713 z "
        id="path2185"
        sodipodi:nodetypes="cccc" />
   </g>
