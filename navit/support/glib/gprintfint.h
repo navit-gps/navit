@@ -26,6 +26,9 @@
 
 #ifndef __G_PRINTFINT_H__
 #define __G_PRINTFINT_H__
+#ifdef HAVE_API_WIN32_CE
+#include <glibintl.h>
+#endif
 
 #ifdef HAVE_GOOD_PRINTF
 
