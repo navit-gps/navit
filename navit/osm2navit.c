@@ -834,12 +834,16 @@ static void relation_add_tag(char *k, char *v);
 static int
 access_value(char *v)
 {
+	if (!strcmp(v,"1"))
+		return 1;
 	if (!strcmp(v,"yes"))
 		return 1;
 	if (!strcmp(v,"designated"))
 		return 1;
 	if (!strcmp(v,"permissive"))
 		return 1;
+	if (!strcmp(v,"0"))
+		return 2;
 	if (!strcmp(v,"no"))
 		return 2;
 	if (!strcmp(v,"agricultural"))
