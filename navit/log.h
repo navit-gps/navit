@@ -19,25 +19,33 @@
 
 #ifndef NAVIT_LOG_H
 #define NAVIT_LOG_H
-/* prototypes */
-enum attr_type;
-struct attr;
-struct attr_iter;
-struct log;
-int log_get_attr(struct log *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
-struct log *log_new(struct attr * parent,struct attr **attrs);
-void log_set_header(struct log *this_, char *data, int len);
-void log_set_trailer(struct log *this_, char *data, int len);
-void log_write(struct log *this_, char *data, int len);
-void log_destroy(struct log *this_);
-
 #define LOG_BUFFER_SIZE 256
 /**
  * printf-style writing to the log file. A buffer of LOG_BUFFER_SIZE
  * bytes is preallocated for the complete format message, longer
  * messages will be truncated.
  */
-void log_printf(struct log *this_, char *fmt, ...);
 
+enum log_flags {
+	log_flag_replace_buffer=1,
+	log_flag_force_flush=2,
+	log_flag_keep_pointer=4,
+	log_flag_keep_buffer=8,
+	log_flag_truncate=16,
+};
+/* prototypes */
+enum attr_type;
+enum log_flags;
+struct attr;
+struct attr_iter;
+struct log;
+int log_get_attr(struct log *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+struct log *log_new(struct attr *parent, struct attr **attrs);
+void log_set_header(struct log *this_, char *data, int len);
+void log_set_trailer(struct log *this_, char *data, int len);
+void log_write(struct log *this_, char *data, int len, enum log_flags flags);
+void *log_get_buffer(struct log *this_, int *len);
+void log_printf(struct log *this_, char *fmt, ...);
+void log_destroy(struct log *this_);
 /* end of prototypes */
 #endif

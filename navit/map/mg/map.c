@@ -587,7 +587,7 @@ map_new_mg(struct map_methods *meth, struct attr **attrs)
 	for (i = 0 ; i < file_end ; i++) {
 		if (file[i]) {
 			filename=g_strdup_printf("%s/%s", m->dirname, file[i]);
-			m->file[i]=file_create_caseinsensitive(filename);
+			m->file[i]=file_create_caseinsensitive(filename, 0);
 			if (! m->file[i]) {
 				maybe_missing=(i == file_border_ply || i == file_height_ply || i == file_sea_ply);
 				if (! maybe_missing)

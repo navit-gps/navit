@@ -479,7 +479,7 @@ map_rect_new_shapefile(struct map_priv *map, struct map_selection *sel)
 	struct file *file;
 	int size;
 	int changed=0;
-	if ((file=file_create(dbfmapfile))) {
+	if ((file=file_create(dbfmapfile, 0))) {
         	size=file_size(file);
         	data=file_data_read_all(file);
 		if (data) {

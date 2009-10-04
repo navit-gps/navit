@@ -33,6 +33,7 @@
 #include "debug.h"
 #include "cache.h"
 #include "file.h"
+#include "atom.h"
 #include "config.h"
 
 #ifndef O_LARGEFILE
@@ -57,7 +58,7 @@ struct file_cache_id {
 } __attribute__ ((packed));
 
 struct file *
-file_create(char *name)
+file_create(char *name, enum file_flags flags)
 {
 	struct stat stat;
 	struct file *file= g_new0(struct file,1);
@@ -72,6 +73,9 @@ file_create(char *name)
 	file->size=stat.st_size;
 	dbg(1,"size=%Ld\n", file->size);
 	file->name = g_strdup(name);
+	file->name_id = (int)atom(name);
+	if (file_cache && !(flags & file_flag_nocache)) 
+		file->cache=1;
 	dbg_assert(file != NULL);
 	return file;
 }
@@ -141,10 +145,11 @@ int file_mkdir(char *name, int pflag)
 int
 file_mmap(struct file *file)
 {
-#if defined(_WIN32) || defined(__CEGCC__)
-    file->begin = (char*)mmap_readonly_win32( file->name, &file->map_handle, &file->map_file );
+	int mmap_size=file->size+1024*1024;
+#ifdef HAVE_API_WIN32_BASE
+	file->begin = (char*)mmap_readonly_win32( file->name, &file->map_handle, &file->map_file );
 #else
-	file->begin=mmap(NULL, file->size, PROT_READ|PROT_WRITE, MAP_PRIVATE, file->fd, 0);
+	file->begin=mmap(NULL, mmap_size, PROT_READ|PROT_WRITE, MAP_PRIVATE, file->fd, 0);
 	dbg_assert(file->begin != NULL);
 	if (file->begin == (void *)0xffffffff) {
 		perror("mmap");
@@ -152,6 +157,7 @@ file_mmap(struct file *file)
 	}
 #endif
 	dbg_assert(file->begin != (void *)0xffffffff);
+	file->mmap_end=file->begin+mmap_size;
 	file->end=file->begin+file->size;
 
 	return 1;
@@ -218,7 +224,7 @@ int
 file_get_contents(char *name, unsigned char **buffer, int *size)
 {
 	struct file *file;
-	file=file_create(name);
+	file=file_create(name, 0);
 	if (!file)
 		return 0;
 	*size=file_size(file);
@@ -294,9 +300,13 @@ file_data_read_compressed(struct file *file, long long offset, int size, int siz
 void
 file_data_free(struct file *file, unsigned char *data)
 {
-	if (file->begin && data >= file->begin && data < file->end)
-		return;
-	if (file_cache) {
+	if (file->begin) {
+		if (data == file->begin)
+			return;
+		if (data >= file->begin && data < file->end)
+			return;
+	}	
+	if (file->cache && data) {
 		cache_entry_destroy(file_cache, data);
 	} else
 		g_free(data);
@@ -358,7 +368,7 @@ file_closedir(void *hnd)
 }
 
 struct file *
-file_create_caseinsensitive(char *name)
+file_create_caseinsensitive(char *name, enum file_flags flags)
 {
 	char dirname[strlen(name)+1];
 	char *filename;
@@ -366,7 +376,7 @@ file_create_caseinsensitive(char *name)
 	void *d;
 	struct file *ret;
 
-	ret=file_create(name);
+	ret=file_create(name, flags);
 	if (ret)
 		return ret;
 
@@ -384,7 +394,7 @@ file_create_caseinsensitive(char *name)
 		while ((filename=file_readdir(d))) {
 			if (!strcasecmp(filename, p)) {
 				strcpy(p, filename);
-				ret=file_create(dirname);
+				ret=file_create(dirname, flags);
 				if (ret)
 					break;
 			}
@@ -464,20 +474,31 @@ file_get_param(struct file *file, struct param_list *param, int count)
 }
 
 int
-file_version(struct file *file, int byname)
+file_version(struct file *file, int mode)
 {
-#ifndef __CEGCC__
+#ifndef HAVE_API_WIN32_BASE
 	struct stat st;
 	int error;
-	if (byname)
-		error=stat(file->name, &st);
-	else
-		error=fstat(file->fd, &st);
-	if (error || !file->version || file->mtime != st.st_mtime || file->ctime != st.st_ctime) {
-		file->mtime=st.st_mtime;
-		file->ctime=st.st_ctime;
-		file->version++;
-		dbg(0,"%s now version %d\n", file->name, file->version);
+	if (mode == 3) {
+		long long size=lseek(file->fd, 0, SEEK_END);
+		if (file->begin && file->begin+size > file->mmap_end) {
+			file->version++;
+		} else {
+			file->size=size;
+			if (file->begin)
+				file->end=file->begin+file->size;
+		}
+	} else {
+		if (mode == 2)
+			error=stat(file->name, &st);
+		else
+			error=fstat(file->fd, &st);
+		if (error || !file->version || file->mtime != st.st_mtime || file->ctime != st.st_ctime) {
+			file->mtime=st.st_mtime;
+			file->ctime=st.st_ctime;
+			file->version++;
+			dbg(1,"%s now version %d\n", file->name, file->version);
+		}
 	}
 	return file->version;
 #else

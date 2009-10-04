@@ -279,7 +279,15 @@ binfile_coord_get(void *priv_data, struct coord *c, int count)
 {
 	struct map_rect_priv *mr=priv_data;
 	struct tile *t=mr->t;
-	int ret=0;
+	int max,ret=0;
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+	max=(t->pos_attr_start-t->pos_coord)/2;
+	if (count > max)
+		count=max;
+	memcpy(c, t->pos_coord, count*sizeof(struct coord));
+	t->pos_coord+=count*2;
+	ret=count;
+#else
 	dbg(2,"binfile_coord_get %d\n",count);
 	while (count--) {
 		dbg(2,"%p vs %p\n", t->pos_coord, t->pos_attr_start);
@@ -290,6 +298,7 @@ binfile_coord_get(void *priv_data, struct coord *c, int count)
 		c++;
 		ret++;
 	}
+#endif
 	return ret;
 }
 
@@ -771,6 +780,8 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 
 	binfile_check_version(map);
 	dbg(1,"map_rect_new_binfile\n");
+	if (!map->fi)
+		return NULL;
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->m=map;
 	mr->sel=sel;
@@ -780,7 +791,8 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 	if (map->eoc) 
 		push_zipfile_tile(mr, map->zip_members-1);
 	else {
-		unsigned char *d=file_data_read(map->fi, 0, map->fi->size);
+		unsigned char *d;
+		d=file_data_read(map->fi, 0, map->fi->size);
 		t.start=(int *)d;
 		t.end=(int *)(d+map->fi->size);
 		t.zipfile_num=0;
@@ -1271,14 +1283,19 @@ map_binfile_open(struct map_priv *m)
 	struct attr attr;
 
 	dbg(1,"file_create %s\n", m->filename);
-	m->fi=file_create(m->filename);
+	m->fi=file_create(m->filename, 0);
 	if (! m->fi) {
 		dbg(0,"Failed to load '%s'\n", m->filename);
 		return 0;
 	}
 	if (m->check_version)
-		m->version=file_version(m->fi, m->check_version == 2);
+		m->version=file_version(m->fi, m->check_version);
 	magic=(int *)file_data_read(m->fi, 0, 4);
+	if (!magic) {
+		file_destroy(m->fi);
+		m->fi=NULL;
+		return 0;
+	}
 	*magic = le32_to_cpu(*magic);
 	if (*magic == zip_lfh_sig) {
 		if ((m->eoc=binfile_read_eoc(m->fi)) && binfile_get_index(m) && (first_cd=binfile_read_cd(m, 0, 0))) {
@@ -1289,9 +1306,11 @@ map_binfile_open(struct map_priv *m)
 			file_data_free(m->fi, (unsigned char *)first_cd);
 		} else {
 			dbg(0,"invalid file format for '%s'\n", m->filename);
+			file_destroy(m->fi);
+			m->fi=NULL;
 			return 0;
 		}
-	} else 
+	} else
 		file_mmap(m->fi);
 	file_data_free(m->fi, (unsigned char *)magic);
 	m->cachedir="/tmp/navit";
@@ -1330,12 +1349,14 @@ map_binfile_destroy(struct map_priv *m)
 static void
 binfile_check_version(struct map_priv *m)
 {
-	int version;
+	int version=-1;
 	if (!m->check_version)
 		return;
-	version=file_version(m->fi, m->check_version == 2);
+	if (m->fi) 
+		version=file_version(m->fi, m->check_version);
 	if (version != m->version) {
-		map_binfile_close(m);
+		if (m->fi)
+			map_binfile_close(m);
 		map_binfile_open(m);
 	}
 }
@@ -1364,7 +1385,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 	check_version=attr_search(attrs, NULL, attr_check_version);
 	if (check_version) 
 		m->check_version=check_version->u.num;
-	if (!map_binfile_open(m)) {
+	if (!map_binfile_open(m) && !m->check_version) {
 		map_binfile_destroy(m);
 		m=NULL;
 	} else {
