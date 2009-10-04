@@ -1042,6 +1042,30 @@ transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, st
 	return dist;
 }
 
+int
+transform_douglas_peucker(struct coord *in, int count, int dist_sq, struct coord *out)
+{
+	int ret=0;
+	int i,d,dmax=0, idx=0;
+	for (i = 1; i < count-1 ; i++) {
+		d=transform_distance_line_sq(&in[0], &in[count-1], &in[i], NULL);
+		if (d > dmax) {
+			idx=i;
+			dmax=d;
+		}
+	}
+	if (dmax > dist_sq) {
+		ret=transform_douglas_peucker(in, idx+1, dist_sq, out)-1;
+		ret+=transform_douglas_peucker(in+idx, count-idx, dist_sq, out+ret);
+	} else {
+		if (count > 0)
+			out[ret++]=in[0];
+		if (count > 1)
+			out[ret++]=in[count-1];
+	}
+	return ret;
+}
+
 
 void
 transform_print_deg(double deg)
