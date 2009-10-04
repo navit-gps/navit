@@ -49,7 +49,7 @@ void transform_geo_to_cart(struct coord_geo *geo, navit_float a, navit_float b, 
 void transform_cart_to_geo(struct coord_geo_cart *cart, navit_float a, navit_float b, struct coord_geo *geo);
 void transform_utm_to_geo(const double UTMEasting, const double UTMNorthing, int ZoneNumber, int NorthernHemisphere, struct coord_geo *geo);
 void transform_datum(struct coord_geo *from, enum map_datum from_datum, struct coord_geo *to, enum map_datum to_datum);
-int transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int unique, int width, int *width_return);
+int transform(struct transformation *t, enum projection pro, struct coord *c, struct point *p, int count, int mindist, int width, int *width_return);
 void transform_reverse(struct transformation *t, struct point *p, struct coord *c);
 enum projection transform_get_projection(struct transformation *this_);
 void transform_set_projection(struct transformation *this_, enum projection pro);
@@ -81,6 +81,7 @@ int transform_distance_sq(struct coord *c1, struct coord *c2);
 int transform_distance_sq_pc(struct pcoord *c1, struct pcoord *c2);
 int transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref, struct coord *lpnt);
 int transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, struct coord *lpnt, int *pos);
+int transform_douglas_peucker(struct coord *in, int count, int dist_sq, struct coord *out);
 void transform_print_deg(double deg);
 int transform_get_angle_delta(struct coord *c1, struct coord *c2, int dir);
 int transform_within_border(struct transformation *this_, struct point *p, int border);

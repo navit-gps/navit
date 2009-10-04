@@ -128,7 +128,7 @@ log_close(struct log *this_)
 }
 
 static void
-log_flush(struct log *this_)
+log_flush(struct log *this_, enum log_flags flags)
 {
 	long pos;
 	if (this_->lazy && !this_->f) {
@@ -145,6 +145,12 @@ log_flush(struct log *this_)
 			this_->empty=0;
 	}
 	fwrite(this_->data.data, 1, this_->data.len, this_->f);
+#ifndef HAVE_API_WIN32_BASE
+	if (flags & log_flag_truncate) {
+		pos=ftell(this_->f);
+		ftruncate(fileno(this_->f), pos);
+	}
+#endif
 	if (this_->trailer.len) {
 		pos=ftell(this_->f);
 		if (pos > 0) {
@@ -152,11 +158,14 @@ log_flush(struct log *this_)
 			fseek(this_->f, pos, SEEK_SET);	
 		}
 	}
-	
+	if (flags & log_flag_keep_pointer)
+		fseek(this_->f, -this_->data.len, SEEK_CUR);
 	fflush(this_->f);
-	g_free(this_->data.data);
-	this_->data.data=NULL;
-	this_->data.max_len=this_->data.len=0;
+	if (!(flags & log_flag_keep_buffer)) {
+		g_free(this_->data.data);
+		this_->data.data=NULL;
+		this_->data.max_len=this_->data.len=0;
+	}
 	log_set_last_flush(this_);
 }
 
@@ -170,7 +179,7 @@ log_flush_required(struct log *this_)
 static void
 log_change(struct log *this_)
 {
-	log_flush(this_);
+	log_flush(this_,0);
 	log_close(this_);
 	expand_filenames(this_);
 	if (! this_->lazy)
@@ -195,7 +204,7 @@ log_timer(struct log *this_)
 	delta=(tv.tv_sec-this_->last_flush.tv_sec)*1000+(tv.tv_usec-this_->last_flush.tv_usec)/1000;
 	dbg(1,"delta=%d flush_time=%d\n", delta, this_->flush_time);
 	if (this_->flush_time && delta >= this_->flush_time*1000)
-		log_flush(this_);
+		log_flush(this_,0);
 }
 
 int
@@ -273,13 +282,15 @@ log_set_trailer(struct log *this_, char *data, int len)
 }
 
 void
-log_write(struct log *this_, char *data, int len)
+log_write(struct log *this_, char *data, int len, enum log_flags flags)
 {
 	dbg(1,"enter\n");
 	if (log_change_required(this_)) {
 		dbg(1,"log_change");
 		log_change(this_);
 	}
+	if (flags & log_flag_replace_buffer)
+		this_->data.len=0;
 	if (this_->data.len + len > this_->data.max_len) {
 		dbg(2,"overflow\n");
 		this_->data.max_len+=16384;
@@ -287,9 +298,18 @@ log_write(struct log *this_, char *data, int len)
 	}
 	memcpy(this_->data.data+this_->data.len, data, len);
 	this_->data.len+=len;
-	if (log_flush_required(this_))
-		log_flush(this_);
+	if (log_flush_required(this_) || (flags & log_flag_force_flush))
+		log_flush(this_, flags);
 }
+
+void *
+log_get_buffer(struct log *this_, int *len)
+{
+	if (len)
+		*len=this_->data.len;
+	return this_->data.data;
+}
+
 
 void
 log_printf(struct log *this_, char *fmt, ...)
@@ -302,7 +322,7 @@ log_printf(struct log *this_, char *fmt, ...)
 
 	// Format the string and write it to the log
 	size = vsnprintf(buffer, LOG_BUFFER_SIZE, fmt, ap);
-	log_write(this_, buffer, size);
+	log_write(this_, buffer, size, 0);
 
 	va_end(ap);
 }
@@ -312,7 +332,7 @@ log_destroy(struct log *this_)
 {
 	callback_destroy(this_->timer_callback);
 	event_remove_timeout(this_->timer);
-	log_flush(this_);
+	log_flush(this_,0);
 	log_close(this_);
 	g_free(this_);
 }

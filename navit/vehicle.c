@@ -29,6 +29,7 @@
 #include "callback.h"
 #include "plugin.h"
 #include "vehicle.h"
+#include "transform.h"
 #include "util.h"
 
 struct vehicle {
@@ -47,7 +48,7 @@ vehicle_log_nmea(struct vehicle *this_, struct log *log)
 		return;
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_nmea, &pos_attr))
 		return;
-	log_write(log, pos_attr.u.str, strlen(pos_attr.u.str));
+	log_write(log, pos_attr.u.str, strlen(pos_attr.u.str), 0);
 }
 
 static void
@@ -93,7 +94,7 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 	}
 	logstr=g_strconcat_printf(logstr,"</trkpt>\n");
 	callback_list_call_attr_1(this_->cbl, attr_log_gpx, &logstr);
-	log_write(log, logstr, strlen(logstr));
+	log_write(log, logstr, strlen(logstr), 0);
 	g_free(logstr);
 }
 
@@ -108,7 +109,57 @@ vehicle_log_textfile(struct vehicle *this_, struct log *log)
 		return;
 	logstr=g_strdup_printf("%f %f type=trackpoint\n", pos_attr.u.coord_geo->lng, pos_attr.u.coord_geo->lat);
 	callback_list_call_attr_1(this_->cbl, attr_log_textfile, &logstr);
-	log_write(log, logstr, strlen(logstr));
+	log_write(log, logstr, strlen(logstr), 0);
+}
+
+static void
+vehicle_log_binfile(struct vehicle *this_, struct log *log)
+{
+	struct attr pos_attr;
+	int *buffer;
+	int *buffer_new;
+	int len,limit=1024,done=0,radius=25;
+	struct coord c;
+	enum log_flags flags;
+
+	if (!this_->meth.position_attr_get)
+		return;
+	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
+		return;
+	transform_from_geo(projection_mg, pos_attr.u.coord_geo, &c);
+	if (!c.x || !c.y)
+		return;
+	while (!done) {
+		buffer=log_get_buffer(log, &len);
+		if (! buffer || !len) {
+			buffer_new=g_malloc(5*sizeof(int));
+			buffer_new[0]=2;
+			buffer_new[1]=type_track;
+			buffer_new[2]=0;
+		} else {
+			buffer_new=g_malloc((buffer[0]+3)*sizeof(int));
+			memcpy(buffer_new, buffer, (buffer[0]+1)*sizeof(int));
+		}
+		dbg(1,"c=0x%x,0x%x\n",c.x,c.y);
+		buffer_new[buffer_new[0]+1]=c.x;
+		buffer_new[buffer_new[0]+2]=c.y;
+		buffer_new[0]+=2;
+		buffer_new[2]+=2;
+		if (buffer_new[2] > limit) {
+			int count=buffer_new[2]/2;
+			struct coord out[count];
+			struct coord *in=(struct coord *)(buffer_new+3);
+			int count_out=transform_douglas_peucker(in, count, radius, out);
+			memcpy(in, out, count_out*2*sizeof(int));
+			buffer_new[0]+=(count_out-count)*2;	
+			buffer_new[2]+=(count_out-count)*2;	
+			flags=log_flag_replace_buffer|log_flag_force_flush|log_flag_truncate;
+		} else {
+			flags=log_flag_replace_buffer|log_flag_keep_pointer|log_flag_keep_buffer|log_flag_force_flush;
+			done=1;
+		}
+		log_write(log, (char *)buffer_new, (buffer_new[0]+1)*sizeof(int), flags);
+	}
 }
 
 static int
@@ -138,6 +189,8 @@ vehicle_add_log(struct vehicle *this_, struct log *log)
 		char *header = "type=track\n";
 		log_set_header(log, header, strlen(header));
 		cb=callback_new_attr_2(callback_cast(vehicle_log_textfile), attr_position_coord_geo, this_, log);
+	} else if (!strcmp(type_attr.u.str, "binfile")) {
+		cb=callback_new_attr_2(callback_cast(vehicle_log_binfile), attr_position_coord_geo, this_, log);
 	} else
 		return 1;
 	callback_list_add(this_->cbl, cb);

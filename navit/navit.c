@@ -1076,7 +1076,7 @@ navit_textfile_debug_log(struct navit *this_, const char *fmt, ...)
 	if (this_->textfile_debug_log && this_->vehicle) {
 		str1=g_strdup_vprintf(fmt, ap);
 		str2=g_strdup_printf("0x%x 0x%x%s%s\n", this_->vehicle->coord.x, this_->vehicle->coord.y, strlen(str1) ? " " : "", str1);
-		log_write(this_->textfile_debug_log, str2, strlen(str2));
+		log_write(this_->textfile_debug_log, str2, strlen(str2), 0);
 		g_free(str2);
 		g_free(str1);
 	}

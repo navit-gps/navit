@@ -33,6 +33,7 @@ struct file {
 	struct file *next;
 	unsigned char *begin;
 	unsigned char *end;
+	unsigned char *mmap_end;
 	long long size;
 	int name_id;
 	int fd;
@@ -48,18 +49,25 @@ struct file {
 	char *name;
 	FILE *stdfile;
 	int special;
+	int cache;
+};
+
+enum file_flags {
+	file_flag_nocache=1,
 };
 
 /* prototypes */
+enum file_flags;
 struct file;
 struct file_wordexp;
 struct param_list;
-struct file *file_create(char *name);
+struct file *file_create(char *name, enum file_flags flags);
 int file_is_dir(char *name);
 long long file_size(struct file *file);
 int file_mkdir(char *name, int pflag);
 int file_mmap(struct file *file);
 unsigned char *file_data_read(struct file *file, long long offset, int size);
+unsigned char *file_data_read_special(struct file *file, int size, int *size_ret);
 unsigned char *file_data_read_all(struct file *file);
 int file_data_write(struct file *file, long long offset, int size, unsigned char *data);
 int file_get_contents(char *name, unsigned char **buffer, int *size);
@@ -71,7 +79,7 @@ void file_unmap(struct file *f);
 void *file_opendir(char *dir);
 char *file_readdir(void *hnd);
 void file_closedir(void *hnd);
-struct file *file_create_caseinsensitive(char *name);
+struct file *file_create_caseinsensitive(char *name, enum file_flags flags);
 void file_destroy(struct file *f);
 struct file_wordexp *file_wordexp_new(const char *pattern);
 int file_wordexp_get_count(struct file_wordexp *wexp);
