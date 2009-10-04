@@ -1852,6 +1852,19 @@ search_relation_member(struct item_bin *ib, char *role, struct relation_member *
 }
 
 static int
+load_way_index(FILE *ways_index, int p, long long *idx)
+{
+	int step=sizeof(*idx)*2;
+	fseek(ways_index, p*step, SEEK_SET);
+	if (fread(idx, step, 1, ways_index) != 1) {
+		fprintf(stderr,"read failed\n");
+		return 0;
+	}
+	return 1;
+}
+
+
+static int
 seek_to_way(FILE *way, FILE *ways_index, long long wayid)
 {
 	long offset;
@@ -1872,12 +1885,9 @@ seek_to_way(FILE *way, FILE *ways_index, long long wayid)
 		// avoid infinite loop
 		interval = 1;
 	}
+	if (!load_way_index(ways_index, p, idx))
+		return 0;
 	for (;;) {
-		fseek(ways_index, p*sizeof(idx), SEEK_SET);
-		if (fread(idx, sizeof(idx), 1, ways_index) != 1) {
-			fprintf(stderr,"read failed\n");
-			return 0;
-		}
 		if (idx[0] == wayid) {
 			fseek(way, idx[1], SEEK_SET);
 			return 1;
@@ -1887,28 +1897,37 @@ seek_to_way(FILE *way, FILE *ways_index, long long wayid)
 			if (interval == 1) {
 				if (p >= count)
 					return 0;
+				if (!load_way_index(ways_index, p, idx))
+					return 0;
 				if (idx[0] > wayid)
 					return 0;
 			} else {
 				if (p >= count)
 					p=count-1;
+				if (!load_way_index(ways_index, p, idx))
+					return 0;
 			}
 		} else {
 			p-=interval;
 			if (interval == 1) {
 				if (p < 0)
 					return 0;
+				if (!load_way_index(ways_index, p, idx))
+					return 0;
 				if (idx[0] < wayid)
 					return 0;
 			} else {
 				if (p < 0)
 					p=0;
+				if (!load_way_index(ways_index, p, idx))
+					return 0;
 			}
 		}
 		if (interval > 1)
 			interval/=2;
 	}
 }
+
 
 static struct coord *
 get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct item_bin *ret)
@@ -3889,7 +3908,7 @@ int main(int argc, char **argv)
 				ways_split=tempfile(suffix,"ways_split",1);
 				ways_split_index=final ? tempfile(suffix,"ways_split_index",1) : NULL;
 				graph=tempfile(suffix,"graph",1);
-				/* coastline=tempfile(suffix,"coastline",1); */
+				coastline=tempfile(suffix,"coastline",1); 
 				if (i) 
 					load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
 				phase2(ways,ways_split,ways_split_index,graph,coastline,final);
@@ -4029,6 +4048,7 @@ int main(int argc, char **argv)
 			tempfile_unlink(suffix,"relations");
 			tempfile_unlink(suffix,"nodes");
 			tempfile_unlink(suffix,"ways_split");
+			tempfile_unlink(suffix,"coastline");
 			tempfile_unlink(suffix,"turn_restrictions");
 			tempfile_unlink(suffix,"graph");
 			tempfile_unlink(suffix,"tilesdir");
