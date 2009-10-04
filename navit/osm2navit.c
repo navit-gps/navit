@@ -432,6 +432,7 @@ struct country_table {
 	{276,"Germany,Deutschland,Bundesrepublik Deutschland"},
 	{348,"Hungary"},
  	{380,"Italy,Italia"},
+	{442,"Luxembourg"},
 	{528,"Nederland,The Netherlands,Niederlande,NL"},
 	{578,"Norway,Norge,Noreg,NO"},
 	{616,"Poland,Polska,PL"},
