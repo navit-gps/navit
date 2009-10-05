@@ -1818,7 +1818,8 @@ struct selector {
 		type_poi_dam,type_poi_dam,
 		type_none}},
 	{"unknown","Other",(enum item_type []){
-		type_point_unspecified,type_poi_land_feature-1,
+		type_point_unspecified,type_point_unkn-1,
+		type_point_unkn+1,type_poi_land_feature-1,
 		type_poi_rock+1,type_poi_fuel-1,
 		type_poi_marina+1,type_poi_car_parking-1,
 		type_poi_car_parking+1,type_poi_bar-1,
@@ -1830,6 +1831,9 @@ struct selector {
 		type_poi_restroom+1,type_poi_shop_grocery-1,
 		type_poi_shop_grocery+1,type_poi_motel-1,
 		type_poi_hostel+1,type_selected_point,
+		type_none}},
+	{"unknown","Unknown",(enum item_type []){
+		type_point_unkn,type_point_unkn,
 		type_none}},
 };
 
