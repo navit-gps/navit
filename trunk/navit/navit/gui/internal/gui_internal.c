@@ -1855,7 +1855,7 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 	char dirbuf[32];
 	char *type;
 	struct attr attr;
-	struct widget *wl;
+	struct widget *wl,*wt;
 	char *text;
 
 	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
@@ -1870,7 +1870,9 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 		wl->name=g_strdup(type);
 	}
         text=g_strdup_printf("%s %s %s %s", distbuf, dirbuf, type, attr.u.str);
-	gui_internal_widget_append(wl, gui_internal_label_new(this, text));
+	wt=gui_internal_label_new(this, text);
+	wt->datai=dist;
+	gui_internal_widget_append(wl, wt);
 	g_free(text);
 
 	return wl;
@@ -1883,11 +1885,15 @@ gui_internal_cmd_pois_sort_num(gconstpointer a, gconstpointer b, gpointer user_d
 	const struct widget *wb=b;
 	struct widget *wac=wa->children->data;
 	struct widget *wbc=wb->children->data;
+#if 0
 	int ia,ib;
 	ia=atoi(wac->text);
 	ib=atoi(wbc->text);
 
 	return ia-ib;
+#else
+	return wac->datai-wbc->datai;
+#endif
 }
 
 static int
