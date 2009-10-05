@@ -533,7 +533,7 @@ AC_ARG_WITH(svg2png-use-ksvgtopng4, [  --with-svg2png-use-ksvgtopng4   use kde4'
 AC_ARG_WITH(svg2png-use-ksvgtopng, [  --with-svg2png-use-ksvgtopng   use kde3's convert for png creation], SVG2PNG_CONVERTER="ksvgtopng")
 if test "x${enable_svg2png}" = "xyes" ; then
     if test "x${SVG2PNG_CONVERTER}" = "x"; then
-        SVG2PNG_CONVERTER="ksvgtopng ksvgtopng4 rsvg-convert inkscape convert"
+        SVG2PNG_CONVERTER="rsvg-convert ksvgtopng ksvgtopng4 inkscape convert"
     fi
     AC_PATH_PROGS([SVG2PNG], ${SVG2PNG_CONVERTER}, [none])
     if test "x${SVG2PNG}" = "xnone"; then
