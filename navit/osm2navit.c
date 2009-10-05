@@ -474,6 +474,7 @@ static GHashTable *attr_hash;
 static GHashTable *strings_hash = NULL;
 
 static void dump_itembin(struct item_bin *ib);
+
 static void
 osm_warning(char *type, long long id, int cont, char *fmt, ...)
 {
@@ -1716,7 +1717,7 @@ end_node(FILE *out)
 				lookup=g_hash_table_lookup(country_table_hash,tok);
 				if (lookup) {
 					if (result && result->countryid != lookup->countryid) {
-						fprintf(stderr,"conflict for %s %s country %d vs %d\n", attr_strings[attr_string_label], debug_attr_buffer, lookup->countryid, result->countryid);
+						osm_warning("node",nodeid,0,"conflict for %s %s country %d vs %d\n", attr_strings[attr_string_label], debug_attr_buffer, lookup->countryid, result->countryid);
 						conflict=1;
 					} else
 						result=lookup;
