@@ -364,6 +364,7 @@ static void gui_internal_search_town(struct gui_priv *this, struct widget *wm, v
 static void gui_internal_search_town_in_country(struct gui_priv *this, struct widget *wm);
 static void gui_internal_search_country(struct gui_priv *this, struct widget *widget, void *data);
 static void gui_internal_check_exit(struct gui_priv *this);
+static void gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void *data);
 
 static struct widget *gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode);
 static struct menu_data * gui_internal_menu_data(struct gui_priv *this);
@@ -1008,6 +1009,8 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		w->w=w->bl+w->br+width;
 		w->h=w->bt+w->bb+height;
 	}
+	if (expand < 100)
+		expand=100;
 
 	/**
 	 * At this stage the width and height of this
@@ -1987,6 +1990,53 @@ gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *dat
 
 
 static void
+gui_internal_cmd_view_attribute_details(struct gui_priv *this, struct widget *wm, void *data)
+{
+	struct widget *w,*wb;
+	struct map_rect *mr;
+	struct item *item;
+	struct attr attr;
+	char *text,*url;
+	int i;
+
+	text=g_strdup_printf("Attribute %s",wm->name);
+	wb=gui_internal_menu(this, text);
+	g_free(text);
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	mr=map_rect_new(wm->item.map, NULL);
+	item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
+	for (i = 0 ; i < wm->datai ; i++) {
+		item_attr_get(item, attr_any, &attr);
+	}
+	if (item_attr_get(item, attr_any, &attr)) {
+		url=NULL;
+		switch (attr.type) {
+		case attr_osm_nodeid:
+			url=g_strdup_printf("http://www.openstreetmap.org/browse/node/%Ld\n",*attr.u.num64);
+			break;
+		case attr_osm_wayid:
+			url=g_strdup_printf("http://www.openstreetmap.org/browse/way/%Ld\n",*attr.u.num64);
+			break;
+		case attr_osm_relationid:
+			url=g_strdup_printf("http://www.openstreetmap.org/browse/relation/%Ld\n",*attr.u.num64);
+			break;
+		default:
+			break;
+		}
+		if (url) {	
+			gui_internal_widget_append(w,
+					wb=gui_internal_button_new_with_callback(this, _("View in Browser"),
+						image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+						gui_internal_cmd_view_in_browser, NULL));
+			wb->name=url;
+		}
+	}
+	map_rect_destroy(mr);
+	gui_internal_menu_render(this);
+}
+
+static void
 gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct widget *w,*wb;
@@ -1994,6 +2044,7 @@ gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm, void 
 	struct item *item;
 	struct attr attr;
 	char *text;
+	int count=0;
 
 	dbg(0,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
 	wb=gui_internal_menu(this, "Attributes");
@@ -2008,7 +2059,10 @@ gui_internal_cmd_view_attributes(struct gui_priv *this, struct widget *wm, void 
 			gui_internal_widget_append(w,
 			wb=gui_internal_button_new_with_callback(this, text,
 				NULL, gravity_left_center|orientation_horizontal|flags_fill,
-				gui_internal_cmd_view_attributes, NULL));
+				gui_internal_cmd_view_attribute_details, NULL));
+			wb->name=g_strdup(text);
+			wb->item=wm->item;
+			wb->datai=count++;
 			g_free(text);
 		}
 	}
@@ -2024,17 +2078,21 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 	struct attr attr;
 	char *cmd=NULL;
 
-	dbg(0,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
-	mr=map_rect_new(wm->item.map, NULL);
-	item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
-	dbg(0,"item=%p\n", item);
-	if (item) {
-		while(item_attr_get(item, attr_url_local, &attr)) {
-			if (! cmd)
-				cmd=g_strdup_printf("navit-browser.sh '%s' &",attr.u.str);
+	if (!wm->name) {
+		dbg(0,"item=%p 0x%x 0x%x\n", wm->item.map,wm->item.id_hi, wm->item.id_lo);
+		mr=map_rect_new(wm->item.map, NULL);
+		item = map_rect_get_item_byid(mr, wm->item.id_hi, wm->item.id_lo);
+		dbg(0,"item=%p\n", item);
+		if (item) {
+			while(item_attr_get(item, attr_url_local, &attr)) {
+				if (! cmd)
+					cmd=g_strdup_printf("navit-browser.sh '%s' &",attr.u.str);
+			}
 		}
+		map_rect_destroy(mr);
+	} else {
+		cmd=g_strdup_printf("navit-browser.sh '%s' &",wm->name);
 	}
-	map_rect_destroy(mr);
 	if (cmd) {
 #ifdef HAVE_SYSTEM
 		system(cmd);
@@ -2049,6 +2107,8 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 	     1 Map Point
 	     2 Item
 	     3 Town
+	     4 County
+	     5 Street
 */
 
 
@@ -2063,7 +2123,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 	int display_view_on_map=(wm->data != (void *)1);
 	int display_items=(wm->data == (void *)1);
 	int display_streets=(wm->data == (void *)3);
-	int display_house_numbers=1;
+	int display_house_numbers=(wm->data == (void *)5);
 	if (wm->data == (void *)4) {
 		gui_internal_search_town_in_country(this, wm);
 		return;
@@ -2491,10 +2551,10 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 
 	void *param=(void *)3;
 	int minlen=1;
-	if (! strcmp(wm->name,"Country")) {
+	if (! strcmp(wm->name,"Country")) 
 		param=(void *)4;
-		minlen=1;
-	}
+	if (! strcmp(wm->name,"Street")) 
+		param=(void *)5;
 	dbg(0,"%s now '%s'\n", wm->name, wm->text);
 
 	gui_internal_search_idle_end(this);
