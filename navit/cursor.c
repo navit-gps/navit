@@ -46,11 +46,12 @@ struct cursor {
 	int w,h;
 	struct graphics *gra;
 	struct callback *animate_callback;
-	struct event_timeout *animate_timer;	
+	struct event_timeout *animate_timer;
 	struct point cursor_pnt;
 	struct graphics_gc *bg;
 	struct attr **attrs;
 	struct transformation *trans;
+	struct range *sequence_range;
 	int sequence;
 	int angle;
 	int speed;
@@ -61,47 +62,44 @@ struct cursor {
 static void
 cursor_draw_do(struct cursor *this_, int lazy)
 {
+	if (!this_->attrs || !this_->gra)
+		return;
+
 	struct point p;
 	int speed=this_->speed;
 	int angle=this_->angle;
+	int sequence=this_->sequence;
 
-	if (!this_->attrs || !this_->gra)
-		return;
-	if (!this_->gra)
-		return;
 	transform_set_yaw(this_->trans, -this_->angle);
 	graphics_draw_mode(this_->gra, draw_mode_begin);
 	p.x=0;
 	p.y=0;
 	graphics_draw_rectangle(this_->gra, this_->bg, &p, this_->w, this_->h);
-	for (;;) {
-		struct attr **attr=this_->attrs;
-		int sequence=this_->sequence;
-		int match=0;
-		while (*attr) {
-			if ((*attr)->type == attr_itemgra) {
-				struct itemgra *itm=(*attr)->u.itemgra;
-				dbg(1,"speed %d-%d %d\n", itm->speed_range.min, itm->speed_range.max, speed);
-				if (speed >= itm->speed_range.min && speed <= itm->speed_range.max &&  
-				    angle >= itm->angle_range.min && angle <= itm->angle_range.max &&  
-				    sequence >= itm->sequence_range.min && sequence <= itm->sequence_range.max) {
-					graphics_draw_itemgra(this_->gra, itm, this_->trans);
-					match=1;
-				}
+	struct attr **attr=this_->attrs;
+	int match=0;
+	while (*attr) {
+		if ((*attr)->type == attr_itemgra) {
+			struct itemgra *itm=(*attr)->u.itemgra;
+			dbg(1,"speed %d-%d %d\n", itm->speed_range.min, itm->speed_range.max, speed);
+			if (speed >= itm->speed_range.min && speed <= itm->speed_range.max &&  
+			    angle >= itm->angle_range.min && angle <= itm->angle_range.max &&  
+			    sequence >= itm->sequence_range.min && sequence <= itm->sequence_range.max) {
+				graphics_draw_itemgra(this_->gra, itm, this_->trans);
 			}
-			attr++;
+			if (sequence < itm->sequence_range.max)
+				match=1;
 		}
-		if (match) {
-			break;
-		} else {
-			if (this_->sequence) 
-				this_->sequence=0;
-			else
-				break;
-		}
+		++attr;
 	}
 	graphics_draw_drag(this_->gra, &this_->cursor_pnt);
 	graphics_draw_mode(this_->gra, lazy ? draw_mode_end_lazy : draw_mode_end);
+	if (this_->animate_callback) {
+		++this_->sequence;
+		if (this_->sequence_range && this_->sequence_range->max < this_->sequence)
+			this_->sequence=this_->sequence_range->min;
+		if (! match && ! this_->sequence_range)
+			this_->sequence=0;
+	}
 }
 
 void
@@ -129,13 +127,6 @@ cursor_draw(struct cursor *this_, struct graphics *gra, struct point *pnt, int l
 	cursor_draw_do(this_, lazy);
 }
 
-static void
-cursor_animate(struct cursor * this)
-{
-	this->sequence++;
-	cursor_draw_do(this, 0);
-}
-
 int
 cursor_add_attr(struct cursor *this_, struct attr *attr)
 {
@@ -155,7 +146,7 @@ struct cursor *
 cursor_new(struct attr *parent, struct attr **attrs)
 {
 	struct cursor *this=g_new0(struct cursor,1);
-	struct attr *w,*h, *interval;
+	struct attr *w,*h, *interval, *sequence_range;
 	struct pcoord center;
 	struct point scenter;
 	w=attr_search(attrs, NULL, attr_w);
@@ -175,8 +166,19 @@ cursor_new(struct attr *parent, struct attr **attrs)
 	transform_set_screen_center(this->trans, &scenter);
 	interval=attr_search(attrs, NULL, attr_interval);
 	if (interval) {
-		this->animate_callback=callback_new_1(callback_cast(cursor_animate), this);
+		this->animate_callback=callback_new_2(callback_cast(cursor_draw_do), this, 0);
 		this->animate_timer=event_add_timeout(interval->u.num, 1, this->animate_callback);
+	}
+	sequence_range=attr_search(attrs, NULL, attr_sequence_range);
+	if (sequence_range) {
+		struct range *r=g_new0(struct range,1);
+		r->min=sequence_range->u.range.min;
+		r->max=sequence_range->u.range.max;
+		this->sequence_range=r;
+		this->sequence=r->min;
+	}
+	else {
+		this->sequence_range=NULL;
 	}
 	dbg(2,"ret=%p\n", this);
 	return this;
@@ -185,6 +187,8 @@ cursor_new(struct attr *parent, struct attr **attrs)
 void
 cursor_destroy(struct cursor *this_)
 {
+	if (this_->sequence_range)
+		g_free(this_->sequence_range);
 	if (this_->animate_callback) {
 		callback_destroy(this_->animate_callback);
 		event_remove_timeout(this_->animate_timer);
