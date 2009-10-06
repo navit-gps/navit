@@ -72,7 +72,7 @@ osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button,
 	if (navit_ignore_button(nav))
 		return;
 	this->pressed = pressed;
-	if (pressed) {
+	if (pressed && this->command) {
 		struct attr navit;
 		navit.type=attr_navit;
 		navit.u.navit=nav;
