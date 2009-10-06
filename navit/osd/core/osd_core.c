@@ -316,6 +316,7 @@ struct nav_next_turn {
 	char *icon_src;
 	int icon_h, icon_w, active;
 	char *last_name;
+	int level;
 };
 
 static void
@@ -331,7 +332,7 @@ osd_nav_next_turn_draw(struct nav_next_turn *this, struct navit *navit,
 	struct graphics_image *gr_image;
 	char *image;
 	char *name = "unknown";
-
+	int level = this->level;
 
 	if (navit)
 		nav = navit_get_navigation(navit);
@@ -341,7 +342,7 @@ osd_nav_next_turn_draw(struct nav_next_turn *this, struct navit *navit,
 		mr = map_rect_new(map, NULL);
 	if (mr)
 		while ((item = map_rect_get_item(mr))
-		       && (item->type == type_nav_position || item->type == type_nav_none));
+		       && (item->type == type_nav_position || item->type == type_nav_none || level-- > 0));
 	if (item) {
 		name = item_to_name(item->type);
 		dbg(1, "name=%s\n", name);
@@ -427,6 +428,7 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 	this->icon_w = -1;
 	this->icon_h = -1;
 	this->active = -1;
+	this->level  = 0;
 
 	attr = attr_search(attrs, NULL, attr_icon_w);
 	if (attr)
@@ -447,6 +449,10 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 	} else {
 		this->icon_src = graphics_icon_path("%s_wh.svg");
 	}
+	
+	attr = attr_search(attrs, NULL, attr_level);
+	if (attr)
+		this->level=attr->u.num;
 
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_turn_init), attr_navit, this));
 	return (struct osd_priv *) this;
