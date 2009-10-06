@@ -26,6 +26,7 @@ extern "C" {
 #ifndef ATTR_H
 #define ATTR_H
 
+#include <glib.h>
 #include "projection.h"
 
 enum item_type;
