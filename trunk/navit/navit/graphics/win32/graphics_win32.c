@@ -22,6 +22,19 @@
 
 //#define FAST_TRANSPARENCY 1
 
+typedef BOOL (WINAPI *FP_AlphaBlend) ( HDC hdcDest,
+                                       int nXOriginDest,
+                                       int nYOriginDest,
+                                       int nWidthDest,
+                                       int nHeightDest,
+                                       HDC hdcSrc,
+                                       int nXOriginSrc,
+                                       int nYOriginSrc,
+                                       int nWidthSrc,
+                                       int nHeightSrc,
+                                       BLENDFUNCTION blendFunction
+                                     );
+
 struct graphics_priv
 {
     struct navit *nav;
@@ -46,6 +59,8 @@ struct graphics_priv
     HBITMAP hPrebuildBitmap;
     HBITMAP hOldBitmap;
     HBITMAP hOldPrebuildBitmap;
+    FP_AlphaBlend AlphaBlend;
+    HANDLE hCoreDll;
 };
 
 struct window_priv
@@ -152,6 +167,7 @@ struct graphics_image_priv
     PXPM2BMP pxpm;
 	int width,height,row_bytes,channels;
     unsigned char *png_pixels;
+    HBITMAP hBitmap;
     struct point hot;
 };
 
@@ -1051,7 +1067,7 @@ static struct graphics_image_priv* image_cache_hash_lookup( const char* key )
 #include "png.h"
 
 static int
-pngdecode(char *name, struct graphics_image_priv *img)
+pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 {
     png_struct    *png_ptr = NULL;
     png_info	*info_ptr = NULL;
@@ -1067,7 +1083,8 @@ pngdecode(char *name, struct graphics_image_priv *img)
 
     dbg(1,"enter %s\n",name);
     png_file=fopen(name, "rb");
-  if (!png_file) {
+    if (!png_file)
+    {
         dbg(0,"failed to open %s\n",name);
         return FALSE;
     }
@@ -1075,13 +1092,15 @@ pngdecode(char *name, struct graphics_image_priv *img)
 
     /* read and check signature in PNG file */
     ret = fread (buf, 1, 8, png_file);
-  if (ret != 8) {
+    if (ret != 8)
+    {
         fclose(png_file);
         return FALSE;
     }
 
     ret = png_check_sig (buf, 8);
-  if (!ret) {
+    if (!ret)
+    {
         fclose(png_file);
         return FALSE;
     }
@@ -1090,7 +1109,8 @@ pngdecode(char *name, struct graphics_image_priv *img)
 
     png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING,
                                       NULL, NULL, NULL);
-  if (!png_ptr) {
+    if (!png_ptr)
+    {
         fclose(png_file);
         return FALSE;   /* out of memory */
     }
@@ -1134,6 +1154,8 @@ pngdecode(char *name, struct graphics_image_priv *img)
     if (png_get_valid (png_ptr, info_ptr, PNG_INFO_tRNS))
         png_set_expand (png_ptr);
 
+	png_set_bgr(png_ptr);
+
     /* all transformations have been registered; now update info_ptr data,
      * get rowbytes and channels, and allocate image memory */
 
@@ -1159,13 +1181,32 @@ pngdecode(char *name, struct graphics_image_priv *img)
     /* row_bytes is the width x number of channels x (bit-depth / 8) */
     img->row_bytes = png_get_rowbytes (png_ptr, info_ptr);
 
-  if ((img->png_pixels = (png_byte *) g_malloc (img->row_bytes * img->height * sizeof (png_byte))) == NULL) {
+    if (  gr->AlphaBlend && img->channels == 4 )
+    {
+        BITMAPINFO pnginfo;
+        memset(&pnginfo, 0, sizeof(pnginfo));
+        pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+        pnginfo.bmiHeader.biWidth = img->width;
+        pnginfo.bmiHeader.biHeight = -img->height;
+        pnginfo.bmiHeader.biBitCount = 32;
+        pnginfo.bmiHeader.biCompression = BI_RGB;
+        pnginfo.bmiHeader.biPlanes = 1;
+        HDC dc = CreateCompatibleDC(NULL);
+        img->hBitmap = CreateDIBSection(dc, &pnginfo, DIB_RGB_COLORS , (void **)&img->png_pixels, NULL, 0);
+        DeleteDC(dc);
+
+    }
+    else
+    {
+        if ((img->png_pixels = (png_byte *) g_malloc (img->row_bytes * img->height * sizeof (png_byte))) == NULL)
+        {
             fclose(png_file);
             png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
             return FALSE;
         }
+    }
 
-  if ((row_pointers = (png_byte **) g_malloc (img->height * sizeof (png_bytep))) == NULL)
+    if ((row_pointers = (png_byte **) g_malloc (img->height * sizeof (png_bytep))) == NULL)
     {
         fclose(png_file);
         png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
@@ -1200,51 +1241,73 @@ pngdecode(char *name, struct graphics_image_priv *img)
 static void
 pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int y0)
 {
-	int x,y;
-	HDC hdc=gr->hMemDC;
-  	png_byte *pix_ptr = img->png_pixels;
-	COLORREF *pixeldata;
+    if (img->hBitmap)
+    {
+		BLENDFUNCTION blendFunction ;
+		blendFunction.BlendOp = AC_SRC_OVER;
+		blendFunction.BlendFlags = 0;
+		blendFunction.SourceConstantAlpha = 255;
+		blendFunction.AlphaFormat = AC_SRC_ALPHA;
+		HDC hdc = CreateCompatibleDC(NULL);
+		HBITMAP oldBitmap = SelectBitmap(hdc, img->hBitmap);
+    	gr->AlphaBlend(gr->hMemDC, x0, y0, img->width, img->height, hdc, 0, 0, img->width, img->height, blendFunction);
+    	(void)SelectBitmap(hdc, oldBitmap);
+    	DeleteDC(hdc);
+    }
+    else
+    {
 
-	BITMAPINFO pnginfo;
+		int x,y;
+		HDC hdc=gr->hMemDC;
+		png_byte *pix_ptr = img->png_pixels;
+		COLORREF *pixeldata;
 
-	memset(&pnginfo, 0, sizeof(pnginfo));
-	pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-	pnginfo.bmiHeader.biWidth = img->width;
-	pnginfo.bmiHeader.biHeight = -img->height;
-	pnginfo.bmiHeader.biBitCount = 32;
-	pnginfo.bmiHeader.biCompression = BI_RGB;
-	pnginfo.bmiHeader.biPlanes = 1;
-	HDC dc = CreateCompatibleDC(NULL);
-	HBITMAP bitmap = CreateDIBSection(hdc, &pnginfo, DIB_RGB_COLORS , (void **)&pixeldata, NULL, 0);
-	HBITMAP oldBitmap = SelectBitmap(dc, bitmap);
-	BitBlt(dc, 0, 0, img->width, img->height, hdc, x0, y0, SRCCOPY);
-	for (y=0 ; y < img->width ; y++) {
-		for (x=0 ; x < img->height ; x++) {
-			int ai,a=pix_ptr[3];
-			int r,g,b;
-			if (a == 0xff) {
-				r=pix_ptr[0];
-				g=pix_ptr[1];
-				b=pix_ptr[2];
-			} else {
-				int p=*pixeldata;
-				ai=0xff-a;
-				r=(p >> 16) & 0xff;
-				g=(p >> 8) & 0xff;
-				b=(p >> 0) & 0xff;
-				r=(pix_ptr[0]*a+((p >> 16) & 0xff)*ai)/255;
-				g=(pix_ptr[1]*a+((p >>  8) & 0xff)*ai)/255;
-				b=(pix_ptr[2]*a+((p >>  0) & 0xff)*ai)/255;
+		BITMAPINFO pnginfo;
+
+		memset(&pnginfo, 0, sizeof(pnginfo));
+		pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+		pnginfo.bmiHeader.biWidth = img->width;
+		pnginfo.bmiHeader.biHeight = -img->height;
+		pnginfo.bmiHeader.biBitCount = 32;
+		pnginfo.bmiHeader.biCompression = BI_RGB;
+		pnginfo.bmiHeader.biPlanes = 1;
+		HDC dc = CreateCompatibleDC(NULL);
+		HBITMAP bitmap = CreateDIBSection(hdc, &pnginfo, DIB_RGB_COLORS , (void **)&pixeldata, NULL, 0);
+		HBITMAP oldBitmap = SelectBitmap(dc, bitmap);
+		BitBlt(dc, 0, 0, img->width, img->height, hdc, x0, y0, SRCCOPY);
+		for (y=0 ; y < img->width ; y++)
+		{
+			for (x=0 ; x < img->height ; x++)
+			{
+				int ai,a=pix_ptr[3];
+				int r,g,b;
+				if (a == 0xff)
+				{
+					r=pix_ptr[0];
+					g=pix_ptr[1];
+					b=pix_ptr[2];
+				}
+				else
+				{
+					int p=*pixeldata;
+					ai=0xff-a;
+					r=(p >> 16) & 0xff;
+					g=(p >> 8) & 0xff;
+					b=(p >> 0) & 0xff;
+					r=(pix_ptr[0]*a+((p >> 16) & 0xff)*ai)/255;
+					g=(pix_ptr[1]*a+((p >>  8) & 0xff)*ai)/255;
+					b=(pix_ptr[2]*a+((p >>  0) & 0xff)*ai)/255;
+				}
+				*pixeldata++=(r << 16) | (g << 8) | b;
+				pix_ptr+=img->channels;
 			}
-			*pixeldata++=(r << 16) | (g << 8) | b;
-			pix_ptr+=img->channels;
 		}
-	}
 
-	BitBlt(hdc, x0, y0, img->width, img->height, dc, 0, 0, SRCCOPY);
-	(void)SelectBitmap(dc, oldBitmap);
-	DeleteBitmap(bitmap);
-	DeleteDC(dc);
+		BitBlt(hdc, x0, y0, img->width, img->height, dc, 0, 0, SRCCOPY);
+		(void)SelectBitmap(dc, oldBitmap);
+		DeleteBitmap(bitmap);
+		DeleteDC(dc);
+    }
 }
 
 static int
@@ -1281,7 +1344,7 @@ static struct graphics_image_priv *image_new(struct graphics_priv *gr, struct gr
 		if (!strcmp(ext,".xpm")) {
             rc=xpmdecode(name, ret);
 		} else if (!strcmp(ext,".png")) {
-			rc=pngdecode(name, ret);
+			rc=pngdecode(gr, name, ret);
         }
 		if (rc) {
             image_cache_hash_add( name, ret );
@@ -1427,6 +1490,30 @@ static struct graphics_priv *
 }
 
 
+static void set_alphablend(struct graphics_priv* gra_priv)
+{
+#if HAVE_API_WIN32_CE
+    gra_priv->hCoreDll = LoadLibrary(TEXT("coredll.dll"));
+#else
+    gra_priv->hCoreDll = LoadLibrary(TEXT("msimg32.dll"));
+#endif
+    if ( gra_priv->hCoreDll )
+    {
+        gra_priv->AlphaBlend  = (FP_AlphaBlend)GetProcAddress(gra_priv->hCoreDll, TEXT("AlphaBlend") );
+        if (!gra_priv->AlphaBlend)
+        {
+            FreeLibrary(gra_priv->hCoreDll);
+            gra_priv->hCoreDll = NULL;
+            dbg(1, "AlphaBlend not supported\n");
+        }
+    }
+    else
+    {
+        dbg(0, "Error loading coredll\n");
+    }
+}
+
+
 
 static struct graphics_priv*
             graphics_win32_new( struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
@@ -1448,6 +1535,7 @@ static struct graphics_priv*
     this_->cbl=cbl;
     this_->parent = NULL;
     this_->window.priv = NULL;
+    set_alphablend(this_);
     return this_;
 }
 
