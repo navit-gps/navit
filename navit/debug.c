@@ -82,12 +82,12 @@ debug_init(const char *program_name)
 static void
 debug_update_level(gpointer key, gpointer value, gpointer user_data)
 {
-	if (debug_level < (int) value)
-		debug_level=(int) value;
+	if (debug_level < GPOINTER_TO_INT(value))
+		debug_level = GPOINTER_TO_INT(value);
 }
 
 void
-debug_level_set(const char *name, int level)
+debug_level_set(const char *name, gint level)
 {
 	if (!strcmp(name, "segv")) {
 		segv_level=level;
@@ -99,7 +99,7 @@ debug_level_set(const char *name, int level)
 		timestamp_prefix=level;
 	} else {
 		debug_level=0;
-		g_hash_table_insert(debug_hash, g_strdup(name), (gpointer) level);
+		g_hash_table_insert(debug_hash, g_strdup(name), GINT_TO_POINTER(level));
 		g_hash_table_foreach(debug_hash, debug_update_level, NULL);
 	}
 }
@@ -122,7 +122,7 @@ debug_level_get(const char *name)
 {
 	if (!debug_hash)
 		return 0;
-	return (int)(g_hash_table_lookup(debug_hash, name));
+	return GPOINTER_TO_INT(g_hash_table_lookup(debug_hash, name));
 }
 
 static void debug_timestamp(FILE *fp)

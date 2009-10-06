@@ -245,7 +245,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 struct attr_iter *
 vehicle_attr_iter_new(void)
 {
-	return g_new0(void *,1);
+	return g_new0(struct attr_iter,1);
 }
 
 void

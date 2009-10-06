@@ -57,6 +57,11 @@ attr_from_name(const char *name)
 	return attr_none;
 }
 
+
+static int attr_match(enum attr_type search, enum attr_type found);
+
+
+
 char *
 attr_to_name(enum attr_type attr)
 {
@@ -272,7 +277,7 @@ attr_search(struct attr **attrs, struct attr *last, enum attr_type attr)
 	return NULL;
 }
 
-int
+static int
 attr_match(enum attr_type search, enum attr_type found)
 {
 	switch (search) {

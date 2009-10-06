@@ -57,10 +57,6 @@ enum file_flags {
 };
 
 /* prototypes */
-enum file_flags;
-struct file;
-struct file_wordexp;
-struct param_list;
 struct file *file_create(char *name, enum file_flags flags);
 int file_is_dir(char *name);
 long long file_size(struct file *file);

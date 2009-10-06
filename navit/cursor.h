@@ -21,10 +21,6 @@
 #define NAVIT_CURSOR_H
 
 /* prototypes */
-struct color;
-struct cursor;
-struct graphics;
-struct point;
 void cursor_draw(struct cursor *this_, struct graphics *gra, struct point *pnt, int lazy, int dir, int speed);
 int cursor_add_attr(struct cursor *this_, struct attr *attr);
 struct cursor *cursor_new(struct attr *parent, struct attr **attrs);

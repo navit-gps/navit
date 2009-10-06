@@ -256,7 +256,7 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 	ret+=str-c_str;
 	if (debug) {
 		printf("args=%d\n", args);
-		printf("ret=%d delta=%d ret_str='%s'\n", ret, str-c_str, c_str+ret);
+		printf("ret=%d delta=%d ret_str='%s'\n", ret, GPOINTER_TO_INT(str-c_str), c_str+ret);
 	}
 out:
 	if (proj)

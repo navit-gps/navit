@@ -35,6 +35,8 @@
 #include "xmlconfig.h"
 #include "file.h"
 #include "search.h"
+#include "start_real.h"
+#include "linguistics.h"
 #include "navit_nls.h"
 #include "atom.h"
 #ifdef HAVE_API_WIN32_CE

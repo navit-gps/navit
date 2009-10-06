@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2008 Navit Team
+ * Copyright (C) 2005-2009 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,10 +17,9 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include "start_real.h"
+#ifndef NAVIT_MAIN_REAL_H 
+#define NAVIT_MAIN_REAL_H 
 
-int
-main(int argc, char **argv)
-{
-	return main_real(argc, argv);
-}
+int main_real(int argc, char **argv);
+
+#endif

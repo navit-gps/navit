@@ -139,13 +139,6 @@ struct navit {
 
 struct gui *main_loop_gui;
 
-struct attr_iter {
-	union {
-		GList *list;
-		struct mapset_handle *mapset_handle;
-	} u;
-};
-
 static void navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv);
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt);
 static int navit_add_vehicle(struct navit *this_, struct vehicle *v);
@@ -332,7 +325,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 {
 	int border=16;
 
-	callback_list_call_attr_4(this_->attr_cbl, attr_button, this_, (void *)pressed, (void *)button, p);
+	callback_list_call_attr_4(this_->attr_cbl, attr_button, this_, GINT_TO_POINTER(pressed), GINT_TO_POINTER(button), p);
 	if (this_->ignore_button) {
 		this_->ignore_button=0;
 		return 0;
