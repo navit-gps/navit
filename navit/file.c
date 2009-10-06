@@ -509,7 +509,7 @@ file_version(struct file *file, int mode)
 void *
 file_get_os_handle(struct file *file)
 {
-	return (void *)(file->fd);
+	return GINT_TO_POINTER(file->fd);
 }
 
 void

@@ -619,7 +619,7 @@ configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
 	gra->width=widget->allocation.width;
 	gra->height=widget->allocation.height;
         gra->drawable = gdk_pixmap_new(widget->window, gra->width, gra->height, -1);
-	callback_list_call_attr_2(gra->cbl, attr_resize, (void *)gra->width, (void *)gra->height);
+	callback_list_call_attr_2(gra->cbl, attr_resize, GINT_TO_POINTER(gra->width), GINT_TO_POINTER(gra->height));
 	return TRUE;
 }
 
@@ -687,7 +687,7 @@ button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 	}
 	p.x=event->x;
 	p.y=event->y;
-	callback_list_call_attr_3(this->cbl, attr_button, (void *)1, (void *)event->button, (void *)&p);
+	callback_list_call_attr_3(this->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(event->button), (void *)&p);
 	return FALSE;
 }
 
@@ -710,7 +710,7 @@ button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 	}
 	p.x=event->x;
 	p.y=event->y;
-	callback_list_call_attr_3(this->cbl, attr_button, (void *)0, (void *)event->button, (void *)&p);
+	callback_list_call_attr_3(this->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(event->button), (void *)&p);
 	return FALSE;
 }
 
@@ -737,8 +737,8 @@ scroll(GtkWidget * widget, GdkEventScroll * event, gpointer user_data)
 		break;
 	}
 	if (button != -1) {
-		callback_list_call_attr_3(this->cbl, attr_button, (void *)1, (void *)button, (void *)&p);
-		callback_list_call_attr_3(this->cbl, attr_button, (void *)0, (void *)button, (void *)&p);
+		callback_list_call_attr_3(this->cbl, attr_button, GINT_TO_POINTER(1), GINT_TO_POINTER(button), (void *)&p);
+		callback_list_call_attr_3(this->cbl, attr_button, GINT_TO_POINTER(0), GINT_TO_POINTER(button), (void *)&p);
 	}
 	return FALSE;
 }
@@ -882,7 +882,7 @@ overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int al
 			this->overlay_autodisabled = 0;
 		}
 
-		callback_list_call_attr_2(this->cbl, attr_resize, (void *)this->width, (void *)this->height);
+		callback_list_call_attr_2(this->cbl, attr_resize, GINT_TO_POINTER(this->width), GINT_TO_POINTER(this->height));
 	}
 }
 

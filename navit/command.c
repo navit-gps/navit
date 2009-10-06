@@ -102,11 +102,11 @@ get_op(struct context *ctx, int test, ...)
 	return ret;
 }
 
-static int
+/*static int
 is_int(struct result *res)
 {
 	return 1;
-}
+}*/
 
 static int
 is_double(struct result *res)

@@ -232,7 +232,7 @@ static guint
 item_hash_hash(gconstpointer key)
 {
 	const struct item *itm=key;
-	gconstpointer hashkey=(gconstpointer)(itm->id_hi^itm->id_lo^((int) itm->map));
+	gconstpointer hashkey=(gconstpointer)GINT_TO_POINTER(itm->id_hi^itm->id_lo^(GPOINTER_TO_INT(itm->map)));
 	return g_direct_hash(hashkey);
 }
 

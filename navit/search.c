@@ -51,7 +51,7 @@ static guint
 search_item_hash_hash(gconstpointer key)
 {
 	const struct item *itm=key;
-	gconstpointer hashkey=(gconstpointer)(itm->id_hi^itm->id_lo);
+	gconstpointer hashkey=(gconstpointer)GINT_TO_POINTER(itm->id_hi^itm->id_lo);
 	return g_direct_hash(hashkey);
 }
 

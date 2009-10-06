@@ -660,7 +660,7 @@ static guint
 displayitem_hash(gconstpointer key)
 {
 	const struct displayitem *di=key;
-	return (di->item.id_hi^di->item.id_lo^((int) di->item.map));
+	return (di->item.id_hi^di->item.id_lo^(GPOINTER_TO_INT(di->item.map)));
 }
 
 static gboolean
