@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <wingdi.h>
+#include <glib/glib.h>
 #include "xpm2bmp.h"
 
 /* #define _DBG */
@@ -249,9 +250,9 @@ static XPMCOLORENTRY theRGBRecords[] =
 };
 
 
-PXPM2BMP Xpm2bmp_new()
+PXPM2BMP Xpm2bmp_new(void)
 {
-	PXPM2BMP preturn = (PXPM2BMP)calloc( sizeof( XPM2BMP ) , 1 );
+	PXPM2BMP preturn = g_malloc0( sizeof(XPM2BMP) );
 	return preturn;
 }
 
@@ -521,18 +522,18 @@ static int CreateBitmapFromXpm( const char* filename, PXPM2BMP pXpm2bmp )
 					pXpm2bmp->color_entires_size = 0;
 					nbytes = ( pXpm2bmp->chars_per_pixel + 1 ) * pXpm2bmp->colors;
 
-					pXpm2bmp->color_entires = calloc( sizeof( XPMCOLORENTRY ), pXpm2bmp->colors + 100 );
-					pXpm2bmp->color_entires[0].color_str = calloc( nbytes, pXpm2bmp->colors );
+					pXpm2bmp->color_entires = g_malloc0( sizeof(XPMCOLORENTRY) * (pXpm2bmp->colors + 100) );
+					pXpm2bmp->color_entires[0].color_str = g_malloc0( nbytes * pXpm2bmp->colors );
 					for ( i = 1; i< pXpm2bmp->colors; i++ )
 					{
 						pXpm2bmp->color_entires[i].color_str = pXpm2bmp->color_entires[0].color_str + ( pXpm2bmp->chars_per_pixel + 1 ) * i;
 					}
 
-					if (!(pXpm2bmp->dib = (unsigned char *)malloc(sizeof(BITMAPINFOHEADER) + pXpm2bmp->size_x * pXpm2bmp->size_y * 3)))
+					if (!(pXpm2bmp->dib = (unsigned char *)g_malloc(sizeof(BITMAPINFOHEADER) + pXpm2bmp->size_x * pXpm2bmp->size_y * 3)))
 					{
 						return 4;
 					}
-					if (!(pXpm2bmp->dib_trans = (unsigned char *)calloc(sizeof(BITMAPINFOHEADER) + pXpm2bmp->size_x * pXpm2bmp->size_y * 3,1)))
+					if (!(pXpm2bmp->dib_trans = (unsigned char *)g_malloc0(sizeof(BITMAPINFOHEADER) + pXpm2bmp->size_x * pXpm2bmp->size_y * 3)))
 					{
 						return 4;
 					}
