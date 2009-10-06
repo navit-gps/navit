@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ `uname` == Darwin ]; then
+if [ `uname` = Darwin ]; then
 	LIBTOOL=glibtool
 else
 	LIBTOOL=libtool
