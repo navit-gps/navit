@@ -36,7 +36,7 @@ typedef struct XPM2BMP_TAG
 } XPM2BMP, *PXPM2BMP;
 
 
-PXPM2BMP Xpm2bmp_new();
+PXPM2BMP Xpm2bmp_new(void);
 int Xpm2bmp_load( PXPM2BMP pXpm2bmp, const char* filename );
 int Xpm2bmp_paint( PXPM2BMP pXpm2bmp, HDC hdc, int x1,int y1 );
 
