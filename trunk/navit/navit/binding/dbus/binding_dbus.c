@@ -63,8 +63,8 @@ object_new(char *type, void *object)
 	int id;
 	char *ret;
 	dbg(0,"enter %s\n", type);
-	id=(int)g_hash_table_lookup(object_count, type);
-	g_hash_table_insert(object_count, type, (void *)(id+1));
+	id=GPOINTER_TO_INT(g_hash_table_lookup(object_count, type));
+	g_hash_table_insert(object_count, type, GINT_TO_POINTER((id+1)));
 	ret=g_strdup_printf("%s/%s/%d", object_path, type, id);
 	g_hash_table_insert(object_hash, ret, object);
 	dbg(0,"return %s\n", ret);
@@ -546,7 +546,7 @@ request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
         dbg(0, "string detected\n");
         if(navit_get_attr(navit, attr.type, &attr, NULL)) {
             dbg(0, "%s = %s\n", attr_type, &attr.u.layout);
-            return reply_simple_as_variant(connection, message, &attr.u.layout, DBUS_TYPE_STRING);
+            return reply_simple_as_variant(connection, message, GPOINTER_TO_INT(&attr.u.layout), DBUS_TYPE_STRING);
         }
     }
 

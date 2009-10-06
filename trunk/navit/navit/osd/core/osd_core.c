@@ -128,11 +128,11 @@ format_speed(double speed, char *sep)
 	return g_strdup_printf("%.0f%skm/h", speed, sep);
 }
 
-static char *
+/*static char *
 format_float(double num)
 {
 	return g_strdup_printf("%f", num);
-}
+}*/
 
 static char *
 format_float_0(double num)

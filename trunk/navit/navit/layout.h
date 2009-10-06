@@ -23,9 +23,6 @@
 #include "item.h"
 #include "color.h"
 
-struct element_line;
-struct element_text;
-
 struct element {
 	enum { element_point, element_polyline, element_polygon, element_circle, element_text, element_icon, element_image, element_arrows } type;
 	struct color color;
@@ -64,18 +61,11 @@ struct itemgra {
 	GList *elements;
 };
 
-struct color;
-
 struct layer { char *name; int details; GList *itemgras; };
 
 struct layout { char *name; char *font; struct color color; GList *layers; int order_delta; };
 
 /* prototypes */
-enum item_type;
-struct element;
-struct itemgra;
-struct layer;
-struct layout;
 struct layout *layout_new(struct attr *parent, struct attr **attrs);
 int layout_add_attr(struct layout *layout, struct attr *attr);
 struct layer *layer_new(struct attr *parent, struct attr **attrs);

@@ -23,11 +23,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-struct vehicle;
+
 struct vehicle_priv;
-enum attr_type;
-struct attr;
-struct attr_iter;
 
 struct vehicle_methods {
 	void (*destroy)(struct vehicle_priv *priv);
@@ -35,6 +32,7 @@ struct vehicle_methods {
 	int (*set_attr)(struct vehicle_priv *priv, struct attr *attr, struct attr **attrs);
 
 };
+
 
 /* prototypes */
 struct vehicle *vehicle_new(struct attr *parent, struct attr **attrs);
@@ -46,6 +44,7 @@ int vehicle_remove_attr(struct vehicle *this_, struct attr *attr);
 void vehicle_destroy(struct vehicle *this_);
 void vehicle_attr_iter_destroy(struct attr_iter *iter); 
 /* end of prototypes */
+
 #ifdef __cplusplus
 }
 #endif
