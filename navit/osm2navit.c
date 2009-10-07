@@ -1942,19 +1942,26 @@ seek_to_way(FILE *way, FILE *ways_index, long long wayid)
 
 
 static struct coord *
-get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct item_bin *ret)
+get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct item_bin *ret, int debug)
 {
 	long long currid;
 	int last;
 	struct coord *ic;
-	if (!seek_to_way(way, ways_index, wayid))
+	if (!seek_to_way(way, ways_index, wayid)) {
+		if (debug)
+			fprintf(stderr,"not found in index");
 		return NULL;
+	}
 	while (item_bin_read(ret, way)) {
 		currid=item_bin_get_wayid(ret);
+		if (debug)
+			fprintf(stderr,"%Ld:",currid);
 		if (currid != wayid) 
 			return NULL;
 		ic=(struct coord *)(ret+1);
 		last=ret->clen/2-1;
+		if (debug)
+			fprintf(stderr,"(0x%x,0x%x)-(0x%x,0x%x)",ic[0].x,ic[0].y,ic[last].x,ic[last].y);
 		if (!c) 
 			return &ic[0];
 		if (ic[0].x == c->x && ic[0].y == c->y) 
@@ -1964,8 +1971,6 @@ get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct it
 	}
 	return NULL;
 }
-
-
 
 static void
 process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out)
@@ -2015,12 +2020,12 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 			viafrom=&ni.c;
 			viato=&ni.c;
 		} else {
-			if (!(viafrom=get_way(ways, ways_index, NULL, viam.id, via))) {
+			if (!(viafrom=get_way(ways, ways_index, NULL, viam.id, via, 0))) {
 				osm_warning("relation",relid,0,"turn restriction: failed to get first via coordinate from ");
 				osm_warning(osm_types[viam.type],viam.id,1,"\n");
 				continue;
 			}
-			if (!(viato=get_way(ways, ways_index, viafrom, viam.id, via))) {
+			if (!(viato=get_way(ways, ways_index, viafrom, viam.id, via, 0))) {
 				osm_warning("relation",relid,0,"turn restriction: failed to get last via coordinate from ");
 				osm_warning(osm_types[viam.type],viam.id,1,"\n");
 				continue;
@@ -2032,11 +2037,13 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 		fprintf(stderr,"coord 0x%x,0x%x\n",ni.c.x,ni.c.y);	
 		fprintf(stderr,"Lookup %Ld\n",fromm.id);
 #endif
-		if (!(fromc=get_way(ways, ways_index, viafrom, fromm.id, from))) {
-			if (viam.type == 1 || !(fromc=get_way(ways, ways_index, viato, fromm.id, from))) {
+		if (!(fromc=get_way(ways, ways_index, viafrom, fromm.id, from, 0))) {
+			if (viam.type == 1 || !(fromc=get_way(ways, ways_index, viato, fromm.id, from, 0))) {
 				osm_warning("relation",relid,0,"turn restriction: failed to connect via ");
-				osm_warning(osm_types[viam.type],viam.id,1," to from member ");
-				osm_warning(osm_types[fromm.type],fromm.id,1,"\n");
+				osm_warning(osm_types[viam.type],viam.id,1," 0x%x,0x%x to from member ",viafrom->x,viafrom->y);
+				osm_warning(osm_types[fromm.type],fromm.id,1," (");
+				get_way(ways, ways_index, viafrom, fromm.id, from, 1);
+				fprintf(stderr,")\n");
 				continue;
 			} else {
 				tmp=viato;
@@ -2044,10 +2051,12 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 				viafrom=tmp;
 			}
 		}
-		if (!(toc=get_way(ways, ways_index, viato, tom.id, to))) {
+		if (!(toc=get_way(ways, ways_index, viato, tom.id, to, 0))) {
 			osm_warning("relation",relid,0,"turn restriction: failed to connect via ");
-			osm_warning(osm_types[viam.type],viam.id,1," to to member ");
-			osm_warning(osm_types[tom.type],tom.id,1,"\n");
+			osm_warning(osm_types[viam.type],viam.id,1," 0x%x,0x%x to to member ",viato->x,viato->y);
+			osm_warning(osm_types[tom.type],tom.id,1," (");
+			get_way(ways, ways_index, viato, tom.id, to, 1);
+			fprintf(stderr,")\n");
 			continue;
 		}
 #if 0
