@@ -595,6 +595,23 @@ sig_alrm(int sig)
 	fprintf(stderr,"PROGRESS%d: Processed %d nodes (%d out) %d ways %d relations %d tiles\n", phase, processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles);
 }
 
+struct tile_data {
+	char buffer[1024];
+	int tile_depth;
+	struct rect item_bbox;
+	struct rect tile_bbox;
+};
+
+struct item_bin_sink_func {
+	int (*func)(struct item_bin_sink_func *func, struct item_bin *ib, struct tile_data *tile_data);
+	void *priv_data[8];
+};
+
+struct item_bin_sink {
+	void *priv_data[8];
+	GList *sink_funcs;
+};
+
 struct item_bin {
 	int len;
 	enum item_type type;
@@ -638,6 +655,50 @@ enum attr_strings {
 
 char *attr_strings[attr_string_last];
 
+struct tile_parameter {
+	int min;
+	int max;
+	int overlap;
+};
+
+
+
+static struct item_bin_sink *
+item_bin_sink_new(void)
+{
+	struct item_bin_sink *ret=g_new0(struct item_bin_sink, 1);
+
+	return ret;
+}
+
+static struct item_bin_sink_func *
+item_bin_sink_func_new(int (*func)(struct item_bin_sink_func *func, struct item_bin *ib, struct tile_data *tile_data))
+{
+	struct item_bin_sink_func *ret=g_new0(struct item_bin_sink_func, 1);
+	ret->func=func;
+	return ret;
+}
+
+static void
+item_bin_sink_func_destroy(struct item_bin_sink_func *func)
+{
+	g_free(func);
+}
+
+static void
+item_bin_sink_add_func(struct item_bin_sink *sink, struct item_bin_sink_func *func)
+{
+	sink->sink_funcs=g_list_append(sink->sink_funcs, func);
+}
+
+static void
+item_bin_sink_destroy(struct item_bin_sink *sink)
+{
+	/* g_list_foreach(sink->sink_funcs, (GFunc)g_free, NULL); */
+	g_list_free(sink->sink_funcs);
+	g_free(sink);
+}
+
 static void
 attr_strings_clear(void)
 {
@@ -676,6 +737,19 @@ item_bin_add_coord(struct item_bin *ib, struct coord *c, int count)
 	memcpy(c2, c, count*sizeof(struct coord));
 	ib->clen+=count*2;
 	ib->len+=count*2;
+}
+
+static void
+item_bin_copy_coord(struct item_bin *ib, struct item_bin *from, int dir)
+{
+	struct coord *c=(struct coord *)(from+1);
+	int i,count=from->clen/2;
+	if (dir >= 0) {
+		item_bin_add_coord(ib, c, count);
+		return;
+	}
+	for (i = 1 ; i <= count ; i++) 
+		item_bin_add_coord(ib, &c[count-i], 1);
 }
 
 static void
@@ -795,7 +869,110 @@ item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, sho
 static void
 item_bin_write(struct item_bin *ib, FILE *out)
 {
-	fwrite(buffer, (ib->len+1)*4, 1, out);
+	fwrite(ib, (ib->len+1)*4, 1, out);
+}
+
+static int
+item_bin_write_to_sink(struct item_bin *ib, struct item_bin_sink *sink, struct tile_data *tile_data)
+{
+	GList *list=sink->sink_funcs;
+	int ret=0;
+	while (list) {
+		struct item_bin_sink_func *func=list->data;
+		ret=func->func(func, ib, tile_data);
+		if (ret)
+			break;
+		list=g_list_next(list);
+	}
+	return ret;
+}
+
+static int
+item_bin_write_to_sink_func(struct item_bin *ib, struct item_bin_sink_func *func, struct tile_data *tile_data)
+{
+	return func->func(func, ib, tile_data);
+}
+
+static int
+item_bin_write_debug_point_to_sink(struct item_bin_sink *sink, struct coord *c, const char *fmt, ...)
+{
+	char buffer[16384];
+	char buffer2[16384];
+	va_list ap;
+	struct item_bin *ib=(struct item_bin *)buffer;
+
+	item_bin_init(ib, type_town_label_1e7);
+	item_bin_add_coord(ib, c, 1);
+        va_start(ap, fmt);
+	vsprintf(buffer2,fmt,ap);
+        va_end(ap);
+	item_bin_add_attr_string(ib, attr_label, buffer2);
+	return item_bin_write_to_sink(ib, sink, NULL);
+}
+
+static char *
+coord_to_str(struct coord *c)
+{
+	int x=c->x;
+	int y=c->y;
+	char *sx="";
+	char *sy="";
+	if (x < 0) {
+		sx="-";
+		x=-x;
+	}
+	if (y < 0) {
+		sy="-";
+		y=-y;
+	}
+	return g_strdup_printf("%s0x%x %s0x%x",sx,x,sy,y);
+}
+
+static void
+dump_coord(struct coord *c, FILE *out)
+{
+	char *str=coord_to_str(c);
+	fprintf(out,"%s",str);
+	g_free(str);
+}
+
+
+static void
+item_bin_dump(struct item_bin *ib, FILE *out)
+{
+	struct coord *c;
+	struct attr_bin *a;
+	struct attr attr;
+	int *attr_start;
+	int *attr_end;
+	int i;
+	char *str;
+
+	c=(struct coord *)(ib+1);
+	if (ib->type < type_line) {
+		dump_coord(c,out);
+		fprintf(out, " ");
+	}
+	attr_start=(int *)(ib+1)+ib->clen;
+	attr_end=(int *)ib+ib->len+1;
+	fprintf(out,"type=%s", item_to_name(ib->type));
+	while (attr_start < attr_end) {
+		a=(struct attr_bin *)(attr_start);
+		attr_start+=a->len+1;
+		attr.type=a->type;
+		attr_data_set(&attr, (a+1));
+		str=attr_to_text(&attr, NULL, 1);
+		fprintf(out," %s=\"%s\"", attr_to_name(a->type), str);
+		g_free(str);
+	}
+	fprintf(out," debug=\"length=%d\"", ib->len);
+	fprintf(out,"\n");
+	if (ib->type >= type_line) {
+		for (i = 0 ; i < ib->clen/2 ; i++) {
+			dump_coord(c+i,out);
+			fprintf(out,"\n");
+		}
+	}
 }
 
 static int
@@ -2495,8 +2672,8 @@ struct rect world_bbox = {
 
 int overlap=1;
 
-static void
-tile(struct rect *r, char *suffix, char *ret, int max)
+static int
+tile(struct rect *r, char *suffix, char *ret, int max, int overlap, struct rect *tr)
 {
 	int x0,x2,x4;
 	int y0,y2,y4;
@@ -2530,12 +2707,19 @@ tile(struct rect *r, char *suffix, char *ret, int max)
 		} else 
 			break;
 	}
+	if (tr) {
+		tr->l.x=x0;
+		tr->l.y=y0;
+		tr->h.x=x4;
+		tr->h.y=y4;
+       	}
 	if (suffix)
 		strcat(ret,suffix);
+	return i;
 }
 
 static void
-tile_bbox(char *tile, struct rect *r)
+tile_bbox(char *tile, struct rect *r, int overlap)
 {
 	struct coord c;
 	int xo,yo;
@@ -2576,6 +2760,274 @@ tile_len(char *tile)
 		ret++;
 	}
 	return ret;
+}
+
+static int
+clipcode(struct coord *p, struct rect *r)
+{
+	int code=0;
+	if (p->x < r->l.x)
+		code=1;
+	if (p->x > r->h.x)
+		code=2;
+	if (p->y < r->l.y)
+		code |=4;
+	if (p->y > r->h.y)
+		code |=8;
+	return code;
+}
+
+
+static int
+clip_line_code(struct coord *p1, struct coord *p2, struct rect *r)
+{
+	int code1,code2,ret=1;
+	int dx,dy;
+	code1=clipcode(p1, r);
+	if (code1)
+		ret |= 2;
+	code2=clipcode(p2, r);
+	if (code2)
+		ret |= 4;
+	dx=p2->x-p1->x;
+	dy=p2->y-p1->y;
+	while (code1 || code2) {
+		if (code1 & code2)
+			return 0;
+		if (code1 & 1) {
+			p1->y+=(r->l.x-p1->x)*dy/dx;
+			p1->x=r->l.x;
+		} else if (code1 & 2) {
+			p1->y+=(r->h.x-p1->x)*dy/dx;
+			p1->x=r->h.x;
+		} else if (code1 & 4) {
+			p1->x+=(r->l.y-p1->y)*dx/dy;
+			p1->y=r->l.y;
+		} else if (code1 & 8) {
+			p1->x+=(r->h.y-p1->y)*dx/dy;
+			p1->y=r->h.y;
+		}
+		code1=clipcode(p1, r);
+		if (code1 & code2)
+			return 0;
+		if (code2 & 1) {
+			p2->y+=(r->l.x-p2->x)*dy/dx;
+			p2->x=r->l.x;
+		} else if (code2 & 2) {
+			p2->y+=(r->h.x-p2->x)*dy/dx;
+			p2->x=r->h.x;
+		} else if (code2 & 4) {
+			p2->x+=(r->l.y-p2->y)*dx/dy;
+			p2->y=r->l.y;
+		} else if (code2 & 8) {
+			p2->x+=(r->h.y-p2->y)*dx/dy;
+			p2->y=r->h.y;
+		}
+		code2=clipcode(p2, r);
+	}
+	if (p1->x == p2->x && p1->y == p2->y)
+		ret=0;
+	return ret;
+}
+
+static void item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, struct item_bin_sink *out);
+
+static void
+clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out)
+{
+	char buffer[ib->len*4+32];
+	struct item_bin *ib_new=(struct item_bin *)buffer;
+	struct coord *pa=(struct coord *)(ib+1);
+	int count=ib->clen/2;
+	struct coord p1,p2;
+	int i,code;
+	item_bin_init(ib_new, ib->type);
+	for (i = 0 ; i < count ; i++) {
+		if (i) {
+			p1.x=pa[i-1].x;
+			p1.y=pa[i-1].y;
+			p2.x=pa[i].x;
+			p2.y=pa[i].y;
+			/* 0 = invisible, 1 = completely visible, 3 = start point clipped, 5 = end point clipped, 7 both points clipped */
+			code=clip_line_code(&p1, &p2, r);
+#if 1
+			if (((code == 1 || code == 5) && ib_new->clen == 0) || (code & 2)) {
+				item_bin_add_coord(ib_new, &p1, 1);
+			}
+			if (code) {
+				item_bin_add_coord(ib_new, &p2, 1);
+			}
+			if (i == count-1 || (code & 4)) {
+				if (ib_new->clen)
+					item_bin_write_clipped(ib_new, param, out);
+				item_bin_init(ib_new, ib->type);
+			}
+#else
+			if (code) {
+				item_bin_init(ib_new, ib->type);
+				item_bin_add_coord(ib_new, &p1, 1);
+				item_bin_add_coord(ib_new, &p2, 1);
+				item_bin_write_clipped(ib_new, param, out);
+			}
+#endif
+		}
+	}
+}
+
+static int
+is_inside(struct coord *p, struct rect *r, int edge)
+{
+	switch(edge) {
+	case 0:
+		return p->x >= r->l.x;
+	case 1:
+		return p->x <= r->h.x;
+	case 2:
+		return p->y >= r->l.y;
+	case 3:
+		return p->y <= r->h.y;
+	default:
+		return 0;
+	}
+}
+
+static void
+poly_intersection(struct coord *p1, struct coord *p2, struct rect *r, int edge, struct coord *ret)
+{
+	int dx=p2->x-p1->x;
+	int dy=p2->y-p1->y;
+	switch(edge) {
+	case 0:
+		ret->y=p1->y+(r->l.x-p1->x)*dy/dx;
+		ret->x=r->l.x;
+		break;
+	case 1:
+		ret->y=p1->y+(r->h.x-p1->x)*dy/dx;
+		ret->x=r->h.x;
+		break;
+	case 2:
+		ret->x=p1->x+(r->l.y-p1->y)*dx/dy;
+		ret->y=r->l.y;
+		break;
+	case 3:
+		ret->x=p1->x+(r->h.y-p1->y)*dx/dy;
+		ret->y=r->h.y;
+		break;
+	}
+}
+
+static void
+clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out)
+{
+	int count_in=ib->clen/2;
+	struct coord *pin,*p,*s,pi;
+	char buffer1[ib->len*4+ib->clen*7+32];
+	struct item_bin *ib1=(struct item_bin *)buffer1;
+	char buffer2[ib->len*4+ib->clen*7+32];
+	struct item_bin *ib2=(struct item_bin *)buffer2;
+	struct item_bin *ib_in,*ib_out;
+	int edge,i;
+	ib_out=ib1;
+	ib_in=ib;
+	for (edge = 0 ; edge < 4 ; edge++) {
+		count_in=ib_in->clen/2;
+		pin=(struct coord *)(ib_in+1);
+		p=pin;
+		s=pin+count_in-1;
+		item_bin_init(ib_out, ib_in->type);
+		for (i = 0 ; i < count_in ; i++) {
+			if (is_inside(p, r, edge)) {
+				if (! is_inside(s, r, edge)) {
+					poly_intersection(s,p,r,edge,&pi);
+					item_bin_add_coord(ib_out, &pi, 1);
+				}
+				item_bin_add_coord(ib_out, p, 1);
+			} else {
+				if (is_inside(s, r, edge)) {
+					poly_intersection(p,s,r,edge,&pi);
+					item_bin_add_coord(ib_out, &pi, 1);
+				}
+			}
+			s=p;
+			p++;
+		}
+		if (ib_in == ib1) {
+			ib_in=ib2;
+			ib_out=ib1;
+		} else {
+		       ib_in=ib1;
+			ib_out=ib2;
+		}
+	}
+	if (ib_in->clen)
+		item_bin_write_clipped(ib_in, param, out);
+}
+
+static void
+item_bin_bbox(struct item_bin *ib, struct rect *r)
+{
+	struct coord c;
+	item_bin_add_coord(ib, &r->l, 1);
+	c.x=r->h.x;
+	c.y=r->l.y;
+	item_bin_add_coord(ib, &c, 1);
+	item_bin_add_coord(ib, &r->h, 1);
+	c.x=r->l.x;
+	c.y=r->h.y;
+	item_bin_add_coord(ib, &c, 1);
+	item_bin_add_coord(ib, &r->l, 1);
+}
+
+static int
+bbox_marker_process(struct item_bin_sink_func *func, struct item_bin *ib, struct tile_data *tile_data)
+{
+	char buffer2[1024];
+	struct item_bin *ibb=(struct item_bin *)buffer2;
+	struct item_bin_sink_func *out=func->priv_data[0];
+	item_bin_init(ibb, type_border_country);
+	item_bin_bbox(ibb, &tile_data->tile_bbox);
+	item_bin_write_to_sink_func(ibb, out, NULL);
+	return 0;
+}
+
+static struct item_bin_sink_func *
+bbox_marker_new(struct item_bin_sink_func *func)
+{
+	struct item_bin_sink_func *bbox_marker=item_bin_sink_func_new(bbox_marker_process);
+	bbox_marker->priv_data[0]=func;
+	return bbox_marker;
+}
+
+static int
+bbox_marker_finish(struct item_bin_sink_func *bbox_marker)
+{
+	item_bin_sink_func_destroy(bbox_marker);
+	return 0;
+}
+
+
+static void
+item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, struct item_bin_sink *out)
+{
+	struct tile_data tile_data;
+	int i;
+	bbox((struct coord *)(ib+1), ib->clen/2, &tile_data.item_bbox);
+	tile_data.buffer[0]='\0';
+	tile_data.tile_depth=tile(&tile_data.item_bbox, NULL, tile_data.buffer, param->max, param->overlap, &tile_data.tile_bbox);
+	if (tile_data.tile_depth == param->max || tile_data.tile_depth >= param->min) {
+		item_bin_write_to_sink(ib, out, &tile_data);
+		return;
+	}
+	for (i = 0 ; i < 4 ; i++) {
+		struct rect clip_rect;
+		tile_data.buffer[tile_data.tile_depth]='a'+i;
+		tile_data.buffer[tile_data.tile_depth+1]='\0';
+		tile_bbox(tile_data.buffer, &clip_rect, param->overlap);
+		if (ib->type < type_area)
+			clip_line(ib, &clip_rect, param, out);
+		else
+			clip_polygon(ib, &clip_rect, param, out);
+	}
 }
 
 GHashTable *tile_hash;
@@ -2863,7 +3315,7 @@ tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, int min, int
 	char buffer[1024];
 	bbox((struct coord *)(ib+1), ib->clen/2, &r);
 	buffer[0]='\0';
-	tile(&r, info->suffix, buffer, max);
+	tile(&r, info->suffix, buffer, max, overlap, NULL);
 	tile_write_item_to_tile(info, ib, buffer);
 }
 
@@ -2953,7 +3405,7 @@ index_submap_add(struct tile_info *info, struct tile_head *th)
 	index_tile[len]=0;
 	if (tlen)
 		strcat(index_tile, suffix);
-	tile_bbox(th->name, &r);
+	tile_bbox(th->name, &r, overlap);
 
 	item_bin_init(item_bin, type_submap);
 	item_bin_add_coord_rect(item_bin, &r);
@@ -3245,7 +3697,7 @@ write_countrydir(struct zip_info *zip_info)
 				tilename[0]='\0';
 				sprintf(suffix,"s%d", num);
 				num++;
-				tile(&co->r, suffix, tilename, max);
+				tile(&co->r, suffix, tilename, max, overlap, NULL);
 				sprintf(filename,"country_%d.bin", co->countryid);
 				zipnum=add_aux_tile(zip_info, tilename, filename, co->size);
 			} while (zipnum == -1);
@@ -3309,56 +3761,17 @@ phase34(struct tile_info *info, struct zip_info *zip_info, FILE *relations_in, F
 
 }
 
-static void
-dump_coord(struct coord *c)
-{
-	printf("0x%x 0x%x",c->x, c->y);
-}
 
 static void
 dump_itembin(struct item_bin *ib)
 {
-	struct coord *c;
-	struct attr_bin *a;
-	struct attr attr;
-	int *attr_start;
-	int *attr_end;
-	int i;
-	char *str;
-	c=(struct coord *)(ib+1);
-	if (ib->type < type_line) {
-		dump_coord(c);
-		printf(" ");
-	}
-	attr_start=(int *)(ib+1)+ib->clen;
-	attr_end=(int *)ib+ib->len+1;
-	printf("type=%s", item_to_name(ib->type));
-	fprintf(stderr,"type=%s\n",item_to_name(ib->type));
-	while (attr_start < attr_end) {
-		a=(struct attr_bin *)(attr_start);
-		attr_start+=a->len+1;
-		attr.type=a->type;
-		attr_data_set(&attr, (a+1));
-		str=attr_to_text(&attr, NULL, 1);
-		printf(" %s=\"%s\"", attr_to_name(a->type), str);
-		g_free(str);
-	}
-	printf(" debug=\"length=%d\"", ib->len);
-	printf("\n");
-	if (ib->type >= type_line) {
-		for (i = 0 ; i < ib->clen/2 ; i++) {
-			dump_coord(c+i);
-			printf("\n");
-		}
-		
-	}
+	item_bin_dump(ib, stdout);
 }
 
 static void
 dump(FILE *in)
 {
 	struct item_bin *ib;
-	fprintf(stderr,"enter\n");
 	while ((ib=read_item(in))) {
 		dump_itembin(ib);
 	}
@@ -3681,12 +4094,669 @@ static void add_plugin(char *path)
 	plugin_new(&(struct attr){attr_plugins,.u.plugins=plugins}, attrs);	
 }
 
+static struct item_bin_sink *
+file_reader_new(FILE *in, int limit, int offset)
+{
+	struct item_bin_sink *ret;
+	if (!in)
+		return NULL;
+	ret=item_bin_sink_new();
+	ret->priv_data[0]=in;
+	ret->priv_data[1]=(void *)(long)limit;
+	ret->priv_data[2]=(void *)(long)offset;
+	fseek(in, 0, SEEK_SET);
+	return ret;
+}
+
+static int
+file_reader_finish(struct item_bin_sink *sink)
+{
+	struct item_bin *ib=(struct item_bin *)buffer;
+	int ret =0;
+	FILE *in=sink->priv_data[0];
+	int limit=(int)(long)sink->priv_data[1];
+	int offset=(int)(long)sink->priv_data[2];
+	for (;;) {
+		switch (item_bin_read(ib, in)) {
+		case 0:
+			item_bin_sink_destroy(sink);
+			return 0;
+		case 2:
+			if (offset > 0) {
+				offset--;
+			} else {
+				ret=item_bin_write_to_sink(ib, sink, NULL);
+				if (ret || (limit != -1 && !--limit)) {
+					item_bin_sink_destroy(sink);
+					return ret;
+				}
+			}
+		default:
+			continue;
+		}
+	}
+}
+
+static int
+file_writer_process(struct item_bin_sink_func *func, struct item_bin *ib, struct tile_data *tile_data)
+{
+	FILE *out=func->priv_data[0];
+	item_bin_write(ib, out);
+	return 0;
+}
+
+static struct item_bin_sink_func *
+file_writer_new(FILE *out)
+{
+	struct item_bin_sink_func *file_writer;
+	if (!out)
+		return NULL;
+	file_writer=item_bin_sink_func_new(file_writer_process);
+	file_writer->priv_data[0]=out;
+	return file_writer;
+}
+
+static int
+file_writer_finish(struct item_bin_sink_func *file_writer)
+{
+	item_bin_sink_func_destroy(file_writer);
+	return 0;
+}
+
+
+static int
+tile_collector_process(struct item_bin_sink_func *tile_collector, struct item_bin *ib, struct tile_data *tile_data)
+{
+	int *buffer,*buffer2;
+	int len=ib->len+1;
+	GHashTable *hash=tile_collector->priv_data[0];
+	buffer=g_hash_table_lookup(hash, tile_data->buffer);
+	buffer2=g_malloc((len+(buffer ? buffer[0] : 1))*4);
+	if (buffer) {
+		memcpy(buffer2, buffer, buffer[0]*4);
+	} else 
+		buffer2[0]=1;
+	memcpy(buffer2+buffer2[0], ib, len*4);
+	buffer2[0]+=len;
+	g_hash_table_insert(hash, g_strdup(tile_data->buffer), buffer2);
+	return 0;
+}
+
+static struct item_bin_sink_func *
+tile_collector_new(struct item_bin_sink *out)
+{
+	struct item_bin_sink_func *tile_collector;
+	tile_collector=item_bin_sink_func_new(tile_collector_process);
+	tile_collector->priv_data[0]=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
+	tile_collector->priv_data[1]=out;
+	return tile_collector;
+}
+
+
+static int distance_from_ll(struct coord *c, struct rect *bbox)
+{
+	int dist=0;
+	if (c->x == bbox->l.x) 
+		return dist+c->y-bbox->l.y;
+	dist+=bbox->h.y-bbox->l.y;
+	if (c->y == bbox->h.y)
+		return dist+c->x-bbox->l.x;
+	dist+=bbox->h.x-bbox->l.x;
+	if (c->x == bbox->h.x)
+		return dist+bbox->h.y-c->y;
+	dist+=bbox->h.y-bbox->l.y;
+	if (c->y == bbox->l.y)
+		return dist+bbox->h.x-c->x;
+	return -1;
+}
+
+static struct item_bin *
+find_next(struct rect *bbox, int *tile_data, struct coord *c, int exclude, struct coord *ci)
+{
+	int min=INT_MAX,search=distance_from_ll(c, bbox)+(exclude?1:0);
+	int *curr,*end=tile_data+tile_data[0];
+	int i;
+	struct item_bin *ret=NULL;
+	int dbgl=1;
+
+	for (i = 0 ; i < 2 ; i++) {
+		curr=tile_data+1;
+		dbg(dbgl,"search distance %d\n",search);
+		while (curr < end) {
+			struct item_bin *ib=(struct item_bin *)curr;
+			struct coord *cs=(struct coord *)(ib+1);
+			struct coord *ce=cs+ib->clen/2-1;
+			int dist=distance_from_ll(cs, bbox);
+			dbg(dbgl,"0x%x 0x%x dist %d\n",cs->x,cs->y,dist);
+			if (dist != -1 && ib->clen > 2 && dist < min && (dist >= search)) {
+				min=dist;
+				ci[0]=*cs;
+				ci[1]=*ce;
+				ret=ib;
+			}
+			curr+=ib->len+1;
+		}
+		if (ret || !search)
+			break;
+		search=0;
+	}
+	return ret;
+		
+}
+
+static struct item_bin *
+find_connected(int *tile_data, struct item_bin *ib, struct coord *cend)
+{
+	int *end=tile_data+tile_data[0];
+	int *curr=tile_data+1;
+	int count=0;
+	struct item_bin *ret=NULL;
+	struct coord *cs=(struct coord *)(ib+1);
+	struct coord *ce=cs+ib->clen/2-1;
+	if (cs->x == ce->x && cs->y == ce->y)
+		return NULL;
+	while (curr < end) {
+		struct item_bin *ib=(struct item_bin *)curr;
+		struct coord *c=(struct coord *)(ib+1);
+		if (ib->clen > 2 && ib->type != type_none && c->x == ce->x && c->y == ce->y) {
+			ret=ib;
+			count++;
+		}
+		curr+=ib->len+1;
+	}
+	dbg(1,"count=%d\n",count);
+	if (count == 1) {
+		struct coord *cs=(struct coord *)(ret+1);
+		struct coord *ce=cs+ret->clen/2-1;
+		*cend=*ce;
+		return ret;
+	}
+	return NULL;
+}
+
+static void
+close_polygon(struct item_bin *ib, struct coord *from, struct coord *to, int dir, struct rect *bbox, int *edges)
+{
+	int i,e,dist,fromdist,todist;
+	int full=(bbox->h.x-bbox->l.x+bbox->h.y-bbox->l.y)*2;
+	int corners=0,first_corner=0;
+	struct coord c;
+	if (dir > 0) {
+		fromdist=distance_from_ll(from, bbox);
+		todist=distance_from_ll(to, bbox);
+	} else {
+		fromdist=distance_from_ll(to, bbox);
+		todist=distance_from_ll(from, bbox);
+	}
+#if 0
+	fprintf(stderr,"close_polygon fromdist %d todist %d full %d dir %d\n", fromdist, todist, full, dir);
+#endif
+	if (fromdist > todist)
+		todist+=full;
+#if 0
+	fprintf(stderr,"close_polygon corrected fromdist %d todist %d full %d dir %d\n", fromdist, todist, full, dir);
+#endif
+	for (i = 0 ; i < 8 ; i++) {
+		if (dir > 0)
+			e=i;
+		else
+			e=7-i;
+		switch (e%4) {
+		case 0:
+			c=bbox->l;
+			break;
+		case 1:
+			c.x=bbox->l.x;
+			c.y=bbox->h.y;
+			break;
+		case 2:
+			c=bbox->h;
+			break;
+		case 3:
+			c.x=bbox->h.x;
+			c.y=bbox->l.y;
+			break;
+		}
+		dist=distance_from_ll(&c, bbox);
+		if (e & 4)
+			dist+=full;
+#if 0
+		fprintf(stderr,"dist %d %d\n",e,dist);
+#endif
+		if (dist > fromdist && dist < todist) {
+			item_bin_add_coord(ib, &c, 1);
+#if 0
+			fprintf(stderr,"add\n");
+#endif
+		}
+		if (dist >= fromdist && dist <= todist) {
+			if (!corners)
+				first_corner=e;
+			corners++;
+		}
+	}
+	while (corners >= 2) {
+		*edges |= 1<<(first_corner%4);
+		first_corner++;
+		corners--;
+	}
+}
+
+struct coastline_tile_data {
+	struct item_bin_sink_func *sink;
+	GHashTable *tile_edges;
+	int level;
+};
+
+static void
+tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_data *data)
+{
+	int poly_start_valid,tile_start_valid,exclude,search=0,workload=0;
+	struct rect bbox;
+	struct coord c,cn[2],end,poly_start,tile_start;
+	struct item_bin *first,*ib=(struct item_bin *)buffer;
+	struct item_bin_sink *out=data->sink->priv_data[1];
+	int dbgl=1;
+	int edges=0;
+#if 0
+	if (strcmp(tile,"bcdbdcabddddba"))
+		return;
+#endif
+#if 0
+	fprintf(stderr,"tile %s of size %d\n", tile, *tile_data);
+#endif
+	tile_bbox(tile, &bbox, 0);
+#if 1
+	end=bbox.l;
+	tile_start_valid=0;
+	poly_start_valid=0;
+	exclude=0;
+	poly_start.x=0;
+	poly_start.y=0;
+	tile_start.x=0;
+	tile_start.y=0;
+	for (;;) {
+		search++;
+		// item_bin_write_debug_point_to_sink(out, &end, "Search %d",search);
+		dbg(dbgl,"searching next polygon from 0x%x 0x%x\n",end.x,end.y);
+		first=find_next(&bbox, tile_data, &end, exclude, cn);
+		exclude=1;
+		if (!first)
+			break;
+		if (!tile_start_valid) {
+			tile_start=cn[0];
+			tile_start_valid=1;
+		} else {
+			if (cn[0].x == tile_start.x && cn[0].y == tile_start.y) {
+				dbg(dbgl,"end of tile reached\n");
+				break;
+			}
+		}
+		if (first->type == type_none) {
+			end=cn[0];
+			continue;
+		}
+		poly_start_valid=0;
+		dbg(dbgl,"start of polygon 0x%x 0x%x\n",cn[0].x,cn[0].y);
+		for (;;) {
+			if (!poly_start_valid) {
+				poly_start=cn[0];
+				poly_start_valid=1;
+				item_bin_init(ib,type_poly_water);
+			} else {
+				close_polygon(ib, &end, &cn[0], 1, &bbox, &edges);
+				if (cn[0].x == poly_start.x && cn[0].y == poly_start.y) {
+					dbg(dbgl,"poly end reached\n");
+					item_bin_write_to_sink(ib, out, NULL);
+					end=cn[0];
+					break;
+				}
+			}
+			if (first->type == type_none)
+				break;
+			item_bin_copy_coord(ib, first, 1);
+			first->type=type_none;
+			end=cn[1];
+			dbg(dbgl,"searching end\n");
+			while ((first=find_connected(tile_data, first, &end))) {
+#if 0
+			item_bin_dump(first);
+#endif
+				dbg(dbgl,"found 0x%x,0x%x\n",end.x,end.y);
+				item_bin_copy_coord(ib, first, 1);
+				first->type=type_none;
+			}
+			dbg(dbgl,"end found 0x%x,0x%x\n",end.x,end.y);
+			if (distance_from_ll(&end, &bbox) == -1) {
+				dbg(dbgl,"incomplete\n");
+				break;
+			}
+			first=find_next(&bbox, tile_data, &end, 1, cn);
+			dbg(dbgl,"next segment of polygon 0x%x 0x%x\n",cn[0].x,cn[0].y);
+		}
+		if (search > 55)
+			break;
+	}
+#endif
+
+#if 1
+	{
+		int *end=tile_data+tile_data[0];
+		int *curr=tile_data+1;
+		while (curr < end) {
+			struct item_bin *ib=(struct item_bin *)curr;
+			// item_bin_dump(ib);
+			ib->type=type_rg_segment;
+			item_bin_write_to_sink(ib, out, NULL);
+			curr+=ib->len+1;
+#if 0
+			{
+				struct coord *c[2];
+				int i;
+				char *s;
+				c[0]=(struct coord *)(ib+1);
+				c[1]=c[0]+ib->clen/2-1;
+				for (i = 0 ; i < 2 ; i++) {
+					s=coord_to_str(c[i]);
+					item_bin_write_debug_point_to_sink(out, c[i], "%s",s);
+					g_free(s);
+				}
+				
+			}
+#endif
+		}
+	}
+#endif
+	g_hash_table_insert(data->tile_edges, g_strdup(tile), (void *)edges);
+	item_bin_init(ib, type_border_country);
+	item_bin_bbox(ib, &bbox);
+	item_bin_add_attr_string(ib, attr_debug, tile);
+	item_bin_write_to_sink(ib, out, NULL);
+	c.x=(bbox.l.x+bbox.h.x)/2;
+	c.y=(bbox.l.y+bbox.h.y)/2;
+	//item_bin_write_debug_point_to_sink(out, &c, "%s %d",tile,edges);
+}
+
+static void
+ocean_tile(GHashTable *hash, char *tile, char c, struct item_bin_sink *out)
+{
+	int len=strlen(tile);
+	char tile2[len+1];
+	struct rect bbox;
+	struct item_bin *ib=(struct item_bin *)buffer;
+	struct coord co;
+
+	strcpy(tile2, tile);
+	tile2[len-1]=c;
+	//fprintf(stderr,"Testing %s\n",tile2);
+	if (g_hash_table_lookup_extended(hash, tile2, NULL, NULL))
+		return;
+	//fprintf(stderr,"%s ok\n",tile2);
+	tile_bbox(tile2, &bbox, 0);
+	item_bin_init(ib,type_poly_water);
+	item_bin_bbox(ib, &bbox);
+	item_bin_write_to_sink(ib, out, NULL);
+	g_hash_table_insert(hash, g_strdup(tile2), (void *)15);
+	item_bin_init(ib, type_border_country);
+	item_bin_bbox(ib, &bbox);
+	item_bin_add_attr_string(ib, attr_debug, tile2);
+	item_bin_write_to_sink(ib, out, NULL);
+	co.x=(bbox.l.x+bbox.h.x)/2;
+	co.y=(bbox.l.y+bbox.h.y)/2;
+	//item_bin_write_debug_point_to_sink(out, &co, "%s 15",tile2);
+	
+}
+
+/* ba */
+/* dc */
+
+static void
+tile_collector_add_siblings(char *tile, void *edgesp, struct coastline_tile_data *data)
+{
+	int len=strlen(tile);
+	char t=tile[len-1];
+	struct item_bin_sink *out=data->sink->priv_data[1];
+	int edges=(int)edgesp;
+	int debug=0;
+
+	if (len != data->level)
+		return;
+	if (!strncmp(tile,"bcacccaadbdcd",10))
+		debug=1;
+	if (debug)
+		fprintf(stderr,"%s (%c) has %d edges active\n",tile,t,edges);
+	if (t == 'a' && (edges & 1)) 
+		ocean_tile(data->tile_edges, tile, 'b', out);
+	if (t == 'a' && (edges & 8)) 
+		ocean_tile(data->tile_edges, tile, 'c', out);
+	if (t == 'b' && (edges & 4)) 
+		ocean_tile(data->tile_edges, tile, 'a', out);
+	if (t == 'b' && (edges & 8)) 
+		ocean_tile(data->tile_edges, tile, 'd', out);
+	if (t == 'c' && (edges & 1)) 
+		ocean_tile(data->tile_edges, tile, 'd', out);
+	if (t == 'c' && (edges & 2)) 
+		ocean_tile(data->tile_edges, tile, 'a', out);
+	if (t == 'd' && (edges & 4)) 
+		ocean_tile(data->tile_edges, tile, 'c', out);
+	if (t == 'd' && (edges & 2)) 
+		ocean_tile(data->tile_edges, tile, 'b', out);
+}
+
+static int
+tile_sibling_edges(GHashTable *hash, char *tile, char c)
+{
+	int len=strlen(tile);
+	int ret;
+	char tile2[len+1];
+	void *data;
+	strcpy(tile2, tile);
+	tile2[len-1]=c;
+	if (!g_hash_table_lookup_extended(hash, tile2, NULL, &data))
+		ret=15;
+	else
+		ret=(int)data;
+	//fprintf(stderr,"checking '%s' with %d edges active\n",tile2,ret);
+
+	return ret;
+}
+
+static void
+ocean_tile2(struct rect *r, int dx, int dy, int wf, int hf, struct item_bin_sink *out)
+{
+	struct item_bin *ib=(struct item_bin *)buffer;
+	int w=r->h.x-r->l.x;
+	int h=r->h.y-r->l.y;
+	char tile2[32];
+	struct rect bbox;
+	struct coord co;
+	bbox.l.x=r->l.x+dx*w;
+	bbox.l.y=r->l.y+dy*h;
+	bbox.h.x=bbox.l.x+w*wf;
+	bbox.h.y=bbox.l.y+h*hf;
+	//fprintf(stderr,"0x%x,0x%x-0x%x,0x%x -> 0x%x,0x%x-0x%x,0x%x\n",r->l.x,r->l.y,r->h.x,r->h.y,bbox.l.x,bbox.l.y,bbox.h.x,bbox.h.y);
+	item_bin_init(ib,type_poly_water);
+	item_bin_bbox(ib, &bbox);
+	item_bin_write_to_sink(ib, out, NULL);
+	item_bin_init(ib, type_border_country);
+	item_bin_bbox(ib, &bbox);
+	item_bin_add_attr_string(ib, attr_debug, tile2);
+	tile(&bbox, NULL, tile2, 32, 0, NULL);
+	item_bin_write_to_sink(ib, out, NULL);
+	co.x=(bbox.l.x+bbox.h.x)/2;
+	co.y=(bbox.l.y+bbox.h.y)/2;
+	//item_bin_write_debug_point_to_sink(out, &co, "%s 15",tile2);
+}
+
+static void
+tile_collector_add_siblings2(char *tile, void *edgesp, struct coastline_tile_data *data)
+{
+	int len=strlen(tile);
+	char tile2[len+1];
+	char t=tile[len-1];
+	strcpy(tile2, tile);
+	tile2[len-1]='\0';
+	struct item_bin_sink *out=data->sink->priv_data[1];
+	struct rect bbox;
+	int edges=(int)edgesp;
+	int pedges=0;
+	int debug=0;
+	if (!strncmp(tile,"bcacccaadbdcd",10))
+		debug=1;
+	if (debug) 
+		fprintf(stderr,"len of %s %d vs %d\n",tile,len,data->level);
+	if (len != data->level)
+		return;
+
+
+	if (debug)
+		fprintf(stderr,"checking siblings of '%s' with %d edges active\n",tile,edges);
+	if (t == 'b' && (edges & 1) && (tile_sibling_edges(data->tile_edges, tile, 'd') & 1))
+		pedges|=1;
+	if (t == 'd' && (edges & 2) && (tile_sibling_edges(data->tile_edges, tile, 'b') & 1))
+		pedges|=1;
+	if (t == 'a' && (edges & 2) && (tile_sibling_edges(data->tile_edges, tile, 'b') & 2))
+		pedges|=2;
+	if (t == 'b' && (edges & 2) && (tile_sibling_edges(data->tile_edges, tile, 'a') & 2))
+		pedges|=2;
+	if (t == 'a' && (edges & 4) && (tile_sibling_edges(data->tile_edges, tile, 'c') & 4))
+		pedges|=4;
+	if (t == 'c' && (edges & 4) && (tile_sibling_edges(data->tile_edges, tile, 'a') & 4))
+		pedges|=4;
+	if (t == 'd' && (edges & 8) && (tile_sibling_edges(data->tile_edges, tile, 'c') & 8))
+		pedges|=8;
+	if (t == 'c' && (edges & 8) && (tile_sibling_edges(data->tile_edges, tile, 'd') & 8))
+		pedges|=8;
+	if (debug)
+		fprintf(stderr,"result '%s' %d old %d\n",tile2,pedges,(int)g_hash_table_lookup(data->tile_edges, tile2));
+	g_hash_table_insert(data->tile_edges, g_strdup(tile2), (void *)((int)g_hash_table_lookup(data->tile_edges, tile2)|pedges));
+}
+
+static int
+tile_collector_finish(struct item_bin_sink_func *tile_collector)
+{
+	struct coastline_tile_data data;
+	int i;
+	data.sink=tile_collector;
+	data.tile_edges=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	GHashTable *hash=tile_collector->priv_data[0];
+	fprintf(stderr,"tile_collector_finish\n");
+	g_hash_table_foreach(hash, tile_collector_process_tile, &data);
+	fprintf(stderr,"tile_collector_finish foreach done\n");
+	g_hash_table_destroy(hash);
+	fprintf(stderr,"tile_collector_finish destroy done\n");
+	for (i = 14 ; i > 4 ; i--) {
+		fprintf(stderr,"Level=%d\n",i);
+		data.level=i;
+		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+		fprintf(stderr,"*");
+		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+		fprintf(stderr,"*");
+		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+		fprintf(stderr,"*");
+		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+		fprintf(stderr,"*");
+		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings2, &data);
+		fprintf(stderr,"*\n");
+		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings2, &data);
+		fprintf(stderr,"*\n");
+		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings2, &data);
+		fprintf(stderr,"*\n");
+		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings2, &data);
+		fprintf(stderr,"*\n");
+	}
+#if 0
+	data.level=13;
+	g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+	g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+	g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings2, &data);
+	data.level=12;
+	g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+	g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+#endif
+	item_bin_sink_func_destroy(tile_collector);
+	fprintf(stderr,"tile_collector_finish done\n");
+	return 0;
+}
+
+
+static int
+coastline_processor_process(struct item_bin_sink_func *func, struct item_bin *ib, struct tile_data *tile_data)
+{
+	int i;
+	struct coord *c=(struct coord *)(ib+1);
+#if 0
+	for (i = 0 ; i < 19 ; i++) {
+		c[i]=c[i+420];
+	}
+	ib->clen=(i-1)*2;
+#endif
+	item_bin_write_clipped(ib, func->priv_data[0], func->priv_data[1]);
+	return 0;
+}
+
+static struct item_bin_sink_func *
+coastline_processor_new(struct item_bin_sink *out)
+{
+	struct item_bin_sink_func *coastline_processor=item_bin_sink_func_new(coastline_processor_process);
+	struct item_bin_sink *tiles=item_bin_sink_new();
+	struct item_bin_sink_func *tile_collector=tile_collector_new(out);
+	struct tile_parameter *param=g_new0(struct tile_parameter, 1);
+
+	fprintf(stderr,"new:out=%p\n",out);
+	param->min=14;
+	param->max=14;
+	param->overlap=0;
+
+	item_bin_sink_add_func(tiles, tile_collector);
+	coastline_processor->priv_data[0]=param;
+	coastline_processor->priv_data[1]=tiles;
+	coastline_processor->priv_data[2]=tile_collector;
+	return coastline_processor;
+}
+
+static void
+coastline_processor_finish(struct item_bin_sink_func *coastline_processor)
+{
+	struct tile_parameter *param=coastline_processor->priv_data[0];
+	struct item_bin_sink *tiles=coastline_processor->priv_data[1];
+	struct item_bin_sink_func *tile_collector=coastline_processor->priv_data[2];
+	g_free(param);
+	tile_collector_finish(tile_collector);
+	item_bin_sink_destroy(tiles);
+	item_bin_sink_func_destroy(coastline_processor);
+}
+
+static void
+process_coastlines(FILE *in, FILE *out)
+{
+	struct item_bin_sink *reader=file_reader_new(in,1000000,0);
+	struct item_bin_sink_func *file_writer=file_writer_new(out);
+	struct item_bin_sink *result=item_bin_sink_new();
+	struct item_bin_sink_func *coastline_processor=coastline_processor_new(result);
+	item_bin_sink_add_func(reader, coastline_processor);
+	item_bin_sink_add_func(result, file_writer);
+	file_reader_finish(reader);
+	coastline_processor_finish(coastline_processor);
+	file_writer_finish(file_writer);
+	item_bin_sink_destroy(result);
+}
+
 static FILE *
-tempfile(char *suffix, char *name, int write)
+tempfile(char *suffix, char *name, int mode)
 {
 	char buffer[4096];
 	sprintf(buffer,"%s_%s.tmp",name, suffix);
-	return fopen(buffer,write ? "wb+": "rb");
+	switch (mode) {
+	case 0:
+		return fopen(buffer, "rb");
+	case 1:
+		return fopen(buffer, "wb+");
+	case 2:
+		return fopen(buffer, "ab");
+	default:
+		return NULL;
+	}
 }
 
 static void
@@ -3929,7 +4999,7 @@ int main(int argc, char **argv)
 				ways_split=tempfile(suffix,"ways_split",1);
 				ways_split_index=final ? tempfile(suffix,"ways_split_index",1) : NULL;
 				graph=tempfile(suffix,"graph",1);
-				coastline=tempfile(suffix,"coastline",1); 
+				coastline=tempfile(suffix,"coastline",1);
 				if (i) 
 					load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
 				phase2(ways,ways_split,ways_split_index,graph,coastline,final);
@@ -3938,6 +5008,7 @@ int main(int argc, char **argv)
 					fclose(ways_split_index);
 				fclose(ways);
 				fclose(graph);
+				fclose(coastline);
 				if (! final) {
 					tempfile_rename(suffix,"ways_split","ways_to_resolve");
 					ways=tempfile(suffix,"ways_to_resolve",0);
@@ -3960,6 +5031,14 @@ int main(int argc, char **argv)
 		process_binfile(stdin, ways_split);
 		fclose(ways_split);
 	}
+#if 0
+	coastline=tempfile(suffix,"coastline",0);
+	ways_split=tempfile(suffix,"ways_split",2);
+	fprintf(stderr,"coastline=%p\n",coastline);
+	process_coastlines(coastline, ways_split);
+	fclose(ways_split);
+	fclose(coastline);
+#endif
 	if (start <= 3) {
 		fprintf(stderr,"PROGRESS: Phase 3: sorting countries, generating turn restrictions\n");
 		sort_countries(keep_tmpfiles);
