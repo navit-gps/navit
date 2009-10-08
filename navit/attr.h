@@ -23,8 +23,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#ifndef ATTR_H
-#define ATTR_H
 
 #include <glib.h>
 #include "projection.h"
@@ -165,7 +163,6 @@ int attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_r
 int attr_types_contains(enum attr_type *types, enum attr_type type);
 int attr_types_contains_default(enum attr_type *types, enum attr_type type, int deflt);
 /* end of prototypes */
-#endif
 #ifdef __cplusplus
 }
 #endif
