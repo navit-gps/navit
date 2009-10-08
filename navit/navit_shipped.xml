@@ -403,6 +403,9 @@
                     <polygon color="#d68fb8"/>
                     <polyline color="#881155"/>
                 </itemgra>
+                <itemgra item_types="poly_water_tiled" order="0-">
+                    <polygon color="#82c8ea"/>
+                </itemgra>
                 <itemgra item_types="poly_water" order="0-">
                     <polygon color="#82c8ea"/>
                     <polyline color="#5096b8"/>
