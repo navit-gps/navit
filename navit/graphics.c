@@ -1567,6 +1567,7 @@ static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *dis
 	GList *es,*types;
 	GHashTable *h;
 	enum item_type type;
+	int mindist=0;
 
 	es=itm->elements;
 	while (es) {
@@ -1577,8 +1578,14 @@ static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *dis
 			type=GPOINTER_TO_INT(types->data);
 			h=g_hash_table_lookup(display_list->dl, GINT_TO_POINTER(type));
 			if (h) {
+				if (type == type_poly_water_tiled) {
+					mindist=display_list->dc.mindist;
+					display_list->dc.mindist=0;				
+				}
 				g_hash_table_foreach(h, (GHFunc)displayitem_draw, &display_list->dc);
 				display_context_free(&display_list->dc);
+				if (type == type_poly_water_tiled) 
+					display_list->dc.mindist=mindist;
 			}
 			types=g_list_next(types);
 		}
