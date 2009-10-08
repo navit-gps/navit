@@ -3477,7 +3477,7 @@ write_item(char *tile, struct item_bin *ib)
 }
 
 static void
-write_item_part(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *orig, int first, int last)
+write_item_part(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *orig, int first, int last, long long *last_id)
 {
 	struct item_bin new;
 	struct coord *c=(struct coord *)(orig+1);
@@ -3495,7 +3495,10 @@ write_item_part(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *or
 			if (!(g_hash_table_lookup_extended(way_hash, (gpointer)(long)idx[0], NULL, NULL)))
 				g_hash_table_insert(way_hash, (gpointer)(long)idx[0], (gpointer)(long)idx[1]);
 		} else {
-			fwrite(idx, sizeof(idx), 1, out_index);
+			if (!last_id || *last_id != idx[0])
+				fwrite(idx, sizeof(idx), 1, out_index);
+			if (last_id)
+				*last_id=idx[0];
 		}
 
 	}
@@ -3520,7 +3523,7 @@ phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastlin
 	osmid ndref;
 	struct item_bin *ib;
 	struct node_item *ni;
-	FILE *out_index_tmp;
+	long long last_id=0;
 
 	processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
 	sig_alrm(0);
@@ -3528,7 +3531,6 @@ phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastlin
 #if 0
 		fprintf(stderr,"type 0x%x len %d clen %d\n", ib->type, ib->len, ib->clen);
 #endif
-		out_index_tmp=out_index;
 		ccount=ib->clen/2;
 		if (ccount <= 1)
 			continue;
@@ -3541,8 +3543,7 @@ phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastlin
 				if (ni) {
 					c[i]=ni->c;
 					if (ni->ref_way > 1 && i != 0 && i != ccount-1 && i != last && item_get_default_flags(ib->type)) {
-						write_item_part(out, out_index_tmp, out_graph, ib, last, i);
-						out_index_tmp=NULL;
+						write_item_part(out, out_index, out_graph, ib, last, i, &last_id);
 						last=i;
 					}
 				} else if (final) {
@@ -3558,9 +3559,9 @@ phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastlin
 			}
 		}
 		if (ccount) {
-			write_item_part(out, out_index_tmp, out_graph, ib, last, ccount-1);
+			write_item_part(out, out_index, out_graph, ib, last, ccount-1, &last_id);
 			if (final && ib->type == type_water_line && out_coastline) {
-				write_item_part(out_coastline, NULL, NULL, ib, last, ccount-1);
+				write_item_part(out_coastline, NULL, NULL, ib, last, ccount-1, NULL);
 			}
 		}
 	}
