@@ -24,7 +24,6 @@
 extern "C" {
 #endif
 
-#include <glib.h>
 #include "projection.h"
 
 enum item_type;
@@ -133,13 +132,7 @@ struct attr {
 	} u;
 };
 
-struct attr_iter {
-	union {
-		GList *list;
-		struct mapset_handle *mapset_handle;
-	} u;
-};
-
+struct attr_iter;
 /* prototypes */
 enum attr_type attr_from_name(const char *name);
 char *attr_to_name(enum attr_type attr);

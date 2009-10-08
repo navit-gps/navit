@@ -139,6 +139,13 @@ struct navit {
 
 struct gui *main_loop_gui;
 
+struct attr_iter {
+	union {
+		GList *list;
+		struct mapset_handle *mapset_handle;
+	} u;
+};
+
 static void navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv);
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt);
 static int navit_add_vehicle(struct navit *this_, struct vehicle *v);
