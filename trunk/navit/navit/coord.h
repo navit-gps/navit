@@ -24,6 +24,8 @@
 #include "config.h"
 #include "projection.h"
 
+#define coord_is_equal(a,b) ((a).x==(b).x && (a).y==(b).y)
+
 /*! A integer mercator coordinate */
 struct coord {
 	int x; /*!< X-Value */
