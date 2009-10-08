@@ -34,7 +34,7 @@ do
 done
 
 echo "garmintypes.txt"
-grep "^[0-9]" ../data/garmin/garmintypes.txt | sed -e 's/[A-Z][A-Z]*, //' -e 's/.*= \([^,]*\),.*/\1/' | sort -u |
+grep "^[0-9]" ../map/garmin/garmintypes.txt | sed -e 's/[A-Z][A-Z]*, //' -e 's/.*= \([^,]*\),.*/\1/' | sort -u |
 while read -r x
 do
 	check_item_def "$x"
