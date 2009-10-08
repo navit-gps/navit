@@ -1619,6 +1619,9 @@ add_id_attr(char *p, enum attr_type attr_type)
 }
 
 char relation_type[BUFFER_SIZE];
+char iso_code[BUFFER_SIZE];
+int admin_level;
+int boundary;
 
 
 static int
@@ -1626,6 +1629,9 @@ parse_relation(char *p)
 {
 	debug_attr_buffer[0]='\0';
 	relation_type[0]='\0';
+	iso_code[0]='\0';
+	admin_level=-1;
+	boundary=0;
 	item_bin_init(item_bin, type_none);
 	if (!add_id_attr(p, attr_osm_relationid))
 		return 0;
@@ -1636,6 +1642,18 @@ static void
 end_relation(FILE *turn_restrictions)
 {
 	struct item_bin *ib=(struct item_bin *)buffer;
+#if 0
+	if (!strcmp(relation_type, "multipolygon") && boundary && admin_level != -1) {
+		if (admin_level == 2) {
+			FILE *f;
+			fprintf(stderr,"Multipolygon for %s\n", iso_code);
+			char *name=g_strdup_printf("country_%s.tmp",iso_code);
+			f=fopen(name,"w");
+			item_bin_write(item_bin, f);
+			fclose(f);
+		}
+	}
+#endif
 	if (!strcmp(relation_type, "restriction") && (ib->type == type_street_turn_restriction_no || ib->type == type_street_turn_restriction_only))
 		item_bin_write(item_bin, turn_restrictions);
 }
@@ -1676,6 +1694,7 @@ parse_member(char *p)
 static void
 relation_add_tag(char *k, char *v)
 {
+	fprintf(stderr,"add tag %s %s\n",k,v);
 	if (!strcmp(k,"type")) 
 		strcpy(relation_type, v);
 	else if (!strcmp(k,"restriction")) {
@@ -1687,6 +1706,14 @@ relation_add_tag(char *k, char *v)
 			item_bin->type=type_none;
 			osm_warning("relation", current_id, 0, "Unknown restriction %s\n",v);
 		}
+	} else if (!strcmp(k,"admin_level")) {
+		admin_level=atoi(v);
+	} else if (!strcmp(k,"boundary")) {
+		if (!strcmp(v,"administrative")) {
+			boundary=1;
+		}
+	} else if (!strcmp(k,"ISO3166-1")) {
+		strcpy(iso_code, v);
 	}
 }
 
@@ -2247,6 +2274,270 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 		item_bin_add_coord(ib, toc, 1);
 		item_bin_write(item_bin, out);
 	}
+}
+
+enum geom_poly_segment_type {
+	geom_poly_segment_type_none,
+	geom_poly_segment_type_way_inner,
+	geom_poly_segment_type_way_outer,
+	geom_poly_segment_type_way_left_side,
+	geom_poly_segment_type_way_right_side,
+	geom_poly_segment_type_way_unknown,
+
+};
+
+struct geom_poly_segment {
+	enum geom_poly_segment_type type;
+	struct coord *first,*last;
+};
+
+static void
+geom_coord_copy(struct coord *from, struct coord *to, int count, int reverse)
+{
+	int i;
+	if (!reverse) {
+		memcpy(to, from, count*sizeof(struct coord));
+		return;
+	}
+	from+=count;
+	for (i = 0 ; i < count ; i++) 
+		*to++=*--from;	
+}
+
+static void
+geom_coord_revert(struct coord *c, int count)
+{
+	struct coord tmp;
+	int i;
+
+	for (i = 0 ; i < count/2 ; i++) {
+		tmp=c[i];
+		c[i]=c[count-1-i];
+		c[count-1-i]=tmp;
+	}
+}
+
+
+static long long
+geom_poly_area(struct coord *c, int count)
+{
+	long long area=0;
+	int i,j=0;
+#if 0
+	fprintf(stderr,"count=%d\n",count);
+#endif
+	for (i=0; i<count; i++) {
+		if (++j == count)
+			j=0;
+#if 0
+		fprintf(stderr,"(%d+%d)*(%d-%d)=%d*%d=%Ld\n",c[i].x,c[j].x,c[i].y,c[j].y,c[i].x+c[j].x,c[i].y-c[j].y,(long long)(c[i].x+c[j].x)*(c[i].y-c[j].y));
+#endif
+    		area+=(long long)(c[i].x+c[j].x)*(c[i].y-c[j].y);
+#if 0
+		fprintf(stderr,"area=%Ld\n",area);
+#endif
+	}
+  	return area/2;
+}
+
+static GList *
+geom_poly_segments_insert(GList *list, struct geom_poly_segment *first, struct geom_poly_segment *second, struct geom_poly_segment *third)
+{
+	int count;
+	struct geom_poly_segment *ret;
+	struct coord *pos;
+
+	if (!second)
+		return NULL;
+	ret=g_new(struct geom_poly_segment, 1);
+	ret->type=second->type;
+	count=(second->last-second->first)+1;
+	if (first) 
+		count+=(first->last-first->first);
+	if (third)
+		count+=(third->last-third->first);
+#if 0
+	fprintf(stderr,"count=%d first=%p second=%p third=%p\n",count,first,second,third);	
+	if (first) 
+		fprintf(stderr,"first:0x%x,0x%x-0x%x,0x%x (%d)\n",first->first->x,first->first->y,first->last->x,first->last->y, first->last-first->first+1);
+	if (second) 
+		fprintf(stderr,"second:0x%x,0x%x-0x%x,0x%x (%d)\n",second->first->x,second->first->y,second->last->x,second->last->y, second->last-second->first+1);
+	if (third) 
+		fprintf(stderr,"third:0x%x,0x%x-0x%x,0x%x (%d)\n",third->first->x,third->first->y,third->last->x,third->last->y, third->last-third->first+1);
+#endif
+	ret->first=g_new(struct coord, count);
+	pos=ret->first;
+	if (first) {
+		count=(first->last-first->first)+1;
+		geom_coord_copy(first->first, pos, count, coord_is_equal(*first->first, *second->first));
+		pos+=count-1;
+	}
+	count=(second->last-second->first)+1;
+	geom_coord_copy(second->first, pos, count, 0);
+	pos+=count;
+	if (third) {
+		pos--;
+		count=(third->last-third->first)+1;
+		geom_coord_copy(third->first, pos, count, coord_is_equal(*third->last, *second->last));
+		pos+=count;
+	}
+	ret->last=pos-1;	
+#if 0
+	fprintf(stderr,"result:0x%x,0x%x-0x%x,0x%x (%d)\n",ret->first->x,ret->first->y,ret->last->x,ret->last->y, ret->last-ret->first+1);
+#endif
+	list=g_list_prepend(list, ret);
+#if 0
+	fprintf(stderr,"List=%p\n",list);
+#endif
+	return list;
+}
+
+static void
+geom_poly_segment_destroy(struct geom_poly_segment *seg)
+{
+	g_free(seg->first);
+	g_free(seg);
+}
+
+static GList *
+geom_poly_segments_remove(GList *list, struct geom_poly_segment *seg)
+{
+	if (seg) {
+		list=g_list_remove(list, seg);
+		geom_poly_segment_destroy(seg);
+	}
+	return list;
+}
+
+static int
+geom_poly_segment_compatible(struct geom_poly_segment *s1, struct geom_poly_segment *s2, int dir)
+{
+	int same=0,opposite=0;
+	if (s1->type == geom_poly_segment_type_none || s2->type == geom_poly_segment_type_none)
+		return 0;
+	if (s1->type == s2->type)
+		same=1;
+	if (s1->type == geom_poly_segment_type_way_inner && s2->type == geom_poly_segment_type_way_outer)
+		opposite=1;
+	if (s1->type == geom_poly_segment_type_way_outer && s2->type == geom_poly_segment_type_way_inner)
+		opposite=1;
+	if (s1->type == geom_poly_segment_type_way_left_side && s2->type == geom_poly_segment_type_way_right_side)
+		opposite=1;
+	if (s1->type == geom_poly_segment_type_way_right_side && s2->type == geom_poly_segment_type_way_left_side)
+		opposite=1;
+	if (s1->type == geom_poly_segment_type_way_unknown || s2->type == geom_poly_segment_type_way_unknown) {
+		same=1;
+		opposite=1;
+	}
+	if (dir < 0) {
+		if ((opposite && coord_is_equal(*s1->first, *s2->first)) || (same && coord_is_equal(*s1->first, *s2->last))) 
+			return 1;
+	} else {
+		if ((opposite && coord_is_equal(*s1->last, *s2->last)) || (same && coord_is_equal(*s1->last, *s2->first))) 
+			return 1;
+	}
+	return 0;
+}
+
+
+static GList *
+geom_poly_segments_sort(GList *in, enum geom_poly_segment_type type)
+{
+	GList *ret=NULL;
+	while (in) {
+		struct geom_poly_segment *seg=in->data;
+		GList *tmp=ret;
+		struct geom_poly_segment *merge_first=NULL,*merge_last=NULL;
+		while (tmp) {
+			struct geom_poly_segment *cseg=tmp->data;	
+			if (geom_poly_segment_compatible(seg, cseg, -1))
+				merge_first=cseg;
+			if (geom_poly_segment_compatible(seg, cseg, 1))
+				merge_last=cseg;
+			tmp=g_list_next(tmp);
+		}
+		if (merge_first == merge_last)
+			merge_last=NULL;
+		ret=geom_poly_segments_insert(ret, merge_first, seg, merge_last);
+		ret=geom_poly_segments_remove(ret, merge_first);
+		ret=geom_poly_segments_remove(ret, merge_last);
+		in=g_list_next(in);
+	}
+	in=ret;
+	while (in) {
+		struct geom_poly_segment *seg=in->data;
+		if (coord_is_equal(*seg->first, *seg->last)) {
+			long long area=geom_poly_area(seg->first,seg->last-seg->first+1);
+			if (type == geom_poly_segment_type_way_right_side && seg->type == geom_poly_segment_type_way_right_side) {
+				seg->type=area > 0 ? geom_poly_segment_type_way_outer : geom_poly_segment_type_way_inner;
+			}
+		}
+		in=g_list_next(in);
+	}
+	return ret;
+}
+
+static struct geom_poly_segment *
+item_bin_to_poly_segment(struct item_bin *ib, int type)
+{
+	struct geom_poly_segment *ret=g_new(struct geom_poly_segment, 1);
+	int count=ib->clen*sizeof(int)/sizeof(struct coord);
+	ret->type=type;
+	ret->first=g_new(struct coord, count);
+	ret->last=ret->first+count-1;
+	geom_coord_copy((struct coord *)(ib+1), ret->first, count, 0);
+	return ret;
+}
+
+
+static void
+process_countries(FILE *way, FILE *ways_index) 
+{
+	FILE *in=fopen("country_de.tmp","r");
+	struct item_bin *ib=(struct item_bin *)buffer;
+	char buffer2[400000];
+	struct item_bin *ib2=(struct item_bin *)buffer2;
+	GList *segments=NULL,*sort_segments;
+	fseek(in, 0, SEEK_SET);
+	while (item_bin_read(ib, in)) {
+		char *str=NULL;
+		struct relation_member member;
+		while ((str=item_bin_get_attr(ib, attr_osm_member, str))) {
+			if (!get_relation_member(str, &member))
+				break;
+			if (member.type == 2) {		
+				if (!seek_to_way(way, ways_index, member.id)) {
+					fprintf(stderr,"not found in index");
+					break;
+				}
+				while (item_bin_read(ib2, way)) {
+					if (item_bin_get_wayid(ib2) != member.id)
+						break;
+					segments=g_list_prepend(segments,item_bin_to_poly_segment(ib2, geom_poly_segment_type_way_unknown));
+					break;
+				}
+			}
+		}
+	}
+	sort_segments=geom_poly_segments_sort(segments, geom_poly_segment_type_way_left_side);
+	FILE *tmp=fopen("tst.txt","w");
+	while (sort_segments) {
+		struct geom_poly_segment *seg=sort_segments->data;
+		if (!seg) {
+			fprintf(stderr,"is null\n");
+		}
+#if 0
+		int count=seg->last-seg->first+1;
+		item_bin_init(ib, type_border_country);
+		item_bin_add_coord(ib, seg->first, count);
+		item_bin_dump(ib, tmp);
+#endif
+		fprintf(stderr,"segment %p %s area %Ld\n",sort_segments,coord_is_equal(*seg->first, *seg->last) ? "closed":"open",geom_poly_area(seg->first,seg->last-seg->first+1));
+		
+		sort_segments=g_list_next(sort_segments);
+	}
+	fclose(tmp);
+	fclose(in);
 }
 
 static void
@@ -4210,68 +4501,35 @@ static int distance_from_ll(struct coord *c, struct rect *bbox)
 	return -1;
 }
 
-static struct item_bin *
-find_next(struct rect *bbox, int *tile_data, struct coord *c, int exclude, struct coord *ci)
+static struct geom_poly_segment *
+find_next(struct rect *bbox, GList *segments, struct coord *c, int exclude, struct coord *ci)
 {
 	int min=INT_MAX,search=distance_from_ll(c, bbox)+(exclude?1:0);
-	int *curr,*end=tile_data+tile_data[0];
+	GList *curr;
 	int i;
-	struct item_bin *ret=NULL;
+	struct geom_poly_segment *ret=NULL;
 	int dbgl=1;
 
 	for (i = 0 ; i < 2 ; i++) {
-		curr=tile_data+1;
+		curr=segments;
 		dbg(dbgl,"search distance %d\n",search);
-		while (curr < end) {
-			struct item_bin *ib=(struct item_bin *)curr;
-			struct coord *cs=(struct coord *)(ib+1);
-			struct coord *ce=cs+ib->clen/2-1;
-			int dist=distance_from_ll(cs, bbox);
-			dbg(dbgl,"0x%x 0x%x dist %d\n",cs->x,cs->y,dist);
-			if (dist != -1 && ib->clen > 2 && dist < min && (dist >= search)) {
+		while (curr) {
+			struct geom_poly_segment *seg=curr->data;
+			int dist=distance_from_ll(seg->first, bbox);
+			dbg(dbgl,"0x%x 0x%x dist %d\n",seg->first->x,seg->first->y,dist);
+			if (dist != -1 && seg->first != seg->last && dist < min && (dist >= search)) {
 				min=dist;
-				ci[0]=*cs;
-				ci[1]=*ce;
-				ret=ib;
+				ci[0]=*seg->first;
+				ci[1]=*seg->last;
+				ret=seg;
 			}
-			curr+=ib->len+1;
+			curr=g_list_next(curr);
 		}
 		if (ret || !search)
 			break;
 		search=0;
 	}
 	return ret;
-		
-}
-
-static struct item_bin *
-find_connected(int *tile_data, struct item_bin *ib, struct coord *cend)
-{
-	int *end=tile_data+tile_data[0];
-	int *curr=tile_data+1;
-	int count=0;
-	struct item_bin *ret=NULL;
-	struct coord *cs=(struct coord *)(ib+1);
-	struct coord *ce=cs+ib->clen/2-1;
-	if (cs->x == ce->x && cs->y == ce->y)
-		return NULL;
-	while (curr < end) {
-		struct item_bin *ib=(struct item_bin *)curr;
-		struct coord *c=(struct coord *)(ib+1);
-		if (ib->clen > 2 && ib->type != type_none && c->x == ce->x && c->y == ce->y) {
-			ret=ib;
-			count++;
-		}
-		curr+=ib->len+1;
-	}
-	dbg(1,"count=%d\n",count);
-	if (count == 1) {
-		struct coord *cs=(struct coord *)(ret+1);
-		struct coord *ce=cs+ret->clen/2-1;
-		*cend=*ce;
-		return ret;
-	}
-	return NULL;
 }
 
 static void
@@ -4348,24 +4606,94 @@ struct coastline_tile_data {
 	int level;
 };
 
+static GList *
+tile_data_to_segments(int *tile_data)
+{
+	int *end=tile_data+tile_data[0];
+	int *curr=tile_data+1;
+	GList *segments=NULL;
+	int count=0;
+
+	while (curr < end) {
+		struct item_bin *ib=(struct item_bin *)curr;
+		segments=g_list_prepend(segments,item_bin_to_poly_segment(ib, geom_poly_segment_type_way_right_side));
+		curr+=ib->len+1;
+		count++;
+	}
+#if 0
+	fprintf(stderr,"%d segments\n",count);
+#endif
+	return segments;
+}
+
 static void
 tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_data *data)
 {
 	int poly_start_valid,tile_start_valid,exclude,search=0,workload=0;
 	struct rect bbox;
 	struct coord c,cn[2],end,poly_start,tile_start;
-	struct item_bin *first,*ib=(struct item_bin *)buffer;
+	struct geom_poly_segment *first;
+	struct item_bin *ib=(struct item_bin *)buffer;
 	struct item_bin_sink *out=data->sink->priv_data[1];
 	int dbgl=1;
-	int edges=0;
+	int edges=0,flags;
+	GList *sorted_segments,*curr;
 #if 0
-	if (strcmp(tile,"bcdbdcabddddba"))
+	if (strncmp(tile,"bcdbdcabddddba",7))
+		return;
+#endif
+#if 0
+	if (strncmp(tile,"bcdbdcaaaaddba",14))
 		return;
 #endif
 #if 0
 	fprintf(stderr,"tile %s of size %d\n", tile, *tile_data);
 #endif
 	tile_bbox(tile, &bbox, 0);
+	sorted_segments=geom_poly_segments_sort(tile_data_to_segments(tile_data), geom_poly_segment_type_way_right_side);
+#if 0
+{
+	GList *sort_segments=sorted_segments;
+	int count=0;
+	while (sort_segments) {
+		struct geom_poly_segment *seg=sort_segments->data;
+		struct item_bin *ib=(struct item_bin *)buffer;
+		char *text=g_strdup_printf("segment %d type %d %p %s area %Ld",count++,seg->type,sort_segments,coord_is_equal(*seg->first, *seg->last) ? "closed":"open",geom_poly_area(seg->first,seg->last-seg->first+1));
+		item_bin_init(ib, type_rg_segment);
+		item_bin_add_coord(ib, seg->first, seg->last-seg->first+1);
+		item_bin_add_attr_string(ib, attr_debug, text);
+		// fprintf(stderr,"%s\n",text);
+		g_free(text);
+		// item_bin_dump(ib, stderr);
+		item_bin_write_to_sink(ib, out, NULL);
+		sort_segments=g_list_next(sort_segments);
+	}
+}
+#endif
+	flags=0;
+	curr=sorted_segments;
+	while (curr) {
+		struct geom_poly_segment *seg=curr->data;
+		switch (seg->type) {
+		case geom_poly_segment_type_way_inner:
+			flags|=1;
+			break;
+		case geom_poly_segment_type_way_outer:
+			flags|=2;
+			break;
+		default:
+			flags|=4;
+			break;
+		}
+		curr=g_list_next(curr);
+	}
+	if (flags == 1) {
+		item_bin_init(ib, type_poly_water_tiled);
+		item_bin_bbox(ib, &bbox);
+		item_bin_write_to_sink(ib, out, NULL);
+		g_hash_table_insert(data->tile_edges, g_strdup(tile), (void *)15);
+		return;
+	}
 #if 1
 	end=bbox.l;
 	tile_start_valid=0;
@@ -4379,7 +4707,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 		search++;
 		// item_bin_write_debug_point_to_sink(out, &end, "Search %d",search);
 		dbg(dbgl,"searching next polygon from 0x%x 0x%x\n",end.x,end.y);
-		first=find_next(&bbox, tile_data, &end, exclude, cn);
+		first=find_next(&bbox, sorted_segments, &end, exclude, cn);
 		exclude=1;
 		if (!first)
 			break;
@@ -4392,7 +4720,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 				break;
 			}
 		}
-		if (first->type == type_none) {
+		if (first->type == geom_poly_segment_type_none) {
 			end=cn[0];
 			continue;
 		}
@@ -4402,7 +4730,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 			if (!poly_start_valid) {
 				poly_start=cn[0];
 				poly_start_valid=1;
-				item_bin_init(ib,type_poly_water);
+				item_bin_init(ib,type_poly_water_tiled);
 			} else {
 				close_polygon(ib, &end, &cn[0], 1, &bbox, &edges);
 				if (cn[0].x == poly_start.x && cn[0].y == poly_start.y) {
@@ -4412,26 +4740,16 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 					break;
 				}
 			}
-			if (first->type == type_none)
+			if (first->type == geom_poly_segment_type_none)
 				break;
-			item_bin_copy_coord(ib, first, 1);
-			first->type=type_none;
+			item_bin_add_coord(ib, first->first, first->last-first->first+1);
+			first->type=geom_poly_segment_type_none;
 			end=cn[1];
-			dbg(dbgl,"searching end\n");
-			while ((first=find_connected(tile_data, first, &end))) {
-#if 0
-			item_bin_dump(first);
-#endif
-				dbg(dbgl,"found 0x%x,0x%x\n",end.x,end.y);
-				item_bin_copy_coord(ib, first, 1);
-				first->type=type_none;
-			}
-			dbg(dbgl,"end found 0x%x,0x%x\n",end.x,end.y);
 			if (distance_from_ll(&end, &bbox) == -1) {
 				dbg(dbgl,"incomplete\n");
 				break;
 			}
-			first=find_next(&bbox, tile_data, &end, 1, cn);
+			first=find_next(&bbox, sorted_segments, &end, 1, cn);
 			dbg(dbgl,"next segment of polygon 0x%x 0x%x\n",cn[0].x,cn[0].y);
 		}
 		if (search > 55)
@@ -4439,7 +4757,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 	}
 #endif
 
-#if 1
+#if 0
 	{
 		int *end=tile_data+tile_data[0];
 		int *curr=tile_data+1;
@@ -4468,13 +4786,17 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 	}
 #endif
 	g_hash_table_insert(data->tile_edges, g_strdup(tile), (void *)edges);
+#if 0
 	item_bin_init(ib, type_border_country);
 	item_bin_bbox(ib, &bbox);
 	item_bin_add_attr_string(ib, attr_debug, tile);
 	item_bin_write_to_sink(ib, out, NULL);
+#endif
+#if 0
 	c.x=(bbox.l.x+bbox.h.x)/2;
 	c.y=(bbox.l.y+bbox.h.y)/2;
-	//item_bin_write_debug_point_to_sink(out, &c, "%s %d",tile,edges);
+	item_bin_write_debug_point_to_sink(out, &c, "%s %d",tile,edges);
+#endif
 }
 
 static void
@@ -4493,14 +4815,16 @@ ocean_tile(GHashTable *hash, char *tile, char c, struct item_bin_sink *out)
 		return;
 	//fprintf(stderr,"%s ok\n",tile2);
 	tile_bbox(tile2, &bbox, 0);
-	item_bin_init(ib,type_poly_water);
+	item_bin_init(ib,type_poly_water_tiled);
 	item_bin_bbox(ib, &bbox);
 	item_bin_write_to_sink(ib, out, NULL);
 	g_hash_table_insert(hash, g_strdup(tile2), (void *)15);
+#if 0
 	item_bin_init(ib, type_border_country);
 	item_bin_bbox(ib, &bbox);
 	item_bin_add_attr_string(ib, attr_debug, tile2);
 	item_bin_write_to_sink(ib, out, NULL);
+#endif
 	co.x=(bbox.l.x+bbox.h.x)/2;
 	co.y=(bbox.l.y+bbox.h.y)/2;
 	//item_bin_write_debug_point_to_sink(out, &co, "%s 15",tile2);
@@ -4521,8 +4845,10 @@ tile_collector_add_siblings(char *tile, void *edgesp, struct coastline_tile_data
 
 	if (len != data->level)
 		return;
+#if 0
 	if (!strncmp(tile,"bcacccaadbdcd",10))
 		debug=1;
+#endif
 	if (debug)
 		fprintf(stderr,"%s (%c) has %d edges active\n",tile,t,edges);
 	if (t == 'a' && (edges & 1)) 
@@ -4575,14 +4901,16 @@ ocean_tile2(struct rect *r, int dx, int dy, int wf, int hf, struct item_bin_sink
 	bbox.h.x=bbox.l.x+w*wf;
 	bbox.h.y=bbox.l.y+h*hf;
 	//fprintf(stderr,"0x%x,0x%x-0x%x,0x%x -> 0x%x,0x%x-0x%x,0x%x\n",r->l.x,r->l.y,r->h.x,r->h.y,bbox.l.x,bbox.l.y,bbox.h.x,bbox.h.y);
-	item_bin_init(ib,type_poly_water);
+	item_bin_init(ib,type_poly_water_tiled);
 	item_bin_bbox(ib, &bbox);
 	item_bin_write_to_sink(ib, out, NULL);
+#if 0
 	item_bin_init(ib, type_border_country);
 	item_bin_bbox(ib, &bbox);
 	item_bin_add_attr_string(ib, attr_debug, tile2);
-	tile(&bbox, NULL, tile2, 32, 0, NULL);
 	item_bin_write_to_sink(ib, out, NULL);
+#endif
+	tile(&bbox, NULL, tile2, 32, 0, NULL);
 	co.x=(bbox.l.x+bbox.h.x)/2;
 	co.y=(bbox.l.y+bbox.h.y)/2;
 	//item_bin_write_debug_point_to_sink(out, &co, "%s 15",tile2);
@@ -4601,8 +4929,10 @@ tile_collector_add_siblings2(char *tile, void *edgesp, struct coastline_tile_dat
 	int edges=(int)edgesp;
 	int pedges=0;
 	int debug=0;
+#if 0
 	if (!strncmp(tile,"bcacccaadbdcd",10))
 		debug=1;
+#endif
 	if (debug) 
 		fprintf(stderr,"len of %s %d vs %d\n",tile,len,data->level);
 	if (len != data->level)
@@ -4645,7 +4975,7 @@ tile_collector_finish(struct item_bin_sink_func *tile_collector)
 	fprintf(stderr,"tile_collector_finish foreach done\n");
 	g_hash_table_destroy(hash);
 	fprintf(stderr,"tile_collector_finish destroy done\n");
-	for (i = 14 ; i > 4 ; i--) {
+	for (i = 14 ; i > 0 ; i--) {
 		fprintf(stderr,"Level=%d\n",i);
 		data.level=i;
 		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
@@ -5049,6 +5379,9 @@ int main(int argc, char **argv)
 			ways_split=tempfile(suffix,"ways_split",0);
 			ways_split_index=tempfile(suffix,"ways_split_index",0);
 			process_turn_restrictions(turn_restrictions,coords,ways_split,ways_split_index,relations);
+#if 0
+			process_countries(ways_split,ways_split_index);
+#endif
 			fclose(ways_split_index);
 			fclose(ways_split);
 			fclose(coords);
