@@ -1694,7 +1694,9 @@ parse_member(char *p)
 static void
 relation_add_tag(char *k, char *v)
 {
+#if 0
 	fprintf(stderr,"add tag %s %s\n",k,v);
+#endif
 	if (!strcmp(k,"type")) 
 		strcpy(relation_type, v);
 	else if (!strcmp(k,"restriction")) {
