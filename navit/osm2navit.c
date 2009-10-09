@@ -2068,14 +2068,19 @@ get_relation_member(char *str, struct relation_member *memb)
 }
 
 static int
-search_relation_member(struct item_bin *ib, char *role, struct relation_member *memb)
+search_relation_member(struct item_bin *ib, char *role, struct relation_member *memb, int *min_count)
 {
 	char *str=NULL;
+	int count=0;
 	while ((str=item_bin_get_attr(ib, attr_osm_member, str))) {
 		if (!get_relation_member(str, memb))
 			return 0;
-		if (!strcmp(memb->role, role))
+		count++;
+	 	if (!strcmp(memb->role, role) && (!min_count || *min_count < count)) {
+			if (min_count)
+				*min_count=count;
 			return 1;
+		}
 	}
 	return 0;
 }
@@ -2199,18 +2204,34 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 	struct item_bin *ib=(struct item_bin *)buffer,*from=(struct item_bin *)from_buffer,*to=(struct item_bin *)to_buffer,*via=(struct item_bin *)via_buffer;
 	struct coord *fromc,*toc,*viafrom,*viato,*tmp;
 	fseek(in, 0, SEEK_SET);
+	int min_count;
 	while (item_bin_read(ib, in)) {
 		relid=item_bin_get_relationid(ib);
-		if (!search_relation_member(ib, "from",&fromm)) {
+		min_count=0;
+		if (!search_relation_member(ib, "from",&fromm,&min_count)) {
 			osm_warning("relation",relid,0,"turn restriction: from member missing\n");
 			continue;
 		}
-		if (!search_relation_member(ib, "to",&tom)) {
+		if (search_relation_member(ib, "from",&fromm,&min_count)) {
+			osm_warning("relation",relid,0,"turn restriction: multiple from members\n");
+			continue;
+		}
+		min_count=0;
+		if (!search_relation_member(ib, "to",&tom,&min_count)) {
 			osm_warning("relation",relid,0,"turn restriction: to member missing\n");
 			continue;
 		}
-		if (!search_relation_member(ib, "via",&viam)) {
+		if (search_relation_member(ib, "to",&tom,&min_count)) {
+			osm_warning("relation",relid,0,"turn restriction: multiple to members\n");
+			continue;
+		}
+		min_count=0;
+		if (!search_relation_member(ib, "via",&viam,&min_count)) {
 			osm_warning("relation",relid,0,"turn restriction: via member missing\n");
+			continue;
+		}
+		if (search_relation_member(ib, "via",&viam,&min_count)) {
+			osm_warning("relation",relid,0,"turn restriction: multiple via member\n");
 			continue;
 		}
 		if (fromm.type != 2) {
