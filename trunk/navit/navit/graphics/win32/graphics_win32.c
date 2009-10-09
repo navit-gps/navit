@@ -1070,7 +1070,7 @@ static int
 pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 {
     png_struct    *png_ptr = NULL;
-    png_info	*info_ptr = NULL;
+    png_info      *info_ptr = NULL;
     png_byte      buf[8];
     png_byte      **row_pointers = NULL;
 
@@ -1154,7 +1154,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     if (png_get_valid (png_ptr, info_ptr, PNG_INFO_tRNS))
         png_set_expand (png_ptr);
 
-	png_set_bgr(png_ptr);
+   png_set_bgr(png_ptr);
 
     /* all transformations have been registered; now update info_ptr data,
      * get rowbytes and channels, and allocate image memory */
@@ -1402,6 +1402,7 @@ static struct graphics_priv *
     this->p.y    = p->y;
     this->disabled = 0;
     this->hPrebuildDC = 0;
+    this->AlphaBlend = gr->AlphaBlend;
 
     this->next = gr->overlays;
     gr->overlays = this;
