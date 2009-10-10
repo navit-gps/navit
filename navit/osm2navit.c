@@ -2207,7 +2207,7 @@ get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct it
 static void
 process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out)
 {
-	struct relation_member fromm,tom,viam;
+	struct relation_member fromm,tom,viam,tmpm;
 	struct node_item ni;
 	long long relid;
 	char from_buffer[65536],to_buffer[65536],via_buffer[65536];
@@ -2222,7 +2222,7 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 			osm_warning("relation",relid,0,"turn restriction: from member missing\n");
 			continue;
 		}
-		if (search_relation_member(ib, "from",&fromm,&min_count)) {
+		if (search_relation_member(ib, "from",&tmpm,&min_count)) {
 			osm_warning("relation",relid,0,"turn restriction: multiple from members\n");
 			continue;
 		}
@@ -2231,7 +2231,7 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 			osm_warning("relation",relid,0,"turn restriction: to member missing\n");
 			continue;
 		}
-		if (search_relation_member(ib, "to",&tom,&min_count)) {
+		if (search_relation_member(ib, "to",&tmpm,&min_count)) {
 			osm_warning("relation",relid,0,"turn restriction: multiple to members\n");
 			continue;
 		}
@@ -2240,7 +2240,7 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 			osm_warning("relation",relid,0,"turn restriction: via member missing\n");
 			continue;
 		}
-		if (search_relation_member(ib, "via",&viam,&min_count)) {
+		if (search_relation_member(ib, "via",&tmpm,&min_count)) {
 			osm_warning("relation",relid,0,"turn restriction: multiple via member\n");
 			continue;
 		}
