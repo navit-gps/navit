@@ -5406,7 +5406,7 @@ int main(int argc, char **argv)
 		process_binfile(stdin, ways_split);
 		fclose(ways_split);
 	}
-#if 0
+#if 1
 	coastline=tempfile(suffix,"coastline",0);
 	ways_split=tempfile(suffix,"ways_split",2);
 	fprintf(stderr,"coastline=%p\n",coastline);
