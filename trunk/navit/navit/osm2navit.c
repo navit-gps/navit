@@ -2288,7 +2288,7 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 		if (!(fromc=get_way(ways, ways_index, viafrom, fromm.id, from, 0))) {
 			if (viam.type == 1 || !(fromc=get_way(ways, ways_index, viato, fromm.id, from, 0))) {
 				osm_warning("relation",relid,0,"turn restriction: failed to connect via ");
-				osm_warning(osm_types[viam.type],viam.id,1," 0x%x,0x%x to from member ",viafrom->x,viafrom->y);
+				osm_warning(osm_types[viam.type],viam.id,1," 0x%x,0x%x-0x%x,0x%x to from member ",viafrom->x,viafrom->y,viato->x,viato->y);
 				osm_warning(osm_types[fromm.type],fromm.id,1," (");
 				get_way(ways, ways_index, viafrom, fromm.id, from, 1);
 				fprintf(stderr,")\n");
@@ -2301,7 +2301,7 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 		}
 		if (!(toc=get_way(ways, ways_index, viato, tom.id, to, 0))) {
 			osm_warning("relation",relid,0,"turn restriction: failed to connect via ");
-			osm_warning(osm_types[viam.type],viam.id,1," 0x%x,0x%x to to member ",viato->x,viato->y);
+			osm_warning(osm_types[viam.type],viam.id,1," 0x%x,0x%x-0x%x,0x%x to to member ",viafrom->x,viafrom->y,viato->x,viato->y);
 			osm_warning(osm_types[tom.type],tom.id,1," (");
 			get_way(ways, ways_index, viato, tom.id, to, 1);
 			fprintf(stderr,")\n");
