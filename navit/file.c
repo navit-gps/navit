@@ -149,6 +149,7 @@ file_mmap(struct file *file)
 	int mmap_size=file->size+1024*1024;
 #else
 	int mmap_size=file->size;
+#endif
 #ifdef HAVE_API_WIN32_BASE
 	file->begin = (char*)mmap_readonly_win32( file->name, &file->map_handle, &file->map_file );
 #else
