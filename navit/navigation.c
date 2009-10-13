@@ -687,7 +687,8 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
 		ret->item=*sitem;
 		item_hash_insert(this_->hash, sitem, ret);
 		mr=map_rect_new(sitem->map, NULL);
-		sitem=map_rect_get_item_byid(mr, sitem->id_hi, sitem->id_lo);
+		if (! (sitem=map_rect_get_item_byid(mr, sitem->id_hi, sitem->id_lo)))
+			return NULL;
 		if (item_attr_get(sitem, attr_street_name, &attr))
 			ret->name1=map_convert_string(sitem->map,attr.u.str);
 		if (item_attr_get(sitem, attr_street_name_systematic, &attr))

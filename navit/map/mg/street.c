@@ -774,7 +774,8 @@ street_get_byid(struct map_rect_priv *mr, struct street_priv *street, int id_hi,
 	dbg(1,"enter(%p,%p,0x%x,0x%x,%p)\n", mr, street, id_hi, id_lo, item);
 	if (! country)
 		return 0;
-        tree_search_hv(mr->m->dirname, "street", (id_lo >> 8) | (country << 24), id_lo & 0xff, &res);
+        if (! tree_search_hv(mr->m->dirname, "street", (id_lo >> 8) | (country << 24), id_lo & 0xff, &res))
+		return 0;
 	dbg(1,"res=0x%x (blk=0x%x)\n", res, res >> 12);
         block_get_byindex(mr->m->file[mr->current_file], res >> 12, &mr->b);
 	street_get_data(street, &mr->b.p);
