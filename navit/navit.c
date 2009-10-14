@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2008 Navit Team
+ * Copyright (C) 2005-2009 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,7 +42,6 @@
 #include "param.h"
 #include "menu.h"
 #include "graphics.h"
-#include "cursor.h"
 #include "popup.h"
 #include "data_window.h"
 #include "route.h"
@@ -151,6 +150,7 @@ static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, st
 static int navit_add_vehicle(struct navit *this_, struct vehicle *v);
 static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init);
 static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir);
+static void navit_set_cursors(struct navit *this_);
 static void navit_cmd_zoom_to_route(struct navit *this);
 static void navit_cmd_set_center_cursor(struct navit *this_);
 static void navit_cmd_announcer_toggle(struct navit *this_);
@@ -1370,6 +1370,8 @@ navit_init(struct navit *this_)
 
 	messagelist_init(this_->messages);
 
+	navit_set_cursors(this_);
+
 	dbg(2,"ready=%d\n",this_->ready);
 	if (this_->ready == 3)
 		navit_draw(this_);
@@ -1479,6 +1481,33 @@ navit_set_center_coord_screen(struct navit *this_, struct coord *c, struct point
 	update_transformation(this_->trans, &po, p, NULL);
 	if (set_timeout)
 		navit_set_timeout(this_);
+}
+
+/**
+ * Links all vehicles to a cursor depending on the current profile.
+ *
+ * @param this_ A navit instance
+ * @author Ralph Sennhauser (10/2009)
+ */
+static void
+navit_set_cursors(struct navit *this_)
+{
+	struct attr name;
+	struct navit_vehicle *nv;
+	struct cursor *c;
+	GList *v;
+
+	v=g_list_first(this_->vehicles); // GList of navit_vehicles
+	while (v) {
+		nv=v->data;
+		if (vehicle_get_attr(nv->vehicle, attr_cursorname, &name, NULL))
+			c=layout_get_cursor(this_->layout_current, name.u.str);
+		else
+			c=layout_get_cursor(this_->layout_current, "default");
+		vehicle_set_cursor(nv->vehicle, c);
+		v=g_list_next(v);
+	}
+	return;
 }
 
 static int
@@ -1605,6 +1634,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		if(this_->layout_current!=attr->u.layout) {
 			this_->layout_current=attr->u.layout;
 			graphics_font_destroy_all(this_->gra);
+			navit_set_cursors(this_);
 			navit_draw(this_);
 			attr_updated=1;
 		}
@@ -1992,13 +2022,8 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 {
 	struct point cursor_pnt;
 	enum projection pro;
-	struct attr cursor;
 
 	if (this_->blocked)
-		return;
-	if (! vehicle_get_attr(nv->vehicle, attr_cursor, &cursor, NULL))
-		return;
-	if (! cursor.u.cursor)
 		return;
 	if (pnt)
 		cursor_pnt=*pnt;
@@ -2006,7 +2031,7 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 		pro=transform_get_projection(this_->trans);
 		transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	}
-	cursor_draw(cursor.u.cursor, this_->gra, &cursor_pnt, pnt ? 0:1, nv->dir-transform_get_yaw(this_->trans), nv->speed);
+	vehicle_draw(nv->vehicle, this_->gra, &cursor_pnt, pnt ? 0:1, nv->dir-transform_get_yaw(this_->trans), nv->speed);
 #if 0	
 	if (pnt)
 		pnt2=*pnt;

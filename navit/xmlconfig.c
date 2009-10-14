@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2008 Navit Team
+ * Copyright (C) 2005-2009 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,7 +44,6 @@
 #include "gui.h"
 #include "osd.h"
 #include "log.h"
-#include "cursor.h"
 #include "announcement.h"
 #include "vehicleprofile.h"
 #include "roadprofile.h"
@@ -303,6 +302,7 @@ struct element_func {
 	{ "graphics", "navit", NULL, attr_graphics},
 	{ "gui", "navit", NULL, attr_gui},
 	{ "layout", "navit", NULL, attr_layout},
+	{ "cursor", "layout", NULL, attr_cursor},
 	{ "layer", "layout", NULL, attr_layer},
 	{ "itemgra", "layer", NULL, attr_itemgra},
 	{ "circle", "itemgra", NULL, attr_circle},
