@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2008 Navit Team
+ * Copyright (C) 2005-2009 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public License
@@ -211,6 +211,7 @@ ATTR(navigation_long)
 ATTR(navigation_long_exact)
 ATTR(navigation_speech)
 ATTR(name)
+ATTR(cursorname)
 ATTR(source)
 ATTR(description)
 ATTR(gc_type)
