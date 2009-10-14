@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2008 Navit Team
+ * Copyright (C) 2005-2009 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +24,7 @@
 #include "layout.h"
 #include "coord.h"
 #include "debug.h"
+
 
 struct layout * layout_new(struct attr *parent, struct attr **attrs)
 {
@@ -51,12 +52,101 @@ int
 layout_add_attr(struct layout *layout, struct attr *attr)
 {
 	switch (attr->type) {
+	case attr_cursor:
+		layout->cursors = g_list_append(layout->cursors, attr->u.cursor);
+		return 1;
 	case attr_layer:
 		layout->layers = g_list_append(layout->layers, attr->u.layer);
 		return 1;
 	default:
 		return 0;
 	}
+}
+
+/**
+ * Searchs the layout for a cursor with the given name.
+ *
+ * @param layout The layout
+ * @param name The name
+ * @returns A pointer to cursor with the given name or the name default or NULL.
+ * @author Ralph Sennhauser (10/2009)
+*/
+struct cursor *
+layout_get_cursor(struct layout *this_, char *name)
+{
+	GList *c;
+	struct cursor *d=NULL;
+
+	c=g_list_first(this_->cursors);
+	while (c) {
+		if (! strcmp(((struct cursor *)c->data)->name, name))
+			return c->data;
+		if (! strcmp(((struct cursor *)c->data)->name, "default"))
+			d=c->data;
+		c=g_list_next(c);
+	}
+	return d;
+}
+
+
+
+struct cursor *
+cursor_new(struct attr *parent, struct attr **attrs)
+{
+	struct attr *w, *h, *name, *interval, *sequence_range;
+
+	w=attr_search(attrs, NULL, attr_w);
+	h=attr_search(attrs, NULL, attr_h);
+	if (! w || ! h)
+		return NULL;
+
+	struct cursor *this=g_new0(struct cursor,1);
+	this->w=w->u.num;
+	this->h=h->u.num;
+	name=attr_search(attrs, NULL, attr_name);
+	if (name)
+		this->name=g_strdup(name->u.str);
+	else
+		this->name=g_strdup("default");
+	interval=attr_search(attrs, NULL, attr_interval);
+	if (interval)
+		this->interval=interval->u.num;
+	sequence_range=attr_search(attrs, NULL, attr_sequence_range);
+	if (sequence_range) {
+		struct range *r=g_new0(struct range,1);
+		r->min=sequence_range->u.range.min;
+		r->max=sequence_range->u.range.max;
+		this->sequence_range=r;
+	}
+	else {
+		this->sequence_range=NULL;
+	}
+	dbg(2,"ret=%p\n", this);
+	return this;
+}
+
+void
+cursor_destroy(struct cursor *this_)
+{
+	if (this_->sequence_range)
+		g_free(this_->sequence_range);
+	if (this_->name) {
+		g_free(this_->name);
+	}
+	g_free(this_);
+}
+
+int
+cursor_add_attr(struct cursor *this_, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_itemgra:
+		this_->attrs=attr_generic_add_attr(this_->attrs, attr);
+		return 1;
+	default:
+		break;
+	}
+	return 0;
 }
 
 
