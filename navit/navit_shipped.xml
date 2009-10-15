@@ -827,39 +827,39 @@
                 <itemgra item_types="steps" order="10-">
                     <polyline color="#000000" width="1"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="10">
+                <itemgra item_types="street_pedestrian,living_street" order="10">
                     <polyline color="#d2d2d2" width="3"/>
                     <polyline color="#dddddd" width="1"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="11">
+                <itemgra item_types="street_pedestrian,living_street" order="11">
                     <polyline color="#d2d2d2" width="5"/>
                     <polyline color="#dddddd" width="3"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="12">
+                <itemgra item_types="street_pedestrian,living_street" order="12">
                     <polyline color="#d2d2d2" width="8"/>
                     <polyline color="#dddddd" width="6"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="13">
+                <itemgra item_types="street_pedestrian,living_street" order="13">
                     <polyline color="#d2d2d2" width="9"/>
                     <polyline color="#dddddd" width="7"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="14">
+                <itemgra item_types="street_pedestrian,living_street" order="14">
                     <polyline color="#d2d2d2" width="13"/>
                     <polyline color="#dddddd" width="9"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="15">
+                <itemgra item_types="street_pedestrian,living_street" order="15">
                     <polyline color="#d2d2d2" width="18"/>
                     <polyline color="#dddddd" width="14"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="16">
+                <itemgra item_types="street_pedestrian,living_street" order="16">
                     <polyline color="#d2d2d2" width="21"/>
                     <polyline color="#dddddd" width="17"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="17">
+                <itemgra item_types="street_pedestrian,living_street" order="17">
                     <polyline color="#d2d2d2" width="25"/>
                     <polyline color="#dddddd" width="21"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="18">
+                <itemgra item_types="street_pedestrian,living_street" order="18">
                     <polyline color="#d2d2d2" width="40"/>
                     <polyline color="#dddddd" width="34"/>
                 </itemgra>
@@ -2362,38 +2362,38 @@
                 <itemgra item_types="steps" order="17-18">
                     <polyline color="#4d4e11" width="3"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="10">
+                <itemgra item_types="street_pedestrian,living_street" order="10">
                     <polyline color="#1e0728" width="1"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="11">
+                <itemgra item_types="street_pedestrian,living_street" order="11">
                     <polyline color="#1e0728" width="5"/>
                     <polyline color="#202020" width="2"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="12">
+                <itemgra item_types="street_pedestrian,living_street" order="12">
                     <polyline color="#1e0728" width="8"/>
                     <polyline color="#202020" width="3"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="13">
+                <itemgra item_types="street_pedestrian,living_street" order="13">
                     <polyline color="#1e0728" width="9"/>
                     <polyline color="#202020" width="4"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="14">
+                <itemgra item_types="street_pedestrian,living_street" order="14">
                     <polyline color="#1e0728" width="13"/>
                     <polyline color="#202020" width="7"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="15">
+                <itemgra item_types="street_pedestrian,living_street" order="15">
                     <polyline color="#1e0728" width="18"/>
                     <polyline color="#202020" width="10"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="16">
+                <itemgra item_types="street_pedestrian,living_street" order="16">
                     <polyline color="#1e0728" width="21"/>
                     <polyline color="#202020" width="13"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="17">
+                <itemgra item_types="street_pedestrian,living_street" order="17">
                     <polyline color="#1e0728" width="25"/>
                     <polyline color="#202020" width="17"/>
                 </itemgra>
-                <itemgra item_types="street_pedestrian" order="18">
+                <itemgra item_types="street_pedestrian,living_street" order="18">
                     <polyline color="#1e0728" width="40"/>
                     <polyline color="#202020" width="30"/>
                 </itemgra>
@@ -3224,6 +3224,7 @@
                 </itemgra>
             </layer>
         </layout>
+
         <layout name="Bike" color="#ffefb7" font="Liberation Sans">
 
             <cursor w="26" h="26">
@@ -4091,6 +4092,7 @@
                 </itemgra>
             </layer>
         </layout>
+
         <layout name="T@H" font="Liberation Sans">
 
             <cursor w="26" h="26">
@@ -4216,6 +4218,42 @@
                     <polyline color="#0000a0" width="530"/>
                 </itemgra>
                 <!-- highway=service,footway, ,... -->
+                <itemgra item_types="street_pedestrian,living_street" order="10">
+                    <polyline color="#d2d2d2" width="3"/>
+                    <polyline color="#dddddd" width="1"/>
+                </itemgra>
+                <itemgra item_types="street_pedestrian,living_street" order="11">
+                    <polyline color="#d2d2d2" width="5"/>
+                    <polyline color="#dddddd" width="3"/>
+                </itemgra>
+                <itemgra item_types="street_pedestrian,living_street" order="12">
+                    <polyline color="#d2d2d2" width="8"/>
+                    <polyline color="#dddddd" width="6"/>
+                </itemgra>
+                <itemgra item_types="street_pedestrian,living_street" order="13">
+                    <polyline color="#d2d2d2" width="9"/>
+                    <polyline color="#dddddd" width="7"/>
+                </itemgra>
+                <itemgra item_types="street_pedestrian,living_street" order="14">
+                    <polyline color="#d2d2d2" width="13"/>
+                    <polyline color="#dddddd" width="9"/>
+                </itemgra>
+                <itemgra item_types="street_pedestrian,living_street" order="15">
+                    <polyline color="#d2d2d2" width="18"/>
+                    <polyline color="#dddddd" width="14"/>
+                </itemgra>
+                <itemgra item_types="street_pedestrian,living_street" order="16">
+                    <polyline color="#d2d2d2" width="21"/>
+                    <polyline color="#dddddd" width="17"/>
+                </itemgra>
+                <itemgra item_types="street_pedestrian,living_street" order="17">
+                    <polyline color="#d2d2d2" width="25"/>
+                    <polyline color="#dddddd" width="21"/>
+                </itemgra>
+                <itemgra item_types="street_pedestrian,living_street" order="18">
+                    <polyline color="#d2d2d2" width="40"/>
+                    <polyline color="#dddddd" width="34"/>
+                </itemgra>
                 <itemgra item_types="street_nopass" order="10">
                     <polyline color="#efeaa0" width="1"/>
                 </itemgra>
