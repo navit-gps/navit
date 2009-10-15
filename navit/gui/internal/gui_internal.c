@@ -1809,7 +1809,6 @@ struct selector {
 		type_poi_police,type_poi_autoservice,
 		type_poi_information,type_poi_information,
 		type_poi_personal_service,type_poi_repair_service,
-		type_poi_rest_room,type_poi_rest_room,
 		type_poi_restroom,type_poi_restroom,
 		type_none}},
 	{"parking","Parking",(enum item_type []){type_poi_car_parking,type_poi_car_parking,type_none}},
