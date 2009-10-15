@@ -27,7 +27,7 @@ POINT
 0, 0x1500-0x15FF = country_label, Country Name
 0, 0x1c00 = poi_wreck, Unclassified Obstruction
 0, 0x1c01 = poi_wreck, Wreck
-0, 0x1c02 = poi_dangerous, submerged wreck, dangerous
+0, 0x1c02 = poi_danger_sea_wreck, submerged wreck, dangerous
 0, 0x1c03 = poi_nondangerous,  submerged wreck, non-dangerous
 0, 0x1c04 = poi_wreck, Wreck, cleared by wire drag
 0, 0x1c05 = poi_rock, Obstruction, visible at high water
@@ -118,7 +118,7 @@ POINT
 0, 0x2E06 = poi_shopping, Convenience
 0, 0x2E07 = poi_shop_apparel, Apparel
 0, 0x2E08 = poi_shop_handg, House and Garden
-0, 0x2E09 = poi_shop_furnish, Home Furnishing
+0, 0x2E09 = poi_shop_furniture, Home Furnishing
 0, 0x2E0a = poi_shop_retail, Special Retail
 0, 0x2E0b = poi_shop_computer, Computer/Software
 0, 0x2E0c = poi_shop_computer, Mobile Communications
@@ -128,19 +128,19 @@ POINT
 0, 0x2F02 = poi_car_rent, Car Rental
 0, 0x2F03 = poi_autoservice, Car Repair
 0, 0x2F04 = poi_airport, Airport
-0, 0x2F05 = poi_post, Post Office
+0, 0x2F05 = poi_post_office, Post Office
 0, 0x2F06 = poi_bank, Bank
 0, 0x2F07 = poi_car_dealer_parts, Car Dealer(point)
 0, 0x2F08 = poi_bus_station, Bus Station
 0, 0x2F09 = poi_marina, Marina
 0, 0x2F0A = poi_wrecker, Wrecker Service
 0, 0x2F0B = poi_car_parking, Parking
-0, 0x2F0C = poi_rest_room, Restroom
+0, 0x2F0C = poi_restroom, Restroom
 0, 0x2F0D = poi_auto_club, Automobile Club
 0, 0x2F0E = poi_car_wash, Car Wash
-0, 0x2F0F = poi_garmin, Garmin Dealer
+0, 0x2F0F = poi_shop_gps, Garmin Dealer
 0, 0x2F10 = poi_personal_service, Personal Service
-0, 0x2F11 = poi_bussines_service, Business Service
+0, 0x2F11 = poi_business_service, Business Service
 0, 0x2F12 = poi_communication, Communication
 0, 0x2F13 = poi_repair_service, Repair Service
 0, 0x2F14 = poi_social_service, Social Service
@@ -181,7 +181,7 @@ POINT
 0, 0x5400-0x543F = poi_swimming, Swimming
 0, 0x5500-0x553F = poi_dam, Dam
 
-0, 0x5600-0x563F = poi_forbiden_area, Forbiden Area
+0, 0x5600-0x563F = poi_forbidden_area, Forbiden Area
 0, 0x5700-0x573F = poi_danger_area, Danger Area
 0, 0x5800-0x583F = poi_restricted_area, Restricted Area
 
@@ -209,7 +209,7 @@ POINT
 0, 0x6402 = poi_building, Building
 0, 0x6403 = poi_cemetery, Cemetery
 0, 0x6404 = poi_church, Church
-0, 0x6405 = poi_civil, Civil
+0, 0x6405 = poi_townhall, Civil
 0, 0x6406 = poi_crossing, Crossing
 0, 0x6407 = poi_dam, Dam
 0, 0x6408 = poi_hospital, Hospital
@@ -219,14 +219,14 @@ POINT
 0, 0x640C = poi_mine, Mine
 0, 0x640D = poi_oil_field, Oil Field
 0, 0x640E = poi_park, Park
-0, 0x640F = poi_post, Post
+0, 0x640F = poi_post_office, Post
 0, 0x6410 = poi_school, School
 0, 0x6411 = poi_tower, Tower
 0, 0x6412 = poi_trail, Trail
 0, 0x6413 = poi_tunnel, Tunnel
 0, 0x6414 = poi_drinking_water, Drink water
 0, 0x6415 = town_ghost, Ghost Town
-0, 0x6416 = poi_subdivision, Subdivision
+0, 0x6416 = poi_ruins, Subdivision
 
 0, 0x6500 = poi_water_feature, Water Feature
 0, 0x6501 = poi_water_feature, Arroyo
@@ -430,7 +430,7 @@ POINT
 1, 0x1002 = poly_car_parking, Parking Lot
 1, 0x1003 = poi_autoservice, Car Repair
 1, 0x1004 = poi_airport, Airport
-1, 0x1005 = poi_post, Post Office
+1, 0x1005 = poi_post_office, Post Office
 1, 0x1006 = poi_bank, Bank
 1, 0x1008 = poi_bus_station, Bus station
 1, 0x1009 = poi_marina, SeaPort
