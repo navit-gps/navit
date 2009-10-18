@@ -332,7 +332,7 @@ get_distance(int dist, enum attr_type type, int is_length)
 		int rem=(dist/100)%10;
 		if (rem) {
 			if (is_length)
-				return g_strdup_printf(_("%d.%d kilometer"), dist/1000, rem);
+				return g_strdup_printf(_("%d.%d kilometers"), dist/1000, rem);
 			else
 				return g_strdup_printf(_("in %d.%d kilometers"), dist/1000, rem);
 		}
