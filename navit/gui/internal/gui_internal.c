@@ -3514,7 +3514,7 @@ static void gui_internal_menu_root(struct gui_priv *this)
 	gui_internal_widget_append(w, gui_internal_button_new(this, _("Tools"),
 			image_new_l(this, "gui_tools"), gravity_center|orientation_vertical));
 
-	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, "Route",
+	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Route"),
 			image_new_l(this, "gui_settings"), gravity_center|orientation_vertical,
 			gui_internal_cmd_route, NULL));
 
