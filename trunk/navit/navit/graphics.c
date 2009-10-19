@@ -1014,8 +1014,8 @@ int_sqrt(unsigned int n)
 	unsigned int h, p= 0, q= 1, r= n;
 
 	/* avoid q rollover */
-	if(n > (1<<(sizeof(n)*8-1))) {
-		q = 1<<(sizeof(n)*8-1);
+	if(n >= (1<<(sizeof(n)*8-2))) {
+		q = 1<<(sizeof(n)*8-2);
 	} else {
 		while ( q <= n ) {
 			q <<= 2;
