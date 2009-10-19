@@ -3701,6 +3701,29 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 	}
 }
 
+static void
+gui_internal_setup_gc(struct gui_priv *this)
+{
+	struct color cbh={0x9fff,0x9fff,0x9fff,0xffff};
+	struct color cf={0xbfff,0xbfff,0xbfff,0xffff};
+	struct graphics *gra=this->gra;
+
+	if (this->background)
+		return;
+	this->background=graphics_gc_new(gra);
+	this->background2=graphics_gc_new(gra);
+	this->highlight_background=graphics_gc_new(gra);
+	graphics_gc_set_foreground(this->highlight_background, &cbh);
+	this->foreground=graphics_gc_new(gra);
+	graphics_gc_set_foreground(this->foreground, &cf);
+	this->text_background=graphics_gc_new(gra);
+	this->text_foreground=graphics_gc_new(gra);
+	graphics_gc_set_foreground(this->background, &this->background_color);
+	graphics_gc_set_foreground(this->background2, &this->background2_color);
+	graphics_gc_set_foreground(this->text_background, &this->text_background_color);
+	graphics_gc_set_foreground(this->text_foreground, &this->text_foreground_color);
+}
+
 //##############################################################################################################
 //# Description:
 //# Comment:
@@ -3710,6 +3733,7 @@ static void gui_internal_resize(void *data, int w, int h)
 {
 	struct gui_priv *this=data;
 
+	gui_internal_setup_gc(this);
 	if( this->root.w==w && this->root.h==h)
                 return;
 
@@ -3903,8 +3927,6 @@ static void gui_internal_keypress(void *data, char *key)
 static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra)
 {
 	struct window *win;
-	struct color cbh={0x9fff,0x9fff,0x9fff,0xffff};
-	struct color cf={0xbfff,0xbfff,0xbfff,0xffff};
 	struct transformation *trans=navit_get_trans(this->nav);
 
 	win=graphics_get_data(gra, "window");
@@ -3923,18 +3945,6 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	graphics_add_callback(gra, this->motion_cb);
 	this->keypress_cb=callback_new_attr_1(callback_cast(gui_internal_keypress), attr_keypress, this);
 	graphics_add_callback(gra, this->keypress_cb);
-	this->background=graphics_gc_new(gra);
-	this->background2=graphics_gc_new(gra);
-	this->highlight_background=graphics_gc_new(gra);
-	graphics_gc_set_foreground(this->highlight_background, &cbh);
-	this->foreground=graphics_gc_new(gra);
-	graphics_gc_set_foreground(this->foreground, &cf);
-	this->text_background=graphics_gc_new(gra);
-	this->text_foreground=graphics_gc_new(gra);
-	graphics_gc_set_foreground(this->background, &this->background_color);
-	graphics_gc_set_foreground(this->background2, &this->background2_color);
-	graphics_gc_set_foreground(this->text_background, &this->text_background_color);
-	graphics_gc_set_foreground(this->text_foreground, &this->text_foreground_color);
 
 	// set fullscreen if needed
 	if (this->fullscreen)

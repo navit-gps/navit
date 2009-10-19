@@ -243,6 +243,7 @@ navit_handle_resize(struct navit *this_, int w, int h)
 	sel.u.p_rect.rl.x=w;
 	sel.u.p_rect.rl.y=h;
 	transform_set_screen_selection(this_->trans, &sel);
+	graphics_init(this_->gra);
 	this_->ready |= 2;
 	graphics_set_rect(this_->gra, &sel.u.p_rect);
 	if (this_->ready == 3)
@@ -1297,7 +1298,6 @@ navit_init(struct navit *this_)
 		return;
 	}
 	dbg(2,"Initializing graphics\n");
-	graphics_init(this_->gra);
 	dbg(2,"Setting Vehicle\n");
 	navit_set_vehicle(this_, this_->vehicle);
 	dbg(2,"Adding dynamic maps to mapset %p\n",this_->mapsets);

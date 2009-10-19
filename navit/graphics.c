@@ -104,6 +104,16 @@ struct displaylist {
 static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
 static void graphics_process_selection(struct graphics *gra, struct displaylist *dl);
 
+int
+graphics_set_attr(struct graphics *gra, struct attr *attr)
+{
+	int ret=1;
+	dbg(0,"enter\n");
+	if (gra->meth.set_attr)
+		ret=gra->meth.set_attr(gra->priv, attr);
+        return ret != 0;
+}
+
 void
 graphics_set_rect(struct graphics *gra, struct point_rect *pr)
 {
@@ -197,6 +207,8 @@ graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, i
 */
 void graphics_init(struct graphics *this_)
 {
+	if (this_->gc[0])
+		return;
 	this_->gc[0]=graphics_gc_new(this_);
 	graphics_gc_set_background(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7, 0xffff});
 	graphics_gc_set_foreground(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7, 0xffff });
