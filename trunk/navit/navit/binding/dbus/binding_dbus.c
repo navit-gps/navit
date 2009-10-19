@@ -81,6 +81,7 @@ static void *
 resolve_object(const char *opath, char *type)
 {
 	char *prefix;
+	const char *oprefix;
 	void *ret=NULL;
 	char *def_navit="/default_navit";
 	char *def_graphics="/default_graphics";
@@ -97,15 +98,15 @@ resolve_object(const char *opath, char *type)
 		return ret;
 	}
 	g_free(prefix);
-	prefix=opath+strlen(object_path);
-	if (!strncmp(prefix,def_navit,strlen(def_navit))) {
-		prefix+=strlen(def_navit);
+	oprefix=opath+strlen(object_path);
+	if (!strncmp(oprefix,def_navit,strlen(def_navit))) {
+		oprefix+=strlen(def_navit);
 		struct navit *navit=main_get_navit(NULL);
-		if (!prefix[0]) {
+		if (!oprefix[0]) {
 			dbg(0,"default_navit\n");
 			return navit;
 		}
-		if (!strncmp(prefix,def_graphics,strlen(def_graphics))) {
+		if (!strncmp(oprefix,def_graphics,strlen(def_graphics))) {
 			if (navit_get_attr(navit, attr_graphics, &attr, NULL)) {
 				return attr.u.graphics;
 			}
@@ -583,84 +584,77 @@ request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
     return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
+static int
+decode_attr(DBusMessage *message, struct attr *attr)
+{
+	DBusMessageIter iter, iterattr;
+	char *attr_type;
+
+	dbus_message_iter_init(message, &iter);
+	dbus_message_iter_get_basic(&iter, &attr_type);
+	attr->type = attr_from_name(attr_type); 
+	dbg(0, "attr value: 0x%x string: %s\n", attr->type, attr_type);
+    
+	if (attr->type == attr_none)
+		return 0;
+    
+	dbus_message_iter_next(&iter);
+	dbus_message_iter_recurse(&iter, &iterattr);
+	dbg(0, "seems valid. signature: %s\n", dbus_message_iter_get_signature(&iterattr));
+    
+	if (attr->type > attr_type_item_begin && attr->type < attr_type_item_end)
+		return 0;
+
+	if (attr->type > attr_type_int_begin && attr->type < attr_type_boolean_begin) {
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_INT32) {
+			dbus_message_iter_get_basic(&iterattr, &attr->u.num);
+			return 1;
+		}
+		return 0;
+	}
+	if(attr->type > attr_type_boolean_begin && attr->type < attr_type_int_end) {
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_BOOLEAN) {
+		
+			dbus_message_iter_get_basic(&iterattr, &attr->u.num);
+			return 1;
+		}
+		return 0;
+        }
+	return 0;
+}
+
+
 
 static DBusHandlerResult
 request_navit_set_attr(DBusConnection *connection, DBusMessage *message)
 {
-    struct navit *navit;
-	DBusMessageIter iter, iterattr;
-    struct attr attr;
-    char *attr_type;
+	struct navit *navit;
+	struct attr attr;
 
 	navit = object_get_from_message(message, "navit");
 	if (! navit)
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	if (decode_attr(message, &attr)) {
+		if (navit_set_attr(navit, &attr))
+			return empty_reply(connection, message);
+	}
+    	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
 
-    dbus_message_iter_init(message, &iter);
-    dbus_message_iter_get_basic(&iter, &attr_type);
-    attr.type = attr_from_name(attr_type); 
-    dbg(0, "attr value: 0x%x string: %s\n", attr.type, attr_type);
-    
-    if (attr.type == attr_none)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-    
-    dbus_message_iter_next(&iter);
-    dbus_message_iter_recurse(&iter, &iterattr);
-    dbg(0, "seems valid. signature: %s\n", dbus_message_iter_get_signature(&iterattr));
-    
-    if (attr.type > attr_type_item_begin && attr.type < attr_type_item_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if (attr.type > attr_type_int_begin && attr.type < attr_type_boolean_begin) {
-        if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_INT32)
-        {
-            dbus_message_iter_get_basic(&iterattr, &attr.u.num);
-            if (navit_set_attr(navit, &attr))
-                return empty_reply(connection, message);
-        }
-    }
-    else if(attr.type > attr_type_boolean_begin && attr.type < attr_type_int_end) {
-        if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_BOOLEAN)
-        {
-            dbus_message_iter_get_basic(&iterattr, &attr.u.num);
-            if (navit_set_attr(navit, &attr))
-                return empty_reply(connection, message);
-        }
-    }
-#if 0
-    else if(attr.type > attr_type_string_begin && attr.type < attr_type_string_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_special_begin && attr.type < attr_type_special_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_double_begin && attr.type < attr_type_double_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_coord_geo_begin && attr.type < attr_type_coord_geo_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_color_begin && attr.type < attr_type_color_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_object_begin && attr.type < attr_type_object_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_coord_begin && attr.type < attr_type_coord_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_pcoord_begin && attr.type < attr_type_pcoord_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_callback_begin && attr.type < attr_type_callback_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-#endif
-    else {
-        dbg(0, "zomg really unhandled111\n");
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-    }
-    
-    return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+static DBusHandlerResult
+request_graphics_set_attr(DBusConnection *connection, DBusMessage *message)
+{
+	struct graphics *graphics;
+    	struct attr attr;
+	
+	graphics = object_get_from_message(message, "graphics");
+	if (! graphics)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	if (decode_attr(message, &attr)) {
+		if (graphics_set_attr(graphics, &attr))
+			return empty_reply(connection, message);
+	}
+    	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
 static DBusHandlerResult
@@ -800,6 +794,7 @@ struct dbus_method {
 	{".navit",  "set_destination",     "(iii)s",  "(projection,longitude,latitude)comment",  "",   "",      request_navit_set_destination},
 	{".navit",  "evaluate", 	   "s",	      "command",				 "s",  "",     request_navit_evaluate},
 	{".graphics","get_data", 	   "s",	      "type",				 	 "ay",  "data", request_graphics_get_data},
+	{".graphics","set_attr",           "sv",      "attribute,value",                         "",   "",      request_graphics_set_attr},
 #if 0
     {".navit",  "toggle_announcer",    "",        "",                                        "",   "",      request_navit_toggle_announcer},
 	{".navit",  "toggle_announcer",    "i",       "",                                        "",   "",      request_navit_toggle_announcer},
