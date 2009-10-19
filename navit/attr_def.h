@@ -123,6 +123,7 @@ ATTR(delay)
 ATTR(lag)
 ATTR(bpp)
 ATTR(fullscreen)
+ATTR(windowid)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
