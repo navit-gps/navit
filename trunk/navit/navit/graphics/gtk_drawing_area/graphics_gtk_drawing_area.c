@@ -89,6 +89,7 @@ struct graphics_priv {
 	struct timeval button_press[8];
 	struct timeval button_release[8];
 	int timeout;
+	int delay;
 };
 
 
@@ -759,13 +760,20 @@ motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer user_data)
  * * Exit navit (X pressed)
  * * @param widget active widget
  * * @param event the event (delete_event)
- * * @param nav our Navit context
+ * * @param user_data Pointer to private data structure
  * * @returns TRUE
  * */
 static gint
-delete(GtkWidget *widget, GdkEventKey *event, struct navit *nav)
+delete(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
-	navit_destroy(nav);
+	struct graphics_priv *this=user_data;
+	dbg(0,"enter this->win=%p\n",this->win);
+	if (this->delay & 2) {
+		if (this->win) 
+			this->win=NULL;
+	} else {
+		navit_destroy(this->nav);
+	}
 	return TRUE;
 }
 
@@ -886,6 +894,45 @@ overlay_resize(struct graphics_priv *this, struct point *p, int w, int h, int al
 	}
 }
 
+static void
+get_data_window(struct graphics_priv *this, unsigned int xid)
+{
+	if (!xid)
+		this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	else
+		this->win = gtk_plug_new(xid);
+	if (!gtk_widget_get_parent(this->widget)) 
+		gtk_widget_ref(this->widget);
+	gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
+	dbg(1,"h= %i, w= %i\n",this->win_h, this->win_w);
+	gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
+	gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", "Navit");
+	gtk_widget_realize(this->win);
+	if (gtk_widget_get_parent(this->widget)) 
+		gtk_widget_reparent(this->widget, this->win);
+	else
+		gtk_container_add(GTK_CONTAINER(this->win), this->widget);
+	gtk_widget_show_all(this->win);
+	GTK_WIDGET_SET_FLAGS (this->widget, GTK_CAN_FOCUS);
+       	gtk_widget_set_sensitive(this->widget, TRUE);
+	gtk_widget_grab_focus(this->widget);
+	g_signal_connect(G_OBJECT(this->widget), "key-press-event", G_CALLBACK(keypress), this);
+	g_signal_connect(G_OBJECT(this->win), "delete_event", G_CALLBACK(delete), this);
+}
+
+static int
+set_attr(struct graphics_priv *gr, struct attr *attr)
+{
+	dbg(0,"enter\n");
+	switch (attr->type) {
+	case attr_windowid:
+		get_data_window(gr, attr->u.num);
+		return 1;
+	default:
+		return 0;
+	}
+}
+
 static struct graphics_priv *
 overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha, int wraparound)
 {
@@ -954,7 +1001,8 @@ graphics_gtk_drawing_area_disable_suspend(struct window *w)
 #else
     dbg(1, "failed to kill() under Windows\n");
 #endif
-}		
+}
+
 
 static void *
 get_data(struct graphics_priv *this, char *type)
@@ -971,22 +1019,8 @@ get_data(struct graphics_priv *this, char *type)
 		unsigned xid = 0;
 		if (cp) 
 			xid = strtol(cp, NULL, 0);
-		if (!xid)
-			this->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-		else
-			this->win = gtk_plug_new(xid);
-		gtk_window_set_default_size(GTK_WINDOW(this->win), this->win_w, this->win_h);
-		dbg(1,"h= %i, w= %i\n",this->win_h, this->win_w);
-		gtk_window_set_title(GTK_WINDOW(this->win), "Navit");
-		gtk_window_set_wmclass (GTK_WINDOW (this->win), "navit", "Navit");
-		gtk_widget_realize(this->win);
-		gtk_container_add(GTK_CONTAINER(this->win), this->widget);
-		gtk_widget_show_all(this->win);
-		GTK_WIDGET_SET_FLAGS (this->widget, GTK_CAN_FOCUS);
-        	gtk_widget_set_sensitive(this->widget, TRUE);
-		gtk_widget_grab_focus(this->widget);
-		g_signal_connect(G_OBJECT(this->widget), "key-press-event", G_CALLBACK(keypress), this);
-	g_signal_connect(G_OBJECT(this->win), "delete_event", G_CALLBACK(delete), this->nav);
+		if (!(this->delay & 1))
+			get_data_window(this, xid);
 		this->window.fullscreen=graphics_gtk_drawing_area_fullscreen;
 		this->window.disable_suspend=graphics_gtk_drawing_area_disable_suspend;
 		this->window.priv=this;
@@ -1029,6 +1063,7 @@ static struct graphics_methods graphics_methods = {
 	NULL,
 	overlay_disable,
 	overlay_resize,
+	set_attr,
 };
 
 static struct graphics_priv *
@@ -1070,6 +1105,9 @@ graphics_gtk_drawing_area_new(struct navit *nav, struct graphics_methods *meth, 
 	this->timeout=100;
 	if ((attr=attr_search(attrs, NULL, attr_timeout))) 
 		this->timeout=attr->u.num;
+	this->delay=0;
+	if ((attr=attr_search(attrs, NULL, attr_delay))) 
+		this->delay=attr->u.num;
 	this->cbl=cbl;
 	this->colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
 	gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_KEY_PRESS_MASK);

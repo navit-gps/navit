@@ -68,6 +68,7 @@ struct graphics_methods {
 	void (*get_text_bbox)(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate);
 	void (*overlay_disable)(struct graphics_priv *gr, int disable);
 	void (*overlay_resize)(struct graphics_priv *gr, struct point *p, int w, int h, int alpha, int wraparound);
+	int (*set_attr)(struct graphics_priv *gr, struct attr *attr);
 };
 
 
@@ -132,6 +133,7 @@ struct mapset;
 struct point;
 struct point_rect;
 struct transformation;
+int graphics_set_attr(struct graphics *gra, struct attr *attr);
 void graphics_set_rect(struct graphics *gra, struct point_rect *pr);
 struct graphics *graphics_new(struct attr *parent, struct attr **attrs);
 int graphics_get_attr(struct graphics *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
