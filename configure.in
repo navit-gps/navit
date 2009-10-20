@@ -55,6 +55,7 @@ vehicle_demo=yes; vehicle_demo_reason=default
 vehicle_file=yes; vehicle_file_reason=default
 vehicle_gpsd=yes; vehicle_gpsd_reason=default
 vehicle_gypsy=yes; vehicle_gypsy_reason=default
+vehicle_null=no; vehicle_null_reason=default
 vehicle_wince=no; vehicle_wince_reason=default
 vehicle_iphone=no; vehicle_iphone_reason=default
 vehicle_android=no; vehicle_android_reason=default
@@ -758,6 +759,9 @@ fi
 AC_SUBST(GYPSY_CFLAGS)
 AC_SUBST(GYPSY_LIBS)
 AM_CONDITIONAL(VEHICLE_GYPSY, test "x${vehicle_gypsy}" = "xyes")
+# null
+AC_ARG_ENABLE(vehicle-null, [  --enable-vehicle-null             enable vehicle type null], vehicle_null=$enableval;vehicle_null_reason="configure parameter")
+AM_CONDITIONAL(VEHICLE_NULL, test "x${vehicle_null}" = "xyes")
 # wince
 AC_ARG_ENABLE(vehicle-wince, [  --disable-vehicle-wince             disable vehicle type wince], vehicle_wince=$enableval;vehicle_wince_reason="configure parameter")
 AM_CONDITIONAL(VEHICLE_WINCE, test "x${vehicle_wince}" = "xyes")
@@ -829,6 +833,7 @@ navit/vehicle/android/Makefile
 navit/vehicle/file/Makefile
 navit/vehicle/gpsd/Makefile
 navit/vehicle/gypsy/Makefile
+navit/vehicle/null/Makefile
 navit/vehicle/demo/Makefile
 navit/vehicle/wince/Makefile
 navit/vehicle/iphone/Makefile
@@ -926,6 +931,7 @@ echo "  demo:              $vehicle_demo ($vehicle_demo_reason)"
 echo "  file:              $vehicle_file ($vehicle_file_reason)"
 echo "  gpsd:              $vehicle_gpsd ($vehicle_gpsd_reason)"
 echo "  gypsy:             $vehicle_gypsy ($vehicle_gypsy_reason)"
+echo "  null:              $vehicle_null ($vehicle_null_reason)"
 echo "  wince:             $vehicle_wince ($vehicle_wince_reason)"
 echo "  iphone:            $vehicle_iphone ($vehicle_iphone_reason)"
 
