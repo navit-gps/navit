@@ -34,6 +34,7 @@
 #include "layout.h"
 #include "command.h"
 #include "graphics.h"
+#include "vehicle.h"
 #include "util.h"
 
 
@@ -85,6 +86,7 @@ resolve_object(const char *opath, char *type)
 	void *ret=NULL;
 	char *def_navit="/default_navit";
 	char *def_graphics="/default_graphics";
+	char *def_vehicle="/default_vehicle";
 	struct attr attr;
 
 	if (strncmp(opath, object_path, strlen(object_path))) {
@@ -109,6 +111,12 @@ resolve_object(const char *opath, char *type)
 		if (!strncmp(oprefix,def_graphics,strlen(def_graphics))) {
 			if (navit_get_attr(navit, attr_graphics, &attr, NULL)) {
 				return attr.u.graphics;
+			}
+			return NULL;
+		}
+		if (!strncmp(oprefix,def_vehicle,strlen(def_vehicle))) {
+			if (navit_get_attr(navit, attr_vehicle, &attr, NULL)) {
+				return attr.u.vehicle;
 			}
 			return NULL;
 		}
@@ -587,8 +595,10 @@ request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
 static int
 decode_attr(DBusMessage *message, struct attr *attr)
 {
-	DBusMessageIter iter, iterattr;
+	DBusMessageIter iter, iterattr, iterstruct;
 	char *attr_type;
+	int ret=1;
+	double d;
 
 	dbus_message_iter_init(message, &iter);
 	dbus_message_iter_get_basic(&iter, &attr_type);
@@ -614,13 +624,49 @@ decode_attr(DBusMessage *message, struct attr *attr)
 	}
 	if(attr->type > attr_type_boolean_begin && attr->type < attr_type_int_end) {
 		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_BOOLEAN) {
-		
 			dbus_message_iter_get_basic(&iterattr, &attr->u.num);
 			return 1;
 		}
 		return 0;
         }
+	if(attr->type > attr_type_double_begin && attr->type < attr_type_double_end) {
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_DOUBLE) {
+			attr->u.numd=g_new(typeof(*attr->u.numd),1);
+			dbus_message_iter_get_basic(&iterattr, attr->u.numd);
+			return 1;
+		}
+	}
+	if(attr->type > attr_type_coord_geo_begin && attr->type < attr_type_coord_geo_end) {
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRUCT) {
+			attr->u.coord_geo=g_new(typeof(*attr->u.coord_geo),1);
+			dbus_message_iter_recurse(&iterattr, &iterstruct);
+			if (dbus_message_iter_get_arg_type(&iterstruct) == DBUS_TYPE_DOUBLE) {
+				dbus_message_iter_get_basic(&iterstruct, &d);
+				dbus_message_iter_next(&iterstruct);
+				attr->u.coord_geo->lng=d;
+			} else
+				ret=0;
+			if (dbus_message_iter_get_arg_type(&iterstruct) == DBUS_TYPE_DOUBLE) {
+				dbus_message_iter_get_basic(&iterstruct, &d);
+				attr->u.coord_geo->lat=d;
+			} else
+				ret=0;
+			if (!ret) {
+				g_free(attr->u.coord_geo);
+				attr->u.coord_geo=NULL;
+			}
+			return ret;
+		}
+	}
 	return 0;
+}
+
+static void
+destroy_attr(struct attr *attr)
+{
+	if(attr->type > attr_type_double_begin && attr->type < attr_type_double_end) {
+		g_free(attr->u.numd);
+	}
 }
 
 
@@ -630,12 +676,15 @@ request_navit_set_attr(DBusConnection *connection, DBusMessage *message)
 {
 	struct navit *navit;
 	struct attr attr;
+	int ret;
 
 	navit = object_get_from_message(message, "navit");
 	if (! navit)
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 	if (decode_attr(message, &attr)) {
-		if (navit_set_attr(navit, &attr))
+		ret=navit_set_attr(navit, &attr);
+		destroy_attr(&attr);
+		if (ret)
 			return empty_reply(connection, message);
 	}
     	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
@@ -646,12 +695,34 @@ request_graphics_set_attr(DBusConnection *connection, DBusMessage *message)
 {
 	struct graphics *graphics;
     	struct attr attr;
+	int ret;
 	
 	graphics = object_get_from_message(message, "graphics");
 	if (! graphics)
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 	if (decode_attr(message, &attr)) {
-		if (graphics_set_attr(graphics, &attr))
+		ret=graphics_set_attr(graphics, &attr);
+		destroy_attr(&attr);
+		if (ret)
+			return empty_reply(connection, message);
+	}
+    	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
+
+static DBusHandlerResult
+request_vehicle_set_attr(DBusConnection *connection, DBusMessage *message)
+{
+	struct vehicle *vehicle;
+    	struct attr attr;
+	int ret;
+	
+	vehicle = object_get_from_message(message, "vehicle");
+	if (! vehicle)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	if (decode_attr(message, &attr)) {
+		ret=vehicle_set_attr(vehicle, &attr, NULL);
+		destroy_attr(&attr);
+		if (ret)	
 			return empty_reply(connection, message);
 	}
     	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
@@ -795,6 +866,7 @@ struct dbus_method {
 	{".navit",  "evaluate", 	   "s",	      "command",				 "s",  "",     request_navit_evaluate},
 	{".graphics","get_data", 	   "s",	      "type",				 	 "ay",  "data", request_graphics_get_data},
 	{".graphics","set_attr",           "sv",      "attribute,value",                         "",   "",      request_graphics_set_attr},
+	{".vehicle","set_attr",           "sv",      "attribute,value",                         "",   "",      request_vehicle_set_attr},
 #if 0
     {".navit",  "toggle_announcer",    "",        "",                                        "",   "",      request_navit_toggle_announcer},
 	{".navit",  "toggle_announcer",    "i",       "",                                        "",   "",      request_navit_toggle_announcer},
