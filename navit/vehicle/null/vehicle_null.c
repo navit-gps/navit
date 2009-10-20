@@ -32,7 +32,6 @@
 #include "plugin.h"
 #include "coord.h"
 #include "item.h"
-#include "null.h"
 #include "vehicle.h"
 
 struct vehicle_priv {
@@ -120,8 +119,23 @@ vehicle_null_position_attr_get(struct vehicle_priv *priv,
 	return 1;
 }
 
-int vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr, struct attr **attrs)
+static int
+vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr, struct attr **attrs)
 {
+	switch (attr->type) {
+	case attr_position_speed:
+		priv->speed=*attr->u.numd;
+		break;
+	case attr_position_direction:
+		priv->direction=*attr->u.numd;
+		break;
+	case attr_position_coord_geo:
+		priv->geo=*attr->u.coord_geo;
+		break;
+	default:
+		return 0;
+	}
+	callback_list_call_attr_0(priv->cbl, attr->type);
 	return 1;
 }
 
