@@ -17,6 +17,9 @@ endif
 if VEHICLE_GYPSY
   SUBDIRS += gypsy
 endif
+if VEHICLE_NULL
+  SUBDIRS += null
+endif
 if VEHICLE_WINCE
   SUBDIRS += wince
 endif
