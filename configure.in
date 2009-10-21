@@ -520,6 +520,8 @@ fi
 AC_SUBST(DBUS_CFLAGS)
 AC_SUBST(DBUS_LIBS)
 AM_CONDITIONAL(BINDING_DBUS, test "x${binding_dbus}" = "xyes")
+AC_ARG_WITH(dbus-service-dir, [ --with-dbus-service-dir   specify where the dbus service dir resides], DBUS_SERVICE_DIR=$withval, DBUS_SERVICE_DIR="$datarootdir/dbus-1/services")
+AC_SUBST(DBUS_SERVICE_DIR)
 
 # svg
 AC_ARG_ENABLE(svg, [  --disable-svg        disable Scalable Vector Graphics], enable_svg=$enableval, enable_svg=yes)
