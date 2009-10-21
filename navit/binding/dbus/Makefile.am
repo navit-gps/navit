@@ -13,3 +13,6 @@ $(service_DATA): $(service_in_files) Makefile
 	sed -e "s|\@bindir\@|$(bindir)|" $< > $@
 
 EXTRA_DIST = $(service_in_files)
+
+distclean-local:
+	rm -f $(service_DATA)
