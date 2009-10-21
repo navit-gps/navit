@@ -5,7 +5,7 @@ libbinding_dbus_la_SOURCES = binding_dbus.c
 libbinding_dbus_la_LIBADD = @DBUS_LIBS@
 libbinding_dbus_la_LDFLAGS = -module -avoid-version
 
-servicedir = /usr/share/dbus-1/services
+servicedir = @DBUS_SERVICE_DIR@
 service_in_files = org.navit_project.navit.service.in
 service_DATA = $(service_in_files:.service.in=.service)
 
