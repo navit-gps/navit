@@ -205,6 +205,13 @@ navit_draw(struct navit *this_)
 	navit_draw_async(this_, 0);
 }
 
+int
+navit_get_ready(struct navit *this_)
+{
+	return this_->ready;
+}
+
+
 
 void
 navit_draw_displaylist(struct navit *this_)
@@ -1100,7 +1107,7 @@ navit_say(struct navit *this_, char *text)
  * @brief Toggles the navigation announcer for navit
  * @param this_ The navit object
  */
-void
+static void
 navit_cmd_announcer_toggle(struct navit *this_)
 {
     struct attr attr, speechattr;

@@ -24,6 +24,12 @@
 extern "C" {
 #endif
 extern struct gui *main_loop_gui;
+// defined in glib.h.
+#ifndef __G_LIST_H__
+struct _GList;
+typedef struct _GList GList;
+#endif
+
 /* prototypes */
 enum attr_type;
 struct attr;
@@ -42,17 +48,11 @@ struct route;
 struct tracking;
 struct transformation;
 struct vehicleprofile;
-
-// defined in glib.h.
-#ifndef __G_LIST_H__
-struct _GList;
-typedef struct _GList GList;
-#endif
-
 void navit_add_mapset(struct navit *this_, struct mapset *ms);
 struct mapset *navit_get_mapset(struct navit *this_);
 struct tracking *navit_get_tracking(struct navit *this_);
 void navit_draw(struct navit *this_);
+int navit_get_ready(struct navit *this_);
 void navit_draw_displaylist(struct navit *this_);
 void navit_handle_resize(struct navit *this_, int w, int h);
 int navit_get_width(struct navit *this_);
@@ -68,17 +68,13 @@ void navit_add_message(struct navit *this_, char *message);
 struct message *navit_get_messages(struct navit *this_);
 struct graphics *navit_get_graphics(struct navit *this_);
 struct vehicleprofile *navit_get_vehicleprofile(struct navit *this_);
-
-//! Returns a list of 'struct vehicleprofile *'
 GList *navit_get_vehicleprofiles(struct navit *this_);
-
 void navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async);
 int navit_check_route(struct navit *this_);
 void navit_add_bookmark(struct navit *this_, struct pcoord *c, const char *description);
 void navit_textfile_debug_log(struct navit *this_, const char *fmt, ...);
 int navit_speech_estimate(struct navit *this_, char *str);
 void navit_say(struct navit *this_, char *text);
-void navit_announcer_toggle(struct navit *this_);
 void navit_speak(struct navit *this_);
 void navit_window_roadbook_destroy(struct navit *this_);
 void navit_window_roadbook_new(struct navit *this_);
