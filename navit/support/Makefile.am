@@ -23,4 +23,7 @@ endif
 if SUPPORT_LIBPNG
  SUBDIRS+=libpng
 endif
+if SPEECH_ESPEAK
+ SUBDIRS+=espeak
+endif
 DIST_SUBDIRS=espeak ezxml glib wordexp win32 zlib libc libpng
