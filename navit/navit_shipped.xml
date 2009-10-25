@@ -1422,11 +1422,8 @@
                 <itemgra item_types="nav_straight" order="0-">
                     <icon src="nav_straight_bk.svg" w="32" h="32"/>
                 </itemgra>
-                <itemgra item_types="nav_turnaround_left" order="0-">
+                <itemgra item_types="nav_turnaround" order="0-">
                     <icon src="nav_turnaround_left_bk.svg" w="32" h="32"/>
-                </itemgra>
-                <itemgra item_types="nav_turnaround_right" order="0-">
-                    <icon src="nav_turnaround_right_bk.svg" w="32" h="32"/>
                 </itemgra>
                 <itemgra item_types="nav_roundabout_l1" order="0-">
                     <icon src="nav_roundabout_l1_bk.svg" w="32" h="32"/>
@@ -1585,7 +1582,7 @@
                 <itemgra item_types="poi_bus_stop" order="12-">
                     <icon src="bus.png"/>
                 </itemgra>
-                <itemgra item_types="poi_bussines_service" order="12-">
+                <itemgra item_types="poi_business_service" order="12-">
                     <icon src="bussines_service.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_car_rent" order="12-">
@@ -1606,9 +1603,6 @@
                 <itemgra item_types="poi_cinema" order="12-">
                     <icon src="cinema.png"/>
                 </itemgra>
-                <itemgra item_types="poi_civil" order="12-">
-                    <icon src="civil.xpm"/>
-                </itemgra>
                 <itemgra item_types="poi_communication" order="12-">
                     <icon src="communication.xpm"/>
                 </itemgra>
@@ -1627,7 +1621,7 @@
                 <itemgra item_types="poi_danger_area" order="12-">
                     <icon src="danger_area.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_dangerous" order="12-">
+                <itemgra item_types="poi_danger_sea_wreck" order="12-">
                     <icon src="dangerous.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_daymark" order="12-">
@@ -1651,16 +1645,16 @@
                 <itemgra item_types="poi_fish" order="9-">
                     <icon src="fish.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_forbiden_area" order="12-">
+                <itemgra item_types="poi_forbidden_area" order="12-">
                     <icon src="forbiden_area.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_garmin" order="15-">
+                <itemgra item_types="poi_shop_gps" order="15-">
                     <icon src="garmin.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_golf" order="12-">
                     <icon src="golf.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_goverment_building" order="12-">
+                <itemgra item_types="poi_government_building" order="12-">
                     <icon src="goverment_building.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_height" order="12-">
@@ -1735,7 +1729,7 @@
                 <itemgra item_types="poi_pharmacy" order="12-">
                     <icon src="pharmacy.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_post" order="13-">
+                <itemgra item_types="poi_post_office,poi_post_box" order="13-">
                     <icon src="post.png"/>
                 </itemgra>
                 <itemgra item_types="poi_public_office" order="12-">
@@ -1768,9 +1762,6 @@
                 <itemgra item_types="poi_restricted_area" order="12-">
                     <icon src="restricted_area.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_rest_room" order="13-">
-                    <icon src="rest_room.xpm"/>
-                </itemgra>
                 <itemgra item_types="poi_restroom" order="13-">
                     <icon src="restroom.xpm"/>
                 </itemgra>
@@ -1795,7 +1786,7 @@
                 <itemgra item_types="poi_shop_department" order="12-">
                     <icon src="shop_department.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_shop_furnish" order="12-">
+                <itemgra item_types="poi_shop_furniture" order="12-">
                     <icon src="shop_furnish.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_shop_grocery" order="12-">
@@ -1827,9 +1818,6 @@
                 </itemgra>
                 <itemgra item_types="poi_stadium" order="11-">
                     <icon src="stadium.xpm"/>
-                </itemgra>
-                <itemgra item_types="poi_subdivision" order="12-">
-                    <icon src="subdivision.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_swimming" order="12-">
                     <icon src="swimming.xpm"/>
@@ -1951,7 +1939,7 @@
                 </itemgra>
             </layer>
             <layer name="POI Labels">
-                <itemgra item_types="poi_airport,town_ghost,poi_hotel,poi_car_parking,poi_car_dealer_parts,poi_fuel,poi_shopping,poi_attraction,poi_cafe,poi_bar,highway_exit,poi_camp_rv,poi_museum_history,poi_hospital,poi_dining,poi_fastfood,poi_police,poi_autoservice,poi_bank,poi_bus_station,poi_bus_stop,poi_bussines_service,poi_car_rent,poi_church,poi_cinema,poi_concert,poi_drinkingwater,poi_emergency,poi_fair,poi_fish,poi_goverment_building,poi_hotspring,poi_information,poi_justice,poi_landmark,poi_library,poi_mall,poi_manmade_feature,poi_marine,poimarine_type,poi_mark,poi_oil_field,poi_peak,poi_personal_service,poi_pharmacy,poi_post,poi_public_office,poi_rail_halt,poi_rail_station,poi_rail_tram_stop,poi_repair_service,poi_resort,poi_restaurant,poi_restricted_area,poi_sailing,poi_scenic_area,poi_school,poi_service,poi_shop_retail,poi_skiing,poi_social_service,poi_sport,poi_stadium,poi_swimming,poi_theater,poi_townhall,poi_trail,poi_truck_stop,poi_tunnel,poi_worship,poi_wrecker,poi_zoo,poi_biergarten,poi_castle,poi_ruins,poi_memorial,poi_monument,poi_shelter,poi_fountain,poi_viewpoint" order="14-">
+                <itemgra item_types="poi_airport,town_ghost,poi_hotel,poi_car_parking,poi_car_dealer_parts,poi_fuel,poi_shopping,poi_attraction,poi_cafe,poi_bar,highway_exit,poi_camp_rv,poi_museum_history,poi_hospital,poi_dining,poi_fastfood,poi_police,poi_autoservice,poi_bank,poi_bus_station,poi_bus_stop,poi_business_service,poi_car_rent,poi_church,poi_cinema,poi_concert,poi_drinking_water,poi_emergency,poi_fair,poi_fish,poi_government_building,poi_hotspring,poi_information,poi_justice,poi_landmark,poi_library,poi_mall,poi_manmade_feature,poi_marine,poi_marine_type,poi_mark,poi_oil_field,poi_peak,poi_personal_service,poi_pharmacy,poi_post_office,poi_public_office,poi_rail_halt,poi_rail_station,poi_rail_tram_stop,poi_repair_service,poi_resort,poi_restaurant,poi_restricted_area,poi_sailing,poi_scenic_area,poi_school,poi_service,poi_shop_retail,poi_skiing,poi_social_service,poi_sport,poi_stadium,poi_swimming,poi_theater,poi_townhall,poi_trail,poi_truck_stop,poi_tunnel,poi_worship,poi_wrecker,poi_zoo,poi_biergarten,poi_castle,poi_ruins,poi_memorial,poi_monument,poi_shelter,poi_fountain,poi_viewpoint" order="14-">
                     <circle color="#606060" radius="0" width="0" text_size="10"/>
                 </itemgra>
             </layer>
@@ -2845,7 +2833,7 @@
                 <itemgra item_types="poi_bus_stop" order="12-">
                     <icon src="bus.png"/>
                 </itemgra>
-                <itemgra item_types="poi_bussines_service" order="0-">
+                <itemgra item_types="poi_business_service" order="0-">
                     <icon src="bussines_service.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_car_rent" order="11-">
@@ -2866,9 +2854,6 @@
                 <itemgra item_types="poi_cinema" order="12-">
                     <icon src="cinema.png"/>
                 </itemgra>
-                <itemgra item_types="poi_civil" order="0-">
-                    <icon src="civil.xpm"/>
-                </itemgra>
                 <itemgra item_types="poi_communication" order="0-">
                     <icon src="communication.xpm"/>
                 </itemgra>
@@ -2887,7 +2872,7 @@
                 <itemgra item_types="poi_danger_area" order="0-">
                     <icon src="danger_area.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_dangerous" order="0-">
+                <itemgra item_types="poi_danger_sea_wreck" order="0-">
                     <icon src="dangerous.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_daymark" order="0-">
@@ -2911,16 +2896,16 @@
                 <itemgra item_types="poi_fish" order="0-">
                     <icon src="fish.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_forbiden_area" order="0-">
+                <itemgra item_types="poi_forbidden_area" order="0-">
                     <icon src="forbiden_area.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_garmin" order="0-">
+                <itemgra item_types="poi_shop_gps" order="0-">
                     <icon src="garmin.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_golf" order="12-">
                     <icon src="golf.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_goverment_building" order="0-">
+                <itemgra item_types="poi_government_building" order="0-">
                     <icon src="goverment_building.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_height" order="0-">
@@ -2995,7 +2980,7 @@
                 <itemgra item_types="poi_pharmacy" order="12-">
                     <icon src="pharmacy.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_post" order="13-">
+                <itemgra item_types="poi_post_office,poi_post_box" order="13-">
                     <icon src="post.png"/>
                 </itemgra>
                 <itemgra item_types="poi_public_office" order="0-">
@@ -3021,9 +3006,6 @@
                 </itemgra>
                 <itemgra item_types="poi_resort" order="0-">
                     <icon src="resort.xpm"/>
-                </itemgra>
-                <itemgra item_types="poi_rest_room" order="13-">
-                    <icon src="rest_room.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_restaurant" order="12-">
                     <icon src="restaurant.xpm"/>
@@ -3055,7 +3037,7 @@
                 <itemgra item_types="poi_shop_department" order="0-">
                     <icon src="shop_department.xpm"/>
                 </itemgra>
-                <itemgra item_types="poi_shop_furnish" order="0-">
+                <itemgra item_types="poi_shop_furniture" order="0-">
                     <icon src="shop_furnish.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_shop_grocery" order="0-">
@@ -3087,9 +3069,6 @@
                 </itemgra>
                 <itemgra item_types="poi_stadium" order="0-">
                     <icon src="stadium.xpm"/>
-                </itemgra>
-                <itemgra item_types="poi_subdivision" order="0-">
-                    <icon src="subdivision.xpm"/>
                 </itemgra>
                 <itemgra item_types="poi_swimming" order="12-">
                     <icon src="swimming.xpm"/>
@@ -3219,7 +3198,7 @@
                 </itemgra>
             </layer>
             <layer name="POI Labels">
-                <itemgra item_types="poi_airport,town_ghost,poi_hotel,poi_car_parking,poi_car_dealer_parts,poi_fuel,poi_shopping,poi_attraction,poi_cafe,poi_bar,highway_exit,poi_camp_rv,poi_museum_history,poi_hospital,poi_dining,poi_fastfood,poi_police,poi_autoservice,poi_bank,poi_bus_station,poi_bus_stop,poi_bussines_service,poi_car_rent,poi_church,poi_cinema,poi_concert,poi_drinkingwater,poi_emergency,poi_fair,poi_fish,poi_goverment_building,poi_hotspring,poi_information,poi_justice,poi_landmark,poi_library,poi_mall,poi_manmade_feature,poi_marine,poimarine_type,poi_mark,poi_oil_field,poi_peak,poi_personal_service,poi_pharmacy,poi_post,poi_public_office,poi_rail_halt,poi_rail_station,poi_rail_tram_stop,poi_repair_service,poi_resort,poi_restaurant,poi_restricted_area,poi_sailing,poi_scenic_area,poi_school,poi_service,poi_shop_retail,poi_skiing,poi_social_service,poi_sport,poi_stadium,poi_swimming,poi_theater,poi_townhall,poi_trail,poi_truck_stop,poi_tunnel,poi_worship,poi_wrecker,poi_zoo,poi_biergarten,poi_castle,poi_ruins,poi_memorial,poi_monument,poi_shelter,poi_fountain,poi_viewpoint" order="14-">
+                <itemgra item_types="poi_airport,town_ghost,poi_hotel,poi_car_parking,poi_car_dealer_parts,poi_fuel,poi_shopping,poi_attraction,poi_cafe,poi_bar,highway_exit,poi_camp_rv,poi_museum_history,poi_hospital,poi_dining,poi_fastfood,poi_police,poi_autoservice,poi_bank,poi_bus_station,poi_bus_stop,poi_business_service,poi_car_rent,poi_church,poi_cinema,poi_concert,poi_drinking_water,poi_emergency,poi_fair,poi_fish,poi_government_building,poi_hotspring,poi_information,poi_justice,poi_landmark,poi_library,poi_mall,poi_manmade_feature,poi_marine,poi_marine_type,poi_mark,poi_oil_field,poi_peak,poi_personal_service,poi_pharmacy,poi_post_office,poi_public_office,poi_rail_halt,poi_rail_station,poi_rail_tram_stop,poi_repair_service,poi_resort,poi_restaurant,poi_restricted_area,poi_sailing,poi_scenic_area,poi_school,poi_service,poi_shop_retail,poi_skiing,poi_social_service,poi_sport,poi_stadium,poi_swimming,poi_theater,poi_townhall,poi_trail,poi_truck_stop,poi_tunnel,poi_worship,poi_wrecker,poi_zoo,poi_biergarten,poi_castle,poi_ruins,poi_memorial,poi_monument,poi_shelter,poi_fountain,poi_viewpoint" order="14-">
                     <circle color="#606060" radius="0" width="0" text_size="10"/>
                 </itemgra>
             </layer>
@@ -3276,7 +3255,7 @@
                 <itemgra item_types="poly_airport" order="0-">
                     <polygon color="#a0a0a0"/>
                 </itemgra>
-                <itemgra item_types="sport_poly,poly_sport" order="0-">
+                <itemgra item_types="poly_sport" order="0-">
                     <polygon color="#ff8c00"/>
                 </itemgra>
                 <itemgra item_types="poly_industry,poly_place,poly_railway" order="0-">
@@ -3285,7 +3264,7 @@
                 <itemgra item_types="poly_commercial" order="0-">
                     <polygon color="#fff8dc"/>
                 </itemgra>
-                <itemgra item_types="industry_poly,building_poly,place_poly,poly_brownfield,poly_greenfield,poly_construction,poly_railway" order="0-">
+                <itemgra item_types="poly_industry,poly_building,poly_place,poly_brownfield,poly_greenfield,poly_construction,poly_railway" order="0-">
                     <polygon color="#ecd8ff"/>
                 </itemgra>
                 <itemgra item_types="poly_farm" order="0-">
@@ -4122,29 +4101,29 @@
                     <polygon color="#72bf81"/>
                 </itemgra>
                 <!-- landuse=residential -->
-                <itemgra item_types="town_poly" order="0-">
+                <itemgra item_types="poly_town" order="0-">
                     <polygon color="#f2f2f2"/>
                 </itemgra>
                 <!-- natural=water -->
-                <itemgra item_types="water_poly" order="0-">
+                <itemgra item_types="poly_water" order="0-">
                     <polygon color="#b5d6f1"/>
                     <polyline color="#b5d6f1"/>
                     <text text_size="8"/>
                 </itemgra>
                 <!-- leisure=park -->
-                <itemgra item_types="park_poly" order="0-">
+                <itemgra item_types="poly_park" order="0-">
                     <polygon color="#c7f1a3"/>
                     <polyline color="#79c691"/>
                     <text text_size="5"/>
                 </itemgra>
-                <itemgra item_types="airport_poly" order="0-">
+                <itemgra item_types="poly_airport" order="0-">
                     <polygon color="#a0a0a0"/>
                 </itemgra>
-                <itemgra item_types="sport_poly" order="0-">
+                <itemgra item_types="poly_sport" order="0-">
                     <polygon color="#4af04f"/>
                 </itemgra>
                 <!-- landuse=industrial -->
-                <itemgra item_types="industry_poly,building_poly,place_poly" order="0-">
+                <itemgra item_types="poly_industry,poly_building,poly_place" order="0-">
                     <polygon color="#ecd8ff"/>
                 </itemgra>
                 <!-- waterway=stream -->
@@ -4546,7 +4525,7 @@
                 <itemgra item_types="town_label_1e7,district_label_1e7" order="1-">
                     <circle color="#000000" radius="3" text_size="15"/>
                 </itemgra>
-                <itemgra item_types="flats,scrub,military_zone,marine_poly,plantation,tundra" order="0-">
+                <itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-">
                     <polygon color="#a0a0a0"/>
                     <text text_size="5"/>
                 </itemgra>
