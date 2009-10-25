@@ -35,6 +35,8 @@
 #include "command.h"
 #include "graphics.h"
 #include "vehicle.h"
+#include "map.h"
+#include "mapset.h"
 #include "util.h"
 
 
@@ -87,6 +89,8 @@ resolve_object(const char *opath, char *type)
 	char *def_navit="/default_navit";
 	char *def_graphics="/default_graphics";
 	char *def_vehicle="/default_vehicle";
+	char *def_mapset="/default_mapset";
+	char *def_map="/default_map";
 	struct attr attr;
 
 	if (strncmp(opath, object_path, strlen(object_path))) {
@@ -117,6 +121,21 @@ resolve_object(const char *opath, char *type)
 		if (!strncmp(oprefix,def_vehicle,strlen(def_vehicle))) {
 			if (navit_get_attr(navit, attr_vehicle, &attr, NULL)) {
 				return attr.u.vehicle;
+			}
+			return NULL;
+		}
+		if (!strncmp(oprefix,def_mapset,strlen(def_mapset))) {
+			oprefix+=strlen(def_mapset);
+			if (navit_get_attr(navit, attr_mapset, &attr, NULL)) {
+				if (!oprefix[0]) {
+					return attr.u.mapset;
+				}	
+				if (!strncmp(oprefix,def_map,strlen(def_map))) {
+					if (mapset_get_attr(attr.u.mapset, attr_map, &attr, NULL)) {
+						return attr.u.map;
+					}
+					return NULL;
+				}
 			}
 			return NULL;
 		}
@@ -629,6 +648,13 @@ decode_attr(DBusMessage *message, struct attr *attr)
 		}
 		return 0;
         }
+	if(attr->type > attr_type_string_begin && attr->type < attr_type_string_end) {
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRING) {
+			dbus_message_iter_get_basic(&iterattr, &attr->u.str);
+			return 1;
+		}
+		return 0;
+        }
 	if(attr->type > attr_type_double_begin && attr->type < attr_type_double_end) {
 		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_DOUBLE) {
 			attr->u.numd=g_new(typeof(*attr->u.numd),1);
@@ -721,6 +747,25 @@ request_vehicle_set_attr(DBusConnection *connection, DBusMessage *message)
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 	if (decode_attr(message, &attr)) {
 		ret=vehicle_set_attr(vehicle, &attr, NULL);
+		destroy_attr(&attr);
+		if (ret)	
+			return empty_reply(connection, message);
+	}
+    	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
+
+static DBusHandlerResult
+request_map_set_attr(DBusConnection *connection, DBusMessage *message)
+{
+	struct map *map;
+    	struct attr attr;
+	int ret;
+	
+	map = object_get_from_message(message, "map");
+	if (! map)
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	if (decode_attr(message, &attr)) {
+		ret=map_set_attr(map, &attr);
 		destroy_attr(&attr);
 		if (ret)	
 			return empty_reply(connection, message);
@@ -867,6 +912,7 @@ struct dbus_method {
 	{".graphics","get_data", 	   "s",	      "type",				 	 "ay",  "data", request_graphics_get_data},
 	{".graphics","set_attr",           "sv",      "attribute,value",                         "",   "",      request_graphics_set_attr},
 	{".vehicle","set_attr",           "sv",      "attribute,value",                         "",   "",      request_vehicle_set_attr},
+	{".map","set_attr",           "sv",      "attribute,value",                         "",   "",      request_map_set_attr},
 #if 0
     {".navit",  "toggle_announcer",    "",        "",                                        "",   "",      request_navit_toggle_announcer},
 	{".navit",  "toggle_announcer",    "i",       "",                                        "",   "",      request_navit_toggle_announcer},
