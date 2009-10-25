@@ -1,4 +1,4 @@
-SUBDIRS=mg textfile binfile shapefile
+SUBDIRS=mg textfile binfile shapefile filter
 #  garmin_img
 if HAVELIBGARMIN
 SUBDIRS+=garmin
@@ -7,5 +7,4 @@ if MAP_POI_GEODOWNLOAD
 SUBDIRS+=poi_geodownload
 endif
 
-DIST_SUBDIRS=mg textfile poi_geodownload binfile garmin shapefile
-
+DIST_SUBDIRS=mg textfile poi_geodownload binfile garmin shapefile filter
