@@ -80,6 +80,8 @@ filter_type(struct map_priv *m, enum item_type type)
 		}
 		if (old) {
 			new=filter->new;
+			if (!new)
+				return type;
 			while (new) {
 				struct filter_entry *entry=new->data;
 				count+=entry->last-entry->first+1;
@@ -97,7 +99,7 @@ filter_type(struct map_priv *m, enum item_type type)
 		}
 		filters=g_list_next(filters);
 	}
-	return type_none;
+	return type;
 }
 
 static void
@@ -281,6 +283,19 @@ map_filter_destroy(struct map_priv *m)
 	g_free(m);
 }
 
+static int
+map_filter_set_attr(struct map_priv *m, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_filter:
+		parse_filters(m,attr->u.str);
+		return 1;	
+	default:
+		return 0;
+	}
+}
+
+
 static struct map_methods map_methods_filter = {
 	projection_mg,
 	"utf-8",
@@ -291,7 +306,10 @@ static struct map_methods map_methods_filter = {
 	map_filter_rect_get_item_byid,
 	map_filter_search_new,
 	map_filter_search_destroy,
-	map_filter_search_get_item
+	map_filter_search_get_item,
+	NULL,
+	NULL,
+	map_filter_set_attr,
 };
 
 
