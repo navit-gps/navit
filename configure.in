@@ -800,6 +800,7 @@ navit/map/Makefile
 navit/map/mg/Makefile
 navit/map/textfile/Makefile
 navit/map/shapefile/Makefile
+navit/map/filter/Makefile
 navit/map/binfile/Makefile
 navit/map/garmin/Makefile
 navit/map/poi_geodownload/Makefile
