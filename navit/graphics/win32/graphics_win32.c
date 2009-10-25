@@ -396,10 +396,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 #endif
 			while ( !gra_priv->disabled && overlay && !overlay->disabled )
 			{
-				if ( overlay->p.x > 0 &&
-					 overlay->p.y > 0 &&
-					 overlay->p.x + overlay->width < gra_priv->width &&
-					 overlay->p.y + overlay->height < gra_priv->height )
+				if ( overlay->p.x >= 0 &&
+					 overlay->p.y >= 0 &&
+					 overlay->p.x < gra_priv->width &&
+					 overlay->p.y < gra_priv->height )
 				{
 
 #ifdef FAST_TRANSPARENCY
@@ -420,9 +420,15 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 					int x,y;
 					int destPixel, srcPixel;
-					for ( y = 0; y < overlay->height;y++ )
+					int h=overlay->height;
+					int w=overlay->width;
+					if (w > gra_priv->width-overlay->p.x)
+						w=gra_priv->width-overlay->p.x;
+					if (h > gra_priv->height-overlay->p.y)
+						h=gra_priv->height-overlay->p.y;
+					for ( y = 0; y < h ;y++ )
 					{
-						for ( x = 0; x < overlay->width; x++ )
+						for ( x = 0; x < w; x++ )
 						{
 							srcPixel = y*overlay->width+x;
 							destPixel = ((overlay->p.y + y) * gra_priv->width) + (overlay->p.x + x);
