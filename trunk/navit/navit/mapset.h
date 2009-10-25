@@ -21,7 +21,9 @@
 #define NAVIT_MAPSET_H
 
 /* prototypes */
+enum attr_type;
 struct attr;
+struct attr_iter;
 struct item;
 struct map;
 struct mapset;
@@ -29,6 +31,7 @@ struct mapset_handle;
 struct mapset_search;
 struct mapset *mapset_new(struct attr *parent, struct attr **attrs);
 int mapset_add_attr(struct mapset *ms, struct attr *attr);
+int mapset_get_attr(struct mapset *ms, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 void mapset_destroy(struct mapset *ms);
 struct mapset_handle *mapset_open(struct mapset *ms);
 struct map *mapset_next(struct mapset_handle *msh, int active);
@@ -36,6 +39,5 @@ void mapset_close(struct mapset_handle *msh);
 struct mapset_search *mapset_search_new(struct mapset *ms, struct item *item, struct attr *search_attr, int partial);
 struct item *mapset_search_get_item(struct mapset_search *this);
 void mapset_search_destroy(struct mapset_search *this);
-
+/* end of prototypes */
 #endif
-

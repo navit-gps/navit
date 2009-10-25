@@ -77,6 +77,25 @@ mapset_add_attr(struct mapset *ms, struct attr *attr)
 	}
 }
 
+int
+mapset_get_attr(struct mapset *ms, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	GList *map;
+	map=ms->maps;
+	switch (type) {
+	case attr_map:
+		if (map) {
+			attr->u.map=map->data;
+			return 1;
+		}
+		break;
+	default:
+		break;
+	}
+	return 0;
+}
+
+
 #if 0
 static void mapset_maps_free(struct mapset *ms)
 {

@@ -75,6 +75,9 @@ struct map_methods {
 	void			(*map_search_destroy)(struct map_search_priv *ms); /**< Function to destroy a map search struct */
 	struct item *		(*map_search_get_item)(struct map_search_priv *ms); /**< Function to get the next item of a search on the map */
 	struct item *		(*map_rect_create_item)(struct map_rect_priv *mr, enum item_type type); /**< Function to create a new item in the map */
+	int			(*map_get_attr)(struct map_priv *priv, enum attr_type type, struct attr *attr);
+        int			(*map_set_attr)(struct map_priv *priv, struct attr *attr);
+
 };
 
 /**
