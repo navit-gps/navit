@@ -146,6 +146,8 @@ int
 map_set_attr(struct map *this_, struct attr *attr)
 {
 	this_->attrs=attr_generic_set_attr(this_->attrs, attr);
+	if (this_->meth.map_set_attr)
+		this_->meth.map_set_attr(this_->priv, attr);
 	callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
 	return 1;
 }
