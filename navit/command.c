@@ -824,10 +824,18 @@ command_table_call(struct command_table *table, int count, void *data, char *com
 }
 
 void
+command_add_table_attr(struct command_table *table, int count, void *data, struct attr *attr)
+{
+	attr->type=attr_callback;
+	attr->u.callback=callback_new_attr_3(callback_cast(command_table_call),attr_command, table, count, data);
+}
+
+void
 command_add_table(struct callback_list *cbl, struct command_table *table, int count, void *data)
 {
-	struct callback *cb=callback_new_attr_3(callback_cast(command_table_call),attr_command, table, count, data);
-	callback_list_add(cbl, cb);
+	struct attr attr;
+	command_add_table_attr(table, count, data, &attr);
+	callback_list_add(cbl, attr.u.callback);
 }
 
 void
