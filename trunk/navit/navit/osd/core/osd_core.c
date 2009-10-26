@@ -836,6 +836,10 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 								value=format_speed(routespeed,"");
 							}
 						}
+					} else if (item) {
+						attr_type=attr_from_name(key);
+						if (tracking_get_attr(tracking, attr_type, &attr, NULL)) 
+							value=osd_text_format_attr(&attr, index);
 					}
 				}
 			}
