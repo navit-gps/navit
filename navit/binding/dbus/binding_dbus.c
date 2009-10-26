@@ -33,6 +33,7 @@
 #include "attr.h"
 #include "layout.h"
 #include "command.h"
+#include "callback.h"
 #include "graphics.h"
 #include "vehicle.h"
 #include "map.h"
@@ -41,6 +42,7 @@
 
 
 static DBusConnection *connection;
+static dbus_uint32_t dbus_serial;
 
 static char *service_name = "org.navit_project.navit";
 static char *object_path = "/org/navit_project/navit";
@@ -58,6 +60,7 @@ char *navitintrospectxml_head2 = "\">\n"
 
 
 GHashTable *object_hash;
+GHashTable *object_hash_rev;
 GHashTable *object_count;
 
 static char *
@@ -66,10 +69,13 @@ object_new(char *type, void *object)
 	int id;
 	char *ret;
 	dbg(0,"enter %s\n", type);
+	if ((ret=g_hash_table_lookup(object_hash_rev, object)))
+		return ret;
 	id=GPOINTER_TO_INT(g_hash_table_lookup(object_count, type));
 	g_hash_table_insert(object_count, type, GINT_TO_POINTER((id+1)));
 	ret=g_strdup_printf("%s/%s/%d", object_path, type, id);
 	g_hash_table_insert(object_hash, ret, object);
+	g_hash_table_insert(object_hash_rev, object, ret);
 	dbg(0,"return %s\n", ret);
 	return (ret);
 }
@@ -529,6 +535,21 @@ request_navit_resize(DBusConnection *connection, DBusMessage *message)
 
 }
 
+static int
+encode_attr(DBusMessage *message, struct attr *attr)
+{
+	char *name=attr_to_name(attr->type);
+	DBusMessageIter iter1,iter2;
+	dbus_message_iter_init_append(message, &iter1);
+	dbus_message_iter_append_basic(&iter1, DBUS_TYPE_STRING, &name);
+	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
+		dbus_message_iter_open_container(&iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_STRING_AS_STRING, &iter2);
+		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_STRING, &attr->u.str);
+		dbus_message_iter_close_container(&iter1, &iter2);
+	}
+	return 1;
+}
+
 static DBusHandlerResult
 request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
 {
@@ -569,7 +590,7 @@ request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
         }
     }
 
-    else if(attr.type > attr_type_string_begin && attr.type < attr_type_string_end)
+    else if(attr.type >= attr_type_string_begin && attr.type <= attr_type_string_end)
     {
         dbg(0, "string detected\n");
         if(navit_get_attr(navit, attr.type, &attr, NULL)) {
@@ -631,38 +652,38 @@ decode_attr(DBusMessage *message, struct attr *attr)
 	dbus_message_iter_recurse(&iter, &iterattr);
 	dbg(0, "seems valid. signature: %s\n", dbus_message_iter_get_signature(&iterattr));
     
-	if (attr->type > attr_type_item_begin && attr->type < attr_type_item_end)
+	if (attr->type >= attr_type_item_begin && attr->type <= attr_type_item_end)
 		return 0;
 
-	if (attr->type > attr_type_int_begin && attr->type < attr_type_boolean_begin) {
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_boolean_begin) {
 		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_INT32) {
 			dbus_message_iter_get_basic(&iterattr, &attr->u.num);
 			return 1;
 		}
 		return 0;
 	}
-	if(attr->type > attr_type_boolean_begin && attr->type < attr_type_int_end) {
+	if(attr->type >= attr_type_boolean_begin && attr->type <= attr_type_int_end) {
 		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_BOOLEAN) {
 			dbus_message_iter_get_basic(&iterattr, &attr->u.num);
 			return 1;
 		}
 		return 0;
         }
-	if(attr->type > attr_type_string_begin && attr->type < attr_type_string_end) {
+	if(attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
 		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRING) {
 			dbus_message_iter_get_basic(&iterattr, &attr->u.str);
 			return 1;
 		}
 		return 0;
         }
-	if(attr->type > attr_type_double_begin && attr->type < attr_type_double_end) {
+	if(attr->type >= attr_type_double_begin && attr->type <= attr_type_double_end) {
 		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_DOUBLE) {
 			attr->u.numd=g_new(typeof(*attr->u.numd),1);
 			dbus_message_iter_get_basic(&iterattr, attr->u.numd);
 			return 1;
 		}
 	}
-	if(attr->type > attr_type_coord_geo_begin && attr->type < attr_type_coord_geo_end) {
+	if(attr->type >= attr_type_coord_geo_begin && attr->type <= attr_type_coord_geo_end) {
 		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRUCT) {
 			attr->u.coord_geo=g_new(typeof(*attr->u.coord_geo),1);
 			dbus_message_iter_recurse(&iterattr, &iterstruct);
@@ -1045,11 +1066,49 @@ filter(DBusConnection *connection, DBusMessage *message, void *user_data)
 }
 #endif
 
+static int
+dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struct attr ***out)
+{
+	DBusMessage* msg;
+	char *opath=object_new("navit",navit);
+	char *interface=g_strdup_printf("%s%s", service_name, ".navit");
+	dbg(0,"enter %s %s %s\n",opath,command,interface);
+	msg = dbus_message_new_signal(opath, interface, "signal");
+	if (msg) {
+		if (in && in[0]) {
+			encode_attr(msg, in[0]);
+		}
+		dbus_connection_send(connection, msg, &dbus_serial);
+		dbus_connection_flush(connection);
+		dbus_message_unref(msg);
+	}
+	g_free(interface);
+	return 0;
+}
+     
+
+static struct command_table commands[] = {
+        {"dbus_send_signal",command_cast(dbus_cmd_send_signal)},
+};
+
+
+static void
+dbus_main_navit(struct navit *navit, int added)
+{
+	struct attr attr;
+	if (added) {
+		command_add_table_attr(commands, sizeof(commands)/sizeof(struct command_table), navit, &attr);
+		navit_add_attr(navit, &attr);
+	}
+}
+
 void plugin_init(void)
 {
 	DBusError error;
 
-    object_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	struct attr callback;
+	object_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	object_hash_rev=g_hash_table_new(NULL, NULL);
 	object_count=g_hash_table_new(g_str_hash, g_str_equal);
 	dbg(0,"enter 1\n");
 	dbus_error_init(&error);
@@ -1070,4 +1129,7 @@ void plugin_init(void)
 		dbg(0,"Failed to request name: %s", error.message);
 		dbus_error_free (&error);
 	}
+	callback.type=attr_callback;
+	callback.u.callback=callback_new_0(callback_cast(dbus_main_navit));
+	main_add_attr(&callback);
 }
