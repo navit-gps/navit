@@ -394,9 +394,9 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 #ifndef FAST_TRANSPARENCY
 			BitBlt( gra_priv->hPrebuildDC, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY);
 #endif
-			while ( !gra_priv->disabled && overlay && !overlay->disabled )
+			while ( !gra_priv->disabled && overlay)
 			{
-				if ( overlay->p.x >= 0 &&
+				if ( !overlay->disabled && overlay->p.x >= 0 &&
 					 overlay->p.y >= 0 &&
 					 overlay->p.x < gra_priv->width &&
 					 overlay->p.y < gra_priv->height )
