@@ -210,6 +210,7 @@ main_setup_environment(int mode)
 char *nls_table[][3]={
 	{"DEU","DEU","de_DE"},
 	{"DEA","AUT","de_AT"},
+	{"RUS","RUS","ru_RU"},
 	{NULL,NULL,NULL},
 };
 
