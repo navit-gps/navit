@@ -17,6 +17,10 @@ samplemap: $(SAMPLE_MAP).bin
 	$(top_builddir)/navit/osm2navit $(osm2navit_args) $@.tmp <$<
 	mv $@.tmp $@
 
+.txt.bin:
+	$(top_builddir)/navit/osm2navit $(osm2navit_args) $@.tmp -p ../map/textfile/libmap_textfile.la -m $<
+	mv $@.tmp $@
+
 .osm.bz2.bin:
 	echo "Converting osm map"
 	bzcat $< | $(top_builddir)/navit/osm2navit $(osm2navit_args) $@.tmp
