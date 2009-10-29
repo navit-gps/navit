@@ -34,6 +34,8 @@
 #include "item.h"
 #include "plugin.h"
 #include "speech.h"
+#include "util.h"
+#include "file.h"
 #include "debug.h"
 
 #include "support/espeak/speech.h"
@@ -421,15 +423,14 @@ espeak_new(struct speech_methods *meth, struct attr **attrs) {
 	struct speech_priv *this = NULL;
 	struct attr *path;
 	struct attr *language;
-	char *lang_str = "default";
+	char *lang_str=NULL;
 
 	path=attr_search(attrs, NULL, attr_path);
-	if (! path)
-	{
-		dbg(0, "Missing path to espeak data\n");
-		return NULL;
-	}
-	strcpy(path_home,path->u.str);
+	if (path)
+		strcpy(path_home,path->u.str);
+	else
+		sprintf(path_home,"%s/espeak-data",getenv("NAVIT_SHAREDIR"));
+	dbg(0,"path_home set to %s\n",path_home);
 
 	if ( !initialise() )
 	{
@@ -437,15 +438,47 @@ espeak_new(struct speech_methods *meth, struct attr **attrs) {
 	}
 
 	language=attr_search(attrs, NULL, attr_language);
-	if ( language )
+	if ( language ) {
+		lang_str=g_strdup(language->u.str);
+	} else {
+		char *lang_env=getenv("LANG");
+		
+		if (lang_env) {
+			char *country,*lang,*lang_full;
+			char *file1;
+			char *file2;
+			lang_full=g_strdup(lang_env);
+			strtolower(lang_full,lang_env);
+			lang=g_strdup(lang_full);
+			country=strchr(lang_full,'_');
+			if (country) {
+				lang[country-lang_full]='\0';
+				*country++='-';
+			}
+			file1=g_strdup_printf("%s/voices/%s",path_home,lang_full);
+			file2=g_strdup_printf("%s/voices/%s/%s",path_home,lang,lang_full);
+			dbg(0,"Testing %s and %s\n",file1,file2);
+			if (file_exists(file1) || file_exists(file2)) 
+				lang_str=g_strdup(lang_full);
+			else
+				lang_str=g_strdup(lang);
+			dbg(0,"Language full %s lang %s result %s\n",lang_full,lang,lang_str);
+			g_free(lang_full);
+			g_free(lang);
+			g_free(file1);
+			g_free(file2);
+		}
+	}
+	if(lang_str && SetVoiceByName(lang_str) != EE_OK)
 	{
-		lang_str = language->u.str;
+		dbg(0, "Error setting language to: '%s',falling back to default\n", lang_str);
+		g_free(lang_str);
+		lang_str=NULL;
+	}
+	if(!lang_str && SetVoiceByName("default") != EE_OK) {
+		dbg(0, "Error setting language to default\n");
 	}
 
-	if(SetVoiceByName(lang_str) != EE_OK)
-	{
-		dbg(0, "Error setting language to: '%s'\n", lang_str);
-	}
 
 	SetParameter(espeakRATE,170,0);
 	SetParameter(espeakVOLUME,100,0);
