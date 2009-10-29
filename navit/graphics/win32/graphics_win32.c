@@ -211,6 +211,8 @@ struct graphics_gc_priv
     COLORREF    fg_color;
     int         fg_alpha;
     COLORREF    bg_color;
+    HPEN hpen;
+    HBRUSH hbrush;
     struct graphics_priv *gr;
 };
 
@@ -682,12 +684,16 @@ static void graphics_destroy(struct graphics_priv *gr)
 
 static void gc_destroy(struct graphics_gc_priv *gc)
 {
+    DeleteObject( gc->hpen );
+    DeleteObject( gc->hbrush );
     g_free( gc );
 }
 
 static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
+    DeleteObject (gc->hpen);
     gc->line_width = w;
+    gc->hpen = CreatePen( PS_NULL, gc->line_width, gc->fg_color );
 }
 
 static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, unsigned char dash_list[], int n)
@@ -702,6 +708,10 @@ static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
     gc->fg_color = RGB( c->r >> 8, c->g >> 8, c->b >> 8);
     gc->fg_alpha = c->a;
 
+    DeleteObject (gc->hpen);
+    DeleteObject (gc->hbrush);
+    gc->hpen = CreatePen( PS_NULL, gc->line_width, gc->fg_color );
+    gc->hbrush = CreateSolidBrush( gc->fg_color );
 	if ( gc->gr && c->a < 0xFFFF )
     {
             gc->gr->transparent_color = *c;
@@ -735,6 +745,8 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
     gc->line_width = 1;
     gc->fg_color = RGB( 0,0,0 );
     gc->bg_color = RGB( 255,255,255 );
+    gc->hpen = CreatePen( PS_NULL, gc->line_width, gc->fg_color );
+    gc->hbrush = CreateSolidBrush( gc->fg_color );
     gc->gr = gr;
     return gc;
 }
@@ -743,12 +755,8 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
     int i;
-    HPEN hpen;
 
-    hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
-    HPEN hOldPen = SelectObject( gr->hMemDC, hpen );
-
-    SetBkColor( gr->hMemDC, gc->bg_color );
+    SelectObject( gr->hMemDC, gc->hpen );
 
     int first = 1;
     for ( i = 0; i< count; i++ )
@@ -763,80 +771,44 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
             LineTo( gr->hMemDC, p[i].x, p[i].y );
         }
     }
-
-    SelectObject( gr->hMemDC, hOldPen );
-    DeleteObject( hpen );
 }
 
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-
-    int i;
-    POINT points[ count ];
-    for ( i=0;i< count; i++ )
-    {
-        points[i].x = p[i].x;
-        points[i].y = p[i].y;
-    }
-    HPEN hpen;
-    HBRUSH hbrush;
-
-    SetBkColor( gr->hMemDC, gc->bg_color );
-
-    hpen = CreatePen( PS_NULL, gc->line_width, gc->fg_color );
-    HPEN hOldPen = SelectObject( gr->hMemDC, hpen );
-    hbrush = CreateSolidBrush( gc->fg_color );
-    HBRUSH hOldBrush = SelectObject( gr->hMemDC, hbrush );
-
-    Polygon( gr->hMemDC, points,count );
-
-    SelectObject( gr->hMemDC, hOldPen );
-    SelectObject( gr->hMemDC, hOldBrush );
-    DeleteObject( hbrush );
-    DeleteObject( hpen );
+    SelectObject( gr->hMemDC, gc->hpen );
+    SelectObject( gr->hMemDC, gc->hbrush );
+    if (sizeof(POINT) != sizeof(struct point)) {
+	    int i;
+	    POINT points[ count ];
+	    for ( i=0;i< count; i++ )
+	    {
+		points[i].x = p[i].x;
+		points[i].y = p[i].y;
+	    }
+            Polygon( gr->hMemDC, points,count );
+    } else
+	    Polygon( gr->hMemDC, (POINT *)p, count);
 }
 
 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-    HPEN hpen;
-    HBRUSH hbrush;
-
-    hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
-    HPEN hOldPen = SelectObject( gr->hMemDC, hpen );
-    hbrush = CreateSolidBrush( gc->fg_color );
-    HBRUSH hOldBrush = SelectObject( gr->hMemDC, hbrush );
-    SetBkColor( gr->hMemDC, gc->bg_color );
+    SelectObject( gr->hMemDC, gc->hpen );
+    SelectObject( gr->hMemDC, gc->hbrush );
 
     Rectangle(gr->hMemDC, p->x, p->y, p->x+w, p->y+h);
-
-    SelectObject( gr->hMemDC, hOldPen );
-    SelectObject( gr->hMemDC, hOldBrush );
-    DeleteObject( hpen );
-    DeleteObject( hbrush );
 
 }
 
 static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
-    HPEN hpen;
-    HBRUSH hbrush;
     r=r/2;
 
-    hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
-    HPEN hOldPen = SelectObject( gr->hMemDC, hpen );
-
-    hbrush = CreateSolidBrush( RGB(gr->transparent_color.r >> 8, gr->transparent_color.g >> 8, gr->transparent_color.b >> 8) );
-    HBRUSH hOldBrush = SelectObject( gr->hMemDC, hbrush );
-
-    SetBkColor( gr->hMemDC, gc->bg_color );
+    SelectObject( gr->hMemDC, gc->hpen );
+    SelectObject( gr->hMemDC, gc->hbrush );
 
     Ellipse( gr->hMemDC, p->x - r, p->y -r, p->x + r, p->y + r );
 
-    SelectObject( gr->hMemDC, hOldPen );
-    SelectObject( gr->hMemDC, hOldBrush );
-    DeleteObject( hpen );
-    DeleteObject( hbrush );
 }
 
 
