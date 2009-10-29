@@ -33,6 +33,9 @@
 #include <math.h>
 #include <glib.h>
 #include <time.h>
+#ifdef HAVE_API_WIN32_BASE
+#include <windows.h>
+#endif
 #include "config.h"
 #include "item.h"
 #include "file.h"
@@ -342,6 +345,7 @@ static void gui_internal_apply_config(struct gui_priv *this);
 static struct widget* gui_internal_widget_table_new(struct gui_priv * this, enum flags flags, int buttons);
 static struct widget * gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags);
 static void gui_internal_table_render(struct gui_priv * this, struct widget * w);
+static void gui_internal_cmd_tools(struct gui_priv * this, struct widget * w,void *);
 static void gui_internal_cmd_route(struct gui_priv * this, struct widget * w,void *);
 static void gui_internal_table_pack(struct gui_priv * this, struct widget * w);
 static void gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void *data);
@@ -3493,6 +3497,7 @@ static void gui_internal_motion(void *data, struct point *p)
 }
 
 
+
 static void gui_internal_menu_root(struct gui_priv *this)
 {
 	struct widget *w;
@@ -3511,8 +3516,9 @@ static void gui_internal_menu_root(struct gui_priv *this)
 	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Settings"),
 			image_new_l(this, "gui_settings"), gravity_center|orientation_vertical,
 			gui_internal_cmd_settings, NULL));
-	gui_internal_widget_append(w, gui_internal_button_new(this, _("Tools"),
-			image_new_l(this, "gui_tools"), gravity_center|orientation_vertical));
+	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Tools"),
+			image_new_l(this, "gui_tools"), gravity_center|orientation_vertical,
+			gui_internal_cmd_tools, NULL));
 
 	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Route"),
 			image_new_l(this, "gui_settings"), gravity_center|orientation_vertical,
@@ -4914,12 +4920,64 @@ void gui_internal_cmd_route(struct gui_priv * this, struct widget * wm,void *v)
 			image_new_l(this, "gui_actions"), gravity_center|orientation_vertical,
 			gui_internal_cmd_route_height_profile, NULL));
 	gui_internal_menu_render(this);
-	gui_internal_menu_render(this);
 	graphics_draw_mode(this->gra, draw_mode_end);
 
 }
 
+static void
+gui_internal_cmd_show_locale(struct gui_priv * this, struct widget * wm,void *v)
+{
+	struct widget *menu,*wb,*w;
+	char *text;
 
+	graphics_draw_mode(this->gra, draw_mode_begin);
+	menu=gui_internal_menu(this, _("Show Locale"));
+	menu->spx=this->spacing*10;
+	wb=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(menu, wb);
+	text=g_strdup_printf("LANG=%s",getenv("LANG"));
+	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+	w->flags=gravity_left_center|orientation_horizontal|flags_fill;
+	g_free(text);
+#ifdef HAVE_API_WIN32_BASE
+	{
+		wchar_t wcountry[32],wlang[32];
+		char country[32],lang[32];
+
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, wlang, sizeof(wlang));
+		WideCharToMultiByte(CP_ACP,0,wlang,-1,lang,sizeof(lang),NULL,NULL);
+		text=g_strdup_printf("LOCALE_SABBREVLANGNAME=%s",lang);
+		gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+		w->flags=gravity_left_center|orientation_horizontal|flags_fill;
+		g_free(text);
+	        GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, wcountry, sizeof(wcountry));
+		WideCharToMultiByte(CP_ACP,0,wcountry,-1,country,sizeof(country),NULL,NULL);
+		text=g_strdup_printf("LOCALE_SABBREVCTRYNAME=%s",country);
+		gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+		w->flags=gravity_left_center|orientation_horizontal|flags_fill;
+		g_free(text);
+	}
+#endif
+
+	gui_internal_menu_render(this);
+	graphics_draw_mode(this->gra, draw_mode_end);
+}
+
+
+static void
+gui_internal_cmd_tools(struct gui_priv * this, struct widget * wm,void *v)
+{
+	struct widget *w;
+
+	graphics_draw_mode(this->gra, draw_mode_begin);
+	w=gui_internal_menu(this, _("Tools"));
+	w->spx=this->spacing*10;
+	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Show Locale"),
+			image_new_l(this, "gui_actions"), gravity_center|orientation_vertical,
+			gui_internal_cmd_show_locale, NULL));
+	gui_internal_menu_render(this);
+	graphics_draw_mode(this->gra, draw_mode_end);
+}
 
 /**
  * @brief handles the 'next page' table event.
