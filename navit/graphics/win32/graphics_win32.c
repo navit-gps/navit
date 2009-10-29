@@ -756,7 +756,7 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
 {
     int i;
 
-    SelectObject( gr->hMemDC, gc->hpen );
+    HPEN hpenold = SelectObject( gr->hMemDC, gc->hpen );
 
     int first = 1;
     for ( i = 0; i< count; i++ )
@@ -771,12 +771,12 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
             LineTo( gr->hMemDC, p[i].x, p[i].y );
         }
     }
-}
+    SelectObject( gr->hMemDC, hpenold);}
 
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-    SelectObject( gr->hMemDC, gc->hpen );
-    SelectObject( gr->hMemDC, gc->hbrush );
+    HPEN holdpen = SelectObject( gr->hMemDC, gc->hpen );
+    HBRUSH holdbrush = SelectObject( gr->hMemDC, gc->hbrush );
     if (sizeof(POINT) != sizeof(struct point)) {
 	    int i;
 	    POINT points[ count ];
@@ -788,28 +788,28 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
             Polygon( gr->hMemDC, points,count );
     } else
 	    Polygon( gr->hMemDC, (POINT *)p, count);
-}
+    SelectObject( gr->hMemDC, holdbrush);    SelectObject( gr->hMemDC, holdpen);}
 
 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-    SelectObject( gr->hMemDC, gc->hpen );
-    SelectObject( gr->hMemDC, gc->hbrush );
+    HPEN holdpen = SelectObject( gr->hMemDC, gc->hpen );
+    HBRUSH holdbrush = SelectObject( gr->hMemDC, gc->hbrush );
 
     Rectangle(gr->hMemDC, p->x, p->y, p->x+w, p->y+h);
 
-}
+    SelectObject( gr->hMemDC, holdbrush);    SelectObject( gr->hMemDC, holdpen);}
 
 static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
     r=r/2;
 
-    SelectObject( gr->hMemDC, gc->hpen );
-    SelectObject( gr->hMemDC, gc->hbrush );
+    HPEN holdpen = SelectObject( gr->hMemDC, gc->hpen );
+    HBRUSH holdbrush = SelectObject( gr->hMemDC, gc->hbrush );
 
     Ellipse( gr->hMemDC, p->x - r, p->y -r, p->x + r, p->y + r );
 
-}
+    SelectObject( gr->hMemDC, holdbrush);    SelectObject( gr->hMemDC, holdpen);}
 
 
 
@@ -971,13 +971,8 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
                                &utf16p, utf16p+sizeof(utf16),
                                lenientConversion) == conversionOK)
         {
-#ifdef _WIN32_WCE
-			ExtTextOut (gr->hMemDC, 0, 0, 0, NULL,
-						utf16, (wchar_t*) utf16p - utf16, NULL);
-#else
             ExtTextOutW(gr->hMemDC, 0, 0, 0, NULL,
                         utf16, (wchar_t*) utf16p - utf16, NULL);
-#endif
         }
     }
 
@@ -1359,7 +1354,6 @@ static void overlay_resize(struct graphics_priv *gr, struct point *p, int w, int
     {
         gr->width  = w;
         gr->height = h;
-// TODO (Rikky#1#): should be deleted first
         create_memory_dc(gr);
     }
     gr->p.x    = p->x;
