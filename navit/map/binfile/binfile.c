@@ -1313,7 +1313,7 @@ map_binfile_open(struct map_priv *m)
 	} else
 		file_mmap(m->fi);
 	file_data_free(m->fi, (unsigned char *)magic);
-	m->cachedir="/tmp/navit";
+	m->cachedir=g_strdup("/tmp/navit");
 	m->map_version=0;
 	mr=map_rect_new_binfile(m, NULL);
 	if (mr) {
@@ -1335,6 +1335,7 @@ map_binfile_close(struct map_priv *m)
 {
 	file_data_free(m->fi, (unsigned char *)m->index_cd);
 	file_data_free(m->fi, (unsigned char *)m->eoc);
+	g_free(m->cachedir);
 	file_destroy(m->fi);
 }
 
