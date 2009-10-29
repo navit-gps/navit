@@ -183,17 +183,17 @@ msgstr "налево"
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1384
 msgid "easily "
-msgstr "слегка "
+msgstr "немного "
 
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1389
 msgid "strongly "
-msgstr "сильно "
+msgstr "круто "
 
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1392
 msgid "really strongly "
-msgstr ""
+msgstr "очень круто "
 
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1396
@@ -217,12 +217,12 @@ msgstr "Круговое движение через %s"
 #: ../navit/navigation.c:1432
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr ""
+msgstr "Съезжайте с кругового движения на %s"
 
 #: ../navit/navigation.c:1435
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr ""
+msgstr "потом съезжайте с кругового движения на %s"
 
 #: ../navit/navigation.c:1445
 #, c-format
@@ -326,8 +326,8 @@ msgstr "Установить как пункт назначения"
 
 #: ../navit/popup.c:280 ../navit/popup.c:349
 #: ../navit/gui/internal/gui_internal.c:2129
-msgid "Add as bookmark"
-msgstr "Добавить в закладки"
+msgid "Add bookmark"
+msgstr "Добавить закладку"
 
 #: ../navit/popup.c:337
 #, c-format
@@ -1571,7 +1571,7 @@ msgstr "Зимбабвэ"
 
 #: ../navit/country.c:285
 msgid "* Unknown, add is_in tags to those cities"
-msgstr ""
+msgstr "* Неизвестно, добавьте тэги is_in к этим городам"
 
 #: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:128
 #: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
@@ -1719,12 +1719,12 @@ msgstr "Курсор"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:223
 msgid "Lock on Road"
-msgstr ""
+msgstr "Привязываться к дороге"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:224
 #: ../navit/gui/internal/gui_internal.c:3204
 msgid "Northing"
-msgstr ""
+msgstr "Ориентировать на север"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:226
 msgid "Autozoom"
@@ -1899,6 +1899,28 @@ msgstr "Показать Состояние Спутников"
 msgid "Show NMEA Data"
 msgstr "Показать Данные NMEA"
 
+#: ../navit/gui/internal/gui_internal.c:3305
+msgid "car"
+msgstr "авто"
+
+#: ../navit/gui/internal/gui_internal.c:3305
+msgid "bike"
+msgstr "велосипед"
+
+#: ../navit/gui/internal/gui_internal.c:3305
+msgid "pedestrian"
+msgstr "пешеход"
+
+#: ../navit/gui/internal/gui_internal.c:3322
+#, c-format
+msgid "Current profile: %s"
+msgstr "Текущий профиль: %s"
+
+#: ../navit/gui/internal/gui_internal.c:3324
+#, c-format
+msgid "Change profile to: %s"
+msgstr "Сменить профиль на: %s"
+
 #: ../navit/gui/internal/gui_internal.c:3136
 msgid "Set as active"
 msgstr "Сделать активным"
@@ -1906,6 +1928,18 @@ msgstr "Сделать активным"
 #: ../navit/gui/internal/gui_internal.c:3142
 msgid "Show Satellite status"
 msgstr "Показать состояние Спутников"
+
+#: ../navit/gui/internal/gui_internal.c:3162
+msgid " Elevation "
+msgstr " Высота "
+
+#: ../navit/gui/internal/gui_internal.c:3163
+msgid " Azimuth "
+msgstr " Азимут "
+
+#: ../navit/gui/internal/gui_internal.c:3164
+msgid " SNR "
+msgstr " Сигнал/Шум "
 
 #: ../navit/gui/internal/gui_internal.c:3148
 msgid "Show NMEA data"
@@ -1918,7 +1952,7 @@ msgstr "Правила"
 
 #: ../navit/gui/internal/gui_internal.c:3198
 msgid "Lock on road"
-msgstr ""
+msgstr "Привязывать к дороге"
 
 #: ../navit/gui/internal/gui_internal.c:3210
 msgid "Map follows Vehicle"
@@ -1957,3 +1991,7 @@ msgstr "Профиль высот"
 #: ../navit/gui/internal/gui_internal.c:4656
 msgid "Description"
 msgstr "Описание"
+
+#: ../navit/gui/internal/gui_internal.c:4642
+msgid "Route Description"
+msgstr "Описание маршрута"
