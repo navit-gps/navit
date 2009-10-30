@@ -693,7 +693,7 @@ static void gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
     DeleteObject (gc->hpen);
     gc->line_width = w;
-    gc->hpen = CreatePen( PS_NULL, gc->line_width, gc->fg_color );
+    gc->hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
 }
 
 static void gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, unsigned char dash_list[], int n)
@@ -710,7 +710,7 @@ static void gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 
     DeleteObject (gc->hpen);
     DeleteObject (gc->hbrush);
-    gc->hpen = CreatePen( PS_NULL, gc->line_width, gc->fg_color );
+    gc->hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
     gc->hbrush = CreateSolidBrush( gc->fg_color );
 	if ( gc->gr && c->a < 0xFFFF )
     {
@@ -745,7 +745,7 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
     gc->line_width = 1;
     gc->fg_color = RGB( 0,0,0 );
     gc->bg_color = RGB( 255,255,255 );
-    gc->hpen = CreatePen( PS_NULL, gc->line_width, gc->fg_color );
+    gc->hpen = CreatePen( PS_SOLID, gc->line_width, gc->fg_color );
     gc->hbrush = CreateSolidBrush( gc->fg_color );
     gc->gr = gr;
     return gc;
@@ -771,7 +771,9 @@ static void draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, st
             LineTo( gr->hMemDC, p[i].x, p[i].y );
         }
     }
-    SelectObject( gr->hMemDC, hpenold);}
+
+    SelectObject( gr->hMemDC, hpenold);
+}
 
 static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
@@ -788,7 +790,9 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
             Polygon( gr->hMemDC, points,count );
     } else
 	    Polygon( gr->hMemDC, (POINT *)p, count);
-    SelectObject( gr->hMemDC, holdbrush);    SelectObject( gr->hMemDC, holdpen);}
+    SelectObject( gr->hMemDC, holdbrush);
+    SelectObject( gr->hMemDC, holdpen);
+}
 
 
 static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
@@ -798,7 +802,9 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
 
     Rectangle(gr->hMemDC, p->x, p->y, p->x+w, p->y+h);
 
-    SelectObject( gr->hMemDC, holdbrush);    SelectObject( gr->hMemDC, holdpen);}
+    SelectObject( gr->hMemDC, holdbrush);
+    SelectObject( gr->hMemDC, holdpen);
+}
 
 static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
@@ -809,7 +815,9 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 
     Ellipse( gr->hMemDC, p->x - r, p->y -r, p->x + r, p->y + r );
 
-    SelectObject( gr->hMemDC, holdbrush);    SelectObject( gr->hMemDC, holdpen);}
+    SelectObject( gr->hMemDC, holdbrush);
+    SelectObject( gr->hMemDC, holdpen);
+}
 
 
 
@@ -1185,6 +1193,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
         png_destroy_read_struct (&png_ptr, &info_ptr, NULL);
         g_free (img->png_pixels);
         img->png_pixels = NULL;
+        img->hBitmap = NULL;
         return FALSE;
     }
 
