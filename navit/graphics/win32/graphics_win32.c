@@ -805,7 +805,7 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
     r=r/2;
 
     HPEN holdpen = SelectObject( gr->hMemDC, gc->hpen );
-    HBRUSH holdbrush = SelectObject( gr->hMemDC, gc->hbrush );
+    HBRUSH holdbrush = SelectObject( gr->hMemDC, GetStockObject(NULL_BRUSH));
 
     Ellipse( gr->hMemDC, p->x - r, p->y -r, p->x + r, p->y + r );
 
