@@ -1,3 +1,4 @@
+ACLOCAL_AMFLAGS= -I m4
 include $(top_srcdir)/Makefile.inc
 SUBDIRS=
 if ENABLE_NLS
