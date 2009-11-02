@@ -638,7 +638,6 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->self.type=attr_navit;
 	this_->self.u.navit=this_;
 	this_->attr_cbl=callback_list_new();
-	main_add_navit(this_);
 
 	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
@@ -2272,7 +2271,6 @@ navit_destroy(struct navit *this_)
 	/* TODO: destroy objects contained in this_ */
 	if (this_->vehicle)
 		vehicle_destroy(this_->vehicle->vehicle);
-	main_remove_navit(this_);
 	char *center_file = navit_get_center_file(TRUE);
 	navit_write_center_to_file(this_, center_file);
 	g_free(center_file);
