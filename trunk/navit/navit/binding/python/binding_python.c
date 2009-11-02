@@ -328,7 +328,7 @@ static PyMethodDef navitMethods[]={
 	{"map", map_new_py, METH_VARARGS, "Create a new map."},
 	{"mapset", mapset_new_py, METH_VARARGS, "Create a new mapset."},
 	{"config_load", config_load_py, METH_VARARGS, "Load a config"},
-	{"main", main_py, METH_VARARGS, "Get Main Object"},
+	{"config", config_py, METH_VARARGS, "Get Config Object"},
 	{"pcoord", pcoord_py, METH_VARARGS},
 	{NULL, NULL, 0, NULL}
 };
