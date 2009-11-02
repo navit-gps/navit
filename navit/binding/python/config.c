@@ -18,54 +18,56 @@
  */
 
 #include "common.h"
-#include "main.h"
+#include "item.h"
+#include "config_.h"
 
 typedef struct {
 	PyObject_HEAD
-} mainObject;
+} configObject;
 
 static PyObject *
-main_navit(PyObject *self, PyObject *args)
+config_navit(PyObject *self, PyObject *args)
 {
-	struct navit *navit;
-	navit=main_get_navit(NULL);
-	return navit_py_ref(navit);
+	struct attr navit;
+	if (config_get_attr(config, attr_navit, &navit, NULL)) 
+		return navit_py_ref(navit.u.navit);
+	return NULL;
 }
 
 
 
-static PyMethodDef main_methods[] = {
-	{"navit",	(PyCFunction) main_navit, METH_VARARGS },
+static PyMethodDef config_methods[] = {
+	{"navit",	(PyCFunction) config_navit, METH_VARARGS },
 	{NULL, NULL },
 };
 
 
 static PyObject *
-main_getattr_py(PyObject *self, char *name)
+config_getattr_py(PyObject *self, char *name)
 {
-	return Py_FindMethod(main_methods, self, name);
+	return Py_FindMethod(config_methods, self, name);
 }
 
 static void
-main_destroy_py(mainObject *self)
+config_destroy_py(configObject *self)
 {
 }
 
-PyTypeObject main_Type = {
+PyTypeObject config_Type = {
 	Obj_HEAD
-	.tp_name="main",
-	.tp_basicsize=sizeof(mainObject),
-	.tp_dealloc=(destructor)main_destroy_py,
-	.tp_getattr=main_getattr_py,
+	.tp_name="config",
+	.tp_basicsize=sizeof(configObject),
+	.tp_dealloc=(destructor)config_destroy_py,
+	.tp_getattr=config_getattr_py,
 };
 
 PyObject *
-main_py(PyObject *self, PyObject *args)
+config_py(PyObject *self, PyObject *args)
 {
-	mainObject *ret;
+	configObject *ret;
 
 	dbg(0,"enter\n");	
-	ret=PyObject_NEW(mainObject, &main_Type);
+	ret=PyObject_NEW(configObject, &config_Type);
 	return (PyObject *)ret;
 }
 
