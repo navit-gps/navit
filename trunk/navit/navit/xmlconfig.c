@@ -47,6 +47,7 @@
 #include "announcement.h"
 #include "vehicleprofile.h"
 #include "roadprofile.h"
+#include "config_.h"
 #include "xmlconfig.h"
 
 #ifdef HAVE_GLIB
@@ -186,13 +187,6 @@ convert_number(const char *val)
 }
 
 static int
-xmlconfig_config(struct xmlstate *state)
-{
-	state->element_attr.u.data = (void *)1;
-	return 1;
-}
-
-static int
 xmlconfig_announce(struct xmlstate *state)
 {
 	const char *type,*value;
@@ -242,6 +236,7 @@ static struct object_func object_funcs[] = {
 	{ attr_announcement,NEW(announcement_new),  GET(announcement_get_attr), NULL, NULL, SET(announcement_set_attr), ADD(announcement_add_attr) },
 	{ attr_arrows,     NEW(arrows_new)},
 	{ attr_circle,     NEW(circle_new),   NULL, NULL, NULL, NULL, ADD(element_add_attr)},
+	{ attr_config,     NEW(config_new), GET(config_get_attr), ITERN(config_attr_iter_new), ITERD(config_attr_iter_destroy), SET(config_set_attr), ADD(config_add_attr), REMOVE(config_remove_attr), NULL, DESTROY(config_destroy)},
 	{ attr_coord,      NEW(coord_new_from_attrs)},
 	{ attr_cursor,     NEW(cursor_new),   NULL, NULL, NULL, NULL, ADD(cursor_add_attr)},
 	{ attr_debug,      NEW(debug_new)},
@@ -288,7 +283,7 @@ struct element_func {
 	int (*func)(struct xmlstate *state);
 	enum attr_type type;
 } elements[] = {
-	{ "config", NULL, xmlconfig_config},
+	{ "config", NULL, NULL, attr_config},
 	{ "announce", "navigation", xmlconfig_announce},
 	{ "speech", "navit", NULL, attr_speech},
 	{ "tracking", "navit", NULL, attr_tracking},
@@ -388,6 +383,7 @@ start_element(GMarkupParseContext *context,
 	static int fixme_count;
 	const char *parent_name=NULL;
 	char *s,*sep="",*possible_parents;
+	struct attr *parent_attr;
 	dbg(2,"name='%s' parent='%s'\n", element_name, *parent ? (*parent)->element:NULL);
 
 	/* determine if we have to fix any attributes */
@@ -467,13 +463,17 @@ start_element(GMarkupParseContext *context,
 			return;
 		attrs=convert_to_attrs(new,attr_fixme);
 		new->element_attr.type=attr_none;
-		new->element_attr.u.data = new->object_func->new(&new->parent->element_attr, attrs);
+		if (!new->parent || new->parent->element_attr.type == attr_none)
+			parent_attr=NULL;
+		else
+			parent_attr=&new->parent->element_attr;
+		new->element_attr.u.data = new->object_func->new(parent_attr, attrs);
 		if (! new->element_attr.u.data)
 			return;
 		new->element_attr.type=attr_from_name(element_name);
 		if (new->element_attr.type == attr_none) 
 			dbg(0,"failed to create object of type '%s'\n", element_name);
-		if (new->parent->object_func && new->parent->object_func->add_attr) 
+		if (new->parent && new->parent->object_func && new->parent->object_func->add_attr) 
 			new->parent->object_func->add_attr(new->parent->element_attr.u.data, &new->element_attr);
 	}
 	return;

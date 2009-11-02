@@ -1,19 +1,27 @@
 <!ELEMENT config (plugins,debug*,navit)>
 <!ATTLIST config xmlns:xi CDATA #REQUIRED>
+<!ATTLIST config language CDATA #IMPLIED>
 <!ELEMENT plugins (plugin*)>
 <!ELEMENT plugin EMPTY>
 <!ATTLIST plugin path CDATA #REQUIRED>
 <!ATTLIST plugin active CDATA #IMPLIED>
+<!ATTLIST plugin ondemand CDATA #IMPLIED>
 <!ELEMENT debug EMPTY>
 <!ATTLIST debug name CDATA #REQUIRED>
 <!ATTLIST debug level CDATA "0">
-<!ELEMENT navit (gui,graphics,vehicle*,tracking,route,navigation,speech,mapset+,layout+)>
+<!ELEMENT log EMPTY>
+<!ATTLIST log enabled CDATA #IMPLIED>
+<!ATTLIST log type CDATA #REQUIRED>
+<!ATTLIST log data CDATA #REQUIRED>
+<!ATTLIST log flush_size CDATA #IMPLIED>
+<!ATTLIST log flush_time CDATA #IMPLIED>
+<!ELEMENT navit (gui,graphics,vehicle*,vehicleprofile*,tracking,route,navigation,speech,osd*,mapset+,layout+,log*)>
 <!ATTLIST navit center CDATA #REQUIRED>
 <!ATTLIST navit zoom CDATA #REQUIRED>
 <!ATTLIST navit tracking CDATA #REQUIRED>
-<!ATTLIST navit cursor CDATA #REQUIRED>
 <!ATTLIST navit orientation CDATA #REQUIRED>
 <!ATTLIST navit recent_dest CDATA #IMPLIED>
+<!ATTLIST navit drag_bitmap CDATA #IMPLIED>
 <!ELEMENT gui EMPTY>
 <!ATTLIST gui type CDATA #REQUIRED>
 <!ATTLIST gui menubar CDATA #IMPLIED>
@@ -23,18 +31,36 @@
 <!ATTLIST gui fullscreen CDATA #IMPLIED>
 <!ELEMENT graphics EMPTY>
 <!ATTLIST graphics type CDATA #REQUIRED>
-<!ELEMENT vehicle (cursor)>
+<!ELEMENT vehicle (cursor*)>
 <!ATTLIST vehicle name CDATA #REQUIRED>
 <!ATTLIST vehicle source CDATA #REQUIRED>
-<!ATTLIST vehicle color CDATA #REQUIRED>
 <!ATTLIST vehicle enabled CDATA #IMPLIED>
 <!ATTLIST vehicle active CDATA #IMPLIED>
 <!ATTLIST vehicle follow CDATA #IMPLIED>
 <!ATTLIST vehicle update CDATA #IMPLIED>
 <!ATTLIST vehicle gpsd_query CDATA #IMPLIED>
-<!ELEMENT cursor EMPTY>
+<!ATTLIST vehicle profilename CDATA #IMPLIED>
+<!ELEMENT vehicleprofile (roadprofile+)>
+<!ATTLIST vehicleprofile name CDATA #REQUIRED>
+<!ATTLIST vehicleprofile flags CDATA #REQUIRED>
+<!ATTLIST vehicleprofile flags_forward_mask CDATA #REQUIRED>
+<!ATTLIST vehicleprofile flags_reverse_mask CDATA #REQUIRED>
+<!ATTLIST vehicleprofile maxspeed_handling CDATA #REQUIRED>
+<!ATTLIST vehicleprofile route_mode CDATA #REQUIRED>
+<!ELEMENT coord EMPTY>
+<!ATTLIST coord x CDATA #REQUIRED>
+<!ATTLIST coord y CDATA #REQUIRED>
+<!ELEMENT cursor (itemgra+)>
+<!ATTLIST cursor w CDATA #REQUIRED>
+<!ATTLIST cursor h CDATA #REQUIRED>
 <!ELEMENT tracking ANY>
-<!ELEMENT route (speed+)>
+<!ATTLIST tracking cdf_histsize CDATA #IMPLIED>
+<!ELEMENT route EMPTY>
+<!ATTLIST route destination_distance CDATA #IMPLIED>
+<!ELEMENT roadprofile (announcement*)>
+<!ATTLIST roadprofile item_types CDATA #REQUIRED>
+<!ATTLIST roadprofile speed CDATA #REQUIRED>
+<!ATTLIST roadprofile route_weight CDATA #REQUIRED>
 <!ELEMENT speed EMPTY>
 <!ATTLIST speed type CDATA #REQUIRED>
 <!ATTLIST speed value CDATA #REQUIRED>
@@ -45,10 +71,14 @@
 <!ATTLIST announce level1 CDATA #IMPLIED>
 <!ATTLIST announce level2 CDATA #IMPLIED>
 <!ATTLIST announce unit CDATA #REQUIRED>
+<!ELEMENT announcement EMPTY>
+<!ATTLIST announcement level CDATA #REQUIRED>
+<!ATTLIST announcement distance_metric CDATA #REQUIRED>
 <!ELEMENT speech EMPTY>
 <!ATTLIST speech type CDATA #REQUIRED>
 <!ATTLIST speech data CDATA #REQUIRED>
-<!ELEMENT mapset (map+)>
+<!ATTLIST speech cps CDATA #IMPLIED>
+<!ELEMENT mapset (map*,xi:include*)>
 <!ATTLIST mapset enabled CDATA #IMPLIED>
 <!ELEMENT map EMPTY>
 <!ATTLIST map type CDATA #REQUIRED>
@@ -56,20 +86,28 @@
 <!ATTLIST map active CDATA #IMPLIED>
 <!ATTLIST map data CDATA #REQUIRED>
 <!ATTLIST map debug CDATA #IMPLIED>
-<!ELEMENT layout (layer*)>
+<!ELEMENT layout (cursor*,layer*,xi:include*)>
 <!ATTLIST layout name CDATA #REQUIRED>
 <!ATTLIST layout color CDATA #IMPLIED>
 <!ATTLIST layout font CDATA #IMPLIED>
-<!ELEMENT layer (itemgra+)>
+<!ELEMENT layer (itemgra*)>
+<!ATTLIST layer enabled CDATA #IMPLIED>
 <!ATTLIST layer name CDATA #IMPLIED>
 <!ATTLIST layer details CDATA #IMPLIED>
+<!ELEMENT osd EMPTY>
+<!ATTLIST osd enabled CDATA #IMPLIED>
+<!ATTLIST osd type CDATA #REQUIRED>
+<!ATTLIST osd x CDATA #IMPLIED>
+<!ATTLIST osd y CDATA #IMPLIED>
+<!ATTLIST osd src CDATA #IMPLIED>
+<!ATTLIST osd command CDATA #IMPLIED>
 <!ELEMENT itemgra (polygon|polyline|text|circle|icon|image|arrows)*>
 <!ATTLIST itemgra item_types CDATA #IMPLIED>
 <!ATTLIST itemgra order CDATA #IMPLIED>
 <!ATTLIST itemgra speed_range CDATA #IMPLIED>
-<!ELEMENT polygon EMPTY>
+<!ELEMENT polygon (coord*)>
 <!ATTLIST polygon color CDATA #REQUIRED>
-<!ELEMENT polyline EMPTY>
+<!ELEMENT polyline (coord*)>
 <!ATTLIST polyline color CDATA #REQUIRED>
 <!ATTLIST polyline width CDATA #IMPLIED>
 <!ATTLIST polyline dash CDATA #IMPLIED>
@@ -77,7 +115,7 @@
 <!ELEMENT text EMPTY>
 <!ATTLIST text text_size CDATA #REQUIRED>
 <!ATTLIST text color CDATA #IMPLIED>
-<!ELEMENT circle EMPTY>
+<!ELEMENT circle (coord*)>
 <!ATTLIST circle color CDATA #REQUIRED>
 <!ATTLIST circle radius CDATA #REQUIRED>
 <!ATTLIST circle width CDATA #IMPLIED>
@@ -90,4 +128,6 @@
 <!ATTLIST arrows color CDATA #REQUIRED>
 <!ATTLIST arrows width CDATA #IMPLIED>
 <!ELEMENT image EMPTY>
-
+<!ELEMENT xi:include EMPTY>
+<!ATTLIST xi:include href CDATA #IMPLIED>
+<!ATTLIST xi:include xpointer CDATA #IMPLIED>

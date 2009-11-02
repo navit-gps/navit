@@ -22,6 +22,7 @@
 #include <glib.h>
 #include <getopt.h>
 #include "config.h"
+#include "config_.h"
 #include "version.h"
 #include "item.h"
 #include "coord.h"
@@ -59,6 +60,7 @@ int main_real(int argc, char **argv)
 	char *config_file = NULL;
 	int opt;
 	char *cp;
+	struct attr navit;
 
 	GList *list = NULL, *li;
 
@@ -165,7 +167,7 @@ int main_real(int argc, char **argv)
 		li = g_list_next(li);
 	}
 	g_list_free(list);
-	if (! main_get_navit(NULL)) {
+	if (! config_get_attr(config, attr_navit, &navit, NULL)) {
 		dbg(0, _("No instance has been created, exiting\n"));
 		exit(1);
 	}
