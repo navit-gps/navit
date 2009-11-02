@@ -23,7 +23,7 @@
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
 #include "config.h"
-#include "main.h"
+#include "config_.h"
 #include "navit.h"
 #include "coord.h"
 #include "point.h"
@@ -113,26 +113,28 @@ resolve_object(const char *opath, char *type)
 	oprefix=opath+strlen(object_path);
 	if (!strncmp(oprefix,def_navit,strlen(def_navit))) {
 		oprefix+=strlen(def_navit);
-		struct navit *navit=main_get_navit(NULL);
+		struct attr navit;
+		if (!config_get_attr(config, attr_navit, &navit, NULL))
+			return NULL;
 		if (!oprefix[0]) {
 			dbg(0,"default_navit\n");
-			return navit;
+			return navit.u.navit;
 		}
 		if (!strncmp(oprefix,def_graphics,strlen(def_graphics))) {
-			if (navit_get_attr(navit, attr_graphics, &attr, NULL)) {
+			if (navit_get_attr(navit.u.navit, attr_graphics, &attr, NULL)) {
 				return attr.u.graphics;
 			}
 			return NULL;
 		}
 		if (!strncmp(oprefix,def_vehicle,strlen(def_vehicle))) {
-			if (navit_get_attr(navit, attr_vehicle, &attr, NULL)) {
+			if (navit_get_attr(navit.u.navit, attr_vehicle, &attr, NULL)) {
 				return attr.u.vehicle;
 			}
 			return NULL;
 		}
 		if (!strncmp(oprefix,def_mapset,strlen(def_mapset))) {
 			oprefix+=strlen(def_mapset);
-			if (navit_get_attr(navit, attr_mapset, &attr, NULL)) {
+			if (navit_get_attr(navit.u.navit, attr_mapset, &attr, NULL)) {
 				if (!oprefix[0]) {
 					return attr.u.mapset;
 				}	
@@ -150,17 +152,14 @@ resolve_object(const char *opath, char *type)
 }
 
 static void *
-object_get_from_message_arg(DBusMessage *message, char *type)
+object_get_from_message_arg(DBusMessageIter *iter, char *type)
 {
 	char *opath;
-	DBusError error;
 
-	dbus_error_init(&error);
-	if (!dbus_message_get_args(message, &error, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID)) {
-		dbus_error_free(&error);
-		dbg(0,"wrong arg type\n");
+	if (dbus_message_iter_get_arg_type(iter) != DBUS_TYPE_OBJECT_PATH)
 		return NULL;
-	}
+	dbus_message_iter_get_basic(iter, &opath);
+	dbus_message_iter_next(iter);
 	return resolve_object(opath, type);
 }
 
@@ -170,20 +169,49 @@ object_get_from_message(DBusMessage *message, char *type)
 	return resolve_object(dbus_message_get_path(message), type);
 }
 
-static DBusHandlerResult
-reply_simple_as_variant(DBusConnection *connection, DBusMessage *message, int value, int dbus_type)
+static enum attr_type 
+attr_type_get_from_message(DBusMessageIter *iter)
 {
-	DBusMessage *reply;
-    
-	reply = dbus_message_new_method_return(message);
-    dbus_message_append_args(reply,
-                             dbus_type, &value,
-                             DBUS_TYPE_INVALID);
-	dbus_connection_send (connection, reply, NULL);
-	dbus_message_unref (reply);
+	char *attr_type;
 
-	return DBUS_HANDLER_RESULT_HANDLED;
+	if (dbus_message_iter_get_arg_type(iter) != DBUS_TYPE_STRING) 
+		return attr_none;
+	dbus_message_iter_get_basic(iter, &attr_type);
+	dbus_message_iter_next(iter);
+	return attr_from_name(attr_type); 
 }
+
+static int
+encode_attr(DBusMessage *message, struct attr *attr)
+{
+	char *name=attr_to_name(attr->type);
+	DBusMessageIter iter1,iter2;
+	dbus_message_iter_init_append(message, &iter1);
+	dbus_message_iter_append_basic(&iter1, DBUS_TYPE_STRING, &name);
+	if (attr->type >= attr_type_int_begin && attr->type < attr_type_boolean_begin) {
+		dbus_message_iter_open_container(&iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_INT32_AS_STRING, &iter2);
+		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_INT32, &attr->u.num);
+		dbus_message_iter_close_container(&iter1, &iter2);
+	}
+	if (attr->type >= attr_type_boolean_begin && attr->type <= attr_type_int_end) {
+		dbus_message_iter_open_container(&iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_BOOLEAN_AS_STRING, &iter2);
+		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_BOOLEAN, &attr->u.num);
+		dbus_message_iter_close_container(&iter1, &iter2);
+	}
+	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
+		dbus_message_iter_open_container(&iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_STRING_AS_STRING, &iter2);
+		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_STRING, &attr->u.str);
+		dbus_message_iter_close_container(&iter1, &iter2);
+	}
+	if (attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end) {
+		char *object=object_new(attr_to_name(attr->type), attr->u.data);
+		dbus_message_iter_open_container(&iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_OBJECT_PATH_AS_STRING, &iter2);
+		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_OBJECT_PATH, &object);
+		dbus_message_iter_close_container(&iter1, &iter2);
+	}
+	return 1;
+}
+
 
 static DBusHandlerResult
 empty_reply(DBusConnection *connection, DBusMessage *message)
@@ -197,42 +225,73 @@ empty_reply(DBusConnection *connection, DBusMessage *message)
 	return DBUS_HANDLER_RESULT_HANDLED;
 }
 
+
 static DBusHandlerResult
-request_main_get_navit(DBusConnection *connection, DBusMessage *message)
+dbus_error(DBusConnection *connection, DBusMessage *message, char *error, char *msg)
 {
 	DBusMessage *reply;
-	DBusError error;
-	struct iter *iter;
-	struct navit *navit;
-	char *opath;
 
-	dbus_error_init(&error);
+	reply = dbus_message_new_error(message, error, msg);
+	dbus_connection_send (connection, reply, NULL);
+	dbus_message_unref (reply);
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
 
-	if (!dbus_message_get_args(message, &error, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID)) {
-		dbg(0,"Error parsing\n");
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-	dbg(0,"opath=%s\n", opath);
-	iter=object_get(opath);
-	navit=main_get_navit(iter);
-	if (navit) {
+static DBusHandlerResult
+dbus_error_invalid_attr_type(DBusConnection *connection, DBusMessage *message)
+{
+	return dbus_error(connection, message, DBUS_ERROR_INVALID_ARGS, "attribute type invalid");
+}
+
+static DBusHandlerResult
+dbus_error_invalid_parameter(DBusConnection *connection, DBusMessage *message)
+{
+	return dbus_error(connection, message, DBUS_ERROR_INVALID_ARGS, "parameter invalid");
+}
+
+static DBusHandlerResult
+dbus_error_invalid_object_path(DBusConnection *connection, DBusMessage *message)
+{
+	return dbus_error(connection, message, DBUS_ERROR_BAD_ADDRESS, "object path invalid");
+}
+
+static DBusHandlerResult
+dbus_error_invalid_object_path_parameter(DBusConnection *connection, DBusMessage *message)
+{
+	return dbus_error(connection, message, DBUS_ERROR_BAD_ADDRESS, "object path parameter invalid");
+}
+
+static DBusHandlerResult
+request_config_get_attr(DBusConnection *connection, DBusMessage *message)
+{
+	DBusMessage *reply;
+	DBusMessageIter iter;
+	struct attr attr;
+	enum attr_type attr_type;
+	struct attr_iter *attr_iter;
+
+	dbus_message_iter_init(message, &iter);
+	attr_type=attr_type_get_from_message(&iter);
+	attr_iter=object_get_from_message_arg(&iter, "config_attr_iter");
+	if (attr_type == attr_none)
+		return dbus_error_invalid_attr_type(connection, message);
+	if (config_get_attr(config, attr_type, &attr, attr_iter)) {
 		reply = dbus_message_new_method_return(message);
-		opath=object_new("navit",navit);
-		dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
+		encode_attr(reply, &attr);
 		dbus_connection_send (connection, reply, NULL);
 		dbus_message_unref (reply);
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
-	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	return empty_reply(connection, message);
 }
 
 static DBusHandlerResult
-request_main_iter(DBusConnection *connection, DBusMessage *message)
+request_config_attr_iter(DBusConnection *connection, DBusMessage *message)
 {
 	DBusMessage *reply;
-	struct iter *iter=main_iter_new();
-	dbg(0,"iter=%p\n", iter);
-	char *opath=object_new("main_iter",iter);
+	struct attr_iter *attr_iter=config_attr_iter_new();
+	dbg(0,"iter=%p\n", attr_iter);
+	char *opath=object_new("config_attr_iter",attr_iter);
 	reply = dbus_message_new_method_return(message);
 	dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
 	dbus_connection_send (connection, reply, NULL);
@@ -242,14 +301,16 @@ request_main_iter(DBusConnection *connection, DBusMessage *message)
 }
 
 static DBusHandlerResult
-request_main_iter_destroy(DBusConnection *connection, DBusMessage *message)
+request_config_attr_iter_destroy(DBusConnection *connection, DBusMessage *message)
 {
-	struct iter *iter;
-	
-	iter=object_get_from_message_arg(message, "main_iter");
-	if (! iter)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	main_iter_destroy(iter);
+	struct attr_iter *attr_iter;
+	DBusMessageIter iter;
+
+	dbus_message_iter_init(message, &iter);
+	attr_iter=object_get_from_message_arg(&iter, "config_attr_iter");
+	if (! attr_iter)
+		return dbus_error_invalid_object_path_parameter(connection, message);
+	config_attr_iter_destroy(attr_iter);
 
 	return empty_reply(connection, message);
 }
@@ -315,11 +376,11 @@ request_navit_draw(DBusConnection *connection, DBusMessage *message)
 
 	navit=object_get_from_message(message, "navit");
 	if (! navit)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 
 	navit_draw(navit);
 	
-    return empty_reply(connection, message);
+	return empty_reply(connection, message);
 }
 
 
@@ -377,7 +438,7 @@ request_navit_add_message(DBusConnection *connection, DBusMessage *message)
 
 	navit=object_get_from_message(message, "navit");
 	if (! navit)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
 	dbus_message_iter_get_basic(&iter, &usermessage);
@@ -404,12 +465,12 @@ request_navit_set_center(DBusConnection *connection, DBusMessage *message)
 
 	navit=object_get_from_message(message, "navit");
 	if (! navit)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
 
 	if (!pcoord_get_from_message(message, &iter, &pc))
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_parameter(connection, message);
     
 	navit_set_center(navit, &pc, 0);
 	return empty_reply(connection, message);
@@ -430,12 +491,12 @@ request_navit_set_center_screen(DBusConnection *connection, DBusMessage *message
 
 	navit=object_get_from_message(message, "navit");
 	if (! navit)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
 
 	if (!point_get_from_message(message, &iter, &p))
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_parameter(connection, message);
 	navit_set_center_screen(navit, &p, 0);
 	return empty_reply(connection, message);
 }
@@ -456,12 +517,12 @@ request_navit_set_layout(DBusConnection *connection, DBusMessage *message)
 
 	navit=object_get_from_message(message, "navit");
 	if (! navit)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 	
-    if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &new_layout_name, DBUS_TYPE_INVALID))
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &new_layout_name, DBUS_TYPE_INVALID))
+		return dbus_error_invalid_parameter(connection, message);
 	
-    iter=navit_attr_iter_new();
+	iter=navit_attr_iter_new();
 	while(navit_get_attr(navit, attr_layout, &attr, iter)) {
 		if (strcmp(attr.u.layout->name, new_layout_name) == 0) {
 			navit_set_attr(navit, &attr);
@@ -480,7 +541,7 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 
 	navit = object_get_from_message(message, "navit");
 	if (! navit)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
 	dbg(0,"%s\n", dbus_message_iter_get_signature(&iter));
@@ -491,7 +552,7 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 	{
 		dbus_message_iter_next(&iter);
 		if (!point_get_from_message(message, &iter, &p))
-			return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+			return dbus_error_invalid_parameter(connection, message);
 	}
 
 	if (factor > 1)
@@ -512,19 +573,19 @@ request_navit_resize(DBusConnection *connection, DBusMessage *message)
 
 	navit = object_get_from_message(message, "navit");
 	if (! navit)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
 	dbg(0,"%s\n", dbus_message_iter_get_signature(&iter));
 	
 	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_parameter(connection, message);
 	dbus_message_iter_get_basic(&iter, &w);
 	
 	dbus_message_iter_next(&iter);
 	
 	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_parameter(connection, message);
 	dbus_message_iter_get_basic(&iter, &h);
 
 	dbg(0, " w -> %i  h -> %i\n", w, h);
@@ -535,101 +596,33 @@ request_navit_resize(DBusConnection *connection, DBusMessage *message)
 
 }
 
-static int
-encode_attr(DBusMessage *message, struct attr *attr)
-{
-	char *name=attr_to_name(attr->type);
-	DBusMessageIter iter1,iter2;
-	dbus_message_iter_init_append(message, &iter1);
-	dbus_message_iter_append_basic(&iter1, DBUS_TYPE_STRING, &name);
-	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
-		dbus_message_iter_open_container(&iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_STRING_AS_STRING, &iter2);
-		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_STRING, &attr->u.str);
-		dbus_message_iter_close_container(&iter1, &iter2);
-	}
-	return 1;
-}
-
 static DBusHandlerResult
 request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
 {
-    struct navit *navit;
-    DBusMessageIter iter;
-    char * attr_type = NULL;
-    struct attr attr;
-    navit = object_get_from_message(message, "navit");
-    if (! navit)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	DBusMessage *reply;
+	DBusMessageIter iter;
+	struct attr attr;
+	enum attr_type attr_type;
+	struct attr_iter *attr_iter;
+	struct navit *navit;
 
-    dbus_message_iter_init(message, &iter);
-    dbus_message_iter_get_basic(&iter, &attr_type);
-    attr.type = attr_from_name(attr_type); 
-    dbg(0, "attr value: 0x%x string: %s\n", attr.type, attr_type);
+	navit = object_get_from_message(message, "navit");
+	if (! navit)
+		return dbus_error_invalid_object_path(connection, message);
 
-    if (attr.type == attr_none)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-    
-    if (attr.type > attr_type_item_begin && attr.type < attr_type_item_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if (attr.type > attr_type_int_begin && attr.type < attr_type_boolean_begin)
-    {
-        dbg(0, "int detected\n");
-        if(navit_get_attr(navit, attr.type, &attr, NULL)) {
-            dbg(0, "%s = %i\n", attr_type, attr.u.num);
-            return reply_simple_as_variant(connection, message, attr.u.num, DBUS_TYPE_INT32);
-        }
-    }
-
-    else if(attr.type > attr_type_boolean_begin && attr.type < attr_type_int_end)
-    {
-        dbg(0, "bool detected\n");
-        if(navit_get_attr(navit, attr.type, &attr, NULL)) {
-            dbg(0, "%s = %i\n", attr_type, attr.u.num);
-            return reply_simple_as_variant(connection, message, attr.u.num, DBUS_TYPE_BOOLEAN);
-        }
-    }
-
-    else if(attr.type >= attr_type_string_begin && attr.type <= attr_type_string_end)
-    {
-        dbg(0, "string detected\n");
-        if(navit_get_attr(navit, attr.type, &attr, NULL)) {
-            dbg(0, "%s = %s\n", attr_type, &attr.u.layout);
-            return reply_simple_as_variant(connection, message, GPOINTER_TO_INT(&attr.u.layout), DBUS_TYPE_STRING);
-        }
-    }
-
-#if 0
-    else if(attr.type > attr_type_special_begin && attr.type < attr_type_special_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_double_begin && attr.type < attr_type_double_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_coord_geo_begin && attr.type < attr_type_coord_geo_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_color_begin && attr.type < attr_type_color_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_object_begin && attr.type < attr_type_object_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_coord_begin && attr.type < attr_type_coord_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_pcoord_begin && attr.type < attr_type_pcoord_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-
-    else if(attr.type > attr_type_callback_begin && attr.type < attr_type_callback_end)
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-#endif
-    else {
-        dbg(0, "zomg really unhandled111\n");
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-    }
-
-    return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	dbus_message_iter_init(message, &iter);
+	attr_type=attr_type_get_from_message(&iter);
+	if (attr_type == attr_none)
+		return dbus_error_invalid_attr_type(connection, message);
+	attr_iter=object_get_from_message_arg(&iter, "navit_attr_iter");
+	if (navit_get_attr(navit, attr_type, &attr, attr_iter)) {
+		reply = dbus_message_new_method_return(message);
+		encode_attr(reply, &attr);
+		dbus_connection_send (connection, reply, NULL);
+		dbus_message_unref (reply);
+		return DBUS_HANDLER_RESULT_HANDLED;
+	}
+	return empty_reply(connection, message);
 }
 
 static int
@@ -727,14 +720,14 @@ request_navit_set_attr(DBusConnection *connection, DBusMessage *message)
 
 	navit = object_get_from_message(message, "navit");
 	if (! navit)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 	if (decode_attr(message, &attr)) {
 		ret=navit_set_attr(navit, &attr);
 		destroy_attr(&attr);
 		if (ret)
 			return empty_reply(connection, message);
 	}
-    	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    	return dbus_error_invalid_parameter(connection, message);
 }
 
 static DBusHandlerResult
@@ -746,14 +739,14 @@ request_graphics_set_attr(DBusConnection *connection, DBusMessage *message)
 	
 	graphics = object_get_from_message(message, "graphics");
 	if (! graphics)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 	if (decode_attr(message, &attr)) {
 		ret=graphics_set_attr(graphics, &attr);
 		destroy_attr(&attr);
 		if (ret)
 			return empty_reply(connection, message);
 	}
-    	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    	return dbus_error_invalid_parameter(connection, message);
 }
 
 static DBusHandlerResult
@@ -765,14 +758,14 @@ request_vehicle_set_attr(DBusConnection *connection, DBusMessage *message)
 	
 	vehicle = object_get_from_message(message, "vehicle");
 	if (! vehicle)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 	if (decode_attr(message, &attr)) {
 		ret=vehicle_set_attr(vehicle, &attr, NULL);
 		destroy_attr(&attr);
 		if (ret)	
 			return empty_reply(connection, message);
 	}
-    	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    	return dbus_error_invalid_parameter(connection, message);
 }
 
 static DBusHandlerResult
@@ -784,14 +777,14 @@ request_map_set_attr(DBusConnection *connection, DBusMessage *message)
 	
 	map = object_get_from_message(message, "map");
 	if (! map)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 	if (decode_attr(message, &attr)) {
 		ret=map_set_attr(map, &attr);
 		destroy_attr(&attr);
 		if (ret)	
 			return empty_reply(connection, message);
 	}
-    	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    	return dbus_error_invalid_parameter(connection, message);
 }
 
 static DBusHandlerResult
@@ -803,11 +796,11 @@ request_navit_set_position(DBusConnection *connection, DBusMessage *message)
 
 	navit = object_get_from_message(message, "navit");
 	if (! navit)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
 	if (!pcoord_get_from_message(message, &iter, &pc))
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    		return dbus_error_invalid_parameter(connection, message);
 	
 	navit_set_position(navit, &pc);
 	return empty_reply(connection, message);
@@ -823,13 +816,13 @@ request_navit_set_destination(DBusConnection *connection, DBusMessage *message)
 
 	navit = object_get_from_message(message, "navit");
 	if (! navit)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
 	if (!pcoord_get_from_message(message, &iter, &pc))
-	    return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    		return dbus_error_invalid_parameter(connection, message);
 	
-    dbus_message_iter_next(&iter);
+	dbus_message_iter_next(&iter);
 	dbus_message_iter_get_basic(&iter, &description);
 	dbg(0, " destination -> %s\n", description);
 	
@@ -849,12 +842,12 @@ request_navit_evaluate(DBusConnection *connection, DBusMessage *message)
 
 	navit = object_get_from_message(message, "navit");
 	if (! navit)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 
 	attr.type=attr_navit;
 	attr.u.navit=navit;
         if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &command, DBUS_TYPE_INVALID))
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    		return dbus_error_invalid_parameter(connection, message);
 	result=command_evaluate_to_string(&attr, command, &error);
 	reply = dbus_message_new_method_return(message);
 	if (error)
@@ -876,10 +869,10 @@ request_graphics_get_data(DBusConnection *connection, DBusMessage *message)
 
 	graphics = object_get_from_message(message, "graphics");
 	if (! graphics)
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+		return dbus_error_invalid_object_path(connection, message);
 
         if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &data, DBUS_TYPE_INVALID))
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+    		return dbus_error_invalid_parameter(connection, message);
 	image=graphics_get_data(graphics, data);
 	if (image) {
 		DBusMessageIter iter1,iter2;
@@ -896,7 +889,7 @@ request_graphics_get_data(DBusConnection *connection, DBusMessage *message)
 		dbus_message_unref (reply);
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
-	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	return empty_reply(connection, message);
 }
 
 struct dbus_method {
@@ -908,9 +901,9 @@ struct dbus_method {
     char *response_name;
 	DBusHandlerResult(*func)(DBusConnection *connection, DBusMessage *message);
 } dbus_methods[] = {
-	{"",        "iter",                "",        "",                                        "o",  "navit", request_main_iter},
-	{"",        "iter_destroy",        "o",       "navit",                                   "",   "",      request_main_iter_destroy},
-	{"",        "get_navit",           "o",       "navit",                                   "o",  "",      request_main_get_navit},
+	{"",        "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_config_attr_iter},
+	{"",        "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_config_attr_iter_destroy},
+	{"",        "get_attr",            "so",      "attrname,attr_iter",                      "sv", "attrname,value",request_config_get_attr},
 	{".navit",  "draw",                "",        "",                                        "",   "",      request_navit_draw},
 	{".navit",  "add_message",         "s",       "message",                                 "",   "",      request_navit_add_message},
 	{".navit",  "set_center",          "s",       "(coordinates)",                           "",   "",      request_navit_set_center},
@@ -1131,5 +1124,5 @@ void plugin_init(void)
 	}
 	callback.type=attr_callback;
 	callback.u.callback=callback_new_0(callback_cast(dbus_main_navit));
-	main_add_attr(&callback);
+	config_add_attr(config, &callback);
 }
