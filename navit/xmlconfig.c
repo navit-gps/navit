@@ -132,7 +132,7 @@ static struct attr ** convert_to_attrs(struct xmlstate *state, struct attr_fixme
 		ret[count]=attr_new_from_text(name,*attribute_value);
 		if (ret[count])
 			count++;
-		else if (strcmp(*attribute_name,"enabled"))
+		else if (strcmp(*attribute_name,"enabled") && strcmp(*attribute_name,"xmlns:xi"))
 			dbg(0,"failed to create attribute '%s' with value '%s'\n", *attribute_name,*attribute_value);
 		attribute_name++;
 		attribute_value++;

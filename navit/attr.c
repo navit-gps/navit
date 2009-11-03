@@ -374,12 +374,12 @@ attr_generic_remove_attr(struct attr **attrs, struct attr *attr)
 		curr++;
 		count++;
 	}
-	if (!found == -1)
+	if (!found)
 		return attrs;
 	curr=g_new0(struct attr *, count);
 	j=0;
 	for (i = 0 ; i < count ; i++) {
-		if ((*curr)->type != attr->type || (*curr)->u.data != attr->u.data)
+		if (attrs[i]->type != attr->type || attrs[i]->u.data != attr->u.data)
 			curr[j++]=attrs[i];
 		else
 			attr_free(attrs[i]);

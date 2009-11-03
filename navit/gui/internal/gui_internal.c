@@ -3046,6 +3046,7 @@ gui_internal_cmd_quit(struct gui_priv *this, struct widget *wm, void *data)
 	navit.u.navit=this->nav;
 	navit_destroy(navit.u.navit);
 	config_remove_attr(config, &navit);
+	event_main_loop_quit();
 }
 
 static void
@@ -3747,7 +3748,7 @@ static void gui_internal_resize(void *data, int w, int h)
 
 	this->root.w=w;
 	this->root.h=h;
-	dbg(0,"w=%d h=%d children=%p\n", w, h, this->root.children);
+	dbg(1,"w=%d h=%d children=%p\n", w, h, this->root.children);
 	navit_handle_resize(this->nav, w, h);
 	if (this->root.children) {
 		gui_internal_prune_menu(this, NULL);
@@ -4099,7 +4100,6 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	else
 		this->menu_on_map_click=1;
 	if ((attr=attr_search(attrs, NULL, attr_callback_list))) {
-		dbg(0,"register\n");
 		command_add_table(attr->u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), this);
 	}
 
