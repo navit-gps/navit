@@ -290,7 +290,6 @@ request_config_attr_iter(DBusConnection *connection, DBusMessage *message)
 {
 	DBusMessage *reply;
 	struct attr_iter *attr_iter=config_attr_iter_new();
-	dbg(0,"iter=%p\n", attr_iter);
 	char *opath=object_new("config_attr_iter",attr_iter);
 	reply = dbus_message_new_method_return(message);
 	dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
@@ -625,6 +624,35 @@ request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
 	return empty_reply(connection, message);
 }
 
+static DBusHandlerResult
+request_navit_attr_iter(DBusConnection *connection, DBusMessage *message)
+{
+	DBusMessage *reply;
+	struct attr_iter *attr_iter=navit_attr_iter_new();
+	char *opath=object_new("navit_attr_iter",attr_iter);
+	reply = dbus_message_new_method_return(message);
+	dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
+	dbus_connection_send (connection, reply, NULL);
+	dbus_message_unref (reply);
+
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
+
+static DBusHandlerResult
+request_navit_attr_iter_destroy(DBusConnection *connection, DBusMessage *message)
+{
+	struct attr_iter *attr_iter;
+	DBusMessageIter iter;
+
+	dbus_message_iter_init(message, &iter);
+	attr_iter=object_get_from_message_arg(&iter, "navit_attr_iter");
+	if (! attr_iter)
+		return dbus_error_invalid_object_path_parameter(connection, message);
+	navit_attr_iter_destroy(attr_iter);
+
+	return empty_reply(connection, message);
+}
+
 static int
 decode_attr(DBusMessage *message, struct attr *attr)
 {
@@ -903,7 +931,8 @@ struct dbus_method {
 } dbus_methods[] = {
 	{"",        "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_config_attr_iter},
 	{"",        "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_config_attr_iter_destroy},
-	{"",        "get_attr",            "so",      "attrname,attr_iter",                      "sv", "attrname,value",request_config_get_attr},
+	{"",        "get_attr",            "s",       "attrname,attr_iter",                      "sv", "attrname,value",request_config_get_attr},
+	{"",        "get_attr_wi",         "so",      "attrname,attr_iter",                      "sv", "attrname,value",request_config_get_attr},
 	{".navit",  "draw",                "",        "",                                        "",   "",      request_navit_draw},
 	{".navit",  "add_message",         "s",       "message",                                 "",   "",      request_navit_add_message},
 	{".navit",  "set_center",          "s",       "(coordinates)",                           "",   "",      request_navit_set_center},
@@ -914,7 +943,10 @@ struct dbus_method {
 	{".navit",  "zoom",                "i(ii)",   "factor(pixel_x,pixel_y)",                 "",   "",      request_navit_zoom},
 	{".navit",  "zoom",                "i",       "factor",                                  "",   "",      request_navit_zoom},
 	{".navit",  "resize",              "ii",      "upperleft,lowerright",                    "",   "",      request_navit_resize},
-	{".navit",  "get_attr",            "s",       "attribute",                               "v",  "value", request_navit_get_attr},
+	{".navit",  "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_navit_attr_iter},
+	{".navit",  "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_navit_attr_iter_destroy},
+	{".navit",  "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_navit_get_attr},
+	{".navit",  "get_attr_wi",         "so",      "attribute",                               "sv",  "attrname,value", request_navit_get_attr},
 	{".navit",  "set_attr",            "sv",      "attribute,value",                         "",   "",      request_navit_set_attr},
 	{".navit",  "set_position",        "s",       "(coordinates)",                           "",   "",      request_navit_set_position},
 	{".navit",  "set_position",        "(is)",    "(projection,coordinated)",                "",   "",      request_navit_set_position},
