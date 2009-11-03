@@ -39,14 +39,12 @@ config_destroy(struct config *this_)
 	attr_list_free(this_->attrs);
 	callback_list_destroy(this_->cbl);
 	g_free(config);
-	dbg(0,"exit");
 	exit(0);
 }
 
 int
 config_get_attr(struct config *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-	dbg(0,"enter\n");
 	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
@@ -97,14 +95,12 @@ config_remove_attr(struct config *this_, struct attr *attr)
 struct attr_iter *
 config_attr_iter_new()
 {
-	dbg(0,"enter\n");
 	return g_new0(struct attr_iter, 1);
 }
 
 void
 config_attr_iter_destroy(struct attr_iter *iter)
 {
-	dbg(0,"enter\n");
 	g_free(iter);
 }
 
@@ -112,7 +108,6 @@ config_attr_iter_destroy(struct attr_iter *iter)
 struct config *
 config_new(struct attr *parent, struct attr **attrs)
 {
-	dbg(0,"enter\n");
 	if (config) {
 		dbg(0,"only one config allowed\n");
 		return NULL;
