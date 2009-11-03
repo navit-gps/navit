@@ -55,7 +55,7 @@
 #include "vehicle.h"
 #include "vehicleprofile.h"
 #include "window.h"
-#include "main.h"
+#include "config_.h"
 #include "keys.h"
 #include "mapset.h"
 #include "route.h"
@@ -3041,9 +3041,11 @@ gui_internal_cmd_display(struct gui_priv *this, struct widget *wm, void *data)
 static void
 gui_internal_cmd_quit(struct gui_priv *this, struct widget *wm, void *data)
 {
-	struct navit *nav=this->nav;
-	navit_destroy(nav);
-	main_remove_navit(nav);
+	struct attr navit;
+	navit.type=attr_navit;
+	navit.u.navit=this->nav;
+	navit_destroy(navit.u.navit);
+	config_remove_attr(config, &navit);
 }
 
 static void
