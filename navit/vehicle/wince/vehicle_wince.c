@@ -211,9 +211,11 @@ reconnect_port:
 			current_index = 0;
 			memset(buffer, 0, sizeof(buffer));
 		}
+		dbg(1,"readfile\n");
 		status = ReadFile(pvt->m_hGPSDevice,
 			&buffer[current_index], chunk_size,
 			&dwBytes, NULL);
+		dbg(1,"status=%d dwBytes=%d\n",status,dwBytes);
 		if (!status) {
 			CloseHandle(pvt->m_hGPSDevice);
 			pvt->m_hGPSDevice = NULL;
@@ -225,7 +227,7 @@ reconnect_port:
 			return_pos = NULL;
 			current_index += dwBytes;
 			buffer[current_index+1] = '\0';
-			//dbg(0, "buffer[%s]\n", buffer);
+			dbg(1,"buffer[%s]\n",buffer);
 			while (buffer[0]) {
 				pos = strcspn(buffer, "\r\n");
 				if (pos >= sizeof(return_buffer)) {
@@ -246,6 +248,7 @@ reconnect_port:
 					sizeof(buffer) - consumed);
 				buffer[current_index] = '\0';
 			}
+			dbg(1,"havedata=%d\n",havedata);
 			if (havedata) {
 				// post a message so we can callback from
 				// the ui thread
@@ -541,6 +544,7 @@ vehicle_wince_parse(struct vehicle_priv *priv, char *buffer)
 			priv->fixyear = atoi(item[4]);
 		}
 	}
+	dbg(1,"returning %d\n",ret);
 	return ret;
 }
 
