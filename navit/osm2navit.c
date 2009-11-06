@@ -3481,7 +3481,7 @@ write_tile(char *key, struct tile_head *th, gpointer dummy)
 #endif
 
 static void
-write_item(char *tile, struct item_bin *ib)
+write_item(char *tile, struct item_bin *ib, FILE *reference)
 {
 	struct tile_head *th;
 	int size;
@@ -3501,8 +3501,11 @@ write_item(char *tile, struct item_bin *ib)
 			fprintf(stderr,"error with tile '%s' of length %d\n", tile, (int)strlen(tile));
 			abort();
 		}
-		if (! th->process)
+		if (! th->process) {
+			if (reference) 
+				fseek(reference, 8, SEEK_CUR);
 			return;
+		}
 		if (debug_tile(tile))
 			fprintf(stderr,"Data:Writing %d bytes to '%s' (%p,%p) 0x%x\n", (ib->len+1)*4, tile, g_hash_table_lookup(tile_hash, tile), tile_hash2 ? g_hash_table_lookup(tile_hash2, tile) : NULL, ib->type);
 		size=(ib->len+1)*4;
@@ -3510,6 +3513,10 @@ write_item(char *tile, struct item_bin *ib)
 			fprintf(stderr,"Overflow in tile %s (used %d max %d item %d)\n", tile, th->total_size_used, th->total_size, size);
 			exit(1);
 			return;
+		}
+		if (reference) {
+			fwrite(&th->zipnum, sizeof(th->zipnum), 1, reference);
+			fwrite(&th->total_size_used, sizeof(th->total_size_used), 1, reference);
 		}
 		memcpy(th->zip_data+th->total_size_used, ib, size);
 		th->total_size_used+=size;
@@ -3637,27 +3644,27 @@ struct zip_info {
 static void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size);
 
 static void
-tile_write_item_to_tile(struct tile_info *info, struct item_bin *ib, char *name)
+tile_write_item_to_tile(struct tile_info *info, struct item_bin *ib, FILE *reference, char *name)
 {
 	if (info->write)
-		write_item(name, ib);
+		write_item(name, ib, reference);
 	else
 		tile_extend(name, ib, info->tiles_list);
 }
 
 static void
-tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, int min, int max)
+tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *reference, int min, int max)
 {
 	struct rect r;
 	char buffer[1024];
 	bbox((struct coord *)(ib+1), ib->clen/2, &r);
 	buffer[0]='\0';
 	tile(&r, info->suffix, buffer, max, overlap, NULL);
-	tile_write_item_to_tile(info, ib, buffer);
+	tile_write_item_to_tile(info, ib, reference, buffer);
 }
 
 static void
-phase34_process_file(struct tile_info *info, FILE *in)
+phase34_process_file(struct tile_info *info, FILE *in, FILE *reference)
 {
 	struct item_bin *ib;
 	int max;
@@ -3714,7 +3721,7 @@ phase34_process_file(struct tile_info *info, FILE *in)
 		default:
 			break;
 		}
-		tile_write_item_minmax(info, ib, 0, max);
+		tile_write_item_minmax(info, ib, reference, 0, max);
 	}
 }
 
@@ -3748,7 +3755,7 @@ index_submap_add(struct tile_info *info, struct tile_head *th)
 	item_bin_add_coord_rect(item_bin, &r);
 	item_bin_add_attr_range(item_bin, attr_order, (tlen > 4)?tlen-4 : 0, 255);
 	item_bin_add_attr_int(item_bin, attr_zipfile_ref, th->zipnum);
-	tile_write_item_to_tile(info, item_bin, index_tile);
+	tile_write_item_to_tile(info, item_bin, NULL, index_tile);
 }
 
 static int
@@ -4072,7 +4079,7 @@ remove_countryfiles(void)
 }
 
 static int
-phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, int in_count)
+phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, FILE **reference, int in_count)
 {
 	int i;
 
@@ -4083,7 +4090,7 @@ phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, int in_cou
 		tile_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	for (i = 0 ; i < in_count ; i++) {
 		if (in[i])
-			phase34_process_file(info, in[i]);
+			phase34_process_file(info, in[i], reference ? reference[i]:NULL);
 	}
 	if (! info->write)
 		merge_tiles(info);
@@ -4122,7 +4129,7 @@ phase4(FILE **in, int in_count, char *suffix, FILE *tilesdir_out, struct zip_inf
 	info.suffix=suffix;
 	info.tiles_list=NULL;
 	info.tilesdir_out=tilesdir_out;
-	return phase34(&info, zip_info, in, in_count);
+	return phase34(&info, zip_info, in, NULL, in_count);
 }
 
 static int
@@ -4244,7 +4251,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 }
 
 static int
-process_slice(FILE **in, int in_count, long long size, char *suffix, struct zip_info *zip_info)
+process_slice(FILE **in, FILE **reference, int in_count, long long size, char *suffix, struct zip_info *zip_info)
 {
 	struct tile_head *th;
 	char *slice_data,*zip_data;
@@ -4266,13 +4273,16 @@ process_slice(FILE **in, int in_count, long long size, char *suffix, struct zip_
 	for (i = 0 ; i < in_count ; i++) {
 		if (in[i])
 			fseek(in[i], 0, SEEK_SET);
+		if (reference && reference[i]) {
+			fseek(reference[i], 0, SEEK_SET);
+		}
 	}
 	info.write=1;
 	info.maxlen=zip_info->maxnamelen;
 	info.suffix=suffix;
 	info.tiles_list=NULL;
 	info.tilesdir_out=NULL;
-	phase34(&info, zip_info, in, in_count);
+	phase34(&info, zip_info, in, reference, in_count);
 
 	th=tile_head_root;
 	while (th) {
@@ -4304,7 +4314,7 @@ cat(FILE *in, FILE *out)
 }
 
 static int
-phase5(FILE **in, int in_count, char *suffix, struct zip_info *zip_info)
+phase5(FILE **in, FILE **references, int in_count, char *suffix, struct zip_info *zip_info)
 {
 	long long size;
 	int slices;
@@ -4344,7 +4354,7 @@ phase5(FILE **in, int in_count, char *suffix, struct zip_info *zip_info)
 		}
 		/* process_slice() modifies zip_info, but need to retain old info */
 		zipnum=zip_info->zipnum;
-		written_tiles=process_slice(in, in_count, size, suffix, zip_info);
+		written_tiles=process_slice(in, references, in_count, size, suffix, zip_info);
 		zip_info->zipnum=zipnum+written_tiles;
 		slices++;
 	}
@@ -5155,6 +5165,7 @@ int main(int argc, char **argv)
 {
 	FILE *ways=NULL,*ways_split=NULL,*ways_split_index=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*coastline=NULL,*tilesdir,*coords,*relations=NULL;
 	FILE *files[10];
+	FILE *references[10];
 
 	char *map=g_strdup(attrmap);
 	int zipnum,c,start=1,end=99,dump_coordinates=0;
@@ -5167,6 +5178,7 @@ int main(int argc, char **argv)
 #endif
 	int output=0;
 	int input=0;
+	int f;
 	char *result;
 #ifdef HAVE_POSTGRESQL
 	char *dbstr=NULL;
@@ -5504,10 +5516,16 @@ int main(int argc, char **argv)
 		files[0]=NULL;
 		files[1]=NULL;
 		files[2]=NULL;
+		references[0]=NULL;
+		references[1]=NULL;
+		references[2]=NULL;
 		if (process_relations)
 			files[0]=tempfile(suffix,"relations",0);
-		if (process_ways)
+		if (process_ways) {
 			files[1]=tempfile(suffix,"ways_split",0);
+			references[1]=tempfile(suffix,"ways_split_ref",1);
+			printf("References=%p\n",references[1]);
+		}
 		if (process_nodes)
 			files[2]=tempfile(suffix,"nodes",0);
 		if (i == 0) {
@@ -5523,17 +5541,18 @@ int main(int argc, char **argv)
 		}
 		fprintf(stderr,"Slice %d\n",i);
 		
-		phase5(files,3,suffix,&zip_info);
-		if (files[2])
-			fclose(files[2]);
-		if (files[1])
-			fclose(files[1]);
-		if (files[0])
-			fclose(files[0]);
+		phase5(files,references,3,suffix,&zip_info);
+		for (f = 0 ; f < 3 ; f++) {
+			if (files[f])
+				fclose(files[f]);
+			if (references[f])
+				fclose(references[f]);
+		}
 		if(!keep_tmpfiles) {
 			tempfile_unlink(suffix,"relations");
 			tempfile_unlink(suffix,"nodes");
 			tempfile_unlink(suffix,"ways_split");
+			tempfile_unlink(suffix,"ways_split_ref");
 			tempfile_unlink(suffix,"coastline");
 			tempfile_unlink(suffix,"turn_restrictions");
 			tempfile_unlink(suffix,"graph");
