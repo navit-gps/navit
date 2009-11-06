@@ -4072,20 +4072,19 @@ remove_countryfiles(void)
 }
 
 static int
-phase34(struct tile_info *info, struct zip_info *zip_info, FILE *relations_in, FILE *ways_in, FILE *nodes_in)
+phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, int in_count)
 {
+	int i;
 
 	processed_nodes=processed_nodes_out=processed_ways=processed_relations=processed_tiles=0;
 	bytes_read=0;
 	sig_alrm(0);
 	if (! info->write)
 		tile_hash=g_hash_table_new(g_str_hash, g_str_equal);
-	if (relations_in)
-		phase34_process_file(info, relations_in);
-	if (ways_in)
-		phase34_process_file(info, ways_in);
-	if (nodes_in)
-		phase34_process_file(info, nodes_in);
+	for (i = 0 ; i < in_count ; i++) {
+		if (in[i])
+			phase34_process_file(info, in[i]);
+	}
 	if (! info->write)
 		merge_tiles(info);
 	sig_alrm(0);
@@ -4115,7 +4114,7 @@ dump(FILE *in)
 }
 
 static int
-phase4(FILE *relations_in, FILE *ways_in, FILE *nodes_in, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info)
+phase4(FILE **in, int in_count, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info)
 {
 	struct tile_info info;
 	info.write=0;
@@ -4123,7 +4122,7 @@ phase4(FILE *relations_in, FILE *ways_in, FILE *nodes_in, char *suffix, FILE *ti
 	info.suffix=suffix;
 	info.tiles_list=NULL;
 	info.tilesdir_out=tilesdir_out;
-	return phase34(&info, zip_info, relations_in, ways_in, nodes_in);
+	return phase34(&info, zip_info, in, in_count);
 }
 
 static int
@@ -4245,12 +4244,13 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 }
 
 static int
-process_slice(FILE *relations_in, FILE *ways_in, FILE *nodes_in, long long size, char *suffix, struct zip_info *zip_info)
+process_slice(FILE **in, int in_count, long long size, char *suffix, struct zip_info *zip_info)
 {
 	struct tile_head *th;
 	char *slice_data,*zip_data;
 	int zipfiles=0;
 	struct tile_info info;
+	int i;
 
 	slice_data=malloc(size);
 	assert(slice_data != NULL);
@@ -4263,18 +4263,16 @@ process_slice(FILE *relations_in, FILE *ways_in, FILE *nodes_in, long long size,
 		}
 		th=th->next;
 	}
-	if (relations_in)
-		fseek(relations_in, 0, SEEK_SET);
-	if (ways_in)
-		fseek(ways_in, 0, SEEK_SET);
-	if (nodes_in)
-		fseek(nodes_in, 0, SEEK_SET);
+	for (i = 0 ; i < in_count ; i++) {
+		if (in[i])
+			fseek(in[i], 0, SEEK_SET);
+	}
 	info.write=1;
 	info.maxlen=zip_info->maxnamelen;
 	info.suffix=suffix;
 	info.tiles_list=NULL;
 	info.tilesdir_out=NULL;
-	phase34(&info, zip_info, relations_in, ways_in, nodes_in);
+	phase34(&info, zip_info, in, in_count);
 
 	th=tile_head_root;
 	while (th) {
@@ -4306,7 +4304,7 @@ cat(FILE *in, FILE *out)
 }
 
 static int
-phase5(FILE *relations_in, FILE *ways_in, FILE *nodes_in, char *suffix, struct zip_info *zip_info)
+phase5(FILE **in, int in_count, char *suffix, struct zip_info *zip_info)
 {
 	long long size;
 	int slices;
@@ -4346,7 +4344,7 @@ phase5(FILE *relations_in, FILE *ways_in, FILE *nodes_in, char *suffix, struct z
 		}
 		/* process_slice() modifies zip_info, but need to retain old info */
 		zipnum=zip_info->zipnum;
-		written_tiles=process_slice(relations_in, ways_in, nodes_in, size, suffix, zip_info);
+		written_tiles=process_slice(in, in_count, size, suffix, zip_info);
 		zip_info->zipnum=zipnum+written_tiles;
 		slices++;
 	}
@@ -5156,6 +5154,8 @@ tempfile_rename(char *suffix, char *from, char *to)
 int main(int argc, char **argv)
 {
 	FILE *ways=NULL,*ways_split=NULL,*ways_split_index=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*coastline=NULL,*tilesdir,*coords,*relations=NULL;
+	FILE *files[10];
+
 	char *map=g_strdup(attrmap);
 	int zipnum,c,start=1,end=99,dump_coordinates=0;
 	int keep_tmpfiles=0;
@@ -5476,21 +5476,24 @@ int main(int argc, char **argv)
 		}
 		zipnum=zip_info.zipnum;
 		fprintf(stderr,"PROGRESS: Phase 4: generating tiles %s\n",suffix);
+		files[0]=NULL;
+		files[1]=NULL;
+		files[2]=NULL;
 		if (process_relations)
-			relations=tempfile(suffix,"relations",0);
+			files[0]=tempfile(suffix,"relations",0);
 		if (process_ways)
-			ways_split=tempfile(suffix,"ways_split",0);
+			files[1]=tempfile(suffix,"ways_split",0);
 		if (process_nodes)
-			nodes=tempfile(suffix,"nodes",0);
+			files[2]=tempfile(suffix,"nodes",0);
 		tilesdir=tempfile(suffix,"tilesdir",1);
-		phase4(relations,ways_split,nodes,suffix,tilesdir,&zip_info);
+		phase4(files,3,suffix,tilesdir,&zip_info);
 		fclose(tilesdir);
-		if (nodes)
-			fclose(nodes);
-		if (ways_split)
-			fclose(ways_split);
-		if (relations)
-			fclose(relations);
+		if (files[2])
+			fclose(files[2]);
+		if (files[1])
+			fclose(files[1]);
+		if (files[0])
+			fclose(files[0]);
 		zip_info.zipnum=zipnum;
 	}
 	if (end == 4)
@@ -5498,12 +5501,15 @@ int main(int argc, char **argv)
 	if (start <= 5) {
 		phase=4;
 		fprintf(stderr,"PROGRESS: Phase 5: assembling map %s\n",suffix);
+		files[0]=NULL;
+		files[1]=NULL;
+		files[2]=NULL;
 		if (process_relations)
-			relations=tempfile(suffix,"relations",0);
+			files[0]=tempfile(suffix,"relations",0);
 		if (process_ways)
-			ways_split=tempfile(suffix,"ways_split",0);
+			files[1]=tempfile(suffix,"ways_split",0);
 		if (process_nodes)
-			nodes=tempfile(suffix,"nodes",0);
+			files[2]=tempfile(suffix,"nodes",0);
 		if (i == 0) {
 			zip_info.dir_size=0;
 			zip_info.offset=0;
@@ -5516,13 +5522,14 @@ int main(int argc, char **argv)
 			index_init(&zip_info, 1);
 		}
 		fprintf(stderr,"Slice %d\n",i);
-		phase5(relations,ways_split,nodes,suffix,&zip_info);
-		if (nodes)
-			fclose(nodes);
-		if (ways_split)
-			fclose(ways_split);
-		if (relations)
-			fclose(relations);
+		
+		phase5(files,3,suffix,&zip_info);
+		if (files[2])
+			fclose(files[2]);
+		if (files[1])
+			fclose(files[1]);
+		if (files[0])
+			fclose(files[0]);
 		if(!keep_tmpfiles) {
 			tempfile_unlink(suffix,"relations");
 			tempfile_unlink(suffix,"nodes");
