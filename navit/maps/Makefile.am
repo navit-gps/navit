@@ -15,16 +15,16 @@ samplemap: $(SAMPLE_MAP).bin
 
 .osm.bin:
 	echo "Converting osm map"
-	$maptool $(maptool_args) $@.tmp <$<
+	$(maptool) $(maptool_args) $@.tmp <$<
 	mv $@.tmp $@
 
 .txt.bin:
-	$maptool $(maptool_args) $@.tmp -p ../map/textfile/libmap_textfile.la -m $<
+	$(maptool) $(maptool_args) $@.tmp -p ../map/textfile/libmap_textfile.la -m $<
 	mv $@.tmp $@
 
 .osm.bz2.bin:
 	echo "Converting osm map"
-	bzcat $< | $maptool $(maptool_args) $@.tmp
+	bzcat $< | $(maptool) $(maptool_args) $@.tmp
 	mv $@.tmp $@
 
 .bin.xml:
