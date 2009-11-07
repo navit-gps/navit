@@ -162,6 +162,7 @@ extern struct item_bin *item_bin;
 extern int bytes_read;
 extern int overlap;
 void sig_alrm(int sig);
+void sig_alrm_end(void);
 
 /* misc.c */
 extern struct rect world_bbox;
@@ -171,29 +172,24 @@ void bbox_extend(struct coord *c, struct rect *r);
 void bbox(struct coord *c, int count, struct rect *r);
 int contains_bbox(int xl, int yl, int xh, int yh, struct rect *r);
 void phase1_map(struct map *map, FILE *out_ways, FILE *out_nodes);
-void index_init(struct zip_info *info, int version);
-void index_submap_add(struct tile_info *info, struct tile_head *th);
 void dump(FILE *in);
 int phase4(FILE **in, int in_count, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info);
 int phase5(FILE **in, FILE **references, int in_count, char *suffix, struct zip_info *zip_info);
-int phase5_write_directory(struct zip_info *info);
 void process_binfile(FILE *in, FILE *out);
-void write_index(struct zip_info *info);
 
 /* osm.c */
 
-void build_attrmap(void);
-void build_countrytable(void);
 long long item_bin_get_id(struct item_bin *ib);
 void flush_nodes(int final);
 void sort_countries(int keep_tmpfiles);
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 int resolve_ways(FILE *in, FILE *out);
-int phase1(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions);
-int phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes);
-int phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
+int map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions);
+int map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_nodes);
+int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info);
 void remove_countryfiles(void);
+void osm_init(void);
 
 /* sourcesink.c */
 
@@ -237,7 +233,11 @@ int write_aux_tiles(struct zip_info *zip_info);
 int create_tile_hash(void);
 void write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out);
 void merge_tiles(struct tile_info *info);
+void index_init(struct zip_info *info, int version);
+void index_submap_add(struct tile_info *info, struct tile_head *th);
 
 /* zip.c */
 
 void write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size);
+void zip_write_index(struct zip_info *info);
+int zip_write_directory(struct zip_info *info);

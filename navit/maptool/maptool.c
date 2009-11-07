@@ -45,7 +45,6 @@
 
 long long slice_size=1024*1024*1024;
 int attr_debug_level=1;
-char *suffix="";
 int ignore_unkown = 0;
 GHashTable *dedupe_ways_hash;
 int phase;
@@ -75,6 +74,14 @@ sig_alrm(int sig)
 	fprintf(stderr,"PROGRESS%d: Processed %d nodes (%d out) %d ways %d relations %d tiles\n", phase, processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles);
 }
 
+void
+sig_alrm_end(void)
+{
+#ifndef _WIN32
+	alarm(0);
+#endif
+}
+
 static struct plugins *plugins;
 
 static void add_plugin(char *path)
@@ -85,6 +92,14 @@ static void add_plugin(char *path)
 		plugins=plugins_new();
 	attrs=(struct attr*[]){&(struct attr){attr_path,{path}},NULL};
 	plugin_new(&(struct attr){attr_plugins,.u.plugins=plugins}, attrs);	
+}
+
+static void
+maptool_init(void)
+{
+	if (plugins)
+		plugins_init(plugins);
+	osm_init();
 }
 
 static void
@@ -113,6 +128,7 @@ usage(FILE *f)
 	fprintf(f,"-z (--compression-level) : set the compression level\n");
 	exit(1);
 }
+
 int main(int argc, char **argv)
 {
 	FILE *ways=NULL,*ways_split=NULL,*ways_split_index=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*coastline=NULL,*tilesdir,*coords,*relations=NULL;
@@ -145,6 +161,8 @@ int main(int argc, char **argv)
 #else
 	char *suffixes[]={""};
 #endif
+	char *suffix="";
+
 	int suffix_count=sizeof(suffixes)/sizeof(char *);
 	int i;
 	main_init(argv[0]);
@@ -269,12 +287,9 @@ int main(int argc, char **argv)
 	}
 	if (optind != argc-(output == 1 ? 0:1))
 		usage(stderr);
-	if (plugins)
-		plugins_init(plugins);
 	result=argv[optind];
-	build_attrmap();
-	build_countrytable();
 
+	maptool_init();
 
 	if (input == 0) {
 	if (start == 1) {
@@ -289,7 +304,7 @@ int main(int argc, char **argv)
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
 #ifdef HAVE_POSTGRESQL
 		if (dbstr) 
-			phase1_db(dbstr,ways,nodes);
+			map_collect_data_osm_db(dbstr,ways,nodes);
 		else
 #endif
 		if (map_handle) {
@@ -297,7 +312,7 @@ int main(int argc, char **argv)
 			map_destroy(map_handle);
 		}
 		else
-			phase1(input_file,ways,nodes,turn_restrictions);
+			map_collect_data_osm(input_file,ways,nodes,turn_restrictions);
 		if (slices) {
 			fprintf(stderr,"%d slices\n",slices);
 			flush_nodes(1);
@@ -340,7 +355,7 @@ int main(int argc, char **argv)
 				coastline=tempfile(suffix,"coastline",1);
 				if (i) 
 					load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
-				phase2(ways,ways_split,ways_split_index,graph,coastline,final);
+				map_find_intersections(ways,ways_split,ways_split_index,graph,coastline,final);
 				fclose(ways_split);
 				if (ways_split_index)
 					fclose(ways_split_index);
@@ -431,101 +446,95 @@ int main(int argc, char **argv)
 	}
 	for (i = 0 ; i < suffix_count ; i++) {
 		suffix=suffixes[i];
-	if (start <= 4) {
-		phase=3;
-		if (i == 0) {
-			memset(&zip_info, 0, sizeof(zip_info));
+		if (start <= 4) {
+			phase=3;
+			if (i == 0) {
+				memset(&zip_info, 0, sizeof(zip_info));
+			}
+			zipnum=zip_info.zipnum;
+			fprintf(stderr,"PROGRESS: Phase 4: generating tiles %s\n",suffix);
+			for (f = 0 ; f < 3 ; f++) 
+				files[f]=NULL;
+			if (process_relations)
+				files[0]=tempfile(suffix,"relations",0);
+			if (process_ways)
+				files[1]=tempfile(suffix,"ways_split",0);
+			if (process_nodes)
+				files[2]=tempfile(suffix,"nodes",0);
+			tilesdir=tempfile(suffix,"tilesdir",1);
+			phase4(files,3,suffix,tilesdir,&zip_info);
+			fclose(tilesdir);
+			for (f = 0 ; f < 3 ; f++) {
+				if (files[f])
+					fclose(files[f]);
+			}
+			zip_info.zipnum=zipnum;
 		}
-		zipnum=zip_info.zipnum;
-		fprintf(stderr,"PROGRESS: Phase 4: generating tiles %s\n",suffix);
-		files[0]=NULL;
-		files[1]=NULL;
-		files[2]=NULL;
-		if (process_relations)
-			files[0]=tempfile(suffix,"relations",0);
-		if (process_ways)
-			files[1]=tempfile(suffix,"ways_split",0);
-		if (process_nodes)
-			files[2]=tempfile(suffix,"nodes",0);
-		tilesdir=tempfile(suffix,"tilesdir",1);
-		phase4(files,3,suffix,tilesdir,&zip_info);
-		fclose(tilesdir);
-		if (files[2])
-			fclose(files[2]);
-		if (files[1])
-			fclose(files[1]);
-		if (files[0])
-			fclose(files[0]);
-		zip_info.zipnum=zipnum;
-	}
-	if (end == 4)
-		exit(0);
-	if (start <= 5) {
-		phase=4;
-		fprintf(stderr,"PROGRESS: Phase 5: assembling map %s\n",suffix);
-		files[0]=NULL;
-		files[1]=NULL;
-		files[2]=NULL;
-		references[0]=NULL;
-		references[1]=NULL;
-		references[2]=NULL;
-		if (process_relations)
-			files[0]=tempfile(suffix,"relations",0);
-		if (process_ways) {
-			files[1]=tempfile(suffix,"ways_split",0);
-			references[1]=tempfile(suffix,"ways_split_ref",1);
-			printf("References=%p\n",references[1]);
+		if (end == 4)
+			exit(0);
+		if (start <= 5) {
+			phase=4;
+			fprintf(stderr,"PROGRESS: Phase 5: assembling map %s\n",suffix);
+			for (f = 0 ; f < 3 ; f++) {
+				files[f]=NULL;
+				references[f]=NULL;
+			}
+			if (process_relations)
+				files[0]=tempfile(suffix,"relations",0);
+			if (process_ways) {
+				files[1]=tempfile(suffix,"ways_split",0);
+				references[1]=tempfile(suffix,"ways_split_ref",1);
+			}
+			if (process_nodes)
+				files[2]=tempfile(suffix,"nodes",0);
+			if (i == 0) {
+				zip_info.dir_size=0;
+				zip_info.offset=0;
+				zip_info.maxnamelen=14+strlen(suffixes[0]);
+				zip_info.compression_level=compression_level;
+				zip_info.zipnum=0;
+				zip_info.dir=tempfile("zipdir","",1);
+				zip_info.index=tempfile("index","",1);
+				zip_info.res=fopen(result,"wb+");
+				index_init(&zip_info, 1);
+			}
+			fprintf(stderr,"Slice %d\n",i);
+			
+			phase5(files,references,3,suffix,&zip_info);
+			for (f = 0 ; f < 3 ; f++) {
+				if (files[f])
+					fclose(files[f]);
+				if (references[f])
+					fclose(references[f]);
+			}
+			if(!keep_tmpfiles) {
+				tempfile_unlink(suffix,"relations");
+				tempfile_unlink(suffix,"nodes");
+				tempfile_unlink(suffix,"ways_split");
+				tempfile_unlink(suffix,"ways_split_ref");
+				tempfile_unlink(suffix,"coastline");
+				tempfile_unlink(suffix,"turn_restrictions");
+				tempfile_unlink(suffix,"graph");
+				tempfile_unlink(suffix,"tilesdir");
+				unlink("coords.tmp");
+			}
+			if (i == suffix_count-1) {
+				zipnum=zip_info.zipnum;
+				write_countrydir(&zip_info);
+				zip_info.zipnum=zipnum;
+				write_aux_tiles(&zip_info);
+				zip_write_index(&zip_info);
+				zip_write_directory(&zip_info);
+				fclose(zip_info.index);
+				fclose(zip_info.dir);
+				fclose(zip_info.res);
+				if (!keep_tmpfiles) {
+					remove_countryfiles();
+					tempfile_unlink("index","");
+					tempfile_unlink("zipdir","");
+				}
+			}
 		}
-		if (process_nodes)
-			files[2]=tempfile(suffix,"nodes",0);
-		if (i == 0) {
-			zip_info.dir_size=0;
-			zip_info.offset=0;
-			zip_info.maxnamelen=14+strlen(suffixes[0]);
-			zip_info.compression_level=compression_level;
-			zip_info.zipnum=0;
-			zip_info.dir=tempfile("zipdir","",1);
-			zip_info.index=tempfile("index","",1);
-			zip_info.res=fopen(result,"wb+");
-			index_init(&zip_info, 1);
-		}
-		fprintf(stderr,"Slice %d\n",i);
-		
-		phase5(files,references,3,suffix,&zip_info);
-		for (f = 0 ; f < 3 ; f++) {
-			if (files[f])
-				fclose(files[f]);
-			if (references[f])
-				fclose(references[f]);
-		}
-		if(!keep_tmpfiles) {
-			tempfile_unlink(suffix,"relations");
-			tempfile_unlink(suffix,"nodes");
-			tempfile_unlink(suffix,"ways_split");
-			tempfile_unlink(suffix,"ways_split_ref");
-			tempfile_unlink(suffix,"coastline");
-			tempfile_unlink(suffix,"turn_restrictions");
-			tempfile_unlink(suffix,"graph");
-			tempfile_unlink(suffix,"tilesdir");
-			tempfile_unlink("zipdir","");
-			unlink("coords.tmp");
-		}
-		if (i == suffix_count-1) {
-	zipnum=zip_info.zipnum;
-	write_countrydir(&zip_info);
-	zip_info.zipnum=zipnum;
-	write_aux_tiles(&zip_info);
-	write_index(&zip_info);
-	phase5_write_directory(&zip_info);
-	fclose(zip_info.index);
-	fclose(zip_info.dir);
-	fclose(zip_info.res);
-	if (!keep_tmpfiles) {
-		remove_countryfiles();
-		tempfile_unlink("index","");
-	}
-		}
-	}
 	}
 	return 0;
 }

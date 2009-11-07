@@ -23,6 +23,15 @@
 #include "maptool.h"
 #include "zipfile.h"
 
+static void
+cat(FILE *in, FILE *out)
+{
+	size_t size;
+	char buffer[4096];
+	while ((size=fread(buffer, 1, 4096, in)))
+		fwrite(buffer, 1, size, out);
+}
+
 static int
 compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level)
 {
@@ -139,4 +148,44 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	zip_info->dir_size+=sizeof(cd)+filelen;
 	
 	free(compbuffer);
+}
+
+void
+zip_write_index(struct zip_info *info)
+{
+	int size=ftell(info->index);
+	char buffer[size];
+
+	fseek(info->index, 0, SEEK_SET);
+	fread(buffer, size, 1, info->index);
+	write_zipmember(info, "index", strlen("index"), buffer, size);
+	info->zipnum++;
+}
+
+int
+zip_write_directory(struct zip_info *info)
+{
+	struct zip_eoc eoc = {
+		0x06054b50,
+		0x0000,
+		0x0000,
+		0x0000,
+		0x0000,
+		0x0,
+		0x0,
+		0x0,
+	};
+
+	fseek(info->dir, 0, SEEK_SET);
+	cat(info->dir, info->res);
+	eoc.zipenum=info->zipnum;
+	eoc.zipecenn=info->zipnum;
+	eoc.zipecsz=info->dir_size;
+	eoc.zipeofst=info->offset;
+	fwrite(&eoc, sizeof(eoc), 1, info->res);
+	sig_alrm(0);
+#ifndef _WIN32
+	alarm(0);
+#endif
+	return 0;
 }
