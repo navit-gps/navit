@@ -87,25 +87,25 @@ tile(struct rect *r, char *suffix, char *ret, int max, int overlap, struct rect 
 	y4=world_bbox.h.y;
 	for (i = 0 ; i < max ; i++) {
 		x2=(x0+x4)/2;
-                y2=(y0+y4)/2;
+		y2=(y0+y4)/2;
 		xo=(x4-x0)*overlap/100;
 		yo=(y4-y0)*overlap/100;
-     		if (     contains_bbox(x0,y0,x2+xo,y2+yo,r)) {
+		if (     contains_bbox(x0,y0,x2+xo,y2+yo,r)) {
 			strcat(ret,"d");
-                        x4=x2+xo;
-                        y4=y2+yo;
-                } else if (contains_bbox(x2-xo,y0,x4,y2+yo,r)) {
+			x4=x2+xo;
+			y4=y2+yo;
+		} else if (contains_bbox(x2-xo,y0,x4,y2+yo,r)) {
 			strcat(ret,"c");
-                        x0=x2-xo;
-                        y4=y2+yo;
-                } else if (contains_bbox(x0,y2-yo,x2+xo,y4,r)) {
+			x0=x2-xo;
+			y4=y2+yo;
+		} else if (contains_bbox(x0,y2-yo,x2+xo,y4,r)) {
 			strcat(ret,"b");
-                        x4=x2+xo;
-                        y0=y2-yo;
-                } else if (contains_bbox(x2-xo,y2-yo,x4,y4,r)) {
+			x4=x2+xo;
+			y0=y2-yo;
+		} else if (contains_bbox(x2-xo,y2-yo,x4,y4,r)) {
 			strcat(ret,"a");
-                        x0=x2-xo;
-                        y0=y2-yo;
+			x0=x2-xo;
+			y0=y2-yo;
 		} else 
 			break;
 	}
@@ -114,7 +114,7 @@ tile(struct rect *r, char *suffix, char *ret, int max, int overlap, struct rect 
 		tr->l.y=y0;
 		tr->h.x=x4;
 		tr->h.y=y4;
-       	}
+	}
 	if (suffix)
 		strcat(ret,suffix);
 	return i;
@@ -400,7 +400,7 @@ add_tile_hash(struct tile_head *th)
 #endif
 	for( idx = 0; idx < th->num_subtiles; idx++ ) {
 
-        data = th_get_subtile( th, idx );
+		data = th_get_subtile( th, idx );
 
 		if (debug_tile(((char *)data)) || debug_tile(th->name)) {
 			fprintf(stderr,"Parent for '%s' is '%s'\n", *data, th->name);
@@ -493,7 +493,7 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 					fprintf(out,"%s:%d",(char *)next->data,th->total_size);
 
 					for ( idx = 0; idx< th->num_subtiles; idx++ ){
-                        data= th_get_subtile( th, idx );
+						data= th_get_subtile( th, idx );
 						fprintf(out,":%s", *data);
 					}
 
@@ -579,4 +579,37 @@ merge_tiles(struct tile_info *info)
 		g_list_free(tiles_list_sorted);
 		fprintf(stderr,"PROGRESS: merged %d tiles\n", work_done);
 	} while (work_done);
+}
+
+void
+index_init(struct zip_info *info, int version)
+{
+	item_bin_init(item_bin, type_map_information);
+	item_bin_add_attr_int(item_bin, attr_version, version);
+	item_bin_write(item_bin, info->index);
+}
+
+void
+index_submap_add(struct tile_info *info, struct tile_head *th)
+{
+	int tlen=tile_len(th->name);
+	int len=tlen;
+	char index_tile[len+1+strlen(info->suffix)];
+	struct rect r;
+
+	strcpy(index_tile, th->name);
+	if (len > 6)
+		len=6;
+	else
+		len=0;
+	index_tile[len]=0;
+	if (tlen)
+		strcat(index_tile, info->suffix);
+	tile_bbox(th->name, &r, overlap);
+
+	item_bin_init(item_bin, type_submap);
+	item_bin_add_coord_rect(item_bin, &r);
+	item_bin_add_attr_range(item_bin, attr_order, (tlen > 4)?tlen-4 : 0, 255);
+	item_bin_add_attr_int(item_bin, attr_zipfile_ref, th->zipnum);
+	tile_write_item_to_tile(info, item_bin, NULL, index_tile);
 }

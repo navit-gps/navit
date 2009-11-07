@@ -80,20 +80,19 @@ bbox(struct coord *c, int count, struct rect *r)
 int
 contains_bbox(int xl, int yl, int xh, int yh, struct rect *r)
 {
-        if (r->h.x < xl || r->h.x > xh) {
-                return 0;
-        }
-        if (r->l.x > xh || r->l.x < xl) {
-                return 0;
-        }
-        if (r->h.y < yl || r->h.y > yh) {
-                return 0;
-        }
-        if (r->l.y > yh || r->l.y < yl) {
-                return 0;
-        }
-        return 1;
-
+	if (r->h.x < xl || r->h.x > xh) {
+		return 0;
+	}
+	if (r->l.x > xh || r->l.x < xl) {
+		return 0;
+	}
+	if (r->h.y < yl || r->h.y > yh) {
+		return 0;
+	}
+	if (r->l.y > yh || r->l.y < yl) {
+		return 0;
+	}
+	return 1;
 }
 
 void
@@ -112,7 +111,7 @@ phase1_map(struct map *map, FILE *out_ways, FILE *out_nodes)
 		while (item_attr_get(item, attr_any, &attr)) {
 			item_bin_add_attr(item_bin, &attr);
 		}
-                if (item->type >= type_line) 
+		if (item->type >= type_line) 
 			item_bin_write(item_bin, out_ways);
 		else
 			item_bin_write(item_bin, out_nodes);
@@ -194,39 +193,6 @@ phase34_process_file(struct tile_info *info, FILE *in, FILE *reference)
 	}
 }
 
-void
-index_init(struct zip_info *info, int version)
-{
-	item_bin_init(item_bin, type_map_information);
-	item_bin_add_attr_int(item_bin, attr_version, version);
-	item_bin_write(item_bin, info->index);
-}
-
-void
-index_submap_add(struct tile_info *info, struct tile_head *th)
-{
-	int tlen=tile_len(th->name);
-	int len=tlen;
-	char index_tile[len+1+strlen(suffix)];
-	struct rect r;
-
-	strcpy(index_tile, th->name);
-	if (len > 6)
-		len=6;
-	else
-		len=0;
-	index_tile[len]=0;
-	if (tlen)
-		strcat(index_tile, suffix);
-	tile_bbox(th->name, &r, overlap);
-
-	item_bin_init(item_bin, type_submap);
-	item_bin_add_coord_rect(item_bin, &r);
-	item_bin_add_attr_range(item_bin, attr_order, (tlen > 4)?tlen-4 : 0, 255);
-	item_bin_add_attr_int(item_bin, attr_zipfile_ref, th->zipnum);
-	tile_write_item_to_tile(info, item_bin, NULL, index_tile);
-}
-
 static int
 phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, FILE **reference, int in_count)
 {
@@ -244,9 +210,7 @@ phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, FILE **ref
 	if (! info->write)
 		merge_tiles(info);
 	sig_alrm(0);
-#ifndef _WIN32
-	alarm(0);
-#endif
+	sig_alrm_end();
 	write_tilesdir(info, zip_info, info->tilesdir_out);
 
 	return 0;
@@ -329,15 +293,6 @@ process_slice(FILE **in, FILE **reference, int in_count, long long size, char *s
 	return zipfiles;
 }
 
-static void
-cat(FILE *in, FILE *out)
-{
-	size_t size;
-	char buffer[4096];
-	while ((size=fread(buffer, 1, 4096, in)))
-		fwrite(buffer, 1, size, out);
-}
-
 int
 phase5(FILE **in, FILE **references, int in_count, char *suffix, struct zip_info *zip_info)
 {
@@ -386,34 +341,6 @@ phase5(FILE **in, FILE **references, int in_count, char *suffix, struct zip_info
 	return 0;
 }
 
-int
-phase5_write_directory(struct zip_info *info)
-{
-	struct zip_eoc eoc = {
-		0x06054b50,
-		0x0000,
-		0x0000,
-		0x0000,
-		0x0000,
-		0x0,
-		0x0,
-		0x0,
-	};
-
-	fseek(info->dir, 0, SEEK_SET);
-	cat(info->dir, info->res);
-	eoc.zipenum=info->zipnum;
-	eoc.zipecenn=info->zipnum;
-	eoc.zipecsz=info->dir_size;
-	eoc.zipeofst=info->offset;
-	fwrite(&eoc, sizeof(eoc), 1, info->res);
-	sig_alrm(0);
-#ifndef _WIN32
-	alarm(0);
-#endif
-	return 0;
-}
-
 void
 process_binfile(FILE *in, FILE *out)
 {
@@ -421,16 +348,4 @@ process_binfile(FILE *in, FILE *out)
 	while ((ib=read_item(in))) {
 		fwrite(ib, (ib->len+1)*4, 1, out);
 	}
-}
-
-void
-write_index(struct zip_info *info)
-{
-        int size=ftell(info->index);
-	char buffer[size];
-
-	fseek(info->index, 0, SEEK_SET);
-	fread(buffer, size, 1, info->index);
-	write_zipmember(info, "index", strlen("index"), buffer, size);
-	info->zipnum++;
 }

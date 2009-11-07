@@ -507,7 +507,7 @@ build_attrmap_line(char *line)
 	(*attr_mapping_curr)[(*attr_mapping_curr_count)++]=attr_mapping;
 }
 
-void
+static void
 build_attrmap(void)
 {
 	char *p,*map=g_strdup(attrmap);
@@ -524,7 +524,7 @@ build_attrmap(void)
 	attr_present=g_malloc0(sizeof(*attr_present)*attr_present_count);
 }
 
-void
+static void
 build_countrytable(void)
 {
 	int i;
@@ -544,9 +544,9 @@ osm_warning(char *type, long long id, int cont, char *fmt, ...)
 {
 	char str[4096];
 	va_list ap;
-        va_start(ap, fmt);
-        vsnprintf(str, sizeof(str), fmt, ap);
-        va_end(ap);
+	va_start(ap, fmt);
+	vsnprintf(str, sizeof(str), fmt, ap);
+	va_end(ap);
 	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/%Ld %s",cont ? "":"OSM Warning:",type,id,str);
 }
 
@@ -1985,7 +1985,7 @@ parse_nd(char *p)
 }
 
 int
-phase1(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions)
+map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions)
 {
 	int size=BUFFER_SIZE;
 	char buffer[size];
@@ -2039,15 +2039,13 @@ phase1(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions)
 		}
 	}
 	sig_alrm(0);
-#ifndef _WIN32
-	alarm(0);
-#endif
+	sig_alrm_end();
 	return 1;
 }
 
 #ifdef HAVE_POSTGRESQL
 int
-phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
+map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
 {
 	PGconn *conn;
 	PGresult *res,*node,*way,*tag;
@@ -2207,9 +2205,7 @@ phase1_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
 		exit(1);
 	}
 	sig_alrm(0);
-#ifndef _WIN32
-	alarm(0);
-#endif
+	sig_alrm_end();
 	return 1;
 }
 #endif
@@ -2255,7 +2251,7 @@ write_item_part(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *or
 }
 
 int
-phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final)
+map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final)
 {
 	struct coord *c;
 	int i,ccount,last,remaining;
@@ -2305,9 +2301,7 @@ phase2(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastlin
 		}
 	}
 	sig_alrm(0);
-#ifndef _WIN32
-	alarm(0);
-#endif
+	sig_alrm_end();
 	return 0;
 }
 
@@ -2360,5 +2354,11 @@ remove_countryfiles(void)
 			unlink(filename);
 		}
 	}
+}
+
+void osm_init(void)
+{
+        build_attrmap();
+        build_countrytable();
 }
 
