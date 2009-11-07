@@ -654,6 +654,7 @@ AC_ARG_ENABLE(support_libc, [  --enable-support-libc enable builtin mini libc ],
 AM_CONDITIONAL(SUPPORT_LIBC, [test "x$support_libc" = "xyes"])
 if test "x$support_libc" = "xyes"; then
 	CFLAGS="$CFLAGS -I\$(top_srcdir)/navit/support/libc"
+	LIBC_LIBS="-L\$(top_builddir)/navit/support/libc -lsupport_libc"
 fi
 
 ## graphics
@@ -789,6 +790,7 @@ NAVIT_LIBS="$NAVIT_LIBS $GLIB_LIBS $GMODULE_LIBS $LIBINTL"
 AC_SUBST(NAVIT_CFLAGS)
 AC_SUBST(NAVIT_LIBS)
 AC_SUBST(WORDEXP_LIBS)
+AC_SUBST(LIBC_LIBS)
 AC_SUBST(WINDRES)
 
 AC_CONFIG_FILES([
