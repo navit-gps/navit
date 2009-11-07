@@ -1,19 +1,21 @@
 include $(top_srcdir)/Makefile.inc
-DIST_SUBDIRS=binding map fib-1.1 font fonts gui graphics osd speech support vehicle xpm maps
+DIST_SUBDIRS=binding map maptool fib-1.1 font fonts gui graphics osd speech support vehicle xpm maps
 SUBDIRS=binding map fib-1.1 font gui graphics osd speech support vehicle xpm
-if BUILD_SAMPLEMAP
-  SUBDIRS += maps
-endif
 
 if FONTS
   SUBDIRS += fonts
 endif
 
+SUBDIRS+=.
+SUBDIRS+=maptool
+
+if BUILD_SAMPLEMAP
+  SUBDIRS += maps
+endif
+
+
 AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ @ZLIB_CFLAGS@ -DPREFIX=\"@prefix@\" -DLIBDIR=\"@libdir@\" -DMODULE=navit
 BUILT_SOURCES = version.h navit_config.h
-if BUILD_SAMPLEMAP
-  BUILT_SOURCES += osm2navit$(EXEEXT)
-endif
 
 if SUPPORT_ANDROID
   lib_LTLIBRARIES        = libnavit.la
@@ -21,7 +23,7 @@ if SUPPORT_ANDROID
   libnavit_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib -llog
 
 else
-  bin_PROGRAMS = navit osm2navit
+  bin_PROGRAMS = navit
   noinst_LTLIBRARIES        = libnavit.la
 endif
 
@@ -55,8 +57,6 @@ if SUPPORT_ANDROID
   libnavit_la_SOURCES += android.c
   navit_SOURCES =
   navit_LDADD =
-  osm2navit_SOURCES =
-  osm2navit_LDADD =
 
 android/build.xml: android/AndroidManifest.xml
 	if [ "$(builddir)" != "$(srcdir)" ]; then cp -rp $(srcdir)/android $(builddir)/android; fi
@@ -77,9 +77,6 @@ else
 navit_SOURCES = start.c
 navit_LDADD = libnavit.la @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib
 
-osm2navit_CPPFLAGS = $(AM_CPPFLAGS) @ZLIB_CFLAGS@ @POSTGRESQL_CFLAGS@
-osm2navit_SOURCES = osm2navit.c
-osm2navit_LDADD = libnavit.la @NAVIT_LIBS@ @ZLIB_LIBS@ @POSTGRESQL_LIBS@ @INTLLIBS@
 endif
 
 if EVENT_GLIB
@@ -89,8 +86,6 @@ endif
 if !PLUGINS
   navit_SOURCES += builtin.c
   navit_LDADD += $(wildcard $(top_builddir)/navit/*/*/*.la)
-  osm2navit_SOURCES += support-builtin.c
-  osm2navit_LDADD += $(wildcard $(top_builddir)/navit/support/*/*.la)
 endif
 
 if SUPPORT_WIN32

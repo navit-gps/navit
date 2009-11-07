@@ -807,6 +807,7 @@ navit/map/garmin/Makefile
 navit/map/poi_geodownload/Makefile
 navit/map/poi_geodownload/libmdb/Makefile
 navit/map/poi_geodownload/libmdb/include/Makefile
+navit/maptool/Makefile
 navit/fib-1.1/Makefile
 navit/font/Makefile
 navit/font/freetype/Makefile
