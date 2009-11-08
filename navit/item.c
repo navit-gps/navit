@@ -246,6 +246,21 @@ item_hash_equal(gconstpointer a, gconstpointer b)
 	return FALSE;
 }
 
+unsigned int
+item_id_hash(const void *key)
+{
+	const struct item_id *id=key;
+	return id->id_hi^id->id_lo;
+}
+
+int
+item_id_equal(const void *a, const void *b)
+{
+	const struct item_id *id_a=a;
+	const struct item_id *id_b=b;
+	return (id_a->id_hi == id_b->id_hi && id_a->id_lo == id_b->id_lo);
+}
+
 
 
 struct item_hash *
@@ -310,19 +325,25 @@ item_range_contains_item(struct item_range *range, enum item_type type)
 }
 
 void
+item_dump_attr(struct item *item, struct map *map, FILE *out)
+{
+	struct attr attr;
+	fprintf(out,"type=%s", item_to_name(item->type));
+	while (item_attr_get(item, attr_any, &attr)) 
+		fprintf(out," %s='%s'", attr_to_name(attr.type), attr_to_text(&attr, map, 1));
+}
+
+void
 item_dump_filedesc(struct item *item, struct map *map, FILE *out)
 {
 
 	int i,count,max=16384;
 	struct coord ca[max];
-	struct attr attr;
 
 	count=item_coord_get(item, ca, item->type < type_line ? 1: max);
 	if (item->type < type_line) 
 		fprintf(out,"mg:0x%x 0x%x ", ca[0].x, ca[0].y);
-	fprintf(out,"type=%s", item_to_name(item->type));
-	while (item_attr_get(item, attr_any, &attr)) 
-		fprintf(out," %s='%s'", attr_to_name(attr.type), attr_to_text(&attr, map, 1));
+	item_dump_attr(item, map, out);
 	fprintf(out,"\n");
 	if (item->type >= type_line)
 		for (i = 0 ; i < count ; i++)

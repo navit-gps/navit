@@ -132,3 +132,26 @@ void coord_rect_extend(struct coord_rect *r, struct coord *c);
 void coord_format(float lat,float lng, enum coord_format, char * buffer, int size);
 
 #endif
+/* prototypes */
+enum coord_format;
+enum projection;
+struct attr;
+struct coord;
+struct coord_rect;
+struct pcoord;
+struct coord *coord_get(unsigned char **p);
+struct coord *coord_new(int x, int y);
+struct coord *coord_new_from_attrs(struct attr *parent, struct attr **attrs);
+void coord_destroy(struct coord *c);
+struct coord_rect *coord_rect_new(struct coord *lu, struct coord *rl);
+void coord_rect_destroy(struct coord_rect *r);
+int coord_rect_overlap(struct coord_rect *r1, struct coord_rect *r2);
+int coord_rect_contains(struct coord_rect *r, struct coord *c);
+void coord_rect_extend(struct coord_rect *r, struct coord *c);
+int coord_parse(const char *c_str, enum projection pro, struct coord *c_ret);
+int pcoord_parse(const char *c_str, enum projection pro, struct pcoord *pc_ret);
+void coord_print(enum projection pro, struct coord *c, FILE *out);
+void coord_format(float lat, float lng, enum coord_format fmt, char *buffer, int size);
+unsigned int coord_hash(const void *key);
+int coord_equal(const void *a, const void *b);
+/* end of prototypes */

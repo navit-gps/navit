@@ -158,10 +158,11 @@ int main(int argc, char **argv)
 	struct map *map_handle=NULL;
 #if 0
 	char *suffixes[]={"m0l0", "m0l1","m0l2","m0l3","m0l4","m0l5","m0l6"};
+	char *suffixes[]={"m","r"};
 #else
 	char *suffixes[]={""};
 #endif
-	char *suffix="";
+	char *suffix=suffixes[0];
 
 	int suffix_count=sizeof(suffixes)/sizeof(char *);
 	int i;
@@ -453,21 +454,25 @@ int main(int argc, char **argv)
 			}
 			zipnum=zip_info.zipnum;
 			fprintf(stderr,"PROGRESS: Phase 4: generating tiles %s\n",suffix);
-			for (f = 0 ; f < 3 ; f++) 
-				files[f]=NULL;
-			if (process_relations)
-				files[0]=tempfile(suffix,"relations",0);
-			if (process_ways)
-				files[1]=tempfile(suffix,"ways_split",0);
-			if (process_nodes)
-				files[2]=tempfile(suffix,"nodes",0);
 			tilesdir=tempfile(suffix,"tilesdir",1);
-			phase4(files,3,suffix,tilesdir,&zip_info);
-			fclose(tilesdir);
-			for (f = 0 ; f < 3 ; f++) {
-				if (files[f])
-					fclose(files[f]);
+			if (!strcmp(suffix,"r")) {
+				ch_generate_tiles(suffixes[0],suffix,tilesdir,&zip_info);
+			} else {
+				for (f = 0 ; f < 3 ; f++) 
+					files[f]=NULL;
+				if (process_relations)
+					files[0]=tempfile(suffix,"relations",0);
+				if (process_ways)
+					files[1]=tempfile(suffix,"ways_split",0);
+				if (process_nodes)
+					files[2]=tempfile(suffix,"nodes",0);
+				phase4(files,3,suffix,tilesdir,&zip_info);
+				for (f = 0 ; f < 3 ; f++) {
+					if (files[f])
+						fclose(files[f]);
+				}
 			}
+			fclose(tilesdir);
 			zip_info.zipnum=zipnum;
 		}
 		if (end == 4)
@@ -475,18 +480,6 @@ int main(int argc, char **argv)
 		if (start <= 5) {
 			phase=4;
 			fprintf(stderr,"PROGRESS: Phase 5: assembling map %s\n",suffix);
-			for (f = 0 ; f < 3 ; f++) {
-				files[f]=NULL;
-				references[f]=NULL;
-			}
-			if (process_relations)
-				files[0]=tempfile(suffix,"relations",0);
-			if (process_ways) {
-				files[1]=tempfile(suffix,"ways_split",0);
-				references[1]=tempfile(suffix,"ways_split_ref",1);
-			}
-			if (process_nodes)
-				files[2]=tempfile(suffix,"nodes",0);
 			if (i == 0) {
 				zip_info.dir_size=0;
 				zip_info.offset=0;
@@ -498,14 +491,30 @@ int main(int argc, char **argv)
 				zip_info.res=fopen(result,"wb+");
 				index_init(&zip_info, 1);
 			}
-			fprintf(stderr,"Slice %d\n",i);
-			
-			phase5(files,references,3,suffix,&zip_info);
-			for (f = 0 ; f < 3 ; f++) {
-				if (files[f])
-					fclose(files[f]);
-				if (references[f])
-					fclose(references[f]);
+			if (!strcmp(suffix,"r")) {
+				ch_assemble_map(suffixes[0],suffix,&zip_info);
+			} else {
+				for (f = 0 ; f < 3 ; f++) {
+					files[f]=NULL;
+					references[f]=NULL;
+				}
+				if (process_relations)
+					files[0]=tempfile(suffix,"relations",0);
+				if (process_ways) {
+					files[1]=tempfile(suffix,"ways_split",0);
+					references[1]=tempfile(suffix,"ways_split_ref",1);
+				}
+				if (process_nodes)
+					files[2]=tempfile(suffix,"nodes",0);
+				fprintf(stderr,"Slice %d\n",i);
+				
+				phase5(files,references,3,suffix,&zip_info);
+				for (f = 0 ; f < 3 ; f++) {
+					if (files[f])
+						fclose(files[f]);
+					if (references[f])
+						fclose(references[f]);
+				}
 			}
 			if(!keep_tmpfiles) {
 				tempfile_unlink(suffix,"relations");
