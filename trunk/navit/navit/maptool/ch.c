@@ -96,10 +96,23 @@ road_speed(enum item_type type)
 	}
 }
 
+static void
+coord_slice_free(void *data)
+{
+	g_slice_free(struct coord, data);
+}
+
+
 static GHashTable *
 coord_hash_new(void)
 {
-        return g_hash_table_new_full(coord_hash, coord_equal, g_free, NULL);
+        return g_hash_table_new_full(coord_hash, coord_equal, coord_slice_free, NULL);
+}
+
+static void
+item_id_slice_free(void *data)
+{
+	g_slice_free(struct item_id, data);
 }
 
 #define sq(x) ((double)(x)*(x))
@@ -108,13 +121,19 @@ static void
 add_node_to_hash(FILE *idx, GHashTable *hash, struct coord *c, int *nodes)
 {
 	if (! g_hash_table_lookup(hash, c)) {
-		struct coord *ct=g_new(struct coord, 1);
+		struct coord *ct=g_slice_new(struct coord);
 		*ct=*c;
 		fwrite(c, sizeof(*c), 1, idx);
 		(*nodes)++;
 		g_hash_table_insert(hash, ct, (void *)(*nodes));
 	}
 
+}
+
+static void
+edge_hash_slice_free(void *data)
+{
+	g_slice_free(struct edge_hash_item, data);
 }
 
 static guint
@@ -150,7 +169,7 @@ ch_generate_ddsg(FILE *in, FILE *ref, FILE *idx, FILE *ddsg)
 			edges++;
 		}
 	}
-	edge_hash=g_hash_table_new_full(edge_hash_hash, edge_hash_equal, g_free, g_free);
+	edge_hash=g_hash_table_new_full(edge_hash_hash, edge_hash_equal, edge_hash_slice_free, item_id_slice_free);
 	fseek(in, 0, SEEK_SET);
 	fprintf(ddsg,"d\n");
 	fprintf(ddsg,"%d %d\n", nodes, edges);
@@ -162,8 +181,8 @@ ch_generate_ddsg(FILE *in, FILE *ref, FILE *idx, FILE *ddsg)
 		double l;
 		fread(&road_id, sizeof(road_id), 1, ref);
 		if (speed) {
-			struct edge_hash_item *hi=g_new(struct edge_hash_item, 1);
-			struct item_id *id=g_new(struct item_id, 1);
+			struct edge_hash_item *hi=g_slice_new(struct edge_hash_item);
+			struct item_id *id=g_slice_new(struct item_id);
 			*id=road_id;
 			dbg_assert((n1=GPOINTER_TO_INT(g_hash_table_lookup(hash, &c[0]))) != 0);
 			dbg_assert((n2=GPOINTER_TO_INT(g_hash_table_lookup(hash, &c[ccount-1]))) != 0);
@@ -439,11 +458,12 @@ ch_assemble_map(char *map_suffix, char *suffix, struct zip_info *zip_info)
 	FILE *ref=tempfile(suffix,"sgr_ref",1);
 	struct item_id id;
 	int nodeid=0;
-	
+
 	create_tile_hash();
+
 	th=tile_head_root;
         while (th) {
-		th->zip_data=malloc(th->total_size);
+		th->zip_data=NULL;
 		th->process=1;
                 th=th->next;
         }
@@ -452,9 +472,9 @@ ch_assemble_map(char *map_suffix, char *suffix, struct zip_info *zip_info)
 	ch_copy_to_tiles(suffix, ch_levels, &info, ref);
 	fclose(ref);
 	ref=tempfile(suffix,"sgr_ref",0);
-	sgr_nodes_hash=g_hash_table_new_full(NULL, NULL, NULL, g_free);
+	sgr_nodes_hash=g_hash_table_new_full(NULL, NULL, NULL, item_id_slice_free);
 	while (fread(&id, sizeof(id), 1, ref)) {
-		struct item_id *id2=g_new(struct item_id, 1);
+		struct item_id *id2=g_slice_new(struct item_id);
 		*id2=id;
 #if 0
 		dbg(0,"%d is "ITEM_ID_FMT"\n",nodeid,ITEM_ID_ARGS(*id2));
@@ -490,6 +510,7 @@ ch_assemble_map(char *map_suffix, char *suffix, struct zip_info *zip_info)
 		} else {
 			fwrite(th->zip_data, th->total_size, 1, zip_info->index);
 		}
+		g_free(th->zip_data);
                 th=th->next;
         }
 }
