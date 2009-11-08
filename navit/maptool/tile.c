@@ -314,7 +314,8 @@ write_item(char *tile, struct item_bin *ib, FILE *reference)
 			fwrite(&th->zipnum, sizeof(th->zipnum), 1, reference);
 			fwrite(&offset, sizeof(th->total_size_used), 1, reference);
 		}
-		memcpy(th->zip_data+th->total_size_used, ib, size);
+		if (th->zip_data)
+			memcpy(th->zip_data+th->total_size_used, ib, size);
 		th->total_size_used+=size;
 	} else {
 		fprintf(stderr,"no tile hash found for %s\n", tile);

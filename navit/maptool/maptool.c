@@ -168,6 +168,7 @@ int main(int argc, char **argv)
 	int i;
 	main_init(argv[0]);
 	struct zip_info zip_info;
+	int suffix_start=0;
 
 	while (1) {
 #if 0
@@ -445,11 +446,11 @@ int main(int argc, char **argv)
 		}
 		exit(0);
 	}
-	for (i = 0 ; i < suffix_count ; i++) {
+	for (i = suffix_start ; i < suffix_count ; i++) {
 		suffix=suffixes[i];
 		if (start <= 4) {
 			phase=3;
-			if (i == 0) {
+			if (i == suffix_start) {
 				memset(&zip_info, 0, sizeof(zip_info));
 			}
 			zipnum=zip_info.zipnum;
@@ -480,7 +481,7 @@ int main(int argc, char **argv)
 		if (start <= 5) {
 			phase=4;
 			fprintf(stderr,"PROGRESS: Phase 5: assembling map %s\n",suffix);
-			if (i == 0) {
+			if (i == suffix_start) {
 				zip_info.dir_size=0;
 				zip_info.offset=0;
 				zip_info.maxnamelen=14+strlen(suffixes[0]);
