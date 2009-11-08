@@ -92,6 +92,11 @@ struct buffer {
 void save_buffer(char *filename, struct buffer *b, long long offset);
 void load_buffer(char *filename, struct buffer *b, long long offset, long long size);
 
+/* ch.c */
+
+void ch_generate_tiles(char *map_suffix, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info);
+void ch_assemble_map(char *map_suffix, char *suffix, struct zip_info *zip_info);
+
 /* coastline.c */
 
 void process_coastlines(FILE *in, FILE *out);
@@ -135,6 +140,7 @@ void item_bin_add_coord(struct item_bin *ib, struct coord *c, int count);
 void item_bin_bbox(struct item_bin *ib, struct rect *r);
 void item_bin_copy_coord(struct item_bin *ib, struct item_bin *from, int dir);
 void item_bin_add_coord_rect(struct item_bin *ib, struct rect *r);
+void item_bin_add_attr_data(struct item_bin *ib, enum attr_type type, void *data, int size);
 void item_bin_add_attr(struct item_bin *ib, struct attr *attr);
 void item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val);
 void *item_bin_get_attr(struct item_bin *ib, enum attr_type type, void *last);
@@ -209,6 +215,7 @@ struct item_bin_sink_func *tile_collector_new(struct item_bin_sink *out);
 
 /* tempfile.c */
 
+char *tempfile_name(char *suffix, char *name);
 FILE *tempfile(char *suffix, char *name, int mode);
 void tempfile_unlink(char *suffix, char *name);
 void tempfile_rename(char *suffix, char *from, char *to);
@@ -228,6 +235,7 @@ int tile(struct rect *r, char *suffix, char *ret, int max, int overlap, struct r
 void tile_bbox(char *tile, struct rect *r, int overlap);
 int tile_len(char *tile);
 void tile_write_item_to_tile(struct tile_info *info, struct item_bin *ib, FILE *reference, char *name);
+void tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *reference, int min, int max);
 int add_aux_tile(struct zip_info *zip_info, char *name, char *filename, int size);
 int write_aux_tiles(struct zip_info *zip_info);
 int create_tile_hash(void);

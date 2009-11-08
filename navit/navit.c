@@ -1381,6 +1381,9 @@ navit_init(struct navit *this_)
 	dbg(2,"ready=%d\n",this_->ready);
 	if (this_->ready == 3)
 		navit_draw(this_);
+#if 0
+	routech_test(this_);
+#endif
 }
 
 void

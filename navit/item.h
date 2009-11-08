@@ -79,6 +79,9 @@ struct item_id {
 	int id_lo;
 };
 
+#define ITEM_ID_FMT "(0x%x,0x%x)"
+#define ITEM_ID_ARGS(x) (x).id_hi,(x).id_lo
+
 struct item {
 	enum item_type type;
 	int id_hi;
@@ -94,19 +97,22 @@ extern struct item_range {
 
 /* prototypes */
 enum attr_type;
+enum change_mode;
 enum item_type;
+enum projection;
 struct attr;
 struct coord;
 struct item;
 struct item_hash;
+struct item_range;
+struct map;
 struct map_selection;
 int *item_get_default_flags(enum item_type type);
 void item_coord_rewind(struct item *it);
 int item_coord_get(struct item *it, struct coord *c, int count);
 int item_coord_set(struct item *it, struct coord *c, int count, enum change_mode mode);
 int item_coord_get_within_selection(struct item *it, struct coord *c, int count, struct map_selection *sel);
-int item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection pro);
-/* does the next returned coordinate mark a node */
+int item_coord_get_pro(struct item *it, struct coord *c, int count, enum projection to);
 int item_coord_is_node(struct item *it);
 void item_attr_rewind(struct item *it);
 int item_attr_get(struct item *it, enum attr_type attr_type, struct attr *attr);
@@ -114,6 +120,8 @@ int item_attr_set(struct item *it, struct attr *attr, enum change_mode mode);
 struct item *item_new(char *type, int zoom);
 enum item_type item_from_name(const char *name);
 char *item_to_name(enum item_type item);
+unsigned int item_id_hash(const void *key);
+int item_id_equal(const void *a, const void *b);
 struct item_hash *item_hash_new(void);
 void item_hash_insert(struct item_hash *h, struct item *item, void *val);
 int item_hash_remove(struct item_hash *h, struct item *item);
@@ -121,6 +129,7 @@ void *item_hash_lookup(struct item_hash *h, struct item *item);
 void item_hash_destroy(struct item_hash *h);
 int item_range_intersects_range(struct item_range *range1, struct item_range *range2);
 int item_range_contains_item(struct item_range *range, enum item_type type);
+void item_dump_attr(struct item *item, struct map *map, FILE *out);
 void item_dump_filedesc(struct item *item, struct map *map, FILE *out);
 /* end of prototypes */
 

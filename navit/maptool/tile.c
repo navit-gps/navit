@@ -310,8 +310,9 @@ write_item(char *tile, struct item_bin *ib, FILE *reference)
 			return;
 		}
 		if (reference) {
+			int offset=th->total_size_used/4;
 			fwrite(&th->zipnum, sizeof(th->zipnum), 1, reference);
-			fwrite(&th->total_size_used, sizeof(th->total_size_used), 1, reference);
+			fwrite(&offset, sizeof(th->total_size_used), 1, reference);
 		}
 		memcpy(th->zip_data+th->total_size_used, ib, size);
 		th->total_size_used+=size;
@@ -330,7 +331,7 @@ tile_write_item_to_tile(struct tile_info *info, struct item_bin *ib, FILE *refer
 		tile_extend(name, ib, info->tiles_list);
 }
 
-static void
+void
 tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *reference, int min, int max)
 {
 	struct rect r;
@@ -499,7 +500,7 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 
 					fprintf(out,"\n");
 				}
-				if (th->name[0])
+				if (th->name[strlen(info->suffix)])
 					index_submap_add(info, th);
 				zip_info->zipnum++;
 				processed_tiles++;
@@ -507,6 +508,13 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 			next=g_list_next(next);
 		}
 		len--;
+	}
+	if (info->suffix[0] && info->write) {
+		item_bin_init(item_bin, type_submap);
+		item_bin_add_coord_rect(item_bin, &world_bbox);
+		item_bin_add_attr_range(item_bin, attr_order, 0, 255);
+		item_bin_add_attr_int(item_bin, attr_zipfile_ref, zip_info->zipnum-1);
+		item_bin_write(item_bin, zip_info->index);
 	}
 }
 
@@ -603,8 +611,7 @@ index_submap_add(struct tile_info *info, struct tile_head *th)
 	else
 		len=0;
 	index_tile[len]=0;
-	if (tlen)
-		strcat(index_tile, info->suffix);
+	strcat(index_tile, info->suffix);
 	tile_bbox(th->name, &r, overlap);
 
 	item_bin_init(item_bin, type_submap);
