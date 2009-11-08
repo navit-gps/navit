@@ -94,16 +94,21 @@ item_bin_add_coord_rect(struct item_bin *ib, struct rect *r)
 }
 
 void
-item_bin_add_attr(struct item_bin *ib, struct attr *attr)
+item_bin_add_attr_data(struct item_bin *ib, enum attr_type type, void *data, int size)
 {
 	struct attr_bin *ab=(struct attr_bin *)((int *)ib+ib->len+1);
-	int size=attr_data_size(attr);
 	int pad=(4-(size%4))%4;
-	ab->type=attr->type;
-	memcpy(ab+1, attr_data_get(attr), size);
+	ab->type=type;
+	memcpy(ab+1, data, size);
 	memset((unsigned char *)(ab+1)+size, 0, pad);
 	ab->len=(size+pad)/4+1;
 	ib->len+=ab->len+1;
+}
+
+void
+item_bin_add_attr(struct item_bin *ib, struct attr *attr)
+{
+	item_bin_add_attr_data(ib, attr->type, attr_data_get(attr), attr_data_size(attr));
 }
 
 void

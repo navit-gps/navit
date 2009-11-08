@@ -2,21 +2,29 @@
 #include "maptool.h"
 #include "debug.h"
 
+char *
+tempfile_name(char *suffix, char *name)
+{
+	return g_strdup_printf("%s_%s.tmp",name, suffix);
+}
 FILE *
 tempfile(char *suffix, char *name, int mode)
 {
-	char buffer[4096];
-	sprintf(buffer,"%s_%s.tmp",name, suffix);
+	char *buffer=tempfile_name(suffix, name);
+	FILE *ret=NULL;
 	switch (mode) {
 	case 0:
-		return fopen(buffer, "rb");
+		ret=fopen(buffer, "rb");
+		break;
 	case 1:
-		return fopen(buffer, "wb+");
+		ret=fopen(buffer, "wb+");
+		break;
 	case 2:
-		return fopen(buffer, "ab");
-	default:
-		return NULL;
+		ret=fopen(buffer, "ab");
+		break;
 	}
+	g_free(buffer);
+	return ret;
 }
 
 void

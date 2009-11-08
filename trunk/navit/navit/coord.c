@@ -364,4 +364,20 @@ void coord_format(float lat,float lng, enum coord_format fmt, char * buffer, int
 	
 }
 
+unsigned int 
+coord_hash(const void *key)
+{
+        const struct coord *c=key;
+	return c->x^c->y;
+}
+
+int
+coord_equal(const void *a, const void *b)
+{
+        const struct coord *c_a=a;
+        const struct coord *c_b=b;
+	if (c_a->x == c_b->x && c_a->y == c_b->y)
+                return TRUE;
+        return FALSE;
+}
 /** @} */

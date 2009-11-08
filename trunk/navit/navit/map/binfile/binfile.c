@@ -1014,8 +1014,10 @@ static struct item *
 map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
 	struct tile *t;
-	if (mr->m->eoc) 
+	if (mr->m->eoc) {
+		while (pop_tile(mr));
 		push_zipfile_tile(mr, id_hi);
+	}
 	t=mr->t;
 	t->pos=t->start+id_lo;
 	mr->item.id_hi=id_hi;

@@ -119,18 +119,6 @@ phase1_map(struct map *map, FILE *out_ways, FILE *out_nodes)
 	map_rect_destroy(mr);
 }
 
-
-static void
-tile_write_item_minmax(struct tile_info *info, struct item_bin *ib, FILE *reference, int min, int max)
-{
-	struct rect r;
-	char buffer[1024];
-	bbox((struct coord *)(ib+1), ib->clen/2, &r);
-	buffer[0]='\0';
-	tile(&r, info->suffix, buffer, max, overlap, NULL);
-	tile_write_item_to_tile(info, ib, reference, buffer);
-}
-
 static void
 phase34_process_file(struct tile_info *info, FILE *in, FILE *reference)
 {
