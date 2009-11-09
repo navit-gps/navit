@@ -1,12 +1,12 @@
-.TH osm2navit 1  "August, 21 2008" "version 0.0.4+svn" "USER COMMANDS"
+.TH maptool 1  "August, 21 2008" "version 0.0.4+svn" "USER COMMANDS"
 .SH NAME
-osm2navit \- parse osm textfile and converts to NavIt binfile format
+maptool \- parse osm textfile and converts to NavIt binfile format
 .SH SYNOPSIS
-.B bzcat planet.osm.bz2 | osm2navit mymap.bin
+.B bzcat planet.osm.bz2 | maptool mymap.bin
 [\-h] [\-N] [\-W] [\-a value] [\-c] [\-d connect string] [\-e phase]
 [\-k] [\-o] [\-s phase] [\-i input file] [\-w] [\-z level]
 .SH DESCRIPTION
-osm2navit parses osm textfile and converts to NavIt binfile format
+maptool parses osm textfile and converts to NavIt binfile format
 .SH OPTIONS
 .TP
 \-h (\-\-help)
@@ -33,9 +33,6 @@ end at specified phase
 \-k (\-\-keep-tmpfiles)
 do not delete tmp files after processing. useful to reuse them
 .TP
-\-o (\-\-coverage)
-map every street to item overage
-.TP 
 \-s (\-\-start) <phase>
 start at specified phase
 .TP
