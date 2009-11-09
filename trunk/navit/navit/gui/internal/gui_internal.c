@@ -3741,16 +3741,18 @@ gui_internal_setup_gc(struct gui_priv *this)
 static void gui_internal_resize(void *data, int w, int h)
 {
 	struct gui_priv *this=data;
+	int changed=0;
 
 	gui_internal_setup_gc(this);
-	if( this->root.w==w && this->root.h==h)
-                return;
 
-	this->root.w=w;
-	this->root.h=h;
+	if (this->root.w != w || this->root.h != h) {
+		this->root.w=w;
+		this->root.h=h;
+		changed=1;
+	}
 	dbg(1,"w=%d h=%d children=%p\n", w, h, this->root.children);
 	navit_handle_resize(this->nav, w, h);
-	if (this->root.children) {
+	if (this->root.children && changed) {
 		gui_internal_prune_menu(this, NULL);
 		gui_internal_menu_root(this);
 	}
