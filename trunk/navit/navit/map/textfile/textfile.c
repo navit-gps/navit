@@ -37,60 +37,6 @@
 
 static int map_id;
 
-static int
-get_tag(char *line, char *name, int *pos, char *ret, char *name_ret)
-{
-	int len=0,quoted;
-	char *p,*e,*n;
-
-	dbg(1,"get_tag %s from %s\n", name, line); 
-	if (name)
-		len=strlen(name);
-	if (pos) 
-		p=line+*pos;
-	else
-		p=line;
-	for(;;) {
-		while (*p == ' ') {
-			p++;
-		}
-		if (! *p)
-			return 0;
-		n=p;
-		e=strchr(p,'=');
-		if (! e)
-			return 0;
-		p=e+1;
-		quoted=0;
-		while (*p) {
-			if (*p == ' ' && !quoted)
-				break;
-			if (*p == '"')
-				quoted=1-quoted;
-			p++;
-		}
-		if (name == NULL || (e-n == len && !strncmp(n, name, len))) {
-			if (name_ret) {
-				len=e-n;
-				strncpy(name_ret, n, len);
-				name_ret[len]='\0';
-			}
-			e++;
-			len=p-e;
-			if (e[0] == '"') {
-				e++;
-				len-=2;
-			}
-			strncpy(ret, e, len);
-			ret[len]='\0';
-			if (pos)
-				*pos=p-line;
-			return 1;
-		}
-	}	
-	return 0;
-}
-
 static void
 get_line(struct map_rect_priv *mr)
 {
@@ -180,7 +126,7 @@ textfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	}
 	if (attr_type == attr_any) {
 		dbg(1,"attr_any");
-		if (get_tag(mr->attrs,NULL,&mr->attr_pos,mr->attr, mr->attr_name)) {
+		if (attr_from_line(mr->attrs,NULL,&mr->attr_pos,mr->attr, mr->attr_name)) {
 			attr_type=attr_from_name(mr->attr_name);
 			dbg(1,"found attr '%s' 0x%x\n", mr->attr_name, attr_type);
 			attr->type=attr_type;
@@ -190,7 +136,7 @@ textfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	} else {
 		str=attr_to_name(attr_type);
 		dbg(1,"attr='%s' ",str);
-		if (get_tag(mr->attrs,str,&mr->attr_pos,mr->attr, NULL)) {
+		if (attr_from_line(mr->attrs,str,&mr->attr_pos,mr->attr, NULL)) {
 			textfile_encode_attr(mr->attr, attr_type, attr);
 			dbg(1,"found\n");
 			return 1;
@@ -321,7 +267,7 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 			dbg(1,"mr=%p attrs=%s\n", mr, mr->attrs);
 		}
 		dbg(1,"get_attrs %s\n", mr->attrs);
-		if (get_tag(mr->attrs,"type",NULL,type,NULL)) {
+		if (attr_from_line(mr->attrs,"type",NULL,type,NULL)) {
 			dbg(1,"type='%s'\n", type);
 			mr->item.type=item_from_name(type);
 			if (mr->item.type == type_none) 
