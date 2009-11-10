@@ -494,6 +494,7 @@ map_rect_new_shapefile(struct map_priv *map, struct map_selection *sel)
 		}
         	file_destroy(file);
 	} else {
+		dbg(0,"Failed to open %s\n",dbfmapfile);
 		if (map->dbfmap_data) {
 			changed=1;
 			g_free(map->dbfmap_data);
@@ -563,6 +564,8 @@ map_rect_get_item_shapefile(struct map_rect_priv *mr)
 				mr->item.type=item_from_name(type);
 				if (mr->item.type == type_none)
 					dbg(0,"Warning: type '%s' unknown\n", type);
+			} else {
+				dbg(0,"failed to get attribute type\n");
 			}
 		} else
 			mr->line=NULL;
