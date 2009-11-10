@@ -148,13 +148,13 @@ int main(int argc, char **argv)
 #endif
 	int output=0;
 	int input=0;
-	int f;
-	char *result;
+	int f,pos;
+	char *result,*optarg_cp,*attr_name,*attr_value;
 #ifdef HAVE_POSTGRESQL
 	char *dbstr=NULL;
 #endif
 	FILE* input_file = stdin;
-	struct attr **attrs;
+	struct attr *attrs[10];
 	struct map *map_handle=NULL;
 #if 0
 	char *suffixes[]={"m0l0", "m0l1","m0l2","m0l3","m0l4","m0l5","m0l6"};
@@ -242,12 +242,28 @@ int main(int argc, char **argv)
 			usage(stdout);
 			break;
 		case 'm':
-			attrs=(struct attr*[]){
-				&(struct attr){attr_type,{"textfile"}},
-				&(struct attr){attr_data,{optarg}},
-				NULL};
-			add_plugin("$NAVIT_LIBDIR/*/${NAVIT_LIBPREFIX}libmap_textfile.so");
+			optarg_cp=g_strdup(optarg);
+			pos=0;
+			i=0;
+			attr_name=g_strdup(optarg);
+			attr_value=g_strdup(optarg);
+			while (i < 9 && attr_from_line(optarg_cp, NULL, &pos, attr_value, attr_name)) {
+				attrs[i]=attr_new_from_text(attr_name,attr_value);
+				if (attrs[i]) {
+					i++;
+				} else {
+					fprintf(stderr,"Failed to convert %s=%s to attribute\n",attr_name,attr_value);
+				}
+				attr_value=g_strdup(optarg);
+			}
+			attrs[i++]=NULL;
+			g_free(attr_value);
+			g_free(optarg_cp);
 			map_handle=map_new(NULL, attrs);
+			if (! map_handle) {
+				fprintf(stderr,"Failed to create map from attributes\n");
+				exit(1);
+			}
 			break;	
 		case 'n':
 			fprintf(stderr,"I will IGNORE unknown types\n");
