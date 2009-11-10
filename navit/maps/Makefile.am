@@ -9,7 +9,7 @@ maptool=$(top_builddir)/navit/maptool/maptool
 
 maps_DATA = $(SAMPLE_MAP).bin $(SAMPLE_MAP).xml
 
-SUFFIXES=.osm.bz2
+SUFFIXES=.osm.bz2 .txt .shp .osm
 
 samplemap: $(SAMPLE_MAP).bin
 
@@ -19,7 +19,11 @@ samplemap: $(SAMPLE_MAP).bin
 	mv $@.tmp $@
 
 .txt.bin:
-	$(maptool) $(maptool_args) $@.tmp -p ../map/textfile/libmap_textfile.la -m $<
+	$(maptool) $(maptool_args) $@.tmp -p $(top_builddir/navit/map/textfile/libmap_textfile.la -m "type=textfile data=$<"
+	mv $@.tmp $@
+
+.shp.bin:
+	$(maptool) $(maptool_args) $@.tmp -p $(top_builddir)/navit/map/shapefile/libmap_shapefile.la -m "type=shapefile data=$(subst .shp,,$<) $(SHAPEFILE_ATTRIBUTES)"
 	mv $@.tmp $@
 
 .osm.bz2.bin:
