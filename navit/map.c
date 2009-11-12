@@ -654,8 +654,11 @@ map_dump_file(struct map *map, const char *file)
 {
 	FILE *f;
 	f=fopen(file,"w");
-	map_dump_filedesc(map, f);
-	fclose(f);
+	if (f) {
+		map_dump_filedesc(map, f);
+		fclose(f);
+	} else 
+		dbg(0,"failed to open file '%s'\n",file);
 }
 
 void
