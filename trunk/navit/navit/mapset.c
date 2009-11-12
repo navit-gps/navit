@@ -44,6 +44,10 @@ struct mapset {
 	GList *maps; /**< Linked list of all the maps in the mapset */
 };
 
+struct attr_iter {
+	GList *last;
+};
+
 /**
  * @brief Creates a new, empty mapset
  *
@@ -58,6 +62,18 @@ struct mapset *mapset_new(struct attr *parent, struct attr **attrs)
 	return ms;
 }
 
+
+struct attr_iter *
+mapset_attr_iter_new(void)
+{
+	return g_new0(struct attr_iter, 1);
+}
+
+void
+mapset_attr_iter_destroy(struct attr_iter *iter)
+{
+	g_free(iter);
+}
 
 /**
  * @brief Adds a map to a mapset
@@ -82,11 +98,17 @@ mapset_get_attr(struct mapset *ms, enum attr_type type, struct attr *attr, struc
 {
 	GList *map;
 	map=ms->maps;
+	attr->type=type;
 	switch (type) {
 	case attr_map:
-		if (map) {
-			attr->u.map=map->data;
-			return 1;
+		while (map) {
+			if (!iter || iter->last == g_list_previous(map)) {
+				attr->u.map=map->data;
+				if (iter)
+					iter->last=map;
+				return 1;
+			}
+			map=g_list_next(map);
 		}
 		break;
 	default:
