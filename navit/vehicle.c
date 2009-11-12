@@ -193,12 +193,11 @@ vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, 
  * @param attrs
  */
 int
-vehicle_set_attr(struct vehicle *this_, struct attr *attr,
-		 struct attr **attrs)
+vehicle_set_attr(struct vehicle *this_, struct attr *attr)
 {
 	int ret=1;
 	if (this_->meth.set_attr)
-		ret=this_->meth.set_attr(this_->priv, attr, attrs);
+		ret=this_->meth.set_attr(this_->priv, attr);
 	if (ret == 1 && attr->type != attr_navit)
 		this_->attrs=attr_generic_set_attr(this_->attrs, attr);
 	return ret != 0;

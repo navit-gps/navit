@@ -86,8 +86,7 @@ vehicle_iphone_position_attr_get(struct vehicle_priv *priv,
 }
 
 static int
-vehicle_iphone_set_attr(struct vehicle_priv *priv, struct attr *attr,
-		      struct attr **attrs)
+vehicle_iphone_set_attr(struct vehicle_priv *priv, struct attr *attr)
 {
 	if (attr->type == attr_navit) {
 		priv->navit = attr->u.navit;

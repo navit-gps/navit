@@ -1716,9 +1716,9 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 			if (nv->vehicle == attr->u.vehicle) {
 				if (!this_->vehicle || this_->vehicle->vehicle != attr->u.vehicle) {
 					if (this_->vehicle)
-						vehicle_set_attr(this_->vehicle->vehicle, &active, NULL);
+						vehicle_set_attr(this_->vehicle->vehicle, &active);
 					active.u.num=1;
-					vehicle_set_attr(nv->vehicle, &active, NULL);
+					vehicle_set_attr(nv->vehicle, &active);
 					attr_updated=1;
 				}
 				navit_set_vehicle(this_, nv);
@@ -2215,7 +2215,7 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v)
 	nv->callback.type=attr_callback;
 	nv->callback.u.callback=callback_new_attr_2(callback_cast(navit_vehicle_update), attr_position_coord_geo, this_, nv);
 	vehicle_add_attr(nv->vehicle, &nv->callback);
-	vehicle_set_attr(nv->vehicle, &this_->self, NULL);
+	vehicle_set_attr(nv->vehicle, &this_->self);
 	return 1;
 }
 
