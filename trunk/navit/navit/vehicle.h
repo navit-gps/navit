@@ -34,6 +34,7 @@ struct vehicle_methods {
 };
 
 /* prototypes */
+void vehicle_log_gpx_add_tag(char *tag, char **logstr);
 struct vehicle *vehicle_new(struct attr *parent, struct attr **attrs);
 void vehicle_destroy(struct vehicle *this_);
 struct attr_iter *vehicle_attr_iter_new(void); 
