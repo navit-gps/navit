@@ -30,7 +30,7 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs)
 {
 	struct layout *l;
 	struct color def_color = {0xffff, 0xefef, 0xb7b7, 0xffff};
-	struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr;
+	struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr;
 
 	if (! (name_attr=attr_search(attrs, NULL, attr_name)))
 		return NULL;
@@ -38,6 +38,12 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs)
 	l->name = g_strdup(name_attr->u.str);
 	if ((font_attr=attr_search(attrs, NULL, attr_font))) {
 		l->font = g_strdup(font_attr->u.str);
+	}
+	if ((day_attr=attr_search(attrs, NULL, attr_daylayout))) {
+		l->dayname = g_strdup(day_attr->u.str);
+	}
+	if ((night_attr=attr_search(attrs, NULL, attr_nightlayout))) {
+		l->nightname = g_strdup(night_attr->u.str);
 	}
 	if ((color_attr=attr_search(attrs, NULL, attr_color)))
 		l->color = *color_attr->u.color;
