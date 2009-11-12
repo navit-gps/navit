@@ -120,7 +120,7 @@ vehicle_null_position_attr_get(struct vehicle_priv *priv,
 }
 
 static int
-vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr, struct attr **attrs)
+vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr)
 {
 	switch (attr->type) {
 	case attr_position_speed:
