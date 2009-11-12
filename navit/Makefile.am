@@ -41,7 +41,7 @@ libnavit_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c 
 	map_data.h mapset.h maptype.h menu.h messages.h navigation.h navit.h osd.h \
 	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h profile.h roadprofile.h search.h speech.h start_real.h \
 	transform.h track.h util.h vehicle.h vehicleprofile.h window.h xmlconfig.h zipfile.h \
-	navit_nls.h
+	navit_nls.h sunriset.c sunriset.h
 
 comma=,
 XSLTS=@XSLTS@
