@@ -60,6 +60,7 @@
 #include "util.h"
 #include "messages.h"
 #include "vehicleprofile.h"
+#include "sunriset.h"
 
 /**
  * @defgroup navit the navit core instance. navit is the object containing nearly everything: A set of maps, one or more vehicle, a graphics object for rendering the map, a gui object for displaying the user interface, a route object, a navigation object and so on. Be warned that it is theoretically possible to have more than one navit object
@@ -134,6 +135,7 @@ struct navit {
 	GList *vehicleprofiles;
 	int pitch;
 	int follow_cursor;
+	int prevTs;
 };
 
 struct gui *main_loop_gui;
@@ -660,6 +662,8 @@ navit_new(struct attr *parent, struct attr **attrs)
 	center.x=co.x;
 	center.y=co.y;
 	center.pro = pro;
+	
+	this_->prevTs=0;
 
 	transform_setup(this_->trans, &center, zoom, (this_->orientation != -1) ? this_->orientation : 0);
 	for (;*attrs; attrs++) {
@@ -2075,6 +2079,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		profile(0,"return 1\n");
 		return;
 	}
+	navit_layout_switch(this_);
 	if (this_->vehicle == nv && this_->tracking_flag)
 		tracking=this_->tracking;
 	if (tracking) {
@@ -2250,6 +2255,114 @@ struct displaylist *
 navit_get_displaylist(struct navit *this_)
 {
 	return this_->displaylist;
+}
+
+void
+navit_layout_switch(struct navit *n) 
+{
+
+    int currTs=0;
+    struct attr iso8601_attr,geo_attr,layout_attr;
+    double trise,tset,trise_actual;
+    struct layout *l;
+    
+    if (navit_get_attr(n,attr_layout,&layout_attr,NULL)!=1) {
+	return; //No layout - nothing to switch
+    }
+    l=layout_attr.u.layout;
+    
+    if (l->dayname || l->nightname) {
+	//Ok, we know that we have profile to switch
+	
+	//Check that we aren't calculating too fast
+	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_time_iso8601,&iso8601_attr,NULL)==1) {
+		currTs=iso8601_to_secs(iso8601_attr.u.str);
+	}
+	if (currTs-(n->prevTs)<60) {
+	    //We've have to wait a little
+	    return;
+	}
+	
+	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_coord_geo,&geo_attr,NULL)!=1) {
+		//No position - no sun
+		return;
+	}
+	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_valid, &geo_attr,NULL) && geo_attr.u.num==attr_position_valid_invalid) {
+		return; //No valid fix yet
+	}
+	
+	//We calculate sunrise anyway, cause it is need both for day and for night
+        if (__sunriset__(currTs,geo_attr.u.coord_geo->lat,geo_attr.u.coord_geo->lng,35,1,&trise,&tset)!=0) {
+		//near the pole sun never rises/sets, so we should never switch profiles
+		n->prevTs=currTs;
+		return;
+	    }
+	
+        trise_actual=trise;
+	
+	if (l->dayname) {
+	
+	    if ((HOURS(trise)*60+MINUTES(trise)==(currTs%86400)/60) || 
+		    (n->prevTs==0 && ((HOURS(trise)*60+MINUTES(trise)<(currTs%86400)/60)))) {
+		//The sun is rising now!
+		if (strcmp(l->name,l->dayname)) {
+		    navit_set_layout_by_name(n,l->dayname);
+		}
+	    }
+	}
+	if (l->nightname) {
+	    if (__sunriset__(currTs,geo_attr.u.coord_geo->lat,geo_attr.u.coord_geo->lng,-12,0,&trise,&tset)!=0) {
+		//near the pole sun never rises/sets, so we should never switch profiles
+		n->prevTs=currTs;
+		return;
+	    }
+	    
+	    if (HOURS(tset)*60+MINUTES(tset)==((currTs%86400)/60)
+		|| (n->prevTs==0 && (((HOURS(tset)*60+MINUTES(tset)<(currTs%86400)/60)) || 
+			((HOURS(trise_actual)*60+MINUTES(trise_actual)>(currTs%86400)/60))))) {
+		//Time to sleep
+		if (strcmp(l->name,l->nightname)) {
+		    navit_set_layout_by_name(n,l->nightname);
+		}
+	    }	
+	}
+	
+	n->prevTs=currTs;
+    }
+}
+
+int 
+navit_set_layout_by_name(struct navit *n,char *name) 
+{
+    struct layout *l;
+    struct attr_iter iter;
+    struct attr layout_attr;
+
+    iter.u.list=0x00;
+
+    if (navit_get_attr(n,attr_layout,&layout_attr,&iter)!=1) {
+	return 0; //No layouts - nothing to do
+    }
+    if (iter.u.list==NULL) {
+	return 0;
+    }
+    
+    iter.u.list=g_list_first(iter.u.list);
+    
+    while(iter.u.list) {
+	l=(struct layout*)iter.u.list->data;
+	if (!strcmp(name,l->name)) {
+	    layout_attr.u.layout=l;
+	    layout_attr.type=attr_layout;
+	    navit_set_attr(n,&layout_attr);
+	    iter.u.list=g_list_first(iter.u.list);
+	    return 1;
+	}
+	iter.u.list=g_list_next(iter.u.list);
+    }
+
+    iter.u.list=g_list_first(iter.u.list);
+    return 0;
 }
 
 int

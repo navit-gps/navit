@@ -340,7 +340,7 @@
             <map type="garmin" enabled="yes" data="/path/to/img" debug="4"/>
         </mapset>
 
-        <layout name="Car" color="#ffefb7" font="Liberation Sans">
+        <layout name="Car" nightlayout="Car-dark" color="#ffefb7" font="Liberation Sans">
 
             <cursor w="26" h="26">
                 <itemgra>
@@ -1945,7 +1945,7 @@
             </layer>
         </layout>
 
-        <layout name="Car-dark" color="#011001">
+        <layout name="Car-dark" daylayout="Car" color="#011001">
 
             <cursor w="26" h="26">
                 <itemgra>
