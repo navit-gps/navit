@@ -82,8 +82,7 @@ vehicle_demo_position_attr_get(struct vehicle_priv *priv,
 }
 
 static int
-vehicle_demo_set_attr(struct vehicle_priv *priv, struct attr *attr,
-		      struct attr **attrs)
+vehicle_demo_set_attr(struct vehicle_priv *priv, struct attr *attr)
 {
 	if (attr->type == attr_navit) 
 		priv->navit = attr->u.navit;

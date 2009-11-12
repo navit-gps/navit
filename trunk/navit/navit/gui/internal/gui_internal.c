@@ -3275,7 +3275,7 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 
 	// Change the profile name
 	struct attr profilename_attr = {attr_profilename, {profilename}};
-	if(!vehicle_set_attr(v, &profilename_attr, NULL)) {
+	if(!vehicle_set_attr(v, &profilename_attr)) {
 		dbg(0, "Unable to set the vehicle's profile name\n");
 	}
 
