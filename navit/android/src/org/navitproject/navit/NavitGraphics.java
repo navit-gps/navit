@@ -25,9 +25,20 @@ import android.graphics.*;
 import android.os.Bundle;
 import android.os.Debug;
 import android.view.*;
+import android.view.Window;
 import android.util.Log;
+import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.lang.String;
+import android.app.Activity;
+import android.content.Context;
+import android.hardware.Camera;
+import android.os.Bundle;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.Window;
+import java.io.IOException;
+
 
 public class NavitGraphics {
 	private NavitGraphics parent_graphics;
@@ -40,7 +51,8 @@ public class NavitGraphics {
 	int overlay_disabled;
 	float trackball_x,trackball_y;
 	View view;
-	public NavitGraphics(Activity activity, NavitGraphics parent, int x, int y, int w, int h, int alpha, int wraparound) {
+	RelativeLayout relativelayout;
+	public NavitGraphics(Activity activity, NavitGraphics parent, int x, int y, int w, int h, int alpha, int wraparound, int camera) {
 		if (parent == null) {
 			view=new View(activity) {
 	@Override protected void onDraw(Canvas canvas)
@@ -181,7 +193,16 @@ public class NavitGraphics {
 			};
 			view.setFocusable(true);
 			view.setFocusableInTouchMode(true);
-			activity.setContentView(view);
+			if (camera != 0) {
+				activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
+				relativelayout=new RelativeLayout(activity);
+				NavitCamera camera=new NavitCamera(activity);
+				relativelayout.addView(camera);
+				relativelayout.addView(view);
+				activity.setContentView(relativelayout);
+			} else {
+				activity.setContentView(view);
+			}
 			view.requestFocus();
 		} else {
 			draw_bitmap=Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
@@ -280,9 +301,9 @@ public class NavitGraphics {
 	}
 	protected void draw_mode(int mode)
 	{
-		if (mode == 1 && parent_graphics == null)
+		if (mode == 2 && parent_graphics == null)
 			view.invalidate();
-		if (mode == 0 && parent_graphics != null)
+		if (mode == 1 || (mode == 0 && parent_graphics != null)) 
 			draw_bitmap.eraseColor(0);
 			
 	}
