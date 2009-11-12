@@ -174,8 +174,10 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 	ret->gra=gr;	
 	ret->Paint=(*jnienv)->NewObject(jnienv, gr->PaintClass, gr->Paint_init);
 	dbg(1,"result=%p\n",ret->Paint);
-	if (ret->Paint)
+	if (ret->Paint) {
 		(*jnienv)->NewGlobalRef(jnienv, ret->Paint);
+		(*jnienv)->DeleteLocalRef(jnienv, ret->Paint);
+	}
 	return ret;
 }
 
@@ -222,6 +224,7 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 	dbg(1,"result=%p\n",ret->Bitmap);
 	if (ret->Bitmap) {
 		(*jnienv)->NewGlobalRef(jnienv, ret->Bitmap);
+		(*jnienv)->DeleteLocalRef(jnienv, ret->Bitmap);
 		*w=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getWidth);
 		*h=(*jnienv)->CallIntMethod(jnienv, ret->Bitmap, gra->Bitmap_getHeight);
 		dbg(1,"w=%d h=%d for %s\n",*w,*h,path);
@@ -499,13 +502,13 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 	if (!find_class_global("org/navitproject/navit/NavitGraphics", &ret->NavitGraphicsClass))
 		return 0;
 	dbg(0,"at 3\n");
-	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "<init>", "(Landroid/app/Activity;Lorg/navitproject/navit/NavitGraphics;IIIIII)V");
+	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "<init>", "(Landroid/app/Activity;Lorg/navitproject/navit/NavitGraphics;IIIIIII)V");
 	if (cid == NULL) {
 		dbg(0,"no method found\n");
 		return 0; /* exception thrown */
 	}
 	dbg(0,"at 4 android_activity=%p\n",android_activity);
-	ret->NavitGraphics=(*jnienv)->NewObject(jnienv, ret->NavitGraphicsClass, cid, android_activity, parent ? parent->NavitGraphics : NULL, pnt ? pnt->x:0 , pnt ? pnt->y:0, w, h, alpha, wraparound);
+	ret->NavitGraphics=(*jnienv)->NewObject(jnienv, ret->NavitGraphicsClass, cid, android_activity, parent ? parent->NavitGraphics : NULL, pnt ? pnt->x:0 , pnt ? pnt->y:0, w, h, alpha, wraparound, 0);
 	dbg(0,"result=%p\n",ret->NavitGraphics);
 	if (ret->NavitGraphics)
 		(*jnienv)->NewGlobalRef(jnienv, ret->NavitGraphics);
