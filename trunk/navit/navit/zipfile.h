@@ -69,6 +69,12 @@ struct zip_cd {
 
 #define zip_eoc_sig 0x6054b50
 
+struct zip_cd_ext {
+	short tag;
+	short size;
+	unsigned long long zipofst;
+} __attribute__ ((packed));
+
 struct zip_eoc {
 	int zipesig;
 	unsigned short zipedsk;
