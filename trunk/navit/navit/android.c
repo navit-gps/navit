@@ -149,3 +149,11 @@ Java_org_navitproject_navit_NavitWatch_WatchCallback( JNIEnv* env, jobject thiz,
 }
 
 
+JNIEXPORT void JNICALL
+Java_org_navitproject_navit_NavitSensors_SensorCallback( JNIEnv* env, jobject thiz, int id, int sensor, float x, float y, float z)
+{
+	dbg(1,"enter %p %p %f %f %f\n",thiz, (void *)id,x,y,z);
+	callback_call_4((struct callback *)id, sensor, &x, &y, &z);
+}
+
+
