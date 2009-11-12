@@ -368,6 +368,114 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
     
 }
 
+static int
+decode_attr(DBusMessage *message, struct attr *attr)
+{
+	DBusMessageIter iter, iterattr, iterstruct;
+	char *attr_type;
+	int ret=1;
+	double d;
+
+	dbus_message_iter_init(message, &iter);
+	dbus_message_iter_get_basic(&iter, &attr_type);
+	attr->type = attr_from_name(attr_type); 
+	dbg(0, "attr value: 0x%x string: %s\n", attr->type, attr_type);
+    
+	if (attr->type == attr_none)
+		return 0;
+    
+	dbus_message_iter_next(&iter);
+	dbus_message_iter_recurse(&iter, &iterattr);
+	dbg(0, "seems valid. signature: %s\n", dbus_message_iter_get_signature(&iterattr));
+    
+	if (attr->type >= attr_type_item_begin && attr->type <= attr_type_item_end)
+		return 0;
+
+	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_boolean_begin) {
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_INT32) {
+			dbus_message_iter_get_basic(&iterattr, &attr->u.num);
+			return 1;
+		}
+		return 0;
+	}
+	if(attr->type >= attr_type_boolean_begin && attr->type <= attr_type_int_end) {
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_BOOLEAN) {
+			dbus_message_iter_get_basic(&iterattr, &attr->u.num);
+			return 1;
+		}
+		return 0;
+        }
+	if(attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRING) {
+			dbus_message_iter_get_basic(&iterattr, &attr->u.str);
+			return 1;
+		}
+		return 0;
+        }
+	if(attr->type >= attr_type_double_begin && attr->type <= attr_type_double_end) {
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_DOUBLE) {
+			attr->u.numd=g_new(typeof(*attr->u.numd),1);
+			dbus_message_iter_get_basic(&iterattr, attr->u.numd);
+			return 1;
+		}
+	}
+	if(attr->type >= attr_type_coord_geo_begin && attr->type <= attr_type_coord_geo_end) {
+		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRUCT) {
+			attr->u.coord_geo=g_new(typeof(*attr->u.coord_geo),1);
+			dbus_message_iter_recurse(&iterattr, &iterstruct);
+			if (dbus_message_iter_get_arg_type(&iterstruct) == DBUS_TYPE_DOUBLE) {
+				dbus_message_iter_get_basic(&iterstruct, &d);
+				dbus_message_iter_next(&iterstruct);
+				attr->u.coord_geo->lng=d;
+			} else
+				ret=0;
+			if (dbus_message_iter_get_arg_type(&iterstruct) == DBUS_TYPE_DOUBLE) {
+				dbus_message_iter_get_basic(&iterstruct, &d);
+				attr->u.coord_geo->lat=d;
+			} else
+				ret=0;
+			if (!ret) {
+				g_free(attr->u.coord_geo);
+				attr->u.coord_geo=NULL;
+			}
+			return ret;
+		}
+	}
+	return 0;
+}
+
+static void
+destroy_attr(struct attr *attr)
+{
+	if(attr->type > attr_type_double_begin && attr->type < attr_type_double_end) {
+		g_free(attr->u.numd);
+	}
+}
+
+
+/* graphics */
+
+static DBusHandlerResult
+request_graphics_set_attr(DBusConnection *connection, DBusMessage *message)
+{
+	struct graphics *graphics;
+    	struct attr attr;
+	int ret;
+	
+	graphics = object_get_from_message(message, "graphics");
+	if (! graphics)
+		return dbus_error_invalid_object_path(connection, message);
+	if (decode_attr(message, &attr)) {
+		ret=graphics_set_attr(graphics, &attr);
+		destroy_attr(&attr);
+		if (ret)
+			return empty_reply(connection, message);
+	}
+    	return dbus_error_invalid_parameter(connection, message);
+}
+
+/* navit */
+
 static DBusHandlerResult
 request_navit_draw(DBusConnection *connection, DBusMessage *message)
 {
@@ -653,91 +761,6 @@ request_navit_attr_iter_destroy(DBusConnection *connection, DBusMessage *message
 	return empty_reply(connection, message);
 }
 
-static int
-decode_attr(DBusMessage *message, struct attr *attr)
-{
-	DBusMessageIter iter, iterattr, iterstruct;
-	char *attr_type;
-	int ret=1;
-	double d;
-
-	dbus_message_iter_init(message, &iter);
-	dbus_message_iter_get_basic(&iter, &attr_type);
-	attr->type = attr_from_name(attr_type); 
-	dbg(0, "attr value: 0x%x string: %s\n", attr->type, attr_type);
-    
-	if (attr->type == attr_none)
-		return 0;
-    
-	dbus_message_iter_next(&iter);
-	dbus_message_iter_recurse(&iter, &iterattr);
-	dbg(0, "seems valid. signature: %s\n", dbus_message_iter_get_signature(&iterattr));
-    
-	if (attr->type >= attr_type_item_begin && attr->type <= attr_type_item_end)
-		return 0;
-
-	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_boolean_begin) {
-		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_INT32) {
-			dbus_message_iter_get_basic(&iterattr, &attr->u.num);
-			return 1;
-		}
-		return 0;
-	}
-	if(attr->type >= attr_type_boolean_begin && attr->type <= attr_type_int_end) {
-		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_BOOLEAN) {
-			dbus_message_iter_get_basic(&iterattr, &attr->u.num);
-			return 1;
-		}
-		return 0;
-        }
-	if(attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
-		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRING) {
-			dbus_message_iter_get_basic(&iterattr, &attr->u.str);
-			return 1;
-		}
-		return 0;
-        }
-	if(attr->type >= attr_type_double_begin && attr->type <= attr_type_double_end) {
-		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_DOUBLE) {
-			attr->u.numd=g_new(typeof(*attr->u.numd),1);
-			dbus_message_iter_get_basic(&iterattr, attr->u.numd);
-			return 1;
-		}
-	}
-	if(attr->type >= attr_type_coord_geo_begin && attr->type <= attr_type_coord_geo_end) {
-		if (dbus_message_iter_get_arg_type(&iterattr) == DBUS_TYPE_STRUCT) {
-			attr->u.coord_geo=g_new(typeof(*attr->u.coord_geo),1);
-			dbus_message_iter_recurse(&iterattr, &iterstruct);
-			if (dbus_message_iter_get_arg_type(&iterstruct) == DBUS_TYPE_DOUBLE) {
-				dbus_message_iter_get_basic(&iterstruct, &d);
-				dbus_message_iter_next(&iterstruct);
-				attr->u.coord_geo->lng=d;
-			} else
-				ret=0;
-			if (dbus_message_iter_get_arg_type(&iterstruct) == DBUS_TYPE_DOUBLE) {
-				dbus_message_iter_get_basic(&iterstruct, &d);
-				attr->u.coord_geo->lat=d;
-			} else
-				ret=0;
-			if (!ret) {
-				g_free(attr->u.coord_geo);
-				attr->u.coord_geo=NULL;
-			}
-			return ret;
-		}
-	}
-	return 0;
-}
-
-static void
-destroy_attr(struct attr *attr)
-{
-	if(attr->type > attr_type_double_begin && attr->type < attr_type_double_end) {
-		g_free(attr->u.numd);
-	}
-}
-
-
 
 static DBusHandlerResult
 request_navit_set_attr(DBusConnection *connection, DBusMessage *message)
@@ -753,63 +776,6 @@ request_navit_set_attr(DBusConnection *connection, DBusMessage *message)
 		ret=navit_set_attr(navit, &attr);
 		destroy_attr(&attr);
 		if (ret)
-			return empty_reply(connection, message);
-	}
-    	return dbus_error_invalid_parameter(connection, message);
-}
-
-static DBusHandlerResult
-request_graphics_set_attr(DBusConnection *connection, DBusMessage *message)
-{
-	struct graphics *graphics;
-    	struct attr attr;
-	int ret;
-	
-	graphics = object_get_from_message(message, "graphics");
-	if (! graphics)
-		return dbus_error_invalid_object_path(connection, message);
-	if (decode_attr(message, &attr)) {
-		ret=graphics_set_attr(graphics, &attr);
-		destroy_attr(&attr);
-		if (ret)
-			return empty_reply(connection, message);
-	}
-    	return dbus_error_invalid_parameter(connection, message);
-}
-
-static DBusHandlerResult
-request_vehicle_set_attr(DBusConnection *connection, DBusMessage *message)
-{
-	struct vehicle *vehicle;
-    	struct attr attr;
-	int ret;
-	
-	vehicle = object_get_from_message(message, "vehicle");
-	if (! vehicle)
-		return dbus_error_invalid_object_path(connection, message);
-	if (decode_attr(message, &attr)) {
-		ret=vehicle_set_attr(vehicle, &attr, NULL);
-		destroy_attr(&attr);
-		if (ret)	
-			return empty_reply(connection, message);
-	}
-    	return dbus_error_invalid_parameter(connection, message);
-}
-
-static DBusHandlerResult
-request_map_set_attr(DBusConnection *connection, DBusMessage *message)
-{
-	struct map *map;
-    	struct attr attr;
-	int ret;
-	
-	map = object_get_from_message(message, "map");
-	if (! map)
-		return dbus_error_invalid_object_path(connection, message);
-	if (decode_attr(message, &attr)) {
-		ret=map_set_attr(map, &attr);
-		destroy_attr(&attr);
-		if (ret)	
 			return empty_reply(connection, message);
 	}
     	return dbus_error_invalid_parameter(connection, message);
@@ -887,6 +853,155 @@ request_navit_evaluate(DBusConnection *connection, DBusMessage *message)
 	return DBUS_HANDLER_RESULT_HANDLED;
 }
 
+
+static char *
+get_iter_name(char *type)
+{
+	return g_strdup_printf("%s_attr_iter",type);
+}
+
+static DBusHandlerResult
+request_attr_iter(DBusConnection *connection, DBusMessage *message, char *type, struct attr_iter *(*func)(void))
+{
+	DBusMessage *reply;
+	char *iter_name;
+	char *opath;
+	struct attr_iter *attr_iter;
+
+	attr_iter=(*func)();
+	iter_name=get_iter_name(type);
+	opath=object_new(iter_name,attr_iter);
+	g_free(iter_name);
+	reply = dbus_message_new_method_return(message);
+	dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
+	dbus_connection_send (connection, reply, NULL);
+	dbus_message_unref (reply);
+
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
+
+static DBusHandlerResult
+request_attr_iter_destroy(DBusConnection *connection, DBusMessage *message, char *type, void (*func)(struct attr_iter *))
+{
+	struct attr_iter *attr_iter;
+	DBusMessageIter iter;
+	char *iter_name;
+
+	dbus_message_iter_init(message, &iter);
+	iter_name=get_iter_name(type);
+	attr_iter=object_get_from_message_arg(&iter, iter_name);
+	g_free(iter_name);
+	if (! attr_iter)
+		return dbus_error_invalid_object_path_parameter(connection, message);
+	func(attr_iter);
+
+	return empty_reply(connection, message);
+}
+
+
+static DBusHandlerResult
+request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, int (*func)(void *data, enum attr_type type, struct attr *attr, struct attr_iter *iter))
+{
+	DBusMessage *reply;
+	DBusMessageIter iter;
+	struct attr attr;
+	enum attr_type attr_type;
+	struct attr_iter *attr_iter;
+	void *data;
+	char *iter_name;
+
+	data = object_get_from_message(message, type);
+	if (! data)
+		return dbus_error_invalid_object_path(connection, message);
+
+	dbus_message_iter_init(message, &iter);
+	attr_type=attr_type_get_from_message(&iter);
+	if (attr_type == attr_none)
+		return dbus_error_invalid_attr_type(connection, message);
+	iter_name=get_iter_name(type);	
+	attr_iter=object_get_from_message_arg(&iter, iter_name);
+	g_free(iter_name);
+	if (func(data, attr_type, &attr, attr_iter)) {
+		reply = dbus_message_new_method_return(message);
+		encode_attr(reply, &attr);
+		dbus_connection_send (connection, reply, NULL);
+		dbus_message_unref (reply);
+		return DBUS_HANDLER_RESULT_HANDLED;
+	}
+	return empty_reply(connection, message);
+	
+}
+
+/* map */
+
+static DBusHandlerResult
+request_map_set_attr(DBusConnection *connection, DBusMessage *message)
+{
+	struct map *map;
+    	struct attr attr;
+	int ret;
+	
+	map = object_get_from_message(message, "map");
+	if (! map)
+		return dbus_error_invalid_object_path(connection, message);
+	if (decode_attr(message, &attr)) {
+		ret=map_set_attr(map, &attr);
+		destroy_attr(&attr);
+		if (ret)	
+			return empty_reply(connection, message);
+	}
+    	return dbus_error_invalid_parameter(connection, message);
+}
+
+static DBusHandlerResult
+request_map_get_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_get_attr(connection, message, "map", (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))map_get_attr);
+}
+
+/* mapset */
+
+static DBusHandlerResult
+request_mapset_attr_iter(DBusConnection *connection, DBusMessage *message)
+{
+	return request_attr_iter(connection, message, "mapset", (struct attr_iter * (*)(void))mapset_attr_iter_new);
+}
+
+static DBusHandlerResult
+request_mapset_attr_iter_destroy(DBusConnection *connection, DBusMessage *message)
+{
+	return request_attr_iter_destroy(connection, message, "mapset", (void (*)(struct attr_iter *))mapset_attr_iter_destroy);
+}
+
+static DBusHandlerResult
+request_mapset_get_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_get_attr(connection, message, "mapset", (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))mapset_get_attr);
+}
+
+/* vehicle */
+
+static DBusHandlerResult
+request_vehicle_set_attr(DBusConnection *connection, DBusMessage *message)
+{
+	struct vehicle *vehicle;
+    	struct attr attr;
+	int ret;
+	
+	vehicle = object_get_from_message(message, "vehicle");
+	if (! vehicle)
+		return dbus_error_invalid_object_path(connection, message);
+	if (decode_attr(message, &attr)) {
+		ret=vehicle_set_attr(vehicle, &attr);
+		destroy_attr(&attr);
+		if (ret)	
+			return empty_reply(connection, message);
+	}
+    	return dbus_error_invalid_parameter(connection, message);
+}
+
+/* graphics */
+
 static DBusHandlerResult
 request_graphics_get_data(DBusConnection *connection, DBusMessage *message)
 {
@@ -931,8 +1046,10 @@ struct dbus_method {
 } dbus_methods[] = {
 	{"",        "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_config_attr_iter},
 	{"",        "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_config_attr_iter_destroy},
-	{"",        "get_attr",            "s",       "attrname,attr_iter",                      "sv", "attrname,value",request_config_get_attr},
+	{"",        "get_attr",            "s",       "attrname",                                "sv", "attrname,value",request_config_get_attr},
 	{"",        "get_attr_wi",         "so",      "attrname,attr_iter",                      "sv", "attrname,value",request_config_get_attr},
+	{".graphics","get_data", 	   "s",	      "type",				 	 "ay",  "data", request_graphics_get_data},
+	{".graphics","set_attr",           "sv",      "attribute,value",                         "",   "",      request_graphics_set_attr},
 	{".navit",  "draw",                "",        "",                                        "",   "",      request_navit_draw},
 	{".navit",  "add_message",         "s",       "message",                                 "",   "",      request_navit_add_message},
 	{".navit",  "set_center",          "s",       "(coordinates)",                           "",   "",      request_navit_set_center},
@@ -946,7 +1063,7 @@ struct dbus_method {
 	{".navit",  "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_navit_attr_iter},
 	{".navit",  "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_navit_attr_iter_destroy},
 	{".navit",  "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_navit_get_attr},
-	{".navit",  "get_attr_wi",         "so",      "attribute",                               "sv",  "attrname,value", request_navit_get_attr},
+	{".navit",  "get_attr_wi",         "so",      "attribute,attr_iter",                     "sv",  "attrname,value", request_navit_get_attr},
 	{".navit",  "set_attr",            "sv",      "attribute,value",                         "",   "",      request_navit_set_attr},
 	{".navit",  "set_position",        "s",       "(coordinates)",                           "",   "",      request_navit_set_position},
 	{".navit",  "set_position",        "(is)",    "(projection,coordinated)",                "",   "",      request_navit_set_position},
@@ -954,15 +1071,14 @@ struct dbus_method {
 	{".navit",  "set_destination",     "ss",      "coordinates,comment",                     "",   "",      request_navit_set_destination},
 	{".navit",  "set_destination",     "(is)s",   "(projection,coordinates)comment",         "",   "",      request_navit_set_destination},
 	{".navit",  "set_destination",     "(iii)s",  "(projection,longitude,latitude)comment",  "",   "",      request_navit_set_destination},
-	{".navit",  "evaluate", 	   "s",	      "command",				 "s",  "",     request_navit_evaluate},
-	{".graphics","get_data", 	   "s",	      "type",				 	 "ay",  "data", request_graphics_get_data},
-	{".graphics","set_attr",           "sv",      "attribute,value",                         "",   "",      request_graphics_set_attr},
-	{".vehicle","set_attr",           "sv",      "attribute,value",                         "",   "",      request_vehicle_set_attr},
-	{".map","set_attr",           "sv",      "attribute,value",                         "",   "",      request_map_set_attr},
-#if 0
-    {".navit",  "toggle_announcer",    "",        "",                                        "",   "",      request_navit_toggle_announcer},
-	{".navit",  "toggle_announcer",    "i",       "",                                        "",   "",      request_navit_toggle_announcer},
-#endif
+	{".navit",  "evaluate", 	   "s",	      "command",				 "s",  "",      request_navit_evaluate},
+	{".map",    "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_map_get_attr},
+	{".map",    "set_attr",            "sv",      "attribute,value",                         "",   "",      request_map_set_attr},
+	{".mapset", "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_mapset_attr_iter},
+	{".mapset", "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_mapset_attr_iter_destroy},
+	{".mapset", "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_mapset_get_attr},
+	{".mapset", "get_attr_wi",         "so",      "attribute,attr_iter",                     "sv",  "attrname,value", request_mapset_get_attr},
+	{".vehicle","set_attr",            "sv",      "attribute,value",                         "",   "",      request_vehicle_set_attr},
 };
 
 static char *
