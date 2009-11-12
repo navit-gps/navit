@@ -2002,7 +2002,7 @@ navit_remove_attr(struct navit *this_, struct attr *attr)
 }
 
 struct attr_iter *
-navit_attr_iter_new()
+navit_attr_iter_new(void)
 {
 	return g_new0(struct attr_iter, 1);
 }
