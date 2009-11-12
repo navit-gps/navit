@@ -386,6 +386,39 @@ vehicle_log_nmea(struct vehicle *this_, struct log *log)
 	log_write(log, pos_attr.u.str, strlen(pos_attr.u.str), 0);
 }
 
+void
+vehicle_log_gpx_add_tag(char *tag, char **logstr)
+{
+	char *ext_start="\t<extensions>\n";
+	char *ext_end="\t</extensions>\n";
+	char *trkpt_end="</trkpt>";
+	char *start=NULL,*end=NULL;
+	if (!*logstr) {
+		start=g_strdup(ext_start);
+		end=g_strdup(ext_end);
+	} else {
+		char *str=strstr(*logstr, ext_start);
+		int len;
+		if (str) {
+			len=str-*logstr+strlen(ext_start);
+			start=g_strdup(*logstr);
+			start[len]='\0';
+			end=g_strdup(str+strlen(ext_start));
+		} else {
+			str=strstr(*logstr, trkpt_end);
+			len=str-*logstr;
+			end=g_strdup_printf("%s%s",ext_end,str);
+			str=g_strdup(*logstr);
+			str[len]='\0';
+			start=g_strdup_printf("%s%s",str,ext_start);
+			g_free(str);
+		}
+	}
+	*logstr=g_strdup_printf("%s%s%s",start,tag,end);
+	g_free(start);
+	g_free(end);
+}
+
 static void
 vehicle_log_gpx(struct vehicle *this_, struct log *log)
 {
