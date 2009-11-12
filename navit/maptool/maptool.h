@@ -76,6 +76,7 @@ struct zip_info {
 	long long offset;
 	int compression_level;
 	int maxnamelen;
+	int zip64;
 	FILE *res;
 	FILE *index;
 	FILE *dir;

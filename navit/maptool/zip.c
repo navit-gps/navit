@@ -99,6 +99,11 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		0x0,
 		zip_info->offset,
 	};
+	struct zip_cd_ext cd_ext = {
+		0x1,
+		0x8,
+		zip_info->offset,
+	};
 	char filename[filelen+1];
 	int error,crc,len,comp_size=data_size;
 	uLongf destlen=data_size+data_size/500+12;
@@ -133,6 +138,10 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	cd.zipcsiz=comp_size;
 	cd.zipcunc=data_size;
 	cd.zipcmthd=zip_info->compression_level ? 8:0;
+	if (zip_info->zip64) {
+		cd.zipofst=0xffffffff;
+		cd.zipcxtl=sizeof(cd_ext);
+	}
 	strcpy(filename, name);
 	len=strlen(filename);
 	while (len < filelen) {
@@ -146,6 +155,10 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	fwrite(&cd, sizeof(cd), 1, zip_info->dir);
 	fwrite(filename, filelen, 1, zip_info->dir);
 	zip_info->dir_size+=sizeof(cd)+filelen;
+	if (zip_info->zip64) {
+		fwrite(&cd_ext, sizeof(cd_ext), 1, zip_info->dir);
+		zip_info->dir_size+=sizeof(cd_ext);
+	}
 	
 	free(compbuffer);
 }
