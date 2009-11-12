@@ -449,6 +449,7 @@ ITEM(border_city)
 ITEM(border_county)
 ITEM(selected_line)
 ITEM(traffic_distortion)
+ITEM(street_route_occluded)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)
