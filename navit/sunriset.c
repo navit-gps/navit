@@ -16,13 +16,12 @@ Released to the public domain by Paul Schlyter, December 1992
 
 #include <stdio.h>
 #include <math.h>
-#include <time.h>
 
 #include "sunriset.h"
 
 /* The "workhorse" function for sun rise/set times */
 
-int __sunriset__( time_t ts, double lon, double lat,
+int __sunriset__( int year, int month, int day, double lon, double lat,
                   double altit, int upper_limb, double *trise, double *tset )
 /***************************************************************************/
 /* Note: year,month,date = calendar date, 1801-2099 only.             */
@@ -54,8 +53,6 @@ int __sunriset__( time_t ts, double lon, double lat,
 /*                                                                    */
 /**********************************************************************/
 {
-      int year, month, day;
-      struct tm ymd;
       double  d,  /* Days since 2000 Jan 0.0 (negative before) */
       sr,         /* Solar distance, astronomical units */
       sRA,        /* Sun's Right Ascension */
@@ -66,12 +63,6 @@ int __sunriset__( time_t ts, double lon, double lat,
       sidtime;    /* Local sidereal time */
 
       int rc = 0; /* Return cde from function - usually 0 */
-
-      //Split ts to y/m/d
-      gmtime_r(&ts,&ymd);
-      year=ymd.tm_year+1900;
-      month=ymd.tm_mon+1;
-      day=ymd.tm_mday+1;
 
       /* Compute d of 12h local mean solar time */
       d = days_since_2000_Jan_0(year,month,day) + 0.5 - lon/360.0;
