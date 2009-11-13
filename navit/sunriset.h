@@ -7,7 +7,7 @@ extern long int timezone_offset;
 #define HOURS(h) ((int)(floor(h)))
 #define MINUTES(h) ((int)(60*(h-floor(h))))
 
-#define ABS(x) ((x)<0?-(x):(x))
+#define ABS(x) ((x)<0?-(x):(x)) 
 
 /* A macro to compute the number of days elapsed since 2000 Jan 0.0 */
 /* (which is equal to 1999 Dec 31, 0h UT)                           */
@@ -100,7 +100,7 @@ extern long int timezone_offset;
 double __daylen__( int year, int month, int day, double lon, double lat,
                    double altit, int upper_limb );
 
-int __sunriset__( time_t ts, double lon, double lat,
+int __sunriset__( int year, int month, int day, double lon, double lat,
                   double altit, int upper_limb, double *rise, double *set );
 
 void sunpos( double d, double *lon, double *r );
