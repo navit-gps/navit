@@ -30,7 +30,7 @@
 struct search_list_level {
 	struct mapset *ms;
 	struct search_list_common *parent;
-	struct attr attr;
+	struct attr *attr;
 	int partial;
 	int selected;
 	struct mapset_search *search;
@@ -115,10 +115,8 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 		this_->result.id=0;
 		this_->level=level;
 		le=&this_->levels[level];
-		le->attr=*search_attr;
-		if (search_attr->type != attr_country_id)
-			le->attr.u.str=g_strdup(search_attr->u.str);
 		search_list_search_free(this_, level);
+		le->attr=attr_dup(search_attr);
 		le->partial=partial;
 		if (level > 0) {
 			le=&this_->levels[level-1];
@@ -360,6 +358,7 @@ search_list_search_free(struct search_list *sl, int level)
 		next=g_list_next(curr);
 		curr=next;
 	}
+	attr_free(le->attr);
 	g_list_free(le->list);
 	le->list=NULL;
 	le->curr=NULL;
@@ -450,8 +449,8 @@ search_list_get_result(struct search_list *this_)
 			}
 			if (le->parent)
 				dbg(1,"mapset_search_new with item(%d,%d)\n", le->parent->item.id_hi, le->parent->item.id_lo);
-			dbg(1,"attr=%s\n", attr_to_name(le->attr.type));
-			le->search=mapset_search_new(this_->ms, &le->parent->item, &le->attr, le->partial);
+			dbg(1,"attr=%s\n", attr_to_name(le->attr->type));
+			le->search=mapset_search_new(this_->ms, &le->parent->item, le->attr, le->partial);
 			le->hash=g_hash_table_new(search_item_hash_hash, search_item_hash_equal);
 		}
 		dbg(1,"le->search=%p\n", le->search);
