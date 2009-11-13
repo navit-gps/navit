@@ -52,7 +52,7 @@ public class NavitGraphics {
 	float trackball_x,trackball_y;
 	View view;
 	RelativeLayout relativelayout;
-	public NavitGraphics(Activity activity, NavitGraphics parent, int x, int y, int w, int h, int alpha, int wraparound, int camera) {
+	public NavitGraphics(Activity activity, NavitGraphics parent, int x, int y, int w, int h, int alpha, int wraparound, int use_camera) {
 		if (parent == null) {
 			view=new View(activity) {
 	@Override protected void onDraw(Canvas canvas)
@@ -193,7 +193,7 @@ public class NavitGraphics {
 			};
 			view.setFocusable(true);
 			view.setFocusableInTouchMode(true);
-			if (camera != 0) {
+			if (use_camera != 0) {
 				activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				relativelayout=new RelativeLayout(activity);
 				NavitCamera camera=new NavitCamera(activity);
