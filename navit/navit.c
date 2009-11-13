@@ -2265,6 +2265,7 @@ navit_layout_switch(struct navit *n)
     struct attr iso8601_attr,geo_attr,layout_attr;
     double trise,tset,trise_actual;
     struct layout *l;
+    int year, month, day;
     
     if (navit_get_attr(n,attr_layout,&layout_attr,NULL)!=1) {
 	return; //No layout - nothing to switch
@@ -2282,7 +2283,8 @@ navit_layout_switch(struct navit *n)
 	    //We've have to wait a little
 	    return;
 	}
-	
+	if (sscanf(iso8601_attr.u.str,"%d-%02d-%02dT",&year,&month,&day) != 3)
+		return;
 	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_coord_geo,&geo_attr,NULL)!=1) {
 		//No position - no sun
 		return;
@@ -2292,7 +2294,7 @@ navit_layout_switch(struct navit *n)
 	}
 	
 	//We calculate sunrise anyway, cause it is need both for day and for night
-        if (__sunriset__(currTs,geo_attr.u.coord_geo->lat,geo_attr.u.coord_geo->lng,35,1,&trise,&tset)!=0) {
+        if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lat,geo_attr.u.coord_geo->lng,35,1,&trise,&tset)!=0) {
 		//near the pole sun never rises/sets, so we should never switch profiles
 		n->prevTs=currTs;
 		return;
@@ -2311,7 +2313,7 @@ navit_layout_switch(struct navit *n)
 	    }
 	}
 	if (l->nightname) {
-	    if (__sunriset__(currTs,geo_attr.u.coord_geo->lat,geo_attr.u.coord_geo->lng,-12,0,&trise,&tset)!=0) {
+	    if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lat,geo_attr.u.coord_geo->lng,-12,0,&trise,&tset)!=0) {
 		//near the pole sun never rises/sets, so we should never switch profiles
 		n->prevTs=currTs;
 		return;
