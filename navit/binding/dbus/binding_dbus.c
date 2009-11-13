@@ -38,6 +38,7 @@
 #include "vehicle.h"
 #include "map.h"
 #include "mapset.h"
+#include "search.h"
 #include "util.h"
 
 
@@ -68,7 +69,7 @@ object_new(char *type, void *object)
 {
 	int id;
 	char *ret;
-	dbg(0,"enter %s\n", type);
+	dbg(1,"enter %s\n", type);
 	if ((ret=g_hash_table_lookup(object_hash_rev, object)))
 		return ret;
 	id=GPOINTER_TO_INT(g_hash_table_lookup(object_count, type));
@@ -76,7 +77,7 @@ object_new(char *type, void *object)
 	ret=g_strdup_printf("%s/%s/%d", object_path, type, id);
 	g_hash_table_insert(object_hash, ret, object);
 	g_hash_table_insert(object_hash_rev, object, ret);
-	dbg(0,"return %s\n", ret);
+	dbg(1,"return %s\n", ret);
 	return (ret);
 }
 
@@ -84,6 +85,19 @@ static void *
 object_get(const char *path)
 {
 	return g_hash_table_lookup(object_hash, path);
+}
+
+static void 
+object_destroy(const char *path, void *object)
+{
+	if (!path && !object)
+		return;
+	if (!object)
+		object=g_hash_table_lookup(object_hash, path);
+	if (!path)
+		path=g_hash_table_lookup(object_hash_rev, object);
+	g_hash_table_remove(object_hash, path);
+	g_hash_table_remove(object_hash_rev, object);
 }
 
 static void *
@@ -181,6 +195,25 @@ attr_type_get_from_message(DBusMessageIter *iter)
 	return attr_from_name(attr_type); 
 }
 
+static void
+encode_variant_string(DBusMessageIter *iter, char *str)
+{
+	DBusMessageIter variant;
+	dbus_message_iter_open_container(iter, DBUS_TYPE_VARIANT, DBUS_TYPE_STRING_AS_STRING, &variant);
+	dbus_message_iter_append_basic(&variant, DBUS_TYPE_STRING, &str);
+	dbus_message_iter_close_container(iter, &variant);
+}
+
+static void
+encode_dict_string_variant_string(DBusMessageIter *iter, char *key, char *value)
+{
+	DBusMessageIter dict;
+	dbus_message_iter_open_container(iter, DBUS_TYPE_DICT_ENTRY, NULL, &dict);
+	dbus_message_iter_append_basic(&dict, DBUS_TYPE_STRING, &key);
+	encode_variant_string(&dict, value);
+	dbus_message_iter_close_container(iter, &dict);
+}
+
 static int
 encode_attr(DBusMessage *message, struct attr *attr)
 {
@@ -199,9 +232,7 @@ encode_attr(DBusMessage *message, struct attr *attr)
 		dbus_message_iter_close_container(&iter1, &iter2);
 	}
 	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
-		dbus_message_iter_open_container(&iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_STRING_AS_STRING, &iter2);
-		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_STRING, &attr->u.str);
-		dbus_message_iter_close_container(&iter1, &iter2);
+		encode_variant_string(&iter1, attr->u.str);
 	}
 	if (attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end) {
 		char *object=object_new(attr_to_name(attr->type), attr->u.data);
@@ -261,6 +292,69 @@ dbus_error_invalid_object_path_parameter(DBusConnection *connection, DBusMessage
 	return dbus_error(connection, message, DBUS_ERROR_BAD_ADDRESS, "object path parameter invalid");
 }
 
+#if 0
+static void
+dbus_dump_iter(char *prefix, DBusMessageIter *iter)
+{
+	char *prefixr,*vals;
+	int arg,vali;
+	DBusMessageIter iterr;
+	while ((arg=dbus_message_iter_get_arg_type(iter)) != DBUS_TYPE_INVALID) {
+		switch (arg) {
+		case DBUS_TYPE_INT32:
+            		dbus_message_iter_get_basic(iter, &vali);
+			dbg(0,"%sDBUS_TYPE_INT32: %d\n",prefix,vali);
+			break;
+		case DBUS_TYPE_STRING:
+            		dbus_message_iter_get_basic(iter, &vals);
+			dbg(0,"%sDBUS_TYPE_STRING: %s\n",prefix,vals);
+			break;
+		case DBUS_TYPE_STRUCT:
+			dbg(0,"%sDBUS_TYPE_STRUCT:\n",prefix);
+			prefixr=g_strdup_printf("%s  ",prefix);
+        		dbus_message_iter_recurse(iter, &iterr);
+			dbus_dump_iter(prefixr, &iterr);
+			g_free(prefixr);
+			break;
+		case DBUS_TYPE_VARIANT:
+			dbg(0,"%sDBUS_TYPE_VARIANT:\n",prefix);
+			prefixr=g_strdup_printf("%s  ",prefix);
+        		dbus_message_iter_recurse(iter, &iterr);
+			dbus_dump_iter(prefixr, &iterr);
+			g_free(prefixr);
+			break;
+		case DBUS_TYPE_DICT_ENTRY:
+			dbg(0,"%sDBUS_TYPE_DICT_ENTRY:\n",prefix);
+			prefixr=g_strdup_printf("%s  ",prefix);
+        		dbus_message_iter_recurse(iter, &iterr);
+			dbus_dump_iter(prefixr, &iterr);
+			g_free(prefixr);
+			break;
+		case DBUS_TYPE_ARRAY:
+			dbg(0,"%sDBUS_TYPE_ARRAY:\n",prefix);
+			prefixr=g_strdup_printf("%s  ",prefix);
+        		dbus_message_iter_recurse(iter, &iterr);
+			dbus_dump_iter(prefixr, &iterr);
+			g_free(prefixr);
+			break;
+		default:
+			dbg(0,"%c\n",arg);
+		}
+		dbus_message_iter_next(iter);
+	}
+}
+
+static void
+dbus_dump(DBusMessage *message)
+{
+	DBusMessageIter iter;
+
+	dbus_message_iter_init(message, &iter);
+	dbus_dump_iter("",&iter);
+		
+}
+#endif
+
 /**
  * Extracts a struct pcoord from a DBus message
  *
@@ -315,25 +409,53 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
     
 }
 
-static int
-decode_attr(DBusMessage *message, struct attr *attr)
+static void
+pcoord_encode(DBusMessageIter *iter, struct pcoord *pc)
 {
-	DBusMessageIter iter, iterattr, iterstruct;
+	DBusMessageIter iter2;
+	dbus_message_iter_open_container(iter,DBUS_TYPE_STRUCT,NULL,&iter2);
+	if (pc) {
+		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_INT32, &pc->pro);
+		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_INT32, &pc->x);
+		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_INT32, &pc->y);
+	} else {
+		int n=0;
+		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_INT32, &n);
+		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_INT32, &n);
+		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_INT32, &n);
+	}
+	dbus_message_iter_close_container(iter, &iter2);
+}
+
+static enum attr_type
+decode_attr_type_from_iter(DBusMessageIter *iter)
+{
 	char *attr_type;
+	enum attr_type ret;
+	
+	if (dbus_message_iter_get_arg_type(iter) != DBUS_TYPE_STRING)
+		return attr_none;
+	dbus_message_iter_get_basic(iter, &attr_type);
+	dbus_message_iter_next(iter);
+	ret=attr_from_name(attr_type); 
+	dbg(1, "attr value: 0x%x string: %s\n", ret, attr_type);
+	return ret;
+}
+
+static int
+decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr)
+{
+	DBusMessageIter iterattr, iterstruct;
 	int ret=1;
 	double d;
 
-	dbus_message_iter_init(message, &iter);
-	dbus_message_iter_get_basic(&iter, &attr_type);
-	attr->type = attr_from_name(attr_type); 
-	dbg(0, "attr value: 0x%x string: %s\n", attr->type, attr_type);
-    
+	attr->type=decode_attr_type_from_iter(iter);
 	if (attr->type == attr_none)
 		return 0;
     
-	dbus_message_iter_next(&iter);
-	dbus_message_iter_recurse(&iter, &iterattr);
-	dbg(0, "seems valid. signature: %s\n", dbus_message_iter_get_signature(&iterattr));
+	dbus_message_iter_recurse(iter, &iterattr);
+	dbus_message_iter_next(iter);
+	dbg(1, "seems valid. signature: %s\n", dbus_message_iter_get_signature(&iterattr));
     
 	if (attr->type >= attr_type_item_begin && attr->type <= attr_type_item_end)
 		return 0;
@@ -391,6 +513,15 @@ decode_attr(DBusMessage *message, struct attr *attr)
 	return 0;
 }
 
+static int
+decode_attr(DBusMessage *message, struct attr *attr)
+{
+	DBusMessageIter iter;
+
+	dbus_message_iter_init(message, &iter);
+	return decode_attr_from_iter(&iter, attr);
+}
+
 static void
 destroy_attr(struct attr *attr)
 {
@@ -438,7 +569,21 @@ request_attr_iter_destroy(DBusConnection *connection, DBusMessage *message, char
 	g_free(iter_name);
 	if (! attr_iter)
 		return dbus_error_invalid_object_path_parameter(connection, message);
+	object_destroy(NULL, attr_iter);
 	func(attr_iter);
+
+	return empty_reply(connection, message);
+}
+
+static DBusHandlerResult
+request_destroy(DBusConnection *connection, DBusMessage *message, char *type, void *data, void (*func)(void *))
+{
+	if (!data) 
+		data=object_get_from_message(message, type);
+	if (!data)
+		return dbus_error_invalid_object_path(connection, message);
+	object_destroy(NULL, data);
+	func(data);
 
 	return empty_reply(connection, message);
 }
@@ -516,6 +661,8 @@ request_config_attr_iter_destroy(DBusConnection *connection, DBusMessage *messag
 {
 	return request_attr_iter_destroy(connection, message, "config", (void (*)(struct attr_iter *))config_attr_iter_destroy);
 }
+
+
 
 /* graphics */
 
@@ -972,7 +1119,146 @@ request_navit_evaluate(DBusConnection *connection, DBusMessage *message)
 	return DBUS_HANDLER_RESULT_HANDLED;
 }
 
+/* search_list */
 
+static DBusHandlerResult
+request_search_list_destroy(DBusConnection *connection, DBusMessage *message)
+{
+	return request_destroy(connection, message, "search_list", NULL, (void (*)(void *)) search_list_destroy);
+}
+
+static DBusHandlerResult
+request_search_list_get_result(DBusConnection *connection, DBusMessage *message)
+{
+	struct search_list *search_list;
+	struct search_list_result *result;
+	DBusMessage *reply;
+	DBusMessageIter iter,iter2,iter3,iter4;
+	char *country="country";
+	char *town="town";
+	char *street="street";
+
+	search_list = object_get_from_message(message, "search_list");
+	if (! search_list)
+		return dbus_error_invalid_object_path(connection, message);
+	result=search_list_get_result(search_list);
+	if (!result)
+		return empty_reply(connection, message);
+	reply = dbus_message_new_method_return(message);
+	dbus_message_iter_init_append(reply, &iter);
+	dbus_message_iter_append_basic(&iter, DBUS_TYPE_INT32, &result->id);
+	pcoord_encode(&iter, result->c);
+	dbus_message_iter_open_container(&iter, DBUS_TYPE_ARRAY, "{sa{sv}}", &iter2);
+	if (result->country && (result->country->car || result->country->iso2 || result->country->iso3 || result->country->name)) {
+		dbus_message_iter_open_container(&iter2, DBUS_TYPE_DICT_ENTRY, NULL, &iter3);
+		dbus_message_iter_append_basic(&iter3, DBUS_TYPE_STRING, &country);
+		dbus_message_iter_open_container(&iter3, DBUS_TYPE_ARRAY, "{sv}", &iter4);
+		if (result->country->car) 
+			encode_dict_string_variant_string(&iter4, "car", result->country->car);
+		if (result->country->iso2) 
+			encode_dict_string_variant_string(&iter4, "iso2", result->country->iso2);
+		if (result->country->iso3) 
+			encode_dict_string_variant_string(&iter4, "iso3", result->country->iso3);
+		if (result->country->name) 
+			encode_dict_string_variant_string(&iter4, "name", result->country->name);
+		dbus_message_iter_close_container(&iter3, &iter4);
+		dbus_message_iter_close_container(&iter2, &iter3);
+	}
+	if (result->town && (result->town->district || result->town->name)) {
+		dbus_message_iter_open_container(&iter2, DBUS_TYPE_DICT_ENTRY, NULL, &iter3);
+		dbus_message_iter_append_basic(&iter3, DBUS_TYPE_STRING, &town);
+		dbus_message_iter_open_container(&iter3, DBUS_TYPE_ARRAY, "{sv}", &iter4);
+		if (result->town->district)
+			encode_dict_string_variant_string(&iter4, "district", result->town->district);
+		if (result->town->name)
+			encode_dict_string_variant_string(&iter4, "name", result->town->name);
+		dbus_message_iter_close_container(&iter3, &iter4);
+		dbus_message_iter_close_container(&iter2, &iter3);
+	}
+	if (result->street && result->street->name) {
+		dbus_message_iter_open_container(&iter2, DBUS_TYPE_DICT_ENTRY, NULL, &iter3);
+		dbus_message_iter_append_basic(&iter3, DBUS_TYPE_STRING, &street);
+		dbus_message_iter_open_container(&iter3, DBUS_TYPE_ARRAY, "{sv}", &iter4);
+		if (result->street->name)
+			encode_dict_string_variant_string(&iter4, "name", result->street->name);
+		dbus_message_iter_close_container(&iter3, &iter4);
+		dbus_message_iter_close_container(&iter2, &iter3);
+	}
+	dbus_message_iter_close_container(&iter, &iter2);
+	dbus_connection_send (connection, reply, NULL);
+	dbus_message_unref (reply);
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
+
+static DBusHandlerResult
+request_search_list_new(DBusConnection *connection, DBusMessage *message)
+{
+	DBusMessageIter iter;
+	DBusMessage *reply;
+	struct mapset *mapset;
+	struct search_list *search_list;
+	char *opath;
+
+	dbus_message_iter_init(message, &iter);
+	mapset=object_get_from_message_arg(&iter, "mapset");
+	if (! mapset)
+		return dbus_error_invalid_object_path_parameter(connection, message);
+	search_list=search_list_new(mapset);
+	opath=object_new("search_list", search_list);
+	reply = dbus_message_new_method_return(message);
+	dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
+	dbus_connection_send (connection, reply, NULL);
+	dbus_message_unref (reply);
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
+
+static DBusHandlerResult
+request_search_list_search(DBusConnection *connection, DBusMessage *message)
+{
+	DBusMessageIter iter;
+	struct search_list *search_list;
+	struct attr attr;
+	int partial;
+
+	search_list = object_get_from_message(message, "search_list");
+	if (! search_list)
+		return dbus_error_invalid_object_path(connection, message);
+
+	dbus_message_iter_init(message, &iter);
+	if (!decode_attr_from_iter(&iter, &attr))
+    		return dbus_error_invalid_parameter(connection, message);
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32) 
+    		return dbus_error_invalid_parameter(connection, message);
+	dbus_message_iter_get_basic(&iter, &partial);
+	search_list_search(search_list, &attr, partial);
+	return empty_reply(connection, message);
+}
+
+static DBusHandlerResult
+request_search_list_select(DBusConnection *connection, DBusMessage *message)
+{
+	DBusMessageIter iter;
+	struct search_list *search_list;
+	int id, mode;
+	enum attr_type attr_type;
+
+	search_list = object_get_from_message(message, "search_list");
+	if (! search_list)
+		return dbus_error_invalid_object_path(connection, message);
+
+	dbus_message_iter_init(message, &iter);
+	attr_type=decode_attr_type_from_iter(&iter);	
+	if (attr_type == attr_none)
+    		return dbus_error_invalid_parameter(connection, message);
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32) 
+    		return dbus_error_invalid_parameter(connection, message);
+	dbus_message_iter_get_basic(&iter, &id);
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32) 
+    		return dbus_error_invalid_parameter(connection, message);
+	dbus_message_iter_get_basic(&iter, &mode);
+	search_list_select(search_list, attr_type, id, mode);
+	return empty_reply(connection, message);
+}
 
 /* vehicle */
 
@@ -1009,6 +1295,7 @@ struct dbus_method {
 	{"",        "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_config_attr_iter_destroy},
 	{"",        "get_attr",            "s",       "attrname",                                "sv", "attrname,value",request_config_get_attr},
 	{"",        "get_attr_wi",         "so",      "attrname,attr_iter",                      "sv", "attrname,value",request_config_get_attr},
+	{"",	    "search_list_new",	   "o",       "mapset",                                  "o",  "search",request_search_list_new},
 	{".graphics","get_data", 	   "s",	      "type",				 	 "ay",  "data", request_graphics_get_data},
 	{".graphics","set_attr",           "sv",      "attribute,value",                         "",   "",      request_graphics_set_attr},
 	{".navit",  "draw",                "",        "",                                        "",   "",      request_navit_draw},
@@ -1039,6 +1326,10 @@ struct dbus_method {
 	{".mapset", "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_mapset_attr_iter_destroy},
 	{".mapset", "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_mapset_get_attr},
 	{".mapset", "get_attr_wi",         "so",      "attribute,attr_iter",                     "sv",  "attrname,value", request_mapset_get_attr},
+	{".search_list","destroy",         "",        "",                                        "",   "",      request_search_list_destroy},
+	{".search_list","get_result",      "",        "",                                        "i(iii)a{sa{sv}}",   "id,coord,dict",      request_search_list_get_result},
+	{".search_list","search",          "svi",     "attribute,value,partial",                 "",   "",      request_search_list_search},
+	{".search_list","select",          "sii",     "attribute_type,id,mode",                  "",   "",      request_search_list_select},
 	{".vehicle","set_attr",            "sv",      "attribute,value",                         "",   "",      request_vehicle_set_attr},
 };
 
@@ -1052,7 +1343,7 @@ introspect_path(const char *object)
 	if (strncmp(object, object_path, strlen(object_path)))
 		return NULL;
 	ret=g_strdup(object+strlen(object_path));
-	dbg(0,"path=%s\n",ret);
+	dbg(1,"path=%s\n",ret);
 	for (i = strlen(ret)-1 ; i >= 0 ; i--) {
 		if (ret[i] == '/' || (ret[i] >= '0' && ret[i] <= '9'))
 			ret[i]='\0';
@@ -1080,7 +1371,7 @@ generate_navitintrospectxml(const char *object)
     char *path=introspect_path(object);
     if (!path)
 	return NULL;
-    dbg(0,"path=%s\n",path);
+    dbg(1,"path=%s\n",path);
     
     // write header and make navit introspectable
     navitintrospectxml = g_strdup_printf("%s%s%s\n", navitintrospectxml_head1, object, navitintrospectxml_head2);
@@ -1127,7 +1418,7 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 	if (dbus_message_is_method_call (message, "org.freedesktop.DBus.Introspectable", "Introspect")) {
 		DBusMessage *reply;
             	char *navitintrospectxml = generate_navitintrospectxml(dbus_message_get_path(message));
-		dbg(0,"Introspect %s:Result:%s\n",dbus_message_get_path(message), navitintrospectxml);
+		dbg(1,"Introspect %s:Result:%s\n",dbus_message_get_path(message), navitintrospectxml);
 		if (navitintrospectxml) {
 			reply = dbus_message_new_method_return(message);
 			dbus_message_append_args(reply, DBUS_TYPE_STRING, &navitintrospectxml, DBUS_TYPE_INVALID);

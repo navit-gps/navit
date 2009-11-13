@@ -393,7 +393,7 @@ map_search_new(struct map *m, struct item *item, struct attr *search_attr, int p
 	this_=g_new0(struct map_search,1);
 	this_->m=m;
 	this_->search_attr=*search_attr;
-	if (search_attr->type >= attr_country_all && search_attr->type <= attr_country_name)
+	if ((search_attr->type >= attr_country_all && search_attr->type <= attr_country_name) || search_attr->type == attr_country_id)
 		this_->priv=country_search_new(&this_->search_attr, partial);
 	else {
 		if (m->meth.map_search_new) {
@@ -429,7 +429,7 @@ map_search_get_item(struct map_search *this_)
 
 	if (! this_)
 		return NULL;
-	if (this_->search_attr.type >= attr_country_all && this_->search_attr.type <= attr_country_name)
+	if ((this_->search_attr.type >= attr_country_all && this_->search_attr.type <= attr_country_name) || this_->search_attr.type == attr_country_id)
 		return country_search_get_item(this_->priv);
 	ret=this_->m->meth.map_search_get_item(this_->priv);
 	if (ret)
