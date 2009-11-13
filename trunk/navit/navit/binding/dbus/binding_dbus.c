@@ -445,17 +445,17 @@ request_attr_iter_destroy(DBusConnection *connection, DBusMessage *message, char
 
 
 static DBusHandlerResult
-request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, int (*func)(void *data, enum attr_type type, struct attr *attr, struct attr_iter *iter))
+request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, void *data, int (*func)(void *data, enum attr_type type, struct attr *attr, struct attr_iter *iter))
 {
 	DBusMessage *reply;
 	DBusMessageIter iter;
 	struct attr attr;
 	enum attr_type attr_type;
 	struct attr_iter *attr_iter;
-	void *data;
 	char *iter_name;
 
-	data = object_get_from_message(message, type);
+	if (! data)
+		data = object_get_from_message(message, type);
 	if (! data)
 		return dbus_error_invalid_object_path(connection, message);
 
@@ -477,59 +477,44 @@ request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, i
 	
 }
 
+static DBusHandlerResult
+request_set_attr(DBusConnection *connection, DBusMessage *message, char *type, void *data, int (*func)(void *data, struct attr *attr))
+{
+    	struct attr attr;
+	int ret;
+
+	if (! data)	
+		data = object_get_from_message(message, type);
+	if (! data)
+		return dbus_error_invalid_object_path(connection, message);
+
+	if (decode_attr(message, &attr)) {
+		ret=(*func)(data, &attr);
+		destroy_attr(&attr);
+		if (ret)	
+			return empty_reply(connection, message);
+	}
+    	return dbus_error_invalid_parameter(connection, message);
+}
+
 
 /* config */
 static DBusHandlerResult
 request_config_get_attr(DBusConnection *connection, DBusMessage *message)
 {
-	DBusMessage *reply;
-	DBusMessageIter iter;
-	struct attr attr;
-	enum attr_type attr_type;
-	struct attr_iter *attr_iter;
-
-	dbus_message_iter_init(message, &iter);
-	attr_type=attr_type_get_from_message(&iter);
-	attr_iter=object_get_from_message_arg(&iter, "config_attr_iter");
-	if (attr_type == attr_none)
-		return dbus_error_invalid_attr_type(connection, message);
-	if (config_get_attr(config, attr_type, &attr, attr_iter)) {
-		reply = dbus_message_new_method_return(message);
-		encode_attr(reply, &attr);
-		dbus_connection_send (connection, reply, NULL);
-		dbus_message_unref (reply);
-		return DBUS_HANDLER_RESULT_HANDLED;
-	}
-	return empty_reply(connection, message);
+	return request_get_attr(connection, message, "config", config, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))config_get_attr);
 }
 
 static DBusHandlerResult
 request_config_attr_iter(DBusConnection *connection, DBusMessage *message)
 {
-	DBusMessage *reply;
-	struct attr_iter *attr_iter=config_attr_iter_new();
-	char *opath=object_new("config_attr_iter",attr_iter);
-	reply = dbus_message_new_method_return(message);
-	dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
-	dbus_connection_send (connection, reply, NULL);
-	dbus_message_unref (reply);
-
-	return DBUS_HANDLER_RESULT_HANDLED;
+	return request_attr_iter(connection, message, "config", (struct attr_iter * (*)(void))config_attr_iter_new);
 }
 
 static DBusHandlerResult
 request_config_attr_iter_destroy(DBusConnection *connection, DBusMessage *message)
 {
-	struct attr_iter *attr_iter;
-	DBusMessageIter iter;
-
-	dbus_message_iter_init(message, &iter);
-	attr_iter=object_get_from_message_arg(&iter, "config_attr_iter");
-	if (! attr_iter)
-		return dbus_error_invalid_object_path_parameter(connection, message);
-	config_attr_iter_destroy(attr_iter);
-
-	return empty_reply(connection, message);
+	return request_attr_iter_destroy(connection, message, "config", (void (*)(struct attr_iter *))config_attr_iter_destroy);
 }
 
 /* graphics */
@@ -570,47 +555,22 @@ request_graphics_get_data(DBusConnection *connection, DBusMessage *message)
 static DBusHandlerResult
 request_graphics_set_attr(DBusConnection *connection, DBusMessage *message)
 {
-	struct graphics *graphics;
-    	struct attr attr;
-	int ret;
-	
-	graphics = object_get_from_message(message, "graphics");
-	if (! graphics)
-		return dbus_error_invalid_object_path(connection, message);
-	if (decode_attr(message, &attr)) {
-		ret=graphics_set_attr(graphics, &attr);
-		destroy_attr(&attr);
-		if (ret)
-			return empty_reply(connection, message);
-	}
-    	return dbus_error_invalid_parameter(connection, message);
+	return request_set_attr(connection, message, "graphics", NULL, (int (*)(void *, struct attr *))graphics_set_attr);
 }
 
 /* map */
 
 static DBusHandlerResult
-request_map_set_attr(DBusConnection *connection, DBusMessage *message)
-{
-	struct map *map;
-    	struct attr attr;
-	int ret;
-	
-	map = object_get_from_message(message, "map");
-	if (! map)
-		return dbus_error_invalid_object_path(connection, message);
-	if (decode_attr(message, &attr)) {
-		ret=map_set_attr(map, &attr);
-		destroy_attr(&attr);
-		if (ret)	
-			return empty_reply(connection, message);
-	}
-    	return dbus_error_invalid_parameter(connection, message);
-}
-
-static DBusHandlerResult
 request_map_get_attr(DBusConnection *connection, DBusMessage *message)
 {
-	return request_get_attr(connection, message, "map", (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))map_get_attr);
+	return request_get_attr(connection, message, "map", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))map_get_attr);
+}
+
+
+static DBusHandlerResult
+request_map_set_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_set_attr(connection, message, "map", NULL, (int (*)(void *, struct attr *))map_set_attr);
 }
 
 /* mapset */
@@ -630,7 +590,7 @@ request_mapset_attr_iter_destroy(DBusConnection *connection, DBusMessage *messag
 static DBusHandlerResult
 request_mapset_get_attr(DBusConnection *connection, DBusMessage *message)
 {
-	return request_get_attr(connection, message, "mapset", (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))mapset_get_attr);
+	return request_get_attr(connection, message, "mapset", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))mapset_get_attr);
 }
 
 /* navit */
