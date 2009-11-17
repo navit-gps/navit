@@ -68,6 +68,7 @@
 #include "navigation.h"
 #include "gui_internal.h"
 #include "command.h"
+#include "xmlconfig.h"
 #include "util.h"
 
 struct menu_data {
@@ -115,6 +116,7 @@ struct widget {
 	char *prefix;
 	char *name;
 	char *speech;
+	char *command;
 	struct pcoord c;
 	struct item item;
 	int selection_id;
@@ -260,6 +262,9 @@ struct gui_priv {
 	int cols;
 	struct attr osd_configuration;
 	int pitch;
+/* html */
+	char *html_tag,*html_command;
+	struct widget *html_container, *html_curr;
 };
 
 
@@ -385,7 +390,7 @@ static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle 
  * * @returns image_struct Ptr to scaled image struct or NULL if not scaled or found
  * */
 static struct graphics_image *
-image_new_scaled(struct gui_priv *this, char *name, int w, int h)
+image_new_scaled(struct gui_priv *this, const char *name, int w, int h)
 {
 	struct graphics_image *ret=NULL;
 	char *full_name=NULL;
@@ -444,20 +449,20 @@ image_new_o(struct gui_priv *this, char *name)
 #endif
 
 static struct graphics_image *
-image_new_xs(struct gui_priv *this, char *name)
+image_new_xs(struct gui_priv *this, const char *name)
 {
 	return image_new_scaled(this, name, this->icon_xs, this->icon_xs);
 }
 
 
 static struct graphics_image *
-image_new_s(struct gui_priv *this, char *name)
+image_new_s(struct gui_priv *this, const char *name)
 {
 	return image_new_scaled(this, name, this->icon_s, this->icon_s);
 }
 
 static struct graphics_image *
-image_new_l(struct gui_priv *this, char *name)
+image_new_l(struct gui_priv *this, const char *name)
 {
 	return image_new_scaled(this, name, this->icon_l, this->icon_l);
 }
@@ -1167,6 +1172,7 @@ static void gui_internal_widget_children_destroy(struct gui_priv *this, struct w
 static void gui_internal_widget_destroy(struct gui_priv *this, struct widget *w)
 {
 	gui_internal_widget_children_destroy(this, w);
+	g_free(w->command);
 	g_free(w->speech);
 	g_free(w->text);
 	if (w->img)
@@ -3281,13 +3287,13 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 
     // Notify Navit that the routing should be re-done if this is the
     // active vehicle.
-    if(gui_internal_is_active_vehicle(this, v)) {
-        struct attr vehicle = {attr_vehicle, {v}};
-        navit_set_attr(this->nav, &vehicle);
-    }
+	if (gui_internal_is_active_vehicle(this, v)) {
+		struct attr vehicle;
+		vehicle.type=attr_vehicle;
+		vehicle.u.vehicle=v;
+		navit_set_attr(this->nav, &vehicle);
+	}
 	save_vehicle_xml(v);
-
-			
 }
 
 /**
@@ -3308,9 +3314,9 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 	int active;
 	struct vehicle_and_profilename *context = NULL;
 
-	static char *__profile_translations[] = {
-		_n("car"), _n("bike"), _n("pedestrian")
-	};
+#ifdef ONLY_FOR_TRANSLATION
+	char *translations[] = {_n("car"), _n("bike"), _n("pedestrian")};
+#endif
 
 	// Figure out the profile name
 	attr = attr_search(profile->attrs, NULL, attr_name);
@@ -3499,39 +3505,108 @@ static void gui_internal_motion(void *data, struct point *p)
 		this->motion_timeout_event=event_add_timeout(100,0, this->motion_timeout_callback);
 }
 
+static const char *
+find_attr(const char **names, const char **values, const char *name)
+{
+	while (*names) {
+		if (!strcasecmp(*names, name))
+			return *values;
+		names+=xml_attr_distance;
+		values+=xml_attr_distance;
+	}
+	return NULL;
+}
+
+static void
+gui_internal_html_command(struct gui_priv *this, struct widget *w, void *data)
+{
+	struct attr attr;
+	/* FIXME */
+	if (w->command && navit_get_attr(this->nav, attr_gui, &attr, NULL)) {
+		command_evaluate(&attr, w->command);
+	}
+}
+
+static void
+gui_internal_html_start(void *dummy, const char *tag, const char **names, const char **values, void *data, void *error)
+{
+	struct gui_priv *this=data;
+	g_free(this->html_tag);
+	g_free(this->html_command);
+	this->html_tag=g_strdup(tag);
+	if (!strcasecmp(tag,"img")) {
+		const char *src=find_attr(names, values, "src");
+		this->html_command=g_strdup(find_attr(names, values, "onclick"));
+		if (src)
+			this->html_curr=gui_internal_image_new(this, image_new_l(this, src));
+	}
+}
+
+static void
+gui_internal_html_end(void *dummy, const char *tag, void *data, void *error)
+{
+	struct gui_priv *this=data;
+	if (this->html_command && this->html_curr) {
+		struct widget *w=this->html_curr;
+		w->state |= STATE_SENSITIVE;
+		w->command=this->html_command;
+		w->func=gui_internal_html_command;
+		this->html_command=NULL;
+	}
+	if (!strcasecmp(this->html_tag, "img")) {
+		gui_internal_widget_append(this->html_container, this->html_curr);
+	}
+	this->html_curr=NULL;
+}
+
+static void
+gui_internal_html_text(void *dummy, const char *text, int len, void *data, void *error)
+{
+	struct gui_priv *this=data;
+	if (!strcasecmp(this->html_tag, "h1")) {
+		if (!this->html_container) {
+			this->html_container=gui_internal_menu(this, gettext(text));
+			this->html_container->spx=this->spacing*10;
+		}
+	}
+	if (!strcasecmp(this->html_tag, "img")) {
+		struct widget *w;
+		w=gui_internal_box_new(this, gravity_center|orientation_vertical);
+		gui_internal_widget_append(w, this->html_curr);
+		gui_internal_widget_append(w, gui_internal_text_new(this, gettext(text), gravity_center|orientation_vertical));
+		this->html_curr=w;
+	}
+}
+
+static void
+gui_internal_html_menu(struct gui_priv *this, char *document)
+{
+	graphics_draw_mode(this->gra, draw_mode_begin);
+	this->html_container=NULL;
+	this->html_curr=NULL;
+	xml_parse_text(document, this, gui_internal_html_start, gui_internal_html_end, gui_internal_html_text);
+	gui_internal_menu_render(this);
+	graphics_draw_mode(this->gra, draw_mode_end);
+}
 
 
 static void gui_internal_menu_root(struct gui_priv *this)
 {
-	struct widget *w;
-
-	graphics_draw_mode(this->gra, draw_mode_begin);
-	w=gui_internal_menu(this, _("Main menu"));
-	w->spx=this->spacing*10;
-	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Actions"),
-			image_new_l(this, "gui_actions"), gravity_center|orientation_vertical,
-			gui_internal_cmd_actions, NULL));
-	if (this->flags & 2) {
-		gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Show\nMap"),
-				image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
-				gui_internal_cmd_settings, NULL));
-	}
-	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Settings"),
-			image_new_l(this, "gui_settings"), gravity_center|orientation_vertical,
-			gui_internal_cmd_settings, NULL));
-	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Tools"),
-			image_new_l(this, "gui_tools"), gravity_center|orientation_vertical,
-			gui_internal_cmd_tools, NULL));
-
-	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Route"),
-			image_new_l(this, "gui_settings"), gravity_center|orientation_vertical,
-			gui_internal_cmd_route, NULL));
-
-
-	callback_list_call_attr_1(this->cbl, attr_gui, w);
-
-	gui_internal_menu_render(this);
-	graphics_draw_mode(this->gra, draw_mode_end);
+#ifdef ONLY_FOR_TRANSLATION
+	char *translations[] = {_n("Actions"), _n("Show\nMap"), _n("Settings"), _n("Tools"), _n("Route")};
+#endif
+	gui_internal_html_menu(this,
+	"<html>"
+	"<h1>Main menu</h1>"
+	"<img src='gui_actions' onclick='actions()'>Actions</img>"
+#if 0
+	"<img src='gui_map' onclick='show_map()'>Show Map</img>"
+#endif
+	"<img src='gui_settings' onclick='settings()'>Settings</img>"
+	"<img src='gui_tools' onclick='tools()'>Tools</img>"
+	"<img src='gui_settings' onclick='route()'>Route</img>"
+	"</html>"
+	);
 }
 
 static void
@@ -4078,10 +4153,14 @@ static struct gui_internal_widget_methods gui_internal_widget_methods = {
 };
 
 static struct command_table commands[] = {
-	{"menu",command_cast(gui_internal_cmd_menu2)},
+	{"actions",command_cast(gui_internal_cmd_actions)},
 	{"fullscreen",command_cast(gui_internal_cmd_fullscreen)},
 	{"get_data",command_cast(gui_internal_get_data)},
 	{"log",command_cast(gui_internal_cmd_log)},
+	{"menu",command_cast(gui_internal_cmd_menu2)},
+	{"route",command_cast(gui_internal_cmd_route)},
+	{"settings",command_cast(gui_internal_cmd_settings)},
+	{"tools",command_cast(gui_internal_cmd_tools)},
 };
 
 
