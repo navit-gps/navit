@@ -3592,19 +3592,16 @@ gui_internal_html_menu(struct gui_priv *this, char *document)
 
 static void gui_internal_menu_root(struct gui_priv *this)
 {
-#ifdef ONLY_FOR_TRANSLATION
-	char *translations[] = {_n("Actions"), _n("Show\nMap"), _n("Settings"), _n("Tools"), _n("Route")};
-#endif
 	gui_internal_html_menu(this,
 	"<html>"
-	"<h1>Main menu</h1>"
-	"<img src='gui_actions' onclick='actions()'>Actions</img>"
+	"<h1>"_n("Main menu")"</h1>"
+	"<img src='gui_actions' onclick='actions()'>"_n("Actions")"</img>"
 #if 0
-	"<img src='gui_map' onclick='show_map()'>Show Map</img>"
+	"<img src='gui_map' onclick='show_map()'>"_n("Show</br>Map")"</img>"
 #endif
-	"<img src='gui_settings' onclick='settings()'>Settings</img>"
-	"<img src='gui_tools' onclick='tools()'>Tools</img>"
-	"<img src='gui_settings' onclick='route()'>Route</img>"
+	"<img src='gui_settings' onclick='settings()'>"_n("Settings")"</img>"
+	"<img src='gui_tools' onclick='tools()'>"_n("Tools")"</img>"
+	"<img src='gui_settings' onclick='route()'>"_n("Route")"</img>"
 	"</html>"
 	);
 }
