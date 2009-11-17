@@ -34,9 +34,13 @@ struct object_func {
 };
 
 typedef GError xmlerror;
-struct container;
-gboolean config_load(const char *filename, xmlerror **error);
+
+extern const int xml_attr_distance;
+
+/* prototypes */
+enum attr_type;
 struct object_func *object_func_lookup(enum attr_type type);
-
+void xml_parse_text(char *document, void *data, void (*start)(void *, const char *, const char **, const char **, void *, void *), void (*end)(void *, const char *, void *, void *), void (*text)(void *, const char *, int, void *, void *));
+gboolean config_load(const char *filename, xmlerror **error);
+/* end of prototypes */
 #endif
-

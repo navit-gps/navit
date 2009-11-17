@@ -52,8 +52,10 @@
 
 #ifdef HAVE_GLIB
 #define ATTR_DISTANCE 1
+const int xml_attr_distance=1;
 #else
 #include "ezxml.h"
+const int xml_attr_distance=2;
 #define ATTR_DISTANCE 2
 #define G_MARKUP_ERROR 0
 #define G_MARKUP_ERROR_INVALID_CONTENT 0
@@ -803,6 +805,50 @@ xi_text (GMarkupParseContext *context,
 		gpointer                user_data,
 		xmlerror               **error)
 {
+}
+
+#ifndef HAVE_GLIB
+static void
+parse_node_text(ezxml_t node, void *data, void (*start)(void *, const char *, const char **, const char **, void *, void *),
+					  void (*end)(void *, const char *, void *, void *),
+					  void (*text)(void *, const char *, int, void *, void *))
+{
+	while (node) {
+		if (start)
+			start(NULL, node->name, (const char **)node->attr, (const char **)(node->attr+1), data, NULL);
+		if (text && node->txt)
+			text(NULL, node->txt, strlen(node->txt), data, NULL);
+		if (node->child)
+			parse_node_text(node->child, data, start, end, text);
+		if (end)
+			end(NULL, node->name, data, NULL);
+		node=node->ordered;
+	}
+}
+#endif
+
+void
+xml_parse_text(char *document, void *data, void (*start)(void *, const char *, const char **, const char **, void *, void *),
+			                   void (*end)(void *, const char *, void *, void *),
+			                   void (*text)(void *, const char *, int, void *, void *))
+{
+#ifdef HAVE_GLIB
+	GMarkupParser parser = { start, end, text, NULL, NULL};
+	GMarkupParseContext *context;
+	gboolean result;
+
+	context = g_markup_parse_context_new (&parser, 0, data, NULL);
+	result = g_markup_parse_context_parse (context, document, strlen(document), NULL);
+	g_markup_parse_context_free (context);
+#else
+	char *str=g_strdup(document);
+	ezxml_t root = ezxml_parse_str(str, strlen(str));
+	if (!root)
+		return;
+	parse_node_text(root, data, start, end, text);
+	ezxml_free(root);
+	g_free(str);
+#endif
 }
 
 
