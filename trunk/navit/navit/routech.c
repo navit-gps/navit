@@ -288,6 +288,14 @@ routech_find_nearest(struct mapset *ms, struct coord *c, struct item_id *id, str
 	return ret;
 }
 
+static int
+routech_edge_valid(struct ch_edge *edge, int dir)
+{
+	if (edge->flags & (1 << dir))
+		return 1;
+	return 0;
+}
+
 static void
 routech_stall(struct map_rect *mr, struct routech_search *curr, struct item_id *id, int key)
 {
@@ -311,7 +319,7 @@ routech_stall(struct map_rect *mr, struct routech_search *curr, struct item_id *
 		item=map_rect_get_item_byid(mr, se->id.id_hi, se->id.id_lo);
 		while (item_attr_get(item, attr_ch_edge, &edge_attr)) {
 			struct ch_edge *edge=edge_attr.u.data;
-			if (edge->flags & (1 << curr->dir)) {
+			if (routech_edge_valid(edge, curr->dir)) {
 				int index=GPOINTER_TO_INT(g_hash_table_lookup(curr->hash, &edge->target));
 				if (index) {
 					int newkey=key+edge->weight;
@@ -362,9 +370,9 @@ routech_relax(struct map_rect **mr, struct routech_search *curr, struct routech_
 	while (item_attr_get(item, attr_ch_edge, &edge_attr)) {
 		struct ch_edge *edge=edge_attr.u.data;
 		struct item_id *target_id=&edge->target;
-		if (edge->flags & (1 << curr->dir)) {
+		if (routech_edge_valid(edge, curr->dir)) {
 			int index=GPOINTER_TO_INT(g_hash_table_lookup(curr->hash, target_id));
-			if (index && (edge->flags & (1 << (1-curr->dir)))) {
+			if (index && routech_edge_valid(edge, 1-curr->dir)) {
 				int newkey,stallkey;
 				stallkey=pq_get_stalled(curr->pq, index);
 				if (stallkey)
@@ -434,11 +442,11 @@ routech_find_edge(struct map_rect *mr, struct item_id *from, struct item_id *to,
 	struct item *item=map_rect_get_item_byid(mr, from->id_hi, from->id_lo);
 	struct attr edge_attr;
 	dbg_assert(item->type == type_ch_node);
-	dbg(0,"type %s\n",item_to_name(item->type));
-	dbg(0,"segment item=%p\n",item);
+	dbg(1,"type %s\n",item_to_name(item->type));
+	dbg(1,"segment item=%p\n",item);
 	while (item_attr_get(item, attr_ch_edge, &edge_attr)) {
 		struct ch_edge *edge=edge_attr.u.data;
-		dbg(0,"flags=%d\n",edge->flags);
+		dbg(1,"flags=%d\n",edge->flags);
 		if (edge->target.id_hi == to->id_hi && edge->target.id_lo == to->id_lo) {
 			*middle=edge->middle;
 			return edge->flags;
@@ -453,23 +461,16 @@ routech_resolve(struct map_rect *mr, struct item_id *from, struct item_id *to, i
 {
 	struct item_id middle_node;
 	int res;
-	if (dir) {
+	if (dir) 
 		res=routech_find_edge(mr, to, from, &middle_node);
-		dbg(0,"res=%d\n",res);
-		if (res & 4) {
-			routech_resolve(mr, from, &middle_node, dir);
-			routech_resolve(mr, &middle_node, to, 1-dir);
-		} else
-			routech_resolve_route(mr, &middle_node, res, dir);
-	} else {
+	else
 		res=routech_find_edge(mr, from, to, &middle_node);
-		dbg(0,"res=%d\n",res);
-		if (res & 4) {
-			routech_resolve(mr, from, &middle_node, 1-dir);
-			routech_resolve(mr, &middle_node, to, dir);
-		} else
-			routech_resolve_route(mr, &middle_node, res, dir);
-	}
+	dbg(1,"res=%d\n",res);
+	if (res & 4) {
+		routech_resolve(mr, from, &middle_node, 1);
+		routech_resolve(mr, &middle_node, to, 0);
+	} else 
+		routech_resolve_route(mr, &middle_node, res, dir);
 }
 
 void
@@ -477,7 +478,7 @@ routech_find_path(struct map_rect *mr, struct routech_search *search)
 {
 	struct item_id *curr_node=search->via;
 	GList *i,*n,*list=NULL;
-	dbg(0,"node %p\n",curr_node);
+	dbg(1,"node %p\n",curr_node);
 	for (;;) {
 		int element=GPOINTER_TO_INT(g_hash_table_lookup(search->hash, curr_node));
 		struct item_id *next_node=pq_get_parent_node_id(search->pq,element);
@@ -485,8 +486,8 @@ routech_find_path(struct map_rect *mr, struct routech_search *search)
 			list=g_list_append(list, curr_node);
 		else
 			list=g_list_prepend(list, curr_node);
-		dbg(0,"element %d\n",element);
-		dbg(0,"next node %p\n",next_node);
+		dbg(1,"element %d\n",element);
+		dbg(1,"next node %p\n",next_node);
 		if (!next_node)
 			break;
 		curr_node=next_node;
