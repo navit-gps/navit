@@ -561,6 +561,8 @@ AM_CONDITIONAL(USE_SVG, test "x${enable_svg}" = "xyes")
 # XSLTS
 AC_ARG_WITH(xslts, [  --with-xslts   enable processing of navit.xml with given xslt scripts], XSLTS=$withval, XSLTS="")
 AC_SUBST(XSLTS)
+AC_ARG_WITH(saxon, [ --with-saxon   specify the saxon xslt processor], SAXON=$withval, SAXON="saxon")
+AC_SUBST(SAXON)
 
 # NLS
 
