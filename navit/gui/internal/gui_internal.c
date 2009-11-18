@@ -71,6 +71,34 @@
 #include "xmlconfig.h"
 #include "util.h"
 
+const char *menu_html=
+	"<html>"
+	"<a name='Main Menu'>Main menu"
+#ifdef NOTYET
+	"<a href='#Actions'><img src='gui_actions'>"_n("Actions")"</img></a>"
+#else
+	"<img src='gui_actions' onclick='actions()'>"_n("Actions")"</img>"
+#endif
+#if 0
+	"<img src='gui_map' onclick='show_map()'>"_n("Show</br>Map")"</img>"
+#endif
+	"<img src='gui_settings' onclick='settings()'>"_n("Settings")"</img>"
+	"<img src='gui_tools' onclick='tools()'>"_n("Tools")"</img>"
+	"<img src='gui_settings' onclick='route()'>"_n("Route")"</img>"
+	"</a>"
+#ifdef NOTYET
+	"<a name='Actions'>Actions"
+	"<img src='gui_bookmark' onclick='bookmarks()'>"_n("Bookmarks")"</img>"
+	"<img src='gui_map' onclick='map_position()'><script>write(position_coord_geo)</script></img>"
+	"<img src='gui_vehicle' onclick='vehicle_position()'><script>write(navit.vehicle.position_coord_geo)</script></img>"
+	"<img src='gui_town' onclick='town()'>Town</img>"
+	"<img src='gui_quit' onclick='quit()'>Quit</img>"
+	"<img src='gui_stop' onclick='abort_navigation()'>Stop\nNavigation</img>"
+	"</a>"
+#endif
+	"</html>"
+;
+
 struct menu_data {
 	struct widget *search_list;
 	struct widget *keyboard;
@@ -234,6 +262,7 @@ struct gui_priv {
 	struct widget *highlighted_menu;
 	int clickp_valid, vehicle_valid;
 	struct pcoord clickp, vehiclep;
+	struct coord_geo clickp_geo;
 	struct search_list *sl;
 	int ignore_button;
 	int menu_on_map_click;
@@ -263,8 +292,38 @@ struct gui_priv {
 	struct attr osd_configuration;
 	int pitch;
 /* html */
-	char *html_tag,*html_command;
-	struct widget *html_container, *html_curr;
+
+	int html_depth;	
+	struct widget *html_container;
+	int html_skip;
+	char *html_anchor;
+	int html_anchor_found;
+	struct html {
+		int skip;
+		enum html_tag {
+			html_tag_none,
+			html_tag_a,
+			html_tag_h1,
+			html_tag_html,
+			html_tag_img,
+			html_tag_script,
+		} tag;
+		char *command;
+		char *name;
+		char *href;
+		struct widget *w;
+	} html[10];
+};
+
+struct html_tag_map {
+	char *tag_name;
+	enum html_tag tag;
+} html_tag_map[] = {
+	{"a",html_tag_a},
+	{"h1",html_tag_h1},
+	{"html",html_tag_html},
+	{"img",html_tag_img},
+	{"script",html_tag_script},
 };
 
 
@@ -379,6 +438,7 @@ static struct widget *gui_internal_keyboard_do(struct gui_priv *this, struct wid
 static struct menu_data * gui_internal_menu_data(struct gui_priv *this);
 
 static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle *vehicle);
+static void gui_internal_html_menu(struct gui_priv *this, const char *document, char *anchor);
 
 /*
  * * Display image scaled to specific size
@@ -468,16 +528,12 @@ image_new_l(struct gui_priv *this, const char *name)
 }
 
 static char *
-coordinates(struct pcoord *pc, char sep)
+coordinates_geo(const struct coord_geo *gc, char sep)
 {
 	char latc='N',lngc='E';
 	int lat_deg,lat_min,lat_sec;
 	int lng_deg,lng_min,lng_sec;
-	struct coord_geo g;
-	struct coord c;
-	c.x=pc->x;
-	c.y=pc->y;
-	transform_to_geo(pc->pro, &c, &g);
+	struct coord_geo g=*gc;
 
 	if (g.lat < 0) {
 		g.lat=-g.lat;
@@ -494,6 +550,18 @@ coordinates(struct pcoord *pc, char sep)
 	lng_min=fmod(g.lng*60,60);
 	lng_sec=fmod(g.lng*3600,60);
 	return g_strdup_printf("%d°%d'%d\" %c%c%d°%d'%d\" %c",lat_deg,lat_min,lat_sec,latc,sep,lng_deg,lng_min,lng_sec,lngc);
+}
+
+static char *
+coordinates(struct pcoord *pc, char sep)
+{
+	struct coord_geo g;
+	struct coord c;
+	c.x=pc->x;
+	c.y=pc->y;
+	transform_to_geo(pc->pro, &c, &g);
+	return coordinates_geo(&g, sep);
+
 }
 
 static void
@@ -829,7 +897,7 @@ static void gui_internal_highlight(struct gui_priv *this)
 }
 
 static struct widget *
-gui_internal_box_new_with_label(struct gui_priv *this, enum flags flags, char *label)
+gui_internal_box_new_with_label(struct gui_priv *this, enum flags flags, const char *label)
 {
 	struct widget *widget=g_new0(struct widget, 1);
 
@@ -1594,7 +1662,7 @@ gui_internal_button_label(struct gui_priv *this, char *label, int mode)
 
 
 static struct widget *
-gui_internal_menu(struct gui_priv *this, char *label)
+gui_internal_menu(struct gui_priv *this, const char *label)
 {
 	struct widget *menu,*w,*w1,*topbox;
 
@@ -3517,73 +3585,179 @@ find_attr(const char **names, const char **values, const char *name)
 	return NULL;
 }
 
+static char *
+find_attr_dup(const char **names, const char **values, const char *name)
+{
+	return g_strdup(find_attr(names, values, name));
+}
+
 static void
-gui_internal_html_command(struct gui_priv *this, struct widget *w, void *data)
+gui_internal_evaluate(struct gui_priv *this, const char *command)
 {
 	struct attr attr;
 	/* FIXME */
-	if (w->command && navit_get_attr(this->nav, attr_gui, &attr, NULL)) {
-		command_evaluate(&attr, w->command);
-	}
+	if (command && navit_get_attr(this->nav, attr_gui, &attr, NULL)) 
+		command_evaluate(&attr, command);
+}
+
+
+static void
+gui_internal_html_command(struct gui_priv *this, struct widget *w, void *data)
+{
+	gui_internal_evaluate(this,w->command);
 }
 
 static void
-gui_internal_html_start(void *dummy, const char *tag, const char **names, const char **values, void *data, void *error)
+gui_internal_html_href(struct gui_priv *this, struct widget *w, void *data)
 {
-	struct gui_priv *this=data;
-	g_free(this->html_tag);
-	g_free(this->html_command);
-	this->html_tag=g_strdup(tag);
-	if (!strcasecmp(tag,"img")) {
-		const char *src=find_attr(names, values, "src");
-		this->html_command=g_strdup(find_attr(names, values, "onclick"));
-		if (src)
-			this->html_curr=gui_internal_image_new(this, image_new_l(this, src));
+	if (w->command && w->command[0] == '#') {
+		dbg(0,"href=%s\n",w->command);
+		gui_internal_html_menu(this, menu_html, w->command+1);
 	}
 }
 
+
 static void
-gui_internal_html_end(void *dummy, const char *tag, void *data, void *error)
+gui_internal_html_start(void *dummy, const char *tag_name, const char **names, const char **values, void *data, void *error)
 {
 	struct gui_priv *this=data;
-	if (this->html_command && this->html_curr) {
-		struct widget *w=this->html_curr;
-		w->state |= STATE_SENSITIVE;
-		w->command=this->html_command;
-		w->func=gui_internal_html_command;
-		this->html_command=NULL;
+	int i;
+	enum html_tag tag=html_tag_none;
+	struct html *html=&this->html[this->html_depth];
+	const char *src;
+	html->command=NULL;
+	html->name=NULL;
+	html->href=NULL;
+	html->skip=0;
+	for (i=0 ; i < sizeof(html_tag_map)/sizeof(struct html_tag_map); i++) {
+		if (!strcasecmp(html_tag_map[i].tag_name, tag_name)) {
+			tag=html_tag_map[i].tag;
+			break;
+		}
 	}
-	if (!strcasecmp(this->html_tag, "img")) {
-		gui_internal_widget_append(this->html_container, this->html_curr);
+	html->tag=tag;
+	if (!this->html_skip) {
+		switch (tag) {
+		case html_tag_a:
+			html->name=find_attr_dup(names, values, "name");
+			if (html->name) {
+				if (this->html_anchor_found)
+					html->skip=1;
+				else
+					html->skip=this->html_anchor ? strcmp(html->name,this->html_anchor) : 0;
+				if (!html->skip)
+					this->html_anchor_found=1;
+			}
+			html->href=find_attr_dup(names, values, "href");
+			break;
+		case html_tag_img:
+			html->command=find_attr_dup(names, values, "onclick");
+			src=find_attr(names, values, "src");
+			if (src)
+				html->w=gui_internal_image_new(this, image_new_l(this, src));
+			break;
+		default:
+			break;
+		}
 	}
-	this->html_curr=NULL;
+	this->html_skip+=html->skip;
+	this->html_depth++;
+}
+
+static void
+gui_internal_html_end(void *dummy, const char *tag_name, void *data, void *error)
+{
+	struct gui_priv *this=data;
+	this->html_depth--;
+	struct html *html=&this->html[this->html_depth];
+	struct html *parent=NULL;
+
+
+	if (this->html_depth > 0)
+		parent=&this->html[this->html_depth-1];
+	
+
+	if (!this->html_skip) {	
+		if (html->command && html->w) {
+			html->w->state |= STATE_SENSITIVE;
+			html->w->command=html->command;
+			html->w->func=gui_internal_html_command;
+			html->command=NULL;
+		}
+		if (parent && parent->href) {
+			html->w->state |= STATE_SENSITIVE;
+			html->w->command=g_strdup(parent->href);
+			html->w->func=gui_internal_html_href;
+		}
+		switch (html->tag) {
+		case html_tag_img:
+			gui_internal_widget_append(this->html_container, html->w);
+			break;
+		default:
+			break;
+		}
+	}
+	this->html_skip-=html->skip;
+	g_free(html->command);
+	g_free(html->name);
+	g_free(html->href);
 }
 
 static void
 gui_internal_html_text(void *dummy, const char *text, int len, void *data, void *error)
 {
 	struct gui_priv *this=data;
-	if (!strcasecmp(this->html_tag, "h1")) {
+	struct widget *w;
+	int depth=this->html_depth-1;
+	struct html *html=&this->html[depth];
+	struct attr attr;
+
+	if (this->html_skip)
+		return;
+	if (html->tag == html_tag_html && depth > 2) {
+		if (this->html[depth-1].tag == html_tag_script) {
+			html=&this->html[depth-2];
+		}
+	}
+	switch (html->tag) {
+	case html_tag_a:
+		if (html->name && len) {
+			this->html_container=gui_internal_menu(this, gettext(text));
+			this->html_container->spx=this->spacing*10;
+		}
+		break;
+	case html_tag_h1:
 		if (!this->html_container) {
 			this->html_container=gui_internal_menu(this, gettext(text));
 			this->html_container->spx=this->spacing*10;
 		}
-	}
-	if (!strcasecmp(this->html_tag, "img")) {
-		struct widget *w;
-		w=gui_internal_box_new(this, gravity_center|orientation_vertical);
-		gui_internal_widget_append(w, this->html_curr);
-		gui_internal_widget_append(w, gui_internal_text_new(this, gettext(text), gravity_center|orientation_vertical));
-		this->html_curr=w;
+		break;
+	case html_tag_img:
+		if (len) {
+			w=gui_internal_box_new(this, gravity_center|orientation_vertical);
+			gui_internal_widget_append(w, html->w);
+			gui_internal_widget_append(w, gui_internal_text_new(this, gettext(text), gravity_center|orientation_vertical));
+			html->w=w;
+		}
+		break;
+	case html_tag_script:
+		attr.type=attr_gui;
+		dbg(0,"execute %s\n",text);
+		gui_internal_evaluate(this,text);
+		break;
+	default:
+		break;
 	}
 }
 
 static void
-gui_internal_html_menu(struct gui_priv *this, char *document)
+gui_internal_html_menu(struct gui_priv *this, const char *document, char *anchor)
 {
 	graphics_draw_mode(this->gra, draw_mode_begin);
 	this->html_container=NULL;
-	this->html_curr=NULL;
+	this->html_depth=0;
+	this->html_anchor=anchor;
+	this->html_anchor_found=0;
 	xml_parse_text(document, this, gui_internal_html_start, gui_internal_html_end, gui_internal_html_text);
 	gui_internal_menu_render(this);
 	graphics_draw_mode(this->gra, draw_mode_end);
@@ -3592,18 +3766,7 @@ gui_internal_html_menu(struct gui_priv *this, char *document)
 
 static void gui_internal_menu_root(struct gui_priv *this)
 {
-	gui_internal_html_menu(this,
-	"<html>"
-	"<h1>"_n("Main menu")"</h1>"
-	"<img src='gui_actions' onclick='actions()'>"_n("Actions")"</img>"
-#if 0
-	"<img src='gui_map' onclick='show_map()'>"_n("Show</br>Map")"</img>"
-#endif
-	"<img src='gui_settings' onclick='settings()'>"_n("Settings")"</img>"
-	"<img src='gui_tools' onclick='tools()'>"_n("Tools")"</img>"
-	"<img src='gui_settings' onclick='route()'>"_n("Route")"</img>"
-	"</html>"
-	);
+	gui_internal_html_menu(this, menu_html, "Main Menu");
 }
 
 static void
@@ -3642,6 +3805,7 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 		this->clickp.pro=transform_get_projection(trans);
 		this->clickp.x=c.x;
 		this->clickp.y=c.y;
+		transform_to_geo(this->clickp.pro, &c, &this->clickp_geo);
 		this->clickp_valid=1;
 	}
 	if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle
@@ -3737,6 +3901,27 @@ gui_internal_check_exit(struct gui_priv *this)
 		}
 	}
 }
+
+static int
+gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *attr)
+{
+	switch (type) {
+	case attr_active:
+		attr->u.num=this->root.children != NULL;
+		break;
+	case attr_position_coord_geo:
+		if (!this->clickp_valid)
+			return 0;
+		attr->u.coord_geo=&this->clickp_geo;
+		break;
+	default:
+		dbg(0,"%s\n",attr_to_name(type));
+		return 0;
+	}
+	attr->type=type;
+	return 1;
+}
+
 
 //##############################################################################################################
 //# Description: Function to handle mouse clicks and scroll wheel movement
@@ -4057,6 +4242,7 @@ struct gui_methods gui_internal_methods = {
 	NULL,
 	NULL,
 	gui_internal_disable_suspend,
+	gui_internal_get_attr,
 };
 
 static void
@@ -4149,6 +4335,28 @@ static struct gui_internal_widget_methods gui_internal_widget_methods = {
 	gui_internal_set_default_background,
 };
 
+static void
+gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	char *str=NULL,*str2=NULL;
+	dbg(0,"enter %s %p %p %p\n",function,in,out,valid);
+	if (!in || !in[0])
+		return;
+	dbg(0,"%s\n",attr_to_name(in[0]->type));	
+	if (in[0]->type >= attr_type_string_begin && in[0]->type <= attr_type_string_end) {
+		str=in[0]->u.str;
+	}
+	if (in[0]->type >= attr_type_coord_geo_begin && in[0]->type <= attr_type_coord_geo_end) {
+		str=str2=coordinates_geo(in[0]->u.coord_geo, '\n');
+	}
+	if (str) {
+		str=g_strdup_printf("<html>%s</html>\n",str);
+		xml_parse_text(str, this, gui_internal_html_start, gui_internal_html_end, gui_internal_html_text);
+	}
+	g_free(str);
+	g_free(str2);
+}
+
 static struct command_table commands[] = {
 	{"actions",command_cast(gui_internal_cmd_actions)},
 	{"fullscreen",command_cast(gui_internal_cmd_fullscreen)},
@@ -4158,6 +4366,7 @@ static struct command_table commands[] = {
 	{"route",command_cast(gui_internal_cmd_route)},
 	{"settings",command_cast(gui_internal_cmd_settings)},
 	{"tools",command_cast(gui_internal_cmd_tools)},
+	{"write",command_cast(gui_internal_cmd_write)},
 };
 
 

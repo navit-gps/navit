@@ -58,7 +58,7 @@ struct gui_internal_widget_methods {
 	struct widget * (*label_new)(struct gui_priv *this, char *text);
 	struct widget * (*image_new)(struct gui_priv *this, struct graphics_image *image);
 	struct widget * (*keyboard)(struct gui_priv *this, int mode);
-	struct widget * (*menu)(struct gui_priv *this, char *label);
+	struct widget * (*menu)(struct gui_priv *this, const char *label);
 	enum flags (*get_flags)(struct widget *widget);
 	void (*set_flags)(struct widget *widget, enum flags flags);
 	int (*get_state)(struct widget *widget);

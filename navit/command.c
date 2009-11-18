@@ -196,11 +196,8 @@ static void
 resolve(struct context *ctx, struct result *res, struct attr *parent) //FIXME What is that parent for?
 {
 	resolve_object(ctx, res);
-	if (res->attr.type >= attr_type_object_begin && res->attr.type <= attr_type_object_end) {
-		if (res->attrn)
-			command_get_attr(ctx, res);
-		return;
-	}
+	if (res->attrn)
+		command_get_attr(ctx, res);
 }
 
 static double
@@ -685,6 +682,7 @@ eval_list(struct context *ctx)
 			attr_list_free(ret);
 			return NULL;
 		}
+		resolve(ctx, &tmp, NULL);
 		ret=attr_generic_add_attr(ret, &tmp.attr);
 		if (!get_op(ctx,0,",",NULL)) return ret;
 	}
