@@ -37,6 +37,7 @@ struct gui_methods {
 	struct datawindow_priv *(*datawindow_new)(struct gui_priv *priv, char *name, struct callback *click, struct callback *close, struct datawindow_methods *meth);
 	int (*add_bookmark)(struct gui_priv *priv, struct pcoord *c, char *description);
 	void (*disable_suspend)(struct gui_priv *priv);
+	int (*get_attr)(struct gui_priv *priv, enum attr_type type, struct attr *attr);
 };
 
 

@@ -31,6 +31,7 @@ struct gui {
 	struct gui_methods meth;
 	struct gui_priv *priv;
 	struct attr **attrs;
+	struct attr parent;
 };
 
 struct gui *
@@ -54,12 +55,23 @@ gui_new(struct attr *parent, struct attr **attrs)
 	cbl.u.callback_list=callback_list_new();
 	this_->attrs=attr_generic_add_attr(this_->attrs, &cbl);
 	this_->priv=guitype_new(parent->u.navit, &this_->meth, this_->attrs);
+	this_->parent=*parent;
 	return this_;
 }
 
 int
 gui_get_attr(struct gui *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
+	int ret;
+	if (this_->meth.get_attr) {
+		ret=this_->meth.get_attr(this_->priv, type, attr);
+		if (ret)
+			return ret;
+	}
+	if (type == this_->parent.type) {
+		*attr=this_->parent;
+		return 1;
+	}
 	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
