@@ -39,7 +39,7 @@ gui_new(struct attr *parent, struct attr **attrs)
 {
 	struct gui *this_;
 	struct attr *type_attr;
-	struct gui_priv *(*guitype_new)(struct navit *nav, struct gui_methods *meth, struct attr **attrs);
+	struct gui_priv *(*guitype_new)(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui);
 	struct attr cbl;
 	if (! (type_attr=attr_search(attrs, NULL, attr_type))) {
 		return NULL;
@@ -54,7 +54,7 @@ gui_new(struct attr *parent, struct attr **attrs)
 	cbl.type=attr_callback_list;
 	cbl.u.callback_list=callback_list_new();
 	this_->attrs=attr_generic_add_attr(this_->attrs, &cbl);
-	this_->priv=guitype_new(parent->u.navit, &this_->meth, this_->attrs);
+	this_->priv=guitype_new(parent->u.navit, &this_->meth, this_->attrs, this_);
 	this_->parent=*parent;
 	return this_;
 }
@@ -73,6 +73,15 @@ gui_get_attr(struct gui *this_, enum attr_type type, struct attr *attr, struct a
 		return 1;
 	}
 	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+}
+
+int
+gui_add_attr(struct gui *this_, struct attr *attr)
+{
+	int ret=0;
+	if (this_->meth.add_attr) 
+		ret=this_->meth.add_attr(this_->priv, attr);
+	return ret;
 }
 
 struct menu *

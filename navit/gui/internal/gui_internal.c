@@ -71,34 +71,6 @@
 #include "xmlconfig.h"
 #include "util.h"
 
-const char *menu_html=
-	"<html>"
-	"<a name='Main Menu'>Main menu"
-#ifdef NOTYET
-	"<a href='#Actions'><img src='gui_actions'>"_n("Actions")"</img></a>"
-#else
-	"<img src='gui_actions' onclick='actions()'>"_n("Actions")"</img>"
-#endif
-#if 0
-	"<img src='gui_map' onclick='show_map()'>"_n("Show</br>Map")"</img>"
-#endif
-	"<img src='gui_settings' onclick='settings()'>"_n("Settings")"</img>"
-	"<img src='gui_tools' onclick='tools()'>"_n("Tools")"</img>"
-	"<img src='gui_settings' onclick='route()'>"_n("Route")"</img>"
-	"</a>"
-#ifdef NOTYET
-	"<a name='Actions'>Actions"
-	"<img src='gui_bookmark' onclick='bookmarks()'>"_n("Bookmarks")"</img>"
-	"<img src='gui_map' onclick='map_position()'><script>write(position_coord_geo)</script></img>"
-	"<img src='gui_vehicle' onclick='vehicle_position()'><script>write(navit.vehicle.position_coord_geo)</script></img>"
-	"<img src='gui_town' onclick='town()'>Town</img>"
-	"<img src='gui_quit' onclick='quit()'>Quit</img>"
-	"<img src='gui_stop' onclick='abort_navigation()'>Stop\nNavigation</img>"
-	"</a>"
-#endif
-	"</html>"
-;
-
 struct menu_data {
 	struct widget *search_list;
 	struct widget *keyboard;
@@ -239,6 +211,7 @@ struct route_data {
 //##############################################################################################################
 struct gui_priv {
 	struct navit *nav;
+	struct attr self;
 	struct window *win;
 	struct graphics *gra;
 	struct graphics_gc *background;
@@ -262,7 +235,7 @@ struct gui_priv {
 	struct widget *highlighted_menu;
 	int clickp_valid, vehicle_valid;
 	struct pcoord clickp, vehiclep;
-	struct coord_geo clickp_geo;
+	struct attr *click_coord_geo, *position_coord_geo;
 	struct search_list *sl;
 	int ignore_button;
 	int menu_on_map_click;
@@ -292,7 +265,7 @@ struct gui_priv {
 	struct attr osd_configuration;
 	int pitch;
 /* html */
-
+	char *html_text;
 	int html_depth;	
 	struct widget *html_container;
 	int html_skip;
@@ -409,8 +382,6 @@ static void gui_internal_apply_config(struct gui_priv *this);
 static struct widget* gui_internal_widget_table_new(struct gui_priv * this, enum flags flags, int buttons);
 static struct widget * gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags);
 static void gui_internal_table_render(struct gui_priv * this, struct widget * w);
-static void gui_internal_cmd_tools(struct gui_priv * this, struct widget * w,void *);
-static void gui_internal_cmd_route(struct gui_priv * this, struct widget * w,void *);
 static void gui_internal_table_pack(struct gui_priv * this, struct widget * w);
 static void gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void *data);
 static void gui_internal_table_button_prev(struct gui_priv * this, struct widget * wm, void *data);
@@ -1382,6 +1353,13 @@ gui_internal_cmd_return(struct gui_priv *this, struct widget *wm, void *data)
 }
 
 static void
+gui_internal_cmd2_back_to_map(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	gui_internal_prune_menu(this, NULL);
+}
+
+
+static void
 gui_internal_cmd_main_menu(struct gui_priv *this, struct widget *wm, void *data)
 {
 	gui_internal_prune_menu(this, this->root.children->data);
@@ -1570,7 +1548,7 @@ static void gui_internal_apply_config(struct gui_priv *this)
 {
   struct gui_config_settings *  current_config=0;
 
-  dbg(0,"w=%d h=%d\n", this->root.w, this->root.h);
+  dbg(1,"w=%d h=%d\n", this->root.w, this->root.h);
   /**
    * Select default values from profile based on the screen.
    */
@@ -1744,9 +1722,9 @@ gui_internal_menu_render(struct gui_priv *this)
 static void
 gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void *data)
 {
-	struct widget *w=wm->data;
-	dbg(0,"c=%d:0x%x,0x%x\n", w->c.pro, w->c.x, w->c.y);
-	navit_set_destination(this->nav, &w->c, w->name, 1);
+	char *name=data;
+	dbg(0,"c=%d:0x%x,0x%x\n", wm->c.pro, wm->c.x, wm->c.y);
+	navit_set_destination(this->nav, &wm->c, name, 1);
 	if (this->flags & 512) {
 		struct attr follow;
 		follow.type=attr_follow;
@@ -1761,8 +1739,7 @@ gui_internal_cmd_set_destination(struct gui_priv *this, struct widget *wm, void 
 static void
 gui_internal_cmd_set_position(struct gui_priv *this, struct widget *wm, void *data)
 {
-	struct widget *w=wm->data;
-	navit_set_position(this->nav, &w->c);
+	navit_set_position(this->nav, &wm->c);
 	gui_internal_prune_menu(this, NULL);
 }
 
@@ -1804,15 +1781,16 @@ gui_internal_cmd_add_bookmark_changed(struct gui_priv *this, struct widget *wm, 
 static struct widget * gui_internal_keyboard(struct gui_priv *this, int mode);
 
 static void
-gui_internal_cmd_add_bookmark(struct gui_priv *this, struct widget *wm, void *data)
+gui_internal_cmd_add_bookmark2(struct gui_priv *this, struct widget *wm, void *data)
 {
-	struct widget *w,*wb,*wk,*wl,*we,*wnext,*wp=wm->data;
+	struct widget *w,*wb,*wk,*wl,*we,*wnext;
+	char *name=data;
 	wb=gui_internal_menu(this,_("Add Bookmark"));
 	w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
 	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	gui_internal_widget_append(w, we);
-	gui_internal_widget_append(we, wk=gui_internal_label_new(this, wp->name ? wp->name : wp->text));
+	gui_internal_widget_append(we, wk=gui_internal_label_new(this, name));
 	wk->state |= STATE_EDIT|STATE_CLEAR;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
@@ -2184,57 +2162,40 @@ gui_internal_cmd_view_in_browser(struct gui_priv *this, struct widget *wm, void 
 	}
 }
 
-/* wm->data: 0 Nothing special
-	     1 Map Point
-	     2 Item
-	     3 Town
-	     4 County
-	     5 Street
-*/
-
-
 static void
-gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
+gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct coord_geo *g_in, struct widget *wm, char *name, int flags)
 {
 	struct widget *wb,*w,*wc,*wbc;
 	struct coord_geo g;
+	struct pcoord pc;
 	struct coord c;
-	char *coord,*name;
-	int display_attributes=(wm->data == (void *)2);
-	int display_view_on_map=(wm->data != (void *)1);
-	int display_items=(wm->data == (void *)1);
-	int display_streets=(wm->data == (void *)3);
-	int display_house_numbers=(wm->data == (void *)5);
-	if (wm->data == (void *)4) {
-		gui_internal_search_town_in_country(this, wm);
+	char *coord;
+
+	if (pc_in) {
+		pc=*pc_in;
+		c.x=pc.x;
+		c.y=pc.y;
+		dbg(0,"x=0x%x y=0x%x\n", c.x, c.y);
+		transform_to_geo(pc.pro, &c, &g);
+	} else if (g_in) {
+		struct attr attr;
+		if (!navit_get_attr(this->nav, attr_projection, &attr, NULL))
+			return;
+		g=*g_in;
+		pc.pro=attr.u.projection;
+		transform_from_geo(pc.pro, &g, &c);
+		pc.x=c.x;
+		pc.y=c.y;
+	} else
 		return;
-	}
-#if 0
-	switch ((int)wm->data) {
-		case 0:
-#endif
-			c.x=wm->c.x;
-			c.y=wm->c.y;
-			dbg(0,"x=0x%x y=0x%x\n", c.x, c.y);
-			transform_to_geo(wm->c.pro, &c, &g);
-#if 0
-			break;
-		case 1:
-			g=this->click;
-			break;
-		case 2:
-			g=this->vehicle;
-			break;
-	}
-#endif
-	name=wm->name ? wm->name : wm->text;
+
 	wb=gui_internal_menu(this, name);
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
-	coord=coordinates(&wm->c, ' ');
+	coord=coordinates(&pc, ' ');
 	gui_internal_widget_append(w, gui_internal_label_new(this, coord));
 	g_free(coord);
-	if (display_streets) {
+	if ((flags & 1) && wm) {
 		gui_internal_widget_append(w,
 			wc=gui_internal_button_new_with_callback(this, _("Streets"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
@@ -2242,7 +2203,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		wc->item=wm->item;
 		wc->selection_id=wm->selection_id;
 	}
-	if (display_house_numbers) {
+	if ((flags & 2) && wm) {
 		gui_internal_widget_append(w,
 			wc=gui_internal_button_new_with_callback(this, _("House numbers"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
@@ -2250,7 +2211,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		wc->item=wm->item;
 		wc->selection_id=wm->selection_id;
 	}
-	if (display_attributes) {
+	if ((flags & 4) && wm) {
 		struct map_rect *mr;
 		struct item *item;
 		struct attr attr;
@@ -2274,39 +2235,48 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		}
 		map_rect_destroy(mr);
 	}
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, _("Set as destination"),
-			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-			gui_internal_cmd_set_destination, wm));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, _("Set as position"),
+	if (flags & 8) {
+		gui_internal_widget_append(w,
+			wbc=gui_internal_button_new_with_callback(this, _("Set as destination"),
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_set_destination, g_strdup(name)));
+		wbc->data_free=g_free;
+		wbc->c=pc;
+	}
+	if (flags & 16) {
+		gui_internal_widget_append(w,
+			wbc=gui_internal_button_new_with_callback(this, _("Set as position"),
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_set_position, wm));
-	gui_internal_widget_append(w,
-		wbc=gui_internal_button_new_with_callback(this, _("Add as bookmark"),
+		wbc->c=pc;
+	}
+	if (flags & 32) {
+		gui_internal_widget_append(w,
+			wbc=gui_internal_button_new_with_callback(this, _("Add as bookmark"),
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-			gui_internal_cmd_add_bookmark, wm));
-	wbc->c=wm->c;
-	gui_internal_widget_append(w,
-		wbc=gui_internal_button_new_with_callback(this, _("POIs"),
-			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-			gui_internal_cmd_pois, NULL));
-	wbc->c=wm->c;
+			gui_internal_cmd_add_bookmark2, g_strdup(name)));
+		wbc->data_free=g_free;
+		wbc->c=pc;
+	}
+	if (flags & 64) {
+		gui_internal_widget_append(w,
+			wbc=gui_internal_button_new_with_callback(this, _("POIs"),
+				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_pois, NULL));
+		wbc->c=pc;
+	}
 #if 0
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Add to tour",
 			image_new_o(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
-	gui_internal_widget_append(w,
-		gui_internal_button_new(this, "Add as bookmark",
-			image_new_o(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill));
 #endif
-	if (display_view_on_map) {
+	if (flags & 128) {
 		gui_internal_widget_append(w,
 			gui_internal_button_new_with_callback(this, _("View on map"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_view_on_map, wm));
 	}
-	if (display_items) {
+	if (flags & 256) {
 		int dist=10;
 		struct mapset *ms;
 		struct mapset_handle *h;
@@ -2362,8 +2332,64 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		}
 		mapset_close(h);
 	}
-
 	gui_internal_menu_render(this);
+}
+
+
+/* wm->data: 0 Nothing special
+	     1 Map Point
+	     2 Item
+	     3 Town
+	     4 County
+	     5 Street
+*/
+
+static void
+gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
+{
+	int flags;
+	switch ((int) wm->data) {
+	case 0:
+		flags=8|16|32|64|128|256;
+		break;
+	case 1:
+		flags=8|16|32|64|256;
+		break;
+	case 2:
+		flags=4|8|16|32|64|256;
+		break;
+	case 3:
+		flags=1|8|16|32|64|256;
+	case 4:
+		gui_internal_search_town_in_country(this, wm);
+		return;
+	case 5:
+		flags=2|8|16|32|64|256;
+		break;
+	default:
+		return;
+	}
+	gui_internal_cmd_position_do(this, &wm->c, NULL, wm, wm->name ? wm->name : wm->text, flags);
+}
+
+static void
+gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	char *name=_("Position");
+	int flags=-1;
+
+	dbg(1,"enter\n");
+	if (!in || !in[0])
+		return;
+	if (in[0]->type < attr_type_coord_geo_begin || in[0]->type > attr_type_coord_geo_end)
+		return;
+	if (in[1] && in[1]->type >= attr_type_string_begin && in[1]->type <= attr_type_string_end) {
+		name=in[1]->u.str;
+		if (in[2] && in[2]->type >= attr_type_int_begin && in[2]->type <= attr_type_int_end) 
+			flags=in[2]->u.num;
+	}
+	dbg(1,"flags=0x%x\n",flags);
+	gui_internal_cmd_position_do(this, NULL, in[0]->u.coord_geo, NULL, name, flags);
 }
 
 static void
@@ -2372,21 +2398,22 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 	struct attr attr,mattr;
 	struct map_rect *mr=NULL;
 	struct item *item;
-	char *label_full,*l,*prefix,*pos;
+	char *label_full,*l,*prefix="",*pos;
 	int len,plen,hassub;
 	struct widget *wb,*w,*wbm;
 	GHashTable *hash;
 	struct coord c;
+	char *text=_("Bookmarks");
+	if (wm && wm->text)
+		text=wm->text;
 
-
-	wb=gui_internal_menu(this, wm->text ? wm->text : _("Bookmarks"));
+	wb=gui_internal_menu(this, text);
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
 
-	prefix=wm->prefix;
-	if (! prefix)
-		prefix="";
+	if (wm && wm->prefix)
+		prefix=wm->prefix;
 	plen=strlen(prefix);
 
 	if(navit_get_attr(this->nav, attr_bookmark_map, &mattr, NULL) && mattr.u.map && (mr=map_rect_new(mattr.u.map, NULL))) {
@@ -2433,6 +2460,12 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 		g_hash_table_destroy(hash);
 	}
 	gui_internal_menu_render(this);
+}
+
+static void
+gui_internal_cmd2_bookmarks(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	gui_internal_cmd_bookmarks(this, NULL, NULL);
 }
 
 static void gui_internal_keypress_do(struct gui_priv *this, char *key)
@@ -3014,7 +3047,7 @@ gui_internal_search_country(struct gui_priv *this, struct widget *widget, void *
 }
 
 static void
-gui_internal_cmd_town(struct gui_priv *this, struct widget *wm, void *data)
+gui_internal_cmd2_town(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	if (this->sl)
 		search_list_select(this->sl, attr_country_all, 0, 0);
@@ -3072,7 +3105,7 @@ gui_internal_cmd_3d(struct gui_priv *this, struct widget *wm, void *data)
 }
 
 static void
-gui_internal_cmd_display(struct gui_priv *this, struct widget *wm, void *data)
+gui_internal_cmd2_setting_display(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct widget *w;
 	struct transformation *trans;
@@ -3113,7 +3146,7 @@ gui_internal_cmd_display(struct gui_priv *this, struct widget *wm, void *data)
 }
 
 static void
-gui_internal_cmd_quit(struct gui_priv *this, struct widget *wm, void *data)
+gui_internal_cmd2_quit(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr navit;
 	navit.type=attr_navit;
@@ -3124,63 +3157,14 @@ gui_internal_cmd_quit(struct gui_priv *this, struct widget *wm, void *data)
 }
 
 static void
-gui_internal_cmd_abort_navigation(struct gui_priv *this, struct widget *wm, void *data)
+gui_internal_cmd2_abort_navigation(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	navit_set_destination(this->nav, NULL, NULL, 0);
 }
 
 
 static void
-gui_internal_cmd_actions(struct gui_priv *this, struct widget *wm, void *data)
-{
-	struct widget *w,*wc;
-	char *coord;
-
-	w=gui_internal_menu(this, _("Actions"));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, _("Bookmarks"),
-			image_new_l(this, "gui_bookmark"), gravity_center|orientation_vertical,
-			gui_internal_cmd_bookmarks, NULL));
-	if (this->clickp_valid) {
-		coord=coordinates(&this->clickp, '\n');
-		gui_internal_widget_append(w,
-			wc=gui_internal_button_new_with_callback(this, coord,
-				image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
-				gui_internal_cmd_position, (void *)1));
-		wc->name=g_strdup(_("Map Point"));
-		wc->c=this->clickp;
-		g_free(coord);
-	}
-	if (this->vehicle_valid) {
-		coord=coordinates(&this->vehiclep, '\n');
-		gui_internal_widget_append(w,
-			wc=gui_internal_button_new_with_callback(this, coord,
-				image_new_l(this, "gui_vehicle"), gravity_center|orientation_vertical,
-				gui_internal_cmd_position, NULL));
-		wc->name=g_strdup(_("Vehicle Position"));
-		wc->c=this->vehiclep;
-		g_free(coord);
-	}
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, _("Town"),
-			image_new_l(this, "gui_town"), gravity_center|orientation_vertical,
-			gui_internal_cmd_town, NULL));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, _("Quit"),
-			image_new_l(this, "gui_quit"), gravity_center|orientation_vertical,
-			gui_internal_cmd_quit, NULL));
-
-	if (navit_check_route(this->nav)) {
-		gui_internal_widget_append(w,
-								   gui_internal_button_new_with_callback(this, _("Stop\nNavigation"),
-								 image_new_l(this, "gui_stop"), gravity_center|orientation_vertical,
-								 gui_internal_cmd_abort_navigation, NULL));
-	}
-	gui_internal_menu_render(this);
-}
-
-static void
-gui_internal_cmd_maps(struct gui_priv *this, struct widget *wm, void *wdata)
+gui_internal_cmd2_setting_maps(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr attr, on, off, description, type, data;
 	struct widget *w,*wb,*wma;
@@ -3468,7 +3452,7 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 }
 
 static void
-gui_internal_cmd_vehicle(struct gui_priv *this, struct widget *wm, void *data)
+gui_internal_cmd2_setting_vehicle(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr attr,vattr;
 	struct widget *w,*wb,*wl;
@@ -3497,7 +3481,7 @@ gui_internal_cmd_vehicle(struct gui_priv *this, struct widget *wm, void *data)
 
 
 static void
-gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm, void *data)
+gui_internal_cmd2_setting_rules(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct widget *wb,*w;
 	struct attr on,off;
@@ -3523,31 +3507,6 @@ gui_internal_cmd_rules(struct gui_priv *this, struct widget *wm, void *data)
 	gui_internal_widget_append(w,
 		gui_internal_button_navit_attr_new(this, _("Map follows Vehicle"), gravity_left_center|orientation_horizontal|flags_fill,
 			&on, &off));
-	gui_internal_menu_render(this);
-}
-
-static void
-gui_internal_cmd_settings(struct gui_priv *this, struct widget *wm, void *data)
-{
-	struct widget *w;
-
-	w=gui_internal_menu(this, _("Settings"));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, _("Display"),
-			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
-			gui_internal_cmd_display, NULL));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, _("Maps"),
-			image_new_l(this, "gui_maps"), gravity_center|orientation_vertical,
-			gui_internal_cmd_maps, NULL));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, _("Vehicle"),
-			image_new_l(this, "gui_vehicle"), gravity_center|orientation_vertical,
-			gui_internal_cmd_vehicle, NULL));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, _("Rules"),
-			image_new_l(this, "gui_rules"), gravity_center|orientation_vertical,
-			gui_internal_cmd_rules, NULL));
 	gui_internal_menu_render(this);
 }
 
@@ -3594,10 +3553,8 @@ find_attr_dup(const char **names, const char **values, const char *name)
 static void
 gui_internal_evaluate(struct gui_priv *this, const char *command)
 {
-	struct attr attr;
-	/* FIXME */
-	if (command && navit_get_attr(this->nav, attr_gui, &attr, NULL)) 
-		command_evaluate(&attr, command);
+	if (command)
+		command_evaluate(&this->self, command);
 }
 
 
@@ -3611,8 +3568,8 @@ static void
 gui_internal_html_href(struct gui_priv *this, struct widget *w, void *data)
 {
 	if (w->command && w->command[0] == '#') {
-		dbg(0,"href=%s\n",w->command);
-		gui_internal_html_menu(this, menu_html, w->command+1);
+		dbg(1,"href=%s\n",w->command);
+		gui_internal_html_menu(this, this->html_text, w->command+1);
 	}
 }
 
@@ -3624,11 +3581,21 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 	int i;
 	enum html_tag tag=html_tag_none;
 	struct html *html=&this->html[this->html_depth];
-	const char *src;
+	const char *src, *cond;
+
+	if (!strcasecmp(tag_name,"text"))
+		return;
 	html->command=NULL;
 	html->name=NULL;
 	html->href=NULL;
 	html->skip=0;
+	cond=find_attr(names, values, "cond");
+	
+	if (cond && !this->html_skip) {
+		if (!command_evaluate_to_boolean(&this->self, cond, NULL)) 
+			html->skip=1;
+	}
+
 	for (i=0 ; i < sizeof(html_tag_map)/sizeof(struct html_tag_map); i++) {
 		if (!strcasecmp(html_tag_map[i].tag_name, tag_name)) {
 			tag=html_tag_map[i].tag;
@@ -3636,7 +3603,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 		}
 	}
 	html->tag=tag;
-	if (!this->html_skip) {
+	if (!this->html_skip && !html->skip) {
 		switch (tag) {
 		case html_tag_a:
 			html->name=find_attr_dup(names, values, "name");
@@ -3668,11 +3635,13 @@ static void
 gui_internal_html_end(void *dummy, const char *tag_name, void *data, void *error)
 {
 	struct gui_priv *this=data;
-	this->html_depth--;
-	struct html *html=&this->html[this->html_depth];
+	struct html *html;
 	struct html *parent=NULL;
 
-
+	if (!strcasecmp(tag_name,"text"))
+		return;
+	this->html_depth--;
+	html=&this->html[this->html_depth];
 	if (this->html_depth > 0)
 		parent=&this->html[this->html_depth-1];
 	
@@ -3684,7 +3653,7 @@ gui_internal_html_end(void *dummy, const char *tag_name, void *data, void *error
 			html->w->func=gui_internal_html_command;
 			html->command=NULL;
 		}
-		if (parent && parent->href) {
+		if (parent && parent->href && html->w) {
 			html->w->state |= STATE_SENSITIVE;
 			html->w->command=g_strdup(parent->href);
 			html->w->func=gui_internal_html_href;
@@ -3710,10 +3679,19 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 	struct widget *w;
 	int depth=this->html_depth-1;
 	struct html *html=&this->html[depth];
-	struct attr attr;
+	char *text_stripped;
 
 	if (this->html_skip)
 		return;
+	while (isspace(text[0])) {
+		text++;
+		len--;
+	}
+	while (len > 0 && isspace(text[len-1]))
+		len--;
+	text_stripped=g_malloc(len+1);
+	strncpy(text_stripped, text, len);
+	text_stripped[len]='\0';
 	if (html->tag == html_tag_html && depth > 2) {
 		if (this->html[depth-1].tag == html_tag_script) {
 			html=&this->html[depth-2];
@@ -3722,13 +3700,13 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 	switch (html->tag) {
 	case html_tag_a:
 		if (html->name && len) {
-			this->html_container=gui_internal_menu(this, gettext(text));
+			this->html_container=gui_internal_menu(this, gettext(text_stripped));
 			this->html_container->spx=this->spacing*10;
 		}
 		break;
 	case html_tag_h1:
 		if (!this->html_container) {
-			this->html_container=gui_internal_menu(this, gettext(text));
+			this->html_container=gui_internal_menu(this, gettext(text_stripped));
 			this->html_container->spx=this->spacing*10;
 		}
 		break;
@@ -3736,14 +3714,13 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 		if (len) {
 			w=gui_internal_box_new(this, gravity_center|orientation_vertical);
 			gui_internal_widget_append(w, html->w);
-			gui_internal_widget_append(w, gui_internal_text_new(this, gettext(text), gravity_center|orientation_vertical));
+			gui_internal_widget_append(w, gui_internal_text_new(this, gettext(text_stripped), gravity_center|orientation_vertical));
 			html->w=w;
 		}
 		break;
 	case html_tag_script:
-		attr.type=attr_gui;
-		dbg(0,"execute %s\n",text);
-		gui_internal_evaluate(this,text);
+		dbg(1,"execute %s\n",text_stripped);
+		gui_internal_evaluate(this,text_stripped);
 		break;
 	default:
 		break;
@@ -3766,7 +3743,7 @@ gui_internal_html_menu(struct gui_priv *this, const char *document, char *anchor
 
 static void gui_internal_menu_root(struct gui_priv *this)
 {
-	gui_internal_html_menu(this, menu_html, "Main Menu");
+	gui_internal_html_menu(this, this->html_text, "Main Menu");
 }
 
 static void
@@ -3794,22 +3771,30 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 {
 	struct transformation *trans;
 	struct coord c;
+	struct coord_geo g;
 	struct attr attr,attrp;
 
 	dbg(1,"enter\n");
 	gui_internal_enter(this, ignore);
 	trans=navit_get_trans(this->nav);
+	attr_free(this->click_coord_geo);
+	this->click_coord_geo=NULL;
+	attr_free(this->position_coord_geo);
+	this->position_coord_geo=NULL;
 	if (p) {
 		transform_reverse(trans, p, &c);
-		dbg(0,"x=0x%x y=0x%x\n", c.x, c.y);
+		dbg(1,"x=0x%x y=0x%x\n", c.x, c.y);
 		this->clickp.pro=transform_get_projection(trans);
 		this->clickp.x=c.x;
 		this->clickp.y=c.y;
-		transform_to_geo(this->clickp.pro, &c, &this->clickp_geo);
-		this->clickp_valid=1;
+		transform_to_geo(this->clickp.pro, &c, &g);
+		attr.u.coord_geo=&g;
+		attr.type=attr_click_coord_geo;
+		this->click_coord_geo=attr_dup(&attr);
 	}
 	if (navit_get_attr(this->nav, attr_vehicle, &attr, NULL) && attr.u.vehicle
 		&& vehicle_get_attr(attr.u.vehicle, attr_position_coord_geo, &attrp, NULL)) {
+		this->position_coord_geo=attr_dup(&attrp);
 		this->vehiclep.pro=transform_get_projection(trans);
 		transform_from_geo(this->vehiclep.pro, attrp.u.coord_geo, &c);
 		this->vehiclep.x=c.x;
@@ -3909,17 +3894,34 @@ gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *a
 	case attr_active:
 		attr->u.num=this->root.children != NULL;
 		break;
-	case attr_position_coord_geo:
-		if (!this->clickp_valid)
+	case attr_click_coord_geo:
+		if (!this->click_coord_geo)
 			return 0;
-		attr->u.coord_geo=&this->clickp_geo;
+		*attr=*this->click_coord_geo;
+		break;
+	case attr_position_coord_geo:
+		if (!this->position_coord_geo)
+			return 0;
+		*attr=*this->position_coord_geo;
 		break;
 	default:
-		dbg(0,"%s\n",attr_to_name(type));
 		return 0;
 	}
 	attr->type=type;
 	return 1;
+}
+
+static int
+gui_internal_add_attr(struct gui_priv *this, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_xml_text:
+		g_free(this->html_text);
+		this->html_text=g_strdup(attr->u.str);
+		return 1;
+	default:
+		return 0;
+	}
 }
 
 
@@ -4243,6 +4245,7 @@ struct gui_methods gui_internal_methods = {
 	NULL,
 	gui_internal_disable_suspend,
 	gui_internal_get_attr,
+	gui_internal_add_attr,
 };
 
 static void
@@ -4339,10 +4342,10 @@ static void
 gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	char *str=NULL,*str2=NULL;
-	dbg(0,"enter %s %p %p %p\n",function,in,out,valid);
+	dbg(1,"enter %s %p %p %p\n",function,in,out,valid);
 	if (!in || !in[0])
 		return;
-	dbg(0,"%s\n",attr_to_name(in[0]->type));	
+	dbg(1,"%s\n",attr_to_name(in[0]->type));	
 	if (in[0]->type >= attr_type_string_begin && in[0]->type <= attr_type_string_end) {
 		str=in[0]->u.str;
 	}
@@ -4357,131 +4360,6 @@ gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in,
 	g_free(str2);
 }
 
-static struct command_table commands[] = {
-	{"actions",command_cast(gui_internal_cmd_actions)},
-	{"fullscreen",command_cast(gui_internal_cmd_fullscreen)},
-	{"get_data",command_cast(gui_internal_get_data)},
-	{"log",command_cast(gui_internal_cmd_log)},
-	{"menu",command_cast(gui_internal_cmd_menu2)},
-	{"route",command_cast(gui_internal_cmd_route)},
-	{"settings",command_cast(gui_internal_cmd_settings)},
-	{"tools",command_cast(gui_internal_cmd_tools)},
-	{"write",command_cast(gui_internal_cmd_write)},
-};
-
-
-//##############################################################################################################
-//# Description:
-//# Comment:
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs)
-{
-	struct gui_priv *this;
-	struct attr *attr;
-	*meth=gui_internal_methods;
-	this=g_new0(struct gui_priv, 1);
-	this->nav=nav;
-	if ((attr=attr_search(attrs, NULL, attr_menu_on_map_click)))
-		this->menu_on_map_click=attr->u.num;
-	else
-		this->menu_on_map_click=1;
-	if ((attr=attr_search(attrs, NULL, attr_callback_list))) {
-		command_add_table(attr->u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), this);
-	}
-
-	if( (attr=attr_search(attrs,NULL,attr_font_size)))
-        {
-	  this->config.font_size=attr->u.num;
-	}
-	else
-	{
-	  this->config.font_size=-1;
-	}
-	if( (attr=attr_search(attrs,NULL,attr_icon_xs)))
-	{
-	  this->config.icon_xs=attr->u.num;
-	}
-	else
-	{
-	  this->config.icon_xs=-1;
-	}
-	if( (attr=attr_search(attrs,NULL,attr_icon_l)))
-	{
-	  this->config.icon_l=attr->u.num;
-	}
-	else
-        {
-	  this->config.icon_l=-1;
-	}
-	if( (attr=attr_search(attrs,NULL,attr_icon_s)))
-	{
-	  this->config.icon_s=attr->u.num;
-	}
-	else
-        {
-	  this->config.icon_s=-1;
-	}
-	if( (attr=attr_search(attrs,NULL,attr_spacing)))
-	{
-	  this->config.spacing=attr->u.num;
-	}
-	else
-	{
-	  this->config.spacing=-1;
-	}
-	if( (attr=attr_search(attrs,NULL,attr_gui_speech)))
-	{
-	  this->speech=attr->u.num;
-	}
-	if( (attr=attr_search(attrs,NULL,attr_keyboard)))
-	  this->keyboard=attr->u.num;
-        else
-	  this->keyboard=1;
-
-    if( (attr=attr_search(attrs,NULL,attr_fullscreen)))
-      this->fullscreen=attr->u.num;
-
-	if( (attr=attr_search(attrs,NULL,attr_flags)))
-	      this->flags=attr->u.num;
-	if( (attr=attr_search(attrs,NULL,attr_background_color)))
-	      this->background_color=*attr->u.color;
-	else
-	      this->background_color=(struct color){0x0,0x0,0x0,0xffff};
-	if( (attr=attr_search(attrs,NULL,attr_background_color2)))
-		this->background2_color=*attr->u.color;
-	else
-		this->background2_color=(struct color){0x4141,0x4141,0x4141,0xffff};
-	if( (attr=attr_search(attrs,NULL,attr_text_color)))
-	      this->text_foreground_color=*attr->u.color;
-	else
-	      this->text_foreground_color=(struct color){0xffff,0xffff,0xffff,0xffff};
-	if( (attr=attr_search(attrs,NULL,attr_columns)))
-	      this->cols=attr->u.num;
-	if( (attr=attr_search(attrs,NULL,attr_osd_configuration)))
-	      this->osd_configuration=*attr;
-
-	if( (attr=attr_search(attrs,NULL,attr_pitch)))
-	      this->pitch=attr->u.num;
-	else
-		this->pitch=20;
-	this->data.priv=this;
-	this->data.gui=&gui_internal_methods_ext;
-	this->data.widget=&gui_internal_widget_methods;
-	this->cbl=callback_list_new();
-
-	return this;
-}
-
-//##############################################################################################################
-//# Description:
-//# Comment:
-//# Authors: Martin Schaller (04/2008)
-//##############################################################################################################
-void plugin_init(void)
-{
-	plugin_register_gui_type("internal", gui_internal_new);
-}
 
 /**
  * @brief Creates a new table widget.
@@ -4910,7 +4788,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
  * @param v Unused
  */
 static void
-gui_internal_cmd_route_description(struct gui_priv * this, struct widget * wm,void *v)
+gui_internal_cmd2_route_description(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 
 
@@ -5033,7 +4911,8 @@ item_get_heightline(struct item *item)
  * @param wm The button that was pressed.
  * @param v Unused
  */
-static void gui_internal_cmd_route_height_profile(struct gui_priv * this, struct widget * wm,void *v)
+static void
+gui_internal_cmd2_route_height_profile(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 
 
@@ -5188,33 +5067,8 @@ static void gui_internal_cmd_route_height_profile(struct gui_priv * this, struct
 
 }
 
-/**
- * @brief Displays Route information
- *
- * @li The name of the active vehicle
- * @param wm The button that was pressed.
- * @param v Unused
- 		*/
-void gui_internal_cmd_route(struct gui_priv * this, struct widget * wm,void *v)
-{
-	struct widget *w;
-
-	graphics_draw_mode(this->gra, draw_mode_begin);
-	w=gui_internal_menu(this, _("Route"));
-	w->spx=this->spacing*10;
-	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Description"),
-			image_new_l(this, "gui_actions"), gravity_center|orientation_vertical,
-			gui_internal_cmd_route_description, NULL));
-	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Height Profile"),
-			image_new_l(this, "gui_actions"), gravity_center|orientation_vertical,
-			gui_internal_cmd_route_height_profile, NULL));
-	gui_internal_menu_render(this);
-	graphics_draw_mode(this->gra, draw_mode_end);
-
-}
-
 static void
-gui_internal_cmd_show_locale(struct gui_priv * this, struct widget * wm,void *v)
+gui_internal_cmd2_locale(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct widget *menu,*wb,*w;
 	char *text;
@@ -5252,21 +5106,6 @@ gui_internal_cmd_show_locale(struct gui_priv * this, struct widget * wm,void *v)
 	graphics_draw_mode(this->gra, draw_mode_end);
 }
 
-
-static void
-gui_internal_cmd_tools(struct gui_priv * this, struct widget * wm,void *v)
-{
-	struct widget *w;
-
-	graphics_draw_mode(this->gra, draw_mode_begin);
-	w=gui_internal_menu(this, _("Tools"));
-	w->spx=this->spacing*10;
-	gui_internal_widget_append(w, gui_internal_button_new_with_callback(this, _("Show Locale"),
-			image_new_l(this, "gui_actions"), gravity_center|orientation_vertical,
-			gui_internal_cmd_show_locale, NULL));
-	gui_internal_menu_render(this);
-	graphics_draw_mode(this->gra, draw_mode_end);
-}
 
 /**
  * @brief handles the 'next page' table event.
@@ -5450,3 +5289,143 @@ void gui_internal_populate_route_table(struct gui_priv * this,
 
 	}
 }
+
+static struct command_table commands[] = {
+	{"abort_navigation()",command_cast(gui_internal_cmd2_abort_navigation)},
+	{"back_to_map",command_cast(gui_internal_cmd2_back_to_map)},
+	{"bookmarks",command_cast(gui_internal_cmd2_bookmarks)},
+	{"fullscreen",command_cast(gui_internal_cmd_fullscreen)},
+	{"get_data",command_cast(gui_internal_get_data)},
+	{"locale",command_cast(gui_internal_cmd2_locale)},
+	{"log",command_cast(gui_internal_cmd_log)},
+	{"menu",command_cast(gui_internal_cmd_menu2)},
+	{"position",command_cast(gui_internal_cmd2_position)},
+	{"route_description",command_cast(gui_internal_cmd2_route_description)},
+	{"route_height_profile",command_cast(gui_internal_cmd2_route_height_profile)},
+	{"setting_display",command_cast(gui_internal_cmd2_setting_display)},
+	{"setting_maps",command_cast(gui_internal_cmd2_setting_maps)},
+	{"setting_rules",command_cast(gui_internal_cmd2_setting_rules)},
+	{"setting_vehicle",command_cast(gui_internal_cmd2_setting_vehicle)},
+	{"town",command_cast(gui_internal_cmd2_town)},
+	{"quit",command_cast(gui_internal_cmd2_quit)},
+	{"write",command_cast(gui_internal_cmd_write)},
+};
+
+
+//##############################################################################################################
+//# Description:
+//# Comment:
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui)
+{
+	struct gui_priv *this;
+	struct attr *attr;
+	*meth=gui_internal_methods;
+	this=g_new0(struct gui_priv, 1);
+	this->nav=nav;
+
+	this->self.type=attr_gui;
+	this->self.u.gui=gui;	
+
+	if ((attr=attr_search(attrs, NULL, attr_menu_on_map_click)))
+		this->menu_on_map_click=attr->u.num;
+	else
+		this->menu_on_map_click=1;
+	if ((attr=attr_search(attrs, NULL, attr_callback_list))) {
+		command_add_table(attr->u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), this);
+	}
+
+	if( (attr=attr_search(attrs,NULL,attr_font_size)))
+        {
+	  this->config.font_size=attr->u.num;
+	}
+	else
+	{
+	  this->config.font_size=-1;
+	}
+	if( (attr=attr_search(attrs,NULL,attr_icon_xs)))
+	{
+	  this->config.icon_xs=attr->u.num;
+	}
+	else
+	{
+	  this->config.icon_xs=-1;
+	}
+	if( (attr=attr_search(attrs,NULL,attr_icon_l)))
+	{
+	  this->config.icon_l=attr->u.num;
+	}
+	else
+        {
+	  this->config.icon_l=-1;
+	}
+	if( (attr=attr_search(attrs,NULL,attr_icon_s)))
+	{
+	  this->config.icon_s=attr->u.num;
+	}
+	else
+        {
+	  this->config.icon_s=-1;
+	}
+	if( (attr=attr_search(attrs,NULL,attr_spacing)))
+	{
+	  this->config.spacing=attr->u.num;
+	}
+	else
+	{
+	  this->config.spacing=-1;
+	}
+	if( (attr=attr_search(attrs,NULL,attr_gui_speech)))
+	{
+	  this->speech=attr->u.num;
+	}
+	if( (attr=attr_search(attrs,NULL,attr_keyboard)))
+	  this->keyboard=attr->u.num;
+        else
+	  this->keyboard=1;
+
+    if( (attr=attr_search(attrs,NULL,attr_fullscreen)))
+      this->fullscreen=attr->u.num;
+
+	if( (attr=attr_search(attrs,NULL,attr_flags)))
+	      this->flags=attr->u.num;
+	if( (attr=attr_search(attrs,NULL,attr_background_color)))
+	      this->background_color=*attr->u.color;
+	else
+	      this->background_color=(struct color){0x0,0x0,0x0,0xffff};
+	if( (attr=attr_search(attrs,NULL,attr_background_color2)))
+		this->background2_color=*attr->u.color;
+	else
+		this->background2_color=(struct color){0x4141,0x4141,0x4141,0xffff};
+	if( (attr=attr_search(attrs,NULL,attr_text_color)))
+	      this->text_foreground_color=*attr->u.color;
+	else
+	      this->text_foreground_color=(struct color){0xffff,0xffff,0xffff,0xffff};
+	if( (attr=attr_search(attrs,NULL,attr_columns)))
+	      this->cols=attr->u.num;
+	if( (attr=attr_search(attrs,NULL,attr_osd_configuration)))
+	      this->osd_configuration=*attr;
+
+	if( (attr=attr_search(attrs,NULL,attr_pitch)))
+	      this->pitch=attr->u.num;
+	else
+		this->pitch=20;
+	this->data.priv=this;
+	this->data.gui=&gui_internal_methods_ext;
+	this->data.widget=&gui_internal_widget_methods;
+	this->cbl=callback_list_new();
+
+	return this;
+}
+
+//##############################################################################################################
+//# Description:
+//# Comment:
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
+void plugin_init(void)
+{
+	plugin_register_gui_type("internal", gui_internal_new);
+}
+
