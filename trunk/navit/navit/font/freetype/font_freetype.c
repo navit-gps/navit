@@ -488,6 +488,7 @@ font_freetype_glyph_get_shadow(struct font_freetype_glyph *g,
 		fg=foreground->a>>8;
 		bg=background->a>>8;
 		break;
+	case 24:
 	case 32:
 		fg=((foreground->a>>8)<<24)|
 		   ((foreground->r>>8)<<16)|
@@ -514,6 +515,13 @@ font_freetype_glyph_get_shadow(struct font_freetype_glyph *g,
 			break;
 		case 8:
 			memset(ps, bg, w+2);
+			break;
+		case 24:
+			for (x = 0 ; x < w+2 ; x++) {
+				ps[x*3]=bg>>16;
+				ps[x*3+1]=bg>>8;
+				ps[x*3+2]=bg;
+			}
 			break;
 		case 32:
 			for (x = 0 ; x < w+2 ; x++) 
@@ -581,6 +589,31 @@ font_freetype_glyph_get_shadow(struct font_freetype_glyph *g,
 				pm++;
 			}
 			break;
+		case 24:
+			for (x = 0; x < w; x++) {
+				if (*pm) {
+					psp[3]=fg>>16;
+					psp[4]=fg>>8;
+					psp[5]=fg;
+					ps[0]=fg>>16;
+					ps[1]=fg>>8;
+					ps[2]=fg;
+					ps[3]=fg>>16;
+					ps[4]=fg>>8;
+					ps[5]=fg;
+					ps[6]=fg>>16;
+					ps[7]=fg>>8;
+					ps[8]=fg;
+					psn[3]=fg>>16;
+					psn[4]=fg>>8;
+					psn[5]=fg;
+				}
+				psp+=3;
+				ps+=3;
+				psn+=3;
+				pm++;
+			}
+			break;
 		case 32:
 			for (x = 0; x < w; x++) {
 				if (*pm) {
@@ -609,6 +642,10 @@ font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
 	unsigned int tr;
 	unsigned char v,vi,*pm, *ps;
 	switch (depth) {
+	case 8:
+		tr=transparent->a>>8;
+		break;
+	case 24:
 	case 32:
 		tr=((transparent->a>>8)<<24)|
 		   ((transparent->r>>8)<<16)|
@@ -627,6 +664,34 @@ font_freetype_glyph_get_glyph(struct font_freetype_glyph *g,
 			ps = dataptr[y];
 		}
 		switch (depth) {
+		case 8:
+			for (x = 0; x < w; x++) {
+				v=*pm;
+				if (v) 
+					*ps=fg->a;
+				else 
+					*ps=tr;
+				ps++;
+				pm++;
+			}
+			break;
+		case 24:
+			for (x = 0; x < w; x++) {
+				v=*pm;
+				if (v) {
+					vi=255-v;
+					ps[0]=(((fg->r*v+bg->r*vi)/255)>>8);
+					ps[1]=(((fg->g*v+bg->g*vi)/255)>>8);
+					ps[2]=(((fg->b*v+bg->b*vi)/255)>>8);
+				} else {
+					ps[0]=tr >> 16;
+					ps[1]=tr >> 8;
+					ps[2]=tr;
+				}
+				ps+=3;
+				pm++;
+			}
+			break;
 		case 32:
 			for (x = 0; x < w; x++) {
 				v=*pm;

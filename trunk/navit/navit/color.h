@@ -24,4 +24,14 @@ struct color {
 	int r,g,b,a;
 };
 
+#define COLOR_WHITE ((struct color) {0xffff,0xffff,0xffff,0xffff})
+#define COLOR_BLACK ((struct color) {0x0000,0x0000,0x0000,0xffff})
+#define COLOR_TRANSPARENT ((struct color) {0x0000,0x0000,0x0000,0x0000})
+#define COLOR_FMT "0x%x,0x%x,0x%x,0x%x"
+#define COLOR_ARGS(c) (c).r,(c).g,(c).b,(c).a
+
+#define COLOR_IS_SAME(c1,c2) ((c1).r==(c2).r && (c1).g==(c2).g && (c1).b==(c2).b && (c1).a==(c2).a)
+#define COLOR_IS_WHITE(c) COLOR_IS_SAME(c, COLOR_WHITE)
+#define COLOR_IS_BLACK(c) COLOR_IS_SAME(c, COLOR_BLACK)
+
 #endif
