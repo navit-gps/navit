@@ -260,6 +260,8 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 		else
 			return g_strdup_printf("#%02x%02x%02x", attr->u.color->r>>8,attr->u.color->g>>8,attr->u.color->b>>8);
 	}
+	if (type >= attr_type_coord_geo_begin && type <= attr_type_coord_geo_end) 
+		return g_strdup_printf("%f %f",attr->u.coord_geo->lng,attr->u.coord_geo->lat);
 	return g_strdup_printf("(no text[%s])", attr_to_name(type));	
 }
 

@@ -24,6 +24,7 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <string.h>
+#include <ctype.h>
 #include "debug.h"
 #include "config.h"
 #include "file.h"
@@ -243,7 +244,7 @@ static struct object_func object_funcs[] = {
 	{ attr_cursor,     NEW(cursor_new),   NULL, NULL, NULL, NULL, ADD(cursor_add_attr)},
 	{ attr_debug,      NEW(debug_new)},
 	{ attr_graphics,   NEW(graphics_new)},
-	{ attr_gui,        NEW(gui_new), GET(gui_get_attr)},
+	{ attr_gui,        NEW(gui_new), GET(gui_get_attr), NULL, NULL, NULL, ADD(gui_add_attr)},
 	{ attr_icon,       NEW(icon_new),     NULL, NULL, NULL, NULL, ADD(element_add_attr)},
 	{ attr_image,      NEW(image_new)},
 	{ attr_itemgra,    NEW(itemgra_new),  NULL, NULL, NULL, NULL, ADD(itemgra_add_attr)},
@@ -805,6 +806,28 @@ xi_text (GMarkupParseContext *context,
 		gpointer                user_data,
 		xmlerror               **error)
 {
+	struct xmldocument *doc=user_data;
+	int i;
+	if (doc->active) {
+		for (i = 0 ; i < text_len ; i++) {
+			if (!isspace(text[i])) {
+				struct xmldocument *doc=user_data;
+				struct xmlstate *curr, **state = doc->user_data;
+				struct attr attr;
+				char *text_dup=malloc(text_len+1);
+
+				curr=*state;
+				strncpy(text_dup, text, text_len);
+				text_dup[text_len]='\0';
+				attr.type=attr_xml_text;
+				attr.u.str=text_dup;
+				if (curr->object_func && curr->object_func->add_attr)
+					curr->object_func->add_attr(curr->element_attr.u.data, &attr);
+				g_free(text_dup);
+				return;
+			}
+		}
+	}
 }
 
 #ifndef HAVE_GLIB
@@ -879,7 +902,7 @@ parse_file(struct xmldocument *document, xmlerror **error)
 	gboolean result;
 
 	dbg(1,"enter filename='%s'\n", document->href);
-	context = g_markup_parse_context_new (&parser, 0, document, NULL);
+	context = g_markup_parse_context_new (&parser, G_MARKUP_TREAT_CDATA_AS_TEXT, document, NULL);
 
 	if (!g_file_get_contents (document->href, &contents, &len, error)) {
 		g_markup_parse_context_free (context);
