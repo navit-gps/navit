@@ -38,6 +38,7 @@ struct gui_methods {
 	int (*add_bookmark)(struct gui_priv *priv, struct pcoord *c, char *description);
 	void (*disable_suspend)(struct gui_priv *priv);
 	int (*get_attr)(struct gui_priv *priv, enum attr_type type, struct attr *attr);
+	int (*add_attr)(struct gui_priv *priv, struct attr *attr);
 };
 
 
@@ -50,10 +51,10 @@ struct datawindow;
 struct graphics;
 struct gui;
 struct menu;
-struct navit;
 struct pcoord;
 struct gui *gui_new(struct attr *parent, struct attr **attrs);
 int gui_get_attr(struct gui *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+int gui_add_attr(struct gui *this_, struct attr *attr);
 struct menu *gui_menubar_new(struct gui *gui);
 struct menu *gui_popup_new(struct gui *gui);
 struct datawindow *gui_datawindow_new(struct gui *gui, char *name, struct callback *click, struct callback *close);

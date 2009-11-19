@@ -31,14 +31,49 @@
         <graphics type="gtk_drawing_area"/>
         <!-- The following line let you select which graphical user interface you'd like to use.
              Options include internal (optimized for touch screen devices), gtk (useful for desktop computers) and cegui.
+	     If you don't like the internal gui, set enabled=yes for the following tag and enabled=no for the gui internal tag -->
+        <gui type="gtk" enabled="no" menubar="1" toolbar="1" statusbar="1"/>
+	<!--
              In case of the internal GUI, you can even influence the size of the text and of the icons in the toolbar and the viewport.
              Here's an example for a freerunner: -->
         <!-- <gui type="internal" font_size="350" icon_xs="32" icon_s="96" icon_l="96"/> -->
-        <!-- Normally it is sufficient to use -->
-        <!-- <gui type="internal" /> -->
 
-        <gui type="gtk" menubar="1" toolbar="1" statusbar="1"/>
-
+        <gui type="internal" enabled="yes">
+	<![CDATA[
+        	<html>
+        		<a name='Main Menu'>Main menu
+        			<a href='#Actions'><img src='gui_actions'>Actions</img></a>
+        			<img cond='flags&amp;2' src='gui_map' onclick='back_to_map()'><text>Show
+Map</text></img>
+        			<a href='#Settings'><img src='gui_settings'><text>Settings</text></img></a>
+				<a href='#Tools'><img src='gui_tools'><text>Tools</text></img></a>
+				<a href='#Route'><img src='gui_settings'><text>Route</text></img></a>
+		        </a>
+			<a name='Actions'><text>Actions</text>
+				<img src='gui_bookmark' onclick='bookmarks()'><text>Bookmarks</text></img>
+				<img cond='click_coord_geo' src='gui_map' onclick='position(click_coord_geo,_("Map Point"),8|16|32|64|256)'><script>write(click_coord_geo)</script></img>
+				<img cond='position_coord_geo' src='gui_vehicle' onclick='position(position_coord_geo,_("Vehicle Position"),8|32|64|128|256)'><script>write(position_coord_geo)</script></img>
+				<img src='gui_town' onclick='town()'><text>Town</text></img>
+				<img src='gui_quit' onclick='quit()'><text>Quit</text></img>
+				<img cond='navit.route.status&amp;48' src='gui_stop' onclick='abort_navigation()'><text>Stop
+Navigation</text></img>
+			</a>
+			<a name='Settings'><text>Settings</text>
+				<img src='gui_display' onclick='setting_display()'><text>Display</text></img>
+				<img src='gui_maps' onclick='setting_maps()'><text>Maps</text></img>
+				<img src='gui_vehicle' onclick='setting_vehicle()'><text>Vehicle</text></img>
+				<img src='gui_rules' onclick='setting_rules()'><text>Rules</text></img>
+			</a>
+			<a name='Tools'><text>Tools</text>
+				<img src='gui_actions' onclick='locale()'><text>Show Locale</text></img>
+			</a>
+			<a name='Route'><text>Route</text>
+				<img src='gui_actions' onclick='route_description()'><text>Description</text></img>
+				<img src='gui_actions' onclick='route_height_profile()'><text>Height Profile</text></img>
+			</a>
+        	</html>
+	]]>
+	</gui>
         <!-- for a debug log -->
         <log enabled="no" type="textfile_debug" data="debug_%Y%m%d-%i.txt" flush_size="1000" flush_time="30"/>
         <!-- osd items allow to position display and control items directly on top of the map: -->

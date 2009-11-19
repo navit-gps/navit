@@ -14,6 +14,7 @@
 #include "callback.h"
 #include "command.h"
 #include "event.h"
+#include "navit_nls.h"
 
 /*
 gui.fullscreen()
@@ -117,6 +118,7 @@ is_double(struct result *res)
 static void
 dump(struct result *res)
 {
+#if 0
 	char object[res->varlen+1];
 	char attribute[res->attrnlen+1];
 	if (res->var)
@@ -127,6 +129,7 @@ dump(struct result *res)
 	attribute[res->attrnlen]='\0';
 	dbg(0,"type:%s\n", attr_to_name(res->attr.type));
 	dbg(0,"attribute '%s' from '%s'\n", attribute, object);
+#endif
 }
 
 static enum attr_type
@@ -263,7 +266,7 @@ eval_value(struct context *ctx, struct result *res) {
 		op++;
 	}
 
-	if (op[0] >= 'a' && op[0] <= 'z') {
+	if ((op[0] >= 'a' && op[0] <= 'z') || op[0] == '_') {
 		res->attr.type=attr_none;
 		res->var=op;
 		while ((op[0] >= 'a' && op[0] <= 'z') || op[0] == '_') {
@@ -361,7 +364,7 @@ command_call_function(struct context *ctx, struct result *res)
 	if (res->attrn)
 		strncpy(function, res->attrn, res->attrnlen);
 	function[res->attrnlen]='\0';
-	dbg(0,"function=%s\n", function);
+	dbg(1,"function=%s\n", function);
 	if (ctx->expr[0] != ')') {
 		list=eval_list(ctx);	
 		if (ctx->error) return;
@@ -370,16 +373,22 @@ command_call_function(struct context *ctx, struct result *res)
 		ctx->error=missing_closing_brace;
 		return;
 	}
-	if (command_object_get_attr(ctx, &res->attr, attr_callback_list, &cbl)) {
-		int valid;
-		dbg(0,"function call %s from %s\n",function, attr_to_name(res->attr.type));
-		callback_list_call_attr_4(cbl.u.callback_list, attr_command, function, list, NULL, &valid);
+	if (!strcmp(function,"_") && list && list[0] && list[0]->type >= attr_type_string_begin && list[0]->type <= attr_type_string_end) {
+		res->attr.type=list[0]->type;
+		res->attr.u.str=g_strdup(gettext(list[0]->u.str));	
+		
+	} else {
+		if (command_object_get_attr(ctx, &res->attr, attr_callback_list, &cbl)) {
+			int valid;
+			dbg(1,"function call %s from %s\n",function, attr_to_name(res->attr.type));
+			callback_list_call_attr_4(cbl.u.callback_list, attr_command, function, list, NULL, &valid);
+		}
+		res->attr.type=attr_none;
 	}
 	res->var=NULL;
 	res->varlen=0;
 	res->attrn=NULL;
 	res->attrnlen=0;
-	res->attr.type=attr_none;
 }
 
 static void
@@ -407,7 +416,7 @@ eval_postfix(struct context *ctx, struct result *res)
 				return;
 			}
 		} else if (op[0] == '(') {
-			dbg(0,"function call\n");
+			dbg(1,"function call\n");
 			resolve_object(ctx, res);
 			command_call_function(ctx, res);
 		}
@@ -742,6 +751,8 @@ command_evaluate_to_string(struct attr *attr, char *expr, int **error)
 
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (!ctx.error)
+		resolve(&ctx, &res, NULL);
+	if (!ctx.error)
 		ret=get_string(&ctx, &res);
 	if (error)
 		*error=&ctx.error;
@@ -760,12 +771,41 @@ command_evaluate_to_int(struct attr *attr, char *expr, int **error)
 
 	command_evaluate_to(attr, expr, &ctx, &res);
 	if (!ctx.error)
+		resolve(&ctx, &res, NULL);
+	if (!ctx.error)
 		ret=get_int(&ctx, &res);
 	if (error)
 		*error=&ctx.error;
 	if (ctx.error)
 		return 0;
 	else
+		return ret;
+}
+
+int
+command_evaluate_to_boolean(struct attr *attr, char *expr, int **error)
+{
+	struct result res;
+	struct context ctx;
+	int ret=0;
+
+	command_evaluate_to(attr, expr, &ctx, &res);
+	if (!ctx.error)
+		resolve(&ctx, &res, NULL);
+	if (!ctx.error) {
+		if (res.attr.type == attr_none)
+			ret=0;
+		else if ((res.attr.type >= attr_type_int_begin && res.attr.type <= attr_type_int_end) ||
+			 (res.attr.type >= attr_type_double_begin && res.attr.type <= attr_type_double_end))
+			ret=get_int(&ctx, &res);
+		else 
+			ret=res.attr.u.data != NULL;
+	}
+	if (error)
+		*error=&ctx.error;
+	if (ctx.error)
+		return 0;
+	else	
 		return ret;
 }
 
