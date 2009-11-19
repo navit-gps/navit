@@ -97,8 +97,7 @@ struct graphics_gc_priv {
 	GdkGC *gc;
 	GdkPixmap *pixmap;
 	struct graphics_priv *gr;
-	int level;
-	unsigned char r,g,b,a;
+	struct color c;
 };
 
 struct graphics_image_priv {
@@ -142,13 +141,9 @@ gc_set_color(struct graphics_gc_priv *gc, struct color *c, int fg)
 	gdkc.blue=c->b;
 	gdk_colormap_alloc_color(gc->gr->colormap, &gdkc, FALSE, TRUE);
 	gdk_colormap_query_color(gc->gr->colormap, gdkc.pixel, &gdkc);
-	gc->r=gdkc.red >> 8;
-	gc->g=gdkc.green >> 8;
-	gc->b=gdkc.blue >> 8;
-	gc->a=c->a >> 8;
+	gc->c=*c;
 	if (fg) {
 		gdk_gc_set_foreground(gc->gc, &gdkc);
-		gc->level=(c->r+c->g+c->b)/3;
 	} else
 		gdk_gc_set_background(gc->gc, &gdkc);
 }
@@ -290,13 +285,14 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 }
 
 static void
-display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct point *p)
+display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, int color, struct point *p)
 {
-	int i,x,y;
+	int i,x,y,stride;
 	struct font_freetype_glyph *g, **gp;
-	unsigned char *shadow;
+	unsigned char *shadow,*glyph;
 	struct color transparent={0x0,0x0,0x0,0x0};
 	struct color white={0xffff,0xffff,0xffff,0xffff};
+	struct color black={0x0000,0x0000,0x0000,0xffff};
 
 	gp=text->glyph;
 	i=text->glyph_count;
@@ -307,10 +303,18 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 		g=*gp++;
 		if (g->w && g->h && bg ) {
 #if 1
-			shadow=g_malloc((g->w+2)*(g->h+2));
-			if (gr->freetype_methods.get_shadow(g, shadow, 8, g->w+2, &white, &transparent))
-				gdk_draw_gray_image(gr->drawable, bg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, g->w+2);
+			stride=g->w+2;
+			shadow=g_malloc(stride*(g->h+2));
+			if (gr->freetype_methods.get_shadow(g, shadow, 8, stride, &white, &transparent))
+				gdk_draw_gray_image(gr->drawable, bg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, stride);
 			g_free(shadow);
+			if (color) {
+				stride*=3;
+				shadow=g_malloc(stride*(g->h+2));
+				gr->freetype_methods.get_shadow(g, shadow, 24, stride, &bg->c, &transparent);
+				gdk_draw_rgb_image(gr->drawable, fg->gc, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, g->w+2, g->h+2, GDK_RGB_DITHER_NONE, shadow, stride);
+				g_free(shadow);
+			} 
 #else
 			GdkImage *image;
 			stride=(g->w+9)/8;
@@ -333,8 +337,21 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 	while (i-- > 0)
 	{
 		g=*gp++;
-		if (g->w && g->h) 
-			gdk_draw_gray_image(gr->drawable, fg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, g->pixmap, g->w);
+		if (g->w && g->h) {
+			if (color) {
+				stride=g->w;
+				glyph=g_malloc(stride*g->h);
+				gr->freetype_methods.get_glyph(g, glyph, 8, stride, &fg->c, &bg->c, &transparent);
+				gdk_draw_gray_image(gr->drawable, bg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, glyph, g->w);
+				g_free(glyph);
+				stride*=3;
+				glyph=g_malloc(stride*g->h);
+				gr->freetype_methods.get_glyph(g, glyph, 24, stride, &fg->c, &bg->c, &transparent);
+				gdk_draw_rgb_image(gr->drawable, fg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, glyph, stride);
+				g_free(glyph);
+			} else
+				gdk_draw_gray_image(gr->drawable, fg->gc, (x+g->x)>>6, (y+g->y)>>6, g->w, g->h, GDK_RGB_DITHER_NONE, g->pixmap, g->w);
+		}
 		x+=g->dx;
 		y+=g->dy;
 	}
@@ -344,6 +361,7 @@ static void
 draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
 	struct font_freetype_text *t;
+	int color=0;
 
 	if (! font)
 	{
@@ -363,22 +381,24 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 #endif
 
 	if (bg) {
-		if (bg->level > 32767) {
+		if (COLOR_IS_BLACK(fg->c) && COLOR_IS_WHITE(bg->c)) {
 			gdk_gc_set_function(fg->gc, GDK_AND_INVERT);
 			gdk_gc_set_function(bg->gc, GDK_OR);
-		} else {
+		} else if (COLOR_IS_WHITE(fg->c) && COLOR_IS_BLACK(bg->c)) {
 			gdk_gc_set_function(fg->gc, GDK_OR);
 			gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
-		}
+		} else 
+			color=1;
+	} else {
+		gdk_gc_set_function(fg->gc, GDK_OR);
+		gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
+		color=1;
 	}
-
 	t=gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
-	display_text_draw(t, gr, fg, bg, p);
+	display_text_draw(t, gr, fg, bg, color, p);
 	gr->freetype_methods.text_destroy(t);
-	if (bg) {
-		gdk_gc_set_function(fg->gc, GDK_COPY);
-        	gdk_gc_set_function(bg->gc, GDK_COPY);
-	}
+	gdk_gc_set_function(fg->gc, GDK_COPY);
+       	gdk_gc_set_function(bg->gc, GDK_COPY);
 #if 0
 	{
 		struct point pnt[5];
@@ -461,25 +481,30 @@ overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int cl
 }
 
 static void
-overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *r, GdkPixmap *pixmap, GdkGC *gc)
+overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re, GdkPixmap *pixmap, GdkGC *gc)
 {
 	GdkPixbuf *pixbuf,*pixbuf2;
-	guchar *pixels1, *pixels2, *p1, *p2;
+	guchar *pixels1, *pixels2, *p1, *p2, r, g, b, a;
 	int x,y;
 	int rowstride1,rowstride2;
 	int n_channels1,n_channels2;
 	GdkRectangle or,ir;
 	struct graphics_gc_priv *bg=overlay->background_gc;
+	r=bg->c.r>>8;
+	g=bg->c.g>>8;
+	b=bg->c.b>>8;
+	a=bg->c.a>>8;
+	
 
 	if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
 		return;
-	dbg(1,"r->x=%d r->y=%d r->width=%d r->height=%d\n", r->x, r->y, r->width, r->height);
+	dbg(1,"r->x=%d r->y=%d r->width=%d r->height=%d\n", re->x, re->y, re->width, re->height);
 	overlay_rect(parent, overlay, 0, &or);
 	dbg(1,"or.x=%d or.y=%d or.width=%d or.height=%d\n", or.x, or.y, or.width, or.height);
-	if (! gdk_rectangle_intersect(r, &or, &ir))
+	if (! gdk_rectangle_intersect(re, &or, &ir))
 		return;
-	or.x-=r->x;
-	or.y-=r->y;
+	or.x-=re->x;
+	or.y-=re->y;
 	pixbuf=gdk_pixbuf_get_from_drawable(NULL, overlay->drawable, NULL, 0, 0, 0, 0, or.width, or.height);
 	pixbuf2=gdk_pixbuf_new(gdk_pixbuf_get_colorspace(pixbuf), TRUE, gdk_pixbuf_get_bits_per_sample(pixbuf),
 				or.width, or.height);
@@ -496,8 +521,8 @@ overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRec
 			p2[0]=p1[0];
 			p2[1]=p1[1];
 			p2[2]=p1[2];
-			if (bg && p1[0] == bg->r && p1[1] == bg->g && p1[2] == bg->b) 
-				p2[3]=bg->a;
+			if (bg && p1[0] == r && p1[1] == g && p1[2] == b) 
+				p2[3]=a;
 			else 
 				p2[3]=overlay->a;
 		}

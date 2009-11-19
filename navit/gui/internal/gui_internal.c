@@ -5393,7 +5393,7 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	if( (attr=attr_search(attrs,NULL,attr_background_color)))
 	      this->background_color=*attr->u.color;
 	else
-	      this->background_color=(struct color){0x0,0x0,0x0,0xffff};
+	      this->background_color=COLOR_BLACK;
 	if( (attr=attr_search(attrs,NULL,attr_background_color2)))
 		this->background2_color=*attr->u.color;
 	else
@@ -5401,7 +5401,8 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	if( (attr=attr_search(attrs,NULL,attr_text_color)))
 	      this->text_foreground_color=*attr->u.color;
 	else
-	      this->text_foreground_color=(struct color){0xffff,0xffff,0xffff,0xffff};
+	      this->text_foreground_color=COLOR_WHITE;
+	this->text_background_color=COLOR_BLACK;
 	if( (attr=attr_search(attrs,NULL,attr_columns)))
 	      this->cols=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_osd_configuration)))
