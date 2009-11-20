@@ -564,6 +564,10 @@ AC_SUBST(XSLTS)
 AC_ARG_WITH(saxon, [ --with-saxon   specify the saxon xslt processor], SAXON=$withval, SAXON="saxon")
 AC_SUBST(SAXON)
 
+# Android Permissions
+AC_ARG_WITH(android-permissions, [  --with-android-permissions   Set additional android permissions], ANDROID_PERMISSIONS=$withval, ANDROID_PERMISSIONS="")
+AC_SUBST(ANDROID_PERMISSIONS)
+
 # NLS
 
 AC_ARG_ENABLE(nls,
