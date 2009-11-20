@@ -1079,13 +1079,27 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 		wi=*width;
 		width+=step;
 		if (i < count - 1) {
+			int dxs,dys,lscales;
+
 			dx = (pnt[i + 1].x - pnt[i].x);
 			dy = (pnt[i + 1].y - pnt[i].y);
+#if 0
 			l = int_sqrt(dx * dx * lscale * lscale + dy * dy * lscale * lscale);
+#else
+			dxs=dx*dx;
+                       dys=dy*dy;
+                       lscales=lscale*lscale;
+                       if (dxs + dys > lscales)
+                               l = int_sqrt(dxs+dys)*lscale;
+                       else
+                               l = int_sqrt((dxs+dys)*lscales);
+#endif
 			fow=fowler(-dy, dx);
 		}
 		if (! l) 
 			l=1;
+		if (wi*lscale > 10000)
+			lscale=10000/wi;
 		dbg_assert(wi*lscale < 10000);
 		calc_offsets(wi*lscale, l, dx, dy, &o);
 		pos.x = pnt[i].x + o.ny;
@@ -1807,7 +1821,7 @@ do_draw(struct displaylist *displaylist, int cancel)
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int callback)
+void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int flags)
 {
 	int order=transform_get_order(trans);
 	displaylist->dc.trans=trans;
@@ -1820,13 +1834,15 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 		gra->default_font = g_strdup(l->font);
 	}
 	graphics_background_gc(gra, gra->gc[0]);
-	gra->meth.draw_mode(gra->priv, draw_mode_begin);
-	gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &gra->r.lu, gra->r.rl.x-gra->r.lu.x, gra->r.rl.y-gra->r.lu.y);
+	gra->meth.draw_mode(gra->priv, (flags & 8)?draw_mode_begin_clear:draw_mode_begin);
+	if (!(flags & 2))
+		gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &gra->r.lu, gra->r.rl.x-gra->r.lu.x, gra->r.rl.y-gra->r.lu.y);
 	if (l) 
 		xdisplay_draw(displaylist, gra, l, order+l->order_delta);
-	if (callback)
+	if (flags & 1)
 		callback_list_call_attr_0(gra->cbl, attr_postdraw);
-	gra->meth.draw_mode(gra->priv, draw_mode_end);
+	if (!(flags & 4))
+		gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
 
 static void graphics_load_mapset(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb)
