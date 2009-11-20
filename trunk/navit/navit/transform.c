@@ -516,9 +516,15 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 static void
 transform_apply_inverse_matrix(struct transformation *t, struct coord_geo_cart *in, struct coord_geo_cart *out)
 {
+#ifdef ENABLE_ROLL
 	out->x=in->x*t->im00+in->y*t->im01+in->z*t->im02;
 	out->y=in->x*t->im10+in->y*t->im11+in->z*t->im12;
 	out->z=in->x*t->im20+in->y*t->im21+in->z*t->im22;
+#else
+	out->x=in->x*t->im00+in->y*t->im01;
+	out->y=in->x*t->im10+in->y*t->im11;
+	out->z=0;
+#endif
 }
 
 static int
@@ -559,6 +565,7 @@ static int
 transform_reverse_near_far(struct transformation *t, struct point *p, struct coord *c, int near, int far)
 {
         double xc,yc;
+	int hog;
 	dbg(1,"%d,%d\n",p->x,p->y);
 	if (t->ddd) {
 		struct coord_geo_cart nearc,farc,nears,fars,intersection;
@@ -566,7 +573,12 @@ transform_reverse_near_far(struct transformation *t, struct point *p, struct coo
 		transform_screen_to_3d(t, p, far, &farc);
 		transform_apply_inverse_matrix(t, &nearc, &nears);
 		transform_apply_inverse_matrix(t, &farc, &fars);
-		if (transform_zplane_intersection(&nears, &fars, t->hog, &intersection) != 1)
+#if ENABLE_ROLL
+		hog=t->hog;
+#else
+		hog=0;
+#endif
+		if (transform_zplane_intersection(&nears, &fars, hog, &intersection) != 1)
 			return 0;
 		xc=intersection.x;
 		yc=intersection.y;
@@ -826,7 +838,6 @@ transform_setup_source_rect(struct transformation *t)
 	msm_last=&t->map_sel;
 	ms=t->screen_sel;
 	while (ms) {
-		int valid=0;
 		msm=g_new0(struct map_selection, 1);
 		*msm=*ms;
 		pr=&ms->u.p_rect;
@@ -842,7 +853,11 @@ transform_setup_source_rect(struct transformation *t)
 			struct coord_geo_cart tmp,cg[8];
 			struct coord c;
 			int valid=0;
+#if ENABLE_ROLL
 			int hog=t->hog;
+#else
+			int hog=0;
+#endif
 			char edgenodes[]={
 				0,1,
 				1,2,
