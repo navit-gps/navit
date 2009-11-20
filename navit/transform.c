@@ -106,7 +106,7 @@ transform_setup_matrix(struct transformation *t)
 
 	dbg(1,"yaw=%d pitch=%d center=0x%x,0x%x\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
 	t->znear=1 << POST_SHIFT;
-	t->zfar=1000*t->znear;
+	t->zfar=300*t->znear;
 	t->scale_shift=0;
 	t->order=t->order_base;
 	if (t->scale >= 1) {
@@ -524,7 +524,6 @@ transform_screen_to_3d(struct transformation *t, struct point *p, navit_float z,
 	double offz=t->offz << POST_SHIFT;
 	xc=p->x - t->offx;
 	yc=p->y - t->offy;
-	z+=offz;
 	cg->x=xc*z/t->xscale;
 	cg->y=yc*z/t->yscale;
 	cg->z=z-offz;
