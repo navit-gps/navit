@@ -14,7 +14,9 @@ POTFILES  = \
 	$(top_srcdir)/navit/gui/gtk/destination.c \
 	$(top_srcdir)/navit/gui/gtk/gui_gtk_action.c \
 	$(top_srcdir)/navit/gui/gtk/gui_gtk_statusbar.c \
-	$(top_srcdir)/navit/gui/internal/gui_internal.c
+	$(top_srcdir)/navit/gui/internal/gui_internal.c \
+	$(top_builddir)/navit/navit_shipped.glade \
+	$(top_builddir)/navit/navit_shipped.c
 
 
 SUFFIXES = .po .mo
@@ -26,6 +28,14 @@ SUFFIXES = .po .mo
 	cp $@ ../locale/$$dir/LC_MESSAGES/navit.mo
 
 all: @MOFILES@
+
+# Trick gettext to get translateable strings out of navit_shipped.xml
+
+$(top_builddir)/navit/navit_shipped.glade: $(top_srcdir)/navit/navit_shipped.xml
+	sed -e "s/vehicleprofile/atkaction/" -e "s/name=/description=/" -e 's/<!\[CDATA\[//' -e 's/\]\]//' <$(top_srcdir)/navit/navit_shipped.xml >$(top_builddir)/navit/navit_shipped.glade
+
+$(top_builddir)/navit/navit_shipped.c: $(top_srcdir)/navit/navit_shipped.xml
+	sed -e 's/|//g' -e 's/^/|/' -e 's/$$/|/' -e 's/\(_("[^"]*")\)/| \1; |/g' -e 's/|[^|]*|//g' <$(top_srcdir)/navit/navit_shipped.xml >$(top_builddir)/navit/navit_shipped.c
 
 @POFILES@: navit.pot
 	sed 's/^"Project-Id-Version:.*/"Project-Id-Version: $(PACKAGE_STRING)\\n"/' < $(top_srcdir)/po/$@.in | $(MSGMERGE) --no-fuzzy-matching --verbose -o $(top_builddir)/po/$@ - navit.pot
