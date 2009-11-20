@@ -573,7 +573,7 @@ transform_reverse_near_far(struct transformation *t, struct point *p, struct coo
 		transform_screen_to_3d(t, p, far, &farc);
 		transform_apply_inverse_matrix(t, &nearc, &nears);
 		transform_apply_inverse_matrix(t, &farc, &fars);
-#if ENABLE_ROLL
+#ifdef ENABLE_ROLL
 		hog=t->hog;
 #else
 		hog=0;
@@ -853,7 +853,7 @@ transform_setup_source_rect(struct transformation *t)
 			struct coord_geo_cart tmp,cg[8];
 			struct coord c;
 			int valid=0;
-#if ENABLE_ROLL
+#ifdef ENABLE_ROLL
 			int hog=t->hog;
 #else
 			int hog=0;
