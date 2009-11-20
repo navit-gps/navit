@@ -39,7 +39,7 @@ struct transformation {
 	int pitch;
 	int ddd;
  	int m00,m01,m10,m11;	/* 2d transformation matrix */
-	int xyscale;
+	int xscale,yscale,wscale;
  	int m20,m21; 		/* additional 3d parameters */
 #ifdef ENABLE_ROLL
 	int roll;
@@ -53,6 +53,7 @@ struct transformation {
 	struct point screen_center;
  	int screen_dist;
  	int offx,offy,offz;
+	int znear,zfar;
 	struct coord map_center;	/* Center of source rectangle */
 	enum projection pro;
 	navit_float scale;		/* Scale factor */
@@ -68,6 +69,18 @@ transform_setup_matrix(struct transformation *t)
 {
 	navit_float det;
 	navit_float fac;
+#if 0 /* FIXME */
+#if 0
+	t->roll=0;
+	t->pitch=90;
+	t->yaw=0;
+#endif
+#if 0
+	t->scale=1;
+#endif
+	t->hog=2;
+	t->ddd=1;
+#endif
 	navit_float yawc=navit_cos(-M_PI*t->yaw/180);
 	navit_float yaws=navit_sin(-M_PI*t->yaw/180);
 	navit_float pitchc=navit_cos(-M_PI*t->pitch/180);
@@ -81,6 +94,8 @@ transform_setup_matrix(struct transformation *t)
 	int order_dir=-1;
 
 	dbg(1,"yaw=%d pitch=%d center=0x%x,0x%x\n", t->yaw, t->pitch, t->map_center.x, t->map_center.y);
+	t->znear=1 << POST_SHIFT;
+	t->zfar=1000*t->znear;
 	t->scale_shift=0;
 	t->order=t->order_base;
 	if (t->scale >= 1) {
@@ -117,15 +132,25 @@ transform_setup_matrix(struct transformation *t)
 	t->m21=(-pitchs*yawc)*fac;
 #endif
 	t->offz=0;
-	t->xyscale=1;
+	t->xscale=1;
+	t->yscale=1;
+	t->wscale=1;
 	t->ddd=0;
 	t->offx=t->screen_center.x;
 	t->offy=t->screen_center.y;
 	if (t->pitch) {
 		t->ddd=1;
 		t->offz=t->screen_dist;
-		t->xyscale=t->offz;
+		t->xscale=t->offz;
+		t->yscale=t->offz;
+		t->wscale=t->offz << POST_SHIFT;
 	}
+#if 0 /* FIXME */
+	t->offz=0;
+	t->xscale=750;
+	t->yscale=620;
+	t->wscale=32 << POST_SHIFT;
+#endif
 #ifdef ENABLE_ROLL
 	det=(navit_float)t->m00*(navit_float)t->m11*(navit_float)t->m22+
             (navit_float)t->m01*(navit_float)t->m12*(navit_float)t->m20+
@@ -379,7 +404,7 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 	struct coord_geo g;
 	int xc, yc, zc=0, xco=0, yco=0, zco=0;
 	int xm,ym,zct;
-	int zlimit=1000;
+	int zlimit=t->znear;
 	int visible, visibleo=-1;
 	int i,j = 0,k=0;
 	dbg(1,"count=%d\n", count);
@@ -406,6 +431,8 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 		yc-=t->map_center.y;
 		xc >>= t->scale_shift;
 		yc >>= t->scale_shift;
+		xm=xc;
+		ym=yc;
 #ifdef ENABLE_ROLL		
 		xcn=xc*t->m00+yc*t->m01+t->hog*t->m02;
 		ycn=xc*t->m10+yc*t->m11+t->hog*t->m12;
@@ -456,13 +483,15 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 			dbg(0,"%d/%d=%d %d/%d=%d\n",xcn,xc,xcn/xc,ycn,yc,ycn/yc);
 #endif
 #if 1
-			xc=(long long)xcn*t->xyscale/zc;
-			yc=(long long)ycn*t->xyscale/zc;
+			xc=(long long)xcn*t->xscale/zc;
+			yc=(long long)ycn*t->yscale/zc;
 #else
 			xc=xcn/(1000+zc);
 			yc=ycn/(1000+zc);
 #endif
+#if 0
 			dbg(1,"%d,%d %d\n",xc,yc,zc);
+#endif
 		} else {
 			xc=xcn;
 			yc=ycn;
@@ -471,12 +500,11 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 		}
 		xc+=t->offx;
 		yc+=t->offy;
-		dbg(1,"xc=%d yc=%d\n", xc, yc);
 		p[j].x=xc;
 		p[j].y=yc;
 		if (width_return) {
 			if (t->ddd) 
-				width_return[j]=width*(t->offz << POST_SHIFT)/zc;
+				width_return[j]=width*t->wscale/zc;
 			else 
 				width_return[j]=width;
 		}
@@ -485,49 +513,79 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 	return j;
 }
 
-void
-transform_reverse(struct transformation *t, struct point *p, struct coord *c)
+static void
+transform_apply_inverse_matrix(struct transformation *t, struct coord_geo_cart *in, struct coord_geo_cart *out)
 {
-        double zc,xc,yc,xcn,ycn,q;
+	out->x=in->x*t->im00+in->y*t->im01+in->z*t->im02;
+	out->y=in->x*t->im10+in->y*t->im11+in->z*t->im12;
+	out->z=in->x*t->im20+in->y*t->im21+in->z*t->im22;
+}
+
+static int
+transform_zplane_intersection(struct coord_geo_cart *p1, struct coord_geo_cart *p2, navit_float z, struct coord_geo_cart *result)
+{
+	navit_float dividend=z-p1->z;
+	navit_float divisor=p2->z-p1->z;
+	navit_float q;
+	if (!divisor) {
+		if (dividend) 
+			return 0;	/* no intersection */
+		else
+			return 3;	/* identical planes */
+	}
+	q=dividend/divisor;
+	result->x=p1->x+q*(p2->x-p1->x);
+	result->y=p1->y+q*(p2->y-p1->y);
+	result->z=z;
+	if (q >= 0 && q <= 1)
+		return 1;	/* intersection within [p1,p2] */
+	return 2; /* intersection without [p1,p2] */
+}
+
+static void
+transform_screen_to_3d(struct transformation *t, struct point *p, navit_float z, struct coord_geo_cart *cg)
+{
+	double xc,yc;
 	double offz=t->offz << POST_SHIFT;
 	xc=p->x - t->offx;
 	yc=p->y - t->offy;
-	if (t->ddd) {
-		xc/=t->xyscale;
-		yc/=t->xyscale;
-		double f00=xc*t->im00*t->m20;
-		double f01=yc*t->im01*t->m20;
-		double f10=xc*t->im10*t->m21;
-		double f11=yc*t->im11*t->m21;
-#ifdef ENABLE_ROLL	
-		q=(1-f00-f01-t->im02*t->m20-f10-f11-t->im12*t->m21);
-		if (q < 0) 
-			q=0.15;
-		zc=(offz*((f00+f01+f10+f11))+t->hog*t->m22)/q;
-#else
-		q=(1-f00-f01-f10-f11);
-                if (q < 0) 
-			q=0.15;
-		zc=offz*(f00+f01+f10+f11)/q;
-#endif
-		xcn=xc*(zc+offz);
-		ycn=yc*(zc+offz);
-#ifdef ENABLE_ROLL	
-		xc=xcn*t->im00+ycn*t->im01+zc*t->im02;
-		yc=xcn*t->im10+ycn*t->im11+zc*t->im12;
-#else
-		xc=xcn*t->im00+ycn*t->im01;
-		yc=xcn*t->im10+ycn*t->im11;
-#endif
+	z+=offz;
+	cg->x=xc*z/t->xscale;
+	cg->y=yc*z/t->yscale;
+	cg->z=z-offz;
+}
 
+static int
+transform_reverse_near_far(struct transformation *t, struct point *p, struct coord *c, int near, int far)
+{
+        double xc,yc;
+	dbg(1,"%d,%d\n",p->x,p->y);
+	if (t->ddd) {
+		struct coord_geo_cart nearc,farc,nears,fars,intersection;
+		transform_screen_to_3d(t, p, near, &nearc);	
+		transform_screen_to_3d(t, p, far, &farc);
+		transform_apply_inverse_matrix(t, &nearc, &nears);
+		transform_apply_inverse_matrix(t, &farc, &fars);
+		if (transform_zplane_intersection(&nears, &fars, t->hog, &intersection) != 1)
+			return 0;
+		xc=intersection.x;
+		yc=intersection.y;
 	} else {
-		xcn=xc;
-		ycn=yc;
+        	double xcn,ycn;
+		xcn=p->x - t->offx;
+		ycn=p->y - t->offy;
 		xc=(xcn*t->im00+ycn*t->im01)*(1 << POST_SHIFT);
 		yc=(xcn*t->im10+ycn*t->im11)*(1 << POST_SHIFT);
 	}
 	c->x=xc*(1 << t->scale_shift)+t->map_center.x;
 	c->y=yc*(1 << t->scale_shift)+t->map_center.y;
+	return 1;
+}
+
+int
+transform_reverse(struct transformation *t, struct point *p, struct coord *c)
+{
+	return transform_reverse_near_far(t, p, c, t->znear, t->zfar);
 }
 
 enum projection
@@ -589,6 +647,10 @@ transform_get_selection(struct transformation *this_, enum projection pro, int o
 		}
 		dbg(1,"transform rect for %d is %d,%d - %d,%d\n", pro, curro->u.c_rect.lu.x, curro->u.c_rect.lu.y, curro->u.c_rect.rl.x, curro->u.c_rect.rl.y);
 		curro->order+=order;
+		curro->u.c_rect.lu.x-=500;
+		curro->u.c_rect.lu.y+=500;
+		curro->u.c_rect.rl.x+=500;
+		curro->u.c_rect.rl.y-=500;
 		curro->range=item_range_all;
 		curri=curri->next;
 		curro=curro->next;
@@ -764,25 +826,69 @@ transform_setup_source_rect(struct transformation *t)
 	msm_last=&t->map_sel;
 	ms=t->screen_sel;
 	while (ms) {
+		int valid=0;
 		msm=g_new0(struct map_selection, 1);
 		*msm=*ms;
 		pr=&ms->u.p_rect;
-		screen_pnt[0].x=pr->lu.x;
+		screen_pnt[0].x=pr->lu.x;	/* left upper */
 		screen_pnt[0].y=pr->lu.y;
-		screen_pnt[1].x=pr->rl.x;
+		screen_pnt[1].x=pr->rl.x;	/* right upper */
 		screen_pnt[1].y=pr->lu.y;
-		screen_pnt[2].x=pr->lu.x;
+		screen_pnt[2].x=pr->rl.x;	/* right lower */
 		screen_pnt[2].y=pr->rl.y;
-		screen_pnt[3].x=pr->rl.x;
+		screen_pnt[3].x=pr->lu.x;	/* left lower */
 		screen_pnt[3].y=pr->rl.y;
-		for (i = 0 ; i < 4 ; i++) {
-			transform_reverse(t, &screen_pnt[i], &screen[i]);
-			dbg(1,"map(%d) %d,%d=0x%x,0x%x\n", i,screen_pnt[i].x, screen_pnt[i].y, screen[i].x, screen[i].y);
+		if (t->ddd) {
+			struct coord_geo_cart tmp,cg[8];
+			struct coord c;
+			int valid=0;
+			int hog=t->hog;
+			char edgenodes[]={
+				0,1,
+				1,2,
+				2,3,
+				3,0,
+				4,5,
+				5,6,
+				6,7,
+				7,4,
+				0,4,
+				1,5,
+				2,6,
+				3,7};	
+			for (i = 0 ; i < 8 ; i++) {
+				transform_screen_to_3d(t, &screen_pnt[i%4], (i >= 4 ? t->zfar:t->znear), &tmp);
+				transform_apply_inverse_matrix(t, &tmp, &cg[i]);
+			}
+			msm->u.c_rect.lu.x=0;
+			msm->u.c_rect.lu.y=0;
+			msm->u.c_rect.rl.x=0;
+			msm->u.c_rect.rl.y=0;
+			for (i = 0 ; i < 12 ; i++) {
+				if (transform_zplane_intersection(&cg[edgenodes[i*2]], &cg[edgenodes[i*2+1]], hog, &tmp) == 1) {
+					c.x=tmp.x*(1 << t->scale_shift)+t->map_center.x;
+					c.y=tmp.y*(1 << t->scale_shift)+t->map_center.y;
+					dbg(0,"intersection with edge %d at 0x%x,0x%x\n",i,c.x,c.y);
+					if (valid)
+						coord_rect_extend(&msm->u.c_rect, &c);
+					else {
+						msm->u.c_rect.lu=c;
+						msm->u.c_rect.rl=c;
+						valid=1;
+					}
+					dbg(0,"rect 0x%x,0x%x - 0x%x,0x%x\n",msm->u.c_rect.lu.x,msm->u.c_rect.lu.y,msm->u.c_rect.rl.x,msm->u.c_rect.rl.y);
+				}
+			}
+		} else {
+			for (i = 0 ; i < 4 ; i++) {
+				transform_reverse(t, &screen_pnt[i], &screen[i]);
+				dbg(1,"map(%d) %d,%d=0x%x,0x%x\n", i,screen_pnt[i].x, screen_pnt[i].y, screen[i].x, screen[i].y);
+			}
+			msm->u.c_rect.lu.x=min4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
+			msm->u.c_rect.rl.x=max4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
+			msm->u.c_rect.rl.y=min4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
+			msm->u.c_rect.lu.y=max4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
 		}
-		msm->u.c_rect.lu.x=min4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
-		msm->u.c_rect.rl.x=max4(screen[0].x,screen[1].x,screen[2].x,screen[3].x);
-		msm->u.c_rect.rl.y=min4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
-		msm->u.c_rect.lu.y=max4(screen[0].y,screen[1].y,screen[2].y,screen[3].y);
 		dbg(1,"%dx%d\n", msm->u.c_rect.rl.x-msm->u.c_rect.lu.x,
 				 msm->u.c_rect.lu.y-msm->u.c_rect.rl.y);
 		*msm_last=msm;
