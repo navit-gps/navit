@@ -1,4 +1,5 @@
 include $(top_srcdir)/Makefile.inc
+comma=,
 DIST_SUBDIRS=binding map maptool fib-1.1 font fonts gui graphics osd speech support vehicle xpm maps
 SUBDIRS=binding map fib-1.1 font gui graphics osd speech support vehicle xpm
 
@@ -57,6 +58,12 @@ if SUPPORT_ANDROID
   libnavit_la_SOURCES += android.c
   navit_SOURCES =
   navit_LDADD =
+
+android/AndroidManifest.xml: android/AndroidManifest.xml.in
+	sed '0,/<uses-sdk/!d' <$< >$@
+	for i in $(subst $(comma), ,@ANDROID_PERMISSIONS@); do echo "    <uses-permission android:name="android.permission.$$i" />" >>$@; done
+	sed '0,/<uses-sdk/d' <$< >>$@
+	
 
 android/build.xml: android/AndroidManifest.xml
 	if [ "$(builddir)" != "$(srcdir)" ]; then cp -rp $(srcdir)/android $(builddir)/android; fi
