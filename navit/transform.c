@@ -33,21 +33,23 @@
 #include "point.h"
 
 #define POST_SHIFT 8
+#define ENABLE_ROLL
 
 struct transformation {
 	int yaw;		/* Rotation angle */
 	int pitch;
 	int ddd;
- 	int m00,m01,m10,m11;	/* 2d transformation matrix */
+ 	int m00,m01,m02;	/* 3d transformation matrix */
+ 	int m10,m11,m12;	
+ 	int m20,m21,m22;	
 	int xscale,yscale,wscale;
- 	int m20,m21; 		/* additional 3d parameters */
 #ifdef ENABLE_ROLL
 	int roll;
- 	int m02,m12,m22; 
 	int hog;
- 	navit_float im02,im12,im20,im21,im22;
 #endif
- 	navit_float im00,im01,im10,im11;	/* inverse 2d transformation matrix */
+ 	navit_float im00,im01,im02;	/* inverse 3d transformation matrix */
+ 	navit_float im10,im11,im12;
+ 	navit_float im20,im21,im22;
 	struct map_selection *map_sel;
 	struct map_selection *screen_sel;
 	struct point screen_center;
@@ -61,6 +63,12 @@ struct transformation {
 	int order;
 	int order_base;
 };
+
+#ifdef ENABLE_ROLL
+#define HOG(t) ((t).hog)
+#else
+#define HOG(t) 0
+#endif
 
 
 
@@ -88,6 +96,9 @@ transform_setup_matrix(struct transformation *t)
 #ifdef ENABLE_ROLL	
 	navit_float rollc=navit_cos(M_PI*t->roll/180);
 	navit_float rolls=navit_sin(M_PI*t->roll/180);
+#else
+	navit_float rollc=1;
+	navit_float rolls=0;
 #endif
 
 	int scale=t->scale;
@@ -113,7 +124,6 @@ transform_setup_matrix(struct transformation *t)
 	fac=(1 << POST_SHIFT) * (1 << t->scale_shift) / t->scale;
 	dbg(1,"scale_shift=%d order=%d scale=%f fac=%f\n", t->scale_shift, t->order,t->scale,fac);
 	
-#ifdef ENABLE_ROLL
         t->m00=rollc*yawc*fac;
         t->m01=rollc*yaws*fac;
 	t->m02=-rolls*fac;
@@ -123,14 +133,7 @@ transform_setup_matrix(struct transformation *t)
 	t->m20=(pitchc*rolls*yawc+pitchs*yaws)*fac;
 	t->m21=(pitchc*rolls*yaws-pitchs*yawc)*fac;
 	t->m22=pitchc*rollc*fac;
-#else
-        t->m00=yawc*fac;
-        t->m01=yaws*fac;
-	t->m10=(-pitchc*yaws)*(-fac);
-	t->m11=pitchc*yawc*(-fac);
-	t->m20=pitchs*yaws*fac;
-	t->m21=(-pitchs*yawc)*fac;
-#endif
+
 	t->offz=0;
 	t->xscale=1;
 	t->yscale=1;
@@ -141,6 +144,7 @@ transform_setup_matrix(struct transformation *t)
 	if (t->pitch) {
 		t->ddd=1;
 		t->offz=t->screen_dist;
+		dbg(0,"near %d far %d\n",t->znear,t->zfar);
 		t->xscale=t->offz;
 		t->yscale=t->offz;
 		t->wscale=t->offz << POST_SHIFT;
@@ -151,7 +155,6 @@ transform_setup_matrix(struct transformation *t)
 	t->yscale=620;
 	t->wscale=32 << POST_SHIFT;
 #endif
-#ifdef ENABLE_ROLL
 	det=(navit_float)t->m00*(navit_float)t->m11*(navit_float)t->m22+
             (navit_float)t->m01*(navit_float)t->m12*(navit_float)t->m20+
             (navit_float)t->m02*(navit_float)t->m10*(navit_float)t->m21-
@@ -168,13 +171,6 @@ transform_setup_matrix(struct transformation *t)
 	t->im20=(t->m10*t->m21-t->m11*t->m20)/det;
 	t->im21=(t->m01*t->m20-t->m00*t->m21)/det;
 	t->im22=(t->m00*t->m11-t->m01*t->m10)/det;
-#else
-	det=((navit_float)t->m00*(navit_float)t->m11-(navit_float)t->m01*(navit_float)t->m10);
-	t->im00=t->m11/det;
-	t->im01=-t->m01/det;
-	t->im10=-t->m10/det;
-	t->im11=t->m00/det;
-#endif
 }
 
 struct transformation *
@@ -196,35 +192,22 @@ transform_new(void)
 	return this_;
 }
 
+int
+transform_get_hog(struct transformation *this_)
+{
+	return HOG(*this_);
+}
+
+void
+transform_set_hog(struct transformation *this_, int hog)
+{
 #ifdef ENABLE_ROLL
-
-int
-transform_get_hog(struct transformation *this_)
-{
-	return this_->hog;
-}
-
-void
-transform_set_hog(struct transformation *this_, int hog)
-{
 	this_->hog=hog;
-}
-
 #else
-
-int
-transform_get_hog(struct transformation *this_)
-{
-	return 0;
-}
-
-void
-transform_set_hog(struct transformation *this_, int hog)
-{
 	dbg(0,"not supported\n");
-}
-
 #endif
+
+}
 
 int
 transformation_get_order_base(struct transformation *this_)
@@ -433,20 +416,12 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 		yc >>= t->scale_shift;
 		xm=xc;
 		ym=yc;
-#ifdef ENABLE_ROLL		
-		xcn=xc*t->m00+yc*t->m01+t->hog*t->m02;
-		ycn=xc*t->m10+yc*t->m11+t->hog*t->m12;
-#else
-		xcn=xc*t->m00+yc*t->m01;
-		ycn=xc*t->m10+yc*t->m11;
-#endif
+
+		xcn=xc*t->m00+yc*t->m01+HOG(*t)*t->m02;
+		ycn=xc*t->m10+yc*t->m11+HOG(*t)*t->m12;
 
 		if (t->ddd) {
-#ifdef ENABLE_ROLL		
-			zc=(xc*t->m20+yc*t->m21+t->hog*t->m22);
-#else
-			zc=(xc*t->m20+yc*t->m21);
-#endif
+			zc=(xc*t->m20+yc*t->m21+HOG(*t)*t->m22);
 			zct=zc;
 			zc+=t->offz << POST_SHIFT;
 			dbg(1,"zc=%d\n", zc);
@@ -516,15 +491,9 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 static void
 transform_apply_inverse_matrix(struct transformation *t, struct coord_geo_cart *in, struct coord_geo_cart *out)
 {
-#ifdef ENABLE_ROLL
 	out->x=in->x*t->im00+in->y*t->im01+in->z*t->im02;
 	out->y=in->x*t->im10+in->y*t->im11+in->z*t->im12;
 	out->z=in->x*t->im20+in->y*t->im21+in->z*t->im22;
-#else
-	out->x=in->x*t->im00+in->y*t->im01;
-	out->y=in->x*t->im10+in->y*t->im11;
-	out->z=0;
-#endif
 }
 
 static int
@@ -565,7 +534,6 @@ static int
 transform_reverse_near_far(struct transformation *t, struct point *p, struct coord *c, int near, int far)
 {
         double xc,yc;
-	int hog;
 	dbg(1,"%d,%d\n",p->x,p->y);
 	if (t->ddd) {
 		struct coord_geo_cart nearc,farc,nears,fars,intersection;
@@ -573,12 +541,7 @@ transform_reverse_near_far(struct transformation *t, struct point *p, struct coo
 		transform_screen_to_3d(t, p, far, &farc);
 		transform_apply_inverse_matrix(t, &nearc, &nears);
 		transform_apply_inverse_matrix(t, &farc, &fars);
-#ifdef ENABLE_ROLL
-		hog=t->hog;
-#else
-		hog=0;
-#endif
-		if (transform_zplane_intersection(&nears, &fars, hog, &intersection) != 1)
+		if (transform_zplane_intersection(&nears, &fars, HOG(*t), &intersection) != 1)
 			return 0;
 		xc=intersection.x;
 		yc=intersection.y;
@@ -714,35 +677,26 @@ transform_get_pitch(struct transformation *this_)
 	return this_->pitch;
 }
 
-#ifdef ENABLE_ROLL
 void
 transform_set_roll(struct transformation *this_,int roll)
 {
+#ifdef ENABLE_ROLL
 	this_->roll=roll;
 	transform_setup_matrix(this_);
-}
-
-int
-transform_get_roll(struct transformation *this_)
-{
-	return this_->roll;
-}
-
 #else
-
-void
-transform_set_roll(struct transformation *this_,int roll)
-{
 	dbg(0,"not supported\n");
+#endif
 }
 
 int
 transform_get_roll(struct transformation *this_)
 {
+#ifdef ENABLE_ROLL
+	return this_->roll;
+#else
 	return 0;
-}
-
 #endif
+}
 
 void
 transform_set_distance(struct transformation *this_,int distance)
@@ -853,11 +807,6 @@ transform_setup_source_rect(struct transformation *t)
 			struct coord_geo_cart tmp,cg[8];
 			struct coord c;
 			int valid=0;
-#ifdef ENABLE_ROLL
-			int hog=t->hog;
-#else
-			int hog=0;
-#endif
 			char edgenodes[]={
 				0,1,
 				1,2,
@@ -880,7 +829,7 @@ transform_setup_source_rect(struct transformation *t)
 			msm->u.c_rect.rl.x=0;
 			msm->u.c_rect.rl.y=0;
 			for (i = 0 ; i < 12 ; i++) {
-				if (transform_zplane_intersection(&cg[edgenodes[i*2]], &cg[edgenodes[i*2+1]], hog, &tmp) == 1) {
+				if (transform_zplane_intersection(&cg[edgenodes[i*2]], &cg[edgenodes[i*2+1]], HOG(*t), &tmp) == 1) {
 					c.x=tmp.x*(1 << t->scale_shift)+t->map_center.x;
 					c.y=tmp.y*(1 << t->scale_shift)+t->map_center.y;
 					dbg(0,"intersection with edge %d at 0x%x,0x%x\n",i,c.x,c.y);
