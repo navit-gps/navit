@@ -71,6 +71,7 @@ uninstall-local:
 	done
 
 distclean-local:
+	rm -f $(top_builddir)/navit/navit_shipped.glade $(top_builddir)/navit/navit_shipped.c
 	for n in $(CATALOGS) __DuMmY ; do \
 		if test "$$n" -a "$$n" != "__DuMmY" ; then \
 			l=`basename $$n .mo`; \
