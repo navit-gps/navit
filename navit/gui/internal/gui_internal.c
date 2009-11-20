@@ -1358,7 +1358,6 @@ gui_internal_cmd2_back_to_map(struct gui_priv *this, char *function, struct attr
 	gui_internal_prune_menu(this, NULL);
 }
 
-
 static void
 gui_internal_cmd_main_menu(struct gui_priv *this, struct widget *wm, void *data)
 {
@@ -3055,7 +3054,7 @@ gui_internal_cmd2_town(struct gui_priv *this, char *function, struct attr **in, 
 }
 
 static void
-gui_internal_cmd_layout(struct gui_priv *this, struct widget *wm, void *data)
+gui_internal_cmd2_setting_layout(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr attr;
 	struct widget *w,*wb,*wl;
@@ -3073,75 +3072,6 @@ gui_internal_cmd_layout(struct gui_priv *this, struct widget *wm, void *data)
 		gui_internal_widget_append(w, wl);
 	}
 	navit_attr_iter_destroy(iter);
-	gui_internal_menu_render(this);
-}
-
-static void
-gui_internal_cmd_fullscreen(struct gui_priv *this, struct widget *wm, void *data)
-{
-	graphics_draw_mode(this->gra, draw_mode_end);
-	if (this->fullscreen != 2)
-		this->fullscreen=!this->fullscreen;
-	this->win->fullscreen(this->win, this->fullscreen != 0);
-	graphics_draw_mode(this->gra, draw_mode_begin);
-}
-
-static void
-gui_internal_cmd_2d(struct gui_priv *this, struct widget *wm, void *data)
-{
-	struct transformation *trans=navit_get_trans(this->nav);
-	transform_set_pitch(trans, 0);
-	this->redraw=1;
-	gui_internal_prune_menu(this, NULL);
-}
-
-static void
-gui_internal_cmd_3d(struct gui_priv *this, struct widget *wm, void *data)
-{
-	struct transformation *trans=navit_get_trans(this->nav);
-	transform_set_pitch(trans, this->pitch);
-	this->redraw=1;
-	gui_internal_prune_menu(this, NULL);
-}
-
-static void
-gui_internal_cmd2_setting_display(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
-{
-	struct widget *w;
-	struct transformation *trans;
-
-	w=gui_internal_menu(this, _("Display"));
-	gui_internal_widget_append(w,
-		gui_internal_button_new_with_callback(this, _("Layout"),
-			image_new_l(this, "gui_display"), gravity_center|orientation_vertical,
-			gui_internal_cmd_layout, NULL));
-
-	if(this->fullscreen != 2) {
-		if (this->fullscreen) {
-			gui_internal_widget_append(w,
-					gui_internal_button_new_with_callback(this, _("Window Mode"),
-						image_new_l(this, "gui_leave_fullscreen"), gravity_center|orientation_vertical,
-						gui_internal_cmd_fullscreen, NULL));
-		} else {
-			gui_internal_widget_append(w,
-					gui_internal_button_new_with_callback(this, _("Fullscreen"),
-						image_new_l(this, "gui_fullscreen"), gravity_center|orientation_vertical,
-						gui_internal_cmd_fullscreen, NULL));
-		}
-	}
-	trans=navit_get_trans(this->nav);
-	if (transform_get_pitch(trans)) {
-		gui_internal_widget_append(w,
-			gui_internal_button_new_with_callback(this, _("2D"),
-				image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
-				gui_internal_cmd_2d, NULL));
-
-	} else {
-		gui_internal_widget_append(w,
-			gui_internal_button_new_with_callback(this, _("3D"),
-				image_new_l(this, "gui_map"), gravity_center|orientation_vertical,
-				gui_internal_cmd_3d, NULL));
-	}
 	gui_internal_menu_render(this);
 }
 
@@ -3904,6 +3834,9 @@ gui_internal_get_attr(struct gui_priv *this, enum attr_type type, struct attr *a
 			return 0;
 		*attr=*this->position_coord_geo;
 		break;
+	case attr_pitch:
+		attr->u.num=this->pitch;
+		break;
 	default:
 		return 0;
 	}
@@ -3920,6 +3853,24 @@ gui_internal_add_attr(struct gui_priv *this, struct attr *attr)
 		this->html_text=g_strdup(attr->u.str);
 		return 1;
 	default:
+		return 0;
+	}
+}
+
+static int
+gui_internal_set_attr(struct gui_priv *this, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_fullscreen:
+		if ((this->fullscreen > 0) != (attr->u.num > 0)) {
+			graphics_draw_mode(this->gra, draw_mode_end);
+			this->win->fullscreen(this->win, attr->u.num > 0);
+			graphics_draw_mode(this->gra, draw_mode_begin);
+		}
+		this->fullscreen=attr->u.num;
+		return 1;
+	default:
+		dbg(0,"%s\n",attr_to_name(attr->type));
 		return 0;
 	}
 }
@@ -4246,6 +4197,7 @@ struct gui_methods gui_internal_methods = {
 	gui_internal_disable_suspend,
 	gui_internal_get_attr,
 	gui_internal_add_attr,
+	gui_internal_set_attr,
 };
 
 static void
@@ -5294,7 +5246,6 @@ static struct command_table commands[] = {
 	{"abort_navigation()",command_cast(gui_internal_cmd2_abort_navigation)},
 	{"back_to_map",command_cast(gui_internal_cmd2_back_to_map)},
 	{"bookmarks",command_cast(gui_internal_cmd2_bookmarks)},
-	{"fullscreen",command_cast(gui_internal_cmd_fullscreen)},
 	{"get_data",command_cast(gui_internal_get_data)},
 	{"locale",command_cast(gui_internal_cmd2_locale)},
 	{"log",command_cast(gui_internal_cmd_log)},
@@ -5302,7 +5253,7 @@ static struct command_table commands[] = {
 	{"position",command_cast(gui_internal_cmd2_position)},
 	{"route_description",command_cast(gui_internal_cmd2_route_description)},
 	{"route_height_profile",command_cast(gui_internal_cmd2_route_height_profile)},
-	{"setting_display",command_cast(gui_internal_cmd2_setting_display)},
+	{"setting_layout",command_cast(gui_internal_cmd2_setting_layout)},
 	{"setting_maps",command_cast(gui_internal_cmd2_setting_maps)},
 	{"setting_rules",command_cast(gui_internal_cmd2_setting_rules)},
 	{"setting_vehicle",command_cast(gui_internal_cmd2_setting_vehicle)},

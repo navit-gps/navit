@@ -42,7 +42,7 @@
 
 		<gui type="internal" enabled="yes"><![CDATA[
 			<html>
-				<a name='Main Menu'>Main menu
+				<a name='Main Menu'><text>Main menu</text>
 					<a href='#Actions'><img src='gui_actions'>Actions</img></a>
 					<img cond='flags&amp;2' src='gui_map' onclick='back_to_map()'><text>Show
 Map</text></img>
@@ -60,10 +60,17 @@ Map</text></img>
 Navigation</text></img>
 			</a>
 			<a name='Settings'><text>Settings</text>
-				<img src='gui_display' onclick='setting_display()'><text>Display</text></img>
+				<a href='#Settings Display'><img src='gui_display'><text>Display</text></img></a>
 				<img src='gui_maps' onclick='setting_maps()'><text>Maps</text></img>
 				<img src='gui_vehicle' onclick='setting_vehicle()'><text>Vehicle</text></img>
 				<img src='gui_rules' onclick='setting_rules()'><text>Rules</text></img>
+			</a>
+			<a name='Settings Display'><text>Display</text>
+				<img src='gui_display' onclick='setting_layout()'><text>Layout</text></img>
+				<img cond='fullscreen==0' src='gui_fullscreen' onclick='fullscreen=1'><text>Fullscreen</text></img>
+				<img cond='fullscreen==1' src='gui_leave_fullscreen' onclick='fullscreen=0'><text>Window Mode</text></img>
+				<img cond='navit.pitch==0' src='gui_map' onclick='navit.pitch=pitch;redraw_map();back_to_map()'><text>3D</text></img>
+				<img cond='navit.pitch!=0' src='gui_map' onclick='navit.pitch=0;redraw_map();back_to_map()'><text>2D</text></img>
 			</a>
 			<a name='Tools'><text>Tools</text>
 				<img src='gui_actions' onclick='locale()'><text>Show Locale</text></img>
