@@ -75,6 +75,18 @@ gui_get_attr(struct gui *this_, enum attr_type type, struct attr *attr, struct a
 	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
+
+int
+gui_set_attr(struct gui *this_, struct attr *attr)
+{
+	int ret=1;
+	if (this_->meth.set_attr)
+		ret=this_->meth.set_attr(this_->priv, attr);
+	if (ret == 1)
+		this_->attrs=attr_generic_set_attr(this_->attrs, attr);
+	return ret != 0;
+}
+
 int
 gui_add_attr(struct gui *this_, struct attr *attr)
 {

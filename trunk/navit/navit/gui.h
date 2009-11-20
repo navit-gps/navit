@@ -39,6 +39,7 @@ struct gui_methods {
 	void (*disable_suspend)(struct gui_priv *priv);
 	int (*get_attr)(struct gui_priv *priv, enum attr_type type, struct attr *attr);
 	int (*add_attr)(struct gui_priv *priv, struct attr *attr);
+	int (*set_attr)(struct gui_priv *priv, struct attr *attr);
 };
 
 
@@ -54,6 +55,7 @@ struct menu;
 struct pcoord;
 struct gui *gui_new(struct attr *parent, struct attr **attrs);
 int gui_get_attr(struct gui *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+int gui_set_attr(struct gui *this_, struct attr *attr);
 int gui_add_attr(struct gui *this_, struct attr *attr);
 struct menu *gui_menubar_new(struct gui *gui);
 struct menu *gui_popup_new(struct gui *gui);
