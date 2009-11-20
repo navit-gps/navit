@@ -1861,6 +1861,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 	case attr_osd_configuration:
 		attr->u.num=this_->osd_configuration;
 		break;
+	case attr_pitch:
+		attr->u.num=transform_get_pitch(this_->trans);
+		break;
 	case attr_projection:
 		if(this_->trans) {
 			attr->u.num=transform_get_projection(this_->trans);
