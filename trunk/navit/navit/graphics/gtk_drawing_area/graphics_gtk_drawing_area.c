@@ -802,7 +802,7 @@ delete(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 		if (this->win) 
 			this->win=NULL;
 	} else {
-		navit_destroy(this->nav);
+		callback_list_call_attr_0(this->cbl, attr_window_closed);
 	}
 	return TRUE;
 }
