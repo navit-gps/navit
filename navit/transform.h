@@ -26,9 +26,12 @@ extern "C" {
 #include "coord.h"
 
 /* prototypes */
+enum attr_type;
 enum item_type;
 enum map_datum;
 enum projection;
+struct attr;
+struct attr_iter;
 struct coord;
 struct coord_geo;
 struct coord_geo_cart;
@@ -39,6 +42,8 @@ struct transformation;
 struct transformation *transform_new(void);
 int transform_get_hog(struct transformation *this_);
 void transform_set_hog(struct transformation *this_, int hog);
+int transform_get_attr(struct transformation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+int transform_set_attr(struct transformation *this_, struct attr *attr);
 int transformation_get_order_base(struct transformation *this_);
 void transform_set_order_base(struct transformation *this_, int order_base);
 struct transformation *transform_dup(struct transformation *t);
@@ -65,6 +70,7 @@ void transform_set_roll(struct transformation *this_, int roll);
 int transform_get_roll(struct transformation *this_);
 void transform_set_distance(struct transformation *this_, int distance);
 int transform_get_distance(struct transformation *this_);
+void transform_set_scales(struct transformation *this_, int xscale, int yscale, int wscale);
 void transform_set_screen_selection(struct transformation *t, struct map_selection *sel);
 void transform_set_screen_center(struct transformation *t, struct point *p);
 void transform_get_size(struct transformation *t, int *width, int *height);
