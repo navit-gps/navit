@@ -310,6 +310,8 @@ vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int
 		angle+=360;
 	dbg(1,"enter this=%p gra=%p pnt=%p lazy=%d dir=%d speed=%d\n", this_, gra, pnt, lazy, angle, speed);
 	dbg(1,"point %d,%d\n", pnt->x, pnt->y);
+	if (!this_->cursor)
+		return;
 	this_->cursor_pnt=*pnt;
 	this_->cursor_pnt.x-=this_->cursor->w/2;
 	this_->cursor_pnt.y-=this_->cursor->h/2;
