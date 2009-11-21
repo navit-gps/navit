@@ -33,7 +33,6 @@
 #include "point.h"
 
 #define POST_SHIFT 8
-#define ENABLE_ROLL
 
 struct transformation {
 	int yaw;		/* Rotation angle */
@@ -43,6 +42,7 @@ struct transformation {
  	int m10,m11,m12;	
  	int m20,m21,m22;	
 	int xscale,yscale,wscale;
+	int xscale3d,yscale3d,wscale3d;
 #ifdef ENABLE_ROLL
 	int roll;
 	int hog;
@@ -70,25 +70,20 @@ struct transformation {
 #define HOG(t) 0
 #endif
 
-
+static void
+transform_set_screen_dist(struct transformation *t, int dist)
+{
+	t->screen_dist=dist;
+	t->xscale3d=dist;
+	t->yscale3d=dist;
+	t->wscale3d=dist << POST_SHIFT;
+}
 
 static void
 transform_setup_matrix(struct transformation *t)
 {
 	navit_float det;
 	navit_float fac;
-#if 0 /* FIXME */
-#if 0
-	t->roll=0;
-	t->pitch=90;
-	t->yaw=0;
-#endif
-#if 0
-	t->scale=1;
-#endif
-	t->hog=2;
-	t->ddd=1;
-#endif
 	navit_float yawc=navit_cos(-M_PI*t->yaw/180);
 	navit_float yaws=navit_sin(-M_PI*t->yaw/180);
 	navit_float pitchc=navit_cos(-M_PI*t->pitch/180);
@@ -134,27 +129,22 @@ transform_setup_matrix(struct transformation *t)
 	t->m21=(pitchc*rolls*yaws-pitchs*yawc)*fac;
 	t->m22=pitchc*rollc*fac;
 
-	t->offz=0;
-	t->xscale=1;
-	t->yscale=1;
-	t->wscale=1;
-	t->ddd=0;
 	t->offx=t->screen_center.x;
 	t->offy=t->screen_center.y;
 	if (t->pitch) {
 		t->ddd=1;
 		t->offz=t->screen_dist;
 		dbg(0,"near %d far %d\n",t->znear,t->zfar);
-		t->xscale=t->offz;
-		t->yscale=t->offz;
-		t->wscale=t->offz << POST_SHIFT;
+		t->xscale=t->xscale3d;
+		t->yscale=t->yscale3d;
+		t->wscale=t->wscale3d;
+	} else {
+		t->ddd=0;
+		t->offz=0;
+		t->xscale=1;
+		t->yscale=1;
+		t->wscale=1;
 	}
-#if 0 /* FIXME */
-	t->offz=0;
-	t->xscale=750;
-	t->yscale=620;
-	t->wscale=32 << POST_SHIFT;
-#endif
 	det=(navit_float)t->m00*(navit_float)t->m11*(navit_float)t->m22+
             (navit_float)t->m01*(navit_float)t->m12*(navit_float)t->m20+
             (navit_float)t->m02*(navit_float)t->m10*(navit_float)t->m21-
@@ -179,7 +169,7 @@ transform_new(void)
 	struct transformation *this_;
 
 	this_=g_new0(struct transformation, 1);
-	this_->screen_dist=100;
+	transform_set_screen_dist(this_, 100);
 	this_->order_base=14;
 #if 0
 	this_->pitch=20;
@@ -207,6 +197,36 @@ transform_set_hog(struct transformation *this_, int hog)
 	dbg(0,"not supported\n");
 #endif
 
+}
+
+int
+transform_get_attr(struct transformation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	switch (type) {
+#ifdef ENABLE_ROLL
+	case attr_hog:
+		attr->u.num=this_->hog;
+		break;
+#endif
+	default:
+		return 0;
+	}
+	attr->type=type;
+	return 1;
+}
+
+int
+transform_set_attr(struct transformation *this_, struct attr *attr)
+{
+	switch (attr->type) {
+#ifdef ENABLE_ROLL
+	case attr_hog:
+		this_->hog=attr->u.num;
+		return 1;
+#endif
+	default:
+		return 0;
+	}
 }
 
 int
@@ -700,7 +720,7 @@ transform_get_roll(struct transformation *this_)
 void
 transform_set_distance(struct transformation *this_,int distance)
 {
-	this_->screen_dist=distance;
+	transform_set_screen_dist(this_, distance);
 	transform_setup_matrix(this_);
 }
 
@@ -708,6 +728,14 @@ int
 transform_get_distance(struct transformation *this_)
 {
 	return this_->screen_dist;
+}
+
+void
+transform_set_scales(struct transformation *this_, int xscale, int yscale, int wscale)
+{
+	this_->xscale3d=xscale;
+	this_->yscale3d=yscale;
+	this_->wscale3d=wscale;
 }
 
 void
