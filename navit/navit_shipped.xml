@@ -56,7 +56,7 @@ Map</text></img>
 				<img cond='position_coord_geo' src='gui_vehicle' onclick='position(position_coord_geo,_("Vehicle Position"),8|32|64|128|256)'><script>write(position_coord_geo)</script></img>
 				<img src='gui_town' onclick='town()'><text>Town</text></img>
 				<img src='gui_quit' onclick='quit()'><text>Quit</text></img>
-				<img cond='navit.route.status&amp;48' src='gui_stop' onclick='abort_navigation()'><text>Stop
+				<img cond='navit.route.route_status&amp;48' src='gui_stop' onclick='abort_navigation()'><text>Stop
 Navigation</text></img>
 			</a>
 			<a name='Settings'><text>Settings</text>
