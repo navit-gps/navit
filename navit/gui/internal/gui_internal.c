@@ -248,7 +248,7 @@ struct gui_priv {
 	 */
         struct gui_config_settings config;
 	struct event_idle *idle;
-	struct callback *motion_cb,*button_cb,*resize_cb,*keypress_cb,*idle_cb, *motion_timeout_callback;
+	struct callback *motion_cb,*button_cb,*resize_cb,*keypress_cb,*window_closed_cb,*idle_cb, *motion_timeout_callback;
 	struct event_timeout *motion_timeout_event;
 	struct point current;
 
@@ -3087,6 +3087,12 @@ gui_internal_cmd2_quit(struct gui_priv *this, char *function, struct attr **in, 
 }
 
 static void
+gui_internal_window_closed(struct gui_priv *this)
+{
+	gui_internal_cmd2_quit(this, NULL, NULL, NULL, NULL);
+}
+
+static void
 gui_internal_cmd2_abort_navigation(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	navit_set_destination(this->nav, NULL, NULL, 0);
@@ -4166,6 +4172,8 @@ static int gui_internal_set_graphics(struct gui_priv *this, struct graphics *gra
 	graphics_add_callback(gra, this->motion_cb);
 	this->keypress_cb=callback_new_attr_1(callback_cast(gui_internal_keypress), attr_keypress, this);
 	graphics_add_callback(gra, this->keypress_cb);
+	this->window_closed_cb=callback_new_attr_1(callback_cast(gui_internal_window_closed), attr_window_closed, this);
+	graphics_add_callback(gra, this->window_closed_cb);
 
 	// set fullscreen if needed
 	if (this->fullscreen)
