@@ -5270,7 +5270,7 @@ void gui_internal_populate_route_table(struct gui_priv * this,
 }
 
 static struct command_table commands[] = {
-	{"abort_navigation()",command_cast(gui_internal_cmd2_abort_navigation)},
+	{"abort_navigation",command_cast(gui_internal_cmd2_abort_navigation)},
 	{"back_to_map",command_cast(gui_internal_cmd2_back_to_map)},
 	{"bookmarks",command_cast(gui_internal_cmd2_bookmarks)},
 	{"get_data",command_cast(gui_internal_get_data)},
