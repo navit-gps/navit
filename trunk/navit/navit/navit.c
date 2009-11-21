@@ -315,14 +315,16 @@ update_transformation(struct transformation *tr, struct point *old, struct point
 	int yaw;
 	double angleo,anglen;
 
-	transform_reverse(tr, old, &co);
+	if (!transform_reverse(tr, old, &co))
+		return;
 	if (rot) {
 		angleo=atan2(old->y-rot->y, old->x-rot->x)*180/M_PI;
 		anglen=atan2(new->y-rot->y, new->x-rot->x)*180/M_PI;
 		yaw=transform_get_yaw(tr)+angleo-anglen;
 		transform_set_yaw(tr, yaw % 360);
 	}
-	transform_reverse(tr, new, &cn);
+	if (!transform_reverse(tr, new, &cn))
+		return;
 	cp=transform_get_center(tr);
 	c.x=cp->x+co.x-cn.x;
 	c.y=cp->y+co.y-cn.y;
