@@ -134,7 +134,7 @@ transform_setup_matrix(struct transformation *t)
 	if (t->pitch) {
 		t->ddd=1;
 		t->offz=t->screen_dist;
-		dbg(0,"near %d far %d\n",t->znear,t->zfar);
+		dbg(1,"near %d far %d\n",t->znear,t->zfar);
 		t->xscale=t->xscale3d;
 		t->yscale=t->yscale3d;
 		t->wscale=t->wscale3d;
@@ -859,7 +859,7 @@ transform_setup_source_rect(struct transformation *t)
 				if (transform_zplane_intersection(&cg[edgenodes[i*2]], &cg[edgenodes[i*2+1]], HOG(*t), &tmp) == 1) {
 					c.x=tmp.x*(1 << t->scale_shift)+t->map_center.x;
 					c.y=tmp.y*(1 << t->scale_shift)+t->map_center.y;
-					dbg(0,"intersection with edge %d at 0x%x,0x%x\n",i,c.x,c.y);
+					dbg(1,"intersection with edge %d at 0x%x,0x%x\n",i,c.x,c.y);
 					if (valid)
 						coord_rect_extend(&msm->u.c_rect, &c);
 					else {
@@ -867,7 +867,7 @@ transform_setup_source_rect(struct transformation *t)
 						msm->u.c_rect.rl=c;
 						valid=1;
 					}
-					dbg(0,"rect 0x%x,0x%x - 0x%x,0x%x\n",msm->u.c_rect.lu.x,msm->u.c_rect.lu.y,msm->u.c_rect.rl.x,msm->u.c_rect.rl.y);
+					dbg(1,"rect 0x%x,0x%x - 0x%x,0x%x\n",msm->u.c_rect.lu.x,msm->u.c_rect.lu.y,msm->u.c_rect.rl.x,msm->u.c_rect.rl.y);
 				}
 			}
 		} else {
