@@ -1379,13 +1379,13 @@ navit_init(struct navit *this_)
 	navit_window_roadbook_new(this_);
 	navit_window_items_new(this_);
 #endif
-	callback_list_call_attr_1(this_->attr_cbl, attr_navit, this_);
-	this_->ready|=1;
 
 	messagelist_init(this_->messages);
 
 	navit_set_cursors(this_);
 
+	callback_list_call_attr_1(this_->attr_cbl, attr_navit, this_);
+	this_->ready|=1;
 	dbg(2,"ready=%d\n",this_->ready);
 	if (this_->ready == 3)
 		navit_draw(this_);
@@ -1652,7 +1652,8 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 			this_->layout_current=attr->u.layout;
 			graphics_font_destroy_all(this_->gra);
 			navit_set_cursors(this_);
-			navit_draw(this_);
+			if (this_->ready == 3)
+				navit_draw(this_);
 			attr_updated=1;
 		}
 		break;
