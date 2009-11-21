@@ -264,6 +264,7 @@ struct gui_priv {
 	int cols;
 	struct attr osd_configuration;
 	int pitch;
+	int flags_town,flags_street,flags_house_number;
 /* html */
 	char *html_text;
 	int html_depth;	
@@ -2341,6 +2342,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 	     3 Town
 	     4 County
 	     5 Street
+	     6 House number 
 */
 
 static void
@@ -2355,17 +2357,32 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		flags=8|16|32|64|256;
 		break;
 	case 2:
-		flags=4|8|16|32|64|256;
+		flags=4|8|16|32|64;
 		break;
 	case 3:
-		flags=1|8|16|32|64|256;
+		flags=1|8|16|32|64;
+		flags &= this->flags_town;
+		break;
 	case 4:
 		gui_internal_search_town_in_country(this, wm);
 		return;
 	case 5:
-		flags=2|8|16|32|64|256;
+		flags=2|8|16|32|64;
+		flags &= this->flags_street;
+		break;
+	case 6:
+		flags=8|16|32|64;
+		flags &= this->flags_house_number;
 		break;
 	default:
+		return;
+	}
+	switch (flags) {
+	case 2:
+		gui_internal_search_house_number_in_street(this, wm, NULL);
+		return;
+	case 8:
+		gui_internal_cmd_set_destination(this, wm, NULL);
 		return;
 	}
 	gui_internal_cmd_position_do(this, &wm->c, NULL, wm, wm->name ? wm->name : wm->text, flags);
@@ -2668,6 +2685,8 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 		param=(void *)4;
 	if (! strcmp(wm->name,"Street")) 
 		param=(void *)5;
+	if (! strcmp(wm->name,"House number")) 
+		param=(void *)6;
 	dbg(0,"%s now '%s'\n", wm->name, wm->text);
 
 	gui_internal_search_idle_end(this);
@@ -5371,6 +5390,18 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	      this->pitch=attr->u.num;
 	else
 		this->pitch=20;
+	if( (attr=attr_search(attrs,NULL,attr_flags_town)))
+		this->flags_town=attr->u.num;
+	else
+		this->flags_town=-1;
+	if( (attr=attr_search(attrs,NULL,attr_flags_street)))
+		this->flags_street=attr->u.num;
+	else
+		this->flags_street=-1;
+	if( (attr=attr_search(attrs,NULL,attr_flags_house_number)))
+		this->flags_house_number=attr->u.num;
+	else
+		this->flags_house_number=-1;
 	this->data.priv=this;
 	this->data.gui=&gui_internal_methods_ext;
 	this->data.widget=&gui_internal_widget_methods;
