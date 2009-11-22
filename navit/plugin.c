@@ -217,9 +217,10 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 	char **array;
 	char *name;
 	struct plugin *pl=NULL;
-	struct plugins *pls;
+	struct plugins *pls=NULL;
 
-	pls=parent->u.plugins;
+	if (parent)
+		pls=parent->u.plugins;
 
 	if (! (path_attr=attr_search(attrs, NULL, attr_path))) {
 		dbg(0,"missing path\n");
@@ -244,21 +245,29 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 		for (i = 0 ; i < count ; i++) {
 			name=array[i];
 			dbg(2,"name[%d]='%s'\n", i, name);
-			if (! (pl=g_hash_table_lookup(pls->hash, name))) {
+			if (! (pls && (pl=g_hash_table_lookup(pls->hash, name)))) {
 				pl=plugin_new_from_path(name);
 				if (! pl) {
 					dbg(0,"failed to create plugin '%s'\n", name);
 					continue;
 				}
-				g_hash_table_insert(pls->hash, plugin_get_name(pl), pl);
-				pls->list=g_list_append(pls->list, pl);
+				if (pls) {
+					g_hash_table_insert(pls->hash, plugin_get_name(pl), pl);
+					pls->list=g_list_append(pls->list, pl);
+				}
 			} else {
-				pls->list=g_list_remove(pls->list, pl);
-				pls->list=g_list_append(pls->list, pl);
+				if (pls) {
+					pls->list=g_list_remove(pls->list, pl);
+					pls->list=g_list_append(pls->list, pl);
+				}
 			}
 			plugin_set_active(pl, active);
 			plugin_set_lazy(pl, lazy);
 			plugin_set_ondemand(pl, ondemand);
+			if (!pls && active) {
+				if (!plugin_load(pl)) 
+					plugin_set_active(pl, 0);
+			}
 		}
 		file_wordexp_destroy(we);
 	}
