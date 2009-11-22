@@ -269,9 +269,16 @@ eval_value(struct context *ctx, struct result *res) {
 	if ((op[0] >= 'a' && op[0] <= 'z') || op[0] == '_') {
 		res->attr.type=attr_none;
 		res->var=op;
-		while ((op[0] >= 'a' && op[0] <= 'z') || op[0] == '_') {
-			res->varlen++;
-			op++;
+		for (;;) {
+			while ((op[0] >= 'a' && op[0] <= 'z') || op[0] == '_') {
+				res->varlen++;
+				op++;
+			}
+			if (res->varlen == 3 && !strncmp(res->var,"new",3) && op[0] == ' ') {
+				res->varlen++;
+				op++;
+			} else
+				break;
 		}
 		ctx->expr=op;
 		return;
@@ -377,6 +384,15 @@ command_call_function(struct context *ctx, struct result *res)
 		res->attr.type=list[0]->type;
 		res->attr.u.str=g_strdup(gettext(list[0]->u.str));	
 		
+	} if (!strncmp(function,"new ",4)) {
+		enum attr_type attr_type=attr_from_name(function+4);
+		if (attr_type != attr_none) {
+			struct object_func *func=object_func_lookup(attr_type);
+			if (func && func->new) {
+				res->attr.type=attr_type;
+				res->attr.u.data=func->new(NULL, list);
+			}
+		}
 	} else {
 		if (command_object_get_attr(ctx, &res->attr, attr_callback_list, &cbl)) {
 			int valid;
