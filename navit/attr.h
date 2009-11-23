@@ -77,6 +77,13 @@ enum attr_position_valid {
 	attr_position_valid_valid,
 };
 
+#define ATTR_IS_INT(x) ((x) >= attr_type_int_begin && (x) <= attr_type_int_end)
+#define ATTR_IS_DOUBLE(x) ((x) >= attr_type_double_begin && (x) <= attr_type_double_end)
+#define ATTR_IS_STRING(x) ((x) >= attr_type_string_begin && (x) <= attr_type_string_end)
+#define ATTR_IS_OBJECT(x) ((x) >= attr_type_object_begin && (x) <= attr_type_object_end)
+#define ATTR_IS_COORD_GEO(x) ((x) >= attr_type_coord_geo_begin && (x) <= attr_type_coord_geo_end)
+#define ATTR_IS_NUMERIC(x) (ATTR_IS_INT(x) || ATTR_IS_DOUBLE(x))
+
 struct attr {
 	enum attr_type type;
 	union {
