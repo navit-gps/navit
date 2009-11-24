@@ -17,7 +17,7 @@
 #include "navit_nls.h"
 
 /*
-gui.fullscreen()
+gui.fullscreen=!gui.fullscreen
 gui.menu()
 gui.get_data() 
 zoom_in() 
