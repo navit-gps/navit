@@ -406,6 +406,7 @@ osd_nav_next_turn_init(struct nav_next_turn *this, struct navit *nav)
 {
 	osd_set_std_graphic(nav, &this->osd_item, (struct osd_priv *)this);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_turn_draw), attr_position_coord_geo, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_std_click), attr_button, &this->osd_item));
 	osd_nav_next_turn_draw(this, nav, NULL);
 }
 
