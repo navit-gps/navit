@@ -39,6 +39,7 @@
 #include "map.h"
 #include "mapset.h"
 #include "search.h"
+#include "callback.h"
 #include "util.h"
 
 
@@ -63,6 +64,11 @@ char *navitintrospectxml_head2 = "\">\n"
 GHashTable *object_hash;
 GHashTable *object_hash_rev;
 GHashTable *object_count;
+
+struct dbus_callback {
+	struct callback *callback;
+	char *signal;
+};
 
 static char *
 object_new(char *type, void *object)
@@ -510,6 +516,13 @@ decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr)
 			return ret;
 		}
 	}
+	if (attr->type == attr_callback) {
+		struct dbus_callback *callback=object_get_from_message_arg(&iterattr, "callback");
+		if (callback) {
+			attr->u.callback=callback->callback;
+			return 1;
+		}
+	}
 	return 0;
 }
 
@@ -623,7 +636,7 @@ request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, v
 }
 
 static DBusHandlerResult
-request_set_attr(DBusConnection *connection, DBusMessage *message, char *type, void *data, int (*func)(void *data, struct attr *attr))
+request_set_add_remove_attr(DBusConnection *connection, DBusMessage *message, char *type, void *data, int (*func)(void *data, struct attr *attr))
 {
     	struct attr attr;
 	int ret;
@@ -642,6 +655,64 @@ request_set_attr(DBusConnection *connection, DBusMessage *message, char *type, v
     	return dbus_error_invalid_parameter(connection, message);
 }
 
+/* callback */
+
+
+static void
+dbus_callback_emit_signal(struct dbus_callback *dbus_callback)
+{
+	DBusMessage* msg;
+	msg = dbus_message_new_signal(object_path, service_name, dbus_callback->signal);
+	if (msg) {
+		dbus_connection_send(connection, msg, &dbus_serial);
+		dbus_connection_flush(connection);
+		dbus_message_unref(msg);
+	}
+}
+
+static void
+request_callback_destroy_do(struct dbus_callback *data)
+{
+	callback_destroy(data->callback);
+	g_free(data->signal);
+	g_free(data);
+}
+
+static DBusHandlerResult
+request_callback_destroy(DBusConnection *connection, DBusMessage *message)
+{
+	return request_destroy(connection, message, "search_list", NULL, (void (*)(void *)) request_callback_destroy_do);
+}
+
+static DBusHandlerResult
+request_callback_new(DBusConnection *connection, DBusMessage *message)
+{
+	DBusMessageIter iter;
+	DBusMessage *reply;
+	struct dbus_callback *callback;
+	char *signal,*opath;
+	enum attr_type type;
+
+	dbus_message_iter_init(message, &iter);
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_STRING) 
+		return dbus_error_invalid_parameter(connection, message);
+	dbus_message_iter_get_basic(&iter, &signal);
+	dbus_message_iter_next(&iter);
+	callback=g_new0(struct dbus_callback, 1);
+	callback->signal=g_strdup(signal);
+
+	if (dbus_message_iter_get_arg_type(&iter) == DBUS_TYPE_STRING) {
+		type=attr_type_get_from_message(&iter);
+		callback->callback=callback_new_attr_1(callback_cast(dbus_callback_emit_signal), type, callback);
+	} else
+		callback->callback=callback_new_1(callback_cast(dbus_callback_emit_signal), callback);
+	opath=object_new("callback", callback);
+	reply = dbus_message_new_method_return(message);
+	dbus_message_append_args(reply, DBUS_TYPE_OBJECT_PATH, &opath, DBUS_TYPE_INVALID);
+	dbus_connection_send (connection, reply, NULL);
+	dbus_message_unref (reply);
+	return DBUS_HANDLER_RESULT_HANDLED;
+}
 
 /* config */
 static DBusHandlerResult
@@ -702,7 +773,7 @@ request_graphics_get_data(DBusConnection *connection, DBusMessage *message)
 static DBusHandlerResult
 request_graphics_set_attr(DBusConnection *connection, DBusMessage *message)
 {
-	return request_set_attr(connection, message, "graphics", NULL, (int (*)(void *, struct attr *))graphics_set_attr);
+	return request_set_add_remove_attr(connection, message, "graphics", NULL, (int (*)(void *, struct attr *))graphics_set_attr);
 }
 
 /* map */
@@ -717,7 +788,7 @@ request_map_get_attr(DBusConnection *connection, DBusMessage *message)
 static DBusHandlerResult
 request_map_set_attr(DBusConnection *connection, DBusMessage *message)
 {
-	return request_set_attr(connection, message, "map", NULL, (int (*)(void *, struct attr *))map_set_attr);
+	return request_set_add_remove_attr(connection, message, "map", NULL, (int (*)(void *, struct attr *))map_set_attr);
 }
 
 /* mapset */
@@ -1031,20 +1102,19 @@ request_navit_attr_iter_destroy(DBusConnection *connection, DBusMessage *message
 static DBusHandlerResult
 request_navit_set_attr(DBusConnection *connection, DBusMessage *message)
 {
-	struct navit *navit;
-	struct attr attr;
-	int ret;
+	return request_set_add_remove_attr(connection, message, "navit", NULL, (int (*)(void *, struct attr *))navit_set_attr);
+}
 
-	navit = object_get_from_message(message, "navit");
-	if (! navit)
-		return dbus_error_invalid_object_path(connection, message);
-	if (decode_attr(message, &attr)) {
-		ret=navit_set_attr(navit, &attr);
-		destroy_attr(&attr);
-		if (ret)
-			return empty_reply(connection, message);
-	}
-    	return dbus_error_invalid_parameter(connection, message);
+static DBusHandlerResult
+request_navit_add_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_set_add_remove_attr(connection, message, "navit", NULL, (int (*)(void *, struct attr *))navit_add_attr);
+}
+
+static DBusHandlerResult
+request_navit_remove_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_set_add_remove_attr(connection, message, "navit", NULL, (int (*)(void *, struct attr *))navit_remove_attr);
 }
 
 static DBusHandlerResult
@@ -1295,7 +1365,10 @@ struct dbus_method {
 	{"",        "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_config_attr_iter_destroy},
 	{"",        "get_attr",            "s",       "attrname",                                "sv", "attrname,value",request_config_get_attr},
 	{"",        "get_attr_wi",         "so",      "attrname,attr_iter",                      "sv", "attrname,value",request_config_get_attr},
+	{"",	    "callback_new",	   "s",       "signalname",                              "o",  "callback",request_callback_new},
+	{"",	    "callback_attr_new",   "ss",       "signalname,attribute",                   "o",  "callback",request_callback_new},
 	{"",	    "search_list_new",	   "o",       "mapset",                                  "o",  "search",request_search_list_new},
+	{".callback","destroy",            "",        "",                                        "",   "",      request_callback_destroy},
 	{".graphics","get_data", 	   "s",	      "type",				 	 "ay",  "data", request_graphics_get_data},
 	{".graphics","set_attr",           "sv",      "attribute,value",                         "",   "",      request_graphics_set_attr},
 	{".navit",  "draw",                "",        "",                                        "",   "",      request_navit_draw},
@@ -1313,6 +1386,8 @@ struct dbus_method {
 	{".navit",  "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_navit_get_attr},
 	{".navit",  "get_attr_wi",         "so",      "attribute,attr_iter",                     "sv",  "attrname,value", request_navit_get_attr},
 	{".navit",  "set_attr",            "sv",      "attribute,value",                         "",   "",      request_navit_set_attr},
+	{".navit",  "add_attr",            "sv",      "attribute,value",                         "",   "",      request_navit_add_attr},
+	{".navit",  "remove_attr",         "sv",      "attribute,value",                         "",   "",      request_navit_remove_attr},
 	{".navit",  "set_position",        "s",       "(coordinates)",                           "",   "",      request_navit_set_position},
 	{".navit",  "set_position",        "(is)",    "(projection,coordinated)",                "",   "",      request_navit_set_position},
 	{".navit",  "set_position",        "(iii)",   "(projection,longitude,latitude)",         "",   "",      request_navit_set_position},
