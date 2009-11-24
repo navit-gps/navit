@@ -40,6 +40,7 @@
 #include "mapset.h"
 #include "search.h"
 #include "callback.h"
+#include "gui.h"
 #include "util.h"
 
 
@@ -113,6 +114,7 @@ resolve_object(const char *opath, char *type)
 	const char *oprefix;
 	void *ret=NULL;
 	char *def_navit="/default_navit";
+	char *def_gui="/default_gui";
 	char *def_graphics="/default_graphics";
 	char *def_vehicle="/default_vehicle";
 	char *def_mapset="/default_mapset";
@@ -143,6 +145,12 @@ resolve_object(const char *opath, char *type)
 		if (!strncmp(oprefix,def_graphics,strlen(def_graphics))) {
 			if (navit_get_attr(navit.u.navit, attr_graphics, &attr, NULL)) {
 				return attr.u.graphics;
+			}
+			return NULL;
+		}
+		if (!strncmp(oprefix,def_gui,strlen(def_gui))) {
+			if (navit_get_attr(navit.u.navit, attr_gui, &attr, NULL)) {
+				return attr.u.gui;
 			}
 			return NULL;
 		}
@@ -636,6 +644,31 @@ request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, v
 }
 
 static DBusHandlerResult
+request_command(DBusConnection *connection, DBusMessage *message, char *type, void *data, int (*func)(void *data, enum attr_type type, struct attr *attr, struct attr_iter *iter))
+{
+	DBusMessageIter iter;
+	struct attr attr;
+	char *command;
+
+	if (! data)
+		data = object_get_from_message(message, type);
+	if (! data)
+		return dbus_error_invalid_object_path(connection, message);
+
+	dbus_message_iter_init(message, &iter);
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_STRING) 
+		return dbus_error_invalid_parameter(connection, message);
+	dbus_message_iter_get_basic(&iter, &command);
+	dbus_message_iter_next(&iter);
+	if (func(data, attr_callback_list, &attr, NULL)) {
+		int valid=0;
+                callback_list_call_attr_4(attr.u.callback_list, attr_command, command, NULL, NULL, &valid);
+	}
+	return empty_reply(connection, message);
+	
+}
+
+static DBusHandlerResult
 request_set_add_remove_attr(DBusConnection *connection, DBusMessage *message, char *type, void *data, int (*func)(void *data, struct attr *attr))
 {
     	struct attr attr;
@@ -769,6 +802,22 @@ request_graphics_get_data(DBusConnection *connection, DBusMessage *message)
 	}
 	return empty_reply(connection, message);
 }
+
+/* gui */
+
+static DBusHandlerResult
+request_gui_get_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_get_attr(connection, message, "gui", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))gui_get_attr);
+}
+
+static DBusHandlerResult
+request_gui_command(DBusConnection *connection, DBusMessage *message)
+{
+	return request_command(connection, message, "gui", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))gui_get_attr);
+}
+
+
 
 static DBusHandlerResult
 request_graphics_set_attr(DBusConnection *connection, DBusMessage *message)
@@ -1168,7 +1217,7 @@ request_navit_evaluate(DBusConnection *connection, DBusMessage *message)
 	char *result;
 	struct attr attr;
 	DBusMessage *reply;
-	int *error;
+	int error;
 
 	navit = object_get_from_message(message, "navit");
 	if (! navit)
@@ -1181,8 +1230,8 @@ request_navit_evaluate(DBusConnection *connection, DBusMessage *message)
 	result=command_evaluate_to_string(&attr, command, &error);
 	reply = dbus_message_new_method_return(message);
 	if (error)
-		dbus_message_append_args(reply, DBUS_TYPE_INT32, error, DBUS_TYPE_INVALID);
-	else
+		dbus_message_append_args(reply, DBUS_TYPE_INT32, &error, DBUS_TYPE_INVALID);
+	else if (result)
 		dbus_message_append_args(reply, DBUS_TYPE_STRING, &result, DBUS_TYPE_INVALID);
 	dbus_connection_send (connection, reply, NULL);
 	dbus_message_unref (reply);
@@ -1371,6 +1420,9 @@ struct dbus_method {
 	{".callback","destroy",            "",        "",                                        "",   "",      request_callback_destroy},
 	{".graphics","get_data", 	   "s",	      "type",				 	 "ay",  "data", request_graphics_get_data},
 	{".graphics","set_attr",           "sv",      "attribute,value",                         "",   "",      request_graphics_set_attr},
+	{".gui",     "get_attr",           "s",       "attribute",                               "sv",  "attrname,value", request_gui_get_attr},
+	{".gui",     "command_parameter",  "sa{sa{sv}}","command,parameter",                     "a{sa{sv}}",  "return", request_gui_command},
+	{".gui",     "command",            "s",       "command",                                 "a{sa{sv}}",  "return", request_gui_command},
 	{".navit",  "draw",                "",        "",                                        "",   "",      request_navit_draw},
 	{".navit",  "add_message",         "s",       "message",                                 "",   "",      request_navit_add_message},
 	{".navit",  "set_center",          "s",       "(coordinates)",                           "",   "",      request_navit_set_center},
