@@ -1354,6 +1354,13 @@ gui_internal_cmd_return(struct gui_priv *this, struct widget *wm, void *data)
 }
 
 static void
+gui_internal_cmd2_back(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	gui_internal_back(this, NULL, NULL);
+	gui_internal_check_exit(this);	
+}
+
+static void
 gui_internal_cmd2_back_to_map(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	gui_internal_prune_menu(this, NULL);
@@ -2397,11 +2404,11 @@ gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **
 	dbg(1,"enter\n");
 	if (!in || !in[0])
 		return;
-	if (in[0]->type < attr_type_coord_geo_begin || in[0]->type > attr_type_coord_geo_end)
+	if (!ATTR_IS_COORD_GEO(in[0]->type))
 		return;
-	if (in[1] && in[1]->type >= attr_type_string_begin && in[1]->type <= attr_type_string_end) {
+	if (in[1] && ATTR_IS_STRING(in[1]->type)) {
 		name=in[1]->u.str;
-		if (in[2] && in[2]->type >= attr_type_int_begin && in[2]->type <= attr_type_int_end) 
+		if (in[2] && ATTR_IS_INT(in[2]->type)) 
 			flags=in[2]->u.num;
 	}
 	dbg(1,"flags=0x%x\n",flags);
@@ -3250,7 +3257,7 @@ save_vehicle_xml(struct vehicle *v)
 	dbg(0,"enter\n");
 	printf("<vehicle");
 	while (vehicle_get_attr(v, attr_any_xml, &attr, iter)) {
-		if (attr_type_begin(attr.type) == attr_type_object_begin)
+		if (ATTR_IS_OBJECT(attr.type))
 			childs=1;
 		else
 			printf(" %s=\"%s\"",attr_to_name(attr.type),attr_to_text(&attr, NULL, 1));
@@ -4325,10 +4332,10 @@ gui_internal_cmd_write(struct gui_priv * this, char *function, struct attr **in,
 	if (!in || !in[0])
 		return;
 	dbg(1,"%s\n",attr_to_name(in[0]->type));	
-	if (in[0]->type >= attr_type_string_begin && in[0]->type <= attr_type_string_end) {
+	if (ATTR_IS_STRING(in[0]->type)) {
 		str=in[0]->u.str;
 	}
-	if (in[0]->type >= attr_type_coord_geo_begin && in[0]->type <= attr_type_coord_geo_end) {
+	if (ATTR_IS_COORD_GEO(in[0]->type)) {
 		str=str2=coordinates_geo(in[0]->u.coord_geo, '\n');
 	}
 	if (str) {
@@ -5271,6 +5278,7 @@ void gui_internal_populate_route_table(struct gui_priv * this,
 
 static struct command_table commands[] = {
 	{"abort_navigation",command_cast(gui_internal_cmd2_abort_navigation)},
+	{"back",command_cast(gui_internal_cmd2_back)},
 	{"back_to_map",command_cast(gui_internal_cmd2_back_to_map)},
 	{"bookmarks",command_cast(gui_internal_cmd2_bookmarks)},
 	{"get_data",command_cast(gui_internal_get_data)},
