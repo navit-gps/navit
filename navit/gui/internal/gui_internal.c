@@ -1391,6 +1391,7 @@ gui_internal_top_bar(struct gui_priv *this)
 	128:Show help
 	256:Use background for menu headline
 	512:Set osd_configuration and zoom to route when setting position
+	1024:Don't show back button
 */
 
 	w=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|(this->flags & 1 ? 0:flags_fill));
@@ -1670,7 +1671,7 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 	w->spx=4*this->spacing;
 	w->w=menu->w;
 	gui_internal_widget_append(menu, w);
-	if (this->flags & 16) {
+	if (this->flags & 16 && (!this->flags & 1024)) {
 		struct widget *wlb,*wb,*wm=w;
 		wm->flags=gravity_center|orientation_vertical|flags_expand|flags_fill;
 		w=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_expand|flags_fill);
