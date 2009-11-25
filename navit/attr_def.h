@@ -128,6 +128,7 @@ ATTR(hog)
 ATTR(flags_town)
 ATTR(flags_street)
 ATTR(flags_house_number)
+ATTR(use_camera)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*

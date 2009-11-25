@@ -34,7 +34,7 @@ int dummy;
 
 struct graphics_priv {
 	jclass NavitGraphicsClass;
-	jmethodID NavitGraphics_draw_polyline, NavitGraphics_draw_polygon, NavitGraphics_draw_rectangle, NavitGraphics_draw_circle, NavitGraphics_draw_text, NavitGraphics_draw_image, NavitGraphics_draw_mode, NavitGraphics_draw_drag, NavitGraphics_overlay_disable, NavitGraphics_overlay_resize;
+	jmethodID NavitGraphics_draw_polyline, NavitGraphics_draw_polygon, NavitGraphics_draw_rectangle, NavitGraphics_draw_circle, NavitGraphics_draw_text, NavitGraphics_draw_image, NavitGraphics_draw_mode, NavitGraphics_draw_drag, NavitGraphics_overlay_disable, NavitGraphics_overlay_resize, NavitGraphics_SetCamera;
 
 	jclass PaintClass;
 	jmethodID Paint_init,Paint_setStrokeWidth,Paint_setARGB;
@@ -374,6 +374,18 @@ static void overlay_resize(struct graphics_priv *gra, struct point *pnt, int w, 
 	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_overlay_resize, pnt ? pnt->x:0 , pnt ? pnt->y:0, w, h, alpha, wraparound);
 }
 
+static int
+set_attr(struct graphics_priv *gra, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_use_camera:
+		(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_SetCamera, attr->u.num);
+		return 1;
+	default:
+		return 0;
+	}
+}
+
 static struct graphics_methods graphics_methods = {
 	graphics_destroy,
 	draw_mode,
@@ -396,6 +408,7 @@ static struct graphics_methods graphics_methods = {
 	get_text_bbox,
 	overlay_disable,
 	overlay_resize,
+	set_attr,
 };
 
 static void
@@ -456,7 +469,7 @@ set_activity(jobject graphics)
 }
 
 static int
-graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, struct point *pnt, int w, int h, int alpha, int wraparound)
+graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, struct point *pnt, int w, int h, int alpha, int wraparound, int use_camera)
 {
 	struct callback *cb;
 	jmethodID cid;
@@ -508,7 +521,7 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 		return 0; /* exception thrown */
 	}
 	dbg(0,"at 4 android_activity=%p\n",android_activity);
-	ret->NavitGraphics=(*jnienv)->NewObject(jnienv, ret->NavitGraphicsClass, cid, android_activity, parent ? parent->NavitGraphics : NULL, pnt ? pnt->x:0 , pnt ? pnt->y:0, w, h, alpha, wraparound, 0);
+	ret->NavitGraphics=(*jnienv)->NewObject(jnienv, ret->NavitGraphicsClass, cid, android_activity, parent ? parent->NavitGraphics : NULL, pnt ? pnt->x:0 , pnt ? pnt->y:0, w, h, alpha, wraparound, use_camera);
 	dbg(0,"result=%p\n",ret->NavitGraphics);
 	if (ret->NavitGraphics)
 		(*jnienv)->NewGlobalRef(jnienv, ret->NavitGraphics);
@@ -565,6 +578,8 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 		return 0;
 	if (!find_method(ret->NavitGraphicsClass, "overlay_resize", "(IIIIII)V", &ret->NavitGraphics_overlay_resize))
 		return 0;
+	if (!find_method(ret->NavitGraphicsClass, "SetCamera", "(I)V", &ret->NavitGraphics_SetCamera))
+		return 0;
 #if 0
 	set_activity(ret->NavitGraphics);
 #endif
@@ -593,6 +608,8 @@ static struct graphics_priv *
 graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct graphics_priv *ret;
+	struct attr *attr;
+	int use_camera=0;
 	if (!event_request_system("android","graphics_android"))
 		return NULL;
 	ret=g_new0(struct graphics_priv, 1);
@@ -602,7 +619,10 @@ graphics_android_new(struct navit *nav, struct graphics_methods *meth, struct at
 	ret->win.priv=ret;
 	ret->win.fullscreen=graphics_android_fullscreen;
 	ret->win.disable_suspend=graphics_android_disable_suspend;
-	if (graphics_android_init(ret, NULL, NULL, 0, 0, 0, 0)) {
+	if ((attr=attr_search(attrs, NULL, attr_use_camera))) {
+		use_camera=attr->u.num;
+	}
+	if (graphics_android_init(ret, NULL, NULL, 0, 0, 0, 0, use_camera)) {
 		dbg(0,"returning %p\n",ret);
 		return ret;
 	} else {
@@ -616,7 +636,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 {
 	struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
-	if (graphics_android_init(ret, gr, p, w, h, alpha, wraparound)) {
+	if (graphics_android_init(ret, gr, p, w, h, alpha, wraparound, 0)) {
 		dbg(0,"returning %p\n",ret);
 		return ret;
 	} else {
