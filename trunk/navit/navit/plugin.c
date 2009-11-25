@@ -267,6 +267,8 @@ plugin_new(struct attr *parent, struct attr **attrs) {
 			if (!pls && active) {
 				if (!plugin_load(pl)) 
 					plugin_set_active(pl, 0);
+				else
+					plugin_call_init(pl);
 			}
 		}
 		file_wordexp_destroy(we);

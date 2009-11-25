@@ -1670,8 +1670,10 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 			}
 			transform_set_yaw(this_->trans, dir);
 			if (orient_old != this_->orientation) {
+#if 0
 				if (this_->ready == 3)
 					navit_draw(this_);
+#endif
 				attr_updated=1;
 			}
 		}
