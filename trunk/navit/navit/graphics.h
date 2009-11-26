@@ -171,7 +171,7 @@ void graphics_background_gc(struct graphics *this_, struct graphics_gc *gc);
 char *graphics_icon_path(char *icon);
 void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t);
 void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int callback);
-void graphics_draw(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb);
+void graphics_draw(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb, int flags);
 int graphics_draw_cancel(struct graphics *gra, struct displaylist *displaylist);
 struct displaylist_handle *graphics_displaylist_open(struct displaylist *displaylist);
 struct displayitem *graphics_displaylist_next(struct displaylist_handle *dlh);

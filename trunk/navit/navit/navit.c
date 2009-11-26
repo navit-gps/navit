@@ -136,6 +136,7 @@ struct navit {
 	int pitch;
 	int follow_cursor;
 	int prevTs;
+	int graphics_flags;
 };
 
 struct gui *main_loop_gui;
@@ -198,7 +199,7 @@ navit_draw_async(struct navit *this_, int async)
 		navit_vehicle_draw(this_, nv, NULL);
 		l=g_list_next(l);
 	}
-	graphics_draw(this_->gra, this_->displaylist, this_->mapsets->data, this_->trans, this_->layout_current, async, NULL);
+	graphics_draw(this_->gra, this_->displaylist, this_->mapsets->data, this_->trans, this_->layout_current, async, NULL, this_->graphics_flags|1);
 }
 
 void
@@ -219,7 +220,7 @@ void
 navit_draw_displaylist(struct navit *this_)
 {
 	if (this_->ready == 3)
-		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current, 1);
+		graphics_displaylist_draw(this_->gra, this_->displaylist, this_->trans, this_->layout_current, this_->graphics_flags|1);
 }
 
 static void
@@ -456,7 +457,7 @@ navit_motion_timeout(struct navit *this_)
 		graphics_displaylist_move(this_->displaylist, dx, dy);
 #endif
 		graphics_draw_cancel(this_->gra, this_->displaylist);
-		graphics_displaylist_draw(this_->gra, this_->displaylist, tr, this_->layout_current, 0);
+		graphics_displaylist_draw(this_->gra, this_->displaylist, tr, this_->layout_current, this_->graphics_flags);
 		transform_destroy(tr);
 		this_->moved=1;
 	}
@@ -1640,6 +1641,10 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 	case attr_drag_bitmap:
 		attr_updated=(this_->drag_bitmap != !!attr->u.num);
 		this_->drag_bitmap=!!attr->u.num;
+		break;
+	case attr_flags_graphics:
+		attr_updated=(this_->graphics_flags != attr->u.num);
+		this_->graphics_flags=attr->u.num;
 		break;
 	case attr_follow:
 		if (!this_->vehicle)
