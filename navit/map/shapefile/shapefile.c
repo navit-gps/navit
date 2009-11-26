@@ -48,6 +48,7 @@ struct map_priv {
 	char *dbfmap_data;
 	struct coord offset;
 	enum projection pro;
+	int flags;
 };
 
 
@@ -116,7 +117,10 @@ shapefile_attr_rewind(void *priv_data)
 	struct map_rect_priv *mr=priv_data;
 	mr->aidx=0;
 	mr->attr_pos=0;
-	mr->anext=attr_debug;
+	if (mr->m->flags & 1)
+		mr->anext=attr_none;
+	else
+		mr->anext=attr_debug;
 }
 
 
@@ -382,15 +386,19 @@ attr_resolve(struct map_rect_priv *mr, enum attr_type attr_type, struct attr *at
 	if (attr_from_line(mr->line,type,&mr->attr_pos,value,name)) {
 		len=strlen(value);	
 		if (value[0] == '$' && value[1] == '{' && value[len-1] == '}') {
+			int found=0;
 			value[len-1]='\0';
 			col=value+2;
 			for (i = 0 ; i < mr->m->nFields ; i++) {
 				if (DBFGetFieldInfo(mr->m->hDBF, i, szTitle, &nWidth, &nDecimals ) == FTString && !strcmp(szTitle,col)) {
 					str=DBFReadStringAttribute( mr->m->hDBF, mr->item.id_lo, i);
 					strcpy(value,str);
+					found=1;
 					break;
 				}
 			}
+			if (!found)
+				value[0]='\0';
 		}
 		if (!value[0])
 			return -1;
@@ -600,6 +608,7 @@ map_new_shapefile(struct map_methods *meth, struct attr **attrs)
 	struct attr *data=attr_search(attrs, NULL, attr_data);
 	struct attr *charset=attr_search(attrs, NULL, attr_charset);
 	struct attr *projectionname=attr_search(attrs, NULL, attr_projectionname);
+	struct attr *flags=attr_search(attrs, NULL, attr_flags);
 	struct file_wordexp *wexp;
 	char *wdata;
 	char **wexp_data;
@@ -629,6 +638,8 @@ map_new_shapefile(struct map_methods *meth, struct attr **attrs)
 	}
 	if (projectionname) 
 		m->pro=projection_from_name(projectionname->u.str, &m->offset);
+	if (flags)
+		m->flags=flags->u.num;
 	file_wordexp_destroy(wexp);
 	return m;
 }
