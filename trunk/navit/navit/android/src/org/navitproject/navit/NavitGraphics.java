@@ -62,6 +62,7 @@ public class NavitGraphics {
 			// activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
 			camera=new NavitCamera(activity);
 			relativelayout.addView(camera);
+			relativelayout.bringChildToFront(view);
 		}
 	}
 	public NavitGraphics(Activity activity, NavitGraphics parent, int x, int y, int w, int h, int alpha, int wraparound, int use_camera) {
