@@ -1746,7 +1746,7 @@ static void xdisplay_draw(struct displaylist *display_list, struct graphics *gra
 extern void *route_selection;
 
 static void
-do_draw(struct displaylist *displaylist, int cancel)
+do_draw(struct displaylist *displaylist, int cancel, int flags)
 {
 	struct item *item;
 	int count,max=16384,workload=0;
@@ -1798,11 +1798,13 @@ do_draw(struct displaylist *displaylist, int cancel)
 	profile(1,"process_selection\n");
 	event_remove_idle(displaylist->idle_ev);
 	displaylist->idle_ev=NULL;
+	callback_destroy(displaylist->idle_cb);
+	displaylist->idle_cb=NULL;
 	displaylist->busy=0;
 	graphics_process_selection(displaylist->dc.gra, displaylist);
 	profile(1,"draw\n");
 	if (! cancel) 
-		graphics_displaylist_draw(displaylist->dc.gra, displaylist, displaylist->dc.trans, displaylist->layout, 1);
+		graphics_displaylist_draw(displaylist->dc.gra, displaylist, displaylist->dc.trans, displaylist->layout, flags);
 	map_rect_destroy(displaylist->mr);
 	map_selection_destroy(displaylist->sel);
 	mapset_close(displaylist->msh);
@@ -1845,7 +1847,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 		gra->meth.draw_mode(gra->priv, draw_mode_end);
 }
 
-static void graphics_load_mapset(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb)
+static void graphics_load_mapset(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb, int flags)
 {
 	int order=transform_get_order(trans);
 
@@ -1853,7 +1855,7 @@ static void graphics_load_mapset(struct graphics *gra, struct displaylist *displ
 	if (displaylist->busy) {
 		if (async == 1)
 			return;
-		do_draw(displaylist, 1);
+		do_draw(displaylist, 1, flags);
 	}
 	xdisplay_free(displaylist->dl);
 	dbg(1,"order=%d\n", order);
@@ -1870,9 +1872,10 @@ static void graphics_load_mapset(struct graphics *gra, struct displaylist *displ
 	displaylist->layout=l;
 	if (async) {
 		if (! displaylist->idle_cb)
-			displaylist->idle_cb=callback_new_2(callback_cast(do_draw), displaylist, 0);
+			displaylist->idle_cb=callback_new_3(callback_cast(do_draw), displaylist, 0, flags);
 		displaylist->idle_ev=event_add_idle(50, displaylist->idle_cb);
-	}
+	} else
+		do_draw(displaylist, 0, flags);
 }
 /**
  * FIXME
@@ -1880,11 +1883,9 @@ static void graphics_load_mapset(struct graphics *gra, struct displaylist *displ
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_draw(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb)
+void graphics_draw(struct graphics *gra, struct displaylist *displaylist, struct mapset *mapset, struct transformation *trans, struct layout *l, int async, struct callback *cb, int flags)
 {
-	graphics_load_mapset(gra, displaylist, mapset, trans, l, async, cb);
-	if (! async)
-		do_draw(displaylist, 0);
+	graphics_load_mapset(gra, displaylist, mapset, trans, l, async, cb, flags);
 }
 
 int
@@ -1892,7 +1893,7 @@ graphics_draw_cancel(struct graphics *gra, struct displaylist *displaylist)
 {
 	if (!displaylist->busy)
 		return 0;
-	do_draw(displaylist, 1);
+	do_draw(displaylist, 1, 0);
 	return 1;
 }
 
