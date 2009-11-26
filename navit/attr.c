@@ -147,7 +147,7 @@ attr_new_from_text(const char *name, const char *value)
 		break;
 	default:
 		if (attr >= attr_type_string_begin && attr <= attr_type_string_end) {
-			ret->u.str=(char *)value;
+			ret->u.str=g_strdup(value);
 			break;
 		}
 		if (attr >= attr_type_int_begin && attr <= attr_type_int_end) {
@@ -494,10 +494,9 @@ attr_free(struct attr *attr)
 {
 	if (!attr)
 		return;
-	if (attr->type == attr_position_coord_geo)
-		g_free(attr->u.coord_geo);
-	if (attr->type >= attr_type_color_begin && attr->type <= attr_type_color_end) 
-		g_free(attr->u.color);
+	if (!(attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) && 
+	    !(attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end))
+		g_free(attr->u.data);
 	g_free(attr);
 }
 
