@@ -62,7 +62,7 @@ if SUPPORT_ANDROID
 android/AndroidManifest.xml: android/AndroidManifest.xml.in
 	mkdir -p $(builddir)/android
 	sed '0,/<uses-sdk/!d' <$< >$@
-	for i in $(subst $(comma), ,@ANDROID_PERMISSIONS@); do echo "    <uses-permission android:name="android.permission.$$i" />" >>$@; done
+	for i in $(subst $(comma), ,@ANDROID_PERMISSIONS@); do echo "    <uses-permission android:name=\"android.permission.$$i\" />" >>$@; done
 	sed '0,/<uses-sdk/d' <$< >>$@
 	
 
