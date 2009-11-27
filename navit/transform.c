@@ -422,7 +422,8 @@ transform(struct transformation *t, enum projection pro, struct coord *c, struct
 			yc=c1.y;
 		}
 		if (i != 0 && i != count-1 && mindist) {
-			if (xc > c[k].x-mindist && xc < c[k].x+mindist && yc > c[k].y-mindist && yc < c[k].y+mindist) 
+			if (xc > c[k].x-mindist && xc < c[k].x+mindist && yc > c[k].y-mindist && yc < c[k].y+mindist &&
+				(c[i+1].x != c[0].x || c[i+1].y != c[0].y))
 				continue;
 			k=i;
 		}
