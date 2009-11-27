@@ -1356,7 +1356,9 @@ gui_internal_cmd_return(struct gui_priv *this, struct widget *wm, void *data)
 static void
 gui_internal_cmd2_back(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
+	graphics_draw_mode(this->gra, draw_mode_begin);
 	gui_internal_back(this, NULL, NULL);
+	graphics_draw_mode(this->gra, draw_mode_end);
 	gui_internal_check_exit(this);	
 }
 
