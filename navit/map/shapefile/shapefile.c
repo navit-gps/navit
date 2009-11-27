@@ -36,6 +36,9 @@
 #include "shapefil.h"
 
 
+#define IS_ARC(x) ((x).nSHPType == SHPT_ARC || (x).nSHPType == SHPT_ARCZ || (x).nSHPType == SHPT_ARCM)
+#define IS_POLYGON(x) ((x).nSHPType == SHPT_POLYGON || (x).nSHPType == SHPT_POLYGONZ || (x).nSHPType == SHPT_POLYGONM)
+
 struct map_priv {
 	int id;
 	char *filename;
@@ -57,7 +60,8 @@ struct map_rect_priv {
 	struct map_priv *m;
 	struct item item;
 	int idx;
-	int cidx;
+	int cidx,cidx_rewind;
+	int part,part_rewind;
 	int aidx;
 	enum attr_type anext;
 	SHPObject *psShape;
@@ -78,32 +82,52 @@ static void
 shapefile_coord_rewind(void *priv_data)
 {
 	struct map_rect_priv *mr=priv_data;
-	mr->cidx=0;
+	mr->cidx=mr->cidx_rewind;
+	mr->part=mr->part_rewind;
+}
+
+static void
+shapefile_coord(struct map_rect_priv *mr, int idx, struct coord *c)
+{
+	SHPObject *psShape=mr->psShape;
+	struct coord cs;
+	struct coord_geo g;
+
+	cs.x=psShape->padfX[idx]+mr->m->offset.x;
+	cs.y=psShape->padfY[idx]+mr->m->offset.y;
+	if (!mr->m->pro) {
+		g.lng=cs.x;
+		g.lat=cs.y;
+		transform_from_geo(projection_mg, &g, c);
+	} else
+		transform_from_to(&cs, mr->m->pro, c, projection_mg);
 }
 
 static int
 shapefile_coord_get(void *priv_data, struct coord *c, int count)
 {
 	struct map_rect_priv *mr=priv_data;
-	struct coord cs;
 	int ret=0;
 	int idx;
 	
-	struct coord_geo g;
 	SHPObject *psShape=mr->psShape;
 	while (count) {
 		idx=mr->cidx;
 		if (idx >= psShape->nVertices)
 			break;
-		cs.x=psShape->padfX[idx]+mr->m->offset.x;
-		cs.y=psShape->padfY[idx]+mr->m->offset.y;
-		if (!mr->m->pro) {
-			g.lng=cs.x;
-			g.lat=cs.y;
-			transform_from_geo(projection_mg, &g, c);
-		} else
-			transform_from_to(&cs, mr->m->pro, c, projection_mg);
-		mr->cidx++;
+		if (mr->part+1 < psShape->nParts && idx == psShape->panPartStart[mr->part+1]) {
+			if (IS_POLYGON(*psShape)) {
+				mr->part++;
+				shapefile_coord(mr, 0, c);
+			} else if (IS_ARC(*psShape)) {
+				break;
+			} else {
+				dbg_assert("Neither POLYGON or ARC and has parts" == NULL);
+			}
+		} else {
+			shapefile_coord(mr, idx, c);
+			mr->cidx++;
+		}
 		ret++;
 		c++;
 		count--;
@@ -391,7 +415,7 @@ attr_resolve(struct map_rect_priv *mr, enum attr_type attr_type, struct attr *at
 			col=value+2;
 			for (i = 0 ; i < mr->m->nFields ; i++) {
 				if (DBFGetFieldInfo(mr->m->hDBF, i, szTitle, &nWidth, &nDecimals ) == FTString && !strcmp(szTitle,col)) {
-					str=DBFReadStringAttribute( mr->m->hDBF, mr->item.id_lo, i);
+					str=DBFReadStringAttribute( mr->m->hDBF, mr->item.id_hi, i);
 					strcpy(value,str);
 					found=1;
 					break;
@@ -443,15 +467,15 @@ shapefile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		switch (DBFGetFieldInfo(m->hDBF, mr->aidx, szTitle, &nWidth, &nDecimals )) {
 		case FTString:
 			pszTypeName = "String";
-			str=g_strdup(DBFReadStringAttribute( m->hDBF, mr->item.id_lo, mr->aidx ));
+			str=g_strdup(DBFReadStringAttribute( m->hDBF, mr->item.id_hi, mr->aidx ));
 			break;
 		case FTInteger:
 			pszTypeName = "Integer";
-			str=g_strdup_printf("%d",DBFReadIntegerAttribute( m->hDBF, mr->item.id_lo, mr->aidx ));
+			str=g_strdup_printf("%d",DBFReadIntegerAttribute( m->hDBF, mr->item.id_hi, mr->aidx ));
 			break;
 		case FTDouble:
 			pszTypeName = "Double";
-			str=g_strdup_printf("%lf",DBFReadDoubleAttribute( m->hDBF, mr->item.id_lo, mr->aidx ));
+			str=g_strdup_printf("%lf",DBFReadDoubleAttribute( m->hDBF, mr->item.id_hi, mr->aidx ));
 			break;
 		case FTInvalid:
 			pszTypeName = "Invalid";
@@ -549,36 +573,44 @@ map_rect_get_item_shapefile(struct map_rect_priv *mr)
 	int count;
 	char type[1024];
 
-	if (mr->idx >= m->nEntities)
-		return NULL;
-	mr->item.id_lo=mr->idx;
-	if (mr->psShape)
-		SHPDestroyObject(mr->psShape);
-	mr->psShape=SHPReadObject(m->hSHP, mr->idx);
-	if (mr->psShape->nVertices > 1)
-		mr->item.type=type_street_unkn;
-	else
-		mr->item.type=type_point_unkn;
-	if (m->lm) {
-		longest_match_clear(m->lm);
-		process_fields(m, mr->idx);
+	if (mr->psShape && IS_ARC(*mr->psShape) && mr->part+1 < mr->psShape->nParts) {
+		mr->part++;
+		mr->part_rewind=mr->part;
+		mr->cidx_rewind=mr->psShape->panPartStart[mr->part];
+	} else {
+		if (mr->idx >= m->nEntities)
+			return NULL;
+		mr->item.id_hi=mr->idx;
+		if (mr->psShape)
+			SHPDestroyObject(mr->psShape);
+		mr->psShape=SHPReadObject(m->hSHP, mr->idx);
+		if (mr->psShape->nVertices > 1)
+			mr->item.type=type_street_unkn;
+		else
+			mr->item.type=type_point_unkn;
+		if (m->lm) {
+			longest_match_clear(m->lm);
+			process_fields(m, mr->idx);
 
-		lml=longest_match_get_list(m->lm, 0);
-		count=longest_match_list_find(m->lm, lml, lines, sizeof(lines)/sizeof(void *));
-		if (count) {
-			mr->line=lines[0];
-			if (attr_from_line(mr->line,"type",NULL,type,NULL)) {
-				dbg(1,"type='%s'\n", type);
-				mr->item.type=item_from_name(type);
-				if (mr->item.type == type_none)
-					dbg(0,"Warning: type '%s' unknown\n", type);
-			} else {
-				dbg(0,"failed to get attribute type\n");
-			}
-		} else
-			mr->line=NULL;
+			lml=longest_match_get_list(m->lm, 0);
+			count=longest_match_list_find(m->lm, lml, lines, sizeof(lines)/sizeof(void *));
+			if (count) {
+				mr->line=lines[0];
+				if (attr_from_line(mr->line,"type",NULL,type,NULL)) {
+					dbg(1,"type='%s'\n", type);
+					mr->item.type=item_from_name(type);
+					if (mr->item.type == type_none)
+						dbg(0,"Warning: type '%s' unknown\n", type);
+				} else {
+					dbg(0,"failed to get attribute type\n");
+				}
+			} else
+				mr->line=NULL;
+		}
+		mr->idx++;
+		mr->part_rewind=0;
+		mr->cidx_rewind=0;
 	}
-	mr->idx++;
 	shapefile_coord_rewind(mr);
 	shapefile_attr_rewind(mr);
 	return &mr->item;
@@ -587,7 +619,11 @@ map_rect_get_item_shapefile(struct map_rect_priv *mr)
 static struct item *
 map_rect_get_item_byid_shapefile(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
-	mr->idx=id_lo;
+	mr->idx=id_hi;
+	while (id_lo--) {
+		if (!map_rect_get_item_shapefile(mr))
+			return NULL;
+	}
 	return map_rect_get_item_shapefile(mr);
 }
 
