@@ -109,7 +109,12 @@ phase1_map(struct map *map, FILE *out_ways, FILE *out_nodes)
 		item_bin_init(item_bin, item->type);
 		item_bin_add_coord(item_bin, ca, count);
 		while (item_attr_get(item, attr_any, &attr)) {
-			item_bin_add_attr(item_bin, &attr);
+			if (attr.type >= attr_type_string_begin && attr.type <= attr_type_string_end) {
+				attr.u.str=map_convert_string(map, attr.u.str);
+				item_bin_add_attr(item_bin, &attr);
+				map_convert_free(attr.u.str);
+			} else 
+				item_bin_add_attr(item_bin, &attr);
 		}
 		if (item->type >= type_line) 
 			item_bin_write(item_bin, out_ways);
