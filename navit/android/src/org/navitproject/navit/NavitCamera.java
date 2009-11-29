@@ -37,7 +37,7 @@ import java.io.IOException;
 
 public class NavitCamera extends SurfaceView implements SurfaceHolder.Callback {
 	 SurfaceHolder mHolder;
-	static Camera mCamera = Camera.open();
+	Camera mCamera;
 
 
 
@@ -57,6 +57,7 @@ public class NavitCamera extends SurfaceView implements SurfaceHolder.Callback {
         // The Surface has been created, acquire the camera and tell it where
         // to draw.
         try {
+	   mCamera = Camera.open();
            mCamera.setPreviewDisplay(holder);
         } catch (IOException exception) {
             mCamera.release();
@@ -79,6 +80,7 @@ public class NavitCamera extends SurfaceView implements SurfaceHolder.Callback {
         // Now that the size is known, set up the camera parameters and begin
         // the preview.
 	Log.e("NavitCamera","surfaceChanged "+w+"x"+h);
+        mCamera.stopPreview();
         Camera.Parameters parameters = mCamera.getParameters();
         parameters.setPreviewSize(w, h);
         mCamera.setParameters(parameters);
