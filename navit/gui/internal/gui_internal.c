@@ -3574,8 +3574,6 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 			html->name=find_attr_dup(names, values, "name");
 			if (html->name) {
 				if (this->html_anchor_found)
-					html->skip=1;
-				else
 					html->skip=this->html_anchor ? strcmp(html->name,this->html_anchor) : 0;
 				if (!html->skip)
 					this->html_anchor_found=1;
