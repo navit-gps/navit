@@ -2425,7 +2425,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 	struct map_rect *mr=NULL;
 	struct item *item;
 	char *label_full,*l,*prefix="",*pos;
-	int len,plen,hassub;
+	int len,plen,hassub,found=0;
 	struct widget *wb,*w,*wbm;
 	GHashTable *hash;
 	struct coord c;
@@ -2438,8 +2438,12 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 	w->spy=this->spacing*3;
 	gui_internal_widget_append(wb, w);
 
-	if (wm && wm->prefix)
-		prefix=wm->prefix;
+	if (data)
+		prefix=data;
+	else {
+		if (wm && wm->prefix)
+			prefix=wm->prefix;
+	}
 	plen=strlen(prefix);
 
 	if(navit_get_attr(this->nav, attr_bookmark_map, &mattr, NULL) && mattr.u.map && (mr=map_rect_new(mattr.u.map, NULL))) {
@@ -2475,6 +2479,11 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 						wbm->prefix=g_malloc(len+2);
 						strncpy(wbm->prefix, label_full, len+1);
 						wbm->prefix[len+1]='\0';
+						if (!l[0]) {
+							gui_internal_cmd_set_destination(this, wbm, wbm->name);
+							found=1;
+							break;
+						}
 					} else {
 						gui_internal_widget_destroy(this, wbm);
 					}
@@ -2485,13 +2494,20 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 		}
 		g_hash_table_destroy(hash);
 	}
-	gui_internal_menu_render(this);
+	if (found)
+		gui_internal_check_exit(this);
+	else
+		gui_internal_menu_render(this);
 }
 
 static void
 gui_internal_cmd2_bookmarks(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-	gui_internal_cmd_bookmarks(this, NULL, NULL);
+	char *str=NULL;
+	if (in && in[0] && ATTR_IS_STRING(in[0]->type)) {
+		str=in[0]->u.str;
+	}
+	gui_internal_cmd_bookmarks(this, NULL, str);
 }
 
 static void gui_internal_keypress_do(struct gui_priv *this, char *key)
