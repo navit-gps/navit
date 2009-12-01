@@ -19,7 +19,7 @@ samplemap: $(SAMPLE_MAP).bin
 	mv $@.tmp $@
 
 .txt.bin:
-	$(maptool) $(maptool_args) $@.tmp -p $(top_builddir/navit/map/textfile/libmap_textfile.la -m "type=textfile data=$<"
+	$(maptool) $(maptool_args) $@.tmp -p $(top_builddir)/navit/map/textfile/libmap_textfile.la -m "type=textfile data="$<
 	mv $@.tmp $@
 
 .shp.bin:
