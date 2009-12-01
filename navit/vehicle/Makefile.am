@@ -14,6 +14,9 @@ endif
 if VEHICLE_GPSD
   SUBDIRS += gpsd
 endif
+if VEHICLE_GPSD_DBUS
+  SUBDIRS += gpsd_dbus
+endif
 if VEHICLE_GYPSY
   SUBDIRS += gypsy
 endif
