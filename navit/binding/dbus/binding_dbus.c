@@ -1650,6 +1650,6 @@ void plugin_init(void)
 		dbus_error_free (&error);
 	}
 	callback.type=attr_callback;
-	callback.u.callback=callback_new_0(callback_cast(dbus_main_navit));
+	callback.u.callback=callback_new_attr_0(callback_cast(dbus_main_navit),attr_navit);
 	config_add_attr(config, &callback);
 }
