@@ -239,6 +239,7 @@ struct gui_priv {
 	struct search_list *sl;
 	int ignore_button;
 	int menu_on_map_click;
+	int signal_on_map_click;
 	char *country_iso2;
 	int speech;
 	int keyboard;
@@ -3923,6 +3924,36 @@ gui_internal_set_attr(struct gui_priv *this, struct attr *attr)
 	}
 }
 
+static void gui_internal_dbus_signal(struct gui_priv *this, struct point *p)
+{
+	struct displaylist_handle *dlh;
+	struct displaylist *display;
+	struct displayitem *di;
+
+	display=navit_get_displaylist(this->nav);
+	dlh=graphics_displaylist_open(display);
+	while ((di=graphics_displaylist_next(dlh))) {
+		struct item *item=graphics_displayitem_get_item(di);
+		if (item_is_point(*item) && graphics_displayitem_get_displayed(di) &&
+			graphics_displayitem_within_dist(display, di, p, 10)) {
+			struct map_rect *mr=map_rect_new(item->map, NULL);
+			struct item *itemo=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+			struct attr attr;
+			if (item_attr_get(itemo, attr_data, &attr)) {
+				struct attr cb,*attr_list[2];
+				int valid=0;
+				attr.type=attr_data;
+				attr_list[0]=&attr;
+				attr_list[1]=NULL;
+       				if (navit_get_attr(this->nav, attr_callback_list, &cb, NULL)) 
+               				callback_list_call_attr_4(cb.u.callback_list, attr_command, "dbus_send_signal", attr_list, NULL, &valid);
+			}
+			map_rect_destroy(mr);
+		}
+	}
+       	graphics_displaylist_close(dlh);
+}
+
 
 //##############################################################################################################
 //# Description: Function to handle mouse clicks and scroll wheel movement
@@ -3938,6 +3969,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 	// if still on the map (not in the menu, yet):
 	dbg(1,"children=%p ignore_button=%d\n",this->root.children,this->ignore_button);
 	if (!this->root.children || this->ignore_button) {
+
 		this->ignore_button=0;
 		// check whether the position of the mouse changed during press/release OR if it is the scrollwheel
 		if (!navit_handle_button(this->nav, pressed, button, p, NULL)) {
@@ -3945,8 +3977,16 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 			return;
 		}
 		dbg(1,"menu_on_map_click=%d\n",this->menu_on_map_click);
-		if (this->menu_on_map_click && button == 1) 
+		if (button != 1)
+			return;
+		if (this->menu_on_map_click) {
 			gui_internal_cmd_menu(this, p, 0);
+			return;
+		}
+		if (this->signal_on_map_click) {
+			gui_internal_dbus_signal(this, p);
+			return;
+		}
 		return;
 	}
 
@@ -5334,6 +5374,9 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 		this->menu_on_map_click=attr->u.num;
 	else
 		this->menu_on_map_click=1;
+	if ((attr=attr_search(attrs, NULL, attr_signal_on_map_click)))
+		this->signal_on_map_click=attr->u.num;
+
 	if ((attr=attr_search(attrs, NULL, attr_callback_list))) {
 		command_add_table(attr->u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), this);
 	}

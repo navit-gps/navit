@@ -1995,6 +1995,12 @@ char * graphics_displayitem_get_label(struct displayitem *di)
 	return di->label;
 }
 
+int
+graphics_displayitem_get_displayed(struct displayitem *di)
+{
+	return di->displayed;
+}
+
 /**
  * FIXME
  * @param <>
