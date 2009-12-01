@@ -1221,10 +1221,10 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
 } /* end of source */
 
 static void
-pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int y0)
+pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0, int y0)
 {
-    if (img->hBitmap)
-    {
+	if (img->hBitmap)
+	{
 		BLENDFUNCTION blendFunction ;
 		blendFunction.BlendOp = AC_SRC_OVER;
 		blendFunction.BlendFlags = 0;
@@ -1232,14 +1232,13 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int 
 		blendFunction.AlphaFormat = AC_SRC_ALPHA;
 		HDC hdc = CreateCompatibleDC(NULL);
 		HBITMAP oldBitmap = SelectBitmap(hdc, img->hBitmap);
-    	gr->AlphaBlend(gr->hMemDC, x0, y0, img->width, img->height, hdc, 0, 0, img->width, img->height, blendFunction);
-    	(void)SelectBitmap(hdc, oldBitmap);
-    	DeleteDC(hdc);
-    }
-    else
-    {
-
-		int x,y;
+		gr->AlphaBlend(gr->hMemDC, x0, y0, img->width, img->height, hdc, 0, 0, img->width, img->height, blendFunction);
+		(void)SelectBitmap(hdc, oldBitmap);
+		DeleteDC(hdc);
+	}
+	else
+	{
+		int x, y;
 		HDC hdc=gr->hMemDC;
 		png_byte *pix_ptr = img->png_pixels;
 		COLORREF *pixeldata;
@@ -1254,33 +1253,26 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int 
 		pnginfo.bmiHeader.biCompression = BI_RGB;
 		pnginfo.bmiHeader.biPlanes = 1;
 		HDC dc = CreateCompatibleDC(NULL);
-		HBITMAP bitmap = CreateDIBSection(hdc, &pnginfo, DIB_RGB_COLORS , (void **)&pixeldata, NULL, 0);
+		HBITMAP bitmap = CreateDIBSection(hdc, &pnginfo, DIB_RGB_COLORS, (void **)&pixeldata, NULL, 0);
 		HBITMAP oldBitmap = SelectBitmap(dc, bitmap);
 		BitBlt(dc, 0, 0, img->width, img->height, hdc, x0, y0, SRCCOPY);
 		for (y=0 ; y < img->width ; y++)
 		{
 			for (x=0 ; x < img->height ; x++)
 			{
-				int ai,a=pix_ptr[3];
-				int r,g,b;
-				if (a == 0xff)
+				int b = pix_ptr[0];
+				int g = pix_ptr[1];
+				int r = pix_ptr[2];
+				int a = pix_ptr[3];
+				if (a != 0xff)
 				{
-					r=pix_ptr[0];
-					g=pix_ptr[1];
-					b=pix_ptr[2];
+					int p = *pixeldata;
+					int ai = 0xff - a;
+					r = (r * a + ((p >> 16) & 0xff) * ai) / 255;
+					g = (g * a + ((p >>  8) & 0xff) * ai) / 255;
+					b = (b * a + ((p >>  0) & 0xff) * ai) / 255;
 				}
-				else
-				{
-					int p=*pixeldata;
-					ai=0xff-a;
-					r=(p >> 16) & 0xff;
-					g=(p >> 8) & 0xff;
-					b=(p >> 0) & 0xff;
-					r=(pix_ptr[0]*a+((p >> 16) & 0xff)*ai)/255;
-					g=(pix_ptr[1]*a+((p >>  8) & 0xff)*ai)/255;
-					b=(pix_ptr[2]*a+((p >>  0) & 0xff)*ai)/255;
-				}
-				*pixeldata++=(r << 16) | (g << 8) | b;
+				*pixeldata++ = (r << 16) | (g << 8) | b;
 				pix_ptr+=img->channels;
 			}
 		}
@@ -1289,7 +1281,7 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0,int 
 		(void)SelectBitmap(dc, oldBitmap);
 		DeleteBitmap(bitmap);
 		DeleteDC(dc);
-    }
+	}
 }
 
 static int
