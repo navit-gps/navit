@@ -56,6 +56,7 @@ speech_speech_dispatcher=yes; speech_speech_dispatcher_reason=default
 vehicle_demo=yes; vehicle_demo_reason=default
 vehicle_file=yes; vehicle_file_reason=default
 vehicle_gpsd=yes; vehicle_gpsd_reason=default
+vehicle_gpsd_dbus=no; vehicle_gpsd_dbus_reason=default
 vehicle_gypsy=yes; vehicle_gypsy_reason=default
 vehicle_null=no; vehicle_null_reason=default
 vehicle_wince=no; vehicle_wince_reason=default
@@ -521,10 +522,13 @@ if test "x${binding_dbus}" = "xyes" ; then
 fi
 if test "x${binding_dbus}" = "xyes" ; then
 	AC_DEFINE(USE_BINDING_DBUS, 1, [Build with binding dbus])
+	vehicle_gpsd_dbus="yes"
+	vehicle_gpsd_dbus_reason="dbus binding present"
 fi
 AC_SUBST(DBUS_CFLAGS)
 AC_SUBST(DBUS_LIBS)
 AM_CONDITIONAL(BINDING_DBUS, test "x${binding_dbus}" = "xyes")
+AM_CONDITIONAL(VEHICLE_GPSD_DBUS, test "x${vehicle_gpsd_dbus}" = "xyes")
 AC_ARG_WITH(dbus-service-dir, [ --with-dbus-service-dir   specify where the dbus service dir resides], DBUS_SERVICE_DIR=$withval, DBUS_SERVICE_DIR="$datarootdir/dbus-1/services")
 AC_SUBST(DBUS_SERVICE_DIR)
 
@@ -853,6 +857,7 @@ navit/vehicle/Makefile
 navit/vehicle/android/Makefile
 navit/vehicle/file/Makefile
 navit/vehicle/gpsd/Makefile
+navit/vehicle/gpsd_dbus/Makefile
 navit/vehicle/gypsy/Makefile
 navit/vehicle/null/Makefile
 navit/vehicle/demo/Makefile
@@ -952,6 +957,7 @@ echo "  android:           $vehicle_android ($vehicle_android_reason)"
 echo "  demo:              $vehicle_demo ($vehicle_demo_reason)"
 echo "  file:              $vehicle_file ($vehicle_file_reason)"
 echo "  gpsd:              $vehicle_gpsd ($vehicle_gpsd_reason)"
+echo "  gpsd_dbus:         $vehicle_gpsd_dbus ($vehicle_gpsd_dbus_reason)"
 echo "  gypsy:             $vehicle_gypsy ($vehicle_gypsy_reason)"
 echo "  null:              $vehicle_null ($vehicle_null_reason)"
 echo "  wince:             $vehicle_wince ($vehicle_wince_reason)"
