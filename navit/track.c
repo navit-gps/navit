@@ -438,7 +438,7 @@ tracking_doupdate_lines(struct tracking *tr, struct coord *pc, enum projection p
 
 	dbg(1,"enter\n");
 	h=mapset_open(tr->ms);
-	while ((m=mapset_next(h,1))) {
+	while ((m=mapset_next(h,2))) {
 		cc.x = pc->x;
 		cc.y = pc->y;
 		if (map_projection(m) != pro) {

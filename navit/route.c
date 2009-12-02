@@ -1995,7 +1995,7 @@ static int
 route_graph_build_next_map(struct route_graph *rg)
 {
 	do {
-		rg->m=mapset_next(rg->h, 1);
+		rg->m=mapset_next(rg->h, 2);
 		if (! rg->m)
 			return 0;
 		map_rect_destroy(rg->mr);
@@ -2377,7 +2377,7 @@ route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *
 	mindist = INT_MAX;
 
 	h=mapset_open(ms);
-	while ((m=mapset_next(h,1))) {
+	while ((m=mapset_next(h,2))) {
 		c.x = pc->x;
 		c.y = pc->y;
 		if (map_projection(m) != pc->pro) {
