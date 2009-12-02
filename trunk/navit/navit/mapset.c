@@ -192,7 +192,6 @@ struct map * mapset_next(struct mapset_handle *msh, int active)
 		msh->l=g_list_next(msh->l);
 		if (!active)
 			return ret;			
-		dbg(0,"active=%d\n",active);
 		if (active == 2 && map_get_attr(ret, attr_route_active, &active_attr, NULL)) {
 			if (active_attr.u.num)
 				return ret;
