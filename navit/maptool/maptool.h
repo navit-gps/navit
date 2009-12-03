@@ -145,6 +145,7 @@ void item_bin_add_attr_data(struct item_bin *ib, enum attr_type type, void *data
 void item_bin_add_attr(struct item_bin *ib, struct attr *attr);
 void item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val);
 void *item_bin_get_attr(struct item_bin *ib, enum attr_type type, void *last);
+struct attr_bin * item_bin_get_attr_bin_last(struct item_bin *ib);
 void item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long long val);
 void item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str);
 void item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, short max);
@@ -154,6 +155,8 @@ void item_bin_dump(struct item_bin *ib, FILE *out);
 void dump_itembin(struct item_bin *ib);
 void item_bin_set_type_by_population(struct item_bin *ib, int population);
 void item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, FILE *out);
+int item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size);
+
 
 
 /* maptool.c */
