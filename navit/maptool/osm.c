@@ -1445,8 +1445,8 @@ end_node(FILE *out)
 				if (result->file) {
 					item_bin_init(item_bin, item_bin->type);
 					item_bin_add_coord(item_bin, &ni->c, 1);
-					item_bin_add_attr_string(item_bin, attr_town_name, attr_strings[attr_string_label]);
 					item_bin_add_attr_string(item_bin, attr_town_postal, postal);
+					item_bin_add_attr_string(item_bin, attr_town_name, attr_strings[attr_string_label]);
 					item_bin_write_match(item_bin, attr_town_name, attr_town_name_match, result->file);
 				}
 			
@@ -1456,79 +1456,23 @@ end_node(FILE *out)
 	processed_nodes_out++;
 }
 
-static int
-sort_countries_compare(const void *p1, const void *p2)
-{
-	struct item_bin *ib1=*((struct item_bin **)p1),*ib2=*((struct item_bin **)p2);
-	struct attr_bin *attr1,*attr2;
-	char *s1,*s2;
-	dbg_assert(ib1->clen==2);
-	dbg_assert(ib2->clen==2);
-	attr1=(struct attr_bin *)((int *)(ib1+1)+ib1->clen);
-	attr2=(struct attr_bin *)((int *)(ib2+1)+ib1->clen);
-	dbg_assert(attr1->type == attr_town_name || attr1->type == attr_town_name_match);
-	dbg_assert(attr2->type == attr_town_name || attr2->type == attr_town_name_match);
-	s1=(char *)(attr1+1);
-	s2=(char *)(attr2+1);
-	return strcmp(s1, s2);
-#if 0
-	fprintf(stderr,"sort_countries_compare p1=%p p2=%p %s %s\n",p1,p2,s1,s2);
-#endif
-	return 0;
-}
-
 void
 sort_countries(int keep_tmpfiles)
 {
-	int i,j,count;
+	int i;
 	struct country_table *co;
-	struct coord *c;
-	struct item_bin *ib;
-	FILE *f;
-	char *name;
-	unsigned char *p,**idx,*buffer;
+	char *name_in,*name_out;
 	for (i = 0 ; i < sizeof(country_table)/sizeof(struct country_table) ; i++) {
 		co=&country_table[i];
 		if (co->file) {
 			fclose(co->file);
 			co->file=NULL;
 		}
-		name=g_strdup_printf("country_%d.bin.unsorted", co->countryid);
-		if (file_get_contents(name, &buffer, &co->size)) {
-			if(!keep_tmpfiles) 
-				unlink(name);
-			g_free(name);
-			ib=(struct item_bin *)buffer;
-			p=buffer;
-			count=0;
-			while (p < buffer+co->size) {
-				count++;
-				p+=(*((int *)p)+1)*4;
-			}
-			idx=malloc(count*sizeof(void *));
-			dbg_assert(idx != NULL);
-			p=buffer;
-			for (j = 0 ; j < count ; j++) {
-				idx[j]=p;
-				p+=(*((int *)p)+1)*4;
-			}
-			qsort(idx, count, sizeof(void *), sort_countries_compare);
-			name=g_strdup_printf("country_%d.bin", co->countryid);
-			f=fopen(name,"wb");
-			for (j = 0 ; j < count ; j++) {
-				ib=(struct item_bin *)(idx[j]);
-				c=(struct coord *)(ib+1);
-				fwrite(ib, (ib->len+1)*4, 1, f);
-				if (j) 
-					bbox_extend(c, &co->r);
-				else {
-					co->r.l=*c;
-					co->r.h=*c;
-				}
-			}
-			fclose(f);
-		}
-		g_free(name);
+		name_in=g_strdup_printf("country_%d.bin.unsorted", co->countryid);
+		name_out=g_strdup_printf("country_%d.bin", co->countryid);
+		item_bin_sort_file(name_in, name_out, &co->r, &co->size);
+		g_free(name_in);
+		g_free(name_out);
 	}
 }
 
