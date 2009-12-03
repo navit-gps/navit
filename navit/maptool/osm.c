@@ -1379,63 +1379,6 @@ end_way(FILE *out)
 	}
 }
 
-struct population_table {
-	enum item_type type;
-	int population;
-};
-
-static struct population_table town_population[] = {
-	{type_town_label_0e0,0},
-	{type_town_label_1e0,1},
-	{type_town_label_2e0,2},
-	{type_town_label_5e0,5},
-	{type_town_label_1e1,10},
-	{type_town_label_2e1,20},
-	{type_town_label_5e1,50},
-	{type_town_label_1e2,100},
-	{type_town_label_2e2,200},
-	{type_town_label_5e2,500},
-	{type_town_label_1e3,1000},
-	{type_town_label_2e3,2000},
-	{type_town_label_5e3,5000},
-	{type_town_label_1e4,10000},
-	{type_town_label_2e4,20000},
-	{type_town_label_5e4,50000},
-	{type_town_label_1e5,100000},
-	{type_town_label_2e5,200000},
-	{type_town_label_5e5,500000},
-	{type_town_label_1e6,1000000},
-	{type_town_label_2e6,2000000},
-	{type_town_label_5e6,5000000},
-	{type_town_label_1e7,1000000},
-};
-
-static struct population_table district_population[] = {
-	{type_district_label_0e0,0},
-	{type_district_label_1e0,1},
-	{type_district_label_2e0,2},
-	{type_district_label_5e0,5},
-	{type_district_label_1e1,10},
-	{type_district_label_2e1,20},
-	{type_district_label_5e1,50},
-	{type_district_label_1e2,100},
-	{type_district_label_2e2,200},
-	{type_district_label_5e2,500},
-	{type_district_label_1e3,1000},
-	{type_district_label_2e3,2000},
-	{type_district_label_5e3,5000},
-	{type_district_label_1e4,10000},
-	{type_district_label_2e4,20000},
-	{type_district_label_5e4,50000},
-	{type_district_label_1e5,100000},
-	{type_district_label_2e5,200000},
-	{type_district_label_5e5,500000},
-	{type_district_label_1e6,1000000},
-	{type_district_label_2e6,2000000},
-	{type_district_label_5e6,5000000},
-	{type_district_label_1e7,1000000},
-};
-
 static void
 end_node(FILE *out)
 {
@@ -1456,24 +1399,8 @@ end_node(FILE *out)
 		if (types[i] == type_none)
 			continue;
 		item_bin_init(item_bin, types[i]);
-		if (item_is_town(*item_bin) && attr_strings[attr_string_population]) {
-			int i,count,population=atoi(attr_strings[attr_string_population]);
-			struct population_table *table;
-			if (population < 0)
-				population=0;
-			if (item_is_district(*item_bin)) {
-				table=district_population;
-				count=sizeof(district_population)/sizeof(district_population[0]);
-			} else {
-				table=town_population;
-				count=sizeof(town_population)/sizeof(town_population[0]);
-			}
-			for (i = 0 ; i < count ; i++) {
-				if (population < table[i].population)
-					break;
-			}
-			item_bin_set_type(item_bin, table[i-1].type);
-		}
+		if (item_is_town(*item_bin) && attr_strings[attr_string_population]) 
+			item_bin_set_type_by_population(item_bin, atoi(attr_strings[attr_string_population]));
 		item_bin_add_coord(item_bin, &ni->c, 1);
 		item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_name : attr_label, attr_strings[attr_string_label]);
 		item_bin_add_attr_string(item_bin, attr_house_number, attr_strings[attr_string_house_number]);
