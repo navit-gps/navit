@@ -23,15 +23,6 @@
 #include "maptool.h"
 #include "zipfile.h"
 
-static void
-cat(FILE *in, FILE *out)
-{
-	size_t size;
-	char buffer[4096];
-	while ((size=fread(buffer, 1, 4096, in)))
-		fwrite(buffer, 1, size, out);
-}
-
 static int
 compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level)
 {

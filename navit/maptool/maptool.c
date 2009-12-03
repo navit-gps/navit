@@ -546,7 +546,9 @@ int main(int argc, char **argv)
 				unlink("coords.tmp");
 			}
 			if (i == suffix_count-1) {
+				FILE *auxtiles;
 				zipnum=zip_info.zipnum;
+				add_aux_tiles("auxtiles.txt", &zip_info);
 				write_countrydir(&zip_info);
 				zip_info.zipnum=zipnum;
 				write_aux_tiles(&zip_info);
