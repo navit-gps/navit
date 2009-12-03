@@ -700,6 +700,14 @@ pop_tile(struct map_rect_priv *mr)
 	return 1;
 }
 
+static void
+tile_set_window(struct map_rect_priv *mr, int offset, int length)
+{
+	mr->t->pos=mr->t->pos_next=mr->t->start+offset;
+	mr->t->end=mr->t->start+offset+length;
+	dbg(1,"range is from %p to %p (%d,%d)\n",mr->t->pos, mr->t->end, offset, length);
+	
+}
 
 static int
 zipfile_to_tile(struct file *f, struct zip_cd *cd, struct tile *t)
@@ -1149,7 +1157,7 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 {
 	struct map_rect_priv *map_rec;
 	struct map_search_priv *msp;
-	struct item *town;
+	struct item *town,*street;
 	
 	/*
      * NOTE: If you implement search for other attributes than attr_town_name and attr_street_name,
@@ -1206,6 +1214,32 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			}
 			map_rect_destroy_binfile(map_rec);
 			break;
+		case attr_house_number:
+			if (! item->map)
+				break;
+			if (!map_priv_is(item->map, map))
+				break;
+			map_rec = map_rect_new_binfile(map, NULL);
+			street = map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo);
+			if (street) {
+				struct map_search_priv *msp = g_new0(struct map_search_priv, 1);
+				struct attr zipfile_ref;
+				int *data;
+			
+				if (!item_attr_get(street, attr_zipfile_ref_block, &zipfile_ref)) {
+					g_free(msp);
+					return NULL;
+				}
+				data=zipfile_ref.u.data;
+				msp->search = search;
+				msp->partial = partial;
+				msp->mr = map_rect_new_binfile_int(map, NULL);
+				push_zipfile_tile(msp->mr, data[0]);
+				tile_set_window(msp->mr, data[1], data[2]);
+				map_rect_destroy_binfile(map_rec);
+				return msp;
+			}
+			map_rect_destroy_binfile(map_rec);
 		default:
 			break;
 	}
@@ -1224,13 +1258,14 @@ static struct item *
 binmap_search_get_item(struct map_search_priv *map_search)
 {
 	struct item* it;
+	struct attr at;
+
 	while ((it  = map_rect_get_item_binfile(map_search->mr))) {
 		switch (map_search->search->type) {
 		case attr_town_name:
 		case attr_district_name:
 		case attr_town_or_district_name:
 			if (item_is_town(*it) && !item_is_district(*it) && map_search->search->type != attr_district_name) {
-				struct attr at;
 				if (binfile_attr_get(it->priv_data, attr_town_name_match, &at) || binfile_attr_get(it->priv_data, attr_town_name, &at)) {
 					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
 						return it;
@@ -1238,7 +1273,6 @@ binmap_search_get_item(struct map_search_priv *map_search)
 				}
 			}
 			if (item_is_district(*it) && map_search->search->type != attr_town_name) {
-				struct attr at;
 				if (binfile_attr_get(it->priv_data, attr_district_name_match, &at) || binfile_attr_get(it->priv_data, attr_district_name, &at)) {
 					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
 						binfile_attr_rewind(it->priv_data);
@@ -1249,7 +1283,6 @@ binmap_search_get_item(struct map_search_priv *map_search)
 			break;
 		case attr_street_name:
 			if (map_search->mode == 1) {
-				struct attr at;
 				if (binfile_attr_get(it->priv_data, attr_street_name_match, &at) || binfile_attr_get(it->priv_data, attr_street_name, &at)) {
 					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
 						binfile_attr_rewind(it->priv_data);
@@ -1287,6 +1320,14 @@ binmap_search_get_item(struct map_search_priv *map_search)
 				}
 			}
 			break;
+		case attr_house_number:
+			if (binfile_attr_get(it->priv_data, attr_house_number, &at)) {
+				if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
+					binfile_attr_rewind(it->priv_data);
+					return it;
+				}
+			}
+			continue;
 		default:
 			return NULL;
 		}
@@ -1297,7 +1338,8 @@ binmap_search_get_item(struct map_search_priv *map_search)
 static void
 binmap_search_destroy(struct map_search_priv *ms)
 {
-	g_hash_table_destroy(ms->search_results);
+	if (ms->search_results)
+		g_hash_table_destroy(ms->search_results);
 	map_rect_destroy_binfile(ms->mr);
 	g_free(ms);
 }
