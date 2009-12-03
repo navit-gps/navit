@@ -1,6 +1,10 @@
 #include <string.h>
+#include <stdlib.h>
 #include "maptool.h"
+#include "linguistics.h"
+#include "file.h"
 #include "debug.h"
+
 
 
 struct item_bin *
@@ -134,6 +138,20 @@ item_bin_get_attr(struct item_bin *ib, enum attr_type type, void *last)
 		}
 	}
 	return NULL;
+}
+
+struct attr_bin *
+item_bin_get_attr_bin_last(struct item_bin *ib)
+{
+	struct attr_bin *ab=NULL;
+	unsigned char *s=(unsigned char *)ib;
+	unsigned char *e=s+(ib->len+1)*4;
+	s+=sizeof(struct item_bin)+ib->clen*4;
+	while (s < e) {
+		ab=(struct attr_bin *)s;
+		s+=(ab->len+1)*4;
+	}
+	return ab;
 }
 
 void
@@ -368,4 +386,83 @@ item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type ma
 			word=linguistics_next_word(word);
 			words++;
 	} while (word);
+}
+
+static int
+item_bin_sort_compare(const void *p1, const void *p2)
+{
+	struct item_bin *ib1=*((struct item_bin **)p1),*ib2=*((struct item_bin **)p2);
+	struct attr_bin *attr1,*attr2;
+	char *s1,*s2;
+	int ret;
+#if 0
+	dbg_assert(ib1->clen==2);
+	dbg_assert(ib2->clen==2);
+	attr1=(struct attr_bin *)((int *)(ib1+1)+ib1->clen);
+	attr2=(struct attr_bin *)((int *)(ib2+1)+ib1->clen);
+#else
+	attr1=item_bin_get_attr_bin_last(ib1);
+	attr2=item_bin_get_attr_bin_last(ib2);
+#endif
+#if 0
+	dbg_assert(attr1->type == attr_town_name || attr1->type == attr_town_name_match);
+	dbg_assert(attr2->type == attr_town_name || attr2->type == attr_town_name_match);
+#endif
+	s1=(char *)(attr1+1);
+	s2=(char *)(attr2+1);
+	ret=strcmp(s1, s2);
+	if (!ret) {
+		int match1=0,match2=0;
+		match1=(attr1->type == attr_town_name_match || attr1->type == attr_district_name_match);
+		match2=(attr2->type == attr_town_name_match || attr2->type == attr_district_name_match);
+		ret=match1-match2;
+	}
+#if 0
+	fprintf(stderr,"sort_countries_compare p1=%p p2=%p %s %s\n",p1,p2,s1,s2);
+#endif
+	return ret;
+}
+
+int
+item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size)
+{
+	int j,count;
+	struct coord *c;
+	struct item_bin *ib;
+	FILE *f;
+	unsigned char *p,**idx,*buffer;
+	if (file_get_contents(in_file, &buffer, size)) {
+		ib=(struct item_bin *)buffer;
+		p=buffer;
+		count=0;
+		while (p < buffer+*size) {
+			count++;
+			p+=(*((int *)p)+1)*4;
+		}
+		idx=malloc(count*sizeof(void *));
+		dbg_assert(idx != NULL);
+		p=buffer;
+		for (j = 0 ; j < count ; j++) {
+			idx[j]=p;
+			p+=(*((int *)p)+1)*4;
+		}
+		qsort(idx, count, sizeof(void *), item_bin_sort_compare);
+		f=fopen(out_file,"wb");
+		for (j = 0 ; j < count ; j++) {
+			ib=(struct item_bin *)(idx[j]);
+			c=(struct coord *)(ib+1);
+			fwrite(ib, (ib->len+1)*4, 1, f);
+			if (r) {
+				if (j) 
+					bbox_extend(c, r);
+				else {
+					r->l=*c;
+					r->h=*c;
+				}
+			}
+		}
+		fclose(f);
+		return 1;
+	}
+	return 0;
 }
