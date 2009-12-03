@@ -345,3 +345,27 @@ item_bin_set_type_by_population(struct item_bin *ib, int population)
 	}
 	item_bin_set_type(ib, table[i-1].type);
 }
+
+
+void
+item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, FILE *out)
+{
+	char *word=item_bin_get_attr(ib, type, NULL);
+	int i,words=0,len=ib->len;
+	if (!word)
+		return;
+	do  {
+		for (i = 0 ; i < 3 ; i++) {
+				char *str=linguistics_expand_special(word, i);
+				if (str) {
+					ib->len=len;
+					if (i || words)
+						item_bin_add_attr_string(ib, match, str);
+					item_bin_write(ib, out);
+					g_free(str);
+				}
+			}
+			word=linguistics_next_word(word);
+			words++;
+	} while (word);
+}
