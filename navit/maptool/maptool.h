@@ -153,6 +153,7 @@ void item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, s
 void item_bin_dump(struct item_bin *ib, FILE *out);
 void dump_itembin(struct item_bin *ib);
 void item_bin_set_type_by_population(struct item_bin *ib, int population);
+void item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, FILE *out);
 
 
 /* maptool.c */
