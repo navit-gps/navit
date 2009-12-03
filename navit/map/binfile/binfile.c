@@ -95,6 +95,7 @@ struct map_search_priv {
 	struct attr *search;
 	struct map_selection ms;
 	int partial;
+	int mode;
 	GHashTable *search_results;
 };
 
@@ -785,10 +786,9 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 }
 
 static struct map_rect_priv *
-map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
+map_rect_new_binfile_int(struct map_priv *map, struct map_selection *sel)
 {
 	struct map_rect_priv *mr;
-	struct tile t={};
 
 	binfile_check_version(map);
 	dbg(1,"map_rect_new_binfile\n");
@@ -799,6 +799,16 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 	mr->sel=sel;
 	mr->item.id_hi=0;
 	mr->item.id_lo=0;
+	mr->item.meth=&methods_binfile;
+	mr->item.priv_data=mr;
+	return mr;
+}
+
+static struct map_rect_priv *
+map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
+{
+	struct map_rect_priv *mr=map_rect_new_binfile_int(map, sel);
+	struct tile t={};
 	dbg(1,"zip_members=%d\n", map->zip_members);
 	if (map->eoc) 
 		push_zipfile_tile(mr, map->zip_members-1);
@@ -811,8 +821,6 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 		t.mode=0;
 		push_tile(mr, &t);
 	}
-	mr->item.meth=&methods_binfile;
-	mr->item.priv_data=mr;
 	return mr;
 }
 
@@ -1042,6 +1050,100 @@ map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 	return &mr->item;
 }
 
+static struct map_rect_priv *
+binmap_search_street_by_index(struct map_priv *map, struct item *town)
+{
+	struct attr zipfile_ref;
+	struct map_rect_priv *ret;
+
+	if (!item_attr_get(town, attr_zipfile_ref, &zipfile_ref))
+		return NULL;
+	ret=map_rect_new_binfile_int(map, NULL);
+	push_zipfile_tile(ret, zipfile_ref.u.num);
+	return ret;
+}
+
+static struct map_rect_priv *
+binmap_search_street_by_place(struct map_priv *map, struct item *town, struct coord *c, struct map_selection *sel)
+{
+	struct attr town_name, poly_town_name;
+	struct map_rect_priv *map_rec2;
+	struct item *place;
+	int found;
+
+	if (!item_attr_get(town, attr_label, &town_name))
+		return NULL;
+	sel->range = item_range_all;
+	sel->order = 18;
+	sel->next = NULL;
+	sel->u.c_rect.lu=*c;
+	sel->u.c_rect.rl=*c;
+	map_rec2=map_rect_new_binfile(map, sel);
+	while ((place=map_rect_get_item_binfile(map_rec2))) {
+		if (item_is_poly_place(*place) &&
+		    item_attr_get(place, attr_label, &poly_town_name) && 
+		    !strcmp(poly_town_name.u.str,town_name.u.str)) {
+				struct coord c[128];
+				int i,count;
+				found=1;
+				while ((count=item_coord_get(place, c, 128))) {
+					for (i = 0 ; i < count ; i++)
+						coord_rect_extend(&sel->u.c_rect, &c[i]);
+				}
+		}
+	}
+	map_rect_destroy_binfile(map_rec2);
+	if (found)
+		return map_rect_new_binfile(map, sel);
+	return NULL;
+}
+
+static struct map_rect_priv *
+binmap_search_street_by_estimate(struct map_priv *map, struct item *town, struct coord *c, struct map_selection *sel)
+{
+	int size = 10000;
+	switch (town->type) {
+		case type_town_label_1e7:
+		case type_town_label_5e6:
+		case type_town_label_2e6:
+		case type_town_label_1e6:
+		case type_town_label_5e5:
+		case type_town_label_2e5:
+			size = 10000;
+			break;
+		case type_town_label_1e5:
+		case type_town_label_5e4:
+		case type_town_label_2e4:
+			size = 5000;
+			break;
+		case type_town_label_1e4:
+		case type_town_label_5e3:
+		case type_town_label_2e3:
+			size = 2500;
+			break;
+		case type_town_label_1e3:
+		case type_town_label_5e2:
+		case type_town_label_2e2:
+		case type_town_label_1e2:
+		case type_town_label_5e1:
+		case type_town_label_2e1:
+		case type_town_label_1e1:
+		case type_town_label_5e0:
+		case type_town_label_2e0:
+		case type_town_label_1e0:
+		case type_town_label_0e0:
+			size = 1000;
+			break;
+		default:
+			break;
+	}
+	sel->u.c_rect.lu.x = c->x-size;
+	sel->u.c_rect.lu.y = c->y+size;
+	sel->u.c_rect.rl.x = c->x+size;
+	sel->u.c_rect.rl.y = c->y-size;
+	return map_rect_new_binfile(map, sel);
+}
+
 static struct map_search_priv *
 binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial)
 {
@@ -1079,78 +1181,24 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			if (town) {
 				struct map_search_priv *msp = g_new(struct map_search_priv, 1);
 				struct coord c;
-				struct map_rect_priv *map_rec2;
-				struct attr town_name, poly_town_name;
-				struct item *place;
-				int place_found=0;
-				item_coord_get(town, &c, 1);
-				if (item_attr_get(town, attr_label, &town_name)) {
-					msp->ms.range = item_range_all;
-					msp->ms.order = 18;
-					msp->ms.next = NULL;
-					msp->ms.u.c_rect.lu=c;
-					msp->ms.u.c_rect.rl=c;
-					map_rec2=map_rect_new_binfile(map, &msp->ms);
-					while ((place=map_rect_get_item_binfile(map_rec2))) {
-						if (item_is_poly_place(*place) &&
-						    item_attr_get(place, attr_label, &poly_town_name) && 
-						    !strcmp(poly_town_name.u.str,town_name.u.str)) {
-							struct coord c[128];
-							int i,count;
-							place_found=1;
-							while ((count=item_coord_get(place, c, 128))) {
-								for (i = 0 ; i < count ; i++)
-									coord_rect_extend(&msp->ms.u.c_rect, &c[i]);
-							}
-						}
+
+				if ((msp->mr=binmap_search_street_by_index(map, town)))
+					msp->mode = 1;
+				else {
+					if (item_coord_get(town, &c, 1)) {
+						if ((msp->mr=binmap_search_street_by_place(map, town, &c, &msp->ms))) 
+							msp->mode = 2;
+						else {
+							msp->mr=binmap_search_street_by_estimate(map, town, &c, &msp->ms);
+							msp->mode = 3;
+						}	
 					}
-					map_rect_destroy_binfile(map_rec2);
-				}
-				if (!place_found) {
-					int size = 10000;
-					switch (town->type) {
-						case type_town_label_1e7:
-						case type_town_label_5e6:
-						case type_town_label_2e6:
-						case type_town_label_1e6:
-						case type_town_label_5e5:
-						case type_town_label_2e5:
-							size = 10000;
-							break;
-						case type_town_label_1e5:
-						case type_town_label_5e4:
-						case type_town_label_2e4:
-							size = 5000;
-							break;
-						case type_town_label_1e4:
-						case type_town_label_5e3:
-						case type_town_label_2e3:
-							size = 2500;
-							break;
-						case type_town_label_1e3:
-						case type_town_label_5e2:
-						case type_town_label_2e2:
-						case type_town_label_1e2:
-						case type_town_label_5e1:
-						case type_town_label_2e1:
-						case type_town_label_1e1:
-						case type_town_label_5e0:
-						case type_town_label_2e0:
-						case type_town_label_1e0:
-						case type_town_label_0e0:
-							size = 1000;
-							break;
-						default:
-							break;
-					}
-					msp->ms.u.c_rect.lu.x = c.x-size;
-					msp->ms.u.c_rect.lu.y = c.y+size;
-					msp->ms.u.c_rect.rl.x = c.x+size;
-					msp->ms.u.c_rect.rl.y = c.y-size;
 				}
 				map_rect_destroy_binfile(map_rec);
-				map_rec = map_rect_new_binfile(map, &msp->ms);
-				msp->mr = map_rec;
+				if (!msp->mr) {
+					g_free(msp);
+					return NULL;
+				}
 				msp->search = search;
 				msp->partial = partial;
 				msp->search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
@@ -1193,12 +1241,23 @@ binmap_search_get_item(struct map_search_priv *map_search)
 				struct attr at;
 				if (binfile_attr_get(it->priv_data, attr_district_name_match, &at) || binfile_attr_get(it->priv_data, attr_district_name, &at)) {
 					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
+						binfile_attr_rewind(it->priv_data);
 						return it;
 					}
 				}
 			}
 			break;
 		case attr_street_name:
+			if (map_search->mode == 1) {
+				struct attr at;
+				if (binfile_attr_get(it->priv_data, attr_street_name_match, &at) || binfile_attr_get(it->priv_data, attr_street_name, &at)) {
+					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
+						binfile_attr_rewind(it->priv_data);
+						return it;
+					}
+				}
+				continue;
+			}
 			if ((it->type == type_street_3_city) || (it->type == type_street_2_city) || (it->type == type_street_1_city)) {
 				struct attr at;
 				if (map_selection_contains_item_rect(map_search->mr->sel, it) && binfile_attr_get(it->priv_data, attr_label, &at)) {
