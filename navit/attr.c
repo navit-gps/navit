@@ -262,6 +262,10 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 	}
 	if (type >= attr_type_coord_geo_begin && type <= attr_type_coord_geo_end) 
 		return g_strdup_printf("%f %f",attr->u.coord_geo->lng,attr->u.coord_geo->lat);
+	if (type == attr_zipfile_ref_block) {
+		int *data=attr->u.data;
+		return g_strdup_printf("0x%x,0x%x,0x%x",data[0],data[1],data[2]);
+	}
 	return g_strdup_printf("(no text[%s])", attr_to_name(type));	
 }
 
