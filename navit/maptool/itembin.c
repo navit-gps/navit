@@ -313,7 +313,7 @@ static struct population_table town_population[] = {
 	{type_town_label_1e6,1000000},
 	{type_town_label_2e6,2000000},
 	{type_town_label_5e6,5000000},
-	{type_town_label_1e7,1000000},
+	{type_town_label_1e7,10000000},
 };
 
 static struct population_table district_population[] = {
@@ -339,7 +339,7 @@ static struct population_table district_population[] = {
 	{type_district_label_1e6,1000000},
 	{type_district_label_2e6,2000000},
 	{type_district_label_5e6,5000000},
-	{type_district_label_1e7,1000000},
+	{type_district_label_1e7,10000000},
 };
 
 void
