@@ -404,32 +404,36 @@ int main(int argc, char **argv)
 	}
 #if 1
 	coastline=tempfile(suffix,"coastline",0);
-	ways_split=tempfile(suffix,"ways_split",2);
-	fprintf(stderr,"coastline=%p\n",coastline);
-	process_coastlines(coastline, ways_split);
-	fclose(ways_split);
-	fclose(coastline);
+	if (coastline) {
+		ways_split=tempfile(suffix,"ways_split",2);
+		fprintf(stderr,"coastline=%p\n",coastline);
+		process_coastlines(coastline, ways_split);
+		fclose(ways_split);
+		fclose(coastline);
+	}
 #endif
 	if (start <= 3) {
 		fprintf(stderr,"PROGRESS: Phase 3: sorting countries, generating turn restrictions\n");
 		sort_countries(keep_tmpfiles);
 		if (process_relations) {
 			turn_restrictions=tempfile(suffix,"turn_restrictions",0);
-			relations=tempfile(suffix,"relations",1);
-			coords=fopen("coords.tmp","rb");
-			ways_split=tempfile(suffix,"ways_split",0);
-			ways_split_index=tempfile(suffix,"ways_split_index",0);
-			process_turn_restrictions(turn_restrictions,coords,ways_split,ways_split_index,relations);
-#if 0
-			process_countries(ways_split,ways_split_index);
-#endif
-			fclose(ways_split_index);
-			fclose(ways_split);
-			fclose(coords);
-			fclose(relations);
-			fclose(turn_restrictions);
-			if(!keep_tmpfiles)
-				tempfile_unlink(suffix,"turn_restrictions");
+			if (turn_restrictions) {
+				relations=tempfile(suffix,"relations",1);
+				coords=fopen("coords.tmp","rb");
+				ways_split=tempfile(suffix,"ways_split",0);
+				ways_split_index=tempfile(suffix,"ways_split_index",0);
+				process_turn_restrictions(turn_restrictions,coords,ways_split,ways_split_index,relations);
+	#if 0
+				process_countries(ways_split,ways_split_index);
+	#endif
+				fclose(ways_split_index);
+				fclose(ways_split);
+				fclose(coords);
+				fclose(relations);
+				fclose(turn_restrictions);
+				if(!keep_tmpfiles)
+					tempfile_unlink(suffix,"turn_restrictions");
+			}
 		}
 		if(!keep_tmpfiles)
 			tempfile_unlink(suffix,"ways_split_index");
