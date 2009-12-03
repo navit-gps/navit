@@ -410,6 +410,11 @@ item_bin_sort_compare(const void *p1, const void *p2)
 #endif
 	s1=(char *)(attr1+1);
 	s2=(char *)(attr2+1);
+	if (attr1->type == attr_house_number && attr2->type == attr_house_number) {
+		ret=atoi(s1)-atoi(s2);
+		if (ret)
+			return ret;
+	}
 	ret=strcmp(s1, s2);
 	if (!ret) {
 		int match1=0,match2=0;
