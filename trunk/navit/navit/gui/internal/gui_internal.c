@@ -2371,18 +2371,18 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		flags=4|8|16|32|64;
 		break;
 	case 3:
-		flags=1|8|16|32|64;
+		flags=1|8|16|32|64|128;
 		flags &= this->flags_town;
 		break;
 	case 4:
 		gui_internal_search_town_in_country(this, wm);
 		return;
 	case 5:
-		flags=2|8|16|32|64;
+		flags=2|8|16|32|64|128;
 		flags &= this->flags_street;
 		break;
 	case 6:
-		flags=8|16|32|64;
+		flags=8|16|32|64|128;
 		flags &= this->flags_house_number;
 		break;
 	default:
@@ -2666,6 +2666,10 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		name=res->street->name;
 		item=&res->street->common.item;
 		text=g_strdup_printf("%s %s", res->town->name, res->street->name);
+	}
+	if (! strcmp(wm_name,"House number")) {
+		name=res->house_number->house_number;
+		text=g_strdup_printf("%s", name);
 	}
 	dbg(1,"res->country->flag=%s\n", res->country->flag);
 		gui_internal_widget_append(search_list,
