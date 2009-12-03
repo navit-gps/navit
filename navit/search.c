@@ -495,7 +495,7 @@ search_list_get_result(struct search_list *this_)
 				this_->result.town=this_->levels[1].last->data;
 				this_->result.street=this_->levels[2].last->data;
 				this_->result.house_number=p;
-				this_->result.c=this_->result.street->common.c;
+				this_->result.c=this_->result.house_number->common.c;
 				
 			}
 			if (p) {
