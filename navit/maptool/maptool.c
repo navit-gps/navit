@@ -423,9 +423,6 @@ int main(int argc, char **argv)
 				ways_split=tempfile(suffix,"ways_split",0);
 				ways_split_index=tempfile(suffix,"ways_split_index",0);
 				process_turn_restrictions(turn_restrictions,coords,ways_split,ways_split_index,relations);
-	#if 0
-				process_countries(ways_split,ways_split_index);
-	#endif
 				fclose(ways_split_index);
 				fclose(ways_split);
 				fclose(coords);
