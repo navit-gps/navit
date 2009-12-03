@@ -329,6 +329,7 @@ ITEM(poi_shop_parfum)
 ITEM(poi_shop_drugstore)
 ITEM(poi_shop_photo)
 ITEM(ch_node)
+ITEM(place_label)
 /* Line */
 ITEM2(0x80000000,line)
 ITEM2(0x80000001,line_unspecified)
