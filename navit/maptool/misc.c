@@ -342,3 +342,39 @@ process_binfile(FILE *in, FILE *out)
 		fwrite(ib, (ib->len+1)*4, 1, out);
 	}
 }
+
+void
+add_aux_tiles(char *name, struct zip_info *info)
+{
+	char buffer[4096];
+	char *s;
+	FILE *in;
+	FILE *tmp;
+	in=fopen(name,"rb");
+	if (!in)
+		return;
+	while (fscanf(in,"%s",buffer) == 1) {
+		s=strchr(buffer,'/');
+		if (s)
+			s++;
+		else
+			s=buffer;
+		tmp=fopen(buffer,"rb");
+		if (tmp) {
+			fseek(tmp, 0, SEEK_END);
+			add_aux_tile(info, s, buffer, ftell(tmp));
+			fclose(tmp);
+		}
+	}
+	fclose(in);
+}
+
+void
+cat(FILE *in, FILE *out)
+{
+	size_t size;
+	char buffer[4096];
+	while ((size=fread(buffer, 1, 4096, in)))
+		fwrite(buffer, 1, size, out);
+}
+
