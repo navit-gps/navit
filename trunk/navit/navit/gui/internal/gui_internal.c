@@ -2652,12 +2652,15 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		text=g_strdup_printf("%s", res->country->name);
 	}
 	if (! strcmp(wm_name,"Town")) {
+		char *postal=res->town->common.postal;
+		if (res->town->common.postal_mask)
+			postal=res->town->common.postal_mask;
 		name=res->town->name;
 		item=&res->town->common.item;
 		if (res->town->name && res->town->district)
-			text=g_strdup_printf("%s%s%s (%s)", res->town->common.postal_mask ? res->town->common.postal_mask : "", res->town->common.postal_mask ? " ":"", res->town->name, res->town->district);
+			text=g_strdup_printf("%s%s%s (%s)", postal ? postal : "", postal ? " ":"", res->town->name, res->town->district);
 		else
-			text=g_strdup_printf("%s%s%s", res->town->common.postal ? res->town->common.postal_mask : "", res->town->common.postal_mask ? " ":"", res->town->name);
+			text=g_strdup_printf("%s%s%s", postal ? postal : "", postal ? " ":"", res->town->name);
 	}
 	if (! strcmp(wm_name,"Street")) {
 		name=res->street->name;

@@ -207,6 +207,10 @@ search_list_town_new(struct item *item)
 		ret->common.postal=map_convert_string(item->map,attr.u.str);
 	else
 		ret->common.postal=NULL;
+	if (item_attr_get(item, attr_postal_mask, &attr))
+		ret->common.postal_mask=map_convert_string(item->map,attr.u.str);
+	else 
+		ret->common.postal_mask=NULL;
 	if (item_attr_get(item, attr_district_name, &attr))
 		ret->district=map_convert_string(item->map,attr.u.str);
 	else
@@ -246,6 +250,10 @@ search_list_common_new(struct item *item, struct search_list_common *common)
 		common->postal=map_convert_string(item->map, attr.u.str);
 	else
 		common->postal=NULL;
+	if (item_attr_get(item, attr_postal_mask, &attr)) 
+		common->postal_mask=map_convert_string(item->map, attr.u.str);
+	else 
+		common->postal_mask=NULL;
 }
 
 static struct search_list_street *
