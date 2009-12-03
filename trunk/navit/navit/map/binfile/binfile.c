@@ -1181,7 +1181,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 		case attr_town_name:
 		case attr_district_name:
 		case attr_town_or_district_name:
-			if (item_is_town(*it) && map_search->search->type != attr_district_name) {
+			if (item_is_town(*it) && !item_is_district(*it) && map_search->search->type != attr_district_name) {
 				struct attr at;
 				if (binfile_attr_get(it->priv_data, attr_town_name_match, &at) || binfile_attr_get(it->priv_data, attr_town_name, &at)) {
 					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
