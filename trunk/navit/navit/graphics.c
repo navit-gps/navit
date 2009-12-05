@@ -1775,7 +1775,7 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 				if (! count)
 					continue;
 				if (count == max) 
-					dbg(0,"point count overflow %d\n", count);
+					dbg(0,"point count overflow %d for %s "ITEM_ID_FMT"\n", count,item_to_name(item->type),ITEM_ID_ARGS(*item));
 				if (!item_attr_get(item, attr_label, &attr))
 					attr.u.str=NULL;
 				if (displaylist->conv && attr.u.str && attr.u.str[0]) {
