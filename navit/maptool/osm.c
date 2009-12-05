@@ -97,6 +97,7 @@ struct country_table {
 	{191,"Croatia,Republika Hrvatska,HR"},
 	{203,"Czech Republic,Česká republika,CZ"},
  	{208,"Denmark,Danmark,DK"},
+	{234,"Faroe Islands"},
  	{246,"Finland,Suomi"},
  	{250,"France,République française,FR"},
 	{276,"Germany,Deutschland,Bundesrepublik Deutschland"},
