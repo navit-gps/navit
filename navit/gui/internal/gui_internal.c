@@ -125,6 +125,7 @@ struct widget {
 	int wmin,hmin;
 	int w,h;
 	int textw,texth;
+	int font_idx;
 	int bl,br,bt,bb,spx,spy;
 	int border;
 	/**
@@ -224,7 +225,7 @@ struct gui_priv {
 	int spacing;
 	int font_size;
 	int fullscreen;
-	struct graphics_font *font;
+	struct graphics_font *fonts[2];
 	int icon_xs, icon_s, icon_l;
 	int pressed;
 	struct widget *widgets;
@@ -548,8 +549,9 @@ gui_internal_background_render(struct gui_priv *this, struct widget *w)
 			graphics_draw_rectangle(this->gra, w->background, &pnt, w->w, w->h);
 	}
 }
+
 static struct widget *
-gui_internal_label_new(struct gui_priv *this, char *text)
+gui_internal_label_font_new(struct gui_priv *this, char *text, int font)
 {
 	struct point p[4];
 	int w=0;
@@ -557,9 +559,10 @@ gui_internal_label_new(struct gui_priv *this, char *text)
 
 	struct widget *widget=g_new0(struct widget, 1);
 	widget->type=widget_label;
+	widget->font_idx=font;
 	if (text) {
 		widget->text=g_strdup(text);
-		graphics_get_text_bbox(this->gra, this->font, text, 0x10000, 0x0, p, 0);
+		graphics_get_text_bbox(this->gra, this->fonts[font], text, 0x10000, 0x0, p, 0);
 		w=p[2].x-p[0].x;
 		h=p[0].y-p[2].y;
 	}
@@ -572,6 +575,12 @@ gui_internal_label_new(struct gui_priv *this, char *text)
 	widget->text_background=this->text_background;
 
 	return widget;
+}
+
+static struct widget *
+gui_internal_label_new(struct gui_priv *this, char *text)
+{
+	return gui_internal_label_font_new(this, text, 0);
 }
 
 static struct widget *
@@ -632,10 +641,10 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
 		if (w->flags & gravity_right) {
 			pnt.y+=w->h-this->spacing;
 			pnt.x+=w->w-w->textw-this->spacing;
-			graphics_draw_text(this->gra, w->foreground, w->text_background, this->font, w->text, &pnt, 0x10000, 0x0);
+			graphics_draw_text(this->gra, w->foreground, w->text_background, this->fonts[w->font_idx], w->text, &pnt, 0x10000, 0x0);
 		} else {
 			pnt.y+=w->h-this->spacing;
-			graphics_draw_text(this->gra, w->foreground, w->text_background, this->font, w->text, &pnt, 0x10000, 0x0);
+			graphics_draw_text(this->gra, w->foreground, w->text_background, this->fonts[w->font_idx], w->text, &pnt, 0x10000, 0x0);
 		}
 	}
 }
@@ -1666,7 +1675,8 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 	menu->h=this->root.h;
 	menu->background=this->background;
 	gui_internal_apply_config(this);
-	this->font=graphics_font_new(this->gra,this->font_size,1);
+	this->fonts[0]=graphics_font_new(this->gra,this->font_size,1);
+	this->fonts[1]=graphics_font_new(this->gra,this->font_size*66/100,1);
  	topbox->menu_data=g_new0(struct menu_data, 1);
 	gui_internal_widget_append(topbox, menu);
 	w=gui_internal_top_bar(this);
@@ -2577,10 +2587,67 @@ gui_internal_search_idle_end(struct gui_priv *this)
 	}
 }
 
+static char *
+postal_str(struct search_list_result *res, int level)
+{
+	char *ret=NULL;
+	if (res->town->common.postal)
+		ret=res->town->common.postal;
+	if (res->town->common.postal_mask)
+		ret=res->town->common.postal_mask;
+	if (level == 1)
+		return ret;
+	if (res->street->common.postal)
+		ret=res->street->common.postal;
+	if (res->street->common.postal_mask)
+		ret=res->street->common.postal_mask;
+	if (level == 2)
+		return ret;
+	if (res->house_number->common.postal)
+		ret=res->house_number->common.postal;
+	if (res->house_number->common.postal_mask)
+		ret=res->house_number->common.postal_mask;
+	return ret;
+}
+
+static char *
+district_str(struct search_list_result *res, int level)
+{
+	char *ret=NULL;
+	if (res->town->common.district_name)
+		ret=res->town->common.district_name;
+	if (level == 1)
+		return ret;
+	if (res->street->common.district_name)
+		ret=res->street->common.district_name;
+	if (level == 2)
+		return ret;
+	if (res->house_number->common.district_name)
+		ret=res->house_number->common.district_name;
+	return ret;
+}
+
+static char *
+town_str(struct search_list_result *res, int level, int flags)
+{
+	char *town=res->town->common.town_name;
+	char *district=district_str(res, level);
+	char *postal=postal_str(res, level);
+	char *postal_sep=" ";
+	char *district_begin=" (";
+	char *district_end=")";
+	if (!postal) 
+		postal_sep=postal="";
+	if (!district || (flags & 1)) 
+		district_begin=district_end=district="";
+	
+	return g_strdup_printf("%s%s%s%s%s%s", postal, postal_sep, town, district_begin, district, district_end);
+}
+
 static void
 gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *search_list, void *param)
 {
-	char *text=NULL,*name=NULL;
+	char *text=NULL,*text2=NULL,*name=NULL;
 	struct search_list_result *res;
 	struct widget *wc;
 	struct item *item=NULL;
@@ -2595,7 +2662,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		struct widget *wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
 
 		if (! strcmp(wm_name,"Town"))
-			trunk_name = g_strrstr(res->town->name, wi->text);
+			trunk_name = g_strrstr(res->town->common.town_name, wi->text);
 		if (! strcmp(wm_name,"Street"))
 			trunk_name = g_strrstr(name=res->street->name, wi->text);
 
@@ -2609,7 +2676,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 				possible_keys[len+1]='\0';
 
 			}
-			dbg(1,"%s %s possible_keys:%s \n", wi->text, res->town->name, possible_keys);
+			dbg(1,"%s %s possible_keys:%s \n", wi->text, res->town->common.town_name, possible_keys);
 		}
 	}
 
@@ -2653,31 +2720,42 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		text=g_strdup_printf("%s", res->country->name);
 	}
 	if (! strcmp(wm_name,"Town")) {
-		char *postal=res->town->common.postal;
-		if (res->town->common.postal_mask)
-			postal=res->town->common.postal_mask;
-		name=res->town->name;
 		item=&res->town->common.item;
-		if (res->town->name && res->town->district)
-			text=g_strdup_printf("%s%s%s (%s)", postal ? postal : "", postal ? " ":"", res->town->name, res->town->district);
-		else
-			text=g_strdup_printf("%s%s%s", postal ? postal : "", postal ? " ":"", res->town->name);
+		name=res->town->common.town_name;
+		text=town_str(res, 1, 0);
 	}
 	if (! strcmp(wm_name,"Street")) {
 		name=res->street->name;
 		item=&res->street->common.item;
-		text=g_strdup_printf("%s %s", res->town->name, res->street->name);
+		text=g_strdup(res->street->name);
+		text2=town_str(res, 2, 1);
 	}
 	if (! strcmp(wm_name,"House number")) {
 		name=res->house_number->house_number;
-		text=g_strdup_printf("%s", name);
+		text=g_strdup_printf("%s %s", res->street->name, name);
+		text2=town_str(res, 3, 0);
 	}
 	dbg(1,"res->country->flag=%s\n", res->country->flag);
+		if (!text2) {
 		gui_internal_widget_append(search_list,
 				wc=gui_internal_button_new_with_callback(this, text,
 					image_new_xs(this, res->country->flag),
 					gravity_left_center|orientation_horizontal|flags_fill,
 					gui_internal_cmd_position, param));
+		} else {
+			struct widget *wb;
+			wc=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+			gui_internal_widget_append(wc, gui_internal_image_new(this, image_new_xs(this, res->country->flag)));
+			wb=gui_internal_box_new(this, gravity_left_center|orientation_vertical|flags_fill);
+			gui_internal_widget_append(wb, gui_internal_label_new(this, text));
+			gui_internal_widget_append(wb, gui_internal_label_font_new(this, text2, 1));
+			gui_internal_widget_append(wc, wb);
+			wc->func=gui_internal_cmd_position;
+			wc->data=param;
+			wc->state |= STATE_SENSITIVE;
+			wc->speech=g_strdup(text);
+			gui_internal_widget_append(search_list, wc);
+		}
 		wc->name=g_strdup(name);
 		if (res->c)
 			wc->c=*res->c;
@@ -2690,6 +2768,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		gui_internal_widget_render(this, l->data);
 		graphics_draw_mode(this->gra, draw_mode_end);
 	g_free(text);
+	g_free(text2);
 }
 
 static void
