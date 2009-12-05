@@ -141,7 +141,7 @@ linguistics_expand_special(char *str, int mode)
 char *
 linguistics_next_word(char *str)
 {
-	int len=strcspn(str, " -");
+	int len=strcspn(str, " -/()");
 	if (!str[len] || !str[len+1])
 		return NULL;
 	return str+len+1;
