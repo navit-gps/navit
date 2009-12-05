@@ -1395,6 +1395,7 @@ gui_internal_top_bar(struct gui_priv *this)
 	256:Use background for menu headline
 	512:Set osd_configuration and zoom to route when setting position
 	1024:Don't show back button
+	2048:No highlighting of keyboard
 */
 
 	w=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|(this->flags & 1 ? 0:flags_fill));
@@ -2616,7 +2617,7 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		gui_internal_search_idle_end(this);
 
 		struct menu_data *md=gui_internal_menu_data(this);
-		if (md && md->keyboard) {
+		if (md && md->keyboard && !(this->flags & 2048)) {
 			GList *lk=md->keyboard->children;
 			graphics_draw_mode(this->gra, draw_mode_begin);
 			while (lk) {
