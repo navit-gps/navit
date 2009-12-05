@@ -47,6 +47,7 @@ extern int default_flags[];
       there are many "suburbs" that users will consider towns (not districts/counties);
       we want navit's town search to find them
 */
+#define item_type_is_area(type) ((type) >= type_area)
 #define item_is_town(item) ((item).type >= type_town_label && (item).type <= type_district_label_1e7)
 #define item_is_district(item) ((item).type >= type_district_label && (item).type <= type_district_label_1e7)
 #define item_is_poly_place(item) ((item).type >= type_poly_place1 && (item).type <= type_poly_place6)
