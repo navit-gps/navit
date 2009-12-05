@@ -76,7 +76,7 @@ struct map_rect_priv {
 	int *end;
 	enum attr_type attr_last;
 	int label;
-	int *label_attr[4];
+	int *label_attr[5];
         struct map_selection *sel;
         struct map_priv *m;
         struct item item;
@@ -396,8 +396,10 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			mr->label_attr[1]=t->pos_attr;
 		if (type == attr_street_name_systematic)
 			mr->label_attr[2]=t->pos_attr;
-		if (type == attr_town_name && mr->item.type < type_line)
+		if (type == attr_district_name && mr->item.type < type_line)
 			mr->label_attr[3]=t->pos_attr;
+		if (type == attr_town_name && mr->item.type < type_line)
+			mr->label_attr[4]=t->pos_attr;
 		if (type == attr_type || attr_type == attr_any) {
 			if (attr_type == attr_any) {
 				dbg(1,"pos %p attr %s size %d\n", t->pos_attr-1, attr_to_name(type), size);
@@ -1181,7 +1183,6 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			break;
 		case attr_town_name:
 		case attr_town_or_district_name:
-			msp->search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 			map_rec = map_rect_new_binfile(map, NULL);
 			map_rec->country_id = item->id_lo;
 			msp->mr = map_rec;
@@ -1214,7 +1215,6 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 				map_rect_destroy_binfile(map_rec);
 				if (!msp->mr)
 					break;
-				msp->search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 				return msp;
 			}
 			map_rect_destroy_binfile(map_rec);
@@ -1244,6 +1244,23 @@ ascii_cmp(char *name, char *match, int partial)
 		return g_ascii_strcasecmp(name, match);
 }
 
+static int
+duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_type)
+{
+	struct attr attr;
+	if (!msp->search_results)
+		msp->search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+	binfile_attr_rewind(item->priv_data);
+	if (!item_attr_get(item, attr_type, &attr))
+		return 1;
+	if (!g_hash_table_lookup(msp->search_results, attr.u.str)) {
+		g_hash_table_insert(msp->search_results, g_strdup(attr.u.str), GINT_TO_POINTER(1));
+		binfile_attr_rewind(item->priv_data);
+		return 0;
+	}
+	return 2;
+}
+
 static struct item *
 binmap_search_get_item(struct map_search_priv *map_search)
 {
@@ -1257,25 +1274,21 @@ binmap_search_get_item(struct map_search_priv *map_search)
 		case attr_town_or_district_name:
 			if (item_is_town(*it) && !item_is_district(*it) && map_search->search->type != attr_district_name) {
 				if (binfile_attr_get(it->priv_data, attr_town_name_match, &at) || binfile_attr_get(it->priv_data, attr_town_name, &at)) {
-					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
+					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
 						return it;
-					}
 				}
 			}
 			if (item_is_district(*it) && map_search->search->type != attr_town_name) {
 				if (binfile_attr_get(it->priv_data, attr_district_name_match, &at) || binfile_attr_get(it->priv_data, attr_district_name, &at)) {
-					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
-						binfile_attr_rewind(it->priv_data);
+					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_district_name)) 
 						return it;
-					}
 				}
 			}
 			break;
 		case attr_street_name:
 			if (map_search->mode == 1) {
 				if (binfile_attr_get(it->priv_data, attr_street_name_match, &at) || binfile_attr_get(it->priv_data, attr_street_name, &at)) {
-					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
-						binfile_attr_rewind(it->priv_data);
+					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_street_name)) {
 						return it;
 					}
 				}
@@ -1301,10 +1314,8 @@ binmap_search_get_item(struct map_search_priv *map_search)
 						word=linguistics_next_word(word);
 					} while (word);
 					g_free(str);
-					if (match && !g_hash_table_lookup(map_search->search_results, at.u.str)) {
+					if (match && !duplicate(map_search, it, attr_label)) {
 						item_coord_rewind(it);
-						item_attr_rewind(it);
-						g_hash_table_insert(map_search->search_results, g_strdup(at.u.str), "");
 						return it;
 					}
 				}
