@@ -80,6 +80,8 @@ struct display_context
 	enum projection pro;
 	int mindist;
 	struct transformation *trans;
+	enum item_type type;
+	int maxlen;
 };
 
 struct displaylist {
@@ -1448,13 +1450,24 @@ graphics_icon_path(char *icon)
 	}
 }
 
+static int
+limit_count(struct coord *c, int count)
+{
+	int i;
+	for (i = 1 ; i < count ; i++) {
+		if (c[i].x == c[0].x && c[i].y == c[0].y)
+			return i+1;
+	}
+	return count;
+}
+
 
 static void
 displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc)
 {
-	int width[16384];
-	int i,count;
-	struct point pa[16384];
+	int width[dc->maxlen];
+	int i,count=di->count,mindist=dc->mindist;
+	struct point pa[dc->maxlen];
 	struct graphics *gra=dc->gra;
 	struct graphics_gc *gc=dc->gc;
 	struct element *e=dc->e;
@@ -1468,11 +1481,14 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		gc->meth.gc_set_foreground(gc->priv, &e->color);
 		dc->gc=gc;
 	}
-	if (dc->e->type == element_polyline) {
-		count=transform(dc->trans, dc->pro, di->c, pa, di->count, dc->mindist, e->u.polyline.width, width);
-	}
+	if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
+		count=limit_count(di->c, count);
+	if (dc->type == type_poly_water_tiled)
+		mindist=0;
+	if (dc->e->type == element_polyline) 
+		count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.polyline.width, width);
 	else
-		count=transform(dc->trans, dc->pro, di->c, pa, di->count, dc->mindist, 0, NULL);
+		count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
 	switch (e->type) {
 	case element_polygon:
 #if 0
@@ -1592,26 +1608,19 @@ static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *dis
 	struct element *e;
 	GList *es,*types;
 	GHashTable *h;
-	enum item_type type;
-	int mindist=0;
+	struct display_context *dc=&display_list->dc;
 
 	es=itm->elements;
 	while (es) {
 		e=es->data;
-		display_list->dc.e=e;
+		dc->e=e;
 		types=itm->type;
 		while (types) {
-			type=GPOINTER_TO_INT(types->data);
-			h=g_hash_table_lookup(display_list->dl, GINT_TO_POINTER(type));
+			dc->type=GPOINTER_TO_INT(types->data);
+			h=g_hash_table_lookup(display_list->dl, GINT_TO_POINTER(dc->type));
 			if (h) {
-				if (type == type_poly_water_tiled) {
-					mindist=display_list->dc.mindist;
-					display_list->dc.mindist=0;				
-				}
-				g_hash_table_foreach(h, (GHFunc)displayitem_draw, &display_list->dc);
-				display_context_free(&display_list->dc);
-				if (type == type_poly_water_tiled) 
-					display_list->dc.mindist=mindist;
+				g_hash_table_foreach(h, (GHFunc)displayitem_draw, dc);
+				display_context_free(dc);
 			}
 			types=g_list_next(types);
 		}
@@ -1749,7 +1758,7 @@ static void
 do_draw(struct displaylist *displaylist, int cancel, int flags)
 {
 	struct item *item;
-	int count,max=16384,workload=0;
+	int count,max=displaylist->dc.maxlen,workload=0;
 	struct coord ca[max];
 	struct attr attr;
 
@@ -1774,8 +1783,10 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 				count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);
 				if (! count)
 					continue;
-				if (count == max) 
+				if (count == max) {
 					dbg(0,"point count overflow %d for %s "ITEM_ID_FMT"\n", count,item_to_name(item->type),ITEM_ID_ARGS(*item));
+					displaylist->dc.maxlen=max*2;
+				}
 				if (!item_attr_get(item, attr_label, &attr))
 					attr.u.str=NULL;
 				if (displaylist->conv && attr.u.str && attr.u.str[0]) {
@@ -1969,6 +1980,7 @@ struct displaylist * graphics_displaylist_new(void)
 	struct displaylist *ret=g_new0(struct displaylist, 1);
 
 	ret->dl=g_hash_table_new(NULL,NULL);
+	ret->dc.maxlen=16384;
 
 	return ret;
 }
@@ -1982,6 +1994,12 @@ struct displaylist * graphics_displaylist_new(void)
 struct item * graphics_displayitem_get_item(struct displayitem *di)
 {
 	return &di->item;	
+}
+
+int
+graphics_displayitem_get_coord_count(struct displayitem *di)
+{
+	return di->count;
 }
 
 /**
@@ -2118,7 +2136,7 @@ static int within_dist_polygon(struct point *p, struct point *poly_pnt, int coun
 */
 int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p, int dist)
 {
-	struct point pa[16384];
+	struct point pa[displaylist->dc.maxlen];
 	int count;
 
 	count=transform(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 1, 0, NULL);
