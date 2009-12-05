@@ -248,16 +248,18 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 	void *menu, *menu_map, *menu_item, *menu_dist;
 	char *label;
 	struct item *item,*diitem;
+	int count;
 
 	label=graphics_displayitem_get_label(di);
 	diitem=graphics_displayitem_get_item(di);
+	count=graphics_displayitem_get_coord_count(di);
 
 	dbg_assert(diitem);
 
 	if (label) 
-		menu=popup_printf(popup, menu_type_submenu, "%s '%s'", item_to_name(diitem->type), label);
+		menu=popup_printf(popup, menu_type_submenu, "%s '%s' (%d coords)", item_to_name(diitem->type), label, count);
 	else
-		menu=popup_printf(popup, menu_type_submenu, "%s", item_to_name(diitem->type));
+		menu=popup_printf(popup, menu_type_submenu, "%s (%d coords)", item_to_name(diitem->type), count);
 	menu_item=popup_printf(menu, menu_type_submenu, "Item");
 	popup_printf(menu_item, menu_type_menu, "type: 0x%x", diitem->type);
 	popup_printf(menu_item, menu_type_menu, "id: 0x%x 0x%x", diitem->id_hi, diitem->id_lo);
