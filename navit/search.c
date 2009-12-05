@@ -145,7 +145,8 @@ search_list_select(struct search_list *this_, enum attr_type attr_type, int id, 
 			slc=curr->data;
 			slc->selected=mode;
 			if (id) {
-				dbg(1,"found\n");
+				le->last=curr;
+				dbg(0,"found\n");
 				return slc;
 			}
 		}
@@ -153,6 +154,37 @@ search_list_select(struct search_list *this_, enum attr_type attr_type, int id, 
 	}
 	dbg(1,"not found\n");
 	return NULL;
+}
+
+static void
+search_list_common_new(struct item *item, struct search_list_common *common)
+{
+	struct attr attr;
+	if (item_attr_get(item, attr_town_name, &attr))
+		common->town_name=map_convert_string(item->map, attr.u.str);
+	else
+		common->town_name=NULL;
+	if (item_attr_get(item, attr_district_name, &attr))
+		common->district_name=map_convert_string(item->map, attr.u.str);
+	else
+		common->district_name=NULL;
+	if (item_attr_get(item, attr_postal, &attr))
+		common->postal=map_convert_string(item->map, attr.u.str);
+	else
+		common->postal=NULL;
+	if (item_attr_get(item, attr_postal_mask, &attr)) 
+		common->postal_mask=map_convert_string(item->map, attr.u.str);
+	else 
+		common->postal_mask=NULL;
+}
+
+static void
+search_list_common_destroy(struct search_list_common *common)
+{
+	map_convert_free(common->town_name);
+	map_convert_free(common->district_name);
+	map_convert_free(common->postal);
+	map_convert_free(common->postal_mask);
 }
 
 static struct search_list_country *
@@ -199,22 +231,11 @@ search_list_town_new(struct item *item)
 		dbg(1,"town_assoc 0x%x 0x%x\n", attr.u.item->id_hi, attr.u.item->id_lo);
 		ret->common.unique=*attr.u.item;
 	}
-	if (item_attr_get(item, attr_town_name, &attr))
-		ret->name=map_convert_string(item->map,attr.u.str);
+	search_list_common_new(item, &ret->common);
+	if (item_attr_get(item, attr_county_name, &attr))
+		ret->county=map_convert_string(item->map,attr.u.str);
 	else
-		ret->name=NULL;
-	if (item_attr_get(item, attr_town_postal, &attr))
-		ret->common.postal=map_convert_string(item->map,attr.u.str);
-	else
-		ret->common.postal=NULL;
-	if (item_attr_get(item, attr_postal_mask, &attr))
-		ret->common.postal_mask=map_convert_string(item->map,attr.u.str);
-	else 
-		ret->common.postal_mask=NULL;
-	if (item_attr_get(item, attr_district_name, &attr))
-		ret->district=map_convert_string(item->map,attr.u.str);
-	else
-		ret->district=NULL;
+		ret->county=NULL;
 	if (item_coord_get(item, &c, 1)) {
 		ret->common.c=g_new(struct pcoord, 1);
 		ret->common.c->x=c.x;
@@ -227,34 +248,13 @@ search_list_town_new(struct item *item)
 static void
 search_list_town_destroy(struct search_list_town *this_)
 {
-	map_convert_free(this_->name);
-	map_convert_free(this_->common.postal);
+	map_convert_free(this_->county);
+	search_list_common_destroy(&this_->common);
 	if (this_->common.c)
 		g_free(this_->common.c);
 	g_free(this_);
 }
 
-static void
-search_list_common_new(struct item *item, struct search_list_common *common)
-{
-	struct attr attr;
-	if (item_attr_get(item, attr_town_name, &attr))
-		common->town_name=map_convert_string(item->map, attr.u.str);
-	else
-		common->town_name=NULL;
-	if (item_attr_get(item, attr_district_name, &attr))
-		common->district_name=map_convert_string(item->map, attr.u.str);
-	else
-		common->district_name=NULL;
-	if (item_attr_get(item, attr_postal, &attr))
-		common->postal=map_convert_string(item->map, attr.u.str);
-	else
-		common->postal=NULL;
-	if (item_attr_get(item, attr_postal_mask, &attr)) 
-		common->postal_mask=map_convert_string(item->map, attr.u.str);
-	else 
-		common->postal_mask=NULL;
-}
 
 static struct search_list_street *
 search_list_street_new(struct item *item)
@@ -278,13 +278,6 @@ search_list_street_new(struct item *item)
 	return ret;
 }
 
-static void
-search_list_common_destroy(struct search_list_common *common)
-{
-	map_convert_free(common->town_name);
-	map_convert_free(common->district_name);
-	map_convert_free(common->postal);
-}
 
 static void
 search_list_street_destroy(struct search_list_street *this_)
@@ -475,26 +468,30 @@ search_list_get_result(struct search_list *this_)
 			case 0:
 				p=search_list_country_new(item);
 				this_->result.country=p;
+				this_->result.country->common.parent=NULL;
 				break;
 			case 1:
 				p=search_list_town_new(item);
-				this_->result.country=this_->levels[0].last->data;
 				this_->result.town=p;
+				this_->result.town->common.parent=this_->levels[0].last->data;
+				this_->result.country=this_->result.town->common.parent;
 				this_->result.c=this_->result.town->common.c;
 				break;
 			case 2:
 				p=search_list_street_new(item);
-				this_->result.country=this_->levels[0].last->data;
-				this_->result.town=this_->levels[1].last->data;
 				this_->result.street=p;
+				this_->result.street->common.parent=this_->levels[1].last->data;
+				this_->result.town=this_->result.street->common.parent;
+				this_->result.country=this_->result.town->common.parent;
 				this_->result.c=this_->result.street->common.c;
 				break;
 			case 3:
 				p=search_list_house_number_new(item);
-				this_->result.country=this_->levels[0].last->data;
-				this_->result.town=this_->levels[1].last->data;
-				this_->result.street=this_->levels[2].last->data;
 				this_->result.house_number=p;
+				this_->result.house_number->common.parent=this_->levels[2].last->data;
+				this_->result.street=this_->result.house_number->common.parent;
+				this_->result.town=this_->result.street->common.parent;
+				this_->result.country=this_->result.town->common.parent;
 				this_->result.c=this_->result.house_number->common.c;
 				
 			}

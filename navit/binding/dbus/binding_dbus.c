@@ -1283,14 +1283,14 @@ request_search_list_get_result(DBusConnection *connection, DBusMessage *message)
 		dbus_message_iter_close_container(&iter3, &iter4);
 		dbus_message_iter_close_container(&iter2, &iter3);
 	}
-	if (result->town && (result->town->district || result->town->name)) {
+	if (result->town && (result->town->common.district_name || result->town->common.town_name)) {
 		dbus_message_iter_open_container(&iter2, DBUS_TYPE_DICT_ENTRY, NULL, &iter3);
 		dbus_message_iter_append_basic(&iter3, DBUS_TYPE_STRING, &town);
 		dbus_message_iter_open_container(&iter3, DBUS_TYPE_ARRAY, "{sv}", &iter4);
-		if (result->town->district)
-			encode_dict_string_variant_string(&iter4, "district", result->town->district);
-		if (result->town->name)
-			encode_dict_string_variant_string(&iter4, "name", result->town->name);
+		if (result->town->common.district_name)
+			encode_dict_string_variant_string(&iter4, "district", result->town->common.district_name);
+		if (result->town->common.town_name)
+			encode_dict_string_variant_string(&iter4, "name", result->town->common.town_name);
 		dbus_message_iter_close_container(&iter3, &iter4);
 		dbus_message_iter_close_container(&iter2, &iter3);
 	}

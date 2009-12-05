@@ -24,6 +24,7 @@
 extern "C" {
 #endif
 struct search_list_common {
+	void *parent;
 	struct item unique,item;
 	int selected;
 	struct pcoord *c;
@@ -45,8 +46,7 @@ struct search_list_country {
 struct search_list_town {
 	struct search_list_common common;
 	struct item itemt;
-	char *name;
-	char *district;
+	char *county;
 };
 
 struct search_list_street {
