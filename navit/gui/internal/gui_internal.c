@@ -2975,6 +2975,7 @@ gui_internal_search(struct gui_priv *this, char *what, char *type, int flags)
 {
 	struct widget *wb,*wk,*w,*wr,*we,*wl,*wnext=NULL;
 	char *country;
+	int keyboard_mode=2;
 	gui_internal_search_list_new(this);
 	wb=gui_internal_menu(this, what);
 	w=gui_internal_box_new(this, gravity_center|orientation_vertical|flags_expand|flags_fill);
@@ -3017,6 +3018,7 @@ gui_internal_search(struct gui_priv *this, char *what, char *type, int flags)
 		gui_internal_widget_append(we, wb=gui_internal_image_new(this, image_new_xs(this, "gui_select_street")));
 		wb->state |= STATE_SENSITIVE;
 		wb->func = gui_internal_back;
+		keyboard_mode=18;
 	}
 	gui_internal_widget_append(we, wk=gui_internal_label_new(this, NULL));
 	if (wnext) {
@@ -3032,7 +3034,7 @@ gui_internal_search(struct gui_priv *this, char *what, char *type, int flags)
 	wk->func = gui_internal_search_changed;
 	wk->name=g_strdup(type);
 	if (this->keyboard)
-		gui_internal_widget_append(w, gui_internal_keyboard(this,2));
+		gui_internal_widget_append(w, gui_internal_keyboard(this,keyboard_mode));
 	gui_internal_menu_render(this);
 }
 
