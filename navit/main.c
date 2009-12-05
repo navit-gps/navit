@@ -128,6 +128,7 @@ main_setup_environment(int mode)
 
 #ifdef HAVE_API_WIN32_BASE
 char *nls_table[][3]={
+	{"DAN","DNK","da_DK"},
 	{"DEU","DEU","de_DE"},
 	{"DEA","AUT","de_AT"},
 	{"ENU","USA","en_US"},
