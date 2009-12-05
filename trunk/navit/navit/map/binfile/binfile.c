@@ -1059,16 +1059,27 @@ map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 }
 
 static struct map_rect_priv *
-binmap_search_street_by_index(struct map_priv *map, struct item *town)
+binmap_search_by_index(struct map_priv *map, struct item *item)
 {
 	struct attr zipfile_ref;
 	struct map_rect_priv *ret;
+	int *data;
 
-	if (!item_attr_get(town, attr_zipfile_ref, &zipfile_ref))
+	if (!item)
 		return NULL;
-	ret=map_rect_new_binfile_int(map, NULL);
-	push_zipfile_tile(ret, zipfile_ref.u.num);
-	return ret;
+	if (item_attr_get(item, attr_zipfile_ref, &zipfile_ref)) {
+		ret=map_rect_new_binfile_int(map, NULL);
+		push_zipfile_tile(ret, zipfile_ref.u.num);
+		return ret;
+	}
+	if (item_attr_get(item, attr_zipfile_ref_block, &zipfile_ref)) {
+		data=zipfile_ref.u.data;
+		ret=map_rect_new_binfile_int(map, NULL);
+		push_zipfile_tile(ret, data[0]);
+		tile_set_window(ret, data[1], data[2]);
+		return ret;
+	}
+	return NULL;
 }
 
 static struct map_rect_priv *
@@ -1156,9 +1167,11 @@ static struct map_search_priv *
 binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, int partial)
 {
 	struct map_rect_priv *map_rec;
-	struct map_search_priv *msp;
-	struct item *town,*street;
+	struct map_search_priv *msp=g_new0(struct map_search_priv, 1);
+	struct item *town;
 	
+	msp->search = search;
+	msp->partial = partial;
 	/*
      * NOTE: If you implement search for other attributes than attr_town_name and attr_street_name,
      * please update this comment and the documentation for map_search_new() in map.c
@@ -1168,13 +1181,10 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			break;
 		case attr_town_name:
 		case attr_town_or_district_name:
-			msp = g_new(struct map_search_priv, 1);
 			msp->search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 			map_rec = map_rect_new_binfile(map, NULL);
 			map_rec->country_id = item->id_lo;
 			msp->mr = map_rec;
-			msp->search = search;
-			msp->partial = partial;
 			return msp;
 			break;
 		case attr_town_postal:
@@ -1187,10 +1197,9 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			map_rec = map_rect_new_binfile(map, NULL);
 			town = map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo);
 			if (town) {
-				struct map_search_priv *msp = g_new(struct map_search_priv, 1);
 				struct coord c;
 
-				if ((msp->mr=binmap_search_street_by_index(map, town)))
+				if ((msp->mr=binmap_search_by_index(map, town)))
 					msp->mode = 1;
 				else {
 					if (item_coord_get(town, &c, 1)) {
@@ -1203,48 +1212,29 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 					}
 				}
 				map_rect_destroy_binfile(map_rec);
-				if (!msp->mr) {
-					g_free(msp);
-					return NULL;
-				}
-				msp->search = search;
-				msp->partial = partial;
+				if (!msp->mr)
+					break;
 				msp->search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 				return msp;
 			}
 			map_rect_destroy_binfile(map_rec);
 			break;
 		case attr_house_number:
-			if (! item->map)
-				break;
-			if (!map_priv_is(item->map, map))
+			if (!item->map || !map_priv_is(item->map,map))
 				break;
 			map_rec = map_rect_new_binfile(map, NULL);
-			street = map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo);
-			if (street) {
-				struct map_search_priv *msp = g_new0(struct map_search_priv, 1);
-				struct attr zipfile_ref;
-				int *data;
-			
-				if (!item_attr_get(street, attr_zipfile_ref_block, &zipfile_ref)) {
-					g_free(msp);
-					return NULL;
-				}
-				data=zipfile_ref.u.data;
-				msp->search = search;
-				msp->partial = partial;
-				msp->mr = map_rect_new_binfile_int(map, NULL);
-				push_zipfile_tile(msp->mr, data[0]);
-				tile_set_window(msp->mr, data[1], data[2]);
-				map_rect_destroy_binfile(map_rec);
-				return msp;
-			}
+			msp->mr=binmap_search_by_index(map, map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo));
 			map_rect_destroy_binfile(map_rec);
+			if (!msp->mr)
+				break;
+			return msp;
 		default:
 			break;
 	}
+	g_free(msp);
 	return NULL;
 }
+
 static int
 ascii_cmp(char *name, char *match, int partial)
 {
