@@ -99,6 +99,7 @@ linux*_android)
 	graphics_android=yes; graphics_android_reason="host_os is android"
 	speech_android=yes; speech_android_reason="host_os is android"
 	MODULE_LDFLAGS="-Xcompiler -nostdlib"
+	NAVIT_MODULE_LDFLAGS="$MODULE_LDFLAGS -L\$(top_builddir)/navit -lnavit"
 	;;
 esac
 if test "x$win32" = "xyes"
@@ -120,6 +121,7 @@ fi
 AM_CONDITIONAL(SUPPORT_LIBPNG, [test "x$support_libpng" = "xyes"])
 
 AC_SUBST(MODULE_LDFLAGS)
+AC_SUBST(NAVIT_MODULE_LDFLAGS)
 
 LIBS="$LIBS -lm"
 if test "$win32" == "no"; then

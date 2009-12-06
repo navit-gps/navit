@@ -6,4 +6,4 @@ else
   noinst_LTLIBRARIES = libmap_filter.la
 endif
 libmap_filter_la_SOURCES = filter.c
-libmap_filter_la_LDFLAGS = -module -avoid-version @MODULE_LDFLAGS@
+libmap_filter_la_LDFLAGS = -module -avoid-version @NAVIT_MODULE_LDFLAGS@
