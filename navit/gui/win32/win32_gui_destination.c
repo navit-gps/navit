@@ -187,7 +187,7 @@ static void notify_textchange(struct datawindow_priv *datawindow, int param1, in
             tcharBuffer = newSysString(res->country->name);
             break;
         case attr_town_name:
-            tcharBuffer = newSysString(res->town->name);
+            tcharBuffer = newSysString(res->town->common.town_name);
             break;
         case attr_street_name:
             if (res->street->name)
