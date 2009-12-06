@@ -1,13 +1,14 @@
 include $(top_srcdir)/Makefile.inc
 comma=,
+SUBDIRS=fib-1.1 support
+SUBDIRS+=.
 DIST_SUBDIRS=binding map maptool fib-1.1 font fonts gui graphics osd speech support vehicle xpm maps
-SUBDIRS=binding map fib-1.1 font gui graphics osd speech support vehicle xpm
+SUBDIRS+=binding map font gui graphics osd speech vehicle xpm
 
 if FONTS
   SUBDIRS += fonts
 endif
 
-SUBDIRS+=.
 SUBDIRS+=maptool
 
 if BUILD_SAMPLEMAP
