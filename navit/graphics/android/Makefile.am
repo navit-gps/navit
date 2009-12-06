@@ -6,4 +6,4 @@ else
 noinst_LTLIBRARIES = libgraphics_android.la
 endif
 libgraphics_android_la_SOURCES = graphics_android.c
-libgraphics_android_la_LDFLAGS = -module -avoid-version @MODULE_LDFLAGS@
+libgraphics_android_la_LDFLAGS = -module -avoid-version @NAVIT_MODULE_LDFLAGS@
