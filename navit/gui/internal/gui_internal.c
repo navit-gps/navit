@@ -75,6 +75,7 @@ struct menu_data {
 	struct widget *search_list;
 	struct widget *keyboard;
 	struct widget *button_bar;
+	struct widget *menu;
 	int keyboard_mode;
 	void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
 	struct widget *redisplay_widget;
@@ -128,6 +129,7 @@ struct widget {
 	int font_idx;
 	int bl,br,bt,bb,spx,spy;
 	int border;
+	int packed;
 	/**
 	 * The number of widgets to layout horizontally when doing
 	 * a orientation_horizontal_vertical layout
@@ -225,7 +227,7 @@ struct gui_priv {
 	int spacing;
 	int font_size;
 	int fullscreen;
-	struct graphics_font *fonts[2];
+	struct graphics_font *fonts[3];
 	int icon_xs, icon_s, icon_l;
 	int pressed;
 	struct widget *widgets;
@@ -655,22 +657,28 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
  *
  */
 static struct widget *
-gui_internal_text_new(struct gui_priv *this, char *text, enum flags flags)
+gui_internal_text_font_new(struct gui_priv *this, char *text, int font, enum flags flags)
 {
 	char *s=g_strdup(text),*s2,*tok;
 	struct widget *ret=gui_internal_box_new(this, flags);
 	s2=s;
 	while ((tok=strtok(s2,"\n"))) {
-		gui_internal_widget_append(ret, gui_internal_label_new(this, tok));
+		gui_internal_widget_append(ret, gui_internal_label_font_new(this, tok, font));
 		s2=NULL;
 	}
 	gui_internal_widget_pack(this,ret);
 	return ret;
 }
 
+static struct widget *
+gui_internal_text_new(struct gui_priv *this, char *text, enum flags flags)
+{
+	return gui_internal_text_font_new(this, text, 0, flags);
+}
+
 
 static struct widget *
-gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data)
+gui_internal_button_font_new_with_callback(struct gui_priv *this, char *text, int font, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data)
 {
 	struct widget *ret=NULL;
 	ret=gui_internal_box_new(this, flags);
@@ -678,7 +686,7 @@ gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct 
 		if (image)
 			gui_internal_widget_append(ret, gui_internal_image_new(this, image));
 		if (text)
-			gui_internal_widget_append(ret, gui_internal_text_new(this, text, gravity_center|orientation_vertical));
+			gui_internal_widget_append(ret, gui_internal_text_font_new(this, text, font, gravity_center|orientation_vertical));
 		ret->func=func;
 		ret->data=data;
 		if (func) {
@@ -688,6 +696,12 @@ gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct 
 	}
 	return ret;
 
+}
+
+static struct widget *
+gui_internal_button_new_with_callback(struct gui_priv *this, char *text, struct graphics_image *image, enum flags flags, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data)
+{
+	return gui_internal_button_font_new_with_callback(this, text, 0, image, flags, func, data);
 }
 
 static int
@@ -903,6 +917,10 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 	GList *l;
 
 	gui_internal_background_render(this, w);
+#if 0
+	w->border=1;
+	w->foreground=this->foreground;
+#endif
 #if 1
 	if (w->foreground && w->border) {
 	struct point pnt[5];
@@ -937,7 +955,7 @@ static void gui_internal_box_render(struct gui_priv *this, struct widget *w)
 static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 {
 	struct widget *wc;
-	int x0,x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0,count=0,rows=0,cols=w->cols ? w->cols : 0;
+	int x0,x=0,y=0,width=0,height=0,owidth=0,oheight=0,expand=0,expandd=1,count=0,rows=0,cols=w->cols ? w->cols : 0;
 	GList *l;
 	int orientation=w->flags & 0xffff0000;
 
@@ -988,10 +1006,10 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		}
 		owidth=width;
 		if (expand && w->w) {
-			expand=100*(w->w-width+expand)/expand;
+			expandd=w->w-width+expand;
 			owidth=w->w;
-		} else
-			expand=100;
+		} else 
+			expandd=expand=1;
 		break;
 	case orientation_vertical:
 		/**
@@ -1017,10 +1035,10 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		}
 		oheight=height;
 		if (expand && w->h) {
-			expand=100*(w->h-height+expand)/expand;
+			expandd=w->h-height+expand;
 			oheight=w->h;
-		} else
-			expand=100;
+		} else 
+			expandd=expand=1;
 		break;
 	case orientation_horizontal_vertical:
 		/**
@@ -1051,7 +1069,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		height+=w->spy*(rows-1);
 		owidth=width;
 		oheight=height;
-		expand=100;
+		expandd=expand=1;
 		break;
 	default:
 		/**
@@ -1067,9 +1085,12 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 	if (! w->w && ! w->h) {
 		w->w=w->bl+w->br+width;
 		w->h=w->bt+w->bb+height;
+		w->packed=1;
 	}
+#if 0
 	if (expand < 100)
 		expand=100;
+#endif
 
 	/**
 	 * At this stage the width and height of this
@@ -1102,7 +1123,7 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 			if (wc->flags & flags_expand) {
 				if (! wc->w)
 					wc->w=1;
-				wc->w=wc->w*expand/100;
+				wc->w=wc->w*expandd/expand;
 			}
 			if (w->flags & gravity_top)
 				wc->p.y=y;
@@ -1119,12 +1140,12 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		while (l) {
 			wc=l->data;
 			wc->p.y=y;
-			if (wc->flags & flags_fill)
+			if (wc->flags & flags_fill) 
 				wc->w=w->w;
 			if (wc->flags & flags_expand) {
 				if (! wc->h)
 					wc->h=1;
-				wc->h=wc->h*expand/100;
+				wc->h=wc->h*expandd/expand;
 			}
 			if (w->flags & gravity_left)
 				wc->p.x=x;
@@ -1184,6 +1205,24 @@ static void gui_internal_box_pack(struct gui_priv *this, struct widget *w)
 		wc=l->data;
 		gui_internal_widget_pack(this, wc);
 		l=g_list_next(l);
+	}
+}
+
+static void
+gui_internal_widget_reset_pack(struct gui_priv *this, struct widget *w)
+{
+	struct widget *wc;
+	GList *l;
+
+	l=w->children;
+	while (l) {
+		wc=l->data;
+		gui_internal_widget_reset_pack(this, wc);
+		l=g_list_next(l);
+	}
+	if (w->packed) {
+		w->w=0;
+		w->h=0;
 	}
 }
 
@@ -1675,8 +1714,11 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 	menu->h=this->root.h;
 	menu->background=this->background;
 	gui_internal_apply_config(this);
-	this->fonts[0]=graphics_font_new(this->gra,this->font_size,1);
-	this->fonts[1]=graphics_font_new(this->gra,this->font_size*66/100,1);
+	if (!this->fonts[0]) {
+		this->fonts[0]=graphics_font_new(this->gra,this->font_size,1);
+		this->fonts[1]=graphics_font_new(this->gra,this->font_size*66/100,1);
+		this->fonts[2]=graphics_font_new(this->gra,this->font_size*50/100,1);
+	}
  	topbox->menu_data=g_new0(struct menu_data, 1);
 	gui_internal_widget_append(topbox, menu);
 	w=gui_internal_top_bar(this);
@@ -1714,6 +1756,12 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 		gui_internal_widget_append(topbox, menu);
 		menu->background=NULL;
 	}
+	gui_internal_widget_pack(this, topbox);
+	gui_internal_widget_reset_pack(this, topbox);
+        topbox->w=this->root.w;
+        topbox->h=this->root.h;
+	menu->w=this->root.w;
+	menu->h=this->root.h;
 	return w;
 }
 
@@ -1726,6 +1774,17 @@ gui_internal_menu_data(struct gui_priv *this)
 	l=g_list_last(this->root.children);
 	menu=l->data;
 	return menu->menu_data;
+}
+
+static void
+gui_internal_menu_reset_pack(struct gui_priv *this)
+{
+	GList *l;
+	struct widget *top_box;
+
+	l=g_list_last(this->root.children);
+	top_box=l->data;
+	gui_internal_widget_reset_pack(this, top_box);
 }
 
 static void
@@ -2825,10 +2884,10 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 }
 
 static struct widget *
-gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char *text, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data, void (*data_free)(void *data), int w, int h)
+gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char *text, int font, void(*func)(struct gui_priv *priv, struct widget *widget, void *data), void *data, void (*data_free)(void *data), int w, int h)
 {
 	struct widget *wk;
-	gui_internal_widget_append(wkbd, wk=gui_internal_button_new_with_callback(this, text,
+	gui_internal_widget_append(wkbd, wk=gui_internal_button_font_new_with_callback(this, text, font,
 		NULL, gravity_center|orientation_vertical, func, data));
 	wk->data_free=data_free;
 	wk->background=this->background;
@@ -2842,7 +2901,7 @@ gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char 
 static struct widget *
 gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text, char *key, int w, int h)
 {
-	return gui_internal_keyboard_key_data(this, wkbd, text, gui_internal_cmd_keypress, g_strdup(key), g_free,w,h);
+	return gui_internal_keyboard_key_data(this, wkbd, text, 0, gui_internal_cmd_keypress, g_strdup(key), g_free,w,h);
 }
 
 static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *data);
@@ -2850,7 +2909,7 @@ static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *k
 // Some macros that make the keyboard layout easier to visualise in
 // the source code. The macros are #undef'd after this function.
 #define KEY(x) gui_internal_keyboard_key(this, wkbd, (x), (x), max_w, max_h)
-#define SPACER() gui_internal_keyboard_key_data(this, wkbd, "", NULL, NULL, NULL,max_w,max_h)
+#define SPACER() gui_internal_keyboard_key_data(this, wkbd, "", 0, NULL, NULL, NULL,max_w,max_h)
 static struct widget *
 gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 {
@@ -2858,12 +2917,28 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 	struct menu_data *md=gui_internal_menu_data(this);
 	int i, max_w=this->root.w, max_h=this->root.h;
 	int render=0;
+	char *space="_";
+	char *backspace="←";
+	char *ucase="ABC";
+	int ucase_font=2;
+	char *lcase="abc";
+	int lcase_font=2;
+	char *numeric="123";
+	int numeric_font=2;
+	char *umlauts_ucase="ÄÖÜ";
+	int umlauts_ucase_font=2;
+	char *umlauts_lcase="äöü";
+	int umlauts_lcase_font=2;
+	char *hide="▼";
 
 	if (wkbdb) {
 		this->current.x=-1;
 		this->current.y=-1;
 		gui_internal_highlight(this);
-		render=1;
+		if (md->keyboard_mode >= 40 && md->keyboard_mode < 48)
+			render=2;
+		else
+			render=1;
 		gui_internal_widget_children_destroy(this, wkbdb);
 	} else
 		wkbdb=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
@@ -2882,42 +2957,46 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 			char text[]={'A'+i,'\0'};
 			KEY(text);
 		}
-		gui_internal_keyboard_key(this, wkbd, "_"," ",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
 		if (mode == 0) {
 			KEY("-");
 			KEY("'");
-			SPACER();
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk->datai=mode+40;
 		} else {
-			SPACER();
-			wk=gui_internal_keyboard_key_data(this, wkbd, "a", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk->datai=mode+40;
+			wk=gui_internal_keyboard_key_data(this, wkbd, lcase, lcase_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode+8;
-			wk=gui_internal_keyboard_key_data(this, wkbd, "1", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, numeric, numeric_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode+16;
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard_change, wkbdb,NULL,max_w,max_h);
+		wk=gui_internal_keyboard_key_data(this, wkbd, umlauts_ucase, umlauts_ucase_font, gui_internal_keyboard_change, wkbdb,NULL,max_w,max_h);
 		wk->datai=mode+24;
-		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}
 	if (mode >= 8 && mode < 16) {
 		for (i = 0 ; i < 26 ; i++) {
 			char text[]={'a'+i,'\0'};
 			KEY(text);
 		}
-		gui_internal_keyboard_key(this, wkbd, "_"," ",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
 		if (mode == 8) {
 			KEY("-");
 			KEY("'");
-			SPACER();
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk->datai=mode+32;
 		} else {
-			SPACER();
-			wk=gui_internal_keyboard_key_data(this, wkbd, "A", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk->datai=mode+32;
+			wk=gui_internal_keyboard_key_data(this, wkbd, ucase, ucase_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode-8;
-			wk=gui_internal_keyboard_key_data(this, wkbd, "1", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, numeric, numeric_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode+8;
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, "ä",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
+		wk=gui_internal_keyboard_key_data(this, wkbd, umlauts_lcase, umlauts_lcase_font, gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
 		wk->datai=mode+24;
-		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}
 	if (mode >= 16 && mode < 24) {
 		for (i = 0 ; i < 10 ; i++) {
@@ -2932,17 +3011,19 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		if (mode == 16) {
 			KEY("-");
 			KEY("'");
-			SPACER();
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk->datai=mode+24;
 		} else {
-			SPACER();
-			wk=gui_internal_keyboard_key_data(this, wkbd, "A", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk->datai=mode+24;
+			wk=gui_internal_keyboard_key_data(this, wkbd, ucase, ucase_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode-16;
-			wk=gui_internal_keyboard_key_data(this, wkbd, "a", gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, lcase, lcase_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
 			wk->datai=mode-8;
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, "Ä",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
+		wk=gui_internal_keyboard_key_data(this, wkbd, umlauts_ucase, umlauts_ucase_font, gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
 		wk->datai=mode+8;
-		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}
 	if (mode >= 24 && mode < 32) {
 		KEY("Ä"); KEY("Ë"); KEY("Ï"); KEY("Ö"); KEY("Ü"); KEY("Æ"); KEY("Ø"); KEY("Å");
@@ -2950,10 +3031,10 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		KEY("À"); KEY("È"); KEY("Ì"); KEY("Ò"); KEY("Ù"); KEY("Ś"); KEY("Ć"); KEY("Ź");
 		KEY("Â"); KEY("Ê"); KEY("Î"); KEY("Ô"); KEY("Û"); SPACER();
 
-		wk=gui_internal_keyboard_key_data(this, wkbd, "A",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
+		wk=gui_internal_keyboard_key_data(this, wkbd, ucase, ucase_font, gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
 		wk->datai=mode-24;
 
-		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}
 	if (mode >= 32 && mode < 40) {
 		KEY("ä"); KEY("ë"); KEY("ï"); KEY("ö"); KEY("ü"); KEY("æ"); KEY("ø"); KEY("å");
@@ -2961,15 +3042,24 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		KEY("à"); KEY("è"); KEY("ì"); KEY("ò"); KEY("ù"); KEY("ś"); KEY("ć"); KEY("ź");
 		KEY("â"); KEY("ê"); KEY("î"); KEY("ô"); KEY("û"); KEY("ß");
 
-		wk=gui_internal_keyboard_key_data(this, wkbd, "a",gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
+		wk=gui_internal_keyboard_key_data(this, wkbd, lcase, lcase_font, gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
 		wk->datai=mode-24;
 
-		gui_internal_keyboard_key(this, wkbd, "<-","\b",max_w,max_h);
+		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+	}
+	if (mode >= 40 && mode < 48) {
+		wk=gui_internal_keyboard_key_data(this, wkbd, lcase, lcase_font, gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
+		wk->datai=mode-24;
+		if (render)
+			render=2;
 	}
 	gui_internal_widget_append(wkbdb, wkbd);
-	if (render) {
+	if (render == 1) {
 		gui_internal_widget_pack(this, wkbdb);
 		gui_internal_widget_render(this, wkbdb);
+	} else if (render == 2) {
+		gui_internal_menu_reset_pack(this);
+		gui_internal_menu_render(this);
 	}
 	return wkbdb;
 }
