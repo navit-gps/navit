@@ -2275,7 +2275,7 @@ navit_layout_switch(struct navit *n)
 {
 
     int currTs=0;
-    struct attr iso8601_attr,geo_attr,layout_attr;
+    struct attr iso8601_attr,geo_attr,valid_attr,layout_attr;
     double trise,tset,trise_actual;
     struct layout *l;
     int year, month, day;
@@ -2302,7 +2302,7 @@ navit_layout_switch(struct navit *n)
 		//No position - no sun
 		return;
 	}
-	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_valid, &geo_attr,NULL) && geo_attr.u.num==attr_position_valid_invalid) {
+	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_valid, &valid_attr,NULL) && valid_attr.u.num==attr_position_valid_invalid) {
 		return; //No valid fix yet
 	}
 	
