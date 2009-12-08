@@ -1929,7 +1929,13 @@ struct displaylist_handle * graphics_displaylist_open(struct displaylist *displa
 	struct displaylist_handle *ret;
 
 	ret=g_new0(struct displaylist_handle, 1);
+	if (!displaylist->dl)
+		return NULL;
 	ret->hl_head=ret->hl=g_hash_to_list(displaylist->dl);
+	if (!ret->hl) {
+		g_free(ret);
+		return NULL;
+	}
 	ret->l_head=ret->l=g_hash_to_list_keys(ret->hl->data);
 
 	return ret;
@@ -1944,6 +1950,8 @@ struct displaylist_handle * graphics_displaylist_open(struct displaylist *displa
 struct displayitem * graphics_displaylist_next(struct displaylist_handle *dlh)
 {
 	struct displayitem *ret;
+	if (!dlh)
+		return NULL;
 	if (! dlh->l) {
 		dlh->hl=g_list_next(dlh->hl);
 		if (!dlh->hl)
@@ -1964,9 +1972,11 @@ struct displayitem * graphics_displaylist_next(struct displaylist_handle *dlh)
 */
 void graphics_displaylist_close(struct displaylist_handle *dlh)
 {
-	g_list_free(dlh->hl_head);
-	g_list_free(dlh->l_head);
-	g_free(dlh);
+	if (dlh) {
+		g_list_free(dlh->hl_head);
+		g_list_free(dlh->l_head);
+		g_free(dlh);
+	}
 }
 
 /**
