@@ -1090,7 +1090,7 @@ binmap_search_street_by_place(struct map_priv *map, struct item *town, struct co
 	struct attr town_name, poly_town_name;
 	struct map_rect_priv *map_rec2;
 	struct item *place;
-	int found;
+	int found=0;
 
 	if (!item_attr_get(town, attr_label, &town_name))
 		return NULL;
