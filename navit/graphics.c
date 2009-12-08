@@ -2185,7 +2185,7 @@ graphics_process_selection_item(struct displaylist *dl, struct item *item)
 		}
 	}
 	mr=map_rect_new(item->map, NULL);
-	item=map_rect_get_item_byid(item->map, item->id_lo, item->id_hi);
+	item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
 	count=item_coord_get(item, ca, item->type < type_line ? 1: max);
 	if (!item_attr_get(item, attr_label, &attr))
 		attr.u.str=NULL;
