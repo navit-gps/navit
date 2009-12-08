@@ -149,36 +149,43 @@ public class Navit extends Activity implements Handler.Callback
 	}
 	// Debug.startMethodTracing("calc");
         NavitMain(this, langu);
+	NavitActivity(3);
     }
     @Override public void onStart()
     {
         super.onStart();
 	Log.e("Navit","OnStart");
+	NavitActivity(2);
     }
     @Override public void onRestart()
     {
         super.onRestart();
 	Log.e("Navit","OnRestart");
+	NavitActivity(0);
     }
     @Override public void onResume()
     {
         super.onResume();
 	Log.e("Navit","OnResume");
+	NavitActivity(1);
     }
     @Override public void onPause()
     {
 	super.onPause();
 	Log.e("Navit","OnPause");
+	NavitActivity(-1);
     }
     @Override public void onStop()
     {
 	super.onStop();
 	Log.e("Navit","OnStop");
+	NavitActivity(-2);
     }
     @Override public void onDestroy()
     {
 	super.onDestroy();
 	Log.e("Navit","OnDestroy");
+	NavitActivity(-3);
     }
 
     public void disableSuspend()
@@ -202,6 +209,7 @@ public class Navit extends Activity implements Handler.Callback
      * with this application.
      */
     public native void NavitMain(Navit x, String lang);
+    public native void NavitActivity(int activity);
 
     /* this is used to load the 'hello-jni' library on application
      * startup. The library has already been unpacked into
