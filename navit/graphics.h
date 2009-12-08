@@ -114,6 +114,7 @@ struct graphics_data_image {
 
 /* prototypes */
 enum attr_type;
+enum item_type;
 enum draw_mode_num;
 struct attr;
 struct attr_iter;
@@ -181,8 +182,8 @@ struct item *graphics_displayitem_get_item(struct displayitem *di);
 char *graphics_displayitem_get_label(struct displayitem *di);
 int graphics_displayitem_get_displayed(struct displayitem *di);
 int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p, int dist);
-void graphics_add_selection(struct graphics *gra, struct item *item, struct displaylist *dl);
-void graphics_remove_selection(struct graphics *gra, struct item *item, struct displaylist *dl);
+void graphics_add_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);
+void graphics_remove_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl);
 void graphics_clear_selection(struct graphics *gra, struct displaylist *dl);
 /* end of prototypes */
 #ifdef __cplusplus

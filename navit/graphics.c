@@ -2151,23 +2151,15 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
 }
 
 
-static enum item_type
-graphics_selection_type(enum item_type type)
-{
-	if (type < type_line) 
-		return type_selected_point;
-	if (type < type_area) 
-		return type_selected_line;
-	return type_selected_area;
-	
-}
-
-
 static void
 graphics_process_selection_item(struct displaylist *dl, struct item *item)
 {
 	struct displayitem di,*di_res;
 	GHashTable *h;
+	int count,max=dl->dc.maxlen;
+	struct coord ca[max];
+	struct attr attr;
+	struct map_rect *mr;
 
 	di.item=*item;
 	di.label=NULL;
@@ -2177,24 +2169,38 @@ graphics_process_selection_item(struct displaylist *dl, struct item *item)
 	if (h) {
 		di_res=g_hash_table_lookup(h, &di);
 		if (di_res) {
-			di.item.type=graphics_selection_type(di.item.type);
+			di.item.type=(enum item_type)item->priv_data;
 			display_add(dl, &di.item, di_res->count, di_res->c, NULL);
+			return;
 		}
 	}
+	mr=map_rect_new(item->map, NULL);
+	item=map_rect_get_item_byid(item->map, item->id_lo, item->id_hi);
+	count=item_coord_get(item, ca, item->type < type_line ? 1: max);
+	if (!item_attr_get(item, attr_label, &attr))
+		attr.u.str=NULL;
+	if (dl->conv && attr.u.str && attr.u.str[0]) {
+		char *str=map_convert_string(item->map, attr.u.str);
+		display_add(dl, item, count, ca, str);
+		map_convert_free(str);
+	} else
+		display_add(dl, item, count, ca, attr.u.str);
+	map_rect_destroy(mr);
 }
 
 void
-graphics_add_selection(struct graphics *gra, struct item *item, struct displaylist *dl)
+graphics_add_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl)
 {
 	struct item *item_dup=g_new(struct item, 1);
 	*item_dup=*item;
+	item_dup->priv_data=(void *)type;
 	gra->selection=g_list_append(gra->selection, item_dup);
 	if (dl)
 		graphics_process_selection_item(dl, item_dup);
 }
 
 void
-graphics_remove_selection(struct graphics *gra, struct item *item, struct displaylist *dl)
+graphics_remove_selection(struct graphics *gra, struct item *item, enum item_type type, struct displaylist *dl)
 {
 	GList *curr;
 	int found;
@@ -2212,7 +2218,7 @@ graphics_remove_selection(struct graphics *gra, struct item *item, struct displa
 					di.label=NULL;
 					di.displayed=0;
 					di.count=0;
-					di.item.type=graphics_selection_type(di.item.type);
+					di.item.type=type;
 					h=g_hash_table_lookup(dl->dl, GINT_TO_POINTER(di.item.type));
 					if (h)
 						g_hash_table_remove(h, &di);
@@ -2231,8 +2237,10 @@ graphics_remove_selection(struct graphics *gra, struct item *item, struct displa
 void
 graphics_clear_selection(struct graphics *gra, struct displaylist *dl)
 {
-	while (gra->selection) 
-		graphics_remove_selection(gra, (struct item *)gra->selection->data, dl);
+	while (gra->selection) {
+		struct item *item=(struct item *)gra->selection->data;
+		graphics_remove_selection(gra, item, (enum item_type)item->priv_data,dl);
+	}
 }
 
 static void
