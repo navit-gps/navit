@@ -2119,10 +2119,17 @@ static void
 gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct widget *w=wm->data;
-	int highlight=(w->data == (void *)2 || w->data == (void *)3 || w->data == (void *)4);
+	int highlight=(w->data == (void *)2 || w->data == (void *)3 || w->data == (void *)5);
 	if (highlight) {
+		enum item_type type;
+		if (w->item.type < type_line)
+	           	type=type_selected_point;
+		else if (w->item.type < type_area)
+	            	type=type_selected_point;
+		else
+			type=type_selected_area;
 		graphics_clear_selection(this->gra, NULL);
-		graphics_add_selection(this->gra, &w->item, NULL);
+		graphics_add_selection(this->gra, &w->item, type, NULL);
 	}
 	navit_set_center(this->nav, &w->c, 1);
 	gui_internal_prune_menu(this, NULL);
