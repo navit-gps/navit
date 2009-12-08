@@ -3051,6 +3051,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 	if (mode >= 1024) {
 		char *text;
 		int font;
+		struct widget *wkl;
 		mode -= 1024;
 		if (mode >= 0 && mode < 8) {
 			text=ucase;
@@ -3082,8 +3083,10 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		wk->bb=0;
 		wk->datai=mode;
 		wk->state |= STATE_SENSITIVE;
-		gui_internal_widget_append(wk, gui_internal_text_new(this, unhide, gravity_center|orientation_vertical));
-		gui_internal_widget_append(wk, gui_internal_text_font_new(this, text,font, gravity_center|orientation_vertical));
+		gui_internal_widget_append(wk, wkl=gui_internal_label_new(this, unhide));
+		wkl->background=NULL;
+		gui_internal_widget_append(wk, wkl=gui_internal_label_font_new(this, text,font));
+		wkl->background=NULL;
 		gui_internal_widget_append(wkbd, wk);
 		if (render)
 			render=2;
