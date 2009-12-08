@@ -170,6 +170,8 @@ search_list_common_new(struct item *item, struct search_list_common *common)
 		common->district_name=NULL;
 	if (item_attr_get(item, attr_postal, &attr))
 		common->postal=map_convert_string(item->map, attr.u.str);
+	else if (item_attr_get(item, attr_town_postal, &attr))
+		common->postal=map_convert_string(item->map, attr.u.str);
 	else
 		common->postal=NULL;
 	if (item_attr_get(item, attr_postal_mask, &attr)) 
