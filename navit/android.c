@@ -8,6 +8,7 @@
 
 JNIEnv *jnienv;
 jobject *android_activity;
+struct callback_list *android_activity_cbl;
 
 
 int
@@ -50,6 +51,7 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 	char *strings[]={"/data/data/org.navitproject.navit/bin/navit",NULL};
 	char *langstr;
 	__android_log_print(ANDROID_LOG_ERROR,"test","called");
+	android_activity_cbl=callback_list_new();
 	jnienv=env;
 	android_activity=activity;
 	(*jnienv)->NewGlobalRef(jnienv, activity);
@@ -58,6 +60,13 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 	setenv("LANG",langstr,1);
 	(*env)->ReleaseStringUTFChars(env, lang, langstr);
 	main_real(1, strings);
+}
+
+JNIEXPORT void JNICALL
+Java_org_navitproject_navit_Navit_NavitActivity( JNIEnv* env, jobject thiz, int param)
+{
+	dbg(0,"enter %d\n",param);
+	callback_list_call_1(android_activity_cbl, param);
 }
 
 JNIEXPORT void JNICALL
