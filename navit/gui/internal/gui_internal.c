@@ -2962,14 +2962,14 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		if (mode == 0) {
 			KEY("-");
 			KEY("'");
-			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+1024;
 		} else {
-			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+1024;
-			wk=gui_internal_keyboard_key_data(this, wkbd, lcase, lcase_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, lcase, lcase_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+8;
-			wk=gui_internal_keyboard_key_data(this, wkbd, numeric, numeric_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, numeric, numeric_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+16;
 		}
 		wk=gui_internal_keyboard_key_data(this, wkbd, umlauts_ucase, umlauts_ucase_font, gui_internal_keyboard_change, wkbdb,NULL,max_w,max_h);
@@ -2985,14 +2985,14 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		if (mode == 8) {
 			KEY("-");
 			KEY("'");
-			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+1024;
 		} else {
-			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+1024;
-			wk=gui_internal_keyboard_key_data(this, wkbd, ucase, ucase_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, ucase, ucase_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode-8;
-			wk=gui_internal_keyboard_key_data(this, wkbd, numeric, numeric_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, numeric, numeric_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+8;
 		}
 		wk=gui_internal_keyboard_key_data(this, wkbd, umlauts_lcase, umlauts_lcase_font, gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
@@ -3012,14 +3012,14 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		if (mode == 16) {
 			KEY("-");
 			KEY("'");
-			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+1024;
 		} else {
-			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+1024;
-			wk=gui_internal_keyboard_key_data(this, wkbd, ucase, ucase_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, ucase, ucase_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode-16;
-			wk=gui_internal_keyboard_key_data(this, wkbd, lcase, lcase_font, gui_internal_keyboard_change, wkbd, NULL,max_w,max_h);
+			wk=gui_internal_keyboard_key_data(this, wkbd, lcase, lcase_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode-8;
 		}
 		wk=gui_internal_keyboard_key_data(this, wkbd, umlauts_ucase, umlauts_ucase_font, gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
@@ -3075,7 +3075,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		}
 		wk=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_fill);
 		wk->func=gui_internal_keyboard_change;
-		wk->data=wkbd;
+		wk->data=wkbdb;
 		wk->background=this->background;
 		wk->bl=max_w/2;
 		wk->br=0;
