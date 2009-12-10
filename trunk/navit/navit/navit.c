@@ -247,6 +247,7 @@ void
 navit_handle_resize(struct navit *this_, int w, int h)
 {
 	struct map_selection sel;
+	int callback=(this_->ready == 1);
 	this_->ready |= 2;
 	if (this_->w != w || this_->h != h) {
 		memset(&sel, 0, sizeof(sel));
@@ -260,6 +261,8 @@ navit_handle_resize(struct navit *this_, int w, int h)
 	}
 	if (this_->ready == 3)
 		navit_draw(this_);
+	if (callback)
+		callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
 }
 
 static void
@@ -1288,6 +1291,7 @@ navit_init(struct navit *this_)
 {
 	struct mapset *ms;
 	struct map *map;
+	int callback;
 
 	dbg(2,"enter gui %p graphics %p\n",this_->gui,this_->gra);
 	if (!this_->gui) {
@@ -1386,10 +1390,13 @@ navit_init(struct navit *this_)
 	navit_set_cursors(this_);
 
 	callback_list_call_attr_1(this_->attr_cbl, attr_navit, this_);
+	callback=(this_->ready == 2);
 	this_->ready|=1;
 	dbg(2,"ready=%d\n",this_->ready);
 	if (this_->ready == 3)
 		navit_draw(this_);
+	if (callback)
+		callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
 #if 0
 	routech_test(this_);
 #endif
