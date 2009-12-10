@@ -221,7 +221,7 @@ osd_compass_new(struct navit *nav, struct osd_methods *meth,
 	osd_set_std_attr(attrs, &this->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_init), attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_compass_init), attr_graphics_ready, this));
 	return (struct osd_priv *) this;
 }
 
@@ -302,7 +302,7 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 
 	this->src = graphics_icon_path(attr->u.str);
 
-	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_button_init), attr_navit, this));
+	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_button_init), attr_graphics_ready, this));
 
 	return (struct osd_priv *) this;
       error:
@@ -455,7 +455,7 @@ osd_nav_next_turn_new(struct navit *nav, struct osd_methods *meth,
 	if (attr)
 		this->level=attr->u.num;
 
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_turn_init), attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_next_turn_init), attr_graphics_ready, this));
 	return (struct osd_priv *) this;
 }
 
@@ -571,7 +571,7 @@ osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct
 
     this->item.command = g_strdup(command);
 
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_toggle_announcer_init), attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_nav_toggle_announcer_init), attr_graphics_ready, this));
 	return (struct osd_priv *) this;
 }
 
@@ -632,7 +632,7 @@ osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **
 	if (this->item.h < this->d)
 		this->d=this->item.h;
 	this->width=this->d/10;
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_init), attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_init), attr_graphics_ready, this));
 	return (struct osd_priv *) this;
 }
 
@@ -1006,7 +1006,7 @@ osd_text_new(struct navit *nav, struct osd_methods *meth,
 	if (attr)
 		this->align=attr->u.num;
 
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_text_init), attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_text_init), attr_graphics_ready, this));
 	return (struct osd_priv *) this;
 }
 
@@ -1124,7 +1124,7 @@ osd_gps_status_new(struct navit *nav, struct osd_methods *meth,
 	} else
 		this->icon_src = graphics_icon_path("gui_strength_%d_32_32.png");
 
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_init), attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_gps_status_init), attr_graphics_ready, this));
 	return (struct osd_priv *) this;
 }
 
@@ -1227,7 +1227,7 @@ osd_volume_new(struct navit *nav, struct osd_methods *meth,
 	} else
 		this->icon_src = graphics_icon_path("gui_strength_%d_32_32.png");
 
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_volume_init), attr_navit, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_volume_init), attr_graphics_ready, this));
 	return (struct osd_priv *) this;
 }
 
