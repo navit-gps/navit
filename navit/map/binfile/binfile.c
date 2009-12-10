@@ -1186,6 +1186,8 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 		case attr_town_name:
 		case attr_town_or_district_name:
 			map_rec = map_rect_new_binfile(map, NULL);
+			if (!map_rec) 
+				break;
 			map_rec->country_id = item->id_lo;
 			msp->mr = map_rec;
 			return msp;
