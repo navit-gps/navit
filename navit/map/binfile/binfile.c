@@ -824,12 +824,14 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 		push_zipfile_tile(mr, map->zip_members-1);
 	else {
 		unsigned char *d;
-		d=file_data_read(map->fi, 0, map->fi->size);
-		t.start=(int *)d;
-		t.end=(int *)(d+map->fi->size);
-		t.zipfile_num=0;
-		t.mode=0;
-		push_tile(mr, &t);
+		if (map->fi) {
+			d=file_data_read(map->fi, 0, map->fi->size);
+			t.start=(int *)d;
+			t.end=(int *)(d+map->fi->size);
+			t.zipfile_num=0;
+			t.mode=0;
+			push_tile(mr, &t);
+		}
 	}
 	return mr;
 }
