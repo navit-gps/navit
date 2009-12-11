@@ -138,8 +138,11 @@ public class NavitGraphics {
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_BACK) {
 				s=java.lang.String.valueOf((char)27);
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_CALL) {
+				s=java.lang.String.valueOf((char)3);
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP) {
+				s=java.lang.String.valueOf((char)21);
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN) {
+				s=java.lang.String.valueOf((char)4);
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER) {
 				s=java.lang.String.valueOf((char)13);
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
@@ -149,7 +152,7 @@ public class NavitGraphics {
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT) {
 				s=java.lang.String.valueOf((char)6);
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_UP) {
-				s=java.lang.String.valueOf((char)16);
+				s=java.lang.String.valueOf((char)14);
 			}
 		} else if (i == 10) {
 			s=java.lang.String.valueOf((char)13);
