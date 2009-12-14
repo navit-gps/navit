@@ -1630,6 +1630,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 	GList *l;
 	struct navit_vehicle *nv;
 	struct attr active=(struct attr){attr_active,{(void *)0}};
+	struct layout *lay;
 
 	switch (attr->type) {
 	case attr_autozoom:
@@ -1669,6 +1670,19 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 			attr_updated=1;
 		}
 		break;
+	case attr_layout_name:
+		l=this_->layouts;
+		while (l) {
+			lay=l->data;
+			if (!strcmp(lay->name,attr->u.str)) {
+				struct attr attr;
+				attr.type=attr_layout;
+				attr.u.layout=lay;
+				return navit_set_attr_do(this_, &attr, init);
+			}
+			l=g_list_next(l);
+		} 		
+		return 0;
 	case attr_orientation:
 		orient_old=this_->orientation;
 		this_->orientation=attr->u.num;
