@@ -130,6 +130,8 @@ ATTR(flags_street)
 ATTR(flags_house_number)
 ATTR(use_camera)
 ATTR(flags_graphics)
+ATTR(zoom_min)
+ATTR(zoom_max)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
