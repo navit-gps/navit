@@ -1028,7 +1028,7 @@ static DBusHandlerResult
 request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 {
 	int factor;
-	struct point p;
+	struct point p, *pp=NULL;
 	struct navit *navit;
 	DBusMessageIter iter;
 
@@ -1046,12 +1046,13 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 		dbus_message_iter_next(&iter);
 		if (!point_get_from_message(message, &iter, &p))
 			return dbus_error_invalid_parameter(connection, message);
+		pp=&p;
 	}
 
 	if (factor > 1)
-		navit_zoom_in(navit, factor, &p);
+		navit_zoom_in(navit, factor, pp);
 	else if (factor < -1)
-		navit_zoom_out(navit, 0-factor, &p);
+		navit_zoom_out(navit, 0-factor, pp);
 
 	return empty_reply(connection, message);
 
