@@ -351,6 +351,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 {
 	int border=16;
 
+	dbg(1,"enter %d %d (ignore %d)\n",pressed,button,this_->ignore_button);
 	callback_list_call_attr_4(this_->attr_cbl, attr_button, this_, GINT_TO_POINTER(pressed), GINT_TO_POINTER(button), p);
 	if (this_->ignore_button) {
 		this_->ignore_button=0;
@@ -417,6 +418,7 @@ static void
 navit_button(void *data, int pressed, int button, struct point *p)
 {
 	struct navit *this=data;
+	dbg(1,"enter %d %d ignore %d\n",pressed,button,this->ignore_graphics_events);
 	if (!this->ignore_graphics_events) {
 		if (! this->popup_callback)
 			this->popup_callback=callback_new_1(callback_cast(navit_popup), this);
