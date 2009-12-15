@@ -4011,7 +4011,7 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 static void
 gui_internal_cmd_menu2(struct gui_priv *this)
 {
-	gui_internal_cmd_menu(this, NULL, 1);
+	gui_internal_cmd_menu(this, NULL, 0);
 }
 
 
