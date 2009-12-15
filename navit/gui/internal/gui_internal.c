@@ -4011,6 +4011,8 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 static void
 gui_internal_cmd_menu2(struct gui_priv *this)
 {
+	if (this->root.children)
+		return;
 	gui_internal_cmd_menu(this, NULL, 0);
 }
 
@@ -4274,9 +4276,13 @@ static void gui_internal_resize(void *data, int w, int h)
 	}
 	dbg(1,"w=%d h=%d children=%p\n", w, h, this->root.children);
 	navit_handle_resize(this->nav, w, h);
-	if (this->root.children && changed) {
-		gui_internal_prune_menu(this, NULL);
-		gui_internal_menu_root(this);
+	if (this->root.children) {
+		if (changed) {
+			gui_internal_prune_menu(this, NULL);
+			gui_internal_menu_root(this);
+		} else {
+			gui_internal_menu_render(this);
+		}
 	}
 }
 
