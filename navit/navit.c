@@ -137,6 +137,7 @@ struct navit {
 	int follow_cursor;
 	int prevTs;
 	int graphics_flags;
+	int zoom_min, zoom_max;
 };
 
 struct gui *main_loop_gui;
@@ -502,6 +503,10 @@ static void
 navit_scale(struct navit *this_, long scale, struct point *p, int draw)
 {
 	struct coord c1, c2, *center;
+	if (scale < this_->zoom_min)
+		scale=this_->zoom_min;
+	if (scale > this_->zoom_max)
+		scale=this_->zoom_max;
 	if (p)
 		transform_reverse(this_->trans, p, &c1);
 	transform_set_scale(this_->trans, scale);
@@ -661,6 +666,8 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->autozoom_secs = 10;
 	this_->autozoom_min = 7;
 	this_->autozoom_active = 0;
+	this_->zoom_min = 1;
+	this_->zoom_max = 2097152;
 	this_->follow_cursor = 1;
 
 	this_->trans = transform_new();
@@ -1767,6 +1774,14 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		transform_set_scale(this_->trans, attr->u.num);
 		if (attr_updated && !init) 
 			navit_draw(this_);
+		break;
+	case attr_zoom_min:
+		attr_updated=(attr->u.num != this_->zoom_min);
+		this_->zoom_min=attr->u.num;
+		break;
+	case attr_zoom_max:
+		attr_updated=(attr->u.num != this_->zoom_max);
+		this_->zoom_max=attr->u.num;
 		break;
 	case attr_message:
 		navit_add_message(this_, attr->u.str);
