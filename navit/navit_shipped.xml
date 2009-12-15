@@ -1661,7 +1661,7 @@ Navigation</text></img>
 					<icon src="dam.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_danger_area" order="12-">
-					<icon src="danger_area.xpm"/>
+					<icon src="danger_16_16.png"/>
 				</itemgra>
 				<itemgra item_types="poi_danger_sea_wreck" order="12-">
 					<icon src="dangerous.xpm"/>
@@ -1981,6 +1981,9 @@ Navigation</text></img>
 				</itemgra>
 				<itemgra item_types="vehicle" order="0-">
 					<icon src="gui_vehicle_16_16.png" />
+				</itemgra>
+				<itemgra item_types="vehicle_pedestrian" order="0-">
+					<icon src="gui_vehicle_pedestrian_16_16.png" />
 				</itemgra>
 			</layer>
 			<layer name="POI Labels">
@@ -2914,8 +2917,8 @@ Navigation</text></img>
 				<itemgra item_types="poi_dam" order="0-">
 					<icon src="dam.xpm"/>
 				</itemgra>
-				<itemgra item_types="poi_danger_area" order="0-">
-					<icon src="danger_area.xpm"/>
+				<itemgra item_types="poi_danger_area" order="12-">
+					<icon src="danger_16_16.png"/>
 				</itemgra>
 				<itemgra item_types="poi_danger_sea_wreck" order="0-">
 					<icon src="dangerous.xpm"/>
@@ -3243,6 +3246,9 @@ Navigation</text></img>
 				</itemgra>
 				<itemgra item_types="vehicle" order="0-">
 					<icon src="gui_vehicle_16_16.png" />
+				</itemgra>
+				<itemgra item_types="vehicle_pedestrian" order="0-">
+					<icon src="gui_vehicle_pedestrian_16_16.png" />
 				</itemgra>
 			</layer>
 			<layer name="POI Labels">

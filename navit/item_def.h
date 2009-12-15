@@ -331,6 +331,7 @@ ITEM(poi_shop_photo)
 ITEM(ch_node)
 ITEM(place_label)
 ITEM(vehicle)
+ITEM(vehicle_pedestrian)
 /* Line */
 ITEM2(0x80000000,line)
 ITEM2(0x80000001,line_unspecified)
