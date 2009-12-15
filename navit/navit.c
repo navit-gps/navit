@@ -1858,6 +1858,11 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 	case attr_displaylist:
 		attr->u.displaylist=this_->displaylist;
 		return (attr->u.displaylist != NULL);
+	case attr_follow:
+		if (!this_->vehicle)
+			return 0;
+		attr->u.num=this_->vehicle->follow_curr;
+		break;
 	case attr_former_destination_map:
 		attr->u.map=this_->former_destination;
 		break;
