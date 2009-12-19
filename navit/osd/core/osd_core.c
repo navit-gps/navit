@@ -1231,6 +1231,121 @@ osd_volume_new(struct navit *nav, struct osd_methods *meth,
 	return (struct osd_priv *) this;
 }
 
+struct osd_scale {
+	int use_overlay;
+	struct osd_item item;
+	struct callback *draw_cb,*navit_init_cb;
+	struct graphics_gc *black;
+};
+
+static void
+osd_scale_draw(struct osd_scale *this, struct navit *nav)
+{
+	struct point bp = this->item.p,bp1,bp2;
+	struct point p[6],bbox[4];
+	struct coord c[2];
+	struct attr transformation;
+	int len;
+	double dist,exp,base,man;
+	char *text;
+	int w=this->item.w*9/10;
+	int o=(this->item.w-w)/2;
+
+	if (!navit_get_attr(nav, attr_transformation, &transformation, NULL))
+		return;
+	osd_wrap_point(&bp, nav);
+	bp1=bp;
+	bp1.y+=this->item.h/2;
+	bp1.x+=o;
+	bp2=bp1;
+	bp2.x+=w;
+	p[0]=bp1;
+	p[1]=bp2;
+	dbg(0,"%d,%d-%d,%d\n",p[0].x,p[0].y,p[1].x,p[1].y);
+	transform_reverse(transformation.u.transformation, &p[0], &c[0]);
+	transform_reverse(transformation.u.transformation, &p[1], &c[1]);
+	dist=transform_distance(transform_get_projection(transformation.u.transformation), &c[0], &c[1]);
+	exp=floor(log10(dist));
+	base=pow(10,exp);
+	man=dist/base;
+	if (man >= 5)
+		man=5;
+	else if (man >= 2)
+		man=2;
+	else
+		man=1;
+	len=this->item.w-man*base/dist*w;
+	dbg(0,"fac %f=%f/%f len %d\n",man*base/dist,dist,man*base,len);
+	p[0].x+=len/2;
+	p[1].x-=len/2;
+	dbg(0,"dist=%f exp=%f base=%f man=%f\n",dist,exp,base,man);
+	p[2]=p[0];
+	p[3]=p[0];
+	p[2].y-=this->item.h/10;
+	p[3].y+=this->item.h/10;
+	p[4]=p[1];
+	p[5]=p[1];
+	p[4].y-=this->item.h/10;
+	p[5].y+=this->item.h/10;
+	graphics_draw_lines(this->item.gr, this->item.graphic_fg_white, p, 2);
+	graphics_draw_lines(this->item.gr, this->item.graphic_fg_white, p+2, 2);
+	graphics_draw_lines(this->item.gr, this->item.graphic_fg_white, p+4, 2);
+	graphics_draw_lines(this->item.gr, this->black, p, 2);
+	graphics_draw_lines(this->item.gr, this->black, p+2, 2);
+	graphics_draw_lines(this->item.gr, this->black, p+4, 2);
+	text=format_distance(man*base, "");
+	graphics_get_text_bbox(this->item.gr, this->item.font, text, 0x10000, 0, bbox, 0);
+	p[0].x=(this->item.w-bbox[2].x)/2+bp.x;
+	p[0].y=bp.y+this->item.h-this->item.h/10;
+	graphics_draw_text(this->item.gr, this->black, this->item.graphic_fg_white, this->item.font, text, &p[0], 0x10000, 0);
+	g_free(text);
+}
+
+static void
+osd_scale_init(struct osd_scale *this, struct navit *nav)
+{
+	struct graphics *gra = navit_get_graphics(nav);
+	dbg(1, "enter\n");
+	if (this->use_overlay) {
+		osd_set_std_graphic(nav, &this->item, (struct osd_priv *)this);
+	} else {
+		this->item.configured=1;
+		this->item.gr=gra;
+		this->item.font = graphics_font_new(this->item.gr, this->item.font_size, 1);
+		this->item.graphic_fg_white=graphics_gc_new(this->item.gr);
+		this->item.color_white=COLOR_WHITE;
+		graphics_gc_set_foreground(this->item.graphic_fg_white, &this->item.color_white);
+		graphics_gc_set_linewidth(this->item.graphic_fg_white, 3);
+		this->black=graphics_gc_new(this->item.gr);
+		graphics_gc_set_foreground(this->black, &COLOR_BLACK);
+		graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_scale_draw), attr_postdraw, this, nav));
+		if (navit_get_ready(nav) == 3)
+			osd_scale_draw(this, nav);
+	}
+}
+
+static struct osd_priv *
+osd_scale_new(struct navit *nav, struct osd_methods *meth,
+	       struct attr **attrs)
+{
+	struct osd_scale *this = g_new0(struct osd_scale, 1);
+	struct attr *attr;
+
+	this->item.navit = nav;
+	this->item.meth.draw = osd_draw_cast(osd_scale_draw);
+
+	osd_set_std_attr(attrs, &this->item, 1);
+	dbg(0,"%dx%d\n",this->item.w,this->item.h);
+
+	attr=attr_search(attrs, NULL, attr_use_overlay);
+	if (attr)
+		this->use_overlay=attr->u.num;
+
+	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_scale_init), attr_graphics_ready, this));
+
+	return (struct osd_priv *) this;
+}
+
 
 void
 plugin_init(void)
@@ -1243,4 +1358,5 @@ plugin_init(void)
     	plugin_register_osd_type("text", osd_text_new);
     	plugin_register_osd_type("gps_status", osd_gps_status_new);
     	plugin_register_osd_type("volume", osd_volume_new);
+    	plugin_register_osd_type("scale", osd_scale_new);
 }
