@@ -1241,7 +1241,7 @@ struct osd_scale {
 static void
 osd_scale_draw(struct osd_scale *this, struct navit *nav)
 {
-	struct point bp = this->item.p,bp1,bp2;
+	struct point bp,bp1,bp2;
 	struct point p[6],bbox[4];
 	struct coord c[2];
 	struct attr transformation;
@@ -1253,7 +1253,15 @@ osd_scale_draw(struct osd_scale *this, struct navit *nav)
 
 	if (!navit_get_attr(nav, attr_transformation, &transformation, NULL))
 		return;
-	osd_wrap_point(&bp, nav);
+	if (this->use_overlay) {
+		graphics_draw_mode(this->item.gr, draw_mode_begin);
+		bp.x=0;
+		bp.y=0;
+		graphics_draw_rectangle(this->item.gr, this->item.graphic_bg, &bp, this->item.w, this->item.h);
+	} else {
+		bp=this->item.p;
+		osd_wrap_point(&bp, nav);
+	}
 	bp1=bp;
 	bp1.y+=this->item.h/2;
 	bp1.x+=o;
@@ -1261,7 +1269,6 @@ osd_scale_draw(struct osd_scale *this, struct navit *nav)
 	bp2.x+=w;
 	p[0]=bp1;
 	p[1]=bp2;
-	dbg(0,"%d,%d-%d,%d\n",p[0].x,p[0].y,p[1].x,p[1].y);
 	transform_reverse(transformation.u.transformation, &p[0], &c[0]);
 	transform_reverse(transformation.u.transformation, &p[1], &c[1]);
 	dist=transform_distance(transform_get_projection(transformation.u.transformation), &c[0], &c[1]);
@@ -1275,10 +1282,8 @@ osd_scale_draw(struct osd_scale *this, struct navit *nav)
 	else
 		man=1;
 	len=this->item.w-man*base/dist*w;
-	dbg(0,"fac %f=%f/%f len %d\n",man*base/dist,dist,man*base,len);
 	p[0].x+=len/2;
 	p[1].x-=len/2;
-	dbg(0,"dist=%f exp=%f base=%f man=%f\n",dist,exp,base,man);
 	p[2]=p[0];
 	p[3]=p[0];
 	p[2].y-=this->item.h/10;
@@ -1299,6 +1304,8 @@ osd_scale_draw(struct osd_scale *this, struct navit *nav)
 	p[0].y=bp.y+this->item.h-this->item.h/10;
 	graphics_draw_text(this->item.gr, this->black, this->item.graphic_fg_white, this->item.font, text, &p[0], 0x10000, 0);
 	g_free(text);
+	if (this->use_overlay)
+		graphics_draw_mode(this->item.gr, draw_mode_end);
 }
 
 static void
@@ -1315,13 +1322,13 @@ osd_scale_init(struct osd_scale *this, struct navit *nav)
 		this->item.graphic_fg_white=graphics_gc_new(this->item.gr);
 		this->item.color_white=COLOR_WHITE;
 		graphics_gc_set_foreground(this->item.graphic_fg_white, &this->item.color_white);
-		graphics_gc_set_linewidth(this->item.graphic_fg_white, 3);
-		this->black=graphics_gc_new(this->item.gr);
-		graphics_gc_set_foreground(this->black, &COLOR_BLACK);
-		graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_scale_draw), attr_postdraw, this, nav));
-		if (navit_get_ready(nav) == 3)
-			osd_scale_draw(this, nav);
 	}
+	this->black=graphics_gc_new(this->item.gr);
+	graphics_gc_set_foreground(this->black, &COLOR_BLACK);
+	graphics_gc_set_linewidth(this->item.graphic_fg_white, 6);
+	graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_scale_draw), attr_postdraw, this, nav));
+	if (navit_get_ready(nav) == 3)
+		osd_scale_draw(this, nav);
 }
 
 static struct osd_priv *
@@ -1334,8 +1341,7 @@ osd_scale_new(struct navit *nav, struct osd_methods *meth,
 	this->item.navit = nav;
 	this->item.meth.draw = osd_draw_cast(osd_scale_draw);
 
-	osd_set_std_attr(attrs, &this->item, 1);
-	dbg(0,"%dx%d\n",this->item.w,this->item.h);
+	osd_set_std_attr(attrs, &this->item, 3);
 
 	attr=attr_search(attrs, NULL, attr_use_overlay);
 	if (attr)
