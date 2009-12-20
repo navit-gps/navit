@@ -1,7 +1,7 @@
 # Ukrainian translation for navit
 # Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the navit package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# serg_stetsuk <serg_stetsuk@ukr.net> 2009.
 #
 msgid ""
 msgstr ""
@@ -18,6 +18,7 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Launchpad-Export-Date: 2009-12-20 18:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+"X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 #: ../navit/main.c:238
 #, c-format
