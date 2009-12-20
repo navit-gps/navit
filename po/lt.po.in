@@ -120,17 +120,13 @@ msgstr "už %d.%d kilometrų"
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "vienas kilometras"
-msgstr[1] "%d kilometrai"
-msgstr[2] "%d kilometrai"
+msgstr[0] ""
 
 #: ../navit/navigation.c:336
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] "už vieno kilometro"
-msgstr[1] "už %d kilometrų"
-msgstr[2] "už %d kilometrų"
+msgstr[0] ""
 
 #: ../navit/navigation.c:1266
 msgid "exit"
