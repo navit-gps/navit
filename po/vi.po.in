@@ -1,12 +1,12 @@
 # Vietnamese translation for navit
 # Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the navit package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# Nguyễn Hào Khôi <nguyenhaokhoi@yahoo.com.vn>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: navit\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-08-07 07:16+0200\n"
 "PO-Revision-Date: 2009-12-01 11:36+0000\n"
 "Last-Translator: Nguyễn Hào Khôi <nguyenhaokhoi@yahoo.com.vn>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Launchpad-Export-Date: 2009-12-20 18:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+"X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 #: ../navit/main.c:238
 #, c-format
