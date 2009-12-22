@@ -46,6 +46,8 @@
 #endif
 
 char *version=PACKAGE_VERSION" "SVN_VERSION""NAVIT_VARIANT; 
+int main_argc;
+char **main_argv;
 
 static void
 print_usage(void)
@@ -63,6 +65,8 @@ int main_real(int argc, char **argv)
 	struct attr navit;
 
 	GList *list = NULL, *li;
+	main_argc=argc;
+	main_argv=argv;
 
 
 #ifdef HAVE_GLIB
