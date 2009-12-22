@@ -29,6 +29,8 @@ struct config {
 	struct callback_list *cbl;
 } *config;
 
+int config_empty_ok;
+
 struct attr_iter {
 	void *iter;
 };
