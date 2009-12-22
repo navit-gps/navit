@@ -433,6 +433,7 @@ get_data(struct graphics_priv *this, char *type)
 {
 	int b;
 	 struct point p;
+	dbg(1,"type=%s\n",type);
 	if (!strcmp(type,"window"))
 		return &this->window;
 	if (!strcmp(type,"image_png")) {
@@ -442,14 +443,12 @@ get_data(struct graphics_priv *this, char *type)
 		return &this->image;
 	}
 	if (sscanf(type,"click_%d_%d_%d",&p.x,&p.y,&b) == 3) {
-		if (this->image.data)
-			gdFree(this->image.data);
-		this->image.data=0;
-		this->image.size=0;
-
+		dbg(1,"click %d %d %d\n",p.x,p.y,b);
         	callback_list_call_attr_3(this->cbl, attr_button, (void *)b, (void *)1, (void *)&p);
-
-		return &this->image;
+	}
+	if (sscanf(type,"move_%d_%d",&p.x,&p.y) == 2) {
+		dbg(1,"move %d %d\n",p.x,p.y);
+        	callback_list_call_attr_1(this->cbl, attr_motion, (void *)&p);
 	}
 	return NULL;
 }
