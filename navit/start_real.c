@@ -167,7 +167,7 @@ int main_real(int argc, char **argv)
 		li = g_list_next(li);
 	}
 	g_list_free(list);
-	if (! config_get_attr(config, attr_navit, &navit, NULL)) {
+	if (! config_get_attr(config, attr_navit, &navit, NULL) && !config_empty_ok) {
 		dbg(0, _("No instance has been created, exiting\n"));
 		exit(1);
 	}

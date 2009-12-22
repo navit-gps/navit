@@ -1,4 +1,5 @@
 extern struct config *config;
+extern int config_empty_ok;
 /* prototypes */
 enum attr_type;
 struct attr;
