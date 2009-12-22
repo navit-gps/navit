@@ -480,6 +480,7 @@ navit_handle_motion(struct navit *this_, struct point *p)
 		dx=(p->x-this_->pressed.x);
 		dy=(p->y-this_->pressed.y);
 		if (dx < -8 || dx > 8 || dy < -8 || dy > 8) {
+			this_->moved=1;
 			if (this_->button_timeout) {
 				event_remove_timeout(this_->button_timeout);
 				this_->button_timeout=NULL;
