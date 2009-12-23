@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><!--
-         For configuration options used in this file, please read
-	 http://wiki.navit-project.org/index.php/Configuring_NavIt 
-	 Do not edit /usr/share/navit/navit.xml : changes would be lost
-	 on upgrade. Rather copy it to ~/.navit/. Please read wiki
+	For configuration options used in this file, please read
+	http://wiki.navit-project.org/index.php/Configuring_NavIt 
+	Do not edit /usr/share/navit/navit.xml : changes would be lost
+	on upgrade. Rather copy it to ~/.navit/. Please read wiki
 -->
 <!DOCTYPE config
   SYSTEM "navit.dtd">
@@ -22,22 +22,22 @@
 	<!-- timestamps 0/1 - prefix log messages with a timestamp -->
 	<debug name="timestamps" level="0"/>
 	<!-- This line defines which location on the map navit will show after startup.
-		 It makes sense to set it to your home coordinates.
-		 Center coordinates format:
-		 [D][D]DMM.ss[S][S]... N/S [D][D]DMM.ss[S][S]... E/W 
-		 [-][D]D.d[d]... [-][D][D]D.d[d]... 
-		 [-]0xX [-]0xX -->
+		It makes sense to set it to your home coordinates.
+		Center coordinates format:
+		[D][D]DMM.ss[S][S]... N/S [D][D]DMM.ss[S][S]... E/W 
+		[-][D]D.d[d]... [-][D][D]D.d[d]... 
+		[-]0xX [-]0xX -->
 
 	<navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="-1" recent_dest="10">
 		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. For cegui, use opengl -->
 		<graphics type="gtk_drawing_area"/>
 		<!-- The following line let you select which graphical user interface you'd like to use.
-			 Options include internal (optimized for touch screen devices), gtk (useful for desktop computers) and cegui.
-		 If you don't like the internal gui, set enabled=yes for the following tag and enabled=no for the gui internal tag -->
+		Options include internal (optimized for touch screen devices), gtk (useful for desktop computers) and cegui.
+		If you don't like the internal gui, set enabled=yes for the following tag and enabled=no for the gui internal tag -->
 		<gui type="gtk" enabled="no" menubar="1" toolbar="1" statusbar="1"/>
 	<!--
-			 In case of the internal GUI, you can even influence the size of the text and of the icons in the toolbar and the viewport.
-			 Here's an example for a freerunner: -->
+			In case of the internal GUI, you can even influence the size of the text and of the icons in the toolbar and the viewport.
+			Here's an example for a freerunner: -->
 		<!-- <gui type="internal" font_size="350" icon_xs="32" icon_s="96" icon_l="96"/> -->
 
 		<gui type="internal" enabled="yes"><![CDATA[
@@ -92,8 +92,8 @@ Navigation</text></img>
 		<osd enabled="no" type="navigation_next_turn"/> 
 
 		<!-- Commands include gui_internal_menu, gui_internal_fullscreen, zoom_in and zoom_out.
-			 Usage of negative values change the button origins. x="0" y="0" specifies the top left, x="-0" y="-0" the bottom right corner.
-			 It's always the top left corner of the icon, so you need to consider the icon's size when you enter the values. -->
+			Usage of negative values change the button origins. x="0" y="0" specifies the top left, x="-0" y="-0" the bottom right corner.
+			It's always the top left corner of the icon, so you need to consider the icon's size when you enter the values. -->
 		<osd enabled="no" type="button" x="0" y="0" command="gui.fullscreen()" src="toggle_fullscreen.xpm"/> 
 		<osd enabled="no" type="button" x="-96" y="0" command="gui.menu()" src="menu.xpm"/>
 		<osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.xpm"/>
@@ -229,7 +229,7 @@ Navigation</text></img>
 					<announcement level="2" distance_metric="200"/>
 			</roadprofile>
 			<!-- Those types do not appear in osm2navit.c and therefore are not used ATM -->
-	  <roadprofile item_types="street_3_land,street_4_land" speed="20" route_weight="7">
+			<roadprofile item_types="street_3_land,street_4_land" speed="20" route_weight="7">
 					<announcement level="0" distance_metric="100"/>
 					<announcement level="1" distance_metric="400"/>
 					<announcement level="2" distance_metric="1000"/>
@@ -352,8 +352,8 @@ Navigation</text></img>
 		</navigation>
 
 		<!-- Navit provides speech output in text format.
-			 If you have a speech synthesizer like festival lite installed, you can get turn by turn directions out of navit. Please set the "cps"-value to how many characters your tts engine approximately speaks per second.
-			 The default is text output to the shell -->
+			If you have a speech synthesizer like festival lite installed, you can get turn by turn directions out of navit. Please set the "cps"-value to how many characters your tts engine approximately speaks per second.
+			The default is text output to the shell -->
 		<speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" cps="15"/>
 		<!-- <speech type="cmdline" data="flite -t '%s'"/> -->
 
@@ -3388,30 +3388,30 @@ Navigation</text></img>
 			<!-- "Contour Lines" -->
 
 			<layer name="Barriers">
-			  <itemgra item_types="ditch" order="8-">
-				<polyline color="#B8860B" width="1"/>
-				<text text_size="8"/>
-			  </itemgra>
-			  <itemgra item_types="hedge" order="8-">
-				<polyline color="#90EE90" width="1"/>
-				<text text_size="8"/>
-			  </itemgra>
-			  <itemgra item_types="fence" order="8-">
-				<polyline color="#808080" width="1"/>
-				<text text_size="8"/>
-			  </itemgra>
-			  <itemgra item_types="wall" order="8-">
-				<polyline color="#808080" width="1"/>
-				<text text_size="8"/>
-			  </itemgra>
-			  <itemgra item_types="retaining_wall" order="8-">
-				<polyline color="#808080" width="1"/>
-				<text text_size="8"/>
-			  </itemgra>
-			  <itemgra item_types="city_wall" order="8-">
-				<polyline color="#CD5C5C" width="1"/>
-				<text text_size="8"/>
-			  </itemgra>
+				<itemgra item_types="ditch" order="8-">
+					<polyline color="#B8860B" width="1"/>
+					<text text_size="8"/>
+				</itemgra>
+				<itemgra item_types="hedge" order="8-">
+					<polyline color="#90EE90" width="1"/>
+					<text text_size="8"/>
+				</itemgra>
+				<itemgra item_types="fence" order="8-">
+					<polyline color="#808080" width="1"/>
+					<text text_size="8"/>
+				</itemgra>
+				<itemgra item_types="wall" order="8-">
+					<polyline color="#808080" width="1"/>
+					<text text_size="8"/>
+				</itemgra>
+				<itemgra item_types="retaining_wall" order="8-">
+					<polyline color="#808080" width="1"/>
+					<text text_size="8"/>
+				</itemgra>
+				<itemgra item_types="city_wall" order="8-">
+					<polyline color="#CD5C5C" width="1"/>
+					<text text_size="8"/>
+				</itemgra>
 			</layer>
 			<!-- "Barriers" -->
 
