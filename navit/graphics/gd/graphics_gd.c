@@ -35,6 +35,8 @@
 #ifdef NAVIT_GD_XPM_TRANSPARENCY_HACK
 #include <X11/xpm.h>
 
+static void emit_callback(struct graphics_priv *priv);
+
 BGD_DECLARE(gdImagePtr) gdImageCreateFromXpm (char *filename)
 {
   XpmInfo info;
@@ -166,7 +168,7 @@ BGD_DECLARE(gdImagePtr) gdImageCreateFromXpm (char *filename)
 
 struct graphics_priv {
 	gdImagePtr im;
-	int w,h;
+	int w,h,flags;
 	struct callback *cb;
 	struct callback_list *cbl;
 	struct navit *nav;
@@ -418,7 +420,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 		gdImageFilledRectangle(gr->im, 0, 0, gr->w, gr->h, gr->background->color);
 	}
 #endif
-	if (mode == draw_mode_end) {
+	if (mode == draw_mode_end && !(gr->flags & 1)) {
 		rename("test.png","test.png.old");
 		pngout=fopen("test.png", "wb");
 		gdImagePng(gr->im, pngout);
@@ -467,7 +469,47 @@ overlay_disable(struct graphics_priv *gr, int disable)
 	dbg(0,"enter\n");
 }
 
+static int
+set_attr_do(struct graphics_priv *gr, struct attr *attr, int init)
+{
+	switch (attr->type) {
+	case attr_w:
+		if (gr->w != attr->u.num) {
+			gr->w=attr->u.num;
+			if (!init) {
+				if (gr->im)
+					gdImageDestroy(gr->im);
+				gr->im=gdImageCreateTrueColor(gr->w,gr->h);
+				emit_callback(gr);
+			}
+		}
+		break;
+	case attr_h:
+		if (gr->h != attr->u.num) {
+			gr->h=attr->u.num;
+			if (!init) {
+				if (gr->im)
+					gdImageDestroy(gr->im);
+				gr->im=gdImageCreateTrueColor(gr->w,gr->h);
+				emit_callback(gr);
+			}
+		}
+		break;
+	case attr_flags:
+		gr->flags=attr->u.num;
+		break;
+	default:
+		return 0;
+	}
+	return 1;
+}
 
+
+static int
+set_attr(struct graphics_priv *gr, struct attr *attr)
+{
+	return set_attr_do(gr, attr, 0);
+}
 
 static struct graphics_methods graphics_methods = {
 	graphics_destroy,
@@ -490,6 +532,8 @@ static struct graphics_methods graphics_methods = {
 	image_free,
 	NULL,
 	overlay_disable,
+	NULL,
+	set_attr,
 };
 
 static struct graphics_priv *
@@ -525,17 +569,14 @@ graphics_gd_new(struct navit *nav, struct graphics_methods *meth, struct attr **
 	navit_add_callback(nav, ret->cb);
 	ret->cbl=cbl;
 	ret->nav=nav;
-	attr=attr_search(attrs, NULL, attr_w);
-	if (attr)
-		ret->w=attr->u.num;
-	else
-		ret->w=800;
-	attr=attr_search(attrs, NULL, attr_h);
-	if (attr)
-		ret->h=attr->u.num;
-	else
-		ret->h=600;
-	ret->im=gdImageCreateTrueColor(ret->w,ret->h);
+	ret->w=800;
+	ret->h=600;
+	while (*attrs) {
+		set_attr_do(ret, *attrs, 1);
+		attrs++;
+	}
+	if (!ret->im)
+		ret->im=gdImageCreateTrueColor(ret->w,ret->h);
 	return ret;
 }
 
