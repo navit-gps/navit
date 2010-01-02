@@ -93,6 +93,7 @@ struct graphics_gc_methods {
 struct graphics_gc {
 	struct graphics_gc_priv *priv;
 	struct graphics_gc_methods meth;
+	struct graphics *gra;
 };
 
 struct graphics_image_methods {

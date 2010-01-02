@@ -68,6 +68,8 @@ struct graphics
 	struct attr **attrs;
 	struct callback_list *cbl;
 	struct point_rect r;
+	int gamma,brightness,contrast;
+	int colormgmt;
 	GList *selection;
 };
 
@@ -106,6 +108,26 @@ struct displaylist {
 static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
 static void graphics_process_selection(struct graphics *gra, struct displaylist *dl);
 
+static int
+graphics_set_attr_do(struct graphics *gra, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_gamma:
+		gra->gamma=attr->u.num;
+		break;
+	case attr_brightness:
+		gra->brightness=attr->u.num;
+		break;
+	case attr_contrast:
+		gra->contrast=attr->u.num;
+		break;
+	default:
+		return 0;
+	}
+	gra->colormgmt=(gra->gamma != 655536 || gra->brightness != 65536 || gra->contrast != 65536);
+	return 1;
+}
+
 int
 graphics_set_attr(struct graphics *gra, struct attr *attr)
 {
@@ -113,6 +135,8 @@ graphics_set_attr(struct graphics *gra, struct attr *attr)
 	dbg(0,"enter\n");
 	if (gra->meth.set_attr)
 		ret=gra->meth.set_attr(gra->priv, attr);
+	if (!ret)
+		ret=graphics_set_attr_do(gra, attr);
         return ret != 0;
 }
 
@@ -146,6 +170,13 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 	this_->cbl=callback_list_new();
 	this_->priv=(*graphicstype_new)(parent->u.navit, &this_->meth, attrs, this_->cbl);
 	this_->attrs=attr_list_dup(attrs);
+	this_->brightness=0;
+	this_->contrast=65536;
+	this_->gamma=65536;
+	while (*attrs) {
+		graphics_set_attr_do(this_,*attrs);
+		attrs++;
+	}
 	return this_;
 }
 
@@ -288,6 +319,7 @@ struct graphics_gc * graphics_gc_new(struct graphics *gra)
 
 	this_=g_new0(struct graphics_gc,1);
 	this_->priv=gra->meth.gc_new(gra->priv, &this_->meth);
+	this_->gra=gra;
 	return this_;
 }
 
@@ -303,6 +335,39 @@ void graphics_gc_destroy(struct graphics_gc *gc)
 	g_free(gc);
 }
 
+static void
+graphics_convert_color(struct graphics *gra, struct color *in, struct color *out)
+{
+	*out=*in;
+	if (gra->brightness) {
+		out->r+=gra->brightness;
+		out->g+=gra->brightness;
+		out->b+=gra->brightness;
+	}
+	if (gra->contrast != 65536) {
+		out->r=out->r*gra->contrast/65536;
+		out->g=out->g*gra->contrast/65536;
+		out->b=out->b*gra->contrast/65536;
+	}
+	if (out->r < 0)
+		out->r=0;
+	if (out->r > 65535)
+		out->r=65535;
+	if (out->g < 0)
+		out->g=0;
+	if (out->g > 65535)
+		out->g=65535;
+	if (out->b < 0)
+		out->b=0;
+	if (out->b > 65535)
+		out->b=65535;
+	if (gra->gamma != 65536) {
+		out->r=pow(out->r/65535.0,gra->gamma/65536.0)*65535.0;
+		out->g=pow(out->g/65535.0,gra->gamma/65536.0)*65535.0;
+		out->b=pow(out->b/65535.0,gra->gamma/65536.0)*65535.0;
+	}
+}
+
 /**
  * FIXME
  * @param <>
@@ -311,6 +376,11 @@ void graphics_gc_destroy(struct graphics_gc *gc)
 */
 void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c)
 {
+	struct color cn;
+	if (gc->gra->colormgmt) {
+		graphics_convert_color(gc->gra, c, &cn);
+		c=&cn;
+	}
 	gc->meth.gc_set_foreground(gc->priv, c);
 }
 
@@ -322,6 +392,11 @@ void graphics_gc_set_foreground(struct graphics_gc *gc, struct color *c)
 */
 void graphics_gc_set_background(struct graphics_gc *gc, struct color *c)
 {
+	struct color cn;
+	if (gc->gra->colormgmt) {
+		graphics_convert_color(gc->gra, c, &cn);
+		c=&cn;
+	}
 	gc->meth.gc_set_background(gc->priv, c);
 }
 
@@ -1478,8 +1553,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 	di->displayed=1;
 	if (! gc) {
 		gc=graphics_gc_new(gra);
-		gc->meth.gc_set_foreground(gc->priv, &e->color);
-		dc->gc=gc;
+		graphics_gc_set_foreground(gc, &e->color);
 	}
 	if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
 		count=limit_count(di->c, count);
@@ -1654,7 +1728,7 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 			count=1;
 		}
 		gc=graphics_gc_new(gra);
-		gc->meth.gc_set_foreground(gc->priv, &e->color);
+		graphics_gc_set_foreground(gc, &e->color);
 		switch (e->type) {
 		case element_polyline:
 			if (e->u.polyline.width > 1) 
