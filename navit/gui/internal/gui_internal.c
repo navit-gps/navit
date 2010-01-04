@@ -71,6 +71,10 @@
 #include "xmlconfig.h"
 #include "util.h"
 
+struct form {
+	char *onsubmit;
+};
+
 struct menu_data {
 	struct widget *search_list;
 	struct widget *keyboard;
@@ -136,6 +140,7 @@ struct widget {
 	 */
 	int cols;
 	enum flags flags;
+	int flags2;
 	void *instance;
 	int (*set_attr)(void *, struct attr *);
 	int (*get_attr)(void *, enum attr_type, struct attr *, struct attr_iter *);
@@ -147,6 +152,7 @@ struct widget {
 	int is_on;
 	int redraw;
 	struct menu_data *menu_data;
+	struct form *form;
 	GList *children;
 };
 
@@ -234,7 +240,7 @@ struct gui_priv {
 	int widgets_count;
 	int redraw;
 	struct widget root;
-	struct widget *highlighted;
+	struct widget *highlighted,*editable;
 	struct widget *highlighted_menu;
 	int clickp_valid, vehicle_valid;
 	struct pcoord clickp, vehiclep;
@@ -246,6 +252,7 @@ struct gui_priv {
 	char *country_iso2;
 	int speech;
 	int keyboard;
+	int keyboard_required;
 	/**
 	 * The setting information read from the configuration file.
 	 * values of -1 indicate no value was specified in the config file.
@@ -276,6 +283,7 @@ struct gui_priv {
 	int html_skip;
 	char *html_anchor;
 	int html_anchor_found;
+	struct form *form;
 	struct html {
 		int skip;
 		enum html_tag {
@@ -285,11 +293,15 @@ struct gui_priv {
 			html_tag_html,
 			html_tag_img,
 			html_tag_script,
+			html_tag_form,
+			html_tag_input,
+			html_tag_div,
 		} tag;
 		char *command;
 		char *name;
 		char *href;
 		struct widget *w;
+		struct widget *container;
 	} html[10];
 };
 
@@ -302,6 +314,9 @@ struct html_tag_map {
 	{"html",html_tag_html},
 	{"img",html_tag_img},
 	{"script",html_tag_script},
+	{"form",html_tag_form},
+	{"input",html_tag_input},
+	{"div",html_tag_div},
 };
 
 
@@ -639,14 +654,25 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
 {
 	struct point pnt=w->p;
 	gui_internal_background_render(this, w);
+	if (w->state & STATE_EDIT)
+		graphics_draw_rectangle(this->gra, this->highlight_background, &pnt, w->w, w->h);
 	if (w->text) {
+		char *text,startext[strlen(w->text)+1];
+		text=w->text;
+		if (w->flags2 & 1) {
+			int i;
+			for (i = 0 ; i < strlen(text); i++)
+				startext[i]='*';
+			startext[i]='\0';
+			text=startext;
+		}
 		if (w->flags & gravity_right) {
 			pnt.y+=w->h-this->spacing;
 			pnt.x+=w->w-w->textw-this->spacing;
-			graphics_draw_text(this->gra, w->foreground, w->text_background, this->fonts[w->font_idx], w->text, &pnt, 0x10000, 0x0);
+			graphics_draw_text(this->gra, w->foreground, w->text_background, this->fonts[w->font_idx], text, &pnt, 0x10000, 0x0);
 		} else {
 			pnt.y+=w->h-this->spacing;
-			graphics_draw_text(this->gra, w->foreground, w->text_background, this->fonts[w->font_idx], w->text, &pnt, 0x10000, 0x0);
+			graphics_draw_text(this->gra, w->foreground, w->text_background, this->fonts[w->font_idx], text, &pnt, 0x10000, 0x0);
 		}
 	}
 }
@@ -887,6 +913,19 @@ static void gui_internal_highlight(struct gui_priv *this)
 	if (this->current.x > -1 && this->current.y > -1) {
 		menu=g_list_last(this->root.children)->data;
 		found=gui_internal_find_widget(menu, &this->current, STATE_SENSITIVE);
+		if (!found) {
+			found=gui_internal_find_widget(menu, &this->current, STATE_EDITABLE);
+			if (found) {
+				if (this->editable && this->editable != found) {
+					this->editable->state &= ~ STATE_EDIT;
+					gui_internal_widget_render(this, this->editable);
+				}
+				found->state |= STATE_EDIT;
+				gui_internal_widget_render(this, found);
+				this->editable=found;
+				found=NULL;
+			}
+		}
 	}
 	gui_internal_highlight_do(this, found);
 	this->motion_timeout_event=NULL;
@@ -1872,7 +1911,7 @@ gui_internal_cmd_add_bookmark2(struct gui_priv *this, struct widget *wm, void *d
 	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	gui_internal_widget_append(w, we);
 	gui_internal_widget_append(we, wk=gui_internal_label_new(this, name));
-	wk->state |= STATE_EDIT|STATE_CLEAR;
+	wk->state |= STATE_EDIT|STATE_EDITABLE|STATE_CLEAR;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
 	wk->func = gui_internal_cmd_add_bookmark_changed;
@@ -3242,7 +3281,7 @@ gui_internal_search(struct gui_priv *this, char *what, char *type, int flags)
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wr, wl);
 	gui_internal_menu_data(this)->search_list=wl;
-	wk->state |= STATE_EDIT;
+	wk->state |= STATE_EDIT|STATE_EDITABLE;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
 	wk->func = gui_internal_search_changed;
@@ -3581,9 +3620,9 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 	name = attr->u.str;
 
 	// Determine whether the profile is the active one
-	vehicle_get_attr(v, attr_profilename, &profile_attr, NULL);
-	active_profile = profile_attr.u.str;
-	active = strcmp(name, active_profile) == 0;
+	if (vehicle_get_attr(v, attr_profilename, &profile_attr, NULL))
+		active_profile = profile_attr.u.str;
+	active = active_profile != NULL && !strcmp(name, active_profile);
 
 	dbg(0, "Adding vehicle profile %s, active=%s/%i\n", name,
 			active_profile, active);
@@ -3771,14 +3810,134 @@ gui_internal_html_command(struct gui_priv *this, struct widget *w, void *data)
 }
 
 static void
-gui_internal_html_href(struct gui_priv *this, struct widget *w, void *data)
+gui_internal_html_submit_set(struct gui_priv *this, struct widget *w, struct form *form)
 {
-	if (w->command && w->command[0] == '#') {
-		dbg(1,"href=%s\n",w->command);
-		gui_internal_html_menu(this, this->html_text, w->command+1);
+	GList *l;
+	if (w->form == form && w->name) {
+		struct attr *attr=attr_new_from_text(w->name, w->text?w->text:"");	
+		if (attr)
+			gui_set_attr(this->self.u.gui, attr);
+		attr_free(attr);
+	}
+	l=w->children;
+	while (l) {
+		w=l->data;
+		gui_internal_html_submit_set(this, w, form);
+		l=g_list_next(l);
+	}
+	
+}
+
+static void
+gui_internal_html_submit(struct gui_priv *this, struct widget *w, void *data)
+{
+	struct widget *menu;
+	GList *l;
+
+	dbg(1,"enter form %p %s\n",w->form,w->form->onsubmit);
+	l=g_list_last(this->root.children);
+	menu=l->data;
+	graphics_draw_mode(this->gra, draw_mode_begin);
+	gui_internal_highlight_do(this, NULL);
+	gui_internal_menu_render(this);
+	graphics_draw_mode(this->gra, draw_mode_end);
+	gui_internal_html_submit_set(this, menu, w->form);
+	gui_internal_evaluate(this,w->form->onsubmit);
+}
+
+static void
+gui_internal_html_load_href(struct gui_priv *this, char *href, int replace)
+{
+	if (replace)
+		gui_internal_prune_menu_count(this, 1, 0);
+	if (href && href[0] == '#') {
+		dbg(1,"href=%s\n",href);
+		gui_internal_html_menu(this, this->html_text, href+1);
 	}
 }
 
+static void
+gui_internal_html_href(struct gui_priv *this, struct widget *w, void *data)
+{
+	gui_internal_html_load_href(this, w->command, 0);
+}
+
+struct div_flags_map {
+	char *attr;
+	char *val;
+	enum flags flags;
+} div_flags_map[] = {
+	{"gravity","none",gravity_none},
+	{"gravity","left",gravity_left},
+	{"gravity","xcenter",gravity_xcenter},
+	{"gravity","right",gravity_right},
+	{"gravity","top",gravity_top},
+	{"gravity","ycenter",gravity_ycenter},
+	{"gravity","bottom",gravity_bottom},
+	{"gravity","left_top",gravity_left_top},
+	{"gravity","top_center",gravity_top_center},
+	{"gravity","right_top",gravity_right_top},
+	{"gravity","left_center",gravity_left_center},
+	{"gravity","center",gravity_center},
+	{"gravity","right_center",gravity_right_center},
+	{"gravity","left_bottom",gravity_left_bottom},
+	{"gravity","bottom_center",gravity_bottom_center},
+	{"gravity","right_bottom",gravity_right_bottom},
+	{"expand","1",flags_expand},
+	{"fill","1",flags_fill},
+	{"orientation","horizontal",orientation_horizontal},
+	{"orientation","vertical",orientation_vertical},
+	{"orientation","horizontal_vertical",orientation_horizontal_vertical},
+};
+
+static enum flags
+div_flag(const char **names, const char **values, char *name)
+{
+	int i;
+	enum flags ret=0;
+	const char *value=find_attr(names, values, name);
+	if (!value)
+		return ret;
+	for (i = 0 ; i < sizeof(div_flags_map)/sizeof(struct div_flags_map); i++) {
+		if (!strcmp(div_flags_map[i].attr,name) && !strcmp(div_flags_map[i].val,value))
+			ret|=div_flags_map[i].flags;
+	}
+	return ret;
+}
+
+static enum flags
+div_flags(const char **names, const char **values)
+{
+	enum flags flags;
+	flags = div_flag(names, values, "gravity");
+	flags |= div_flag(names, values, "orientation");
+	flags |= div_flag(names, values, "expand");
+	flags |= div_flag(names, values, "fill");
+	return flags;
+}
+
+static struct widget *
+html_image(struct gui_priv *this, const char **names, const char **values)
+{
+	const char *src, *size;
+	struct graphics_image *img=NULL;
+
+	src=find_attr(names, values, "src");
+	if (!src)
+		return NULL;
+	size=find_attr(names, values, "size");
+	if (!size)
+		size="l";
+	if (!strcmp(size,"l"))
+		img=image_new_l(this, src);
+	else if (!strcmp(size,"s"))
+		img=image_new_s(this, src);
+	else if (!strcmp(size,"xs"))
+		img=image_new_xs(this, src);
+	if (!img)
+		return NULL;
+	return gui_internal_image_new(this, img);
+}
 
 static void
 gui_internal_html_start(void *dummy, const char *tag_name, const char **names, const char **values, void *data, void *error)
@@ -3787,7 +3946,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 	int i;
 	enum html_tag tag=html_tag_none;
 	struct html *html=&this->html[this->html_depth];
-	const char *src, *cond;
+	const char *cond, *type;
 
 	if (!strcasecmp(tag_name,"text"))
 		return;
@@ -3822,9 +3981,45 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 			break;
 		case html_tag_img:
 			html->command=find_attr_dup(names, values, "onclick");
-			src=find_attr(names, values, "src");
-			if (src)
-				html->w=gui_internal_image_new(this, image_new_l(this, src));
+			html->w=html_image(this, names, values);
+			break;
+		case html_tag_form:
+			this->form=g_new0(struct form, 1);
+			this->form->onsubmit=find_attr_dup(names, values, "onsubmit");
+			break;
+		case html_tag_input:
+			type=find_attr_dup(names, values, "type");
+			if (!type)
+				break;
+			if (!strcmp(type,"image")) {
+				html->w=html_image(this, names, values);
+				if (html->w) {
+					html->w->state|=STATE_SENSITIVE;
+					html->w->func=gui_internal_html_submit;
+				}
+			}
+			if (!strcmp(type,"text") || !strcmp(type,"password")) {
+				html->w=gui_internal_label_new(this, NULL);
+				html->w->background=this->background;
+			        html->w->flags |= div_flags(names, values);
+				html->w->state|=STATE_EDITABLE;
+				if (!this->editable) {
+					this->editable=html->w;
+					html->w->state|=STATE_EDIT;
+				}
+				this->keyboard_required=1;
+				if (!strcmp(type,"password"))
+					html->w->flags2 |= 1;
+			}
+			if (html->w) {
+				html->w->form=this->form;
+				html->w->name=find_attr_dup(names, values, "name");
+			}
+			break;
+		case html_tag_div:
+			html->w=gui_internal_box_new(this, div_flags(names, values));
+			html->container=this->html_container;
+			this->html_container=html->w;
 			break;
 		default:
 			break;
@@ -3862,8 +4057,14 @@ gui_internal_html_end(void *dummy, const char *tag_name, void *data, void *error
 			html->w->func=gui_internal_html_href;
 		}
 		switch (html->tag) {
+		case html_tag_div:
+			this->html_container=html->container;
 		case html_tag_img:
+		case html_tag_input:
 			gui_internal_widget_append(this->html_container, html->w);
+			break;
+		case html_tag_form:
+			this->form=NULL;
 			break;
 		default:
 			break;
@@ -3903,13 +4104,15 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 	switch (html->tag) {
 	case html_tag_a:
 		if (html->name && len) {
-			this->html_container=gui_internal_menu(this, gettext(text_stripped));
+			this->html_container=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
+			gui_internal_widget_append(gui_internal_menu(this, gettext(text_stripped)), this->html_container);
 			this->html_container->spx=this->spacing*10;
 		}
 		break;
 	case html_tag_h1:
 		if (!this->html_container) {
-			this->html_container=gui_internal_menu(this, gettext(text_stripped));
+			this->html_container=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
+			gui_internal_widget_append(gui_internal_menu(this, gettext(text_stripped)), this->html_container);
 			this->html_container->spx=this->spacing*10;
 		}
 		break;
@@ -3919,6 +4122,11 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 			gui_internal_widget_append(w, html->w);
 			gui_internal_widget_append(w, gui_internal_text_new(this, gettext(text_stripped), gravity_center|orientation_vertical));
 			html->w=w;
+		}
+		break;
+	case html_tag_div:
+		if (len) {
+			gui_internal_widget_append(html->w, gui_internal_text_new(this, gettext(text_stripped), gravity_center|orientation_vertical));
 		}
 		break;
 	case html_tag_script:
@@ -3933,21 +4141,26 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 static void
 gui_internal_html_menu(struct gui_priv *this, const char *document, char *anchor)
 {
+	char *doc=g_strdup(document);
 	graphics_draw_mode(this->gra, draw_mode_begin);
 	this->html_container=NULL;
 	this->html_depth=0;
 	this->html_anchor=anchor;
 	this->html_anchor_found=0;
-	xml_parse_text(document, this, gui_internal_html_start, gui_internal_html_end, gui_internal_html_text);
+	this->form=NULL;
+	this->keyboard_required=0;
+	this->editable=NULL;
+	callback_list_call_attr_2(this->cbl,attr_gui,anchor,&doc);
+	xml_parse_text(doc, this, gui_internal_html_start, gui_internal_html_end, gui_internal_html_text);
+	g_free(doc);
+	if (this->keyboard_required && this->keyboard) {
+		this->html_container->flags=gravity_center|orientation_vertical|flags_expand|flags_fill;
+		gui_internal_widget_append(this->html_container, gui_internal_keyboard(this,2));
+	}
 	gui_internal_menu_render(this);
 	graphics_draw_mode(this->gra, draw_mode_end);
 }
 
-
-static void gui_internal_menu_root(struct gui_priv *this)
-{
-	gui_internal_html_menu(this, this->html_text, "Main Menu");
-}
 
 static void
 gui_internal_enter(struct gui_priv *this, int ignore)
@@ -3970,7 +4183,7 @@ gui_internal_leave(struct gui_priv *this)
 }
 
 static void
-gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
+gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore, char *href)
 {
 	struct transformation *trans;
 	struct coord c;
@@ -4005,15 +4218,26 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore)
 		this->vehicle_valid=1;
 	}
 	// draw menu
-	gui_internal_menu_root(this);
+	gui_internal_html_load_href(this, href?href:"#Main Menu", 0);
 }
 
 static void
-gui_internal_cmd_menu2(struct gui_priv *this)
+gui_internal_cmd_menu2(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
-	if (this->root.children)
+	char *href=NULL;
+	int replace=0;
+	if (in && in[0] && ATTR_IS_STRING(in[0]->type)) {
+		href=in[0]->u.str;
+		if (in[1] && ATTR_IS_INT(in[1]->type)) 	
+			replace=in[1]->u.num;
+	}
+	if (this->root.children) {
+		if (!href)
+			return;
+		gui_internal_html_load_href(this, href, replace);
 		return;
-	gui_internal_cmd_menu(this, NULL, 0);
+	}
+	gui_internal_cmd_menu(this, NULL, 0, href);
 }
 
 
@@ -4059,7 +4283,7 @@ gui_internal_cmd_log(struct gui_priv *this)
 	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	gui_internal_widget_append(w, we);
 	gui_internal_widget_append(we, wk=gui_internal_label_new(this, _("Message")));
-	wk->state |= STATE_EDIT|STATE_CLEAR;
+	wk->state |= STATE_EDIT|STATE_EDITABLE|STATE_CLEAR;
 	wk->background=this->background;
 	wk->flags |= flags_expand|flags_fill;
 	wk->func = gui_internal_cmd_log_changed;
@@ -4146,7 +4370,7 @@ gui_internal_set_attr(struct gui_priv *this, struct attr *attr)
 		return 1;
 	default:
 		dbg(0,"%s\n",attr_to_name(attr->type));
-		return 0;
+		return 1;
 	}
 }
 
@@ -4206,7 +4430,7 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		if (button != 1)
 			return;
 		if (this->menu_on_map_click) {
-			gui_internal_cmd_menu(this, p, 0);
+			gui_internal_cmd_menu(this, p, 0, NULL);
 			return;
 		}
 		if (this->signal_on_map_click) {
@@ -4279,7 +4503,7 @@ static void gui_internal_resize(void *data, int w, int h)
 	if (this->root.children) {
 		if (changed) {
 			gui_internal_prune_menu(this, NULL);
-			gui_internal_menu_root(this);
+			gui_internal_html_load_href(this, "#Main Menu", 0);
 		} else {
 			gui_internal_menu_render(this);
 		}
@@ -4423,7 +4647,7 @@ static void gui_internal_keypress(void *data, char *key)
 			break;
 		case NAVIT_KEY_RETURN:
 		case NAVIT_KEY_MENU:
-			gui_internal_cmd_menu(this, NULL, 0);
+			gui_internal_cmd_menu(this, NULL, 0, NULL);
 			break;
 		}
 		return;

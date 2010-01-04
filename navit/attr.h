@@ -156,6 +156,7 @@ void *attr_data_get(struct attr *attr);
 void attr_data_set(struct attr *attr, void *data);
 void attr_data_set_le(struct attr *attr, void *data);
 void attr_free(struct attr *attr);
+void attr_dup_content(struct attr *src, struct attr *dst);
 struct attr *attr_dup(struct attr *attr);
 void attr_list_free(struct attr **attrs);
 struct attr **attr_list_dup(struct attr **attrs);
