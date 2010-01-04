@@ -504,23 +504,29 @@ attr_free(struct attr *attr)
 	g_free(attr);
 }
 
+void
+attr_dup_content(struct attr *src, struct attr *dst)
+{
+	int size;
+	dst->type=src->type;
+	if (src->type >= attr_type_int_begin && src->type <= attr_type_int_end) 
+		dst->u.num=src->u.num;
+	else if (src->type >= attr_type_object_begin && src->type <= attr_type_object_end) 
+		dst->u.data=src->u.data;
+	else {
+		size=attr_data_size(src);
+		if (size) {
+			dst->u.data=g_malloc(size);
+			memcpy(dst->u.data, src->u.data, size);
+		}
+	}
+}
+
 struct attr *
 attr_dup(struct attr *attr)
 {
-	int size;
 	struct attr *ret=g_new0(struct attr, 1);
-	ret->type=attr->type;
-	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
-		ret->u.num=attr->u.num;
-	else if (attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end) 
-		ret->u.data=attr->u.data;
-	else {
-		size=attr_data_size(attr);
-		if (size) {
-			ret->u.data=g_malloc(size);
-			memcpy(ret->u.data, attr->u.data, size);
-		}
-	}
+	attr_dup_content(attr, ret);
 	return ret;
 }
 

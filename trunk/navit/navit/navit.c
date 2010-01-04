@@ -2327,6 +2327,8 @@ navit_layout_switch(struct navit *n)
     if (navit_get_attr(n,attr_layout,&layout_attr,NULL)!=1) {
 	return; //No layout - nothing to switch
     }
+    if (!n->vehicle)
+	return;
     l=layout_attr.u.layout;
     
     if (l->dayname || l->nightname) {
