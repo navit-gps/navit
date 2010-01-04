@@ -396,10 +396,16 @@ command_call_function(struct context *ctx, struct result *res)
 	} else {
 		if (command_object_get_attr(ctx, &res->attr, attr_callback_list, &cbl)) {
 			int valid;
+			struct attr **out=NULL;
 			dbg(1,"function call %s from %s\n",function, attr_to_name(res->attr.type));
-			callback_list_call_attr_4(cbl.u.callback_list, attr_command, function, list, NULL, &valid);
-		}
-		res->attr.type=attr_none;
+			callback_list_call_attr_4(cbl.u.callback_list, attr_command, function, list, &out, &valid);
+			if (out && out[0]) {
+				attr_dup_content(out[0], &res->attr);
+				attr_list_free(out);
+			} else
+				res->attr.type=attr_none;
+		} else
+			res->attr.type=attr_none;
 	}
 	res->var=NULL;
 	res->varlen=0;
