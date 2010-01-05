@@ -384,7 +384,7 @@ command_call_function(struct context *ctx, struct result *res)
 		res->attr.type=list[0]->type;
 		res->attr.u.str=g_strdup(gettext(list[0]->u.str));	
 		
-	} if (!strncmp(function,"new ",4)) {
+	} else if (!strncmp(function,"new ",4)) {
 		enum attr_type attr_type=attr_from_name(function+4);
 		if (attr_type != attr_none) {
 			struct object_func *func=object_func_lookup(attr_type);
