@@ -1596,8 +1596,11 @@ dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struc
 	dbg(0,"enter %s %s %s\n",opath,command,interface);
 	msg = dbus_message_new_signal(opath, interface, "signal");
 	if (msg) {
-		if (in && in[0]) {
-			encode_attr(msg, in[0]);
+		if (in) {
+			while (*in) {
+				encode_attr(msg, *in);
+				in++;
+			}
 		}
 		dbus_connection_send(connection, msg, &dbus_serial);
 		dbus_connection_flush(connection);

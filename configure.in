@@ -51,6 +51,7 @@ graphics_sdl=yes; graphics_sdl_reason=default
 graphics_win32=no; graphics_win32_reason=default
 speech_android=no; speech_android_reason=default
 speech_cmdline=yes; speech_cmdline_reason=default
+speech_dbus=no; speech_dbus_reason=default
 speech_espeak=no; speech_espeak_reason=default
 speech_speech_dispatcher=yes; speech_speech_dispatcher_reason=default
 vehicle_demo=yes; vehicle_demo_reason=default
@@ -526,11 +527,14 @@ if test "x${binding_dbus}" = "xyes" ; then
 	AC_DEFINE(USE_BINDING_DBUS, 1, [Build with binding dbus])
 	vehicle_gpsd_dbus="yes"
 	vehicle_gpsd_dbus_reason="dbus binding present"
+	speech_dbus="yes"
+	speech_dbus_reason="dbus binding present"
 fi
 AC_SUBST(DBUS_CFLAGS)
 AC_SUBST(DBUS_LIBS)
 AM_CONDITIONAL(BINDING_DBUS, test "x${binding_dbus}" = "xyes")
 AM_CONDITIONAL(VEHICLE_GPSD_DBUS, test "x${vehicle_gpsd_dbus}" = "xyes")
+AM_CONDITIONAL(SPEECH_DBUS, test "x${speech_dbus}" = "xyes")
 AC_ARG_WITH(dbus-service-dir, [ --with-dbus-service-dir   specify where the dbus service dir resides], DBUS_SERVICE_DIR=$withval, DBUS_SERVICE_DIR="$datarootdir/dbus-1/services")
 AC_SUBST(DBUS_SERVICE_DIR)
 
@@ -844,6 +848,7 @@ navit/osd/core/Makefile
 navit/speech/Makefile
 navit/speech/android/Makefile
 navit/speech/cmdline/Makefile
+navit/speech/dbus/Makefile
 navit/speech/espeak/Makefile
 navit/speech/speech_dispatcher/Makefile
 navit/support/Makefile
@@ -951,6 +956,7 @@ echo "  python:            $binding_python ($binding_python_reason)"
 echo "Speech types:"
 echo "  android:           $speech_android ($speech_android_reason)"
 echo "  cmdline:           $speech_cmdline ($speech_cmdline_reason)"
+echo "  dbus:              $speech_dbus ($speech_dbus_reason)"
 echo "  espeak:            $speech_espeak ($speech_espeak_reason)"
 echo "  speech_dispatcher: $speech_speech_dispatcher ($speech_speech_dispatcher_reason)"
 
