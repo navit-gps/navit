@@ -24,7 +24,11 @@
 #ifdef HAVE_GMODULE
 #include <gmodule.h>
 #else
+#ifdef HAVE_API_WIN32_BASE
+#include <windows.h>
+#else
 #include <dlfcn.h>
+#endif
 #endif
 #endif
 #include "plugin.h"
@@ -45,6 +49,42 @@ g_module_supported(void)
 	return 1;
 }
 
+#ifdef HAVE_API_WIN32_BASE
+
+static void *
+g_module_open(char *name, int flags)
+{
+	HINSTANCE handle;
+	int len=MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, name, -1, 0, 0);
+	wchar_t filename[len];
+	MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, name, -1, filename, len) ;
+
+	dbg(0,"%s\n",name);
+	handle = LoadLibraryW (filename);
+	dbg(0,"handle=%p\n",handle);
+	dbg(0,"%d\n",GetLastError ());
+	return handle;
+}
+
+static char *
+g_module_error(void)
+{
+	return NULL;
+}
+
+static int
+g_module_symbol(GModule *handle, char *symbol, gpointer *addr)
+{
+	*addr=GetProcAddress ((HANDLE)handle, symbol);
+	return (*addr != NULL);
+}
+
+static void
+g_module_close(GModule *handle)
+{
+}
+
+#else
 static void *
 g_module_open(char *name, int flags)
 {
@@ -71,7 +111,7 @@ g_module_close(GModule *handle)
 {
 	dlclose(handle);
 }
-
+#endif
 #endif
 #endif
 
