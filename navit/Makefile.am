@@ -107,9 +107,9 @@ endif
 if SUPPORT_WIN32
   navit_LDADD += resource.rsc
 if SUPPORT_WIN32CE
-  navit_LDADD += -lcommctrl
+  navit_LDADD += -lcommctrl -lwinmm
 else
-  navit_LDADD += -lgdi32 -lcomctl32
+  navit_LDADD += -lgdi32 -lcomctl32 -lwinmm
 endif
 
 resource.rsc: $(top_srcdir)/navit/gui/win32/resources/resource.rc
