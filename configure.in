@@ -91,7 +91,6 @@ mingw32)
 	graphics_win32=yes; graphics_win32_reason="host_os is mingw32"
 	speech_espeak=yes; speech_espeak_reason="host_os is mingw32"
 	support_libpng=yes
-	MODULE_LIBADD="-Wl,-lwinmm"
 	;;
 linux*_android)
 	android=yes
