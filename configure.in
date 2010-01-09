@@ -65,6 +65,9 @@ vehicle_iphone=no; vehicle_iphone_reason=default
 vehicle_android=no; vehicle_android_reason=default
 graphics_android=no; graphics_android_reason=default
 
+shared_libnavit=no
+bin_navit=yes
+
 AC_CANONICAL_HOST
 win32=no
 win32ce=no
@@ -88,10 +91,12 @@ mingw32)
 	graphics_win32=yes; graphics_win32_reason="host_os is mingw32"
 	speech_espeak=yes; speech_espeak_reason="host_os is mingw32"
 	support_libpng=yes
-	LIBS="$LIBS -lwinmm"
+	MODULE_LIBADD="-Wl,-lwinmm"
 	;;
 linux*_android)
 	android=yes
+	shared_libnavit=yes
+	bin_navit=no
 	AC_DEFINE(HAVE_API_ANDROID, 1, [Have Android API])
 	echo "void dl_unwind_find_exidx(void) {}" >crt0.c
 	$CC -c crt0.c
@@ -99,7 +104,8 @@ linux*_android)
 	vehicle_android=yes; vehicle_android_reason="host_os is android"
 	graphics_android=yes; graphics_android_reason="host_os is android"
 	speech_android=yes; speech_android_reason="host_os is android"
-	MODULE_LDFLAGS="-Xcompiler -nostdlib"
+	MODULE_LDFLAGS="-module -Xcompiler -nostdlib"
+	MODULE_LIBADD="-llog"
 	NAVIT_MODULE_LDFLAGS="$MODULE_LDFLAGS -L\$(top_builddir)/navit -lnavit"
 	;;
 esac
@@ -122,6 +128,7 @@ fi
 AM_CONDITIONAL(SUPPORT_LIBPNG, [test "x$support_libpng" = "xyes"])
 
 AC_SUBST(MODULE_LDFLAGS)
+AC_SUBST(MODULE_LIBADD)
 AC_SUBST(NAVIT_MODULE_LDFLAGS)
 
 LIBS="$LIBS -lm"
@@ -261,11 +268,17 @@ if test "x${plugins}" = "xyes"; then
 		[],
 		Define to 1 if you have plugins.
 	)
+	if test "x${win32}" = "xyes"; then
+		shared_libnavit=yes
+		NAVIT_MODULE_LDFLAGS="-no-undefined -L\$(top_builddir)/navit -lnavit -L\$(top_builddir)/intl -lintl"
+	fi
 else
 	AC_DISABLE_SHARED
 	AC_ENABLE_STATIC
 fi
 AM_CONDITIONAL(PLUGINS, [test "x$plugins" = "xyes"])
+AM_CONDITIONAL(SHARED_LIBNAVIT, [test "x$shared_libnavit" = "xyes"])
+AM_CONDITIONAL(BIN_NAVIT, [test "x$bin_navit" = "xyes"])
 AC_PROG_LIBTOOL
 
 AM_CONDITIONAL(EVENT_GLIB, [test "x$glib" = "xyes"])
@@ -637,7 +650,7 @@ AC_SUBST(MOFILES)
 AC_SUBST(POFILES)
 AC_SUBST(POIFILES)
 AM_GNU_GETTEXT_VERSION
-AM_GNU_GETTEXT(no-libtool, need-ngettext, \$(top_builddir)/intl/)
+AM_GNU_GETTEXT(use-libtool, need-ngettext, \$(top_builddir)/intl/)
 AC_SUBST(LIBINTL)
 AC_SUBST(LTLIBINTL)
 if test x"$LIBINTL" != "x" ;then

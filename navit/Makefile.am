@@ -24,13 +24,15 @@ endif
 AM_CPPFLAGS = -I$(top_srcdir)/navit/fib-1.1 @NAVIT_CFLAGS@ @ZLIB_CFLAGS@ -DPREFIX=\"@prefix@\" -DLIBDIR=\"@libdir@\" -DMODULE=navit
 BUILT_SOURCES = version.h navit_config.h
 
-if SUPPORT_ANDROID
-  lib_LTLIBRARIES        = libnavit.la
-  libnavit_la_LDFLAGS = -module -avoid-version @MODULE_LDFLAGS@ -Wl,--no-undefined
-  libnavit_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib -llog
-
-else
+if BIN_NAVIT
   bin_PROGRAMS = navit
+endif
+
+if SHARED_LIBNAVIT
+  lib_LTLIBRARIES        = libnavit.la
+  libnavit_la_LDFLAGS = -avoid-version @MODULE_LDFLAGS@ -no-undefined -Wl,--no-undefined
+  libnavit_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib @MODULE_LIBADD@
+else
   noinst_LTLIBRARIES        = libnavit.la
 endif
 
