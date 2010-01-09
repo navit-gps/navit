@@ -51,6 +51,9 @@ g_module_supported(void)
 
 #ifdef HAVE_API_WIN32_BASE
 
+static DWORD last_error;
+static char errormsg[64];
+
 static void *
 g_module_open(char *name, int flags)
 {
@@ -59,29 +62,33 @@ g_module_open(char *name, int flags)
 	wchar_t filename[len];
 	MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, name, -1, filename, len) ;
 
-	dbg(0,"%s\n",name);
 	handle = LoadLibraryW (filename);
-	dbg(0,"handle=%p\n",handle);
-	dbg(0,"%d\n",GetLastError ());
+	if (!handle)
+		last_error=GetLastError();
 	return handle;
 }
 
 static char *
 g_module_error(void)
 {
-	return NULL;
+	sprintf(errormsg,"dll error %d",(int)last_error);
+	return errormsg;
 }
 
 static int
 g_module_symbol(GModule *handle, char *symbol, gpointer *addr)
 {
 	*addr=GetProcAddress ((HANDLE)handle, symbol);
-	return (*addr != NULL);
+	if (*addr)
+		return 1;
+	last_error=GetLastError();
+	return 0;
 }
 
 static void
 g_module_close(GModule *handle)
 {
+	FreeLibrary((HANDLE)handle);
 }
 
 #else
