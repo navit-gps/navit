@@ -107,7 +107,7 @@ endif
 if SUPPORT_WIN32
   navit_LDADD += resource.rsc
 if SUPPORT_WIN32CE
-  navit_LDADD += -lcommctrl -lwinmm
+  navit_LDADD += -lcommctrl
 else
   navit_LDADD += -lgdi32 -lcomctl32 -lwinmm
 endif
