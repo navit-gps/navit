@@ -1774,7 +1774,7 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 			}
 			break;
 		default:
-			dbg(0,"dont know how to draw %d\n", e->type);
+			dbg(0,"don't know how to draw %d\n", e->type);
 		}
 		graphics_gc_destroy(gc);
 		es=g_list_next(es);
