@@ -418,7 +418,7 @@ point_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 			attr->u.num |= AF_SEGMENTED;
 		return 1;
 	default:
-		dlog(1, "Dont know about attribute %d[%04X]=%s yet\n", attr_type,attr_type, attr_to_name(attr_type));
+		dlog(1, "Don't know about attribute %d[%04X]=%s yet\n", attr_type,attr_type, attr_to_name(attr_type));
 	}
 
 	return 0;
@@ -567,7 +567,7 @@ search_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 	case attr_town_streets_item:
 		return 0;
 	default:
-		dlog(1, "Dont know about attribute %d[%04X]=%s yet\n",
+		dlog(1, "Don't know about attribute %d[%04X]=%s yet\n",
 				attr_type,attr_type, attr_to_name(attr_type));
 	}
 

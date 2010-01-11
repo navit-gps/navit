@@ -357,7 +357,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 	}
 	font->size=size;
 #ifdef HAVE_FONTCONFIG
-	dbg(2, " about to search for fonts, prefered = %s\n", fontfamily);
+	dbg(2, " about to search for fonts, preferred = %s\n", fontfamily);
 	family = g_malloc(sizeof(fontfamilies) + sizeof(fontfamily));
 	if (fontfamily) {
 		memcpy(family, &fontfamily, sizeof(fontfamily));
