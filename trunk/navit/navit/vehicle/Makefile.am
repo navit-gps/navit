@@ -1,4 +1,7 @@
 SUBDIRS=
+if VEHICLE_MAEMO
+  SUBDIRS += maemo
+endif
 if VEHICLE_ANDROID
   SUBDIRS += android
 endif
