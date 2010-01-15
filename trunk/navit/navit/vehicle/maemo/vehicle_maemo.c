@@ -47,7 +47,7 @@ static struct vehicle_priv {
 	guint retry_interval;
 	struct callback_list *cbl;
 	struct attr ** attrs;
-	int sats_signal; // satellites_in_view
+	int sats; // satellites_in_view
 	int sats_used; //satellites_in_user
 	int fix_type; //mode
 	struct coord_geo geo; //lattigute&longittude
@@ -63,14 +63,23 @@ static struct vehicle_priv {
 static void vehicle_maemo_callback(LocationGPSDevice *device, gpointer user_data) {
 	struct vehicle_priv *priv=(struct vehicle_priv*)user_data;
 
-	priv->sats_signal=device->satellites_in_view;
+	priv->sats=device->satellites_in_view;
 	priv->sats_used=device->satellites_in_use;
 	callback_list_call_attr_0(priv->cbl, attr_position_sats);
 
-	dbg(1,"Got update with %u/%u satellites\n",priv->sats_used,priv->sats_signal);
+	dbg(1,"Got update with %u/%u satellites\n",priv->sats_used,priv->sats);
 
 	if (device->fix) {
-		priv->fix_type=device->fix->mode;
+		switch(device->fix->mode) {
+		case LOCATION_GPS_DEVICE_MODE_NOT_SEEN:
+		case LOCATION_GPS_DEVICE_MODE_NO_FIX:
+		    priv->fix_type=0;
+		    break;
+		case LOCATION_GPS_DEVICE_MODE_2D:
+		case LOCATION_GPS_DEVICE_MODE_3D:
+		    priv->fix_type=1;
+		    break;
+		}
 
 		if (device->fix->fields & LOCATION_GPS_DEVICE_LATLONG_SET) {
 			priv->geo.lat=device->fix->latitude;
@@ -230,9 +239,9 @@ vehicle_maemo_position_attr_get(struct vehicle_priv *priv,
 		dbg(1,"Attr requested: position_hdop\n");
 		attr->u.numd = &priv->hdop;
 		break;
-	case attr_position_sats_signal:
+	case attr_position_sats:
 		dbg(1,"Attr requested: position_sats_signal\n");
-		attr->u.num = priv->sats_signal;
+		attr->u.num = priv->sats;
 		break;
 	case attr_position_sats_used:
 		dbg(1,"Attr requested: position_sats_used\n");
