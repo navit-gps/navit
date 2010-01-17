@@ -124,7 +124,7 @@ graphics_set_attr_do(struct graphics *gra, struct attr *attr)
 	default:
 		return 0;
 	}
-	gra->colormgmt=(gra->gamma != 655536 || gra->brightness != 65536 || gra->contrast != 65536);
+	gra->colormgmt=(gra->gamma != 65536 || gra->brightness != 0 || gra->contrast != 65536);
 	return 1;
 }
 
