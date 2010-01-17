@@ -1554,6 +1554,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 	if (! gc) {
 		gc=graphics_gc_new(gra);
 		graphics_gc_set_foreground(gc, &e->color);
+		dc->gc=gc;
 	}
 	if (item_type_is_area(dc->type) && (dc->e->type == element_polyline || dc->e->type == element_text))
 		count=limit_count(di->c, count);
