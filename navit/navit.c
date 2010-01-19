@@ -2337,6 +2337,7 @@ navit_layout_switch(struct navit *n)
 	//Check that we aren't calculating too fast
 	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_time_iso8601,&iso8601_attr,NULL)==1) {
 		currTs=iso8601_to_secs(iso8601_attr.u.str);
+		dbg(1,"currTs: %u:%u\n",currTs%86400/3600,((currTs%86400)%3600)/60);
 	}
 	if (currTs-(n->prevTs)<60) {
 	    //We've have to wait a little
@@ -2352,7 +2353,7 @@ navit_layout_switch(struct navit *n)
 		return; //No valid fix yet
 	}
 	
-	//We calculate sunrise anyway, cause it is need both for day and for night
+	//We calculate sunrise anyway, cause it is needed both for day and for night
         if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lat,geo_attr.u.coord_geo->lng,35,1,&trise,&tset)!=0) {
 		//near the pole sun never rises/sets, so we should never switch profiles
 		n->prevTs=currTs;
@@ -2360,7 +2361,7 @@ navit_layout_switch(struct navit *n)
 	    }
 	
         trise_actual=trise;
-	
+	dbg(1,"trise: %u:%u\n",HOURS(trise),MINUTES(trise));
 	if (l->dayname) {
 	
 	    if ((HOURS(trise)*60+MINUTES(trise)==(currTs%86400)/60) || 
@@ -2372,12 +2373,12 @@ navit_layout_switch(struct navit *n)
 	    }
 	}
 	if (l->nightname) {
-	    if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lat,geo_attr.u.coord_geo->lng,-12,0,&trise,&tset)!=0) {
+	    if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lat,geo_attr.u.coord_geo->lng,-24,0,&trise,&tset)!=0) {
 		//near the pole sun never rises/sets, so we should never switch profiles
 		n->prevTs=currTs;
 		return;
 	    }
-	    
+	    dbg(1,"tset: %u:%u\n",HOURS(tset),MINUTES(tset));
 	    if (HOURS(tset)*60+MINUTES(tset)==((currTs%86400)/60)
 		|| (n->prevTs==0 && (((HOURS(tset)*60+MINUTES(tset)<(currTs%86400)/60)) || 
 			((HOURS(trise_actual)*60+MINUTES(trise_actual)>(currTs%86400)/60))))) {
