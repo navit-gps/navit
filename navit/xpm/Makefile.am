@@ -180,18 +180,20 @@ flag_svgs += country_VA.svgz country_VC.svgz country_VE.svgz country_VG.svgz cou
 flag_svgs += country_WF.svgz country_WS.svgz country_YE.svgz country_YT.svgz country_ZA.svgz country_ZM.svgz country_ZW.svgz
 
 if USE_SVG
-   xpm_DATA += $(svgs) $(nav_svgs) $(flag_svgs)
+  xpm_DATA += $(svgs) $(nav_svgs) $(flag_svgs)
 endif
 
 if USE_SVG2PNG
-%.png:$(srcdir)/*.svgz
-	SRCDIR=$(srcdir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
-%.png:$(srcdir)/*.svg
-	SRCDIR=$(srcdir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
-pngs = $(addsuffix .png,$(basename $(svgs)))
-xsize=$(word 1,$(subst x, ,$(scale)))
-ysize=$(word $(words $(scale)),$(subst x, ,$(scale)))
-comma=,
+%.png: $(srcdir)/*.svgz
+	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
+%.png: $(srcdir)/*.svg
+	SRCDIR=$(abs_srcdir) BUILDDIR=$(abs_builddir) $(srcdir)/navit_svg2png "@SVG2PNG@" "$@"
+
+pngs  = $(addsuffix .png,$(basename $(svgs)))
+xsize = $(word 1,$(subst x, ,$(scale)))
+ysize = $(word $(words $(scale)),$(subst x, ,$(scale)))
+comma =,
+
 if USE_SVG2PNG_SCALES
 pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(svgs))))
 endif
