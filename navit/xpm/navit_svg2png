@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/sh
 
 function svgtopng
 {
@@ -10,18 +10,21 @@ function svgtopng
 		$svgtopng --width=$1 --height=$2 --output $4 $3
 		;;
 	*inkscape)
-		$svgtopng --without-gui --export-width=$1 --export-height=$2 --export-png=$4 $3
+		$svgtopng --without-gui --export-width=$1 --export-height=$2 --export-png=$BUILDDIR/$4 $3
 		;;
 	*convert)
 		$svgtopng $3 -resize $1x$2 $4
-		;; 
+		;;
 	esac
 }
 
-ulimit -t 5
+if test "$OSTYPE" != "cygwin" -a "$OSTYPE" != "msys"; then
+	ulimit -t 5
+fi
+
 svgtopng=$1
 png=$2
-if [[ "$png" = *_[1-9]*_[1-9]*.png ]]; 
+if [[ "$png" = *_[1-9]*_[1-9]*.png ]];
 then
         svg=${png%_*_*.png};
 	h=${png##*_}
@@ -35,10 +38,11 @@ if [ ! -f $svg.svg -a ! -f $svg.svgz ]
 then
 	svg="$SRCDIR/$svg"
 fi
-if [ -f $png -a ! -f $svg.svg ]
-then
+if [ -f $png -a ! -f $svg.svg ]; then
+	# width and height seems to be defined as part of the file name
 	touch $png
 else
+	# use width and hight from the svg image
 	if [ -f $svg.svg ]
 	then
 		if [ -z "$w" ]
