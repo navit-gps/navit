@@ -102,8 +102,14 @@ struct displaylist {
 	struct map_rect *mr;
 	struct callback *idle_cb;
 	struct event_idle *idle_ev;
+	unsigned int seq;
 };
 
+
+struct displaylist_icon_cache {
+	unsigned int seq;
+	
+};
 
 static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
 static void graphics_process_selection(struct graphics *gra, struct displaylist *dl);
@@ -1566,52 +1572,21 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
 	switch (e->type) {
 	case element_polygon:
-#if 0
-		{
-			int i;
-			for (i = 0 ; i < count ; i++) {
-				dbg(0,"pa[%d]=%d,%d\n", i, pa[i].x, pa[i].y);
-			}
-		}
-		dbg(0,"element_polygon count=%d\n",count);
-#endif
-#if 1
 		graphics_draw_polygon_clipped(gra, gc, pa, count);
-#endif
 		break;
 	case element_polyline:
-#if 0
-		if (e->u.polyline.width > 1) {
-			graphics_draw_polyline_as_polygon(gra, gc, pa, count, width, 0);
-		} else {
-#else
 		{
-#if 0
-			 if (e->u.polyline.width > 1)
-				     gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
-#else
 			gc->meth.gc_set_linewidth(gc->priv, 1);
-#endif
-
-			
-#endif
 			if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
 				graphics_gc_set_dashes(gc, e->u.polyline.width, 
 						       e->u.polyline.offset,
 						       e->u.polyline.dash_table,
 						       e->u.polyline.dash_num);
-#if 0
-			if (di->label && !strcmp(di->label, "Bahnhofstr.") && di->item.type != type_street_1_city) {
-				dbg(0,"0x%x,0x%x %s\n", di->item.id_hi, di->item.id_lo, item_to_name(di->item.type));
-#endif
 			for (i = 0 ; i < count ; i++) {
 				if (width[i] < 2)
 					width[i]=2;
 			}
 			graphics_draw_polyline_clipped(gra, gc, pa, count, width, 1, e->u.polyline.width > 1);
-#if 0
-			}
-#endif
 		}
 		break;
 	case element_circle:
@@ -1707,77 +1682,42 @@ void
 graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t)
 {
 	GList *es;
-	struct point p;
-	struct coord c;
-#if 0
-	char *label=NULL;
-#endif
-	struct graphics_gc *gc = NULL;
-	struct graphics_image *img;
-	char *path;
+	struct display_context dc;
+	int max_coord=32;
+	char buffer[sizeof(struct displayitem)+max_coord*sizeof(struct coord)];
+	struct displayitem *di=(struct displayitem *)buffer;
 	es=itm->elements;
-	c.x=0;
-	c.y=0;
+	di->item.type=type_none;
+	di->item.id_hi=0;
+	di->item.id_lo=0;
+	di->item.map=NULL;
+	di->label=NULL;
+	di->displayed=0;
+	dc.gra=gra;
+	dc.gc=NULL;
+	dc.img=NULL;
+	dc.pro=projection_screen;
+	dc.mindist=0;
+	dc.trans=t;
+	dc.type=type_none;
+	dc.maxlen=max_coord;
 	while (es) {
 		struct element *e=es->data;
-		int count=e->coord_count;
-		struct point pnt[count+1];
-		if (count)
-			transform(t, projection_screen, e->coord, pnt, count, 0, 0, NULL);
-		else {
-			transform(t, projection_screen, &c, pnt, 1, 0, 0, NULL);
-			count=1;
+		if (e->coord_count) {
+			if (e->coord_count > max_coord) {
+				dbg(0,"maximum number of coords reached: %d > %d\n",e->coord_count,max_coord);
+				di->count=max_coord;
+			} else
+				di->count=e->coord_count;
+			memcpy(di->c, e->coord, di->count*sizeof(struct coord));
+		} else {
+			di->c[0].x=0;
+			di->c[0].y=0;
+			di->count=1;
 		}
-		gc=graphics_gc_new(gra);
-		graphics_gc_set_foreground(gc, &e->color);
-		switch (e->type) {
-		case element_polyline:
-			if (e->u.polyline.width > 1) 
-				gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
-			if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
-				graphics_gc_set_dashes(gc, e->u.polyline.width, 
-						       e->u.polyline.offset,
-				                       e->u.polyline.dash_table,
-				                       e->u.polyline.dash_num);
-			gra->meth.draw_lines(gra->priv, gc->priv, pnt, count);
-			break;
-		case element_polygon:
-			gra->meth.draw_polygon(gra->priv, gc->priv, pnt, count);
-			break;
-		case element_circle:
-			if (e->u.circle.width > 1) 
-				gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
-			gra->meth.draw_circle(gra->priv, gc->priv, &pnt[0], e->u.circle.radius);
-			#if 0
-			// Leftover code,  displayitem_draw is intended to be merged with with graphics_draw_itemgra
-			if (label && e->text_size) {
-				struct graphics_font *font=get_font(gra, e->text_size);
-				p.x=pnt[0].x+3;
-				p.y=pnt[0].y+10;
-				if (font) 
-					gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, font->priv, label, &p, 0x10000, 0);
-				else
-					dbg(0,"Failed to get font with size %d\n",e->text_size);
-			}
-			# endif
-			break;
-		case element_icon:
-			path=graphics_icon_path(e->u.icon.src);	
-			img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
-			g_free(path);
-			if (! img)
-				dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
-			else {
-				p.x=pnt[0].x - img->hot.x;
-				p.y=pnt[0].y - img->hot.y;
-				gra->meth.draw_image(gra->priv, gc->priv, &p, img->priv);
-				graphics_image_free(gra, img);
-			}
-			break;
-		default:
-			dbg(0,"don't know how to draw %d\n", e->type);
-		}
-		graphics_gc_destroy(gc);
+		dc.e=e;
+		displayitem_draw(di, NULL, &dc);
+		display_context_free(&dc);
 		es=g_list_next(es);
 	}
 }
@@ -1795,12 +1735,14 @@ static void xdisplay_draw_layer(struct displaylist *display_list, struct graphic
 
 	itms=lay->itemgras;
 	while (itms) {
-		itm=itms->data;
-		if (order >= itm->order.min && order <= itm->order.max) 
-			xdisplay_draw_elements(gra, display_list, itm);
-		itms=g_list_next(itms);
+	       itm=itms->data;
+	       if (order >= itm->order.min && order <= itm->order.max)
+		       xdisplay_draw_elements(gra, display_list, itm);
+	       itms=g_list_next(itms);
 	}
 }
+
+
 
 /**
  * FIXME
@@ -1951,6 +1893,7 @@ static void graphics_load_mapset(struct graphics *gra, struct displaylist *displ
 	displaylist->dc.trans=trans;
 	displaylist->workload=async ? 100 : 0;
 	displaylist->cb=cb;
+	displaylist->seq++;
 	if (l)
 		order+=l->order_delta;
 	displaylist->order=order;
