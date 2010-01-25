@@ -36,7 +36,9 @@
 
 static struct vehicle_priv {
 	char *source;
+#ifndef HAVE_LIBGPS19
 	char *gpsd_query;
+#endif
 	struct callback_list *cbl;
 	struct callback *cb;
 	struct event_watch *evwatch;
@@ -69,8 +71,12 @@ static struct vehicle_priv {
 static void vehicle_gpsd_io(struct vehicle_priv *priv);
 
 static void
+#ifdef HAVE_LIBGPS19
+vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len)
+#else
 vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		      int level)
+#endif
 {
 	char *pos,*nmea_data_buf;
         int i=0,sats_signal=0;
@@ -108,16 +114,32 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		data->set &= ~ALTITUDE_SET;
 	}
 	if (data->set & SATELLITE_SET) {
+#ifdef HAVE_LIBGPS19
+                if(data->satellites_visible > 0) {
+#else
                 if(data->satellites > 0) {
+#endif
                         sats_signal=0;
+#ifdef HAVE_LIBGPS19
+                        for( i=0;i<data->satellites_visible;i++) {
+#else
                         for( i=0;i<data->satellites;i++) {
+#endif
                                if (data->ss[i] > 0)
                                         sats_signal++;
                         }
                 }
+#ifdef HAVE_LIBGPS19
+		if (priv->sats_used != data->satellites_used || priv->sats != data->satellites_visible || priv->sats_signal != sats_signal ) {
+#else
 		if (priv->sats_used != data->satellites_used || priv->sats != data->satellites || priv->sats_signal != sats_signal ) {
+#endif
 			priv->sats_used = data->satellites_used;
+#ifdef HAVE_LIBGPS19
+			priv->sats = data->satellites_visible;
+#else
 			priv->sats = data->satellites;
+#endif
                         priv->sats_signal = sats_signal;
 			callback_list_call_attr_0(priv->cbl, attr_position_sats);
 		}
@@ -135,10 +157,17 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		priv->fix_time = data->fix.time;
 		data->set &= ~TIME_SET;
 	}
+#ifdef HAVE_LIBGPS19
+	if (data->set & DOP_SET) {
+		dbg(1, "pdop : %g\n", data->dop.pdop);
+		priv->hdop = data->dop.pdop;
+		data->set &= ~DOP_SET;
+#else
 	if (data->set & PDOP_SET) {
 		dbg(1, "pdop : %g\n", data->pdop);
 		priv->hdop = data->hdop;
 		data->set &= ~PDOP_SET;
+#endif
 	}
 	if (data->set & LATLON_SET) {
 		priv->geo.lat = data->fix.latitude;
@@ -180,7 +209,11 @@ vehicle_gpsd_try_open(gpointer *data)
 		dbg(0,"gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?\n", priv->source, priv->retry_interval);
 		return TRUE;
 	}
+#ifdef HAVE_LIBGPS19
+	gps_stream(priv->gps, WATCH_ENABLE, NULL);
+#else
 	gps_query(priv->gps, priv->gpsd_query);
+#endif
 	gps_set_raw_hook(priv->gps, vehicle_gpsd_callback);
 	priv->cb = callback_new_1(callback_cast(vehicle_gpsd_io), priv);
 	priv->evwatch = event_add_watch((void *)priv->gps->gps_fd, event_watch_cond_read, priv->cb);
@@ -268,8 +301,10 @@ vehicle_gpsd_destroy(struct vehicle_priv *priv)
 	vehicle_gpsd_close(priv);
 	if (priv->source)
 		g_free(priv->source);
+#ifndef HAVE_LIBGPS19
 	if (priv->gpsd_query)
 		g_free(priv->gpsd_query);
+#endif
 	g_free(priv);
 }
 
@@ -350,12 +385,17 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 		      *cbl, struct attr **attrs)
 {
 	struct vehicle_priv *ret;
+#ifdef HAVE_LIBGPS19
+	struct attr *source, *retry_int;
+#else
 	struct attr *source, *query, *retry_int;
+#endif
 
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->source = g_strdup(source->u.str);
+#ifndef HAVE_LIBGPS19
 	query = attr_search(attrs, NULL, attr_gpsd_query);
 	if (query) {
 		ret->gpsd_query = g_strconcat(query->u.str, "\n", NULL);
@@ -363,6 +403,7 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 		ret->gpsd_query = g_strdup("w+x\n");
 	}
 	dbg(1,"Format string for gpsd_query: %s\n",ret->gpsd_query);
+#endif
 	retry_int = attr_search(attrs, NULL, attr_retry_interval);
 	if (retry_int) {
 		ret->retry_interval = retry_int->u.num;

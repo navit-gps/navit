@@ -231,7 +231,9 @@ ATTR(description)
 ATTR(gc_type)
 ATTR(layout)
 ATTR(position_nmea)
+#ifndef HAVE_LIBGPS19
 ATTR(gpsd_query)
+#endif
 ATTR(on_eof)
 ATTR(command)
 ATTR(src)
