@@ -20,7 +20,7 @@ noinst_PROGRAMS=gentypes$(EXEEXT)
 gentypes_SOURCES=gentypes.c
 
 gentypes.$(OBJEXT): gentypes.c
-	$(CC_FOR_BUILD) -I$(top_srcdir)/navit -c -o $@ $<
+	$(CC_FOR_BUILD) -I$(top_srcdir)/navit -I$(top_srcdir) -c -o $@ $<
 
 gentypes$(EXEEXT): $(gentypes_OBJECTS) $(gentypes_DEPENDENCIES) 
 	@rm -f gentypes$(EXEEXT)

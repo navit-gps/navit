@@ -25,6 +25,7 @@ extern "C" {
 #endif
 
 #include "projection.h"
+#include "config.h"
 
 enum item_type;
 
