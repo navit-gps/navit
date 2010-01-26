@@ -1242,7 +1242,7 @@ static void
 osd_scale_draw(struct osd_scale *this, struct navit *nav)
 {
 	struct point bp,bp1,bp2;
-	struct point p[6],bbox[4];
+	struct point p[10],bbox[4];
 	struct coord c[2];
 	struct attr transformation;
 	int len;
@@ -1292,9 +1292,17 @@ osd_scale_draw(struct osd_scale *this, struct navit *nav)
 	p[5]=p[1];
 	p[4].y-=this->item.h/10;
 	p[5].y+=this->item.h/10;
-	graphics_draw_lines(this->item.gr, this->item.graphic_fg_white, p, 2);
-	graphics_draw_lines(this->item.gr, this->item.graphic_fg_white, p+2, 2);
-	graphics_draw_lines(this->item.gr, this->item.graphic_fg_white, p+4, 2);
+	p[6]=p[2];
+	p[6].x-=2;
+	p[6].y-=2;
+	p[7]=p[0];
+	p[7].y-=2;
+	p[8]=p[4];
+	p[8].x-=2;
+	p[8].y-=2;
+	graphics_draw_rectangle(this->item.gr, this->item.graphic_fg_white, p+6, 4,this->item.h/5+4);
+	graphics_draw_rectangle(this->item.gr, this->item.graphic_fg_white, p+7, p[1].x-p[0].x, 4);
+	graphics_draw_rectangle(this->item.gr, this->item.graphic_fg_white, p+8, 4,this->item.h/5+4);
 	graphics_draw_lines(this->item.gr, this->black, p, 2);
 	graphics_draw_lines(this->item.gr, this->black, p+2, 2);
 	graphics_draw_lines(this->item.gr, this->black, p+4, 2);
@@ -1325,7 +1333,6 @@ osd_scale_init(struct osd_scale *this, struct navit *nav)
 	}
 	this->black=graphics_gc_new(this->item.gr);
 	graphics_gc_set_foreground(this->black, &COLOR_BLACK);
-	graphics_gc_set_linewidth(this->item.graphic_fg_white, 6);
 	graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_scale_draw), attr_postdraw, this, nav));
 	if (navit_get_ready(nav) == 3)
 		osd_scale_draw(this, nav);
