@@ -2157,20 +2157,18 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 static void
 gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *data)
 {
-	struct widget *w=wm->data;
-	int highlight=(w->data == (void *)2 || w->data == (void *)3 || w->data == (void *)5);
-	if (highlight) {
+	if (wm->item.type != type_none) {
 		enum item_type type;
-		if (w->item.type < type_line)
+		if (wm->item.type < type_line)
 	           	type=type_selected_point;
-		else if (w->item.type < type_area)
+		else if (wm->item.type < type_area)
 	            	type=type_selected_point;
 		else
 			type=type_selected_area;
 		graphics_clear_selection(this->gra, NULL);
-		graphics_add_selection(this->gra, &w->item, type, NULL);
+		graphics_add_selection(this->gra, &wm->item, type, NULL);
 	}
-	navit_set_center(this->nav, &w->c, 1);
+	navit_set_center(this->nav, &wm->c, 1);
 	gui_internal_prune_menu(this, NULL);
 }
 
@@ -2399,9 +2397,14 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 #endif
 	if (flags & 128) {
 		gui_internal_widget_append(w,
-			gui_internal_button_new_with_callback(this, _("View on map"),
+			wbc=gui_internal_button_new_with_callback(this, _("View on map"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
-				gui_internal_cmd_view_on_map, wm));
+				gui_internal_cmd_view_on_map, NULL));
+		wbc->c=pc;
+		if ((flags & 4) && wm) 
+			wbc->item=wm->item;
+		else
+			wbc->item.type=type_none;
 	}
 	if (flags & 256) {
 		int dist=10;
