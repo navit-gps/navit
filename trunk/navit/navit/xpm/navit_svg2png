@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-function svgtopng
+svgtopng()
 {
 	case $svgtopng in
 	*ksvgtopng|*ksvgtopng4)
@@ -18,22 +18,24 @@ function svgtopng
 	esac
 }
 
-if test "$OSTYPE" != "cygwin" -a "$OSTYPE" != "msys"; then
+if [ "$OSTYPE" != "cygwin" -a "$OSTYPE" != "msys" ]; then
 	ulimit -t 5
 fi
 
 svgtopng=$1
 png=$2
-if [[ "$png" = *_[1-9]*_[1-9]*.png ]];
-then
-        svg=${png%_*_*.png};
-	h=${png##*_}
-	w=${png%_$h}
-	h=${h%.png}
-	w=${w##*_}
-else
-	svg=${png%.png}
-fi
+case "$png" in
+	*_[1-9]*_[1-9]*.png)
+		svg=${png%_*_*.png};
+		h=${png##*_}
+		w=${png%_$h}
+		h=${h%.png}
+		w=${w##*_}
+		;;
+	*)
+		svg=${png%.png}
+		;;
+esac
 if [ ! -f $svg.svg -a ! -f $svg.svgz ]
 then
 	svg="$SRCDIR/$svg"
@@ -42,7 +44,7 @@ if [ -f $png -a ! -f $svg.svg ]; then
 	# width and height seems to be defined as part of the file name
 	touch $png
 else
-	# use width and hight from the svg image
+	# use width and height from the svg image
 	if [ -f $svg.svg ]
 	then
 		if [ -z "$w" ]
