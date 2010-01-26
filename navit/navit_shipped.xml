@@ -49,6 +49,7 @@ Map</text></img>
 					<a href='#Settings'><img src='gui_settings'><text>Settings</text></img></a>
 				<a href='#Tools'><img src='gui_tools'><text>Tools</text></img></a>
 				<a href='#Route'><img src='gui_settings'><text>Route</text></img></a>
+                <img src='gui_about'  onclick='about()'><text>About</text></img>
 				</a>
 			<a name='Actions'><text>Actions</text>
 				<img src='gui_bookmark' onclick='bookmarks()'><text>Bookmarks</text></img>
