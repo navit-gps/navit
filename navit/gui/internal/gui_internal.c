@@ -70,6 +70,7 @@
 #include "command.h"
 #include "xmlconfig.h"
 #include "util.h"
+#include "version.h"
 
 struct form {
 	char *onsubmit;
@@ -5605,6 +5606,76 @@ gui_internal_cmd2_locale(struct gui_priv *this, char *function, struct attr **in
 	graphics_draw_mode(this->gra, draw_mode_end);
 }
 
+static void
+gui_internal_cmd2_about(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct widget *menu,*wb,*w;
+	char *text;
+
+	graphics_draw_mode(this->gra, draw_mode_begin);
+	menu=gui_internal_menu(this, _("About Navit"));
+	menu->spx=this->spacing*10;
+	wb=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand);
+	gui_internal_widget_append(menu, wb);
+
+	//Icon
+	gui_internal_widget_append(wb, w=gui_internal_image_new(this, image_new_xs(this, "navit")));
+	w->flags=gravity_top_center|orientation_horizontal|flags_fill;
+
+	//app name
+	text=g_strdup_printf("%s",PACKAGE_NAME);
+	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+	w->flags=gravity_top_center|orientation_horizontal|flags_expand;
+	g_free(text);
+
+	//Version
+	text=g_strdup_printf("%s %s%s%s (svn %s)",PACKAGE_VERSION, strlen(NAVIT_VARIANT)>0 ? "'" : "", NAVIT_VARIANT, strlen(NAVIT_VARIANT)>0 ? "'" : "", SVN_VERSION);
+	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+	w->flags=gravity_top_center|orientation_horizontal|flags_expand;
+	g_free(text);
+
+	//Site
+	text=g_strdup_printf("http://www.navit-project.org/");
+	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+	w->flags=gravity_top_center|orientation_horizontal|flags_expand;
+	g_free(text);
+
+	//Authors
+	text=g_strdup_printf("%s:",_("By"));
+	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+	w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+	g_free(text);
+	text=g_strdup_printf("Martin Schaller");
+	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+	w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+	g_free(text);
+	text=g_strdup_printf("Michael Farmbauer");
+	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+	w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+	g_free(text);
+	text=g_strdup_printf("Alexander Atanasov");
+	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+	w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+	g_free(text);
+	text=g_strdup_printf("Pierre Grandin");
+	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+	w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+	g_free(text);
+
+	//Contributors
+	text=g_strdup_printf("%s",_("And all the Navit Team"));
+	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+	w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+	g_free(text);
+	text=g_strdup_printf("%s",_("members and contributors."));
+	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
+	w->flags=gravity_bottom_center|orientation_horizontal|flags_fill;
+	g_free(text);
+	
+	gui_internal_menu_render(this);
+	graphics_draw_mode(this->gra, draw_mode_end);
+}
+
 
 /**
  * @brief handles the 'next page' table event.
@@ -5808,6 +5879,7 @@ static struct command_table commands[] = {
 	{"town",command_cast(gui_internal_cmd2_town)},
 	{"quit",command_cast(gui_internal_cmd2_quit)},
 	{"write",command_cast(gui_internal_cmd_write)},
+	{"about",command_cast(gui_internal_cmd2_about)},
 };
 
 
