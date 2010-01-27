@@ -793,9 +793,8 @@ then
 			AC_DEFINE([HAVE_LIBGPS19],[],Define to 1 if you have libgps19.)
 		fi
 	else
-		vehicle_gpsd=no; vehicle_gpsd_reason="no libgps"
+		AC_CHECK_HEADER(gps.h, AC_DEFINE([HAVE_LIBGPS],[],Define to 1 if you have the <gps.h> header file.) GPSD_LIBS="-lgps", vehicle_gpsd=no; vehicle_gpsd_reason="no gps.h and no gpsd pkgconfig" )
 	fi
-dnl	AC_CHECK_HEADER(gps.h, AC_DEFINE([HAVE_LIBGPS],[],Define to 1 if you have the <gps.h> header file.) GPSD_LIBS="-lgps", vehicle_gpsd=no; vehicle_gpsd_reason="no gps.h" )
 fi
 AC_SUBST(GPSD_CFLAGS)
 AC_SUBST(GPSD_LIBS)
