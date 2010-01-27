@@ -70,7 +70,8 @@
 #include "command.h"
 #include "xmlconfig.h"
 #include "util.h"
-#include "version.h"
+
+extern char *version;
 
 struct form {
 	char *onsubmit;
@@ -1583,7 +1584,6 @@ gui_internal_top_bar(struct gui_priv *this)
 		l=g_list_next(l);
 	}
 	if (this->flags & 32) {
-		extern char *version;
 		char *version_text=g_strdup_printf("Navit %s",version);
 		wcn=gui_internal_label_new(this, version_text);
 		g_free(version_text);
@@ -5629,7 +5629,7 @@ gui_internal_cmd2_about(struct gui_priv *this, char *function, struct attr **in,
 	g_free(text);
 
 	//Version
-	text=g_strdup_printf("%s %s%s%s (svn %s)",PACKAGE_VERSION, strlen(NAVIT_VARIANT)>0 ? "'" : "", NAVIT_VARIANT, strlen(NAVIT_VARIANT)>0 ? "'" : "", SVN_VERSION);
+	text=g_strdup_printf("%s",version);
 	gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
 	w->flags=gravity_top_center|orientation_horizontal|flags_expand;
 	g_free(text);
