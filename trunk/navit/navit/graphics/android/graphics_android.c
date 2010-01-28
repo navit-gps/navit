@@ -40,6 +40,7 @@ struct graphics_priv {
 	jmethodID Paint_init,Paint_setStrokeWidth,Paint_setARGB;
 
 	jobject NavitGraphics;
+	jobject Paint;
 	
 	jclass BitmapFactoryClass;	
 	jmethodID BitmapFactory_decodeFile, BitmapFactory_decodeResource;
@@ -63,8 +64,10 @@ struct graphics_font_priv {
 };
 
 struct graphics_gc_priv {
-	struct graphics_priv *gra;
-	jobject Paint;
+        struct graphics_priv *gra;
+	int linewidth;
+	enum draw_mode_num mode;
+	int a,r,g,b;
 };
 
 struct graphics_image_priv {
@@ -131,15 +134,13 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 static void
 gc_destroy(struct graphics_gc_priv *gc)
 {
-	(*jnienv)->DeleteGlobalRef(jnienv, gc->Paint);
 	g_free(gc);
 }
 
 static void
 gc_set_linewidth(struct graphics_gc_priv *gc, int w)
 {
-	float wf=w;
-	(*jnienv)->CallVoidMethod(jnienv, gc->Paint, gc->gra->Paint_setStrokeWidth, wf);
+    gc->linewidth = w;
 }
 
 static void
@@ -150,7 +151,10 @@ gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *das
 static void
 gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
-	(*jnienv)->CallVoidMethod(jnienv, gc->Paint, gc->gra->Paint_setARGB, c->a >> 8, c->r >> 8, c->g >> 8, c->b >> 8);
+    gc->r = c->r >> 8;
+    gc->g = c->g >> 8;
+    gc->b = c->b >> 8;
+    gc->a = c->a >> 8;
 }
 
 static void
@@ -171,20 +175,15 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 	struct graphics_gc_priv *ret=g_new0(struct graphics_gc_priv, 1);
 	*meth=gc_methods;
 
-	ret->gra=gr;	
-	ret->Paint=(*jnienv)->NewObject(jnienv, gr->PaintClass, gr->Paint_init);
-	dbg(1,"result=%p\n",ret->Paint);
-	if (ret->Paint) {
-		(*jnienv)->NewGlobalRef(jnienv, ret->Paint);
-		(*jnienv)->DeleteLocalRef(jnienv, ret->Paint);
-	}
+	ret->gra = gr;
+	ret->a = ret->r = ret->g = ret->b = 255;
+	ret->linewidth=1;
 	return ret;
 }
 
 static void image_destroy(struct graphics_image_priv *img)
 {
-	(*jnienv)->DeleteGlobalRef(jnienv, img->Bitmap);
-	g_free(img);
+    // unused?
 }
 
 static struct graphics_image_methods image_methods = {
@@ -240,6 +239,13 @@ image_new(struct graphics_priv *gra, struct graphics_image_methods *meth, char *
 	return ret;
 }
 
+static void initPaint(struct graphics_priv *gra, struct graphics_gc_priv *gc)
+{
+    float wf = gc->linewidth;
+    (*jnienv)->CallVoidMethod(jnienv, gc->gra->Paint, gra->Paint_setStrokeWidth, wf);
+    (*jnienv)->CallVoidMethod(jnienv, gc->gra->Paint, gra->Paint_setARGB, gc->a, gc->r, gc->g, gc->b);
+}
+
 static void
 draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int count)
 {
@@ -253,8 +259,9 @@ draw_lines(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point 
 		pc[i*2]=p[i].x;
 		pc[i*2+1]=p[i].y;
 	}
+	initPaint(gra, gc);
 	(*jnienv)->SetIntArrayRegion(jnienv, points, 0, count*2, pc);
-	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_polyline, gc->Paint, points);
+	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_polyline, gc->gra->Paint, points);
 	(*jnienv)->DeleteLocalRef(jnienv, points);
 }
 
@@ -271,21 +278,24 @@ draw_polygon(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct poin
 		pc[i*2]=p[i].x;
 		pc[i*2+1]=p[i].y;
 	}
+	initPaint(gra, gc);
 	(*jnienv)->SetIntArrayRegion(jnienv, points, 0, count*2, pc);
-	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_polygon, gc->Paint, points);
+	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_polygon, gc->gra->Paint, points);
 	(*jnienv)->DeleteLocalRef(jnienv, points);
 }
 
 static void
 draw_rectangle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_rectangle, gc->Paint, p->x, p->y, w, h);
+        initPaint(gra, gc);
+	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_rectangle, gc->gra->Paint, p->x, p->y, w, h);
 }
 
 static void
 draw_circle(struct graphics_priv *gra, struct graphics_gc_priv *gc, struct point *p, int r)
 {
-	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_circle, gc->Paint, p->x, p->y, r);
+        initPaint(gra, gc);
+	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_circle, gc->gra->Paint, p->x, p->y, r);
 }
 
 
@@ -293,8 +303,9 @@ static void
 draw_text(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
 	dbg(1,"enter %s\n", text);
+	initPaint(gra, fg);
 	jstring string = (*jnienv)->NewStringUTF(jnienv, text);
-	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_text, fg->Paint, p->x, p->y, string, font->size, dx, dy);
+	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_text, fg->gra->Paint, p->x, p->y, string, font->size, dx, dy);
 	(*jnienv)->DeleteLocalRef(jnienv, string);
 }
 
@@ -302,7 +313,8 @@ static void
 draw_image(struct graphics_priv *gra, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
 {
 	dbg(1,"enter %p\n",img);
-	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_image, fg->Paint, p->x, p->y, img->Bitmap);
+	initPaint(gra, fg);
+	(*jnienv)->CallVoidMethod(jnienv, gra->NavitGraphics, gra->NavitGraphics_draw_image, fg->gra->Paint, p->x, p->y, img->Bitmap);
 	
 }
 
@@ -344,6 +356,8 @@ get_data(struct graphics_priv *this, char *type)
 
 static void image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 {
+    (*jnienv)->DeleteGlobalRef(jnienv, priv->Bitmap);
+    g_free(priv);
 }
 
 static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)
@@ -525,6 +539,13 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 	dbg(0,"result=%p\n",ret->NavitGraphics);
 	if (ret->NavitGraphics)
 		(*jnienv)->NewGlobalRef(jnienv, ret->NavitGraphics);
+
+	/* Create a single global Paint, otherwise android will quickly run out
+	 * of global refs.*/
+	ret->Paint=(*jnienv)->NewObject(jnienv, ret->PaintClass, ret->Paint_init);
+	dbg(0,"result=%p\n",ret->Paint);
+	if (ret->Paint)
+		(*jnienv)->NewGlobalRef(jnienv, ret->Paint);
 
 	cid = (*jnienv)->GetMethodID(jnienv, ret->NavitGraphicsClass, "setSizeChangedCallback", "(I)V");
 	if (cid == NULL) {
