@@ -106,7 +106,7 @@ linux*_android)
 	speech_android=yes; speech_android_reason="host_os is android"
 	MODULE_LDFLAGS="-module -Xcompiler -nostdlib"
 	MODULE_LIBADD="-llog"
-	NAVIT_MODULE_LDFLAGS="$MODULE_LDFLAGS -L\$(top_builddir)/navit -lnavit"
+	NAVIT_MODULE_LDFLAGS="$MODULE_LDFLAGS"
 	;;
 esac
 if test "x$win32" = "xyes"
@@ -650,7 +650,7 @@ AC_SUBST(MOFILES)
 AC_SUBST(POFILES)
 AC_SUBST(POIFILES)
 AM_GNU_GETTEXT_VERSION
-AM_GNU_GETTEXT(use-libtool, need-ngettext, \$(top_builddir)/intl/)
+AM_GNU_GETTEXT(no-libtool, need-ngettext, \$(top_builddir)/intl/)
 AC_SUBST(LIBINTL)
 AC_SUBST(LTLIBINTL)
 if test x"$LIBINTL" != "x" ;then
