@@ -491,7 +491,7 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 	dbg(0,"at 2 jnienv=%p\n",jnienv);
 	if (!find_class_global("android/graphics/Paint", &ret->PaintClass))
 		return 0;
-	if (!find_method(ret->PaintClass, "<init>", "()V", &ret->Paint_init))
+	if (!find_method(ret->PaintClass, "<init>", "(I)V", &ret->Paint_init))
 		return 0;
 	if (!find_method(ret->PaintClass, "setARGB", "(IIII)V", &ret->Paint_setARGB))
 		return 0;
@@ -542,7 +542,9 @@ graphics_android_init(struct graphics_priv *ret, struct graphics_priv *parent, s
 
 	/* Create a single global Paint, otherwise android will quickly run out
 	 * of global refs.*/
-	ret->Paint=(*jnienv)->NewObject(jnienv, ret->PaintClass, ret->Paint_init);
+	/* 0x101 = text kerning (default), antialiasing */
+	ret->Paint=(*jnienv)->NewObject(jnienv, ret->PaintClass, ret->Paint_init, 0x101);
+
 	dbg(0,"result=%p\n",ret->Paint);
 	if (ret->Paint)
 		(*jnienv)->NewGlobalRef(jnienv, ret->Paint);
