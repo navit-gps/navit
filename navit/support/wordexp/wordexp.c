@@ -83,7 +83,7 @@ int
 wordexp(const char *words, wordexp_t *we, int flags)
 {	
 	int     i;
-	int     error;	
+	int     error = 0;
 	char   *words_expanded;
 #ifdef HAVE_API_WIN32_BASE
 	glob_t  pglob;
@@ -94,7 +94,6 @@ wordexp(const char *words, wordexp_t *we, int flags)
  
 	/* expansion of ´$NAME´ or ´${NAME}´ */
 	words_expanded=expand_variables(words);
-
 #ifdef HAVE_API_WIN32_BASE
 	/* expansion of ´*´, ´?´ */
 	error=glob(words_expanded, 0, NULL, &pglob);
