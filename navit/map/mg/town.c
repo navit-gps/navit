@@ -105,7 +105,8 @@ town_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		twn->attr_next=attr_none;
 		return 1;
 	default:
-		dbg_assert(1==0);
+                dbg(1, "Don't know about attribute %d[%04X]=%s yet\n",
+			attr_type, attr_type, attr_to_name(attr_type));
 		return 0;
 	}
 	return 1;
