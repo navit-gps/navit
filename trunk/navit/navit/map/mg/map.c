@@ -307,6 +307,10 @@ map_rect_get_item_byid_mg(struct map_rect_priv *mr, int id_hi, int id_lo)
 		if (street_get_byid(mr, &mr->street, id_hi, id_lo, &mr->item))
 			return &mr->item;
 		break;
+	case file_strname_stn:
+		if (street_name_get_byid(mr, &mr->street, id_hi, id_lo, &mr->item))
+			return &mr->item;
+		break;
 	default:	
 		if (poly_get_byid(mr, &mr->poly, id_hi, id_lo, &mr->item))
 			return &mr->item;
