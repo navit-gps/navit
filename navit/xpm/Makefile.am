@@ -194,26 +194,31 @@ xsize = $(word 1,$(subst x, ,$(scale)))
 ysize = $(word $(words $(scale)),$(subst x, ,$(scale)))
 comma =,
 
+# png images of the user interface and other, sizes e.g. "8,16,32,48,96"
 if USE_SVG2PNG_SCALES
 pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(svgs))))
 endif
+# png state flags
 if USE_SVG2PNG_SCALES_FLAG
 pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_FLAG@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(flag_svgs))))
 endif
+# png symbols for navigation
 if USE_SVG2PNG_SCALES_NAV
 pngs += $(foreach scale, $(subst $(comma), ,@SVG2PNG_SCALES_NAV@), $(addsuffix _$(xsize)_$(ysize).png,$(basename $(nav_svgs))))
 endif
 xpm_DATA += $(pngs)
 endif
 
-DESKTOPFILEdir=$(datadir)/applications
-DESKTOPFILE_DATA = desktop_icons/navit.desktop
+if !SUPPORT_WIN32
+  DESKTOPFILEdir=$(datadir)/applications
+  DESKTOPFILE_DATA = desktop_icons/navit.desktop
 
-ICON128dir=$(datadir)/icons/hicolor/128x128/apps
-ICON128_DATA = desktop_icons/128x128/navit.png
+  ICON128dir=$(datadir)/icons/hicolor/128x128/apps
+  ICON128_DATA = desktop_icons/128x128/navit.png
 
-ICON22dir=$(datadir)/icons/hicolor/22x22/apps
-ICON22_DATA = desktop_icons/22x22/navit.png
+  ICON22dir=$(datadir)/icons/hicolor/22x22/apps
+  ICON22_DATA = desktop_icons/22x22/navit.png
+endif
 
 EXTRA_DIST = $(xpm_DATA) $(DESKTOPFILE_DATA) $(ICON128_DATA) $(ICON22_DATA) navit_svg2png
 #burgerking.ico:
