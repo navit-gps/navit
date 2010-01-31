@@ -168,7 +168,8 @@ BGD_DECLARE(gdImagePtr) gdImageCreateFromXpm (char *filename)
 
 struct graphics_priv {
 	gdImagePtr im;
-	int w,h,flags;
+	int w,h,flags,alpha,overlay;
+	struct point p;
 	struct callback *cb;
 	struct callback_list *cbl;
 	struct navit *nav;
@@ -176,6 +177,7 @@ struct graphics_priv {
 	struct font_freetype_methods freetype_methods;
 	struct window window;
 	struct graphics_data_image image;
+	struct graphics_priv *next,*overlays;
 };
 
 struct graphics_gc_priv {
@@ -406,6 +408,18 @@ draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
 }
 
 static void
+draw_drag(struct graphics_priv *gr, struct point *p)
+{
+	if (p)
+		gr->p=*p;
+	else {
+		gr->p.x=0;
+		gr->p.y=0;
+	}
+}
+
+
+static void
 background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
 {
 	gr->background=gc;
@@ -434,14 +448,26 @@ static void *
 get_data(struct graphics_priv *this, char *type)
 {
 	int b;
-	 struct point p;
+	struct point p;
+  	gdImagePtr im = this->im;
 	dbg(1,"type=%s\n",type);
 	if (!strcmp(type,"window"))
 		return &this->window;
 	if (!strcmp(type,"image_png")) {
+		if (this->overlays) {
+			struct graphics_priv *overlay=this->overlays;
+			im=gdImageCreateTrueColor(this->w,this->h);
+			gdImageCopy(im, this->im, 0, 0, 0, 0, this->w, this->h);
+			while (overlay) {
+				gdImageCopy(im, overlay->im, overlay->p.x, overlay->p.y, 0, 0, overlay->w, overlay->h);
+				overlay=overlay->next;
+			}
+		}
 		if (this->image.data)
 			gdFree(this->image.data);
-		this->image.data=gdImagePngPtr(this->im, &this->image.size);
+		this->image.data=gdImagePngPtr(im, &this->image.size);
+		if (this->overlays)
+			gdImageDestroy(im);
 		return &this->image;
 	}
 	if (sscanf(type,"click_%d_%d_%d",&p.x,&p.y,&b) == 3) {
@@ -468,6 +494,13 @@ overlay_disable(struct graphics_priv *gr, int disable)
 {
 	dbg(0,"enter\n");
 }
+
+static void
+overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int alpha, int wraparound)
+{
+	dbg(0,"enter\n");
+}
+
 
 static int
 set_attr_do(struct graphics_priv *gr, struct attr *attr, int init)
@@ -522,7 +555,7 @@ static struct graphics_methods graphics_methods = {
 	draw_image,
 	draw_image_warp,
 	draw_restore,
-	NULL,
+	draw_drag,
 	NULL,
 	gc_new,
 	background_gc,
@@ -532,15 +565,34 @@ static struct graphics_methods graphics_methods = {
 	image_free,
 	NULL,
 	overlay_disable,
-	NULL,
+	overlay_resize,
 	set_attr,
 };
 
 static struct graphics_priv *
 overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha)
 {
+	struct font_priv * (*font_freetype_new)(void *meth);
+	struct graphics_priv *ret;
+
+	dbg(0,"enter\n");
+	ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
-	return NULL;
+        font_freetype_new=plugin_get_font_type("freetype");
+        if (!font_freetype_new)
+                return NULL;
+        font_freetype_new(&ret->freetype_methods);
+	ret->p=*p;
+	ret->w=w;
+	ret->h=h;
+	ret->alpha=alpha;
+	ret->overlay=1;
+	ret->flags=1;
+	ret->im=gdImageCreateTrueColor(ret->w,ret->h);
+	ret->next=gr->overlays;
+	gr->overlays=ret;
+
+	return ret;
 }
 
 static void
@@ -556,7 +608,7 @@ graphics_gd_new(struct navit *nav, struct graphics_methods *meth, struct attr **
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct graphics_priv *ret;
 	struct attr *attr;
-	event_request_system("glib","graphics_gtk_drawing_area_new");
+	event_request_system("glib","graphics_gd_new");
         font_freetype_new=plugin_get_font_type("freetype");
         if (!font_freetype_new)
                 return NULL;
