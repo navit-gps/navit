@@ -29,10 +29,10 @@
 		[-]0xX [-]0xX -->
 
 	<navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="-1" recent_dest="10">
-		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. For cegui, use opengl -->
+		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. -->
 		<graphics type="gtk_drawing_area"/>
 		<!-- The following line let you select which graphical user interface you'd like to use.
-		Options include internal (optimized for touch screen devices), gtk (useful for desktop computers) and cegui.
+		Options include internal (optimized for touch screen devices), gtk (useful for desktop computers).
 		If you don't like the internal gui, set enabled=yes for the following tag and enabled=no for the gui internal tag -->
 		<gui type="gtk" enabled="no" menubar="1" toolbar="1" statusbar="1"/>
 	<!--
