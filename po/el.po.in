@@ -8,14 +8,13 @@ msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-12-20 19:51+0100\n"
-"PO-Revision-Date: 2010-01-09 00:44+0000\n"
-"Last-Translator: alichani <alichani@yahoo.co.uk>\n"
+"PO-Revision-Date: 2010-01-28 17:33+0000\n"
+"Last-Translator: aitolos <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-01-18 09:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -31,7 +30,7 @@ msgstr "ρύθμιση '% s' στο'% s'\n"
 
 #: ../navit/navigation.c:245
 msgid "zeroth"
-msgstr ""
+msgstr "τρέχουσα"
 
 #: ../navit/navigation.c:247
 msgid "first"
@@ -141,7 +140,7 @@ msgstr "στη ράμπα"
 #: ../navit/navigation.c:1306
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr "% s στο δρόμο% s% s% s"
+msgstr "%s στην οδό %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #: ../navit/navigation.c:1310
@@ -165,7 +164,7 @@ msgstr "%sστο %s%s%s|neutral form"
 #: ../navit/navigation.c:1325
 #, c-format
 msgid "%sinto the %s"
-msgstr "%s στο %s"
+msgstr "%s στην %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 #: ../navit/navigation.c:1346
@@ -180,7 +179,7 @@ msgstr "αριστερά"
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1392
 msgid "easily "
-msgstr "εύκολα "
+msgstr "ελαφρά "
 
 #. TRANSLATORS: Don't forget the ending space
 #: ../navit/navigation.c:1397
@@ -199,7 +198,7 @@ msgstr "άγνωστο "
 
 #: ../navit/navigation.c:1411
 msgid "When possible, please turn around"
-msgstr "Όταν είναι δυνατόν, παρακαλείσθε να γυρίσεις"
+msgstr "Όταν είναι δυνατόν, κάνε αναστροφή"
 
 #: ../navit/navigation.c:1421
 msgid "Enter the roundabout soon"
@@ -209,22 +208,22 @@ msgstr "Πληκτρολογήστε το συντομότερο κυκλική"
 #: ../navit/navigation.c:1425
 #, c-format
 msgid "In %s, enter the roundabout"
-msgstr "Σε% s, πληκτρολογήστε την κυκλική"
+msgstr "Σε %s, μπες σε κυκλική πορεία"
 
 #: ../navit/navigation.c:1440
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr "Αφήστε την κυκλική στο% s"
+msgstr "Εξοδος απο την κυκλική πορεία στην %s"
 
 #: ../navit/navigation.c:1443
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr "κατόπιν άδειας κυκλική στο %s"
+msgstr "και βγείτε απο την κυκλική πορεία στην %s"
 
 #: ../navit/navigation.c:1453
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Ακολουθήστε το δρόμο για το επόμενο %s"
+msgstr "Ακολουθήστε το δρόμο για τα επόμενα %s"
 
 #: ../navit/navigation.c:1457
 msgid "soon"
@@ -248,7 +247,7 @@ msgstr "τώρα"
 #: ../navit/navigation.c:1481
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr "Στη συνέχεια λαμβάνουν το %1$s δρόμο για το %2$s"
+msgstr "στη συνέχεια πάρτε το %1$s δρόμο για το %2$s"
 
 #: ../navit/navigation.c:1492
 msgid "error"
@@ -264,7 +263,7 @@ msgstr "Στρίψτε %1$s%2$s %3$s%4$s"
 #: ../navit/navigation.c:1526
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "στρίβετε %1$s%2$s %3$s%4$s"
+msgstr "και στρίψτε %1$s%2$s %3$s%4$s"
 
 #: ../navit/navigation.c:1531
 #, c-format
@@ -297,19 +296,19 @@ msgstr "μ"
 
 #: ../navit/navit.c:1236
 msgid "Time"
-msgstr "Ώρα"
+msgstr "Χρόνος"
 
 #: ../navit/navit.c:1248
 msgid "Destination Length"
-msgstr "Προορισμός Μήκος"
+msgstr "Απόσταση Προορισμού"
 
 #: ../navit/navit.c:1261
 msgid "Destination Time"
-msgstr "Προορισμός Ώρα"
+msgstr "Χρόνος που απομένει"
 
 #: ../navit/navit.c:1294 ../navit/gui/gtk/gui_gtk_action.c:225
 msgid "Roadbook"
-msgstr ""
+msgstr "Οδηγίες Διαδρομής"
 
 #: ../navit/popup.c:280 ../navit/popup.c:349
 #: ../navit/gui/internal/gui_internal.c:2336
@@ -469,7 +468,7 @@ msgstr "Μπενίν"
 #. 652
 #: ../navit/country.c:65
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "Αγιος Βαρθολομαίος"
 
 #. 060
 #: ../navit/country.c:66
@@ -869,7 +868,7 @@ msgstr "Ιράκ"
 #. 364
 #: ../navit/country.c:145
 msgid "Iran, Islamic Republic of"
-msgstr "Ιράν, Ισλαμική Δημοκρατία του"
+msgstr "Ισλαμική Δημοκρατία του Ιράν"
 
 #. 352
 #: ../navit/country.c:146
@@ -1229,7 +1228,7 @@ msgstr "Πολωνία"
 #. 666
 #: ../navit/country.c:217
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "Σεν Πιερ και Μικελόν"
 
 #. 612
 #: ../navit/country.c:218
@@ -1269,7 +1268,7 @@ msgstr "Κατάρ"
 #. 638
 #: ../navit/country.c:225
 msgid "Reunion"
-msgstr ""
+msgstr "Ρεουνιόν"
 
 #. 642
 #: ../navit/country.c:226
@@ -1334,7 +1333,7 @@ msgstr "Σλοβενία"
 #. 744
 #: ../navit/country.c:238
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "Νήσοι Σβάλμπαρντ και Γιαν Μάγιεν"
 
 #. 703
 #: ../navit/country.c:239
@@ -1349,7 +1348,7 @@ msgstr "Σιέρα Λεόνε"
 #. 674
 #: ../navit/country.c:241
 msgid "San Marino"
-msgstr ""
+msgstr "Άγιος Μαρίνος"
 
 #. 686
 #: ../navit/country.c:242
@@ -1364,12 +1363,12 @@ msgstr "Σομαλία"
 #. 740
 #: ../navit/country.c:244
 msgid "Suriname"
-msgstr ""
+msgstr "Σουρινάμ"
 
 #. 678
 #: ../navit/country.c:245
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "Sao Tome και Principe"
 
 #. 222
 #: ../navit/country.c:246
@@ -1389,7 +1388,7 @@ msgstr "Σουαζιλάνδη"
 #. 796
 #: ../navit/country.c:249
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "Νήσοι Τούρκς και Καΐκος"
 
 #. 148
 #: ../navit/country.c:250
@@ -1399,7 +1398,7 @@ msgstr "Τσαντ"
 #. 260
 #: ../navit/country.c:251
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Γαλλικές Νότιες Περιοχές"
 
 #. 768
 #: ../navit/country.c:252
@@ -1479,7 +1478,7 @@ msgstr "Ουγκάντα"
 #. 581
 #: ../navit/country.c:267
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "Απομακρυσμένες Νησίδες των Ηνωμένων Πολιτειών"
 
 #. 840
 #: ../navit/country.c:268
@@ -1534,7 +1533,7 @@ msgstr "Βανουάτου"
 #. 876
 #: ../navit/country.c:278
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "Νήσοι Γουόλις και Φουτούνα"
 
 #. 882
 #: ../navit/country.c:279
@@ -1687,7 +1686,7 @@ msgstr "Μεγέθυνση"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:206
 msgid "Recalculate"
-msgstr "Επανάληψη υπολογισμού"
+msgstr "Επαναϋπολογισμός"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:208 ../navit/gui/gtk/gui_gtk_action.c:210
 msgid "Info"
@@ -1716,7 +1715,7 @@ msgstr "Κλείδωμα στο δρόμο"
 #: ../navit/gui/gtk/gui_gtk_action.c:224
 #: ../navit/gui/internal/gui_internal.c:3708
 msgid "Northing"
-msgstr ""
+msgstr "Χάρτης στο βορρά"
 
 #: ../navit/gui/gtk/gui_gtk_action.c:226
 msgid "Autozoom"
@@ -1785,16 +1784,16 @@ msgstr "3Δ"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:78
 msgid "OT"
-msgstr ""
+msgstr "ΟΤ"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "Διαδρομή %4.0fχλμ Χρόνος που απομένει %02d:%02d"
 
 #: ../navit/gui/gtk/gui_gtk_statusbar.c:164
 msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
+msgstr "Διαδρομή 0000χλμ Χρόνος που απομένει 0+00:00"
 
 #: ../navit/gui/internal/gui_internal.c:1464
 msgid "Back to map"
@@ -1858,7 +1857,7 @@ msgstr "Χάρτες"
 
 #: ../navit/gui/internal/gui_internal.c:3425
 msgid "Show Satellite Status"
-msgstr "Δείτε Δορυφορική"
+msgstr "Εμφάνιση Κατάστασης Δορυφόρων"
 
 #: ../navit/gui/internal/gui_internal.c:3432
 msgid " PRN "
@@ -1874,11 +1873,11 @@ msgstr " Αζιμούθιο "
 
 #: ../navit/gui/internal/gui_internal.c:3435
 msgid " SNR "
-msgstr ""
+msgstr " SNR "
 
 #: ../navit/gui/internal/gui_internal.c:3459
 msgid "Show NMEA Data"
-msgstr "Δείτε NEAM"
+msgstr "Εμφάνιση Δεδομένων ΝΜΕΑ"
 
 #: ../navit/gui/internal/gui_internal.c:3576 ../navit/navit_shipped.glade:115
 msgid "car"
@@ -1890,7 +1889,7 @@ msgstr "ποδήλατο"
 
 #: ../navit/gui/internal/gui_internal.c:3576 ../navit/navit_shipped.glade:241
 msgid "pedestrian"
-msgstr "πεζών"
+msgstr "Πεζός"
 
 #: ../navit/gui/internal/gui_internal.c:3593
 #, c-format
@@ -1900,19 +1899,19 @@ msgstr "Τρέχον προφίλ: %s"
 #: ../navit/gui/internal/gui_internal.c:3595
 #, c-format
 msgid "Change profile to: %s"
-msgstr "Αλλαγή προφίλ για να %s"
+msgstr "Αλλαγή προφίλ σε: %s"
 
 #: ../navit/gui/internal/gui_internal.c:3630
 msgid "Set as active"
-msgstr "που ως δραστικές"
+msgstr "Καθορισμός ως ενεργό"
 
 #: ../navit/gui/internal/gui_internal.c:3637
 msgid "Show Satellite status"
-msgstr "Δείτε Δορυφορική καθεστώς"
+msgstr "Εμφάνιση Κατάστασης Δορυφόρων"
 
 #: ../navit/gui/internal/gui_internal.c:3643
 msgid "Show NMEA data"
-msgstr "NMEA δεδομένα δείχνουν"
+msgstr "Εμφάνιση δεδομένων ΝΜΕΑ"
 
 #: ../navit/gui/internal/gui_internal.c:3694 ../navit/navit_shipped.glade:66
 msgid "Rules"
@@ -1920,7 +1919,7 @@ msgstr "Κανόνες"
 
 #: ../navit/gui/internal/gui_internal.c:3702
 msgid "Lock on road"
-msgstr "Κλείδωμα για τα τροχαία"
+msgstr "Κλείδωμα στο δρόμο"
 
 #: ../navit/gui/internal/gui_internal.c:3714
 msgid "Map follows Vehicle"
@@ -1940,7 +1939,7 @@ msgstr "Ύψος προφίλ"
 
 #: ../navit/gui/internal/gui_internal.c:5349 ../navit/navit_shipped.glade:76
 msgid "Show Locale"
-msgstr ""
+msgstr "Eμφάνιση Εντοπιότητας"
 
 #: ../navit/navit_shipped.glade:45
 msgid "Main menu"
@@ -1950,7 +1949,9 @@ msgstr "Κύριο Μενού"
 msgid ""
 "Show\n"
 "Map"
-msgstr "Παρουσίαση χάρτη"
+msgstr ""
+"Εμφάνιση\n"
+"Χάρτη"
 
 #: ../navit/navit_shipped.glade:49 ../navit/navit_shipped.glade:62
 msgid "Settings"
