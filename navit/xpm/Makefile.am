@@ -67,7 +67,8 @@ xpm_DATA += menu.xpm
 xpm_DATA += school.xpm
 xpm_DATA += public_office.xpm
 
-svgs  = gui_actions.svg
+svgs  = gui_about.svg
+svgs += gui_actions.svg
 svgs += gui_active.svg
 svgs += gui_bookmark.svg
 svgs += gui_display.svg
