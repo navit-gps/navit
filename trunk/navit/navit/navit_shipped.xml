@@ -3282,6 +3282,8 @@ Navigation</text></img>
 				</itemgra>
 			</cursor>
 
+			<xi:include xpointer="xpointer(/config/navit/layout[@name='Car']/layer[@name='POI Symbols'])"/>
+			<!-- <xi:include xpointer="xpointer(/config/navit/layout[@name='Car']/layer[@name='POI Labels'])"/> -->
 			<layer name="Landuse">
 				<itemgra item_types="image" order="0-">
 					<image/>
@@ -4083,8 +4085,6 @@ Navigation</text></img>
 					<text text_size="9"/>
 				</itemgra>
 			</layer>
-			<xi:include xpointer="xpointer(/config/navit/layout[@name='Car']/layer[@name='POI Symbols'])"/>
-			<!-- <xi:include xpointer="xpointer(/config/navit/layout[@name='Car']/layer[@name='POI Labels'])"/> -->
 			<layer name="Unknown Elements">
 				<!-- This entry shows all unknown linear elements as blue lines -->
 				<!--
