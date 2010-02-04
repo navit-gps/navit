@@ -45,6 +45,7 @@ struct vehicle {
 	struct vehicle_priv *priv;
 	struct callback_list *cbl;
 	struct log *nmea_log, *gpx_log;
+	char *gpx_desc;
 	struct attr **attrs;
 
 	// cursor
@@ -182,6 +183,10 @@ vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, 
 		if (ret)
 			return ret;
 	}
+	if (type == attr_log_gpx_desc) {
+		attr->u.str = this_->gpx_desc;
+		return 1;
+	}
 	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
@@ -198,6 +203,10 @@ vehicle_set_attr(struct vehicle *this_, struct attr *attr)
 	int ret=1;
 	if (this_->meth.set_attr)
 		ret=this_->meth.set_attr(this_->priv, attr);
+	if (ret == 1 && attr->type == attr_log_gpx_desc) {
+		g_free(this_->gpx_desc);
+		this_->gpx_desc = attr->u.str;
+	}
 	if (ret == 1 && attr->type != attr_navit)
 		this_->attrs=attr_generic_set_attr(this_->attrs, attr);
 	return ret != 0;
@@ -445,6 +454,11 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 			logstr=g_strconcat_printf(logstr,"\t<time>%s</time>\n",timep);
 			g_free(timep);
 		}
+	}
+	if (this_->gpx_desc) {
+		logstr=g_strconcat_printf(logstr,"\t<desc>%s</desc>\n",this_->gpx_desc);
+		g_free(this_->gpx_desc);
+		this_->gpx_desc = NULL;
 	}
 	if (attr_types_contains_default(attr_types, attr_position_direction,0) && this_->meth.position_attr_get(this_->priv, attr_position_direction, &attr))
 		logstr=g_strconcat_printf(logstr,"\t<course>%.1f</course>\n",*attr.u.numd);
