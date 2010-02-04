@@ -220,7 +220,7 @@ static int
 clip_line_code(struct coord *p1, struct coord *p2, struct rect *r)
 {
 	int code1,code2,ret=1;
-	int dx,dy;
+	long long dx,dy;
 	code1=clipcode(p1, r);
 	if (code1)
 		ret |= 2;
