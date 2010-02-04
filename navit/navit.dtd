@@ -15,23 +15,25 @@
 <!ATTLIST log data CDATA #REQUIRED>
 <!ATTLIST log flush_size CDATA #IMPLIED>
 <!ATTLIST log flush_time CDATA #IMPLIED>
-<!ELEMENT navit (gui,graphics,vehicle*,vehicleprofile*,tracking,route,navigation,speech,osd*,mapset+,layout+,log*)>
+<!ATTLIST log attr_types CDATA #IMPLIED>
+<!ELEMENT navit (graphics,gui+,log*,osd*,vehicle*,tracking,vehicleprofile*,route,navigation,speech,mapset+,layout+)>
 <!ATTLIST navit center CDATA #REQUIRED>
 <!ATTLIST navit zoom CDATA #REQUIRED>
 <!ATTLIST navit tracking CDATA #REQUIRED>
 <!ATTLIST navit orientation CDATA #REQUIRED>
 <!ATTLIST navit recent_dest CDATA #IMPLIED>
 <!ATTLIST navit drag_bitmap CDATA #IMPLIED>
-<!ELEMENT gui EMPTY>
+<!ELEMENT gui ANY>
 <!ATTLIST gui type CDATA #REQUIRED>
 <!ATTLIST gui menubar CDATA #IMPLIED>
 <!ATTLIST gui toolbar CDATA #IMPLIED>
 <!ATTLIST gui statusbar CDATA #IMPLIED>
 <!ATTLIST gui skin CDATA #IMPLIED>
 <!ATTLIST gui fullscreen CDATA #IMPLIED>
+<!ATTLIST gui enabled CDATA #IMPLIED>
 <!ELEMENT graphics EMPTY>
 <!ATTLIST graphics type CDATA #REQUIRED>
-<!ELEMENT vehicle (cursor*)>
+<!ELEMENT vehicle (log*)>
 <!ATTLIST vehicle name CDATA #REQUIRED>
 <!ATTLIST vehicle source CDATA #REQUIRED>
 <!ATTLIST vehicle enabled CDATA #IMPLIED>
@@ -86,10 +88,12 @@
 <!ATTLIST map active CDATA #IMPLIED>
 <!ATTLIST map data CDATA #REQUIRED>
 <!ATTLIST map debug CDATA #IMPLIED>
-<!ELEMENT layout (cursor*,layer*,xi:include*)>
+<!ELEMENT layout (cursor*,xi:include*,layer*)>
 <!ATTLIST layout name CDATA #REQUIRED>
 <!ATTLIST layout color CDATA #IMPLIED>
 <!ATTLIST layout font CDATA #IMPLIED>
+<!ATTLIST layout daylayout CDATA #IMPLIED>
+<!ATTLIST layout nightlayout CDATA #IMPLIED>
 <!ELEMENT layer (itemgra*)>
 <!ATTLIST layer enabled CDATA #IMPLIED>
 <!ATTLIST layer name CDATA #IMPLIED>
