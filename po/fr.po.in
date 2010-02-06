@@ -108,7 +108,7 @@ msgstr "dans %d mètres"
 #: ../navit/navigation.c:335
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d kilomètres"
 
 #: ../navit/navigation.c:337
 #, c-format
@@ -203,7 +203,7 @@ msgstr "inconnu "
 
 #: ../navit/navigation.c:1411
 msgid "When possible, please turn around"
-msgstr "Si possible, faites demi-tour"
+msgstr "Dès que possible, faites demi-tour"
 
 #: ../navit/navigation.c:1421
 msgid "Enter the roundabout soon"
@@ -218,7 +218,7 @@ msgstr "Dans %s, engagez vous dans le rond-point"
 #: ../navit/navigation.c:1440
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr "sortez du rond-point à la %s"
+msgstr "Sortez du rond-point à la %s"
 
 #: ../navit/navigation.c:1443
 #, c-format
@@ -228,7 +228,7 @@ msgstr "puis sortez du rond-point à la %s"
 #: ../navit/navigation.c:1453
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr "Suivez la prochaine route sur %s"
+msgstr "Suivez la route sur %s"
 
 #: ../navit/navigation.c:1457
 msgid "soon"
@@ -1855,7 +1855,7 @@ msgstr "Ajouter %s aux favoris"
 #: ../navit/gui/internal/gui_internal.c:3259
 #: ../navit/gui/internal/gui_internal.c:3268
 msgid "House number"
-msgstr "Numéro de Maison"
+msgstr "Numéro de maison"
 
 #: ../navit/gui/internal/gui_internal.c:3381 ../navit/navit_shipped.glade:64
 msgid "Maps"
@@ -1867,7 +1867,7 @@ msgstr "Afficher les infos satellite"
 
 #: ../navit/gui/internal/gui_internal.c:3432
 msgid " PRN "
-msgstr ""
+msgstr " PRN "
 
 #: ../navit/gui/internal/gui_internal.c:3433
 msgid " Elevation "
@@ -2002,7 +2002,3 @@ msgstr "Point sur la carte"
 #: ../navit/navit_shipped.c:56
 msgid "Vehicle Position"
 msgstr "Position du véhicule"
-
-#, c-format
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d,%d kilomètre"
