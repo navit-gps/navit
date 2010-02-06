@@ -1905,7 +1905,8 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		break;
 	case attr_mapset:
 		attr->u.mapset=this_->mapsets->data;
-		return (attr->u.mapset != NULL);
+		ret=(attr->u.mapset != NULL);
+		break;
 	case attr_navigation:
 		attr->u.navigation=this_->navigation;
 		break;
