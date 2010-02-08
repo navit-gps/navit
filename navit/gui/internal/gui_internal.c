@@ -3472,10 +3472,10 @@ gui_internal_cmd_show_satellite_status(struct gui_priv *this, struct widget *wm,
 	gui_internal_widget_append(wb, w);
 	w = gui_internal_widget_table_new(this,gravity_center | orientation_vertical | flags_expand | flags_fill, 0);
 	row = gui_internal_widget_table_row_new(this,gravity_left_top);
-	gui_internal_widget_append(row, gui_internal_label_new(this, _(" PRN ")));
+	gui_internal_widget_append(row, gui_internal_label_new(this, " PRN "));
 	gui_internal_widget_append(row, gui_internal_label_new(this, _(" Elevation ")));
 	gui_internal_widget_append(row, gui_internal_label_new(this, _(" Azimuth ")));
-	gui_internal_widget_append(row, gui_internal_label_new(this, _(" SNR ")));
+	gui_internal_widget_append(row, gui_internal_label_new(this, " SNR "));
 	gui_internal_widget_append(w,row);
 	while (vehicle_get_attr(v, attr_position_sat_item, &attr, NULL)) {
 		row = gui_internal_widget_table_row_new(this,gravity_left_top);
