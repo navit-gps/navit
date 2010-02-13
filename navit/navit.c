@@ -632,10 +632,18 @@ navit_cmd_zoom_out(struct navit *this_)
 	return 0;
 }
 
+static void
+navit_cmd_say(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) 
+		navit_say(this, in[0]->u.str);
+}
+
 static struct command_table commands[] = {
 	{"zoom_in",command_cast(navit_cmd_zoom_in)},
 	{"zoom_out",command_cast(navit_cmd_zoom_out)},
 	{"zoom_to_route",command_cast(navit_cmd_zoom_to_route)},
+	{"say",command_cast(navit_cmd_say)},
 	{"set_center_cursor",command_cast(navit_cmd_set_center_cursor)},
 	{"announcer_toggle",command_cast(navit_cmd_announcer_toggle)},
 };
