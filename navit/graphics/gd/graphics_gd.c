@@ -459,7 +459,29 @@ get_data(struct graphics_priv *this, char *type)
 			im=gdImageCreateTrueColor(this->w,this->h);
 			gdImageCopy(im, this->im, 0, 0, 0, 0, this->w, this->h);
 			while (overlay) {
-				gdImageCopy(im, overlay->im, overlay->p.x, overlay->p.y, 0, 0, overlay->w, overlay->h);
+				if (overlay->background) {
+					gdImagePtr res,src;
+					int y,x;
+					int bgcol=overlay->background->color;
+					res=gdImageCreateTrueColor(overlay->w,overlay->h);
+					src=gdImageCreateTrueColor(overlay->w,overlay->h);
+					gdImageCopy(src, im, 0, 0, overlay->p.x, overlay->p.y, overlay->w, overlay->h);
+					for (y = 0 ; y < overlay->h ; y++) {
+						unsigned int *res_line=res->tpixels[y];
+						unsigned int *src_line=src->tpixels[y];
+						unsigned int *overlay_line=overlay->im->tpixels[y];
+						for (x = 0 ; x < overlay->w ; x++) {
+							if (overlay_line[x] != bgcol) 
+								res_line[x]=overlay_line[x];
+							else
+								res_line[x]=src_line[x];
+						}
+					}
+					gdImageCopy(im, res, overlay->p.x, overlay->p.y, 0, 0, overlay->w, overlay->h);
+					gdImageDestroy(res);	
+					gdImageDestroy(src);
+				} else
+					gdImageCopy(im, overlay->im, overlay->p.x, overlay->p.y, 0, 0, overlay->w, overlay->h);
 				overlay=overlay->next;
 			}
 		}
@@ -575,7 +597,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct graphics_priv *ret;
 
-	dbg(0,"enter\n");
+	dbg(1,"enter\n");
 	ret=g_new0(struct graphics_priv, 1);
 	*meth=graphics_methods;
         font_freetype_new=plugin_get_font_type("freetype");
