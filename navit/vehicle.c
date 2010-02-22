@@ -256,6 +256,7 @@ vehicle_remove_attr(struct vehicle *this_, struct attr *attr)
 		callback_list_remove(this_->cbl, attr->u.callback);
 		break;
 	default:
+		this_->attrs=attr_generic_remove_attr(this_->attrs, attr);
 		return 0;
 	}
 	return 1;
