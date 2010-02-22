@@ -6,7 +6,8 @@ else
 noinst_LTLIBRARIES = libspeech_android.la
 endif
 libspeech_android_la_SOURCES = speech_android.c
-libspeech_android_la_LDFLAGS = -module -avoid-version  -Xcompiler -nostdlib
+libspeech_android_la_LDFLAGS = -module -avoid-version @NAVIT_MODULE_LDFLAGS@
+
 
 android: libspeech_android.la
 	mkdir -p ../../android/libs/armeabi/navit/speech
