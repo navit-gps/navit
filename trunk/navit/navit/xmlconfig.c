@@ -261,11 +261,11 @@ static struct object_func object_funcs[] = {
 	{ attr_polygon,    NEW(polygon_new),  NULL, NULL, NULL, NULL, ADD(element_add_attr)},
 	{ attr_polyline,   NEW(polyline_new), NULL, NULL, NULL, NULL, ADD(element_add_attr)},
 	{ attr_roadprofile,NEW(roadprofile_new),  GET(roadprofile_get_attr), NULL, NULL, SET(roadprofile_set_attr), ADD(roadprofile_add_attr) },
-	{ attr_route,      NEW(route_new), GET(route_get_attr)},
+	{ attr_route,      NEW(route_new), GET(route_get_attr), NULL, NULL, SET(route_set_attr), ADD(route_add_attr), REMOVE(route_remove_attr)},
 	{ attr_speech,     NEW(speech_new), GET(speech_get_attr), NULL, NULL, SET(speech_set_attr)},
 	{ attr_text,       NEW(text_new)},
 	{ attr_tracking,   NEW(tracking_new)},
-	{ attr_vehicle,    NEW(vehicle_new),  GET(vehicle_get_attr), NULL, NULL, SET(vehicle_set_attr), ADD(vehicle_add_attr) },
+	{ attr_vehicle,    NEW(vehicle_new),  GET(vehicle_get_attr), NULL, NULL, SET(vehicle_set_attr), ADD(vehicle_add_attr), REMOVE(vehicle_remove_attr) },
 	{ attr_vehicleprofile, NEW(vehicleprofile_new),  GET(vehicleprofile_get_attr), NULL, NULL, SET(vehicleprofile_set_attr), ADD(vehicleprofile_add_attr) },
 };
 
