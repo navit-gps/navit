@@ -66,6 +66,7 @@
 #include "fib.h"
 #include "event.h"
 #include "callback.h"
+#include "vehicle.h"
 #include "vehicleprofile.h"
 #include "roadprofile.h"
 
@@ -192,6 +193,8 @@ struct route_path {
 	int in_use;						/**< The path is in use and can not be updated */
 	int update_required;					/**< The path needs to be updated after it is no longer in use */
 	int updated;						/**< The path has only been updated */
+	int path_time;						/**< Time to pass the path */
+	int path_len;						/**< Length of the path */
 	struct route_path_segment *path;			/**< The first segment in the path, i.e. the segment one should 
 												 *  drive in next */
 	struct route_path_segment *path_last;		/**< The last segment in the path */
@@ -220,6 +223,8 @@ struct route {
 	int destination_distance;	/**< Distance to the destination at which the destination is considered "reached" */
 	struct vehicleprofile *vehicleprofile; /**< Routing preferences */
 	int route_status;		/**< Route Status */
+	struct pcoord pc;
+	struct vehicle *v;
 };
 
 /**
@@ -264,6 +269,7 @@ static struct route_path *route_path_new(struct route_graph *this, struct route_
 static void route_process_street_graph(struct route_graph *this, struct item *item);
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this, int cancel, int async);
+static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, struct route_traffic_distortion *dist);
 
 /**
  * @brief Returns the projection used for this route
@@ -632,11 +638,25 @@ route_path_update_done(struct route *this, int new_graph)
 	this->path2=route_path_new(this->graph, oldpath, this->pos, this->dst, this->vehicleprofile);
 	route_path_destroy(oldpath);
 	if (this->path2) {
+		struct route_path_segment *seg=this->path2->path;
+		int path_time=0,path_len=0;
+		while (seg) {
+			/* FIXME */
+			int seg_time=route_time_seg(this->vehicleprofile, seg->data, NULL);
+			if (seg_time == INT_MAX) {
+				dbg(0,"error\n");
+			} else
+				path_time+=seg_time;
+			path_len+=seg->data->len;
+			seg=seg->next;
+		}
+		this->path2->path_time=path_time;
+		this->path2->path_len=path_len;
 		if (!new_graph && this->path2->updated)
 			route_status.u.num=route_status_path_done_incremental;
 		else
 			route_status.u.num=route_status_path_done_new;
-	} else
+	} else 
 		route_status.u.num=route_status_not_found;
 	route_set_attr(this, &route_status);
 }
@@ -1923,8 +1943,10 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 	int val;
 	struct route_path *ret;
 
-	if (! pos->street || ! dst->street)
+	if (! pos->street || ! dst->street) {
+		dbg(0,"pos or dest not set\n");
 		return NULL;
+	}
 
 	if (profile->mode == 2 || (profile->mode == 0 && pos->lenextra + dst->lenextra > transform_distance(map_projection(pos->street->item.map), &pos->c, &dst->c)))
 		return route_path_new_offroad(this, pos, dst);
@@ -3148,7 +3170,27 @@ route_set_attr(struct route *this_, struct attr *attr)
 		attr_updated = (this_->route_status != attr->u.num);
 		this_->route_status = attr->u.num;
 		break;
+	case attr_destination:
+		route_set_destination(this_, attr->u.pcoord, 1);
+		return 1;
+	case attr_vehicle:
+		attr_updated = (this_->v != attr->u.vehicle);
+		this_->v=attr->u.vehicle;
+		if (attr_updated) {
+			struct attr g;
+			struct pcoord pc;
+			struct coord c;
+			if (vehicle_get_attr(this_->v, attr_position_coord_geo, &g, NULL)) {
+				pc.pro=projection_mg;
+				transform_from_geo(projection_mg, g.u.coord_geo, &c);
+				pc.x=c.x;
+				pc.y=c.y;
+				route_set_position(this_, &pc);
+			}
+		}
+		break;
 	default:
+		dbg(0,"unsupported attribute: %s\n",attr_to_name(attr->type));
 		return 0;
 	}
 	if (attr_updated)
@@ -3161,7 +3203,6 @@ route_add_attr(struct route *this_, struct attr *attr)
 {
 	switch (attr->type) {
 	case attr_callback:
-		dbg(1,"add\n");
 		callback_list_add(this_->cbl2, attr->u.callback);
 		return 1;
 	default:
@@ -3172,9 +3213,13 @@ route_add_attr(struct route *this_, struct attr *attr)
 int
 route_remove_attr(struct route *this_, struct attr *attr)
 {
+	dbg(0,"enter\n");
 	switch (attr->type) {
 	case attr_callback:
 		callback_list_remove(this_->cbl2, attr->u.callback);
+		return 1;
+	case attr_vehicle:
+		this_->v=NULL;
 		return 1;
 	default:
 		return 0;
@@ -3190,8 +3235,37 @@ route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, stru
 		attr->u.map=route_get_map(this_);
 		ret=(attr->u.map != NULL);
 		break;
+	case attr_destination:
+		if (this_->dst) {
+			attr->u.pcoord=&this_->pc;
+			this_->pc.pro=projection_mg; /* fixme */
+			this_->pc.x=this_->dst->c.x;
+			this_->pc.y=this_->dst->c.y;
+		} else
+			ret=0;
+		break;
+	case attr_vehicle:
+		attr->u.vehicle=this_->v;
+		ret=(this_->v != NULL);
+		dbg(0,"get vehicle %p\n",this_->v);
+		break;
 	case attr_route_status:
 		attr->u.num=this_->route_status;
+		break;
+	case attr_destination_time:
+		if (this_->path2 && (this_->route_status == route_status_path_done_new || this_->route_status == route_status_path_done_incremental)) {
+
+			attr->u.num=this_->path2->path_time;
+			dbg(0,"path_time %d\n",attr->u.num);
+		}
+		else
+			ret=0;
+		break;
+	case attr_destination_length:
+		if (this_->path2 && (this_->route_status == route_status_path_done_new || this_->route_status == route_status_path_done_incremental))
+			attr->u.num=this_->path2->path_len;
+		else
+			ret=0;
 		break;
 	default:
 		return 0;
