@@ -104,9 +104,9 @@ linux*_android)
 	vehicle_android=yes; vehicle_android_reason="host_os is android"
 	graphics_android=yes; graphics_android_reason="host_os is android"
 	speech_android=yes; speech_android_reason="host_os is android"
-	MODULE_LDFLAGS="-module -Xcompiler -nostdlib"
+	MODULE_LDFLAGS="-module -Xcompiler -nostdlib -Xcompiler -Wl,-rpath -Xcompiler -Wl,/data/data/org.navitproject.navit/lib"
 	MODULE_LIBADD="-llog"
-	NAVIT_MODULE_LDFLAGS="$MODULE_LDFLAGS"
+	NAVIT_MODULE_LDFLAGS="$MODULE_LDFLAGS -L\$(top_builddir)/navit -lnavit"
 	;;
 esac
 if test "x$win32" = "xyes"
