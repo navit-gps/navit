@@ -85,6 +85,7 @@ enum attr_position_valid {
 #define ATTR_IS_NUMERIC(x) (ATTR_IS_INT(x) || ATTR_IS_DOUBLE(x))
 #define ATTR_IS_COLOR(x) ((x) >= attr_type_color_begin && (x) <= attr_type_color_end)
 #define ATTR_IS_PCOORD(x) ((x) >= attr_type_pcoord_begin && (x) <= attr_type_pcoord_end)
+#define ATTR_IS_COORD(x) ((x) >= attr_type_coord_begin && (x) <= attr_type_coord_end)
 
 struct attr {
 	enum attr_type type;

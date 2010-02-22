@@ -632,11 +632,45 @@ navit_cmd_zoom_out(struct navit *this_)
 	return 0;
 }
 
+
 static void
 navit_cmd_say(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) 
 		navit_say(this, in[0]->u.str);
+}
+
+static void
+navit_cmd_set_destination(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct pcoord pc;
+	char *description=NULL;
+	if (!in)
+		return;
+	if (!in[0])
+		return;
+	pc.pro = transform_get_projection(this->trans);
+	if (ATTR_IS_COORD(in[0]->type)) {
+		pc.x=in[0]->u.coord->x;
+		pc.y=in[0]->u.coord->y;
+		in++;
+	} else if (ATTR_IS_PCOORD(in[0]->type)) {
+		pc=*in[0]->u.pcoord;
+		in++;
+	} else if (in[1] && in[2] && ATTR_IS_INT(in[0]->type) && ATTR_IS_INT(in[1]->type) && ATTR_IS_INT(in[2]->type)) {
+		pc.pro=in[0]->u.num;
+		pc.x=in[1]->u.num;
+		pc.y=in[2]->u.num;
+		in+=3;
+	} else if (in[1] && ATTR_IS_INT(in[0]->type) && ATTR_IS_INT(in[1]->type)) {
+		pc.x=in[0]->u.num;
+		pc.y=in[1]->u.num;
+		in+=2;
+	} else
+		return;
+	if (in[0] && ATTR_IS_STRING(in[0]->type))
+		description=in[0]->u.str;
+	navit_set_destination(this, &pc, description, 1);
 }
 
 static struct command_table commands[] = {
@@ -645,6 +679,7 @@ static struct command_table commands[] = {
 	{"zoom_to_route",command_cast(navit_cmd_zoom_to_route)},
 	{"say",command_cast(navit_cmd_say)},
 	{"set_center_cursor",command_cast(navit_cmd_set_center_cursor)},
+	{"set_destination",command_cast(navit_cmd_set_destination)},
 	{"announcer_toggle",command_cast(navit_cmd_announcer_toggle)},
 };
 	
