@@ -72,7 +72,7 @@ static void sigsegv(int sig)
 void
 debug_init(const char *program_name)
 {
-	gdb_program=program_name;
+	gdb_program=g_strdup(program_name);
 	signal(SIGSEGV, sigsegv);
 	debug_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	debug_fp = stderr;
