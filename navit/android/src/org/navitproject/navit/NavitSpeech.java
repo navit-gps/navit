@@ -19,6 +19,7 @@
 
 package org.navitproject.navit;
 
+import java.lang.Thread;
 import android.app.Activity;
 import android.widget.TextView;
 import android.os.Bundle;
@@ -30,9 +31,12 @@ import android.util.Log;
 import com.google.tts.TTS;
 
 
-public class NavitSpeech {
+public class NavitSpeech implements Runnable {
 	private TTS tts;
     	private TTS.InitListener ttsInitListener;
+	private String what;
+	private Thread thread;
+
 	NavitSpeech(Context context) 
 	{
 	 	ttsInitListener = new TTS.InitListener() {
@@ -41,10 +45,16 @@ public class NavitSpeech {
 		};
 		tts=new TTS(context, ttsInitListener, true);
 	}
-	public void say(String what)
+	public void run()
 	{
 		Log.e("NavitSpeech","In "+what);
 		tts.speak(what, 0, null);
+	}
+	public void say(String what)
+	{
+		this.what=what;
+		thread = new Thread(this, "speech thread");
+		thread.start();
 	}
 }
 
