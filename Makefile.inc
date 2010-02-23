@@ -6,6 +6,7 @@ moduleguidir=$(pkglibdir)/gui
 modulespeechdir=$(pkglibdir)/speech
 moduleosddir=$(pkglibdir)/osd
 modulevehicledir=$(pkglibdir)/vehicle
+moduleplugindir=$(pkglibdir)/plugin
 pkgdocdir=$(pkgdatadir)
 xpmdir=$(pkgdatadir)/xpm
 fontsdir=$(pkgdatadir)/fonts
