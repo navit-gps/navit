@@ -1,5 +1,5 @@
 include $(top_srcdir)/Makefile.inc
-AM_CPPFLAGS = @NAVIT_CFLAGS@ -I$(top_srcdir)/navit -DMODULE=plugin_pedestrian
+AM_CPPFLAGS = @NAVIT_CFLAGS@ -I$(top_srcdir) -I$(top_srcdir)/navit -DMODULE=plugin_pedestrian
 moduleplugin_LTLIBRARIES = libplugin_pedestrian.la
 libplugin_pedestrian_la_LDFLAGS=-module -avoid-version @NAVIT_MODULE_LDFLAGS@ #-Wl,--no-undefined
 
