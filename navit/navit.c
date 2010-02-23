@@ -260,10 +260,10 @@ navit_handle_resize(struct navit *this_, int w, int h)
 		graphics_init(this_->gra);
 		graphics_set_rect(this_->gra, &sel.u.p_rect);
 	}
+	if (callback) 
+		callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
 	if (this_->ready == 3)
 		navit_draw(this_);
-	if (callback)
-		callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
 }
 
 static void
