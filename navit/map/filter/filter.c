@@ -218,9 +218,9 @@ map_filter_rect_new(struct map_priv *map, struct map_selection *sel)
 		mr->m=map;
 		mr->sel=sel;
 		mr->parent=parent;
+		mr->item.meth=&methods_filter;
+		mr->item.priv_data=mr;
 	}
-	mr->item.meth=&methods_filter;
-	mr->item.priv_data=mr;
 	return mr;
 }
 
