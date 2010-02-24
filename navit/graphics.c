@@ -781,26 +781,37 @@ displayitem_equal(gconstpointer a, gconstpointer b)
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void display_add(struct displaylist *displaylist, struct item *item, int count, struct coord *c, char *label)
+static void display_add(struct displaylist *displaylist, struct item *item, int count, struct coord *c, char **label, int label_count)
 {
 	struct displayitem *di;
-	int len;
+	int len,i;
 	GHashTable *h;
 	char *p;
 
 	len=sizeof(*di)+count*sizeof(*c);
-	if (label)
-		len+=strlen(label)+1;
-
+	if (label && label_count) {
+		for (i = 0 ; i < label_count ; i++) {
+			if (label[i])
+				len+=strlen(label[i])+1;
+			else
+				len++;
+		}
+	}
 	p=g_malloc(len);
 
 	di=(struct displayitem *)p;
 	di->displayed=0;
 	p+=sizeof(*di)+count*sizeof(*c);
 	di->item=*item;
-	if (label) {
+	if (label && label_count) {
 		di->label=p;
-		strcpy(di->label, label);
+		for (i = 0 ; i < label_count ; i++) {
+			if (label[i]) {
+				strcpy(p, label[i]);
+				p+=strlen(label[i])+1;
+			} else
+				*p++='\0';
+		}
 	} else 
 		di->label=NULL;
 	di->count=count;
@@ -1622,8 +1633,21 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		break;
 	case element_icon:
 		if (count) {
-			if (!img) {
-				path=graphics_icon_path(e->u.icon.src);	
+			if (!img || item_is_custom_poi(di->item)) {
+				if (item_is_custom_poi(di->item)) {
+					char *icon;
+					char *src;
+					dbg(0,"custom\n");
+					if (img)
+						graphics_image_free(dc->gra, img);
+					src=e->u.icon.src;
+					if (!src || !src[0])
+						src="%s";
+					icon=g_strdup_printf(src,di->label+strlen(di->label)+1);
+					path=graphics_icon_path(icon);
+					g_free(icon);
+				} else
+					path=graphics_icon_path(e->u.icon.src);	
 				img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
 				g_free(path);
 				if (img)
@@ -1783,7 +1807,7 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 	struct item *item;
 	int count,max=displaylist->dc.maxlen,workload=0;
 	struct coord ca[max];
-	struct attr attr;
+	struct attr attr,attr2;
 
 	profile(0,NULL);
 	while (!cancel) {
@@ -1803,6 +1827,8 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 		}
 		if (displaylist->mr) {
 			while ((item=map_rect_get_item(displaylist->mr))) {
+				int label_count=0;
+				char *labels[2];
 				count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);
 				if (! count)
 					continue;
@@ -1810,14 +1836,31 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 					dbg(0,"point count overflow %d for %s "ITEM_ID_FMT"\n", count,item_to_name(item->type),ITEM_ID_ARGS(*item));
 					displaylist->dc.maxlen=max*2;
 				}
-				if (!item_attr_get(item, attr_label, &attr))
-					attr.u.str=NULL;
-				if (displaylist->conv && attr.u.str && attr.u.str[0]) {
-					char *str=map_convert_string(displaylist->m, attr.u.str);
-					display_add(displaylist, item, count, ca, str);
-					map_convert_free(str);
+				if (item_is_custom_poi(*item)) {
+					dbg(0,"custom\n");
+					if (item_attr_get(item, attr_icon_src, &attr2))
+						labels[1]=map_convert_string(displaylist->m, attr2.u.str);
+					else
+						labels[1]=NULL;
+					label_count=2;
+				} else {
+					labels[1]=NULL;
+					label_count=0;
+				}
+				if (item_attr_get(item, attr_label, &attr)) {
+					labels[0]=attr.u.str;
+					if (!label_count)
+						label_count=2;
 				} else
-					display_add(displaylist, item, count, ca, attr.u.str);
+					labels[0]=NULL;
+				if (displaylist->conv && label_count) {
+					labels[0]=map_convert_string(displaylist->m, labels[0]);
+					display_add(displaylist, item, count, ca, labels, label_count);
+					map_convert_free(labels[0]);
+				} else
+					display_add(displaylist, item, count, ca, labels, label_count);
+				if (labels[1])
+					map_convert_free(labels[1]);
 				workload++;
 				if (workload == displaylist->workload)
 					return;
@@ -2204,7 +2247,7 @@ graphics_process_selection_item(struct displaylist *dl, struct item *item)
 		di_res=g_hash_table_lookup(h, &di);
 		if (di_res) {
 			di.item.type=(enum item_type)item->priv_data;
-			display_add(dl, &di.item, di_res->count, di_res->c, NULL);
+			display_add(dl, &di.item, di_res->count, di_res->c, NULL, 0);
 			return;
 		}
 	}
@@ -2215,10 +2258,10 @@ graphics_process_selection_item(struct displaylist *dl, struct item *item)
 		attr.u.str=NULL;
 	if (dl->conv && attr.u.str && attr.u.str[0]) {
 		char *str=map_convert_string(item->map, attr.u.str);
-		display_add(dl, item, count, ca, str);
+		display_add(dl, item, count, ca, &str, 1);
 		map_convert_free(str);
 	} else
-		display_add(dl, item, count, ca, attr.u.str);
+		display_add(dl, item, count, ca, &attr.u.str, 1);
 	map_rect_destroy(mr);
 }
 
