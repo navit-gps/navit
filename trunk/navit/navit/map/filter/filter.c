@@ -39,6 +39,8 @@
 
 struct filter_entry {
 	enum item_type first,last;
+	enum attr_type cond_attr;
+	char *cond_str;
 };
 
 struct filter {
@@ -63,25 +65,42 @@ struct map_search_priv {
 };
 
 static enum item_type
-filter_type(struct map_priv *m, enum item_type type)
+filter_type(struct map_priv *m, struct item *item)
 {
 	GList *filters=m->filters;
+	struct filter_entry *entry;
 	while (filters) {
 		struct filter *filter=filters->data;
 		int pos=0,count=0;
 		GList *old,*new;
 		old=filter->old;
 		while (old) {
-			struct filter_entry *entry=old->data;
-			if (type >= entry->first && type <= entry->last)
+			entry=old->data;
+			if (item->type >= entry->first && item->type <= entry->last)
 				break;
 			pos+=entry->last-entry->first+1;
 			old=g_list_next(old);
 		}
+		if (old && entry && entry->cond_attr != attr_none) {
+			struct attr attr;
+			if (!item_attr_get(item, entry->cond_attr, &attr)) {
+				old=NULL;
+			} else {
+				char *wildcard=strchr(entry->cond_str,'*');
+				int len;
+				if (!wildcard)
+					len=strlen(entry->cond_str)+1;
+				else
+					len=wildcard-entry->cond_str;
+				if (strncmp(entry->cond_str, attr.u.str, len))
+					old=NULL;
+			}
+			item_attr_rewind(item);
+		}
 		if (old) {
 			new=filter->new;
 			if (!new)
-				return type;
+				return item->type;
 			while (new) {
 				struct filter_entry *entry=new->data;
 				count+=entry->last-entry->first+1;
@@ -99,16 +118,23 @@ filter_type(struct map_priv *m, enum item_type type)
 		}
 		filters=g_list_next(filters);
 	}
-	return type;
+	return item->type;
+}
+
+static void
+free_filter_entry(struct filter_entry *filter)
+{
+	g_free(filter->cond_str);
+	g_free(filter);
 }
 
 static void
 free_filter(struct filter *filter)
 {
-	g_list_foreach(filter->old, (GFunc)g_free, NULL);
+	g_list_foreach(filter->old, (GFunc)free_filter_entry, NULL);
 	g_list_free(filter->old);
 	filter->old=NULL;
-	g_list_foreach(filter->new, (GFunc)g_free, NULL);
+	g_list_foreach(filter->new, (GFunc)free_filter_entry, NULL);
 	g_list_free(filter->new);
 	filter->new=NULL;
 }
@@ -126,18 +152,43 @@ parse_filter(char *filter)
 {
 	GList *ret=NULL;
 	for (;;) {
-		char *range,*next=strchr(filter,',');
-		struct filter_entry *entry=g_new(struct filter_entry, 1);
+		char *condition,*range,*next=strchr(filter,',');
+		struct filter_entry *entry=g_new0(struct filter_entry, 1);
 		if (next)
 			*next++='\0';
+		condition=strchr(filter,'[');
+		if (condition)
+			*condition++='\0';
 		range=strchr(filter,'-');
 		if (range)
 			*range++='\0';
-		entry->first=item_from_name(filter);
-		if (range)
-			entry->last=item_from_name(range);
-		else
-			entry->last=entry->first;
+		if (!strcmp(filter,"*") && !range) {
+			entry->first=type_none;
+			entry->last=type_last;
+		} else {
+			entry->first=item_from_name(filter);
+			if (range)
+				entry->last=item_from_name(range);
+			else
+				entry->last=entry->first;
+		}
+		if (condition) {
+			char *end=strchr(condition,']');
+			char *eq=strchr(condition,'=');
+			if (end && eq && eq < end) {
+				*end='\0';
+				*eq++='\0';
+				if (eq[0] == '"' || eq[0] == '\'') {
+					char *quote=strchr(eq+1,eq[0]);
+					if (quote) {
+						eq++;
+						*quote='\0';
+					}
+				}
+				entry->cond_attr=attr_from_name(condition);
+				entry->cond_str=g_strdup(eq);
+			}
+		}
 		ret=g_list_append(ret, entry);	
 		if (!next)
 			break;
@@ -154,13 +205,30 @@ parse_filters(struct map_priv *m, char *filter)
 
 	free_filters(m);	
 	for (;;) {
-		char *eq,*next=strchr(str,';');
+		char *pos,*bracket,*eq,*next=strchr(str,';');
 		struct filter *filter=g_new0(struct filter, 1); 
 		if (next)
 			*next++='\0';
-		eq=strchr(str,'=');
-		if (eq) 
-			*eq++='\0';
+		pos=str;
+		for (;;) {
+			eq=strchr(pos,'=');
+			if (eq) {
+				bracket=strchr(pos,'[');
+				if (bracket && bracket < eq) {
+					bracket=strchr(pos,']');
+					if (bracket)
+						pos=bracket+1;
+					else {
+						eq=NULL;
+						break;
+					}
+				} else {
+					*eq++='\0';
+					break;
+				}
+			} else
+				break;
+		}
 		filter->old=parse_filter(str);
 		if (eq)
 			filter->new=parse_filter(eq);
@@ -237,7 +305,7 @@ map_filter_rect_get_item(struct map_rect_priv *mr)
 	mr->parent_item=map_rect_get_item(mr->parent);
 	if (!mr->parent_item)
 		return NULL;
-	mr->item.type=filter_type(mr->m,mr->parent_item->type);
+	mr->item.type=filter_type(mr->m,mr->parent_item);
 	mr->item.id_lo=mr->parent_item->id_lo;
 	mr->item.id_hi=mr->parent_item->id_hi;
 	return &mr->item;
@@ -250,7 +318,7 @@ map_filter_rect_get_item_byid(struct map_rect_priv *mr, int id_hi, int id_lo)
 	mr->parent_item=map_rect_get_item_byid(mr->parent, id_hi, id_lo);
 	if (!mr->parent_item)
 		return NULL;
-	mr->item.type=filter_type(mr->m,mr->parent_item->type);
+	mr->item.type=filter_type(mr->m,mr->parent_item);
 	mr->item.id_lo=mr->parent_item->id_lo;
 	mr->item.id_hi=mr->parent_item->id_hi;
 	return &mr->item;
