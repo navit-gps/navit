@@ -102,6 +102,9 @@ textfile_coord_get(void *priv_data, struct coord *c, int count)
 static void
 textfile_attr_rewind(void *priv_data)
 {
+	struct map_rect_priv *mr=priv_data;
+	mr->attr_pos=0;
+	mr->attr_last=attr_none;
 }
 
 static void
