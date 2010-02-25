@@ -49,7 +49,7 @@ graphics_qt_qpainter=yes; graphics_qt_qpainter_reason=default
 graphics_opengl=yes; graphics_opengl_reason=default
 graphics_sdl=yes; graphics_sdl_reason=default
 graphics_win32=no; graphics_win32_reason=default
-plugin_pedestian=no; plugin_pedestian_reason=default
+plugin_pedestrian=no; plugin_pedestrian_reason=default
 speech_android=no; speech_android_reason=default
 speech_cmdline=yes; speech_cmdline_reason=default
 speech_dbus=no; speech_dbus_reason=default
