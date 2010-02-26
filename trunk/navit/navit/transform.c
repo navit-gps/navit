@@ -300,6 +300,20 @@ transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c)
 }
 
 void
+transform_from_to_count(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to, int count)
+{
+	struct coord_geo g;
+	int i;
+
+	for (i = 0 ; i < count ; i++) {
+		transform_to_geo(from, cfrom, &g);
+		transform_from_geo(to, &g, cto);
+		cfrom++;
+		cto++;
+	}
+}
+
+void
 transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to)
 {
 	struct coord_geo g;
