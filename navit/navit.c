@@ -799,7 +799,7 @@ navit_get_vehicleprofiles(struct navit *this_)
 }
 
 static void
-navit_projection_set(struct navit *this_, enum projection pro)
+navit_projection_set(struct navit *this_, enum projection pro, int draw)
 {
 	struct coord_geo g;
 	struct coord *c;
@@ -808,7 +808,8 @@ navit_projection_set(struct navit *this_, enum projection pro)
 	transform_to_geo(transform_get_projection(this_->trans), c, &g);
 	transform_set_projection(this_->trans, pro);
 	transform_from_geo(pro, &g, c);
-	navit_draw(this_);
+	if (draw)
+		navit_draw(this_);
 }
 
 /**
@@ -1771,7 +1772,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		break;
 	case attr_projection:
 		if(this_->trans && transform_get_projection(this_->trans) != attr->u.projection) {
-			navit_projection_set(this_, attr->u.projection);
+			navit_projection_set(this_, attr->u.projection, !init);
 			attr_updated=1;
 		}
 		break;
