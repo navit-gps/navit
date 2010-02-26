@@ -1808,8 +1808,10 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 	int count,max=displaylist->dc.maxlen,workload=0;
 	struct coord ca[max];
 	struct attr attr,attr2;
+	enum projection pro;
 
 	profile(0,NULL);
+	pro=transform_get_projection(displaylist->dc.trans);
 	while (!cancel) {
 		if (!displaylist->msh) 
 			displaylist->msh=mapset_open(displaylist->ms);
@@ -1832,6 +1834,8 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 				count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);
 				if (! count)
 					continue;
+				if (displaylist->dc.pro != pro) 
+					transform_from_to_count(ca, displaylist->dc.pro, ca, pro, count);
 				if (count == max) {
 					dbg(0,"point count overflow %d for %s "ITEM_ID_FMT"\n", count,item_to_name(item->type),ITEM_ID_ARGS(*item));
 					displaylist->dc.maxlen=max*2;

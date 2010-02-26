@@ -49,6 +49,7 @@ void transform_set_order_base(struct transformation *this_, int order_base);
 struct transformation *transform_dup(struct transformation *t);
 void transform_to_geo(enum projection pro, struct coord *c, struct coord_geo *g);
 void transform_from_geo(enum projection pro, struct coord_geo *g, struct coord *c);
+void transform_from_to_count(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to, int count);
 void transform_from_to(struct coord *cfrom, enum projection from, struct coord *cto, enum projection to);
 void transform_geo_to_cart(struct coord_geo *geo, navit_float a, navit_float b, struct coord_geo_cart *cart);
 void transform_cart_to_geo(struct coord_geo_cart *cart, navit_float a, navit_float b, struct coord_geo *geo);
