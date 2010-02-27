@@ -107,7 +107,7 @@ msgstr "In %d Metern"
 #: ../navit/navigation.c:335
 #, c-format
 msgid "%d.%d kilometers"
-msgstr "%d.%d Kilometer"
+msgstr "%d,%d Kilometer"
 
 #: ../navit/navigation.c:337
 #, c-format
