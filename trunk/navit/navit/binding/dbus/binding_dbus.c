@@ -1093,30 +1093,7 @@ request_navit_resize(DBusConnection *connection, DBusMessage *message)
 static DBusHandlerResult
 request_navit_get_attr(DBusConnection *connection, DBusMessage *message)
 {
-	DBusMessage *reply;
-	DBusMessageIter iter;
-	struct attr attr;
-	enum attr_type attr_type;
-	struct attr_iter *attr_iter;
-	struct navit *navit;
-
-	navit = object_get_from_message(message, "navit");
-	if (! navit)
-		return dbus_error_invalid_object_path(connection, message);
-
-	dbus_message_iter_init(message, &iter);
-	attr_type=attr_type_get_from_message(&iter);
-	if (attr_type == attr_none)
-		return dbus_error_invalid_attr_type(connection, message);
-	attr_iter=object_get_from_message_arg(&iter, "navit_attr_iter");
-	if (navit_get_attr(navit, attr_type, &attr, attr_iter)) {
-		reply = dbus_message_new_method_return(message);
-		encode_attr(reply, &attr);
-		dbus_connection_send (connection, reply, NULL);
-		dbus_message_unref (reply);
-		return DBUS_HANDLER_RESULT_HANDLED;
-	}
-	return empty_reply(connection, message);
+	return request_get_attr(connection, message, "navit", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))navit_get_attr);
 }
 
 static DBusHandlerResult
