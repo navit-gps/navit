@@ -754,7 +754,7 @@ command_evaluate_to(struct attr *attr, char *expr, struct context *ctx, struct r
 }
 
 void
-command_evaluate_to_void(struct attr *attr, char *expr, int **error)
+command_evaluate_to_void(struct attr *attr, char *expr, int *error)
 {
 	struct result res;
 	struct context ctx;
@@ -762,12 +762,12 @@ command_evaluate_to_void(struct attr *attr, char *expr, int **error)
 	if (!ctx.error)
 		resolve(&ctx, &res, NULL);
 	if (error)
-		*error=&ctx.error;
+		*error=ctx.error;
 
 }
 
 char *
-command_evaluate_to_string(struct attr *attr, char *expr, int **error)
+command_evaluate_to_string(struct attr *attr, char *expr, int *error)
 {
 	struct result res;
 	struct context ctx;
@@ -779,7 +779,7 @@ command_evaluate_to_string(struct attr *attr, char *expr, int **error)
 	if (!ctx.error)
 		ret=get_string(&ctx, &res);
 	if (error)
-		*error=&ctx.error;
+		*error=ctx.error;
 	if (ctx.error)
 		return NULL;
 	else
@@ -787,7 +787,7 @@ command_evaluate_to_string(struct attr *attr, char *expr, int **error)
 }
 
 int
-command_evaluate_to_int(struct attr *attr, char *expr, int **error)
+command_evaluate_to_int(struct attr *attr, char *expr, int *error)
 {
 	struct result res;
 	struct context ctx;
@@ -799,7 +799,7 @@ command_evaluate_to_int(struct attr *attr, char *expr, int **error)
 	if (!ctx.error)
 		ret=get_int(&ctx, &res);
 	if (error)
-		*error=&ctx.error;
+		*error=ctx.error;
 	if (ctx.error)
 		return 0;
 	else
@@ -807,7 +807,7 @@ command_evaluate_to_int(struct attr *attr, char *expr, int **error)
 }
 
 int
-command_evaluate_to_boolean(struct attr *attr, char *expr, int **error)
+command_evaluate_to_boolean(struct attr *attr, char *expr, int *error)
 {
 	struct result res;
 	struct context ctx;
@@ -826,7 +826,7 @@ command_evaluate_to_boolean(struct attr *attr, char *expr, int **error)
 			ret=res.attr.u.data != NULL;
 	}
 	if (error)
-		*error=&ctx.error;
+		*error=ctx.error;
 	if (ctx.error)
 		return 0;
 	else	
