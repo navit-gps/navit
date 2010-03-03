@@ -38,6 +38,7 @@
 #include "callback.h"
 #include "route.h"
 #include "navit_nls.h"
+#include "bookmarks.h"
 
 #if 0
 static void
@@ -126,7 +127,7 @@ popup_set_bookmark(struct navit *nav, struct pcoord *pc)
 	coord_format(g.lat,g.lng,DEGREES_MINUTES_SECONDS,buffer_geo,sizeof(buffer_geo));
 	sprintf(buffer,"Map Point %s", buffer_geo);
 	if (!gui_add_bookmark(navit_get_gui(nav), pc, buffer)) 
-		navit_add_bookmark(nav, pc, buffer);
+		bookmarks_add_bookmark(navit_get_bookmarks(nav), pc, buffer);
 }
 
 

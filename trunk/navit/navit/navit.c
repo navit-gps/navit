@@ -61,6 +61,7 @@
 #include "messages.h"
 #include "vehicleprofile.h"
 #include "sunriset.h"
+#include "bookmarks.h"
 
 /**
  * @defgroup navit the navit core instance. navit is the object containing nearly everything: A set of maps, one or more vehicle, a graphics object for rendering the map, a gui object for displaying the user interface, a route object, a navigation object and so on. Be warned that it is theoretically possible to have more than one navit object
@@ -109,9 +110,7 @@ struct navit {
 	struct callback_list *attr_cbl;
 	struct callback *nav_speech_cb, *roadbook_callback, *popup_callback, *route_cb;
 	struct datawindow *roadbook_window;
-	struct map *bookmark;
 	struct map *former_destination;
-	GHashTable *bookmarks_hash;
 	struct point pressed, last, current;
 	int button_pressed,moved,popped,zoomed;
 	int center_timeout;
@@ -138,6 +137,7 @@ struct navit {
 	int prevTs;
 	int graphics_flags;
 	int zoom_min, zoom_max;
+	struct bookmarks *bookmarks;
 };
 
 struct gui *main_loop_gui;
@@ -159,6 +159,8 @@ static void navit_cmd_zoom_to_route(struct navit *this);
 static void navit_cmd_set_center_cursor(struct navit *this_);
 static void navit_cmd_announcer_toggle(struct navit *this_);
 static void navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv);
+
+struct navit *global_navit;
 
 void
 navit_add_mapset(struct navit *this_, struct mapset *ms)
@@ -700,8 +702,6 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->self.u.navit=this_;
 	this_->attr_cbl=callback_list_new();
 
-	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-
 	this_->orientation=-1;
 	this_->tracking_flag=1;
 	this_->recentdest_count=10;
@@ -722,9 +722,12 @@ navit_new(struct attr *parent, struct attr **attrs)
 	center.y=co.y;
 	center.pro = pro;
 	
+	transform_setup(this_->trans, &center, zoom, (this_->orientation != -1) ? this_->orientation : 0);
+
+	this_->bookmarks=bookmarks_new(&this_->self, this_->trans);
+
 	this_->prevTs=0;
 
-	transform_setup(this_->trans, &center, zoom, (this_->orientation != -1) ? this_->orientation : 0);
 	for (;*attrs; attrs++) {
 		navit_set_attr_do(this_, *attrs, 1);
 	}
@@ -813,205 +816,6 @@ navit_projection_set(struct navit *this_, enum projection pro, int draw)
 }
 
 /**
- * @param limit Limits the number of entries in the "backlog". Set to 0 for "infinite"
- */
-static void
-navit_append_coord(struct navit *this_, char *file, struct pcoord *c, const char *type, const char *description, GHashTable *h, int limit)
-{
-	FILE *f;
-	int offset=0;
-	char *buffer;
-	int ch,prev,lines=0;
-	int numc,readc;
-	int fd;
-	const char *prostr;
-
-	f=fopen(file, "r");
-	if (!f)
-		goto new_file;
-	if (limit != 0) {
-		prev = '\n';
-		while ((ch = fgetc(f)) != EOF) {
-			if ((ch == '\n') && (prev != '\n')) {
-				lines++;
-			}
-			prev = ch;
-		}
-
-		if (prev != '\n') { // Last line did not end with a newline
-			lines++;
-		}
-
-		fclose(f);
-		f = fopen(file, "r+");
-		fd = fileno(f);
-		while (lines >= limit) { // We have to "scroll up"
-			rewind(f);
-			numc = 0; // Counts how many bytes we have in our line to scroll up
-			while ((ch = fgetc(f)) != EOF) {
-				numc++;
-				if (ch == '\n') {
-					break;
-				}
-			}
-
-			buffer=g_malloc(numc);
-			offset = numc; // Offset holds where we currently are
-			
-			do {
-				fseek(f,offset,SEEK_SET);
-				readc = fread(buffer,1,numc,f);
-				
-				fseek(f,-(numc+readc),SEEK_CUR);
-				fwrite(buffer,1,readc,f);
-
-				offset += readc;
-			} while (readc == numc);
-
-			g_free(buffer);
-			fflush(f);
-			ftruncate(fd,(offset-numc));
-#ifdef HAVE_FSYNC
-			fsync(fd);
-#endif
-
-			lines--;
-		}
-		fclose(f);
-	}
-
-new_file:
-	f=fopen(file, "a");
-	if (f) {
-		if (c) {
-			prostr = projection_to_name(c->pro,NULL);
-			fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
-				 prostr, *prostr ? ":" : "", 
-				 c->x >= 0 ? "":"-", c->x >= 0 ? c->x : -c->x, 
-				 c->y >= 0 ? "":"-", c->y >= 0 ? c->y : -c->y, 
-				 type, description);
-		} else
-			fprintf(f,"\n");
-	}
-	fclose(f);
-}
-
-/*
- * navit_get_user_data_directory
- * 
- * returns the directory used to store user data files (center.txt,
- * destination.txt, bookmark.txt, ...)
- *
- * arg: gboolean create: create the directory if it does not exist
- */
-static char*
-navit_get_user_data_directory(gboolean create) {
-	char *dir;
-	dir = getenv("NAVIT_USER_DATADIR");
-	if (create && !file_exists(dir)) {
-		dbg(0,"creating dir %s\n", dir);
-		if (file_mkdir(dir,0)) {
-			dbg(0,"failed creating dir %s\n", dir);
-			return NULL;
-		}
-	}
-
-	return dir;
-}
-
-/*
- * navit_get_destination_file
- * 
- * returns the name of the file used to store destinations with its
- * full path
- *
- * arg: gboolean create: create the directory where the file is stored
- * if it does not exist
- */
-static char*
-navit_get_destination_file(gboolean create)
-{
-	return g_strjoin(NULL, navit_get_user_data_directory(create), "/destination.txt", NULL);
-}
-
-/*
- * navit_get_bookmark_file
- * 
- * returns the name of the file used to store bookmarks with its
- * full path
- *
- * arg: gboolean create: create the directory where the file is stored
- * if it does not exist
- */
-static char*
-navit_get_bookmark_file(gboolean create)
-{
-	return g_strjoin(NULL, navit_get_user_data_directory(create), "/bookmark.txt", NULL);
-}
-
-
-/*
- * navit_get_bookmark_file
- * 
- * returns the name of the file used to store the center file  with its
- * full path
- *
- * arg: gboolean create: create the directory where the file is stored
- * if it does not exist
- */
-static char*
-navit_get_center_file(gboolean create)
-{
-	return g_strjoin(NULL, navit_get_user_data_directory(create), "/center.txt", NULL);
-}
-
-static void
-navit_set_center_from_file(struct navit *this_, char *file)
-{
-#ifndef HAVE_API_ANDROID
-	FILE *f;
-	char *line = NULL;
-
-	size_t line_size = 0;
-	enum projection pro;
-	struct coord *center;
-
-	f = fopen(file, "r");
-	if (! f)
-		return;
-	getline(&line, &line_size, f);
-	fclose(f);
-	if (line) {
-		center = transform_center(this_->trans);
-		pro = transform_get_projection(this_->trans);
-		coord_parse(g_strchomp(line), pro, center);
-		free(line);
-	}
-	return;
-#endif
-}
- 
-static void
-navit_write_center_to_file(struct navit *this_, char *file)
-{
-	FILE *f;
-	enum projection pro;
-	struct coord *center;
-
-	f = fopen(file, "w+");
-	if (f) {
-		center = transform_center(this_->trans);
-		pro = transform_get_projection(this_->trans);
-		coord_print(pro, center, f);
-		fclose(f);
-	} else {
-		perror(file);
-	}
-	return;
-}
-
-
-/**
  * Start the route computing to a given set of coordinates
  *
  * @param navit The navit instance
@@ -1027,8 +831,8 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 		this_->destination_valid=1;
 	} else
 		this_->destination_valid=0;
-	char *destination_file = navit_get_destination_file(TRUE);
-	navit_append_coord(this_, destination_file, c, "former_destination", description, NULL, this_->recentdest_count);
+	char *destination_file = bookmarks_get_destination_file(TRUE);
+	bookmarks_append_coord(this_->bookmarks, destination_file, c, "former_destination", description, NULL, this_->recentdest_count);
 	g_free(destination_file);
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 	if (this_->route) {
@@ -1057,42 +861,10 @@ navit_check_route(struct navit *this_)
 	return 0;
 }
 
-/**
- * Record the given set of coordinates as a bookmark
- *
- * @param navit The navit instance
- * @param c The coordinate to store
- * @param description A label which allows the user to later identify this bookmark
- * @returns nothing
- */
-void
-navit_add_bookmark(struct navit *this_, struct pcoord *c, const char *description)
-{
-	char *bookmark_file = navit_get_bookmark_file(TRUE);
-	navit_append_coord(this_,bookmark_file, c, "bookmark", description, this_->bookmarks_hash,0);
-	g_free(bookmark_file);
-
-	callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
-}
-
-struct navit *global_navit;
-
-static void
-navit_add_bookmarks_from_file(struct navit *this_)
-{
-	char *bookmark_file = navit_get_bookmark_file(FALSE);
-	struct attr parent={attr_navit, .u.navit=this_};
-	struct attr type={attr_type, {"textfile"}}, data={attr_data, {bookmark_file}};
-	struct attr *attrs[]={&type, &data, NULL};
-
-	this_->bookmark=map_new(&parent, attrs);
-	g_free(bookmark_file);
-}
-
 static int
 navit_former_destinations_active(struct navit *this_)
 {
-	char *destination_file = navit_get_destination_file(FALSE);
+	char *destination_file = bookmarks_get_destination_file(FALSE);
 	FILE *f;
 	int active=0;
 	char buffer[3];
@@ -1109,7 +881,7 @@ navit_former_destinations_active(struct navit *this_)
 static void
 navit_add_former_destinations_from_file(struct navit *this_)
 {
-	char *destination_file = navit_get_destination_file(FALSE);
+	char *destination_file = bookmarks_get_destination_file(FALSE);
 	struct attr parent={attr_navit, .u.navit=this_};
 	struct attr type={attr_type, {"textfile"}}, data={attr_data, {destination_file}};
 	struct attr *attrs[]={&type, &data, NULL};
@@ -1403,7 +1175,7 @@ navit_init(struct navit *this_)
 				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 		}
-		navit_add_bookmarks_from_file(this_);
+		bookmarks_add_bookmarks_from_file(this_->bookmarks);
 		navit_add_former_destinations_from_file(this_);
 	}
 	if (this_->route) {
@@ -1422,8 +1194,8 @@ navit_init(struct navit *this_)
 			navigation_set_route(this_->navigation, this_->route);
 	}
 	dbg(2,"Setting Center\n");
-	char *center_file = navit_get_center_file(FALSE);
-	navit_set_center_from_file(this_, center_file);
+	char *center_file = bookmarks_get_center_file(FALSE);
+	bookmarks_set_center_from_file(this_->bookmarks, center_file);
 	g_free(center_file);
 #if 0
 	if (this_->menubar) {
@@ -1890,7 +1662,7 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 		attr->u.str[len] = '\0';
 		break;
 	case attr_bookmark_map:
-		attr->u.map=this_->bookmark;
+		attr->u.map=bookmarks_get_map(this_->bookmarks);
 		break;
 	case attr_callback_list:
 		attr->u.callback_list=this_->attr_cbl;
@@ -2472,6 +2244,11 @@ navit_set_layout_by_name(struct navit *n,char *name)
     return 0;
 }
 
+struct bookmarks* 
+navit_get_bookmarks(struct navit *this_) {
+	return this_->bookmarks;
+}
+
 int
 navit_block(struct navit *this_, int block)
 {
@@ -2496,9 +2273,12 @@ navit_destroy(struct navit *this_)
 	/* TODO: destroy objects contained in this_ */
 	if (this_->vehicle)
 		vehicle_destroy(this_->vehicle->vehicle);
-	char *center_file = navit_get_center_file(TRUE);
-	navit_write_center_to_file(this_, center_file);
-	g_free(center_file);
+	if (this_->bookmarks) {
+		char *center_file = bookmarks_get_center_file(TRUE);
+		bookmarks_write_center_to_file(this_->bookmarks, center_file);
+		g_free(center_file);
+		bookmarks_destroy(this_->bookmarks);
+	}
 	callback_destroy(this_->nav_speech_cb);
 	callback_destroy(this_->roadbook_callback);
 	callback_destroy(this_->popup_callback);
