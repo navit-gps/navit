@@ -221,7 +221,7 @@ gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra)
 static void
 gui_gtk_add_bookmark_do(struct gui_priv *gui)
 {
-	navit_add_bookmark(gui->nav, &gui->dialog_coord, gtk_entry_get_text(GTK_ENTRY(gui->dialog_entry)));
+	bookmarks_add_bookmark(navit_get_bookmarks(gui->nav), &gui->dialog_coord, gtk_entry_get_text(GTK_ENTRY(gui->dialog_entry)));
 	gtk_widget_destroy(gui->dialog_win);
 }
 

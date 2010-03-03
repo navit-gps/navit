@@ -32,6 +32,7 @@
 #include "search.h"
 #include "projection.h"
 #include "navit_nls.h"
+#include "bookmarks.h"
 
 #define COL_COUNT 8
 
@@ -117,7 +118,7 @@ static void button_bookmark(GtkWidget *widget, struct search_param *search)
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, COL_COUNT, &c, -1);
 	if (c) {
 		desc=description(search, &iter);
-		navit_add_bookmark(search->nav, c, desc);
+		bookmarks_add_bookmark(navit_get_bookmarks(search->nav), c, desc);
 		g_free(desc);
 	}
 }
