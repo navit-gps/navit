@@ -99,7 +99,6 @@ struct displaylist *navit_get_displaylist(struct navit *this_);
 int navit_block(struct navit *this_, int block);
 void navit_layout_switch(struct navit *n);
 int navit_set_layout_by_name(struct navit *n, char* name);
-struct bookmarks* navit_get_bookmarks(struct navit *this_);
 void navit_destroy(struct navit *this_);
 /* end of prototypes */
 #ifdef __cplusplus

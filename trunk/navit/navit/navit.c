@@ -1664,6 +1664,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 	case attr_bookmark_map:
 		attr->u.map=bookmarks_get_map(this_->bookmarks);
 		break;
+	case attr_bookmarks:
+		attr->u.bookmarks=this_->bookmarks;
+		break;
 	case attr_callback_list:
 		attr->u.callback_list=this_->attr_cbl;
 		break;
@@ -2242,11 +2245,6 @@ navit_set_layout_by_name(struct navit *n,char *name)
 
     iter.u.list=g_list_first(iter.u.list);
     return 0;
-}
-
-struct bookmarks* 
-navit_get_bookmarks(struct navit *this_) {
-	return this_->bookmarks;
 }
 
 int
