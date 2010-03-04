@@ -33,6 +33,8 @@ struct bookmarks {
 	//data storage
 	struct map *bookmark;
 	GHashTable *bookmarks_hash;
+	char* bookmark_file;
+	char *working_file;
 
 	//Refs to other objects
 	struct transformation *trans;
@@ -53,6 +55,9 @@ bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation
 
 	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
+	this_->bookmark_file=g_strjoin(NULL, bookmarks_get_user_data_directory(TRUE), "/bookmark.txt", NULL);
+	this_->working_file=g_strjoin(NULL, bookmarks_get_user_data_directory(TRUE), "/bookmark.txt.tmp", NULL);
+
 	return this_;
 }
 
@@ -61,6 +66,10 @@ bookmarks_destroy(struct bookmarks *this_) {
 	map_destroy(this_->bookmark);
 	g_hash_table_destroy(this_->bookmarks_hash);
 	callback_list_destroy(this_->attr_cbl);
+
+	g_free(this_->bookmark_file);
+	g_free(this_->working_file);
+
 	g_free(this_);
 }
 
@@ -74,6 +83,78 @@ bookmarks_add_callback(struct bookmarks *this_, struct callback *cb)
 {
 	callback_list_add(this_->attr_cbl, cb);
 }
+
+static int bookmarks_write_bookmark_to_file(FILE *f, struct coord c, const char *label) {
+	const char *prostr;
+	int result;
+
+	prostr = projection_to_name(projection_mg,NULL);
+	result=fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
+		 prostr, *prostr ? ":" : "", 
+		 c.x >= 0 ? "":"-", c.x >= 0 ? c.x : -c.x, 
+		 c.y >= 0 ? "":"-", c.y >= 0 ? c.y : -c.y, 
+		 "bookmark", label);
+
+	return result>0;
+}
+
+static int 
+bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replace) {
+	FILE *f;
+	struct item *item;
+	struct map_rect *mr=NULL;
+	struct attr attr;
+	struct coord c;
+
+	if (limit>0) {
+		limit++; //We are 1 based, not zero
+		//Calculate, how many entries we already have
+		f=fopen(this_->working_file,"r");
+		if (f!=NULL) {
+			while (!feof(f) && limit>0) {
+				char* tmpline=NULL;
+				size_t tmpn;
+				getline(&tmpline,&tmpn,f);
+				limit--;
+				free(tmpline);
+			}
+		}
+		fclose(f);
+	}
+
+	mr=map_rect_new(this_->bookmark, NULL);
+	if (mr==NULL) {
+		return FALSE;
+	}
+
+	f=fopen(this_->working_file, replace ? "w+" : "a+");
+	if (f==NULL) {
+		return FALSE;
+	}
+
+
+	while ((item=map_rect_get_item(mr))) {
+		if (item->type != type_bookmark) continue;
+		item_attr_get(item, attr_label, &attr);
+		item_coord_get(item, &c, 1);
+
+		if (!bookmarks_write_bookmark_to_file(f,c,attr.u.str)) 
+			break;
+
+ 		/* Limit could be zero, so we start decrementing it from zero and never reach 1
+ 		 or it was bigger and we decreased it earlier. So when this counter becomes 1, we know
+		 that we have enough entries in bookmarks file */
+		if (limit==1) {
+			break;
+		}
+		limit--;
+	}
+
+	fclose(f);
+
+	return rename(this_->working_file,this_->bookmark_file)==0;
+}
+
 /*
  * bookmarks_get_user_data_directory
  * 
@@ -95,21 +176,6 @@ bookmarks_get_user_data_directory(gboolean create) {
 	}
 
 	return dir;
-}
-
- /*
- * bookmarks_get_bookmark_file
- * 
- * returns the name of the file used to store bookmarks with its
- * full path
- *
- * arg: gboolean create: create the directory where the file is stored
- * if it does not exist
- */
-char*
-bookmarks_get_bookmark_file(gboolean create)
-{
-	return g_strjoin(NULL, bookmarks_get_user_data_directory(create), "/bookmark.txt", NULL);
 }
 
 /*
@@ -195,25 +261,37 @@ bookmarks_write_center_to_file(struct bookmarks *this_, char *file)
  * @param description A label which allows the user to later identify this bookmark
  * @returns nothing
  */
-void
-bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *c, const char *description)
+int 
+bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *description)
 {
-	char *bookmark_file = bookmarks_get_bookmark_file(TRUE);
-	bookmarks_append_coord(this_,bookmark_file, c, "bookmark", description, this_->bookmarks_hash,0);
-	g_free(bookmark_file);
+	FILE *f;
+	int result;
+	struct coord c;
+
+	f=fopen(this_->working_file, "a+");
+	if (f==NULL) {
+		return FALSE;
+	}
+	c.x=pc->x;
+	c.y=pc->y;
+	result=bookmarks_write_bookmark_to_file(f, c, description);
+	fclose(f);
+	if (result) {
+		bookmarks_store_bookmarks_to_file(this_,0,0);
+	}
 
 	callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
+
+	return result;
 }
 
 void
 bookmarks_add_bookmarks_from_file(struct bookmarks *this_)
 {
-	char *bookmark_file = bookmarks_get_bookmark_file(FALSE);
-	struct attr type={attr_type, {"textfile"}}, data={attr_data, {bookmark_file}};
+	struct attr type={attr_type, {"textfile"}}, data={attr_data, {this_->bookmark_file}};
 	struct attr *attrs[]={&type, &data, NULL};
 
 	this_->bookmark=map_new(this_->parent, attrs);
-	g_free(bookmark_file);
 }
 
 /**
