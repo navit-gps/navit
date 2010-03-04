@@ -1869,9 +1869,12 @@ static void
 gui_internal_cmd_add_bookmark_do(struct gui_priv *this, struct widget *widget)
 {
 	GList *l;
+	struct attr attr;
 	dbg(0,"text='%s'\n", widget->text);
-	if (widget->text && strlen(widget->text))
-		bookmarks_add_bookmark(navit_get_bookmarks(this->nav), &widget->c, widget->text);
+	if (widget->text && strlen(widget->text)){
+		navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
+		bookmarks_add_bookmark(attr.u.bookmarks, &widget->c, widget->text);
+	}
 	g_free(widget->text);
 	widget->text=NULL;
 	l=g_list_previous(g_list_last(this->root.children));

@@ -117,6 +117,7 @@ popup_set_destination(struct navit *nav, struct pcoord *pc)
 static void
 popup_set_bookmark(struct navit *nav, struct pcoord *pc)
 {
+    struct attr attr;
 	struct coord c;
 	struct coord_geo g;
 	char buffer[1024];
@@ -126,8 +127,10 @@ popup_set_bookmark(struct navit *nav, struct pcoord *pc)
 	transform_to_geo(pc->pro, &c, &g);
 	coord_format(g.lat,g.lng,DEGREES_MINUTES_SECONDS,buffer_geo,sizeof(buffer_geo));
 	sprintf(buffer,"Map Point %s", buffer_geo);
-	if (!gui_add_bookmark(navit_get_gui(nav), pc, buffer)) 
-		bookmarks_add_bookmark(navit_get_bookmarks(nav), pc, buffer);
+	if (!gui_add_bookmark(navit_get_gui(nav), pc, buffer)) {
+        navit_get_attr(nav, attr_bookmarks, &attr, NULL);
+		bookmarks_add_bookmark(attr.u.bookmarks, pc, buffer);
+    }
 }
 
 

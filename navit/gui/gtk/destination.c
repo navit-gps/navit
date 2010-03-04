@@ -112,13 +112,15 @@ static void button_bookmark(GtkWidget *widget, struct search_param *search)
 	struct pcoord *c=NULL;
 	GtkTreeIter iter;
 	char *desc;
+	struct attr attr;
 
 	if (!gtk_tree_model_get_iter_first (GTK_TREE_MODEL (search->liststore2), &iter))
 		return;
 	gtk_tree_model_get (GTK_TREE_MODEL (search->liststore2), &iter, COL_COUNT, &c, -1);
 	if (c) {
+		navit_get_attr(search->nav, attr_bookmarks, &attr, NULL);
 		desc=description(search, &iter);
-		bookmarks_add_bookmark(navit_get_bookmarks(search->nav), c, desc);
+		bookmarks_add_bookmark(attr.u.bookmarks, c, desc);
 		g_free(desc);
 	}
 }
