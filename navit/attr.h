@@ -132,6 +132,7 @@ struct attr {
 		struct transformation *transformation;
 		struct vehicleprofile *vehicleprofile;
 		struct roadprofile *roadprofile;
+		struct bookmarks *bookmarks;
 		struct range {
 			short min, max;
 		} range;
