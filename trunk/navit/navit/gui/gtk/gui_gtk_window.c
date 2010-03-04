@@ -44,6 +44,7 @@
 #include "map.h"
 #include "coord.h"
 #include "event.h"
+#include "bookmarks.h"
 #include "navit_nls.h"
 
 #ifdef USE_HILDON
@@ -652,7 +653,9 @@ gui_gtk_bookmarks_update(struct gui_priv *this)
 static void
 gui_gtk_bookmarks_init(struct gui_priv *this)
 {
-	navit_add_callback(this->nav, callback_new_attr_1(callback_cast(gui_gtk_bookmarks_update), attr_bookmark_map, this));
+	struct attr attr;
+	navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
+	bookmarks_add_callback(attr.u.bookmarks, callback_new_attr_1(callback_cast(gui_gtk_bookmarks_update), attr_bookmark_map, this));
 	gui_gtk_bookmarks_update(this);
 }
 
