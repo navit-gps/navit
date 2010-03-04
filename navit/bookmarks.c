@@ -41,7 +41,8 @@ struct bookmarks {
 	struct attr *parent;
 };
 
-struct bookmarks *bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation *trans) {
+struct bookmarks *
+bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation *trans) {
 	struct bookmarks *this_;
 
 	this_ = g_new0(struct bookmarks,1);
@@ -55,15 +56,23 @@ struct bookmarks *bookmarks_new(struct attr *parent, /*struct attr **attrs,*/str
 	return this_;
 }
 
-void bookmarks_destroy(struct bookmarks *this_) {
+void 
+bookmarks_destroy(struct bookmarks *this_) {
 	map_destroy(this_->bookmark);
 	g_hash_table_destroy(this_->bookmarks_hash);
 	callback_list_destroy(this_->attr_cbl);
 	g_free(this_);
 }
 
-struct map* bookmarks_get_map(struct bookmarks *this_) {
+struct map* 
+bookmarks_get_map(struct bookmarks *this_) {
 	return this_->bookmark;
+}
+
+void
+bookmarks_add_callback(struct bookmarks *this_, struct callback *cb)
+{
+	callback_list_add(this_->attr_cbl, cb);
 }
 /*
  * bookmarks_get_user_data_directory
