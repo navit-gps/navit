@@ -33,7 +33,6 @@ int bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *c, const char
 struct map* bookmarks_get_map(struct bookmarks *this_);
 char* bookmarks_get_user_data_directory(gboolean create);
 char* bookmarks_get_destination_file(gboolean create);
-void bookmarks_add_bookmarks_from_file(struct bookmarks *this_);
 void bookmarks_set_center_from_file(struct bookmarks *this_, char *file);
 char* bookmarks_get_center_file(gboolean create);
 void bookmarks_write_center_to_file(struct bookmarks *this_, char *file);
