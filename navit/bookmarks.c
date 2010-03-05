@@ -33,6 +33,7 @@ struct bookmarks {
 	//data storage
 	struct map *bookmark;
 	GHashTable *bookmarks_hash;
+	GList *bookmarks_list;
 	char* bookmark_file;
 	char *working_file;
 
@@ -43,6 +44,57 @@ struct bookmarks {
 	struct attr *parent;
 };
 
+struct bookmark_item_priv {
+	char *label;
+	enum item_type type;
+	struct coord c;
+};
+
+static gboolean 
+bookmarks_clear_hash_foreach(gpointer key,gpointer value,gpointer data){
+	struct bookmark_item_priv *item=(struct bookmark_item_priv*)value;
+	free(item->label);
+	g_free(item);
+	return TRUE;
+}
+
+static void 
+bookmarks_clear_hash(struct bookmarks *this_) {
+	g_hash_table_foreach_remove(this_->bookmarks_hash,bookmarks_clear_hash_foreach,NULL);
+	g_hash_table_destroy(this_->bookmarks_hash);
+	g_list_free(this_->bookmarks_list);
+}
+
+static void 
+bookmarks_load_hash(struct bookmarks *this_) {
+	struct bookmark_item_priv *b_item;
+	struct item *item;
+	struct map_rect *mr=NULL;
+	struct attr attr;
+	struct coord c;
+
+	this_->bookmarks_hash=g_hash_table_new(g_str_hash, g_str_equal);
+
+	mr=map_rect_new(this_->bookmark, NULL);
+	if (mr==NULL) {
+		return;
+	}
+
+	while ((item=map_rect_get_item(mr))) {
+		if (item->type != type_bookmark) continue;
+		item_attr_get(item, attr_label, &attr);
+		item_coord_get(item, &c, 1);
+
+		b_item=g_new0(struct bookmark_item_priv,1);
+		b_item->c.x=c.x;
+		b_item->c.y=c.y;
+		b_item->label=strdup(attr.u.str);
+		b_item->type=item->type;
+
+		g_hash_table_insert(this_->bookmarks_hash,b_item->label,b_item);
+		this_->bookmarks_list=g_list_append(this_->bookmarks_list,b_item);
+	}
+}
 struct bookmarks *
 bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation *trans) {
 	struct bookmarks *this_;
@@ -53,18 +105,26 @@ bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation
 	//this_->attrs=attr_list_dup(attrs);
 	this_->trans=trans;
 
-	this_->bookmarks_hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-
 	this_->bookmark_file=g_strjoin(NULL, bookmarks_get_user_data_directory(TRUE), "/bookmark.txt", NULL);
 	this_->working_file=g_strjoin(NULL, bookmarks_get_user_data_directory(TRUE), "/bookmark.txt.tmp", NULL);
+
+	{
+		//Load map now
+		struct attr type={attr_type, {"textfile"}}, data={attr_data, {this_->bookmark_file}};
+		struct attr *attrs[]={&type, &data, NULL};
+		this_->bookmark=map_new(this_->parent, attrs);
+		bookmarks_load_hash(this_);
+	}
 
 	return this_;
 }
 
 void 
 bookmarks_destroy(struct bookmarks *this_) {
+
+	bookmarks_clear_hash(this_);
+
 	map_destroy(this_->bookmark);
-	g_hash_table_destroy(this_->bookmarks_hash);
 	callback_list_destroy(this_->attr_cbl);
 
 	g_free(this_->bookmark_file);
@@ -84,27 +144,11 @@ bookmarks_add_callback(struct bookmarks *this_, struct callback *cb)
 	callback_list_add(this_->attr_cbl, cb);
 }
 
-static int bookmarks_write_bookmark_to_file(FILE *f, struct coord c, const char *label) {
-	const char *prostr;
-	int result;
-
-	prostr = projection_to_name(projection_mg,NULL);
-	result=fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
-		 prostr, *prostr ? ":" : "", 
-		 c.x >= 0 ? "":"-", c.x >= 0 ? c.x : -c.x, 
-		 c.y >= 0 ? "":"-", c.y >= 0 ? c.y : -c.y, 
-		 "bookmark", label);
-
-	return result>0;
-}
-
 static int 
 bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replace) {
 	FILE *f;
-	struct item *item;
-	struct map_rect *mr=NULL;
-	struct attr attr;
-	struct coord c;
+	struct bookmark_item_priv *item;
+	const char *prostr;
 
 	if (limit>0) {
 		limit++; //We are 1 based, not zero
@@ -122,23 +166,22 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 		fclose(f);
 	}
 
-	mr=map_rect_new(this_->bookmark, NULL);
-	if (mr==NULL) {
-		return FALSE;
-	}
-
 	f=fopen(this_->working_file, replace ? "w+" : "a+");
 	if (f==NULL) {
 		return FALSE;
 	}
 
-
-	while ((item=map_rect_get_item(mr))) {
+	this_->bookmarks_list=g_list_first(this_->bookmarks_list);
+	while (this_->bookmarks_list) {
+		item=(struct bookmark_item_priv*)this_->bookmarks_list->data;
 		if (item->type != type_bookmark) continue;
-		item_attr_get(item, attr_label, &attr);
-		item_coord_get(item, &c, 1);
 
-		if (!bookmarks_write_bookmark_to_file(f,c,attr.u.str)) 
+		prostr = projection_to_name(projection_mg,NULL);
+		if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
+			 prostr, *prostr ? ":" : "", 
+			 item->c.x >= 0 ? "":"-", item->c.x >= 0 ? item->c.x : -item->c.x, 
+			 item->c.y >= 0 ? "":"-", item->c.y >= 0 ? item->c.y : -item->c.y, 
+			 "bookmark", item->label)<1) 
 			break;
 
  		/* Limit could be zero, so we start decrementing it from zero and never reach 1
@@ -148,6 +191,8 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 			break;
 		}
 		limit--;
+
+		this_->bookmarks_list=g_list_next(this_->bookmarks_list);
 	}
 
 	fclose(f);
@@ -264,34 +309,24 @@ bookmarks_write_center_to_file(struct bookmarks *this_, char *file)
 int 
 bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *description)
 {
-	FILE *f;
+	struct bookmark_item_priv b_item;
 	int result;
-	struct coord c;
 
-	f=fopen(this_->working_file, "a+");
-	if (f==NULL) {
-		return FALSE;
-	}
-	c.x=pc->x;
-	c.y=pc->y;
-	result=bookmarks_write_bookmark_to_file(f, c, description);
-	fclose(f);
-	if (result) {
-		bookmarks_store_bookmarks_to_file(this_,0,0);
-	}
+	b_item.c.x=pc->x;
+	b_item.c.y=pc->y;
+	b_item.label=description;
+	b_item.type=type_bookmark;
+
+	this_->bookmarks_list=g_list_first(this_->bookmarks_list);
+	this_->bookmarks_list=g_list_prepend(this_->bookmarks_list,&b_item);
+
+	result=bookmarks_store_bookmarks_to_file(this_,0,0);
 
 	callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
+	bookmarks_clear_hash(this_);
+	bookmarks_load_hash(this_);
 
 	return result;
-}
-
-void
-bookmarks_add_bookmarks_from_file(struct bookmarks *this_)
-{
-	struct attr type={attr_type, {"textfile"}}, data={attr_data, {this_->bookmark_file}};
-	struct attr *attrs[]={&type, &data, NULL};
-
-	this_->bookmark=map_new(this_->parent, attrs);
 }
 
 /**

@@ -1175,7 +1175,6 @@ navit_init(struct navit *this_)
 				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
 			}
 		}
-		bookmarks_add_bookmarks_from_file(this_->bookmarks);
 		navit_add_former_destinations_from_file(this_);
 	}
 	if (this_->route) {
