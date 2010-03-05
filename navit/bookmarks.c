@@ -329,6 +329,27 @@ bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *d
 	return result;
 }
 
+int 
+bookmarks_del_bookmark(struct bookmarks *this_, const char *description) {
+	struct bookmark_item_priv *b_item;
+	int result;
+
+	b_item=(struct bookmark_item_priv*)g_hash_table_lookup(this_->bookmarks_hash,description);
+	if (b_item) {
+		this_->bookmarks_list=g_list_first(this_->bookmarks_list);
+		this_->bookmarks_list=g_list_remove(this_->bookmarks_list,b_item);
+
+		result=bookmarks_store_bookmarks_to_file(this_,0,0);
+
+		callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
+		bookmarks_clear_hash(this_);
+		bookmarks_load_hash(this_);
+
+		return result;
+	}
+
+	return FALSE;
+}
 /**
  * @param limit Limits the number of entries in the "backlog". Set to 0 for "infinite"
  */
