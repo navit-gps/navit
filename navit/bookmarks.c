@@ -150,22 +150,6 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 	struct bookmark_item_priv *item;
 	const char *prostr;
 
-	if (limit>0) {
-		limit++; //We are 1 based, not zero
-		//Calculate, how many entries we already have
-		f=fopen(this_->working_file,"r");
-		if (f!=NULL) {
-			while (!feof(f) && limit>0) {
-				char* tmpline=NULL;
-				size_t tmpn;
-				getline(&tmpline,&tmpn,f);
-				limit--;
-				free(tmpline);
-			}
-		}
-		fclose(f);
-	}
-
 	f=fopen(this_->working_file, replace ? "w+" : "a+");
 	if (f==NULL) {
 		return FALSE;
