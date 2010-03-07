@@ -279,6 +279,7 @@ struct gui_priv {
 	struct attr osd_configuration;
 	int pitch;
 	int flags_town,flags_street,flags_house_number;
+	int radius;
 /* html */
 	char *html_text;
 	int html_depth;	
@@ -4393,7 +4394,7 @@ static void gui_internal_dbus_signal(struct gui_priv *this, struct point *p)
 	while ((di=graphics_displaylist_next(dlh))) {
 		struct item *item=graphics_displayitem_get_item(di);
 		if (item_is_point(*item) && graphics_displayitem_get_displayed(di) &&
-			graphics_displayitem_within_dist(display, di, p, 10)) {
+			graphics_displayitem_within_dist(display, di, p, this->radius)) {
 			struct map_rect *mr=map_rect_new(item->map, NULL);
 			struct item *itemo=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
 			struct attr attr;
@@ -6002,6 +6003,10 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 		this->flags_house_number=attr->u.num;
 	else
 		this->flags_house_number=-1;
+	if( (attr=attr_search(attrs,NULL,attr_radius)))
+		this->radius=attr->u.num;
+	else
+		this->radius=10;
 	this->data.priv=this;
 	this->data.gui=&gui_internal_methods_ext;
 	this->data.widget=&gui_internal_widget_methods;
