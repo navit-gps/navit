@@ -1598,8 +1598,16 @@ dbus_main_navit(struct navit *navit, int added)
 {
 	struct attr attr;
 	if (added) {
+		DBusMessage* msg;
+		char *opath=object_new("navit",navit);
+		char *interface=g_strdup_printf("%s%s", service_name, ".navit");
 		command_add_table_attr(commands, sizeof(commands)/sizeof(struct command_table), navit, &attr);
 		navit_add_attr(navit, &attr);
+		msg = dbus_message_new_signal(opath, interface, "startup");
+		dbus_connection_send(connection, msg, &dbus_serial);
+		dbus_connection_flush(connection);
+		dbus_message_unref(msg);
+		g_free(interface);
 	}
 }
 
