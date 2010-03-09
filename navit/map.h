@@ -28,6 +28,10 @@
 #ifndef NAVIT_MAP_H
 #define NAVIT_MAP_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct map_priv;
 struct attr;
 #include "coord.h"
@@ -261,4 +265,7 @@ void map_dump_file(struct map *map, const char *file);
 void map_dump(struct map *map);
 /* end of prototypes */
 
+#ifdef __cplusplus
+}
+#endif
 #endif
