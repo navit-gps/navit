@@ -20,6 +20,10 @@
 #ifndef NAVIT_COORD_H
 #define NAVIT_COORD_H
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <stdio.h>
 #include "config.h"
 #include "projection.h"
@@ -131,7 +135,6 @@ int coord_rect_contains(struct coord_rect *r, struct coord *c);
 void coord_rect_extend(struct coord_rect *r, struct coord *c);
 void coord_format(float lat,float lng, enum coord_format, char * buffer, int size);
 
-#endif
 /* prototypes */
 enum coord_format;
 enum projection;
@@ -155,3 +158,7 @@ void coord_format(float lat, float lng, enum coord_format fmt, char *buffer, int
 unsigned int coord_hash(const void *key);
 int coord_equal(const void *a, const void *b);
 /* end of prototypes */
+#ifdef __cplusplus
+}
+#endif
+#endif
