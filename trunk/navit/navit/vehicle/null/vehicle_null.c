@@ -161,11 +161,11 @@ vehicle_null_new_null(struct vehicle_methods *meth,
 {
 	struct vehicle_priv *ret;
 
-	dbg(0, "enter\n");
+	dbg(1, "enter\n");
 	ret = g_new0(struct vehicle_priv, 1);
 	ret->cbl = cbl;
 	*meth = vehicle_null_methods;
-	dbg(0, "return\n");
+	dbg(1, "return\n");
 	return ret;
 }
 
@@ -177,6 +177,6 @@ vehicle_null_new_null(struct vehicle_methods *meth,
 void
 plugin_init(void)
 {
-	dbg(0, "enter\n");
+	dbg(1, "enter\n");
 	plugin_register_vehicle_type("null", vehicle_null_new_null);
 }
