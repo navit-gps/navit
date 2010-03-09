@@ -17,6 +17,10 @@
  * Boston, MA  02110-1301, USA.
  */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 struct roadprofile {
 	struct attr **attrs;
         int speed;
@@ -28,3 +32,6 @@ int roadprofile_get_attr(struct roadprofile *this_, enum attr_type type, struct 
 int roadprofile_set_attr(struct roadprofile *this_, struct attr *attr);
 int roadprofile_add_attr(struct roadprofile *this_, struct attr *attr);
 int roadprofile_remove_attr(struct roadprofile *this_, struct attr *attr);
+#ifdef __cplusplus
+}
+#endif
