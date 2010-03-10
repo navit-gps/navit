@@ -909,10 +909,14 @@ disable_suspend(struct window *win)
 static void * get_data(struct graphics_priv *this_, char *type)
 {
 	struct window *win;
+
+	this_->painter=new QPainter;
+
+	if (!strcmp(type, "qt_widget")) 
+	    return this_->widget;
 	if (strcmp(type, "window"))
 		return NULL;
 	win=g_new(struct window, 1);
-	this_->painter=new QPainter;
 	if (this_->w && this_->h)
 		this_->widget->show();
 	else
