@@ -444,6 +444,8 @@ attr_data_size(struct attr *attr)
 		return sizeof(*attr->u.num64);
 	if (attr->type == attr_order)
 		return sizeof(attr->u.range);
+	if (attr->type >= attr_type_double_begin && attr->type <= attr_type_double_end) 
+		return sizeof(*attr->u.numd);
 	if (attr->type == attr_item_types) {
 		int i=0;
 		while (attr->u.item_types[i++] != type_none);
