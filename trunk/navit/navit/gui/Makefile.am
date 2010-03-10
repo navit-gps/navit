@@ -8,3 +8,6 @@ endif
 if GUI_WIN32
   SUBDIRS += win32
 endif
+if GUI_QML
+  SUBDIRS += qml
+endif
