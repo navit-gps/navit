@@ -35,6 +35,7 @@
 #include "vehicleprofile.h"
 #include "vehicle.h"
 #include "util.h"
+#include "config.h"
 
 struct tracking_line
 {
@@ -338,6 +339,9 @@ tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *attr
 	case attr_position_speed:
 		attr->u.numd=&_this->speed;
 		return 1;
+	case attr_directed:
+		attr->u.num=_this->street_direction;
+		return 1;
 	case attr_position_coord_geo:
 		if (!_this->coord_geo_valid) {
 			struct coord c;
@@ -347,6 +351,11 @@ tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *attr
 			_this->coord_geo_valid=1;
 		}
 		attr->u.coord_geo=&_this->coord_geo;
+		return 1;
+	case attr_current_item:
+		if (! _this->curr_line || ! _this->curr_line->street)
+			return 0;
+		attr->u.item=&_this->curr_line->street->item;
 		return 1;
 	default:
 		if (! _this->curr_line || ! _this->curr_line->street)
@@ -549,11 +558,15 @@ tracking_is_no_stop(struct coord *c1, struct coord *c2)
 static int
 tracking_is_on_route(struct route *rt, struct item *item)
 {
+#ifdef USE_ROUTING
 	if (! rt)
 		return 0;
 	if (route_contains(rt, item))
 		return 0;
 	return route_pref;
+#else
+	return 0;
+#endif	
 }
 
 static int
@@ -668,6 +681,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		dbg(1,"update end\n");
 	}
 	
+	tr->street_direction=0;
 	t=tr->lines;
 	tr->curr_line=NULL;
 	min=INT_MAX/2;
@@ -706,6 +720,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	if (!tr->curr_line || min > offroad_limit_pref) {
 		tr->curr_out=tr->curr_in;
 		tr->coord_geo_valid=0;
+		tr->street_direction=0;
 	}
 	dbg(1,"found 0x%x,0x%x\n", tr->curr_out.x, tr->curr_out.y);
 }
