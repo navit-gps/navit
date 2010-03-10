@@ -31,6 +31,7 @@ ATTR(street_name_numbers_item)
 ATTR(street_item)
 ATTR(street_number_item)
 ATTR(position_sat_item)
+ATTR(current_item)
 ATTR2(0x0001ffff,type_item_end)
 
 ATTR2(0x00020000,type_int_begin)

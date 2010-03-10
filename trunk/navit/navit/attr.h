@@ -87,6 +87,11 @@ enum attr_position_valid {
 #define ATTR_IS_PCOORD(x) ((x) >= attr_type_pcoord_begin && (x) <= attr_type_pcoord_end)
 #define ATTR_IS_COORD(x) ((x) >= attr_type_coord_begin && (x) <= attr_type_coord_end)
 
+#define ATTR_DEF_STR(x,y) (&(struct attr){attr_##x,{y}})
+#define ATTR_DEF_INT(x,y) (&(struct attr){attr_##x,{(char *)(y)}})
+#define ATTR_DEF_ITEMS(x,types...) (&(struct attr){attr_##x,{(char *)((enum item_type[]){types,type_none})}})
+#define ATTR_LIST(attrs...) (struct attr *[]) { attrs, NULL}
+
 struct attr {
 	enum attr_type type;
 	union {
