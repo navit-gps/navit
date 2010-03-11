@@ -1458,9 +1458,10 @@ static void
 graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pin, int count_in)
 {
 	struct point_rect r=gra->r;
-	struct point *pout,*p,*s,pi;
-	struct point p1[count_in*8+1];
-	struct point p2[count_in*8+1];
+	struct point *pout,*p,*s,pi,*p1,*p2;
+	int limit=10000;
+	struct point pa1[count_in < limit ? count_in*8+1:0];
+	struct point pa2[count_in < limit ? count_in*8+1:0];
 	int count_out,edge=3;
 	int i;
 #if 0
@@ -1469,7 +1470,14 @@ graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, stru
 	r.rl.x-=20;
 	r.rl.y-=20;
 #endif
-
+	if (count_in < limit) {
+		p1=pa1;
+		p2=pa2;
+	} else {
+		p1=g_new(struct point, count_in*8+1);
+		p2=g_new(struct point, count_in*8+1);
+	}
+	
 	pout=p1;
 	for (edge = 0 ; edge < 4 ; edge++) {
 		p=pin;
@@ -1501,6 +1509,10 @@ graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, stru
 		}
 	}
 	gra->meth.draw_polygon(gra->priv, gc->priv, pin, count_in);
+	if (count_in >= limit) {
+		g_free(p1);
+		g_free(p2);
+	}
 }
 
 
