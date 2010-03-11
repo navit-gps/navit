@@ -358,6 +358,8 @@ Navigation</text></img>
 		<speech type="cmdline" data="echo 'Fix the speech tag in navit.xml to let navit say:' '%s'" cps="15"/>
 		<!-- <speech type="cmdline" data="flite -t '%s'"/> -->
 
+		<!-- You can only have enabled only one mapset at time, but with as much maps enabled as you want -->
+
 		<!-- If you have the reiseplaner maps installed, set enabled="yes" in the next line and set the path correctly -->
 		<mapset enabled="no">
 			<map type="mg" enabled="yes" data="/opt/reiseplaner/travel/DE.map"/>
