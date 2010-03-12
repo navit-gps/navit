@@ -12,6 +12,7 @@
 #include "navit.h"
 #include "point.h"
 #include "graphics.h"
+#include "event.h"
 
 struct gui_priv {
 	struct navit *nav;
@@ -23,6 +24,7 @@ struct gui_priv {
 	int h;
 	char *source;
 	char *skin;
+	char* icon_src;
 	
 	//Interface stuff
 	struct callback_list *cbl;
@@ -31,10 +33,122 @@ struct gui_priv {
 	struct graphics *gra;
 	struct QMainWindow *mainWindow;
 	QWidget *graphicsWidget;
-	QWidget *guiWidget;
+	QmlView *guiWidget;
 	QStackedWidget *switcherWidget;
 	struct callback *button_cb;
+
+	//Proxy objects
+	class NGQProxyGui* guiProxy;
+	class NGQProxyNavit* navitProxy;
 };
+
+//Proxy classes
+class NGQProxyGui : public QObject {
+    Q_OBJECT;
+
+	Q_PROPERTY(QString iconPath READ iconPath CONSTANT);
+	Q_PROPERTY(QString returnSource READ returnSource WRITE setReturnSource);
+
+public:
+    NGQProxyGui(struct gui_priv* this_,QObject *parent) : QObject(parent) {
+        this->gui=this_;
+		this->source=QString("NoReturnTicket");
+    }
+
+public slots:
+	void setPage(QString page) {
+		this->gui->guiWidget->setUrl(QUrl::fromLocalFile(QString(this->gui->source)+"/"+this->gui->skin+"/"+page));
+		this->gui->guiWidget->execute();
+		this->gui->guiWidget->show();
+		dbg(0,"Page is: %s\n",page.toStdString().c_str());
+	}
+	void backToMap() {
+        if (this->gui->graphicsWidget) {
+                this->gui->switcherWidget->setCurrentWidget(this->gui->graphicsWidget);
+        }
+    }
+
+	//Properties
+	QString iconPath() {
+		return QString(this->gui->icon_src);
+	}
+	QString returnSource() {
+		return this->source;
+	}
+	void setReturnSource(QString returnSource) {
+		this->source=returnSource;
+	}
+
+private:
+    struct gui_priv* gui;
+	QString source;
+};
+
+class NGQProxyNavit : public QObject {
+    Q_OBJECT;
+
+public:
+    NGQProxyNavit(struct gui_priv* this_,QObject *parent) : QObject(parent) {
+        this->gui=this_;
+    }
+
+public slots:
+	void quit() {
+			struct attr navit;
+			navit.type=attr_navit;
+			navit.u.navit=this->gui->nav;
+			navit_destroy(navit.u.navit);
+			event_main_loop_quit();
+			this->gui->mainWindow->close();
+	}
+	//Attribute read/write
+	QString getAttr(const QString &attr_name) {
+		QString ret;
+		struct attr attr;
+		navit_get_attr(this->gui->nav, attr_from_name(attr_name.toStdString().c_str()), &attr, NULL);
+		if (ATTR_IS_INT(attr.type)) {
+			ret.setNum(attr.u.num);
+		}
+		if (ATTR_IS_DOUBLE(attr.type)) {
+			ret.setNum(*attr.u.numd);
+		}
+		if (ATTR_IS_STRING(attr.type)) {
+			ret=attr.u.str;
+		}
+		return ret;
+	}
+	void setAttr(const QString &attr_name, const QString &attr_string) {
+			struct attr attr_value;
+			double *helper;
+
+			navit_get_attr(this->gui->nav, attr_from_name(attr_name.toStdString().c_str()), &attr_value, NULL);
+
+			if (ATTR_IS_INT(attr_value.type)) {
+				attr_value.u.num=attr_string.toInt();
+			}
+			if (ATTR_IS_DOUBLE(attr_value.type)) {
+				helper = g_new0(double,1);
+				*helper=attr_string.toDouble();
+				attr_value.u.numd=helper;
+			}
+			if (ATTR_IS_STRING(attr_value.type)) {
+				attr_value.u.str=(char*)attr_string.toStdString().c_str();
+			}
+
+			navit_set_attr(this->gui->nav, &attr_value);
+
+			return;
+	}
+	
+protected:
+
+private:
+    struct gui_priv* gui;
+
+};
+
+//Meta objects
+#include "gui_qml.moc"
 
 static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 {
@@ -52,7 +166,7 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 	}
 }
 
-
+//GUI interface calls
 static int argc=1;
 static char *argv[]={(char *)"navit",NULL};
 
@@ -87,10 +201,12 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	view = new QmlView(NULL);
 	this_->guiWidget = view;
 	
-	view->setUrl(QUrl::fromLocalFile(QString(this_->source)+"/"+this_->skin+"/main.qml"));
-	view->execute();
-	this_->switcherWidget->addWidget(this_->guiWidget);
-	
+	//Create proxy object and bind them to gui widget
+	this_->guiProxy = new NGQProxyGui(this_,this_->mainWindow);
+	view->rootContext()->setContextProperty("gui",this_->guiProxy);
+	this_->navitProxy = new NGQProxyNavit(this_,this_->mainWindow);
+	view->rootContext()->setContextProperty("navit",this_->navitProxy);
+		
 	//Check, if we have compatible graphics
 	this_->graphicsWidget = (QWidget*)graphics_get_data(gra,"qt_widget");
 	if (this_->graphicsWidget == NULL ) {
@@ -104,6 +220,10 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	//Link graphics events
 	this_->button_cb=callback_new_attr_1(callback_cast(gui_qml_button), attr_button, this_);
 	graphics_add_callback(gra, this_->button_cb);
+
+	//Instantiate qml components
+	this_->guiProxy->setPage(QString("main.qml"));
+	this_->switcherWidget->addWidget(this_->guiWidget);
 
 	this_->mainWindow->show();
 
@@ -186,14 +306,17 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
     	      this_->source=attr->u.str;
 	if( (attr=attr_search(attrs,NULL,attr_skin)))
     	      this_->skin=attr->u.str;
+	if( (attr=attr_search(attrs,NULL,attr_icon_src)))
+			  this_->icon_src=attr->u.str;
 
 	if ( this_->source==NULL ) {
 	    this_->source=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"),"/gui/qml/skins",NULL);
 	}
+	if ( this_->icon_src==NULL ) {
+		this_->icon_src=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"),"/xpm/",NULL);
+	}
 
 	this_->cbl=callback_list_new();
-
-	plugin_init();
 
 	return this_;
 }
