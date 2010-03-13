@@ -821,7 +821,7 @@ xi_text (GMarkupParseContext *context,
 				text_dup[text_len]='\0';
 				attr.type=attr_xml_text;
 				attr.u.str=text_dup;
-				if (curr->object_func && curr->object_func->add_attr)
+				if (curr->object_func && curr->object_func->add_attr && curr->element_attr.u.data)
 					curr->object_func->add_attr(curr->element_attr.u.data, &attr);
 				g_free(text_dup);
 				return;
