@@ -1457,7 +1457,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		d=g_strdup(_("soon"));
 		break;
 	case 1:
-		d=get_distance(distance, type, 0);
+		d=get_distance(distance, attr_navigation_short, 0);
 		break;
 	case 0:
 		skip_roads = count_possible_turns(nav->first,cmd->itm,cmd->delta);
