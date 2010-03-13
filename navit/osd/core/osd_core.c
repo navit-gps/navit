@@ -273,6 +273,7 @@ osd_button_init(struct osd_button *this, struct navit *nav)
 		graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, this, nav));
 	}
 	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_std_click), attr_button, &this->item));
+	osd_button_draw(this,nav);
 }
 
 static struct osd_priv *
