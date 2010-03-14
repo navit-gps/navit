@@ -24,13 +24,13 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter;
         spacing: 64
         ToggleSwitch {
-             on: navit.getAttr("tracking");  text: "Lock on road"
+             id: trackingSw; on: navit.getAttr("tracking");  text: "Lock on road"; onChanged: navit.setAttr("tracking",trackingSw.on)
         }
         ToggleSwitch {
-             on: navit.getAttr("orientation");  text: "Northing"
+             id: orientationSw; on: navit.getAttr("orientation");  text: "Northing"; onChanged: navit.setAttr("orientation",orientationSw.on)
         }
 	ToggleSwitch {
-             on: navit.getAttr("follow_cursor");  text: "Map follows Vehicle"
+             id: followrcursorSw; on: navit.getAttr("follow_cursor");  text: "Map follows Vehicle"; onChanged: navit.setAttr("follow_cursor",followrcursorSw.on)
         }
     }
 

@@ -6,6 +6,7 @@ import Qt 4.6
 
      property string on: "false"
      property string text: "Toggle switch"
+     signal changed
 
      function toggle() {
          if (toggleswitch.state == "on")
@@ -51,10 +52,14 @@ import Qt 4.6
          State {
              name: "on"
              PropertyChanges { target: knob; x: 78 }
+	     PropertyChanges { target: toggleswitch; on: "true" }
+	     StateChangeScript { script: toggleswitch.changed(); }
          },
          State {
              name: "off"
              PropertyChanges { target: knob; x: 1 }
+	     PropertyChanges { target: toggleswitch; on: "false" }
+	     StateChangeScript { script: toggleswitch.changed(); }
          }
      ]
 
