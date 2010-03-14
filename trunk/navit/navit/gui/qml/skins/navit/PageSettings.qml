@@ -24,7 +24,7 @@ Rectangle {
         anchors.bottom: parent.verticalCenter; anchors.bottomMargin: 48;
         spacing: 64
         ButtonIcon {
-            id: btnDisplay; text: "Display"; icon: "gui_display.svg"; onClicked: console.log("Implement me!");
+            id: btnDisplay; text: "Display"; icon: "gui_display.svg"; onClicked: { gui.returnSource="PageSettings.qml"; gui.setPage("PageSettingsDisplay.qml") }
         }
         ButtonIcon {
             id: btnMap; text: "Map"; icon: "gui_maps.svg"; onClicked: console.log("Implement me!");
