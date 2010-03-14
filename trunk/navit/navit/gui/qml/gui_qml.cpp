@@ -13,6 +13,7 @@
 #include "point.h"
 #include "graphics.h"
 #include "event.h"
+#include "map.h"
 
 struct gui_priv {
 	struct navit *nav;
@@ -20,11 +21,14 @@ struct gui_priv {
 	
 	//configuration items
 	int fullscreen;
+	int menu_on_map_click;
+	int signal_on_map_click;
 	int w;
 	int h;
 	char *source;
 	char *skin;
 	char* icon_src;
+	int radius;
 	
 	//Interface stuff
 	struct callback_list *cbl;
@@ -150,19 +154,53 @@ private:
 //Meta objects
 #include "gui_qml.moc"
 
+static void gui_qml_dbus_signal(struct gui_priv *this_, struct point *p)
+{
+	struct displaylist_handle *dlh;
+	struct displaylist *display;
+	struct displayitem *di;
+
+	display=navit_get_displaylist(this_->nav);
+	dlh=graphics_displaylist_open(display);
+	while ((di=graphics_displaylist_next(dlh))) {
+		struct item *item=graphics_displayitem_get_item(di);
+		if (item_is_point(*item) && graphics_displayitem_get_displayed(di) &&
+			graphics_displayitem_within_dist(display, di, p, this_->radius)) {
+			struct map_rect *mr=map_rect_new(item->map, NULL);
+			struct item *itemo=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+			struct attr attr;
+			if (item_attr_get(itemo, attr_data, &attr)) {
+				struct attr cb,*attr_list[2];
+				int valid=0;
+				attr.type=attr_data;
+				attr_list[0]=&attr;
+				attr_list[1]=NULL;
+       				if (navit_get_attr(this_->nav, attr_callback_list, &cb, NULL)) 
+               				callback_list_call_attr_4(cb.u.callback_list, attr_command, "dbus_send_signal", attr_list, NULL, &valid);
+			}
+			map_rect_destroy(mr);
+		}
+	}
+       	graphics_displaylist_close(dlh);
+}
+
 static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 {
 	struct gui_priv *this_=(struct gui_priv*)data;
 
+	// check whether the position of the mouse changed during press/release OR if it is the scrollwheel
+	if (!navit_handle_button(this_->nav, pressed, button, p, NULL)) {
+		dbg(1,"navit has handled button\n");
+		return;
+	}
 	dbg(1,"enter %d %d\n", pressed, button);
-	if (pressed == 0) {
-	    if ( button == 1 ) {
-		if (this_->switcherWidget->currentWidget() == this_->graphicsWidget) {
-		    this_->switcherWidget->setCurrentWidget(this_->guiWidget);
-		} else {
-		    this_->switcherWidget->setCurrentWidget(this_->graphicsWidget);
-		}
-	    }
+	if (this_->signal_on_map_click) {
+		gui_qml_dbus_signal(this_, p);
+		return;
+	}
+
+	if ( button == 1 && this_->menu_on_map_click ) {
+		this_->switcherWidget->setCurrentWidget(this_->guiWidget);
 	}
 }
 
@@ -274,7 +312,7 @@ gui_qml_set_attr(struct gui_priv *this_, struct attr *attr)
 struct gui_methods gui_qml_methods = {
 	NULL,
 	NULL,
-        gui_qml_set_graphics,
+    gui_qml_set_graphics,
 	NULL,
 	NULL,
 	NULL,
@@ -296,8 +334,18 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 	this_->self.type=attr_gui;
 	this_->self.u.gui=gui;	
 
+	this_->fullscreen = 0; //NO by default
 	if( (attr=attr_search(attrs,NULL,attr_fullscreen)))
     	      this_->fullscreen=attr->u.num;
+	this_->menu_on_map_click = 1; //YES by default;
+	if( (attr=attr_search(attrs,NULL,attr_menu_on_map_click)))
+			  this_->menu_on_map_click=attr->u.num;
+	this_->signal_on_map_click = 0; //YES by default;
+	if( (attr=attr_search(attrs,NULL,attr_signal_on_map_click)))
+			  this_->signal_on_map_click=attr->u.num;
+	this_->radius = 10; //Default value
+	if( (attr=attr_search(attrs,NULL,attr_radius)))
+			  this_->radius=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_width)))
     	      this_->w=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_height)))
@@ -311,6 +359,9 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 
 	if ( this_->source==NULL ) {
 	    this_->source=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"),"/gui/qml/skins",NULL);
+	}
+	if ( this_->skin==NULL ) {
+		this_->source=g_strdup("navit");
 	}
 	if ( this_->icon_src==NULL ) {
 		this_->icon_src=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"),"/xpm/",NULL);
