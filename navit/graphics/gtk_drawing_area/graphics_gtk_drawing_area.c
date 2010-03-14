@@ -389,13 +389,13 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 		} else if (COLOR_IS_WHITE(fg->c) && COLOR_IS_BLACK(bg->c)) {
 			gdk_gc_set_function(fg->gc, GDK_OR);
 			gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
-		} else 
+		} else  {
+			gdk_gc_set_function(fg->gc, GDK_OR);
+			gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
 			color=1;
+		}
 	} else {
 		gdk_gc_set_function(fg->gc, GDK_OR);
-#if 0
-		gdk_gc_set_function(bg->gc, GDK_AND_INVERT);
-#endif
 		color=1;
 	}
 	t=gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
