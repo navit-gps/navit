@@ -70,6 +70,7 @@ struct graphics
 	struct point_rect r;
 	int gamma,brightness,contrast;
 	int colormgmt;
+	int font_size;
 	GList *selection;
 };
 
@@ -113,6 +114,7 @@ struct displaylist_icon_cache {
 
 static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
 static void graphics_process_selection(struct graphics *gra, struct displaylist *dl);
+static void graphics_gc_init(struct graphics *this_);
 
 static int
 graphics_set_attr_do(struct graphics *gra, struct attr *attr)
@@ -127,10 +129,14 @@ graphics_set_attr_do(struct graphics *gra, struct attr *attr)
 	case attr_contrast:
 		gra->contrast=attr->u.num;
 		break;
+	case attr_font_size:
+		gra->font_size=attr->u.num;
+		return 1;
 	default:
 		return 0;
 	}
 	gra->colormgmt=(gra->gamma != 65536 || gra->brightness != 0 || gra->contrast != 65536);
+	graphics_gc_init(gra);
 	return 1;
 }
 
@@ -179,6 +185,7 @@ struct graphics * graphics_new(struct attr *parent, struct attr **attrs)
 	this_->brightness=0;
 	this_->contrast=65536;
 	this_->gamma=65536;
+	this_->font_size=20;
 	while (*attrs) {
 		graphics_set_attr_do(this_,*attrs);
 		attrs++;
@@ -243,6 +250,20 @@ graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, i
 	this_->meth.overlay_resize(this_->priv, p, w, h, alpha, wraparound);
 }
 
+static void
+graphics_gc_init(struct graphics *this_)
+{
+	if (!this_->gc[0] || !this_->gc[1] || !this_->gc[2])
+		return;
+	graphics_gc_set_background(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7, 0xffff});
+	graphics_gc_set_foreground(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7, 0xffff });
+	graphics_gc_set_background(this_->gc[1], &(struct color) { 0x0000, 0x0000, 0x0000, 0xffff });
+	graphics_gc_set_foreground(this_->gc[1], &(struct color) { 0xffff, 0xffff, 0xffff, 0xffff });
+	graphics_gc_set_background(this_->gc[2], &(struct color) { 0xffff, 0xffff, 0xffff, 0xffff });
+	graphics_gc_set_foreground(this_->gc[2], &(struct color) { 0x0000, 0x0000, 0x0000, 0xffff });
+}
+
+
 
 /**
  * FIXME
@@ -255,14 +276,9 @@ void graphics_init(struct graphics *this_)
 	if (this_->gc[0])
 		return;
 	this_->gc[0]=graphics_gc_new(this_);
-	graphics_gc_set_background(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7, 0xffff});
-	graphics_gc_set_foreground(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7, 0xffff });
 	this_->gc[1]=graphics_gc_new(this_);
-	graphics_gc_set_background(this_->gc[1], &(struct color) { 0x0000, 0x0000, 0x0000, 0xffff });
-	graphics_gc_set_foreground(this_->gc[1], &(struct color) { 0xffff, 0xffff, 0xffff, 0xffff });
 	this_->gc[2]=graphics_gc_new(this_);
-	graphics_gc_set_background(this_->gc[2], &(struct color) { 0xffff, 0xffff, 0xffff, 0xffff });
-	graphics_gc_set_foreground(this_->gc[2], &(struct color) { 0x0000, 0x0000, 0x0000, 0xffff });
+	graphics_gc_init(this_);
 	graphics_background_gc(this_, this_->gc[0]);
 }
 
@@ -1538,7 +1554,7 @@ get_font(struct graphics *gra, int size)
 			gra->font[gra->font_len++]=NULL;
 	}
 	if (! gra->font[size])
-		gra->font[size]=graphics_font_new(gra, size*20, 0);
+		gra->font[size]=graphics_font_new(gra, size*gra->font_size, 0);
 	return gra->font[size];
 }
 
