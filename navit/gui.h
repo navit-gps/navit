@@ -20,6 +20,9 @@
 #ifndef NAVIT_GUI_H
 #define NAVIT_GUI_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 struct navit;
 struct gui_priv;
 struct menu_methods;
@@ -66,6 +69,9 @@ void gui_disable_suspend(struct gui *this_);
 int gui_has_main_loop(struct gui *this_);
 int gui_run_main_loop(struct gui *this_);
 /* end of prototypes */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
