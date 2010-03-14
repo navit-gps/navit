@@ -35,6 +35,7 @@ struct gui_priv {
 	char *skin;
 	char* icon_src;
 	int radius;
+	int pitch;
 	
 	//Interface stuff
 	struct callback_list *cbl;
@@ -283,6 +284,10 @@ gui_qml_get_attr(struct gui_priv *this_, enum attr_type type, struct attr *attr)
 		break;
 	case attr_skin:
 		attr->u.str=this_->skin;
+		break;
+	case attr_pitch:
+		attr->u.num=this_->pitch;
+		break;
 	default:
 		return 0;
 	}
@@ -303,8 +308,11 @@ gui_qml_set_attr(struct gui_priv *this_, struct attr *attr)
 		}
 		this_->fullscreen=attr->u.num;
 		return 1;
+	case attr_pitch:
+		this_->pitch=attr->u.num;
+		return 1;
 	default:
-		dbg(0,"%s\n",attr_to_name(attr->type));
+		dbg(0,"unknown attr: %s\n",attr_to_name(attr->type));
 		return 1;
 	}
 }
@@ -348,6 +356,9 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 	this_->radius = 10; //Default value
 	if( (attr=attr_search(attrs,NULL,attr_radius)))
 			  this_->radius=attr->u.num;
+	this_->pitch = 20; //Default value
+	if( (attr=attr_search(attrs,NULL,attr_pitch)))
+			  this_->pitch=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_width)))
     	      this_->w=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_height)))
