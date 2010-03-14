@@ -210,7 +210,7 @@ vehicle_gpsd_try_open(gpointer *data)
 		return TRUE;
 	}
 #ifdef HAVE_LIBGPS19
-	gps_stream(priv->gps, WATCH_ENABLE, NULL);
+	gps_stream(priv->gps, WATCH_ENABLE | WATCH_NEWSTYLE, NULL);
 #else
 	gps_query(priv->gps, priv->gpsd_query);
 #endif
