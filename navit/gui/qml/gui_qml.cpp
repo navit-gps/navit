@@ -2,6 +2,9 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtDeclarative>
+#ifdef HAVE_API_WIN32_BASE
+#include <windows.h>
+#endif
 #include "config.h"
 #include "plugin.h"
 #include "item.h"
@@ -15,8 +18,11 @@
 #include "event.h"
 #include "map.h"
 
+#include "proxy.h"
+
 struct gui_priv {
 	struct navit *nav;
+	struct gui *gui;
 	struct attr self;
 	
 	//configuration items
@@ -47,34 +53,37 @@ struct gui_priv {
 };
 
 //Proxy classes
-class NGQProxyGui : public QObject {
+class NGQProxyGui : public NGQProxy {
     Q_OBJECT;
 
 	Q_PROPERTY(QString iconPath READ iconPath CONSTANT);
 	Q_PROPERTY(QString returnSource READ returnSource WRITE setReturnSource);
 
+	Q_PROPERTY(QString localeName READ localeName CONSTANT);
+	Q_PROPERTY(QString langName READ langName CONSTANT);
+	Q_PROPERTY(QString ctryName READ ctryName CONSTANT);
+
 public:
-    NGQProxyGui(struct gui_priv* this_,QObject *parent) : QObject(parent) {
-        this->gui=this_;
+    NGQProxyGui(struct gui_priv* this_,QObject *parent) : NGQProxy(this_, parent) {
 		this->source=QString("NoReturnTicket");
     }
 
 public slots:
 	void setPage(QString page) {
-		this->gui->guiWidget->setUrl(QUrl::fromLocalFile(QString(this->gui->source)+"/"+this->gui->skin+"/"+page));
-		this->gui->guiWidget->execute();
-		this->gui->guiWidget->show();
+		this->object->guiWidget->setUrl(QUrl::fromLocalFile(QString(this->object->source)+"/"+this->object->skin+"/"+page));
+		this->object->guiWidget->execute();
+		this->object->guiWidget->show();
 		dbg(0,"Page is: %s\n",page.toStdString().c_str());
 	}
 	void backToMap() {
-        if (this->gui->graphicsWidget) {
-                this->gui->switcherWidget->setCurrentWidget(this->gui->graphicsWidget);
+        if (this->object->graphicsWidget) {
+                this->object->switcherWidget->setCurrentWidget(this->object->graphicsWidget);
         }
     }
 
 	//Properties
 	QString iconPath() {
-		return QString(this->gui->icon_src);
+		return QString(this->object->icon_src);
 	}
 	QString returnSource() {
 		return this->source;
@@ -83,75 +92,66 @@ public slots:
 		this->source=returnSource;
 	}
 
+	//Locale properties
+	QString localeName() {
+		return QString()+"LANG="+getenv("LANG");
+	}
+	QString langName() {
+#ifdef HAVE_API_WIN32_BASE
+		wchar_t wstr[32];
+		char str[32];
+
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, wstr, sizeof(wstr));
+		WideCharToMultiByte(CP_ACP,0,wstr,-1,str,sizeof(str),NULL,NULL);
+		return QString()+"LOCALE_SABBREVLANGNAME="+str;
+#else
+		return QString();
+#endif
+	}
+	QString ctryName() {
+#ifdef HAVE_API_WIN32_BASE
+		wchar_t wstr[32];
+		char str[32];
+
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, wstr, sizeof(wstr));
+		WideCharToMultiByte(CP_ACP,0,wstr,-1,str,sizeof(str),NULL,NULL);
+		return QString()+"LOCALE_SABBREVCTRYNAME="+str;
+#else
+		return QString();
+#endif
+	}
+protected:
+	int getAttrFunc(enum attr_type type, struct attr* attr, struct attr_iter* iter) { return gui_get_attr(this->object->gui, type, attr, iter); }
+	int setAttrFunc(struct attr* attr) {return gui_set_attr(this->object->gui,attr); }
 private:
-    struct gui_priv* gui;
 	QString source;
 };
 
-class NGQProxyNavit : public QObject {
+class NGQProxyNavit : public NGQProxy {
     Q_OBJECT;
 
 public:
-    NGQProxyNavit(struct gui_priv* this_,QObject *parent) : QObject(parent) {
-        this->gui=this_;
-    }
+	NGQProxyNavit(struct gui_priv* object, QObject* parent) : NGQProxy(object,parent) { };
 
 public slots:
 	void quit() {
 			struct attr navit;
 			navit.type=attr_navit;
-			navit.u.navit=this->gui->nav;
+			navit.u.navit=this->object->nav;
 			navit_destroy(navit.u.navit);
 			event_main_loop_quit();
-			this->gui->mainWindow->close();
-	}
-	//Attribute read/write
-	QString getAttr(const QString &attr_name) {
-		QString ret;
-		struct attr attr;
-		navit_get_attr(this->gui->nav, attr_from_name(attr_name.toStdString().c_str()), &attr, NULL);
-		if (ATTR_IS_INT(attr.type)) {
-			ret.setNum(attr.u.num);
-		}
-		if (ATTR_IS_DOUBLE(attr.type)) {
-			ret.setNum(*attr.u.numd);
-		}
-		if (ATTR_IS_STRING(attr.type)) {
-			ret=attr.u.str;
-		}
-		return ret;
-	}
-	void setAttr(const QString &attr_name, const QString &attr_string) {
-			struct attr attr_value;
-			double *helper;
-
-			navit_get_attr(this->gui->nav, attr_from_name(attr_name.toStdString().c_str()), &attr_value, NULL);
-
-			if (ATTR_IS_INT(attr_value.type)) {
-				attr_value.u.num=attr_string.toInt();
-			}
-			if (ATTR_IS_DOUBLE(attr_value.type)) {
-				helper = g_new0(double,1);
-				*helper=attr_string.toDouble();
-				attr_value.u.numd=helper;
-			}
-			if (ATTR_IS_STRING(attr_value.type)) {
-				attr_value.u.str=(char*)attr_string.toStdString().c_str();
-			}
-
-			navit_set_attr(this->gui->nav, &attr_value);
-
-			return;
+			//this->gui->mainWindow->close();
 	}
 	
 protected:
+	int getAttrFunc(enum attr_type type, struct attr* attr, struct attr_iter* iter) { return navit_get_attr(this->object->nav, type, attr, iter); }
+	int setAttrFunc(struct attr* attr) {return navit_set_attr(this->object->nav,attr); }
 
 private:
-    struct gui_priv* gui;
 
 };
 
-//Meta objects
+//Meta object
 #include "gui_qml.moc"
 
 static void gui_qml_dbus_signal(struct gui_priv *this_, struct point *p)
@@ -329,7 +329,9 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 	struct attr *attr;
 	*meth=gui_qml_methods;
 	this_=g_new0(struct gui_priv, 1);
+
 	this_->nav=nav;
+	this_->gui=gui;
 
 	this_->self.type=attr_gui;
 	this_->self.u.gui=gui;	
