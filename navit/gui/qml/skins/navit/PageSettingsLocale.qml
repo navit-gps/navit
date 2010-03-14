@@ -24,9 +24,9 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.verticalCenter: parent.verticalCenter; 
 
-	Text { id: lang; anchors.bottom: langname.top; text: "Hi, i'm Navit!"; color: "White" }
-	Text { id: langname; anchors.centerIn: parent; text: "Hi, i'm Navit!"; color: "White" }
-	Text { id: ctryname; anchors.top: langname.bottom; text: "Hi, i'm Navit!"; color: "White" }
+	Text { id: lang; anchors.bottom: langname.top; text: gui.localeName; color: "White" }
+	Text { id: langname; anchors.centerIn: parent; text: gui.langName; color: "White" }
+	Text { id: ctryname; anchors.top: langname.bottom; text: gui.ctryName; color: "White" }
     }
 
     Cellar {anchors.bottom: page.bottom; anchors.horizontalCenter: page.horizontalCenter; width: page.width }
