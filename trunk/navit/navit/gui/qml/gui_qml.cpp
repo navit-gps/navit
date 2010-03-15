@@ -374,7 +374,7 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 	    this_->source=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"),"/gui/qml/skins",NULL);
 	}
 	if ( this_->skin==NULL ) {
-		this_->source=g_strdup("navit");
+		this_->skin=g_strdup("navit");
 	}
 	if ( this_->icon_src==NULL ) {
 		this_->icon_src=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"),"/xpm/",NULL);
