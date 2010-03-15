@@ -1357,6 +1357,7 @@ plugin_init(void)
 {
 	struct attr callback,navit;
 	struct attr_iter *iter;
+#ifdef HAVE_API_ANDROID
 	jclass ActivityClass;
 	jmethodID Activity_setRequestedOrientation;
 
@@ -1366,6 +1367,7 @@ plugin_init(void)
         if (Activity_setRequestedOrientation == NULL)
 		dbg(0,"failed to get method setRequestedOrientation from android/app/Activity\n");
 	(*jnienv)->CallVoidMethod(jnienv, android_activity, Activity_setRequestedOrientation, 0);
+#endif
 	
     	plugin_register_osd_type("auxmap", osd_auxmap_new);
     	plugin_register_osd_type("marker", osd_marker_new);
