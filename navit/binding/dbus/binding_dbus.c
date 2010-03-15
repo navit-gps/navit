@@ -1403,7 +1403,7 @@ struct dbus_method {
 	{".gui",     "command",            "s",       "command",                                 "a{sa{sv}}",  "return", request_gui_command},
 	{".navit",  "draw",                "",        "",                                        "",   "",      request_navit_draw},
 	{".navit",  "add_message",         "s",       "message",                                 "",   "",      request_navit_add_message},
-	{".navit",  "set_center",          "s",       "(coordinates)",                           "",   "",      request_navit_set_center},
+	{".navit",  "set_center_by_string","s",       "(coordinates)",                           "",   "",      request_navit_set_center},
 	{".navit",  "set_center",          "(is)",    "(projection,coordinates)",                "",   "",      request_navit_set_center},
 	{".navit",  "set_center",          "(iii)",   "(projection,longitude,latitude)",         "",   "",      request_navit_set_center},
 	{".navit",  "set_center_screen",   "(ii)",    "(pixel_x,pixel_y)",                       "",   "",      request_navit_set_center_screen},
