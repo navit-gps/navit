@@ -292,7 +292,6 @@ display_text_draw(struct font_freetype_text *text, struct graphics_priv *gr, str
 	unsigned char *shadow,*glyph;
 	struct color transparent={0x0,0x0,0x0,0x0};
 	struct color white={0xffff,0xffff,0xffff,0xffff};
-	struct color black={0x0000,0x0000,0x0000,0xffff};
 
 	gp=text->glyph;
 	i=text->glyph_count;
