@@ -41,20 +41,28 @@ Rectangle {
     }
 
     Grid {
-        columns: 1; rows: 3
-        anchors.horizontalCenter: parent.horizontalCenter;
+        columns: 2; rows: 1
         anchors.verticalCenter: parent.verticalCenter;
-        spacing: 64
-        ToggleSwitch {
-             id: fullscreenSw; on: gui.getAttr("fullscreen");  text: "Fullscreen"; onChanged: gui.setAttr("fullscreen",fullscreenSw.on)
+	anchors.left: parent.left; anchors.right: parent.right;
+	ListSelector { 
+		id:layoutList; text: "Current layout"; itemId: navit.getAttrList("layout"); onChanged: navit.setObjectByName("layout",layoutList.value)
+		anchors.left: parent.left
+	}
+        Grid {
+            columns: 1; rows: 3
+            anchors.right: parent.right;
+            spacing: 64
+            ToggleSwitch {
+                id: fullscreenSw; on: gui.getAttr("fullscreen");  text: "Fullscreen"; onChanged: gui.setAttr("fullscreen",fullscreenSw.on)
+            }
+            ToggleSwitch {
+                id: tripledSw; on: page.isTripleD();  text: "2D/3D"; onChanged: setTripleD(tripledSw.on)
+            }
+            Slider {
+                id: pitchSlider; minValue: 5; maxValue: 90; value: navit.getAttr("pitch"); text: "Pitch"; onChanged: { navit.setAttr("pitch",pitchSlider.value); gui.setAttr("pitch",pitchSlider.value) }
+                opacity: 0
+           }
         }
-        ToggleSwitch {
-             id: tripledSw; on: page.isTripleD();  text: "2D/3D"; onChanged: setTripleD(tripledSw.on)
-        }
-        Slider {
-             id: pitchSlider; minValue: 5; maxValue: 90; value: navit.getAttr("pitch"); text: "Pitch"; onChanged: { navit.setAttr("pitch",pitchSlider.value); gui.setAttr("pitch",pitchSlider.value) }
-             opacity: 0
-       }
     }
 
     Cellar {anchors.bottom: page.bottom; anchors.horizontalCenter: page.horizontalCenter; width: page.width }
