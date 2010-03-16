@@ -12,25 +12,11 @@ Rectangle {
     property string itemId: "0"
     signal changed
 
- ListModel {
-     id: contactModel
-     ListElement {
-         itemId: 0
-         name: "Car"
-     }
-     ListElement {
-	 itemId: 1
-         name: "John Brown"
-     }
-     ListElement {
-         itemId: 2
-         name: "Sam Wise"
-     }
-     ListElement {
-         itemId: 3
-         name: "T@H"
-     }
- }
+    function startup() {
+        console.log("model is: "+listModel);
+    }
+    Component.onCompleted: startup();    
+
      Component {
          id: delegate
          Item {
@@ -38,12 +24,12 @@ Rectangle {
              width: 180; height: 20
              Column {
                  x: 5; y: 5
-                 Text { text: name; color: "White" }
+                 Text { text: itemName; color: "White" }
              }
 	     MouseRegion {
 	   		id:delegateMouse
 			anchors.fill: parent
-			onClicked: { list.currentIndex=itemId; listselector.value=name; listselector.changed() }
+			onClicked: { list.currentIndex=itemId; listselector.value=itemName; listselector.changed() }
 	     }
          }
      }
@@ -67,7 +53,7 @@ Rectangle {
              width: 180; height: 60
 	     anchors.top: labelTxt.bottom;
 	     anchors.left: listselector.left
-             model: contactModel
+             model: listModel
              delegate: delegate
              highlight: highlight
              focus: true
