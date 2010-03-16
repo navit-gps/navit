@@ -19,6 +19,7 @@
 #include "event.h"
 #include "map.h"
 #include "coord.h"
+#include "vehicle.h"
 
 //WORKAOUND for the c/c++ compatibility issues.
 //range is defined inside of struct attr so it is invisible in c++
@@ -32,6 +33,7 @@ struct gui_priv {
 	struct navit *nav;
 	struct gui *gui;
 	struct attr self;
+	struct vehicle* currVehicle;
 	
 	//configuration items
 	int fullscreen;
@@ -59,6 +61,7 @@ struct gui_priv {
 	//Proxy objects
 	class NGQProxyGui* guiProxy;
 	class NGQProxyNavit* navitProxy;
+	class NGQProxyVehicle* vehicleProxy;
 };
 
 #include "proxy.h"
@@ -138,6 +141,25 @@ private:
 	QString source;
 };
 
+
+class NGQProxyVehicle : public NGQProxy {
+    Q_OBJECT;
+
+public:
+	NGQProxyVehicle(struct gui_priv* object, QObject* parent) : NGQProxy(object,parent) { };
+
+public slots:
+
+protected:
+	int getAttrFunc(enum attr_type type, struct attr* attr, struct attr_iter* iter) { return vehicle_get_attr(this->object->currVehicle, type, attr, iter); }
+	int setAttrFunc(struct attr* attr) {return vehicle_set_attr(this->object->currVehicle,attr); }
+	struct attr_iter* getIterFunc() { return vehicle_attr_iter_new(); };
+	void dropIterFunc(struct attr_iter* iter) { vehicle_attr_iter_destroy(iter); };
+
+private:
+
+};
+
 class NGQProxyNavit : public NGQProxy {
     Q_OBJECT;
 
@@ -157,7 +179,57 @@ public slots:
 		if (attr_name=="layout") {
 			navit_set_layout_by_name(this->object->nav,attr_value.toStdString().c_str());
 		}
+		if (attr_name=="vehicle") {
+			navit_set_vehicle_by_name(this->object->nav,attr_value.toStdString().c_str());
+		}
 		return;
+	}
+	QString getAttrList(const QString &attr_name) {
+		NGQStandardItemModel* ret=new NGQStandardItemModel(this);
+		struct attr attr;
+		struct attr_iter *iter;
+		int counter=0;
+		QString currentValue, retId;
+
+		//Find current value
+		getAttrFunc(attr_from_name(attr_name.toStdString().c_str()), &attr, NULL) ;
+		if (attr.type==attr_layout) {
+			currentValue=attr.u.layout->name;
+		}
+
+		//Fill da list
+		iter=getIterFunc();
+		if (iter == NULL) {
+			return retId;
+		}
+
+		while (getAttrFunc(attr_from_name(attr_name.toStdString().c_str()), &attr, iter) ) {
+			QStandardItem* curItem=new QStandardItem();
+			//Listed attributes are usualy have very complex structure	
+			if (attr.type==attr_layout) {
+				curItem->setData(QVariant(counter),NGQStandardItemModel::ItemId);
+				curItem->setData(QVariant(attr.u.layout->name),NGQStandardItemModel::ItemName);
+				if (currentValue==attr.u.layout->name) {
+					retId.setNum(counter);
+				}
+			}
+			if (attr.type==attr_vehicle) {
+				this->object->currVehicle=attr.u.vehicle;
+				curItem->setData(QVariant(counter),NGQStandardItemModel::ItemId);
+				curItem->setData(QVariant(this->object->vehicleProxy->getAttr("name")),NGQStandardItemModel::ItemName);
+				retId.setNum(0);
+			}
+			counter++;
+			ret->appendRow(curItem);
+		}
+
+		dropIterFunc(iter);
+
+		this->object->guiWidget->rootContext()->setContextProperty("listModel",static_cast<QObject*>(ret));
+
+		dbg(0,"retId %s \n",retId.toStdString().c_str());
+
+		return retId;
 	}
 	
 protected:
@@ -263,6 +335,8 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	view->rootContext()->setContextProperty("gui",this_->guiProxy);
 	this_->navitProxy = new NGQProxyNavit(this_,this_->mainWindow);
 	view->rootContext()->setContextProperty("navit",this_->navitProxy);
+	this_->vehicleProxy = new NGQProxyVehicle(this_,this_->mainWindow);
+	view->rootContext()->setContextProperty("vehicle",this_->vehicleProxy);
 		
 	//Check, if we have compatible graphics
 	this_->graphicsWidget = (QWidget*)graphics_get_data(gra,"qt_widget");

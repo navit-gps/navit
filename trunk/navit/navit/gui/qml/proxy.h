@@ -44,47 +44,6 @@ public slots:
 		}
 		return ret;
 	}
-	QString getAttrList(const QString &attr_name) {
-		NGQStandardItemModel* ret=new NGQStandardItemModel(this);
-		struct attr attr;
-		struct attr_iter *iter;
-		int counter=0;
-		QString currentValue, retId;
-
-		//Find current value
-		getAttrFunc(attr_from_name(attr_name.toStdString().c_str()), &attr, NULL) ;
-		if (attr.type==attr_layout) {
-			currentValue=attr.u.layout->name;
-		}
-
-		//Fill da list
-		iter=getIterFunc();
-		if (iter == NULL) {
-			return retId;
-		}
-
-		while (getAttrFunc(attr_from_name(attr_name.toStdString().c_str()), &attr, iter) ) {
-			QStandardItem* curItem=new QStandardItem();
-			//Listed attributes are usualy have very complex structure	
-			if (attr.type==attr_layout) {
-				curItem->setData(QVariant(counter),NGQStandardItemModel::ItemId);
-				curItem->setData(QVariant(attr.u.layout->name),NGQStandardItemModel::ItemName);
-				if (currentValue==attr.u.layout->name) {
-					retId.setNum(counter);
-				}
-				counter++;
-			}
-			ret->appendRow(curItem);
-		}
-
-		dropIterFunc(iter);
-
-		this->object->guiWidget->rootContext()->setContextProperty("listModel",static_cast<QObject*>(ret));
-
-		dbg(0,"retId %s \n",retId.toStdString().c_str());
-
-		return retId;
-	}
 	void setAttr(const QString &attr_name, const QString &attr_string) {
 			struct attr attr_value;
 			double *helper;

@@ -30,7 +30,7 @@ Rectangle {
             id: btnMap; text: "Map"; icon: "gui_maps.svg"; onClicked: console.log("Implement me!");
         }
         ButtonIcon {
-            id: btnVehicle; text: "Vehicle"; icon: "gui_vehicle.svg"; onClicked: console.log("Implement me!");
+            id: btnVehicle; text: "Vehicle"; icon: "gui_vehicle.svg"; onClicked: { gui.returnSource="PageSettings.qml"; gui.setPage("PageSettingsVehicle.qml") }
         }
     }
     Grid {
