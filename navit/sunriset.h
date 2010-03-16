@@ -7,7 +7,9 @@ extern long int timezone_offset;
 #define HOURS(h) ((int)(floor(h)))
 #define MINUTES(h) ((int)(60*(h-floor(h))))
 
+#ifndef ABS
 #define ABS(x) ((x)<0?-(x):(x)) 
+#endif
 
 /* A macro to compute the number of days elapsed since 2000 Jan 0.0 */
 /* (which is equal to 1999 Dec 31, 0h UT)                           */

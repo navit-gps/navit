@@ -1769,7 +1769,7 @@ gui_internal_menu(struct gui_priv *this, const char *label)
 	w->spx=4*this->spacing;
 	w->w=menu->w;
 	gui_internal_widget_append(menu, w);
-	if (this->flags & 16 && (!this->flags & 1024)) {
+	if (this->flags & 16 && !(this->flags & 1024)) {
 		struct widget *wlb,*wb,*wm=w;
 		wm->flags=gravity_center|orientation_vertical|flags_expand|flags_fill;
 		w=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_expand|flags_fill);

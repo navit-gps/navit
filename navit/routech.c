@@ -206,7 +206,7 @@ pq_check(struct pq *pq)
 	}
 }
 
-struct routech_search *
+static struct routech_search *
 routech_search_new(int dir)
 {
 	struct routech_search *ret=g_new0(struct routech_search, 1);
@@ -393,7 +393,7 @@ routech_relax(struct map_rect **mr, struct routech_search *curr, struct routech_
 	}
 }
 
-void
+static void
 routech_print_coord(struct coord *c, FILE *out)
 {
 	int x=c->x;
@@ -411,7 +411,7 @@ routech_print_coord(struct coord *c, FILE *out)
 	fprintf(out,"%s0x%x %s0x%x\n",sx,x,sy,y);
 }
 
-void
+static void
 routech_resolve_route(struct map_rect *mr, struct item_id *id, int flags, int dir)
 {
         int i,count,max=16384;
@@ -436,7 +436,7 @@ routech_resolve_route(struct map_rect *mr, struct item_id *id, int flags, int di
 	}
 }
 
-int
+static int
 routech_find_edge(struct map_rect *mr, struct item_id *from, struct item_id *to, struct item_id *middle)
 {
 	struct item *item=map_rect_get_item_byid(mr, from->id_hi, from->id_lo);
@@ -456,7 +456,7 @@ routech_find_edge(struct map_rect *mr, struct item_id *from, struct item_id *to,
 	return 0;
 }
 
-void
+static void
 routech_resolve(struct map_rect *mr, struct item_id *from, struct item_id *to, int dir)
 {
 	struct item_id middle_node;
@@ -473,7 +473,7 @@ routech_resolve(struct map_rect *mr, struct item_id *from, struct item_id *to, i
 		routech_resolve_route(mr, &middle_node, res, dir);
 }
 
-void
+static void
 routech_find_path(struct map_rect *mr, struct routech_search *search)
 {
 	struct item_id *curr_node=search->via;

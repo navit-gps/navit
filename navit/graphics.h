@@ -23,6 +23,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+struct attr;
 struct point;
 struct container;
 struct color;
@@ -180,6 +181,7 @@ struct displayitem *graphics_displaylist_next(struct displaylist_handle *dlh);
 void graphics_displaylist_close(struct displaylist_handle *dlh);
 struct displaylist *graphics_displaylist_new(void);
 struct item *graphics_displayitem_get_item(struct displayitem *di);
+int graphics_displayitem_get_coord_count(struct displayitem *di);
 char *graphics_displayitem_get_label(struct displayitem *di);
 int graphics_displayitem_get_displayed(struct displayitem *di);
 int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p, int dist);
