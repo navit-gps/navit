@@ -2214,7 +2214,7 @@ navit_layout_switch(struct navit *n)
 }
 
 int 
-navit_set_layout_by_name(struct navit *n,char *name) 
+navit_set_layout_by_name(struct navit *n,const char *name) 
 {
     struct layout *l;
     struct attr_iter iter;
