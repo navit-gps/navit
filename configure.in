@@ -783,12 +783,12 @@ AM_CONDITIONAL(GUI_WIN32, test "x${gui_win32}" = "xyes")
 # qml
 AC_ARG_ENABLE(gui-qml, [  --disable-gui-qml              disable gui type QML], gui_qml=$enableval;gui_qml_reason="configure parameter")
 if test "x${gui_qml}" = "xyes" -a "x${QT_GUI_CFLAGS}" = "x" -a "x${QT_GUI_LIBS}" = "x"; then
-	PKG_CHECK_MODULES(QT_GUI, [QtGui QtCore], ,gui_qml=no,gui_qml_reason="Packages QtGui and/or QtCore missing")
+	PKG_CHECK_MODULES(QT_GUI, [QtGui QtCore], ,gui_qml=no;gui_qml_reason="Packages QtGui and/or QtCore missing")
 fi
 if test "x${gui_qml}" = "xyes" -a "x${QT_DECLARATIVE_CFLAGS}" = "x" -a "x${QT_DECLARATIVE_LIBS}" = "x"; then
-	PKG_CHECK_MODULES(QT_DECLARATIVE, [QtDeclarative], ,gui_qml=no,gui_qml_reason="Packages QtDeclarative missing")
+	PKG_CHECK_MODULES(QT_DECLARATIVE, [QtDeclarative >= 4.6.0 ], ,gui_qml=no;gui_qml_reason="Packages QtDeclarative missing")
 fi
-if test "x${graphics_qt_qpainter}" = "xyes" ; then
+if test "x${gui_qml}" = "xyes" ; then
 	AC_DEFINE(USE_GUI_QML, 1, [Build with gui qml])
 	MOC=`$PKG_CONFIG QtGui --variable=moc_location`
 	if test "x${MOC}" = "x"; then
@@ -800,8 +800,6 @@ AC_SUBST(QT_GUI_CFLAGS)
 AC_SUBST(QT_GUI_LIBS)
 AC_SUBST(QT_DECLARATIVE_CFLAGS)
 AC_SUBST(QT_DECLARATIVE_LIBS)
-AM_CONDITIONAL(GUI_QML, test "x${gui_qml}" = "xyes")
-
 AM_CONDITIONAL(GUI_QML, test "x${gui_qml}" = "xyes")
 
 ## plugins
