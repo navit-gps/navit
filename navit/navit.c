@@ -2214,6 +2214,30 @@ navit_layout_switch(struct navit *n)
 }
 
 int 
+navit_set_vehicle_by_name(struct navit *n,const char *name) 
+{
+    struct vehicle *v;
+    struct attr_iter *iter;
+    struct attr vehicle_attr, name_attr;
+
+	iter=navit_attr_iter_new();
+
+    while (navit_get_attr(n,attr_vehicle,&vehicle_attr,iter)) {
+		v=vehicle_attr.u.vehicle;
+		vehicle_get_attr(v,attr_name,&name_attr,NULL);
+		if (name_attr.type==attr_name) {
+			if (!strcmp(name,name_attr.u.str)) {
+				navit_set_attr(n,&vehicle_attr);				
+				navit_attr_iter_destroy(iter);
+				return 1;
+			}
+		}
+	}
+    navit_attr_iter_destroy(iter);
+    return 0;
+}
+
+int 
 navit_set_layout_by_name(struct navit *n,const char *name) 
 {
     struct layout *l;
