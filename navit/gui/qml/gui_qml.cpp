@@ -9,6 +9,7 @@
 #include "plugin.h"
 #include "item.h"
 #include "attr.h"
+#include "color.h"
 #include "gui.h"
 #include "callback.h"
 #include "debug.h"
@@ -17,8 +18,15 @@
 #include "graphics.h"
 #include "event.h"
 #include "map.h"
+#include "coord.h"
 
-#include "proxy.h"
+//WORKAOUND for the c/c++ compatibility issues.
+//range is defined inside of struct attr so it is invisible in c++
+struct range {
+	short min, max;
+} range;
+
+#include "layout.h"
 
 struct gui_priv {
 	struct navit *nav;
@@ -52,6 +60,8 @@ struct gui_priv {
 	class NGQProxyGui* guiProxy;
 	class NGQProxyNavit* navitProxy;
 };
+
+#include "proxy.h"
 
 //Proxy classes
 class NGQProxyGui : public NGQProxy {
@@ -141,12 +151,20 @@ public slots:
 			navit.u.navit=this->object->nav;
 			navit_destroy(navit.u.navit);
 			event_main_loop_quit();
-			//this->gui->mainWindow->close();
+			this->object->mainWindow->close();
+	}
+	void setObjectByName(const QString& attr_name,const QString& attr_value) {
+		if (attr_name=="layout") {
+			navit_set_layout_by_name(this->object->nav,attr_value.toStdString().c_str());
+		}
+		return;
 	}
 	
 protected:
 	int getAttrFunc(enum attr_type type, struct attr* attr, struct attr_iter* iter) { return navit_get_attr(this->object->nav, type, attr, iter); }
 	int setAttrFunc(struct attr* attr) {return navit_set_attr(this->object->nav,attr); }
+	struct attr_iter* getIterFunc() { return navit_attr_iter_new(); };
+	void dropIterFunc(struct attr_iter* iter) { navit_attr_iter_destroy(iter); };
 
 private:
 
