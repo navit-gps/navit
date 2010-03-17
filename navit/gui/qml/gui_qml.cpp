@@ -20,6 +20,10 @@
 #include "map.h"
 #include "coord.h"
 #include "vehicle.h"
+#include "coord.h"
+#include "transform.h"
+#include "mapset.h"
+#include "route.h"
 
 //WORKAOUND for the c/c++ compatibility issues.
 //range is defined inside of struct attr so it is invisible in c++
@@ -63,9 +67,11 @@ struct gui_priv {
 	class NGQProxyGui* guiProxy;
 	class NGQProxyNavit* navitProxy;
 	class NGQProxyVehicle* vehicleProxy;
+	class NGQPoint* currentPoint;
 };
 
 #include "proxy.h"
+#include "ngqpoint.h"
 
 //Proxy classes
 class NGQProxyGui : public NGQProxy {
@@ -83,6 +89,13 @@ public:
 		this->source=QString("");
     }
 
+	void setNewPoint(struct point* p,NGQPointTypes type) {
+		if (this->object->currentPoint!=NULL) {
+			delete this->object->currentPoint;
+		}
+		this->object->currentPoint = new NGQPoint(this->object,p,type,NULL);
+		this->object->guiWidget->rootContext()->setContextProperty("point",this->object->currentPoint);
+	}
 public slots:
 	void setPage(QString page) {
 		dbg(0,"Page is: %s\n",page.toStdString().c_str());
@@ -244,7 +257,12 @@ public slots:
 
 		return retId;
 	}
-	
+	void setDestination() {
+		navit_set_destination(this->object->nav,this->object->currentPoint->pc(),this->object->currentPoint->coordString().toStdString().c_str(),1);
+	}
+	void setPosition() {
+		navit_set_position(this->object->nav,this->object->currentPoint->pc());
+	}
 protected:
 	int getAttrFunc(enum attr_type type, struct attr* attr, struct attr_iter* iter) { return navit_get_attr(this->object->nav, type, attr, iter); }
 	int setAttrFunc(struct attr* attr) {return navit_set_attr(this->object->nav,attr); }
@@ -292,6 +310,17 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 {
 	struct gui_priv *this_=(struct gui_priv*)data;
 
+	/* There is a special 'popup' feature in navit, that makes all 'click-on-point' related stuff
+	   but it looks VERY unflexible, so i'm not able to use it. I believe we need
+	   to re-design the popup feature or remove it at all */
+	if ( button == 3 ) {
+		this_->guiProxy->setNewPoint(p,MapPoint);
+		this_->guiWidget->clearItems();
+		this_->guiProxy->setReturnSource(QString(""));
+		this_->guiProxy->setPage("point.qml");
+		this_->switcherWidget->setCurrentWidget(this_->guiWidget);
+	}
+
 	// check whether the position of the mouse changed during press/release OR if it is the scrollwheel
 	if (!navit_handle_button(this_->nav, pressed, button, p, NULL)) {
 		dbg(1,"navit has handled button\n");
@@ -305,15 +334,10 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 
 	if ( button == 1 && this_->menu_on_map_click ) {
 		if (!this_->lazy) {
+			this_->guiWidget->clearItems();
 			this_->guiProxy->setReturnSource(QString(""));
 			this_->guiProxy->setPage("main.qml");
 		}
-		this_->switcherWidget->setCurrentWidget(this_->guiWidget);
-	}
-	/* There is a special 'popup' feature in navit, that makes all 'click-on-point' related stuff
-	   but it looks VERY unflexible, so i'm not able to use it. I believe we need
-	   to re-design the popup feature or remove it at all */
-	if ( button == 3 && this_->menu_on_map_click ) {
 		this_->switcherWidget->setCurrentWidget(this_->guiWidget);
 	}
 }
