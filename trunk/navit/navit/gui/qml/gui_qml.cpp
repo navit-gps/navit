@@ -46,6 +46,7 @@ struct gui_priv {
 	char* icon_src;
 	int radius;
 	int pitch;
+	int lazy; //When TRUE - menu state will not be changed during map/menu switches, FALSE - menu will be always reseted to main.qml
 	
 	//Interface stuff
 	struct callback_list *cbl;
@@ -79,21 +80,33 @@ class NGQProxyGui : public NGQProxy {
 
 public:
     NGQProxyGui(struct gui_priv* this_,QObject *parent) : NGQProxy(this_, parent) {
-		this->source=QString("NoReturnTicket");
+		this->source=QString("");
     }
 
 public slots:
 	void setPage(QString page) {
+		dbg(0,"Page is: %s\n",page.toStdString().c_str());
+		this->source+="/"+page;
 		this->object->guiWidget->setUrl(QUrl::fromLocalFile(QString(this->object->source)+"/"+this->object->skin+"/"+page));
 		this->object->guiWidget->execute();
 		this->object->guiWidget->show();
-		dbg(0,"Page is: %s\n",page.toStdString().c_str());
 	}
 	void backToMap() {
         if (this->object->graphicsWidget) {
                 this->object->switcherWidget->setCurrentWidget(this->object->graphicsWidget);
         }
     }
+	void backToPrevPage() {
+		QStringList returnList=this->source.split(QString("/"), QString::SkipEmptyParts);
+		QString returnPage;
+		if (returnList.size()>1) {
+			returnList.takeLast();//Remove current element
+			returnPage=returnList.takeLast(); //Set previous element as return page and remove it from the list
+		}
+		this->source=returnList.join(QString("/"));
+		this->source.prepend(QString("/"));
+		this->setPage(returnPage);
+	}
 
 	//Properties
 	QString iconPath() {
@@ -291,6 +304,16 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 	}
 
 	if ( button == 1 && this_->menu_on_map_click ) {
+		if (!this_->lazy) {
+			this_->guiProxy->setReturnSource(QString(""));
+			this_->guiProxy->setPage("main.qml");
+		}
+		this_->switcherWidget->setCurrentWidget(this_->guiWidget);
+	}
+	/* There is a special 'popup' feature in navit, that makes all 'click-on-point' related stuff
+	   but it looks VERY unflexible, so i'm not able to use it. I believe we need
+	   to re-design the popup feature or remove it at all */
+	if ( button == 3 && this_->menu_on_map_click ) {
 		this_->switcherWidget->setCurrentWidget(this_->guiWidget);
 	}
 }
@@ -303,7 +326,6 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 {
 	struct window *win;
 	struct transformation *trans=navit_get_trans(this_->nav);
-	struct QmlView *view;
 
 	this_->gra=gra;
 
@@ -327,16 +349,15 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	this_->mainWindow->setCentralWidget(this_->switcherWidget);
 	
 	//Create gui widget
-	view = new QmlView(NULL);
-	this_->guiWidget = view;
+	this_->guiWidget = new QmlView(NULL);
 	
 	//Create proxy object and bind them to gui widget
 	this_->guiProxy = new NGQProxyGui(this_,this_->mainWindow);
-	view->rootContext()->setContextProperty("gui",this_->guiProxy);
+	this_->guiWidget->rootContext()->setContextProperty("gui",this_->guiProxy);
 	this_->navitProxy = new NGQProxyNavit(this_,this_->mainWindow);
-	view->rootContext()->setContextProperty("navit",this_->navitProxy);
+	this_->guiWidget->rootContext()->setContextProperty("navit",this_->navitProxy);
 	this_->vehicleProxy = new NGQProxyVehicle(this_,this_->mainWindow);
-	view->rootContext()->setContextProperty("vehicle",this_->vehicleProxy);
+	this_->guiWidget->rootContext()->setContextProperty("vehicle",this_->vehicleProxy);
 		
 	//Check, if we have compatible graphics
 	this_->graphicsWidget = (QWidget*)graphics_get_data(gra,"qt_widget");
@@ -451,6 +472,9 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 	this_->pitch = 20; //Default value
 	if( (attr=attr_search(attrs,NULL,attr_pitch)))
 			  this_->pitch=attr->u.num;
+	this_->lazy = 1; //YES by default
+	if( (attr=attr_search(attrs,NULL,attr_lazy)))
+			  this_->lazy=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_width)))
     	      this_->w=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_height)))

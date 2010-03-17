@@ -25,7 +25,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter; 
         spacing: 64
         ButtonIcon {
-            id: btnDisplay; text: "Locale"; icon: "gui_actions.svg"; onClicked: { gui.returnSource="PageSettingsTools.qml";gui.setPage("PageSettingsLocale.qml") }
+            id: btnDisplay; text: "Locale"; icon: "gui_actions.svg"; onClicked: gui.setPage("PageSettingsLocale.qml")
         }
     }
 
