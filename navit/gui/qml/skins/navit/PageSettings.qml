@@ -24,13 +24,13 @@ Rectangle {
         anchors.bottom: parent.verticalCenter; anchors.bottomMargin: 48;
         spacing: 64
         ButtonIcon {
-            id: btnDisplay; text: "Display"; icon: "gui_display.svg"; onClicked: { gui.returnSource="PageSettings.qml"; gui.setPage("PageSettingsDisplay.qml") }
+            id: btnDisplay; text: "Display"; icon: "gui_display.svg"; onClicked: gui.setPage("PageSettingsDisplay.qml")
         }
         ButtonIcon {
             id: btnMap; text: "Map"; icon: "gui_maps.svg"; onClicked: console.log("Implement me!");
         }
         ButtonIcon {
-            id: btnVehicle; text: "Vehicle"; icon: "gui_vehicle.svg"; onClicked: { gui.returnSource="PageSettings.qml"; gui.setPage("PageSettingsVehicle.qml") }
+            id: btnVehicle; text: "Vehicle"; icon: "gui_vehicle.svg"; onClicked: gui.setPage("PageSettingsVehicle.qml")
         }
     }
     Grid {
@@ -39,10 +39,10 @@ Rectangle {
         anchors.top: parent.verticalCenter; anchors.topMargin: 48;
         spacing: 64
         ButtonIcon {
-            id: btnRules; text: "Rules"; icon: "gui_rules.svg"; onClicked: { gui.returnSource="PageSettings.qml";gui.setPage("PageSettingsRules.qml") }
+            id: btnRules; text: "Rules"; icon: "gui_rules.svg"; onClicked: gui.setPage("PageSettingsRules.qml")
         }
         ButtonIcon {
-            id: btnTools; text: "Tools"; icon: "gui_tools.svg"; onClicked: { gui.returnSource="PageSettings.qml";gui.setPage("PageSettingsTools.qml") }
+            id: btnTools; text: "Tools"; icon: "gui_tools.svg"; onClicked: gui.setPage("PageSettingsTools.qml")
         }
     }
 

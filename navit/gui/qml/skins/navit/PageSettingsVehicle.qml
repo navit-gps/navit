@@ -25,7 +25,7 @@ Rectangle {
 	}
 
 	ButtonIcon {
-            id: btnVehicle; text: "Vehicle options"; icon: "gui_vehicle.svg"; onClicked: { gui.returnSource="PageSettingsVehicle.qml"; gui.setPage("PageSettingsVehicleOptions.qml") }
+            id: btnVehicle; text: "Vehicle options"; icon: "gui_vehicle.svg"; onClicked: gui.setPage("PageSettingsVehicleOptions.qml")
 	    anchors.top: vehicleList.bottom; anchors.topMargin: 48
 	    anchors.right: page.horizontalCenter;
         }
