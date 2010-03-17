@@ -56,6 +56,7 @@ speech_new(struct attr *parent, struct attr **attrs)
 	dbg(1, "say=%p\n", this_->meth.say);
 	dbg(1,"priv=%p\n", this_->priv);
 	if (! this_->priv) {
+		attr_list_free(this_->attrs);
 		g_free(this_);
 		return NULL;
 	}
