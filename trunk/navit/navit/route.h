@@ -28,6 +28,9 @@
 #ifndef NAVIT_ROUTE_H
 #define NAVIT_ROUTE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 enum route_status {
 	route_status_no_destination=0,
 	route_status_not_found=1|2,
@@ -79,20 +82,20 @@ struct street_data;
 struct tracking;
 struct transformation;
 struct route *route_new(struct attr *parent, struct attr **attrs);
-void route_set_mapset(struct route *this, struct mapset *ms);
-void route_set_profile(struct route *this, struct vehicleprofile *prof);
-struct mapset *route_get_mapset(struct route *this);
-struct route_info *route_get_pos(struct route *this);
-struct route_info *route_get_dst(struct route *this);
-int *route_get_speedlist(struct route *this);
-int route_get_path_set(struct route *this);
-int route_set_speed(struct route *this, enum item_type type, int value);
-int route_contains(struct route *this, struct item *item);
-void route_set_position(struct route *this, struct pcoord *pos);
-void route_set_position_from_tracking(struct route *this, struct tracking *tracking, enum projection pro);
+void route_set_mapset(struct route *, struct mapset *ms);
+void route_set_profile(struct route *, struct vehicleprofile *prof);
+struct mapset *route_get_mapset(struct route *);
+struct route_info *route_get_pos(struct route *);
+struct route_info *route_get_dst(struct route *);
+int *route_get_speedlist(struct route *);
+int route_get_path_set(struct route *);
+int route_set_speed(struct route *, enum item_type type, int value);
+int route_contains(struct route *, struct item *item);
+void route_set_position(struct route *, struct pcoord *pos);
+void route_set_position_from_tracking(struct route *, struct tracking *tracking, enum projection pro);
 struct map_selection *route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs);
-void route_set_destination(struct route *this, struct pcoord *dst, int async);
-struct route_path_handle *route_path_open(struct route *this);
+void route_set_destination(struct route *, struct pcoord *dst, int async);
+struct route_path_handle *route_path_open(struct route *);
 struct route_path_segment *route_path_get_segment(struct route_path_handle *h);
 struct coord *route_path_segment_get_start(struct route_path_segment *s);
 struct coord *route_path_segment_get_end(struct route_path_segment *s);
@@ -100,7 +103,7 @@ struct item *route_path_segment_get_item(struct route_path_segment *s);
 int route_path_segment_get_length(struct route_path_segment *s);
 int route_path_segment_get_time(struct route_path_segment *s);
 void route_path_close(struct route_path_handle *h);
-struct route_path_coord_handle *route_path_coord_open(struct route *this);
+struct route_path_coord_handle *route_path_coord_open(struct route *);
 struct coord *route_path_coord_get(struct route_path_coord_handle *h);
 void route_path_coord_close(struct route_path_coord_handle *h);
 int route_time(struct route_preferences *preferences, struct item *item, int len, int maxspeed);
@@ -114,20 +117,23 @@ struct coord *route_info_point(struct route_info *rinf, int point);
 struct route_info_handle *route_info_open(struct route_info *start, struct route_info *end, int dir);
 struct coord *route_info_get(struct route_info_handle *h);
 void route_info_close(struct route_info_handle *h);
-void route_draw(struct route *this, struct transformation *t, struct displaylist *dsp);
+void route_draw(struct route *, struct transformation *t, struct displaylist *dsp);
 struct map *route_get_map(struct route *route);
 struct map *route_get_graph_map(struct route *route);
 void route_set_projection(struct route *this_, enum projection pro);
-int route_destination_reached(struct route *this);
+int route_destination_reached(struct route *);
 int route_set_attr(struct route *this_, struct attr *attr);
 int route_add_attr(struct route *this_, struct attr *attr);
 int route_remove_attr(struct route *this_, struct attr *attr);
 int route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 void route_init(void);
-int route_pos_contains(struct route *this, struct item *item);
+int route_pos_contains(struct route *, struct item *item);
 struct coord route_get_coord_dist(struct route *this_, int dist);
 
 /* end of prototypes */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
