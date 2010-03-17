@@ -336,6 +336,7 @@ log_printf(struct log *this_, char *fmt, ...)
 void
 log_destroy(struct log *this_)
 {
+	attr_list_free(this_->attrs);
 	callback_destroy(this_->timer_callback);
 	event_remove_timeout(this_->timer);
 	log_flush(this_,0);
