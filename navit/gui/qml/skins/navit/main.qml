@@ -8,7 +8,6 @@ Rectangle {
     opacity: 0
 
     function pageOpen() {
-    	gui.returnSource="NoReturnTicket";
         page.opacity = 1;
     }
     
@@ -25,13 +24,13 @@ Rectangle {
         anchors.bottom: parent.verticalCenter; anchors.bottomMargin: 48;
         spacing: 64
         ButtonIcon {
-            id: btnRoute; text: "Route"; icon: "cursor.svg";  onClicked: { gui.returnSource="main.qml";gui.setPage("PageRoute.qml") }
+            id: btnRoute; text: "Route"; icon: "cursor.svg";  onClicked: gui.setPage("PageRoute.qml")
         }
         ButtonIcon {
-            id: btnNavigation; text: "Navigation"; icon: "nav_destination_wh.svg"; onClicked: { gui.returnSource="main.qml";gui.setPage("PageNavigation.qml") }
+            id: btnNavigation; text: "Navigation"; icon: "nav_destination_wh.svg"; onClicked: gui.setPage("PageNavigation.qml")
         }
         ButtonIcon {
-            id: btnSettings; text: "Settings"; icon: "gui_settings.svg"; onClicked: { gui.returnSource="main.qml";gui.setPage("PageSettings.qml") }
+            id: btnSettings; text: "Settings"; icon: "gui_settings.svg"; onClicked: gui.setPage("PageSettings.qml")
         }
     }
 
@@ -41,7 +40,7 @@ Rectangle {
         anchors.top: parent.verticalCenter; anchors.topMargin: 48;
         spacing: 64
         ButtonIcon {
-            id: btnAbout; text: "About"; icon: "gui_about.svg"; onClicked: { gui.returnSource="main.qml";gui.setPage("PageAbout.qml") }
+            id: btnAbout; text: "About"; icon: "gui_about.svg"; onClicked: gui.setPage("PageAbout.qml") 
         }
         ButtonIcon {
             id: btnQuit; text: "Quit"; icon: "gui_quit.svg"; onClicked: navit.quit();
