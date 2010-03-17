@@ -849,7 +849,7 @@ transform_setup_source_rect(struct transformation *t)
 			struct coord_geo_cart tmp,cg[8];
 			struct coord c;
 			int valid=0;
-			char edgenodes[]={
+			unsigned char edgenodes[]={
 				0,1,
 				1,2,
 				2,3,

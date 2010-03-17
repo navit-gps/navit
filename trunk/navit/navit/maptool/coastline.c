@@ -146,9 +146,9 @@ tile_data_to_segments(int *tile_data)
 static void
 tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_data *data)
 {
-	int poly_start_valid,tile_start_valid,exclude,search=0,workload=0;
+	int poly_start_valid,tile_start_valid,exclude,search=0;
 	struct rect bbox;
-	struct coord c,cn[2],end,poly_start,tile_start;
+	struct coord cn[2],end,poly_start,tile_start;
 	struct geom_poly_segment *first;
 	struct item_bin *ib=(struct item_bin *)buffer;
 	struct item_bin_sink *out=data->sink->priv_data[1];
@@ -441,8 +441,6 @@ tile_collector_add_siblings2(char *tile, void *edgesp, struct coastline_tile_dat
 	char t=tile[len-1];
 	strcpy(tile2, tile);
 	tile2[len-1]='\0';
-	struct item_bin_sink *out=data->sink->priv_data[1];
-	struct rect bbox;
 	int edges=(int)edgesp;
 	int pedges=0;
 	int debug=0;
@@ -488,28 +486,28 @@ tile_collector_finish(struct item_bin_sink_func *tile_collector)
 	data.tile_edges=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	GHashTable *hash=tile_collector->priv_data[0];
 	fprintf(stderr,"tile_collector_finish\n");
-	g_hash_table_foreach(hash, tile_collector_process_tile, &data);
+	g_hash_table_foreach(hash, (GHFunc) tile_collector_process_tile, &data);
 	fprintf(stderr,"tile_collector_finish foreach done\n");
 	g_hash_table_destroy(hash);
 	fprintf(stderr,"tile_collector_finish destroy done\n");
 	for (i = 14 ; i > 0 ; i--) {
 		fprintf(stderr,"Level=%d\n",i);
 		data.level=i;
-		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+		g_hash_table_foreach(data.tile_edges, (GHFunc) tile_collector_add_siblings, &data);
 		fprintf(stderr,"*");
-		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+		g_hash_table_foreach(data.tile_edges, (GHFunc) tile_collector_add_siblings, &data);
 		fprintf(stderr,"*");
-		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+		g_hash_table_foreach(data.tile_edges, (GHFunc) tile_collector_add_siblings, &data);
 		fprintf(stderr,"*");
-		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings, &data);
+		g_hash_table_foreach(data.tile_edges, (GHFunc) tile_collector_add_siblings, &data);
 		fprintf(stderr,"*");
-		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings2, &data);
+		g_hash_table_foreach(data.tile_edges, (GHFunc) tile_collector_add_siblings2, &data);
 		fprintf(stderr,"*\n");
-		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings2, &data);
+		g_hash_table_foreach(data.tile_edges, (GHFunc) tile_collector_add_siblings2, &data);
 		fprintf(stderr,"*\n");
-		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings2, &data);
+		g_hash_table_foreach(data.tile_edges, (GHFunc) tile_collector_add_siblings2, &data);
 		fprintf(stderr,"*\n");
-		g_hash_table_foreach(data.tile_edges, tile_collector_add_siblings2, &data);
+		g_hash_table_foreach(data.tile_edges, (GHFunc) tile_collector_add_siblings2, &data);
 		fprintf(stderr,"*\n");
 	}
 #if 0
@@ -530,9 +528,9 @@ tile_collector_finish(struct item_bin_sink_func *tile_collector)
 static int
 coastline_processor_process(struct item_bin_sink_func *func, struct item_bin *ib, struct tile_data *tile_data)
 {
+#if 0
 	int i;
 	struct coord *c=(struct coord *)(ib+1);
-#if 0
 	for (i = 0 ; i < 19 ; i++) {
 		c[i]=c[i+420];
 	}
