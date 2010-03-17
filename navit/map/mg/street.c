@@ -1174,10 +1174,10 @@ district_debug(struct map_rect_priv *mr, int country, int dist)
 }
 
 static int
-street_name_numbers_get_next(struct map_rect_priv *mr, struct street_name *name, char *start, char **p, int mode, int *id, struct street_name_numbers *ret)
+street_name_numbers_get_next(struct map_rect_priv *mr, struct street_name *name, char *start, unsigned char **p, int mode, int *id, struct street_name_numbers *ret)
 {
 	struct street_name_numbers tmp;
-	char *ps,*pt;
+	unsigned char *ps,*pt;
 	int found;
 	while (*p < name->aux_data+name->aux_len) {
 		ps=*p;

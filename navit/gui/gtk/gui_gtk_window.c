@@ -674,7 +674,7 @@ gui_gtk_init(struct gui_priv *this, struct navit *nav)
 }
 
 static struct gui_priv *
-gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs) 
+gui_gtk_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui) 
 {
 	struct gui_priv *this;
 	int w=792, h=547;

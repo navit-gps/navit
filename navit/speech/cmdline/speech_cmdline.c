@@ -108,7 +108,7 @@ static struct speech_methods speechd_meth = {
 };
 
 static struct speech_priv *
-speechd_new(struct speech_methods *meth, struct attr **attrs) {
+speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
 	struct speech_priv *this;
 	struct attr *data;
 	data=attr_search(attrs, NULL, attr_data);

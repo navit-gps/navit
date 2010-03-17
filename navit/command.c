@@ -32,9 +32,9 @@ osd[type=="xxx"].active=0;osd[type=="yyy"].active=0
 struct result {
 	struct attr attr;
 	double val;
-	char *var;
+	const char *var;
 	int varlen;
-	char *attrn;
+	const char *attrn;
 	int attrnlen;
 	int allocated;
 };
@@ -42,7 +42,7 @@ struct result {
 struct context {
 	struct attr *attr;
 	int error;
-	char *expr;
+	const char *expr;
 	struct result res;
 };
 
@@ -80,10 +80,11 @@ result_free(struct result *res)
 
 static int command_register_callbacks(struct command_saved *cs);
 
-static char *
+static const char *
 get_op(struct context *ctx, int test, ...)
 {
-	char *op,*ret=NULL;
+	char *op;
+	const char *ret=NULL;
 	va_list ap;
 
 	while (g_ascii_isspace(*ctx->expr)) {
@@ -254,7 +255,7 @@ set_int(struct context *ctx, struct result *res, int val)
 
 static void
 eval_value(struct context *ctx, struct result *res) {
-	char *op;
+	const char *op;
 	int len,dots=0;
 	op=ctx->expr;
 	res->varlen=0;
@@ -417,7 +418,7 @@ static void
 eval_postfix(struct context *ctx, struct result *res)
 {
 	struct result tmp;
-	char *op;
+	const char *op;
 
     	eval_brace(ctx, res);
 	if (ctx->error) return;
@@ -448,7 +449,7 @@ eval_postfix(struct context *ctx, struct result *res)
 static void
 eval_unary(struct context *ctx, struct result *res) 
 {
-	char *op;
+	const char *op;
 	op=get_op(ctx,0,"~","!",NULL);
 	if (op) {
 	    	eval_unary(ctx, res);
@@ -465,7 +466,7 @@ static void
 eval_multiplicative(struct context *ctx, struct result *res) 
 {
 	struct result tmp;
-	char *op;
+	const char *op;
 
     	eval_unary(ctx, res);
 	if (ctx->error) return;
@@ -498,7 +499,7 @@ static void
 eval_additive(struct context *ctx, struct result *res) 
 {
 	struct result tmp;
-	char *op;
+	const char *op;
 
     	eval_multiplicative(ctx, res);
 	if (ctx->error) return;
@@ -525,7 +526,7 @@ static void
 eval_equality(struct context *ctx, struct result *res) 
 {
 	struct result tmp;
-	char *op;
+	const char *op;
 
     	eval_additive(ctx, res);
 	if (ctx->error) return;
@@ -744,7 +745,7 @@ void command(struct attr *attr, char *expr)
 #endif
 
 static void
-command_evaluate_to(struct attr *attr, char *expr, struct context *ctx, struct result *res)
+command_evaluate_to(struct attr *attr, const char *expr, struct context *ctx, struct result *res)
 {
 	memset(res, 0, sizeof(*res));
 	memset(ctx, 0, sizeof(*ctx));
@@ -807,7 +808,7 @@ command_evaluate_to_int(struct attr *attr, char *expr, int *error)
 }
 
 int
-command_evaluate_to_boolean(struct attr *attr, char *expr, int *error)
+command_evaluate_to_boolean(struct attr *attr, const char *expr, int *error)
 {
 	struct result res;
 	struct context ctx;
@@ -834,7 +835,7 @@ command_evaluate_to_boolean(struct attr *attr, char *expr, int *error)
 }
 
 void
-command_evaluate(struct attr *attr, char *expr)
+command_evaluate(struct attr *attr, const char *expr)
 {
 	struct result res;
 	struct context ctx;
