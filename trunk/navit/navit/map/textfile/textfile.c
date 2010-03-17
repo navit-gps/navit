@@ -344,6 +344,7 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs)
 		meth->charset=m->charset;
 	}
 	file_wordexp_destroy(wexp);
+	g_free(wdata);
 	return m;
 }
 
