@@ -86,6 +86,7 @@ enum attr_position_valid {
 #define ATTR_IS_COLOR(x) ((x) >= attr_type_color_begin && (x) <= attr_type_color_end)
 #define ATTR_IS_PCOORD(x) ((x) >= attr_type_pcoord_begin && (x) <= attr_type_pcoord_end)
 #define ATTR_IS_COORD(x) ((x) >= attr_type_coord_begin && (x) <= attr_type_coord_end)
+#define ATTR_IS_GROUP(x) ((x) >= attr_type_group_begin && (x) <= attr_type_group_end)
 
 #define ATTR_DEF_STR(x,y) (&(struct attr){attr_##x,{y}})
 #define ATTR_DEF_INT(x,y) (&(struct attr){attr_##x,{(char *)(y)}})
