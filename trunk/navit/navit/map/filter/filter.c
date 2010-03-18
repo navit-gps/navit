@@ -415,8 +415,8 @@ map_filter_new(struct map_methods *meth, struct attr **attrs)
 	if (map) {
 		m=g_new0(struct map_priv, 1);
 		m->parent=map;
+		parse_filters(m,filter->u.str);
 	}
-	parse_filters(m,filter->u.str);
 	g_free(parent_attrs);
 	return m;
 }
