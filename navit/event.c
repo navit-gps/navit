@@ -40,7 +40,6 @@ void event_main_loop_quit(void)
 {
 	if (event_methods.main_loop_quit)
 		event_methods.main_loop_quit();
-	exit(0);
 }
 
 struct event_watch *
