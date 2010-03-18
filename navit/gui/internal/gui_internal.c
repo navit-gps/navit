@@ -2789,10 +2789,11 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 				if (i==len || !len) {
 					possible_keys[len]=trunk_name[strlen(wi->text)];
 					possible_keys[len+1]='\0';
-
 				}
 				dbg(1,"%s %s possible_keys:%s \n", wi->text, res->town->common.town_name, possible_keys);
 			}
+		} else {
+			dbg(0, "Unable to find widget");
 		}
 	}
 
