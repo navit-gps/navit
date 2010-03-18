@@ -3624,6 +3624,10 @@ gui_internal_add_vehicle_profile(struct gui_priv *this, struct widget
 
 	// Figure out the profile name
 	attr = attr_search(profile->attrs, NULL, attr_name);
+	if (!attr) {
+		dbg(0, "Adding vehicle profile failed. attr==NULL");
+		return;
+	}
 	name = attr->u.str;
 
 	// Determine whether the profile is the active one
