@@ -1777,6 +1777,8 @@ process_countries(FILE *way, FILE *ways_index)
 		struct geom_poly_segment *seg=sort_segments->data;
 		if (!seg) {
 			fprintf(stderr,"is null\n");
+		} else {
+			fprintf(stderr,"segment %p %s area %Ld\n",sort_segments,coord_is_equal(*seg->first, *seg->last) ? "closed":"open",geom_poly_area(seg->first,seg->last-seg->first+1));
 		}
 #if 0
 		int count=seg->last-seg->first+1;
@@ -1784,7 +1786,6 @@ process_countries(FILE *way, FILE *ways_index)
 		item_bin_add_coord(ib, seg->first, count);
 		item_bin_dump(ib, tmp);
 #endif
-		fprintf(stderr,"segment %p %s area %Ld\n",sort_segments,coord_is_equal(*seg->first, *seg->last) ? "closed":"open",geom_poly_area(seg->first,seg->last-seg->first+1));
 		
 		sort_segments=g_list_next(sort_segments);
 	}
