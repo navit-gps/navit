@@ -265,13 +265,14 @@ ch_process_node(FILE *out, int node, int resolve)
 #endif
 			}
 			id=g_hash_table_lookup(sgr_nodes_hash, GINT_TO_POINTER((int)edge->target));
-			if (id == NULL) {
-				fprintf(stderr,"Failed to look up target %d\n",edge->target);
-			}
 #if 0
 			dbg(0,"id for %d is "ITEM_ID_FMT"\n",edge->target,ITEM_ID_ARGS(*id));
 #endif
-			ch_edge.target=*id;
+			if (id == NULL) {
+				fprintf(stderr,"Failed to look up target %d\n",edge->target);
+			} else {
+				ch_edge.target=*id;
+			}
 		}
 		item_bin_add_attr_data(item_bin,attr_ch_edge,&ch_edge,sizeof(ch_edge));
 	}
