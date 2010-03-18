@@ -145,6 +145,7 @@ struct attr {
 		enum item_type *item_types;
 		enum attr_type *attr_types;
 		long long *num64;
+		struct attr *attrs;
 	} u;
 };
 
