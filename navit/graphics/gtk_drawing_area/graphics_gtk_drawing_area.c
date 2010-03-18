@@ -488,17 +488,18 @@ static void
 overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, GdkRectangle *re, GdkPixmap *pixmap, GdkGC *gc)
 {
 	GdkPixbuf *pixbuf,*pixbuf2;
-	guchar *pixels1, *pixels2, *p1, *p2, r, g, b, a;
+	guchar *pixels1, *pixels2, *p1, *p2, r=0, g=0, b=0, a=0;
 	int x,y;
 	int rowstride1,rowstride2;
 	int n_channels1,n_channels2;
 	GdkRectangle or,ir;
 	struct graphics_gc_priv *bg=overlay->background_gc;
-	r=bg->c.r>>8;
-	g=bg->c.g>>8;
-	b=bg->c.b>>8;
-	a=bg->c.a>>8;
-	
+	if (bg) {
+		r=bg->c.r>>8;
+		g=bg->c.g>>8;
+		b=bg->c.b>>8;
+		a=bg->c.a>>8;
+	}
 
 	if (parent->overlay_disabled || overlay->overlay_disabled || overlay->overlay_autodisabled)
 		return;
