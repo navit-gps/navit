@@ -3104,27 +3104,23 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}
 	if (mode >= 1024) {
-		char *text;
-		int font;
+		char *text=NULL;
+		int font=0;
 		struct widget *wkl;
 		mode -= 1024;
 		if (mode >= 0 && mode < 8) {
 			text=ucase;
 			font=ucase_font;
-		}
-		if (mode >= 8 && mode < 16) {
+		} else if (mode >= 8 && mode < 16) {
 			text=lcase;
 			font=lcase_font;
-		}
-		if (mode >= 16 && mode < 24) {
+		} else if (mode >= 16 && mode < 24) {
 			text=numeric;
 			font=numeric_font;
-		}
-		if (mode >= 24 && mode < 32) {
+		} else if (mode >= 24 && mode < 32) {
 			text=umlauts_ucase;
 			font=umlauts_ucase_font;
-		}
-		if (mode >= 32 && mode < 40) {
+		} else if (mode >= 32 && mode < 40) {
 			text=umlauts_lcase;
 			font=umlauts_lcase_font;
 		}
@@ -3140,7 +3136,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		wk->state |= STATE_SENSITIVE;
 		gui_internal_widget_append(wk, wkl=gui_internal_label_new(this, unhide));
 		wkl->background=NULL;
-		gui_internal_widget_append(wk, wkl=gui_internal_label_font_new(this, text,font));
+		gui_internal_widget_append(wk, wkl=gui_internal_label_font_new(this, text, font));
 		wkl->background=NULL;
 		gui_internal_widget_append(wkbd, wk);
 		if (render)
