@@ -266,6 +266,19 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 		int *data=attr->u.data;
 		return g_strdup_printf("0x%x,0x%x,0x%x",data[0],data[1],data[2]);
 	}
+	if (type >= attr_type_group_begin && type <= attr_type_group_end) {
+		int i=0;
+		char *ret=g_strdup("");
+		char *sep="";
+		while (attr->u.attrs[i].type) {
+			char *val=attr_to_text(&attr->u.attrs[i], map, pretty);
+			ret=g_strconcat_printf(ret,"%s%s=%s",sep,attr_to_name(attr->u.attrs[i].type),val);
+			g_free(val);
+			sep=" ";
+			i++;
+		}
+		return ret;
+	}
 	return g_strdup_printf("(no text[%s])", attr_to_name(type));	
 }
 

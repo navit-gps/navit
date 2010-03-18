@@ -85,6 +85,7 @@ struct map_rect_priv {
 	struct tile *t;
 	int country_id;
 	char *url;
+	struct attr attrs[8];
 #ifdef DEBUG_SIZE
 	int size;
 #endif
@@ -405,14 +406,33 @@ binfile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 				dbg(1,"pos %p attr %s size %d\n", t->pos_attr-1, attr_to_name(type), size);
 			}
 			attr->type=type;			
-			attr_data_set_le(attr, t->pos_attr+1); 
-			if (type == attr_url_local) {
-				g_free(mr->url);
-				mr->url=binfile_extract(mr->m, mr->m->cachedir, attr->u.str, 1);
-				attr->u.str=mr->url;
+			if (ATTR_IS_GROUP(type)) {
+				int i=0;
+				int *subpos=t->pos_attr+1;
+				int size_rem=size-1;
+				i=0;
+				while (size_rem > 0 && i < 7) {
+					int subsize=le32_to_cpu(*subpos++);
+					int subtype=le32_to_cpu(subpos[0]);
+					mr->attrs[i].type=subtype;
+					attr_data_set_le(&mr->attrs[i], subpos+1);
+					subpos+=subsize;
+					size_rem-=subsize+1;
+					i++;
+				}
+				mr->attrs[i].type=type_none;
+				mr->attrs[i].u.data=NULL;
+				attr->u.attrs=mr->attrs;
+			} else {
+				attr_data_set_le(attr, t->pos_attr+1); 
+				if (type == attr_url_local) {
+					g_free(mr->url);
+					mr->url=binfile_extract(mr->m, mr->m->cachedir, attr->u.str, 1);
+					attr->u.str=mr->url;
+				}
+				if (type == attr_flags && mr->m->map_version < 1) 
+					attr->u.num |= AF_CAR;
 			}
-			if (type == attr_flags && mr->m->map_version < 1) 
-				attr->u.num |= AF_CAR;
 			t->pos_attr+=size;
 			return 1;
 		} else {
