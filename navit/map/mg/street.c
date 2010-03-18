@@ -579,11 +579,11 @@ street_lookup_housenumber(struct street_priv *street)
 					project(c, scount, dir, dlr, &street->hnc[street->hn_count]);
 					street->hn[street->hn_count]=nn.first;
 					street->hn_count++;
-					g_assert(street->hn_count < 100);
+					dbg_assert(street->hn_count < 100);
 					project(c, scount, -dir, dlr, &street->hnc[street->hn_count]);
 					street->hn[street->hn_count]=nn.last;
 					street->hn_count++;
-					g_assert(street->hn_count < 100);
+					dbg_assert(street->hn_count < 100);
 					dbg(1,"found %d%s %d%s\n",nn.first.number,nn.first.suffix,nn.last.number,nn.last.suffix);
 				}	
 			}
