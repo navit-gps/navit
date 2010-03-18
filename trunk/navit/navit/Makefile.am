@@ -29,18 +29,18 @@ if BIN_NAVIT
 endif
 
 if SHARED_LIBNAVIT
-  lib_LTLIBRARIES        = libnavit.la
-  libnavit_la_LDFLAGS = -avoid-version @MODULE_LDFLAGS@ -no-undefined -Wl,--no-undefined
-  libnavit_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib @MODULE_LIBADD@
+  lib_LTLIBRARIES        = lib@LIBNAVIT@.la
+  lib@LIBNAVIT@_la_LDFLAGS = -avoid-version @MODULE_LDFLAGS@ -no-undefined -Wl,--no-undefined
+  lib@LIBNAVIT@_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib @MODULE_LIBADD@
 else
-  noinst_LTLIBRARIES        = libnavit.la
+  noinst_LTLIBRARIES        = lib@LIBNAVIT@.la
 endif
 
 pkgdata_DATA = navit.xml
 
 EXTRA_DIST = navit_shipped.xml navit.dtd
 
-libnavit_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c compass.c config_.c coord.c country.c data_window.c debug.c \
+lib@LIBNAVIT@_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c command.c compass.c config_.c coord.c country.c data_window.c debug.c \
 	event.c event_glib.h file.c graphics.c gui.c item.c layout.c log.c main.c map.c \
 	linguistics.c mapset.c maptype.c menu.c messages.c bookmarks.c bookmarks.h navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c \
 	profile.c projection.c roadprofile.c route.c routech.c search.c speech.c start_real.c transform.c track.c \
@@ -62,7 +62,7 @@ navit.xml: navit_shipped.xml  $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(ad
 	
 
 if SUPPORT_ANDROID
-  libnavit_la_SOURCES += android.c
+  lib@LIBNAVIT@_la_SOURCES += android.c
   navit_SOURCES =
   navit_LDADD =
 
@@ -80,7 +80,8 @@ android/build.xml: android/AndroidManifest.xml
 
 apk: all android/build.xml navit.xml
 	mkdir -p android/libs/armeabi
-	cp .libs/*.so */*/.libs/*.so android/libs/armeabi
+	cp .libs/*.so android/libs/armeabi/libnavit.so
+	for i in */*/.libs/*.so ; do sed 's&lib_data_data_org\.navitproject\.navit_lib_&/data/data/org.navitproject.navit/lib/lib&' <$$i >android/libs/armeabi/$$(basename $$i); done
 	for i in $(shell cd $(srcdir)/xpm && echo *.xpm); do convert $(srcdir)/xpm/$$i android/res/drawable/$${i%.xpm}.png; done 
 	for i in $(shell cd $(srcdir)/xpm && echo *.png); do cp $(srcdir)/xpm/$$i android/res/drawable/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
 	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do cp $(builddir)/xpm/$$i android/res/drawable/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
@@ -91,12 +92,12 @@ apk: all android/build.xml navit.xml
 
 else
 navit_SOURCES = start.c
-navit_LDADD = libnavit.la @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib
+navit_LDADD = lib@LIBNAVIT@.la @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib
 
 endif
 
 if EVENT_GLIB
-  libnavit_la_SOURCES += event_glib.c
+  lib@LIBNAVIT@_la_SOURCES += event_glib.c
 endif
 
 if !PLUGINS

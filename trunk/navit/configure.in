@@ -71,6 +71,7 @@ graphics_android=no; graphics_android_reason=default
 vehicle_maemo=no; vehicle_maemo_reason=default
 
 shared_libnavit=no
+LIBNAVIT=navit
 bin_navit=yes
 
 AC_CANONICAL_HOST
@@ -110,7 +111,8 @@ linux*_android)
 	speech_android=yes; speech_android_reason="host_os is android"
 	MODULE_LDFLAGS="-module -Xcompiler -nostdlib -Xcompiler -Wl,-rpath -Xcompiler -Wl,/data/data/org.navitproject.navit/lib"
 	MODULE_LIBADD="-llog"
-	NAVIT_MODULE_LDFLAGS="$MODULE_LDFLAGS -L\$(top_builddir)/navit -lnavit"
+	LIBNAVIT=_data_data_org.navitproject.navit_lib_navit
+	NAVIT_MODULE_LDFLAGS="$MODULE_LDFLAGS -L\$(top_builddir)/navit -l$LIBNAVIT"
 	;;
 esac
 if test "x$win32" = "xyes"
@@ -274,7 +276,7 @@ if test "x${plugins}" = "xyes"; then
 	)
 	if test "x${win32}" = "xyes"; then
 		shared_libnavit=yes
-		NAVIT_MODULE_LDFLAGS="-no-undefined -L\$(top_builddir)/navit -lnavit -L\$(top_builddir)/intl -lintl"
+		NAVIT_MODULE_LDFLAGS="-no-undefined -L\$(top_builddir)/navit -l$LIBNAVIT -L\$(top_builddir)/intl -lintl"
 	fi
 else
 	AC_DISABLE_SHARED
@@ -284,6 +286,7 @@ AM_CONDITIONAL(PLUGINS, [test "x$plugins" = "xyes"])
 AM_CONDITIONAL(SHARED_LIBNAVIT, [test "x$shared_libnavit" = "xyes"])
 AM_CONDITIONAL(BIN_NAVIT, [test "x$bin_navit" = "xyes"])
 AC_PROG_LIBTOOL
+AC_SUBST(LIBNAVIT)
 
 AM_CONDITIONAL(EVENT_GLIB, [test "x$glib" = "xyes"])
 AM_CONDITIONAL(SUPPORT_GLIB, [test "x$glib" = "xno"])
