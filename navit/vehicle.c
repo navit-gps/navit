@@ -100,6 +100,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	dbg(1, "source='%s' type='%s'\n", source->u.str, type);
 
 	vehicletype_new = plugin_get_vehicle_type(type);
+	g_free(type);
 	if (!vehicletype_new) {
 		dbg(0, "invalid type '%s'\n", type);
 		return NULL;
