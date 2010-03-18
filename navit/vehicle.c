@@ -100,11 +100,12 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	dbg(1, "source='%s' type='%s'\n", source->u.str, type);
 
 	vehicletype_new = plugin_get_vehicle_type(type);
-	g_free(type);
 	if (!vehicletype_new) {
 		dbg(0, "invalid type '%s'\n", type);
+		g_free(type);
 		return NULL;
 	}
+	g_free(type);
 	this_ = g_new0(struct vehicle, 1);
 	this_->cbl = callback_list_new();
 	this_->priv = vehicletype_new(&this_->meth, this_->cbl, attrs);
