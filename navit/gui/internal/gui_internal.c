@@ -2775,22 +2775,24 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 		struct widget *menu=g_list_last(this->root.children)->data;
 		struct widget *wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
 
-		if (! strcmp(wm_name,"Town"))
-			trunk_name = g_strrstr(res->town->common.town_name, wi->text);
-		if (! strcmp(wm_name,"Street"))
-			trunk_name = g_strrstr(name=res->street->name, wi->text);
+		if (wi) {
+			if (! strcmp(wm_name,"Town"))
+				trunk_name = g_strrstr(res->town->common.town_name, wi->text);
+			if (! strcmp(wm_name,"Street"))
+				trunk_name = g_strrstr(name=res->street->name, wi->text);
 
-		if (trunk_name) {
-			char next_char = trunk_name[strlen(wi->text)];
-			int i;
-			int len = strlen(possible_keys);
-			for(i = 0; (i<len) && (possible_keys[i] != next_char) ;i++) ;
-			if (i==len || !len) {
-				possible_keys[len]=trunk_name[strlen(wi->text)];
-				possible_keys[len+1]='\0';
+			if (trunk_name) {
+				char next_char = trunk_name[strlen(wi->text)];
+				int i;
+				int len = strlen(possible_keys);
+				for(i = 0; (i<len) && (possible_keys[i] != next_char) ;i++) ;
+				if (i==len || !len) {
+					possible_keys[len]=trunk_name[strlen(wi->text)];
+					possible_keys[len+1]='\0';
 
+				}
+				dbg(1,"%s %s possible_keys:%s \n", wi->text, res->town->common.town_name, possible_keys);
 			}
-			dbg(1,"%s %s possible_keys:%s \n", wi->text, res->town->common.town_name, possible_keys);
 		}
 	}
 
