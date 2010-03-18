@@ -44,6 +44,7 @@ struct debug *debug_new(struct attr *parent, struct attr **attrs);
 void debug_vprintf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap);
 void debug_printf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, ...);
 void debug_assert_fail(char *module, const int mlen,const char *function, const int flen, char *file, int line, char *expr);
+void debug_finished(void);
 /* end of prototypes */
 
 #ifdef __cplusplus

@@ -221,3 +221,10 @@ void debug_set_logfile(const char *path)
 		fflush(debug_fp);
 	}
 }
+
+void debug_finished(void) {
+	g_free(gdb_program);
+	g_hash_table_destroy(debug_hash);
+	debug_destroy();
+}
+

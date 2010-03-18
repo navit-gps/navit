@@ -177,5 +177,6 @@ int main_real(int argc, char **argv)
 	}
 	event_main_loop_run();
 
+	debug_finished();
 	return 0;
 }
