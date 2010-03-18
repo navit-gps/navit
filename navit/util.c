@@ -101,6 +101,7 @@ g_utf8_strlen_force_link(gchar *buffer, int max)
 
 #if defined(_WIN32) || defined(__CEGCC__)
 #include <windows.h>
+#include <sys/types.h>
 #endif
 
 #if defined(_WIN32) || defined(__CEGCC__) || defined (__APPLE__)
