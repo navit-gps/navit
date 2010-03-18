@@ -56,6 +56,10 @@ static void
 map_destroy_textfile(struct map_priv *m)
 {
 	dbg(1,"map_destroy_textfile\n");
+	g_free(m->filename);
+	if(m->charset) {
+		g_free(m->charset);
+	}
 	g_free(m);
 }
 
