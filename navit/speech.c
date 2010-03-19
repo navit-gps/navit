@@ -27,7 +27,7 @@
 struct speech {
 	struct speech_priv *priv;
 	struct speech_methods meth;
-    struct attr **attrs;
+	struct attr **attrs;
 };
 
 
@@ -38,21 +38,21 @@ speech_new(struct attr *parent, struct attr **attrs)
 	struct speech_priv *(*speech_new)(struct speech_methods *meth, struct attr **attrs, struct attr *parent);
 	struct attr *attr;
 
-    attr=attr_search(attrs, NULL, attr_type);
+	attr=attr_search(attrs, NULL, attr_type);
 	if (! attr) {
 		dbg(0,"type missing\n");
 		return NULL;
 	}
 	dbg(1,"type='%s'\n", attr->u.str);
-        speech_new=plugin_get_speech_type(attr->u.str);
+	speech_new=plugin_get_speech_type(attr->u.str);
 	dbg(1,"new=%p\n", speech_new);
-        if (! speech_new) {
+	if (! speech_new) {
 		dbg(0,"wrong type '%s'\n", attr->u.str);
-                return NULL;
+		return NULL;
 	}
 	this_=g_new0(struct speech, 1);
 	this_->priv=speech_new(&this_->meth, attrs, parent);
-    this_->attrs=attr_list_dup(attrs);
+	this_->attrs=attr_list_dup(attrs);
 	dbg(1, "say=%p\n", this_->meth.say);
 	dbg(1,"priv=%p\n", this_->priv);
 	if (! this_->priv) {
@@ -63,6 +63,14 @@ speech_new(struct attr *parent, struct attr **attrs)
 	dbg(1,"return %p\n", this_);
 	
 	return this_;
+}
+
+void
+speech_destroy(struct speech *this_)
+{
+	this_->meth.destroy(this_->priv);
+	attr_list_free(this_->attrs);
+	g_free(this_);
 }
 
 int
@@ -85,7 +93,7 @@ speech_say(struct speech *this_, const char *text)
 int
 speech_get_attr(struct speech *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-    return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
 }
 
 /**
@@ -104,7 +112,7 @@ speech_estimate_duration(struct speech *this_, char *str)
 {
 	int count;
 	struct attr cps_attr;
-   
+
 	if (!speech_get_attr(this_,attr_cps,&cps_attr,NULL)) {
 		return -1;
 	}
@@ -129,7 +137,7 @@ speech_estimate_duration(struct speech *this_, char *str)
 int
 speech_set_attr(struct speech *this_, struct attr *attr)
 {
-    this_->attrs=attr_generic_set_attr(this_->attrs, attr);
-    //callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
-    return 1;
+	this_->attrs=attr_generic_set_attr(this_->attrs, attr);
+	//callback_list_call_attr_2(this_->attr_cbl, attr->type, this_, attr);
+	return 1;
 }
