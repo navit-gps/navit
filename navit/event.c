@@ -31,7 +31,7 @@ void event_main_loop_run(void)
 {
 	if (! event_methods.main_loop_run) {
 		dbg(0,"no event system set\n");
-		exit(1);
+		return;
 	}
 	event_methods.main_loop_run();
 }
