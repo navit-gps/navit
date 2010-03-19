@@ -43,29 +43,30 @@ speechd_say(struct speech_priv *this, const char *text)
 #ifdef USE_EXEC
 	if (!fork()) {
 		char *cmdline=g_strdup_printf(this->cmdline, text);
-                int argcmax=10;
-                char *argv[argcmax];
-                int argc=0;
-                char *pos=cmdline,end;
-                while (*pos && argc < argcmax-1) {
-                        end=' ';
-                        if (*pos == '\'' || *pos == '\"') {
-                                end=*pos++;
-                        }
-                        argv[argc]=pos;
-                        while (*pos && *pos != end)
-                                pos++;
-                        if (*pos)
-                                *pos++='\0';
-                        while (*pos == ' ')
-                                pos++;
-                        if (strcmp(argv[argc], "2>/dev/null") && strcmp(argv[argc],">/dev/null") && strcmp(argv[argc],"&"))
-                                argc++;
-                }
-                argv[argc++]=NULL;
-                execvp(argv[0], argv);
-                exit(1);
-        }
+		int argcmax=10;
+		char *argv[argcmax];
+		int argc=0;
+		char *pos=cmdline, end;
+		while (*pos && argc < argcmax-1) {
+			end=' ';
+			if (*pos == '\'' || *pos == '\"') {
+				end=*pos++;
+			}
+			argv[argc]=pos;
+			while (*pos && *pos != end)
+			pos++;
+			if (*pos)
+			*pos++='\0';
+			while (*pos == ' ')
+			pos++;
+			if (strcmp(argv[argc], "2>/dev/null") && strcmp(argv[argc],">/dev/null") && strcmp(argv[argc],"&"))
+			argc++;
+		}
+		g_free(cmdline);
+		argv[argc++]=NULL;
+		execvp(argv[0], argv);
+		exit(1);
+	}
 	return 0;
 #else
 #ifdef HAVE_API_WIN32_BASE
@@ -84,14 +85,18 @@ speechd_say(struct speech_priv *this, const char *text)
 	cmd = newSysString(cmdline);
 	arg = newSysString(p);
 	ret=!CreateProcess(cmd, arg, NULL, NULL, 0, CREATE_NEW_CONSOLE, NULL, NULL, NULL, &pr);
+	g_free(cmdline);
 	g_free(cmd);
 	g_free(arg);
 	return ret;
 #else
 	char *cmdline;
+	int ret;
 
 	cmdline=g_strdup_printf(this->cmdline, text);
-	return system(cmdline);
+	ret = system(cmdline);
+	g_free(cmdline);
+	return ret;
 #endif
 #endif
 }
