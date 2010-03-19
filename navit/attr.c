@@ -30,6 +30,7 @@
 #include "map.h"
 #include "config.h"
 #include "endianess.h"
+#include "util.h"
 
 struct attr_name {
 	enum attr_type attr;
