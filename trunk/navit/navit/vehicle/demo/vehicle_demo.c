@@ -52,6 +52,7 @@ struct vehicle_priv {
 static void
 vehicle_demo_destroy(struct vehicle_priv *priv)
 {
+	g_free(priv->timep);
 	g_free(priv);
 }
 
@@ -113,7 +114,7 @@ vehicle_demo_timer(struct vehicle_priv *priv)
 		route_map=route_get_map(route);
 	if (route_map)
 		mr=map_rect_new(route_map, NULL);
-	if (mr) 
+	if (mr)
 		item=map_rect_get_item(mr);
 	if (item && item->type == type_route_start)
 		item=map_rect_get_item(mr);
