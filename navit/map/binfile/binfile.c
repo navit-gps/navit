@@ -1268,19 +1268,53 @@ ascii_cmp(char *name, char *match, int partial)
 		return g_ascii_strcasecmp(name, match);
 }
 
+struct duplicate
+{
+	struct coord c;
+	char str[0];
+};
+
+static guint
+duplicate_hash(gconstpointer key)
+{
+	const struct duplicate *d=key;
+	return d->c.x^d->c.y^g_str_hash(d->str);
+}
+
+static gboolean
+duplicate_equal(gconstpointer a, gconstpointer b)
+{
+	const struct duplicate *da=a;
+	const struct duplicate *db=b;
+	return (da->c.x == db->c.x && da->c.y == da->c.y && g_str_equal(da->str,db->str));
+}
+
 static int
 duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_type)
 {
 	struct attr attr;
 	if (!msp->search_results)
-		msp->search_results = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+		msp->search_results = g_hash_table_new_full(duplicate_hash, duplicate_equal, g_free, NULL);
 	binfile_attr_rewind(item->priv_data);
 	if (!item_attr_get(item, attr_type, &attr))
 		return 1;
-	if (!g_hash_table_lookup(msp->search_results, attr.u.str)) {
-		g_hash_table_insert(msp->search_results, g_strdup(attr.u.str), GINT_TO_POINTER(1));
-		binfile_attr_rewind(item->priv_data);
-		return 0;
+	{
+		int len=sizeof(struct  coord)+strlen(attr.u.str)+1;
+		char buffer[len];
+		struct duplicate *d=(struct duplicate *)buffer;
+		if (!item_coord_get(item, &d->c, 1)) {
+			d->c.x=0;
+			d->c.y=0;
+		}
+		binfile_coord_rewind(item->priv_data);
+		strcpy(d->str, attr.u.str);
+		if (!g_hash_table_lookup(msp->search_results, d)) {
+			struct duplicate *dc=g_malloc(len);
+			memcpy(dc, d, len);
+			g_hash_table_insert(msp->search_results, dc, GINT_TO_POINTER(1));
+			binfile_attr_rewind(item->priv_data);
+			return 0;
+		}
 	}
 	return 2;
 }
