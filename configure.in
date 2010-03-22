@@ -942,6 +942,8 @@ navit/gui/gtk/Makefile
 navit/gui/internal/Makefile
 navit/gui/win32/Makefile
 navit/gui/qml/Makefile
+navit/gui/qml/skins/Makefile
+navit/gui/qml/skins/navit/Makefile
 navit/osd/Makefile
 navit/osd/core/Makefile
 navit/plugin/Makefile

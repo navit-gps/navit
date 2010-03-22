@@ -4,9 +4,15 @@ modulegui_LTLIBRARIES = libgui_qml.la
 libgui_qml_la_SOURCES = gui_qml.moc gui_qml.cpp proxy.moc proxy.h ngqpoint.moc ngqpoint.h
 libgui_qml_la_LDFLAGS = @QT_DECLARATIVE_LIBS@ @QT_GUI_LIBS@ -module -avoid-version
 BUILT_SOURCES = gui_qml.moc proxy.moc ngqpoint.moc
+if GUI_QML
 gui_qml.moc: gui_qml.cpp
 	@MOC@ $(srcdir)/gui_qml.cpp >gui_qml.moc || touch gui_qml.moc
 proxy.moc: proxy.h
 	@MOC@ $(srcdir)/proxy.h >proxy.moc || touch proxy.moc
 ngqpoint.moc: ngqpoint.h
 	@MOC@ $(srcdir)/ngqpoint.h >ngqpoint.moc || touch ngqpoint.moc
+distclean-local:
+	-$(RM) *.moc
+
+SUBDIRS=skins
+endif

@@ -9,5 +9,6 @@ modulevehicledir=$(pkglibdir)/vehicle
 moduleplugindir=$(pkglibdir)/plugin
 pkgdocdir=$(pkgdatadir)
 xpmdir=$(pkgdatadir)/xpm
+skinsdir=$(pkgdatadir)/skins
 fontsdir=$(pkgdatadir)/fonts
 mapsdir=$(pkgdatadir)/maps
