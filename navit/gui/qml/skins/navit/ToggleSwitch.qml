@@ -28,8 +28,8 @@ import Qt 4.6
      Component.onCompleted: startup();
 
      Text {
-        id: label; text: toggleswitch.text; color: "White"; font.pointSize: 18;
-        anchors.left: background.right; anchors.leftMargin: 32;
+        id: label; text: toggleswitch.text; color: "White"; font.pointSize: gui.height/32;
+        anchors.left: background.right; anchors.leftMargin: gui.width/12;
         anchors.verticalCenter: background.verticalCenter
      }
 
@@ -37,21 +37,24 @@ import Qt 4.6
      Image {
          id: background; source: "background.svg"
          MouseRegion { anchors.fill: parent; onClicked: toggle() }
+	 height: gui.height/7.5; width: height*2.4;
      }
 
      Image {
          id: knob; source: "knob.svg"; x: 1; y: 2
+	 height: gui.height/8; width: gui.height/8;
 
          MouseRegion {
              anchors.fill: parent
-             drag.target: knob; drag.axis: "XAxis"; drag.minimumX: 1; drag.maximumX: 78
+             drag.target: knob; drag.axis: "XAxis"; drag.minimumX: 1; drag.maximumX: background.width-knob.width
+	     hoverEnabled: false; onReleased: toggle()
          }
      }
 
      states: [
          State {
              name: "on"
-             PropertyChanges { target: knob; x: 78 }
+             PropertyChanges { target: knob; x: background.width-knob.width }
 	     PropertyChanges { target: toggleswitch; on: "true" }
 	     StateChangeScript { script: toggleswitch.changed(); }
          },
