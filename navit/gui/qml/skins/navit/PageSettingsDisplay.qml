@@ -3,7 +3,7 @@ import Qt 4.6
 Rectangle {
     id: page
 
-    width: 800; height: 424
+    width: gui.width; height: gui.height
     border.width: 1
     color: "Black"
     opacity: 0
@@ -40,29 +40,28 @@ Rectangle {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
 
+    ListSelector { 
+	id:layoutList; text: "Current layout"; itemId: navit.getAttrList("layout"); onChanged: navit.setObjectByName("layout",layoutList.value)
+	anchors.top: parent.top;
+	anchors.left: parent.left; anchors.leftMargin: 3
+	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
+    }
     Grid {
-        columns: 2; rows: 1
-        anchors.verticalCenter: parent.verticalCenter;
-	anchors.left: parent.left; anchors.right: parent.right;
-	ListSelector { 
-		id:layoutList; text: "Current layout"; itemId: navit.getAttrList("layout"); onChanged: navit.setObjectByName("layout",layoutList.value)
-		anchors.left: parent.left
-	}
-        Grid {
-            columns: 1; rows: 3
-            anchors.right: parent.right;
-            spacing: 64
-            ToggleSwitch {
-                id: fullscreenSw; on: gui.getAttr("fullscreen");  text: "Fullscreen"; onChanged: gui.setAttr("fullscreen",fullscreenSw.on)
-            }
-            ToggleSwitch {
-                id: tripledSw; on: page.isTripleD();  text: "2D/3D"; onChanged: setTripleD(tripledSw.on)
-            }
-            Slider {
-                id: pitchSlider; minValue: 5; maxValue: 90; value: navit.getAttr("pitch"); text: "Pitch"; onChanged: { navit.setAttr("pitch",pitchSlider.value); gui.setAttr("pitch",pitchSlider.value) }
-                opacity: 0
-           }
+        columns: 1; rows: 3
+	anchors.right: parent.right
+	anchors.top: parent.top;
+	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
+        spacing: gui.width/12
+        ToggleSwitch {
+	    id: fullscreenSw; on: gui.getAttr("fullscreen");  text: "Fullscreen"; onChanged: gui.setAttr("fullscreen",fullscreenSw.on)
         }
+        ToggleSwitch {
+	    id: tripledSw; on: page.isTripleD();  text: "2D/3D"; onChanged: setTripleD(tripledSw.on)
+        }
+        Slider {
+	    id: pitchSlider; minValue: 5; maxValue: 90; value: navit.getAttr("pitch"); text: "Pitch"; onChanged: { navit.setAttr("pitch",pitchSlider.value); gui.setAttr("pitch",pitchSlider.value) }
+	    opacity: 0
+       }
     }
 
     Cellar {anchors.bottom: page.bottom; anchors.horizontalCenter: page.horizontalCenter; width: page.width }

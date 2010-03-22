@@ -4,7 +4,7 @@ import Qt 4.6
 Rectangle {
     id: page
 
-    width: 800; height: 424
+    width: gui.width; height: gui.height
     color: "Black"
     opacity: 0
 
@@ -21,8 +21,8 @@ Rectangle {
     Grid {
         columns: 3;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.bottom: parent.verticalCenter; anchors.bottomMargin: 48;
-        spacing: 64
+        anchors.bottom: parent.verticalCenter; anchors.bottomMargin: ui.height/16;
+        spacing: gui.width/12
         ButtonIcon {
             id: btnView; text: "View on map"; icon: "gui_maps.svg"; onClicked: console.log("Implement me!");
         }
@@ -37,8 +37,8 @@ Rectangle {
     Grid {
         columns: 2;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.top: parent.verticalCenter; anchors.topMargin: 48;
-        spacing: 64
+        anchors.top: parent.verticalCenter; anchors.topMargin: ui.height/16;
+        spacing: gui.width/12
         ButtonIcon {
             id: btnQuit; text: "POIs"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
         }
