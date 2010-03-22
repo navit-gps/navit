@@ -3,7 +3,7 @@ import Qt 4.6
 Rectangle {
     id: page
 
-    width: 800; height: 424
+    width: gui.width; height: gui.height
     border.width: 1
     color: "Black"
     opacity: 0
@@ -20,14 +20,14 @@ Rectangle {
 
 	ListSelector { 
 		id:vehicleList; text: "Current vehicle profile"; itemId: navit.getAttrList("vehicle"); onChanged: {navit.setObjectByName("vehicle",vehicleList.value) }
-		anchors.top: parent.top; anchors.topMargin: 48
-		anchors.horizontalCenter: parent.horizontalCenter;		
+		anchors.top: parent.top; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
+		anchors.left: parent.left;		
 	}
 
 	ButtonIcon {
             id: btnVehicle; text: "Vehicle options"; icon: "gui_vehicle.svg"; onClicked: gui.setPage("PageSettingsVehicleOptions.qml")
-	    anchors.top: vehicleList.bottom; anchors.topMargin: 48
-	    anchors.right: page.horizontalCenter;
+	    anchors.verticalCenter: vehicleList.verticalCenter; anchors.leftMargin: gui.width/32
+	    anchors.left: vehicleList.horizontalCenter;
         }
 
     Cellar {anchors.bottom: page.bottom; anchors.horizontalCenter: page.horizontalCenter; width: page.width }
