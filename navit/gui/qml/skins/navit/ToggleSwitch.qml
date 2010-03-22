@@ -2,7 +2,7 @@ import Qt 4.6
 
  Item {
      id: toggleswitch
-     width: background.width + label.width + 40; height: background.height
+     width: background.width + label.width + gui.width/24; height: background.height
 
      property string on: "false"
      property string text: "Toggle switch"
@@ -29,7 +29,7 @@ import Qt 4.6
 
      Text {
         id: label; text: toggleswitch.text; color: "White"; font.pointSize: gui.height/32;
-        anchors.left: background.right; anchors.leftMargin: gui.width/12;
+        anchors.left: background.right; anchors.leftMargin: gui.width/24;
         anchors.verticalCenter: background.verticalCenter
      }
 

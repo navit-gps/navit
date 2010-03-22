@@ -15,11 +15,12 @@ Rectangle {
 
    Image {
 	id: imgItem; source: gui.iconPath+container.icon; anchors.top: container.top; anchors.horizontalCenter: container.horizontalCenter;
-	width: 48; height: 48
+	width: gui.height/8; height: gui.height/8
    }
 
     Text {
-        id: txtItem; text: container.text; anchors.top: imgItem.bottom; anchors.horizontalCenter: container.horizontalCenter; color: "White"; font.pointSize: 18;
+        id: txtItem; text: container.text; anchors.top: imgItem.bottom; anchors.horizontalCenter: container.horizontalCenter; 
+	color: "White"; font.pointSize: gui.height/32; horizontalAlignment: Qt.AlignHCenter
     }
 
     states: [

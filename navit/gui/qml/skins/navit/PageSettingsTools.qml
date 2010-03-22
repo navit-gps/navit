@@ -4,7 +4,7 @@ import Qt 4.6
 Rectangle {
     id: page
 
-    width: 800; height: 424
+    width: gui.width; height: gui.height
     border.width: 1
     color: "Black"
     opacity: 0
@@ -23,7 +23,6 @@ Rectangle {
         columns: 1;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.verticalCenter: parent.verticalCenter; 
-        spacing: 64
         ButtonIcon {
             id: btnDisplay; text: "Locale"; icon: "gui_actions.svg"; onClicked: gui.setPage("PageSettingsLocale.qml")
         }

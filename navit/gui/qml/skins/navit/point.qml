@@ -3,7 +3,7 @@ import Qt 4.6
 Rectangle {
     id: page
 
-    width: 800; height: 424
+    width: gui.width; height: gui.height
     color: "Black"
     opacity: 0
 
@@ -19,44 +19,44 @@ Rectangle {
 
     Text {
 	id: infoTxt;
-    	text: point.coordString; color: "White"; font.pointSize: 20;
+    	text: point.coordString; color: "White"; font.pointSize: gui.height/20;
 	anchors.top:parent.top;anchors.horizontalCenter:parent.horizontalCenter
     }
     Text {
 	id: nameTxt;
-    	text: point.pointName; color: "White"; font.pointSize: 20;
+    	text: point.pointName; color: "White"; font.pointSize: gui.height/20;
 	anchors.top:infoTxt.bottom;anchors.topMargin: 5;anchors.horizontalCenter:parent.horizontalCenter
     }
 
     Grid {
         columns: 3;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.bottom: parent.verticalCenter; anchors.bottomMargin: 48;
-        spacing: 64
+        anchors.bottom: parent.verticalCenter; anchors.bottomMargin: gui.height/16;
+        spacing: gui.width/12
         ButtonIcon {
             id: btnView; text: "View on map"; icon: "gui_maps.svg"; onClicked: console.log("Implement me!");
         }
         ButtonIcon {
-            id: btnRoadbook; text: "Set as position"; icon: "gui_active.svg"; onClicked: { navit.setPosition(); gui.backToMap() }
+            id: btnRoadbook; text: "Set as\nposition"; icon: "gui_active.svg"; onClicked: { navit.setPosition(); gui.backToMap() }
         }
         ButtonIcon {
-            id: btnSettings; text: "Set as destination"; icon: "gui_active.svg"; onClicked: { navit.setDestination(); gui.backToMap() }
+            id: btnSettings; text: "Set as\ndestination"; icon: "gui_active.svg"; onClicked: { navit.setDestination(); gui.backToMap() }
         }
     }
 
     Grid {
         columns: 3;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.top: parent.verticalCenter; anchors.topMargin: 48;
-        spacing: 64
+        anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
+        spacing: gui.width/12
         ButtonIcon {
-            id: btnQuit; text: "Nearest POIs"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
+            id: btnQuit; text: "Nearest\nPOIs"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
         }
         ButtonIcon {
-            id: btnStop; text: "Add as a Bookmark"; icon: "gui_bookmark.svg"; onClicked: console.log("Implement me!");
+            id: btnStop; text: "Add as\na Bookmark"; icon: "gui_bookmark.svg"; onClicked: console.log("Implement me!");
         }
         ButtonIcon {
-            id: btnInfo; text: "Point information"; icon: "gui_menu.svg"; onClicked: console.log("Implement me!");
+            id: btnInfo; text: "Point\ninformation"; icon: "gui_menu.svg"; onClicked: console.log("Implement me!");
         }
     }
 

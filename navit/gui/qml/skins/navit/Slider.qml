@@ -2,7 +2,7 @@ import Qt 4.6
 
 Rectangle {
     id: slider
-    width: background.width + label.width + 40; height: label.height
+    width: background.width + label.width + gui.width/24; height: label.height
     color: "Black"
 
     property int minValue: 0
@@ -12,10 +12,10 @@ Rectangle {
     signal changed
 
     function toSlider(inputVal) {
-    	return 2+(((inputVal-minValue)/(maxValue-minValue))*126);
+    	return 2+(((inputVal-minValue)/(maxValue-minValue))*(background.width-knob.width-2));
     }
     function fromSlider(inputVal) {
-    	return minValue+(((inputVal-2)/(126))*(maxValue-minValue));
+    	return minValue+(((inputVal-2)/(background.width-knob.width-2))*(maxValue-minValue));
     }
 
     function startup () {
@@ -32,7 +32,7 @@ Rectangle {
 
     Rectangle {
         id: background
-	x: 20; width: 160; height: 16
+	x: 20; width: gui.width/5; height: gui.height/24
 	gradient: Gradient {
 		GradientStop { position: 0.0; color: "steelblue" }
 		GradientStop { position: 1.0; color: "lightsteelblue" }
@@ -45,7 +45,7 @@ Rectangle {
 	radius: 8; opacity: 0.7
 	Rectangle {
 	    id: knob
-	    x: 2; y: 2; width: 30; height: 12
+	    x: 2; y: 2; width: gui.width/26; height: gui.height/35
 	    radius: 6
             gradient: Gradient {
 		GradientStop { position: 0.0; color: "lightgray" }
@@ -53,13 +53,13 @@ Rectangle {
             }
 	    MouseRegion {
 		anchors.fill: parent
-		drag.target: parent; drag.axis: "XAxis"; drag.minimumX: 2; drag.maximumX: 128
+		drag.target: parent; drag.axis: "XAxis"; drag.minimumX: 2; drag.maximumX: background.width-knob.width
 		onPositionChanged: slider.value=Math.round(fromSlider(knob.x))
 		onReleased: slider.changed()
 	   }
         }
         Text {
-            id: valueTxt; text: slider.value; color: "White"; font.pointSize: 14;
+            id: valueTxt; text: slider.value; color: "White"; font.pointSize: gui.height/32;
             anchors.horizontalCenter: knob.horizontalCenter;
             anchors.verticalCenter: knob.verticalCenter
         }
@@ -67,8 +67,8 @@ Rectangle {
 
 
     Text {
-        id: label; text: slider.text; color: "White"; font.pointSize: 18;
-        anchors.left: background.right; anchors.leftMargin: 32;
+        id: label; text: slider.text; color: "White"; font.pointSize: gui.height/24;
+        anchors.left: background.right; anchors.leftMargin: gui.width/24;
         anchors.verticalCenter: background.verticalCenter
      }
 }

@@ -3,7 +3,7 @@ import Qt 4.6
 Rectangle {
     id: page
 
-    width: 800; height: 424
+    width: gui.width; height: gui.height
     border.width: 1
     color: "Black"
     opacity: 0
@@ -21,8 +21,8 @@ Rectangle {
     Grid {
         columns: 3;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.bottom: parent.verticalCenter; anchors.bottomMargin: 48;
-        spacing: 64
+        anchors.bottom: parent.verticalCenter; anchors.bottomMargin: gui.height/16;
+        spacing: gui.width/12
         ButtonIcon {
             id: btnDisplay; text: "Display"; icon: "gui_display.svg"; onClicked: gui.setPage("PageSettingsDisplay.qml")
         }
@@ -36,8 +36,8 @@ Rectangle {
     Grid {
         columns: 2;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.top: parent.verticalCenter; anchors.topMargin: 48;
-        spacing: 64
+        anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
+        spacing: gui.width/12
         ButtonIcon {
             id: btnRules; text: "Rules"; icon: "gui_rules.svg"; onClicked: gui.setPage("PageSettingsRules.qml")
         }
