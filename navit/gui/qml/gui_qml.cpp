@@ -84,8 +84,8 @@ class NGQProxyGui : public NGQProxy {
 	Q_PROPERTY(QString langName READ langName CONSTANT);
 	Q_PROPERTY(QString ctryName READ ctryName CONSTANT);
 
-	Q_PROPERTY(int width READ width STORED false);
-	Q_PROPERTY(int height READ height STORED false);
+	Q_PROPERTY(int width READ width WRITE setWidth NOTIFY widthSignal STORED false);
+	Q_PROPERTY(int height READ height WRITE setHeight NOTIFY heightSignal STORED false);
 
 public:
     NGQProxyGui(struct gui_priv* this_,QObject *parent) : NGQProxy(this_, parent) {
@@ -99,6 +99,9 @@ public:
 		this->object->currentPoint = new NGQPoint(this->object,p,type,NULL);
 		this->object->guiWidget->rootContext()->setContextProperty("point",this->object->currentPoint);
 	}
+signals:
+	void widthSignal(int);
+	void heightSignal(int);
 public slots:
 	void setPage(QString page) {
 		dbg(0,"Page is: %s\n",page.toStdString().c_str());
@@ -135,10 +138,16 @@ public slots:
 		this->source=returnSource;
 	}
 	int width() {
-		return this->object->mainWindow->width();
+		return this->object->w;
+	}
+	void setWidth(int w) {
+		this->object->w=w;
 	}
 	int height() {
-		return this->object->mainWindow->height();
+		return this->object->h;
+	}
+	void setHeight(int h) {
+		this->object->h=h;
 	}
 
 	//Locale properties
@@ -282,6 +291,24 @@ private:
 
 };
 
+//Main window class for resizeEvent handling
+class NGQMainWindow : public QMainWindow {
+public:
+	NGQMainWindow(struct gui_priv* this_,QWidget *parent) : QMainWindow(parent) {
+		this->object=this_;
+	}
+protected:
+	virtual void resizeEvent(QResizeEvent *) {
+		this->object->w=this->width();
+		this->object->h=this->height();
+		//YES, i KNOW about signal/slot thing
+		this->object->guiProxy->setWidth(this->width());
+		this->object->guiProxy->setHeight(this->height());
+	}
+private:
+	struct gui_priv* object;
+};
+
 //Meta object
 #include "gui_qml.moc"
 
@@ -324,7 +351,7 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 	   to re-design the popup feature or remove it at all */
 	if ( button == 3 ) {
 		this_->guiProxy->setNewPoint(p,MapPoint);
-		this_->guiWidget->clearItems();
+		this_->guiWidget->reset();
 		this_->guiProxy->setReturnSource(QString(""));
 		this_->guiProxy->setPage("point.qml");
 		this_->switcherWidget->setCurrentWidget(this_->guiWidget);
@@ -372,7 +399,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	
 	//Create main window
 	this_->switcherWidget = new QStackedWidget(this_->mainWindow);
-	this_->mainWindow = new QMainWindow(NULL);
+	this_->mainWindow = new NGQMainWindow(this_, NULL);
 	if ( this_->w && this_->h ) {
 	    this_->mainWindow->setFixedSize(this_->w,this_->h);
 	}
@@ -383,6 +410,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	
 	//Create gui widget
 	this_->guiWidget = new QmlView(NULL);
+	this_->guiWidget->setContentResizable(true);
 	
 	//Create proxy object and bind them to gui widget
 	this_->guiProxy = new NGQProxyGui(this_,this_->mainWindow);
