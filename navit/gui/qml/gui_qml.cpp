@@ -84,6 +84,9 @@ class NGQProxyGui : public NGQProxy {
 	Q_PROPERTY(QString langName READ langName CONSTANT);
 	Q_PROPERTY(QString ctryName READ ctryName CONSTANT);
 
+	Q_PROPERTY(int width READ width STORED false);
+	Q_PROPERTY(int height READ height STORED false);
+
 public:
     NGQProxyGui(struct gui_priv* this_,QObject *parent) : NGQProxy(this_, parent) {
 		this->source=QString("");
@@ -130,6 +133,12 @@ public slots:
 	}
 	void setReturnSource(QString returnSource) {
 		this->source=returnSource;
+	}
+	int width() {
+		return this->object->mainWindow->width();
+	}
+	int height() {
+		return this->object->mainWindow->height();
 	}
 
 	//Locale properties
@@ -499,8 +508,10 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 	this_->lazy = 1; //YES by default
 	if( (attr=attr_search(attrs,NULL,attr_lazy)))
 			  this_->lazy=attr->u.num;
+	this_->w=800; //Default value
 	if( (attr=attr_search(attrs,NULL,attr_width)))
     	      this_->w=attr->u.num;
+	this_->h=600; //Default value
 	if( (attr=attr_search(attrs,NULL,attr_height)))
     	      this_->h=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_source)))
