@@ -45,6 +45,7 @@ Rectangle {
 	anchors.top: parent.top;
 	anchors.left: parent.left; anchors.leftMargin: 3
 	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
+	width: page.width/2; height: page.height*0.25
     }
     Grid {
         columns: 1; rows: 3

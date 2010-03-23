@@ -3,7 +3,7 @@ import Qt 4.6
 
 Rectangle {
     id: listselector
-    width: labelTxt.width + 40 + 180; height: 60
+    width: parent.width; height: parent.height
     color: "Black"
 
 
@@ -21,7 +21,7 @@ Rectangle {
          id: delegate
          Item {
              id: wrapper
-             width: 180; height: 20
+             width: list.width; height: 20
              Column {
                  x: 5; y: 5
                  Text { text: itemName; color: "White" }
@@ -50,7 +50,7 @@ Rectangle {
 
 	ListView {
 	     id: list;
-             width: 180; height: 60
+             width: listselector.width*0.8; height: listselector.height
 	     anchors.top: labelTxt.bottom;
 	     anchors.left: listselector.left
              model: listModel

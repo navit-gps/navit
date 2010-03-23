@@ -31,10 +31,9 @@ Rectangle {
 
     ListSelector { 
 	id:layoutList; text: search.searchContext; itemId: search.getAttrList(search.searchContext); onChanged: setSearchResult()
-	anchors.top: parent.top;
-	anchors.left: parent.left; anchors.leftMargin: 3
-	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
+	anchors.top: parent.top; anchors.left: parent.left; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
+	width: page.width; height: page.height/2-cellar.height
     }
 
-    Cellar {anchors.bottom: page.bottom; anchors.horizontalCenter: page.horizontalCenter; width: page.width }
+    Cellar {id: cellar; anchors.bottom: page.bottom; anchors.horizontalCenter: page.horizontalCenter; width: page.width }
 }
