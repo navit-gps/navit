@@ -48,7 +48,7 @@ public slots:
              lng_deg=g.lng;
              lng_min=fmod(g.lng*60,60);
              lng_sec=fmod(g.lng*3600,60);
-             return QString("%1°%2'%3\" %4%5%6°%7'%8\" %9").arg(lat_deg).arg(lat_min).arg(lat_sec).arg(latc).arg(' ').arg(lng_deg).arg(lng_min).arg(lng_sec).arg(lngc);
+             return QString(QString::fromLocal8Bit("%1°%2'%3\" %4%5%6°%7'%8\" %9")).arg(lat_deg).arg(lat_min).arg(lat_sec).arg(latc).arg(' ').arg(lng_deg).arg(lng_min).arg(lng_sec).arg(lngc);
      }
      QString pointName() {
              int dist=10;
@@ -87,9 +87,9 @@ public slots:
                                      if (item_attr_get(item, attr_label, &attr)) {
                                              label=map_convert_string(m, attr.u.str);
                                               if (QString(item_to_name(item->type)).startsWith(QString("poi_"))) {
-                                                      ret=item_to_name(item->type);
+                                                      ret=QString::fromLocal8Bit(item_to_name(item->type));
                                                       ret=ret.remove(QString("poi_"));
-                                                      ret+=QString(" ")+label;
+                                                      ret+=QString(" ")+QString::fromLocal8Bit(label);
                                                       map_convert_free(label);
                                                       street_data_free(data);
                                                       map_rect_destroy(mr);
@@ -97,9 +97,9 @@ public slots:
                                                       return ret;
                                               }
                                               if (QString(item_to_name(item->type)).startsWith(QString("poly_"))) {
-                                                      ret=item_to_name(item->type);
+                                                      ret=QString::fromLocal8Bit(item_to_name(item->type));
                                                       ret=ret.remove(QString("poly_"));
-                                                      ret+=QString(" ")+label;
+                                                      ret+=QString(" ")+QString::fromLocal8Bit(label);
                                                       map_convert_free(label);
                                                       street_data_free(data);
                                                       map_rect_destroy(mr);
@@ -108,7 +108,7 @@ public slots:
                                               }
                                               if (QString(item_to_name(item->type)).startsWith(QString("street_"))) {
                                                       ret="Street ";
-                                                      ret+=label;
+                                                      ret+=QString::fromLocal8Bit(label);
                                                       map_convert_free(label);
                                                       street_data_free(data);
                                                       map_rect_destroy(mr);
