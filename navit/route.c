@@ -1618,13 +1618,14 @@ route_process_turn_restriction(struct route_graph *this, struct item *item)
 	dbg(1,"%s: (0x%x,0x%x)-(0x%x,0x%x)-(0x%x,0x%x) %p-%p-%p\n",item_to_name(item->type),c[0].x,c[0].y,c[1].x,c[1].y,c[2].x,c[2].y,pnt[0],pnt[1],pnt[2]);
 	route_graph_add_segment(this, pnt[0], pnt[1], 0, item, 0, 0, 0);
 	route_graph_add_segment(this, pnt[1], pnt[2], 0, item, 0, 0, 0);
+#if 0
 	if (count == 4) {
 		pnt[1]->flags |= RP_TURN_RESTRICTION;
 		pnt[2]->flags |= RP_TURN_RESTRICTION;
 		route_graph_add_segment(this, pnt[2], pnt[3], 0, item, 0, 0, 0);
 	} else 
 		pnt[1]->flags |= RP_TURN_RESTRICTION;
-	
+#endif	
 }
 
 /**
