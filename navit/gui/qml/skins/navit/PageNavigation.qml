@@ -21,7 +21,7 @@ Rectangle {
     Grid {
         columns: 3;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.bottom: parent.verticalCenter; anchors.bottomMargin: ui.height/16;
+        anchors.bottom: parent.verticalCenter; anchors.bottomMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
             id: btnView; text: "View on map"; icon: "gui_maps.svg"; onClicked: console.log("Implement me!");
@@ -37,7 +37,7 @@ Rectangle {
     Grid {
         columns: 2;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.top: parent.verticalCenter; anchors.topMargin: ui.height/16;
+        anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
             id: btnQuit; text: "POIs"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
