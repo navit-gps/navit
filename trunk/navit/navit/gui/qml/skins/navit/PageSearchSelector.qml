@@ -13,6 +13,10 @@ Rectangle {
 	    search.countryName=layoutList.value;
 	    gui.backToPrevPage();
 	}
+        if (search.searchContext=="town") {
+	    search.townName=layoutList.value;
+	    gui.backToPrevPage();
+	}
     }
 
     function pageOpen() {

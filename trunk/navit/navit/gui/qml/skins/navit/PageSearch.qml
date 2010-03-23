@@ -26,7 +26,7 @@ Rectangle {
             id: btnCountry; text: search.countryName; icon: "country_"+search.countryISO2+".svgz"; onClicked: { search.searchContext="country"; gui.setPage("PageSearchSelector.qml"); }
         }
         ButtonIcon {
-            id: btnCity; text: "City"; icon: "gui_bookmark.svg"; onClicked: { search.searchContext="town"; gui.setPage("PageSearchSelector.qml"); }
+            id: btnCity; text: search.townName; icon: "gui_bookmark.svg"; onClicked: { search.searchContext="town"; gui.setPage("PageSearchSelector.qml"); }
         }
     }
 
@@ -36,7 +36,7 @@ Rectangle {
         anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnStreet; text: "Street"; icon: "gui_town.svg"; onClicked: console.log("Implement me!");
+            id: btnStreet; text: "Street"; icon: "gui_town.svg"; onClicked: { search.searchContext="street"; gui.setPage("PageSearchSelector.qml"); }
         }
         ButtonIcon {
             id: btnAddress; text: "Address"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
