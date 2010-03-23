@@ -142,12 +142,14 @@ public slots:
 	}
 	void setWidth(int w) {
 		this->object->w=w;
+		this->widthSignal(w);
 	}
 	int height() {
 		return this->object->h;
 	}
 	void setHeight(int h) {
 		this->object->h=h;
+		this->heightSignal(h);
 	}
 
 	//Locale properties
