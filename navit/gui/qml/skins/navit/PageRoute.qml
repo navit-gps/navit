@@ -39,7 +39,7 @@ Rectangle {
         anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnAbout; text: "Search"; icon: "gui_town.svg"; onClicked: console.log("Implement me!");
+            id: btnAbout; text: "Search"; icon: "gui_town.svg"; onClicked: gui.setPage("PageSearch.qml");
         }
         ButtonIcon {
             id: btnQuit; text: "POIs"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
