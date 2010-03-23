@@ -83,6 +83,7 @@ class NGQProxySearch : public NGQProxy {
 
 	Q_PROPERTY(QString countryName READ countryName WRITE setCountryName NOTIFY countryNameSignal);
 	Q_PROPERTY(QString countryISO2 READ countryISO2 WRITE setCountryISO2 NOTIFY countryISO2Signal);
+	Q_PROPERTY(QString townName READ townName WRITE setTownName NOTIFY townNameSignal);
 
 	Q_PROPERTY(QString searchContext READ searchContext WRITE setSearchContext);
 
@@ -96,6 +97,7 @@ public:
 
 		this->sl=search_list_new(navit_get_mapset(this->object->nav));
 		this->search_context="country";
+		this->town_name="Select a town";
 
 		country_attr=country_default();
 		tracking=navit_get_tracking(this->object->nav);
@@ -127,10 +129,14 @@ public:
 			}
 		}		
 	}
+	~NGQProxySearch() {
+		search_list_destroy(this->sl);
+	}
 
 signals:
 	void countryNameSignal(QString);
 	void countryISO2Signal(QString);
+	void townNameSignal(QString);
 
 public slots:
 	QString getAttrList(const QString &attr_name) {
@@ -150,6 +156,11 @@ public slots:
 			attr.type=attr_town_or_district_name;
 			attr.u.str="";
 		}
+		if (this->search_context=="street") {
+			currentValue=this->street_name;
+			attr.type=attr_street_name;
+			attr.u.str="";
+		}
 
 		search_list_search(this->sl,&attr,1);
 
@@ -161,6 +172,25 @@ public slots:
 				curItem->setData(QString::fromLocal8Bit(res->country->name),NGQStandardItemModel::ItemName);
 				curItem->setData(QString("country_%1%2").arg(res->country->iso2).arg(".svgz"),NGQStandardItemModel::ItemIcon);
 				if (this->country_name==QString::fromLocal8Bit(res->country->name)) {
+					retId.setNum(counter);
+				}
+			}
+			if (this->search_context=="town") {
+				curItem->setData(QVariant(counter),NGQStandardItemModel::ItemId);
+				if (res->town->common.town_name) {
+					curItem->setData(QString::fromLocal8Bit(res->town->common.town_name),NGQStandardItemModel::ItemName);
+				}
+				if (res->town->common.district_name) {
+					curItem->setData(QString::fromLocal8Bit(res->town->common.district_name),NGQStandardItemModel::ItemName);
+				} 
+				if (this->town_name==QString::fromLocal8Bit(res->town->common.town_name) || this->town_name==QString::fromLocal8Bit(res->town->common.district_name)) {
+					retId.setNum(counter);
+				}
+			}
+			if (this->search_context=="street") {
+				curItem->setData(QVariant(counter),NGQStandardItemModel::ItemId);
+				curItem->setData(QString::fromLocal8Bit(res->street->name),NGQStandardItemModel::ItemName);
+				if (this->street_name==QString::fromLocal8Bit(res->street->name)) {
 					retId.setNum(counter);
 				}
 			}
@@ -187,6 +217,8 @@ public slots:
 		while ((res=search_list_get_result(this->sl))) {
 				this->setCountryISO2(QString::fromLocal8Bit(res->country->iso2));
 		}
+		//...and current town
+		this->town_name="Select a town";
 
 		countryNameSignal(countryName);
 	}
@@ -196,6 +228,22 @@ public slots:
 	void setCountryISO2(QString countryISO2) {
 		this->country_iso2=countryISO2;
 		countryISO2Signal(countryISO2);
+	}
+	QString townName() {
+		return this->town_name;
+	}
+	void setTownName(QString townName) {
+		struct attr attr;
+		struct search_list_result *res;
+
+		this->town_name=townName;
+
+		//Specialize search
+		attr.type=attr_town_or_district_name;
+		attr.u.str=townName.toLocal8Bit().data();
+		search_list_search(this->sl,&attr,0);
+
+		townNameSignal(townName);
 	}
 	QString searchContext() {
 		return this->search_context;
@@ -214,7 +262,7 @@ protected:
 private:
 	struct search_list *sl;
 	QString search_context;
-	QString country_iso2,country_name,town_name;
+	QString country_iso2,country_name,town_name,street_name;
 };
 
 class NGQProxyGui : public NGQProxy {
