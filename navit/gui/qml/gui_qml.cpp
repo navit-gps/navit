@@ -27,6 +27,7 @@
 #include "country.h"
 #include "track.h"
 #include "search.h"
+#include "bookmarks.h"
 
 //WORKAOUND for the c/c++ compatibility issues.
 //range is defined inside of struct attr so it is invisible in c++
@@ -71,6 +72,7 @@ struct gui_priv {
 	class NGQProxyNavit* navitProxy;
 	class NGQProxyVehicle* vehicleProxy;
 	class NGQProxySearch* searchProxy;
+	class NGQProxyBookmarks* bookmarksProxy;
 	class NGQPoint* currentPoint;
 };
 
@@ -303,7 +305,7 @@ public slots:
 	}
 	void backToMap() {
         if (this->object->graphicsWidget) {
-				this_->graphicsWidget->setFocus(Qt::ActiveWindowFocusReason);
+				this->object->graphicsWidget->setFocus(Qt::ActiveWindowFocusReason);
                 this->object->switcherWidget->setCurrentWidget(this->object->graphicsWidget);
         }
     }
@@ -379,7 +381,6 @@ private:
 	QString source;
 };
 
-
 class NGQProxyVehicle : public NGQProxy {
     Q_OBJECT;
 
@@ -393,6 +394,33 @@ protected:
 	int setAttrFunc(struct attr* attr) {return vehicle_set_attr(this->object->currVehicle,attr); }
 	struct attr_iter* getIterFunc() { return vehicle_attr_iter_new(); };
 	void dropIterFunc(struct attr_iter* iter) { vehicle_attr_iter_destroy(iter); };
+
+private:
+
+};
+
+class NGQProxyBookmarks : public NGQProxy {
+    Q_OBJECT;
+
+public:
+	NGQProxyBookmarks(struct gui_priv* object, QObject* parent) : NGQProxy(object,parent) { };
+
+public slots:
+	QString AddBookmark(QString description) {
+		struct attr attr;
+		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
+		if (!bookmarks_add_bookmark(attr.u.bookmarks, this->object->currentPoint->pc(), description.toLocal8Bit().constData()) ) {
+			return "Failed!";
+		} else {
+			return "Success";
+		}
+	}
+
+protected:
+	int getAttrFunc(enum attr_type type, struct attr* attr, struct attr_iter* iter) { return 0; }
+	int setAttrFunc(struct attr* attr) {return 0; }
+	struct attr_iter* getIterFunc() { return NULL; };
+	void dropIterFunc(struct attr_iter* iter) { return; };
 
 private:
 
@@ -617,6 +645,8 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	this_->guiWidget->rootContext()->setContextProperty("vehicle",this_->vehicleProxy);
 	this_->searchProxy = new NGQProxySearch(this_,this_->mainWindow);
 	this_->guiWidget->rootContext()->setContextProperty("search",this_->searchProxy);
+	this_->bookmarksProxy = new NGQProxyBookmarks(this_,this_->mainWindow);
+	this_->guiWidget->rootContext()->setContextProperty("bookmarks",this_->bookmarksProxy);
 		
 	//Check, if we have compatible graphics
 	this_->graphicsWidget = (QWidget*)graphics_get_data(gra,"qt_widget");
