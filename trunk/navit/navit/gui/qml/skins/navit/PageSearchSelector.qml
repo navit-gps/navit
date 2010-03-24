@@ -29,9 +29,15 @@ Rectangle {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
 
+   TextInput{
+     	id: searchTxt; text: search.countryName;
+	anchors.top: parent.top; anchors.left: parent.left; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
+	width: page.width; font.pointSize: 14; color: "White";focus: true; readOnly: false
+   }
+
     ListSelector { 
 	id:layoutList; text: search.searchContext; itemId: search.getAttrList(search.searchContext); onChanged: setSearchResult()
-	anchors.top: parent.top; anchors.left: parent.left; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
+	anchors.top: searchTxt.bottom; anchors.left: parent.left; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
 	width: page.width; height: page.height/2-cellar.height
     }
 
