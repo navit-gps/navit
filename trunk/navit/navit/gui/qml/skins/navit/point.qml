@@ -53,7 +53,7 @@ Rectangle {
             id: btnQuit; text: "Nearest\nPOIs"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
         }
         ButtonIcon {
-            id: btnStop; text: "Add as\na Bookmark"; icon: "gui_bookmark.svg"; onClicked: console.log("Implement me!");
+            id: btnBookmark; text: "Add as\na Bookmark"; icon: "gui_bookmark.svg"; onClicked: gui.setPage("PageBookmarksAdd.qml")
         }
         ButtonIcon {
             id: btnInfo; text: "Point\ninformation"; icon: "gui_menu.svg"; onClicked: console.log("Implement me!");
