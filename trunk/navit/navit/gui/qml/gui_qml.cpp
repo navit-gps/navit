@@ -303,6 +303,7 @@ public slots:
 	}
 	void backToMap() {
         if (this->object->graphicsWidget) {
+				this_->graphicsWidget->setFocus(Qt::ActiveWindowFocusReason);
                 this->object->switcherWidget->setCurrentWidget(this->object->graphicsWidget);
         }
     }
@@ -544,6 +545,7 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 	   to re-design the popup feature or remove it at all */
 	if ( button == 3 ) {
 		this_->guiProxy->setNewPoint(p,MapPoint);
+		this_->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
 		this_->guiWidget->reset();
 		this_->guiProxy->setReturnSource(QString(""));
 		this_->guiProxy->setPage("point.qml");
@@ -567,6 +569,7 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 			this_->guiProxy->setReturnSource(QString(""));
 			this_->guiProxy->setPage("main.qml");
 		}
+		this_->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
 		this_->switcherWidget->setCurrentWidget(this_->guiWidget);
 	}
 }
