@@ -8,10 +8,11 @@ public:
 		roleNames.insert(NGQStandardItemModel::ItemId, "itemId");
 		roleNames.insert(NGQStandardItemModel::ItemName, "itemName");
 		roleNames.insert(NGQStandardItemModel::ItemIcon, "itemIcon");
+		roleNames.insert(NGQStandardItemModel::ItemPath, "itemPath");
 		this->setRoleNames(roleNames);
 	}
 
-	enum listRoles {ItemId=Qt::UserRole+1,ItemName=Qt::UserRole+2,ItemIcon=Qt::UserRole+3};
+	enum listRoles {ItemId=Qt::UserRole+1,ItemName=Qt::UserRole+2,ItemIcon=Qt::UserRole+3,ItemPath=Qt::UserRole+4};
 private:
 	QHash<int, QByteArray> roleNames;
 };
