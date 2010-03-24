@@ -480,6 +480,15 @@ public slots:
 			return "Success";
 		}
 	}
+	QString Delete(QString bookmark) {
+		struct attr attr;
+		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
+		if (!bookmarks_del_bookmark(attr.u.bookmarks, bookmark.toLocal8Bit().constData()) ) {
+			return "Failed!";
+		} else {
+			return "Success";
+		}
+	}
 	void setPoint(QString bookmark) {
 		struct attr attr;
 		struct item* item;
