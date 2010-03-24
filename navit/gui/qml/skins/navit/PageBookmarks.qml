@@ -39,15 +39,25 @@ Rectangle {
          Item {
              id: wrapper
              width: list.width; height: 20
-             Column {
-                 x: 5; y: 5
-                 Text { text: itemName; color: "White" }
-             }
-	     MouseRegion {
-	   		id:delegateMouse
+                 Text { id: txtItem; text: itemName; color: "White" 
+       			width: list.width-imgDelete.width
+		MouseRegion {
+			id:delegateMouse
 			anchors.fill: parent
 			onClicked: bookmarkClick(itemId,itemIcon,itemName,itemPath);
-	     }
+		}
+
+		 }
+		 Image {
+			id: imgDelete; source: gui.iconPath+"gui_inactive.svg"; anchors.right: wrapper.right;anchors.rightMargin: 5;
+			width: 20; height: 20
+
+			MouseRegion {
+				id:delegateMouseDelete
+				anchors.fill: parent
+				onClicked: { bookmarks.Delete(itemId); bookmarks.getAttrList(""); }
+			}
+		}
          }
      }
 
