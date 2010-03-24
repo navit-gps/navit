@@ -13,6 +13,4 @@ ngqpoint.moc: ngqpoint.h
 distclean-local:
 	-$(RM) *.moc
 
-if GUI_QML
 SUBDIRS=skins
-endif
