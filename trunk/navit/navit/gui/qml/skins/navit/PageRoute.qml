@@ -23,7 +23,7 @@ Rectangle {
         anchors.bottom: parent.verticalCenter; anchors.bottomMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnBookmarks; text: "Bookmarks"; icon: "gui_bookmark.svg"; onClicked: console.log("Implement me!");
+            id: btnBookmarks; text: "Bookmarks"; icon: "gui_bookmark.svg"; onClicked: {bookmarks.currentPath=""; gui.setPage("PageBookmarks.qml") }
         }
         ButtonIcon {
             id: btnDestinations; text: "Destinations"; icon: "gui_bookmark.svg"; onClicked: console.log("Implement me!");
