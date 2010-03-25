@@ -177,6 +177,8 @@ int main_real(int argc, char **argv)
 	}
 	event_main_loop_run();
 
+#ifndef HAVE_API_ANDROID
 	debug_finished();
+#endif
 	return 0;
 }
