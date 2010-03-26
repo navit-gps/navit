@@ -38,6 +38,7 @@
 #include "vehicle.h"
 #include "map.h"
 #include "mapset.h"
+#include "route.h"
 #include "search.h"
 #include "callback.h"
 #include "gui.h"
@@ -119,6 +120,7 @@ resolve_object(const char *opath, char *type)
 	char *def_vehicle="/default_vehicle";
 	char *def_mapset="/default_mapset";
 	char *def_map="/default_map";
+	char *def_route="/default_route";
 	struct attr attr;
 
 	if (strncmp(opath, object_path, strlen(object_path))) {
@@ -172,6 +174,13 @@ resolve_object(const char *opath, char *type)
 					}
 					return NULL;
 				}
+			}
+			return NULL;
+		}
+		if (!strncmp(oprefix,def_route,strlen(def_route))) {
+			oprefix+=strlen(def_route);
+			if (navit_get_attr(navit.u.navit, attr_route, &attr, NULL)) {
+				return attr.u.route;
 			}
 			return NULL;
 		}
@@ -860,6 +869,22 @@ request_mapset_get_attr(DBusConnection *connection, DBusMessage *message)
 	return request_get_attr(connection, message, "mapset", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))mapset_get_attr);
 }
 
+/* route */
+
+static DBusHandlerResult
+request_route_get_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_get_attr(connection, message, "route", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))route_get_attr);
+}
+
+
+static DBusHandlerResult
+request_route_set_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_set_add_remove_attr(connection, message, "route", NULL, (int (*)(void *, struct attr *))route_set_attr);
+}
+
+
 /* navit */
 
 static DBusHandlerResult
@@ -1431,6 +1456,8 @@ struct dbus_method {
 	{".mapset", "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_mapset_attr_iter_destroy},
 	{".mapset", "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_mapset_get_attr},
 	{".mapset", "get_attr_wi",         "so",      "attribute,attr_iter",                     "sv",  "attrname,value", request_mapset_get_attr},
+	{".route",    "get_attr",          "s",       "attribute",                               "sv",  "attrname,value", request_route_get_attr},
+	{".route",    "set_attr",          "sv",      "attribute,value",                         "",    "",  request_route_set_attr},
 	{".search_list","destroy",         "",        "",                                        "",   "",      request_search_list_destroy},
 	{".search_list","get_result",      "",        "",                                        "i(iii)a{sa{sv}}",   "id,coord,dict",      request_search_list_get_result},
 	{".search_list","search",          "svi",     "attribute,value,partial",                 "",   "",      request_search_list_search},
