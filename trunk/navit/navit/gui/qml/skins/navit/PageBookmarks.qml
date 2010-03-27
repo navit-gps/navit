@@ -49,8 +49,38 @@ Rectangle {
 
 		 }
 		 Image {
+			id: imgCut; source: gui.iconPath+"zoom_out.svg"; anchors.right: imgCopy.left;anchors.rightMargin: 5;
+			width: 20; height: 20;
+
+			MouseRegion {
+				id:delegateMouseCut
+				anchors.fill: parent
+				onClicked: { bookmarks.Cut(itemId); bookmarks.getAttrList(""); }
+			}
+		}
+		 Image {
+			id: imgCopy; source: gui.iconPath+"zoom_in.svg"; anchors.right: imgPaste.left;anchors.rightMargin: 5;
+			width: 20; height: 20;
+
+			MouseRegion {
+				id:delegateMouseCopy
+				anchors.fill: parent
+				onClicked: { bookmarks.Copy(itemId); bookmarks.getAttrList(""); }
+			}
+		}
+		Image {
+			id: imgPaste; source: gui.iconPath+"mark.svg"; anchors.right: imgDelete.left;anchors.rightMargin: 5;
+			width: 20; height: 20;
+
+			MouseRegion {
+				id:delegateMousePaste
+				anchors.fill: parent
+				onClicked: { bookmarks.Paste(bookmarks.currentPath); bookmarks.getAttrList(""); }
+			}
+		}
+		 Image {
 			id: imgDelete; source: gui.iconPath+"gui_inactive.svg"; anchors.right: wrapper.right;anchors.rightMargin: 5;
-			width: 20; height: 20
+			width: 20; height: 20;
 
 			MouseRegion {
 				id:delegateMouseDelete
