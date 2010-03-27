@@ -382,7 +382,7 @@ int main (int argc, char **argv)
 
 		case 'h':
 			printf("\n");
-			printf("eSpeak text-to-speech: %s\n%s",espeak_Info(NULL),help_text);
+			printf("eSpeak text-to-speech: %s\n%s",espeak_Info(),help_text);
 			exit(0);
 			break;
 

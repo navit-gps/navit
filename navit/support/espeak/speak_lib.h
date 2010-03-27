@@ -594,7 +594,7 @@ espeak_ERROR espeak_Terminate(void);
 #ifdef __cplusplus
 extern "C"
 #endif
-const char *espeak_Info(void* ptr);
+const char *espeak_Info(void);
 /* Returns the version number string.
    The parameter is for future use, and should be set to NULL
 */
