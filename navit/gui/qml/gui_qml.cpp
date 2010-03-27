@@ -419,6 +419,7 @@ public slots:
 		struct attr attr;
 		struct item* item;
 		struct map_rect *mr=NULL;
+		QHash<QString,QString> seenMap;
 
 		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
 		mr=map_rect_new(bookmarks_get_map(attr.u.bookmarks), NULL);
@@ -456,6 +457,8 @@ public slots:
 			if (!label.startsWith(this->current_path)) continue;
 			label=label.right(label.length()-this->current_path.length());
 			labelList=label.split("/",QString::SkipEmptyParts);
+			if (seenMap[labelList[0]]==labelList[0]) continue;
+			seenMap[labelList[0]]=labelList[0];
 			curItem->setData(labelList[0],NGQStandardItemModel::ItemName);
 			curItem->setData(QString(this->current_path).append(labelList[0]).append("/"),NGQStandardItemModel::ItemPath);
 			if (labelList.size()>1) {
@@ -475,6 +478,33 @@ public slots:
 		struct attr attr;
 		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
 		if (!bookmarks_add_bookmark(attr.u.bookmarks, this->object->currentPoint->pc(), description.toLocal8Bit().constData()) ) {
+			return "Failed!";
+		} else {
+			return "Success";
+		}
+	}
+	QString Cut(QString description) {
+		struct attr attr;
+		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
+		if (!bookmarks_cut_bookmark(attr.u.bookmarks, description.toLocal8Bit().constData()) ) {
+			return "Failed!";
+		} else {
+			return "Success";
+		}
+	}
+	QString Copy(QString description) {
+		struct attr attr;
+		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
+		if (!bookmarks_copy_bookmark(attr.u.bookmarks, description.toLocal8Bit().constData()) ) {
+			return "Failed!";
+		} else {
+			return "Success";
+		}
+	}
+	QString Paste(QString location) {
+		struct attr attr;
+		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
+		if (!bookmarks_paste_bookmark(attr.u.bookmarks, location.toLocal8Bit().constData()) ) {
 			return "Failed!";
 		} else {
 			return "Success";
