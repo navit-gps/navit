@@ -33,7 +33,7 @@
 //#define USE_PORTAUDIO
 //#define USE_PULSEAUDIO
 #define USE_NANOSLEEP
-#define ESPEAK_API  extern "C"
+//#define ESPEAK_API  extern "C"
 
 #ifdef LIBRARY
 #define USE_ASYNC
@@ -67,8 +67,10 @@ int LookupMnem(MNEM_TAB *table, char *string);
 
 #ifdef PLATFORM_WINDOWS
 #define N_PATH_HOME  220
+#define ESPEAK_API
 #else
 #define N_PATH_HOME  150
+#define ESPEAK_API  extern "C"
 #endif
 
 extern char path_home[N_PATH_HOME];    // this is the espeak-data directory

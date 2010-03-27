@@ -31,7 +31,9 @@
 #include "speech.h"
 
 #include <sys/stat.h>
-#ifndef PLATFORM_WINDOWS
+#ifdef PLATFORM_WINDOWS
+#include <windows.h>
+#else
 #include <unistd.h>
 #endif
 
@@ -526,8 +528,8 @@ void MarkerEvent(int type, unsigned int char_position, int value, unsigned char 
 	ep->text_position = char_position & 0xffffff;
 	ep->length = char_position >> 24;
 	
-	time = (double(count_samples + mbrola_delay + (out_ptr - out_start)/2)*1000.0)/samplerate;
-	ep->audio_position = int(time);
+	time = ((double)(count_samples + mbrola_delay + (out_ptr - out_start)/2)*1000.0)/samplerate;
+	ep->audio_position = (int)(time);
 	ep->sample = (count_samples + mbrola_delay + (out_ptr - out_start)/2);
 	
 #ifdef DEBUG_ENABLED
@@ -1144,7 +1146,7 @@ ESPEAK_API espeak_ERROR espeak_Terminate(void)
 	return EE_OK;
 }   //  end of espeak_Terminate
 
-ESPEAK_API const char *espeak_Info(void *)
+ESPEAK_API const char *espeak_Info(void)
 {//=======================================
 	return(version_string);
 }
