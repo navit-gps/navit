@@ -36,6 +36,7 @@ struct bookmarks {
 	GList *bookmarks_list;
 	char* bookmark_file;
 	char *working_file;
+	struct bookmark_item_priv* clipboard;
 
 	//Refs to other objects
 	struct transformation *trans;
@@ -116,6 +117,8 @@ bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation
 		bookmarks_load_hash(this_);
 	}
 
+	this_->clipboard=g_new0(struct bookmark_item_priv,1);
+
 	return this_;
 }
 
@@ -129,6 +132,8 @@ bookmarks_destroy(struct bookmarks *this_) {
 
 	g_free(this_->bookmark_file);
 	g_free(this_->working_file);
+
+	g_free(this_->clipboard);
 
 	g_free(this_);
 }
@@ -298,7 +303,7 @@ bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *d
 
 	b_item.c.x=pc->x;
 	b_item.c.y=pc->y;
-	b_item.label=description;
+	b_item.label=(char *)description;
 	b_item.type=type_bookmark;
 
 	this_->bookmarks_list=g_list_first(this_->bookmarks_list);
@@ -312,6 +317,56 @@ bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *d
 
 	return result;
 }
+
+int 
+bookmarks_cut_bookmark(struct bookmarks *this_, const char *description) {
+	if (bookmarks_copy_bookmark(this_,description)) {
+		return bookmarks_del_bookmark(this_,description);
+	}
+	
+	return FALSE;
+}
+int 
+bookmarks_copy_bookmark(struct bookmarks *this_, const char *description) {
+	struct bookmark_item_priv *b_item;
+	b_item=(struct bookmark_item_priv*)g_hash_table_lookup(this_->bookmarks_hash,description);
+	if (b_item) {
+		this_->clipboard->c=b_item->c;
+		this_->clipboard->type=b_item->type;
+		if (!this_->clipboard->label) {
+			g_free(this_->clipboard->label);
+		}
+		this_->clipboard->label=g_strdup(b_item->label);
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+int 
+bookmarks_paste_bookmark(struct bookmarks *this_, const char* path) {
+	char *fullLabel;
+	int result;
+	struct pcoord pc;
+
+	//check, if we need to add a trailing "/" to path
+	if (path[strlen(path)-1]!='/') {
+		fullLabel=g_strjoin(NULL,path,"/",this_->clipboard->label,NULL);
+	} else {
+		fullLabel=g_strjoin(NULL,path,this_->clipboard->label,NULL);
+	}
+
+	pc.x=this_->clipboard->c.x;
+	pc.y=this_->clipboard->c.y;
+	pc.pro=projection_mg; //Bookmarks are always stored in mg
+
+	result=bookmarks_add_bookmark(this_,&pc,fullLabel);
+	
+	g_free(fullLabel);
+
+	return result;
+}
+
 
 int 
 bookmarks_del_bookmark(struct bookmarks *this_, const char *description) {
