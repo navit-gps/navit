@@ -1,1 +1,1 @@
-SUBDIR=navit
+SUBDIRS=navit
