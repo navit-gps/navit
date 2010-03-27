@@ -30,6 +30,9 @@ struct bookmarks *bookmarks_new(struct attr *parent,/* struct attr **attrs,*/ st
 void bookmarks_destroy(struct bookmarks *this_);
 void bookmarks_add_callback(struct bookmarks *this_, struct callback *cb);
 int bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *c, const char *description);
+int bookmarks_cut_bookmark(struct bookmarks *this_, const char *description);
+int bookmarks_copy_bookmark(struct bookmarks *this_, const char *description);
+int bookmarks_paste_bookmark(struct bookmarks *this_, const char *path);
 int bookmarks_del_bookmark(struct bookmarks *this_, const char *description);
 struct map* bookmarks_get_map(struct bookmarks *this_);
 
