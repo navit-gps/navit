@@ -108,6 +108,7 @@ map_new(struct attr *parent, struct attr **attrs)
 	m->attrs=attr_list_dup(attrs);
 	m->priv=maptype_new(&m->meth, attrs);
 	if (! m->priv) {
+		attr_list_free(m->attrs);
 		g_free(m);
 		m=NULL;
 	}
@@ -253,6 +254,7 @@ map_destroy(struct map *m)
 {
 	m->meth.map_destroy(m->priv);
 	attr_list_free(m->attrs);
+	callback_list_destroy(m->attr_cbl);
 	g_free(m);
 }
 
