@@ -502,6 +502,9 @@ static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct grap
 //##############################################################################################################
 static void gc_destroy(struct graphics_gc_priv *gc)
 {
+	delete gc->pen;
+	delete gc->brush;
+	g_free(gc);
 }
 
 //##############################################################################################################
