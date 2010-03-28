@@ -1168,17 +1168,21 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 		return NULL;
 #endif
 #if 1
-        font_freetype_new=(struct font_priv *(*)(void *))plugin_get_font_type("freetype");
-        if (!font_freetype_new)
-                return NULL;
+	font_freetype_new=(struct font_priv *(*)(void *))plugin_get_font_type("freetype");
+	if (!font_freetype_new)
+		return NULL;
 #endif
 	ret=g_new0(struct graphics_priv, 1);
 	ret->font_freetype_new=font_freetype_new;
 	*meth=graphics_methods;
 #if 1
-        font_freetype_new(&ret->freetype_methods);
-        meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))ret->freetype_methods.font_new;
-        meth->get_text_bbox=(void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*, int))ret->freetype_methods.get_text_bbox;
+	font_freetype_new(&ret->freetype_methods);
+	meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))ret->freetype_methods.font_new;
+	meth->get_text_bbox=(void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*, int))ret->freetype_methods.get_text_bbox;
+#endif
+
+#if defined(Q_WS_X11) && QT_VERSION >= 0x040500
+	QApplication::setGraphicsSystem("raster");
 #endif
 
 #ifdef HAVE_QPE
