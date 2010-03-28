@@ -891,8 +891,10 @@ load_changes(struct map_priv *m)
 	int size;
 	changes_file=g_strdup_printf("%s.log",m->filename);
 	changes=fopen(changes_file,"rb");
-	if (! changes)
+	if (! changes) {
+		g_free(changes_file);
 		return;
+	}
 	m->changes=g_hash_table_new_full(binfile_hash_entry_hash, binfile_hash_entry_equal, g_free, NULL);
 	while (fread(&entry, sizeof(entry), 1, changes) == 1) {
 		if (fread(&size, sizeof(size), 1, changes) != 1)
