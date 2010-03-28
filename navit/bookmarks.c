@@ -95,6 +95,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 		g_hash_table_insert(this_->bookmarks_hash,b_item->label,b_item);
 		this_->bookmarks_list=g_list_append(this_->bookmarks_list,b_item);
 	}
+	map_rect_destroy(mr);
 }
 struct bookmarks *
 bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation *trans) {
