@@ -1023,10 +1023,6 @@ static struct graphics_priv *event_gr;
 static void
 event_qt_main_loop_run(void)
 {
-
-#if defined(Q_WS_X11) && QT_VERSION >= 0x040500
-	QApplication::setGraphicsSystem("raster");
-#endif
 	event_gr->app->exec();
 }
 
