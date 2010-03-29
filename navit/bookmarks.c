@@ -390,6 +390,47 @@ bookmarks_del_bookmark(struct bookmarks *this_, const char *description) {
 
 	return FALSE;
 }
+
+int 
+bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const char* newName) {
+	struct bookmark_item_priv *b_item;
+	struct pcoord pc;
+	char *path;
+	int result;
+
+	b_item=(struct bookmark_item_priv*)g_hash_table_lookup(this_->bookmarks_hash,oldName);
+	if (b_item) {
+		this_->bookmarks_list=g_list_first(this_->bookmarks_list);
+		this_->bookmarks_list=g_list_remove(this_->bookmarks_list,b_item);
+
+		pc.x=this_->clipboard->c.x;
+		pc.y=this_->clipboard->c.y;
+		pc.pro=projection_mg; //Bookmarks are always stored in mg
+
+		//Check if we have to parse the tree
+		if ((path=strrchr(oldName,'/'))) {
+			char *fullName=g_new0(char,path-oldName+strlen(newName)+2);
+			memcpy(fullName,oldName,path-oldName);
+			memcpy(fullName+(path-oldName),"/",1);
+			memcpy(fullName+(path-oldName)+1,newName,strlen(newName));
+			bookmarks_add_bookmark(this_,&pc,fullName);
+
+			g_free(fullName);
+		} else {
+			bookmarks_add_bookmark(this_,&pc,newName);
+		}
+
+		result=bookmarks_store_bookmarks_to_file(this_,0,0);
+
+		callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
+		bookmarks_clear_hash(this_);
+		bookmarks_load_hash(this_);
+
+	}
+
+	return result;
+}
+
 /**
  * @param limit Limits the number of entries in the "backlog". Set to 0 for "infinite"
  */
