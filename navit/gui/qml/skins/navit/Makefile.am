@@ -4,7 +4,7 @@ SKIN = navit
 
 qmldir=$(skinsdir)/$(SKIN)
 
-qml_DATA = ButtonIcon.qml ToggleSwitch.qml ListSelector.qml Slider.qml Cellar.qml main.qml point.qml PageAbout.qml PageBookmarksAdd.qml PageBookmarks.qml PageNavigation.qml PageRoute.qml PageSearch.qml PageSearchSelector.qml PageSettingsDisplay.qml PageSettingsLocale.qml PageSettings.qml PageSettingsRules.qml PageSettingsTools.qml PageSettingsVehicle.qml
+qml_DATA = ButtonIcon.qml ToggleSwitch.qml ListSelector.qml Slider.qml Cellar.qml main.qml point.qml command.qml PageAbout.qml PageBookmarksAdd.qml PageBookmarks.qml PageNavigation.qml PageRoute.qml PageSearch.qml PageSearchSelector.qml PageSettingsDisplay.qml PageSettingsLocale.qml PageSettings.qml PageSettingsRules.qml PageSettingsTools.qml PageSettingsVehicle.qml
 qml_DATA += background.svg knob.svg
 
 do_button_subst = sed -e 's,matchProperties,properties,g' \
