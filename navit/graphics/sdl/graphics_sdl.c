@@ -2136,11 +2136,16 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
         w=attr->u.num;
     if ((attr=attr_search(attrs, NULL, attr_h)))
         h=attr->u.num;
-    if (attr=attr_search(attrs, NULL, attr_bpp))
+    if ((attr=attr_search(attrs, NULL, attr_bpp)))
         this->video_bpp=attr->u.num;
-    if (attr=attr_search(attrs, NULL, attr_frame))
+    if ((attr=attr_search(attrs, NULL, attr_flags))) {
+	if (attr->u.num & 1) 
+	    this->video_flags = SDL_SWSURFACE;
+    }
+    if ((attr=attr_search(attrs, NULL, attr_frame))) {
         if(!attr->u.num)
             this->video_flags |= SDL_NOFRAME;
+    }
 
     this->screen = SDL_SetVideoMode(w, h, this->video_bpp, this->video_flags);
 
