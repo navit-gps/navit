@@ -97,22 +97,51 @@ item_bin_add_coord_rect(struct item_bin *ib, struct rect *r)
 	item_bin_add_coord(ib, &r->h, 1);
 }
 
+int
+attr_bin_write_data(struct attr_bin *ab, enum attr_type type, void *data, int size)
+{
+       int pad=(4-(size%4))%4;
+       ab->type=type;
+       memcpy(ab+1, data, size);
+       memset((unsigned char *)(ab+1)+size, 0, pad);
+       ab->len=(size+pad)/4+1;
+       return ab->len+1;
+}
+
+int
+attr_bin_write_attr(struct attr_bin *ab, struct attr *attr)
+{
+	return attr_bin_write_data(ab, attr->type, attr_data_get(attr), attr_data_size(attr));
+}
+
 void
 item_bin_add_attr_data(struct item_bin *ib, enum attr_type type, void *data, int size)
 {
 	struct attr_bin *ab=(struct attr_bin *)((int *)ib+ib->len+1);
-	int pad=(4-(size%4))%4;
-	ab->type=type;
-	memcpy(ab+1, data, size);
-	memset((unsigned char *)(ab+1)+size, 0, pad);
-	ab->len=(size+pad)/4+1;
-	ib->len+=ab->len+1;
+	ib->len+=attr_bin_write_data(ab, type, data, size);
 }
 
 void
 item_bin_add_attr(struct item_bin *ib, struct attr *attr)
 {
-	item_bin_add_attr_data(ib, attr->type, attr_data_get(attr), attr_data_size(attr));
+	struct attr_bin *ab=(struct attr_bin *)((int *)ib+ib->len+1);
+	if (ATTR_IS_GROUP(attr->type)) {
+		int i=0;
+		int *abptr;
+		ab->type=attr->type;
+		ab->len=1;
+		abptr=(int *)(ab+1);
+                while (attr->u.attrs[i].type) {
+                        int size=attr_bin_write_attr((struct attr_bin *)abptr, &attr->u.attrs[i]);
+                        ab->len+=size;
+                        abptr+=size;
+                        i++;
+                }
+                ib->len+=ab->len+1;
+
+	} else
+		ib->len+=attr_bin_write_attr(ab, attr);
+	
 }
 
 void
@@ -189,6 +218,18 @@ item_bin_write(struct item_bin *ib, FILE *out)
 {
 	fwrite(ib, (ib->len+1)*4, 1, out);
 }
+
+void
+item_bin_write_range(struct item_bin *ib, FILE *out, int min, int max)
+{
+	struct range r;
+
+	r.min=min;
+	r.max=max;
+	fwrite(&r, sizeof(r), 1, out);
+	item_bin_write(ib, out);
+}
+
 
 void
 item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, struct item_bin_sink *out)
