@@ -141,6 +141,8 @@ void item_bin_add_coord(struct item_bin *ib, struct coord *c, int count);
 void item_bin_bbox(struct item_bin *ib, struct rect *r);
 void item_bin_copy_coord(struct item_bin *ib, struct item_bin *from, int dir);
 void item_bin_add_coord_rect(struct item_bin *ib, struct rect *r);
+int attr_bin_write_data(struct attr_bin *ab, enum attr_type type, void *data, int size);
+int attr_bin_write_attr(struct attr_bin *ab, struct attr *attr);
 void item_bin_add_attr_data(struct item_bin *ib, enum attr_type type, void *data, int size);
 void item_bin_add_attr(struct item_bin *ib, struct attr *attr);
 void item_bin_add_attr_int(struct item_bin *ib, enum attr_type type, int val);
@@ -150,6 +152,7 @@ void item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long l
 void item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str);
 void item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, short max);
 void item_bin_write(struct item_bin *ib, FILE *out);
+void item_bin_write_range(struct item_bin *ib, FILE *out, int min, int max);
 void item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, struct item_bin_sink *out);
 void item_bin_dump(struct item_bin *ib, FILE *out);
 void dump_itembin(struct item_bin *ib);
