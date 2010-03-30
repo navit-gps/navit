@@ -28,6 +28,7 @@
 #include "track.h"
 #include "search.h"
 #include "bookmarks.h"
+#include "command.h"
 
 //WORKAOUND for the c/c++ compatibility issues.
 //range is defined inside of struct attr so it is invisible in c++
@@ -545,6 +546,8 @@ class NGQProxyGui : public NGQProxy {
 	Q_PROPERTY(QString iconPath READ iconPath CONSTANT);
 	Q_PROPERTY(QString returnSource READ returnSource WRITE setReturnSource);
 
+	Q_PROPERTY(QString commandFunction READ commandFunction CONSTANT);
+
 	Q_PROPERTY(QString localeName READ localeName CONSTANT);
 	Q_PROPERTY(QString langName READ langName CONSTANT);
 	Q_PROPERTY(QString ctryName READ ctryName CONSTANT);
@@ -564,11 +567,15 @@ public:
 		this->object->currentPoint = new NGQPoint(this->object,p,type,NULL);
 		this->object->guiWidget->rootContext()->setContextProperty("point",this->object->currentPoint);
 	}
+	void processCommand(QString function) {
+		this->function=function;
+		this->setPage("command.qml",true);
+	}
 signals:
 	void widthSignal(int);
 	void heightSignal(int);
 public slots:
-	void setPage(QString page) {
+	void setPage(QString page,bool hidden=false) {
 		dbg(0,"Page is: %s\n",page.toStdString().c_str());
 		this->source+="/"+page;
 
@@ -601,15 +608,18 @@ public slots:
 #else
 		this->object->guiWidget->setSource(QUrl::fromLocalFile(QString(this->object->source)+"/"+this->object->skin+"/"+page));
 #endif
-		this->object->guiWidget->show();
-		this->object->switcherWidget->addWidget(this->object->guiWidget);
-		this->object->switcherWidget->setCurrentWidget(this->object->guiWidget);
+		if (!hidden) {
+			//we render commands page hidden, so the screen doesn't flicks.
+			this->object->guiWidget->show();
+			this->object->switcherWidget->addWidget(this->object->guiWidget);
+			this->object->switcherWidget->setCurrentWidget(this->object->guiWidget);
+		}
 	}
 	void backToMap() {
         if (this->object->graphicsWidget) {
 				this->object->graphicsWidget->setFocus(Qt::ActiveWindowFocusReason);
+				this->object->switcherWidget->setCurrentWidget(this->object->graphicsWidget);
 				this->object->graphicsWidget->show();
-                this->object->switcherWidget->setCurrentWidget(this->object->graphicsWidget);
         }
     }
 	void backToPrevPage() {
@@ -648,6 +658,9 @@ public slots:
 		this->object->h=h;
 		this->heightSignal(h);
 	}
+	QString commandFunction() {
+		return this->function;
+	}
 
 	//Locale properties
 	QString localeName() {
@@ -682,6 +695,7 @@ protected:
 	int setAttrFunc(struct attr* attr) {return gui_set_attr(this->object->gui,attr); }
 private:
 	QString source;
+	QString function;
 };
 
 //Main window class for resizeEvent handling
@@ -830,12 +844,6 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	return 0;
 }
 
-static void gui_qml_disable_suspend(struct gui_priv *this_)
-{
-/*	if (this->win->disable_suspend)
-		this->win->disable_suspend(this->win);*/
-}
-
 static int
 gui_qml_get_attr(struct gui_priv *this_, enum attr_type type, struct attr *attr)
 {
@@ -885,12 +893,35 @@ struct gui_methods gui_qml_methods = {
 	NULL,
 	NULL,
 	NULL,
-	gui_qml_disable_suspend,
+	NULL,
 	gui_qml_get_attr,
 	NULL,
 	gui_qml_set_attr,
 };
 
+static void
+gui_qml_command(struct gui_priv *this_, char *function, struct attr **in, struct attr ***out, int *valid) {
+	struct attr **curr=in;
+	struct attr *attr;
+	if (!strcasecmp(function,"command")) {
+		if( (attr=attr_search(in,NULL,attr_command))) {
+			//The value setting code in command.c is buggy
+			//so i disable this fucntionality for a while
+			//function=attr->u.str;
+		}
+	}
+	while (curr && *curr) {
+		dbg(0,"attr type is: %s\n",attr_to_name((*curr)->type));
+		curr++;
+	}
+	this_->guiProxy->processCommand(function);
+}
+
+static struct command_table commands[] = {
+	{"menu",command_cast(gui_qml_command)},
+	{"fullscreen",command_cast(gui_qml_command)},
+	{"command",command_cast(gui_qml_command)},
+};
 
 static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui)
 {
@@ -944,6 +975,10 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 	}
 	if ( this_->icon_src==NULL ) {
 		this_->icon_src=g_strjoin(NULL,getenv("NAVIT_SHAREDIR"),"/xpm/",NULL);
+	}
+
+	if ((attr=attr_search(attrs, NULL, attr_callback_list))) {
+		command_add_table(attr->u.callback_list, commands, sizeof(commands)/sizeof(struct command_table), this_);
 	}
 
 	this_->cbl=callback_list_new();
