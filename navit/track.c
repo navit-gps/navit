@@ -755,6 +755,8 @@ tracking_set_route(struct tracking *this, struct route *rt)
 void
 tracking_destroy(struct tracking *tr)
 {
+	if (tr->attr) 
+		attr_free(tr->attr);
 	tracking_free_lines(tr);
 	g_free(tr);
 }
