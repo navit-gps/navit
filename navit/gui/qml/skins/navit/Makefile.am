@@ -4,5 +4,22 @@ SKIN = navit
 
 qmldir=$(skinsdir)/$(SKIN)
 
-qml_DATA = ButtonIcon.qml PageBookmarksAdd.qml PageSearchSelector.qml PageSettingsTools.qml Cellar.qml PageBookmarks.qml PageSettingsDisplay.qml PageSettingsVehicle.qml ListSelector.qml PageNavigation.qml PageSettingsLocale.qml point.qml main.qml PageRoute.qml PageSettings.qml Slider.qml PageAbout.qml PageSearch.qml PageSettingsRules.qml ToggleSwitch.qml
+qml_DATA = ButtonIcon.qml ToggleSwitch.qml ListSelector.qml Slider.qml Cellar.qml main.qml point.qml PageAbout.qml PageBookmarksAdd.qml PageBookmarks.qml PageNavigation.qml PageRoute.qml PageSearch.qml PageSearchSelector.qml PageSettingsDisplay.qml PageSettingsLocale.qml PageSettings.qml PageSettingsRules.qml PageSettingsTools.qml PageSettingsVehicle.qml
 qml_DATA += background.svg knob.svg
+
+do_button_subst = sed -e 's,matchProperties,properties,g' \
+		      -e 's,easing\:\ \"ease,easing\.type\:\ \",g'
+
+ButtonIcon.qml: ButtonIcon.qml.in
+if QT_DECLARATIVE_NEWAPI
+	$(do_button_subst) < ButtonIcon.qml.in > ButtonIcon.qml
+else 
+	cp ButtonIcon.qml.in ButtonIcon.qml
+endif
+
+ToggleSwitch.qml: ToggleSwitch.qml.in
+if QT_DECLARATIVE_NEWAPI
+	$(do_button_subst) < ToggleSwitch.qml.in > ToggleSwitch.qml
+else 
+	cp ToggleSwitch.qml.in ToggleSwitch.qml
+endif

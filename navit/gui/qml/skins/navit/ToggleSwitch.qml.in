@@ -4,7 +4,7 @@ import Qt 4.6
      id: toggleswitch
      width: background.width + label.width + gui.width/24; height: background.height
 
-     property string on: "false"
+     property string stOn: "false"
      property string text: "Toggle switch"
      signal changed
 
@@ -15,11 +15,11 @@ import Qt 4.6
      }
 
      function startup () {
-	 if (toggleswitch.on == "1" ) 
-       		toggleswitch.on = "true";
+	 if (toggleswitch.stOn == "1" ) 
+       		toggleswitch.stOn = "true";
 	 else 
-		toggleswitch.on = "false";
-         if (toggleswitch.on == "true")
+		toggleswitch.stOn = "false";
+         if (toggleswitch.stOn == "true")
              toggleswitch.state = "on";
          else
              toggleswitch.state = "off";
@@ -55,13 +55,13 @@ import Qt 4.6
          State {
              name: "on"
              PropertyChanges { target: knob; x: background.width-knob.width }
-	     PropertyChanges { target: toggleswitch; on: "true" }
+	     PropertyChanges { target: toggleswitch; stOn: "true" }
 	     StateChangeScript { script: toggleswitch.changed(); }
          },
          State {
              name: "off"
              PropertyChanges { target: knob; x: 1 }
-	     PropertyChanges { target: toggleswitch; on: "false" }
+	     PropertyChanges { target: toggleswitch; stOn: "false" }
 	     StateChangeScript { script: toggleswitch.changed(); }
          }
      ]
