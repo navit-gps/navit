@@ -54,10 +54,10 @@ Rectangle {
 	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
         spacing: gui.width/12
         ToggleSwitch {
-	    id: fullscreenSw; on: gui.getAttr("fullscreen");  text: "Fullscreen"; onChanged: gui.setAttr("fullscreen",fullscreenSw.on)
+	    id: fullscreenSw; stOn: gui.getAttr("fullscreen");  text: "Fullscreen"; onChanged: gui.setAttr("fullscreen",fullscreenSw.stOn)
         }
         ToggleSwitch {
-	    id: tripledSw; on: page.isTripleD();  text: "2D/3D"; onChanged: setTripleD(tripledSw.on)
+	    id: tripledSw; stOn: page.isTripleD();  text: "2D/3D"; onChanged: setTripleD(tripledSw.stOn)
         }
         Slider {
 	    id: pitchSlider; minValue: 5; maxValue: 90; value: navit.getAttr("pitch"); text: "Pitch"; onChanged: { navit.setAttr("pitch",pitchSlider.value); gui.setAttr("pitch",pitchSlider.value) }
