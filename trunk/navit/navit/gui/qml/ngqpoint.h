@@ -24,6 +24,20 @@ public:
         this->name=this->_coordName();
         this->coord=this->_coordString();
     }
+    NGQPoint(struct gui_priv* this_,struct coord* c,NGQPointTypes type=Bookmark,QObject *parent=NULL) : QObject(parent) {
+        this->object=this_;
+        this->co.x=c->x;
+        this->co.y=c->y;
+        transform_to_geo(transform_get_projection(navit_get_trans(this->object->nav)), &co, &g);
+        this->c.pro = transform_get_projection(navit_get_trans(this->object->nav));
+        this->c.x = c->x;
+        this->c.y = c->y;
+        this->type=type;
+
+        this->name=this->_coordName();
+        this->coord=this->_coordString();
+    }
+
     NGQPoint(struct gui_priv* this_,struct coord* c,QString name,NGQPointTypes type=Bookmark,QObject *parent=NULL) : QObject(parent) {
         this->object=this_;
         this->co.x=c->x;
