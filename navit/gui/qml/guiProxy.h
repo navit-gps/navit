@@ -28,6 +28,13 @@ public:
 		this->object->currentPoint = new NGQPoint(this->object,p,type,NULL);
 		this->object->guiWidget->rootContext()->setContextProperty("point",this->object->currentPoint);
 	}
+	void setNewPoint(struct coord* c,NGQPointTypes type) {
+		if (this->object->currentPoint!=NULL) {
+			delete this->object->currentPoint;
+		}
+		this->object->currentPoint = new NGQPoint(this->object,c,type,NULL);
+		this->object->guiWidget->rootContext()->setContextProperty("point",this->object->currentPoint);
+	}
 	void processCommand(QString function) {
 		this->function=function;
 		this->setPage("command.qml",true);
@@ -158,6 +165,10 @@ private:
 	QString source;
 	QString function;
 };
+
+void __setNewPoint(struct gui_priv* this_,struct coord* c, NGQPointTypes type) {
+	this_->guiProxy->setNewPoint(c,type);
+}
 
 #include "guiProxy.moc"
 

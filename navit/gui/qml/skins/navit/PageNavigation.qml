@@ -10,6 +10,10 @@ Rectangle {
 
     function pageOpen() {
         page.opacity = 1;
+	if (navit.getDestination().length>0) {
+		btnPoi.opacity=0.8;
+	}
+
     }
     
     Component.onCompleted: pageOpen();    
@@ -40,7 +44,8 @@ Rectangle {
         anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnQuit; text: "POIs"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
+            id: btnPoi; text: "POIs near\nPosition"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
+	    opacity: 0;
         }
         ButtonIcon {
             id: btnStop; text: "Stop"; icon: "gui_stop.svg"; onClicked: console.log("Implement me!");

@@ -1,6 +1,8 @@
 #ifndef NAVIT_GUI_QML_NAVIT_H
 #define NAVIT_GUI_QML_NAVIT_H
 
+void __setNewPoint(struct gui_priv* this_,struct coord* c, NGQPointTypes type);
+
 class NGQProxyNavit : public NGQProxy {
     Q_OBJECT;
 
@@ -72,8 +74,39 @@ public slots:
 
 		return retId;
 	}
+	QString getDestination() {
+		struct attr attr;
+		struct coord c;
+
+		if (getAttrFunc(attr_destination, &attr, NULL) ) {
+			c.x=attr.u.pcoord->x;
+			c.y=attr.u.pcoord->y;
+			__setNewPoint(this->object,&c,MapPoint);
+			return this->object->currentPoint->pointName();
+		}
+		return QString();
+	}
 	void setDestination() {
 		navit_set_destination(this->object->nav,this->object->currentPoint->pc(),this->object->currentPoint->coordString().toStdString().c_str(),1);
+	}
+	QString getPosition() {
+		struct attr attr;
+		struct pcoord pc;
+		struct coord c;
+		struct transformation *trans;
+
+		trans=navit_get_trans(this->object->nav);
+
+		getAttrFunc(attr_vehicle, &attr, NULL);
+		this->object->currVehicle=attr.u.vehicle;
+
+		if (vehicle_get_attr(this->object->currVehicle, attr_position_coord_geo, &attr, NULL)) {
+		   pc.pro=transform_get_projection(trans);
+		   transform_from_geo(pc.pro, attr.u.coord_geo, &c);
+		   __setNewPoint(this->object,&c,MapPoint);
+		   return this->object->currentPoint->pointName();
+		}
+		return QString();
 	}
 	void setPosition() {
 		navit_set_position(this->object->nav,this->object->currentPoint->pc());

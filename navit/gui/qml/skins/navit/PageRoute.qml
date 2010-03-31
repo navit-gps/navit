@@ -9,6 +9,9 @@ Rectangle {
 
     function pageOpen() {
         page.opacity = 1;
+	if (navit.getPosition().length>0) {
+		btnPoi.opacity=0.8;
+	}
     }
     
     Component.onCompleted: pageOpen();    
@@ -39,10 +42,11 @@ Rectangle {
         anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnAbout; text: "Search"; icon: "gui_town.svg"; onClicked: gui.setPage("PageSearch.qml");
+            id: btnSearch; text: "Search"; icon: "gui_town.svg"; onClicked: gui.setPage("PageSearch.qml");
         }
         ButtonIcon {
-            id: btnQuit; text: "POIs"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
+            id: btnPoi; text: "POIs near\nDestination"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
+	    opacity: 0;
         }
     }
 
