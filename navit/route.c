@@ -2860,10 +2860,12 @@ rm_rect_new(struct map_priv *priv, struct map_selection *sel)
 {
 	struct map_rect_priv * mr;
 	dbg(1,"enter\n");
+#if 0
 	if (! route_get_pos(priv->route))
 		return NULL;
 	if (! route_get_dst(priv->route))
 		return NULL;
+#endif
 #if 0
 	if (! priv->route->path2)
 		return NULL;
