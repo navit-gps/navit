@@ -8,6 +8,9 @@ Rectangle {
     opacity: 0
 
     function pageOpen() {
+	if (point.pointType!="Bookmark") {
+	    btnBookmark.opacity=1;
+	}
         page.opacity = 1;
     }
     
@@ -54,6 +57,7 @@ Rectangle {
         }
         ButtonIcon {
             id: btnBookmark; text: "Add as\na Bookmark"; icon: "gui_bookmark.svg"; onClicked: gui.setPage("PageBookmarksAdd.qml")
+	    opacity: 0;
         }
         ButtonIcon {
             id: btnInfo; text: "Point\ninformation"; icon: "gui_menu.svg"; onClicked: console.log("Implement me!");
