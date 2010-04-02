@@ -45,7 +45,7 @@ Rectangle {
             id: btnSearch; text: "Search"; icon: "gui_town.svg"; onClicked: gui.setPage("PageSearch.qml");
         }
         ButtonIcon {
-            id: btnPoi; text: "POIs near\nDestination"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
+            id: btnPoi; text: "POIs near\nDestination"; icon: "attraction.svg"; onClicked: gui.setPage("PagePoi.qml");
 	    opacity: 0;
         }
     }

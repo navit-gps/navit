@@ -69,6 +69,79 @@ public slots:
             }
             return QString("");
     }
+    QString getAttrList(const QString &attr_name) {
+            NGQStandardItemModel* ret=new NGQStandardItemModel(this);
+            struct attr attr;
+            struct item* item;
+            struct mapset_handle *h;
+            struct map_selection *sel,*selm;
+            struct map_rect *mr;
+            struct map *m;
+            int idist,dist;
+            struct coord center;
+            QString retXml;
+
+            if (!gui_get_attr(this->object->gui,attr_radius,&attr,NULL)) {
+                    return QString();
+            }
+
+            dist=attr.u.num*1000;
+
+            sel=map_selection_rect_new(&this->c, dist, 18);
+            center.x=this->c.x;
+            center.y=this->c.y;
+            h=mapset_open(navit_get_mapset(this->object->nav));
+
+            retXml=QString("<%1>").arg(attr_name);
+
+            while ((m=mapset_next(h, 1))) {
+                    selm=map_selection_dup_pro(sel, this->c.pro, map_projection(m));
+                    mr=map_rect_new(m, selm);
+                    if (mr) {
+                            while ((item=map_rect_get_item(mr))) {
+                                    struct coord c;
+                                    if ( item_coord_get_pro(item, &c, 1, this->c.pro) && coord_rect_contains(&sel->u.c_rect, &c) && (idist=transform_distance(this->c.pro, &center, &c)) < dist ) {
+                                            char* label;
+                                            QString rs;
+                                            QString pointXml="<point>";
+                                            if (item_attr_get(item, attr_label, &attr)) {
+                                                    label=map_convert_string(m, attr.u.str);
+                                                     if (QString(item_to_name(item->type)).startsWith(QString("poi_"))) {
+                                                             rs=QString::fromLocal8Bit(item_to_name(item->type));
+                                                             rs=rs.remove(QString("poi_"));
+                                                             rs+=QString(" ")+QString::fromLocal8Bit(label);
+
+                                                     } else if (QString(item_to_name(item->type)).startsWith(QString("poly_"))) {
+                                                             rs=QString::fromLocal8Bit(item_to_name(item->type));
+                                                             rs=rs.remove(QString("poly_"));
+                                                             rs+=QString(" ")+QString::fromLocal8Bit(label);
+
+                                                     } else if (QString(item_to_name(item->type)).startsWith(QString("street_"))) {
+                                                             rs="Street ";
+                                                             rs+=QString::fromLocal8Bit(label);
+                                                     }
+                                                     map_convert_free(label);
+                                            } else
+                                                    rs=item_to_name(item->type);
+                                            pointXml+="<name>"+rs+"</name>";
+                                            pointXml+="<type>"+QString(item_to_name(item->type))+"</type>";
+                                            pointXml+="</point>";
+
+                                            retXml+=pointXml;
+                                    }
+                            }
+                    }
+                    map_selection_destroy(selm);
+            }
+            map_selection_destroy(sel);
+            mapset_close(h);
+
+            this->object->guiWidget->rootContext()->setContextProperty("listModel",static_cast<QObject*>(ret));
+            
+            retXml+=QString("</%1>").arg(attr_name);
+            dbg(0,"Reulsting xml: %s\n",retXml.toLocal8Bit().constData());
+            return retXml;
+    }
 protected:
         QString _coordString() {
                 char latc='N',lngc='E';

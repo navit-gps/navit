@@ -53,7 +53,7 @@ Rectangle {
         anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnQuit; text: "Nearest\nPOIs"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
+            id: btnQuit; text: "Nearest\nPOIs"; icon: "attraction.svg"; onClicked: gui.setPage("PagePoi.qml");
         }
         ButtonIcon {
             id: btnBookmark; text: "Add as\na Bookmark"; icon: "gui_bookmark.svg"; onClicked: gui.setPage("PageBookmarksAdd.qml")
