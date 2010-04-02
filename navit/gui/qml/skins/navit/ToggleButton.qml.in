@@ -23,13 +23,10 @@ import Qt 4.6
        		togglebutton.stOn = "true";
 	 else if (togglebutton.stOn == "0" ) 
 		togglebutton.stOn = "false";
-	console.log("stOn now: "+togglebutton.stOn);
-	console.log("state now: "+togglebutton.state);
          if (togglebutton.stOn == "true")
              togglebutton.state = "on";
          else
              togglebutton.state = "off";
-	     console.log("state now: "+togglebutton.state);
      }
 
      Component.onCompleted: startup();
