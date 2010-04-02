@@ -3,6 +3,8 @@ import Qt 4.6
 Rectangle {
     id: page
 
+    property string poiFilter: ""
+
     width: gui.width; height: gui.height
     color: "Black"
     opacity: 0
@@ -15,6 +17,57 @@ Rectangle {
 	   bookmarks.setPoint(itemId);
 	   gui.setPage("point.qml");
 	}
+    }
+
+    function calculateFilter() {
+        page.poiFilter='/points/point[type="point_begin" or ';
+	if (bankBtn.state=="on") {
+		page.poiFilter+='type="poi_bank" or ';
+	}
+	if (fuelBtn.state=="on") {
+		page.poiFilter+='type="poi_fuel" or ';
+		page.poiFilter+='type="poi_autoservice" or ';
+		page.poiFilter+='type="poi_repair_service" or ';
+	}
+	if (hotelBtn.state=="on") {
+		page.poiFilter+='type="poi_hotel" or ';
+		page.poiFilter+='type="poi_camp_rv" or ';
+		page.poiFilter+='type="poi_camping" or ';
+		page.poiFilter+='type="poi_resort" or ';
+		page.poiFilter+='type="poi_motel" or ';
+		page.poiFilter+='type="poi_hostel" or ';
+	}
+	if (foodBtn.state=="on") {
+		page.poiFilter+='type="poi_bar" or ';
+		page.poiFilter+='type="poi_picnic" or ';
+		page.poiFilter+='type="poi_burgerking" or ';
+		page.poiFilter+='type="poi_fastfood" or ';
+		page.poiFilter+='type="poi_restaurant" or ';
+	}
+	if (shopBtn.state=="on") {
+		page.poiFilter+='type="poi_shop_grocery" or ';
+		page.poiFilter+='type="poi_mall" or ';
+	}
+	if (serviceBtn.state=="on") {
+		page.poiFilter+='type="poi_marina" or ';
+		page.poiFilter+='type="poi_hospital" or ';
+		page.poiFilter+='type="poi_public_utilities" or ';
+		page.poiFilter+='type="poi_police" or ';
+		page.poiFilter+='type="poi_information" or ';
+		page.poiFilter+='type="poi_personal_service" or ';
+		page.poiFilter+='type="poi_restroom" or ';
+	}
+	if (parkingBtn.state=="on") {
+		page.poiFilter+='type="poi_car_parking" or ';
+	}
+	if (landBtn.state=="on") {
+		page.poiFilter+='type="poi_land_feature" or ';
+		page.poiFilter+='type="poi_rock" or ';
+		page.poiFilter+='type="poi_dam" or ';
+	}
+	page.poiFilter+='type="point_end"]';
+	listModel.query=page.poiFilter;
+	listModel.reload();
     }
 
     function pageOpen() {
@@ -36,14 +89,14 @@ Rectangle {
   VisualItemModel {
       	id: selectorsModel
 
-        ToggleButton {	id: bankBtn; text: "Bank"; icon: "bank.svg";stOn: "true"; }
-	ToggleButton {	id: fuelBtn; text: "Fuel"; icon: "fuel.svg";stOn: "true"; }
-	ToggleButton {	id: hotelBtn; text: "Hotel"; icon: "bar.svg";stOn: "true"; }
-	ToggleButton {	id: foodBtn; text: "Food"; icon: "fastfood.svg";stOn: "true"; }
-	ToggleButton {	id: shopBtn; text: "Shop"; icon: "shopping.svg";stOn: "true"; }
-	ToggleButton {	id: serviceBtn; text: "Service"; icon: "hospital.svg";stOn: "true"; }
-	ToggleButton {	id: parkingBtn; text: "Parking"; icon: "police.svg";stOn: "true"; }
-	ToggleButton {	id: landBtn; text: "Land features"; icon: "peak.svg";stOn: "true"; }
+        ToggleButton {	id: bankBtn; text: "Bank"; icon: "bank.svg";stOn: "true"; onChanged: calculateFilter(); }
+	ToggleButton {	id: fuelBtn; text: "Fuel"; icon: "fuel.svg";stOn: "true"; onChanged: calculateFilter(); }
+	ToggleButton {	id: hotelBtn; text: "Hotel"; icon: "bar.svg";stOn: "true"; onChanged: calculateFilter(); }
+	ToggleButton {	id: foodBtn; text: "Food"; icon: "fastfood.svg";stOn: "true"; onChanged: calculateFilter(); }
+	ToggleButton {	id: shopBtn; text: "Shop"; icon: "shopping.svg";stOn: "true"; onChanged: calculateFilter(); }
+	ToggleButton {	id: serviceBtn; text: "Service"; icon: "hospital.svg";stOn: "true"; onChanged: calculateFilter(); }
+	ToggleButton {	id: parkingBtn; text: "Parking"; icon: "police.svg";stOn: "true";  onChanged: calculateFilter(); }
+	ToggleButton {	id: landBtn; text: "Land features"; icon: "peak.svg";stOn: "true";  onChanged: calculateFilter(); }
   }
 
   ListView {
@@ -54,11 +107,18 @@ Rectangle {
   }
 
 	Slider {
-	    id: distanceSlider; minValue: 1; maxValue: 250; value: gui.getAttr("radius"); text: "Distance"; onChanged: { gui.setAttr("radius",distanceSlider.value); point.getAttrList("points"); }
+	    id: distanceSlider; minValue: 1; maxValue: 250; value: gui.getAttr("radius"); text: "Distance"; onChanged: { gui.setAttr("radius",distanceSlider.value); listModel.xml=point.getAttrList("points"); listModel.reload(); }
 	    anchors.top: selectorsList.bottom; anchors.horizontalCenter: page.horizontalCenter;
        }
 
-    ListSelector { 
+	XmlListModel {
+		id: listModel
+		xml: point.getAttrList("points")
+		query: "/points/point"
+		XmlRole { name: "itemName"; query: "name/string()" }
+		XmlRole { name: "itemType"; query: "type/string()" }
+	}
+    ListSelectorXml { 
 	id:layoutList; text: ""; itemId: point.getAttrList("points"); onChanged: console.log("Poi clicked");
 	anchors.top: distanceSlider.bottom;
 	anchors.left: parent.left; anchors.leftMargin: 3

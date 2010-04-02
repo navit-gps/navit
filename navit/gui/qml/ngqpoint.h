@@ -70,7 +70,6 @@ public slots:
             return QString("");
     }
     QString getAttrList(const QString &attr_name) {
-            NGQStandardItemModel* ret=new NGQStandardItemModel(this);
             struct attr attr;
             struct item* item;
             struct mapset_handle *h;
@@ -103,7 +102,6 @@ public slots:
                                     if ( item_coord_get_pro(item, &c, 1, this->c.pro) && coord_rect_contains(&sel->u.c_rect, &c) && (idist=transform_distance(this->c.pro, &center, &c)) < dist ) {
                                             char* label;
                                             QString rs;
-                                            QString pointXml="<point>";
                                             if (item_attr_get(item, attr_label, &attr)) {
                                                     label=map_convert_string(m, attr.u.str);
                                                      if (QString(item_to_name(item->type)).startsWith(QString("poi_"))) {
@@ -123,11 +121,14 @@ public slots:
                                                      map_convert_free(label);
                                             } else
                                                     rs=item_to_name(item->type);
-                                            pointXml+="<name>"+rs+"</name>";
-                                            pointXml+="<type>"+QString(item_to_name(item->type))+"</type>";
-                                            pointXml+="</point>";
-
-                                            retXml+=pointXml;
+                                            if (rs.length()>0) {
+                                                    QString pointXml="<point>";
+                                                    pointXml+="<name>"+rs+"</name>";
+                                                    pointXml+="<type>"+QString(item_to_name(item->type))+"</type>";
+                                                    pointXml+="</point>";
+        
+                                                    retXml+=pointXml;
+                                            }
                                     }
                             }
                     }
@@ -135,9 +136,7 @@ public slots:
             }
             map_selection_destroy(sel);
             mapset_close(h);
-
-            this->object->guiWidget->rootContext()->setContextProperty("listModel",static_cast<QObject*>(ret));
-            
+           
             retXml+=QString("</%1>").arg(attr_name);
             dbg(0,"Reulsting xml: %s\n",retXml.toLocal8Bit().constData());
             return retXml;
