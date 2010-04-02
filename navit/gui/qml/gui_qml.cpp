@@ -123,7 +123,7 @@ static void gui_qml_dbus_signal(struct gui_priv *this_, struct point *p)
 	while ((di=graphics_displaylist_next(dlh))) {
 		struct item *item=graphics_displayitem_get_item(di);
 		if (item_is_point(*item) && graphics_displayitem_get_displayed(di) &&
-			graphics_displayitem_within_dist(display, di, p, this_->radius)) {
+			graphics_displayitem_within_dist(display, di, p, 10)) {
 			struct map_rect *mr=map_rect_new(item->map, NULL);
 			struct item *itemo=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
 			struct attr attr;
@@ -250,6 +250,9 @@ gui_qml_get_attr(struct gui_priv *this_, enum attr_type type, struct attr *attr)
 	case attr_pitch:
 		attr->u.num=this_->pitch;
 		break;
+	case attr_radius:
+		attr->u.num=this_->radius;
+		break;
 	default:
 		return 0;
 	}
@@ -272,6 +275,9 @@ gui_qml_set_attr(struct gui_priv *this_, struct attr *attr)
 		return 1;
 	case attr_pitch:
 		this_->pitch=attr->u.num;
+		return 1;
+	case attr_radius:
+		this_->radius=attr->u.num;
 		return 1;
 	default:
 		dbg(0,"unknown attr: %s\n",attr_to_name(attr->type));
