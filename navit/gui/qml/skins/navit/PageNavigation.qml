@@ -44,7 +44,7 @@ Rectangle {
         anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnPoi; text: "POIs near\nPosition"; icon: "attraction.svg"; onClicked: console.log("Implement me!");
+            id: btnPoi; text: "POIs near\nPosition"; icon: "attraction.svg"; onClicked: gui.setPage("PagePoi.qml");
 	    opacity: 0;
         }
         ButtonIcon {

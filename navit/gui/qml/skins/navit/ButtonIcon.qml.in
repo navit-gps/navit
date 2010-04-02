@@ -35,7 +35,6 @@ Rectangle {
     transitions: Transition {
         NumberAnimation { matchProperties: "scale"; easing: "easeOutExpo"; duration: 200 }
         NumberAnimation { matchProperties: "opacity"; easing: "easeInQuad"; duration: 200 }
-
     }
 
 }
