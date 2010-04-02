@@ -8,7 +8,7 @@ class NGQPoint : public QObject {
 
     Q_PROPERTY(QString coordString READ coordString CONSTANT);
     Q_PROPERTY(QString pointName READ pointName CONSTANT);
-    Q_PROPERTY(QString py READ py CONSTANT);
+    Q_PROPERTY(QString pointType READ pointType CONSTANT);
 public:
     NGQPoint(struct gui_priv* this_,struct point* p,NGQPointTypes type=MapPoint,QObject *parent=NULL) : QObject(parent) {
         this->object=this_;
@@ -60,12 +60,15 @@ public slots:
     QString coordString() {
             return this->coord;
     }
-    QString px() { 
-            char buffer[1024];
-            coord_format(this->g.lat,this->g.lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
-            return QString(buffer);
+    QString pointType() {
+            switch(this->type) {
+            case MapPoint:
+                    return QString("MapPoint");
+            case Bookmark:
+                    return QString("Bookmark");
+            }
+            return QString("");
     }
-    QString py() { return QString().setNum(p.y);    }
 protected:
         QString _coordString() {
                 char latc='N',lngc='E';
