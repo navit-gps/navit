@@ -52,6 +52,7 @@ public slots:
 			if (attr.type==attr_layout) {
 				curItem->setData(QVariant(counter),NGQStandardItemModel::ItemId);
 				curItem->setData(QVariant(attr.u.layout->name),NGQStandardItemModel::ItemName);
+				curItem->setData(QVariant(attr.u.layout->name),NGQStandardItemModel::ItemValue);
 				if (currentValue==attr.u.layout->name) {
 					retId.setNum(counter);
 				}
@@ -60,6 +61,7 @@ public slots:
 				this->object->currVehicle=attr.u.vehicle;
 				curItem->setData(QVariant(counter),NGQStandardItemModel::ItemId);
 				curItem->setData(QVariant(this->object->vehicleProxy->getAttr("name")),NGQStandardItemModel::ItemName);
+				curItem->setData(QVariant(this->object->vehicleProxy->getAttr("name")),NGQStandardItemModel::ItemValue);
 				retId.setNum(0);
 			}
 			counter++;
