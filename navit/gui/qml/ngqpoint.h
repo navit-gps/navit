@@ -1,7 +1,7 @@
 #ifndef NAVIT_GUI_QML_POINT_H
 #define NAVIT_GUI_QML_POINT_H
 
-enum NGQPointTypes {MapPoint,Bookmark};
+enum NGQPointTypes {MapPoint,Bookmark,Position,Destination};
 
 class NGQPoint : public QObject {
 	Q_OBJECT;
@@ -66,6 +66,10 @@ public slots:
                     return QString("MapPoint");
             case Bookmark:
                     return QString("Bookmark");
+            case Position:
+                    return QString("Position");
+            case Destination:
+                    return QString("Destination");
             }
             return QString("");
     }
@@ -78,7 +82,8 @@ public slots:
             struct map *m;
             int idist,dist;
             struct coord center;
-            QString retXml;
+            QDomDocument retDoc(attr_name);
+            QDomElement entries;
 
             if (!gui_get_attr(this->object->gui,attr_radius,&attr,NULL)) {
                     return QString();
@@ -91,7 +96,8 @@ public slots:
             center.y=this->c.y;
             h=mapset_open(navit_get_mapset(this->object->nav));
 
-            retXml=QString("<%1>").arg(attr_name);
+            entries=retDoc.createElement(attr_name);
+            retDoc.appendChild(entries);
 
             while ((m=mapset_next(h, 1))) {
                     selm=map_selection_dup_pro(sel, this->c.pro, map_projection(m));
@@ -99,7 +105,7 @@ public slots:
                     if (mr) {
                             while ((item=map_rect_get_item(mr))) {
                                     struct coord c;
-                                    if ( item_coord_get_pro(item, &c, 1, this->c.pro) && coord_rect_contains(&sel->u.c_rect, &c) && (idist=transform_distance(this->c.pro, &center, &c)) < dist ) {
+                                    if ( item_coord_get_pro(item, &c, 1, this->c.pro) && coord_rect_contains(&sel->u.c_rect, &c) && (idist=transform_distance(this->c.pro, &center, &c)) < dist && item->type<type_line) {
                                             char* label;
                                             QString rs;
                                             if (item_attr_get(item, attr_label, &attr)) {
@@ -122,12 +128,16 @@ public slots:
                                             } else
                                                     rs=item_to_name(item->type);
                                             if (rs.length()>0) {
-                                                    QString pointXml="<point>";
-                                                    pointXml+="<name>"+rs+"</name>";
-                                                    pointXml+="<type>"+QString(item_to_name(item->type))+"</type>";
-                                                    pointXml+="</point>";
-        
-                                                    retXml+=pointXml;
+                                                    QDomElement entry=retDoc.createElement("point");
+                                                    QDomElement nameTag=retDoc.createElement("name");
+                                                    QDomElement typeTag=retDoc.createElement("type");
+                                                    QDomText nameT=retDoc.createTextNode(rs);
+                                                    QDomText typeT=retDoc.createTextNode(QString(item_to_name(item->type)));
+                                                    nameTag.appendChild(nameT);
+                                                    typeTag.appendChild(typeT);
+                                                    entry.appendChild(nameTag);
+                                                    entry.appendChild(typeTag);
+                                                    entries.appendChild(entry);
                                             }
                                     }
                             }
@@ -137,9 +147,7 @@ public slots:
             map_selection_destroy(sel);
             mapset_close(h);
            
-            retXml+=QString("</%1>").arg(attr_name);
-            dbg(0,"Reulsting xml: %s\n",retXml.toLocal8Bit().constData());
-            return retXml;
+            return retDoc.toString();
     }
 protected:
         QString _coordString() {

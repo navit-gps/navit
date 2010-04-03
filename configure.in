@@ -787,7 +787,7 @@ AM_CONDITIONAL(GUI_WIN32, test "x${gui_win32}" = "xyes")
 AM_CONDITIONAL(QT_DECLARATIVE_NEWAPI,test "x${gui_qml}" = "xoldapi")
 AC_ARG_ENABLE(gui-qml, [  --disable-gui-qml              disable gui type QML], gui_qml=$enableval;gui_qml_reason="configure parameter")
 if test "x${gui_qml}" = "xyes" -a "x${QT_GUI_CFLAGS}" = "x" -a "x${QT_GUI_LIBS}" = "x"; then
-	PKG_CHECK_MODULES(QT_GUI, [QtGui QtCore], ,gui_qml=no;gui_qml_reason="Packages QtGui and/or QtCore missing")
+	PKG_CHECK_MODULES(QT_GUI, [QtGui QtCore QtXml], ,gui_qml=no;gui_qml_reason="Packages QtGui and/or QtCore missing")
 fi
 if test "x${gui_qml}" = "xyes" -a "x${QT_DECLARATIVE_CFLAGS}" = "x" -a "x${QT_DECLARATIVE_LIBS}" = "x"; then
 	PKG_CHECK_MODULES(QT_DECLARATIVE, [QtDeclarative >= 4.6.0 ], ,gui_qml=no;gui_qml_reason="Packages QtDeclarative missing")

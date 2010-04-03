@@ -2,6 +2,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtDeclarative>
+#include <QtXml>
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #endif
