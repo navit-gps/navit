@@ -163,18 +163,22 @@ public slots:
                                                     QDomElement typeTag=retDoc.createElement("type");
                                                     QDomElement distTag=retDoc.createElement("distance");
                                                     QDomElement directTag=retDoc.createElement("direction");
+                                                    QDomElement coordsTag=retDoc.createElement("coords");
                                                     QDomText nameT=retDoc.createTextNode(rs);
                                                     QDomText typeT=retDoc.createTextNode(QString(item_to_name(item->type)));
                                                     QDomText distT=retDoc.createTextNode(QString::number(idist/1000));
                                                     QDomText directT=retDoc.createTextNode(dirbuf);
+                                                    QDomText coordsT=retDoc.createTextNode(QString("%1 %2").arg(c.x).arg(c.y));
                                                     nameTag.appendChild(nameT);
                                                     typeTag.appendChild(typeT);
                                                     distTag.appendChild(distT);
                                                     directTag.appendChild(directT);
+                                                    coordsTag.appendChild(coordsT);
                                                     entry.appendChild(nameTag);
                                                     entry.appendChild(typeTag);
                                                     entry.appendChild(distTag);
                                                     entry.appendChild(directTag);
+                                                    entry.appendChild(coordsTag);
                                                     entries.appendChild(entry);
                                             }
                                     }
@@ -184,7 +188,7 @@ public slots:
             }
             map_selection_destroy(sel);
             mapset_close(h);
-            dbg(2,"%s\n",retDoc.toString().toLocal8Bit().constData());
+            dbg(0,"%s\n",retDoc.toString().toLocal8Bit().constData());
             return retDoc.toString();
     }
 protected:
