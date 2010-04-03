@@ -81,7 +81,7 @@ public slots:
 		if (getAttrFunc(attr_destination, &attr, NULL) ) {
 			c.x=attr.u.pcoord->x;
 			c.y=attr.u.pcoord->y;
-			__setNewPoint(this->object,&c,MapPoint);
+			__setNewPoint(this->object,&c,Destination);
 			return this->object->currentPoint->pointName();
 		}
 		return QString();
@@ -103,7 +103,7 @@ public slots:
 		if (vehicle_get_attr(this->object->currVehicle, attr_position_coord_geo, &attr, NULL)) {
 		   pc.pro=transform_get_projection(trans);
 		   transform_from_geo(pc.pro, attr.u.coord_geo, &c);
-		   __setNewPoint(this->object,&c,MapPoint);
+		   __setNewPoint(this->object,&c,Position);
 		   return this->object->currentPoint->pointName();
 		}
 		return QString();
