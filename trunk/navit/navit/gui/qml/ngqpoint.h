@@ -1,6 +1,34 @@
 #ifndef NAVIT_GUI_QML_POINT_H
 #define NAVIT_GUI_QML_POINT_H
 
+static void
+get_direction(char *buffer, int angle, int mode)
+{
+	angle=angle%360;
+	switch (mode) {
+	case 0:
+		sprintf(buffer,"%d",angle);
+		break;
+	case 1:
+		if (angle < 69 || angle > 291)
+			*buffer++='N';
+		if (angle > 111 && angle < 249)
+			*buffer++='S';
+		if (angle > 22 && angle < 158)
+			*buffer++='E';
+		if (angle > 202 && angle < 338)
+			*buffer++='W';
+		*buffer++='\0';
+		break;
+	case 2:
+		angle=(angle+15)/30;
+		if (! angle)
+			angle=12;
+		sprintf(buffer,"%d H", angle);
+		break;
+	}
+}
+
 enum NGQPointTypes {MapPoint,Bookmark,Position,Destination};
 
 class NGQPoint : public QObject {
@@ -84,6 +112,7 @@ public slots:
             struct coord center;
             QDomDocument retDoc(attr_name);
             QDomElement entries;
+            char dirbuf[32];
 
             if (!gui_get_attr(this->object->gui,attr_radius,&attr,NULL)) {
                     return QString();
@@ -127,16 +156,25 @@ public slots:
                                                      map_convert_free(label);
                                             } else
                                                     rs=item_to_name(item->type);
+                                            get_direction(dirbuf, transform_get_angle_delta(&center, &c, 0), 1);
                                             if (rs.length()>0) {
                                                     QDomElement entry=retDoc.createElement("point");
                                                     QDomElement nameTag=retDoc.createElement("name");
                                                     QDomElement typeTag=retDoc.createElement("type");
+                                                    QDomElement distTag=retDoc.createElement("distance");
+                                                    QDomElement directTag=retDoc.createElement("direction");
                                                     QDomText nameT=retDoc.createTextNode(rs);
                                                     QDomText typeT=retDoc.createTextNode(QString(item_to_name(item->type)));
+                                                    QDomText distT=retDoc.createTextNode(QString::number(idist/1000));
+                                                    QDomText directT=retDoc.createTextNode(dirbuf);
                                                     nameTag.appendChild(nameT);
                                                     typeTag.appendChild(typeT);
+                                                    distTag.appendChild(distT);
+                                                    directTag.appendChild(directT);
                                                     entry.appendChild(nameTag);
                                                     entry.appendChild(typeTag);
+                                                    entry.appendChild(distTag);
+                                                    entry.appendChild(directTag);
                                                     entries.appendChild(entry);
                                             }
                                     }
@@ -146,7 +184,7 @@ public slots:
             }
             map_selection_destroy(sel);
             mapset_close(h);
-           
+            dbg(2,"%s\n",retDoc.toString().toLocal8Bit().constData());
             return retDoc.toString();
     }
 protected:

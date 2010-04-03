@@ -117,6 +117,8 @@ Rectangle {
 		query: "/points/point"
 		XmlRole { name: "itemName"; query: "name/string()" }
 		XmlRole { name: "itemType"; query: "type/string()" }
+		XmlRole { name: "itemDistance"; query: "distance/string()" }
+		XmlRole { name: "itemDirection"; query: "direction/string()" }
 	}
     ListSelector { 
 	id:layoutList; text: ""; itemId: point.getAttrList("points"); onChanged: console.log("Poi clicked");
