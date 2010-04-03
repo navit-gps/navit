@@ -29,7 +29,7 @@ get_direction(char *buffer, int angle, int mode)
 	}
 }
 
-enum NGQPointTypes {MapPoint,Bookmark,Position,Destination};
+enum NGQPointTypes {MapPoint,Bookmark,Position,Destination,PointOfInterest};
 
 class NGQPoint : public QObject {
 	Q_OBJECT;
@@ -82,6 +82,19 @@ public:
 
     struct pcoord* pc() { return &c; }
 public slots:
+    void setNewPoint(QString coord,NGQPointTypes type=PointOfInterest) {
+            QStringList coordSplit=coord.split(" ",QString::SkipEmptyParts);
+            this->co.x=coordSplit[0].toInt();
+            this->co.y=coordSplit[1].toInt();
+            transform_to_geo(transform_get_projection(navit_get_trans(this->object->nav)), &co, &g);
+            this->c.pro = transform_get_projection(navit_get_trans(this->object->nav));
+            this->c.x = coordSplit[0].toInt();
+            this->c.y = coordSplit[1].toInt();
+            this->type=type;
+
+            this->name=this->_coordName();
+            this->coord=this->_coordString();
+    }
     QString pointName() {
             return this->name;    
     }
@@ -101,7 +114,7 @@ public slots:
             }
             return QString("");
     }
-    QString getAttrList(const QString &attr_name) {
+    QString getPOI(const QString &attr_name) {
             struct attr attr;
             struct item* item;
             struct mapset_handle *h;
@@ -188,7 +201,7 @@ public slots:
             }
             map_selection_destroy(sel);
             mapset_close(h);
-            dbg(0,"%s\n",retDoc.toString().toLocal8Bit().constData());
+            dbg(2,"%s\n",retDoc.toString().toLocal8Bit().constData());
             return retDoc.toString();
     }
 protected:
