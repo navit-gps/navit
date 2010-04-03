@@ -24,7 +24,9 @@ Rectangle {
              width: list.width; height: 20
              Column {
                  x: 5; y: 5
-                 Text { text: itemName; color: "White" }
+                 Text { id: txtItemName; text: itemName; color: "White" }
+		 Text { id: txtItemDist; text: itemDistance; color: "White"; anchors.leftMargin: 5; anchors.left: txtItemName.right;anchors.top: txtItemName.top }
+		 Text { id: txtItemDirect; text: itemDirection; color: "White"; anchors.leftMargin: 5; anchors.left: txtItemDist.right;anchors.top: txtItemDist.top }
              }
 	     MouseRegion {
 	   		id:delegateMouse
