@@ -13,6 +13,9 @@ Rectangle {
 	if (navit.getDestination().length>0) {
 		btnPoi.opacity=0.8;
 	}
+	if (navit.getDestination().length>0 && navit.getDestination().length>0) {
+		btnStop.opacity=0.8;
+	}
 
     }
     
@@ -48,7 +51,8 @@ Rectangle {
 	    opacity: 0;
         }
         ButtonIcon {
-            id: btnStop; text: "Stop"; icon: "gui_stop.svg"; onClicked: console.log("Implement me!");
+            id: btnStop; text: "Stop"; icon: "gui_stop.svg"; onClicked: { navit.stopNavigation(); gui.backToPrevPage(); }
+	    opacity: 0;
         }
     }
 
