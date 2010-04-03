@@ -11,6 +11,15 @@ Rectangle {
 	if (point.pointType!="Bookmark") {
 	    btnBookmark.opacity=1;
 	}
+	if (point.pointType!="MapPoint") {
+	    btnView.opacity=1;
+	}
+	if (point.pointType!="Position") {
+	    btnPosition.opacity=1;
+	}
+	if (point.pointType!="Destination") {
+	    btnDestination.opacity=1;
+	}
         page.opacity = 1;
     }
     
@@ -38,12 +47,15 @@ Rectangle {
         spacing: gui.width/12
         ButtonIcon {
             id: btnView; text: "View on map"; icon: "gui_maps.svg"; onClicked: console.log("Implement me!");
+	    opacity: 0
         }
         ButtonIcon {
-            id: btnRoadbook; text: "Set as\nposition"; icon: "gui_active.svg"; onClicked: { navit.setPosition(); gui.backToMap() }
+            id: btnPosition; text: "Set as\nposition"; icon: "gui_active.svg"; onClicked: { navit.setPosition(); gui.backToMap() }
+	    opacity: 0
         }
         ButtonIcon {
-            id: btnSettings; text: "Set as\ndestination"; icon: "gui_active.svg"; onClicked: { navit.setDestination(); gui.backToMap() }
+            id: btnDestination; text: "Set as\ndestination"; icon: "gui_active.svg"; onClicked: { navit.setDestination(); gui.backToMap() }
+	    opacity: 0
         }
     }
 
