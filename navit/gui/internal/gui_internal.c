@@ -5615,6 +5615,19 @@ gui_internal_cmd2_locale(struct gui_priv *this, char *function, struct attr **in
 }
 
 static void
+gui_internal_cmd2_fullscreen(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid) {
+	struct attr attr;
+
+	gui_get_attr(this->self.u.gui,attr_fullscreen, &attr, NULL);
+	attr.u.num=!attr.u.num;
+	attr.type=attr_fullscreen;
+
+	gui_set_attr(this->self.u.gui,&attr);
+
+	return;
+}
+
+static void
 gui_internal_cmd2_about(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct widget *menu,*wb,*w;
@@ -5888,6 +5901,7 @@ static struct command_table commands[] = {
 	{"quit",command_cast(gui_internal_cmd2_quit)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2_about)},
+	{"fullscreen",command_cast(gui_internal_cmd2_fullscreen)},
 };
 
 
