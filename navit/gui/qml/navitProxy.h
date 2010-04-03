@@ -91,6 +91,9 @@ public slots:
 	void setDestination() {
 		navit_set_destination(this->object->nav,this->object->currentPoint->pc(),this->object->currentPoint->coordString().toStdString().c_str(),1);
 	}
+	void stopNavigation() {
+		navit_set_destination(this->object->nav,NULL,NULL,0);
+	}
 	QString getPosition() {
 		struct attr attr;
 		struct pcoord pc;
