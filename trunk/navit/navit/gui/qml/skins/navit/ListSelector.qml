@@ -31,7 +31,7 @@ Rectangle {
 	     MouseRegion {
 	   		id:delegateMouse
 			anchors.fill: parent
-			onClicked: { list.currentIndex=itemId; listselector.value=itemName; listselector.changed() }
+			onClicked: { list.currentIndex=itemId; listselector.value=itemValue; listselector.changed() }
 	     }
          }
      }

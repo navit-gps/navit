@@ -9,14 +9,8 @@ Rectangle {
     color: "Black"
     opacity: 0
 
-    function bookmarkClick(itemId,itemIcon,itemName,itemPath) {
-	if ( itemIcon=="yes" ) {
-	    bookmarks.currentPath=itemPath;
-	    bookmarks.getAttrList("");
-	} else {
-	   bookmarks.setPoint(itemId);
-	   gui.setPage("point.qml");
-	}
+    function poiClick(item) {
+	console.log("itemName: "+item.itemName);
     }
 
     function calculateFilter() {
@@ -119,9 +113,10 @@ Rectangle {
 		XmlRole { name: "itemType"; query: "type/string()" }
 		XmlRole { name: "itemDistance"; query: "distance/string()" }
 		XmlRole { name: "itemDirection"; query: "direction/string()" }
+		XmlRole { name: "itemCoords"; query: "coords/string()" }
 	}
     ListSelector { 
-	id:layoutList; text: ""; itemId: point.getAttrList("points"); onChanged: console.log("Poi clicked");
+	id:layoutList; text: ""; itemId: point.getAttrList("points"); onChanged: console.log("clicked"+wrapper);
 	anchors.top: distanceSlider.bottom;
 	anchors.left: parent.left; anchors.leftMargin: 3
 	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32

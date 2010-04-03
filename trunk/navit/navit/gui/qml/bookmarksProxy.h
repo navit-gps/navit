@@ -62,6 +62,7 @@ public slots:
 			if (seenMap[labelList[0]]==labelList[0]) continue;
 			seenMap[labelList[0]]=labelList[0];
 			curItem->setData(labelList[0],NGQStandardItemModel::ItemName);
+			curItem->setData(labelList[0],NGQStandardItemModel::ItemValue);
 			curItem->setData(QString(this->current_path).append(labelList[0]).append("/"),NGQStandardItemModel::ItemPath);
 			if (labelList.size()>1) {
 				curItem->setData("yes",NGQStandardItemModel::ItemIcon);
