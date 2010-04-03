@@ -47,18 +47,20 @@ public slots:
 		dbg(0,"Page is: %s\n",page.toStdString().c_str());
 		this->source+="/"+page;
 
-		//Reload widget
-		if (this->object->guiWidget) {
-			this->object->switcherWidget->removeWidget(this->object->guiWidget);
-			if (this->object->prevGuiWidget) {
-				delete this->object->prevGuiWidget;
-			}
-			this->object->prevGuiWidget=this->object->guiWidget;
-		}
 #if QT_VERSION < 0x040700
- 	this->object->guiWidget = new QmlView(NULL);
- 	this->object->guiWidget->setContentResizable(true);
+    if (this->object->guiWidget==NULL) {
+	   this->object->guiWidget = new QmlView(NULL);
+       this->object->guiWidget->setContentResizable(true);
+    }
 #else
+	//Reload widget
+	if (this->object->guiWidget) {
+		this->object->switcherWidget->removeWidget(this->object->guiWidget);
+		if (this->object->prevGuiWidget) {
+			delete this->object->prevGuiWidget;
+		}
+		this->object->prevGuiWidget=this->object->guiWidget;
+	}
 	this->object->guiWidget = new QDeclarativeView(NULL);
 	this->object->guiWidget->setResizeMode(QDeclarativeView::SizeRootObjectToView);
 #endif
