@@ -9,10 +9,6 @@ Rectangle {
     color: "Black"
     opacity: 0
 
-    function poiClick(item) {
-	console.log("itemName: "+item.itemName);
-    }
-
     function calculateFilter() {
         page.poiFilter='/points/point[type="point_begin" or ';
 	if (bankBtn.state=="on") {
@@ -101,22 +97,22 @@ Rectangle {
   }
 
 	Slider {
-	    id: distanceSlider; minValue: 1; maxValue: 250; value: gui.getAttr("radius"); text: "Distance"; onChanged: { gui.setAttr("radius",distanceSlider.value); listModel.xml=point.getAttrList("points"); listModel.reload(); }
+	    id: distanceSlider; minValue: 1; maxValue: 250; value: gui.getAttr("radius"); text: "Distance"; onChanged: { gui.setAttr("radius",distanceSlider.value); listModel.xml=point.getPOI("points"); listModel.reload(); }
 	    anchors.top: selectorsList.bottom; anchors.horizontalCenter: page.horizontalCenter;
        }
 
 	XmlListModel {
 		id: listModel
-		xml: point.getAttrList("points")
+		xml: point.getPOI("points")
 		query: "/points/point"
 		XmlRole { name: "itemName"; query: "name/string()" }
 		XmlRole { name: "itemType"; query: "type/string()" }
 		XmlRole { name: "itemDistance"; query: "distance/string()" }
 		XmlRole { name: "itemDirection"; query: "direction/string()" }
-		XmlRole { name: "itemCoords"; query: "coords/string()" }
+		XmlRole { name: "itemValue"; query: "coords/string()" }
 	}
     ListSelector { 
-	id:layoutList; text: ""; itemId: point.getAttrList("points"); onChanged: console.log("clicked"+wrapper);
+	id:layoutList; text: ""; itemId: point.getPOI("points"); onChanged: { point.setNewPoint(layoutList.value); gui.setPage("point.qml"); }
 	anchors.top: distanceSlider.bottom;
 	anchors.left: parent.left; anchors.leftMargin: 3
 	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
