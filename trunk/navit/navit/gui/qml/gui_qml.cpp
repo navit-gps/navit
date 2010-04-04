@@ -319,7 +319,6 @@ gui_qml_command(struct gui_priv *this_, char *function, struct attr **in, struct
 
 static struct command_table commands[] = {
 	{"menu",command_cast(gui_qml_command)},
-	{"fullscreen",command_cast(gui_qml_command)},
 	{"command",command_cast(gui_qml_command)},
 };
 
