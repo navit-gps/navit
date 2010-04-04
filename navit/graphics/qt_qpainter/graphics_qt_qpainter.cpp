@@ -832,6 +832,9 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 	dbg(1,"mode for %p %d\n", gr, mode);
 	QRect r;
 	if (mode == draw_mode_begin) {
+		if (gr->widget->pixmap->paintingActive()) {
+			gr->widget->pixmap->paintEngine()->painter()->end();
+		}
 		gr->painter->begin(gr->widget->pixmap);
 #if 0
 		gr->painter->fillRect(QRect(QPoint(0,0), gr->widget->size()), *gr->background_gc->brush);
