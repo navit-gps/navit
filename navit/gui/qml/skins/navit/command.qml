@@ -9,14 +9,6 @@ Rectangle {
 		gui.returnSource="";
 		gui.setPage("main.qml");
 	}
-	if (command=="fullscreen") {
-		if (gui.getAttr("fullscreen") == "1") {
-			gui.setAttr("fullscreen",0)
-		} else {
-			gui.setAttr("fullscreen",1)
-		}
-		gui.backToMap();
-	}
 	if (command=="quit") {
 		navit.quit();
 	}
