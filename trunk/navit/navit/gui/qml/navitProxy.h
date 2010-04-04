@@ -119,6 +119,9 @@ public slots:
 	void setCenter() {
 		navit_set_center(this->object->nav,this->object->currentPoint->pc(),1);
 	}
+	void zoomToRoute() {
+		navit_zoom_to_route(this->object->nav,-1);
+	}
 protected:
 	int getAttrFunc(enum attr_type type, struct attr* attr, struct attr_iter* iter) { return navit_get_attr(this->object->nav, type, attr, iter); }
 	int setAttrFunc(struct attr* attr) {return navit_set_attr(this->object->nav,attr); }
