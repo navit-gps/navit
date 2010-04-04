@@ -202,7 +202,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	this_->switcherWidget = new QStackedWidget(this_->mainWindow);
 	this_->mainWindow = new NGQMainWindow(this_, NULL);
 	if ( this_->w && this_->h ) {
-	    this_->mainWindow->setFixedSize(this_->w,this_->h);
+	    this_->mainWindow->resize(this_->w,this_->h);
 	}
 	if ( this_->fullscreen ) {
 	    this_->mainWindow->showFullScreen();
