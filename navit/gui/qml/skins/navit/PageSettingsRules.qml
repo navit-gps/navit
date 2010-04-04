@@ -19,7 +19,7 @@ Rectangle {
     }
 
     Grid {
-        columns: 1; rows: 3
+        columns: 1; rows: 4
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.verticalCenter: parent.verticalCenter;
         spacing: gui.width/12
@@ -31,6 +31,9 @@ Rectangle {
         }
 	ToggleSwitch {
              id: followrcursorSw; stOn: navit.getAttr("follow_cursor");  text: "Map follows Vehicle"; onChanged: navit.setAttr("follow_cursor",followrcursorSw.stOn)
+        }
+	ToggleSwitch {
+             id: autozoomSw; stOn: navit.getAttr("autozoom_active");  text: "Auto zoom"; onChanged: navit.setAttr("autozoom_active",autozoomSw.stOn)
         }
     }
 
