@@ -31,7 +31,7 @@ Rectangle {
         anchors.bottom: parent.verticalCenter; anchors.bottomMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnView; text: "View position\non map"; icon: "gui_maps.svg"; onClicked: { navit.getPosition();navit.setCenter();gui.backToMap(); }
+            id: btnRouteview; text: "View route"; icon: "gui_town.svg"; onClicked: { navit.zoomToRoute(), gui.backToMap(); }
         }
         ButtonIcon {
             id: btnRoadbook; text: "Roadbook"; icon: "gui_log.svg"; onClicked: console.log("Implement me!");
@@ -42,10 +42,13 @@ Rectangle {
     }
 
     Grid {
-        columns: 2;rows: 1
+        columns: 3;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
         spacing: gui.width/12
+        ButtonIcon {
+            id: btnView; text: "View position\non map"; icon: "gui_maps.svg"; onClicked: { navit.getPosition();navit.setCenter();gui.backToMap(); }
+        }
         ButtonIcon {
             id: btnPoi; text: "POIs near\nPosition"; icon: "attraction.svg"; onClicked: gui.setPage("PagePoi.qml");
 	    opacity: 0;
