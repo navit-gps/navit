@@ -116,6 +116,9 @@ public slots:
 	void setPosition() {
 		navit_set_position(this->object->nav,this->object->currentPoint->pc());
 	}
+	void setCenter() {
+		navit_set_center(this->object->nav,this->object->currentPoint->pc(),1);
+	}
 protected:
 	int getAttrFunc(enum attr_type type, struct attr* attr, struct attr_iter* iter) { return navit_get_attr(this->object->nav, type, attr, iter); }
 	int setAttrFunc(struct attr* attr) {return navit_set_attr(this->object->nav,attr); }

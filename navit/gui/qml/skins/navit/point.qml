@@ -46,7 +46,7 @@ Rectangle {
         anchors.bottom: parent.verticalCenter; anchors.bottomMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnView; text: "View on map"; icon: "gui_maps.svg"; onClicked: console.log("Implement me!");
+            id: btnView; text: "View on map"; icon: "gui_maps.svg"; onClicked: { navit.setCenter(); gui.backToMap(); }
 	    opacity: 0
         }
         ButtonIcon {
