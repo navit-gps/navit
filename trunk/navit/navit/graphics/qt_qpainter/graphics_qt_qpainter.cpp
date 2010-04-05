@@ -1184,7 +1184,10 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 #endif
 
 #if defined(Q_WS_X11) && QT_VERSION >= 0x040500
-	QApplication::setGraphicsSystem("raster");
+	if ((attr=attr_search(attrs, NULL, attr_gc_type)))
+		QApplication::setGraphicsSystem(attr->u.str);
+	else
+		QApplication::setGraphicsSystem("raster");
 #endif
 
 #ifdef HAVE_QPE
