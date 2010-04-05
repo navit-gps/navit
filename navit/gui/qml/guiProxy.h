@@ -82,6 +82,7 @@ public slots:
 			//we render commands page hidden, so the screen doesn't flicks.
 			this->object->guiWidget->show();
 			this->object->switcherWidget->addWidget(this->object->guiWidget);
+			this->object->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
 			this->object->switcherWidget->setCurrentWidget(this->object->guiWidget);
 		}
 	}
