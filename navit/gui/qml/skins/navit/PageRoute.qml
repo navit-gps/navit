@@ -9,7 +9,7 @@ Rectangle {
 
     function pageOpen() {
         page.opacity = 1;
-	if (navit.getPosition().length>0) {
+	if (navit.getDestination().length>0) {
 		btnPoi.opacity=0.8;
 	}
     }
