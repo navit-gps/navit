@@ -120,6 +120,7 @@ svgs += bar.svg
 svgs += boat_ramp.svg
 svgs += bus.svg
 svgs += cinema.svg
+svgs += cursor.svg
 svgs += danger.svg
 svgs += exit.svg
 svgs += fastfood.svg
