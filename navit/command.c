@@ -877,7 +877,7 @@ command_table_call(struct command_table *table, int count, void *data, char *com
 {
 	int i;
 	for (i = 0 ; i < count ; i++) {
-		if (!strcmp(command,table->command)) {
+		if (!strcmp(command,table->command) || !strcmp("*",table->command)) {
 			if (valid)
 				*valid=1;
 			table->func(data, command, in, out);
