@@ -309,10 +309,10 @@ eval_value(struct context *ctx, struct result *res) {
 		ctx->expr=op;
 		return;
 	}
-	if (op[0] == '"') {
+	if (op[0] == '\'') {
 		do {
 			op++;
-		} while (op[0] != '"');
+		} while (op[0] != '\'');
 		res->attr.type=attr_type_string_begin;
 		len=op-ctx->expr-1;
 		res->attr.u.str=g_malloc(len+1);
