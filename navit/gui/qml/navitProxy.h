@@ -122,6 +122,12 @@ public slots:
 	void zoomToRoute() {
 		navit_zoom_to_route(this->object->nav,-1);
 	}
+	void command(QString command) {
+		struct attr navit;
+		navit.type=attr_navit;
+		navit.u.navit=this->object->nav;
+		command_evaluate(&navit,command.toLocal8Bit().constData());
+	}
 protected:
 	int getAttrFunc(enum attr_type type, struct attr* attr, struct attr_iter* iter) { return navit_get_attr(this->object->nav, type, attr, iter); }
 	int setAttrFunc(struct attr* attr) {return navit_set_attr(this->object->nav,attr); }
