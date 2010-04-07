@@ -147,17 +147,6 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 {
 	struct gui_priv *this_=(struct gui_priv*)data;
 
-	/* There is a special 'popup' feature in navit, that makes all 'click-on-point' related stuff
-	   but it looks VERY unflexible, so i'm not able to use it. I believe we need
-	   to re-design the popup feature or remove it at all */
-	if ( button == 3 ) {
-		this_->guiProxy->setNewPoint(p,MapPoint);
-		this_->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
-		this_->guiProxy->setReturnSource(QString(""));
-		this_->guiProxy->setPage("point.qml");
-		this_->switcherWidget->setCurrentWidget(this_->guiWidget);
-	}
-
 	// check whether the position of the mouse changed during press/release OR if it is the scrollwheel
 	if (!navit_handle_button(this_->nav, pressed, button, p, NULL)) {
 		dbg(1,"navit has handled button\n");
@@ -172,8 +161,9 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 	if ( button == 1 && this_->menu_on_map_click ) {
 		if (!this_->lazy) {
 			this_->guiProxy->setReturnSource(QString(""));
-			this_->guiProxy->setPage("main.qml");
+			this_->guiProxy->setPage("point.qml");
 		}
+		this_->guiProxy->setNewPoint(p,MapPoint);
 		this_->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
 		this_->switcherWidget->setCurrentWidget(this_->guiWidget);
 	}
@@ -228,7 +218,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	graphics_add_callback(gra, this_->button_cb);
 
 	//Instantiate qml components
-	this_->guiProxy->setPage(QString("main.qml"));
+	this_->guiProxy->setPage(QString("point.qml"));
 
 	//Switch to graphics
 	this_->switcherWidget->setCurrentWidget(this_->graphicsWidget);
@@ -303,23 +293,11 @@ static void
 gui_qml_command(struct gui_priv *this_, char *function, struct attr **in, struct attr ***out, int *valid) {
 	struct attr **curr=in;
 	struct attr *attr;
-	if (!strcasecmp(function,"command")) {
-		if( (attr=attr_search(in,NULL,attr_command))) {
-			//The value setting code in command.c is buggy
-			//so i disable this fucntionality for a while
-			//function=attr->u.str;
-		}
-	}
-	while (curr && *curr) {
-		dbg(0,"attr type is: %s\n",attr_to_name((*curr)->type));
-		curr++;
-	}
 	this_->guiProxy->processCommand(function);
 }
 
 static struct command_table commands[] = {
-	{"menu",command_cast(gui_qml_command)},
-	{"command",command_cast(gui_qml_command)},
+	{"*",command_cast(gui_qml_command)},
 };
 
 static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui)
