@@ -137,6 +137,7 @@ struct navit {
 	int prevTs;
 	int graphics_flags;
 	int zoom_min, zoom_max;
+	int radius;
 	struct bookmarks *bookmarks;
 };
 
@@ -716,6 +717,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->zoom_min = 1;
 	this_->zoom_max = 2097152;
 	this_->follow_cursor = 1;
+	this_->radius = 30;
 
 	this_->trans = transform_new();
 	transform_from_geo(pro, &g, &co);
@@ -1367,7 +1369,7 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir)
 	int width, height;
 	struct navit_vehicle *nv=this_->vehicle;
 
-        float offset=30;            // Cursor offset from the center of the screen (percent).
+        float offset=this_->radius;      // Cursor offset from the center of the screen (percent).
 #if 0 /* Better improve track.c to get that issue resolved or make it configurable with being off the default, the jumping back to the center is a bit annoying */
         float min_offset = 0.;      // Percent offset at min_offset_speed.
         float max_offset = 30.;     // Percent offset at max_offset_speed.
@@ -1547,6 +1549,10 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 			navit_projection_set(this_, attr->u.projection, !init);
 			attr_updated=1;
 		}
+		break;
+	case attr_radius:
+		attr_updated=(this_->radius != attr->u.num);
+		this_->radius=attr->u.num;
 		break;
 	case attr_recent_dest:
 		attr_updated=(this_->recentdest_count != attr->u.num);
