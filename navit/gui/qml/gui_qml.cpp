@@ -99,12 +99,20 @@ public:
 		this->object=this_;
 	}
 protected:
-	virtual void resizeEvent(QResizeEvent *) {
+	void resizeEvent(QResizeEvent *) {
 		this->object->w=this->width();
 		this->object->h=this->height();
 		//YES, i KNOW about signal/slot thing
 		this->object->guiProxy->setWidth(this->width());
 		this->object->guiProxy->setHeight(this->height());
+	}
+	void closeEvent(QCloseEvent * event) {
+		struct attr navit;
+		navit.type=attr_navit;
+		navit.u.navit=this->object->nav;
+		navit_destroy(navit.u.navit);
+		event_main_loop_quit();
+		event->accept();
 	}
 private:
 	struct gui_priv* object;
