@@ -42,6 +42,7 @@
 #include "window.h"
 #include "keys.h"
 #include "navit/font/freetype/font_freetype.h"
+#include "navit.h"
 
 #include <qglobal.h>
 #if QT_VERSION < 0x040000
@@ -72,46 +73,7 @@
 #include <QtGui>
 #endif
 
-
-//##############################################################################################################
-//# Description: RenderArea (QWidget) class for the main window (map, menu, ...) 
-//# Comment: 
-//# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
-//##############################################################################################################
-class RenderArea : public QWidget
- {
-     Q_OBJECT
- public:
-     RenderArea(struct graphics_priv *priv, QWidget *parent = 0, int w=800, int h=800, int overlay=0);
-     QPixmap *pixmap;
-     struct callback_list *cbl;
-     struct graphics_priv *gra;
-
-#if QT_VERSION < 0x040000
-     GHashTable *timer_type;
-     GHashTable *timer_callback;
-     GHashTable *watches;
-#endif
- protected:
-     int is_overlay;
-     QSize sizeHint() const;
-     void paintEvent(QPaintEvent *event);
-     void resizeEvent(QResizeEvent *event);
-     void mouseEvent(int pressed, QMouseEvent *event);
-     void mousePressEvent(QMouseEvent *event);
-     void mouseReleaseEvent(QMouseEvent *event);
-     void mouseMoveEvent(QMouseEvent *event);
-     void wheelEvent(QWheelEvent *event);
-     void keyPressEvent(QKeyEvent *event);
-#if QT_VERSION < 0x040000
-     void timerEvent(QTimerEvent *event);
-#endif
- protected slots:
-     void watchEvent(int fd);
- };
-
-
-#include "graphics_qt_qpainter.moc"
+class RenderArea;
 
 //##############################################################################################################
 //# Description: 
@@ -148,7 +110,48 @@ struct graphics_priv {
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct font_freetype_methods freetype_methods;
 	int w,h;
+	struct navit* nav;
 };
+
+//##############################################################################################################
+//# Description: RenderArea (QWidget) class for the main window (map, menu, ...) 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
+//##############################################################################################################
+class RenderArea : public QWidget
+ {
+     Q_OBJECT
+ public:
+     RenderArea(struct graphics_priv *priv, QWidget *parent = 0, int w=800, int h=800, int overlay=0);
+     QPixmap *pixmap;
+     struct callback_list *cbl;
+     struct graphics_priv *gra;
+
+#if QT_VERSION < 0x040000
+     GHashTable *timer_type;
+     GHashTable *timer_callback;
+     GHashTable *watches;
+#endif
+ protected:
+     int is_overlay;
+     QSize sizeHint() const;
+     void paintEvent(QPaintEvent *event);
+     void resizeEvent(QResizeEvent *event);
+     void mouseEvent(int pressed, QMouseEvent *event);
+     void mousePressEvent(QMouseEvent *event);
+     void mouseReleaseEvent(QMouseEvent *event);
+     void mouseMoveEvent(QMouseEvent *event);
+     void wheelEvent(QWheelEvent *event);
+     void keyPressEvent(QKeyEvent *event);
+	 void closeEvent(QCloseEvent *event);
+#if QT_VERSION < 0x040000
+     void timerEvent(QTimerEvent *event);
+#endif
+ protected slots:
+     void watchEvent(int fd);
+ };
+
+#include "graphics_qt_qpainter.moc"
 
 static void
 overlay_rect(struct graphics_priv *parent, struct graphics_priv *overlay, int clean, QRect *r)
@@ -259,6 +262,19 @@ RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h
 #endif
 }
 
+//##############################################################################################################
+//# Description: QWidget:closeEvent
+//# Comment: Deletes navit object and stops event loop on graphics shutdown
+//##############################################################################################################
+void RenderArea::closeEvent(QCloseEvent* event) 
+{
+	struct attr navit;
+	navit.type=attr_navit;
+	navit.u.navit=this->gra->nav;
+	navit_destroy(navit.u.navit);
+	event_main_loop_quit();
+	event->accept();
+}
 //##############################################################################################################
 //# Description: QWidget:sizeHint
 //# Comment: This property holds the recommended size for the widget
@@ -1177,6 +1193,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	ret=g_new0(struct graphics_priv, 1);
 	ret->font_freetype_new=font_freetype_new;
 	*meth=graphics_methods;
+	ret->nav=nav;
 #if 1
 	font_freetype_new(&ret->freetype_methods);
 	meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))ret->freetype_methods.font_new;
