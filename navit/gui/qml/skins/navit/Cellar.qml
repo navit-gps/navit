@@ -2,8 +2,7 @@ import Qt 4.6
 
 Rectangle {
 
-    function onStartup() {    
-    console.log("returnSource: "+gui.returnSource);
+    function onStartup() {        
        	if ( gui.returnSource.split('/').length > 2  ) {
 		btnBack.opacity=1;
 	}
