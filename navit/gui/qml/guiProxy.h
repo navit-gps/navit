@@ -101,7 +101,9 @@ public slots:
 			returnPage=returnList.takeLast(); //Set previous element as return page and remove it from the list
 		}
 		this->source=returnList.join(QString("/"));
-		this->source.prepend(QString("/"));
+		if (!this->source.startsWith("/")) {
+			this->source.prepend(QString("/"));
+		}
 		this->setPage(returnPage);
 	}
 
