@@ -198,6 +198,12 @@ struct map * mapset_next(struct mapset_handle *msh, int active)
 			else
 				continue;
 		}
+		if (active == 3 && map_get_attr(ret, attr_search_active, &active_attr, NULL)) {
+			if (active_attr.u.num)
+				return ret;
+			else
+				continue;
+		}
 		if (!map_get_attr(ret, attr_active, &active_attr, NULL))
 			return ret;
 		if (active_attr.u.num)
@@ -294,6 +300,10 @@ mapset_search_get_item(struct mapset_search *this)
 			this->map=g_list_next(this->map);
 			if (! this->map)
 				break;
+			if (map_get_attr(this->map->data, attr_search_active, &active_attr, NULL)) {
+				if (!active_attr.u.num)
+					continue;
+			}
 			if (!map_get_attr(this->map->data, attr_active, &active_attr, NULL))
 				break;
 			if (active_attr.u.num)
