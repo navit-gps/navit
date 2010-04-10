@@ -4396,22 +4396,20 @@ static void gui_internal_dbus_signal(struct gui_priv *this, struct point *p)
 	dlh=graphics_displaylist_open(display);
 	while ((di=graphics_displaylist_next(dlh))) {
 		struct item *item=graphics_displayitem_get_item(di);
+		struct attr cb,**attr_list=NULL;
+		int valid=0;
 		if (item_is_point(*item) && graphics_displayitem_get_displayed(di) &&
 			graphics_displayitem_within_dist(display, di, p, this->radius)) {
 			struct map_rect *mr=map_rect_new(item->map, NULL);
 			struct item *itemo=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
 			struct attr attr;
-			if (item_attr_get(itemo, attr_data, &attr)) {
-				struct attr cb,*attr_list[2];
-				int valid=0;
-				attr.type=attr_data;
-				attr_list[0]=&attr;
-				attr_list[1]=NULL;
-       				if (navit_get_attr(this->nav, attr_callback_list, &cb, NULL)) 
-               				callback_list_call_attr_4(cb.u.callback_list, attr_command, "dbus_send_signal", attr_list, NULL, &valid);
-			}
+			if (item_attr_get(itemo, attr_data, &attr)) 
+				attr_list=attr_generic_add_attr(attr_list, &attr);
 			map_rect_destroy(mr);
 		}
+       		if (attr_list && navit_get_attr(this->nav, attr_callback_list, &cb, NULL)) 
+			callback_list_call_attr_4(cb.u.callback_list, attr_command, "dbus_send_signal", attr_list, NULL, &valid);
+		attr_list_free(attr_list);
 	}
        	graphics_displaylist_close(dlh);
 }
