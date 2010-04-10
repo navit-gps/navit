@@ -238,30 +238,29 @@ encode_dict_string_variant_string(DBusMessageIter *iter, char *key, char *value)
 }
 
 static int
-encode_attr(DBusMessage *message, struct attr *attr)
+encode_attr(DBusMessageIter *iter1, struct attr *attr)
 {
 	char *name=attr_to_name(attr->type);
-	DBusMessageIter iter1,iter2;
-	dbus_message_iter_init_append(message, &iter1);
-	dbus_message_iter_append_basic(&iter1, DBUS_TYPE_STRING, &name);
+	DBusMessageIter iter2;
+	dbus_message_iter_append_basic(iter1, DBUS_TYPE_STRING, &name);
 	if (attr->type >= attr_type_int_begin && attr->type < attr_type_boolean_begin) {
-		dbus_message_iter_open_container(&iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_INT32_AS_STRING, &iter2);
+		dbus_message_iter_open_container(iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_INT32_AS_STRING, &iter2);
 		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_INT32, &attr->u.num);
-		dbus_message_iter_close_container(&iter1, &iter2);
+		dbus_message_iter_close_container(iter1, &iter2);
 	}
 	if (attr->type >= attr_type_boolean_begin && attr->type <= attr_type_int_end) {
-		dbus_message_iter_open_container(&iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_BOOLEAN_AS_STRING, &iter2);
+		dbus_message_iter_open_container(iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_BOOLEAN_AS_STRING, &iter2);
 		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_BOOLEAN, &attr->u.num);
-		dbus_message_iter_close_container(&iter1, &iter2);
+		dbus_message_iter_close_container(iter1, &iter2);
 	}
 	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
-		encode_variant_string(&iter1, attr->u.str);
+		encode_variant_string(iter1, attr->u.str);
 	}
 	if (attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end) {
 		char *object=object_new(attr_to_name(attr->type), attr->u.data);
-		dbus_message_iter_open_container(&iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_OBJECT_PATH_AS_STRING, &iter2);
+		dbus_message_iter_open_container(iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_OBJECT_PATH_AS_STRING, &iter2);
 		dbus_message_iter_append_basic(&iter2, DBUS_TYPE_OBJECT_PATH, &object);
-		dbus_message_iter_close_container(&iter1, &iter2);
+		dbus_message_iter_close_container(iter1, &iter2);
 	}
 	return 1;
 }
@@ -642,8 +641,10 @@ request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, v
 	attr_iter=object_get_from_message_arg(&iter, iter_name);
 	g_free(iter_name);
 	if (func(data, attr_type, &attr, attr_iter)) {
+		DBusMessageIter iter1;
 		reply = dbus_message_new_method_return(message);
-		encode_attr(reply, &attr);
+		dbus_message_iter_init_append(reply, &iter1);
+		encode_attr(&iter1, &attr);
 		dbus_connection_send (connection, reply, NULL);
 		dbus_message_unref (reply);
 		return DBUS_HANDLER_RESULT_HANDLED;
@@ -882,6 +883,18 @@ static DBusHandlerResult
 request_route_set_attr(DBusConnection *connection, DBusMessage *message)
 {
 	return request_set_add_remove_attr(connection, message, "route", NULL, (int (*)(void *, struct attr *))route_set_attr);
+}
+
+static DBusHandlerResult
+request_route_add_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_set_add_remove_attr(connection, message, "route", NULL, (int (*)(void *, struct attr *))route_add_attr);
+}
+
+static DBusHandlerResult
+request_route_remove_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_set_add_remove_attr(connection, message, "route", NULL, (int (*)(void *, struct attr *))route_remove_attr);
 }
 
 
@@ -1458,6 +1471,8 @@ struct dbus_method {
 	{".mapset", "get_attr_wi",         "so",      "attribute,attr_iter",                     "sv",  "attrname,value", request_mapset_get_attr},
 	{".route",    "get_attr",          "s",       "attribute",                               "sv",  "attrname,value", request_route_get_attr},
 	{".route",    "set_attr",          "sv",      "attribute,value",                         "",    "",  request_route_set_attr},
+	{".route",    "add_attr",          "sv",      "attribute,value",                         "",    "",  request_route_add_attr},
+	{".route",    "remove_attr",       "sv",      "attribute,value",                         "",    "",  request_route_remove_attr},
 	{".search_list","destroy",         "",        "",                                        "",   "",      request_search_list_destroy},
 	{".search_list","get_result",      "",        "",                                        "i(iii)a{sa{sv}}",   "id,coord,dict",      request_search_list_get_result},
 	{".search_list","search",          "svi",     "attribute,value,partial",                 "",   "",      request_search_list_search},
@@ -1600,12 +1615,16 @@ dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struc
 	dbg(0,"enter %s %s %s\n",opath,command,interface);
 	msg = dbus_message_new_signal(opath, interface, "signal");
 	if (msg) {
+		DBusMessageIter iter1,iter2;
+		dbus_message_iter_init_append(msg, &iter1);
+		dbus_message_iter_open_container(&iter1, DBUS_TYPE_ARRAY, "{sv}", &iter2);
 		if (in) {
 			while (*in) {
-				encode_attr(msg, *in);
+				encode_attr(&iter2, *in);
 				in++;
 			}
 		}
+		dbus_message_iter_close_container(&iter1, &iter2);
 		dbus_connection_send(connection, msg, &dbus_serial);
 		dbus_connection_flush(connection);
 		dbus_message_unref(msg);
