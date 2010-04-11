@@ -298,10 +298,10 @@ phase5(FILE **in, FILE **references, int in_count, char *suffix, struct zip_info
 	th=tile_head_root;
 	size=0;
 	slices=0;
-	fprintf(stderr, "Maximum slice size %Ld\n", slice_size);
+	fprintf(stderr, "Maximum slice size "LONGLONG_FMT"\n", slice_size);
 	while (th) {
 		if (size + th->total_size > slice_size) {
-			fprintf(stderr,"Slice %d is of size %Ld\n", slices, size);
+			fprintf(stderr,"Slice %d is of size "LONGLONG_FMT"\n", slices, size);
 			size=0;
 			slices++;
 		}
@@ -309,7 +309,7 @@ phase5(FILE **in, FILE **references, int in_count, char *suffix, struct zip_info
 		th=th->next;
 	}
 	if (size)
-		fprintf(stderr,"Slice %d is of size %Ld\n", slices, size);
+		fprintf(stderr,"Slice %d is of size "LONGLONG_FMT"\n", slices, size);
 	th=tile_head_root;
 	size=0;
 	slices=0;

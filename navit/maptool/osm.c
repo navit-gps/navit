@@ -553,7 +553,7 @@ osm_warning(char *type, long long id, int cont, char *fmt, ...)
 	va_start(ap, fmt);
 	vsnprintf(str, sizeof(str), fmt, ap);
 	va_end(ap);
-	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/%Ld %s",cont ? "":"OSM Warning:",type,id,str);
+	fprintf(stderr,"%shttp://www.openstreetmap.org/browse/%s/"LONGLONG_FMT" %s",cont ? "":"OSM Warning:",type,id,str);
 }
 
 static void
@@ -1494,7 +1494,7 @@ static int
 get_relation_member(char *str, struct relation_member *memb)
 {
 	int len;
-	sscanf(str,"%d:%Ld:%n",&memb->type,&memb->id,&len);
+	sscanf(str,"%d:"LONGLONG_FMT":%n",&memb->type,&memb->id,&len);
 	memb->role=str+len;
 	return 1;
 }
@@ -1609,7 +1609,7 @@ get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct it
 	while (item_bin_read(ret, way)) {
 		currid=item_bin_get_wayid(ret);
 		if (debug)
-			fprintf(stderr,"%Ld:",currid);
+			fprintf(stderr,LONGLONG_FMT":",currid);
 		if (currid != wayid) 
 			return NULL;
 		ic=(struct coord *)(ret+1);
@@ -1703,9 +1703,9 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 				
 		}
 #if 0
-		fprintf(stderr,"via %Ld vs %d\n",viam.id, ni.id);
+		fprintf(stderr,"via "LONGLONG_FMT" vs %d\n",viam.id, ni.id);
 		fprintf(stderr,"coord 0x%x,0x%x\n",ni.c.x,ni.c.y);	
-		fprintf(stderr,"Lookup %Ld\n",fromm.id);
+		fprintf(stderr,"Lookup "LONGLONG_FMT"\n",fromm.id);
 #endif
 		if (!(fromc=get_way(ways, ways_index, viafrom, fromm.id, from, 0))) {
 			if (viam.type == 1 || !(fromc=get_way(ways, ways_index, viato, fromm.id, from, 0))) {
@@ -1778,7 +1778,7 @@ process_countries(FILE *way, FILE *ways_index)
 		if (!seg) {
 			fprintf(stderr,"is null\n");
 		} else {
-			fprintf(stderr,"segment %p %s area %Ld\n",sort_segments,coord_is_equal(*seg->first, *seg->last) ? "closed":"open",geom_poly_area(seg->first,seg->last-seg->first+1));
+			fprintf(stderr,"segment %p %s area "LONGLONG_FMT"\n",sort_segments,coord_is_equal(*seg->first, *seg->last) ? "closed":"open",geom_poly_area(seg->first,seg->last-seg->first+1));
 		}
 #if 0
 		int count=seg->last-seg->first+1;
