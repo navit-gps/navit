@@ -41,6 +41,7 @@
 #include "config.h"
 #include "linguistics.h"
 #include "plugin.h"
+#include "util.h"
 #include "maptool.h"
 
 long long slice_size=1024*1024*1024;
@@ -107,9 +108,9 @@ usage(FILE *f)
 {
 	/* DEVELOPPERS : don't forget to update the manpage if you modify theses options */
 	fprintf(f,"\n");
-	fprintf(f,"osm2navit - parse osm textfile and converts to NavIt binfile format\n\n");
+	fprintf(f,"maptool - parse osm textfile and converts to NavIt binfile format\n\n");
 	fprintf(f,"Usage :\n");
-	fprintf(f,"bzcat planet.osm.bz2 | osm2navit mymap.bin\n");
+	fprintf(f,"bzcat planet.osm.bz2 | maptool mymap.bin\n");
 	fprintf(f,"Available switches:\n");
 	fprintf(f,"-h (--help)              : this screen\n");
 	fprintf(f,"-N (--nodes-only)        : process only nodes\n");
@@ -169,6 +170,7 @@ int main(int argc, char **argv)
 	main_init(argv[0]);
 	struct zip_info zip_info;
 	int suffix_start=0;
+	char *timestamp=current_to_iso8601();
 
 	while (1) {
 #if 0
@@ -468,7 +470,12 @@ int main(int argc, char **argv)
 		if (start <= 4) {
 			phase=3;
 			if (i == suffix_start) {
+				int year,month,day,hour,min,sec;
 				memset(&zip_info, 0, sizeof(zip_info));
+				if (sscanf(timestamp,"%d-%d-%dT%d:%d:%d",&year,&month,&day,&hour,&min,&sec) == 6) {
+					zip_info.date=day | (month << 5) | ((year-1980) << 9);
+					zip_info.time=(sec >> 1) | (min << 5) | (hour << 11);
+				}
 			}
 			zipnum=zip_info.zipnum;
 			fprintf(stderr,"PROGRESS: Phase 4: generating tiles %s\n",suffix);
