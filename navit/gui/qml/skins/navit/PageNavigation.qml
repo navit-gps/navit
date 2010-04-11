@@ -31,7 +31,7 @@ Rectangle {
         anchors.bottom: parent.verticalCenter; anchors.bottomMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnRouteview; text: "View route"; icon: "gui_town.svg"; onClicked: { navit.zoomToRoute(), gui.backToMap(); }
+            id: btnRouteview; text: "View route"; icon: "gui_town.svg"; onClicked: { navit.command("zoom_to_route()"), gui.backToMap(); }
         }
         ButtonIcon {
             id: btnRoadbook; text: "Roadbook"; icon: "gui_log.svg"; onClicked: console.log("Implement me!");

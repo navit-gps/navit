@@ -114,9 +114,6 @@ public slots:
 	void setCenter() {
 		navit_set_center(this->object->nav,this->object->currentPoint->pc(),1);
 	}
-	void zoomToRoute() {
-		navit_zoom_to_route(this->object->nav,-1);
-	}
 	void command(QString command) {
 		struct attr navit;
 		navit.type=attr_navit;
