@@ -83,6 +83,8 @@ struct zip_info {
 	int compression_level;
 	int maxnamelen;
 	int zip64;
+	short date;
+	short time;
 	FILE *res;
 	FILE *index;
 	FILE *dir;
