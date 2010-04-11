@@ -40,11 +40,11 @@ geom_poly_area(struct coord *c, int count)
 		if (++j == count)
 			j=0;
 #if 0
-		fprintf(stderr,"(%d+%d)*(%d-%d)=%d*%d=%Ld\n",c[i].x,c[j].x,c[i].y,c[j].y,c[i].x+c[j].x,c[i].y-c[j].y,(long long)(c[i].x+c[j].x)*(c[i].y-c[j].y));
+		fprintf(stderr,"(%d+%d)*(%d-%d)=%d*%d="LONGLONG_FMT"\n",c[i].x,c[j].x,c[i].y,c[j].y,c[i].x+c[j].x,c[i].y-c[j].y,(long long)(c[i].x+c[j].x)*(c[i].y-c[j].y));
 #endif
     		area+=(long long)(c[i].x+c[j].x)*(c[i].y-c[j].y);
 #if 0
-		fprintf(stderr,"area=%Ld\n",area);
+		fprintf(stderr,"area="LONGLONG_FMT"\n",area);
 #endif
 	}
   	return area/2;

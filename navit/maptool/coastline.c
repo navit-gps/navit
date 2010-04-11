@@ -175,7 +175,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 	while (sort_segments) {
 		struct geom_poly_segment *seg=sort_segments->data;
 		struct item_bin *ib=(struct item_bin *)buffer;
-		char *text=g_strdup_printf("segment %d type %d %p %s area %Ld",count++,seg->type,sort_segments,coord_is_equal(*seg->first, *seg->last) ? "closed":"open",geom_poly_area(seg->first,seg->last-seg->first+1));
+		char *text=g_strdup_printf("segment %d type %d %p %s area "LONGLONG_FMT,count++,seg->type,sort_segments,coord_is_equal(*seg->first, *seg->last) ? "closed":"open",geom_poly_area(seg->first,seg->last-seg->first+1));
 		item_bin_init(ib, type_rg_segment);
 		item_bin_add_coord(ib, seg->first, seg->last-seg->first+1);
 		item_bin_add_attr_string(ib, attr_debug, text);
