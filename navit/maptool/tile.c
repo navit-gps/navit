@@ -169,7 +169,7 @@ tile_extend(char *tile, struct item_bin *ib, GList **tiles_list)
 {
 	struct tile_head *th=NULL;
 	if (debug_tile(tile))
-		fprintf(stderr,"Tile:Writing %d bytes to '%s' (%p,%p) 0x%x %Ld\n", (ib->len+1)*4, tile, g_hash_table_lookup(tile_hash, tile), tile_hash2 ? g_hash_table_lookup(tile_hash2, tile) : NULL, ib->type, item_bin_get_id(ib));
+		fprintf(stderr,"Tile:Writing %d bytes to '%s' (%p,%p) 0x%x "LONGLONG_FMT"\n", (ib->len+1)*4, tile, g_hash_table_lookup(tile_hash, tile), tile_hash2 ? g_hash_table_lookup(tile_hash2, tile) : NULL, ib->type, item_bin_get_id(ib));
 	if (tile_hash2)
 		th=g_hash_table_lookup(tile_hash2, tile);
 	if (!th)
