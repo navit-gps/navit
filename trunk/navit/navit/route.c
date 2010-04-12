@@ -901,6 +901,8 @@ route_free_selection(struct map_selection *sel)
 void
 route_set_destination(struct route *this, struct pcoord *dst, int async)
 {
+	struct attr route_status;
+	route_status.type=attr_route_status;
 	profile(0,NULL);
 	if (this->dst)
 		route_info_free(this->dst);
@@ -909,12 +911,10 @@ route_set_destination(struct route *this, struct pcoord *dst, int async)
 		this->dst=route_find_nearest_street(this->vehicleprofile, this->ms, dst);
 		if(this->dst)
 			route_info_distances(this->dst, dst->pro);
-	} else  {
-		struct attr route_status;
-		route_status.type=attr_route_status;
+		route_status.u.num=route_status_destination_set;
+	} else  
 		route_status.u.num=route_status_no_destination;
-		route_set_attr(this, &route_status);
-	}
+	route_set_attr(this, &route_status);
 	profile(1,"find_nearest_street");
 
 	/* The graph has to be destroyed and set to NULL, otherwise route_path_update() doesn't work */

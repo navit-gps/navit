@@ -33,6 +33,7 @@ extern "C" {
 #endif
 enum route_status {
 	route_status_no_destination=0,
+	route_status_destination_set=1,
 	route_status_not_found=1|2,
 	route_status_building_path=1|4,
 	route_status_building_graph=1|4|8,
