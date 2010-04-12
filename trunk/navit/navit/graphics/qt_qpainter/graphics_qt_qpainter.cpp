@@ -938,17 +938,19 @@ static void * get_data(struct graphics_priv *this_, char *type)
 
 	if (!strcmp(type, "qt_widget")) 
 	    return this_->widget;
-	if (strcmp(type, "window"))
-		return NULL;
-	win=g_new(struct window, 1);
-	if (this_->w && this_->h)
-		this_->widget->show();
-	else
-		this_->widget->showMaximized();
-	win->priv=this_;
-	win->fullscreen=fullscreen;
-	win->disable_suspend=disable_suspend;
-	return win;
+	if (!strcmp(type, "window")) {
+		win=g_new(struct window, 1);
+		if (this_->w && this_->h)
+			this_->widget->show();
+		else
+			this_->widget->showMaximized();
+		win->priv=this_;
+		win->fullscreen=fullscreen;
+		win->disable_suspend=disable_suspend;
+		return win;
+	}
+	return NULL;
+
 }
 
 static void
