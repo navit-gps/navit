@@ -1615,12 +1615,14 @@ dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struc
 	dbg(0,"enter %s %s %s\n",opath,command,interface);
 	msg = dbus_message_new_signal(opath, interface, "signal");
 	if (msg) {
-		DBusMessageIter iter1,iter2;
+		DBusMessageIter iter1,iter2,iter3;
 		dbus_message_iter_init_append(msg, &iter1);
 		dbus_message_iter_open_container(&iter1, DBUS_TYPE_ARRAY, "{sv}", &iter2);
 		if (in) {
 			while (*in) {
-				encode_attr(&iter2, *in);
+				dbus_message_iter_open_container(&iter2, DBUS_TYPE_DICT_ENTRY, NULL, &iter3);
+				encode_attr(&iter3, *in);
+				dbus_message_iter_close_container(&iter2, &iter3);
 				in++;
 			}
 		}
