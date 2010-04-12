@@ -9,7 +9,7 @@ Rectangle {
 
     function pageOpen() {
 	if (point.pointType!="Bookmark") {
-	    btnBookmark.opacity=1;
+	    btnAddBookmark.opacity=1;
 	}
 	if (point.pointType!="MapPoint") {
 	    btnView.opacity=1;
@@ -40,36 +40,43 @@ Rectangle {
 	anchors.top:infoTxt.bottom;anchors.topMargin: 5;anchors.horizontalCenter:parent.horizontalCenter
     }
 
-    Grid {
-        columns: 3;rows: 1
-        anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.bottom: parent.verticalCenter; anchors.bottomMargin: gui.height/16;
-        spacing: gui.width/12
         ButtonIcon {
             id: btnView; text: "View on map"; icon: "gui_maps.svg"; onClicked: { navit.setCenter(); gui.backToMap(); }
 	    opacity: 0
+	    anchors.top: nameTxt.bottom;anchors.topMargin:gui.height/32
+	    anchors.left:page.left;anchors.leftMargin: gui.height/6
         }
         ButtonIcon {
             id: btnPosition; text: "Set as\nposition"; icon: "gui_active.svg"; onClicked: { navit.setPosition(); gui.backToMap() }
 	    opacity: 0
+	    anchors.top: nameTxt.bottom;anchors.topMargin:gui.height/32
+	    anchors.left:btnView.right;anchors.leftMargin: gui.height/6
         }
         ButtonIcon {
             id: btnDestination; text: "Set as\ndestination"; icon: "gui_active.svg"; onClicked: { navit.setDestination(); gui.backToMap() }
 	    opacity: 0
+	    anchors.top: nameTxt.bottom;anchors.topMargin:gui.height/32
+	    anchors.left:btnPosition.right;anchors.leftMargin: gui.height/6
         }
-    }
-
+        ButtonIcon {
+            id: btnAddBookmark; text: "Add as\na bookmark"; icon: "gui_active.svg"; onClicked: gui.setPage("PageBookmarksAdd.qml")
+	    opacity: 0
+	    anchors.top: nameTxt.bottom;anchors.topMargin:gui.height/32
+	    anchors.left:btnDestination.right;anchors.leftMargin: gui.height/6
+        }
     Grid {
-        columns: 3;rows: 1
+        columns: 4;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
-        spacing: gui.width/12
+	anchors.top: btnDestination.bottom;anchors.topMargin:gui.height/32
+        spacing: gui.height/6
         ButtonIcon {
-            id: btnQuit; text: "Nearest\nPOIs"; icon: "attraction.svg"; onClicked: gui.setPage("PagePoi.qml");
+            id: btnBookmarks; text: "Bookmarks"; icon: "gui_bookmark.svg"; onClicked: gui.setPage("PageBookmarks.qml");
         }
         ButtonIcon {
-            id: btnBookmark; text: "Add as\na Bookmark"; icon: "gui_bookmark.svg"; onClicked: gui.setPage("PageBookmarksAdd.qml")
-	    opacity: 0;
+            id: btnPOI; text: "Nearest\nPOIs"; icon: "attraction.svg"; onClicked: gui.setPage("PagePoi.qml");
+        }
+        ButtonIcon {
+            id: btnSearch; text: "Address\nSearch"; icon: "gui_town.svg"; onClicked: gui.setPage("PageSearch.qml")
         }
         ButtonIcon {
             id: btnInfo; text: "Point\ninformation"; icon: "gui_menu.svg"; onClicked: console.log("Implement me!");
