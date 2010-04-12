@@ -169,7 +169,7 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 	if ( button == 1 && this_->menu_on_map_click ) {
 		if (!this_->lazy) {
 			this_->guiProxy->setReturnSource(QString(""));
-			this_->guiProxy->setPage("point.qml");
+			this_->guiProxy->setPage("main.qml");
 		}
 		this_->guiProxy->setNewPoint(p,MapPoint);
 		this_->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
@@ -226,7 +226,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	graphics_add_callback(gra, this_->button_cb);
 
 	//Instantiate qml components
-	this_->guiProxy->setPage(QString("point.qml"));
+	this_->guiProxy->setPage(QString("main.qml"));
 
 	//Switch to graphics
 	this_->switcherWidget->setCurrentWidget(this_->graphicsWidget);
