@@ -44,7 +44,6 @@ signals:
 	void heightSignal(int);
 public slots:
 	void setPage(QString page,bool hidden=false) {
-		dbg(0,"Page is: %s\n",page.toStdString().c_str());
 		this->source+="/"+page;
 
 #if QT_VERSION < 0x040700
@@ -100,9 +99,13 @@ public slots:
 			returnList.takeLast();//Remove current element
 			returnPage=returnList.takeLast(); //Set previous element as return page and remove it from the list
 		}
-		this->source=returnList.join(QString("/"));
-		if (!this->source.startsWith("/")) {
-			this->source.prepend(QString("/"));
+		if (returnList.size()>0) {
+			this->source=returnList.join(QString("/"));
+			if (!this->source.startsWith("/")) {
+				this->source.prepend(QString("/"));
+			}
+		} else {
+			this->source.clear();
 		}
 		this->setPage(returnPage);
 	}
