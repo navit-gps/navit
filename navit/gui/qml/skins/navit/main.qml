@@ -19,31 +19,22 @@ Rectangle {
 
 
     Grid {
-        columns: 3;rows: 1
+        columns: 2; rows: 2
         anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.bottom: parent.verticalCenter; anchors.bottomMargin: gui.height/16;
-        spacing: gui.width/12
-        ButtonIcon {
-            id: btnRoute; text: "Route"; icon: "cursor.svg";  onClicked: gui.setPage("PageRoute.qml")
+	anchors.top: parent.top;anchors.topMargin:gui.height/10
+        spacing: gui.height/6
+
+	ButtonIcon {
+            id: btnDestination; text: "Drive to\npoint on map"; icon: "gui_active.svg"; onClicked: { navit.setDestination(); gui.backToMap() }
         }
         ButtonIcon {
-            id: btnNavigation; text: "Navigation"; icon: "nav_destination_wh.svg"; onClicked: gui.setPage("PageNavigation.qml")
+            id: btnNavigate; text: "Navigate\nto . . ."; icon: "cursor.svg";  onClicked: gui.setPage("PageRoute.qml")
+        }
+        ButtonIcon {
+            id: btnRoute; text: "Route\ninformation"; icon: "nav_destination_wh.svg"; onClicked: gui.setPage("PageNavigation.qml")
         }
         ButtonIcon {
             id: btnSettings; text: "Settings"; icon: "gui_settings.svg"; onClicked: gui.setPage("PageSettings.qml")
-        }
-    }
-
-    Grid {
-        columns: 2;rows: 1
-        anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
-        spacing: gui.width/12
-        ButtonIcon {
-            id: btnAbout; text: "About"; icon: "gui_about.svg"; onClicked: gui.setPage("PageAbout.qml") 
-        }
-        ButtonIcon {
-            id: btnQuit; text: "Quit"; icon: "gui_quit.svg"; onClicked: navit.quit();
         }
     }
 
