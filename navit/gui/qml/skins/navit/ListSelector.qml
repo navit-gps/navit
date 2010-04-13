@@ -10,11 +10,15 @@ Rectangle {
     property string text: "ListSelector"
     property string value: ""
     property string itemId: "0"
+    property bool showScroller: false
     signal changed
 
     function startup() {
-        console.log("model is: "+listModel);
+        if (listselector.showScroller == true) {
+		listScroller.opacity=0.5;
+	}
     }
+    
     Component.onCompleted: startup();    
 
      Component {
@@ -67,7 +71,7 @@ Rectangle {
          }
 	 Rectangle {
        		 id: listScroller
-		opacity: 0.5; anchors.left: list.right; anchors.leftMargin: 4; width: 6
+		opacity: 0; anchors.left: list.right; anchors.leftMargin: 4; width: 6
 		y: (list.visibleArea.yPosition * list.height)+(list.visibleArea.heightRatio * list.height/4)
 		height: list.visibleArea.heightRatio * list.height
 	}
