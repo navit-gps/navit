@@ -39,32 +39,33 @@ Rectangle {
 	anchors.top:typeTxt.bottom;anchors.topMargin: 5;anchors.horizontalCenter:parent.horizontalCenter
     }
 
-	XmlListModel {
-		id: listModel
-		xml: point.getInformation();
-		query: "/point/element()"
-		XmlRole { name: "itemName"; query: "name()" }
-		XmlRole { name: "itemDistance"; query: "string()" }
-	}
+    XmlListModel {
+	id: listModel
+	xml: point.getInformation();
+	query: "/point/element()"
+	XmlRole { name: "itemType"; query: "name()" }
+	XmlRole { name: "itemAttribute"; query: "string()" }
+    }
 
-     Component {
-         id: listDelegate
-         Item {
-             id: wrapper
-             width: list.width; height: 20
-             Column {
-                 x: 5; y: 5
-                 Text { id: txtItemName; text: itemName; color: "White" }
-		 Text { id: txtItemDist; text: itemDistance; color: "White"; anchors.leftMargin: 5; anchors.left: txtItemName.right;anchors.top: txtItemName.top }
-		 Text { id: txtItemDirect; text: itemDirection; color: "White"; anchors.leftMargin: 5; anchors.left: txtItemDist.right;anchors.top: txtItemDist.top }
-             }
-	     MouseRegion {
-	   		id:delegateMouse
-			anchors.fill: parent
-			onClicked: { list.currentIndex=itemId; listselector.value=itemValue; listselector.changed() }
-	     }
-         }
-     }
+    Component {
+        id: listDelegate
+        Item {
+            id: wrapper
+            width: list.width; height: 20
+            Column {
+                x: 5; y: 5
+                Text { id: txtItemType; text: itemType; color: "White"; font.bold: true; }
+	 Text { id: txtItemAttribute; text: itemAttribute; color: "White"; anchors.leftMargin: 5; anchors.left: txtItemType.right;anchors.top: txtItemType.top }
+            }
+        }
+    }
+
+    Component {
+        id: listHighlight
+        Rectangle {
+	    opacity: 0
+        }
+    }
 
     ListSelector { 
 	id:layoutList; text: "Attributes";

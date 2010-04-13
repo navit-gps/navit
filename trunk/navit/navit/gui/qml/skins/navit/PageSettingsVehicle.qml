@@ -36,7 +36,7 @@ Rectangle {
 	     }
          }
      }
-
+CommonHighlight { id: listHighlight} 
 	ListSelector { 
 		id:vehicleList; text: "Current vehicle profile"; itemId: navit.getAttrList("vehicle"); onChanged: {navit.setObjectByName("vehicle",vehicleList.value) }
 		anchors.top: parent.top; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32

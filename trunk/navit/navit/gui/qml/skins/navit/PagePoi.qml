@@ -129,7 +129,7 @@ Rectangle {
 	     }
          }
      }
-
+CommonHighlight { id: listHighlight} 
     ListSelector { 
 	id:layoutList; text: ""; itemId: point.getPOI("points"); onChanged: { point.setNewPoint(layoutList.value); gui.setPage("point.qml"); }
 	anchors.top: distanceSlider.bottom;
