@@ -21,14 +21,6 @@ Rectangle {
     
     Component.onCompleted: startup();    
 
-     Component {
-         id: highlight
-         Rectangle {
-             color: "lightsteelblue"
-             radius: 5
-         }
-     }
-
     Text {
 	id: labelTxt; text: listselector.text; color: "White"; font.pointSize: 14;
 	anchors.horizontalCenter: list.horizontalCenter
@@ -42,7 +34,7 @@ Rectangle {
 	     anchors.left: listselector.left
              model: listModel
              delegate: listDelegate
-             highlight: highlight
+             highlight: listHighlight
              focus: true
 	     clip: true
 	     highlightFollowsCurrentItem: true
