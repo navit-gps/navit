@@ -37,9 +37,11 @@ class NGQPoint : public QObject {
     Q_PROPERTY(QString coordString READ coordString CONSTANT);
     Q_PROPERTY(QString pointName READ pointName CONSTANT);
     Q_PROPERTY(QString pointType READ pointType CONSTANT);
+    Q_PROPERTY(QUrl pointUrl READ pointUrl CONSTANT);
 public:
     NGQPoint(struct gui_priv* this_,struct point* p,NGQPointTypes type=MapPoint,QObject *parent=NULL) : QObject(parent) {
         this->object=this_;
+        this->item.map=0;
         transform_reverse(navit_get_trans(this->object->nav), p, &co);
         transform_to_geo(transform_get_projection(navit_get_trans(this->object->nav)), &co, &g);
         c.pro = transform_get_projection(navit_get_trans(this->object->nav));
@@ -54,6 +56,7 @@ public:
     }
     NGQPoint(struct gui_priv* this_,struct coord* c,NGQPointTypes type=Bookmark,QObject *parent=NULL) : QObject(parent) {
         this->object=this_;
+        this->item.map=0;
         this->co.x=c->x;
         this->co.y=c->y;
         transform_to_geo(transform_get_projection(navit_get_trans(this->object->nav)), &co, &g);
@@ -68,6 +71,7 @@ public:
 
     NGQPoint(struct gui_priv* this_,struct coord* c,QString name,NGQPointTypes type=Bookmark,QObject *parent=NULL) : QObject(parent) {
         this->object=this_;
+        this->item.map=0;
         this->co.x=c->x;
         this->co.y=c->y;
         transform_to_geo(transform_get_projection(navit_get_trans(this->object->nav)), &co, &g);
@@ -83,6 +87,7 @@ public:
     struct pcoord* pc() { return &c; }
 public slots:
     void setNewPoint(QString coord,NGQPointTypes type=PointOfInterest) {
+            this->item.map=0;
             QStringList coordSplit=coord.split(" ",QString::SkipEmptyParts);
             this->co.x=coordSplit[0].toInt();
             this->co.y=coordSplit[1].toInt();
@@ -111,8 +116,35 @@ public slots:
                     return QString("Position");
             case Destination:
                     return QString("Destination");
+            case PointOfInterest:
+                    return QString("PointOfInterest");
             }
             return QString("");
+    }
+    QUrl pointUrl() {
+            return this->url;
+    }
+    QString getInformation() {
+            struct map_rect *mr;
+            struct item* item;
+            struct attr attr;
+
+            QDomDocument retDoc;
+            QDomElement entries;
+            entries=retDoc.createElement("point");
+            retDoc.appendChild(entries);
+
+            if (this->type!=Bookmark and this->item.map) {
+                    mr=map_rect_new(this->item.map, NULL);
+                    item = map_rect_get_item_byid(mr, this->item.id_hi, this->item.id_lo);
+                    if (item) {
+                            while(item_attr_get(item, attr_any, &attr)) {
+                                     entries.appendChild(this->_fieldValueHelper(retDoc,QString(attr_to_name(attr.type)), QString(attr_to_text(&attr,this->item.map, 1))));
+                            }
+                    }
+                    map_rect_destroy(mr);
+            }
+            return retDoc.toString();
     }
     QString getPOI(const QString &attr_name) {
             struct attr attr;
@@ -205,6 +237,12 @@ public slots:
             return retDoc.toString();
     }
 protected:
+        QDomElement _fieldValueHelper(QDomDocument doc, QString field,QString value) {
+                QDomElement fieldTag=doc.createElement(field);
+                QDomText valueText=doc.createTextNode(value);
+                fieldTag.appendChild(valueText);
+                return fieldTag;
+        }
         QString _coordString() {
                 char latc='N',lngc='E';
                 int lat_deg,lat_min,lat_sec;
@@ -264,6 +302,8 @@ protected:
                                         if (item_attr_get(item, attr_label, &attr)) {
                                                 label=map_convert_string(m, attr.u.str);
                                                  if (QString(item_to_name(item->type)).startsWith(QString("poi_"))) {
+                                                         this->item=*item;             
+                                                         this->_setUrl(&this->item);
                                                          ret=QString::fromLocal8Bit(item_to_name(item->type));
                                                          ret=ret.remove(QString("poi_"));
                                                          ret+=QString(" ")+QString::fromLocal8Bit(label);
@@ -274,6 +314,8 @@ protected:
                                                          return ret;
                                                  }
                                                  if (QString(item_to_name(item->type)).startsWith(QString("poly_"))) {
+                                                         this->item=*item;
+                                                         this->_setUrl(&this->item);
                                                          ret=QString::fromLocal8Bit(item_to_name(item->type));
                                                          ret=ret.remove(QString("poly_"));
                                                          ret+=QString(" ")+QString::fromLocal8Bit(label);
@@ -284,6 +326,8 @@ protected:
                                                          return ret;                                                     
                                                  }
                                                  if (QString(item_to_name(item->type)).startsWith(QString("street_"))) {
+                                                         this->item=*item;
+                                                         this->_setUrl(&this->item);
                                                          ret="Street ";
                                                          ret+=QString::fromLocal8Bit(label);
                                                          map_convert_free(label);
@@ -294,6 +338,8 @@ protected:
                                                  }
                                                  map_convert_free(label);
                                         } else
+                                                this->item=*item;
+                                                this->_setUrl(&this->item);
                                                 ret=item_to_name(item->type);
                                 }
                                 street_data_free(data);
@@ -302,6 +348,18 @@ protected:
                 }
                 mapset_close(h);
                 return ret;
+        }
+        void _setUrl(struct item *item) {
+                struct attr attr;
+                if (item_attr_get(item,attr_osm_nodeid,&attr)) {
+                        url.setUrl(QString("http://www.openstreetmap.org/browse/node/%1").arg(*attr.u.num64));
+                } else if (item_attr_get(item,attr_osm_wayid,&attr)) {
+                        url.setUrl(QString("http://www.openstreetmap.org/browse/way/%1").arg(*attr.u.num64));
+                } else if (item_attr_get(item,attr_osm_relationid,&attr)) {
+                        url.setUrl(QString("http://www.openstreetmap.org/browse/relation/%1").arg(*attr.u.num64));
+                } else {
+                        url.clear();
+                }
         }
 private:
     struct gui_priv* object;
@@ -312,8 +370,11 @@ private:
     struct pcoord c;
     struct point p;
 
+    struct item item;
+
     QString name;
     QString coord;
+    QUrl url;
 };
 
 #include "ngqpoint.moc"
