@@ -59,6 +59,7 @@ Rectangle {
          }
      }
 
+    CommonHighlight { id: listHighlight} 
 
     ListSelector { 
 	id:layoutList; text: "Current layout"; itemId: navit.getAttrList("layout"); onChanged: navit.setObjectByName("layout",layoutList.value)

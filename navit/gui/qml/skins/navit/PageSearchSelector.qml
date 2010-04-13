@@ -53,7 +53,7 @@ Rectangle {
 	     }
          }
      }
-
+CommonHighlight { id: listHighlight} 
     ListSelector { 
 	id:layoutList; text: search.searchContext; itemId: search.getAttrList(search.searchContext); onChanged: setSearchResult()
 	anchors.top: searchTxt.bottom; anchors.left: parent.left; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
