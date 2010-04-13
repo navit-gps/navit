@@ -139,7 +139,7 @@ public slots:
                     item = map_rect_get_item_byid(mr, this->item.id_hi, this->item.id_lo);
                     if (item) {
                             while(item_attr_get(item, attr_any, &attr)) {
-                                     entries.appendChild(this->_fieldValueHelper(retDoc,QString(attr_to_name(attr.type)), QString(attr_to_text(&attr,this->item.map, 1))));
+                                     entries.appendChild(this->_fieldValueHelper(retDoc,QString::fromLocal8Bit(attr_to_name(attr.type)), QString::fromLocal8Bit(attr_to_text(&attr,this->item.map, 1))));
                             }
                     }
                     map_rect_destroy(mr);
