@@ -914,7 +914,7 @@ route_set_destination(struct route *this, struct pcoord *dst, int async)
 		route_status.u.num=route_status_destination_set;
 	} else  
 		route_status.u.num=route_status_no_destination;
-	callback_list_call_attr_1(this->cbl2, attr_destination, this_);
+	callback_list_call_attr_1(this->cbl2, attr_destination, this);
 	route_set_attr(this, &route_status);
 	profile(1,"find_nearest_street");
 
