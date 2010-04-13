@@ -79,7 +79,7 @@ Rectangle {
             id: btnSearch; text: "Address\nSearch"; icon: "gui_town.svg"; onClicked: gui.setPage("PageSearch.qml")
         }
         ButtonIcon {
-            id: btnInfo; text: "Point\ninformation"; icon: "gui_menu.svg"; onClicked: console.log("Implement me!");
+            id: btnInfo; text: "Point\ninformation"; icon: "gui_menu.svg"; onClicked: gui.setPage("PagePointInfo.qml")
         }
     }
 
