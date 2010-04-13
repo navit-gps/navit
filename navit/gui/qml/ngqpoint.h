@@ -301,45 +301,30 @@ protected:
                                 if (transform_within_dist_item(&co, item->type, data->c, data->count, dist)) {                                     
                                         if (item_attr_get(item, attr_label, &attr)) {
                                                 label=map_convert_string(m, attr.u.str);
+                                                this->item=*item;             
+                                                this->_setUrl(item);
                                                  if (QString(item_to_name(item->type)).startsWith(QString("poi_"))) {
-                                                         this->item=*item;             
-                                                         this->_setUrl(&this->item);
                                                          ret=QString::fromLocal8Bit(item_to_name(item->type));
                                                          ret=ret.remove(QString("poi_"));
                                                          ret+=QString(" ")+QString::fromLocal8Bit(label);
-                                                         map_convert_free(label);
-                                                         street_data_free(data);
-                                                         map_rect_destroy(mr);
-                                                         mapset_close(h);
-                                                         return ret;
                                                  }
                                                  if (QString(item_to_name(item->type)).startsWith(QString("poly_"))) {
-                                                         this->item=*item;
-                                                         this->_setUrl(&this->item);
                                                          ret=QString::fromLocal8Bit(item_to_name(item->type));
                                                          ret=ret.remove(QString("poly_"));
                                                          ret+=QString(" ")+QString::fromLocal8Bit(label);
-                                                         map_convert_free(label);
-                                                         street_data_free(data);
-                                                         map_rect_destroy(mr);
-                                                         mapset_close(h);
-                                                         return ret;                                                     
                                                  }
                                                  if (QString(item_to_name(item->type)).startsWith(QString("street_"))) {
-                                                         this->item=*item;
-                                                         this->_setUrl(&this->item);
                                                          ret="Street ";
                                                          ret+=QString::fromLocal8Bit(label);
-                                                         map_convert_free(label);
-                                                         street_data_free(data);
-                                                         map_rect_destroy(mr);
-                                                         mapset_close(h);
-                                                         return ret;                                                      
                                                  }
                                                  map_convert_free(label);
+                                                 street_data_free(data);
+                                                 map_rect_destroy(mr);
+                                                 mapset_close(h);
+                                                 return ret;
                                         } else
                                                 this->item=*item;
-                                                this->_setUrl(&this->item);
+                                                this->_setUrl(item);
                                                 ret=item_to_name(item->type);
                                 }
                                 street_data_free(data);
