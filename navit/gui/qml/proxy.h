@@ -85,6 +85,14 @@ protected:
 	virtual int getAttrFunc(enum attr_type type, struct attr *attr, struct attr_iter *iter)=0;
 	virtual struct attr_iter* getIterFunc() { return NULL; };
 	virtual void dropIterFunc(struct attr_iter*) { return; };
+
+	QDomElement _fieldValueHelper(QDomDocument doc, QString field,QString value) {
+			QDomElement fieldTag=doc.createElement(field);
+			QDomText valueText=doc.createTextNode(value);
+			fieldTag.appendChild(valueText);
+			return fieldTag;
+	}
+
 };
 
 #include "proxy.moc"
