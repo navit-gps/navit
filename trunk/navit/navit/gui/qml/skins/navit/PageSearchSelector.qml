@@ -2,60 +2,99 @@
 import Qt 4.6
 
 Rectangle {
-    id: page
+      id: page
 
-    width: gui.width; height: gui.height
-    color: "Black"
-    opacity: 0
+      width: gui.width; height: gui.height
+      color: "Black"
+      opacity: 0
 
-    function setSearchResult() {
-        if (search.searchContext=="country") {
-	    search.countryName=layoutList.value;
-	    gui.backToPrevPage();
-	}
-        if (search.searchContext=="town") {
-	    search.townName=layoutList.value;
-	    gui.backToPrevPage();
-	}
-    }
+      function setSearchResult(listValue) {
+          if (search.searchContext=="country") {
+	      search.countryName=listValue;
+	      gui.backToPrevPage();
+	  }
+          if (search.searchContext=="town") {
+	      search.townName=listValue;
+	      gui.backToPrevPage();
+	  }
+          if (search.searchContext=="street") {
+	      search.streetName=listValue;
+	      search.setPointToResult();
+	      gui.setPage("PageNavigate.qml");
+	  }
+      }
 
-    function pageOpen() {
-        page.opacity = 1;
-    }
+      function pageOpen() {
+          if (search.searchContext=="country") {
+	      searchTxt.text=search.countryName;
+	      countryBinding.when=true;
+	  }
+          if (search.searchContext=="town") {
+	      searchTxt.text=search.townName;
+	      townBinding.when=true;
+	  }
+          if (search.searchContext=="street") {
+	      searchTxt.text=search.streetName;
+	      streetBinding.when=true;
+	  }
+          page.opacity = 1;
+      }
     
-    Component.onCompleted: pageOpen();    
+      Component.onCompleted: pageOpen();    
     
-    opacity: Behavior {
-        NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
-    }
+      opacity: Behavior {
+          NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
+      }
 
-   TextInput{
-     	id: searchTxt; text: search.countryName;
-	anchors.top: parent.top; anchors.left: parent.left; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
-	width: page.width; font.pointSize: 14; color: "White";focus: true; readOnly: false
-   }
+     TextInput{
+     	  id: searchTxt; 
+	  anchors.top: parent.top; anchors.left: parent.left; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
+	  width: page.width; font.pointSize: 14; color: "White";focus: true; readOnly: false; cursorVisible: true;
+     }
+    Binding {id: countryBinding; target: search; property: "countryName"; value: searchTxt.text; when: false}
+    Binding {id: townBinding; target: search; property: "townName"; value: searchTxt.text; when: false}
+    Binding {id: streetBinding; target: search; property: "streetName"; value: searchTxt.text; when: false}
+
+    XmlListModel {
+	id: listModel
+	xml: search.searchXml;
+	query: "/search/item"
+	XmlRole { name: "itemId"; query: "id/string()" }
+	XmlRole { name: "itemName"; query: "name/string()" }
+	XmlRole { name: "itemIcon"; query: "icon/string()" }
+    }
 
    Component {
          id: listDelegate
          Item {
              id: wrapper
              width: list.width; height: 20
-             Column {
-                 x: 5; y: 5
-                 Text { id: txtItemName; text: itemName; color: "White" }
-		 Text { id: txtItemDist; text: itemDistance; color: "White"; anchors.leftMargin: 5; anchors.left: txtItemName.right;anchors.top: txtItemName.top }
-		 Text { id: txtItemDirect; text: itemDirection; color: "White"; anchors.leftMargin: 5; anchors.left: txtItemDist.right;anchors.top: txtItemDist.top }
-             }
-	     MouseRegion {
-	   		id:delegateMouse
-			anchors.fill: parent
-			onClicked: { list.currentIndex=itemId; listselector.value=itemValue; listselector.changed() }
+		 Image {
+			id: imgIcon; source: gui.iconPath+itemIcon
+			width: 20; height: 20;
+		}
+                Text { 
+		    id: txtItemName; text: itemName; color: "White"; 
+		    anchors.left: imgIcon.right;anchors.leftMargin: 5
+		    width: list.width-imgIcon.width
+		}
+	        MouseRegion {
+	   	    id:delegateMouse
+		    anchors.fill: parent
+		    onClicked: { setSearchResult(itemName); }
 	     }
          }
      }
-CommonHighlight { id: listHighlight} 
+
+    Component {
+        id: listHighlight
+        Rectangle {
+	    opacity: 0
+        }
+    }
+
     ListSelector { 
-	id:layoutList; text: search.searchContext; itemId: search.getAttrList(search.searchContext); onChanged: setSearchResult()
+	id:layoutList; text: search.searchContext; onChanged: setSearchResult()
 	anchors.top: searchTxt.bottom; anchors.left: parent.left; anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
 	width: page.width; height: page.height/2-cellar.height
     }
