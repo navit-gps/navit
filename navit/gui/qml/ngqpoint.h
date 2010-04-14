@@ -69,6 +69,21 @@ public:
         this->coord=this->_coordString();
     }
 
+    NGQPoint(struct gui_priv* this_,struct pcoord* pc,NGQPointTypes type=Bookmark,QObject *parent=NULL) : QObject(parent) {
+        this->object=this_;
+        this->item.map=0;
+        this->c.pro = pc->pro;
+        this->c.x = pc->x;
+        this->c.y = pc->y;
+        this->co.x=pc->x;
+        this->co.y=pc->y;
+        transform_to_geo(this->c.pro, &co, &g);
+        this->type=type;
+
+        this->name=this->_coordName();
+        this->coord=this->_coordString();
+    }
+
     NGQPoint(struct gui_priv* this_,struct coord* c,QString name,NGQPointTypes type=Bookmark,QObject *parent=NULL) : QObject(parent) {
         this->object=this_;
         this->item.map=0;
