@@ -241,7 +241,7 @@ static int
 encode_attr(DBusMessageIter *iter1, struct attr *attr)
 {
 	char *name=attr_to_name(attr->type);
-	DBusMessageIter iter2;
+	DBusMessageIter iter2,iter3;
 	dbus_message_iter_append_basic(iter1, DBUS_TYPE_STRING, &name);
 	if (attr->type >= attr_type_int_begin && attr->type < attr_type_boolean_begin) {
 		dbus_message_iter_open_container(iter1, DBUS_TYPE_VARIANT, DBUS_TYPE_INT32_AS_STRING, &iter2);
@@ -255,6 +255,17 @@ encode_attr(DBusMessageIter *iter1, struct attr *attr)
 	}
 	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
 		encode_variant_string(iter1, attr->u.str);
+	}
+	if (attr->type >= attr_type_pcoord_begin && attr->type <= attr_type_pcoord_end) {
+		dbus_message_iter_open_container(iter1, DBUS_TYPE_VARIANT, "ai", &iter2);
+		dbus_message_iter_open_container(&iter2, DBUS_TYPE_ARRAY, "i", &iter3);
+		if (attr->u.pcoord) {
+			dbus_message_iter_append_basic(&iter3, DBUS_TYPE_INT32, &attr->u.pcoord->pro);
+			dbus_message_iter_append_basic(&iter3, DBUS_TYPE_INT32, &attr->u.pcoord->x);
+			dbus_message_iter_append_basic(&iter3, DBUS_TYPE_INT32, &attr->u.pcoord->y);
+		}
+		dbus_message_iter_close_container(&iter2, &iter3);
+		dbus_message_iter_close_container(iter1, &iter2);
 	}
 	if (attr->type >= attr_type_object_begin && attr->type <= attr_type_object_end) {
 		char *object=object_new(attr_to_name(attr->type), attr->u.data);
