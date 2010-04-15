@@ -125,13 +125,20 @@ Rectangle {
 	     MouseRegion {
 	   		id:delegateMouse
 			anchors.fill: parent
-			onClicked: { list.currentIndex=itemId; listselector.value=itemValue; listselector.changed() }
+			onClicked: { point.setNewPoint(itemValue); gui.returnSource="/main.qml"; gui.setPage("PageNavigate.qml"); }
 	     }
          }
      }
-CommonHighlight { id: listHighlight} 
+
+    Component {
+        id: listHighlight
+        Rectangle {
+	    opacity: 0
+        }
+    }
+
     ListSelector { 
-	id:layoutList; text: ""; itemId: point.getPOI("points"); onChanged: { point.setNewPoint(layoutList.value); gui.setPage("point.qml"); }
+	id:layoutList; text: ""
 	anchors.top: distanceSlider.bottom;
 	anchors.left: parent.left; anchors.leftMargin: 3
 	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
