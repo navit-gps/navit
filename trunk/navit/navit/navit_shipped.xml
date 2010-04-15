@@ -229,7 +229,7 @@ Navigation</text></img>
 					<announcement level="1" distance_metric="100"/>
 					<announcement level="2" distance_metric="200"/>
 			</roadprofile>
-			<!-- Those types do not appear in osm2navit.c and therefore are not used ATM -->
+			<!-- Those types do not appear in maptool.c and therefore are not used ATM -->
 			<roadprofile item_types="street_3_land,street_4_land" speed="20" route_weight="7">
 					<announcement level="0" distance_metric="100"/>
 					<announcement level="1" distance_metric="400"/>
