@@ -20,6 +20,7 @@ Rectangle {
           if (search.searchContext=="street") {
 	      search.streetName=listValue;
 	      search.setPointToResult();
+	      gui.returnSource="/main.qml";
 	      gui.setPage("PageNavigate.qml");
 	  }
       }
@@ -55,9 +56,13 @@ Rectangle {
     Binding {id: townBinding; target: search; property: "townName"; value: searchTxt.text; when: false}
     Binding {id: streetBinding; target: search; property: "streetName"; value: searchTxt.text; when: false}
 
+    Connections { target: search; onCountryNameSignal: {listModel.xml=search.searchXml(); listModel.query="/search/item"; listModel.reload(); } }
+    Connections { target: search; onTownNameSignal: {listModel.xml=search.searchXml(); listModel.query="/search/item"; listModel.reload(); } }
+    Connections { target: search; onStreetNameSignal: {listModel.xml=search.searchXml(); listModel.query="/search/item"; listModel.reload(); } }
+
     XmlListModel {
 	id: listModel
-	xml: search.searchXml;
+	xml: search.searchXml();
 	query: "/search/item"
 	XmlRole { name: "itemId"; query: "id/string()" }
 	XmlRole { name: "itemName"; query: "name/string()" }
