@@ -19,8 +19,8 @@ do
 done
 
 rm -f check.$$
-echo osm2navit.c
-egrep '^	"[nw]	+[^	]+	+[^	]+' ../osm2navit.c | sed "s/.*	//" | sort -u |
+echo maptool.c
+egrep '^	"[nw]	+[^	]+	+[^	]+' ../maptool.c | sed "s/.*	//" | sort -u |
 while read -r x
 do
 	check_item_def "${x%%\\n\"}"

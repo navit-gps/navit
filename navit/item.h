@@ -43,7 +43,7 @@ extern int default_flags[];
 
 /* NOTE: we treat districts as towns for now, since
    a) navit does not implement district search yet
-   b) OSM "place=suburb" maps to type_district in osm2navit. with the OSM USA maps,
+   b) OSM "place=suburb" maps to type_district in maptool. with the OSM USA maps,
       there are many "suburbs" that users will consider towns (not districts/counties);
       we want navit's town search to find them
 */
