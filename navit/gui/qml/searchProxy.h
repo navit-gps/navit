@@ -12,7 +12,6 @@ class NGQProxySearch : public NGQProxy {
 	Q_PROPERTY(QString streetName READ streetName WRITE setStreetName NOTIFY streetNameSignal);
 
 	Q_PROPERTY(QString searchContext READ searchContext WRITE setSearchContext);
-	Q_PROPERTY(QString searchXml READ searchXml NOTIFY searchXmlSignal);
 
 public:
 	NGQProxySearch(struct gui_priv* this_,QObject* parent) : NGQProxy(this_,parent) {
@@ -64,7 +63,6 @@ signals:
 	void countryISO2Signal(QString);
 	void townNameSignal(QString);
 	void streetNameSignal(QString);
-	void searchXmlSignal(QString);
 
 public slots:
 	void setPointToResult() {
@@ -164,9 +162,6 @@ public slots:
 		this->town_name="";
 		this->street_name="";
 
-		//...and a list
-		searchXmlSignal(this->searchXml());
-
 		countryNameSignal(countryName);
 	}
 	QString countryISO2() {
@@ -193,9 +188,6 @@ public slots:
 		//...and street
 		this->street_name="";
 
-		//...and a list
-		searchXmlSignal(this->searchXml());
-
 		townNameSignal(townName);
 	}
 	QString streetName() {
@@ -211,9 +203,6 @@ public slots:
 		attr.type=attr_street_name;
 		attr.u.str=streetName.toLocal8Bit().data();
 		search_list_search(this->sl,&attr,0);
-
-		//...and a list
-		searchXmlSignal(this->searchXml());
 
 		streetNameSignal(streetName);
 	}
