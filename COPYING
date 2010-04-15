@@ -86,7 +86,7 @@ navit/graphics.c
 navit/profile.c
 navit/popup.c
 navit/coord.c
-navit/osm2navit.c
+navit/maptool.c
 navit/mapset.c
 navit/plugin.c
 navit/data_window.c

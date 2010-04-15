@@ -47,7 +47,7 @@ close $pipe;
 
 sub show_help {
     print "parses one (or multiple) .asc-file(s) (mainly used by poiwarner) and\n";
-    print "merges the result into one navit binary mapfile. requires osm2navit (when -x is not set)\n";
+    print "merges the result into one navit binary mapfile. requires maptool (when -x is not set)\n";
     print "usage: $0 [OPTION] OUT in1.asc [in2.asc [...]]\n";
     print "       creates one big file called onebigfile\n";
     print "usage: $0 [OPTION] IN.asc\n";
@@ -68,9 +68,9 @@ sub preprocess_filelist {
 }
 
 sub open_outputhandle() {
-    # open the pipe to osm2navit...
+    # open the pipe to maptool...
     if (!$write_osm) {
-        open $pipe, "| osm2navit $filename" or die $!;
+        open $pipe, "| maptool $filename" or die $!;
     } else {
     # or a filehandle
         open $pipe, ">$filename" or die $!;
