@@ -11,7 +11,11 @@ public:
 
 public slots:
 	void quit() {
-			this->object->mainWindow->close();
+		struct attr navit;
+		navit.type=attr_navit;
+		navit.u.navit=this->object->nav;
+		navit_destroy(navit.u.navit);
+		event_main_loop_quit();
 	}
 	void setObjectByName(const QString& attr_name,const QString& attr_value) {
 		if (attr_name=="layout") {
