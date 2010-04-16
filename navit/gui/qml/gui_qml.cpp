@@ -78,6 +78,7 @@ struct gui_priv {
 	struct callback *motion_cb;
 	struct callback *resize_cb;
 	struct callback *keypress_cb;
+	struct callback *window_closed_cb;
 
 	//Proxy objects
 	class NGQProxyGui* guiProxy;
@@ -110,13 +111,8 @@ protected:
 		this->object->guiProxy->setWidth(this->width());
 		this->object->guiProxy->setHeight(this->height());
 	}
-	void closeEvent(QCloseEvent * event) {
-		struct attr navit;
-		navit.type=attr_navit;
-		navit.u.navit=this->object->nav;
-		navit_destroy(navit.u.navit);
-		event_main_loop_quit();
-		event->accept();
+	void closeEvent(QCloseEvent* event) {
+	this->object->graphicsWidget->close();
 	}
 private:
 	struct gui_priv* object;
@@ -231,6 +227,12 @@ static void gui_qml_keypress(void *data, char *key)
 	return;
 }
 
+static void
+gui_qml_window_closed(struct gui_priv *data)
+{
+	struct gui_priv *this_=(struct gui_priv*) data;
+	this_->navitProxy->quit();
+}
 //GUI interface calls
 static int argc=1;
 static char *argv[]={(char *)"navit",NULL};
@@ -259,6 +261,8 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	graphics_add_callback(gra, this_->resize_cb);
 	this_->keypress_cb=callback_new_attr_1(callback_cast(gui_qml_keypress), attr_keypress, this_);
 	graphics_add_callback(gra, this_->keypress_cb);
+	this_->window_closed_cb=callback_new_attr_1(callback_cast(gui_qml_window_closed), attr_window_closed, this_);
+	graphics_add_callback(gra, this_->window_closed_cb);
 	
 		
 	//Create main window
