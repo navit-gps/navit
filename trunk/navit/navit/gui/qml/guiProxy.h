@@ -116,7 +116,16 @@ public slots:
 		}
 		this->setPage(returnPage);
 	}
+	void switchToMenu(struct point* p) {
+		if (!this->object->lazy) {
+			this->setReturnSource(QString(""));
+			this->setPage("main.qml");
+		}
+		this->setNewPoint(p,MapPoint);
+		this->object->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
+		this->object->switcherWidget->setCurrentWidget(this->object->guiWidget);
 
+	}
 	//Properties
 	QString iconPath() {
 		return QString(this->object->icon_src);

@@ -30,6 +30,7 @@
 #include "search.h"
 #include "bookmarks.h"
 #include "command.h"
+#include "keys.h"
 
 //WORKAOUND for the c/c++ compatibility issues.
 //range is defined inside of struct attr so it is invisible in c++
@@ -74,6 +75,9 @@ struct gui_priv {
 #endif
 	QStackedWidget *switcherWidget;
 	struct callback *button_cb;
+	struct callback *motion_cb;
+	struct callback *resize_cb;
+	struct callback *keypress_cb;
 
 	//Proxy objects
 	class NGQProxyGui* guiProxy;
@@ -160,6 +164,7 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 		dbg(1,"navit has handled button\n");
 		return;
 	}
+
 	dbg(1,"enter %d %d\n", pressed, button);
 	if (this_->signal_on_map_click) {
 		gui_qml_dbus_signal(this_, p);
@@ -167,14 +172,63 @@ static void gui_qml_button(void *data, int pressed, int button, struct point *p)
 	}
 
 	if ( button == 1 && this_->menu_on_map_click ) {
-		if (!this_->lazy) {
-			this_->guiProxy->setReturnSource(QString(""));
-			this_->guiProxy->setPage("main.qml");
-		}
-		this_->guiProxy->setNewPoint(p,MapPoint);
-		this_->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
-		this_->switcherWidget->setCurrentWidget(this_->guiWidget);
+		this_->guiProxy->switchToMenu(p);
 	}
+}
+
+static void gui_qml_motion(void *data, struct point *p)
+{
+	struct gui_priv *this_=(struct gui_priv*)data;
+	navit_handle_motion(this_->nav, p);
+	return;
+}
+static void gui_qml_resize(void *data, int w, int h)
+{
+	struct gui_priv *this_=(struct gui_priv*)data;
+	navit_handle_resize(this_->nav, w, h);
+}
+
+static void gui_qml_keypress(void *data, char *key)
+{
+	struct gui_priv *this_=(struct gui_priv*) data;
+	int w,h;
+	struct point p;
+	transform_get_size(navit_get_trans(this_->nav), &w, &h);
+	switch (*key) {
+	case NAVIT_KEY_UP:
+		p.x=w/2;
+		p.y=0;
+		navit_set_center_screen(this_->nav, &p, 1);
+		break;
+	case NAVIT_KEY_DOWN:
+		p.x=w/2;
+		p.y=h;
+		navit_set_center_screen(this_->nav, &p, 1);
+		break;
+	case NAVIT_KEY_LEFT:
+		p.x=0;
+		p.y=h/2;
+		navit_set_center_screen(this_->nav, &p, 1);
+		break;
+	case NAVIT_KEY_RIGHT:
+		p.x=w;
+		p.y=h/2;
+		navit_set_center_screen(this_->nav, &p, 1);
+		break;
+	case NAVIT_KEY_ZOOM_IN:
+		navit_zoom_in(this_->nav, 2, NULL);
+		break;
+	case NAVIT_KEY_ZOOM_OUT:
+		navit_zoom_out(this_->nav, 2, NULL);
+		break;
+	case NAVIT_KEY_RETURN:
+	case NAVIT_KEY_MENU:
+		p.x=w/2;
+		p.y=h/2;
+		this_->guiProxy->switchToMenu(&p);
+		break;
+	}
+	return;
 }
 
 //GUI interface calls
@@ -195,7 +249,18 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	} else {
 	    this_->app=QApplication::instance();
 	}
+
+	//Link graphics events
+	this_->button_cb=callback_new_attr_1(callback_cast(gui_qml_button), attr_button, this_);
+	graphics_add_callback(gra, this_->button_cb);
+	this_->motion_cb=callback_new_attr_1(callback_cast(gui_qml_motion), attr_motion, this_);
+	graphics_add_callback(gra, this_->motion_cb);
+	this_->resize_cb=callback_new_attr_1(callback_cast(gui_qml_resize), attr_resize, this_);
+	graphics_add_callback(gra, this_->resize_cb);
+	this_->keypress_cb=callback_new_attr_1(callback_cast(gui_qml_keypress), attr_keypress, this_);
+	graphics_add_callback(gra, this_->keypress_cb);
 	
+		
 	//Create main window
 	this_->switcherWidget = new QStackedWidget(this_->mainWindow);
 	this_->mainWindow = new NGQMainWindow(this_, NULL);
@@ -221,14 +286,11 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	}
         this_->switcherWidget->addWidget(this_->graphicsWidget);
 	
-	//Link graphics events
-	this_->button_cb=callback_new_attr_1(callback_cast(gui_qml_button), attr_button, this_);
-	graphics_add_callback(gra, this_->button_cb);
-
 	//Instantiate qml components
 	this_->guiProxy->setPage(QString("main.qml"));
 
 	//Switch to graphics
+	navit_draw(this_->nav);
 	this_->switcherWidget->setCurrentWidget(this_->graphicsWidget);
 
 	this_->mainWindow->show();
@@ -320,6 +382,8 @@ static struct gui_priv * gui_qml_new(struct navit *nav, struct gui_methods *meth
 
 	this_->self.type=attr_gui;
 	this_->self.u.gui=gui;	
+
+	navit_ignore_graphics_events(this_->nav, 1);
 
 	this_->fullscreen = 0; //NO by default
 	if( (attr=attr_search(attrs,NULL,attr_fullscreen)))
