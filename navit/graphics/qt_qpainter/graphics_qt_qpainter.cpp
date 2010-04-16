@@ -268,12 +268,7 @@ RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h
 //##############################################################################################################
 void RenderArea::closeEvent(QCloseEvent* event) 
 {
-	struct attr navit;
-	navit.type=attr_navit;
-	navit.u.navit=this->gra->nav;
-	navit_destroy(navit.u.navit);
-	event_main_loop_quit();
-	event->accept();
+	callback_list_call_attr_0(this->cbl, attr_window_closed);
 }
 //##############################################################################################################
 //# Description: QWidget:sizeHint
