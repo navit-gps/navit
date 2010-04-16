@@ -10,6 +10,11 @@ qml_DATA += background.svg knob.svg
 do_button_subst = sed -e 's,matchProperties,properties,g' \
 		      -e 's,easing\:\ \"ease,easing\.type\:\ \",g'
 
+do_connections_subst = sed -e 's,sender:,target:,g' \
+			   -e 's,signal\:\ ,on,g' \
+			   -e 's,()\;\ script\:,\:,g' \
+			   -e 's,Connection\ {,Connections\ {,g'
+
 ButtonIcon.qml: ButtonIcon.qml.in
 if QT_DECLARATIVE_NEWAPI
 	$(do_button_subst) < ButtonIcon.qml.in > ButtonIcon.qml
@@ -31,5 +36,12 @@ else
 	cp ToggleButton.qml.in ToggleButton.qml
 endif
 
+PageSearchSelector.qml: PageSearchSelector.qml.in
+if QT_DECLARATIVE_NEWAPI
+	$(do_connections_subst) <  PageSearchSelector.qml.in >  PageSearchSelector.qml
+else 
+	cp  PageSearchSelector.qml.in  PageSearchSelector.qml
+endif
+
 clean-local:
-	-$(RM) ButtonIcon.qml ToggleSwitch.qml ToggleButton.qml
+	-$(RM) ButtonIcon.qml ToggleSwitch.qml ToggleButton.qml PageSearchSelector.qml
