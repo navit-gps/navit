@@ -200,6 +200,7 @@ void dump(FILE *in);
 int phase4(FILE **in, int in_count, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info);
 int phase5(FILE **in, FILE **references, int in_count, char *suffix, struct zip_info *zip_info);
 void process_binfile(FILE *in, FILE *out);
+void add_aux_tiles(char *name, struct zip_info *info);
 void cat(FILE *in, FILE *out);
 
 
