@@ -105,7 +105,7 @@ if !PLUGINS
   navit_LDADD += $(wildcard $(top_builddir)/navit/*/*/*.la)
 endif
 
-navit_LDADD += @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@
+navit_LDADD += @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @CRYPTO_LIBS@ @INTLLIBS@
 
 if SUPPORT_WIN32
   navit_LDADD += resource.rsc

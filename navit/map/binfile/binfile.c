@@ -217,16 +217,38 @@ binfile_read_lfh(struct file *fi, unsigned int offset)
 static unsigned char *
 binfile_read_content(struct file *fi, int offset, struct zip_lfh *lfh)
 {
-	offset+=sizeof(struct zip_lfh)+lfh->zipfnln+lfh->zipxtraln;
+	struct zip_enc *enc;
+	unsigned char *ret=NULL;
+
+	offset+=sizeof(struct zip_lfh)+lfh->zipfnln;
 	switch (lfh->zipmthd) {
 	case 0:
-		return file_data_read(fi,offset, lfh->zipuncmp);
+		offset+=lfh->zipxtraln;
+		ret=file_data_read(fi,offset, lfh->zipuncmp);
+		break;
 	case 8:
-		return file_data_read_compressed(fi,offset, lfh->zipsize, lfh->zipuncmp);
+		offset+=lfh->zipxtraln;
+		ret=file_data_read_compressed(fi,offset, lfh->zipsize, lfh->zipuncmp);
+		break;
+	case 99:
+		enc=(struct zip_enc *)file_data_read(fi, offset, sizeof(*enc));
+		offset+=lfh->zipxtraln;
+		switch (enc->compress_method) {
+		case 0:
+			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 0, "test");	
+			break;
+		case 8:
+			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 1, "test");
+			break;
+		default:
+			dbg(0,"Unknown encrypted compression method %d\n",enc->compress_method);
+		}
+		file_data_free(fi, (unsigned char *)enc);
+		break;
 	default:
 		dbg(0,"Unknown compression method %d\n", lfh->zipmthd);
-		return NULL;
 	}
+	return ret;
 }
 
 static int

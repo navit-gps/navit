@@ -75,6 +75,15 @@ struct zip_cd_ext {
 	unsigned long long zipofst;
 } __attribute__ ((packed));
 
+struct zip_enc {
+	short efield_header;
+	short efield_size;
+	short version;
+	char vendor_id1,vendor_id2;
+	char encryption_strength;
+	short compress_method; 
+} __attribute__ ((packed));
+
 struct zip_eoc {
 	int zipesig;
 	unsigned short zipedsk;

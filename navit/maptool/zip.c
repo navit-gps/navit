@@ -23,6 +23,14 @@
 #include "maptool.h"
 #include "zipfile.h"
 
+#ifdef HAVE_LIBCRYPTO
+#include <openssl/sha.h>
+#include <openssl/hmac.h>
+#include <openssl/aes.h>
+#include <openssl/evp.h>
+#include <openssl/rand.h>
+#endif
+
 static int
 compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level)
 {
@@ -95,8 +103,19 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		0x8,
 		zip_info->offset,
 	};
+#ifdef HAVE_LIBCRYPTO
+	struct zip_enc enc = {
+		0x9901,
+		0x7,
+		0x2,
+		'A','E',
+		0x1,
+		0x0,
+	};
+	unsigned char salt[8], key[34], verify[2], mac[10];
+#endif
 	char filename[filelen+1];
-	int error,crc,len,comp_size=data_size;
+	int error,crc=0,len,comp_size=data_size;
 	uLongf destlen=data_size+data_size/500+12;
 	char *compbuffer;
 
@@ -105,9 +124,19 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	  fprintf(stderr, "No more memory.\n");
 	  exit (1);
 	}
-
-	crc=crc32(0, NULL, 0);
-	crc=crc32(crc, (unsigned char *)data, data_size);
+#ifdef HAVE_LIBCRYPTO
+	if (zip_info->passwd) {	
+		RAND_bytes(salt, sizeof(salt));
+		PKCS5_PBKDF2_HMAC_SHA1(zip_info->passwd, strlen(zip_info->passwd), salt, sizeof(salt), 1000, sizeof(key), key);
+		verify[0]=key[32];
+		verify[1]=key[33];
+	} else {
+#endif
+		crc=crc32(0, NULL, 0);
+		crc=crc32(crc, (unsigned char *)data, data_size);
+#ifdef HAVE_LIBCRYPTO
+	}
+#endif
 #ifdef HAVE_ZLIB
 	if (zip_info->compression_level) {
 		error=compress2_int((Byte *)compbuffer, &destlen, (Bytef *)data, data_size, zip_info->compression_level);
@@ -125,14 +154,30 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	lfh.zipsize=comp_size;
 	lfh.zipuncmp=data_size;
 	lfh.zipmthd=zip_info->compression_level ? 8:0;
+#ifdef HAVE_LIBCRYPTO
+	if (zip_info->passwd) {
+		enc.compress_method=lfh.zipmthd;
+		lfh.zipmthd=99;
+		lfh.zipxtraln+=sizeof(enc);
+		lfh.zipgenfld|=1;
+		lfh.zipsize+=sizeof(salt)+sizeof(verify)+sizeof(mac);
+	}
+#endif
 	cd.zipccrc=crc;
-	cd.zipcsiz=comp_size;
+	cd.zipcsiz=lfh.zipsize;
 	cd.zipcunc=data_size;
 	cd.zipcmthd=zip_info->compression_level ? 8:0;
 	if (zip_info->zip64) {
 		cd.zipofst=0xffffffff;
-		cd.zipcxtl=sizeof(cd_ext);
+		cd.zipcxtl+=sizeof(cd_ext);
 	}
+#ifdef HAVE_LIBCRYPTO
+	if (zip_info->passwd) {
+		cd.zipcmthd=99;
+		cd.zipcxtl+=sizeof(enc);
+		cd.zipcflg|=1;
+	}
+#endif
 	strcpy(filename, name);
 	len=strlen(filename);
 	while (len < filelen) {
@@ -141,8 +186,47 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	filename[filelen]='\0';
 	fwrite(&lfh, sizeof(lfh), 1, zip_info->res);
 	fwrite(filename, filelen, 1, zip_info->res);
+	zip_info->offset+=sizeof(lfh)+filelen;
+#ifdef HAVE_LIBCRYPTO
+	if (zip_info->passwd) {
+		unsigned char counter[16], xor[16], *datap=(unsigned char *)data;
+		int size=comp_size;
+		AES_KEY aeskey;
+		fwrite(&enc, sizeof(enc), 1, zip_info->res);
+		fwrite(salt, sizeof(salt), 1, zip_info->res);
+		fwrite(verify, sizeof(verify), 1, zip_info->res);
+		zip_info->offset+=sizeof(enc)+sizeof(salt)+sizeof(verify);
+		AES_set_encrypt_key(key, 128, &aeskey);
+		memset(counter, 0, sizeof(counter));
+		fprintf(stderr,"size=%d\n",size);
+		while (size > 0) {
+			int i,curr_size,idx=0;
+			do {
+				counter[idx]++;
+			} while (!counter[idx++]);
+			AES_encrypt(counter, xor, &aeskey);
+			curr_size=size;
+			if (curr_size > sizeof(xor))
+				curr_size=sizeof(xor);
+			for (i = 0 ; i < curr_size ; i++) {
+				fprintf(stderr,"0x%x=0x%x\n",datap[0],datap[0]^xor[i]);
+				*datap++^=xor[i];
+			}
+			size-=curr_size;
+		}
+	}
+#endif
 	fwrite(data, comp_size, 1, zip_info->res);
-	zip_info->offset+=sizeof(lfh)+filelen+comp_size;
+	zip_info->offset+=comp_size;
+#ifdef HAVE_LIBCRYPTO
+	if (zip_info->passwd) {
+		unsigned int maclen=sizeof(mac);
+		unsigned char mactmp[maclen*2];
+		HMAC(EVP_sha1(), key+16, 16, (unsigned char *)data, comp_size, mactmp, &maclen);
+		fwrite(mactmp, sizeof(mac), 1, zip_info->res);
+		zip_info->offset+=sizeof(mac);
+	}
+#endif
 	fwrite(&cd, sizeof(cd), 1, zip_info->dir);
 	fwrite(filename, filelen, 1, zip_info->dir);
 	zip_info->dir_size+=sizeof(cd)+filelen;
@@ -150,6 +234,12 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		fwrite(&cd_ext, sizeof(cd_ext), 1, zip_info->dir);
 		zip_info->dir_size+=sizeof(cd_ext);
 	}
+#ifdef HAVE_LIBCRYPTO
+	if (zip_info->passwd) {
+		fwrite(&enc, sizeof(enc), 1, zip_info->dir);
+		zip_info->dir_size+=sizeof(enc);
+	}
+#endif
 	
 	free(compbuffer);
 }
