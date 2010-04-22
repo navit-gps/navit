@@ -92,7 +92,7 @@ apk: all android/build.xml navit.xml
 
 else
 navit_SOURCES = start.c
-navit_LDADD = lib@LIBNAVIT@.la @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib
+navit_LDADD = lib@LIBNAVIT@.la -Lfib-1.1 -lfib
 
 endif
 
@@ -105,6 +105,8 @@ if !PLUGINS
   navit_LDADD += $(wildcard $(top_builddir)/navit/*/*/*.la)
 endif
 
+navit_LDADD += @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@
+
 if SUPPORT_WIN32
   navit_LDADD += resource.rsc
 if SUPPORT_WIN32CE
@@ -112,6 +114,7 @@ if SUPPORT_WIN32CE
 else
   navit_LDADD += -lgdi32 -lcomctl32 -lwinmm
 endif
+
 
 resource.rsc: $(top_srcdir)/navit/gui/win32/resources/resource.rc
 	$(WINDRES) -I $(top_srcdir)/navit/gui/win32/resources $(top_srcdir)/navit/gui/win32/resources/resource.rc resource.rsc
