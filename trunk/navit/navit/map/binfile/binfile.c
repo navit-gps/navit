@@ -764,7 +764,7 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 #if 0
 	if (!cd->zipcunc) {
 		char tilename[cd->zipcfnl+1];
-		char *url;
+		char *url,*lfh_filename;
 		long long offset;
 		struct file *tile;
 		struct zip_lfh *lfh;
@@ -788,7 +788,7 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 			int size=64*1024,size_ret;
 			unsigned char *data;
 			data=file_data_read_special(tile, size, &size_ret);
-			dbg(1,"got %d bytes\n",size_ret);
+			dbg(1,"got %d bytes writing at offset %Ld\n",size_ret,offset);
 			if (size_ret <= 0)
 				break;
 			file_data_write(f, offset, size_ret, data);
@@ -798,6 +798,10 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 		lfh=(char *)(file_data_read(f,cd_copy->zipofst, sizeof(struct zip_lfh)));
 		cd_copy->zipcsiz=lfh->zipsize;
 		cd_copy->zipcunc=lfh->zipuncmp;
+		cd_copy->zipccrc=lfh->zipcrc;
+		lfh_filename=file_data_read(f,cd_copy->zipofst+sizeof(struct zip_lfh),lfh->zipfnln);
+		memcpy(cd_copy+1,lfh_filename,lfh->zipfnln);
+		file_data_free(f,lfh_filename);
 		file_data_write(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size, cd_copy);
 		g_free(url);
 		g_free(cd_copy);
