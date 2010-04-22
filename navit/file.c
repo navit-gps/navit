@@ -36,6 +36,15 @@
 #include "atom.h"
 #include "config.h"
 
+#ifdef HAVE_LIBCRYPTO
+#include <openssl/sha.h>
+#include <openssl/hmac.h>
+#include <openssl/aes.h>
+#include <openssl/evp.h>
+#include <openssl/rand.h>
+#endif
+
+
 #ifndef O_LARGEFILE
 #define O_LARGEFILE 0
 #endif
@@ -44,6 +53,7 @@
 #define O_BINARY 0
 #endif
 
+#define CACHE_SIZE (10*1024*1024)
 #ifdef CACHE_SIZE
 static GHashTable *file_name_hash;
 #endif
@@ -299,6 +309,81 @@ file_data_read_compressed(struct file *file, long long offset, int size, int siz
 	g_free(buffer);
 
 	return ret;
+}
+
+unsigned char *
+file_data_read_encrypted(struct file *file, long long offset, int size, int size_uncomp, int compressed, char *passwd)
+{
+#ifdef HAVE_LIBCRYPTO
+	void *ret;
+	unsigned char *buffer = 0;
+	uLongf destLen=size_uncomp;
+
+	if (file_cache) {
+		struct file_cache_id id={offset,size,file->name_id,1};
+		ret=cache_lookup(file_cache,&id); 
+		if (ret)
+			return ret;
+		ret=cache_insert_new(file_cache,&id,size_uncomp);
+	} else 
+		ret=g_malloc(size_uncomp);
+	lseek(file->fd, offset, SEEK_SET);
+
+	buffer = (unsigned char *)g_malloc(size);
+	if (read(file->fd, buffer, size) != size) {
+		g_free(ret);
+		ret=NULL;
+	} else {
+		unsigned char key[34], salt[8], verify[2], counter[16], xor[16], mac[10], mactmp[20], *datap;
+		int overhead=sizeof(salt)+sizeof(verify)+sizeof(mac);
+		int esize=size-overhead;
+		PKCS5_PBKDF2_HMAC_SHA1(passwd, strlen(passwd), (unsigned char *)buffer, 8, 1000, 34, key);
+		if (key[32] == buffer[8] && key[33] == buffer[9] && esize >= 0) {
+			AES_KEY aeskey;
+			AES_set_encrypt_key(key, 128, &aeskey);
+			datap=buffer+sizeof(salt)+sizeof(verify);
+			memset(counter, 0, sizeof(counter));
+			while (esize > 0) {
+				int i,curr_size,idx=0;
+				do {
+					counter[idx]++;
+				} while (!counter[idx++]);
+				AES_encrypt(counter, xor, &aeskey);
+				curr_size=esize;
+				if (curr_size > sizeof(xor))
+					curr_size=sizeof(xor);
+				for (i = 0 ; i < curr_size ; i++) 
+					*datap++^=xor[i];
+				esize-=curr_size;
+			}
+			size-=overhead;
+			datap=buffer+sizeof(salt)+sizeof(verify);
+			if (compressed) {
+				if (uncompress_int(ret, &destLen, (Bytef *)datap, size) != Z_OK) {
+					dbg(0,"uncompress failed\n");
+					g_free(ret);
+					ret=NULL;
+				}
+			} else {
+				if (size == destLen) 
+					memcpy(ret, destLen, buffer);
+				else {
+					dbg(0,"memcpy failed\n");
+					g_free(ret);
+					ret=NULL;
+				}
+			}
+		} else {
+			g_free(ret);
+			ret=NULL;
+		}
+	}
+	g_free(buffer);
+
+	return ret;
+#else
+	return NULL;
+#endif
 }
 
 void

@@ -85,6 +85,7 @@ struct zip_info {
 	int zip64;
 	short date;
 	short time;
+	char *passwd;
 	FILE *res;
 	FILE *index;
 	FILE *dir;
