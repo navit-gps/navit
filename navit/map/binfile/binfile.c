@@ -69,6 +69,7 @@ struct map_priv {
 	int check_version;
 	int map_version;
 	GHashTable *changes;
+	char *passwd;
 };
 
 struct map_rect_priv {
@@ -215,7 +216,7 @@ binfile_read_lfh(struct file *fi, unsigned int offset)
 }
 
 static unsigned char *
-binfile_read_content(struct file *fi, int offset, struct zip_lfh *lfh)
+binfile_read_content(struct map_priv *m, int offset, struct zip_lfh *lfh)
 {
 	struct zip_enc *enc;
 	unsigned char *ret=NULL;
@@ -224,26 +225,28 @@ binfile_read_content(struct file *fi, int offset, struct zip_lfh *lfh)
 	switch (lfh->zipmthd) {
 	case 0:
 		offset+=lfh->zipxtraln;
-		ret=file_data_read(fi,offset, lfh->zipuncmp);
+		ret=file_data_read(m->fi,offset, lfh->zipuncmp);
 		break;
 	case 8:
 		offset+=lfh->zipxtraln;
-		ret=file_data_read_compressed(fi,offset, lfh->zipsize, lfh->zipuncmp);
+		ret=file_data_read_compressed(m->fi,offset, lfh->zipsize, lfh->zipuncmp);
 		break;
 	case 99:
-		enc=(struct zip_enc *)file_data_read(fi, offset, sizeof(*enc));
+		if (!m->passwd)
+			break;
+		enc=(struct zip_enc *)file_data_read(m->fi, offset, sizeof(*enc));
 		offset+=lfh->zipxtraln;
 		switch (enc->compress_method) {
 		case 0:
-			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 0, "test");	
+			ret=file_data_read_encrypted(m->fi, offset, lfh->zipsize, lfh->zipuncmp, 0, m->passwd);
 			break;
 		case 8:
-			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 1, "test");
+			ret=file_data_read_encrypted(m->fi, offset, lfh->zipsize, lfh->zipuncmp, 1, m->passwd);
 			break;
 		default:
 			dbg(0,"Unknown encrypted compression method %d\n",enc->compress_method);
 		}
-		file_data_free(fi, (unsigned char *)enc);
+		file_data_free(m->fi, (unsigned char *)enc);
 		break;
 	default:
 		dbg(0,"Unknown compression method %d\n", lfh->zipmthd);
@@ -378,7 +381,7 @@ binfile_extract(struct map_priv *m, char *dir, char *filename, int partial)
 		}
 		if (full[len-2] != '/') {
 			lfh=binfile_read_lfh(m->fi, binfile_cd_offset(cd));
-			start=binfile_read_content(m->fi, binfile_cd_offset(cd), lfh);
+			start=binfile_read_content(m, binfile_cd_offset(cd), lfh);
 			dbg(0,"fopen '%s'\n", full);
 			f=fopen(full,"w");
 			fwrite(start, lfh->zipuncmp, 1, f);
@@ -754,24 +757,24 @@ tile_set_window(struct map_rect_priv *mr, int offset, int length)
 }
 
 static int
-zipfile_to_tile(struct file *f, struct zip_cd *cd, struct tile *t)
+zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
 {
 	char buffer[1024];
 	struct zip_lfh *lfh;
 	char *zipfn;
-	dbg(1,"enter %p %p %p\n", f, cd, t);
+	dbg(1,"enter %p %p %p\n", m, cd, t);
 	dbg(1,"cd->zipofst=0x%x\n", binfile_cd_offset(cd));
 	t->start=NULL;
 	t->mode=1;
-	lfh=binfile_read_lfh(f, binfile_cd_offset(cd));
-	zipfn=(char *)(file_data_read(f,binfile_cd_offset(cd)+sizeof(struct zip_lfh), lfh->zipfnln));
+	lfh=binfile_read_lfh(m->fi, binfile_cd_offset(cd));
+	zipfn=(char *)(file_data_read(m->fi,binfile_cd_offset(cd)+sizeof(struct zip_lfh), lfh->zipfnln));
 	strncpy(buffer, zipfn, lfh->zipfnln);
 	buffer[lfh->zipfnln]='\0';
-	t->start=(int *)binfile_read_content(f, binfile_cd_offset(cd), lfh);
+	t->start=(int *)binfile_read_content(m, binfile_cd_offset(cd), lfh);
 	t->end=t->start+lfh->zipuncmp/4;
 	dbg(1,"0x%x '%s' %d %d,%d\n", lfh->ziplocsig, buffer, sizeof(*cd)+cd->zipcfnl, lfh->zipsize, lfh->zipuncmp);
-	file_data_free(f, (unsigned char *)zipfn);
-	file_data_free(f, (unsigned char *)lfh);
+	file_data_free(m->fi, (unsigned char *)zipfn);
+	file_data_free(m->fi, (unsigned char *)lfh);
 	return t->start != NULL;
 }
 
@@ -836,7 +839,7 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 	mr->size+=cd->zipcunc;
 #endif
 	t.zipfile_num=zipfile;
-	if (zipfile_to_tile(f, cd, &t))
+	if (zipfile_to_tile(m, cd, &t))
 		push_tile(mr, &t);
 	file_data_free(f, (unsigned char *)cd);
 }
@@ -1575,7 +1578,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 {
 	struct map_priv *m;
 	struct attr *data=attr_search(attrs, NULL, attr_data);
-	struct attr *check_version;
+	struct attr *check_version,*map_pass;
 	struct file_wordexp *wexp;
 	char **wexp_data;
 	if (! data)
@@ -1593,6 +1596,9 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 	check_version=attr_search(attrs, NULL, attr_check_version);
 	if (check_version) 
 		m->check_version=check_version->u.num;
+	map_pass=attr_search(attrs, NULL, attr_map_pass);
+	if (map_pass)
+		m->passwd=g_strdup(map_pass->u.str);
 	if (!map_binfile_open(m) && !m->check_version) {
 		map_binfile_destroy(m);
 		m=NULL;
