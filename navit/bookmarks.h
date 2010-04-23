@@ -36,6 +36,9 @@ int bookmarks_paste_bookmark(struct bookmarks *this_, const char *path);
 int bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const char* newName);
 int bookmarks_del_bookmark(struct bookmarks *this_, const char *description);
 struct map* bookmarks_get_map(struct bookmarks *this_);
+void bookmarks_move_root(struct bookmarks *this_);
+void bookmarks_move_up(struct bookmarks *this_);
+int bookmarks_move_down(struct bookmarks *this_,const char* name);
 
 char* bookmarks_get_user_data_directory(gboolean create);
 char* bookmarks_get_destination_file(gboolean create);
