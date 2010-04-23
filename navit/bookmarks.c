@@ -37,6 +37,8 @@ struct bookmarks {
 	char* bookmark_file;
 	char *working_file;
 	struct bookmark_item_priv* clipboard;
+	struct bookmark_item_priv* root;
+	struct bookmark_item_priv* current;
 
 	//Refs to other objects
 	struct transformation *trans;
@@ -49,19 +51,47 @@ struct bookmark_item_priv {
 	char *label;
 	enum item_type type;
 	struct coord c;
+	GList *children;
+	struct bookmark_item_priv *parent;
 };
 
-static gboolean 
-bookmarks_clear_hash_foreach(gpointer key,gpointer value,gpointer data){
-	struct bookmark_item_priv *item=(struct bookmark_item_priv*)value;
-	free(item->label);
-	g_free(item);
-	return TRUE;
+void bookmarks_move_root(struct bookmarks *this_) {
+	this_->current=this_->root;
+	return;
+}
+void bookmarks_move_up(struct bookmarks *this_) {
+	if (this_->current->parent) {
+		this_->current=this_->current->parent;
+	}
+	return;
+}
+int bookmarks_move_down(struct bookmarks *this_,const char* name) {
+	if (this_->current->children==NULL) {
+		return 0;
+	}
+	this_->current->children=g_list_first(this_->current->children);
+	while ((this_->current->children=g_list_next(this_->current->children))) {
+		struct bookmark_item_priv* data=(struct bookmark_item_priv*)this_->current->children->data;
+		if (!strcmp(data->label,name)) {
+			this_->current=(struct bookmark_item_priv*)this_->current->children;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+static void bookmarks_clear_item(struct bookmark_item_priv *b_item) {
+	b_item->children=g_list_first(b_item->children);
+	while((b_item->children=g_list_next(b_item->children))) {
+		bookmarks_clear_item((struct bookmark_item_priv*)b_item->children->data);
+	}
+	g_free(b_item->label);
+	g_free(b_item);
 }
 
 static void 
 bookmarks_clear_hash(struct bookmarks *this_) {
-	g_hash_table_foreach_remove(this_->bookmarks_hash,bookmarks_clear_hash_foreach,NULL);
+	bookmarks_clear_item(this_->root);
 	g_hash_table_destroy(this_->bookmarks_hash);
 	g_list_free(this_->bookmarks_list);
 }
@@ -73,8 +103,14 @@ bookmarks_load_hash(struct bookmarks *this_) {
 	struct map_rect *mr=NULL;
 	struct attr attr;
 	struct coord c;
+	char *pos,*finder;
 
 	this_->bookmarks_hash=g_hash_table_new(g_str_hash, g_str_equal);
+	this_->root=g_new0(struct bookmark_item_priv,1);
+	this_->root->type=type_none;
+	this_->root->parent=NULL;
+	this_->root->children=NULL;
+	bookmarks_move_root(this_);
 
 	mr=map_rect_new(this_->bookmark, NULL);
 	if (mr==NULL) {
@@ -92,10 +128,33 @@ bookmarks_load_hash(struct bookmarks *this_) {
 		b_item->label=strdup(attr.u.str);
 		b_item->type=item->type;
 
+		//Prepare position
+		bookmarks_move_root(this_);
+		finder=b_item->label;
+		while ((pos=strchr(finder,'/'))) {
+			*pos=0x00;
+			dbg(1,"Found path entry: %s\n",finder);
+			if (!bookmarks_move_down(this_,finder)) {
+				struct bookmark_item_priv *path_item=g_new0(struct bookmark_item_priv,1);	
+				path_item->type=type_path;
+				path_item->parent=this_->current;
+				path_item->children=NULL;
+				path_item->label=strdup(finder);
+
+				this_->current->children=g_list_append(this_->current->children,path_item);
+				this_->current=path_item;
+			}
+			finder+=strlen(finder)+1;
+		}
+		strcpy(b_item->label,finder);
+		b_item->parent=this_->current;
+
 		g_hash_table_insert(this_->bookmarks_hash,b_item->label,b_item);
 		this_->bookmarks_list=g_list_append(this_->bookmarks_list,b_item);
+		this_->current->children=g_list_append(this_->current->children,b_item);
 	}
 	map_rect_destroy(mr);
+	bookmarks_move_root(this_);
 }
 struct bookmarks *
 bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation *trans) {
@@ -110,6 +169,8 @@ bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation
 	this_->bookmark_file=g_strjoin(NULL, bookmarks_get_user_data_directory(TRUE), "/bookmark.txt", NULL);
 	this_->working_file=g_strjoin(NULL, bookmarks_get_user_data_directory(TRUE), "/bookmark.txt.tmp", NULL);
 
+	this_->clipboard=g_new0(struct bookmark_item_priv,1);
+
 	{
 		//Load map now
 		struct attr type={attr_type, {"textfile"}}, data={attr_data, {this_->bookmark_file}};
@@ -117,8 +178,6 @@ bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation
 		this_->bookmark=map_new(this_->parent, attrs);
 		bookmarks_load_hash(this_);
 	}
-
-	this_->clipboard=g_new0(struct bookmark_item_priv,1);
 
 	return this_;
 }
@@ -135,6 +194,7 @@ bookmarks_destroy(struct bookmarks *this_) {
 	g_free(this_->working_file);
 
 	g_free(this_->clipboard);
+	g_free(this_->root);
 
 	g_free(this_);
 }
@@ -153,7 +213,8 @@ bookmarks_add_callback(struct bookmarks *this_, struct callback *cb)
 static int 
 bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replace) {
 	FILE *f;
-	struct bookmark_item_priv *item;
+	struct bookmark_item_priv *item,*parent_item;
+	char *fullname;
 	const char *prostr;
 
 	f=fopen(this_->working_file, replace ? "w+" : "a+");
@@ -166,13 +227,28 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 		item=(struct bookmark_item_priv*)this_->bookmarks_list->data;
 		if (item->type != type_bookmark) continue;
 
+		parent_item=item;
+		fullname=g_strdup(item->label);
+		while ((parent_item=parent_item->parent)) {
+			char *pathHelper;
+			if (parent_item->label) {
+				pathHelper=g_strconcat(parent_item->label,"/",fullname,NULL);
+				g_free(fullname);
+				fullname=g_strdup(pathHelper);
+				g_free(pathHelper);
+				dbg(0,"full name: %s\n",fullname);
+			}
+		}
+
 		prostr = projection_to_name(projection_mg,NULL);
 		if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
 			 prostr, *prostr ? ":" : "", 
 			 item->c.x >= 0 ? "":"-", item->c.x >= 0 ? item->c.x : -item->c.x, 
 			 item->c.y >= 0 ? "":"-", item->c.y >= 0 ? item->c.y : -item->c.y, 
-			 "bookmark", item->label)<1) 
+			 "bookmark", fullname)<1) {
+			g_free(fullname); 
 			break;
+		}
 
  		/* Limit could be zero, so we start decrementing it from zero and never reach 1
  		 or it was bigger and we decreased it earlier. So when this counter becomes 1, we know
@@ -306,7 +382,10 @@ bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *d
 	b_item.c.y=pc->y;
 	b_item.label=(char *)description;
 	b_item.type=type_bookmark;
+	b_item.parent=this_->current;
 
+	this_->current->children=g_list_first(this_->current->children);
+	this_->current->children=g_list_prepend(this_->current->children,&b_item);
 	this_->bookmarks_list=g_list_first(this_->bookmarks_list);
 	this_->bookmarks_list=g_list_prepend(this_->bookmarks_list,&b_item);
 
