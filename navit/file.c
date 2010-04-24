@@ -365,7 +365,7 @@ file_data_read_encrypted(struct file *file, long long offset, int size, int size
 				}
 			} else {
 				if (size == destLen) 
-					memcpy(ret, destLen, buffer);
+					memcpy(ret, buffer, destLen);
 				else {
 					dbg(0,"memcpy failed\n");
 					g_free(ret);
