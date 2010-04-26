@@ -29,16 +29,22 @@ struct bookmarks;
 struct bookmarks *bookmarks_new(struct attr *parent,/* struct attr **attrs,*/ struct transformation *trans);
 void bookmarks_destroy(struct bookmarks *this_);
 void bookmarks_add_callback(struct bookmarks *this_, struct callback *cb);
+
 int bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *c, const char *description);
 int bookmarks_cut_bookmark(struct bookmarks *this_, const char *description);
 int bookmarks_copy_bookmark(struct bookmarks *this_, const char *description);
 int bookmarks_paste_bookmark(struct bookmarks *this_, const char *path);
 int bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const char* newName);
 int bookmarks_del_bookmark(struct bookmarks *this_, const char *description);
+
 struct map* bookmarks_get_map(struct bookmarks *this_);
+
 void bookmarks_move_root(struct bookmarks *this_);
 void bookmarks_move_up(struct bookmarks *this_);
 int bookmarks_move_down(struct bookmarks *this_,const char* name);
+
+struct item* bookmarks_get_item(struct bookmarks* this_);
+void bookmarks_rewind_item(struct bookmarks* this_);
 
 char* bookmarks_get_user_data_directory(gboolean create);
 char* bookmarks_get_destination_file(gboolean create);

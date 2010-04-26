@@ -32,6 +32,7 @@
 struct bookmarks {
 	//data storage
 	struct map *bookmark;
+	struct map_rect *mr;
 	GHashTable *bookmarks_hash;
 	GList *bookmarks_list;
 	char* bookmark_file;
@@ -53,6 +54,7 @@ struct bookmark_item_priv {
 	struct coord c;
 	GList *children;
 	struct bookmark_item_priv *parent;
+	struct item* item;
 };
 
 void bookmarks_move_root(struct bookmarks *this_) {
@@ -80,6 +82,21 @@ int bookmarks_move_down(struct bookmarks *this_,const char* name) {
 	return 0;
 }
 
+void bookmarks_rewind_item(struct bookmarks* this_) {
+	this_->current->children=g_list_first(this_->current->children);
+}
+struct item* bookmarks_get_item(struct bookmarks* this_) {
+	struct item *item;
+    if (this_->current->children==NULL) {
+		return NULL;
+	}
+
+	item=((struct bookmark_item_priv*)this_->current->children->data)->item;
+	this_->current->children=g_list_next(this_->current->children);
+
+	return item;
+}
+
 static void bookmarks_clear_item(struct bookmark_item_priv *b_item) {
 	b_item->children=g_list_first(b_item->children);
 	while((b_item->children=g_list_next(b_item->children))) {
@@ -100,7 +117,6 @@ static void
 bookmarks_load_hash(struct bookmarks *this_) {
 	struct bookmark_item_priv *b_item;
 	struct item *item;
-	struct map_rect *mr=NULL;
 	struct attr attr;
 	struct coord c;
 	char *pos,*finder;
@@ -112,13 +128,17 @@ bookmarks_load_hash(struct bookmarks *this_) {
 	this_->root->children=NULL;
 	bookmarks_move_root(this_);
 
-	mr=map_rect_new(this_->bookmark, NULL);
-	if (mr==NULL) {
+	if (this_->mr) {
+		map_rect_destroy(this_->mr);
+		this_->mr=NULL;
+	}
+	this_->mr=map_rect_new(this_->bookmark, NULL);
+	if (this_->mr==NULL) {
 		return;
 	}
 
-	while ((item=map_rect_get_item(mr))) {
-		if (item->type != type_bookmark) continue;
+	while ((item=map_rect_get_item(this_->mr))) {
+		if (item->type != type_bookmark && item->type != type_bookmark_folder ) continue;
 		item_attr_get(item, attr_label, &attr);
 		item_coord_get(item, &c, 1);
 
@@ -127,6 +147,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 		b_item->c.y=c.y;
 		b_item->label=strdup(attr.u.str);
 		b_item->type=item->type;
+		b_item->item=item;
 
 		//Prepare position
 		bookmarks_move_root(this_);
@@ -136,24 +157,26 @@ bookmarks_load_hash(struct bookmarks *this_) {
 			dbg(1,"Found path entry: %s\n",finder);
 			if (!bookmarks_move_down(this_,finder)) {
 				struct bookmark_item_priv *path_item=g_new0(struct bookmark_item_priv,1);	
-				path_item->type=type_path;
+				path_item->type=type_bookmark_folder;
 				path_item->parent=this_->current;
 				path_item->children=NULL;
 				path_item->label=strdup(finder);
 
 				this_->current->children=g_list_append(this_->current->children,path_item);
 				this_->current=path_item;
+				g_hash_table_insert(this_->bookmarks_hash,b_item->label,path_item);
+				this_->bookmarks_list=g_list_append(this_->bookmarks_list,path_item);
 			}
 			finder+=strlen(finder)+1;
 		}
 		strcpy(b_item->label,finder);
 		b_item->parent=this_->current;
-
 		g_hash_table_insert(this_->bookmarks_hash,b_item->label,b_item);
 		this_->bookmarks_list=g_list_append(this_->bookmarks_list,b_item);
-		this_->current->children=g_list_append(this_->current->children,b_item);
+		if (b_item->type==type_bookmark) {
+			this_->current->children=g_list_append(this_->current->children,b_item);
+		}
 	}
-	map_rect_destroy(mr);
 	bookmarks_move_root(this_);
 }
 struct bookmarks *
@@ -225,7 +248,6 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 	this_->bookmarks_list=g_list_first(this_->bookmarks_list);
 	while (this_->bookmarks_list) {
 		item=(struct bookmark_item_priv*)this_->bookmarks_list->data;
-		if (item->type != type_bookmark) continue;
 
 		parent_item=item;
 		fullname=g_strdup(item->label);
@@ -240,14 +262,27 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 			}
 		}
 
-		prostr = projection_to_name(projection_mg,NULL);
-		if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
-			 prostr, *prostr ? ":" : "", 
-			 item->c.x >= 0 ? "":"-", item->c.x >= 0 ? item->c.x : -item->c.x, 
-			 item->c.y >= 0 ? "":"-", item->c.y >= 0 ? item->c.y : -item->c.y, 
-			 "bookmark", fullname)<1) {
-			g_free(fullname); 
-			break;
+		if (item->type == type_bookmark) {
+			prostr = projection_to_name(projection_mg,NULL);
+			if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
+				 prostr, *prostr ? ":" : "", 
+				 item->c.x >= 0 ? "":"-", item->c.x >= 0 ? item->c.x : -item->c.x, 
+				 item->c.y >= 0 ? "":"-", item->c.y >= 0 ? item->c.y : -item->c.y, 
+				 "bookmark", fullname)<1) {
+				g_free(fullname); 
+				break;
+			}
+		}
+		if (item->type == type_bookmark_folder) {
+			prostr = projection_to_name(projection_mg,NULL);
+			if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
+				 prostr, *prostr ? ":" : "", 
+				 "", 0, 
+				 "", 0, 
+				 "bookmark_folder", fullname)<1) {
+				g_free(fullname); 
+				break;
+			}
 		}
 
  		/* Limit could be zero, so we start decrementing it from zero and never reach 1
