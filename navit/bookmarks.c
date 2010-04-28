@@ -108,7 +108,7 @@ struct item* bookmarks_get_item(struct bookmarks* this_) {
 	return ret;
 }
 
-char* bookmarks_item_cwd(struct bookmarks* this_) {
+const char* bookmarks_item_cwd(struct bookmarks* this_) {
 	return this_->current->label;
 }
 
@@ -136,6 +136,11 @@ bookmarks_load_hash(struct bookmarks *this_) {
 	struct attr attr;
 	struct coord c;
 	char *pos,*finder;
+
+	if (this_->mr) {
+		map_rect_destroy(this_->mr);
+	}
+	this_->mr=map_rect_new(this_->bookmark, NULL);
 
 	this_->bookmarks_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	this_->root=g_new0(struct bookmark_item_priv,1);
@@ -209,7 +214,6 @@ bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation
 		struct attr type={attr_type, {"textfile"}}, data={attr_data, {this_->bookmark_file}};
 		struct attr *attrs[]={&type, &data, NULL};
 		this_->bookmark=map_new(this_->parent, attrs);
-		this_->mr=map_rect_new(this_->bookmark, NULL);
 		bookmarks_load_hash(this_);
 	}
 
@@ -221,7 +225,6 @@ bookmarks_destroy(struct bookmarks *this_) {
 
 	bookmarks_clear_hash(this_);
 
-	map_rect_destroy(this_->mr);
 	map_destroy(this_->bookmark);
 	callback_list_destroy(this_->attr_cbl);
 
@@ -431,19 +434,20 @@ bookmarks_write_center_to_file(struct bookmarks *this_, char *file)
 int 
 bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *description)
 {
-	struct bookmark_item_priv b_item;
+	struct bookmark_item_priv *b_item=g_new0(struct bookmark_item_priv,1);
 	int result;
 
-	b_item.c.x=pc->x;
-	b_item.c.y=pc->y;
-	b_item.label=(char *)description;
-	b_item.type=type_bookmark;
-	b_item.parent=this_->current;
+	b_item->c.x=pc->x;
+	b_item->c.y=pc->y;
+	b_item->label=strdup(description);
+	b_item->type=type_bookmark;
+	b_item->parent=this_->current;
+	b_item->children=NULL;
 
 	this_->current->children=g_list_first(this_->current->children);
-	this_->current->children=g_list_prepend(this_->current->children,&b_item);
+	this_->current->children=g_list_prepend(this_->current->children,b_item);
 	this_->bookmarks_list=g_list_first(this_->bookmarks_list);
-	this_->bookmarks_list=g_list_prepend(this_->bookmarks_list,&b_item);
+	this_->bookmarks_list=g_list_prepend(this_->bookmarks_list,b_item);
 
 	result=bookmarks_store_bookmarks_to_file(this_,0,0);
 
