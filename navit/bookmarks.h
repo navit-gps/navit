@@ -46,6 +46,7 @@ int bookmarks_move_down(struct bookmarks *this_,const char* name);
 
 struct item* bookmarks_get_item(struct bookmarks* this_);
 void bookmarks_item_rewind(struct bookmarks* this_);
+char* bookmarks_item_cwd(struct bookmarks* this_);
 
 char* bookmarks_get_user_data_directory(gboolean create);
 char* bookmarks_get_destination_file(gboolean create);

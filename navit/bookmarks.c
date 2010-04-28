@@ -108,6 +108,10 @@ struct item* bookmarks_get_item(struct bookmarks* this_) {
 	return ret;
 }
 
+char* bookmarks_item_cwd(struct bookmarks* this_) {
+	return this_->current->label;
+}
+
 static void bookmarks_clear_item(struct bookmark_item_priv *b_item) {
 	b_item->children=g_list_first(b_item->children);
 	while(b_item->children) {
