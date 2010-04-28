@@ -1883,9 +1883,31 @@ gui_internal_cmd_add_bookmark_do(struct gui_priv *this, struct widget *widget)
 }
 
 static void
+gui_internal_cmd_add_bookmark_folder_do(struct gui_priv *this, struct widget *widget)
+{
+	GList *l;
+	struct attr attr;
+	dbg(0,"text='%s'\n", widget->text);
+	if (widget->text && strlen(widget->text)){
+		navit_get_attr(this->nav, attr_bookmarks, &attr, NULL);
+		bookmarks_add_bookmark(attr.u.bookmarks, NULL, widget->text);
+	}
+	g_free(widget->text);
+	widget->text=NULL;
+	l=g_list_previous(g_list_previous(g_list_last(this->root.children)));
+	gui_internal_prune_menu(this, l->data);
+}
+
+static void
 gui_internal_cmd_add_bookmark_clicked(struct gui_priv *this, struct widget *widget, void *data)
 {
 	gui_internal_cmd_add_bookmark_do(this, widget->data);
+}
+
+static void
+gui_internal_cmd_add_bookmark_folder_clicked(struct gui_priv *this, struct widget *widget, void *data)
+{
+	gui_internal_cmd_add_bookmark_folder_do(this, widget->data);
 }
 
 static void
@@ -1925,6 +1947,33 @@ gui_internal_cmd_add_bookmark2(struct gui_priv *this, struct widget *wm, void *d
 	gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
 	wnext->state |= STATE_SENSITIVE;
 	wnext->func = gui_internal_cmd_add_bookmark_clicked;
+	wnext->data=wk;
+	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(w, wl);
+	if (this->keyboard)
+		gui_internal_widget_append(w, gui_internal_keyboard(this,2));
+	gui_internal_menu_render(this);
+}
+
+static void
+gui_internal_cmd_add_bookmark_folder2(struct gui_priv *this, struct widget *wm, void *data)
+{
+	struct widget *w,*wb,*wk,*wl,*we,*wnext;
+	char *name=data;
+	wb=gui_internal_menu(this,_("Add Bookmark folder"));
+	w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
+	gui_internal_widget_append(wb, w);
+	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	gui_internal_widget_append(w, we);
+	gui_internal_widget_append(we, wk=gui_internal_label_new(this, name));
+	wk->state |= STATE_EDIT|STATE_EDITABLE|STATE_CLEAR;
+	wk->background=this->background;
+	wk->flags |= flags_expand|flags_fill;
+	wk->func = gui_internal_cmd_add_bookmark_changed;
+	wk->c=wm->c;
+	gui_internal_widget_append(we, wnext=gui_internal_image_new(this, image_new_xs(this, "gui_active")));
+	wnext->state |= STATE_SENSITIVE;
+	wnext->func = gui_internal_cmd_add_bookmark_folder_clicked;
 	wnext->data=wk;
 	wl=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, wl);
@@ -2569,7 +2618,6 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 	gui_internal_widget_append(wb, w);
    
 	if(navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL) ) {
-		dbg(0,"prefix before: %s\n",prefix);
 		if (!plen) {
 			bookmarks_move_root(mattr.u.bookmarks);
 		} else {
@@ -2593,7 +2641,10 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 				gui_internal_widget_append(w, wbm);
 			}
 		}
-		dbg(0,"prefix after: %s\n",prefix);
+		wbm=gui_internal_button_new_with_callback(this, _("Add Bookmark folder"),
+			    image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
+				gui_internal_cmd_add_bookmark_folder2, NULL);
+		gui_internal_widget_append(w, wbm);		
 		bookmarks_item_rewind(mattr.u.bookmarks);
 		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
 			if (!item_attr_get(item, attr_label, &attr)) continue;
