@@ -31,11 +31,11 @@ void bookmarks_destroy(struct bookmarks *this_);
 void bookmarks_add_callback(struct bookmarks *this_, struct callback *cb);
 
 int bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *c, const char *description);
-int bookmarks_cut_bookmark(struct bookmarks *this_, const char *description);
-int bookmarks_copy_bookmark(struct bookmarks *this_, const char *description);
+int bookmarks_cut_bookmark(struct bookmarks *this_, const char *label);
+int bookmarks_copy_bookmark(struct bookmarks *this_, const char *label);
 int bookmarks_paste_bookmark(struct bookmarks *this_, const char *path);
 int bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const char* newName);
-int bookmarks_del_bookmark(struct bookmarks *this_, const char *description);
+int bookmarks_delete_bookmark(struct bookmarks *this_, const char *label);
 
 struct map* bookmarks_get_map(struct bookmarks *this_);
 enum projection bookmarks_get_projection(struct bookmarks *this_);

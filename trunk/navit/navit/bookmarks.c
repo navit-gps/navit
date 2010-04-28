@@ -463,28 +463,34 @@ bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *d
 }
 
 int 
-bookmarks_cut_bookmark(struct bookmarks *this_, const char *description) {
-	if (bookmarks_copy_bookmark(this_,description)) {
-		return bookmarks_del_bookmark(this_,description);
+bookmarks_cut_bookmark(struct bookmarks *this_, const char *label) {
+	if (bookmarks_copy_bookmark(this_,label)) {
+		return bookmarks_delete_bookmark(this_,label);
 	}
 	
 	return FALSE;
 }
 int 
-bookmarks_copy_bookmark(struct bookmarks *this_, const char *description) {
-	struct bookmark_item_priv *b_item;
-	b_item=(struct bookmark_item_priv*)g_hash_table_lookup(this_->bookmarks_hash,description);
-	if (b_item) {
-		this_->clipboard->c=b_item->c;
-		this_->clipboard->type=b_item->type;
-		if (!this_->clipboard->label) {
-			g_free(this_->clipboard->label);
-		}
-		this_->clipboard->label=g_strdup(b_item->label);
-
-		return TRUE;
+bookmarks_copy_bookmark(struct bookmarks *this_, const char *label) {
+	bookmarks_item_rewind(this_);
+	if (this_->current->children==NULL) {
+		return 0;
 	}
-
+	while (this_->current->iter!=NULL) {
+		struct bookmark_item_priv* data=(struct bookmark_item_priv*)this_->current->iter->data;
+		if (!strcmp(data->label,label)) {
+			this_->clipboard->c=data->c;
+			this_->clipboard->type=data->type;
+			this_->clipboard->item=data->item;
+			this_->clipboard->children=data->children;
+			if (!this_->clipboard->label) {
+				g_free(this_->clipboard->label);
+			}
+			this_->clipboard->label=g_strdup(data->label);
+			return TRUE;
+		}
+		this_->current->iter=g_list_next(this_->current->iter);
+	}
 	return FALSE;
 }
 int 
@@ -513,22 +519,28 @@ bookmarks_paste_bookmark(struct bookmarks *this_, const char* path) {
 
 
 int 
-bookmarks_del_bookmark(struct bookmarks *this_, const char *description) {
-	struct bookmark_item_priv *b_item;
+bookmarks_delete_bookmark(struct bookmarks *this_, const char *label) {
 	int result;
 
-	b_item=(struct bookmark_item_priv*)g_hash_table_lookup(this_->bookmarks_hash,description);
-	if (b_item) {
-		this_->bookmarks_list=g_list_first(this_->bookmarks_list);
-		this_->bookmarks_list=g_list_remove(this_->bookmarks_list,b_item);
+	bookmarks_item_rewind(this_);
+	if (this_->current->children==NULL) {
+		return 0;
+	}
+	while (this_->current->iter!=NULL) {
+		struct bookmark_item_priv* data=(struct bookmark_item_priv*)this_->current->iter->data;
+		if (!strcmp(data->label,label)) {
+			this_->bookmarks_list=g_list_first(this_->bookmarks_list);
+			this_->bookmarks_list=g_list_remove(this_->bookmarks_list,data);
 
-		result=bookmarks_store_bookmarks_to_file(this_,0,0);
+			result=bookmarks_store_bookmarks_to_file(this_,0,0);
 
-		callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
-		bookmarks_clear_hash(this_);
-		bookmarks_load_hash(this_);
+			callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
+			bookmarks_clear_hash(this_);
+			bookmarks_load_hash(this_);
 
-		return result;
+			return result;
+		}
+		this_->current->iter=g_list_next(this_->current->iter);
 	}
 
 	return FALSE;
