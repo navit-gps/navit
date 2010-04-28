@@ -33,7 +33,7 @@ void bookmarks_add_callback(struct bookmarks *this_, struct callback *cb);
 int bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *c, const char *description);
 int bookmarks_cut_bookmark(struct bookmarks *this_, const char *label);
 int bookmarks_copy_bookmark(struct bookmarks *this_, const char *label);
-int bookmarks_paste_bookmark(struct bookmarks *this_, const char *path);
+int bookmarks_paste_bookmark(struct bookmarks *this_);
 int bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const char* newName);
 int bookmarks_delete_bookmark(struct bookmarks *this_, const char *label);
 
