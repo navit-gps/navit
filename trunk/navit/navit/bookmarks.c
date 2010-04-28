@@ -561,37 +561,28 @@ bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const ch
 	char *path;
 	int result;
 
-	b_item=(struct bookmark_item_priv*)g_hash_table_lookup(this_->bookmarks_hash,oldName);
-	if (b_item) {
-		this_->bookmarks_list=g_list_first(this_->bookmarks_list);
-		this_->bookmarks_list=g_list_remove(this_->bookmarks_list,b_item);
+	bookmarks_item_rewind(this_);
+	if (this_->current->children==NULL) {
+		return 0;
+	}
+	while (this_->current->iter!=NULL) {
+		struct bookmark_item_priv* data=(struct bookmark_item_priv*)this_->current->iter->data;
+		if (!strcmp(data->label,oldName)) {
+			g_free(data->label);
+			data->label=g_strdup(newName);
 
-		pc.x=this_->clipboard->c.x;
-		pc.y=this_->clipboard->c.y;
-		pc.pro=projection_mg; //Bookmarks are always stored in mg
+			result=bookmarks_store_bookmarks_to_file(this_,0,0);
 
-		//Check if we have to parse the tree
-		if ((path=strrchr(oldName,'/'))) {
-			char *fullName=g_new0(char,path-oldName+strlen(newName)+2);
-			memcpy(fullName,oldName,path-oldName);
-			memcpy(fullName+(path-oldName),"/",1);
-			memcpy(fullName+(path-oldName)+1,newName,strlen(newName));
-			bookmarks_add_bookmark(this_,&pc,fullName);
+			callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
+			bookmarks_clear_hash(this_);
+			bookmarks_load_hash(this_);
 
-			g_free(fullName);
-		} else {
-			bookmarks_add_bookmark(this_,&pc,newName);
+			return result;
 		}
-
-		result=bookmarks_store_bookmarks_to_file(this_,0,0);
-
-		callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
-		bookmarks_clear_hash(this_);
-		bookmarks_load_hash(this_);
-
+		this_->current->iter=g_list_next(this_->current->iter);
 	}
 
-	return result;
+	return FALSE;
 }
 
 /**
