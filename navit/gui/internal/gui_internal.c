@@ -2527,7 +2527,8 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 	     3 Town
 	     4 County
 	     5 Street
-	     6 House number 
+ 		 6 House number
+ 		 7 Bookmark
 */
 
 static void
@@ -2558,6 +2559,9 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 	case 6:
 		flags=8|16|32|64|128;
 		flags &= this->flags_house_number;
+		break;
+	case 7:
+		flags=8|16|64|128;
 		break;
 	default:
 		return;
@@ -2664,6 +2668,9 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 				wbm->c.pro=bookmarks_get_projection(mattr.u.bookmarks);
 				wbm->name=g_strdup_printf(_("Bookmark %s"),label_full);
 				wbm->text=g_strdup(label_full);
+				if (!hassub) {
+					wbm->data=7;//Mark us as a bookmark
+				}
 				gui_internal_widget_append(w, wbm);
 				wbm->prefix=g_strdup(label_full);
 			} else {
