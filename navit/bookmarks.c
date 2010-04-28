@@ -437,17 +437,21 @@ bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *d
 	struct bookmark_item_priv *b_item=g_new0(struct bookmark_item_priv,1);
 	int result;
 
-	b_item->c.x=pc->x;
-	b_item->c.y=pc->y;
+	if (pc) {
+		b_item->c.x=pc->x;
+		b_item->c.y=pc->y;
+		b_item->type=type_bookmark;
+	} else {
+		b_item->type=type_bookmark_folder;
+	}
 	b_item->label=strdup(description);
-	b_item->type=type_bookmark;
 	b_item->parent=this_->current;
 	b_item->children=NULL;
 
 	this_->current->children=g_list_first(this_->current->children);
-	this_->current->children=g_list_prepend(this_->current->children,b_item);
+	this_->current->children=g_list_append(this_->current->children,b_item);
 	this_->bookmarks_list=g_list_first(this_->bookmarks_list);
-	this_->bookmarks_list=g_list_prepend(this_->bookmarks_list,b_item);
+	this_->bookmarks_list=g_list_append(this_->bookmarks_list,b_item);
 
 	result=bookmarks_store_bookmarks_to_file(this_,0,0);
 
