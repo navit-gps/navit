@@ -2548,77 +2548,80 @@ static void
 gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct attr attr,mattr;
-	struct map_rect *mr=NULL;
 	struct item *item;
-	char *label_full,*l,*prefix="",*pos;
-	int len,plen,hassub,found=0;
+	char *label_full,*prefix="";
+	int plen,hassub,found=0;
 	struct widget *wb,*w,*wbm;
-	GHashTable *hash;
 	struct coord c;
-	char *text=_("Bookmarks");
-	if (wm && wm->text)
-		text=wm->text;
-
-	wb=gui_internal_menu(this, text);
-	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
-	w->spy=this->spacing*3;
-	gui_internal_widget_append(wb, w);
 
 	if (data)
-		prefix=data;
+		prefix=g_strdup(data);
 	else {
 		if (wm && wm->prefix)
-			prefix=wm->prefix;
+			prefix=g_strdup(wm->prefix);
 	}
 	plen=strlen(prefix);
 
-	if(navit_get_attr(this->nav, attr_bookmark_map, &mattr, NULL) && mattr.u.map && (mr=map_rect_new(mattr.u.map, NULL))) {
-		hash=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-		while ((item=map_rect_get_item(mr))) {
-			if (item->type != type_bookmark) continue;
+	gui_internal_prune_menu_count(this, 1, 0);
+	wb=gui_internal_menu(this, _("Bookmarks"));
+	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
+	w->spy=this->spacing*3;
+	gui_internal_widget_append(wb, w);
+   
+	if(navit_get_attr(this->nav, attr_bookmarks, &mattr, NULL) ) {
+		dbg(0,"prefix before: %s\n",prefix);
+		if (!plen) {
+			bookmarks_move_root(mattr.u.bookmarks);
+		} else {
+			if (!strcmp(prefix,"..")) {
+				bookmarks_move_up(mattr.u.bookmarks);
+				g_free(prefix);
+				prefix=g_strdup(bookmarks_item_cwd(mattr.u.bookmarks));
+				if (prefix) {
+					plen=strlen(prefix);
+				} else {
+					plen=0;
+				}
+			} else {
+				bookmarks_move_down(mattr.u.bookmarks,prefix);
+			}
+			if (plen) {
+				wbm=gui_internal_button_new_with_callback(this, "..",
+					image_new_xs(this, "gui_inactive"), gravity_left_center|orientation_horizontal|flags_fill,
+						gui_internal_cmd_bookmarks, NULL);
+						wbm->prefix=g_strdup("..");
+				gui_internal_widget_append(w, wbm);
+			}
+		}
+		dbg(0,"prefix after: %s\n",prefix);
+		bookmarks_item_rewind(mattr.u.bookmarks);
+		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
 			if (!item_attr_get(item, attr_label, &attr)) continue;
 			label_full=attr.u.str;
-			if (!strncmp(label_full, prefix, plen)) {
-				pos=strchr(label_full+plen, '/');
-				if (pos) {
-					hassub=1;
-					len=pos-label_full;
-				} else {
-					hassub=0;
-					len=strlen(label_full);
-				}
-				l=g_malloc(len-plen+1);
-				strncpy(l, label_full+plen, len-plen);
-				l[len-plen]='\0';
-				if (!g_hash_table_lookup(hash, l)) {
-					wbm=gui_internal_button_new_with_callback(this, l,
-						image_new_xs(this, hassub ? "gui_inactive" : "gui_active" ), gravity_left_center|orientation_horizontal|flags_fill,
-							hassub ? gui_internal_cmd_bookmarks : gui_internal_cmd_position, NULL);
-					if (item_coord_get(item, &c, 1)) {
-						wbm->c.x=c.x;
-						wbm->c.y=c.y;
-						wbm->c.pro=map_projection(mattr.u.map);
-						wbm->name=g_strdup_printf(_("Bookmark %s"),label_full);
-						wbm->text=g_strdup(l);
-						gui_internal_widget_append(w, wbm);
-						g_hash_table_insert(hash, g_strdup(l), (void *)1);
-						wbm->prefix=g_malloc(len+2);
-						strncpy(wbm->prefix, label_full, len+1);
-						wbm->prefix[len+1]='\0';
-						if (!l[0]) {
-							gui_internal_cmd_set_destination(this, wbm, wbm->name);
-							found=1;
-							break;
-						}
-					} else {
-						gui_internal_widget_destroy(this, wbm);
-					}
-				}
-				g_free(l);
+			dbg(0,"full_labled: %s\n",label_full);
+			if (item->type == type_bookmark_folder) {
+				hassub=1;
+			} else {
+				hassub=0;
 			}
-
+			wbm=gui_internal_button_new_with_callback(this, label_full,
+				image_new_xs(this, hassub ? "gui_inactive" : "gui_active" ), gravity_left_center|orientation_horizontal|flags_fill,
+					hassub ? gui_internal_cmd_bookmarks : gui_internal_cmd_position, NULL);
+			if (item_coord_get(item, &c, 1)) {
+				wbm->c.x=c.x;
+				wbm->c.y=c.y;
+				wbm->c.pro=bookmarks_get_projection(mattr.u.bookmarks);
+				wbm->name=g_strdup_printf(_("Bookmark %s"),label_full);
+				wbm->text=g_strdup(label_full);
+				gui_internal_widget_append(w, wbm);
+				wbm->prefix=g_strdup(label_full);
+			} else {
+				gui_internal_widget_destroy(this, wbm);
+			}
 		}
-		g_hash_table_destroy(hash);
+	}
+	if (plen) {
+		g_free(prefix);
 	}
 	if (found)
 		gui_internal_check_exit(this);
