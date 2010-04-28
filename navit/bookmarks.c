@@ -53,54 +53,66 @@ struct bookmark_item_priv {
 	enum item_type type;
 	struct coord c;
 	GList *children;
+	GList *iter;
 	struct bookmark_item_priv *parent;
-	struct item* item;
+	struct item item;
 };
 
 void bookmarks_move_root(struct bookmarks *this_) {
 	this_->current=this_->root;
+	this_->current->iter=g_list_first(this_->current->children);
+	dbg(2,"Root list have %u entries\n",g_list_length(this_->current->children));
 	return;
 }
 void bookmarks_move_up(struct bookmarks *this_) {
 	if (this_->current->parent) {
 		this_->current=this_->current->parent;
+		this_->current->iter=this_->current->children;
 	}
 	return;
 }
 int bookmarks_move_down(struct bookmarks *this_,const char* name) {
+	bookmarks_item_rewind(this_);
 	if (this_->current->children==NULL) {
 		return 0;
 	}
-	this_->current->children=g_list_first(this_->current->children);
-	while ((this_->current->children=g_list_next(this_->current->children))) {
-		struct bookmark_item_priv* data=(struct bookmark_item_priv*)this_->current->children->data;
+	while (this_->current->iter!=NULL) {
+		struct bookmark_item_priv* data=(struct bookmark_item_priv*)this_->current->iter->data;
 		if (!strcmp(data->label,name)) {
-			this_->current=(struct bookmark_item_priv*)this_->current->children;
+			this_->current=(struct bookmark_item_priv*)this_->current->iter->data;
+			this_->current->iter=g_list_first(this_->current->children);
+			dbg(2,"%s list have %u entries\n",this_->current->label,g_list_length(this_->current->children));
 			return 1;
 		}
+		this_->current->iter=g_list_next(this_->current->iter);
 	}
 	return 0;
 }
 
-void bookmarks_rewind_item(struct bookmarks* this_) {
+void bookmarks_item_rewind(struct bookmarks* this_) {
 	this_->current->children=g_list_first(this_->current->children);
+	this_->current->iter=this_->current->children;
+	this_->current->iter=this_->current->children;
 }
 struct item* bookmarks_get_item(struct bookmarks* this_) {
-	struct item *item;
-    if (this_->current->children==NULL) {
+	struct item item,*ret;
+    if (this_->current->iter==NULL) {
 		return NULL;
 	}
 
-	item=((struct bookmark_item_priv*)this_->current->children->data)->item;
-	this_->current->children=g_list_next(this_->current->children);
+	item=((struct bookmark_item_priv*)this_->current->iter->data)->item;
+	this_->current->iter=g_list_next(this_->current->iter);
 
-	return item;
+	ret = map_rect_get_item_byid(this_->mr, item.id_hi, item.id_lo);
+
+	return ret;
 }
 
 static void bookmarks_clear_item(struct bookmark_item_priv *b_item) {
 	b_item->children=g_list_first(b_item->children);
-	while((b_item->children=g_list_next(b_item->children))) {
+	while(b_item->children) {
 		bookmarks_clear_item((struct bookmark_item_priv*)b_item->children->data);
+		b_item->children=g_list_next(b_item->children);
 	}
 	g_free(b_item->label);
 	g_free(b_item);
@@ -128,18 +140,11 @@ bookmarks_load_hash(struct bookmarks *this_) {
 	this_->root->children=NULL;
 	bookmarks_move_root(this_);
 
-	if (this_->mr) {
-		map_rect_destroy(this_->mr);
-		this_->mr=NULL;
-	}
-	this_->mr=map_rect_new(this_->bookmark, NULL);
-	if (this_->mr==NULL) {
-		return;
-	}
-
 	while ((item=map_rect_get_item(this_->mr))) {
 		if (item->type != type_bookmark && item->type != type_bookmark_folder ) continue;
-		item_attr_get(item, attr_label, &attr);
+		if (!item_attr_get(item, attr_path, &attr)) {
+			item_attr_get(item, attr_label, &attr);
+		}
 		item_coord_get(item, &c, 1);
 
 		b_item=g_new0(struct bookmark_item_priv,1);
@@ -147,7 +152,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 		b_item->c.y=c.y;
 		b_item->label=strdup(attr.u.str);
 		b_item->type=item->type;
-		b_item->item=item;
+		b_item->item=*item;
 
 		//Prepare position
 		bookmarks_move_root(this_);
@@ -171,11 +176,12 @@ bookmarks_load_hash(struct bookmarks *this_) {
 		}
 		strcpy(b_item->label,finder);
 		b_item->parent=this_->current;
+		
 		g_hash_table_insert(this_->bookmarks_hash,b_item->label,b_item);
 		this_->bookmarks_list=g_list_append(this_->bookmarks_list,b_item);
-		if (b_item->type==type_bookmark) {
-			this_->current->children=g_list_append(this_->current->children,b_item);
-		}
+		this_->current->children=g_list_append(this_->current->children,b_item);
+		this_->current->children=g_list_first(this_->current->children);
+		dbg(1,"Added %s to %s and current list now %u long\n",b_item->label,this_->current->label,g_list_length(this_->current->children));
 	}
 	bookmarks_move_root(this_);
 }
@@ -199,6 +205,7 @@ bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation
 		struct attr type={attr_type, {"textfile"}}, data={attr_data, {this_->bookmark_file}};
 		struct attr *attrs[]={&type, &data, NULL};
 		this_->bookmark=map_new(this_->parent, attrs);
+		this_->mr=map_rect_new(this_->bookmark, NULL);
 		bookmarks_load_hash(this_);
 	}
 
@@ -210,6 +217,7 @@ bookmarks_destroy(struct bookmarks *this_) {
 
 	bookmarks_clear_hash(this_);
 
+	map_rect_destroy(this_->mr);
 	map_destroy(this_->bookmark);
 	callback_list_destroy(this_->attr_cbl);
 
@@ -227,6 +235,9 @@ bookmarks_get_map(struct bookmarks *this_) {
 	return this_->bookmark;
 }
 
+enum projection bookmarks_get_projection(struct bookmarks *this_){
+	return map_projection(this_->bookmark);
+}
 void
 bookmarks_add_callback(struct bookmarks *this_, struct callback *cb)
 {
@@ -239,6 +250,7 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 	struct bookmark_item_priv *item,*parent_item;
 	char *fullname;
 	const char *prostr;
+	GHashTable *dedup=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,NULL);
 
 	f=fopen(this_->working_file, replace ? "w+" : "a+");
 	if (f==NULL) {
@@ -258,30 +270,33 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 				g_free(fullname);
 				fullname=g_strdup(pathHelper);
 				g_free(pathHelper);
-				dbg(0,"full name: %s\n",fullname);
+				dbg(1,"full name: %s\n",fullname);
 			}
 		}
 
-		if (item->type == type_bookmark) {
-			prostr = projection_to_name(projection_mg,NULL);
-			if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
-				 prostr, *prostr ? ":" : "", 
-				 item->c.x >= 0 ? "":"-", item->c.x >= 0 ? item->c.x : -item->c.x, 
-				 item->c.y >= 0 ? "":"-", item->c.y >= 0 ? item->c.y : -item->c.y, 
-				 "bookmark", fullname)<1) {
-				g_free(fullname); 
-				break;
+		if (!g_hash_table_lookup(dedup,fullname)) {
+			g_hash_table_insert(dedup,fullname,fullname);
+			if (item->type == type_bookmark) {
+				prostr = projection_to_name(projection_mg,NULL);
+				if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\" path=\"%s\"\n",
+					 prostr, *prostr ? ":" : "", 
+					 item->c.x >= 0 ? "":"-", item->c.x >= 0 ? item->c.x : -item->c.x, 
+					 item->c.y >= 0 ? "":"-", item->c.y >= 0 ? item->c.y : -item->c.y, 
+					 "bookmark", item->label,fullname)<1) {
+					g_free(fullname); 
+					break;
+				}
 			}
-		}
-		if (item->type == type_bookmark_folder) {
-			prostr = projection_to_name(projection_mg,NULL);
-			if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
-				 prostr, *prostr ? ":" : "", 
-				 "", 0, 
-				 "", 0, 
-				 "bookmark_folder", fullname)<1) {
-				g_free(fullname); 
-				break;
+			if (item->type == type_bookmark_folder) {
+				prostr = projection_to_name(projection_mg,NULL);
+				if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\" path=\"%s\"\n",
+					 prostr, *prostr ? ":" : "", 
+					 "", 0, 
+					 "", 0, 
+					 "bookmark_folder", item->label,fullname)<1) {
+					g_free(fullname); 
+					break;
+				}
 			}
 		}
 
@@ -297,6 +312,8 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 	}
 
 	fclose(f);
+
+    g_hash_table_destroy(dedup);
 
 	return rename(this_->working_file,this_->bookmark_file)==0;
 }
