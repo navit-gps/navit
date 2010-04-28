@@ -494,25 +494,33 @@ bookmarks_copy_bookmark(struct bookmarks *this_, const char *label) {
 	return FALSE;
 }
 int 
-bookmarks_paste_bookmark(struct bookmarks *this_, const char* path) {
-	char *fullLabel;
+bookmarks_paste_bookmark(struct bookmarks *this_) {
 	int result;
-	struct pcoord pc;
+	struct bookmark_item_priv* b_item;
 
-	//check, if we need to add a trailing "/" to path
-	if (path[strlen(path)-1]!='/') {
-		fullLabel=g_strjoin(NULL,path,"/",this_->clipboard->label,NULL);
-	} else {
-		fullLabel=g_strjoin(NULL,path,this_->clipboard->label,NULL);
-	}
+	if (!this_->clipboard->label) {
+	    return FALSE;
+    }
 
-	pc.x=this_->clipboard->c.x;
-	pc.y=this_->clipboard->c.y;
-	pc.pro=projection_mg; //Bookmarks are always stored in mg
+	b_item=g_new0(struct bookmark_item_priv,1);
+	b_item->c.x=this_->clipboard->c.x;
+	b_item->c.y=this_->clipboard->c.y;
+	b_item->label=strdup(this_->clipboard->label);
+	b_item->type=this_->clipboard->type;
+	b_item->item=this_->clipboard->item;
+	b_item->parent=this_->current;
+	b_item->children=this_->clipboard->children;
 
-	result=bookmarks_add_bookmark(this_,&pc,fullLabel);
-	
-	g_free(fullLabel);
+	g_hash_table_insert(this_->bookmarks_hash,b_item->label,b_item);
+	this_->bookmarks_list=g_list_append(this_->bookmarks_list,b_item);
+	this_->current->children=g_list_append(this_->current->children,b_item);
+	this_->current->children=g_list_first(this_->current->children);
+
+	result=bookmarks_store_bookmarks_to_file(this_,0,0);
+
+	callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
+	bookmarks_clear_hash(this_);
+	bookmarks_load_hash(this_);
 
 	return result;
 }
