@@ -70,7 +70,7 @@ Rectangle {
 	anchors.top: btnDestination.bottom;anchors.topMargin:gui.height/32
         spacing: gui.height/6
         ButtonIcon {
-            id: btnBookmarks; text: "Bookmarks"; icon: "gui_bookmark.svg"; onClicked: gui.setPage("PageBookmarks.qml");
+            id: btnBookmarks; text: "Bookmarks"; icon: "gui_bookmark.svg"; onClicked: {bookmarks.moveRoot(); gui.setPage("PageBookmarks.qml"); }
         }
         ButtonIcon {
             id: btnPOI; text: "Nearest\nPOIs"; icon: "attraction.svg"; onClicked: gui.setPage("PagePoi.qml");
