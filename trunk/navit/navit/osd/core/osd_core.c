@@ -311,6 +311,87 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 	return NULL;
 }
 
+struct osd_image {
+	int use_overlay;
+	struct osd_item item;
+	struct callback *draw_cb,*navit_init_cb;
+	struct graphics_image *img;
+	char *src;
+};
+
+static void
+osd_image_draw(struct osd_image *this, struct navit *nav)
+{
+	struct point bp = this->item.p;
+	osd_wrap_point(&bp, nav);
+	graphics_draw_image(this->item.gr, this->item.graphic_bg, &bp, this->img);
+}
+
+static void
+osd_image_init(struct osd_image *this, struct navit *nav)
+{
+	struct graphics *gra = navit_get_graphics(nav);
+	dbg(1, "enter\n");
+	this->img = graphics_image_new(gra, this->src);
+	if (!this->img) {
+		dbg(1, "failed to load '%s'\n", this->src);
+		return;
+	}
+	if (!this->item.w)
+		this->item.w=this->img->width;
+	if (!this->item.h)
+		this->item.h=this->img->height;
+	if (this->use_overlay) {
+		struct graphics_image *img;
+		struct point p;
+		osd_set_std_graphic(nav, &this->item, (struct osd_priv *)this);
+		img=graphics_image_new(this->item.gr, this->src);
+		p.x=(this->item.w-this->img->width)/2;
+		p.y=(this->item.h-this->img->height)/2;
+		osd_std_draw(&this->item);
+		graphics_draw_image(this->item.gr, this->item.graphic_bg, &p, img);
+		graphics_draw_mode(this->item.gr, draw_mode_end);
+		graphics_image_free(this->item.gr, img);
+	} else {
+		this->item.configured=1;
+		this->item.gr=gra;
+		this->item.graphic_bg=graphics_gc_new(this->item.gr);
+		graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, this, nav));
+	}
+	osd_image_draw(this,nav);
+}
+
+static struct osd_priv *
+osd_image_new(struct navit *nav, struct osd_methods *meth,
+	       struct attr **attrs)
+{
+	struct osd_image *this = g_new0(struct osd_image, 1);
+	struct attr *attr;
+
+	this->item.navit = nav;
+	this->item.meth.draw = osd_draw_cast(osd_image_draw);
+
+	osd_set_std_attr(attrs, &this->item, 1);
+
+	attr=attr_search(attrs, NULL, attr_use_overlay);
+	if (attr)
+		this->use_overlay=attr->u.num;
+	attr = attr_search(attrs, NULL, attr_src);
+	if (!attr) {
+		dbg(0, "no src\n");
+		goto error;
+	}
+
+	this->src = graphics_icon_path(attr->u.str);
+
+	navit_add_callback(nav, this->navit_init_cb = callback_new_attr_1(callback_cast (osd_image_init), attr_graphics_ready, this));
+
+	return (struct osd_priv *) this;
+      error:
+	g_free(this);
+	return NULL;
+}
+
 struct nav_next_turn {
 	struct osd_item osd_item;
 	char *test_text;
@@ -1373,4 +1454,5 @@ plugin_init(void)
     	plugin_register_osd_type("gps_status", osd_gps_status_new);
     	plugin_register_osd_type("volume", osd_volume_new);
     	plugin_register_osd_type("scale", osd_scale_new);
+		plugin_register_osd_type("image", osd_image_new);
 }
