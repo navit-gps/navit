@@ -34,7 +34,7 @@ Rectangle {
         }
     }
     Grid {
-        columns: 2;rows: 1
+        columns: 3;rows: 1
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
         spacing: gui.width/12
@@ -43,6 +43,9 @@ Rectangle {
         }
         ButtonIcon {
             id: btnTools; text: "Tools"; icon: "gui_tools.svg"; onClicked: gui.setPage("PageSettingsTools.qml")
+        }
+        ButtonIcon {
+            id: btnAbout; text: "About"; icon: "gui_about.svg"; onClicked: gui.setPage("PageAbout.qml")
         }
     }
 

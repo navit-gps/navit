@@ -16,66 +16,80 @@ public slots:
 	void setCurrentPath(QString currentPath) {
 		this->current_path=currentPath;
 	}
-	QString getAttrList(const QString &attr_name) {
-		NGQStandardItemModel* ret=new NGQStandardItemModel(this);
-		struct attr attr;
+	void moveRoot() {
+		struct attr mattr;
+		navit_get_attr(this->object->nav, attr_bookmarks, &mattr, NULL);
+		bookmarks_move_root(mattr.u.bookmarks);
+	}
+	void moveUp() {
+		struct attr mattr;
+		navit_get_attr(this->object->nav, attr_bookmarks, &mattr, NULL);
+		bookmarks_move_up(mattr.u.bookmarks);
+	}
+	void moveDown(QString path) {
+		struct attr mattr;
+		navit_get_attr(this->object->nav, attr_bookmarks, &mattr, NULL);
+		bookmarks_move_down(mattr.u.bookmarks,path.toLocal8Bit().constData());
+	}
+
+	QString getBookmarks(const QString &attr_name) {
+		struct attr attr,mattr;
 		struct item* item;
-		struct map_rect *mr=NULL;
-		QHash<QString,QString> seenMap;
+		struct coord c;
+		QDomDocument retDoc(attr_name);
+		QDomElement entries;
 
-		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
-		mr=map_rect_new(bookmarks_get_map(attr.u.bookmarks), NULL);
-		if (!mr) {
-			return QString();
-		}
+		entries=retDoc.createElement(attr_name);
+		retDoc.appendChild(entries);
 
-		if (!this->current_path.isEmpty()) {
-			QStandardItem* curItem=new QStandardItem();	
-			QStringList returnPath=this->current_path.split("/",QString::SkipEmptyParts);
+		navit_get_attr(this->object->nav, attr_bookmarks, &mattr, NULL);
 
-			curItem->setData("..",NGQStandardItemModel::ItemName);
-			curItem->setData("yes",NGQStandardItemModel::ItemIcon);
-
-			if (returnPath.size()>1) {
-				returnPath.removeLast();
-				curItem->setData(returnPath.join("/"),NGQStandardItemModel::ItemPath);
-			} else {
-				//Fast way
-				curItem->setData(QString(),NGQStandardItemModel::ItemPath);
-			}
-
-			ret->appendRow(curItem);
-		}
-		while ((item=map_rect_get_item(mr))) {
-			QStandardItem* curItem=new QStandardItem();
+		bookmarks_item_rewind(mattr.u.bookmarks);
+		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
 			QString label;
-			QStringList labelList;
+			QString path;
 			
-			if (item->type != type_bookmark) continue;
+			if (item->type != type_bookmark && item->type != type_bookmark_folder) continue;
 			if (!item_attr_get(item, attr_label, &attr)) continue;
-			//We need to treeize output
 			label=QString::fromLocal8Bit(attr.u.str);
-			curItem->setData(label,NGQStandardItemModel::ItemId);
-			if (!label.startsWith(this->current_path)) continue;
-			label=label.right(label.length()-this->current_path.length());
-			labelList=label.split("/",QString::SkipEmptyParts);
-			if (seenMap[labelList[0]]==labelList[0]) continue;
-			seenMap[labelList[0]]=labelList[0];
-			curItem->setData(labelList[0],NGQStandardItemModel::ItemName);
-			curItem->setData(labelList[0],NGQStandardItemModel::ItemValue);
-			curItem->setData(QString(this->current_path).append(labelList[0]).append("/"),NGQStandardItemModel::ItemPath);
-			if (labelList.size()>1) {
-				curItem->setData("yes",NGQStandardItemModel::ItemIcon);
-			} else {
-				curItem->setData("no",NGQStandardItemModel::ItemIcon);
+			if (!item_attr_get(item, attr_path, &attr)) {
+				path="";
 			}
+			path=QString::fromLocal8Bit(attr.u.str);
+			item_coord_get(item, &c, 1);
+			QDomElement entry=retDoc.createElement("bookmark");
+			QDomElement nameTag=retDoc.createElement("label");
+			QDomElement pathTag=retDoc.createElement("path");
+			QDomElement typeTag=retDoc.createElement("type");
+			QDomElement distTag=retDoc.createElement("distance");
+			QDomElement directTag=retDoc.createElement("direction");
+			QDomElement coordsTag=retDoc.createElement("coords");
+			QDomText nameT=retDoc.createTextNode(label);
+			QDomText pathT=retDoc.createTextNode(path);
+			QDomText typeT=retDoc.createTextNode(QString(item_to_name(item->type)));
+			//QDomText distT=retDoc.createTextNode(QString::number(idist/1000));
+			//QDomText directT=retDoc.createTextNode(dirbuf);
+			QDomText distT=retDoc.createTextNode("100500");
+			QDomText directT=retDoc.createTextNode("nahuy");
+			QDomText coordsT=retDoc.createTextNode(QString("%1 %2").arg(c.x).arg(c.y));
+			nameTag.appendChild(nameT);
+			pathTag.appendChild(pathT);
+			typeTag.appendChild(typeT);
+			distTag.appendChild(distT);
+			directTag.appendChild(directT);
+			coordsTag.appendChild(coordsT);
+			entry.appendChild(nameTag);
+			entry.appendChild(pathTag);
+			entry.appendChild(typeTag);
+			entry.appendChild(distTag);
+			entry.appendChild(directTag);
+			entry.appendChild(coordsTag);
+			entries.appendChild(entry);
 
-			ret->appendRow(curItem);
 		}
 
-		this->object->guiWidget->rootContext()->setContextProperty("listModel",static_cast<QObject*>(ret));
-
-		return QString();
+		dbg(0,"%s\n",retDoc.toString().toLocal8Bit().constData());
+		return retDoc.toString();
 	}
 	QString AddBookmark(QString description) {
 		struct attr attr;
@@ -104,10 +118,10 @@ public slots:
 			return "Success";
 		}
 	}
-	QString Paste(QString location) {
+	QString Paste() {
 		struct attr attr;
 		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
-		if (!bookmarks_paste_bookmark(attr.u.bookmarks, location.toLocal8Bit().constData()) ) {
+		if (!bookmarks_paste_bookmark(attr.u.bookmarks) ) {
 			return "Failed!";
 		} else {
 			return "Success";
@@ -116,7 +130,7 @@ public slots:
 	QString Delete(QString bookmark) {
 		struct attr attr;
 		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
-		if (!bookmarks_del_bookmark(attr.u.bookmarks, bookmark.toLocal8Bit().constData()) ) {
+		if (!bookmarks_delete_bookmark(attr.u.bookmarks, bookmark.toLocal8Bit().constData()) ) {
 			return "Failed!";
 		} else {
 			return "Success";
