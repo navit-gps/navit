@@ -27,6 +27,7 @@
 #include "transform.h"
 #include "callback.h"
 #include "map.h"
+#include "command.h"
 #include "bookmarks.h"
 
 struct bookmarks {
@@ -194,8 +195,9 @@ bookmarks_load_hash(struct bookmarks *this_) {
 	}
 	bookmarks_move_root(this_);
 }
+
 struct bookmarks *
-bookmarks_new(struct attr *parent, /*struct attr **attrs,*/struct transformation *trans) {
+bookmarks_new(struct attr *parent, struct attr **attrs, struct transformation *trans) {
 	struct bookmarks *this_;
 
 	this_ = g_new0(struct bookmarks,1);
@@ -556,9 +558,6 @@ bookmarks_delete_bookmark(struct bookmarks *this_, const char *label) {
 
 int 
 bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const char* newName) {
-	struct bookmark_item_priv *b_item;
-	struct pcoord pc;
-	char *path;
 	int result;
 
 	bookmarks_item_rewind(this_);

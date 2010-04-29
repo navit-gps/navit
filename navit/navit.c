@@ -739,7 +739,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	
 	transform_setup(this_->trans, &center, zoom, (this_->orientation != -1) ? this_->orientation : 0);
 
-	this_->bookmarks=bookmarks_new(&this_->self, this_->trans);
+	this_->bookmarks=bookmarks_new(&this_->self, NULL, this_->trans);
 
 	this_->prevTs=0;
 

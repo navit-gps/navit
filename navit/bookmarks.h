@@ -26,7 +26,7 @@ extern "C" {
 
 /* prototypes */
 struct bookmarks;
-struct bookmarks *bookmarks_new(struct attr *parent,/* struct attr **attrs,*/ struct transformation *trans);
+struct bookmarks *bookmarks_new(struct attr *parent, struct attr **attrs, struct transformation *trans);
 void bookmarks_destroy(struct bookmarks *this_);
 void bookmarks_add_callback(struct bookmarks *this_, struct callback *cb);
 
