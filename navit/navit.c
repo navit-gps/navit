@@ -677,6 +677,17 @@ navit_cmd_set_destination(struct navit *this, char *function, struct attr **in, 
 	navit_set_destination(this, &pc, description, 1);
 }
 
+static void
+navit_cmd_fmt_coordinates(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct attr attr;
+	attr.type=attr_type_string_begin;
+	attr.u.str="Fix me";
+	if (out) {
+		*out=attr_generic_add_attr(*out, &attr);
+	}
+}
+
 static struct command_table commands[] = {
 	{"zoom_in",command_cast(navit_cmd_zoom_in)},
 	{"zoom_out",command_cast(navit_cmd_zoom_out)},
@@ -685,6 +696,7 @@ static struct command_table commands[] = {
 	{"set_center_cursor",command_cast(navit_cmd_set_center_cursor)},
 	{"set_destination",command_cast(navit_cmd_set_destination)},
 	{"announcer_toggle",command_cast(navit_cmd_announcer_toggle)},
+	{"fmt_coordinates",command_cast(navit_cmd_fmt_coordinates)},
 };
 	
 
