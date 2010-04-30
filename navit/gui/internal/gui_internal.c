@@ -4643,9 +4643,11 @@ static void gui_internal_button(void *data, int pressed, int button, struct poin
 		this->current.y=-1;
 		graphics_draw_mode(gra, draw_mode_begin);
 		gui_internal_call_highlighted(this);
-		gui_internal_highlight(this);
-		graphics_draw_mode(gra, draw_mode_end);
-		gui_internal_check_exit(this);
+		if (!event_main_loop_has_quit()) {
+			gui_internal_highlight(this);
+			graphics_draw_mode(gra, draw_mode_end);
+			gui_internal_check_exit(this);
+		}
 	}
 }
 
@@ -4868,8 +4870,10 @@ static void gui_internal_keypress(void *data, char *key)
 	default:
 		gui_internal_keypress_do(this, key);
 	}
-	graphics_draw_mode(this->gra, draw_mode_end);
-	gui_internal_check_exit(this);
+	if (!event_main_loop_has_quit()) {
+		graphics_draw_mode(this->gra, draw_mode_end);
+		gui_internal_check_exit(this);
+	}
 }
 
 
