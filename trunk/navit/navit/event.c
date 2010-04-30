@@ -27,6 +27,8 @@ static struct event_methods event_methods;
 static const char *e_requestor;
 static const char *e_system;
 
+static int has_quit;
+
 void event_main_loop_run(void)
 {
 	if (! event_methods.main_loop_run) {
@@ -40,6 +42,13 @@ void event_main_loop_quit(void)
 {
 	if (event_methods.main_loop_quit)
 		event_methods.main_loop_quit();
+	has_quit=1;
+}
+
+int
+event_main_loop_has_quit(void)
+{
+	return has_quit;
 }
 
 struct event_watch *
