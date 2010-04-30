@@ -48,16 +48,23 @@ struct event_methods {
 
 
 /* prototypes */
+enum event_watch_cond;
+struct callback;
+struct callback_list;
+struct event_idle;
+struct event_timeout;
+struct event_watch;
 void event_main_loop_run(void);
 void event_main_loop_quit(void);
+int event_main_loop_has_quit(void);
 struct event_watch *event_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb);
 void event_remove_watch(struct event_watch *ev);
 struct event_timeout *event_add_timeout(int timeout, int multi, struct callback *cb);
 void event_remove_timeout(struct event_timeout *ev);
 struct event_idle *event_add_idle(int priority, struct callback *cb);
 void event_remove_idle(struct event_idle *ev);
-int event_request_system(const char *system, const char *requestor);
 void event_call_callback(struct callback_list *cb);
+int event_request_system(const char *system, const char *requestor);
 /* end of prototypes */
 #ifdef __cplusplus
 }
