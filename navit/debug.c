@@ -87,7 +87,7 @@ debug_update_level(gpointer key, gpointer value, gpointer user_data)
 }
 
 void
-debug_level_set(const char *name, gint level)
+debug_level_set(const char *name, int level)
 {
 	if (!strcmp(name, "segv")) {
 		segv_level=level;
@@ -222,7 +222,133 @@ void debug_set_logfile(const char *path)
 	}
 }
 
+struct malloc_head {
+	int magic;
+	int size;
+	char *where;
+	void *return_address[8];
+	struct malloc_head *prev;
+	struct malloc_head *next;
+} *malloc_heads;
+
+struct malloc_tail {
+	int magic;
+};
+
+int mallocs;
+
+void
+debug_dump_mallocs(void)
+{
+	struct malloc_head *head=malloc_heads;
+	int i;
+	dbg(0,"mallocs %d\n",mallocs);
+	while (head) {
+		fprintf(stderr,"unfreed malloc from %s of size %d\n",head->where,head->size);
+		for (i = 0 ; i < 8 ; i++)
+			fprintf(stderr,"\tlist *%p\n",head->return_address[i]);
+#if 0
+		fprintf(stderr,"%s\n",head+1);
+#endif
+		head=head->next;
+	}
+}
+
+void *
+debug_malloc(const char *where, int line, const char *func, int size)
+{
+	struct malloc_head *head;
+	struct malloc_tail *tail;
+	if (!size)
+		return NULL;
+	mallocs++;
+	head=malloc(size+sizeof(*head)+sizeof(*tail));
+	head->magic=0xdeadbeef;
+	head->size=size;
+	head->prev=NULL;
+	head->next=malloc_heads;
+	malloc_heads=head;
+	if (head->next) 
+		head->next->prev=head;
+	head->where=g_strdup_printf("%s:%d %s",where,line,func);
+	head->return_address[0]=__builtin_return_address(0);
+	head->return_address[1]=__builtin_return_address(1);
+	head->return_address[2]=__builtin_return_address(2);
+	head->return_address[3]=__builtin_return_address(3);
+	head->return_address[4]=__builtin_return_address(4);
+	head->return_address[5]=__builtin_return_address(5);
+	head->return_address[6]=__builtin_return_address(6);
+	head->return_address[7]=__builtin_return_address(7);
+	head++;
+	tail=(struct malloc_tail *)((unsigned char *)head+size);
+	tail->magic=0xdeadbef0;
+	return head;
+}
+
+
+void *
+debug_malloc0(const char *where, int line, const char *func, int size)
+{
+	void *ret=debug_malloc(where, line, func, size);
+	if (ret)
+		memset(ret, 0, size);
+	return ret;
+}
+
+char *
+debug_strdup(const char *where, int line, const char *func, const char *ptr)
+{ 
+	int size;
+	char *ret;
+
+	if (!ptr)
+		return NULL;
+	size=strlen(ptr)+1;
+	ret=debug_malloc(where, line, func, size);
+	memcpy(ret, ptr, size);
+	return ret;
+}
+
+char *
+debug_guard(const char *where, int line, const char *func, char *str)
+{
+	char *ret=debug_strdup(where, line, func, str);
+	g_free(str);
+	return ret;
+}
+
+void
+debug_free(const char *where, int line, const char *func, void *ptr)
+{
+	struct malloc_head *head,*tail;
+	if (!ptr)
+		return;
+	mallocs--;
+	head=(struct malloc_head *)((unsigned char *)ptr-sizeof(*head));
+	tail=(struct malloc_tail *)((unsigned char *)ptr+head->size);
+	if (head->magic != 0xdeadbeef || tail->magic != 0xdeadbef0) {
+		fprintf(stderr,"Invalid free from %s:%d %s\n",where,line,func);
+	}
+	head->magic=0;
+	tail->magic=0;
+	if (head->prev) 
+		head->prev->next=head->next;
+	else
+		malloc_heads=head->next;
+	if (head->next)
+		head->next->prev=head->prev;
+	free(head->where);
+	free(head);
+}
+
+void
+debug_free_func(void *ptr)
+{
+	debug_free("unknown",0,"unknown",ptr);
+}
+
 void debug_finished(void) {
+	debug_dump_mallocs();
 	g_free(gdb_program);
 	g_hash_table_destroy(debug_hash);
 	debug_destroy();
