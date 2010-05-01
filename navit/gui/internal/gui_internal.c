@@ -41,7 +41,6 @@
 #include "file.h"
 #include "navit.h"
 #include "navit_nls.h"
-#include "debug.h"
 #include "gui.h"
 #include "coord.h"
 #include "point.h"
@@ -71,12 +70,15 @@
 #include "xmlconfig.h"
 #include "util.h"
 #include "bookmarks.h"
+#include "debug.h"
+
 
 extern char *version;
 
 struct form {
 	char *onsubmit;
 };
+
 
 struct menu_data {
 	struct widget *search_list;
@@ -86,6 +88,8 @@ struct menu_data {
 	int keyboard_mode;
 	void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
 	struct widget *redisplay_widget;
+	char *href;
+	struct attr refresh_callback_obj,refresh_callback;
 };
 
 //##############################################################################################################
@@ -286,6 +290,7 @@ struct gui_priv {
 	struct widget *html_container;
 	int html_skip;
 	char *html_anchor;
+	char *href;
 	int html_anchor_found;
 	struct form *form;
 	struct html {
@@ -304,6 +309,7 @@ struct gui_priv {
 		char *command;
 		char *name;
 		char *href;
+		char *refresh_cond;
 		struct widget *w;
 		struct widget *container;
 	} html[10];
@@ -434,6 +440,8 @@ static struct menu_data * gui_internal_menu_data(struct gui_priv *this);
 
 static int gui_internal_is_active_vehicle(struct gui_priv *this, struct vehicle *vehicle);
 static void gui_internal_html_menu(struct gui_priv *this, const char *document, char *anchor);
+static void gui_internal_html_load_href(struct gui_priv *this, char *href, int replace);
+static void gui_internal_destroy(struct gui_priv *this);
 
 /*
  * * Display image scaled to specific size
@@ -697,6 +705,7 @@ gui_internal_text_font_new(struct gui_priv *this, char *text, int font, enum fla
 		s2=NULL;
 	}
 	gui_internal_widget_pack(this,ret);
+	g_free(s);
 	return ret;
 }
 
@@ -1393,44 +1402,76 @@ gui_internal_say(struct gui_priv *this, struct widget *w, int questionmark)
 }
 
 static void
-gui_internal_prune_menu(struct gui_priv *this, struct widget *w)
+gui_internal_menu_destroy(struct gui_priv *this, struct widget *w)
+{
+	struct menu_data *menu_data=w->menu_data;
+	if (menu_data) {
+		if (menu_data->refresh_callback_obj.type) {
+			struct object_func *func;
+			func=object_func_lookup(menu_data->refresh_callback_obj.type);
+			if (func && func->remove_attr)
+				func->remove_attr(menu_data->refresh_callback_obj.u.data, &menu_data->refresh_callback);
+		}
+		if (menu_data->refresh_callback.u.callback)
+			callback_destroy(menu_data->refresh_callback.u.callback);
+		
+		g_free(menu_data->href);
+		g_free(menu_data);
+	}
+	gui_internal_widget_destroy(this, w);
+	this->root.children=g_list_remove(this->root.children, w);
+}
+
+static void
+gui_internal_prune_menu_do(struct gui_priv *this, struct widget *w, int render)
 {
 	GList *l;
-	struct widget *wr;
+	struct widget *wr,*wd;
 	gui_internal_search_idle_end(this);
 	while ((l = g_list_last(this->root.children))) {
-		if (l->data == w) {
+		wd=l->data;
+		if (wd == w) {
 			void (*redisplay)(struct gui_priv *priv, struct widget *widget, void *data);
+			if (!render)
+				return;
 			gui_internal_say(this, w, 0);
 			redisplay=w->menu_data->redisplay;
 			wr=w->menu_data->redisplay_widget;
-			if (!w->menu_data->redisplay) {
+			if (!w->menu_data->redisplay && !w->menu_data->href) {
 				gui_internal_widget_render(this, w);
 				return;
 			}
-			gui_internal_widget_destroy(this, l->data);
-			this->root.children=g_list_remove(this->root.children, l->data);
-			redisplay(this, wr, wr->data);
+			if (redisplay) {
+				gui_internal_menu_destroy(this, w);
+				redisplay(this, wr, wr->data);
+			} else {
+				char *href=g_strdup(w->menu_data->href);
+				gui_internal_menu_destroy(this, w);
+				gui_internal_html_load_href(this, href, 0);
+				g_free(href);
+			}
 			return;
 		}
-		gui_internal_widget_destroy(this, l->data);
-		this->root.children=g_list_remove(this->root.children, l->data);
+		gui_internal_menu_destroy(this, wd);
 	}
+}
+
+static void
+gui_internal_prune_menu(struct gui_priv *this, struct widget *w)
+{
+	gui_internal_prune_menu_do(this, w, 1);
 }
 
 static void
 gui_internal_prune_menu_count(struct gui_priv *this, int count, int render)
 {
-	GList *l;
-	gui_internal_search_idle_end(this);
-	while ((l = g_list_last(this->root.children)) && count-- > 0) {
-		gui_internal_widget_destroy(this, l->data);
-		this->root.children=g_list_remove(this->root.children, l->data);
-	}
-	if (l && render) {
-		gui_internal_say(this, l->data, 0);
-		gui_internal_widget_render(this, l->data);
-	}
+	GList *l=g_list_last(this->root.children);
+	struct widget *w=NULL;
+	while (l && count-- > 0) 
+		l=g_list_previous(l);
+	if (l)
+		w=l->data;
+	gui_internal_prune_menu_do(this, w, render);
 }
 
 static void
@@ -2510,7 +2551,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 			wbc=gui_internal_button_new_with_callback(this, _("Set as destination"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_set_destination, g_strdup(name)));
-		wbc->data_free=g_free;
+		wbc->data_free=g_free_func;
 		wbc->c=pc;
 	}
 	if (flags & 16) {
@@ -2525,7 +2566,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 			wbc=gui_internal_button_new_with_callback(this, _("Add as bookmark"),
 			image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 			gui_internal_cmd_add_bookmark2, g_strdup(name)));
-		wbc->data_free=g_free;
+		wbc->data_free=g_free_func;
 		wbc->c=pc;
 	}
 	if (flags & 64) {
@@ -3140,7 +3181,7 @@ gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char 
 static struct widget *
 gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text, char *key, int w, int h)
 {
-	return gui_internal_keyboard_key_data(this, wkbd, text, 0, gui_internal_cmd_keypress, g_strdup(key), g_free,w,h);
+	return gui_internal_keyboard_key_data(this, wkbd, text, 0, gui_internal_cmd_keypress, g_strdup(key), g_free_func,w,h);
 }
 
 static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *data);
@@ -3577,10 +3618,12 @@ static void
 gui_internal_cmd2_quit(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
 	struct attr navit;
+	gui_internal_prune_menu(this, NULL);
 	navit.type=attr_navit;
 	navit.u.navit=this->nav;
 	navit_destroy(navit.u.navit);
 	config_remove_attr(config, &navit);
+	gui_internal_destroy(this);
 	event_main_loop_quit();
 }
 
@@ -4045,6 +4088,8 @@ gui_internal_html_load_href(struct gui_priv *this, char *href, int replace)
 		gui_internal_prune_menu_count(this, 1, 0);
 	if (href && href[0] == '#') {
 		dbg(1,"href=%s\n",href);
+		g_free(this->href);
+		this->href=g_strdup(href);
 		gui_internal_html_menu(this, this->html_text, href+1);
 	}
 }
@@ -4171,6 +4216,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 					this->html_anchor_found=1;
 			}
 			html->href=find_attr_dup(names, values, "href");
+			html->refresh_cond=find_attr_dup(names, values, "refresh_cond");
 			break;
 		case html_tag_img:
 			html->command=find_attr_dup(names, values, "onclick");
@@ -4267,6 +4313,38 @@ gui_internal_html_end(void *dummy, const char *tag_name, void *data, void *error
 	g_free(html->command);
 	g_free(html->name);
 	g_free(html->href);
+	g_free(html->refresh_cond);
+}
+
+static void
+gui_internal_refresh_callback_called(struct gui_priv *this, struct menu_data *menu_data)
+{
+	if (gui_internal_menu_data(this) == menu_data) {
+		char *href=g_strdup(menu_data->href);
+		gui_internal_html_load_href(this, href, 1);
+		g_free(href);
+	}
+}
+
+static void
+gui_internal_set_refresh_callback(struct gui_priv *this, char *cond)
+{
+	dbg(0,"cond=%s\n",cond);
+	if (cond) {
+		enum attr_type type;
+		struct object_func *func;
+		struct menu_data *menu_data=gui_internal_menu_data(this);
+		dbg(0,"navit=%p\n",this->nav);
+		type=command_evaluate_to_attr(&this->self, cond, NULL, &menu_data->refresh_callback_obj);
+		if (type == attr_none)
+			return;
+		func=object_func_lookup(menu_data->refresh_callback_obj.type);
+		if (!func || !func->add_attr)
+			return;
+		menu_data->refresh_callback.type=attr_callback;
+		menu_data->refresh_callback.u.callback=callback_new_attr_2(gui_internal_refresh_callback_called,type,this,menu_data);
+		func->add_attr(menu_data->refresh_callback_obj.u.data, &menu_data->refresh_callback);
+	}
 }
 
 static void
@@ -4299,6 +4377,8 @@ gui_internal_html_text(void *dummy, const char *text, int len, void *data, void 
 		if (html->name && len) {
 			this->html_container=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_expand|flags_fill);
 			gui_internal_widget_append(gui_internal_menu(this, gettext(text_stripped)), this->html_container);
+			gui_internal_menu_data(this)->href=g_strdup(this->href);
+			gui_internal_set_refresh_callback(this, html->refresh_cond);
 			this->html_container->spx=this->spacing*10;
 		}
 		break;
@@ -4939,7 +5019,7 @@ struct gui_methods gui_internal_methods = {
 	gui_internal_set_attr,
 };
 
-static void
+	static void
 gui_internal_get_data(struct gui_priv *priv, char *command, struct attr **in, struct attr ***out)
 {
 	struct attr private_data = (struct attr) { attr_private_data, {(void *)&priv->data}};
@@ -6211,3 +6291,11 @@ void plugin_init(void)
 	plugin_register_gui_type("internal", gui_internal_new);
 }
 
+static void
+gui_internal_destroy(struct gui_priv *this)
+{
+	g_free(this->country_iso2);
+	g_free(this->href);
+	g_free(this->html_text);
+	g_free(this);
+}
