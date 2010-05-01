@@ -754,6 +754,20 @@ command_evaluate_to(struct attr *attr, const char *expr, struct context *ctx, st
 	eval_comma(ctx,res);
 }
 
+enum attr_type
+command_evaluate_to_attr(struct attr *attr, char *expr, int *error, struct attr *ret)
+{
+	struct result res;
+	struct context ctx;
+	command_evaluate_to(attr, expr, &ctx, &res);
+	if (ctx.error)
+		return attr_none;
+	resolve_object(&ctx, &res);
+	*ret=res.attr;
+	dbg(0,"type %s\n",attr_to_name(command_attr_type(&res)));
+	return command_attr_type(&res);
+}
+
 void
 command_evaluate_to_void(struct attr *attr, char *expr, int *error)
 {
