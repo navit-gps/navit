@@ -32,17 +32,19 @@ struct command_table {
 #define command_cast(x) (int (*)(void *, char *, struct attr **, struct attr ***))(x)
 
 /* prototypes */
+enum attr_type;
 struct attr;
 struct callback;
 struct callback_list;
 struct command_saved;
 struct command_table;
 struct navit;
+enum attr_type command_evaluate_to_attr(struct attr *attr, char *expr, int *error, struct attr *ret);
 void command_evaluate_to_void(struct attr *attr, char *expr, int *error);
 char *command_evaluate_to_string(struct attr *attr, char *expr, int *error);
 int command_evaluate_to_int(struct attr *attr, char *expr, int *error);
 int command_evaluate_to_boolean(struct attr *attr, const char *expr, int *error);
-void command_evaluate(struct attr *attr,const char *expr);
+void command_evaluate(struct attr *attr, const char *expr);
 void command_add_table_attr(struct command_table *table, int count, void *data, struct attr *attr);
 void command_add_table(struct callback_list *cbl, struct command_table *table, int count, void *data);
 void command_saved_set_cb(struct command_saved *cs, struct callback *cb);
