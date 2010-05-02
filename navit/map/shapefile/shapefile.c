@@ -93,14 +93,15 @@ shapefile_coord(struct map_rect_priv *mr, int idx, struct coord *c)
 	struct coord cs;
 	struct coord_geo g;
 
-	cs.x=psShape->padfX[idx]+mr->m->offset.x;
-	cs.y=psShape->padfY[idx]+mr->m->offset.y;
 	if (!mr->m->pro) {
-		g.lng=cs.x;
-		g.lat=cs.y;
+		g.lng=psShape->padfX[idx]+mr->m->offset.x;
+		g.lat=psShape->padfY[idx]+mr->m->offset.y;
 		transform_from_geo(projection_mg, &g, c);
-	} else
+	} else {
+		cs.x=psShape->padfX[idx]+mr->m->offset.x;
+		cs.y=psShape->padfY[idx]+mr->m->offset.y;
 		transform_from_to(&cs, mr->m->pro, c, projection_mg);
+	}
 }
 
 static int
