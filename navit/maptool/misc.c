@@ -113,8 +113,10 @@ phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes)
 			while (item_attr_get(item, attr_any, &attr)) {
 				if (attr.type >= attr_type_string_begin && attr.type <= attr_type_string_end) {
 					attr.u.str=map_convert_string(maps->data, attr.u.str);
-					item_bin_add_attr(item_bin, &attr);
-					map_convert_free(attr.u.str);
+					if (attr.u.str) {
+						item_bin_add_attr(item_bin, &attr);
+						map_convert_free(attr.u.str);
+					}
 				} else 
 					item_bin_add_attr(item_bin, &attr);
 			}
