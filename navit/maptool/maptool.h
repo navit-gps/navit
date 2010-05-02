@@ -196,7 +196,7 @@ extern struct rect world_bbox;
 void bbox_extend(struct coord *c, struct rect *r);
 void bbox(struct coord *c, int count, struct rect *r);
 int contains_bbox(int xl, int yl, int xh, int yh, struct rect *r);
-void phase1_map(struct map *map, FILE *out_ways, FILE *out_nodes);
+void phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes);
 void dump(FILE *in);
 int phase4(FILE **in, int in_count, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info);
 int phase5(FILE **in, FILE **references, int in_count, char *suffix, struct zip_info *zip_info);
