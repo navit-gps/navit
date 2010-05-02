@@ -156,7 +156,8 @@ int main(int argc, char **argv)
 #endif
 	FILE* input_file = stdin;
 	struct attr *attrs[10];
-	struct map *map_handle=NULL;
+	GList *map_handles=NULL;
+	struct map *handle;
 #if 0
 	char *suffixes[]={"m0l0", "m0l1","m0l2","m0l3","m0l4","m0l5","m0l6"};
 	char *suffixes[]={"m","r"};
@@ -261,11 +262,12 @@ int main(int argc, char **argv)
 			attrs[i++]=NULL;
 			g_free(attr_value);
 			g_free(optarg_cp);
-			map_handle=map_new(NULL, attrs);
-			if (! map_handle) {
+			handle=map_new(NULL, attrs);
+			if (! handle) {
 				fprintf(stderr,"Failed to create map from attributes\n");
 				exit(1);
 			}
+			map_handles=g_list_append(map_handles,handle);
 			break;	
 		case 'n':
 			fprintf(stderr,"I will IGNORE unknown types\n");
@@ -327,9 +329,14 @@ int main(int argc, char **argv)
 			map_collect_data_osm_db(dbstr,ways,nodes);
 		else
 #endif
-		if (map_handle) {
-			phase1_map(map_handle,ways,nodes);
-			map_destroy(map_handle);
+		if (map_handles) {
+			GList *l;
+			phase1_map(map_handles,ways,nodes);
+			l=map_handles;
+			while (l) {
+				map_destroy(l->data);
+				l=g_list_next(l);
+			}
 		}
 		else
 			map_collect_data_osm(input_file,ways,nodes,turn_restrictions);
