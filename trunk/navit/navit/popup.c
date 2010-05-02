@@ -268,6 +268,14 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 	popup_printf(menu_item, menu_type_menu, "type: 0x%x", diitem->type);
 	popup_printf(menu_item, menu_type_menu, "id: 0x%x 0x%x", diitem->id_hi, diitem->id_lo);
 	if (diitem->map) {
+		struct attr type,data;
+		if (!map_get_attr(diitem->map, attr_type, &type, NULL))
+			type.u.str="";
+		if (!map_get_attr(diitem->map, attr_data, &data, NULL))
+			data.u.str="";
+		popup_printf(menu_item, menu_type_menu, "map: %s:%s", type.u.str, data.u.str);
+	}
+	if (diitem->map) {
 		mr=map_rect_new(diitem->map,NULL);
 		item=map_rect_get_item_byid(mr, diitem->id_hi, diitem->id_lo);
 		dbg(1,"item=%p\n", item);
