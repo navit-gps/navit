@@ -175,7 +175,7 @@ else
 fi
 CCLD_FOR_BUILD="$CC_FOR_BUILD"
 AC_SUBST(cross_compiling)
-AM_CONDITIONAL(CROSS_COMPILING, test "${cross_compiling}" = "xyes")
+AM_CONDITIONAL(CROSS_COMPILING, test "x${cross_compiling}" = "xyes")
 AC_SUBST(CC_FOR_BUILD)
 AC_SUBST(CCLD_FOR_BUILD)
 
