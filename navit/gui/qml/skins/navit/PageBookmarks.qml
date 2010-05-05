@@ -7,6 +7,12 @@ Rectangle {
     color: "Black"
     opacity: 0
 
+    function bookmarkReload() {
+	    listModel.xml=bookmarks.getBookmarks();
+	    listModel.query="/bookmarks/bookmark";
+	    listModel.reload();        
+    }
+
     function bookmarkClick(itemName,itemType,itemCoord) {
         if (itemType=="bookmark_folder") {
 	    if ( itemName==".." ) {
@@ -14,9 +20,7 @@ Rectangle {
 	    } else {
 	        bookmarks.moveDown(itemName);
 	    }
-	    listModel.xml=bookmarks.getBookmarks();
-	    listModel.query="/bookmarks/bookmark";
-	    listModel.reload();
+	    bookmarkReload();
 	} else {
 	   bookmarks.setPoint(itemName);
 	   gui.setPage("PageNavigate.qml");
@@ -31,6 +35,13 @@ Rectangle {
     
     opacity: Behavior {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
+    }
+
+    ButtonIcon { id: folderBtn; text: "New folder"; icon: "gui_active.svg"; onClicked: folderDialog.opacity=1
+		      anchors.top: parent.top; anchors.topMargin: page.height/16; anchors.left: parent.left; anchors.leftMargin: page.width/16
+    }
+    ButtonIcon { id: pasteBtn; text: "Paste"; icon: "gui_active.svg"; onClicked: { bookmarks.Paste(); bookmarkReload(); } 
+		      anchors.top: parent.top; anchors.topMargin: page.height/16; anchors.left: folderBtn.right; anchors.leftMargin: page.width/16
     }
 
     XmlListModel {
@@ -64,37 +75,27 @@ Rectangle {
 			MouseRegion {
 				id:delegateMouseCut
 				anchors.fill: parent
-				onClicked: { bookmarks.Cut(itemName); listModel.xml=bookmarks.getBookmarks(); listModel.query="/bookmarks/bookmark"; listModel.reload(); }
+				onClicked: { bookmarks.Cut(itemName); bookmarkReload(); }
 			}
 		}
 		 Image {
-			id: imgCopy; source: gui.iconPath+"zoom_in.svg"; anchors.right: imgPaste.left;anchors.rightMargin: 5;
+			id: imgCopy; source: gui.iconPath+"zoom_in.svg"; anchors.right: imgDelete.left;anchors.rightMargin: 5;
 			width: 20; height: 20;
 
 			MouseRegion {
 				id:delegateMouseCopy
 				anchors.fill: parent
-				onClicked: { bookmarks.Copy(itemName); listModel.xml=bookmarks.getBookmarks(); listModel.query="/bookmarks/bookmark"; listModel.reload(); }
+				onClicked: { bookmarks.Copy(itemName); bookmarkReload(); }
 			}
 		}
-		Image {
-			id: imgPaste; source: gui.iconPath+"mark.svg"; anchors.right: imgDelete.left;anchors.rightMargin: 5;
-			width: 20; height: 20;
-
-			MouseRegion {
-				id:delegateMousePaste
-				anchors.fill: parent
-				onClicked: { bookmarks.Paste(); listModel.xml=bookmarks.getBookmarks(); listModel.query="/bookmarks/bookmark"; listModel.reload(); }
-			}
-		}
-		 Image {
+    	       Image {
 			id: imgDelete; source: gui.iconPath+"gui_inactive.svg"; anchors.right: wrapper.right;anchors.rightMargin: 5;
 			width: 20; height: 20;
 
 			MouseRegion {
 				id:delegateMouseDelete
 				anchors.fill: parent
-				onClicked: { bookmarks.Delete(itemName); listModel.xml=bookmarks.getBookmarks(); listModel.query="/bookmarks/bookmark"; listModel.reload(); }
+				onClicked: { bookmarks.Delete(itemName); bookmarkReload(); }
 			}
 		}
          }
@@ -109,11 +110,34 @@ Rectangle {
 
     ListSelector { 
 	id:layoutList; text: ""
-	anchors.top: parent.top;
+	anchors.top: pasteBtn.bottom;
 	anchors.left: parent.left; anchors.leftMargin: 3
 	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
 	width: page.width; height: page.height*0.25
     }
 
     Cellar {id: cellar; anchors.bottom: page.bottom; anchors.horizontalCenter: page.horizontalCenter; width: page.width }
+
+    Rectangle {
+        id: folderDialog
+        opacity:0
+	anchors.horizontalCenter: page.horizontalCenter; anchors.verticalCenter: page.verticalCenter;
+	width: page.width; height:page.height/3
+        color: "Grey";
+
+	TextInput{
+     	    id: folderTxt; text: "Enter folder name here..."
+	    anchors.top: parent.top;anchors.topMargin: 5;anchors.horizontalCenter:parent.horizontalCenter
+	    width: page.width; font.pointSize: 14; color: "White";focus: true; readOnly: false
+       }
+
+	ButtonIcon {
+            id: btnOk; text: "Add"; icon: "gui_active.svg"; onClicked: { bookmarks.AddFolder(folderTxt.text); bookmarkReload(); folderDialog.opacity=0 }
+	    anchors.top: folderTxt.bottom;anchors.topMargin: 5;anchors.right:parent.horizontalCenter;anchors.rightMargin:10
+        }
+	ButtonIcon {
+            id: btnCancel; text: "Cancel"; icon: "gui_inactive.svg"; onClicked: folderDialog.opacity=0;
+	    anchors.top: folderTxt.bottom;anchors.topMargin: 5;anchors.left:parent.horizontalCenter;anchors.leftMargin:10
+        }
+    }
 }
