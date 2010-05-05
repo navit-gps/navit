@@ -35,7 +35,6 @@ Rectangle {
              model: listModel
              delegate: listDelegate
              highlight: listHighlight
-             focus: true
 	     clip: true
 	     highlightFollowsCurrentItem: true
 	     keyNavigationWraps: true
