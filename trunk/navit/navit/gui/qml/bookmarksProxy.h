@@ -107,6 +107,15 @@ public slots:
 		dbg(0,"%s\n",retDoc.toString().toLocal8Bit().constData());
 		return retDoc.toString();
 	}
+	QString AddFolder(QString description) {
+		struct attr attr;
+		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
+		if (!bookmarks_add_bookmark(attr.u.bookmarks, NULL, description.toLocal8Bit().constData()) ) {
+			return "Failed!";
+		} else {
+			return "Success";
+		}
+	}
 	QString AddBookmark(QString description) {
 		struct attr attr;
 		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
