@@ -9,10 +9,17 @@ Rectangle {
 
     function bookmarkClick(itemName,itemType,itemCoord) {
         if (itemType=="bookmark_folder") {
-	    bookmarks.moveDown(itemName);
-	    listModel.xml=bookmarks.getBookmarks("bookmarks");
-	    listModel.xml="";
+	    if ( itemName==".." ) {
+		bookmarks.moveUp();
+	    } else {
+	        bookmarks.moveDown(itemName);
+	    }
+	    listModel.xml=bookmarks.getBookmarks();
+	    listModel.query="/bookmarks/bookmark";
 	    listModel.reload();
+	} else {
+	   bookmarks.setPoint(itemName);
+	   gui.setPage("PageNavigate.qml");
 	}
     }
 
@@ -57,7 +64,7 @@ Rectangle {
 			MouseRegion {
 				id:delegateMouseCut
 				anchors.fill: parent
-				onClicked: { bookmarks.Cut(itemId); bookmarks.getAttrList(""); }
+				onClicked: { bookmarks.Cut(itemName); listModel.xml=bookmarks.getBookmarks(); listModel.query="/bookmarks/bookmark"; listModel.reload(); }
 			}
 		}
 		 Image {
@@ -67,7 +74,7 @@ Rectangle {
 			MouseRegion {
 				id:delegateMouseCopy
 				anchors.fill: parent
-				onClicked: { bookmarks.Copy(itemId); bookmarks.getAttrList(""); }
+				onClicked: { bookmarks.Copy(itemName); listModel.xml=bookmarks.getBookmarks(); listModel.query="/bookmarks/bookmark"; listModel.reload(); }
 			}
 		}
 		Image {
@@ -77,7 +84,7 @@ Rectangle {
 			MouseRegion {
 				id:delegateMousePaste
 				anchors.fill: parent
-				onClicked: { bookmarks.Paste(bookmarks.currentPath); bookmarks.getAttrList(""); }
+				onClicked: { bookmarks.Paste(); listModel.xml=bookmarks.getBookmarks(); listModel.query="/bookmarks/bookmark"; listModel.reload(); }
 			}
 		}
 		 Image {
@@ -87,7 +94,7 @@ Rectangle {
 			MouseRegion {
 				id:delegateMouseDelete
 				anchors.fill: parent
-				onClicked: { bookmarks.Delete(itemId); bookmarks.getAttrList(""); }
+				onClicked: { bookmarks.Delete(itemName); listModel.xml=bookmarks.getBookmarks(); listModel.query="/bookmarks/bookmark"; listModel.reload(); }
 			}
 		}
          }

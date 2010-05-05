@@ -4,18 +4,10 @@
 class NGQProxyBookmarks : public NGQProxy {
     Q_OBJECT;
 
-
-	Q_PROPERTY(QString currentPath READ currentPath WRITE setCurrentPath);
 public:
 	NGQProxyBookmarks(struct gui_priv* object, QObject* parent) : NGQProxy(object,parent) { };
 
 public slots:
-	QString currentPath() {
-		return this->current_path;
-	}
-	void setCurrentPath(QString currentPath) {
-		this->current_path=currentPath;
-	}
 	void moveRoot() {
 		struct attr mattr;
 		navit_get_attr(this->object->nav, attr_bookmarks, &mattr, NULL);
@@ -32,17 +24,42 @@ public slots:
 		bookmarks_move_down(mattr.u.bookmarks,path.toLocal8Bit().constData());
 	}
 
-	QString getBookmarks(const QString &attr_name) {
+	QString getBookmarks() {
 		struct attr attr,mattr;
 		struct item* item;
 		struct coord c;
-		QDomDocument retDoc(attr_name);
+		QDomDocument retDoc("bookmarks");
 		QDomElement entries;
 
-		entries=retDoc.createElement(attr_name);
+		entries=retDoc.createElement("bookmarks");
 		retDoc.appendChild(entries);
 
 		navit_get_attr(this->object->nav, attr_bookmarks, &mattr, NULL);
+
+        if (bookmarks_item_cwd(mattr.u.bookmarks)) {
+			QDomElement entry=retDoc.createElement("bookmark");
+			QDomElement nameTag=retDoc.createElement("label");
+			QDomElement pathTag=retDoc.createElement("path");
+			QDomElement typeTag=retDoc.createElement("type");
+			QDomElement distTag=retDoc.createElement("distance");
+			QDomElement directTag=retDoc.createElement("direction");
+			QDomElement coordsTag=retDoc.createElement("coords");
+			QDomText nameT=retDoc.createTextNode("..");
+			QDomText pathT=retDoc.createTextNode("..");
+			QDomText typeT=retDoc.createTextNode(QString(item_to_name(type_bookmark_folder)));
+			QDomText coordsT=retDoc.createTextNode(QString("%1 %2").arg(0).arg(0));
+			nameTag.appendChild(nameT);
+			pathTag.appendChild(pathT);
+			typeTag.appendChild(typeT);
+			coordsTag.appendChild(coordsT);
+			entry.appendChild(nameTag);
+			entry.appendChild(pathTag);
+			entry.appendChild(typeTag);
+			entry.appendChild(distTag);
+			entry.appendChild(directTag);
+			entry.appendChild(coordsTag);
+			entries.appendChild(entry);
+		}
 
 		bookmarks_item_rewind(mattr.u.bookmarks);
 		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
@@ -85,7 +102,6 @@ public slots:
 			entry.appendChild(directTag);
 			entry.appendChild(coordsTag);
 			entries.appendChild(entry);
-
 		}
 
 		dbg(0,"%s\n",retDoc.toString().toLocal8Bit().constData());
@@ -137,23 +153,19 @@ public slots:
 		}
 	}
 	void setPoint(QString bookmark) {
-		struct attr attr;
+		struct attr attr, mattr;
 		struct item* item;
 		struct coord c;
-		struct map_rect *mr=NULL;
 
-		navit_get_attr(this->object->nav, attr_bookmarks, &attr, NULL);
-		mr=map_rect_new(bookmarks_get_map(attr.u.bookmarks), NULL);
-		if (!mr) {
-			return;
-		}
+		navit_get_attr(this->object->nav, attr_bookmarks, &mattr, NULL);
 
-		while ((item=map_rect_get_item(mr))) {
+		bookmarks_item_rewind(mattr.u.bookmarks);
+		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
 			QString label;
 
 			if (item->type != type_bookmark) continue;
 			if (!item_attr_get(item, attr_label, &attr)) continue;
-			
+
 			label=QString::fromLocal8Bit(attr.u.str);
 			dbg(0,"Bookmark is %s\n",bookmark.toStdString().c_str());
 			if (label.compare(bookmark)) continue;
@@ -175,7 +187,6 @@ protected:
 	void dropIterFunc(struct attr_iter* iter) { return; };
 
 private:
-	QString current_path;
 };
 
 #include "bookmarksProxy.moc"
