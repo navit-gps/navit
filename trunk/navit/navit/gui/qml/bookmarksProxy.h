@@ -38,26 +38,12 @@ public slots:
 
         if (bookmarks_item_cwd(mattr.u.bookmarks)) {
 			QDomElement entry=retDoc.createElement("bookmark");
-			QDomElement nameTag=retDoc.createElement("label");
-			QDomElement pathTag=retDoc.createElement("path");
-			QDomElement typeTag=retDoc.createElement("type");
-			QDomElement distTag=retDoc.createElement("distance");
-			QDomElement directTag=retDoc.createElement("direction");
-			QDomElement coordsTag=retDoc.createElement("coords");
-			QDomText nameT=retDoc.createTextNode("..");
-			QDomText pathT=retDoc.createTextNode("..");
-			QDomText typeT=retDoc.createTextNode(QString(item_to_name(type_bookmark_folder)));
-			QDomText coordsT=retDoc.createTextNode(QString("%1 %2").arg(0).arg(0));
-			nameTag.appendChild(nameT);
-			pathTag.appendChild(pathT);
-			typeTag.appendChild(typeT);
-			coordsTag.appendChild(coordsT);
-			entry.appendChild(nameTag);
-			entry.appendChild(pathTag);
-			entry.appendChild(typeTag);
-			entry.appendChild(distTag);
-			entry.appendChild(directTag);
-			entry.appendChild(coordsTag);
+			entry.appendChild(this->_fieldValueHelper(retDoc,"label",".."));
+			entry.appendChild(this->_fieldValueHelper(retDoc,"path",".."));
+			entry.appendChild(this->_fieldValueHelper(retDoc,"type",QString(item_to_name(type_bookmark_folder))));
+			entry.appendChild(this->_fieldValueHelper(retDoc,"distance",""));
+			entry.appendChild(this->_fieldValueHelper(retDoc,"direction",""));
+			entry.appendChild(this->_fieldValueHelper(retDoc,"coords",QString("%1 %2").arg(0).arg(0)));
 			entries.appendChild(entry);
 		}
 
@@ -75,36 +61,18 @@ public slots:
 			path=QString::fromLocal8Bit(attr.u.str);
 			item_coord_get(item, &c, 1);
 			QDomElement entry=retDoc.createElement("bookmark");
-			QDomElement nameTag=retDoc.createElement("label");
-			QDomElement pathTag=retDoc.createElement("path");
-			QDomElement typeTag=retDoc.createElement("type");
-			QDomElement distTag=retDoc.createElement("distance");
-			QDomElement directTag=retDoc.createElement("direction");
-			QDomElement coordsTag=retDoc.createElement("coords");
-			QDomText nameT=retDoc.createTextNode(label);
-			QDomText pathT=retDoc.createTextNode(path);
-			QDomText typeT=retDoc.createTextNode(QString(item_to_name(item->type)));
-			//QDomText distT=retDoc.createTextNode(QString::number(idist/1000));
-			//QDomText directT=retDoc.createTextNode(dirbuf);
-			QDomText distT=retDoc.createTextNode("100500");
-			QDomText directT=retDoc.createTextNode("nahuy");
-			QDomText coordsT=retDoc.createTextNode(QString("%1 %2").arg(c.x).arg(c.y));
-			nameTag.appendChild(nameT);
-			pathTag.appendChild(pathT);
-			typeTag.appendChild(typeT);
-			distTag.appendChild(distT);
-			directTag.appendChild(directT);
-			coordsTag.appendChild(coordsT);
-			entry.appendChild(nameTag);
-			entry.appendChild(pathTag);
-			entry.appendChild(typeTag);
-			entry.appendChild(distTag);
-			entry.appendChild(directTag);
-			entry.appendChild(coordsTag);
+			entry.appendChild(this->_fieldValueHelper(retDoc,"label",label));
+			entry.appendChild(this->_fieldValueHelper(retDoc,"path",path));
+			entry.appendChild(this->_fieldValueHelper(retDoc,"type",QString(item_to_name(item->type))));
+			//entry.appendChild(this->_fieldValueHelper(retDoc,"distance",QString::number(idist/1000)));
+			entry.appendChild(this->_fieldValueHelper(retDoc,"distance","100500"));
+			//entry.appendChild(this->_fieldValueHelper(retDoc,"direction",dirbuf));
+			entry.appendChild(this->_fieldValueHelper(retDoc,"direction","nahut"));
+			entry.appendChild(this->_fieldValueHelper(retDoc,"coords",QString("%1 %2").arg(c.x).arg(c.y)));
 			entries.appendChild(entry);
 		}
 
-		dbg(0,"%s\n",retDoc.toString().toLocal8Bit().constData());
+		dbg(2,"%s\n",retDoc.toString().toLocal8Bit().constData());
 		return retDoc.toString();
 	}
 	QString AddFolder(QString description) {
