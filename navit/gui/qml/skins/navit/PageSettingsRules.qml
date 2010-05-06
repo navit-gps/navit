@@ -18,24 +18,20 @@ Rectangle {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
 
-    Grid {
-        columns: 1; rows: 4
-        anchors.horizontalCenter: parent.horizontalCenter;
-        anchors.verticalCenter: parent.verticalCenter;
-        spacing: gui.width/12
-        ToggleSwitch {
-             id: trackingSw; stOn: navit.getAttr("tracking");  text: "Lock on road"; onChanged: navit.setAttr("tracking",trackingSw.stOn)
-        }
-        ToggleSwitch {
-             id: orientationSw; stOn: navit.getAttr("orientation");  text: "Northing"; onChanged: navit.setAttr("orientation",orientationSw.stOn)
-        }
-	ToggleSwitch {
-             id: followrcursorSw; stOn: navit.getAttr("follow_cursor");  text: "Map follows Vehicle"; onChanged: navit.setAttr("follow_cursor",followrcursorSw.stOn)
-        }
-	ToggleSwitch {
-             id: autozoomSw; stOn: navit.getAttr("autozoom_active");  text: "Auto zoom"; onChanged: navit.setAttr("autozoom_active",autozoomSw.stOn)
-        }
-    }
+  VisualItemModel {
+      	id: selectorsModel
 
+        ToggleSwitch { id: trackingSw; stOn: navit.getAttr("tracking");  text: "Lock on road"; onChanged: navit.setAttr("tracking",trackingSw.stOn)  }
+        ToggleSwitch { id: orientationSw; stOn: navit.getAttr("orientation");  text: "Northing"; onChanged: navit.setAttr("orientation",orientationSw.stOn) }
+	ToggleSwitch { id: followcursorSw; stOn: navit.getAttr("follow_cursor");  text: "Map follows Vehicle"; onChanged: navit.setAttr("follow_cursor",followrcursorSw.stOn) }
+	ToggleSwitch { id: autozoomSw; stOn: navit.getAttr("autozoom_active");  text: "Auto zoom"; onChanged: navit.setAttr("autozoom_active",autozoomSw.stOn) }
+  }
+
+  ListView {
+      	id: selectorsList; model: selectorsModel
+        focus: true; clip: true; orientation: Qt.Vertical
+	anchors.verticalCenter: parent.verticalCenter; anchors.horizontalCenter: parent.horizontalCenter;
+	width: trackingSw.width*1.5; height: trackingSw.height*4
+  }
     Cellar {anchors.bottom: page.bottom; anchors.horizontalCenter: page.horizontalCenter; width: page.width }
 }
