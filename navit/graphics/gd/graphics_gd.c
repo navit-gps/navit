@@ -20,6 +20,11 @@
 #include <glib.h>
 #include <gd.h>
 #include "config.h"
+#ifdef HAVE_SHMEM
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#endif
 #include "point.h"
 #include "graphics.h"
 #include "color.h"
@@ -32,10 +37,11 @@
 
 #define NAVIT_GD_XPM_TRANSPARENCY_HACK
 
+static void emit_callback(struct graphics_priv *priv);
+
 #ifdef NAVIT_GD_XPM_TRANSPARENCY_HACK
 #include <X11/xpm.h>
 
-static void emit_callback(struct graphics_priv *priv);
 
 BGD_DECLARE(gdImagePtr) gdImageCreateFromXpm (char *filename)
 {
@@ -168,7 +174,8 @@ BGD_DECLARE(gdImagePtr) gdImageCreateFromXpm (char *filename)
 
 struct graphics_priv {
 	gdImagePtr im;
-	int w,h,flags,alpha,overlay;
+	int w,h,flags,alpha,overlay,shmkey;
+	int *shm;
 	struct point p;
 	struct callback *cb;
 	struct callback_list *cbl;
@@ -523,6 +530,51 @@ overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int alph
 	dbg(0,"enter\n");
 }
 
+static void
+image_create(struct graphics_priv *gr)
+{
+	dbg(0,"shmkey %d\n",gr->shmkey);
+#ifdef HAVE_SHMEM
+	if (gr->shmkey) {
+		int size=gr->h*gr->w*sizeof(int);
+		int shmid=shmget(gr->shmkey, size, 0666);
+		int i;
+		dbg(0,"shmid for key 0x%x is 0x%x\n",gr->shmkey, shmid);
+		if (shmid < 0)
+			dbg(0,"shmget\n");
+		gr->shm=shmat(shmid, NULL, 0);
+		if (!gr->shm)
+			dbg(0,"shmat\n");
+		gr->im=g_new0(gdImage,1);
+		gr->im->tpixels=g_new(int *,gr->h);
+		gr->im->sx=gr->w;
+		gr->im->sy=gr->h;
+		gr->im->transparent=-1;
+		gr->im->trueColor=1;
+		gr->im->alphaBlendingFlag=1;
+		gr->im->thick=1;
+		gr->im->cx2=gr->im->sx-1;
+		gr->im->cy2=gr->im->sy-1;
+		for (i = 0 ; i < gr->h ; i++)
+			gr->im->tpixels[i]=gr->shm+gr->w*i;
+	} else
+#endif
+		gr->im=gdImageCreateTrueColor(gr->w,gr->h);
+}
+
+static void
+image_destroy(struct graphics_priv *gr)
+{
+#ifdef HAVE_SHMEM
+	if (gr->shmkey) {
+		shmdt(gr->shm);
+		g_free(gr->im->tpixels);
+		g_free(gr->im);
+	} else
+#endif
+		gdImageDestroy(gr->im);
+	gr->im=NULL;
+}
 
 static int
 set_attr_do(struct graphics_priv *gr, struct attr *attr, int init)
@@ -533,8 +585,8 @@ set_attr_do(struct graphics_priv *gr, struct attr *attr, int init)
 			gr->w=attr->u.num;
 			if (!init) {
 				if (gr->im)
-					gdImageDestroy(gr->im);
-				gr->im=gdImageCreateTrueColor(gr->w,gr->h);
+					image_destroy(gr);
+				image_create(gr);
 				emit_callback(gr);
 			}
 		}
@@ -544,14 +596,17 @@ set_attr_do(struct graphics_priv *gr, struct attr *attr, int init)
 			gr->h=attr->u.num;
 			if (!init) {
 				if (gr->im)
-					gdImageDestroy(gr->im);
-				gr->im=gdImageCreateTrueColor(gr->w,gr->h);
+					image_destroy(gr);
+				image_create(gr);
 				emit_callback(gr);
 			}
 		}
 		break;
 	case attr_flags:
 		gr->flags=attr->u.num;
+		break;
+	case attr_shmkey:
+		gr->shmkey=attr->u.num;
 		break;
 	default:
 		return 0;
@@ -649,8 +704,8 @@ graphics_gd_new(struct navit *nav, struct graphics_methods *meth, struct attr **
 		set_attr_do(ret, *attrs, 1);
 		attrs++;
 	}
-	if (!ret->im)
-		ret->im=gdImageCreateTrueColor(ret->w,ret->h);
+	if (!ret->im) 
+		image_create(ret);
 	return ret;
 }
 
