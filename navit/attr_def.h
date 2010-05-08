@@ -140,6 +140,13 @@ ATTR(height)
 ATTR(minspeed)
 ATTR(recspeed)
 ATTR(speed_cond)
+ATTR(shmkey)
+ATTR(vehicle_width)
+ATTR(vehicle_length)
+ATTR(vehicle_height)
+ATTR(vehicle_weight)
+ATTR(vehicle_axle_weight)
+ATTR(vehicle_dangerous_goods)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
