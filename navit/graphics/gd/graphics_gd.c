@@ -20,11 +20,6 @@
 #include <glib.h>
 #include <gd.h>
 #include "config.h"
-#ifdef HAVE_SHMEM
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#endif
 #include "point.h"
 #include "graphics.h"
 #include "color.h"
@@ -35,9 +30,23 @@
 #include "debug.h"
 #include "navit/font/freetype/font_freetype.h"
 
+
+#ifdef HAVE_SHMEM
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#endif
+
+struct shmem_header {
+	int flag;
+	int w,h,bpp;
+};
+
 #define NAVIT_GD_XPM_TRANSPARENCY_HACK
 
 static void emit_callback(struct graphics_priv *priv);
+static void image_setup(struct graphics_priv *gr);
+struct shmem_header *shm_next(struct graphics_priv *gr);
 
 #ifdef NAVIT_GD_XPM_TRANSPARENCY_HACK
 #include <X11/xpm.h>
@@ -174,8 +183,9 @@ BGD_DECLARE(gdImagePtr) gdImageCreateFromXpm (char *filename)
 
 struct graphics_priv {
 	gdImagePtr im;
-	int w,h,flags,alpha,overlay,shmkey;
-	int *shm;
+	int w,h,flags,alpha,overlay,shmkey,shmsize,shmoffset;
+	void *shm;
+	struct shmem_header *shm_header;
 	struct point p;
 	struct callback *cb;
 	struct callback_list *cbl;
@@ -441,11 +451,22 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 		gdImageFilledRectangle(gr->im, 0, 0, gr->w, gr->h, gr->background->color);
 	}
 #endif
-	if (mode == draw_mode_end && !(gr->flags & 1)) {
-		rename("test.png","test.png.old");
-		pngout=fopen("test.png", "wb");
-		gdImagePng(gr->im, pngout);
-		fclose(pngout);
+	if (mode == draw_mode_end) {
+		if (!(gr->flags & 1)) {
+			rename("test.png","test.png.old");
+			pngout=fopen("test.png", "wb");
+			gdImagePng(gr->im, pngout);
+			fclose(pngout);
+		}
+		if (gr->flags & 2) {
+			struct shmem_header *next=shm_next(gr);
+			gr->shm_header->flag=1;
+			dbg(0,"next flag is %d\n",next->flag);
+			if (!next->flag) {
+				gr->shm_header=next;
+				image_setup(gr);
+			}
+		}
 	}
 }
 
@@ -530,6 +551,32 @@ overlay_resize(struct graphics_priv *gr, struct point *p, int w, int h, int alph
 	dbg(0,"enter\n");
 }
 
+struct shmem_header *
+shm_next(struct graphics_priv *gr)
+{
+	char *next=(char *)gr->shm_header+gr->shmoffset;
+	if (next+gr->shmoffset > (char *)gr->shm+gr->shmsize) {
+		dbg(0,"wraparound\n");
+		return gr->shm;
+	}
+	dbg(0,"next 0x%x (offset 0x%x)\n",next-(char *)gr->shm,gr->shmoffset);
+	return (struct shmem_header *)next;
+	
+}
+static void
+image_setup(struct graphics_priv *gr)
+{
+	int i,*shm=(int *)(gr->shm_header+1);
+	if (!gr->shmkey)
+		return;
+	for (i = 0 ; i < gr->h ; i++)
+		gr->im->tpixels[i]=shm+gr->w*i;
+	gr->shm_header->w=gr->w;
+	gr->shm_header->h=gr->h;
+	gr->shm_header->bpp=32;
+	gr->shm_header->flag=0;
+}
+
 static void
 image_create(struct graphics_priv *gr)
 {
@@ -538,13 +585,13 @@ image_create(struct graphics_priv *gr)
 	if (gr->shmkey) {
 		int size=gr->h*gr->w*sizeof(int);
 		int shmid=shmget(gr->shmkey, size, 0666);
-		int i;
 		dbg(0,"shmid for key 0x%x is 0x%x\n",gr->shmkey, shmid);
 		if (shmid < 0)
 			dbg(0,"shmget\n");
 		gr->shm=shmat(shmid, NULL, 0);
 		if (!gr->shm)
 			dbg(0,"shmat\n");
+		gr->shm_header=gr->shm;
 		gr->im=g_new0(gdImage,1);
 		gr->im->tpixels=g_new(int *,gr->h);
 		gr->im->sx=gr->w;
@@ -555,8 +602,7 @@ image_create(struct graphics_priv *gr)
 		gr->im->thick=1;
 		gr->im->cx2=gr->im->sx-1;
 		gr->im->cy2=gr->im->sy-1;
-		for (i = 0 ; i < gr->h ; i++)
-			gr->im->tpixels[i]=gr->shm+gr->w*i;
+		image_setup(gr);
 	} else
 #endif
 		gr->im=gdImageCreateTrueColor(gr->w,gr->h);
@@ -607,6 +653,12 @@ set_attr_do(struct graphics_priv *gr, struct attr *attr, int init)
 		break;
 	case attr_shmkey:
 		gr->shmkey=attr->u.num;
+		break;
+	case attr_shmsize:
+		gr->shmsize=attr->u.num;
+		break;
+	case attr_shmoffset:
+		gr->shmoffset=attr->u.num;
 		break;
 	default:
 		return 0;
@@ -684,7 +736,6 @@ graphics_gd_new(struct navit *nav, struct graphics_methods *meth, struct attr **
 {
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct graphics_priv *ret;
-	struct attr *attr;
 	event_request_system("glib","graphics_gd_new");
         font_freetype_new=plugin_get_font_type("freetype");
         if (!font_freetype_new)
