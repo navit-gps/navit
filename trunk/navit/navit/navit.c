@@ -1793,6 +1793,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 			}
 		}
 		break;
+	case attr_vehicleprofile:
+		attr->u.vehicleprofile=this_->vehicleprofile;
+		break;
 	case attr_zoom:
 		attr->u.num=transform_get_scale(this_->trans);
 		break;
