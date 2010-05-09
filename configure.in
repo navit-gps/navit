@@ -757,6 +757,15 @@ if test "x${graphics_gd}" = "xyes" ; then
        	fi 
 fi
 AM_CONDITIONAL(GRAPHICS_GD, test "x${graphics_gd}" = "xyes")
+AC_CHECK_HEADER(
+	sys/shm.h,
+	AC_DEFINE(
+		[HAVE_SHMEM],
+		[],
+		Define to 1 if you have shared memory
+	)
+)
+
 # gtk_drawing_area
 AC_ARG_ENABLE(graphics-gtk-drawing-area, [  --disable-graphics-gtk-drawing-area disable graphics type gtk_drawing_area], graphics_gtk_drawing_area=$enableval;graphics_gtk_drawing_area_reason="configure parameter")
 AM_CONDITIONAL(GRAPHICS_GTK_DRAWING_AREA, [test "x${graphics_gtk_drawing_area}" = "xyes"])
