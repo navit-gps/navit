@@ -36,6 +36,7 @@
 #include "command.h"
 #include "callback.h"
 #include "graphics.h"
+#include "track.h"
 #include "vehicle.h"
 #include "vehicleprofile.h"
 #include "map.h"
@@ -125,6 +126,7 @@ resolve_object(const char *opath, char *type)
 	char *def_map="/default_map";
 	char *def_navigation="/default_navigation";
 	char *def_route="/default_route";
+	char *def_tracking="/default_tracking";
 	struct attr attr;
 
 	if (strncmp(opath, object_path, strlen(object_path))) {
@@ -197,6 +199,12 @@ resolve_object(const char *opath, char *type)
 			oprefix+=strlen(def_route);
 			if (navit_get_attr(navit.u.navit, attr_route, &attr, NULL)) {
 				return attr.u.route;
+			}
+			return NULL;
+		}
+		if (!strncmp(oprefix,def_tracking,strlen(def_tracking))) {
+			if (navit_get_attr(navit.u.navit, attr_trackingo, &attr, NULL)) {
+				return attr.u.tracking;
 			}
 			return NULL;
 		}
@@ -1434,6 +1442,16 @@ request_search_list_select(DBusConnection *connection, DBusMessage *message)
 	return empty_reply(connection, message);
 }
 
+/* tracking */
+
+static DBusHandlerResult
+request_tracking_get_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_get_attr(connection, message, "tracking", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))tracking_get_attr);
+}
+
+
+
 /* vehicle */
 
 static DBusHandlerResult
@@ -1531,6 +1549,7 @@ struct dbus_method {
 	{".search_list","get_result",      "",        "",                                        "i(iii)a{sa{sv}}",   "id,coord,dict",      request_search_list_get_result},
 	{".search_list","search",          "svi",     "attribute,value,partial",                 "",   "",      request_search_list_search},
 	{".search_list","select",          "sii",     "attribute_type,id,mode",                  "",   "",      request_search_list_select},
+	{".tracking","get_attr",           "s",       "attribute",                               "",   "",      request_tracking_get_attr},
 	{".vehicle","set_attr",            "sv",      "attribute,value",                         "",   "",      request_vehicle_set_attr},
 	{".vehicleprofile","get_attr",     "s",       "attribute",                               "",   "",      request_vehicleprofile_get_attr},
 	{".vehicleprofile","set_attr",     "sv",      "attribute,value",                         "",   "",      request_vehicleprofile_set_attr},

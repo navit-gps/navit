@@ -1772,6 +1772,9 @@ navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, stru
 	case attr_tracking:
 		attr->u.num=this_->tracking_flag;
 		break;
+	case attr_trackingo:
+		attr->u.tracking=this_->tracking;
+		break;
 	case attr_transformation:
 		attr->u.transformation=this_->trans;
 		break;
