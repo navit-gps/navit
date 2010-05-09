@@ -745,8 +745,12 @@ if test "x${graphics_gd}" = "xyes" ; then
 	    graphics_gd=no 
             AC_MSG_RESULT([no])
 	else
-	    GD_CFLAGS="-I`$GDLIB_CONFIG --includedir`"
-	    GD_LIBS="-L`$GDLIB_CONFIG --libdir` -lgd `$GDLIB_CONFIG --libs`"
+	    if test "x${GD_CFLAGS}" = "x" ; then
+		    GD_CFLAGS="-I`$GDLIB_CONFIG --includedir`"
+	    fi
+	    if test "x${GD_LIBS}" = "x" ; then
+		    GD_LIBS="-L`$GDLIB_CONFIG --libdir` -lgd `$GDLIB_CONFIG --libs`"
+            fi
 	    AC_SUBST(GD_CFLAGS)
 	    AC_SUBST(GD_LIBS)
             AC_MSG_RESULT([yes])
