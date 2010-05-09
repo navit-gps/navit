@@ -32,10 +32,12 @@
 #include "item.h"
 #include "attr.h"
 #include "layout.h"
+#include "navigation.h"
 #include "command.h"
 #include "callback.h"
 #include "graphics.h"
 #include "vehicle.h"
+#include "vehicleprofile.h"
 #include "map.h"
 #include "mapset.h"
 #include "route.h"
@@ -118,8 +120,10 @@ resolve_object(const char *opath, char *type)
 	char *def_gui="/default_gui";
 	char *def_graphics="/default_graphics";
 	char *def_vehicle="/default_vehicle";
+	char *def_vehicleprofile="/default_vehicleprofile";
 	char *def_mapset="/default_mapset";
 	char *def_map="/default_map";
+	char *def_navigation="/default_navigation";
 	char *def_route="/default_route";
 	struct attr attr;
 
@@ -156,6 +160,12 @@ resolve_object(const char *opath, char *type)
 			}
 			return NULL;
 		}
+		if (!strncmp(oprefix,def_vehicleprofile,strlen(def_vehicleprofile))) {
+			if (navit_get_attr(navit.u.navit, attr_vehicleprofile, &attr, NULL)) {
+				return attr.u.vehicleprofile;
+			}
+			return NULL;
+		}
 		if (!strncmp(oprefix,def_vehicle,strlen(def_vehicle))) {
 			if (navit_get_attr(navit.u.navit, attr_vehicle, &attr, NULL)) {
 				return attr.u.vehicle;
@@ -174,6 +184,12 @@ resolve_object(const char *opath, char *type)
 					}
 					return NULL;
 				}
+			}
+			return NULL;
+		}
+		if (!strncmp(oprefix,def_navigation,strlen(def_navigation))) {
+			if (navit_get_attr(navit.u.navit, attr_navigation, &attr, NULL)) {
+				return attr.u.navigation;
 			}
 			return NULL;
 		}
@@ -255,6 +271,9 @@ encode_attr(DBusMessageIter *iter1, struct attr *attr)
 	}
 	if (attr->type >= attr_type_string_begin && attr->type <= attr_type_string_end) {
 		encode_variant_string(iter1, attr->u.str);
+	}
+	if ((attr->type >= attr_type_item_type_begin && attr->type <= attr_type_item_type_end) || attr->type == attr_item_type) {
+		encode_variant_string(iter1, item_to_name(attr->u.item_type));
 	}
 	if (attr->type >= attr_type_pcoord_begin && attr->type <= attr_type_pcoord_end) {
 		dbus_message_iter_open_container(iter1, DBUS_TYPE_VARIANT, "ai", &iter2);
@@ -881,6 +900,15 @@ request_mapset_get_attr(DBusConnection *connection, DBusMessage *message)
 	return request_get_attr(connection, message, "mapset", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))mapset_get_attr);
 }
 
+/* navigation */
+
+static DBusHandlerResult
+request_navigation_get_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_get_attr(connection, message, "navigation", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))navigation_get_attr);
+}
+
+
 /* route */
 
 static DBusHandlerResult
@@ -1427,6 +1455,20 @@ request_vehicle_set_attr(DBusConnection *connection, DBusMessage *message)
     	return dbus_error_invalid_parameter(connection, message);
 }
 
+/* vehicleprofile */
+
+static DBusHandlerResult
+request_vehicleprofile_get_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_get_attr(connection, message, "vehicleprofile", NULL, (int (*)(void *, enum attr_type, struct attr *, struct attr_iter *))vehicleprofile_get_attr);
+}
+
+
+static DBusHandlerResult
+request_vehicleprofile_set_attr(DBusConnection *connection, DBusMessage *message)
+{
+	return request_set_add_remove_attr(connection, message, "vehicleprofile", NULL, (int (*)(void *, struct attr *))vehicleprofile_set_attr);
+}
 
 struct dbus_method {
 	char *path;
@@ -1480,6 +1522,7 @@ struct dbus_method {
 	{".mapset", "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_mapset_attr_iter_destroy},
 	{".mapset", "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_mapset_get_attr},
 	{".mapset", "get_attr_wi",         "so",      "attribute,attr_iter",                     "sv",  "attrname,value", request_mapset_get_attr},
+	{".navigation","get_attr",         "s",       "attribute",                               "",   "",      request_navigation_get_attr},
 	{".route",    "get_attr",          "s",       "attribute",                               "sv",  "attrname,value", request_route_get_attr},
 	{".route",    "set_attr",          "sv",      "attribute,value",                         "",    "",  request_route_set_attr},
 	{".route",    "add_attr",          "sv",      "attribute,value",                         "",    "",  request_route_add_attr},
@@ -1489,6 +1532,8 @@ struct dbus_method {
 	{".search_list","search",          "svi",     "attribute,value,partial",                 "",   "",      request_search_list_search},
 	{".search_list","select",          "sii",     "attribute_type,id,mode",                  "",   "",      request_search_list_select},
 	{".vehicle","set_attr",            "sv",      "attribute,value",                         "",   "",      request_vehicle_set_attr},
+	{".vehicleprofile","get_attr",     "s",       "attribute",                               "",   "",      request_vehicleprofile_get_attr},
+	{".vehicleprofile","set_attr",     "sv",      "attribute,value",                         "",   "",      request_vehicleprofile_set_attr},
 };
 
 static char *
