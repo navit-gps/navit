@@ -126,10 +126,30 @@ angle_opposite(int angle)
 int
 navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-	dbg(0,"enter %s\n", attr_to_name(type));
+	struct map_rect *mr;
+	struct item *item;
+	dbg(1,"enter %s\n", attr_to_name(type));
 	switch (type) {
 	case attr_map:
 		attr->u.map=this_->map;
+		break;
+	case attr_item_type:
+	case attr_length:
+		mr=map_rect_new(this_->map, NULL);
+		while ((item=map_rect_get_item(mr))) {
+			if (item->type != type_nav_none && item->type != type_nav_position) {
+				if (type == attr_item_type) 
+					attr->u.item_type=item->type;
+				else { 
+					if (!item_attr_get(item, type, attr))
+						item=NULL;
+				}
+				break;
+			}
+		}
+		map_rect_destroy(mr);
+		if (!item)
+			return 0;
 		break;
 	default:
 		return 0;	
