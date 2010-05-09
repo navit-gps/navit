@@ -31,6 +31,8 @@ struct config {
 
 int config_empty_ok;
 
+static int configured;
+
 struct attr_iter {
 	void *iter;
 };
@@ -42,6 +44,13 @@ config_destroy(struct config *this_)
 	callback_list_destroy(this_->cbl);
 	g_free(config);
 	exit(0);
+}
+
+static void
+config_new_int(void)
+{
+	config=g_new0(struct config, 1);
+	config->cbl=callback_list_new();
 }
 
 int
@@ -71,6 +80,8 @@ config_set_attr(struct config *this_, struct attr *attr)
 int
 config_add_attr(struct config *this_, struct attr *attr)
 {
+	if (!config)
+		config_new_int();
 	switch (attr->type) {
 	case attr_callback:
 		callback_list_add(this_->cbl, attr->u.callback);
@@ -110,7 +121,7 @@ config_attr_iter_destroy(struct attr_iter *iter)
 struct config *
 config_new(struct attr *parent, struct attr **attrs)
 {
-	if (config) {
+	if (configured) {
 		dbg(0,"only one config allowed\n");
 		return NULL;
 	}
@@ -118,9 +129,9 @@ config_new(struct attr *parent, struct attr **attrs)
 		dbg(0,"no parent in config allowed\n");
 		return NULL;
 	}
-	config=g_new0(struct config, 1);
+	if (!config)
+		config_new_int();
 	config->attrs=attr_list_dup(attrs);
-	config->cbl=callback_list_new();
 	while (*attrs) {
 		if (!config_set_attr_int(config,*attrs)) {
 			dbg(0,"failed to set attribute '%s'\n",attr_to_name((*attrs)->type));
@@ -130,5 +141,6 @@ config_new(struct attr *parent, struct attr **attrs)
 		}
 		attrs++;
 	}
+	configured=1;
 	return config;
 }
