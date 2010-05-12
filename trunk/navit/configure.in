@@ -37,6 +37,7 @@ plugins=yes; plugins_reason=default
 postgresql=yes; postgresql_reason=default
 samplemap=yes; samplemap_reason=default
 binding_dbus=yes; binding_dbus_reason=default
+binding_dbus_use_system_bus=no
 binding_python=yes; binding_python_reason=default
 font_freetype=yes; font_freetype_reason=default
 fontconfig=yes; fontconfig_reason=default
@@ -564,6 +565,7 @@ AM_CONDITIONAL(BINDING_PYTHON, test "x${binding_python}" = "xyes")
 
 # dbus
 AC_ARG_ENABLE(binding-dbus,   [  --disable-binding-dbus               don't create binding dbus], binding_dbus=$enableval;binding_dbus_reason="configure parameter")
+AC_ARG_ENABLE(binding-dbus-use-system-bus,  [  --enable-binding-dbus-use-system-bus   use system bus for dbus binding], binding_dbus_use_system_bus=$enableval)
 if test "x${binding_dbus}" = "xyes" ; then
 	PKG_CHECK_MODULES(DBUS, [dbus-glib-1], ,binding_dbus=no)
 fi
@@ -573,6 +575,9 @@ if test "x${binding_dbus}" = "xyes" ; then
 	vehicle_gpsd_dbus_reason="dbus binding present"
 	speech_dbus="yes"
 	speech_dbus_reason="dbus binding present"
+fi
+if text "x${binding_bus_use_system_bus}" = "xyes" ; then
+	AC_DEFINE(DBUS_USE_SYSTEM_BUS, 1, [Use system bus instead of session bus for binding dbus])
 fi
 AC_SUBST(DBUS_CFLAGS)
 AC_SUBST(DBUS_LIBS)
