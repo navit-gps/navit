@@ -1744,7 +1744,11 @@ void plugin_init(void)
 	object_count=g_hash_table_new(g_str_hash, g_str_equal);
 	dbg(0,"enter 1\n");
 	dbus_error_init(&error);
+#ifdef DBUS_USE_SYSTEM_BUS
+	connection = dbus_bus_get(DBUS_BUS_SYSTEM, &error);
+#else
 	connection = dbus_bus_get(DBUS_BUS_SESSION, &error);
+#endif
 	if (!connection) {
 		dbg(0,"Failed to open connection to session message bus: %s\n", error.message);
 		dbus_error_free(&error);
