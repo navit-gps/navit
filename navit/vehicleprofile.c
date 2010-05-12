@@ -51,6 +51,21 @@ vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 		/* previously used strdupn not available on win32 */
 		this_->name = g_strdup(attr->u.str);
 		break;
+	case attr_vehicle_axle_weight:
+		this_->axle_weight=attr->u.num;
+		break;
+	case attr_vehicle_height:
+		this_->height=attr->u.num;
+		break;
+	case attr_vehicle_length:
+		this_->length=attr->u.num;
+		break;
+	case attr_vehicle_weight:
+		this_->weight=attr->u.num;
+		break;
+	case attr_vehicle_width:
+		this_->width=attr->u.num;
+		break;
 	default:
 		break;
 	}
@@ -67,6 +82,11 @@ vehicleprofile_new(struct attr *parent, struct attr **attrs)
 	this_=g_new0(struct vehicleprofile, 1);
 	this_->attrs=attr_list_dup(attrs);
 	this_->roadprofile_hash=g_hash_table_new(NULL, NULL);
+	this_->length=-1;
+	this_->width=-1;
+	this_->height=-1;
+	this_->weight=-1;
+	this_->axle_weight=-1;
 	for (attr=attrs;*attr; attr++)
 		vehicleprofile_set_attr_do(this_, *attr);
 	return this_;
