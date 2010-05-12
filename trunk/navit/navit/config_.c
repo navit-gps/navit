@@ -80,8 +80,10 @@ config_set_attr(struct config *this_, struct attr *attr)
 int
 config_add_attr(struct config *this_, struct attr *attr)
 {
-	if (!config)
+	if (!config) {
 		config_new_int();
+		this_=config;
+	}
 	switch (attr->type) {
 	case attr_callback:
 		callback_list_add(this_->cbl, attr->u.callback);
