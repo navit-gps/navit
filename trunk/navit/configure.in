@@ -576,7 +576,7 @@ if test "x${binding_dbus}" = "xyes" ; then
 	speech_dbus="yes"
 	speech_dbus_reason="dbus binding present"
 fi
-if text "x${binding_bus_use_system_bus}" = "xyes" ; then
+if text "x${binding_dbus_use_system_bus}" = "xyes" ; then
 	AC_DEFINE(DBUS_USE_SYSTEM_BUS, 1, [Use system bus instead of session bus for binding dbus])
 fi
 AC_SUBST(DBUS_CFLAGS)
