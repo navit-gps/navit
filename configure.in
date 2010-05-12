@@ -779,7 +779,13 @@ AC_CHECK_HEADER(
 	)
 )
 if test "x${graphics_gd}" = "xyes" ; then
+	save_CPPFLAGS=$CPPFLAGS
+	save_LIBS=$LIBS
+	LIBS="$GD_LIBS $LIBS"
+	CPPFLAGS="$GD_CFLAGS $CPPFLAGS"
 	AC_TRY_LINK([#include <gd.h>], [gdImageCreateFromPng(0);],AC_MSG_RESULT(yes);AC_DEFINE(HAVE_GRAPHICS_GD_PNG, 1, [Define to 1 if you have png support in gd.]),AC_MSG_RESULT(no))
+	CPPFLAGS=$save_CPPFLAGS
+	LIBS=$save_LIBS
 fi
 
 # gtk_drawing_area
