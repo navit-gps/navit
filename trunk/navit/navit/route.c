@@ -119,10 +119,30 @@ struct route_segment_data {
 	 */
 };
 
+
+struct size_weight_limit {
+	int width;
+	int length;
+	int height;
+	int weight;
+	int axle_weight;
+};
+
 #define RSD_OFFSET(x) *((int *)route_segment_data_field_pos((x), attr_offset))
 #define RSD_MAXSPEED(x) *((int *)route_segment_data_field_pos((x), attr_maxspeed))
+#define RSD_SIZE_WEIGHT(x) *((struct size_weight_limit *)route_segment_data_field_pos((x), attr_vehicle_width))
+#define RSD_DANGEROUS_GOODS(x) *((int *)route_segment_data_field_pos((x), attr_vehicle_dangerous_goods))
 
 
+struct route_graph_segment_data {
+	struct item *item;
+	int offset;
+	int flags;
+	int len;
+	int maxspeed;
+	struct size_weight_limit size_weight;
+	int dangerous_goods;
+};
 
 /**
  * @brief A segment in the route graph
@@ -1074,6 +1094,16 @@ route_segment_data_field_pos(struct route_segment_data *seg, enum attr_type type
 			return (void*)ptr;
 		ptr += sizeof(int);
 	}
+	if (seg->flags & AF_SIZE_OR_WEIGHT_LIMIT) {
+		if (type == attr_vehicle_width)
+			return (void*)ptr;
+		ptr += sizeof(struct size_weight_limit);
+	}
+	if (seg->flags & AF_DANGEROUS_GOODS) {
+		if (type == attr_vehicle_dangerous_goods)
+			return (void*)ptr;
+		ptr += sizeof(int);
+	}
 	return NULL;
 }
 
@@ -1091,19 +1121,23 @@ route_segment_data_size(int flags)
 		ret+=sizeof(int);
 	if (flags & AF_SEGMENTED)
 		ret+=sizeof(int);
+	if (flags & AF_SIZE_OR_WEIGHT_LIMIT)
+		ret+=sizeof(struct size_weight_limit);
+	if (flags & AF_DANGEROUS_GOODS)
+		ret+=sizeof(int);
 	return ret;
 }
 
 
 static int
-route_graph_segment_is_duplicate(struct route_graph_point *start, struct item *item, int flags, int offset)
+route_graph_segment_is_duplicate(struct route_graph_point *start, struct route_graph_segment_data *data)
 {
 	struct route_graph_segment *s;
 	s=start->start;
 	while (s) {
-		if (item_is_equal(*item, s->data.item)) {
-			if (flags & AF_SEGMENTED) {
-				if (RSD_OFFSET(&s->data) == offset) {
+		if (item_is_equal(*data->item, s->data.item)) {
+			if (data->flags & AF_SEGMENTED) {
+				if (RSD_OFFSET(&s->data) == data->offset) {
 					return 1;
 				}
 			} else
@@ -1131,13 +1165,12 @@ route_graph_segment_is_duplicate(struct route_graph_point *start, struct item *i
  */
 static void
 route_graph_add_segment(struct route_graph *this, struct route_graph_point *start,
-			struct route_graph_point *end, int len, struct item *item,
-			int flags, int offset, int maxspeed)
+			struct route_graph_point *end, struct route_graph_segment_data *data)
 {
 	struct route_graph_segment *s;
 	int size;
 
-	size = sizeof(struct route_graph_segment)-sizeof(struct route_segment_data)+route_segment_data_size(flags);
+	size = sizeof(struct route_graph_segment)-sizeof(struct route_segment_data)+route_segment_data_size(data->flags);
 	s = g_malloc0(size);
 	if (!s) {
 		printf("%s:Out of memory\n", __FUNCTION__);
@@ -1149,15 +1182,19 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 	s->end=end;
 	s->end_next=end->end;
 	end->end=s;
-	dbg_assert(len >= 0);
-	s->data.len=len;
-	s->data.item=*item;
-	s->data.flags=flags;
+	dbg_assert(data->len >= 0);
+	s->data.len=data->len;
+	s->data.item=*data->item;
+	s->data.flags=data->flags;
 
-	if (flags & AF_SPEED_LIMIT) 
-		RSD_MAXSPEED(&s->data)=maxspeed;
-	if (flags & AF_SEGMENTED) 
-		RSD_OFFSET(&s->data)=offset;
+	if (data->flags & AF_SPEED_LIMIT) 
+		RSD_MAXSPEED(&s->data)=data->maxspeed;
+	if (data->flags & AF_SEGMENTED) 
+		RSD_OFFSET(&s->data)=data->offset;
+	if (data->flags & AF_SIZE_OR_WEIGHT_LIMIT) 
+		RSD_SIZE_WEIGHT(&s->data)=data->size_weight;
+	if (data->flags & AF_DANGEROUS_GOODS) 
+		RSD_DANGEROUS_GOODS(&s->data)=data->dangerous_goods;
 
 	s->next=this->route_segments;
 	this->route_segments=s;
@@ -1493,6 +1530,23 @@ route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, 
 		if (maxspeed != INT_MAX && (profile->maxspeed_handling != 1 || maxspeed < speed))
 			speed=maxspeed;
 	}
+	if (over->flags & AF_DANGEROUS_GOODS) {
+		if (profile->dangerous_goods & RSD_DANGEROUS_GOODS(over))
+			return INT_MAX;
+	}
+	if (over->flags & AF_SIZE_OR_WEIGHT_LIMIT) {
+		struct size_weight_limit *size_weight=&RSD_SIZE_WEIGHT(over);
+		if (size_weight->width != -1 && profile->width != -1 && profile->width > size_weight->width)
+			return INT_MAX;
+		if (size_weight->height != -1 && profile->height != -1 && profile->height > size_weight->height)
+			return INT_MAX;
+		if (size_weight->length != -1 && profile->length != -1 && profile->length > size_weight->length)
+			return INT_MAX;
+		if (size_weight->weight != -1 && profile->weight != -1 && profile->weight > size_weight->weight)
+			return INT_MAX;
+		if (size_weight->axle_weight != -1 && profile->axle_weight != -1 && profile->axle_weight > size_weight->axle_weight)
+			return INT_MAX;
+	}
 	if (!speed)
 		return INT_MAX;
 	return over->len*36/speed+(dist ? dist->delay : 0);
@@ -1571,10 +1625,13 @@ route_process_traffic_distortion(struct route_graph *this, struct item *item)
 	struct route_graph_point *s_pnt,*e_pnt;
 	struct coord c,l;
 	struct attr delay_attr, maxspeed_attr;
-	int len=0;
-	int flags = 0;
-	int offset = 1;
-	int maxspeed = INT_MAX;
+	struct route_graph_segment_data data;
+
+	data.item=item;
+	data.len=0;
+	data.flags=0;
+	data.offset=1;
+	data.maxspeed = INT_MAX;
 
 	if (item_coord_get(item, &l, 1)) {
 		s_pnt=route_graph_add_point(this,&l);
@@ -1585,12 +1642,12 @@ route_process_traffic_distortion(struct route_graph *this, struct item *item)
 		s_pnt->flags |= RP_TRAFFIC_DISTORTION;
 		e_pnt->flags |= RP_TRAFFIC_DISTORTION;
 		if (item_attr_get(item, attr_maxspeed, &maxspeed_attr)) {
-			flags |= AF_SPEED_LIMIT;
-			maxspeed=maxspeed_attr.u.num;
+			data.flags |= AF_SPEED_LIMIT;
+			data.maxspeed=maxspeed_attr.u.num;
 		}
 		if (item_attr_get(item, attr_delay, &delay_attr))
-			len=delay_attr.u.num;
-		route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
+			data.len=delay_attr.u.num;
+		route_graph_add_segment(this, s_pnt, e_pnt, &data);
 	}
 }
 
@@ -1606,6 +1663,7 @@ route_process_turn_restriction(struct route_graph *this, struct item *item)
 	struct route_graph_point *pnt[4];
 	struct coord c[5];
 	int i,count;
+	struct route_graph_segment_data data;
 
 	count=item_coord_get(item, c, 5);
 	if (count != 3 && count != 4) {
@@ -1617,8 +1675,11 @@ route_process_turn_restriction(struct route_graph *this, struct item *item)
 	for (i = 0 ; i < count ; i++) 
 		pnt[i]=route_graph_add_point(this,&c[i]);
 	dbg(1,"%s: (0x%x,0x%x)-(0x%x,0x%x)-(0x%x,0x%x) %p-%p-%p\n",item_to_name(item->type),c[0].x,c[0].y,c[1].x,c[1].y,c[2].x,c[2].y,pnt[0],pnt[1],pnt[2]);
-	route_graph_add_segment(this, pnt[0], pnt[1], 0, item, 0, 0, 0);
-	route_graph_add_segment(this, pnt[1], pnt[2], 0, item, 0, 0, 0);
+	data.item=item;
+	data.flags=0;
+	data.len=0;
+	route_graph_add_segment(this, pnt[0], pnt[1], &data);
+	route_graph_add_segment(this, pnt[1], pnt[2], &data);
 #if 0
 	if (count == 4) {
 		pnt[1]->flags |= RP_TURN_RESTRICTION;
@@ -1648,28 +1709,57 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 #endif
 	struct route_graph_point *s_pnt,*e_pnt;
 	struct coord c,l;
-	struct attr flags_attr, maxspeed_attr;
-	int flags = 0;
+	struct attr attr;
+	struct route_graph_segment_data data;
+	data.flags=0;
+	data.offset=1;
+	data.maxspeed=-1;
+	data.item=item;
 	int segmented = 0;
-	int offset = 1;
-	int maxspeed = -1;
 
 	if (item_coord_get(item, &l, 1)) {
 		int *default_flags=item_get_default_flags(item->type);
 		if (! default_flags)
 			return;
-		if (item_attr_get(item, attr_flags, &flags_attr)) {
-			flags = flags_attr.u.num;
-			if (flags & AF_SEGMENTED)
+		if (item_attr_get(item, attr_flags, &attr)) {
+			data.flags = attr.u.num;
+			if (data.flags & AF_SEGMENTED)
 				segmented = 1;
 		} else
-			flags = *default_flags;
+			data.flags = *default_flags;
 		
 
-		if (flags & AF_SPEED_LIMIT) {
-			if (item_attr_get(item, attr_maxspeed, &maxspeed_attr)) {
-				maxspeed = maxspeed_attr.u.num;
-			}
+		if (data.flags & AF_SPEED_LIMIT) {
+			if (item_attr_get(item, attr_maxspeed, &attr)) 
+				data.maxspeed = attr.u.num;
+		}
+		if (data.flags & AF_DANGEROUS_GOODS) {
+			if (item_attr_get(item, attr_vehicle_dangerous_goods, &attr)) 
+				data.dangerous_goods = attr.u.num;
+			else 
+				data.flags &= ~AF_DANGEROUS_GOODS;
+		}
+		if (data.flags & AF_SIZE_OR_WEIGHT_LIMIT) {
+			if (item_attr_get(item, attr_vehicle_width, &attr))
+				data.size_weight.width=attr.u.num;
+			else
+				data.size_weight.width=-1;
+			if (item_attr_get(item, attr_vehicle_height, &attr))
+				data.size_weight.height=attr.u.num;
+			else
+				data.size_weight.height=-1;
+			if (item_attr_get(item, attr_vehicle_length, &attr))
+				data.size_weight.length=attr.u.num;
+			else
+				data.size_weight.length=-1;
+			if (item_attr_get(item, attr_vehicle_weight, &attr))
+				data.size_weight.weight=attr.u.num;
+			else
+				data.size_weight.weight=-1;
+			if (item_attr_get(item, attr_vehicle_axle_weight, &attr))
+				data.size_weight.axle_weight=attr.u.num;
+			else
+				data.size_weight.axle_weight=-1;
 		}
 
 		s_pnt=route_graph_add_point(this,&l);
@@ -1680,8 +1770,9 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 			}
 			e_pnt=route_graph_add_point(this,&l);
 			dbg_assert(len >= 0);
-			if (!route_graph_segment_is_duplicate(s_pnt, item, flags, offset))
-				route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
+			data.len=len;
+			if (!route_graph_segment_is_duplicate(s_pnt, &data))
+				route_graph_add_segment(this, s_pnt, e_pnt, &data);
 		} else {
 			int isseg,rc;
 			int sc = 0;
@@ -1693,9 +1784,10 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 					l=c;
 					if (isseg) {
 						e_pnt=route_graph_add_point(this,&l);
-						if (!route_graph_segment_is_duplicate(s_pnt, item, flags, offset))
-							route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
-						offset++;
+						data.len=len;
+						if (!route_graph_segment_is_duplicate(s_pnt, &data))
+							route_graph_add_segment(this, s_pnt, e_pnt, &data);
+						data.offset++;
 						s_pnt=route_graph_add_point(this,&l);
 						len = 0;
 					}
@@ -1704,8 +1796,9 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 			e_pnt=route_graph_add_point(this,&l);
 			dbg_assert(len >= 0);
 			sc++;
-			if (!route_graph_segment_is_duplicate(s_pnt, item, flags, offset))
-				route_graph_add_segment(this, s_pnt, e_pnt, len, item, flags, offset, maxspeed);
+			data.len=len;
+			if (!route_graph_segment_is_duplicate(s_pnt, &data))
+				route_graph_add_segment(this, s_pnt, e_pnt, &data);
 		}
 	}
 }
@@ -2078,14 +2171,18 @@ is_turn_allowed(struct route_graph_point *p, struct route_graph_segment *from, s
 static void
 route_graph_clone_segment(struct route_graph *this, struct route_graph_segment *s, struct route_graph_point *start, struct route_graph_point *end, int flags)
 {
-	int offset=0;
-	int maxspeed=0;
+	struct route_graph_segment_data data;
+	data.flags=s->data.flags|flags;
+	data.offset=1;
+	data.maxspeed=-1;
+	data.item=&s->data.item;
+	data.len=s->data.len+1;
 	if (s->data.flags & AF_SPEED_LIMIT)
-		maxspeed=RSD_MAXSPEED(&s->data);
+		data.maxspeed=RSD_MAXSPEED(&s->data);
 	if (s->data.flags & AF_SEGMENTED) 
-		offset=RSD_OFFSET(&s->data);
+		data.offset=RSD_OFFSET(&s->data);
 	dbg(1,"cloning segment from %p (0x%x,0x%x) to %p (0x%x,0x%x)\n",start,start->c.x,start->c.y, end, end->c.x, end->c.y);
-	route_graph_add_segment(this, start, end, s->data.len+1, &s->data.item, s->data.flags | flags, offset, maxspeed);
+	route_graph_add_segment(this, start, end, &data);
 }
 
 static void

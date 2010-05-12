@@ -22,14 +22,20 @@
 extern "C" {
 #endif
 struct vehicleprofile {
-	int mode;						/**< 0 = Auto, 1 = On-Road, 2 = Off-Road */
+	int mode;				/**< 0 = Auto, 1 = On-Road, 2 = Off-Road */
 	int flags_forward_mask;			/**< Flags mask for moving in positive direction */
 	int flags_reverse_mask;			/**< Flags mask for moving in reverse direction */
-	int flags;						/**< Required flags to move through a segment */
+	int flags;				/**< Required flags to move through a segment */
 	int maxspeed_handling;			/**< 0 = Always, 1 = Only if lower, 2 = Never */
-	int static_speed;				/**< Maximum speed of vehicle to consider it stationary */
+	int static_speed;			/**< Maximum speed of vehicle to consider it stationary */
 	int static_distance;			/**< Maximum distance of previous position of vehicle to consider it stationary */
-	char *name;						// the vehicle profile name
+	char *name;				/**< the vehicle profile name */
+	int width;				/**< Width of the vehicle in cm */
+	int height;				/**< Height of the vehicle in cm */
+	int length;				/**< Length of the vehicle in cm */
+	int weight;				/**< Weight of the vehicle in kg */
+	int axle_weight;			/**< Axle Weight of the vehicle in kg */
+	int dangerous_goods;			/**< Flags of dangerous goods present */
 	struct attr **attrs;
 	GHashTable *roadprofile_hash;
 };
