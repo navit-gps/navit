@@ -437,7 +437,15 @@ font_freetype_font_new(struct graphics_priv *gr,
 	}
 	g_free(family_sav);
 #else
+#ifdef FREETYPE_FONTS
+	{
+		char *fonts[]={FREETYPE_FONTS};
+		name=g_strdup(fonts[flags ? 1:0]);
+	}
+#else
 	name=g_strdup_printf("%s/fonts/%s-%s.ttf",getenv("NAVIT_SHAREDIR"),"LiberationSans",flags ? "Bold":"Regular");
+#endif
+
 #if USE_CACHING
 	idstr=g_strdup_printf("%s/%d", name, 0);
 	font->scaler.face_id=(FTC_FaceID)atom(idstr);
