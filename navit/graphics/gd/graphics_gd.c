@@ -48,7 +48,8 @@ struct shmem_header {
 
 static void emit_callback(struct graphics_priv *priv);
 static void image_setup(struct graphics_priv *gr);
-struct shmem_header *shm_next(struct graphics_priv *gr);
+static struct shmem_header *shm_next(struct graphics_priv *gr);
+static void add_overlays(struct graphics_priv *overlay, gdImagePtr im);
 
 #ifdef NAVIT_GD_XPM_TRANSPARENCY_HACK
 #include <X11/xpm.h>
@@ -457,7 +458,8 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 		gdImageFilledRectangle(gr->im, 0, 0, gr->w, gr->h, gr->background->color);
 	}
 #endif
-	if (mode == draw_mode_end) {
+	if (mode == draw_mode_end && !gr->overlay) {
+		add_overlays(gr->overlays, gr->im);
 		if (!(gr->flags & 1)) {
 #ifdef HAVE_GRAPHICS_GD_PNG
 			rename("test.png","test.png.old");
@@ -485,6 +487,37 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 
 static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h, int alpha);
 
+static void
+add_overlays(struct graphics_priv *overlay, gdImagePtr im)
+{
+	while (overlay) {
+		if (overlay->background) {
+			gdImagePtr res,src;
+			int y,x;
+			int bgcol=overlay->background->color;
+			res=gdImageCreateTrueColor(overlay->w,overlay->h);
+			src=gdImageCreateTrueColor(overlay->w,overlay->h);
+			gdImageCopy(src, im, 0, 0, overlay->p.x, overlay->p.y, overlay->w, overlay->h);
+			for (y = 0 ; y < overlay->h ; y++) {
+				unsigned int *res_line=res->tpixels[y];
+				unsigned int *src_line=src->tpixels[y];
+				unsigned int *overlay_line=overlay->im->tpixels[y];
+				for (x = 0 ; x < overlay->w ; x++) {
+					if (overlay_line[x] != bgcol) 
+						res_line[x]=overlay_line[x];
+					else
+						res_line[x]=src_line[x];
+				}
+			}
+			gdImageCopy(im, res, overlay->p.x, overlay->p.y, 0, 0, overlay->w, overlay->h);
+			gdImageDestroy(res);	
+			gdImageDestroy(src);
+		} else
+			gdImageCopy(im, overlay->im, overlay->p.x, overlay->p.y, 0, 0, overlay->w, overlay->h);
+		overlay=overlay->next;
+	}
+}
+
 static void *
 get_data(struct graphics_priv *this, char *type)
 {
@@ -499,32 +532,7 @@ get_data(struct graphics_priv *this, char *type)
 			struct graphics_priv *overlay=this->overlays;
 			im=gdImageCreateTrueColor(this->w,this->h);
 			gdImageCopy(im, this->im, 0, 0, 0, 0, this->w, this->h);
-			while (overlay) {
-				if (overlay->background) {
-					gdImagePtr res,src;
-					int y,x;
-					int bgcol=overlay->background->color;
-					res=gdImageCreateTrueColor(overlay->w,overlay->h);
-					src=gdImageCreateTrueColor(overlay->w,overlay->h);
-					gdImageCopy(src, im, 0, 0, overlay->p.x, overlay->p.y, overlay->w, overlay->h);
-					for (y = 0 ; y < overlay->h ; y++) {
-						unsigned int *res_line=res->tpixels[y];
-						unsigned int *src_line=src->tpixels[y];
-						unsigned int *overlay_line=overlay->im->tpixels[y];
-						for (x = 0 ; x < overlay->w ; x++) {
-							if (overlay_line[x] != bgcol) 
-								res_line[x]=overlay_line[x];
-							else
-								res_line[x]=src_line[x];
-						}
-					}
-					gdImageCopy(im, res, overlay->p.x, overlay->p.y, 0, 0, overlay->w, overlay->h);
-					gdImageDestroy(res);	
-					gdImageDestroy(src);
-				} else
-					gdImageCopy(im, overlay->im, overlay->p.x, overlay->p.y, 0, 0, overlay->w, overlay->h);
-				overlay=overlay->next;
-			}
+			add_overlays(overlay, im);
 		}
 		if (this->image.data)
 			gdFree(this->image.data);
