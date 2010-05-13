@@ -42,7 +42,9 @@ struct shmem_header {
 	int w,h,bpp;
 };
 
+#ifdef HAVE_XPM
 #define NAVIT_GD_XPM_TRANSPARENCY_HACK
+#endif
 
 static void emit_callback(struct graphics_priv *priv);
 static void image_setup(struct graphics_priv *gr);
@@ -297,7 +299,11 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 	file=fopen(name,"r");
 	if (file) {
 		if (!strcmp(name+len-4,".png"))
+#ifdef HAVE_GRAPHICS_GD_PNG
 			im=gdImageCreateFromPng(file);
+#else
+			im=NULL;
+#endif
 		else if (!strcmp(name+len-4,".xpm"))
 			im=gdImageCreateFromXpm(name);
 		fclose(file);
@@ -453,10 +459,17 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 #endif
 	if (mode == draw_mode_end) {
 		if (!(gr->flags & 1)) {
+#ifdef HAVE_GRAPHICS_GD_PNG
 			rename("test.png","test.png.old");
 			pngout=fopen("test.png", "wb");
 			gdImagePng(gr->im, pngout);
 			fclose(pngout);
+#else
+			rename("test.gd","test.gd.old");
+			pngout=fopen("test.gd", "wb");
+			gdImageGd(gr->im, pngout);
+			fclose(pngout);
+#endif
 		}
 		if (gr->flags & 2) {
 			struct shmem_header *next=shm_next(gr);
@@ -515,7 +528,11 @@ get_data(struct graphics_priv *this, char *type)
 		}
 		if (this->image.data)
 			gdFree(this->image.data);
+#ifdef HAVE_GRAPHICS_GD_PNG
 		this->image.data=gdImagePngPtr(im, &this->image.size);
+#else
+		this->image.data=NULL;
+#endif
 		if (this->overlays)
 			gdImageDestroy(im);
 		return &this->image;
