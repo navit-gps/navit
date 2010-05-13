@@ -198,7 +198,6 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 		zip_info->offset+=sizeof(enc)+sizeof(salt)+sizeof(verify);
 		AES_set_encrypt_key(key, 128, &aeskey);
 		memset(counter, 0, sizeof(counter));
-		fprintf(stderr,"size=%d\n",size);
 		while (size > 0) {
 			int i,curr_size,idx=0;
 			do {
@@ -208,10 +207,8 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 			curr_size=size;
 			if (curr_size > sizeof(xor))
 				curr_size=sizeof(xor);
-			for (i = 0 ; i < curr_size ; i++) {
-				fprintf(stderr,"0x%x=0x%x\n",datap[0],datap[0]^xor[i]);
+			for (i = 0 ; i < curr_size ; i++) 
 				*datap++^=xor[i];
-			}
 			size-=curr_size;
 		}
 	}
