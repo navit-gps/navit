@@ -25,6 +25,18 @@ read_item(FILE *in)
 	return ib;
 }
 
+struct item_bin *
+read_item_range(FILE *in, int *min, int *max)
+{
+	struct range r;
+
+	if (fread(&r, sizeof(r), 1, in) != 1)
+		return NULL;
+	*min=r.min;
+	*max=r.max;
+	return read_item(in);
+}
+
 int
 item_bin_read(struct item_bin *ib, FILE *in)
 {
