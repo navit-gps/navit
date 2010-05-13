@@ -65,6 +65,11 @@ enum attr_type {
 #define AF_BIKE			(1<<30)	
 #define AF_PEDESTRIAN		(1<<31)	
 
+#define AF_DG_ANY		(1<<0)
+#define AF_DG_WATER_HARMFUL	(1<<1)
+#define AF_DG_EXPLOSIVE		(1<<2)
+#define AF_DG_FLAMMABLE		(1<<3)
+
 /* Values for attributes that could carry relative values */
 #define ATTR_REL_MAXABS			0x40000000
 #define ATTR_REL_RELSHIFT		0x60000000
