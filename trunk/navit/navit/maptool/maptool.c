@@ -498,7 +498,7 @@ int main(int argc, char **argv)
 					files[1]=tempfile(suffix,"ways_split",0);
 				if (process_nodes)
 					files[2]=tempfile(suffix,"nodes",0);
-				phase4(files,3,suffix,tilesdir,&zip_info);
+				phase4(files,3,0,suffix,tilesdir,&zip_info);
 				for (f = 0 ; f < 3 ; f++) {
 					if (files[f])
 						fclose(files[f]);
@@ -540,7 +540,7 @@ int main(int argc, char **argv)
 					files[2]=tempfile(suffix,"nodes",0);
 				fprintf(stderr,"Slice %d\n",i);
 				
-				phase5(files,references,3,suffix,&zip_info);
+				phase5(files,references,3,0,suffix,&zip_info);
 				for (f = 0 ; f < 3 ; f++) {
 					if (files[f])
 						fclose(files[f]);

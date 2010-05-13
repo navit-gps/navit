@@ -192,8 +192,23 @@ phase34_process_file(struct tile_info *info, FILE *in, FILE *reference)
 	}
 }
 
+static void
+phase34_process_file_range(struct tile_info *info, FILE *in, FILE *reference)
+{
+	struct item_bin *ib;
+	int min,max;
+
+	while ((ib=read_item_range(in, &min, &max))) {
+		if (ib->type < 0x80000000)
+			processed_nodes++;
+		else
+			processed_ways++;
+		tile_write_item_minmax(info, ib, reference, min, max);
+	}
+}
+
 static int
-phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, FILE **reference, int in_count)
+phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, FILE **reference, int in_count, int with_range)
 {
 	int i;
 
@@ -203,8 +218,12 @@ phase34(struct tile_info *info, struct zip_info *zip_info, FILE **in, FILE **ref
 	if (! info->write)
 		tile_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	for (i = 0 ; i < in_count ; i++) {
-		if (in[i])
-			phase34_process_file(info, in[i], reference ? reference[i]:NULL);
+		if (in[i]) {
+			if (with_range)
+				phase34_process_file_range(info, in[i], reference ? reference[i]:NULL);
+			else
+				phase34_process_file(info, in[i], reference ? reference[i]:NULL);
+		}
 	}
 	if (! info->write)
 		merge_tiles(info);
@@ -227,7 +246,7 @@ dump(FILE *in)
 }
 
 int
-phase4(FILE **in, int in_count, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info)
+phase4(FILE **in, int in_count, int with_range, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info)
 {
 	struct tile_info info;
 	info.write=0;
@@ -235,11 +254,11 @@ phase4(FILE **in, int in_count, char *suffix, FILE *tilesdir_out, struct zip_inf
 	info.suffix=suffix;
 	info.tiles_list=NULL;
 	info.tilesdir_out=tilesdir_out;
-	return phase34(&info, zip_info, in, NULL, in_count);
+	return phase34(&info, zip_info, in, NULL, in_count, with_range);
 }
 
 static int
-process_slice(FILE **in, FILE **reference, int in_count, long long size, char *suffix, struct zip_info *zip_info)
+process_slice(FILE **in, FILE **reference, int in_count, int with_range, long long size, char *suffix, struct zip_info *zip_info)
 {
 	struct tile_head *th;
 	char *slice_data,*zip_data;
@@ -270,7 +289,7 @@ process_slice(FILE **in, FILE **reference, int in_count, long long size, char *s
 	info.suffix=suffix;
 	info.tiles_list=NULL;
 	info.tilesdir_out=NULL;
-	phase34(&info, zip_info, in, reference, in_count);
+	phase34(&info, zip_info, in, reference, in_count, with_range);
 
 	th=tile_head_root;
 	while (th) {
@@ -293,7 +312,7 @@ process_slice(FILE **in, FILE **reference, int in_count, long long size, char *s
 }
 
 int
-phase5(FILE **in, FILE **references, int in_count, char *suffix, struct zip_info *zip_info)
+phase5(FILE **in, FILE **references, int in_count, int with_range, char *suffix, struct zip_info *zip_info)
 {
 	long long size;
 	int slices;
@@ -333,7 +352,7 @@ phase5(FILE **in, FILE **references, int in_count, char *suffix, struct zip_info
 		}
 		/* process_slice() modifies zip_info, but need to retain old info */
 		zipnum=zip_info->zipnum;
-		written_tiles=process_slice(in, references, in_count, size, suffix, zip_info);
+		written_tiles=process_slice(in, references, in_count, with_range, size, suffix, zip_info);
 		zip_info->zipnum=zipnum+written_tiles;
 		slices++;
 	}
