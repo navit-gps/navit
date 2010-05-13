@@ -143,6 +143,7 @@ void clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *pa
 /* itembin.c */
 
 struct item_bin *read_item(FILE *in);
+struct item_bin *read_item_range(FILE *in, int *min, int *max);
 int item_bin_read(struct item_bin *ib, FILE *in);
 void item_bin_set_type(struct item_bin *ib, enum item_type type);
 void item_bin_init(struct item_bin *ib, enum item_type type);
@@ -198,8 +199,8 @@ void bbox(struct coord *c, int count, struct rect *r);
 int contains_bbox(int xl, int yl, int xh, int yh, struct rect *r);
 void phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes);
 void dump(FILE *in);
-int phase4(FILE **in, int in_count, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info);
-int phase5(FILE **in, FILE **references, int in_count, char *suffix, struct zip_info *zip_info);
+int phase4(FILE **in, int in_count, int with_range, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info);
+int phase5(FILE **in, FILE **references, int in_count, int with_range, char *suffix, struct zip_info *zip_info);
 void process_binfile(FILE *in, FILE *out);
 void add_aux_tiles(char *name, struct zip_info *info);
 void cat(FILE *in, FILE *out);
