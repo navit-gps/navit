@@ -107,44 +107,50 @@ static void setup_pos(struct map_rect_priv *mr);
 
 static void lfh_to_cpu(struct zip_lfh *lfh) {
 	dbg_assert(lfh != NULL);
-	lfh->ziplocsig = le32_to_cpu(lfh->ziplocsig);
-	lfh->zipver    = le16_to_cpu(lfh->zipver);
-	lfh->zipgenfld = le16_to_cpu(lfh->zipgenfld);
-	lfh->zipmthd   = le16_to_cpu(lfh->zipmthd);
-	lfh->ziptime   = le16_to_cpu(lfh->ziptime);
-	lfh->zipdate   = le16_to_cpu(lfh->zipdate);
-	lfh->zipcrc    = le32_to_cpu(lfh->zipcrc);
-	lfh->zipsize   = le32_to_cpu(lfh->zipsize);
-	lfh->zipuncmp  = le32_to_cpu(lfh->zipuncmp);
-	lfh->zipfnln   = le16_to_cpu(lfh->zipfnln);
-	lfh->zipxtraln = le16_to_cpu(lfh->zipxtraln);
+	if (lfh->ziplocsig != zip_lfh_sig) {
+		lfh->ziplocsig = le32_to_cpu(lfh->ziplocsig);
+		lfh->zipver    = le16_to_cpu(lfh->zipver);
+		lfh->zipgenfld = le16_to_cpu(lfh->zipgenfld);
+		lfh->zipmthd   = le16_to_cpu(lfh->zipmthd);
+		lfh->ziptime   = le16_to_cpu(lfh->ziptime);
+		lfh->zipdate   = le16_to_cpu(lfh->zipdate);
+		lfh->zipcrc    = le32_to_cpu(lfh->zipcrc);
+		lfh->zipsize   = le32_to_cpu(lfh->zipsize);
+		lfh->zipuncmp  = le32_to_cpu(lfh->zipuncmp);
+		lfh->zipfnln   = le16_to_cpu(lfh->zipfnln);
+		lfh->zipxtraln = le16_to_cpu(lfh->zipxtraln);
+	}	
 }
 
 static void cd_to_cpu(struct zip_cd *zcd) {
 	dbg_assert(zcd != NULL);
-	zcd->zipcensig = le32_to_cpu(zcd->zipcensig);
-	zcd->zipccrc   = le32_to_cpu(zcd->zipccrc);
-	zcd->zipcsiz   = le32_to_cpu(zcd->zipcsiz);
-	zcd->zipcunc   = le32_to_cpu(zcd->zipcunc);
-	zcd->zipcfnl   = le16_to_cpu(zcd->zipcfnl);
-	zcd->zipcxtl   = le16_to_cpu(zcd->zipcxtl);
-	zcd->zipccml   = le16_to_cpu(zcd->zipccml);
-	zcd->zipdsk    = le16_to_cpu(zcd->zipdsk);
-	zcd->zipint    = le16_to_cpu(zcd->zipint);
-	zcd->zipext    = le32_to_cpu(zcd->zipext);
-	zcd->zipofst   = le32_to_cpu(zcd->zipofst);
+	if (zcd->zipcensig != zip_cd_sig) {
+		zcd->zipcensig = le32_to_cpu(zcd->zipcensig);
+		zcd->zipccrc   = le32_to_cpu(zcd->zipccrc);
+		zcd->zipcsiz   = le32_to_cpu(zcd->zipcsiz);
+		zcd->zipcunc   = le32_to_cpu(zcd->zipcunc);
+		zcd->zipcfnl   = le16_to_cpu(zcd->zipcfnl);
+		zcd->zipcxtl   = le16_to_cpu(zcd->zipcxtl);
+		zcd->zipccml   = le16_to_cpu(zcd->zipccml);
+		zcd->zipdsk    = le16_to_cpu(zcd->zipdsk);
+		zcd->zipint    = le16_to_cpu(zcd->zipint);
+		zcd->zipext    = le32_to_cpu(zcd->zipext);
+		zcd->zipofst   = le32_to_cpu(zcd->zipofst);
+	}
 }
 
 static void eoc_to_cpu(struct zip_eoc *eoc) {
 	dbg_assert(eoc != NULL);
-	eoc->zipesig   = le32_to_cpu(eoc->zipesig);
-	eoc->zipedsk   = le16_to_cpu(eoc->zipedsk);
-	eoc->zipecen   = le16_to_cpu(eoc->zipecen);
-	eoc->zipenum   = le16_to_cpu(eoc->zipenum);
-	eoc->zipecenn  = le16_to_cpu(eoc->zipecenn);
-	eoc->zipecsz   = le32_to_cpu(eoc->zipecsz);
-	eoc->zipeofst  = le32_to_cpu(eoc->zipeofst);
-	eoc->zipecoml  = le16_to_cpu(eoc->zipecoml);
+	if (eoc->zipesig != zip_eoc_sig) {
+		eoc->zipesig   = le32_to_cpu(eoc->zipesig);
+		eoc->zipedsk   = le16_to_cpu(eoc->zipedsk);
+		eoc->zipecen   = le16_to_cpu(eoc->zipecen);
+		eoc->zipenum   = le16_to_cpu(eoc->zipenum);
+		eoc->zipecenn  = le16_to_cpu(eoc->zipecenn);
+		eoc->zipecsz   = le32_to_cpu(eoc->zipecsz);
+		eoc->zipeofst  = le32_to_cpu(eoc->zipeofst);
+		eoc->zipecoml  = le16_to_cpu(eoc->zipecoml);
+	}
 }
 
 static void binfile_check_version(struct map_priv *m);
