@@ -1231,7 +1231,6 @@ parse_relation(char *p)
 static void
 end_relation(FILE *turn_restrictions)
 {
-	struct item_bin *ib=(struct item_bin *)buffer;
 #if 0
 	if (!strcmp(relation_type, "multipolygon") && boundary && admin_level != -1) {
 		if (admin_level == 2) {
@@ -1244,7 +1243,8 @@ end_relation(FILE *turn_restrictions)
 		}
 	}
 #endif
-	if (!strcmp(relation_type, "restriction") && (ib->type == type_street_turn_restriction_no || ib->type == type_street_turn_restriction_only))
+
+	if (!strcmp(relation_type, "restriction") && (item_bin->type == type_street_turn_restriction_no || item_bin->type == type_street_turn_restriction_only))
 		item_bin_write(item_bin, turn_restrictions);
 }
 
@@ -1344,6 +1344,7 @@ end_way(FILE *out)
 	int i,count;
 	int *def_flags,add_flags;
 	enum item_type types[10];
+	struct item_bin *item_bin;
 
 	if (! out)
 		return;
@@ -1365,7 +1366,7 @@ end_way(FILE *out)
 		add_flags=0;
 		if (types[i] == type_none)
 			continue;
-		item_bin_init(item_bin,types[i]);
+		item_bin=init_item(types[i]);
 		item_bin_add_coord(item_bin, coord_buffer, coord_count);
 		def_flags=item_get_default_flags(types[i]);
 		if (def_flags) {
@@ -1393,6 +1394,8 @@ end_node(FILE *out)
 	char *postal;
 	enum item_type types[10];
 	struct country_table *result=NULL, *lookup;
+	struct item_bin *item_bin;
+
 	if (!out || ! node_is_tagged || ! nodeid)
 		return;
 	count=attr_longest_match(attr_mapping_node, attr_mapping_node_count, types, sizeof(types)/sizeof(enum item_type));
@@ -1405,7 +1408,7 @@ end_node(FILE *out)
 		conflict=0;
 		if (types[i] == type_none)
 			continue;
-		item_bin_init(item_bin, types[i]);
+		item_bin=init_item(types[i]);
 		if (item_is_town(*item_bin) && attr_strings[attr_string_population]) 
 			item_bin_set_type_by_population(item_bin, atoi(attr_strings[attr_string_population]));
 		item_bin_add_coord(item_bin, &ni->c, 1);
@@ -1450,7 +1453,7 @@ end_node(FILE *out)
 					g_free(name);
 				}
 				if (result->file) {
-					item_bin_init(item_bin, item_bin->type);
+					item_bin=init_item(item_bin->type);
 					item_bin_add_coord(item_bin, &ni->c, 1);
 					item_bin_add_attr_string(item_bin, attr_town_postal, postal);
 					item_bin_add_attr_string(item_bin, attr_town_name, attr_strings[attr_string_label]);
@@ -1634,11 +1637,11 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 	struct node_item ni;
 	long long relid;
 	char from_buffer[65536],to_buffer[65536],via_buffer[65536];
-	struct item_bin *ib=(struct item_bin *)buffer,*from=(struct item_bin *)from_buffer,*to=(struct item_bin *)to_buffer,*via=(struct item_bin *)via_buffer;
+	struct item_bin *ib,*from=(struct item_bin *)from_buffer,*to=(struct item_bin *)to_buffer,*via=(struct item_bin *)via_buffer;
 	struct coord *fromc,*toc,*viafrom,*viato,*tmp;
 	fseek(in, 0, SEEK_SET);
 	int min_count;
-	while (item_bin_read(ib, in)) {
+	while ((ib=read_item(in))) {
 		relid=item_bin_get_relationid(ib);
 		min_count=0;
 		if (!search_relation_member(ib, "from",&fromm,&min_count)) {
@@ -1747,12 +1750,12 @@ static void
 process_countries(FILE *way, FILE *ways_index) 
 {
 	FILE *in=fopen("country_de.tmp","r");
-	struct item_bin *ib=(struct item_bin *)buffer;
+	struct item_bin *ib;
 	char buffer2[400000];
 	struct item_bin *ib2=(struct item_bin *)buffer2;
 	GList *segments=NULL,*sort_segments;
 	fseek(in, 0, SEEK_SET);
-	while (item_bin_read(ib, in)) {
+	while ((ib=read_item(in))) {
 		char *str=NULL;
 		struct relation_member member;
 		while ((str=item_bin_get_attr(ib, attr_osm_member, str))) {
@@ -1806,26 +1809,18 @@ node_ref_way(osmid node)
 int
 resolve_ways(FILE *in, FILE *out)
 {
-	struct item_bin *ib=(struct item_bin *)buffer;
+	struct item_bin *ib;
 	struct coord *c;
 	int i;
 
 	fseek(in, 0, SEEK_SET);
-	for (;;) {
-		switch (item_bin_read(ib, in)) {
-		case 0:
-			return 0;
-		case 2:
-			c=(struct coord *)(ib+1);
-			for (i = 0 ; i < ib->clen/2 ; i++) {
-				node_ref_way(REF(c[i]));
-			}
-		default:
-			continue;
+	while ((ib=read_item(in))) {
+		c=(struct coord *)(ib+1);
+		for (i = 0 ; i < ib->clen/2 ; i++) {
+			node_ref_way(REF(c[i]));
 		}
 	}
-	
-	
+	return 0;
 }
 
 static void
@@ -2174,7 +2169,7 @@ map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FI
 static void
 index_country_add(struct zip_info *info, int country_id, int zipnum)
 {
-	item_bin_init(item_bin, type_countryindex);
+	struct item_bin *item_bin=init_item(type_countryindex);
 	item_bin_add_attr_int(item_bin, attr_country_id, country_id);
 	item_bin_add_attr_int(item_bin, attr_zipfile_ref, zipnum);
 	item_bin_write(item_bin, info->index);

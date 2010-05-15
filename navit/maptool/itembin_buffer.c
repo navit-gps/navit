@@ -3,22 +3,26 @@
 #include "maptool.h"
 #include "debug.h"
 
+
+static char buffer[400000];
+struct item_bin *item_bin=(struct item_bin *)(void *)buffer;
+
 struct item_bin *
 read_item(FILE *in)
 {
 	struct item_bin *ib=(struct item_bin *) buffer;
-	int r,s;
-	r=fread(ib, sizeof(*ib), 1, in);
-	if (r != 1)
-		return NULL;
-	bytes_read+=r;
-	dbg_assert((ib->len+1)*4 < sizeof(buffer));
-	s=(ib->len+1)*4-sizeof(*ib);
-	r=fread(ib+1, s, 1, in);
-	if (r != 1)
-		return NULL;
-	bytes_read+=r;
-	return ib;
+	for (;;) {
+		switch (item_bin_read(ib, in)) {
+		case 0:
+			return NULL;
+		case 2:
+			dbg_assert((ib->len+1)*4 < sizeof(buffer));
+			bytes_read+=(ib->len+1)*sizeof(int);
+			return ib;
+		default:
+			continue;
+		}
+	}
 }
 
 struct item_bin *

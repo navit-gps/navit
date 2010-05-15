@@ -373,7 +373,7 @@ item_bin_set_type_by_population(struct item_bin *ib, int population)
 
 	if (population < 0)
 		population=0;
-	if (item_is_district(*item_bin)) {
+	if (item_is_district(*ib)) {
 		table=district_population;
 		count=sizeof(district_population)/sizeof(district_population[0]);
 	} else {

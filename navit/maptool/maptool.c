@@ -56,9 +56,6 @@ struct buffer node_buffer = {
 
 int processed_nodes, processed_nodes_out, processed_ways, processed_relations, processed_tiles;
 
-char buffer[400000];
-struct item_bin *item_bin=(struct item_bin *)(void *)buffer;
-
 int overlap=1;
 
 int bytes_read;

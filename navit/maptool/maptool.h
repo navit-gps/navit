@@ -175,7 +175,6 @@ struct item_bin *init_item(enum item_type type);
 
 /* maptool.c */
 
-extern char buffer[400000];
 extern long long slice_size;
 extern int attr_debug_level;
 extern char *suffix;
