@@ -220,9 +220,10 @@ ch_process_node(FILE *out, int node, int resolve)
 	int last_edge_id=nodes[node+1].first_edge;
 	int edge_id;
 	struct ch_edge ch_edge;
+	struct item_bin *item_bin;
 	memset(&ch_edge, 0, sizeof(ch_edge));
 	struct edge_hash_item fwd,rev;
-	item_bin_init(item_bin, type_ch_node);
+	item_bin=init_item(type_ch_node);
 	int oldnode=GPOINTER_TO_INT(g_hash_table_lookup(newnode_hash, GINT_TO_POINTER(node)));
 #if 0
 	dbg(0,"0x%x,0x%x\n",node_index[oldnode].x,node_index[oldnode].y);

@@ -74,30 +74,24 @@ file_reader_new(FILE *in, int limit, int offset)
 int
 file_reader_finish(struct item_bin_sink *sink)
 {
-	struct item_bin *ib=(struct item_bin *)buffer;
+	struct item_bin *ib;
 	int ret =0;
 	FILE *in=sink->priv_data[0];
 	int limit=(int)(long)sink->priv_data[1];
 	int offset=(int)(long)sink->priv_data[2];
-	for (;;) {
-		switch (item_bin_read(ib, in)) {
-		case 0:
-			item_bin_sink_destroy(sink);
-			return 0;
-		case 2:
-			if (offset > 0) {
-				offset--;
-			} else {
-				ret=item_bin_write_to_sink(ib, sink, NULL);
-				if (ret || (limit != -1 && !--limit)) {
-					item_bin_sink_destroy(sink);
-					return ret;
-				}
+	while ((ib=read_item(in))) {
+		if (offset > 0) {
+			offset--;
+		} else {
+			ret=item_bin_write_to_sink(ib, sink, NULL);
+			if (ret || (limit != -1 && !--limit)) {
+				item_bin_sink_destroy(sink);
+				return ret;
 			}
-		default:
-			continue;
 		}
 	}
+	item_bin_sink_destroy(sink);
+	return 0;
 }
 
 int

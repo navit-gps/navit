@@ -150,7 +150,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 	struct rect bbox;
 	struct coord cn[2],end,poly_start,tile_start;
 	struct geom_poly_segment *first;
-	struct item_bin *ib=(struct item_bin *)buffer;
+	struct item_bin *ib=NULL;
 	struct item_bin_sink *out=data->sink->priv_data[1];
 	int dbgl=1;
 	int edges=0,flags;
@@ -205,7 +205,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 		curr=g_list_next(curr);
 	}
 	if (flags == 1) {
-		item_bin_init(ib, type_poly_water_tiled);
+		ib=init_item(type_poly_water_tiled);
 		item_bin_bbox(ib, &bbox);
 		item_bin_write_to_sink(ib, out, NULL);
 		g_hash_table_insert(data->tile_edges, g_strdup(tile), (void *)15);
@@ -247,7 +247,7 @@ tile_collector_process_tile(char *tile, int *tile_data, struct coastline_tile_da
 			if (!poly_start_valid) {
 				poly_start=cn[0];
 				poly_start_valid=1;
-				item_bin_init(ib,type_poly_water_tiled);
+				ib=init_item(type_poly_water_tiled);
 			} else {
 				close_polygon(ib, &end, &cn[0], 1, &bbox, &edges);
 				if (cn[0].x == poly_start.x && cn[0].y == poly_start.y) {
@@ -322,7 +322,7 @@ ocean_tile(GHashTable *hash, char *tile, char c, struct item_bin_sink *out)
 	int len=strlen(tile);
 	char tile2[len+1];
 	struct rect bbox;
-	struct item_bin *ib=(struct item_bin *)buffer;
+	struct item_bin *ib;
 	struct coord co;
 
 	strcpy(tile2, tile);
@@ -332,7 +332,7 @@ ocean_tile(GHashTable *hash, char *tile, char c, struct item_bin_sink *out)
 		return;
 	//fprintf(stderr,"%s ok\n",tile2);
 	tile_bbox(tile2, &bbox, 0);
-	item_bin_init(ib,type_poly_water_tiled);
+	ib=init_item(type_poly_water_tiled);
 	item_bin_bbox(ib, &bbox);
 	item_bin_write_to_sink(ib, out, NULL);
 	g_hash_table_insert(hash, g_strdup(tile2), (void *)15);
@@ -407,7 +407,7 @@ tile_sibling_edges(GHashTable *hash, char *tile, char c)
 static void
 ocean_tile2(struct rect *r, int dx, int dy, int wf, int hf, struct item_bin_sink *out)
 {
-	struct item_bin *ib=(struct item_bin *)buffer;
+	struct item_bin *ib;
 	int w=r->h.x-r->l.x;
 	int h=r->h.y-r->l.y;
 	char tile2[32];
@@ -418,7 +418,7 @@ ocean_tile2(struct rect *r, int dx, int dy, int wf, int hf, struct item_bin_sink
 	bbox.h.x=bbox.l.x+w*wf;
 	bbox.h.y=bbox.l.y+h*hf;
 	//fprintf(stderr,"0x%x,0x%x-0x%x,0x%x -> 0x%x,0x%x-0x%x,0x%x\n",r->l.x,r->l.y,r->h.x,r->h.y,bbox.l.x,bbox.l.y,bbox.h.x,bbox.h.y);
-	item_bin_init(ib,type_poly_water_tiled);
+	ib=init_item(type_poly_water_tiled);
 	item_bin_bbox(ib, &bbox);
 	item_bin_write_to_sink(ib, out, NULL);
 #if 0
