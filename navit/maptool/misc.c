@@ -103,12 +103,13 @@ phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes)
 	int count,max=16384;
 	struct coord ca[max];
 	struct attr attr;
+	struct item_bin *item_bin;
 
 	while (maps) {
 		mr=map_rect_new(maps->data, NULL);
 		while ((item = map_rect_get_item(mr))) {
 			count=item_coord_get(item, ca, item->type < type_line ? 1: max);
-			item_bin_init(item_bin, item->type);
+			item_bin=init_item(item->type);
 			item_bin_add_coord(item_bin, ca, count);
 			while (item_attr_get(item, attr_any, &attr)) {
 				if (attr.type >= attr_type_string_begin && attr.type <= attr_type_string_end) {
