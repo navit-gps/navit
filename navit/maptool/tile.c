@@ -511,7 +511,7 @@ write_tilesdir(struct tile_info *info, struct zip_info *zip_info, FILE *out)
 		len--;
 	}
 	if (info->suffix[0] && info->write) {
-		item_bin_init(item_bin, type_submap);
+		struct item_bin *item_bin=init_item(type_submap);
 		item_bin_add_coord_rect(item_bin, &world_bbox);
 		item_bin_add_attr_range(item_bin, attr_order, 0, 255);
 		item_bin_add_attr_int(item_bin, attr_zipfile_ref, zip_info->zipnum-1);
@@ -593,7 +593,8 @@ merge_tiles(struct tile_info *info)
 void
 index_init(struct zip_info *info, int version)
 {
-	item_bin_init(item_bin, type_map_information);
+	struct item_bin *item_bin;
+	item_bin=init_item(type_map_information);
 	item_bin_add_attr_int(item_bin, attr_version, version);
 	item_bin_write(item_bin, info->index);
 }
@@ -605,6 +606,7 @@ index_submap_add(struct tile_info *info, struct tile_head *th)
 	int len=tlen;
 	char index_tile[len+1+strlen(info->suffix)];
 	struct rect r;
+	struct item_bin *item_bin;
 
 	strcpy(index_tile, th->name);
 	if (len > 6)
@@ -615,7 +617,7 @@ index_submap_add(struct tile_info *info, struct tile_head *th)
 	strcat(index_tile, info->suffix);
 	tile_bbox(th->name, &r, overlap);
 
-	item_bin_init(item_bin, type_submap);
+	item_bin=init_item(type_submap);
 	item_bin_add_coord_rect(item_bin, &r);
 	item_bin_add_attr_range(item_bin, attr_order, (tlen > 4)?tlen-4 : 0, 255);
 	item_bin_add_attr_int(item_bin, attr_zipfile_ref, th->zipnum);
