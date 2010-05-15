@@ -201,6 +201,16 @@ item_bin_write(struct item_bin *ib, FILE *out)
 	fwrite(ib, (ib->len+1)*4, 1, out);
 }
 
+struct item_bin *
+item_bin_dup(struct item_bin *ib)
+{
+	int len=(ib->len+1)*4;
+	struct item_bin *ret=g_malloc(len);
+	memcpy(ret, ib, len);
+
+	return ret;
+}
+
 void
 item_bin_write_range(struct item_bin *ib, FILE *out, int min, int max)
 {

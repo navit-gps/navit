@@ -129,7 +129,7 @@ usage(FILE *f)
 
 int main(int argc, char **argv)
 {
-	FILE *ways=NULL,*ways_split=NULL,*ways_split_index=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*coastline=NULL,*tilesdir,*coords,*relations=NULL;
+	FILE *ways=NULL,*ways_split=NULL,*ways_split_index=NULL,*nodes=NULL,*turn_restrictions=NULL,*graph=NULL,*coastline=NULL,*tilesdir,*coords,*relations=NULL,*boundaries=NULL;
 	FILE *files[10];
 	FILE *references[10];
 
@@ -319,6 +319,8 @@ int main(int argc, char **argv)
 			nodes=tempfile(suffix,"nodes",1);
 		if (process_ways && process_nodes) 
 			turn_restrictions=tempfile(suffix,"turn_restrictions",1);
+		if (process_relations)
+			boundaries=tempfile(suffix,"boundaries",1);
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
 #ifdef HAVE_POSTGRESQL
@@ -336,7 +338,7 @@ int main(int argc, char **argv)
 			}
 		}
 		else
-			map_collect_data_osm(input_file,ways,nodes,turn_restrictions);
+			map_collect_data_osm(input_file,ways,nodes,turn_restrictions,boundaries);
 		if (slices) {
 			fprintf(stderr,"%d slices\n",slices);
 			flush_nodes(1);
@@ -354,6 +356,8 @@ int main(int argc, char **argv)
 			fclose(nodes);
 		if (turn_restrictions)
 			fclose(turn_restrictions);
+		if (boundaries)
+			fclose(boundaries);
 	}
 	if (!slices) {
 		if (end == 1 || dump_coordinates)
@@ -422,6 +426,14 @@ int main(int argc, char **argv)
 		fprintf(stderr,"PROGRESS: Phase 3: sorting countries, generating turn restrictions\n");
 		sort_countries(keep_tmpfiles);
 		if (process_relations) {
+#if 0
+			boundaries=tempfile(suffix,"boundaries",0);
+			ways_split=tempfile(suffix,"ways_split",0);
+			process_boundaries(boundaries, ways_split);
+			fclose(boundaries);
+			fclose(ways_split);
+			exit(0);
+#endif
 			turn_restrictions=tempfile(suffix,"turn_restrictions",0);
 			if (turn_restrictions) {
 				relations=tempfile(suffix,"relations",1);

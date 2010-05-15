@@ -1229,10 +1229,10 @@ parse_relation(char *p)
 }
 
 static void
-end_relation(FILE *turn_restrictions)
+end_relation(FILE *turn_restrictions, FILE *boundaries)
 {
+	if ((!strcmp(relation_type, "multipolygon") || !strcmp(relation_type, "boundary")) && boundary) {
 #if 0
-	if (!strcmp(relation_type, "multipolygon") && boundary && admin_level != -1) {
 		if (admin_level == 2) {
 			FILE *f;
 			fprintf(stderr,"Multipolygon for %s\n", iso_code);
@@ -1241,8 +1241,9 @@ end_relation(FILE *turn_restrictions)
 			item_bin_write(item_bin, f);
 			fclose(f);
 		}
-	}
 #endif
+		item_bin_write(item_bin, boundaries);
+	}
 
 	if (!strcmp(relation_type, "restriction") && (item_bin->type == type_street_turn_restriction_no || item_bin->type == type_street_turn_restriction_only))
 		item_bin_write(item_bin, turn_restrictions);
@@ -1284,16 +1285,21 @@ parse_member(char *p)
 static void
 relation_add_tag(char *k, char *v)
 {
+	int add_tag=1;
 #if 0
 	fprintf(stderr,"add tag %s %s\n",k,v);
 #endif
-	if (!strcmp(k,"type")) 
+	if (!strcmp(k,"type")) {
 		strcpy(relation_type, v);
+		add_tag=0;
+	}
 	else if (!strcmp(k,"restriction")) {
 		if (!strncmp(v,"no_",3)) {
 			item_bin->type=type_street_turn_restriction_no;
+			add_tag=0;
 		} else if (!strncmp(v,"only_",5)) {
 			item_bin->type=type_street_turn_restriction_only;
+			add_tag=0;
 		} else {
 			item_bin->type=type_none;
 			osm_warning("relation", current_id, 0, "Unknown restriction %s\n",v);
@@ -1307,6 +1313,13 @@ relation_add_tag(char *k, char *v)
 	} else if (!strcmp(k,"ISO3166-1")) {
 		strcpy(iso_code, v);
 	}
+#if 0
+	if (add_tag) {
+		char tag[strlen(k)+strlen(v)+2];
+		sprintf(tag,"%s=%s",k,v);
+		item_bin_add_attr_string(item_bin, attr_osm_tag, tag);
+	}
+#endif
 }
 
 
@@ -1846,7 +1859,7 @@ parse_nd(char *p)
 }
 
 int
-map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions)
+map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries)
 {
 	int size=BUFFER_SIZE;
 	char buffer[size];
@@ -1893,7 +1906,7 @@ map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_r
 			end_way(out_ways);
 		} else if (!strncmp(p, "</relation>",11)) {
 			in_relation=0;
-			end_relation(out_turn_restrictions);
+			end_relation(out_turn_restrictions, out_boundaries);
 		} else if (!strncmp(p, "</osm>",6)) {
 		} else {
 			fprintf(stderr,"WARNING: unknown tag in %s\n", buffer);
