@@ -142,8 +142,6 @@ void clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *pa
 
 /* itembin.c */
 
-struct item_bin *read_item(FILE *in);
-struct item_bin *read_item_range(FILE *in, int *min, int *max);
 int item_bin_read(struct item_bin *ib, FILE *in);
 void item_bin_set_type(struct item_bin *ib, enum item_type type);
 void item_bin_init(struct item_bin *ib, enum item_type type);
@@ -170,7 +168,10 @@ void item_bin_set_type_by_population(struct item_bin *ib, int population);
 void item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type match, FILE *out);
 int item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size);
 
-
+/* itembin_buffer.c */
+struct item_bin *read_item(FILE *in);
+struct item_bin *read_item_range(FILE *in, int *min, int *max);
+struct item_bin *init_item(enum item_type type);
 
 /* maptool.c */
 
