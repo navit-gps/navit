@@ -187,6 +187,25 @@ geom_poly_segments_sort(GList *in, enum geom_poly_segment_type type)
 	return ret;
 }
 
+int
+geom_poly_segments_point_inside(GList *in, struct coord *c)
+{
+	int ret=0;
+	struct coord *cp;
+	while (in) {
+		struct geom_poly_segment *seg=in->data;
+		cp=seg->first;
+		while (cp < seg->last) {
+			if ((cp[0].y > c->y) != (cp[1].y > c->y) &&
+				c->x < (cp[1].x-cp[0].x)*(c->y-cp[0].y)/(cp[1].y-cp[0].y)+cp[0].x)
+				ret=!ret;
+			cp++;
+		}
+		in=g_list_next(in);
+	}
+	return ret;
+}
+
 struct geom_poly_segment *
 item_bin_to_poly_segment(struct item_bin *ib, int type)
 {

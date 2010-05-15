@@ -95,6 +95,40 @@ contains_bbox(int xl, int yl, int xh, int yh, struct rect *r)
 	return 1;
 }
 
+int
+bbox_contains_coord(struct rect *r, struct coord *c)
+{
+	if (r->h.x < c->x)
+		return 0;
+	if (r->l.x > c->x)
+		return 0;
+	if (r->h.y < c->y)
+		return 0;
+	if (r->l.y > c->y)
+		return 0;
+	return 1;
+}
+
+int
+bbox_contains_bbox(struct rect *out, struct rect *in)
+{
+	if (out->h.x < in->h.x)
+		return 0;
+	if (out->l.x > in->l.x)
+		return 0;
+	if (out->h.y < in->h.y)
+		return 0;
+	if (out->l.y > in->l.y)
+		return 0;
+	return 1;
+}
+
+long long
+bbox_area(struct rect *r)
+{
+	return ((long long)r->h.x-r->l.x)*(r->h.y-r->l.y);
+}
+
 void
 phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes)
 {

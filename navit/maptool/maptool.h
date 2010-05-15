@@ -91,6 +91,10 @@ struct zip_info {
 	FILE *dir;
 };
 
+/* boundaries.c */
+
+int process_boundaries(FILE *boundaries, FILE *ways);
+
 /* buffer.c */
 struct buffer {
 	int malloced_step;
@@ -160,6 +164,7 @@ void item_bin_add_attr_longlong(struct item_bin *ib, enum attr_type type, long l
 void item_bin_add_attr_string(struct item_bin *ib, enum attr_type type, char *str);
 void item_bin_add_attr_range(struct item_bin *ib, enum attr_type type, short min, short max);
 void item_bin_write(struct item_bin *ib, FILE *out);
+struct item_bin *item_bin_dup(struct item_bin *ib);
 void item_bin_write_range(struct item_bin *ib, FILE *out, int min, int max);
 void item_bin_write_clipped(struct item_bin *ib, struct tile_parameter *param, struct item_bin_sink *out);
 void item_bin_dump(struct item_bin *ib, FILE *out);
@@ -197,6 +202,9 @@ extern struct rect world_bbox;
 void bbox_extend(struct coord *c, struct rect *r);
 void bbox(struct coord *c, int count, struct rect *r);
 int contains_bbox(int xl, int yl, int xh, int yh, struct rect *r);
+int bbox_contains_coord(struct rect *r, struct coord *c);
+int bbox_contains_bbox(struct rect *out, struct rect *in);
+long long bbox_area(struct rect *r);
 void phase1_map(GList *maps, FILE *out_ways, FILE *out_nodes);
 void dump(FILE *in);
 int phase4(FILE **in, int in_count, int with_range, char *suffix, FILE *tilesdir_out, struct zip_info *zip_info);
@@ -213,7 +221,7 @@ void flush_nodes(int final);
 void sort_countries(int keep_tmpfiles);
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 int resolve_ways(FILE *in, FILE *out);
-int map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions);
+int map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
 int map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_nodes);
 int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info);
