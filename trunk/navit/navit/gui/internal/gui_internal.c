@@ -33,10 +33,10 @@
 #include <math.h>
 #include <glib.h>
 #include <time.h>
+#include "config.h"
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
 #endif
-#include "config.h"
 #include "item.h"
 #include "file.h"
 #include "navit.h"
