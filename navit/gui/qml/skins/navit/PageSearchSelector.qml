@@ -56,9 +56,9 @@ Rectangle {
     Binding {id: townBinding; target: search; property: "townName"; value: searchTxt.text; when: false}
     Binding {id: streetBinding; target: search; property: "streetName"; value: searchTxt.text; when: false}
 
-    Connections { sender: search; signal: CountryNameSignal(); script: {listModel.xml=search.searchXml(); listModel.query="/search/item"; listModel.reload(); } }
-    Connections { sender: search; signal: TownNameSignal(); script: {listModel.xml=search.searchXml(); listModel.query="/search/item"; listModel.reload(); } }
-    Connections { sender: search; signal: StreetNameSignal(); script: {listModel.xml=search.searchXml(); listModel.query="/search/item"; listModel.reload(); } }
+    Connections { target: search; onCountryNameSignal: {listModel.xml=search.searchXml(); listModel.query="/search/item"; listModel.reload(); } }
+    Connections { target: search; onTownNameSignal: {listModel.xml=search.searchXml(); listModel.query="/search/item"; listModel.reload(); } }
+    Connections { target: search; onStreetNameSignal: {listModel.xml=search.searchXml(); listModel.query="/search/item"; listModel.reload(); } }
 
     XmlListModel {
 	id: listModel
