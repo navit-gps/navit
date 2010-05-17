@@ -833,8 +833,6 @@ if test "x${gui_qml}" = "xyes" -a "x${QT_GUI_CFLAGS}" = "x" -a "x${QT_GUI_LIBS}"
 fi
 if test "x${gui_qml}" = "xyes" -a "x${QT_DECLARATIVE_CFLAGS}" = "x" -a "x${QT_DECLARATIVE_LIBS}" = "x"; then
 	PKG_CHECK_MODULES(QT_DECLARATIVE, [QtDeclarative >= 4.6.0 ], ,gui_qml=no;gui_qml_reason="Packages QtDeclarative missing")
-	QmlApiVersion=`$PKG_CONFIG QtDeclarative --modversion`
-	AM_CONDITIONAL(QT_DECLARATIVE_NEWAPI,test "x${QmlApiVersion}" != "x4.6.0" -a "x${QmlApiVersion}" != "x4.6.2" )
 fi
 if test "x${gui_qml}" = "xyes" ; then
 	AC_DEFINE(USE_GUI_QML, 1, [Build with gui qml])
