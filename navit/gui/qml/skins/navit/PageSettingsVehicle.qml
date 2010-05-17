@@ -14,7 +14,7 @@ Rectangle {
     
     Component.onCompleted: pageOpen();    
     
-    opacity: Behavior {
+    Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
 
@@ -29,7 +29,7 @@ Rectangle {
 		 Text { id: txtItemDist; text: itemDistance; color: "White"; anchors.leftMargin: 5; anchors.left: txtItemName.right;anchors.top: txtItemName.top }
 		 Text { id: txtItemDirect; text: itemDirection; color: "White"; anchors.leftMargin: 5; anchors.left: txtItemDist.right;anchors.top: txtItemDist.top }
              }
-	     MouseRegion {
+	     MouseArea {
 	   		id:delegateMouse
 			anchors.fill: parent
 			onClicked: { list.currentIndex=itemId; listselector.value=itemValue; listselector.changed() }

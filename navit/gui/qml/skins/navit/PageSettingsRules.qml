@@ -14,7 +14,7 @@ Rectangle {
     
     Component.onCompleted: pageOpen();    
     
-    opacity: Behavior {
+    Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
 
@@ -23,7 +23,7 @@ Rectangle {
 
         ToggleSwitch { id: trackingSw; stOn: navit.getAttr("tracking");  text: "Lock on road"; onChanged: navit.setAttr("tracking",trackingSw.stOn)  }
         ToggleSwitch { id: orientationSw; stOn: navit.getAttr("orientation");  text: "Northing"; onChanged: navit.setAttr("orientation",orientationSw.stOn) }
-	ToggleSwitch { id: followcursorSw; stOn: navit.getAttr("follow_cursor");  text: "Map follows Vehicle"; onChanged: navit.setAttr("follow_cursor",followrcursorSw.stOn) }
+	ToggleSwitch { id: followcursorSw; stOn: navit.getAttr("follow_cursor");  text: "Map follows Vehicle"; onChanged: navit.setAttr("follow_cursor",followcursorSw.stOn) }
 	ToggleSwitch { id: autozoomSw; stOn: navit.getAttr("autozoom_active");  text: "Auto zoom"; onChanged: navit.setAttr("autozoom_active",autozoomSw.stOn) }
   }
 

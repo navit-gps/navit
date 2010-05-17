@@ -37,7 +37,7 @@ Rectangle {
 		GradientStop { position: 0.0; color: "steelblue" }
 		GradientStop { position: 1.0; color: "lightsteelblue" }
 	}
-	MouseRegion {
+	MouseArea {
 		anchors.fill: parent
 		onReleased: { knob.x=mouse.x-15; slider.value=Math.round(fromSlider(knob.x)); slider.changed(); } 
 	}
@@ -51,7 +51,7 @@ Rectangle {
 		GradientStop { position: 0.0; color: "lightgray" }
 		GradientStop { position: 1.0; color: "gray" }
             }
-	    MouseRegion {
+	    MouseArea {
 		anchors.fill: parent
 		drag.target: parent; drag.axis: "XAxis"; drag.minimumX: 2; drag.maximumX: background.width-knob.width
 		onPositionChanged: slider.value=Math.round(fromSlider(knob.x))

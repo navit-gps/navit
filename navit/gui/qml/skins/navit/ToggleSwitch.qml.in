@@ -36,7 +36,7 @@ import Qt 4.6
 
      Image {
          id: background; source: "background.svg"
-         MouseRegion { anchors.fill: parent; onClicked: toggle() }
+         MouseArea { anchors.fill: parent; onClicked: toggle() }
 	 height: gui.height/7.5; width: height*2.4;
      }
 
@@ -44,7 +44,7 @@ import Qt 4.6
          id: knob; source: "knob.svg"; x: 1; y: 2
 	 height: gui.height/8; width: gui.height/8;
 
-         MouseRegion {
+         MouseArea {
              anchors.fill: parent
              drag.target: knob; drag.axis: "XAxis"; drag.minimumX: 1; drag.maximumX: background.width-knob.width
 	     hoverEnabled: false; onReleased: toggle()

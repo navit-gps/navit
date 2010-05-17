@@ -33,7 +33,7 @@ Rectangle {
     
     Component.onCompleted: pageOpen();    
     
-    opacity: Behavior {
+    Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
 
@@ -62,7 +62,7 @@ Rectangle {
                  Text { id: txtItem; text: itemName; color: {itemType== "bookmark" ? "White"  : "Yellow"}
 		 font.bold: {itemType!= "bookmark" }
        	         width: list.width-imgDelete.width
-		     MouseRegion {
+		     MouseArea {
 		         id:delegateMouse
 			 anchors.fill: parent
 			 onClicked: bookmarkClick(itemName,itemType,itemValue);
@@ -72,7 +72,7 @@ Rectangle {
 			id: imgCut; source: gui.iconPath+"zoom_out.svg"; anchors.right: imgCopy.left;anchors.rightMargin: 5;
 			width: 20; height: 20;
 
-			MouseRegion {
+			MouseArea {
 				id:delegateMouseCut
 				anchors.fill: parent
 				onClicked: { bookmarks.Cut(itemName); bookmarkReload(); }
@@ -82,7 +82,7 @@ Rectangle {
 			id: imgCopy; source: gui.iconPath+"zoom_in.svg"; anchors.right: imgDelete.left;anchors.rightMargin: 5;
 			width: 20; height: 20;
 
-			MouseRegion {
+			MouseArea {
 				id:delegateMouseCopy
 				anchors.fill: parent
 				onClicked: { bookmarks.Copy(itemName); bookmarkReload(); }
@@ -92,7 +92,7 @@ Rectangle {
 			id: imgDelete; source: gui.iconPath+"gui_inactive.svg"; anchors.right: wrapper.right;anchors.rightMargin: 5;
 			width: 20; height: 20;
 
-			MouseRegion {
+			MouseArea {
 				id:delegateMouseDelete
 				anchors.fill: parent
 				onClicked: { bookmarks.Delete(itemName); bookmarkReload(); }
@@ -111,7 +111,7 @@ Rectangle {
     ListSelector { 
 	id:layoutList; text: ""
 	anchors.top: pasteBtn.bottom;
-	anchors.left: parent.left; anchors.leftMargin: 3
+	anchors.left: parent.left;
 	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
 	width: page.width; height: page.height*0.25
     }
