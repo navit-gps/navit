@@ -1636,7 +1636,7 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 {
 	int i;
 	char *path;
-	dbg(0,"type=%s interface=%s path=%s member=%s signature=%s\n", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
+	dbg(1,"type=%s interface=%s path=%s member=%s signature=%s\n", dbus_message_type_to_string(dbus_message_get_type(message)), dbus_message_get_interface(message), dbus_message_get_path(message), dbus_message_get_member(message), dbus_message_get_signature(message));
 	if (dbus_message_is_method_call (message, "org.freedesktop.DBus.Introspectable", "Introspect")) {
 		DBusMessage *reply;
             	char *navitintrospectxml = generate_navitintrospectxml(dbus_message_get_path(message));
@@ -1742,7 +1742,7 @@ void plugin_init(void)
 	object_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	object_hash_rev=g_hash_table_new(NULL, NULL);
 	object_count=g_hash_table_new(g_str_hash, g_str_equal);
-	dbg(0,"enter 1\n");
+	dbg(1,"enter\n");
 	dbus_error_init(&error);
 #ifdef DBUS_USE_SYSTEM_BUS
 	connection = dbus_bus_get(DBUS_BUS_SYSTEM, &error);
