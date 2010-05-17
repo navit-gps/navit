@@ -31,7 +31,7 @@ import Qt 4.6
 
      Component.onCompleted: startup();
 
-    MouseRegion { id: mr; anchors.fill: parent; onReleased: toggle() }
+    MouseArea { id: mr; anchors.fill: parent; onReleased: toggle() }
 
    Image {
 	id: imgItem; source: gui.iconPath+togglebutton.icon; anchors.top: togglebutton.top; anchors.horizontalCenter: togglebutton.horizontalCenter;

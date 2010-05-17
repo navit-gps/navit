@@ -11,7 +11,7 @@ Rectangle {
     width: imgItem.width+20; height: txtItem.height + 6 + imgItem.height;
     transformOrigin: Rectangle.Center;
 
-    MouseRegion { id: mr; anchors.fill: parent; onClicked: container.clicked() }
+    MouseArea { id: mr; anchors.fill: parent; onClicked: container.clicked() }
 
    Image {
 	id: imgItem; source: gui.iconPath+container.icon; anchors.top: container.top; anchors.horizontalCenter: container.horizontalCenter;

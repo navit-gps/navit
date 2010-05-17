@@ -14,7 +14,7 @@ Rectangle {
     
     Component.onCompleted: pageOpen();    
     
-    opacity: Behavior {
+    Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
 
@@ -70,7 +70,7 @@ Rectangle {
     ListSelector { 
 	id:layoutList; text: "Attributes";
 	anchors.top: urlTxt.bottom;
-	anchors.left: parent.left; anchors.leftMargin: 3
+	anchors.left: parent.left;
 	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
 	width: page.width; height: page.height*0.25
     }

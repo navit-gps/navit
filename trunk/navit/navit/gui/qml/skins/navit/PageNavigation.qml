@@ -21,7 +21,7 @@ Rectangle {
     
     Component.onCompleted: pageOpen();    
     
-    opacity: Behavior {
+    Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
 
