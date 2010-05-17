@@ -476,7 +476,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 		if (gr->flags & 2) {
 			struct shmem_header *next=shm_next(gr);
 			gr->shm_header->flag=1;
-			dbg(0,"next flag is %d\n",next->flag);
+			dbg(1,"next flag is %d\n",next->flag);
 			if (!next->flag) {
 				gr->shm_header=next;
 				image_setup(gr);
@@ -581,10 +581,10 @@ shm_next(struct graphics_priv *gr)
 {
 	char *next=(char *)gr->shm_header+gr->shmoffset;
 	if (next+gr->shmoffset > (char *)gr->shm+gr->shmsize) {
-		dbg(0,"wraparound\n");
+		dbg(1,"wraparound\n");
 		return gr->shm;
 	}
-	dbg(0,"next 0x%x (offset 0x%x)\n",next-(char *)gr->shm,gr->shmoffset);
+	dbg(1,"next 0x%x (offset 0x%x)\n",next-(char *)gr->shm,gr->shmoffset);
 	return (struct shmem_header *)next;
 	
 }
