@@ -80,7 +80,7 @@ public slots:
 			attr.u.str=this->country_name.toLocal8Bit().data();
 		}
 		search_list_search(this->sl,&attr,0);
-		if (res=search_list_get_result(this->sl)) {
+		if ((res=search_list_get_result(this->sl))) {
 			__setNewPoint(this->object,res->c,PointOfInterest);
 		}
 		return;
@@ -176,7 +176,6 @@ public slots:
 	}
 	void setTownName(QString townName) {
 		struct attr attr;
-		struct search_list_result *res;
 
 		this->town_name=townName;
 
@@ -195,7 +194,6 @@ public slots:
 	}
 	void setStreetName(QString streetName) {
 		struct attr attr;
-		struct search_list_result *res;
 
 		this->street_name=streetName;
 

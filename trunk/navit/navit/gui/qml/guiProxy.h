@@ -53,37 +53,25 @@ public slots:
 	void setPage(QString page,bool hidden=false) {
 		this->source+="/"+page;
 
-#if QT_VERSION < 0x040700
-    if (this->object->guiWidget==NULL) {
-	   this->object->guiWidget = new QmlView(NULL);
-       this->object->guiWidget->setContentResizable(true);
-    }
-#else
-	//Reload widget
-	if (this->object->guiWidget) {
-		this->object->switcherWidget->removeWidget(this->object->guiWidget);
-		if (this->object->prevGuiWidget) {
-			delete this->object->prevGuiWidget;
+		if (this->object->guiWidget) {
+			this->object->switcherWidget->removeWidget(this->object->guiWidget);
+			if (this->object->prevGuiWidget) {
+				delete this->object->prevGuiWidget;
+			}
+			this->object->prevGuiWidget=this->object->guiWidget;
 		}
-		this->object->prevGuiWidget=this->object->guiWidget;
-	}
-	this->object->guiWidget = new QDeclarativeView(NULL);
-	this->object->guiWidget->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-#endif
+		this->object->guiWidget = new QDeclarativeView(NULL);
+		this->object->guiWidget->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+		
+		this->object->guiWidget->rootContext()->setContextProperty("gui",this->object->guiProxy);
+		this->object->guiWidget->rootContext()->setContextProperty("navit",this->object->navitProxy);
+		this->object->guiWidget->rootContext()->setContextProperty("vehicle",this->object->vehicleProxy);
+		this->object->guiWidget->rootContext()->setContextProperty("search",this->object->searchProxy);
+		this->object->guiWidget->rootContext()->setContextProperty("bookmarks",this->object->bookmarksProxy);
+		this->object->guiWidget->rootContext()->setContextProperty("point",this->object->currentPoint);
 
-	this->object->guiWidget->rootContext()->setContextProperty("gui",this->object->guiProxy);
-	this->object->guiWidget->rootContext()->setContextProperty("navit",this->object->navitProxy);
-	this->object->guiWidget->rootContext()->setContextProperty("vehicle",this->object->vehicleProxy);
-	this->object->guiWidget->rootContext()->setContextProperty("search",this->object->searchProxy);
-	this->object->guiWidget->rootContext()->setContextProperty("bookmarks",this->object->bookmarksProxy);
-	this->object->guiWidget->rootContext()->setContextProperty("point",this->object->currentPoint);
-
-#if QT_VERSION < 0x040700
- 		this->object->guiWidget->setUrl(QUrl::fromLocalFile(QString(this->object->source)+"/"+this->object->skin+"/"+page));
- 		this->object->guiWidget->execute();
-#else
 		this->object->guiWidget->setSource(QUrl::fromLocalFile(QString(this->object->source)+"/"+this->object->skin+"/"+page));
-#endif
+
 		if (!hidden) {
 			//we render commands page hidden, so the screen doesn't flicks.
 			this->object->guiWidget->show();
@@ -92,6 +80,7 @@ public slots:
 			this->object->switcherWidget->setCurrentWidget(this->object->guiWidget);
 		}
 	}
+
 	void backToMap() {
         if (this->object->graphicsWidget) {
 				this->object->graphicsWidget->setFocus(Qt::ActiveWindowFocusReason);

@@ -61,7 +61,7 @@ import Qt 4.6
      ]
 
     transitions: Transition {
-        NumberAnimation { matchProperties: "scale"; easing: "easeOutExpo"; duration: 200 }
-        NumberAnimation { matchProperties: "opacity"; easing: "easeInQuad"; duration: 200 }
+        NumberAnimation { properties: "scale"; easing.type: "OutExpo"; duration: 200 }
+        NumberAnimation { properties: "opacity"; easing.type: "InQuad"; duration: 200 }
     }
  }
