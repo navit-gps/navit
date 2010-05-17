@@ -325,25 +325,24 @@ binfile_coord_get(void *priv_data, struct coord *c, int count)
 	struct map_rect_priv *mr=priv_data;
 	struct tile *t=mr->t;
 	int max,ret=0;
-#if __BYTE_ORDER == __LITTLE_ENDIAN
 	max=(t->pos_attr_start-t->pos_coord)/2;
 	if (count > max)
 		count=max;
+#if __BYTE_ORDER == __LITTLE_ENDIAN
 	memcpy(c, t->pos_coord, count*sizeof(struct coord));
-	t->pos_coord+=count*2;
-	ret=count;
 #else
-	dbg(2,"binfile_coord_get %d\n",count);
-	while (count--) {
-		dbg(2,"%p vs %p\n", t->pos_coord, t->pos_attr_start);
-		if (t->pos_coord >= t->pos_attr_start)
-			break;
-		c->x=le32_to_cpu(*(t->pos_coord++));
-		c->y=le32_to_cpu(*(t->pos_coord++));
-		c++;
-		ret++;
+	{
+		int i=0,end=count*sizeof(struct coord)/sizeof(int);
+		int *src=(int *)t->pos_coord;
+		int *dst=(int *)c;
+		while (i++ < end) {
+			*dst++=le32_to_cpu(*src);
+			src++;
+		}
 	}
 #endif
+	t->pos_coord+=count*2;
+	ret=count;
 	return ret;
 }
 
