@@ -66,7 +66,7 @@ Rectangle {
     
     Component.onCompleted: pageOpen();    
     
-    opacity: Behavior {
+    Behavior on opacity {
         NumberAnimation { id: opacityAnimation; duration: 300; alwaysRunToEnd: true }
     }
 
@@ -122,7 +122,7 @@ Rectangle {
 		 Text { id: txtItemDist; text: itemDistance; color: "White"; anchors.leftMargin: 5; anchors.left: txtItemName.right;anchors.top: txtItemName.top }
 		 Text { id: txtItemDirect; text: itemDirection; color: "White"; anchors.leftMargin: 5; anchors.left: txtItemDist.right;anchors.top: txtItemDist.top }
              }
-	     MouseRegion {
+	     MouseArea {
 	   		id:delegateMouse
 			anchors.fill: parent
 			onClicked: { point.setNewPoint(itemValue); gui.returnSource="/main.qml"; gui.setPage("PageNavigate.qml"); }
@@ -140,7 +140,7 @@ Rectangle {
     ListSelector { 
 	id:layoutList; text: ""
 	anchors.top: distanceSlider.bottom;
-	anchors.left: parent.left; anchors.leftMargin: 3
+	anchors.left: parent.left;
 	anchors.topMargin: gui.height/16; anchors.leftMargin: gui.width/32
 	width: page.width; height: page.height*0.25
     }
