@@ -7,1951 +7,1545 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-07 07:16+0200\n"
+"POT-Creation-Date: 2010-05-18 13:32+0200\n"
 "PO-Revision-Date: 2009-07-27 15:16+0000\n"
 "Last-Translator: laimonas <laimonas.mockus@gmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"(n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%"
+"100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Launchpad-Export-Date: 2009-12-20 18:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
-#: ../navit/main.c:238
 #, c-format
 msgid "Running from source directory\n"
 msgstr "Paleidžiu pradiniame kataloge\n"
 
-#: ../navit/main.c:252
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "nustatau iš '%s' į '%s'\n"
 
-#: ../navit/navigation.c:238
 msgid "zeroth"
 msgstr "nulinis"
 
-#: ../navit/navigation.c:240
 msgid "first"
 msgstr "pirmas"
 
-#: ../navit/navigation.c:242
 msgid "second"
 msgstr "antras"
 
-#: ../navit/navigation.c:244
 msgid "third"
 msgstr "trečias"
 
-#: ../navit/navigation.c:246
 msgid "fourth"
 msgstr "ketvirtas"
 
-#: ../navit/navigation.c:248
 msgid "fifth"
 msgstr "penktas"
 
-#: ../navit/navigation.c:250
 msgid "sixth"
 msgstr "šeštas"
 
-#: ../navit/navigation.c:261
 msgid "zeroth exit"
 msgstr "nulinis išvažiavimas"
 
-#: ../navit/navigation.c:263
 msgid "first exit"
 msgstr "pirmas išvažiavimas"
 
-#: ../navit/navigation.c:265
 msgid "second exit"
 msgstr "antras išvažiavimas"
 
-#: ../navit/navigation.c:267
 msgid "third exit"
 msgstr "trečias išvažiavimas"
 
-#: ../navit/navigation.c:269
 msgid "fourth exit"
 msgstr "ketvirtas išvažiavimas"
 
-#: ../navit/navigation.c:271
 msgid "fifth exit"
 msgstr "penktas išvažiavimas"
 
-#: ../navit/navigation.c:273
 msgid "sixth exit"
 msgstr "šeštas išvažiavimas"
 
-#: ../navit/navigation.c:314
 #, c-format
 msgid "%d m"
 msgstr "%d m"
 
-#: ../navit/navigation.c:316
 #, c-format
 msgid "in %d m"
 msgstr "už %d m"
 
-#: ../navit/navigation.c:320
 #, c-format
 msgid "%d meters"
 msgstr "%d metrai"
 
-#: ../navit/navigation.c:322
 #, c-format
 msgid "in %d meters"
 msgstr "už %d metrų"
 
-#: ../navit/navigation.c:328
 #, c-format
-msgid "%d.%d kilometer"
-msgstr "%d.%d kilometras"
+msgid "%d.%d kilometers"
+msgstr ""
 
-#: ../navit/navigation.c:330
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "už %d.%d kilometrų"
 
-#: ../navit/navigation.c:334
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] ""
 
-#: ../navit/navigation.c:336
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] ""
 
-#: ../navit/navigation.c:1266
 msgid "exit"
 msgstr "išvažiavimas"
 
-#: ../navit/navigation.c:1268
 msgid "into the ramp"
 msgstr "į rampą"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:1298
 #, c-format
 msgid "%sinto the street %s%s%s"
 msgstr "%s į gatvę %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1302
 #, c-format
 msgid "%sinto the %s%s%s|male form"
 msgstr "%s į %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1306
 #, c-format
 msgid "%sinto the %s%s%s|female form"
 msgstr "%s į %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1310
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%s į %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1317
 #, c-format
 msgid "%sinto the %s"
 msgstr "%s į %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1338
 msgid "right"
 msgstr "dešinėn"
 
 #. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1377
 msgid "left"
 msgstr "kairėn"
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1384
 msgid "easily "
 msgstr "lengvai "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1389
 msgid "strongly "
 msgstr "stipriai "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1392
 msgid "really strongly "
 msgstr "labai stipriai "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1396
 msgid "unknown "
 msgstr "nežinomas "
 
-#: ../navit/navigation.c:1403
 msgid "When possible, please turn around"
 msgstr "kai įmanoma, apsisukite"
 
-#: ../navit/navigation.c:1413
 msgid "Enter the roundabout soon"
 msgstr "Netrukus įsukite į žiedą"
 
 #. TRANSLATORS: %s is the distance to the roundabout
-#: ../navit/navigation.c:1417
 #, c-format
 msgid "In %s, enter the roundabout"
 msgstr "Už %s, įsukite į žiedą"
 
-#: ../navit/navigation.c:1432
 #, c-format
 msgid "Leave the roundabout at the %s"
 msgstr "išsukite iš žiedo %s išvažiavime"
 
-#: ../navit/navigation.c:1435
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "tada išsukite iš žiedo %s išvažiavime"
 
-#: ../navit/navigation.c:1445
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "Laikykitės kelio sekančius %s"
 
-#: ../navit/navigation.c:1449
 msgid "soon"
 msgstr "netrukus"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1459
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "Važiuokite %1$s keliu į %2$s"
 
-#: ../navit/navigation.c:1462 ../navit/navigation.c:1476
 #, c-format
 msgid "after %i roads"
 msgstr "už %i kelių"
 
-#: ../navit/navigation.c:1465
 msgid "now"
 msgstr "dabar"
 
-#: ../navit/navigation.c:1473
 #, c-format
 msgid "then take the %1$s road to the %2$s"
 msgstr "tada važiuokite %1$s keliu į %2$s"
 
-#: ../navit/navigation.c:1484
 msgid "error"
 msgstr "klaida"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:1514
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "Pasukite %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#: ../navit/navigation.c:1517
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
 msgstr "tada pasukite %1$s%2$s %3$s%4$s"
 
-#: ../navit/navigation.c:1522
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "Jūs pasiekėte tikslą %s"
 
-#: ../navit/navigation.c:1524
 msgid "then you have reached your destination."
 msgstr "tada jūs pasiekėte kelionės tikslą."
 
-#: ../navit/navit.c:1189
 msgid "Position"
 msgstr "Pozicija"
 
-#: ../navit/navit.c:1190
 msgid "Command"
 msgstr "Komanda"
 
-#: ../navit/navit.c:1194
 msgid "Length"
 msgstr "Ilgis"
 
-#: ../navit/navit.c:1198 ../navit/navit.c:1223
 msgid "km"
 msgstr "km"
 
-#: ../navit/navit.c:1202 ../navit/navit.c:1227
 msgid "m"
 msgstr "m"
 
-#: ../navit/navit.c:1208
 msgid "Time"
 msgstr "Laikas"
 
-#: ../navit/navit.c:1220
 msgid "Destination Length"
 msgstr "Atvykimo ilgis"
 
-#: ../navit/navit.c:1233
 msgid "Destination Time"
 msgstr "Atvykimo laikas"
 
-#: ../navit/navit.c:1266 ../navit/gui/gtk/gui_gtk_action.c:225
 msgid "Roadbook"
 msgstr "Kelionės knyga"
 
-#: ../navit/popup.c:278 ../navit/popup.c:347
-#: ../navit/gui/internal/gui_internal.c:2130
 msgid "Set as position"
 msgstr "Nustatykite poziciją"
 
-#: ../navit/popup.c:279 ../navit/popup.c:348
-#: ../navit/gui/internal/gui_internal.c:2126
 msgid "Set as destination"
 msgstr "Nustatykite tikslą"
 
-#: ../navit/popup.c:280 ../navit/popup.c:349
-#: ../navit/gui/internal/gui_internal.c:2134
 msgid "Add as bookmark"
 msgstr "Pridėkite žymę"
 
-#: ../navit/popup.c:337
 #, c-format
 msgid "Point 0x%x 0x%x"
 msgstr "Taškas 0x%x 0x%x"
 
-#: ../navit/popup.c:338
 #, c-format
 msgid "Screen coord : %d %d"
 msgstr "Ekrano koordinatės  : %d %d"
 
 #. 020
-#: ../navit/country.c:39
 msgid "Andorra"
 msgstr "Andora"
 
 #. 784
-#: ../navit/country.c:40
 msgid "United Arab Emirates"
 msgstr "Jungtiniai Arabų Emyratai"
 
 #. 004
-#: ../navit/country.c:41
 msgid "Afghanistan"
 msgstr "Afganistanas"
 
 #. 028
-#: ../navit/country.c:42
 msgid "Antigua and Barbuda"
 msgstr "Antigva ir Barbuda"
 
 #. 660
-#: ../navit/country.c:43
 msgid "Anguilla"
 msgstr "Angilija"
 
 #. 008
-#: ../navit/country.c:44
 msgid "Albania"
 msgstr "Albanija"
 
 #. 051
-#: ../navit/country.c:45
 msgid "Armenia"
 msgstr "Armėnija"
 
 #. 530
-#: ../navit/country.c:46
 msgid "Netherlands Antilles"
 msgstr "Olandijos Antilai"
 
 #. 024
-#: ../navit/country.c:47
 msgid "Angola"
 msgstr "Angola"
 
 #. 010
-#: ../navit/country.c:48
 msgid "Antarctica"
 msgstr "Antarktida"
 
 #. 032
-#: ../navit/country.c:49
 msgid "Argentina"
 msgstr "Argentina"
 
 #. 016
-#: ../navit/country.c:50
 msgid "American Samoa"
 msgstr "Amerikos Samoa"
 
 #. 040
-#: ../navit/country.c:51
 msgid "Austria"
 msgstr "Austrija"
 
 #. 036
-#: ../navit/country.c:52
 msgid "Australia"
 msgstr "Australija"
 
 #. 533
-#: ../navit/country.c:53
 msgid "Aruba"
 msgstr "Aruba"
 
 #. 248
-#: ../navit/country.c:54
 msgid "Aland Islands"
 msgstr "Alandų salos"
 
 #. 031
-#: ../navit/country.c:55
 msgid "Azerbaijan"
 msgstr "Azerbaidžanas"
 
 #. 070
-#: ../navit/country.c:56
 msgid "Bosnia and Herzegovina"
 msgstr "Bosnija ir Hercegovina"
 
 #. 052
-#: ../navit/country.c:57
 msgid "Barbados"
 msgstr "Barbadosas"
 
 #. 050
-#: ../navit/country.c:58
 msgid "Bangladesh"
 msgstr "Bangladešas"
 
 #. 056
-#: ../navit/country.c:59
 msgid "Belgium"
 msgstr "Belgija"
 
 #. 854
-#: ../navit/country.c:60
 msgid "Burkina Faso"
 msgstr "Burkina Fasas"
 
 #. 100
-#: ../navit/country.c:61
 msgid "Bulgaria"
 msgstr "Bulgarija"
 
 #. 048
-#: ../navit/country.c:62
 msgid "Bahrain"
 msgstr "Bahreinas"
 
 #. 108
-#: ../navit/country.c:63
 msgid "Burundi"
 msgstr "Burundis"
 
 #. 204
-#: ../navit/country.c:64
 msgid "Benin"
 msgstr "Beninas"
 
 #. 652
-#: ../navit/country.c:65
 msgid "Saint Barthelemy"
 msgstr "Švento Baltramiejaus sala"
 
 #. 060
-#: ../navit/country.c:66
 msgid "Bermuda"
 msgstr "Bermuda"
 
 #. 096
-#: ../navit/country.c:67
 msgid "Brunei Darussalam"
 msgstr "Brunėjaus Darusalamas"
 
 #. 068
-#: ../navit/country.c:68
 msgid "Bolivia"
 msgstr "Bolivija"
 
 #. 076
-#: ../navit/country.c:69
 msgid "Brazil"
 msgstr "Brazilija"
 
 #. 044
-#: ../navit/country.c:70
 msgid "Bahamas"
 msgstr "Bahamos"
 
 #. 064
-#: ../navit/country.c:71
 msgid "Bhutan"
 msgstr "Butanas"
 
 #. 074
-#: ../navit/country.c:72
 msgid "Bouvet Island"
 msgstr "Buvė sala"
 
 #. 072
-#: ../navit/country.c:73
 msgid "Botswana"
 msgstr "Botsvana"
 
 #. 112
-#: ../navit/country.c:74
 msgid "Belarus"
 msgstr "Gudija"
 
 #. 084
-#: ../navit/country.c:75
 msgid "Belize"
 msgstr "Belizas"
 
 #. 124
-#: ../navit/country.c:76
 msgid "Canada"
 msgstr "Kanada"
 
 #. 166
-#: ../navit/country.c:77
 msgid "Cocos (Keeling) Islands"
 msgstr "Kokosų (Keelingo) salos"
 
 #. 180
-#: ../navit/country.c:78
 msgid "Congo, Democratic Republic of the"
 msgstr "Kongo Demokratinė Respublika"
 
 #. 140
-#: ../navit/country.c:79
 msgid "Central African Republic"
 msgstr "Centrinės Afrikos Respublika"
 
 #. 178
-#: ../navit/country.c:80
 msgid "Congo"
 msgstr "Kongas"
 
 #. 756
-#: ../navit/country.c:81
 msgid "Switzerland"
 msgstr "Šveicarija"
 
 #. 384
-#: ../navit/country.c:82
 msgid "Cote d'Ivoire"
 msgstr "Dramblio Kaulo Krantas"
 
 #. 184
-#: ../navit/country.c:83
 msgid "Cook Islands"
 msgstr "Kuko salos"
 
 #. 152
-#: ../navit/country.c:84
 msgid "Chile"
 msgstr "Čilė"
 
 #. 120
-#: ../navit/country.c:85
 msgid "Cameroon"
 msgstr "Kamerūnas"
 
 #. 156
-#: ../navit/country.c:86
 msgid "China"
 msgstr "Kinija"
 
 #. 170
-#: ../navit/country.c:87
 msgid "Colombia"
 msgstr "Kolumbija"
 
 #. 188
-#: ../navit/country.c:88
 msgid "Costa Rica"
 msgstr "Kosta Rika"
 
 #. 192
-#: ../navit/country.c:89
 msgid "Cuba"
 msgstr "Kuba"
 
 #. 132
-#: ../navit/country.c:90
 msgid "Cape Verde"
 msgstr "Žaliasis Kyšulys"
 
 #. 162
-#: ../navit/country.c:91
 msgid "Christmas Island"
 msgstr "Kalėdų sala"
 
 #. 196
-#: ../navit/country.c:92
 msgid "Cyprus"
 msgstr "Kipras"
 
 #. 203
-#: ../navit/country.c:93
 msgid "Czech Republic"
 msgstr "Čekija"
 
 #. 276
-#: ../navit/country.c:94
 msgid "Germany"
 msgstr "Vokietija"
 
 #. 262
-#: ../navit/country.c:95
 msgid "Djibouti"
 msgstr "Džibutis"
 
 #. 208
-#: ../navit/country.c:96
 msgid "Denmark"
 msgstr "Danija"
 
 #. 212
-#: ../navit/country.c:97
 msgid "Dominica"
 msgstr "Dominika"
 
 #. 214
-#: ../navit/country.c:98
 msgid "Dominican Republic"
 msgstr "Dominikos Respublika"
 
 #. 012
-#: ../navit/country.c:99
 msgid "Algeria"
 msgstr "Alžyras"
 
 #. 218
-#: ../navit/country.c:100
 msgid "Ecuador"
 msgstr "Ekvadoras"
 
 #. 233
-#: ../navit/country.c:101
 msgid "Estonia"
 msgstr "Estija"
 
 #. 818
-#: ../navit/country.c:102
 msgid "Egypt"
 msgstr "Egiptas"
 
 #. 732
-#: ../navit/country.c:103
 msgid "Western Sahara"
 msgstr "Vakarų Sachara"
 
 #. 232
-#: ../navit/country.c:104
 msgid "Eritrea"
 msgstr "Eritrėja"
 
 #. 724
-#: ../navit/country.c:105
 msgid "Spain"
 msgstr "Ispanija"
 
 #. 231
-#: ../navit/country.c:106
 msgid "Ethiopia"
 msgstr "Etiopija"
 
 #. 246
-#: ../navit/country.c:107
 msgid "Finland"
 msgstr "Suomija"
 
 #. 242
-#: ../navit/country.c:108
 msgid "Fiji"
 msgstr "Fidžis"
 
 #. 238
-#: ../navit/country.c:109
 msgid "Falkland Islands (Malvinas)"
 msgstr "Falklando (Malvinų) salos"
 
 #. 583
-#: ../navit/country.c:110
 msgid "Micronesia, Federated States of"
 msgstr "Mikronezijos Federacinės Valstijos"
 
 #. 234
-#: ../navit/country.c:111
 msgid "Faroe Islands"
 msgstr "Farerų salos"
 
 #. 250
-#: ../navit/country.c:112
 msgid "France"
 msgstr "Prancūzija"
 
 #. 266
-#: ../navit/country.c:113
 msgid "Gabon"
 msgstr "Gabonas"
 
 #. 826
-#: ../navit/country.c:114
 msgid "United Kingdom"
 msgstr "Jungtinė Karalystė"
 
 #. 308
-#: ../navit/country.c:115
 msgid "Grenada"
 msgstr "Grenada"
 
 #. 268
-#: ../navit/country.c:116
 msgid "Georgia"
 msgstr "Gruzija"
 
 #. 254
-#: ../navit/country.c:117
 msgid "French Guiana"
 msgstr "Prancūzijos Gviana"
 
 #. 831
-#: ../navit/country.c:118
 msgid "Guernsey"
 msgstr "Guernsis"
 
 #. 288
-#: ../navit/country.c:119
 msgid "Ghana"
 msgstr "Gana"
 
 #. 292
-#: ../navit/country.c:120
 msgid "Gibraltar"
 msgstr "Gibraltaras"
 
 #. 304
-#: ../navit/country.c:121
 msgid "Greenland"
 msgstr "Grenlandija"
 
 #. 270
-#: ../navit/country.c:122
 msgid "Gambia"
 msgstr "Gambija"
 
 #. 324
-#: ../navit/country.c:123
 msgid "Guinea"
 msgstr "Gvinėja"
 
 #. 312
-#: ../navit/country.c:124
 msgid "Guadeloupe"
 msgstr "Gvadelupa"
 
 #. 226
-#: ../navit/country.c:125
 msgid "Equatorial Guinea"
 msgstr "Pusiaujo Gvinėja"
 
 #. 300
-#: ../navit/country.c:126
 msgid "Greece"
 msgstr "Graikija"
 
 #. 239
-#: ../navit/country.c:127
 msgid "South Georgia and the South Sandwich Islands"
 msgstr "Pietų Georgijos ir Pietų Sandwicho salos"
 
 #. 320
-#: ../navit/country.c:128
 msgid "Guatemala"
 msgstr "Gvatemala"
 
 #. 316
-#: ../navit/country.c:129
 msgid "Guam"
 msgstr "Guamas"
 
 #. 624
-#: ../navit/country.c:130
 msgid "Guinea-Bissau"
 msgstr "Bisau-Gvinėja"
 
 #. 328
-#: ../navit/country.c:131
 msgid "Guyana"
 msgstr "Gajana"
 
 #. 344
-#: ../navit/country.c:132
 msgid "Hong Kong"
 msgstr "Honk Kongas"
 
 #. 334
-#: ../navit/country.c:133
 msgid "Heard Island and McDonald Islands"
 msgstr "Heardo ir McDonaldo salos"
 
 #. 340
-#: ../navit/country.c:134
 msgid "Honduras"
 msgstr "Hondūras"
 
 #. 191
-#: ../navit/country.c:135
 msgid "Croatia"
 msgstr "Kroatija"
 
 #. 332
-#: ../navit/country.c:136
 msgid "Haiti"
 msgstr "Haitis"
 
 #. 348
-#: ../navit/country.c:137
 msgid "Hungary"
 msgstr "Vengrija"
 
 #. 360
-#: ../navit/country.c:138
 msgid "Indonesia"
 msgstr "Indonezija"
 
 #. 372
-#: ../navit/country.c:139
 msgid "Ireland"
 msgstr "Airija"
 
 #. 376
-#: ../navit/country.c:140
 msgid "Israel"
 msgstr "Izraelis"
 
 #. 833
-#: ../navit/country.c:141
 msgid "Isle of Man"
 msgstr "Meno sala"
 
 #. 356
-#: ../navit/country.c:142
 msgid "India"
 msgstr "Indija"
 
 #. 086
-#: ../navit/country.c:143
 msgid "British Indian Ocean Territory"
 msgstr "Indijos vandenyno britų sritis"
 
 #. 368
-#: ../navit/country.c:144
 msgid "Iraq"
 msgstr "Irakas"
 
 #. 364
-#: ../navit/country.c:145
 msgid "Iran, Islamic Republic of"
 msgstr "Iranas"
 
 #. 352
-#: ../navit/country.c:146
 msgid "Iceland"
 msgstr "Islandija"
 
 #. 380
-#: ../navit/country.c:147
 msgid "Italy"
 msgstr "Italija"
 
 #. 832
-#: ../navit/country.c:148
 msgid "Jersey"
 msgstr "Džersis"
 
 #. 388
-#: ../navit/country.c:149
 msgid "Jamaica"
 msgstr "Jamaika"
 
 #. 400
-#: ../navit/country.c:150
 msgid "Jordan"
 msgstr "Jordanas"
 
 #. 392
-#: ../navit/country.c:151
 msgid "Japan"
 msgstr "Japonija"
 
 #. 404
-#: ../navit/country.c:152
 msgid "Kenya"
 msgstr "Kenija"
 
 #. 417
-#: ../navit/country.c:153
 msgid "Kyrgyzstan"
 msgstr "Kirgizija"
 
 #. 116
-#: ../navit/country.c:154
 msgid "Cambodia"
 msgstr "Kambodža"
 
 #. 296
-#: ../navit/country.c:155
 msgid "Kiribati"
 msgstr "Kiribatis"
 
 #. 174
-#: ../navit/country.c:156
 msgid "Comoros"
 msgstr "Komorai"
 
 #. 659
-#: ../navit/country.c:157
 msgid "Saint Kitts and Nevis"
 msgstr "Sent Kitsas ir Nevis"
 
 #. 408
-#: ../navit/country.c:158
 msgid "Korea, Democratic People's Republic of"
 msgstr "Korėjos Demokratinė Respublika"
 
 #. 410
-#: ../navit/country.c:159
 msgid "Korea, Republic of"
 msgstr "Korėjos Respublika"
 
 #. 414
-#: ../navit/country.c:160
 msgid "Kuwait"
 msgstr "Kuveitas"
 
 #. 136
-#: ../navit/country.c:161
 msgid "Cayman Islands"
 msgstr "Kaimanų salos"
 
 #. 398
-#: ../navit/country.c:162
 msgid "Kazakhstan"
 msgstr "Kazachija"
 
 #. 418
-#: ../navit/country.c:163
 msgid "Lao People's Democratic Republic"
 msgstr "Laosas"
 
 #. 422
-#: ../navit/country.c:164
 msgid "Lebanon"
 msgstr "Libanas"
 
 #. 662
-#: ../navit/country.c:165
 msgid "Saint Lucia"
 msgstr "Šventoji Liucija"
 
 #. 438
-#: ../navit/country.c:166
 msgid "Liechtenstein"
 msgstr "Lichtenšteinas"
 
 #. 144
-#: ../navit/country.c:167
 msgid "Sri Lanka"
 msgstr "Šri Lanka"
 
 #. 430
-#: ../navit/country.c:168
 msgid "Liberia"
 msgstr "Liberija"
 
 #. 426
-#: ../navit/country.c:169
 msgid "Lesotho"
 msgstr "Lesotas"
 
 #. 440
-#: ../navit/country.c:170
 msgid "Lithuania"
 msgstr "Lietuva"
 
 #. 442
-#: ../navit/country.c:171
 msgid "Luxembourg"
 msgstr "Liuksemburgas"
 
 #. 428
-#: ../navit/country.c:172
 msgid "Latvia"
 msgstr "Latvija"
 
 #. 434
-#: ../navit/country.c:173
 msgid "Libyan Arab Jamahiriya"
 msgstr "Libija"
 
 #. 504
-#: ../navit/country.c:174
 msgid "Morocco"
 msgstr "Marokas"
 
 #. 492
-#: ../navit/country.c:175
 msgid "Monaco"
 msgstr "Monakas"
 
 #. 498
-#: ../navit/country.c:176
 msgid "Moldova, Republic of"
 msgstr "Moldova"
 
 #. 499
-#: ../navit/country.c:177
 msgid "Montenegro"
 msgstr "Juodkalnija"
 
 #. 663
-#: ../navit/country.c:178
 msgid "Saint Martin (French part)"
 msgstr "San Martenas (Prancūzijos dalis)"
 
 #. 450
-#: ../navit/country.c:179
 msgid "Madagascar"
 msgstr "Madagaskaras"
 
 #. 584
-#: ../navit/country.c:180
 msgid "Marshall Islands"
 msgstr "Maršalo salos"
 
 #. 807
-#: ../navit/country.c:181
 msgid "Macedonia, the former Yugoslav Republic of"
 msgstr "Makedonija"
 
 #. 466
-#: ../navit/country.c:182
 msgid "Mali"
 msgstr "Malis"
 
 #. 104
-#: ../navit/country.c:183
 msgid "Myanmar"
 msgstr "Mianmaras"
 
 #. 496
-#: ../navit/country.c:184
 msgid "Mongolia"
 msgstr "Mongolija"
 
 #. 446
-#: ../navit/country.c:185
 msgid "Macao"
 msgstr "Makao"
 
 #. 580
-#: ../navit/country.c:186
 msgid "Northern Mariana Islands"
 msgstr "Šiaurės Marianų salos"
 
 #. 474
-#: ../navit/country.c:187
 msgid "Martinique"
 msgstr "Martinika"
 
 #. 478
-#: ../navit/country.c:188
 msgid "Mauritania"
 msgstr "Mauritanija"
 
 #. 500
-#: ../navit/country.c:189
 msgid "Montserrat"
 msgstr "Montserratas"
 
 #. 470
-#: ../navit/country.c:190
 msgid "Malta"
 msgstr "Malta"
 
 #. 480
-#: ../navit/country.c:191
 msgid "Mauritius"
 msgstr "Mauricijus"
 
 #. 462
-#: ../navit/country.c:192
 msgid "Maldives"
 msgstr "Maldyvai"
 
 #. 454
-#: ../navit/country.c:193
 msgid "Malawi"
 msgstr "Malavis"
 
 #. 484
-#: ../navit/country.c:194
 msgid "Mexico"
 msgstr "Meksika"
 
 #. 458
-#: ../navit/country.c:195
 msgid "Malaysia"
 msgstr "Malaizija"
 
 #. 508
-#: ../navit/country.c:196
 msgid "Mozambique"
 msgstr "Mozambikas"
 
 #. 516
-#: ../navit/country.c:197
 msgid "Namibia"
 msgstr "Namibija"
 
 #. 540
-#: ../navit/country.c:198
 msgid "New Caledonia"
 msgstr "Naujoji Kaledonija"
 
 #. 562
-#: ../navit/country.c:199
 msgid "Niger"
 msgstr "Nigeris"
 
 #. 574
-#: ../navit/country.c:200
 msgid "Norfolk Island"
 msgstr "Norfolko sala"
 
 #. 566
-#: ../navit/country.c:201
 msgid "Nigeria"
 msgstr "Nigerija"
 
 #. 558
-#: ../navit/country.c:202
 msgid "Nicaragua"
 msgstr "Nikaragva"
 
 #. 528
-#: ../navit/country.c:203
 msgid "Netherlands"
 msgstr "Nyderlandai"
 
 #. 578
-#: ../navit/country.c:204
 msgid "Norway"
 msgstr "Norvegija"
 
 #. 524
-#: ../navit/country.c:205
 msgid "Nepal"
 msgstr "Nepalas"
 
 #. 520
-#: ../navit/country.c:206
 msgid "Nauru"
 msgstr "Nauru"
 
 #. 570
-#: ../navit/country.c:207
 msgid "Niue"
 msgstr "Niujė"
 
 #. 554
-#: ../navit/country.c:208
 msgid "New Zealand"
 msgstr "Naujoji Zelandija"
 
 #. 512
-#: ../navit/country.c:209
 msgid "Oman"
 msgstr "Omanas"
 
 #. 591
-#: ../navit/country.c:210
 msgid "Panama"
 msgstr "Panama"
 
 #. 604
-#: ../navit/country.c:211
 msgid "Peru"
 msgstr "Peru"
 
 #. 258
-#: ../navit/country.c:212
 msgid "French Polynesia"
 msgstr "Prancūzijos Polinezija"
 
 #. 598
-#: ../navit/country.c:213
 msgid "Papua New Guinea"
 msgstr "Papua Naujoji Gvinėja"
 
 #. 608
-#: ../navit/country.c:214
 msgid "Philippines"
 msgstr "Filipinai"
 
 #. 586
-#: ../navit/country.c:215
 msgid "Pakistan"
 msgstr "Pakistanas"
 
 #. 616
-#: ../navit/country.c:216
 msgid "Poland"
 msgstr "Lenkija"
 
 #. 666
-#: ../navit/country.c:217
 msgid "Saint Pierre and Miquelon"
 msgstr "Sen Pjeras ir Mikelonas"
 
 #. 612
-#: ../navit/country.c:218
 msgid "Pitcairn"
 msgstr "Pitkernas"
 
 #. 630
-#: ../navit/country.c:219
 msgid "Puerto Rico"
 msgstr "Puerto Riko"
 
 #. 275
-#: ../navit/country.c:220
 msgid "Palestinian Territory, Occupied"
 msgstr "Okupuota Palestinos teritorija"
 
 #. 620
-#: ../navit/country.c:221
 msgid "Portugal"
 msgstr "Portugalija"
 
 #. 585
-#: ../navit/country.c:222
 msgid "Palau"
 msgstr "Palau"
 
 #. 600
-#: ../navit/country.c:223
 msgid "Paraguay"
 msgstr "Paragvajus"
 
 #. 634
-#: ../navit/country.c:224
 msgid "Qatar"
 msgstr "Kataras"
 
 #. 638
-#: ../navit/country.c:225
 msgid "Reunion"
 msgstr "Reunionas"
 
 #. 642
-#: ../navit/country.c:226
 msgid "Romania"
 msgstr "Rumunija"
 
 #. 688
-#: ../navit/country.c:227
 msgid "Serbia"
 msgstr "Serbija"
 
 #. 643
-#: ../navit/country.c:228
 msgid "Russian Federation"
 msgstr "Rusijos Federacija"
 
 #. 646
-#: ../navit/country.c:229
 msgid "Rwanda"
 msgstr "Ruanda"
 
 #. 682
-#: ../navit/country.c:230
 msgid "Saudi Arabia"
 msgstr "Saudo Arabija"
 
 #. 090
-#: ../navit/country.c:231
 msgid "Solomon Islands"
 msgstr "Saliamono salos"
 
 #. 690
-#: ../navit/country.c:232
 msgid "Seychelles"
 msgstr "Seišeliai"
 
 #. 736
-#: ../navit/country.c:233
 msgid "Sudan"
 msgstr "Sudanas"
 
 #. 752
-#: ../navit/country.c:234
 msgid "Sweden"
 msgstr "Švedija"
 
 #. 702
-#: ../navit/country.c:235
 msgid "Singapore"
 msgstr "Singapūras"
 
 #. 654
-#: ../navit/country.c:236
 msgid "Saint Helena"
 msgstr "Šventoji Elena"
 
 #. 705
-#: ../navit/country.c:237
 msgid "Slovenia"
 msgstr "Slovėnija"
 
 #. 744
-#: ../navit/country.c:238
 msgid "Svalbard and Jan Mayen"
 msgstr "Svalbardo ir Jan Majen salos"
 
 #. 703
-#: ../navit/country.c:239
 msgid "Slovakia"
 msgstr "Slovakija"
 
 #. 694
-#: ../navit/country.c:240
 msgid "Sierra Leone"
 msgstr "Siera Leonė"
 
 #. 674
-#: ../navit/country.c:241
 msgid "San Marino"
 msgstr "San Marinas"
 
 #. 686
-#: ../navit/country.c:242
 msgid "Senegal"
 msgstr "Senegalas"
 
 #. 706
-#: ../navit/country.c:243
 msgid "Somalia"
 msgstr "Somalis"
 
 #. 740
-#: ../navit/country.c:244
 msgid "Suriname"
 msgstr "Surinamas"
 
 #. 678
-#: ../navit/country.c:245
 msgid "Sao Tome and Principe"
 msgstr "San Tomė ir Prinsipė"
 
 #. 222
-#: ../navit/country.c:246
 msgid "El Salvador"
 msgstr "Salvadoras"
 
 #. 760
-#: ../navit/country.c:247
 msgid "Syrian Arab Republic"
 msgstr "Sirijos Arabų Respublika"
 
 #. 748
-#: ../navit/country.c:248
 msgid "Swaziland"
 msgstr "Svazilendas"
 
 #. 796
-#: ../navit/country.c:249
 msgid "Turks and Caicos Islands"
 msgstr "Turkso ir Caicoso salos"
 
 #. 148
-#: ../navit/country.c:250
 msgid "Chad"
 msgstr "Čadas"
 
 #. 260
-#: ../navit/country.c:251
 msgid "French Southern Territories"
 msgstr "Prancūzijos Pietų sritys"
 
 #. 768
-#: ../navit/country.c:252
 msgid "Togo"
 msgstr "Togas"
 
 #. 764
-#: ../navit/country.c:253
 msgid "Thailand"
 msgstr "Tailandas"
 
 #. 762
-#: ../navit/country.c:254
 msgid "Tajikistan"
 msgstr "Tadžikija"
 
 #. 772
-#: ../navit/country.c:255
 msgid "Tokelau"
 msgstr "Tokelau"
 
 #. 626
-#: ../navit/country.c:256
 msgid "Timor-Leste"
 msgstr "Rytų Timoras"
 
 #. 795
-#: ../navit/country.c:257
 msgid "Turkmenistan"
 msgstr "Turkmėnija"
 
 #. 788
-#: ../navit/country.c:258
 msgid "Tunisia"
 msgstr "Tunisas"
 
 #. 776
-#: ../navit/country.c:259
 msgid "Tonga"
 msgstr "Tonga"
 
 #. 792
-#: ../navit/country.c:260
 msgid "Turkey"
 msgstr "Turkija"
 
 #. 780
-#: ../navit/country.c:261
 msgid "Trinidad and Tobago"
 msgstr "Trinidadas ir Tobagas"
 
 #. 798
-#: ../navit/country.c:262
 msgid "Tuvalu"
 msgstr "Tuvalu"
 
 #. 158
-#: ../navit/country.c:263
 msgid "Taiwan, Province of China"
 msgstr "Taivanas, Kinijos provincija"
 
 #. 834
-#: ../navit/country.c:264
 msgid "Tanzania, United Republic of"
 msgstr "Tanzanija"
 
 #. 804
-#: ../navit/country.c:265
 msgid "Ukraine"
 msgstr "Ukraina"
 
 #. 800
-#: ../navit/country.c:266
 msgid "Uganda"
 msgstr "Uganda"
 
 #. 581
-#: ../navit/country.c:267
 msgid "United States Minor Outlying Islands"
 msgstr "JAV mažosios aplinkinės salos"
 
 #. 840
-#: ../navit/country.c:268
 msgid "United States"
 msgstr "JAV"
 
 #. 858
-#: ../navit/country.c:269
 msgid "Uruguay"
 msgstr "Urugvajus"
 
 #. 860
-#: ../navit/country.c:270
 msgid "Uzbekistan"
 msgstr "Uzbekija"
 
 #. 336
-#: ../navit/country.c:271
 msgid "Holy See (Vatican City State)"
 msgstr "Šventasis Sostas (Vatikano Miesto Valstybė)"
 
 #. 670
-#: ../navit/country.c:272
 msgid "Saint Vincent and the Grenadines"
 msgstr "Sent Vinsentas ir Grenadinai"
 
 #. 862
-#: ../navit/country.c:273
 msgid "Venezuela"
 msgstr "Venesuela"
 
 #. 092
-#: ../navit/country.c:274
 msgid "Virgin Islands, British"
 msgstr "Mergelių salos, Jungtinė Karalystė"
 
 #. 850
-#: ../navit/country.c:275
 msgid "Virgin Islands, U.S."
 msgstr "Mergelių salos, JAV"
 
 #. 704
-#: ../navit/country.c:276
 msgid "Viet Nam"
 msgstr "Vietnamas"
 
 #. 548
-#: ../navit/country.c:277
 msgid "Vanuatu"
 msgstr "Vanuatu"
 
 #. 876
-#: ../navit/country.c:278
 msgid "Wallis and Futuna"
 msgstr "Wallisas ir Futuna"
 
 #. 882
-#: ../navit/country.c:279
 msgid "Samoa"
 msgstr "Samoa"
 
 #. 887
-#: ../navit/country.c:280
 msgid "Yemen"
 msgstr "Jemenas"
 
 #. 175
-#: ../navit/country.c:281
 msgid "Mayotte"
 msgstr "Majotas"
 
 #. 710
-#: ../navit/country.c:282
 msgid "South Africa"
 msgstr "Pietų Afrika"
 
 #. 894
-#: ../navit/country.c:283
 msgid "Zambia"
 msgstr "Zambija"
 
 #. 716
-#: ../navit/country.c:284
 msgid "Zimbabwe"
 msgstr "Zimbabvė"
 
-#: ../navit/country.c:285
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "* Nežinomas, pridėti is_in žodžius į šiuos miestus"
 
-#: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:128
-#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
 msgid "Car"
 msgstr "Automobilis"
 
-#: ../navit/gui/gtk/destination.c:127
 msgid "Iso2"
 msgstr "Iso2"
 
-#: ../navit/gui/gtk/destination.c:127
 msgid "Iso3"
 msgstr "Iso3"
 
-#: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:435
-#: ../navit/gui/internal/gui_internal.c:2860
 msgid "Country"
 msgstr "Šalis:"
 
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
 msgid "Postal"
 msgstr "Pašto"
 
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
-#: ../navit/gui/internal/gui_internal.c:2839
-#: ../navit/gui/internal/gui_internal.c:2868
-#: ../navit/gui/internal/gui_internal.c:3003
 msgid "Town"
 msgstr "Miestas"
 
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
 msgid "District"
 msgstr "Rajonas"
 
-#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
-#: ../navit/gui/gtk/destination.c:446
-#: ../navit/gui/internal/gui_internal.c:2820
-#: ../navit/gui/internal/gui_internal.c:2829
 msgid "Street"
 msgstr "Gatvė:"
 
-#: ../navit/gui/gtk/destination.c:130 ../navit/gui/gtk/destination.c:448
 msgid "Number"
 msgstr "Numeris"
 
-#: ../navit/gui/gtk/destination.c:429
 msgid "Enter Destination"
 msgstr "Įveskite kelionės tikslą"
 
-#: ../navit/gui/gtk/destination.c:438
 msgid "Zip Code"
 msgstr "Pašto kodas"
 
-#: ../navit/gui/gtk/destination.c:440
 msgid "City"
 msgstr "Miestas"
 
-#: ../navit/gui/gtk/destination.c:443
 msgid "District/Township"
 msgstr "Rajonas/miestas"
 
-#: ../navit/gui/gtk/destination.c:471 ../navit/gui/gtk/gui_gtk_action.c:200
 msgid "Map"
 msgstr "Žemėlapis"
 
-#: ../navit/gui/gtk/destination.c:472
 msgid "Bookmark"
 msgstr "Pažymėti"
 
-#: ../navit/gui/gtk/destination.c:473 ../navit/gui/gtk/gui_gtk_action.c:212
 msgid "Destination"
 msgstr "Kelionės tikslas"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:196
-#: ../navit/gui/internal/gui_internal.c:2924
-#: ../navit/gui/internal/gui_internal.c:3349
 msgid "Display"
 msgstr "Rodyti"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:197
-#: ../navit/gui/internal/gui_internal.c:4781
 msgid "Route"
 msgstr "Parinkti kelią"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:198
 msgid "Former Destinations"
 msgstr "Ankstesnės vietos"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:199
-#: ../navit/gui/internal/gui_internal.c:2230
-#: ../navit/gui/internal/gui_internal.c:2979
 msgid "Bookmarks"
 msgstr "Adresynas"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:201
-#: ../navit/gui/internal/gui_internal.c:2879
-#: ../navit/gui/internal/gui_internal.c:2926
 msgid "Layout"
 msgstr "Išdėstymas"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:202
 msgid "Projection"
 msgstr "Projekcija"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:203
-#: ../navit/gui/internal/gui_internal.c:3292
-#: ../navit/gui/internal/gui_internal.c:3357
 msgid "Vehicle"
 msgstr "Transporto priemonė"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:204
 msgid "ZoomOut"
 msgstr "Sumažinti"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:205
 msgid "ZoomIn"
 msgstr "Padidinti"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:206
 msgid "Recalculate"
 msgstr "Perskaičiuoti"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:208 ../navit/gui/gtk/gui_gtk_action.c:210
 msgid "Info"
 msgstr "Informacija"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:213
 msgid "Stop Navigation"
 msgstr "Stabdyti navigaciją"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:214
 msgid "Test"
 msgstr "Bandymas"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:215
 msgid "_Quit"
 msgstr "_Išeiti"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:222
 msgid "Cursor"
 msgstr "Kursorius"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:223
 msgid "Lock on Road"
 msgstr "Sekti kelią"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:224
-#: ../navit/gui/internal/gui_internal.c:3331
 msgid "Northing"
 msgstr "Į šiaurę"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:226
 msgid "Autozoom"
 msgstr "Automatinis didinimas"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
-#: ../navit/gui/internal/gui_internal.c:2936
 msgid "Fullscreen"
 msgstr "Visas ekranas"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:238
 msgid "Data"
 msgstr "Duomenys"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "N"
 msgstr "Š"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "NE"
 msgstr "ŠR"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "E"
 msgstr "R"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "SE"
 msgstr "PR"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "S"
 msgstr "P"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "SW"
 msgstr "PV"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "W"
 msgstr "V"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "NW"
 msgstr "ŠV"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:74
 msgid "No"
 msgstr "Ne"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:75
-#: ../navit/gui/internal/gui_internal.c:2943
 msgid "2D"
 msgstr "2D"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:76
-#: ../navit/gui/internal/gui_internal.c:2949
 msgid "3D"
 msgstr "3D"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
 msgid "OT"
 msgstr "OT"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
 msgstr "Liko kelio %4.0fkm %02d:%02d atvykimo laikas"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:164
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "Liko kelio 0000km 0+00:00 atvykimo laikas"
 
-#: ../navit/gui/internal/gui_internal.c:1340
 msgid "Back to map"
 msgstr "Grižti į žemėlapį"
 
-#: ../navit/gui/internal/gui_internal.c:1349
 msgid "Main Menu"
 msgstr "Pagrindinis meniu"
 
-#: ../navit/gui/internal/gui_internal.c:1466
 msgid "Help"
 msgstr "Žinynas"
 
-#: ../navit/gui/internal/gui_internal.c:1616
 msgid "Back"
 msgstr "Grįžti"
 
-#: ../navit/gui/internal/gui_internal.c:1922
-#: ../navit/gui/internal/gui_internal.c:2139
+msgid "Add Bookmark"
+msgstr ""
+
+msgid "Add Bookmark folder"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
 msgid "POIs"
 msgstr "Lankytinos vietos"
 
-#: ../navit/gui/internal/gui_internal.c:2087
-msgid "Streets"
-msgstr "Gatvės"
-
-#: ../navit/gui/internal/gui_internal.c:2095
-msgid "House numbers"
-msgstr "Namų numeriai"
-
-#: ../navit/gui/internal/gui_internal.c:2112
 msgid "View in Browser"
 msgstr "Peržiūrėti naršyklėje"
 
-#: ../navit/gui/internal/gui_internal.c:2118
+msgid "Streets"
+msgstr "Gatvės"
+
+msgid "House numbers"
+msgstr "Namų numeriai"
+
 msgid "View Attributes"
 msgstr "Rodyti savybes"
 
-#: ../navit/gui/internal/gui_internal.c:2153
 msgid "View on map"
 msgstr "Rodyti žemėlapyje"
 
-#: ../navit/gui/internal/gui_internal.c:2266
+msgid "Cut Bookmark"
+msgstr ""
+
+msgid "Copy Bookmark"
+msgstr ""
+
+msgid "Rename Bookmark"
+msgstr ""
+
+msgid "Paste Bookmark"
+msgstr ""
+
+msgid "Delete Bookmark"
+msgstr ""
+
+msgid "Paste bookmark"
+msgstr ""
+
 #, c-format
 msgid "Bookmark %s"
 msgstr "Pasižymėti %s"
 
-#: ../navit/gui/internal/gui_internal.c:2804
-#: ../navit/gui/internal/gui_internal.c:2813
 msgid "House number"
 msgstr "Namo numeris"
 
-#: ../navit/gui/internal/gui_internal.c:2931
-msgid "Window Mode"
-msgstr "Langų režimas"
-
-#: ../navit/gui/internal/gui_internal.c:2977
-#: ../navit/gui/internal/gui_internal.c:3397
-msgid "Actions"
-msgstr "Veiksmai"
-
-#: ../navit/gui/internal/gui_internal.c:2988
-msgid "Map Point"
-msgstr "Vieta žemėlapyje"
-
-#: ../navit/gui/internal/gui_internal.c:2998
-msgid "Vehicle Position"
-msgstr "Transporto priemonės vieta"
-
-#: ../navit/gui/internal/gui_internal.c:3007
-msgid "Quit"
-msgstr "Išeiti"
-
-#: ../navit/gui/internal/gui_internal.c:3013
-msgid ""
-"Stop\n"
-"Navigation"
-msgstr ""
-"Stabdyti\n"
-"navigaciją"
-
-#: ../navit/gui/internal/gui_internal.c:3029
-#: ../navit/gui/internal/gui_internal.c:3353
 msgid "Maps"
 msgstr "Žemėlapiai"
 
-#: ../navit/gui/internal/gui_internal.c:3073
 msgid "Show Satellite Status"
 msgstr "Parodyti palydovų būseną"
 
-#: ../navit/gui/internal/gui_internal.c:3107
+msgid " Elevation "
+msgstr ""
+
+msgid " Azimuth "
+msgstr ""
+
 msgid "Show NMEA Data"
 msgstr "Rodyti NMEA duomenis"
 
-#: ../navit/gui/internal/gui_internal.c:3199
 msgid "car"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3199
 msgid "bike"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3199
 msgid "pedestrian"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3216
 #, c-format
 msgid "Current profile: %s"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3218
 #, c-format
 msgid "Change profile to: %s"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3253
 msgid "Set as active"
 msgstr "Aktyvuoti"
 
-#: ../navit/gui/internal/gui_internal.c:3260
 msgid "Show Satellite status"
 msgstr "Parodyti palydovų būseną"
 
-#: ../navit/gui/internal/gui_internal.c:3266
 msgid "Show NMEA data"
 msgstr "Parodyti NMEA duomenis"
 
-#: ../navit/gui/internal/gui_internal.c:3317
-#: ../navit/gui/internal/gui_internal.c:3361
 msgid "Rules"
 msgstr "Taisyklės"
 
-#: ../navit/gui/internal/gui_internal.c:3325
 msgid "Lock on road"
 msgstr "Sekti kelią"
 
-#: ../navit/gui/internal/gui_internal.c:3337
 msgid "Map follows Vehicle"
 msgstr "Sekti transporto priemonę"
 
-#: ../navit/gui/internal/gui_internal.c:3347
-#: ../navit/gui/internal/gui_internal.c:3405
-msgid "Settings"
-msgstr "Parinktys"
+msgid "Message"
+msgstr "Žinutė"
 
-#: ../navit/gui/internal/gui_internal.c:3395
+msgid "Route Description"
+msgstr ""
+
+msgid "Height Profile"
+msgstr "Aukščio profilis"
+
+msgid "Show Locale"
+msgstr ""
+
+msgid "About Navit"
+msgstr ""
+
+#. Authors
+msgid "By"
+msgstr ""
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr ""
+
+msgid "members and contributors."
+msgstr ""
+
 msgid "Main menu"
 msgstr "Pagrindinis meniu"
 
-#: ../navit/gui/internal/gui_internal.c:3401
 msgid ""
 "Show\n"
 "Map"
@@ -1959,19 +1553,42 @@ msgstr ""
 "Rodyti\n"
 "žemėlapį"
 
-#: ../navit/gui/internal/gui_internal.c:3408
+msgid "Settings"
+msgstr "Parinktys"
+
 msgid "Tools"
 msgstr "Įrankiai"
 
-#: ../navit/gui/internal/gui_internal.c:3519
-msgid "Message"
-msgstr "Žinutė"
+msgid "About"
+msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:4638
-#: ../navit/gui/internal/gui_internal.c:4786
-msgid "Height Profile"
-msgstr "Aukščio profilis"
+msgid "Actions"
+msgstr "Veiksmai"
 
-#: ../navit/gui/internal/gui_internal.c:4783
+msgid "Quit"
+msgstr "Išeiti"
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr ""
+"Stabdyti\n"
+"navigaciją"
+
+msgid "Window Mode"
+msgstr "Langų režimas"
+
 msgid "Description"
 msgstr "Aprašas"
+
+msgid "horse"
+msgstr ""
+
+msgid "Map Point"
+msgstr "Vieta žemėlapyje"
+
+msgid "Vehicle Position"
+msgstr "Transporto priemonės vieta"
+
+#~ msgid "%d.%d kilometer"
+#~ msgstr "%d.%d kilometras"
