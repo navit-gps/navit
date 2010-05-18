@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-20 19:51+0100\n"
+"POT-Creation-Date: 2010-05-18 13:32+0200\n"
 "PO-Revision-Date: 2009-12-20 20:37+0000\n"
 "Last-Translator: KaZeR <Unknown>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -18,1934 +18,1534 @@ msgstr ""
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
-#: ../navit/main.c:181
 #, c-format
 msgid "Running from source directory\n"
 msgstr "מופעל מתיקיית המקור\n"
 
-#: ../navit/main.c:195
 #, c-format
 msgid "setting '%s' to '%s'\n"
 msgstr "הגדרת '%s' ל־'%s'\n"
 
-#: ../navit/navigation.c:245
 msgid "zeroth"
 msgstr "במקום ה־0"
 
-#: ../navit/navigation.c:247
 msgid "first"
 msgstr "ראשון"
 
-#: ../navit/navigation.c:249
 msgid "second"
 msgstr "שני"
 
-#: ../navit/navigation.c:251
 msgid "third"
 msgstr "שלישי"
 
-#: ../navit/navigation.c:253
 msgid "fourth"
 msgstr "רביעי"
 
-#: ../navit/navigation.c:255
 msgid "fifth"
 msgstr "חמישי"
 
-#: ../navit/navigation.c:257
 msgid "sixth"
 msgstr "שישי"
 
-#: ../navit/navigation.c:268
 msgid "zeroth exit"
 msgstr "היציאה ה-0"
 
-#: ../navit/navigation.c:270
 msgid "first exit"
 msgstr "היציאה הראשונה"
 
-#: ../navit/navigation.c:272
 msgid "second exit"
 msgstr "היציאה השנייה"
 
-#: ../navit/navigation.c:274
 msgid "third exit"
 msgstr "היציאה השלישית"
 
-#: ../navit/navigation.c:276
 msgid "fourth exit"
 msgstr "היציאה הרביעית"
 
-#: ../navit/navigation.c:278
 msgid "fifth exit"
 msgstr "היציאה החמישית"
 
-#: ../navit/navigation.c:280
 msgid "sixth exit"
 msgstr "היציאה השישית"
 
-#: ../navit/navigation.c:321
 #, c-format
 msgid "%d m"
 msgstr "%d מ'"
 
-#: ../navit/navigation.c:323
 #, c-format
 msgid "in %d m"
 msgstr "בעוד %d מ'"
 
-#: ../navit/navigation.c:327
 #, c-format
 msgid "%d meters"
 msgstr "%d מטרים"
 
-#: ../navit/navigation.c:329
 #, c-format
 msgid "in %d meters"
 msgstr "בעוד %d מטרים"
 
-#: ../navit/navigation.c:335
 #, c-format
 msgid "%d.%d kilometers"
 msgstr ""
 
-#: ../navit/navigation.c:337
 #, c-format
 msgid "in %d.%d kilometers"
 msgstr "בעוד  %d.%d קילומטרים"
 
-#: ../navit/navigation.c:341
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
 msgstr[0] "קילומטר אחד"
 msgstr[1] "%d קילומטרים"
 
-#: ../navit/navigation.c:343
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
 msgstr[0] "בעוד קילומטר אחד"
 msgstr[1] "בעוד %d קילומטרים"
 
-#: ../navit/navigation.c:1274
 msgid "exit"
 msgstr "יציאה"
 
-#: ../navit/navigation.c:1276
 msgid "into the ramp"
 msgstr "אל הרמפה"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
-#: ../navit/navigation.c:1306
 #, c-format
 msgid "%sinto the street %s%s%s"
 msgstr "%s אל רחוב %s %s %s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1310
 #, c-format
 msgid "%sinto the %s%s%s|male form"
 msgstr "%s אל רחוב %s %s %s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1314
 #, c-format
 msgid "%sinto the %s%s%s|female form"
 msgstr "%s אל רחוב %s %s %s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
-#: ../navit/navigation.c:1318
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
 msgstr "%s אל רחוב %s %s %s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
-#: ../navit/navigation.c:1325
 #, c-format
 msgid "%sinto the %s"
 msgstr "%sאל תוך ה%s"
 
 #. TRANSLATORS: right, as in 'Turn right'
-#: ../navit/navigation.c:1346
 msgid "right"
 msgstr "ימינה"
 
 #. TRANSLATORS: left, as in 'Turn left'
-#: ../navit/navigation.c:1385
 msgid "left"
 msgstr "שמאלה"
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1392
 msgid "easily "
 msgstr "מעט "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1397
 msgid "strongly "
 msgstr "בצורה חדה "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1400
 msgid "really strongly "
 msgstr "באופן חזק מאד "
 
 #. TRANSLATORS: Don't forget the ending space
-#: ../navit/navigation.c:1404
 msgid "unknown "
 msgstr "לא ידוע "
 
-#: ../navit/navigation.c:1411
 msgid "When possible, please turn around"
 msgstr "כשיתאפשר לך, פנה חזרה"
 
-#: ../navit/navigation.c:1421
 msgid "Enter the roundabout soon"
 msgstr "הכנס לכיכר הקרובה"
 
 #. TRANSLATORS: %s is the distance to the roundabout
-#: ../navit/navigation.c:1425
 #, c-format
 msgid "In %s, enter the roundabout"
 msgstr "ב%s, הכנס לכיכר"
 
-#: ../navit/navigation.c:1440
 #, c-format
 msgid "Leave the roundabout at the %s"
 msgstr "צא מהכיכר ב%s"
 
-#: ../navit/navigation.c:1443
 #, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "אחר כך צא מהכיכר ב%s"
 
-#: ../navit/navigation.c:1453
 #, c-format
 msgid "Follow the road for the next %s"
 msgstr "המשך בדרך זו למשך %s"
 
-#: ../navit/navigation.c:1457
 msgid "soon"
 msgstr "בקרוב"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
-#: ../navit/navigation.c:1467
 #, c-format
 msgid "Take the %1$s road to the %2$s"
 msgstr "קח את הכביש ה%1$s אל %2$s"
 
-#: ../navit/navigation.c:1470 ../navit/navigation.c:1484
 #, c-format
 msgid "after %i roads"
 msgstr "לאחר %i כבישים"
 
-#: ../navit/navigation.c:1473
 msgid "now"
 msgstr "כעת"
 
-#: ../navit/navigation.c:1481
 #, c-format
 msgid "then take the %1$s road to the %2$s"
 msgstr "ואז קח את הכביש ה%1$s אל ה%2$s"
 
-#: ../navit/navigation.c:1492
 msgid "error"
 msgstr "שגיאה"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
-#: ../navit/navigation.c:1523
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
 msgstr "פנה %1$s %2$s %4$s %3$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
-#: ../navit/navigation.c:1526
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
 msgstr "ואז פנה %1$s%2$s %3$s%4$s"
 
-#: ../navit/navigation.c:1531
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "הגעת ליעדך %s"
 
-#: ../navit/navigation.c:1533
 msgid "then you have reached your destination."
 msgstr "ואז הגעת ליעד."
 
-#: ../navit/navit.c:1217 ../navit/gui/internal/gui_internal.c:2482
 msgid "Position"
 msgstr "מיקום"
 
-#: ../navit/navit.c:1218
 msgid "Command"
 msgstr "פקודה"
 
-#: ../navit/navit.c:1222
 msgid "Length"
 msgstr "אורך"
 
-#: ../navit/navit.c:1226 ../navit/navit.c:1251
 msgid "km"
 msgstr "ק\"מ"
 
-#: ../navit/navit.c:1230 ../navit/navit.c:1255
 msgid "m"
 msgstr "מ'"
 
-#: ../navit/navit.c:1236
 msgid "Time"
 msgstr "זמן"
 
-#: ../navit/navit.c:1248
 msgid "Destination Length"
 msgstr "מרחק ליעד"
 
-#: ../navit/navit.c:1261
 msgid "Destination Time"
 msgstr "זמן ליעד"
 
-#: ../navit/navit.c:1294 ../navit/gui/gtk/gui_gtk_action.c:225
 msgid "Roadbook"
 msgstr "הוראות נסיעה"
 
-#: ../navit/popup.c:280 ../navit/popup.c:349
-#: ../navit/gui/internal/gui_internal.c:2336
 msgid "Set as position"
 msgstr "קבע כמיקום נוכחי"
 
-#: ../navit/popup.c:281 ../navit/popup.c:350
-#: ../navit/gui/internal/gui_internal.c:2328
 msgid "Set as destination"
 msgstr "קבע כיעד"
 
-#: ../navit/popup.c:282 ../navit/popup.c:351
-#: ../navit/gui/internal/gui_internal.c:2343
 msgid "Add as bookmark"
 msgstr "צור סימניה למקום זה"
 
-#: ../navit/popup.c:339
 #, c-format
 msgid "Point 0x%x 0x%x"
 msgstr "נקודה 0x%x 0x%x"
 
-#: ../navit/popup.c:340
 #, c-format
 msgid "Screen coord : %d %d"
 msgstr "קואורדינטת מסך: %d %d"
 
 #. 020
-#: ../navit/country.c:39
 msgid "Andorra"
 msgstr "אנדורה"
 
 #. 784
-#: ../navit/country.c:40
 msgid "United Arab Emirates"
 msgstr "איחוד האמירויות הערביות"
 
 #. 004
-#: ../navit/country.c:41
 msgid "Afghanistan"
 msgstr "אפגניסטן"
 
 #. 028
-#: ../navit/country.c:42
 msgid "Antigua and Barbuda"
 msgstr "אנטיגואה וברבודה"
 
 #. 660
-#: ../navit/country.c:43
 msgid "Anguilla"
 msgstr "אנגווילה"
 
 #. 008
-#: ../navit/country.c:44
 msgid "Albania"
 msgstr "אלבניה"
 
 #. 051
-#: ../navit/country.c:45
 msgid "Armenia"
 msgstr "ארמניה"
 
 #. 530
-#: ../navit/country.c:46
 msgid "Netherlands Antilles"
 msgstr "האנטילים ההולנדיים"
 
 #. 024
-#: ../navit/country.c:47
 msgid "Angola"
 msgstr "אנגולה"
 
 #. 010
-#: ../navit/country.c:48
 msgid "Antarctica"
 msgstr "אנטארקטיקה"
 
 #. 032
-#: ../navit/country.c:49
 msgid "Argentina"
 msgstr "ארגנטינה"
 
 #. 016
-#: ../navit/country.c:50
 msgid "American Samoa"
 msgstr "סמואה האמריקאית"
 
 #. 040
-#: ../navit/country.c:51
 msgid "Austria"
 msgstr "אוסטריה"
 
 #. 036
-#: ../navit/country.c:52
 msgid "Australia"
 msgstr "אוסטרליה"
 
 #. 533
-#: ../navit/country.c:53
 msgid "Aruba"
 msgstr "ארובה"
 
 #. 248
-#: ../navit/country.c:54
 msgid "Aland Islands"
 msgstr "איי אלאנדה"
 
 #. 031
-#: ../navit/country.c:55
 msgid "Azerbaijan"
 msgstr "אזרבייג'אן"
 
 #. 070
-#: ../navit/country.c:56
 msgid "Bosnia and Herzegovina"
 msgstr "בוסניה והרצגובינה"
 
 #. 052
-#: ../navit/country.c:57
 msgid "Barbados"
 msgstr "ברבדוס"
 
 #. 050
-#: ../navit/country.c:58
 msgid "Bangladesh"
 msgstr "בנגלדש"
 
 #. 056
-#: ../navit/country.c:59
 msgid "Belgium"
 msgstr "בלגיה"
 
 #. 854
-#: ../navit/country.c:60
 msgid "Burkina Faso"
 msgstr "בורקינה פאסו"
 
 #. 100
-#: ../navit/country.c:61
 msgid "Bulgaria"
 msgstr "בולגריה"
 
 #. 048
-#: ../navit/country.c:62
 msgid "Bahrain"
 msgstr "בחריין"
 
 #. 108
-#: ../navit/country.c:63
 msgid "Burundi"
 msgstr "בורונדי"
 
 #. 204
-#: ../navit/country.c:64
 msgid "Benin"
 msgstr "בנין"
 
 #. 652
-#: ../navit/country.c:65
 msgid "Saint Barthelemy"
 msgstr "סנט ברתלמי"
 
 #. 060
-#: ../navit/country.c:66
 msgid "Bermuda"
 msgstr "ברמודה"
 
 #. 096
-#: ../navit/country.c:67
 msgid "Brunei Darussalam"
 msgstr "סולטנות ברוניי"
 
 #. 068
-#: ../navit/country.c:68
 msgid "Bolivia"
 msgstr "בוליביה"
 
 #. 076
-#: ../navit/country.c:69
 msgid "Brazil"
 msgstr "ברזיל"
 
 #. 044
-#: ../navit/country.c:70
 msgid "Bahamas"
 msgstr "איי בהאמה"
 
 #. 064
-#: ../navit/country.c:71
 msgid "Bhutan"
 msgstr "בהוטאן"
 
 #. 074
-#: ../navit/country.c:72
 msgid "Bouvet Island"
 msgstr "אי בובט"
 
 #. 072
-#: ../navit/country.c:73
 msgid "Botswana"
 msgstr "בוטסואנה"
 
 #. 112
-#: ../navit/country.c:74
 msgid "Belarus"
 msgstr "בלרוס"
 
 #. 084
-#: ../navit/country.c:75
 msgid "Belize"
 msgstr "בליז"
 
 #. 124
-#: ../navit/country.c:76
 msgid "Canada"
 msgstr "קנדה"
 
 #. 166
-#: ../navit/country.c:77
 msgid "Cocos (Keeling) Islands"
 msgstr "איי קוקוס (קילינג)"
 
 #. 180
-#: ../navit/country.c:78
 msgid "Congo, Democratic Republic of the"
 msgstr "הרפובליקה הדמוקרטית של קונגו"
 
 #. 140
-#: ../navit/country.c:79
 msgid "Central African Republic"
 msgstr "רפובליקת מרכז אפריקה"
 
 #. 178
-#: ../navit/country.c:80
 msgid "Congo"
 msgstr "קונגו"
 
 #. 756
-#: ../navit/country.c:81
 msgid "Switzerland"
 msgstr "שוויץ"
 
 #. 384
-#: ../navit/country.c:82
 msgid "Cote d'Ivoire"
 msgstr "חוף השנהב"
 
 #. 184
-#: ../navit/country.c:83
 msgid "Cook Islands"
 msgstr "איי קוק"
 
 #. 152
-#: ../navit/country.c:84
 msgid "Chile"
 msgstr "צ'ילה"
 
 #. 120
-#: ../navit/country.c:85
 msgid "Cameroon"
 msgstr "קמרון"
 
 #. 156
-#: ../navit/country.c:86
 msgid "China"
 msgstr "סין"
 
 #. 170
-#: ../navit/country.c:87
 msgid "Colombia"
 msgstr "קולומביה"
 
 #. 188
-#: ../navit/country.c:88
 msgid "Costa Rica"
 msgstr "קוסטה ריקה"
 
 #. 192
-#: ../navit/country.c:89
 msgid "Cuba"
 msgstr "קובה"
 
 #. 132
-#: ../navit/country.c:90
 msgid "Cape Verde"
 msgstr "קייפ ורדה"
 
 #. 162
-#: ../navit/country.c:91
 msgid "Christmas Island"
 msgstr "אי כריסמס"
 
 #. 196
-#: ../navit/country.c:92
 msgid "Cyprus"
 msgstr "קפריסין"
 
 #. 203
-#: ../navit/country.c:93
 msgid "Czech Republic"
 msgstr "צ'כיה"
 
 #. 276
-#: ../navit/country.c:94
 msgid "Germany"
 msgstr "גרמניה"
 
 #. 262
-#: ../navit/country.c:95
 msgid "Djibouti"
 msgstr "ג'יבוטי"
 
 #. 208
-#: ../navit/country.c:96
 msgid "Denmark"
 msgstr "דנמרק"
 
 #. 212
-#: ../navit/country.c:97
 msgid "Dominica"
 msgstr "דומיניקה"
 
 #. 214
-#: ../navit/country.c:98
 msgid "Dominican Republic"
 msgstr "הרפובליקה הדומיניקנית"
 
 #. 012
-#: ../navit/country.c:99
 msgid "Algeria"
 msgstr "אלג'יריה"
 
 #. 218
-#: ../navit/country.c:100
 msgid "Ecuador"
 msgstr "אקוודור"
 
 #. 233
-#: ../navit/country.c:101
 msgid "Estonia"
 msgstr "אסטוניה"
 
 #. 818
-#: ../navit/country.c:102
 msgid "Egypt"
 msgstr "מצרים"
 
 #. 732
-#: ../navit/country.c:103
 msgid "Western Sahara"
 msgstr "סהרה המערבית"
 
 #. 232
-#: ../navit/country.c:104
 msgid "Eritrea"
 msgstr "אריתריאה"
 
 #. 724
-#: ../navit/country.c:105
 msgid "Spain"
 msgstr "ספרד"
 
 #. 231
-#: ../navit/country.c:106
 msgid "Ethiopia"
 msgstr "אתיופיה"
 
 #. 246
-#: ../navit/country.c:107
 msgid "Finland"
 msgstr "פינלנד"
 
 #. 242
-#: ../navit/country.c:108
 msgid "Fiji"
 msgstr "פיג'י"
 
 #. 238
-#: ../navit/country.c:109
 msgid "Falkland Islands (Malvinas)"
 msgstr "איי פוקלנד"
 
 #. 583
-#: ../navit/country.c:110
 msgid "Micronesia, Federated States of"
 msgstr "מיקרונזיה"
 
 #. 234
-#: ../navit/country.c:111
 msgid "Faroe Islands"
 msgstr "איי פארו"
 
 #. 250
-#: ../navit/country.c:112
 msgid "France"
 msgstr "צרפת"
 
 #. 266
-#: ../navit/country.c:113
 msgid "Gabon"
 msgstr "גבון"
 
 #. 826
-#: ../navit/country.c:114
 msgid "United Kingdom"
 msgstr "אנגליה"
 
 #. 308
-#: ../navit/country.c:115
 msgid "Grenada"
 msgstr "גרנדה"
 
 #. 268
-#: ../navit/country.c:116
 msgid "Georgia"
 msgstr "גאורגיה"
 
 #. 254
-#: ../navit/country.c:117
 msgid "French Guiana"
 msgstr "גיאנה הצרפתית"
 
 #. 831
-#: ../navit/country.c:118
 msgid "Guernsey"
 msgstr "גרנזי"
 
 #. 288
-#: ../navit/country.c:119
 msgid "Ghana"
 msgstr "גאנה"
 
 #. 292
-#: ../navit/country.c:120
 msgid "Gibraltar"
 msgstr "גיברלטר"
 
 #. 304
-#: ../navit/country.c:121
 msgid "Greenland"
 msgstr "גרינלנד"
 
 #. 270
-#: ../navit/country.c:122
 msgid "Gambia"
 msgstr "גמביה"
 
 #. 324
-#: ../navit/country.c:123
 msgid "Guinea"
 msgstr "גינאה"
 
 #. 312
-#: ../navit/country.c:124
 msgid "Guadeloupe"
 msgstr "גוואדלופ"
 
 #. 226
-#: ../navit/country.c:125
 msgid "Equatorial Guinea"
 msgstr "גינאה המשוונית"
 
 #. 300
-#: ../navit/country.c:126
 msgid "Greece"
 msgstr "יוון"
 
 #. 239
-#: ../navit/country.c:127
 msgid "South Georgia and the South Sandwich Islands"
 msgstr "איי ג'ורג'יה הדרומית ואיי סנדוויץ' הדרומיים"
 
 #. 320
-#: ../navit/country.c:128
 msgid "Guatemala"
 msgstr "גואטמלה"
 
 #. 316
-#: ../navit/country.c:129
 msgid "Guam"
 msgstr "גואם"
 
 #. 624
-#: ../navit/country.c:130
 msgid "Guinea-Bissau"
 msgstr "גיניאה ביסאו"
 
 #. 328
-#: ../navit/country.c:131
 msgid "Guyana"
 msgstr "גיאנה"
 
 #. 344
-#: ../navit/country.c:132
 msgid "Hong Kong"
 msgstr "הונג קונג"
 
 #. 334
-#: ../navit/country.c:133
 msgid "Heard Island and McDonald Islands"
 msgstr "האי הרד ואיי מקדונלד"
 
 #. 340
-#: ../navit/country.c:134
 msgid "Honduras"
 msgstr "הונדורס"
 
 #. 191
-#: ../navit/country.c:135
 msgid "Croatia"
 msgstr "קרואטיה"
 
 #. 332
-#: ../navit/country.c:136
 msgid "Haiti"
 msgstr "האיטי"
 
 #. 348
-#: ../navit/country.c:137
 msgid "Hungary"
 msgstr "הונגריה"
 
 #. 360
-#: ../navit/country.c:138
 msgid "Indonesia"
 msgstr "אינדונזיה"
 
 #. 372
-#: ../navit/country.c:139
 msgid "Ireland"
 msgstr "אירלנד"
 
 #. 376
-#: ../navit/country.c:140
 msgid "Israel"
 msgstr "ישראל"
 
 #. 833
-#: ../navit/country.c:141
 msgid "Isle of Man"
 msgstr "האי מאן"
 
 #. 356
-#: ../navit/country.c:142
 msgid "India"
 msgstr "הודו"
 
 #. 086
-#: ../navit/country.c:143
 msgid "British Indian Ocean Territory"
 msgstr "הטריטוריה הבריטית באוקיינוס ההודי"
 
 #. 368
-#: ../navit/country.c:144
 msgid "Iraq"
 msgstr "עיראק"
 
 #. 364
-#: ../navit/country.c:145
 msgid "Iran, Islamic Republic of"
 msgstr "אירן"
 
 #. 352
-#: ../navit/country.c:146
 msgid "Iceland"
 msgstr "איסלנד"
 
 #. 380
-#: ../navit/country.c:147
 msgid "Italy"
 msgstr "איטליה"
 
 #. 832
-#: ../navit/country.c:148
 msgid "Jersey"
 msgstr "ג'רסי"
 
 #. 388
-#: ../navit/country.c:149
 msgid "Jamaica"
 msgstr "ג'מייקה"
 
 #. 400
-#: ../navit/country.c:150
 msgid "Jordan"
 msgstr "ירדן"
 
 #. 392
-#: ../navit/country.c:151
 msgid "Japan"
 msgstr "יפן"
 
 #. 404
-#: ../navit/country.c:152
 msgid "Kenya"
 msgstr "קניה"
 
 #. 417
-#: ../navit/country.c:153
 msgid "Kyrgyzstan"
 msgstr "קירגיסטן"
 
 #. 116
-#: ../navit/country.c:154
 msgid "Cambodia"
 msgstr "קמבודיה"
 
 #. 296
-#: ../navit/country.c:155
 msgid "Kiribati"
 msgstr "קיריבאטי"
 
 #. 174
-#: ../navit/country.c:156
 msgid "Comoros"
 msgstr "איי קומורו"
 
 #. 659
-#: ../navit/country.c:157
 msgid "Saint Kitts and Nevis"
 msgstr "סנט קיטס ונוויס"
 
 #. 408
-#: ../navit/country.c:158
 msgid "Korea, Democratic People's Republic of"
 msgstr "קוריאה הצפונית"
 
 #. 410
-#: ../navit/country.c:159
 msgid "Korea, Republic of"
 msgstr "קוריאה הדרומית"
 
 #. 414
-#: ../navit/country.c:160
 msgid "Kuwait"
 msgstr "כווית"
 
 #. 136
-#: ../navit/country.c:161
 msgid "Cayman Islands"
 msgstr "איי קיימן"
 
 #. 398
-#: ../navit/country.c:162
 msgid "Kazakhstan"
 msgstr "קזחסטן"
 
 #. 418
-#: ../navit/country.c:163
 msgid "Lao People's Democratic Republic"
 msgstr "לאוס"
 
 #. 422
-#: ../navit/country.c:164
 msgid "Lebanon"
 msgstr "לבנון"
 
 #. 662
-#: ../navit/country.c:165
 msgid "Saint Lucia"
 msgstr "סנט לוסיה"
 
 #. 438
-#: ../navit/country.c:166
 msgid "Liechtenstein"
 msgstr "ליכטנשטיין"
 
 #. 144
-#: ../navit/country.c:167
 msgid "Sri Lanka"
 msgstr "סרי לנקה"
 
 #. 430
-#: ../navit/country.c:168
 msgid "Liberia"
 msgstr "ליבריה"
 
 #. 426
-#: ../navit/country.c:169
 msgid "Lesotho"
 msgstr "לסוטו"
 
 #. 440
-#: ../navit/country.c:170
 msgid "Lithuania"
 msgstr "ליטא"
 
 #. 442
-#: ../navit/country.c:171
 msgid "Luxembourg"
 msgstr "לוקסמבורג"
 
 #. 428
-#: ../navit/country.c:172
 msgid "Latvia"
 msgstr "לטביה"
 
 #. 434
-#: ../navit/country.c:173
 msgid "Libyan Arab Jamahiriya"
 msgstr "לוב"
 
 #. 504
-#: ../navit/country.c:174
 msgid "Morocco"
 msgstr "מרוקו"
 
 #. 492
-#: ../navit/country.c:175
 msgid "Monaco"
 msgstr "מונקו"
 
 #. 498
-#: ../navit/country.c:176
 msgid "Moldova, Republic of"
 msgstr "מולדובה"
 
 #. 499
-#: ../navit/country.c:177
 msgid "Montenegro"
 msgstr "מונטנגרו"
 
 #. 663
-#: ../navit/country.c:178
 msgid "Saint Martin (French part)"
 msgstr "סנט מרטיו (החלק הצרפתי)"
 
 #. 450
-#: ../navit/country.c:179
 msgid "Madagascar"
 msgstr "מדגסקר"
 
 #. 584
-#: ../navit/country.c:180
 msgid "Marshall Islands"
 msgstr "איי מרשל"
 
 #. 807
-#: ../navit/country.c:181
 msgid "Macedonia, the former Yugoslav Republic of"
 msgstr "מקדוניה"
 
 #. 466
-#: ../navit/country.c:182
 msgid "Mali"
 msgstr "מאלי"
 
 #. 104
-#: ../navit/country.c:183
 msgid "Myanmar"
 msgstr "מיאנמר"
 
 #. 496
-#: ../navit/country.c:184
 msgid "Mongolia"
 msgstr "מונגוליה"
 
 #. 446
-#: ../navit/country.c:185
 msgid "Macao"
 msgstr "מקאו"
 
 #. 580
-#: ../navit/country.c:186
 msgid "Northern Mariana Islands"
 msgstr "איי מריאנה הצפוניים"
 
 #. 474
-#: ../navit/country.c:187
 msgid "Martinique"
 msgstr "מרטיניק"
 
 #. 478
-#: ../navit/country.c:188
 msgid "Mauritania"
 msgstr "מאוריטניה"
 
 #. 500
-#: ../navit/country.c:189
 msgid "Montserrat"
 msgstr "מונטסראט"
 
 #. 470
-#: ../navit/country.c:190
 msgid "Malta"
 msgstr "מלטה"
 
 #. 480
-#: ../navit/country.c:191
 msgid "Mauritius"
 msgstr "מאוריציוס"
 
 #. 462
-#: ../navit/country.c:192
 msgid "Maldives"
 msgstr "האיים המלדיביים"
 
 #. 454
-#: ../navit/country.c:193
 msgid "Malawi"
 msgstr "מלאווי"
 
 #. 484
-#: ../navit/country.c:194
 msgid "Mexico"
 msgstr "מקסיקו"
 
 #. 458
-#: ../navit/country.c:195
 msgid "Malaysia"
 msgstr "מלזיה"
 
 #. 508
-#: ../navit/country.c:196
 msgid "Mozambique"
 msgstr "מוזמביק"
 
 #. 516
-#: ../navit/country.c:197
 msgid "Namibia"
 msgstr "נמיביה"
 
 #. 540
-#: ../navit/country.c:198
 msgid "New Caledonia"
 msgstr "קלדוניה החדשה"
 
 #. 562
-#: ../navit/country.c:199
 msgid "Niger"
 msgstr "ניז'ר"
 
 #. 574
-#: ../navit/country.c:200
 msgid "Norfolk Island"
 msgstr "האי נורפוק"
 
 #. 566
-#: ../navit/country.c:201
 msgid "Nigeria"
 msgstr "ניגריה"
 
 #. 558
-#: ../navit/country.c:202
 msgid "Nicaragua"
 msgstr "ניקרגואה"
 
 #. 528
-#: ../navit/country.c:203
 msgid "Netherlands"
 msgstr "הולנד"
 
 #. 578
-#: ../navit/country.c:204
 msgid "Norway"
 msgstr "נורבגיה"
 
 #. 524
-#: ../navit/country.c:205
 msgid "Nepal"
 msgstr "נפאל"
 
 #. 520
-#: ../navit/country.c:206
 msgid "Nauru"
 msgstr "נאורו"
 
 #. 570
-#: ../navit/country.c:207
 msgid "Niue"
 msgstr "ניואה"
 
 #. 554
-#: ../navit/country.c:208
 msgid "New Zealand"
 msgstr "ניו-זילנד"
 
 #. 512
-#: ../navit/country.c:209
 msgid "Oman"
 msgstr "עומן"
 
 #. 591
-#: ../navit/country.c:210
 msgid "Panama"
 msgstr "פנמה"
 
 #. 604
-#: ../navit/country.c:211
 msgid "Peru"
 msgstr "פרו"
 
 #. 258
-#: ../navit/country.c:212
 msgid "French Polynesia"
 msgstr "פולינזיה הצרפתית"
 
 #. 598
-#: ../navit/country.c:213
 msgid "Papua New Guinea"
 msgstr "פפואה גינאה החדשה"
 
 #. 608
-#: ../navit/country.c:214
 msgid "Philippines"
 msgstr "הפיליפינים"
 
 #. 586
-#: ../navit/country.c:215
 msgid "Pakistan"
 msgstr "פקיסטן"
 
 #. 616
-#: ../navit/country.c:216
 msgid "Poland"
 msgstr "פולין"
 
 #. 666
-#: ../navit/country.c:217
 msgid "Saint Pierre and Miquelon"
 msgstr "סנט פייר ומיקלון"
 
 #. 612
-#: ../navit/country.c:218
 msgid "Pitcairn"
 msgstr "פיטקרן"
 
 #. 630
-#: ../navit/country.c:219
 msgid "Puerto Rico"
 msgstr "פורטו ריקו"
 
 #. 275
-#: ../navit/country.c:220
 msgid "Palestinian Territory, Occupied"
 msgstr "פלסטין"
 
 #. 620
-#: ../navit/country.c:221
 msgid "Portugal"
 msgstr "פורטוגל"
 
 #. 585
-#: ../navit/country.c:222
 msgid "Palau"
 msgstr "פלאו"
 
 #. 600
-#: ../navit/country.c:223
 msgid "Paraguay"
 msgstr "פראגוואי"
 
 #. 634
-#: ../navit/country.c:224
 msgid "Qatar"
 msgstr "קטאר"
 
 #. 638
-#: ../navit/country.c:225
 msgid "Reunion"
 msgstr "ריוניון"
 
 #. 642
-#: ../navit/country.c:226
 msgid "Romania"
 msgstr "רומניה"
 
 #. 688
-#: ../navit/country.c:227
 msgid "Serbia"
 msgstr "סרביה"
 
 #. 643
-#: ../navit/country.c:228
 msgid "Russian Federation"
 msgstr "רוסיה"
 
 #. 646
-#: ../navit/country.c:229
 msgid "Rwanda"
 msgstr "רואנדה"
 
 #. 682
-#: ../navit/country.c:230
 msgid "Saudi Arabia"
 msgstr "ערב הסעודית"
 
 #. 090
-#: ../navit/country.c:231
 msgid "Solomon Islands"
 msgstr "איי שלמה"
 
 #. 690
-#: ../navit/country.c:232
 msgid "Seychelles"
 msgstr "איי סיישל"
 
 #. 736
-#: ../navit/country.c:233
 msgid "Sudan"
 msgstr "סודן"
 
 #. 752
-#: ../navit/country.c:234
 msgid "Sweden"
 msgstr "שבדיה"
 
 #. 702
-#: ../navit/country.c:235
 msgid "Singapore"
 msgstr "סינגפור"
 
 #. 654
-#: ../navit/country.c:236
 msgid "Saint Helena"
 msgstr "סנט הלנה"
 
 #. 705
-#: ../navit/country.c:237
 msgid "Slovenia"
 msgstr "סלובניה"
 
 #. 744
-#: ../navit/country.c:238
 msgid "Svalbard and Jan Mayen"
 msgstr "סוולבראד ויאן מאיין"
 
 #. 703
-#: ../navit/country.c:239
 msgid "Slovakia"
 msgstr "סלובקיה"
 
 #. 694
-#: ../navit/country.c:240
 msgid "Sierra Leone"
 msgstr "סיירה ליאונה"
 
 #. 674
-#: ../navit/country.c:241
 msgid "San Marino"
 msgstr "סן מרינו"
 
 #. 686
-#: ../navit/country.c:242
 msgid "Senegal"
 msgstr "סנגל"
 
 #. 706
-#: ../navit/country.c:243
 msgid "Somalia"
 msgstr "סומליה"
 
 #. 740
-#: ../navit/country.c:244
 msgid "Suriname"
 msgstr "סורינאם"
 
 #. 678
-#: ../navit/country.c:245
 msgid "Sao Tome and Principe"
 msgstr "סאו תומה ופרינסיפה"
 
 #. 222
-#: ../navit/country.c:246
 msgid "El Salvador"
 msgstr "אל סלוודור"
 
 #. 760
-#: ../navit/country.c:247
 msgid "Syrian Arab Republic"
 msgstr "סוריה"
 
 #. 748
-#: ../navit/country.c:248
 msgid "Swaziland"
 msgstr "סווזילנד"
 
 #. 796
-#: ../navit/country.c:249
 msgid "Turks and Caicos Islands"
 msgstr "איי טורקס וקאיקוס"
 
 #. 148
-#: ../navit/country.c:250
 msgid "Chad"
 msgstr "צ'אד"
 
 #. 260
-#: ../navit/country.c:251
 msgid "French Southern Territories"
 msgstr "הטריטוריות הדרום צרפתיות"
 
 #. 768
-#: ../navit/country.c:252
 msgid "Togo"
 msgstr "טוגו"
 
 #. 764
-#: ../navit/country.c:253
 msgid "Thailand"
 msgstr "תאילנד"
 
 #. 762
-#: ../navit/country.c:254
 msgid "Tajikistan"
 msgstr "טג'יקיסטן"
 
 #. 772
-#: ../navit/country.c:255
 msgid "Tokelau"
 msgstr "טוקלאו"
 
 #. 626
-#: ../navit/country.c:256
 msgid "Timor-Leste"
 msgstr "טימור מזרח"
 
 #. 795
-#: ../navit/country.c:257
 msgid "Turkmenistan"
 msgstr "טורקמניסטן"
 
 #. 788
-#: ../navit/country.c:258
 msgid "Tunisia"
 msgstr "טוניסיה"
 
 #. 776
-#: ../navit/country.c:259
 msgid "Tonga"
 msgstr "טונגה"
 
 #. 792
-#: ../navit/country.c:260
 msgid "Turkey"
 msgstr "טורקיה"
 
 #. 780
-#: ../navit/country.c:261
 msgid "Trinidad and Tobago"
 msgstr "טרינידד וטובגו"
 
 #. 798
-#: ../navit/country.c:262
 msgid "Tuvalu"
 msgstr "טובלו"
 
 #. 158
-#: ../navit/country.c:263
 msgid "Taiwan, Province of China"
 msgstr "טאיוואן"
 
 #. 834
-#: ../navit/country.c:264
 msgid "Tanzania, United Republic of"
 msgstr "טנזניה"
 
 #. 804
-#: ../navit/country.c:265
 msgid "Ukraine"
 msgstr "אוקראינה"
 
 #. 800
-#: ../navit/country.c:266
 msgid "Uganda"
 msgstr "אוגנדה"
 
 #. 581
-#: ../navit/country.c:267
 msgid "United States Minor Outlying Islands"
 msgstr "איים מזעריים ומרוחקים השייכים לארה\"ב"
 
 #. 840
-#: ../navit/country.c:268
 msgid "United States"
 msgstr "ארצות הברית"
 
 #. 858
-#: ../navit/country.c:269
 msgid "Uruguay"
 msgstr "אורוגוואי"
 
 #. 860
-#: ../navit/country.c:270
 msgid "Uzbekistan"
 msgstr "אוזבקיסטן"
 
 #. 336
-#: ../navit/country.c:271
 msgid "Holy See (Vatican City State)"
 msgstr "וותיקן"
 
 #. 670
-#: ../navit/country.c:272
 msgid "Saint Vincent and the Grenadines"
 msgstr "סנט וינסנט והגרנדינים"
 
 #. 862
-#: ../navit/country.c:273
 msgid "Venezuela"
 msgstr "ונצואלה"
 
 #. 092
-#: ../navit/country.c:274
 msgid "Virgin Islands, British"
 msgstr "איי הבתולה (בריטיים)"
 
 #. 850
-#: ../navit/country.c:275
 msgid "Virgin Islands, U.S."
 msgstr "איי הבתולה (ארה\"ב)"
 
 #. 704
-#: ../navit/country.c:276
 msgid "Viet Nam"
 msgstr "וייטנאם"
 
 #. 548
-#: ../navit/country.c:277
 msgid "Vanuatu"
 msgstr "ונואטו"
 
 #. 876
-#: ../navit/country.c:278
 msgid "Wallis and Futuna"
 msgstr "ואליס ופוטונה"
 
 #. 882
-#: ../navit/country.c:279
 msgid "Samoa"
 msgstr "סמואה"
 
 #. 887
-#: ../navit/country.c:280
 msgid "Yemen"
 msgstr "תימן"
 
 #. 175
-#: ../navit/country.c:281
 msgid "Mayotte"
 msgstr "מיוט"
 
 #. 710
-#: ../navit/country.c:282
 msgid "South Africa"
 msgstr "דרום אפריקה"
 
 #. 894
-#: ../navit/country.c:283
 msgid "Zambia"
 msgstr "זמביה"
 
 #. 716
-#: ../navit/country.c:284
 msgid "Zimbabwe"
 msgstr "זימבבואה"
 
-#: ../navit/country.c:285
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "*לא ידוע,הוסף תגי is_in לערים אלו"
 
-#: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:128
-#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
 msgid "Car"
 msgstr "מכונית"
 
-#: ../navit/gui/gtk/destination.c:127
 msgid "Iso2"
 msgstr "Iso2"
 
-#: ../navit/gui/gtk/destination.c:127
 msgid "Iso3"
 msgstr "Iso3"
 
-#: ../navit/gui/gtk/destination.c:127 ../navit/gui/gtk/destination.c:435
-#: ../navit/gui/internal/gui_internal.c:3315
 msgid "Country"
 msgstr "ארץ"
 
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
 msgid "Postal"
 msgstr "דואר"
 
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
-#: ../navit/gui/internal/gui_internal.c:3294
-#: ../navit/gui/internal/gui_internal.c:3323 ../navit/navit_shipped.glade:57
 msgid "Town"
 msgstr "עיירה"
 
-#: ../navit/gui/gtk/destination.c:128 ../navit/gui/gtk/destination.c:129
-#: ../navit/gui/gtk/destination.c:130
 msgid "District"
 msgstr "מחוז"
 
-#: ../navit/gui/gtk/destination.c:129 ../navit/gui/gtk/destination.c:130
-#: ../navit/gui/gtk/destination.c:446
-#: ../navit/gui/internal/gui_internal.c:3275
-#: ../navit/gui/internal/gui_internal.c:3284
 msgid "Street"
 msgstr "רחוב"
 
-#: ../navit/gui/gtk/destination.c:130 ../navit/gui/gtk/destination.c:448
 msgid "Number"
 msgstr "מס'"
 
-#: ../navit/gui/gtk/destination.c:429
 msgid "Enter Destination"
 msgstr "הכנס יעד"
 
-#: ../navit/gui/gtk/destination.c:438
 msgid "Zip Code"
 msgstr "מיקוד"
 
-#: ../navit/gui/gtk/destination.c:440
 msgid "City"
 msgstr "עיר"
 
-#: ../navit/gui/gtk/destination.c:443
 msgid "District/Township"
 msgstr "מחוז/איזור העיר"
 
-#: ../navit/gui/gtk/destination.c:471 ../navit/gui/gtk/gui_gtk_action.c:200
 msgid "Map"
 msgstr "מפה"
 
-#: ../navit/gui/gtk/destination.c:472
 msgid "Bookmark"
 msgstr "סימניה"
 
-#: ../navit/gui/gtk/destination.c:473 ../navit/gui/gtk/gui_gtk_action.c:212
 msgid "Destination"
 msgstr "יעד"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:196 ../navit/navit_shipped.glade:63
-#: ../navit/navit_shipped.glade:68
 msgid "Display"
 msgstr "תצוגה"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:197 ../navit/navit_shipped.glade:51
-#: ../navit/navit_shipped.glade:78
 msgid "Route"
 msgstr "מסלול"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:198
 msgid "Former Destinations"
 msgstr "יעדים קודמים"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:199
-#: ../navit/gui/internal/gui_internal.c:2510 ../navit/navit_shipped.glade:54
 msgid "Bookmarks"
 msgstr "סימניות"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:201
-#: ../navit/gui/internal/gui_internal.c:3334 ../navit/navit_shipped.glade:69
 msgid "Layout"
 msgstr "מערך"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:202
 msgid "Projection"
 msgstr "תכנון"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:203
-#: ../navit/gui/internal/gui_internal.c:3669 ../navit/navit_shipped.glade:65
 msgid "Vehicle"
 msgstr "רכב (ׂGPS)"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:204
 msgid "ZoomOut"
 msgstr "התרחק"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:205
 msgid "ZoomIn"
 msgstr "התקרב"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:206
 msgid "Recalculate"
 msgstr "חשב מחדש"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:208 ../navit/gui/gtk/gui_gtk_action.c:210
 msgid "Info"
 msgstr "מידע"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:213
 msgid "Stop Navigation"
 msgstr "עצור ניווט"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:214
 msgid "Test"
 msgstr "בדיקה"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:215
 msgid "_Quit"
 msgstr "_יציאה"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:222
 msgid "Cursor"
 msgstr "סמן"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:223
 msgid "Lock on Road"
 msgstr "הנעל על הדרך"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:224
-#: ../navit/gui/internal/gui_internal.c:3708
 msgid "Northing"
 msgstr "הצפנה"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:226
 msgid "Autozoom"
 msgstr "זום אוטומטי"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:228 ../navit/gui/gtk/gui_gtk_action.c:230
-#: ../navit/navit_shipped.glade:70
 msgid "Fullscreen"
 msgstr "מסך מלא"
 
-#: ../navit/gui/gtk/gui_gtk_action.c:238
 msgid "Data"
 msgstr "מידע"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "N"
 msgstr "צ'"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "NE"
 msgstr "צפון מזרח"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "E"
 msgstr "מז'"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "SE"
 msgstr "דרום מזרח"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "S"
 msgstr "ד'"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "SW"
 msgstr "דרום מערב"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "W"
 msgstr "מע'"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:58
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:97
 msgid "NW"
 msgstr "צפון מערב"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:74
 msgid "No"
 msgstr "לא"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:75 ../navit/navit_shipped.glade:73
 msgid "2D"
 msgstr "דו-מימד"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:76 ../navit/navit_shipped.glade:72
 msgid "3D"
 msgstr "תלת מימד"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:78
 msgid "OT"
 msgstr "OT"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:119
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
 msgstr "נשארו עוד %4.0f ק\"מ, זמן הגעה משוער %02d:%02d"
 
-#: ../navit/gui/gtk/gui_gtk_statusbar.c:164
 msgid "Route 0000km  0+00:00 ETA"
 msgstr "מסלול 0000ק\"מ 0+00:00 זמן הגעה משוער"
 
-#: ../navit/gui/internal/gui_internal.c:1464
 msgid "Back to map"
 msgstr "חזור למפה"
 
-#: ../navit/gui/internal/gui_internal.c:1473
 msgid "Main Menu"
 msgstr "תפריט ראשי"
 
-#: ../navit/gui/internal/gui_internal.c:1590
 msgid "Help"
 msgstr "עזרה"
 
-#: ../navit/gui/internal/gui_internal.c:1744
 msgid "Back"
 msgstr "חזרה"
 
-#: ../navit/gui/internal/gui_internal.c:1869
 msgid "Add Bookmark"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:2076
-#: ../navit/gui/internal/gui_internal.c:2351
+msgid "Add Bookmark folder"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
 msgid "POIs"
 msgstr "נ\"צ"
 
-#: ../navit/gui/internal/gui_internal.c:2176
-#: ../navit/gui/internal/gui_internal.c:2313
 msgid "View in Browser"
 msgstr "צפה בדפדפן אינטרנט"
 
-#: ../navit/gui/internal/gui_internal.c:2288
 msgid "Streets"
 msgstr "רחובות"
 
-#: ../navit/gui/internal/gui_internal.c:2296
 msgid "House numbers"
 msgstr "מספרי בתים"
 
-#: ../navit/gui/internal/gui_internal.c:2319
 msgid "View Attributes"
 msgstr "צפה בתכונות"
 
-#: ../navit/gui/internal/gui_internal.c:2363
 msgid "View on map"
 msgstr "צפה במפה"
 
-#: ../navit/gui/internal/gui_internal.c:2553
+msgid "Cut Bookmark"
+msgstr ""
+
+msgid "Copy Bookmark"
+msgstr ""
+
+msgid "Rename Bookmark"
+msgstr ""
+
+msgid "Paste Bookmark"
+msgstr ""
+
+msgid "Delete Bookmark"
+msgstr ""
+
+msgid "Paste bookmark"
+msgstr ""
+
 #, c-format
 msgid "Bookmark %s"
 msgstr "סימנייה %s"
 
-#: ../navit/gui/internal/gui_internal.c:3259
-#: ../navit/gui/internal/gui_internal.c:3268
 msgid "House number"
 msgstr "מספר בית"
 
-#: ../navit/gui/internal/gui_internal.c:3381 ../navit/navit_shipped.glade:64
 msgid "Maps"
 msgstr "מפות"
 
-#: ../navit/gui/internal/gui_internal.c:3425
 msgid "Show Satellite Status"
 msgstr "הצגת מצב הלוויינים"
 
-#: ../navit/gui/internal/gui_internal.c:3432
-msgid " PRN "
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3433
 msgid " Elevation "
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3434
 msgid " Azimuth "
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:3435
-msgid " SNR "
-msgstr ""
-
-#: ../navit/gui/internal/gui_internal.c:3459
 msgid "Show NMEA Data"
 msgstr "הצגת נתוני NMEA"
 
-#: ../navit/gui/internal/gui_internal.c:3576 ../navit/navit_shipped.glade:115
 msgid "car"
 msgstr "מכונית"
 
-#: ../navit/gui/internal/gui_internal.c:3576 ../navit/navit_shipped.glade:180
 msgid "bike"
 msgstr "אופניים"
 
-#: ../navit/gui/internal/gui_internal.c:3576 ../navit/navit_shipped.glade:241
 msgid "pedestrian"
 msgstr "הולך רגל"
 
-#: ../navit/gui/internal/gui_internal.c:3593
 #, c-format
 msgid "Current profile: %s"
 msgstr "פרופיל נוכחי: %s"
 
-#: ../navit/gui/internal/gui_internal.c:3595
 #, c-format
 msgid "Change profile to: %s"
 msgstr "שנה את הפרופיל ל: %s"
 
-#: ../navit/gui/internal/gui_internal.c:3630
 msgid "Set as active"
 msgstr "הגדרה כפעיל"
 
-#: ../navit/gui/internal/gui_internal.c:3637
 msgid "Show Satellite status"
 msgstr "הצגת מצב הלוויינים"
 
-#: ../navit/gui/internal/gui_internal.c:3643
 msgid "Show NMEA data"
 msgstr "הצגת נתוני NMEA"
 
-#: ../navit/gui/internal/gui_internal.c:3694 ../navit/navit_shipped.glade:66
 msgid "Rules"
 msgstr "כללים"
 
-#: ../navit/gui/internal/gui_internal.c:3702
 msgid "Lock on road"
 msgstr "נעול על הדרך"
 
-#: ../navit/gui/internal/gui_internal.c:3714
 msgid "Map follows Vehicle"
 msgstr "מפה עוקבת אחר הרכב"
 
-#: ../navit/gui/internal/gui_internal.c:4061
 msgid "Message"
 msgstr "הודעה"
 
-#: ../navit/gui/internal/gui_internal.c:5087
 msgid "Route Description"
 msgstr ""
 
-#: ../navit/gui/internal/gui_internal.c:5211 ../navit/navit_shipped.glade:80
 msgid "Height Profile"
 msgstr "פרופיל גובה"
 
-#: ../navit/gui/internal/gui_internal.c:5349 ../navit/navit_shipped.glade:76
 msgid "Show Locale"
 msgstr ""
 
-#: ../navit/navit_shipped.glade:45
+msgid "About Navit"
+msgstr ""
+
+#. Authors
+msgid "By"
+msgstr ""
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr ""
+
+msgid "members and contributors."
+msgstr ""
+
 msgid "Main menu"
 msgstr "תפריט ראשי"
 
-#: ../navit/navit_shipped.glade:47
 msgid ""
 "Show\n"
 "Map"
@@ -1953,23 +1553,21 @@ msgstr ""
 "הצגת\n"
 "מפה"
 
-#: ../navit/navit_shipped.glade:49 ../navit/navit_shipped.glade:62
 msgid "Settings"
 msgstr "הגדרות"
 
-#: ../navit/navit_shipped.glade:50 ../navit/navit_shipped.glade:75
 msgid "Tools"
 msgstr "כלים"
 
-#: ../navit/navit_shipped.glade:53
+msgid "About"
+msgstr ""
+
 msgid "Actions"
 msgstr "פעולות"
 
-#: ../navit/navit_shipped.glade:58
 msgid "Quit"
 msgstr "יציאה"
 
-#: ../navit/navit_shipped.glade:59
 msgid ""
 "Stop\n"
 "Navigation"
@@ -1977,26 +1575,20 @@ msgstr ""
 "עצור\n"
 "ניווט"
 
-#: ../navit/navit_shipped.glade:71
 msgid "Window Mode"
 msgstr "מצב חלון"
 
-#: ../navit/navit_shipped.glade:79
 msgid "Description"
 msgstr "תיאור"
 
-#: ../navit/navit_shipped.glade:290
 msgid "horse"
 msgstr ""
 
-#: ../navit/navit_shipped.c:55
 msgid "Map Point"
 msgstr "נקודה במפה"
 
-#: ../navit/navit_shipped.c:56
 msgid "Vehicle Position"
 msgstr "מיקום רכב"
 
-#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d קילומטר"
