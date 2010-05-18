@@ -273,6 +273,7 @@ AC_SUBST(CRYPTO_LIBS)
 
 # plugins
 AC_ARG_ENABLE(plugins, 	[  --disable-plugins          disable plugins], [ plugins=$enableval;plugin_reason="configure parameter" ])
+AC_ARG_ENABLE(shared-libnavit, 	[  --enable-shared-libnavit], [ shared_libnavit=$enableval])
 if test "x${plugins}" = "xyes"; then
 	AC_ENABLE_SHARED
 	AC_DISABLE_STATIC
@@ -286,8 +287,13 @@ if test "x${plugins}" = "xyes"; then
 		NAVIT_MODULE_LDFLAGS="-no-undefined -L\$(top_builddir)/navit -l$LIBNAVIT -L\$(top_builddir)/intl -lintl"
 	fi
 else
-	AC_DISABLE_SHARED
-	AC_ENABLE_STATIC
+	if test "x${shared_libnavit}" = "xyes"; then
+		AC_ENABLE_SHARED
+		AC_DISABLE_STATIC
+	else
+		AC_DISABLE_SHARED
+		AC_ENABLE_STATIC
+	fi
 fi
 AM_CONDITIONAL(PLUGINS, [test "x$plugins" = "xyes"])
 AM_CONDITIONAL(SHARED_LIBNAVIT, [test "x$shared_libnavit" = "xyes"])
