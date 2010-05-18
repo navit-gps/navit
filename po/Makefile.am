@@ -41,7 +41,7 @@ $(top_builddir)/navit/navit_shipped.c: $(top_srcdir)/navit/navit_shipped.xml
 	sed 's/^"Project-Id-Version:.*/"Project-Id-Version: $(PACKAGE_STRING)\\n"/' < $(top_srcdir)/po/$@.in | $(MSGMERGE) --no-fuzzy-matching --verbose -o $(top_builddir)/po/$@ - navit.pot
 
 navit.pot: $(POTFILES)
-	 $(XGETTEXT) --default-domain=navit \
+	 $(XGETTEXT) --no-location --default-domain=navit \
 	--add-comments --keyword=_ --keyword=_n $(POTFILES)
 	if cmp -s navit.po navit.pot; then \
 	    rm -f navit.po; \
