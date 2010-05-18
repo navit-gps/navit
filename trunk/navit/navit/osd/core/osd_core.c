@@ -976,7 +976,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 		oti=oti->next;
 	}
 
-	if ( this->last && !g_strcmp0(this->last, str) ) {
+	if ( this->last && str && !strcmp(this->last, str) ) {
 		do_draw=0;
 	} else {
 		do_draw=1;
