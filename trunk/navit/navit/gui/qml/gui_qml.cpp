@@ -98,21 +98,21 @@ struct gui_priv {
 #include "guiProxy.h"
 
 //Main window class for resizeEvent handling
-#if defined Q_WS_X11 && QT_VERSION >= 0x040000
+#ifdef Q_WS_X11 
 #include <QX11EmbedWidget>
 class NGQMainWindow : public QX11EmbedWidget 
 {
 #else
 class NGQMainWindow : public QWidget 
 {
-#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
+#endif /* Q_WS_X11 */
 public:
 
-#if defined Q_WS_X11 && QT_VERSION >= 0x040000
+#ifdef Q_WS_X11 
 	NGQMainWindow(struct gui_priv* this_,QWidget *parent) : QX11EmbedWidget(parent) {
 #else
 	NGQMainWindow(struct gui_priv* this_,QWidget *parent) : QWidget(parent) {
-#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
+#endif /* Q_WS_X11  */
 		this->object=this_;
 	}
 protected:
@@ -281,12 +281,12 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	//Create main window
 	this_->switcherWidget = new QStackedLayout();
 	_mainWindow = new NGQMainWindow(this_, NULL);
-#if defined Q_WS_X11 && QT_VERSION >= 0x040000
+#ifdef Q_WS_X11
 		xid=getenv("NAVIT_XID");
 		if (xid.length()>0) {
 			_mainWindow->embedInto(xid.toULong(&ok,0));
 		}
-#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
+#endif /* Q_WS_X11  */
 	this_->mainWindow=_mainWindow;
 	if ( this_->w && this_->h ) {
 	    this_->mainWindow->resize(this_->w,this_->h);
