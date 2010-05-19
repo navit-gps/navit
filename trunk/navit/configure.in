@@ -694,6 +694,11 @@ AC_SUBST(POFILES)
 AC_SUBST(POIFILES)
 AM_GNU_GETTEXT_VERSION
 AM_GNU_GETTEXT(no-libtool, need-ngettext, \$(top_builddir)/intl/)
+if test "x${shared_libnavit}" = "xyes" -a "x${win32ce}" = "xyes"; then
+	INTLLIBS="\$(top_builddir)/intl/libintl.la"
+	LIBINTL=$INTLLIBS
+	LTLIBINTL=$INTLLIBS
+fi
 AC_SUBST(LIBINTL)
 AC_SUBST(LTLIBINTL)
 if test x"$LIBINTL" != "x" ;then
