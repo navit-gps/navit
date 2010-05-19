@@ -9,4 +9,7 @@ struct lconv {
 
 #define LC_ALL 1
 #define LC_NUMERIC 2
+#ifndef PATH_MAX
+#define PATH_MAX 1024
+#endif
 #endif
