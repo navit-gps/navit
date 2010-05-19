@@ -120,7 +120,7 @@ struct graphics_priv {
 //##############################################################################################################
 #if defined Q_WS_X11 && QT_VERSION >= 0x040000
 #include <QX11EmbedWidget>
-class RenderArea : public QX11EmbedWidget 
+class RenderArea : public QX11EmbedWidget
 {
 #else
 class RenderArea : public QWidget
@@ -940,6 +940,7 @@ static void * get_data(struct graphics_priv *this_, char *type)
 {
 	struct window *win;
 	QString xid;
+	bool ok;
 
 	this_->painter=new QPainter;
 
@@ -949,7 +950,7 @@ static void * get_data(struct graphics_priv *this_, char *type)
 #if defined Q_WS_X11 && QT_VERSION >= 0x040000
 		xid=getenv("NAVIT_XID");
 		if (xid.length()>0) {
-			this_->widget->embedInto(xid.toULong());
+			this_->widget->embedInto(xid.toULong(&ok,0));
 		}
 #endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
 		win=g_new(struct window, 1);
