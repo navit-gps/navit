@@ -9,6 +9,7 @@ if SUPPORT_WIN32CE
 if SHARED_LIBNAVIT
 XCFLAGS+=-L../navit/support/libc -lsupport_libc
 AM_MAKEFLAGS=l=l
+SUBDIRS+=navit/support/libc
 endif
 endif
 endif
