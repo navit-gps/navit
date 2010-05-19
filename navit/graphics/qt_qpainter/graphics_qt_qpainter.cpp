@@ -118,8 +118,14 @@ struct graphics_priv {
 //# Comment: 
 //# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
 //##############################################################################################################
+#if defined Q_WS_X11 && QT_VERSION >= 0x040000
+#include <QX11EmbedWidget>
+class RenderArea : public QX11EmbedWidget 
+{
+#else
 class RenderArea : public QWidget
- {
+{
+#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
      Q_OBJECT
  public:
      RenderArea(struct graphics_priv *priv, QWidget *parent = 0, int w=800, int h=800, int overlay=0);
@@ -241,8 +247,13 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 //# Comment: Using a QPixmap for rendering the graphics
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
+#if defined Q_WS_X11 && QT_VERSION >= 0x040000
+RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h, int overlay)
+	: QX11EmbedWidget(parent)
+#else
 RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h, int overlay)
 	: QWidget(parent)
+#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
 {
 	pixmap = new QPixmap(w, h);
 	if (!overlay) {
@@ -928,12 +939,19 @@ disable_suspend(struct window *win)
 static void * get_data(struct graphics_priv *this_, char *type)
 {
 	struct window *win;
+	QString xid;
 
 	this_->painter=new QPainter;
 
 	if (!strcmp(type, "qt_widget")) 
 	    return this_->widget;
 	if (!strcmp(type, "window")) {
+#if defined Q_WS_X11 && QT_VERSION >= 0x040000
+		xid=getenv("NAVIT_XID");
+		if (xid.length()>0) {
+			this_->widget->embedInto(xid.toULong());
+		}
+#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
 		win=g_new(struct window, 1);
 		if (this_->w && this_->h)
 			this_->widget->show();
@@ -945,7 +963,6 @@ static void * get_data(struct graphics_priv *this_, char *type)
 		return win;
 	}
 	return NULL;
-
 }
 
 static void
