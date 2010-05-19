@@ -33,9 +33,14 @@ endif
 if SHARED_LIBNAVIT
   lib_LTLIBRARIES        = lib@LIBNAVIT@.la
   lib@LIBNAVIT@_la_LDFLAGS = -avoid-version @MODULE_LDFLAGS@ -no-undefined -Wl,--no-undefined
-  lib@LIBNAVIT@_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib @MODULE_LIBADD@ -Lsupport/libc -lsupport_libc
+  lib@LIBNAVIT@_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib @MODULE_LIBADD@
 else
   noinst_LTLIBRARIES        = lib@LIBNAVIT@.la
+  lib@LIBNAVIT@_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib @MODULE_LIBADD@
+endif
+
+if SUPPORT_WIN32CE
+  lib@LIBNAVIT@_la_LIBADD += -Lsupport/libc -lsupport_libc
 endif
 
 pkgdata_DATA = navit.xml
@@ -94,7 +99,7 @@ apk: all android/build.xml navit.xml
 
 else
 navit_SOURCES = start.c
-navit_LDADD = lib@LIBNAVIT@.la -Lfib-1.1 -lfib
+navit_LDADD = lib@LIBNAVIT@.la
 
 endif
 
@@ -104,9 +109,7 @@ endif
 
 if !PLUGINS
   lib@LIBNAVIT@_la_SOURCES += builtin.c
-if SHARED_LIBNAVIT
   lib@LIBNAVIT@_la_LIBADD += $(MODULES)
-endif
 endif
 
 navit_LDADD += @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @CRYPTO_LIBS@ @INTLLIBS@
