@@ -566,6 +566,7 @@ int main(int argc, char **argv)
 				tempfile_unlink(suffix,"turn_restrictions");
 				tempfile_unlink(suffix,"graph");
 				tempfile_unlink(suffix,"tilesdir");
+				tempfile_unlink(suffix,"boundaries");
 				unlink("coords.tmp");
 			}
 			if (i == suffix_count-1) {
