@@ -64,7 +64,7 @@ struct gui_priv {
 	QCoreApplication *app;
 	struct window *win;
 	struct graphics *gra;
-	struct QMainWindow *mainWindow;
+	QWidget *mainWindow;
 	QWidget *graphicsWidget;
 #if QT_VERSION < 0x040700
  	QmlView *guiWidget;
@@ -73,7 +73,7 @@ struct gui_priv {
 	QDeclarativeView *guiWidget;
 	QDeclarativeView *prevGuiWidget;
 #endif
-	QStackedWidget *switcherWidget;
+	QStackedLayout *switcherWidget;
 	struct callback *button_cb;
 	struct callback *motion_cb;
 	struct callback *resize_cb;
@@ -98,9 +98,9 @@ struct gui_priv {
 #include "guiProxy.h"
 
 //Main window class for resizeEvent handling
-class NGQMainWindow : public QMainWindow {
+class NGQMainWindow : public QWidget {
 public:
-	NGQMainWindow(struct gui_priv* this_,QWidget *parent) : QMainWindow(parent) {
+	NGQMainWindow(struct gui_priv* this_,QWidget *parent) : QWidget(parent) {
 		this->object=this_;
 	}
 protected:
@@ -266,7 +266,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	
 		
 	//Create main window
-	this_->switcherWidget = new QStackedWidget(this_->mainWindow);
+	this_->switcherWidget = new QStackedLayout();
 	this_->mainWindow = new NGQMainWindow(this_, NULL);
 	if ( this_->w && this_->h ) {
 	    this_->mainWindow->resize(this_->w,this_->h);
@@ -274,7 +274,10 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	if ( this_->fullscreen ) {
 	    this_->mainWindow->showFullScreen();
 	}
-	this_->mainWindow->setCentralWidget(this_->switcherWidget);
+	
+	//QVBoxLayout *mainLayout = new QVBoxLayout;
+	//mainLayout->addLayout(this_->switcherWidget);
+	this_->mainWindow->setLayout(this_->switcherWidget);
 	
 	//Create proxy object and bind them to gui widget
 	this_->guiProxy = new NGQProxyGui(this_,this_->mainWindow);
