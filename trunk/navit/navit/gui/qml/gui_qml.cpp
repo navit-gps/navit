@@ -98,9 +98,21 @@ struct gui_priv {
 #include "guiProxy.h"
 
 //Main window class for resizeEvent handling
-class NGQMainWindow : public QWidget {
+#if defined Q_WS_X11 && QT_VERSION >= 0x040000
+#include <QX11EmbedWidget>
+class NGQMainWindow : public QX11EmbedWidget 
+{
+#else
+class NGQMainWindow : public QWidget 
+{
+#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
 public:
+
+#if defined Q_WS_X11 && QT_VERSION >= 0x040000
+	NGQMainWindow(struct gui_priv* this_,QWidget *parent) : QX11EmbedWidget(parent) {
+#else
 	NGQMainWindow(struct gui_priv* this_,QWidget *parent) : QWidget(parent) {
+#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
 		this->object=this_;
 	}
 protected:
@@ -239,8 +251,9 @@ static char *argv[]={(char *)"navit",NULL};
 
 static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 {
-	struct window *win;
-	struct transformation *trans=navit_get_trans(this_->nav);
+	QString xid;
+	NGQMainWindow* _mainWindow;
+	bool ok;
 
 	this_->gra=gra;
 
@@ -267,7 +280,14 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 		
 	//Create main window
 	this_->switcherWidget = new QStackedLayout();
-	this_->mainWindow = new NGQMainWindow(this_, NULL);
+	_mainWindow = new NGQMainWindow(this_, NULL);
+#if defined Q_WS_X11 && QT_VERSION >= 0x040000
+		xid=getenv("NAVIT_XID");
+		if (xid.length()>0) {
+			_mainWindow->embedInto(xid.toULong(&ok,0));
+		}
+#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
+	this_->mainWindow=_mainWindow;
 	if ( this_->w && this_->h ) {
 	    this_->mainWindow->resize(this_->w,this_->h);
 	}
@@ -275,8 +295,6 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	    this_->mainWindow->showFullScreen();
 	}
 	
-	//QVBoxLayout *mainLayout = new QVBoxLayout;
-	//mainLayout->addLayout(this_->switcherWidget);
 	this_->mainWindow->setLayout(this_->switcherWidget);
 	
 	//Create proxy object and bind them to gui widget
