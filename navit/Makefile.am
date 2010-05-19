@@ -7,6 +7,8 @@ endif
 DIST_SUBDIRS=binding map maptool fib-1.1 font fonts gui graphics osd plugin speech support vehicle xpm maps
 SUBDIRS+=binding map font gui graphics osd plugin speech vehicle xpm
 
+MODULES = $(wildcard $(top_builddir)/navit/graphics/*/*.la $(top_builddir)/navit/gui/*/*.la $(top_builddir)/navit/map/*/*.la $(top_builddir)/navit/osd/*/*.la $(top_builddir)/navit/speech/*/*.la $(top_builddir)/navit/vehicle/*/*.la)
+
 if FONTS
   SUBDIRS += fonts
 endif
@@ -31,7 +33,7 @@ endif
 if SHARED_LIBNAVIT
   lib_LTLIBRARIES        = lib@LIBNAVIT@.la
   lib@LIBNAVIT@_la_LDFLAGS = -avoid-version @MODULE_LDFLAGS@ -no-undefined -Wl,--no-undefined
-  lib@LIBNAVIT@_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib @MODULE_LIBADD@
+  lib@LIBNAVIT@_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib @MODULE_LIBADD@ -Lsupport/libc -lsupport_libc
 else
   noinst_LTLIBRARIES        = lib@LIBNAVIT@.la
 endif
@@ -101,8 +103,10 @@ if EVENT_GLIB
 endif
 
 if !PLUGINS
-  navit_SOURCES += builtin.c
-  navit_LDADD += $(wildcard $(top_builddir)/navit/*/*/*.la)
+  lib@LIBNAVIT@_la_SOURCES += builtin.c
+if SHARED_LIBNAVIT
+  lib@LIBNAVIT@_la_LIBADD += $(MODULES)
+endif
 endif
 
 navit_LDADD += @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @CRYPTO_LIBS@ @INTLLIBS@
