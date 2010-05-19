@@ -6,7 +6,7 @@ libgraphics_qt_qpainter_la_LDFLAGS = @QT_GUI_LIBS@ -module -avoid-version
 if GRAPHICS_QT_QPAINTER
 BUILT_SOURCES = graphics_qt_qpainter.moc
 graphics_qt_qpainter.moc:
-	@MOC@ $(srcdir)/graphics_qt_qpainter.cpp >graphics_qt_qpainter.moc
+	@MOC@ $(srcdir)/graphics_qt_qpainter.cpp >graphics_qt_qpainter.moc || touch graphics_qt_qpainter.moc
 
 distclean-local:
 	$(RM) graphics_qt_qpainter.moc
