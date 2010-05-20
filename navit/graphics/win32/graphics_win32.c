@@ -288,7 +288,7 @@ static void HandleKeyChar(struct graphics_priv *gra_priv, WPARAM wParam)
 static void HandleKeyDown(struct graphics_priv *gra_priv, WPARAM wParam)
 {
     int key = (int) wParam;
-    dbg(0,"HandleKey %d\n",key);
+    dbg(1,"HandleKey %d\n",key);
     char *s=NULL;
 	switch (key) {
     case 37:
