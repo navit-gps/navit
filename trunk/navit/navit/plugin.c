@@ -78,7 +78,14 @@ g_module_error(void)
 static int
 g_module_symbol(GModule *handle, char *symbol, gpointer *addr)
 {
+#ifdef HAVE_API_WIN32_CE
+	int len=MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, symbol, -1, 0, 0);
+	wchar_t wsymbol[len+1];
+	MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, symbol, -1, wsymbol, len) ;
+	*addr=GetProcAddress ((HANDLE)handle, wsymbol);
+#else
 	*addr=GetProcAddress ((HANDLE)handle, symbol);
+#endif
 	if (*addr)
 		return 1;
 	last_error=GetLastError();
