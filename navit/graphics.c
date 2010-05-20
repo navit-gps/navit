@@ -87,14 +87,21 @@ struct display_context
 	int maxlen;
 };
 
+#define HASH_SIZE 1024
+struct hash_entry
+{
+	enum item_type type;
+	struct displayitem *di;
+};
+
+
 struct displaylist {
-	GHashTable *dl;
 	int busy;
 	int workload;
 	struct callback *cb;
-	struct layout *layout;
+	struct layout *layout, *layout_hashed;
 	struct display_context dc;
-	int order;
+	int order, order_hashed, max_offset;
 	struct mapset *ms;
 	struct mapset_handle *msh;
 	struct map *m;
@@ -104,6 +111,7 @@ struct displaylist {
 	struct callback *idle_cb;
 	struct event_idle *idle_ev;
 	unsigned int seq;
+	struct hash_entry hash_entries[HASH_SIZE];
 };
 
 
@@ -115,6 +123,49 @@ struct displaylist_icon_cache {
 static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
 static void graphics_process_selection(struct graphics *gra, struct displaylist *dl);
 static void graphics_gc_init(struct graphics *this_);
+
+static void
+clear_hash(struct displaylist *dl)
+{
+	int i;
+	for (i = 0 ; i < HASH_SIZE ; i++)
+		dl->hash_entries[i].type=type_none;
+}
+
+static struct hash_entry *
+get_hash_entry(struct displaylist *dl, enum item_type type)
+{
+	int hashidx=(type*2654435761UL) & (HASH_SIZE-1);
+	int offset=dl->max_offset;
+	do {
+		if (!dl->hash_entries[hashidx].type)
+			return NULL;
+		if (dl->hash_entries[hashidx].type == type)
+			return &dl->hash_entries[hashidx];
+		hashidx=(hashidx+1)&(HASH_SIZE-1);
+	} while (offset-- > 0);
+	return NULL;
+}
+
+static struct hash_entry *
+set_hash_entry(struct displaylist *dl, enum item_type type)
+{
+	int hashidx=(type*2654435761UL) & (HASH_SIZE-1);
+	int offset=0;
+	for (;;) {
+		if (!dl->hash_entries[hashidx].type) {
+			dl->hash_entries[hashidx].type=type;
+			if (dl->max_offset < offset)
+				dl->max_offset=offset;
+			return &dl->hash_entries[hashidx];
+		}
+		if (dl->hash_entries[hashidx].type == type)
+			return &dl->hash_entries[hashidx];
+		hashidx=(hashidx+1)&(HASH_SIZE-1);
+		offset++;
+	}
+	return NULL;
+}
 
 static int
 graphics_set_attr_do(struct graphics *gra, struct attr *attr)
@@ -741,9 +792,9 @@ static void graphics_popup(struct display_list *list, struct popup_item **popup)
  * @author Martin Schaller (04/2008)
 */
 struct displayitem {
+	struct displayitem *next;
 	struct item item;
 	char *label;
-	int displayed;
 	int count;
 	struct coord c[0];
 };
@@ -754,12 +805,18 @@ struct displayitem {
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static int xdisplay_free_list(gpointer key, gpointer value, gpointer user_data)
+static void xdisplay_free(struct displaylist *dl)
 {
-	GHashTable *hash=value;
-	if (hash) 
-		g_hash_table_destroy(hash);
-	return TRUE;
+	int i;
+	for (i = 0 ; i < HASH_SIZE ; i++) {
+		struct displayitem *di=dl->hash_entries[i].di;
+		while (di) {
+			struct displayitem *next=di->next;
+			g_free(di);
+			di=next;
+		}
+		dl->hash_entries[i].di=NULL;
+	}
 }
 
 /**
@@ -768,40 +825,10 @@ static int xdisplay_free_list(gpointer key, gpointer value, gpointer user_data)
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-static void xdisplay_free(GHashTable *display_list)
-{
-	g_hash_table_foreach_remove(display_list, xdisplay_free_list, NULL);
-}
-
-static guint
-displayitem_hash(gconstpointer key)
-{
-	const struct displayitem *di=key;
-	return (di->item.id_hi^di->item.id_lo^(GPOINTER_TO_INT(di->item.map)));
-}
-
-static gboolean
-displayitem_equal(gconstpointer a, gconstpointer b)
-{
-	const struct displayitem *dia=a;
-	const struct displayitem *dib=b;
-	if (item_is_equal(dia->item, dib->item))
-                return TRUE;
-        return FALSE;
-}
-
-
-/**
- * FIXME
- * @param <>
- * @returns <>
- * @author Martin Schaller (04/2008)
-*/
-static void display_add(struct displaylist *displaylist, struct item *item, int count, struct coord *c, char **label, int label_count)
+static void display_add(struct hash_entry *entry, struct item *item, int count, struct coord *c, char **label, int label_count)
 {
 	struct displayitem *di;
 	int len,i;
-	GHashTable *h;
 	char *p;
 
 	len=sizeof(*di)+count*sizeof(*c);
@@ -816,7 +843,6 @@ static void display_add(struct displaylist *displaylist, struct item *item, int 
 	p=g_malloc(len);
 
 	di=(struct displayitem *)p;
-	di->displayed=0;
 	p+=sizeof(*di)+count*sizeof(*c);
 	di->item=*item;
 	if (label && label_count) {
@@ -832,13 +858,8 @@ static void display_add(struct displaylist *displaylist, struct item *item, int 
 		di->label=NULL;
 	di->count=count;
 	memcpy(di->c, c, count*sizeof(*c));
-
-	h=g_hash_table_lookup(displaylist->dl, GINT_TO_POINTER(item->type));
-	if (! h) {
-		h=g_hash_table_new_full(displayitem_hash, displayitem_equal, g_free, NULL);
-		g_hash_table_insert(displaylist->dl, GINT_TO_POINTER(item->type), h);
-	}
-	g_hash_table_replace(h, di, di);
+	di->next=entry->di;
+	entry->di=di;
 }
 
 
@@ -1592,7 +1613,6 @@ static void
 displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc)
 {
 	int width[dc->maxlen];
-	int i,count=di->count,mindist=dc->mindist;
 	struct point pa[dc->maxlen];
 	struct graphics *gra=dc->gra;
 	struct graphics_gc *gc=dc->gc;
@@ -1601,7 +1621,9 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 	struct point p;
 	char *path;
 
-	di->displayed=1;
+	while (di) {
+	int i,count=di->count,mindist=dc->mindist;
+
 	if (! gc) {
 		gc=graphics_gc_new(gra);
 		graphics_gc_set_foreground(gc, &e->color);
@@ -1704,6 +1726,8 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		printf("Unhandled element type %d\n", e->type);
 	
 	}
+	di=di->next;
+	}
 }
 /**
  * FIXME
@@ -1715,8 +1739,8 @@ static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *dis
 {
 	struct element *e;
 	GList *es,*types;
-	GHashTable *h;
 	struct display_context *dc=&display_list->dc;
+	struct hash_entry *entry;
 
 	es=itm->elements;
 	while (es) {
@@ -1725,9 +1749,9 @@ static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *dis
 		types=itm->type;
 		while (types) {
 			dc->type=GPOINTER_TO_INT(types->data);
-			h=g_hash_table_lookup(display_list->dl, GINT_TO_POINTER(dc->type));
-			if (h) {
-				g_hash_table_foreach(h, (GHFunc)displayitem_draw, dc);
+			entry=get_hash_entry(display_list, dc->type);
+			if (entry->di) {
+				displayitem_draw(entry->di, NULL, dc);
 				display_context_free(dc);
 			}
 			types=g_list_next(types);
@@ -1750,7 +1774,6 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 	di->item.id_lo=0;
 	di->item.map=NULL;
 	di->label=NULL;
-	di->displayed=0;
 	dc.gra=gra;
 	dc.gc=NULL;
 	dc.img=NULL;
@@ -1774,6 +1797,7 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 			di->count=1;
 		}
 		dc.e=e;
+		di->next=NULL;
 		displayitem_draw(di, NULL, &dc);
 		display_context_free(&dc);
 		es=g_list_next(es);
@@ -1830,6 +1854,35 @@ static void xdisplay_draw(struct displaylist *display_list, struct graphics *gra
 extern void *route_selection;
 
 static void
+displaylist_update_hash(struct displaylist *displaylist)
+{
+	GList *layers=displaylist->layout->layers;
+	int order=displaylist->order;
+	displaylist->max_offset=0;
+	clear_hash(displaylist);
+	while (layers) {
+		struct layer *layer=layers->data;
+		GList *itemgras=layer->itemgras;
+		while (itemgras) {
+			struct itemgra *itemgra=itemgras->data;
+			GList *types=itemgra->type;
+			if (itemgra->order.min <= order && itemgra->order.max >= order) {
+				while (types) {
+					enum item_type type=(enum item_type) types->data;
+					set_hash_entry(displaylist, type);
+					types=g_list_next(types);
+				}
+			}
+			itemgras=g_list_next(itemgras);
+		}
+		layers=g_list_next(layers);
+	}
+	dbg(1,"max offset %d\n",displaylist->max_offset);
+}
+
+
+
+static void
 do_draw(struct displaylist *displaylist, int cancel, int flags)
 {
 	struct item *item;
@@ -1838,6 +1891,11 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 	struct attr attr,attr2;
 	enum projection pro;
 
+	if (displaylist->order != displaylist->order_hashed || displaylist->layout != displaylist->layout_hashed) {
+		displaylist_update_hash(displaylist);
+		displaylist->order_hashed=displaylist->order;
+		displaylist->layout_hashed=displaylist->layout;
+	}
 	profile(0,NULL);
 	pro=transform_get_projection(displaylist->dc.trans);
 	while (!cancel) {
@@ -1859,6 +1917,9 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 			while ((item=map_rect_get_item(displaylist->mr))) {
 				int label_count=0;
 				char *labels[2];
+				struct hash_entry *entry=get_hash_entry(displaylist, item->type);
+				if (!entry) 
+					continue;
 				count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);
 				if (! count)
 					continue;
@@ -1887,10 +1948,10 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 					labels[0]=NULL;
 				if (displaylist->conv && label_count) {
 					labels[0]=map_convert_string(displaylist->m, labels[0]);
-					display_add(displaylist, item, count, ca, labels, label_count);
+					display_add(entry, item, count, ca, labels, label_count);
 					map_convert_free(labels[0]);
 				} else
-					display_add(displaylist, item, count, ca, labels, label_count);
+					display_add(entry, item, count, ca, labels, label_count);
 				if (labels[1])
 					map_convert_free(labels[1]);
 				workload++;
@@ -1966,7 +2027,7 @@ static void graphics_load_mapset(struct graphics *gra, struct displaylist *displ
 			return;
 		do_draw(displaylist, 1, flags);
 	}
-	xdisplay_free(displaylist->dl);
+	xdisplay_free(displaylist);
 	dbg(1,"order=%d\n", order);
 
 	displaylist->dc.gra=gra;
@@ -2014,7 +2075,9 @@ graphics_draw_cancel(struct graphics *gra, struct displaylist *displaylist)
  * @author Martin Schaller (04/2008)
 */
 struct displaylist_handle {
-	GList *hl_head,*hl,*l_head,*l;
+	struct displaylist *dl;
+	struct displayitem *di;
+	int hashidx;
 };
 
 /**
@@ -2028,14 +2091,7 @@ struct displaylist_handle * graphics_displaylist_open(struct displaylist *displa
 	struct displaylist_handle *ret;
 
 	ret=g_new0(struct displaylist_handle, 1);
-	if (!displaylist->dl)
-		return NULL;
-	ret->hl_head=ret->hl=g_hash_to_list(displaylist->dl);
-	if (!ret->hl) {
-		g_free(ret);
-		return NULL;
-	}
-	ret->l_head=ret->l=g_hash_to_list_keys(ret->hl->data);
+	ret->dl=displaylist;
 
 	return ret;
 }
@@ -2051,15 +2107,20 @@ struct displayitem * graphics_displaylist_next(struct displaylist_handle *dlh)
 	struct displayitem *ret;
 	if (!dlh)
 		return NULL;
-	if (! dlh->l) {
-		dlh->hl=g_list_next(dlh->hl);
-		if (!dlh->hl)
-			return NULL;
-		g_list_free(dlh->l_head);
-		dlh->l_head=dlh->l=g_hash_to_list_keys(dlh->hl->data);
+	for (;;) {
+		if (dlh->di) {
+			ret=dlh->di;
+			dlh->di=ret->next;
+			break;
+		}
+		if (dlh->hashidx == HASH_SIZE) {
+			ret=NULL;
+			break;
+		}
+		if (dlh->dl->hash_entries[dlh->hashidx].type)
+			dlh->di=dlh->dl->hash_entries[dlh->hashidx].di;
+		dlh->hashidx++;
 	}
-	ret=dlh->l->data;
-	dlh->l=g_list_next(dlh->l);
 	return ret;
 }
 
@@ -2071,11 +2132,7 @@ struct displayitem * graphics_displaylist_next(struct displaylist_handle *dlh)
 */
 void graphics_displaylist_close(struct displaylist_handle *dlh)
 {
-	if (dlh) {
-		g_list_free(dlh->hl_head);
-		g_list_free(dlh->l_head);
-		g_free(dlh);
-	}
+	g_free(dlh);
 }
 
 /**
@@ -2088,7 +2145,6 @@ struct displaylist * graphics_displaylist_new(void)
 {
 	struct displaylist *ret=g_new0(struct displaylist, 1);
 
-	ret->dl=g_hash_table_new(NULL,NULL);
 	ret->dc.maxlen=16384;
 
 	return ret;
@@ -2125,7 +2181,7 @@ char * graphics_displayitem_get_label(struct displayitem *di)
 int
 graphics_displayitem_get_displayed(struct displayitem *di)
 {
-	return di->displayed;
+	return 1;	
 }
 
 /**
@@ -2263,6 +2319,7 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
 static void
 graphics_process_selection_item(struct displaylist *dl, struct item *item)
 {
+#if 0 /* FIXME */
 	struct displayitem di,*di_res;
 	GHashTable *h;
 	int count,max=dl->dc.maxlen;
@@ -2272,7 +2329,6 @@ graphics_process_selection_item(struct displaylist *dl, struct item *item)
 
 	di.item=*item;
 	di.label=NULL;
-	di.displayed=0;
 	di.count=0;
 	h=g_hash_table_lookup(dl->dl, GINT_TO_POINTER(di.item.type));
 	if (h) {
@@ -2295,6 +2351,7 @@ graphics_process_selection_item(struct displaylist *dl, struct item *item)
 	} else
 		display_add(dl, item, count, ca, &attr.u.str, 1);
 	map_rect_destroy(mr);
+#endif
 }
 
 void
@@ -2325,12 +2382,13 @@ graphics_remove_selection(struct graphics *gra, struct item *item, enum item_typ
 					GHashTable *h;
 					di.item=*sitem;
 					di.label=NULL;
-					di.displayed=0;
 					di.count=0;
 					di.item.type=type;
+#if 0 /* FIXME */
 					h=g_hash_table_lookup(dl->dl, GINT_TO_POINTER(di.item.type));
 					if (h)
 						g_hash_table_remove(h, &di);
+#endif
 				}
 				g_free(sitem);
 				gra->selection=g_list_remove(gra->selection, curr->data);
