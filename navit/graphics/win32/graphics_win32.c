@@ -847,7 +847,7 @@ static void draw_drag(struct graphics_priv *gr, struct point *p)
 
 static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 {
-    dbg( 0, "set draw_mode to %x, %d\n", gr, (int)mode );
+    dbg( 1, "set draw_mode to %x, %d\n", gr, (int)mode );
 
     if ( mode == draw_mode_begin )
     {
