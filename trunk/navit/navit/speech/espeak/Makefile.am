@@ -6,4 +6,8 @@ else
 noinst_LTLIBRARIES = libspeech_espeak.la
 endif
 libspeech_espeak_la_SOURCES = speak.c 
-libspeech_espeak_la_LDFLAGS = -module -avoid-version @NAVIT_MODULE_LDFLAGS@ -L$(top_builddir)/navit/support/espeak -lsupport_espeak -Wl,-lwinmm
+libspeech_espeak_la_LDFLAGS = -module -avoid-version @NAVIT_MODULE_LDFLAGS@ -L$(top_builddir)/navit/support/espeak -lsupport_espeak
+if !SUPPORT_WIN32CE
+libspeech_espeak_la_LDFLAGS += -Wl,-lwinmm
+endif
+
