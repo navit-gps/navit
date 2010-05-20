@@ -275,7 +275,7 @@ static void HandleKeyChar(struct graphics_priv *gra_priv, WPARAM wParam)
 {
     TCHAR key = (TCHAR) wParam;
     char *s=NULL;
-    dbg(0,"HandleKey %d\n",key);
+    dbg(1,"HandleKey %d\n",key);
 	switch (key) {
     default:
 		s=(char []){key, 0};
