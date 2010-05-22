@@ -897,6 +897,8 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 				if (item_attr_get(item, oti->attr_typ, &attr))
 					value=osd_text_format_attr(&attr, oti->format);
 			}
+			if (nav_mr)
+				map_rect_destroy(nav_mr);
 		} else if (oti->section == attr_vehicle) {
 			if (navit && !vehicle_attr.u.vehicle) {
 				navit_get_attr(navit, attr_vehicle, &vehicle_attr, NULL);
