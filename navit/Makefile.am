@@ -33,11 +33,10 @@ endif
 if SHARED_LIBNAVIT
   lib_LTLIBRARIES        = lib@LIBNAVIT@.la
   lib@LIBNAVIT@_la_LDFLAGS = -avoid-version @MODULE_LDFLAGS@ -no-undefined -Wl,--no-undefined
-  lib@LIBNAVIT@_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib @MODULE_LIBADD@
 else
   noinst_LTLIBRARIES        = lib@LIBNAVIT@.la
-  lib@LIBNAVIT@_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib @MODULE_LIBADD@
 endif
+lib@LIBNAVIT@_la_LIBADD = @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @INTLLIBS@ -Lfib-1.1 -lfib @MODULE_LIBADD@ @CRYPTO_LIBS@
 
 if SUPPORT_WIN32CE
   lib@LIBNAVIT@_la_LIBADD += -Lsupport/libc -lsupport_libc
