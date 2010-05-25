@@ -20,6 +20,10 @@
 #ifndef NAVIT_FILE_H
 #define NAVIT_FILE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef PATH_MAX
 #define PATH_MAX 4096
 #endif
@@ -88,5 +92,8 @@ void *file_get_os_handle(struct file *file);
 void file_init(void);
 /* end of prototypes */
 
+#ifdef __cplusplus
+}
 #endif
 
+#endif

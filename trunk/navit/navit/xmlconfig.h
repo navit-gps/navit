@@ -20,9 +20,13 @@
 #ifndef NAVIT_XMLCONFIG_H
 #define NAVIT_XMLCONFIG_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct object_func {
 	enum attr_type type;
-	void *(*new)(struct attr *parent, struct attr **attrs);
+	void *(*create)(struct attr *parent, struct attr **attrs);
 	int (*get_attr)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 	struct attr_iter *(*iter_new)(void *);
 	void (*iter_destroy)(struct attr_iter *);
@@ -43,4 +47,9 @@ struct object_func *object_func_lookup(enum attr_type type);
 void xml_parse_text(const char *document, void *data, void (*start)(void *, const char *, const char **, const char **, void *, void *), void (*end)(void *, const char *, void *, void *), void (*text)(void *, const char *, int, void *, void *));
 gboolean config_load(const char *filename, xmlerror **error);
 /* end of prototypes */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
