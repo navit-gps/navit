@@ -389,9 +389,9 @@ command_call_function(struct context *ctx, struct result *res)
 		enum attr_type attr_type=attr_from_name(function+4);
 		if (attr_type != attr_none) {
 			struct object_func *func=object_func_lookup(attr_type);
-			if (func && func->new) {
+			if (func && func->create) {
 				res->attr.type=attr_type;
-				res->attr.u.data=func->new(NULL, list);
+				res->attr.u.data=func->create(NULL, list);
 			}
 		}
 	} else {
