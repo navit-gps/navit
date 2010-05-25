@@ -470,7 +470,7 @@ start_element(GMarkupParseContext *context,
 			parent_attr=NULL;
 		else
 			parent_attr=&new->parent->element_attr;
-		new->element_attr.u.data = new->object_func->new(parent_attr, attrs);
+		new->element_attr.u.data = new->object_func->create(parent_attr, attrs);
 		if (! new->element_attr.u.data)
 			return;
 		new->element_attr.type=attr_from_name(element_name);
