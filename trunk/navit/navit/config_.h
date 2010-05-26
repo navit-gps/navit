@@ -1,3 +1,6 @@
+#ifdef __cplusplus
+extern "C" {
+#endif
 extern struct config *config;
 extern int config_empty_ok;
 /* prototypes */
@@ -14,3 +17,6 @@ struct attr_iter *config_attr_iter_new(void);
 void config_attr_iter_destroy(struct attr_iter *iter);
 struct config *config_new(struct attr *parent, struct attr **attrs);
 /* end of prototypes */
+#ifdef __cplusplus
+}
+#endif
