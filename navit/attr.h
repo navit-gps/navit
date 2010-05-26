@@ -95,8 +95,8 @@ enum attr_position_valid {
 
 #define ATTR_DEF_STR(x,y) (&(struct attr){attr_##x,{y}})
 #define ATTR_DEF_INT(x,y) (&(struct attr){attr_##x,{(char *)(y)}})
-#define ATTR_DEF_ITEMS(x,types...) (&(struct attr){attr_##x,{(char *)((enum item_type[]){types,type_none})}})
-#define ATTR_LIST(attrs...) (struct attr *[]) { attrs, NULL}
+#define ATTR_DEF_ITEMS(x,...) (&(struct attr){attr_##x,{(char *)((enum item_type[]){__VA_ARGS__ , type_none})}})
+#define ATTR_LIST(...) (struct attr *[]) { __VA_ARGS__, NULL}
 
 struct attr {
 	enum attr_type type;
