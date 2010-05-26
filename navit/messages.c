@@ -144,6 +144,8 @@ struct messagelist
 void
 messagelist_init(struct messagelist *this_)
 {
+	if (!event_system())
+		return;
 	this_->msg_cleanup_cb = callback_new_1(callback_cast(message_cleanup), this_);
 	this_->msg_cleanup_to = event_add_timeout(1000, 1, this_->msg_cleanup_cb);
 }
