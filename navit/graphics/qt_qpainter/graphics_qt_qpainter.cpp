@@ -158,6 +158,7 @@ class RenderArea : public QT_QPAINTER_RENDERAREA_PARENT
      Q_OBJECT
  public:
      RenderArea(struct graphics_priv *priv, QWidget *parent = 0, int w=800, int h=800, int overlay=0);
+     void do_resize(QSize size);
      QPixmap *pixmap;
      struct callback_list *cbl;
      struct graphics_priv *gra;
@@ -335,6 +336,18 @@ void RenderArea::paintEvent(QPaintEvent * event)
 #endif
 }
 
+void RenderArea::do_resize(QSize size)
+{
+	delete pixmap;
+	pixmap=new QPixmap(size);
+	pixmap->fill();
+	QPainter painter(pixmap);
+	QBrush brush;
+	painter.fillRect(0, 0, size.width(), size.height(), brush);
+	dbg(0,"size %dx%d\n", size.width(), size.height());
+	dbg(0,"pixmap %p %dx%d\n", pixmap, pixmap->width(), pixmap->height());
+	callback_list_call_attr_2(this->cbl, attr_resize, (void *)size.width(), (void *)size.height());
+}
 
 //##############################################################################################################
 //# Description: QWidget::resizeEvent()
@@ -344,16 +357,7 @@ void RenderArea::paintEvent(QPaintEvent * event)
 void RenderArea::resizeEvent(QResizeEvent * event)
 {
 	if (!this->is_overlay) {
-		QSize size=event->size();
-		delete pixmap;
-		pixmap=new QPixmap(size);
-		pixmap->fill();
-		QPainter painter(pixmap);
-		QBrush brush;
-		painter.fillRect(0, 0, size.width(), size.height(), brush);
-		dbg(0,"size %dx%d\n", size.width(), size.height());
-		dbg(0,"pixmap %p %dx%d\n", pixmap, pixmap->width(), pixmap->height());
-		callback_list_call_attr_2(this->cbl, attr_resize, (void *)size.width(), (void *)size.height());
+		RenderArea::do_resize(event->size());
 	}
 }
 
@@ -974,18 +978,10 @@ static void * get_data(struct graphics_priv *this_, char *type)
 	QString xid;
 	bool ok;
 
-	this_->painter=new QPainter;
-
 	if (!strcmp(type, "resize")) {
 		dbg(0,"resize %d %d\n",this_->w,this_->h);
 		QSize size(this_->w,this_->h);
-		delete this_->widget->pixmap;
-		this_->widget->pixmap=new QPixmap(size);
-		this_->widget->pixmap->fill();
-		QPainter painter(this_->widget->pixmap);
-		QBrush brush;
-		painter.fillRect(0, 0, size.width(), size.height(), brush);
-		callback_list_call_attr_2(this_->widget->cbl, attr_resize, (void *)this_->w, (void *)this_->h);
+		this_->widget->do_resize(size);
 	}
 	if (!strcmp(type, "qt_widget")) 
 	    return this_->widget;
@@ -1053,6 +1049,34 @@ static void overlay_disable(struct graphics_priv *gr, int disable)
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
+static int set_attr(struct graphics_priv *gr, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_w:
+		gr->w=attr->u.num;
+		if (gr->w != 0 && gr->h != 0) {
+			QSize size(gr->w,gr->h);
+			gr->widget->do_resize(size);
+		}
+		break;
+	case attr_h:
+		gr->h=attr->u.num;
+		if (gr->w != 0 && gr->h != 0) {
+			QSize size(gr->w,gr->h);
+			gr->widget->do_resize(size);
+		}
+		break;
+	default:
+		return 0;
+	}
+	return 1;
+}
+
+//##############################################################################################################
+//# Description: 
+//# Comment: 
+//# Authors: Martin Schaller (04/2008)
+//##############################################################################################################
 static struct graphics_methods graphics_methods = {
 	graphics_destroy,
 	draw_mode,
@@ -1074,6 +1098,9 @@ static struct graphics_methods graphics_methods = {
 	image_free,
         get_text_bbox,
         overlay_disable,
+	NULL,
+	set_attr,
+	
 };
 
 //##############################################################################################################
@@ -1283,6 +1310,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 #endif
 	ret->widget= new RenderArea(ret);
 	ret->widget->cbl=cbl;
+	ret->painter = new QPainter;
 #if QT_QPAINTER_USE_EVENT_QT
 	event_gr=ret;
 #endif
