@@ -64,6 +64,7 @@ void event_remove_timeout(struct event_timeout *ev);
 struct event_idle *event_add_idle(int priority, struct callback *cb);
 void event_remove_idle(struct event_idle *ev);
 void event_call_callback(struct callback_list *cb);
+char *event_system(void);
 int event_request_system(const char *system, const char *requestor);
 /* end of prototypes */
 #ifdef __cplusplus
