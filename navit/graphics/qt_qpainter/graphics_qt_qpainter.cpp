@@ -30,19 +30,19 @@
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "config.h"
-#include "point.h"
-#include "item.h"
-#include "graphics.h"
-#include "color.h"
-#include "debug.h"
-#include "plugin.h"
-#include "callback.h"
-#include "event.h"
-#include "window.h"
-#include "keys.h"
+#include "navit/navit_config.h"
+#include "navit/point.h"
+#include "navit/item.h"
+#include "navit/graphics.h"
+#include "navit/color.h"
+#include "navit/debug.h"
+#include "navit/plugin.h"
+#include "navit/callback.h"
+#include "navit/event.h"
+#include "navit/window.h"
+#include "navit/keys.h"
 #include "navit/font/freetype/font_freetype.h"
-#include "navit.h"
+#include "navit/navit.h"
 
 #include <qglobal.h>
 #if QT_VERSION < 0x040000
@@ -59,6 +59,9 @@
 #ifdef HAVE_QPE
 #include <qpe/qpeapplication.h>
 #endif
+#ifndef QT_PAINTER_USE_EVENT_QT
+#define QT_PAINTER_USE_EVENT_QT 1
+#endif
 #else
 #include <QResizeEvent>
 #include <QApplication>
@@ -71,6 +74,9 @@
 #include <QWidget>
 #include <QPolygonF>
 #include <QtGui>
+#ifndef QT_PAINTER_USE_EVENT_GLIB
+#define QT_PAINTER_USE_EVENT_GLIB 1
+#endif
 #endif
 
 class RenderArea;
@@ -133,7 +139,7 @@ class RenderArea : public QWidget
      struct callback_list *cbl;
      struct graphics_priv *gra;
 
-#if QT_VERSION < 0x040000
+#if QT_QPAINTER_USE_EVENT_QT
      GHashTable *timer_type;
      GHashTable *timer_callback;
      GHashTable *watches;
@@ -150,7 +156,7 @@ class RenderArea : public QWidget
      void wheelEvent(QWheelEvent *event);
      void keyPressEvent(QKeyEvent *event);
 	 void closeEvent(QCloseEvent *event);
-#if QT_VERSION < 0x040000
+#if QT_QPAINTER_USE_EVENT_QT
      void timerEvent(QTimerEvent *event);
 #endif
  protected slots:
@@ -265,7 +271,7 @@ RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h
 	}
 	is_overlay=overlay;
 	gra=priv;
-#if QT_VERSION < 0x040000
+#if QT_QPAINTER_USE_EVENT_QT
 	timer_type=g_hash_table_new(NULL, NULL);
 	timer_callback=g_hash_table_new(NULL, NULL);
 	watches=g_hash_table_new(NULL, NULL);
@@ -1054,7 +1060,7 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 	return ret;
 }
 
-#if QT_VERSION < 0x040000
+#if QT_QPAINTER_USE_EVENT_QT
 
 
 static struct graphics_priv *event_gr;
@@ -1173,7 +1179,7 @@ void RenderArea::timerEvent(QTimerEvent *event)
 
 void RenderArea::watchEvent(int fd)
 {
-#if QT_VERSION < 0x040000
+#if QT_QPAINTER_USE_EVENT_QT
 	struct event_watch *ev=(struct event_watch *)g_hash_table_lookup(watches, (void *)fd);
 	dbg(1,"fd=%d ev=%p cb=%p\n", fd, ev, ev->cb);
 	callback_call_0(ev->cb);
@@ -1193,12 +1199,13 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	struct attr *attr;
 
 	dbg(0,"enter\n");
-#if QT_VERSION < 0x040000
+#if QT_QPAINTER_USE_EVENT_QT
 	if (event_gr)
 		return NULL;
 	if (! event_request_system("qt","graphics_qt_qpainter_new"))
 		return NULL;
-#else
+#endif
+#if QT_QPAINTER_USE_EVENT_GLIB
 	if (! event_request_system("glib","graphics_qt_qpainter_new"))
 		return NULL;
 #endif
@@ -1231,7 +1238,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 #endif
 	ret->widget= new RenderArea(ret);
 	ret->widget->cbl=cbl;
-#if QT_VERSION < 0x040000
+#if QT_QPAINTER_USE_EVENT_QT
 	event_gr=ret;
 #endif
 	ret->w=800;
@@ -1254,7 +1261,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 void plugin_init(void)
 {
         plugin_register_graphics_type("qt_qpainter", graphics_qt_qpainter_new);
-#if QT_VERSION < 0x040000
+#if QT_QPAINTER_USE_EVENT_QT
         plugin_register_event_type("qt", event_qt_new);
 #endif
 }
