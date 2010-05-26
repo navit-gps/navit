@@ -1497,6 +1497,7 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 	case attr_flags:
 		attr_updated=(this_->flags != attr->u.num);
 		this_->flags=attr->u.num;
+		break;
 	case attr_flags_graphics:
 		attr_updated=(this_->graphics_flags != attr->u.num);
 		this_->graphics_flags=attr->u.num;
