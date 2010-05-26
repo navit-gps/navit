@@ -217,6 +217,7 @@ static void
 qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 {
 	if (!paintev) {
+#ifndef QT_QPAINTER_NO_WIDGET
 		dbg(1,"update %d,%d %d x %d\n", r->x(), r->y(), r->width(), r->height());
 		if (r->x() <= -r->width())
 			return;
@@ -228,6 +229,7 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 			return;
 		dbg(1,"update valid %d,%d %dx%d\n", r->x(), r->y(), r->width(), r->height());
 		gr->widget->update(*r);
+#endif
 		return;
 	}
 	QPixmap pixmap(r->width(),r->height());
@@ -266,8 +268,10 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 		}
 		overlay=overlay->next;
 	}
+#ifndef QT_QPAINTER_NO_WIDGET
 	QPainter painterw(gr->widget);
 	painterw.drawPixmap(r->x(), r->y(), pixmap);
+#endif
 }
 
 
@@ -280,6 +284,7 @@ RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h
 	: QT_QPAINTER_RENDERAREA_PARENT(parent)
 {
 	pixmap = new QPixmap(w, h);
+#ifndef QT_QPAINTER_NO_WIDGET
 	if (!overlay) {
 #if QT_VERSION >= 0x040000
 		setWindowTitle("Navit");
@@ -287,6 +292,7 @@ RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h
 		setCaption("Navit");
 #endif
 	}
+#endif
 	is_overlay=overlay;
 	gra=priv;
 #if QT_QPAINTER_USE_EVENT_QT
@@ -938,11 +944,13 @@ static char *argv[]={(char *)"navit",NULL};
 static int
 fullscreen(struct window *win, int on)
 {
+#ifndef QT_QPAINTER_NO_WIDGET
 	struct graphics_priv *this_=(struct graphics_priv *)win->priv;
 	if (on)
 		this_->widget->showFullScreen();
 	else
 		this_->widget->showMaximized();
+#endif
 	return 1;
 }
 
@@ -968,20 +976,35 @@ static void * get_data(struct graphics_priv *this_, char *type)
 
 	this_->painter=new QPainter;
 
+	if (!strcmp(type, "resize")) {
+		dbg(0,"resize %d %d\n",this_->w,this_->h);
+		QSize size(this_->w,this_->h);
+		delete this_->widget->pixmap;
+		this_->widget->pixmap=new QPixmap(size);
+		this_->widget->pixmap->fill();
+		QPainter painter(this_->widget->pixmap);
+		QBrush brush;
+		painter.fillRect(0, 0, size.width(), size.height(), brush);
+		callback_list_call_attr_2(this_->widget->cbl, attr_resize, (void *)this_->w, (void *)this_->h);
+	}
 	if (!strcmp(type, "qt_widget")) 
 	    return this_->widget;
+	if (!strcmp(type, "qt_pixmap")) 
+	    return this_->widget->pixmap;
 	if (!strcmp(type, "window")) {
-#if QT_QPAINTER_USE_EMBEDDING
+#if QT_QPAINTER_USE_EMBEDDING && !defined(QT_QPAINTER_NO_WIDGET)
 		xid=getenv("NAVIT_XID");
 		if (xid.length()>0) {
 			this_->widget->embedInto(xid.toULong(&ok,0));
 		}
 #endif /* QT_QPAINTER_USE_EMBEDDING */
 		win=g_new(struct window, 1);
+#ifndef QT_QPAINTER_NO_WIDGET
 		if (this_->w && this_->h)
 			this_->widget->show();
 		else
 			this_->widget->showMaximized();
+#endif
 		win->priv=this_;
 		win->fullscreen=fullscreen;
 		win->disable_suspend=disable_suspend;
@@ -1003,7 +1026,7 @@ get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *t
 	QPainter *painter=gr->painter;
 	QString tmp=QString::fromUtf8(text);
 	painter->setFont(*font->font);
-	QRect r=painter->boundingRect(0,0,gr->widget->width(),gr->widget->height(),0,tmp);
+	QRect r=painter->boundingRect(0,0,gr->w,gr->h,0,tmp);
 	ret[0].x=0;
 	ret[0].y=-r.height();
 	ret[1].x=0;
