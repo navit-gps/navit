@@ -1966,7 +1966,8 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 		displaylist->m=NULL;
 	}
 	profile(1,"process_selection\n");
-	event_remove_idle(displaylist->idle_ev);
+	if (displaylist->idle_ev)
+		event_remove_idle(displaylist->idle_ev);
 	displaylist->idle_ev=NULL;
 	callback_destroy(displaylist->idle_cb);
 	displaylist->idle_cb=NULL;

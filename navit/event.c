@@ -93,6 +93,12 @@ event_call_callback(struct callback_list *cb)
 	event_methods.call_callback(cb);
 }
 
+char *
+event_system(void)
+{
+	return e_system;
+}
+
 int
 event_request_system(const char *system, const char *requestor)
 {
