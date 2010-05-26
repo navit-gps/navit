@@ -139,6 +139,9 @@ struct navit {
 	int zoom_min, zoom_max;
 	int radius;
 	struct bookmarks *bookmarks;
+	int flags;
+		 /* 1=No graphics ok */
+		 /* 2=No gui ok */
 };
 
 struct gui *main_loop_gui;
@@ -1135,18 +1138,19 @@ navit_init(struct navit *this_)
 	int callback;
 
 	dbg(2,"enter gui %p graphics %p\n",this_->gui,this_->gra);
-	if (!this_->gui) {
+
+	if (!this_->gui && !(this_->flags & 2)) {
 		dbg(0,"no gui\n");
 		navit_destroy(this_);
 		return;
 	}
-	if (!this_->gra) {
+	if (!this_->gra && (!this_->flags & 1)) {
 		dbg(0,"no graphics\n");
 		navit_destroy(this_);
 		return;
 	}
 	dbg(2,"Connecting gui to graphics\n");
-	if (gui_set_graphics(this_->gui, this_->gra)) {
+	if (this_->gui && this_->gra && gui_set_graphics(this_->gui, this_->gra)) {
 		struct attr attr_type_gui, attr_type_graphics;
 		gui_get_attr(this_->gui, attr_type, &attr_type_gui, NULL);
 		graphics_get_attr(this_->gra, attr_type, &attr_type_graphics, NULL);
@@ -1490,6 +1494,9 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		attr_updated=(this_->drag_bitmap != !!attr->u.num);
 		this_->drag_bitmap=!!attr->u.num;
 		break;
+	case attr_flags:
+		attr_updated=(this_->flags != attr->u.num);
+		this_->flags=attr->u.num;
 	case attr_flags_graphics:
 		attr_updated=(this_->graphics_flags != attr->u.num);
 		this_->graphics_flags=attr->u.num;
