@@ -59,8 +59,8 @@
 #ifdef HAVE_QPE
 #include <qpe/qpeapplication.h>
 #endif
-#ifndef QT_PAINTER_USE_EVENT_QT
-#define QT_PAINTER_USE_EVENT_QT 1
+#ifndef QT_QPAINTER_USE_EVENT_QT
+#define QT_QPAINTER_USE_EVENT_QT 1
 #endif
 #else
 #include <QResizeEvent>
@@ -74,8 +74,27 @@
 #include <QWidget>
 #include <QPolygonF>
 #include <QtGui>
-#ifndef QT_PAINTER_USE_EVENT_GLIB
-#define QT_PAINTER_USE_EVENT_GLIB 1
+
+#ifndef QT_QPAINTER_USE_EVENT_GLIB
+#define QT_QPAINTER_USE_EVENT_GLIB 1
+#endif
+
+#ifdef Q_WS_X11
+#ifndef QT_QPAINTER_USE_EMBEDDING
+#define QT_QPAINTER_USE_EMBEDDING 1
+#endif
+#endif
+
+#endif
+
+#if QT_QPAINTER_USE_EMBEDDING
+#include <QX11EmbedWidget>
+#ifndef QT_QPAINTER_RENDERAREA_PARENT
+#define QT_QPAINTER_RENDERAREA_PARENT QX11EmbedWidget
+#endif
+#else
+#ifndef QT_QPAINTER_RENDERAREA_PARENT
+#define QT_QPAINTER_RENDERAREA_PARENT QWidget
 #endif
 #endif
 
@@ -124,14 +143,8 @@ struct graphics_priv {
 //# Comment: 
 //# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
 //##############################################################################################################
-#if defined Q_WS_X11 && QT_VERSION >= 0x040000
-#include <QX11EmbedWidget>
-class RenderArea : public QX11EmbedWidget
+class RenderArea : public QT_QPAINTER_RENDERAREA_PARENT
 {
-#else
-class RenderArea : public QWidget
-{
-#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
      Q_OBJECT
  public:
      RenderArea(struct graphics_priv *priv, QWidget *parent = 0, int w=800, int h=800, int overlay=0);
@@ -253,13 +266,8 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 //# Comment: Using a QPixmap for rendering the graphics
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-#if defined Q_WS_X11 && QT_VERSION >= 0x040000
 RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h, int overlay)
-	: QX11EmbedWidget(parent)
-#else
-RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h, int overlay)
-	: QWidget(parent)
-#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
+	: QT_QPAINTER_RENDERAREA_PARENT(parent)
 {
 	pixmap = new QPixmap(w, h);
 	if (!overlay) {
@@ -953,12 +961,12 @@ static void * get_data(struct graphics_priv *this_, char *type)
 	if (!strcmp(type, "qt_widget")) 
 	    return this_->widget;
 	if (!strcmp(type, "window")) {
-#if defined Q_WS_X11 && QT_VERSION >= 0x040000
+#if QT_QPAINTER_USE_EMBEDDING
 		xid=getenv("NAVIT_XID");
 		if (xid.length()>0) {
 			this_->widget->embedInto(xid.toULong(&ok,0));
 		}
-#endif /* Q_WS_X11 && QT_VERSION >= 0x040000 */
+#endif /* QT_QPAINTER_USE_EMBEDDING */
 		win=g_new(struct window, 1);
 		if (this_->w && this_->h)
 			this_->widget->show();
@@ -1224,7 +1232,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	meth->get_text_bbox=(void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*, int))ret->freetype_methods.get_text_bbox;
 #endif
 
-#if defined(Q_WS_X11) && QT_VERSION >= 0x040500
+#if QT_QPAINTER_USE_EMBEDDING
 	if ((attr=attr_search(attrs, NULL, attr_gc_type)))
 		QApplication::setGraphicsSystem(attr->u.str);
 	else
