@@ -41,10 +41,18 @@
 #include "navit/event.h"
 #include "navit/window.h"
 #include "navit/keys.h"
-#include "navit/font/freetype/font_freetype.h"
 #include "navit/navit.h"
 
 #include <qglobal.h>
+
+#ifndef QT_QPAINTER_USE_FREETYPE
+#define QT_QPAINTER_USE_FREETYPE 1
+#endif
+
+#if QT_QPAINTER_USE_FREETYPE
+#include "navit/font/freetype/font_freetype.h"
+#endif
+
 #if QT_VERSION < 0x040000
 #include <qwidget.h>
 #include <qapplication.h>
@@ -132,8 +140,10 @@ struct graphics_priv {
 	int cleanup;
 	int overlay_disable;
 	int wraparound;
+#if QT_QPAINTER_USE_FREETYPE
 	struct font_priv * (*font_freetype_new)(void *meth);
 	struct font_freetype_methods freetype_methods;
+#endif
 	int w,h;
 	struct navit* nav;
 };
@@ -713,7 +723,7 @@ static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, s
 static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
 	QPainter *painter=gr->painter;
-#if 0
+#if !QT_QPAINTER_USE_FREETYPE
 	QString tmp=QString::fromUtf8(text);
 #ifndef QT_NO_TRANSFORMATIONS
 #if QT_VERSION >= 0x040000
@@ -1052,12 +1062,14 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 {
 	*meth=graphics_methods;
 	struct graphics_priv *ret=g_new0(struct graphics_priv, 1);
+#if QT_QPAINTER_USE_FREETYPE
 	if (gr->font_freetype_new) {
 		ret->font_freetype_new=gr->font_freetype_new;
         	gr->font_freetype_new(&ret->freetype_methods);
 		meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))ret->freetype_methods.font_new;
 		meth->get_text_bbox=(void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*, int))ret->freetype_methods.get_text_bbox;
 	}
+#endif
 	ret->widget= new RenderArea(ret,NULL,w,h,1);
 	ret->wraparound=wraparound;
 	ret->painter=new QPainter;
@@ -1217,16 +1229,16 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	if (! event_request_system("glib","graphics_qt_qpainter_new"))
 		return NULL;
 #endif
-#if 1
+#if QT_QPAINTER_USE_FREETYPE
 	font_freetype_new=(struct font_priv *(*)(void *))plugin_get_font_type("freetype");
 	if (!font_freetype_new)
 		return NULL;
 #endif
 	ret=g_new0(struct graphics_priv, 1);
-	ret->font_freetype_new=font_freetype_new;
 	*meth=graphics_methods;
 	ret->nav=nav;
-#if 1
+#if QT_QPAINTER_USE_FREETYPE
+	ret->font_freetype_new=font_freetype_new;
 	font_freetype_new(&ret->freetype_methods);
 	meth->font_new=(struct graphics_font_priv *(*)(struct graphics_priv *, struct graphics_font_methods *, char *,  int, int))ret->freetype_methods.font_new;
 	meth->get_text_bbox=(void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*, int))ret->freetype_methods.get_text_bbox;
@@ -1239,10 +1251,12 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 		QApplication::setGraphicsSystem("raster");
 #endif
 
+#ifndef QT_QPAINTER_NO_APP
 #ifdef HAVE_QPE
 	ret->app = new QPEApplication(argc, argv);
 #else
 	ret->app = new QApplication(argc, argv);
+#endif
 #endif
 	ret->widget= new RenderArea(ret);
 	ret->widget->cbl=cbl;
