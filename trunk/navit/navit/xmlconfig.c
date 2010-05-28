@@ -942,14 +942,14 @@ parse_node(struct xmldocument *document, ezxml_t node)
 static gboolean
 parse_file(struct xmldocument *document, xmlerror **error)
 {
-	int fd;
+	FILE *f;
 	ezxml_t root;
-	/* BUG workaround: ezxml parse file leaves negative fds unclosed */
-	fd = open(document->href, O_RDONLY, 0);
-	if (fd == -1)
+
+	f=fopen(document->href,"rb");
+	if (!f)
 		return FALSE;
-	root = ezxml_parse_fd(fd);
-	close(fd);
+	root = ezxml_parse_fp(f);
+	fclose(f);
 	if (!root)
 		return FALSE;
 	document->active=document->xpointer ? 0:1;
