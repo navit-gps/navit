@@ -29,6 +29,12 @@ struct config {
 	struct callback_list *cbl;
 } *config;
 
+struct config *
+config_get(void)
+{
+	return config;
+}
+
 int config_empty_ok;
 
 static int configured;
