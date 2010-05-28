@@ -1143,6 +1143,5 @@ then
 	echo "Please install the dependency for at least gtk or sdl gui"
 	echo "For more details, see the wiki at http://wiki.navit-project.org/"
 	echo "" 
-	exit 1
 fi
 
