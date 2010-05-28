@@ -1,1 +1,6 @@
-SUBDIRS=core
+SUBDIRS=
+DIST_SUBDIRS=core
+
+if OSD_CORE
+  SUBDIRS+=core
+endif
