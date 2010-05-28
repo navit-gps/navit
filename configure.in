@@ -49,9 +49,16 @@ graphics=yes; graphics_reason=default
 graphics_gd=no; graphics_gd_reason=default
 graphics_gtk_drawing_area=no; graphics_gtk_drawing_area_reason=default
 graphics_qt_qpainter=yes; graphics_qt_qpainter_reason=default
+graphics_null=yes; graphics_null_reason=default
 graphics_opengl=yes; graphics_opengl_reason=default
 graphics_sdl=yes; graphics_sdl_reason=default
 graphics_win32=no; graphics_win32_reason=default
+map_binfile=yes; map_binfile_reason=default
+map_filter=yes; map_filter_reason=default
+map_mg=yes; map_mg_reason=default
+map_shapefile=yes; map_shapefile_reason=default
+map_textfile=yes; map_textfile_reason=default
+osd_core=yes; osd_core_reason=default
 plugin_pedestrian=no; plugin_pedestrian_reason=default
 routing=yes; routing_reason=default
 speech_android=no; speech_android_reason=default
@@ -1094,9 +1101,11 @@ echo "NLS Support:         $enable_nls ($nls_libs)"
 echo "Routing:             $routing ($routing_reason)"
 echo "Font renderers:"
 echo "  freetype:          $font_freetype ($font_freetype_reason)"
+
 echo "Graphics types: $graphics ($graphics_reason)"
 echo "  android:  $graphics_android ($graphics_android_reason)"
 echo "  gtk_drawing_area:  $graphics_gtk_drawing_area ($graphics_gtk_drawing_area_reason)"
+echo "  null:              $graphics_null ($graphics_null_reason)"
 echo "  qt_qpainter:       $graphics_qt_qpainter ($graphics_qt_qpainter_reason)"
 echo "  win32:             $graphics_win32 ($graphics_win32_reason)"
 echo "  OpenGL:            $graphics_opengl ($graphics_opengl_reason)"
@@ -1109,9 +1118,20 @@ echo "  internal:          $gui_internal ($gui_internal_reason)"
 echo "  win32:             $gui_win32 ($gui_win32_reason)"
 echo "  qml:               $gui_qml ($gui_qml_reason)"
 
+echo "Map types:"
+echo "  binfile:           $map_binfile ($map_binfile_reason)"
+echo "  filter:	           $map_filter ($map_filter_reason)"
+echo "  mg:                $map_mg ($map_mg_reason)"
+echo "  shapefile:         $map_shapefile ($map_shapefile_reason)"
+echo "  textfile:          $map_textfile ($map_textfile_reason)"
+
+
 echo "Bindings:"
 echo "  dbus:              $binding_dbus ($binding_dbus_reason)"
 echo "  python:            $binding_python ($binding_python_reason)"
+
+echo "OSD types:"
+echo "  core:              $osd_core ($osd_core_reason)"
 
 echo "Plugins:"
 echo "  pedestrian:	   $plugin_pedestrian ($plugin_pedestrian_reason)"
