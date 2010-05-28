@@ -1750,7 +1750,7 @@ static void xdisplay_draw_elements(struct graphics *gra, struct displaylist *dis
 		while (types) {
 			dc->type=GPOINTER_TO_INT(types->data);
 			entry=get_hash_entry(display_list, dc->type);
-			if (entry->di) {
+			if (entry && entry->di) {
 				displayitem_draw(entry->di, NULL, dc);
 				display_context_free(dc);
 			}
