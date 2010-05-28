@@ -104,6 +104,7 @@ struct country_table {
  	{250,"France,République française,FR"},
 	{276,"Germany,Deutschland,Bundesrepublik Deutschland"},
 	{348,"Hungary"},
+	{352,"Iceland"},
  	{380,"Italy,Italia"},
  	{440,"Lithuania,Lietuva"},
 	{442,"Luxembourg"},
