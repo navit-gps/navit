@@ -833,6 +833,28 @@ AC_SUBST(QT_GUI_CFLAGS)
 AC_SUBST(QT_GUI_LIBS)
 AM_CONDITIONAL(GRAPHICS_QT_QPAINTER, test "x${graphics_qt_qpainter}" = "xyes")
 
+## map
+# binfile
+AC_ARG_ENABLE(map-binfile, [  --disable-map-binfile            disable graphics type android], map_binfile=$enableval;map_binfile_reason="configure parameter")
+AM_CONDITIONAL(MAP_BINFILE, test "x${map_binfile}" = "xyes")
+# filter
+AC_ARG_ENABLE(map-filter, [  --disable-map-filter            disable graphics type android], map_filter=$enableval;map_filter_reason="configure parameter")
+AM_CONDITIONAL(MAP_FILTER, test "x${map_filter}" = "xyes")
+# mg
+AC_ARG_ENABLE(map-mg, [  --disable-map-mg            disable graphics type android], map_mg=$enableval;map_mg_reason="configure parameter")
+AM_CONDITIONAL(MAP_MG, test "x${map_mg}" = "xyes")
+# shapefile
+AC_ARG_ENABLE(map-shapefile, [  --disable-map-shapefile            disable graphics type android], map_shapefile=$enableval;map_shapefile_reason="configure parameter")
+AM_CONDITIONAL(MAP_SHAPEFILE, test "x${map_shapefile}" = "xyes")
+# textfile
+AC_ARG_ENABLE(map-textfile, [  --disable-map-textfile            disable graphics type android], map_textfile=$enableval;map_textfile_reason="configure parameter")
+AM_CONDITIONAL(MAP_TEXTFILE, test "x${map_textfile}" = "xyes")
+
+## osd
+# core
+AC_ARG_ENABLE(osd-core, [  --disable-osd-core            disable graphics type android], osd_core=$enableval;osd_core_reason="configure parameter")
+AM_CONDITIONAL(OSD_CORE, test "x${osd_core}" = "xyes")
+
 ## gui
 # gtk
 AC_ARG_ENABLE(gui-gtk, [  --disable-gui-gtk                   disable gui type gtk ], gui_gtk=$enableval)
