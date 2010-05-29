@@ -1144,7 +1144,7 @@ navit_init(struct navit *this_)
 		navit_destroy(this_);
 		return;
 	}
-	if (!this_->gra && (!this_->flags & 1)) {
+	if (!this_->gra && !(this_->flags & 1)) {
 		dbg(0,"no graphics\n");
 		navit_destroy(this_);
 		return;
