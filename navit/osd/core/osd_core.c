@@ -1067,12 +1067,10 @@ struct osd_text_item *
 oti_new(struct osd_text_item * parent)
 {
     struct osd_text_item *this;
-    this=g_new(struct osd_text_item, 1);
+    this=g_new0(struct osd_text_item, 1);
     this->prev=parent;
-    this->next=NULL;
     this->static_text=0;
     this->offset=0;
-    this->format=NULL;
 
     if(!parent) {
         this->root=this;
