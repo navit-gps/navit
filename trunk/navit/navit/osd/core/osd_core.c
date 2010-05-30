@@ -1085,12 +1085,13 @@ oti_new(struct osd_text_item * parent)
 static void
 osd_text_prepare(struct osd_text *this, struct navit *nav)
 {
-	char *str,*next,*last,*start,*end,*key,*subkey,*index;
+	char *absbegin,*str,*start,*end,*key,*subkey,*index;
 	struct osd_text_item *oti;
 	enum attr_type attr_type;
 
 	oti=NULL;
 	str=g_strdup(this->text);
+	absbegin=str;
 
 	dbg(1,"string: %s\n", str);
 	while ((start=strstr(str, "${"))) {
@@ -1170,6 +1171,8 @@ osd_text_prepare(struct osd_text *this, struct navit *nav)
 		this->items=oti->root;
 	else
 		this->items=NULL;
+
+	g_free(absbegin);
 
 }
 
