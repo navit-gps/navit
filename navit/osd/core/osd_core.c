@@ -1093,7 +1093,6 @@ osd_text_prepare(struct osd_text *this, struct navit *nav)
 	str=g_strdup(this->text);
 	absbegin=str;
 
-	dbg(1,"string: %s\n", str);
 	while ((start=strstr(str, "${"))) {
 
 		*start='\0';
@@ -1104,7 +1103,6 @@ osd_text_prepare(struct osd_text *this, struct navit *nav)
 			oti = oti_new(oti);
 			oti->static_text=1;
 			oti->text=g_strdup(str);
-			dbg(1,"before %s\n", oti->text);
 
 		}
 
@@ -1116,11 +1114,9 @@ osd_text_prepare(struct osd_text *this, struct navit *nav)
 		key=start;
 
 		subkey=osd_text_split(key,NULL);
-		dbg(1,"subkey1: %s\n", subkey);
 
 	    oti = oti_new(oti);
 		oti->section=attr_from_name(key);
-		dbg(0,"section %s\n", attr_to_name(oti->section));
 
 		if (( oti->section == attr_navigation ||
 				oti->section == attr_tracking) && subkey) {
@@ -1137,7 +1133,6 @@ osd_text_prepare(struct osd_text *this, struct navit *nav)
 			} else {
 				oti->attr_typ=attr_from_name(key);
 			}
-			dbg(0,"attr_type %s\n", attr_to_name(oti->attr_typ));
 			oti->format = g_strdup(index);
 
 		} else if ((oti->section == attr_vehicle || oti->section == attr_navit) && subkey) {
@@ -1147,7 +1142,6 @@ osd_text_prepare(struct osd_text *this, struct navit *nav)
 			} else {
 				oti->attr_typ=attr_from_name(subkey);
 			}
-			dbg(0,"attr_type %s\n", attr_to_name(oti->attr_typ));
 			oti->format = g_strdup(index);
 		}
 
@@ -1164,7 +1158,6 @@ osd_text_prepare(struct osd_text *this, struct navit *nav)
 		oti = oti_new(oti);
 		oti->static_text=1;
 		oti->text=g_strdup(str);
-		dbg(1,"after %s\n", oti->text);
 	}
 
 	if (oti)
