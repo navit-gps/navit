@@ -1119,7 +1119,6 @@ osd_text_prepare(struct osd_text *this, struct navit *nav)
 				oti->section == attr_tracking) && subkey) {
 		    key=osd_text_split(subkey,&index);
 
-			oti->offset=0;
 			if (index)
 				oti->offset=atoi(index);
 
