@@ -1069,8 +1069,6 @@ oti_new(struct osd_text_item * parent)
     struct osd_text_item *this;
     this=g_new0(struct osd_text_item, 1);
     this->prev=parent;
-    this->static_text=0;
-    this->offset=0;
 
     if(!parent) {
         this->root=this;
