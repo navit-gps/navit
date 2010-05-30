@@ -2379,6 +2379,7 @@ route_graph_update(struct route *this, struct callback *cb, int async)
 
 	route_status.type=attr_route_status;
 	route_graph_destroy(this->graph);
+	this->graph=NULL;
 	callback_destroy(this->route_graph_done_cb);
 	this->route_graph_done_cb=callback_new_2(callback_cast(route_graph_update_done), this, cb);
 	route_status.u.num=route_status_building_graph;
