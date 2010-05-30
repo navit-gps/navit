@@ -856,7 +856,6 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 	int height=this->osd_item.font_size*13/256;
 	int yspacing=height/2;
 	int xspacing=height/4;
-	enum attr_type attr_type;
 
 	vehicle_attr.u.vehicle=NULL;
 	oti=this->items;
@@ -1086,7 +1085,6 @@ osd_text_prepare(struct osd_text *this, struct navit *nav)
 {
 	char *absbegin,*str,*start,*end,*key,*subkey,*index;
 	struct osd_text_item *oti;
-	enum attr_type attr_type;
 
 	oti=NULL;
 	str=g_strdup(this->text);
