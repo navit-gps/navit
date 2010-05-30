@@ -842,7 +842,7 @@ static void
 osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 {
 	struct point p, p2[4];
-	char *str,*last,*next,*value;
+	char *str,*last,*next,*value,*absbegin;
 	int do_draw = 0;
 	struct attr attr, vehicle_attr, maxspeed_attr;
 	struct navigation *nav = NULL;
@@ -987,6 +987,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 		this->last = g_strdup(str);
 	}
 
+	absbegin=str;
 	if (do_draw) {
 		lines=0;
 		next=str;
@@ -1059,7 +1060,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 		}
 		graphics_draw_mode(this->osd_item.gr, draw_mode_end);
 	}
-	g_free(str);
+	g_free(absbegin);
 
 }
 
