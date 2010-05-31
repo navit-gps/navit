@@ -748,6 +748,11 @@ pop_tile(struct map_rect_priv *mr)
 		return 0;
 	if (mr->t->mode < 2)
 		file_data_free(mr->m->fi, (unsigned char *)(mr->t->start));
+#ifdef DEBUG_SIZE
+#if DEBUG_SIZE > 0
+	dbg(0,"leave %d\n",mr->t->zipfile_num);
+#endif
+#endif
 	mr->t=&mr->tiles[--mr->tile_depth-1];
 	return 1;
 }
@@ -841,6 +846,14 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 #endif
 	dbg(1,"enter %p %d\n", mr, zipfile);
 #ifdef DEBUG_SIZE
+#if DEBUG_SIZE > 0
+	{
+		char filename[cd->zipcfnl+1];
+		memcpy(filename, cd+1, cd->zipcfnl);
+		filename[cd->zipcfnl]='\0';
+		dbg(0,"enter %d (%s) %d\n",zipfile, filename, cd->zipcunc);
+	}
+#endif
 	mr->size+=cd->zipcunc;
 #endif
 	t.zipfile_num=zipfile;
