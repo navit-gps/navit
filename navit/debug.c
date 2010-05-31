@@ -34,7 +34,7 @@
 #include <android/log.h>
 #endif
 
-#ifdef DEBUG_WIN32_CE_MESSAGEBOX
+#ifdef HAVE_API_WIN32_CE
 #include <windows.h>
 #include <windowsx.h>
 #endif
@@ -127,6 +127,16 @@ debug_level_get(const char *name)
 
 static void debug_timestamp(FILE *fp)
 {
+#ifdef HAVE_API_WIN32_CE
+	LARGE_INTEGER counter, frequency;
+	double val;
+	QueryPerformanceCounter(&counter);
+	QueryPerformanceFrequency(&frequency);
+	val=counter.HighPart * 4294967296.0 + counter.LowPart;
+	val/=frequency.HighPart * 4294967296.0 + frequency.LowPart;
+	fprintf(fp,"%.6f|",val);
+
+#else
 	struct timeval tv;
 
 	if (gettimeofday(&tv, NULL) == -1)
@@ -138,6 +148,7 @@ static void debug_timestamp(FILE *fp)
 		(int)(tv.tv_sec/60)%60,
 		(int)tv.tv_sec % 60,
 		(int)tv.tv_usec/1000);
+#endif
 }
 
 void
