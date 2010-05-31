@@ -257,16 +257,14 @@ navit_handle_resize(struct navit *this_, int w, int h)
 	struct map_selection sel;
 	int callback=(this_->ready == 1);
 	this_->ready |= 2;
-	if (this_->w != w || this_->h != h) {
-		memset(&sel, 0, sizeof(sel));
-		this_->w=w;
-		this_->h=h;
-		sel.u.p_rect.rl.x=w;
-		sel.u.p_rect.rl.y=h;
-		transform_set_screen_selection(this_->trans, &sel);
-		graphics_init(this_->gra);
-		graphics_set_rect(this_->gra, &sel.u.p_rect);
-	}
+	memset(&sel, 0, sizeof(sel));
+	this_->w=w;
+	this_->h=h;
+	sel.u.p_rect.rl.x=w;
+	sel.u.p_rect.rl.y=h;
+	transform_set_screen_selection(this_->trans, &sel);
+	graphics_init(this_->gra);
+	graphics_set_rect(this_->gra, &sel.u.p_rect);
 	if (callback) 
 		callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
 	if (this_->ready == 3)
