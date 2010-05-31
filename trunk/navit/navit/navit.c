@@ -1592,6 +1592,9 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 		attr_updated=(this_->tracking_flag != !!attr->u.num);
 		this_->tracking_flag=!!attr->u.num;
 		break;
+	case attr_transformation:
+		this_->trans=attr->u.transformation;
+		break;
 	case attr_use_mousewheel:
 		attr_updated=(this_->use_mousewheel != !!attr->u.num);
 		this_->use_mousewheel=!!attr->u.num;
