@@ -31,7 +31,7 @@ Rectangle {
             id: btnNavigate; text: "Navigate\nto . . ."; icon: "cursor.svg";  onClicked: gui.setPage("PageNavigate.qml")
         }
         ButtonIcon {
-            id: btnRoute; text: "Route\ninformation"; icon: "nav_destination_wh.svg"; onClicked: gui.setPage("PageNavigation.qml")
+            id: btnRoute; text: "Route\ninformation"; icon: "nav_destination_wh.svg"; onClicked: gui.setPage("PageRoute.qml")
         }
         ButtonIcon {
             id: btnSettings; text: "Settings"; icon: "gui_settings.svg"; onClicked: gui.setPage("PageSettings.qml")
