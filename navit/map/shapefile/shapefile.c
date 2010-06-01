@@ -492,7 +492,7 @@ shapefile_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		mr->aidx++;
 		return 1;
 	default:
-		return attr_resolve(mr, attr_type, attr);
+		return (attr_resolve(mr, attr_type, attr) == 1);
 	}
 }
 
