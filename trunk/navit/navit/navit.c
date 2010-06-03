@@ -2029,7 +2029,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	callback_list_call_attr_0(this_->attr_cbl, attr_position);
 	navit_textfile_debug_log(this_, "type=trackpoint_tracked");
 	if (this_->gui && nv->speed > 2)
-		gui_disable_suspend(this_->gui);
+		navit_disable_suspend();
 
 	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	if (this_->button_pressed != 1 && this_->follow_cursor && nv->follow_curr <= nv->follow && 
@@ -2302,6 +2302,12 @@ navit_set_layout_by_name(struct navit *n,const char *name)
 
     iter.u.list=g_list_first(iter.u.list);
     return 0;
+}
+
+void
+navit_disable_suspend() {
+	gui_disable_suspend(global_navit->gui);
+	callback_list_call_attr_0(global_navit->attr_cbl,attr_unsuspend);
 }
 
 int
