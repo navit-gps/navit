@@ -97,13 +97,6 @@
 
 #if QT_QPAINTER_USE_EMBEDDING
 #include <QX11EmbedWidget>
-#ifndef QT_QPAINTER_RENDERAREA_PARENT
-#define QT_QPAINTER_RENDERAREA_PARENT QX11EmbedWidget
-#endif
-#else
-#ifndef QT_QPAINTER_RENDERAREA_PARENT
-#define QT_QPAINTER_RENDERAREA_PARENT QWidget
-#endif
 #endif
 
 class RenderArea;
@@ -153,7 +146,7 @@ struct graphics_priv {
 //# Comment: 
 //# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
 //##############################################################################################################
-class RenderArea : public QT_QPAINTER_RENDERAREA_PARENT
+class RenderArea : public QWidget
 {
      Q_OBJECT
  public:
@@ -282,7 +275,7 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h, int overlay)
-	: QT_QPAINTER_RENDERAREA_PARENT(parent)
+	: QWidget(parent)
 {
 	pixmap = new QPixmap(w, h);
 #ifndef QT_QPAINTER_NO_WIDGET
@@ -988,14 +981,20 @@ static void * get_data(struct graphics_priv *this_, char *type)
 	if (!strcmp(type, "qt_pixmap")) 
 	    return this_->widget->pixmap;
 	if (!strcmp(type, "window")) {
-#if QT_QPAINTER_USE_EMBEDDING && !defined(QT_QPAINTER_NO_WIDGET)
-		xid=getenv("NAVIT_XID");
-		if (xid.length()>0) {
-			this_->widget->embedInto(xid.toULong(&ok,0));
-		}
-#endif /* QT_QPAINTER_USE_EMBEDDING */
 		win=g_new(struct window, 1);
 #ifndef QT_QPAINTER_NO_WIDGET
+#if QT_QPAINTER_USE_EMBEDDING
+		QX11EmbedWidget* _outerWidget=new QX11EmbedWidget();
+		QStackedLayout* _outerLayout = new QStackedLayout(_outerWidget);
+		_outerWidget->setLayout(_outerLayout);
+		_outerLayout->addWidget(this_->widget);
+		_outerLayout->setCurrentWidget(this_->widget);
+		_outerWidget->show();
+		xid=getenv("NAVIT_XID");
+		if (xid.length()>0) {
+			_outerWidget->embedInto(xid.toULong(&ok,0));
+		}
+#endif 
 		if (this_->w && this_->h)
 			this_->widget->show();
 		else
@@ -1120,13 +1119,14 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 		meth->get_text_bbox=(void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*, int))ret->freetype_methods.get_text_bbox;
 	}
 #endif
-	ret->widget= new RenderArea(ret,NULL,w,h,1);
+	ret->widget= new RenderArea(ret,gr->widget,w,h,1);
 	ret->wraparound=wraparound;
 	ret->painter=new QPainter;
 	ret->p=*p;
 	ret->parent=gr;
 	ret->next=gr->overlays;
 	gr->overlays=ret;
+	ret->widget->hide();
 	return ret;
 }
 
