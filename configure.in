@@ -999,6 +999,7 @@ AC_SUBST(WINDRES)
 AC_CONFIG_FILES([
 Makefile
 navit/Makefile
+navit/autoload/Makefile
 navit/binding/Makefile
 navit/binding/python/Makefile
 navit/binding/dbus/Makefile
