@@ -4,8 +4,8 @@ SUBDIRS=fib-1.1 support
 if PLUGINS
   SUBDIRS += .
 endif
-DIST_SUBDIRS=binding map maptool fib-1.1 font fonts gui graphics osd plugin speech support vehicle xpm maps
-SUBDIRS+=binding map font gui graphics osd plugin speech vehicle xpm
+DIST_SUBDIRS=autoload binding map maptool fib-1.1 font fonts gui graphics osd plugin speech support vehicle xpm maps
+SUBDIRS+=autoload binding map font gui graphics osd plugin speech vehicle xpm
 
 MODULES = $(wildcard $(top_builddir)/navit/binding/*/*.la $(top_builddir)/navit/font/*/*.la $(top_builddir)/navit/graphics/*/*.la $(top_builddir)/navit/gui/*/*.la $(top_builddir)/navit/map/*/*.la $(top_builddir)/navit/osd/*/*.la $(top_builddir)/navit/speech/*/*.la $(top_builddir)/navit/vehicle/*/*.la)
 
