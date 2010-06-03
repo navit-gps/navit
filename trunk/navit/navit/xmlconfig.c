@@ -75,7 +75,7 @@ struct xistate {
 
 struct xmldocument {
 	const gchar *href;
-	const gchar *xpointer;	
+	const gchar *xpointer;
 	gpointer user_data;
 	struct xistate *first;
 	struct xistate *last;
@@ -139,7 +139,7 @@ static struct attr ** convert_to_attrs(struct xmlstate *state, struct attr_fixme
 			dbg(0,"failed to create attribute '%s' with value '%s'\n", *attribute_name,*attribute_value);
 		attribute_name++;
 		attribute_value++;
-	}	
+	}
 	ret[count]=NULL;
 	dbg(1,"ret=%p\n", ret);
 	return ret;
@@ -156,7 +156,7 @@ static const char * find_attribute(struct xmlstate *state, const char *attribute
 		attribute_name++;
 		attribute_value++;
 	}
-	if (required) 
+	if (required)
 		g_set_error(state->error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "element '%s' is missing attribute '%s'", state->element, attribute);
 	return NULL;
 }
@@ -169,7 +169,7 @@ find_boolean(struct xmlstate *state, const char *attribute, int deflt, int requi
 	value=find_attribute(state, attribute, required);
 	if (! value)
 		return deflt;
-	if (g_ascii_strcasecmp(value,"no") && g_ascii_strcasecmp(value,"0") && g_ascii_strcasecmp(value,"false")) 
+	if (g_ascii_strcasecmp(value,"no") && g_ascii_strcasecmp(value,"0") && g_ascii_strcasecmp(value,"false"))
 		return 1;
 	return 0;
 }
@@ -205,7 +205,7 @@ xmlconfig_announce(struct xmlstate *state)
 	for (i = 0 ; i < 3 ; i++) {
 		sprintf(key,"level%d", i);
 		value=find_attribute(state, key, 0);
-		if (value) 
+		if (value)
 			level[i]=convert_number(value);
 		else
 			level[i]=-1;
@@ -227,8 +227,8 @@ xmlconfig_announce(struct xmlstate *state)
 
 #define NEW(x) (void *(*)(struct attr *, struct attr **))(x)
 #define GET(x) (int (*)(void *, enum attr_type type, struct attr *attr, struct attr_iter *iter))(x)
-#define ITERN(x) (struct attr_iter * (*)(void *))(x) 
-#define ITERD(x) (void (*)(struct attr_iter *iter))(x) 
+#define ITERN(x) (struct attr_iter * (*)(void *))(x)
+#define ITERD(x) (void (*)(struct attr_iter *iter))(x)
 #define SET(x) (int (*)(void *, struct attr *attr))(x)
 #define ADD(x) (int (*)(void *, struct attr *attr))(x)
 #define REMOVE(x) (int (*)(void *, struct attr *attr))(x)
@@ -397,7 +397,7 @@ start_element(GMarkupParseContext *context,
 	}
 	if (!attr_fixme[0].element)
 		attr_fixme=NULL;
-	
+
 	/* tell user to fix  deprecated element names */
 	while (element_fixme[0]) {
 		if (!strcmp(element_name,element_fixme[0])) {
@@ -474,9 +474,9 @@ start_element(GMarkupParseContext *context,
 		if (! new->element_attr.u.data)
 			return;
 		new->element_attr.type=attr_from_name(element_name);
-		if (new->element_attr.type == attr_none) 
+		if (new->element_attr.type == attr_none)
 			dbg(0,"failed to create object of type '%s'\n", element_name);
-		if (new->parent && new->parent->object_func && new->parent->object_func->add_attr) 
+		if (new->parent && new->parent->object_func && new->parent->object_func->add_attr)
 			new->parent->object_func->add_attr(new->parent->element_attr.u.data, &new->element_attr);
 	}
 	return;
@@ -519,14 +519,14 @@ xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gcha
 	i=0;
 	while (attribute_names[i]) {
 		if(!g_ascii_strcasecmp("href", attribute_names[i])) {
-			if (!href) 
+			if (!href)
 				href=attribute_values[i];
 			else {
 				g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "xi:include has more than one href");
 				return;
 			}
 		} else if(!g_ascii_strcasecmp("xpointer", attribute_names[i])) {
-			if (!doc_new.xpointer) 
+			if (!doc_new.xpointer)
 				doc_new.xpointer=attribute_values[i];
 			else {
 				g_set_error(error,G_MARKUP_ERROR,G_MARKUP_ERROR_INVALID_CONTENT, "xi:include has more than one xpointer");
@@ -561,10 +561,10 @@ xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gcha
 				parse_file(&doc_new, error);
 			}
 		}
-		file_wordexp_destroy(we);	
-		
+		file_wordexp_destroy(we);
+
 	}
-	
+
 }
 static int
 strncmp_len(const char *s1, int s1len, const char *s2)
@@ -583,7 +583,7 @@ strncmp_len(const char *s1, int s1len, const char *s2)
 	return strlen(s2)-s1len;
 }
 
-static int 
+static int
 xpointer_value(const char *test, int len, struct xistate *elem, const char **out, int out_len)
 {
 	int i,ret=0;
@@ -740,7 +740,7 @@ xi_start_element(GMarkupParseContext *context,
 		}
 	}
 	xistate->parent=doc->last;
-	
+
 	if (doc->last) {
 		doc->last->child=xistate;
 	} else
@@ -754,7 +754,7 @@ xi_start_element(GMarkupParseContext *context,
 		start_element(context, element_name, xistate->attribute_names, xistate->attribute_values, doc->user_data, error);
 		doc->active++;
 	}
-		
+
 }
 /**
  * * Reached closing tag of a config element
@@ -814,7 +814,7 @@ xi_text (GMarkupParseContext *context,
 				struct xmldocument *doc=user_data;
 				struct xmlstate *curr, **state = doc->user_data;
 				struct attr attr;
-				char *text_dup=malloc(text_len+1);
+				char *text_dup=g_malloc(text_len+1);
 
 				curr=*state;
 				strncpy(text_dup, text, text_len);
