@@ -123,14 +123,14 @@ static void bookmarks_clear_item(struct bookmark_item_priv *b_item) {
 	g_free(b_item);
 }
 
-static void 
+static void
 bookmarks_clear_hash(struct bookmarks *this_) {
 	bookmarks_clear_item(this_->root);
 	g_hash_table_destroy(this_->bookmarks_hash);
 	g_list_free(this_->bookmarks_list);
 }
 
-static void 
+static void
 bookmarks_load_hash(struct bookmarks *this_) {
 	struct bookmark_item_priv *b_item;
 	struct item *item;
@@ -171,7 +171,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 			*pos=0x00;
 			dbg(1,"Found path entry: %s\n",finder);
 			if (!bookmarks_move_down(this_,finder)) {
-				struct bookmark_item_priv *path_item=g_new0(struct bookmark_item_priv,1);	
+				struct bookmark_item_priv *path_item=g_new0(struct bookmark_item_priv,1);
 				path_item->type=type_bookmark_folder;
 				path_item->parent=this_->current;
 				path_item->children=NULL;
@@ -186,7 +186,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 		}
 		strcpy(b_item->label,finder);
 		b_item->parent=this_->current;
-		
+
 		g_hash_table_insert(this_->bookmarks_hash,b_item->label,b_item);
 		this_->bookmarks_list=g_list_append(this_->bookmarks_list,b_item);
 		this_->current->children=g_list_append(this_->current->children,b_item);
@@ -222,7 +222,7 @@ bookmarks_new(struct attr *parent, struct attr **attrs, struct transformation *t
 	return this_;
 }
 
-void 
+void
 bookmarks_destroy(struct bookmarks *this_) {
 
 	bookmarks_clear_hash(this_);
@@ -234,12 +234,10 @@ bookmarks_destroy(struct bookmarks *this_) {
 	g_free(this_->working_file);
 
 	g_free(this_->clipboard);
-	g_free(this_->root);
-
 	g_free(this_);
 }
 
-struct map* 
+struct map*
 bookmarks_get_map(struct bookmarks *this_) {
 	return this_->bookmark;
 }
@@ -253,7 +251,7 @@ bookmarks_add_callback(struct bookmarks *this_, struct callback *cb)
 	callback_list_add(this_->attr_cbl, cb);
 }
 
-static int 
+static int
 bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replace) {
 	FILE *f;
 	struct bookmark_item_priv *item,*parent_item;
@@ -288,22 +286,22 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 			if (item->type == type_bookmark) {
 				prostr = projection_to_name(projection_mg,NULL);
 				if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\" path=\"%s\"\n",
-					 prostr, *prostr ? ":" : "", 
-					 item->c.x >= 0 ? "":"-", item->c.x >= 0 ? item->c.x : -item->c.x, 
-					 item->c.y >= 0 ? "":"-", item->c.y >= 0 ? item->c.y : -item->c.y, 
+					 prostr, *prostr ? ":" : "",
+					 item->c.x >= 0 ? "":"-", item->c.x >= 0 ? item->c.x : -item->c.x,
+					 item->c.y >= 0 ? "":"-", item->c.y >= 0 ? item->c.y : -item->c.y,
 					 "bookmark", item->label,fullname)<1) {
-					g_free(fullname); 
+					g_free(fullname);
 					break;
 				}
 			}
 			if (item->type == type_bookmark_folder) {
 				prostr = projection_to_name(projection_mg,NULL);
 				if (fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\" path=\"%s\"\n",
-					 prostr, *prostr ? ":" : "", 
-					 "", 0, 
-					 "", 0, 
+					 prostr, *prostr ? ":" : "",
+					 "", 0,
+					 "", 0,
 					 "bookmark_folder", item->label,fullname)<1) {
-					g_free(fullname); 
+					g_free(fullname);
 					break;
 				}
 			}
@@ -329,7 +327,7 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 
 /*
  * bookmarks_get_user_data_directory
- * 
+ *
  * returns the directory used to store user data files (center.txt,
  * destination.txt, bookmark.txt, ...)
  *
@@ -352,7 +350,7 @@ bookmarks_get_user_data_directory(gboolean create) {
 
 /*
  * bookmarks_get_destination_file
- * 
+ *
  * returns the name of the file used to store destinations with its
  * full path
  *
@@ -367,7 +365,7 @@ bookmarks_get_destination_file(gboolean create)
 
 /*
  * bookmarks_get_center_file
- * 
+ *
  * returns the name of the file used to store the center file  with its
  * full path
  *
@@ -405,7 +403,7 @@ bookmarks_set_center_from_file(struct bookmarks *this_, char *file)
 	return;
 #endif
 }
- 
+
 void
 bookmarks_write_center_to_file(struct bookmarks *this_, char *file)
 {
@@ -433,7 +431,7 @@ bookmarks_write_center_to_file(struct bookmarks *this_, char *file)
  * @param description A label which allows the user to later identify this bookmark
  * @returns nothing
  */
-int 
+int
 bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *description)
 {
 	struct bookmark_item_priv *b_item=g_new0(struct bookmark_item_priv,1);
@@ -464,15 +462,15 @@ bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *d
 	return result;
 }
 
-int 
+int
 bookmarks_cut_bookmark(struct bookmarks *this_, const char *label) {
 	if (bookmarks_copy_bookmark(this_,label)) {
 		return bookmarks_delete_bookmark(this_,label);
 	}
-	
+
 	return FALSE;
 }
-int 
+int
 bookmarks_copy_bookmark(struct bookmarks *this_, const char *label) {
 	bookmarks_item_rewind(this_);
 	if (this_->current->children==NULL) {
@@ -495,7 +493,7 @@ bookmarks_copy_bookmark(struct bookmarks *this_, const char *label) {
 	}
 	return FALSE;
 }
-int 
+int
 bookmarks_paste_bookmark(struct bookmarks *this_) {
 	int result;
 	struct bookmark_item_priv* b_item;
@@ -528,7 +526,7 @@ bookmarks_paste_bookmark(struct bookmarks *this_) {
 }
 
 
-int 
+int
 bookmarks_delete_bookmark(struct bookmarks *this_, const char *label) {
 	int result;
 
@@ -556,7 +554,7 @@ bookmarks_delete_bookmark(struct bookmarks *this_, const char *label) {
 	return FALSE;
 }
 
-int 
+int
 bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const char* newName) {
 	int result;
 
@@ -629,11 +627,11 @@ bookmarks_append_coord(struct bookmarks *this_, char *file, struct pcoord *c, co
 
 			buffer=g_malloc(numc);
 			offset = numc; // Offset holds where we currently are
-			
+
 			do {
 				fseek(f,offset,SEEK_SET);
 				readc = fread(buffer,1,numc,f);
-				
+
 				fseek(f,-(numc+readc),SEEK_CUR);
 				fwrite(buffer,1,readc,f);
 
@@ -658,9 +656,9 @@ new_file:
 		if (c) {
 			prostr = projection_to_name(c->pro,NULL);
 			fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
-				 prostr, *prostr ? ":" : "", 
-				 c->x >= 0 ? "":"-", c->x >= 0 ? c->x : -c->x, 
-				 c->y >= 0 ? "":"-", c->y >= 0 ? c->y : -c->y, 
+				 prostr, *prostr ? ":" : "",
+				 c->x >= 0 ? "":"-", c->x >= 0 ? c->x : -c->x,
+				 c->y >= 0 ? "":"-", c->y >= 0 ? c->y : -c->y,
 				 type, description);
 		} else
 			fprintf(f,"\n");
