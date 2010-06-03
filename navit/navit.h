@@ -100,6 +100,7 @@ int navit_block(struct navit *this_, int block);
 void navit_layout_switch(struct navit *n);
 int navit_set_vehicle_by_name(struct navit *n,const char *name);
 int navit_set_layout_by_name(struct navit *n, const char* name);
+void navit_disable_suspend();
 void navit_destroy(struct navit *this_);
 /* end of prototypes */
 #ifdef __cplusplus
