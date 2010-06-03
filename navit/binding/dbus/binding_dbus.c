@@ -98,7 +98,7 @@ object_get(const char *path)
 	return g_hash_table_lookup(object_hash, path);
 }
 
-static void 
+static void
 object_destroy(const char *path, void *object)
 {
 	if (!path && !object)
@@ -179,7 +179,7 @@ resolve_object(const char *opath, char *type)
 			if (navit_get_attr(navit.u.navit, attr_mapset, &attr, NULL)) {
 				if (!oprefix[0]) {
 					return attr.u.mapset;
-				}	
+				}
 				if (!strncmp(oprefix,def_map,strlen(def_map))) {
 					if (mapset_get_attr(attr.u.mapset, attr_map, &attr, NULL)) {
 						return attr.u.map;
@@ -230,16 +230,16 @@ object_get_from_message(DBusMessage *message, char *type)
 	return resolve_object(dbus_message_get_path(message), type);
 }
 
-static enum attr_type 
+static enum attr_type
 attr_type_get_from_message(DBusMessageIter *iter)
 {
 	char *attr_type;
 
-	if (dbus_message_iter_get_arg_type(iter) != DBUS_TYPE_STRING) 
+	if (dbus_message_iter_get_arg_type(iter) != DBUS_TYPE_STRING)
 		return attr_none;
 	dbus_message_iter_get_basic(iter, &attr_type);
 	dbus_message_iter_next(iter);
-	return attr_from_name(attr_type); 
+	return attr_from_name(attr_type);
 }
 
 static void
@@ -411,7 +411,7 @@ dbus_dump(DBusMessage *message)
 
 	dbus_message_iter_init(message, &iter);
 	dbus_dump_iter("",&iter);
-		
+
 }
 #endif
 
@@ -433,16 +433,16 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
         dbus_message_iter_get_basic(iter, &coordstring);
         if(!pcoord_parse(coordstring, projection_mg, pc))
             return 0;
-        
+
         return 1;
     } else {
-        
+
         DBusMessageIter iter2;
         dbus_message_iter_recurse(iter, &iter2);
         if(!strcmp(dbus_message_iter_get_signature(iter), "(is)")) {
             char *coordstring;
             int projection;
-            
+
             dbus_message_iter_get_basic(&iter2, &projection);
 
             dbus_message_iter_next(&iter2);
@@ -453,12 +453,12 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
 
             return 1;
         } else if(!strcmp(dbus_message_iter_get_signature(iter), "(iii)")) {
-            
+
             dbus_message_iter_get_basic(&iter2, &pc->pro);
-            
+
             dbus_message_iter_next(&iter2);
             dbus_message_iter_get_basic(&iter2, &pc->x);
-            
+
             dbus_message_iter_next(&iter2);
             dbus_message_iter_get_basic(&iter2, &pc->y);
 
@@ -466,7 +466,7 @@ pcoord_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct pcoo
         }
     }
     return 0;
-    
+
 }
 
 static void
@@ -492,12 +492,12 @@ decode_attr_type_from_iter(DBusMessageIter *iter)
 {
 	char *attr_type;
 	enum attr_type ret;
-	
+
 	if (dbus_message_iter_get_arg_type(iter) != DBUS_TYPE_STRING)
 		return attr_none;
 	dbus_message_iter_get_basic(iter, &attr_type);
 	dbus_message_iter_next(iter);
-	ret=attr_from_name(attr_type); 
+	ret=attr_from_name(attr_type);
 	dbg(1, "attr value: 0x%x string: %s\n", ret, attr_type);
 	return ret;
 }
@@ -512,11 +512,11 @@ decode_attr_from_iter(DBusMessageIter *iter, struct attr *attr)
 	attr->type=decode_attr_type_from_iter(iter);
 	if (attr->type == attr_none)
 		return 0;
-    
+
 	dbus_message_iter_recurse(iter, &iterattr);
 	dbus_message_iter_next(iter);
 	dbg(1, "seems valid. signature: %s\n", dbus_message_iter_get_signature(&iterattr));
-    
+
 	if (attr->type >= attr_type_item_begin && attr->type <= attr_type_item_end)
 		return 0;
 
@@ -645,7 +645,7 @@ request_attr_iter_destroy(DBusConnection *connection, DBusMessage *message, char
 static DBusHandlerResult
 request_destroy(DBusConnection *connection, DBusMessage *message, char *type, void *data, void (*func)(void *))
 {
-	if (!data) 
+	if (!data)
 		data=object_get_from_message(message, type);
 	if (!data)
 		return dbus_error_invalid_object_path(connection, message);
@@ -675,7 +675,7 @@ request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, v
 	attr_type=attr_type_get_from_message(&iter);
 	if (attr_type == attr_none)
 		return dbus_error_invalid_attr_type(connection, message);
-	iter_name=get_iter_name(type);	
+	iter_name=get_iter_name(type);
 	attr_iter=object_get_from_message_arg(&iter, iter_name);
 	g_free(iter_name);
 	if (func(data, attr_type, &attr, attr_iter)) {
@@ -688,7 +688,7 @@ request_get_attr(DBusConnection *connection, DBusMessage *message, char *type, v
 		return DBUS_HANDLER_RESULT_HANDLED;
 	}
 	return empty_reply(connection, message);
-	
+
 }
 
 static DBusHandlerResult
@@ -704,7 +704,7 @@ request_command(DBusConnection *connection, DBusMessage *message, char *type, vo
 		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
-	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_STRING) 
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_STRING)
 		return dbus_error_invalid_parameter(connection, message);
 	dbus_message_iter_get_basic(&iter, &command);
 	dbus_message_iter_next(&iter);
@@ -713,7 +713,7 @@ request_command(DBusConnection *connection, DBusMessage *message, char *type, vo
                 callback_list_call_attr_4(attr.u.callback_list, attr_command, command, NULL, NULL, &valid);
 	}
 	return empty_reply(connection, message);
-	
+
 }
 
 static DBusHandlerResult
@@ -722,7 +722,7 @@ request_set_add_remove_attr(DBusConnection *connection, DBusMessage *message, ch
     	struct attr attr;
 	int ret;
 
-	if (! data)	
+	if (! data)
 		data = object_get_from_message(message, type);
 	if (! data)
 		return dbus_error_invalid_object_path(connection, message);
@@ -730,7 +730,7 @@ request_set_add_remove_attr(DBusConnection *connection, DBusMessage *message, ch
 	if (decode_attr(message, &attr)) {
 		ret=(*func)(data, &attr);
 		destroy_attr(&attr);
-		if (ret)	
+		if (ret)
 			return empty_reply(connection, message);
 	}
     	return dbus_error_invalid_parameter(connection, message);
@@ -775,7 +775,7 @@ request_callback_new(DBusConnection *connection, DBusMessage *message)
 	enum attr_type type;
 
 	dbus_message_iter_init(message, &iter);
-	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_STRING) 
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_STRING)
 		return dbus_error_invalid_parameter(connection, message);
 	dbus_message_iter_get_basic(&iter, &signal);
 	dbus_message_iter_next(&iter);
@@ -841,7 +841,7 @@ request_graphics_get_data(DBusConnection *connection, DBusMessage *message)
 #endif
 		dbus_message_iter_init_append(reply, &iter1);
 		dbus_message_iter_open_container(&iter1, DBUS_TYPE_ARRAY, "y", &iter2);
-		if (image->data && image->size) 
+		if (image->data && image->size)
 			dbus_message_iter_append_fixed_array(&iter2, DBUS_TYPE_BYTE, &image->data, image->size);
 		dbus_message_iter_close_container(&iter1, &iter2);
 		dbus_connection_send (connection, reply, NULL);
@@ -957,7 +957,7 @@ request_navit_draw(DBusConnection *connection, DBusMessage *message)
 		return dbus_error_invalid_object_path(connection, message);
 
 	navit_draw(navit);
-	
+
 	return empty_reply(connection, message);
 }
 
@@ -976,26 +976,26 @@ point_get_from_message(DBusMessage *message, DBusMessageIter *iter, struct point
 	DBusMessageIter iter2;
 
 	dbg(0,"%s\n", dbus_message_iter_get_signature(iter));
-	
+
 	dbus_message_iter_recurse(iter, &iter2);
 
 	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
 		return 0;
 	dbus_message_iter_get_basic(&iter2, &p->x);
-	
+
 	dbus_message_iter_next(&iter2);
-	
+
 	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INT32)
 		return 0;
 	dbus_message_iter_get_basic(&iter2, &p->y);
 
 	dbg(0, " x -> %x  y -> %x\n", p->x, p->y);
-	
+
 	dbus_message_iter_next(&iter2);
 
 	if (dbus_message_iter_get_arg_type(&iter2) != DBUS_TYPE_INVALID)
 		return 0;
-	
+
 	return 1;
 }
 
@@ -1011,7 +1011,7 @@ request_navit_add_message(DBusConnection *connection, DBusMessage *message)
 {
 	struct navit *navit;
 	char *usermessage;
-    
+
     DBusMessageIter iter;
 
 	navit=object_get_from_message(message, "navit");
@@ -1020,9 +1020,9 @@ request_navit_add_message(DBusConnection *connection, DBusMessage *message)
 
 	dbus_message_iter_init(message, &iter);
 	dbus_message_iter_get_basic(&iter, &usermessage);
-	
+
     navit_add_message(navit, usermessage);
-	
+
     return empty_reply(connection, message);
 }
 
@@ -1049,7 +1049,7 @@ request_navit_set_center(DBusConnection *connection, DBusMessage *message)
 
 	if (!pcoord_get_from_message(message, &iter, &pc))
 		return dbus_error_invalid_parameter(connection, message);
-    
+
 	navit_set_center(navit, &pc, 0);
 	return empty_reply(connection, message);
 }
@@ -1096,10 +1096,10 @@ request_navit_set_layout(DBusConnection *connection, DBusMessage *message)
 	navit=object_get_from_message(message, "navit");
 	if (! navit)
 		return dbus_error_invalid_object_path(connection, message);
-	
+
 	if (!dbus_message_get_args(message, NULL, DBUS_TYPE_STRING, &new_layout_name, DBUS_TYPE_INVALID))
 		return dbus_error_invalid_parameter(connection, message);
-	
+
 	iter=navit_attr_iter_new();
 	while(navit_get_attr(navit, attr_layout, &attr, iter)) {
 		if (strcmp(attr.u.layout->name, new_layout_name) == 0) {
@@ -1123,9 +1123,9 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 
 	dbus_message_iter_init(message, &iter);
 	dbg(0,"%s\n", dbus_message_iter_get_signature(&iter));
-	
+
 	dbus_message_iter_get_basic(&iter, &factor);
-	
+
 	if (dbus_message_iter_has_next(&iter))
 	{
 		dbus_message_iter_next(&iter);
@@ -1156,19 +1156,19 @@ request_navit_resize(DBusConnection *connection, DBusMessage *message)
 
 	dbus_message_iter_init(message, &iter);
 	dbg(0,"%s\n", dbus_message_iter_get_signature(&iter));
-	
+
 	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32)
 		return dbus_error_invalid_parameter(connection, message);
 	dbus_message_iter_get_basic(&iter, &w);
-	
+
 	dbus_message_iter_next(&iter);
-	
+
 	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32)
 		return dbus_error_invalid_parameter(connection, message);
 	dbus_message_iter_get_basic(&iter, &h);
 
 	dbg(0, " w -> %i  h -> %i\n", w, h);
-	
+
 	navit_handle_resize(navit, w, h);
 
 	return empty_reply(connection, message);
@@ -1243,7 +1243,7 @@ request_navit_set_position(DBusConnection *connection, DBusMessage *message)
 	dbus_message_iter_init(message, &iter);
 	if (!pcoord_get_from_message(message, &iter, &pc))
     		return dbus_error_invalid_parameter(connection, message);
-	
+
 	navit_set_position(navit, &pc);
 	return empty_reply(connection, message);
 }
@@ -1263,11 +1263,11 @@ request_navit_set_destination(DBusConnection *connection, DBusMessage *message)
 	dbus_message_iter_init(message, &iter);
 	if (!pcoord_get_from_message(message, &iter, &pc))
     		return dbus_error_invalid_parameter(connection, message);
-	
+
 	dbus_message_iter_next(&iter);
 	dbus_message_iter_get_basic(&iter, &description);
 	dbg(0, " destination -> %s\n", description);
-	
+
 	navit_set_destination(navit, &pc, description, 1);
 	return empty_reply(connection, message);
 }
@@ -1335,13 +1335,13 @@ request_search_list_get_result(DBusConnection *connection, DBusMessage *message)
 		dbus_message_iter_open_container(&iter2, DBUS_TYPE_DICT_ENTRY, NULL, &iter3);
 		dbus_message_iter_append_basic(&iter3, DBUS_TYPE_STRING, &country);
 		dbus_message_iter_open_container(&iter3, DBUS_TYPE_ARRAY, "{sv}", &iter4);
-		if (result->country->car) 
+		if (result->country->car)
 			encode_dict_string_variant_string(&iter4, "car", result->country->car);
-		if (result->country->iso2) 
+		if (result->country->iso2)
 			encode_dict_string_variant_string(&iter4, "iso2", result->country->iso2);
-		if (result->country->iso3) 
+		if (result->country->iso3)
 			encode_dict_string_variant_string(&iter4, "iso3", result->country->iso3);
-		if (result->country->name) 
+		if (result->country->name)
 			encode_dict_string_variant_string(&iter4, "name", result->country->name);
 		dbus_message_iter_close_container(&iter3, &iter4);
 		dbus_message_iter_close_container(&iter2, &iter3);
@@ -1409,7 +1409,7 @@ request_search_list_search(DBusConnection *connection, DBusMessage *message)
 	dbus_message_iter_init(message, &iter);
 	if (!decode_attr_from_iter(&iter, &attr))
     		return dbus_error_invalid_parameter(connection, message);
-	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32) 
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32)
     		return dbus_error_invalid_parameter(connection, message);
 	dbus_message_iter_get_basic(&iter, &partial);
 	search_list_search(search_list, &attr, partial);
@@ -1429,13 +1429,13 @@ request_search_list_select(DBusConnection *connection, DBusMessage *message)
 		return dbus_error_invalid_object_path(connection, message);
 
 	dbus_message_iter_init(message, &iter);
-	attr_type=decode_attr_type_from_iter(&iter);	
+	attr_type=decode_attr_type_from_iter(&iter);
 	if (attr_type == attr_none)
     		return dbus_error_invalid_parameter(connection, message);
-	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32) 
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32)
     		return dbus_error_invalid_parameter(connection, message);
 	dbus_message_iter_get_basic(&iter, &id);
-	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32) 
+	if (dbus_message_iter_get_arg_type(&iter) != DBUS_TYPE_INT32)
     		return dbus_error_invalid_parameter(connection, message);
 	dbus_message_iter_get_basic(&iter, &mode);
 	search_list_select(search_list, attr_type, id, mode);
@@ -1460,14 +1460,14 @@ request_vehicle_set_attr(DBusConnection *connection, DBusMessage *message)
 	struct vehicle *vehicle;
     	struct attr attr;
 	int ret;
-	
+
 	vehicle = object_get_from_message(message, "vehicle");
 	if (! vehicle)
 		return dbus_error_invalid_object_path(connection, message);
 	if (decode_attr(message, &attr)) {
 		ret=vehicle_set_attr(vehicle, &attr);
 		destroy_attr(&attr);
-		if (ret)	
+		if (ret)
 			return empty_reply(connection, message);
 	}
     	return dbus_error_invalid_parameter(connection, message);
@@ -1575,7 +1575,7 @@ introspect_path(const char *object)
 	for (i = 0 ; i < strlen(ret); i++)
 		if (ret[i] == '/')
 			ret[i]='.';
-	
+
 	for (i = strlen(ret)-1 ; i >= 0 ; i--) {
 		if (!strncmp(ret+i, def, def_len)) {
 			memmove(ret+1,ret+i+def_len,strlen(ret+i+def_len)+1);
@@ -1594,10 +1594,10 @@ generate_navitintrospectxml(const char *object)
     if (!path)
 	return NULL;
     dbg(1,"path=%s\n",path);
-    
+
     // write header and make navit introspectable
     navitintrospectxml = g_strdup_printf("%s%s%s\n", navitintrospectxml_head1, object, navitintrospectxml_head2);
-    
+
     methods_size=sizeof(dbus_methods)/sizeof(struct dbus_method);
     for (i = 0 ; i < methods_size ; i++) {
         // start new interface if it's the first method or it changed
@@ -1606,28 +1606,28 @@ generate_navitintrospectxml(const char *object)
         if ((n == 0) || strcmp(dbus_methods[i-1].path, dbus_methods[i].path))
             navitintrospectxml = g_strconcat_printf(navitintrospectxml, "  <interface name=\"%s%s\">\n", service_name, dbus_methods[i].path);
 	n++;
-        
+
         // start the new method
         navitintrospectxml = g_strconcat_printf(navitintrospectxml, "    <method name=\"%s\">\n", dbus_methods[i].method);
 
         // set input signature if existent
         if (strcmp(dbus_methods[i].signature, ""))
             navitintrospectxml = g_strconcat_printf(navitintrospectxml, "      <arg direction=\"in\" name=\"%s\" type=\"%s\" />\n", dbus_methods[i].signature_name, dbus_methods[i].signature);
-        
+
         // set response signature if existent
         if (strcmp(dbus_methods[i].response, ""))
             navitintrospectxml = g_strconcat_printf(navitintrospectxml, "      <arg direction=\"out\" name=\"%s\" type=\"%s\" />\n", dbus_methods[i].response_name, dbus_methods[i].response);
-        
+
         // close the method
         navitintrospectxml = g_strconcat_printf(navitintrospectxml, "    </method>\n");
-        
+
         // close the interface if we reached the last method or the interface changes
         if ((methods_size == i+1) || ((methods_size > i+1) && strcmp(dbus_methods[i+1].path, dbus_methods[i].path)))
             navitintrospectxml = g_strconcat_printf(navitintrospectxml, "  </interface>\n\n");
     }
     // close the "mother tag"
     navitintrospectxml = g_strconcat_printf(navitintrospectxml, "</node>\n");
-    
+
     return navitintrospectxml;
 }
 
@@ -1651,7 +1651,7 @@ navit_handler_func(DBusConnection *connection, DBusMessage *message, void *user_
 		}
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 	}
-	
+
     for (i = 0 ; i < sizeof(dbus_methods)/sizeof(struct dbus_method) ; i++) {
 		path=g_strdup_printf("%s%s", service_name, dbus_methods[i].path);
 		if (dbus_message_is_method_call(message, path, dbus_methods[i].method) &&
@@ -1709,7 +1709,7 @@ dbus_cmd_send_signal(struct navit *navit, char *command, struct attr **in, struc
 	g_free(interface);
 	return 0;
 }
-     
+
 
 static struct command_table commands[] = {
         {"dbus_send_signal",command_cast(dbus_cmd_send_signal)},
@@ -1720,7 +1720,7 @@ static void
 dbus_main_navit(struct navit *navit, int added)
 {
 	struct attr attr;
-	if (added) {
+	if (added==1) {
 		DBusMessage* msg;
 		char *opath=object_new("navit",navit);
 		char *interface=g_strdup_printf("%s%s", service_name, ".navit");
