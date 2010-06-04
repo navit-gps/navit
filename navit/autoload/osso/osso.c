@@ -67,7 +67,7 @@ plugin_init(void)
 }
 
 void
-osso_plugin_destroy(void) 
+plugin_deinit(void) 
 {
     osso_deinitialize(osso_context); 
 }
