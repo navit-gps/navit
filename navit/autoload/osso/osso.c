@@ -7,7 +7,8 @@
 #include "navit.h"
 #include "plugin.h"
 
-osso_context_t *osso_context; 
+static osso_context_t *osso_context; 
+static struct attr callback={attr_callback};
 
 static void  
 navit_osso_display_on(struct navit *this_)  
@@ -51,6 +52,16 @@ osso_cb_hw_state(osso_hw_state_t *state, gpointer data)
     g_idle_add((GSourceFunc)osso_cb_hw_state_idle, state_copy);
 }
 
+static void
+osso_navit(struct navit *nav, int add)
+{
+	struct callback *cb;
+	dbg(2,"enter\n");
+	if (add > 0) {
+    		/* add callback to unblank screen on gps event */  
+		navit_add_callback(nav, callback_new_attr_0(callback_cast(plugin_osso_display_on), attr_unsuspend_));
+	}
+}
 
 void
 plugin_init(void) 
@@ -61,9 +72,9 @@ plugin_init(void)
 	dbg(0, "error initiating osso context\n");  
     }  
     osso_hw_set_event_cb(osso_context, NULL, osso_cb_hw_state, NULL);  
+    callback.u.callback=callback_new_attr_0(callback_cast(osso_navit), attr_navit);
+    config_add_attr(config,&callback);
 
-    /* add callback to unblank screen on gps event */  
-    //navit_add_callback(this_, callback_new_attr_0(callback_cast(plugin_osso_display_on), attr_unsuspend_));
 }
 
 void
