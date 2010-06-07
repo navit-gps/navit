@@ -6,12 +6,19 @@
 #include "attr.h"
 #include "navit.h"
 #include "plugin.h"
+#include "callback.h"
+#include "config_.h"
 
 static osso_context_t *osso_context;
 static struct attr callback = { attr_callback };
 
+struct cb_hw_state_trail {
+	struct navit* nav;
+	osso_hw_state_t *state;
+};
+
 static void
-navit_osso_display_on(struct navit *this_)
+osso_display_on(struct navit *this_)
 {
 	osso_return_t err;
 	err = osso_display_blanking_pause(osso_context);
@@ -22,20 +29,20 @@ navit_osso_display_on(struct navit *this_)
 }
 
 static gboolean
-osso_cb_hw_state_idle(osso_hw_state_t * state)
+osso_cb_hw_state_idle(struct cb_hw_state_trail * params)
 {
 	dbg(0, "(inact=%d, save=%d, shut=%d, memlow=%d, state=%d)\n",
-	    state->system_inactivity_ind,
-	    state->save_unsaved_data_ind, state->shutdown_ind,
-	    state->memory_low_ind, state->sig_device_mode_ind);
+	    params->state->system_inactivity_ind,
+	    params->state->save_unsaved_data_ind, params->state->shutdown_ind,
+	    params->state->memory_low_ind, params->state->sig_device_mode_ind);
 
-	if (state->shutdown_ind) {
+	if (params->state->shutdown_ind) {
 		/* we  are going  down, down,  down */
-		//navit_destroy(global_navit);
-		exit(1);
+		navit_destroy(params->nav);		
 	}
 
-	g_free(state);
+	g_free(params->state);
+	g_free(params);
 
 	return FALSE;
 }
@@ -49,34 +56,39 @@ osso_cb_hw_state_idle(osso_hw_state_t * state)
 static void
 osso_cb_hw_state(osso_hw_state_t * state, gpointer data)
 {
-	osso_hw_state_t *state_copy = g_new(osso_hw_state_t, 1);
-	memcpy(state_copy, state, sizeof(osso_hw_state_t));
-	g_idle_add((GSourceFunc) osso_cb_hw_state_idle, state_copy);
+	struct navit *nav = (struct navit*)data;
+	struct cb_hw_state_trail *params = g_new(struct cb_hw_state_trail,1);
+	params->nav=nav;
+	params->state = g_new(osso_hw_state_t, 1);
+	memcpy(params->state, state, sizeof(osso_hw_state_t));
+	g_idle_add((GSourceFunc) osso_cb_hw_state_idle, params);
 }
 
 static void
 osso_navit(struct navit *nav, int add)
-{
-	struct callback *cb;
-	dbg(2, "enter\n");
-	if (add > 0) {
-		/* add callback to unblank screen on gps event */
-		navit_add_callback(nav, callback_new_attr_0(callback_cast (plugin_osso_display_on), attr_unsuspend_));
-	}
-}
-
-void
-plugin_init(void)
 {
 	dbg(1, "Installing osso context for org.navit_project.navit\n");
 	osso_context = osso_initialize("org.navit_project.navit", VERSION, TRUE, NULL);
 	if (osso_context == NULL) {
 		dbg(0, "error initiating osso context\n");
 	}
-	osso_hw_set_event_cb(osso_context, NULL, osso_cb_hw_state, NULL);
+	osso_hw_set_event_cb(osso_context, NULL, osso_cb_hw_state, nav);
+
+	if (add > 0) {
+		/* add callback to unblank screen */
+		navit_add_callback(nav, callback_new_attr_0(callback_cast (osso_display_on), attr_unsuspend));
+	}
+}
+
+void
+plugin_init(void)
+{
+	//struct callback *cb;
+
+	dbg(2, "enter\n");
+
 	callback.u.callback = callback_new_attr_0(callback_cast(osso_navit), attr_navit);
 	config_add_attr(config, &callback);
-
 }
 
 void
