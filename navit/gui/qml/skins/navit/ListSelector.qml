@@ -37,7 +37,6 @@ Rectangle {
 	     clip: true
 	     highlightFollowsCurrentItem: true
 	     keyNavigationWraps: true
-	     overShoot: false
 	     currentIndex: listselector.itemId;
          }
 	 Rectangle {
