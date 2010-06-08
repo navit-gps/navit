@@ -7,6 +7,7 @@ modulespeechdir=$(pkglibdir)/speech
 moduleosddir=$(pkglibdir)/osd
 modulevehicledir=$(pkglibdir)/vehicle
 moduleplugindir=$(pkglibdir)/plugin
+moduleautoloaddir=$(pkglibdir)/autoload
 pkgdocdir=$(pkgdatadir)
 xpmdir=$(pkgdatadir)/xpm
 skinsdir=$(pkgdatadir)/skins
