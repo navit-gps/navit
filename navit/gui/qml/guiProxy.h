@@ -54,8 +54,8 @@ public slots:
 		this->source+="/"+page;
 
 		if (this->object->guiWidget) {
-			this->object->switcherWidget->removeWidget(this->object->guiWidget);
 			if (this->object->prevGuiWidget) {
+				this->object->switcherWidget->removeWidget(this->object->prevGuiWidget);
 				delete this->object->prevGuiWidget;
 			}
 			this->object->prevGuiWidget=this->object->guiWidget;
@@ -74,10 +74,9 @@ public slots:
 
 		if (!hidden) {
 			//we render commands page hidden, so the screen doesn't flicks.
-			this->object->guiWidget->show();
 			this->object->switcherWidget->addWidget(this->object->guiWidget);
-			this->object->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
 			this->object->switcherWidget->setCurrentWidget(this->object->guiWidget);
+			this->object->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
 		}
 	}
 
