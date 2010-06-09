@@ -1,7 +1,6 @@
 #include <libosso.h>
 #include <stdlib.h>
 #include "debug.h"
-#include "version.h"
 #include "item.h"
 #include "attr.h"
 #include "navit.h"
@@ -11,6 +10,8 @@
 
 static osso_context_t *osso_context;
 static struct attr callback = { attr_callback };
+
+extern char *version;
 
 struct cb_hw_state_trail {
 	struct navit* nav;
@@ -68,7 +69,7 @@ static void
 osso_navit(struct navit *nav, int add)
 {
 	dbg(1, "Installing osso context for org.navit_project.navit\n");
-	osso_context = osso_initialize("org.navit_project.navit", VERSION, TRUE, NULL);
+	osso_context = osso_initialize("org.navit_project.navit", version, TRUE, NULL);
 	if (osso_context == NULL) {
 		dbg(0, "error initiating osso context\n");
 	}
