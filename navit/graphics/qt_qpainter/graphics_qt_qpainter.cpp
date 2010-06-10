@@ -500,7 +500,7 @@ struct graphics_font_priv {
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 struct graphics_image_priv {
-	QImage *image;
+	QPixmap *pixmap;
 };
 
 //##############################################################################################################
@@ -636,21 +636,34 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)
 {
 	struct graphics_image_priv *ret;
+	QImage image;
+	QPixmap *cachedPixmap;
+	QString key(path);
 
 	ret=g_new0(struct graphics_image_priv, 1);
 
-	ret->image=new QImage(path);
-	if (ret->image->isNull()) {
-		delete(ret->image);
-		g_free(ret);
-		return NULL;
+	cachedPixmap=QPixmapCache::find(key);
+	if (!cachedPixmap) {
+	
+		image=QImage(path);
+		if (image.isNull()) {
+			g_free(ret);
+			return NULL;
+		}
+		ret->pixmap=new QPixmap(QPixmap::fromImage(image));
+		QPixmapCache::insert(key,QPixmap(*ret->pixmap));
+	} else {
+		dbg(0,"cache hit\n");
+		ret->pixmap=new QPixmap(*cachedPixmap);
 	}
-	*w=ret->image->width();
-	*h=ret->image->height();
+
+	*w=ret->pixmap->width();
+	*h=ret->pixmap->height();
 	if (hot) {
 		hot->x=*w/2;
 		hot->y=*h/2;
 	}
+
 	return ret;
 }
 
@@ -819,7 +832,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 //##############################################################################################################
 static void draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
 {
-	gr->painter->drawImage(p->x, p->y, *img->image);
+	gr->painter->drawPixmap(p->x, p->y, *img->pixmap);
 }
 
 //##############################################################################################################
@@ -1011,7 +1024,7 @@ static void * get_data(struct graphics_priv *this_, char *type)
 static void
 image_free(struct graphics_priv *gr, struct graphics_image_priv *priv)
 {
-	delete priv->image;
+	delete priv->pixmap;
 	g_free(priv);
 }
 
