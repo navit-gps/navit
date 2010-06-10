@@ -137,6 +137,7 @@ bookmarks_load_hash(struct bookmarks *this_) {
 	struct attr attr;
 	struct coord c;
 	char *pos,*finder;
+	char *copy_helper;
 
 	if (this_->mr) {
 		map_rect_destroy(this_->mr);
@@ -184,7 +185,9 @@ bookmarks_load_hash(struct bookmarks *this_) {
 			}
 			finder+=strlen(finder)+1;
 		}
-		strcpy(b_item->label,finder);
+		copy_helper=strdup(finder);
+		free(b_item->label);
+		b_item->label=copy_helper;
 		b_item->parent=this_->current;
 
 		g_hash_table_insert(this_->bookmarks_hash,b_item->label,b_item);
