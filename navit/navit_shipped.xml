@@ -1553,7 +1553,7 @@ Navigation</text></img>
 					<icon src="hotel.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_car_parking" order="11-">
-					<icon src="parking.xpm"/>
+					<icon src="parking.png"/>
 				</itemgra>
 				<itemgra item_types="poi_car_dealer_parts" order="12-">
 					<icon src="car_dealer.xpm"/>
@@ -1772,7 +1772,7 @@ Navigation</text></img>
 					<icon src="personal_service.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_pharmacy" order="12-">
-					<icon src="pharmacy.xpm"/>
+					<icon src="pharmacy.png"/>
 				</itemgra>
 				<itemgra item_types="poi_post_office,poi_post_box" order="13-">
 					<icon src="post.png"/>
@@ -1802,7 +1802,7 @@ Navigation</text></img>
 					<icon src="resort.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_restaurant" order="12-">
-					<icon src="restaurant.xpm"/>
+					<icon src="restaurant.png"/>
 				</itemgra>
 				<itemgra item_types="poi_restricted_area" order="12-">
 					<icon src="restricted_area.xpm"/>
@@ -2807,7 +2807,7 @@ Navigation</text></img>
 					<icon src="ghost_town.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_hotel" order="12-">
-					<icon src="hotel.xpm"/>
+					<icon src="hotel.png"/>
 				</itemgra>
 				<itemgra item_types="poi_car_parking" order="11-">
 					<icon src="parking.xpm"/>
@@ -3035,7 +3035,7 @@ Navigation</text></img>
 					<icon src="personal_service.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_pharmacy" order="12-">
-					<icon src="pharmacy.xpm"/>
+					<icon src="pharmacy.png"/>
 				</itemgra>
 				<itemgra item_types="poi_post_office,poi_post_box" order="13-">
 					<icon src="post.png"/>
@@ -4613,7 +4613,7 @@ Navigation</text></img>
 				</itemgra>
 				<!-- amenity=parking -->
 				<itemgra item_types="poi_car_parking" order="14-">
-					<icon src="parking.xpm"/>
+					<icon src="parking.png"/>
 				</itemgra>
 				<!-- amenity=police -->
 				<itemgra item_types="poi_police" order="14-">
@@ -4622,7 +4622,7 @@ Navigation</text></img>
 				</itemgra>
 				<!-- amenity=restaurant -->
 				<itemgra item_types="poi_restaurant" order="14-">
-					<icon src="restaurant.xpm"/>
+					<icon src="restaurant.png"/>
 					<circle color="#000000" radius="3" text_size="7"/>
 				</itemgra>
 				<!-- leisure=golf_curse -->
