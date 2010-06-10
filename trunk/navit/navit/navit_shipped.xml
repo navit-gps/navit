@@ -2825,7 +2825,7 @@ Navigation</text></img>
 					<icon src="attraction.png"/>
 				</itemgra>
 				<itemgra item_types="poi_cafe" order="12-">
-					<icon src="cafe.xpm"/>
+					<icon src="cafe.png"/>
 				</itemgra>
 				<itemgra item_types="poi_bar" order="12-">
 					<icon src="bar.xpm"/>
@@ -3131,7 +3131,7 @@ Navigation</text></img>
 					<icon src="swimming.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_telephone" order="13-">
-					<icon src="telephone.xpm"/>
+					<icon src="telephone.png"/>
 				</itemgra>
 				<itemgra item_types="poi_theater" order="12-">
 					<icon src="theater.xpm"/>
