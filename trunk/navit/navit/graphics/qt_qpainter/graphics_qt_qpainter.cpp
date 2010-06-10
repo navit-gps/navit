@@ -650,10 +650,10 @@ static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct g
 			g_free(ret);
 			return NULL;
 		}
-		ret->pixmap=new QPixmap(QPixmap::fromImage(image));
+		ret->pixmap=new QPixmap();
+		ret->pixmap->convertFromImage(image,0);
 		QPixmapCache::insert(key,QPixmap(*ret->pixmap));
 	} else {
-		dbg(0,"cache hit\n");
 		ret->pixmap=new QPixmap(*cachedPixmap);
 	}
 
