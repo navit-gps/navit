@@ -645,13 +645,12 @@ static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct g
 	cachedPixmap=QPixmapCache::find(key);
 	if (!cachedPixmap) {
 	
-		image=QImage(path);
-		if (image.isNull()) {
-			g_free(ret);
-			return NULL;
-		}
-		ret->pixmap=new QPixmap();
-		ret->pixmap->convertFromImage(image,0);
+		ret->pixmap=new QPixmap(path);
+                if (ret->pixmap->isNull()) {
+                        g_free(ret);
+                        return NULL;
+                }
+                   
 		QPixmapCache::insert(key,QPixmap(*ret->pixmap));
 	} else {
 		ret->pixmap=new QPixmap(*cachedPixmap);
