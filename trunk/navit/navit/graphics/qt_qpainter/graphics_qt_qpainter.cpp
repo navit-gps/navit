@@ -246,7 +246,7 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 			QImage img=overlay->widget->pixmap->convertToImage();
 			img.setAlphaBuffer(1);
 #else
-			QImage img=overlay->widget->pixmap->toImage().convertToFormat(QImage::Format_ARGB32);
+			QImage img=overlay->widget->pixmap->toImage().convertToFormat(QImage::Format_ARGB32_Premultiplied);
 #endif
 			data=img.bits();
 			for (i = 0 ; i < size ; i++) {
@@ -785,7 +785,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 				data=img.bits();
 				gr->freetype_methods.get_shadow(g,(unsigned char *)(img.jumpTable()),32,0,bgc,&transparent);
 #else
-				QImage img(g->w+2, g->h+2, QImage::Format_ARGB32);
+				QImage img(g->w+2, g->h+2, QImage::Format_ARGB32_Premultiplied);
 				data=img.bits();
 				gr->freetype_methods.get_shadow(g,(unsigned char *)data,32,img.bytesPerLine(),bgc,&transparent);
 #endif
@@ -811,7 +811,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
 			data=img.bits();
 			gr->freetype_methods.get_glyph(g,(unsigned char *)(img.jumpTable()),32,0,fgc,bgc,&transparent);
 #else
-			QImage img(g->w, g->h, QImage::Format_ARGB32);
+			QImage img(g->w, g->h, QImage::Format_ARGB32_Premultiplied);
 			data=img.bits();
 			gr->freetype_methods.get_glyph(g,(unsigned char *)data,32,img.bytesPerLine(),fgc,bgc,&transparent);
 #endif
