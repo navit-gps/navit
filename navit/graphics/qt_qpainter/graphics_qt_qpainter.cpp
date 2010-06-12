@@ -82,6 +82,7 @@
 #include <QWidget>
 #include <QPolygonF>
 #include <QtGui>
+#include <QSvgRenderer>
 
 #ifndef QT_QPAINTER_USE_EVENT_GLIB
 #define QT_QPAINTER_USE_EVENT_GLIB 1
@@ -644,8 +645,23 @@ static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct g
 
 	cachedPixmap=QPixmapCache::find(key);
 	if (!cachedPixmap) {
-	
-		ret->pixmap=new QPixmap(path);
+                if(key.endsWith(".svg", Qt::CaseInsensitive)) {
+                    QSvgRenderer renderer(key);
+                    if (!renderer.isValid()) {
+                       g_free(ret);
+                       return NULL;
+                    }
+                    ret->pixmap=new QPixmap(renderer.defaultSize());
+                    ret->pixmap->fill(Qt::transparent);
+                    QPainter painter(ret->pixmap); 
+                    renderer.render(&painter);
+
+                } else {
+
+		    ret->pixmap=new QPixmap(path);
+
+                }
+
                 if (ret->pixmap->isNull()) {
                         g_free(ret);
                         return NULL;
