@@ -137,6 +137,9 @@ svgs += stadium.svg
 svgs += telephone.svg
 svgs += traffic_signals.svg
 svgs += church.svg
+svgs += zoo.svg
+svgs += heliport.svg
+svgs += viewpoint.svg
 
 nav_svgs =  nav_left_1_bk.svg nav_left_1_wh.svg nav_left_2_bk.svg nav_left_2_wh.svg nav_left_3_bk.svg nav_left_3_wh.svg
 nav_svgs += nav_right_1_bk.svg nav_right_1_wh.svg nav_right_2_bk.svg nav_right_2_wh.svg nav_right_3_bk.svg nav_right_3_wh.svg
