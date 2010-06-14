@@ -637,7 +637,6 @@ static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics
 static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *path, int *w, int *h, struct point *hot, int rotation)
 {
 	struct graphics_image_priv *ret;
-	QImage image;
 	QPixmap *cachedPixmap;
 	QString key(path);
 
