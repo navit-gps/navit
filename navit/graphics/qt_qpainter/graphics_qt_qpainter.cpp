@@ -970,10 +970,16 @@ fullscreen(struct window *win, int on)
 {
 #ifndef QT_QPAINTER_NO_WIDGET
 	struct graphics_priv *this_=(struct graphics_priv *)win->priv;
+	QWidget* _outerWidget;
+#ifdef QT_QPAINTER_USE_EMBEDDING
+	_outerWidget=(QWidget*)this_->widget->parent();
+#else
+	_outerWidget=this_->widget;
+#endif /* QT_QPAINTER_USE_EMBEDDING */
 	if (on)
-		this_->widget->showFullScreen();
+		_outerWidget->showFullScreen();
 	else
-		this_->widget->showMaximized();
+		_outerWidget->showMaximized();
 #endif
 	return 1;
 }
@@ -1010,7 +1016,7 @@ static void * get_data(struct graphics_priv *this_, char *type)
 	if (!strcmp(type, "window")) {
 		win=g_new(struct window, 1);
 #ifndef QT_QPAINTER_NO_WIDGET
-#if QT_QPAINTER_USE_EMBEDDING
+#ifdef QT_QPAINTER_USE_EMBEDDING
 		QX11EmbedWidget* _outerWidget=new QX11EmbedWidget();
 		QStackedLayout* _outerLayout = new QStackedLayout(_outerWidget);
 		_outerWidget->setLayout(_outerLayout);
@@ -1021,12 +1027,12 @@ static void * get_data(struct graphics_priv *this_, char *type)
 		if (xid.length()>0) {
 			_outerWidget->embedInto(xid.toULong(&ok,0));
 		}
-#endif 
+#endif /* QT_QPAINTER_USE_EMBEDDING */
 		if (this_->w && this_->h)
 			this_->widget->show();
 		else
 			this_->widget->showMaximized();
-#endif
+#endif /* QT_QPAINTER_NO_WIDGET */
 		win->priv=this_;
 		win->fullscreen=fullscreen;
 		win->disable_suspend=disable_suspend;
