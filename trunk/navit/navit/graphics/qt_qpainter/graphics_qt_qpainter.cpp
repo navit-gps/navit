@@ -1018,6 +1018,11 @@ static void * get_data(struct graphics_priv *this_, char *type)
 #ifndef QT_QPAINTER_NO_WIDGET
 #ifdef QT_QPAINTER_USE_EMBEDDING
 		QX11EmbedWidget* _outerWidget=new QX11EmbedWidget();
+#if QT_VERSION >= 0x040000
+		_outerWidget->setWindowTitle("Navit");
+#else
+		_outerWidget->setCaption("Navit");
+#endif
 		QStackedLayout* _outerLayout = new QStackedLayout(_outerWidget);
 		_outerWidget->setLayout(_outerLayout);
 		_outerLayout->addWidget(this_->widget);
