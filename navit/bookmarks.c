@@ -29,6 +29,7 @@
 #include "map.h"
 #include "command.h"
 #include "bookmarks.h"
+#include "navit_nls.h"
 
 struct bookmarks {
 	//data storage
@@ -46,7 +47,7 @@ struct bookmarks {
 	struct transformation *trans;
 	struct attr **attrs;
 	struct callback_list *attr_cbl;
-	struct attr *parent;
+	struct attr *parent;	
 };
 
 struct bookmark_item_priv {
@@ -203,6 +204,10 @@ struct bookmarks *
 bookmarks_new(struct attr *parent, struct attr **attrs, struct transformation *trans) {
 	struct bookmarks *this_;
 
+	if (parent->type!=attr_navit) {
+		return NULL;
+	}
+
 	this_ = g_new0(struct bookmarks,1);
 	this_->attr_cbl=callback_list_new();
 	this_->parent=parent;
@@ -260,10 +265,12 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 	struct bookmark_item_priv *item,*parent_item;
 	char *fullname;
 	const char *prostr;
+	int result;
 	GHashTable *dedup=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,NULL);
 
 	f=fopen(this_->working_file, replace ? "w+" : "a+");
 	if (f==NULL) {
+		navit_add_message(this_->parent->u.navit,_("Failed to write bookmarks file"));
 		return FALSE;
 	}
 
@@ -325,7 +332,12 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 
     g_hash_table_destroy(dedup);
 
-	return rename(this_->working_file,this_->bookmark_file)==0;
+	result=(rename(this_->working_file,this_->bookmark_file)==0);
+	if (!result) 
+	{
+		navit_add_message(this_->parent->u.navit,_("Failed to write bookmarks file"));
+	}
+	return result;
 }
 
 /*
