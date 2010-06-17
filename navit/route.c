@@ -807,6 +807,7 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking, 
 		ret->street=street_data_dup(sd);
 		route_info_distances(ret, pro);
 	}
+	dbg(3,"position 0x%x,0x%x item 0x%x,0x%x direction %d pos %d lenpos %d lenneg %d\n",c->x,c->y,sd->item.id_hi,sd->item.id_lo,ret->street_direction,ret->pos,ret->lenpos,ret->lenneg);
 	dbg(3,"c->x=0x%x, c->y=0x%x pos=%d item=(0x%x,0x%x)\n", c->x, c->y, ret->pos, ret->street->item.id_hi, ret->street->item.id_lo);
 	dbg(3,"street 0=(0x%x,0x%x) %d=(0x%x,0x%x)\n", ret->street->c[0].x, ret->street->c[0].y, ret->street->count-1, ret->street->c[ret->street->count-1].x, ret->street->c[ret->street->count-1].y);
 	this->pos=ret;
@@ -1680,11 +1681,11 @@ route_process_turn_restriction(struct route_graph *this, struct item *item)
 	data.len=0;
 	route_graph_add_segment(this, pnt[0], pnt[1], &data);
 	route_graph_add_segment(this, pnt[1], pnt[2], &data);
-#if 0
+#if 1
 	if (count == 4) {
 		pnt[1]->flags |= RP_TURN_RESTRICTION;
 		pnt[2]->flags |= RP_TURN_RESTRICTION;
-		route_graph_add_segment(this, pnt[2], pnt[3], 0, item, 0, 0, 0);
+		route_graph_add_segment(this, pnt[2], pnt[3], &data);
 	} else 
 		pnt[1]->flags |= RP_TURN_RESTRICTION;
 #endif	
@@ -2030,12 +2031,12 @@ route_get_coord_dist(struct route *this_, int dist)
 static struct route_path *
 route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct vehicleprofile *profile)
 {
-	struct route_graph_segment *first,*s=NULL;
+	struct route_graph_segment *first,*s=NULL,*s1=NULL,*s2=NULL;
 	struct route_graph_point *start;
 	struct route_info *posinfo, *dstinfo;
 	int segs=0;
 	int val1=INT_MAX,val2=INT_MAX;
-	int val;
+	int val,val1_new,val2_new;
 	struct route_path *ret;
 
 	if (! pos->street || ! dst->street) {
@@ -2045,34 +2046,41 @@ route_path_new(struct route_graph *this, struct route_path *oldpath, struct rout
 
 	if (profile->mode == 2 || (profile->mode == 0 && pos->lenextra + dst->lenextra > transform_distance(map_projection(pos->street->item.map), &pos->c, &dst->c)))
 		return route_path_new_offroad(this, pos, dst);
-	
-	s=route_graph_get_segment(this, pos->street, NULL);
-	if (!s) {
-		dbg(0,"no segment for position found\n");
-		return NULL;
-	}
-	val=route_value_seg(profile, NULL, s, 1);
-	if (val != INT_MAX && s->end->value != INT_MAX) {
-		val=val*(100-pos->percent)/100;
-		val1=s->end->value+val;
-	}
-	val=route_value_seg(profile, NULL, s, -1);
-	if (val != INT_MAX && s->start->value != INT_MAX) {
-		val=val*pos->percent/100;
-		val2=s->start->value+val;
+	while ((s=route_graph_get_segment(this, pos->street, s))) {
+		val=route_value_seg(profile, NULL, s, 1);
+		if (val != INT_MAX && s->end->value != INT_MAX) {
+			val=val*(100-pos->percent)/100;
+			val1_new=s->end->value+val;
+			if (val1_new < val1) {
+				val1=val1_new;
+				s1=s;
+			}
+		}
+		val=route_value_seg(profile, NULL, s, -1);
+		if (val != INT_MAX && s->start->value != INT_MAX) {
+			val=val*pos->percent/100;
+			val2_new=s->start->value+val;
+			if (val2_new < val2) {
+				val2=val2_new;
+				s2=s;
+			}
+		}
 	}
 	if (val1 == INT_MAX && val2 == INT_MAX) {
 		dbg(0,"no route found, pos blocked\n");
 		return NULL;
 	}
 	if (val1 == val2) {
-		val1=s->end->value;
-		val2=s->start->value;
+		val1=s1->end->value;
+		val2=s2->start->value;
 	}
-	if (val1 < val2) 
-		start=s->start;
-	else 
-		start=s->end;
+	if (val1 < val2) {
+		start=s1->start;
+		s=s1;
+	} else {
+		start=s2->end;
+		s=s2;
+	}
 	ret=g_new0(struct route_path, 1);
 	ret->updated=1;
 	if (pos->lenextra) 
