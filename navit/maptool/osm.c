@@ -119,7 +119,7 @@ struct country_table {
 	{705,"Slovenia,Republika Slovenija,SI"},
  	{724,"Spain,Espana,España,Reino de Espana"},
 	{752,"Sweden,Sverige,Konungariket Sverige,SE"},
-	{756,"Switzerland","Schweiz"}, 
+	{756,"Switzerland,Schweiz"}, 
 	{807,"Macedonia,Македонија"},
 	{826,"United Kingdom,UK"},
 	{840,"USA"},
