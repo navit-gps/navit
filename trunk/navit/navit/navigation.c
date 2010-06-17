@@ -1072,6 +1072,9 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 			   we can't use the same name criterium  */
 			if (is_same_street && is_same_street2(old->name1, old->name2, w->name1, w->name2) && (cat != 7 || wcat != 7) && is_way_allowed(w))
 				is_same_street=0;
+			/* Even if the ramp has the same name, announce it */
+			if (new->item.type == type_ramp && old->item.type != type_ramp)
+				is_same_street=0;
 			/* Mark if the street has a higher or the same category */
 			if (wcat > maxcat)
 				maxcat=wcat;
