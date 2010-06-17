@@ -1273,6 +1273,18 @@ request_navit_set_destination(DBusConnection *connection, DBusMessage *message)
 }
 
 static DBusHandlerResult
+request_navit_clear_destination(DBusConnection *connection, DBusMessage *message)
+{
+	struct navit *navit;
+
+	navit = object_get_from_message(message, "navit");
+	if (! navit)
+		return dbus_error_invalid_object_path(connection, message);
+	navit_set_destination(navit, NULL, NULL, 0);
+	return empty_reply(connection, message);
+}
+
+static DBusHandlerResult
 request_navit_evaluate(DBusConnection *connection, DBusMessage *message)
 {
 	struct navit *navit;
@@ -1533,6 +1545,7 @@ struct dbus_method {
 	{".navit",  "set_destination",     "ss",      "coordinates,comment",                     "",   "",      request_navit_set_destination},
 	{".navit",  "set_destination",     "(is)s",   "(projection,coordinates)comment",         "",   "",      request_navit_set_destination},
 	{".navit",  "set_destination",     "(iii)s",  "(projection,longitude,latitude)comment",  "",   "",      request_navit_set_destination},
+	{".navit",  "clear_destination",   "",        "",                                        "",   "",      request_navit_clear_destination},
 	{".navit",  "evaluate", 	   "s",	      "command",				 "s",  "",      request_navit_evaluate},
 	{".map",    "get_attr",            "s",       "attribute",                               "sv",  "attrname,value", request_map_get_attr},
 	{".map",    "set_attr",            "sv",      "attribute,value",                         "",   "",      request_map_set_attr},
