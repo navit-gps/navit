@@ -902,6 +902,9 @@ parse_file(struct xmldocument *document, xmlerror **error)
 	gboolean result;
 
 	dbg(1,"enter filename='%s'\n", document->href);
+#ifndef G_MARKUP_TREAT_CDATA_AS_TEXT
+#define G_MARKUP_TREAT_CDATA_AS_TEXT 0
+#endif
 	context = g_markup_parse_context_new (&parser, G_MARKUP_TREAT_CDATA_AS_TEXT, document, NULL);
 
 	if (!g_file_get_contents (document->href, &contents, &len, error)) {
