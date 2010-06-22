@@ -644,6 +644,7 @@ static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct g
 
 	cachedPixmap=QPixmapCache::find(key);
 	if (!cachedPixmap) {
+#if QT_VERSION >= 0x040000
                 if(key.endsWith(".svg", Qt::CaseInsensitive)) {
                     QSvgRenderer renderer(key);
                     if (!renderer.isValid()) {
@@ -660,7 +661,9 @@ static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct g
 		    ret->pixmap=new QPixmap(path);
 
                 }
-
+#else 
+		ret->pixmap=new QPixmap(path);
+#endif /* QT__VERSION */
                 if (ret->pixmap->isNull()) {
                         g_free(ret);
                         return NULL;
