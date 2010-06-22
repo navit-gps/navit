@@ -466,7 +466,7 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 	if (attr_types_contains_default(attr_types, attr_position_direction,0) && this_->meth.position_attr_get(this_->priv, attr_position_direction, &attr))
 		logstr=g_strconcat_printf(logstr,"\t<course>%.1f</course>\n",*attr.u.numd);
 	if (attr_types_contains_default(attr_types, attr_position_speed, 0) && this_->meth.position_attr_get(this_->priv, attr_position_speed, &attr))
-		logstr=g_strconcat_printf(logstr,"\t<speed>%.2f</speed>\n",*attr.u.numd);
+		logstr=g_strconcat_printf(logstr,"\t<speed>%.2f</speed>\n",(*attr.u.numd / 3.6));
 	if (attr_types_contains_default(attr_types, attr_profilename, 0) && (attrp=attr_search(this_->attrs, NULL, attr_profilename))) {
 		logstr=g_strconcat_printf(logstr,"%s\t\t<navit:profilename>%s</navit:profilename>\n",extensions,attrp->u.str);
 		extensions="";
