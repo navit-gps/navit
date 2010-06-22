@@ -61,6 +61,7 @@
 #include <qbrush.h>
 #include <qimage.h>
 #include <qpixmap.h>
+#include <qpixmapcache.h>
 #include <qlistview.h>
 #include <qobject.h>
 #include <qsocketnotifier.h>
@@ -81,6 +82,7 @@
 #include <QPixmap>
 #include <QWidget>
 #include <QPolygonF>
+#include <QPixmapCache>
 #include <QtGui>
 #include <QSvgRenderer>
 
