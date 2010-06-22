@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2010-01-04 21:47+0000\n"
-"Last-Translator: Vaclav Cerny <vatoz@seznam.cz>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-06-18 19:02+0000\n"
+"Last-Translator: Vladimír Burian <vladimir.burian@email.cz>\n"
 "Language-Team: Čeština\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -269,7 +269,7 @@ msgstr "Souřadnice obrazovky: %d %d"
 
 #. 020
 msgid "Andorra"
-msgstr "Andora"
+msgstr "Andorra"
 
 #. 784
 msgid "United Arab Emirates"
@@ -277,7 +277,7 @@ msgstr "Spojené arabské emiráty"
 
 #. 004
 msgid "Afghanistan"
-msgstr "Afganistán"
+msgstr "Afghánistán"
 
 #. 028
 msgid "Antigua and Barbuda"
@@ -333,7 +333,7 @@ msgstr "Ålandy"
 
 #. 031
 msgid "Azerbaijan"
-msgstr "Azerbajdžán"
+msgstr "Ázerbájdžán"
 
 #. 070
 msgid "Bosnia and Herzegovina"
@@ -397,7 +397,7 @@ msgstr "Bahamy"
 
 #. 064
 msgid "Bhutan"
-msgstr "Bhután"
+msgstr "Bhútán"
 
 #. 074
 msgid "Bouvet Island"
@@ -421,11 +421,11 @@ msgstr "Kanada"
 
 #. 166
 msgid "Cocos (Keeling) Islands"
-msgstr "Kokosové ostrovy"
+msgstr "Kokosové (Keelingovy) ostrovy"
 
 #. 180
 msgid "Congo, Democratic Republic of the"
-msgstr "Kongo"
+msgstr "Kongo, demokratická republika"
 
 #. 140
 msgid "Central African Republic"
@@ -473,7 +473,7 @@ msgstr "Kuba"
 
 #. 132
 msgid "Cape Verde"
-msgstr "Kapverdské ostrovy"
+msgstr "Kapverdy"
 
 #. 162
 msgid "Christmas Island"
@@ -489,11 +489,11 @@ msgstr "Česká republika"
 
 #. 276
 msgid "Germany"
-msgstr "Ňemecko"
+msgstr "Německo"
 
 #. 262
 msgid "Djibouti"
-msgstr "Džibuti"
+msgstr "Džibutsko"
 
 #. 208
 msgid "Denmark"
@@ -505,11 +505,11 @@ msgstr "Dominika"
 
 #. 214
 msgid "Dominican Republic"
-msgstr "Dominikánská Republika"
+msgstr "Dominikánská republika"
 
 #. 012
 msgid "Algeria"
-msgstr "Alžír"
+msgstr "Alžírsko"
 
 #. 218
 msgid "Ecuador"
@@ -549,7 +549,7 @@ msgstr "Fidži"
 
 #. 238
 msgid "Falkland Islands (Malvinas)"
-msgstr "Fallandské ostrovy (Malvíny)"
+msgstr "Falklandy (Malvíny)"
 
 #. 583
 msgid "Micronesia, Federated States of"
@@ -557,7 +557,7 @@ msgstr "Mikronésie, federativní státy"
 
 #. 234
 msgid "Faroe Islands"
-msgstr "Farské ostrovy"
+msgstr "Faerské ostrovy"
 
 #. 250
 msgid "France"
@@ -565,7 +565,7 @@ msgstr "Francie"
 
 #. 266
 msgid "Gabon"
-msgstr "Gabun"
+msgstr "Gabon"
 
 #. 826
 msgid "United Kingdom"
@@ -581,7 +581,7 @@ msgstr "Gruzie"
 
 #. 254
 msgid "French Guiana"
-msgstr "Francouzská Guayana"
+msgstr "Francouzská Guyana"
 
 #. 831
 msgid "Guernsey"
@@ -685,7 +685,7 @@ msgstr "Indie"
 
 #. 086
 msgid "British Indian Ocean Territory"
-msgstr "Britské teritorium v Indickém oceánu"
+msgstr "Britské indickooceánské území"
 
 #. 368
 msgid "Iraq"
@@ -805,7 +805,7 @@ msgstr "Lotyšsko"
 
 #. 434
 msgid "Libyan Arab Jamahiriya"
-msgstr "Lýbie"
+msgstr "Libyjská arabská džamáhíríje"
 
 #. 504
 msgid "Morocco"
@@ -821,11 +821,11 @@ msgstr "Moldavská republika"
 
 #. 499
 msgid "Montenegro"
-msgstr "Černá hora"
+msgstr "Černá Hora"
 
 #. 663
 msgid "Saint Martin (French part)"
-msgstr "Svatý Martin (Francouzská část)"
+msgstr "Svatý Martin (francouzská část)"
 
 #. 450
 msgid "Madagascar"
@@ -837,7 +837,7 @@ msgstr "Marshallovy ostrovy"
 
 #. 807
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr "Makedonie"
+msgstr "Makedonie, bývalá jugoslávská republika"
 
 #. 466
 msgid "Mali"
@@ -857,7 +857,7 @@ msgstr "Macao"
 
 #. 580
 msgid "Northern Mariana Islands"
-msgstr "Severní Mariánské Ostrovy"
+msgstr "Severní Mariany"
 
 #. 474
 msgid "Martinique"
@@ -901,7 +901,7 @@ msgstr "Mosambik"
 
 #. 516
 msgid "Namibia"
-msgstr "Namíbie"
+msgstr "Namibie"
 
 #. 540
 msgid "New Caledonia"
@@ -925,7 +925,7 @@ msgstr "Nikaragua"
 
 #. 528
 msgid "Netherlands"
-msgstr "Nizozemí"
+msgstr "Nizozemsko"
 
 #. 578
 msgid "Norway"
@@ -1013,7 +1013,7 @@ msgstr "Katar"
 
 #. 638
 msgid "Reunion"
-msgstr "Reunion"
+msgstr "Réunion"
 
 #. 642
 msgid "Romania"
@@ -1033,7 +1033,7 @@ msgstr "Rwanda"
 
 #. 682
 msgid "Saudi Arabia"
-msgstr "Saudská Arábie"
+msgstr "Saúdská Arábie"
 
 #. 090
 msgid "Solomon Islands"
@@ -1041,7 +1041,7 @@ msgstr "Šalamounovy ostrovy"
 
 #. 690
 msgid "Seychelles"
-msgstr "Seychelské ostrovy"
+msgstr "Seychely"
 
 #. 736
 msgid "Sudan"
@@ -1065,7 +1065,7 @@ msgstr "Slovinsko"
 
 #. 744
 msgid "Svalbard and Jan Mayen"
-msgstr "Svalbard a Jan Mayen"
+msgstr "Špicberky a Jan Mayen"
 
 #. 703
 msgid "Slovakia"
@@ -1117,7 +1117,7 @@ msgstr "Čad"
 
 #. 260
 msgid "French Southern Territories"
-msgstr "Francouzská jižní teritoria"
+msgstr "Francouzská jižní a antarktická území"
 
 #. 768
 msgid "Togo"
@@ -1137,7 +1137,7 @@ msgstr "Tokelau"
 
 #. 626
 msgid "Timor-Leste"
-msgstr "Timor-Leste"
+msgstr "Východní Timor"
 
 #. 795
 msgid "Turkmenistan"
@@ -1145,7 +1145,7 @@ msgstr "Turkmenistán"
 
 #. 788
 msgid "Tunisia"
-msgstr "Tunis"
+msgstr "Tunisko"
 
 #. 776
 msgid "Tonga"
@@ -1169,7 +1169,7 @@ msgstr "Tchaj-wan, provincie Číny"
 
 #. 834
 msgid "Tanzania, United Republic of"
-msgstr "Tanzánie, sjednocená republika"
+msgstr "Tanzanie, sjednocená republika"
 
 #. 804
 msgid "Ukraine"
@@ -1201,7 +1201,7 @@ msgstr "Svatý stolec (Vatikánský městský stát)"
 
 #. 670
 msgid "Saint Vincent and the Grenadines"
-msgstr "Svatý Vincent a Grenadiny"
+msgstr "Svatý Vincenc a Grenadiny"
 
 #. 862
 msgid "Venezuela"
@@ -1209,7 +1209,7 @@ msgstr "Venezuela"
 
 #. 092
 msgid "Virgin Islands, British"
-msgstr "Britské panenské ostrovy"
+msgstr "Britské Panenské ostrovy"
 
 #. 850
 msgid "Virgin Islands, U.S."
@@ -1421,10 +1421,10 @@ msgid "Add Bookmark"
 msgstr "Přidat značku"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Přidat složku záložek"
 
 msgid "Rename"
-msgstr ""
+msgstr "Přejmenovat"
 
 msgid "POIs"
 msgstr "Body zájmu"
@@ -1445,22 +1445,22 @@ msgid "View on map"
 msgstr "Zobrazit na mapě"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Vyjmout záložku"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Kopírovat záložku"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Přejmenovat záložku"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Vložit záložku"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Smazat záložku"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Vložit záložku"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1532,18 +1532,18 @@ msgid "Show Locale"
 msgstr "Zobrazit jazyk"
 
 msgid "About Navit"
-msgstr ""
+msgstr "O Navitu"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Od"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "A další z Navit týmu"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "členové a přispívající"
 
 msgid "Main menu"
 msgstr "Hlavní menu"
@@ -1562,7 +1562,7 @@ msgid "Tools"
 msgstr "Nástroje"
 
 msgid "About"
-msgstr ""
+msgstr "O programu"
 
 msgid "Actions"
 msgstr "Akce"
@@ -1592,5 +1592,6 @@ msgstr "Bod na mapě"
 msgid "Vehicle Position"
 msgstr "Poloha vozidla"
 
+#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d kilometrů"

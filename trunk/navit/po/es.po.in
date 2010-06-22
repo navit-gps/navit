@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2009-12-25 17:49+0000\n"
-"Last-Translator: Paco Molinero <paco@byasl.com>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-05-27 20:36+0000\n"
+"Last-Translator: DiegoJ <diegojromerolopez@gmail.com>\n"
 "Language-Team: Chris Eubank <cteubank@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -1420,10 +1420,10 @@ msgid "Add Bookmark"
 msgstr "Añadir marcador"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Añadir carpeta de marcadores"
 
 msgid "Rename"
-msgstr ""
+msgstr "Renombrar"
 
 msgid "POIs"
 msgstr "PDIs"
@@ -1444,22 +1444,22 @@ msgid "View on map"
 msgstr "Ver en el mapa"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Cortar marcador"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Copiar marcador"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Renombrar marcador"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Pegar marcador"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Eliminar marcador"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Pegar marcador"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1531,18 +1531,18 @@ msgid "Show Locale"
 msgstr "Mostrar local"
 
 msgid "About Navit"
-msgstr ""
+msgstr "Acerca de Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Por"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "Y todo el equipo de Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "miembros y colaboradores"
 
 msgid "Main menu"
 msgstr "Menú principal"
@@ -1561,7 +1561,7 @@ msgid "Tools"
 msgstr "Herramientas"
 
 msgid "About"
-msgstr ""
+msgstr "Acerca de"
 
 msgid "Actions"
 msgstr "Acciones"
@@ -1591,11 +1591,12 @@ msgstr "Punto en el mapa"
 msgid "Vehicle Position"
 msgstr "Posición del vehículo"
 
-#~ msgid " PRN "
-#~ msgstr " PRN "
+#, c-format
+#~ msgid "%d.%d kilometer"
+#~ msgstr "%d.%d kilómetro"
 
 #~ msgid " SNR "
 #~ msgstr " SNR "
 
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d kilómetro"
+#~ msgid " PRN "
+#~ msgstr " PRN "

@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2009-12-20 20:37+0000\n"
-"Last-Translator: KaZeR <Unknown>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-05-27 15:01+0000\n"
+"Last-Translator: M Bambang I <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,73 +24,73 @@ msgstr ""
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr ""
+msgstr "penataan '%s' ke '%s'\n"
 
 msgid "zeroth"
-msgstr ""
+msgstr "ke nol"
 
 msgid "first"
-msgstr ""
+msgstr "pertama"
 
 msgid "second"
-msgstr ""
+msgstr "kedua"
 
 msgid "third"
-msgstr ""
+msgstr "ketiga"
 
 msgid "fourth"
-msgstr ""
+msgstr "keempat"
 
 msgid "fifth"
 msgstr "kelima"
 
 msgid "sixth"
-msgstr ""
+msgstr "keenam"
 
 msgid "zeroth exit"
 msgstr ""
 
 msgid "first exit"
-msgstr ""
+msgstr "exit pertama"
 
 msgid "second exit"
-msgstr ""
+msgstr "exit kedua"
 
 msgid "third exit"
-msgstr ""
+msgstr "exit ketiga"
 
 msgid "fourth exit"
-msgstr ""
+msgstr "exit keempat"
 
 msgid "fifth exit"
-msgstr ""
+msgstr "exit kelima"
 
 msgid "sixth exit"
-msgstr ""
+msgstr "exit keenam"
 
 #, c-format
 msgid "%d m"
-msgstr ""
+msgstr "%d meter"
 
 #, c-format
 msgid "in %d m"
-msgstr ""
+msgstr "dalam %d meter"
 
 #, c-format
 msgid "%d meters"
-msgstr ""
+msgstr "%d meter"
 
 #, c-format
 msgid "in %d meters"
-msgstr ""
+msgstr "dalam %d meter"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d kilometer"
 
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "in %d.%d kilometer"
+msgstr "dalam %d.%d kilometer"
 
 #, c-format
 msgid "one kilometer"
@@ -101,14 +101,13 @@ msgstr[1] ""
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "dalam %d kilometer"
 
 msgid "exit"
 msgstr "keluar"
 
 msgid "into the ramp"
-msgstr ""
+msgstr "menuju jalur yang melandai"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
@@ -118,22 +117,22 @@ msgstr "%s menuju jalan %s%s%s"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr ""
+msgstr "%smenuju ke%s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr ""
+msgstr "%smenuju ke %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
+msgstr "%smenuju ke %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr ""
+msgstr "%smenuju ke %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 msgid "right"
@@ -149,11 +148,11 @@ msgstr "dengan mudah "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "strongly "
-msgstr ""
+msgstr "Sangat "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "really strongly "
-msgstr ""
+msgstr "amat sangat "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
@@ -163,20 +162,20 @@ msgid "When possible, please turn around"
 msgstr "bila memungkinkan, balik arah"
 
 msgid "Enter the roundabout soon"
-msgstr ""
+msgstr "segera memasuki bundaran"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "In %s, enter the roundabout"
-msgstr ""
+msgstr "Dalam %s,memasuki bundaran"
 
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr ""
+msgstr "Tinggalkan bundaran pada %s"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr ""
+msgstr "kemudian tinggalkan bundaran pada %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -188,18 +187,18 @@ msgstr "segera"
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr ""
+msgstr "Ambil %1$s jalan ke %2$s"
 
 #, c-format
 msgid "after %i roads"
-msgstr ""
+msgstr "setelah %i jalan"
 
 msgid "now"
 msgstr "saat ini"
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "kemudian ambil %1$s jalan menuju %2$s"
 
 msgid "error"
 msgstr "kesalahan"
@@ -207,19 +206,19 @@ msgstr "kesalahan"
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "Beloklah %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "kemudian beloklah %1$s%2$s %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
 msgstr "anda telah sampai pada tujuan %s"
 
 msgid "then you have reached your destination."
-msgstr "kemudian anda telah sampai pada tujuan"
+msgstr "kini anda telah sampai pada tujuan"
 
 msgid "Position"
 msgstr "Posisi"
@@ -240,30 +239,30 @@ msgid "Time"
 msgstr ""
 
 msgid "Destination Length"
-msgstr ""
+msgstr "Jarak ke tujuan"
 
 msgid "Destination Time"
-msgstr ""
+msgstr "Waktu di tujuan"
 
 msgid "Roadbook"
-msgstr ""
+msgstr "Panduan perjalanan"
 
 msgid "Set as position"
-msgstr ""
+msgstr "Tetapkan sebagai posisi"
 
 msgid "Set as destination"
-msgstr ""
+msgstr "Tetapkan sebagai tujuan"
 
 msgid "Add as bookmark"
-msgstr ""
+msgstr "Tambahkan sebagai penunjuk"
 
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr ""
+msgstr "Titik 0X%x 0X%x"
 
 #, c-format
 msgid "Screen coord : %d %d"
-msgstr ""
+msgstr "Koordinat dilayar :%d %d"
 
 #. 020
 msgid "Andorra"
@@ -295,7 +294,7 @@ msgstr "Armenia"
 
 #. 530
 msgid "Netherlands Antilles"
-msgstr "Netherlands Antilles"
+msgstr "Antilles Belanda"
 
 #. 024
 msgid "Angola"
@@ -371,7 +370,7 @@ msgstr "Benin"
 
 #. 652
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "Saint Barthelemy"
 
 #. 060
 msgid "Bermuda"
@@ -379,7 +378,7 @@ msgstr "Bermuda"
 
 #. 096
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunei Darussalam"
 
 #. 068
 msgid "Bolivia"
@@ -391,11 +390,11 @@ msgstr "Brasilia"
 
 #. 044
 msgid "Bahamas"
-msgstr "Bahamas"
+msgstr "Kepulauan Bahama"
 
 #. 064
 msgid "Bhutan"
-msgstr "Bhutan"
+msgstr "Butan"
 
 #. 074
 msgid "Bouvet Island"
@@ -407,7 +406,7 @@ msgstr "Botswana"
 
 #. 112
 msgid "Belarus"
-msgstr "Belarus"
+msgstr "Belarusia"
 
 #. 084
 msgid "Belize"
@@ -419,11 +418,11 @@ msgstr "Kanada"
 
 #. 166
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "Kepulauan Cocos (Keeling)"
 
 #. 180
 msgid "Congo, Democratic Republic of the"
-msgstr ""
+msgstr "Republik Demokrat Kongo"
 
 #. 140
 msgid "Central African Republic"
@@ -439,7 +438,7 @@ msgstr "Swiss"
 
 #. 384
 msgid "Cote d'Ivoire"
-msgstr ""
+msgstr "Pantai Gading"
 
 #. 184
 msgid "Cook Islands"
@@ -463,7 +462,7 @@ msgstr "Kolombia"
 
 #. 188
 msgid "Costa Rica"
-msgstr "Costa Rica"
+msgstr "Kosta Rika"
 
 #. 192
 msgid "Cuba"
@@ -471,7 +470,7 @@ msgstr "Kuba"
 
 #. 132
 msgid "Cape Verde"
-msgstr ""
+msgstr "Tanjung Verde"
 
 #. 162
 msgid "Christmas Island"
@@ -483,7 +482,7 @@ msgstr "Siprus"
 
 #. 203
 msgid "Czech Republic"
-msgstr ""
+msgstr "Republik Ceko"
 
 #. 276
 msgid "Germany"
@@ -499,11 +498,11 @@ msgstr "Denmark"
 
 #. 212
 msgid "Dominica"
-msgstr "Dominica"
+msgstr "Dominika"
 
 #. 214
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Republik Dominikan"
 
 #. 012
 msgid "Algeria"
@@ -591,15 +590,15 @@ msgstr "Ghana"
 
 #. 292
 msgid "Gibraltar"
-msgstr ""
+msgstr "Jibraltar"
 
 #. 304
 msgid "Greenland"
-msgstr ""
+msgstr "Greenland"
 
 #. 270
 msgid "Gambia"
-msgstr ""
+msgstr "Gambia"
 
 #. 324
 msgid "Guinea"
@@ -643,11 +642,11 @@ msgstr "Hong Kong"
 
 #. 334
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "Pulau Heard dan Kepulauan McDonald"
 
 #. 340
 msgid "Honduras"
-msgstr ""
+msgstr "Honduras"
 
 #. 191
 msgid "Croatia"
@@ -687,15 +686,15 @@ msgstr ""
 
 #. 368
 msgid "Iraq"
-msgstr ""
+msgstr "Irak"
 
 #. 364
 msgid "Iran, Islamic Republic of"
-msgstr ""
+msgstr "Republik Islam Iran"
 
 #. 352
 msgid "Iceland"
-msgstr ""
+msgstr "Islandia"
 
 #. 380
 msgid "Italy"
@@ -735,7 +734,7 @@ msgstr "Kiribati"
 
 #. 174
 msgid "Comoros"
-msgstr ""
+msgstr "Komoro"
 
 #. 659
 msgid "Saint Kitts and Nevis"
@@ -771,11 +770,11 @@ msgstr "Lebanon"
 
 #. 662
 msgid "Saint Lucia"
-msgstr ""
+msgstr "Santa Lusia"
 
 #. 438
 msgid "Liechtenstein"
-msgstr ""
+msgstr "Liechtenstein"
 
 #. 144
 msgid "Sri Lanka"
@@ -1349,13 +1348,13 @@ msgid "Lock on Road"
 msgstr ""
 
 msgid "Northing"
-msgstr ""
+msgstr "Keutara"
 
 msgid "Autozoom"
-msgstr ""
+msgstr "AutoZoom"
 
 msgid "Fullscreen"
-msgstr ""
+msgstr "Layar penuh"
 
 msgid "Data"
 msgstr "Data"
@@ -1367,7 +1366,7 @@ msgid "NE"
 msgstr "Timur Laut"
 
 msgid "E"
-msgstr ""
+msgstr "Timur"
 
 msgid "SE"
 msgstr "Tenggara"
@@ -1385,7 +1384,7 @@ msgid "NW"
 msgstr "Barat Laut"
 
 msgid "No"
-msgstr ""
+msgstr "Tidak"
 
 msgid "2D"
 msgstr "2D"
@@ -1394,14 +1393,14 @@ msgid "3D"
 msgstr "3D"
 
 msgid "OT"
-msgstr ""
+msgstr "OT"
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "Rute %4.0fkm    %02d:%02d Perkiraan waktu kedatangan"
 
 msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
+msgstr "Rute 0000km  0+00:00 Perkiraan waktu kedatangan"
 
 msgid "Back to map"
 msgstr "Kembali ke Peta"
@@ -1416,7 +1415,7 @@ msgid "Back"
 msgstr "Kembali"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Tambah Penanda"
 
 msgid "Add Bookmark folder"
 msgstr ""
@@ -1425,7 +1424,7 @@ msgid "Rename"
 msgstr ""
 
 msgid "POIs"
-msgstr ""
+msgstr "POIs"
 
 msgid "View in Browser"
 msgstr ""
@@ -1434,16 +1433,16 @@ msgid "Streets"
 msgstr "jalan"
 
 msgid "House numbers"
-msgstr ""
+msgstr "Nomor Rumah"
 
 msgid "View Attributes"
-msgstr ""
+msgstr "Lihat atribut"
 
 msgid "View on map"
-msgstr ""
+msgstr "Lihat pada peta"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Hapus penanda"
 
 msgid "Copy Bookmark"
 msgstr ""
@@ -1462,10 +1461,10 @@ msgstr ""
 
 #, c-format
 msgid "Bookmark %s"
-msgstr ""
+msgstr "Penanda %s"
 
 msgid "House number"
-msgstr ""
+msgstr "Nomer rumah"
 
 msgid "Maps"
 msgstr "Peta - peta"
@@ -1474,33 +1473,33 @@ msgid "Show Satellite Status"
 msgstr "Status Satelit"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Elevasi "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Azimuth "
 
 msgid "Show NMEA Data"
 msgstr "Data NMEA"
 
 msgid "car"
-msgstr ""
+msgstr "mobil"
 
 msgid "bike"
-msgstr ""
+msgstr "sepeda"
 
 msgid "pedestrian"
-msgstr ""
+msgstr "pejalan kaki"
 
 #, c-format
 msgid "Current profile: %s"
-msgstr ""
+msgstr "Profil saat ini: %s"
 
 #, c-format
 msgid "Change profile to: %s"
 msgstr ""
 
 msgid "Set as active"
-msgstr ""
+msgstr "Diaktifkan"
 
 msgid "Show Satellite status"
 msgstr "Status Satelit"
@@ -1512,36 +1511,36 @@ msgid "Rules"
 msgstr "Aturan - aturan"
 
 msgid "Lock on road"
-msgstr ""
+msgstr "Kunci pada jalan"
 
 msgid "Map follows Vehicle"
-msgstr ""
+msgstr "Peta mengikuti kendaraan"
 
 msgid "Message"
-msgstr ""
+msgstr "Pesan"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Deskripsi rute"
 
 msgid "Height Profile"
-msgstr ""
+msgstr "Profil ketinggian"
 
 msgid "Show Locale"
 msgstr ""
 
 msgid "About Navit"
-msgstr ""
+msgstr "Tentang Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Oleh"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "Dan seluruh anggota tim Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "para anggota dan kontributor"
 
 msgid "Main menu"
 msgstr "Menu Utama"
@@ -1554,19 +1553,19 @@ msgstr ""
 "Map"
 
 msgid "Settings"
-msgstr ""
+msgstr "Pengaturan"
 
 msgid "Tools"
-msgstr ""
+msgstr "Peralatan"
 
 msgid "About"
-msgstr ""
+msgstr "Tentang"
 
 msgid "Actions"
-msgstr ""
+msgstr "Tindakan-tindakan"
 
 msgid "Quit"
-msgstr ""
+msgstr "Berhenti"
 
 msgid ""
 "Stop\n"
@@ -1579,13 +1578,13 @@ msgid "Window Mode"
 msgstr ""
 
 msgid "Description"
-msgstr ""
+msgstr "Deskripsi"
 
 msgid "horse"
-msgstr ""
+msgstr "kuda"
 
 msgid "Map Point"
-msgstr ""
+msgstr "Letak pada peta"
 
 msgid "Vehicle Position"
 msgstr "Posisi kendaraan"

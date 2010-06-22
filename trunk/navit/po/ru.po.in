@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2010-01-18 10:04+0000\n"
-"Last-Translator: Denis Chapligin <akashihi@gmail.com>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-06-13 19:46+0000\n"
+"Last-Translator: Vlad <Unknown>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -87,11 +87,11 @@ msgstr "через %d метров"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr "%d.%d километров"
+msgstr "%d,%d км."
 
 #, c-format
 msgid "in %d.%d kilometers"
-msgstr "через %d.%d километр(а,ов"
+msgstr "через %d,%d км."
 
 #, c-format
 msgid "one kilometer"
@@ -202,7 +202,7 @@ msgstr "сейчас"
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr "после чего выезайте на %1$s дорогу в направлении %2$s"
+msgstr "после чего выезжайте на %1$s дорогу в направлении %2$s"
 
 msgid "error"
 msgstr "ошибка"
@@ -215,7 +215,7 @@ msgstr "Сверните %1$s%2$s %3$s%4$s"
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr "после чего поверните на %1$s%2$s %3$s%4$s"
+msgstr "после чего поверните %1$s%2$s на %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
@@ -1422,10 +1422,10 @@ msgid "Add Bookmark"
 msgstr "Добавить закладку"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Добавить папку закладок"
 
 msgid "Rename"
-msgstr ""
+msgstr "Переименовать"
 
 msgid "POIs"
 msgstr "POIs"
@@ -1446,22 +1446,22 @@ msgid "View on map"
 msgstr "Показать на карте"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Вырезать закладку"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Скопировать закладку"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Переименовать закладку"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Вставить закладку"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Удалить закладку"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Вставить закладку"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1533,18 +1533,18 @@ msgid "Show Locale"
 msgstr "Проверить локализацию"
 
 msgid "About Navit"
-msgstr ""
+msgstr "О Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Авторы:"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "И все участники команды Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "и лица внесшие вклад"
 
 msgid "Main menu"
 msgstr "Главное меню"
@@ -1563,7 +1563,7 @@ msgid "Tools"
 msgstr "Инструменты"
 
 msgid "About"
-msgstr ""
+msgstr "О программе"
 
 msgid "Actions"
 msgstr "Команды"
@@ -1593,8 +1593,9 @@ msgstr "Точка на карте"
 msgid "Vehicle Position"
 msgstr "Местоположение автомобиля"
 
-#~ msgid " SNR "
-#~ msgstr " Сигнал/Шум "
-
+#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d километр"
+
+#~ msgid " SNR "
+#~ msgstr " Сигнал/Шум "

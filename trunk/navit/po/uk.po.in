@@ -7,21 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2009-12-20 21:38+0000\n"
-"Last-Translator: serg_stetsuk <serg_stetsuk@ukr.net>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-05-28 14:54+0000\n"
+"Last-Translator: andygol <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
 #, c-format
 msgid "Running from source directory\n"
-msgstr "Праця з джерельної директорії\n"
+msgstr "Запуск з початкового каталогу\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
@@ -87,7 +87,7 @@ msgstr "за %d метрів"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d кілометрів"
 
 #, c-format
 msgid "in %d.%d kilometers"
@@ -111,40 +111,40 @@ msgid "exit"
 msgstr "виїзд"
 
 msgid "into the ramp"
-msgstr "на автомагістраль"
+msgstr "з'їзд на"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr "%sна вулицю %s%s%s"
+msgstr "%s на вулицю %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr ""
+msgstr "%s на %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr ""
+msgstr "%s на %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
+msgstr "%s на %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr "%sв %s"
+msgstr "%s в %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 msgid "right"
-msgstr "вправо"
+msgstr "праворуч"
 
 #. TRANSLATORS: left, as in 'Turn left'
 msgid "left"
-msgstr "вліво"
+msgstr "ліворуч"
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "easily "
@@ -152,11 +152,11 @@ msgstr "легко "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "strongly "
-msgstr "сильно "
+msgstr "круто "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "really strongly "
-msgstr ""
+msgstr "дуже круто "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
@@ -330,7 +330,7 @@ msgstr "Аруба"
 
 #. 248
 msgid "Aland Islands"
-msgstr ""
+msgstr "Аландські острови"
 
 #. 031
 msgid "Azerbaijan"
@@ -1253,7 +1253,7 @@ msgid "Zimbabwe"
 msgstr "Зімбабве"
 
 msgid "* Unknown, add is_in tags to those cities"
-msgstr ""
+msgstr "Новідомо, додайте is_in теґ до цих міст"
 
 msgid "Car"
 msgstr "Машина"
@@ -1397,7 +1397,7 @@ msgid "3D"
 msgstr "3D"
 
 msgid "OT"
-msgstr ""
+msgstr "Інший"
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
@@ -1419,13 +1419,13 @@ msgid "Back"
 msgstr "Назад"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Додати закладку"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Додати папку закладок"
 
 msgid "Rename"
-msgstr ""
+msgstr "Перейменувати"
 
 msgid "POIs"
 msgstr "Інформація про об’єкти"
@@ -1446,22 +1446,22 @@ msgid "View on map"
 msgstr "Показати на карті"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Вирізати закладку"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Копіювати закладку"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Перейменувати закладку"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Вставити закладку"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Вилучити закладку"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Вставити закладку"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1477,10 +1477,10 @@ msgid "Show Satellite Status"
 msgstr "Показати статус супутника"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Висота "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Азимут "
 
 msgid "Show NMEA Data"
 msgstr "Показати дані NMEA"
@@ -1524,27 +1524,27 @@ msgid "Message"
 msgstr "Повідомлення"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Опис маршруту"
 
 msgid "Height Profile"
-msgstr ""
+msgstr "Профіль висот"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Перевірити локалізацію"
 
 msgid "About Navit"
-msgstr ""
+msgstr "Про Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "від"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "Все про Navit Team"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "члени та учасникі."
 
 msgid "Main menu"
 msgstr "Головне меню"
@@ -1563,7 +1563,7 @@ msgid "Tools"
 msgstr "Інструменти"
 
 msgid "About"
-msgstr ""
+msgstr "Про програму..."
 
 msgid "Actions"
 msgstr "Дія"
@@ -1585,7 +1585,7 @@ msgid "Description"
 msgstr "Опис"
 
 msgid "horse"
-msgstr ""
+msgstr "кінь"
 
 msgid "Map Point"
 msgstr "Точка на карті"
@@ -1593,5 +1593,6 @@ msgstr "Точка на карті"
 msgid "Vehicle Position"
 msgstr "Положення транспорту"
 
+#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d кілометрів"

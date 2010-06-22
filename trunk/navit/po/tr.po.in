@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2010-01-15 10:03+0000\n"
-"Last-Translator: tinyos <Unknown>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-05-10 15:05+0000\n"
+"Last-Translator: seqizz (gurkanGur) <seqizz@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -849,11 +849,11 @@ msgstr "Moğolistan"
 
 #. 446
 msgid "Macao"
-msgstr "Makao"
+msgstr "Macao"
 
 #. 580
 msgid "Northern Mariana Islands"
-msgstr "Kuzey Mariana Adaları"
+msgstr "Northern Mariana Adaları"
 
 #. 474
 msgid "Martinique"
@@ -865,7 +865,7 @@ msgstr "Moritanya"
 
 #. 500
 msgid "Montserrat"
-msgstr "Monserat"
+msgstr "Montserrat"
 
 #. 470
 msgid "Malta"
@@ -1225,7 +1225,7 @@ msgstr "Wallis ve Futuna Adaları"
 
 #. 882
 msgid "Samoa"
-msgstr "ABD/Samoa"
+msgstr "Samoa"
 
 #. 887
 msgid "Yemen"
@@ -1528,18 +1528,18 @@ msgid "Show Locale"
 msgstr "Yerel Ayarlar"
 
 msgid "About Navit"
-msgstr ""
+msgstr "Navit Hakkında"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Yazar"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "Ve tüm Navit takımı"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "üyeler ve katkıda bulunanlar."
 
 msgid "Main menu"
 msgstr "Ana menü"
@@ -1556,7 +1556,7 @@ msgid "Tools"
 msgstr "Araçlar"
 
 msgid "About"
-msgstr ""
+msgstr "Hakkında"
 
 msgid "Actions"
 msgstr "Eylemler"
@@ -1586,5 +1586,6 @@ msgstr "Harita Noktası"
 msgid "Vehicle Position"
 msgstr "Araç Konumu"
 
+#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d kilometre"

@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2010-01-21 22:07+0000\n"
-"Last-Translator: zhevz <boite_afrodite@hotmail.com>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-06-13 14:14+0000\n"
+"Last-Translator: leopoldonet <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1419,10 +1419,10 @@ msgid "Add Bookmark"
 msgstr "Adicionar aos Favoritos"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Adicionar Pasta de Favoritos"
 
 msgid "Rename"
-msgstr ""
+msgstr "Renomear"
 
 msgid "POIs"
 msgstr "POIs"
@@ -1443,22 +1443,22 @@ msgid "View on map"
 msgstr "Ver no mapa"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Corta Favorito"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Copiar Favorito"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Renomear Favorito"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Colar Favorito"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Apagar Favorito"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Colar favorito"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1530,18 +1530,18 @@ msgid "Show Locale"
 msgstr "Mostrar seu Local"
 
 msgid "About Navit"
-msgstr ""
+msgstr "Sobre Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Por"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "e tudo o equipe do Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "membros e contributores"
 
 msgid "Main menu"
 msgstr "Menu Principal"
@@ -1560,7 +1560,7 @@ msgid "Tools"
 msgstr "Ferramentas"
 
 msgid "About"
-msgstr ""
+msgstr "Sobre"
 
 msgid "Actions"
 msgstr "Ações"
@@ -1590,11 +1590,12 @@ msgstr "Ponto no mapa"
 msgid "Vehicle Position"
 msgstr "Posição do Veículo"
 
-#~ msgid " PRN "
-#~ msgstr " PRN "
+#, c-format
+#~ msgid "%d.%d kilometer"
+#~ msgstr "%d.%d kilometros"
 
 #~ msgid " SNR "
 #~ msgstr " SNR "
 
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d kilometros"
+#~ msgid " PRN "
+#~ msgstr " PRN "
