@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2009-12-20 20:38+0000\n"
-"Last-Translator: Lucian Adrian Grijincu <lucian.grijincu@gmail.com>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-06-12 09:37+0000\n"
+"Last-Translator: igorashu <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +87,7 @@ msgstr "în %d metri"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d kilometri"
 
 #, c-format
 msgid "in %d.%d kilometers"
@@ -1419,13 +1419,13 @@ msgid "Back"
 msgstr "Înapoi"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Adaugă semn de carte"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Adaugă director pentru semne de carte"
 
 msgid "Rename"
-msgstr ""
+msgstr "Redenumește"
 
 msgid "POIs"
 msgstr "Puncte de interes"
@@ -1446,22 +1446,22 @@ msgid "View on map"
 msgstr "Arată pe hartă"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Taie semnul de carte"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Copiază semnul de carte"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Redenumește semnul de carte"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Lipește semnul de carte"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Șterge semnul de carte"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Lipește semn de carte"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1480,7 +1480,7 @@ msgid " Elevation "
 msgstr ""
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Azimut "
 
 msgid "Show NMEA Data"
 msgstr "Arată datele NMEA"
@@ -1496,7 +1496,7 @@ msgstr "pieton"
 
 #, c-format
 msgid "Current profile: %s"
-msgstr ""
+msgstr "Profil curent: %s"
 
 #, c-format
 msgid "Change profile to: %s"
@@ -1524,7 +1524,7 @@ msgid "Message"
 msgstr "Mesaj"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Descrerea traseului"
 
 msgid "Height Profile"
 msgstr "Profil înălțime"
@@ -1533,18 +1533,18 @@ msgid "Show Locale"
 msgstr ""
 
 msgid "About Navit"
-msgstr ""
+msgstr "Despre Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "De"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "Și întreaga echipă Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "membri și colaboratori."
 
 msgid "Main menu"
 msgstr "Meniu principal"
@@ -1563,7 +1563,7 @@ msgid "Tools"
 msgstr "Unelte"
 
 msgid "About"
-msgstr ""
+msgstr "Despre"
 
 msgid "Actions"
 msgstr "Acțiuni"
@@ -1585,7 +1585,7 @@ msgid "Description"
 msgstr "Descriere"
 
 msgid "horse"
-msgstr ""
+msgstr "cal"
 
 msgid "Map Point"
 msgstr "Locație pe hartă"
@@ -1593,5 +1593,6 @@ msgstr "Locație pe hartă"
 msgid "Vehicle Position"
 msgstr "Poziția vehiculului"
 
+#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "kilometrul %d.%d"

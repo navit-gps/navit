@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2009-12-20 20:38+0000\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-06-11 09:50+0000\n"
 "Last-Translator: kayle.sk <webmaster@kayle.sk>\n"
 "Language-Team: Slovenčina\n"
 "MIME-Version: 1.0\n"
@@ -86,7 +86,7 @@ msgstr "o %d metrov"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d kilometrov"
 
 #, c-format
 msgid "in %d.%d kilometers"
@@ -110,7 +110,7 @@ msgid "exit"
 msgstr "výjazd"
 
 msgid "into the ramp"
-msgstr ""
+msgstr "na privádzač"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
@@ -155,7 +155,7 @@ msgstr "prudko "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "really strongly "
-msgstr ""
+msgstr "naozaj silno "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
@@ -209,7 +209,7 @@ msgstr "chyba"
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr "Odbočte %1s%2s%3s%4s"
+msgstr "Odbočte %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
 #, c-format
@@ -1418,13 +1418,13 @@ msgid "Back"
 msgstr "Späť"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Pridať záložku"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Pridať priečinok pre záložky"
 
 msgid "Rename"
-msgstr ""
+msgstr "Premenovať"
 
 msgid "POIs"
 msgstr "POI"
@@ -1445,22 +1445,22 @@ msgid "View on map"
 msgstr "Zobraziť na mape"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Vystrihnúť záložku"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Kopírovať záložku"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Premenovať záložku"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Vložiť záložku"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Odstrániť záložku"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Vložiť záložku"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1476,10 +1476,10 @@ msgid "Show Satellite Status"
 msgstr "Zobraziť stav satelitov"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Prevýšenie "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Azimut "
 
 msgid "Show NMEA Data"
 msgstr "Zobraziť NMEA data"
@@ -1523,27 +1523,27 @@ msgid "Message"
 msgstr "Správa"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Popis trasy"
 
 msgid "Height Profile"
-msgstr ""
+msgstr "Výškovy Profil"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Zobraziť jazyk"
 
 msgid "About Navit"
-msgstr ""
+msgstr "O Navite"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Od"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "A všetci členovia týmu Navitu"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "členovia a prispievatelia"
 
 msgid "Main menu"
 msgstr "Hlavné menu"
@@ -1562,7 +1562,7 @@ msgid "Tools"
 msgstr "Nástroje"
 
 msgid "About"
-msgstr ""
+msgstr "O programe"
 
 msgid "Actions"
 msgstr "Akcie"
@@ -1584,7 +1584,7 @@ msgid "Description"
 msgstr "Popis"
 
 msgid "horse"
-msgstr ""
+msgstr "kôň"
 
 msgid "Map Point"
 msgstr "Bod na mape"
@@ -1592,5 +1592,6 @@ msgstr "Bod na mape"
 msgid "Vehicle Position"
 msgstr "Pozícia vozidla"
 
+#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d kilometra"

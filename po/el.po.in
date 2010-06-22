@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2010-01-28 17:33+0000\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-05-24 14:51+0000\n"
 "Last-Translator: aitolos <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,11 +20,11 @@ msgstr ""
 
 #, c-format
 msgid "Running from source directory\n"
-msgstr "Λειτουργίας από την πηγή\n"
+msgstr "Λειτουργία από τον πηγαίο κατάλογο\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "ρύθμιση '% s' στο'% s'\n"
+msgstr "ρύθμιση '%s' στο'%s'\n"
 
 msgid "zeroth"
 msgstr "τρέχουσα"
@@ -118,17 +118,17 @@ msgstr "%s στην οδό %s%s%s"
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr "%sστον %s%s%s|male form"
+msgstr "%sστον %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr "%sστην %s%s%s|female form"
+msgstr "%sστην %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr "%sστο %s%s%s|neutral form"
+msgstr "%sστο %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
@@ -149,11 +149,11 @@ msgstr "ελαφρά "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "strongly "
-msgstr "έντονα "
+msgstr "Κλειστά "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "really strongly "
-msgstr "πραγματικά έντονα "
+msgstr "πολύ κλειστά "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
@@ -163,7 +163,7 @@ msgid "When possible, please turn around"
 msgstr "Όταν είναι δυνατόν, κάνε αναστροφή"
 
 msgid "Enter the roundabout soon"
-msgstr "Πληκτρολογήστε το συντομότερο κυκλική"
+msgstr "Μπές στη κυκλική πορεία άμεσα"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
@@ -249,7 +249,7 @@ msgid "Roadbook"
 msgstr "Οδηγίες Διαδρομής"
 
 msgid "Set as position"
-msgstr "Ορισμός ως θέση"
+msgstr "Ορισμός ως αφετηρία"
 
 msgid "Set as destination"
 msgstr "Ορισμός ως προορισμός"
@@ -1419,10 +1419,10 @@ msgid "Add Bookmark"
 msgstr "Προσθήκη σελιδοδείκτη"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Πρόσθεση φακέλου Σελιδοδείκτη"
 
 msgid "Rename"
-msgstr ""
+msgstr "Μετονομασία"
 
 msgid "POIs"
 msgstr "Σημεία Ενδιαφέροντος"
@@ -1443,22 +1443,22 @@ msgid "View on map"
 msgstr "Προβολή στο χάρτη"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Αποκοπή Σελιδοδείκτη"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Αντιγραφή Σελιδοδείκτη"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Μετονομασία Σελιδοδείκτη"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Επικόληση Σελιδοδείκτη"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Διαγραφή Σελιδοδείκτη"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Επικόληση σελιδοδείκτη"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1530,18 +1530,18 @@ msgid "Show Locale"
 msgstr "Eμφάνιση Εντοπιότητας"
 
 msgid "About Navit"
-msgstr ""
+msgstr "Περί του Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Από"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "Και όλη την ομάδα του Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "μέλη και συνεισφέροντες"
 
 msgid "Main menu"
 msgstr "Κύριο Μενού"
@@ -1560,7 +1560,7 @@ msgid "Tools"
 msgstr "Εργαλεία"
 
 msgid "About"
-msgstr ""
+msgstr "Περί"
 
 msgid "Actions"
 msgstr "Ενέργειες"
@@ -1588,11 +1588,12 @@ msgstr "Σημείο Χάρτη"
 msgid "Vehicle Position"
 msgstr "Θέση Οχήματος"
 
+#, c-format
+#~ msgid "%d.%d kilometer"
+#~ msgstr "%d %d χιλιόμετρα"
+
 #~ msgid " PRN "
 #~ msgstr " PRN "
 
 #~ msgid " SNR "
 #~ msgstr " SNR "
-
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d %d χιλιόμετρα"

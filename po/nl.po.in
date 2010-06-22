@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2010-01-03 19:01+0000\n"
-"Last-Translator: Frenzel <f.heinen.nl@gmail.com>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-06-17 08:22+0000\n"
+"Last-Translator: Christ van Willegen <cvwillegen+launchpad@gmail.com>\n"
 "Language-Team: afaber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +24,7 @@ msgstr "Gestart vanuit de brondirectory\n"
 
 #, c-format
 msgid "setting '%s' to '%s'\n"
-msgstr "setting '%s' naar '%s'\n"
+msgstr "Instelling '%s' naar '%s'\n"
 
 msgid "zeroth"
 msgstr "nulde"
@@ -1421,13 +1421,13 @@ msgid "Back"
 msgstr "Terug"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Bladwijzer Toevoegen"
 
 msgid "Add Bookmark folder"
 msgstr ""
 
 msgid "Rename"
-msgstr ""
+msgstr "Hernoem"
 
 msgid "POIs"
 msgstr "bezienswaardigheden"
@@ -1457,13 +1457,13 @@ msgid "Rename Bookmark"
 msgstr ""
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Plak Bladwijzer"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Verwijder Bladwijzer"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Plak Bladwijzer"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1479,10 +1479,10 @@ msgid "Show Satellite Status"
 msgstr "Toon satellietstatus"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Hoogte "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Azimuth "
 
 msgid "Show NMEA Data"
 msgstr "Toon NMEA gegevens"
@@ -1526,24 +1526,24 @@ msgid "Message"
 msgstr "Boodschap"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Routebeschrijving"
 
 msgid "Height Profile"
 msgstr "Hoogteprofiel"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Toon taal"
 
 msgid "About Navit"
-msgstr ""
+msgstr "Over Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Door"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "En het hele Navit Team"
 
 msgid "members and contributors."
 msgstr ""
@@ -1595,5 +1595,6 @@ msgstr "Punt op de kaart"
 msgid "Vehicle Position"
 msgstr "Voertuigpositie"
 
+#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d,%d kilometer"

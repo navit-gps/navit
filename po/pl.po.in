@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2009-12-31 00:00+0000\n"
-"Last-Translator: Jarosław Ogrodnik <nobodythere@gmail.com>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-06-09 18:10+0000\n"
+"Last-Translator: Lukasz Semler <lukasz_semler@o2.pl>\n"
 "Language-Team: Translators\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -1421,13 +1421,13 @@ msgid "Back"
 msgstr "Wróć"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Dodaj zakładkę"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Dodaj folder zakładek"
 
 msgid "Rename"
-msgstr ""
+msgstr "Zmień nazwę"
 
 msgid "POIs"
 msgstr "Użyteczne miejsca"
@@ -1448,22 +1448,22 @@ msgid "View on map"
 msgstr "Zobacz na mapie"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Wytnij zakładkę"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Kopiuj zakładkę"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Zmień nazwę zakładki"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Wklej zakładkę"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Usuń zakładkę"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Wklej zakładkę"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1479,10 +1479,10 @@ msgid "Show Satellite Status"
 msgstr "Pokaż status satelitów"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Wysokość n.p.m. "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Azymut "
 
 msgid "Show NMEA Data"
 msgstr "Pokaż dane NMEA"
@@ -1535,18 +1535,18 @@ msgid "Show Locale"
 msgstr ""
 
 msgid "About Navit"
-msgstr ""
+msgstr "O Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Przez"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "I cały zespół Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "członkowie oraz współtwórcy."
 
 msgid "Main menu"
 msgstr "Menu główne"
@@ -1565,7 +1565,7 @@ msgid "Tools"
 msgstr "Narzędzia"
 
 msgid "About"
-msgstr ""
+msgstr "O"
 
 msgid "Actions"
 msgstr "Akcje"
@@ -1595,5 +1595,6 @@ msgstr "Punkt na mapie"
 msgid "Vehicle Position"
 msgstr "Pozycja pojazdu"
 
+#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d kilometra"

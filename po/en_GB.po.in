@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2010-01-03 06:40+0000\n"
-"Last-Translator: Philipp Kleinhenz <Unknown>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-05-29 13:38+0000\n"
+"Last-Translator: Matthew Gall <matthewgall2005@gmail.com>\n"
 "Language-Team: English (United Kingdom) <en_GB@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1419,10 +1419,10 @@ msgid "Add Bookmark"
 msgstr "Add Bookmark"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Add Bookmark folder"
 
 msgid "Rename"
-msgstr ""
+msgstr "Rename"
 
 msgid "POIs"
 msgstr "POIs"
@@ -1443,22 +1443,22 @@ msgid "View on map"
 msgstr "View on map"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Cut Bookmark"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Copy Bookmark"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Rename Bookmark"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Paste Bookmark"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Delete Bookmark"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Paste bookmark"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1530,18 +1530,18 @@ msgid "Show Locale"
 msgstr "Show Locale"
 
 msgid "About Navit"
-msgstr ""
+msgstr "About Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "By"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "And all the Navit Team"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "members and contributors."
 
 msgid "Main menu"
 msgstr "Main menu"
@@ -1558,7 +1558,7 @@ msgid "Tools"
 msgstr "Tools"
 
 msgid "About"
-msgstr ""
+msgstr "About"
 
 msgid "Actions"
 msgstr "Actions"
@@ -1586,11 +1586,12 @@ msgstr "Map Point"
 msgid "Vehicle Position"
 msgstr "Vehicle Position"
 
-#~ msgid " PRN "
-#~ msgstr " PRN "
+#, c-format
+#~ msgid "%d.%d kilometer"
+#~ msgstr "%d.%d kilometre"
 
 #~ msgid " SNR "
 #~ msgstr " SNR "
 
-#~ msgid "%d.%d kilometer"
-#~ msgstr "%d.%d kilometre"
+#~ msgid " PRN "
+#~ msgstr " PRN "
