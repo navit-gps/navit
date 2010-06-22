@@ -1337,7 +1337,7 @@ static struct graphics_priv * graphics_qt_qpainter_new(struct navit *nav, struct
 	meth->get_text_bbox=(void (*)(struct graphics_priv*, struct graphics_font_priv*, char*, int, int, struct point*, int))ret->freetype_methods.get_text_bbox;
 #endif
 
-#if QT_QPAINTER_USE_EMBEDDING
+#if QT_QPAINTER_USE_EMBEDDING && QT_VERSION >= 0x040500
 	if ((attr=attr_search(attrs, NULL, attr_gc_type)))
 		QApplication::setGraphicsSystem(attr->u.str);
 	else
