@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2010-01-21 18:57+0000\n"
-"Last-Translator: jerome-lsl <Unknown>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-06-18 19:16+0000\n"
+"Last-Translator: yannick56 <Unknown>\n"
 "Language-Team: KaZeR <kazer@altern.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1425,10 +1425,10 @@ msgid "Add Bookmark"
 msgstr "Ajouter au favoris"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Ajouter un dossier de signets"
 
 msgid "Rename"
-msgstr ""
+msgstr "Renommer"
 
 msgid "POIs"
 msgstr "Points d'intérêt"
@@ -1449,22 +1449,22 @@ msgid "View on map"
 msgstr "Voir sur la carte"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Couper le signet"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Copier le signet"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Renommer le signet"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Insérer le signet"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Supprimer le signet"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Insérer le signet"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1536,18 +1536,18 @@ msgid "Show Locale"
 msgstr "Afficher la locale"
 
 msgid "About Navit"
-msgstr ""
+msgstr "A propos de Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "par"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "Et tous les membres du projet Navit"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "membres et contributeurs"
 
 msgid "Main menu"
 msgstr "Menu principal"
@@ -1566,7 +1566,7 @@ msgid "Tools"
 msgstr "Outils"
 
 msgid "About"
-msgstr ""
+msgstr "À propos"
 
 msgid "Actions"
 msgstr "Actions"
@@ -1596,8 +1596,8 @@ msgstr "Point sur la carte"
 msgid "Vehicle Position"
 msgstr "Position du véhicule"
 
-#~ msgid " PRN "
-#~ msgstr " PRN "
-
 #~ msgid " SNR "
 #~ msgstr " Rapport Signal/Bruit "
+
+#~ msgid " PRN "
+#~ msgstr " PRN "

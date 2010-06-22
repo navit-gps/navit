@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2010-01-03 06:41+0000\n"
-"Last-Translator: Philipp Kleinhenz <Unknown>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-06-01 22:09+0000\n"
+"Last-Translator: Achim Behrens <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1424,10 +1424,10 @@ msgid "Add Bookmark"
 msgstr "Lesezeichen hinzufügen"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "Lesezeichen-Ordner hinzufügen"
 
 msgid "Rename"
-msgstr ""
+msgstr "Umbennenen"
 
 msgid "POIs"
 msgstr "Interessante Kartenpunkte"
@@ -1448,22 +1448,22 @@ msgid "View on map"
 msgstr "Auf der Karte zeigen"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "Lesezeichen entfernen"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "Lesezeichen kopieren"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Lesezeichen umbenennen"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "Lesezeichen einfügen"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "Lesezeichen entfernen"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "Lesezeichen einfügen"
 
 #, c-format
 msgid "Bookmark %s"
@@ -1479,10 +1479,10 @@ msgid "Show Satellite Status"
 msgstr "Satellitenstatus anzeigen"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Höhe "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Längengrad "
 
 msgid "Show NMEA Data"
 msgstr "zeige NMEA Daten"
@@ -1526,7 +1526,7 @@ msgid "Message"
 msgstr "Benachrichtigung"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Wegbeschreibung"
 
 msgid "Height Profile"
 msgstr "Höhenprofil"
@@ -1535,18 +1535,18 @@ msgid "Show Locale"
 msgstr ""
 
 msgid "About Navit"
-msgstr ""
+msgstr "Über Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Von"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "Und das ganze Navit Team"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "Mitglieder und Mitarbeiter"
 
 msgid "Main menu"
 msgstr "Hauptmenü"
@@ -1565,7 +1565,7 @@ msgid "Tools"
 msgstr "Werkzeuge"
 
 msgid "About"
-msgstr ""
+msgstr "Über"
 
 msgid "Actions"
 msgstr "Aktionen"
@@ -1595,5 +1595,6 @@ msgstr "Kartenpunkt"
 msgid "Vehicle Position"
 msgstr "Fahrzeugposition"
 
+#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d,%d Kilometer"
