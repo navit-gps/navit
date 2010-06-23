@@ -257,8 +257,8 @@ font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
 
 		curr->dx = glyph->advance.x >> 10;
 		curr->dy = -glyph->advance.y >> 10;
-#if USE_CACHING
 		FT_Done_Glyph(glyph);
+#if USE_CACHING
 		FTC_Node_Unref(anode, manager);
 #endif
 		p = g_utf8_next_char(p);
