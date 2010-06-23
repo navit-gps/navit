@@ -306,6 +306,16 @@ debug_malloc0(const char *where, int line, const char *func, int size)
 	return ret;
 }
 
+void *
+debug_realloc(const char *where, int line, const char *func, void *ptr, int size)
+{
+	void *ret=debug_malloc(where, line, func, size);
+	if (ret && ptr)
+		memcpy(ret, ptr, size);
+	debug_free(where, line, func, ptr);
+	return ret;
+}
+
 char *
 debug_strdup(const char *where, int line, const char *func, const char *ptr)
 { 

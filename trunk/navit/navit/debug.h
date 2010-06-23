@@ -38,6 +38,9 @@ extern int debug_level;
 #undef g_new0
 #define g_new(type, size) (type *)debug_malloc(__FILE__,__LINE__,__PRETTY_FUNCTION__,sizeof(type)*(size))
 #define g_new0(type, size) (type *)debug_malloc0(__FILE__,__LINE__,__PRETTY_FUNCTION__,sizeof(type)*(size))
+#define g_malloc(size) debug_malloc(__FILE__,__LINE__,__PRETTY_FUNCTION__,(size))
+#define g_malloc0(size) debug_malloc0(__FILE__,__LINE__,__PRETTY_FUNCTION__,(size))
+#define g_realloc(ptr,size) debug_realloc(__FILE__,__LINE__,__PRETTY_FUNCTION__,ptr,(size))
 #define g_free(ptr) debug_free(__FILE__,__LINE__,__PRETTY_FUNCTION__,ptr)
 #define g_strdup(ptr) debug_strdup(__FILE__,__LINE__,__PRETTY_FUNCTION__,ptr)
 #define g_strdup_printf(fmt...) debug_guard(__FILE__,__LINE__,__PRETTY_FUNCTION__,g_strdup_printf(fmt))
