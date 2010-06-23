@@ -11,6 +11,9 @@
 #if USE_CACHING
 #include FT_CACHE_H
 #endif
+#if USE_FRIBIDI
+#include <fribidi/fribidi.h>
+#endif
 #include <freetype/ftglyph.h>
 #include "point.h"
 #include "graphics.h"
@@ -192,6 +195,21 @@ font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
 #if !USE_CACHING
 	FT_Set_Transform(font->face, &matrix, &pen);
 #endif
+
+#if USE_FRIBIDI
+    // Need to use fribidi to handle the string properly
+    char visual_text[len*4+1];
+    {
+        FriBidiChar unicode_text[len+1];
+        FriBidiChar visual_unicode_text[len+1];
+        int unicode_len = fribidi_utf8_to_unicode(text, strlen(text), unicode_text);
+        FriBidiCharType base = FRIBIDI_TYPE_LTR;
+        fribidi_boolean fribidi_ret = fribidi_log2vis(unicode_text, unicode_len, &base, visual_unicode_text, NULL, NULL, NULL);
+        // TODO: check return value
+        fribidi_unicode_to_utf8(visual_unicode_text, unicode_len, visual_text);
+        p = visual_text;
+    }
+#endif /* USE_FRIBIDI */
 
 	for (n = 0; n < len; n++) {
 

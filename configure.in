@@ -41,6 +41,7 @@ binding_dbus_use_system_bus=no
 binding_python=yes; binding_python_reason=default
 font_freetype=yes; font_freetype_reason=default
 fontconfig=yes; fontconfig_reason=default
+fribidi=yes; fribidi_reason=default
 gui_gtk=no; gui_gtk_reason=default
 gui_win32=no; gui_win32_reason=default
 gui_internal=yes; gui_internal_reason=default
@@ -421,7 +422,9 @@ AM_CONDITIONAL(HAVE_POSTGRESQL, test "x${postgresql}" = "xyes")
 # freetype
 AC_ARG_ENABLE(font-freetype, [  --disable-font-freetype             don't add freetype support], font_freetype=$enableval;font_freetype_reason="configure parameter")
 if test "x${font_freetype}" = "xyes" -a "x${FREETYPE2_CFLAGS}" = "x" -a "x${FREETYPE2_LIBS}" = "x"; then
-	PKG_CHECK_MODULES(FREETYPE2, [freetype2], , [font_freetype=no;font_freetype_reason="Package freetype2 missing"])
+	PKG_CHECK_MODULES(FREETYPE2, [freetype2], , [font_freetype=no;font_freetype_reason="Package freetype2 missing"])	
+else
+	fribidi=no
 fi
 AC_SUBST(FREETYPE2_CFLAGS)
 AC_SUBST(FREETYPE2_LIBS)
@@ -439,6 +442,22 @@ AC_SUBST(FONTCONFIG_CFLAGS)
 AC_SUBST(FONTCONFIG_LIBS)
 
 AM_CONDITIONAL(FONTS, test "x${font_freetype}" = "xyes" -a "x$fontconfig" != "xyes")
+
+# fribidi 
+AC_ARG_ENABLE(fribidi, [  --disable-fribidi      dont build with fribidi], fribidi=$enableval, fribidi=yes)
+if test x"${fribidi}" = "xyes"; then
+        AC_CHECK_LIB(fribidi, fribidi_log2vis,
+                     [FRIBIDI_LIBS=AC_DEFINE(USE_FRIBIDI, 1, [Define to 1 if you want to use fribidi])],
+                     [fribidi="no"; fribidi_reason="fribidi library is missing"]
+        )
+    if test x"${fribidi}" = "xyes"; then
+        AC_PATH_PROG([FRIBIDICONFIG], [fribidi-config], [])
+        FRIBIDI_CFLAGS="`${FRIBIDICONFIG} --cflags`"
+        FRIBIDI_LIBS="`${FRIBIDICONFIG} --libs`"
+    fi
+fi
+AC_SUBST(FRIBIDI_CFLAGS)
+AC_SUBST(FRIBIDI_LIBS)
 
 PKG_CHECK_MODULES(IMLIB2, [imlib2], [imlib2_pkgconfig=yes], [imlib2_pkgconfig=no])
 if test "x$imlib2_pkgconfig" = "xyes"; then
@@ -1164,6 +1183,7 @@ echo "NLS Support:         $enable_nls ($nls_libs)"
 echo "Routing:             $routing ($routing_reason)"
 echo "Font renderers:"
 echo "  freetype:          $font_freetype ($font_freetype_reason)"
+echo "  FriBidi enabled:   $fribidi ($fribidi_reason)"
 
 echo "Graphics types: $graphics ($graphics_reason)"
 echo "  android:  $graphics_android ($graphics_android_reason)"
