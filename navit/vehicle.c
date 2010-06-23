@@ -435,7 +435,7 @@ vehicle_log_gpx_add_tag(char *tag, char **logstr)
 static void
 vehicle_log_gpx(struct vehicle *this_, struct log *log)
 {
-	struct attr attr,*attrp;
+	struct attr attr,*attrp, fix_attr;
 	enum attr_type *attr_types;
 	char *logstr;
 	char *extensions="\t<extensions>\n";
@@ -446,6 +446,10 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 		attr_types=attr.u.attr_types;
 	else
 		attr_types=NULL;
+	if (this_->meth.position_attr_get(this_->priv, attr_position_fix_type, &fix_attr)) {
+		if (fix_attr.u.num != 2 && fix_attr.u.num != 3) 
+			return; 
+	}
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &attr))
 		return;
 	logstr=g_strdup_printf("<trkpt lat=\"%f\" lon=\"%f\">\n",attr.u.coord_geo->lat,attr.u.coord_geo->lng);
@@ -487,10 +491,14 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 static void
 vehicle_log_textfile(struct vehicle *this_, struct log *log)
 {
-	struct attr pos_attr;
+	struct attr pos_attr,fix_attr;
 	char *logstr;
 	if (!this_->meth.position_attr_get)
 		return;
+	if (this_->meth.position_attr_get(this_->priv, attr_position_fix_type, &fix_attr)) {
+		if (fix_attr.u.num != 2 && fix_attr.u.num != 3) 
+			return; 
+	}
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
 		return;
 	logstr=g_strdup_printf("%f %f type=trackpoint\n", pos_attr.u.coord_geo->lng, pos_attr.u.coord_geo->lat);
@@ -501,7 +509,7 @@ vehicle_log_textfile(struct vehicle *this_, struct log *log)
 static void
 vehicle_log_binfile(struct vehicle *this_, struct log *log)
 {
-	struct attr pos_attr;
+	struct attr pos_attr, fix_attr;
 	int *buffer;
 	int *buffer_new;
 	int len,limit=1024,done=0,radius=25;
@@ -510,6 +518,10 @@ vehicle_log_binfile(struct vehicle *this_, struct log *log)
 
 	if (!this_->meth.position_attr_get)
 		return;
+	if (this_->meth.position_attr_get(this_->priv, attr_position_fix_type, &fix_attr)) {
+		if (fix_attr.u.num != 2 && fix_attr.u.num != 3) 
+			return; 
+	}
 	if (!this_->meth.position_attr_get(this_->priv, attr_position_coord_geo, &pos_attr))
 		return;
 	transform_from_geo(projection_mg, pos_attr.u.coord_geo, &c);
