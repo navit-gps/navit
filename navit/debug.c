@@ -246,7 +246,7 @@ struct malloc_tail {
 	int magic;
 };
 
-int mallocs;
+int mallocs,malloc_size,malloc_size_m;
 
 void
 debug_dump_mallocs(void)
@@ -273,6 +273,11 @@ debug_malloc(const char *where, int line, const char *func, int size)
 	if (!size)
 		return NULL;
 	mallocs++;
+	malloc_size+=size;
+	if (malloc_size/(1024*1024) != malloc_size_m) {
+		malloc_size_m=malloc_size/(1024*1024);
+		dbg(0,"malloced %d kb\n",malloc_size/1024);
+	}
 	head=malloc(size+sizeof(*head)+sizeof(*tail));
 	head->magic=0xdeadbeef;
 	head->size=size;
@@ -347,6 +352,7 @@ debug_free(const char *where, int line, const char *func, void *ptr)
 	mallocs--;
 	head=(struct malloc_head *)((unsigned char *)ptr-sizeof(*head));
 	tail=(struct malloc_tail *)((unsigned char *)ptr+head->size);
+	malloc_size-=head->size;
 	if (head->magic != 0xdeadbeef || tail->magic != 0xdeadbef0) {
 		fprintf(stderr,"Invalid free from %s:%d %s\n",where,line,func);
 	}
