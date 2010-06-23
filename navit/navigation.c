@@ -649,6 +649,7 @@ check_roundabout(struct navigation_itm *itm, struct map *graph_map)
 	
 	i = map_rect_get_item(g_rect);
 	if (!i || i->type != type_rg_point) { // probably offroad? 
+		map_rect_destroy(g_rect);
 		return 0;
 	}
 
