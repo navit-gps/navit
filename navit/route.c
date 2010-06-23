@@ -50,7 +50,8 @@
 #endif
 #include <glib.h>
 #include "config.h"
-#include "debug.h"
+#include "point.h"
+#include "graphics.h"
 #include "profile.h"
 #include "coord.h"
 #include "projection.h"
@@ -59,8 +60,6 @@
 #include "mapset.h"
 #include "route.h"
 #include "track.h"
-#include "point.h"
-#include "graphics.h"
 #include "transform.h"
 #include "plugin.h"
 #include "fib.h"
@@ -69,6 +68,7 @@
 #include "vehicle.h"
 #include "vehicleprofile.h"
 #include "roadprofile.h"
+#include "debug.h"
 
 
 struct map_priv {
@@ -1018,7 +1018,7 @@ route_graph_point_new(struct route_graph *this, struct coord *f)
 	hashval=HASHCOORD(f);
 	if (debug_route)
 		printf("p (0x%x,0x%x)\n", f->x, f->y);
-	p=g_new0(struct route_graph_point,1);
+	p=g_slice_new0(struct route_graph_point);
 	p->hash_next=this->hash[hashval];
 	this->hash[hashval]=p;
 	p->value=INT_MAX;
@@ -1061,7 +1061,7 @@ route_graph_free_points(struct route_graph *this)
 		curr=this->hash[i];
 		while (curr) {
 			next=curr->hash_next;
-			g_free(curr);
+			g_slice_free(struct route_graph_point, curr);
 			curr=next;
 		}
 		this->hash[i]=NULL;
@@ -1172,7 +1172,7 @@ route_graph_add_segment(struct route_graph *this, struct route_graph_point *star
 	int size;
 
 	size = sizeof(struct route_graph_segment)-sizeof(struct route_segment_data)+route_segment_data_size(data->flags);
-	s = g_malloc0(size);
+	s = g_slice_alloc0(size);
 	if (!s) {
 		printf("%s:Out of memory\n", __FUNCTION__);
 		return;
@@ -1474,10 +1474,12 @@ static void
 route_graph_free_segments(struct route_graph *this)
 {
 	struct route_graph_segment *curr,*next;
+	int size;
 	curr=this->route_segments;
 	while (curr) {
 		next=curr->next;
-		g_free(curr);
+		size = sizeof(struct route_graph_segment)-sizeof(struct route_segment_data)+route_segment_data_size(curr->data.flags);
+		g_slice_free1(size, curr);
 		curr=next;
 	}
 	this->route_segments=NULL;
@@ -2296,9 +2298,10 @@ route_graph_build_done(struct route_graph *rg, int cancel)
 	rg->mr=NULL;
 	rg->h=NULL;
 	rg->sel=NULL;
-	route_graph_process_restrictions(rg);
-	if (! cancel)
+	if (! cancel) {
+		route_graph_process_restrictions(rg);
 		callback_call_0(rg->done_cb);
+	}
 	rg->busy=0;
 }
 
@@ -2570,6 +2573,8 @@ route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *
 void
 route_info_free(struct route_info *inf)
 {
+	if (!inf)
+		return;
 	if (inf->street)
 		street_data_free(inf->street);
 	g_free(inf);
@@ -3391,3 +3396,14 @@ route_init(void)
 	plugin_register_map_type("route_graph", route_graph_map_new);
 }
 
+void
+route_destroy(struct route *this_)
+{
+	route_path_destroy(this_->path2);
+	route_graph_destroy(this_->graph);
+	route_info_free(this_->dst);
+	route_info_free(this_->pos);
+	map_destroy(this_->map);
+	map_destroy(this_->graph_map);
+	g_free(this_);
+}
