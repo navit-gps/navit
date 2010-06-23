@@ -1095,6 +1095,7 @@ navit/xpm/Makefile
 navit/maps/Makefile
 intl/Makefile
 po/Makefile
+man/Makefile
 ])
 #src/data/garmin_img/Makefile
 
