@@ -2353,6 +2353,7 @@ navit_destroy(struct navit *this_)
 	if(this_->gra)
 	  graphics_remove_callback(this_->gra, this_->motion_callback);
 	callback_destroy(this_->motion_callback);
+	route_destroy(this_->route);
 	g_free(this_);
 }
 
