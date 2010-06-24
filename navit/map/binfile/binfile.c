@@ -1032,6 +1032,7 @@ map_parse_submap(struct map_rect_priv *mr)
 	struct coord_rect r;
 	struct coord c[2];
 	struct attr at;
+	struct range mima;
 	if (binfile_coord_get(mr->item.priv_data, c, 2) != 2)
 		return;
 	r.lu.x=c[0].x;
@@ -1040,7 +1041,13 @@ map_parse_submap(struct map_rect_priv *mr)
 	r.rl.y=c[0].y;
 	if (!binfile_attr_get(mr->item.priv_data, attr_order, &at))
 		return;
-	if (!mr->m->eoc || !selection_contains(mr->sel, &r, &at.u.range))
+#if __BYTE_ORDER == __BIG_ENDIAN
+	mima.min=le16_to_cpu(at.u.range.max);
+	mima.max=le16_to_cpu(at.u.range.min);
+#else
+	mima=at.u.range;
+#endif
+	if (!mr->m->eoc || !selection_contains(mr->sel, &r, &mima))
 		return;
 	if (!binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
 		return;
