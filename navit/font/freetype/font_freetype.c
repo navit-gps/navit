@@ -13,6 +13,9 @@
 #endif
 #if USE_FRIBIDI
 #include <fribidi/fribidi.h>
+#if FRIBIDI_INTERFACE_VERSION == 3
+#include <fribidi/fribidi-deprecated.h>
+#endif 
 #endif
 #include <freetype/ftglyph.h>
 #include "point.h"
@@ -204,7 +207,7 @@ font_freetype_text_new(char *text, struct font_freetype_font *font, int dx,
         FriBidiChar visual_unicode_text[len+1];
         int unicode_len = fribidi_utf8_to_unicode(text, strlen(text), unicode_text);
         FriBidiCharType base = FRIBIDI_TYPE_LTR;
-        fribidi_boolean fribidi_ret = fribidi_log2vis(unicode_text, unicode_len, &base, visual_unicode_text, NULL, NULL, NULL);
+        fribidi_log2vis(unicode_text, unicode_len, &base, visual_unicode_text, NULL, NULL, NULL);
         // TODO: check return value
         fribidi_unicode_to_utf8(visual_unicode_text, unicode_len, visual_text);
         p = visual_text;
