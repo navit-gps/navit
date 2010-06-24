@@ -664,7 +664,7 @@ route_path_update_done(struct route *this, int new_graph)
 			/* FIXME */
 			int seg_time=route_time_seg(this->vehicleprofile, seg->data, NULL);
 			if (seg_time == INT_MAX) {
-				dbg(0,"error\n");
+				dbg(1,"error\n");
 			} else
 				path_time+=seg_time;
 			path_len+=seg->data->len;
@@ -3371,7 +3371,7 @@ route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, stru
 		if (this_->path2 && (this_->route_status == route_status_path_done_new || this_->route_status == route_status_path_done_incremental)) {
 
 			attr->u.num=this_->path2->path_time;
-			dbg(0,"path_time %d\n",attr->u.num);
+			dbg(1,"path_time %d\n",attr->u.num);
 		}
 		else
 			ret=0;
