@@ -45,6 +45,7 @@
 #include "coord.h"
 #include "event.h"
 #include "bookmarks.h"
+#include "route.h"
 #include "navit_nls.h"
 
 #ifdef USE_HILDON
@@ -217,6 +218,24 @@ gui_gtk_set_graphics(struct gui_priv *this, struct graphics *gra)
 	gtk_widget_grab_focus(graphics);
 
 	return 0;
+}
+
+static void 
+gui_gtk_route_callback(struct gui_priv *gui) {
+	struct attr route_attr;
+	GtkAction *roadbookAction=gtk_ui_manager_get_action (gui->ui_manager,"/ui/ToolBar/ToolItems/Roadbook");
+	if (roadbookAction) {
+		if (navit_get_attr(gui->nav,attr_route,&route_attr,NULL)) {
+			struct attr route_status_attr;
+			if (route_get_attr(route_attr.u.route, attr_route_status,&route_status_attr,NULL) ) {
+				if (route_status_attr.u.num>2) {
+					gtk_action_set_sensitive(roadbookAction,1);
+				} else {
+					gtk_action_set_sensitive(roadbookAction,0);
+				}
+			}
+		}
+	}
 }
 
 static void
@@ -663,6 +682,7 @@ static void
 gui_gtk_init(struct gui_priv *this, struct navit *nav)
 {
 
+	struct attr route_attr;
 
 	gui_gtk_toggle_init(this);
 	gui_gtk_layouts_init(this);
@@ -671,6 +691,14 @@ gui_gtk_init(struct gui_priv *this, struct navit *nav)
 	gui_gtk_maps_init(this);
 	gui_gtk_destinations_init(this);
 	gui_gtk_bookmarks_init(this);
+
+	if (navit_get_attr(nav,attr_route,&route_attr,NULL)) {
+		struct attr callback;
+		callback.type=attr_callback;
+		callback.u.callback=callback_new_attr_1(callback_cast(gui_gtk_route_callback), attr_route_status, this);
+		route_add_attr(route_attr.u.route, &callback);	
+	}
+	gui_gtk_route_callback(this); //Set initial state
 }
 
 static struct gui_priv *
