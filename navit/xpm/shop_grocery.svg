@@ -1,89 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="146"
-   height="146"
-   id="svg1875"
-   sodipodi:version="0.32"
-   inkscape:version="0.46"
-   version="1.0"
-   sodipodi:docbase="C:\Dokumente und Einstellungen\Stefan Fussan\Eigene Dateien\Eigene Bilder\WikiTravel\Kartenentwürfe\eigene Symbole"
-   sodipodi:docname="shop_grocery.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
-  <defs
-     id="defs1877">
-    <linearGradient
-       id="linearGradient3158">
-      <stop
-         style="stop-color:#060606;stop-opacity:1;"
-         offset="0"
-         id="stop3160" />
-      <stop
-         id="stop3166"
-         offset="1"
-         style="stop-color:#fcc82d;stop-opacity:1;" />
+
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="22" height="22" id="svg1875" sodipodi:version="0.32" inkscape:version="0.47 r22583" version="1.0" sodipodi:docname="shop_grocery.svg" inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs id="defs1877">
+    <linearGradient id="linearGradient3158">
+      <stop style="stop-color:#060606;stop-opacity:1;" offset="0" id="stop3160" />
+      <stop id="stop3166" offset="1" style="stop-color:#fcc82d;stop-opacity:1;" />
     </linearGradient>
-    <linearGradient
-       id="linearGradient3165">
-      <stop
-         style="stop-color:#1f1f1f;stop-opacity:1;"
-         offset="0"
-         id="stop3167" />
-      <stop
-         style="stop-color:#ed4600;stop-opacity:1;"
-         offset="1"
-         id="stop3169" />
+    <linearGradient id="linearGradient3165">
+      <stop style="stop-color:#1f1f1f;stop-opacity:1;" offset="0" id="stop3167" />
+      <stop style="stop-color:#ed4600;stop-opacity:1;" offset="1" id="stop3169" />
     </linearGradient>
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 73.285255 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="146.84756 : 73.285255 : 1"
-       inkscape:persp3d-origin="73.423782 : 48.856837 : 1"
-       id="perspective12" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient3158"
-       id="linearGradient3164"
-       x1="-825.11873"
-       y1="46.535869"
-       x2="-694.4925"
-       y2="46.535869"
-       gradientUnits="userSpaceOnUse" />
+    <inkscape:perspective sodipodi:type="inkscape:persp3d" inkscape:vp_x="0 : 73.285255 : 1" inkscape:vp_y="0 : 1000 : 0" inkscape:vp_z="146.84756 : 73.285255 : 1" inkscape:persp3d-origin="73.423782 : 48.856837 : 1" id="perspective12" />
+    <linearGradient inkscape:collect="always" xlink:href="#linearGradient3158" id="linearGradient3164" x1="-825.11871" y1="46.53587" x2="-694.49249" y2="46.53587" gradientUnits="userSpaceOnUse" />
+    <linearGradient inkscape:collect="always" xlink:href="#linearGradient3158" id="linearGradient2921" gradientUnits="userSpaceOnUse" x1="-825.11871" y1="46.53587" x2="-694.49249" y2="46.53587" />
   </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="0.5305008"
-     inkscape:cx="67.106389"
-     inkscape:cy="83.544468"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="true"
-     inkscape:window-width="1094"
-     inkscape:window-height="800"
-     inkscape:window-x="113"
-     inkscape:window-y="-2" />
-  <metadata
-     id="metadata1880">
+  <sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="24.227273" inkscape:cx="11" inkscape:cy="11" inkscape:document-units="px" inkscape:current-layer="layer1" showgrid="true" inkscape:window-width="1094" inkscape:window-height="778" inkscape:window-x="113" inkscape:window-y="-2" inkscape:window-maximized="0" />
+  <metadata id="metadata1880">
     <rdf:RDF>
-      <cc:Work
-         rdf:about="">
+      <cc:Work rdf:about="">
         <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
         <dc:title>Symbol Shop</dc:title>
         <dc:date>07. Oct. 2006</dc:date>
         <dc:creator>
@@ -97,73 +34,30 @@
           </rdf:Bag>
         </dc:subject>
         <dc:description>Symbol for Wikivoyage maps:Shop</dc:description>
-        <cc:license
-           rdf:resource="http://creativecommons.org/licenses/by-sa/2.5/" />
+        <cc:license rdf:resource="http://creativecommons.org/licenses/by-sa/2.5/" />
       </cc:Work>
-      <cc:License
-         rdf:about="http://creativecommons.org/licenses/by-sa/2.5/">
-        <cc:permits
-           rdf:resource="http://web.resource.org/cc/Reproduction" />
-        <cc:permits
-           rdf:resource="http://web.resource.org/cc/Distribution" />
-        <cc:requires
-           rdf:resource="http://web.resource.org/cc/Notice" />
-        <cc:requires
-           rdf:resource="http://web.resource.org/cc/Attribution" />
-        <cc:permits
-           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
-        <cc:requires
-           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+      <cc:License rdf:about="http://creativecommons.org/licenses/by-sa/2.5/">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:requires rdf:resource="http://web.resource.org/cc/Attribution" />
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires rdf:resource="http://web.resource.org/cc/ShareAlike" />
       </cc:License>
     </rdf:RDF>
   </metadata>
-  <g
-     inkscape:label="Hintergrund"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(836.281, 29.4945)"
-     style="opacity: 1;">
-    <path
-       id="path2386"
-       style="fill:url(#linearGradient3164);fill-rule:evenodd;stroke:#000000;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;fill-opacity:1"
-       d="M -803.29162,95.74954 L -716.98607,95.74954 L -696.9925,25.105617 L -730.98156,25.438843 C -730.98156,25.438843 -729.60032,12.777063 -738.64576,2.7794696 C -744.97706,-4.2182774 -774.63418,-4.8847304 -782.6316,3.1126956 C -793.29484,13.77593 -788.9629,25.105617 -790.2958,25.105617 C -791.62871,25.105617 -822.61873,24.772391 -822.61873,24.772391 L -803.29162,95.74954 z M -741.07095,23.653477 C -741.07095,23.653477 -740.17615,15.450881 -746.036,8.9742076 C -750.13756,4.4409045 -769.35014,4.0091607 -774.53105,9.1900792 C -781.43894,16.09797 -778.39698,23.673231 -779.26047,23.673231 L -741.07095,23.653477 z"
-       sodipodi:nodetypes="ccccssscccsscc" />
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
-       d="M 122.05448,66.928784 L 103.91125,67.16441"
-       id="path3190"
-       transform="translate(-836.281,-29.4945)" />
-    <path
-       id="path3192"
-       d="M -717.99654,49.922484 L -736.13977,50.15811"
-       style="fill:none;fill-rule:evenodd;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M -721.05968,61.939431 L -739.20291,62.175057"
-       id="path3194" />
-    <path
-       id="path3196"
-       d="M -723.41594,74.192004 L -741.55917,74.42763"
-       style="fill:none;fill-rule:evenodd;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       id="path3198"
-       d="M -741.08793,36.963031 L -759.23116,37.198657"
-       style="fill:none;fill-rule:evenodd;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M -744.85795,49.451231 L -763.00118,49.686857"
-       id="path3200" />
-    <path
-       id="path3202"
-       d="M -747.92109,61.468178 L -766.06432,61.703804"
-       style="fill:none;fill-rule:evenodd;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       style="fill:none;fill-rule:evenodd;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M -750.27735,73.720751 L -768.42058,73.956377"
-       id="path3204" />
+  <g inkscape:label="Hintergrund" inkscape:groupmode="layer" id="layer1" transform="translate(836.281,-94.5055)">
+    <g id="g2910" transform="matrix(0.16527013,0,0,0.199046,-699.70878,96.139377)">
+      <path sodipodi:nodetypes="ccccssscccsscc" d="m -803.29162,95.74954 86.30555,0 19.99357,-70.643923 -33.98906,0.333226 c 0,0 1.38124,-12.66178 -7.6642,-22.6593734 -6.3313,-6.997747 -35.98842,-7.6642 -43.98584,0.333226 -10.66324,10.6632344 -6.3313,21.9929214 -7.6642,21.9929214 -1.33291,0 -32.32293,-0.333226 -32.32293,-0.333226 l 19.32711,70.977149 z m 62.22067,-72.096063 c 0,0 0.8948,-8.202596 -4.96505,-14.6792694 -4.10156,-4.5333031 -23.31414,-4.9650469 -28.49505,0.2158716 -6.90789,6.9078908 -3.86593,14.4831518 -4.72942,14.4831518 l 38.18952,-0.01975 z" style="fill:url(#linearGradient2921);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" id="path2386" />
+      <path transform="translate(-836.281,-29.4945)" id="path3190" d="M 122.05448,66.928784 103.91125,67.16441" style="fill:none;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path style="fill:none;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m -717.99654,49.922484 -18.14323,0.235626" id="path3192" />
+      <path id="path3194" d="m -721.05968,61.939431 -18.14323,0.235626" style="fill:none;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path style="fill:none;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m -723.41594,74.192004 -18.14323,0.235626" id="path3196" />
+      <path style="fill:none;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m -741.08793,36.963031 -18.14323,0.235626" id="path3198" />
+      <path id="path3200" d="m -744.85795,49.451231 -18.14323,0.235626" style="fill:none;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path style="fill:none;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m -747.92109,61.468178 -18.14323,0.235626" id="path3202" />
+      <path id="path3204" d="m -750.27735,73.720751 -18.14323,0.235626" style="fill:none;stroke:#0093bd;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
   </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer2"
-     inkscape:label="Symbol" />
+  <g inkscape:groupmode="layer" id="layer2" inkscape:label="Symbol" transform="translate(0,-124)" />
 </svg>

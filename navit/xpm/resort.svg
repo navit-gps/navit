@@ -1,59 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="146"
-   height="146"
-   id="svg1875"
-   sodipodi:version="0.32"
-   inkscape:version="0.46"
-   version="1.0"
-   sodipodi:docbase="C:\Dokumente und Einstellungen\Stefan Fussan\Eigene Dateien\WikiVoyage\Symbole"
-   sodipodi:docname="resort.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
-  <defs
-     id="defs1877">
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 73.285255 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="146.84756 : 73.285255 : 1"
-       inkscape:persp3d-origin="73.423782 : 48.856837 : 1"
-       id="perspective10" />
+
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="22" height="22" id="svg1875" sodipodi:version="0.32" inkscape:version="0.47 r22583" version="1.0" sodipodi:docname="resort.svg" inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs id="defs1877">
+    <inkscape:perspective sodipodi:type="inkscape:persp3d" inkscape:vp_x="0 : 73.285255 : 1" inkscape:vp_y="0 : 1000 : 0" inkscape:vp_z="146.84756 : 73.285255 : 1" inkscape:persp3d-origin="73.423782 : 48.856837 : 1" id="perspective10" />
   </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ff00ff"
-     bordercolor="#366666"
-     borderopacity="1"
-     inkscape:pageopacity="1"
-     inkscape:pageshadow="2"
-     inkscape:zoom="3.0009658"
-     inkscape:cx="63.995508"
-     inkscape:cy="65.015315"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="true"
-     inkscape:window-width="1094"
-     inkscape:window-height="800"
-     inkscape:window-x="110"
-     inkscape:window-y="4"
-     inkscape:object-nodes="true"
-     inkscape:object-points="true" />
-  <metadata
-     id="metadata1880">
+  <sodipodi:namedview id="base" pagecolor="#ff00ff" bordercolor="#366666" borderopacity="1" inkscape:pageopacity="1" inkscape:pageshadow="2" inkscape:zoom="24.227273" inkscape:cx="11" inkscape:cy="11" inkscape:document-units="px" inkscape:current-layer="layer1" showgrid="true" inkscape:window-width="1094" inkscape:window-height="778" inkscape:window-x="110" inkscape:window-y="4" inkscape:object-nodes="true" inkscape:object-points="true" inkscape:window-maximized="0" />
+  <metadata id="metadata1880">
     <rdf:RDF>
-      <cc:Work
-         rdf:about="">
+      <cc:Work rdf:about="">
         <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
         <dc:title>Symbol Resort</dc:title>
         <dc:date>02. Feb. 2006</dc:date>
         <dc:creator>
@@ -67,46 +24,22 @@
           </rdf:Bag>
         </dc:subject>
         <dc:description>Symbol for Wikivoyage maps: Resort</dc:description>
-        <cc:license
-           rdf:resource="http://creativecommons.org/licenses/by-sa/2.5/" />
+        <cc:license rdf:resource="http://creativecommons.org/licenses/by-sa/2.5/" />
       </cc:Work>
-      <cc:License
-         rdf:about="http://creativecommons.org/licenses/by-sa/2.5/">
-        <cc:permits
-           rdf:resource="http://web.resource.org/cc/Reproduction" />
-        <cc:permits
-           rdf:resource="http://web.resource.org/cc/Distribution" />
-        <cc:requires
-           rdf:resource="http://web.resource.org/cc/Notice" />
-        <cc:requires
-           rdf:resource="http://web.resource.org/cc/Attribution" />
-        <cc:permits
-           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
-        <cc:requires
-           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+      <cc:License rdf:about="http://creativecommons.org/licenses/by-sa/2.5/">
+        <cc:permits rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:requires rdf:resource="http://web.resource.org/cc/Attribution" />
+        <cc:permits rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires rdf:resource="http://web.resource.org/cc/ShareAlike" />
       </cc:License>
     </rdf:RDF>
   </metadata>
-  <g
-     inkscape:label="Ebene 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(836.281, 29.4945)">
-    <path
-       id="path6273"
-       style="font-size:12px;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:7.136;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="M -764.17284,-20.048921 L -693.29368,32.766388 L -693.29368,37.880694 L -713.61867,37.880694 L -713.00133,102.41364 L -811.02301,102.41364 L -811.02301,37.572027 L -832.46473,37.555583 L -832.46473,32.441277 L -764.17284,-20.048921 z"
-       sodipodi:nodetypes="cccccccccc" />
-    <text
-       xml:space="preserve"
-       style="font-size:37.74900817999999703px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:7.136;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans;stroke-miterlimit:4;stroke-dasharray:none"
-       x="-793.22296"
-       y="81.305115"
-       id="text3153"><tspan
-         sodipodi:role="line"
-         id="tspan3155"
-         x="-793.22296"
-         y="81.305115"
-         style="font-size:82.36148833999999397px;font-weight:bold;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold;stroke-width:7.136;stroke-miterlimit:4;stroke-dasharray:none">R</tspan></text>
+  <g inkscape:label="Ebene 1" inkscape:groupmode="layer" id="layer1" transform="translate(836.281,-94.5055)">
+    <g id="g2834" transform="matrix(0.14900171,0,0,0.14900171,-711.62752,99.891712)">
+      <path sodipodi:nodetypes="cccccccccc" d="m -764.17284,-20.048921 70.87916,52.815309 0,5.114306 -20.32499,0 0.61734,64.532946 -98.02168,0 0,-64.841613 -21.44172,-0.01644 0,-5.114306 68.29189,-52.490198 z" style="font-size:12px;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:7.13600016;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" id="path6273" />
+      <text id="text3153" y="81.305115" x="-793.22296" style="font-size:37.74900818px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans" xml:space="preserve"><tspan style="font-size:82.36148834px;font-weight:bold;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold" y="81.305115" x="-793.22296" id="tspan3155" sodipodi:role="line">R</tspan></text>
+    </g>
   </g>
 </svg>
