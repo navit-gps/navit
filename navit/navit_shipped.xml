@@ -1799,10 +1799,10 @@ Navigation</text></img>
 					<circle color="#606060" radius="5" width="2" text_size="8"/>
 				</itemgra>
 				<itemgra item_types="poi_repair_service" order="12-">
-					<icon src="repair_service.xpm"/>
+					<icon src="repair_service.png"/>
 				</itemgra>
 				<itemgra item_types="poi_resort" order="12-">
-					<icon src="resort.xpm"/>
+					<icon src="resort.png"/>
 				</itemgra>
 				<itemgra item_types="poi_restaurant" order="12-">
 					<icon src="restaurant.png"/>
@@ -1838,7 +1838,7 @@ Navigation</text></img>
 					<icon src="shop_furnish.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_shop_grocery" order="12-">
-					<icon src="shop_grocery.xpm"/>
+					<icon src="shop_grocery.png"/>
 				</itemgra>
 				<itemgra item_types="poi_shop_handg" order="12-">
 					<icon src="shop_handg.xpm"/>
@@ -3156,10 +3156,10 @@ Navigation</text></img>
 					<circle color="#3d3d3d" radius="6" width="2" text_size="8"/>
 				</itemgra>
 				<itemgra item_types="poi_repair_service" order="0-">
-					<icon src="repair_service.xpm"/>
+					<icon src="repair_service.png"/>
 				</itemgra>
 				<itemgra item_types="poi_resort" order="0-">
-					<icon src="resort.xpm"/>
+					<icon src="resort.png"/>
 				</itemgra>
 				<itemgra item_types="poi_restaurant" order="12-">
 					<icon src="restaurant.xpm"/>
@@ -3195,7 +3195,7 @@ Navigation</text></img>
 					<icon src="shop_furnish.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_shop_grocery" order="0-">
-					<icon src="shop_grocery.xpm"/>
+					<icon src="shop_grocery.png"/>
 				</itemgra>
 				<itemgra item_types="poi_shop_handg" order="0-">
 					<icon src="shop_handg.xpm"/>
