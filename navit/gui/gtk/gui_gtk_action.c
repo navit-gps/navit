@@ -413,7 +413,7 @@ static char layout[] =
 				<toolitem name=\"Zoom in\" action=\"ZoomInAction\"/>\
 				<toolitem name=\"Zoom out\" action=\"ZoomOutAction\"/>\
 				<toolitem name=\"Refresh\" action=\"RefreshAction\"/>\
-				<toolitem name=\"Cursor\" action=\"CursorAction\"/>\
+				<!-- <toolitem name=\"Cursor\" action=\"CursorAction\"/> -->\
 				<toolitem name=\"Orientation\" action=\"OrientationAction\"/>\
 				<toolitem name=\"Destination\" action=\"DestinationAction\"/>\
 				<!-- <toolitem name=\"Info\" action=\"InfoAction\"/> -->\
