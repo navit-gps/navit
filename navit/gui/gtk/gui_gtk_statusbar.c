@@ -58,7 +58,7 @@ statusbar_gps_update(struct statusbar_priv *this, int sats, int qual, double lng
 	char *dirs[]={_("N"),_("NE"),_("E"),_("SE"),_("S"),_("SW"),_("W"),_("NW"),_("N")};
 	char *dir;
 	int dir_idx;
-	char pos_text[26];
+	char pos_text[36];
 
 	coord_format(lat,lng,DEGREES_MINUTES_SECONDS,pos_text,sizeof(pos_text));
 	dir=dirs[dir_idx];
