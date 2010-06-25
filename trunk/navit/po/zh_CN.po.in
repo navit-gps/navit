@@ -48,25 +48,25 @@ msgid "sixth"
 msgstr "第六个"
 
 msgid "zeroth exit"
-msgstr ""
+msgstr "第零个退出"
 
 msgid "first exit"
-msgstr ""
+msgstr "第一个退出"
 
 msgid "second exit"
-msgstr ""
+msgstr "第二个退出"
 
 msgid "third exit"
-msgstr ""
+msgstr "第三个退出"
 
 msgid "fourth exit"
-msgstr ""
+msgstr "第四个退出"
 
 msgid "fifth exit"
-msgstr ""
+msgstr "第五个退出"
 
 msgid "sixth exit"
-msgstr ""
+msgstr "第六个退出"
 
 #, c-format
 msgid "%d m"
@@ -86,7 +86,7 @@ msgstr "距离%d米"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d千米"
 
 #, c-format
 msgid "in %d.%d kilometers"
@@ -106,32 +106,32 @@ msgid "exit"
 msgstr "退出"
 
 msgid "into the ramp"
-msgstr ""
+msgstr "进入坡道"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr ""
+msgstr "%s 到达街区 %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr ""
+msgstr "%s 到达 %s%s%s | male form"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr ""
+msgstr "%s 到达 %s%s%s | female form"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr ""
+msgstr "%s 到达 %s%s%s | neutral form"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr ""
+msgstr "%s 到达 %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 msgid "right"
@@ -158,110 +158,110 @@ msgid "unknown "
 msgstr "未知 "
 
 msgid "When possible, please turn around"
-msgstr ""
+msgstr "当有路口的时候，请转弯"
 
 msgid "Enter the roundabout soon"
-msgstr ""
+msgstr "即将进入环形枢纽"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "In %s, enter the roundabout"
-msgstr ""
+msgstr "还有%s进入环形枢纽"
 
 #, c-format
 msgid "Leave the roundabout at the %s"
-msgstr ""
+msgstr "还有%s就将驶离环形区"
 
 #, c-format
 msgid "then leave the roundabout at the %s"
-msgstr ""
+msgstr "然后在%s处驶出环形区"
 
 #, c-format
 msgid "Follow the road for the next %s"
-msgstr ""
+msgstr "沿路继续行驶%s"
 
 msgid "soon"
-msgstr ""
+msgstr "将要"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #, c-format
 msgid "Take the %1$s road to the %2$s"
-msgstr ""
+msgstr "可以经由道路 %1$s 到 %2$s"
 
 #, c-format
 msgid "after %i roads"
-msgstr ""
+msgstr "之后有 %i 条道路"
 
 msgid "now"
-msgstr ""
+msgstr "现在"
 
 #, c-format
 msgid "then take the %1$s road to the %2$s"
-msgstr ""
+msgstr "然后可以经由道路 %1$s 到 %2$s"
 
 msgid "error"
-msgstr ""
+msgstr "错误"
 
 #. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
 #, c-format
 msgid "Turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "转向 %1$s%2$s %3$s%4$s"
 
 #. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
 #, c-format
 msgid "then turn %1$s%2$s %3$s%4$s"
-msgstr ""
+msgstr "然后转向 %1$s%2$s %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
-msgstr ""
+msgstr "你已经抵达您的目的地 %s"
 
 msgid "then you have reached your destination."
-msgstr ""
+msgstr "然后你已经到达您的目的地"
 
 msgid "Position"
-msgstr ""
+msgstr "位置"
 
 msgid "Command"
-msgstr ""
+msgstr "命令"
 
 msgid "Length"
-msgstr ""
+msgstr "长度"
 
 msgid "km"
-msgstr ""
+msgstr "千米"
 
 msgid "m"
-msgstr ""
+msgstr "米"
 
 msgid "Time"
-msgstr ""
+msgstr "时间"
 
 msgid "Destination Length"
-msgstr ""
+msgstr "目的地距离"
 
 msgid "Destination Time"
-msgstr ""
+msgstr "距目的地时间"
 
 msgid "Roadbook"
-msgstr ""
+msgstr "路线图"
 
 msgid "Set as position"
-msgstr ""
+msgstr "设置为当前位置"
 
 msgid "Set as destination"
-msgstr ""
+msgstr "设置为目的地"
 
 msgid "Add as bookmark"
-msgstr ""
+msgstr "添加为书签"
 
 #, c-format
 msgid "Point 0x%x 0x%x"
-msgstr ""
+msgstr "位置 0x%x 0x%x"
 
 #, c-format
 msgid "Screen coord : %d %d"
-msgstr ""
+msgstr "屏幕坐标：%d %d"
 
 #. 020
 msgid "Andorra"
@@ -453,7 +453,7 @@ msgstr ""
 
 #. 156
 msgid "China"
-msgstr ""
+msgstr "中国"
 
 #. 170
 msgid "Colombia"
@@ -1248,10 +1248,10 @@ msgid "Zimbabwe"
 msgstr ""
 
 msgid "* Unknown, add is_in tags to those cities"
-msgstr ""
+msgstr "* 未知，添加标签"
 
 msgid "Car"
-msgstr ""
+msgstr "汽车"
 
 msgid "Iso2"
 msgstr ""
@@ -1260,329 +1260,331 @@ msgid "Iso3"
 msgstr ""
 
 msgid "Country"
-msgstr ""
+msgstr "国家"
 
 msgid "Postal"
-msgstr ""
+msgstr "邮编"
 
 msgid "Town"
-msgstr ""
+msgstr "区/镇"
 
 msgid "District"
-msgstr ""
+msgstr "城区"
 
 msgid "Street"
-msgstr ""
+msgstr "街区"
 
 msgid "Number"
-msgstr ""
+msgstr "门牌号"
 
 msgid "Enter Destination"
-msgstr ""
+msgstr "进入目标区域"
 
 msgid "Zip Code"
-msgstr ""
+msgstr "区号（邮编）"
 
 msgid "City"
-msgstr ""
+msgstr "城市"
 
 msgid "District/Township"
-msgstr ""
+msgstr "市区/区镇"
 
 msgid "Map"
-msgstr ""
+msgstr "地图"
 
 msgid "Bookmark"
-msgstr ""
+msgstr "书签"
 
 msgid "Destination"
-msgstr ""
+msgstr "目的地"
 
 msgid "Display"
-msgstr ""
+msgstr "显示"
 
 msgid "Route"
-msgstr ""
+msgstr "路线"
 
 msgid "Former Destinations"
-msgstr ""
+msgstr "前一目的地"
 
 msgid "Bookmarks"
-msgstr ""
+msgstr "书签"
 
 msgid "Layout"
-msgstr ""
+msgstr "布局"
 
 msgid "Projection"
-msgstr ""
+msgstr "规划"
 
 msgid "Vehicle"
-msgstr ""
+msgstr "车辆"
 
 msgid "ZoomOut"
-msgstr ""
+msgstr "缩小"
 
 msgid "ZoomIn"
-msgstr ""
+msgstr "放大"
 
 msgid "Recalculate"
-msgstr ""
+msgstr "重新计算"
 
 msgid "Info"
-msgstr ""
+msgstr "信息"
 
 msgid "Stop Navigation"
-msgstr ""
+msgstr "停止导航"
 
 msgid "Test"
-msgstr ""
+msgstr "测试"
 
 msgid "_Quit"
-msgstr ""
+msgstr "退出（_Q）"
 
 msgid "Cursor"
-msgstr ""
+msgstr "光标"
 
 msgid "Lock on Road"
-msgstr ""
+msgstr "锁定路线"
 
 msgid "Northing"
-msgstr ""
+msgstr "总指向北"
 
 msgid "Autozoom"
-msgstr ""
+msgstr "自动缩放"
 
 msgid "Fullscreen"
-msgstr ""
+msgstr "全屏"
 
 msgid "Data"
-msgstr ""
+msgstr "数据"
 
 msgid "N"
-msgstr ""
+msgstr "北"
 
 msgid "NE"
-msgstr ""
+msgstr "东北"
 
 msgid "E"
-msgstr ""
+msgstr "东"
 
 msgid "SE"
-msgstr ""
+msgstr "东南"
 
 msgid "S"
-msgstr ""
+msgstr "南"
 
 msgid "SW"
-msgstr ""
+msgstr "西南"
 
 msgid "W"
-msgstr ""
+msgstr "西"
 
 msgid "NW"
-msgstr ""
+msgstr "西北"
 
 msgid "No"
-msgstr ""
+msgstr "否"
 
 msgid "2D"
-msgstr ""
+msgstr "2D"
 
 msgid "3D"
-msgstr ""
+msgstr "3D"
 
 msgid "OT"
-msgstr ""
+msgstr "OT"
 
 #, c-format
 msgid "Route %4.0fkm    %02d:%02d ETA"
-msgstr ""
+msgstr "路线 %4.0f千米   %02d:%02d ETA"
 
 msgid "Route 0000km  0+00:00 ETA"
-msgstr ""
+msgstr "路线 0000千米  0+00:00 ETA"
 
 msgid "Back to map"
-msgstr ""
+msgstr "返回到地图"
 
 msgid "Main Menu"
-msgstr ""
+msgstr "主菜单"
 
 msgid "Help"
-msgstr ""
+msgstr "帮助"
 
 msgid "Back"
-msgstr ""
+msgstr "返回"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "增加书签"
 
 msgid "Add Bookmark folder"
-msgstr ""
+msgstr "添加书签文件夹"
 
 msgid "Rename"
-msgstr ""
+msgstr "重命名"
 
 msgid "POIs"
-msgstr ""
+msgstr "您可能感兴趣的位置"
 
 msgid "View in Browser"
-msgstr ""
+msgstr "在浏览器中查看"
 
 msgid "Streets"
-msgstr ""
+msgstr "街道"
 
 msgid "House numbers"
-msgstr ""
+msgstr "编号"
 
 msgid "View Attributes"
-msgstr ""
+msgstr "查看属性"
 
 msgid "View on map"
-msgstr ""
+msgstr "在地图中查看"
 
 msgid "Cut Bookmark"
-msgstr ""
+msgstr "剪切标签"
 
 msgid "Copy Bookmark"
-msgstr ""
+msgstr "复制标签"
 
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "重命名标签"
 
 msgid "Paste Bookmark"
-msgstr ""
+msgstr "粘帖标签"
 
 msgid "Delete Bookmark"
-msgstr ""
+msgstr "删除标签"
 
 msgid "Paste bookmark"
-msgstr ""
+msgstr "粘帖标签"
 
 #, c-format
 msgid "Bookmark %s"
-msgstr ""
+msgstr "书签 %s"
 
 msgid "House number"
-msgstr ""
+msgstr "房屋编号（门牌号）"
 
 msgid "Maps"
-msgstr ""
+msgstr "地图"
 
 msgid "Show Satellite Status"
-msgstr ""
+msgstr "显示卫星状态"
 
 msgid " Elevation "
-msgstr ""
+msgstr " 海拔"
 
 msgid " Azimuth "
-msgstr ""
+msgstr " 地平经度"
 
 msgid "Show NMEA Data"
-msgstr ""
+msgstr "显示NMEA数据"
 
 msgid "car"
-msgstr ""
+msgstr "汽车"
 
 msgid "bike"
-msgstr ""
+msgstr "自行车"
 
 msgid "pedestrian"
-msgstr ""
+msgstr "步行"
 
 #, c-format
 msgid "Current profile: %s"
-msgstr ""
+msgstr "当前设定：%s"
 
 #, c-format
 msgid "Change profile to: %s"
-msgstr ""
+msgstr "更改设定到： %s"
 
 msgid "Set as active"
-msgstr ""
+msgstr "保存生效"
 
 msgid "Show Satellite status"
-msgstr ""
+msgstr "显示卫星状态"
 
 msgid "Show NMEA data"
-msgstr ""
+msgstr "显示NMEA数据"
 
 msgid "Rules"
-msgstr ""
+msgstr "规则"
 
 msgid "Lock on road"
-msgstr ""
+msgstr "锁定路线"
 
 msgid "Map follows Vehicle"
-msgstr ""
+msgstr "随车显示地图"
 
 msgid "Message"
-msgstr ""
+msgstr "信息"
 
 msgid "Route Description"
-msgstr ""
+msgstr "到目的地的路线"
 
 msgid "Height Profile"
-msgstr ""
+msgstr "高度设定"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "显示本地"
 
 msgid "About Navit"
-msgstr ""
+msgstr "关于Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "作者"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "和整个的Navit组"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "成员和贡献者"
 
 msgid "Main menu"
-msgstr ""
+msgstr "主菜单"
 
 msgid ""
 "Show\n"
 "Map"
 msgstr ""
+"显示地图"
 
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 msgid "Tools"
-msgstr ""
+msgstr "工具"
 
 msgid "About"
-msgstr ""
+msgstr "关于"
 
 msgid "Actions"
-msgstr ""
+msgstr "动作"
 
 msgid "Quit"
-msgstr ""
+msgstr "退出"
 
 msgid ""
 "Stop\n"
 "Navigation"
 msgstr ""
+"停止导航"
 
 msgid "Window Mode"
-msgstr ""
+msgstr "窗口模式"
 
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 msgid "horse"
-msgstr ""
+msgstr "骑马"
 
 msgid "Map Point"
-msgstr ""
+msgstr "地图位置点"
 
 msgid "Vehicle Position"
-msgstr ""
+msgstr "车辆位置"
 
 #, c-format
 #~ msgid "%d.%d kilometer"
