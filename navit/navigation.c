@@ -1440,9 +1440,17 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 	}
 
 	if (cmd->itm->prev->flags & AF_ROUNDABOUT) {
+		cur = cmd->itm->prev;
+		count_roundabout = 0;
+		while (cur && (cur->flags & AF_ROUNDABOUT)) {
+			if (cur->next->ways && is_way_allowed(cur->next->ways)) { // If the next segment has no exit or the exit isn't allowed, don't count it
+				count_roundabout++;
+			}
+			cur = cur->prev;
+		}
 		switch (level) {
 		case 2:
-			return g_strdup(_("Enter the roundabout soon"));
+			return g_strdup_printf(_("Enter the roundabout soon and leave it at the %s"), get_exit_count_str(count_roundabout));
 		case 1:
 			d = get_distance(distance, type, 1);
 			/* TRANSLATORS: %s is the distance to the roundabout */
@@ -1450,24 +1458,9 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 			g_free(d);
 			return ret;
 		case -2:
+			return g_strdup_printf(_("then leave the roundabout at the %s"), get_exit_count_str(count_roundabout));
 		case 0:
-			cur = cmd->itm->prev;
-			count_roundabout = 0;
-			while (cur && (cur->flags & AF_ROUNDABOUT)) {
-				if (cur->next->ways && is_way_allowed(cur->next->ways)) { // If the next segment has no exit or the exit isn't allowed, don't count it
-					count_roundabout++;
-				}
-				cur = cur->prev;
-			}
-			switch (level) {
-			case 0:
-				ret = g_strdup_printf(_("Leave the roundabout at the %s"), get_exit_count_str(count_roundabout));
-				break;
-			case -2:
-				ret = g_strdup_printf(_("then leave the roundabout at the %s"), get_exit_count_str(count_roundabout));
-				break;
-			}
-			return ret;
+			return g_strdup_printf(_("Leave the roundabout at the %s"), get_exit_count_str(count_roundabout));
 		}
 	}
 
