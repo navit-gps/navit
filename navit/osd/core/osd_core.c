@@ -757,8 +757,50 @@ osd_text_format_attr(struct attr *attr, char *format)
 	case attr_position_magnetic_direction:
 		return g_strdup_printf("%d",attr->u.num);
 	case attr_position_coord_geo:
-		coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
-		return g_strdup(buffer);
+		if (format) {
+			if (!strcmp(format,"pos_degmin")) 
+			{
+				coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_MINUTES,buffer,sizeof(buffer));
+				return g_strdup(buffer);
+			}
+			else if (!strcmp(format,"pos_deg")) 
+			{
+				coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_DECIMAL,buffer,sizeof(buffer));
+				return g_strdup(buffer);
+			}
+			else if (!strcmp(format,"lat_degminsec")) 
+			{
+				coord_format(attr->u.coord_geo->lat,360,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
+				return g_strdup(buffer);
+			}
+			else if (!strcmp(format,"lat_degmin")) 
+			{
+				coord_format(attr->u.coord_geo->lat,360,DEGREES_MINUTES,buffer,sizeof(buffer));
+				return g_strdup(buffer);
+			}
+			else if (!strcmp(format,"lat_deg")) 
+			{
+				coord_format(attr->u.coord_geo->lat,360,DEGREES_DECIMAL,buffer,sizeof(buffer));
+				return g_strdup(buffer);
+			}
+			else if (!strcmp(format,"lng_degminsec")) 
+			{
+				coord_format(360,attr->u.coord_geo->lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
+				return g_strdup(buffer);
+			}
+			else if (!strcmp(format,"lng_degmin")) 
+			{
+				coord_format(360,attr->u.coord_geo->lng,DEGREES_MINUTES,buffer,sizeof(buffer));
+				return g_strdup(buffer);
+			}
+			else if (!strcmp(format,"lng_deg")) {
+				coord_format(360,attr->u.coord_geo->lng,DEGREES_DECIMAL,buffer,sizeof(buffer));
+				return g_strdup(buffer);
+			}
+		} else { //Covers format==pos_degminsec too
+			coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
+			return g_strdup(buffer);
+		}
 	case attr_destination_time:
 		if (!format || (strcmp(format,"arrival") && strcmp(format,"remaining")))
 			break;
@@ -779,7 +821,7 @@ osd_text_format_attr(struct attr *attr, char *format)
 			tm.tm_min = 0;
 			tm.tm_hour = 0;
 			days = (mktime(&text_tm0) - mktime(&tm) + 43200) / 86400;
-       		}
+			}
 		return format_time(&text_tm, days);
 	case attr_length:
 	case attr_destination_length:

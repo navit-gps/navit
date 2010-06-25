@@ -312,15 +312,15 @@ coord_print(enum projection pro, struct coord *c, FILE *out) {
 
 /**
  * @brief Converts a lat/lon into a text formatted text string.
- * @param lat The latitude
- * @param lng The longitude
+ * @param lat The latitude (if lat is 360 or greater, the latitude will be omitted)
+ * @param lng The longitude (if lng is 360 or greater, the longitude will be omitted)
  * @param fmt The format to use. 
- *    @li DEGREES=>(45.5000N 100.9000S)
- *    @li DEGREES_MINUTES=>(45 30.))00N 100 120.54.0000S)
- *    @li DEGREES_MINUTES_SECONDS=>(4530.0000N 12054.0000S)
+ *    @li DEGREES=>Degrees with decimal places, i.e. 20.5000°N 110.5000°E
+ *    @li DEGREES_MINUTES=>Degrees and minutes, i.e. 20°30.00'N 110°30.00'E
+ *    @li DEGREES_MINUTES_SECONDS=>Degrees, minutes and seconds, i.e. 20°30'30.00"N 110°30'30"E
  *           
  * 
- * @param buffer  A buffer large enough to hold the output + a terminating NULL (26 bytes)
+ * @param buffer  A buffer large enough to hold the output + a terminating NULL (up to 31 bytes)
  * @param size The size of the buffer
  *
  */
@@ -331,6 +331,7 @@ void coord_format(float lat,float lng, enum coord_format fmt, char * buffer, int
   	char lng_c='E';
 	float lat_deg,lat_min,lat_sec;
 	float lng_deg,lng_min,lng_sec;
+	int size_used=0;
 
 	if (lng < 0) {
 		lng=-lng;
@@ -350,13 +351,28 @@ void coord_format(float lat,float lng, enum coord_format fmt, char * buffer, int
 	{
 
 	case DEGREES_DECIMAL:
-	  snprintf(buffer,size,"%02.6f%c %03.7f%c",lat,lat_c,lng,lng_c);
+	  if (lat<360)
+	    size_used+=snprintf(buffer+size_used,size-size_used,"%02.6f°%c",lat,lat_c);
+	  if ((lat<360)&&(lng<360))
+	    size_used+=snprintf(buffer+size_used,size-size_used," ");
+	  if (lng<360)
+	    size_used+=snprintf(buffer+size_used,size-size_used,"%03.7f°%c",lng,lng_c);
 	  break;
 	case DEGREES_MINUTES:
-	  snprintf(buffer,size,"%02.0f %07.4f%c %03.0f %07.4f%c",floor(lat_deg),lat_min , lat_c, floor(lng), lng_min, lng_c);
-		   break;
+	  if (lat<360)
+	    size_used+=snprintf(buffer+size_used,size-size_used,"%02.0f°%07.4f' %c",floor(lat_deg),lat_min,lat_c);
+	  if ((lat<360)&&(lng<360))
+	    size_used+=snprintf(buffer+size_used,size-size_used," ");
+	  if (lng<360)
+	    size_used+=snprintf(buffer+size_used,size-size_used,"%03.0f°%07.4f' %c",floor(lng_deg),lng_min,lng_c);
+	  break;
 	case DEGREES_MINUTES_SECONDS:
-	  snprintf(buffer,size,"%02.0f%07.4f%c %03.0f%07.4f%c",floor(lat), fmod(lat*60,60), lat_c, floor(lng), fmod(lng*60,60), lng_c);
+	  if (lat<360)
+	    size_used+=snprintf(buffer+size_used,size-size_used,"%02.0f°%02.0f'%05.2f\" %c",floor(lat_deg),floor(lat_min),lat_sec,lat_c);
+	  if ((lat<360)&&(lng<360))
+	    size_used+=snprintf(buffer+size_used,size-size_used," ");
+	  if (lng<360)
+	    size_used+=snprintf(buffer+size_used,size-size_used,"%03.0f°%02.0f'%05.2f\" %c",floor(lng_deg),floor(lng_min),lng_sec,lng_c);
 	  break;
 	  
 	
