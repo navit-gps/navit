@@ -7,15 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:32+0200\n"
-"PO-Revision-Date: 2009-08-28 15:07+0000\n"
-"Last-Translator: goran.cvetkovski <goran.cvetkovski@gmail.com>\n"
+"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"PO-Revision-Date: 2010-04-25 02:12+0000\n"
+"Last-Translator: Robert Mileski <r_mileski@hotmail.com>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
-"X-Launchpad-Export-Date: 2009-12-20 18:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -87,7 +86,7 @@ msgstr "после %d метра"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr ""
+msgstr "%d.%d километри"
 
 #, c-format
 msgid "in %d.%d kilometers"
@@ -96,14 +95,14 @@ msgstr "после %d.%d километри"
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d километри"
+msgstr[1] "%d километри"
 
 #, c-format
 msgid "in one kilometer"
 msgid_plural "in %d kilometers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "после %d километри"
+msgstr[1] "после %d километри"
 
 msgid "exit"
 msgstr "излез"
@@ -1417,7 +1416,7 @@ msgid "Back"
 msgstr "Назад"
 
 msgid "Add Bookmark"
-msgstr ""
+msgstr "Додај обележувач"
 
 msgid "Add Bookmark folder"
 msgstr ""
@@ -1475,10 +1474,10 @@ msgid "Show Satellite Status"
 msgstr "Покажи статус на сателитите"
 
 msgid " Elevation "
-msgstr ""
+msgstr " Елевација "
 
 msgid " Azimuth "
-msgstr ""
+msgstr " Азимут "
 
 msgid "Show NMEA Data"
 msgstr "Покажи NMEA податоци"
@@ -1522,27 +1521,27 @@ msgid "Message"
 msgstr "Порака"
 
 msgid "Route Description"
-msgstr ""
+msgstr "Објаснување за патот"
 
 msgid "Height Profile"
 msgstr "Висински профил"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Прикажи јазично подесување"
 
 msgid "About Navit"
-msgstr ""
+msgstr "За Navit"
 
 #. Authors
 msgid "By"
-msgstr ""
+msgstr "Од"
 
 #. Contributors
 msgid "And all the Navit Team"
-msgstr ""
+msgstr "И целиот Navit тим"
 
 msgid "members and contributors."
-msgstr ""
+msgstr "членови и придонесувачи"
 
 msgid "Main menu"
 msgstr "Главно мени"
@@ -1561,7 +1560,7 @@ msgid "Tools"
 msgstr "Алатки"
 
 msgid "About"
-msgstr ""
+msgstr "За"
 
 msgid "Actions"
 msgstr "Акции"
@@ -1583,7 +1582,7 @@ msgid "Description"
 msgstr "Опис"
 
 msgid "horse"
-msgstr ""
+msgstr "коњ"
 
 msgid "Map Point"
 msgstr "Точка на карта"
@@ -1591,5 +1590,6 @@ msgstr "Точка на карта"
 msgid "Vehicle Position"
 msgstr "Позиција на возило"
 
+#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d километри"
