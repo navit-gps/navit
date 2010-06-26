@@ -282,6 +282,41 @@ static void changed(GtkWidget *widget, struct search_param *search)
 
 		}
 	}
+	
+	if(! search->partial)
+	{
+	    if( widget == search->entry_country )
+	    {
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_city), TRUE);
+	    }
+	    if( widget == search->entry_city )
+	    {
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_city), TRUE);
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_street), TRUE);
+	    }
+	    if( widget == search->entry_street )
+	    {
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_city), TRUE);
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_street), TRUE);
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_number), TRUE);
+	    }
+	} else {
+	    if( widget == search->entry_country )
+	    {
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_city), FALSE);
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_street), FALSE);
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_number), FALSE);
+	    }
+	    if( widget == search->entry_city )
+	    {
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_street), FALSE);
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_number), FALSE);
+	    }
+	    if( widget == search->entry_street )
+	    {
+		gtk_widget_set_sensitive(GTK_WIDGET(search->entry_number), FALSE);
+	    }
+	}
 	if (! search->partial)
 		next_focus(search, widget);
 	search->partial=1;
@@ -440,14 +475,17 @@ int destination_address(struct navit *nav)
 	gtk_widget_set_sensitive(GTK_WIDGET(search->entry_postal), FALSE);
 	label_postal = gtk_label_new(_("Zip Code"));
 	search->entry_city = gtk_entry_new();
+	gtk_widget_set_sensitive(GTK_WIDGET(search->entry_city), FALSE);
 	label_city = gtk_label_new(_("City"));
 	search->entry_district = gtk_entry_new();
 	gtk_widget_set_sensitive(GTK_WIDGET(search->entry_district), FALSE);
 	label_district = gtk_label_new(_("District/Township"));
 	hseparator1 = gtk_vseparator_new();
 	search->entry_street = gtk_entry_new();
+	gtk_widget_set_sensitive(GTK_WIDGET(search->entry_street), FALSE);
 	label_street = gtk_label_new(_("Street"));
 	search->entry_number = gtk_entry_new();
+	gtk_widget_set_sensitive(GTK_WIDGET(search->entry_number), FALSE);
 	label_number = gtk_label_new(_("Number"));
  	search->treeview=gtk_tree_view_new();
 	search->listbox = gtk_scrolled_window_new (NULL, NULL);
