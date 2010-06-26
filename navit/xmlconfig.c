@@ -547,19 +547,29 @@ xinclude(GMarkupParseContext *context, const gchar **attribute_names, const gcha
 	if (! href) {
 		dbg(1,"no href, using '%s'\n", doc_old->href);
 		doc_new.href=doc_old->href;
-		parse_file(&doc_new, error);
+		if (file_exists(doc_new.href)) {
+		    parse_file(&doc_new, error);
+		} else {
+		    dbg(0,"Unable to include %s\n",doc_new.href);
+		}
 	} else {
 		dbg(1,"expanding '%s'\n", href);
 		we=file_wordexp_new(href);
 		we_files=file_wordexp_get_array(we);
 		count=file_wordexp_get_count(we);
 		dbg(1,"%d results\n", count);
-		if (count != 1 || file_exists(we_files[0])) {
+		if (count != 1) {
+		    if (file_exists(we_files[0])) {
 			for (i = 0 ; i < count ; i++) {
 				dbg(1,"result[%d]='%s'\n", i, we_files[i]);
 				doc_new.href=we_files[i];
 				parse_file(&doc_new, error);
 			}
+		    } else {
+			dbg(0,"Unable to include %s\n",we_files[0]);
+		    }
+		} else {
+		    dbg(0,"Unable to include %s\n",href);
 		}
 		file_wordexp_destroy(we);
 
