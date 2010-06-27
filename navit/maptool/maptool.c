@@ -144,6 +144,7 @@ int main(int argc, char **argv)
 #else
 	int compression_level=0;
 #endif
+	int zip64=0;
 	int output=0;
 	int input=0;
 	int f,pos;
@@ -176,6 +177,7 @@ int main(int argc, char **argv)
 #endif
 		int option_index = 0;
 		static struct option long_options[] = {
+			{"64bit", 0, 0, '6'},
 			{"attr-debug-level", 1, 0, 'a'},
 			{"binfile", 0, 0, 'b'},
 			{"compression-level", 1, 0, 'z'},
@@ -198,7 +200,7 @@ int main(int argc, char **argv)
 			{"slice-size", 1, 0, 'S'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "DNWS:a:bc"
+		c = getopt_long (argc, argv, "6DNWS:a:bc"
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
@@ -206,6 +208,9 @@ int main(int argc, char **argv)
 		if (c == -1)
 			break;
 		switch (c) {
+		case '6':
+			zip64=1;
+			break;
 		case 'D':
 			output=1;
 			break;
@@ -488,6 +493,7 @@ int main(int argc, char **argv)
 			if (i == suffix_start) {
 				int year,month,day,hour,min,sec;
 				memset(&zip_info, 0, sizeof(zip_info));
+				zip_info.zip64=zip64;
 				if (sscanf(timestamp,"%d-%d-%dT%d:%d:%d",&year,&month,&day,&hour,&min,&sec) == 6) {
 					zip_info.date=day | (month << 5) | ((year-1980) << 9);
 					zip_info.time=(sec >> 1) | (min << 5) | (hour << 11);
