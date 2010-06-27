@@ -860,17 +860,18 @@ if test "x${graphics_qt_qpainter}" = "xyes" ; then
 fi
 if test "x${graphics_qt_qpainter}" = "xyes" ; then
 	AC_DEFINE(USE_GRAPICS_QT_QPAINTER, 1, [Build with graphics qt_qpainter])
-	MOC=`$PKG_CONFIG QtGui --variable=moc_location`
-	if test "x${MOC}" = "x"; then
-		AC_CHECK_PROG(MOC, moc, moc)
-	fi
-	AC_SUBST(MOC)
 fi
 AC_SUBST(QT_GUI_CFLAGS)
 AC_SUBST(QT_GUI_LIBS)
 AC_SUBST([QT_SVG_CFLAGS])
 AC_SUBST([QT_SVG_LIBS])
 AM_CONDITIONAL(GRAPHICS_QT_QPAINTER, test "x${graphics_qt_qpainter}" = "xyes")
+MOC=`$PKG_CONFIG QtGui --variable=moc_location`
+if test "x${MOC}" = "x"; then
+	AC_CHECK_PROG(MOC, moc, moc)
+fi
+AC_SUBST(MOC)
+
 
 ## map
 # binfile
@@ -917,11 +918,6 @@ if test "x${gui_qml}" = "xyes" -a "x${QT_DECLARATIVE_CFLAGS}" = "x" -a "x${QT_DE
 fi
 if test "x${gui_qml}" = "xyes" ; then
 	AC_DEFINE(USE_GUI_QML, 1, [Build with gui qml])
-	MOC=`$PKG_CONFIG QtGui --variable=moc_location`
-	if test "x${MOC}" = "x"; then
-		AC_CHECK_PROG(MOC, moc, moc)
-	fi
-	AC_SUBST(MOC)
 fi
 AC_SUBST(QT_GUI_CFLAGS)
 AC_SUBST(QT_GUI_LIBS)
