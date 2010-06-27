@@ -856,7 +856,7 @@ if test "x${graphics_qt_qpainter}" = "xyes" -a "x${QT_GUI_CFLAGS}" = "x" -a "x${
 	fi
 fi
 if test "x${graphics_qt_qpainter}" = "xyes" ; then
-        PKG_CHECK_MODULES(QT_SVG, [QtSvg], AC_DEFINE([HAVE_QT_SVG],[],Define to 1 if qt supports svg))
+        PKG_CHECK_MODULES(QT_SVG, [QtSvg], AC_DEFINE([HAVE_QT_SVG],[],Define to 1 if qt supports svg),)
 fi
 if test "x${graphics_qt_qpainter}" = "xyes" ; then
 	AC_DEFINE(USE_GRAPICS_QT_QPAINTER, 1, [Build with graphics qt_qpainter])
