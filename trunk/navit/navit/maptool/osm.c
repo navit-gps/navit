@@ -103,7 +103,7 @@ struct country_table {
  	{246,"Finland,Suomi"},
  	{250,"France,République française,FR"},
 	{276,"Germany,Deutschland,Bundesrepublik Deutschland"},
-	{348,"Hungary"},
+	{348,"Hungary,Magyarorsz�g"},
 	{352,"Iceland"},
  	{380,"Italy,Italia"},
  	{440,"Lithuania,Lietuva"},
@@ -1447,7 +1447,7 @@ end_node(FILE *out)
 			char *tok,*buf=is_in_buffer;
 			if (!buf[0])
 				strcpy(is_in_buffer, "Unknown");
-			while ((tok=strtok(buf, ","))) {
+			while ((tok=strtok(buf, ",;"))) {
 				while (*tok==' ')
 					tok++;
 				lookup=g_hash_table_lookup(country_table_hash,tok);
