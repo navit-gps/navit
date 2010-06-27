@@ -156,10 +156,10 @@ m4_ifndef([AC_USE_SYSTEM_EXTENSIONS],
 
 AC_USE_SYSTEM_EXTENSIONS
 
-m4_ifdef([AC_PROG_OBJC],AC_PROG_OBJC)
+m4_ifdef([AC_PROG_OBJC],[AC_PROG_OBJC])
 AC_PROG_CC
-m4_ifdef([AC_PROG_OBJC],AC_PROG_OBJC,AC_SUBST([OBJC],["$CC"]);AC_SUBST([OBJCFLAGS],["$CFLAGS"]))
-m4_ifdef([_AM_DEPENENCIES],_AM_DEPENDENCIES(OBJC))
+m4_ifdef([AC_PROG_OBJC],[AC_PROG_OBJC],[AC_SUBST([OBJC],["$CC"]);AC_SUBST([OBJCFLAGS],["$CFLAGS"])])
+m4_ifdef([_AM_DEPENENCIES],[_AM_DEPENDENCIES(OBJC)])
 
 if eval "test x`uname` = xDarwin"; then
 	CFLAGS="$CFLAGS -I/opt/local/include -L/opt/local/lib"
