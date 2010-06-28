@@ -37,6 +37,13 @@
 #include <sys/shm.h>
 #endif
 
+#ifdef HAVE_SOCKET
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#endif
+
 struct shmem_header {
 	int flag;
 	int w,h,bpp;
@@ -66,7 +73,6 @@ BGD_DECLARE(gdImagePtr) gdImageCreateFromXpm (char *filename)
   int red = 0, green = 0, blue = 0, alpha = 0;
   int *colors;
   int ret;
-
   ret = XpmReadFileToXpmImage (filename, &image, &info);
   if (ret != XpmSuccess)
     return 0;
@@ -198,6 +204,7 @@ struct graphics_priv {
 	struct window window;
 	struct graphics_data_image image;
 	struct graphics_priv *next,*overlays;
+	GList *sockets;
 };
 
 struct graphics_gc_priv {
@@ -482,6 +489,30 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 				image_setup(gr);
 			}
 		}
+#ifdef HAVE_SOCKET
+		if (gr->flags & 4) {
+			int size, size_written;
+			void *data=gdImagePngPtr(gr->im, &size);
+			GList *sockets=gr->sockets;
+			while (sockets) {
+				int fd=socket(PF_INET, SOCK_STREAM, 0);
+				if (fd < 0) {
+					dbg(0,"socket failed\n");
+				} else  {
+					if (connect(fd, (struct sockaddr *)sockets->data, sizeof(struct sockaddr_in)) < 0) {
+						dbg(0,"connect failed\n");
+					} else {
+						size_written=write(fd, data, size);	
+						dbg(0,"size %d vs %d\n",size, size_written);
+						if (shutdown(fd, SHUT_RDWR) < 0)
+							dbg(0,"shutdown failed\n");
+					}
+					close(fd);
+				}
+				sockets=g_list_next(sockets);
+			}
+		}
+#endif
 	}
 }
 
@@ -650,6 +681,7 @@ image_destroy(struct graphics_priv *gr)
 static int
 set_attr_do(struct graphics_priv *gr, struct attr *attr, int init)
 {
+	char *s,*c,*n,*p;
 	switch (attr->type) {
 	case attr_w:
 		if (gr->w != attr->u.num) {
@@ -685,6 +717,36 @@ set_attr_do(struct graphics_priv *gr, struct attr *attr, int init)
 	case attr_shmoffset:
 		gr->shmoffset=attr->u.num;
 		break;
+#ifdef HAVE_SOCKET
+	case attr_socket:
+		g_list_foreach(gr->sockets, (GFunc)g_free, NULL);
+		g_list_free(gr->sockets);
+		gr->sockets=NULL;
+		c=s=g_strdup(attr->u.str);
+		dbg(0,"s=%s\n",s);
+		while (c) {
+			n=strchr(c,',');
+			if (n)
+				*n++='\0';
+			p=strchr(c,':');
+			if (p) {
+				*p++='\0';
+				struct sockaddr_in *sin=g_new(struct sockaddr_in, 1);
+				sin->sin_family=AF_INET;
+				sin->sin_port=ntohs(atoi(p));
+				if (inet_aton(c, &sin->sin_addr)) {
+					gr->sockets=g_list_append(gr->sockets, sin);
+				} else {
+					dbg(0,"error in %s\n",c);
+					g_free(sin);
+				}
+				dbg(0,"host=%s port=%s\n",c,p);
+			} else 
+				dbg(0,"error in format: %s\n",p);
+			c=n;
+		}
+		g_free(s);
+#endif
 	default:
 		return 0;
 	}
