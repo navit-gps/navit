@@ -84,7 +84,7 @@
 #include <QPolygonF>
 #include <QPixmapCache>
 #include <QtGui>
-#if HAVE_QT_SVG
+#ifdef HAVE_QT_SVG
 #include <QSvgRenderer>
 #endif
 
@@ -648,7 +648,7 @@ static struct graphics_image_priv * image_new(struct graphics_priv *gr, struct g
 
 	cachedPixmap=QPixmapCache::find(key);
 	if (!cachedPixmap) {
-#if HAVE_QT_SVG
+#ifdef HAVE_QT_SVG
                 if(key.endsWith(".svg", Qt::CaseInsensitive)) {
                     QSvgRenderer renderer(key);
                     if (!renderer.isValid()) {
