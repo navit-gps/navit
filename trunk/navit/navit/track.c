@@ -518,10 +518,13 @@ tracking_angle_abs_diff(int a1, int a2, int full)
 static int
 tracking_angle_delta(struct tracking *tr, int vehicle_angle, int street_angle, int flags)
 {
-	int full=180,ret=360,fwd,rev;
+	int full=180,ret=360,fwd=0,rev=0;
 	struct vehicleprofile *profile=tr->vehicleprofile;
-	fwd=((flags & profile->flags_forward_mask) == profile->flags);
-	rev=((flags & profile->flags_reverse_mask) == profile->flags);
+	
+	if (profile) {
+	    fwd=((flags & profile->flags_forward_mask) == profile->flags);
+	    rev=((flags & profile->flags_reverse_mask) == profile->flags);
+	}
 	if (fwd || rev) {
 		if (!fwd || !rev) {
 			full=360;
