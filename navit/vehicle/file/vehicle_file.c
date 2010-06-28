@@ -38,6 +38,12 @@
 #include "item.h"
 #include "event.h"
 #include "vehicle.h"
+#ifdef HAVE_SOCKET
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#endif
 
 static void vehicle_file_disable_watch(struct vehicle_priv *priv);
 static void vehicle_file_enable_watch(struct vehicle_priv *priv);
@@ -47,7 +53,7 @@ static void vehicle_file_close(struct vehicle_priv *priv);
 
 
 enum file_type {
-	file_type_pipe = 1, file_type_device, file_type_file
+	file_type_pipe = 1, file_type_device, file_type_file, file_type_socket
 };
 
 static int buffer_size = 1024;
@@ -246,12 +252,40 @@ vehicle_file_open(struct vehicle_priv *priv)
 			tcsetattr(priv->fd, TCSANOW, &tio);
 			priv->file_type = file_type_device;
 		}
-	} else {
+	} else if (!strncmp(priv->source,"pipe:", 5)) {
 		priv->file = popen(name, "r");
 		if (!priv->file)
 			return 0;
 		priv->fd = fileno(priv->file);
 		priv->file_type = file_type_pipe;
+#ifdef HAVE_SOCKET
+	} else if (!strncmp(priv->source,"socket:", 7)) {
+		char *p,*s=g_strdup(priv->source+7);
+		struct sockaddr_in sin;
+		p=strchr(s,':');
+		if (!p) {
+			dbg(0,"port number missing in %s\n",s);
+			g_free(s);
+			return 0;
+		}
+		*p++='\0';
+		sin.sin_family=AF_INET;
+		sin.sin_port=ntohs(atoi(p));
+		if (!inet_aton(s, &sin.sin_addr)) {
+			dbg(0,"failed to parse %s\n",s);
+			g_free(s);
+			return 0;
+		}
+		priv->fd = socket(PF_INET, SOCK_STREAM, 0);
+		if (priv->fd != -1) {
+			if (connect(priv->fd, (struct sockaddr *)&sin, sizeof(sin)) < 0) {
+				dbg(0,"failed to connect to %s:%s\n",s,p);
+				g_free(s);
+				return 0;
+			}
+		}
+		priv->file_type = file_type_socket;
+#endif
 	}
 #endif
     return(priv->fd != -1);
@@ -934,4 +968,5 @@ void plugin_init(void)
 	dbg(1, "vehicle_file:plugin_init:enter\n");
 	plugin_register_vehicle_type("file", vehicle_file_new_file);
 	plugin_register_vehicle_type("pipe", vehicle_file_new_file);
+	plugin_register_vehicle_type("socket", vehicle_file_new_file);
 }
