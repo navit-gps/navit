@@ -145,8 +145,8 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 			if (destlen < data_size) {
 				data=compbuffer;
 				comp_size=destlen;
+			} else
 				lfh.zipmthd=0;
-			}
 		} else {
 			fprintf(stderr,"compress2 returned %d\n", error);
 		}
@@ -167,7 +167,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	cd.zipccrc=crc;
 	cd.zipcsiz=lfh.zipsize;
 	cd.zipcunc=data_size;
-	cd.zipcmthd=zip_info->compression_level ? 8:0;
+	cd.zipcmthd=lfh.zipmthd;
 	if (zip_info->zip64) {
 		cd.zipofst=0xffffffff;
 		cd.zipcxtl+=sizeof(cd_ext);
