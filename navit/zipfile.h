@@ -67,7 +67,6 @@ struct zip_cd {
 	char zipcfn[0];	
 } __attribute__ ((packed));
 
-#define zip_eoc_sig 0x6054b50
 
 struct zip_cd_ext {
 	short tag;
@@ -84,16 +83,34 @@ struct zip_enc {
 	short compress_method; 
 } __attribute__ ((packed));
 
+#define zip_eoc_sig 0x6054b50
+
 struct zip_eoc {
-	int zipesig;
-	unsigned short zipedsk;
-	unsigned short zipecen;
-	unsigned short zipenum;
-	unsigned short zipecenn;
-	unsigned int zipecsz;
-	unsigned int zipeofst;
-	short zipecoml;
-	char zipecom[0];
+	int zipesig; 		/* end of central dir signature */
+	unsigned short zipedsk; /* number of this disk */
+	unsigned short zipecen; /* number of the disk with the start of the central directory */
+	unsigned short zipenum; /* total number of entries in the central directory on this disk */
+	unsigned short zipecenn; /* total number of entries in the central directory */
+	unsigned int zipecsz; 	/* size of the central directory */
+	unsigned int zipeofst; 	/* offset of start of central directory with respect to the starting disk number */
+	short zipecoml; 	/* .ZIP file comment length */
+	char zipecom[0];	/* .ZIP file comment */
+} __attribute__ ((packed));
+
+#define zip64_eoc_sig 0x6064b50
+
+struct zip64_eoc {
+	int zip64esig;			/* zip64 end of central dir signature */
+	unsigned long long zip64esize;	/* size of zip64 end of central directory record */
+	unsigned short zip64ever;	/* version made by */
+	unsigned short zip64eneed;	/* version needed to extract */
+	unsigned int zip64edsk;		/* number of this disk */
+	unsigned int zip64ecen;		/* number of the disk with the start of the central directory */
+	unsigned long long zip64enum; 	/* total number of entries in the central directory on this disk */
+	unsigned long long zip64ecenn;	/* total number of entries in the central directory */
+	unsigned long long zip64ecsz;	/* size of the central directory */
+	unsigned long long zip64eofst;	/* offset of start of central directory with respect to the starting disk number */
+	char zip64ecom[0];		/* zip64 extensible data sector */
 } __attribute__ ((packed));
 
 struct zip64_eocl {
