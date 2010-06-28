@@ -351,6 +351,8 @@ AM_CONDITIONAL(SUPPORT_ZLIB, [test "x$zlib" = "xno"])
 AC_SUBST(ZLIB_CFLAGS)
 AC_SUBST(ZLIB_LIBS)
 
+AC_CHECK_HEADER(sys/socket.h, AC_DEFINE([HAVE_SOCKET],[],Define to 1 if you have sockets))
+
 # gtk
 PKG_CHECK_MODULES(GTK2, [gtk+-2.0], [gtk2_pkgconfig=yes], [gtk2_pkgconfig=no])
 if test "x$gtk2_pkgconfig" = "xyes"; then
