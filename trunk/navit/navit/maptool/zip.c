@@ -137,6 +137,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 #ifdef HAVE_LIBCRYPTO
 	}
 #endif
+	lfh.zipmthd=zip_info->compression_level ? 8:0;
 #ifdef HAVE_ZLIB
 	if (zip_info->compression_level) {
 		error=compress2_int((Byte *)compbuffer, &destlen, (Bytef *)data, data_size, zip_info->compression_level);
@@ -144,6 +145,7 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 			if (destlen < data_size) {
 				data=compbuffer;
 				comp_size=destlen;
+				lfh.zipmthd=0;
 			}
 		} else {
 			fprintf(stderr,"compress2 returned %d\n", error);
@@ -153,7 +155,6 @@ write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, 
 	lfh.zipcrc=crc;
 	lfh.zipsize=comp_size;
 	lfh.zipuncmp=data_size;
-	lfh.zipmthd=zip_info->compression_level ? 8:0;
 #ifdef HAVE_LIBCRYPTO
 	if (zip_info->passwd) {
 		enc.compress_method=lfh.zipmthd;
