@@ -111,6 +111,8 @@ if !PLUGINS
   lib@LIBNAVIT@_la_LIBADD += $(MODULES)
 endif
 
+navit_LDFLAGS = -export-dynamic
+
 navit_LDADD += @NAVIT_LIBS@ @WORDEXP_LIBS@ @ZLIB_LIBS@ @CRYPTO_LIBS@ @INTLLIBS@
 
 if SUPPORT_WIN32
