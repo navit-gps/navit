@@ -511,6 +511,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 				}
 				sockets=g_list_next(sockets);
 			}
+			gdFree(data);
 		}
 #endif
 	}
