@@ -2099,7 +2099,17 @@ navit_set_vehicle(struct navit *this_, struct navit_vehicle *nv)
 		if (navit_set_vehicleprofile(this_, attr.u.str))
 			return;
 	}
-	navit_set_vehicleprofile(this_,"car");
+	if (!navit_set_vehicleprofile(this_,"car")) {
+		/* We do not have a fallback "car" profile
+		* so lets set any profile */
+		GList *l;
+		l=this_->vehicleprofiles;
+		if (l) {
+		    this_->vehicleprofile=l->data;
+		    if (this_->route)
+			route_set_profile(this_->route, this_->vehicleprofile);
+		}
+	}
 }
 
 /**
