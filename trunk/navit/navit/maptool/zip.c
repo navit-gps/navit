@@ -266,9 +266,37 @@ zip_write_directory(struct zip_info *info)
 		0x0,
 		0x0,
 	};
+	struct zip64_eoc eoc64 = {
+		0x06064b50,
+		0x0,
+		0x0,
+		0x0403,
+		0x0,
+		0x0,
+		0x0,
+		0x0,
+		0x0,
+		0x0,		
+	};
+	struct zip64_eocl eocl = {
+		0x07064b50,
+		0x0,
+		0x0,
+		0x0,
+	};
 
 	fseek(info->dir, 0, SEEK_SET);
 	cat(info->dir, info->res);
+	if (info->zip64) {
+		eoc64.zip64esize=sizeof(eoc64)-12;
+		eoc64.zip64enum=info->zipnum;
+		eoc64.zip64ecenn=info->zipnum;
+		eoc64.zip64ecsz=info->dir_size;
+		eoc64.zip64eofst=info->offset;
+		fwrite(&eoc64, sizeof(eoc64), 1, info->res);
+		eocl.zip64lofst=info->offset+info->dir_size;
+		fwrite(&eocl, sizeof(eocl), 1, info->res);
+	}
 	eoc.zipenum=info->zipnum;
 	eoc.zipecenn=info->zipnum;
 	eoc.zipecsz=info->dir_size;
