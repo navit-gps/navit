@@ -347,7 +347,12 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 		gdImageSetStyle(gr->im, color, gc->dash_count);
 	}
 	gdImageSetThickness(gr->im, gc->width);
+#ifdef GD_NO_IMAGE_OPEN_POLYGON
+	for (i = 0 ; i < count-1 ; i++)
+		gdImageLine(gr->im, p[i].x, p[i].y, p[i+1].x, p[i+1].y, gc->dash_count ? gdStyled : gc->color);
+#else
 	gdImageOpenPolygon(gr->im, (gdPointPtr) p, count, gc->dash_count ? gdStyled : gc->color);  
+#endif
 }
 
 static void
