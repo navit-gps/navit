@@ -600,7 +600,7 @@ map_rect_get_item_shapefile(struct map_rect_priv *mr)
 				if (attr_from_line(mr->line,"type",NULL,type,NULL)) {
 					dbg(1,"type='%s'\n", type);
 					mr->item.type=item_from_name(type);
-					if (mr->item.type == type_none)
+					if (mr->item.type == type_none && strcmp(type,"none"))
 						dbg(0,"Warning: type '%s' unknown\n", type);
 				} else {
 					dbg(0,"failed to get attribute type\n");
