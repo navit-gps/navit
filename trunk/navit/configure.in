@@ -450,6 +450,7 @@ AM_CONDITIONAL(FONTS, test "x${font_freetype}" = "xyes" -a "x$fontconfig" != "xy
 AC_ARG_ENABLE(fribidi, [  --disable-fribidi      dont build with fribidi], fribidi=$enableval;fribidi_reason="configure parameter", fribidi=yes)
 if test x"${fribidi}" = "xyes"; then
 	PKG_CHECK_MODULES(FRIBIDI, [fribidi], [fribidi=yes], [fribidi=no;fribidi_reason="FriBidi library not found"])
+	AC_DEFINE(USE_FRIBIDI, 1, [Build with fribidi support])
 fi
 AC_SUBST(FRIBIDI_CFLAGS)
 AC_SUBST(FRIBIDI_LIBS)
