@@ -4641,6 +4641,9 @@ gui_internal_set_attr(struct gui_priv *this, struct attr *attr)
 		}
 		this->fullscreen=attr->u.num;
 		return 1;
+	case attr_menu_on_map_click:
+		this->menu_on_map_click=attr->u.num;
+		return 1;
 	default:
 		dbg(0,"%s\n",attr_to_name(attr->type));
 		return 1;
