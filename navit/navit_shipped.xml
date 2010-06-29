@@ -113,7 +113,7 @@ Navigation</text></img>
 		<!-- For the cumulative displacement filter to be enabled, set cdf_histsize="x" here, with x being an integer somewhere around 4 -->
 		<tracking cdf_histsize="0"/>
 
-		<vehicleprofile name="car" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0">
+		<vehicleprofile name="car" flags="0x4000000" flags_forward_mask="0x4000002" flags_reverse_mask="0x4000001" maxspeed_handling="0" route_mode="0" static_speed="5" static_distance="25">
 			<roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved" speed="10" route_weight="10">
 					<announcement level="0" distance_metric="25"/>
 					<announcement level="1" distance_metric="100"/>
@@ -178,7 +178,7 @@ Navigation</text></img>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
 
-		<vehicleprofile name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="1" route_mode="0">
+		<vehicleprofile name="bike" flags="0x40000000" flags_forward_mask="0x40000000" flags_reverse_mask="0x40000000" maxspeed_handling="1" route_mode="0" static_speed="5" static_distance="25">
 			<roadprofile item_types="steps" speed="2" route_weight="5">
 					<announcement level="0" distance_metric="25"/>
 					<announcement level="1" distance_metric="100"/>
@@ -239,7 +239,7 @@ Navigation</text></img>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
 
-		<vehicleprofile name="pedestrian" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" maxspeed_handling="1" route_mode="0">
+		<vehicleprofile name="pedestrian" flags="0x80000000" flags_forward_mask="0x80000000" flags_reverse_mask="0x80000000" maxspeed_handling="1" route_mode="0" static_speed="3" static_distance="10">
 			<roadprofile item_types="footway,bridleway,path" speed="5" route_weight="5">
 					<announcement level="0" distance_metric="25"/>
 					<announcement level="1" distance_metric="100"/>
@@ -288,7 +288,7 @@ Navigation</text></img>
 			<roadprofile item_types="roundabout" speed="5" route_weight="5"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
-		<vehicleprofile name="horse" flags="0x20000000" flags_forward_mask="0x20000000" flags_reverse_mask="0x20000000" maxspeed_handling="1" route_mode="0">
+		<vehicleprofile name="horse" flags="0x20000000" flags_forward_mask="0x20000000" flags_reverse_mask="0x20000000" maxspeed_handling="1" route_mode="0" static_speed="3" static_distance="10">
 			<roadprofile item_types="bridleway" speed="10" route_weight="10">
 					<announcement level="0" distance_metric="25"/>
 					<announcement level="1" distance_metric="100"/>

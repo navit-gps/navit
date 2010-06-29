@@ -150,6 +150,8 @@ ATTR(vehicle_dangerous_goods)
 ATTR(shmsize)
 ATTR(shmoffset)
 ATTR(speed_category)
+ATTR(static_speed)
+ATTR(static_distance)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
