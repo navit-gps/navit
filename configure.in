@@ -691,6 +691,7 @@ POFILES=""
 POIFILES=""
 LINGUAS=""
 
+xgettext_glade=no
 if test "x$enable_nls" = "xyes"; then
 
   AC_CHECK_FUNC(gettext, [HAVEGETTEXT="yes"],[INTLIBS="-lintl" HAVEGETTEXT="yes"])
@@ -703,7 +704,9 @@ if test "x$enable_nls" = "xyes"; then
         echo "xgettext isn't GNU version"
         XGETTEXT=""
     else
-	AM_CONDITIONAL(XGETTEXT_GLADE, $XGETTEXT --help 2>&1 | grep Glade >/dev/null)
+	if $XGETTEXT --help 2>&1 | grep Glade >/dev/null; then
+	    xgettext_glade=yes
+	fi
     fi
   fi
 
@@ -753,6 +756,7 @@ fi
 
 fi
 AM_CONDITIONAL(ENABLE_NLS, [test "x$enable_nls" = "xyes"])
+AM_CONDITIONAL(XGETTEXT_GLADE, [test "x$xgettext_glade" = "xyes"])
 AC_CHECK_HEADER(
 	byteswap.h,
 	AC_DEFINE(
