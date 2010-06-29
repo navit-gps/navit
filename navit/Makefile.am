@@ -16,7 +16,9 @@ if !PLUGINS
   SUBDIRS += .
 endif
 
-SUBDIRS+=maptool
+if MAPTOOL
+  SUBDIRS += maptool
+endif
 
 if BUILD_SAMPLEMAP
   SUBDIRS += maps
