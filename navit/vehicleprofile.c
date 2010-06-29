@@ -66,6 +66,12 @@ vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 	case attr_vehicle_width:
 		this_->width=attr->u.num;
 		break;
+	case attr_static_speed:
+		this_->static_speed=attr->u.num;
+		break;
+	case attr_static_distance:
+		this_->static_distance=attr->u.num;
+		break;
 	default:
 		break;
 	}

@@ -613,7 +613,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	int i,value,min,time;
 	struct coord lpnt;
 	struct coord cin;
-	struct attr valid,speed_attr,direction_attr,coord_geo,lag,time_attr;
+	struct attr valid,speed_attr,direction_attr,coord_geo,lag,time_attr,static_speed,static_distance;
 	double speed, direction;
 	if (v)
 		tr->vehicle=v;
@@ -635,12 +635,18 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		dbg(0,"failed to get position data\n");
 		return;
 	}
+	if (!vehicleprofile_get_attr(vehicleprofile,attr_static_speed,&static_speed,NULL) || !vehicleprofile_get_attr(vehicleprofile,attr_static_distance,&static_distance,NULL)) {
+		static_speed.u.num=3;
+		static_distance.u.num=10;
+		dbg(1,"Using defaults for static position detection\n");
+	}
+	dbg(0,"Static speed: %u, static distance: %u\n",static_speed.u.num, static_distance.u.num);
 	time=iso8601_to_secs(time_attr.u.str);
 	speed=*speed_attr.u.numd;
 	direction=*direction_attr.u.numd;
 	tr->valid=attr_position_valid_valid;
 	transform_from_geo(pro, coord_geo.u.coord_geo, &tr->curr_in);
-	if ((speed < 3 && transform_distance(pro, &tr->last_in, &tr->curr_in) < 10 )) {
+	if ((speed < static_speed.u.num && transform_distance(pro, &tr->last_in, &tr->curr_in) < static_distance.u.num )) {
 		dbg(1,"static speed %f coord 0x%x,0x%x vs 0x%x,0x%x\n",speed,tr->last_in.x,tr->last_in.y, tr->curr_in.x, tr->curr_in.y);
 		tr->valid=attr_position_valid_static;
 		tr->speed=0;
