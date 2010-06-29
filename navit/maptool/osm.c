@@ -89,6 +89,7 @@ struct country_table {
 	int size;
 	struct rect r;
 } country_table[] = {
+	{ 32,"Argentina,República Argentina,AR "},
 	{ 36,"Australia,AUS"},
 	{ 40,"Austria,Ã–sterreich,AUT"},
 	{ 56,"Belgium"},
