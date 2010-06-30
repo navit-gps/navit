@@ -442,12 +442,12 @@ font_freetype_font_new(struct graphics_priv *gr,
 #endif
 					FTC_Manager_LookupFace(manager, font->scaler.face_id, &face);
 					font->charmap_index=face->charmap ? FT_Get_Charmap_Index(face->charmap) : 0;
-#else
+#else /* USE_CACHING */
 					FT_New_Face(library,
 						    (char *) fontfile,
 						    fontindex,
 						    &font->face);
-#endif
+#endif /* USE_CACHING */
 					found = 1;
 				}
 				FcPatternDestroy(matched);
@@ -457,7 +457,7 @@ font_freetype_font_new(struct graphics_priv *gr,
 		}
 	}
 	g_free(family_sav);
-#else
+#else /* HAVE_FONTCONFIG */
 #ifdef FREETYPE_FONTS
 	{
 		char *fonts[]={FREETYPE_FONTS};
@@ -471,6 +471,8 @@ font_freetype_font_new(struct graphics_priv *gr,
 	idstr=g_strdup_printf("%s/%d", name, 0);
 	font->scaler.face_id=(FTC_FaceID)atom(idstr);
 	g_free(idstr);
+	FTC_Manager_LookupFace(manager, font->scaler.face_id, &face);
+	font->charmap_index=face->charmap ? FT_Get_Charmap_Index(face->charmap) : 0;
 #if HAVE_LOOKUP_SCALER
 	font->scaler.width=0;
 	font->scaler.height=size;
@@ -483,12 +485,14 @@ font_freetype_font_new(struct graphics_priv *gr,
 	font->scaler.flags=FT_LOAD_DEFAULT;
 #endif
 	found=1;
-#else
+	FTC_Manager_LookupFace(manager, font->scaler.face_id, &face);
+	font->charmap_index=face->charmap ? FT_Get_Charmap_Index(face->charmap) : 0;
+#else /* USE_CACHING */
 	if (!FT_New_Face(library, name, 0, &font->face))
 		found=1;
-#endif
+#endif /* USE_CACHING */
 	g_free(name);
-#endif
+#endif /* HAVE_FONTCONFIG */
 	if (!found) {
 		dbg(0,"Failed to load font, no labelling\n");
 		g_free(font);
