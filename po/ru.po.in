@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: navit 0.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
-"PO-Revision-Date: 2010-06-13 19:46+0000\n"
-"Last-Translator: Vlad <Unknown>\n"
+"POT-Creation-Date: 2010-06-26 11:29+0200\n"
+"PO-Revision-Date: 2010-06-30 18:26+0000\n"
+"Last-Translator: Denis Chapligin <akashihi@gmail.com>\n"
 "Language-Team: Rustam T. Usmanov\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2010-06-30 20:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
 
@@ -165,8 +166,9 @@ msgstr "неизвестно "
 msgid "When possible, please turn around"
 msgstr "Развернитесь, пожалуйста, если это возможно"
 
-msgid "Enter the roundabout soon"
-msgstr "Скоро круговое движение"
+#, c-format
+msgid "Enter the roundabout soon and leave it at the %s"
+msgstr "Скоро круговое движение, ожидайте съезд на %s"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
@@ -174,12 +176,12 @@ msgid "In %s, enter the roundabout"
 msgstr "Круговое движение через %s"
 
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Съезжайте с кругового движения на %s"
-
-#, c-format
 msgid "then leave the roundabout at the %s"
 msgstr "потом съезжайте с кругового движения на %s"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Съезжайте с кругового движения на %s"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1327,14 +1329,29 @@ msgstr "Т/с"
 msgid "ZoomOut"
 msgstr "Уменьшить"
 
+msgid "Decrease zoom level"
+msgstr "Уменьшить масштаб"
+
 msgid "ZoomIn"
 msgstr "Увеличить"
+
+msgid "Increase zoom level"
+msgstr "Увеличить масштаб"
 
 msgid "Recalculate"
 msgstr "Пересчитать"
 
+msgid "Redraw map"
+msgstr "Обновить карту"
+
 msgid "Info"
 msgstr "Информация"
+
+msgid "Set destination"
+msgstr "Установить пункт назначения"
+
+msgid "Opens address search dialog"
+msgstr "Диалог поиска по адресу"
 
 msgid "Stop Navigation"
 msgstr "Остановить навигацию"
@@ -1345,17 +1362,29 @@ msgstr "Тест"
 msgid "_Quit"
 msgstr "_Выход"
 
-msgid "Cursor"
-msgstr "Курсор"
+msgid "Quit the application"
+msgstr "Выйти из программы"
+
+msgid "Show position cursor"
+msgstr "Показать/скрыть отметку текущей позиции"
 
 msgid "Lock on Road"
 msgstr "Заблокировать дорогу"
 
-msgid "Northing"
-msgstr "на север"
+msgid "Keep orientation to the North"
+msgstr "Ориентировать карту на север"
+
+msgid "Switches map orientation to the north or the vehicle"
+msgstr "Переключить ориентацию карты на север или по ходу движения"
+
+msgid "Show/hide route description"
+msgstr "Показать описание маршрута"
 
 msgid "Autozoom"
 msgstr "Автомасштабирование"
+
+msgid "Enable/disable automatic zoom level changing"
+msgstr "Включить/выключить автоматическое масштабирование"
 
 msgid "Fullscreen"
 msgstr "Во весь экран"
@@ -1517,6 +1546,9 @@ msgstr "Правила"
 msgid "Lock on road"
 msgstr "Придерживаться дороги"
 
+msgid "Northing"
+msgstr "на север"
+
 msgid "Map follows Vehicle"
 msgstr "Карта следует за машиной"
 
@@ -1596,6 +1628,12 @@ msgstr "Местоположение автомобиля"
 #, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d.%d километр"
+
+#~ msgid "Cursor"
+#~ msgstr "Курсор"
+
+#~ msgid "Enter the roundabout soon"
+#~ msgstr "Скоро круговое движение"
 
 #~ msgid " SNR "
 #~ msgstr " Сигнал/Шум "
