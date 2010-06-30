@@ -160,14 +160,14 @@ distclean-local:
 	if [ "$(builddir)" != "$(srcdir)" ]; then rm -f navit.dtd; fi
 
 builtin.c: $(top_builddir)/config.h
-	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/.la/_init(void);/" -e "s/.*lib/extern void module_/" >builtin.c
+	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/\.la/_init(void);/" -e "s/.*lib/extern void module_/" >builtin.c
 	echo "extern void builtin_init(void);" >>builtin.c
 	echo "void builtin_init(void) {" >>builtin.c
-	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/.la/_init();/" -e "s/.*\\/lib/	module_/" >>builtin.c
+	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/\.la/_init();/" -e "s/.*\\/lib/	module_/" >>builtin.c
 	echo "}" >>builtin.c
 support-builtin.c: $(top_builddir)/config.h
-	ls $(top_builddir)/navit/support/*/*.la | sed -e "s/.la/_init(void);/" -e "s/.*lib/extern void module_/" >support-builtin.c
+	ls $(top_builddir)/navit/support/*/*.la | sed -e "s/\.la/_init(void);/" -e "s/.*lib/extern void module_/" >support-builtin.c
 	echo "extern void builtin_init(void);" >>support-builtin.c
 	echo "void builtin_init(void) {" >>support-builtin.c
-	ls $(top_builddir)/navit/support/*/*.la | sed -e "s/.la/_init();/" -e "s/.*\\/lib/	module_/" >>support-builtin.c
+	ls $(top_builddir)/navit/support/*/*.la | sed -e "s/\.la/_init();/" -e "s/.*\\/lib/	module_/" >>support-builtin.c
 	echo "}" >>support-builtin.c
