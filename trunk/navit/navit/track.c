@@ -640,7 +640,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		static_distance.u.num=10;
 		dbg(1,"Using defaults for static position detection\n");
 	}
-	dbg(0,"Static speed: %u, static distance: %u\n",static_speed.u.num, static_distance.u.num);
+	dbg(2,"Static speed: %u, static distance: %u\n",static_speed.u.num, static_distance.u.num);
 	time=iso8601_to_secs(time_attr.u.str);
 	speed=*speed_attr.u.numd;
 	direction=*direction_attr.u.numd;
