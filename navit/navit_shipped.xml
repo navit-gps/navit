@@ -4824,5 +4824,12 @@ Navigation</text></img>
 				</itemgra>
 			</layer>
 		</layout>
+		<layout name="Route">
+			<layer name="streets">
+				<itemgra item_types="street_route_occluded" order="0-">
+					<polyline color="#0000a0" width="20"/>
+				</itemgra>
+			</layer>
+		</layout>
 	</navit>
 </config>
