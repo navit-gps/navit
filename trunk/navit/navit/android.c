@@ -67,6 +67,8 @@ Java_org_navitproject_navit_Navit_NavitActivity( JNIEnv* env, jobject thiz, int 
 {
 	dbg(0,"enter %d\n",param);
 	callback_list_call_1(android_activity_cbl, param);
+	if (param == -3)
+		exit(0);
 }
 
 JNIEXPORT void JNICALL
