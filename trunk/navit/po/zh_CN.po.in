@@ -143,30 +143,30 @@ msgstr "左"
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "easily "
-msgstr "轻轻 "
+msgstr "缓 "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "strongly "
-msgstr "大幅度 "
+msgstr "急转 "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "really strongly "
-msgstr ""
+msgstr "非常大的急转 "
 
 #. TRANSLATORS: Don't forget the ending space
 msgid "unknown "
 msgstr "未知 "
 
 msgid "When possible, please turn around"
-msgstr "当有路口的时候，请转弯"
+msgstr "当遇到路口的时候，请转弯"
 
 msgid "Enter the roundabout soon"
-msgstr "即将进入环形枢纽"
+msgstr "不久将进入环形交叉路口"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
 msgid "In %s, enter the roundabout"
-msgstr "还有%s进入环形枢纽"
+msgstr "还有%s进入环形环形交叉路口"
 
 #, c-format
 msgid "Leave the roundabout at the %s"
@@ -181,7 +181,7 @@ msgid "Follow the road for the next %s"
 msgstr "沿路继续行驶%s"
 
 msgid "soon"
-msgstr "将要"
+msgstr "不久"
 
 #. TRANSLATORS: First argument is the how manieth street to take, second the direction
 #, c-format
@@ -214,10 +214,10 @@ msgstr "然后转向 %1$s%2$s %3$s%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "你已经抵达您的目的地 %s"
+msgstr "您已经抵达您的目的地 %s"
 
 msgid "then you have reached your destination."
-msgstr "然后你已经到达您的目的地"
+msgstr "然后你就到达您的目的地"
 
 msgid "Position"
 msgstr "位置"
@@ -244,10 +244,10 @@ msgid "Destination Time"
 msgstr "距目的地时间"
 
 msgid "Roadbook"
-msgstr "路线图"
+msgstr "路线指南"
 
 msgid "Set as position"
-msgstr "设置为当前位置"
+msgstr "设置为起始位置"
 
 msgid "Set as destination"
 msgstr "设置为目的地"
@@ -265,167 +265,167 @@ msgstr "屏幕坐标：%d %d"
 
 #. 020
 msgid "Andorra"
-msgstr ""
+msgstr "安道尔"
 
 #. 784
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "阿拉伯联合酋长国"
 
 #. 004
 msgid "Afghanistan"
-msgstr ""
+msgstr "阿富汗"
 
 #. 028
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "安提瓜和巴布达"
 
 #. 660
 msgid "Anguilla"
-msgstr ""
+msgstr "安圭拉"
 
 #. 008
 msgid "Albania"
-msgstr ""
+msgstr "阿尔巴尼亚"
 
 #. 051
 msgid "Armenia"
-msgstr ""
+msgstr "亚美尼亚"
 
 #. 530
 msgid "Netherlands Antilles"
-msgstr ""
+msgstr "荷兰安地列斯"
 
 #. 024
 msgid "Angola"
-msgstr ""
+msgstr "安哥拉"
 
 #. 010
 msgid "Antarctica"
-msgstr ""
+msgstr "南极洲"
 
 #. 032
 msgid "Argentina"
-msgstr ""
+msgstr "阿根廷"
 
 #. 016
 msgid "American Samoa"
-msgstr ""
+msgstr "美属萨摩亚"
 
 #. 040
 msgid "Austria"
-msgstr ""
+msgstr "奥地利"
 
 #. 036
 msgid "Australia"
-msgstr ""
+msgstr "澳大利亚"
 
 #. 533
 msgid "Aruba"
-msgstr ""
+msgstr "阿鲁巴岛"
 
 #. 248
 msgid "Aland Islands"
-msgstr ""
+msgstr "奥兰群岛"
 
 #. 031
 msgid "Azerbaijan"
-msgstr ""
+msgstr "阿塞拜疆"
 
 #. 070
 msgid "Bosnia and Herzegovina"
-msgstr ""
+msgstr "波黑"
 
 #. 052
 msgid "Barbados"
-msgstr ""
+msgstr "巴巴多斯"
 
 #. 050
 msgid "Bangladesh"
-msgstr ""
+msgstr "孟加拉国"
 
 #. 056
 msgid "Belgium"
-msgstr ""
+msgstr "比利时"
 
 #. 854
 msgid "Burkina Faso"
-msgstr ""
+msgstr "布基纳法索"
 
 #. 100
 msgid "Bulgaria"
-msgstr ""
+msgstr "保加利亚"
 
 #. 048
 msgid "Bahrain"
-msgstr ""
+msgstr "巴林"
 
 #. 108
 msgid "Burundi"
-msgstr ""
+msgstr "布隆迪"
 
 #. 204
 msgid "Benin"
-msgstr ""
+msgstr "贝宁"
 
 #. 652
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "圣巴泰勒米岛"
 
 #. 060
 msgid "Bermuda"
-msgstr ""
+msgstr "百慕大群岛"
 
 #. 096
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "文莱达鲁萨兰国"
 
 #. 068
 msgid "Bolivia"
-msgstr ""
+msgstr "玻利维亚"
 
 #. 076
 msgid "Brazil"
-msgstr ""
+msgstr "巴西"
 
 #. 044
 msgid "Bahamas"
-msgstr ""
+msgstr "巴哈马群岛"
 
 #. 064
 msgid "Bhutan"
-msgstr ""
+msgstr "不丹"
 
 #. 074
 msgid "Bouvet Island"
-msgstr ""
+msgstr "布维岛"
 
 #. 072
 msgid "Botswana"
-msgstr ""
+msgstr "博茨瓦那"
 
 #. 112
 msgid "Belarus"
-msgstr ""
+msgstr "白俄罗斯"
 
 #. 084
 msgid "Belize"
-msgstr ""
+msgstr "伯利兹"
 
 #. 124
 msgid "Canada"
-msgstr ""
+msgstr "加拿大"
 
 #. 166
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "科科斯群岛"
 
 #. 180
 msgid "Congo, Democratic Republic of the"
-msgstr ""
+msgstr "刚果"
 
 #. 140
 msgid "Central African Republic"
-msgstr ""
+msgstr "中非共和国"
 
 #. 178
 msgid "Congo"
@@ -433,23 +433,23 @@ msgstr ""
 
 #. 756
 msgid "Switzerland"
-msgstr ""
+msgstr "瑞士"
 
 #. 384
 msgid "Cote d'Ivoire"
-msgstr ""
+msgstr "科特迪瓦"
 
 #. 184
 msgid "Cook Islands"
-msgstr ""
+msgstr "库克群岛"
 
 #. 152
 msgid "Chile"
-msgstr ""
+msgstr "智利"
 
 #. 120
 msgid "Cameroon"
-msgstr ""
+msgstr "喀麦隆"
 
 #. 156
 msgid "China"
@@ -457,795 +457,795 @@ msgstr "中国"
 
 #. 170
 msgid "Colombia"
-msgstr ""
+msgstr "哥伦比亚"
 
 #. 188
 msgid "Costa Rica"
-msgstr ""
+msgstr "哥斯达黎加"
 
 #. 192
 msgid "Cuba"
-msgstr ""
+msgstr "古巴"
 
 #. 132
 msgid "Cape Verde"
-msgstr ""
+msgstr "佛得角"
 
 #. 162
 msgid "Christmas Island"
-msgstr ""
+msgstr "圣诞岛"
 
 #. 196
 msgid "Cyprus"
-msgstr ""
+msgstr "塞浦路斯"
 
 #. 203
 msgid "Czech Republic"
-msgstr ""
+msgstr "捷克"
 
 #. 276
 msgid "Germany"
-msgstr ""
+msgstr "德国"
 
 #. 262
 msgid "Djibouti"
-msgstr ""
+msgstr "吉布提"
 
 #. 208
 msgid "Denmark"
-msgstr ""
+msgstr "丹麦"
 
 #. 212
 msgid "Dominica"
-msgstr ""
+msgstr "多米尼克"
 
 #. 214
 msgid "Dominican Republic"
-msgstr ""
+msgstr "多米尼亚共和国"
 
 #. 012
 msgid "Algeria"
-msgstr ""
+msgstr "阿尔及利亚"
 
 #. 218
 msgid "Ecuador"
-msgstr ""
+msgstr "厄瓜多尔"
 
 #. 233
 msgid "Estonia"
-msgstr ""
+msgstr "爱沙尼亚"
 
 #. 818
 msgid "Egypt"
-msgstr ""
+msgstr "埃及"
 
 #. 732
 msgid "Western Sahara"
-msgstr ""
+msgstr "西萨哈拉"
 
 #. 232
 msgid "Eritrea"
-msgstr ""
+msgstr "厄立特里亚"
 
 #. 724
 msgid "Spain"
-msgstr ""
+msgstr "西班牙"
 
 #. 231
 msgid "Ethiopia"
-msgstr ""
+msgstr "埃塞额比亚"
 
 #. 246
 msgid "Finland"
-msgstr ""
+msgstr "芬兰"
 
 #. 242
 msgid "Fiji"
-msgstr ""
+msgstr "斐济"
 
 #. 238
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "弗克兰群岛"
 
 #. 583
 msgid "Micronesia, Federated States of"
-msgstr ""
+msgstr "密克罗尼西亚联邦"
 
 #. 234
 msgid "Faroe Islands"
-msgstr ""
+msgstr "法罗群岛"
 
 #. 250
 msgid "France"
-msgstr ""
+msgstr "法国"
 
 #. 266
 msgid "Gabon"
-msgstr ""
+msgstr "加蓬"
 
 #. 826
 msgid "United Kingdom"
-msgstr ""
+msgstr "英国"
 
 #. 308
 msgid "Grenada"
-msgstr ""
+msgstr "格林纳达岛"
 
 #. 268
 msgid "Georgia"
-msgstr ""
+msgstr "格鲁吉亚"
 
 #. 254
 msgid "French Guiana"
-msgstr ""
+msgstr "法属圭亚那"
 
 #. 831
 msgid "Guernsey"
-msgstr ""
+msgstr "格恩西岛"
 
 #. 288
 msgid "Ghana"
-msgstr ""
+msgstr "加纳"
 
 #. 292
 msgid "Gibraltar"
-msgstr ""
+msgstr "直布罗陀"
 
 #. 304
 msgid "Greenland"
-msgstr ""
+msgstr "格陵兰岛"
 
 #. 270
 msgid "Gambia"
-msgstr ""
+msgstr "冈比亚"
 
 #. 324
 msgid "Guinea"
-msgstr ""
+msgstr "几内亚"
 
 #. 312
 msgid "Guadeloupe"
-msgstr ""
+msgstr "瓜德罗普岛"
 
 #. 226
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "赤道几内亚"
 
 #. 300
 msgid "Greece"
-msgstr ""
+msgstr "希腊"
 
 #. 239
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "南乔治亚岛和南桑德韦奇岛"
 
 #. 320
 msgid "Guatemala"
-msgstr ""
+msgstr "危地马拉"
 
 #. 316
 msgid "Guam"
-msgstr ""
+msgstr "关岛"
 
 #. 624
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "几内亚比绍共和国"
 
 #. 328
 msgid "Guyana"
-msgstr ""
+msgstr "盖亚那"
 
 #. 344
 msgid "Hong Kong"
-msgstr ""
+msgstr "香港"
 
 #. 334
 msgid "Heard Island and McDonald Islands"
-msgstr ""
+msgstr "赫德和麦克唐纳群岛"
 
 #. 340
 msgid "Honduras"
-msgstr ""
+msgstr "洪都拉斯"
 
 #. 191
 msgid "Croatia"
-msgstr ""
+msgstr "克罗地亚"
 
 #. 332
 msgid "Haiti"
-msgstr ""
+msgstr "海地"
 
 #. 348
 msgid "Hungary"
-msgstr ""
+msgstr "匈牙利"
 
 #. 360
 msgid "Indonesia"
-msgstr ""
+msgstr "印度尼西亚"
 
 #. 372
 msgid "Ireland"
-msgstr ""
+msgstr "爱尔兰"
 
 #. 376
 msgid "Israel"
-msgstr ""
+msgstr "以色列"
 
 #. 833
 msgid "Isle of Man"
-msgstr ""
+msgstr "马恩岛"
 
 #. 356
 msgid "India"
-msgstr ""
+msgstr "印度"
 
 #. 086
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "英属印度洋领地"
 
 #. 368
 msgid "Iraq"
-msgstr ""
+msgstr "伊拉克"
 
 #. 364
 msgid "Iran, Islamic Republic of"
-msgstr ""
+msgstr "伊朗伊斯兰共和国"
 
 #. 352
 msgid "Iceland"
-msgstr ""
+msgstr "冰岛"
 
 #. 380
 msgid "Italy"
-msgstr ""
+msgstr "意大利"
 
 #. 832
 msgid "Jersey"
-msgstr ""
+msgstr "泽西岛"
 
 #. 388
 msgid "Jamaica"
-msgstr ""
+msgstr "牙买加"
 
 #. 400
 msgid "Jordan"
-msgstr ""
+msgstr "约旦"
 
 #. 392
 msgid "Japan"
-msgstr ""
+msgstr "日本"
 
 #. 404
 msgid "Kenya"
-msgstr ""
+msgstr "肯尼亚"
 
 #. 417
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "吉尔吉斯斯坦"
 
 #. 116
 msgid "Cambodia"
-msgstr ""
+msgstr "柬埔寨"
 
 #. 296
 msgid "Kiribati"
-msgstr ""
+msgstr "基里巴斯"
 
 #. 174
 msgid "Comoros"
-msgstr ""
+msgstr "科摩罗"
 
 #. 659
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "圣基茨和尼维斯"
 
 #. 408
 msgid "Korea, Democratic People's Republic of"
-msgstr ""
+msgstr "朝鲜"
 
 #. 410
 msgid "Korea, Republic of"
-msgstr ""
+msgstr "韩国"
 
 #. 414
 msgid "Kuwait"
-msgstr ""
+msgstr "科威特"
 
 #. 136
 msgid "Cayman Islands"
-msgstr ""
+msgstr "开曼群岛"
 
 #. 398
 msgid "Kazakhstan"
-msgstr ""
+msgstr "哈萨克斯坦"
 
 #. 418
 msgid "Lao People's Democratic Republic"
-msgstr ""
+msgstr "老挝人民民主共和国"
 
 #. 422
 msgid "Lebanon"
-msgstr ""
+msgstr "黎巴嫩"
 
 #. 662
 msgid "Saint Lucia"
-msgstr ""
+msgstr "圣卢西亚"
 
 #. 438
 msgid "Liechtenstein"
-msgstr ""
+msgstr "列支敦士登"
 
 #. 144
 msgid "Sri Lanka"
-msgstr ""
+msgstr "斯里兰卡"
 
 #. 430
 msgid "Liberia"
-msgstr ""
+msgstr "利比里亚"
 
 #. 426
 msgid "Lesotho"
-msgstr ""
+msgstr "莱索托"
 
 #. 440
 msgid "Lithuania"
-msgstr ""
+msgstr "立陶宛"
 
 #. 442
 msgid "Luxembourg"
-msgstr ""
+msgstr "卢森堡"
 
 #. 428
 msgid "Latvia"
-msgstr ""
+msgstr "拉脱维亚"
 
 #. 434
 msgid "Libyan Arab Jamahiriya"
-msgstr ""
+msgstr "利比亚"
 
 #. 504
 msgid "Morocco"
-msgstr ""
+msgstr "摩洛哥"
 
 #. 492
 msgid "Monaco"
-msgstr ""
+msgstr "摩纳哥"
 
 #. 498
 msgid "Moldova, Republic of"
-msgstr ""
+msgstr "摩尔多瓦共和国"
 
 #. 499
 msgid "Montenegro"
-msgstr ""
+msgstr "黑山"
 
 #. 663
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "圣马丁"
 
 #. 450
 msgid "Madagascar"
-msgstr ""
+msgstr "马达加斯加"
 
 #. 584
 msgid "Marshall Islands"
-msgstr ""
+msgstr "马绍尔群岛"
 
 #. 807
 msgid "Macedonia, the former Yugoslav Republic of"
-msgstr ""
+msgstr "马其顿"
 
 #. 466
 msgid "Mali"
-msgstr ""
+msgstr "马里"
 
 #. 104
 msgid "Myanmar"
-msgstr ""
+msgstr "缅甸"
 
 #. 496
 msgid "Mongolia"
-msgstr ""
+msgstr "蒙古"
 
 #. 446
 msgid "Macao"
-msgstr ""
+msgstr "澳门"
 
 #. 580
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "北马里亚纳群岛"
 
 #. 474
 msgid "Martinique"
-msgstr ""
+msgstr "马提尼克"
 
 #. 478
 msgid "Mauritania"
-msgstr ""
+msgstr "毛里塔尼亚"
 
 #. 500
 msgid "Montserrat"
-msgstr ""
+msgstr "蒙特萨拉特岛"
 
 #. 470
 msgid "Malta"
-msgstr ""
+msgstr "马尔他"
 
 #. 480
 msgid "Mauritius"
-msgstr ""
+msgstr "毛里求斯"
 
 #. 462
 msgid "Maldives"
-msgstr ""
+msgstr "马尔代夫"
 
 #. 454
 msgid "Malawi"
-msgstr ""
+msgstr "马拉威"
 
 #. 484
 msgid "Mexico"
-msgstr ""
+msgstr "墨西哥"
 
 #. 458
 msgid "Malaysia"
-msgstr ""
+msgstr "马来西亚"
 
 #. 508
 msgid "Mozambique"
-msgstr ""
+msgstr "莫桑比克"
 
 #. 516
 msgid "Namibia"
-msgstr ""
+msgstr "纳米比亚"
 
 #. 540
 msgid "New Caledonia"
-msgstr ""
+msgstr "新喀里多尼亚"
 
 #. 562
 msgid "Niger"
-msgstr ""
+msgstr "尼日尔"
 
 #. 574
 msgid "Norfolk Island"
-msgstr ""
+msgstr "诺福克岛"
 
 #. 566
 msgid "Nigeria"
-msgstr ""
+msgstr "尼日利亚"
 
 #. 558
 msgid "Nicaragua"
-msgstr ""
+msgstr "尼加拉瓜"
 
 #. 528
 msgid "Netherlands"
-msgstr ""
+msgstr "荷兰"
 
 #. 578
 msgid "Norway"
-msgstr ""
+msgstr "挪威"
 
 #. 524
 msgid "Nepal"
-msgstr ""
+msgstr "尼泊尔"
 
 #. 520
 msgid "Nauru"
-msgstr ""
+msgstr "瑙鲁"
 
 #. 570
 msgid "Niue"
-msgstr ""
+msgstr "纽埃岛"
 
 #. 554
 msgid "New Zealand"
-msgstr ""
+msgstr "新西兰"
 
 #. 512
 msgid "Oman"
-msgstr ""
+msgstr "阿曼"
 
 #. 591
 msgid "Panama"
-msgstr ""
+msgstr "巴拿马"
 
 #. 604
 msgid "Peru"
-msgstr ""
+msgstr "秘鲁"
 
 #. 258
 msgid "French Polynesia"
-msgstr ""
+msgstr "法属波利尼西亚"
 
 #. 598
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "巴布亚新几内亚"
 
 #. 608
 msgid "Philippines"
-msgstr ""
+msgstr "菲律宾"
 
 #. 586
 msgid "Pakistan"
-msgstr ""
+msgstr "巴基斯坦"
 
 #. 616
 msgid "Poland"
-msgstr ""
+msgstr "波兰"
 
 #. 666
 msgid "Saint Pierre and Miquelon"
-msgstr ""
+msgstr "圣皮埃尔和密克隆"
 
 #. 612
 msgid "Pitcairn"
-msgstr ""
+msgstr "皮特凯恩"
 
 #. 630
 msgid "Puerto Rico"
-msgstr ""
+msgstr "波多黎各"
 
 #. 275
 msgid "Palestinian Territory, Occupied"
-msgstr ""
+msgstr "巴勒斯坦领土被占领"
 
 #. 620
 msgid "Portugal"
-msgstr ""
+msgstr "葡萄牙"
 
 #. 585
 msgid "Palau"
-msgstr ""
+msgstr "帕劳"
 
 #. 600
 msgid "Paraguay"
-msgstr ""
+msgstr "巴拉圭"
 
 #. 634
 msgid "Qatar"
-msgstr ""
+msgstr "卡塔尔"
 
 #. 638
 msgid "Reunion"
-msgstr ""
+msgstr "法属留尼旺岛"
 
 #. 642
 msgid "Romania"
-msgstr ""
+msgstr "罗马尼亚"
 
 #. 688
 msgid "Serbia"
-msgstr ""
+msgstr "塞尔维亚"
 
 #. 643
 msgid "Russian Federation"
-msgstr ""
+msgstr "俄罗斯联邦"
 
 #. 646
 msgid "Rwanda"
-msgstr ""
+msgstr "卢旺达"
 
 #. 682
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "沙特阿拉伯"
 
 #. 090
 msgid "Solomon Islands"
-msgstr ""
+msgstr "所罗门群岛"
 
 #. 690
 msgid "Seychelles"
-msgstr ""
+msgstr "塞舌尔"
 
 #. 736
 msgid "Sudan"
-msgstr ""
+msgstr "苏丹"
 
 #. 752
 msgid "Sweden"
-msgstr ""
+msgstr "瑞典"
 
 #. 702
 msgid "Singapore"
-msgstr ""
+msgstr "新加坡"
 
 #. 654
 msgid "Saint Helena"
-msgstr ""
+msgstr "圣赫勒拿"
 
 #. 705
 msgid "Slovenia"
-msgstr ""
+msgstr "斯洛文尼亚"
 
 #. 744
 msgid "Svalbard and Jan Mayen"
-msgstr ""
+msgstr "斯瓦尔巴群岛"
 
 #. 703
 msgid "Slovakia"
-msgstr ""
+msgstr "斯洛伐克"
 
 #. 694
 msgid "Sierra Leone"
-msgstr ""
+msgstr "塞拉利昂"
 
 #. 674
 msgid "San Marino"
-msgstr ""
+msgstr "圣马力诺"
 
 #. 686
 msgid "Senegal"
-msgstr ""
+msgstr "塞内加尔"
 
 #. 706
 msgid "Somalia"
-msgstr ""
+msgstr "索马里"
 
 #. 740
 msgid "Suriname"
-msgstr ""
+msgstr "苏里南"
 
 #. 678
 msgid "Sao Tome and Principe"
-msgstr ""
+msgstr "圣多美及普林西比"
 
 #. 222
 msgid "El Salvador"
-msgstr ""
+msgstr "萨尔瓦多"
 
 #. 760
 msgid "Syrian Arab Republic"
-msgstr ""
+msgstr "阿拉伯叙利亚共和国"
 
 #. 748
 msgid "Swaziland"
-msgstr ""
+msgstr "斯威士兰"
 
 #. 796
 msgid "Turks and Caicos Islands"
-msgstr ""
+msgstr "特克斯和凯科斯群岛"
 
 #. 148
 msgid "Chad"
-msgstr ""
+msgstr "乍得"
 
 #. 260
 msgid "French Southern Territories"
-msgstr ""
+msgstr "法属南部占领地"
 
 #. 768
 msgid "Togo"
-msgstr ""
+msgstr "多哥"
 
 #. 764
 msgid "Thailand"
-msgstr ""
+msgstr "泰国"
 
 #. 762
 msgid "Tajikistan"
-msgstr ""
+msgstr "塔吉克斯坦"
 
 #. 772
 msgid "Tokelau"
-msgstr ""
+msgstr "托克劳"
 
 #. 626
 msgid "Timor-Leste"
-msgstr ""
+msgstr "东帝汶"
 
 #. 795
 msgid "Turkmenistan"
-msgstr ""
+msgstr "土库曼斯坦"
 
 #. 788
 msgid "Tunisia"
-msgstr ""
+msgstr "突尼斯"
 
 #. 776
 msgid "Tonga"
-msgstr ""
+msgstr "汤加"
 
 #. 792
 msgid "Turkey"
-msgstr ""
+msgstr "土耳其"
 
 #. 780
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "特立尼达和多巴哥"
 
 #. 798
 msgid "Tuvalu"
-msgstr ""
+msgstr "图瓦卢"
 
 #. 158
 msgid "Taiwan, Province of China"
-msgstr ""
+msgstr "台湾（中国）"
 
 #. 834
 msgid "Tanzania, United Republic of"
-msgstr ""
+msgstr "坦桑尼亚联合共和国"
 
 #. 804
 msgid "Ukraine"
-msgstr ""
+msgstr "乌克兰"
 
 #. 800
 msgid "Uganda"
-msgstr ""
+msgstr "乌干达"
 
 #. 581
 msgid "United States Minor Outlying Islands"
-msgstr ""
+msgstr "美国本土外小岛屿"
 
 #. 840
 msgid "United States"
-msgstr ""
+msgstr "美国"
 
 #. 858
 msgid "Uruguay"
-msgstr ""
+msgstr "乌拉圭"
 
 #. 860
 msgid "Uzbekistan"
-msgstr ""
+msgstr "乌兹别克斯坦"
 
 #. 336
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "圣座"
 
 #. 670
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "圣文森特和格林纳丁斯"
 
 #. 862
 msgid "Venezuela"
-msgstr ""
+msgstr "委内瑞拉"
 
 #. 092
 msgid "Virgin Islands, British"
-msgstr ""
+msgstr "英属维京群岛"
 
 #. 850
 msgid "Virgin Islands, U.S."
-msgstr ""
+msgstr "美属维京群岛"
 
 #. 704
 msgid "Viet Nam"
-msgstr ""
+msgstr "越南"
 
 #. 548
 msgid "Vanuatu"
-msgstr ""
+msgstr "瓦努阿图"
 
 #. 876
 msgid "Wallis and Futuna"
-msgstr ""
+msgstr "瓦利斯和富图纳群岛"
 
 #. 882
 msgid "Samoa"
-msgstr ""
+msgstr "萨摩亚群岛"
 
 #. 887
 msgid "Yemen"
-msgstr ""
+msgstr "也门"
 
 #. 175
 msgid "Mayotte"
-msgstr ""
+msgstr "马约特岛"
 
 #. 710
 msgid "South Africa"
-msgstr ""
+msgstr "南非"
 
 #. 894
 msgid "Zambia"
-msgstr ""
+msgstr "赞比亚"
 
 #. 716
 msgid "Zimbabwe"
-msgstr ""
+msgstr "津巴布韦"
 
 msgid "* Unknown, add is_in tags to those cities"
 msgstr "* 未知，添加标签"
