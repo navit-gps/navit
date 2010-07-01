@@ -63,7 +63,7 @@ lib@LIBNAVIT@_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c comma
 XSLTS=@XSLTS@
 navit.xml: navit_shipped.xml  $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(addsuffix .xslt,$(addprefix xslt/,$(xslt))))
 	cp $< navit.xml.new
-	if [ ! -f "$(builddir)/navit.dtd" ]; then cp -f $(srcdir)/navit.dtd $(builddir)/navit.dtd; fi
+	if [ ! -f navit.dtd ]; then cp -f $(top_srcdir)/navit/navit.dtd .; fi
 	for i in $^; do if [ "$${i%.xslt}" != "$$i" ]; then echo "Applying $$i" ; @SAXON@ -snone navit.xml.new $$i >navit.xml.tmp || exit ; mv navit.xml.tmp navit.xml.new || exit ; fi ; done
 	mv navit.xml.new navit.xml
 	rm -f navit.xml.tmp
@@ -157,7 +157,7 @@ navit_config.h: ../config.h
 
 distclean-local:
 	rm -f version.h version.h.tmp navit_config.h navit_config.h.tmp builtin.c support-builtin.c navit.xml
-	if [ "$(builddir)" != "$(srcdir)" ]; then rm -f navit.dtd; fi
+	if [ "$(top_builddir)" != "$(top_srcdir)" ]; then rm -f navit.dtd; fi
 
 builtin.c: $(top_builddir)/config.h
 	ls $(top_builddir)/navit/*/*/*.la | sed -e "s/\.la/_init(void);/" -e "s/.*lib/extern void module_/" >builtin.c
