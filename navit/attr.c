@@ -214,6 +214,43 @@ attr_new_from_text(const char *name, const char *value)
 	return ret;
 }
 
+static char *
+flags_to_text(int flags)
+{
+	char *ret=NULL;
+	if (flags & AF_ONEWAY) ret=g_strconcat_printf(ret,"%sAF_ONEWAY",ret?"|":"");
+	if (flags & AF_ONEWAYREV) ret=g_strconcat_printf(ret,"%sAF_ONEWAYREV",ret?"|":"");
+	if (flags & AF_SEGMENTED) ret=g_strconcat_printf(ret,"%sAF_SEGMENTED",ret?"|":"");
+	if (flags & AF_ROUNDABOUT) ret=g_strconcat_printf(ret,"%sAF_ROUNDABOUT",ret?"|":"");
+	if (flags & AF_ROUNDABOUT_VALID) ret=g_strconcat_printf(ret,"%sAF_ROUNDABOUT_VALID",ret?"|":"");
+	if (flags & AF_ONEWAY_EXCEPTION) ret=g_strconcat_printf(ret,"%sAF_ONEWAY_EXCEPTION",ret?"|":"");
+	if (flags & AF_SPEED_LIMIT) ret=g_strconcat_printf(ret,"%sAF_SPEED_LIMIT",ret?"|":"");
+	if (flags & AF_RESERVED1) ret=g_strconcat_printf(ret,"%sAF_RESERVED1",ret?"|":"");
+	if (flags & AF_SIZE_OR_WEIGHT_LIMIT) ret=g_strconcat_printf(ret,"%sAF_SIZE_OR_WEIGHT_LIMIT",ret?"|":"");
+	if (flags & AF_THROUGH_TRAFFIC_LIMIT) ret=g_strconcat_printf(ret,"%sAF_THROUGH_TRAFFIC_LIMIT",ret?"|":"");
+	if (flags & AF_TOLL) ret=g_strconcat_printf(ret,"%sAF_TOLL",ret?"|":"");
+	if (flags & AF_SEASONAL) ret=g_strconcat_printf(ret,"%sAF_SEASONAL",ret?"|":"");
+	if (flags & AF_UNPAVED) ret=g_strconcat_printf(ret,"%sAF_UNPAVED",ret?"|":"");
+	if (flags & AF_DANGEROUS_GOODS) ret=g_strconcat_printf(ret,"%sAF_DANGEROUS_GOODS",ret?"|":"");
+	if ((flags & AF_ALL) == AF_ALL) 
+		return g_strconcat_printf(ret,"%sAF_ALL",ret?"|":"");
+	if ((flags & AF_ALL) == AF_MOTORIZED_FAST) 
+		return g_strconcat_printf(ret,"%sAF_MOTORIZED_FAST",ret?"|":"");
+	if (flags & AF_EMERGENCY_VEHICLES) ret=g_strconcat_printf(ret,"%sAF_EMERGENCY_VEHICLES",ret?"|":"");
+	if (flags & AF_TRANSPORT_TRUCK) ret=g_strconcat_printf(ret,"%sAF_TRANSPORT_TRUCK",ret?"|":"");
+	if (flags & AF_DELIVERY_TRUCK) ret=g_strconcat_printf(ret,"%sAF_DELIVERY_TRUCK",ret?"|":"");
+	if (flags & AF_PUBLIC_BUS) ret=g_strconcat_printf(ret,"%sAF_PUBLIC_BUS",ret?"|":"");
+	if (flags & AF_TAXI) ret=g_strconcat_printf(ret,"%sAF_TAXI",ret?"|":"");
+	if (flags & AF_HIGH_OCCUPANCY_CAR) ret=g_strconcat_printf(ret,"%sAF_HIGH_OCCUPANCY_CAR",ret?"|":"");
+	if (flags & AF_CAR) ret=g_strconcat_printf(ret,"%sAF_CAR",ret?"|":"");
+	if (flags & AF_MOTORCYCLE) ret=g_strconcat_printf(ret,"%sAF_MOTORCYCLE",ret?"|":"");
+	if (flags & AF_MOPED) ret=g_strconcat_printf(ret,"%sAF_MOPED",ret?"|":"");
+	if (flags & AF_HORSE) ret=g_strconcat_printf(ret,"%sAF_HORSE",ret?"|":"");
+	if (flags & AF_BIKE) ret=g_strconcat_printf(ret,"%sAF_BIKE",ret?"|":"");
+	if (flags & AF_PEDESTRIAN) ret=g_strconcat_printf(ret,"%sAF_PEDESTRIAN",ret?"|":"");
+	return ret;
+}
+
 char *
 attr_to_text(struct attr *attr, struct map *map, int pretty)
 {
@@ -245,8 +282,8 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 			ret=g_strdup(attr->u.str);
 		return ret;
 	}
-	if (type == attr_flags)
-		return g_strdup_printf("0x%x", attr->u.num);
+	if (type == attr_flags || type == attr_through_traffic_flags)
+		return flags_to_text(attr->u.num);
 	if (type >= attr_type_int_begin && type <= attr_type_int_end) 
 		return g_strdup_printf("%d", attr->u.num);
 	if (type >= attr_type_int64_begin && type <= attr_type_int64_end) 

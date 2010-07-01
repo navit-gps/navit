@@ -33,11 +33,6 @@ struct item_name {
 
 struct item_range item_range_all = { type_none, type_last };
 
-#define AF_PBH (AF_PEDESTRIAN|AF_BIKE|AF_HORSE)
-#define AF_MOTORIZED_FAST (AF_MOTORCYCLE|AF_CAR|AF_HIGH_OCCUPANCY_CAR|AF_TAXI|AF_PUBLIC_BUS|AF_DELIVERY_TRUCK|AF_TRANSPORT_TRUCK|AF_EMERGENCY_VEHICLES)
-#define AF_ALL (AF_PBH|AF_MOPED|AF_MOTORIZED_FAST)
-
-
 struct default_flags {
 	enum item_type type;
 	int flags;
