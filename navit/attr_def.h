@@ -153,6 +153,7 @@ ATTR(speed_category)
 ATTR(static_speed)
 ATTR(static_distance)
 ATTR(through_traffic_penalty)
+ATTR(through_traffic_flags)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
