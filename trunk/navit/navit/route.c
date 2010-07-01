@@ -1614,6 +1614,8 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 		return INT_MAX;
 	if (from && from->seg == over)
 		return INT_MAX;
+	if (over->data.flags & AF_THROUGH_TRAFFIC_LIMIT)
+		return profile->through_traffic_penalty;
 	if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION)) {
 		struct route_traffic_distortion dist;
 		if (route_get_traffic_distortion(over, &dist))
@@ -1882,7 +1884,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 		s=p_min->start;
 		while (s) { /* Iterating all the segments leading away from our point to update the points at their ends */
 			val=route_value_seg(profile, p_min, s, -1);
-			if (val != INT_MAX) {
+			if (val != INT_MAX && !item_is_equal(s->data.item,p_min->seg->data.item)) {
 				new=min+val;
 				if (debug_route)
 					printf("begin %d len %d vs %d (0x%x,0x%x)\n",new,val,s->end->value, s->end->c.x, s->end->c.y);
@@ -1910,7 +1912,7 @@ route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehic
 		s=p_min->end;
 		while (s) { /* Doing the same as above with the segments leading towards our point */
 			val=route_value_seg(profile, p_min, s, 1);
-			if (val != INT_MAX) {
+			if (val != INT_MAX && !item_is_equal(s->data.item,p_min->seg->data.item)) {
 				new=min+val;
 				if (debug_route)
 					printf("end %d len %d vs %d (0x%x,0x%x)\n",new,val,s->start->value,s->start->c.x, s->start->c.y);
@@ -2144,6 +2146,8 @@ is_turn_allowed(struct route_graph_point *p, struct route_graph_segment *from, s
 {
 	struct route_graph_point *prev,*next;
 	struct route_graph_segment *tmp1,*tmp2;
+	if (item_is_equal(from->data.item, to->data.item))
+		return 0;
 	if (from->start == p)
 		prev=from->end;
 	else

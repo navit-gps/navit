@@ -36,6 +36,7 @@ struct vehicleprofile {
 	int weight;				/**< Weight of the vehicle in kg */
 	int axle_weight;			/**< Axle Weight of the vehicle in kg */
 	int dangerous_goods;			/**< Flags of dangerous goods present */
+	int through_traffic_penalty;		/**< Penalty when driving on a through traffic limited road */
 	struct attr **attrs;
 	GHashTable *roadprofile_hash;
 };
