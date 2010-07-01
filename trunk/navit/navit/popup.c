@@ -246,6 +246,18 @@ popup_show_attrs(struct map *map, void *menu, struct item *item)
 }
 
 static void
+popup_item_dump(struct item *item)
+{
+	struct map_rect *mr;
+	mr=map_rect_new(item->map,NULL);
+	item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+	dbg(0,"item=%p\n",item);
+	item_dump_filedesc(item,item->map,stdout);
+	map_rect_destroy(mr);
+}
+
+
+static void
 popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 {
 	struct map_rect *mr;
@@ -281,6 +293,7 @@ popup_show_item(struct navit *nav, void *popup, struct displayitem *di)
 		dbg(1,"item=%p\n", item);
 		if (item) {
 			popup_show_attrs(item->map, menu_item, item);
+			popup_printf_cb(menu_item, menu_type_menu, callback_new_1(callback_cast(popup_item_dump), diitem), "Dump");
 			if (item->type < type_line) {
 				struct coord co;
 				struct pcoord *c;
