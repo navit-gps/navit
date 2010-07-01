@@ -1910,7 +1910,10 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 			}
 			displaylist->dc.pro=map_projection(displaylist->m);
 			displaylist->conv=map_requires_conversion(displaylist->m);
-			displaylist->sel=transform_get_selection(displaylist->dc.trans, displaylist->dc.pro, displaylist->order);
+			if (route_selection)
+				displaylist->sel=route_selection;
+			else
+				displaylist->sel=transform_get_selection(displaylist->dc.trans, displaylist->dc.pro, displaylist->order);
 			displaylist->mr=map_rect_new(displaylist->m, displaylist->sel);
 		}
 		if (displaylist->mr) {
@@ -1960,7 +1963,8 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 			}
 			map_rect_destroy(displaylist->mr);
 		}
-		map_selection_destroy(displaylist->sel);
+		if (!route_selection)
+			map_selection_destroy(displaylist->sel);
 		displaylist->mr=NULL;
 		displaylist->sel=NULL;
 		displaylist->m=NULL;
@@ -1977,7 +1981,8 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 	if (! cancel) 
 		graphics_displaylist_draw(displaylist->dc.gra, displaylist, displaylist->dc.trans, displaylist->layout, flags);
 	map_rect_destroy(displaylist->mr);
-	map_selection_destroy(displaylist->sel);
+	if (!route_selection)
+		map_selection_destroy(displaylist->sel);
 	mapset_close(displaylist->msh);
 	displaylist->mr=NULL;
 	displaylist->sel=NULL;
