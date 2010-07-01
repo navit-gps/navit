@@ -72,6 +72,9 @@ vehicleprofile_set_attr_do(struct vehicleprofile *this_, struct attr *attr)
 	case attr_static_distance:
 		this_->static_distance=attr->u.num;
 		break;
+	case attr_through_traffic_penalty:
+		this_->through_traffic_penalty=attr->u.num;
+		break;
 	default:
 		break;
 	}
@@ -93,6 +96,7 @@ vehicleprofile_new(struct attr *parent, struct attr **attrs)
 	this_->height=-1;
 	this_->weight=-1;
 	this_->axle_weight=-1;
+	this_->through_traffic_penalty=9000;
 	for (attr=attrs;*attr; attr++)
 		vehicleprofile_set_attr_do(this_, *attr);
 	return this_;
