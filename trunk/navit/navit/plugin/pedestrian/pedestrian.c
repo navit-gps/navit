@@ -1147,10 +1147,13 @@ android_sensors(struct navit *nav, int sensor, float *x, float *y, float *z)
 		dbg(1,"orientation=%d\n",orientation);
 	}
 	if ((orientation_old == 2) != (orientation == 2)) {
-		struct attr attr;
+		struct attr attr, flags_graphics;
 		navit_set_attr(nav, orientation == 2 ? &initial_layout:&main_layout);
 		navit_get_attr(nav, attr_transformation, &attr, NULL);
 		transform_set_scale(attr.u.transformation, orientation == 2 ? 64:16);
+		flags_graphics.type=attr_flags_graphics;
+		flags_graphics.u.num=orientation == 2 ? 0:10;
+		navit_set_attr(nav, &flags_graphics);
 	}
 	orientation_old=orientation;
 	switch (orientation) {
@@ -1316,7 +1319,7 @@ pedestrian_navit_init(struct navit *nav)
 	navit_get_attr(nav, attr_layout, &initial_layout, NULL);
     	iter=navit_attr_iter_new();
 	while(navit_get_attr(nav, attr_layout, &attr, iter)) {
-		if (!strcmp(attr.u.layout->name, "Main")) {
+		if (!strcmp(attr.u.layout->name, "Route")) {
 			dbg(0,"found %s\n",attr_to_name(attr.type));
 			main_layout=attr;
 #if 1
