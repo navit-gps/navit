@@ -15,8 +15,11 @@ POTFILES  = \
 	$(top_srcdir)/navit/gui/gtk/gui_gtk_action.c \
 	$(top_srcdir)/navit/gui/gtk/gui_gtk_statusbar.c \
 	$(top_srcdir)/navit/gui/internal/gui_internal.c \
-	$(top_builddir)/navit/navit_shipped.glade \
 	$(top_builddir)/navit/navit_shipped.c
+
+if XGETTEXT_GLADE
+POTFILES += $(top_builddir)/navit/navit_shipped.glade
+endif
 
 
 SUFFIXES = .po .mo
