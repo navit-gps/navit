@@ -74,8 +74,10 @@
 #else
 #include <QResizeEvent>
 #include <QApplication>
+#if QT_VERSION >= 0x040200
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#endif
 #include <QPainter>
 #include <QPen>
 #include <QBrush>
