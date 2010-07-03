@@ -21,7 +21,7 @@
  * Modified by the GLib Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GLib Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
- * GLib at ftp://ftp.gtk.org/pub/gtk/. 
+ * GLib at ftp://ftp.gtk.org/pub/gtk/.
  */
 
 /*
@@ -125,18 +125,18 @@ g_memdup (gconstpointer mem,
  * If @str is less than @n bytes long the buffer is padded with nuls.
  * If @str is %NULL it returns %NULL.
  * The returned value should be freed when no longer needed.
- * 
+ *
  * <note><para>
  * To copy a number of characters from a UTF-8 encoded string, use
  * g_utf8_strncpy() instead.
  * </para></note>
- * 
- * Returns: a newly-allocated buffer containing the first @n bytes 
- *          of @str, nul-terminated 
+ *
+ * Returns: a newly-allocated buffer containing the first @n bytes
+ *          of @str, nul-terminated
  */
 gchar*
 g_strndup (const gchar *str,
-	   gsize        n)    
+	   gsize        n)
 {
   gchar *new_str;
 
@@ -159,11 +159,11 @@ g_strndup (const gchar *str,
  *
  * Creates a new string @length bytes long filled with @fill_char.
  * The returned string should be freed when no longer needed.
- * 
+ *
  * Returns: a newly-allocated string filled the @fill_char
  */
 gchar*
-g_strnfill (gsize length,     
+g_strnfill (gsize length,
 	    gchar fill_char)
 {
   gchar *str;
@@ -179,12 +179,12 @@ g_strnfill (gsize length,
  * g_stpcpy:
  * @dest: destination buffer.
  * @src: source string.
- * 
+ *
  * Copies a nul-terminated string into the dest buffer, include the
  * trailing nul, and return a pointer to the trailing nul byte.
  * This is useful for concatenating multiple strings together
  * without having to repeatedly scan for the end.
- * 
+ *
  * Return value: a pointer to trailing nul byte.
  **/
 gchar *
@@ -237,7 +237,7 @@ g_strdup_printf (const gchar *format,
 gchar*
 g_strconcat (const gchar *string1, ...)
 {
-  gsize	  l;     
+  gsize	  l;
   va_list args;
   gchar	  *s;
   gchar	  *concat;
@@ -277,7 +277,7 @@ g_strconcat (const gchar *string1, ...)
  * @nptr:    the string to convert to a numeric value.
  * @endptr:  if non-%NULL, it returns the character after
  *           the last character used in the conversion.
- * 
+ *
  * Converts a string to a #gdouble value.
  * It calls the standard strtod() function to handle the conversion, but
  * if the string is not completely converted it attempts the conversion
@@ -289,7 +289,7 @@ g_strconcat (const gchar *string1, ...)
  * should you use this. Make sure that you don't pass strings such as comma
  * separated lists of values, since the commas may be interpreted as a decimal
  * point in some locales, causing unexpected results.
- * 
+ *
  * Return value: the #gdouble value.
  **/
 gdouble
@@ -330,14 +330,14 @@ g_strtod (const gchar *nptr,
  * @nptr:    the string to convert to a numeric value.
  * @endptr:  if non-%NULL, it returns the character after
  *           the last character used in the conversion.
- * 
+ *
  * Converts a string to a #gdouble value.
  *
  * This function behaves like the standard strtod() function
- * does in the C locale. It does this without actually changing 
- * the current locale, since that would not be thread-safe. 
+ * does in the C locale. It does this without actually changing
+ * the current locale, since that would not be thread-safe.
  * A limitation of the implementation is that this function
- * will still accept localized versions of infinities and NANs. 
+ * will still accept localized versions of infinities and NANs.
  *
  * This function is typically used when reading configuration
  * files or other non-user input that should be locale independent.
@@ -351,7 +351,7 @@ g_strtod (const gchar *nptr,
  * is returned (according to the sign of the value), and %ERANGE is
  * stored in %errno. If the correct value would cause underflow,
  * zero is returned and %ERANGE is stored in %errno.
- * 
+ *
  * This function resets %errno before calling strtod() so that
  * you can reliably detect overflow and underflow.
  *
@@ -386,37 +386,37 @@ g_ascii_strtod (const gchar *nptr,
 #if NOT_NEEDED_FOR_NAVIT
   g_assert (decimal_point_len != 0);
 #endif /* NOT_NEEDED_FOR_NAVIT */
-  
+
   decimal_point_pos = NULL;
   end = NULL;
 
-  if (decimal_point[0] != '.' || 
+  if (decimal_point[0] != '.' ||
       decimal_point[1] != 0)
     {
       p = nptr;
       /* Skip leading space */
       while (g_ascii_isspace (*p))
 	p++;
-      
+
       /* Skip leading optional sign */
       if (*p == '+' || *p == '-')
 	p++;
-      
-      if (p[0] == '0' && 
+
+      if (p[0] == '0' &&
 	  (p[1] == 'x' || p[1] == 'X'))
 	{
 	  p += 2;
 	  /* HEX - find the (optional) decimal point */
-	  
+
 	  while (g_ascii_isxdigit (*p))
 	    p++;
-	  
+
 	  if (*p == '.')
 	    decimal_point_pos = p++;
-	      
+
 	  while (g_ascii_isxdigit (*p))
 	    p++;
-	  
+
 	  if (*p == 'p' || *p == 'P')
 	    p++;
 	  if (*p == '+' || *p == '-')
@@ -430,13 +430,13 @@ g_ascii_strtod (const gchar *nptr,
 	{
 	  while (g_ascii_isdigit (*p))
 	    p++;
-	  
+
 	  if (*p == '.')
 	    decimal_point_pos = p++;
-	  
+
 	  while (g_ascii_isdigit (*p))
 	    p++;
-	  
+
 	  if (*p == 'e' || *p == 'E')
 	    p++;
 	  if (*p == '+' || *p == '-')
@@ -455,7 +455,7 @@ g_ascii_strtod (const gchar *nptr,
 
       /* We need to convert the '.' to the locale specific decimal point */
       copy = g_malloc (end - nptr + 1 + decimal_point_len);
-      
+
       c = copy;
       memcpy (c, nptr, decimal_point_pos - nptr);
       c += decimal_point_pos - nptr;
@@ -476,18 +476,18 @@ g_ascii_strtod (const gchar *nptr,
 	  else
 	    fail_pos = (char *)nptr + (fail_pos - copy);
 	}
-      
+
       g_free (copy);
-	  
+
     }
   else if (end)
     {
       char *copy;
-      
+
       copy = g_malloc (end - (char *)nptr + 1);
       memcpy (copy, nptr, end - nptr);
       *(copy + (end - (char *)nptr)) = 0;
-      
+
       errno = 0;
       val = strtod (copy, &fail_pos);
       strtod_errno = errno;
@@ -496,7 +496,7 @@ g_ascii_strtod (const gchar *nptr,
 	{
 	  fail_pos = (char *)nptr + (fail_pos - copy);
 	}
-      
+
       g_free (copy);
     }
   else
@@ -522,8 +522,8 @@ g_ascii_strtod (const gchar *nptr,
  * @d: The #gdouble to convert
  *
  * Converts a #gdouble to a string, using the '.' as
- * decimal point. 
- * 
+ * decimal point.
+ *
  * This functions generates enough precision that converting
  * the string back using g_ascii_strtod() gives the same machine-number
  * (on machines with IEEE compatible 64bit doubles). It is
@@ -545,14 +545,14 @@ g_ascii_dtostr (gchar       *buffer,
  * @buffer: A buffer to place the resulting string in
  * @buf_len: The length of the buffer.
  * @format: The printf()-style format to use for the
- *          code to use for converting. 
+ *          code to use for converting.
  * @d: The #gdouble to convert
  *
  * Converts a #gdouble to a string, using the '.' as
  * decimal point. To format the number you pass in
  * a printf()-style format string. Allowed conversion
- * specifiers are 'e', 'E', 'f', 'F', 'g' and 'G'. 
- * 
+ * specifiers are 'e', 'E', 'f', 'F', 'g' and 'G'.
+ *
  * If you just want to want to serialize the value into a
  * string, use g_ascii_dtostr().
  *
@@ -574,9 +574,9 @@ g_ascii_formatd (gchar       *buffer,
   g_return_val_if_fail (buffer != NULL, NULL);
   g_return_val_if_fail (format[0] == '%', NULL);
   g_return_val_if_fail (strpbrk (format + 1, "'l%") == NULL, NULL);
- 
+
   format_char = format[strlen (format) - 1];
-  
+
   g_return_val_if_fail (format_char == 'e' || format_char == 'E' ||
 			format_char == 'f' || format_char == 'F' ||
 			format_char == 'g' || format_char == 'G',
@@ -593,7 +593,7 @@ g_ascii_formatd (gchar       *buffer,
 	format_char == 'g' || format_char == 'G'))
     return NULL;
 
-      
+
   _g_snprintf (buffer, buf_len, format, d);
 
 #ifdef HAVE_API_ANDROID
@@ -627,7 +627,7 @@ g_ascii_formatd (gchar       *buffer,
 	{
 	  *p = '.';
 	  p++;
-	  if (decimal_point_len > 1) 
+	  if (decimal_point_len > 1)
             {
 	      rest_len = strlen (p + (decimal_point_len-1));
 	      memmove (p, p + (decimal_point_len-1), rest_len);
@@ -635,7 +635,7 @@ g_ascii_formatd (gchar       *buffer,
 	    }
 	}
     }
-  
+
   return buffer;
 }
 
@@ -664,9 +664,9 @@ g_parse_long_long (const gchar  *nptr,
   guint64 ui64;
   const gchar *s, *save;
   guchar c;
-  
+
   g_return_val_if_fail (nptr != NULL, 0);
-  
+
   *negative = FALSE;
   if (base == 1 || base > 36)
     {
@@ -675,16 +675,16 @@ g_parse_long_long (const gchar  *nptr,
 	*endptr = nptr;
       return 0;
     }
-  
+
   save = s = nptr;
-  
+
   /* Skip white space.  */
   while (ISSPACE (*s))
     ++s;
 
   if (G_UNLIKELY (!*s))
     goto noconv;
-  
+
   /* Check for a sign.  */
   if (*s == '-')
     {
@@ -693,7 +693,7 @@ g_parse_long_long (const gchar  *nptr,
     }
   else if (*s == '+')
     ++s;
-  
+
   /* Recognize number prefix and if BASE is zero, figure it out ourselves.  */
   if (*s == '0')
     {
@@ -707,12 +707,12 @@ g_parse_long_long (const gchar  *nptr,
     }
   else if (base == 0)
     base = 10;
-  
+
   /* Save the pointer so we can check later if anything happened.  */
   save = s;
   cutoff = G_MAXUINT64 / base;
   cutlim = G_MAXUINT64 % base;
-  
+
   overflow = FALSE;
   ui64 = 0;
   c = *s;
@@ -735,16 +735,16 @@ g_parse_long_long (const gchar  *nptr,
 	  ui64 += c;
 	}
     }
-  
+
   /* Check if anything actually happened.  */
   if (s == save)
     goto noconv;
-  
+
   /* Store in ENDPTR the address of one character
      past the last character we converted.  */
   if (endptr)
     *endptr = s;
-  
+
   if (G_UNLIKELY (overflow))
     {
       errno = ERANGE;
@@ -752,7 +752,7 @@ g_parse_long_long (const gchar  *nptr,
     }
 
   return ui64;
-  
+
  noconv:
   /* We must handle a special case here: the base is 0 or 16 and the
      first two characters are '0' and 'x', but the rest are no
@@ -840,7 +840,7 @@ g_ascii_strtoull (const gchar *nptr,
  *
  * Since: 2.12
  **/
-gint64 
+gint64
 g_ascii_strtoll (const gchar *nptr,
 		 gchar      **endptr,
 		 guint        base)
@@ -892,7 +892,7 @@ g_strerror (gint errnum)
 	   */
 	  GQuark msg_quark = g_quark_from_string (msg_utf8);
 	  g_free (msg_utf8);
-	  
+
 	  msg_utf8 = (gchar *) g_quark_to_string (msg_quark);
 	  errno = saved_errno;
 	  return msg_utf8;
@@ -1346,7 +1346,7 @@ g_strsignal (gint signum)
 
 #ifdef HAVE_STRSIGNAL
   const char *msg_locale;
-  
+
 #if defined(G_OS_BEOS) || defined(G_WITH_CYGWIN)
 extern const char *strsignal(int);
 #else
@@ -1365,7 +1365,7 @@ extern const char *strsignal(int);
 	   */
 	  GQuark msg_quark = g_quark_from_string (msg_utf8);
 	  g_free (msg_utf8);
-	  
+
 	  return g_quark_to_string (msg_quark);
 	}
     }
@@ -1487,7 +1487,7 @@ extern const char *strsignal(int);
     }
 
   _g_sprintf (msg, "unknown signal (%d)", signum);
-  
+
   return msg;
 }
 #endif /* NOT_NEEDED_FOR_NAVIT */
@@ -1507,7 +1507,7 @@ g_strlcpy (gchar       *dest,
 {
   g_return_val_if_fail (dest != NULL, 0);
   g_return_val_if_fail (src  != NULL, 0);
-  
+
   return strlcpy (dest, src, dest_size);
 }
 
@@ -1518,7 +1518,7 @@ g_strlcat (gchar       *dest,
 {
   g_return_val_if_fail (dest != NULL, 0);
   g_return_val_if_fail (src  != NULL, 0);
-  
+
   return strlcat (dest, src, dest_size);
 }
 
@@ -1540,22 +1540,22 @@ g_strlcpy (gchar       *dest,
   register gchar *d = dest;
   register const gchar *s = src;
   register gsize n = dest_size;
-  
+
   g_return_val_if_fail (dest != NULL, 0);
   g_return_val_if_fail (src  != NULL, 0);
-  
+
   /* Copy as many bytes as will fit */
   if (n != 0 && --n != 0)
     do
       {
 	register gchar c = *s++;
-	
+
 	*d++ = c;
 	if (c == 0)
 	  break;
       }
     while (--n != 0);
-  
+
   /* If not enough room in dest, add NUL and traverse rest of src */
   if (n == 0)
     {
@@ -1564,7 +1564,7 @@ g_strlcpy (gchar       *dest,
       while (*s++)
 	;
     }
-  
+
   return s - src - 1;  /* count does not include NUL */
 }
 
@@ -1589,19 +1589,19 @@ g_strlcat (gchar       *dest,
   register const gchar *s = src;
   register gsize bytes_left = dest_size;
   gsize dlength;  /* Logically, MIN (strlen (d), dest_size) */
-  
+
   g_return_val_if_fail (dest != NULL, 0);
   g_return_val_if_fail (src  != NULL, 0);
-  
+
   /* Find the end of dst and adjust bytes left but don't go past end */
   while (*d != 0 && bytes_left-- != 0)
     d++;
   dlength = d - dest;
   bytes_left = dest_size - dlength;
-  
+
   if (bytes_left == 0)
     return dlength + strlen (s);
-  
+
   while (*s != 0)
     {
       if (bytes_left != 1)
@@ -1612,7 +1612,7 @@ g_strlcat (gchar       *dest,
       s++;
     }
   *d = 0;
-  
+
   return dlength + (s - src);  /* count does not include NUL */
 }
 #endif /* ! HAVE_STRLCPY */
@@ -1621,9 +1621,9 @@ g_strlcat (gchar       *dest,
  * g_ascii_strdown:
  * @str: a string.
  * @len: length of @str in bytes, or -1 if @str is nul-terminated.
- * 
+ *
  * Converts all upper case ASCII letters to lower case ASCII letters.
- * 
+ *
  * Return value: a newly-allocated string, with all the upper case
  *               characters in @str converted to lower case, with
  *               semantics that exactly match g_ascii_tolower(). (Note
@@ -1635,7 +1635,7 @@ g_ascii_strdown (const gchar *str,
 		 gssize       len)
 {
   gchar *result, *s;
-  
+
   g_return_val_if_fail (str != NULL, NULL);
 
   if (len < 0)
@@ -1644,7 +1644,7 @@ g_ascii_strdown (const gchar *str,
   result = g_strndup (str, len);
   for (s = result; *s; s++)
     *s = g_ascii_tolower (*s);
-  
+
   return result;
 }
 
@@ -1652,9 +1652,9 @@ g_ascii_strdown (const gchar *str,
  * g_ascii_strup:
  * @str: a string.
  * @len: length of @str in bytes, or -1 if @str is nul-terminated.
- * 
+ *
  * Converts all lower case ASCII letters to upper case ASCII letters.
- * 
+ *
  * Return value: a newly allocated string, with all the lower case
  *               characters in @str converted to upper case, with
  *               semantics that exactly match g_ascii_toupper(). (Note
@@ -1682,43 +1682,43 @@ g_ascii_strup (const gchar *str,
 /**
  * g_strdown:
  * @string: the string to convert.
- * 
- * Converts a string to lower case.  
- * 
- * Return value: the string 
  *
- * Deprecated:2.2: This function is totally broken for the reasons discussed 
- * in the g_strncasecmp() docs - use g_ascii_strdown() or g_utf8_strdown() 
+ * Converts a string to lower case.
+ *
+ * Return value: the string
+ *
+ * Deprecated:2.2: This function is totally broken for the reasons discussed
+ * in the g_strncasecmp() docs - use g_ascii_strdown() or g_utf8_strdown()
  * instead.
  **/
 gchar*
 g_strdown (gchar *string)
 {
   register guchar *s;
-  
+
   g_return_val_if_fail (string != NULL, NULL);
-  
+
   s = (guchar *) string;
-  
+
   while (*s)
     {
       if (isupper (*s))
 	*s = tolower (*s);
       s++;
     }
-  
+
   return (gchar *) string;
 }
 
 /**
  * g_strup:
  * @string: the string to convert.
- * 
- * Converts a string to upper case. 
- * 
+ *
+ * Converts a string to upper case.
+ *
  * Return value: the string
  *
- * Deprecated:2.2: This function is totally broken for the reasons discussed 
+ * Deprecated:2.2: This function is totally broken for the reasons discussed
  * in the g_strncasecmp() docs - use g_ascii_strup() or g_utf8_strup() instead.
  **/
 gchar*
@@ -1770,7 +1770,7 @@ g_strreverse (gchar *string)
 /**
  * g_ascii_tolower:
  * @c: any character.
- * 
+ *
  * Convert a character to ASCII lower case.
  *
  * Unlike the standard C library tolower() function, this only
@@ -1780,7 +1780,7 @@ g_strreverse (gchar *string)
  * library function, this takes and returns a char, not an int, so
  * don't call it on %EOF but no need to worry about casting to #guchar
  * before passing a possibly non-ASCII character in.
- * 
+ *
  * Return value: the result of converting @c to lower case.
  *               If @c is not an ASCII upper case letter,
  *               @c is returned unchanged.
@@ -1794,7 +1794,7 @@ g_ascii_tolower (gchar c)
 /**
  * g_ascii_toupper:
  * @c: any character.
- * 
+ *
  * Convert a character to ASCII upper case.
  *
  * Unlike the standard C library toupper() function, this only
@@ -1804,7 +1804,7 @@ g_ascii_tolower (gchar c)
  * library function, this takes and returns a char, not an int, so
  * don't call it on %EOF but no need to worry about casting to #guchar
  * before passing a possibly non-ASCII character in.
- * 
+ *
  * Return value: the result of converting @c to upper case.
  *               If @c is not an ASCII lower case letter,
  *               @c is returned unchanged.
@@ -1861,7 +1861,7 @@ g_ascii_xdigit_value (gchar c)
  * g_ascii_strcasecmp:
  * @s1: string to compare with @s2.
  * @s2: string to compare with @s1.
- * 
+ *
  * Compare two strings, ignoring the case of ASCII characters.
  *
  * Unlike the BSD strcasecmp() function, this only recognizes standard
@@ -1876,7 +1876,7 @@ g_ascii_xdigit_value (gchar c)
  * characters include all ASCII letters. If you compare two CP932
  * strings using this function, you will get false matches.
  *
- * Return value: 0 if the strings match, a negative value if @s1 &lt; @s2, 
+ * Return value: 0 if the strings match, a negative value if @s1 &lt; @s2,
  *   or a positive value if @s1 &gt; @s2.
  **/
 gint
@@ -1905,19 +1905,19 @@ g_ascii_strcasecmp (const gchar *s1,
  * @s1: string to compare with @s2.
  * @s2: string to compare with @s1.
  * @n:  number of characters to compare.
- * 
+ *
  * Compare @s1 and @s2, ignoring the case of ASCII characters and any
  * characters after the first @n in each string.
  *
  * Unlike the BSD strcasecmp() function, this only recognizes standard
  * ASCII letters and ignores the locale, treating all non-ASCII
  * characters as if they are not letters.
- * 
+ *
  * The same warning as in g_ascii_strcasecmp() applies: Use this
  * function only on strings known to be in encodings where bytes
  * corresponding to ASCII letters always represent themselves.
  *
- * Return value: 0 if the strings match, a negative value if @s1 &lt; @s2, 
+ * Return value: 0 if the strings match, a negative value if @s1 &lt; @s2,
  *   or a positive value if @s1 &gt; @s2.
  **/
 gint
@@ -1950,14 +1950,14 @@ g_ascii_strncasecmp (const gchar *s1,
  * g_strcasecmp:
  * @s1: a string.
  * @s2: a string to compare with @s1.
- * 
+ *
  * A case-insensitive string comparison, corresponding to the standard
  * strcasecmp() function on platforms which support it.
  *
- * Return value: 0 if the strings match, a negative value if @s1 &lt; @s2, 
+ * Return value: 0 if the strings match, a negative value if @s1 &lt; @s2,
  *   or a positive value if @s1 &gt; @s2.
  *
- * Deprecated:2.2: See g_strncasecmp() for a discussion of why this function 
+ * Deprecated:2.2: See g_strncasecmp() for a discussion of why this function
  *   is deprecated and how to replace it.
  **/
 gint
@@ -1996,16 +1996,16 @@ g_strcasecmp (const gchar *s1,
  * @s1: a string.
  * @s2: a string to compare with @s1.
  * @n: the maximum number of characters to compare.
- * 
+ *
  * A case-insensitive string comparison, corresponding to the standard
  * strncasecmp() function on platforms which support it.
- * It is similar to g_strcasecmp() except it only compares the first @n 
+ * It is similar to g_strcasecmp() except it only compares the first @n
  * characters of the strings.
- * 
- * Return value: 0 if the strings match, a negative value if @s1 &lt; @s2, 
+ *
+ * Return value: 0 if the strings match, a negative value if @s1 &lt; @s2,
  *   or a positive value if @s1 &gt; @s2.
  *
- * Deprecated:2.2: The problem with g_strncasecmp() is that it does the 
+ * Deprecated:2.2: The problem with g_strncasecmp() is that it does the
  * comparison by calling toupper()/tolower(). These functions are
  * locale-specific and operate on single bytes. However, it is impossible
  * to handle things correctly from an I18N standpoint by operating on
@@ -2022,7 +2022,7 @@ g_strcasecmp (const gchar *s1,
 gint
 g_strncasecmp (const gchar *s1,
 	       const gchar *s2,
-	       guint n)     
+	       guint n)
 {
 #ifdef HAVE_STRNCASECMP
   return strncasecmp (s1, s2, n);
@@ -2098,7 +2098,7 @@ g_strcompress (const gchar *source)
   const gchar *p = source, *octal;
   gchar *dest = g_malloc (strlen (source) + 1);
   gchar *q = dest;
-  
+
   while (*p)
     {
       if (*p == '\\')
@@ -2149,7 +2149,7 @@ g_strcompress (const gchar *source)
     }
 out:
   *q = 0;
-  
+
   return dest;
 }
 
@@ -2161,7 +2161,7 @@ g_strescape (const gchar *source,
   gchar *dest;
   gchar *q;
   guchar excmap[256];
-  
+
   g_return_val_if_fail (source != NULL, NULL);
 
   p = (guchar *) source;
@@ -2278,10 +2278,10 @@ g_strchomp (gchar *string)
  *     @max_tokens is reached.
  * @max_tokens: the maximum number of pieces to split @string into. If this is
  *              less than 1, the string is split completely.
- * 
+ *
  * Splits a string into a maximum of @max_tokens pieces, using the given
  * @delimiter. If @max_tokens is reached, the remainder of @string is appended
- * to the last token. 
+ * to the last token.
  *
  * As a special case, the result of splitting the empty string "" is an empty
  * vector, not a vector containing a single string. The reason for this
@@ -2289,8 +2289,8 @@ g_strchomp (gchar *string)
  * more useful than consistent handling of empty elements. If you do need
  * to represent empty elements, you'll need to check for the empty string
  * before calling g_strsplit().
- * 
- * Return value: a newly-allocated %NULL-terminated array of strings. Use 
+ *
+ * Return value: a newly-allocated %NULL-terminated array of strings. Use
  *    g_strfreev() to free it.
  **/
 gchar**
@@ -2314,11 +2314,11 @@ g_strsplit (const gchar *string,
   s = strstr (remainder, delimiter);
   if (s)
     {
-      gsize delimiter_len = strlen (delimiter);   
+      gsize delimiter_len = strlen (delimiter);
 
       while (--max_tokens && s)
 	{
-	  gsize len;     
+	  gsize len;
 
 	  len = s - remainder;
 	  string_list = g_slist_prepend (string_list,
@@ -2350,21 +2350,21 @@ g_strsplit (const gchar *string,
  * @string: The string to be tokenized
  * @delimiters: A nul-terminated string containing bytes that are used
  *              to split the string.
- * @max_tokens: The maximum number of tokens to split @string into. 
+ * @max_tokens: The maximum number of tokens to split @string into.
  *              If this is less than 1, the string is split completely
- * 
+ *
  * Splits @string into a number of tokens not containing any of the characters
  * in @delimiter. A token is the (possibly empty) longest string that does not
  * contain any of the characters in @delimiters. If @max_tokens is reached, the
  * remainder is appended to the last token.
  *
  * For example the result of g_strsplit_set ("abc:def/ghi", ":/", -1) is a
- * %NULL-terminated vector containing the three strings "abc", "def", 
+ * %NULL-terminated vector containing the three strings "abc", "def",
  * and "ghi".
  *
  * The result if g_strsplit_set (":def/ghi:", ":/", -1) is a %NULL-terminated
  * vector containing the four strings "", "def", "ghi", and "".
- * 
+ *
  * As a special case, the result of splitting the empty string "" is an empty
  * vector, not a vector containing a single string. The reason for this
  * special case is that being able to represent a empty vector is typically
@@ -2372,12 +2372,12 @@ g_strsplit (const gchar *string,
  * to represent empty elements, you'll need to check for the empty string
  * before calling g_strsplit_set().
  *
- * Note that this function works on bytes not characters, so it can't be used 
+ * Note that this function works on bytes not characters, so it can't be used
  * to delimit UTF-8 strings for anything but ASCII characters.
- * 
- * Return value: a newly-allocated %NULL-terminated array of strings. Use 
+ *
+ * Return value: a newly-allocated %NULL-terminated array of strings. Use
  *    g_strfreev() to free it.
- * 
+ *
  * Since: 2.4
  **/
 gchar **
@@ -2392,7 +2392,7 @@ g_strsplit_set (const gchar *string,
   const gchar *current;
   gchar *token;
   gchar **result;
-  
+
   g_return_val_if_fail (string != NULL, NULL);
   g_return_val_if_fail (delimiters != NULL, NULL);
 
@@ -2405,7 +2405,7 @@ g_strsplit_set (const gchar *string,
       result[0] = NULL;
       return result;
     }
-  
+
   memset (delim_table, FALSE, sizeof (delim_table));
   for (s = delimiters; *s != '\0'; ++s)
     delim_table[*(guchar *)s] = TRUE;
@@ -2426,7 +2426,7 @@ g_strsplit_set (const gchar *string,
 
 	  current = s + 1;
 	}
-      
+
       ++s;
     }
 
@@ -2441,7 +2441,7 @@ g_strsplit_set (const gchar *string,
     result[--n_tokens] = list->data;
 
   g_slist_free (tokens);
-  
+
   return result;
 }
 #endif /* NOT_NEEDED_FOR_NAVIT */
@@ -2451,7 +2451,7 @@ g_strsplit_set (const gchar *string,
  * @str_array: a %NULL-terminated array of strings to free.
 
  * Frees a %NULL-terminated array of strings, and the array itself.
- * If called on a %NULL value, g_strfreev() simply returns. 
+ * If called on a %NULL value, g_strfreev() simply returns.
  **/
 void
 g_strfreev (gchar **str_array)
@@ -2470,12 +2470,12 @@ g_strfreev (gchar **str_array)
 /**
  * g_strdupv:
  * @str_array: %NULL-terminated array of strings.
- * 
+ *
  * Copies %NULL-terminated array of strings. The copy is a deep copy;
  * the new array should be freed by first freeing each string, then
  * the array itself. g_strfreev() does this for you. If called
  * on a %NULL value, g_strdupv() simply returns %NULL.
- * 
+ *
  * Return value: a new %NULL-terminated array of strings.
  **/
 gchar**
@@ -2489,7 +2489,7 @@ g_strdupv (gchar **str_array)
       i = 0;
       while (str_array[i])
         ++i;
-          
+
       retval = g_new (gchar*, i + 1);
 
       i = 0;
@@ -2522,7 +2522,7 @@ g_strjoinv (const gchar  *separator,
     {
       gint i;
       gsize len;
-      gsize separator_len;     
+      gsize separator_len;
 
       separator_len = strlen (separator);
       /* First part, getting length */
@@ -2552,8 +2552,8 @@ g_strjoin (const gchar  *separator,
 {
   gchar *string, *s;
   va_list args;
-  gsize len;               
-  gsize separator_len;     
+  gsize len;
+  gsize separator_len;
   gchar *ptr;
 
   if (separator == NULL)
@@ -2602,8 +2602,6 @@ g_strjoin (const gchar  *separator,
   return string;
 }
 
-#if NOT_NEEDED_FOR_NAVIT
-
 /**
  * g_strstr_len:
  * @haystack: a string.
@@ -2614,7 +2612,7 @@ g_strjoin (const gchar  *separator,
  *
  * Searches the string @haystack for the first occurrence
  * of the string @needle, limiting the length of the search
- * to @haystack_len. 
+ * to @haystack_len.
  *
  * Return value: a pointer to the found occurrence, or
  *    %NULL if not found.
@@ -2641,25 +2639,24 @@ g_strstr_len (const gchar *haystack,
 
       if (haystack_len < needle_len)
 	return NULL;
-      
+
       end = haystack + haystack_len - needle_len;
-      
+
       while (p <= end && *p)
 	{
 	  for (i = 0; i < needle_len; i++)
 	    if (p[i] != needle[i])
 	      goto next;
-	  
+
 	  return (gchar *)p;
-	  
+
 	next:
 	  p++;
 	}
-      
+
       return NULL;
     }
 }
-#endif /* NOT_NEEDED_FOR_NAVIT */
 
 /**
  * g_strrstr:
@@ -2680,7 +2677,7 @@ g_strrstr (const gchar *haystack,
   gsize needle_len;
   gsize haystack_len;
   const gchar *p;
-      
+
   g_return_val_if_fail (haystack != NULL, NULL);
   g_return_val_if_fail (needle != NULL, NULL);
 
@@ -2692,7 +2689,7 @@ g_strrstr (const gchar *haystack,
 
   if (haystack_len < needle_len)
     return NULL;
-  
+
   p = haystack + haystack_len - needle_len;
 
   while (p >= haystack)
@@ -2700,17 +2697,16 @@ g_strrstr (const gchar *haystack,
       for (i = 0; i < needle_len; i++)
 	if (p[i] != needle[i])
 	  goto next;
-      
+
       return (gchar *)p;
-      
+
     next:
       p--;
     }
-  
+
   return NULL;
 }
 
-#if NOT_NEEDED_FOR_NAVIT
 /**
  * g_strrstr_len:
  * @haystack: a nul-terminated string.
@@ -2719,7 +2715,7 @@ g_strrstr (const gchar *haystack,
  *
  * Searches the string @haystack for the last occurrence
  * of the string @needle, limiting the length of the search
- * to @haystack_len. 
+ * to @haystack_len.
  *
  * Return value: a pointer to the found occurrence, or
  *    %NULL if not found.
@@ -2731,7 +2727,7 @@ g_strrstr_len (const gchar *haystack,
 {
   g_return_val_if_fail (haystack != NULL, NULL);
   g_return_val_if_fail (needle != NULL, NULL);
-  
+
   if (haystack_len < 0)
     return g_strrstr (haystack, needle);
   else
@@ -2746,7 +2742,7 @@ g_strrstr_len (const gchar *haystack,
 
       if (p < haystack + needle_len)
 	return NULL;
-	
+
       p -= needle_len;
 
       while (p >= haystack)
@@ -2754,9 +2750,9 @@ g_strrstr_len (const gchar *haystack,
 	  for (i = 0; i < needle_len; i++)
 	    if (p[i] != needle[i])
 	      goto next;
-	  
+
 	  return (gchar *)p;
-	  
+
 	next:
 	  p--;
 	}
@@ -2764,6 +2760,7 @@ g_strrstr_len (const gchar *haystack,
       return NULL;
     }
 }
+#if NOT_NEEDED_FOR_NAVIT
 
 
 /**
@@ -2783,7 +2780,7 @@ g_str_has_suffix (const gchar  *str,
 {
   int str_len;
   int suffix_len;
-  
+
   g_return_val_if_fail (str != NULL, FALSE);
   g_return_val_if_fail (suffix != NULL, FALSE);
 
@@ -2813,7 +2810,7 @@ g_str_has_prefix (const gchar  *str,
 {
   int str_len;
   int prefix_len;
-  
+
   g_return_val_if_fail (str != NULL, FALSE);
   g_return_val_if_fail (prefix != NULL, FALSE);
 
@@ -2822,7 +2819,7 @@ g_str_has_prefix (const gchar  *str,
 
   if (str_len < prefix_len)
     return FALSE;
-  
+
   return strncmp (str, prefix, prefix_len) == 0;
 }
 
@@ -2831,17 +2828,17 @@ g_str_has_prefix (const gchar  *str,
  * g_strip_context:
  * @msgid: a string
  * @msgval: another string
- * 
+ *
  * An auxiliary function for gettext() support (see Q_()).
- * 
+ *
  * Return value: @msgval, unless @msgval is identical to @msgid and contains
  *   a '|' character, in which case a pointer to the substring of msgid after
- *   the first '|' character is returned. 
+ *   the first '|' character is returned.
  *
  * Since: 2.4
  **/
 G_CONST_RETURN gchar *
-g_strip_context  (const gchar *msgid, 
+g_strip_context  (const gchar *msgid,
 		  const gchar *msgval)
 {
   if (msgval == msgid)
@@ -2850,7 +2847,7 @@ g_strip_context  (const gchar *msgid,
       if (c != NULL)
 	return c + 1;
     }
-  
+
   return msgval;
 }
 
@@ -2858,10 +2855,10 @@ g_strip_context  (const gchar *msgid,
 /**
  * g_strv_length:
  * @str_array: a %NULL-terminated array of strings.
- * 
- * Returns the length of the given %NULL-terminated 
+ *
+ * Returns the length of the given %NULL-terminated
  * string array @str_array.
- * 
+ *
  * Return value: length of @str_array.
  *
  * Since: 2.6
@@ -2907,8 +2904,8 @@ g_strv_length (gchar **str_array)
  * Since: 2.16
  */
 G_CONST_RETURN gchar *
-g_dpgettext (const gchar *domain, 
-             const gchar *msgctxtid, 
+g_dpgettext (const gchar *domain,
+             const gchar *msgctxtid,
              gsize        msgidoffset)
 {
   const gchar *translation;
@@ -2922,7 +2919,7 @@ g_dpgettext (const gchar *domain,
         return msgctxtid + msgidoffset;
 
       sep = strchr (msgctxtid, '|');
- 
+
       if (sep)
         {
           /* try with '\004' instead of '|', in case
@@ -2933,16 +2930,16 @@ g_dpgettext (const gchar *domain,
           tmp[sep - msgctxtid] = '\004';
 
           translation = g_dgettext (domain, tmp);
-   
+
           if (translation == tmp)
-            return sep + 1; 
+            return sep + 1;
         }
     }
 
   return translation;
 }
 
-/* This function is taken from gettext.h 
+/* This function is taken from gettext.h
  * GNU gettext uses '\004' to separate context and msgid in .mo files.
  */
 /**
@@ -2960,7 +2957,7 @@ g_dpgettext (const gchar *domain,
  * This uses g_dgettext() internally.  See that functions for differences
  * with dgettext() proper.
  *
- * This function differs from C_() in that it is not a macro and 
+ * This function differs from C_() in that it is not a macro and
  * thus you may use non-string-literals as context and msgid arguments.
  *
  * Returns: The translated string
@@ -2985,7 +2982,7 @@ g_dpgettext2 (const char *domain,
 
   translation = g_dgettext (domain, msg_ctxt_id);
 
-  if (translation == msg_ctxt_id) 
+  if (translation == msg_ctxt_id)
     {
       /* try the old way of doing message contexts, too */
       msg_ctxt_id[msgctxt_len - 1] = '|';
@@ -3037,7 +3034,7 @@ _g_dgettext_should_translate (void)
 	  0 != strncmp (translate_locale, "en_", 3) &&
 	  0 != strcmp (translate_locale, "C"))
         should_translate = FALSE;
-      
+
       g_once_init_leave (&translate,
 			 should_translate ?
 			 SHOULD_TRANSLATE :

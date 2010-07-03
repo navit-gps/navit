@@ -190,10 +190,8 @@ typedef unsigned __int64 guintptr;
 
 #define G_GNUC_INTERNAL
 
-#if NOT_NEEDED_FOR_NAVIT
 #define G_THREADS_ENABLED
 #define G_THREADS_IMPL_WIN32
-#endif /* NOT_NEEDED_FOR_NAVIT */
 typedef struct _GMutex* GStaticMutex;
 #define G_STATIC_MUTEX_INIT NULL
 #define g_static_mutex_get_mutex(mutex) \
