@@ -45,7 +45,7 @@
 #include <winbase.h>
 #endif
 
-char *version=PACKAGE_VERSION" "SVN_VERSION""NAVIT_VARIANT; 
+char *version=PACKAGE_VERSION" "SVN_VERSION""NAVIT_VARIANT;
 int main_argc;
 char **main_argv;
 
@@ -71,12 +71,14 @@ int main_real(int argc, char **argv)
 
 #ifdef HAVE_GLIB
 	event_glib_init();
+#else
+	_g_slice_thread_init_nomessage();
 #endif
 	atom_init();
 	main_init(argv[0]);
 	main_init_nls();
 	debug_init(argv[0]);
-	
+
 	cp = getenv("NAVIT_LOGFILE");
 	if (cp)
 		debug_set_logfile(cp);
@@ -105,7 +107,7 @@ int main_real(int argc, char **argv)
 				exit(0);
 				break;
 			case 'v':
-				printf("%s %s\n", "navit", version); 
+				printf("%s %s\n", "navit", version);
 				exit(0);
 				break;
 			case 'c':

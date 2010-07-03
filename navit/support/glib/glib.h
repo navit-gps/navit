@@ -28,12 +28,13 @@
 #define __G_LIB_H__
 
 #define __GLIB_H_INSIDE__
+#include <glib/gerror.h>
 #include <glib/fake.h>
 #include <glib/ghash.h>
-#include <glib/gerror.h>
 #include <glib/gmessages.h>
 #include <glib/gstrfuncs.h>
 #include <glib/gunicode.h>
+#include <glib/gutils.h>
 
 #undef __GLIB_H_INSIDE__
 

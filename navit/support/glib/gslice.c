@@ -99,13 +99,12 @@
  * [4] allocating ca. 8 chunks per block/page keeps a good balance between
  *     external and internal fragmentation (<= 12.5%). [Bonwick94]
  */
-#if NOT_NEEDED_FOR_NAVIT
 
 /* --- macros and constants --- */
 #define LARGEALIGNMENT          (256)
 #define P2ALIGNMENT             (2 * sizeof (gsize))                            /* fits 2 pointers (assumed to be 2 * GLIB_SIZEOF_SIZE_T below) */
 #define ALIGN(size, base)       ((base) * (gsize) (((size) + (base) - 1) / (base)))
-#define NATIVE_MALLOC_PADDING   P2ALIGNMENT                                     /* per-page padding left for native malloc(3) see [1] */
+#define NATIVE_MALLOC_PADDING   0                                     /* per-page padding left for native malloc(3) see [1] */
 #define SLAB_INFO_SIZE          P2ALIGN (sizeof (SlabInfo) + NATIVE_MALLOC_PADDING)
 #define MAX_MAGAZINE_SIZE       (256)                                           /* see [3] and allocator_get_magazine_threshold() for this */
 #define MIN_MAGAZINE_SIZE       (4)
@@ -197,6 +196,8 @@ static int      smc_notify_free   (void   *pointer,
 /* --- variables --- */
 static GPrivate   *private_thread_memory = NULL;
 static gsize       sys_page_size = 0;
+static gsize       sys_valignment = ((32*1024*1024));
+static guint8      *virtual_mem = 0;
 static Allocator   allocator[1] = { { 0, }, };
 static SliceConfig slice_config = {
   FALSE,        /* always_malloc */
@@ -276,6 +277,7 @@ static void
 slice_config_init (SliceConfig *config)
 {
   /* don't use g_malloc/g_message here */
+#if NOT_NEEDED_FOR_NAVIT
   gchar buffer[1024];
   const gchar *val = _g_getenv_nomalloc ("G_SLICE", buffer);
   const GDebugKey keys[] = {
@@ -283,11 +285,14 @@ slice_config_init (SliceConfig *config)
     { "debug-blocks",  1 << 1 },
   };
   gint flags = !val ? 0 : g_parse_debug_string (val, keys, G_N_ELEMENTS (keys));
+#endif
   *config = slice_config;
+#if NOT_NEEDED_FOR_NAVIT
   if (flags & (1 << 0))         /* always-malloc */
     config->always_malloc = TRUE;
   if (flags & (1 << 1))         /* debug-blocks */
     config->debug_blocks = TRUE;
+#endif
 }
 
 static void
@@ -302,9 +307,14 @@ g_slice_init_nomessage (void)
     SYSTEM_INFO system_info;
     GetSystemInfo (&system_info);
     sys_page_size = system_info.dwPageSize;
+    virtual_mem = VirtualAlloc (NULL, sys_valignment, MEM_RESERVE, PAGE_NOACCESS);
+//    sys_valignment = system_info.dwAllocationGranularity;
+	//sys_valignment = 2*1024*1024 + sys_page_size;
+    printf("SPAGE_SIZE: %d, SVALIGN:%d\n", sys_page_size, sys_valignment);
   }
 #else
   sys_page_size = sysconf (_SC_PAGESIZE); /* = sysconf (_SC_PAGE_SIZE); = getpagesize(); */
+  sys_valignment = sys_page_size;
 #endif
   mem_assert (sys_page_size >= 2 * LARGEALIGNMENT);
   mem_assert ((sys_page_size & (sys_page_size - 1)) == 0);
@@ -794,12 +804,10 @@ thread_memory_magazine2_free (ThreadMemory *tmem,
   mag->count++;
 }
 
-#endif /* NOT_NEEDED_FOR_NAVIT */
 /* --- API functions --- */
 gpointer
 g_slice_alloc (gsize mem_size)
 {
-#if NOT_NEEDED_FOR_NAVIT
   gsize chunk_size;
   gpointer mem;
   guint acat;
@@ -828,9 +836,6 @@ g_slice_alloc (gsize mem_size)
   if (G_UNLIKELY (allocator->config.debug_blocks))
     smc_notify_alloc (mem, mem_size);
   return mem;
-#else /* NOT_NEEDED_FOR_NAVIT */
-	return g_malloc(mem_size);
-#endif /* NOT_NEEDED_FOR_NAVIT */
 }
 
 gpointer
@@ -856,7 +861,6 @@ void
 g_slice_free1 (gsize    mem_size,
                gpointer mem_block)
 {
-#if NOT_NEEDED_FOR_NAVIT
   gsize chunk_size = P2ALIGN (mem_size);
   guint acat = allocator_categorize (chunk_size);
   if (G_UNLIKELY (!mem_block))
@@ -892,9 +896,6 @@ g_slice_free1 (gsize    mem_size,
         memset (mem_block, 0, mem_size);
       g_free (mem_block);
     }
-#else /* NOT_NEEDED_FOR_NAVIT */
-	g_free(mem_block);
-#endif /* NOT_NEEDED_FOR_NAVIT */
 }
 
 void
@@ -903,7 +904,6 @@ g_slice_free_chain_with_offset (gsize    mem_size,
                                 gsize    next_offset)
 {
   gpointer slice = mem_chain;
-#if NOT_NEEDED_FOR_NAVIT
   /* while the thread magazines and the magazine cache are implemented so that
    * they can easily be extended to allow for free lists containing more free
    * lists for the first level nodes, which would allow O(1) freeing in this
@@ -960,24 +960,19 @@ g_slice_free_chain_with_offset (gsize    mem_size,
       g_mutex_unlock (allocator->slab_mutex);
     }
   else                                  /* delegate to system malloc */
-#else /* NOT_NEEDED_FOR_NAVIT */
     while (slice)
       {
         guint8 *current = slice;
         slice = *(gpointer*) (current + next_offset);
-#if NOT_NEEDED_FOR_NAVIT
         if (G_UNLIKELY (allocator->config.debug_blocks) &&
             !smc_notify_free (current, mem_size))
           abort();
-#endif /* NOT_NEEDED_FOR_NAVIT */
         if (G_UNLIKELY (g_mem_gc_friendly))
           memset (current, 0, mem_size);
         g_free (current);
       }
-#endif /* NOT_NEEDED_FOR_NAVIT */
 }
 
-#if NOT_NEEDED_FOR_NAVIT
 /* --- single page allocator --- */
 static void
 allocator_slab_stack_push (Allocator *allocator,
@@ -1163,7 +1158,15 @@ allocator_memalign (gsize alignment,
   mem_assert (alignment == sys_page_size);
   mem_assert (memsize <= sys_page_size);
   if (!compat_valloc_trash)
+#ifdef G_OS_WIN32
     {
+      aligned_memory = VirtualAlloc (virtual_mem, sys_page_size, MEM_COMMIT, PAGE_READWRITE);
+      virtual_mem += sys_page_size;
+    }
+    else
+#else
+    {
+
       const guint n_pages = 16;
       guint8 *mem = malloc (n_pages * sys_page_size);
       err = errno;
@@ -1177,7 +1180,8 @@ allocator_memalign (gsize alignment,
             g_trash_stack_push (&compat_valloc_trash, amem + i * sys_page_size);
         }
     }
-  aligned_memory = g_trash_stack_pop (&compat_valloc_trash);
+#endif
+		aligned_memory = g_trash_stack_pop (&compat_valloc_trash);
 #endif
   if (!aligned_memory)
     errno = err;
@@ -1205,7 +1209,7 @@ mem_error (const char *format,
   /* at least, put out "MEMORY-ERROR", in case we segfault during the rest of the function */
   fputs ("\n***MEMORY-ERROR***: ", stderr);
   pname = g_get_prgname();
-  fprintf (stderr, "%s[%ld]: GSlice: ", pname ? pname : "", (long)getpid());
+  fprintf (stderr, "%s: GSlice: ", pname ? pname : "");
   va_start (args, format);
   vfprintf (stderr, format, args);
   va_end (args);
@@ -1463,13 +1467,13 @@ g_slice_debug_tree_statistics (void)
   else
     fprintf (stderr, "GSlice: MemChecker: root=NULL\n");
   g_mutex_unlock (smc_tree_mutex);
-  
+
   /* sample statistics (beast + GSLice + 24h scripted core & GUI activity):
    *  PID %CPU %MEM   VSZ  RSS      COMMAND
    * 8887 30.3 45.8 456068 414856   beast-0.7.1 empty.bse
    * $ cat /proc/8887/statm # total-program-size resident-set-size shared-pages text/code data/stack library dirty-pages
    * 114017 103714 2354 344 0 108676 0
-   * $ cat /proc/8887/status 
+   * $ cat /proc/8887/status
    * Name:   beast-0.7.1
    * VmSize:   456068 kB
    * VmLck:         0 kB
@@ -1490,4 +1494,3 @@ g_slice_debug_tree_statistics (void)
 
 #define __G_SLICE_C__
 #include "galiasdef.c"
-#endif /* NOT_NEEDED_FOR_NAVIT */
