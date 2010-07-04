@@ -42,7 +42,8 @@ CRITICAL_SECTION* g_mutex_new_navit(void)
 #endif
 #endif
 
-int g_private_new_navit ()
+GPrivate
+g_private_new_navit ()
 {
 	int dwTlsIndex;
 #if HAVE_API_WIN32_BASE
@@ -50,10 +51,14 @@ int g_private_new_navit ()
 	if ((dwTlsIndex = TlsAlloc()) == TLS_OUT_OF_INDEXES)
       printf(0, "TlsAlloc failed");
 	printf("return dwTlsIndex = 0x%x\n",dwTlsIndex);
-#else
-#warning g_private implementation is missing
-#endif
 	return dwTlsIndex;
+#else
+	pthread_key_t key;
+	if (pthread_key_create(&key, NULL)) {
+		fprintf(stderr,"pthread_key_create failed\n");
+	}
+	return key;	
+#endif
 }
 
 /**
