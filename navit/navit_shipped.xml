@@ -709,6 +709,18 @@ Navigation</text></img>
 				<itemgra item_types="selected_line" order="18">
 					<polyline color="#ba00b8" width="530"/>
 				</itemgra>
+				<itemgra item_types="forest_way_1" order="10-">
+					<polyline color="#0070c0" width="6"/>
+				</itemgra>
+				<itemgra item_types="forest_way_2" order="10-">
+					<polyline color="#ff0000" width="3"/>
+				</itemgra>
+				<itemgra item_types="forest_way_3" order="10-">
+					<polyline color="#ff0000" width="1" dash="2,4"/>
+				</itemgra>
+				<itemgra item_types="forest_way_4" order="10-">
+					<polyline color="#119a2e" width="1" dash="4,10"/>
+				</itemgra>
 				<itemgra item_types="street_nopass" order="10-">
 					<polyline color="#000000" width="1"/>
 				</itemgra>
