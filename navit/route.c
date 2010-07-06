@@ -1590,6 +1590,12 @@ route_get_traffic_distortion(struct route_graph_segment *seg, struct route_traff
 	return 0;
 }
 
+static int
+route_through_traffic_allowed(struct vehicleprofile *profile, struct route_graph_segment *seg)
+{
+	return (seg->data.flags & AF_THROUGH_TRAFFIC_LIMIT) == 0;
+}
+
 /**
  * @brief Returns the "costs" of driving from point from over segment over in direction dir
  *
@@ -1603,6 +1609,8 @@ route_get_traffic_distortion(struct route_graph_segment *seg, struct route_traff
 static int
 route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, struct route_graph_segment *over, int dir)
 {
+	int ret;
+	struct route_traffic_distortion dist,*distp=NULL;
 #if 0
 	dbg(0,"flags 0x%x mask 0x%x flags 0x%x\n", over->flags, dir >= 0 ? profile->flags_forward_mask : profile->flags_reverse_mask, profile->flags);
 #endif
@@ -1614,14 +1622,16 @@ route_value_seg(struct vehicleprofile *profile, struct route_graph_point *from, 
 		return INT_MAX;
 	if (from && from->seg == over)
 		return INT_MAX;
-	if (over->data.flags & AF_THROUGH_TRAFFIC_LIMIT)
-		return profile->through_traffic_penalty;
-	if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION)) {
-		struct route_traffic_distortion dist;
-		if (route_get_traffic_distortion(over, &dist))
-			return route_time_seg(profile, &over->data, &dist);
+	if ((over->start->flags & RP_TRAFFIC_DISTORTION) && (over->end->flags & RP_TRAFFIC_DISTORTION) && 
+		route_get_traffic_distortion(over, &dist)) {
+			distp=&dist;
 	}
-	return route_time_seg(profile, &over->data, NULL);
+	ret=route_time_seg(profile, &over->data, distp);
+	if (ret == INT_MAX)
+		return ret;
+	if (!route_through_traffic_allowed(profile, over) && from && route_through_traffic_allowed(profile, from->seg)) 
+		ret+=profile->through_traffic_penalty;
+	return ret;
 }
 
 /**
