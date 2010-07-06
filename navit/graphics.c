@@ -1687,7 +1687,6 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 				if (item_is_custom_poi(di->item)) {
 					char *icon;
 					char *src;
-					dbg(0,"custom\n");
 					if (img)
 						graphics_image_free(dc->gra, img);
 					src=e->u.icon.src;
@@ -1699,11 +1698,11 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 				} else
 					path=graphics_icon_path(e->u.icon.src);	
 				img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
-				g_free(path);
 				if (img)
 					dc->img=img;
 				else
-					dbg(0,"failed to load icon '%s'\n", e->u.icon.src);
+					dbg(0,"failed to load icon '%s'\n", path);
+				g_free(path);
 			}
 			if (img) {
 				p.x=pa[0].x - img->hot.x;
