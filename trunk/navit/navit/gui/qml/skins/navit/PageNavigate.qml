@@ -1,4 +1,5 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
     id: page
@@ -59,7 +60,7 @@ Rectangle {
 	    anchors.left:btnPosition.right;anchors.leftMargin: gui.height/6
         }
         ButtonIcon {
-            id: btnAddBookmark; text: "Add as\na bookmark"; icon: "gui_active.svg"; onClicked: gui.setPage("PageBookmarksAdd.qml")
+            id: btnAddBookmark; text: "Add as\na bookmark"; icon: "gui_active.svg"; onClicked: Navit.load("PageBookmarksAdd.qml");
 	    opacity: 0
 	    anchors.top: nameTxt.bottom;anchors.topMargin:gui.height/32
 	    anchors.left:btnDestination.right;anchors.leftMargin: gui.height/6
@@ -70,16 +71,16 @@ Rectangle {
 	anchors.top: btnDestination.bottom;anchors.topMargin:gui.height/32
         spacing: gui.height/6
         ButtonIcon {
-            id: btnBookmarks; text: "Bookmarks"; icon: "gui_bookmark.svg"; onClicked: {bookmarks.moveRoot(); gui.setPage("PageBookmarks.qml"); }
+            id: btnBookmarks; text: "Bookmarks"; icon: "gui_bookmark.svg"; onClicked: {bookmarks.moveRoot(); Navit.load("PageBookmarks.qml"); }
         }
         ButtonIcon {
-            id: btnPOI; text: "Nearest\nPOIs"; icon: "attraction.svg"; onClicked: gui.setPage("PagePoi.qml");
+            id: btnPOI; text: "Nearest\nPOIs"; icon: "attraction.svg"; onClicked: Navit.load("PagePoi.qml");
         }
         ButtonIcon {
-            id: btnSearch; text: "Address\nSearch"; icon: "gui_town.svg"; onClicked: gui.setPage("PageSearch.qml")
+            id: btnSearch; text: "Address\nSearch"; icon: "gui_town.svg"; onClicked: Navit.load("PageSearch.qml");
         }
         ButtonIcon {
-            id: btnInfo; text: "Point\ninformation"; icon: "gui_menu.svg"; onClicked: gui.setPage("PagePointInfo.qml")
+            id: btnInfo; text: "Point\ninformation"; icon: "gui_menu.svg"; onClicked: Navit.load("PagePointInfo.qml");
         }
     }
 

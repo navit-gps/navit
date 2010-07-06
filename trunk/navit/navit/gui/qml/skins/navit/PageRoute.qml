@@ -1,4 +1,5 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
     id: page
@@ -81,11 +82,11 @@ Rectangle {
             id: btnView; text: "View position\non map"; icon: "gui_maps.svg"; onClicked: { navit.getPosition();navit.setCenter();gui.backToMap(); }
         }
         ButtonIcon {
-            id: btnPoi; text: "POIs near\nPosition"; icon: "attraction.svg"; onClicked: gui.setPage("PagePoi.qml");
+            id: btnPoi; text: "POIs near\nPosition"; icon: "attraction.svg"; onClicked: Navit.load("PagePoi.qml");
 	    opacity: 0;
         }
         ButtonIcon {
-            id: btnStop; text: "Stop"; icon: "gui_stop.svg"; onClicked: { navit.stopNavigation(); gui.backToPrevPage(); }
+            id: btnStop; text: "Stop"; icon: "gui_stop.svg"; onClicked: { navit.stopNavigation(); Navit.back(); }
 	    opacity: 0;
         }
     }

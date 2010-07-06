@@ -1,4 +1,5 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
     id: page
@@ -24,13 +25,13 @@ Rectangle {
         anchors.bottom: parent.verticalCenter; anchors.bottomMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnDisplay; text: "Display"; icon: "gui_display.svg"; onClicked: gui.setPage("PageSettingsDisplay.qml")
+            id: btnDisplay; text: "Display"; icon: "gui_display.svg"; onClicked: Navit.load("PageSettingsDisplay.qml");
         }
         ButtonIcon {
             id: btnMap; text: "Map"; icon: "gui_maps.svg"; onClicked: console.log("Implement me!");
         }
         ButtonIcon {
-            id: btnVehicle; text: "Vehicle"; icon: "gui_vehicle.svg"; onClicked: gui.setPage("PageSettingsVehicle.qml")
+            id: btnVehicle; text: "Vehicle"; icon: "gui_vehicle.svg"; onClicked: Navit.load("PageSettingsVehicle.qml");
         }
     }
     Grid {
@@ -39,13 +40,13 @@ Rectangle {
         anchors.top: parent.verticalCenter; anchors.topMargin: gui.height/16;
         spacing: gui.width/12
         ButtonIcon {
-            id: btnRules; text: "Rules"; icon: "gui_rules.svg"; onClicked: gui.setPage("PageSettingsRules.qml")
+            id: btnRules; text: "Rules"; icon: "gui_rules.svg"; onClicked: Navit.load("PageSettingsRules.qml");
         }
         ButtonIcon {
-            id: btnTools; text: "Tools"; icon: "gui_tools.svg"; onClicked: gui.setPage("PageSettingsTools.qml")
+            id: btnTools; text: "Tools"; icon: "gui_tools.svg"; onClicked: Navit.load("PageSettingsTools.qml");
         }
         ButtonIcon {
-            id: btnAbout; text: "About"; icon: "gui_about.svg"; onClicked: gui.setPage("PageAbout.qml")
+            id: btnAbout; text: "About"; icon: "gui_about.svg"; onClicked: Navit.load("PageAbout.qml");
         }
     }
 

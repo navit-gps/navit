@@ -1,4 +1,5 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
     id: page
@@ -23,7 +24,7 @@ Rectangle {
 	    bookmarkReload();
 	} else {
 	   bookmarks.setPoint(itemName);
-	   gui.setPage("PageNavigate.qml");
+	   pageLoader.source="PageNavigate.qml";
 	}
     }
 
