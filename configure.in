@@ -711,7 +711,7 @@ if test "x$enable_nls" = "xyes"; then
         echo "xgettext isn't GNU version"
         XGETTEXT=""
     else
-	if $XGETTEXT --help 2>&1 | grep Glade >/dev/null; then
+	if echo '<test/>' | $XGETTEXT -L Glade - ; then
 	    xgettext_glade=yes
 	fi
     fi
