@@ -1,17 +1,20 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
 
-    function onStartup() {    
-       	if ( gui.returnSource.split('/').length > 2  ) {
+    function onStartup(currentPage) {    
+	btnBack.opacity=0;
+	btnQuit.opacity=0;
+	console.log(gui.lengthPage());
+       	if ( gui.lengthPage() > 1  ) {
 		btnBack.opacity=1;
 	}
-	if ( gui.returnSource == "/main.qml" ) {
-		btnQuit.opacity=1;
+	if ( gui.lengthPage() == 1 && currentPage == "PageMain.qml" ) {
+		btnQuit.opacity=1;		
 	}
     }
 
-   Component.onCompleted: onStartup();
 
     ButtonIcon {
         id: btnMap; icon: "gui_map.svg"; text:"Map"; onClicked: gui.backToMap();
@@ -20,7 +23,7 @@ Rectangle {
     }
 
     ButtonIcon {
-        id: btnBack; icon: "gui_arrow_left.svg"; text: "Back"; onClicked: gui.backToPrevPage();
+        id: btnBack; icon: "gui_arrow_left.svg"; text: "Back"; onClicked: Navit.back();
         anchors.right: parent.right; anchors.leftMargin: 3
         anchors.bottom: parent.bottom; anchors.bottomMargin: 3
 	opacity: 0;

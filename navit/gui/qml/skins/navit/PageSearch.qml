@@ -1,4 +1,5 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
     id: page
@@ -39,7 +40,7 @@ Rectangle {
 	        color: "White"; font.pointSize: gui.height/32; horizontalAlignment: Qt.AlignHCenter
 	    }
             ButtonIcon {
-                id: btnCountry; text: search.countryName; icon: "country_"+search.countryISO2+".svgz"; onClicked: { search.searchContext="country"; gui.setPage("PageSearchSelector.qml"); }
+                id: btnCountry; text: search.countryName; icon: "country_"+search.countryISO2+".svgz"; onClicked: { search.searchContext="country"; Navit.load("PageSearchSelector.qml"); }
             }            
 	}
 	Grid {
@@ -51,7 +52,7 @@ Rectangle {
 	        color: "White"; font.pointSize: gui.height/32; horizontalAlignment: Qt.AlignHCenter
 	    }
             ButtonIcon {
-                id: btnCity; text: search.townName; icon: "gui_bookmark.svg"; onClicked: { search.searchContext="town"; gui.setPage("PageSearchSelector.qml"); }
+                id: btnCity; text: search.townName; icon: "gui_bookmark.svg"; onClicked: { search.searchContext="town"; Navit.load("PageSearchSelector.qml"); }
             }
 	}
     }
@@ -70,7 +71,7 @@ Rectangle {
 	        color: "White"; font.pointSize: gui.height/32; horizontalAlignment: Qt.AlignHCenter
 	    }
             ButtonIcon {
-                id: btnStreet; text: search.streetName; icon: "gui_town.svg"; onClicked: { search.searchContext="street"; gui.setPage("PageSearchSelector.qml"); }
+                id: btnStreet; text: search.streetName; icon: "gui_town.svg"; onClicked: { search.searchContext="street"; Navit.load("PageSearchSelector.qml"); }
             }
        }
        Grid {

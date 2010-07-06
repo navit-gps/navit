@@ -1,4 +1,5 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
     id: page
