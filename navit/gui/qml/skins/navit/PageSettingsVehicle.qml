@@ -1,4 +1,5 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
     id: page
@@ -43,7 +44,7 @@ CommonHighlight { id: listHighlight}
 		anchors.left: parent.left; width: page.width/2;height: page.height/2
 	}
 	ButtonIcon {
-            id: btnVehicle; text: "Vehicle options"; icon: "gui_vehicle.svg"; onClicked: gui.setPage("PageSettingsVehicleOptions.qml")
+            id: btnVehicle; text: "Vehicle options"; icon: "gui_vehicle.svg"; onClicked: Navit.load("PageSettingsVehicleOptions.qml");
 	    anchors.verticalCenter: vehicleList.verticalCenter; anchors.leftMargin: gui.width/32
 	    anchors.left: vehicleList.right;
         }

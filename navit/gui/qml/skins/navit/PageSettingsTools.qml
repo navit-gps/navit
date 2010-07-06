@@ -1,4 +1,5 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
     id: page
@@ -23,7 +24,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter;
         anchors.verticalCenter: parent.verticalCenter; 
         ButtonIcon {
-            id: btnDisplay; text: "Locale"; icon: "gui_actions.svg"; onClicked: gui.setPage("PageSettingsLocale.qml")
+            id: btnDisplay; text: "Locale"; icon: "gui_actions.svg"; onClicked: Navit.load("PageSettingsLocale.qml");
         }
     }
 

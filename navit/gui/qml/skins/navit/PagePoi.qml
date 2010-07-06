@@ -1,4 +1,5 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
     id: page
@@ -125,7 +126,7 @@ Rectangle {
 	     MouseArea {
 	   		id:delegateMouse
 			anchors.fill: parent
-			onClicked: { point.setNewPoint(itemValue); gui.returnSource="/main.qml"; gui.setPage("PageNavigate.qml"); }
+			onClicked: { point.setNewPoint(itemValue); gui.returnSource="/main.qml"; Navit.load("PageNavigate.qml"); }
 	     }
          }
      }

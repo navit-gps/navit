@@ -6,7 +6,7 @@ Rectangle {
     function pageOpen(command) {
         if ( command=="menu") {
 		gui.returnSource="";
-		gui.setPage("main.qml");
+		Loader {source: "main.qml"};
 	}
 	if (command=="quit") {
 		navit.quit();

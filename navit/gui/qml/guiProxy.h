@@ -5,7 +5,6 @@ class NGQProxyGui : public NGQProxy {
     Q_OBJECT;
 
 	Q_PROPERTY(QString iconPath READ iconPath CONSTANT);
-	Q_PROPERTY(QString returnSource READ returnSource WRITE setReturnSource);
 
 	Q_PROPERTY(QString commandFunction READ commandFunction CONSTANT);
 
@@ -15,6 +14,9 @@ class NGQProxyGui : public NGQProxy {
 
 	Q_PROPERTY(int width READ width WRITE setWidth NOTIFY widthSignal STORED false);
 	Q_PROPERTY(int height READ height WRITE setHeight NOTIFY heightSignal STORED false);
+
+private:
+	QStringList returnPath;
 
 public:
     NGQProxyGui(struct gui_priv* this_,QObject *parent) : NGQProxy(this_, parent) {
@@ -43,43 +45,32 @@ public:
 		this->object->guiWidget->rootContext()->setContextProperty("point",this->object->currentPoint);
 	}
 	void processCommand(QString function) {
+#if 0
+		QDeclarativeExpression commandJS(this->object->guiWidget->rootContext(),this->object->guiWidget->rootObject(),QString());
+		commandJS.setSourceLocation("command.js",0);
 		this->function=function;
-		this->setPage("command.qml",true);
+		commandJS.evaluate();
+#endif
 	}
 signals:
 	void widthSignal(int);
 	void heightSignal(int);
 public slots:
-	void setPage(QString page,bool hidden=false) {
-		this->source+="/"+page;
-
-		if (this->object->guiWidget) {
-			if (this->object->prevGuiWidget) {
-				this->object->switcherWidget->removeWidget(this->object->prevGuiWidget);
-				delete this->object->prevGuiWidget;
-			}
-			this->object->prevGuiWidget=this->object->guiWidget;
-		}
-		this->object->guiWidget = new QDeclarativeView(NULL);
-		this->object->guiWidget->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-		
-		this->object->guiWidget->rootContext()->setContextProperty("gui",this->object->guiProxy);
-		this->object->guiWidget->rootContext()->setContextProperty("navit",this->object->navitProxy);
-		this->object->guiWidget->rootContext()->setContextProperty("vehicle",this->object->vehicleProxy);
-		this->object->guiWidget->rootContext()->setContextProperty("search",this->object->searchProxy);
-		this->object->guiWidget->rootContext()->setContextProperty("bookmarks",this->object->bookmarksProxy);
-		this->object->guiWidget->rootContext()->setContextProperty("point",this->object->currentPoint);
-
-		this->object->guiWidget->setSource(QUrl::fromLocalFile(QString(this->object->source)+"/"+this->object->skin+"/"+page));
-
-		if (!hidden) {
-			//we render commands page hidden, so the screen doesn't flicks.
-			this->object->switcherWidget->addWidget(this->object->guiWidget);
-			this->object->switcherWidget->setCurrentWidget(this->object->guiWidget);
-			this->object->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
-		}
+	void pushPage(QString page) {
+		returnPath.push_front(page);
 	}
-
+	QString popPage() {		
+		if (!returnPath.empty()) {
+			if (returnPath.length()>1) {
+				returnPath.pop_front();
+			}
+			return returnPath.first();
+		}
+		return QString();
+	}
+	int lengthPage() {
+		return returnPath.length();
+	}
 	void backToMap() {
         if (this->object->graphicsWidget) {
 				this->object->graphicsWidget->setFocus(Qt::ActiveWindowFocusReason);
@@ -87,27 +78,10 @@ public slots:
 				this->object->graphicsWidget->show();
         }
     }
-	void backToPrevPage() {
-		QStringList returnList=this->source.split(QString("/"), QString::SkipEmptyParts);
-		QString returnPage;
-		if (returnList.size()>1) {
-			returnList.takeLast();//Remove current element
-			returnPage=returnList.takeLast(); //Set previous element as return page and remove it from the list
-		}
-		if (returnList.size()>0) {
-			this->source=returnList.join(QString("/"));
-			if (!this->source.startsWith("/")) {
-				this->source.prepend(QString("/"));
-			}
-		} else {
-			this->source.clear();
-		}
-		this->setPage(returnPage);
-	}
 	void switchToMenu(struct point* p) {
 		if (!this->object->lazy) {
-			this->setReturnSource(QString(""));
-			this->setPage("main.qml");
+			this->returnPath.clear();
+			this->object->guiWidget->setSource(QUrl::fromLocalFile(QString(this->object->source)+"/"+this->object->skin+"/main.qml"));
 		}
 		this->setNewPoint(p,MapPoint);
 		this->object->guiWidget->setFocus(Qt::ActiveWindowFocusReason);
@@ -117,12 +91,6 @@ public slots:
 	//Properties
 	QString iconPath() {
 		return QString(this->object->icon_src);
-	}
-	QString returnSource() {
-		return this->source;
-	}
-	void setReturnSource(QString returnSource) {
-		this->source=returnSource;
 	}
 	int width() {
 		return this->object->w;

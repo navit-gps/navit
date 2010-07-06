@@ -1,4 +1,5 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
       id: page
@@ -10,17 +11,17 @@ Rectangle {
       function setSearchResult(listValue) {
           if (search.searchContext=="country") {
 	      search.countryName=listValue;
-	      gui.backToPrevPage();
+	      Navit.back;
 	  }
           if (search.searchContext=="town") {
 	      search.townName=listValue;
-	      gui.backToPrevPage();
+	      Navit.back();
 	  }
           if (search.searchContext=="street") {
 	      search.streetName=listValue;
 	      search.setPointToResult();
-	      gui.returnSource="/main.qml";
-	      gui.setPage("PageNavigate.qml");
+	      Navit.returnSource="main.qml";
+	      Navit.load("PageNavigate.qml");
 	  }
       }
 

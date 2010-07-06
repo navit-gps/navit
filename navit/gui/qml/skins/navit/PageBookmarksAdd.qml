@@ -1,4 +1,5 @@
 import Qt 4.7
+import "pagenavigation.js" as Navit
 
 Rectangle {
     id: page
@@ -10,7 +11,7 @@ Rectangle {
     Timer {
 	id: backTimer
         interval: 2000;
-        onTriggered: gui.backToPrevPage();
+        onTriggered: Navit.back();
     }
 
     function add(description) {

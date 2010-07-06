@@ -66,13 +66,8 @@ struct gui_priv {
 	struct graphics *gra;
 	QWidget *mainWindow;
 	QWidget *graphicsWidget;
-#if QT_VERSION < 0x040700
- 	QmlView *guiWidget;
-	QmlView *prevGuiWidget;
-#else
 	QDeclarativeView *guiWidget;
 	QDeclarativeView *prevGuiWidget;
-#endif
 	QStackedLayout *switcherWidget;
 	struct callback *button_cb;
 	struct callback *motion_cb;
@@ -309,10 +304,21 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	if (this_->graphicsWidget == NULL ) {
 	    this_->graphicsWidget = new QLabel(QString("Sorry, current graphics type is incompatible with this gui."));
 	}
-        this_->switcherWidget->addWidget(this_->graphicsWidget);
+    this_->switcherWidget->addWidget(this_->graphicsWidget);
 	
 	//Instantiate qml components
-	this_->guiProxy->setPage(QString("main.qml"));
+    this_->guiWidget = new QDeclarativeView(NULL);
+	this_->guiWidget->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+		
+	this_->guiWidget->rootContext()->setContextProperty("gui",this_->guiProxy);
+	this_->guiWidget->rootContext()->setContextProperty("navit",this_->navitProxy);
+	this_->guiWidget->rootContext()->setContextProperty("vehicle",this_->vehicleProxy);
+	this_->guiWidget->rootContext()->setContextProperty("search",this_->searchProxy);
+	this_->guiWidget->rootContext()->setContextProperty("bookmarks",this_->bookmarksProxy);
+	this_->guiWidget->rootContext()->setContextProperty("point",this_->currentPoint);
+
+	this_->guiWidget->setSource(QUrl::fromLocalFile(QString(this_->source)+"/"+this_->skin+"/main.qml"));
+	this_->switcherWidget->addWidget(this_->guiWidget);
 
 	//Switch to graphics
 	navit_draw(this_->nav);
