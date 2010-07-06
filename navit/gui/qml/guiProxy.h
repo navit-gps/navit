@@ -45,9 +45,9 @@ public:
 		this->object->guiWidget->rootContext()->setContextProperty("point",this->object->currentPoint);
 	}
 	void processCommand(QString function) {
-		QDeclarativeExpression commandJS(this->object->guiWidget->rootContext(),QString(),qobject_cast<QObject*>(this->object->guiWidget->rootObject()));
-		commandJS.setSourceLocation("command.js",0);
-		this->function=function;
+		//QDeclarativeExpression commandJS(this->object->guiWidget->rootContext(),QString(),qobject_cast<QObject*>(this->object->guiWidget->rootObject()));
+		//commandJS.setSourceLocation("command.js",0);
+		//this->function=function;
 		//commandJS.eval(qobject_cast<QObject*>(this->object->guiWidget->rootObject()));		
 	}
 signals:
