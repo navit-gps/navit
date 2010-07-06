@@ -4,7 +4,7 @@
 #include "debug.h"
 
 
-static char buffer[400000];
+static char buffer[800000];
 struct item_bin *item_bin=(struct item_bin *)(void *)buffer;
 
 struct item_bin *
