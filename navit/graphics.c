@@ -1932,7 +1932,6 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 					displaylist->dc.maxlen=max*2;
 				}
 				if (item_is_custom_poi(*item)) {
-					dbg(0,"custom\n");
 					if (item_attr_get(item, attr_icon_src, &attr2))
 						labels[1]=map_convert_string(displaylist->m, attr2.u.str);
 					else
