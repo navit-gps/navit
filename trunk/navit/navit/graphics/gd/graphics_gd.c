@@ -494,6 +494,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 				image_setup(gr);
 			}
 		}
+#ifdef HAVE_GRAPHICS_GD_PNG
 #ifdef HAVE_SOCKET
 		if (gr->flags & 4) {
 			int size, size_written;
@@ -518,6 +519,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 			}
 			gdFree(data);
 		}
+#endif
 #endif
 	}
 }
