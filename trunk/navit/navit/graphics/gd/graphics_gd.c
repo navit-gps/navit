@@ -314,6 +314,9 @@ image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *n
 #endif
 		else if (!strcmp(name+len-4,".xpm"))
 			im=gdImageCreateFromXpm(name);
+		else if (!strcmp(name+len-4,".gif")) {
+			im=gdImageCreateFromGif(file);
+		}
 		fclose(file);
 	}
 	if (im) {
