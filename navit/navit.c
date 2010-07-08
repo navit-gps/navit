@@ -2329,11 +2329,12 @@ navit_block(struct navit *this_, int block)
 			this_->blocked |= 2;
 		return 0;
 	}
-	this_->blocked=0;
 	if ((this_->blocked & 2) || block < 0) {
+		this_->blocked=0;
 		navit_draw(this_);
 		return 1;
 	}
+	this_->blocked=0;
 	return 0;
 }
 
