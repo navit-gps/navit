@@ -1144,6 +1144,26 @@ request_navit_zoom(DBusConnection *connection, DBusMessage *message)
 }
 
 static DBusHandlerResult
+request_navit_block(DBusConnection *connection, DBusMessage *message)
+{
+	int mode;
+	struct navit *navit;
+	DBusMessageIter iter;
+
+	navit = object_get_from_message(message, "navit");
+	if (! navit)
+		return dbus_error_invalid_object_path(connection, message);
+
+	dbus_message_iter_init(message, &iter);
+
+	dbus_message_iter_get_basic(&iter, &mode);
+
+	navit_block(navit, mode);
+	return empty_reply(connection, message);
+
+}
+
+static DBusHandlerResult
 request_navit_resize(DBusConnection *connection, DBusMessage *message)
 {
 	struct navit *navit;
@@ -1531,6 +1551,7 @@ struct dbus_method {
 	{".navit",  "set_layout",          "s",       "layoutname",                              "",   "",      request_navit_set_layout},
 	{".navit",  "zoom",                "i(ii)",   "factor(pixel_x,pixel_y)",                 "",   "",      request_navit_zoom},
 	{".navit",  "zoom",                "i",       "factor",                                  "",   "",      request_navit_zoom},
+	{".navit",  "block",               "i",       "mode",                                    "",   "",      request_navit_block},
 	{".navit",  "resize",              "ii",      "upperleft,lowerright",                    "",   "",      request_navit_resize},
 	{".navit",  "attr_iter",           "",        "",                                        "o",  "attr_iter",  request_navit_attr_iter},
 	{".navit",  "attr_iter_destroy",   "o",       "attr_iter",                               "",   "",      request_navit_attr_iter_destroy},
