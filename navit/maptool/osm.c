@@ -1020,7 +1020,7 @@ add_tag(char *k, char *v)
 		attr_strings_save(attr_string_fax, v);
 		level=5;
 	}
-	if (! strcmp(k,"postal")) {
+	if (! strcmp(k,"postal_code")) {
 		attr_strings_save(attr_string_postal, v);
 		level=5;
 	}
