@@ -44,6 +44,9 @@
 #include <openssl/rand.h>
 #endif
 
+#ifdef HAVE_API_ANDROID
+#define lseek lseek64
+#endif
 
 #ifndef O_LARGEFILE
 #define O_LARGEFILE 0
