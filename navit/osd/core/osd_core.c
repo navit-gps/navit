@@ -96,6 +96,13 @@ handle(struct graphics *gr, struct graphics_gc *gc, struct point *p, int r,
 	graphics_draw_lines(gr, gc, ph, 3);
 }
 
+/**
+ * * Format distance, choosing the unit (m or km) and precision depending on distance
+ * *
+ * * @param distance distance in meters
+ * * @param sep separator character to be inserted between distance value and unit
+ * * @returns a pointer to a string containing the formatted distance
+ * */
 static char *
 format_distance(double distance, char *sep)
 {
@@ -113,6 +120,13 @@ format_distance(double distance, char *sep)
 		return g_strdup_printf("%.1f%sm", distance, sep);
 }
 
+/**
+ * * Format time (duration)
+ * *
+ * * @param tm pointer to a tm structure specifying the time
+ * * @param days days
+ * * @returns a pointer to a string containing the formatted time
+ * */
 static char * 
 format_time(struct tm *tm, int days)
 {
@@ -122,6 +136,13 @@ format_time(struct tm *tm, int days)
 		return g_strdup_printf("%02d:%02d", tm->tm_hour, tm->tm_min);
 }
 
+/**
+ * * Format speed in km/h
+ * *
+ * * @param speed speed in km/h
+ * * @param sep separator character to be inserted between speed value and unit
+ * * @returns a pointer to a string containing the formatted speed
+ * */
 static char * 
 format_speed(double speed, char *sep)
 {
@@ -757,47 +778,53 @@ osd_text_format_attr(struct attr *attr, char *format)
 	case attr_position_magnetic_direction:
 		return g_strdup_printf("%d",attr->u.num);
 	case attr_position_coord_geo:
-		if (format) {
-			if (!strcmp(format,"pos_degmin")) 
-			{
-				coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_MINUTES,buffer,sizeof(buffer));
-				return g_strdup(buffer);
-			}
-			else if (!strcmp(format,"pos_deg")) 
-			{
-				coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_DECIMAL,buffer,sizeof(buffer));
-				return g_strdup(buffer);
-			}
-			else if (!strcmp(format,"lat_degminsec")) 
-			{
-				coord_format(attr->u.coord_geo->lat,360,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
-				return g_strdup(buffer);
-			}
-			else if (!strcmp(format,"lat_degmin")) 
-			{
-				coord_format(attr->u.coord_geo->lat,360,DEGREES_MINUTES,buffer,sizeof(buffer));
-				return g_strdup(buffer);
-			}
-			else if (!strcmp(format,"lat_deg")) 
-			{
-				coord_format(attr->u.coord_geo->lat,360,DEGREES_DECIMAL,buffer,sizeof(buffer));
-				return g_strdup(buffer);
-			}
-			else if (!strcmp(format,"lng_degminsec")) 
-			{
-				coord_format(360,attr->u.coord_geo->lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
-				return g_strdup(buffer);
-			}
-			else if (!strcmp(format,"lng_degmin")) 
-			{
-				coord_format(360,attr->u.coord_geo->lng,DEGREES_MINUTES,buffer,sizeof(buffer));
-				return g_strdup(buffer);
-			}
-			else if (!strcmp(format,"lng_deg")) {
-				coord_format(360,attr->u.coord_geo->lng,DEGREES_DECIMAL,buffer,sizeof(buffer));
-				return g_strdup(buffer);
-			}
-		} else { //Covers format==pos_degminsec too
+		if ((!format) || (!strcmp(format,"pos_degminsec")))
+		{ 
+			coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
+			return g_strdup(buffer);
+		}
+		else if (!strcmp(format,"pos_degmin")) 
+		{
+			coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_MINUTES,buffer,sizeof(buffer));
+			return g_strdup(buffer);
+		}
+		else if (!strcmp(format,"pos_deg")) 
+		{
+			coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_DECIMAL,buffer,sizeof(buffer));
+			return g_strdup(buffer);
+		}
+		else if (!strcmp(format,"lat_degminsec")) 
+		{
+			coord_format(attr->u.coord_geo->lat,360,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
+			return g_strdup(buffer);
+		}
+		else if (!strcmp(format,"lat_degmin")) 
+		{
+			coord_format(attr->u.coord_geo->lat,360,DEGREES_MINUTES,buffer,sizeof(buffer));
+			return g_strdup(buffer);
+		}
+		else if (!strcmp(format,"lat_deg")) 
+		{
+			coord_format(attr->u.coord_geo->lat,360,DEGREES_DECIMAL,buffer,sizeof(buffer));
+			return g_strdup(buffer);
+		}
+		else if (!strcmp(format,"lng_degminsec")) 
+		{
+			coord_format(360,attr->u.coord_geo->lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
+			return g_strdup(buffer);
+		}
+		else if (!strcmp(format,"lng_degmin")) 
+		{
+			coord_format(360,attr->u.coord_geo->lng,DEGREES_MINUTES,buffer,sizeof(buffer));
+			return g_strdup(buffer);
+		}
+		else if (!strcmp(format,"lng_deg")) 
+		{
+			coord_format(360,attr->u.coord_geo->lng,DEGREES_DECIMAL,buffer,sizeof(buffer));
+			return g_strdup(buffer);
+		}
+		else
+		{ // fall back to pos_degminsec
 			coord_format(attr->u.coord_geo->lat,attr->u.coord_geo->lng,DEGREES_MINUTES_SECONDS,buffer,sizeof(buffer));
 			return g_strdup(buffer);
 		}
@@ -847,6 +874,13 @@ osd_text_format_attr(struct attr *attr, char *format)
 	return attr_to_text(attr, NULL, 1);
 }
 
+/**
+ * * Parse a string of the form key.subkey or key[index].subkey into its components, where subkey can itself have its own index and further subkeys
+ * *
+ * * @param in string to parse (will be modified by the function); upon returning this pointer will point to a string containing key
+ * * @param index pointer to an address that will receive a pointer to a string containing index or a null pointer if key does not have an index
+ * * @returns a pointer to a string containing subkey, i.e. everything following the first period; if no subkey was found, the return value is a pointer to an empty string; if errors are encountered (index with missing closed bracket or passing a null pointer as index argument when an index was encountered), the return value is NULL
+ * */
 static char *
 osd_text_split(char *in, char **index)
 {
