@@ -106,6 +106,10 @@
 #include <QX11EmbedWidget>
 #endif
 
+#ifndef QT_QPAINTER_RENDERAREA_PARENT
+#define QT_QPAINTER_RENDERAREA_PARENT QWidget
+#endif
+
 class RenderArea;
 
 //##############################################################################################################
@@ -153,11 +157,11 @@ struct graphics_priv {
 //# Comment: 
 //# Authors: Martin Schaller (04/2008), Stefan Klumpp (04/2008)
 //##############################################################################################################
-class RenderArea : public QWidget
+class RenderArea : public QT_QPAINTER_RENDERAREA_PARENT
 {
      Q_OBJECT
  public:
-     RenderArea(struct graphics_priv *priv, QWidget *parent = 0, int w=800, int h=800, int overlay=0);
+     RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT *parent = 0, int w=800, int h=800, int overlay=0);
      void do_resize(QSize size);
      QPixmap *pixmap;
      struct callback_list *cbl;
@@ -281,8 +285,8 @@ qt_qpainter_draw(struct graphics_priv *gr, const QRect *r, int paintev)
 //# Comment: Using a QPixmap for rendering the graphics
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-RenderArea::RenderArea(struct graphics_priv *priv, QWidget *parent, int w, int h, int overlay)
-	: QWidget(parent)
+RenderArea::RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT *parent, int w, int h, int overlay)
+	: QT_QPAINTER_RENDERAREA_PARENT(parent)
 {
 	pixmap = new QPixmap(w, h);
 #ifndef QT_QPAINTER_NO_WIDGET
@@ -1173,7 +1177,9 @@ static struct graphics_priv * overlay_new(struct graphics_priv *gr, struct graph
 	ret->parent=gr;
 	ret->next=gr->overlays;
 	gr->overlays=ret;
+#ifndef QT_QPAINTER_NO_WIDGET
 	ret->widget->hide();
+#endif
 	return ret;
 }
 
