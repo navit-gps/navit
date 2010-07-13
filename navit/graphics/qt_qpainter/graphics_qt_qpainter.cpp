@@ -304,7 +304,9 @@ RenderArea::RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT
 	timer_type=g_hash_table_new(NULL, NULL);
 	timer_callback=g_hash_table_new(NULL, NULL);
 	watches=g_hash_table_new(NULL, NULL);
+#ifndef QT_QPAINTER_NO_WIDGET
 	setBackgroundMode(NoBackground);
+#endif
 #endif
 }
 
