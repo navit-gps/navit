@@ -131,6 +131,7 @@ vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr)
 		break;
 	case attr_position_coord_geo:
 		priv->geo=*attr->u.coord_geo;
+		priv->have_coords=1;
 		break;
 	default:
 		return 0;
