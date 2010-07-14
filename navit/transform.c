@@ -1086,6 +1086,14 @@ transform_distance_sq(struct coord *c1, struct coord *c2)
 		return dx*dx+dy*dy;
 }
 
+navit_float
+transform_distance_sq_float(struct coord *c1, struct coord *c2)
+{
+	int dx=c1->x-c2->x;
+	int dy=c1->y-c2->y;
+	return (navit_float)dx*dx+dy*dy;
+}
+
 int
 transform_distance_sq_pc(struct pcoord *c1, struct pcoord *c2)
 {
@@ -1131,6 +1139,37 @@ transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref
 	return transform_distance_sq(&l, ref);
 }
 
+navit_float
+transform_distance_line_sq_float(struct coord *l0, struct coord *l1, struct coord *ref, struct coord *lpnt)
+{
+	navit_float vx,vy,wx,wy;
+	navit_float c1,c2;
+	struct coord l;
+
+	vx=l1->x-l0->x;
+	vy=l1->y-l0->y;
+	wx=ref->x-l0->x;
+	wy=ref->y-l0->y;
+
+	c1=vx*wx+vy*wy;
+	if ( c1 <= 0 ) {
+		if (lpnt)
+			*lpnt=*l0;
+		return transform_distance_sq_float(l0, ref);
+	}
+	c2=vx*vx+vy*vy;
+	if ( c2 <= c1 ) {
+		if (lpnt)
+			*lpnt=*l1;
+		return transform_distance_sq_float(l1, ref);
+	}
+	l.x=l0->x+vx*c1/c2;
+	l.y=l0->y+vy*c1/c2;
+	if (lpnt)
+		*lpnt=l;
+	return transform_distance_sq_float(&l, ref);
+}
+
 int
 transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, struct coord *lpnt, int *pos)
 {
@@ -1159,7 +1198,7 @@ transform_douglas_peucker(struct coord *in, int count, int dist_sq, struct coord
 {
 	int ret=0;
 	int i,d,dmax=0, idx=0;
-	for (i = 1; i < count-1 ; i++) {
+	for (i = 1; i < count-2 ; i++) {
 		d=transform_distance_line_sq(&in[0], &in[count-1], &in[i], NULL);
 		if (d > dmax) {
 			idx=i;
@@ -1167,8 +1206,33 @@ transform_douglas_peucker(struct coord *in, int count, int dist_sq, struct coord
 		}
 	}
 	if (dmax > dist_sq) {
-		ret=transform_douglas_peucker(in, idx+1, dist_sq, out)-1;
+		ret=transform_douglas_peucker(in, idx, dist_sq, out)-1;
 		ret+=transform_douglas_peucker(in+idx, count-idx, dist_sq, out+ret);
+	} else {
+		if (count > 0)
+			out[ret++]=in[0];
+		if (count > 1)
+			out[ret++]=in[count-1];
+	}
+	return ret;
+}
+
+int
+transform_douglas_peucker_float(struct coord *in, int count, navit_float dist_sq, struct coord *out)
+{
+	int ret=0;
+	int i,idx=0;
+	navit_float d,dmax=0;
+	for (i = 1; i < count-2 ; i++) {
+		d=transform_distance_line_sq_float(&in[0], &in[count-1], &in[i], NULL);
+		if (d > dmax) {
+			idx=i;
+			dmax=d;
+		}
+	}
+	if (dmax > dist_sq) {
+		ret=transform_douglas_peucker_float(in, idx, dist_sq, out)-1;
+		ret+=transform_douglas_peucker_float(in+idx, count-idx, dist_sq, out+ret);
 	} else {
 		if (count > 0)
 			out[ret++]=in[0];
