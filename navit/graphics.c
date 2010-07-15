@@ -339,7 +339,7 @@ void graphics_init(struct graphics *this_)
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void * graphics_get_data(struct graphics *this_, char *type)
+void * graphics_get_data(struct graphics *this_, const char *type)
 {
 	return (this_->meth.get_data(this_->priv, type));
 }
