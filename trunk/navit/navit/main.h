@@ -35,7 +35,7 @@ void main_add_navit(struct navit *nav);
 void main_remove_navit(struct navit *nav);
 int main_add_attr(struct attr *attr);
 int main_remove_attr(struct attr *attr);
-void main_init(char *program);
+void main_init(const char *program);
 void main_init_nls(void);
 int main(int argc, char **argv);
 /* end of prototypes */

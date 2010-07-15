@@ -61,7 +61,7 @@ struct debug *debug_new(struct attr *parent, struct attr **attrs);
 int debug_level_get(const char *name);
 void debug_vprintf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap);
 void debug_printf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, ...);
-void debug_assert_fail(char *module, const int mlen, const char *function, const int flen, char *file, int line, char *expr);
+void debug_assert_fail(const char *module, const int mlen, const char *function, const int flen, const char *file, int line, const char *expr);
 void debug_destroy(void);
 void debug_set_logfile(const char *path);
 void debug_dump_mallocs(void);
