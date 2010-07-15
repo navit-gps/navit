@@ -161,7 +161,7 @@ win_set_nls(void)
 #endif
 
 void
-main_init(char *program)
+main_init(const char *program)
 {
 	char *s;
 	int l;
