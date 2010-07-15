@@ -1013,7 +1013,7 @@ disable_suspend(struct window *win)
 //# Comment: 
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
-static void * get_data(struct graphics_priv *this_, char *type)
+static void * get_data(struct graphics_priv *this_, const char *type)
 {
 	struct window *win;
 	QString xid;
