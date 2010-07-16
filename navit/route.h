@@ -130,6 +130,7 @@ int route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, 
 void route_init(void);
 int route_pos_contains(struct route *, struct item *item);
 struct coord route_get_coord_dist(struct route *this_, int dist);
+void route_destroy(struct route *this_);
 
 /* end of prototypes */
 #ifdef __cplusplus
