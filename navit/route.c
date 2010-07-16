@@ -226,6 +226,7 @@ struct route_path {
 	struct route_path_segment *path_last;		/**< The last segment in the path */
 	/* XXX: path_hash is not necessery now */
 	struct item_hash *path_hash;				/**< A hashtable of all the items represented by this route's segements */
+	struct route_path *next;				/**< Next route path in case of intermediate destinations */	
 };
 
 /**
@@ -238,6 +239,7 @@ struct route {
 	unsigned flags;
 	struct route_info *pos;		/**< Current position within this route */
 	GList *destinations;		/**< Destinations of the route */
+	struct route_info *current_dst;	/**< Current destination */
 
 	struct route_graph *graph;	/**< Pointer to the route graph */
 	struct route_path *path2;	/**< Pointer to the route path */
@@ -296,6 +298,9 @@ static void route_process_street_graph(struct route_graph *this, struct item *it
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this, int cancel, int async);
 static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, struct route_traffic_distortion *dist);
+static void route_graph_flood(struct route_graph *this, struct route_info *dst, struct vehicleprofile *profile, struct callback *cb);
+static void route_graph_reset(struct route_graph *this);
+
 
 /**
  * @brief Returns the projection used for this route
@@ -392,22 +397,27 @@ rp_iterator_end(struct route_graph_point_iterator *it) {
  * @param this The route_path to be destroyed
  */
 static void
-route_path_destroy(struct route_path *this)
+route_path_destroy(struct route_path *this, int recurse)
 {
 	struct route_path_segment *c,*n;
-	if (! this)
-		return;
-	if (this->path_hash) {
-		item_hash_destroy(this->path_hash);
-		this->path_hash=NULL;
+	struct route_path *next;
+	while (this) {
+		next=this->next;
+		if (this->path_hash) {
+			item_hash_destroy(this->path_hash);
+			this->path_hash=NULL;
+		}
+		c=this->path;
+		while (c) {
+			n=c->next;
+			g_free(c);
+			c=n;
+		}
+		g_free(this);
+		if (!recurse)
+			break;
+		this=next;
 	}
-	c=this->path;
-	while (c) {
-		n=c->next;
-		g_free(c);
-		c=n;
-	}
-	g_free(this);
 }
 
 /**
@@ -656,11 +666,24 @@ route_destination_reached(struct route *this)
 	return 1;
 }
 
+static struct route_info *
+route_previous_destination(struct route *this)
+{
+	GList *l=g_list_find(this->destinations, this->current_dst);
+	if (!l)
+		return this->pos;
+	l=g_list_previous(l);
+	if (!l)
+		return this->pos;
+	return l->data;
+}
+
 static void
 route_path_update_done(struct route *this, int new_graph)
 {
 	struct route_path *oldpath=this->path2;
 	struct attr route_status;
+	struct route_info *prev_dst;
 	route_status.type=attr_route_status;
 	if (this->path2 && this->path2->in_use) {
 		this->path2->update_required=1+new_graph;
@@ -668,9 +691,16 @@ route_path_update_done(struct route *this, int new_graph)
 	}
 	route_status.u.num=route_status_building_path;
 	route_set_attr(this, &route_status);
-
-	this->path2=route_path_new(this->graph, oldpath, this->pos, route_get_dst(this), this->vehicleprofile);
-	route_path_destroy(oldpath);
+	prev_dst=route_previous_destination(this);
+	this->path2=route_path_new(this->graph, oldpath, prev_dst, this->current_dst, this->vehicleprofile);
+	if (oldpath) {
+		if (!item_is_equal(oldpath->path_last->data->item,this->path2->path_last->data->item)) {
+			this->path2->next=oldpath;
+		} else {
+			this->path2->next=oldpath->next;
+			route_path_destroy(oldpath,0);
+		}
+	}
 	if (this->path2) {
 		struct route_path_segment *seg=this->path2->path;
 		int path_time=0,path_len=0;
@@ -686,6 +716,12 @@ route_path_update_done(struct route *this, int new_graph)
 		}
 		this->path2->path_time=path_time;
 		this->path2->path_len=path_len;
+		if (prev_dst != this->pos) {
+			this->current_dst=prev_dst;
+			route_graph_reset(this->graph);
+			route_graph_flood(this->graph, this->current_dst, this->vehicleprofile, this->route_graph_flood_done_cb);
+			return;
+		}
 		if (!new_graph && this->path2->updated)
 			route_status.u.num=route_status_path_done_incremental;
 		else
@@ -712,7 +748,7 @@ route_path_update(struct route *this, int cancel, int async)
 	dbg(1,"enter %d\n", cancel);
 	if (! this->pos || ! this->destinations) {
 		dbg(1,"destroy\n");
-		route_path_destroy(this->path2);
+		route_path_destroy(this->path2,1);
 		this->path2 = NULL;
 		return;
 	}
@@ -730,7 +766,7 @@ route_path_update(struct route *this, int cancel, int async)
 		dbg(1,"try update\n");
 		route_path_update_done(this, 0);
 	} else {
-		route_path_destroy(this->path2);
+		route_path_destroy(this->path2,1);
 		this->path2 = NULL;
 	}
 	if (!this->graph || !this->path2) {
@@ -948,20 +984,27 @@ route_clear_destinations(struct route *this_)
  *
  * @param this The route to set the destination for
  * @param dst Coordinates to set as destination
+ * @param count: Number of destinations (last one is final)
+ * @param async: If set, do routing asynchronously
  */
+
 void
-route_set_destination(struct route *this, struct pcoord *dst, int async)
+route_set_destinations(struct route *this, struct pcoord *dst, int count, int async)
 {
 	struct attr route_status;
 	struct route_info *dsti;
 	route_status.type=attr_route_status;
+	int i;
+
 	profile(0,NULL);
 	route_clear_destinations(this);
-	if (dst) {
-		dsti=route_find_nearest_street(this->vehicleprofile, this->ms, dst);
-		if(dsti) {
-			route_info_distances(dsti, dst->pro);
-			this->destinations=g_list_append(this->destinations, dsti);
+	if (dst && count) {
+		for (i = 0 ; i < count ; i++) {
+			dsti=route_find_nearest_street(this->vehicleprofile, this->ms, &dst[i]);
+			if(dsti) {
+				route_info_distances(dsti, dst->pro);
+				this->destinations=g_list_append(this->destinations, dsti);
+			}
 		}
 		route_status.u.num=route_status_destination_set;
 	} else  
@@ -973,8 +1016,15 @@ route_set_destination(struct route *this, struct pcoord *dst, int async)
 	/* The graph has to be destroyed and set to NULL, otherwise route_path_update() doesn't work */
 	route_graph_destroy(this->graph);
 	this->graph=NULL;
+	this->current_dst=route_get_dst(this);
 	route_path_update(this, 1, async);
 	profile(0,"end");
+}
+ 
+void
+route_set_destination(struct route *this, struct pcoord *dst, int async)
+{
+	route_set_destinations(this, dst, dst?1:0, async);
 }
 
 /**
@@ -1096,6 +1146,27 @@ route_graph_free_points(struct route_graph *this)
 			curr=next;
 		}
 		this->hash[i]=NULL;
+	}
+}
+
+/**
+ * @brief Resets all nodes
+ *
+ * @param this The route graph to reset
+ */
+static void
+route_graph_reset(struct route_graph *this)
+{
+	struct route_graph_point *curr;
+	int i;
+	for (i = 0 ; i < HASH_SIZE ; i++) {
+		curr=this->hash[i];
+		while (curr) {
+			curr->value=INT_MAX;
+			curr->seg=NULL;
+			curr->el=NULL;
+			curr=curr->hash_next;
+		}
 	}
 }
 
@@ -2418,7 +2489,7 @@ route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback
 static void
 route_graph_update_done(struct route *this, struct callback *cb)
 {
-	route_graph_flood(this->graph, route_get_dst(this), this->vehicleprofile, cb);
+	route_graph_flood(this->graph, this->current_dst, this->vehicleprofile, cb);
 }
 
 /**
@@ -3199,6 +3270,11 @@ rm_get_item(struct map_rect_priv *mr)
 	default:
 		mr->item.type=type_street_route;
 		mr->seg=mr->seg_next;
+		if (!mr->seg && mr->path) {
+			mr->path=mr->path->next;
+			if (mr->path)
+				mr->seg=mr->path->path;
+		}
 		if (mr->seg) {
 			mr->seg_next=mr->seg->next;
 			break;
@@ -3457,7 +3533,7 @@ route_init(void)
 void
 route_destroy(struct route *this_)
 {
-	route_path_destroy(this_->path2);
+	route_path_destroy(this_->path2,1);
 	route_graph_destroy(this_->graph);
 	route_clear_destinations(this_);
 	route_info_free(this_->pos);
