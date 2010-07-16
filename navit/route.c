@@ -883,18 +883,26 @@ route_rect(int order, struct coord *c1, struct coord *c2, int rel, int abs)
  * @param c2 Corder 2 of the rectangle
  */
 static struct map_selection *
-route_calc_selection(struct coord *c1, struct coord *c2)
+route_calc_selection(struct coord *c, int count)
 {
 	struct map_selection *ret,*sel;
-	sel=route_rect(4, c1, c2, 25, 0);
+	int i;
+	struct coord_rect r;
+
+	if (!count)
+		return NULL;
+	r.lu=c[0];
+	r.rl=c[0];
+	for (i = 1 ; i < count ; i++)
+		coord_rect_extend(&r, &c[i]);
+	sel=route_rect(4, &r.lu, &r.rl, 25, 0);
 	ret=sel;
-	sel->next=route_rect(8, c1, c1, 0, 40000);
-	sel=sel->next;
-	sel->next=route_rect(18, c1, c1, 0, 10000);
-	sel=sel->next;
-	sel->next=route_rect(8, c2, c2, 0, 40000);
-	sel=sel->next;
-	sel->next=route_rect(18, c2, c2, 0, 10000);
+	for (i = 0 ; i < count ; i++) {
+		sel->next=route_rect(8, &c[i], &c[i], 0, 40000);
+		sel=sel->next;
+		sel->next=route_rect(18, &c[i], &c[i], 0, 10000);
+		sel=sel->next;
+	}
 	/* route_selection=ret; */
 	return ret;
 }
@@ -2368,13 +2376,13 @@ route_graph_build_idle(struct route_graph *rg)
  * @return The new route graph.
  */
 static struct route_graph *
-route_graph_build(struct mapset *ms, struct coord *c1, struct coord *c2, struct callback *done_cb, int async)
+route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback *done_cb, int async)
 {
 	struct route_graph *ret=g_new0(struct route_graph, 1);
 
 	dbg(1,"enter\n");
 
-	ret->sel=route_calc_selection(c1, c2);
+	ret->sel=route_calc_selection(c, count);
 	ret->h=mapset_open(ms);
 	ret->done_cb=done_cb;
 	ret->busy=1;
@@ -2407,6 +2415,7 @@ static void
 route_graph_update(struct route *this, struct callback *cb, int async)
 {
 	struct attr route_status;
+	struct coord c[2];
 
 	route_status.type=attr_route_status;
 	route_graph_destroy(this->graph);
@@ -2415,7 +2424,9 @@ route_graph_update(struct route *this, struct callback *cb, int async)
 	this->route_graph_done_cb=callback_new_2(callback_cast(route_graph_update_done), this, cb);
 	route_status.u.num=route_status_building_graph;
 	route_set_attr(this, &route_status);
-	this->graph=route_graph_build(this->ms, &this->pos->c, &this->dst->c, this->route_graph_done_cb, async);
+	c[0]=this->pos->c;
+	c[1]=this->dst->c;
+	this->graph=route_graph_build(this->ms, c, 2, this->route_graph_done_cb, async);
 	if (! async) {
 		while (this->graph->busy) 
 			route_graph_build_idle(this->graph);
