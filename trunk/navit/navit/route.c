@@ -237,7 +237,7 @@ struct route {
 	struct mapset *ms;			/**< The mapset this route is built upon */
 	unsigned flags;
 	struct route_info *pos;		/**< Current position within this route */
-	struct route_info *dst;		/**< Destination of the route */
+	GList *destinations;		/**< Destinations of the route */
 
 	struct route_graph *graph;	/**< Pointer to the route graph */
 	struct route_path *path2;	/**< Pointer to the route path */
@@ -306,9 +306,10 @@ static int route_time_seg(struct vehicleprofile *profile, struct route_segment_d
 static enum projection route_projection(struct route *route)
 {
 	struct street_data *street;
-	if (!route->pos && !route->dst)
+	struct route_info *dst=route_get_dst(route);
+	if (!route->pos && !dst)
 		return projection_none;
-	street = route->pos ? route->pos->street : route->dst->street;
+	street = route->pos ? route->pos->street : dst->street;
 	if (!street || !street->item.map)
 		return projection_none;
 	return map_projection(street->item.map);
@@ -567,7 +568,11 @@ route_get_pos(struct route *this)
 struct route_info *
 route_get_dst(struct route *this)
 {
-	return this->dst;
+	struct route_info *dst=NULL;
+
+	if (this->destinations)
+		dst=g_list_last(this->destinations)->data;
+	return dst;
 }
 
 /**
@@ -617,31 +622,34 @@ route_destination_reached(struct route *this)
 {
 	struct street_data *sd = NULL;
 	enum projection pro;
+	struct route_info *dst=route_get_dst(this);
 
 	if (!this->pos)
 		return 0;
-
+	if (!dst)
+		return 0;
+	
 	sd = this->pos->street;
 
 	if (!this->path2) {
 		return 0;
 	}
 
-	if (!item_is_equal(this->pos->street->item, this->dst->street->item)) { 
+	if (!item_is_equal(this->pos->street->item, dst->street->item)) { 
 		return 0;
 	}
 
-	if ((sd->flags & AF_ONEWAY) && (this->pos->lenneg >= this->dst->lenneg)) { // We would have to drive against the one-way road
+	if ((sd->flags & AF_ONEWAY) && (this->pos->lenneg >= dst->lenneg)) { // We would have to drive against the one-way road
 		return 0;
 	}
-	if ((sd->flags & AF_ONEWAYREV) && (this->pos->lenpos >= this->dst->lenpos)) {
+	if ((sd->flags & AF_ONEWAYREV) && (this->pos->lenpos >= dst->lenpos)) {
 		return 0;
 	}
 	pro=route_projection(this);
 	if (pro == projection_none)
 		return 0;
 	 
-	if (transform_distance(pro, &this->pos->c, &this->dst->lp) > this->destination_distance) {
+	if (transform_distance(pro, &this->pos->c, &dst->lp) > this->destination_distance) {
 		return 0;
 	}
 	
@@ -661,7 +669,7 @@ route_path_update_done(struct route *this, int new_graph)
 	route_status.u.num=route_status_building_path;
 	route_set_attr(this, &route_status);
 
-	this->path2=route_path_new(this->graph, oldpath, this->pos, this->dst, this->vehicleprofile);
+	this->path2=route_path_new(this->graph, oldpath, this->pos, route_get_dst(this), this->vehicleprofile);
 	route_path_destroy(oldpath);
 	if (this->path2) {
 		struct route_path_segment *seg=this->path2->path;
@@ -702,7 +710,7 @@ static void
 route_path_update(struct route *this, int cancel, int async)
 {
 	dbg(1,"enter %d\n", cancel);
-	if (! this->pos || ! this->dst) {
+	if (! this->pos || ! this->destinations) {
 		dbg(1,"destroy\n");
 		route_path_destroy(this->path2);
 		this->path2 = NULL;
@@ -817,7 +825,7 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking, 
 	dbg(3,"c->x=0x%x, c->y=0x%x pos=%d item=(0x%x,0x%x)\n", c->x, c->y, ret->pos, ret->street->item.id_hi, ret->street->item.id_lo);
 	dbg(3,"street 0=(0x%x,0x%x) %d=(0x%x,0x%x)\n", ret->street->c[0].x, ret->street->c[0].y, ret->street->count-1, ret->street->c[ret->street->count-1].x, ret->street->c[ret->street->count-1].y);
 	this->pos=ret;
-	if (this->dst) 
+	if (this->destinations) 
 		route_path_update(this, 0, 1);
 	dbg(2,"ret\n");
 }
@@ -924,6 +932,14 @@ route_free_selection(struct map_selection *sel)
 }
 
 
+static void
+route_clear_destinations(struct route *this_)
+{
+	g_list_foreach(this_->destinations, (GFunc)route_info_free, NULL);
+	g_list_free(this_->destinations);
+	this_->destinations=NULL;
+}
+
 /**
  * @brief Sets the destination of a route
  *
@@ -937,15 +953,16 @@ void
 route_set_destination(struct route *this, struct pcoord *dst, int async)
 {
 	struct attr route_status;
+	struct route_info *dsti;
 	route_status.type=attr_route_status;
 	profile(0,NULL);
-	if (this->dst)
-		route_info_free(this->dst);
-	this->dst=NULL;
+	route_clear_destinations(this);
 	if (dst) {
-		this->dst=route_find_nearest_street(this->vehicleprofile, this->ms, dst);
-		if(this->dst)
-			route_info_distances(this->dst, dst->pro);
+		dsti=route_find_nearest_street(this->vehicleprofile, this->ms, dst);
+		if(dsti) {
+			route_info_distances(dsti, dst->pro);
+			this->destinations=g_list_append(this->destinations, dsti);
+		}
 		route_status.u.num=route_status_destination_set;
 	} else  
 		route_status.u.num=route_status_no_destination;
@@ -2006,6 +2023,7 @@ route_get_coord_dist(struct route *this_, int dist)
 	struct route_path_segment *cur;
 	struct coord ret;
 	enum projection pro=route_projection(this_);
+	struct route_info *dst=route_get_dst(this_);
 
 	d = dist;
 
@@ -2040,7 +2058,7 @@ route_get_coord_dist(struct route *this_, int dist)
 		cur = cur->next;
 	}
 
-	return this_->dst->c;
+	return dst->c;
 }
 
 /**
@@ -2400,7 +2418,7 @@ route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback
 static void
 route_graph_update_done(struct route *this, struct callback *cb)
 {
-	route_graph_flood(this->graph, this->dst, this->vehicleprofile, cb);
+	route_graph_flood(this->graph, route_get_dst(this), this->vehicleprofile, cb);
 }
 
 /**
@@ -2415,7 +2433,9 @@ static void
 route_graph_update(struct route *this, struct callback *cb, int async)
 {
 	struct attr route_status;
-	struct coord c[2];
+	struct coord c[1+g_list_length(this->destinations)];
+	int i=0;
+	GList *tmp;
 
 	route_status.type=attr_route_status;
 	route_graph_destroy(this->graph);
@@ -2424,8 +2444,13 @@ route_graph_update(struct route *this, struct callback *cb, int async)
 	this->route_graph_done_cb=callback_new_2(callback_cast(route_graph_update_done), this, cb);
 	route_status.u.num=route_status_building_graph;
 	route_set_attr(this, &route_status);
-	c[0]=this->pos->c;
-	c[1]=this->dst->c;
+	c[i++]=this->pos->c;
+	tmp=this->destinations;
+	while (tmp) {
+		struct route_info *dst=tmp->data;
+		c[i++]=dst->c;
+		tmp=g_list_next(tmp);
+	}
 	this->graph=route_graph_build(this->ms, c, 2, this->route_graph_done_cb, async);
 	if (! async) {
 		while (this->graph->busy) 
@@ -2771,8 +2796,9 @@ rm_coord_get(void *priv_data, struct coord *c, int count)
 		mr->last_coord=1;
 		if (mr->item.type == type_route_start || mr->item.type == type_route_start_reverse)
 			c[0]=r->pos->c;
-		else
-			c[0]=r->dst->c;
+		else {
+			c[0]=route_get_dst(r)->c;
+		}	
 		return 1;
 	}
 	if (! seg)
@@ -3178,7 +3204,7 @@ rm_get_item(struct map_rect_priv *mr)
 			break;
 		}
 		mr->item.type=type_route_end;
-		if (mr->mpriv->route->dst)
+		if (mr->mpriv->route->destinations)
 			break;
 	case type_route_end:
 		return NULL;
@@ -3382,11 +3408,12 @@ route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, stru
 		ret=(attr->u.map != NULL);
 		break;
 	case attr_destination:
-		if (this_->dst) {
+		if (this_->destinations) {
+			struct route_info *dst=route_get_dst(this_);
 			attr->u.pcoord=&this_->pc;
 			this_->pc.pro=projection_mg; /* fixme */
-			this_->pc.x=this_->dst->c.x;
-			this_->pc.y=this_->dst->c.y;
+			this_->pc.x=dst->c.x;
+			this_->pc.y=dst->c.y;
 		} else
 			ret=0;
 		break;
@@ -3432,7 +3459,7 @@ route_destroy(struct route *this_)
 {
 	route_path_destroy(this_->path2);
 	route_graph_destroy(this_->graph);
-	route_info_free(this_->dst);
+	route_clear_destinations(this_);
 	route_info_free(this_->pos);
 	map_destroy(this_->map);
 	map_destroy(this_->graph_map);
