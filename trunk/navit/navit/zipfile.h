@@ -113,6 +113,8 @@ struct zip64_eoc {
 	char zip64ecom[0];		/* zip64 extensible data sector */
 } __attribute__ ((packed));
 
+#define zip64_eocl_sig 0x07064b50
+
 struct zip64_eocl {
 	int zip64lsig;
 	int zip64ldsk;
