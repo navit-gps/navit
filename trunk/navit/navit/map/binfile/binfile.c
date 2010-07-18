@@ -61,6 +61,7 @@ struct map_priv {
 	int index_offset;
 	int cde_size;
 	struct zip_eoc *eoc;
+	struct zip64_eoc *eoc64;
 	int zip_members;
 	unsigned char *search_data;
 	int search_offset;
@@ -171,17 +172,45 @@ binfile_read_eoc(struct file *fi)
 	return eoc;
 }
 
+static struct zip64_eoc *
+binfile_read_eoc64(struct file *fi)
+{
+	struct zip64_eocl *eocl;
+	struct zip64_eoc *eoc;
+	eocl=(struct zip64_eocl *)file_data_read(fi,fi->size-sizeof(struct zip_eoc)-sizeof(struct zip64_eocl), sizeof(struct zip64_eocl));
+	if (!eocl)
+		return NULL;
+	dbg(1,"sig 0x%x\n", eocl->zip64lsig);
+	if (eocl->zip64lsig != zip64_eocl_sig) {
+		file_data_free(fi,(unsigned char *)eocl);
+		dbg(1,"eocl wrong\n");
+		return NULL;
+	}
+	eoc=(struct zip64_eoc *)file_data_read(fi,eocl->zip64lofst, sizeof(struct zip64_eoc));
+	if (eoc) {
+		if (eoc->zip64esig != zip64_eoc_sig) {
+			file_data_free(fi,(unsigned char *)eoc);
+			dbg(1,"eoc wrong\n");
+			eoc=NULL;
+		}
+	}
+	file_data_free(fi,(unsigned char *)eocl);
+	dbg(1,"eoc64 ok 0x%Lx 0x%Lx\n",eoc->zip64eofst,eoc->zip64ecsz);
+	return eoc;
+}
+
 static struct zip_cd *
 binfile_read_cd(struct map_priv *m, int offset, int len)
 {
 	struct zip_cd *cd;
+	long long cdoffset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
 	if (len == -1) {
-		cd=(struct zip_cd *)file_data_read(m->fi,m->eoc->zipeofst+offset, sizeof(*cd));
+		cd=(struct zip_cd *)file_data_read(m->fi,cdoffset+offset, sizeof(*cd));
 		cd_to_cpu(cd);
 		len=cd->zipcfnl+cd->zipcxtl;
 		file_data_free(m->fi,(unsigned char *)cd);
 	}
-	cd=(struct zip_cd *)file_data_read(m->fi,m->eoc->zipeofst+offset, sizeof(*cd)+len);
+	cd=(struct zip_cd *)file_data_read(m->fi,cdoffset+offset, sizeof(*cd)+len);
 	if (cd) {
 		cd_to_cpu(cd);
 		dbg(1,"sig 0x%x\n", cd->zipcensig);
@@ -206,7 +235,7 @@ binfile_cd_offset(struct zip_cd *cd)
 }
 
 static struct zip_lfh *
-binfile_read_lfh(struct file *fi, unsigned int offset)
+binfile_read_lfh(struct file *fi, long long offset)
 {
 	struct zip_lfh *lfh;
 
@@ -222,7 +251,7 @@ binfile_read_lfh(struct file *fi, unsigned int offset)
 }
 
 static unsigned char *
-binfile_read_content(struct map_priv *m, int offset, struct zip_lfh *lfh)
+binfile_read_content(struct map_priv *m, long long offset, struct zip_lfh *lfh)
 {
 	struct zip_enc *enc;
 	unsigned char *ret=NULL;
@@ -264,8 +293,9 @@ static int
 binfile_search_cd(struct map_priv *m, int offset, char *name, int partial, int skip)
 {
 	int size=4096;
-	int end=m->eoc->zipecsz;
+	int end=m->eoc64?m->eoc64->zip64ecsz:m->eoc->zipecsz;
 	int len=strlen(name);
+	long long cdoffset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
 	struct zip_cd *cd;
 #if 0
 	dbg(0,"end=%d\n",end);
@@ -286,7 +316,7 @@ binfile_search_cd(struct map_priv *m, int offset, char *name, int partial, int s
 			m->search_size=end-offset;
 			if (m->search_size > size)
 				m->search_size=size;
-			m->search_data=file_data_read(m->fi,m->eoc->zipeofst+m->search_offset,m->search_size);
+			m->search_data=file_data_read(m->fi,cdoffset+m->search_offset,m->search_size);
 			cd=(struct zip_cd *)m->search_data;
 		}
 #if 0
@@ -773,7 +803,7 @@ zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
 	struct zip_lfh *lfh;
 	char *zipfn;
 	dbg(1,"enter %p %p %p\n", m, cd, t);
-	dbg(1,"cd->zipofst=0x%x\n", binfile_cd_offset(cd));
+	dbg(1,"cd->zipofst=0x%Lx\n", binfile_cd_offset(cd));
 	t->start=NULL;
 	t->mode=1;
 	lfh=binfile_read_lfh(m->fi, binfile_cd_offset(cd));
@@ -794,7 +824,8 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
         struct map_priv *m=mr->m;
 	struct file *f=m->fi;
 	struct tile t;
-	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size));
+	long long offset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
+	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, offset + zipfile*m->cde_size, m->cde_size));
 	cd_to_cpu(cd);
 #if 0
 	if (!cd->zipcunc) {
@@ -1482,12 +1513,18 @@ binfile_get_index(struct map_priv *m)
 
 	len = strlen("index");
 	cde_index_size = sizeof(struct zip_cd)+len;
-	offset = m->eoc->zipecsz-cde_index_size;
+	if (m->eoc64) 
+		offset = m->eoc64->zip64ecsz-cde_index_size;
+	else
+		offset = m->eoc->zipecsz-cde_index_size;
 	cd = binfile_read_cd(m, offset, len);
 
 	if (!cd) {
 		cde_index_size+=sizeof(struct zip_cd_ext);
-		offset = m->eoc->zipecsz-cde_index_size;
+		if (m->eoc64)
+			offset = m->eoc64->zip64ecsz-cde_index_size;
+		else
+			offset = m->eoc->zipecsz-cde_index_size;
 		cd = binfile_read_cd(m, offset, len+sizeof(struct zip_cd_ext));
 	}
 	if (cd) {
@@ -1506,6 +1543,17 @@ binfile_get_index(struct map_priv *m)
 	m->index_offset=offset;
 	m->index_cd=cd;
 	return 1;
+}
+
+static struct zip_cd *
+map_binfile_first_cd(struct map_priv *m)
+{
+	if (!(m->eoc=binfile_read_eoc(m->fi)))
+		return NULL;
+	m->eoc64=binfile_read_eoc64(m->fi);
+	if (!binfile_get_index(m))
+		return NULL;
+	return binfile_read_cd(m, 0, 0);
 }
 
 static int
@@ -1533,7 +1581,7 @@ map_binfile_open(struct map_priv *m)
 	}
 	*magic = le32_to_cpu(*magic);
 	if (*magic == zip_lfh_sig) {
-		if ((m->eoc=binfile_read_eoc(m->fi)) && binfile_get_index(m) && (first_cd=binfile_read_cd(m, 0, 0))) {
+		if ((first_cd=map_binfile_first_cd(m))) {
 			m->cde_size=sizeof(struct zip_cd)+first_cd->zipcfnl+first_cd->zipcxtl;
 			m->zip_members=m->index_offset/m->cde_size+1;
 			dbg(1,"cde_size %d\n", m->cde_size);
@@ -1570,6 +1618,7 @@ map_binfile_close(struct map_priv *m)
 {
 	file_data_free(m->fi, (unsigned char *)m->index_cd);
 	file_data_free(m->fi, (unsigned char *)m->eoc);
+	file_data_free(m->fi, (unsigned char *)m->eoc64);
 	g_free(m->cachedir);
 	file_destroy(m->fi);
 }
