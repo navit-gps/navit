@@ -134,7 +134,7 @@ vehicle_null_set_attr(struct vehicle_priv *priv, struct attr *attr)
 		priv->have_coords=1;
 		break;
 	default:
-		return 0;
+		break;
 	}
 	callback_list_call_attr_0(priv->cbl, attr->type);
 	return 1;
