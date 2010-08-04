@@ -2759,8 +2759,8 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct attr attr,mattr;
 	struct item *item;
-	char *label_full,*prefix="";
-	int plen,hassub,found=0;
+	char *label_full,*prefix=0;
+	int plen=0,hassub,found=0;
 	struct widget *wb,*w,*wbm;
 	struct coord c;
 
@@ -2770,7 +2770,8 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 		if (wm && wm->prefix)
 			prefix=g_strdup(wm->prefix);
 	}
-	plen=strlen(prefix);
+	if ( prefix )
+        plen=strlen(prefix);
 
 	gui_internal_prune_menu_count(this, 1, 0);
 	wb=gui_internal_menu(this, _("Bookmarks"));
