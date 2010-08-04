@@ -46,8 +46,7 @@
 #include "support/espeak/translate.h"
 
 
-#define SAMPLES_PER_BUFFER 1024
-#define BUFFERS 8
+#define BUFFERS 4
 
 
 // ----- some stuff needed by espeak ----------------------------------
@@ -137,14 +136,13 @@ static BOOL waveout_open(struct speech_priv* sp_priv)
 
 static int wave_out(struct speech_priv* sp_priv)
 {
-	unsigned char wav_outbuf[SAMPLES_PER_BUFFER * 2];
 	int isDone;
 
 	WAVEHDR *WaveHeader = g_list_first(sp_priv->free_buffers)->data;
 	sp_priv->free_buffers = g_list_remove(sp_priv->free_buffers, WaveHeader);
 
-	out_ptr = out_start = wav_outbuf;
-	out_end = wav_outbuf + sizeof(wav_outbuf);
+	out_ptr = out_start = WaveHeader->lpData;
+	out_end = WaveHeader->lpData + WaveHeader->dwBufferLength;
 
 	isDone = WavegenFill(0);
 
@@ -152,7 +150,6 @@ static int wave_out(struct speech_priv* sp_priv)
 	{
 		memset ( out_ptr, 0, out_end - out_ptr );
 	}
-	memcpy(WaveHeader->lpData, wav_outbuf, WaveHeader->dwBufferLength);
 	waveOutWrite(sp_priv->h_wave_out, WaveHeader, sizeof(WAVEHDR));
 
 	return isDone;
@@ -297,12 +294,21 @@ static void speech_message_dispatcher( struct speech_priv * sp_priv)
 static void create_buffers(struct speech_priv *sp_priv)
 {
 	int buffer_counter;
+
+
+    SYSTEM_INFO system_info;
+    GetSystemInfo (&system_info);
+
+	char *buffer_head = VirtualAlloc(0, system_info.dwPageSize * BUFFERS, MEM_RESERVE, PAGE_NOACCESS);
+
 	for (buffer_counter = 0; buffer_counter < BUFFERS; buffer_counter++)
 	{
 		WAVEHDR *WaveHeader = g_new0(WAVEHDR, 1);
 
-		WaveHeader->dwBufferLength = SAMPLES_PER_BUFFER * 2;
-		WaveHeader->lpData = (char *)VirtualAlloc(0, WaveHeader->dwBufferLength, MEM_COMMIT, PAGE_READWRITE);
+		WaveHeader->dwBufferLength = system_info.dwPageSize;
+		WaveHeader->lpData = (char *)VirtualAlloc(buffer_head, WaveHeader->dwBufferLength, MEM_COMMIT, PAGE_READWRITE);
+		buffer_head += WaveHeader->dwBufferLength;
+
 		WaveHeader->dwUser = (DWORD)sp_priv;
 		waveOutPrepareHeader(sp_priv->h_wave_out, WaveHeader, sizeof(WAVEHDR));
 
