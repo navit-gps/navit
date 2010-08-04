@@ -425,7 +425,7 @@ static struct speech_methods espeak_meth = {
 };
 
 static struct speech_priv *
-espeak_new(struct speech_methods *meth, struct attr **attrs) {
+espeak_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
 	struct speech_priv *this = NULL;
 	struct attr *path;
 	struct attr *language;
