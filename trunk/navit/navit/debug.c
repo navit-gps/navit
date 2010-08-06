@@ -45,7 +45,7 @@ int timestamp_prefix=0;
 
 static int dummy;
 static GHashTable *debug_hash;
-static const char *gdb_program;
+static const gchar *gdb_program;
 
 static FILE *debug_fp;
 
