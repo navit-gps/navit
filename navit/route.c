@@ -3011,7 +3011,6 @@ rp_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 		default:
 			return 0;
 		}
-		return 0;
 	default:
 		mr->attr_next=attr_none;
 		attr->type=attr_none;
