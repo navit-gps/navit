@@ -346,7 +346,8 @@ debug_guard(const char *where, int line, const char *func, char *str)
 void
 debug_free(const char *where, int line, const char *func, void *ptr)
 {
-	struct malloc_head *head,*tail;
+	struct malloc_head *head;
+        struct malloc_tail *tail;
 	if (!ptr)
 		return;
 	mallocs--;
