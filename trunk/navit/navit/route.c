@@ -3270,11 +3270,12 @@ rm_get_item(struct map_rect_priv *mr)
 	default:
 		mr->item.type=type_street_route;
 		mr->seg=mr->seg_next;
+        /* workaround for missing route guidance
 		if (!mr->seg && mr->path) {
 			mr->path=mr->path->next;
 			if (mr->path)
 				mr->seg=mr->path->path;
-		}
+		} */
 		if (mr->seg) {
 			mr->seg_next=mr->seg->next;
 			break;
