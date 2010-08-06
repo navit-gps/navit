@@ -25,6 +25,7 @@
 #include <glib/gprintf.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "debug.h"
 #include "config.h"
 #include "file.h"
@@ -820,7 +821,7 @@ xi_text (GMarkupParseContext *context,
 				struct xmldocument *doc=user_data;
 				struct xmlstate *curr, **state = doc->user_data;
 				struct attr attr;
-				char *text_dup=g_malloc(text_len+1);
+				char *text_dup = malloc(text_len+1);
 
 				curr=*state;
 				strncpy(text_dup, text, text_len);
@@ -829,7 +830,7 @@ xi_text (GMarkupParseContext *context,
 				attr.u.str=text_dup;
 				if (curr->object_func && curr->object_func->add_attr && curr->element_attr.u.data)
 					curr->object_func->add_attr(curr->element_attr.u.data, &attr);
-				g_free(text_dup);
+				free(text_dup);
 				return;
 			}
 		}
