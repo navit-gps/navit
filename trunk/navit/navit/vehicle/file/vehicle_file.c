@@ -450,7 +450,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		if (*item[8])
 			sscanf(item[8], "%lf", &priv->hdop);
 		if (*item[1])
-			strcpy(priv->fixtime, item[1]);
+			strncpy(priv->fixtime, item[1], strlen(priv->fixtime));
 		if (*item[9])
 			sscanf(item[9], "%lf", &priv->height);
 
@@ -552,8 +552,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 			yy        local zone minutes 0..59
 	*/
 		if (item[1] && item[2] && item[3] && item[4]) {
-			// priv->fixtime = atof(item[1]);
-			strcpy(priv->fixtime, item[1]);
+			strncpy(priv->fixtime, item[1], strlen(priv->fixtime));
 			priv->fixday = atoi(item[2]);
 			priv->fixmonth = atoi(item[3]);
 			priv->fixyear = atoi(item[4]);
