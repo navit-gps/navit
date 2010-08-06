@@ -259,8 +259,7 @@ coord_parse(const char *c_str, enum projection pro, struct coord *c_ret)
 		printf("ret=%d delta=%d ret_str='%s'\n", ret, GPOINTER_TO_INT(str-c_str), c_str+ret);
 	}
 out:
-	if (proj)
-		free(proj);
+	free(proj);
 	return ret;
 }
 
