@@ -284,7 +284,7 @@ if test "x${glib}" = "xyes"; then
 else
 	GLIB_CFLAGS="-I\$(top_srcdir)/navit/support -I\$(top_srcdir)/navit/support/glib -I\$(top_srcdir)/navit/support/ezxml"
 	GLIB_LIBS="-L\$(top_builddir)/navit/support/glib -lsupport_glib -L\$(top_builddir)/navit/support/ezxml -lsupport_ezxml"
-	if test "x${win32}" != "xyes"; then
+	if test "x${win32}" != "xyes" -a "x${android}" != "xyes"; then
 		GLIB_LIBS="$GLIB_LIBS -lpthread"
 	fi
 fi
