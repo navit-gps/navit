@@ -449,8 +449,8 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		sscanf(item[7], "%d", &priv->sats_used);
 		if (*item[8])
 			sscanf(item[8], "%lf", &priv->hdop);
-		if (*item[1])
-			strncpy(priv->fixtime, item[1], strlen(priv->fixtime));
+		if (*item[1]) 
+			strncpy(priv->fixtime, item[1], sizeof(priv->fixtime));
 		if (*item[9])
 			sscanf(item[9], "%lf", &priv->height);
 
