@@ -45,6 +45,14 @@ item_bin_add_coord(struct item_bin *ib, struct coord *c, int count)
 }
 
 void
+item_bin_add_coord_reverse(struct item_bin *ib, struct coord *c, int count)
+{
+	int i;
+	for (i = count-1 ; i >= 0 ; i--) 
+		item_bin_add_coord(ib, &c[i], 1);	
+}
+
+void
 item_bin_bbox(struct item_bin *ib, struct rect *r)
 {
 	struct coord c;
