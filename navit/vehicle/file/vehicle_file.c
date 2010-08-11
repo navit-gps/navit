@@ -619,6 +619,8 @@ vehicle_file_io(struct vehicle_priv *priv)
 		dbg(1, "line='%s'\n", str);
 		rc +=vehicle_file_parse(priv, str);
 		str = tok;
+		if (priv->file_type == file_type_file && rc)
+			break;
 	}
 
 	if (str != priv->buffer) {
