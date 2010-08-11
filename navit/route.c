@@ -251,6 +251,7 @@ struct route {
 	int destination_distance;	/**< Distance to the destination at which the destination is considered "reached" */
 	struct vehicleprofile *vehicleprofile; /**< Routing preferences */
 	int route_status;		/**< Route Status */
+	int link_path;			/**< Link paths over multiple waypoints together */
 	struct pcoord pc;
 	struct vehicle *v;
 };
@@ -692,11 +693,12 @@ route_path_update_done(struct route *this, int new_graph)
 	route_status.u.num=route_status_building_path;
 	route_set_attr(this, &route_status);
 	prev_dst=route_previous_destination(this);
-	this->path2=route_path_new(this->graph, oldpath, prev_dst, this->current_dst, this->vehicleprofile);
-	if (oldpath) {
-		if (!item_is_equal(oldpath->path_last->data->item,this->path2->path_last->data->item)) {
-			this->path2->next=oldpath;
-		} else {
+	if (this->link_path) {
+		this->path2=route_path_new(this->graph, NULL, prev_dst, this->current_dst, this->vehicleprofile);
+		this->path2->next=oldpath;
+	} else {
+		this->path2=route_path_new(this->graph, oldpath, prev_dst, this->current_dst, this->vehicleprofile);
+		if (oldpath) {
 			this->path2->next=oldpath->next;
 			route_path_destroy(oldpath,0);
 		}
@@ -717,6 +719,7 @@ route_path_update_done(struct route *this, int new_graph)
 		this->path2->path_time=path_time;
 		this->path2->path_len=path_len;
 		if (prev_dst != this->pos) {
+			this->link_path=1;
 			this->current_dst=prev_dst;
 			route_graph_reset(this->graph);
 			route_graph_flood(this->graph, this->current_dst, this->vehicleprofile, this->route_graph_flood_done_cb);
@@ -728,6 +731,7 @@ route_path_update_done(struct route *this, int new_graph)
 			route_status.u.num=route_status_path_done_new;
 	} else 
 		route_status.u.num=route_status_not_found;
+	this->link_path=0;
 	route_set_attr(this, &route_status);
 }
 
@@ -3269,12 +3273,12 @@ rm_get_item(struct map_rect_priv *mr)
 	default:
 		mr->item.type=type_street_route;
 		mr->seg=mr->seg_next;
-        /* workaround for missing route guidance
-		if (!mr->seg && mr->path) {
+		if (!mr->seg && mr->path && mr->path->next) {
+			mr->path->in_use--;
 			mr->path=mr->path->next;
-			if (mr->path)
-				mr->seg=mr->path->path;
-		} */
+			mr->path->in_use++;
+			mr->seg=mr->path->path;
+		}
 		if (mr->seg) {
 			mr->seg_next=mr->seg->next;
 			break;
