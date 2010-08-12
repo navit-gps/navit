@@ -622,6 +622,14 @@ route_contains(struct route *this, struct item *item)
 
 }
 
+static struct route_info *
+route_next_destination(struct route *this)
+{
+	if (!this->destinations)
+		return NULL;
+	return this->destinations->data;
+}
+
 /**
  * @brief Checks if a route has reached its destination
  *
@@ -633,7 +641,7 @@ route_destination_reached(struct route *this)
 {
 	struct street_data *sd = NULL;
 	enum projection pro;
-	struct route_info *dst=route_get_dst(this);
+	struct route_info *dst=route_next_destination(this);
 
 	if (!this->pos)
 		return 0;
@@ -663,8 +671,11 @@ route_destination_reached(struct route *this)
 	if (transform_distance(pro, &this->pos->c, &dst->lp) > this->destination_distance) {
 		return 0;
 	}
-	
-	return 1;
+
+	if (g_list_next(this->destinations))	
+		return 1;
+	else
+		return 2;
 }
 
 static struct route_info *
@@ -1029,6 +1040,21 @@ void
 route_set_destination(struct route *this, struct pcoord *dst, int async)
 {
 	route_set_destinations(this, dst, dst?1:0, async);
+}
+
+void
+route_remove_waypoint(struct route *this)
+{
+	struct route_path *path=this->path2;
+	this->destinations=g_list_remove(this->destinations,this->destinations->data);
+	this->path2=this->path2->next;
+	route_path_destroy(path,0);
+	if (!this->destinations)
+		return;
+	route_graph_reset(this->graph);
+	this->current_dst=this->destinations->data;
+	route_graph_flood(this->graph, this->current_dst, this->vehicleprofile, this->route_graph_flood_done_cb);
+	
 }
 
 /**
