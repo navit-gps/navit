@@ -632,7 +632,11 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	    !vehicle_get_attr(tr->vehicle, attr_position_direction, &direction_attr, NULL) ||
 	    !vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL) ||
 	    !vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL)) {
-		dbg(0,"failed to get position data\n");
+		dbg(0,"failed to get position data %d %d %d %d\n",
+		vehicle_get_attr(tr->vehicle, attr_position_speed, &speed_attr, NULL),
+	    vehicle_get_attr(tr->vehicle, attr_position_direction, &direction_attr, NULL),
+	    vehicle_get_attr(tr->vehicle, attr_position_coord_geo, &coord_geo, NULL),
+	    vehicle_get_attr(tr->vehicle, attr_position_time_iso8601, &time_attr, NULL));
 		return;
 	}
 	if (!vehicleprofile_get_attr(vehicleprofile,attr_static_speed,&static_speed,NULL) || !vehicleprofile_get_attr(vehicleprofile,attr_static_distance,&static_distance,NULL)) {
