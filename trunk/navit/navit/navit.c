@@ -903,9 +903,9 @@ navit_add_former_destinations_from_file(struct navit *this_)
 	struct attr *attrs[]={&type, &data, NULL};
 	struct map_rect *mr;
 	struct item *item;
-	int valid=0;
-	struct coord c;
-	struct pcoord pc;
+	int i,valid=0,count=0;
+	struct coord c[16];
+	struct pcoord pc[16];
 
 	this_->former_destination=map_new(&parent, attrs);
 	g_free(destination_file);
@@ -913,16 +913,21 @@ navit_add_former_destinations_from_file(struct navit *this_)
 		return;	
 	mr=map_rect_new(this_->former_destination, NULL);
 	while ((item=map_rect_get_item(mr))) {
-		if (item->type == type_former_destination && item_coord_get(item, &c, 1)) 
+		if ((item->type == type_former_destination || item->type == type_former_itinerary) && (count=item_coord_get(item, c, 16))) 
 			valid=1;
 	}
 	map_rect_destroy(mr);
-	pc.pro=map_projection(this_->former_destination);
-	pc.x=c.x;
-	pc.y=c.y;
-	if (valid) {
-		route_set_destination(this_->route, &pc, 1);
-		this_->destination=pc;
+	if (valid && count > 0) {
+		for (i = 0 ; i < count ; i++) {
+			pc[i].pro=map_projection(this_->former_destination);
+			pc[i].x=c[i].x;
+			pc[i].y=c[i].y;
+		}
+		if (count == 1)
+			route_set_destination(this_->route, &pc[0], 1);
+		else
+			route_set_destinations(this_->route, pc, count, 1);
+		this_->destination=pc[count-1];
 		this_->destination_valid=1;
 	}
 }
@@ -2045,8 +2050,15 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	callback_list_call_attr_2(this_->attr_cbl, attr_position_coord_geo, this_, nv->vehicle);
 
 	/* Finally, if we reached our destination, stop navigation. */
-	if (this_->route && route_destination_reached(this_->route)) {
-		navit_set_destination(this_, NULL, NULL, 0);
+	if (this_->route) {
+		switch(route_destination_reached(this_->route)) {
+		case 1:
+			route_remove_waypoint(this_->route);
+			break;	
+		case 2:
+			navit_set_destination(this_, NULL, NULL, 0);
+			break;
+		}
 	}
 	profile(0,"return 5\n");
 }
