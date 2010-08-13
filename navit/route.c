@@ -2552,7 +2552,7 @@ route_graph_update(struct route *this, struct callback *cb, int async)
 		c[i++]=dst->c;
 		tmp=g_list_next(tmp);
 	}
-	this->graph=route_graph_build(this->ms, c, 2, this->route_graph_done_cb, async);
+	this->graph=route_graph_build(this->ms, c, i, this->route_graph_done_cb, async);
 	if (! async) {
 		while (this->graph->busy) 
 			route_graph_build_idle(this->graph);
