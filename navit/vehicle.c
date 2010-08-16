@@ -276,30 +276,29 @@ vehicle_remove_attr(struct vehicle *this_, struct attr *attr)
 void
 vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor)
 {
-	if (!cursor) {	// we require this for now.
-		return;
-	}
-
 	if (this_->animate_callback) {
 		event_remove_timeout(this_->animate_timer);
 		this_->animate_timer=NULL;		// dangling pointer! prevent double freeing.
 		callback_destroy(this_->animate_callback);
 		this_->animate_callback=NULL;	// dangling pointer! prevent double freeing.
 	}
-	if (cursor->interval) {
+	if (cursor && cursor->interval) {
 		this_->animate_callback=callback_new_2(callback_cast(vehicle_draw_do), this_, 0);
 		this_->animate_timer=event_add_timeout(cursor->interval, 1, this_->animate_callback);
 	}
 
-	if (this_->gra) {
+	if (cursor && this_->gra) {
 		this_->cursor_pnt.x+=(this_->cursor->w - cursor->w)/2;
 		this_->cursor_pnt.y+=(this_->cursor->h - cursor->h)/2;
 		graphics_overlay_resize(this_->gra, &this_->cursor_pnt, cursor->w, cursor->h, 65535, 0);
 	}
 
 	struct point sc;
-	sc.x=cursor->w/2;
-	sc.y=cursor->h/2;
+	if (cursor) { 
+		sc.x=cursor->w/2;
+		sc.y=cursor->h/2;
+	} else
+		sc.x=sc.y=0;
 	transform_set_screen_center(this_->trans, &sc);
 
 	this_->cursor=cursor;
@@ -322,13 +321,13 @@ vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int
 		angle+=360;
 	dbg(1,"enter this=%p gra=%p pnt=%p lazy=%d dir=%d speed=%d\n", this_, gra, pnt, lazy, angle, speed);
 	dbg(1,"point %d,%d\n", pnt->x, pnt->y);
-	if (!this_->cursor)
-		return;
 	this_->cursor_pnt=*pnt;
-	this_->cursor_pnt.x-=this_->cursor->w/2;
-	this_->cursor_pnt.y-=this_->cursor->h/2;
 	this_->angle=angle;
 	this_->speed=speed;
+	if (!this_->cursor)
+		return;
+	this_->cursor_pnt.x-=this_->cursor->w/2;
+	this_->cursor_pnt.y-=this_->cursor->h/2;
 	if (!this_->gra) {
 		struct color c;
 		this_->gra=graphics_overlay_new(gra, &this_->cursor_pnt, this_->cursor->w, this_->cursor->h, 65535, 0);
@@ -342,6 +341,14 @@ vehicle_draw(struct vehicle *this_, struct graphics *gra, struct point *pnt, int
 	vehicle_draw_do(this_, lazy);
 }
 
+int
+vehicle_get_cursor_data(struct vehicle *this, struct point *pnt, int *angle, int *speed)
+{
+	*pnt=this->cursor_pnt;
+	*angle=this->angle;
+	*speed=this->speed;
+	return 1;
+}
 
 
 static void

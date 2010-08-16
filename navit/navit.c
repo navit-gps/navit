@@ -1372,9 +1372,12 @@ navit_set_cursors(struct navit *this_)
 	v=g_list_first(this_->vehicles); // GList of navit_vehicles
 	while (v) {
 		nv=v->data;
-		if (vehicle_get_attr(nv->vehicle, attr_cursorname, &name, NULL))
-			c=layout_get_cursor(this_->layout_current, name.u.str);
-		else
+		if (vehicle_get_attr(nv->vehicle, attr_cursorname, &name, NULL)) {
+			if (!strcmp(name.u.str,"none"))
+				c=NULL;
+			else
+				c=layout_get_cursor(this_->layout_current, name.u.str);
+		} else
 			c=layout_get_cursor(this_->layout_current, "default");
 		vehicle_set_cursor(nv->vehicle, c);
 		v=g_list_next(v);
