@@ -332,6 +332,12 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 
     g_hash_table_destroy(dedup);
 
+    if (this_->mr) {
+        map_rect_destroy(this_->mr);
+        this_->mr = 0;
+    }
+
+    unlink(this_->bookmark_file);
 	result=(rename(this_->working_file,this_->bookmark_file)==0);
 	if (!result) 
 	{
@@ -662,8 +668,8 @@ bookmarks_append_coord(struct bookmarks *this_, char *file, struct pcoord *c, co
 
 			lines--;
 		}
-		fclose(f);
 	}
+    fclose(f);
 
 new_file:
 	f=fopen(file, "a");
