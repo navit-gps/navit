@@ -163,8 +163,8 @@ msgstr "unbekannt "
 msgid "When possible, please turn around"
 msgstr "Wenn möglich bitte wenden"
 
-msgid "Enter the roundabout soon"
-msgstr "Demnächst in den Kreisverkehr einfahren"
+msgid "Enter the roundabout soon and leave it at the %s"
+msgstr "Demnächst in den Kreisverkehr einfahren und an der %s verlassen"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
