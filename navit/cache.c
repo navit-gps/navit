@@ -219,11 +219,12 @@ static struct cache_entry *
 cache_move(struct cache *cache, struct cache_entry_list *old, struct cache_entry_list *new)
 {
 	struct cache_entry *entry;
-	entry=cache_remove_lru(NULL, old);
+	// remove from list AND cache, because next cache lookup can't read the id after trim
+	entry=cache_remove_lru(cache, old);
 	if (! entry)
 		return NULL;
 	entry=cache_trim(cache, entry);
-	cache_insert_mru(NULL, new, entry);
+	cache_insert_mru(cache, new, entry);
 	return entry;
 }
 
