@@ -706,10 +706,11 @@ route_path_update_done(struct route *this, int new_graph)
 	prev_dst=route_previous_destination(this);
 	if (this->link_path) {
 		this->path2=route_path_new(this->graph, NULL, prev_dst, this->current_dst, this->vehicleprofile);
-		this->path2->next=oldpath;
+		if (this->path2)
+		    this->path2->next=oldpath;
 	} else {
 		this->path2=route_path_new(this->graph, oldpath, prev_dst, this->current_dst, this->vehicleprofile);
-		if (oldpath) {
+		if (oldpath && this->path2) {
 			this->path2->next=oldpath->next;
 			route_path_destroy(oldpath,0);
 		}
