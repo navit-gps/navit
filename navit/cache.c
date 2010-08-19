@@ -216,10 +216,14 @@ cache_trim(struct cache *cache, struct cache_entry *entry)
 	struct cache_entry *new_entry;
 	if ( cache->entry_size < entry->size )
 	{
+	    g_hash_table_remove(cache->hash, (gpointer)(entry->id));
+
 	    new_entry = g_slice_alloc0(cache->entry_size);
 	    memcpy(new_entry, entry, cache->entry_size);
 	    g_slice_free1( entry->size, entry);
 	    new_entry->size = cache->entry_size;
+
+	    g_hash_table_insert(cache->hash, (gpointer)new_entry->id, new_entry);
 	}
 	else
 	{
@@ -233,12 +237,11 @@ static struct cache_entry *
 cache_move(struct cache *cache, struct cache_entry_list *old, struct cache_entry_list *new)
 {
 	struct cache_entry *entry;
-	// remove from list AND cache, because next cache lookup can't read the id after trim
-	entry=cache_remove_lru(cache, old);
+	entry=cache_remove_lru(NULL, old);
 	if (! entry)
 		return NULL;
 	entry=cache_trim(cache, entry);
-	cache_insert_mru(cache, new, entry);
+	cache_insert_mru(NULL, new, entry);
 	return entry;
 }
 
