@@ -8,7 +8,7 @@ Rectangle {
 
     property string text: "ListSelector"
     property string value: ""
-    property int itemId
+    property int itemId: 0
     property bool showScroller: false
     signal changed
 
@@ -21,7 +21,7 @@ Rectangle {
     Component.onCompleted: startup();    
 
     Text {
-	id: labelTxt; text: listselector.text; color: "White"; font.pointSize: 14;
+	id: labelTxt; text: listselector.text; color: "White"; font.pointSize: 22;
 	anchors.horizontalCenter: list.horizontalCenter
 	anchors.verticalCenter: listselector.top
     }
@@ -37,7 +37,8 @@ Rectangle {
 	     clip: true
 	     highlightFollowsCurrentItem: true
 	     keyNavigationWraps: true
-	     currentIndex: listselector.itemId;
+	     
+	     Component.onCompleted: { list.currentIndex=listselector.itemId; }
          }
 	 Rectangle {
        		 id: listScroller
