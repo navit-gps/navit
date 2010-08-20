@@ -28,7 +28,7 @@ import Qt 4.7
      Component.onCompleted: startup();
 
      Text {
-        id: label; text: toggleswitch.text; color: "White"; font.pointSize: gui.height/32;
+        id: label; text: toggleswitch.text; color: "White"; font.pointSize: gui.height/20;
         anchors.left: background.right; anchors.leftMargin: gui.width/24;
         anchors.verticalCenter: background.verticalCenter
      }
@@ -37,12 +37,12 @@ import Qt 4.7
      Image {
          id: background; source: "background.svg"
          MouseArea { anchors.fill: parent; onClicked: toggle() }
-	 height: gui.height/7.5; width: height*2.4;
+	 height: gui.height/6; width: height*2.4;
      }
 
      Image {
          id: knob; source: "knob.svg"; x: 1; y: 2
-	 height: gui.height/8; width: gui.height/8;
+	 height: gui.height/6; width: gui.height/6;
 
          MouseArea {
              anchors.fill: parent

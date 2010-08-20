@@ -21,10 +21,14 @@ private:
 class NGQProxy : public QObject {
 	Q_OBJECT;
 
+	Q_PROPERTY(int itemId READ itemId  NOTIFY itemIdSignal);
 public:
     NGQProxy(struct gui_priv* this_,QObject *parent) : QObject(parent) {
         this->object=this_;
     }
+
+signals:
+	void itemIdSignal(int itemId);
 
 public slots:
 	//Attribute read/write
@@ -78,8 +82,13 @@ public slots:
 			return;
 	}
 	
+	int itemId() {
+		return _itemId;
+	}
 protected:
     struct gui_priv* object;
+
+	int _itemId;
 
 	virtual int setAttrFunc(struct attr *attr)=0;
 	virtual int getAttrFunc(enum attr_type type, struct attr *attr, struct attr_iter *iter)=0;
