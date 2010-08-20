@@ -6,7 +6,6 @@ Rectangle {
     function onStartup(currentPage) {    
 	btnBack.opacity=0;
 	btnQuit.opacity=0;
-	console.log(gui.lengthPage());
        	if ( gui.lengthPage() > 1  ) {
 		btnBack.opacity=1;
 	}

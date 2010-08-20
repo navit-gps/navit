@@ -27,11 +27,15 @@ public slots:
 		return;
 	}
 	QString getAttrList(const QString &attr_name) {
-		NGQStandardItemModel* ret=new NGQStandardItemModel(this);
 		struct attr attr;
 		struct attr_iter *iter;
 		int counter=0;
-		QString currentValue, retId;
+		QString currentValue;
+		QDomDocument retDoc;
+		QDomElement entries;
+
+		entries=retDoc.createElement("attributes");
+		retDoc.appendChild(entries);
 
 		//Find current value
 		getAttrFunc(attr_from_name(attr_name.toStdString().c_str()), &attr, NULL) ;
@@ -42,7 +46,7 @@ public slots:
 		//Fill da list
 		iter=getIterFunc();
 		if (iter == NULL) {
-			return retId;
+			return QString();
 		}
 
 		while (getAttrFunc(attr_from_name(attr_name.toStdString().c_str()), &attr, iter) ) {
@@ -53,27 +57,34 @@ public slots:
 				curItem->setData(QVariant(attr.u.layout->name),NGQStandardItemModel::ItemName);
 				curItem->setData(QVariant(attr.u.layout->name),NGQStandardItemModel::ItemValue);
 				if (currentValue==attr.u.layout->name) {
-					retId.setNum(counter);
+					this->_itemId=counter;
 				}
 			}
 			if (attr.type==attr_vehicle) {
+				QStandardItem* curItem=new QStandardItem();
+				QDomElement entry=retDoc.createElement("vehicle");
+				entries.appendChild(entry);
+
 				this->object->currVehicle=attr.u.vehicle;
-				curItem->setData(QVariant(counter),NGQStandardItemModel::ItemId);
 				curItem->setData(QVariant(this->object->vehicleProxy->getAttr("name")),NGQStandardItemModel::ItemName);
-				curItem->setData(QVariant(this->object->vehicleProxy->getAttr("name")),NGQStandardItemModel::ItemValue);
-				retId.setNum(0);
+				entry.appendChild(this->_fieldValueHelper(retDoc,QString("id"), QString::number(counter)));
+				entry.appendChild(this->_fieldValueHelper(retDoc,QString("name"), QString(this->object->vehicleProxy->getAttr("name"))));
+
+				//Detecting current vehicle
+				struct attr vehicle_attr;
+				navit_get_attr(this->object->nav, attr_vehicle, &vehicle_attr, NULL);
+				if (vehicle_attr.u.vehicle==attr.u.vehicle) {
+					this->_itemId=counter;
+				}
 			}
 			counter++;
-			ret->appendRow(curItem);
 		}
 
 		dropIterFunc(iter);
 
-		this->object->guiWidget->rootContext()->setContextProperty("listModel",static_cast<QObject*>(ret));
+		dbg(0,QString::number(_itemId).toStdString().c_str());
 
-		dbg(0,"retId %s \n",retId.toStdString().c_str());
-
-		return retId;
+		return retDoc.toString();
 	}
 	QString getDestination() {
 		struct attr attr;

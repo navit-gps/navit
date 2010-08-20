@@ -15,7 +15,7 @@ Rectangle {
 
    Image {
 	id: imgItem; source: gui.iconPath+container.icon; anchors.top: container.top; anchors.horizontalCenter: container.horizontalCenter;
-	width: gui.height/8; height: gui.height/8
+	width: gui.height/4; height: gui.height/4
    }
 
     Text {
