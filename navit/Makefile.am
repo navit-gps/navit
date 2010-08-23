@@ -86,7 +86,7 @@ android/build.xml: android/AndroidManifest.xml
 	if [ "$(builddir)" != "$(srcdir)" ]; then cp -rp $(srcdir)/android/* $(builddir)/android; fi
 	android update project -t 3 -p android
 
-apk: all android/build.xml navit.xml
+apkg-all: all android/build.xml navit.xml
 	mkdir -p android/libs/armeabi
 	cp .libs/*.so android/libs/armeabi/libnavit.so
 	for i in */*/.libs/*.so ; do sed 's&lib_data_data_org\.navitproject\.navit_lib_&/data/data/org.navitproject.navit/lib/lib&' <$$i >android/libs/armeabi/$$(basename $$i); done
@@ -96,8 +96,14 @@ apk: all android/build.xml navit.xml
 	mkdir -p android/res/raw
 	for i in $(shell cd ../po && echo *.mo); do cp ../po/$$i android/res/raw/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
 	cp navit.xml android/res/raw
+
+apkg: apkg-all
 	cd android && ant debug
 
+apkg-release: apkg-all
+	cd android && ant release
+	jarsigner $$(cat ~/.keystore_args) android/bin/Navit-unsigned.apk mykey
+#	zipalign -f 4  android/bin/Navit-unsigned.apk android/bin/Navit-signed.apk
 else
 navit_SOURCES = start.c
 navit_LDADD = lib@LIBNAVIT@.la
