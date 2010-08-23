@@ -1,4 +1,4 @@
-#include <glib.h>
+#include "glib_slice.h"
 #ifdef DEBUG_CACHE
 #include <stdio.h>
 #endif
