@@ -134,7 +134,7 @@ char *nls_table[][3]={
 	{"ENU","USA","en_US"},
 	{"FRA","FRA","fr_FR"},
 	{"RUS","RUS","ru_RU"},
-	{"ENI","IRL","en_GB"},
+	{"ENI","IRL","en_IE"},
 	{NULL,NULL,NULL},
 };
 
