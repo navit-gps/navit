@@ -2232,8 +2232,9 @@ navit_layout_switch(struct navit *n)
 	}
 	
 	//We calculate sunrise anyway, cause it is needed both for day and for night
-        if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lat,geo_attr.u.coord_geo->lng,35,1,&trise,&tset)!=0) {
+        if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
 		//near the pole sun never rises/sets, so we should never switch profiles
+		dbg(1,"trise: %u:%u, sun never visible, never switch profile\n",HOURS(trise),MINUTES(trise));
 		n->prevTs=currTs;
 		return;
 	    }
@@ -2251,8 +2252,9 @@ navit_layout_switch(struct navit *n)
 	    }
 	}
 	if (l->nightname) {
-	    if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lat,geo_attr.u.coord_geo->lng,-24,0,&trise,&tset)!=0) {
+	    if (__sunriset__(year,month,day,geo_attr.u.coord_geo->lng,geo_attr.u.coord_geo->lat,-5,1,&trise,&tset)!=0) {
 		//near the pole sun never rises/sets, so we should never switch profiles
+		dbg(1,"tset: %u:%u, sun always visible, never switch profile\n",HOURS(tset),MINUTES(tset));
 		n->prevTs=currTs;
 		return;
 	    }
