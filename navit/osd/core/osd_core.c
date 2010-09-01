@@ -761,6 +761,15 @@ struct osd_text {
 };
 
 
+/**
+ * @brief Format a text attribute
+ *
+ * Returns the formatted current value of an attribute as a string
+ * 
+ * @param attr Pointer to an attr structure specifying the attribute to be formatted
+ * @param format Pointer to a string specifying how to format the attribute. Allowed format strings depend on the attribute; this member can be NULL.
+ * @returns Pointer to a string containing the formatted value
+ */
 static char *
 osd_text_format_attr(struct attr *attr, char *format)
 {
@@ -868,6 +877,43 @@ osd_text_format_attr(struct attr *attr, char *format)
 			g_free(tmp);
 			return ret;
 		}
+	case attr_position_time_iso8601:
+		if ((!format) || (!strcmp(format,"iso8601")))
+		{ 
+			break;
+		}
+		else 
+		{
+			if (strstr(format, "local;") == format)
+			{
+				textt = iso8601_to_secs(attr->u.str);
+				memcpy ((void *) &tm, (void *) localtime(&textt), sizeof(tm));
+				strftime(buffer, sizeof(buffer), (char *)(format + 6), &tm);
+			}
+			else if ((sscanf(format, "%*c%2d:%2d;", &(text_tm.tm_hour), &(text_tm.tm_min)) == 2) && (strchr("+-", format[0])))
+			{
+				if (strchr("-", format[0]))
+				{
+					textt = iso8601_to_secs(attr->u.str) - text_tm.tm_hour * 3600 - text_tm.tm_min * 60;
+				}
+				else
+				{
+					textt = iso8601_to_secs(attr->u.str) + text_tm.tm_hour * 3600 + text_tm.tm_min * 60;
+				}
+				memcpy ((void *) &tm, (void *) gmtime(&textt), sizeof(tm));
+				strftime(buffer, sizeof(buffer), &format[strcspn(format, ";") + 1], &tm);
+			}
+			else
+			{
+				sscanf(attr->u.str, "%4d-%2d-%2dT%2d:%2d:%2d", &(tm.tm_year), &(tm.tm_mon), &(tm.tm_mday), &(tm.tm_hour), &(tm.tm_min), &(tm.tm_sec));
+				// the tm structure definition is kinda weird and needs some extra voodoo
+				tm.tm_year-=1900; tm.tm_mon--;
+				// get weekday and day of the year
+				mktime(&tm);
+				strftime(buffer, sizeof(buffer), format, &tm);
+			}
+			return g_strdup(buffer);
+		}
 	default:
 		break;
 	}
@@ -875,12 +921,12 @@ osd_text_format_attr(struct attr *attr, char *format)
 }
 
 /**
- * * Parse a string of the form key.subkey or key[index].subkey into its components, where subkey can itself have its own index and further subkeys
- * *
- * * @param in string to parse (will be modified by the function); upon returning this pointer will point to a string containing key
- * * @param index pointer to an address that will receive a pointer to a string containing index or a null pointer if key does not have an index
- * * @returns a pointer to a string containing subkey, i.e. everything following the first period; if no subkey was found, the return value is a pointer to an empty string; if errors are encountered (index with missing closed bracket or passing a null pointer as index argument when an index was encountered), the return value is NULL
- * */
+ * Parse a string of the form key.subkey or key[index].subkey into its components, where subkey can itself have its own index and further subkeys
+ *
+ * @param in String to parse (the part before subkey will be modified by the function); upon returning this pointer will point to a string containing key
+ * @param index Pointer to an address that will receive a pointer to a string containing index or a null pointer if key does not have an index
+ * @returns If the function succeeds, a pointer to a string containing subkey, i.e. everything following the first period, or a pointer to an empty string if there is nothing left to parse. If the function fails(index with missing closed bracket or passing a null pointer as index argument when an index was encountered), the return value is NULL
+ */
 static char *
 osd_text_split(char *in, char **index)
 {
@@ -1139,6 +1185,12 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 
 }
 
+/**
+ * @brief Create a new osd_text_item and insert it into a linked list
+ * 
+ * @param parent Pointer to the preceding osd_text_item structure in the list. If NULL, the new osd_text_item becomes the root element of a new list.
+ * @returns A pointer to the new osd_text_item element.
+ */
 struct osd_text_item *
 oti_new(struct osd_text_item * parent)
 {
@@ -1156,6 +1208,15 @@ oti_new(struct osd_text_item * parent)
     return this;
 }
 
+/**
+ * @brief Prepare a text type OSD element
+ *
+ * Parses the label string (as specified in the XML file) for a text type OSD element into attributes and static text. 
+ * 
+ * @param this Pointer to an osd_text structure representing the OSD element. The items member of this structure will receive a pointer to a list of osd_text_item structures.
+ * @param nav Pointer to a navit structure
+ * @returns nothing
+ */
 static void
 osd_text_prepare(struct osd_text *this, struct navit *nav)
 {
