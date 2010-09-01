@@ -283,6 +283,12 @@ struct route_graph_point_iterator {
 	struct route_graph_segment *next;	/**< The next segment to be returned */
 };
 
+struct attr_iter {
+	union {
+		GList *list;
+	} u;
+};
+
 static struct route_info * route_find_nearest_street(struct vehicleprofile *vehicleprofile, struct mapset *ms, struct pcoord *c);
 static struct route_graph_point *route_graph_get_point(struct route_graph *this, struct coord *c);
 static void route_graph_update(struct route *this, struct callback *cb, int async);
@@ -3509,7 +3515,20 @@ route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, stru
 		break;
 	case attr_destination:
 		if (this_->destinations) {
-			struct route_info *dst=route_get_dst(this_);
+			struct route_info *dst;
+			if (iter) {
+				if (iter->u.list) {
+					iter->u.list=g_list_next(iter->u.list);
+				} else {
+					iter->u.list=this_->destinations;
+				}
+				if (!iter->u.list) {
+					return 0;
+				}
+				dst = (struct route_info*)iter->u.list->data;				
+			} else { //No iter handling
+				dst=route_get_dst(this_);
+			}
 			attr->u.pcoord=&this_->pc;
 			this_->pc.pro=projection_mg; /* fixme */
 			this_->pc.x=dst->c.x;
@@ -3545,6 +3564,18 @@ route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, stru
 	}
 	attr->type=type;
 	return ret;
+}
+
+struct attr_iter *
+route_attr_iter_new(void)
+{
+	return g_new0(struct attr_iter, 1);
+}
+
+void
+route_attr_iter_destroy(struct attr_iter *iter)
+{
+	g_free(iter);
 }
 
 void
