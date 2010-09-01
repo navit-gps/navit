@@ -155,12 +155,20 @@ char *stristr(const char *String, const char *Pattern)
 # define EOVERFLOW E2BIG
 #endif
 
-/* Read up to (and including) a DELIMITER from FP into *LINEPTR (and
-   NUL-terminate it).  *LINEPTR is a pointer returned from malloc (or
-   NULL), pointing to *N characters of space.  It is realloc'ed as
-   necessary.  Returns the number of characters read (not including
-   the null terminator), or -1 on error or EOF.  */
 
+/**
+ * Read the part of a file up to a delimiter to a string.
+ * <p> 
+ * Read up to (and including) a DELIMITER from FP into *LINEPTR (and
+   NUL-terminate it).  
+ * @param lineptr Pointer to a pointer returned from malloc (or
+   NULL), pointing to a buffer. It is realloc'ed as
+   necessary and will receive the data read.
+ * @param n Size of the buffer.  
+ *
+ * @return Number of characters read (not including
+   the null terminator), or -1 on error or EOF.
+*/
 int
 getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
 {
@@ -260,6 +268,13 @@ char * newSysString(const char *toconvert)
 #endif
 #endif
 
+/**
+ * Convert an ISO 8601-style time string into epoch time.
+ *
+ * @param iso8601 Pointer to a string containing the time in ISO 8601 format.
+ *
+ * @return An unsigned integer representing the number of seconds elapsed since January 1, 1970, 00:00:00 UTC.
+ */
 unsigned int
 iso8601_to_secs(char *iso8601)
 {
@@ -287,6 +302,11 @@ iso8601_to_secs(char *iso8601)
 	return ((d*24+val[3])*60+val[4])*60+val[5];
 }
 
+/**
+ * Output local system time in ISO 8601 format.
+ *
+ * @return Pointer to a string containing the time in ISO 8601 format
+ */
 char *
 current_to_iso8601(void)
 {
