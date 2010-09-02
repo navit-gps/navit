@@ -54,6 +54,60 @@ struct layout * layout_new(struct attr *parent, struct attr **attrs)
 	return l;
 }
 
+struct attr_iter {
+        GList *last;
+};
+
+
+struct attr_iter *
+layout_attr_iter_new(void)
+{
+	return g_new0(struct attr_iter, 1);
+}
+
+void
+layout_attr_iter_destroy(struct attr_iter *iter)
+{
+	g_free(iter);
+}
+
+int
+layout_get_attr(struct layout *layout, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	GList *cursor,*layer;
+	attr->type=type;
+	switch (type) {
+	case attr_cursor:
+		cursor=layout->cursors;
+		while (cursor) {
+			if (!iter || iter->last == g_list_previous(cursor)) {
+				attr->u.cursor=cursor->data;
+				if (iter)
+					iter->last=cursor;
+				return 1;
+			}
+			cursor=g_list_next(cursor);
+		}
+		break;
+	case attr_layer:
+		layer=layout->layers;
+		while (layer) {
+			if (!iter || iter->last == g_list_previous(layer)) {
+				attr->u.layer=layer->data;
+				if (iter)
+					iter->last=layer;
+				return 1;
+			}
+			layer=g_list_next(layer);
+		}
+		break;
+	default:
+		break;
+	}
+	return 0;
+}
+
+
 int
 layout_add_attr(struct layout *layout, struct attr *attr)
 {
@@ -155,21 +209,60 @@ cursor_add_attr(struct cursor *this_, struct attr *attr)
 	return 0;
 }
 
+static int
+layer_set_attr_do(struct layer *l, struct attr *attr, int init)
+{
+	switch (attr->type) {
+	case attr_active:
+		l->active = attr->u.num;
+		return 1;
+	case attr_details:
+		l->details = attr->u.num;
+		return 1;
+	case attr_name:
+		g_free(l->name);
+		l->name = g_strdup(attr->u.str);
+		return 1;
+	default:
+		return 0;
+	}
+}
+
 
 
 struct layer * layer_new(struct attr *parent, struct attr **attrs)
 {
 	struct layer *l;
 
-	struct attr *name, *details;
 	l = g_new0(struct layer, 1);
-	name=attr_search(attrs, NULL, attr_name);
-	if (name)
-		l->name = g_strdup(name->u.str);
-	details=attr_search(attrs, NULL, attr_details);
-	if (details)
-		l->details = details->u.num;
+	l->active=1;
+	for (;*attrs; attrs++) {
+		layer_set_attr_do(l, *attrs, 1);
+	}
 	return l;
+}
+
+int
+layer_get_attr(struct layer *layer, enum attr_type type, struct attr *attr, struct attr_iter *iter)
+{
+	attr->type=type;
+	switch(type) {
+	case attr_active:
+		attr->u.num=layer->active;
+		return 1;
+	case attr_details:
+		attr->u.num=layer->details;
+		return 1;
+	case attr_name:
+		if (layer->name) {
+			attr->u.str=layer->name;
+			return 1;
+		}
+		break;
+	default:
+		return 0;
+	}
+	return 0;
 }
 
 int
@@ -184,6 +277,11 @@ layer_add_attr(struct layer *layer, struct attr *attr)
 	}
 }
 
+int
+layer_set_attr(struct layer *layer, struct attr *attr)
+{
+	return layer_set_attr_do(layer, attr, 0);
+}
 
 struct itemgra * itemgra_new(struct attr *parent, struct attr **attrs)
 {
