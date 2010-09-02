@@ -48,6 +48,7 @@
 #include "roadprofile.h"
 #include "osd.h"
 #include "speech.h"
+#include "event.h"
 
 struct compass {
 	struct osd_item osd_item;
@@ -160,6 +161,149 @@ format_float_0(double num)
 {
 	return g_strdup_printf("%.0f", num);
 }
+
+
+struct stopwatch {
+	struct osd_item osd_item;
+	int width;
+	struct graphics_gc *orange,*white;
+	struct callback *click_cb;
+
+	int bActive;                //counting or not
+	time_t current_base_time;   //base time of currently measured time interval
+	time_t sum_time;            //sum of previous time intervals (except current intervals)
+	time_t last_click_time;     //time of last click (for double click handling)
+};
+
+static void 
+osd_stopwatch_draw(struct stopwatch *this, struct navit *nav,
+		struct vehicle *v)
+{
+	osd_std_draw(&this->osd_item);
+
+	char buffer[32]="00:00:00";
+	struct point p, bbox[4];
+	time_t total_sec,total_min,total_hours,total_days;
+	total_sec = this->sum_time;
+
+	if(this->bActive) {
+		total_sec += time(0)-this->current_base_time;
+		}
+
+	total_min = total_sec/60;
+	total_hours = total_min/60;
+	total_days = total_hours/24;
+
+	if (total_days==0) {
+		snprintf(buffer,32,"%02d:%02d:%02d", (int)total_hours%24, (int)total_min%60, (int)total_sec%60);
+	} else {
+		snprintf(buffer,32,"%02dd %02d:%02d:%02d",
+		(int)total_days, (int)total_hours%24, (int)total_min%60, (int)total_sec%60); 
+	}
+
+	graphics_get_text_bbox(this->osd_item.gr, this->osd_item.font, buffer, 0x10000, 0, bbox, 0);
+	p.x=(this->osd_item.w-bbox[2].x)/2;
+	p.y = this->osd_item.h-this->osd_item.h/10;
+
+	struct graphics_gc *curr_color = this->bActive?this->white:this->orange;
+	graphics_draw_text(this->osd_item.gr, curr_color, NULL, this->osd_item.font, buffer, &p, 0x10000, 0);
+	graphics_draw_mode(this->osd_item.gr, draw_mode_end);
+}
+
+
+static void
+osd_stopwatch_click(struct stopwatch *this, struct navit *nav, int pressed, int button, struct point *p)
+{
+	struct point bp = this->osd_item.p;
+	osd_wrap_point(&bp, nav);
+	if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->osd_item.w || p->y > bp.y + this->osd_item.h) && !this->osd_item.pressed) 
+	return;
+
+	navit_ignore_button(nav);
+	if (pressed) { //single click handling
+
+		if(this->bActive) {
+		this->sum_time += time(0)-this->current_base_time;
+		this->current_base_time = 0;
+		} else {
+			this->current_base_time = time(0);
+		}
+
+		this->bActive ^= 1;  //toggle active flag
+
+		if (this->last_click_time == time(0)) { //double click handling
+		this->bActive = 0;
+		this->current_base_time = 0;
+		this->sum_time = 0;
+		}
+
+	this->last_click_time = time(0);
+	}
+
+	osd_stopwatch_draw(this, nav,NULL);
+}
+
+
+static void
+osd_stopwatch_init(struct stopwatch *this, struct navit *nav)
+{
+
+	struct color c;
+
+	osd_set_std_graphic(nav, &this->osd_item, (struct osd_priv *)this);
+
+	this->orange = graphics_gc_new(this->osd_item.gr);
+	c.r = 0xFFFF;
+	c.g = 0xA5A5;
+	c.b = 0x0000;
+	c.a = 65535;
+	graphics_gc_set_foreground(this->orange, &c);
+	graphics_gc_set_linewidth(this->orange, this->width);
+
+	this->white = graphics_gc_new(this->osd_item.gr);
+	c.r = 65535;
+	c.g = 65535;
+	c.b = 65535;
+	c.a = 65535;
+	graphics_gc_set_foreground(this->white, &c);
+	graphics_gc_set_linewidth(this->white, this->width);
+
+
+	graphics_gc_set_linewidth(this->osd_item.graphic_fg_white, this->width);
+
+	event_add_timeout(500, 1, callback_new_1(callback_cast(osd_stopwatch_draw), this));
+
+	navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast (osd_stopwatch_click), attr_button, this));
+
+	osd_stopwatch_draw(this, nav, NULL);
+}
+
+static struct osd_priv *
+osd_stopwatch_new(struct navit *nav, struct osd_methods *meth,
+		struct attr **attrs)
+{
+	struct stopwatch *this = g_new0(struct stopwatch, 1);
+	struct attr *attr;
+	this->osd_item.p.x = 120;
+	this->osd_item.p.y = 20;
+	this->osd_item.w = 60;
+	this->osd_item.h = 80;
+	this->osd_item.navit = nav;
+	this->osd_item.font_size = 200;
+	this->osd_item.meth.draw = osd_draw_cast(osd_stopwatch_draw);
+
+	this->bActive = 0; //do not count on init
+	this->current_base_time = 0;
+	this->sum_time = 0;
+	this->last_click_time = 0;
+
+	osd_set_std_attr(attrs, &this->osd_item, 2);
+	attr = attr_search(attrs, NULL, attr_width);
+	this->width=attr ? attr->u.num : 2;
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_stopwatch_init), attr_graphics_ready, this));
+	return (struct osd_priv *) this;
+}
+
 
 static void
 osd_compass_draw(struct compass *this, struct navit *nav,
@@ -1708,4 +1852,5 @@ plugin_init(void)
     	plugin_register_osd_type("volume", osd_volume_new);
     	plugin_register_osd_type("scale", osd_scale_new);
 		plugin_register_osd_type("image", osd_image_new);
+		plugin_register_osd_type("stopwatch", osd_stopwatch_new);
 }
