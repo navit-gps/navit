@@ -59,6 +59,7 @@ struct vehicle {
 	int angle;
 	int speed;
 	int sequence;
+	GHashTable *log_to_cb;
 };
 
 static void vehicle_draw_do(struct vehicle *this_, int lazy);
@@ -124,6 +125,7 @@ vehicle_new(struct attr *parent, struct attr **attrs)
 	transform_setup(this_->trans, &center, 16, 0);
 
 	dbg(1, "leave\n");
+	this_->log_to_cb=g_hash_table_new(NULL,NULL);
 	return this_;
 }
 
@@ -253,9 +255,17 @@ vehicle_add_attr(struct vehicle *this_, struct attr *attr)
 int
 vehicle_remove_attr(struct vehicle *this_, struct attr *attr)
 {
+	struct callback *cb;
 	switch (attr->type) {
 	case attr_callback:
 		callback_list_remove(this_->cbl, attr->u.callback);
+		break;
+	case attr_log:
+		cb=g_hash_table_lookup(this_->log_to_cb, attr->u.log);
+		if (!cb)
+			return 0;
+		g_hash_table_remove(this_->log_to_cb, attr->u.log);
+		callback_list_remove(this_->cbl, cb);
 		break;
 	default:
 		this_->attrs=attr_generic_remove_attr(this_->attrs, attr);
@@ -598,6 +608,7 @@ vehicle_add_log(struct vehicle *this_, struct log *log)
 		cb=callback_new_attr_2(callback_cast(vehicle_log_binfile), attr_position_coord_geo, this_, log);
 	} else
 		return 1;
+	g_hash_table_insert(this_->log_to_cb, log, cb);
 	callback_list_add(this_->cbl, cb);
 	return 0;
 }
