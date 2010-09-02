@@ -1839,7 +1839,8 @@ static void xdisplay_draw(struct displaylist *display_list, struct graphics *gra
 	lays=l->layers;
 	while (lays) {
 		lay=lays->data;
-		xdisplay_draw_layer(display_list, gra, lay, order);
+		if (lay->active)
+			xdisplay_draw_layer(display_list, gra, lay, order);
 		lays=g_list_next(lays);
 	}
 }

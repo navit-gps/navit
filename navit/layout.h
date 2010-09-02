@@ -61,7 +61,12 @@ struct itemgra {
 	GList *elements;
 };
 
-struct layer { char *name; int details; GList *itemgras; };
+struct layer { 
+	char *name;
+	int details;
+	GList *itemgras;
+	int active;
+};
 
 struct cursor {
 	struct attr **attrs;
@@ -74,14 +79,34 @@ struct cursor {
 struct layout { char *name; char* dayname; char* nightname; char *font; struct color color; GList *layers; GList *cursors; int order_delta; };
 
 /* prototypes */
+enum attr_type;
+struct arrows;
+struct attr;
+struct attr_iter;
+struct circle;
+struct cursor;
+struct element;
+struct icon;
+struct image;
+struct itemgra;
+struct layer;
+struct layout;
+struct polygon;
+struct polyline;
+struct text;
 struct layout *layout_new(struct attr *parent, struct attr **attrs);
+struct attr_iter *layout_attr_iter_new(void);
+void layout_attr_iter_destroy(struct attr_iter *iter);
+int layout_get_attr(struct layout *layout, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int layout_add_attr(struct layout *layout, struct attr *attr);
 struct cursor *layout_get_cursor(struct layout *this_, char *name);
 struct cursor *cursor_new(struct attr *parent, struct attr **attrs);
 void cursor_destroy(struct cursor *this_);
 int cursor_add_attr(struct cursor *this_, struct attr *attr);
 struct layer *layer_new(struct attr *parent, struct attr **attrs);
+int layer_get_attr(struct layer *layer, enum attr_type type, struct attr *attr, struct attr_iter *iter);
 int layer_add_attr(struct layer *layer, struct attr *attr);
+int layer_set_attr(struct layer *layer, struct attr *attr);
 struct itemgra *itemgra_new(struct attr *parent, struct attr **attrs);
 int itemgra_add_attr(struct itemgra *itemgra, struct attr *attr);
 struct polygon *polygon_new(struct attr *parent, struct attr **attrs);
@@ -92,5 +117,5 @@ struct icon *icon_new(struct attr *parent, struct attr **attrs);
 struct image *image_new(struct attr *parent, struct attr **attrs);
 struct arrows *arrows_new(struct attr *parent, struct attr **attrs);
 int element_add_attr(struct element *e, struct attr *attr);
+/* end of prototypes */
 #endif
-
