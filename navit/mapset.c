@@ -94,6 +94,18 @@ mapset_add_attr(struct mapset *ms, struct attr *attr)
 }
 
 int
+mapset_remove_attr(struct mapset *ms, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_map:
+		ms->maps=g_list_remove(ms->maps, attr->u.map);
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+int
 mapset_get_attr(struct mapset *ms, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
 	GList *map;
@@ -288,31 +300,31 @@ mapset_search_new(struct mapset *ms, struct item *item, struct attr *search_attr
  * @return The next found item or NULL if there are no more items found
  */
 struct item *
-mapset_search_get_item(struct mapset_search *this)
+mapset_search_get_item(struct mapset_search *this_)
 {
 	struct item *ret=NULL;
 	struct attr active_attr;
 
-	while ((this) && (!this->ms || !(ret=map_search_get_item(this->ms)))) { /* The current map has no more items to be returned */
-		if (this->search_attr->type >= attr_country_all && this->search_attr->type <= attr_country_name)
+	while ((this_) && (!this_->ms || !(ret=map_search_get_item(this_->ms)))) { /* The current map has no more items to be returned */
+		if (this_->search_attr->type >= attr_country_all && this_->search_attr->type <= attr_country_name)
 			break;
 		for (;;) {
-			this->map=g_list_next(this->map);
-			if (! this->map)
+			this_->map=g_list_next(this_->map);
+			if (! this_->map)
 				break;
-			if (map_get_attr(this->map->data, attr_search_active, &active_attr, NULL)) {
+			if (map_get_attr(this_->map->data, attr_search_active, &active_attr, NULL)) {
 				if (!active_attr.u.num)
 					continue;
 			}
-			if (!map_get_attr(this->map->data, attr_active, &active_attr, NULL))
+			if (!map_get_attr(this_->map->data, attr_active, &active_attr, NULL))
 				break;
 			if (active_attr.u.num)
 				break;
 		}
-		if (! this->map)
+		if (! this_->map)
 			break;
-		map_search_destroy(this->ms);
-		this->ms=map_search_new(this->map->data, this->item, this->search_attr, this->partial);
+		map_search_destroy(this_->ms);
+		this_->ms=map_search_new(this_->map->data, this_->item, this_->search_attr, this_->partial);
 	}
 	return ret;
 }
@@ -323,10 +335,10 @@ mapset_search_get_item(struct mapset_search *this)
  * @param this The mapset search to be destroyed
  */
 void
-mapset_search_destroy(struct mapset_search *this)
+mapset_search_destroy(struct mapset_search *this_)
 {
-	if (this) {
-		map_search_destroy(this->ms);
-		g_free(this);
+	if (this_) {
+		map_search_destroy(this_->ms);
+		g_free(this_);
 	}
 }
