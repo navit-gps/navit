@@ -5178,9 +5178,9 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	data->button_box=gui_internal_box_new(this,
 					      gravity_center|orientation_horizontal);
 	data->button_box->children=g_list_append(data->button_box->children,
-						 data->next_button);
-	data->button_box->children=g_list_append(data->button_box->children,
 						 data->prev_button);
+	data->button_box->children=g_list_append(data->button_box->children,
+						 data->next_button);
 	//data->button_box->background=this->background2;
 	data->button_box->bl=this->spacing;
 	widget->children=g_list_append(widget->children,data->button_box);
