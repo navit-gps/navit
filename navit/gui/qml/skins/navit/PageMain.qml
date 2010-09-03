@@ -14,7 +14,7 @@ Rectangle {
         spacing: parent.height/6
 
 	ButtonIcon {
-            id: btnDestination; text: "Drive to\npoint on map"; icon: "gui_active.svg"; onClicked: { navit.setDestination(); gui.backToMap() }
+            id: btnDestination; text: "Drive to\npoint on map"; icon: "gui_active.svg"; onClicked: { route.addDestination(); gui.backToMap() }
         }
         ButtonIcon {
             id: btnNavigate; text: "Navigate\nto . . ."; icon: "cursor.svg";  onClicked: Navit.load("PageNavigate.qml");
