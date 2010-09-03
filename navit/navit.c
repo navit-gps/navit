@@ -848,7 +848,7 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 	} else
 		this_->destination_valid=0;
 	char *destination_file = bookmarks_get_destination_file(TRUE);
-	bookmarks_append_coord(this_->bookmarks, destination_file, c, "former_destination", description, NULL, this_->recentdest_count);
+	bookmarks_append_coord(this_->bookmarks, destination_file, c, 1, "former_destination", description, NULL, this_->recentdest_count);
 	g_free(destination_file);
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
 	if (this_->route) {
@@ -899,8 +899,8 @@ navit_add_former_destinations_from_file(struct navit *this_)
 {
 	char *destination_file = bookmarks_get_destination_file(FALSE);
 	struct attr parent={attr_navit, .u.navit=this_};
-	struct attr type={attr_type, {"textfile"}}, data={attr_data, {destination_file}};
-	struct attr *attrs[]={&type, &data, NULL};
+	struct attr type={attr_type, {"textfile"}}, data={attr_data, {destination_file}}, flags={attr_flags, {1}};
+	struct attr *attrs[]={&type, &data, &flags, NULL};
 	struct map_rect *mr;
 	struct item *item;
 	int i,valid=0,count=0;
@@ -913,7 +913,7 @@ navit_add_former_destinations_from_file(struct navit *this_)
 		return;	
 	mr=map_rect_new(this_->former_destination, NULL);
 	while ((item=map_rect_get_item(mr))) {
-		if ((item->type == type_former_destination || item->type == type_former_itinerary) && (count=item_coord_get(item, c, 16))) 
+		if ((item->type == type_former_destination || item->type == type_former_itinerary || item->type == type_former_itinerary_part) && (count=item_coord_get(item, c, 16))) 
 			valid=1;
 	}
 	map_rect_destroy(mr);

@@ -475,6 +475,7 @@ ITEM(forest_way_2)
 ITEM(forest_way_3)
 ITEM(forest_way_4)
 ITEM(former_itinerary)
+ITEM(former_itinerary_part)
 /* Area */
 ITEM2(0xc0000000,area)
 ITEM2(0xc0000001,area_unspecified)
