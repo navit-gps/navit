@@ -169,7 +169,10 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->m=map;
 	mr->sel=sel;
-	mr->item.id_hi=0;
+	if (map->flags & 1)
+		mr->item.id_hi=1;
+	else
+		mr->item.id_hi=0;
 	mr->item.id_lo=0;
 	mr->item.meth=&methods_textfile;
 	mr->item.priv_data=mr;
@@ -232,10 +235,15 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 	for(;;) {
 		if (feof(mr->f)) {
 			dbg(1,"map_rect_get_item_textfile: eof %d\n",mr->item.id_hi);
-			if (mr->item.id_hi) {
-				return NULL;
+			if (mr->m->flags & 1) {
+				if (!mr->item.id_hi) 
+					return NULL;
+				mr->item.id_hi=0;
+			} else {
+				if (mr->item.id_hi) 
+					return NULL;
+				mr->item.id_hi=1;
 			}
-			mr->item.id_hi++;
 			if (mr->m->is_pipe) {
 				pclose(mr->f);
 				mr->f=popen(mr->args, "r");
@@ -321,6 +329,7 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs)
 	struct map_priv *m;
 	struct attr *data=attr_search(attrs, NULL, attr_data);
 	struct attr *charset=attr_search(attrs, NULL, attr_charset);
+	struct attr *flags=attr_search(attrs, NULL, attr_flags);
 	struct file_wordexp *wexp;
 	int len,is_pipe=0;
 	char *wdata;
@@ -342,6 +351,8 @@ map_new_textfile(struct map_methods *meth, struct attr **attrs)
 	m->id=++map_id;
 	m->filename=g_strdup(wexp_data[0]);
 	m->is_pipe=is_pipe;
+	if (flags) 
+		m->flags=flags->u.num;
 	dbg(1,"map_new_textfile %s %s\n", m->filename, wdata);
 	if (charset) {
 		m->charset=g_strdup(charset->u.str);
