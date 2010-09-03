@@ -163,6 +163,218 @@ format_float_0(double num)
 }
 
 
+
+struct odometer {
+	struct osd_item osd_item;
+	int width;
+	struct graphics_gc *orange;
+	struct graphics_gc *white;
+	struct callback *click_cb;
+	char *text;                 //text of label attribute for this osd
+
+	int bActive;                //counting or not
+	double sum_dist;            //sum of distance ofprevious intervals in meters
+	int sum_time;               //sum of time of previous intervals in seconds (needed for avg spd calculation)
+	time_t last_click_time;     //time of last click (for double click handling)
+	time_t last_start_time;     //time of last start of counting
+	struct coord last_coord;
+};
+
+char* str_replace(char*output, char*input, char*pattern, char*replacement)
+{
+  if (!output || !input || !pattern || !replacement) {
+    return NULL;
+  }
+  if(!strcmp(pattern,"")) {
+    return input;
+  }
+
+  char*pos  = &input[0];
+  char*pos2 = &input[0];
+  output[0] = 0;
+  while ( (pos2=strstr(pos,pattern)) ) {
+    strncat(output,pos,pos2-pos);
+    strcat(output,replacement);
+    pos = pos2 + strlen(pattern);
+  }
+  strcat(output,pos);
+}
+
+static void
+osd_odometer_draw(struct odometer *this, struct navit *nav,
+		 struct vehicle *v)
+{
+  struct coord curr_coord;
+
+  char *dist_buffer=0;
+  char *spd_buffer=0;
+  struct point p, bbox[4];
+  struct attr position_attr,vehicle_attr;
+  enum projection pro;
+  struct vehicle* curr_vehicle = v;
+  double spd = 0;
+
+  if(nav) {
+    navit_get_attr(nav, attr_vehicle, &vehicle_attr, NULL);
+  }
+  if (vehicle_attr.u.vehicle) {
+    curr_vehicle = vehicle_attr.u.vehicle;
+  }
+
+  if(0==curr_vehicle)
+    return;
+
+  osd_std_draw(&this->osd_item);
+  if(this->bActive) {
+    vehicle_get_attr(curr_vehicle, attr_position_coord_geo,&position_attr, NULL);
+    pro = projection_mg;//position_attr.u.pcoord->pro;
+    transform_from_geo(pro, position_attr.u.coord_geo, &curr_coord);
+
+    if (this->last_coord.x != -1 ) {
+        //we have valid previous position
+        double dCurrDist = 0;
+        dCurrDist = transform_distance(pro, &curr_coord, &this->last_coord);
+        this->sum_dist += dCurrDist;
+        int time_all = time(0)-this->last_click_time+this->sum_time;
+        spd = 3.6*(double)this->sum_dist/(double)time_all;
+    }
+    this->last_coord = curr_coord;
+  }
+
+  char buffer [64+1]="";
+  char buffer2[64+1]="";
+  dist_buffer = format_distance(this->sum_dist,"");
+  spd_buffer = format_speed(spd,"");
+
+  buffer [0] = 0;
+  buffer2[0] = 0;
+  if(this->text) {
+    str_replace(buffer2,this->text,"${avg_spd}",spd_buffer);
+    str_replace(buffer,buffer2,"${distance}",dist_buffer);
+  }
+
+  graphics_get_text_bbox(this->osd_item.gr, this->osd_item.font, buffer, 0x10000, 0, bbox, 0);
+  p.x=(this->osd_item.w-bbox[2].x)/2;
+  p.y = this->osd_item.h-this->osd_item.h/10;
+  struct graphics_gc *curr_color = this->bActive?this->white:this->orange;
+  graphics_draw_text(this->osd_item.gr, curr_color, NULL, this->osd_item.font, buffer, &p, 0x10000, 0);
+  g_free(dist_buffer);
+  g_free(spd_buffer);
+  graphics_draw_mode(this->osd_item.gr, draw_mode_end);
+}
+
+
+
+static void
+osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int button, struct point *p)
+{
+  struct point bp = this->osd_item.p;
+  osd_wrap_point(&bp, nav);
+  if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->osd_item.w || p->y > bp.y + this->osd_item.h) && !this->osd_item.pressed)
+    return;
+  navit_ignore_button(nav);
+  if (pressed) { //single click handling
+    if(this->bActive) { //being stopped
+      this->last_coord.x = -1;
+      this->last_coord.y = -1;
+      this->sum_time += time(0)-this->last_click_time;
+    }
+
+  this->bActive ^= 1;  //toggle active flag
+
+  if (this->last_click_time == time(0)) { //double click handling
+    this->bActive = 0;
+    this->sum_dist = 0;
+    this->sum_time = 0;
+    this->last_start_time = 0;
+    this->last_coord.x = -1;
+    this->last_coord.y = -1;
+  }
+
+  this->last_click_time = time(0);
+
+  osd_odometer_draw(this, nav,NULL);
+  }
+}
+
+
+static void
+osd_odometer_init(struct odometer *this, struct navit *nav)
+{
+	struct color c;
+
+	osd_set_std_graphic(nav, &this->osd_item, (struct osd_priv *)this);
+
+	this->orange = graphics_gc_new(this->osd_item.gr);
+	c.r = 0xFFFF;
+	c.g = 0xA5A5;
+	c.b = 0x0000;
+	c.a = 65535;
+	graphics_gc_set_foreground(this->orange, &c);
+	graphics_gc_set_linewidth(this->orange, this->width);
+
+	this->white = graphics_gc_new(this->osd_item.gr);
+	c.r = 65535;
+	c.g = 65535;
+	c.b = 65535;
+	c.a = 65535;
+	graphics_gc_set_foreground(this->white, &c);
+	graphics_gc_set_linewidth(this->white, this->width);
+
+	graphics_gc_set_linewidth(this->osd_item.graphic_fg_white, this->width);
+
+    this->last_coord.x = -1;
+    this->last_coord.y = -1;
+    this->sum_dist = 0.0;
+
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_draw), attr_position_coord_geo, this));
+
+	navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast (osd_odometer_click), attr_button, this));
+
+	osd_odometer_draw(this, nav, NULL);
+}
+
+static struct osd_priv *
+osd_odometer_new(struct navit *nav, struct osd_methods *meth,
+		struct attr **attrs)
+{
+	struct odometer *this = g_new0(struct odometer, 1);
+	struct attr *attr;
+	this->osd_item.p.x = 120;
+	this->osd_item.p.y = 20;
+	this->osd_item.w = 60;
+	this->osd_item.h = 80;
+	this->osd_item.navit = nav;
+	this->osd_item.font_size = 200;
+	this->osd_item.meth.draw = osd_draw_cast(osd_odometer_draw);
+
+	this->bActive = 0; //do not count on init
+	this->sum_dist = 0;
+	this->last_click_time = time(0);
+	this->last_coord.x = -1;
+	this->last_coord.y = -1;
+
+
+	attr = attr_search(attrs, NULL, attr_label);
+	//FIXME find some way to free text!!!!
+	if (attr) {
+		this->text = g_strdup(attr->u.str);
+        }
+	else
+		this->text = NULL;
+
+
+
+	osd_set_std_attr(attrs, &this->osd_item, 2);
+	attr = attr_search(attrs, NULL, attr_width);
+	this->width=attr ? attr->u.num : 2;
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_init), attr_graphics_ready, this));
+	return (struct osd_priv *) this;
+}
+
+
+
+
 struct stopwatch {
 	struct osd_item osd_item;
 	int width;
@@ -1853,4 +2065,5 @@ plugin_init(void)
     	plugin_register_osd_type("scale", osd_scale_new);
 		plugin_register_osd_type("image", osd_image_new);
 		plugin_register_osd_type("stopwatch", osd_stopwatch_new);
+	plugin_register_osd_type("odometer", osd_odometer_new);
 }
