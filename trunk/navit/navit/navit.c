@@ -860,6 +860,34 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 }
 
 /**
+ * Start the route computing to a given set of coordinates including waypoints
+ *
+ * @param navit The navit instance
+ * @param c The coordinate to start routing to
+ * @param description A label which allows the user to later identify this destination in the former destinations selection
+ * @returns nothing
+ */
+void
+navit_set_destinations(struct navit *this_, struct pcoord *c, int count, const char *description, int async)
+{
+	if (c && count) {
+		this_->destination=c[count-1];
+		this_->destination_valid=1;
+	} else
+		this_->destination_valid=0;
+	char *destination_file = bookmarks_get_destination_file(TRUE);
+	bookmarks_append_coord(this_->bookmarks, destination_file, c, count, "former_itinerary", description, NULL, this_->recentdest_count);
+	g_free(destination_file);
+	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
+	if (this_->route) {
+		route_set_destinations(this_->route, c, count, async);
+
+		if (this_->ready == 3)
+			navit_draw(this_);
+	}
+}
+
+/**
  * @brief Checks if a route is calculated
  *
  * This function checks if a route is calculated.
@@ -899,7 +927,7 @@ navit_add_former_destinations_from_file(struct navit *this_)
 {
 	char *destination_file = bookmarks_get_destination_file(FALSE);
 	struct attr parent={attr_navit, .u.navit=this_};
-	struct attr type={attr_type, {"textfile"}}, data={attr_data, {destination_file}}, flags={attr_flags, {1}};
+	struct attr type={attr_type, {"textfile"}}, data={attr_data, {destination_file}}, flags={attr_flags, {(void *)1}};
 	struct attr *attrs[]={&type, &data, &flags, NULL};
 	struct map_rect *mr;
 	struct item *item;
@@ -1987,10 +2015,12 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	struct pcoord cursor_pc;
 	struct point cursor_pnt, *pnt=&cursor_pnt;
 	struct tracking *tracking=NULL;
+	struct pcoord pc[16];
 	enum projection pro=transform_get_projection(this_->trans);
-	int border=16;
+	int count,border=16;
 	int (*get_attr)(void *, enum attr_type, struct attr *, struct attr_iter *);
 	void *attr_object;
+	char *destination_file;
 
 	profile(0,NULL);
 	if (this_->ready != 3) {
@@ -2057,6 +2087,9 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 		switch(route_destination_reached(this_->route)) {
 		case 1:
 			route_remove_waypoint(this_->route);
+			count=route_get_destinations(this_->route, pc, 16);
+			destination_file = bookmarks_get_destination_file(TRUE);
+			bookmarks_append_coord(this_->bookmarks, destination_file, pc, count, "former_itinerary_part", NULL, NULL, this_->recentdest_count);
 			break;	
 		case 2:
 			navit_set_destination(this_, NULL, NULL, 0);

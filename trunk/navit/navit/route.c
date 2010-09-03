@@ -1035,6 +1035,23 @@ route_set_destinations(struct route *this, struct pcoord *dst, int count, int as
 	route_path_update(this, 1, async);
 	profile(0,"end");
 }
+
+int
+route_get_destinations(struct route *this, struct pcoord *pc, int count)
+{
+	int ret=0;
+	GList *l=this->destinations;
+	while (l && ret < count) {
+		struct route_info *dst=l->data;
+		pc->x=dst->c.x;
+		pc->y=dst->c.y;
+		pc->pro=projection_mg; /* FIXME */
+		pc++;
+		ret++;
+		l=g_list_next(l);
+	}
+	return ret;
+}
  
 void
 route_set_destination(struct route *this, struct pcoord *dst, int async)
