@@ -53,7 +53,7 @@ char* bookmarks_get_destination_file(gboolean create);
 void bookmarks_set_center_from_file(struct bookmarks *this_, char *file);
 char* bookmarks_get_center_file(gboolean create);
 void bookmarks_write_center_to_file(struct bookmarks *this_, char *file);
-void bookmarks_append_coord(struct bookmarks *this_, char *file, struct pcoord *c, const char *type, const char *description, GHashTable *h, int limit);
+void bookmarks_append_coord(struct bookmarks *this_, char *file, struct pcoord *c, int count, const char *type, const char *description, GHashTable *h, int limit);
 /* end of prototypes */
 
 #ifdef __cplusplus

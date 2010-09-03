@@ -29,6 +29,7 @@
 #include "map.h"
 #include "command.h"
 #include "bookmarks.h"
+#include "navit.h"
 #include "navit_nls.h"
 
 struct bookmarks {
@@ -603,84 +604,76 @@ bookmarks_rename_bookmark(struct bookmarks *this_, const char *oldName, const ch
 	return FALSE;
 }
 
+static int
+bookmarks_shrink(char *bookmarks, int offset) 
+{
+	char buffer[4096];
+	int count,ioffset=offset,ooffset=0;
+	FILE *f;
+	if (!offset)
+		return 1;
+	f = fopen(bookmarks, "r+");
+	if (!f)
+		return 0;
+	for (;;) {
+		fseek(f, ioffset, SEEK_SET);
+		count=fread(buffer, 1, sizeof(buffer), f);
+		if (!count) 
+			break;
+		fseek(f, ooffset, SEEK_SET);
+		if (fwrite(buffer, count, 1, f) != 1)
+			return 0;
+		ioffset+=count;
+		ooffset+=count;
+	}
+	fflush(f);
+	ftruncate(fileno(f),ooffset);
+#ifdef HAVE_FSYNC
+	fsync(fileno(f));
+#endif
+	fclose(f);
+	return 1;
+}
+
 /**
  * @param limit Limits the number of entries in the "backlog". Set to 0 for "infinite"
  */
 void
-bookmarks_append_coord(struct bookmarks *this_, char *file, struct pcoord *c, const char *type, const char *description, GHashTable *h, int limit)
+bookmarks_append_coord(struct bookmarks *this_, char *file, struct pcoord *c, int count, const char *type, const char *description, GHashTable *h, int limit)
 {
 	FILE *f;
-	int offset=0;
-	char *buffer;
-	int ch,prev,lines=0;
-	int numc,readc;
-	int fd;
 	const char *prostr;
 
-	f=fopen(file, "r");
-	if (!f)
-		goto new_file;
-	if (limit != 0) {
-		prev = '\n';
-		while ((ch = fgetc(f)) != EOF) {
-			if ((ch == '\n') && (prev != '\n')) {
-				lines++;
+	if (limit != 0 && (f=fopen(file, "r"))) {
+		int offsets[limit];
+		int offset_pos=0;
+		int offset;
+		char buffer[4096];
+		memset(offsets, 0, sizeof(offsets));
+		for (;;) {
+			offset=ftell(f);
+			if (!fgets(buffer, sizeof(buffer), f))
+				break;
+			if (strstr(buffer,"type=")) {
+				offsets[offset_pos]=offset;
+				offset_pos=(offset_pos+1)%limit;
 			}
-			prev = ch;
 		}
-
-		if (prev != '\n') { // Last line did not end with a newline
-			lines++;
-		}
-
 		fclose(f);
-		f = fopen(file, "r+");
-		fd = fileno(f);
-		while (lines >= limit) { // We have to "scroll up"
-			rewind(f);
-			numc = 0; // Counts how many bytes we have in our line to scroll up
-			while ((ch = fgetc(f)) != EOF) {
-				numc++;
-				if (ch == '\n') {
-					break;
-				}
-			}
-
-			buffer=g_malloc(numc);
-			offset = numc; // Offset holds where we currently are
-
-			do {
-				fseek(f,offset,SEEK_SET);
-				readc = fread(buffer,1,numc,f);
-
-				fseek(f,-(numc+readc),SEEK_CUR);
-				fwrite(buffer,1,readc,f);
-
-				offset += readc;
-			} while (readc == numc);
-
-			g_free(buffer);
-			fflush(f);
-			ftruncate(fd,(offset-numc));
-#ifdef HAVE_FSYNC
-			fsync(fd);
-#endif
-
-			lines--;
-		}
+		bookmarks_shrink(file, offsets[offset_pos]);
 	}
-    fclose(f);
-
-new_file:
 	f=fopen(file, "a");
 	if (f) {
 		if (c) {
-			prostr = projection_to_name(c->pro,NULL);
-			fprintf(f,"%s%s%s0x%x %s0x%x type=%s label=\"%s\"\n",
+			int i;
+			fprintf(f,"type=%s label=\"%s\"\n", type, description);
+			for (i = 0 ; i < count ; i++) {
+				prostr = projection_to_name(c[i].pro,NULL);
+				fprintf(f,"%s%s%s0x%x %s0x%x\n",
 				 prostr, *prostr ? ":" : "",
-				 c->x >= 0 ? "":"-", c->x >= 0 ? c->x : -c->x,
-				 c->y >= 0 ? "":"-", c->y >= 0 ? c->y : -c->y,
-				 type, description);
+				 c[i].x >= 0 ? "":"-", c[i].x >= 0 ? c[i].x : -c[i].x,
+				 c[i].y >= 0 ? "":"-", c[i].y >= 0 ? c[i].y : -c[i].y);
+			}
 		} else
 			fprintf(f,"\n");
 	}
