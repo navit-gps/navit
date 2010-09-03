@@ -54,7 +54,7 @@ Rectangle {
 	    anchors.left:btnView.right;anchors.leftMargin: gui.height/6
         }
         ButtonIcon {
-            id: btnDestination; text: "Set as\ndestination"; icon: "gui_active.svg"; onClicked: { navit.setDestination(); gui.backToMap() }
+            id: btnDestination; text: "Set as\ndestination"; icon: "gui_active.svg"; onClicked: { route.addDestination(); gui.backToMap() }
 	    opacity: 0
 	    anchors.top: nameTxt.bottom;anchors.topMargin:gui.height/32
 	    anchors.left:btnPosition.right;anchors.leftMargin: gui.height/6
