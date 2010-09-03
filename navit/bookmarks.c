@@ -666,7 +666,10 @@ bookmarks_append_coord(struct bookmarks *this_, char *file, struct pcoord *c, in
 	if (f) {
 		if (c) {
 			int i;
-			fprintf(f,"type=%s label=\"%s\"\n", type, description);
+			if (description) 
+				fprintf(f,"type=%s label=\"%s\"\n", type, description);
+			else
+				fprintf(f,"type=%s\n", type);
 			for (i = 0 ; i < count ; i++) {
 				prostr = projection_to_name(c[i].pro,NULL);
 				fprintf(f,"%s%s%s0x%x %s0x%x\n",
