@@ -81,12 +81,14 @@ struct gui_priv {
 	class NGQProxyVehicle* vehicleProxy;
 	class NGQProxySearch* searchProxy;
 	class NGQProxyBookmarks* bookmarksProxy;
+	class NGQProxyRoute* routeProxy;
 	class NGQPoint* currentPoint;
 };
 
 #include "proxy.h"
 #include "ngqpoint.h"
 #include "searchProxy.h"
+#include "routeProxy.h"
 #include "bookmarksProxy.h"
 #include "vehicleProxy.h"
 #include "navitProxy.h"
@@ -298,6 +300,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	this_->vehicleProxy = new NGQProxyVehicle(this_,this_->mainWindow);
 	this_->searchProxy = new NGQProxySearch(this_,this_->mainWindow);
 	this_->bookmarksProxy = new NGQProxyBookmarks(this_,this_->mainWindow);
+	this_->routeProxy = new NGQProxyRoute(this_,this_->mainWindow);
 		
 	//Check, if we have compatible graphics
 	this_->graphicsWidget = (QWidget*)graphics_get_data(gra,"qt_widget");
@@ -315,6 +318,7 @@ static int gui_qml_set_graphics(struct gui_priv *this_, struct graphics *gra)
 	this_->guiWidget->rootContext()->setContextProperty("vehicle",this_->vehicleProxy);
 	this_->guiWidget->rootContext()->setContextProperty("search",this_->searchProxy);
 	this_->guiWidget->rootContext()->setContextProperty("bookmarks",this_->bookmarksProxy);
+	this_->guiWidget->rootContext()->setContextProperty("route",this_->routeProxy);
 	this_->guiWidget->rootContext()->setContextProperty("point",this_->currentPoint);
 
 	this_->guiWidget->setSource(QUrl::fromLocalFile(QString(this_->source)+"/"+this_->skin+"/main.qml"));

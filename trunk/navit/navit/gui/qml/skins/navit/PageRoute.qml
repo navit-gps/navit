@@ -14,12 +14,11 @@ Rectangle {
 		btnPoi.opacity=0.8;
 	}
 	if (navit.getDestination().length>0 && navit.getPosition().length>0) {
-		btnStop.opacity=0.8;
 		btnRouteView.opacity=0.8;
 		btnRouteBook.opacity=0.8;
 		btnRouteHeight.opacity=0.8;
 	}
-
+	route.getDestinations();
     }
     
     Component.onCompleted: pageOpen();    
