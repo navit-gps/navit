@@ -25,6 +25,7 @@ struct map_priv {
 	char *filename;
 	char *charset;
 	int is_pipe;
+	int flags;
 };
 
 #define SIZE 512
