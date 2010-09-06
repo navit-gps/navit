@@ -45,6 +45,7 @@ struct search_list {
 	struct search_list_result result;
 	struct search_list_result last_result;
 	int last_result_valid;
+	char *postal;
 };
 
 static guint
@@ -99,6 +100,8 @@ search_list_level(enum attr_type attr_type)
 		return 2;
 	case attr_house_number:
 		return 3;
+	case attr_postal:
+		return -1;
 	default:
 		dbg(0,"unknown search '%s'\n",attr_to_name(attr_type));
 		return -1;
@@ -123,6 +126,9 @@ search_list_search(struct search_list *this_, struct attr *search_attr, int part
 			le->curr=le->list;
 		}
 		dbg(1,"le=%p partial=%d\n", le, partial);
+	} else if (search_attr->type == attr_postal) {
+		g_free(this_->postal);
+		this_->postal=g_strdup(search_attr->u.str);
 	}
 }
 
@@ -396,6 +402,23 @@ postal_merge(char *mask, char *new)
 }
 
 static int
+postal_match(char *postal, char *mask)
+{
+	for (;;) {
+		if ((*postal != *mask) && (*mask != '.'))
+			return 0;
+		if (!*postal) {
+			if (!*mask)
+				return 1;
+			else
+				return 0;
+		}
+		postal++;
+		mask++;
+	}
+}
+
+static int
 search_add_result(struct search_list_level *le, struct search_list_common *slc)
 {
 	struct search_list_common *slo;
@@ -462,6 +485,16 @@ search_list_get_result(struct search_list *this_)
 		if (item) {
 			void *p=NULL;
 			dbg(1,"id_hi=%d id_lo=%d\n", item->id_hi, item->id_lo);
+			if (this_->postal) {
+				struct attr postal;
+				if (item_attr_get(item, attr_postal_mask, &postal)) {
+					if (!postal_match(this_->postal, postal.u.str))
+						continue;
+				} else if (item_attr_get(item, attr_postal, &postal)) {
+					if (strcmp(this_->postal, postal.u.str))
+						continue;
+				}
+			}
 			this_->result.country=NULL;
 			this_->result.town=NULL;
 			this_->result.street=NULL;
@@ -518,6 +551,7 @@ search_list_get_result(struct search_list *this_)
 void
 search_list_destroy(struct search_list *this_)
 {
+	g_free(this_->postal);
 	g_free(this_);
 }
 
