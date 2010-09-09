@@ -1711,6 +1711,7 @@ sort_countries(int keep_tmpfiles)
 		}
 		name_in=g_strdup_printf("country_%d.bin.unsorted", co->countryid);
 		name_out=g_strdup_printf("country_%d.bin", co->countryid);
+		co->r=world_bbox;
 		item_bin_sort_file(name_in, name_out, &co->r, &co->size);
 		if (!keep_tmpfiles) 
 			unlink(name_in);

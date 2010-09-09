@@ -147,6 +147,20 @@ linguistics_next_word(char *str)
 	return str+len+1;
 }
 
+int
+linguistics_search(char *str)
+{
+	if (!strcasecmp(str,"str"))
+		return 0;
+	if (!strcasecmp(str,"str."))
+		return 0;
+	if (!strcasecmp(str,"strasse"))
+		return 0;
+	if (!strcasecmp(str,"weg"))
+		return 0;
+	return 1;
+}
+
 void
 linguistics_init(void)
 {
