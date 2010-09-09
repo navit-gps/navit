@@ -94,7 +94,10 @@ struct map_rect_priv {
 };
 
 struct map_search_priv {
+	struct map_priv *map;
 	struct map_rect_priv *mr;
+	struct map_rect_priv *mr_item;
+	struct item *item;
 	struct attr *search;
 	struct map_selection ms;
 	int partial;
@@ -791,7 +794,10 @@ static void
 tile_set_window(struct map_rect_priv *mr, int offset, int length)
 {
 	mr->t->pos=mr->t->pos_next=mr->t->start+offset;
-	mr->t->end=mr->t->start+offset+length;
+	if (length == -1)
+		mr->t->end=mr->t->start+offset+mr->t->pos[0]+1;
+	else
+		mr->t->end=mr->t->start+offset+length;
 	dbg(1,"range is from %p to %p (%d,%d)\n",mr->t->pos, mr->t->end, offset, length);
 	
 }
@@ -1169,28 +1175,37 @@ map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 	return &mr->item;
 }
 
-static struct map_rect_priv *
-binmap_search_by_index(struct map_priv *map, struct item *item)
+static int
+binmap_search_by_index(struct map_priv *map, struct item *item, struct map_rect_priv **ret)
 {
 	struct attr zipfile_ref;
-	struct map_rect_priv *ret;
 	int *data;
 
-	if (!item)
-		return NULL;
+	if (!item) {
+		*ret=NULL;
+		return 0;
+	}
+	if (item_attr_get(item, attr_item_id, &zipfile_ref)) {
+		data=zipfile_ref.u.data;
+		*ret=map_rect_new_binfile_int(map, NULL);
+		push_zipfile_tile(*ret, data[0]);
+		tile_set_window(*ret, data[1], -1);
+		return 3;
+	}
 	if (item_attr_get(item, attr_zipfile_ref, &zipfile_ref)) {
-		ret=map_rect_new_binfile_int(map, NULL);
-		push_zipfile_tile(ret, zipfile_ref.u.num);
-		return ret;
+		*ret=map_rect_new_binfile_int(map, NULL);
+		push_zipfile_tile(*ret, zipfile_ref.u.num);
+		return 1;
 	}
 	if (item_attr_get(item, attr_zipfile_ref_block, &zipfile_ref)) {
 		data=zipfile_ref.u.data;
-		ret=map_rect_new_binfile_int(map, NULL);
-		push_zipfile_tile(ret, data[0]);
-		tile_set_window(ret, data[1], data[2]);
-		return ret;
+		*ret=map_rect_new_binfile_int(map, NULL);
+		push_zipfile_tile(*ret, data[0]);
+		tile_set_window(*ret, data[1], data[2]);
+		return 2;
 	}
-	return NULL;
+	*ret=NULL;
+	return 0;
 }
 
 static struct map_rect_priv *
@@ -1311,7 +1326,7 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 			if (town) {
 				struct coord c;
 
-				if ((msp->mr=binmap_search_by_index(map, town)))
+				if (binmap_search_by_index(map, town, &msp->mr))
 					msp->mode = 1;
 				else {
 					if (item_coord_get(town, &c, 1)) {
@@ -1333,9 +1348,13 @@ binmap_search_new(struct map_priv *map, struct item *item, struct attr *search, 
 		case attr_house_number:
 			if (!item->map || !map_priv_is(item->map,map))
 				break;
-			map_rec = map_rect_new_binfile(map, NULL);
-			msp->mr=binmap_search_by_index(map, map_rect_get_item_byid_binfile(map_rec, item->id_hi, item->id_lo));
-			map_rect_destroy_binfile(map_rec);
+			msp->map=map;
+			msp->mr_item = map_rect_new_binfile(map, NULL);
+			msp->item = map_rect_get_item_byid_binfile(msp->mr_item, item->id_hi, item->id_lo);
+			if (binmap_search_by_index(map, msp->item, &msp->mr) != 3) {
+				map_rect_destroy_binfile(msp->mr_item);
+				msp->mr_item=NULL;
+			}
 			if (!msp->mr)
 				break;
 			return msp;
@@ -1412,73 +1431,80 @@ binmap_search_get_item(struct map_search_priv *map_search)
 	struct item* it;
 	struct attr at;
 
-	while ((it  = map_rect_get_item_binfile(map_search->mr))) {
-		switch (map_search->search->type) {
-		case attr_town_name:
-		case attr_district_name:
-		case attr_town_or_district_name:
-			if (item_is_town(*it) && !item_is_district(*it) && map_search->search->type != attr_district_name) {
-				if (binfile_attr_get(it->priv_data, attr_town_name_match, &at) || binfile_attr_get(it->priv_data, attr_town_name, &at)) {
-					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
-						return it;
-				}
-			}
-			if (item_is_district(*it) && map_search->search->type != attr_town_name) {
-				if (binfile_attr_get(it->priv_data, attr_district_name_match, &at) || binfile_attr_get(it->priv_data, attr_district_name, &at)) {
-					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
-						return it;
-				}
-			}
-			break;
-		case attr_street_name:
-			if (map_search->mode == 1) {
-				if (binfile_attr_get(it->priv_data, attr_street_name_match, &at) || binfile_attr_get(it->priv_data, attr_street_name, &at)) {
-					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_street_name)) {
-						return it;
+	for (;;) {
+		while ((it  = map_rect_get_item_binfile(map_search->mr))) {
+			switch (map_search->search->type) {
+			case attr_town_name:
+			case attr_district_name:
+			case attr_town_or_district_name:
+				if (item_is_town(*it) && !item_is_district(*it) && map_search->search->type != attr_district_name) {
+					if (binfile_attr_get(it->priv_data, attr_town_name_match, &at) || binfile_attr_get(it->priv_data, attr_town_name, &at)) {
+						if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
+							return it;
 					}
 				}
-				continue;
-			}
-			if ((it->type == type_street_3_city) || (it->type == type_street_2_city) || (it->type == type_street_1_city)) {
-				struct attr at;
-				if (map_selection_contains_item_rect(map_search->mr->sel, it) && binfile_attr_get(it->priv_data, attr_label, &at)) {
-					int i,match=0;
-					char *str=g_strdup(at.u.str);
-					char *word=str;
-					do {
-						for (i = 0 ; i < 3 ; i++) {
-							char *name=linguistics_expand_special(word,i);
-							if (name && !ascii_cmp(name, map_search->search->u.str, map_search->partial))
-								match=1;
-							g_free(name);
+				if (item_is_district(*it) && map_search->search->type != attr_town_name) {
+					if (binfile_attr_get(it->priv_data, attr_district_name_match, &at) || binfile_attr_get(it->priv_data, attr_district_name, &at)) {
+						if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_town_name)) 
+							return it;
+					}
+				}
+				break;
+			case attr_street_name:
+				if (map_search->mode == 1) {
+					if (binfile_attr_get(it->priv_data, attr_street_name_match, &at) || binfile_attr_get(it->priv_data, attr_street_name, &at)) {
+						if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial) && !duplicate(map_search, it, attr_street_name)) {
+							return it;
+						}
+					}
+					continue;
+				}
+				if ((it->type == type_street_3_city) || (it->type == type_street_2_city) || (it->type == type_street_1_city)) {
+					struct attr at;
+					if (map_selection_contains_item_rect(map_search->mr->sel, it) && binfile_attr_get(it->priv_data, attr_label, &at)) {
+						int i,match=0;
+						char *str=g_strdup(at.u.str);
+						char *word=str;
+						do {
+							for (i = 0 ; i < 3 ; i++) {
+								char *name=linguistics_expand_special(word,i);
+								if (name && !ascii_cmp(name, map_search->search->u.str, map_search->partial))
+									match=1;
+								g_free(name);
+								if (match)
+									break;
+							}
 							if (match)
 								break;
+							word=linguistics_next_word(word);
+						} while (word);
+						g_free(str);
+						if (match && !duplicate(map_search, it, attr_label)) {
+							item_coord_rewind(it);
+							return it;
 						}
-						if (match)
-							break;
-						word=linguistics_next_word(word);
-					} while (word);
-					g_free(str);
-					if (match && !duplicate(map_search, it, attr_label)) {
-						item_coord_rewind(it);
-						return it;
 					}
 				}
-			}
-			break;
-		case attr_house_number:
-			if (binfile_attr_get(it->priv_data, attr_house_number, &at)) {
-				if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
-					binfile_attr_rewind(it->priv_data);
+				break;
+			case attr_house_number:
+				if (binfile_attr_get(it->priv_data, attr_house_number, &at)) {
+					if (!ascii_cmp(at.u.str, map_search->search->u.str, map_search->partial)) {
+						binfile_attr_rewind(it->priv_data);
+						return it;
+					}
+				} else
 					return it;
-				}
+				continue;
+			default:
+				return NULL;
 			}
-			continue;
-		default:
-			return NULL;
 		}
+		if (!map_search->mr_item)
+			return NULL;
+		map_rect_destroy_binfile(map_search->mr);
+		if (!binmap_search_by_index(map_search->map, map_search->item, &map_search->mr))
+			return NULL;
 	}
-	return NULL;
 }
 
 static void
@@ -1486,7 +1512,10 @@ binmap_search_destroy(struct map_search_priv *ms)
 {
 	if (ms->search_results)
 		g_hash_table_destroy(ms->search_results);
-	map_rect_destroy_binfile(ms->mr);
+	if (ms->mr_item)
+		map_rect_destroy_binfile(ms->mr_item);
+	if (ms->mr)
+		map_rect_destroy_binfile(ms->mr);
 	g_free(ms);
 }
 
