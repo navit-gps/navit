@@ -414,7 +414,8 @@ item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type ma
 	if (!word)
 		return;
 	do  {
-		for (i = 0 ; i < 3 ; i++) {
+		if (linguistics_search(word)) {
+			for (i = 0 ; i < 3 ; i++) {
 				char *str=linguistics_expand_special(word, i);
 				if (str) {
 					ib->len=len;
@@ -424,8 +425,9 @@ item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type ma
 					g_free(str);
 				}
 			}
-			word=linguistics_next_word(word);
 			words++;
+		}
+		word=linguistics_next_word(word);
 	} while (word);
 }
 
@@ -472,7 +474,7 @@ item_bin_sort_compare(const void *p1, const void *p2)
 int
 item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size)
 {
-	int j,count;
+	int j,k,count,rc=0;
 	struct coord *c;
 	struct item_bin *ib;
 	FILE *f;
@@ -499,11 +501,14 @@ item_bin_sort_file(char *in_file, char *out_file, struct rect *r, int *size)
 			c=(struct coord *)(ib+1);
 			fwrite(ib, (ib->len+1)*4, 1, f);
 			if (r) {
-				if (j) 
-					bbox_extend(c, r);
-				else {
-					r->l=*c;
-					r->h=*c;
+				for (k = 0 ; k < ib->clen/2 ; k++) {
+					if (rc) 
+						bbox_extend(&c[k], r);
+					else {
+						r->l=c[k];
+						r->h=c[k];
+					}
+					rc++;
 				}
 			}
 		}
