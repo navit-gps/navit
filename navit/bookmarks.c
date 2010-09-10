@@ -445,6 +445,28 @@ bookmarks_write_center_to_file(struct bookmarks *this_, char *file)
 	return;
 }
 
+static void
+bookmarks_emit_dbus_signal(struct bookmarks *this_, struct coord *c, const char *description,int create)
+{
+    struct attr attr1,attr2,attr3,attr4,cb,*attr_list[5];
+	int valid=0;
+	attr1.type=attr_type;
+	attr1.u.str="bookmark";
+    attr2.type=attr_data;
+    attr2.u.str=create ? "create" : "delete";
+	attr3.type=attr_data;
+	attr3.u.str=(char *)description;
+    attr4.type=attr_coord;
+    attr4.u.pcoord=c;
+	attr_list[0]=&attr1;
+	attr_list[1]=&attr2;
+    attr_list[2]=&attr3;
+    attr_list[3]=&attr4;
+	attr_list[4]=NULL;
+	if (navit_get_attr(this_->parent->u.navit, attr_callback_list, &cb, NULL))
+		callback_list_call_attr_4(cb.u.callback_list, attr_command, "dbus_send_signal", attr_list, NULL, &valid);
+}
+
 /**
  * Record the given set of coordinates as a bookmark
  *
@@ -480,6 +502,8 @@ bookmarks_add_bookmark(struct bookmarks *this_, struct pcoord *pc, const char *d
 	callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
 	bookmarks_clear_hash(this_);
 	bookmarks_load_hash(this_);
+
+    bookmarks_emit_dbus_signal(this_,&(b_item->c),description,TRUE);
 
 	return result;
 }
@@ -567,6 +591,8 @@ bookmarks_delete_bookmark(struct bookmarks *this_, const char *label) {
 			callback_list_call_attr_0(this_->attr_cbl, attr_bookmark_map);
 			bookmarks_clear_hash(this_);
 			bookmarks_load_hash(this_);
+
+            bookmarks_emit_dbus_signal(this_,&(data->c),label,FALSE);
 
 			return result;
 		}
