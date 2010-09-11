@@ -198,6 +198,7 @@ char* str_replace(char*output, char*input, char*pattern, char*replacement)
     pos = pos2 + strlen(pattern);
   }
   strcat(output,pos);
+  return NULL;
 }
 
 static void
