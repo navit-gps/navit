@@ -19,12 +19,15 @@
 
 #include <glib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <math.h>
 #include "debug.h"
 #include "projection.h"
 #include "item.h"
 #include "map.h"
 #include "mapset.h"
 #include "coord.h"
+#include "transform.h"
 #include "search.h"
 
 struct search_list_level {
@@ -38,14 +41,21 @@ struct search_list_level {
 	GList *list,*curr,*last;
 };
 
+struct interpolation {
+	int side, mode, rev;
+	char *first, *last, *curr;
+};
+
 struct search_list {
 	struct mapset *ms;
+	struct item *item;
 	int level;
 	struct search_list_level levels[4];
 	struct search_list_result result;
 	struct search_list_result last_result;
 	int last_result_valid;
 	char *postal;
+	struct interpolation inter;
 };
 
 static guint
@@ -108,11 +118,23 @@ search_list_level(enum attr_type attr_type)
 	}
 }
 
+static void
+interpolation_clear(struct interpolation *inter)
+{
+	inter->mode=inter->side=0;
+	g_free(inter->first);
+	g_free(inter->last);
+	g_free(inter->curr);
+	inter->first=inter->last=inter->curr=NULL;
+}
+
 void
 search_list_search(struct search_list *this_, struct attr *search_attr, int partial)
 {
 	struct search_list_level *le;
 	int level=search_list_level(search_attr->type);
+	this_->item=NULL;
+	interpolation_clear(&this_->inter);
 	dbg(1,"level=%d\n", level);
 	if (level != -1) {
 		this_->result.id=0;
@@ -297,23 +319,181 @@ search_list_street_destroy(struct search_list_street *this_)
 	g_free(this_);
 }
 
+static char *
+search_interpolate(struct interpolation *inter)
+{
+	dbg(1,"interpolate %s-%s %s\n",inter->first,inter->last,inter->curr);
+	if (!inter->first || !inter->last)
+		return NULL;
+	if (!inter->curr) 
+		inter->curr=g_strdup(inter->first);
+	else {
+		if (strcmp(inter->curr, inter->last)) {
+			int next=atoi(inter->curr)+(inter->mode?2:1);
+			g_free(inter->curr);
+			if (next == atoi(inter->last))
+				inter->curr=g_strdup(inter->last);
+			else
+				inter->curr=g_strdup_printf("%d",next);
+		} else {
+			g_free(inter->curr);
+			inter->curr=NULL;
+		}
+	}
+	dbg(1,"interpolate result %s\n",inter->curr);
+	return inter->curr;
+}
+
+static void
+search_interpolation_split(char *str, struct interpolation *inter)
+{
+	char *pos=strchr(str,'-');
+	char *first,*last;
+	int len;
+	if (!pos) {
+		dbg(0,"error: no - in %s\n",str);
+	}
+	len=pos-str;
+	first=g_malloc(len+1);
+	strncpy(first, str, len);
+	first[len]='\0';
+	last=g_strdup(pos+1);
+	dbg(1,"%s = %s - %s\n",str, first, last);
+	if (atoi(first) > atoi(last)) {
+		inter->first=last;
+		inter->last=first;
+		inter->rev=1;
+	} else {
+		inter->first=first;
+		inter->last=last;
+		inter->rev=0;
+	}
+}
+
+static int
+search_setup_interpolation(struct item *item, enum attr_type i0, enum attr_type i1, enum attr_type i2, struct interpolation *inter)
+{
+	struct attr attr;
+	g_free(inter->first);
+	g_free(inter->last);
+	g_free(inter->curr);
+	inter->first=inter->last=inter->curr=NULL;
+	dbg(1,"setup %s\n",attr_to_name(i0));
+	if (item_attr_get(item, i0, &attr)) {
+		inter->first=g_strdup(attr.u.str);
+		inter->last=g_strdup(attr.u.str);
+		inter->mode=0;
+	} else if (item_attr_get(item, i1, &attr)) {
+		search_interpolation_split(attr.u.str, inter);
+		inter->mode=1;
+	} else if (item_attr_get(item, i2, &attr)) {
+		search_interpolation_split(attr.u.str, inter);
+		inter->mode=2;
+	} else
+		return 0;
+	return 1;
+}
+
+static int
+search_match(char *str, char *search, int partial)
+{
+	if (!partial)
+		return (!strcasecmp(str, search));
+	else
+		return (!strncasecmp(str, search, strlen(search)));
+}
+
+static struct pcoord *
+search_house_number_coordinate(struct item *item, struct interpolation *inter)
+{
+	struct pcoord *ret=g_new(struct pcoord, 1);
+	ret->pro = map_projection(item->map);
+	if (item_is_point(*item)) {
+		struct coord c;
+		if (item_coord_get(item, &c, 1)) {
+			ret->x=c.x;
+			ret->y=c.y;
+		} else {
+			g_free(ret);
+			ret=NULL;
+		}
+	} else {
+		int count,max=1024;
+		struct coord c[max];
+		count=item_coord_get(item, c, max);
+		int hn_pos,hn_length=atoi(inter->last)-atoi(inter->first);
+		if (inter->rev)
+			hn_pos=atoi(inter->last)-atoi(inter->curr);
+		else
+			hn_pos=atoi(inter->curr)-atoi(inter->first);
+		if (count && hn_length) {
+			int i,distances[count-1],distance_sum=0,hn_distance;
+			dbg(1,"count=%d hn_length=%d hn_pos=%d (%s of %s-%s)\n",count,hn_length,hn_pos,inter->curr,inter->first,inter->last);
+			if (count == max) 
+				dbg(0,"coordinate overflow\n");
+			for (i = 0 ; i < count-1 ; i++) {
+				distances[i]=navit_sqrt(transform_distance_sq(&c[i],&c[i+1]));
+				distance_sum+=distances[i];
+				dbg(1,"distance[%d]=%d\n",i,distances[i]);
+			}
+			dbg(1,"sum=%d\n",distance_sum);
+			hn_distance=distance_sum*hn_pos/hn_length;
+			dbg(1,"hn_distance=%d\n",hn_distance);
+			i=0;
+			while (hn_distance > distances[i] && i < count-1) 
+				hn_distance-=distances[i++];
+			dbg(1,"remaining distance=%d from %d\n",hn_distance,distances[i]);
+			ret->x=(c[i+1].x-c[i].x)*hn_distance/distances[i]+c[i].x;
+			ret->y=(c[i+1].y-c[i].y)*hn_distance/distances[i]+c[i].y;
+		}
+	}
+	return ret;
+}
+
 static struct search_list_house_number *
-search_list_house_number_new(struct item *item)
+search_list_house_number_new(struct item *item, struct interpolation *inter, char *inter_match, int inter_partial)
 {
 	struct search_list_house_number *ret=g_new0(struct search_list_house_number, 1);
 	struct attr attr;
-	struct coord c;
+	char *hn;
 	
 	ret->common.item=ret->common.unique=*item;
 	if (item_attr_get(item, attr_house_number, &attr))
 		ret->house_number=map_convert_string(item->map, attr.u.str);
-	search_list_common_new(item, &ret->common);
-	if (item_coord_get(item, &c, 1)) {
-		ret->common.c=g_new(struct pcoord, 1);
-		ret->common.c->x=c.x;
-		ret->common.c->y=c.y;
-		ret->common.c->pro = map_projection(item->map);
+	else {
+#if 0
+		if (item_attr_get(item, attr_street_name, &attr))
+			dbg(0,"%s\n",attr.u.str);
+#endif
+		for (;;) {
+			ret->interpolation=1;
+			switch(inter->side) {
+			case 0:
+				inter->side=-1;
+				search_setup_interpolation(item, attr_house_number_left, attr_house_number_left_odd, attr_house_number_left_even, inter);
+			case -1:
+				if ((hn=search_interpolate(inter)))
+					break;
+				inter->side=1;
+				search_setup_interpolation(item, attr_house_number_right, attr_house_number_right_odd, attr_house_number_right_even, inter);
+			case 1:
+				if ((hn=search_interpolate(inter)))
+					break;
+			default:
+				g_free(ret);
+				return NULL;
+			}
+			if (search_match(hn, inter_match, inter_partial)) {
+#if 0
+				dbg(0,"match %s %s-%s\n",hn, inter->first, inter->last);
+#endif
+				ret->house_number=map_convert_string(item->map, hn);
+				break;
+			}
+		}
 	}
+	search_list_common_new(item, &ret->common);
+	ret->common.c=search_house_number_coordinate(item, ret->interpolation?inter:NULL);
 	return ret;
 }
 
@@ -444,7 +624,6 @@ struct search_list_result *
 search_list_get_result(struct search_list *this_)
 {
 	struct search_list_level *le,*leu;
-	struct item *item;
 	int level=this_->level;
 
 	dbg(1,"enter\n");
@@ -480,17 +659,17 @@ search_list_get_result(struct search_list *this_)
 			le->hash=g_hash_table_new(search_item_hash_hash, search_item_hash_equal);
 		}
 		dbg(1,"le->search=%p\n", le->search);
-		item=mapset_search_get_item(le->search);
-		dbg(1,"item=%p\n", item);
-		if (item) {
+		if (!this_->item)
+			this_->item=mapset_search_get_item(le->search);
+		if (this_->item) {
 			void *p=NULL;
-			dbg(1,"id_hi=%d id_lo=%d\n", item->id_hi, item->id_lo);
+			dbg(1,"id_hi=%d id_lo=%d\n", this_->item->id_hi, this_->item->id_lo);
 			if (this_->postal) {
 				struct attr postal;
-				if (item_attr_get(item, attr_postal_mask, &postal)) {
+				if (item_attr_get(this_->item, attr_postal_mask, &postal)) {
 					if (!postal_match(this_->postal, postal.u.str))
 						continue;
-				} else if (item_attr_get(item, attr_postal, &postal)) {
+				} else if (item_attr_get(this_->item, attr_postal, &postal)) {
 					if (strcmp(this_->postal, postal.u.str))
 						continue;
 				}
@@ -501,34 +680,43 @@ search_list_get_result(struct search_list *this_)
 			this_->result.c=NULL;
 			switch (level) {
 			case 0:
-				p=search_list_country_new(item);
+				p=search_list_country_new(this_->item);
 				this_->result.country=p;
 				this_->result.country->common.parent=NULL;
+				this_->item=NULL;
 				break;
 			case 1:
-				p=search_list_town_new(item);
+				p=search_list_town_new(this_->item);
 				this_->result.town=p;
 				this_->result.town->common.parent=this_->levels[0].last->data;
 				this_->result.country=this_->result.town->common.parent;
 				this_->result.c=this_->result.town->common.c;
+				this_->item=NULL;
 				break;
 			case 2:
-				p=search_list_street_new(item);
+				p=search_list_street_new(this_->item);
 				this_->result.street=p;
 				this_->result.street->common.parent=this_->levels[1].last->data;
 				this_->result.town=this_->result.street->common.parent;
 				this_->result.country=this_->result.town->common.parent;
 				this_->result.c=this_->result.street->common.c;
+				this_->item=NULL;
 				break;
 			case 3:
-				p=search_list_house_number_new(item);
+				p=search_list_house_number_new(this_->item, &this_->inter, le->attr->u.str, le->partial);
+				if (!p) {
+					interpolation_clear(&this_->inter);
+					this_->item=NULL;
+					continue;
+				}
 				this_->result.house_number=p;
+				if (!this_->result.house_number->interpolation)
+					this_->item=NULL;
 				this_->result.house_number->common.parent=this_->levels[2].last->data;
 				this_->result.street=this_->result.house_number->common.parent;
 				this_->result.town=this_->result.street->common.parent;
 				this_->result.country=this_->result.town->common.parent;
 				this_->result.c=this_->result.house_number->common.c;
-				
 			}
 			if (p) {
 				if (search_add_result(le, p)) {
