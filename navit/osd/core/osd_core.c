@@ -171,6 +171,7 @@ struct odometer {
 	struct graphics_gc *white;
 	struct callback *click_cb;
 	char *text;                 //text of label attribute for this osd
+	struct color idle_color;    //text color when counter is idle
 
 	int bActive;                //counting or not
 	double sum_dist;            //sum of distance ofprevious intervals in meters
@@ -302,24 +303,14 @@ osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int bu
 static void
 osd_odometer_init(struct odometer *this, struct navit *nav)
 {
-	struct color c;
-
 	osd_set_std_graphic(nav, &this->osd_item, (struct osd_priv *)this);
 
 	this->orange = graphics_gc_new(this->osd_item.gr);
-	c.r = 0xFFFF;
-	c.g = 0xA5A5;
-	c.b = 0x0000;
-	c.a = 65535;
-	graphics_gc_set_foreground(this->orange, &c);
+	graphics_gc_set_foreground(this->orange, &this->idle_color);
 	graphics_gc_set_linewidth(this->orange, this->width);
 
 	this->white = graphics_gc_new(this->osd_item.gr);
-	c.r = 65535;
-	c.g = 65535;
-	c.b = 65535;
-	c.a = 65535;
-	graphics_gc_set_foreground(this->white, &c);
+	graphics_gc_set_foreground(this->white, &this->osd_item.text_color);
 	graphics_gc_set_linewidth(this->white, this->width);
 
 	graphics_gc_set_linewidth(this->osd_item.graphic_fg_white, this->width);
@@ -365,10 +356,11 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 		this->text = NULL;
 
 
-
 	osd_set_std_attr(attrs, &this->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
+	attr = attr_search(attrs, NULL, attr_idle_color);
+	this->idle_color=attr ? *attr->u.color : ((struct color) {0xffff,0xa5a5,0x0000,0xffff}); // text idle_color defaults to orange
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_init), attr_graphics_ready, this));
 	return (struct osd_priv *) this;
 }
@@ -381,6 +373,7 @@ struct stopwatch {
 	int width;
 	struct graphics_gc *orange,*white;
 	struct callback *click_cb;
+	struct color idle_color;    //text color when counter is idle
 
 	int bActive;                //counting or not
 	time_t current_base_time;   //base time of currently measured time interval
@@ -460,25 +453,14 @@ osd_stopwatch_click(struct stopwatch *this, struct navit *nav, int pressed, int 
 static void
 osd_stopwatch_init(struct stopwatch *this, struct navit *nav)
 {
-
-	struct color c;
-
 	osd_set_std_graphic(nav, &this->osd_item, (struct osd_priv *)this);
 
 	this->orange = graphics_gc_new(this->osd_item.gr);
-	c.r = 0xFFFF;
-	c.g = 0xA5A5;
-	c.b = 0x0000;
-	c.a = 65535;
-	graphics_gc_set_foreground(this->orange, &c);
+	graphics_gc_set_foreground(this->orange, &this->idle_color);
 	graphics_gc_set_linewidth(this->orange, this->width);
 
 	this->white = graphics_gc_new(this->osd_item.gr);
-	c.r = 65535;
-	c.g = 65535;
-	c.b = 65535;
-	c.a = 65535;
-	graphics_gc_set_foreground(this->white, &c);
+	graphics_gc_set_foreground(this->white, &this->osd_item.text_color);
 	graphics_gc_set_linewidth(this->white, this->width);
 
 
@@ -513,6 +495,8 @@ osd_stopwatch_new(struct navit *nav, struct osd_methods *meth,
 	osd_set_std_attr(attrs, &this->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
+	attr = attr_search(attrs, NULL, attr_idle_color);
+	this->idle_color=attr ? *attr->u.color : ((struct color) {0xffff,0xa5a5,0x0000,0xffff}); // text idle_color defaults to orange
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_stopwatch_init), attr_graphics_ready, this));
 	return (struct osd_priv *) this;
 }
