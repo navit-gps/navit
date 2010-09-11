@@ -212,7 +212,7 @@ static struct cache_entry *
 cache_trim(struct cache *cache, struct cache_entry *entry)
 {
 	dbg(1,"trim 0x%x 0x%x 0x%x 0x%x 0x%x\n", entry->id[0], entry->id[1], entry->id[2], entry->id[3], entry->id[4]);
-	dbg(0,"Trim %x from %d -> %d\n", entry->id[0], entry->size, cache->size);
+	dbg(1,"Trim %x from %d -> %d\n", entry->id[0], entry->size, cache->size);
 	struct cache_entry *new_entry;
 	if ( cache->entry_size < entry->size )
 	{
