@@ -413,6 +413,7 @@ item_bin_write_match(struct item_bin *ib, enum attr_type type, enum attr_type ma
 	int i,words=0,len=ib->len;
 	if (!word)
 		return;
+	item_bin_write(ib, out);
 	do  {
 		if (linguistics_search(word)) {
 			for (i = 0 ; i < 3 ; i++) {
