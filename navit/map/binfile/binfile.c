@@ -1188,8 +1188,8 @@ binmap_search_by_index(struct map_priv *map, struct item *item, struct map_rect_
 	if (item_attr_get(item, attr_item_id, &zipfile_ref)) {
 		data=zipfile_ref.u.data;
 		*ret=map_rect_new_binfile_int(map, NULL);
-		push_zipfile_tile(*ret, data[0]);
-		tile_set_window(*ret, data[1], -1);
+		push_zipfile_tile(*ret, le32_to_cpu(data[0]));
+		tile_set_window(*ret, le32_to_cpu(data[1]), -1);
 		return 3;
 	}
 	if (item_attr_get(item, attr_zipfile_ref, &zipfile_ref)) {
@@ -1200,8 +1200,8 @@ binmap_search_by_index(struct map_priv *map, struct item *item, struct map_rect_
 	if (item_attr_get(item, attr_zipfile_ref_block, &zipfile_ref)) {
 		data=zipfile_ref.u.data;
 		*ret=map_rect_new_binfile_int(map, NULL);
-		push_zipfile_tile(*ret, data[0]);
-		tile_set_window(*ret, data[1], data[2]);
+		push_zipfile_tile(*ret, le32_to_cpu(data[0]));
+		tile_set_window(*ret, le32_to_cpu(data[1]), le32_to_cpu(data[2]));
 		return 2;
 	}
 	*ret=NULL;
