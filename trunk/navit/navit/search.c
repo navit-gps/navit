@@ -555,8 +555,8 @@ search_list_search_free(struct search_list *sl, int level)
 
 }
 
-static char *
-postal_merge(char *mask, char *new)
+char *
+search_postal_merge(char *mask, char *new)
 {
 	dbg(1,"enter %s %s\n", mask, new);
 	int i;
@@ -580,6 +580,17 @@ postal_merge(char *mask, char *new)
 	dbg(1,"merged %s with %s as %s\n", mask, new, ret);	
 	return ret;
 }
+
+char *
+search_postal_merge_replace(char *mask, char *new)
+{
+	char *ret=search_postal_merge(mask, new);
+	if (!ret)
+		return mask;
+	g_free(mask);
+	return ret;
+}
+
 
 static int
 postal_match(char *postal, char *mask)
@@ -612,7 +623,7 @@ search_add_result(struct search_list_level *le, struct search_list_common *slc)
 		le->list=g_list_append(le->list, slc);
 		return 1;
 	}
-	merged=postal_merge(slo->postal_mask, slc->postal);
+	merged=search_postal_merge(slo->postal_mask, slc->postal);
 	if (merged) {
 		g_free(slo->postal_mask);
 		slo->postal_mask=merged;
