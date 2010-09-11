@@ -795,7 +795,7 @@ tile_set_window(struct map_rect_priv *mr, int offset, int length)
 {
 	mr->t->pos=mr->t->pos_next=mr->t->start+offset;
 	if (length == -1)
-		mr->t->end=mr->t->start+offset+mr->t->pos[0]+1;
+		mr->t->end=mr->t->start+offset+le32_to_cpu(mr->t->pos[0])+1;
 	else
 		mr->t->end=mr->t->start+offset+length;
 	dbg(1,"range is from %p to %p (%d,%d)\n",mr->t->pos, mr->t->end, offset, length);
