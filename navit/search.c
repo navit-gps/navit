@@ -351,7 +351,10 @@ search_interpolation_split(char *str, struct interpolation *inter)
 	char *first,*last;
 	int len;
 	if (!pos) {
-		dbg(0,"error: no - in %s\n",str);
+		inter->first=g_strdup(str);
+		inter->last=g_strdup(str);
+		inter->rev=0;
+		return;
 	}
 	len=pos-str;
 	first=g_malloc(len+1);
@@ -380,8 +383,7 @@ search_setup_interpolation(struct item *item, enum attr_type i0, enum attr_type 
 	inter->first=inter->last=inter->curr=NULL;
 	dbg(1,"setup %s\n",attr_to_name(i0));
 	if (item_attr_get(item, i0, &attr)) {
-		inter->first=g_strdup(attr.u.str);
-		inter->last=g_strdup(attr.u.str);
+		search_interpolation_split(attr.u.str, inter);
 		inter->mode=0;
 	} else if (item_attr_get(item, i1, &attr)) {
 		search_interpolation_split(attr.u.str, inter);
