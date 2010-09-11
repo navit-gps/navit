@@ -57,6 +57,7 @@ struct search_list_street {
 struct search_list_house_number {
 	struct search_list_common common;
 	char *house_number;
+	int interpolation;
 };
 
 struct search_list_result {
