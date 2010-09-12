@@ -89,6 +89,7 @@ int transform_distance_sq_pc(struct pcoord *c1, struct pcoord *c2);
 int transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref, struct coord *lpnt);
 int transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, struct coord *lpnt, int *pos);
 int transform_douglas_peucker(struct coord *in, int count, int dist_sq, struct coord *out);
+int transform_douglas_peucker_float(struct coord *in, int count, navit_float dist_sq, struct coord *out);
 void transform_print_deg(double deg);
 int transform_get_angle_delta(struct coord *c1, struct coord *c2, int dir);
 int transform_within_border(struct transformation *this_, struct point *p, int border);
