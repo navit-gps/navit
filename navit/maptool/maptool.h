@@ -150,6 +150,7 @@ int item_bin_read(struct item_bin *ib, FILE *in);
 void item_bin_set_type(struct item_bin *ib, enum item_type type);
 void item_bin_init(struct item_bin *ib, enum item_type type);
 void item_bin_add_coord(struct item_bin *ib, struct coord *c, int count);
+void item_bin_add_coord_reverse(struct item_bin *ib, struct coord *c, int count);
 void item_bin_bbox(struct item_bin *ib, struct rect *r);
 void item_bin_copy_coord(struct item_bin *ib, struct item_bin *from, int dir);
 void item_bin_add_coord_rect(struct item_bin *ib, struct rect *r);
