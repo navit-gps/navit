@@ -422,15 +422,20 @@ search_house_number_coordinate(struct item *item, struct interpolation *inter)
 	} else {
 		int count,max=1024;
 		struct coord c[max];
+		item_coord_rewind(item);
 		count=item_coord_get(item, c, max);
 		int hn_pos,hn_length=atoi(inter->last)-atoi(inter->first);
 		if (inter->rev)
 			hn_pos=atoi(inter->last)-atoi(inter->curr);
 		else
 			hn_pos=atoi(inter->curr)-atoi(inter->first);
-		if (count && hn_length) {
+		if (count) {
 			int i,distances[count-1],distance_sum=0,hn_distance;
 			dbg(1,"count=%d hn_length=%d hn_pos=%d (%s of %s-%s)\n",count,hn_length,hn_pos,inter->curr,inter->first,inter->last);
+			if (!hn_length) {
+				hn_length=2;
+				hn_pos=1;
+			}
 			if (count == max) 
 				dbg(0,"coordinate overflow\n");
 			for (i = 0 ; i < count-1 ; i++) {
