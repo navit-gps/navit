@@ -19,6 +19,9 @@
 
 #include <glib.h>
 #include <gd.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 #include "config.h"
 #include "point.h"
 #include "graphics.h"
