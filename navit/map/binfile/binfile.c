@@ -108,6 +108,8 @@ struct map_search_priv {
 
 static void push_tile(struct map_rect_priv *mr, struct tile *t);
 static void setup_pos(struct map_rect_priv *mr);
+static void map_binfile_close(struct map_priv *m);
+static void map_binfile_destroy(struct map_priv *m);
 
 static void lfh_to_cpu(struct zip_lfh *lfh) {
 	dbg_assert(lfh != NULL);
@@ -341,7 +343,9 @@ static void
 map_destroy_binfile(struct map_priv *m)
 {
 	dbg(1,"map_destroy_binfile\n");
-	g_free(m);
+	if (m->fi)
+		map_binfile_close(m);
+	map_binfile_destroy(m);
 }
 
 static void
