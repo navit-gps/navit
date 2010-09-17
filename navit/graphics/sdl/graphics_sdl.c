@@ -2009,7 +2009,8 @@ static gboolean graphics_sdl_idle(void *data)
                     }
                     default:
                     {
-                        key = 0;
+                        /* return unicode chars when they can be converted to ascii */
+                        key = ev.key.keysym.unicode<=127 ? ev.key.keysym.unicode : 0;
                         break;
                     }
                 }
@@ -2162,6 +2163,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
 
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
+    SDL_EnableUNICODE(1);
     SDL_WM_SetCaption("navit", NULL);
 
 #ifdef LINUX_TOUCHSCREEN
