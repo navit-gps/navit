@@ -202,13 +202,19 @@ vehicle_gpsd_try_open(gpointer *data)
 		port=colon+1;
 	}
 	dbg(0,"Trying to connect to %s:%s\n",source+7,port?port:"default");
-	priv->gps = gps_open(source + 7, port);
-	g_free(source);
 
-	if (!priv->gps){
+#if GPSD_API_MAJOR_VERSION >= 5
+	if (gps_open(source + 7, port, priv->gps)) { //gps_open returns 0 on success
+#else
+	priv->gps = gps_open(source + 7, port);
+	if(priv->gps){
+#endif
 		dbg(0,"gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?\n", priv->source, priv->retry_interval);
+                g_free(source);
 		return TRUE;
 	}
+	g_free(source);
+
 #ifdef HAVE_LIBGPS19
 	gps_stream(priv->gps, WATCH_ENABLE | WATCH_NEWSTYLE, NULL);
 #else
@@ -270,6 +276,9 @@ vehicle_gpsd_close(struct vehicle_priv *priv)
 	}
 	if (priv->gps) {
 		gps_close(priv->gps);
+#if GPSD_API_MAJOR_VERSION >= 5
+                g_free(priv->gps);
+#endif
 		priv->gps = NULL;
 	}
 #ifdef HAVE_GPSBT
@@ -287,7 +296,11 @@ vehicle_gpsd_io(struct vehicle_priv *priv)
 	dbg(1, "enter\n");
 	if (priv->gps) {
 	 	vehicle_last = priv;
+#if GPSD_API_MAJOR_VERSION >= 5
+                if (gps_read(priv->gps)) {
+#else
                 if (gps_poll(priv->gps)) {
+#endif
 			g_warning("gps_poll failed\n");
 			vehicle_gpsd_close(priv);
 			vehicle_gpsd_open(priv);
@@ -304,6 +317,9 @@ vehicle_gpsd_destroy(struct vehicle_priv *priv)
 #ifndef HAVE_LIBGPS19
 	if (priv->gpsd_query)
 		g_free(priv->gpsd_query);
+#endif
+#if GPSD_API_MAJOR_VERSION >= 5
+        g_free(priv->gps);
 #endif
 	g_free(priv);
 }
@@ -394,6 +410,9 @@ vehicle_gpsd_new_gpsd(struct vehicle_methods
 	dbg(1, "enter\n");
 	source = attr_search(attrs, NULL, attr_source);
 	ret = g_new0(struct vehicle_priv, 1);
+#if GPSD_API_MAJOR_VERSION >= 5
+	ret->gps = g_new0(struct gps_data_t, 1);
+#endif
 	ret->source = g_strdup(source->u.str);
 #ifndef HAVE_LIBGPS19
 	query = attr_search(attrs, NULL, attr_gpsd_query);
