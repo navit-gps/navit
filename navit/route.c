@@ -294,7 +294,7 @@ static struct route_graph_point *route_graph_get_point(struct route_graph *this,
 static void route_graph_update(struct route *this, struct callback *cb, int async);
 static void route_graph_build_done(struct route_graph *rg, int cancel);
 static struct route_path *route_path_new(struct route_graph *this, struct route_path *oldpath, struct route_info *pos, struct route_info *dst, struct vehicleprofile *profile);
-static void route_process_street_graph(struct route_graph *this, struct item *item);
+static void route_process_street_graph(struct route_graph *this, struct item *item, struct vehicleprofile *profile);
 static void route_graph_destroy(struct route_graph *this);
 static void route_path_update(struct route *this, int cancel, int async);
 static int route_time_seg(struct vehicleprofile *profile, struct route_segment_data *over, struct route_traffic_distortion *dist);
@@ -1862,9 +1862,10 @@ route_process_turn_restriction(struct route_graph *this, struct item *item)
  *
  * @param this The route graph to add to
  * @param item The item to add
+ * @param profile		The vehicle profile currently in use
  */
 static void
-route_process_street_graph(struct route_graph *this, struct item *item)
+route_process_street_graph(struct route_graph *this, struct item *item, struct vehicleprofile *profile)
 {
 #ifdef AVOID_FLOAT
 	int len=0;
@@ -1880,6 +1881,13 @@ route_process_street_graph(struct route_graph *this, struct item *item)
 	data.maxspeed=-1;
 	data.item=item;
 	int segmented = 0;
+	struct roadprofile *roadp;
+
+	roadp = vehicleprofile_get_roadprofile(profile, item->type);
+	if (!roadp) {
+		// Don't include any roads that don't have a road profile in our vehicle profile
+		return;
+	}
 
 	if (item_coord_get(item, &l, 1)) {
 		int *default_flags=item_get_default_flags(item->type);
@@ -2470,7 +2478,7 @@ route_graph_build_done(struct route_graph *rg, int cancel)
 }
 
 static void
-route_graph_build_idle(struct route_graph *rg)
+route_graph_build_idle(struct route_graph *rg, struct vehicleprofile *profile)
 {
 	int count=1000;
 	struct item *item;
@@ -2490,7 +2498,7 @@ route_graph_build_idle(struct route_graph *rg)
 		else if (item->type == type_street_turn_restriction_no || item->type == type_street_turn_restriction_only)
 			route_process_turn_restriction(rg, item);
 		else
-			route_process_street_graph(rg, item);
+			route_process_street_graph(rg, item, profile);
 		count--;
 	}
 }
@@ -2512,7 +2520,7 @@ route_graph_build_idle(struct route_graph *rg)
  * @return The new route graph.
  */
 static struct route_graph *
-route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback *done_cb, int async)
+route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback *done_cb, int async, struct vehicleprofile *profile)
 {
 	struct route_graph *ret=g_new0(struct route_graph, 1);
 
@@ -2524,7 +2532,7 @@ route_graph_build(struct mapset *ms, struct coord *c, int count, struct callback
 	ret->busy=1;
 	if (route_graph_build_next_map(ret)) {
 		if (async) {
-			ret->idle_cb=callback_new_1(callback_cast(route_graph_build_idle), ret);
+			ret->idle_cb=callback_new_2(callback_cast(route_graph_build_idle), ret, profile);
 			ret->idle_ev=event_add_idle(50, ret->idle_cb);
 		}
 	} else
@@ -2569,10 +2577,10 @@ route_graph_update(struct route *this, struct callback *cb, int async)
 		c[i++]=dst->c;
 		tmp=g_list_next(tmp);
 	}
-	this->graph=route_graph_build(this->ms, c, i, this->route_graph_done_cb, async);
+	this->graph=route_graph_build(this->ms, c, i, this->route_graph_done_cb, async, this->vehicleprofile);
 	if (! async) {
 		while (this->graph->busy) 
-			route_graph_build_idle(this->graph);
+			route_graph_build_idle(this->graph, this->vehicleprofile);
 	}
 }
 
