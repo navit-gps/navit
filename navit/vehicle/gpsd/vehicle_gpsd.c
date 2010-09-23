@@ -204,10 +204,11 @@ vehicle_gpsd_try_open(gpointer *data)
 	dbg(0,"Trying to connect to %s:%s\n",source+7,port?port:"default");
 
 #if GPSD_API_MAJOR_VERSION >= 5
-	if (gps_open(source + 7, port, priv->gps)) { //gps_open returns 0 on success
+        /* gps_open returns 0 on success */
+	if (gps_open(source + 7, port, priv->gps)) {
 #else
 	priv->gps = gps_open(source + 7, port);
-	if(priv->gps){
+	if(!priv->gps) {
 #endif
 		dbg(0,"gps_open failed for '%s'. Retrying in %d seconds. Have you started gpsd?\n", priv->source, priv->retry_interval);
                 g_free(source);
