@@ -24,11 +24,14 @@
 
 static void
 roadprofile_set_attr_do(struct roadprofile *this, struct attr *attr)
-{	
+{
 	switch (attr->type) {
 	case attr_speed:
 		this->speed=attr->u.num;
 		break;
+	case attr_maxspeed:
+		this->maxspeed=attr->u.num; 
+		break; 
 	case attr_route_weight:
 		this->route_weight=attr->u.num;
 		break;
@@ -44,6 +47,7 @@ roadprofile_new(struct attr *parent, struct attr **attrs)
 	struct attr **attr;
 	this_=g_new0(struct roadprofile, 1);
 	this_->attrs=attr_list_dup(attrs);
+	this_->maxspeed=0;
 	for (attr=attrs;*attr; attr++) 
 		roadprofile_set_attr_do(this_, *attr);
 	return this_;
