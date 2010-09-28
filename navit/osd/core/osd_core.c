@@ -1022,29 +1022,97 @@ osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct
 struct osd_speed_warner {
 	struct osd_item item;
 	struct graphics_gc *red;
+	struct graphics_gc *green;
+	struct graphics_gc *grey;
+	struct graphics_gc *black;
+	struct graphics_gc *white;
 	int width;
 	int active;
 	int d;
+	double speed_exceed_limit_offset;
+	double speed_exceed_limit_percent;
+	int announce_on;
+        enum eAnnounceState {eNoWarn=0,eWarningTold=1};
+	enum eAnnounceState announce_state;
+	int bTextOnly;                 //text of label attribute for this osd
 };
 
 static void
 osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct vehicle *v)
 {
-	struct point p[4];
-	char *text="60";
+	struct point p,bbox[4];
+	char text[16]="0";
 
 	osd_std_draw(&this->item);
-	p[0].x=this->item.w/2-this->d/4;
-	p[0].y=this->item.h/2-this->d/4;
-	graphics_draw_rectangle(this->item.gr, this->item.graphic_fg_white, p, this->d/2, this->d/2);
-	p[0].x=this->item.w/2;
-	p[0].y=this->item.h/2;
-	graphics_draw_circle(this->item.gr, this->item.graphic_fg_white, p, this->d/2);
-	graphics_draw_circle(this->item.gr, this->red, p, this->d-this->width*2);
-	graphics_get_text_bbox(this->item.gr, this->item.font, text, 0x10000, 0, p, 0);
-	p[0].x=(this->item.w-p[2].x)/2;
-	p[0].y=(this->item.h+p[2].y)/2-p[2].y;
-	graphics_draw_text(this->item.gr, this->item.graphic_fg_text, NULL, this->item.font, text, p, 0x10000, 0);
+	p.x=this->item.w/2-this->d/4;
+	p.y=this->item.h/2-this->d/4;
+	p.x=this->item.w/2;
+	p.y=this->item.h/2;
+	//graphics_draw_circle(this->item.gr, this->white, &p, this->d/2);
+
+    struct tracking *tracking = NULL;
+    struct graphics_gc *osd_color=this->grey;
+
+    if (navit) {
+        tracking = navit_get_tracking(navit);
+    }
+    if (tracking) {
+
+        struct attr maxspeed_attr,speed_attr;
+        struct item *item;
+        item=tracking_get_current_item(tracking);
+        double routespeed = -1;
+        double tracking_speed = -1;
+
+        int *flags=tracking_get_current_flags(tracking);
+        if (flags && (*flags & AF_SPEED_LIMIT) && tracking_get_attr(tracking, attr_maxspeed, &maxspeed_attr, NULL)) {
+            routespeed = maxspeed_attr.u.num;
+        }
+        if (routespeed == -1) {
+            struct vehicleprofile *prof=navit_get_vehicleprofile(navit);
+            struct roadprofile *rprof=NULL;
+            if (prof && item)
+                rprof=vehicleprofile_get_roadprofile(prof, item->type);
+            if (rprof) {
+                if(rprof->maxspeed!=0)
+                    routespeed=rprof->maxspeed;
+                else
+                    routespeed=rprof->speed;
+            }
+        }
+        tracking_get_attr(tracking, attr_position_speed, &speed_attr, NULL);
+        tracking_speed = *speed_attr.u.numd;
+        if( -1 != tracking_speed && -1 != routespeed ) {
+            snprintf(text,16,"%.0lf",routespeed);
+            if( this->speed_exceed_limit_offset+routespeed<tracking_speed ||
+                (100.0+this->speed_exceed_limit_percent)/100.0*routespeed<tracking_speed ) {
+                if(this->announce_state==eNoWarn && this->announce_on) {
+                    this->announce_state=eWarningTold; //warning told
+                    navit_say(navit,_("Please decrease your speed"));
+                }
+            }
+            if( tracking_speed <= routespeed ) {
+                this->announce_state=eNoWarn; //no warning
+                osd_color = this->green;
+            }
+            else {
+                osd_color = this->red;
+            }
+        } else {
+            osd_color = this->grey;
+        }
+    } else {
+        //when tracking is not available display grey
+        osd_color = this->grey;
+    }
+    if(0==this->bTextOnly) {
+      graphics_draw_circle(this->item.gr, osd_color, &p, this->d-this->width*2 );
+    }
+
+	graphics_get_text_bbox(this->item.gr, this->item.font, text, 0x10000, 0, bbox, 0);
+	p.x=(this->item.w-bbox[2].x)/2;
+	p.y=(this->item.h+bbox[2].y)/2-bbox[2].y;
+	graphics_draw_text(this->item.gr, osd_color, NULL, this->item.font, text, &p, 0x10000, 0);
 	graphics_draw_mode(this->item.gr, draw_mode_end);
 }
 
@@ -1053,10 +1121,30 @@ osd_speed_warner_init(struct osd_speed_warner *this, struct navit *nav)
 {
 	osd_set_std_graphic(nav, &this->item, (struct osd_priv *)this);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_draw), attr_position_coord_geo, this));
+
+
+
+	this->white=graphics_gc_new(this->item.gr);
+	graphics_gc_set_foreground(this->white, &(struct color ){0xffff,0xffff,0xffff,0x0000});
+
+	graphics_gc_set_linewidth(this->white, this->d/2-2 /*-this->width*/ );
+
 	this->red=graphics_gc_new(this->item.gr);
 	graphics_gc_set_foreground(this->red, &(struct color ){0xffff,0,0,0xffff});
 	graphics_gc_set_linewidth(this->red, this->width);
-	graphics_gc_set_linewidth(this->item.graphic_fg_white, this->d/4+2);
+
+	this->green=graphics_gc_new(this->item.gr);
+	graphics_gc_set_foreground(this->green, &(struct color ){0,0xffff,0,0xffff});
+	graphics_gc_set_linewidth(this->green, this->width-2);
+
+	this->grey=graphics_gc_new(this->item.gr);
+	graphics_gc_set_foreground(this->grey, &(struct color ){0x8888,0x8888,0x8888,0x8888});
+	graphics_gc_set_linewidth(this->grey, this->width);
+
+	this->black=graphics_gc_new(this->item.gr);
+	graphics_gc_set_foreground(this->black, &(struct color ){0x1111,0x1111,0x1111,0x9999});
+	graphics_gc_set_linewidth(this->black, this->width);
+
 	osd_speed_warner_draw(this, nav, NULL);
 }
 
@@ -1064,6 +1152,7 @@ static struct osd_priv *
 osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 {
 	struct osd_speed_warner *this=g_new0(struct osd_speed_warner, 1);
+	struct attr *attr;
 	this->item.p.x=-80;
 	this->item.p.y=20;
 	this->item.w=60;
@@ -1071,6 +1160,32 @@ osd_speed_warner_new(struct navit *nav, struct osd_methods *meth, struct attr **
 	this->item.h=60;
 	this->active=-1;
 	this->item.meth.draw = osd_draw_cast(osd_speed_warner_draw);
+
+	attr = attr_search(attrs, NULL, attr_speed_exceed_limit_offset);
+	if (attr) {
+		this->speed_exceed_limit_offset = attr->u.num;
+	} else
+		this->speed_exceed_limit_offset = 15;    //by default 15 km/h
+
+	attr = attr_search(attrs, NULL, attr_speed_exceed_limit_percent);
+	if (attr) {
+		this->speed_exceed_limit_percent = attr->u.num;
+    } else
+		this->speed_exceed_limit_percent = 10;    //by default factor of 1.1
+
+        this->bTextOnly = 0;	//by default display graphics also
+	attr = attr_search(attrs, NULL, attr_label);
+	if (attr) {
+          if (!strcmp("text_only",attr->u.str)) {
+            this->bTextOnly = 1;
+          }
+        }
+
+	attr = attr_search(attrs, NULL, attr_announce_on);
+	if (attr)
+		this->announce_on = attr->u.num;
+	else
+		this->announce_on = 1;    //announce by default
 	osd_set_std_attr(attrs, &this->item, 2);
 	this->d=this->item.w;
 	if (this->item.h < this->d)

@@ -25,6 +25,7 @@ struct roadprofile {
 	struct attr **attrs;
         int speed;
         int route_weight;
+	int maxspeed;
 };
 
 struct roadprofile * roadprofile_new(struct attr *parent, struct attr **attrs);
