@@ -128,16 +128,21 @@ main_setup_environment(int mode)
 
 #ifdef HAVE_API_WIN32_BASE
 char *nls_table[][3]={
-	//{"LANGNAME", "CTRYNAME", "
-	{"DAN","DNK","da_DK"},
-	{"DEU","DEU","de_DE"},
-	{"DEA","AUT","de_AT"},
-	{"ENU","USA","en_US"},
-	{"FRA","FRA","fr_FR"},
-	{"RUS","RUS","ru_RU"},
-	{"ENI","IRL","en_IE"},
-	{"PLK", "POL", "pl_PL"},
-	{NULL,NULL,NULL},
+	//{"LANGNAME", "CTRYNAME", "Language Code"},
+	{"DAN","DNK","da_DK"},		// Danish
+	{"DEU","DEU","de_DE"},		// German
+	{"DEA","AUT","de_AT"},		// German - Austrian
+	{"ENU","USA","en_US"},		// English - US
+	{"FRA","FRA","fr_FR"},		// French
+	{"RUS","RUS","ru_RU"},		// Russian
+	{"ENI","IRL","en_IE"},		// English - Ireland
+	{"PLK", "POL", "pl_PL"},	// Polish
+	{"BGR", "BGR", "bg_BG"},	// Bulgarian
+	{"ITA", "ITA", "it_IT"},	// Italian
+	{"CSY", "CZE", "cs_CZ"},	// Czech
+	{"FIN", "FIN", "fi_FI"},	// Finish
+	{"ROM", "ROM", "ro_RO"},	// Romanian
+	{NULL,NULL,NULL},		
 };
 
 static void
