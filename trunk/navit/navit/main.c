@@ -129,19 +129,42 @@ main_setup_environment(int mode)
 #ifdef HAVE_API_WIN32_BASE
 char *nls_table[][3]={
 	//{"LANGNAME", "CTRYNAME", "Language Code"},
-	{"DAN","DNK","da_DK"},		// Danish
-	{"DEU","DEU","de_DE"},		// German
-	{"DEA","AUT","de_AT"},		// German - Austrian
-	{"ENU","USA","en_US"},		// English - US
-	{"FRA","FRA","fr_FR"},		// French
-	{"RUS","RUS","ru_RU"},		// Russian
-	{"ENI","IRL","en_IE"},		// English - Ireland
+	// TODO - Find out the Languages for Spanish speaking countries
+	{"DAN", "DNK", "da_DK"},	// Danish
+	{"DEU", "DEU", "de_DE"},	// German
+	{"DEA", "AUT", "de_AT"},	// German - Austrian
+	{"FRA", "FRA", "fr_FR"},	// French
+	{"RUS", "RUS", "ru_RU"},	// Russian
 	{"PLK", "POL", "pl_PL"},	// Polish
 	{"BGR", "BGR", "bg_BG"},	// Bulgarian
 	{"ITA", "ITA", "it_IT"},	// Italian
 	{"CSY", "CZE", "cs_CZ"},	// Czech
-	{"FIN", "FIN", "fi_FI"},	// Finish
+	{"FIN", "FIN", "fi_FI"},	// Finnish
 	{"ROM", "ROM", "ro_RO"},	// Romanian
+	{"SVE", "SWE", "sv_SE"},	// Swedish
+	{"BEL", "BLR", "be_BY"},	// Belarussian
+	{"HRV", "HRV", "hr_HR"},	// Croatian
+	{"HUN", "HUN", "hu_HU"},	// Hungary
+	{"NLD", "NLD", "nl_NL"},	// Dutch - Netherlands
+	{"FOS", "FRO", "fo_FO"}, 	// Faroese
+	{"ELL", "GRC", "el_GR"},	// Greek
+	{"HEB", "ISR", "he_IL"},	// Hebrew
+	{"ISL", "ISL", "is_IS"},	// Icelandic
+	{"IND", "IDN", "id_ID"},	// Indonesian
+	{"MSL", "MYS", "ms_MY"},	// Malay - Malaysia
+	{"NOR", "NOR", "nb_NO"},	// Norwegian - Bokmal
+	{"NON", "NOR", "nn_NO"},	// Norwegian - Nynorsk
+	{"PTB", "BRA", "pt_BR"},	// Portuguse - Brazil
+	{"PTG", "PRT", "pt_PT"},	// Portuguse - Portugal
+	{"SKY", "SVK", "sk_SK"},	// Slovak
+	{"THA", "THA", "th_TH"},	// Thai
+	{"TRK", "TUR", "tr_TR"},	// Turkish
+	{"ENI", "IRL", "en_IE"},	// English - Ireland
+	{"ENU", "USA", "en_US"},	// English - US
+	{"ENA", "AUS", "en_AU"},	// English - Australia
+	{"ENC", "CAN", "en_CA"},	// English - Canada
+	{"ENG", "GBR", "en_GB"},	// English - UK
+	{"ENZ", "NZL", "en_NZ"},	// English - New Zealand
 	{NULL,NULL,NULL},		
 };
 
