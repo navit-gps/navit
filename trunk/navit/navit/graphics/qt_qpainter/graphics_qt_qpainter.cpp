@@ -30,7 +30,7 @@
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "navit/navit_config.h"
+#include "navit/../config.h"
 #include "navit/point.h"
 #include "navit/item.h"
 #include "navit/graphics.h"
