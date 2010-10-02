@@ -1,0 +1,1 @@
+module_add_library(graphics_null graphics_null.c)

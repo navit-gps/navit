@@ -1,0 +1,2 @@
+#cmakedefine SVN_VERSION "@SVN_VERSION@"
+#cmakedefine NAVIT_VARIANT "@NAVIT_VARIANT@"

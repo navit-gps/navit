@@ -1,0 +1,2 @@
+module_add_library(vehicle_gpsd_dbus vehicle_gpsd_dbus.c) 
+
