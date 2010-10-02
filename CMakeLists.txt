@@ -78,6 +78,10 @@ if(WIN32)
    set_with_reason(speech/espeak "win32" TRUE)
    set_with_reason(support/espeak "win32" TRUE)
 
+   # workaround for crosscompiling. need to get rid of pkg_config or
+   # change its search path
+   set_with_reason(binding/dbus "win32" FALSE)
+
    # vehicle_file is broken for windows. use vehicle_wince instead
    set_with_reason(vehicle/wince "win32: replace broken vehicle_file" TRUE)
    set_with_reason(vehicle/file "win32: currently broken" FALSE)
@@ -85,8 +89,8 @@ if(WIN32)
    # plugins currently not supported on windows
    set_with_reason(USE_PLUGINS "win32: currently not supported" FALSE)
 
-   set_with_reason(HAVE_API_WIN32_BASE 1)
-   set_with_reason(HAVE_API_WIN32 1)
+   set(HAVE_API_WIN32_BASE 1)
+   set(HAVE_API_WIN32 1)
    
    # Image stuff
    set_with_reason(USE_SVG "win32: urrently not supported" TRUE)
@@ -100,6 +104,8 @@ if(WIN32)
    set(SHARE_DIR ./)
    set(LOCALE_DIR ./)
    set(IMAGE_DIR xpm)
+
+   list(APPEND NAVIT_LIBS winmm)
 
 endif()
 

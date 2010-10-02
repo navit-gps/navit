@@ -67,9 +67,11 @@ if (${HAVE_GLIB})
 endif()
 
 add_library (navit_core ${NAVIT_SRC} )
-target_link_libraries(navit_core  ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib) # support_glib support_zlib support_win32 support_libpng support_wordexp 
+target_link_libraries(navit_core  ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS} m) # support_glib support_zlib support_win32 support_libpng support_wordexp 
 set_target_properties(navit_core PROPERTIES COMPILE_DEFINITIONS "MODULE=navit;LIBDIR=\"${CMAKE_INSTALL_PREFIX}/${LIB_DIR}\";PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
-set_target_properties(navit_core PROPERTIES COMPILE_FLAGS ${NAVIT_COMPILE_FLAGS})
+if (DEFINED NAVIT_COMPILE_FLAGS)
+   set_target_properties(navit_core PROPERTIES COMPILE_FLAGS ${NAVIT_COMPILE_FLAGS})
+endif()
 
 # Subversion revision
 ADD_CUSTOM_TARGET(
@@ -98,7 +100,7 @@ ADD_CUSTOM_COMMAND(
 ADD_DEPENDENCIES(navit_core version)
 
 add_executable (navit start.c navit.xml)
-target_link_libraries (navit navit_core ${NAVIT_LIBS} m)
+target_link_libraries (navit navit_core)
 set_target_properties(navit PROPERTIES COMPILE_DEFINITIONS "MODULE=${MODULE_NAME}")
 
 add_subdirectory (xpm)
