@@ -84,7 +84,7 @@ int glob(const char *pattern, int flags,
 #endif
 		pglob->gl_pathv[pglob->gl_pathc - 1] = malloc ((pathlen + strlen (filename) + 1) * sizeof(char*));
 		strncpy (pglob->gl_pathv[pglob->gl_pathc - 1], pattern, pathlen);
-		strcpy (pglob->gl_pathv[pglob->gl_pathc - 1] + pathlen, filename);
+		strcpy (pglob->gl_pathv[pglob->gl_pathc - 1] + pathlen - 1, filename);
 	} while (FindNextFile (hFiles, &xFindData));
 
 	FindClose(hFiles);
