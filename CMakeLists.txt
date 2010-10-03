@@ -55,9 +55,13 @@ add_module(vehicle/wince FALSE)
 
 # other features
 set(USE_PLUGINS TRUE)
-set(USE_ROUTING TRUE)# routing/reason=default
+set(USE_ROUTING TRUE)
 set(USE_SVG TRUE)
 set(SVG2PNG TRUE)
+set(svg2png_scaling 32 48 96)
+set(svg2png_scaling_flag 32 48 96)
+set(svg2png_scaling_nav 32 48 96)
+   
 set(DBUS_USE_SYSTEM_BUS FALSE)
 set(BUILD_MAPTOOL TRUE)
 
@@ -67,7 +71,6 @@ set(SHARE_DIR share/navit)
 set(LOCALE_DIR share)
 set(IMAGE_DIR share/navit/xpm)
 set(LIB_DIR lib)
-#message (STATUS ${CMAKE_SYSTEM_NAME})
 
 # set platform defaults
 if(WIN32)
@@ -93,13 +96,8 @@ if(WIN32)
    set(HAVE_API_WIN32 1)
    
    # Image stuff
-   set_with_reason(USE_SVG "win32: urrently not supported" TRUE)
+   set_with_reason(USE_SVG "win32: SVGs currently not supported" FALSE)
 
-   set_with_reason(SVG2PNG FALSE)
-   set_with_reason(svg2png_scaling 32 48 96)
-   set_with_reason(svg2png_scaling_flag 32 48 96)
-   set_with_reason(svg2png_scaling_nav 32 48 96)
-   
    set(BIN_DIR ./)
    set(SHARE_DIR ./)
    set(LOCALE_DIR ./)
@@ -154,11 +152,11 @@ endif(NOT ${support/glib})
 find_package(Qt4 COMPONENTS QtCore QtGui QtXml QtDeclarative QtSvg OPTIONAL)
 if (QT_FOUND)
    if (QT_QTCORE_FOUND AND QT_QTGUI_FOUND)
-      set(graphics/qt_qpainter TRUE)# graphics/qt/qpainter/reason=default
+      set(graphics/qt_qpainter TRUE)
  
 	
       if (QT_QTDECLARATIVE_FOUND AND QT_QTXML_FOUND)
-         set_with_reason(gui/qml "Qt libs found" TRUE)# gui/qml/reason=default
+         set_with_reason(gui/qml "Qt libs found" TRUE)
       endif()
       
       if (QT_QTSVG_FOUND)
