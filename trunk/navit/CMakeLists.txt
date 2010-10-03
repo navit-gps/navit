@@ -256,8 +256,9 @@ if(${binding/dbus})
       pkg_check_modules(DBUS_GLIB dbus-glib-1)
       if(DBUS_GLIB_FOUND)
          include_directories(${DBUS_GLIB_INCLUDE_DIRS})
-         set_with_reason(speech/dbus "dbus-glib-1 found" TRUE)# speech/dbus/reason=default
-         set_with_reason(vehicle/gpsd_dbus "dbus-glib-1 found" TRUE)# vehicle/gpsd/dbus/reason=default
+         list(APPEND NAVIT_LIBS ${DBUS_GLIB_LIBRARIES})
+         set_with_reason(speech/dbus "dbus-glib-1 found" TRUE)
+         set_with_reason(vehicle/gpsd_dbus "dbus-glib-1 found" TRUE)
       else()
          set_with_reason(binding/dbus "dbus-glib-1 missing" FALSE)
       endif()
