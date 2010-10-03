@@ -32,6 +32,9 @@ foreach ( MODULE_PATH ${ALL_MODULES})
       
       if (NOT USE_PLUGINS)
          list(APPEND MODULES_NAME ${MODULE_INC})
+      else()
+         # set plugin_type
+         string(REGEX REPLACE "(^[^/]*)/.*" "\\1" ${MODULE_INC}_TYPE ${MODULE_PATH})
       endif()
    else()
       message("Disabled  ${MODULE_PATH} ( ${${MODULE_PATH}_REASON} )")
