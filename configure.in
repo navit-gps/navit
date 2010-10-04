@@ -901,24 +901,24 @@ AC_SUBST(MOC)
 
 ## map
 # binfile
-AC_ARG_ENABLE(map-binfile, [  --disable-map-binfile            disable graphics type android], map_binfile=$enableval;map_binfile_reason="configure parameter")
+AC_ARG_ENABLE(map-binfile, [  --disable-map-binfile            disable map binfile], map_binfile=$enableval;map_binfile_reason="configure parameter")
 AM_CONDITIONAL(MAP_BINFILE, test "x${map_binfile}" = "xyes")
 # filter
-AC_ARG_ENABLE(map-filter, [  --disable-map-filter            disable graphics type android], map_filter=$enableval;map_filter_reason="configure parameter")
+AC_ARG_ENABLE(map-filter, [  --disable-map-filter            disable map filter], map_filter=$enableval;map_filter_reason="configure parameter")
 AM_CONDITIONAL(MAP_FILTER, test "x${map_filter}" = "xyes")
 # mg
-AC_ARG_ENABLE(map-mg, [  --disable-map-mg            disable graphics type android], map_mg=$enableval;map_mg_reason="configure parameter")
+AC_ARG_ENABLE(map-mg, [  --disable-map-mg            disable map mg], map_mg=$enableval;map_mg_reason="configure parameter")
 AM_CONDITIONAL(MAP_MG, test "x${map_mg}" = "xyes")
 # shapefile
-AC_ARG_ENABLE(map-shapefile, [  --disable-map-shapefile            disable graphics type android], map_shapefile=$enableval;map_shapefile_reason="configure parameter")
+AC_ARG_ENABLE(map-shapefile, [  --disable-map-shapefile            disable map shapefile], map_shapefile=$enableval;map_shapefile_reason="configure parameter")
 AM_CONDITIONAL(MAP_SHAPEFILE, test "x${map_shapefile}" = "xyes")
 # textfile
-AC_ARG_ENABLE(map-textfile, [  --disable-map-textfile            disable graphics type android], map_textfile=$enableval;map_textfile_reason="configure parameter")
+AC_ARG_ENABLE(map-textfile, [  --disable-map-textfile            disable map textfile], map_textfile=$enableval;map_textfile_reason="configure parameter")
 AM_CONDITIONAL(MAP_TEXTFILE, test "x${map_textfile}" = "xyes")
 
 ## osd
 # core
-AC_ARG_ENABLE(osd-core, [  --disable-osd-core            disable graphics type android], osd_core=$enableval;osd_core_reason="configure parameter")
+AC_ARG_ENABLE(osd-core, [  --disable-osd-core            disable osd core], osd_core=$enableval;osd_core_reason="configure parameter")
 AM_CONDITIONAL(OSD_CORE, test "x${osd_core}" = "xyes")
 
 ## gui
