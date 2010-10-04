@@ -1084,7 +1084,7 @@ osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct
         tracking_speed = *speed_attr.u.numd;
         if( -1 != tracking_speed && -1 != routespeed ) {
             snprintf(text,16,"%.0lf",routespeed);
-            if( this->speed_exceed_limit_offset+routespeed<tracking_speed ||
+            if( this->speed_exceed_limit_offset+routespeed<tracking_speed &&
                 (100.0+this->speed_exceed_limit_percent)/100.0*routespeed<tracking_speed ) {
                 if(this->announce_state==eNoWarn && this->announce_on) {
                     this->announce_state=eWarningTold; //warning told
