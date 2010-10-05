@@ -483,7 +483,7 @@ AC_CHECK_HEADER(
                 Define to 1 if you have the <X11/Xmu/Xmu.h> header file.
                 )
                 xmu=yes,
-        AC_MSG_WARN([*** no X11/Xmu/Xmu.h -- opengl and SDL support disabled])
+        AC_MSG_WARN([*** no X11/Xmu/Xmu.h -- opengl graphics support disabled])
 )
 
 AC_ARG_ENABLE(graphics-opengl, [  --disable-graphics-opengl      disable graphics type OpenGL], graphics_opengl=$enableval;graphics_opengl_reason="configure parameter")
@@ -498,7 +498,7 @@ AC_CHECK_HEADER(
 		)
 		OPENGL_LIBS="$X_LIBS -lGL -lGLU"
 		opengl=yes,
-	AC_MSG_WARN([*** no GL/gl.h -- opengl and SDL support disabled];graphics_opengl=no;graphics_opengl_reason="Headers missing")
+	AC_MSG_WARN([*** no GL/gl.h -- opengl graphics support disabled];graphics_opengl=no;graphics_opengl_reason="Headers missing")
 )
 
 AC_CHECK_HEADER(
@@ -509,7 +509,7 @@ AC_CHECK_HEADER(
 		Define to 1 if you have the <GL/glut.h> header file.
 		)
 		glut=yes,
-	AC_MSG_WARN([*** no GL/glut.h -- opengl and SDL support disabled]);graphics_opengl=no;graphics_opengl_reason="Headers missing"
+	AC_MSG_WARN([*** no GL/glut.h -- opengl graphics support disabled]);graphics_opengl=no;graphics_opengl_reason="Headers missing"
 )
 
 AC_SUBST(OPENGL_CFLAGS)
@@ -524,7 +524,7 @@ AC_CHECK_HEADER(
 		)
 		GLC_LIBS="-lGLC"
 		glc=yes,
-	AC_MSG_WARN([*** no GL/glc.h -- opengl and SDL support disabled])
+	AC_MSG_WARN([*** no GL/glc.h -- opengl graphics support disabled])
 )
 AC_SUBST(GLC_CFLAGS)
 AC_SUBST(GLC_LIBS)
