@@ -475,23 +475,6 @@ fi
 AC_SUBST(IMLIB2_CFLAGS)
 AC_SUBST(IMLIB2_LIBS)
 
-
-
-AC_ARG_ENABLE(gui-sdl, [  --disable-gui-sdl             don't create gui sdl ], MODULE_GUI_SDL=$enableval, MODULE_GUI_SDL=yes)
-if test "x$MODULE_GUI_SDL" = "xyes"; then
-	AC_CHECK_HEADER(
-		SDL/SDL.h,
-		AC_DEFINE(
-			[HAVE_LIBSDL],
-			[],
-			Define to 1 if you have the <SDL/SDL.h> header file.
-			)
-			SDL_LIBS="-lSDL"
-			sdl=yes,
-		AC_MSG_WARN([*** no SDL/SDL.h -- SDL support disabled])
-	)
-fi
-
 AC_CHECK_HEADER(
         X11/Xmu/Xmu.h,
         AC_DEFINE(
@@ -547,7 +530,6 @@ AC_SUBST(GLC_CFLAGS)
 AC_SUBST(GLC_LIBS)
 fi
 
-AM_CONDITIONAL(GUI_SDL, [test "x$sdl" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" -a "x$xmu" = "xyes" ])
 AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$glut" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
 
 system_shapefile=no
