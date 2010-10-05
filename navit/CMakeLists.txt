@@ -87,7 +87,7 @@ ADD_CUSTOM_TARGET(
 ADD_CUSTOM_COMMAND(
   OUTPUT builtin.c
   COMMAND echo -e \"${MODULES_PROTOTYPE}\" >  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
-  COMMAND echo -e \"extern void builtin_init(void)\;\\nvoid builtin_init(void) {\" >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
+  COMMAND echo -e \"extern void builtin_init\(void\)\;\\nvoid builtin_init\(void\) {\" >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
   COMMAND echo -e \"${MODULES_FUNC}\" >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
   COMMAND echo -e "\"}\"" >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
 )
