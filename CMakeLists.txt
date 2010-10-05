@@ -1,11 +1,12 @@
 project(navit)
 
-cmake_minimum_required(VERSION 2.8)
-cmake_policy(VERSION 2.8)
+cmake_minimum_required(VERSION 2.6)
+cmake_policy(VERSION 2.6)
 
 set(PACKAGE_VERSION "0.2.0")
 set(PACKAGE_NAME "navit-svn")
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include("${PROJECT_SOURCE_DIR}/cmake/navit_macros.cmake")
 
 ### set defaults
@@ -110,13 +111,14 @@ endif()
 foreach(PLUMO ${ALL_PLUGINS} ${ALL_MODULES} USE_PLUGINS USE_ROUTING BUILD_MAPTOOL USE_SVG SVG2PNG DBUS_USE_SYSTEM_BUS)
    set(OLDVALUE ${${PLUMO}})
    OPTION(${PLUMO} "Enable/Disable module/plugin/support" ${${PLUMO}})
-   if ( NOT (${OLDVALUE} STREQUAL ${${PLUMO}} ))
+   if ( NOT ${OLDVALUE} STREQUAL ${${PLUMO}} )
       set(${PLUMO}_REASON "User defined")
    endif()
 endforeach()
 
 ## check for all nessessary progs and libs
 INCLUDE (CheckIncludeFiles)
+INCLUDE (CheckLibraryExists)
 
 # SVG2PNG conversion
 set (IMAGE_CONVERTER_PROGS rsvg-convert ksvgtopng ksvgtopng4)
