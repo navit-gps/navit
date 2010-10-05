@@ -475,17 +475,6 @@ fi
 AC_SUBST(IMLIB2_CFLAGS)
 AC_SUBST(IMLIB2_LIBS)
 
-AC_CHECK_HEADER(
-        X11/Xmu/Xmu.h,
-        AC_DEFINE(
-                [HAVE_XMU],
-                [],
-                Define to 1 if you have the <X11/Xmu/Xmu.h> header file.
-                )
-                xmu=yes,
-        AC_MSG_WARN([*** no X11/Xmu/Xmu.h -- opengl graphics support disabled])
-)
-
 AC_ARG_ENABLE(graphics-opengl, [  --disable-graphics-opengl      disable graphics type OpenGL], graphics_opengl=$enableval;graphics_opengl_reason="configure parameter")
 if test "x${graphics_opengl}" = "xyes" ; then
 
