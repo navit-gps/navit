@@ -14,7 +14,7 @@ endif
 if GRAPHICS_QT_QPAINTER
   SUBDIRS+=qt_qpainter
 endif
-if USE_GRAPHICS_SDL
+if GRAPHICS_SDL
   SUBDIRS+=sdl
 endif
 if GRAPHICS_WIN32
