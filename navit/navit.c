@@ -1278,6 +1278,34 @@ navit_init(struct navit *this_)
 }
 
 void
+navit_zoom_to_rect(struct navit *this_, struct coord_rect *r)
+{
+	struct coord c;
+	int scale=16;
+
+	c.x=(r->rl.x+r->lu.x)/2;
+	c.y=(r->rl.y+r->lu.y)/2;
+	transform_set_center(this_->trans, &c);
+	dbg(1,"%x,%x-%x,%x\n", r->rl.x,r->rl.y,r->lu.x,r->lu.y);
+	while (scale < 1<<20) {
+		struct point p1,p2;
+		transform_set_scale(this_->trans, scale);
+		transform_setup_source_rect(this_->trans);
+		transform(this_->trans, transform_get_projection(this_->trans), &r->lu, &p1, 1, 0, 0, NULL);
+		transform(this_->trans, transform_get_projection(this_->trans), &r->rl, &p2, 1, 0, 0, NULL);
+		dbg(1,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
+		if (p1.x < 0 || p2.x < 0 || p1.x > this_->w || p2.x > this_->w ||
+		    p1.y < 0 || p2.y < 0 || p1.y > this_->h || p2.y > this_->h)
+			scale*=2;
+		else
+			break;
+	
+	}
+	if (this_->ready == 3)
+		navit_draw_async(this_,0);
+}
+
+void
 navit_zoom_to_route(struct navit *this_, int orientation)
 {
 	struct map *map;
@@ -1285,7 +1313,7 @@ navit_zoom_to_route(struct navit *this_, int orientation)
 	struct item *item;
 	struct coord c;
 	struct coord_rect r;
-	int count=0,scale=16;
+	int count=0;
 	if (! this_->route)
 		return;
 	dbg(1,"enter\n");
@@ -1309,29 +1337,9 @@ navit_zoom_to_route(struct navit *this_, int orientation)
 	}
 	if (! count)
 		return;
-	c.x=(r.rl.x+r.lu.x)/2;
-	c.y=(r.rl.y+r.lu.y)/2;
-	dbg(1,"count=%d\n",count);
 	if (orientation != -1)
 		transform_set_yaw(this_->trans, orientation);
-	transform_set_center(this_->trans, &c);
-	dbg(1,"%x,%x-%x,%x\n", r.rl.x,r.rl.y,r.lu.x,r.lu.y);
-	while (scale < 1<<20) {
-		struct point p1,p2;
-		transform_set_scale(this_->trans, scale);
-		transform_setup_source_rect(this_->trans);
-		transform(this_->trans, transform_get_projection(this_->trans), &r.lu, &p1, 1, 0, 0, NULL);
-		transform(this_->trans, transform_get_projection(this_->trans), &r.rl, &p2, 1, 0, 0, NULL);
-		dbg(1,"%d,%d-%d,%d\n",p1.x,p1.y,p2.x,p2.y);
-		if (p1.x < 0 || p2.x < 0 || p1.x > this_->w || p2.x > this_->w ||
-		    p1.y < 0 || p2.y < 0 || p1.y > this_->h || p2.y > this_->h)
-			scale*=2;
-		else
-			break;
-	
-	}
-	if (this_->ready == 3)
-		navit_draw_async(this_,0);
+	navit_zoom_to_rect(this_, &r);
 }
 
 static void
