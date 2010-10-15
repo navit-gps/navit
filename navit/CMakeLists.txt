@@ -8,7 +8,7 @@ message("" )
 message("Summary:\n")
 
 foreach ( PLUGIN_PATH ${ALL_PLUGINS})
-   if (${${PLUGIN_PATH}})
+   if (${PLUGIN_PATH})
       message("Enabled   ${PLUGIN_PATH} ( ${${PLUGIN_PATH}_REASON} )")
       
       include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_PATH}")
@@ -21,7 +21,7 @@ foreach ( PLUGIN_PATH ${ALL_PLUGINS})
 endforeach()
 
 foreach ( MODULE_PATH ${ALL_MODULES})
-   if (${${MODULE_PATH}})
+   if ( ${MODULE_PATH} )
       message("Enabled   ${MODULE_PATH} ( ${${MODULE_PATH}_REASON} )")
       
       include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/${MODULE_PATH}")
@@ -47,7 +47,7 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/fib-1.1")
 
 # Add module paths
 foreach (CURRENT_MODULE ${ALL_PLUGINS} ${ALL_MODULES})
-   if (${${CURRENT_MODULE}})
+   if (${CURRENT_MODULE})
       add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/${CURRENT_MODULE}")
    endif()
 endforeach()
