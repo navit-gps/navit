@@ -151,6 +151,9 @@ if (NOT ${support/glib})
 endif(NOT ${support/glib})
 
 # QT stuff
+SET(QT_USE_QTSVG TRUE)
+SET(QT_USE_QTXML TRUE)
+SET(QT_USE_QTDECLARATIVE TRUE)
 find_package(Qt4 COMPONENTS QtCore QtGui QtXml QtDeclarative QtSvg OPTIONAL)
 if (QT_FOUND)
    if (QT_QTCORE_FOUND AND QT_QTGUI_FOUND)
@@ -183,7 +186,7 @@ else()
 endif(ZLIB_FOUND)
 
 # OpenGL
-if (${graphics/opengl})
+if (graphics/opengl)
    CHECK_INCLUDE_FILES(glc.h HAVE_GLC)
    if (NOT HAVE_GLC)
       set(graphics/opengl FALSE)
@@ -201,7 +204,7 @@ if (${graphics/opengl})
 endif()
 
 # SDL
-if (${graphics/sdl})
+if (graphics/sdl)
    find_package(SDL)
    if (SDL_FOUND)
       list(APPEND NAVIT_LIBS ${SDL_LIBRARY})
@@ -250,7 +253,7 @@ endif(NOT GYPSY_FOUND)
 find_package(Gettext)
 
 # DBUS
-if(${binding/dbus})
+if(binding/dbus)
    find_package(PkgConfig)
    if(PKG_CONFIG_FOUND)
       pkg_check_modules(DBUS_GLIB dbus-glib-1)
