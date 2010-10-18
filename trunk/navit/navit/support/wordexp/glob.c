@@ -84,7 +84,10 @@ int glob(const char *pattern, int flags,
 #endif
 		pglob->gl_pathv[pglob->gl_pathc - 1] = malloc ((pathlen + strlen (filename) + 1) * sizeof(char*));
 		strncpy (pglob->gl_pathv[pglob->gl_pathc - 1], pattern, pathlen);
-		strcpy (pglob->gl_pathv[pglob->gl_pathc - 1] + pathlen - 1, filename);
+		// strcpy (pglob->gl_pathv[pglob->gl_pathc - 1] + pathlen - 1, filename);
+		// The above line should be uncommented later. Currently, the blow line needs to be in use.
+		// If not, navit on WinCE / Win32 cannot "find" the maps and bookmarks folder
+		strcpy (pglob->gl_pathv[pglob->gl_pathc - 1] + pathlen, filename);
 	} while (FindNextFile (hFiles, &xFindData));
 
 	FindClose(hFiles);
