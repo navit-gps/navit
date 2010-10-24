@@ -485,7 +485,7 @@ AC_CHECK_HEADER(
 		[],
 		Define to 1 if you have the <GL/gl.h> header file.
 		)
-		OPENGL_LIBS="$X_LIBS -lGL -lGLU"
+		OPENGL_LIBS="$X_LIBS -lGL -lglut -lfreeimage"
 		opengl=yes,
 	AC_MSG_WARN([*** no GL/gl.h -- opengl graphics support disabled];graphics_opengl=no;graphics_opengl_reason="GL/gl.h header missing")
 )
@@ -499,6 +499,17 @@ AC_CHECK_HEADER(
 		)
 		glut=yes,
 	AC_MSG_WARN([*** no GL/glut.h -- opengl graphics support disabled]);graphics_opengl=no;graphics_opengl_reason="GL/glut.h header missing"
+)
+
+AC_CHECK_HEADER(
+	GL/freeglut.h,
+	AC_DEFINE(
+		[HAVE_FREEGLUT],
+		[],
+		Define to 1 if you have the <GL/freeglut.h> header file.
+		)
+		freeglut=yes,
+	AC_MSG_WARN([*** no GL/freeglut.h -- opengl support disabled]);graphics_opengl=no;graphics_opengl_reason="Headers missing"
 )
 
 AC_SUBST(OPENGL_CFLAGS)
@@ -515,11 +526,23 @@ AC_CHECK_HEADER(
 		glc=yes,
 	AC_MSG_WARN([*** no GL/glc.h -- opengl graphics support disabled]);graphics_opengl=no;graphics_opengl_reason="GL/glc.h header missing"
 )
+AC_CHECK_HEADER(
+	FreeImage.h,
+	AC_DEFINE(
+		[HAVE_FREEIMAGE],
+		[],
+		Define to 1 if you have the <FreeImage.h> header file.
+		)
+		FREEIMAGE_LIBS="-lfreeimage"
+		freeimage=yes,
+	AC_MSG_WARN([*** no FreeImage.h -- opengl support disabled]);graphics_opengl=no;graphics_opengl_reason="Headers missing"
+)
+AC_SUBST(FREEIMAGE_LIBS)
 AC_SUBST(GLC_CFLAGS)
 AC_SUBST(GLC_LIBS)
 fi
 
-AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$glut" = "xyes" -a "x$opengl" = "xyes" -a "x$glc" = "xyes" ])
+AM_CONDITIONAL(GRAPHICS_OPENGL, [test "x$glut" = "xyes" -a "x$freeglut" = "xyes" -a "x$opengl" = "xyes" -a "x$freeimage" = "xyes"  -a "x$glc" = "xyes" ])
 
 system_shapefile=no
 AC_CHECK_HEADERS(
@@ -532,7 +555,7 @@ AC_CHECK_HEADERS(
 		SHAPEFILE_LIBS="-lshp"
 		system_shapefile=yes
 		)
-AC_SUBST(SHAPEFILE_CFLAGS)
+AC_SUBST(SHAPEFILE_CFLAGS) -a "x$freeimage" = "xyes" 
 AC_SUBST(SHAPEFILE_LIBS)
 AM_CONDITIONAL(HAVE_SYSTEM_SHAPEFILELIB, [test "x$system_shapefile" = "xyes" ])
 if test x"${system_shapefile}" = xno
