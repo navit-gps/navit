@@ -5144,6 +5144,7 @@ static void gui_internal_keypress(void *data, char *key)
 		gui_internal_keynav_highlight_next(this,0,1);
 		break;
 	case NAVIT_KEY_BACK:
+		gui_internal_back(this, NULL, NULL);
 		break;
 	case NAVIT_KEY_RETURN:
 		if (this->highlighted && this->highlighted_menu == g_list_last(this->root.children)->data)
