@@ -3051,10 +3051,13 @@ gui_internal_cmd_keypress(struct gui_priv *this, struct widget *wm, void *data)
 {
 	struct menu_data *md=gui_internal_menu_data(this);
 	gui_internal_keypress_do(this, (char *) wm->data);
-	if (md->keyboard_mode == 2)
+	// Switch to lowercase after the first key is pressed
+	if (md->keyboard_mode == 2) // Latin
 		gui_internal_keyboard_do(this, md->keyboard, 10);
-	if (md->keyboard_mode == 26)
+	if (md->keyboard_mode == 26) // Umlaut
 		gui_internal_keyboard_do(this, md->keyboard, 34);
+	if ((md->keyboard_mode & ~7) == 40) // Russian/Ukrainian/Belorussian
+		gui_internal_keyboard_do(this, md->keyboard, 48);
 }
 
 static void
@@ -3318,10 +3321,12 @@ gui_internal_keyboard_key_data(struct gui_priv *this, struct widget *wkbd, char 
 		NULL, gravity_center|orientation_vertical, func, data));
 	wk->data_free=data_free;
 	wk->background=this->background;
-	wk->bl=w/2;
+	wk->bl=0;
 	wk->br=0;
-	wk->bt=h/3;
+	wk->bt=0;
 	wk->bb=0;
+	wk->w=w;
+	wk->h=h;
 	return wk;
 }
 
@@ -3333,10 +3338,35 @@ gui_internal_keyboard_key(struct gui_priv *this, struct widget *wkbd, char *text
 
 static void gui_internal_keyboard_change(struct gui_priv *this, struct widget *key, void *data);
 
+
+// A list of availiable keyboard modes.
+struct gui_internal_keyb_mode {
+    char title[16]; // Label to be displayed on keys that switch to it
+    int font; // Font size of label
+    int case_mode; // Mode to switch to when case CHANGE() key is pressed.
+    int umlaut_mode;  // Mode to switch to when UMLAUT() key is pressed.
+} gui_internal_keyb_modes[]= {
+	/* 0*/ {"ABC", 2,  8, 24},
+	/* 8*/ {"abc", 2,  0, 32},
+	/*16*/ {"123", 2,  0, 24},
+	/*24*/ {"ÄÖÜ", 2, 40, 0},
+	/*32*/ {"äöü", 2, 32, 8},
+	/*40*/ {"АБВ", 2, 48,  0},
+	/*48*/ {"абв", 2, 40,  8}
+};
+
+
 // Some macros that make the keyboard layout easier to visualise in
 // the source code. The macros are #undef'd after this function.
 #define KEY(x) gui_internal_keyboard_key(this, wkbd, (x), (x), max_w, max_h)
 #define SPACER() gui_internal_keyboard_key_data(this, wkbd, "", 0, NULL, NULL, NULL,max_w,max_h)
+#define MODE(x) gui_internal_keyboard_key_data(this, wkbd, \
+		gui_internal_keyb_modes[(x)/8].title, \
+		gui_internal_keyb_modes[(x)/8].font, \
+		gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h) \
+			-> datai=(mode&7)+((x)&~7)
+#define SWCASE() MODE(gui_internal_keyb_modes[mode/8].case_mode)
+#define UMLAUT() MODE(gui_internal_keyb_modes[mode/8].umlaut_mode)
 static struct widget *
 gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 {
@@ -3346,16 +3376,6 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 	int render=0;
 	char *space="_";
 	char *backspace="←";
-	char *ucase="ABC";
-	int ucase_font=2;
-	char *lcase="abc";
-	int lcase_font=2;
-	char *numeric="123";
-	int numeric_font=2;
-	char *umlauts_ucase="ÄÖÜ";
-	int umlauts_ucase_font=2;
-	char *umlauts_lcase="äöü";
-	int umlauts_lcase_font=2;
 	char *hide="▼";
 	char *unhide="▲";
 
@@ -3375,10 +3395,16 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 	wkbd=gui_internal_box_new(this, gravity_center|orientation_horizontal_vertical|flags_fill);
 	wkbd->background=this->background;
 	wkbd->cols=8;
-	wkbd->spx=3;
-	wkbd->spy=3;
-	max_w=max_w/9;
+	wkbd->spx=0;
+	wkbd->spy=0;
+	max_w=max_w/8;
 	max_h=max_h/6;
+	wkbd->p.y=max_h*2;
+	if(mode>=40&&mode<56) { // Russian/Ukrainian/Belarussian layout needs more space...
+		max_h=max_h*4/5;
+		max_w=max_w*8/9;
+		wkbd->cols=9;
+	}
 
 	if (mode >= 0 && mode < 8) {
 		for (i = 0 ; i < 26 ; i++) {
@@ -3394,13 +3420,11 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		} else {
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+1024;
-			wk=gui_internal_keyboard_key_data(this, wkbd, lcase, lcase_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai=mode+8;
-			wk=gui_internal_keyboard_key_data(this, wkbd, numeric, numeric_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai=mode+16;
+			SWCASE();
+			MODE(16);
+			
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, umlauts_ucase, umlauts_ucase_font, gui_internal_keyboard_change, wkbdb,NULL,max_w,max_h);
-		wk->datai=mode+24;
+		UMLAUT();
 		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}
 	if (mode >= 8 && mode < 16) {
@@ -3417,13 +3441,11 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		} else {
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+1024;
-			wk=gui_internal_keyboard_key_data(this, wkbd, ucase, ucase_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai=mode-8;
-			wk=gui_internal_keyboard_key_data(this, wkbd, numeric, numeric_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai=mode+8;
+			SWCASE();
+			
+			MODE(16);
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, umlauts_lcase, umlauts_lcase_font, gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
-		wk->datai=mode+24;
+		UMLAUT();
 		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}
 	if (mode >= 16 && mode < 24) {
@@ -3434,23 +3456,24 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		KEY("."); KEY("°"); KEY("'"); KEY("\""); KEY("-"); KEY("+");
 		KEY("*"); KEY("/"); KEY("("); KEY(")"); KEY("="); KEY("?");
 
-		for (i = 0 ; i < 5 ; i++) SPACER();
+		
 
 		if (mode == 16) {
+			for (i = 0 ; i < 5 ; i++) SPACER();
 			KEY("-");
 			KEY("'");
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+1024;
 		} else {
+			for (i = 0 ; i < 3 ; i++) SPACER();
+			MODE(40);
+			MODE(48);
 			wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
 			wk->datai=mode+1024;
-			wk=gui_internal_keyboard_key_data(this, wkbd, ucase, ucase_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai=mode-16;
-			wk=gui_internal_keyboard_key_data(this, wkbd, lcase, lcase_font, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
-			wk->datai=mode-8;
+			MODE(0);
+			MODE(8);
 		}
-		wk=gui_internal_keyboard_key_data(this, wkbd, umlauts_ucase, umlauts_ucase_font, gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
-		wk->datai=mode+8;
+		UMLAUT();
 		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}
 	if (mode >= 24 && mode < 32) {
@@ -3459,8 +3482,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		KEY("À"); KEY("È"); KEY("Ì"); KEY("Ò"); KEY("Ù"); KEY("Ś"); KEY("Ć"); KEY("Ź");
 		KEY("Â"); KEY("Ê"); KEY("Î"); KEY("Ô"); KEY("Û"); SPACER();
 
-		wk=gui_internal_keyboard_key_data(this, wkbd, ucase, ucase_font, gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
-		wk->datai=mode-24;
+		UMLAUT();
 
 		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}
@@ -3470,40 +3492,67 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 		KEY("à"); KEY("è"); KEY("ì"); KEY("ò"); KEY("ù"); KEY("ś"); KEY("ć"); KEY("ź");
 		KEY("â"); KEY("ê"); KEY("î"); KEY("ô"); KEY("û"); KEY("ß");
 
-		wk=gui_internal_keyboard_key_data(this, wkbd, lcase, lcase_font, gui_internal_keyboard_change,wkbdb,NULL,max_w,max_h);
-		wk->datai=mode-24;
+		UMLAUT();
 
 		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
 	}
+	if (mode >= 40 && mode < 48) {
+		KEY("А"); KEY("Б"); KEY("В"); KEY("Г"); KEY("Д"); KEY("Е"); KEY("Ж"); KEY("З"); KEY("И");
+		KEY("Й"); KEY("К"); KEY("Л"); KEY("М"); KEY("Н"); KEY("О"); KEY("П"); KEY("Р"); KEY("С");
+		KEY("Т"); KEY("У"); KEY("Ф"); KEY("Х"); KEY("Ц"); KEY("Ч"); KEY("Ш"); KEY("Щ"); KEY("Ъ"); 
+		KEY("Ы"); KEY("Ь"); KEY("Э"); KEY("Ю"); KEY("Я"); KEY("Ё"); KEY("І"); KEY("Ї"); KEY("Ў");
+		SPACER(); SPACER(); SPACER();
+		gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+
+		wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+		wk->datai=mode+1024;
+
+		SWCASE();
+
+		MODE(16);
+
+		SPACER();
+
+		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+	}
+	if (mode >= 48 && mode < 56) {
+		KEY("а"); KEY("б"); KEY("в"); KEY("г"); KEY("д"); KEY("е"); KEY("ж"); KEY("з"); KEY("и");
+		KEY("й"); KEY("к"); KEY("л"); KEY("м"); KEY("н"); KEY("о"); KEY("п"); KEY("р"); KEY("с");
+		KEY("т"); KEY("у"); KEY("ф"); KEY("х"); KEY("ц"); KEY("ч"); KEY("ш"); KEY("щ"); KEY("ъ");
+		KEY("ы"); KEY("ь"); KEY("э"); KEY("ю"); KEY("я"); KEY("ё"); KEY("і"); KEY("ї"); KEY("ў");
+		SPACER(); SPACER(); SPACER();
+		gui_internal_keyboard_key(this, wkbd, space," ",max_w,max_h);
+		
+		wk=gui_internal_keyboard_key_data(this, wkbd, hide, 0, gui_internal_keyboard_change, wkbdb, NULL,max_w,max_h);
+		wk->datai=mode+1024;
+
+		SWCASE();
+
+		MODE(16);
+
+		SPACER();
+
+		gui_internal_keyboard_key(this, wkbd, backspace,"\b",max_w,max_h);
+	}
+	
+	
 	if (mode >= 1024) {
 		char *text=NULL;
 		int font=0;
 		struct widget *wkl;
 		mode -= 1024;
-		if (mode >= 0 && mode < 8) {
-			text=ucase;
-			font=ucase_font;
-		} else if (mode >= 8 && mode < 16) {
-			text=lcase;
-			font=lcase_font;
-		} else if (mode >= 16 && mode < 24) {
-			text=numeric;
-			font=numeric_font;
-		} else if (mode >= 24 && mode < 32) {
-			text=umlauts_ucase;
-			font=umlauts_ucase_font;
-		} else if (mode >= 32 && mode < 40) {
-			text=umlauts_lcase;
-			font=umlauts_lcase_font;
-		}
+		text=gui_internal_keyb_modes[mode/8].title;
+		font=gui_internal_keyb_modes[mode/8].font;
 		wk=gui_internal_box_new(this, gravity_center|orientation_horizontal|flags_fill);
 		wk->func=gui_internal_keyboard_change;
 		wk->data=wkbdb;
 		wk->background=this->background;
-		wk->bl=max_w/2;
+		wk->bl=0;
 		wk->br=0;
-		wk->bt=max_h/3;
+		wk->bt=0;
 		wk->bb=0;
+		wk->w=max_w;
+		wk->h=max_h;
 		wk->datai=mode;
 		wk->state |= STATE_SENSITIVE;
 		gui_internal_widget_append(wk, wkl=gui_internal_label_new(this, unhide));
@@ -3526,6 +3575,9 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 }
 #undef KEY
 #undef SPACER
+#undef SWCASE
+#undef UMLAUT
+#undef MODE
 
 static struct widget *
 gui_internal_keyboard(struct gui_priv *this, int mode)
@@ -3563,7 +3615,10 @@ gui_internal_search_list_set_default_country(struct gui_priv *this)
 			search_attr.u.str=country_name.u.str;
 			search_list_search(this->sl, &search_attr, 0);
 			while((res=search_list_get_result(this->sl)));
-			g_free(this->country_iso2);
+			if(this->country_iso2) {
+				g_free(this->country_iso2);
+				this->country_iso2=NULL;
+			}
 			if (item_attr_get(item, attr_country_iso2, &country_iso2))
 				this->country_iso2=g_strdup(country_iso2.u.str);
 		}
@@ -3614,7 +3669,6 @@ gui_internal_search(struct gui_priv *this, char *what, char *type, int flags)
 	gui_internal_widget_append(w, wr);
 	we=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	gui_internal_widget_append(wr, we);
-
 	if (!strcmp(type,"Country")) {
 		wnext=gui_internal_image_new(this, image_new_xs(this, "gui_select_town"));
 		wnext->func=gui_internal_search_town;
@@ -3719,7 +3773,7 @@ gui_internal_search_town_in_country(struct gui_priv *this, struct widget *widget
 	slc=search_list_select(this->sl, attr_country_all, widget->selection_id, 1);
 	if (slc) {
 		g_free(this->country_iso2);
-		this->country_iso2=((struct search_list_country *)slc)->iso2;
+		this->country_iso2=g_strdup(((struct search_list_country *)slc)->iso2);
 	}
 	gui_internal_search(this,widget->name,"Town",0);
 }
