@@ -71,6 +71,7 @@
 #include "util.h"
 #include "bookmarks.h"
 #include "debug.h"
+#include "fib.h"
 
 
 extern char *version;
@@ -2177,6 +2178,7 @@ struct selector {
 	{"peak","Land Features",(enum item_type []){
 		type_poi_land_feature,type_poi_rock,
 		type_poi_dam,type_poi_dam,
+		type_poi_peak,type_poi_peak,
 		type_none}},
 	{"unknown","Other",(enum item_type []){
 		type_point_unspecified,type_point_unkn-1,
@@ -2190,7 +2192,8 @@ struct selector {
 		type_poi_mall+1,type_poi_personal_service-1,
 		type_poi_restaurant+1,type_poi_restroom-1,
 		type_poi_restroom+1,type_poi_shop_grocery-1,
-		type_poi_shop_grocery+1,type_poi_motel-1,
+		type_poi_shop_grocery+1,type_poi_peak-1,
+		type_poi_peak+1, type_poi_motel-1,
 		type_poi_hostel+1,type_selected_point,
 		type_none}},
 	{"unknown","Unknown",(enum item_type []){
@@ -2198,18 +2201,30 @@ struct selector {
 		type_none}},
 };
 
+union poi_param {
+	guint i;
+	struct {
+		unsigned char sel, selnb, pagenb, dist;
+	} p;
+};
+
 static void gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data);
 
 static struct widget *
-gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c)
+gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int pagenb)
 {
 	struct widget *wl,*wb;
 	int i;
 	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	for (i = 0 ; i < sizeof(selectors)/sizeof(struct selector) ; i++) {
-	gui_internal_widget_append(wl, wb=gui_internal_button_new_with_callback(this, NULL,
-		image_new_xs(this, selectors[i].icon), gravity_left_center|orientation_vertical,
-		gui_internal_cmd_pois, &selectors[i]));
+		union poi_param p;
+		p.p.sel = 1;
+		p.p.selnb = i;
+		p.p.pagenb = pagenb;
+		p.p.dist = 0;
+		gui_internal_widget_append(wl, wb=gui_internal_button_new_with_callback(this, NULL,
+			image_new_xs(this, selectors[i].icon), gravity_left_center|orientation_vertical,
+			gui_internal_cmd_pois, GUINT_TO_POINTER(p.i)));
 		wb->c=*c;
 		wb->bt=10;
 	}
@@ -2217,28 +2232,30 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c)
 }
 
 static struct widget *
-gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, int dist)
+gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct item *item, struct coord *c, int dist, char* name)
 {
 	char distbuf[32];
 	char dirbuf[32];
 	char *type;
-	struct attr attr;
 	struct widget *wl,*wt;
 	char *text;
 
 	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 
-	sprintf(distbuf,"%d", dist/1000);
+	if (dist > 10000)
+		sprintf(distbuf,"%d", dist/1000);
+	else
+		sprintf(distbuf,"%d.%d", dist/1000, (dist%1000)/100);
 	get_direction(dirbuf, transform_get_angle_delta(center, c, 0), 1);
 	type=item_to_name(item->type);
-	if (item_attr_get(item, attr_label, &attr)) {
-		wl->name=g_strdup_printf("%s %s",type,attr.u.str);
+	if (name[0]) {
+		wl->name=g_strdup_printf("%s %s",type,name);
 	} else {
-		attr.u.str="";
 		wl->name=g_strdup(type);
 	}
-        text=g_strdup_printf("%s %s %s %s", distbuf, dirbuf, type, attr.u.str);
+	text=g_strdup_printf("%s %s %s %s", distbuf, dirbuf, type, name);
 	wt=gui_internal_label_new(this, text);
+
 	wt->datai=dist;
 	gui_internal_widget_append(wl, wt);
 	g_free(text);
@@ -2284,6 +2301,32 @@ gui_internal_cmd_pois_item_selected(struct selector *sel, enum item_type type)
 
 static void gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data);
 
+struct item_data {
+	int dist;
+	char label[32];
+	struct item item;
+	struct coord c;
+};
+
+/**
+ * @brief Event handler for POIs list "more" element.
+ *
+ * @param this The graphics context.
+ * @param wm called widget.
+ * @param data event data.
+ */
+static void
+gui_internal_cmd_pois_more(struct gui_priv *this, struct widget *wm, void *data) 
+{
+	struct widget *w=g_new0(struct widget,1);
+	w->data=wm->data;
+	w->c=wm->c;
+	gui_internal_back(this, NULL, NULL);
+	gui_internal_cmd_pois(this, w, NULL);
+	free(w);
+}
+
+
 static void
 gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 {
@@ -2293,20 +2336,32 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	struct map *m;
 	struct map_rect *mr;
 	struct item *item;
-	int idist,dist=20000;
-	struct widget *wi,*w,*w2,*wb;
+	struct widget *wi,*w,*w2,*wb, *wtable, *row;
 	enum projection pro=wm->c.pro;
-	struct selector *isel=wm->data;
+	union poi_param param = {.i = GPOINTER_TO_UINT(wm->data)};
+	int idist,dist=10000*(param.p.dist+1);
+	struct selector *isel = param.p.sel? &selectors[param.p.selnb]: NULL;
+	int pagenb = param.p.pagenb;
+	int prevdist=param.p.dist*10000;
+	int rowstoskip=0;
+	const int pagesize = 50; // Starting value and increment of count of items to be extracted
+	int maxitem = pagesize*(pagenb+1), it = 0, i;
+	struct item_data *items= g_new0( struct item_data, maxitem);
+	struct fibheap* fh = fh_makekeyheap();
+	int cnt = 0;
+	struct table_data *td;
+	dbg(2, "Params: sel = %i, selnb = %i, pagenb = %i, dist = %i\n",
+		param.p.sel, param.p.selnb, param.p.pagenb, param.p.dist);
 
 	wb=gui_internal_menu(this, isel ? isel->name : _("POIs"));
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
-	if (! isel)
-		gui_internal_widget_append(w, gui_internal_cmd_pois_selector(this,&wm->c));
+	if (!isel)
+		gui_internal_widget_append(w, gui_internal_cmd_pois_selector(this,&wm->c,pagenb));
 	w2=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(w, w2);
 
-	sel=map_selection_rect_new(&wm->c, dist, 18);
+	sel=map_selection_rect_new(&wm->c,dist*transform_scale(wm->c.y),18);
 	center.x=wm->c.x;
 	center.y=wm->c.y;
 	h=mapset_open(navit_get_mapset(this->nav));
@@ -2318,16 +2373,31 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 			while ((item=map_rect_get_item(mr))) {
 				if (gui_internal_cmd_pois_item_selected(isel, item->type) &&
 				    item_coord_get_pro(item, &c, 1, pro) &&
-				    coord_rect_contains(&sel->u.c_rect, &c) &&
+				    coord_rect_contains(&sel->u.c_rect, &c)  &&
 				    (idist=transform_distance(pro, &center, &c)) < dist) {
-					gui_internal_widget_append(w2, wi=gui_internal_cmd_pois_item(this, &center, item, &c, idist));
-					wi->func=gui_internal_cmd_position;
-					wi->data=(void *)2;
-					wi->item=*item;
-					wi->state |= STATE_SENSITIVE;
-					wi->c.x=c.x;
-					wi->c.y=c.y;
-					wi->c.pro=pro;
+					struct item_data *data;
+					struct attr attr;
+					if(it>=maxitem) {
+						data = fh_extractmin(fh);
+					} else {
+						data = &items[it++];
+					}
+					data->item = *item;
+					data->c = c;
+					data->dist = idist;
+					if (item_attr_get(item, attr_label, &attr)) {
+						strncpy(data->label, attr.u.str, sizeof(data->label));
+					} else {
+						data->label[0] = 0;
+					}
+					// Key expression is a workaround to fight
+					// probable heap collisions when two objects
+					// are at the same distance. But it destroys
+					// right order of POIs 2048 km away from cener
+					// and if table grows more than 1024 rows.
+					fh_insertkey(fh, -((idist<<10) + cnt++), data);
+					if (it == maxitem)
+						dist = (-fh_minkey(fh))>>10;
 				}
 			}
 			map_rect_destroy(mr);
@@ -2336,8 +2406,84 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	}
 	map_selection_destroy(sel);
 	mapset_close(h);
-	w2->children=g_list_sort_with_data(w2->children,  gui_internal_cmd_pois_sort_num, (void *)1);
+	
+	wtable = gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
+	td=wtable->data;
+
+	gui_internal_widget_append(w2,wtable);
+	wtable->w=w2->w;
+
+	// Move items from heap to the table
+	for(i=0;;i++) 
+	{
+		int key = fh_minkey(fh);
+		struct item_data *data = fh_extractmin(fh);
+		if (data == NULL)
+		{
+			dbg(2, "Empty heap: maxitem = %i, it = %i, dist = %i\n", maxitem, it, dist);
+			break;
+		}
+		dbg(2, "dist1: %i, dist2: %i\n", data->dist, (-key)>>10);
+		if(i==(it-pagesize*pagenb) && data->dist>prevdist)
+			prevdist=data->dist;
+		wi=gui_internal_cmd_pois_item(this, &center, &data->item, &data->c, data->dist, data->label);
+		wi->func=gui_internal_cmd_position;
+		wi->data=(void *)2;
+		wi->item=data->item;
+		wi->state |= STATE_SENSITIVE;
+		wi->c.x=data->c.x;
+		wi->c.y=data->c.y;
+		wi->c.pro=pro;
+		row = gui_internal_widget_table_row_new(this,
+							  gravity_left
+							  | flags_fill
+							  | orientation_horizontal);
+		row->children=g_list_append(row->children,wi);
+		row->datai=data->dist;
+		gui_internal_widget_prepend(wtable,row);
+	}
+
+	fh_deleteheap(fh);
+	free(items);
+
+	// Add an entry for more POI
+	struct widget *wl,*wt;
+	char buffer[32];
+	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	if (it == maxitem) {
+		param.p.pagenb++;
+		snprintf(buffer, sizeof(buffer), "Get more (up to %d items)...", (param.p.pagenb+1)*pagesize);
+	} else {
+		param.p.dist++;
+		snprintf(buffer, sizeof(buffer), "Set search distance to %i km", 10*(param.p.dist+1));
+	}
+	wt=gui_internal_label_new(this, buffer);
+	gui_internal_widget_append(wl, wt);
+	wl->func=gui_internal_cmd_pois_more;
+	wl->data=GUINT_TO_POINTER(param.i);
+	wl->state |= STATE_SENSITIVE;
+	wl->c = wm->c;
+	row = gui_internal_widget_table_row_new(this,
+						  gravity_left
+						  | flags_fill
+						  | orientation_horizontal);
+	row->children=g_list_append(row->children,wl);
+	row->datai=100000; // Really far away for Earth, but won't work for bigger planets.
+	gui_internal_widget_append(wtable,row);
+
+	// Rendering now is needed to have table_data->bottomrow filled in.
 	gui_internal_menu_render(this);
+	td=wtable->data;
+	if(td->bottom_row!=NULL)
+	{
+		while(((struct widget*)td->bottom_row->data)->datai<=prevdist
+				&& (td->next_button->state & STATE_SENSITIVE))
+		{
+			gui_internal_table_button_next(this, td->next_button, NULL);
+		}
+	}
+	gui_internal_menu_render(this);
+
 }
 
 static void
@@ -2700,7 +2846,7 @@ gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data)
 		flags=8|16|32|64|256;
 		break;
 	case 2:
-		flags=4|8|16|32|64;
+		flags=4|8|16|32|64|128;
 		break;
 	case 3:
 		flags=1|8|16|32|64|128;
@@ -5156,7 +5302,6 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 	widget->data_free=gui_internal_table_data_free;
 	data = (struct table_data*)widget->data;
 
-
 	if (buttons) {
 	data->next_button = gui_internal_button_new_with_callback
 		(this,"Next",image_new_xs(this, "gui_active") ,
@@ -5410,7 +5555,27 @@ void gui_internal_table_pack(struct gui_priv * this, struct widget * w)
 
 }
 
-
+/**
+ * @brief Invalidates coordinates for previosly rendered table widget rows.
+ *
+ * @param table_data Data from the table object.
+ */
+void gui_internal_table_hide_rows(struct table_data * table_data)
+{
+	GList*cur_row;
+	for(cur_row=table_data->top_row; cur_row ; cur_row = g_list_next(cur_row))
+	{
+		struct widget * cur_row_widget = (struct widget*)cur_row->data;
+		if (cur_row_widget->type!=widget_table_row)
+			continue;
+		cur_row_widget->p.x=0;
+		cur_row_widget->p.y=0;
+		cur_row_widget->w=0;
+		cur_row_widget->h=0;
+		if(cur_row==table_data->bottom_row)
+			break;
+	}
+}
 
 /**
  * @brief Renders a table widget.
@@ -5434,7 +5599,7 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	dbg_assert(table_data);
 	column_desc = gui_internal_compute_table_dimensions(this,w);
 	y=w->p.y;
-
+	gui_internal_table_hide_rows(table_data);
 	/**
 	 * Skip rows that are on previous pages.
 	 */
@@ -5444,8 +5609,6 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		cur_row = table_data->top_row;
 		is_first_page=0;
 	}
-
-
 	/**
 	 * Loop through each row.  Drawing each cell with the proper sizes,
 	 * at the proper positions.
@@ -5470,7 +5633,6 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 			 */
 			is_skipped=1;
 			break;
-
 		}
 		for(cur_column = cur_row_widget->children; cur_column;
 		    cur_column=g_list_next(cur_column))
@@ -5495,6 +5657,14 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 				max_height = dim->height;
 			}
 		}
+		
+		/* Row object should have its coordinates in actual
+		 * state to be able to pass mouse clicks to Column objects
+		 */
+		cur_row_widget->p.x=w->p.x;
+		cur_row_widget->w=w->w;
+		cur_row_widget->p.y=y;
+		cur_row_widget->h=max_height;
 		y = y + max_height;
 		table_data->bottom_row=cur_row;
 		current_desc = g_list_next(current_desc);
@@ -5514,11 +5684,9 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 		//    table_data->prev_button->h=table_data->button_box->h;
 		//    table_data->next_button->c.y=table_data->button_box->c.y;
 		//    table_data->prev_button->c.y=table_data->button_box->c.y;
-
 		gui_internal_widget_pack(this,table_data->button_box);
 		if(table_data->next_button->p.y > w->p.y + w->h + table_data->next_button->h)
 		{
-
 			table_data->button_box->p.y = w->p.y + w->h -
 				table_data->button_box->h;
 		}
@@ -5995,8 +6163,21 @@ static void gui_internal_table_button_next(struct gui_priv * this, struct widget
 			table_data->page_headers=g_list_append(table_data->page_headers,
 							       table_data->top_row);
 		}
-
-		table_data->top_row = g_list_next(table_data->bottom_row);
+		/**
+		 * Invalidate row coordinates for all rows which were previously rendered
+		 
+		for(iterator=table_data->top_row; iterator && table_data->rows_on_page; iterator = g_list_next(iterator))
+		{
+			struct widget * cur_row_widget = (struct widget*)iterator->data;
+			cur_row_widget->p.x=-1;
+			cur_row_widget->p.y=-1;
+			cur_row_widget->w=0;
+			cur_row_widget->h=0;
+			table_data->rows_on_page--;
+		}
+		*/
+		gui_internal_table_hide_rows(table_data);
+		table_data->top_row=g_list_next(table_data->bottom_row);
 	}
 	wm->state&= ~STATE_HIGHLIGHTED;
 	gui_internal_menu_render(this);
@@ -6024,6 +6205,7 @@ static void gui_internal_table_button_prev(struct gui_priv * this, struct widget
 		table_data = (struct table_data*) table_widget->data;
 		if(table_data)
 		{
+			gui_internal_table_hide_rows(table_data);
 			current_page_top = table_data->top_row;
 			for(iterator = table_data->page_headers; iterator != NULL;
 			    iterator = g_list_next(iterator))
