@@ -666,6 +666,14 @@ attr_from_line(char *line, char *name, int *pos, char *val_ret, char *name_ret)
 	return 0;
 }
 
+/**
+ * Check if an enumeration of attribute types contains a specific attribute.
+ *
+ * @param types Pointer to the attr_type enumeration to be searched
+ * @param type The attr_type to be searched for
+ *
+ * @return 1 if the attribute type was found, 0 if it was not found or if a null pointer was passed as types
+ */
 int
 attr_types_contains(enum attr_type *types, enum attr_type type)
 {
@@ -677,6 +685,16 @@ attr_types_contains(enum attr_type *types, enum attr_type type)
 	return 0;
 }
 
+/**
+ * Check if an enumeration of attribute types contains a specific attribute. 
+ * It is different from attr_types_contains in that it returns a caller-defined value if the pointer to the enumeration is NULL.
+ *
+ * @param types Pointer to the attr_type enumeration to be searched
+ * @param type The attr_type to be searched for
+ * @param deflt The default value to return if types is NULL.
+ *
+ * @return 1 if the attribute type was found, 0 if it was not found, the value of the deflt argument if types is NULL.
+ */
 int
 attr_types_contains_default(enum attr_type *types, enum attr_type type, int deflt)
 {
