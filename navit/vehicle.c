@@ -173,9 +173,9 @@ vehicle_attr_iter_destroy(struct attr_iter *iter)
 /**
  * Generic get function
  *
- * @param this_ A vehicle
+ * @param this_ Pointer to a vehicle structure
  * @param type The attribute type to look for
- * @param attr A struct attr to store the attribute
+ * @param attr Pointer to an attr structure to store the attribute
  * @param iter A vehicle attr_iter
  */
 int
@@ -197,9 +197,9 @@ vehicle_get_attr(struct vehicle *this_, enum attr_type type, struct attr *attr, 
 /**
  * Generic set function
  *
- * @param this_ A vehicle
- * @param attr
- * @param attrs
+ * @param this_ Pointer to a vehicle structure
+ * @param attr Pointer to an attr structure for the attribute to be set
+ * @return nonzero on success, zero on failure
  */
 int
 vehicle_set_attr(struct vehicle *this_, struct attr *attr)
@@ -405,6 +405,12 @@ vehicle_draw_do(struct vehicle *this_, int lazy)
 	}
 }
 
+/**
+ * Writes to an NMEA log.
+ *
+ * @param this_ Pointer to the vehicle structure of the data source
+ * @param log Pointer to a log structure for the log file
+ */
 static void
 vehicle_log_nmea(struct vehicle *this_, struct log *log)
 {
@@ -449,6 +455,12 @@ vehicle_log_gpx_add_tag(char *tag, char **logstr)
 	g_free(end);
 }
 
+/**
+ * Writes to a GPX log.
+ *
+ * @param this_ Pointer to the vehicle structure of the data source
+ * @param log Pointer to a log structure for the log file
+ */
 static void
 vehicle_log_gpx(struct vehicle *this_, struct log *log)
 {
@@ -484,6 +496,22 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 		g_free(this_->gpx_desc);
 		this_->gpx_desc = NULL;
 	}
+	if (attr_types_contains_default(attr_types, attr_position_height,0) && this_->meth.position_attr_get(this_->priv, attr_position_height, &attr))
+		logstr=g_strconcat_printf(logstr,"\t<ele>%.6f</ele>\n",*attr.u.numd);
+	// <magvar> magnetic variation in degrees; we might use position_magnetic_direction and position_direction to figure it out
+	// <geoidheight> Height (in meters) of geoid (mean sea level) above WGS84 earth ellipsoid. As defined in NMEA GGA message (field 11, which vehicle_wince.c ignores)
+	// <name> GPS name (arbitrary)
+	// <cmt> comment
+	// <src> Source of data
+	// <link> Link to additional information (URL)
+	// <sym> Text of GPS symbol name
+	// <type> Type (classification)
+	// <fix> Type of GPS fix {'none'|'2d'|'3d'|'dgps'|'pps'}, leave out if unknown. Similar to position_fix_type but more detailed.
+	if (attr_types_contains_default(attr_types, attr_position_sats_used,0) && this_->meth.position_attr_get(this_->priv, attr_position_sats_used, &attr))
+		logstr=g_strconcat_printf(logstr,"\t<sat>%d</sat>\n",attr.u.num);
+	if (attr_types_contains_default(attr_types, attr_position_hdop,0) && this_->meth.position_attr_get(this_->priv, attr_position_hdop, &attr))
+		logstr=g_strconcat_printf(logstr,"\t<hdop>%.6f</hdop>\n",*attr.u.numd);
+	// <vdop>, <pdop> Vertical and position dilution of precision, no corresponding attribute
 	if (attr_types_contains_default(attr_types, attr_position_direction,0) && this_->meth.position_attr_get(this_->priv, attr_position_direction, &attr))
 		logstr=g_strconcat_printf(logstr,"\t<course>%.1f</course>\n",*attr.u.numd);
 	if (attr_types_contains_default(attr_types, attr_position_speed, 0) && this_->meth.position_attr_get(this_->priv, attr_position_speed, &attr))
@@ -505,6 +533,12 @@ vehicle_log_gpx(struct vehicle *this_, struct log *log)
 	g_free(logstr);
 }
 
+/**
+ * Writes to a text log.
+ *
+ * @param this_ Pointer to the vehicle structure of the data source
+ * @param log Pointer to a log structure for the log file
+ */
 static void
 vehicle_log_textfile(struct vehicle *this_, struct log *log)
 {
@@ -523,6 +557,12 @@ vehicle_log_textfile(struct vehicle *this_, struct log *log)
 	log_write(log, logstr, strlen(logstr), 0);
 }
 
+/**
+ * Writes to a binary log.
+ *
+ * @param this_ Pointer to the vehicle structure of the data source
+ * @param log Pointer to a log structure for the log file
+ */
 static void
 vehicle_log_binfile(struct vehicle *this_, struct log *log)
 {
@@ -577,6 +617,12 @@ vehicle_log_binfile(struct vehicle *this_, struct log *log)
 	}
 }
 
+/**
+ * Register a new log to receive data.
+ *
+ * @param this_ Pointer to the vehicle structure of the data source
+ * @param log Pointer to a log structure for the log file
+ */
 static int
 vehicle_add_log(struct vehicle *this_, struct log *log)
 {
