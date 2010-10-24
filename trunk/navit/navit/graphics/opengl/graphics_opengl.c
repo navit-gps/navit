@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2008 Navit Team
+ * Copyright (C) 2005-2010 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,832 +17,1466 @@
  * Boston, MA  02110-1301, USA.
  */
 
-#include <math.h>
 #include <glib.h>
+#include <unistd.h>
+#include <math.h>
+#include <stdio.h>
+#include <FreeImage.h>
+#include <time.h>
+
+#include "item.h"
+#include "attr.h"
 #include "config.h"
-#include <GL/glc.h>
 #include "point.h"
 #include "graphics.h"
 #include "color.h"
 #include "plugin.h"
-
+#include "event.h"
 #include "debug.h"
+#include "callback.h"
+#include "keys.h"
+#include "window.h"
+#include "navit/font/freetype/font_freetype.h"
+#include <GL/glc.h>
 
-#include <GL/glut.h>
-
-
-void CALLBACK tessBeginCB(GLenum which);
-void CALLBACK tessEndCB();
-void CALLBACK tessErrorCB(GLenum errorCode);
-void CALLBACK tessVertexCB(const GLvoid *data);
-void CALLBACK tessVertexCB2(const GLvoid *data);
-void CALLBACK tessCombineCB(const GLdouble newVertex[3], const GLdouble *neighborVertex[4],
-                            const GLfloat neighborWeight[4], GLdouble **outData);
-	
-
-struct graphics_priv {
-	int button_timeout;
-	struct point p;
-	int width;
-	int height;
-	int library_init;
-	int visible;
-	struct graphics_priv *parent;
-	struct graphics_priv *overlays;
-	struct graphics_priv *next;
-	struct graphics_gc_priv *background_gc;
-	enum draw_mode_num mode;
-	void (*resize_callback)(void *data, int w, int h);
-	void *resize_callback_data;
-	void (*motion_callback)(void *data, struct point *p);
-	void *motion_callback_data;
-	void (*button_callback)(void *data, int press, int button, struct point *p);
-	void *button_callback_data;
-	GLuint DLid;
-};
-
-struct graphics_font_priv {
-#if 0
-        FT_Face face;
+#if defined(WINDOWS) || defined(WIN32)
+#include <windows.h>
+# define sleep(i) Sleep(i * 1000)
 #endif
+
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>		/* glut.h includes gl.h and glu.h */
+#endif
+
+#define SCREEN_WIDTH 700
+#define SCREEN_HEIGHT 700
+
+//#define MIRRORED_VIEW 1
+
+struct graphics_gc_priv
+{
+  struct graphics_priv *gr;
+  float fr, fg, fb, fa;
+  float br, bg, bb, ba;
+  int linewidth;
+  unsigned char *dash_list;
+  int dash_count;
+  int dash_mask;
+} graphics_gc_priv;
+
+struct graphics_priv
+{
+  int button_timeout;
+  struct point p;
+  int width;
+  int height;
+  int library_init;
+  int visible;
+  int overlay_enabled;
+  int overlay_autodisabled;
+  int wraparound;
+  struct graphics_priv *parent;
+  struct graphics_priv *overlays;
+  struct graphics_priv *next;
+  struct graphics_gc_priv *background_gc;
+  enum draw_mode_num mode;
+  void (*resize_callback) (void *data, int w, int h);
+  void *resize_callback_data;
+  void (*motion_callback) (void *data, struct point * p);
+  void *motion_callback_data;
+  void (*button_callback) (void *data, int press, int button,
+			   struct point * p);
+  void *button_callback_data;
+  GLuint DLid;
+  struct callback_list *cbl;
+  struct font_freetype_methods freetype_methods;
+  struct navit *nav;
+  int timeout;
+  int delay;
+  struct window window;
+  int dirty;                 //display needs to be redrawn (draw on root graphics or overlay is done)
+  int force_redraw;                 //display needs to be redrawn (draw on root graphics or overlay is done)
+  time_t last_refresh_time;  //last display refresh time
 };
 
-struct graphics_gc_priv {
-	struct graphics_priv *gr;
-	float fr,fg,fb,fa;
-	float br,bg,bb,ba;
-	int linewidth;
+static struct graphics_priv *graphics_priv_root;
+struct graphics_image_priv
+{
+  int w;
+  int h;
+  int hot_x;
+  int hot_y;
+  unsigned char *data;
+  char *path;
+} graphics_image_priv;
+
+struct mouse_event_queue_element {
+  int button;
+  int state;
+  int x;
+  int y;
 };
 
-struct graphics_image_priv {
-	int w;
-	int h;
-};
+static const int mouse_event_queue_size = 100;
+static int mouse_event_queue_begin_idx = 0;
+static int mouse_event_queue_end_idx = 0;
+static struct mouse_event_queue_element mouse_queue[100];
+
+//hastable for uncompressed image data
+static GHashTable *hImageData;
+
+/*  prototypes */
+void CALLBACK tessBeginCB (GLenum which);
+void CALLBACK tessEndCB ();
+void CALLBACK tessErrorCB (GLenum errorCode);
+void CALLBACK tessVertexCB (const GLvoid * data);
+void CALLBACK tessVertexCB2 (const GLvoid * data);
+void CALLBACK tessCombineCB (const GLdouble newVertex[3],
+			     const GLdouble * neighborVertex[4],
+			     const GLfloat neighborWeight[4],
+			     GLdouble ** outData);
+
+static struct graphics_priv *graphics_opengl_new_helper (struct
+							 graphics_methods
+							 *meth);
+void display (void);
+void resize_callback (int w, int h);
+const char *getPrimitiveType (GLenum type);
 
 static void
-graphics_destroy(struct graphics_priv *gr)
+graphics_destroy (struct graphics_priv *gr)
 {
+  /*FIXME graphics_destroy is never called*/
+  /*TODO add destroy code for image cache(delete entries in hImageData)*/
+  g_free (gr);
+  gr = NULL;
 }
 
-int frame=0;
-
-// http://quesoglc.sourceforge.net/tutorial.php
-
-
-static void font_destroy(struct graphics_font_priv *font)
+static void
+gc_destroy (struct graphics_gc_priv *gc)
 {
-	g_free(font);
-	/* TODO: free font->face */
+  g_free (gc);
+  gc = NULL;
 }
 
-static struct graphics_font_methods font_methods = {
-	font_destroy
-};
-
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size)
+static void
+gc_set_linewidth (struct graphics_gc_priv *gc, int w)
 {
-#if 0
-	char **filename=fontlist;
-	struct graphics_font_priv *font=g_new(struct graphics_font_priv, 1);
+  gc->linewidth = w;
+}
 
-	*meth=font_methods;
+static void
+gc_set_dashes (struct graphics_gc_priv *gc, int width, int offset,
+	       unsigned char *dash_list, int n)
+{
+  int i;
+  printf("\n");
+  const int cOpenglMaskBits = 16;
+  gc->dash_count = n;
+  if (1 == n)
+    {
+      gc->dash_mask = 0;
+      for (i = 0; i < cOpenglMaskBits; ++i)
+	{
+	  gc->dash_mask <<= 1;
+	  gc->dash_mask |= (i / n) % 2;
+	}
+    }
+  else if (1 < n)
+    {
+      unsigned char *curr = dash_list;
+      int cnt = 0;		//dot counter
+      int dcnt = 0;		//dash element counter
+      int sum_dash = 0;
+      gc->dash_mask = 0;
 
-	if (!gr->library_init) {
-		FT_Init_FreeType( &gr->library );
-		gr->library_init=1;
+      for (i = 0; i < n; ++i)
+	{
+	  sum_dash += dash_list[i];
 	}
 
-	while (*filename) {	
-	    	if (!FT_New_Face( gr->library, *filename, 0, &font->face ))
-			break;
-		filename++;
+      //scale dashlist elements to max size
+      if (sum_dash > cOpenglMaskBits)
+	{
+	  int num_error[2] = { 0, 0 };	//count elements rounded to 0 for odd(drawn) and even(masked) for compensation
+	  double factor = (1.0 * cOpenglMaskBits) / sum_dash;
+	  for (i = 0; i < n; ++i)
+	    {			//calculate dashlist max and largest common denomiator for scaling
+	      dash_list[i] *= factor;
+	      if (dash_list[i] == 0)
+		{
+		  ++dash_list[i];
+		  ++num_error[i % 2];
+		}
+	      else if (0 < num_error[i % 2] && 2 < dash_list[i])
+		{
+		  ++dash_list[i];
+		  --num_error[i % 2];
+		}
+	    }
 	}
-	if (! *filename) {
-		g_warning("Failed to load font, no labelling");
-		g_free(font);
-		return NULL;
+
+      //calculate mask
+      for (i = 0; i < cOpenglMaskBits; ++i)
+	{
+	  gc->dash_mask <<= 1;
+	  gc->dash_mask |= 1 - dcnt % 2;
+	  ++cnt;
+	  if (cnt == *curr)
+	    {
+	      cnt = 0;
+	      ++curr;
+	      ++dcnt;
+	      if (dcnt == n)
+		{
+		  curr = dash_list;
+		}
+	    }
 	}
-        FT_Set_Char_Size(font->face, 0, size, 300, 300);
-	FT_Select_Charmap(font->face, FT_ENCODING_UNICODE);
-	return font;
-#endif
-	return NULL;
-}
-
-static void
-gc_destroy(struct graphics_gc_priv *gc)
-{
-	g_free(gc);
-}
-
-static void
-gc_set_linewidth(struct graphics_gc_priv *gc, int w)
-{
-	gc->linewidth=w;
-}
-
-static void
-gc_set_dashes(struct graphics_gc_priv *gc, int width, int offset, unsigned char *dash_list, int n)
-{
-#if 0
-	gdk_gc_set_dashes(gc->gc, offset, (gint8 *)dash_list, n);
-	gdk_gc_set_line_attributes(gc->gc, width, GDK_LINE_ON_OFF_DASH, GDK_CAP_ROUND, GDK_JOIN_ROUND);
-#endif
+    }
 }
 
 
 static void
-gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
+gc_set_foreground (struct graphics_gc_priv *gc, struct color *c)
 {
-	gc->fr=c->r/65535.0;
-	gc->fg=c->g/65535.0;
-	gc->fb=c->b/65535.0;
-	gc->fa=c->a/65535.0;
-// 	printf("new alpha : %i\n",c->a);
+  gc->fr = c->r / 65535.0;
+  gc->fg = c->g / 65535.0;
+  gc->fb = c->b / 65535.0;
+  gc->fa = c->a / 65535.0;
 }
 
 static void
-gc_set_background(struct graphics_gc_priv *gc, struct color *c)
+gc_set_background (struct graphics_gc_priv *gc, struct color *c)
 {
-	gc->br=c->r/65535.0;
-	gc->bg=c->g/65535.0;
-	gc->bb=c->b/65535.0;
-	gc->ba=c->a/65535.0;
+  gc->br = c->r / 65535.0;
+  gc->bg = c->g / 65535.0;
+  gc->bb = c->b / 65535.0;
+  gc->ba = c->a / 65535.0;
 }
 
 static struct graphics_gc_methods gc_methods = {
-	gc_destroy,
-	gc_set_linewidth,
-	gc_set_dashes,	
-	gc_set_foreground,	
-	gc_set_background	
+  gc_destroy,
+  gc_set_linewidth,
+  gc_set_dashes,
+  gc_set_foreground,
+  gc_set_background
 };
 
-static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)
+static struct graphics_gc_priv *
+gc_new (struct graphics_priv *gr, struct graphics_gc_methods *meth)
 {
-	struct graphics_gc_priv *gc=g_new(struct graphics_gc_priv, 1);
+  struct graphics_gc_priv *gc = g_new (struct graphics_gc_priv, 1);
 
-	*meth=gc_methods;
-	gc->gr=gr;
-	gc->linewidth=1;
-	return gc;
+  *meth = gc_methods;
+  gc->gr = gr;
+  gc->linewidth = 1;
+  return gc;
 }
 
+static struct graphics_image_priv image_error;
 
 static struct graphics_image_priv *
-image_new(struct graphics_priv *gr, struct graphics_image_methods *meth, char *name, int *w, int *h)
+image_new (struct graphics_priv *gr, struct graphics_image_methods *meth,
+	   char *path, int *w, int *h, struct point *hot, int rotation)
 {
-#if 0
-	GdkPixbuf *pixbuf;
-	struct graphics_image_priv *ret;
+  FIBITMAP *image;
+  RGBQUAD aPixel;
+  unsigned char *data;
+  int width, height, i, j;
+  struct graphics_image_priv *gi;
 
-	pixbuf=gdk_pixbuf_new_from_file(name, NULL);
-	if (! pixbuf)
-		return NULL;
-	ret=g_new0(struct graphics_image_priv, 1);
-	ret->pixbuf=pixbuf;
-	ret->w=gdk_pixbuf_get_width(pixbuf);
-	ret->h=gdk_pixbuf_get_height(pixbuf);
-	*w=ret->w;
-	*h=ret->h;
-	return ret;
-#endif
-	return NULL;
+  //check if image already exists in hashmap
+  struct graphics_image_priv*curr_elem = g_hash_table_lookup(hImageData,path);
+  if(curr_elem == &image_error) {
+    //found but couldn't be loaded
+    return NULL;
+  }
+  else if(curr_elem) {
+    //found and OK -> use hastable entry
+    *w = curr_elem->w;
+    *h = curr_elem->h;
+    hot->x = curr_elem->w / 2 - 1;
+    hot->y = curr_elem->h / 2 - 1;
+    return curr_elem;
+  }
+  else {
+  if (strlen (path) < 4)
+    {
+      g_hash_table_insert(hImageData,g_strdup(path),&image_error);
+      return NULL;
+    }
+  char *ext_str = path + strlen (path) - 3;
+  if (strstr (ext_str, "png") || strstr (path, "PNG"))
+    {
+      if ((image = FreeImage_Load (FIF_PNG, path, 0)) == NULL)
+	{
+          g_hash_table_insert(hImageData,g_strdup(path),&image_error);
+	  return NULL;
+	}
+    }
+  else if (strstr (ext_str, "xpm") || strstr (path, "XPM"))
+    {
+      if ((image = FreeImage_Load (FIF_XPM, path, 0)) == NULL)
+	{
+          g_hash_table_insert(hImageData,g_strdup(path),&image_error);
+	  return NULL;
+	}
+    }
+  else if (strstr (ext_str, "svg") || strstr (path, "SVG"))
+    {
+      char path_new[256];
+      snprintf (path_new, strlen (path) - 3, "%s", path);
+      strcat (path_new, "_48_48.png");
+
+      if ((image = FreeImage_Load (FIF_PNG, path_new, 0)) == NULL)
+	{
+          g_hash_table_insert(hImageData,g_strdup(path),&image_error);
+	  return NULL;
+	}
+    }
+  else
+    {
+      g_hash_table_insert(hImageData,g_strdup(path),&image_error);
+      return NULL;
+    }
+  gi = g_new0 (struct graphics_image_priv, 1);
+
+  width = FreeImage_GetWidth (image);
+  height = FreeImage_GetHeight (image);
+
+  data = (unsigned char *) malloc (width * height * 4);
+
+  RGBQUAD *palette = NULL;
+  if (FreeImage_GetBPP (image) == 8)
+    {
+      palette = FreeImage_GetPalette (image);
+    }
+
+  for (i = 0; i < height; i++)
+    {
+      for (j = 0; j < width; j++)
+	{
+	  unsigned char idx;
+	  if (FreeImage_GetBPP (image) == 8)
+	    {
+	      FreeImage_GetPixelIndex (image, j, height - i - 1, &idx);
+	      data[4 * width * i + 4 * j + 0] = palette[idx].rgbRed;
+	      data[4 * width * i + 4 * j + 1] = palette[idx].rgbGreen;
+	      data[4 * width * i + 4 * j + 2] = palette[idx].rgbBlue;
+	      data[4 * width * i + 4 * j + 3] = 255;
+	    }
+	  else if (FreeImage_GetBPP (image) == 16
+		   || FreeImage_GetBPP (image) == 24
+		   || FreeImage_GetBPP (image) == 32)
+	    {
+	      FreeImage_GetPixelColor (image, j, height - i - 1, &aPixel);
+	      int transparent = (aPixel.rgbRed == 0 && aPixel.rgbBlue == 0
+				 && aPixel.rgbGreen == 0);
+	      data[4 * width * i + 4 * j + 0] =
+		transparent ? 0 : (aPixel.rgbRed);
+	      data[4 * width * i + 4 * j + 1] = (aPixel.rgbGreen);
+	      data[4 * width * i + 4 * j + 2] =
+		transparent ? 0 : (aPixel.rgbBlue);
+	      data[4 * width * i + 4 * j + 3] = transparent ? 0 : 255;
+
+	    }
+	  else if (FreeImage_GetBPP (image) == 64)
+	    {
+	      //FreeImage_GetPixelColor does not handle 64bits/pixel images correctly
+              g_hash_table_insert(hImageData,g_strdup(path),&image_error);
+	      return NULL;
+	    }
+	}
+    }
+
+  FreeImage_Unload (image);
+
+  *w = width;
+  *h = height;
+  gi->w = width;
+  gi->h = height;
+  gi->hot_x = width / 2 - 1;
+  gi->hot_y = height / 2 - 1;
+  hot->x = width / 2 - 1;
+  hot->y = height / 2 - 1;
+  gi->data = data;
+  gi->path = path;
+  //add to hashtable
+  g_hash_table_insert(hImageData,g_strdup(path),gi);
+  return gi;
+  }
 }
 
-static void
-draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
+const char *
+getPrimitiveType (GLenum type)
 {
-	 int i;
-/*
-	if (gr->mode == draw_mode_begin || gr->mode == draw_mode_end) 
-		gdk_draw_lines(gr->drawable, gc->gc, (GdkPoint *)p, count);
-	if (gr->mode == draw_mode_end || gr->mode == draw_mode_cursor)
-		gdk_draw_lines(gr->widget->window, gc->gc, (GdkPoint *)p, count);
-*/
-	/*	
-	if(gr->mode == draw_mode_begin){
-		printf("B");
-	} else if (gr->mode == draw_mode_end){
-		printf("E");
-	} else {
-		printf("x");
-	}
-*/	
+  char *ret = "";
 
-	for (i = 0 ; i < count-1 ; i++) {
-
-// 	  	glEnable( GL_POLYGON_SMOOTH );
-// 	 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-// 		glEnable( GL_BLEND );
-
-		float dx=p[i+1].x-p[i].x;
-		float dy=p[i+1].y-p[i].y;
-
-		float cx=(p[i+1].x+p[i].x)/2;
-		float cy=(p[i+1].y+p[i].y)/2;
-//		printf("(%lx,%lx) -> (%lx,%lx) : (%lx,%lx)\n",p[i].x,p[i].y,p[i+1].x,p[i+1].y,dx,dy);
-
-		int w=round(sqrt(pow((dx),2)+pow((dy),2)));
-
-		float angle=atan (dy/dx) * 180 / M_PI;
-
-		glPushMatrix();
-		glTranslatef(cx,cy,1);
-	//  	glColor4f( 0,0,0,1);
-	//  	glRasterPos2f( 1,1 );
-		glRotatef(angle,0.0,0.0,1.0);
-
-		glColor4f( gc->fr, gc->fg, gc->fb, gc->fa);
-
-		int linewidth=gc->linewidth;
-
-		glBegin( GL_POLYGON );
-				glVertex2f( -w/2,-linewidth/2 );
-				glVertex2f( -w/2-4,0 );
-				glVertex2f( -w/2,+linewidth/2 );
-				glVertex2f( +w/2,+linewidth/2 );
-				glVertex2f( +w/2+4,0 );
-				glVertex2f( +w/2,-linewidth/2 );
-				glVertex2f( -w/2,+linewidth/2 );
-		glEnd();
-
-		
-		// FIXME Roads label can maybe be drawn here, avoid the display_label loop, when playing with Z axis position.
-		/*
-		if(attr==1){
-			glcRenderStyle(GLC_TEXTURE);
-			glColor3f(0., 0., 0.);
-			glScalef(12, 12, 0.);
-			glcRenderString(">>");
-		} else if(attr==-1){
-			glcRenderStyle(GLC_TEXTURE);
-			glColor3f(0., 0., 0.);
-			glScalef(12, 12, 0.);
-			glcRenderString("<<");
-		}
-
-		*/
-		glPopMatrix();
-	}
-//  	glDisable( GL_BLEND );
-// 	glDisable( GL_POLYGON_SMOOTH );
-
-/*
-	if(label){
-		if((strlen(label)*6)<w){
-			SDL_print(label,cx, cy,-angle);
-		}
-	}
-*/
-}
-
-
-const char* getPrimitiveType(GLenum type)
-{
-    char *ret;
-
-    switch(type)
+  switch (type)
     {
     case 0x0000:
-        ret="GL_POINTS"; 
-        break;
+      ret = "GL_POINTS";
+      break;
     case 0x0001:
-        ret="GL_LINES";
-        break;
+      ret = "GL_LINES";
+      break;
     case 0x0002:
-        ret= "GL_LINE_LOOP";
-        break;
+      ret = "GL_LINE_LOOP";
+      break;
     case 0x0003:
-        ret="GL_LINE_STRIP";
-        break;
+      ret = "GL_LINE_STRIP";
+      break;
     case 0x0004:
-        ret="GL_TRIANGLES";
-        break;
+      ret = "GL_TRIANGLES";
+      break;
     case 0x0005:
-        ret="GL_TRIANGLE_STRIP";
-        break;
+      ret = "GL_TRIANGLE_STRIP";
+      break;
     case 0x0006:
-        ret="GL_TRIANGLE_FAN";
-        break;
+      ret = "GL_TRIANGLE_FAN";
+      break;
     case 0x0007:
-        ret="GL_QUADS";
-        break;
+      ret = "GL_QUADS";
+      break;
     case 0x0008:
-        ret="GL_QUAD_STRIP";
-        break;
+      ret = "GL_QUAD_STRIP";
+      break;
     case 0x0009:
-        ret="GL_POLYGON";
-        break;
+      ret = "GL_POLYGON";
+      break;
     }
-return ret;
+  return ret;
 }
 
-void CALLBACK tessBeginCB(GLenum which)
+void CALLBACK
+tessBeginCB (GLenum which)
 {
-    glBegin(which);
+  glBegin (which);
 
-    dbg(1,"glBegin( %s );\n",getPrimitiveType(which));
-}
-
-
-
-void CALLBACK tessEndCB()
-{
-    glEnd();
-
-    dbg(1,"glEnd();\n");
+  dbg (1, "glBegin( %s );\n", getPrimitiveType (which));
 }
 
 
 
-void CALLBACK tessVertexCB(const GLvoid *data)
+void CALLBACK
+tessEndCB ()
 {
-    // cast back to double type
-    const GLdouble *ptr = (const GLdouble*)data;
+  glEnd ();
 
-    glVertex3dv(ptr);
+  dbg (1, "glEnd();\n");
+}
 
-    dbg(1,"  glVertex3d();\n");
+
+
+void CALLBACK
+tessVertexCB (const GLvoid * data)
+{
+  // cast back to double type
+  const GLdouble *ptr = (const GLdouble *) data;
+
+  glVertex3dv (ptr);
+
+  dbg (1, "  glVertex3d();\n");
+}
+
+static void
+get_overlay_pos (struct graphics_priv *gr, struct point *point_out)
+{
+  if (gr->parent == NULL)
+    {
+      point_out->x = 0;
+      point_out->y = 0;
+      return;
+    }
+  point_out->x = gr->p.x;
+  if (point_out->x < 0)
+    {
+      point_out->x += gr->parent->width;
+    }
+
+  point_out->y = gr->p.y;
+  if (point_out->y < 0)
+    {
+      point_out->y += gr->parent->height;
+    }
+}
+
+static void
+draw_lines (struct graphics_priv *gr, struct graphics_gc_priv *gc,
+	    struct point *p, int count)
+{
+  if (gr->parent && !gr->parent->overlay_enabled)
+    {
+      return;
+    }
+
+  graphics_priv_root->dirty = 1;
+
+  glColor4f (gc->fr, gc->fg, gc->fb, gc->fa);
+  glLineWidth (gc->linewidth);
+  if (!gr->parent && 0 < gc->dash_count)
+    {
+      glLineStipple (1, gc->dash_mask);
+      glEnable (GL_LINE_STIPPLE);
+    }
+  glBegin (GL_LINE_STRIP);
+  int i;
+  for (i = 0; i < count; i++)
+    {
+      struct point p_eff;
+      p_eff.x = p[i].x;
+      p_eff.y = p[i].y;
+      glVertex2f (p_eff.x, p_eff.y);
+    }
+  glEnd ();
+  if (!gr->parent && 0 < gc->dash_count)
+    {
+      glDisable (GL_LINE_STIPPLE);
+    }
 }
 
 
 static void
-draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
+draw_polygon (struct graphics_priv *gr, struct graphics_gc_priv *gc,
+	      struct point *p, int count)
 {
-	int i;
+  if (gr->parent && !gr->parent->overlay_enabled)
+    {
+      return;
+    }
 
-	GLUtesselator *tess = gluNewTess(); // create a tessellator
-	if(!tess) return 0;  // failed to create tessellation object, return 0
+  graphics_priv_root->dirty = 1;
 
-	GLdouble quad1[count][3];
-	for (i = 0 ; i < count ; i++) {
-		quad1[i][0]=(GLdouble)(p[i].x);
-		quad1[i][1]=(GLdouble)(p[i].y);
-		quad1[i][2]=0;
+  int i;
+  GLUtesselator *tess = gluNewTess ();	// create a tessellator
+  if (!tess)
+    return;			// failed to create tessellation object, return 0
+
+  GLdouble quad1[count][3];
+  for (i = 0; i < count; i++)
+    {
+      quad1[i][0] = (GLdouble) (p[i].x);
+      quad1[i][1] = (GLdouble) (p[i].y);
+      quad1[i][2] = 0;
+    }
+
+
+  // register callback functions
+  gluTessCallback (tess, GLU_TESS_BEGIN, (void (*)(void)) tessBeginCB);
+  gluTessCallback (tess, GLU_TESS_END, (void (*)(void)) tessEndCB);
+  //     gluTessCallback(tess, GLU_TESS_ERROR, (void (*)(void))tessErrorCB);
+  gluTessCallback (tess, GLU_TESS_VERTEX, (void (*)(void)) tessVertexCB);
+
+  // tessellate and compile a concave quad into display list
+  // gluTessVertex() takes 3 params: tess object, pointer to vertex coords,
+  // and pointer to vertex data to be passed to vertex callback.
+  // The second param is used only to perform tessellation, and the third
+  // param is the actual vertex data to draw. It is usually same as the second
+  // param, but It can be more than vertex coord, for example, color, normal
+  // and UV coords which are needed for actual drawing.
+  // Here, we are looking at only vertex coods, so the 2nd and 3rd params are
+  // pointing same address.
+  glColor4f (gc->fr, gc->fg, gc->fb, gc->fa);
+  gluTessBeginPolygon (tess, 0);	// with NULL data
+  gluTessBeginContour (tess);
+  for (i = 0; i < count; i++)
+    {
+      gluTessVertex (tess, quad1[i], quad1[i]);
+    }
+  gluTessEndContour (tess);
+  gluTessEndPolygon (tess);
+
+  gluDeleteTess (tess);		// delete after tessellation
+}
+
+static void
+draw_rectangle (struct graphics_priv *gr, struct graphics_gc_priv *gc,
+		struct point *p, int w, int h)
+{
+  if (gr->parent && !gr->parent->overlay_enabled)
+    {
+      return;
+    }
+
+  graphics_priv_root->dirty = 1;
+
+  struct point p_eff;
+  p_eff.x = p->x;
+  p_eff.y = p->y;
+
+  glColor4f (gc->fr, gc->fg, gc->fb, gc->fa);
+  glBegin (GL_POLYGON);
+  glVertex2f (p_eff.x, p_eff.y);
+  glVertex2f (p_eff.x + w, p_eff.y);
+  glVertex2f (p_eff.x + w, p_eff.y + h);
+  glVertex2f (p_eff.x, p_eff.y + h);
+  glEnd ();
+}
+
+static void
+draw_circle (struct graphics_priv *gr, struct graphics_gc_priv *gc,
+	     struct point *p, int r)
+{
+
+  if (gr->parent && !gr->parent->overlay_enabled)
+    {
+      return;
+    }
+
+  graphics_priv_root->dirty = 1;
+
+  /* FIXME: does not quite match gtk */
+  /* hack for osd compass.. why is this needed!? */
+  if (gr->parent)
+    {
+      r = r / 2;
+    }
+
+  struct point p_eff;
+  p_eff.x = p->x;
+  p_eff.y = p->y;
+
+  GLint circle_points = 7 + r / 5;
+  glColor4f (gc->fr, gc->fg, gc->fb, gc->fa);
+  glLineWidth (gc->linewidth * 2);
+  glBegin (GL_LINE_LOOP);
+  int i;
+  for (i = 0; i < circle_points; ++i)
+    {
+      double angle = 2 * M_PI * i / circle_points;
+      glVertex2f (r * cos (angle) + p_eff.x, r * sin (angle) + p_eff.y);
+    }
+  glEnd ();
+}
+
+static void
+display_text_draw (struct font_freetype_text *text, struct graphics_priv *gr,
+		   struct graphics_gc_priv *fg, struct graphics_gc_priv *bg,
+		   int color, struct point *p)
+{
+  int i, x, y, stride;
+  struct font_freetype_glyph *g, **gp;
+  unsigned char *shadow, *glyph;
+  struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
+  struct color black =
+    { fg->fr * 65535, fg->fg * 65535, fg->fb * 65535, fg->fa * 65535 };
+  struct color white = { 0xffff, 0xffff, 0xffff, 0xffff };
+
+  if (bg)
+    {
+      if(COLOR_IS_WHITE(black) && COLOR_IS_BLACK(white)) {
+        black.r = 65535;
+        black.g = 65535;
+        black.b = 65535;
+        black.a = 65535;
+
+        white.r = 0;
+        white.g = 0;
+        white.b = 0;
+        white.a = 65535;
+       } 
+      else if(COLOR_IS_BLACK(black) && COLOR_IS_WHITE(white)) {
+        white.r = 65535;
+        white.g = 65535;
+        white.b = 65535;
+        white.a = 65535;
+
+        black.r = 0;
+        black.g = 0;
+        black.b = 0;
+        black.a = 65535;
+      } 
+      else {
+        white.r = bg->fr;
+        white.g = bg->fg;
+        white.b = bg->fb;
+        white.a = bg->fa;
+      }
+    }
+  else {
+    white.r = 0;
+    white.g = 0;
+    white.b = 0;
+    white.a = 0;
+  }
+
+  gp = text->glyph;
+  i = text->glyph_count;
+  x = p->x << 6;
+  y = p->y << 6;
+  while (i-- > 0)
+    {
+      g = *gp++;
+      if (g->w && g->h && bg)
+	{
+	  stride = (g->w + 2) * 4;
+	  if (color)
+	    {
+	      shadow = g_malloc (stride * (g->h + 2));
+	      gr->freetype_methods.get_shadow (g, shadow, 32, stride, &white,
+					       &transparent);
+#ifdef MIRRORED_VIEW
+	      glPixelZoom (-1.0, -1.0); //mirrored mode
+#else
+	      glPixelZoom (1.0, -1.0);
+#endif
+	      glRasterPos2d ((x + g->x) >> 6, (y + g->y) >> 6);
+	      glDrawPixels (g->w + 2, g->h + 2, GL_BGRA, GL_UNSIGNED_BYTE,
+			    shadow);
+	      g_free (shadow);
+	    }
 	}
+      x += g->dx;
+      y += g->dy;
+    }
 
+  x = p->x << 6;
+  y = p->y << 6;
+  gp = text->glyph;
+  i = text->glyph_count;
+  while (i-- > 0)
+    {
+      g = *gp++;
+      if (g->w && g->h)
+	{
+	  if (color)
+	    {
+	      stride = g->w;
+	      if (bg)
+		{
+		  glyph = g_malloc (stride * g->h * 4);
+		  gr->freetype_methods.get_glyph (g, glyph, 32, stride * 4,
+						  &black, &white, &transparent);
+#ifdef MIRRORED_VIEW
+	      glPixelZoom (-1.0, -1.0); //mirrored mode
+#else
+	      glPixelZoom (1.0, -1.0);
+#endif
+	      glRasterPos2d ((x + g->x) >> 6, (y + g->y) >> 6);
+	      glDrawPixels (g->w, g->h, GL_BGRA, GL_UNSIGNED_BYTE, glyph);
 
-	// register callback functions
-	gluTessCallback(tess, GLU_TESS_BEGIN, (void (*)(void))tessBeginCB);
-	gluTessCallback(tess, GLU_TESS_END, (void (*)(void))tessEndCB);
-	//     gluTessCallback(tess, GLU_TESS_ERROR, (void (*)(void))tessErrorCB);
-	gluTessCallback(tess, GLU_TESS_VERTEX, (void (*)(void))tessVertexCB);
-	
-	// tessellate and compile a concave quad into display list
-	// gluTessVertex() takes 3 params: tess object, pointer to vertex coords,
-	// and pointer to vertex data to be passed to vertex callback.
-	// The second param is used only to perform tessellation, and the third
-	// param is the actual vertex data to draw. It is usually same as the second
-	// param, but It can be more than vertex coord, for example, color, normal
-	// and UV coords which are needed for actual drawing.
-	// Here, we are looking at only vertex coods, so the 2nd and 3rd params are
-	// pointing same address.
-	glColor4f( gc->fr, gc->fg, gc->fb, gc->fa);
-	gluTessBeginPolygon(tess, 0);                   // with NULL data
-		gluTessBeginContour(tess);
-		for (i = 0 ; i < count ; i++) {
-		gluTessVertex(tess, quad1[i], quad1[i]);
+		  g_free (glyph);
 		}
-		gluTessEndContour(tess);
-	gluTessEndPolygon(tess);
-	
-	gluDeleteTess(tess);        // delete after tessellation
+	      stride *= 4;
+	      glyph = g_malloc (stride * g->h);
+	      gr->freetype_methods.get_glyph (g, glyph, 32, stride, &black,
+					      &white, &transparent);
 
-}
-
-static void
-draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
-{
-#if 0
-	gdk_draw_rectangle(gr->drawable, gc->gc, TRUE, p->x, p->y, w, h);
+#ifdef MIRRORED_VIEW
+	      glPixelZoom (-1.0, -1.0); //mirrored mode
+#else
+	      glPixelZoom (1.0, -1.0);
 #endif
-}
-
-static void
-draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
-{
-#if 0
-	if (gr->mode == draw_mode_begin || gr->mode == draw_mode_end)
-		gdk_draw_arc(gr->drawable, gc->gc, FALSE, p->x-r/2, p->y-r/2, r, r, 0, 64*360);
-	if (gr->mode == draw_mode_end || gr->mode == draw_mode_cursor)
-		gdk_draw_arc(gr->widget->window, gc->gc, FALSE, p->x-r/2, p->y-r/2, r, r, 0, 64*360);
-#endif
-}
-
-
-
-void SDL_print(char * label,int x, int y, double angle)
-{
-	glPushMatrix();
-	glcRenderStyle(GLC_TEXTURE);
-	glColor4f(0,0,0,1);
-	glTranslatef(x, y, 1);
-    	glRotatef(180,1,0,0);
-   	glRotatef(angle,0,0,1);
-
-	glScalef(14, 14, 14);
-	// FIXME : add some error checking : glcGetError()
-	glcRenderString(label);
-	glPopMatrix();
-
-}
-
-static void
-draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
-{
-//	dbg(0,"%s : %i,%i, %f\n",text,dx,dy,(180*atan2(dx,dy)/3.14));
-	SDL_print(text,p->x,p->y,(180*atan2(dx,dy)/3.14)-90);
-}
-
-static void
-draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
-{
-#if 0
-	gdk_draw_pixbuf(gr->drawable, fg->gc, img->pixbuf, 0, 0, p->x, p->y,
-		    img->w, img->h, GDK_RGB_DITHER_NONE, 0, 0);
-#endif
-}
-
-#ifdef HAVE_IMLIB2
-static void
-draw_image_warp(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, int count, char *data)
-{
-#if 0
-	void *image;
-	int w,h;
-	printf("draw_image_warp data=%s\n", data);
-	image = imlib_load_image(data);
-	imlib_context_set_display(gdk_x11_drawable_get_xdisplay(gr->widget->window));
-	imlib_context_set_colormap(gdk_x11_colormap_get_xcolormap(gtk_widget_get_colormap(gr->widget)));
-	imlib_context_set_visual(gdk_x11_visual_get_xvisual(gtk_widget_get_visual(gr->widget)));
-	imlib_context_set_drawable(gdk_x11_drawable_get_xid(gr->drawable));
-	imlib_context_set_image(image);
-	w = imlib_image_get_width();
-	h = imlib_image_get_height();
-	if (count == 3) {
-		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, p[1].y-p[0].y, p[2].x-p[0].x, p[2].y-p[0].y);
+	      glRasterPos2d ((x + g->x) >> 6, (y + g->y) >> 6);
+	      glDrawPixels (g->w, g->h, GL_BGRA, GL_UNSIGNED_BYTE, glyph);
+	      g_free (glyph);
+	    }
 	}
-	if (count == 2) {
-		imlib_render_image_on_drawable_skewed(0, 0, w, h, p[0].x, p[0].y, p[1].x-p[0].x, 0, 0, p[1].y-p[0].y);
-	}
-#endif
-}
-#endif
-
-static void
-overlay_draw(struct graphics_priv *parent, struct graphics_priv *overlay, int window)
-{
-#if 0
-	GdkPixbuf *pixbuf,*pixbuf2;
-	GtkWidget *widget=parent->widget;
-	guchar *pixels1, *pixels2, *p1, *p2;
-	int x,y;
-	int rowstride1,rowstride2;
-	int n_channels1,n_channels2;
-
-	if (! parent->drawable)
-		return;
-
-	pixbuf=gdk_pixbuf_get_from_drawable(NULL, overlay->drawable, NULL, 0, 0, 0, 0, overlay->width, overlay->height);
-	pixbuf2=gdk_pixbuf_new(gdk_pixbuf_get_colorspace(pixbuf), TRUE, gdk_pixbuf_get_bits_per_sample(pixbuf), 
-				gdk_pixbuf_get_width(pixbuf), gdk_pixbuf_get_height(pixbuf));
-
-	rowstride1 = gdk_pixbuf_get_rowstride (pixbuf);
-	rowstride2 = gdk_pixbuf_get_rowstride (pixbuf2);
-	pixels1=gdk_pixbuf_get_pixels (pixbuf);	
-	pixels2=gdk_pixbuf_get_pixels (pixbuf2);	
-	n_channels1 = gdk_pixbuf_get_n_channels (pixbuf);
-	n_channels2 = gdk_pixbuf_get_n_channels (pixbuf2);
-	for (y = 0 ; y < overlay->height ; y++) {
-		for (x = 0 ; x < overlay->width ; x++) {
-			p1 = pixels1 + y * rowstride1 + x * n_channels1;
-			p2 = pixels2 + y * rowstride2 + x * n_channels2;
-			p2[0]=p1[0];
-			p2[1]=p1[1];
-			p2[2]=p1[2];
-			p2[3]=127;
-		}
-	}
-	if (window)
-		gdk_draw_pixmap(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], overlay->background, 0, 0, overlay->p.x, overlay->p.y, overlay->width, overlay->height);
-	else
-		gdk_draw_pixmap(overlay->background, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, overlay->p.x, overlay->p.y, 0, 0, overlay->width, overlay->height);
-	gdk_draw_pixbuf(parent->drawable, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], pixbuf2, 0, 0, overlay->p.x, overlay->p.y, overlay->width, overlay->height, GDK_RGB_DITHER_NONE, 0, 0);
-	if (window)
-		gdk_draw_pixmap(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)], parent->drawable, overlay->p.x, overlay->p.y, overlay->p.x, overlay->p.y, overlay->width, overlay->height);
-#if 0
-	gdk_draw_pixmap(gr->gra->drawable,
-                        gr->gra->widget->style->fg_gc[GTK_WIDGET_STATE(gr->gra->widget)],
-                        img->gra->drawable,
-                        0, 0, p->x, p->y, img->gra->width, img->gra->height);
-#endif
-#endif
+      x += g->dx;
+      y += g->dy;
+    }
 }
 
 static void
-draw_restore(struct graphics_priv *gr, struct point *p, int w, int h)
+draw_text (struct graphics_priv *gr, struct graphics_gc_priv *fg,
+	   struct graphics_gc_priv *bg, struct graphics_font_priv *font,
+	   char *text, struct point *p, int dx, int dy)
 {
-#if 0
-	GtkWidget *widget=gr->widget;
-	gdk_draw_pixmap(widget->window,
-                        widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-                        gr->drawable,
-                        p->x, p->y, p->x, p->y, w, h);
-#endif
+  if (gr->parent && !gr->parent->overlay_enabled)
+    {
+      return;
+    }
+
+  struct font_freetype_text *t;
+  int color = 1;
+
+  if (!font)
+    {
+      dbg (0, "no font, returning\n");
+      return;
+    }
+
+  graphics_priv_root->dirty = 1;
+
+  t =
+    gr->freetype_methods.text_new (text, (struct font_freetype_font *) font,
+				   dx, dy);
+
+  struct point p_eff;
+  p_eff.x = p->x;
+  p_eff.y = p->y;
+
+  display_text_draw (t, gr, fg, bg, color, &p_eff);
+  gr->freetype_methods.text_destroy (t);
+}
+
+
+static void
+draw_image (struct graphics_priv *gr, struct graphics_gc_priv *fg,
+	    struct point *p, struct graphics_image_priv *img)
+{
+  if (gr->parent && !gr->parent->overlay_enabled)
+    {
+      return;
+    }
+
+  if (!img || !img->data)
+    {
+      return;
+    }
+
+  graphics_priv_root->dirty = 1;
+
+  struct point p_eff;
+  p_eff.x = p->x + img->hot_x;
+  p_eff.y = p->y + img->hot_y;
+
+  glEnable (GL_BLEND);
+  glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  glRasterPos2d (p_eff.x - img->hot_x, p_eff.y - img->hot_y);
+  glDrawPixels (img->w, img->h, GL_RGBA, GL_UNSIGNED_BYTE, img->data);
 
 }
 
 static void
-background_gc(struct graphics_priv *gr, struct graphics_gc_priv *gc)
+draw_image_warp (struct graphics_priv *gr, struct graphics_gc_priv *fg,
+		 struct point *p, int count, char *data)
 {
-	gr->background_gc=gc;
 }
 
 static void
-draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
+draw_restore (struct graphics_priv *gr, struct point *p, int w, int h)
 {
-	if (gr->DLid) {
-		if (mode == draw_mode_begin)
-			glNewList(gr->DLid,GL_COMPILE);
-		if (mode == draw_mode_end)
-			glEndList();
+}
+
+static void
+draw_drag (struct graphics_priv *gr, struct point *p)
+{
+
+  if (p)
+    {
+      gr->p.x = p->x;
+      gr->p.y = p->y;
+    }
+}
+
+static void
+background_gc (struct graphics_priv *gr, struct graphics_gc_priv *gc)
+{
+  gr->background_gc = gc;
+}
+
+static void handle_mouse_queue() 
+{
+  static locked = 0;
+  if(!locked) {
+    locked = 1;
+  }
+  else {
+    return;
+  }
+
+  if(mouse_event_queue_begin_idx < mouse_event_queue_end_idx) {
+    if (mouse_queue[mouse_event_queue_begin_idx].button == GLUT_LEFT_BUTTON && mouse_queue[mouse_event_queue_begin_idx].state == GLUT_UP)
+      {
+        struct point p;
+        p.x = mouse_queue[mouse_event_queue_begin_idx%mouse_event_queue_size].x;
+        p.y = mouse_queue[mouse_event_queue_begin_idx%mouse_event_queue_size].y;
+        graphics_priv_root->force_redraw = 1;
+        callback_list_call_attr_3 (graphics_priv_root->cbl, attr_button,
+				 (void *) 0, 1, (void *) &p);
+      }
+    else if (mouse_queue[mouse_event_queue_begin_idx].button == GLUT_LEFT_BUTTON && mouse_queue[mouse_event_queue_begin_idx].state == GLUT_DOWN)
+      {
+        struct point p;
+        p.x = mouse_queue[mouse_event_queue_begin_idx%mouse_event_queue_size].x;
+        p.y = mouse_queue[mouse_event_queue_begin_idx%mouse_event_queue_size].y;
+        graphics_priv_root->force_redraw = 1;
+        callback_list_call_attr_3 (graphics_priv_root->cbl, attr_button,
+  				 (void *) 1, 1, (void *) &p);
+      }
+    ++mouse_event_queue_begin_idx;
+  }
+  locked = 0;
+}
+
+
+/*draws root graphics and its overlays*/
+static int
+redraw_screen (struct graphics_priv *gr)
+{
+  time_t curr_time = time(0);
+  graphics_priv_root->dirty = 0;
+
+  glCallList (gr->DLid);
+  //display overlays display list
+  struct graphics_priv *overlay;
+  overlay = gr->overlays;
+  while (gr->overlay_enabled && overlay)
+    {
+      glPushMatrix ();
+      struct point p_eff;
+      get_overlay_pos (overlay, &p_eff);
+      glTranslatef (p_eff.x, p_eff.y, 1);
+      glCallList (overlay->DLid);
+      glPopMatrix ();
+      overlay = overlay->next;
+    }
+  glutSwapBuffers ();
+
+  return TRUE;
+}
+
+
+/*filters call to redraw in overlay enabled(map) mode*/
+static void
+redraw_filter (struct graphics_priv *gr)
+{
+  if(gr->overlay_enabled && gr->dirty) {
+    redraw_screen(gr);
+  }
+}
+
+
+
+static void
+draw_mode (struct graphics_priv *gr, enum draw_mode_num mode)
+{
+  if (gr->parent)
+    {				//overlay
+      if (mode == draw_mode_begin)
+	{
+	  glNewList (gr->DLid, GL_COMPILE);
 	}
 
-#if 0
-	struct graphics_priv *overlay;
-	GtkWidget *widget=gr->widget;
-
-	if (mode == draw_mode_begin) {
-		if (! gr->parent && gr->background_gc)
-			gdk_draw_rectangle(gr->drawable, gr->background_gc->gc, TRUE, 0, 0, gr->width, gr->height);
+      if (mode == draw_mode_end || mode == draw_mode_end_lazy)
+	{
+	  glEndList ();
 	}
-	if (mode == draw_mode_end && gr->mode == draw_mode_begin) {
-		if (gr->parent) {
-			overlay_draw(gr->parent, gr, 1);
-		} else {
-			overlay=gr->overlays;
-			while (overlay) {
-				overlay_draw(gr, overlay, 0);
-				overlay=overlay->next;
-			}
-			gdk_draw_pixmap(widget->window,
-                	        widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-                	        gr->drawable,
-                	        0, 0, 0, 0, gr->width, gr->height);
-		}
+    }
+  else
+    {				//root graphics
+      if (mode == draw_mode_begin)
+	{
+	  glNewList (gr->DLid, GL_COMPILE);
 	}
-	gr->mode=mode;
-#endif
-}
 
-#if 0
-/* Events */
-
-static gint
-configure(GtkWidget * widget, GdkEventConfigure * event, gpointer user_data)
-{
-	struct graphics_priv *gra=user_data;
-	if (! gra->visible)
-		return TRUE;
-	if (gra->drawable != NULL) {
-                gdk_pixmap_unref(gra->drawable);
-        }
-	gra->width=widget->allocation.width;
-	gra->height=widget->allocation.height;
-        gra->drawable = gdk_pixmap_new(widget->window, gra->width, gra->height, -1);
-	if (gra->resize_callback) 
-		(*gra->resize_callback)(gra->resize_callback_data, gra->width, gra->height);
-	return TRUE;
-}
-
-static gint
-expose(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
-{
-	struct graphics_priv *gra=user_data;
-
-	gra->visible=1;
-	if (! gra->drawable)
-		configure(widget, NULL, user_data);
-        gdk_draw_pixmap(widget->window, widget->style->fg_gc[GTK_WIDGET_STATE(widget)],
-                        gra->drawable, event->area.x, event->area.y,
-                        event->area.x, event->area.y,
-                        event->area.width, event->area.height);
-
-	return FALSE;
-}
-
-#if 0
-static gint
-button_timeout(gpointer user_data)
-{
-#if 0
-	struct container *co=user_data;
-	int x=co->gra->gra->button_event.x; 
-	int y=co->gra->gra->button_event.y; 
-	int button=co->gra->gra->button_event.button;
-
-	co->gra->gra->button_timeout=0;
-	popup(co, x, y, button);
-
-	return FALSE;
-#endif
-}
-#endif
-
-static gint
-button_press(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
-{
-	struct graphics_priv *this=user_data;
-	struct point p;
-
-	p.x=event->x;
-	p.y=event->y;
-	if (this->button_callback) 
-		(*this->button_callback)(this->button_callback_data, 1, event->button, &p);
-	return FALSE;
-}
-
-static gint
-button_release(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
-{
-	struct graphics_priv *this=user_data;
-	struct point p;
-
-	p.x=event->x;
-	p.y=event->y;
-	if (this->button_callback) 
-		(*this->button_callback)(this->button_callback_data, 0, event->button, &p);
-	return FALSE;
-}
-
-static gint
-scroll(GtkWidget * widget, GdkEventScroll * event, gpointer user_data)
-{
-	struct graphics_priv *this=user_data;
-	struct point p;
-	int button;
-
-	p.x=event->x;
-	p.y=event->y;
-	if (this->button_callback) {
-		switch (event->direction) {
-		case GDK_SCROLL_UP:
-			button=4;
-			break;
-		case GDK_SCROLL_DOWN:
-			button=5;
-			break;
-		default:
-			button=-1;
-			break;
-		}
-		if (button != -1) {
-			(*this->button_callback)(this->button_callback_data, 1, button, &p);
-			(*this->button_callback)(this->button_callback_data, 0, button, &p);
-		}
+      if (mode == draw_mode_end)
+	{
+	  glEndList ();
+          gr->force_redraw = 1;
+          if(!gr->overlay_enabled || gr->force_redraw ) {
+            redraw_screen (gr);
+          }
 	}
-	return FALSE;
+    }
+  gr->mode = mode;
 }
 
-static gint
-motion_notify(GtkWidget * widget, GdkEventMotion * event, gpointer user_data)
+static struct graphics_priv *overlay_new (struct graphics_priv *gr,
+					  struct graphics_methods *meth,
+					  struct point *p, int w, int h,
+					  int alpha, int wraparound);
+
+static int
+graphics_opengl_fullscreen (struct window *w, int on)
 {
-	struct graphics_priv *this=user_data;
-	struct point p;
-
-	p.x=event->x;
-	p.y=event->y;
-	if (this->motion_callback) 
-		(*this->motion_callback)(this->motion_callback_data, &p);
-	return FALSE;
+  return 1;
 }
 
-#endif
-
-
-static struct graphics_priv *
-overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct point *p, int w, int h)
+static void
+graphics_opengl_disable_suspend (struct window *w)
 {
-#if 0
-	struct graphics_priv *this=graphics_gtk_drawing_area_new_helper(meth);
-	this->drawable=gdk_pixmap_new(gr->widget->window, w, h, -1);
-	this->colormap=gr->colormap;
-	this->widget=gr->widget;
-	this->p=*p;
-	this->width=w;
-	this->height=h;
-	this->parent=gr;
-	this->background=gdk_pixmap_new(gr->widget->window, w, h, -1);
-	this->next=gr->overlays;
-	gr->overlays=this;
-	return this;
-#endif
-	return NULL;
 }
+
 
 static void *
-get_data(struct graphics_priv *this, char *type)
+get_data (struct graphics_priv *this, char *type)
 {
-	if (strcmp(type,"opengl_displaylist"))
-		return NULL;
-#if 0
-        dbg(1,"Creating the DL from driver\n");
-        this->DLid = glGenLists(1);
-#endif
-        return &this->DLid;
+  /*TODO initialize gtkglext context when type=="gtk_widget" */
+  if (!strcmp(type,"gtk_widget")) {
+    fprintf(stderr, "Currently GTK gui is not yet supported with opengl graphics driver\n");
+    exit(-1);
+  }
+  if (strcmp (type, "window") == 0)
+    {
+      struct window *win;
+      win = g_new (struct window, 1);
+      win->priv = this;
+      win->fullscreen = graphics_opengl_fullscreen;
+      win->disable_suspend = graphics_opengl_disable_suspend;
+      return win;
+    }
+  else
+    {
+      return &this->DLid;
+    }
+
+
 }
 
 static void
-register_resize_callback(struct graphics_priv *this, void (*callback)(void *data, int w, int h), void *data)
+image_free (struct graphics_priv *gr, struct graphics_image_priv *priv)
 {
-	this->resize_callback=callback;
-	this->resize_callback_data=data;
+//TODO free image data in hashtable when graphics is destroyed
+//currently graphics destroy is not called !!!
+/*
+  g_free(priv->data);
+  priv->data = NULL;
+  g_free(priv); 
+  priv = NULL;
+*/
 }
 
 static void
-register_motion_callback(struct graphics_priv *this, void (*callback)(void *data, struct point *p), void *data)
+overlay_disable (struct graphics_priv *gr, int disable)
 {
-	this->motion_callback=callback;
-	this->motion_callback_data=data;
+  gr->overlay_enabled = !disable;
 }
 
 static void
-register_button_callback(struct graphics_priv *this, void (*callback)(void *data, int press, int button, struct point *p), void *data)
+overlay_resize (struct graphics_priv *gr, struct point *p, int w, int h,
+		int alpha, int wraparound)
 {
-	this->button_callback=callback;
-	this->button_callback_data=data;
+  int changed = 0;
+  int w2, h2;
+
+  if (w == 0)
+    {
+      w2 = 1;
+    }
+  else
+    {
+      w2 = w;
+    }
+
+  if (h == 0)
+    {
+      h2 = 1;
+    }
+  else
+    {
+      h2 = h;
+    }
+
+  gr->p = *p;
+  if (gr->width != w2)
+    {
+      gr->width = w2;
+      changed = 1;
+    }
+
+  if (gr->height != h2)
+    {
+      gr->height = h2;
+      changed = 1;
+    }
+
+  gr->wraparound = wraparound;
+
+  if (changed)
+    {
+      if ((w == 0) || (h == 0))
+	{
+	  gr->overlay_autodisabled = 1;
+	}
+      else
+	{
+	  gr->overlay_autodisabled = 0;
+	}
+
+      callback_list_call_attr_2 (gr->cbl, attr_resize,
+				 GINT_TO_POINTER (gr->width),
+				 GINT_TO_POINTER (gr->height));
+    }
 }
 
 static struct graphics_methods graphics_methods = {
- 	graphics_destroy,
-	draw_mode,
-	draw_lines,
-	draw_polygon,
-	draw_rectangle,
-	draw_circle,
-	draw_text,
-	draw_image,
-#ifdef HAVE_IMLIB2
-	draw_image_warp,
-#else
-	NULL,
-#endif
-	draw_restore,
-	font_new,
-	gc_new,
-	background_gc,
-	overlay_new,
-	image_new,
-	get_data,
-	register_resize_callback,
-	register_button_callback,
-	register_motion_callback,
-	NULL,	// image_free
+  graphics_destroy,
+  draw_mode,
+  draw_lines,
+  draw_polygon,
+  draw_rectangle,
+  draw_circle,
+  draw_text,
+  draw_image,
+  draw_image_warp,
+  draw_restore,
+  draw_drag,
+  NULL,
+  gc_new,
+  background_gc,
+  overlay_new,
+  image_new,
+  get_data,
+  image_free,
+  NULL,
+  overlay_disable,
+  overlay_resize,
 };
 
 static struct graphics_priv *
-graphics_opengl_new(struct navit *nav, struct graphics_methods *meth, struct attr **attrs)
+graphics_opengl_new_helper (struct graphics_methods *meth)
 {
-	struct graphics_priv *this=g_new0(struct graphics_priv,1);
-	*meth=graphics_methods;
-	
-// 	GtkWidget *draw;
+  struct font_priv *(*font_freetype_new) (void *meth);
+  font_freetype_new = plugin_get_font_type ("freetype");
 
-// 	draw=gtk_drawnig_area_new();
-	
+  if (!font_freetype_new)
+    {
+      return NULL;
+    }
 
-	// Initialize the fonts
-	int ctx = 0;
-	int font = 0;
-	ctx = glcGenContext();
-	glcContext(ctx);
-	font = glcNewFontFromFamily(glcGenFontID(), "Verdana");
-	glcFont(font);
-	glcStringType(GLC_UTF8_QSO);
-// 	glcFontFace(font, "Italic");
+  struct graphics_priv *this = g_new0 (struct graphics_priv, 1);
+
+  font_freetype_new (&this->freetype_methods);
+  *meth = graphics_methods;
+
+  meth->font_new =
+    (struct graphics_font_priv *
+     (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
+	 int)) this->freetype_methods.font_new;
+  meth->get_text_bbox = this->freetype_methods.get_text_bbox;
+
+  return this;
+}
+
+static struct graphics_priv *
+overlay_new (struct graphics_priv *gr, struct graphics_methods *meth,
+	     struct point *p, int w, int h, int alpha, int wraparound)
+{
+  int w2, h2;
+  struct graphics_priv *this = graphics_opengl_new_helper (meth);
+  this->p = *p;
+  this->width = w;
+  this->height = h;
+  this->parent = gr;
+
+  /* If either height or width is 0, we set it to 1 to avoid warnings, and
+   * disable the overlay. */
+  if (h == 0)
+    {
+      h2 = 1;
+    }
+  else
+    {
+      h2 = h;
+    }
+
+  if (w == 0)
+    {
+      w2 = 1;
+    }
+  else
+    {
+      w2 = w;
+    }
+
+  if ((w == 0) || (h == 0))
+    {
+      this->overlay_autodisabled = 1;
+    }
+  else
+    {
+      this->overlay_autodisabled = 0;
+    }
+  this->overlay_enabled = 1;
+  this->overlay_autodisabled = 0;
+
+  this->next = gr->overlays;
+  gr->overlays = this;
+  this->DLid = glGenLists (1);
+  return this;
+}
 
 
-/*
-	this->widget=draw;
-	
-	this->colormap=gdk_colormap_new(gdk_visual_get_system(),FALSE);
-	gtk_widget_set_events(draw, GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_POINTER_MOTION_MASK|GDK_KEY_PRESS_MASK);
-	g_signal_connect(G_OBJECT(draw), "expose_event", G_CALLBACK(expose), this); 
-        g_signal_connect(G_OBJECT(draw), "configure_event", G_CALLBACK(configure), this);
-#if 0
-        g_signal_connect(G_OBJECT(draw), "realize_event", G_CALLBACK(realize), co);
+static void
+click_notify (int button, int state, int x, int y)
+{
+  mouse_queue[mouse_event_queue_end_idx%mouse_event_queue_size].button = button;
+  mouse_queue[mouse_event_queue_end_idx%mouse_event_queue_size].state = state;
+#ifdef MIRRORED_VIEW
+  mouse_queue[mouse_event_queue_end_idx%mouse_event_queue_size].x = graphics_priv_root->width-x;
+#else
+  mouse_queue[mouse_event_queue_end_idx%mouse_event_queue_size].x = x;
 #endif
-	g_signal_connect(G_OBJECT(draw), "button_press_event", G_CALLBACK(button_press), this);
-	g_signal_connect(G_OBJECT(draw), "button_release_event", G_CALLBACK(button_release), this);
-	g_signal_connect(G_OBJECT(draw), "scroll_event", G_CALLBACK(scroll), this);
-	g_signal_connect(G_OBJECT(draw), "motion_notify_event", G_CALLBACK(motion_notify), this);
-	*/
-	return this;
+  mouse_queue[mouse_event_queue_end_idx%mouse_event_queue_size].y = y;
+  ++mouse_event_queue_end_idx;
+}
+
+static void
+motion_notify (int x, int y)
+{
+  struct point p;
+#ifdef MIRRORED_VIEW
+  p.x = graphics_priv_root->width-x;
+#else
+  p.x = x;
+#endif
+  p.y = y;
+  callback_list_call_attr_1 (graphics_priv_root->cbl, attr_motion,
+			     (void *) &p);
+  return;
+}
+
+static gboolean
+graphics_opengl_idle (void *data)
+{
+  static int opengl_init_ok = 0;
+  if (!opengl_init_ok)
+    {
+      callback_list_call_attr_2 (graphics_priv_root->cbl, attr_resize,
+				 GINT_TO_POINTER (graphics_priv_root->width),
+				 GINT_TO_POINTER
+				 (graphics_priv_root->height));
+      opengl_init_ok = 1;
+    }
+  else
+    {
+      glutMainLoopEvent ();
+      handle_mouse_queue();
+    }
+  return TRUE;
+}
+
+static void
+ProcessNormalKeys (unsigned char key_in, int x, int y)
+{
+  int key = 0;
+  char keybuf[2];
+
+  switch (key_in)
+    {
+    case 13:
+      key = NAVIT_KEY_RETURN;
+      break;
+    default:
+      key = key_in;
+      break;
+    }
+  keybuf[0] = key;
+  keybuf[1] = '\0';
+  graphics_priv_root->force_redraw = 1;
+  callback_list_call_attr_1 (graphics_priv_root->cbl, attr_keypress,
+			     (void *) keybuf);
+}
+
+static void
+ProcessSpecialKeys (int key_in, int x, int y)
+{
+  int key = 0;
+  char keybuf[2];
+
+  switch (key_in)
+    {
+    case 102:
+      key = NAVIT_KEY_RIGHT;
+      break;
+    case 100:
+      key = NAVIT_KEY_LEFT;
+      break;
+    case 103:
+      key = NAVIT_KEY_DOWN;
+      break;
+    case 101:
+      key = NAVIT_KEY_UP;
+      break;
+    case 104:
+      key = NAVIT_KEY_ZOOM_OUT;
+      break;
+    case 105:
+      key = NAVIT_KEY_ZOOM_IN;
+      break;
+    default:
+      break;
+    }				//switch
+
+  graphics_priv_root->force_redraw = 1;
+  keybuf[0] = key;
+  keybuf[1] = '\0';
+  callback_list_call_attr_1 (graphics_priv_root->cbl, attr_keypress,
+			     (void *) keybuf);
 }
 
 void
-plugin_init(void)
+resize_callback (int w, int h)
 {
-        plugin_register_graphics_type("opengl", graphics_opengl_new);
+  glViewport (0, 0, w, h);
+  glMatrixMode (GL_PROJECTION);
+  glLoadIdentity ();
+#ifdef MIRRORED_VIEW
+  gluOrtho2D ( w, 0, h, 0.0); //mirrored mode
+#else
+  gluOrtho2D ( 0, w, h, 0.0);
+#endif
+
+  graphics_priv_root->width = w;
+  graphics_priv_root->height = h;
+
+  callback_list_call_attr_2 (graphics_priv_root->cbl, attr_resize,
+			     GINT_TO_POINTER (w), GINT_TO_POINTER (h));
+}
+
+void
+display (void)
+{
+  graphics_priv_root->force_redraw = 1;
+  redraw_screen(graphics_priv_root);
+  resize_callback (graphics_priv_root->width, graphics_priv_root->height);
+}
+
+
+static struct graphics_priv *
+graphics_opengl_new (struct navit *nav, struct graphics_methods *meth,
+		     struct attr **attrs, struct callback_list *cbl)
+{
+  struct attr *attr;
+
+  if (!event_request_system ("glib", "graphics_opengl_new"))
+    return NULL;
+
+  struct graphics_priv *this = graphics_opengl_new_helper (meth);
+  graphics_priv_root = this;
+
+  this->nav = nav;
+  this->parent = NULL;
+  this->overlay_enabled = 1;
+
+  this->width = SCREEN_WIDTH;
+  if ((attr = attr_search (attrs, NULL, attr_w)))
+    this->width = attr->u.num;
+  this->height = SCREEN_HEIGHT;
+  if ((attr = attr_search (attrs, NULL, attr_h)))
+    this->height = attr->u.num;
+  this->timeout = 100;
+  if ((attr = attr_search (attrs, NULL, attr_timeout)))
+    this->timeout = attr->u.num;
+  this->delay = 0;
+  if ((attr = attr_search (attrs, NULL, attr_delay)))
+    this->delay = attr->u.num;
+  this->cbl = cbl;
+
+  char *cmdline = "";
+  int argc = 0;
+  glutInit (&argc, &cmdline);
+  glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGBA);
+
+  glutInitWindowSize (this->width, this->height);
+  glutInitWindowPosition (0, 0);
+  glutCreateWindow ("Navit opengl window");
+
+  glutDisplayFunc (display);
+  glutReshapeFunc (resize_callback);
+  resize_callback (this->width, this->height);
+
+  graphics_priv_root->cbl = cbl;
+  graphics_priv_root->width = this->width;
+  graphics_priv_root->height = this->height;
+
+  glutMotionFunc (motion_notify);
+  glutPassiveMotionFunc (motion_notify);
+  glutMouseFunc (click_notify);
+  glutKeyboardFunc (ProcessNormalKeys);
+  glutSpecialFunc (ProcessSpecialKeys);
+
+  this->DLid = glGenLists (1);
+
+  g_timeout_add (G_PRIORITY_DEFAULT + 10, graphics_opengl_idle, NULL);
+  
+  /*this will only refresh screen in map(overlay enabled) mode*/
+  g_timeout_add (G_PRIORITY_DEFAULT + 1000, redraw_filter, this);
+
+  //create hash table for uncompressed image data
+  hImageData = g_hash_table_new(g_str_hash, g_str_equal);
+  return this;
+}
+
+
+static void
+event_opengl_main_loop_run (void)
+{
+  dbg (0, "enter\n");
+}
+
+static void
+event_opengl_main_loop_quit (void)
+{
+  dbg (0, "enter\n");
+}
+
+static struct event_watch *
+event_opengl_add_watch (void *h, enum event_watch_cond cond,
+			struct callback *cb)
+{
+  dbg (0, "enter\n");
+  return NULL;
+}
+
+static void
+event_opengl_remove_watch (struct event_watch *ev)
+{
+  dbg (0, "enter\n");
+}
+
+
+static struct event_timeout *
+event_opengl_add_timeout (int timeout, int multi, struct callback *cb)
+{
+  dbg (0, "enter\n");
+  return NULL;
+}
+
+static void
+event_opengl_remove_timeout (struct event_timeout *to)
+{
+  dbg (0, "enter\n");
+}
+
+
+static struct event_idle *
+event_opengl_add_idle (int priority, struct callback *cb)
+{
+  dbg (0, "enter\n");
+  return NULL;
+}
+
+static void
+event_opengl_remove_idle (struct event_idle *ev)
+{
+  dbg (0, "enter\n");
+}
+
+static void
+event_opengl_call_callback (struct callback_list *cb)
+{
+  dbg (0, "enter\n");
+}
+
+static struct event_methods event_opengl_methods = {
+  event_opengl_main_loop_run,
+  event_opengl_main_loop_quit,
+  event_opengl_add_watch,
+  event_opengl_remove_watch,
+  event_opengl_add_timeout,
+  event_opengl_remove_timeout,
+  event_opengl_add_idle,
+  event_opengl_remove_idle,
+  event_opengl_call_callback,
+};
+
+static struct event_priv *
+event_opengl_new (struct event_methods *meth)
+{
+  *meth = event_opengl_methods;
+  return NULL;
+}
+
+void
+plugin_init (void)
+{
+  plugin_register_graphics_type ("opengl", graphics_opengl_new);
+  plugin_register_event_type ("opengl", event_opengl_new);
 }
