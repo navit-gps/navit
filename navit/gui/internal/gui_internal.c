@@ -178,6 +178,7 @@ struct gui_config_settings {
   int font_size;
   /**
    * The size (in pixels) that xs style icons should be scaled to.
+   * This icon size can be too small to click it on some devices.
    */
   int icon_xs;
   /**
@@ -242,7 +243,19 @@ struct gui_priv {
 	int font_size;
 	int fullscreen;
 	struct graphics_font *fonts[3];
-	int icon_xs, icon_s, icon_l;
+	/**
+	 * The size (in pixels) that xs style icons should be scaled to.
+	 * This icon size can be too small to click it on some devices.
+	 */
+	int icon_xs;
+	/**
+	 * The size (in pixels) that s style icons (small) should be scaled to
+	 */
+	int icon_s;
+	/**
+	 * The size (in pixels) that l style icons should be scaled to
+	 */
+	int icon_l;
 	int pressed;
 	struct widget *widgets;
 	int widgets_count;
@@ -512,12 +525,25 @@ image_new_o(struct gui_priv *this, char *name)
 }
 #endif
 
+/*
+ * * Display image scaled to xs (extra small) size
+ * * This image size can be too small to click it on some devices.
+ * * @param this Our gui context
+ * * @param name image name
+ * * @returns image_struct Ptr to scaled image struct or NULL if not scaled or found
+ * */
 static struct graphics_image *
 image_new_xs(struct gui_priv *this, const char *name)
 {
 	return image_new_scaled(this, name, this->icon_xs, this->icon_xs);
 }
 
+/*
+ * * Display image scaled to s (small) size
+ * * @param this Our gui context
+ * * @param name image name
+ * * @returns image_struct Ptr to scaled image struct or NULL if not scaled or found
+ * */
 
 static struct graphics_image *
 image_new_s(struct gui_priv *this, const char *name)
@@ -525,6 +551,12 @@ image_new_s(struct gui_priv *this, const char *name)
 	return image_new_scaled(this, name, this->icon_s, this->icon_s);
 }
 
+/*
+ * * Display image scaled to l (large) size
+ * * @param this Our gui context
+ * * @param name image name
+ * * @returns image_struct Ptr to scaled image struct or NULL if not scaled or found
+ * */
 static struct graphics_image *
 image_new_l(struct gui_priv *this, const char *name)
 {
@@ -2181,8 +2213,7 @@ struct selector {
 		type_poi_peak,type_poi_peak,
 		type_none}},
 	{"unknown","Other",(enum item_type []){
-		type_point_unspecified,type_point_unkn-1,
-		type_point_unkn+1,type_poi_land_feature-1,
+		type_point_unspecified,type_poi_land_feature-1,
 		type_poi_rock+1,type_poi_fuel-1,
 		type_poi_marina+1,type_poi_car_parking-1,
 		type_poi_car_parking+1,type_poi_bar-1,
@@ -2190,11 +2221,12 @@ struct selector {
 		type_poi_dam+1,type_poi_information-1,
 		type_poi_information+1,type_poi_mall-1,
 		type_poi_mall+1,type_poi_personal_service-1,
+		type_poi_repair_service+1,type_poi_restaurant-1,
 		type_poi_restaurant+1,type_poi_restroom-1,
 		type_poi_restroom+1,type_poi_shop_grocery-1,
 		type_poi_shop_grocery+1,type_poi_peak-1,
 		type_poi_peak+1, type_poi_motel-1,
-		type_poi_hostel+1,type_selected_point,
+		type_poi_hostel+1,type_line-1,
 		type_none}},
 	{"unknown","Unknown",(enum item_type []){
 		type_point_unkn,type_point_unkn,
@@ -2215,19 +2247,26 @@ gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int page
 {
 	struct widget *wl,*wb;
 	int i;
-	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
-	for (i = 0 ; i < sizeof(selectors)/sizeof(struct selector) ; i++) {
+	//wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
+	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal_vertical|flags_fill);
+	wl->w=this->root.w;
+	wl->cols=this->root.w/this->icon_s;
+	int nitems=sizeof(selectors)/sizeof(struct selector);
+	int nrows=nitems/wl->cols + (nitems%wl->cols>0);
+	wl->h=this->icon_l*nrows;
+	for (i = 0 ; i < nitems ; i++) {
 		union poi_param p;
 		p.p.sel = 1;
 		p.p.selnb = i;
 		p.p.pagenb = pagenb;
 		p.p.dist = 0;
 		gui_internal_widget_append(wl, wb=gui_internal_button_new_with_callback(this, NULL,
-			image_new_xs(this, selectors[i].icon), gravity_left_center|orientation_vertical,
+			image_new_s(this, selectors[i].icon), gravity_left_center|orientation_vertical,
 			gui_internal_cmd_pois, GUINT_TO_POINTER(p.i)));
 		wb->c=*c;
 		wb->bt=10;
 	}
+	gui_internal_widget_pack(this,wl);
 	return wl;
 }
 
@@ -2255,7 +2294,6 @@ gui_internal_cmd_pois_item(struct gui_priv *this, struct coord *center, struct i
 	}
 	text=g_strdup_printf("%s %s %s %s", distbuf, dirbuf, type, name);
 	wt=gui_internal_label_new(this, text);
-
 	wt->datai=dist;
 	gui_internal_widget_append(wl, wt);
 	g_free(text);
@@ -2303,7 +2341,7 @@ static void gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, 
 
 struct item_data {
 	int dist;
-	char label[32];
+	char *label;
 	struct item item;
 	struct coord c;
 };
@@ -2321,6 +2359,7 @@ gui_internal_cmd_pois_more(struct gui_priv *this, struct widget *wm, void *data)
 	struct widget *w=g_new0(struct widget,1);
 	w->data=wm->data;
 	w->c=wm->c;
+	w->w=wm->w;
 	gui_internal_back(this, NULL, NULL);
 	gui_internal_cmd_pois(this, w, NULL);
 	free(w);
@@ -2343,13 +2382,13 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	struct selector *isel = param.p.sel? &selectors[param.p.selnb]: NULL;
 	int pagenb = param.p.pagenb;
 	int prevdist=param.p.dist*10000;
-	int rowstoskip=0;
 	const int pagesize = 50; // Starting value and increment of count of items to be extracted
 	int maxitem = pagesize*(pagenb+1), it = 0, i;
 	struct item_data *items= g_new0( struct item_data, maxitem);
 	struct fibheap* fh = fh_makekeyheap();
 	int cnt = 0;
 	struct table_data *td;
+	int width=wm->w;
 	dbg(2, "Params: sel = %i, selnb = %i, pagenb = %i, dist = %i\n",
 		param.p.sel, param.p.selnb, param.p.pagenb, param.p.dist);
 
@@ -2379,6 +2418,8 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 					struct attr attr;
 					if(it>=maxitem) {
 						data = fh_extractmin(fh);
+						free(data->label);
+						data->label=NULL;
 					} else {
 						data = &items[it++];
 					}
@@ -2386,9 +2427,9 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 					data->c = c;
 					data->dist = idist;
 					if (item_attr_get(item, attr_label, &attr)) {
-						strncpy(data->label, attr.u.str, sizeof(data->label));
+						data->label=g_strdup(attr.u.str);
 					} else {
-						data->label[0] = 0;
+						data->label=g_strdup("");
 					}
 					// Key expression is a workaround to fight
 					// probable heap collisions when two objects
@@ -2411,7 +2452,6 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	td=wtable->data;
 
 	gui_internal_widget_append(w2,wtable);
-	wtable->w=w2->w;
 
 	// Move items from heap to the table
 	for(i=0;;i++) 
@@ -2434,6 +2474,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		wi->c.x=data->c.x;
 		wi->c.y=data->c.y;
 		wi->c.pro=pro;
+		wi->w=width;
 		row = gui_internal_widget_table_row_new(this,
 							  gravity_left
 							  | flags_fill
@@ -2441,6 +2482,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 		row->children=g_list_append(row->children,wi);
 		row->datai=data->dist;
 		gui_internal_widget_prepend(wtable,row);
+		free(data->label);
 	}
 
 	fh_deleteheap(fh);
@@ -2468,7 +2510,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 						  | flags_fill
 						  | orientation_horizontal);
 	row->children=g_list_append(row->children,wl);
-	row->datai=100000; // Really far away for Earth, but won't work for bigger planets.
+	row->datai=100000000; // Really far away for Earth, but won't work for bigger planets.
 	gui_internal_widget_append(wtable,row);
 
 	// Rendering now is needed to have table_data->bottomrow filled in.
