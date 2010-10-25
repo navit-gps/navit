@@ -1050,6 +1050,13 @@ add_tag(char *k, char *v)
 		strcpy(is_in_buffer, v);
 		level=5;
 	}
+	if (! strcmp(k,"is_in:country")) {
+ 		/*	sometimes there is no is_in tag, only is_in:country. 
+		   I put this here so it can be overwritten by the next if clause if there IS an is_in tag.
+		*/
+		strcpy(is_in_buffer, v);
+		level=5;
+	}
 	if (! strcmp(k,"gnis:ST_alpha")) {
 		/*	assume a gnis tag means it is part of the USA:
 			http://en.wikipedia.org/wiki/Geographic_Names_Information_System
