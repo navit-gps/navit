@@ -3440,7 +3440,7 @@ gui_internal_keyboard_do(struct gui_priv *this, struct widget *wkbdb, int mode)
 	wkbd->spx=0;
 	wkbd->spy=0;
 	max_w=max_w/8;
-	max_h=max_h/6;
+	max_h=max_h/8; // Allows 3 results in the list when searching for Towns
 	wkbd->p.y=max_h*2;
 	if(mode>=40&&mode<56) { // Russian/Ukrainian/Belarussian layout needs more space...
 		max_h=max_h*4/5;
