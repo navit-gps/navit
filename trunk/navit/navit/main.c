@@ -165,6 +165,10 @@ char *nls_table[][3]={
 	{"ENC", "CAN", "en_CA"},	// English - Canada
 	{"ENG", "GBR", "en_GB"},	// English - UK
 	{"ENZ", "NZL", "en_NZ"},	// English - New Zealand
+	{"DES", "CHE", "de_CH"},	// Swiss - German
+	{"FRS", "CHE", "fr_CH"},	// Swiss - French
+	{"ITS", "CHE", "it_CH"},	// Swiss - Italian
+	{"RMC", "CHE", "rm_CH"},	// Swiss - Romansh
 	{NULL,NULL,NULL},		
 };
 
