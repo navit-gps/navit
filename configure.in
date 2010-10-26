@@ -555,7 +555,7 @@ AC_CHECK_HEADERS(
 		SHAPEFILE_LIBS="-lshp"
 		system_shapefile=yes
 		)
-AC_SUBST(SHAPEFILE_CFLAGS) -a "x$freeimage" = "xyes" 
+AC_SUBST(SHAPEFILE_CFLAGS)
 AC_SUBST(SHAPEFILE_LIBS)
 AM_CONDITIONAL(HAVE_SYSTEM_SHAPEFILELIB, [test "x$system_shapefile" = "xyes" ])
 if test x"${system_shapefile}" = xno
