@@ -59,6 +59,7 @@ void osd_wrap_point(struct point *p, struct navit *nav);
 void osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button, struct point *p);
 void osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags);
 void osd_std_config(struct osd_item *item, struct navit *navit);
+void osd_set_std_config(struct navit *nav, struct osd_item *item);
 void osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *priv);
 void osd_std_resize(struct osd_item *item);
 void osd_std_draw(struct osd_item *item);
