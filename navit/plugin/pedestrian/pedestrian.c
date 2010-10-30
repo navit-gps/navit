@@ -57,92 +57,17 @@
 #endif
 static struct map *global_map;
 
+int orientation,orientation_old;
+
+struct pedestrian {
+	struct navit *nav;
+	int w,h;
+	int yaw;
+} pedestrian_data;
+
 int sensors_locked;
 
 struct attr initial_layout, main_layout;
-
-
-struct auxmap {
-	struct osd_item osd_item;
-	struct displaylist *displaylist;
-	struct transformation *ntrans;
-	struct transformation *trans;
-	struct layout *layout;
-	struct callback *postdraw_cb;
-	struct graphics_gc *red;
-};
-
-static void
-osd_auxmap_draw(struct auxmap *this, struct navit *navit)
-{
-	dbg(0,"enter\n");
-	int d=10;
-	struct point p;
-	p.x=this->osd_item.w/2;
-	p.y=this->osd_item.h/2;
-	transform_set_center(this->trans, transform_get_center(this->ntrans));
-	transform_set_scale(this->trans, 64);
-	transform_set_yaw(this->trans, transform_get_yaw(this->ntrans));
-	transform_setup_source_rect(this->trans);
-	transform_set_projection(this->trans, transform_get_projection(this->ntrans));
-	graphics_displaylist_draw(this->osd_item.gr, this->displaylist, this->trans, this->layout, 4);
-	graphics_draw_circle(this->osd_item.gr, this->red, &p, d);
-	graphics_draw_mode(this->osd_item.gr, draw_mode_end);
-
-}
-
-static void
-osd_auxmap_init(struct auxmap *this, struct navit *nav)
-{
-	struct graphics *gra;
-	struct attr attr;
-	struct map_selection sel;
-	struct color red={0xffff,0x0,0x0,0xffff};
-
-	if (! navit_get_attr(nav, attr_graphics, &attr, NULL))
-		return;
-	gra=attr.u.graphics;
-	graphics_add_callback(gra, callback_new_attr_1(callback_cast(osd_auxmap_draw), attr_postdraw, this));
-	if (! navit_get_attr(nav, attr_transformation, &attr, NULL))
-		return;
-	this->ntrans=attr.u.transformation;
-	if (! navit_get_attr(nav, attr_displaylist, &attr, NULL))
-		return;
-	this->displaylist=attr.u.displaylist;
-	if (! navit_get_attr(nav, attr_layout, &attr, NULL))
-		return;
-	this->layout=attr.u.layout;
-	osd_set_std_graphic(nav, &this->osd_item, NULL);
-	graphics_init(this->osd_item.gr);
-	this->red=graphics_gc_new(gra);
-	graphics_gc_set_foreground(this->red,&red);
-	graphics_gc_set_linewidth(this->red,3);
-	this->trans=transform_new();
-	memset(&sel, 0, sizeof(sel));
-	sel.u.p_rect.rl.x=this->osd_item.w;
-	sel.u.p_rect.rl.y=this->osd_item.h;
-	transform_set_screen_selection(this->trans, &sel);
-        graphics_set_rect(this->osd_item.gr, &sel.u.p_rect);
-#if 0
-	osd_auxmap_draw(this, nav);
-#endif
-}
-
-static struct osd_priv *
-osd_auxmap_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
-{
-	struct auxmap *this = g_new0(struct auxmap, 1);
-
-	this->osd_item.p.x = 20;
-	this->osd_item.p.y = -80;
-	this->osd_item.w = 60;
-	this->osd_item.h = 40;
-	this->osd_item.font_size = 200;
-	osd_set_std_attr(attrs, &this->osd_item, 0);
-
-	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_auxmap_init), attr_navit, this));
-	return (struct osd_priv *) this;
-}
 
 
 struct rocket {
@@ -1007,9 +932,9 @@ map_route_occluded_new(struct map_methods *meth, struct attr **attrs)
 }
 
 void
-pedestrian_graphics_resize(struct graphics *gra)
+pedestrian_graphics_resize(struct graphics *gra, int w, int h)
 {
-#if 1
+#ifndef HAVE_API_ANDROID
 	static int done;
 	if (!done) {
 		int id=(int)graphics_get_data(gra, "xwindow_id");
@@ -1019,6 +944,70 @@ pedestrian_graphics_resize(struct graphics *gra)
 		done=1;
 	}
 #endif
+	pedestrian_data.w=w;
+	pedestrian_data.h=h;
+}
+
+
+static void
+pedestrian_draw_arrow(struct graphics *gra, char *name, int x, int y)
+{
+	char *src=graphics_icon_path(name);
+	struct graphics_image *img=graphics_image_new(gra, src);
+	struct graphics_gc *gc=graphics_gc_new(gra);
+	struct color col={0xffff,0xffff,0xffff,0xffff};
+	struct point p;
+	graphics_gc_set_foreground(gc, &col);
+	p.x=x;
+	p.y=y;
+	graphics_draw_image(gra, gc, &p, img);
+	graphics_image_free(gra, img);
+	graphics_gc_destroy(gc);
+	g_free(src);
+}
+
+static void
+pedestrian_draw_arrows(struct graphics *gra)
+{
+	struct attr route, route_map;
+	struct map_rect *route_map_rect;
+	struct item *item;
+
+	if (orientation == 2)
+		return;
+	if (!navit_get_attr(pedestrian_data.nav, attr_route, &route, NULL)) {
+		dbg(0,"no route in navit\n");
+		return;
+	}
+	if (!route_get_attr(route.u.route, attr_map, &route_map, NULL)) {
+		dbg(0,"no map in route\n");
+		return;
+	}
+	route_map_rect=map_rect_new(route_map.u.map, NULL);
+	if (!route_map_rect) {
+		dbg(0,"no route map rect\n");
+		return;
+	}
+	while ((item=map_rect_get_item(route_map_rect))) {
+		if (item->type == type_street_route) {
+			struct coord c[2];
+			if (item_coord_get(item, c, 2) == 2) {
+				struct coord *center=transform_get_center(navit_get_trans(pedestrian_data.nav));
+				int angle=transform_get_angle_delta(center, &c[1], 0);
+				angle-=pedestrian_data.yaw;
+				if (angle < 0)
+					angle+=360;
+				if (angle >= 360)
+					angle-=360;
+				if (angle > 180 && angle < 350)
+					pedestrian_draw_arrow(gra,"gui_arrow_left_32_32.png",0,pedestrian_data.h/2-16);
+				if (angle > 10 && angle <= 180)	
+					pedestrian_draw_arrow(gra,"gui_arrow_right_32_32.png",pedestrian_data.w-32,pedestrian_data.h/2-16);
+			}
+			break;
+		}
+	}
+	map_rect_destroy(route_map_rect);
 }
 
 void
@@ -1035,6 +1024,7 @@ pedestrian_graphics_postdraw(struct graphics *gra)
 	graphics_draw_rectangle(gra, gc, &p, 1000, 200);
 	graphics_gc_destroy(gc);
 #endif
+	pedestrian_draw_arrows(gra);
 }
 
 #ifndef HAVE_API_ANDROID
@@ -1122,7 +1112,6 @@ pedestrian_setup_tilt(struct navit *nav)
 
 #else
 
-int orientation,orientation_old;
 
 float sensors[2][3];
 
@@ -1147,13 +1136,16 @@ android_sensors(struct navit *nav, int sensor, float *x, float *y, float *z)
 		dbg(1,"orientation=%d\n",orientation);
 	}
 	if ((orientation_old == 2) != (orientation == 2)) {
-		struct attr attr, flags_graphics;
+		struct attr attr, flags_graphics, osd_configuration;
 		navit_set_attr(nav, orientation == 2 ? &initial_layout:&main_layout);
 		navit_get_attr(nav, attr_transformation, &attr, NULL);
 		transform_set_scale(attr.u.transformation, orientation == 2 ? 64:16);
 		flags_graphics.type=attr_flags_graphics;
 		flags_graphics.u.num=orientation == 2 ? 0:10;
 		navit_set_attr(nav, &flags_graphics);
+		osd_configuration.type=attr_osd_configuration;
+		osd_configuration.u.num=orientation == 2 ? 1:2;
+		navit_set_attr(nav, &osd_configuration);
 	}
 	orientation_old=orientation;
 	switch (orientation) {
@@ -1191,8 +1183,13 @@ android_sensors(struct navit *nav, int sensor, float *x, float *y, float *z)
 			struct attr attr;
 			attr.type=attr_orientation;
 			attr.u.num=yaw-1.0;
+			if (attr.u.num < 0)
+				attr.u.num+=360;
+			pedestrian_data.yaw=attr.u.num;
 			navit_set_attr(nav, &attr);
 			dbg(1,"yaw %d %f\n",orientation,yaw);
+			if (orientation == 2) 
+				navit_set_center_cursor_nodraw(nav, 0);
 		}
 	}
 }
@@ -1262,6 +1259,7 @@ pedestrian_navit_init(struct navit *nav)
 			
 	}
 #endif
+	pedestrian_data.nav=nav;
 	flags_graphics.type=attr_flags_graphics;
 	flags_graphics.u.num=10;
 	navit_set_attr(nav, &flags_graphics);
@@ -1372,7 +1370,6 @@ plugin_init(void)
 	(*jnienv)->CallVoidMethod(jnienv, android_activity, Activity_setRequestedOrientation, 0);
 #endif
 	
-    	plugin_register_osd_type("auxmap", osd_auxmap_new);
     	plugin_register_osd_type("marker", osd_marker_new);
 	plugin_register_map_type("route_occluded", map_route_occluded_new);
 	callback.type=attr_callback;
