@@ -599,6 +599,8 @@ static void
 osd_button_draw(struct osd_button *this, struct navit *nav)
 {
 	struct point bp = this->item.p;
+	if (!this->item.configured)
+		return;
 	osd_wrap_point(&bp, nav);
 	graphics_draw_image(this->item.gr, this->item.graphic_bg, &bp, this->img);
 }
@@ -629,7 +631,7 @@ osd_button_init(struct osd_button *this, struct navit *nav)
 		graphics_draw_mode(this->item.gr, draw_mode_end);
 		graphics_image_free(this->item.gr, img);
 	} else {
-		this->item.configured=1;
+		osd_set_std_config(nav, &this->item);
 		this->item.gr=gra;
 		this->item.graphic_bg=graphics_gc_new(this->item.gr);
 		graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_button_draw), attr_postdraw, this, nav));
@@ -648,7 +650,7 @@ osd_button_new(struct navit *nav, struct osd_methods *meth,
 	this->item.navit = nav;
 	this->item.meth.draw = osd_draw_cast(osd_button_draw);
 
-	osd_set_std_attr(attrs, &this->item, 1);
+	osd_set_std_attr(attrs, &this->item, 1|16);
 
 	attr=attr_search(attrs, NULL, attr_use_overlay);
 	if (attr)
@@ -2150,6 +2152,99 @@ osd_scale_new(struct navit *nav, struct osd_methods *meth,
 	return (struct osd_priv *) this;
 }
 
+struct auxmap {
+	struct osd_item osd_item;
+	struct displaylist *displaylist;
+	struct transformation *ntrans;
+	struct transformation *trans;
+	struct layout *layout;
+	struct callback *postdraw_cb;
+	struct graphics_gc *red;
+	struct navit *nav;
+};
+
+static void
+osd_auxmap_draw(struct auxmap *this)
+{
+	int d=10;
+	struct point p;
+	struct coord *c;
+	struct attr mapset;
+
+	if (!this->osd_item.configured)
+		return;
+	if (!navit_get_attr(this->nav, attr_mapset, &mapset, NULL) || !mapset.u.mapset)
+		return;
+	p.x=this->osd_item.w/2;
+	p.y=this->osd_item.h/2;
+	transform_set_center(this->trans, transform_get_center(this->ntrans));
+	transform_set_scale(this->trans, 64);
+	transform_set_yaw(this->trans, transform_get_yaw(this->ntrans));
+	transform_setup_source_rect(this->trans);
+	transform_set_projection(this->trans, transform_get_projection(this->ntrans));
+#if 0
+	graphics_displaylist_draw(this->osd_item.gr, this->displaylist, this->trans, this->layout, 4);
+#endif
+	graphics_draw(this->osd_item.gr, this->displaylist, mapset.u.mapset, this->trans, this->layout, 0, NULL, 1);
+	graphics_draw_circle(this->osd_item.gr, this->red, &p, d);
+	graphics_draw_mode(this->osd_item.gr, draw_mode_end);
+
+}
+
+static void
+osd_auxmap_init(struct auxmap *this, struct navit *nav)
+{
+	struct graphics *gra;
+	struct attr attr;
+	struct map_selection sel;
+	struct color red={0xffff,0x0,0x0,0xffff};
+
+	this->nav=nav;
+	if (! navit_get_attr(nav, attr_graphics, &attr, NULL))
+		return;
+	gra=attr.u.graphics;
+	graphics_add_callback(gra, callback_new_attr_1(callback_cast(osd_auxmap_draw), attr_postdraw, this));
+	if (! navit_get_attr(nav, attr_transformation, &attr, NULL))
+		return;
+	this->ntrans=attr.u.transformation;
+	if (! navit_get_attr(nav, attr_displaylist, &attr, NULL))
+		return;
+	this->displaylist=attr.u.displaylist;
+	if (! navit_get_attr(nav, attr_layout, &attr, NULL))
+		return;
+	this->layout=attr.u.layout;
+	osd_set_std_graphic(nav, &this->osd_item, NULL);
+	graphics_init(this->osd_item.gr);
+	this->red=graphics_gc_new(gra);
+	graphics_gc_set_foreground(this->red,&red);
+	graphics_gc_set_linewidth(this->red,3);
+	this->trans=transform_new();
+	memset(&sel, 0, sizeof(sel));
+	sel.u.p_rect.rl.x=this->osd_item.w;
+	sel.u.p_rect.rl.y=this->osd_item.h;
+	transform_set_screen_selection(this->trans, &sel);
+        graphics_set_rect(this->osd_item.gr, &sel.u.p_rect);
+#if 0
+	osd_auxmap_draw(this, nav);
+#endif
+}
+
+static struct osd_priv *
+osd_auxmap_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
+{
+	struct auxmap *this = g_new0(struct auxmap, 1);
+
+	this->osd_item.p.x = 20;
+	this->osd_item.p.y = -80;
+	this->osd_item.w = 60;
+	this->osd_item.h = 40;
+	this->osd_item.font_size = 200;
+	osd_set_std_attr(attrs, &this->osd_item, 0);
+
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_auxmap_init), attr_navit, this));
+	return (struct osd_priv *) this;
+}
+
 
 void
 plugin_init(void)
@@ -2166,4 +2261,5 @@ plugin_init(void)
 		plugin_register_osd_type("image", osd_image_new);
 		plugin_register_osd_type("stopwatch", osd_stopwatch_new);
 	plugin_register_osd_type("odometer", osd_odometer_new);
+	plugin_register_osd_type("auxmap", osd_auxmap_new);
 }
