@@ -1854,12 +1854,8 @@ static void xdisplay_draw(struct displaylist *display_list, struct graphics *gra
 extern void *route_selection;
 
 static void
-displaylist_update_hash(struct displaylist *displaylist)
+displaylist_update_layers(struct displaylist *displaylist, GList *layers, int order)
 {
-	GList *layers=displaylist->layout->layers;
-	int order=displaylist->order;
-	displaylist->max_offset=0;
-	clear_hash(displaylist);
 	while (layers) {
 		struct layer *layer=layers->data;
 		GList *itemgras=layer->itemgras;
@@ -1877,6 +1873,14 @@ displaylist_update_hash(struct displaylist *displaylist)
 		}
 		layers=g_list_next(layers);
 	}
+}
+
+static void
+displaylist_update_hash(struct displaylist *displaylist)
+{
+	displaylist->max_offset=0;
+	clear_hash(displaylist);
+	displaylist_update_layers(displaylist, displaylist->layout->layers, displaylist->order);
 	dbg(1,"max offset %d\n",displaylist->max_offset);
 }
 
