@@ -915,7 +915,7 @@ static struct map_methods map_route_occluded_methods = {
 };
 
 
-struct map_priv *
+static struct map_priv *
 map_route_occluded_new(struct map_methods *meth, struct attr **attrs)
 {
 	struct map_priv *ret;
@@ -931,7 +931,7 @@ map_route_occluded_new(struct map_methods *meth, struct attr **attrs)
 	return ret;
 }
 
-void
+static void
 pedestrian_graphics_resize(struct graphics *gra, int w, int h)
 {
 #ifndef HAVE_API_ANDROID
@@ -1010,7 +1010,7 @@ pedestrian_draw_arrows(struct graphics *gra)
 	map_rect_destroy(route_map_rect);
 }
 
-void
+static void
 pedestrian_graphics_postdraw(struct graphics *gra)
 {
 #if 0
@@ -1189,13 +1189,13 @@ android_sensors(struct navit *nav, int sensor, float *x, float *y, float *z)
 			navit_set_attr(nav, &attr);
 			dbg(1,"yaw %d %f\n",orientation,yaw);
 			if (orientation == 2) 
-				navit_set_center_cursor_nodraw(nav, 0);
+				navit_set_center_cursor(nav, 1, 0);
 		}
 	}
 }
 #endif
 
-void
+static void
 pedestrian_log(char **logstr)
 {
 #ifdef HAVE_API_ANDROID
@@ -1227,7 +1227,7 @@ vehicle_changed(struct vehicle *v, struct transformation *trans)
 #endif
 
 
-void
+static void
 pedestrian_navit_init(struct navit *nav)
 {
 	struct attr route;
@@ -1341,7 +1341,7 @@ pedestrian_navit_init(struct navit *nav)
 
 }
 
-void
+static void
 pedestrian_navit(struct navit *nav, int add)
 {
 	dbg(0,"enter\n");
