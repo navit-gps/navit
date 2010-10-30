@@ -656,10 +656,12 @@ transform_get_selection(struct transformation *this_, enum projection pro, int o
 		}
 		dbg(1,"transform rect for %d is %d,%d - %d,%d\n", pro, curro->u.c_rect.lu.x, curro->u.c_rect.lu.y, curro->u.c_rect.rl.x, curro->u.c_rect.rl.y);
 		curro->order+=order;
+#if 0
 		curro->u.c_rect.lu.x-=500;
 		curro->u.c_rect.lu.y+=500;
 		curro->u.c_rect.rl.x+=500;
 		curro->u.c_rect.rl.y-=500;
+#endif
 		curro->range=item_range_all;
 		curri=curri->next;
 		curro=curro->next;
