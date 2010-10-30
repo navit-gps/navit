@@ -297,7 +297,7 @@ vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor)
 		this_->animate_timer=event_add_timeout(cursor->interval, 1, this_->animate_callback);
 	}
 
-	if (cursor && this_->gra) {
+	if (cursor && this_->gra && this_->cursor) {
 		this_->cursor_pnt.x+=(this_->cursor->w - cursor->w)/2;
 		this_->cursor_pnt.y+=(this_->cursor->h - cursor->h)/2;
 		graphics_overlay_resize(this_->gra, &this_->cursor_pnt, cursor->w, cursor->h, 65535, 0);
@@ -307,8 +307,13 @@ vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor)
 	if (cursor) { 
 		sc.x=cursor->w/2;
 		sc.y=cursor->h/2;
-	} else
+		if (!this_->cursor && this_->gra)
+			graphics_overlay_disable(this_->gra, 0);
+	} else {
 		sc.x=sc.y=0;
+		if (this_->cursor && this_->gra)
+			graphics_overlay_disable(this_->gra, 1);
+	}
 	transform_set_screen_center(this_->trans, &sc);
 
 	this_->cursor=cursor;
