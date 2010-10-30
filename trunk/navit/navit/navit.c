@@ -157,7 +157,7 @@ static void navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv);
 static void navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *pnt);
 static int navit_add_vehicle(struct navit *this_, struct vehicle *v);
 static int navit_set_attr_do(struct navit *this_, struct attr *attr, int init);
-static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir);
+static int navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation, int *dir);
 static void navit_set_cursors(struct navit *this_);
 static void navit_cmd_zoom_to_route(struct navit *this);
 static void navit_cmd_set_center_cursor(struct navit *this_);
@@ -617,7 +617,7 @@ static int
 navit_cmd_zoom_in(struct navit *this_)
 {
 	struct point p;
-	if (this_->vehicle && this_->vehicle->follow_curr == 1 && navit_get_cursor_pnt(this_, &p, NULL)) {
+	if (this_->vehicle && this_->vehicle->follow_curr == 1 && navit_get_cursor_pnt(this_, &p, 0, NULL)) {
 		navit_zoom_in(this_, 2, &p);
 		this_->vehicle->follow_curr=this_->vehicle->follow;
 	} else
@@ -629,7 +629,7 @@ static int
 navit_cmd_zoom_out(struct navit *this_)
 {
 	struct point p;
-	if (this_->vehicle && this_->vehicle->follow_curr == 1 && navit_get_cursor_pnt(this_, &p, NULL)) {
+	if (this_->vehicle && this_->vehicle->follow_curr == 1 && navit_get_cursor_pnt(this_, &p, 0, NULL)) {
 		navit_zoom_out(this_, 2, &p);
 		this_->vehicle->follow_curr=this_->vehicle->follow;
 	} else
@@ -1422,7 +1422,7 @@ navit_set_cursors(struct navit *this_)
 }
 
 static int
-navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir)
+navit_get_cursor_pnt(struct navit *this_, struct point *p, int keep_orientation, int *dir)
 {
 	int width, height;
 	struct navit_vehicle *nv=this_->vehicle;
@@ -1444,11 +1444,11 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir)
 #endif
 
 	transform_get_size(this_->trans, &width, &height);
-	if (this_->orientation == -1) {
+	if (this_->orientation == -1 || keep_orientation) {
 		p->x=50*width/100;
 		p->y=(50 + offset)*height/100;
-		if (dir)
-			*dir=nv->dir;
+		if (dir) 
+			*dir=keep_orientation?this_->orientation:nv->dir;
 	} else {
 		int mdir;
 		if (this_->tracking && this_->tracking_flag) {
@@ -1465,16 +1465,23 @@ navit_get_cursor_pnt(struct navit *this_, struct point *p, int *dir)
 	return 1;
 }
 
-static void
-navit_set_center_cursor(struct navit *this_)
+void
+navit_set_center_cursor(struct navit *this_, int autozoom, int keep_orientation)
 {
 	int dir;
 	struct point pn;
 	struct navit_vehicle *nv=this_->vehicle;
-	navit_get_cursor_pnt(this_, &pn, &dir);
+	navit_get_cursor_pnt(this_, &pn, keep_orientation, &dir);
 	transform_set_yaw(this_->trans, dir);
 	navit_set_center_coord_screen(this_, &nv->coord, &pn, 0);
-	navit_autozoom(this_, &nv->coord, nv->speed, 0);
+	if (autozoom)
+		navit_autozoom(this_, &nv->coord, nv->speed, 0);
+}
+
+static void
+navit_set_center_cursor_draw(struct navit *this_)
+{
+	navit_set_center_cursor(this_,1,0);
 	if (this_->ready == 3)
 		navit_draw_async(this_, 1);
 }
@@ -1482,7 +1489,7 @@ navit_set_center_cursor(struct navit *this_)
 static void
 navit_cmd_set_center_cursor(struct navit *this_)
 {
-	navit_set_center_cursor(this_);
+	navit_set_center_cursor_draw(this_);
 }
 
 void
@@ -2080,7 +2087,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	if (this_->button_pressed != 1 && this_->follow_cursor && nv->follow_curr <= nv->follow && 
 		(nv->follow_curr == 1 || !transform_within_border(this_->trans, &cursor_pnt, border)))
-		navit_set_center_cursor(this_);
+		navit_set_center_cursor_draw(this_);
 	else
 		navit_vehicle_draw(this_, nv, pnt);
 
