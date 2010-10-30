@@ -84,7 +84,7 @@ android/AndroidManifest.xml: android/AndroidManifest.xml.in
 android/build.xml: android/AndroidManifest.xml
 	mkdir -p android
 	if [ "$(builddir)" != "$(srcdir)" ]; then cp -rp $(srcdir)/android/* $(builddir)/android; fi
-	android update project -t 3 -p android
+	android update project -t @ANDROID_PROJECT@ -p android
 
 apkg-all: all android/build.xml navit.xml
 	mkdir -p android/libs/armeabi
