@@ -243,7 +243,16 @@ osd_std_config(struct osd_item *item, struct navit *navit)
 			attr.u.num=-1;
 		item->configured = !!(attr.u.num & item->osd_configuration);
 	}
-	graphics_overlay_disable(item->gr, !item->configured);
+	if (item->gr && !(item->flags & 16)) 
+		graphics_overlay_disable(item->gr, !item->configured);
+}
+
+void
+osd_set_std_config(struct navit *nav, struct osd_item *item)
+{
+	item->cb = callback_new_attr_2(callback_cast(osd_std_config), attr_osd_configuration, item, nav);
+	navit_add_callback(nav, item->cb);
+	osd_std_config(item, nav);
 }
 
 void
@@ -267,13 +276,11 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *p
 		graphics_gc_set_foreground(item->graphic_fg_text, &item->text_color);
 	}
 
-	item->cb = callback_new_attr_2(callback_cast(osd_std_config), attr_osd_configuration, item, nav);
-	navit_add_callback(nav, item->cb);
+	osd_set_std_config(nav, item);
 
 	item->resize_cb = callback_new_attr_2(callback_cast(osd_std_calculate_sizes), attr_resize, item, priv);
 	graphics_add_callback(navit_gr, item->resize_cb);
 
-	osd_std_config(item, nav);
 }
 
 void
