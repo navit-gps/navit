@@ -682,6 +682,9 @@ AC_SUBST(SAXON)
 # Android Permissions
 AC_ARG_WITH(android-permissions, [  --with-android-permissions   Set additional android permissions], ANDROID_PERMISSIONS=$withval, ANDROID_PERMISSIONS="")
 AC_SUBST(ANDROID_PERMISSIONS)
+# Android Project
+AC_ARG_WITH(android-project, [  --with-android-project   Set android project], ANDROID_PROJECT=$withval, ANDROID_PROJECT="3")
+AC_SUBST(ANDROID_PROJECT)
 
 # NLS
 
