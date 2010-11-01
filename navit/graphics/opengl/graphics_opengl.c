@@ -268,7 +268,7 @@ static struct graphics_gc_methods gc_methods = {
 static struct graphics_gc_priv *
 gc_new (struct graphics_priv *gr, struct graphics_gc_methods *meth)
 {
-  struct graphics_gc_priv *gc = g_new (struct graphics_gc_priv, 1);
+  struct graphics_gc_priv *gc = g_new0(struct graphics_gc_priv, 1);
 
   *meth = gc_methods;
   gc->gr = gr;
@@ -639,17 +639,16 @@ draw_circle (struct graphics_priv *gr, struct graphics_gc_priv *gc,
   p_eff.x = p->x;
   p_eff.y = p->y;
 
-  GLint circle_points = 7 + r / 5;
+  GLUquadricObj *quadratic;
+  quadratic=gluNewQuadric();
+  glPushMatrix ();
+  glTranslatef (p_eff.x, p_eff.y, 0);
   glColor4f (gc->fr, gc->fg, gc->fb, gc->fa);
-  glLineWidth (gc->linewidth * 2);
-  glBegin (GL_LINE_LOOP);
-  int i;
-  for (i = 0; i < circle_points; ++i)
-    {
-      double angle = 2 * M_PI * i / circle_points;
-      glVertex2f (r * cos (angle) + p_eff.x, r * sin (angle) + p_eff.y);
-    }
-  glEnd ();
+  gluDisk(quadratic, r-(gc->linewidth/2)-2,r+(gc->linewidth/2), 10+r/5,10+r/5);
+  glPopMatrix ();
+  gluDeleteQuadric(quadratic);
+
+  return;
 }
 
 static void
@@ -1005,7 +1004,7 @@ get_data (struct graphics_priv *this, char *type)
   if (strcmp (type, "window") == 0)
     {
       struct window *win;
-      win = g_new (struct window, 1);
+      win = g_new0 (struct window, 1);
       win->priv = this;
       win->fullscreen = graphics_opengl_fullscreen;
       win->disable_suspend = graphics_opengl_disable_suspend;
