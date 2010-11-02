@@ -1,0 +1,1622 @@
+# Basque translation for navit
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the navit package.
+# Inaki Saez <Inaki.Saez@gmail.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: navit\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-06-26 11:29+0200\n"
+"PO-Revision-Date: 2010-08-27 18:11+0000\n"
+"Last-Translator: Inaki Saez <Inaki.Saez@gmail.com>\n"
+"Language-Team: Basque <eu@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Launchpad (build Unknown)\n"
+"X-Report-Errors: https://translations.launchpad.net/navit/trunk/+pots/navit\n"
+
+#, c-format
+msgid "Running from source directory\n"
+msgstr "Iturburu direktoriotik ari\\n\n"
+
+#, c-format
+msgid "setting '%s' to '%s'\n"
+msgstr "'%s' '%s'ra ezartzen\\n\n"
+
+msgid "zeroth"
+msgstr "zero"
+
+msgid "first"
+msgstr "lehen"
+
+msgid "second"
+msgstr "bigarren"
+
+msgid "third"
+msgstr "hirugarren"
+
+msgid "fourth"
+msgstr "laugarren"
+
+msgid "fifth"
+msgstr "boskarren"
+
+msgid "sixth"
+msgstr "seigarren"
+
+msgid "zeroth exit"
+msgstr "zerogarren irteera"
+
+msgid "first exit"
+msgstr "lehenengo irteera"
+
+msgid "second exit"
+msgstr "bigarren irteera"
+
+msgid "third exit"
+msgstr "hirugarren irteera"
+
+msgid "fourth exit"
+msgstr "laugarren irteera"
+
+msgid "fifth exit"
+msgstr "boskarren"
+
+msgid "sixth exit"
+msgstr "seigarren irteera"
+
+#, c-format
+msgid "%d m"
+msgstr "%d metro"
+
+#, c-format
+msgid "in %d m"
+msgstr "%d metrotan"
+
+#, c-format
+msgid "%d meters"
+msgstr "%d metro"
+
+#, c-format
+msgid "in %d meters"
+msgstr "%d metrotan"
+
+#, c-format
+msgid "%d.%d kilometers"
+msgstr "%d,%d kilometro"
+
+#, c-format
+msgid "in %d.%d kilometers"
+msgstr "%d,%d kilometrotan"
+
+#, c-format
+msgid "one kilometer"
+msgid_plural "%d kilometers"
+msgstr[0] "kilometro bat"
+msgstr[1] "%d kilometro"
+
+#, c-format
+msgid "in one kilometer"
+msgid_plural "in %d kilometers"
+msgstr[0] "kilometro batean"
+msgstr[1] "%d kilometrotan"
+
+msgid "exit"
+msgstr "irteera"
+
+msgid "into the ramp"
+msgstr "maldan"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
+#, c-format
+msgid "%sinto the street %s%s%s"
+msgstr "%s %s %s %s kalean"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%sinto the %s%s%s|male form"
+msgstr "%s %s%s%s-an"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%sinto the %s%s%s|female form"
+msgstr "%s %s%s%s-an"
+
+#. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
+#, c-format
+msgid "%sinto the %s%s%s|neutral form"
+msgstr "%s %s%s%s-en"
+
+#. TRANSLATORS: gives the name of the next road to turn into (into the E17)
+#, c-format
+msgid "%sinto the %s"
+msgstr "%s %s-an"
+
+#. TRANSLATORS: right, as in 'Turn right'
+msgid "right"
+msgstr "eskuina"
+
+#. TRANSLATORS: left, as in 'Turn left'
+msgid "left"
+msgstr "ezkerra"
+
+#. TRANSLATORS: Don't forget the ending space
+msgid "easily "
+msgstr "pizka bat "
+
+#. TRANSLATORS: Don't forget the ending space
+msgid "strongly "
+msgstr "gogorki "
+
+#. TRANSLATORS: Don't forget the ending space
+msgid "really strongly "
+msgstr "benetan gogor "
+
+#. TRANSLATORS: Don't forget the ending space
+msgid "unknown "
+msgstr "ezezaguna "
+
+msgid "When possible, please turn around"
+msgstr "Ahal duzunean eman itzulia, mesedez"
+
+#, c-format
+msgid "Enter the roundabout soon and leave it at the %s"
+msgstr "Hurrengoan sartu errotondan eta atera %sean"
+
+#. TRANSLATORS: %s is the distance to the roundabout
+#, c-format
+msgid "In %s, enter the roundabout"
+msgstr "%s-tan sartu errotondan"
+
+#, c-format
+msgid "then leave the roundabout at the %s"
+msgstr "gero, irten errotondatik %s-ean"
+
+#, c-format
+msgid "Leave the roundabout at the %s"
+msgstr "Irten errotondatik %s-ean"
+
+#, c-format
+msgid "Follow the road for the next %s"
+msgstr "Jarraitu bidean urrengo %s-arte"
+
+msgid "soon"
+msgstr "hurrengotan"
+
+#. TRANSLATORS: First argument is the how manieth street to take, second the direction
+#, c-format
+msgid "Take the %1$s road to the %2$s"
+msgstr "Hartu %1$s bidea %2$s-ean"
+
+#, c-format
+msgid "after %i roads"
+msgstr "%i bideen ondoren"
+
+msgid "now"
+msgstr "orain"
+
+#, c-format
+msgid "then take the %1$s road to the %2$s"
+msgstr "orduan hartu %1$s irteera %2$s-era"
+
+msgid "error"
+msgstr "akatsa"
+
+#. TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street'
+#, c-format
+msgid "Turn %1$s%2$s %3$s%4$s"
+msgstr "Biratu %1$s%2$s-ra %3$s%4$s-tan"
+
+#. TRANSLATORS: First argument is strength, second direction, third how many roads to skip, fourth destination
+#, c-format
+msgid "then turn %1$s%2$s %3$s%4$s"
+msgstr "ondoren biratu %1$s %2$s-ra %3$s%4$s-raino"
+
+#, c-format
+msgid "You have reached your destination %s"
+msgstr "%s helburura iritsi zara"
+
+msgid "then you have reached your destination."
+msgstr "dagoeneko helburura iritsi zara"
+
+msgid "Position"
+msgstr "kokalekua"
+
+msgid "Command"
+msgstr "Agindua"
+
+msgid "Length"
+msgstr "Luzera"
+
+msgid "km"
+msgstr "km"
+
+msgid "m"
+msgstr "m"
+
+msgid "Time"
+msgstr "Denbora"
+
+msgid "Destination Length"
+msgstr "Helbururaino urruntasuna"
+
+msgid "Destination Time"
+msgstr "Helbururaino denbora"
+
+msgid "Roadbook"
+msgstr "Gida"
+
+msgid "Set as position"
+msgstr "Kolekua finkatu"
+
+msgid "Set as destination"
+msgstr "Heburuz hautatu"
+
+msgid "Add as bookmark"
+msgstr "Nahikotzat gehitu"
+
+#, c-format
+msgid "Point 0x%x 0x%x"
+msgstr "Puntu 0x%x 0x%x"
+
+#, c-format
+msgid "Screen coord : %d %d"
+msgstr "Pantaila koordenatuak: %d %d"
+
+#. 020
+msgid "Andorra"
+msgstr "Andorra"
+
+#. 784
+msgid "United Arab Emirates"
+msgstr "Arabiar Emirerri Batuak"
+
+#. 004
+msgid "Afghanistan"
+msgstr "Afganistan"
+
+#. 028
+msgid "Antigua and Barbuda"
+msgstr "Antigua eta Barbuda"
+
+#. 660
+msgid "Anguilla"
+msgstr "Angila"
+
+#. 008
+msgid "Albania"
+msgstr "Albania"
+
+#. 051
+msgid "Armenia"
+msgstr "Armenia"
+
+#. 530
+msgid "Netherlands Antilles"
+msgstr "Herbeheren Antillak"
+
+#. 024
+msgid "Angola"
+msgstr "Angola"
+
+#. 010
+msgid "Antarctica"
+msgstr "Antartika"
+
+#. 032
+msgid "Argentina"
+msgstr "Argentina"
+
+#. 016
+msgid "American Samoa"
+msgstr "Amerikar Samoa"
+
+#. 040
+msgid "Austria"
+msgstr "Austria"
+
+#. 036
+msgid "Australia"
+msgstr "Australia"
+
+#. 533
+msgid "Aruba"
+msgstr "Aruba"
+
+#. 248
+msgid "Aland Islands"
+msgstr "Aland uharteak"
+
+#. 031
+msgid "Azerbaijan"
+msgstr "Azerbaijan"
+
+#. 070
+msgid "Bosnia and Herzegovina"
+msgstr "Bosnia-Herzegovina"
+
+#. 052
+msgid "Barbados"
+msgstr "Barbados"
+
+#. 050
+msgid "Bangladesh"
+msgstr "Bangladesh"
+
+#. 056
+msgid "Belgium"
+msgstr "Belgika"
+
+#. 854
+msgid "Burkina Faso"
+msgstr "Burkina Faso"
+
+#. 100
+msgid "Bulgaria"
+msgstr "Bulgaria"
+
+#. 048
+msgid "Bahrain"
+msgstr "Bahrain"
+
+#. 108
+msgid "Burundi"
+msgstr "Burundi"
+
+#. 204
+msgid "Benin"
+msgstr "Benin"
+
+#. 652
+msgid "Saint Barthelemy"
+msgstr "San Bartolome"
+
+#. 060
+msgid "Bermuda"
+msgstr "Bermuda"
+
+#. 096
+msgid "Brunei Darussalam"
+msgstr "Bruneiko Sultanerria"
+
+#. 068
+msgid "Bolivia"
+msgstr "Bolivia"
+
+#. 076
+msgid "Brazil"
+msgstr "Brasil"
+
+#. 044
+msgid "Bahamas"
+msgstr "Bahamas"
+
+#. 064
+msgid "Bhutan"
+msgstr "Bhutan"
+
+#. 074
+msgid "Bouvet Island"
+msgstr "Bouvet Uhartea"
+
+#. 072
+msgid "Botswana"
+msgstr "Botswana"
+
+#. 112
+msgid "Belarus"
+msgstr "Bielorrusia"
+
+#. 084
+msgid "Belize"
+msgstr "Belize"
+
+#. 124
+msgid "Canada"
+msgstr "Kanada"
+
+#. 166
+msgid "Cocos (Keeling) Islands"
+msgstr "Cocos (Keeling) Uharteak"
+
+#. 180
+msgid "Congo, Democratic Republic of the"
+msgstr "Kongoko Errepublika Demokratikoa"
+
+#. 140
+msgid "Central African Republic"
+msgstr "Ertafrikar Errepublika"
+
+#. 178
+msgid "Congo"
+msgstr "Kongo"
+
+#. 756
+msgid "Switzerland"
+msgstr "Suitza"
+
+#. 384
+msgid "Cote d'Ivoire"
+msgstr "Bolikosta"
+
+#. 184
+msgid "Cook Islands"
+msgstr "Cook uharteak"
+
+#. 152
+msgid "Chile"
+msgstr "Txile"
+
+#. 120
+msgid "Cameroon"
+msgstr "Kamerun"
+
+#. 156
+msgid "China"
+msgstr "Txina"
+
+#. 170
+msgid "Colombia"
+msgstr "Kolonbia"
+
+#. 188
+msgid "Costa Rica"
+msgstr "Costa Rica"
+
+#. 192
+msgid "Cuba"
+msgstr "Kuba"
+
+#. 132
+msgid "Cape Verde"
+msgstr "Cabo Verde"
+
+#. 162
+msgid "Christmas Island"
+msgstr "Christmas Uhartea"
+
+#. 196
+msgid "Cyprus"
+msgstr "Txipre"
+
+#. 203
+msgid "Czech Republic"
+msgstr "Txekiar Errepublika"
+
+#. 276
+msgid "Germany"
+msgstr "Alemania"
+
+#. 262
+msgid "Djibouti"
+msgstr "Djibuti"
+
+#. 208
+msgid "Denmark"
+msgstr "Danimarka"
+
+#. 212
+msgid "Dominica"
+msgstr "Dominika"
+
+#. 214
+msgid "Dominican Republic"
+msgstr "Dominikar Errepublika"
+
+#. 012
+msgid "Algeria"
+msgstr "Algeria"
+
+#. 218
+msgid "Ecuador"
+msgstr "Ekuador"
+
+#. 233
+msgid "Estonia"
+msgstr "Estonia"
+
+#. 818
+msgid "Egypt"
+msgstr "Egipto"
+
+#. 732
+msgid "Western Sahara"
+msgstr "Mendebaldeko Sahara"
+
+#. 232
+msgid "Eritrea"
+msgstr "Eritrea"
+
+#. 724
+msgid "Spain"
+msgstr "Espainia"
+
+#. 231
+msgid "Ethiopia"
+msgstr "Etiopia"
+
+#. 246
+msgid "Finland"
+msgstr "Finlandia"
+
+#. 242
+msgid "Fiji"
+msgstr "Fiji"
+
+#. 238
+msgid "Falkland Islands (Malvinas)"
+msgstr "Malvinak Uharteak (Falkland Uharteak)"
+
+#. 583
+msgid "Micronesia, Federated States of"
+msgstr "Mikronesiako Estatu Federatuak"
+
+#. 234
+msgid "Faroe Islands"
+msgstr "Faroe Uharteak"
+
+#. 250
+msgid "France"
+msgstr "Frantzia"
+
+#. 266
+msgid "Gabon"
+msgstr "Gabon"
+
+#. 826
+msgid "United Kingdom"
+msgstr "Erresuma Batua"
+
+#. 308
+msgid "Grenada"
+msgstr "Grenada"
+
+#. 268
+msgid "Georgia"
+msgstr "Georgia"
+
+#. 254
+msgid "French Guiana"
+msgstr "Guayana Frantsesa"
+
+#. 831
+msgid "Guernsey"
+msgstr "Guernsey"
+
+#. 288
+msgid "Ghana"
+msgstr "Ghana"
+
+#. 292
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+#. 304
+msgid "Greenland"
+msgstr "Groenlandia"
+
+#. 270
+msgid "Gambia"
+msgstr "Gambia"
+
+#. 324
+msgid "Guinea"
+msgstr "Ginea"
+
+#. 312
+msgid "Guadeloupe"
+msgstr "Guadalupe"
+
+#. 226
+msgid "Equatorial Guinea"
+msgstr "Ekuatore Ginea"
+
+#. 300
+msgid "Greece"
+msgstr "Grezia"
+
+#. 239
+msgid "South Georgia and the South Sandwich Islands"
+msgstr "Hegoaldeko Georgia eta Hegoaldeko Sandwich Uharteak"
+
+#. 320
+msgid "Guatemala"
+msgstr "Guatemala"
+
+#. 316
+msgid "Guam"
+msgstr "Guam"
+
+#. 624
+msgid "Guinea-Bissau"
+msgstr "Ginea-Bissau"
+
+#. 328
+msgid "Guyana"
+msgstr "Guayana"
+
+#. 344
+msgid "Hong Kong"
+msgstr "Hong Kong"
+
+#. 334
+msgid "Heard Island and McDonald Islands"
+msgstr "Heard Uhartea eta McDonald Uharteak"
+
+#. 340
+msgid "Honduras"
+msgstr "Honduras"
+
+#. 191
+msgid "Croatia"
+msgstr "Kroazia"
+
+#. 332
+msgid "Haiti"
+msgstr "Haiti"
+
+#. 348
+msgid "Hungary"
+msgstr "Hungaria"
+
+#. 360
+msgid "Indonesia"
+msgstr "Indonesia"
+
+#. 372
+msgid "Ireland"
+msgstr "Irlanda"
+
+#. 376
+msgid "Israel"
+msgstr "Israel"
+
+#. 833
+msgid "Isle of Man"
+msgstr "Man Uhartea"
+
+#. 356
+msgid "India"
+msgstr "India"
+
+#. 086
+msgid "British Indian Ocean Territory"
+msgstr "Indiako Ozeanoko Britainiar Lurraldea"
+
+#. 368
+msgid "Iraq"
+msgstr "Irak"
+
+#. 364
+msgid "Iran, Islamic Republic of"
+msgstr "Iran, Errepublika Islamikoa"
+
+#. 352
+msgid "Iceland"
+msgstr "Islandia"
+
+#. 380
+msgid "Italy"
+msgstr "Italia"
+
+#. 832
+msgid "Jersey"
+msgstr "Jersey"
+
+#. 388
+msgid "Jamaica"
+msgstr "Jamaika"
+
+#. 400
+msgid "Jordan"
+msgstr "Jordania"
+
+#. 392
+msgid "Japan"
+msgstr "Japonia"
+
+#. 404
+msgid "Kenya"
+msgstr "Kenia"
+
+#. 417
+msgid "Kyrgyzstan"
+msgstr "Kirgizistan"
+
+#. 116
+msgid "Cambodia"
+msgstr "Kanbodia"
+
+#. 296
+msgid "Kiribati"
+msgstr "Kiribati"
+
+#. 174
+msgid "Comoros"
+msgstr "Komoroak"
+
+#. 659
+msgid "Saint Kitts and Nevis"
+msgstr "Saint Kitts eta Nevis"
+
+#. 408
+msgid "Korea, Democratic People's Republic of"
+msgstr "Korea, Herri-errepublika Demokratikoa (Ipar Korea)"
+
+#. 410
+msgid "Korea, Republic of"
+msgstr "Korea, Errepublika (Hego Korea)"
+
+#. 414
+msgid "Kuwait"
+msgstr "Kuwait"
+
+#. 136
+msgid "Cayman Islands"
+msgstr "Kaiman Uharteak"
+
+#. 398
+msgid "Kazakhstan"
+msgstr "Kazakhstan"
+
+#. 418
+msgid "Lao People's Democratic Republic"
+msgstr "Laos Herri Errepublika Demokratikoa"
+
+#. 422
+msgid "Lebanon"
+msgstr "Libano"
+
+#. 662
+msgid "Saint Lucia"
+msgstr "Santa Luzia"
+
+#. 438
+msgid "Liechtenstein"
+msgstr "Liechtenstein"
+
+#. 144
+msgid "Sri Lanka"
+msgstr "Sri Lanka"
+
+#. 430
+msgid "Liberia"
+msgstr "Liberia"
+
+#. 426
+msgid "Lesotho"
+msgstr "Lesotho"
+
+#. 440
+msgid "Lithuania"
+msgstr "Lituania"
+
+#. 442
+msgid "Luxembourg"
+msgstr "Luxenburgo"
+
+#. 428
+msgid "Latvia"
+msgstr "Letonia"
+
+#. 434
+msgid "Libyan Arab Jamahiriya"
+msgstr "Libiar Arabiar Jamahiriya"
+
+#. 504
+msgid "Morocco"
+msgstr "Maroko"
+
+#. 492
+msgid "Monaco"
+msgstr "Monako"
+
+#. 498
+msgid "Moldova, Republic of"
+msgstr "Moldavia, errepublika"
+
+#. 499
+msgid "Montenegro"
+msgstr "Montenegro"
+
+#. 663
+msgid "Saint Martin (French part)"
+msgstr "Saint Martin (Frantziar zatia)"
+
+#. 450
+msgid "Madagascar"
+msgstr "Madagaskar"
+
+#. 584
+msgid "Marshall Islands"
+msgstr "Marshall Uharteak"
+
+#. 807
+msgid "Macedonia, the former Yugoslav Republic of"
+msgstr "Mazedonia, Antzineko Jugoslabiar Errepublika"
+
+#. 466
+msgid "Mali"
+msgstr "Mali"
+
+#. 104
+msgid "Myanmar"
+msgstr "Myanmar"
+
+#. 496
+msgid "Mongolia"
+msgstr "Mongolia"
+
+#. 446
+msgid "Macao"
+msgstr "Makao"
+
+#. 580
+msgid "Northern Mariana Islands"
+msgstr "Ipar Mariana Uharteak"
+
+#. 474
+msgid "Martinique"
+msgstr "Martinika"
+
+#. 478
+msgid "Mauritania"
+msgstr "Mauritania"
+
+#. 500
+msgid "Montserrat"
+msgstr "Montserrat"
+
+#. 470
+msgid "Malta"
+msgstr "Malta"
+
+#. 480
+msgid "Mauritius"
+msgstr "Maurizio"
+
+#. 462
+msgid "Maldives"
+msgstr "Maldibak"
+
+#. 454
+msgid "Malawi"
+msgstr "Malawi"
+
+#. 484
+msgid "Mexico"
+msgstr "Mexiko"
+
+#. 458
+msgid "Malaysia"
+msgstr "Malasia"
+
+#. 508
+msgid "Mozambique"
+msgstr "Mozambike"
+
+#. 516
+msgid "Namibia"
+msgstr "Namibia"
+
+#. 540
+msgid "New Caledonia"
+msgstr "Kaledonia Berria"
+
+#. 562
+msgid "Niger"
+msgstr "Niger"
+
+#. 574
+msgid "Norfolk Island"
+msgstr "Norfolk Uhartea"
+
+#. 566
+msgid "Nigeria"
+msgstr "Nigeria"
+
+#. 558
+msgid "Nicaragua"
+msgstr "Nikaragua"
+
+#. 528
+msgid "Netherlands"
+msgstr "Herbehereak"
+
+#. 578
+msgid "Norway"
+msgstr "Norvegia"
+
+#. 524
+msgid "Nepal"
+msgstr "Nepal"
+
+#. 520
+msgid "Nauru"
+msgstr "Nauru"
+
+#. 570
+msgid "Niue"
+msgstr "Niue"
+
+#. 554
+msgid "New Zealand"
+msgstr "Zelanda Berria"
+
+#. 512
+msgid "Oman"
+msgstr "Oman"
+
+#. 591
+msgid "Panama"
+msgstr "Panama"
+
+#. 604
+msgid "Peru"
+msgstr "Peru"
+
+#. 258
+msgid "French Polynesia"
+msgstr "Polinesia Frantsesa"
+
+#. 598
+msgid "Papua New Guinea"
+msgstr "Papua Ginea Berria"
+
+#. 608
+msgid "Philippines"
+msgstr "Filipinak"
+
+#. 586
+msgid "Pakistan"
+msgstr "Pakistan"
+
+#. 616
+msgid "Poland"
+msgstr "Polonia"
+
+#. 666
+msgid "Saint Pierre and Miquelon"
+msgstr "Saint Pierre eta Miquelon"
+
+#. 612
+msgid "Pitcairn"
+msgstr "Pitcairn"
+
+#. 630
+msgid "Puerto Rico"
+msgstr "Puerto Rico"
+
+#. 275
+msgid "Palestinian Territory, Occupied"
+msgstr "Palestinar Lurralde Okupatuak"
+
+#. 620
+msgid "Portugal"
+msgstr "Portugal"
+
+#. 585
+msgid "Palau"
+msgstr "Palau"
+
+#. 600
+msgid "Paraguay"
+msgstr "Paraguai"
+
+#. 634
+msgid "Qatar"
+msgstr "Qatar"
+
+#. 638
+msgid "Reunion"
+msgstr "Reunion"
+
+#. 642
+msgid "Romania"
+msgstr "Errumania"
+
+#. 688
+msgid "Serbia"
+msgstr "Serbia"
+
+#. 643
+msgid "Russian Federation"
+msgstr "Errusiako Federazioa"
+
+#. 646
+msgid "Rwanda"
+msgstr "Ruanda"
+
+#. 682
+msgid "Saudi Arabia"
+msgstr "Saudi Arabia"
+
+#. 090
+msgid "Solomon Islands"
+msgstr "Solomon Uharteak"
+
+#. 690
+msgid "Seychelles"
+msgstr "Seychelleak"
+
+#. 736
+msgid "Sudan"
+msgstr "Sudan"
+
+#. 752
+msgid "Sweden"
+msgstr "Suedia"
+
+#. 702
+msgid "Singapore"
+msgstr "Singapur"
+
+#. 654
+msgid "Saint Helena"
+msgstr "Santa Helena"
+
+#. 705
+msgid "Slovenia"
+msgstr "Eslovenia"
+
+#. 744
+msgid "Svalbard and Jan Mayen"
+msgstr "Svalbard eta Jan Mayen Uharteak"
+
+#. 703
+msgid "Slovakia"
+msgstr "Eslovakia"
+
+#. 694
+msgid "Sierra Leone"
+msgstr "Sierra Leona"
+
+#. 674
+msgid "San Marino"
+msgstr "San Marino"
+
+#. 686
+msgid "Senegal"
+msgstr "Senegal"
+
+#. 706
+msgid "Somalia"
+msgstr "Somalia"
+
+#. 740
+msgid "Suriname"
+msgstr "Surinam"
+
+#. 678
+msgid "Sao Tome and Principe"
+msgstr "Sao Tome eta Printze"
+
+#. 222
+msgid "El Salvador"
+msgstr "El Salvador"
+
+#. 760
+msgid "Syrian Arab Republic"
+msgstr "Siriako Arabiar Errepublika"
+
+#. 748
+msgid "Swaziland"
+msgstr "Swazilandia"
+
+#. 796
+msgid "Turks and Caicos Islands"
+msgstr "Turk eta Caico uharteak"
+
+#. 148
+msgid "Chad"
+msgstr "Txad"
+
+#. 260
+msgid "French Southern Territories"
+msgstr "Hegoaldeko Lurralde Frantsesak"
+
+#. 768
+msgid "Togo"
+msgstr "Togo"
+
+#. 764
+msgid "Thailand"
+msgstr "Tailandia"
+
+#. 762
+msgid "Tajikistan"
+msgstr "Tajikistan"
+
+#. 772
+msgid "Tokelau"
+msgstr "Tokelau"
+
+#. 626
+msgid "Timor-Leste"
+msgstr "Ekialdeko Timor"
+
+#. 795
+msgid "Turkmenistan"
+msgstr "Turkmenistan"
+
+#. 788
+msgid "Tunisia"
+msgstr "Tunisia"
+
+#. 776
+msgid "Tonga"
+msgstr "Tonga"
+
+#. 792
+msgid "Turkey"
+msgstr "Turkia"
+
+#. 780
+msgid "Trinidad and Tobago"
+msgstr "Trinidad eta Tobago"
+
+#. 798
+msgid "Tuvalu"
+msgstr "Tuvalu"
+
+#. 158
+msgid "Taiwan, Province of China"
+msgstr "Taiwan, Txinako Errepublika"
+
+#. 834
+msgid "Tanzania, United Republic of"
+msgstr "Tanzaniako Errepublika Batua"
+
+#. 804
+msgid "Ukraine"
+msgstr "Ukraina"
+
+#. 800
+msgid "Uganda"
+msgstr "Uganda"
+
+#. 581
+msgid "United States Minor Outlying Islands"
+msgstr "Estatu Batuetako Itsas Bestaldeko Uharte Txikiak"
+
+#. 840
+msgid "United States"
+msgstr "Estatu Batuak"
+
+#. 858
+msgid "Uruguay"
+msgstr "Uruguai"
+
+#. 860
+msgid "Uzbekistan"
+msgstr "Uzbekistan"
+
+#. 336
+msgid "Holy See (Vatican City State)"
+msgstr "Vatikanoko hiria"
+
+#. 670
+msgid "Saint Vincent and the Grenadines"
+msgstr "Saint Vincent eta Grenadinak"
+
+#. 862
+msgid "Venezuela"
+msgstr "Venezuela"
+
+#. 092
+msgid "Virgin Islands, British"
+msgstr "Birgina Uharteak, Britainarrak"
+
+#. 850
+msgid "Virgin Islands, U.S."
+msgstr "Birjina Uharteak, A.E.B."
+
+#. 704
+msgid "Viet Nam"
+msgstr "Vietnam"
+
+#. 548
+msgid "Vanuatu"
+msgstr "Vanuatu"
+
+#. 876
+msgid "Wallis and Futuna"
+msgstr "Wallis eta Futuna"
+
+#. 882
+msgid "Samoa"
+msgstr "Samoa"
+
+#. 887
+msgid "Yemen"
+msgstr "Yemen"
+
+#. 175
+msgid "Mayotte"
+msgstr "Mayotte"
+
+#. 710
+msgid "South Africa"
+msgstr "Hegoafrika"
+
+#. 894
+msgid "Zambia"
+msgstr "Zambia"
+
+#. 716
+msgid "Zimbabwe"
+msgstr "Zimbabwe"
+
+msgid "* Unknown, add is_in tags to those cities"
+msgstr "* Ezezaguna, gehitu -en_dago etiketak hiri hauentzat"
+
+msgid "Car"
+msgstr "Berebila"
+
+msgid "Iso2"
+msgstr "Iso2"
+
+msgid "Iso3"
+msgstr "Iso3"
+
+msgid "Country"
+msgstr "Herrialdea"
+
+msgid "Postal"
+msgstr "Posta"
+
+msgid "Town"
+msgstr "Herria"
+
+msgid "District"
+msgstr "Barrutia"
+
+msgid "Street"
+msgstr "Kalea"
+
+msgid "Number"
+msgstr "Zenbakia"
+
+msgid "Enter Destination"
+msgstr "Sartu helburua"
+
+msgid "Zip Code"
+msgstr "Posta-kodea"
+
+msgid "City"
+msgstr "Hiria"
+
+msgid "District/Township"
+msgstr "Auzoa"
+
+msgid "Map"
+msgstr "Mapa"
+
+msgid "Bookmark"
+msgstr "Gogokoa"
+
+msgid "Destination"
+msgstr "Helburua"
+
+msgid "Display"
+msgstr "Bistaratzea"
+
+msgid "Route"
+msgstr "Ibilbidea"
+
+msgid "Former Destinations"
+msgstr "Aurreko Helburuak"
+
+msgid "Bookmarks"
+msgstr "Gogokoak"
+
+msgid "Layout"
+msgstr "Antolaketa"
+
+msgid "Projection"
+msgstr "Proiekzioa"
+
+msgid "Vehicle"
+msgstr "Ibilgailua"
+
+msgid "ZoomOut"
+msgstr "Hurrundu"
+
+msgid "Decrease zoom level"
+msgstr "Txikitu zooma"
+
+msgid "ZoomIn"
+msgstr "Hurbildu"
+
+msgid "Increase zoom level"
+msgstr "Handitu zooma"
+
+msgid "Recalculate"
+msgstr "Birkalkulatu"
+
+msgid "Redraw map"
+msgstr "Mapa Birmargotu"
+
+msgid "Info"
+msgstr "Datuak"
+
+msgid "Set destination"
+msgstr "Helburua ezarri"
+
+msgid "Opens address search dialog"
+msgstr "Ireki helbidea bilatzeko lehioa"
+
+msgid "Stop Navigation"
+msgstr "Nabigazioa Gelditu"
+
+msgid "Test"
+msgstr "Saiatu"
+
+msgid "_Quit"
+msgstr "_Irten"
+
+msgid "Quit the application"
+msgstr "Irten programatik"
+
+msgid "Show position cursor"
+msgstr "Erakutsi kurtsore kokalekua"
+
+msgid "Lock on Road"
+msgstr "Bidean oztopoa"
+
+msgid "Keep orientation to the North"
+msgstr "Iparralderantz begira"
+
+msgid "Switches map orientation to the north or the vehicle"
+msgstr "Maparen norabidea iparralde edo berebilaren artean aldatu"
+
+msgid "Show/hide route description"
+msgstr "Erakutsi/ezkutatu hibilbidearen berri"
+
+msgid "Autozoom"
+msgstr "Autohanditu"
+
+msgid "Enable/disable automatic zoom level changing"
+msgstr "Zoom automatikoa onartu/debekatu"
+
+msgid "Fullscreen"
+msgstr "Pantaila osoa"
+
+msgid "Data"
+msgstr "Datuak"
+
+msgid "N"
+msgstr "I"
+
+msgid "NE"
+msgstr "IE"
+
+msgid "E"
+msgstr "E"
+
+msgid "SE"
+msgstr "HE"
+
+msgid "S"
+msgstr "H"
+
+msgid "SW"
+msgstr "HM"
+
+msgid "W"
+msgstr "M"
+
+msgid "NW"
+msgstr "IM"
+
+msgid "No"
+msgstr "Ez"
+
+msgid "2D"
+msgstr "2D"
+
+msgid "3D"
+msgstr "3D"
+
+msgid "OT"
+msgstr ""
+
+#, c-format
+msgid "Route %4.0fkm    %02d:%02d ETA"
+msgstr "Ibilide %4.0fkm %02d:%02d EDI"
+
+msgid "Route 0000km  0+00:00 ETA"
+msgstr "Ibilbide 0000km 0+00:00 EDI"
+
+msgid "Back to map"
+msgstr "Mapara itzuli"
+
+msgid "Main Menu"
+msgstr "Menu nagusia"
+
+msgid "Help"
+msgstr "Laguntza"
+
+msgid "Back"
+msgstr "Atzera"
+
+msgid "Add Bookmark"
+msgstr "Gogokoa gehitu"
+
+msgid "Add Bookmark folder"
+msgstr "Gehitu Gogokoen direktorioa"
+
+msgid "Rename"
+msgstr "Izena aldatu"
+
+msgid "POIs"
+msgstr "PIak"
+
+msgid "View in Browser"
+msgstr "Ikusi nabigatzailean"
+
+msgid "Streets"
+msgstr "Kaleak"
+
+msgid "House numbers"
+msgstr "Etxebizitza zenbakiak"
+
+msgid "View Attributes"
+msgstr "Atributoak erakutsi"
+
+msgid "View on map"
+msgstr "Mapan Ikusi"
+
+msgid "Cut Bookmark"
+msgstr "Moztu Gogokoa"
+
+msgid "Copy Bookmark"
+msgstr "Kopiatu Gogokoa"
+
+msgid "Rename Bookmark"
+msgstr "Gogokoa berrizendatu"
+
+msgid "Paste Bookmark"
+msgstr "Itsatsi Gogokoa"
+
+msgid "Delete Bookmark"
+msgstr "Ezabatu Gogokoa"
+
+msgid "Paste bookmark"
+msgstr "Itsatsi gogokoa"
+
+#, c-format
+msgid "Bookmark %s"
+msgstr "%s marka"
+
+msgid "House number"
+msgstr "Etxebizitza zenbakia"
+
+msgid "Maps"
+msgstr "Mapak"
+
+msgid "Show Satellite Status"
+msgstr "Sateliteen egoera erakutsi"
+
+msgid " Elevation "
+msgstr " Garaiera "
+
+msgid " Azimuth "
+msgstr " Azimuth "
+
+msgid "Show NMEA Data"
+msgstr "NMEA datuak erakutsi"
+
+msgid "car"
+msgstr "berebila"
+
+msgid "bike"
+msgstr "bizikleta"
+
+msgid "pedestrian"
+msgstr "oinezkoa"
+
+#, c-format
+msgid "Current profile: %s"
+msgstr "Oraingo profila: %s"
+
+#, c-format
+msgid "Change profile to: %s"
+msgstr "Profila aldatu: %s-ra"
+
+msgid "Set as active"
+msgstr "Lanean ezarri"
+
+msgid "Show Satellite status"
+msgstr "Sateliteen egoera erakutsi"
+
+msgid "Show NMEA data"
+msgstr "NMEA datuak erakutsi"
+
+msgid "Rules"
+msgstr "Arauak"
+
+msgid "Lock on road"
+msgstr "Bidean oztopoa"
+
+msgid "Northing"
+msgstr "Iparrerantz"
+
+msgid "Map follows Vehicle"
+msgstr "Mapak ibilgailua jarraitzen du"
+
+msgid "Message"
+msgstr "Mezua"
+
+msgid "Route Description"
+msgstr "Ibilbidearen nondik-norakoa"
+
+msgid "Height Profile"
+msgstr "Garaiera ikusi"
+
+msgid "Show Locale"
+msgstr "Locale erakutsi"
+
+msgid "About Navit"
+msgstr "Naviti buruz"
+
+#. Authors
+msgid "By"
+msgstr "Egileak"
+
+#. Contributors
+msgid "And all the Navit Team"
+msgstr "Eta Navit talde osoa"
+
+msgid "members and contributors."
+msgstr "partaide eta laguntzaileak."
+
+msgid "Main menu"
+msgstr "Menu nagusia"
+
+msgid ""
+"Show\n"
+"Map"
+msgstr ""
+"Mapa\n"
+"Erakutsi"
+
+msgid "Settings"
+msgstr "Ezarpenak"
+
+msgid "Tools"
+msgstr "Tresnak"
+
+msgid "About"
+msgstr "Honi buruz"
+
+msgid "Actions"
+msgstr "Ekintzak"
+
+msgid "Quit"
+msgstr "Irten"
+
+msgid ""
+"Stop\n"
+"Navigation"
+msgstr ""
+"Nabigazioa\n"
+"Gelditu"
+
+msgid "Window Mode"
+msgstr "Lehio modua"
+
+msgid "Description"
+msgstr "Zehazketa"
+
+msgid "horse"
+msgstr "zaldia"
+
+msgid "Map Point"
+msgstr "Mapako puntua"
+
+msgid "Vehicle Position"
+msgstr "Berebilaren kokalekua"
