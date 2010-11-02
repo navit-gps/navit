@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2008 Navit Team
+ * Copyright (C) 2005-2008, 2010 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -61,21 +61,62 @@ popup_set_no_passing(struct popup_item *item, void *param)
 
 #endif
 
+/**
+ * @brief	Get the user data directory.
+ * @param[in]	 create	- create the directory if it does not exist
+ *
+ * @return	char * to the data directory string.
+ *
+ * returns the directory used to store user data files (center.txt,
+ * destination.txt, bookmark.txt, ...)
+ *
+ */
+char*
+popup_get_user_data_directory(gboolean create) {
+	char *dir;
+	dir = getenv("NAVIT_USER_DATADIR");
+	if (create && !file_exists(dir)) {
+		dbg(0,"creating dir %s\n", dir);
+		if (file_mkdir(dir,0)) {
+			dbg(0,"failed creating dir %s\n", dir);
+			return NULL;
+		}
+	}
+	return dir;
+} /* end: popup_get_user_data_directory(gboolean create) */
+
 static void
 popup_traffic_distortion(struct item *item, char *attr)
 {
-	FILE *map=fopen("distortion.txt","a");
-	struct coord c;
-	struct map_rect *mr;
-	fprintf(map,"type=traffic_distortion %s\n",attr);
-	mr=map_rect_new(item->map,NULL);
-	item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
-	while (item_coord_get(item, &c, 1)) {
-		fprintf(map,"0x%x 0x%x\n",c.x,c.y);
-	}
-	fclose(map);
-}
+	/* add the configuration directory to the name of the file to use */
+	char *dist_filename = g_strjoin(NULL, popup_get_user_data_directory(TRUE),
+									"/distortion.txt", NULL);
+	if (dist_filename)					/* if we built the filename */
+	{
+		FILE *map=fopen(dist_filename,"a");
+		if (map)						/* if the file was opened */
+		{
+			struct coord c;
+			struct map_rect *mr;
+			fprintf(map,"type=traffic_distortion %s\n",attr);
+			mr=map_rect_new(item->map,NULL);
+			item=map_rect_get_item_byid(mr, item->id_hi, item->id_lo);
+			while (item_coord_get(item, &c, 1)) {
+				fprintf(map,"0x%x 0x%x\n",c.x,c.y);
+			}
+			fclose(map);
+		}
+		else
+		{
+			dbg(0,"could not open file for distortions !!", item);
 
+		} /* else - if (map) */
+		g_free(dist_filename);			/* free the file name */
+	} /* if (dist_filename) */
+
+} /* end: popup_traffic_distortion(..) */
+
+ 
 static void
 popup_traffic_distortion_blocked(struct item *item)
 {
