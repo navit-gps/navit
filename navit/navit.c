@@ -142,6 +142,7 @@ struct navit {
 	int flags;
 		 /* 1=No graphics ok */
 		 /* 2=No gui ok */
+	int border;
 };
 
 struct gui *main_loop_gui;
@@ -731,6 +732,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->zoom_max = 2097152;
 	this_->follow_cursor = 1;
 	this_->radius = 30;
+	this_->border = 16;
 
 	this_->trans = transform_new();
 	transform_from_geo(pro, &g, &co);
@@ -1580,6 +1582,12 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 			l=g_list_next(l);
 		} 		
 		return 0;
+	case attr_map_border:
+		if (this_->border != attr->u.num) {
+			this_->border=attr->u.num;
+			attr_updated=1;
+		}
+		break;
 	case attr_orientation:
 		orient_old=this_->orientation;
 		this_->orientation=attr->u.num;
@@ -2032,7 +2040,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	struct tracking *tracking=NULL;
 	struct pcoord pc[16];
 	enum projection pro=transform_get_projection(this_->trans);
-	int count,border=16;
+	int count;
 	int (*get_attr)(void *, enum attr_type, struct attr *, struct attr_iter *);
 	void *attr_object;
 	char *destination_file;
@@ -2086,7 +2094,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 
 	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	if (this_->button_pressed != 1 && this_->follow_cursor && nv->follow_curr <= nv->follow && 
-		(nv->follow_curr == 1 || !transform_within_border(this_->trans, &cursor_pnt, border)))
+		(nv->follow_curr == 1 || !transform_within_border(this_->trans, &cursor_pnt, this_->border)))
 		navit_set_center_cursor_draw(this_);
 	else
 		navit_vehicle_draw(this_, nv, pnt);
@@ -2193,7 +2201,7 @@ navit_add_vehicle(struct navit *this_, struct vehicle *v)
 	nv->last.y = 0;
 	nv->animate_cursor=0;
 	if ((vehicle_get_attr(v, attr_follow, &follow, NULL)))
-		nv->follow=nv->follow=follow.u.num;
+		nv->follow=follow.u.num;
 	nv->follow_curr=nv->follow;
 	this_->vehicles=g_list_append(this_->vehicles, nv);
 	if ((vehicle_get_attr(v, attr_active, &active, NULL)) && active.u.num)
