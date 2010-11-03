@@ -39,6 +39,17 @@
 #include <windowsx.h>
 #endif
 
+#ifdef HAVE_SOCKET
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+static int debug_socket=-1;
+static struct sockaddr_in debug_sin;
+#endif
+
+
 int debug_level=0;
 int segv_level=0;
 int timestamp_prefix=0;
@@ -110,6 +121,31 @@ debug_new(struct attr *parent, struct attr **attrs)
 	struct attr *name,*level;
 	name=attr_search(attrs, NULL, attr_name);
 	level=attr_search(attrs, NULL, attr_level);
+#ifdef HAVE_SOCKET
+	if (!name && !level) {
+		struct attr *socket_attr=attr_search(attrs, NULL, attr_socket);
+		char *p,*s;
+		if (!socket_attr)
+			return NULL;
+		s=g_strdup(socket_attr->u.str);
+        	p=strchr(s,':');
+		if (!p) {
+			g_free(s);
+			return NULL;
+		}
+		*p++='\0';
+		debug_sin.sin_family=AF_INET;
+		if (!inet_aton(s, &debug_sin.sin_addr)) {
+			g_free(s);
+			return NULL;
+		}
+        	debug_sin.sin_port=ntohs(atoi(p));
+        	if (debug_socket == -1) 
+                	debug_socket=socket(PF_INET, SOCK_DGRAM, 0);
+		g_free(s);
+		return (struct debug *)&dummy;	
+	}
+#endif
 	if (!name || !level)
 		return NULL;
 	debug_level_set(name->u.str, level->u.num);
@@ -125,7 +161,7 @@ debug_level_get(const char *name)
 	return GPOINTER_TO_INT(g_hash_table_lookup(debug_hash, name));
 }
 
-static void debug_timestamp(FILE *fp)
+static void debug_timestamp(char *buffer)
 {
 #ifdef HAVE_API_WIN32_CE
 	LARGE_INTEGER counter, frequency;
@@ -134,7 +170,7 @@ static void debug_timestamp(FILE *fp)
 	QueryPerformanceFrequency(&frequency);
 	val=counter.HighPart * 4294967296.0 + counter.LowPart;
 	val/=frequency.HighPart * 4294967296.0 + frequency.LowPart;
-	fprintf(fp,"%.6f|",val);
+	sprintf(buffer,"%.6f|",val);
 
 #else
 	struct timeval tv;
@@ -142,7 +178,7 @@ static void debug_timestamp(FILE *fp)
 	if (gettimeofday(&tv, NULL) == -1)
 		return;
 	/* Timestamps are UTC */
-	fprintf(fp,
+	sprintf(buffer,
 		"%02d:%02d:%02d.%03d|",
 		(int)(tv.tv_sec/3600)%24,
 		(int)(tv.tv_sec/60)%60,
@@ -163,17 +199,18 @@ debug_vprintf(int level, const char *module, const int mlen, const char *functio
 
 	sprintf(buffer, "%s:%s", module, function);
 	if (debug_level_get(module) >= level || debug_level_get(buffer) >= level) {
-#if defined(DEBUG_WIN32_CE_MESSAGEBOX) || defined(HAVE_API_ANDROID)
-		char xbuffer[4096];
+#if defined(DEBUG_WIN32_CE_MESSAGEBOX)
 		wchar_t muni[4096];
-		int len=0;
-		if (prefix) {
-			strcpy(xbuffer,buffer);
-			len=strlen(buffer);
-			xbuffer[len++]=':';
-		}
-		vsprintf(xbuffer+len,fmt,ap);
 #endif
+		char xbuffer[4096];
+		xbuffer[0]='\0';
+		if (prefix) {
+			if (timestamp_prefix)
+				debug_timestamp(xbuffer);	
+			strcpy(xbuffer+strlen(xbuffer),buffer);
+			strcpy(xbuffer+strlen(xbuffer),":");
+		}
+		vsprintf(xbuffer+strlen(xbuffer),fmt,ap);
 #ifdef DEBUG_WIN32_CE_MESSAGEBOX
 		mbstowcs(muni, xbuffer, strlen(xbuffer)+1);
 		MessageBoxW(NULL, muni, TEXT("Navit - Error"), MB_APPLMODAL|MB_OK|MB_ICONERROR);
@@ -181,13 +218,15 @@ debug_vprintf(int level, const char *module, const int mlen, const char *functio
 #ifdef HAVE_API_ANDROID
 		__android_log_print(ANDROID_LOG_ERROR,"navit", "%s", xbuffer);
 #else
+#ifdef HAVE_SOCKET
+		if (debug_socket != -1) {
+			sendto(debug_socket, xbuffer, strlen(xbuffer), 0, (struct sockaddr *)&debug_sin, sizeof(debug_sin));
+			return;
+		}
+#endif
 		if (! fp)
 			fp = stderr;
-		if (timestamp_prefix)
-			debug_timestamp(fp);
-		if (prefix)
-			fprintf(fp,"%s:",buffer);
-		vfprintf(fp,fmt, ap);
+		fprintf(fp,"%s",xbuffer);
 		fflush(fp);
 #endif
 #endif
