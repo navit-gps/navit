@@ -141,8 +141,9 @@ void CALLBACK tessCombineCB (const GLdouble newVertex[3],
 static struct graphics_priv *graphics_opengl_new_helper (struct
 							 graphics_methods
 							 *meth);
-void display (void);
-void resize_callback (int w, int h);
+static void display (void);
+static void resize_callback (int w, int h);
+static void glut_close ();
 const char *getPrimitiveType (GLenum type);
 
 static void
@@ -1300,7 +1301,7 @@ ProcessSpecialKeys (int key_in, int x, int y)
 			     (void *) keybuf);
 }
 
-void
+static void
 resize_callback (int w, int h)
 {
   glViewport (0, 0, w, h);
@@ -1319,12 +1320,18 @@ resize_callback (int w, int h)
 			     GINT_TO_POINTER (w), GINT_TO_POINTER (h));
 }
 
-void
+static void
 display (void)
 {
   graphics_priv_root->force_redraw = 1;
   redraw_screen(graphics_priv_root);
   resize_callback (graphics_priv_root->width, graphics_priv_root->height);
+}
+
+static void
+glut_close (void)
+{
+  callback_list_call_attr_0(graphics_priv_root->cbl, attr_window_closed);
 }
 
 
@@ -1380,6 +1387,7 @@ graphics_opengl_new (struct navit *nav, struct graphics_methods *meth,
   glutMouseFunc (click_notify);
   glutKeyboardFunc (ProcessNormalKeys);
   glutSpecialFunc (ProcessSpecialKeys);
+  glutCloseFunc (glut_close);
 
   this->DLid = glGenLists (1);
 
