@@ -708,8 +708,9 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 				tr->pos=i;
 				tr->curr[0]=sd->c[i];
 				tr->curr[1]=sd->c[i+1];
+				struct coord lpnt_tmp;
 				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
-					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], &cin, &lpnt),
+					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], &cin, &lpnt_tmp),
 					tracking_angle_delta(tr, tr->curr_angle, t->angle[i], 0)*angle_factor,
 					tracking_is_connected(tr->last, &sd->c[i]) ? connected_pref : 0,
 					lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y ? nostop_pref : 0,
