@@ -1047,7 +1047,8 @@ add_tag(char *k, char *v)
 		level=5;
 	}
 	if (! strcmp(k,"is_in")) {
-		strcpy(is_in_buffer, v);
+		if (!is_in_buffer[0])
+			strcpy(is_in_buffer, v);
 		level=5;
 	}
 	if (! strcmp(k,"is_in:country")) {
