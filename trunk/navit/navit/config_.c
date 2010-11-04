@@ -19,6 +19,7 @@
 
 #include <stdlib.h>
 #include <glib.h>
+#include <signal.h>
 #include "debug.h"
 #include "item.h"
 #include "callback.h"
