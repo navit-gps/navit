@@ -44,6 +44,17 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #endif
+#ifdef HAVE_WINSOCK
+#include <winsock2.h>
+int inet_aton(const char *cp, struct in_addr *inp);
+
+int inet_aton(const char *cp, struct in_addr *inp)
+{
+	unsigned long addr = inet_addr(cp);
+	inp->S_un.S_addr = addr;
+	return addr!=-1;
+}
+#endif
 
 static void vehicle_file_disable_watch(struct vehicle_priv *priv);
 static void vehicle_file_enable_watch(struct vehicle_priv *priv);
@@ -53,7 +64,7 @@ static void vehicle_file_close(struct vehicle_priv *priv);
 
 
 enum file_type {
-	file_type_pipe = 1, file_type_device, file_type_file, file_type_socket
+	file_type_pipe = 1, file_type_device, file_type_file, file_type_socket, file_type_serial
 };
 
 static int buffer_size = 1024;
@@ -96,11 +107,10 @@ struct vehicle_priv {
 	int no_data_count;
 	struct event_timeout * timeout;
 	struct callback *timeout_callback;
-#else
+#endif
 	enum file_type file_type;
 	FILE *file;
 	struct event_watch *watch;
-#endif
 	speed_t baudrate;
 	struct attr ** attrs;
 	char fixiso8601[128];
@@ -205,34 +215,13 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
 static int
 vehicle_file_open(struct vehicle_priv *priv)
 {
-#ifdef _WIN32
-    dbg(1, "enter, priv->source='%s'\n", priv->source);
-
-    if ( priv->source )
-    {
-        char* raw_setting_str = g_strdup( priv->source );
-
-        char* strport = strchr(raw_setting_str, ':' );
-        char* strsettings = strchr(raw_setting_str, ' ' );
-
-        if ( strport && strsettings )
-        {
-            strport++;
-            *strsettings = '\0';
-            strsettings++;
-
-            priv->fd=serial_io_init( strport, strsettings );
-        }
-        g_free( raw_setting_str );
-
-        // Add the callback
-        dbg(2, "Add the callback ...\n", priv->source);
-   		priv->timeout_callback=callback_new_1(callback_cast(vehicle_win32_serial_track), priv);
-    }
-#else
 	char *name;
 	struct stat st;
+#ifndef _WIN32
 	struct termios tio;
+#else
+	#define O_NDELAY 0
+#endif
 
 	name = priv->source + 5;
 	if (!strncmp(priv->source, "file:", 5)) {
@@ -242,7 +231,9 @@ vehicle_file_open(struct vehicle_priv *priv)
 		stat(name, &st);
 		if (S_ISREG(st.st_mode)) {
 			priv->file_type = file_type_file;
-		} else {
+		}
+#ifndef _WIN32
+		else {
 			tcgetattr(priv->fd, &tio);
 			cfmakeraw(&tio);
 			cfsetispeed(&tio, priv->baudrate);
@@ -258,8 +249,13 @@ vehicle_file_open(struct vehicle_priv *priv)
 			return 0;
 		priv->fd = fileno(priv->file);
 		priv->file_type = file_type_pipe;
-#ifdef HAVE_SOCKET
+#endif //!_WIN32
+#if defined(HAVE_SOCKET) || defined(HAVE_WINSOCK) 
 	} else if (!strncmp(priv->source,"socket:", 7)) {
+		#ifdef _WIN32
+		WSADATA wsi;
+		WSAStartup(0x00020002,&wsi);
+		#endif
 		char *p,*s=g_strdup(priv->source+7);
 		struct sockaddr_in sin;
 		p=strchr(s,':');
@@ -285,9 +281,31 @@ vehicle_file_open(struct vehicle_priv *priv)
 			}
 		}
 		priv->file_type = file_type_socket;
-#endif
-	}
-#endif
+#endif //HAVE_SOCKET
+	} else if (!strncmp(priv->source,"serial:",7)) {
+#ifdef _WIN32
+		char* raw_setting_str = g_strdup( priv->source );
+
+		char* strport = strchr(raw_setting_str, ':' );
+		char* strsettings = strchr(raw_setting_str, ' ' );
+
+		if ( strport && strsettings )
+		{
+		    strport++;
+		    *strsettings = '\0';
+		    strsettings++;
+
+		    priv->fd=serial_io_init( strport, strsettings );
+		}
+		g_free( raw_setting_str );
+		priv->file_type = file_type_serial;
+		// Add the callback
+		dbg(2, "Add the callback ...\n", priv->source);
+			priv->timeout_callback=callback_new_1(callback_cast(vehicle_win32_serial_track), priv);
+#else
+		//TODO - add linux serial
+#endif //!_WIN32
+    }
     return(priv->fd != -1);
 }
 
@@ -305,19 +323,24 @@ vehicle_file_close(struct vehicle_priv *priv)
     dbg(1, "enter, priv->fd='%d'\n", priv->fd);
 	vehicle_file_disable_watch(priv);
 #ifdef _WIN32
-    if (priv->timeout_callback) {
+    if(priv->file_type == file_type_serial)
+    {
+        if (priv->timeout_callback) {
    		callback_destroy(priv->timeout_callback);
 		priv->timeout_callback=NULL;	// dangling pointer! prevent double freeing.
-    }
+        }
 	serial_io_shutdown( priv->fd );
-#else
+    }
+    else
+#endif
+    {
 	if (priv->file)
 		pclose(priv->file);
 	else if (priv->fd >= 0)
 		close(priv->fd);
 	priv->file = NULL;
-#endif
 	priv->fd = -1;
+    }
 }
 
 //***************************************************************************
@@ -393,7 +416,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		return ret;
 	}
 	if (bcsum != csum && priv->checksum_ignore == 0) {
-		dbg(0, "wrong checksum in '%s'\n", buffer);
+		dbg(0, "wrong checksum in '%s was %x should be %x'\n", buffer,bcsum,csum);
 		return ret;
 	}
 
@@ -457,14 +480,12 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 		g_free(priv->nmea_data);
 		priv->nmea_data=priv->nmea_data_buf;
 		priv->nmea_data_buf=NULL;
-#ifndef _WIN32
 		if (priv->file_type == file_type_file) {
 			if (priv->watch) {
 				vehicle_file_disable_watch(priv);
 				event_add_timeout(priv->time, 0, priv->cbt);
 			}
 		}
-#endif
 	}
 	if (!strncmp(buffer, "$GPVTG", 6)) {
 		/* 0      1      2 34 5    6 7   8
@@ -582,14 +603,13 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 *****************************************************************************
 * @param      priv : pointer on the private data of the plugin
 *****************************************************************************
-* @remarks Not used on WIN32 operating system
+* @remarks 
 *****************************************************************************
 **/
 static void
 vehicle_file_io(struct vehicle_priv *priv)
 {
 	dbg(1, "vehicle_file_io : enter\n");
-#ifndef _WIN32
 	int size, rc = 0;
 	char *str, *tok;
 
@@ -636,7 +656,6 @@ vehicle_file_io(struct vehicle_priv *priv)
 	}
 	if (rc)
 		callback_list_call_attr_0(priv->cbl, attr_position_coord_geo);
-#endif
 }
 
 //***************************************************************************
@@ -653,14 +672,18 @@ vehicle_file_enable_watch(struct vehicle_priv *priv)
 	dbg(1, "enter\n");
 #ifdef _WIN32
 	// add an event : don't use glib timers and g_timeout_add
+    if (priv->file_type == file_type_serial)
+    {
 	if (priv->timeout_callback != NULL)
-        priv->timeout = event_add_timeout(500, 1, priv->timeout_callback);
+            priv->timeout = event_add_timeout(500, 1, priv->timeout_callback);
+        else
+            dbg(1, "error : watch not enabled : priv->timeout_callback is null\n"); }
     else
-        dbg(1, "error : watch not enabled : priv->timeout_callback is null\n");
-#else
+#endif
+    {
 	if (! priv->watch)
 		priv->watch = event_add_watch((void *)priv->fd, event_watch_cond_read, priv->cb);
-#endif
+    }
 }
 
 //***************************************************************************
@@ -676,15 +699,20 @@ vehicle_file_disable_watch(struct vehicle_priv *priv)
 {
 	dbg(1, "vehicle_file_disable_watch : enter\n");
 #ifdef _WIN32
+    if(priv->file_type == file_type_serial)
+    {
     if (priv->timeout) {
 		event_remove_timeout(priv->timeout);
 		priv->timeout=NULL;		// dangling pointer! prevent double freeing.
+        }
     }
-#else
+    else
+#endif //!_WIN32
+    {
 	if (priv->watch)
 		event_remove_watch(priv->watch);
 	priv->watch = NULL;
-#endif
+    }
 }
 
 //***************************************************************************
@@ -970,4 +998,5 @@ void plugin_init(void)
 	plugin_register_vehicle_type("file", vehicle_file_new_file);
 	plugin_register_vehicle_type("pipe", vehicle_file_new_file);
 	plugin_register_vehicle_type("socket", vehicle_file_new_file);
+	plugin_register_vehicle_type("serial", vehicle_file_new_file);
 }
