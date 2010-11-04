@@ -34,7 +34,7 @@ endif
 
 if SHARED_LIBNAVIT
   lib_LTLIBRARIES        = lib@LIBNAVIT@.la
-  lib@LIBNAVIT@_la_LDFLAGS = -avoid-version @MODULE_LDFLAGS@ -no-undefined -Wl,--no-undefined
+  lib@LIBNAVIT@_la_LDFLAGS = -avoid-version @MODULE_LDFLAGS@ @NAVIT_SOCKET_LDFLAGS@ -no-undefined -Wl,--no-undefined
 else
   noinst_LTLIBRARIES        = lib@LIBNAVIT@.la
 endif

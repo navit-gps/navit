@@ -130,6 +130,7 @@ if test "x$win32" = "xyes"
 then
 	NAVIT_CFLAGS="$NAVIT_CFLAGS -I\$(top_srcdir)/navit/support/win32"
 	NAVIT_LIBS="$NAVIT_LIBS -L\$(top_builddir)/navit/support/win32 -lsupport_win32"
+	NAVIT_SOCKET_LDFLAGS="$MODULE_LDFLAGS -lws2_32"
 fi
 
 
@@ -147,6 +148,7 @@ AM_CONDITIONAL(SUPPORT_LIBPNG, [test "x$support_libpng" = "xyes"])
 AC_SUBST(MODULE_LDFLAGS)
 AC_SUBST(MODULE_LIBADD)
 AC_SUBST(NAVIT_MODULE_LDFLAGS)
+AC_SUBST(NAVIT_SOCKET_LDFLAGS)
 
 LIBS="$LIBS -lm"
 if test "$win32" == "no" -a test "$host_os" != "cygwin"; then
@@ -363,6 +365,7 @@ AC_SUBST(ZLIB_CFLAGS)
 AC_SUBST(ZLIB_LIBS)
 
 AC_CHECK_HEADER(sys/socket.h, AC_DEFINE([HAVE_SOCKET],[],Define to 1 if you have sockets))
+AC_CHECK_HEADER(winsock2.h, AC_DEFINE([HAVE_WINSOCK],[],Define to 1 if you have Windows sockets))
 
 # gtk
 PKG_CHECK_MODULES(GTK2, [gtk+-2.0], [gtk2_pkgconfig=yes], [gtk2_pkgconfig=no])
