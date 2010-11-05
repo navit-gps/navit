@@ -2279,12 +2279,12 @@ navit_layout_switch(struct navit *n)
 	}
 	if (sscanf(iso8601_attr.u.str,"%d-%02d-%02dT",&year,&month,&day) != 3)
 		return;
+	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_valid, &valid_attr,NULL) && valid_attr.u.num==attr_position_valid_invalid) {
+		return; //No valid fix yet
+	}
 	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_coord_geo,&geo_attr,NULL)!=1) {
 		//No position - no sun
 		return;
-	}
-	if (vehicle_get_attr(n->vehicle->vehicle, attr_position_valid, &valid_attr,NULL) && valid_attr.u.num==attr_position_valid_invalid) {
-		return; //No valid fix yet
 	}
 	
 	//We calculate sunrise anyway, cause it is needed both for day and for night
