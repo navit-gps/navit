@@ -342,6 +342,97 @@ Navigation</text></img>
 			<roadprofile item_types="roundabout" speed="5" route_weight="2"/>
 			<roadprofile item_types="ferry" speed="40" route_weight="40"/>
 		</vehicleprofile>
+                <!-- chr:
+                     flags used for a truck: (first flag number is 0)
+                                 8: SIZE_OR_WEIGHT_LIMIT
+                                21: TRANSPORT_TRUCK
+                  speed setup:
+                     'speed' data of the vehicleprofile for a car is
+                        reduced about 10 km/h. When the speed was at
+                        10 km/h, I reduced it to 5 km/h.
+                     'route_weight' data has been treated in the same way.
+                        If you want to discourage the use of small roads,
+                        just reduce this value.
+                  size and weight setup:
+                     This is an example, you have to use the data of your truck.
+                     bobshaffer's standard truck:
+                       (1 lb = 453.59237 g, 1 foot = .3048 m)
+                       (data has to be in [cm] and [kg] according to 'vehicleprofile.h')
+                                width=  9    feet,   274 cm
+                               height= 13.5  feet,   411 cm
+                               length= 70    feet,  2134 cm
+                               weight= 80000 lbs,  36287 kg
+                          axle_weight= 34000 lbs,  15422 kg
+                -->
+
+                <vehicleprofile name="truck" flags="0x200100" flags_forward_mask="0x200102" flags_reverse_mask="0x200101" maxspeed_handling="1" route_mode="0" static_speed="5"
+ static_distance="25"
+                                width="274" height="411" length="2134"
+                                weight="36287" axle_weight="15422">
+                        <roadprofile item_types="street_0,street_1_city,living_street,street_service,track_gravelled,track_unpaved" speed="5" route_weight="5">
+                                        <announcement level="0" distance_metric="25"/>
+                                        <announcement level="1" distance_metric="100"/>
+                                        <announcement level="2" distance_metric="200"/>
+                        </roadprofile>
+                        <roadprofile item_types="street_2_city,track_paved" speed="20" route_weight="20">
+                                        <announcement level="0" distance_metric="50"/>
+                                        <announcement level="1" distance_metric="200"/>
+                                        <announcement level="2" distance_metric="500"/>
+                        </roadprofile>
+                        <roadprofile item_types="street_3_city" speed="30" route_weight="30">
+                                        <announcement level="0" distance_metric="50"/>
+                                        <announcement level="1" distance_metric="200"/>
+                                        <announcement level="2" distance_metric="500"/>
+                        </roadprofile>
+                       <roadprofile item_types="street_4_city" speed="40" route_weight="40">
+                                        <announcement level="0" distance_metric="50"/>
+                                        <announcement level="1" distance_metric="200"/>
+                                        <announcement level="2" distance_metric="500"/>
+                        </roadprofile>
+                        <roadprofile item_types="highway_city" speed="70" route_weight="70">
+                                        <announcement level="0" distance_metric="100"/>
+                                        <announcement level="1" distance_metric="400"/>
+                                        <announcement level="2" distance_metric="1000"/>
+                        </roadprofile>
+                        <roadprofile item_types="street_1_land" speed="50" route_weight="50">
+                                        <announcement level="0" distance_metric="100"/>
+                                        <announcement level="1" distance_metric="400"/>
+                                        <announcement level="2" distance_metric="1000"/>
+                        </roadprofile>
+                        <roadprofile item_types="street_2_land" speed="55" route_weight="55">
+                                        <announcement level="0" distance_metric="100"/>
+                                        <announcement level="1" distance_metric="400"/>
+                                        <announcement level="2" distance_metric="1000"/>
+                        </roadprofile>
+                        <roadprofile item_types="street_3_land" speed="60" route_weight="60">
+                                        <announcement level="0" distance_metric="100"/>
+                                        <announcement level="1" distance_metric="400"/>
+                                        <announcement level="2" distance_metric="1000"/>
+                        </roadprofile>
+                        <roadprofile item_types="street_4_land" speed="70" route_weight="70">
+                                        <announcement level="0" distance_metric="100"/>
+                                        <announcement level="1" distance_metric="400"/>
+                                        <announcement level="2" distance_metric="1000"/>
+                        </roadprofile>
+                        <roadprofile item_types="street_n_lanes" speed="80" route_weight="80">
+                                        <announcement level="0" distance_metric="300"/>
+                                        <announcement level="1" distance_metric="1000"/>
+                                        <announcement level="2" distance_metric="2000"/>
+                        </roadprofile>
+                        <roadprofile item_types="highway_land" speed="80" route_weight="80">
+                                        <announcement level="0" distance_metric="300"/>
+                                        <announcement level="1" distance_metric="1000"/>
+                                        <announcement level="2" distance_metric="2000"/>
+                        </roadprofile>
+                        <roadprofile item_types="ramp" speed="30" route_weight="30">
+                                        <announcement level="0" distance_metric="50"/>
+                                        <announcement level="1" distance_metric="200"/>
+                                        <announcement level="2" distance_metric="500"/>
+                        </roadprofile>
+                        <roadprofile item_types="roundabout" speed="5" route_weight="5"/>
+                        <roadprofile item_types="ferry" speed="40" route_weight="40"/>
+                </vehicleprofile>
+
 
 		<route destination_distance="50"/>
 
