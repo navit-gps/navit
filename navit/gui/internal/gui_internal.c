@@ -6127,14 +6127,22 @@ gui_internal_cmd2_locale(struct gui_priv *this, char *function, struct attr **in
 		wchar_t wcountry[32],wlang[32];
 		char country[32],lang[32];
 
+#ifdef HAVE_API_WIN32_CE 
 		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, wlang, sizeof(wlang));
 		WideCharToMultiByte(CP_ACP,0,wlang,-1,lang,sizeof(lang),NULL,NULL);
+#else
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, lang, sizeof(lang));
+#endif
 		text=g_strdup_printf("LOCALE_SABBREVLANGNAME=%s",lang);
 		gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
 		w->flags=gravity_left_center|orientation_horizontal|flags_fill;
 		g_free(text);
+#ifdef HAVE_API_WIN32_CE 
 	        GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, wcountry, sizeof(wcountry));
 		WideCharToMultiByte(CP_ACP,0,wcountry,-1,country,sizeof(country),NULL,NULL);
+#else
+	        GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, country, sizeof(country));
+#endif
 		text=g_strdup_printf("LOCALE_SABBREVCTRYNAME=%s",country);
 		gui_internal_widget_append(wb, w=gui_internal_label_new(this, text));
 		w->flags=gravity_left_center|orientation_horizontal|flags_fill;
