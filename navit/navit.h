@@ -87,6 +87,7 @@ void navit_set_center_cursor(struct navit *this_, int keep_orientation, int auto
 void navit_set_center_screen(struct navit *this_, struct point *p, int set_timeout);
 int navit_set_attr(struct navit *this_, struct attr *attr);
 int navit_get_attr(struct navit *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+char* navit_get_user_data_directory(int create);
 int navit_add_attr(struct navit *this_, struct attr *attr);
 int navit_remove_attr(struct navit *this_, struct attr *attr);
 struct attr_iter *navit_attr_iter_new(void);

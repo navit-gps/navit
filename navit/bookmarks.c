@@ -215,8 +215,8 @@ bookmarks_new(struct attr *parent, struct attr **attrs, struct transformation *t
 	//this_->attrs=attr_list_dup(attrs);
 	this_->trans=trans;
 
-	this_->bookmark_file=g_strjoin(NULL, bookmarks_get_user_data_directory(TRUE), "/bookmark.txt", NULL);
-	this_->working_file=g_strjoin(NULL, bookmarks_get_user_data_directory(TRUE), "/bookmark.txt.tmp", NULL);
+	this_->bookmark_file=g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/bookmark.txt", NULL);
+	this_->working_file=g_strjoin(NULL, navit_get_user_data_directory(TRUE), "/bookmark.txt.tmp", NULL);
 
 	this_->clipboard=g_new0(struct bookmark_item_priv,1);
 
@@ -348,29 +348,6 @@ bookmarks_store_bookmarks_to_file(struct bookmarks *this_,  int limit,int replac
 }
 
 /*
- * bookmarks_get_user_data_directory
- *
- * returns the directory used to store user data files (center.txt,
- * destination.txt, bookmark.txt, ...)
- *
- * arg: gboolean create: create the directory if it does not exist
- */
-char*
-bookmarks_get_user_data_directory(gboolean create) {
-	char *dir;
-	dir = getenv("NAVIT_USER_DATADIR");
-	if (create && !file_exists(dir)) {
-		dbg(0,"creating dir %s\n", dir);
-		if (file_mkdir(dir,0)) {
-			dbg(0,"failed creating dir %s\n", dir);
-			return NULL;
-		}
-	}
-
-	return dir;
-}
-
-/*
  * bookmarks_get_destination_file
  *
  * returns the name of the file used to store destinations with its
@@ -382,7 +359,7 @@ bookmarks_get_user_data_directory(gboolean create) {
 char*
 bookmarks_get_destination_file(gboolean create)
 {
-	return g_strjoin(NULL, bookmarks_get_user_data_directory(create), "/destination.txt", NULL);
+	return g_strjoin(NULL, navit_get_user_data_directory(create), "/destination.txt", NULL);
 }
 
 /*
@@ -397,7 +374,7 @@ bookmarks_get_destination_file(gboolean create)
 char*
 bookmarks_get_center_file(gboolean create)
 {
-	return g_strjoin(NULL, bookmarks_get_user_data_directory(create), "/center.txt", NULL);
+	return g_strjoin(NULL, navit_get_user_data_directory(create), "/center.txt", NULL);
 }
 
 void
