@@ -190,6 +190,31 @@ navit_get_tracking(struct navit *this_)
 	return this_->tracking;
 }
 
+/**
+ * @brief	Get the user data directory.
+ * @param[in]	 create	- create the directory if it does not exist
+ *
+ * @return	char * to the data directory string.
+ *
+ * returns the directory used to store user data files (center.txt,
+ * destination.txt, bookmark.txt, ...)
+ *
+ */
+char*
+navit_get_user_data_directory(int create) {
+	char *dir;
+	dir = getenv("NAVIT_USER_DATADIR");
+	if (create && !file_exists(dir)) {
+		dbg(0,"creating dir %s\n", dir);
+		if (file_mkdir(dir,0)) {
+			dbg(0,"failed creating dir %s\n", dir);
+			return NULL;
+		}
+	}
+	return dir;
+} /* end: navit_get_user_data_directory(gboolean create) */
+
+
 static void
 navit_draw_async(struct navit *this_, int async)
 {
@@ -2414,6 +2439,8 @@ navit_block(struct navit *this_, int block)
 void
 navit_destroy(struct navit *this_)
 {
+	callback_list_call_attr_1(this_->attr_cbl, attr_destroy, this_);
+
 	/* TODO: destroy objects contained in this_ */
 	if (this_->vehicle)
 		vehicle_destroy(this_->vehicle->vehicle);
