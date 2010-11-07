@@ -61,35 +61,11 @@ popup_set_no_passing(struct popup_item *item, void *param)
 
 #endif
 
-/**
- * @brief	Get the user data directory.
- * @param[in]	 create	- create the directory if it does not exist
- *
- * @return	char * to the data directory string.
- *
- * returns the directory used to store user data files (center.txt,
- * destination.txt, bookmark.txt, ...)
- *
- */
-char*
-popup_get_user_data_directory(gboolean create) {
-	char *dir;
-	dir = getenv("NAVIT_USER_DATADIR");
-	if (create && !file_exists(dir)) {
-		dbg(0,"creating dir %s\n", dir);
-		if (file_mkdir(dir,0)) {
-			dbg(0,"failed creating dir %s\n", dir);
-			return NULL;
-		}
-	}
-	return dir;
-} /* end: popup_get_user_data_directory(gboolean create) */
-
 static void
 popup_traffic_distortion(struct item *item, char *attr)
 {
 	/* add the configuration directory to the name of the file to use */
-	char *dist_filename = g_strjoin(NULL, popup_get_user_data_directory(TRUE),
+	char *dist_filename = g_strjoin(NULL, navit_get_user_data_directory(TRUE),
 									"/distortion.txt", NULL);
 	if (dist_filename)					/* if we built the filename */
 	{

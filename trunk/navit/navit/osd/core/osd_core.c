@@ -376,30 +376,6 @@ osd_odometer_init(struct odometer *this, struct navit *nav)
 	osd_odometer_draw(this, nav, NULL);
 }
 
-/*
- * osd_get_user_data_directory
- *
- * returns the directory used to store user data files (center.txt,
- * destination.txt, bookmark.txt, ...)
- *
- * arg: gboolean create: create the directory if it does not exist
- */
-char*
-osd_get_user_data_directory(gboolean create) {
-	char *dir;
-	dir = getenv("NAVIT_USER_DATADIR");
-	if (create && !file_exists(dir)) {
-		dbg(0,"creating dir %s\n", dir);
-		if (file_mkdir(dir,0)) {
-			dbg(0,"failed creating dir %s\n", dir);
-			return NULL;
-		}
-	}
-
-	return dir;
-}
-
-
 static void 
 osd_odometer_destroy(struct navit* nav)
 {
@@ -408,7 +384,7 @@ osd_odometer_destroy(struct navit* nav)
 		odometers_saved = 1;
 		//save odometers that are persistent(ie have name)
 		GList* list = odometer_list;
-		char* fn = g_strdup_printf("%s/odometer.txt",osd_get_user_data_directory(TRUE));
+		char* fn = g_strdup_printf("%s/odometer.txt",navit_get_user_data_directory(TRUE));
 		f = fopen(fn,"w+");
 		g_free(fn);
 		if(!f) {
@@ -474,7 +450,7 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 
 	//load state from file
 	FILE* f;
-	char* fn = g_strdup_printf("%s/odometer.txt",osd_get_user_data_directory(FALSE));
+	char* fn = g_strdup_printf("%s/odometer.txt",navit_get_user_data_directory(FALSE));
 	f = fopen(fn,"r+");
 
 	if(f) {
