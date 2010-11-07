@@ -171,17 +171,23 @@ struct odometer {
 	struct graphics_gc *white;
 	struct callback *click_cb;
 	char *text;                 //text of label attribute for this osd
+	char *name;                 //unique name of the odometer (needed for handling multiple odometers persistently)
 	struct color idle_color;    //text color when counter is idle
 
 	int bActive;                //counting or not
 	double sum_dist;            //sum of distance ofprevious intervals in meters
 	int sum_time;               //sum of time of previous intervals in seconds (needed for avg spd calculation)
+	int time_all;
 	time_t last_click_time;     //time of last click (for double click handling)
 	time_t last_start_time;     //time of last start of counting
 	struct coord last_coord;
 };
 
-char* str_replace(char*output, char*input, char*pattern, char*replacement)
+static int odometers_saved=0;
+static GList* odometer_list = NULL;
+
+static char* 
+str_replace(char*output, char*input, char*pattern, char*replacement)
 {
   if (!output || !input || !pattern || !replacement) {
     return NULL;
@@ -200,6 +206,52 @@ char* str_replace(char*output, char*input, char*pattern, char*replacement)
   }
   strcat(output,pos);
   return NULL;
+}
+
+/*
+ * save current odometer state to string
+ */
+static char *osd_odometer_to_string(struct odometer* this_)
+{
+  return g_strdup_printf("odometer %s %lf %d %d\n",this_->name,this_->sum_dist,this_->time_all,this_->bActive);
+}
+
+/*
+ * load current odometer state from string
+ */
+static void osd_odometer_from_string(struct odometer* this_, char*str)
+{
+  char* saveptr;
+  char*  tok;
+  char*  name_str;
+  char*  sum_dist_str;
+  char*  sum_time_str;
+  char*  active_str;
+  tok = strtok_r(str, " ", &saveptr);
+  if( !tok || strcmp("odometer",tok)) {
+    return;
+  }
+  name_str = g_strdup(strtok_r(NULL, " ", &saveptr));
+  if(!name_str) {
+    return;
+  }
+  sum_dist_str = g_strdup(strtok_r(NULL, " ", &saveptr));
+  if(!sum_dist_str) {
+    return;
+  }
+  sum_time_str = g_strdup(strtok_r(NULL, " ", &saveptr));
+  if(!sum_time_str) {
+    return;
+  }
+  active_str = g_strdup(strtok_r(NULL, " ", &saveptr));
+  if(!active_str) {
+    return;
+  }
+  this_->name = name_str;
+  this_->sum_dist = atof(sum_dist_str); 
+  this_->sum_time = atoi(sum_time_str); 
+  this_->bActive = atoi(active_str); 
+  this_->last_coord.x = -1;
 }
 
 static void
@@ -236,9 +288,11 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
         //we have valid previous position
         double dCurrDist = 0;
         dCurrDist = transform_distance(pro, &curr_coord, &this->last_coord);
-        this->sum_dist += dCurrDist;
-        int time_all = time(0)-this->last_click_time+this->sum_time;
-        spd = 3.6*(double)this->sum_dist/(double)time_all;
+	if(0<curr_coord.x && 0<this->last_coord.x) {
+	        this->sum_dist += dCurrDist;
+	}
+        this->time_all = time(0)-this->last_click_time+this->sum_time;
+        spd = 3.6*(double)this->sum_dist/(double)this->time_all;
     }
     this->last_coord = curr_coord;
   }
@@ -315,15 +369,61 @@ osd_odometer_init(struct odometer *this, struct navit *nav)
 
 	graphics_gc_set_linewidth(this->osd_item.graphic_fg_white, this->width);
 
-    this->last_coord.x = -1;
-    this->last_coord.y = -1;
-    this->sum_dist = 0.0;
-
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_draw), attr_position_coord_geo, this));
 
 	navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast (osd_odometer_click), attr_button, this));
 
 	osd_odometer_draw(this, nav, NULL);
+}
+
+/*
+ * osd_get_user_data_directory
+ *
+ * returns the directory used to store user data files (center.txt,
+ * destination.txt, bookmark.txt, ...)
+ *
+ * arg: gboolean create: create the directory if it does not exist
+ */
+char*
+osd_get_user_data_directory(gboolean create) {
+	char *dir;
+	dir = getenv("NAVIT_USER_DATADIR");
+	if (create && !file_exists(dir)) {
+		dbg(0,"creating dir %s\n", dir);
+		if (file_mkdir(dir,0)) {
+			dbg(0,"failed creating dir %s\n", dir);
+			return NULL;
+		}
+	}
+
+	return dir;
+}
+
+
+static void 
+osd_odometer_destroy(struct navit* nav)
+{
+	FILE*f;
+	if(!odometers_saved) {
+		odometers_saved = 1;
+		//save odometers that are persistent(ie have name)
+		GList* list = odometer_list;
+		char* fn = g_strdup_printf("%s/odometer.txt",osd_get_user_data_directory(TRUE));
+		f = fopen(fn,"w+");
+		g_free(fn);
+		if(!f) {
+			return;
+		}
+		while (list) {
+			if( ((struct odometer*)(list->data))->name) {
+				char*odo_str = osd_odometer_to_string(list->data);
+				fprintf(f,"%s",odo_str);
+				
+			}
+			list = g_list_next(list);
+		}
+		fclose(f);
+	}
 }
 
 static struct osd_priv *
@@ -346,7 +446,6 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 	this->last_coord.x = -1;
 	this->last_coord.y = -1;
 
-
 	attr = attr_search(attrs, NULL, attr_label);
 	//FIXME find some way to free text!!!!
 	if (attr) {
@@ -355,13 +454,57 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 	else
 		this->text = NULL;
 
+	attr = attr_search(attrs, NULL, attr_name);
+	//FIXME find some way to free text!!!!
+	if (attr) {
+		this->name = g_strdup(attr->u.str);
+        }
+	else
+		this->name = NULL;
 
 	osd_set_std_attr(attrs, &this->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
 	attr = attr_search(attrs, NULL, attr_idle_color);
 	this->idle_color=attr ? *attr->u.color : ((struct color) {0xffff,0xa5a5,0x0000,0xffff}); // text idle_color defaults to orange
+
+	this->last_coord.x = -1;
+	this->last_coord.y = -1;
+	this->sum_dist = 0.0;
+
+	//load state from file
+	FILE* f;
+	char* fn = g_strdup_printf("%s/odometer.txt",osd_get_user_data_directory(FALSE));
+	f = fopen(fn,"r+");
+
+	if(f) {
+		g_free(fn);
+
+		while(!feof(f)) {
+			char str[128];
+			char *line;
+			if(fgets(str,128,f)) 
+			{
+				line = g_strdup(str);
+				char* saveptr;
+				char*tok;
+				tok = strtok_r(str," ",&saveptr);
+				if(!strcmp(tok,"odometer")) {
+					tok = strtok_r(NULL," ",&saveptr);
+					if(!strcmp(this->name,tok)) {
+						osd_odometer_from_string(this,line);
+					}
+				}
+				g_free(line);
+			}
+		}
+		fclose(f);
+	}
+
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_init), attr_graphics_ready, this));
+	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_destroy), attr_destroy, nav));
+	odometer_list = g_list_append(odometer_list, this);
+
 	return (struct osd_priv *) this;
 }
 
