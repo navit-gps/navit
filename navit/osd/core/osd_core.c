@@ -221,29 +221,28 @@ static char *osd_odometer_to_string(struct odometer* this_)
  */
 static void osd_odometer_from_string(struct odometer* this_, char*str)
 {
-  char* saveptr;
   char*  tok;
   char*  name_str;
   char*  sum_dist_str;
   char*  sum_time_str;
   char*  active_str;
-  tok = strtok_r(str, " ", &saveptr);
+  tok = strtok(str, " ");
   if( !tok || strcmp("odometer",tok)) {
     return;
   }
-  name_str = g_strdup(strtok_r(NULL, " ", &saveptr));
+  name_str = g_strdup(strtok(NULL, " "));
   if(!name_str) {
     return;
   }
-  sum_dist_str = g_strdup(strtok_r(NULL, " ", &saveptr));
+  sum_dist_str = g_strdup(strtok(NULL, " "));
   if(!sum_dist_str) {
     return;
   }
-  sum_time_str = g_strdup(strtok_r(NULL, " ", &saveptr));
+  sum_time_str = g_strdup(strtok(NULL, " "));
   if(!sum_time_str) {
     return;
   }
-  active_str = g_strdup(strtok_r(NULL, " ", &saveptr));
+  active_str = g_strdup(strtok(NULL, " "));
   if(!active_str) {
     return;
   }
@@ -462,11 +461,10 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 			if(fgets(str,128,f)) 
 			{
 				line = g_strdup(str);
-				char* saveptr;
 				char*tok;
-				tok = strtok_r(str," ",&saveptr);
+				tok = strtok(str," ");
 				if(!strcmp(tok,"odometer")) {
-					tok = strtok_r(NULL," ",&saveptr);
+					tok = strtok(NULL," ");
 					if(!strcmp(this->name,tok)) {
 						osd_odometer_from_string(this,line);
 					}
