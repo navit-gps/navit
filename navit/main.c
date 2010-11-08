@@ -308,10 +308,18 @@ win_set_nls(void)
 	char country[32],lang[32];
 	int i=0;
 
+#ifdef HAVE_API_WIN32_CE 
 	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, wlang, sizeof(wlang));
 	WideCharToMultiByte(CP_ACP,0,wlang,-1,lang,sizeof(lang),NULL,NULL);
+#else
+	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, lang, sizeof(lang));
+#endif
+#ifdef HAVE_API_WIN32_CE 
 	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, wcountry, sizeof(wcountry));
 	WideCharToMultiByte(CP_ACP,0,wcountry,-1,country,sizeof(country),NULL,NULL);
+#else
+	GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, country, sizeof(country));
+#endif
 	while (nls_table[i][0]) {
 		if (!strcmp(nls_table[i][0], lang) && !(strcmp(nls_table[i][1], country))) {
 			dbg(1,"Setting LANG=%s for Lang %s Country %s\n",nls_table[i][2], lang, country);
