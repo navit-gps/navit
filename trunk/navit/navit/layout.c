@@ -351,6 +351,17 @@ element_set_color(struct element *e, struct attr **attrs)
 		e->color=*color->u.color;
 }
 
+
+static void
+element_set_background_color(struct color *c, struct attr **attrs)
+{
+	struct attr *color;
+	color=attr_search(attrs, NULL, attr_background_color);
+	if (color)
+		*c=*color->u.color;
+}
+
+
 static void
 element_set_text_size(struct element *e, struct attr **attrs)
 {
@@ -455,7 +466,10 @@ circle_new(struct attr *parent, struct attr **attrs)
 
 	e = g_new0(struct element, 1);
 	e->type=element_circle;
+	e->color = COLOR_BLACK;
+	e->u.circle.background_color = COLOR_WHITE;
 	element_set_color(e, attrs);
+	element_set_background_color(&e->u.circle.background_color, attrs);
 	element_set_text_size(e, attrs);
 	element_set_circle_width(e, attrs);
 	element_set_circle_radius(e, attrs);
@@ -471,6 +485,10 @@ text_new(struct attr *parent, struct attr **attrs)
 	e = g_new0(struct element, 1);
 	e->type=element_text;
 	element_set_text_size(e, attrs);
+	e->color = COLOR_BLACK;
+	e->u.text.background_color = COLOR_WHITE;
+	element_set_color(e, attrs);
+	element_set_background_color(&e->u.text.background_color, attrs);
 
 	return (struct text *)e;
 }

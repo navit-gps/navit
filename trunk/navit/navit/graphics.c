@@ -79,6 +79,7 @@ struct display_context
 	struct graphics *gra;
 	struct element *e;
 	struct graphics_gc *gc;
+	struct graphics_gc *gc_background;
 	struct graphics_image *img;
 	enum projection pro;
 	int mindist;
@@ -914,7 +915,7 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
 			dbg(0,"display_text: '%s', %d, %d, %d, %d %d\n", label, x, y, dx*0x10000/l, dy*0x10000/l, l);
 #endif
 			if (x < gra->r.rl.x && x + tl > gra->r.lu.x && y + tl > gra->r.lu.y && y - tl < gra->r.rl.y) 
-				gra->meth.draw_text(gra->priv, fg->priv, bg->priv, font->priv, label, &p_t, dx*0x10000/l, dy*0x10000/l);
+				gra->meth.draw_text(gra->priv, fg->priv, bg?bg->priv:NULL, font->priv, label, &p_t, dx*0x10000/l, dy*0x10000/l);
 		}
 	}
 }
@@ -1558,9 +1559,12 @@ display_context_free(struct display_context *dc)
 {
 	if (dc->gc)
 		graphics_gc_destroy(dc->gc);
+	if (dc->gc_background)
+		graphics_gc_destroy(dc->gc_background);
 	if (dc->img)
 		graphics_image_free(dc->gra, dc->img);
 	dc->gc=NULL;
+	dc->gc_background=NULL;
 	dc->img=NULL;
 }
 
@@ -1663,10 +1667,16 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 			gra->meth.draw_circle(gra->priv, gc->priv, pa, e->u.circle.radius);
 			if (di->label && e->text_size) {
 				struct graphics_font *font=get_font(gra, e->text_size);
+				struct graphics_gc *gc_background=dc->gc_background;
+				if (! gc_background && e->u.circle.background_color.a) {
+					gc_background=graphics_gc_new(gra);
+					graphics_gc_set_foreground(gc_background, &e->u.circle.background_color);
+					dc->gc_background=gc_background;
+				}
 				p.x=pa[0].x+3;
 				p.y=pa[0].y+10;
 				if (font)
-					gra->meth.draw_text(gra->priv, gra->gc[2]->priv, gra->gc[1]->priv, font->priv, di->label, &p, 0x10000, 0);
+					gra->meth.draw_text(gra->priv, gc->priv, gc_background?gc_background->priv:NULL, font->priv, di->label, &p, 0x10000, 0);
 				else
 					dbg(0,"Failed to get font with size %d\n",e->text_size);
 			}
@@ -1675,8 +1685,14 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 	case element_text:
 		if (count && di->label) {
 			struct graphics_font *font=get_font(gra, e->text_size);
+			struct graphics_gc *gc_background=dc->gc_background;
+			if (! gc_background && e->u.text.background_color.a) {
+				gc_background=graphics_gc_new(gra);
+				graphics_gc_set_foreground(gc_background, &e->u.text.background_color);
+				dc->gc_background=gc_background;
+			}
 			if (font)
-				label_line(gra, gra->gc[2], gra->gc[1], font, pa, count, di->label);
+				label_line(gra, gc, gc_background, font, pa, count, di->label);
 			else
 				dbg(0,"Failed to get font with size %d\n",e->text_size);
 		}
@@ -1775,6 +1791,7 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 	di->label=NULL;
 	dc.gra=gra;
 	dc.gc=NULL;
+	dc.gc_background=NULL;
 	dc.img=NULL;
 	dc.pro=projection_screen;
 	dc.mindist=0;
