@@ -42,6 +42,7 @@ struct element {
 		struct element_circle {
 			int width;
 			int radius;
+			struct color background_color;
 		} circle;
 		struct element_icon {
 			char *src;
@@ -49,6 +50,9 @@ struct element {
 			int height;
 			int rotation;
 		} icon;
+		struct element_text {
+			struct color background_color;
+		} text;
 	} u;
 	int coord_count;
 	struct coord *coord;
