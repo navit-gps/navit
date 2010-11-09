@@ -19,7 +19,7 @@ svgtopng()
 }
 
 if [ "$OSTYPE" != "cygwin" -a "$OSTYPE" != "msys" ]; then
-	ulimit -t 5
+	ulimit -t 10
 fi
 
 svgtopng=$1
