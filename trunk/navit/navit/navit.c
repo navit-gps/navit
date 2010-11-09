@@ -215,7 +215,7 @@ navit_get_user_data_directory(int create) {
 } /* end: navit_get_user_data_directory(gboolean create) */
 
 
-static void
+void
 navit_draw_async(struct navit *this_, int async)
 {
 
