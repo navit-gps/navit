@@ -85,8 +85,10 @@ double transform_distance(enum projection pro, struct coord *c1, struct coord *c
 void transform_project(enum projection pro, struct coord *c, int distance, int angle, struct coord *res);
 double transform_polyline_length(enum projection pro, struct coord *c, int count);
 int transform_distance_sq(struct coord *c1, struct coord *c2);
+navit_float transform_distance_sq_float(struct coord *c1, struct coord *c2);
 int transform_distance_sq_pc(struct pcoord *c1, struct pcoord *c2);
 int transform_distance_line_sq(struct coord *l0, struct coord *l1, struct coord *ref, struct coord *lpnt);
+navit_float transform_distance_line_sq_float(struct coord *l0, struct coord *l1, struct coord *ref, struct coord *lpnt);
 int transform_distance_polyline_sq(struct coord *c, int count, struct coord *ref, struct coord *lpnt, int *pos);
 int transform_douglas_peucker(struct coord *in, int count, int dist_sq, struct coord *out);
 int transform_douglas_peucker_float(struct coord *in, int count, navit_float dist_sq, struct coord *out);
@@ -98,6 +100,7 @@ int transform_within_dist_line(struct coord *ref, struct coord *c0, struct coord
 int transform_within_dist_polyline(struct coord *ref, struct coord *c, int count, int close, int dist);
 int transform_within_dist_polygon(struct coord *ref, struct coord *c, int count, int dist);
 int transform_within_dist_item(struct coord *ref, enum item_type type, struct coord *c, int count, int dist);
+void transform_copy(struct transformation *src, struct transformation *dst);
 void transform_destroy(struct transformation *t);
 /* end of prototypes */
 #ifdef __cplusplus
