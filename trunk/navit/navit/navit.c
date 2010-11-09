@@ -91,7 +91,7 @@ struct navit {
 	struct layout *layout_current;
 	struct graphics *gra;
 	struct action *action;
-	struct transformation *trans;
+	struct transformation *trans, *trans_cursor;
 	struct compass *compass;
 	struct route *route;
 	struct navigation *navigation;
@@ -129,7 +129,7 @@ struct navit {
 	int drag_bitmap;
 	int use_mousewheel;
 	struct messagelist *messages;
-	struct callback *resize_callback,*button_callback,*motion_callback;
+	struct callback *resize_callback,*button_callback,*motion_callback,*postdraw_callback;
 	struct vehicleprofile *vehicleprofile;
 	GList *vehicleprofiles;
 	int pitch;
@@ -534,6 +534,12 @@ navit_motion(void *data, struct point *p)
 }
 
 static void
+navit_postdraw(struct navit *this)
+{
+	transform_copy(this->trans, this->trans_cursor);
+}
+
+static void
 navit_scale(struct navit *this_, long scale, struct point *p, int draw)
 {
 	struct coord c1, c2, *center;
@@ -760,6 +766,7 @@ navit_new(struct attr *parent, struct attr **attrs)
 	this_->border = 16;
 
 	this_->trans = transform_new();
+	this_->trans_cursor = transform_new();
 	transform_from_geo(pro, &g, &co);
 	center.x=co.x;
 	center.y=co.y;
@@ -823,6 +830,8 @@ navit_set_graphics(struct navit *this_, struct graphics *gra)
 	graphics_add_callback(gra, this_->button_callback);
 	this_->motion_callback=callback_new_attr_1(callback_cast(navit_motion), attr_motion, this_);
 	graphics_add_callback(gra, this_->motion_callback);
+	this_->postdraw_callback=callback_new_attr_1(callback_cast(navit_postdraw), attr_postdraw, this_);
+	graphics_add_callback(gra, this_->postdraw_callback);
 	return 1;
 }
 
@@ -2037,10 +2046,12 @@ navit_vehicle_draw(struct navit *this_, struct navit_vehicle *nv, struct point *
 	if (pnt)
 		cursor_pnt=*pnt;
 	else {
-		pro=transform_get_projection(this_->trans);
-		transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
+		pro=transform_get_projection(this_->trans_cursor);
+		if (!pro)
+			return;
+		transform(this_->trans_cursor, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	}
-	vehicle_draw(nv->vehicle, this_->gra, &cursor_pnt, pnt ? 0:1, nv->dir-transform_get_yaw(this_->trans), nv->speed);
+	vehicle_draw(nv->vehicle, this_->gra, &cursor_pnt, pnt ? 0:1, nv->dir-transform_get_yaw(this_->trans_cursor), nv->speed);
 #if 0	
 	if (pnt)
 		pnt2=*pnt;
@@ -2064,7 +2075,7 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	struct point cursor_pnt, *pnt=&cursor_pnt;
 	struct tracking *tracking=NULL;
 	struct pcoord pc[16];
-	enum projection pro=transform_get_projection(this_->trans);
+	enum projection pro=transform_get_projection(this_->trans_cursor);
 	int count;
 	int (*get_attr)(void *, enum attr_type, struct attr *, struct attr_iter *);
 	void *attr_object;
@@ -2117,9 +2128,9 @@ navit_vehicle_update(struct navit *this_, struct navit_vehicle *nv)
 	if (this_->gui && nv->speed > 2)
 		navit_disable_suspend();
 
-	transform(this_->trans, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
+	transform(this_->trans_cursor, pro, &nv->coord, &cursor_pnt, 1, 0, 0, NULL);
 	if (this_->button_pressed != 1 && this_->follow_cursor && nv->follow_curr <= nv->follow && 
-		(nv->follow_curr == 1 || !transform_within_border(this_->trans, &cursor_pnt, this_->border)))
+		(nv->follow_curr == 1 || !transform_within_border(this_->trans_cursor, &cursor_pnt, this_->border)))
 		navit_set_center_cursor_draw(this_);
 	else
 		navit_vehicle_draw(this_, nv, pnt);
@@ -2463,6 +2474,9 @@ navit_destroy(struct navit *this_)
 	if(this_->gra)
 	  graphics_remove_callback(this_->gra, this_->motion_callback);
 	callback_destroy(this_->motion_callback);
+	if(this_->gra)
+	  graphics_remove_callback(this_->gra, this_->postdraw_callback);
+	callback_destroy(this_->postdraw_callback);
 	route_destroy(this_->route);
 	g_free(this_);
 }
