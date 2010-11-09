@@ -353,32 +353,51 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 		gdImageSetStyle(gr->im, color, gc->dash_count);
 	}
 	gdImageSetThickness(gr->im, gc->width);
+	cc=gc->color;
+	if (gr->flags & 8) {
+		gdImageSetAntiAliased(gr->im, cc);
+		cc=gdAntiAliased;
+	}
 #ifdef GD_NO_IMAGE_OPEN_POLYGON
 	for (i = 0 ; i < count-1 ; i++)
-		gdImageLine(gr->im, p[i].x, p[i].y, p[i+1].x, p[i+1].y, gc->dash_count ? gdStyled : gc->color);
+		gdImageLine(gr->im, p[i].x, p[i].y, p[i+1].x, p[i+1].y, gc->dash_count ? gdStyled : cc);
 #else
-	gdImageOpenPolygon(gr->im, (gdPointPtr) p, count, gc->dash_count ? gdStyled : gc->color);  
+	gdImageOpenPolygon(gr->im, (gdPointPtr) p, count, gc->dash_count ? gdStyled : cc);  
 #endif
 }
 
 static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
-	
-	gdImageFilledPolygon(gr->im, (gdPointPtr) p, count, gc->color);  
+	int cc=gc->color;
+	if (gr->flags & 8) {
+		gdImageSetAntiAliased(gr->im, cc);
+		cc=gdAntiAliased;
+	}	
+	gdImageFilledPolygon(gr->im, (gdPointPtr) p, count, cc);  
 }
 
 static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
-	gdImageFilledRectangle(gr->im, p->x, p->y, p->x+w, p->y+h, gc->color);
+	int cc=gc->color;
+	if (gr->flags & 8) {
+		gdImageSetAntiAliased(gr->im, cc);
+		cc=gdAntiAliased;
+	}
+	gdImageFilledRectangle(gr->im, p->x, p->y, p->x+w, p->y+h, cc);
 }
 
 static void
 draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
+	int cc=gc->color;
+	if (gr->flags & 8) {
+		gdImageSetAntiAliased(gr->im, cc);
+		cc=gdAntiAliased;
+	}
 	gdImageSetThickness(gr->im, gc->width);
-	gdImageArc(gr->im, p->x, p->y, r, r, 0, 360, gc->color);
+	gdImageArc(gr->im, p->x, p->y, r, r, 0, 360, cc);
 }
 
 
