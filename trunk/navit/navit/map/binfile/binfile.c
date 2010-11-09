@@ -71,6 +71,7 @@ struct map_priv {
 	int map_version;
 	GHashTable *changes;
 	char *passwd;
+	char *map_release;
 };
 
 struct map_rect_priv {
@@ -1511,6 +1512,7 @@ binmap_search_get_item(struct map_search_priv *map_search)
 	}
 }
 
+
 static void
 binmap_search_destroy(struct map_search_priv *ms)
 {
@@ -1523,6 +1525,23 @@ binmap_search_destroy(struct map_search_priv *ms)
 	g_free(ms);
 }
 
+static int
+binmap_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr)
+{
+	attr->type=type;
+	switch (type) {
+	case attr_map_release:
+		if (m->map_release) {
+			attr->u.str=m->map_release;
+			return 1;
+		}
+		break;
+	default:
+		break;
+	}
+	return 0;
+}
+
 static struct map_methods map_methods_binfile = {
 	projection_mg,
 	"utf-8",
@@ -1533,7 +1552,9 @@ static struct map_methods map_methods_binfile = {
 	map_rect_get_item_byid_binfile,
 	binmap_search_new,
 	binmap_search_destroy,
-	binmap_search_get_item
+	binmap_search_get_item,
+	NULL,
+	binmap_get_attr,
 };
 
 static int
@@ -1634,9 +1655,12 @@ map_binfile_open(struct map_priv *m)
 	mr=map_rect_new_binfile(m, NULL);
 	if (mr) {
 		item=map_rect_get_item_binfile(mr);
-		if (item && item->type == type_map_information) 
+		if (item && item->type == type_map_information)  {
 			if (binfile_attr_get(item->priv_data, attr_version, &attr))
 				m->map_version=attr.u.num;
+			if (binfile_attr_get(item->priv_data, attr_map_release, &attr))
+				m->map_release=g_strdup(attr.u.str);
+		}
 		map_rect_destroy_binfile(mr);
 		if (m->map_version >= 16) {
 			dbg(0,"Warning: This map is incompatible with your navit version. Please update navit.\n");
@@ -1653,6 +1677,7 @@ map_binfile_close(struct map_priv *m)
 	file_data_free(m->fi, (unsigned char *)m->eoc);
 	file_data_free(m->fi, (unsigned char *)m->eoc64);
 	g_free(m->cachedir);
+	g_free(m->map_release);
 	file_destroy(m->fi);
 }
 

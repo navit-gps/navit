@@ -129,7 +129,12 @@ map_new(struct attr *parent, struct attr **attrs)
 int
 map_get_attr(struct map *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter)
 {
-	return attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+	int ret=0;
+	if (this_->meth.map_get_attr)
+		ret=this_->meth.map_get_attr(this_->priv, type, attr);
+	if (!ret)
+		ret=attr_generic_get_attr(this_->attrs, NULL, type, attr, iter);
+	return ret;
 }
 
 /**

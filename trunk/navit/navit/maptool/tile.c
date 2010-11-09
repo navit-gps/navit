@@ -590,12 +590,21 @@ merge_tiles(struct tile_info *info)
 	} while (work_done);
 }
 
+struct attr map_information_attrs[32];
+
 void
 index_init(struct zip_info *info, int version)
 {
 	struct item_bin *item_bin;
+	int i;
+	map_information_attrs[0].type=attr_version;
+	map_information_attrs[0].u.num=version;
 	item_bin=init_item(type_map_information);
-	item_bin_add_attr_int(item_bin, attr_version, version);
+	for (i = 0 ; i < 32 ; i++) {
+		if (!map_information_attrs[i].type)
+			break;
+		item_bin_add_attr(item_bin, &map_information_attrs[i]);
+	}
 	item_bin_write(item_bin, info->index);
 }
 
