@@ -29,17 +29,17 @@
 
 struct zip_lfh {
 	int ziplocsig;
-	short zipver;
-	short zipgenfld;
-	short zipmthd;
-	short ziptime;
-	short zipdate;
-	int zipcrc;
-	unsigned int zipsize;
-	unsigned int zipuncmp;
-	unsigned short zipfnln;
-	unsigned short zipxtraln;
-	char zipname[0];
+	short zipver; 		// 4
+	short zipgenfld;	// 6
+	short zipmthd;		// 8
+	short ziptime;		// 10
+	short zipdate;		// 12
+	int zipcrc;		// 14
+	unsigned int zipsize;  // 18
+	unsigned int zipuncmp; // 22
+	unsigned short zipfnln; // 26
+	unsigned short zipxtraln; // 30
+	char zipname[0]; // 34
 } __attribute__ ((packed));
 
 #define zip_cd_sig 0x02014b50
