@@ -94,6 +94,13 @@ item_get_default_flags(enum item_type type)
 }
 
 void
+item_cleanup(void)
+{
+	if (default_flags_hash)
+		g_hash_table_destroy(default_flags_hash);
+}
+
+void
 item_coord_rewind(struct item *it)
 {
 	it->meth->item_coord_rewind(it->priv_data);
