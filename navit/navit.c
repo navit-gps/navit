@@ -218,20 +218,12 @@ navit_get_user_data_directory(int create) {
 static void
 navit_draw_async(struct navit *this_, int async)
 {
-	GList *l;
-	struct navit_vehicle *nv;
 
 	if (this_->blocked) {
 		this_->blocked |= 2;
 		return;
 	}
 	transform_setup_source_rect(this_->trans);
-	l=this_->vehicles;
-	while (l) {
-		nv=l->data;
-		navit_vehicle_draw(this_, nv, NULL);
-		l=g_list_next(l);
-	}
 	graphics_draw(this_->gra, this_->displaylist, this_->mapsets->data, this_->trans, this_->layout_current, async, NULL, this_->graphics_flags|1);
 }
 
@@ -435,6 +427,7 @@ navit_handle_button(struct navit *this_, int pressed, int button, struct point *
 			update_transformation(this_->trans, &this_->pressed, p, NULL);
 #endif
 			graphics_draw_drag(this_->gra, NULL);
+			transform_copy(this_->trans, this_->trans_cursor);
 			graphics_overlay_disable(this_->gra, 0);
 			if (!this_->zoomed) 
 				navit_set_timeout(this_);
@@ -534,9 +527,17 @@ navit_motion(void *data, struct point *p)
 }
 
 static void
-navit_postdraw(struct navit *this)
+navit_postdraw(struct navit *this_)
 {
-	transform_copy(this->trans, this->trans_cursor);
+	GList *l;
+	struct navit_vehicle *nv;
+	transform_copy(this_->trans, this_->trans_cursor);
+	l=this_->vehicles;
+	while (l) {
+		nv=l->data;
+		navit_vehicle_draw(this_, nv, NULL);
+		l=g_list_next(l);
+	}
 }
 
 static void
