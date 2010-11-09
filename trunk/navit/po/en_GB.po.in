@@ -86,7 +86,7 @@ msgstr "in %d metres"
 
 #, c-format
 msgid "%d.%d kilometers"
-msgstr "%d.%d kilometers"
+msgstr "%d.%d kilometres"
 
 #, c-format
 msgid "in %d.%d kilometers"
@@ -108,32 +108,32 @@ msgid "exit"
 msgstr "exit"
 
 msgid "into the ramp"
-msgstr "into the ramp"
+msgstr "onto the slip road"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name
 #, c-format
 msgid "%sinto the street %s%s%s"
-msgstr "%sinto the street %s%s%s"
+msgstr "%sonto the street %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|male form"
-msgstr "%sinto the %s%s%s"
+msgstr "%sonto the %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Female form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|female form"
-msgstr "%sinto the %s%s%s"
+msgstr "%sonto the %s%s%s"
 
 #. TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Neutral form. The stuff after | doesn't have to be included
 #, c-format
 msgid "%sinto the %s%s%s|neutral form"
-msgstr "%sinto the %s%s%s"
+msgstr "%sonto the %s%s%s"
 
 #. TRANSLATORS: gives the name of the next road to turn into (into the E17)
 #, c-format
 msgid "%sinto the %s"
-msgstr "%sinto the %s"
+msgstr "%sonto the %s"
 
 #. TRANSLATORS: right, as in 'Turn right'
 msgid "right"
@@ -1334,7 +1334,7 @@ msgid "Info"
 msgstr "Info"
 
 msgid "Stop Navigation"
-msgstr "Stop Navigation"
+msgstr "Stop navigation"
 
 msgid "Test"
 msgstr "Test"
@@ -1346,10 +1346,10 @@ msgid "Cursor"
 msgstr "Cursor"
 
 msgid "Lock on Road"
-msgstr "Lock on Road"
+msgstr " Lock on road"
 
 msgid "Northing"
-msgstr "Northing"
+msgstr " Orient map North"
 
 msgid "Autozoom"
 msgstr "Autozoom"
@@ -1416,10 +1416,10 @@ msgid "Back"
 msgstr "Back"
 
 msgid "Add Bookmark"
-msgstr "Add Bookmark"
+msgstr "Add bookmark"
 
 msgid "Add Bookmark folder"
-msgstr "Add Bookmark folder"
+msgstr "Add bookmark folder"
 
 msgid "Rename"
 msgstr "Rename"
@@ -1428,7 +1428,7 @@ msgid "POIs"
 msgstr "POIs"
 
 msgid "View in Browser"
-msgstr "View in Browser"
+msgstr "View in browser"
 
 msgid "Streets"
 msgstr "Streets"
@@ -1437,25 +1437,25 @@ msgid "House numbers"
 msgstr "House numbers"
 
 msgid "View Attributes"
-msgstr "View Attributes"
+msgstr "View attributes"
 
 msgid "View on map"
 msgstr "View on map"
 
 msgid "Cut Bookmark"
-msgstr "Cut Bookmark"
+msgstr "Cut bookmark"
 
 msgid "Copy Bookmark"
-msgstr "Copy Bookmark"
+msgstr "Copy bookmark"
 
 msgid "Rename Bookmark"
-msgstr "Rename Bookmark"
+msgstr "Rename bookmark"
 
 msgid "Paste Bookmark"
-msgstr "Paste Bookmark"
+msgstr "Paste bookmark"
 
 msgid "Delete Bookmark"
-msgstr "Delete Bookmark"
+msgstr "Delete bookmark"
 
 msgid "Paste bookmark"
 msgstr "Paste bookmark"
@@ -1471,7 +1471,7 @@ msgid "Maps"
 msgstr "Maps"
 
 msgid "Show Satellite Status"
-msgstr "Show Satellite Status"
+msgstr "Show satellite status"
 
 msgid " Elevation "
 msgstr " Elevation "
@@ -1480,7 +1480,7 @@ msgid " Azimuth "
 msgstr " Azimuth "
 
 msgid "Show NMEA Data"
-msgstr "Show NMEA Data"
+msgstr "Show NMEA data"
 
 msgid "car"
 msgstr "car"
@@ -1503,7 +1503,7 @@ msgid "Set as active"
 msgstr "Set as active"
 
 msgid "Show Satellite status"
-msgstr "Show Satellite status"
+msgstr "Show satellite status"
 
 msgid "Show NMEA data"
 msgstr "Show NMEA data"
@@ -1515,7 +1515,7 @@ msgid "Lock on road"
 msgstr "Lock on road"
 
 msgid "Map follows Vehicle"
-msgstr "Map follows vehicle"
+msgstr " Map follows vehicle"
 
 msgid "Message"
 msgstr "Message"
@@ -1544,7 +1544,7 @@ msgid "members and contributors."
 msgstr "members and contributors."
 
 msgid "Main menu"
-msgstr "Main menu"
+msgstr "Main Menu"
 
 msgid ""
 "Show\n"
