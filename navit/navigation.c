@@ -263,6 +263,7 @@ static char
 {
 	switch (n) {
 	case 0:
+		/* TRANSLATORS: the following counts refer to streets */
 		return _("zeroth"); // Not sure if this exists, neither if it will ever be needed
 	case 1:
 		return _("first");
@@ -286,6 +287,7 @@ static char
 {
 	switch (n) {
 	case 0:
+		/* TRANSLATORS: the following counts refer to roundabout exits */
 		return _("zeroth exit"); // Not sure if this exists, neither if it will ever be needed
 	case 1:
 		return _("first exit");
