@@ -215,6 +215,7 @@ struct graphics_gc_priv {
 	int color;
 	int bgcolor;
 	int width;
+	struct color color2;
 	unsigned char *dash_list;
 	int dash_count;
 	int dash_list_len;
@@ -265,6 +266,7 @@ gc_set_dashes(struct graphics_gc_priv *gc, int w, int offset, unsigned char *das
 static void
 gc_set_foreground(struct graphics_gc_priv *gc, struct color *c)
 {
+	gc->color2=*c;
 	gc->color=gdImageColorAllocate(gc->gr->im, c->r>>8, c->g>>8, c->b>>8); 
 }
 
@@ -409,28 +411,33 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 	gdImagePtr im;
 	int i,x,y,w,h;
 	t=gr->freetype_methods.text_new(text, (struct font_freetype_font *)font, dx, dy);
-	struct color transparent = {0x0, 0x0, 0x0, 0x7f7f};
-	struct color white = {0xffff, 0xffff, 0xffff, 0x0};
-	struct color black = {0x0, 0x0, 0x0, 0x0};
+	struct color fgc,bgc,transparent = {0x0, 0x0, 0x0, 0x7f7f};
+	fgc=fg->color2;
+	fgc.a=0;
 
-	x=p->x << 6;
-	y=p->y << 6;
-	gp=t->glyph;
-	i=t->glyph_count;
-	while (i-- > 0)
-	{
-		g=*gp++;
-		w=g->w;
-		h=g->h;
-		if (w && h) {
-			im=gdImageCreateTrueColor(w+2, h+2);
-			gr->freetype_methods.get_shadow(g,(unsigned char *)(im->tpixels),32,0,&white,&transparent);
-			gdImageCopy(gr->im, im, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, 0, 0, w+2, h+2);
-			gdImageDestroy(im);
+	if (bg) {
+		bgc=bg->color2;
+		bgc.a=0;
+		x=p->x << 6;
+		y=p->y << 6;
+		gp=t->glyph;
+		i=t->glyph_count;
+		while (i-- > 0)
+		{
+			g=*gp++;
+			w=g->w;
+			h=g->h;
+			if (w && h) {
+				im=gdImageCreateTrueColor(w+2, h+2);
+				gr->freetype_methods.get_shadow(g,(unsigned char *)(im->tpixels),32,0,&bgc,&transparent);
+				gdImageCopy(gr->im, im, ((x+g->x)>>6)-1, ((y+g->y)>>6)-1, 0, 0, w+2, h+2);
+				gdImageDestroy(im);
+			}
+			x+=g->dx;
+			y+=g->dy;
 		}
-		x+=g->dx;
-		y+=g->dy;
-	}
+	} else
+		bgc=transparent;
 	x=p->x << 6;
 	y=p->y << 6;
 	gp=t->glyph;
@@ -442,7 +449,7 @@ draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics
 		h=g->h;
 		if (w && h) {
 			im=gdImageCreateTrueColor(w, h);
-			gr->freetype_methods.get_glyph(g,(unsigned char *)(im->tpixels),32,0,&black,&white,&transparent);
+			gr->freetype_methods.get_glyph(g,(unsigned char *)(im->tpixels),32,0,&fgc,&bgc,&transparent);
 			gdImageCopy(gr->im, im, (x+g->x)>>6, (y+g->y)>>6, 0, 0, w, h);
 			gdImageDestroy(im);
 		}
