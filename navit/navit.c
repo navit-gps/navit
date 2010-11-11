@@ -650,7 +650,7 @@ void
 navit_zoom_in_cursor(struct navit *this_, int factor)
 {
 	struct point p;
-	if (this_->vehicle && this_->vehicle->follow_curr == 1 && navit_get_cursor_pnt(this_, &p, 0, NULL)) {
+	if (this_->vehicle && this_->vehicle->follow_curr <= 1 && navit_get_cursor_pnt(this_, &p, 0, NULL)) {
 		navit_zoom_in(this_, factor, &p);
 		this_->vehicle->follow_curr=this_->vehicle->follow;
 	} else
@@ -661,7 +661,7 @@ void
 navit_zoom_out_cursor(struct navit *this_, int factor)
 {
 	struct point p;
-	if (this_->vehicle && this_->vehicle->follow_curr == 1 && navit_get_cursor_pnt(this_, &p, 0, NULL)) {
+	if (this_->vehicle && this_->vehicle->follow_curr <= 1 && navit_get_cursor_pnt(this_, &p, 0, NULL)) {
 		navit_zoom_out(this_, 2, &p);
 		this_->vehicle->follow_curr=this_->vehicle->follow;
 	} else
