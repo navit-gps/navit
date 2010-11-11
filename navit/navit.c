@@ -646,20 +646,19 @@ navit_zoom_out(struct navit *this_, int factor, struct point *p)
 	navit_scale(this_, scale, p, 1);
 }
 
-static int
-navit_cmd_zoom_in(struct navit *this_)
+void
+navit_zoom_in_cursor(struct navit *this_, int factor)
 {
 	struct point p;
 	if (this_->vehicle && this_->vehicle->follow_curr == 1 && navit_get_cursor_pnt(this_, &p, 0, NULL)) {
-		navit_zoom_in(this_, 2, &p);
+		navit_zoom_in(this_, factor, &p);
 		this_->vehicle->follow_curr=this_->vehicle->follow;
 	} else
-		navit_zoom_in(this_, 2, NULL);
-	return 0;
+		navit_zoom_in(this_, factor, NULL);
 }
 
-static int
-navit_cmd_zoom_out(struct navit *this_)
+void
+navit_zoom_out_cursor(struct navit *this_, int factor)
 {
 	struct point p;
 	if (this_->vehicle && this_->vehicle->follow_curr == 1 && navit_get_cursor_pnt(this_, &p, 0, NULL)) {
@@ -667,6 +666,20 @@ navit_cmd_zoom_out(struct navit *this_)
 		this_->vehicle->follow_curr=this_->vehicle->follow;
 	} else
 		navit_zoom_out(this_, 2, NULL);
+}
+
+
+static int
+navit_cmd_zoom_in(struct navit *this_)
+{
+	navit_zoom_in_cursor(this_, 2);
+	return 0;
+}
+
+static int
+navit_cmd_zoom_out(struct navit *this_)
+{
+	navit_zoom_out_cursor(this_, 2);
 	return 0;
 }
 

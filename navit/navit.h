@@ -66,6 +66,8 @@ int navit_handle_button(struct navit *this_, int pressed, int button, struct poi
 void navit_handle_motion(struct navit *this_, struct point *p);
 void navit_zoom_in(struct navit *this_, int factor, struct point *p);
 void navit_zoom_out(struct navit *this_, int factor, struct point *p);
+void navit_zoom_in_cursor(struct navit *this_, int factor);
+void navit_zoom_out_cursor(struct navit *this_, int factor);
 struct navit *navit_new(struct attr *parent, struct attr **attrs);
 void navit_add_message(struct navit *this_, char *message);
 struct message *navit_get_messages(struct navit *this_);
