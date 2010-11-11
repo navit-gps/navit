@@ -72,6 +72,7 @@ config_new_int(void)
 	config->cbl=callback_list_new();
 #ifndef HAVE_API_WIN32_CE
 	signal(SIGTERM, config_terminate);
+	signal(SIGPIPE, SIG_IGN);
 #endif
 }
 
