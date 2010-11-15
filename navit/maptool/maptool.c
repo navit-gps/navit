@@ -170,6 +170,9 @@ int main(int argc, char **argv)
 	struct zip_info zip_info;
 	int suffix_start=0;
 	char *timestamp=current_to_iso8601();
+#ifndef HAVE_GLIB
+	_g_slice_thread_init_nomessage();
+#endif
 
 	while (1) {
 #if 0
