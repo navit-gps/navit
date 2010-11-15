@@ -221,6 +221,8 @@ if (graphics/sdl)
    if (SDLIMAGE_FOUND)
       list(APPEND NAVIT_LIBS ${SDLIMAGE_LIBRARY})
       set(SDL_IMAGE 1)
+   else()
+      set_with_reason(graphics/sdl "SDL_image libs missing" FALSE)
    endif(SDLIMAGE_FOUND)   
 endif()
 
