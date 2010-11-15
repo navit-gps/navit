@@ -465,7 +465,7 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 				tok = strtok(str," ");
 				if(!strcmp(tok,"odometer")) {
 					tok = strtok(NULL," ");
-					if(!strcmp(this->name,tok)) {
+					if(this->name && tok && !strcmp(this->name,tok)) {
 						osd_odometer_from_string(this,line);
 					}
 				}
