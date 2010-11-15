@@ -2032,6 +2032,8 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 		gra->default_font = g_strdup(l->font);
 	}
 	graphics_background_gc(gra, gra->gc[0]);
+	if (flags & 1)
+		callback_list_call_attr_0(gra->cbl, attr_predraw);
 	gra->meth.draw_mode(gra->priv, (flags & 8)?draw_mode_begin_clear:draw_mode_begin);
 	if (!(flags & 2))
 		gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &gra->r.lu, gra->r.rl.x-gra->r.lu.x, gra->r.rl.y-gra->r.lu.y);
