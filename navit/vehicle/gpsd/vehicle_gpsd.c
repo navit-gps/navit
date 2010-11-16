@@ -298,14 +298,14 @@ vehicle_gpsd_io(struct vehicle_priv *priv)
 	if (priv->gps) {
 	 	vehicle_last = priv;
 #if GPSD_API_MAJOR_VERSION >= 5
-                if (gps_read(priv->gps)) {
+                gps_read(priv->gps);
 #else
                 if (gps_poll(priv->gps)) {
-#endif
 			g_warning("gps_poll failed\n");
 			vehicle_gpsd_close(priv);
 			vehicle_gpsd_open(priv);
                 }
+#endif
 	}
 }
 
