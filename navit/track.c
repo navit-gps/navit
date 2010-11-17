@@ -100,14 +100,14 @@ struct tracking {
 	struct coord_geo coord_geo;
 	enum projection pro;
 	int street_direction;
+	int angle_pref;
+	int connected_pref;
+	int nostop_pref;
+	int offroad_limit_pref;
+	int route_pref;
 };
 
 
-int angle_factor=10;
-int connected_pref=10;
-int nostop_pref=10;
-int offroad_limit_pref=5000;
-int route_pref=300;
 
 
 static void
@@ -537,7 +537,7 @@ tracking_angle_delta(struct tracking *tr, int vehicle_angle, int street_angle, i
 }
 
 static int
-tracking_is_connected(struct coord *c1, struct coord *c2)
+tracking_is_connected(struct tracking *tr, struct coord *c1, struct coord *c2)
 {
 	if (c1[0].x == c2[0].x && c1[0].y == c2[0].y)
 		return 0;
@@ -547,26 +547,26 @@ tracking_is_connected(struct coord *c1, struct coord *c2)
 		return 0;
 	if (c1[1].x == c2[1].x && c1[1].y == c2[1].y)
 		return 0;
-	return connected_pref;
+	return tr->connected_pref;
 }
 
 static int
-tracking_is_no_stop(struct coord *c1, struct coord *c2)
+tracking_is_no_stop(struct tracking *tr, struct coord *c1, struct coord *c2)
 {
 	if (c1->x == c2->x && c1->y == c2->y)
-		return nostop_pref;
+		return tr->nostop_pref;
 	return 0;
 }
 
 static int
-tracking_is_on_route(struct route *rt, struct item *item)
+tracking_is_on_route(struct tracking *tr, struct route *rt, struct item *item)
 {
 #ifdef USE_ROUTING
 	if (! rt)
 		return 0;
 	if (route_contains(rt, item))
 		return 0;
-	return route_pref;
+	return tr->route_pref;
 #else
 	return 0;
 #endif	
@@ -591,17 +591,17 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 	if (value >= min)
 		return value;
 	if (flags & 2) 
-		value += tracking_angle_delta(tr, tr->curr_angle, t->angle[offset], sd->flags)*angle_factor>>4;
+		value += tracking_angle_delta(tr, tr->curr_angle, t->angle[offset], sd->flags)*tr->angle_pref>>4;
 	if (value >= min)
 		return value;
 	if (flags & 4) 
-		value += tracking_is_connected(tr->last, &sd->c[offset]);
+		value += tracking_is_connected(tr, tr->last, &sd->c[offset]);
 	if (flags & 8) 
-		value += tracking_is_no_stop(lpnt, &tr->last_out);
+		value += tracking_is_no_stop(tr, lpnt, &tr->last_out);
 	if (value >= min)
 		return value;
 	if (flags & 16)
-		value += tracking_is_on_route(tr->rt, &sd->item);
+		value += tracking_is_on_route(tr, tr->rt, &sd->item);
 	return value;
 }
 
@@ -711,9 +711,9 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 				struct coord lpnt_tmp;
 				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
 					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], &cin, &lpnt_tmp),
-					tracking_angle_delta(tr, tr->curr_angle, t->angle[i], 0)*angle_factor,
-					tracking_is_connected(tr->last, &sd->c[i]) ? connected_pref : 0,
-					lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y ? nostop_pref : 0,
+					tracking_angle_delta(tr, tr->curr_angle, t->angle[i], 0)*tr->angle_pref,
+					tracking_is_connected(tr, tr->last, &sd->c[i]) ? tr->connected_pref : 0,
+					lpnt.x == tr->last_out.x && lpnt.y == tr->last_out.y ? tr->nostop_pref : 0,
 					value
 				);
 				tr->curr_out.x=lpnt.x;
@@ -731,7 +731,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		t=t->next;
 	}
 	dbg(1,"tr->curr_line=%p min=%d\n", tr->curr_line, min);
-	if (!tr->curr_line || min > offroad_limit_pref) {
+	if (!tr->curr_line || min > tr->offroad_limit_pref) {
 		tr->curr_out=tr->curr_in;
 		tr->coord_geo_valid=0;
 		tr->street_direction=0;
@@ -739,15 +739,53 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	dbg(1,"found 0x%x,0x%x\n", tr->curr_out.x, tr->curr_out.y);
 }
 
+static int
+tracking_set_attr_do(struct tracking *tr, struct attr *attr, int initial)
+{
+	switch (attr->type) {
+	case attr_angle_pref:
+		tr->angle_pref=attr->u.num;
+		return 1;
+	case attr_connected_pref:
+		tr->connected_pref=attr->u.num;
+		return 1;
+	case attr_nostop_pref:
+		tr->nostop_pref=attr->u.num;
+		return 1;
+	case attr_offroad_limit_pref:
+		tr->offroad_limit_pref=attr->u.num;
+		return 1;
+	case attr_route_pref:
+		tr->route_pref=attr->u.num;
+		return 1;
+	default:
+		return 0;
+	}
+}
+
+int
+tracking_set_attr(struct tracking *tr, struct attr *attr)
+{
+	return tracking_set_attr_do(tr, attr, 0);
+}
+
 struct tracking *
 tracking_new(struct attr *parent, struct attr **attrs)
 {
 	struct tracking *this=g_new0(struct tracking, 1);
 	struct attr hist_size;
+	this->angle_pref=10;
+	this->connected_pref=10;
+	this->nostop_pref=10;
+	this->offroad_limit_pref=5000;
+	this->route_pref=300;
+
 
 	if (! attr_generic_get_attr(attrs, NULL, attr_cdf_histsize, &hist_size, NULL)) {
 		hist_size.u.num = 0;
 	}
+	for (;*attrs; attrs++) 
+		tracking_set_attr_do(this, *attrs, 1);
 
 	tracking_init_cdf(&this->cdf, hist_size.u.num);
 

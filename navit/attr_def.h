@@ -157,6 +157,11 @@ ATTR(through_traffic_flags)
 ATTR(speed_exceed_limit_offset)
 ATTR(speed_exceed_limit_percent)
 ATTR(map_border)
+ATTR(angle_pref)
+ATTR(connected_pref)
+ATTR(nostop_pref)
+ATTR(offroad_limit_pref)
+ATTR(route_pref)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
