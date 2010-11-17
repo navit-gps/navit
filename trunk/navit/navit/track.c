@@ -34,6 +34,7 @@
 #include "plugin.h"
 #include "vehicleprofile.h"
 #include "vehicle.h"
+#include "roadprofile.h"
 #include "util.h"
 #include "config.h"
 
@@ -105,6 +106,8 @@ struct tracking {
 	int nostop_pref;
 	int offroad_limit_pref;
 	int route_pref;
+	int overspeed_pref;
+	int overspeed_percent_pref;
 };
 
 
@@ -602,6 +605,11 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 		return value;
 	if (flags & 16)
 		value += tracking_is_on_route(tr, tr->rt, &sd->item);
+	if ((flags & 32) && tr->overspeed_percent_pref && tr->overspeed_pref ) {
+		struct roadprofile *roadprofile=g_hash_table_lookup(tr->vehicleprofile->roadprofile_hash, (void *)t->street->item.type);
+		if (roadprofile && tr->speed > roadprofile->speed * tr->overspeed_percent_pref/ 100)
+			value += tr->overspeed_pref;
+	}
 	return value;
 }
 
@@ -757,6 +765,12 @@ tracking_set_attr_do(struct tracking *tr, struct attr *attr, int initial)
 		return 1;
 	case attr_route_pref:
 		tr->route_pref=attr->u.num;
+		return 1;
+	case attr_overspeed_pref:
+		tr->overspeed_pref=attr->u.num;
+		return 1;
+	case attr_overspeed_percent_pref:
+		tr->overspeed_percent_pref=attr->u.num;
 		return 1;
 	default:
 		return 0;
@@ -915,6 +929,10 @@ tracking_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct att
                         this_->str=attr->u.str=g_strdup_printf("route: %d", tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, 16));
 			return 1;
 		case 6:
+			this_->debug_idx++;
+                        this_->str=attr->u.str=g_strdup_printf("overspeed: %d", tracking_value(tr, this_->curr, this_->coord, &lpnt, INT_MAX/2, 32));
+			return 1;
+		case 7:
 			this_->debug_idx++;
                         this_->str=attr->u.str=g_strdup_printf("line %p", this_->curr);
 			return 1;
