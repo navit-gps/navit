@@ -46,6 +46,7 @@ int tracking_get_attr(struct tracking *_this, enum attr_type type, struct attr *
 struct item *tracking_get_current_item(struct tracking *_this);
 int *tracking_get_current_flags(struct tracking *_this);
 void tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *vehicleprofile, enum projection pro);
+int tracking_set_attr(struct tracking *tr, struct attr *attr);
 struct tracking *tracking_new(struct attr *parent, struct attr **attrs);
 void tracking_set_mapset(struct tracking *_this, struct mapset *ms);
 void tracking_set_route(struct tracking *_this, struct route *rt);
