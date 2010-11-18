@@ -798,8 +798,10 @@ tracking_new(struct attr *parent, struct attr **attrs)
 	if (! attr_generic_get_attr(attrs, NULL, attr_cdf_histsize, &hist_size, NULL)) {
 		hist_size.u.num = 0;
 	}
-	for (;*attrs; attrs++) 
-		tracking_set_attr_do(this, *attrs, 1);
+	if (attrs) {
+		for (;*attrs; attrs++) 
+			tracking_set_attr_do(this, *attrs, 1);
+	}
 
 	tracking_init_cdf(&this->cdf, hist_size.u.num);
 
