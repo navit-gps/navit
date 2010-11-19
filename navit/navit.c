@@ -129,7 +129,7 @@ struct navit {
 	int drag_bitmap;
 	int use_mousewheel;
 	struct messagelist *messages;
-	struct callback *resize_callback,*button_callback,*motion_callback,*postdraw_callback;
+	struct callback *resize_callback,*button_callback,*motion_callback,*predraw_callback;
 	struct vehicleprofile *vehicleprofile;
 	GList *vehicleprofiles;
 	int pitch;
@@ -527,7 +527,7 @@ navit_motion(void *data, struct point *p)
 }
 
 static void
-navit_postdraw(struct navit *this_)
+navit_predraw(struct navit *this_)
 {
 	GList *l;
 	struct navit_vehicle *nv;
@@ -844,8 +844,8 @@ navit_set_graphics(struct navit *this_, struct graphics *gra)
 	graphics_add_callback(gra, this_->button_callback);
 	this_->motion_callback=callback_new_attr_1(callback_cast(navit_motion), attr_motion, this_);
 	graphics_add_callback(gra, this_->motion_callback);
-	this_->postdraw_callback=callback_new_attr_1(callback_cast(navit_postdraw), attr_postdraw, this_);
-	graphics_add_callback(gra, this_->postdraw_callback);
+	this_->predraw_callback=callback_new_attr_1(callback_cast(navit_predraw), attr_predraw, this_);
+	graphics_add_callback(gra, this_->predraw_callback);
 	return 1;
 }
 
@@ -2489,8 +2489,8 @@ navit_destroy(struct navit *this_)
 	  graphics_remove_callback(this_->gra, this_->motion_callback);
 	callback_destroy(this_->motion_callback);
 	if(this_->gra)
-	  graphics_remove_callback(this_->gra, this_->postdraw_callback);
-	callback_destroy(this_->postdraw_callback);
+	  graphics_remove_callback(this_->gra, this_->predraw_callback);
+	callback_destroy(this_->predraw_callback);
 	route_destroy(this_->route);
 	g_free(this_);
 }
