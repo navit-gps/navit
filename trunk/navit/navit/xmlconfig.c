@@ -390,6 +390,8 @@ start_element(GMarkupParseContext *context,
 	struct attr *parent_attr;
 	dbg(2,"name='%s' parent='%s'\n", element_name, *parent ? (*parent)->element:NULL);
 
+	if (!strcmp(element_name,"xml"))
+		return;
 	/* determine if we have to fix any attributes */
 	while (attr_fixme[0].element) {
 		if (!strcmp(element_name,attr_fixme[0].element))
@@ -493,6 +495,8 @@ end_element (GMarkupParseContext *context,
 {
 	struct xmlstate *curr, **state = user_data;
 
+	if (!strcmp(element_name,"xml"))
+		return;
 	dbg(2,"name='%s'\n", element_name);
 	curr=*state;
 	if (curr->object_func && curr->object_func->init)
