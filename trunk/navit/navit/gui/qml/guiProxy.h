@@ -114,11 +114,9 @@ public slots:
 	}
 	QString langName() {
 #ifdef HAVE_API_WIN32_BASE
-		wchar_t wstr[32];
 		char str[32];
 
-		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, wstr, sizeof(wstr));
-		WideCharToMultiByte(CP_ACP,0,wstr,-1,str,sizeof(str),NULL,NULL);
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVLANGNAME, str, sizeof(str));
 		return QString()+"LOCALE_SABBREVLANGNAME="+str;
 #else
 		return QString();
@@ -126,11 +124,9 @@ public slots:
 	}
 	QString ctryName() {
 #ifdef HAVE_API_WIN32_BASE
-		wchar_t wstr[32];
 		char str[32];
 
-		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, wstr, sizeof(wstr));
-		WideCharToMultiByte(CP_ACP,0,wstr,-1,str,sizeof(str),NULL,NULL);
+		GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SABBREVCTRYNAME, str, sizeof(str));
 		return QString()+"LOCALE_SABBREVCTRYNAME="+str;
 #else
 		return QString();
