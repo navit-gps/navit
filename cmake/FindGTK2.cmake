@@ -123,6 +123,7 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
         glade/glade.h
       PATHS
         ${_GLADEIncDir}
+        ${_GLIB2IncDir}
         /opt/gnome/include/libglade-2.0
         /usr/include/libglade-2.0
         /opt/include/libglade-2.0
@@ -333,6 +334,7 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
       NAMES
         glade-2.0
       PATHS
+        ${_GLIB2LinkDir}
         ${_GLADELinkDir}
         /usr/lib
         /usr/local/lib
@@ -400,14 +402,11 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
       ${GTK2_ATK_INCLUDE_DIR}
     )
 
-	MESSAGE(${GTK2_GTK_LIBRARY})
-	MESSAGE(${GTK2_GTK_INCLUDE_DIR})
     if (GTK2_GTK_LIBRARY AND GTK2_GTK_INCLUDE_DIR)
       if (GTK2_GDK_LIBRARY AND GTK2_GDK_PIXBUF_LIBRARY AND GTK2_GDK_INCLUDE_DIR)
         if (GTK2_GMODULE_LIBRARY)
           if (GTK2_GTHREAD_LIBRARY)
             if (GTK2_GOBJECT_LIBRARY)
-              if (GTK2_GLADE_LIBRARY AND GTK2_GLADE_INCLUDE_DIR)
                 if (GTK2_PANGO_LIBRARY AND GTK2_PANGO_INCLUDE_DIR)
                   if (GTK2_CAIRO_LIBRARY AND GTK2_CAIRO_INCLUDE_DIR)
                     if (GTK2_ATK_LIBRARY AND GTK2_ATK_INCLUDE_DIR)
@@ -450,9 +449,6 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
                 else (GTK2_PANGO_LIBRARY AND GTK2_PANGO_INCLUDE_DIR)
                   message(SEND_ERROR "Could not find PANGO")
                 endif (GTK2_PANGO_LIBRARY AND GTK2_PANGO_INCLUDE_DIR)
-              else (GTK2_GLADE_LIBRARY AND GTK2_GLADE_INCLUDE_DIR)
-                message(SEND_ERROR "Could not find GLADE")
-              endif (GTK2_GLADE_LIBRARY AND GTK2_GLADE_INCLUDE_DIR)
             else (GTK2_GOBJECT_LIBRARY)
               message(SEND_ERROR "Could not find GOBJECT")
             endif (GTK2_GOBJECT_LIBRARY)
