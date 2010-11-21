@@ -81,6 +81,7 @@ if(WIN32)
    set_with_reason(support/win32 "win32" TRUE)
    set_with_reason(speech/espeak "win32" TRUE)
    set_with_reason(support/espeak "win32" TRUE)
+   set_with_reason(speech/speech_dispatcher "win32" FALSE)
 
    # workaround for crosscompiling. need to get rid of pkg_config or
    # change its search path
