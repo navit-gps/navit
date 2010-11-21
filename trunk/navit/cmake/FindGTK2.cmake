@@ -116,21 +116,6 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
     )
     gtk2_debug_message("GTK2_GTKGL_INCLUDE_DIR is ${GTK2_GTKGL_INCLUDE_DIR}")
 
-    pkgconfig(libglade-2.0 _GLADEIncDir _GLADELinkDir _GLADELinkFlags _GLADECflags)
-
-    find_path(GTK2_GLADE_INCLUDE_DIR
-      NAMES
-        glade/glade.h
-      PATHS
-        ${_GLADEIncDir}
-        ${_GLIB2IncDir}
-        /opt/gnome/include/libglade-2.0
-        /usr/include/libglade-2.0
-        /opt/include/libglade-2.0
-        /sw/include/libglade-2.0
-    )
-    gtk2_debug_message("GTK2_GLADE_INCLUDE_DIR is ${GTK2_GLADE_INCLUDE_DIR}")
-
     pkgconfig(pango _PANGOIncDir _PANGOLinkDir _PANGOLinkFlags _PANGOCflags)
 
     find_path(GTK2_PANGO_INCLUDE_DIR
@@ -154,6 +139,24 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
       PATHS
         ${_CAIROIncDir}
         ${_CAIROIncDir}/cairo
+        /opt/gnome/include/cairo
+        /usr/include
+        /usr/include/cairo
+        /opt/include
+        /opt/include/cairo
+        /sw/include
+        /sw/include/cairo
+    )
+    gtk2_debug_message("GTK2_CAIRO_INCLUDE_DIR is ${GTK2_CAIRO_INCLUDE_DIR}")
+
+    pkgconfig(gdk-pixbuf-2.0 _GDKPIXBUFIncDir _GDKPIXBUFLinkDir _GDKPIXBUFLinkFlags _GDKPIXBUFCflags)
+
+    find_path(GTK2_GDKPIXBUF_INCLUDE_DIR
+      NAMES
+        gdk-pixbuf/gdk-pixbuf.h
+      PATHS
+        ${_GDKPIXBUFIncDir}
+        ${_GDKPIXBUFIncDir}/gdk-pixbuf-2.0
         /opt/gnome/include/cairo
         /usr/include
         /usr/include/cairo
@@ -330,22 +333,6 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
     )
     gtk2_debug_message("GTK2_GTKGL_LIBRARY is ${GTK2_GTKGL_LIBRARY}")
 
-    find_library(GTK2_GLADE_LIBRARY
-      NAMES
-        glade-2.0
-      PATHS
-        ${_GLIB2LinkDir}
-        ${_GLADELinkDir}
-        /usr/lib
-        /usr/local/lib
-        /usr/openwin/lib
-        /usr/X11R6/lib
-        /opt/gnome/lib
-        /opt/lib
-        /sw/lib
-    )
-    gtk2_debug_message("GTK2_GLADE_LIBRARY is ${GTK2_GLADE_LIBRARY}")
-
     find_library(GTK2_PANGO_LIBRARY
       NAMES
         pango-1.0
@@ -396,7 +383,6 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
       ${GTK2_GLIBCONFIG_INCLUDE_DIR}
       ${GTK2_GLIB_INCLUDE_DIR}
       ${GTK2_GDK_INCLUDE_DIR}
-      ${GTK2_GLADE_INCLUDE_DIR}
       ${GTK2_PANGO_INCLUDE_DIR}
       ${GTK2_CAIRO_INCLUDE_DIR}
       ${GTK2_ATK_INCLUDE_DIR}
@@ -419,7 +405,6 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
                         ${GTK2_GMODULE_LIBRARY}
                         ${GTK2_GTHREAD_LIBRARY}
                         ${GTK2_GOBJECT_LIBRARY}
-                        ${GTK2_GLADE_LIBRARY}
                         ${GTK2_PANGO_LIBRARY}
                         ${GTK2_CAIRO_LIBRARY}
                         ${GTK2_ATK_LIBRARY}
