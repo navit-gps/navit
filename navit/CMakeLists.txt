@@ -27,8 +27,8 @@ foreach ( MODULE_PATH ${ALL_MODULES})
       include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/${MODULE_PATH}")
       
       string(REPLACE "/" "_" MODULE_INC ${MODULE_PATH})
-      list(APPEND MODULES_PROTOTYPE "void\tmodule_${MODULE_INC}_init(void)\;\\n")
-      list(APPEND MODULES_FUNC "module_${MODULE_INC}_init()\;\\n")
+      list(APPEND MODULES_PROTOTYPE "void\tmodule_${MODULE_INC}_init(void)\;")
+      list(APPEND MODULES_FUNC "module_${MODULE_INC}_init()")
       
       if (NOT USE_PLUGINS)
          list(APPEND MODULES_NAME ${MODULE_INC})
@@ -86,10 +86,10 @@ ADD_CUSTOM_TARGET(
 
 ADD_CUSTOM_COMMAND(
   OUTPUT builtin.c
-  COMMAND echo -e \"${MODULES_PROTOTYPE}\" >  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
-  COMMAND echo -e \"extern void builtin_init\(void\)\;\\nvoid builtin_init\(void\) {\" >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
-  COMMAND echo -e \"${MODULES_FUNC}\" >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
-  COMMAND echo -e "\"}\"" >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
+  COMMAND echo ${MODULES_PROTOTYPE} >  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
+  COMMAND echo extern void builtin_init(void)\; void builtin_init(void) { >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
+  COMMAND echo "${MODULES_FUNC};" >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
+  COMMAND echo "}" >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
 )
 
 ADD_CUSTOM_COMMAND(
