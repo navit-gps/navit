@@ -3,8 +3,8 @@
 
 add_definitions( -DMODULE=graphics_qt_qpainter )
 
-QT4_GENERATE_MOC(graphics_qt_qpainter.cpp graphics_qt_qpainter.moc)
+QT4_GENERATE_MOC(graphics_qt_qpainter.cpp ${CMAKE_CURRENT_BINARY_DIR}/graphics_qt_qpainter.moc)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_library(graphics_qt_qpainter ${MODULE_BUILD_TYPE} graphics_qt_qpainter.moc graphics_qt_qpainter.cpp  ) 
+add_library(graphics_qt_qpainter ${MODULE_BUILD_TYPE} ${CMAKE_CURRENT_BINARY_DIR}/graphics_qt_qpainter.moc graphics_qt_qpainter.cpp  ) 
 
