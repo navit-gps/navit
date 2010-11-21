@@ -73,7 +73,9 @@ config_new_int(void)
 #ifndef HAVE_API_WIN32_CE
 	signal(SIGTERM, config_terminate);
 #ifndef HAVE_API_WIN32
+#ifndef __MINGW32__
 	signal(SIGPIPE, SIG_IGN);
+#endif /* __MINGW32__ */
 #endif
 #endif
 }
