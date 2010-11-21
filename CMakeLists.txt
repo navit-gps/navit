@@ -148,6 +148,8 @@ if(GTK2_GLIB_INCLUDE_DIR)
             set(HAVE_GTK2 1)
             set_with_reason(gui/gtk "GTK libs found" TRUE)
             set_with_reason(graphics/gtk_drawing_area "GTK libs found" TRUE)
+            #GTK requires special compile flags
+            add_definitions("-mms-bitfields")
 	endif (GTK2_GDKPIXBUF_INCLUDE_DIR)
     endif(GTK2_FOUND)
 else()
