@@ -1,4 +1,4 @@
-AC_INIT(navit, 0.2.0)
+AC_INIT(navit, 0.5.0)
 AC_CONFIG_MACRO_DIR([m4])
 SOURCE_MODE=svn
 

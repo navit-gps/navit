@@ -3,7 +3,7 @@ project(navit)
 cmake_minimum_required(VERSION 2.6)
 cmake_policy(VERSION 2.6)
 
-set(PACKAGE_VERSION "0.2.0")
+set(PACKAGE_VERSION "0.5.0")
 set(PACKAGE_NAME "navit-svn")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
