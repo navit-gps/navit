@@ -1,0 +1,2 @@
+module_add_library(graphics_gtk_drawing_area graphics_gtk_drawing_area.c) 
+
