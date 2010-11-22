@@ -27,7 +27,7 @@ foreach ( MODULE_PATH ${ALL_MODULES})
       include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/${MODULE_PATH}")
       
       string(REPLACE "/" "_" MODULE_INC ${MODULE_PATH})
-      list(APPEND MODULES_PROTOTYPE "void\tmodule_${MODULE_INC}_init(void)\;")
+      list(APPEND MODULES_PROTOTYPE "void\tmodule_${MODULE_INC}_init(void);")
       list(APPEND MODULES_FUNC "module_${MODULE_INC}_init()")
       
       if (NOT USE_PLUGINS)
@@ -64,7 +64,7 @@ set(NAVIT_SRC announcement.c atom.c attr.c cache.c callback.c command.c compass.
 	util.c vehicle.c vehicleprofile.c xmlconfig.c )
 
 if(NOT USE_PLUGINS)
-  list(APPEND NAVIT_SRC  builtin.c)
+  list(APPEND NAVIT_SRC  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c)
 endif(NOT USE_PLUGINS)
 
 if (${HAVE_GLIB})
