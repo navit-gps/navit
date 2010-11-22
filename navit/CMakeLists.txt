@@ -40,6 +40,8 @@ foreach ( MODULE_PATH ${ALL_MODULES})
       message("Disabled  ${MODULE_PATH} ( ${${MODULE_PATH}_REASON} )")
    endif()
 endforeach()
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/builtin.c.in ${CMAKE_CURRENT_BINARY_DIR}/builtin.c)
+
 
 message( "")
 
@@ -82,14 +84,6 @@ ADD_CUSTOM_TARGET(
     cd ${CMAKE_CURRENT_SOURCE_DIR} && ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
                      -D DST=${CMAKE_CURRENT_BINARY_DIR}/version.h
                      -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
-)
-
-ADD_CUSTOM_COMMAND(
-  OUTPUT builtin.c
-  COMMAND echo ${MODULES_PROTOTYPE} >  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
-  COMMAND echo extern void builtin_init(void)\; void builtin_init(void) { >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
-  COMMAND echo "${MODULES_FUNC};" >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
-  COMMAND echo "}" >>  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c
 )
 
 ADD_CUSTOM_COMMAND(
