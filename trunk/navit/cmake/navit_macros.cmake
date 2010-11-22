@@ -4,17 +4,17 @@ macro(set_with_reason VARIABLE REASON)
 endmacro()
 
 # modules may be linked static, or shared for import at runtime
-macro(add_module MODULE_PATH)
+macro(add_module MODULE_PATH REASON)
    list(APPEND ALL_MODULES ${MODULE_PATH})
    set(${MODULE_PATH} ${ARGN})
-   set(${MODULE_PATH}_REASON "default")
+   set(${MODULE_PATH}_REASON ${REASON})
 endmacro()
 
 # plugins are always linked static
-macro(add_plugin PLUGIN_PATH)
+macro(add_plugin PLUGIN_PATH REASON)
    list(APPEND ALL_PLUGINS ${PLUGIN_PATH})
    set(${PLUGIN_PATH} ${ARGN})
-   set(${PLUGIN_PATH}_REASON "default")
+   set(${PLUGIN_PATH}_REASON ${REASON})
 endmacro()
 
 macro(module_add_library MODULE_NAME )
