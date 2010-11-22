@@ -82,15 +82,15 @@ vehicle_gpsd_dbus_filter(DBusConnection *connection, DBusMessage *message, void 
 			DBUS_TYPE_DOUBLE, &epc,
 			DBUS_TYPE_STRING, &devname,
 			DBUS_TYPE_INVALID);
-		if (latitude != FP_NAN && longitude != FP_NAN) {
+		if (!isnan(latitude) && !isnan(longitude)) {
 			priv->geo.lat=latitude;
 			priv->geo.lng=longitude;
 		}
-		if (track != FP_NAN)
+		if (!is_nan(track))
 			priv->track=track;
-		if (speed != FP_NAN)
+		if (!is_nan(speed))
 			priv->speed=speed;
-		if (altitude != FP_NAN)
+		if (!isnan(altitude))
 			priv->altitude=altitude;
 		if (time != priv->time) {
 			priv->time=time;
