@@ -597,13 +597,13 @@ tracking_value(struct tracking *tr, struct tracking_line *t, int offset, struct 
 		value += tracking_angle_delta(tr, tr->curr_angle, t->angle[offset], sd->flags)*tr->angle_pref>>4;
 	if (value >= min)
 		return value;
-	if (flags & 4) 
+	if ((flags & 4)  && tr->connected_pref)
 		value += tracking_is_connected(tr, tr->last, &sd->c[offset]);
-	if (flags & 8) 
+	if ((flags & 8)  && tr->nostop_pref)
 		value += tracking_is_no_stop(tr, lpnt, &tr->last_out);
 	if (value >= min)
 		return value;
-	if (flags & 16)
+	if ((flags & 16) && tr->route_pref)
 		value += tracking_is_on_route(tr, tr->rt, &sd->item);
 	if ((flags & 32) && tr->overspeed_percent_pref && tr->overspeed_pref ) {
 		struct roadprofile *roadprofile=g_hash_table_lookup(tr->vehicleprofile->roadprofile_hash, (void *)t->street->item.type);
