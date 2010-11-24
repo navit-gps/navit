@@ -72,6 +72,7 @@ struct map_priv {
 	GHashTable *changes;
 	char *passwd;
 	char *map_release;
+	int flags;
 };
 
 struct map_rect_priv {
@@ -1647,6 +1648,8 @@ map_binfile_open(struct map_priv *m)
 			m->fi=NULL;
 			return 0;
 		}
+		if (m->flags & 1)
+			file_mmap(m->fi);
 	} else
 		file_mmap(m->fi);
 	file_data_free(m->fi, (unsigned char *)magic);
@@ -1710,7 +1713,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 {
 	struct map_priv *m;
 	struct attr *data=attr_search(attrs, NULL, attr_data);
-	struct attr *check_version,*map_pass;
+	struct attr *check_version,*map_pass,*flags;
 	struct file_wordexp *wexp;
 	char **wexp_data;
 	if (! data)
@@ -1731,6 +1734,9 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 	map_pass=attr_search(attrs, NULL, attr_map_pass);
 	if (map_pass)
 		m->passwd=g_strdup(map_pass->u.str);
+	flags=attr_search(attrs, NULL, attr_flags);
+	if (flags)
+		m->flags=flags->u.num;
 	if (!map_binfile_open(m) && !m->check_version) {
 		map_binfile_destroy(m);
 		m=NULL;
