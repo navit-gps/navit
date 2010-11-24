@@ -321,6 +321,9 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 		}
 		return ret;
 	}
+	if (type >= attr_type_item_type_begin && type <= attr_type_item_type_end) {
+		return g_strdup_printf("0x%x[%s]",attr->u.num,item_to_name(attr->u.num));
+	}
 	return g_strdup_printf("(no text[%s])", attr_to_name(type));	
 }
 
@@ -520,7 +523,8 @@ attr_data_size(struct attr *attr)
 void *
 attr_data_get(struct attr *attr)
 {
-	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
+	if ((attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) || 
+	    (attr->type >= attr_type_item_type_begin && attr->type <= attr_type_item_type_end))
 		return &attr->u.num;
 	if (attr->type == attr_order)
 		return &attr->u.range;
@@ -530,7 +534,8 @@ attr_data_get(struct attr *attr)
 void
 attr_data_set(struct attr *attr, void *data)
 {
-	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
+	if ((attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) || 
+	    (attr->type >= attr_type_item_type_begin && attr->type <= attr_type_item_type_end))
 		attr->u.num=*((int *)data);
 	else
 		attr->u.data=data;
@@ -539,7 +544,8 @@ attr_data_set(struct attr *attr, void *data)
 void
 attr_data_set_le(struct attr * attr, void * data)
 {
-	if (attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) 
+	if ((attr->type >= attr_type_int_begin && attr->type <= attr_type_int_end) || 
+	    (attr->type >= attr_type_item_type_begin && attr->type <= attr_type_item_type_end))
 		attr->u.num=le32_to_cpu(*((int *)data));
 	else if (attr->type == attr_order) {
 		attr->u.num=le32_to_cpu(*((int *)data));
