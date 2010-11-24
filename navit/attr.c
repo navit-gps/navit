@@ -506,6 +506,8 @@ attr_data_size(struct attr *attr)
 		while (attr->u.item_types[i++] != type_none);
 		return i*sizeof(enum item_type);
 	}
+	if (attr->type >= attr_type_item_type_begin && attr->type <= attr_type_item_type_end)
+		return sizeof(enum item_type);
 	if (attr->type == attr_attr_types) {
 		int i=0;
 		while (attr->u.attr_types[i++] != attr_none);
