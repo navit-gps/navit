@@ -530,15 +530,22 @@ static int fullscreen(struct window *win, int on)
 
 #ifdef HAVE_API_WIN32_CE
     HWND hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
-
+    HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
 	if (on) {
         ShowWindow(hwndTaskbar, SW_HIDE);
         MoveWindow(g_hwnd, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), FALSE);
+	
+	// deactivate the SIP button
+	ShowWindow(hwndSip, SW_HIDE);
+	
 	} else {
         ShowWindow(hwndTaskbar, SW_SHOW);
         RECT taskbar_rect;
         GetWindowRect(  hwndTaskbar, &taskbar_rect);
         MoveWindow(g_hwnd, 0, taskbar_rect.bottom, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN) - taskbar_rect.bottom, FALSE);
+    
+	// activate the SIP button
+	ShowWindow(hwndSip, SW_SHOW);
     }
 
 #else
@@ -1533,6 +1540,10 @@ static void event_win32_main_loop_quit(void)
     dbg(0,"enter\n");
 #ifdef HAVE_API_WIN32_CE
     HWND hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
+    HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
+
+    // activate the SIP button
+    ShowWindow(hwndSip, SW_SHOW);
     ShowWindow(hwndTaskbar, SW_SHOW);
 #endif
 
