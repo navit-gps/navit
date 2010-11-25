@@ -245,9 +245,13 @@ static void changed(GtkWidget *widget, struct search_param *search)
 	if (widget == search->entry_street) {
 		dbg(0,"street\n");
 		search->attr.type=attr_street_name;
+		// Searching for a street by just its first letter generates too many hits to be useful, 
+		// plus it causes the GUI to become unresponsive because the search is single-threaded.
+		// So we only start searching once we have two letters.
+		if (strlen(search->attr.u.str) < 2)
+			return;
 		set_columns(search, 2);
 	}
-
 
 	search_list_search(search->sl, &search->attr, search->partial);
 	gtk_list_store_clear(search->liststore);
@@ -466,6 +470,7 @@ int destination_address(struct navit *nav)
 	window2 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window2),_("Enter Destination"));
 	gtk_window_set_wmclass (GTK_WINDOW (window2), "navit", "Navit");
+	gtk_window_set_default_size (GTK_WINDOW (window2),0,300);
 	vbox = gtk_vbox_new(FALSE, 0);
 	table = gtk_table_new(3, 8, FALSE);
 
