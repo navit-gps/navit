@@ -174,6 +174,7 @@ struct odometer {
 	char *name;                 //unique name of the odometer (needed for handling multiple odometers persistently)
 	struct color idle_color;    //text color when counter is idle
 
+	int bDisableReset;         
 	int bActive;                //counting or not
 	double sum_dist;            //sum of distance ofprevious intervals in meters
 	int sum_time;               //sum of time of previous intervals in seconds (needed for avg spd calculation)
@@ -337,7 +338,7 @@ osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int bu
 
   this->bActive ^= 1;  //toggle active flag
 
-  if (this->last_click_time == time(0)) { //double click handling
+  if (this->last_click_time == time(0) && !this->bDisableReset ) { //double click handling
     this->bActive = 0;
     this->sum_dist = 0;
     this->sum_time = 0;
@@ -437,6 +438,12 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 	else
 		this->name = NULL;
 
+	attr = attr_search(attrs, NULL, attr_disable_reset);
+	if (attr)
+		this->bDisableReset = attr->u.num;
+	else
+		this->bDisableReset = 0;
+
 	osd_set_std_attr(attrs, &this->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
@@ -492,6 +499,7 @@ struct stopwatch {
 	struct callback *click_cb;
 	struct color idle_color;    //text color when counter is idle
 
+	int bDisableReset;
 	int bActive;                //counting or not
 	time_t current_base_time;   //base time of currently measured time interval
 	time_t sum_time;            //sum of previous time intervals (except current intervals)
@@ -554,7 +562,7 @@ osd_stopwatch_click(struct stopwatch *this, struct navit *nav, int pressed, int 
 
 		this->bActive ^= 1;  //toggle active flag
 
-		if (this->last_click_time == time(0)) { //double click handling
+		if (this->last_click_time == time(0) && !this->bDisableReset) { //double click handling
 		this->bActive = 0;
 		this->current_base_time = 0;
 		this->sum_time = 0;
@@ -614,6 +622,12 @@ osd_stopwatch_new(struct navit *nav, struct osd_methods *meth,
 	this->width=attr ? attr->u.num : 2;
 	attr = attr_search(attrs, NULL, attr_idle_color);
 	this->idle_color=attr ? *attr->u.color : ((struct color) {0xffff,0xa5a5,0x0000,0xffff}); // text idle_color defaults to orange
+	attr = attr_search(attrs, NULL, attr_disable_reset);
+	if (attr)
+		this->bDisableReset = attr->u.num;
+	else
+		this->bDisableReset = 0;
+
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_stopwatch_init), attr_graphics_ready, this));
 	return (struct osd_priv *) this;
 }
