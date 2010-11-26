@@ -100,6 +100,7 @@ add_executable (navit start.c navit.xml)
 target_link_libraries (navit navit_core)
 set_target_properties(navit PROPERTIES COMPILE_DEFINITIONS "MODULE=${MODULE_NAME}")
 
+add_subdirectory (maptool)
 add_subdirectory (xpm)
 
 install(TARGETS navit
