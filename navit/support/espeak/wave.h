@@ -1,8 +1,17 @@
 #ifndef WAVE_H
 #define WAVE_H
 
+#ifdef _MSC_VER
+
+typedef __int32 int32_t;
+typedef unsigned __int32 uint32_t;
+typedef __int64 int64_t;
+typedef unsigned __int32 uint64_t;
+
+#else
 #ifndef PLATFORM_DOS
 #include "stdint.h"
+#endif
 #endif
 
 extern int option_device_number;

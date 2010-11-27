@@ -89,7 +89,8 @@ static int SubstitutePhonemes(Translator *tr, PHONEME_LIST2 *plist_out)
 			if(tr->langopts.phoneme_change != 0)
 			{
 				// this language does changes to phonemes after translation
-
+				int flags;	
+				CHANGEPH ch;
 				if(plist2->sourceix)
 				{
 					// start of a word, find the stressed vowel
@@ -125,9 +126,7 @@ static int SubstitutePhonemes(Translator *tr, PHONEME_LIST2 *plist_out)
 					syllable++;
 				}
 	
-				// make any language specific changes
-				int flags;
-				CHANGEPH ch;
+				// make any language specific changes				
 				flags = 0;
 				if(ix == max_stress_posn)
 					flags |= 2;
