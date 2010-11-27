@@ -23,3 +23,7 @@
 #cmakedefine HAVE_QT_SVG 1
 
 #cmakedefine DBUS_USE_SYSTEM_BUS 1
+
+#ifdef _MSC_VER
+#define __PRETTY_FUNCTION__ __FILE__":" << __LINE__
+#endif
