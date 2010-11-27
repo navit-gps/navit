@@ -3356,9 +3356,8 @@ int LookupDictList(Translator *tr, char **wordptr, char *ph_out, unsigned int *f
 
 int Lookup(Translator *tr, const char *word, char *ph_out)
 {//===================================================
-	unsigned int flags[2];
-	flags[0] = flags[1] = 0;
-	char *word1 = (char *)word;
+	unsigned int flags[2]={0,0};
+	char* word1 = (char *)word;
 	return(LookupDictList(tr, &word1, ph_out, flags, 0, NULL));
 }
 
