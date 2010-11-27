@@ -1155,6 +1155,8 @@ int ChangePhonemes_ru(Translator *tr, PHONEME_LIST2 *phlist, int n_ph, int index
 
 	int variant;
 	int vowelix;
+	int stressed;
+	int soft;
 	PHONEME_TAB *prev, *next;
 
 	if(ch->flags & 8)
@@ -1214,8 +1216,8 @@ PH('V','#'),PH('I','3'),PH('I','2'),PH('E','3')};
 		}
 		// do we need a variant of this vowel, depending on the stress and adjacent phonemes ?
 		variant = -1;
-		int stressed = ch->flags & 2;
-		int soft=prev->phflags & phPALATAL;
+		stressed = ch->flags & 2;
+		soft=prev->phflags & phPALATAL;
 
 		if (soft && stressed)
 			variant = 2; else
