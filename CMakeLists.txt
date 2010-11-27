@@ -226,10 +226,13 @@ if(WIN32)
 
    list(APPEND NAVIT_LIBS winmm)
 
-    if(HAVE_GTK2)
+    if(HAVE_GTK2 AND NOT MSVC)
         #GTK requires special compile flags
 	add_definitions("-mms-bitfields")
-    endif(HAVE_GTK2)
+    endif(HAVE_GTK2 AND NOT MSVC)
+    if(MSVC AND support/espeak)
+	add_definitions(-DPLATFORM_WINDOWS)
+    endif(MSVC AND support/espeak)
 endif()
 
 
