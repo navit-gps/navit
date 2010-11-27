@@ -27,7 +27,9 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif /* _MSC_VER */
 #include <sys/types.h>
 #ifndef EZXML_NOMMAP
 #include <sys/mman.h>
