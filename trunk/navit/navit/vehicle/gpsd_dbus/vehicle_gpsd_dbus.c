@@ -86,9 +86,9 @@ vehicle_gpsd_dbus_filter(DBusConnection *connection, DBusMessage *message, void 
 			priv->geo.lat=latitude;
 			priv->geo.lng=longitude;
 		}
-		if (!is_nan(track))
+		if (!isnan(track))
 			priv->track=track;
-		if (!is_nan(speed))
+		if (!isnan(speed))
 			priv->speed=speed;
 		if (!isnan(altitude))
 			priv->altitude=altitude;
