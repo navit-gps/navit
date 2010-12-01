@@ -27,8 +27,8 @@ foreach ( MODULE_PATH ${ALL_MODULES})
       include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/${MODULE_PATH}")
       
       string(REPLACE "/" "_" MODULE_INC ${MODULE_PATH})
-      list(APPEND MODULES_PROTOTYPE "void\tmodule_${MODULE_INC}_init(void);")
-      list(APPEND MODULES_FUNC "module_${MODULE_INC}_init()")
+      list(APPEND MODULES_PROTOTYPE "\nvoid\tmodule_${MODULE_INC}_init(void)")
+      list(APPEND MODULES_FUNC "\nmodule_${MODULE_INC}_init()")
       
       if (NOT USE_PLUGINS)
          list(APPEND MODULES_NAME ${MODULE_INC})
