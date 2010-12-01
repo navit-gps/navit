@@ -25,7 +25,8 @@ macro(convert_svg2png IMAGE_INPUT IMAGE_OUTPUT SCALE)
 endmacro()
 
 macro(add_scale_targets IMAGE_NAME)
-   foreach (CURRENT_SCALE ${ARGN})
+   string(REPLACE "," ";" SCALES ${ARGN})
+   foreach (CURRENT_SCALE ${SCALES})
       convert_svg2png(
          ${CMAKE_CURRENT_SOURCE_DIR}/${SVG} 
          ${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_NAME}_${CURRENT_SCALE}_${CURRENT_SCALE}.png 
@@ -44,7 +45,7 @@ FILE(GLOB XPM_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.xpm")
 list(APPEND IMAGE_TARGETS ${XPM_FILES})
 
 if (USE_SVG OR SVG2PNG)
-   FILE(GLOB SVG_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.svg")
+   FILE(GLOB SVG_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.svg" "*.svgz")
    
    if(USE_SVG)
       list(APPEND IMAGE_TARGETS ${SVG_FILES})
@@ -52,7 +53,7 @@ if (USE_SVG OR SVG2PNG)
 
    if (SVG2PNG)
       foreach (SVG ${SVG_FILES})
-            string(REPLACE ".svg" "" IMAGE ${SVG})
+            string(REGEX REPLACE ".svgz*\$" "" IMAGE ${SVG})
             
             if ( DEFINED svg2png_scaling_nav AND ${IMAGE} MATCHES "^nav_")
                add_scale_targets(${IMAGE} ${svg2png_scaling_nav})
@@ -60,14 +61,13 @@ if (USE_SVG OR SVG2PNG)
                add_scale_targets(${IMAGE} ${svg2png_scaling_flag})
             elseif( DEFINED svg2png_scaling)
                add_scale_targets(${IMAGE} ${svg2png_scaling})
+               convert_svg2png (
+                  "${CMAKE_CURRENT_SOURCE_DIR}/${SVG}"
+                  "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE}.png"
+                  0
+               )
+               list(APPEND IMAGE_TARGETS "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE}.png")
             endif()
-            
-            convert_svg2png (
-               "${CMAKE_CURRENT_SOURCE_DIR}/${SVG}"
-               "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE}.png"
-               0
-            )
-            list(APPEND IMAGE_TARGETS "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE}.png")
       endforeach()
    endif(SVG2PNG)
 endif(USE_SVG OR SVG2PNG)
