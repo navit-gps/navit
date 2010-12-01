@@ -4,6 +4,9 @@
 #cmakedefine HAVE_API_WIN32 1
 #cmakedefine HAVE_API_WIN32_CE 1
 #cmakedefine HAVE_GLIB 1
+#cmakedefine CACHE_SIZE @CACHE_SIZE@
+#cmakedefine AVOID_FLOAT 1
+#cmakedefine AVOID_UNALIGNED 1
 
 /* Versions */
 #cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
