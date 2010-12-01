@@ -9,6 +9,10 @@ set(PACKAGE_NAME "navit-svn")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include("${PROJECT_SOURCE_DIR}/cmake/navit_macros.cmake")
 
+IF(NOT CMAKE_BUILD_TYPE)
+    SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
+ENDIF(NOT CMAKE_BUILD_TYPE)
+
 ### Detect environment
 INCLUDE (CPack)
 INCLUDE (CheckIncludeFiles)
@@ -201,9 +205,7 @@ set(LIB_DIR lib)
 ### Platform specific settings
 if(WIN32 OR WINCE)
     SET(CMAKE_EXECUTABLE_SUFFIX ".exe")
-    if(FREETYPE_FOUND)
-       add_module(graphics/win32 "Windows detected" TRUE)
-    endif(FREETYPE_FOUND)
+    add_module(graphics/win32 "Windows detected" TRUE)
     add_module(support/win32 "Windows detected" TRUE)
 
     set_with_reason(support/ezxml "Windows detected" TRUE)
