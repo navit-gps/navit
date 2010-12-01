@@ -109,6 +109,9 @@ ADD_CUSTOM_COMMAND(
 
 #configure_file (${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 ADD_DEPENDENCIES(navit_core version)
+if (ENABLE_NLS)
+   ADD_DEPENDENCIES(support_glib intl_cmake)
+endif()
 
 add_executable (navit start.c navit.xml)
 target_link_libraries (navit navit_core)
