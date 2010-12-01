@@ -5,6 +5,7 @@ cmake_policy(VERSION 2.6)
 
 set(PACKAGE_VERSION "0.5.0")
 set(PACKAGE_NAME "navit-svn")
+set(PACKAGE "navit")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include("${PROJECT_SOURCE_DIR}/cmake/navit_macros.cmake")
@@ -41,6 +42,7 @@ if(PKG_CONFIG_FOUND)
 endif(PKG_CONFIG_FOUND)
 #Simple checks
 CHECK_INCLUDE_FILES(wordexp.h HAVE_WORDEXP)
+CHECK_INCLUDE_FILES(stdint.h HAVE_STDINT_H)
 CHECK_LIBRARY_EXISTS(gypsy gypsy_control_get_default "" GYPSY_FOUND)
 CHECK_INCLUDE_FILES(libspeechd.h HAVE_LIBSPEECHD)
 
@@ -254,8 +256,10 @@ if (WIN32)
 endif()
 if(WINCE)
     add_plugin(support/libc "wince detected" TRUE)
+    add_plugin(intl_cmake "wince detected" TRUE)
     set(HAVE_API_WIN32_CE 1)
     set(BUILD_MAPTOOL FALSE)
+    set(ENABLE_NLS TRUE)
 endif()
 
 

@@ -57,6 +57,9 @@ char *alloca ();
 #endif
 
 #include <stdlib.h>
+#if HAVE_STDINT_H
+#include <stdint.h>
+#endif
 #include <string.h>
 
 #if defined HAVE_UNISTD_H || defined _LIBC
