@@ -86,10 +86,24 @@ ADD_CUSTOM_TARGET(
                      -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
 )
 
+
+set(XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml ${CMAKE_CURRENT_BINARY_DIR}/navit.xml.new)
+if(XSLTS)
+   string(REPLACE "," ";" XSLTS ${XSLTS})
+   foreach(tmp ${XSLTS})
+      set (XSLT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/xslt/${tmp}.xslt")
+      list(APPEND XSLT_FILES "${XSLT_FILES}")
+      list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E echo  Applying ${tmp}.xslt)
+      list(APPEND XSLT_COMMANDS COMMAND saxon -snone ${CMAKE_CURRENT_BINARY_DIR}/navit.xml.new ${XSLT_FILE} >${CMAKE_CURRENT_BINARY_DIR}/navit.xml.tmp)
+      list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E rename ${CMAKE_CURRENT_BINARY_DIR}/navit.xml.tmp ${CMAKE_CURRENT_BINARY_DIR}/navit.xml.new)
+   endforeach()
+endif()
+list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/navit.xml.new ${CMAKE_CURRENT_BINARY_DIR}/navit.xml)
+
 ADD_CUSTOM_COMMAND(
   OUTPUT navit.xml
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml ${CMAKE_CURRENT_BINARY_DIR}/navit.xml
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml ${XSLT_FILES}
+  ${XSLT_COMMANDS}
 )
 
 
