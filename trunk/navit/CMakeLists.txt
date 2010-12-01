@@ -10,6 +10,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include("${PROJECT_SOURCE_DIR}/cmake/navit_macros.cmake")
 
 ### Detect environment
+INCLUDE (CPack)
 INCLUDE (CheckIncludeFiles)
 INCLUDE (CheckLibraryExists)
 find_package(Glib)
@@ -72,7 +73,7 @@ endif()
 if(FREETYPE_FOUND)
    include_directories(${FREETYPE_INCLUDE_DIRS})
    list(APPEND NAVIT_LIBS ${FREETYPE_LIBRARY})
-   add_module(font/freetype "freetype found" TRUE)
+   #add_module(font/freetype "freetype found" TRUE)
 else(FREETYPE_FOUND)
     MESSAGE("No freetype library found, graphics modules may not be available")
     add_module(graphics/android "FreeType library not found" FALSE)
@@ -80,7 +81,6 @@ else(FREETYPE_FOUND)
     add_module(graphics/gtk_drawing_area "FreeType library not found" FALSE)
     add_module(graphics/opengl "FreeType library not found" FALSE)
     add_module(graphics/sdl "FreeType library not found" FALSE)
-    add_module(graphics/win32 "FreeType library not found" FALSE)
 endif(FREETYPE_FOUND)
 
 if (QT_FOUND)
@@ -191,8 +191,16 @@ set(svg2png_scaling_nav 32 48 96)
 set(DBUS_USE_SYSTEM_BUS FALSE)
 set(BUILD_MAPTOOL TRUE)
 
+# install path
+set(BIN_DIR bin)
+set(SHARE_DIR share/navit)
+set(LOCALE_DIR share)
+set(IMAGE_DIR share/navit/xpm)
+set(LIB_DIR lib)
+
 ### Platform specific settings
-if(WIN32)
+if(WIN32 OR WINCE)
+    SET(CMAKE_EXECUTABLE_SUFFIX ".exe")
     if(FREETYPE_FOUND)
        add_module(graphics/win32 "Windows detected" TRUE)
     endif(FREETYPE_FOUND)
@@ -210,7 +218,6 @@ if(WIN32)
     set_with_reason(USE_PLUGINS "win32: currently not supported" FALSE)
 
     set(HAVE_API_WIN32_BASE 1)
-    set(HAVE_API_WIN32 1)
    
     # Image stuff
     if(NOT graphics/qt_qpainter)
@@ -224,7 +231,6 @@ if(WIN32)
    set(LOCALE_DIR ./)
    set(IMAGE_DIR xpm)
 
-   list(APPEND NAVIT_LIBS winmm)
 
     if(HAVE_GTK2 AND NOT MSVC)
         #GTK requires special compile flags
@@ -234,14 +240,16 @@ if(WIN32)
 	add_definitions(-DPLATFORM_WINDOWS)
     endif(MSVC AND support/espeak)
 endif()
+if (WIN32) 
+    set(HAVE_API_WIN32 1)
+    list(APPEND NAVIT_LIBS winmm)
+endif()
+if(WINCE)
+    add_plugin(support/libc "wince detected" TRUE)
+    set(HAVE_API_WIN32_CE 1)
+    set(BUILD_MAPTOOL FALSE)
+endif()
 
-
-# install path
-set(BIN_DIR bin)
-set(SHARE_DIR share/navit)
-set(LOCALE_DIR share)
-set(IMAGE_DIR share/navit/xpm)
-set(LIB_DIR lib)
 
 foreach(PLUMO ${ALL_PLUGINS} ${ALL_MODULES} USE_PLUGINS USE_ROUTING BUILD_MAPTOOL USE_SVG SVG2PNG DBUS_USE_SYSTEM_BUS)
    set(OLDVALUE ${${PLUMO}})
