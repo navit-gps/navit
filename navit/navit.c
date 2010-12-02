@@ -1036,7 +1036,9 @@ navit_speech_estimate(struct navit *this_, char *str)
 void
 navit_say(struct navit *this_, char *text)
 {
-	speech_say(this_->speech, text);
+	if(this_->speech) {
+		speech_say(this_->speech, text);
+	}
 }
 
 /**
