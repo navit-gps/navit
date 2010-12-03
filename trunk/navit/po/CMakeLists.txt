@@ -11,8 +11,10 @@ set(POTFILES
       ${PROJECT_SOURCE_DIR}/navit/gui/gtk/gui_gtk_statusbar.c
       ${PROJECT_SOURCE_DIR}/navit/gui/internal/gui_internal.c
       ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.c
-      ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.glade
-)     
+)
+if (XGETTEXT_GLADE)
+      list(APPEND POTFILES ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.glade)
+endif()
 
 ADD_CUSTOM_COMMAND(
    OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/navit_shipped.c
