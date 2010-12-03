@@ -187,6 +187,7 @@ struct odometer {
 	struct color idle_color;    //text color when counter is idle
 
 	int bDisableReset;         
+	int bAutoStart;         
 	int bActive;                //counting or not
 	double sum_dist;            //sum of distance ofprevious intervals in meters
 	int sum_time;               //sum of time of previous intervals in seconds (needed for avg spd calculation)
@@ -404,6 +405,9 @@ osd_odometer_init(struct odometer *this, struct navit *nav)
 
 	navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast (osd_odometer_click), attr_button, this));
 
+	if(this->bAutoStart) {
+		this->bActive = 1;
+	}
 	osd_odometer_draw(this, nav, NULL);
 }
 
@@ -474,6 +478,12 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 		this->bDisableReset = attr->u.num;
 	else
 		this->bDisableReset = 0;
+
+	attr = attr_search(attrs, NULL, attr_autostart);
+	if (attr)
+		this->bAutoStart = attr->u.num;
+	else
+		this->bAutoStart = 0;
 
 	osd_set_std_attr(attrs, &this->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
