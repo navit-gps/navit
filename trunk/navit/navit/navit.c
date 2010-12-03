@@ -746,6 +746,11 @@ static struct command_table commands[] = {
 	{"fmt_coordinates",command_cast(navit_cmd_fmt_coordinates)},
 };
 	
+void 
+navit_command_add_table(struct navit*this_, struct command_table *commands, int count)
+{
+  command_add_table(this_->attr_cbl, commands, count, this_);
+}
 
 struct navit *
 navit_new(struct attr *parent, struct attr **attrs)
