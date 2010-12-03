@@ -49,6 +49,7 @@ struct route;
 struct tracking;
 struct transformation;
 struct vehicleprofile;
+struct command_table;
 void navit_add_mapset(struct navit *this_, struct mapset *ms);
 struct mapset *navit_get_mapset(struct navit *this_);
 struct tracking *navit_get_tracking(struct navit *this_);
@@ -110,6 +111,7 @@ int navit_set_layout_by_name(struct navit *n, const char *name);
 void navit_disable_suspend(void);
 int navit_block(struct navit *this_, int block);
 void navit_destroy(struct navit *this_);
+void navit_command_add_table(struct navit*this_, struct command_table *commands, int count);
 /* end of prototypes */
 #ifdef __cplusplus
 }
