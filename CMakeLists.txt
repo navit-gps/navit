@@ -301,6 +301,12 @@ add_subdirectory (navit)
 add_subdirectory (man)
 
 if (GETTEXT_FOUND)
+   execute_process(COMMAND echo "<test/>" COMMAND xgettext -L glade - RESULT_VARIABLE GETTEXT_RET)
+   if ("${GETTEXT_RET}" STREQUAL "0")
+       set(XGETTEXT_GLADE TRUE)
+   else()
+       set(XGETTEXT_GLADE FALSE)
+   endif()
    add_subdirectory (po)
 endif(GETTEXT_FOUND)
 
