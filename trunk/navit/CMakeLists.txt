@@ -6,6 +6,7 @@ cmake_policy(VERSION 2.6)
 set(PACKAGE_VERSION "0.5.0")
 set(PACKAGE_NAME "navit-svn")
 set(PACKAGE "navit")
+set(PACKAGE_STRING "${PACKAGE} ${PACKAGE_VERSION}")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include("${PROJECT_SOURCE_DIR}/cmake/navit_macros.cmake")
