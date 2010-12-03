@@ -50,6 +50,12 @@
 #include "speech.h"
 #include "event.h"
 
+struct odometer;
+
+static void osd_odometer_reset(struct odometer *this);
+static void osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid);
+static void osd_odometer_draw(struct odometer *this, struct navit *nav, struct vehicle *v);
+
 struct compass {
 	struct osd_item osd_item;
 	int width;
@@ -163,6 +169,12 @@ format_float_0(double num)
 }
 
 
+static int odometers_saved = 0;
+static GList* odometer_list = NULL;
+
+static struct command_table commands[] = {
+	{"odometer_reset",command_cast(osd_cmd_odometer_reset)},
+};
 
 struct odometer {
 	struct osd_item osd_item;
@@ -184,8 +196,20 @@ struct odometer {
 	struct coord last_coord;
 };
 
-static int odometers_saved=0;
-static GList* odometer_list = NULL;
+static void
+osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
+          GList* list = odometer_list;
+          while(list) {
+            if(!strcmp(((struct odometer*)(list->data))->name,in[0]->u.str)) {
+              osd_odometer_reset(list->data);
+	      osd_odometer_draw(list->data,this,NULL);
+            }
+            list = g_list_next(list);
+          }
+	} 
+}
 
 static char* 
 str_replace(char*output, char*input, char*pattern, char*replacement)
@@ -320,6 +344,18 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
 }
 
 
+static void
+osd_odometer_reset(struct odometer *this)
+{
+  if(!this->bDisableReset) {
+    this->bActive = 0;
+    this->sum_dist = 0;
+    this->sum_time = 0;
+    this->last_start_time = 0;
+    this->last_coord.x = -1;
+    this->last_coord.y = -1;
+  }
+}
 
 static void
 osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int button, struct point *p)
@@ -338,13 +374,8 @@ osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int bu
 
   this->bActive ^= 1;  //toggle active flag
 
-  if (this->last_click_time == time(0) && !this->bDisableReset ) { //double click handling
-    this->bActive = 0;
-    this->sum_dist = 0;
-    this->sum_time = 0;
-    this->last_start_time = 0;
-    this->last_coord.x = -1;
-    this->last_coord.y = -1;
+  if (this->last_click_time == time(0)) { //double click handling
+    osd_odometer_reset(this);
   }
 
   this->last_click_time = time(0);
@@ -482,6 +513,7 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 		fclose(f);
 	}
 
+	navit_command_add_table(nav, commands, sizeof(commands)/sizeof(struct command_table));
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_init), attr_graphics_ready, this));
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_destroy), attr_destroy, nav));
 	odometer_list = g_list_append(odometer_list, this);
