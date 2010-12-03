@@ -25,7 +25,7 @@ macro(convert_svg2png IMAGE_INPUT IMAGE_OUTPUT SCALE)
 endmacro()
 
 macro(add_scale_targets IMAGE_NAME)
-   string(REPLACE "," ";" SCALES ${ARGN})
+   string(REPLACE "," ";" SCALES "${ARGN}")
    foreach (CURRENT_SCALE ${SCALES})
       convert_svg2png(
          ${CMAKE_CURRENT_SOURCE_DIR}/${SVG} 
