@@ -15,6 +15,7 @@ POTFILES  = \
 	$(top_srcdir)/navit/gui/gtk/gui_gtk_action.c \
 	$(top_srcdir)/navit/gui/gtk/gui_gtk_statusbar.c \
 	$(top_srcdir)/navit/gui/internal/gui_internal.c \
+	$(top_srcdir)/navit/osd/core/osd_core.c \
 	$(top_builddir)/navit/navit_shipped.c
 
 if XGETTEXT_GLADE
