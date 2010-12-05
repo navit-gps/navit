@@ -133,10 +133,7 @@ void CALLBACK tessEndCB ();
 void CALLBACK tessErrorCB (GLenum errorCode);
 void CALLBACK tessVertexCB (const GLvoid * data);
 void CALLBACK tessVertexCB2 (const GLvoid * data);
-void CALLBACK tessCombineCB (const GLdouble newVertex[3],
-			     const GLdouble * neighborVertex[4],
-			     const GLfloat neighborWeight[4],
-			     GLdouble ** outData);
+void tessCombineCB (GLdouble c[3], void *d[4], GLfloat w[4], void **out);
 
 static struct graphics_priv *graphics_opengl_new_helper (struct
 							 graphics_methods
@@ -173,7 +170,6 @@ gc_set_dashes (struct graphics_gc_priv *gc, int width, int offset,
 	       unsigned char *dash_list, int n)
 {
   int i;
-  printf("\n");
   const int cOpenglMaskBits = 16;
   gc->dash_count = n;
   if (1 == n)
@@ -539,6 +535,15 @@ draw_lines (struct graphics_priv *gr, struct graphics_gc_priv *gc,
     }
 }
 
+void tessCombineCB (GLdouble c[3], void *d[4], GLfloat w[4], void **out) 
+{ 
+  GLdouble *nv = (GLdouble *) malloc(sizeof(GLdouble)*3); 
+  nv[0] = c[0]; 
+  nv[1] = c[1]; 
+  nv[2] = c[2]; 
+  *out = nv;  
+}
+
 
 static void
 draw_polygon (struct graphics_priv *gr, struct graphics_gc_priv *gc,
@@ -570,6 +575,7 @@ draw_polygon (struct graphics_priv *gr, struct graphics_gc_priv *gc,
   gluTessCallback (tess, GLU_TESS_END, (void (*)(void)) tessEndCB);
   //     gluTessCallback(tess, GLU_TESS_ERROR, (void (*)(void))tessErrorCB);
   gluTessCallback (tess, GLU_TESS_VERTEX, (void (*)(void)) tessVertexCB);
+  gluTessCallback (tess, GLU_TESS_COMBINE, (void (*)(void)) tessCombineCB);
 
   // tessellate and compile a concave quad into display list
   // gluTessVertex() takes 3 params: tess object, pointer to vertex coords,
