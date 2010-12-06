@@ -189,6 +189,7 @@ struct odometer {
 	int bDisableReset;         
 	int bAutoStart;         
 	int bActive;                //counting or not
+	int autosave_period;        //autosave period in seconds
 	double sum_dist;            //sum of distance ofprevious intervals in meters
 	int sum_time;               //sum of time of previous intervals in seconds (needed for avg spd calculation)
 	int time_all;
@@ -386,6 +387,31 @@ osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int bu
 }
 
 
+static int 
+osd_odometer_save(struct navit* nav) 
+{
+		//save odometers that are persistent(ie have name)
+		FILE*f;
+		GList* list = odometer_list;
+		char* fn = g_strdup_printf("%s/odometer.txt",navit_get_user_data_directory(TRUE));
+		f = fopen(fn,"w+");
+		g_free(fn);
+		if(!f) {
+			return TRUE;
+		}
+		while (list) {
+			if( ((struct odometer*)(list->data))->name) {
+				char*odo_str = osd_odometer_to_string(list->data);
+				fprintf(f,"%s",odo_str);
+				
+			}
+			list = g_list_next(list);
+		}
+		fclose(f);
+	return TRUE;
+}
+
+
 static void
 osd_odometer_init(struct odometer *this, struct navit *nav)
 {
@@ -404,6 +430,10 @@ osd_odometer_init(struct odometer *this, struct navit *nav)
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_odometer_draw), attr_position_coord_geo, this));
 
 	navit_add_callback(nav, this->click_cb = callback_new_attr_1(callback_cast (osd_odometer_click), attr_button, this));
+	
+	if(this->autosave_period>0) {
+		event_add_timeout(this->autosave_period*1000, 1, callback_new_1(callback_cast(osd_odometer_save), NULL));
+	}
 
 	if(this->bAutoStart) {
 		this->bActive = 1;
@@ -414,26 +444,9 @@ osd_odometer_init(struct odometer *this, struct navit *nav)
 static void 
 osd_odometer_destroy(struct navit* nav)
 {
-	FILE*f;
 	if(!odometers_saved) {
 		odometers_saved = 1;
-		//save odometers that are persistent(ie have name)
-		GList* list = odometer_list;
-		char* fn = g_strdup_printf("%s/odometer.txt",navit_get_user_data_directory(TRUE));
-		f = fopen(fn,"w+");
-		g_free(fn);
-		if(!f) {
-			return;
-		}
-		while (list) {
-			if( ((struct odometer*)(list->data))->name) {
-				char*odo_str = osd_odometer_to_string(list->data);
-				fprintf(f,"%s",odo_str);
-				
-			}
-			list = g_list_next(list);
-		}
-		fclose(f);
+		osd_odometer_save(NULL);
 	}
 }
 
@@ -484,6 +497,11 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 		this->bAutoStart = attr->u.num;
 	else
 		this->bAutoStart = 0;
+	attr = attr_search(attrs, NULL, attr_autosave_period);
+	if (attr)
+		this->autosave_period = attr->u.num;
+	else
+		this->autosave_period = -1;  //disabled by default
 
 	osd_set_std_attr(attrs, &this->osd_item, 2);
 	attr = attr_search(attrs, NULL, attr_width);
