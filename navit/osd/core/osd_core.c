@@ -288,6 +288,7 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
 
   char *dist_buffer=0;
   char *spd_buffer=0;
+  char *time_buffer = 0;
   struct point p, bbox[4];
   struct attr position_attr,vehicle_attr;
   enum projection pro;
@@ -327,13 +328,29 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   char buffer2[64+1]="";
   dist_buffer = format_distance(this->sum_dist,"");
   spd_buffer = format_speed(spd,"");
+  int remainder = this->time_all;
+  int days  = remainder  / (24*60*60);
+  remainder = remainder  % (24*60*60);
+  int hours = remainder  / (60*60);
+  remainder = remainder  % (60*60);
+  int mins  = remainder  / (60);
+  remainder = remainder  % (60);
+  int secs  = remainder;
+  if(0<days) {
+    time_buffer = g_strdup_printf("%dd %d:%d:%d",days,hours,mins,secs);
+  }
+  else {
+    time_buffer = g_strdup_printf("%d:%d:%d",hours,mins,secs);
+  }
 
   buffer [0] = 0;
   buffer2[0] = 0;
   if(this->text) {
-    str_replace(buffer2,this->text,"${avg_spd}",spd_buffer);
-    str_replace(buffer,buffer2,"${distance}",dist_buffer);
+    str_replace(buffer,this->text,"${avg_spd}",spd_buffer);
+    str_replace(buffer2,buffer,"${distance}",dist_buffer);
+    str_replace(buffer,buffer2,"${time}",time_buffer);
   }
+  g_free(time_buffer);
 
   graphics_get_text_bbox(this->osd_item.gr, this->osd_item.font, buffer, 0x10000, 0, bbox, 0);
   p.x=(this->osd_item.w-bbox[2].x)/2;
