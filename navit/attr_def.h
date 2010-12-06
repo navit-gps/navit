@@ -164,6 +164,7 @@ ATTR(offroad_limit_pref)
 ATTR(route_pref)
 ATTR(overspeed_pref)
 ATTR(overspeed_percent_pref)
+ATTR(autosave_period)
 ATTR2(0x00027500,type_rel_abs_begin)
 /* These attributes are int that can either hold relative		*
  * or absolute values. A relative value is indicated by 		*
