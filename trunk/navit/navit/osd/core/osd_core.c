@@ -1446,7 +1446,20 @@ osd_text_format_attr(struct attr *attr, char *format)
 
 	switch (attr->type) {
 	case attr_position_speed:
-		return format_speed(*attr->u.numd,"");
+		if (!format || !strcmp(format,"named"))
+			return format_speed(*attr->u.numd,"");
+		if (!strcmp(format,"value") || !strcmp(format,"unit")) {
+			char *ret,*tmp=format_speed(*attr->u.numd," ");
+			char *pos=strchr(tmp,' ');
+			if (! pos)
+				return tmp;
+			*pos++='\0';
+			if (!strcmp(format,"value"))
+				return tmp;
+			ret=g_strdup(pos);
+			g_free(tmp);
+			return ret;
+		}
 	case attr_position_height:
 	case attr_position_direction:
 		return format_float_0(*attr->u.numd);
