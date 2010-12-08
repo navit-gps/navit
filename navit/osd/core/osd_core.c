@@ -381,9 +381,14 @@ osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int bu
 {
   struct point bp = this->osd_item.p;
   osd_wrap_point(&bp, nav);
-  if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->osd_item.w || p->y > bp.y + this->osd_item.h) && !this->osd_item.pressed)
+  if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->osd_item.w || p->y > bp.y + this->osd_item.h || !this->osd_item.configured ) && !this->osd_item.pressed)
     return;
-  navit_ignore_button(nav);
+  if (button != 1)
+    return;
+  if (!!pressed == !!this->osd_item.pressed)
+    return;
+  if (navit_ignore_button(nav))
+    return;
   if (pressed) { //single click handling
     if(this->bActive) { //being stopped
       this->last_coord.x = -1;
@@ -624,10 +629,15 @@ osd_stopwatch_click(struct stopwatch *this, struct navit *nav, int pressed, int 
 {
 	struct point bp = this->osd_item.p;
 	osd_wrap_point(&bp, nav);
-	if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->osd_item.w || p->y > bp.y + this->osd_item.h) && !this->osd_item.pressed) 
+  if ((p->x < bp.x || p->y < bp.y || p->x > bp.x + this->osd_item.w || p->y > bp.y + this->osd_item.h || !this->osd_item.configured ) && !this->osd_item.pressed)
 	return;
+  if (button != 1)
+    return;
+  if (!!pressed == !!this->osd_item.pressed)
+    return;
+  if (navit_ignore_button(nav))
+    return;
 
-	navit_ignore_button(nav);
 	if (pressed) { //single click handling
 
 		if(this->bActive) {
@@ -1244,7 +1254,7 @@ struct osd_speed_warner {
 	int announce_on;
         enum eAnnounceState {eNoWarn=0,eWarningTold=1};
 	enum eAnnounceState announce_state;
-	int bTextOnly;                 //text of label attribute for this osd
+	int bTextOnly;
 };
 
 static void
@@ -2389,7 +2399,6 @@ osd_auxmap_draw(struct auxmap *this)
 {
 	int d=10;
 	struct point p;
-	struct coord *c;
 	struct attr mapset;
 
 	if (!this->osd_item.configured)
