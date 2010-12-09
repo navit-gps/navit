@@ -385,9 +385,9 @@ osd_odometer_click(struct odometer *this, struct navit *nav, int pressed, int bu
     return;
   if (button != 1)
     return;
-  if (!!pressed == !!this->osd_item.pressed)
-    return;
   if (navit_ignore_button(nav))
+    return;
+  if (!!pressed == !!this->osd_item.pressed)
     return;
   if (pressed) { //single click handling
     if(this->bActive) { //being stopped
@@ -633,9 +633,9 @@ osd_stopwatch_click(struct stopwatch *this, struct navit *nav, int pressed, int 
 	return;
   if (button != 1)
     return;
-  if (!!pressed == !!this->osd_item.pressed)
-    return;
   if (navit_ignore_button(nav))
+    return;
+  if (!!pressed == !!this->osd_item.pressed)
     return;
 
 	if (pressed) { //single click handling
