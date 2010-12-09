@@ -505,7 +505,7 @@ static void
 draw_lines (struct graphics_priv *gr, struct graphics_gc_priv *gc,
 	    struct point *p, int count)
 {
-  if (gr->parent && !gr->parent->overlay_enabled)
+  if ((gr->parent && !gr->parent->overlay_enabled) || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled) )
     {
       return;
     }
@@ -549,7 +549,7 @@ static void
 draw_polygon (struct graphics_priv *gr, struct graphics_gc_priv *gc,
 	      struct point *p, int count)
 {
-  if (gr->parent && !gr->parent->overlay_enabled)
+  if ((gr->parent && !gr->parent->overlay_enabled) || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled) )
     {
       return;
     }
@@ -603,7 +603,7 @@ static void
 draw_rectangle (struct graphics_priv *gr, struct graphics_gc_priv *gc,
 		struct point *p, int w, int h)
 {
-  if (gr->parent && !gr->parent->overlay_enabled)
+  if ((gr->parent && !gr->parent->overlay_enabled) || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled) )
     {
       return;
     }
@@ -628,7 +628,7 @@ draw_circle (struct graphics_priv *gr, struct graphics_gc_priv *gc,
 	     struct point *p, int r)
 {
 
-  if (gr->parent && !gr->parent->overlay_enabled)
+  if ((gr->parent && !gr->parent->overlay_enabled) || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled) )
     {
       return;
     }
@@ -791,7 +791,7 @@ draw_text (struct graphics_priv *gr, struct graphics_gc_priv *fg,
 	   struct graphics_gc_priv *bg, struct graphics_font_priv *font,
 	   char *text, struct point *p, int dx, int dy)
 {
-  if (gr->parent && !gr->parent->overlay_enabled)
+  if ((gr->parent && !gr->parent->overlay_enabled) || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled) )
     {
       return;
     }
@@ -824,7 +824,7 @@ static void
 draw_image (struct graphics_priv *gr, struct graphics_gc_priv *fg,
 	    struct point *p, struct graphics_image_priv *img)
 {
-  if (gr->parent && !gr->parent->overlay_enabled)
+  if ((gr->parent && !gr->parent->overlay_enabled) || (gr->parent && gr->parent->overlay_enabled && !gr->overlay_enabled) )
     {
       return;
     }
@@ -1042,6 +1042,7 @@ static void
 overlay_disable (struct graphics_priv *gr, int disable)
 {
   gr->overlay_enabled = !disable;
+  redraw_screen(graphics_priv_root);
 }
 
 static void
