@@ -19,11 +19,16 @@
 
 #ifndef __ZIPFILE_H__
 #ifdef HAVE_API_WIN32_CE
-#warning OK
 /* cegcc doesn't honor the __attribute__(packed) need pragma to work */
 #pragma pack(push)
 #pragma pack(1)
 #endif
+
+#define zip_split_sig 0x07084b50
+
+struct zip_split {
+	int zipsplitsig;
+};
 
 #define zip_lfh_sig 0x04034b50
 
