@@ -223,7 +223,6 @@ if(WIN32 OR WINCE)
 
     # vehicle_file is broken for windows. use vehicle_wince instead
     # whicle_wince isn't buildable on non-CE windows ssytems
-    set_with_reason(vehicle/file "wind32: currently broken" FALSE)
 
     # plugins currently not supported on windows
     set_with_reason(USE_PLUGINS "win32: currently not supported" FALSE)
@@ -261,6 +260,7 @@ if(WINCE)
     set(HAVE_API_WIN32_CE 1)
     set(BUILD_MAPTOOL FALSE)
     set(ENABLE_NLS TRUE)
+    set_with_reason(vehicle/file "wince: currently broken" FALSE)
 endif()
 
 
