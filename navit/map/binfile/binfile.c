@@ -1635,7 +1635,7 @@ map_binfile_open(struct map_priv *m)
 		return 0;
 	}
 	*magic = le32_to_cpu(*magic);
-	if (*magic == zip_lfh_sig) {
+	if (*magic == zip_lfh_sig || *magic == zip_split_sig) {
 		if ((first_cd=map_binfile_first_cd(m))) {
 			m->cde_size=sizeof(struct zip_cd)+first_cd->zipcfnl+first_cd->zipcxtl;
 			m->zip_members=m->index_offset/m->cde_size+1;
