@@ -1590,6 +1590,12 @@ msgstr "Térképpont"
 msgid "Vehicle Position"
 msgstr "Jármű helyzete"
 
+msgid "Look out! Camera!"
+msgstr "Vigyázz, kamera!"
+
+msgid "Please decrease your speed"
+msgstr "Lassíts!"
+
 #, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d,%d kilométer"
