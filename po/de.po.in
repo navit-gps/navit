@@ -1595,6 +1595,12 @@ msgstr "Kartenpunkt"
 msgid "Vehicle Position"
 msgstr "Fahrzeugposition"
 
+msgid "Look out! Camera!"
+msgstr "Achtung Blitzer!"
+
+msgid "Please decrease your speed"
+msgstr "Du bist zu schnell"
+
 #, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d,%d Kilometer"
