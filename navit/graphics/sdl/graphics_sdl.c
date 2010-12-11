@@ -30,6 +30,7 @@
 #include "item.h"
 #include "attr.h"
 #include "callback.h"
+#include "navit/font/freetype/font_freetype.h"
 
 #include <SDL/SDL.h>
 #include <math.h>
@@ -136,6 +137,7 @@ struct graphics_priv {
     struct timeval draw_begin_tv;
     unsigned long draw_time_peak;
 #endif
+  struct font_freetype_methods freetype_methods;
     /* </main> */
 };
 
@@ -222,100 +224,6 @@ static void font_destroy(struct graphics_font_priv *gf)
 static struct graphics_font_methods font_methods = {
 	font_destroy
 };
-
-static struct graphics_font_priv *font_new(struct graphics_priv *gr, struct graphics_font_methods *meth, char *fontfamily, int size, int flags)
-{
-    struct graphics_font_priv *gf=g_new(struct graphics_font_priv, 1);
-
-#ifdef SDL_TTF
-    /* 'size' is in pixels, TTF_OpenFont wants pts. */
-    size = size / 15;
-
-//    gf->font = TTF_OpenFont("/usr/share/fonts/truetype/ttf-bitstream-vera/Vera.ttf", size);
-    if(flags)
-    {
-        gf->font = TTF_OpenFont("/usr/share/fonts/truetype/LiberationMono-Bold.ttf", size);
-    }
-    else
-    {
-        gf->font = TTF_OpenFont("/usr/share/fonts/truetype/LiberationMono-Regular.ttf", size);
-    }
-
-    if(gf->font == NULL)
-    {
-        g_free(gf);
-        return NULL;
-    }
-
-    if(flags)
-    {
-        /* apparently just means bold right now */
-        TTF_SetFontStyle(gf->font, TTF_STYLE_BOLD);
-    }
-    else
-    {
-        TTF_SetFontStyle(gf->font, TTF_STYLE_NORMAL);
-    }
-#else
-    /* copy-pasted from graphics_gtk_drawing_area.c
-
-       FIXME: figure out some way to share this b/t gtk and sdl graphics plugin.
-       new 'font' plugin type that uses an abstracted bitmap fmt to pass to gfx plugin?
-    */
-
-	int exact, found;
-	char **family;
-
-    if(gr->overlay_mode)
-    {
-        gr = gr->overlay_parent;
-    }
-
-	found=0;
-	for (exact=1;!found && exact>=0;exact--) {
-		family=fontfamilies;
-		while (*family && !found) {
-			dbg(1, "Looking for font family %s. exact=%d\n", *family, exact);
-			FcPattern *required = FcPatternBuild(NULL, FC_FAMILY, FcTypeString, *family, NULL);
-			if (flags)
-				FcPatternAddInteger(required,FC_WEIGHT,FC_WEIGHT_BOLD);
-			FcConfigSubstitute(FcConfigGetCurrent(), required, FcMatchFont);
-			FcDefaultSubstitute(required);
-			FcResult result;
-			FcPattern *matched = FcFontMatch(FcConfigGetCurrent(), required, &result);
-			if (matched) {
-				FcValue v1, v2;
-				FcChar8 *fontfile;
-				int fontindex;
-				FcPatternGet(required, FC_FAMILY, 0, &v1);
-				FcPatternGet(matched, FC_FAMILY, 0, &v2);
-				FcResult r1 = FcPatternGetString(matched, FC_FILE, 0, &fontfile);
-				FcResult r2 = FcPatternGetInteger(matched, FC_INDEX, 0, &fontindex);
-				if ((r1 == FcResultMatch) && (r2 == FcResultMatch) && (FcValueEqual(v1,v2) || !exact)) {
-					dbg(2, "About to load font from file %s index %d\n", fontfile, fontindex);
-					FT_New_Face( gr->library, (char *)fontfile, fontindex, &gf->face );
-					found=1;
-				}
-				FcPatternDestroy(matched);
-			}
-			FcPatternDestroy(required);
-			family++;
-		}
-	}
-	if (!found) {
-		g_warning("Failed to load font, no labelling");
-		g_free(gf);
-		return NULL;
-	}
-        FT_Set_Char_Size(gf->face, 0, size, 300, 300);
-	FT_Select_Charmap(gf->face, FT_ENCODING_UNICODE);
-#endif
-
-	*meth=font_methods;
-
-    return gf;
-}
-
 
 /* graphics_gc */
 
@@ -506,6 +414,11 @@ get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *t
 static void
 draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
+  if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent && gr->overlay_parent->overlay_enable && !gr->overlay_enable) )
+    {
+      return;
+    }
+
     Sint16 *vx, *vy;
     Sint16 x, y;
     int i;
@@ -592,6 +505,11 @@ draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point
 static void
 draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int w, int h)
 {
+  if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent && gr->overlay_parent->overlay_enable && !gr->overlay_enable) )
+    {
+      return;
+    }
+
 #ifdef DEBUG
         printf("draw_rectangle: %d %d %d %d r=%d g=%d b=%d a=%d\n", p->x, p->y, w, h,
                gc->fore_r, gc->fore_g, gc->fore_b, gc->fore_a);
@@ -640,6 +558,11 @@ draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct poi
 static void
 draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
+  if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent && gr->overlay_parent->overlay_enable && !gr->overlay_enable) )
+    {
+      return;
+    }
+
 #if 0
         if(gc->fore_a != 0xff)
         {
@@ -709,6 +632,11 @@ draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point 
 static void
 draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int count)
 {
+  if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent && gr->overlay_parent->overlay_enable && !gr->overlay_enable) )
+    {
+      return;
+    }
+
     /* you might expect lines to be simpler than the other shapes.
        but, that would be wrong. 1 line can generate 1 polygon + 2 circles
        and even worse, we have to calculate their parameters!
@@ -919,501 +847,205 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
     }
 #endif
 }
-
-
-#ifdef SDL_TTF
 static void
-draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *gf, char *text, struct point *p, int dx, int dy)
+display_text_draw(struct font_freetype_text *text,
+		  struct graphics_priv *gr, struct graphics_gc_priv *fg,
+		  struct graphics_gc_priv *bg, int color, struct point *p)
 {
-    SDL_Surface *ss;
-    SDL_Color f, b;
-    SDL_Rect r;
+    int i, x, y, stride;
+    struct font_freetype_glyph *g, **gp;
+    unsigned char *shadow, *glyph;
+    struct color transparent = { 0x0000, 0x0000, 0x0000, 0x0000 };
+    struct color black =
+	{ fg->fore_r * 255, fg->fore_g * 255, fg->fore_b * 255, fg->fore_a * 255
+    };
+    struct color white = { 0xffff, 0xffff, 0xffff, 0xffff };
 
-#if 0
-    /* correct? */
-    f.r = bg->back_r;
-    f.g = bg->back_g;
-    f.b = bg->back_b;
-    b.r = bg->back_r;
-    b.g = bg->back_g;
-    b.b = bg->back_b;
-#else
-    f.r = 0xff;
-    f.g = 0xff;
-    f.b = 0xff;
-    b.r = 0x00;
-    b.g = 0x00;
-    b.b = 0x00;
-#endif
+    if (bg) {
+	if (COLOR_IS_WHITE(black) && COLOR_IS_BLACK(white)) {
+	    black.r = 65535;
+	    black.g = 65535;
+	    black.b = 65535;
+	    black.a = 65535;
 
-    /* TODO: dx + dy? */
+	    white.r = 0;
+	    white.g = 0;
+	    white.b = 0;
+	    white.a = 65535;
+	} else if (COLOR_IS_BLACK(black) && COLOR_IS_WHITE(white)) {
+	    white.r = 65535;
+	    white.g = 65535;
+	    white.b = 65535;
+	    white.a = 65535;
 
-    ss = TTF_RenderUTF8_Solid(gf->font, text, b);
-    if(ss)
-    {
-        r.x = p->x;
-        r.y = p->y;
-        r.w = ss->w;
-        r.h = ss->h;
-        //SDL_SetAlpha(ss, SDL_SRCALPHA, SDL_ALPHA_OPAQUE);
-        SDL_BlitSurface(ss, NULL, gr->screen, &r);
+	    black.r = 0;
+	    black.g = 0;
+	    black.b = 0;
+	    black.a = 65535;
+	} else {
+	    white.r = bg->fore_r * 255;
+	    white.g = bg->fore_g * 255;
+	    white.b = bg->fore_b * 255;
+	    white.a = bg->fore_a * 255;
+	}
+    } else {
+	white.r = 0;
+	white.g = 0;
+	white.b = 0;
+	white.a = 0;
     }
-}
-#else
 
-struct text_glyph {
-	int x,y,w,h;
-    unsigned char *shadow;
-	unsigned char pixmap[0];
-};
 
-struct text_render {
-	int x1,y1;
-	int x2,y2;
-	int x3,y3;
-	int x4,y4;
-	int glyph_count;
-	struct text_glyph *glyph[0];
-};
+    gp = text->glyph;
+    i = text->glyph_count;
+    x = p->x << 6;
+    y = p->y << 6;
+    while (i-- > 0) {
+	g = *gp++;
+	if (g->w && g->h && bg) {
+	    stride = (g->w + 2) * 4;
+	    if (color) {
+		shadow = g_malloc(stride * (g->h + 2));
+		gr->freetype_methods.get_shadow(g, shadow, 32, stride, &white, &transparent);
 
-static unsigned char *
-display_text_render_shadow(struct text_glyph *g)
-{
-	int mask0, mask1, mask2, x, y, w=g->w, h=g->h;
-	int str=(g->w+9)/8;
-	unsigned char *shadow;
-	unsigned char *p, *pm=g->pixmap;
+		SDL_Surface *glyph_surface =
+		    SDL_CreateRGBSurfaceFrom(shadow, g->w + 2, g->h + 2,
+					     32,
+					     stride, 
+					     0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+		if (glyph_surface) {
+		    SDL_Rect r;
+		    r.x = (x + g->x) >> 6;
+		    r.y = (y + g->y) >> 6;
+		    r.w = g->w + 2;
+		    r.h = g->h + 2;
 
-	shadow=malloc(str*(g->h+2));
-	memset(shadow, 0, str*(g->h+2));
-	for (y = 0 ; y < h ; y++) {
-		p=shadow+str*y;
-		mask0=0x4000;
-		mask1=0xe000;
-		mask2=0x4000;
-		for (x = 0 ; x < w ; x++) {
-			if (pm[x+y*w]) {
-				p[0]|=(mask0 >> 8);
-				if (mask0 & 0xff)
-					p[1]|=mask0;
-
-				p[str]|=(mask1 >> 8);
-				if (mask1 & 0xff)
-					p[str+1]|=mask1;
-				p[str*2]|=(mask2 >> 8);
-				if (mask2 & 0xff)
-					p[str*2+1]|=mask2;
-			}
-			mask0 >>= 1;
-			mask1 >>= 1;
-			mask2 >>= 1;
-			if (!((mask0 >> 8) | (mask1 >> 8) | (mask2 >> 8))) {
-				mask0<<=8;
-				mask1<<=8;
-				mask2<<=8;
-				p++;
-			}
+		    SDL_BlitSurface(glyph_surface, NULL, gr->screen, &r);
 		}
+		g_free(shadow);
+	    }
 	}
-	return shadow;
-}
+	x += g->dx;
+	y += g->dy;
+    }
 
+    x = p->x << 6;
+    y = p->y << 6;
+    gp = text->glyph;
+    i = text->glyph_count;
+    while (i-- > 0) {
+	g = *gp++;
+	if (g->w && g->h) {
+	    if (color) {
+		stride = g->w;
+		if (bg) {
+		    glyph = g_malloc(stride * g->h * 4);
+		    gr->freetype_methods.get_glyph(g, glyph, 32,
+						   stride * 4, &black,
+						   &white, &transparent);
+		    SDL_Surface *glyph_surface =
+			SDL_CreateRGBSurfaceFrom(glyph, g->w, g->h, 32,
+						 stride * 4, 
+						 0x000000ff,0x0000ff00, 0x00ff0000,0xff000000);
+		    if (glyph_surface) {
+			SDL_Rect r;
+			r.x = (x + g->x) >> 6;
+			r.y = (y + g->y) >> 6;
+			r.w = g->w;
+			r.h = g->h;
 
-static struct text_render *
-display_text_render(char *text, struct graphics_font_priv *font, int dx, int dy, int x, int y)
-{
-       	FT_GlyphSlot  slot = font->face->glyph;  // a small shortcut
-	FT_Matrix matrix;
-	FT_Vector pen;
-	FT_UInt  glyph_index;
-	int n,len;
-	struct text_render *ret;
-	struct text_glyph *curr;
-	char *p=text;
-
-	len=g_utf8_strlen(text, -1);
-	ret=g_malloc(sizeof(*ret)+len*sizeof(struct text_glyph *));
-	ret->glyph_count=len;
-
-	matrix.xx = dx;
-	matrix.xy = dy;
-	matrix.yx = -dy;
-	matrix.yy = dx;
-
-	pen.x = 0 * 64;
-	pen.y = 0 * 64;
-	x <<= 6;
-	y <<= 6;
-	FT_Set_Transform( font->face, &matrix, &pen );
-
-	for ( n = 0; n < len; n++ )
-	{
-
-		glyph_index = FT_Get_Char_Index(font->face, g_utf8_get_char(p));
-		FT_Load_Glyph(font->face, glyph_index, FT_LOAD_DEFAULT );
-		FT_Render_Glyph(font->face->glyph, ft_render_mode_normal );
-
-		curr=g_malloc(sizeof(*curr)+slot->bitmap.rows*slot->bitmap.pitch);
-		ret->glyph[n]=curr;
-
-		curr->x=(x>>6)+slot->bitmap_left;
-		curr->y=(y>>6)-slot->bitmap_top;
-		curr->w=slot->bitmap.width;
-		curr->h=slot->bitmap.rows;
-		if (slot->bitmap.width && slot->bitmap.rows) {
-			memcpy(curr->pixmap, slot->bitmap.buffer, slot->bitmap.rows*slot->bitmap.pitch);
-			curr->shadow=display_text_render_shadow(curr);
+			SDL_BlitSurface(glyph_surface, NULL, gr->screen,
+					&r);
+		    }
+		    g_free(glyph);
 		}
-		else
-			curr->shadow=NULL;
-#if 0
-		printf("height=%d\n", slot->metrics.height);
-		printf("height2=%d\n", face->height);
-		printf("bbox %d %d %d %d\n", face->bbox.xMin, face->bbox.yMin, face->bbox.xMax, face->bbox.yMax);
-#endif
-#if 0
-        printf("slot->advance x %d y %d\n",
-               slot->advance.x,
-               slot->advance.y);
-#endif
+		stride *= 4;
+		glyph = g_malloc(stride * g->h);
+		gr->freetype_methods.get_glyph(g, glyph, 32, stride,
+					       &black, &white,
+					       &transparent);
+		//convert ABGR to RGBA
+		int j;
+		unsigned char *pGlyph = glyph;
+		for (j = 0; j < g->w * g->h; ++j) {
+		    unsigned char tmp;
+		    tmp = *(pGlyph + 0);
+		    *(pGlyph + 0) = *(pGlyph + 2);
+		    *(pGlyph + 2) = tmp;
+		    pGlyph += 4;
+		}
+		SDL_Surface *glyph_surface =
+		    SDL_CreateRGBSurfaceFrom(glyph, g->w, g->h, 32, 
+		    				stride,
+					     	0x000000ff,0x0000ff00,0x00ff0000,0xff000000);
+		if (glyph_surface) {
+		    SDL_Rect r;
+		    r.x = (x + g->x) >> 6;
+		    r.y = (y + g->y) >> 6;
+		    r.w = g->w;
+		    r.h = g->h;
 
-         	x += slot->advance.x;
-         	y -= slot->advance.y;
-		p=g_utf8_next_char(p);
+		    SDL_BlitSurface(glyph_surface, NULL, gr->screen, &r);
+		}
+
+		int ii, jj;
+		for (jj = 0; jj < g->h; ++jj) {
+		    for (ii = 0; ii < g->w; ++ii) {
+			int sx = (x + g->x) >> 6;
+			int sy = (y + g->y) >> 6;
+			sx = sx < 0 ? 0 : sx;
+			sy = sy < 0 ? 0 : sy;
+			int poff =
+			    gr->screen->w * ((jj) + sy) + ((ii) + sx);
+			poff *= gr->screen->format->BytesPerPixel;
+		    }
+		}
+		g_free(glyph);
+	    }
 	}
-	return ret;
-}
-
-#if 0
-static void hexdump(unsigned char *buf, unsigned int w, unsigned int h)
-{
-    int x, y;
-    printf("hexdump %u %u\n", w, h);
-    for(y = 0; y < h; y++)
-    {
-        for(x = 0; x < w; x++)
-        {
-            printf("%02x ", buf[y*w+x]);
-        }
-        printf("\n");
+	x += g->dx;
+	y += g->dy;
     }
-}
-
-static void bitdump(unsigned char *buf, unsigned int w, unsigned int h)
-{
-    int x, pos;
-    printf("bitdump %u %u\n", w, h);
-    pos = 0;
-    for(x = 0; x < h * w; x++)
-    {
-        if(buf[pos] & (1 << (x&0x7)))
-        {
-            printf("00 ");
-        }
-        else
-        {
-            printf("ff ");
-        }
-
-        if((x & 0x7) == 0x7)
-        {
-            pos++;
-        }
-
-        if((x % w) == (w-1))
-        {
-            printf("\n");
-        }
-    }
-    printf("\n");
-}
-#endif
-
-#if 0
-static void sdl_inv_grayscale_pal_set(SDL_Surface *ss)
-{
-    SDL_Color c;
-    int i;
-
-    for(i = 0; i < 256; i++)
-    {
-        c.r = 255-i;
-        c.g = 255-i;
-        c.b = 255-i;
-        SDL_SetPalette(ss, SDL_LOGPAL, &c, i, 1); 
-    }
-}
-
-static void sdl_scale_pal_set(SDL_Surface *ss, Uint8 r, Uint8 g, Uint8 b)
-{
-    SDL_Color c;
-    int i;
-
-    for(i = 0; i < 256; i++)
-    {
-        c.r = (i * r) / 256;
-        c.g = (i * g) / 256;
-        c.b = (i * b) / 256;
-        SDL_SetPalette(ss, SDL_LOGPAL, &c, i, 1); 
-    }
-}
-#endif
-
-#if 0
-static void sdl_fixed_pal_set(SDL_Surface *ss, Uint8 r, Uint8 g, Uint8 b)
-{
-    SDL_Color c;
-    int i;
-
-    c.r = r;
-    c.g = g;
-    c.b = b;
-    for(i = 0; i < 256; i++)
-    {
-        SDL_SetPalette(ss, SDL_LOGPAL, &c, i, 1); 
-    }
-}
-#endif
-
-static void
-display_text_draw(struct text_render *text, struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg)
-{
-    int i, x, y, poff, soff, col_lev;
-    struct text_glyph *gly, **gp;
-    Uint32 pix;
-    Uint8 r, g, b, a;
-
-#if 0
-    dbg(0,"%u %u %u %u, %u %u %u %u\n",
-        fg->fore_a, fg->fore_r, fg->fore_g, fg->fore_b,
-        fg->back_a, fg->back_r, fg->back_g, fg->back_b);
-
-    dbg(0,"%u %u %u %u, %u %u %u %u\n",
-        bg->fore_a, bg->fore_r, bg->fore_g, bg->fore_b,
-        bg->back_a, bg->back_r, bg->back_g, bg->back_b);
-#endif
-    
-    if(bg)
-    {
-        col_lev = bg->fore_r + bg->fore_g + bg->fore_b;
-    }
-    else
-    {
-        col_lev = 0;
-    }
-
-    /* TODO: lock/unlock in draw_mode() to reduce overhead */
-    SDL_LockSurface(gr->screen);
-	gp=text->glyph;
-	i=text->glyph_count;
-	while (i-- > 0)
-	{
-		gly=*gp++;
-		if (gly->w && gly->h)
-        {
-#if 0
-            if(gly->shadow && bg)
-            {
-                hexdump(gly->pixmap, gly->w, gly->h);
-                bitdump(gly->shadow, gly->w+2, gly->h+2);    
-            }
-#endif
-
-            for(y = 0; y < gly->h + 2; y++)
-            {
-                if(gly->y - 1 + y < 0)
-                {
-                    continue;
-                }
-
-                if(((gly->y-1) + y) >= gr->screen->h)
-                {
-                    break;
-                }
-
-                for(x = 0; x < gly->w + 2; x++)
-                {
-                    if(gly->x - 1 + x < 0)
-                    {
-                        continue;
-                    }
-
-                    if(((gly->x-1) + x) >= gr->screen->w)
-                    {
-                        break;
-                    }
-
-                    poff = gr->screen->w * ((gly->y-1) + y) + ((gly->x-1) + x);
-                    poff = poff * gr->screen->format->BytesPerPixel;
-
-                    switch(gr->screen->format->BytesPerPixel)
-                    {
-                        case 2:
-                        {
-                            pix = *(Uint16 *)((Uint8*)gr->screen->pixels + poff);
-                            break;
-                        }
-                        case 4:
-                        {
-                            pix = *(Uint32 *)((Uint8*)gr->screen->pixels + poff);
-                            break;
-                        }
-                        default:
-                        {
-                            pix = 0;
-                            break;
-                        }
-                    }
-
-                    SDL_GetRGBA(pix,
-                               gr->screen->format,
-                               &r,
-                               &g,
-                               &b,
-                               &a);
-
-#ifdef DEBUG
-                    printf("%u %u -> %u off\n",
-                           gly->x,
-                           gly->y,
-                           off);
-
-                    printf("%u,%u: %u %u %u in\n",
-                           x, y,
-                           r, g, b, off);
-#endif
-
-
-
-                    if(gly->shadow && bg)
-                    {
-                        soff = (8 * ((gly->w+9)/8) * y) + x;
-                        pix = gly->shadow[soff/8];
-
-                        if(pix & (1 << (7-(soff&0x7))))
-                        {
-                            if(col_lev >= 3*0x80)
-                            {
-                                r = bg->fore_r;
-                                g = bg->fore_g;
-                                b = bg->fore_b;
-                                a = bg->fore_a;
-                            }
-                            else
-                            {
-                                r &= ~bg->fore_r;
-                                g &= ~bg->fore_g;
-                                b &= ~bg->fore_b;
-                                a &= ~bg->fore_a;
-                            }
-                        }
-                    }
-
-                    /* glyph */
-                    if((x > 0) && (x <= gly->w) &&
-                       (y > 0) && (y <= gly->h))
-                    {
-                        if(bg && (col_lev >= 3*0x80))
-                        {
-                            r &= ~gly->pixmap[gly->w * (y-1) + (x-1)];
-                            g &= ~gly->pixmap[gly->w * (y-1) + (x-1)];
-                            b &= ~gly->pixmap[gly->w * (y-1) + (x-1)];
-                        }
-                        else
-                        {
-                            r |= gly->pixmap[gly->w * (y-1) + (x-1)];
-                            g |= gly->pixmap[gly->w * (y-1) + (x-1)];
-                            b |= gly->pixmap[gly->w * (y-1) + (x-1)];
-                        }
-                    }
-
-#ifdef DEBUG
-                    printf("%u,%u: %u %u %u out\n",
-                           x, y,
-                           r, g, b);
-#endif
-
-                    pix = SDL_MapRGBA(gr->screen->format,
-                                     r,
-                                     g,
-                                     b,
-                                     a);
-
-                    switch(gr->screen->format->BytesPerPixel)
-                    {
-                        case 2:
-                        {
-                            *(Uint16 *)((Uint8*)gr->screen->pixels + poff) = pix;
-                            break;
-                        }
-                        case 4:
-                        {
-                            *(Uint32 *)((Uint8*)gr->screen->pixels + poff) = pix;
-                            break;
-                        }
-                        default:
-                        {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            //dbg(0, "glyph %d %d %d %d\n", g->x, g->y, g->w, g->h);
-        }
-	}
-    SDL_UnlockSurface(gr->screen);
 }
 
 static void
-display_text_free(struct text_render *text)
+draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg,
+	  struct graphics_gc_priv *bg, struct graphics_font_priv *font,
+	  char *text, struct point *p, int dx, int dy)
 {
-	int i;
-	struct text_glyph **gp;
+    if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable)
+	|| (gr->overlay_parent && gr->overlay_parent->overlay_enable
+	    && !gr->overlay_enable)) {
+	return;
+    }
 
-	gp=text->glyph;
-	i=text->glyph_count;
-	while (i-- > 0) {
-		if ((*gp)->shadow) {
-           free((*gp)->shadow);
-	    }	
-		g_free(*gp++);
-	}
-	g_free(text);
+    struct font_freetype_text *t;
+    int color = 1;
+
+    if (!font) {
+	dbg(0, "no font, returning\n");
+	return;
+    }
+    t = gr->freetype_methods.text_new(text,
+				      (struct font_freetype_font *) font,
+				      dx, dy);
+
+    struct point p_eff;
+    p_eff.x = p->x;
+    p_eff.y = p->y;
+
+    display_text_draw(t, gr, fg, bg, color, &p_eff);
+    gr->freetype_methods.text_destroy(t);
 }
-
-static void
-draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
-{
-	struct text_render *t;
-
-	if (! font)
-		return;
-
-#if 0
-	if (bg) {
-		gdk_gc_set_function(fg->gc, GDK_AND_INVERT);
-		gdk_gc_set_function(bg->gc, GDK_OR);
-	}
-#endif
-
-	t=display_text_render(text, font, dx, dy, p->x, p->y);
-	display_text_draw(t, gr, fg, bg);
-	display_text_free(t);
-#if 0
-	if (bg) {
-		gdk_gc_set_function(fg->gc, GDK_COPY);
-        	gdk_gc_set_function(bg->gc, GDK_COPY);
-	}
-#endif
-}
-#endif
-
-
 
 static void
 draw_image(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct point *p, struct graphics_image_priv *img)
 {
+  if ((gr->overlay_parent && !gr->overlay_parent->overlay_enable) || (gr->overlay_parent && gr->overlay_parent->overlay_enable && !gr->overlay_enable) )
+    {
+      return;
+    }
+
 #ifdef SDL_IMAGE
     SDL_Rect r;
 
@@ -1581,7 +1213,7 @@ static struct graphics_methods graphics_methods = {
 	draw_image_warp,
 	draw_restore,
 	draw_drag,
-	font_new,
+	NULL,
 	gc_new,
 	background_gc,
 	overlay_new,
@@ -1656,7 +1288,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 		amask = gr->screen->format->Amask;
 	}
 
-	ov->screen = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCALPHA, 
+	ov->screen = SDL_CreateRGBSurface(SDL_SWSURFACE, 
 			w, h,
 			gr->screen->format->BitsPerPixel,
 			rmask, gmask, bmask, amask);
@@ -1668,7 +1300,29 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 	ov->overlay_parent = gr;
 	ov->overlay_idx = i;
 	gr->overlay_array[i] = ov;
+
+
+  struct font_priv *(*font_freetype_new) (void *meth);
+  font_freetype_new = plugin_get_font_type ("freetype");
+
+  if (!font_freetype_new)
+    {
+      return NULL;
+    }
+
+
+  font_freetype_new (&ov->freetype_methods);
+
 	*meth=graphics_methods;
+
+  meth->font_new =
+    (struct graphics_font_priv *
+     (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
+	 int)) ov->freetype_methods.font_new;
+  meth->get_text_bbox = ov->freetype_methods.get_text_bbox;
+
+
+
 
 	return ov;
 }
@@ -2105,6 +1759,16 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     int ret;
     int w=DISPLAY_W,h=DISPLAY_H;
 
+    struct font_priv *(*font_freetype_new) (void *meth);
+    font_freetype_new = plugin_get_font_type ("freetype");
+
+    if (!font_freetype_new)
+      {
+        return NULL;
+      }
+
+    font_freetype_new (&this->freetype_methods);
+
     this->nav = nav;
     this->cbl = cbl;
 
@@ -2114,18 +1778,6 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
         g_free(this);
         return NULL;
     }
-
-#ifdef SDL_TTF
-    ret = TTF_Init();
-    if(ret < 0)
-    {
-        g_free(this);
-        SDL_Quit();
-        return NULL;
-    }
-#else
-    FT_Init_FreeType( &this->library );
-#endif
 
     if (! event_request_system("glib","graphics_sdl_new"))
         return NULL;
@@ -2182,7 +1834,16 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     sge_Lock_ON();
 #endif
 
-	*meth=graphics_methods;
+    *meth=graphics_methods;
+
+
+    meth->font_new =
+       (struct graphics_font_priv *
+       (*)(struct graphics_priv *, struct graphics_font_methods *, char *, int,
+        int)) this->freetype_methods.font_new;
+    meth->get_text_bbox = this->freetype_methods.get_text_bbox;
+
+
 
     g_timeout_add(G_PRIORITY_DEFAULT+10, graphics_sdl_idle, this);
 
