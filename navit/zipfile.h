@@ -24,7 +24,7 @@
 #pragma pack(1)
 #endif
 
-#define zip_split_sig 0x07084b50
+#define zip_split_sig 0x08074b50
 
 struct zip_split {
 	int zipsplitsig;
