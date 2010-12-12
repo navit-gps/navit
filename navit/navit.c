@@ -691,6 +691,148 @@ navit_cmd_say(struct navit *this, char *function, struct attr **in, struct attr 
 		navit_say(this, in[0]->u.str);
 }
 
+static GHashTable *cmd_int_var_hash = NULL;
+
+/**
+ * Store key value pair for the  command system
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attributes in[0] is the key string, in[1] is the integer value to store
+ * @param out output attributes, unused 
+ * @param valid unused 
+ * @returns nothing
+ */
+static void
+navit_cmd_set_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	if(!cmd_int_var_hash) {
+		cmd_int_var_hash = g_hash_table_new(g_str_hash, g_str_equal);
+	}
+
+	if ( (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) &&
+	     (in && in[1] && ATTR_IS_NUMERIC(in[1]->type))) {
+		struct attr*val = g_new(struct attr,1);
+		attr_dup_content(in[1],val);
+		char*key = g_strdup(in[0]->u.str);
+		g_hash_table_insert(cmd_int_var_hash, key, val);
+        }
+}
+
+/**
+ * Get value given a key string for the command system
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attribute in[0] is the key string
+ * @param out output attribute, the value for the given key string if exists or 0  
+ * @param valid unused 
+ * @returns nothing
+ */
+static void
+navit_cmd_get_int_var(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct attr **list = g_new0(struct attr *,2);
+	if(!cmd_int_var_hash) {
+		struct attr*val = g_new0(struct attr,1);
+		val->type   = attr_type_int_begin;
+		val->u.num  = 0;
+		list[0]     = val;
+	}
+	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
+		struct attr*ret = g_hash_table_lookup(cmd_int_var_hash, in[0]->u.str);
+                if(ret) {
+			list[0] = ret;
+		}
+		else {
+			struct attr*val = g_new0(struct attr,1);
+			val->type   = attr_type_int_begin;
+			val->u.num  = 0;
+			list[0]   = val;
+		}
+        }
+	list[1] = NULL;
+	*out = list;
+}
+
+GList *cmd_int_var_stack = NULL;
+
+/**
+ * Push an integer to the stack for the command system
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attribute in[0] is the integer attibute to push
+ * @param out output attributes, unused 
+ * @param valid unused 
+ * @returns nothing
+ */
+static void
+navit_cmd_push_int(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	if (in && in[0] && ATTR_IS_NUMERIC(in[0]->type)) {
+		struct attr*val = g_new(struct attr,1);
+		attr_dup_content(in[0],val);
+		cmd_int_var_stack = g_list_prepend(cmd_int_var_stack, val);
+	}
+}
+
+/**
+ * Pop an integer from the command system's integer stack
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attributes unused
+ * @param out output attribute, the value popped if stack isn't empty or 0
+ * @param valid unused 
+ * @returns nothing
+ */
+static void
+navit_cmd_pop_int(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct attr **list = g_new0(struct attr *,2);
+	if(!cmd_int_var_stack) {
+		struct attr*val = g_new0(struct attr,1);
+		val->type = attr_type_int_begin;
+		val->u.num  = 0;
+		list[0]   = val;
+	}
+	else {
+		list[0] = cmd_int_var_stack->data;
+		cmd_int_var_stack = g_list_remove_link(cmd_int_var_stack,cmd_int_var_stack);
+	}
+	list[1] = NULL;
+	*out = list;
+}
+
+/**
+ * Get current size of command system's integer stack
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attributes unused
+ * @param out output attribute, the size of stack
+ * @param valid unused 
+ * @returns nothing
+ */
+static void
+navit_cmd_int_stack_size(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	struct attr *attr  = g_new0(struct attr  ,1);
+	attr->type  = attr_type_int_begin;
+	if(!cmd_int_var_stack) {
+		attr->u.num = 0; 
+	}
+	else {
+		attr->u.num = g_list_length(cmd_int_var_stack); 
+	}
+	struct attr **list = g_new0(struct attr *,2);
+	list[0] = attr;
+	list[1] = NULL;
+	*out = list;
+	cmd_int_var_stack = g_list_remove_link(cmd_int_var_stack,cmd_int_var_stack);
+}
+
 static void
 navit_cmd_set_destination(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
@@ -744,6 +886,11 @@ static struct command_table commands[] = {
 	{"set_destination",command_cast(navit_cmd_set_destination)},
 	{"announcer_toggle",command_cast(navit_cmd_announcer_toggle)},
 	{"fmt_coordinates",command_cast(navit_cmd_fmt_coordinates)},
+	{"set_int_var",command_cast(navit_cmd_set_int_var)},
+	{"get_int_var",command_cast(navit_cmd_get_int_var)},
+	{"push_int",command_cast(navit_cmd_push_int)},
+	{"pop_int",command_cast(navit_cmd_pop_int)},
+	{"int_stack_size",command_cast(navit_cmd_int_stack_size)},
 };
 	
 void 
