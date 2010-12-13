@@ -924,12 +924,14 @@ redraw_screen (struct graphics_priv *gr)
   overlay = gr->overlays;
   while (gr->overlay_enabled && overlay)
     {
+      if(overlay->overlay_enabled) {
       glPushMatrix ();
       struct point p_eff;
       get_overlay_pos (overlay, &p_eff);
       glTranslatef (p_eff.x, p_eff.y, 1);
       glCallList (overlay->DLid);
       glPopMatrix ();
+      }
       overlay = overlay->next;
     }
   glutSwapBuffers ();
@@ -1042,7 +1044,8 @@ static void
 overlay_disable (struct graphics_priv *gr, int disable)
 {
   gr->overlay_enabled = !disable;
-  redraw_screen(graphics_priv_root);
+  gr->force_redraw = 1;
+  draw_mode(gr,draw_mode_end);
 }
 
 static void
