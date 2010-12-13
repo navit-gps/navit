@@ -264,6 +264,7 @@ if(WINCE)
     set_with_reason(vehicle/file "wince: currently broken" FALSE)
 endif()
 
+set(LOCALEDIR "${LOCALE_DIR}/locale")
 
 foreach(PLUMO ${ALL_PLUGINS} ${ALL_MODULES} USE_PLUGINS USE_ROUTING BUILD_MAPTOOL USE_SVG SVG2PNG DBUS_USE_SYSTEM_BUS)
    set(OLDVALUE ${${PLUMO}})
