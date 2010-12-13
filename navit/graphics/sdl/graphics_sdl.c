@@ -955,8 +955,8 @@ display_text_draw(struct font_freetype_text *text,
 			r.w = g->w;
 			r.h = g->h;
 
-			SDL_BlitSurface(glyph_surface, NULL, gr->screen,
-					&r);
+			SDL_BlitSurface(glyph_surface, NULL, gr->screen,&r);
+		        SDL_FreeSurface(glyph_surface);
 		    }
 		    g_free(glyph);
 		}
@@ -987,6 +987,7 @@ display_text_draw(struct font_freetype_text *text,
 		    r.h = g->h;
 
 		    SDL_BlitSurface(glyph_surface, NULL, gr->screen, &r);
+		    SDL_FreeSurface(glyph_surface);
 		}
 
 		int ii, jj;
