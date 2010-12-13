@@ -921,6 +921,7 @@ display_text_draw(struct font_freetype_text *text,
 		    r.h = g->h + 2;
 
 		    SDL_BlitSurface(glyph_surface, NULL, gr->screen, &r);
+		    SDL_FreeSurface(glyph_surface);
 		}
 		g_free(shadow);
 	    }
@@ -1116,7 +1117,7 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
                 for(i = 0; i < OVERLAY_MAX; i++)
                 {
                     ov = gr->overlay_array[i];
-                    if(ov)
+                    if(ov && ov->overlay_enable)
                     {
                         rect.x = ov->overlay_x;
                         if(rect.x<0) rect.x += gr->screen->w;
@@ -1151,6 +1152,11 @@ draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 static void overlay_disable(struct graphics_priv *gr, int disable)
 {
     gr->overlay_enable = !disable;
+    struct graphics_priv *curr_gr = gr;
+    if(gr->overlay_parent) {
+      curr_gr = gr->overlay_parent;
+    }
+    draw_mode(curr_gr,draw_mode_end);
 }
 
 static struct graphics_priv *
