@@ -15,6 +15,7 @@
 #cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
 #cmakedefine PACKAGE_NAME "@PACKAGE_NAME@"
 #cmakedefine PACKAGE "@PACKAGE@"
+#cmakedefine LOCALEDIR "@LOCALE_DIR@/locale"
 
 #cmakedefine HAVE_ZLIB 1
 
