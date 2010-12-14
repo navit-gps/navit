@@ -810,7 +810,9 @@ _nl_locale_name (int category, const char *categoryname)
       switch (sub)
 	{
 	case SUBLANG_BENGALI_INDIA: return "bn_IN";
+#if 0 /* FIXME */
 	case SUBLANG_BENGALI_BANGLADESH: return "bn_BD";
+#endif
 	}
       return "bn";
     case LANG_BULGARIAN: return "bg_BG";
