@@ -281,7 +281,7 @@ extern char *bind_textdomain_codeset (const char *__domainname,
    or gettext() but for which the format string could be the return value
    of _() or gettext() need to add this #include.  Oh well.  */
 
-#if HAVE_POSIX_PRINTF
+#if 1
 
 #include <stdio.h>
 #include <stddef.h>
