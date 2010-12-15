@@ -2,7 +2,11 @@
 #include "config.h"
 
 #ifdef ENABLE_NLS
+#ifdef USE_LIBGNUINTL
+#include <libgnuintl.h>
+#else
 #include <libintl.h>
+#endif
 #define _(STRING)    gettext(STRING)
 #define gettext_noop(String) String
 #define _n(STRING)    gettext_noop(STRING)

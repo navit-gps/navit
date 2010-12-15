@@ -11,7 +11,11 @@ G_CONST_RETURN gchar *glib_gettext (const gchar *str);
 
 #ifdef ENABLE_NLS
 
-#include <libintl.h>
+#include "navit_nls.h"
+#undef _
+#undef gettext_noop
+#undef _n
+
 #define _(String) glib_gettext(String)
 /* Split out this in the code, but keep it in the same domain for now */
 #define P_(String) glib_gettext(String)
