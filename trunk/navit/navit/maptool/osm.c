@@ -1610,6 +1610,8 @@ end_way(FILE *out)
 		add_flags=0;
 		if (types[i] == type_none)
 			continue;
+		if (ignore_unkown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
+			continue;
 		item_bin=init_item(types[i]);
 		item_bin_add_coord(item_bin, coord_buffer, coord_count);
 		def_flags=item_get_default_flags(types[i]);
@@ -1651,6 +1653,8 @@ end_node(FILE *out)
 	for (i = 0 ; i < count ; i++) {
 		conflict=0;
 		if (types[i] == type_none)
+			continue;
+		if (ignore_unkown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
 			continue;
 		item_bin=init_item(types[i]);
 		if (item_is_town(*item_bin) && attr_strings[attr_string_population]) 
