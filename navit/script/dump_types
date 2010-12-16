@@ -1,0 +1,29 @@
+#! /bin/sh
+function print_defs
+{
+	type=$1
+	while read line
+	do
+		case $line in
+		*2\(*)
+			id=${line%%,*}
+			id=${id#*(}
+			id=$(($id))
+			name=${line%%)*}
+			name=${name#*,}
+			printf "%s%s 0x%x\n" $type $name $id
+			id=$((id+1))
+			;;
+		*)
+			name=${line%%)*}
+			name=${name#*(}
+			printf "%s%s 0x%x\n" $type $name $id
+			id=$((id+1))
+		esac
+	done
+}
+
+id=0
+grep ^ITEM ../item_def.h | print_defs type_
+id=0
+grep ^ATTR ../attr_def.h | print_defs attr_
