@@ -1,25 +1,20 @@
 #! /bin/sh
+IFS="(),"
 function print_defs
 {
 	type=$1
-	while read line
+	while read a1 a2 a3
 	do
-		case $line in
-		*2\(*)
-			id=${line%%,*}
-			id=${id#*(}
-			id=$(($id))
-			name=${line%%)*}
-			name=${name#*,}
-			printf "%s%s 0x%x\n" $type $name $id
-			id=$((id+1))
+		case $a1 in
+		*2)
+			id=$(($a2))
+			name=$a3
 			;;
 		*)
-			name=${line%%)*}
-			name=${name#*(}
-			printf "%s%s 0x%x\n" $type $name $id
-			id=$((id+1))
+			name=$a2
 		esac
+		printf "%s%s 0x%x\n" $type $name $id
+		id=$((id+1))
 	done
 }
 dir=$0
