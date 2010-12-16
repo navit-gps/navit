@@ -22,8 +22,10 @@ function print_defs
 		esac
 	done
 }
-
+dir=$0
+dir=${dir%/*}
+dir=$dir/../
 id=0
-grep ^ITEM ../item_def.h | print_defs type_
+grep ^ITEM $dir/item_def.h | print_defs type_
 id=0
-grep ^ATTR ../attr_def.h | print_defs attr_
+grep ^ATTR $dir/attr_def.h | print_defs attr_
