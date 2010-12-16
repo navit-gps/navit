@@ -979,8 +979,18 @@ display_text_draw(struct font_freetype_text *text,
 		    SDL_CreateRGBSurfaceFrom(glyph, g->w, g->h, 32, 
 		    				stride,
 					     	0x000000ff,0x0000ff00,0x00ff0000,0xff000000);
+		if (glyph_surface) {
+		    SDL_Rect r;
+		    r.x = (x + g->x) >> 6;
+		    r.y = (y + g->y) >> 6;
+		    r.w = g->w;
+		    r.h = g->h;
+
+		    SDL_BlitSurface(glyph_surface, NULL, gr->screen, &r);
+		    SDL_FreeSurface(glyph_surface);
+		}
+
 		int ii, jj;
-		pGlyph = glyph;
 		for (jj = 0; jj < g->h; ++jj) {
 		    for (ii = 0; ii < g->w; ++ii) {
 			int sx = (x + g->x) >> 6;
@@ -990,16 +1000,6 @@ display_text_draw(struct font_freetype_text *text,
 			int poff =
 			    gr->screen->w * ((jj) + sy) + ((ii) + sx);
 			poff *= gr->screen->format->BytesPerPixel;
-			if(*(pGlyph + 3)>10) {  // display only non transparent pixels
-                    *(Uint16 *)((Uint8*)gr->screen->pixels + poff) = 
-                        SDL_MapRGBA(gr->screen->format,
-                                     *(pGlyph + 0),
-                                     *(pGlyph + 1),
-                                     *(pGlyph + 2),
-                                     *(pGlyph + 3));
-			}
-
-		    pGlyph += 4;
 		    }
 		}
 		g_free(glyph);
