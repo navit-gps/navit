@@ -480,6 +480,7 @@ static char *attrmap={
 	"n	tourism=viewpoint	poi_viewpoint\n"
 	"n	tourism=zoo		poi_zoo\n"
 	"n	traffic_sign=city_limit	traffic_sign_city_limit\n"
+	"n	highway=speed_camera	tec_common\n"
 	"w	*=*			street_unkn\n"
 	"w	addr:interpolation=even	house_number_interpolation_even\n"
 	"w	addr:interpolation=odd	house_number_interpolation_odd\n"
