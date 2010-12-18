@@ -838,6 +838,10 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 		key[0]=NAVIT_KEY_BACKSPACE;
 		key[1]='\0';
 		break;
+	case GDK_Tab:
+		key[0]='\t';
+		key[1]='\0';
+		break;
 	case GDK_Return:
 	case GDK_KP_Enter:
 		key[0]=NAVIT_KEY_RETURN;

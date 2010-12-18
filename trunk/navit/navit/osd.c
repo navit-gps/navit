@@ -62,6 +62,16 @@ osd_wrap_point(struct point *p, struct navit *nav)
 
 }
 
+static void
+osd_evaluate_command(struct osd_item *this, struct navit *nav)
+{
+	struct attr navit;
+	navit.type=attr_navit;
+	navit.u.navit=nav;
+	dbg(0, "calling command '%s'\n", this->command);
+	command_evaluate(&navit, this->command);
+}
+
 void
 osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button, struct point *p)
 {
@@ -76,13 +86,8 @@ osd_std_click(struct osd_item *this, struct navit *nav, int pressed, int button,
 	if (navit_ignore_button(nav))
 		return;
 	this->pressed = pressed;
-	if (pressed && this->command) {
-		struct attr navit;
-		navit.type=attr_navit;
-		navit.u.navit=nav;
-		dbg(0, "calling command '%s'\n", this->command);
-		command_evaluate(&navit, this->command);
-	}
+	if (pressed && this->command) 
+		osd_evaluate_command(this, nav);
 }
 
 void
@@ -118,6 +123,23 @@ osd_std_calculate_sizes(struct osd_item *item, struct osd_priv *priv, int w, int
 			item->meth.draw(priv, item->navit, vehicle_attr.u.vehicle);
 		}
 	}
+}
+
+static void
+osd_std_keypress(struct osd_item *item, struct navit *nav, char *key) 
+{
+#if 0
+	int i;
+	dbg(0,"key=%s\n",key);
+	for (i = 0 ; i < strlen(key) ; i++) {
+		dbg(0,"key:0x%02x\n",key[i]);
+	}
+	for (i = 0 ; i < strlen(item->accesskey) ; i++) {
+		dbg(0,"accesskey:0x%02x\n",item->accesskey[i]);
+	}
+#endif
+	if (item->accesskey && key && !strcmp(key, item->accesskey)) 
+		osd_evaluate_command(item, nav);
 }
 
 static void
@@ -222,6 +244,9 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 	attr=attr_search(attrs, NULL, attr_flags);
 	if (attr)
 		item->attr_flags=attr->u.num;
+	attr=attr_search(attrs, NULL, attr_accesskey);
+	if (attr)
+		item->accesskey = g_strdup(attr->u.str);
 }
 
 void
@@ -280,6 +305,11 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *p
 
 	item->resize_cb = callback_new_attr_2(callback_cast(osd_std_calculate_sizes), attr_resize, item, priv);
 	graphics_add_callback(navit_gr, item->resize_cb);
+	dbg(0,"accesskey %s\n",item->accesskey);
+	if (item->accesskey) {
+		item->keypress_cb=callback_new_attr_2(callback_cast(osd_std_keypress), attr_keypress, item, nav);
+		graphics_add_callback(navit_gr, item->keypress_cb);
+	}
 
 }
 
