@@ -842,6 +842,15 @@ keypress(GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 		key[0]='\t';
 		key[1]='\0';
 		break;
+	case GDK_Delete:
+		key[0]=NAVIT_KEY_RIGHT;
+		key[1]=NAVIT_KEY_BACK;
+		key[2]='\0';
+		break;
+	case GDK_Escape:
+		key[0]=NAVIT_KEY_BACK;
+		key[1]='\0';
+		break;
 	case GDK_Return:
 	case GDK_KP_Enter:
 		key[0]=NAVIT_KEY_RETURN;
