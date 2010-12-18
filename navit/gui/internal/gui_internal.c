@@ -4458,6 +4458,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 				if (!html->skip)
 					this->html_anchor_found=1;
 			}
+			html->command=find_attr_dup(names, values, "onclick");
 			html->href=find_attr_dup(names, values, "href");
 			html->refresh_cond=find_attr_dup(names, values, "refresh_cond");
 			break;
@@ -4533,10 +4534,15 @@ gui_internal_html_end(void *dummy, const char *tag_name, void *data, void *error
 			html->w->func=gui_internal_html_command;
 			html->command=NULL;
 		}
-		if (parent && parent->href && html->w) {
+		if (parent && (parent->href || parent->command) && html->w) {
 			html->w->state |= STATE_SENSITIVE;
-			html->w->command=g_strdup(parent->href);
-			html->w->func=gui_internal_html_href;
+			if (parent->command) {
+				html->w->command=g_strdup(parent->command);
+				html->w->func=gui_internal_html_command;
+			} else {
+				html->w->command=g_strdup(parent->href);
+				html->w->func=gui_internal_html_href;
+			}
 		}
 		switch (html->tag) {
 		case html_tag_div:
@@ -6224,6 +6230,27 @@ gui_internal_cmd2_about(struct gui_priv *this, char *function, struct attr **in,
 	graphics_draw_mode(this->gra, draw_mode_end);
 }
 
+static void
+gui_internal_cmd_map_downloader(struct gui_priv *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	char *html;
+	struct file *f;
+	int size;
+	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type) || !in[0]->u.str)
+		return;
+	f=file_create(in[0]->u.str, file_flag_url);
+	if (! f)
+		return;
+	html=file_data_read_special(f, 8192, &size);
+	if (size < 8192) {
+		html[size]='\0';
+		printf("%s\n",html);
+		gui_internal_html_menu(this, html, NULL);
+	}
+	g_free(html);
+	file_destroy(f);
+}
+
 
 /**
  * @brief handles the 'next page' table event.
@@ -6441,7 +6468,8 @@ static struct command_table commands[] = {
 	{"town",command_cast(gui_internal_cmd2_town)},
 	{"quit",command_cast(gui_internal_cmd2_quit)},
 	{"write",command_cast(gui_internal_cmd_write)},
-	{"about",command_cast(gui_internal_cmd2_about)}
+	{"about",command_cast(gui_internal_cmd2_about)},
+	{"map_downloader",command_cast(gui_internal_cmd_map_downloader)}
 };
 
 

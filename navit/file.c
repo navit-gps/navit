@@ -74,18 +74,35 @@ file_create(char *name, enum file_flags flags)
 {
 	struct stat stat;
 	struct file *file= g_new0(struct file,1);
+	int open_flags=O_LARGEFILE|O_BINARY;
+	char *cmd;
 
-	file->fd=open(name, O_RDONLY|O_LARGEFILE | O_BINARY);
-	if (file->fd == -1) {
-		g_free(file);
-		return NULL;
-	}
-	dbg(1,"fd=%d\n", file->fd);
-	fstat(file->fd, &stat);
-	file->size=stat.st_size;
-	dbg(1,"size=%Ld\n", file->size);
+	if (flags & file_flag_readwrite)
+		open_flags |= O_RDWR;
+	else
+		open_flags |= O_RDONLY;
+
 	file->name = g_strdup(name);
-	file->name_id = (int)atom(name);
+	if (flags & file_flag_url) {
+#ifndef HAVE_API_WIN32_BASE
+		char *cmd=g_strdup_printf("curl '%s'",name);
+		file->stdfile=popen(cmd,"r");
+		file->fd=fileno(file->stdfile);
+		file->special=1;
+		g_free(cmd);
+#endif
+	} else {
+		file->fd=open(name, open_flags);
+		if (file->fd == -1) {
+			g_free(file);
+			return NULL;
+		}
+		dbg(1,"fd=%d\n", file->fd);
+		fstat(file->fd, &stat);
+		file->size=stat.st_size;
+		dbg(1,"size=%Ld\n", file->size);
+		file->name_id = (int)atom(name);
+	}
 	if (file_cache && !(flags & file_flag_nocache)) 
 		file->cache=1;
 	dbg_assert(file != NULL);
@@ -96,14 +113,6 @@ file_create(char *name, enum file_flags flags)
 struct file *
 file_create_url(char *url)
 {
-	struct file *file= g_new0(struct file,1);
-	char *cmd=g_strdup_printf("curl %s",url);
-	file->name = g_strdup(url);
-	file->stdfile=popen(cmd,"r");
-	file->fd=fileno(file->stdfile);
-	file->special=1;
-	g_free(cmd);
-	return file;
 }
 #endif
 
@@ -502,7 +511,7 @@ file_destroy(struct file *f)
 	case 0:
 		close(f->fd);
 		break;
-#if 0
+#ifndef HAVE_API_WIN32_BASE
 	case 1:
 		pclose(f->stdfile);
 		break;
