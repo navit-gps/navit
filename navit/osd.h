@@ -45,9 +45,11 @@ struct osd_item {
 	struct callback *cb;
 	struct callback *resize_cb;
 	struct callback *reconfig_cb;
+	struct callback *keypress_cb;
 	int pressed;
 	char *command;
 	struct command_saved *enable_cs;
+	char *accesskey;
 };
 
 /* prototypes */
