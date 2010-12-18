@@ -48,6 +48,7 @@ struct tile {
 	int *pos_attr_start;
 	int *pos_attr;
 	int *pos_next;
+	struct file *fi;
 	int zipfile_num;
 	int mode;
 };
@@ -57,6 +58,7 @@ struct map_priv {
 	char *filename;
 	char *cachedir;
 	struct file *fi;
+	struct file **fis;
 	struct zip_cd *index_cd;
 	int index_offset;
 	int cde_size;
@@ -258,7 +260,7 @@ binfile_read_lfh(struct file *fi, long long offset)
 }
 
 static unsigned char *
-binfile_read_content(struct map_priv *m, long long offset, struct zip_lfh *lfh)
+binfile_read_content(struct map_priv *m, struct file *fi, long long offset, struct zip_lfh *lfh)
 {
 	struct zip_enc *enc;
 	unsigned char *ret=NULL;
@@ -267,28 +269,28 @@ binfile_read_content(struct map_priv *m, long long offset, struct zip_lfh *lfh)
 	switch (lfh->zipmthd) {
 	case 0:
 		offset+=lfh->zipxtraln;
-		ret=file_data_read(m->fi,offset, lfh->zipuncmp);
+		ret=file_data_read(fi,offset, lfh->zipuncmp);
 		break;
 	case 8:
 		offset+=lfh->zipxtraln;
-		ret=file_data_read_compressed(m->fi,offset, lfh->zipsize, lfh->zipuncmp);
+		ret=file_data_read_compressed(fi,offset, lfh->zipsize, lfh->zipuncmp);
 		break;
 	case 99:
 		if (!m->passwd)
 			break;
-		enc=(struct zip_enc *)file_data_read(m->fi, offset, sizeof(*enc));
+		enc=(struct zip_enc *)file_data_read(fi, offset, sizeof(*enc));
 		offset+=lfh->zipxtraln;
 		switch (enc->compress_method) {
 		case 0:
-			ret=file_data_read_encrypted(m->fi, offset, lfh->zipsize, lfh->zipuncmp, 0, m->passwd);
+			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 0, m->passwd);
 			break;
 		case 8:
-			ret=file_data_read_encrypted(m->fi, offset, lfh->zipsize, lfh->zipuncmp, 1, m->passwd);
+			ret=file_data_read_encrypted(fi, offset, lfh->zipsize, lfh->zipuncmp, 1, m->passwd);
 			break;
 		default:
 			dbg(0,"Unknown encrypted compression method %d\n",enc->compress_method);
 		}
-		file_data_free(m->fi, (unsigned char *)enc);
+		file_data_free(fi, (unsigned char *)enc);
 		break;
 	default:
 		dbg(0,"Unknown compression method %d\n", lfh->zipmthd);
@@ -425,7 +427,7 @@ binfile_extract(struct map_priv *m, char *dir, char *filename, int partial)
 		}
 		if (full[len-2] != '/') {
 			lfh=binfile_read_lfh(m->fi, binfile_cd_offset(cd));
-			start=binfile_read_content(m, binfile_cd_offset(cd), lfh);
+			start=binfile_read_content(m, m->fi, binfile_cd_offset(cd), lfh);
 			dbg(0,"fopen '%s'\n", full);
 			f=fopen(full,"w");
 			fwrite(start, lfh->zipuncmp, 1, f);
@@ -814,19 +816,25 @@ zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
 	char buffer[1024];
 	struct zip_lfh *lfh;
 	char *zipfn;
+	struct file *fi;
 	dbg(1,"enter %p %p %p\n", m, cd, t);
 	dbg(1,"cd->zipofst=0x%Lx\n", binfile_cd_offset(cd));
 	t->start=NULL;
 	t->mode=1;
-	lfh=binfile_read_lfh(m->fi, binfile_cd_offset(cd));
-	zipfn=(char *)(file_data_read(m->fi,binfile_cd_offset(cd)+sizeof(struct zip_lfh), lfh->zipfnln));
+	if (m->fis)
+		fi=m->fis[cd->zipdsk];
+	else
+		fi=m->fi;
+	lfh=binfile_read_lfh(fi, binfile_cd_offset(cd));
+	zipfn=(char *)(file_data_read(fi,binfile_cd_offset(cd)+sizeof(struct zip_lfh), lfh->zipfnln));
 	strncpy(buffer, zipfn, lfh->zipfnln);
 	buffer[lfh->zipfnln]='\0';
-	t->start=(int *)binfile_read_content(m, binfile_cd_offset(cd), lfh);
+	t->start=(int *)binfile_read_content(m, fi, binfile_cd_offset(cd), lfh);
 	t->end=t->start+lfh->zipuncmp/4;
+	t->fi=fi;
 	dbg(1,"0x%x '%s' %d %d,%d\n", lfh->ziplocsig, buffer, sizeof(*cd)+cd->zipcfnl, lfh->zipsize, lfh->zipuncmp);
-	file_data_free(m->fi, (unsigned char *)zipfn);
-	file_data_free(m->fi, (unsigned char *)lfh);
+	file_data_free(fi, (unsigned char *)zipfn);
+	file_data_free(fi, (unsigned char *)lfh);
 	return t->start != NULL;
 }
 
@@ -938,6 +946,7 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 			d=file_data_read(map->fi, 0, map->fi->size);
 			t.start=(int *)d;
 			t.end=(int *)(d+map->fi->size);
+			t.fi=map->fi;
 			t.zipfile_num=0;
 			t.mode=0;
 			push_tile(mr, &t);
@@ -1009,7 +1018,7 @@ map_rect_destroy_binfile(struct map_rect_priv *mr)
 #ifdef DEBUG_SIZE
 	dbg(0,"size=%d kb\n",mr->size/1024);
 #endif
-	file_data_free(mr->m->fi, (unsigned char *)(mr->tiles[0].start));
+	file_data_free(mr->tiles[0].fi, (unsigned char *)(mr->tiles[0].start));
 	g_free(mr->url);
         g_free(mr);
 }
@@ -1600,22 +1609,46 @@ binfile_get_index(struct map_priv *m)
 	return 1;
 }
 
-static struct zip_cd *
-map_binfile_first_cd(struct map_priv *m)
+static int
+map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap)
 {
+	struct zip_cd *first_cd;
+	int i;
 	if (!(m->eoc=binfile_read_eoc(m->fi)))
-		return NULL;
+		return 0;
+	dbg_assert(m->eoc->zipedsk == m->eoc->zipecen);
+	if (m->eoc->zipedsk && strlen(filename) > 3) {
+		char *tmpfilename=g_strdup(filename),*ext=tmpfilename+strlen(tmpfilename)-3;
+		m->fis=g_new(struct file *,m->eoc->zipedsk);
+		for (i = 0 ; i < m->eoc->zipedsk-1 ; i++) {
+			sprintf(ext,"b%02d",i+1);
+			m->fis[i]=file_create(tmpfilename, 0);
+			if (mmap)
+				file_mmap(m->fis[i]);
+		}
+		m->fis[m->eoc->zipedsk-1]=m->fi;
+		g_free(tmpfilename);
+	}
+	dbg(0,"num_disk %d\n",m->eoc->zipedsk);
 	m->eoc64=binfile_read_eoc64(m->fi);
 	if (!binfile_get_index(m))
-		return NULL;
-	return binfile_read_cd(m, 0, 0);
+		return 0;
+	if (!(first_cd=binfile_read_cd(m, 0, 0)))
+		return 0;
+	m->cde_size=sizeof(struct zip_cd)+first_cd->zipcfnl+first_cd->zipcxtl;
+	m->zip_members=m->index_offset/m->cde_size+1;
+	dbg(1,"cde_size %d\n", m->cde_size);
+	dbg(1,"members %d\n",m->zip_members);
+	file_data_free(m->fi, (unsigned char *)first_cd);
+	if (mmap)
+		file_mmap(m->fi);
+	return 1;
 }
 
 static int
 map_binfile_open(struct map_priv *m)
 {
 	int *magic;
-	struct zip_cd *first_cd;
 	struct map_rect_priv *mr;
 	struct item *item;
 	struct attr attr;
@@ -1636,20 +1669,12 @@ map_binfile_open(struct map_priv *m)
 	}
 	*magic = le32_to_cpu(*magic);
 	if (*magic == zip_lfh_sig || *magic == zip_split_sig) {
-		if ((first_cd=map_binfile_first_cd(m))) {
-			m->cde_size=sizeof(struct zip_cd)+first_cd->zipcfnl+first_cd->zipcxtl;
-			m->zip_members=m->index_offset/m->cde_size+1;
-			dbg(1,"cde_size %d\n", m->cde_size);
-			dbg(1,"members %d\n",m->zip_members);
-			file_data_free(m->fi, (unsigned char *)first_cd);
-		} else {
+		if (!map_binfile_zip_setup(m, m->filename, m->flags & 1)) {
 			dbg(0,"invalid file format for '%s'\n", m->filename);
 			file_destroy(m->fi);
 			m->fi=NULL;
 			return 0;
 		}
-		if (m->flags & 1)
-			file_mmap(m->fi);
 	} else
 		file_mmap(m->fi);
 	file_data_free(m->fi, (unsigned char *)magic);
@@ -1676,12 +1701,18 @@ map_binfile_open(struct map_priv *m)
 static void
 map_binfile_close(struct map_priv *m)
 {
+	int i;
 	file_data_free(m->fi, (unsigned char *)m->index_cd);
 	file_data_free(m->fi, (unsigned char *)m->eoc);
 	file_data_free(m->fi, (unsigned char *)m->eoc64);
 	g_free(m->cachedir);
 	g_free(m->map_release);
-	file_destroy(m->fi);
+	if (m->fis) {
+		for (i = 0 ; i < m->eoc->zipedsk ; i++) {
+			file_destroy(m->fis[i]);
+		}
+	} else
+		file_destroy(m->fi);
 }
 
 static void
