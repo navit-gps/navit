@@ -58,6 +58,8 @@ struct file {
 
 enum file_flags {
 	file_flag_nocache=1,
+	file_flag_readwrite=2,
+	file_flag_url=4,
 };
 
 /* prototypes */
