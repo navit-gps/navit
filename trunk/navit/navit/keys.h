@@ -9,3 +9,4 @@
 #define NAVIT_KEY_ZOOM_IN 17	/* ^Q */
 #define NAVIT_KEY_SEARCH 19	/* ^S */
 #define NAVIT_KEY_BACK 27	/* Esc */
+#define NAVIT_KEY_DELETE 127
