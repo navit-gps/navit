@@ -29,7 +29,8 @@
 		[-]0xX [-]0xX -->
 
 	<navit center="4808 N 1134 E" zoom="256" tracking="1" orientation="-1" recent_dest="10">
-		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. -->
+		<!-- Use one of gtk_drawing_area, qt_qpainter or sdl. 
+		     On windows systems, use win32 -->
 		<graphics type="gtk_drawing_area"/>
 		<!-- The following line let you select which graphical user interface you'd like to use.
 		Options include internal (optimized for touch screen devices), gtk (useful for desktop computers).
@@ -100,7 +101,12 @@ Navigation</text></img>
 		<osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.xpm"/>
 		<osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.xpm"/> 
 
+		<!-- Vehicle with GPS enabled for gpsd on unix -->
 		<vehicle name="Local GPS" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj">
+		<!-- Vehicle with GPS enabled for direct communication on windows. Remove the line above if you use this. -->
+		<!-- <vehicle name="Local GPS" profilename="car" follow="1" enabled="yes" active="1" 
+				source="serial:COM4 baud=4800 parity=N data=8 stop=1" > -->
+
 			<!-- Navit can write a tracklog in several formats (gpx, nmea or textfile): -->
 			<log enabled="no" type="gpx" attr_types="position_time_iso8601,position_direction,position_speed,profilename,position_radius" data="track_%Y%m%d-%%i.gpx" flush_size="1000" flush_time="30"/>
 		</vehicle>
