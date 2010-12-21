@@ -75,6 +75,7 @@ struct map_priv {
 	char *passwd;
 	char *map_release;
 	int flags;
+	char *url;
 };
 
 struct map_rect_priv {
@@ -847,8 +848,7 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 	long long offset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
 	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, offset + zipfile*m->cde_size, m->cde_size));
 	cd_to_cpu(cd);
-#if 0
-	if (!cd->zipcunc) {
+	if (!cd->zipcunc && m->url) {
 		char tilename[cd->zipcfnl+1];
 		char *url,*lfh_filename;
 		long long offset;
@@ -861,7 +861,7 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 		cd=NULL;
 		strncpy(tilename,(char *)(cd_copy+1),cd_copy->zipcfnl);
 		tilename[cd_copy->zipcfnl]='\0';
-		url=g_strdup_printf("http://maps.navit-project.org/api/map/?memberid=%d",zipfile);
+		url=g_strdup_printf("%s%d",m->url,zipfile);
 		offset=file_size(f);
 		offset-=sizeof(struct zip_eoc);
 		eoc=(struct zip_eoc *)file_data_read(f, offset, sizeof(struct zip_eoc));
@@ -869,12 +869,12 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 		file_data_free(f, (unsigned char *)eoc);
 		dbg(0,"encountered missing tile %s(%s), downloading at %Ld\n",url,tilename,offset);
 		cd_copy->zipofst=offset;
-		tile=file_create_url(url);
+		tile=file_create(url,file_flag_url);
 		for (;;) {
 			int size=64*1024,size_ret;
 			unsigned char *data;
 			data=file_data_read_special(tile, size, &size_ret);
-			dbg(1,"got %d bytes writing at offset %Ld\n",size_ret,offset);
+			dbg(0,"got %d bytes writing at offset %Ld\n",size_ret,offset);
 			if (size_ret <= 0)
 				break;
 			file_data_write(f, offset, size_ret, data);
@@ -894,7 +894,6 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 		cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size));
 		dbg(0,"Offset %d\n",cd->zipofst);
 	}
-#endif
 	dbg(1,"enter %p %d\n", mr, zipfile);
 #ifdef DEBUG_SIZE
 #if DEBUG_SIZE > 0
@@ -1654,7 +1653,7 @@ map_binfile_open(struct map_priv *m)
 	struct attr attr;
 
 	dbg(1,"file_create %s\n", m->filename);
-	m->fi=file_create(m->filename, 0);
+	m->fi=file_create(m->filename, m->url?file_flag_readwrite:0);
 	if (! m->fi) {
 		dbg(0,"Failed to load '%s'\n", m->filename);
 		return 0;
@@ -1744,7 +1743,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 {
 	struct map_priv *m;
 	struct attr *data=attr_search(attrs, NULL, attr_data);
-	struct attr *check_version,*map_pass,*flags;
+	struct attr *check_version,*map_pass,*flags,*url;
 	struct file_wordexp *wexp;
 	char **wexp_data;
 	if (! data)
@@ -1768,6 +1767,9 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 	flags=attr_search(attrs, NULL, attr_flags);
 	if (flags)
 		m->flags=flags->u.num;
+	url=attr_search(attrs, NULL, attr_url);
+	if (url)
+		m->url=g_strdup(url->u.str);
 	if (!map_binfile_open(m) && !m->check_version) {
 		map_binfile_destroy(m);
 		m=NULL;
