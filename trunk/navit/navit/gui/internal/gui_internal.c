@@ -6260,21 +6260,44 @@ gui_internal_cmd_map_downloader(struct gui_priv *this, char *function, struct at
 	char *html;
 	struct file *f;
 	int size;
+	int mode=0;
 	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type) || !in[0]->u.str)
 		return;
+	if (in[1] && ATTR_IS_INT(in[1]->type))
+		mode=in[1]->u.num;
 	f=file_create(in[0]->u.str, file_flag_url);
 	if (! f)
 		return;
-	html=file_data_read_special(f, 8192, &size);
-	if (size < 8192) {
-		html[size]='\0';
-		printf("%s\n",html);
-		gui_internal_html_menu(this, html, NULL);
+	if (mode) {
+		FILE *fm=fopen("map.bin","wb");
+		char *data;
+		long long downloaded=0;
+		for (;;) {
+			data=file_data_read_special(f, 8192, &size);
+			if (size) {
+				if (fwrite(data, size, 1, fm) != 1) {
+					dbg(0,"write error\n");
+					break;
+				}
+				downloaded+=size;
+				dbg(0,"%Ld of %Ld\n",downloaded,f->size);
+			}
+			g_free(data);
+			if (!size)
+				break;
+		}
+		fclose(fm);
+	} else {
+		html=file_data_read_special(f, 8192, &size);
+		if (size < 8192) {
+			html[size]='\0';
+			printf("%s\n",html);
+			gui_internal_html_menu(this, html, NULL);
+		}
+		g_free(html);
 	}
-	g_free(html);
 	file_destroy(f);
 }
-
 
 /**
  * @brief handles the 'next page' table event.
@@ -6493,7 +6516,7 @@ static struct command_table commands[] = {
 	{"quit",command_cast(gui_internal_cmd2_quit)},
 	{"write",command_cast(gui_internal_cmd_write)},
 	{"about",command_cast(gui_internal_cmd2_about)},
-	{"map_downloader",command_cast(gui_internal_cmd_map_downloader)}
+	{"map_downloader",command_cast(gui_internal_cmd_map_downloader)},
 };
 
 
