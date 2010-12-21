@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2008 Navit Team
+ * Copyright (C) 2005-2010 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -2942,6 +2942,11 @@ gui_internal_cmd2_position(struct gui_priv *this, char *function, struct attr **
 	gui_internal_cmd_position_do(this, NULL, in[0]->u.coord_geo, NULL, name, flags);
 }
 
+/**
+  * The "Bookmarks" section of the OSD
+  * 
+  */
+
 static void
 gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 {
@@ -2983,6 +2988,9 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 			} else {
 				bookmarks_move_down(mattr.u.bookmarks,prefix);
 			}
+			
+			  // "Back" button, when inside a bookmark folder
+			  
 			if (plen) {
 				wbm=gui_internal_button_new_with_callback(this, "..",
 					image_new_xs(this, "gui_inactive"), gravity_left_center|orientation_horizontal|flags_fill,
@@ -2991,27 +2999,43 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 				gui_internal_widget_append(w, wbm);
 			}
 		}
+		
+		// Adds the Bookmark folders
 		wbm=gui_internal_button_new_with_callback(this, _("Add Bookmark folder"),
 			    image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_add_bookmark_folder2, NULL);
 		gui_internal_widget_append(w, wbm);
+
+		// Pastes the Bookmark
 		wbm=gui_internal_button_new_with_callback(this, _("Paste bookmark"),
 				image_new_xs(this, "gui_active"), gravity_left_center|orientation_horizontal|flags_fill,
 				gui_internal_cmd_paste_bookmark, NULL);
 		gui_internal_widget_append(w, wbm);
+
 		bookmarks_item_rewind(mattr.u.bookmarks);
+		
+		struct widget *tbl, *row;
+		tbl=gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
+		gui_internal_widget_append(w,tbl);
+
 		while ((item=bookmarks_get_item(mattr.u.bookmarks))) {
 			if (!item_attr_get(item, attr_label, &attr)) continue;
 			label_full=attr.u.str;
 			dbg(0,"full_labled: %s\n",label_full);
+			
+			// hassub == 1 if the item type is a sub-folder
 			if (item->type == type_bookmark_folder) {
 				hassub=1;
 			} else {
 				hassub=0;
 			}
+			
+			row=gui_internal_widget_table_row_new(this,gravity_left| flags_fill| orientation_horizontal);
 			wbm=gui_internal_button_new_with_callback(this, label_full,
 				image_new_xs(this, hassub ? "gui_inactive" : "gui_active" ), gravity_left_center|orientation_horizontal|flags_fill,
 					hassub ? gui_internal_cmd_bookmarks : gui_internal_cmd_position, NULL);
+
+			row->children=g_list_append(row->children,wbm);
 			if (item_coord_get(item, &c, 1)) {
 				wbm->c.x=c.x;
 				wbm->c.y=c.y;
@@ -3021,10 +3045,10 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 				if (!hassub) {
 					wbm->data=(void*)7;//Mark us as a bookmark
 				}
-				gui_internal_widget_append(w, wbm);
+				gui_internal_widget_append(tbl, row);
 				wbm->prefix=g_strdup(label_full);
 			} else {
-				gui_internal_widget_destroy(this, wbm);
+				gui_internal_widget_destroy(this, row);
 			}
 		}
 	}
