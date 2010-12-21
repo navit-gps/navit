@@ -79,6 +79,7 @@ vehicle_iphone=no; vehicle_iphone_reason=default
 vehicle_android=no; vehicle_android_reason=default
 graphics_android=no; graphics_android_reason=default
 vehicle_maemo=no; vehicle_maemo_reason=default
+vehicle_webos=no; vehicle_webos_reason=default
 
 shared_libnavit=no
 LIBNAVIT=navit
@@ -1050,6 +1051,17 @@ then
 fi
 AC_SUBST(IPHONE_CFLAGS)
 AC_SUBST(IPHONE_LIBS)
+# webos
+AC_ARG_ENABLE(vehicle-webos, [  --enable-vehicle-webos              enable vehicle type webos], vehicle_webos=$enableval;vehicle_webos_reason="configure parameter")
+AM_CONDITIONAL(VEHICLE_WEBOS, test "x${vehicle_webos}" = "xyes")
+if test "x${vehicle_webos}" = "xyes"
+then
+	AC_DEFINE(USE_WEBOS,[],Build with webOS support)
+	LIBPDL_CFLAGS="$SDL_CFLAGS -I/usr/local/include"
+	LIBPDL_LIBS="-L/usr/local/lib -lpdl"
+	AC_SUBST(LIBPDL_CFLAGS)
+	AC_SUBST(LIBPDL_LIBS)
+fi
 NAVIT_CFLAGS="$NAVIT_CFLAGS $GLIB_CFLAGS $GMODULE_CFLAGS"
 NAVIT_LIBS="$NAVIT_LIBS $GLIB_LIBS $GMODULE_LIBS $LIBINTL"
 AC_SUBST(NAVIT_CFLAGS)
@@ -1124,6 +1136,7 @@ navit/vehicle/null/Makefile
 navit/vehicle/demo/Makefile
 navit/vehicle/wince/Makefile
 navit/vehicle/iphone/Makefile
+navit/vehicle/webos/Makefile
 navit/xpm/Makefile
 navit/maps/Makefile
 intl/Makefile
@@ -1251,6 +1264,7 @@ echo "  maemo:             $vehicle_maemo ($vehicle_maemo_reason)"
 echo "  null:              $vehicle_null ($vehicle_null_reason)"
 echo "  wince:             $vehicle_wince ($vehicle_wince_reason)"
 echo "  iphone:            $vehicle_iphone ($vehicle_iphone_reason)"
+echo "  webos:             $vehicle_webos ($vehicle_webos_reason)"
 
 if  test "x${gtk2_pkgconfig}" != "xyes" -a "x${gui_win32}" != "xyes" -a "x${gui_internal}" != "xyes" -a "x${gui_qml}" != "xyes"
 then
