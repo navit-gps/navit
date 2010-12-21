@@ -29,3 +29,6 @@ endif
 if VEHICLE_WINCE
   SUBDIRS += wince
 endif
+if VEHICLE_WEBOS
+  SUBDIRS += webos
+endif
