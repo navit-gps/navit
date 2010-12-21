@@ -51,9 +51,9 @@ struct file {
 	long map_file;
 #endif
 	char *name;
-	FILE *stdfile;
 	int special;
 	int cache;
+	int requests;
 };
 
 enum file_flags {

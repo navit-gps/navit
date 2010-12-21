@@ -35,6 +35,12 @@
 #include "file.h"
 #include "atom.h"
 #include "config.h"
+#ifdef HAVE_SOCKET
+#include <sys/socket.h>
+#include <netdb.h>
+#endif
+
+extern char *version;
 
 #ifdef HAVE_LIBCRYPTO
 #include <openssl/sha.h>
@@ -69,6 +75,66 @@ struct file_cache_id {
 	int method;
 } __attribute__ ((packed));
 
+#ifdef HAVE_SOCKET
+static int
+file_socket_connect(char *host, char *service)
+{
+	struct addrinfo hints;
+	struct addrinfo *result, *rp;
+	int ret,fd,s;
+
+	memset(&hints, 0, sizeof(struct addrinfo));
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_flags = 0;
+	hints.ai_protocol = 0;
+	s = getaddrinfo(host, service, &hints, &result);
+	if (s != 0) {
+		dbg(0,"getaddrinfo error %s\n",gai_strerror(s));
+		return -1;
+	}
+	for (rp = result; rp != NULL; rp = rp->ai_next) {
+		fd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+		if (fd != -1) {
+			if (connect(fd, rp->ai_addr, rp->ai_addrlen) != -1)
+				break;
+			close(fd);
+			fd=-1;
+		}
+	}
+	freeaddrinfo(result);
+	return fd;
+}
+#endif
+
+static int
+file_http_request(struct file *file, char *host, char *path)
+{
+	char *request=g_strdup_printf("GET %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n\r\n",path,version,host);
+	write(file->fd, request, strlen(request));
+	file->requests++;
+}
+
+static char *
+file_http_header_end(char *str, int len)
+{
+	int i;
+	for (i=0; i+1<len; i+=2) {
+		if (str[i+1]=='\n') {
+			if (str[i]=='\n')
+				return str+i+2;
+			else if (str[i]=='\r' && i+3<len && str[i+2]=='\r' && str[i+3]=='\n')
+			        return str+i+4;
+			--i;
+		} else if (str[i+1]=='\r') {
+			if (i+4<len && str[i+2]=='\n' && str[i+3]=='\r' && str[i+4]=='\n')
+				return str+i+5;
+			--i;
+		}
+    	}
+  	return NULL;
+}
+
 struct file *
 file_create(char *name, enum file_flags flags)
 {
@@ -84,12 +150,21 @@ file_create(char *name, enum file_flags flags)
 
 	file->name = g_strdup(name);
 	if (flags & file_flag_url) {
-#ifndef HAVE_API_WIN32_BASE
-		char *cmd=g_strdup_printf("curl '%s'",name);
-		file->stdfile=popen(cmd,"r");
-		file->fd=fileno(file->stdfile);
-		file->special=1;
-		g_free(cmd);
+#ifdef HAVE_SOCKET
+		if (!strncmp(name,"http://",7)) {
+			char *host=g_strdup(name+7);
+			char *port=strchr(host,':');
+			char *path=strchr(name+7,'/');
+			if (path) 
+				host[path-name-7]='\0';
+			if (port)
+				*port++='\0';
+			dbg(0,"host=%s path=%s\n",host,path);
+			file->fd=file_socket_connect(host,port?port:"80");
+			file_http_request(file,host,path);
+			file->special=1;
+			g_free(host);
+		}
 #endif
 	} else {
 		file->fd=open(name, open_flags);
@@ -213,14 +288,47 @@ file_data_read(struct file *file, long long offset, int size)
 
 }
 
+static void
+file_process_headers(struct file *file, char *headers)
+{
+	char *tok;
+	char *cl="Content-Length: ";
+	while (tok=strtok(headers, "\r\n")) {
+		if (!strncasecmp(tok,cl,strlen(cl))) {
+			file->size=atoll(tok+strlen(cl));
+		}
+		headers=NULL;
+	}
+}
+
 unsigned char *
 file_data_read_special(struct file *file, int size, int *size_ret)
 {
-	void *ret;
+	char *ret,*hdr;
+	int rets=0,rd;
 	if (!file->special)
 		return NULL;
 	ret=g_malloc(size);
-	*size_ret=read(file->fd, ret, size);
+	while (size > 0) {
+		rd=read(file->fd, ret+rets, size);
+		if (rd <= 0)
+			break;
+		rets+=rd;
+		size-=rd;
+		if (file->requests) {
+			if (hdr=file_http_header_end(ret, rets)) {
+				hdr[-1]='\0';
+				file_process_headers(file, ret);
+				rets-=hdr-ret;
+				memmove(ret, hdr, rets);
+				file->requests--;
+			} else {
+				rets=0;
+				break;
+			}
+		}
+	}
+	*size_ret=rets;
 	return ret;
 }
 
@@ -509,13 +617,9 @@ file_destroy(struct file *f)
 {
 	switch (f->special) {
 	case 0:
+	case 1:
 		close(f->fd);
 		break;
-#ifndef HAVE_API_WIN32_BASE
-	case 1:
-		pclose(f->stdfile);
-		break;
-#endif
 	}
 
     if ( f->begin != NULL )
