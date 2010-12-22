@@ -270,8 +270,10 @@ void
 cache_flush(struct cache *cache, void *id)
 {
 	struct cache_entry *entry=g_hash_table_lookup(cache->hash, id);
-	if (entry)
+	if (entry) {
+		cache_remove_from_list(entry->where, entry);
 		cache_remove(cache, entry);
+	}
 }
 
 
