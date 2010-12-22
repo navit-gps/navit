@@ -35,6 +35,7 @@
 #include "file.h"
 #include "atom.h"
 #include "config.h"
+#include "item.h"
 #ifdef HAVE_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>
@@ -62,6 +63,8 @@ extern char *version;
 #define O_BINARY 0
 #endif
 
+#define CACHE_SIZE (10*1024*1024)
+
 #ifdef CACHE_SIZE
 static GHashTable *file_name_hash;
 #endif
@@ -81,7 +84,7 @@ file_socket_connect(char *host, char *service)
 {
 	struct addrinfo hints;
 	struct addrinfo *result, *rp;
-	int ret,fd,s;
+	int fd=-1,s;
 
 	memset(&hints, 0, sizeof(struct addrinfo));
 	hints.ai_family = AF_UNSPEC;
@@ -136,21 +139,17 @@ file_http_header_end(char *str, int len)
 }
 
 struct file *
-file_create(char *name, enum file_flags flags)
+file_create(char *name, struct attr **options)
 {
 	struct stat stat;
 	struct file *file= g_new0(struct file,1);
+	struct attr *attr;
 	int open_flags=O_LARGEFILE|O_BINARY;
-	char *cmd;
 
-	if (flags & file_flag_readwrite)
-		open_flags |= O_RDWR;
-	else
-		open_flags |= O_RDONLY;
-
-	file->name = g_strdup(name);
-	if (flags & file_flag_url) {
+	if (options && (attr=attr_search(options, NULL, attr_url)) && attr->u.str) {
 #ifdef HAVE_SOCKET
+		name=attr->u.str;
+		file->name = g_strdup(name);
 		if (!strncmp(name,"http://",7)) {
 			char *host=g_strdup(name+7);
 			char *port=strchr(host,':');
@@ -167,6 +166,11 @@ file_create(char *name, enum file_flags flags)
 		}
 #endif
 	} else {
+		if (options && (attr=attr_search(options, NULL, attr_readwrite)) && attr->u.num)
+			open_flags |= O_RDWR;
+		else
+			open_flags |= O_RDONLY;
+		file->name = g_strdup(name);
 		file->fd=open(name, open_flags);
 		if (file->fd == -1) {
 			g_free(file);
@@ -178,7 +182,7 @@ file_create(char *name, enum file_flags flags)
 		dbg(1,"size=%Ld\n", file->size);
 		file->name_id = (int)atom(name);
 	}
-	if (file_cache && !(flags & file_flag_nocache)) 
+	if (!options || !(attr=attr_search(options, NULL, attr_cache)) || attr->u.num)
 		file->cache=1;
 	dbg_assert(file != NULL);
 	return file;
@@ -293,7 +297,7 @@ file_process_headers(struct file *file, char *headers)
 {
 	char *tok;
 	char *cl="Content-Length: ";
-	while (tok=strtok(headers, "\r\n")) {
+	while ((tok=strtok(headers, "\r\n"))) {
 		if (!strncasecmp(tok,cl,strlen(cl))) {
 			file->size=atoll(tok+strlen(cl));
 		}
@@ -316,7 +320,7 @@ file_data_read_special(struct file *file, int size, int *size_ret)
 		rets+=rd;
 		size-=rd;
 		if (file->requests) {
-			if (hdr=file_http_header_end(ret, rets)) {
+			if ((hdr=file_http_header_end(ret, rets))) {
 				hdr[-1]='\0';
 				file_process_headers(file, ret);
 				rets-=hdr-ret;
@@ -576,7 +580,7 @@ file_closedir(void *hnd)
 }
 
 struct file *
-file_create_caseinsensitive(char *name, enum file_flags flags)
+file_create_caseinsensitive(char *name, struct attr **options)
 {
 	char dirname[strlen(name)+1];
 	char *filename;
@@ -584,7 +588,7 @@ file_create_caseinsensitive(char *name, enum file_flags flags)
 	void *d;
 	struct file *ret;
 
-	ret=file_create(name, flags);
+	ret=file_create(name, options);
 	if (ret)
 		return ret;
 
@@ -602,7 +606,7 @@ file_create_caseinsensitive(char *name, enum file_flags flags)
 		while ((filename=file_readdir(d))) {
 			if (!strcasecmp(filename, p)) {
 				strcpy(p, filename);
-				ret=file_create(dirname, flags);
+				ret=file_create(dirname, options);
 				if (ret)
 					break;
 			}

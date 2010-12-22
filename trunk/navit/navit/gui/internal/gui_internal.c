@@ -6261,11 +6261,13 @@ gui_internal_cmd_map_downloader(struct gui_priv *this, char *function, struct at
 	struct file *f;
 	int size;
 	int mode=0;
+	struct attr *attrs[2]={NULL,NULL};
 	if (!in || !in[0] || !ATTR_IS_STRING(in[0]->type) || !in[0]->u.str)
 		return;
 	if (in[1] && ATTR_IS_INT(in[1]->type))
 		mode=in[1]->u.num;
-	f=file_create(in[0]->u.str, file_flag_url);
+	attrs[0]=in[0];
+	f=file_create(NULL, attrs);
 	if (! f)
 		return;
 	if (mode) {

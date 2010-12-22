@@ -56,14 +56,8 @@ struct file {
 	int requests;
 };
 
-enum file_flags {
-	file_flag_nocache=1,
-	file_flag_readwrite=2,
-	file_flag_url=4,
-};
-
 /* prototypes */
-struct file *file_create(char *name, enum file_flags flags);
+struct file *file_create(char *name, struct attr **options);
 int file_is_dir(char *name);
 long long file_size(struct file *file);
 int file_mkdir(char *name, int pflag);
@@ -82,7 +76,7 @@ void file_unmap(struct file *f);
 void *file_opendir(char *dir);
 char *file_readdir(void *hnd);
 void file_closedir(void *hnd);
-struct file *file_create_caseinsensitive(char *name, enum file_flags flags);
+struct file *file_create_caseinsensitive(char *name, struct attr **options);
 void file_destroy(struct file *f);
 struct file_wordexp *file_wordexp_new(const char *pattern);
 int file_wordexp_get_count(struct file_wordexp *wexp);
