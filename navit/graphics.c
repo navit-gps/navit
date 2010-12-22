@@ -1587,18 +1587,28 @@ char *
 graphics_icon_path(char *icon)
 {
 	static char *navit_sharedir;
+	char *ret=NULL;
+	struct file_wordexp *wordexp=NULL;
 	dbg(1,"enter %s\n",icon);
+	if (strchr(icon, '$')) {
+		wordexp=file_wordexp_new(icon);
+		if (file_wordexp_get_count(wordexp)) 
+			icon=file_wordexp_get_array(wordexp)[0];
+	}
 	if (icon[0] == '/')
-		return g_strdup(icon);
+		ret=g_strdup(icon);
 	else {
 #ifdef HAVE_API_ANDROID
-		return g_strdup_printf("res/drawable/%s", icon);
+		ret=g_strdup_printf("res/drawable/%s", icon);
 #else
 		if (! navit_sharedir)
 			navit_sharedir = getenv("NAVIT_SHAREDIR");
-		return g_strdup_printf("%s/xpm/%s", navit_sharedir, icon);
+		ret=g_strdup_printf("%s/xpm/%s", navit_sharedir, icon);
 #endif
 	}
+	if (wordexp)
+		file_wordexp_destroy(wordexp);
+	return ret;
 }
 
 static int

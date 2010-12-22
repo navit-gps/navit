@@ -911,6 +911,7 @@ parse_file(struct xmldocument *document, xmlerror **error)
 	gsize len;
 	gint line, chr;
 	gboolean result;
+	char *xmldir,*newxmldir,*xmlfile,*newxmlfile,*sep;
 
 	dbg(1,"enter filename='%s'\n", document->href);
 #if GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 12
@@ -922,6 +923,18 @@ parse_file(struct xmldocument *document, xmlerror **error)
 		g_markup_parse_context_free (context);
 		return FALSE;
 	}
+	xmldir=getenv("XMLDIR");
+	xmlfile=getenv("XMLFILE");
+	newxmlfile=g_strdup(document->href);
+	newxmldir=g_strdup(document->href);
+	if (sep=strrchr(newxmldir,'/')) 
+		*sep='\0';
+	else {
+		g_free(newxmldir);
+		newxmldir=g_strdup(".");
+	}
+	setenv("XMLDIR",newxmldir,1);
+	setenv("XMLFILE",newxmlfile,1);
 	document->active=document->xpointer ? 0:1;
 	document->first=NULL;
 	document->last=NULL;
@@ -934,6 +947,16 @@ parse_file(struct xmldocument *document, xmlerror **error)
 	}
 	g_markup_parse_context_free (context);
 	g_free (contents);
+	if (xmldir)
+		setenv("XMLDIR",xmldir,1);	
+	else
+		unsetenv("XMLDIR");
+	if (xmlfile)
+		setenv("XMLFILE",xmlfile,1);
+	else
+		unsetenv("XMLFILE");
+	g_free(newxmldir);
+	g_free(newxmlfile);
 	dbg(1,"return %d\n", result);
 
 	return result;
