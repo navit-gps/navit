@@ -1648,6 +1648,70 @@ map_binfile_zip_setup(struct map_priv *m, char *filename, int mmap)
 }
 
 static int
+map_binfile_download_initial(struct map_priv *m)
+{
+	struct attr url={attr_url};
+	struct attr http_method={attr_http_method};
+	struct attr http_header={attr_http_header};
+	struct attr *attrs[4];
+	struct file *planet;
+	long long offset=0,planet_size;
+	int size=64*1024,size_ret;
+	unsigned char *data;
+	struct zip64_eoc *zip64_eoc;
+
+	attrs[0]=&url;
+	url.u.str=m->url;
+	attrs[1]=&http_method;
+	http_method.u.str="HEAD";
+	attrs[2]=NULL;
+
+	planet=file_create(NULL, attrs);
+	if (!planet)
+		return 0;
+	data=file_data_read_special(planet, size, &size_ret);
+	dbg(0,"size_ret=%d\n",size_ret);
+	if (size_ret < 0) 
+		return 0;
+	g_free(data);
+	planet_size=file_size(planet);
+	file_destroy(planet);
+
+	dbg(0,"planet_size %Ld\n",planet_size);
+	attrs[1]=&http_header;
+	http_header.u.str=g_strdup_printf("Range: bytes=%Ld-%Ld",planet_size-98,planet_size-1);
+	planet=file_create(NULL, attrs);
+	g_free(http_header.u.str);
+	if (!planet)
+		return 0;
+	data=file_data_read_special(planet, size, &size_ret);
+	dbg(0,"size_ret=%d\n",size_ret);
+	if (size_ret < 0) 
+		return 0;
+	zip64_eoc=data;
+	if (zip64_eoc->zip64esig != zip64_eoc_sig)
+	{
+		g_free(data);
+		file_destroy(planet);
+		return 0;
+	}
+	g_free(data);
+	file_destroy(planet);
+	http_header.u.str=g_strdup_printf("Range: bytes=%Ld-%Ld",zip64_eoc->zip64eofst,zip64_eoc->zip64eofst+zip64_eoc->zip64ecsz);
+	planet=file_create(NULL, attrs);
+	g_free(http_header.u.str);
+	for (;;) {
+		data=file_data_read_special(planet, size, &size_ret);
+		if (size_ret <= 0)
+			break;
+		g_free(data);
+		fprintf(stderr,".");
+	}
+	file_destroy(planet);
+	return 1;
+}
+
+static int
 map_binfile_open(struct map_priv *m)
 {
 	int *magic;
