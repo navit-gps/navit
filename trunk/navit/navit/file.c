@@ -63,8 +63,6 @@ extern char *version;
 #define O_BINARY 0
 #endif
 
-#define CACHE_SIZE (10*1024*1024)
-
 #ifdef CACHE_SIZE
 static GHashTable *file_name_hash;
 #endif
