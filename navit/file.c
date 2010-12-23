@@ -111,9 +111,9 @@ file_socket_connect(char *host, char *service)
 #endif
 
 static int
-file_http_request(struct file *file, char *host, char *path)
+file_http_request(struct file *file, char *method, char *host, char *path, char *header)
 {
-	char *request=g_strdup_printf("GET %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n\r\n",path,version,host);
+	char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s%s%s%s\r\n\r\n",method,path,version,host,header?"\r\n":"",header?header:"",header?"\r\n":"");
 	write(file->fd, request, strlen(request));
 	file->requests++;
 }
@@ -154,13 +154,19 @@ file_create(char *name, struct attr **options)
 			char *host=g_strdup(name+7);
 			char *port=strchr(host,':');
 			char *path=strchr(name+7,'/');
+			char *method="GET";
+			char *header=NULL;
+			if ((attr=attr_search(options, NULL, attr_http_method)) && attr->u.str)
+				method=attr->u.str;
+			if ((attr=attr_search(options, NULL, attr_http_header)) && attr->u.str)
+				header=attr->u.str;
 			if (path) 
 				host[path-name-7]='\0';
 			if (port)
 				*port++='\0';
 			dbg(0,"host=%s path=%s\n",host,path);
 			file->fd=file_socket_connect(host,port?port:"80");
-			file_http_request(file,host,path);
+			file_http_request(file,method,host,path,header);
 			file->special=1;
 			g_free(host);
 		}
