@@ -38,6 +38,8 @@ struct default_flags {
 	int flags;
 };
 
+struct item busy_item;
+
 struct default_flags default_flags2[]={
 	{type_street_nopass, AF_PBH},
 	{type_street_0, AF_ALL},
