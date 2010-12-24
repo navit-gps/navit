@@ -678,6 +678,7 @@ void graphics_draw_text(struct graphics *this_, struct graphics_gc *gc1, struct 
 	this_->meth.draw_text(this_->priv, gc1->priv, gc2 ? gc2->priv : NULL, font->priv, text, p, dx, dy);
 }
 
+
 /**
  * FIXME
  * @param <>
@@ -1583,6 +1584,21 @@ get_font(struct graphics *gra, int size)
 	return gra->font[size];
 }
 
+void graphics_draw_text_std(struct graphics *this_, int text_size, char *text, struct point *p)
+{
+	struct graphics_font *font=get_font(this_, text_size);
+	struct point bbox[4];
+	int i;
+
+	graphics_get_text_bbox(this_, font, text, 0x10000, 0, bbox, 0);
+	for (i = 0 ; i < 4 ; i++) {
+		bbox[i].x+=p->x;
+		bbox[i].y+=p->y;
+	}
+	graphics_draw_rectangle(this_, this_->gc[2], &bbox[1], bbox[2].x-bbox[0].x, bbox[0].y-bbox[1].y+5);
+	graphics_draw_text(this_, this_->gc[1], this_->gc[2], font, text, p, 0x10000, 0);
+}
+
 char *
 graphics_icon_path(char *icon)
 {
@@ -1852,6 +1868,7 @@ static void xdisplay_draw_layer(struct displaylist *display_list, struct graphic
 
 
 
+
 /**
  * FIXME
  * @param <>
@@ -1951,7 +1968,14 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 			while ((item=map_rect_get_item(displaylist->mr))) {
 				int label_count=0;
 				char *labels[2];
-				struct hash_entry *entry=get_hash_entry(displaylist, item->type);
+				struct hash_entry *entry;
+				if (item == &busy_item) {
+					if (displaylist->workload)
+						return;
+					else
+						continue;
+				}
+				entry=get_hash_entry(displaylist, item->type);
 				if (!entry) 
 					continue;
 				count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);

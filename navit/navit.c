@@ -57,6 +57,7 @@
 #include "profile.h"
 #include "command.h"
 #include "navit_nls.h"
+#include "map.h"
 #include "util.h"
 #include "messages.h"
 #include "vehicleprofile.h"
@@ -108,7 +109,7 @@ struct navit {
 	GList *windows_items;
 	struct navit_vehicle *vehicle;
 	struct callback_list *attr_cbl;
-	struct callback *nav_speech_cb, *roadbook_callback, *popup_callback, *route_cb;
+	struct callback *nav_speech_cb, *roadbook_callback, *popup_callback, *route_cb, *progress_cb;
 	struct datawindow *roadbook_window;
 	struct map *former_destination;
 	struct point pressed, last, current;
@@ -250,6 +251,31 @@ navit_draw_displaylist(struct navit *this_)
 }
 
 static void
+navit_map_progress(struct navit *this_)
+{
+	struct map *map;
+	struct mapset *ms;
+	struct mapset_handle *msh;
+	struct attr attr;
+	struct point p;
+	p.x=10;
+	p.y=32;
+
+	ms=this_->mapsets->data;
+	msh=mapset_open(ms);
+	while (msh && (map=mapset_next(msh, 0))) {
+		if (map_get_attr(map, attr_progress, &attr, NULL)) {
+			char *str=g_strdup_printf("%s       ",attr.u.str);
+			graphics_draw_text_std(this_->gra, 32, str, &p);
+			g_free(str);
+			p.y+=32;
+			graphics_draw_mode(this_->gra, draw_mode_end);
+		}
+	}
+	mapset_close(msh);
+}
+
+static void
 navit_redraw_route(struct navit *this_, struct route *route, struct attr *attr)
 {
 	int updated;
@@ -286,7 +312,7 @@ navit_handle_resize(struct navit *this_, int w, int h)
 	if (callback) 
 		callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
 	if (this_->ready == 3)
-		navit_draw(this_);
+		navit_draw_async(this_, 1);
 }
 
 static void
@@ -1401,7 +1427,15 @@ navit_init(struct navit *this_)
 	navit_set_vehicle(this_, this_->vehicle);
 	dbg(2,"Adding dynamic maps to mapset %p\n",this_->mapsets);
 	if (this_->mapsets) {
+		struct mapset_handle *msh;
 		ms=this_->mapsets->data;
+		this_->progress_cb=callback_new_attr_1(callback_cast(navit_map_progress), attr_progress, this_);
+		msh=mapset_open(ms);
+		while (msh && (map=mapset_next(msh, 0))) {
+			map_add_callback(map, this_->progress_cb);
+		}
+		mapset_close(msh);
+		
 		if (this_->route) {
 			if ((map=route_get_map(this_->route)))
 				mapset_add_attr(ms, &(struct attr){attr_map,.u.map=map});
