@@ -186,8 +186,10 @@ file_create(char *name, struct attr **options)
 		dbg(1,"size=%Ld\n", file->size);
 		file->name_id = (int)atom(name);
 	}
+#ifdef CACHE_SIZE
 	if (!options || !(attr=attr_search(options, NULL, attr_cache)) || attr->u.num)
 		file->cache=1;
+#endif
 	dbg_assert(file != NULL);
 	return file;
 }
