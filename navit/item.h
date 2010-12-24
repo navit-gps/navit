@@ -98,6 +98,8 @@ extern struct item_range {
 	enum item_type min,max;
 } item_range_all;
 
+extern struct item busy_item;
+
 /* prototypes */
 enum attr_type;
 enum change_mode;
