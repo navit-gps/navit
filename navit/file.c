@@ -108,7 +108,7 @@ file_socket_connect(char *host, char *service)
 }
 #endif
 
-void
+static void
 file_http_request(struct file *file, char *method, char *host, char *path, char *header)
 {
 	char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s%s%s%s\r\n\r\n",method,path,version,host,header?"\r\n":"",header?header:"",header?"\r\n":"");
