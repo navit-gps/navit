@@ -833,64 +833,67 @@ zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
 	return t->start != NULL;
 }
 
-static void
-push_zipfile_tile(struct map_rect_priv *mr, int zipfile, int offset, int length)
+static struct zip_cd *
+download(struct map_priv *m, struct zip_cd *cd, int zipfile)
 {
+	char tilename[cd->zipcfnl+1];
+	char *lfh_filename;
+	long long offset;
+	struct file *tile,*f=m->fi;
+	struct zip_lfh *lfh;
+	struct zip_cd *cd_copy=g_malloc(m->cde_size);
+	struct zip_eoc *eoc,*eoc_copy=g_malloc(sizeof(struct zip_eoc));
+	struct attr url={attr_url};
+	struct attr *attrs[]={&url, NULL};
+	memcpy(cd_copy, cd, m->cde_size);
+	file_data_free(f, (unsigned char *)cd);
+	cd=NULL;
+	strncpy(tilename,(char *)(cd_copy+1),cd_copy->zipcfnl);
+	tilename[cd_copy->zipcfnl]='\0';
+	url.u.str=g_strdup_printf("%smemberid=%d",m->url,zipfile);
+	offset=file_size(f);
+	offset-=sizeof(struct zip_eoc);
+	eoc=(struct zip_eoc *)file_data_read(f, offset, sizeof(struct zip_eoc));
+	memcpy(eoc_copy, eoc, sizeof(struct zip_eoc));
+	file_data_free(f, (unsigned char *)eoc);
+	dbg(0,"encountered missing tile %s(%s), downloading at %Ld\n",url.u.str,tilename,offset);
+	cd_copy->zipofst=offset;
+	tile=file_create(NULL, attrs);
+	for (;;) {
+		int size=64*1024,size_ret;
+		unsigned char *data;
+		data=file_data_read_special(tile, size, &size_ret);
+		dbg(0,"got %d bytes writing at offset %Ld\n",size_ret,offset);
+		if (size_ret <= 0)
+			break;
+		file_data_write(f, offset, size_ret, data);
+		offset+=size_ret;
+	}
+	file_data_write(f, offset, sizeof(struct zip_eoc), (void *)eoc_copy);
+	lfh=(struct zip_lfh *)(file_data_read(f,cd_copy->zipofst, sizeof(struct zip_lfh)));
+	cd_copy->zipcsiz=lfh->zipsize;
+	cd_copy->zipcunc=lfh->zipuncmp;
+	cd_copy->zipccrc=lfh->zipcrc;
+	lfh_filename=(char *)file_data_read(f,cd_copy->zipofst+sizeof(struct zip_lfh),lfh->zipfnln);
+	memcpy(cd_copy+1,lfh_filename,lfh->zipfnln);
+	file_data_free(f,(void *)lfh_filename);
+	file_data_free(f,(void *)lfh);
+	file_data_write(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size, (void *)cd_copy);
+	g_free(url.u.str);
+	g_free(cd_copy);
+	cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size));
+	cd_to_cpu(cd);
+	dbg(0,"Offset %d\n",cd->zipofst);
+	return cd;
+}
+
+static void
+push_zipfile_tile_do(struct map_rect_priv *mr, struct zip_cd *cd, int zipfile, int offset, int length)
+{
+	struct tile t;
         struct map_priv *m=mr->m;
 	struct file *f=m->fi;
-	struct tile t;
-	long long cdoffset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
-	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, cdoffset + zipfile*m->cde_size, m->cde_size));
-	cd_to_cpu(cd);
-	if (!cd->zipcunc && m->url) {
-		char tilename[cd->zipcfnl+1];
-		char *lfh_filename;
-		long long offset;
-		struct file *tile;
-		struct zip_lfh *lfh;
-		struct zip_cd *cd_copy=g_malloc(m->cde_size);
-		struct zip_eoc *eoc,*eoc_copy=g_malloc(sizeof(struct zip_eoc));
-		struct attr url={attr_url};
-		struct attr *attrs[]={&url, NULL};
-		memcpy(cd_copy, cd, m->cde_size);
-		file_data_free(f, (unsigned char *)cd);
-		cd=NULL;
-		strncpy(tilename,(char *)(cd_copy+1),cd_copy->zipcfnl);
-		tilename[cd_copy->zipcfnl]='\0';
-		url.u.str=g_strdup_printf("%smemberid=%d",m->url,zipfile);
-		offset=file_size(f);
-		offset-=sizeof(struct zip_eoc);
-		eoc=(struct zip_eoc *)file_data_read(f, offset, sizeof(struct zip_eoc));
-		memcpy(eoc_copy, eoc, sizeof(struct zip_eoc));
-		file_data_free(f, (unsigned char *)eoc);
-		dbg(0,"encountered missing tile %s(%s), downloading at %Ld\n",url.u.str,tilename,offset);
-		cd_copy->zipofst=offset;
-		tile=file_create(NULL, attrs);
-		for (;;) {
-			int size=64*1024,size_ret;
-			unsigned char *data;
-			data=file_data_read_special(tile, size, &size_ret);
-			dbg(0,"got %d bytes writing at offset %Ld\n",size_ret,offset);
-			if (size_ret <= 0)
-				break;
-			file_data_write(f, offset, size_ret, data);
-			offset+=size_ret;
-		}
-		file_data_write(f, offset, sizeof(struct zip_eoc), (void *)eoc_copy);
-		lfh=(struct zip_lfh *)(file_data_read(f,cd_copy->zipofst, sizeof(struct zip_lfh)));
-		cd_copy->zipcsiz=lfh->zipsize;
-		cd_copy->zipcunc=lfh->zipuncmp;
-		cd_copy->zipccrc=lfh->zipcrc;
-		lfh_filename=(char *)file_data_read(f,cd_copy->zipofst+sizeof(struct zip_lfh),lfh->zipfnln);
-		memcpy(cd_copy+1,lfh_filename,lfh->zipfnln);
-		file_data_free(f,(void *)lfh_filename);
-		file_data_free(f,(void *)lfh);
-		file_data_write(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size, (void *)cd_copy);
-		g_free(url.u.str);
-		g_free(cd_copy);
-		cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size));
-		dbg(0,"Offset %d\n",cd->zipofst);
-	}
+
 	dbg(1,"enter %p %d\n", mr, zipfile);
 #ifdef DEBUG_SIZE
 #if DEBUG_SIZE > 0
@@ -907,6 +910,20 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile, int offset, int length)
 	if (zipfile_to_tile(m, cd, &t)) 
 		push_tile(mr, &t, offset, length);
 	file_data_free(f, (unsigned char *)cd);
+}
+
+static int
+push_zipfile_tile(struct map_rect_priv *mr, int zipfile, int offset, int length, int async)
+{
+        struct map_priv *m=mr->m;
+	struct file *f=m->fi;
+	long long cdoffset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
+	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, cdoffset + zipfile*m->cde_size, m->cde_size));
+	cd_to_cpu(cd);
+	if (!cd->zipcunc && m->url) 
+		cd=download(m, cd, zipfile);
+	push_zipfile_tile_do(mr, cd, zipfile, offset, length);
+	return 0;
 }
 
 static struct map_rect_priv *
@@ -1068,7 +1085,7 @@ map_parse_country_binfile(struct map_rect_priv *mr)
 		{
 			if (binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
 			{
-				push_zipfile_tile(mr, at.u.num, 0, 0);
+				push_zipfile_tile(mr, at.u.num, 0, 0, 0);
 			}
 		}
 	}
@@ -1100,7 +1117,7 @@ map_parse_submap(struct map_rect_priv *mr)
 	if (!binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
 		return;
 	dbg(1,"pushing zipfile %d from %d\n", at.u.num, mr->t->zipfile_num);
-	push_zipfile_tile(mr, at.u.num, 0, 0);
+	push_zipfile_tile(mr, at.u.num, 0, 0, 0);
 }
 
 static int
@@ -1129,7 +1146,7 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 	struct tile *t;
 	struct map_priv *m=mr->m;
 	if (mr->status == 1) {
-		push_zipfile_tile(mr, m->zip_members-1, 0, 0);
+		push_zipfile_tile(mr, m->zip_members-1, 0, 0, 0);
 		mr->status=0;
 	}
 	for (;;) {
@@ -1177,7 +1194,7 @@ map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 	struct tile *t;
 	if (mr->m->eoc) {
 		while (pop_tile(mr));
-		push_zipfile_tile(mr, id_hi, 0, 0);
+		push_zipfile_tile(mr, id_hi, 0, 0, 0);
 	}
 	t=mr->t;
 	t->pos=t->start+id_lo;
@@ -1204,18 +1221,18 @@ binmap_search_by_index(struct map_priv *map, struct item *item, struct map_rect_
 	if (item_attr_get(item, attr_item_id, &zipfile_ref)) {
 		data=zipfile_ref.u.data;
 		*ret=map_rect_new_binfile_int(map, NULL);
-		push_zipfile_tile(*ret, le32_to_cpu(data[0]), le32_to_cpu(data[1]), -1);
+		push_zipfile_tile(*ret, le32_to_cpu(data[0]), le32_to_cpu(data[1]), -1, 0);
 		return 3;
 	}
 	if (item_attr_get(item, attr_zipfile_ref, &zipfile_ref)) {
 		*ret=map_rect_new_binfile_int(map, NULL);
-		push_zipfile_tile(*ret, zipfile_ref.u.num, 0, 0);
+		push_zipfile_tile(*ret, zipfile_ref.u.num, 0, 0, 0);
 		return 1;
 	}
 	if (item_attr_get(item, attr_zipfile_ref_block, &zipfile_ref)) {
 		data=zipfile_ref.u.data;
 		*ret=map_rect_new_binfile_int(map, NULL);
-		push_zipfile_tile(*ret, le32_to_cpu(data[0]), le32_to_cpu(data[1]), le32_to_cpu(data[2]));
+		push_zipfile_tile(*ret, le32_to_cpu(data[0]), le32_to_cpu(data[1]), le32_to_cpu(data[2]), 0);
 		return 2;
 	}
 	*ret=NULL;
