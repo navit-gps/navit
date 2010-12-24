@@ -93,6 +93,7 @@ struct map_rect_priv {
 	int country_id;
 	char *url;
 	struct attr attrs[8];
+	int status;
 #ifdef DEBUG_SIZE
 	int size;
 #endif
@@ -933,8 +934,8 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 	struct map_rect_priv *mr=map_rect_new_binfile_int(map, sel);
 	struct tile t={};
 	dbg(1,"zip_members=%d\n", map->zip_members);
-	if (map->eoc) 
-		push_zipfile_tile(mr, map->zip_members-1, 0, 0);
+	if (map->eoc)
+		mr->status=1;
 	else {
 		unsigned char *d;
 		if (map->fi) {
@@ -1126,6 +1127,11 @@ static struct item *
 map_rect_get_item_binfile(struct map_rect_priv *mr)
 {
 	struct tile *t;
+	struct map_priv *m=mr->m;
+	if (mr->status == 1) {
+		push_zipfile_tile(mr, m->zip_members-1, 0, 0);
+		mr->status=0;
+	}
 	for (;;) {
 		t=mr->t;
 		if (! t)
