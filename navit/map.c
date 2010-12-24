@@ -91,7 +91,7 @@ struct map *
 map_new(struct attr *parent, struct attr **attrs)
 {
 	struct map *m;
-	struct map_priv *(*maptype_new)(struct map_methods *meth, struct attr **attrs);
+	struct map_priv *(*maptype_new)(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl);
 	struct attr *type=attr_search(attrs, NULL, attr_type);
 
 	if (! type) {
@@ -106,14 +106,12 @@ map_new(struct attr *parent, struct attr **attrs)
 
 	m=g_new0(struct map, 1);
 	m->attrs=attr_list_dup(attrs);
-	m->priv=maptype_new(&m->meth, attrs);
+	m->attr_cbl=callback_list_new();
+	m->priv=maptype_new(&m->meth, attrs, m->attr_cbl);
 	if (! m->priv) {
-		attr_list_free(m->attrs);
-		g_free(m);
+		map_destroy(m);
 		m=NULL;
 	}
-	if (m)
-		m->attr_cbl=callback_list_new();
 	return m;
 }
 
@@ -257,7 +255,8 @@ map_set_projection(struct map *this_, enum projection pro)
 void
 map_destroy(struct map *m)
 {
-	m->meth.map_destroy(m->priv);
+	if (m->priv)
+		m->meth.map_destroy(m->priv);
 	attr_list_free(m->attrs);
 	callback_list_destroy(m->attr_cbl);
 	g_free(m);

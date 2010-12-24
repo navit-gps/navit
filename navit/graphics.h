@@ -116,8 +116,8 @@ struct graphics_data_image {
 
 /* prototypes */
 enum attr_type;
-enum item_type;
 enum draw_mode_num;
+enum item_type;
 struct attr;
 struct attr_iter;
 struct callback;
@@ -171,6 +171,7 @@ void graphics_overlay_disable(struct graphics *this_, int disable);
 void graphics_draw_image(struct graphics *this_, struct graphics_gc *gc, struct point *p, struct graphics_image *img);
 int graphics_draw_drag(struct graphics *this_, struct point *p);
 void graphics_background_gc(struct graphics *this_, struct graphics_gc *gc);
+void graphics_draw_text_std(struct graphics *this_, int text_size, char *text, struct point *p);
 char *graphics_icon_path(char *icon);
 void graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transformation *t);
 void graphics_displaylist_draw(struct graphics *gra, struct displaylist *displaylist, struct transformation *trans, struct layout *l, int flags);
