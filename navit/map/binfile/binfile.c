@@ -59,7 +59,7 @@ struct map_download {
 	struct map_priv *m;
 	struct map_rect_priv *mr;
 	struct file *tile,*file;
-	int zipfile,toffset,tlength;
+	int zipfile,toffset,tlength,progress,read;
 	long long offset;
 	struct zip_eoc *eoc_copy;
 	struct zip_cd *cd_copy,*cd;
@@ -881,7 +881,7 @@ download_start(struct map_download *download)
 static int
 download_download(struct map_download *download)
 {
-	int size=64*1024,size_ret;
+	int size=64*1024,size_ret,tile_size;
 	unsigned char *data;
 	data=file_data_read_special(download->tile, size, &size_ret);
 	dbg(0,"got %d bytes writing at offset %Ld\n",size_ret,download->offset);
@@ -891,6 +891,10 @@ download_download(struct map_download *download)
 	}
 	file_data_write(download->file, download->offset, size_ret, data);
 	download->offset+=size_ret;
+	download->read+=size_ret;
+	tile_size=file_size(download->tile);
+	if (tile_size)
+		download->progress=download->read*100/tile_size;
 	return 0;
 }
 
@@ -983,6 +987,11 @@ download(struct map_priv *m, struct map_rect_priv *mr, struct zip_cd *cd, int zi
 		case 2:
 			if (download_download(download)) 
 				download->state=3;
+			else {
+				g_free(m->progress);
+				m->progress=g_strdup_printf("Download Tile %d %d%%",download->zipfile,download->progress);
+				callback_list_call_attr_0(m->cbl, attr_progress);
+			}
 			break;
 		case 3:
 			if (download_finish(download)) {
