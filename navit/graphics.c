@@ -20,8 +20,8 @@
 //##############################################################################################################
 //#
 //# File: graphics.c
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //#
 //##############################################################################################################
@@ -53,8 +53,8 @@
 
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 struct graphics
@@ -118,7 +118,7 @@ struct displaylist {
 
 struct displaylist_icon_cache {
 	unsigned int seq;
-	
+
 };
 
 static void draw_circle(struct point *pnt, int diameter, int scale, int start, int len, struct point *res, int *pos, int dir);
@@ -292,13 +292,13 @@ struct graphics * graphics_overlay_new(struct graphics *parent, struct point *p,
  * @param alpha The new alpha of the overlay
  * @param wraparound The new wraparound of the overlay
  */
-void 
+void
 graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, int alpha, int wraparound)
 {
 	if (! this_->meth.overlay_resize) {
 		return;
 	}
-	
+
 	this_->meth.overlay_resize(this_->priv, p, w, h, alpha, wraparound);
 }
 
@@ -377,13 +377,13 @@ struct graphics_font * graphics_font_new(struct graphics *gra, int size, int fla
  * @returns nothing
  * @author Sarah Nordstrom (05/2008)
  */
-void graphics_font_destroy_all(struct graphics *gra) 
-{ 
-	int i; 
-	for(i = 0 ; i < gra->font_len; i++) { 
- 		if(!gra->font[i]) continue; 
- 		gra->font[i]->meth.font_destroy(gra->font[i]->priv); 
-             	gra->font[i] = NULL; 
+void graphics_font_destroy_all(struct graphics *gra)
+{
+	int i;
+	for(i = 0 ; i < gra->font_len; i++) {
+ 		if(!gra->font[i]) continue;
+ 		gra->font[i]->meth.font_destroy(gra->font[i]->priv);
+             	gra->font[i] = NULL;
 	}
 }
 
@@ -487,7 +487,7 @@ void graphics_gc_set_background(struct graphics_gc *gc, struct color *c)
  * @returns <>
  * @author Martin Schaller (04/2008)
 */
-void graphics_gc_set_stipple(struct graphics_gc *gc, struct graphics_image *img) 
+void graphics_gc_set_stipple(struct graphics_gc *gc, struct graphics_image *img)
 {
 	gc->meth.gc_set_stipple(gc->priv, img ? img->priv : NULL);
 }
@@ -631,7 +631,18 @@ void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct 
 */
 void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r)
 {
-	this_->meth.draw_circle(this_->priv, gc->priv, p, r);
+	struct point pnt[r*4+64];
+	int i=0;
+
+	if(this_->meth.draw_circle)
+		this_->meth.draw_circle(this_->priv, gc->priv, p, r);
+	else
+	{
+		draw_circle(p, r, 0, -1, 1026, pnt, &i, 1);
+		pnt[i] = pnt[0];
+		i++;
+		this_->meth.draw_lines(this_->priv, gc->priv, pnt, i);
+	}
 }
 
 /**
@@ -741,8 +752,8 @@ graphics_background_gc(struct graphics *this_, struct graphics_gc *gc)
 
 #if 0
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 static void popup_view_html(struct popup_item *item, char *file)
@@ -756,8 +767,8 @@ struct transformatin *tg;
 enum projection pg;
 
 //##############################################################################################################
-//# Description: 
-//# Comment: 
+//# Description:
+//# Comment:
 //# Authors: Martin Schaller (04/2008)
 //##############################################################################################################
 static void graphics_popup(struct display_list *list, struct popup_item **popup)
@@ -856,7 +867,7 @@ static void display_add(struct hash_entry *entry, struct item *item, int count, 
 			} else
 				*p++='\0';
 		}
-	} else 
+	} else
 		di->label=NULL;
 	di->count=count;
 	memcpy(di->c, c, count*sizeof(*c));
@@ -915,7 +926,7 @@ static void label_line(struct graphics *gra, struct graphics_gc *fg, struct grap
 #if 0
 			dbg(0,"display_text: '%s', %d, %d, %d, %d %d\n", label, x, y, dx*0x10000/l, dy*0x10000/l, l);
 #endif
-			if (x < gra->r.rl.x && x + tl > gra->r.lu.x && y + tl > gra->r.lu.y && y - tl < gra->r.rl.y) 
+			if (x < gra->r.rl.x && x + tl > gra->r.lu.x && y + tl > gra->r.lu.y && y - tl < gra->r.rl.y)
 				gra->meth.draw_text(gra->priv, fg->priv, bg?bg->priv:NULL, font->priv, label, &p_t, dx*0x10000/l, dy*0x10000/l);
 		}
 	}
@@ -937,7 +948,7 @@ static void display_draw_arrows(struct graphics *gra, struct graphics_gc *gc, st
 	int i,dx,dy,l;
 	struct point p;
 	for (i = 0 ; i < count-1 ; i++) {
-		dx=pnt[i+1].x-pnt[i].x;	
+		dx=pnt[i+1].x-pnt[i].x;
 		dy=pnt[i+1].y-pnt[i].y;
 		l=sqrt(dx*dx+dy*dy);
 		if (l) {
@@ -1182,7 +1193,7 @@ static void
 calc_offsets(int wi, int l, int dx, int dy, struct offset *res)
 {
 	int x,y;
-	
+
 	x = (dx * wi) / l;
 	y = (dy * wi) / l;
 	if (x < 0) {
@@ -1235,7 +1246,7 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 #endif
 			fow=fowler(-dy, dx);
 		}
-		if (! l) 
+		if (! l)
 			l=1;
 		if (wi*lscale > 10000)
 			lscale=10000/wi;
@@ -1247,7 +1258,7 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 		neg.y = pnt[i].y + o.nx;
 		if (! i)
 			state=0;
-		else if (i == count-1) 
+		else if (i == count-1)
 			state=2;
 		else if (npos < max_circle_points || ppos >= maxpoints-max_circle_points)
 			state=3;
@@ -1305,7 +1316,7 @@ graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, 
 		if (step) {
 			wi=*width;
 			calc_offsets(wi*lscale, l, dx, dy, &oo);
-		} else 
+		} else
 			oo=o;
 		dxo = -dx;
 		dyo = -dy;
@@ -1440,7 +1451,7 @@ graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, str
 			}
 			if (i == count-1 || (code & 4)) {
 				if (out > 1) {
-					if (poly) {	
+					if (poly) {
 						graphics_draw_polyline_as_polygon(gra, gc, p, out, w, step);
 					} else
 						gra->meth.draw_lines(gra->priv, gc->priv, p, out);
@@ -1516,7 +1527,7 @@ graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, stru
 		p1=g_new(struct point, count_in*8+1);
 		p2=g_new(struct point, count_in*8+1);
 	}
-	
+
 	pout=p1;
 	for (edge = 0 ; edge < 4 ; edge++) {
 		p=pin;
@@ -1576,7 +1587,7 @@ get_font(struct graphics *gra, int size)
 		size=64;
 	if (size >= gra->font_len) {
 		gra->font=g_renew(struct graphics_font *, gra->font, size+1);
-		while (gra->font_len <= size) 
+		while (gra->font_len <= size)
 			gra->font[gra->font_len++]=NULL;
 	}
 	if (! gra->font[size])
@@ -1608,7 +1619,7 @@ graphics_icon_path(char *icon)
 	dbg(1,"enter %s\n",icon);
 	if (strchr(icon, '$')) {
 		wordexp=file_wordexp_new(icon);
-		if (file_wordexp_get_count(wordexp)) 
+		if (file_wordexp_get_count(wordexp))
 			icon=file_wordexp_get_array(wordexp)[0];
 	}
 	if (icon[0] == '/')
@@ -1663,7 +1674,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		count=limit_count(di->c, count);
 	if (dc->type == type_poly_water_tiled)
 		mindist=0;
-	if (dc->e->type == element_polyline) 
+	if (dc->e->type == element_polyline)
 		count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, e->u.polyline.width, width);
 	else
 		count=transform(dc->trans, dc->pro, di->c, pa, count, mindist, 0, NULL);
@@ -1675,7 +1686,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		{
 			gc->meth.gc_set_linewidth(gc->priv, 1);
 			if (e->u.polyline.width > 0 && e->u.polyline.dash_num > 0)
-				graphics_gc_set_dashes(gc, e->u.polyline.width, 
+				graphics_gc_set_dashes(gc, e->u.polyline.width,
 						       e->u.polyline.offset,
 						       e->u.polyline.dash_table,
 						       e->u.polyline.dash_num);
@@ -1688,9 +1699,9 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		break;
 	case element_circle:
 		if (count) {
-			if (e->u.circle.width > 1) 
+			if (e->u.circle.width > 1)
 				gc->meth.gc_set_linewidth(gc->priv, e->u.polyline.width);
-			gra->meth.draw_circle(gra->priv, gc->priv, pa, e->u.circle.radius);
+			graphics_draw_circle(gra, gc, pa, e->u.circle.radius);
 			if (di->label && e->text_size) {
 				struct graphics_font *font=get_font(gra, e->text_size);
 				struct graphics_gc *gc_background=dc->gc_background;
@@ -1738,7 +1749,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 					path=graphics_icon_path(icon);
 					g_free(icon);
 				} else
-					path=graphics_icon_path(e->u.icon.src);	
+					path=graphics_icon_path(e->u.icon.src);
 				img=graphics_image_new_scaled_rotated(gra, path, e->u.icon.width, e->u.icon.height, e->u.icon.rotation);
 				if (img)
 					dc->img=img;
@@ -1765,7 +1776,7 @@ displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc
 		break;
 	default:
 		printf("Unhandled element type %d\n", e->type);
-	
+
 	}
 	di=di->next;
 	}
@@ -1879,7 +1890,7 @@ static void xdisplay_draw(struct displaylist *display_list, struct graphics *gra
 {
 	GList *lays;
 	struct layer *lay;
-	
+
 	lays=l->layers;
 	while (lays) {
 		lay=lays->data;
@@ -1947,7 +1958,7 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 	profile(0,NULL);
 	pro=transform_get_projection(displaylist->dc.trans);
 	while (!cancel) {
-		if (!displaylist->msh) 
+		if (!displaylist->msh)
 			displaylist->msh=mapset_open(displaylist->ms);
 		if (!displaylist->m) {
 			displaylist->m=mapset_next(displaylist->msh, 1);
@@ -1976,12 +1987,12 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 						continue;
 				}
 				entry=get_hash_entry(displaylist, item->type);
-				if (!entry) 
+				if (!entry)
 					continue;
 				count=item_coord_get_within_selection(item, ca, item->type < type_line ? 1: max, displaylist->sel);
 				if (! count)
 					continue;
-				if (displaylist->dc.pro != pro) 
+				if (displaylist->dc.pro != pro)
 					transform_from_to_count(ca, displaylist->dc.pro, ca, pro, count);
 				if (count == max) {
 					dbg(0,"point count overflow %d for %s "ITEM_ID_FMT"\n", count,item_to_name(item->type),ITEM_ID_ARGS(*item));
@@ -2032,7 +2043,7 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 	displaylist->busy=0;
 	graphics_process_selection(displaylist->dc.gra, displaylist);
 	profile(1,"draw\n");
-	if (! cancel) 
+	if (! cancel)
 		graphics_displaylist_draw(displaylist->dc.gra, displaylist, displaylist->dc.trans, displaylist->layout, flags);
 	map_rect_destroy(displaylist->mr);
 	if (!route_selection)
@@ -2071,7 +2082,7 @@ void graphics_displaylist_draw(struct graphics *gra, struct displaylist *display
 	gra->meth.draw_mode(gra->priv, (flags & 8)?draw_mode_begin_clear:draw_mode_begin);
 	if (!(flags & 2))
 		gra->meth.draw_rectangle(gra->priv, gra->gc[0]->priv, &gra->r.lu, gra->r.rl.x-gra->r.lu.x, gra->r.rl.y-gra->r.lu.y);
-	if (l) 
+	if (l)
 		xdisplay_draw(displaylist, gra, l, order+l->order_delta);
 	if (flags & 1)
 		callback_list_call_attr_0(gra->cbl, attr_postdraw);
@@ -2220,7 +2231,7 @@ struct displaylist * graphics_displaylist_new(void)
 */
 struct item * graphics_displayitem_get_item(struct displayitem *di)
 {
-	return &di->item;	
+	return &di->item;
 }
 
 int
@@ -2243,7 +2254,7 @@ char * graphics_displayitem_get_label(struct displayitem *di)
 int
 graphics_displayitem_get_displayed(struct displayitem *di)
 {
-	return 1;	
+	return 1;
 }
 
 /**
@@ -2298,7 +2309,7 @@ static int within_dist_line(struct point *p, struct point *line_p0, struct point
 		if (p->y > line_p0->y + dist)
 			return 0;
 	}
-		
+
 	vx=line_p1->x-line_p0->x;
 	vy=line_p1->y-line_p0->y;
 	wx=p->x-line_p0->x;
@@ -2347,7 +2358,7 @@ static int within_dist_polygon(struct point *p, struct point *poly_pnt, int coun
         for (i = 0, j = count-1; i < count; j = i++) {
 		if ((((poly_pnt[i].y <= p->y) && ( p->y < poly_pnt[j].y )) ||
 		((poly_pnt[j].y <= p->y) && ( p->y < poly_pnt[i].y))) &&
-		(p->x < (poly_pnt[j].x - poly_pnt[i].x) * (p->y - poly_pnt[i].y) / (poly_pnt[j].y - poly_pnt[i].y) + poly_pnt[i].x)) 
+		(p->x < (poly_pnt[j].x - poly_pnt[i].x) * (p->y - poly_pnt[i].y) / (poly_pnt[j].y - poly_pnt[i].y) + poly_pnt[i].x))
                         c = !c;
         }
 	if (! c)
@@ -2367,7 +2378,7 @@ int graphics_displayitem_within_dist(struct displaylist *displaylist, struct dis
 	int count;
 
 	count=transform(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 1, 0, NULL);
-	
+
 	if (di->item.type < type_line) {
 		return within_dist_point(p, &pa[0], dist);
 	}
