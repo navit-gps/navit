@@ -54,6 +54,8 @@ struct file {
 	int special;
 	int cache;
 	int requests;
+	unsigned char *buffer;
+	int buffer_len;
 };
 
 /* prototypes */
