@@ -111,7 +111,7 @@ struct map_search_priv {
 };
 
 
-static void push_tile(struct map_rect_priv *mr, struct tile *t);
+static void push_tile(struct map_rect_priv *mr, struct tile *t, int offset, int length);
 static void setup_pos(struct map_rect_priv *mr);
 static void map_binfile_close(struct map_priv *m);
 static void map_binfile_destroy(struct map_priv *m);
@@ -626,7 +626,7 @@ binfile_coord_set(void *priv_data, struct coord *c, int count, enum change_mode 
 	new.pos=new.start=data;
 	new.zipfile_num=t->zipfile_num;
 	new.mode=2;
-	push_tile(mr, &new);
+	push_tile(mr, &new, 0, 0);
 	setup_pos(mr);
 	tn=mr->t;
 	tn->pos_coord=tn->pos_coord_start+coffset;
@@ -731,7 +731,7 @@ binfile_attr_set(void *priv_data, struct attr *attr, enum change_mode mode)
 	new.pos=new.start=data;
 	new.zipfile_num=t->zipfile_num;
 	new.mode=2;
-	push_tile(mr, &new);
+	push_tile(mr, &new, 0, 0);
 	setup_pos(mr);
 	tn=mr->t;
 	tn->pos_coord=tn->pos_coord_start+coffset;
@@ -775,12 +775,16 @@ static struct item_methods methods_binfile = {
 };
 
 static void
-push_tile(struct map_rect_priv *mr, struct tile *t)
+push_tile(struct map_rect_priv *mr, struct tile *t, int offset, int length)
 {
 	dbg_assert(mr->tile_depth < 8);
 	mr->t=&mr->tiles[mr->tile_depth++];
 	*(mr->t)=*t;
-	mr->t->pos=mr->t->pos_next=mr->t->start;
+	mr->t->pos=mr->t->pos_next=mr->t->start+offset;
+	if (length == -1)
+		length=le32_to_cpu(mr->t->pos[0])+1;
+	if (length > 0) 
+		mr->t->end=mr->t->pos+length;
 }
 
 static int
@@ -799,17 +803,6 @@ pop_tile(struct map_rect_priv *mr)
 	return 1;
 }
 
-static void
-tile_set_window(struct map_rect_priv *mr, int offset, int length)
-{
-	mr->t->pos=mr->t->pos_next=mr->t->start+offset;
-	if (length == -1)
-		mr->t->end=mr->t->start+offset+le32_to_cpu(mr->t->pos[0])+1;
-	else
-		mr->t->end=mr->t->start+offset+length;
-	dbg(1,"range is from %p to %p (%d,%d)\n",mr->t->pos, mr->t->end, offset, length);
-	
-}
 
 static int
 zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
@@ -840,13 +833,13 @@ zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
 }
 
 static void
-push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
+push_zipfile_tile(struct map_rect_priv *mr, int zipfile, int offset, int length)
 {
         struct map_priv *m=mr->m;
 	struct file *f=m->fi;
 	struct tile t;
-	long long offset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
-	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, offset + zipfile*m->cde_size, m->cde_size));
+	long long cdoffset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
+	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, cdoffset + zipfile*m->cde_size, m->cde_size));
 	cd_to_cpu(cd);
 	if (!cd->zipcunc && m->url) {
 		char tilename[cd->zipcfnl+1];
@@ -910,8 +903,8 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile)
 	mr->size+=cd->zipcunc;
 #endif
 	t.zipfile_num=zipfile;
-	if (zipfile_to_tile(m, cd, &t))
-		push_tile(mr, &t);
+	if (zipfile_to_tile(m, cd, &t)) 
+		push_tile(mr, &t, offset, length);
 	file_data_free(f, (unsigned char *)cd);
 }
 
@@ -941,7 +934,7 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 	struct tile t={};
 	dbg(1,"zip_members=%d\n", map->zip_members);
 	if (map->eoc) 
-		push_zipfile_tile(mr, map->zip_members-1);
+		push_zipfile_tile(mr, map->zip_members-1, 0, 0);
 	else {
 		unsigned char *d;
 		if (map->fi) {
@@ -951,7 +944,7 @@ map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 			t.fi=map->fi;
 			t.zipfile_num=0;
 			t.mode=0;
-			push_tile(mr, &t);
+			push_tile(mr, &t, 0, 0);
 		}
 	}
 	return mr;
@@ -1074,7 +1067,7 @@ map_parse_country_binfile(struct map_rect_priv *mr)
 		{
 			if (binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
 			{
-				push_zipfile_tile(mr, at.u.num);
+				push_zipfile_tile(mr, at.u.num, 0, 0);
 			}
 		}
 	}
@@ -1106,7 +1099,7 @@ map_parse_submap(struct map_rect_priv *mr)
 	if (!binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
 		return;
 	dbg(1,"pushing zipfile %d from %d\n", at.u.num, mr->t->zipfile_num);
-	push_zipfile_tile(mr, at.u.num);
+	push_zipfile_tile(mr, at.u.num, 0, 0);
 }
 
 static int
@@ -1123,7 +1116,7 @@ push_modified_item(struct map_rect_priv *mr)
 		tn.zipfile_num=mr->item.id_hi;
 		tn.mode=2;
 		tn.end=tn.start+le32_to_cpu(entry->data[0])+1;
-		push_tile(mr, &tn);
+		push_tile(mr, &tn, 0, 0);
 		return 1;
 	}
 	return 0;
@@ -1178,7 +1171,7 @@ map_rect_get_item_byid_binfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 	struct tile *t;
 	if (mr->m->eoc) {
 		while (pop_tile(mr));
-		push_zipfile_tile(mr, id_hi);
+		push_zipfile_tile(mr, id_hi, 0, 0);
 	}
 	t=mr->t;
 	t->pos=t->start+id_lo;
@@ -1205,20 +1198,18 @@ binmap_search_by_index(struct map_priv *map, struct item *item, struct map_rect_
 	if (item_attr_get(item, attr_item_id, &zipfile_ref)) {
 		data=zipfile_ref.u.data;
 		*ret=map_rect_new_binfile_int(map, NULL);
-		push_zipfile_tile(*ret, le32_to_cpu(data[0]));
-		tile_set_window(*ret, le32_to_cpu(data[1]), -1);
+		push_zipfile_tile(*ret, le32_to_cpu(data[0]), le32_to_cpu(data[1]), -1);
 		return 3;
 	}
 	if (item_attr_get(item, attr_zipfile_ref, &zipfile_ref)) {
 		*ret=map_rect_new_binfile_int(map, NULL);
-		push_zipfile_tile(*ret, zipfile_ref.u.num);
+		push_zipfile_tile(*ret, zipfile_ref.u.num, 0, 0);
 		return 1;
 	}
 	if (item_attr_get(item, attr_zipfile_ref_block, &zipfile_ref)) {
 		data=zipfile_ref.u.data;
 		*ret=map_rect_new_binfile_int(map, NULL);
-		push_zipfile_tile(*ret, le32_to_cpu(data[0]));
-		tile_set_window(*ret, le32_to_cpu(data[1]), le32_to_cpu(data[2]));
+		push_zipfile_tile(*ret, le32_to_cpu(data[0]), le32_to_cpu(data[1]), le32_to_cpu(data[2]));
 		return 2;
 	}
 	*ret=NULL;
