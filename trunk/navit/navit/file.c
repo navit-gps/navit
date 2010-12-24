@@ -113,6 +113,7 @@ file_http_request(struct file *file, char *method, char *host, char *path, char 
 {
 	char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s%s%s%s\r\n\r\n",method,path,version,host,header?"\r\n":"",header?header:"",header?"\r\n":"");
 	write(file->fd, request, strlen(request));
+	dbg(1,"%s\n",request);
 	file->requests++;
 }
 
@@ -162,7 +163,7 @@ file_create(char *name, struct attr **options)
 				host[path-name-7]='\0';
 			if (port)
 				*port++='\0';
-			dbg(0,"host=%s path=%s\n",host,path);
+			dbg(1,"host=%s path=%s\n",host,path);
 			file->fd=file_socket_connect(host,port?port:"80");
 			file_http_request(file,method,host,path,header);
 			file->special=1;
@@ -170,12 +171,14 @@ file_create(char *name, struct attr **options)
 		}
 #endif
 	} else {
-		if (options && (attr=attr_search(options, NULL, attr_readwrite)) && attr->u.num)
+		if (options && (attr=attr_search(options, NULL, attr_readwrite)) && attr->u.num) {
 			open_flags |= O_RDWR;
-		else
+			if ((attr=attr_search(options, NULL, attr_create)) && attr->u.num)
+				open_flags |= O_CREAT;
+		} else
 			open_flags |= O_RDONLY;
 		file->name = g_strdup(name);
-		file->fd=open(name, open_flags);
+		file->fd=open(name, open_flags, 0666);
 		if (file->fd == -1) {
 			g_free(file);
 			return NULL;
@@ -311,31 +314,51 @@ file_process_headers(struct file *file, char *headers)
 	}
 }
 
+static void
+file_shift_buffer(struct file *file, int amount)
+{
+	memmove(file->buffer, file->buffer+amount, file->buffer_len-amount);
+	file->buffer_len-=amount;
+}
+
 unsigned char *
 file_data_read_special(struct file *file, int size, int *size_ret)
 {
-	char *ret,*hdr;
+	unsigned char *ret,*hdr;
 	int rets=0,rd;
+	int buffer_size=8192;
+	int eof=0;
 	if (!file->special)
 		return NULL;
+	if (!file->buffer)
+		file->buffer=g_malloc(buffer_size);
 	ret=g_malloc(size);
-	while (size > 0) {
-		rd=read(file->fd, ret+rets, size);
-		if (rd <= 0)
-			break;
-		rets+=rd;
-		size-=rd;
+	while (size > 0 && (!eof || file->buffer_len)) {
+		int toread=buffer_size-file->buffer_len;
+		if (toread >= 4096 && !eof) {
+			rd=read(file->fd, file->buffer+file->buffer_len, toread);
+			if (rd > 0) {
+				file->buffer_len+=rd;
+			} else
+				eof=1;
+		}
 		if (file->requests) {
-			if ((hdr=file_http_header_end(ret, rets))) {
+			dbg(1,"checking header\n");
+			if ((hdr=file_http_header_end(file->buffer, file->buffer_len))) {
 				hdr[-1]='\0';
-				file_process_headers(file, ret);
-				rets-=hdr-ret;
-				memmove(ret, hdr, rets);
+				dbg(1,"found %s\n",file->buffer);
+				file_process_headers(file, file->buffer);
+				file_shift_buffer(file, hdr-file->buffer);
 				file->requests--;
-			} else {
-				rets=0;
-				break;
 			}
+		} else {
+			rd=file->buffer_len;
+			if (rd > size)
+				rd=size;
+			memcpy(ret+rets, file->buffer, rd);
+			file_shift_buffer(file, rd);
+			rets+=rd;
+			size-=rd;
 		}
 	}
 	*size_ret=rets;
@@ -637,6 +660,7 @@ file_destroy(struct file *f)
         file_unmap( f );
     }
 
+	g_free(f->buffer);
 	g_free(f->name);
 	g_free(f);
 }
