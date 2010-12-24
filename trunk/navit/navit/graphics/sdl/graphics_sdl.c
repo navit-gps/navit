@@ -30,7 +30,7 @@
 #include "item.h"
 #include "attr.h"
 #include "callback.h"
-#include "navit/font/freetype/font_freetype.h"
+#include "font/freetype/font_freetype.h"
 
 #include <SDL/SDL.h>
 #include <math.h>
@@ -338,9 +338,9 @@ gc_set_background(struct graphics_gc_priv *gc, struct color *c)
 static struct graphics_gc_methods gc_methods = {
 	gc_destroy,
 	gc_set_linewidth,
-	gc_set_dashes,	
-	gc_set_foreground,	
-	gc_set_background	
+	gc_set_dashes,
+	gc_set_foreground,
+	gc_set_background
 };
 
 static struct graphics_gc_priv *gc_new(struct graphics_priv *gr, struct graphics_gc_methods *meth)
@@ -432,7 +432,7 @@ get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *t
 	int n,len,x=0,y=0;
 
 	bbox.xMin = bbox.yMin = 32000;
-	bbox.xMax = bbox.yMax = -32000; 
+	bbox.xMax = bbox.yMax = -32000;
 	FT_Set_Transform( font->face, &matrix, &pen );
 	len=g_utf8_strlen(text, -1);
 	for ( n = 0; n < len; n++ ) {
@@ -457,7 +457,7 @@ get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *t
 			bbox.xMax = glyph_bbox.xMax;
 		if ( glyph_bbox.yMax > bbox.yMax )
 			bbox.yMax = glyph_bbox.yMax;
-	} 
+	}
 	if ( bbox.xMin > bbox.xMax ) {
 		bbox.xMin = 0;
 		bbox.yMin = 0;
@@ -896,7 +896,7 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
 
             /* FIXME: should just draw a half circle */
 
-            /* now some circular endcaps, if the width is over 2 */ 
+            /* now some circular endcaps, if the width is over 2 */
             if(lw > 2)
             {
                 if(i == 0)
@@ -974,7 +974,7 @@ display_text_draw(struct font_freetype_text *text,
 		SDL_Surface *glyph_surface =
 		    SDL_CreateRGBSurfaceFrom(shadow, g->w + 2, g->h + 2,
 					     32,
-					     stride, 
+					     stride,
 					     0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
 		if (glyph_surface) {
 		    SDL_Rect r;
@@ -1009,7 +1009,7 @@ display_text_draw(struct font_freetype_text *text,
 						   &white, &transparent);
 		    SDL_Surface *glyph_surface =
 			SDL_CreateRGBSurfaceFrom(glyph, g->w, g->h, 32,
-						 stride * 4, 
+						 stride * 4,
 						 0x000000ff,0x0000ff00, 0x00ff0000,0xff000000);
 		    if (glyph_surface) {
 			SDL_Rect r;
@@ -1039,7 +1039,7 @@ display_text_draw(struct font_freetype_text *text,
 		    pGlyph += 4;
 		}
 		SDL_Surface *glyph_surface =
-		    SDL_CreateRGBSurfaceFrom(glyph, g->w, g->h, 32, 
+		    SDL_CreateRGBSurfaceFrom(glyph, g->w, g->h, 32,
 		    				stride,
 					     	0x000000ff,0x0000ff00,0x00ff0000,0xff000000);
 		if (glyph_surface) {
@@ -1241,7 +1241,7 @@ static int window_fullscreen(struct window *win, int on)
 	gr->screen = SDL_SetVideoMode(gr->screen->w, gr->screen->h, gr->video_bpp, gr->video_flags);
 	if(gr->screen == NULL) {
 		navit_destroy(gr->nav);
-	} 
+	}
 	else {
 		callback_list_call_attr_2(gr->cbl, attr_resize, (void *)gr->screen->w, (void *)gr->screen->h);
 	}
@@ -1277,7 +1277,7 @@ static struct graphics_methods graphics_methods = {
 	draw_lines,
 	draw_polygon,
 	draw_rectangle,
-	draw_circle,
+	NULL /*draw_circle*/,
 	draw_text,
 	draw_image,
 	draw_image_warp,
@@ -1358,7 +1358,7 @@ overlay_new(struct graphics_priv *gr, struct graphics_methods *meth, struct poin
 		amask = gr->screen->format->Amask;
 	}
 
-	ov->screen = SDL_CreateRGBSurface(SDL_SWSURFACE, 
+	ov->screen = SDL_CreateRGBSurface(SDL_SWSURFACE,
 			w, h,
 			gr->screen->format->BitsPerPixel,
 			rmask, gmask, bmask, amask);
@@ -1491,7 +1491,7 @@ static void input_ts_map(int *disp_x, int *disp_y,
        bot right =   63,1872
 
        calibrate your TS using input_event_dump
-       and touching all four corners. use the most extreme values. 
+       and touching all four corners. use the most extreme values.
     */
 
 #define INPUT_TS_LEFT 1978
@@ -1652,7 +1652,7 @@ static gboolean graphics_sdl_idle(void *data)
 
               4: type =EV_SYN
 
-              once hit, if the contact point changes, we'll get more 
+              once hit, if the contact point changes, we'll get more
               EV_ABS (for 1 or both axes), followed by an EV_SYN.
 
               and, on a lift:
@@ -1694,14 +1694,14 @@ static gboolean graphics_sdl_idle(void *data)
                     input_ts_map(&p.x, &p.y, gr->ts_x, gr->ts_y);
 
                     /* always send MOUSE_MOTION (first) */
-		    callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p); 
+		    callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p);
                     if(gr->ts_hit > 0)
                     {
-		        callback_list_call_attr_3(gr->cbl, attr_button, (void *)1, (void *)SDL_BUTTON_LEFT, (void *)&p); 
+		        callback_list_call_attr_3(gr->cbl, attr_button, (void *)1, (void *)SDL_BUTTON_LEFT, (void *)&p);
                     }
                     else if(gr->ts_hit == 0)
                     {
-		        callback_list_call_attr_3(gr->cbl, attr_button, (void *)0, (void *)SDL_BUTTON_LEFT, (void *)&p); 
+		        callback_list_call_attr_3(gr->cbl, attr_button, (void *)0, (void *)SDL_BUTTON_LEFT, (void *)&p);
                     }
 
                     /* reset ts_hit */
@@ -1775,7 +1775,7 @@ static gboolean graphics_sdl_idle(void *data)
             {
                 p.x = ev.motion.x;
                 p.y = ev.motion.y;
-		callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p); 
+		callback_list_call_attr_1(gr->cbl, attr_motion, (void *)&p);
                 break;
             }
 
@@ -1931,7 +1931,7 @@ static gboolean graphics_sdl_idle(void *data)
 
                 p.x = ev.button.x;
                 p.y = ev.button.y;
-		callback_list_call_attr_3(gr->cbl, attr_button, (void *)1, (void *)(int)ev.button.button, (void *)&p); 
+		callback_list_call_attr_3(gr->cbl, attr_button, (void *)1, (void *)(int)ev.button.button, (void *)&p);
                 break;
             }
 
@@ -1948,7 +1948,7 @@ static gboolean graphics_sdl_idle(void *data)
 
                 p.x = ev.button.x;
                 p.y = ev.button.y;
-		callback_list_call_attr_3(gr->cbl, attr_button, (void *)0, (void *)(int)ev.button.button, (void *)&p); 
+		callback_list_call_attr_3(gr->cbl, attr_button, (void *)0, (void *)(int)ev.button.button, (void *)&p);
                 break;
             }
 
@@ -2106,7 +2106,7 @@ graphics_sdl_new(struct navit *nav, struct graphics_methods *meth, struct attr *
     if ((attr=attr_search(attrs, NULL, attr_bpp)))
         this->video_bpp=attr->u.num;
     if ((attr=attr_search(attrs, NULL, attr_flags))) {
-	if (attr->u.num & 1) 
+	if (attr->u.num & 1)
 	    this->video_flags = SDL_SWSURFACE;
     }
     if ((attr=attr_search(attrs, NULL, attr_frame))) {
