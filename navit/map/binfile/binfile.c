@@ -36,6 +36,7 @@
 #include "zipfile.h"
 #include "linguistics.h"
 #include "endianess.h"
+#include "callback.h"
 
 static int map_id;
 
@@ -51,6 +52,17 @@ struct tile {
 	struct file *fi;
 	int zipfile_num;
 	int mode;
+};
+
+struct map_download {
+	int state;
+	struct map_priv *m;
+	struct map_rect_priv *mr;
+	struct file *tile,*file;
+	int zipfile,toffset,tlength;
+	long long offset;
+	struct zip_eoc *eoc_copy;
+	struct zip_cd *cd_copy,*cd;
 };
 
 struct map_priv {
@@ -76,6 +88,9 @@ struct map_priv {
 	char *map_release;
 	int flags;
 	char *url;
+	char *progress;
+	struct callback_list *cbl;
+	struct map_download *download;
 };
 
 struct map_rect_priv {
@@ -833,62 +848,78 @@ zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
 	return t->start != NULL;
 }
 
-static struct zip_cd *
-download(struct map_priv *m, struct zip_cd *cd, int zipfile)
+static int
+download_start(struct map_download *download)
 {
-	char tilename[cd->zipcfnl+1];
-	char *lfh_filename;
+	char tilename[download->cd->zipcfnl+1];
 	long long offset;
-	struct file *tile,*f=m->fi;
-	struct zip_lfh *lfh;
-	struct zip_cd *cd_copy=g_malloc(m->cde_size);
-	struct zip_eoc *eoc,*eoc_copy=g_malloc(sizeof(struct zip_eoc));
+	struct zip_eoc *eoc;
 	struct attr url={attr_url};
 	struct attr *attrs[]={&url, NULL};
-	memcpy(cd_copy, cd, m->cde_size);
-	file_data_free(f, (unsigned char *)cd);
-	cd=NULL;
-	strncpy(tilename,(char *)(cd_copy+1),cd_copy->zipcfnl);
-	tilename[cd_copy->zipcfnl]='\0';
-	url.u.str=g_strdup_printf("%smemberid=%d",m->url,zipfile);
-	offset=file_size(f);
+
+	download->cd_copy=g_malloc(download->m->cde_size);
+	memcpy(download->cd_copy, download->cd, download->m->cde_size);
+	file_data_free(download->file, (unsigned char *)download->cd);
+	download->cd=NULL;
+	strncpy(tilename,(char *)(download->cd_copy+1),download->cd_copy->zipcfnl);
+	tilename[download->cd_copy->zipcfnl]='\0';
+	url.u.str=g_strdup_printf("%smemberid=%d",download->m->url,download->zipfile);
+	offset=file_size(download->file);
 	offset-=sizeof(struct zip_eoc);
-	eoc=(struct zip_eoc *)file_data_read(f, offset, sizeof(struct zip_eoc));
-	memcpy(eoc_copy, eoc, sizeof(struct zip_eoc));
-	file_data_free(f, (unsigned char *)eoc);
+	eoc=(struct zip_eoc *)file_data_read(download->file, offset, sizeof(struct zip_eoc));
+	download->eoc_copy=g_malloc(sizeof(struct zip_eoc));
+	memcpy(download->eoc_copy, eoc, sizeof(struct zip_eoc));
+	file_data_free(download->file, (unsigned char *)eoc);
 	dbg(0,"encountered missing tile %s(%s), downloading at %Ld\n",url.u.str,tilename,offset);
-	cd_copy->zipofst=offset;
-	tile=file_create(NULL, attrs);
-	for (;;) {
-		int size=64*1024,size_ret;
-		unsigned char *data;
-		data=file_data_read_special(tile, size, &size_ret);
-		dbg(0,"got %d bytes writing at offset %Ld\n",size_ret,offset);
-		if (size_ret <= 0)
-			break;
-		file_data_write(f, offset, size_ret, data);
-		offset+=size_ret;
-	}
-	file_data_write(f, offset, sizeof(struct zip_eoc), (void *)eoc_copy);
-	lfh=(struct zip_lfh *)(file_data_read(f,cd_copy->zipofst, sizeof(struct zip_lfh)));
-	cd_copy->zipcsiz=lfh->zipsize;
-	cd_copy->zipcunc=lfh->zipuncmp;
-	cd_copy->zipccrc=lfh->zipcrc;
-	lfh_filename=(char *)file_data_read(f,cd_copy->zipofst+sizeof(struct zip_lfh),lfh->zipfnln);
-	memcpy(cd_copy+1,lfh_filename,lfh->zipfnln);
-	file_data_free(f,(void *)lfh_filename);
-	file_data_free(f,(void *)lfh);
-	file_data_write(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size, (void *)cd_copy);
+	download->cd_copy->zipofst=offset;
+	download->tile=file_create(NULL, attrs);
+	download->offset=offset;
 	g_free(url.u.str);
-	g_free(cd_copy);
-	cd=(struct zip_cd *)(file_data_read(f, m->eoc->zipeofst + zipfile*m->cde_size, m->cde_size));
-	cd_to_cpu(cd);
-	dbg(0,"Offset %d\n",cd->zipofst);
-	return cd;
+	return 1;
+}
+
+static int
+download_download(struct map_download *download)
+{
+	int size=64*1024,size_ret;
+	unsigned char *data;
+	data=file_data_read_special(download->tile, size, &size_ret);
+	dbg(0,"got %d bytes writing at offset %Ld\n",size_ret,download->offset);
+	if (size_ret <= 0) {
+		g_free(data);
+		return 1;
+	}
+	file_data_write(download->file, download->offset, size_ret, data);
+	download->offset+=size_ret;
+	return 0;
+}
+
+static int
+download_finish(struct map_download *download)
+{
+	struct zip_lfh *lfh;
+	char *lfh_filename;
+
+	file_data_write(download->file, download->offset, sizeof(struct zip_eoc), (void *)download->eoc_copy);
+	lfh=(struct zip_lfh *)(file_data_read(download->file,download->cd_copy->zipofst, sizeof(struct zip_lfh)));
+	download->cd_copy->zipcsiz=lfh->zipsize;
+	download->cd_copy->zipcunc=lfh->zipuncmp;
+	download->cd_copy->zipccrc=lfh->zipcrc;
+	lfh_filename=(char *)file_data_read(download->file,download->cd_copy->zipofst+sizeof(struct zip_lfh),lfh->zipfnln);
+	memcpy(download->cd_copy+1,lfh_filename,lfh->zipfnln);
+	file_data_free(download->file,(void *)lfh_filename);
+	file_data_free(download->file,(void *)lfh);
+	file_data_write(download->file, download->m->eoc->zipeofst + download->zipfile*download->m->cde_size, download->m->cde_size, (void *)download->cd_copy);
+	g_free(download->cd_copy);
+	download->cd=(struct zip_cd *)(file_data_read(download->file, download->m->eoc->zipeofst + download->zipfile*download->m->cde_size, download->m->cde_size));
+	cd_to_cpu(download->cd);
+	dbg(0,"Offset %d\n",download->cd->zipofst);
+	return 1;
 }
 
 static void
 push_zipfile_tile_do(struct map_rect_priv *mr, struct zip_cd *cd, int zipfile, int offset, int length)
+
 {
 	struct tile t;
         struct map_priv *m=mr->m;
@@ -912,6 +943,73 @@ push_zipfile_tile_do(struct map_rect_priv *mr, struct zip_cd *cd, int zipfile, i
 	file_data_free(f, (unsigned char *)cd);
 }
 
+
+static struct zip_cd *
+download(struct map_priv *m, struct map_rect_priv *mr, struct zip_cd *cd, int zipfile, int offset, int length, int async)
+{
+	struct map_download *download;
+
+	if (async == 2) {
+		download=m->download;
+	} else {
+		download=g_new0(struct map_download, 1);
+		download->m=m;
+		download->mr=mr;
+		download->file=m->fi;
+		download->cd=cd;
+		download->zipfile=zipfile;
+		download->toffset=offset;
+		download->tlength=length;
+		download->state=1;
+	}
+	if (async == 1) {
+		m->download=download;
+		g_free(m->progress);
+		m->progress=g_strdup_printf("Download Tile %d 0%%",download->zipfile);
+		callback_list_call_attr_0(m->cbl, attr_progress);
+		return NULL;
+	}
+	for (;;) {
+		switch (download->state) {
+		case 0:
+			dbg(0,"error\n");
+			break;
+		case 1:
+			if (download_start(download))
+				download->state=2;
+			else
+				download->state=0;
+			break;
+		case 2:
+			if (download_download(download)) 
+				download->state=3;
+			break;
+		case 3:
+			if (download_finish(download)) {
+				struct zip_cd *ret;
+				g_free(m->progress);
+				m->progress=g_strdup_printf("Download Tile %d 100%%",download->zipfile);
+				callback_list_call_attr_0(m->cbl, attr_progress);
+				if (async) {
+					push_zipfile_tile_do(download->mr, download->cd, download->zipfile, download->toffset, download->tlength);
+					ret=NULL;
+				} else
+					ret=download->cd;
+				g_free(m->progress);
+				m->progress=NULL;
+				g_free(download);
+				if (async)
+					m->download=NULL;
+				return ret;
+			} else
+				download->state=0;
+			break;
+		}
+		if (async)
+			return NULL;
+	}
+}
+
 static int
 push_zipfile_tile(struct map_rect_priv *mr, int zipfile, int offset, int length, int async)
 {
@@ -920,8 +1018,11 @@ push_zipfile_tile(struct map_rect_priv *mr, int zipfile, int offset, int length,
 	long long cdoffset=m->eoc64?m->eoc64->zip64eofst:m->eoc->zipeofst;
 	struct zip_cd *cd=(struct zip_cd *)(file_data_read(f, cdoffset + zipfile*m->cde_size, m->cde_size));
 	cd_to_cpu(cd);
-	if (!cd->zipcunc && m->url) 
-		cd=download(m, cd, zipfile);
+	if (!cd->zipcunc && m->url) {
+		cd=download(m, mr, cd, zipfile, offset, length, async);
+		if (!cd)
+			return 1;
+	}
 	push_zipfile_tile_do(mr, cd, zipfile, offset, length);
 	return 0;
 }
@@ -1091,21 +1192,21 @@ map_parse_country_binfile(struct map_rect_priv *mr)
 	}
 }
 
-static void
-map_parse_submap(struct map_rect_priv *mr)
+static int
+map_parse_submap(struct map_rect_priv *mr, int async)
 {
 	struct coord_rect r;
 	struct coord c[2];
 	struct attr at;
 	struct range mima;
 	if (binfile_coord_get(mr->item.priv_data, c, 2) != 2)
-		return;
+		return 0;
 	r.lu.x=c[0].x;
 	r.lu.y=c[1].y;
 	r.rl.x=c[1].x;
 	r.rl.y=c[0].y;
 	if (!binfile_attr_get(mr->item.priv_data, attr_order, &at))
-		return;
+		return 0;
 #if __BYTE_ORDER == __BIG_ENDIAN
 	mima.min=le16_to_cpu(at.u.range.max);
 	mima.max=le16_to_cpu(at.u.range.min);
@@ -1113,11 +1214,11 @@ map_parse_submap(struct map_rect_priv *mr)
 	mima=at.u.range;
 #endif
 	if (!mr->m->eoc || !selection_contains(mr->sel, &r, &mima))
-		return;
+		return 0;
 	if (!binfile_attr_get(mr->item.priv_data, attr_zipfile_ref, &at))
-		return;
+		return 0;
 	dbg(1,"pushing zipfile %d from %d\n", at.u.num, mr->t->zipfile_num);
-	push_zipfile_tile(mr, at.u.num, 0, 0, 0);
+	return push_zipfile_tile(mr, at.u.num, 0, 0, async);
 }
 
 static int
@@ -1145,9 +1246,14 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 {
 	struct tile *t;
 	struct map_priv *m=mr->m;
+	if (m->download) {
+		download(m, NULL, NULL, 0, 0, 0, 2);
+		return &busy_item;
+	}
 	if (mr->status == 1) {
-		push_zipfile_tile(mr, m->zip_members-1, 0, 0, 0);
 		mr->status=0;
+		if (push_zipfile_tile(mr, m->zip_members-1, 0, 0, 1))
+			return &busy_item;
 	}
 	for (;;) {
 		t=mr->t;
@@ -1163,7 +1269,8 @@ map_rect_get_item_binfile(struct map_rect_priv *mr)
 		binfile_coord_rewind(mr);
 		binfile_attr_rewind(mr);
 		if ((mr->item.type == type_submap) && (!mr->country_id)) {
-			map_parse_submap(mr);
+			if (map_parse_submap(mr, 1))
+				return &busy_item;
 			continue;
 		}
 		if (t->mode != 2) {
@@ -1562,6 +1669,11 @@ binmap_get_attr(struct map_priv *m, enum attr_type type, struct attr *attr)
 			return 1;
 		}
 		break;
+	case attr_progress:
+		if (m->progress) {
+			attr->u.str=m->progress;
+			return 1;
+		}
 	default:
 		break;
 	}
@@ -1802,6 +1914,7 @@ map_binfile_destroy(struct map_priv *m)
 {
 	g_free(m->filename);
 	g_free(m->url);
+	g_free(m->progress);
 	g_free(m);
 }
 
@@ -1823,7 +1936,7 @@ binfile_check_version(struct map_priv *m)
 
 
 static struct map_priv *
-map_new_binfile(struct map_methods *meth, struct attr **attrs)
+map_new_binfile(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct map_priv *m;
 	struct attr *data=attr_search(attrs, NULL, attr_data);
@@ -1839,6 +1952,7 @@ map_new_binfile(struct map_methods *meth, struct attr **attrs)
 	*meth=map_methods_binfile;
 
 	m=g_new0(struct map_priv, 1);
+	m->cbl=cbl;
 	m->id=++map_id;
 	m->filename=g_strdup(wexp_data[0]);
 	file_wordexp_destroy(wexp);
