@@ -27,6 +27,7 @@
 #include <sys/mman.h>
 #include <dirent.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <wordexp.h>
 #include <glib.h>
 #include <zlib.h>
