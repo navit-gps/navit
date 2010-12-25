@@ -183,7 +183,8 @@ class RenderArea : public QT_QPAINTER_RENDERAREA_PARENT
      void mouseMoveEvent(QMouseEvent *event);
      void wheelEvent(QWheelEvent *event);
      void keyPressEvent(QKeyEvent *event);
-	 void closeEvent(QCloseEvent *event);
+     void closeEvent(QCloseEvent *event);
+     bool event(QEvent *event);
 #if QT_QPAINTER_USE_EVENT_QT
      void timerEvent(QTimerEvent *event);
 #endif
@@ -291,6 +292,11 @@ RenderArea::RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT
 	pixmap = new QPixmap(w, h);
 #ifndef QT_QPAINTER_NO_WIDGET
 	if (!overlay) {
+#if QT_VERSION >= 0x040700                                                 
+		grabGesture(Qt::PinchGesture);
+		grabGesture(Qt::SwipeGesture);
+		grabGesture(Qt::PanGesture);
+#endif
 #if QT_VERSION >= 0x040000
 		setWindowTitle("Navit");
 #else
@@ -317,6 +323,17 @@ RenderArea::RenderArea(struct graphics_priv *priv, QT_QPAINTER_RENDERAREA_PARENT
 void RenderArea::closeEvent(QCloseEvent* event) 
 {
 	callback_list_call_attr_0(this->cbl, attr_window_closed);
+}
+
+bool RenderArea::event(QEvent *event)
+{
+#if QT_VERSION >= 0x040700                                                 
+	if (event->type() == QEvent::Gesture) {
+		dbg(0,"gesture\n");
+		return true;
+	}
+#endif
+	return QWidget::event(event);
 }
 //##############################################################################################################
 //# Description: QWidget:sizeHint
@@ -962,6 +979,8 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 #endif
 		}
 #endif
+		if (!gr->parent)
+			QCoreApplication::processEvents();
 	}
 #if QT_VERSION >= 0x040000
 	if (mode == draw_mode_end_lazy)
