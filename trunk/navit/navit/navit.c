@@ -267,7 +267,8 @@ navit_map_progress(struct navit *this_)
 	msh=mapset_open(ms);
 	while (msh && (map=mapset_next(msh, 0))) {
 		if (map_get_attr(map, attr_progress, &attr, NULL)) {
-			char *str=g_strdup_printf("%s       ",attr.u.str);
+			char *str=g_strdup_printf("%s           ",attr.u.str);
+			graphics_draw_mode(this_->gra, draw_mode_begin);
 			graphics_draw_text_std(this_->gra, 16, str, &p);
 			g_free(str);
 			p.y+=32;
