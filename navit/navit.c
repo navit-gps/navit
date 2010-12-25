@@ -1510,7 +1510,7 @@ navit_init(struct navit *this_)
 	this_->ready|=1;
 	dbg(2,"ready=%d\n",this_->ready);
 	if (this_->ready == 3)
-		navit_draw(this_);
+		navit_draw_async(this_, 1);
 	if (callback)
 		callback_list_call_attr_1(this_->attr_cbl, attr_graphics_ready, this_);
 #if 0
