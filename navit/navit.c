@@ -258,6 +258,8 @@ navit_map_progress(struct navit *this_)
 	struct mapset_handle *msh;
 	struct attr attr;
 	struct point p;
+	if (this_->ready != 3)
+		return;
 	p.x=10;
 	p.y=32;
 
