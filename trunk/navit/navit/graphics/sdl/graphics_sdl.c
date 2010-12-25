@@ -18,6 +18,9 @@
 */
 
 #include <glib.h>
+#include <pthread.h>
+#include <poll.h>
+#include <signal.h>
 #include "config.h"
 #include "debug.h"
 #include "point.h"
@@ -180,8 +183,9 @@ static int dummy;
 #define SDL_USEREVENT_CODE_TIMER 0x1
 #define SDL_USEREVENT_CODE_CALL_CALLBACK 0x2
 #define SDL_USEREVENT_CODE_IDLE_EVENT 0x4
+#define SDL_USEREVENT_CODE_WATCH 0x8
 #ifdef USE_WEBOS_ACCELEROMETER
-# define SDL_USEREVENT_CODE_ROTATE 0x8
+# define SDL_USEREVENT_CODE_ROTATE 0xA
 #endif
 
 struct event_timeout {
@@ -195,10 +199,27 @@ struct idle_task {
     struct callback *cb;
 };
 
-static int quit_event_loop=0; // quit the main event loop
-static struct graphics_priv* the_graphics=NULL;
-static int the_graphics_count=0; // count how many graphics objects are created
-static GPtrArray *idle_tasks=NULL;
+struct event_watch {
+    struct pollfd *pfd;
+    struct callback *cb;
+};
+
+static struct graphics_priv* the_graphics = NULL;
+static int quit_event_loop			= 0; // quit the main event loop
+static int the_graphics_count		= 0; // count how many graphics objects are created
+static GPtrArray *idle_tasks		= NULL;
+static pthread_t sdl_watch_thread	= NULL;
+static GPtrArray *sdl_watch_list	= NULL;
+
+static void event_sdl_watch_thread (GPtrArray *);
+static void event_sdl_watch_stopthread();
+static struct event_watch *event_sdl_add_watch(void *, enum event_watch_cond, struct callback *);
+static void event_sdl_remove_watch(struct event_watch *);
+static struct event_timeout *event_sdl_add_timeout(int, int, struct callback *);
+static void event_sdl_remove_timeout(struct event_timeout *);
+static struct event_idle *event_sdl_add_idle(int, struct callback *);
+static void event_sdl_remove_idle(struct event_idle *);
+static void event_sdl_call_callback(struct callback_list *);
 #endif
 
 struct graphics_font_priv {
@@ -1725,7 +1746,7 @@ static gboolean graphics_sdl_idle(void *data)
 #endif
 #ifdef USE_WEBOS
     unsigned int idle_tasks_idx=0;
-    unsigned int idle_tasks_cur_priority;
+    unsigned int idle_tasks_cur_priority=0;
     struct idle_task *task;
 
     while(!quit_event_loop)
@@ -1956,8 +1977,8 @@ static gboolean graphics_sdl_idle(void *data)
             {
 #ifdef USE_WEBOS
 		quit_event_loop = 1;
-#endif
                 navit_destroy(gr->nav);
+#endif
                 break;
             }
 
@@ -1985,6 +2006,12 @@ static gboolean graphics_sdl_idle(void *data)
 		{
 		    struct callback *cb = (struct callback *)userevent.data1;
 		    dbg(1, "SDL_USEREVENT timer received cb(%p)\n", cb);
+		    callback_call_0(cb);
+                }
+                else if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_WATCH)
+		{
+		    struct callback *cb = (struct callback *)userevent.data1;
+		    dbg(1, "SDL_USEREVENT watch received cb(%p)\n", cb);
 		    callback_call_0(cb);
                 }
 		else if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_CALL_CALLBACK) 
@@ -2035,6 +2062,10 @@ static gboolean graphics_sdl_idle(void *data)
             }
         }
     }
+
+#ifdef USE_WEBOS
+    event_sdl_watch_stopthread();
+#endif
 
 #ifdef USE_WEBOS_ACCELEROMETER
     event_remove_timeout(accel_to);
@@ -2240,17 +2271,122 @@ event_sdl_main_loop_quit(void)
 
 /* Watch */
 
-static struct event_watch *
-event_sdl_add_watch(void *h, enum event_watch_cond cond, struct callback *cb)
+static void
+event_sdl_watch_thread (GPtrArray *watch_list)
 {
-    dbg(1,"enter\n");
-    return NULL;
+    struct pollfd *pfds = g_new0 (struct pollfd, watch_list->len);
+    struct event_watch *ew;
+    int ret;
+    int idx;
+
+    for (idx = 0; idx < watch_list->len; idx++ ) {
+	ew = g_ptr_array_index (watch_list, idx);
+	g_memmove (&pfds[idx], ew->pfd, sizeof(struct pollfd));
+    }
+
+    while ((ret = ppoll(pfds, watch_list->len, NULL, NULL)) > 0) {
+	for (idx = 0; idx < watch_list->len; idx++ ) {
+	    if (pfds[idx].revents == pfds[idx].events) {	/* The requested event happened, notify mainloop! */
+		ew = g_ptr_array_index (watch_list, idx);
+		dbg(1,"watch(%p) event(%d) encountered\n", ew, pfds[idx].revents);
+
+		SDL_Event event;
+		SDL_UserEvent userevent;
+
+		userevent.type = SDL_USEREVENT;
+		userevent.code = SDL_USEREVENT_CODE_WATCH;
+		userevent.data1 = ew->cb;
+		userevent.data2 = NULL;
+
+		event.type = SDL_USEREVENT;
+		event.user = userevent;
+
+		SDL_PushEvent (&event);
+	    }
+	}
+    }
+
+    g_free(pfds);
+
+    pthread_exit(0);
 }
 
 static void
-event_sdl_remove_watch(struct event_watch *ev)
+event_sdl_watch_stopthread()
 {
-    dbg(1,"enter %p\n",ev);
+    dbg(1,"enter\n");
+    if (sdl_watch_thread) {
+	/* Notify the watch thread that the list of FDs will change */
+	pthread_kill(sdl_watch_thread, SIGUSR1);
+	pthread_join(sdl_watch_thread, NULL);
+	sdl_watch_thread = NULL;
+    }
+}
+
+static void
+event_sdl_watch_startthread(GPtrArray *watch_list)
+{
+    dbg(1,"enter\n");
+    if (sdl_watch_thread)
+	event_sdl_watch_stopthread();
+
+    int ret;
+    ret = pthread_create (&sdl_watch_thread, NULL, event_sdl_watch_thread, (void *)watch_list);
+
+    dbg_assert (ret == 0);
+}
+
+static struct event_watch *
+event_sdl_add_watch(void *fd, enum event_watch_cond cond, struct callback *cb)
+{
+    dbg(1,"fd(%d) cond(%x) cb(%x)\n", fd, cond, cb);
+
+    event_sdl_watch_stopthread();
+
+    if (!sdl_watch_list)
+	sdl_watch_list = g_ptr_array_new();
+
+    struct event_watch *new_ew = g_new0 (struct event_watch, 1);
+    struct pollfd *pfd = g_new0 (struct pollfd, 1);
+
+    pfd->fd = fd;
+
+    /* Modify watchlist here */
+    switch (cond) {
+	case event_watch_cond_read:
+	    pfd->events = POLLIN;
+	    break;
+	case event_watch_cond_write:
+	    pfd->events = POLLOUT;
+	    break;
+	case event_watch_cond_except:
+	    pfd->events = POLLERR|POLLHUP;
+	    break;
+    }
+
+    new_ew->pfd = pfd;
+    new_ew->cb = cb;
+
+    g_ptr_array_add (sdl_watch_list, (gpointer)new_ew);
+
+    event_sdl_watch_startthread(sdl_watch_list);
+
+    return new_ew;
+}
+
+static void
+event_sdl_remove_watch(struct event_watch *ew)
+{
+    dbg(1,"enter %p\n",ew);
+
+    event_sdl_watch_stopthread();
+
+    g_ptr_array_remove (sdl_watch_list, ew);
+    g_free (ew->pfd);
+    g_free (ew);
+
+    if (sdl_watch_list->len > 0)
+	event_sdl_watch_startthread(sdl_watch_list);
 }
 
 /* Timeout */
@@ -2288,7 +2424,7 @@ event_sdl_remove_timeout(struct event_timeout *to)
 /* Idle */
 
 /* sort ptr_array by priority, increasing order */
-gint
+static gint
 sdl_sort_idle_tasks(gconstpointer parama, gconstpointer paramb)
 {
     struct idle_task *a = (struct idle_task *)parama;
@@ -2393,3 +2529,4 @@ plugin_init(void)
     plugin_register_graphics_type("sdl", graphics_sdl_new);
 }
 
+// vim: sw=4 ts=8
