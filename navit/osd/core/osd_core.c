@@ -1798,7 +1798,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 	}
 
 	absbegin=str;
-	if (do_draw) {
+	if (do_draw && str) {
 		lines=0;
 		next=str;
 		last=str;
