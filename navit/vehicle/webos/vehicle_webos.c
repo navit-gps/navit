@@ -117,7 +117,7 @@ vehicle_webos_open(struct vehicle_priv *priv)
 			priv,
 			PDL_FALSE);
 	if (err != PDL_NOERROR) {
-		dbg(0,"PDL_ServiceCallWithCallback failed with %d\n", err);
+		dbg(0,"PDL_ServiceCallWithCallback failed with (%d): (%s)\n", err, PDL_GetError());
 		vehicle_webos_close(priv);
 		return 0;
 	}
