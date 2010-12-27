@@ -324,8 +324,8 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
     this->last_coord = curr_coord;
   }
 
-  char buffer [64+1]="";
-  char buffer2[64+1]="";
+  char buffer [256+1]="";
+  char buffer2[256+1]="";
   dist_buffer = format_distance(this->sum_dist,"");
   spd_buffer = format_speed(spd,"");
   int remainder = this->time_all;
