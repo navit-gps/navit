@@ -30,6 +30,7 @@ struct speech_priv {
 	jclass NavitSpeechClass;
 	jobject NavitSpeech;
 	jmethodID NavitSpeech_say;
+	int flags;
 };
 
 static int 
@@ -39,34 +40,36 @@ speech_android_say(struct speech_priv *this, const char *text)
 	jstring string;
 	int i;
 
-	for (i = 0 ; i < strlen(str) ; i++) {
-		if (str[i] == 0xc3 && str[i+1] == 0x84) {
-			str[i]='A';
-			str[i+1]='e';
-		}
-		if (str[i] == 0xc3 && str[i+1] == 0x96) {
-			str[i]='O';
-			str[i+1]='e';
-		}
-		if (str[i] == 0xc3 && str[i+1] == 0x9c) {
-			str[i]='U';
-			str[i+1]='e';
-		}
-		if (str[i] == 0xc3 && str[i+1] == 0xa4) {
-			str[i]='a';
-			str[i+1]='e';
-		}
-		if (str[i] == 0xc3 && str[i+1] == 0xb6) {
-			str[i]='o';
-			str[i+1]='e';
-		}
-		if (str[i] == 0xc3 && str[i+1] == 0xbc) {
-			str[i]='u';
-			str[i+1]='e';
-		}
-		if (str[i] == 0xc3 && str[i+1] == 0x9f) {
-			str[i]='s';
-			str[i+1]='s';
+	if (this->flags & 2) {
+		for (i = 0 ; i < strlen(str) ; i++) {
+			if (str[i] == 0xc3 && str[i+1] == 0x84) {
+				str[i]='A';
+				str[i+1]='e';
+			}
+			if (str[i] == 0xc3 && str[i+1] == 0x96) {
+				str[i]='O';
+				str[i+1]='e';
+			}
+			if (str[i] == 0xc3 && str[i+1] == 0x9c) {
+				str[i]='U';
+				str[i+1]='e';
+			}
+			if (str[i] == 0xc3 && str[i+1] == 0xa4) {
+				str[i]='a';
+				str[i+1]='e';
+			}
+			if (str[i] == 0xc3 && str[i+1] == 0xb6) {
+				str[i]='o';
+				str[i+1]='e';
+			}
+			if (str[i] == 0xc3 && str[i+1] == 0xbc) {
+				str[i]='u';
+				str[i+1]='e';
+			}
+			if (str[i] == 0xc3 && str[i+1] == 0x9f) {
+				str[i]='s';
+				str[i+1]='s';
+			}
 		}
 	}
 	string = (*jnienv)->NewStringUTF(jnienv, str);
@@ -92,11 +95,17 @@ static int
 speech_android_init(struct speech_priv *ret)
 {
 	jmethodID cid;
+	char *class="org/navitproject/navit/NavitSpeech2";
 
-	if (!android_find_class_global("org/navitproject/navit/NavitSpeech", &ret->NavitSpeechClass))
+	if (ret->flags & 1) 
+		class="org/navitproject/navit/NavitSpeech";
+
+	if (!android_find_class_global(class, &ret->NavitSpeechClass)) {
+		dbg(0,"No class found\n");
                 return 0;
+	}
         dbg(0,"at 3\n");
-        cid = (*jnienv)->GetMethodID(jnienv, ret->NavitSpeechClass, "<init>", "(Landroid/content/Context;)V");
+        cid = (*jnienv)->GetMethodID(jnienv, ret->NavitSpeechClass, "<init>", "(Lorg/navitproject/navit/Navit;)V");
         if (cid == NULL) {
                 dbg(0,"no method found\n");
                 return 0; /* exception thrown */
@@ -114,15 +123,20 @@ speech_android_init(struct speech_priv *ret)
 }
 
 static struct speech_priv *
-speech_android_new(struct speech_methods *meth, struct attr **attrs) {
+speech_android_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
 	struct speech_priv *this;
+	struct attr *flags;
 	*meth=speech_android_meth;
 	this=g_new(struct speech_priv,1);
 	if (!speech_android_init(this)) {
 		g_free(this);
 		this=NULL;
 	}
-	speech_android_say(this, "Demnächst der Straße folgen");
+	if (android_version < 4)
+		this->flags=3;
+	if ((flags = attr_search(attrs, NULL, attr_flags)))
+		this->flags=flags->u.num;
+	
 	return this;
 }
 
