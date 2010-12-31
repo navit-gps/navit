@@ -9,6 +9,7 @@
 JNIEnv *jnienv;
 jobject *android_activity;
 struct callback_list *android_activity_cbl;
+int android_version;
 
 
 int
@@ -46,17 +47,18 @@ android_find_static_method(jclass class, char *name, char *args, jmethodID *ret)
 }
 
 JNIEXPORT void JNICALL
-Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity, jobject lang)
+Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity, jobject lang, int version)
 {
 	char *strings[]={"/data/data/org.navitproject.navit/bin/navit",NULL};
 	char *langstr;
+	android_version=version;
 	__android_log_print(ANDROID_LOG_ERROR,"test","called");
 	android_activity_cbl=callback_list_new();
 	jnienv=env;
 	android_activity=activity;
 	(*jnienv)->NewGlobalRef(jnienv, activity);
 	langstr=(*env)->GetStringUTFChars(env, lang, NULL);
-	dbg(0,"enter env=%p thiz=%p activity=%p lang=%s\n",env,thiz,activity,langstr);
+	dbg(0,"enter env=%p thiz=%p activity=%p lang=%s version=%d\n",env,thiz,activity,langstr,version);
 	setenv("LANG",langstr,1);
 	(*env)->ReleaseStringUTFChars(env, lang, langstr);
 	main_real(1, strings);

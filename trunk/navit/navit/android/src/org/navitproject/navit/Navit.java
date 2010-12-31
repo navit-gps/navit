@@ -27,6 +27,7 @@ import android.os.Message;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.util.Log;
 import java.util.Locale;
@@ -40,6 +41,7 @@ public class Navit extends Activity implements Handler.Callback
 {
     public Handler handler;
     private PowerManager.WakeLock wl;
+    private NavitActivityResult ActivityResults[];
     private boolean extractRes(String resname, String result)
     {
 	int slash=-1;
@@ -124,6 +126,7 @@ public class Navit extends Activity implements Handler.Callback
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        ActivityResults=new NavitActivityResult[16];
 	PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);  
 	wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE, "NavitDoNotDimScreen"); 
 	Locale locale=java.util.Locale.getDefault();
@@ -148,7 +151,7 @@ public class Navit extends Activity implements Handler.Callback
 		Log.e("Navit","Failed to extract navit.xml");
 	}
 	// Debug.startMethodTracing("calc");
-        NavitMain(this, langu);
+        NavitMain(this, langu, android.os.Build.VERSION.SDK_INT);
 	NavitActivity(3);
     }
     @Override public void onStart()
@@ -188,6 +191,17 @@ public class Navit extends Activity implements Handler.Callback
 	NavitActivity(-3);
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+	Log.e("Navit","onActivityResult "+requestCode+" "+resultCode);
+	ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
+    }
+    public void setActivityResult(int requestCode, NavitActivityResult ActivityResult) 
+    {
+        ActivityResults[requestCode]=ActivityResult;
+    }
+
+
     public void disableSuspend()
     {
 	wl.acquire();
@@ -208,7 +222,7 @@ public class Navit extends Activity implements Handler.Callback
      * 'hello-jni' native library, which is packaged
      * with this application.
      */
-    public native void NavitMain(Navit x, String lang);
+    public native void NavitMain(Navit x, String lang, int version);
     public native void NavitActivity(int activity);
 
     /* this is used to load the 'hello-jni' library on application

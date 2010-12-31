@@ -296,6 +296,7 @@ public class NavitGraphics {
 		float fy=y;
 		// Log.e("NavitGraphics","Text size "+size + " vs " + paint.getTextSize());
 		paint.setTextSize((float)size/15);
+		paint.setStyle(Paint.Style.FILL);
 		if (dx == 0x10000 && dy == 0) {
 			draw_canvas.drawText(text, fx, fy, paint);
 		} else {

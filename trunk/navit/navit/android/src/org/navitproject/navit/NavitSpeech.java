@@ -37,13 +37,13 @@ public class NavitSpeech implements Runnable {
 	private String what;
 	private Thread thread;
 
-	NavitSpeech(Context context) 
+	NavitSpeech(Navit navit) 
 	{
 	 	ttsInitListener = new TTS.InitListener() {
 			public void onInit(int version) {
         		}
 		};
-		tts=new TTS(context, ttsInitListener, true);
+		tts=new TTS(navit, ttsInitListener, true);
 	}
 	public void run()
 	{
