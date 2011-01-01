@@ -1061,11 +1061,11 @@ static void * get_data(struct graphics_priv *this_, const char *type)
 		_outerWidget->setLayout(_outerLayout);
 		_outerLayout->addWidget(this_->widget);
 		_outerLayout->setCurrentWidget(this_->widget);
-		_outerWidget->show();
 		xid=getenv("NAVIT_XID");
 		if (xid.length()>0) {
 			_outerWidget->embedInto(xid.toULong(&ok,0));
 		}
+		_outerWidget->show();
 #endif /* QT_QPAINTER_USE_EMBEDDING */
 		if (this_->w && this_->h)
 			this_->widget->show();
