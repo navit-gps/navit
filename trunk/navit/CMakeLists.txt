@@ -236,7 +236,7 @@ set(LIB_DIR lib)
 if(WIN32 OR WINCE)
    SET(CMAKE_EXECUTABLE_SUFFIX ".exe")
    add_module(graphics/win32 "Windows detected" TRUE)
-   add_module(support/win32 "Windows detected" TRUE)
+   add_plugin(support/win32 "Windows detected" TRUE)
 
    set_with_reason(support/ezxml "Windows detected" TRUE)
    set_with_reason(speech/espeak "Windows detected" TRUE)
