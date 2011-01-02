@@ -9,7 +9,7 @@ maptool=$(top_builddir)/navit/maptool/maptool
 
 maps_DATA = $(SAMPLE_MAP).bin $(SAMPLE_MAP).xml
 
-SUFFIXES=.osm.bz2 .txt .shp .osm
+SUFFIXES=.osm.bz2 .osm.pbf .txt .shp .osm
 
 samplemap: $(SAMPLE_MAP).bin
 
@@ -29,6 +29,11 @@ samplemap: $(SAMPLE_MAP).bin
 .osm.bz2.bin:
 	echo "Converting osm map"
 	bzcat $< | $(maptool) $(maptool_args) $@.tmp
+	mv $@.tmp $@
+
+.osm.pbf.bin:
+	echo "Converting osm map"
+	$(maptool) --protobuf $(maptool_args) $@.tmp <$<
 	mv $@.tmp $@
 
 .bin.xml:

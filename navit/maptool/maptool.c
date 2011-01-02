@@ -120,6 +120,7 @@ usage(FILE *f)
 	fprintf(f,"-e (--end)               : end at specified phase\n");
 	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
 	fprintf(f,"-o (--coverage)          : map every street to item coverage\n");
+	fprintf(f,"-P (--protobuf)          : input file is protobuf\n");
 	fprintf(f,"-s (--start)             : start at specified phase\n");
 	fprintf(f,"-i (--input-file)        : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-w (--dedupe-ways)       : ensure no duplicate ways or nodes. useful when using several input files\n");
@@ -147,6 +148,7 @@ int main(int argc, char **argv)
 	int zip64=0;
 	int output=0;
 	int input=0;
+	int protobuf=0;
 	int f,pos;
 	char *result,*optarg_cp,*attr_name,*attr_value;
 #ifdef HAVE_POSTGRESQL
@@ -196,6 +198,7 @@ int main(int argc, char **argv)
 			{"nodes-only", 0, 0, 'N'},
 			{"map", 1, 0, 'm'},
 			{"plugin", 1, 0, 'p'},
+			{"protobuf", 0, 0, 'P'},
 			{"start", 1, 0, 's'},
 			{"input-file", 1, 0, 'i'},
 			{"ignore-unknown", 0, 0, 'n'},
@@ -222,6 +225,9 @@ int main(int argc, char **argv)
 			break;
 		case 'R':
 			process_relations=0;
+			break;
+		case 'P':
+			protobuf=1;
 			break;
 		case 'S':
 			slice_size=atoll(optarg);
@@ -345,6 +351,8 @@ int main(int argc, char **argv)
 				l=g_list_next(l);
 			}
 		}
+		else if (protobuf)
+			map_collect_data_osm_protobuf(input_file,ways,nodes,turn_restrictions,boundaries);
 		else
 			map_collect_data_osm(input_file,ways,nodes,turn_restrictions,boundaries);
 		if (slices) {
