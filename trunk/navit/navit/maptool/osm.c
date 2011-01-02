@@ -1478,15 +1478,24 @@ osm_end_relation(FILE *turn_restrictions, FILE *boundaries)
 		item_bin_write(item_bin, turn_restrictions);
 }
 
+void
+osm_add_member(int type, osmid ref, char *role)
+{
+	char member_buffer[BUFFER_SIZE*3+3];
+	struct attr memberattr = { attr_osm_member };
+
+	sprintf(member_buffer,"%d:%Ld:%s", type, (long long) ref, role);
+	memberattr.u.str=member_buffer;
+	item_bin_add_attr(item_bin, &memberattr);
+}
+
 static int
 parse_member(char *p)
 {
 	char type_buffer[BUFFER_SIZE];
 	char ref_buffer[BUFFER_SIZE];
 	char role_buffer[BUFFER_SIZE];
-	char member_buffer[BUFFER_SIZE*3+3];
 	int type;
-	struct attr memberattr = { attr_osm_member };
 	if (!xml_get_attribute(p, "type", type_buffer, BUFFER_SIZE))
 		return 0;
 	if (!xml_get_attribute(p, "ref", ref_buffer, BUFFER_SIZE))
@@ -1503,9 +1512,7 @@ parse_member(char *p)
 		fprintf(stderr,"Unknown type %s\n",type_buffer);
 		type=0;
 	}
-	sprintf(member_buffer,"%d:%s:%s", type, ref_buffer, role_buffer);
-	memberattr.u.str=member_buffer;
-	item_bin_add_attr(item_bin, &memberattr);
+	osm_add_member(type, atoll(ref_buffer), role_buffer);
 	
 	return 1;
 }
