@@ -1,0 +1,26 @@
+#! /bin/sh
+maptool=$0
+maptool=${maptool%/*}
+maptool=$maptool/../maptool/maptool
+dir=compare.$$
+mkdir $dir
+file1=$1
+file2=$2
+unzip -vl $file1 | sed "s/[0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]//" | egrep -v '^Archive| files$' >$dir/dir1.txt
+unzip -vl $file2 | sed "s/[0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]//" | egrep -v '^Archive| files$' >$dir/dir2.txt
+diff $dir/dir1.txt $dir/dir2.txt | egrep "^<|^>" |
+while read line
+do
+	echo $line
+	case $line in
+	\>*)
+		name=${line##*\ }
+		echo $name
+		unzip -p $file1 $name >$dir/ways_split_.tmp
+		( cd $dir && ../$maptool -D -s3 >data1.txt) 2>/dev/null
+		unzip -p $file2 $name >$dir/ways_split_.tmp
+		( cd $dir && ../$maptool -D -s3 >data2.txt) 2>/dev/null
+		diff $dir/data1.txt $dir/data2.txt
+		;;
+	esac
+done

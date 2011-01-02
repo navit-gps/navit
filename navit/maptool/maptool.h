@@ -216,18 +216,29 @@ void cat(FILE *in, FILE *out);
 
 
 /* osm.c */
+typedef long int osmid;
 
+void osm_add_tag(char *k, char *v);
+void osm_add_node(osmid id, double lat, double lon);
+void osm_add_way(osmid id);
+void osm_add_relation(osmid id);
+void osm_end_relation(FILE *turn_restrictions, FILE *boundaries);
+void osm_end_way(FILE *out);
+void osm_end_node(FILE *out);
+void osm_add_nd(osmid ref);
 long long item_bin_get_id(struct item_bin *ib);
 void flush_nodes(int final);
 void sort_countries(int keep_tmpfiles);
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 int resolve_ways(FILE *in, FILE *out);
 int map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
-int map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_nodes);
 int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info);
 void remove_countryfiles(void);
 void osm_init(void);
+
+/* osm_psql.c */
+int map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
 
 /* sourcesink.c */
 

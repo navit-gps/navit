@@ -6,12 +6,6 @@
 #include "debug.h"
 #include "linguistics.h"
 #include "file.h"
-#ifdef HAVE_POSTGRESQL
-#include <libpq-fe.h>
-#endif
-
-
-typedef long int osmid;
 
 static int in_way, in_node, in_relation;
 static int nodeid,wayid;
@@ -887,11 +881,15 @@ access_value(char *v)
 	return 3;
 }
 
-static void
-add_tag(char *k, char *v)
+void
+osm_add_tag(char *k, char *v)
 {
 	int idx,level=2;
 	char buffer[BUFFER_SIZE*2+2];
+	if (in_relation) {
+		relation_add_tag(k,v);
+		return;
+	}
 	if (! strcmp(k,"ele"))
 		level=9;
 	if (! strcmp(k,"time"))
@@ -1146,10 +1144,7 @@ parse_tag(char *p)
 	if (!xml_get_attribute(p, "v", v_buffer, BUFFER_SIZE))
 		return 0;
 	decode_entities(v_buffer);
-	if (in_relation)
-		relation_add_tag(k_buffer, v_buffer);
-	else
-		add_tag(k_buffer, v_buffer);
+	osm_add_tag(k_buffer, v_buffer);
 	return 1;
 }
 
@@ -1202,9 +1197,10 @@ flush_nodes(int final)
 	slices++;
 }
 
-static void
-add_node(int id, double lat, double lon)
+void
+osm_add_node(osmid id, double lat, double lon)
 {
+	in_node=1;
 	if (node_buffer.size + sizeof(struct node_item) > node_buffer.malloced)
 		extend_buffer(&node_buffer);
 	attr_strings_clear();
@@ -1259,7 +1255,7 @@ parse_node(char *p)
 		return 0;
 	if (!xml_get_attribute(p, "lon", lon_buffer, BUFFER_SIZE))
 		return 0;
-	add_node(atoi(id_buffer), atof(lat_buffer), atof(lon_buffer));
+	osm_add_node(atoll(id_buffer), atof(lat_buffer), atof(lon_buffer));
 	return 1;
 }
 
@@ -1396,10 +1392,12 @@ node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
 	}
 }
 
-static void
-add_way(int id)
+void
+osm_add_way(osmid id)
 {
 	static int wayid_last;
+
+	in_way=1;
 	wayid=id;
 	coord_count=0;
 	attr_strings_clear();
@@ -1423,20 +1421,7 @@ parse_way(char *p)
 	char id_buffer[BUFFER_SIZE];
 	if (!xml_get_attribute(p, "id", id_buffer, BUFFER_SIZE))
 		return 0;
-	add_way(atoi(id_buffer));
-	return 1;
-}
-
-static int
-add_id_attr(char *p, enum attr_type attr_type)
-{
-	struct attr idattr = { attr_type };
-	char id_buffer[BUFFER_SIZE];
-	if (!xml_get_attribute(p, "id", id_buffer, BUFFER_SIZE))
-		return 0;
-	current_id=atoll(id_buffer);
-	idattr.u.num64=&current_id;
-	item_bin_add_attr(item_bin, &idattr);
+	osm_add_way(atoll(id_buffer));
 	return 1;
 }
 
@@ -1445,24 +1430,36 @@ char iso_code[BUFFER_SIZE];
 int admin_level;
 int boundary;
 
-
-static int
-parse_relation(char *p)
+void
+osm_add_relation(osmid id)
 {
+	struct attr idattr = { attr_type };
+	current_id=id;
+	in_relation=1;
 	debug_attr_buffer[0]='\0';
 	relation_type[0]='\0';
 	iso_code[0]='\0';
 	admin_level=-1;
 	boundary=0;
 	item_bin_init(item_bin, type_none);
-	if (!add_id_attr(p, attr_osm_relationid))
+	idattr.u.num64=&current_id;
+	item_bin_add_attr(item_bin, &idattr);
+}
+
+static int
+parse_relation(char *p)
+{
+	char id_buffer[BUFFER_SIZE];
+	if (!xml_get_attribute(p, "id", id_buffer, BUFFER_SIZE))
 		return 0;
+	osm_add_relation(atoll(id_buffer));
 	return 1;
 }
 
-static void
-end_relation(FILE *turn_restrictions, FILE *boundaries)
+void
+osm_end_relation(FILE *turn_restrictions, FILE *boundaries)
 {
+	in_relation=0;
 	if ((!strcmp(relation_type, "multipolygon") || !strcmp(relation_type, "boundary")) && boundary) {
 #if 0
 		if (admin_level == 2) {
@@ -1583,13 +1580,15 @@ attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_t
 	return ret;
 }
 
-static void
-end_way(FILE *out)
+void
+osm_end_way(FILE *out)
 {
 	int i,count;
 	int *def_flags,add_flags;
 	enum item_type types[10];
 	struct item_bin *item_bin;
+
+	in_way=0;
 
 	if (! out)
 		return;
@@ -1634,14 +1633,15 @@ end_way(FILE *out)
 	}
 }
 
-static void
-end_node(FILE *out)
+void
+osm_end_node(FILE *out)
 {
 	int conflict,count,i;
 	char *postal;
 	enum item_type types[10];
 	struct country_table *result=NULL, *lookup;
 	struct item_bin *item_bin;
+	in_node=0;
 
 	if (!out || ! node_is_tagged || ! nodeid)
 		return;
@@ -2073,8 +2073,8 @@ resolve_ways(FILE *in, FILE *out)
 	return 0;
 }
 
-static void
-add_nd(char *p, osmid ref)
+void
+osm_add_nd(osmid ref)
 {
 	SET_REF(coord_buffer[coord_count], ref);
 	node_ref_way(ref);
@@ -2091,7 +2091,7 @@ parse_nd(char *p)
 	char ref_buffer[BUFFER_SIZE];
 	if (!xml_get_attribute(p, "ref", ref_buffer, BUFFER_SIZE))
 		return 0;
-	add_nd(p, atoi(ref_buffer));
+	osm_add_nd(atoll(ref_buffer));
 	return 1;
 }
 
@@ -2114,13 +2114,11 @@ map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_r
 		} else if (!strncmp(p, "<node ",6)) {
 			if (!parse_node(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
-			in_node=1;
 			processed_nodes++;
 		} else if (!strncmp(p, "<tag ",5)) {
 			if (!parse_tag(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 		} else if (!strncmp(p, "<way ",5)) {
-			in_way=1;
 			if (!parse_way(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 			processed_ways++;
@@ -2128,7 +2126,6 @@ map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_r
 			if (!parse_nd(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 		} else if (!strncmp(p, "<relation ",10)) {
-			in_relation=1;
 			if (!parse_relation(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 			processed_relations++;
@@ -2136,14 +2133,11 @@ map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_r
 			if (!parse_member(p))
 				fprintf(stderr,"WARNING: failed to parse %s\n", buffer);
 		} else if (!strncmp(p, "</node>",7)) {
-			in_node=0;
-			end_node(out_nodes);
+			osm_end_node(out_nodes);
 		} else if (!strncmp(p, "</way>",6)) {
-			in_way=0;
-			end_way(out_ways);
+			osm_end_way(out_ways);
 		} else if (!strncmp(p, "</relation>",11)) {
-			in_relation=0;
-			end_relation(out_turn_restrictions, out_boundaries);
+			osm_end_relation(out_turn_restrictions, out_boundaries);
 		} else if (!strncmp(p, "</osm>",6)) {
 		} else {
 			fprintf(stderr,"WARNING: unknown tag in %s\n", buffer);
@@ -2153,174 +2147,6 @@ map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_r
 	sig_alrm_end();
 	return 1;
 }
-
-#ifdef HAVE_POSTGRESQL
-int
-map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_nodes)
-{
-	PGconn *conn;
-	PGresult *res,*node,*way,*tag;
-	int count,tagged,i,j,k;
-	long min, max, id, tag_id, node_id;
-	char query[256];
-	
-	sig_alrm(0);
-	conn=PQconnectdb(dbstr);
-	if (! conn) {
-		fprintf(stderr,"Failed to connect to database with '%s'\n",dbstr);
-		exit(1);
-	}
-	res=PQexec(conn, "begin");
-	if (! res) {
-		fprintf(stderr, "Cannot begin transaction: %s\n", PQerrorMessage(conn));
-		PQclear(res);
-		exit(1);
-	}
-	res=PQexec(conn, "set transaction isolation level serializable");
-	if (! res) {
-		fprintf(stderr, "Cannot set isolation level: %s\n", PQerrorMessage(conn));
-		PQclear(res);
-		exit(1);
-	}
-	res=PQexec(conn, "declare node cursor for select id,x(coordinate),y(coordinate) from node order by id");
-	if (! res) {
-		fprintf(stderr, "Cannot setup cursor for nodes: %s\n", PQerrorMessage(conn));
-		PQclear(res);
-		exit(1);
-	}
-	res=PQexec(conn, "declare way cursor for select id from way order by id");
-	if (! res) {
-		fprintf(stderr, "Cannot setup cursor for nodes: %s\n", PQerrorMessage(conn));
-		PQclear(res);
-		exit(1);
-	}
-	res=PQexec(conn, "declare relation cursor for select id from relation order by id");
-	if (! res) {
-		fprintf(stderr, "Cannot setup cursor for nodes: %s\n", PQerrorMessage(conn));
-		PQclear(res);
-		exit(1);
-	}
-	for (;;) {
-		node=PQexec(conn, "fetch 100000 from node");
-		if (! node) {
-			fprintf(stderr, "Cannot setup cursor for nodes: %s\n", PQerrorMessage(conn));
-			PQclear(node);
-			exit(1);
-		}
-		count=PQntuples(node);
-		if (! count)
-			break;
-		min=atol(PQgetvalue(node, 0, 0));
-		max=atol(PQgetvalue(node, count-1, 0));
-		sprintf(query,"select node_id,name,value from node_tag where node_id >= %ld and node_id <= %ld order by node_id", min, max);
-		tag=PQexec(conn, query);
-		if (! tag) {
-			fprintf(stderr, "Cannot query node_tag: %s\n", PQerrorMessage(conn));
-			exit(1);
-		}
-		j=0;
-		for (i = 0 ; i < count ; i++) {
-			id=atol(PQgetvalue(node, i, 0));
-			add_node(id, atof(PQgetvalue(node, i, 1)), atof(PQgetvalue(node, i, 2)));
-			tagged=0;
-			in_node=1;
-			processed_nodes++;
-			while (j < PQntuples(tag)) {
-				tag_id=atol(PQgetvalue(tag, j, 0));
-				if (tag_id == id) {
-					add_tag(PQgetvalue(tag, j, 1), PQgetvalue(tag, j, 2));
-					tagged=1;
-					j++;
-				}
-				if (tag_id < id)
-					j++;
-				if (tag_id > id)
-					break;
-			}
-			if (tagged)
-				end_node(out_nodes);
-			in_node=0;
-		}
-		PQclear(tag);
-		PQclear(node);
-	}
-	for (;;) {
-		way=PQexec(conn, "fetch 100000 from way");
-		if (! way) {
-			fprintf(stderr, "Cannot setup cursor for ways: %s\n", PQerrorMessage(conn));
-			PQclear(node);
-			exit(1);
-		}
-		count=PQntuples(way);
-		if (! count)
-			break;
-		min=atol(PQgetvalue(way, 0, 0));
-		max=atol(PQgetvalue(way, count-1, 0));
-		sprintf(query,"select way_id,node_id from way_node where way_id >= %ld and way_id <= %ld order by way_id,sequence_id", min, max);
-		node=PQexec(conn, query);
-		if (! node) {
-			fprintf(stderr, "Cannot query way_node: %s\n", PQerrorMessage(conn));
-			exit(1);
-		}
-		sprintf(query,"select way_id,name,value from way_tag where way_id >= %ld and way_id <= %ld order by way_id", min, max);
-		tag=PQexec(conn, query);
-		if (! tag) {
-			fprintf(stderr, "Cannot query way_tag: %s\n", PQerrorMessage(conn));
-			exit(1);
-		}
-		j=0;
-		k=0;
-		for (i = 0 ; i < count ; i++) {
-			id=atol(PQgetvalue(way, i, 0));
-			add_way(id);
-			tagged=0;
-			in_way=1;
-			processed_ways++;
-			while (k < PQntuples(node)) {
-				node_id=atol(PQgetvalue(node, k, 0));
-				if (node_id == id) {
-					add_nd("",atol(PQgetvalue(node, k, 1)));
-					tagged=1;
-					k++;
-				}
-				if (node_id < id)
-					k++;
-				if (node_id > id)
-					break;
-			}
-			while (j < PQntuples(tag)) {
-				tag_id=atol(PQgetvalue(tag, j, 0));
-				if (tag_id == id) {
-					add_tag(PQgetvalue(tag, j, 1), PQgetvalue(tag, j, 2));
-					tagged=1;
-					j++;
-				}
-				if (tag_id < id)
-					j++;
-				if (tag_id > id)
-					break;
-			}
-			if (tagged)
-				end_way(out_ways);
-			in_way=0;
-		}
-		PQclear(tag);
-		PQclear(node);
-		PQclear(way);
-	}
-
-	res=PQexec(conn, "commit");
-	if (! res) {
-		fprintf(stderr, "Cannot commit transaction: %s\n", PQerrorMessage(conn));
-		PQclear(res);
-		exit(1);
-	}
-	sig_alrm(0);
-	sig_alrm_end();
-	return 1;
-}
-#endif
-
 
 static void
 write_item_part(FILE *out, FILE *out_index, FILE *out_graph, struct item_bin *orig, int first, int last, long long *last_id)
