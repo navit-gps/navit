@@ -1045,6 +1045,11 @@ osm_add_tag(char *k, char *v)
 			attr_strings_save(attr_string_street_name_systematic, v);
 		level=5;
 	}
+	if (! strcmp(k,"openGeoDB:is_in")) { 
+		if (!is_in_buffer[0]) 
+			strcpy(is_in_buffer, v); 
+			level=5; 
+	} 
 	if (! strcmp(k,"is_in")) {
 		if (!is_in_buffer[0])
 			strcpy(is_in_buffer, v);
