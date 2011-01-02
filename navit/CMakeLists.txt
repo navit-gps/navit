@@ -58,17 +58,17 @@ add_subdirectory (fib-1.1)
 
 # navit cre
 set(NAVIT_SRC announcement.c atom.c attr.c cache.c callback.c command.c compass.c config_.c coord.c country.c data_window.c debug.c 
-	event.c file.c graphics.c gui.c item.c layout.c log.c main.c map.c 
-	linguistics.c mapset.c maptype.c menu.c messages.c bookmarks.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c
-	profile.c projection.c roadprofile.c route.c routech.c search.c speech.c start_real.c sunriset.c transform.c track.c 
-	util.c vehicle.c vehicleprofile.c xmlconfig.c )
+   event.c file.c graphics.c gui.c item.c layout.c log.c main.c map.c 
+   linguistics.c mapset.c maptype.c menu.c messages.c bookmarks.c navit.c navigation.c osd.c param.c phrase.c plugin.c popup.c
+   profile.c projection.c roadprofile.c route.c routech.c search.c speech.c start_real.c sunriset.c transform.c track.c 
+   util.c vehicle.c vehicleprofile.c xmlconfig.c )
 
 if(NOT USE_PLUGINS)
   list(APPEND NAVIT_SRC  ${CMAKE_CURRENT_BINARY_DIR}/builtin.c)
 endif(NOT USE_PLUGINS)
 
 if (${HAVE_GLIB})
-  list(APPEND NAVIT_SRC event_glib.c)
+   list(APPEND NAVIT_SRC event_glib.c)
 endif()
 
 add_library (navit_core ${NAVIT_SRC} )
@@ -80,10 +80,10 @@ endif()
 
 # Subversion revision
 ADD_CUSTOM_TARGET(
-    version
-    ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
-                     -D DST=${CMAKE_CURRENT_BINARY_DIR}/version.h
-                     -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
+   version
+   ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
+                    -D DST=${CMAKE_CURRENT_BINARY_DIR}/version.h
+                    -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
 )
 
 
@@ -101,9 +101,9 @@ endif()
 list(APPEND XSLT_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/navit.xml.new ${CMAKE_CURRENT_BINARY_DIR}/navit.xml)
 
 ADD_CUSTOM_COMMAND(
-  OUTPUT navit.xml
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml ${XSLT_FILES}
-  ${XSLT_COMMANDS}
+   OUTPUT navit.xml
+   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/navit_shipped.xml ${XSLT_FILES}
+   ${XSLT_COMMANDS}
 )
 
 
