@@ -333,7 +333,7 @@ int main(int argc, char **argv)
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
 #ifdef HAVE_POSTGRESQL
 		if (dbstr) 
-			map_collect_data_osm_db(dbstr,ways,nodes);
+			map_collect_data_osm_db(dbstr,ways,nodes,turn_restrictions,boundaries);
 		else
 #endif
 		if (map_handles) {

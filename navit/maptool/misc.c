@@ -41,9 +41,6 @@
 #include "config.h"
 #include "linguistics.h"
 #include "plugin.h"
-#ifdef HAVE_POSTGRESQL
-#include <libpq-fe.h>
-#endif
 #include "maptool.h"
 
 struct rect world_bbox = {
