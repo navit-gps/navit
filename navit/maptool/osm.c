@@ -41,7 +41,7 @@ struct coord coord_buffer[65536];
 struct attr_mapping {
 	enum item_type type;
 	int attr_present_idx_count;
-	int attr_present_idx[0];	
+	int attr_present_idx[0];
 };
 
 static struct attr_mapping **attr_mapping_node;
@@ -104,7 +104,7 @@ struct country_table {
 	{ 60,"Bermuda"},
 	{ 64,"Bhutan"},
 	{ 68,"Bolivia, Plurinational State of"},
-	{ 70,"Bosnia and Herzegovina,Bosna i Hercegovina,Босна и Херцеговина"},
+	{ 70,"Bosnia and Herzegovina,Bosna i Hercegovina,Бо�?на и Херцеговина"},
 	{ 72,"Botswana"},
 	{ 74,"Bouvet Island"},
 	{ 76,"Brazil"},
@@ -113,7 +113,7 @@ struct country_table {
 	{ 90,"Solomon Islands"},
 	{ 92,"Virgin Islands, British"},
 	{ 96,"Brunei Darussalam"},
-	{ 100,"Bulgaria,България"},
+	{ 100,"Bulgaria,Българи�?"},
 	{ 104,"Myanmar"},
 	{ 108,"Burundi"},
 	{ 112,"Belarus"},
@@ -265,7 +265,7 @@ struct country_table {
 	{ 634,"Qatar"},
 	{ 638,"Réunion"},
 	{ 642,"România,Romania,RO"},
-	{ 643,"Россия,Российская Федерация,Russia,Russian Federation"},
+	{ 643,"Ро�?�?и�?,Ро�?�?ий�?ка�? Федераци�?,Russia,Russian Federation"},
 	{ 646,"Rwanda"},
 	{ 652,"Saint Barthélemy"},
 	{ 654,"Saint Helena, Ascension and Tristan da Cunha"},
@@ -296,7 +296,7 @@ struct country_table {
 	{ 744,"Svalbard and Jan Mayen"},
 	{ 748,"Swaziland"},
 	{ 752,"Sweden,Sverige,Konungariket Sverige,SE"},
-	{ 756,"Switzerland,Schweiz"}, 
+	{ 756,"Switzerland,Schweiz"},
 	{ 760,"Syrian Arab Republic"},
 	{ 762,"Tajikistan"},
 	{ 764,"Thailand"},
@@ -332,9 +332,10 @@ struct country_table {
 	{ 999,"Unknown"},
 };
 
+
 static char *attrmap={
 	"n	*=*			point_unkn\n"
-	"n	Annehmlichkeit=Hochsitz	poi_hunting_stand\n"
+//	"n	Annehmlichkeit=Hochsitz	poi_hunting_stand\n"
 	"n	addr:housenumber=*	house_number\n"
 	"n	aeroway=aerodrome	poi_airport\n"
 	"n	aeroway=airport		poi_airport\n"
@@ -384,7 +385,7 @@ static char *attrmap={
 	"n	amenity=university	poi_school_university\n"
 	"n	amenity=vending_machine	poi_vending_machine\n"
 	"n	barrier=bollard		barrier_bollard\n"
-	"n	barrier=cycle_barrier	barrier_cycle\n"	
+	"n	barrier=cycle_barrier	barrier_cycle\n"
 	"n	barrier=lift_gate	barrier_lift_gate\n"
 	"n	car=car_rental		poi_car_rent\n"
 	"n	highway=bus_station	poi_bus_station\n"
@@ -398,7 +399,7 @@ static char *attrmap={
 	"n	historic=castle		poi_castle\n"
 	"n	historic=memorial	poi_memorial\n"
 	"n	historic=monument	poi_monument\n"
-	"n	historic=*		poi_ruins\n"
+//	"n	historic=*		poi_ruins\n"
 	"n	landuse=cemetery	poi_cemetery\n"
 	"n	leisure=fishing		poi_fish\n"
 	"n	leisure=golf_course	poi_golf\n"
@@ -414,7 +415,7 @@ static char *attrmap={
 	"n	military=danger_area	poi_danger_area\n"
 	"n	military=range		poi_military\n"
 	"n	natural=bay		poi_bay\n"
-	"n	natural=peak		poi_peak\n"
+	"n	natural=peak,ele=*		poi_peak\n"     // show only major peaks with elevation
 	"n	natural=tree		poi_tree\n"
 	"n	place=city		town_label_2e5\n"
 	"n	place=hamlet		town_label_2e2\n"
@@ -501,9 +502,6 @@ static char *attrmap={
 	"w	contour_ext=elevation_major	height_line_1\n"
 	"w	contour_ext=elevation_medium	height_line_2\n"
 	"w	contour_ext=elevation_minor	height_line_3\n"
-#if 0 /* FIXME: Implement this as attribute */
-	"w	cycleway=track	        cycleway\n"
-#endif
 	"w	highway=bridleway	bridleway\n"
 	"w	highway=bus_guideway	bus_guideway\n"
 	"w	highway=construction	street_construction\n"
@@ -516,8 +514,11 @@ static char *attrmap={
 	"w	highway=parking_lane	street_parking_lane\n"
 	"w	highway=path				path\n"
 	"w	highway=path,bicycle=designated		cycleway\n"
+	"w	highway=path,bicycle=official		cycleway\n"
 	"w	highway=path,foot=designated		footway\n"
+	"w	highway=path,foot=official		footway\n"
 	"w	highway=path,horse=designated		bridleway\n"
+	"w	highway=path,horse=official		bridleway\n"
 	"w	highway=path,sac_scale=alpine_hiking			hiking_alpine\n"
 	"w	highway=path,sac_scale=demanding_alpine_hiking		hiking_alpine_demanding\n"
 	"w	highway=path,sac_scale=demanding_mountain_hiking	hiking_mountain_demanding\n"
@@ -682,6 +683,7 @@ static char *attrmap={
 	"w	barrier=city_wall	city_wall\n"
 };
 
+
 static void
 build_attrmap_line(char *line)
 {
@@ -728,19 +730,37 @@ build_attrmap_line(char *line)
 }
 
 static void
-build_attrmap(void)
+build_attrmap(FILE* rule_file)
 {
-	char *p,*map=g_strdup(attrmap);
 	attr_hash=g_hash_table_new(g_str_hash, g_str_equal);
 	attr_present_count=1;
-	while (map) {
-		p=strchr(map,'\n');
-		if (p)
-			*p++='\0';
-		if (strlen(map))
-			build_attrmap_line(map);
-		map=p;
-	}
+
+    // build attribute map from rule file if given
+    if( rule_file )
+    {
+        char buffer[200], *p;
+        while (fgets( buffer, 200, rule_file )) {
+            p=strchr(buffer,'\n');
+            if(p)
+                *p = 0;
+            build_attrmap_line( g_strdup( buffer ) );
+        }
+        fclose( rule_file );
+    }
+    // use hardcoded default attributes
+    else
+    {
+        char *p,*map=g_strdup(attrmap);
+        while (map) {
+            p=strchr(map,'\n');
+            if (p)
+                *p++='\0';
+            if (strlen(map))
+                build_attrmap_line(map);
+            map=p;
+        }
+    }
+
 	attr_present=g_malloc0(sizeof(*attr_present)*attr_present_count);
 }
 
@@ -836,6 +856,8 @@ access_value(char *v)
 		return 1;
 	if (!strcmp(v,"designated"))
 		return 1;
+	if (!strcmp(v,"official"))
+		return 1;
 	if (!strcmp(v,"permissive"))
 		return 1;
 	if (!strcmp(v,"0"))
@@ -895,7 +917,7 @@ osm_add_tag(char *k, char *v)
 			level=5;
 	}
 	if (! strcmp(k,"junction")) {
-		if (! strcmp(v,"roundabout")) 
+		if (! strcmp(v,"roundabout"))
 			flags[0] |= AF_ONEWAY | AF_ROUNDABOUT | AF_ROUNDABOUT_VALID;
 	}
 	if (! strcmp(k,"maxspeed")) {
@@ -904,7 +926,7 @@ osm_add_tag(char *k, char *v)
 		} else {
 			maxspeed_attr_value = atoi(v);
 		}
-		if (maxspeed_attr_value) 
+		if (maxspeed_attr_value)
 			flags[0] |= AF_SPEED_LIMIT;
 		level=5;
 	}
@@ -1015,7 +1037,7 @@ osm_add_tag(char *k, char *v)
 		level=5;
 	}
 	if (! strcmp(k,"ref")) {
-		if (in_way) 
+		if (in_way)
 			attr_strings_save(attr_string_street_name_systematic, v);
 		level=5;
 	}
@@ -1030,7 +1052,7 @@ osm_add_tag(char *k, char *v)
 		level=5;
 	}
 	if (! strcmp(k,"is_in:country")) {
- 		/*	sometimes there is no is_in tag, only is_in:country. 
+ 		/*	sometimes there is no is_in tag, only is_in:country.
 		   I put this here so it can be overwritten by the next if clause if there IS an is_in tag.
 		*/
 		strcpy(is_in_buffer, v);
@@ -1137,7 +1159,7 @@ osm_add_node(osmid id, double lat, double lon)
 	debug_attr_buffer[0]='\0';
 	is_in_buffer[0]='\0';
 	debug_attr_buffer[0]='\0';
-	osmid_attr.type=attr_osm_nodeid;	
+	osmid_attr.type=attr_osm_nodeid;
 	osmid_attr.len=3;
 	osmid_attr_value=id;
 	if (node_buffer.size + sizeof(struct node_item) > slice_size) {
@@ -1251,7 +1273,7 @@ node_item_get_from_file(FILE *coords, int id, struct node_item *ret)
 		else
 			return 0;
 	}
-	
+
 	fseek(coords, 0, SEEK_END);
 	count=ftell(coords)/sizeof(struct node_item);
 	interval=count/4;
@@ -1441,7 +1463,7 @@ attr_longest_match(struct attr_mapping **mapping, int mapping_count, enum item_t
 			longest=sum;
 			ret=0;
 		}
-		if (sum > 0 && sum == longest && ret < types_count) 
+		if (sum > 0 && sum == longest && ret < types_count)
 			types[ret++]=curr->type;
 	}
 	memset(attr_present, 0, sizeof(*attr_present)*attr_present_count);
@@ -1460,18 +1482,20 @@ osm_end_way(FILE *out)
 
 	if (! out)
 		return;
+
 	if (dedupe_ways_hash) {
 		if (g_hash_table_lookup(dedupe_ways_hash, (gpointer)(long)wayid))
 			return;
 		g_hash_table_insert(dedupe_ways_hash, (gpointer)(long)wayid, (gpointer)1);
 	}
+
 	count=attr_longest_match(attr_mapping_way, attr_mapping_way_count, types, sizeof(types)/sizeof(enum item_type));
 	if (!count) {
 		count=1;
 		types[0]=type_street_unkn;
 	}
 	if (count >= 10) {
-		fprintf(stderr,"way id %ld\n",osmid_attr_value);	
+		fprintf(stderr,"way id %ld\n",osmid_attr_value);
 		dbg_assert(count < 10);
 	}
 	for (i = 0 ; i < count ; i++) {
@@ -1493,7 +1517,7 @@ osm_end_way(FILE *out)
 		item_bin_add_attr_longlong(item_bin, attr_osm_wayid, osmid_attr_value);
 		if (debug_attr_buffer[0])
 			item_bin_add_attr_string(item_bin, attr_debug, debug_attr_buffer);
-		if (add_flags) 
+		if (add_flags)
 			item_bin_add_attr_int(item_bin, attr_flags, flags_attr_value);
 		if (maxspeed_attr_value)
 			item_bin_add_attr_int(item_bin, attr_maxspeed, maxspeed_attr_value);
@@ -1526,7 +1550,7 @@ osm_end_node(FILE *out)
 		if (ignore_unkown && (types[i] == type_street_unkn || types[i] == type_point_unkn))
 			continue;
 		item_bin=init_item(types[i]);
-		if (item_is_town(*item_bin) && attr_strings[attr_string_population]) 
+		if (item_is_town(*item_bin) && attr_strings[attr_string_population])
 			item_bin_set_type_by_population(item_bin, atoi(attr_strings[attr_string_population]));
 		item_bin_add_coord(item_bin, &ni->c, 1);
 		item_bin_add_attr_string(item_bin, item_is_town(*item_bin) ? attr_town_name : attr_label, attr_strings[attr_string_label]);
@@ -1576,7 +1600,7 @@ osm_end_node(FILE *out)
 					item_bin_add_attr_string(item_bin, attr_town_name, attr_strings[attr_string_label]);
 					item_bin_write_match(item_bin, attr_town_name, attr_town_name_match, result->file);
 				}
-			
+
 			}
 		}
 	}
@@ -1599,7 +1623,7 @@ sort_countries(int keep_tmpfiles)
 		name_out=g_strdup_printf("country_%d.bin", co->countryid);
 		co->r=world_bbox;
 		item_bin_sort_file(name_in, name_out, &co->r, &co->size);
-		if (!keep_tmpfiles) 
+		if (!keep_tmpfiles)
 			unlink(name_in);
 		g_free(name_in);
 		g_free(name_out);
@@ -1732,17 +1756,17 @@ get_way(FILE *way, FILE *ways_index, struct coord *c, long long wayid, struct it
 		currid=item_bin_get_wayid(ret);
 		if (debug)
 			fprintf(stderr,LONGLONG_FMT":",currid);
-		if (currid != wayid) 
+		if (currid != wayid)
 			return NULL;
 		ic=(struct coord *)(ret+1);
 		last=ret->clen/2-1;
 		if (debug)
 			fprintf(stderr,"(0x%x,0x%x)-(0x%x,0x%x)",ic[0].x,ic[0].y,ic[last].x,ic[last].y);
-		if (!c) 
+		if (!c)
 			return &ic[0];
-		if (ic[0].x == c->x && ic[0].y == c->y) 
+		if (ic[0].x == c->x && ic[0].y == c->y)
 			return &ic[last];
-		if (ic[last].x == c->x && ic[last].y == c->y) 
+		if (ic[last].x == c->x && ic[last].y == c->y)
 			return &ic[0];
 	}
 	return NULL;
@@ -1822,11 +1846,11 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 				osm_warning(osm_types[viam.type],viam.id,1,"\n");
 				continue;
 			}
-				
+
 		}
 #if 0
 		fprintf(stderr,"via "LONGLONG_FMT" vs %d\n",viam.id, ni.id);
-		fprintf(stderr,"coord 0x%x,0x%x\n",ni.c.x,ni.c.y);	
+		fprintf(stderr,"coord 0x%x,0x%x\n",ni.c.x,ni.c.y);
 		fprintf(stderr,"Lookup "LONGLONG_FMT"\n",fromm.id);
 #endif
 		if (!(fromc=get_way(ways, ways_index, viafrom, fromm.id, from, 0))) {
@@ -1865,7 +1889,7 @@ process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, 
 }
 
 static void
-process_countries(FILE *way, FILE *ways_index) 
+process_countries(FILE *way, FILE *ways_index)
 {
 	FILE *in=fopen("country_de.tmp","r");
 	struct item_bin *ib;
@@ -1879,7 +1903,7 @@ process_countries(FILE *way, FILE *ways_index)
 		while ((str=item_bin_get_attr(ib, attr_osm_member, str))) {
 			if (!get_relation_member(str, &member))
 				break;
-			if (member.type == 2) {		
+			if (member.type == 2) {
 				if (!seek_to_way(way, ways_index, member.id)) {
 					fprintf(stderr,"not found in index");
 					break;
@@ -1908,7 +1932,7 @@ process_countries(FILE *way, FILE *ways_index)
 		item_bin_add_coord(ib, seg->first, count);
 		item_bin_dump(ib, tmp);
 #endif
-		
+
 		sort_segments=g_list_next(sort_segments);
 	}
 	fclose(tmp);
@@ -1920,8 +1944,8 @@ node_ref_way(osmid node)
 {
 	struct node_item *ni;
 	ni=node_item_get(node);
-	if (ni) 
-		ni->ref_way++; 
+	if (ni)
+		ni->ref_way++;
 }
 
 int
@@ -2098,9 +2122,9 @@ remove_countryfiles(void)
 	}
 }
 
-void osm_init(void)
+void osm_init(FILE* rule_file)
 {
-        build_attrmap();
+        build_attrmap(rule_file);
         build_countrytable();
 }
 

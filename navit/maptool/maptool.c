@@ -89,15 +89,15 @@ static void add_plugin(char *path)
 	if (! plugins)
 		plugins=plugins_new();
 	attrs=(struct attr*[]){&(struct attr){attr_path,{path}},NULL};
-	plugin_new(&(struct attr){attr_plugins,.u.plugins=plugins}, attrs);	
+	plugin_new(&(struct attr){attr_plugins,.u.plugins=plugins}, attrs);
 }
 
 static void
-maptool_init(void)
+maptool_init(FILE* rule_file)
 {
 	if (plugins)
 		plugins_init(plugins);
-	osm_init();
+	osm_init(rule_file);
 }
 
 static void
@@ -121,6 +121,7 @@ usage(FILE *f)
 	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
 	fprintf(f,"-o (--coverage)          : map every street to item coverage\n");
 	fprintf(f,"-P (--protobuf)          : input file is protobuf\n");
+	fprintf(f,"-r (--rule-file)         : read mapping rules from specified file\n");
 	fprintf(f,"-s (--start)             : start at specified phase\n");
 	fprintf(f,"-i (--input-file)        : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-w (--dedupe-ways)       : ensure no duplicate ways or nodes. useful when using several input files\n");
@@ -155,7 +156,11 @@ int main(int argc, char **argv)
 #ifdef HAVE_POSTGRESQL
 	char *dbstr=NULL;
 #endif
-	FILE* input_file = stdin;
+
+	FILE* input_file = stdin;   // input data
+
+	FILE* rule_file = NULL;    // external rule file
+
 	struct attr *attrs[10];
 	GList *map_handles=NULL;
 	struct map *handle;
@@ -202,6 +207,7 @@ int main(int argc, char **argv)
 			{"protobuf", 0, 0, 'P'},
 			{"start", 1, 0, 's'},
 			{"input-file", 1, 0, 'i'},
+			{"rule-file", 1, 0, 'r'},
 			{"ignore-unknown", 0, 0, 'n'},
 			{"ways-only", 0, 0, 'W'},
 			{"slice-size", 1, 0, 'S'},
@@ -211,7 +217,7 @@ int main(int argc, char **argv)
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
-					      "e:hi:knm:p:s:wz:", long_options, &option_index);
+					      "e:hi:knm:p:r:s:wz:", long_options, &option_index);
 		if (c == -1)
 			break;
 		switch (c) {
@@ -287,7 +293,7 @@ int main(int argc, char **argv)
 				exit(1);
 			}
 			map_handles=g_list_append(map_handles,handle);
-			break;	
+			break;
 		case 'n':
 			fprintf(stderr,"I will IGNORE unknown types\n");
 			ignore_unkown=1;
@@ -313,6 +319,14 @@ int main(int argc, char **argv)
 			    exit( -1 );
 			}
 			break;
+		case 'r':
+			rule_file = fopen( optarg, "r" );
+			if ( rule_file ==  NULL )
+			{
+			    fprintf( stderr, "\nRule file (%s) not found\n", optarg );
+			    exit( -1 );
+			}
+			break;
 #ifdef HAVE_ZLIB
 		case 'z':
 			compression_level=atoi(optarg);
@@ -330,7 +344,8 @@ int main(int argc, char **argv)
 		usage(stderr);
 	result=argv[optind];
 
-	maptool_init();
+    // initialize plugins and OSM mappings
+	maptool_init(rule_file);
 #if 0
 	if (protobufdb_operation) {
 		osm_protobufdb_load(input_file, protobufdb);
@@ -338,6 +353,7 @@ int main(int argc, char **argv)
 	}
 #endif
 
+    // input from an OSM file
 	if (input == 0) {
 	if (start == 1) {
 		unlink("coords.tmp");
@@ -345,14 +361,14 @@ int main(int argc, char **argv)
 			ways=tempfile(suffix,"ways",1);
 		if (process_nodes)
 			nodes=tempfile(suffix,"nodes",1);
-		if (process_ways && process_nodes) 
+		if (process_ways && process_nodes)
 			turn_restrictions=tempfile(suffix,"turn_restrictions",1);
 		if (process_relations)
 			boundaries=tempfile(suffix,"boundaries",1);
 		phase=1;
 		fprintf(stderr,"PROGRESS: Phase 1: collecting data\n");
 #ifdef HAVE_POSTGRESQL
-		if (dbstr) 
+		if (dbstr)
 			map_collect_data_osm_db(dbstr,ways,nodes,turn_restrictions,boundaries);
 		else
 #endif
@@ -411,7 +427,7 @@ int main(int argc, char **argv)
 				ways_split_index=final ? tempfile(suffix,"ways_split_index",1) : NULL;
 				graph=tempfile(suffix,"graph",1);
 				coastline=tempfile(suffix,"coastline",1);
-				if (i) 
+				if (i)
 					load_buffer("coords.tmp",&node_buffer, i*slice_size, slice_size);
 				map_find_intersections(ways,ways_split,ways_split_index,graph,coastline,final);
 				fclose(ways_split);
@@ -442,6 +458,7 @@ int main(int argc, char **argv)
 		process_binfile(stdin, ways_split);
 		fclose(ways_split);
 	}
+
 #if 1
 	coastline=tempfile(suffix,"coastline",0);
 	if (coastline) {
@@ -530,7 +547,7 @@ int main(int argc, char **argv)
 			if (!strcmp(suffix,"r")) {
 				ch_generate_tiles(suffixes[0],suffix,tilesdir,&zip_info);
 			} else {
-				for (f = 0 ; f < 3 ; f++) 
+				for (f = 0 ; f < 3 ; f++)
 					files[f]=NULL;
 				if (process_relations)
 					files[0]=tempfile(suffix,"relations",0);
@@ -579,7 +596,7 @@ int main(int argc, char **argv)
 				if (process_nodes)
 					files[2]=tempfile(suffix,"nodes",0);
 				fprintf(stderr,"Slice %d\n",i);
-				
+
 				phase5(files,references,3,0,suffix,&zip_info);
 				for (f = 0 ; f < 3 ; f++) {
 					if (files[f])
