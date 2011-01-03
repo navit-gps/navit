@@ -51,6 +51,8 @@ enum attr_type {
 #define AF_TOLL			(1<<10)
 #define AF_SEASONAL		(1<<11)
 #define AF_UNPAVED		(1<<12)
+#define AF_FORD			(1<<13)
+#define AF_UNDERGROUND		(1<<14)
 #define AF_DANGEROUS_GOODS	(1<<19)
 #define AF_EMERGENCY_VEHICLES	(1<<20)
 #define AF_TRANSPORT_TRUCK	(1<<21)
