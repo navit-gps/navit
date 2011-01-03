@@ -236,7 +236,7 @@ int map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_tu
 int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info);
 void remove_countryfiles(void);
-void osm_init(void);
+void osm_init(FILE*);
 
 /* osm_psql.c */
 int map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
