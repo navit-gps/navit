@@ -151,6 +151,7 @@ int main(int argc, char **argv)
 	int protobuf=0;
 	int f,pos;
 	char *result,*optarg_cp,*attr_name,*attr_value;
+	char *protobufdb=NULL,*protobufdb_operation=NULL;
 #ifdef HAVE_POSTGRESQL
 	char *dbstr=NULL;
 #endif
@@ -206,7 +207,7 @@ int main(int argc, char **argv)
 			{"slice-size", 1, 0, 'S'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "6DNWS:a:bc"
+		c = getopt_long (argc, argv, "6B:DNO:WS:a:bc"
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
@@ -217,6 +218,9 @@ int main(int argc, char **argv)
 		case '6':
 			zip64=1;
 			break;
+		case 'B':
+			protobufdb=optarg;
+			break;
 		case 'D':
 			output=1;
 			break;
@@ -225,6 +229,10 @@ int main(int argc, char **argv)
 			break;
 		case 'R':
 			process_relations=0;
+			break;
+		case 'O':
+			protobufdb_operation=optarg;
+			output=1;
 			break;
 		case 'P':
 			protobuf=1;
@@ -323,6 +331,12 @@ int main(int argc, char **argv)
 	result=argv[optind];
 
 	maptool_init();
+#if 0
+	if (protobufdb_operation) {
+		osm_protobufdb_load(input_file, protobufdb);
+		return 0;
+	}
+#endif
 
 	if (input == 0) {
 	if (start == 1) {
