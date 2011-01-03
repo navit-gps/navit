@@ -12,11 +12,9 @@
 #include "generated-code/osmformat.pb-c.h"
 
 
-unsigned char buffer[65536];
-double latlon_scale=10000000.0;
-double timestamp_scale=1000.0;
+static double latlon_scale=10000000.0;
 
-OSMPBF__BlobHeader *
+static OSMPBF__BlobHeader *
 read_header(FILE *f)
 {
 	unsigned char *buffer,lenb[4];
@@ -33,7 +31,7 @@ read_header(FILE *f)
 }
 
 
-OSMPBF__Blob *
+static OSMPBF__Blob *
 read_blob(OSMPBF__BlobHeader *header, FILE *f)
 {
 	unsigned char *buffer;
@@ -45,7 +43,7 @@ read_blob(OSMPBF__BlobHeader *header, FILE *f)
 	return osmpbf__blob__unpack(&protobuf_c_system_allocator, len, buffer);
 }
 
-unsigned char *
+static unsigned char *
 uncompress_blob(OSMPBF__Blob *blob)
 {
 	unsigned char *ret=malloc(blob->raw_size);
@@ -75,7 +73,7 @@ uncompress_blob(OSMPBF__Blob *blob)
 	return ret;
 }
 
-int
+static int
 get_string(char *buffer, int buffer_size, OSMPBF__PrimitiveBlock *primitive_block, int id, int escape)
 {
 	int len=primitive_block->stringtable->s[id].len;
@@ -114,7 +112,7 @@ get_string(char *buffer, int buffer_size, OSMPBF__PrimitiveBlock *primitive_bloc
 }
 
 
-void
+static void
 process_osmheader(OSMPBF__Blob *blob, unsigned char *data)
 {
 	OSMPBF__HeaderBlock *header_block;
@@ -122,7 +120,9 @@ process_osmheader(OSMPBF__Blob *blob, unsigned char *data)
 	osmpbf__header_block__free_unpacked(header_block, &protobuf_c_system_allocator);
 }
 
-void
+#if 0
+
+static void
 process_user(OSMPBF__PrimitiveBlock *primitive_block, int user_sid, int uid, int swap)
 {
 	char userbuff[1024];
@@ -135,7 +135,7 @@ process_user(OSMPBF__PrimitiveBlock *primitive_block, int user_sid, int uid, int
 	}
 }
 
-void
+static void
 process_timestamp(long long timestamp)
 {
 	time_t ts;
@@ -147,7 +147,9 @@ process_timestamp(long long timestamp)
 	printf(" timestamp=\"%s\"",tsbuff);
 }
 
-void
+#endif
+
+static void
 process_tag(OSMPBF__PrimitiveBlock *primitive_block, int key, int val)
 {
 	char keybuff[1024];
@@ -164,7 +166,7 @@ process_tag(OSMPBF__PrimitiveBlock *primitive_block, int key, int val)
 }
 
 
-void
+static void
 process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense, FILE *out_nodes)
 {
 	int i,j=0,has_tags;
@@ -210,15 +212,17 @@ process_dense(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__DenseNodes *dense
 	}
 }
 
-void
+#if 0
+static void
 process_info(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Info *info)
 {
 	printf(" version=\"%d\" changeset=\"%Ld\"",info->version,info->changeset);
 	process_user(primitive_block, info->user_sid, info->uid, 1);
 	process_timestamp(info->timestamp);
 }
+#endif
 
-void
+static void
 process_way(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Way *way, FILE *out_ways)
 {
 	int i;
@@ -247,7 +251,7 @@ process_way(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Way *way, FILE *out
 	osm_end_way(out_ways);
 }
 
-void
+static void
 process_relation(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Relation *relation, FILE *out_turn_restrictions, FILE *out_boundaries)
 {
 	int i;
@@ -295,7 +299,7 @@ process_relation(OSMPBF__PrimitiveBlock *primitive_block, OSMPBF__Relation *rela
 #endif
 }
 
-void
+static void
 process_osmdata(OSMPBF__Blob *blob, unsigned char *data, FILE *out_nodes, FILE *out_ways, FILE *out_turn_restrictions, FILE *out_boundaries)
 {
 	int i,j;
