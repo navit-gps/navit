@@ -3071,6 +3071,9 @@ gui_internal_cmd2_bookmarks(struct gui_priv *this, char *function, struct attr *
 	gui_internal_cmd_bookmarks(this, NULL, str);
 }
 
+static void
+gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy);
+
 static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 {
 	struct widget *wi,*menu;
@@ -3080,7 +3083,14 @@ static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 	menu=g_list_last(this->root.children)->data;
 	wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
 	if (wi) {
-		if (*key == NAVIT_KEY_BACKSPACE) {
+                /* select first item of the searchlist */
+                if (*key == NAVIT_KEY_RETURN) {
+                        struct widget *search_list=gui_internal_menu_data(this)->search_list;
+                        GList *l=search_list->children;
+                        if (l && l->data)
+                                gui_internal_highlight_do(this, l->data);
+                        return; 
+		} else if (*key == NAVIT_KEY_BACKSPACE) {
 			dbg(0,"backspace\n");
 			if (wi->text && wi->text[0]) {
 				len=g_utf8_prev_char(wi->text+strlen(wi->text))-wi->text;
