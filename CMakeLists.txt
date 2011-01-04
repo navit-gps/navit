@@ -15,12 +15,20 @@ IF(NOT CMAKE_BUILD_TYPE)
    SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
+# install path
+set(BIN_DIR bin)
+set(SHARE_DIR share/navit)
+set(LOCALE_DIR share)
+set(IMAGE_DIR share/navit/xpm)
+set(LIB_DIR lib)
+
 ### Detect environment
 
 add_plugin(support/glib "native Glib found" FALSE)
 add_plugin(support/zlib "native zlib found" FALSE)
 add_plugin(support/libpng "native libpng found" FALSE)
 add_plugin(support/wordexp "native wordexp found" FALSE)
+add_module(font/freetype "freetype not found" FALSE)
 add_module(graphics/android "FreeType library not found" FALSE)
 add_module(graphics/gd "FreeType library not found" FALSE)
 add_module(graphics/gtk_drawing_area "FreeType library not found" FALSE)
@@ -100,8 +108,8 @@ endif()
 
 if(FREETYPE_FOUND)
    include_directories(${FREETYPE_INCLUDE_DIRS})
-   list(APPEND NAVIT_LIBS ${FREETYPE_LIBRARY})
-   #add_module(font/freetype "freetype found" TRUE)
+   set_with_reason(font/freetype "freetype found" TRUE ${FREETYPE_LIBRARY})
+   add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/navit/fonts")
 else(FREETYPE_FOUND)
    MESSAGE("No freetype library found, graphics modules may not be available")
    set_with_reason(graphics/android "FreeType library not found" FALSE)
@@ -149,14 +157,14 @@ else()
    message (STATUS "no glc implementation found. Install Quesoglc for OpenGL support")
 endif(QUESOGLC_FOUND AND FREETYPE_FOUND)
 
-if(SDL_FOUND AND SDLIMAGE_FOUND AND FREE_TYPE_FOUND)
+if(SDL_FOUND AND SDLIMAGE_FOUND AND FREETYPE_FOUND)
    set(SDL_IMAGE 1)
    if(SDLTTF_FOUND)
       set(SDL_TTF 1)
       list(APPEND SDL_LIBRARY ${SDLTTF_LIBRARY})
    endif(SDLTTF_FOUND)
    set_with_reason(graphics/sdl "SDL/SDL_image libs found" TRUE ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY})
-endif(SDL_FOUND AND SDLIMAGE_FOUND AND FREE_TYPE_FOUND)
+endif(SDL_FOUND AND SDLIMAGE_FOUND AND FREETYPE_FOUND)
 
 if (HAVE_LIBGPS)
    set_with_reason(vehicle/gpsd "gpsd lib found" TRUE)
@@ -219,13 +227,6 @@ ENDIF()
    
 set(DBUS_USE_SYSTEM_BUS FALSE)
 set(BUILD_MAPTOOL TRUE)
-
-# install path
-set(BIN_DIR bin)
-set(SHARE_DIR share/navit)
-set(LOCALE_DIR share)
-set(IMAGE_DIR share/navit/xpm)
-set(LIB_DIR lib)
 
 ### Platform specific settings
 if(WIN32 OR WINCE)
