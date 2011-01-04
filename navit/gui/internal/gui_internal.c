@@ -425,6 +425,7 @@ static void gui_internal_apply_config(struct gui_priv *this);
 
 static struct widget* gui_internal_widget_table_new(struct gui_priv * this, enum flags flags, int buttons);
 static struct widget * gui_internal_widget_table_row_new(struct gui_priv * this, enum flags flags);
+static void gui_internal_table_hide_rows(struct table_data * table_data);
 static void gui_internal_table_render(struct gui_priv * this, struct widget * w);
 static void gui_internal_table_pack(struct gui_priv * this, struct widget * w);
 static void gui_internal_table_button_next(struct gui_priv * this, struct widget * wm, void *data);
