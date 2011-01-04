@@ -1,10 +1,4 @@
-# Create a library called "Hello" which includes the source file "hello.cxx".
-# The extension is already found. Any number of sources could be listed here.
-
-add_definitions( -DMODULE=graphics_qt_qpainter )
-
+module_add_library(graphics_qt_qpainter ${CMAKE_CURRENT_BINARY_DIR}/graphics_qt_qpainter.moc graphics_qt_qpainter.cpp)
 QT4_GENERATE_MOC(graphics_qt_qpainter.cpp ${CMAKE_CURRENT_BINARY_DIR}/graphics_qt_qpainter.moc)
-
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-add_library(graphics_qt_qpainter ${MODULE_BUILD_TYPE} ${CMAKE_CURRENT_BINARY_DIR}/graphics_qt_qpainter.moc graphics_qt_qpainter.cpp  ) 
 
