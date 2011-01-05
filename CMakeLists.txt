@@ -127,7 +127,7 @@ if (QT_FOUND)
       if (QT_QTDECLARATIVE_FOUND AND QT_QTXML_FOUND)
          set_with_reason(gui/qml "Qt Declarative found" TRUE ${QT_LIBRARIES})
       endif()
-      
+
       if (QT_QTSVG_FOUND)
          set(HAVE_QT_SVG 1)
       elseif( USE_SVG AND graphics/qt_qpainter)
@@ -172,7 +172,7 @@ endif(HAVE_LIBGPS)
 
 if (GYPSY_FOUND)
    set_with_reason(vehicle/gypsy "gypsy lib found" TRUE)
-endif(GYPSY_FOUND)   
+endif(GYPSY_FOUND)
 
 if(DBusGLib_FOUND)
    include_directories(${DBusGLib_INCLUDE_DIRS})
@@ -215,6 +215,7 @@ add_feature(USE_PLUGINS "default" TRUE)
 add_feature(USE_ROUTING "default" TRUE)
 add_feature(USE_SVG "default" TRUE)
 add_feature(SVG2PNG "default" TRUE)
+add_feature(SAMPLE_MAP "default" TRUE)
 
 IF(NOT svg2png_scaling)
    set(svg2png_scaling 32 48 96)
@@ -225,7 +226,7 @@ ENDIF()
 IF(NOT svg2png_scaling_nav)
    set(svg2png_scaling_nav 32 48 96)
 ENDIF()
-   
+
 add_feature(DBUS_USE_SYSTEM_BUS "default" FALSE)
 add_feature(BUILD_MAPTOOL "default" TRUE)
 
@@ -247,7 +248,7 @@ if(WIN32 OR WINCE)
    set_with_reason(USE_PLUGINS "win32: currently not supported" FALSE)
 
    set(HAVE_API_WIN32_BASE 1)
-   
+
    # Image stuff
    if(NOT graphics/qt_qpainter)
       set_with_reason(USE_SVG "win32: SVGs currently not supported" FALSE)
@@ -272,7 +273,7 @@ if(WIN32 OR WINCE)
    add_plugin(intl_cmake "windows detected" TRUE)
    set(USE_LIBGNUINTL TRUE)
 endif()
-if (WIN32) 
+if (WIN32)
    set(HAVE_API_WIN32 1)
    list(APPEND NAVIT_LIBS winmm)
 endif()
@@ -295,6 +296,15 @@ if (SVG2PNG)
       set_with_reason(SVG2PNG "no converter found" FALSE)
    endif(NOT IMAGE_CONVERTER)
 endif(SVG2PNG)
+
+find_program(BZCAT NAMES bzcat)
+if (SAMPLE_MAP)
+   if(CMAKE_CROSSCOMPILING)
+      cfg_feature(SAMPLE_MAP "not supported for crosscompiling" FALSE)
+   elseif(NOT BZCAT)
+      cfg_feature(SAMPLE_MAP "bzcat missing" FALSE)
+   endif(CMAKE_CROSSCOMPILING)
+endif(SAMPLE_MAP)
 
 foreach(PLUMO ${ALL_PLUGINS} ${ALL_MODULES} ${ALL_FEATURES})
    set(OLDVALUE ${${PLUMO}})
@@ -334,4 +344,4 @@ if (GETTEXT_FOUND)
 endif(GETTEXT_FOUND)
 
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/locale DESTINATION ${LOCALE_DIR})
- 
+

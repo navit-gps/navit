@@ -152,6 +152,7 @@ set_target_properties(navit PROPERTIES COMPILE_DEFINITIONS "MODULE=${MODULE_NAME
 
 add_subdirectory (maptool)
 add_subdirectory (xpm)
+add_subdirectory (maps)
 
 install(TARGETS navit
         DESTINATION ${BIN_DIR}
