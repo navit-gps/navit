@@ -339,6 +339,14 @@ image_new (struct graphics_priv *gr, struct graphics_image_methods *meth,
       g_hash_table_insert(hImageData,g_strdup(path),&image_error);
       return NULL;
     }
+
+    if (FreeImage_GetBPP (image) == 64) {
+        FIBITMAP *image2; 
+        image2 = FreeImage_ConvertTo32Bits(image);
+        FreeImage_Unload(image);
+        image = image2;
+    }
+
   gi = g_new0 (struct graphics_image_priv, 1);
 
   width = FreeImage_GetWidth (image);
@@ -379,12 +387,6 @@ image_new (struct graphics_priv *gr, struct graphics_image_methods *meth,
 		transparent ? 0 : (aPixel.rgbBlue);
 	      data[4 * width * i + 4 * j + 3] = transparent ? 0 : 255;
 
-	    }
-	  else if (FreeImage_GetBPP (image) == 64)
-	    {
-	      //FreeImage_GetPixelColor does not handle 64bits/pixel images correctly
-              g_hash_table_insert(hImageData,g_strdup(path),&image_error);
-	      return NULL;
 	    }
 	}
     }
