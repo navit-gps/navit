@@ -55,6 +55,8 @@ navit/data/mg/block.c
 navit/data/mg/map.c
 navit/data/textfile/textfile.c
 navit/data/textfile/textfile.h
+navit/data/csv/csv.c
+navit/data/csv/csv.h
 navit/data/binfile/binfile.c
 navit/data/garmin_img/garmin_img.c
 navit/data/garmin/gentypes.c
