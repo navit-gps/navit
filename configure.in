@@ -60,6 +60,7 @@ map_filter=yes; map_filter_reason=default
 map_mg=yes; map_mg_reason=default
 map_shapefile=yes; map_shapefile_reason=default
 map_textfile=yes; map_textfile_reason=default
+map_csv=yes; map_csv_reason=default
 osd_core=yes; osd_core_reason=default
 plugin_pedestrian=no; plugin_pedestrian_reason=default
 routing=yes; routing_reason=default
@@ -916,6 +917,9 @@ AM_CONDITIONAL(MAP_SHAPEFILE, test "x${map_shapefile}" = "xyes")
 # textfile
 AC_ARG_ENABLE(map-textfile, [  --disable-map-textfile            disable map textfile], map_textfile=$enableval;map_textfile_reason="configure parameter")
 AM_CONDITIONAL(MAP_TEXTFILE, test "x${map_textfile}" = "xyes")
+# csv
+AC_ARG_ENABLE(map-csv, [  --disable-map-csv            disable map csv], map_csv=$enableval;map_csv_reason="configure parameter")
+AM_CONDITIONAL(MAP_CSV, test "x${map_csv}" = "xyes")
 
 ## osd
 # core
@@ -1081,6 +1085,7 @@ navit/binding/dbus/Makefile
 navit/map/Makefile
 navit/map/mg/Makefile
 navit/map/textfile/Makefile
+navit/map/csv/Makefile
 navit/map/shapefile/Makefile
 navit/map/filter/Makefile
 navit/map/binfile/Makefile
@@ -1234,6 +1239,7 @@ echo "  filter:	           $map_filter ($map_filter_reason)"
 echo "  mg:                $map_mg ($map_mg_reason)"
 echo "  shapefile:         $map_shapefile ($map_shapefile_reason)"
 echo "  textfile:          $map_textfile ($map_textfile_reason)"
+echo "  csv:          $map_csv ($map_csv_reason)"
 
 
 echo "Bindings:"

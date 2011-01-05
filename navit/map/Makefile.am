@@ -17,5 +17,8 @@ endif
 if MAP_TEXTFILE
   SUBDIRS+=textfile
 endif
+if MAP_CSV
+  SUBDIRS+=csv
+endif
 
-DIST_SUBDIRS=mg textfile binfile garmin shapefile filter
+DIST_SUBDIRS=mg textfile csv binfile garmin shapefile filter
