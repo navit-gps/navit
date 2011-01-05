@@ -1582,12 +1582,12 @@ osm_end_node(FILE *out)
 					if (result && result->countryid != lookup->countryid) {
 						osm_warning("node",nodeid,0,"conflict for %s %s country %d vs %d\n", attr_strings[attr_string_label], debug_attr_buffer, lookup->countryid, result->countryid);
 						conflict=1;
-					} else
-						result=lookup;
+					}
+					result=lookup;
 				}
 				buf=NULL;
 			}
-			if (result && !conflict) {
+			if (result) {
 				if (!result->file) {
 					char *name=g_strdup_printf("country_%d.bin.unsorted", result->countryid);
 					result->file=fopen(name,"wb");
