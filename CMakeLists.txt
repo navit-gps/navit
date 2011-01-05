@@ -211,10 +211,11 @@ add_module(vehicle/maemo "Default" FALSE)
 add_module(vehicle/wince "Default" FALSE)
 
 # other features
-set(USE_PLUGINS TRUE)
-set(USE_ROUTING TRUE)
-set(USE_SVG TRUE)
-set(SVG2PNG TRUE)
+add_feature(USE_PLUGINS "default" TRUE)
+add_feature(USE_ROUTING "default" TRUE)
+add_feature(USE_SVG "default" TRUE)
+add_feature(SVG2PNG "default" TRUE)
+
 IF(NOT svg2png_scaling)
    set(svg2png_scaling 32 48 96)
 ENDIF()
@@ -225,8 +226,9 @@ IF(NOT svg2png_scaling_nav)
    set(svg2png_scaling_nav 32 48 96)
 ENDIF()
    
-set(DBUS_USE_SYSTEM_BUS FALSE)
-set(BUILD_MAPTOOL TRUE)
+add_feature(DBUS_USE_SYSTEM_BUS "default" FALSE)
+add_feature(BUILD_MAPTOOL "default" TRUE)
+
 
 ### Platform specific settings
 if(WIN32 OR WINCE)
@@ -283,15 +285,6 @@ endif()
 
 set(LOCALEDIR "${LOCALE_DIR}/locale")
 
-foreach(PLUMO ${ALL_PLUGINS} ${ALL_MODULES} USE_PLUGINS USE_ROUTING BUILD_MAPTOOL USE_SVG SVG2PNG DBUS_USE_SYSTEM_BUS)
-   set(OLDVALUE ${${PLUMO}})
-   OPTION(${PLUMO} "Enable/Disable module/plugin/support" ${${PLUMO}})
-   if ( (OLDVALUE AND NOT ${PLUMO}) OR (${PLUMO} AND NOT OLDVALUE))
-      set(${PLUMO}_REASON "User defined")
-   endif()
-endforeach()
-
-
 # SVG2PNG conversion
 set (IMAGE_CONVERTER_PROGS rsvg-convert ksvgtopng ksvgtopng4)
 find_program(IMAGE_CONVERTER NAMES ${IMAGE_CONVERTER_PROGS})
@@ -302,6 +295,14 @@ if (SVG2PNG)
       set_with_reason(SVG2PNG "no converter found" FALSE)
    endif(NOT IMAGE_CONVERTER)
 endif(SVG2PNG)
+
+foreach(PLUMO ${ALL_PLUGINS} ${ALL_MODULES} ${ALL_FEATURES})
+   set(OLDVALUE ${${PLUMO}})
+   OPTION(${PLUMO} "Enable/Disable module/plugin/support" ${${PLUMO}})
+   if ( (OLDVALUE AND NOT ${PLUMO}) OR (${PLUMO} AND NOT OLDVALUE))
+      set(${PLUMO}_REASON "User defined")
+   endif()
+endforeach()
 
 # Plugins
 if(USE_PLUGINS)

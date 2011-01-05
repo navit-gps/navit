@@ -66,6 +66,15 @@ foreach ( MODULE_PATH ${ALL_MODULES})
 endforeach()
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/builtin.c.in ${CMAKE_CURRENT_BINARY_DIR}/builtin.c)
 
+LIST(SORT ALL_FEATURES)
+message("\n--->>> Features")
+foreach ( FEATURE ${ALL_FEATURES})
+   if ( ${FEATURE} )
+      message("Enabled   ${FEATURE} ( ${${FEATURE}_REASON} )")
+   else()
+      message("Disabled  ${FEATURE} ( ${${FEATURE}_REASON} )")
+   endif()
+endforeach()
 
 message( "")
 
