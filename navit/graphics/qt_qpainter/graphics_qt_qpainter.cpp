@@ -979,8 +979,10 @@ static void draw_mode(struct graphics_priv *gr, enum draw_mode_num mode)
 #endif
 		}
 #endif
+#if QT_VERSION >= 0x040000
 		if (!gr->parent)
 			QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents|QEventLoop::ExcludeSocketNotifiers|QEventLoop::DeferredDeletion|QEventLoop::X11ExcludeTimers);
+#endif
 	}
 #if QT_VERSION >= 0x040000
 	if (mode == draw_mode_end_lazy)
