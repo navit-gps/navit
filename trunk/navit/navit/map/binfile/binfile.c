@@ -884,9 +884,9 @@ map_binfile_handle_redirect(struct map_priv *m)
 	m->redirect=1;
 	dbg(0,"redirected from %s to %s\n",m->url,location);
 	g_free(m->url);
+	m->url=g_strdup(location);
 	file_destroy(m->http);
 	m->http=NULL;
-	m->url=g_strdup(location);
 
 	return 1;
 }
@@ -1400,12 +1400,84 @@ map_rect_new_binfile_int(struct map_priv *map, struct map_selection *sel)
 	return mr;
 }
 
+static void
+tile_bbox(char *tile, int len, struct coord_rect *r)
+{
+        struct coord c;
+	int overlap=1;
+        int xo,yo;
+	struct coord_rect world_bbox = {
+	        { -20000000,  20000000}, /* lu */
+	        {  20000000, -20000000}, /* rl */
+	};
+        *r=world_bbox;
+        while (len) {
+                c.x=(r->lu.x+r->rl.x)/2;
+                c.y=(r->lu.y+r->rl.y)/2;
+                xo=(r->rl.x-r->lu.x)*overlap/100;
+                yo=(r->lu.y-r->rl.y)*overlap/100;
+                switch (*tile) {
+                case 'a':
+                        r->lu.x=c.x-xo;
+                        r->rl.y=c.y-yo;
+                        break;
+                case 'b':
+                        r->rl.x=c.x+xo;
+                        r->rl.y=c.y-yo;
+                        break;
+                case 'c':
+                        r->lu.x=c.x-xo;
+                        r->lu.y=c.y+yo;
+                        break;
+                case 'd':
+                        r->rl.x=c.x+xo;
+                        r->lu.y=c.y+yo;
+                        break;
+                default:
+                        return;
+                }
+                tile++;
+                len--;
+        }
+}
+
+static int
+map_download_selection_check(struct zip_cd *cd, struct map_selection *sel)
+{
+	struct coord_rect cd_rect;
+	if (cd->zipcunc)
+		return 0;
+	tile_bbox((char *)(cd+1), cd->zipcfnl, &cd_rect);
+	while (sel) {
+		if (coord_rect_overlap(&cd_rect, &sel->u.c_rect))
+			return 1;
+		sel=sel->next;
+	}
+	return 0;
+}
+
+static void
+map_download_selection(struct map_priv *m, struct map_rect_priv *mr, struct map_selection *sel)
+{
+	int i;
+	struct zip_cd *cd;
+	for (i = 0 ; i < m->zip_members ; i++) {
+		cd=binfile_read_cd(m, m->cde_size*i, -1);
+		if (map_download_selection_check(cd, sel)) 
+			download(m, mr, cd, i, 0, 0, 0);
+		file_data_free(m->fi, (unsigned char *)cd);
+	}
+}
+
 static struct map_rect_priv *
 map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 {
 	struct map_rect_priv *mr=map_rect_new_binfile_int(map, sel);
 	struct tile t={};
 	dbg(1,"zip_members=%d\n", map->zip_members);
+	if (map->url && map->fi && sel && sel->order == 255) {
+		map_download_selection(map, mr, sel);
+	}
 	if (map->eoc)
 		mr->status=1;
 	else {
