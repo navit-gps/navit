@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include "maptool.h"
 
-static int
+int
 osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size)
 {
 	int len=strlen(attribute);
@@ -46,7 +46,7 @@ static struct entity {
 	{"&#62;",'>'},
 };
 
-static void
+void
 osm_xml_decode_entities(char *buffer)
 {
 	char *pos=buffer;

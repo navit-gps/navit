@@ -232,7 +232,6 @@ void flush_nodes(int final);
 void sort_countries(int keep_tmpfiles);
 void process_turn_restrictions(FILE *in, FILE *coords, FILE *ways, FILE *ways_index, FILE *out);
 int resolve_ways(FILE *in, FILE *out);
-int map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
 int map_find_intersections(FILE *in, FILE *out, FILE *out_index, FILE *out_graph, FILE *out_coastline, int final);
 void write_countrydir(struct zip_info *zip_info);
 void remove_countryfiles(void);
@@ -243,6 +242,11 @@ int map_collect_data_osm_db(char *dbstr, FILE *out_ways, FILE *out_nodes, FILE *
 
 /* osm_protobuf.c */
 int map_collect_data_osm_protobuf(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+
+/* osm_xml.c */
+int osm_xml_get_attribute(char *xml, char *attribute, char *buffer, int buffer_size);
+int map_collect_data_osm(FILE *in, FILE *out_ways, FILE *out_nodes, FILE *out_turn_restrictions, FILE *out_boundaries);
+
 
 /* sourcesink.c */
 
