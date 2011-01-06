@@ -59,8 +59,8 @@ struct map_download {
 	struct map_priv *m;
 	struct map_rect_priv *mr;
 	struct file *http,*file;
-	int zipfile,toffset,tlength,progress,read;
-	long long offset,cd1offset,size;
+	int zipfile,toffset,tlength,progress,read,dl_size;
+	long long offset,start_offset,cd1offset,size;
 	struct zip64_eoc *zip64_eoc;
 	struct zip64_eocl *zip64_eocl;
 	struct zip_eoc *zip_eoc;
@@ -71,7 +71,7 @@ struct map_priv {
 	int id;
 	char *filename;
 	char *cachedir;
-	struct file *fi;
+	struct file *fi,*http;
 	struct file **fis;
 	struct zip_cd *index_cd;
 	int index_offset;
@@ -93,6 +93,7 @@ struct map_priv {
 	char *progress;
 	struct callback_list *cbl;
 	struct map_download *download;
+	int redirect;
 };
 
 struct map_rect_priv {
@@ -869,53 +870,101 @@ zipfile_to_tile(struct map_priv *m, struct zip_cd *cd, struct tile *t)
 	return t->start != NULL;
 }
 
+
+static int
+map_binfile_handle_redirect(struct map_priv *m)
+{
+	char *location=file_http_header(m->http, "location");
+	if (!location) {
+		m->redirect=0;
+		return 0;
+	}
+	if (m->redirect) 
+		return 0;
+	m->redirect=1;
+	dbg(0,"redirected from %s to %s\n",m->url,location);
+	g_free(m->url);
+	file_destroy(m->http);
+	m->http=NULL;
+	m->url=g_strdup(location);
+
+	return 1;
+}
+
+static int
+map_binfile_http_request(struct map_priv *m, struct attr **attrs)
+{
+	if (!m->http) {
+		m->http=file_create(NULL, attrs);
+	} else {
+		file_request(m->http, attrs);
+	}
+	return 1;
+}
+
+
 static long long
 map_binfile_download_size(struct map_priv *m)
 {
 	struct attr url={attr_url};
 	struct attr http_method={attr_http_method};
-	struct attr *attrs[3];
+	struct attr persistent={attr_persistent};
+	struct attr *attrs[4];
 	int size_ret;
 	long long ret;
-	struct file *http;
 	void *data;
 
-	attrs[0]=&url;
-	url.u.str=m->url;
-	attrs[1]=&http_method;
-	http_method.u.str="HEAD";
-	attrs[2]=NULL;
+	do {
+		attrs[0]=&url;
+		url.u.str=m->url;
+		attrs[1]=&http_method;
+		http_method.u.str="HEAD";
+		persistent.u.num=1;
+		attrs[2]=&persistent;
+		attrs[3]=NULL;
 
-	http=file_create(NULL, attrs);
-	if (!http)
-		return 0;
-	data=file_data_read_special(http, 4096, &size_ret);
-	g_free(data);
-	if (size_ret < 0) 
-		return 0;
-	ret=file_size(http);
-	file_destroy(http);
+		map_binfile_http_request(m, attrs);
+		data=file_data_read_special(m->http, 0, &size_ret);
+		g_free(data);
+		if (size_ret < 0) 
+			return 0;
+	} while (map_binfile_handle_redirect(m));
+	
+	ret=file_size(m->http);
 	return ret;
 }
+
+
+static int
+map_binfile_http_close(struct map_priv *m)
+{
+	if (m->http) {
+		file_destroy(m->http);
+		m->http=NULL;
+	}
+	return 1;
+}
+
 
 static struct file *
 map_binfile_http_range(struct map_priv *m, long long offset, int size)
 {
-	struct file *http;
-	struct attr *attrs[3];
+	struct attr *attrs[4];
 	struct attr url={attr_url};
 	struct attr http_header={attr_http_header};
-	
+	struct attr persistent={attr_persistent};
+
+	persistent.u.num=1;	
 	attrs[0]=&url;
 	attrs[1]=&http_header;
-	attrs[2]=NULL;
+	attrs[2]=&persistent;
+	attrs[3]=NULL;
 
 	url.u.str=m->url;
 	http_header.u.str=g_strdup_printf("Range: bytes=%Ld-%Ld",offset, offset+size-1);
-
-	http=file_create(NULL, attrs);
+	map_binfile_http_request(m, attrs);
 	g_free(http_header.u.str);
-	return http;
+	return m->http;
 }
 
 static unsigned char *
@@ -930,7 +979,6 @@ map_binfile_download_range(struct map_priv *m, long long offset, int size)
 		g_free(ret);
 		return NULL;
 	}
-	file_destroy(http);
 	return ret;
 }
 
@@ -945,64 +993,78 @@ download_cd(struct map_download *download)
 	return cd;
 }
 
+static int
+download_request(struct map_download *download)
+{
+	struct attr url={attr_url};
+	struct attr http_header={attr_http_header};
+	struct attr persistent={attr_persistent};
+	struct attr *attrs[4];
+
+	attrs[0]=&url;
+	persistent.u.num=1;
+	attrs[1]=&persistent;
+	attrs[2]=NULL;
+	if (strchr(download->m->url,'?')) {
+		url.u.str=g_strdup_printf("%smemberid=%d",download->m->url,download->zipfile);
+		download->dl_size=-1;
+	} else {
+		long long offset=binfile_cd_offset(download->cd_copy);
+		int size=download->cd_copy->zipcsiz+sizeof(struct zip_lfh)+download->cd_copy->zipcfnl;
+		url.u.str=g_strdup(download->m->url);
+		http_header.u.str=g_strdup_printf("Range: bytes=%Ld-%Ld",offset,offset+size-1);
+		attrs[2]=&http_header;
+		attrs[3]=NULL;
+		download->dl_size=size;
+	}
+	dbg(0,"encountered missing tile %d %s(%s), Downloading %d bytes at %Ld\n",download->zipfile, url.u.str,(char *)(download->cd_copy+1), download->dl_size, download->offset);
+	map_binfile_http_request(download->m, attrs);
+	g_free(url.u.str);
+	download->http=download->m->http;
+	return 1;
+}
+
 
 static int
 download_start(struct map_download *download)
 {
-	char tilename[download->cd->zipcfnl+1];
 	long long offset;
 	struct zip_eoc *eoc;
-	struct zip_cd_ext *ext;
-	struct attr url={attr_url};
-	struct attr http_header={attr_http_header};
-	struct attr *attrs[3];
 
 	if (!download->cd->zipcensig) {
 		download->cd_copy=download_cd(download);
 	} else {
 		download->cd_copy=g_malloc(download->m->cde_size);
 		memcpy(download->cd_copy, download->cd, download->m->cde_size);
-		file_data_free(download->file, (unsigned char *)download->cd);
 	}
+	file_data_free(download->file, (unsigned char *)download->cd);
 	download->cd=NULL;
-	strncpy(tilename,(char *)(download->cd_copy+1),download->cd_copy->zipcfnl);
-	tilename[download->cd_copy->zipcfnl]='\0';
-	attrs[0]=&url;
-	attrs[1]=NULL;
-	if (strchr(download->m->url,'?')) 
-		url.u.str=g_strdup_printf("%smemberid=%d",download->m->url,download->zipfile);
-	else {
-		long long offset=binfile_cd_offset(download->cd_copy);
-		int size=download->cd_copy->zipcsiz+sizeof(struct zip_lfh)+download->cd_copy->zipcfnl;
-		url.u.str=g_strdup(download->m->url);
-		http_header.u.str=g_strdup_printf("Range: bytes=%Ld-%Ld",offset,offset+size-1);
-		attrs[1]=&http_header;
-		attrs[2]=NULL;
-	}
 	offset=file_size(download->file);
 	offset-=sizeof(struct zip_eoc);
 	eoc=(struct zip_eoc *)file_data_read(download->file, offset, sizeof(struct zip_eoc));
 	download->zip_eoc=g_malloc(sizeof(struct zip_eoc));
 	memcpy(download->zip_eoc, eoc, sizeof(struct zip_eoc));
 	file_data_free(download->file, (unsigned char *)eoc);
-	dbg(0,"encountered missing tile %d %s(%s), downloading at %Ld\n",download->zipfile, url.u.str,tilename,offset);
-	ext=binfile_cd_ext(download->cd_copy);
-	if (ext) 
-		ext->zipofst=offset;
-	else
-		download->cd_copy->zipofst=offset;
-	download->http=file_create(NULL, attrs);
-	download->offset=offset;
-	g_free(url.u.str);
-	return 1;
+	download->start_offset=download->offset=offset;
+	return download_request(download);
 }
 
 static int
 download_download(struct map_download *download)
 {
-	int size=64*1024,size_ret,tile_size;
+	int size=64*1024,size_ret;
 	unsigned char *data;
+	if (download->dl_size != -1 && size > download->dl_size)
+		size=download->dl_size;
+	if (!size)
+		return 1;
 	data=file_data_read_special(download->http, size, &size_ret);
+	if (!download->read && map_binfile_handle_redirect(download->m)) {
+		g_free(data);
+		download_request(download);
+		return 0;
+	}
+
 	dbg(1,"got %d bytes writing at offset %Ld\n",size_ret,download->offset);
 	if (size_ret <= 0) {
 		g_free(data);
@@ -1011,9 +1073,9 @@ download_download(struct map_download *download)
 	file_data_write(download->file, download->offset, size_ret, data);
 	download->offset+=size_ret;
 	download->read+=size_ret;
-	tile_size=file_size(download->http);
-	if (tile_size)
-		download->progress=download->read*100/tile_size;
+	download->dl_size-=size_ret;
+	if (download->dl_size != -1)
+		download->progress=download->read*100/(download->read+download->dl_size);
 	return 0;
 }
 
@@ -1022,9 +1084,15 @@ download_finish(struct map_download *download)
 {
 	struct zip_lfh *lfh;
 	char *lfh_filename;
-	
+	struct zip_cd_ext *ext;
+
 	file_data_write(download->file, download->offset, sizeof(struct zip_eoc), (void *)download->zip_eoc);
-	lfh=(struct zip_lfh *)(file_data_read(download->file,binfile_cd_offset(download->cd_copy), sizeof(struct zip_lfh)));
+	lfh=(struct zip_lfh *)(file_data_read(download->file,download->start_offset, sizeof(struct zip_lfh)));
+	ext=binfile_cd_ext(download->cd_copy);
+	if (ext) 
+		ext->zipofst=download->start_offset;
+	else
+		download->cd_copy->zipofst=download->start_offset;
 	download->cd_copy->zipcsiz=lfh->zipsize;
 	download->cd_copy->zipcunc=lfh->zipuncmp;
 	download->cd_copy->zipccrc=lfh->zipcrc;
@@ -1033,6 +1101,7 @@ download_finish(struct map_download *download)
 	file_data_free(download->file,(void *)lfh_filename);
 	file_data_free(download->file,(void *)lfh);
 	file_data_write(download->file, download->m->eoc->zipeofst + download->zipfile*download->m->cde_size, binfile_cd_extra(download->cd_copy)+sizeof(struct zip_cd), (void *)download->cd_copy);
+
 	g_free(download->cd_copy);
 	download->cd=(struct zip_cd *)(file_data_read(download->file, download->m->eoc->zipeofst + download->zipfile*download->m->cde_size, download->m->cde_size));
 	cd_to_cpu(download->cd);
@@ -1111,7 +1180,7 @@ download_directory_do(struct map_download *download)
 static int
 download_directory_finish(struct map_download *download)
 {
-	file_destroy(download->http);
+	download->http=NULL;
 	return 1;
 }
 
@@ -1320,6 +1389,7 @@ map_rect_new_binfile_int(struct map_priv *map, struct map_selection *sel)
 	dbg(1,"map_rect_new_binfile\n");
 	if (!map->fi && !map->url)
 		return NULL;
+	map_binfile_http_close(map);
 	mr=g_new0(struct map_rect_priv, 1);
 	mr->m=map;
 	mr->sel=sel;
@@ -1422,6 +1492,7 @@ map_rect_destroy_binfile(struct map_rect_priv *mr)
 	if (mr->tiles[0].fi && mr->tiles[0].start)
 		file_data_free(mr->tiles[0].fi, (unsigned char *)(mr->tiles[0].start));
 	g_free(mr->url);
+	map_binfile_http_close(mr->m);
         g_free(mr);
 }
 
