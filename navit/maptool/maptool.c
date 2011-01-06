@@ -346,12 +346,10 @@ int main(int argc, char **argv)
 
     // initialize plugins and OSM mappings
 	maptool_init(rule_file);
-#if 0
 	if (protobufdb_operation) {
 		osm_protobufdb_load(input_file, protobufdb);
 		return 0;
 	}
-#endif
 
     // input from an OSM file
 	if (input == 0) {
