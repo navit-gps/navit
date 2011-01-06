@@ -49,6 +49,7 @@
 #include "osd.h"
 #include "speech.h"
 #include "event.h"
+#include "mapset.h"
 
 struct odometer;
 
@@ -1239,6 +1240,262 @@ osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct
 	return (struct osd_priv *) this;
 }
 
+enum camera_t {CAM_FIXED=1, CAM_TRAFFIC_LAMP, CAM_RED, CAM_SECTION, CAM_MOBILE, CAM_RAIL, CAM_TRAFFIPAX};
+char*camera_t_strs[] = {"None","Fix","Traffic lamp","Red detect","Section","Mobile","Rail","Traffipax(non persistent)"};
+char*camdir_t_strs[] = {"All dir.","UNI-dir","BI-dir"};
+enum cam_dir_t {CAMDIR_ALL=0, CAMDIR_ONE, CAMDIR_TWO};
+
+struct osd_speed_cam_entry {
+	double lon;
+	double lat;
+	enum camera_t cam_type;
+	int speed_limit;
+	enum cam_dir_t cam_dir;
+	int direction;
+};
+
+enum eAnnounceState {eNoWarn=0,eWarningTold=1};
+
+struct osd_speed_cam {
+  struct osd_item item;
+  int width;
+  struct graphics_gc *white,*orange;
+  struct graphics_gc *red;
+  struct color idle_color; 
+
+  int announce_on;
+  enum eAnnounceState announce_state;
+  char *text;                 //text of label attribute for this osd
+};
+
+static double 
+angle_diff(firstAngle,secondAngle)
+{
+        double difference = secondAngle - firstAngle;
+        while (difference < -180) difference += 360;
+        while (difference > 180) difference -= 360;
+        return difference;
+}
+
+static void
+osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehicle *v)
+{
+  struct attr position_attr,vehicle_attr;
+  struct point p, bbox[4];
+  struct attr speed_attr;
+  struct vehicle* curr_vehicle = v;
+  struct coord curr_coord;
+  struct coord cam_coord;
+  struct mapset* ms;
+  if(navit) {
+    navit_get_attr(navit, attr_vehicle, &vehicle_attr, NULL);
+  }
+  else {
+    return;
+  }
+  if (vehicle_attr.u.vehicle) {
+    curr_vehicle = vehicle_attr.u.vehicle;
+  }
+
+  if(0==curr_vehicle)
+    return;
+
+  if(!(ms=navit_get_mapset(navit))) {
+    return;
+  }
+  int ret_attr = 0;
+
+  ret_attr = vehicle_get_attr(curr_vehicle, attr_position_coord_geo,&position_attr, NULL);
+  if(0==ret_attr) {
+    return;
+  }
+
+  osd_std_draw(&this_->item);
+
+  transform_from_geo(projection_mg, position_attr.u.coord_geo, &curr_coord);
+
+  double dCurrDist = -1;
+  int dir_idx = -1;
+  int dir = -1;
+  int spd = -1;
+  int idx = -1;
+  double speed = -1;
+
+  int dst=2000;
+  int dstsq=dst*dst;
+  struct map_selection sel;
+  struct map_rect *mr;
+  struct mapset_handle *msh;
+  struct map *map;
+  struct item *item;
+
+  sel.next=NULL;
+  sel.order=18;
+  sel.range.min=type_tec_common;
+  sel.range.max=type_tec_common;
+  sel.u.c_rect.lu.x=curr_coord.x-dst;
+  sel.u.c_rect.lu.y=curr_coord.y+dst;
+  sel.u.c_rect.rl.x=curr_coord.x+dst;
+  sel.u.c_rect.rl.y=curr_coord.y-dst;
+  
+  msh=mapset_open(ms);
+  while ((map=mapset_next(msh, 1))) {
+    mr=map_rect_new(map, &sel);
+    if (!mr)
+      continue;
+    while ((item=map_rect_get_item(mr))) {
+      struct coord cn;
+      if (item->type == type_tec_common && item_coord_get(item, &cn, 1)) {
+        int dist=transform_distance_sq(&cn, &curr_coord);
+        if (dist < dstsq) {  
+          dstsq=dist;
+          dCurrDist = sqrt(dist);
+          cam_coord = cn;
+          struct attr tec_attr;
+          idx = -1;
+          if(item_attr_get(item,attr_tec_type,&tec_attr)) {
+            idx = tec_attr.u.num;
+          }
+          dir_idx = -1;
+          if(item_attr_get(item,attr_tec_dirtype,&tec_attr)) {
+            dir_idx = tec_attr.u.num;
+          }
+          dir= 0;
+          if(item_attr_get(item,attr_tec_direction,&tec_attr)) {
+            dir = tec_attr.u.num;
+          }
+          spd= 0;
+          if(item_attr_get(item,attr_maxspeed,&tec_attr)) {
+            spd = tec_attr.u.num;
+          }
+        }
+      }
+    }
+    map_rect_destroy(mr);
+  }
+  mapset_close(msh);
+
+  dCurrDist = transform_distance(projection_mg, &curr_coord, &cam_coord);
+  ret_attr = vehicle_get_attr(curr_vehicle,attr_position_speed,&speed_attr, NULL);
+  if(0==ret_attr) {
+    return;
+  }
+  speed = *speed_attr.u.numd;
+  if(dCurrDist <= speed*750.0/130.0) {  //at speed 130 distance limit is 750m
+    if(this_->announce_state==eNoWarn && this_->announce_on) {
+      this_->announce_state=eWarningTold; //warning told
+      navit_say(navit, _("Look out! Camera!"));
+    }
+  }
+  else {
+    this_->announce_state=eNoWarn;
+  }
+
+  char buffer [64+1]="";
+  char buffer2[64+1]="";
+  buffer [0] = 0;
+  buffer2[0] = 0;
+  if(this_->text) {
+    str_replace(buffer,this_->text,"${distance}",format_distance(dCurrDist,""));
+    str_replace(buffer2,buffer,"${camera_type}",camera_t_strs[idx]);
+    str_replace(buffer,buffer2,"${camera_dir}",camdir_t_strs[dir_idx]);
+    char dir_str[16];
+    char spd_str[16];
+    sprintf(dir_str,"%d",dir);
+    sprintf(spd_str,"%d",spd);
+    str_replace(buffer2,buffer,"${direction}",dir_str);
+    str_replace(buffer,buffer2,"${speed_limit}",spd_str);
+
+  graphics_get_text_bbox(this_->item.gr, this_->item.font, buffer, 0x10000, 0, bbox, 0);
+  p.x=(this_->item.w-bbox[2].x)/2;
+  p.y = this_->item.h-this_->item.h/10;
+  struct graphics_gc *curr_color = this_->orange;
+  struct attr attr_dir;
+  //tolerance is +-20 degrees
+  if(
+    dir_idx==CAMDIR_ONE && 
+    dCurrDist <= speed*750.0/130.0 && 
+    vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL) && 
+    fabs(angle_diff(dir,*attr_dir.u.numd))<=20 ) {
+      curr_color = this_->red;
+  }
+  //tolerance is +-20 degrees in both directions
+  else if(
+    dir_idx==CAMDIR_TWO && 
+    dCurrDist <= speed*750.0/130.0 && 
+    vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL) && 
+    (fabs(angle_diff(dir,*attr_dir.u.numd))<=20 || fabs(angle_diff(dir+180,*attr_dir.u.numd))<=20 )) {
+      curr_color = this_->red;
+  }
+        else if(dCurrDist <= speed*750.0/130.0) { 
+      curr_color = this_->red;
+        }
+  graphics_draw_text(this_->item.gr, curr_color, NULL, this_->item.font, buffer, &p, 0x10000, 0);
+    }
+  graphics_draw_mode(this_->item.gr, draw_mode_end);
+}
+
+static void
+osd_speed_cam_init(struct osd_speed_cam *this, struct navit *nav)
+{
+  osd_set_std_graphic(nav, &this->item, (struct osd_priv *)this);
+
+  this->red = graphics_gc_new(this->item.gr);
+  graphics_gc_set_foreground(this->red, &(struct color) {0xffff,0x0000,0x0000,0xffff});
+  graphics_gc_set_linewidth(this->red, this->width);
+
+  this->orange = graphics_gc_new(this->item.gr);
+  graphics_gc_set_foreground(this->orange, &this->idle_color);
+  graphics_gc_set_linewidth(this->orange, this->width);
+
+  this->white = graphics_gc_new(this->item.gr);
+  graphics_gc_set_foreground(this->white, &this->item.text_color);
+  graphics_gc_set_linewidth(this->white, this->width);
+
+
+  graphics_gc_set_linewidth(this->item.graphic_fg_white, this->width);
+
+  navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_cam_draw), attr_position_coord_geo, this));
+
+}
+
+static struct osd_priv *
+osd_speed_cam_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
+{
+  struct osd_speed_cam *this = g_new0(struct osd_speed_cam, 1);
+  struct attr *attr;
+  this->item.p.x = 120;
+  this->item.p.y = 20;
+  this->item.w = 60;
+  this->item.h = 80;
+  this->item.navit = nav;
+  this->item.font_size = 200;
+  this->item.meth.draw = osd_draw_cast(osd_speed_cam_draw);
+
+  osd_set_std_attr(attrs, &this->item, 2);
+  attr = attr_search(attrs, NULL, attr_width);
+  this->width=attr ? attr->u.num : 2;
+  attr = attr_search(attrs, NULL, attr_idle_color);
+  this->idle_color=attr ? *attr->u.color : ((struct color) {0xffff,0xa5a5,0x0000,0xffff}); // text idle_color defaults to orange
+
+  attr = attr_search(attrs, NULL, attr_label);
+  if (attr) {
+    this->text = g_strdup(attr->u.str);
+  }
+  else
+    this->text = NULL;
+
+  attr = attr_search(attrs, NULL, attr_announce_on);
+  if (attr) {
+    this->announce_on = attr->u.num;
+  }
+  else {
+    this->announce_on = 1;    //announce by default
+  }
+
+  navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_cam_init), attr_graphics_ready, this));
+  return (struct osd_priv *) this;
+}
 struct osd_speed_warner {
 	struct osd_item item;
 	struct graphics_gc *red;
@@ -1252,7 +1509,6 @@ struct osd_speed_warner {
 	double speed_exceed_limit_offset;
 	double speed_exceed_limit_percent;
 	int announce_on;
-        enum eAnnounceState {eNoWarn=0,eWarningTold=1};
 	enum eAnnounceState announce_state;
 	int bTextOnly;
 };
@@ -2484,12 +2740,13 @@ plugin_init(void)
 	plugin_register_osd_type("button", osd_button_new);
     	plugin_register_osd_type("toggle_announcer", osd_nav_toggle_announcer_new);
     	plugin_register_osd_type("speed_warner", osd_speed_warner_new);
+    	plugin_register_osd_type("speed_cam", osd_speed_cam_new);
     	plugin_register_osd_type("text", osd_text_new);
     	plugin_register_osd_type("gps_status", osd_gps_status_new);
     	plugin_register_osd_type("volume", osd_volume_new);
     	plugin_register_osd_type("scale", osd_scale_new);
-		plugin_register_osd_type("image", osd_image_new);
-		plugin_register_osd_type("stopwatch", osd_stopwatch_new);
+	plugin_register_osd_type("image", osd_image_new);
+	plugin_register_osd_type("stopwatch", osd_stopwatch_new);
 	plugin_register_osd_type("odometer", osd_odometer_new);
 	plugin_register_osd_type("auxmap", osd_auxmap_new);
 }
