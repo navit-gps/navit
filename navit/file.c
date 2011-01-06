@@ -37,6 +37,7 @@
 #include "atom.h"
 #include "config.h"
 #include "item.h"
+#include "util.h"
 #ifdef HAVE_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>
@@ -107,12 +108,11 @@ file_socket_connect(char *host, char *service)
 	freeaddrinfo(result);
 	return fd;
 }
-#endif
 
 static void
-file_http_request(struct file *file, char *method, char *host, char *path, char *header)
+file_http_request(struct file *file, char *method, char *host, char *path, char *header, int persistent)
 {
-	char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s%s%s%s\r\n\r\n",method,path,version,host,header?"\r\n":"",header?header:"",header?"\r\n":"");
+	char *request=g_strdup_printf("%s %s HTTP/1.0\r\nUser-Agent: navit %s\r\nHost: %s\r\n%s%s%s\r\n",method,path,version,host,persistent?"Connection: Keep-Alive\r\n":"",header?header:"",header?"\r\n":"");
 	write(file->fd, request, strlen(request));
 	dbg(1,"%s\n",request);
 	file->requests++;
@@ -138,6 +138,68 @@ file_http_header_end(char *str, int len)
   	return NULL;
 }
 
+static int
+file_request_do(struct file *file, struct attr **options, int connect)
+{
+	struct attr *attr;
+	char *name;
+
+	if (!options)
+		return 0;
+	attr=attr_search(options, NULL, attr_url);
+	if (!attr)
+		return 0;
+	name=attr->u.str;
+	if (!name)
+		return 0;
+	g_free(file->name);
+	file->name = g_strdup(name);
+	if (!strncmp(name,"http://",7)) {
+		char *host=g_strdup(name+7);
+		char *port=strchr(host,':');
+		char *path=strchr(name+7,'/');
+		char *method="GET";
+		char *header=NULL;
+		int persistent=0;
+		if ((attr=attr_search(options, NULL, attr_http_method)) && attr->u.str)
+			method=attr->u.str;
+		if ((attr=attr_search(options, NULL, attr_http_header)) && attr->u.str)
+			header=attr->u.str;
+		if ((attr=attr_search(options, NULL, attr_persistent)))
+			persistent=attr->u.num;
+		if (path) 
+			host[path-name-7]='\0';
+		if (port)
+			*port++='\0';
+		dbg(1,"host=%s path=%s\n",host,path);
+		if (connect) 
+			file->fd=file_socket_connect(host,port?port:"80");
+		file_http_request(file,method,host,path,header,persistent);
+		file->special=1;
+		g_free(host);
+	}
+	return 1;
+}
+#endif
+
+int
+file_request(struct file *f, struct attr **options)
+{
+#ifdef HAVE_SOCKET
+	return file_request_do(f, options, 0);
+#else
+	return 0;
+#endif
+}
+
+char *
+file_http_header(struct file *f, char *header)
+{
+	if (!f->headers)
+		return NULL;
+	return g_hash_table_lookup(f->headers, header);
+}
+
 struct file *
 file_create(char *name, struct attr **options)
 {
@@ -146,30 +208,9 @@ file_create(char *name, struct attr **options)
 	struct attr *attr;
 	int open_flags=O_LARGEFILE|O_BINARY;
 
-	if (options && (attr=attr_search(options, NULL, attr_url)) && attr->u.str) {
+	if (options && (attr=attr_search(options, NULL, attr_url))) {
 #ifdef HAVE_SOCKET
-		name=attr->u.str;
-		file->name = g_strdup(name);
-		if (!strncmp(name,"http://",7)) {
-			char *host=g_strdup(name+7);
-			char *port=strchr(host,':');
-			char *path=strchr(name+7,'/');
-			char *method="GET";
-			char *header=NULL;
-			if ((attr=attr_search(options, NULL, attr_http_method)) && attr->u.str)
-				method=attr->u.str;
-			if ((attr=attr_search(options, NULL, attr_http_header)) && attr->u.str)
-				header=attr->u.str;
-			if (path) 
-				host[path-name-7]='\0';
-			if (port)
-				*port++='\0';
-			dbg(1,"host=%s path=%s\n",host,path);
-			file->fd=file_socket_connect(host,port?port:"80");
-			file_http_request(file,method,host,path,header);
-			file->special=1;
-			g_free(host);
-		}
+		file_request_do(file, options, 1);
 #endif
 	} else {
 		if (options && (attr=attr_search(options, NULL, attr_readwrite)) && attr->u.num) {
@@ -306,13 +347,31 @@ static void
 file_process_headers(struct file *file, char *headers)
 {
 	char *tok;
-	char *cl="Content-Length: ";
+	char *cl;
+	if (file->headers)
+		g_hash_table_destroy(file->headers);
+	file->headers=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 	while ((tok=strtok(headers, "\r\n"))) {
-		if (!strncasecmp(tok,cl,strlen(cl))) {
-			file->size=atoll(tok+strlen(cl));
+		char *sep;
+		tok=g_strdup(tok);
+		sep=strchr(tok,':');
+		if (!sep)
+			sep=strchr(tok,'/');
+		if (!sep) {
+			g_free(tok);
+			continue;
 		}
+		*sep++='\0';
+		if (*sep == ' ')
+			sep++;
+		strtolower(tok, tok);
+		dbg(1,"header '%s'='%s'\n",tok,sep);
+		g_hash_table_insert(file->headers, tok, sep);
 		headers=NULL;
 	}
+	cl=g_hash_table_lookup(file->headers, "content-length");
+	if (cl) 
+		file->size=atoll(cl);
 }
 
 static void
@@ -334,7 +393,7 @@ file_data_read_special(struct file *file, int size, int *size_ret)
 	if (!file->buffer)
 		file->buffer=g_malloc(buffer_size);
 	ret=g_malloc(size);
-	while (size > 0 && (!eof || file->buffer_len)) {
+	while ((size > 0 || file->requests) && (!eof || file->buffer_len)) {
 		int toread=buffer_size-file->buffer_len;
 		if (toread >= 4096 && !eof) {
 			rd=read(file->fd, file->buffer+file->buffer_len, toread);
@@ -351,8 +410,11 @@ file_data_read_special(struct file *file, int size, int *size_ret)
 				file_process_headers(file, file->buffer);
 				file_shift_buffer(file, hdr-file->buffer);
 				file->requests--;
+				if (file_http_header(file, "location"))
+					break;
 			}
-		} else {
+		}
+		if (!file->requests) {
 			rd=file->buffer_len;
 			if (rd > size)
 				rd=size;
@@ -649,6 +711,8 @@ file_create_caseinsensitive(char *name, struct attr **options)
 void
 file_destroy(struct file *f)
 {
+	if (f->headers)
+		g_hash_table_destroy(f->headers);
 	switch (f->special) {
 	case 0:
 	case 1:
