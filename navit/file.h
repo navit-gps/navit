@@ -56,9 +56,12 @@ struct file {
 	int requests;
 	unsigned char *buffer;
 	int buffer_len;
+	GHashTable *headers;
 };
 
 /* prototypes */
+int file_request(struct file *f, struct attr **options);
+char *file_http_header(struct file *f, char *header);
 struct file *file_create(char *name, struct attr **options);
 int file_is_dir(char *name);
 long long file_size(struct file *file);
