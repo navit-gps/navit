@@ -28,7 +28,7 @@
 struct map_priv {
 
 	int id;
-	struct quadtree* tree_root;
+	struct quadtree_node* tree_root;
 	int flags;
 	GHashTable*item_hash;
 };
