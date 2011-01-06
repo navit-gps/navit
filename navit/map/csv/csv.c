@@ -174,7 +174,7 @@ static struct item *
 map_rect_get_item_byid_csv(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
 	//currently id_hi is ignored
-	return g_hash_table_lookup(mr->m->item_hash,id_lo);
+	return g_hash_table_lookup(mr->m->item_hash,&id_lo);
 }
 
 static struct map_methods map_methods_csv = {
@@ -193,7 +193,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs)
 	struct map_priv *m = NULL;
 	m = g_new0(struct map_priv, 1);
 	m->id = ++map_id;
-	m->item_hash = g_hash_table_new(g_int_hash, g_int_equal);
+	m->item_hash = g_hash_table_new_full(g_int_hash, g_int_equal,g_free,g_free);
 
 	struct attr *item_type  = attr_search(attrs, NULL, attr_item_type);
 	struct attr *attr_types = attr_search(attrs, NULL, attr_attr_types);
@@ -301,7 +301,7 @@ map_new_csv(struct map_methods *meth, struct attr **attrs)
 						}
 						++cnt;
 					}
-					if(bAddSum) {
+					if(bAddSum && (longitude!=0.0 || latitude!=0.0)) {
 						struct quadtree_data* qd = g_new0(struct quadtree_data,1);
 						qd->item = curr_item;
 						qd->attr_list = attr_list;
@@ -310,7 +310,9 @@ map_new_csv(struct map_methods *meth, struct attr **attrs)
 						qi->longitude = longitude;
 						qi->latitude = latitude;
 						quadtree_add(tree_root, qi);
-						g_hash_table_insert(m->item_hash, item_idx,curr_item);
+						int* pID = g_new(int,1);
+						*pID = item_idx;
+						g_hash_table_insert(m->item_hash, pID,curr_item);
 						++item_idx;
 					}
 					else {
