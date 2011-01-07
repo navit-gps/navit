@@ -4,50 +4,17 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}")
 include_directories( "${CMAKE_CURRENT_BINARY_DIR}")
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/support")
 
-message("" )
-message("Summary:\n")
-
-set(LAST_TYPE NONE)
 foreach ( PLUGIN_PATH ${ALL_PLUGINS})
-   # split path to type and name
-   string(REPLACE "/" ";" PLUGIN_PARTS ${PLUGIN_PATH})
-   LIST(GET PLUGIN_PARTS 0 PLUGIN_TYPE)
-   LIST(LENGTH PLUGIN_PARTS PLUGIN_PARTS_LENGTH)
-   if ( PLUGIN_PARTS_LENGTH GREATER 1 )
-      LIST(GET PLUGIN_PARTS 1 PLUGIN_NAME)
-   else()
-      set(PLUGIN_NAME ${PLUGIN_TYPE})
-   endif()
-   if ( NOT ${LAST_TYPE} STREQUAL ${PLUGIN_TYPE})
-      message("\n--->>> ${PLUGIN_TYPE}")
-      set(LAST_TYPE ${PLUGIN_TYPE})
-   endif()
    if (${PLUGIN_PATH})
-      message("Enabled   ${PLUGIN_NAME} ( ${${PLUGIN_PATH}_REASON} )")
-      
       include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_PATH}")
       
       string(REPLACE "/" "_" MODULE_INC ${PLUGIN_PATH})
       list(APPEND NAVIT_SUPPORT_LIBS ${MODULE_INC})
-   else()
-      message("Disabled  ${PLUGIN_NAME} ( ${${PLUGIN_PATH}_REASON} )")
    endif()
 endforeach()
 
-LIST(SORT ALL_MODULES)
 foreach ( MODULE_PATH ${ALL_MODULES})
-   # split path to type and name
-   string(REPLACE "/" ";" MODULE_PARTS ${MODULE_PATH})
-   LIST(GET MODULE_PARTS 0 MODULE_TYPE)
-   LIST(GET MODULE_PARTS 1 MODULE_NAME)
-   if ( NOT ${LAST_TYPE} STREQUAL ${MODULE_TYPE})
-      message("\n--->>> ${MODULE_TYPE}")
-      set(LAST_TYPE ${MODULE_TYPE})
-   endif()
-   
    if ( ${MODULE_PATH} )
-      message("Enabled   ${MODULE_NAME} ( ${${MODULE_PATH}_REASON} )")
-      
       include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/${MODULE_PATH}")
       
       string(REPLACE "/" "_" MODULE_INC ${MODULE_PATH})
@@ -57,26 +24,12 @@ foreach ( MODULE_PATH ${ALL_MODULES})
       if (NOT USE_PLUGINS)
          list(APPEND MODULES_NAME ${MODULE_INC})
       else()
-         # set plugin_type
-         set(${MODULE_INC}_TYPE ${MODULE_TYPE})
+         string(REGEX REPLACE "(^[^/]*)/.*" "\\1" ${MODULE_INC}_TYPE ${MODULE_PATH})
       endif()
-   else()
-      message("Disabled  ${MODULE_NAME} ( ${${MODULE_PATH}_REASON} )")
    endif()
 endforeach()
+
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/builtin.c.in ${CMAKE_CURRENT_BINARY_DIR}/builtin.c)
-
-LIST(SORT ALL_FEATURES)
-message("\n--->>> Features")
-foreach ( FEATURE ${ALL_FEATURES})
-   if ( ${FEATURE} )
-      message("Enabled   ${FEATURE} ( ${${FEATURE}_REASON} )")
-   else()
-      message("Disabled  ${FEATURE} ( ${${FEATURE}_REASON} )")
-   endif()
-endforeach()
-
-message( "")
 
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/fib-1.1")
 

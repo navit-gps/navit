@@ -335,6 +335,48 @@ CHECK_FUNCTION_EXISTS (getcwd HAVE_GETCWD)
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
+
+if (NOT NAVIT_DEPENDENCY_ERROR)
+   message("\nSummary:\n")
+
+   set(SUMMARY_COMPONENTS ${ALL_PLUGINS} ${ALL_MODULES})
+   list(SORT SUMMARY_COMPONENTS)
+
+   set(LAST_TYPE NONE)
+   foreach ( SUMMARY_COMP ${SUMMARY_COMPONENTS})
+      # split path to type and name
+      string(REPLACE "/" ";" SUMMARY_COMP_LIST ${SUMMARY_COMP})
+      list(GET SUMMARY_COMP_LIST 0 SUMMARY_COMP_TYPE)
+      list(LENGTH SUMMARY_COMP_LIST SUMMARY_COMP_LIST_LENGTH)
+      if ( SUMMARY_COMP_LIST_LENGTH GREATER 1 )
+         list(GET SUMMARY_COMP_LIST 1 SUMMARY_COMP_NAME)
+      else()
+         set(SUMMARY_COMP_NAME ${SUMMARY_COMP})
+      endif()
+      if ( NOT ${LAST_TYPE} STREQUAL ${SUMMARY_COMP_TYPE})
+         message("\n--->>> ${SUMMARY_COMP_TYPE}")
+         set(LAST_TYPE ${SUMMARY_COMP_TYPE})
+      endif()
+      if (${SUMMARY_COMP})
+         message("Enabled   ${SUMMARY_COMP_NAME} ( ${${SUMMARY_COMP}_REASON} )")
+      else()
+         message("Disabled  ${SUMMARY_COMP_NAME} ( ${${SUMMARY_COMP}_REASON} )")
+      endif()
+   endforeach()
+
+   list(SORT ALL_FEATURES)
+   message("\n--->>> Features")
+   foreach ( FEATURE ${ALL_FEATURES})
+      if ( ${FEATURE} )
+         message("Enabled   ${FEATURE} ( ${${FEATURE}_REASON} )")
+      else()
+         message("Disabled  ${FEATURE} ( ${${FEATURE}_REASON} )")
+      endif()
+   endforeach()
+
+   message("")
+endif(NOT NAVIT_DEPENDENCY_ERROR)
+
 add_subdirectory (navit)
 add_subdirectory (man)
 
