@@ -42,6 +42,7 @@ struct osd_item {
 	struct graphics *gr;
 	struct graphics_gc *graphic_bg, *graphic_fg_white, *graphic_fg_text;
 	struct graphics_font *font;
+	char *font_name;
 	struct callback *cb;
 	struct callback *resize_cb;
 	struct callback *reconfig_cb;
