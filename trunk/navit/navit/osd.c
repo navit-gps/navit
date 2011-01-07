@@ -247,6 +247,9 @@ osd_set_std_attr(struct attr **attrs, struct osd_item *item, int flags)
 	attr=attr_search(attrs, NULL, attr_accesskey);
 	if (attr)
 		item->accesskey = g_strdup(attr->u.str);
+	attr=attr_search(attrs, NULL, attr_font);
+	if (attr)
+		item->font_name = g_strdup(attr->u.str);
 }
 
 void
@@ -296,7 +299,7 @@ osd_set_std_graphic(struct navit *nav, struct osd_item *item, struct osd_priv *p
 	graphics_gc_set_foreground(item->graphic_fg_white, &item->color_white);
 
 	if (item->flags & 2) {
-		item->font = graphics_font_new(item->gr, item->font_size, 1);
+		item->font = graphics_named_font_new(item->gr, item->font_name, item->font_size, 1);
 		item->graphic_fg_text = graphics_gc_new(item->gr);
 		graphics_gc_set_foreground(item->graphic_fg_text, &item->text_color);
 	}
