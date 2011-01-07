@@ -24,6 +24,7 @@ set(LIB_DIR lib)
 
 ### Detect environment
 
+add_plugin(support/ezxml "native ezxml found" FALSE)
 add_plugin(support/glib "native Glib found" FALSE)
 add_plugin(support/zlib "native zlib found" FALSE)
 add_plugin(support/libpng "native libpng found" FALSE)
@@ -75,6 +76,7 @@ CHECK_INCLUDE_FILES(wordexp.h HAVE_WORDEXP)
 CHECK_INCLUDE_FILES(stdint.h HAVE_STDINT_H)
 CHECK_LIBRARY_EXISTS(gypsy gypsy_control_get_default "" GYPSY_FOUND)
 CHECK_INCLUDE_FILES(libspeechd.h HAVE_LIBSPEECHD)
+CHECK_INCLUDE_FILES(ezxml.h HAVE_EZXML)
 
 ### Configure build
 #Required libraries, supplied with navit
@@ -104,6 +106,9 @@ endif(PNG_FOUND)
 if (NOT HAVE_WORDEXP)
    message(STATUS "wordexp.h not found. use internal wordexp")
    set_with_reason(support/wordexp "native wordexp missing" TRUE)
+endif()
+if (NOT HAVE_EZXML)
+   set_with_reason(support/ezxml "native ezxml missing" TRUE)
 endif()
 
 if(FREETYPE_FOUND)
@@ -204,7 +209,6 @@ add_module(plugin/pedestrian "Default" FALSE)
 add_module(speech/android "Default" FALSE)
 add_module(speech/espeak "Default" FALSE)
 add_plugin(support/espeak "Default" FALSE)
-add_plugin(support/ezxml "Default" FALSE)
 add_module(vehicle/android "Default" FALSE)
 add_module(vehicle/iphone "Default" FALSE)
 add_module(vehicle/maemo "Default" FALSE)
