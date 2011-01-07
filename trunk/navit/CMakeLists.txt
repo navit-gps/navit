@@ -233,7 +233,7 @@ ENDIF()
 
 add_feature(DBUS_USE_SYSTEM_BUS "default" FALSE)
 add_feature(BUILD_MAPTOOL "default" TRUE)
-
+add_feature(XSL_PROCESSING "default" TRUE)
 
 ### Platform specific settings
 if(WIN32 OR WINCE)
@@ -310,6 +310,11 @@ if (SAMPLE_MAP)
    endif(CMAKE_CROSSCOMPILING)
 endif(SAMPLE_MAP)
 
+find_program(SAXON NAMES saxon saxon8 saxon-xslt)
+if(NOT SAXON)
+   cfg_feature(XSL_PROCESSING "Saxon missing" FALSE)
+endif()
+
 foreach(PLUMO ${ALL_PLUGINS} ${ALL_MODULES} ${ALL_FEATURES})
    set(OLDVALUE ${${PLUMO}})
    OPTION(${PLUMO} "Enable/Disable module/plugin/support" ${${PLUMO}})
@@ -317,6 +322,7 @@ foreach(PLUMO ${ALL_PLUGINS} ${ALL_MODULES} ${ALL_FEATURES})
       set(${PLUMO}_REASON "User defined")
    endif()
 endforeach()
+set(XSLTS ${XSLTS} CACHE STRING "define a semicolon seperated list of XSLTs to process")
 
 # Plugins
 if(USE_PLUGINS)
@@ -373,8 +379,16 @@ if (NOT NAVIT_DEPENDENCY_ERROR)
          message("Disabled  ${FEATURE} ( ${${FEATURE}_REASON} )")
       endif()
    endforeach()
-
-   message("")
+   
+   if (XSL_PROCESSING)
+      if (XSLTS)
+         message("\nProcessing XSLTS: ${XSLTS}")
+      else()
+         message("\nProcessing XSLTS: NONE")
+      endif(XSLTS)
+   endif(XSL_PROCESSING)
+   
+   message("\nTo configure your build use 'cmake -L' to find changeable variables and run cmake again with 'cmake -D <var-name>=<your value> ...'.")
 endif(NOT NAVIT_DEPENDENCY_ERROR)
 
 add_subdirectory (navit)
