@@ -370,6 +370,17 @@ struct graphics_font * graphics_font_new(struct graphics *gra, int size, int fla
 	return this_;
 }
 
+struct graphics_font * graphics_named_font_new(struct graphics *gra, char *font, int size, int flags)
+{
+	struct graphics_font *this_;
+
+	this_=g_new0(struct graphics_font,1);
+	this_->priv=gra->meth.font_new(gra->priv, &this_->meth, font, size, flags);
+	return this_;
+}
+
+
+
 /**
  * Free all loaded fonts.
  * Used when switching layouts.
