@@ -152,7 +152,7 @@ config_new(struct attr *parent, struct attr **attrs)
 {
 	if (configured) {
 		dbg(0,"only one config allowed\n");
-		return NULL;
+		return config;
 	}
 	if (parent) {
 		dbg(0,"no parent in config allowed\n");
