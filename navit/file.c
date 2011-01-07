@@ -118,26 +118,6 @@ file_http_request(struct file *file, char *method, char *host, char *path, char 
 	file->requests++;
 }
 
-static char *
-file_http_header_end(char *str, int len)
-{
-	int i;
-	for (i=0; i+1<len; i+=2) {
-		if (str[i+1]=='\n') {
-			if (str[i]=='\n')
-				return str+i+2;
-			else if (str[i]=='\r' && i+3<len && str[i+2]=='\r' && str[i+3]=='\n')
-			        return str+i+4;
-			--i;
-		} else if (str[i+1]=='\r') {
-			if (i+4<len && str[i+2]=='\n' && str[i+3]=='\r' && str[i+4]=='\n')
-				return str+i+5;
-			--i;
-		}
-    	}
-  	return NULL;
-}
-
 static int
 file_request_do(struct file *file, struct attr **options, int connect)
 {
@@ -181,6 +161,26 @@ file_request_do(struct file *file, struct attr **options, int connect)
 	return 1;
 }
 #endif
+
+static char *
+file_http_header_end(char *str, int len)
+{
+	int i;
+	for (i=0; i+1<len; i+=2) {
+		if (str[i+1]=='\n') {
+			if (str[i]=='\n')
+				return str+i+2;
+			else if (str[i]=='\r' && i+3<len && str[i+2]=='\r' && str[i+3]=='\n')
+			        return str+i+4;
+			--i;
+		} else if (str[i+1]=='\r') {
+			if (i+4<len && str[i+2]=='\n' && str[i+3]=='\r' && str[i+4]=='\n')
+				return str+i+5;
+			--i;
+		}
+    	}
+  	return NULL;
+}
 
 int
 file_request(struct file *f, struct attr **options)
