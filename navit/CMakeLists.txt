@@ -57,7 +57,11 @@ if (${HAVE_GLIB})
    list(APPEND NAVIT_SRC event_glib.c)
 endif()
 
-add_library (navit_core ${NAVIT_SRC} )
+if (SHARED_LIBNAVIT)
+  add_library (navit_core SHARED ${NAVIT_SRC} )
+else(SHARED_LIBNAVIT)
+  add_library (navit_core STATIC ${NAVIT_SRC} )
+endif(SHARED_LIBNAVIT)
 target_link_libraries(navit_core  ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS} m) # support_glib support_zlib support_win32 support_libpng support_wordexp 
 set_target_properties(navit_core PROPERTIES COMPILE_DEFINITIONS "MODULE=navit;LIBDIR=\"${CMAKE_INSTALL_PREFIX}/${LIB_DIR}\";PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 if (DEFINED NAVIT_COMPILE_FLAGS)

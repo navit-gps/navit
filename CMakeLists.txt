@@ -235,6 +235,7 @@ add_module(vehicle/wince "Default" FALSE)
 
 # other features
 add_feature(USE_PLUGINS "default" TRUE)
+add_feature(SHARED_LIBNAVIT "default" FALSE)
 add_feature(USE_ROUTING "default" TRUE)
 add_feature(USE_SVG "default" TRUE)
 add_feature(SVG2PNG "default" TRUE)
@@ -352,6 +353,12 @@ else()
    set(MODULE_BUILD_TYPE "STATIC")
 endif(USE_PLUGINS)
 message(STATUS "Use plugins: ${MODULE_BUILD_TYPE}")
+
+if (SHARED_LIBNAVIT)
+  set(NAVIT_CORE_BUILD_TYPE "STATIC")
+else(SHARED_LIBNAVIT)
+  set(NAVIT_CORE_BUILD_TYPE "SHARED")
+endif(SHARED_LIBNAVIT)
 
 CHECK_INCLUDE_FILES (malloc.h HAVE_MALLOC_H)
 CHECK_INCLUDE_FILES ("sys/param.h;sys/mount.h" HAVE_SYS_MOUNT_H)
