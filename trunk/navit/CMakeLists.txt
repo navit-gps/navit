@@ -24,7 +24,7 @@ set(LIB_DIR lib)
 
 ### Detect environment
 
-add_plugin(support/ezxml "native ezxml found" FALSE)
+add_plugin(support/ezxml "native Glib found" FALSE)
 add_plugin(support/glib "native Glib found" FALSE)
 add_plugin(support/zlib "native zlib found" FALSE)
 add_plugin(support/libpng "native libpng found" FALSE)
