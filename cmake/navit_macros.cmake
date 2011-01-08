@@ -41,7 +41,7 @@ macro(module_add_library MODULE_NAME )
       # workaround to be compatible with old paths
       set_target_properties( ${MODULE_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/.libs")
 
-      TARGET_LINK_LIBRARIES(${MODULE_NAME} navit_core)
+#      TARGET_LINK_LIBRARIES(${MODULE_NAME} navit_core)
       install(TARGETS ${MODULE_NAME}
               DESTINATION ${LIB_DIR}/navit/${${MODULE_NAME}_TYPE}
               PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
