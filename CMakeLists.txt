@@ -76,7 +76,6 @@ CHECK_INCLUDE_FILES(wordexp.h HAVE_WORDEXP)
 CHECK_INCLUDE_FILES(stdint.h HAVE_STDINT_H)
 CHECK_LIBRARY_EXISTS(gypsy gypsy_control_get_default "" GYPSY_FOUND)
 CHECK_INCLUDE_FILES(libspeechd.h HAVE_LIBSPEECHD)
-CHECK_INCLUDE_FILES(ezxml.h HAVE_EZXML)
 
 ### Configure build
 #Required libraries, supplied with navit
@@ -107,8 +106,8 @@ if (NOT HAVE_WORDEXP)
    message(STATUS "wordexp.h not found. use internal wordexp")
    set_with_reason(support/wordexp "native wordexp missing" TRUE)
 endif()
-if (NOT HAVE_EZXML)
-   set_with_reason(support/ezxml "native ezxml missing" TRUE)
+if (NOT Glib_FOUND)
+   set_with_reason(support/ezxml "Glib not found" TRUE)
 endif()
 
 if(FREETYPE_FOUND)
