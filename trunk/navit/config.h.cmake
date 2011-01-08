@@ -6,6 +6,7 @@
 #cmakedefine HAVE_API_WIN32 1
 #cmakedefine HAVE_API_WIN32_CE 1
 #cmakedefine HAVE_GLIB 1
+#cmakedefine HAVE_GMODULE 1
 #cmakedefine HAVE_GETCWD 1
 #cmakedefine CACHE_SIZE @CACHE_SIZE@
 #cmakedefine AVOID_FLOAT 1
