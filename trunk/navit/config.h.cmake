@@ -27,6 +27,8 @@
 
 #cmakedefine HAVE_GTK2 1
 
+#cmakedefine HAVE_FONTCONFIG 1
+
 #cmakedefine USE_PLUGINS 1
 
 #cmakedefine SDL_TTF 1
