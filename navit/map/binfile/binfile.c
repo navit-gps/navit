@@ -1059,7 +1059,7 @@ download_download(struct map_download *download)
 	if (!size)
 		return 1;
 	data=file_data_read_special(download->http, size, &size_ret);
-	if (!download->read && map_binfile_handle_redirect(download->m)) {
+	if (!download->read && download->m->http && map_binfile_handle_redirect(download->m)) {
 		g_free(data);
 		download_request(download);
 		return 0;
