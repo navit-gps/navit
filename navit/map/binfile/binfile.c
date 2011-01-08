@@ -1271,6 +1271,7 @@ download(struct map_priv *m, struct map_rect_priv *mr, struct zip_cd *cd, int zi
 		return NULL;
 	}
 	for (;;) {
+		dbg(0,"state=%d\n",download->state);
 		switch (download->state) {
 		case 0:
 			dbg(0,"error\n");
