@@ -29,6 +29,7 @@ import android.os.PowerManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.media.AudioManager;
 import android.util.Log;
 import java.util.Locale;
 import java.io.File;
@@ -127,6 +128,7 @@ public class Navit extends Activity implements Handler.Callback
     {
         super.onCreate(savedInstanceState);
         ActivityResults=new NavitActivityResult[16];
+	setVolumeControlStream(AudioManager.STREAM_MUSIC);
 	PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);  
 	wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK|PowerManager.ON_AFTER_RELEASE, "NavitDoNotDimScreen"); 
 	Locale locale=java.util.Locale.getDefault();
