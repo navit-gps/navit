@@ -28,4 +28,15 @@ typedef uint16_t u16;
 typedef int32_t s32;
 typedef uint32_t u32;
 
+#ifdef HAVE_API_WIN32_BASE
+#define LONGLONG_FMT "%I64d"
+#else
+#ifdef HAVE_API_ANDROID
+#define LONGLONG_FMT "%lld"
+#else
+#define LONGLONG_FMT "%Ld"
+#endif
+#endif
+
+
 #endif
