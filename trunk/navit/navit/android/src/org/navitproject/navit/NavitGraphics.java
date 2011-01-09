@@ -125,6 +125,7 @@ public class NavitGraphics {
 	{
 		int i;
 		String s=null;
+		boolean handled=true;
 		i=event.getUnicodeChar();
 		Log.e("NavitGraphics","onKeyDown "+keyCode+" "+i);
 		// Log.e("NavitGraphics","Unicode "+event.getUnicodeChar());
@@ -141,8 +142,10 @@ public class NavitGraphics {
 				s=java.lang.String.valueOf((char)3);
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP) {
 				s=java.lang.String.valueOf((char)21);
+				handled=false;
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN) {
 				s=java.lang.String.valueOf((char)4);
+				handled=false;
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER) {
 				s=java.lang.String.valueOf((char)13);
 			} else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
@@ -162,7 +165,7 @@ public class NavitGraphics {
 		if (s != null) {
 			KeypressCallback(KeypressCallbackID, s);
 		}
-		return true;
+		return handled;
 	}
 	@Override public boolean onKeyUp(int keyCode, KeyEvent event)
 	{
