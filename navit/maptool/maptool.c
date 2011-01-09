@@ -213,7 +213,7 @@ int main(int argc, char **argv)
 			{"slice-size", 1, 0, 'S'},
 			{0, 0, 0, 0}
 		};
-		c = getopt_long (argc, argv, "6B:DNO:WS:a:bc"
+		c = getopt_long (argc, argv, "6B:DNO:PWS:a:bc"
 #ifdef HAVE_POSTGRESQL
 					      "d:"
 #endif
