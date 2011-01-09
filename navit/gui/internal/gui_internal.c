@@ -72,6 +72,7 @@
 #include "bookmarks.h"
 #include "debug.h"
 #include "fib.h"
+#include "types.h"
 
 
 extern char *version;
@@ -2572,13 +2573,13 @@ gui_internal_cmd_view_attribute_details(struct gui_priv *this, struct widget *wm
 		url=NULL;
 		switch (attr.type) {
 		case attr_osm_nodeid:
-			url=g_strdup_printf("http://www.openstreetmap.org/browse/node/%Ld\n",*attr.u.num64);
+			url=g_strdup_printf("http://www.openstreetmap.org/browse/node/"LONGLONG_FMT"\n",*attr.u.num64);
 			break;
 		case attr_osm_wayid:
-			url=g_strdup_printf("http://www.openstreetmap.org/browse/way/%Ld\n",*attr.u.num64);
+			url=g_strdup_printf("http://www.openstreetmap.org/browse/way/"LONGLONG_FMT"\n",*attr.u.num64);
 			break;
 		case attr_osm_relationid:
-			url=g_strdup_printf("http://www.openstreetmap.org/browse/relation/%Ld\n",*attr.u.num64);
+			url=g_strdup_printf("http://www.openstreetmap.org/browse/relation/"LONGLONG_FMT"\n",*attr.u.num64);
 			break;
 		default:
 			break;
@@ -6293,7 +6294,7 @@ gui_internal_cmd_map_downloader(struct gui_priv *this, char *function, struct at
 					break;
 				}
 				downloaded+=size;
-				dbg(0,"%Ld of %Ld\n",downloaded,f->size);
+				dbg(0,LONGLONG_FMT" of "LONGLONG_FMT"\n",downloaded,f->size);
 			}
 			g_free(data);
 			if (!size)

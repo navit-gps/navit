@@ -38,6 +38,7 @@
 #include "config.h"
 #include "item.h"
 #include "util.h"
+#include "types.h"
 #ifdef HAVE_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>
@@ -228,7 +229,7 @@ file_create(char *name, struct attr **options)
 		dbg(1,"fd=%d\n", file->fd);
 		fstat(file->fd, &stat);
 		file->size=stat.st_size;
-		dbg(1,"size=%Ld\n", file->size);
+		dbg(1,"size="LONGLONG_FMT"\n", file->size);
 		file->name_id = (int)atom(name);
 	}
 #ifdef CACHE_SIZE
@@ -434,13 +435,20 @@ file_data_read_all(struct file *file)
 	return file_data_read(file, 0, file->size);
 }
 
-int
-file_data_write(struct file *file, long long offset, int size, unsigned char *data)
+void
+file_data_flush(struct file *file, long long offset, int size)
 {
 	if (file_cache) {
 		struct file_cache_id id={offset,size,file->name_id,0};
 		cache_flush(file_cache,&id);
+		dbg(1,"Flushing "LONGLONG_FMT" %d bytes\n",offset,size);
 	}
+}
+
+int
+file_data_write(struct file *file, long long offset, int size, unsigned char *data)
+{
+	file_data_flush(file, offset, size);
 	lseek(file->fd, offset, SEEK_SET);
 	if (write(file->fd, data, size) != size)
 		return 0;

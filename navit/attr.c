@@ -31,6 +31,7 @@
 #include "config.h"
 #include "endianess.h"
 #include "util.h"
+#include "types.h"
 
 struct attr_name {
 	enum attr_type attr;
@@ -287,7 +288,7 @@ attr_to_text(struct attr *attr, struct map *map, int pretty)
 	if (type >= attr_type_int_begin && type <= attr_type_int_end) 
 		return g_strdup_printf("%d", attr->u.num);
 	if (type >= attr_type_int64_begin && type <= attr_type_int64_end) 
-		return g_strdup_printf("%Ld", *attr->u.num64);
+		return g_strdup_printf(LONGLONG_FMT, *attr->u.num64);
 	if (type >= attr_type_double_begin && type <= attr_type_double_end) 
 		return g_strdup_printf("%f", *attr->u.numd);
 	if (type >= attr_type_object_begin && type <= attr_type_object_end) 
