@@ -117,7 +117,7 @@ gl.glShadeModel(GL10.GL_SMOOTH);
 }
 
 public class NavitGraphics2 {
-	private NavitGraphics parent_graphics;
+	private NavitGraphics2 parent_graphics;
 	private ArrayList overlays=new ArrayList();
 	int bitmap_w;
 	int bitmap_h;
@@ -144,7 +144,7 @@ public class NavitGraphics2 {
 			relativelayout.bringChildToFront(view);
 		}
 	}
-	public NavitGraphics(Activity activity, NavitGraphics parent, int x, int y, int w, int h, int alpha, int wraparound, int use_camera) {
+	public NavitGraphics2(Activity activity, NavitGraphics2 parent, int x, int y, int w, int h, int alpha, int wraparound, int use_camera) {
 		if (parent == null) {
 			this.activity=activity;
 			flb=new FloatBuffer[10000];
@@ -157,7 +157,7 @@ public class NavitGraphics2 {
 			Object overlays_array[];
 			overlays_array=overlays.toArray();
 			for (Object overlay : overlays_array) {
-				NavitGraphics overlay_graphics=(NavitGraphics)overlay;
+				NavitGraphics2 overlay_graphics=(NavitGraphics2)overlay;
 				if (overlay_graphics.overlay_disabled == 0) {
 					int x=overlay_graphics.pos_x;
 					int y=overlay_graphics.pos_y;
