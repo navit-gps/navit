@@ -70,6 +70,7 @@ int file_mmap(struct file *file);
 unsigned char *file_data_read(struct file *file, long long offset, int size);
 unsigned char *file_data_read_special(struct file *file, int size, int *size_ret);
 unsigned char *file_data_read_all(struct file *file);
+void file_data_flush(struct file *file, long long offset, int size);
 int file_data_write(struct file *file, long long offset, int size, unsigned char *data);
 int file_get_contents(char *name, unsigned char **buffer, int *size);
 unsigned char *file_data_read_compressed(struct file *file, long long offset, int size, int size_uncomp);
