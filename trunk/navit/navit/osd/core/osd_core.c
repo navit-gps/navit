@@ -1391,14 +1391,14 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
     this_->announce_state=eNoWarn;
   }
 
-  char buffer [64+1]="";
-  char buffer2[64+1]="";
+  char buffer [256]="";
+  char buffer2[256]="";
   buffer [0] = 0;
   buffer2[0] = 0;
   if(this_->text) {
     str_replace(buffer,this_->text,"${distance}",format_distance(dCurrDist,""));
-    str_replace(buffer2,buffer,"${camera_type}",camera_t_strs[idx]);
-    str_replace(buffer,buffer2,"${camera_dir}",camdir_t_strs[dir_idx]);
+    str_replace(buffer2,buffer,"${camera_type}",(idx<=CAM_TRAFFIPAX)?camera_t_strs[idx]:"");
+    str_replace(buffer,buffer2,"${camera_dir}",(dir_idx<=CAMDIR_TWO)?camdir_t_strs[dir_idx]:"");
     char dir_str[16];
     char spd_str[16];
     sprintf(dir_str,"%d",dir);
