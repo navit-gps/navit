@@ -1310,8 +1310,6 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
     return;
   }
 
-  osd_std_draw(&this_->item);
-
   transform_from_geo(projection_mg, position_attr.u.coord_geo, &curr_coord);
 
   double dCurrDist = -1;
@@ -1320,6 +1318,7 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
   int spd = -1;
   int idx = -1;
   double speed = -1;
+  int bFound = 0;
 
   int dst=2000;
   int dstsq=dst*dst;
@@ -1348,6 +1347,7 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
       if (item->type == type_tec_common && item_coord_get(item, &cn, 1)) {
         int dist=transform_distance_sq(&cn, &curr_coord);
         if (dist < dstsq) {  
+          bFound = 1;
           dstsq=dist;
           dCurrDist = sqrt(dist);
           cam_coord = cn;
@@ -1375,63 +1375,67 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
   }
   mapset_close(msh);
 
-  dCurrDist = transform_distance(projection_mg, &curr_coord, &cam_coord);
-  ret_attr = vehicle_get_attr(curr_vehicle,attr_position_speed,&speed_attr, NULL);
-  if(0==ret_attr) {
-    return;
-  }
-  speed = *speed_attr.u.numd;
-  if(dCurrDist <= speed*750.0/130.0) {  //at speed 130 distance limit is 750m
-    if(this_->announce_state==eNoWarn && this_->announce_on) {
-      this_->announce_state=eWarningTold; //warning told
-      navit_say(navit, _("Look out! Camera!"));
+  osd_std_draw(&this_->item);
+  if(bFound) {
+    dCurrDist = transform_distance(projection_mg, &curr_coord, &cam_coord);
+    ret_attr = vehicle_get_attr(curr_vehicle,attr_position_speed,&speed_attr, NULL);
+    if(0==ret_attr) {
+      return;
+    }
+    speed = *speed_attr.u.numd;
+    if(dCurrDist <= speed*750.0/130.0) {  //at speed 130 distance limit is 750m
+      if(this_->announce_state==eNoWarn && this_->announce_on) {
+        this_->announce_state=eWarningTold; //warning told
+        navit_say(navit, _("Look out! Camera!"));
+      }
+    }
+    else {
+      this_->announce_state=eNoWarn;
+    }
+  
+    if(this_->text && 0<=idx ) {
+      char buffer [256]="";
+      char buffer2[256]="";
+      buffer [0] = 0;
+      buffer2[0] = 0; 
+  
+      str_replace(buffer,this_->text,"${distance}",format_distance(dCurrDist,""));
+      str_replace(buffer2,buffer,"${camera_type}",(idx<=CAM_TRAFFIPAX)?camera_t_strs[idx]:"");
+      str_replace(buffer,buffer2,"${camera_dir}",(0<=dir_idx && dir_idx<=CAMDIR_TWO)?camdir_t_strs[dir_idx]:"");
+      char dir_str[16];
+      char spd_str[16];
+      sprintf(dir_str,"%d",dir);
+      sprintf(spd_str,"%d",spd);
+      str_replace(buffer2,buffer,"${direction}",dir_str);
+      str_replace(buffer,buffer2,"${speed_limit}",spd_str);
+  
+      graphics_get_text_bbox(this_->item.gr, this_->item.font, buffer, 0x10000, 0, bbox, 0);
+      p.x=(this_->item.w-bbox[2].x)/2;
+      p.y = this_->item.h-this_->item.h/10;
+      struct graphics_gc *curr_color = this_->orange;
+      struct attr attr_dir;
+      //tolerance is +-20 degrees
+      if(
+        dir_idx==CAMDIR_ONE && 
+        dCurrDist <= speed*750.0/130.0 && 
+        vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL) && 
+        fabs(angle_diff(dir,*attr_dir.u.numd))<=20 ) {
+          curr_color = this_->red;
+      }
+      //tolerance is +-20 degrees in both directions
+      else if(
+        dir_idx==CAMDIR_TWO && 
+        dCurrDist <= speed*750.0/130.0 && 
+        vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL) && 
+        (fabs(angle_diff(dir,*attr_dir.u.numd))<=20 || fabs(angle_diff(dir+180,*attr_dir.u.numd))<=20 )) {
+          curr_color = this_->red;
+      }
+      else if(dCurrDist <= speed*750.0/130.0) { 
+        curr_color = this_->red;
+      }
+      graphics_draw_text(this_->item.gr, curr_color, NULL, this_->item.font, buffer, &p, 0x10000, 0);
     }
   }
-  else {
-    this_->announce_state=eNoWarn;
-  }
-
-  char buffer [256]="";
-  char buffer2[256]="";
-  buffer [0] = 0;
-  buffer2[0] = 0;
-  if(this_->text) {
-    str_replace(buffer,this_->text,"${distance}",format_distance(dCurrDist,""));
-    str_replace(buffer2,buffer,"${camera_type}",(idx<=CAM_TRAFFIPAX)?camera_t_strs[idx]:"");
-    str_replace(buffer,buffer2,"${camera_dir}",(dir_idx<=CAMDIR_TWO)?camdir_t_strs[dir_idx]:"");
-    char dir_str[16];
-    char spd_str[16];
-    sprintf(dir_str,"%d",dir);
-    sprintf(spd_str,"%d",spd);
-    str_replace(buffer2,buffer,"${direction}",dir_str);
-    str_replace(buffer,buffer2,"${speed_limit}",spd_str);
-
-  graphics_get_text_bbox(this_->item.gr, this_->item.font, buffer, 0x10000, 0, bbox, 0);
-  p.x=(this_->item.w-bbox[2].x)/2;
-  p.y = this_->item.h-this_->item.h/10;
-  struct graphics_gc *curr_color = this_->orange;
-  struct attr attr_dir;
-  //tolerance is +-20 degrees
-  if(
-    dir_idx==CAMDIR_ONE && 
-    dCurrDist <= speed*750.0/130.0 && 
-    vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL) && 
-    fabs(angle_diff(dir,*attr_dir.u.numd))<=20 ) {
-      curr_color = this_->red;
-  }
-  //tolerance is +-20 degrees in both directions
-  else if(
-    dir_idx==CAMDIR_TWO && 
-    dCurrDist <= speed*750.0/130.0 && 
-    vehicle_get_attr(v, attr_position_direction, &attr_dir, NULL) && 
-    (fabs(angle_diff(dir,*attr_dir.u.numd))<=20 || fabs(angle_diff(dir+180,*attr_dir.u.numd))<=20 )) {
-      curr_color = this_->red;
-  }
-        else if(dCurrDist <= speed*750.0/130.0) { 
-      curr_color = this_->red;
-        }
-  graphics_draw_text(this_->item.gr, curr_color, NULL, this_->item.font, buffer, &p, 0x10000, 0);
-    }
   graphics_draw_mode(this_->item.gr, draw_mode_end);
 }
 
