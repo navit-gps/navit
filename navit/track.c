@@ -482,8 +482,8 @@ tracking_doupdate_lines(struct tracking *tr, struct coord *pc, enum projection p
 }
 
 
-static void
-tracking_free_lines(struct tracking *tr)
+void
+tracking_flush(struct tracking *tr)
 {
 	struct tracking_line *tl=tr->lines,*next;
 	dbg(1,"enter(tr=%p)\n", tr);
@@ -696,7 +696,7 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 	tr->last[1]=tr->curr[1];
 	if (!tr->lines || transform_distance(pro, &tr->last_updated, &tr->curr_in) > 500) {
 		dbg(1, "update\n");
-		tracking_free_lines(tr);
+		tracking_flush(tr);
 		tracking_doupdate_lines(tr, &tr->curr_in, pro);
 		tr->last_updated=tr->curr_in;
 		dbg(1,"update end\n");
@@ -825,7 +825,7 @@ tracking_destroy(struct tracking *tr)
 {
 	if (tr->attr) 
 		attr_free(tr->attr);
-	tracking_free_lines(tr);
+	tracking_flush(tr);
 	g_free(tr);
 }
 
