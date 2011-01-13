@@ -122,6 +122,7 @@ if (NOT HAVE_WORDEXP)
 endif()
 if (NOT Glib_FOUND)
    set_with_reason(support/ezxml "Glib not found" TRUE)
+   add_definitions(-DEZXML_NOMMAP)
 endif()
 
 if(FREETYPE_FOUND)
