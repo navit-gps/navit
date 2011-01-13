@@ -374,7 +374,7 @@ set(XSLTS ${XSLTS} CACHE STRING "define a semicolon seperated list of XSLTs to p
 # Plugins
 if(USE_PLUGINS)
    set(MODULE_BUILD_TYPE "MODULE")
-   list(APPEND NAVIT_COMPILE_FLAGS -fPIC)
+   add_definitions("-fPIC")
    list(APPEND NAVIT_LIBS dl)
 else()
    set(MODULE_BUILD_TYPE "STATIC")
@@ -394,6 +394,7 @@ CHECK_FUNCTION_EXISTS (getcwd HAVE_GETCWD)
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
+add_definitions("-Wall")
 
 if (NOT NAVIT_DEPENDENCY_ERROR)
    message("\nSummary:\n")
