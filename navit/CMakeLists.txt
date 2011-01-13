@@ -57,15 +57,25 @@ if (${HAVE_GLIB})
    list(APPEND NAVIT_SRC event_glib.c)
 endif()
 
+if(ANDROID)
+   list(APPEND NAVIT_SRC android.c)
+   set(NAVIT_LIBNAME navit)
+else()
+   set(NAVIT_LIBNAME navit_core)
+   add_executable (navit start.c)
+   target_link_libraries (navit ${NAVIT_LIBNAME})
+   set_target_properties(navit PROPERTIES COMPILE_DEFINITIONS "MODULE=${MODULE_NAME}")
+endif()
+
 if (SHARED_LIBNAVIT)
-  add_library (navit_core SHARED ${NAVIT_SRC} )
+  add_library (${NAVIT_LIBNAME} SHARED ${NAVIT_SRC} )
 else(SHARED_LIBNAVIT)
-  add_library (navit_core STATIC ${NAVIT_SRC} )
+  add_library (${NAVIT_LIBNAME} STATIC ${NAVIT_SRC} )
 endif(SHARED_LIBNAVIT)
-target_link_libraries(navit_core  ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS} m) # support_glib support_zlib support_win32 support_libpng support_wordexp 
-set_target_properties(navit_core PROPERTIES COMPILE_DEFINITIONS "MODULE=navit;LIBDIR=\"${CMAKE_INSTALL_PREFIX}/${LIB_DIR}\";PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
+target_link_libraries(${NAVIT_LIBNAME}  ${MODULES_NAME} ${NAVIT_SUPPORT_LIBS} fib ${NAVIT_LIBS} m) 
+set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_DEFINITIONS "MODULE=navit;LIBDIR=\"${CMAKE_INSTALL_PREFIX}/${LIB_DIR}\";PREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 if (DEFINED NAVIT_COMPILE_FLAGS)
-   set_target_properties(navit_core PROPERTIES COMPILE_FLAGS ${NAVIT_COMPILE_FLAGS})
+   set_target_properties(${NAVIT_LIBNAME} PROPERTIES COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS}")
 endif()
 
 # Subversion revision
@@ -97,20 +107,18 @@ ADD_CUSTOM_COMMAND(
    ${XSLT_COMMANDS}
 )
 
+add_custom_target( navit_config_xml ALL DEPENDS navit.xml)
 
-#configure_file (${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h)
-ADD_DEPENDENCIES(navit_core version)
+ADD_DEPENDENCIES(${NAVIT_LIBNAME} version)
 if (ENABLE_NLS)
    ADD_DEPENDENCIES(support_glib intl_cmake)
 endif()
 
-add_executable (navit start.c navit.xml)
-target_link_libraries (navit navit_core)
-set_target_properties(navit PROPERTIES COMPILE_DEFINITIONS "MODULE=${MODULE_NAME}")
 
 add_subdirectory (maptool)
 add_subdirectory (xpm)
 add_subdirectory (maps)
+add_subdirectory (android)
 
 install(TARGETS navit
         DESTINATION ${BIN_DIR}
