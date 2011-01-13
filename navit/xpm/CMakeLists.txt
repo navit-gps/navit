@@ -98,7 +98,7 @@ foreach (IMAGE_SRC ${FILES_TO_PNG})
       
 endforeach()
 
-add_custom_target(images DEPENDS ${IMAGE_TARGETS})
+add_custom_target(images ALL DEPENDS ${IMAGE_TARGETS})
 
 install(
    FILES ${IMAGE_TARGETS}

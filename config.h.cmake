@@ -2,6 +2,7 @@
 #cmakedefine HAVE_MALLOC_H 1
 #cmakedefine HAVE_SYS_MOUNT_H 1
 #cmakedefine HAVE_STDINT_H 1
+#cmakedefine HAVE_API_ANDROID 1
 #cmakedefine HAVE_API_WIN32_BASE 1
 #cmakedefine HAVE_API_WIN32 1
 #cmakedefine HAVE_API_WIN32_CE 1

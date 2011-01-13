@@ -1,0 +1,15 @@
+message("Copy '${GLOB_EXP}' to '${DST}'")
+
+file(GLOB SRC_FILES ${GLOB_EXP})
+
+if ( SRC_FILES )
+   if ( LOWER )
+      foreach (FILE ${SRC_FILES})
+         get_filename_component(FILEN_NAME ${FILE} NAME)
+         string(TOLOWER ${FILEN_NAME} FILEN_NAME_LOWER)
+         execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different ${FILE} ${DST}/${FILEN_NAME_LOWER})
+      endforeach()
+   else()
+      file(COPY ${SRC_FILES} DESTINATION ${DST})
+   endif( LOWER )
+endif()
