@@ -98,8 +98,8 @@ Navigation</text></img>
 			It's always the top left corner of the icon, so you need to consider the icon's size when you enter the values. -->
 		<osd enabled="no" type="button" x="0" y="0" command="gui.fullscreen=!gui.fullscreen" src="toggle_fullscreen.xpm"/> 
 		<osd enabled="no" type="button" x="-96" y="0" command="gui.menu()" src="menu.xpm"/>
-		<osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.xpm"/>
-		<osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.xpm"/> 
+		<osd enabled="no" type="button" x="-96" y="-96" command="zoom_in()" src="zoom_in.svg"/>
+		<osd enabled="no" type="button" x="0" y="-96" command="zoom_out()" src="zoom_out.svg"/> 
 
 		<!-- Vehicle with GPS enabled for gpsd on unix -->
 		<vehicle name="Local GPS" profilename="car" enabled="yes" active="1" source="gpsd://localhost" gpsd_query="w+xj">
@@ -1662,7 +1662,7 @@ Navigation</text></img>
 					<icon src="ghost_town.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_hotel" order="12-">
-					<icon src="hotel.xpm"/>
+					<icon src="hotel.png"/>
 				</itemgra>
 				<itemgra item_types="poi_car_parking" order="11-">
 					<icon src="parking.png"/>
@@ -1680,10 +1680,10 @@ Navigation</text></img>
 					<icon src="attraction.png"/>
 				</itemgra>
 				<itemgra item_types="poi_cafe" order="12-">
-					<icon src="cafe.xpm"/>
+					<icon src="cafe.png"/>
 				</itemgra>
 				<itemgra item_types="poi_bar" order="12-">
-					<icon src="bar.xpm"/>
+					<icon src="bar.png"/>
 				</itemgra>
 				<itemgra item_types="poi_bridge" order="12-">
 					<icon src="bridge.xpm"/>
@@ -1692,10 +1692,10 @@ Navigation</text></img>
 					<icon src="exit.png"/>
 				</itemgra>
 				<itemgra item_types="poi_camp_rv" order="12-">
-					<icon src="camping.xpm"/>
+					<icon src="camping.png"/>
 				</itemgra>
 				<itemgra item_types="poi_museum_history" order="12-">
-					<icon src="museum.xpm"/>
+					<icon src="museum.png"/>
 				</itemgra>
 				<itemgra item_types="poi_hospital" order="12-">
 					<icon src="hospital.png"/>
@@ -1818,7 +1818,7 @@ Navigation</text></img>
 					<icon src="height.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_heliport" order="8-">
-					<icon src="heliport.xpm"/>
+					<icon src="heliport.png"/>
 				</itemgra>
 				<itemgra item_types="poi_hotspring" order="12-">
 					<icon src="hotspring.xpm"/>
@@ -2013,7 +2013,7 @@ Navigation</text></img>
 					<icon src="wrecker.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_zoo" order="9-">
-					<icon src="zoo.xpm"/>
+					<icon src="zoo.png"/>
 				</itemgra>
 				<itemgra item_types="poi_picnic" order="12-">
 					<icon src="picnic.xpm"/>
@@ -2089,7 +2089,7 @@ Navigation</text></img>
 					<icon src="toilets.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_viewpoint" order="10-">
-					<icon src="viewpoint.xpm"/>
+					<icon src="viewpoint.png"/>
 				</itemgra>
 				<itemgra item_types="tec_common" order="11-">
 					<icon src="tec_common.png" w="24" h="24"/>
@@ -3034,7 +3034,7 @@ Navigation</text></img>
 					<icon src="cafe.png"/>
 				</itemgra>
 				<itemgra item_types="poi_bar" order="12-">
-					<icon src="bar.xpm"/>
+					<icon src="bar.png"/>
 				</itemgra>
 				<itemgra item_types="poi_bridge" order="0-">
 					<icon src="bridge.xpm"/>
@@ -3175,7 +3175,7 @@ Navigation</text></img>
 					<icon src="height.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_heliport" order="7-">
-					<icon src="heliport.xpm"/>
+					<icon src="heliport.png"/>
 				</itemgra>
 				<itemgra item_types="poi_hotspring" order="0-">
 					<icon src="hotspring.xpm"/>
@@ -3373,7 +3373,7 @@ Navigation</text></img>
 					<icon src="wrecker.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_zoo" order="10-">
-					<icon src="zoo.xpm"/>
+					<icon src="zoo.png"/>
 				</itemgra>
 				<itemgra item_types="poi_picnic" order="11-">
 					<icon src="picnic.xpm"/>
@@ -3447,7 +3447,7 @@ Navigation</text></img>
 					<icon src="toilets.xpm"/>
 				</itemgra>
 				<itemgra item_types="poi_viewpoint" order="12-">
-					<icon src="viewpoint.xpm"/>
+					<icon src="viewpoint.png"/>
 				</itemgra>
 				<itemgra item_types="tec_common" order="11-">
 					<icon src="tec_common.png" w="24" h="24"/>
