@@ -19,23 +19,24 @@
 
 package org.navitproject.navit;
 
-import android.app.Activity;
-import android.widget.TextView;
-import android.os.Bundle;
-import android.os.Debug;
-import android.os.Message;
-import android.os.Handler;
-import android.os.PowerManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.media.AudioManager;
-import android.util.Log;
-import java.util.Locale;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Locale;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.media.AudioManager;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.PowerManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 
 public class Navit extends Activity implements Handler.Callback
@@ -43,6 +44,7 @@ public class Navit extends Activity implements Handler.Callback
 	public Handler						handler;
 	private PowerManager.WakeLock	wl;
 	private NavitActivityResult	ActivityResults[];
+	
 	private boolean extractRes(String resname, String result)
 	{
 		int slash = -1;
@@ -170,6 +172,7 @@ public class Navit extends Activity implements Handler.Callback
 		{
 			Log.e("Navit", "Failed to extract navit.xml");
 		}
+
 		// Debug.startMethodTracing("calc");
 		NavitMain(this, langu, android.os.Build.VERSION.SDK_INT);
 		NavitActivity(3);
@@ -227,7 +230,89 @@ public class Navit extends Activity implements Handler.Callback
 		ActivityResults[requestCode] = ActivityResult;
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		super.onCreateOptionsMenu(menu);
+		Log.e("Navit","onCreateOptionsMenu");
+		return true;
+	}
 
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		super.onPrepareOptionsMenu(menu);
+		Log.e("Navit","onPrepareOptionsMenu");
+		// this gets called every time the menu is opened!!
+		// change menu items here!
+		menu.clear();
+		// group-id,item-id,sort order number
+		menu.add(1, 1, 10, "zoom in");
+		menu.add(1, 2, 20, "zoom out");
+		return true;
+	}
+
+	//public native void KeypressCallback(int id, String s);
+
+	// define callback id here
+	static int				N_KeypressCallbackID;
+	static int				N_MotionCallbackID;
+	static NavitGraphics	N_NavitGraphics	= null;
+
+	// callback id gets set here when called from NavitGraphics
+	public static void setKeypressCallback(int kp_cb_id, NavitGraphics ng)
+	{
+		Log.e("Navit", "setKeypressCallback -> id1=" + kp_cb_id);
+		Log.e("Navit", "setKeypressCallback -> ng=" + String.valueOf(ng));
+		N_KeypressCallbackID = kp_cb_id;
+		N_NavitGraphics = ng;
+	}
+	public static void setMotionCallback(int mo_cb_id, NavitGraphics ng)
+	{
+		Log.e("Navit", "setKeypressCallback -> id2=" + mo_cb_id);
+		Log.e("Navit", "setKeypressCallback -> ng=" + String.valueOf(ng));
+		N_MotionCallbackID = mo_cb_id;
+		N_NavitGraphics = ng;
+	}
+	
+	//public native void KeypressCallback(int id, String s);
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		// Handle item selection
+		String s=null;
+		switch (item.getItemId())
+		{
+			case 1 :
+				s = java.lang.String.valueOf((char) 17);
+				//N_NavitGraphics.KeypressCallback(N_NavitGraphics.KeypressCallbackID, s);
+				Message msg = new Message();
+				Bundle b = new Bundle();
+				b.putInt("Callback", 1);
+				b.putString("s", s);
+				msg.setData(b);
+				N_NavitGraphics.callback_handler.sendMessage(msg);
+
+				//N_NavitGraphics.MotionCallback(N_MotionCallbackID, 0, 0);
+				Log.e("Navit", "onOptionsItemSelected -> zoom in");
+				break;
+			case 2 :
+				s = java.lang.String.valueOf((char) 15);
+				msg = new Message();
+				b = new Bundle();
+				b.putInt("Callback", 1);
+				b.putString("s", s);
+				msg.setData(b);
+				N_NavitGraphics.callback_handler.sendMessage(msg);
+				//N_NavitGraphics.KeypressCallback(N_KeypressCallbackID, s);
+				//N_NavitGraphics.MotionCallback(N_MotionCallbackID, 0, 0);
+				Log.e("Navit", "onOptionsItemSelected -> zoom out");
+				break;
+		}
+		return true;
+	}
+	
 	public void disableSuspend()
 	{
 		wl.acquire();
