@@ -30,6 +30,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.os.Handler;
+import android.os.Message;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -54,6 +56,12 @@ public class NavitGraphics
 	NavitCamera					camera;
 	Activity						activity;
 
+	// Overlay View for Android
+	//
+	// here you can draw all the nice things you want
+	// and get touch events for it (without touching C-code)
+	private NavitAndroidOverlay NavitAOverlay;
+	
 
 	public void SetCamera(int use_camera)
 	{
@@ -82,7 +90,7 @@ public class NavitGraphics
 				static final int	DRAG			= 1;
 				static final int	ZOOM			= 2;
 				static final int	PRESS			= 3;
-
+			
 				@Override
 				protected void onDraw(Canvas canvas)
 				{
@@ -110,6 +118,7 @@ public class NavitGraphics
 				@Override
 				protected void onSizeChanged(int w, int h, int oldw, int oldh)
 				{
+					Log.e("Navit","NavitGraphics -> onSizeChanged");
 					super.onSizeChanged(w, h, oldw, oldh);
 					draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 					draw_canvas = new Canvas(draw_bitmap);
@@ -460,7 +469,9 @@ public class NavitGraphics
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_MENU)
 						{
-							s = java.lang.String.valueOf((char) 1);
+							//s = java.lang.String.valueOf((char) 1);
+							handled = false;
+							return handled;
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_SEARCH)
 						{
@@ -476,13 +487,15 @@ public class NavitGraphics
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP)
 						{
-							s = java.lang.String.valueOf((char) 21);
+							//s = java.lang.String.valueOf((char) 21);
 							handled = false;
+							return handled;
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN)
 						{
-							s = java.lang.String.valueOf((char) 4);
+							//s = java.lang.String.valueOf((char) 4);
 							handled = false;
+							return handled;
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER)
 						{
@@ -534,13 +547,21 @@ public class NavitGraphics
 					{
 						if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP)
 						{
-							s = java.lang.String.valueOf((char) 21);
+							//s = java.lang.String.valueOf((char) 21);
 							handled = false;
+							return handled;
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN)
 						{
-							s = java.lang.String.valueOf((char) 4);
+							//s = java.lang.String.valueOf((char) 4);
 							handled = false;
+							return handled;
+						}
+						else if (keyCode == android.view.KeyEvent.KEYCODE_MENU)
+						{
+							//s = java.lang.String.valueOf((char) 1);
+							handled = false;
+							return handled;
 						}
 					}
 					if (s != null)
@@ -610,6 +631,17 @@ public class NavitGraphics
 				SetCamera(use_camera);
 			}
 			relativelayout.addView(view);
+			
+			// android overlay
+			Log.e("Navit","create android overlay");
+			NavitAOverlay = new NavitAndroidOverlay(relativelayout.getContext());
+			RelativeLayout.LayoutParams NavitAOverlay_lp = new RelativeLayout.LayoutParams(
+					RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
+			relativelayout.addView(NavitAOverlay, NavitAOverlay_lp);
+			NavitAOverlay.bringToFront();
+			NavitAOverlay.invalidate();
+			// android overlay
+
 			activity.setContentView(relativelayout);
 			view.requestFocus();
 		}
@@ -626,13 +658,37 @@ public class NavitGraphics
 		}
 		parent_graphics = parent;
 	}
+
+	public Handler	callback_handler	= new Handler()
+													{
+														public void handleMessage(Message msg)
+														{
+															if (msg.getData().getInt("Callback") == 1)
+															{
+																Log.e("NavitGraphics","callback_handler -> handleMessage 1");
+																KeypressCallback(KeypressCallbackID, msg.getData()
+																		.getString("s"));
+															}
+															else if (msg.getData().getInt("Callback") == 2)
+															{
+																Log.e("NavitGraphics","callback_handler -> handleMessage 2");
+																ButtonCallback(ButtonCallbackID, 1, 1, 0, 0); // down
+															}
+															else if (msg.getData().getInt("Callback") == 3)
+															{
+																Log.e("NavitGraphics","callback_handler -> handleMessage 3");
+																ButtonCallback(ButtonCallbackID, 0, 1, 0, 0); // up
+															}
+														}
+													};
+	
 	public native void SizeChangedCallback(int id, int x, int y);
 	public native void ButtonCallback(int id, int pressed, int button, int x, int y);
 	public native void MotionCallback(int id, int x, int y);
 	public native void KeypressCallback(int id, String s);
 	private Canvas	draw_canvas;
 	private Bitmap	draw_bitmap;
-	private int		SizeChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
+	public int		SizeChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
 	// private int count;
 
 	public void setSizeChangedCallback(int id)
@@ -646,11 +702,16 @@ public class NavitGraphics
 	public void setMotionCallback(int id)
 	{
 		MotionCallbackID = id;
+		Navit.setMotionCallback(id,this);
 	}
+
 	public void setKeypressCallback(int id)
 	{
 		KeypressCallbackID = id;
+		// set callback id also in main intent (for menus)
+		Navit.setKeypressCallback(id,this);
 	}
+	
 
 	protected void draw_polyline(Paint paint, int c[])
 	{
