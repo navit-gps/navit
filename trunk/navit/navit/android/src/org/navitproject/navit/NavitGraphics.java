@@ -603,6 +603,7 @@ public class NavitGraphics
 			};
 			view.setFocusable(true);
 			view.setFocusableInTouchMode(true);
+			view.setKeepScreenOn(true);
 			relativelayout = new RelativeLayout(activity);
 			if (use_camera != 0)
 			{
