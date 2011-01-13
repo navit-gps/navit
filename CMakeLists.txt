@@ -311,16 +311,41 @@ endif()
 
 set(LOCALEDIR "${LOCALE_DIR}/locale")
 
-# SVG2PNG conversion
-set (IMAGE_CONVERTER_PROGS rsvg-convert ksvgtopng ksvgtopng4)
-find_program(IMAGE_CONVERTER NAMES ${IMAGE_CONVERTER_PROGS})
-if (SVG2PNG)
+# Image conversion
+
+find_program(IMAGE_CONVERTER NAMES convert)
+execute_process(COMMAND ${IMAGE_CONVERTER} -list format OUTPUT_VARIABLE CONVERT_FORMATS)
+if(CONVERT_FORMATS MATCHES ".*SVGZ[ *][ ]*SVG[ ]*r[w-].*")
+ message(STATUS ${IMAGE_CONVERTER})
+   set(IMAGE_CONVERTER_SVGZ ${IMAGE_CONVERTER})
+   set(IMAGE_CONVERTER_SVG ${IMAGE_CONVERTER})
+endif()
+if(CONVERT_FORMATS MATCHES ".*XPM[ *][ ]*XPM[ ]*r[w-].*")
    message(STATUS ${IMAGE_CONVERTER})
-   if (NOT IMAGE_CONVERTER)
-      message(WARNING "No SVG2PNG converter found. Please install one of the following tools: ${IMAGE_CONVERTER_PROGS}")
+   set(IMAGE_CONVERTER_XPM ${IMAGE_CONVERTER})
+endif()
+
+if (SVG2PNG)
+   if (NOT IMAGE_CONVERTER_SVGZ)
+      set (SVG_CONVERTER_PROGS rsvg-convert ksvgtopng ksvgtopng4)
+      find_program(IMAGE_CONVERTER_SVGZ NAMES ${SVG_CONVERTER_PROGS})
+   endif(NOT IMAGE_CONVERTER_SVGZ)
+
+   message(STATUS "SVG2PNG-Converter: ${IMAGE_CONVERTER_SVGZ}")
+   if (NOT IMAGE_CONVERTER_SVGZ)
+      message(WARNING "No SVG2PNG converter found. Please install one of the following tools: ${SVG_CONVERTER_PROGS}, or imagemagick with svg support")
       set_with_reason(SVG2PNG "no converter found" FALSE)
-   endif(NOT IMAGE_CONVERTER)
+   endif(NOT IMAGE_CONVERTER_SVGZ)
 endif(SVG2PNG)
+
+if (XPM2PNG)
+   message(STATUS "XPM2PNG-Converter: ${IMAGE_CONVERTER_XPM}")
+   if (NOT IMAGE_CONVERTER_XPM)
+      message(WARNING "No XPM2PNG converter found. Please install imagemagick with xpm support")
+      set_with_reason(XPM2PNG "no converter found" FALSE)
+   endif(NOT IMAGE_CONVERTER_XPM)
+endif(XPM2PNG)
+
 
 find_program(BZCAT NAMES bzcat)
 if (SAMPLE_MAP)
