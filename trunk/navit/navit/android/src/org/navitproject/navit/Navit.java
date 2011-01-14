@@ -37,13 +37,19 @@ import android.os.PowerManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 
 
 public class Navit extends Activity implements Handler.Callback
 {
-	public Handler						handler;
-	private PowerManager.WakeLock	wl;
-	private NavitActivityResult	ActivityResults[];
+	public Handler							handler;
+	private PowerManager.WakeLock		wl;
+	private NavitActivityResult		ActivityResults[];
+	public static InputMethodManager	mgr							= null;
+	public static Boolean				show_soft_keyboard		= false;
+	public static Boolean				show_soft_keyboard_now_showing		= false;
+	public static long					last_pressed_menu_key	= 0L;
+	public static long					time_pressed_menu_key	= 0L;
 	
 	private boolean extractRes(String resname, String result)
 	{
@@ -176,6 +182,8 @@ public class Navit extends Activity implements Handler.Callback
 		// Debug.startMethodTracing("calc");
 		NavitMain(this, langu, android.os.Build.VERSION.SDK_INT);
 		NavitActivity(3);
+
+		this.mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 	@Override
 	public void onStart()
@@ -196,6 +204,7 @@ public class Navit extends Activity implements Handler.Callback
 	{
 		super.onResume();
 		Log.e("Navit", "OnResume");
+		//InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		NavitActivity(1);
 	}
 	@Override
