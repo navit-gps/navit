@@ -37,6 +37,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 
 
@@ -56,7 +57,9 @@ public class NavitGraphics
 	NavitCamera							camera;
 	Activity								activity;
 
-	public static Boolean			in_map	= false;
+	public static Boolean			in_map						= false;
+	private static long				time_for_long_press		= 300L;
+	private static long				interval_for_long_press	= 200L;
 	
 	// Overlay View for Android
 	//
@@ -120,6 +123,21 @@ public class NavitGraphics
 								if (overlay_graphics.pos_wraparound != 0 && x < 0) x += bitmap_w;
 								if (overlay_graphics.pos_wraparound != 0 && y < 0) y += bitmap_h;
 								canvas.drawBitmap(overlay_graphics.draw_bitmap, x, y, null);
+							}
+						}
+					}
+					else
+					{
+						if (Navit.show_soft_keyboard)
+						{
+							if (Navit.mgr != null)
+							{
+								Log.e("NavitGraphics", "view -> SHOW SoftInput");
+								//Log.e("NavitGraphics", "view mgr=" + String.valueOf(Navit.mgr));
+								Navit.mgr.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT);
+								Navit.show_soft_keyboard_now_showing=true;
+								// clear the variable now, keyboard will stay on screen until backbutton pressed
+								Navit.show_soft_keyboard=false;
 							}
 						}
 					}
@@ -481,10 +499,34 @@ public class NavitGraphics
 						{
 							if (!in_map)
 							{
+								// if last menukeypress is less than 0.2 seconds away then count longpress
+								if ((System.currentTimeMillis() - Navit.last_pressed_menu_key) < interval_for_long_press)
+								{
+									Navit.time_pressed_menu_key = Navit.time_pressed_menu_key
+											+ (System.currentTimeMillis() - Navit.last_pressed_menu_key);
+									Log.e("NavitGraphics", "press time=" + Navit.time_pressed_menu_key);
+									
+									// on long press let softkeyboard popup
+									if (Navit.time_pressed_menu_key > time_for_long_press)
+									{
+										Log.e("NavitGraphics", "long press menu key!!");
+										Navit.show_soft_keyboard = true;
+										Navit.time_pressed_menu_key = 0L;
+										// need to draw to get the keyboard showing
+										this.postInvalidate();
+									}
+								}
+								else
+								{
+									Navit.time_pressed_menu_key = 0L;
+								}
+								Navit.last_pressed_menu_key = System.currentTimeMillis();
 								// if in menu view:
 								// use as OK (Enter) key
 								s = java.lang.String.valueOf((char) 13);
 								handled = true;
+								// dont use menu key here (use it in onKeyUp)
+								return handled;
 							}
 							else
 							{
@@ -501,6 +543,7 @@ public class NavitGraphics
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_BACK)
 						{
+							Log.e("NavitGraphics", "KEYCODE_BACK down");
 							s = java.lang.String.valueOf((char) 27);
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_CALL)
@@ -621,15 +664,32 @@ public class NavitGraphics
 								return handled;
 							}
 						}
+						else if (keyCode == android.view.KeyEvent.KEYCODE_BACK)
+						{
+							if (Navit.show_soft_keyboard_now_showing)
+							{
+								Navit.show_soft_keyboard_now_showing = false;
+							}
+							Log.e("NavitGraphics", "KEYCODE_BACK up");
+							//s = java.lang.String.valueOf((char) 27);
+							handled = true;
+							return handled;
+						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_MENU)
 						{
 							if (!in_map)
 							{
-								// if in menu view:
-								// use as OK (Enter) key
-								// s = java.lang.String.valueOf((char) 13);
-								handled = true;
-								return handled;
+								if (Navit.show_soft_keyboard_now_showing)
+								{
+									// if soft keyboard showing on screen, dont use menu button as select key
+								}
+								else
+								{
+									// if in menu view:
+									// use as OK (Enter) key
+									s = java.lang.String.valueOf((char) 13);
+									handled = true;
+								}
 							}
 							else
 							{
