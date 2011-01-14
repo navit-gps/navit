@@ -42,20 +42,22 @@ import android.widget.RelativeLayout;
 
 public class NavitGraphics
 {
-	private NavitGraphics	parent_graphics;
-	private ArrayList			overlays	= new ArrayList();
-	int							bitmap_w;
-	int							bitmap_h;
-	int							pos_x;
-	int							pos_y;
-	int							pos_wraparound;
-	int							overlay_disabled;
-	float							trackball_x, trackball_y;
-	View							view;
-	RelativeLayout				relativelayout;
-	NavitCamera					camera;
-	Activity						activity;
+	private NavitGraphics			parent_graphics;
+	private ArrayList					overlays	= new ArrayList();
+	int									bitmap_w;
+	int									bitmap_h;
+	int									pos_x;
+	int									pos_y;
+	int									pos_wraparound;
+	int									overlay_disabled;
+	float									trackball_x, trackball_y;
+	View									view;
+	RelativeLayout						relativelayout;
+	NavitCamera							camera;
+	Activity								activity;
 
+	public static Boolean			in_map	= false;
+	
 	// Overlay View for Android
 	//
 	// here you can draw all the nice things you want
@@ -98,13 +100,21 @@ public class NavitGraphics
 					canvas.drawBitmap(draw_bitmap, pos_x, pos_y, null);
 					if (overlay_disabled == 0)
 					{
+						//Log.e("NavitGraphics", "view -> onDraw 1");
+						// assume we ARE in map view mode!
+						in_map = true;
+
 						Object overlays_array[];
 						overlays_array = overlays.toArray();
 						for (Object overlay : overlays_array)
 						{
+							//Log.e("NavitGraphics","view -> onDraw 2");
+
 							NavitGraphics overlay_graphics = (NavitGraphics) overlay;
 							if (overlay_graphics.overlay_disabled == 0)
 							{
+								//Log.e("NavitGraphics","view -> onDraw 3");
+
 								int x = overlay_graphics.pos_x;
 								int y = overlay_graphics.pos_y;
 								if (overlay_graphics.pos_wraparound != 0 && x < 0) x += bitmap_w;
@@ -118,7 +128,7 @@ public class NavitGraphics
 				@Override
 				protected void onSizeChanged(int w, int h, int oldw, int oldh)
 				{
-					Log.e("Navit","NavitGraphics -> onSizeChanged");
+					//Log.e("Navit","NavitGraphics -> onSizeChanged");
 					super.onSizeChanged(w, h, oldw, oldh);
 					draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 					draw_canvas = new Canvas(draw_bitmap);
@@ -232,7 +242,7 @@ public class NavitGraphics
 							// just a single press down
 							touch_mode = PRESS;
 
-							Log.e("NavitGraphics", "onTouch up");
+							//Log.e("NavitGraphics", "onTouch up");
 							//ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
 							ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 
@@ -245,7 +255,7 @@ public class NavitGraphics
 								touch_now2 = touch_now;
 								touch_start2 = touch_start;
 
-								Log.e("NavitGraphics", "onTouch move");
+								//Log.e("NavitGraphics", "onTouch move");
 								MotionCallback(MotionCallbackID, x, y);
 								ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 
@@ -459,7 +469,7 @@ public class NavitGraphics
 					String s = null;
 					boolean handled = true;
 					i = event.getUnicodeChar();
-					Log.e("NavitGraphics", "onKeyDown " + keyCode + " " + i);
+					//Log.e("NavitGraphics", "onKeyDown " + keyCode + " " + i);
 					// Log.e("NavitGraphics","Unicode "+event.getUnicodeChar());
 					if (i == 0)
 					{
@@ -469,9 +479,21 @@ public class NavitGraphics
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_MENU)
 						{
-							//s = java.lang.String.valueOf((char) 1);
-							handled = false;
-							return handled;
+							if (!in_map)
+							{
+								// if in menu view:
+								// use as OK (Enter) key
+								s = java.lang.String.valueOf((char) 13);
+								handled = true;
+							}
+							else
+							{
+								// if on map view:
+								// volume UP
+								//s = java.lang.String.valueOf((char) 1);
+								handled = false;
+								return handled;
+							}							
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_SEARCH)
 						{
@@ -487,15 +509,39 @@ public class NavitGraphics
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP)
 						{
-							//s = java.lang.String.valueOf((char) 21);
-							handled = false;
-							return handled;
+							if (!in_map)
+							{
+								// if in menu view:
+								// use as UP key
+								s = java.lang.String.valueOf((char) 16);
+								handled = true;
+							}
+							else
+							{
+								// if on map view:
+								// volume UP
+								//s = java.lang.String.valueOf((char) 21);
+								handled = false;
+								return handled;
+							}
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN)
 						{
-							//s = java.lang.String.valueOf((char) 4);
-							handled = false;
-							return handled;
+							if (!in_map)
+							{
+								// if in menu view:
+								// use as DOWN key
+								s = java.lang.String.valueOf((char) 14);
+								handled = true;
+							}
+							else
+							{
+								// if on map view:
+								// volume DOWN
+								//s = java.lang.String.valueOf((char) 4);
+								handled = false;
+								return handled;
+							}
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER)
 						{
@@ -536,7 +582,7 @@ public class NavitGraphics
 				@Override
 				public boolean onKeyUp(int keyCode, KeyEvent event)
 				{
-					Log.e("NavitGraphics", "onKeyUp " + keyCode);
+					//Log.e("NavitGraphics", "onKeyUp " + keyCode);
 
 					int i;
 					String s = null;
@@ -547,21 +593,52 @@ public class NavitGraphics
 					{
 						if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_UP)
 						{
-							//s = java.lang.String.valueOf((char) 21);
-							handled = false;
-							return handled;
+							if (!in_map)
+							{
+								//s = java.lang.String.valueOf((char) 16);
+								handled=true;
+								return handled;
+							}
+							else
+							{
+								//s = java.lang.String.valueOf((char) 21);
+								handled = false;
+								return handled;
+							}
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_VOLUME_DOWN)
 						{
-							//s = java.lang.String.valueOf((char) 4);
-							handled = false;
-							return handled;
+							if (!in_map)
+							{
+								//s = java.lang.String.valueOf((char) 14);
+								handled=true;
+								return handled;
+							}
+							else
+							{
+								//s = java.lang.String.valueOf((char) 4);
+								handled = false;
+								return handled;
+							}
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_MENU)
 						{
-							//s = java.lang.String.valueOf((char) 1);
-							handled = false;
-							return handled;
+							if (!in_map)
+							{
+								// if in menu view:
+								// use as OK (Enter) key
+								// s = java.lang.String.valueOf((char) 13);
+								handled = true;
+								return handled;
+							}
+							else
+							{
+								// if on map view:
+								// volume UP
+								//s = java.lang.String.valueOf((char) 1);
+								handled = false;
+								return handled;
+							}							
 						}
 					}
 					if (s != null)
@@ -665,18 +742,18 @@ public class NavitGraphics
 														{
 															if (msg.getData().getInt("Callback") == 1)
 															{
-																Log.e("NavitGraphics","callback_handler -> handleMessage 1");
+																//Log.e("NavitGraphics","callback_handler -> handleMessage 1");
 																KeypressCallback(KeypressCallbackID, msg.getData()
 																		.getString("s"));
 															}
 															else if (msg.getData().getInt("Callback") == 2)
 															{
-																Log.e("NavitGraphics","callback_handler -> handleMessage 2");
+																//Log.e("NavitGraphics","callback_handler -> handleMessage 2");
 																ButtonCallback(ButtonCallbackID, 1, 1, 0, 0); // down
 															}
 															else if (msg.getData().getInt("Callback") == 3)
 															{
-																Log.e("NavitGraphics","callback_handler -> handleMessage 3");
+																//Log.e("NavitGraphics","callback_handler -> handleMessage 3");
 																ButtonCallback(ButtonCallbackID, 0, 1, 0, 0); // up
 															}
 														}
@@ -688,7 +765,7 @@ public class NavitGraphics
 	public native void KeypressCallback(int id, String s);
 	private Canvas	draw_canvas;
 	private Bitmap	draw_bitmap;
-	public int		SizeChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
+	private int		SizeChangedCallbackID, ButtonCallbackID, MotionCallbackID, KeypressCallbackID;
 	// private int count;
 
 	public void setSizeChangedCallback(int id)
@@ -772,27 +849,38 @@ public class NavitGraphics
 	}
 	protected void draw_image(Paint paint, int x, int y, Bitmap bitmap)
 	{
+		// Log.e("NavitGraphics","draw_image");
+
 		float fx = x;
 		float fy = y;
 		draw_canvas.drawBitmap(bitmap, fx, fy, paint);
 	}
 	protected void draw_mode(int mode)
 	{
+		//Log.e("NavitGraphics", "draw_mode mode=" + mode + " parent_graphics="
+		//		+ String.valueOf(parent_graphics));
+		
 		if (mode == 2 && parent_graphics == null) view.invalidate();
 		if (mode == 1 || (mode == 0 && parent_graphics != null)) draw_bitmap.eraseColor(0);
 
 	}
 	protected void draw_drag(int x, int y)
 	{
+		//Log.e("NavitGraphics","draw_drag");
 		pos_x = x;
 		pos_y = y;
 	}
 	protected void overlay_disable(int disable)
 	{
+		//Log.e("NavitGraphics","overlay_disable");
+		// assume we are NOT in map view mode!
+		in_map=false;
+
 		overlay_disabled = disable;
 	}
 	protected void overlay_resize(int x, int y, int w, int h, int alpha, int wraparond)
 	{
+		//Log.e("NavitGraphics","overlay_resize");
 		pos_x = x;
 		pos_y = y;
 	}
