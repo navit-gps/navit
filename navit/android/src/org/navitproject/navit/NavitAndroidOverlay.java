@@ -68,6 +68,6 @@ public class NavitAndroidOverlay extends ImageView
 		paint.setColor(Color.GRAY);
 
 		// test, draw a grey rectangle on top layer!
-		//c.drawRect(10, 10, 300, 200, paint);
+		// c.drawRect(10, 10, 300, 200, paint);
 	}
 }
