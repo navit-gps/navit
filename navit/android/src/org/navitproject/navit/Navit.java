@@ -222,11 +222,12 @@ public class Navit extends Activity implements Handler.Callback
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		Log.e("Navit", "onActivityResult " + requestCode + " " + resultCode);
+		//Log.e("Navit", "onActivityResult " + requestCode + " " + resultCode);
 		ActivityResults[requestCode].onActivityResult(requestCode, resultCode, data);
 	}
 	public void setActivityResult(int requestCode, NavitActivityResult ActivityResult)
 	{
+		//Log.e("Navit", "setActivityResult " + requestCode);
 		ActivityResults[requestCode] = ActivityResult;
 	}
 
@@ -234,7 +235,7 @@ public class Navit extends Activity implements Handler.Callback
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		super.onCreateOptionsMenu(menu);
-		Log.e("Navit","onCreateOptionsMenu");
+		//Log.e("Navit","onCreateOptionsMenu");
 		return true;
 	}
 
@@ -242,7 +243,7 @@ public class Navit extends Activity implements Handler.Callback
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
 		super.onPrepareOptionsMenu(menu);
-		Log.e("Navit","onPrepareOptionsMenu");
+		//Log.e("Navit","onPrepareOptionsMenu");
 		// this gets called every time the menu is opened!!
 		// change menu items here!
 		menu.clear();
@@ -255,23 +256,23 @@ public class Navit extends Activity implements Handler.Callback
 	//public native void KeypressCallback(int id, String s);
 
 	// define callback id here
-	static int				N_KeypressCallbackID;
-	static int				N_MotionCallbackID;
+	//static int				N_KeypressCallbackID;
+	//static int				N_MotionCallbackID;
 	static NavitGraphics	N_NavitGraphics	= null;
 
 	// callback id gets set here when called from NavitGraphics
 	public static void setKeypressCallback(int kp_cb_id, NavitGraphics ng)
 	{
-		Log.e("Navit", "setKeypressCallback -> id1=" + kp_cb_id);
-		Log.e("Navit", "setKeypressCallback -> ng=" + String.valueOf(ng));
-		N_KeypressCallbackID = kp_cb_id;
+		//Log.e("Navit", "setKeypressCallback -> id1=" + kp_cb_id);
+		//Log.e("Navit", "setKeypressCallback -> ng=" + String.valueOf(ng));
+		//N_KeypressCallbackID = kp_cb_id;
 		N_NavitGraphics = ng;
 	}
 	public static void setMotionCallback(int mo_cb_id, NavitGraphics ng)
 	{
-		Log.e("Navit", "setKeypressCallback -> id2=" + mo_cb_id);
-		Log.e("Navit", "setKeypressCallback -> ng=" + String.valueOf(ng));
-		N_MotionCallbackID = mo_cb_id;
+		//Log.e("Navit", "setKeypressCallback -> id2=" + mo_cb_id);
+		//Log.e("Navit", "setKeypressCallback -> ng=" + String.valueOf(ng));
+		//N_MotionCallbackID = mo_cb_id;
 		N_NavitGraphics = ng;
 	}
 	
@@ -326,7 +327,7 @@ public class Navit extends Activity implements Handler.Callback
 
 	public boolean handleMessage(Message m)
 	{
-		Log.e("Navit", "Handler received message");
+		//Log.e("Navit", "Handler received message");
 		return true;
 	}
 
