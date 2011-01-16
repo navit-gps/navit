@@ -236,7 +236,13 @@ public class NavitGraphics
 					}
 
 					// calculate value
-					int switch_value = (event.getAction() & _ACTION_MASK_);
+					int switch_value=event.getAction();;
+					if (_ACTION_MASK_ != -999)
+					{
+						switch_value = (event.getAction() & _ACTION_MASK_);
+					}
+					//Log.e("NavitGraphics", "switch_value=" + switch_value);
+					//Log.e("NavitGraphics", "_ACTION_MASK_=" + _ACTION_MASK_);
 					// calculate value
 
 					if (switch_value == MotionEvent.ACTION_DOWN)
@@ -244,6 +250,7 @@ public class NavitGraphics
 						this.touch_now.set(event.getX(), event.getY());
 						this.touch_start.set(event.getX(), event.getY());
 						this.touch_prev.set(event.getX(), event.getY());
+						//Log.e("NavitGraphics", "ACTION_DOWN");
 						ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
 						touch_mode = DRAG;
 
@@ -254,6 +261,7 @@ public class NavitGraphics
 						this.touch_now.set(event.getX(), event.getY());
 						touch_now2 = touch_now;
 						touch_start2 = touch_start;
+						//Log.e("NavitGraphics", "ACTION_UP");
 
 						if ((touch_mode == DRAG) && (spacing(touch_start2, touch_now2) < 8f))
 						{
@@ -284,6 +292,9 @@ public class NavitGraphics
 								if (touch_mode == ZOOM)
 								{
 									// end of "pinch zoom" move
+
+									//Log.e("NavitGraphics", "onTouch zoom");
+
 									float newDist = spacing(event);
 									float scale = 0;
 									if (newDist > 10f)
@@ -296,23 +307,37 @@ public class NavitGraphics
 										// zoom in
 										String s = java.lang.String.valueOf((char) 17);
 										KeypressCallback(KeypressCallbackID, s);
-										//ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
-										Log.e("NavitGraphics", "onTouch zoom in");
+
+										// next lines are a hack, without it screen will not get updated anymore!
+										ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+										MotionCallback(MotionCallbackID, x+15, y);
+										MotionCallback(MotionCallbackID, x-15, y);
+										ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
+										//this.postInvalidate();
+
+										//Log.e("NavitGraphics", "onTouch zoom in");
 									}
 									else if (scale < 0.8)
 									{
 										// zoom out    
 										String s = java.lang.String.valueOf((char) 15);
 										KeypressCallback(KeypressCallbackID, s);
-										//ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
-										Log.e("NavitGraphics", "onTouch zoom out");
+
+										// next lines are a hack, without it screen will not get updated anymore!
+										ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+										MotionCallback(MotionCallbackID, x+15, y);
+										MotionCallback(MotionCallbackID, x-15, y);
+										ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
+										//this.postInvalidate();
+										
+										//Log.e("NavitGraphics", "onTouch zoom out");
 									}
 
 									touch_mode = NONE;
 								}
 								else
 								{
-									//Log.d(TAG, "touch_mode=NONE (END of ZOOM part 2)");
+									//Log.d("NavitGraphics", "touch_mode=NONE (END of ZOOM part 2)");
 									touch_mode = NONE;
 								}
 							}
@@ -320,6 +345,7 @@ public class NavitGraphics
 					}
 					else if (switch_value == MotionEvent.ACTION_MOVE)
 					{
+						//Log.e("NavitGraphics", "ACTION_MOVE");
 
 						if (touch_mode == DRAG)
 						{
@@ -336,14 +362,19 @@ public class NavitGraphics
 						{
 							this.touch_now.set(event.getX(), event.getY());
 							this.touch_prev.set(event.getX(), event.getY());
+							
+							//Log.e("NavitGraphics", "zoom 2");
 						}
 					}
 					else if (switch_value == _ACTION_POINTER_DOWN_)
 					{
+						//Log.e("NavitGraphics", "ACTION_POINTER_DOWN");
+
 						oldDist = spacing(event);
 						if (oldDist > 10f)
 						{
 							touch_mode = ZOOM;
+							//Log.e("NavitGraphics", "--> zoom");
 						}
 						//break;
 					}
