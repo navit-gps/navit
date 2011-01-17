@@ -4583,6 +4583,10 @@ Navigation</text></img>
 				<itemgra item_types="poly_wood" order="0-">
 					<polygon color="#72bf81"/>
 				</itemgra>
+				<itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-"> 
+					<polygon color="#a0a0a0"/> 
+					<text text_size="5"/> 
+				</itemgra> 
 				<!-- landuse=residential -->
 				<itemgra item_types="poly_town" order="0-">
 					<polygon color="#f2f2f2"/>
@@ -5007,10 +5011,6 @@ Navigation</text></img>
 				</itemgra>
 				<itemgra item_types="town_label_1e7,district_label_1e7" order="1-">
 					<circle color="#000000" radius="3" text_size="15"/>
-				</itemgra>
-				<itemgra item_types="poly_flats,poly_scrub,poly_military_zone,poly_marine,plantation,tundra" order="0-">
-					<polygon color="#a0a0a0"/>
-					<text text_size="5"/>
 				</itemgra>
 				<itemgra item_types="rg_point" order="0-">
 					<circle color="#FF089C" radius="10"/>
