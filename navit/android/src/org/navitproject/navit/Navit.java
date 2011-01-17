@@ -141,11 +141,17 @@ public class Navit extends Activity implements Handler.Callback
 		}
 		return true;
 	}
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
+		Intent startup_intent=this.getIntent();
+		Log.e("Navit","****A "+startup_intent.getAction());
+		Log.e("Navit","****D "+startup_intent.getDataString());
+		
 		ActivityResults = new NavitActivityResult[16];
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
