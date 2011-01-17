@@ -286,15 +286,6 @@ graphics_destroy(struct graphics_priv *gr)
 }
 
 /* graphics_font */
-static char *fontfamilies[]={
-	"Liberation Mono",
-	"Arial",
-	"DejaVu Sans",
-	"NcrBI4nh",
-	"luximbi",
-	"FreeSans",
-	NULL,
-};
 
 static void font_destroy(struct graphics_font_priv *gf)
 {
