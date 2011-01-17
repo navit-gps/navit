@@ -1504,9 +1504,10 @@ gui_internal_prune_menu_count(struct gui_priv *this, int count, int render)
 	struct widget *w=NULL;
 	while (l && count-- > 0)
 		l=g_list_previous(l);
-	if (l)
+	if (l) {
 		w=l->data;
-	gui_internal_prune_menu_do(this, w, render);
+		gui_internal_prune_menu_do(this, w, render);
+	}
 }
 
 static void
