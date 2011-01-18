@@ -418,15 +418,15 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
                       if (GTK2_GTKGL_LIBRARY AND GTK2_GTKGL_INCLUDE_DIR)
                         set(GTK2_GTKGL_FOUND TRUE)
 
-                        set(GTK2_INCLUDE_DIRS
-                          ${GTK2_INCLUDE_DIRS}
-                          ${GTK2_GTKGL_INCLUDE_DIR}
-                        )
+#                        set(GTK2_INCLUDE_DIRS
+#                          ${GTK2_INCLUDE_DIRS}
+#                          ${GTK2_GTKGL_INCLUDE_DIR}
+#                        )
 
-                        set(GTK2_LIBRARIES
-                          ${GTK2_LIBRARIES}
-                          ${GTK2_GTKGL_LIBRARY}
-                        )
+#                        set(GTK2_LIBRARIES
+#                          ${GTK2_LIBRARIES}
+#                          ${GTK2_GTKGL_LIBRARY}
+#                        )
                       endif (GTK2_GTKGL_LIBRARY AND GTK2_GTKGL_INCLUDE_DIR)
 
                     else (GTK2_ATK_LIBRARY AND GTK2_ATK_INCLUDE_DIR)
