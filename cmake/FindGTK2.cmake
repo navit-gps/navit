@@ -419,7 +419,7 @@ else (GTK2_LIBRARIES AND GTK2_INCLUDE_DIRS)
                         set(GTK2_GTKGL_FOUND TRUE)
 
                         set(GTK2_INCLUDE_DIRS
-                          ${GTK2_INCLUDE_DIR}
+                          ${GTK2_INCLUDE_DIRS}
                           ${GTK2_GTKGL_INCLUDE_DIR}
                         )
 
