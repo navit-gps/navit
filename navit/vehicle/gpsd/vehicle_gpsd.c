@@ -87,7 +87,11 @@ vehicle_gpsd_callback(struct gps_data_t *data, char *buf, size_t len,
 		buffer[len+1]='\0';
 		memcpy(buffer, buf, len);
 		pos=strchr(buffer,'\n');
+		if(!pos) {
+			pos=strchr(buffer,'\r');
+		}
 		if (pos) {
+			*pos  ='\n';
 			*++pos='\0';
 			if (!priv->nmea_data_buf || strlen(priv->nmea_data_buf) < 65536) {
 				nmea_data_buf=g_strconcat(priv->nmea_data_buf ? priv->nmea_data_buf : "", buffer, NULL);
@@ -217,7 +221,7 @@ vehicle_gpsd_try_open(gpointer *data)
 	g_free(source);
 
 #ifdef HAVE_LIBGPS19
-	gps_stream(priv->gps, WATCH_ENABLE | WATCH_NEWSTYLE, NULL);
+	gps_stream(priv->gps, WATCH_ENABLE|WATCH_NMEA|WATCH_JSON, NULL);
 #else
 	gps_query(priv->gps, priv->gpsd_query);
 #endif
