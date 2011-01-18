@@ -5,7 +5,7 @@ if(SAMPLE_MAP)
    GET_TARGET_PROPERTY(MAPTOOL_PATH maptool LOCATION)
    add_custom_command (
       OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.xml
-      COMMAND echo '<map data=\"$$NAVIT_SHAREDIR/maps/${SAMPLE_MAP_NAME}.bin\" type=\"binfile\"/>' > ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.xml
+      COMMAND ${CMAKE_COMMAND} -D TEXT:STRING='<map data=\"$$NAVIT_SHAREDIR/maps/${SAMPLE_MAP_NAME}.bin\" type=\"binfile\"/>' -D DST=${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.xml -P ${PROJECT_SOURCE_DIR}/cmake/navit_writeto.cmake
       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${SAMPLE_MAP_NAME}.bin
    )
    add_custom_command (
