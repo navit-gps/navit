@@ -57,7 +57,7 @@ lib@LIBNAVIT@_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c comma
 	file.h graphics.h gtkext.h gui.h item.h item_def.h keys.h log.h layer.h layout.h linguistics.h main.h map-share.h map.h\
 	map_data.h mapset.h maptype.h menu.h messages.h navigation.h navit.h osd.h \
 	param.h phrase.h plugin.h point.h plugin_def.h projection.h popup.h route.h profile.h roadprofile.h search.h speech.h start_real.h \
-	transform.h track.h util.h vehicle.h vehicleprofile.h window.h xmlconfig.h zipfile.h \
+	transform.h track.h types.h util.h vehicle.h vehicleprofile.h window.h xmlconfig.h zipfile.h \
 	navit_nls.h sunriset.c sunriset.h glib_slice.h
 
 XSLTS=@XSLTS@
