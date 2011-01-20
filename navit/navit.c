@@ -1208,12 +1208,6 @@ navit_textfile_debug_log(struct navit *this_, const char *fmt, ...)
        	va_end(ap);
 }
 
-int 
-navit_speech_estimate(struct navit *this_, char *str)
-{
-	return speech_estimate_duration(this_->speech, str);
-}
-
 void
 navit_say(struct navit *this_, char *text)
 {
@@ -1424,6 +1418,12 @@ navit_init(struct navit *this_)
 
 		navit_destroy(this_);
 		return;
+	}
+	if (this_->speech && this_->navigation) {
+		struct attr speech;
+		speech.type=attr_speech;
+		speech.u.speech=this_->speech;
+		navigation_set_attr(this_->navigation, &speech);
 	}
 	dbg(2,"Initializing graphics\n");
 	dbg(2,"Setting Vehicle\n");
