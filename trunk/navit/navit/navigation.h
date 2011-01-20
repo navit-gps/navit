@@ -33,6 +33,7 @@ struct map;
 struct navigation;
 struct route;
 int navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *attr, struct attr_iter *iter);
+int navigation_set_attr(struct navigation *this_, struct attr *attr);
 struct navigation *navigation_new(struct attr *parent, struct attr **attrs);
 int navigation_set_announce(struct navigation *this_, enum item_type type, int *level);
 void navigation_destroy(struct navigation *this_);

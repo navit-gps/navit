@@ -35,6 +35,7 @@
 #include "map.h"
 #include "navit.h"
 #include "callback.h"
+#include "speech.h"
 #include "plugin.h"
 #include "navit_nls.h"
 
@@ -65,6 +66,7 @@ struct navigation {
 	struct callback_list *callback_speech;
 	struct callback_list *callback;
 	struct navit *navit;
+	struct speech *speech;
 	int level_last;
 	struct item item_last;
 	int turn_around;
@@ -157,6 +159,18 @@ navigation_get_attr(struct navigation *this_, enum attr_type type, struct attr *
 	}
 	attr->type=type;
 	return 1;
+}
+
+int
+navigation_set_attr(struct navigation *this_, struct attr *attr)
+{
+	switch (attr->type) {
+	case attr_speech:
+		this_->speech=attr->u.speech;
+		return 1;
+	default:
+		return 0;
+	}
 }
 
 
@@ -1286,13 +1300,28 @@ replace_suffix(char *name, char *search, char *replace)
 }
 
 static char *
-navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *next, char *prefix)
+navigation_item_destination(struct navigation *nav, struct navigation_itm *itm, struct navigation_itm *next, char *prefix)
 {
 	char *ret=NULL,*name1,*sep,*name2;
+	char *n1,*n2;
 	int i,sex;
+	int vocabulary1=65535;
+	int vocabulary2=65535;
+	struct attr attr;
+
 	if (! prefix)
 		prefix="";
-	if(!itm->name1 && !itm->name2 && itm->item.type == type_ramp) {
+	if (nav->speech && speech_get_attr(nav->speech, attr_vocabulary_name, &attr, NULL))
+		vocabulary1=attr.u.num;
+	if (nav->speech && speech_get_attr(nav->speech, attr_vocabulary_name_systematic, &attr, NULL))
+		vocabulary2=attr.u.num;
+	n1=itm->name1;
+	n2=itm->name2;
+	if (!vocabulary1)
+		n1=NULL;
+	if (!vocabulary2)
+		n2=NULL;
+	if(!n1 && !n2 && itm->item.type == type_ramp && vocabulary2) {
 		dbg(1,">> Next is ramp %lx current is %lx \n", itm->item.type, next->item.type);
 			 
 		if(next->item.type == type_ramp)
@@ -1303,25 +1332,25 @@ navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *n
 			return g_strdup_printf("%s%s",prefix,_("into the ramp"));
 		
 	}
-	if (!itm->name1 && !itm->name2)
+	if (!n1 && !n2)
 		return NULL;
-	if (itm->name1) {
+	if (n1) {
 		sex=-1;
 		name1=NULL;
 		for (i = 0 ; i < sizeof(suffixes)/sizeof(suffixes[0]) ; i++) {
-			if (contains_suffix(itm->name1,suffixes[i].fullname)) {
+			if (contains_suffix(n1,suffixes[i].fullname)) {
 				sex=suffixes[i].sex;
-				name1=g_strdup(itm->name1);
+				name1=g_strdup(n1);
 				break;
 			}
-			if (contains_suffix(itm->name1,suffixes[i].abbrev)) {
+			if (contains_suffix(n1,suffixes[i].abbrev)) {
 				sex=suffixes[i].sex;
-				name1=replace_suffix(itm->name1, suffixes[i].abbrev, suffixes[i].fullname);
+				name1=replace_suffix(n1, suffixes[i].abbrev, suffixes[i].fullname);
 				break;
 			}
 		}
-		if (itm->name2) {
-			name2=itm->name2;
+		if (n2) {
+			name2=n2;
 			sep=" ";
 		} else {
 			name2="";
@@ -1330,7 +1359,7 @@ navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *n
 		switch (sex) {
 		case -1:
 			/* TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name */
-			ret=g_strdup_printf(_("%sinto the street %s%s%s"),prefix,itm->name1, sep, name2);
+			ret=g_strdup_printf(_("%sinto the street %s%s%s"),prefix,n1, sep, name2);
 			break;
 		case 1:
 			/* TRANSLATORS: Arguments: 1: Prefix (Space if required) 2: Street Name 3: Separator (Space if required), 4: Systematic Street Name. Male form. The stuff after | doesn't have to be included */
@@ -1349,7 +1378,7 @@ navigation_item_destination(struct navigation_itm *itm, struct navigation_itm *n
 			
 	} else
 		/* TRANSLATORS: gives the name of the next road to turn into (into the E17) */
-		ret=g_strdup_printf(_("%sinto the %s"),prefix,itm->name2);
+		ret=g_strdup_printf(_("%sinto the %s"),prefix,n2);
 	name1=ret;
 	while (name1 && *name1) {
 		switch (*name1) {
@@ -1536,7 +1565,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		     tellstreetname = 1;
 
 		if(nav->tell_street_name && tellstreetname)
-			destination=navigation_item_destination(cmd->itm, itm, " ");
+			destination=navigation_item_destination(nav, cmd->itm, itm, " ");
 
 		if (level != -2) {
 			/* TRANSLATORS: The first argument is strength, the second direction, the third distance and the fourth destination Example: 'Turn 'slightly' 'left' in '100 m' 'onto baker street' */
@@ -1602,7 +1631,10 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 		}
 		
 		next = show_maneuver(nav,prev->itm, cur, type, 0);
-		speech_time = navit_speech_estimate(nav->navit,next);
+		if (nav->speech)
+			speech_time = speech_estimate_duration(nav->speech,next);
+		else
+			speech_time = -1;
 		g_free(next);
 
 		if (speech_time == -1) { // user didn't set cps
@@ -1620,7 +1652,7 @@ show_next_maneuvers(struct navigation *nav, struct navigation_itm *itm, struct n
 		buf = show_maneuver(nav, prev->itm, cur, type, 1);
 		ret = g_strdup_printf("%s, %s", old, buf);
 		g_free(buf);
-		if (navit_speech_estimate(nav->navit,ret) > time2nav) {
+		if (nav->speech && speech_estimate_duration(nav->speech,ret) > time2nav) {
 			g_free(ret);
 			ret = old;
 			i = 2; // This will terminate the loop
