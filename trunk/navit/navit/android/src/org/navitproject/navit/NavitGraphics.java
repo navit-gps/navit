@@ -305,31 +305,36 @@ public class NavitGraphics
 									if (scale > 1.3)
 									{
 										// zoom in
-										String s = java.lang.String.valueOf((char) 17);
-										KeypressCallback(KeypressCallbackID, s);
+										//String s = java.lang.String.valueOf((char) 17);
+										//KeypressCallback(KeypressCallbackID, s);
+
 
 										// next lines are a hack, without it screen will not get updated anymore!
-										ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-										MotionCallback(MotionCallbackID, x+15, y);
-										MotionCallback(MotionCallbackID, x-15, y);
-										ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
+										//ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+										//MotionCallback(MotionCallbackID, x+15, y);
+										//MotionCallback(MotionCallbackID, x-15, y);
+										//ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 										//this.postInvalidate();
+
+										CallbackMessageChannel(1,"");
 
 										//Log.e("NavitGraphics", "onTouch zoom in");
 									}
 									else if (scale < 0.8)
 									{
 										// zoom out    
-										String s = java.lang.String.valueOf((char) 15);
-										KeypressCallback(KeypressCallbackID, s);
+										//String s = java.lang.String.valueOf((char) 15);
+										//KeypressCallback(KeypressCallbackID, s);
 
 										// next lines are a hack, without it screen will not get updated anymore!
-										ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-										MotionCallback(MotionCallbackID, x+15, y);
-										MotionCallback(MotionCallbackID, x-15, y);
-										ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
+										//ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+										//MotionCallback(MotionCallbackID, x+15, y);
+										//MotionCallback(MotionCallbackID, x-15, y);
+										//ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 										//this.postInvalidate();
-										
+
+										CallbackMessageChannel(2,"");
+
 										//Log.e("NavitGraphics", "onTouch zoom out");
 									}
 
@@ -362,7 +367,7 @@ public class NavitGraphics
 						{
 							this.touch_now.set(event.getX(), event.getY());
 							this.touch_prev.set(event.getX(), event.getY());
-							
+
 							//Log.e("NavitGraphics", "zoom 2");
 						}
 					}
@@ -834,15 +839,22 @@ public class NavitGraphics
 															if (msg.getData().getInt("Callback") == 1)
 															{
 																//Log.e("NavitGraphics","callback_handler -> handleMessage 1");
-																KeypressCallback(KeypressCallbackID, msg.getData()
-																		.getString("s"));
+																//KeypressCallback(KeypressCallbackID, msg.getData()
+																//		.getString("s"));
+		CallbackMessageChannel(1,"");
 															}
-															else if (msg.getData().getInt("Callback") == 2)
+        else if (msg.getData().getInt("Callback") == 2)
+
+        {
+                CallbackMessageChannel(2,"");
+        }
+
+															else if (msg.getData().getInt("Callback") == 21)
 															{
 																//Log.e("NavitGraphics","callback_handler -> handleMessage 2");
 																ButtonCallback(ButtonCallbackID, 1, 1, 0, 0); // down
 															}
-															else if (msg.getData().getInt("Callback") == 3)
+															else if (msg.getData().getInt("Callback") == 22)
 															{
 																//Log.e("NavitGraphics","callback_handler -> handleMessage 3");
 																ButtonCallback(ButtonCallbackID, 0, 1, 0, 0); // up
@@ -975,4 +987,13 @@ public class NavitGraphics
 		pos_x = x;
 		pos_y = y;
 	}
+
+
+
+	/**
+	* generic message channel to C-code
+	*/
+	public native int CallbackMessageChannel(int i,String s);
+
+
 }
