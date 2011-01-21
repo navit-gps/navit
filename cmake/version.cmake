@@ -26,7 +26,7 @@ EXECUTE_PROCESS(
      OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-set( SVN_VERSION "unknown" )
+set( ${NAME} "unknown" )
 
 if (NOT VERSION)
    FIND_PACKAGE(Subversion)
@@ -42,13 +42,13 @@ if (NOT VERSION)
    endif(Subversion_FOUND)
 
    if (VERSION)
-      set( SVN_VERSION ${VERSION} )
+      set( ${NAME} ${VERSION} )
    endif(VERSION)
 else()
-   string(REGEX REPLACE "Revision: " "" SVN_VERSION ${VERSION})
+   string(REGEX REPLACE "Revision: " "" ${NAME} ${VERSION})
 endif(NOT VERSION)
 
 set(NAVIT_VARIANT "-")
 
-message (STATUS "SVN-version ${SVN_VERSION}")
+message (STATUS "SVN-version ${${NAME}}")
 CONFIGURE_FILE(${SRC} ${DST} @ONLY)
