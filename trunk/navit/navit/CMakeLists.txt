@@ -83,6 +83,7 @@ ADD_CUSTOM_TARGET(
    version
    ${CMAKE_COMMAND} -D SRC=${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
                     -D DST=${CMAKE_CURRENT_BINARY_DIR}/version.h
+		    -D NAME=SVN_VERSION
                     -P ${PROJECT_SOURCE_DIR}/cmake/version.cmake
 )
 

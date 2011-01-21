@@ -23,6 +23,9 @@ set(IMAGE_DIR share/navit/xpm)
 set(LIB_DIR lib)
 
 ### Detect environment
+foreach(EXTRA_MODULE ${EXTRA_MODULES}) 
+   add_module(${EXTRA_MODULE} "extra module specified" TRUE)
+endforeach()
 
 add_plugin(support/ezxml "native Glib found" FALSE)
 add_plugin(support/glib "native Glib found" FALSE)
