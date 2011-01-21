@@ -11,7 +11,6 @@ jobject *android_activity;
 struct callback_list *android_activity_cbl;
 int android_version;
 
-
 int
 android_find_class_global(char *name, jclass *ret)
 {
@@ -169,4 +168,25 @@ Java_org_navitproject_navit_NavitSensors_SensorCallback( JNIEnv* env, jobject th
 	callback_call_4((struct callback *)id, sensor, &x, &y, &z);
 }
 
-
+JNIEXPORT void JNICALL
+Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, jobject thiz, int i, jobject str)
+{
+	char *s;
+	dbg(0,"enter %p %p\n",(struct callback *)i,str);
+	s=(*env)->GetStringUTFChars(env, str, NULL);
+	dbg(0,"string=%s\n",s);
+	if (i)
+	{
+		if (i == 1)
+		{
+			// zoom in
+			navit_cmd_zoom_in_void();
+		}
+		if (i == 2)
+		{
+			// zoom out
+			navit_cmd_zoom_out_void();
+		}
+	}
+	(*env)->ReleaseStringUTFChars(env, str, s);
+}

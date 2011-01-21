@@ -317,7 +317,7 @@ public class Navit extends Activity implements Handler.Callback
 				s = java.lang.String.valueOf((char) 15);
 				msg = new Message();
 				b = new Bundle();
-				b.putInt("Callback", 1);
+				b.putInt("Callback", 2);
 				b.putString("s", s);
 				msg.setData(b);
 				N_NavitGraphics.callback_handler.sendMessage(msg);

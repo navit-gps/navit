@@ -697,6 +697,16 @@ navit_zoom_out_cursor(struct navit *this_, int factor)
 		navit_zoom_out(this_, 2, NULL);
 }
 
+// zoom without args
+int navit_cmd_zoom_in_void()
+{
+	navit_zoom_in_cursor(global_navit, 2);
+}
+
+int navit_cmd_zoom_out_void()
+{
+	navit_zoom_out_cursor(global_navit, 2);
+}
 
 static int
 navit_cmd_zoom_in(struct navit *this_)
