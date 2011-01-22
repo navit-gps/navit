@@ -1,15 +1,29 @@
 #include <string.h>
 #include <poll.h>
+#include <glib.h>
+#include <stdlib.h>
 #include "android.h"
 #include <android/log.h>
 #include "debug.h"
 #include "event.h"
 #include "callback.h"
+#include "projection.h"
+#include "map.h"
+
 
 JNIEnv *jnienv;
 jobject *android_activity;
 struct callback_list *android_activity_cbl;
 int android_version;
+
+struct navit *global_navit;
+
+struct attr attr;
+struct config {
+        struct attr **attrs;
+        struct callback_list *cbl;
+} *config;
+
 
 int
 android_find_class_global(char *name, jclass *ret)
@@ -173,20 +187,66 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 {
 	char *s;
 	dbg(0,"enter %p %p\n",(struct callback *)i,str);
-	s=(*env)->GetStringUTFChars(env, str, NULL);
-	dbg(0,"string=%s\n",s);
+
+	config_get_attr(config, attr_navit, &attr, NULL);
+	// attr.u.navit
+
 	if (i)
 	{
 		if (i == 1)
 		{
 			// zoom in
-			navit_cmd_zoom_in_void();
+			navit_zoom_in_cursor(global_navit, 2);
+			// navit_zoom_in_cursor(attr.u.navit, 2);
 		}
-		if (i == 2)
+		else if (i == 2)
 		{
 			// zoom out
-			navit_cmd_zoom_out_void();
+			navit_zoom_out_cursor(global_navit, 2);
+			// navit_zoom_out_cursor(attr.u.navit, 2);
+		}
+		else if (i == 3)
+		{
+			s=(*env)->GetStringUTFChars(env, str, NULL);
+			dbg(0,"*****string=%s\n",s);
+
+			// set destination to (lat#lon#title)
+			struct coord_geo g;
+			char *p;
+			char name[strlen(s)];
+			char *stopstring;
+
+			// lat
+			p = strtok (s,"#");
+			g.lat = strtof(p, &stopstring);
+			// lon
+			p = strtok (NULL, "#");
+			g.lng = strtof(p, &stopstring);
+			// description
+			*name = strtok (NULL, "#");
+
+			dbg(0,"lat=%f\n",g.lat);
+			dbg(0,"lng=%f\n",g.lng);
+			dbg(0,"str1=%s\n",name);
+
+			struct coord c;
+			transform_from_geo(projection_mg, &g, &c);
+
+			struct pcoord pc;
+			pc.x=c.x;
+			pc.y=c.y;
+			pc.pro=projection_mg;
+
+			dbg(0,"c x=%f\n",c.x);
+			dbg(0,"c y=%f\n",c.y);
+
+			dbg(0,"pc x=%f\n",pc.x);
+			dbg(0,"pc y=%f\n",pc.y);
+
+			// start navigation asynchronous
+			navit_set_destination(global_navit, &pc, &name, 1);
+
+			(*env)->ReleaseStringUTFChars(env, str, s);
 		}
 	}
-	(*env)->ReleaseStringUTFChars(env, str, s);
 }
