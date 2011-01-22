@@ -60,10 +60,14 @@ public class NavitGraphics
 	Activity								activity;
 
 	public static Boolean			in_map										= false;
+
+	// for menu key
 	private static long				time_for_long_press						= 300L;
 	private static long				interval_for_long_press					= 200L;
+
+	// for touch screen
 	private long						last_touch_on_screen						= 0L;
-	private static long				long_press_on_screen_interval			= 1000L;
+	private static long				long_press_on_screen_interval			= 1500L;
 	private static float				long_press_on_screen_max_distance	= 8f;
 
 	// Overlay View for Android
@@ -109,7 +113,7 @@ public class NavitGraphics
 			this.v = v;
 			this.is_still_pressing = true;
 			last_down_action = System.currentTimeMillis();
-			Log.e("NavitGraphics", "SensorThread created");
+			//Log.e("NavitGraphics", "SensorThread created");
 		}
 		
 		public void down()
@@ -129,20 +133,20 @@ public class NavitGraphics
 
 		public void run()
 		{
-			Log.e("NavitGraphics", "SensorThread started");
+			//Log.e("NavitGraphics", "SensorThread started");
 			while (this.running)
 			{
 				if ((System.currentTimeMillis() - this.last_down_action) > long_press_on_screen_interval)
 				{
 					// ok, we have counted a long press on screen
 					// do stuff and then stop this thread
-					Log.e("NavitGraphics", "SensorThread: LONG PRESS");
+					//Log.e("NavitGraphics", "SensorThread: LONG PRESS");
 					try
 					{
 						// find the class, to get the method "do_longpress_action"
 						// and then call the method
 						Class cls = this.v.getClass();
-						Log.e("NavitGraphics", "c=" + String.valueOf(cls));
+						//Log.e("NavitGraphics", "c=" + String.valueOf(cls));
 						Class partypes[] = new Class[2];
 						partypes[0] = Float.TYPE;
 						partypes[1] = Float.TYPE;
@@ -162,7 +166,7 @@ public class NavitGraphics
 				}
 				else if (!this.is_still_pressing)
 				{
-					Log.e("NavitGraphics", "SensorThread: stopped pressing");
+					//Log.e("NavitGraphics", "SensorThread: stopped pressing");
 					this.running = false;
 				}
 				else
@@ -178,7 +182,7 @@ public class NavitGraphics
 					}
 				}
 			}
-			Log.e("NavitGraphics", "SensorThread ended");
+			//Log.e("NavitGraphics", "SensorThread ended");
 		}
 	}
 
@@ -237,7 +241,7 @@ public class NavitGraphics
 						{
 							if (Navit.mgr != null)
 							{
-								Log.e("NavitGraphics", "view -> SHOW SoftInput");
+								//Log.e("NavitGraphics", "view -> SHOW SoftInput");
 								//Log.e("NavitGraphics", "view mgr=" + String.valueOf(Navit.mgr));
 								Navit.mgr.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT);
 								Navit.show_soft_keyboard_now_showing = true;
@@ -262,7 +266,7 @@ public class NavitGraphics
 
 				public void do_longpress_action(float x, float y)
 				{
-					Log.e("NavitGraphics", "do_longpress_action enter");
+					//Log.e("NavitGraphics", "do_longpress_action enter");
 					NavitAndroidOverlayBubble b = new NavitAndroidOverlayBubble();
 					b.x = (int) x;
 					b.y = (int) y;
@@ -280,7 +284,7 @@ public class NavitGraphics
 					PointF touch_prev2 = null;
 					PointF touch_last_load_tiles2 = null;
 
-					Log.e("NavitGraphics", "onTouchEvent");
+					//Log.e("NavitGraphics", "onTouchEvent");
 
 					super.onTouchEvent(event);
 					int action = event.getAction();
@@ -360,8 +364,8 @@ public class NavitGraphics
 					{
 						switch_value = (event.getAction() & _ACTION_MASK_);
 					}
-					Log.e("NavitGraphics", "switch_value=" + switch_value);
-					Log.e("NavitGraphics", "_ACTION_MASK_=" + _ACTION_MASK_);
+					//Log.e("NavitGraphics", "switch_value=" + switch_value);
+					//Log.e("NavitGraphics", "_ACTION_MASK_=" + _ACTION_MASK_);
 					// calculate value
 
 					if (switch_value == MotionEvent.ACTION_DOWN)
@@ -369,7 +373,7 @@ public class NavitGraphics
 						this.touch_now.set(event.getX(), event.getY());
 						this.touch_start.set(event.getX(), event.getY());
 						this.touch_prev.set(event.getX(), event.getY());
-						Log.e("NavitGraphics", "ACTION_DOWN");
+						//Log.e("NavitGraphics", "ACTION_DOWN");
 
 						if (in_map)
 						{
@@ -390,7 +394,7 @@ public class NavitGraphics
 						this.touch_now.set(event.getX(), event.getY());
 						touch_now2 = touch_now;
 						touch_start2 = touch_start;
-						Log.e("NavitGraphics", "ACTION_UP");
+						//Log.e("NavitGraphics", "ACTION_UP");
 						if (in_map)
 						{
 							try
@@ -415,12 +419,12 @@ public class NavitGraphics
 							if ((in_map)
 									&& ((System.currentTimeMillis() - last_touch_on_screen) > long_press_on_screen_interval))
 							{
-								Log.e("NavitGraphics", "onTouch up (LONG PRESS)");
+								//Log.e("NavitGraphics", "onTouch up (LONG PRESS)");
 								do_longpress_action(touch_now.x, touch_now.y);
 							}
 							else
 							{
-								Log.e("NavitGraphics", "onTouch up (quick touch)");
+								//Log.e("NavitGraphics", "onTouch up (quick touch)");
 								ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 							}
 							touch_mode = NONE;
@@ -432,7 +436,7 @@ public class NavitGraphics
 								touch_now2 = touch_now;
 								touch_start2 = touch_start;
 
-								Log.e("NavitGraphics", "onTouch move");
+								//Log.e("NavitGraphics", "onTouch move");
 
 								// we are dragging, so we can't be holding down on same spot!
 								try
@@ -509,7 +513,7 @@ public class NavitGraphics
 					}
 					else if (switch_value == MotionEvent.ACTION_MOVE)
 					{
-						Log.e("NavitGraphics", "ACTION_MOVE");
+						//Log.e("NavitGraphics", "ACTION_MOVE");
 
 						if (touch_mode == DRAG)
 						{
@@ -525,13 +529,13 @@ public class NavitGraphics
 								// is it a still ongoing long press?
 								if ((System.currentTimeMillis() - last_touch_on_screen) > long_press_on_screen_interval)
 								{
-									Log.e("NavitGraphics", "onTouch up (LONG PRESS)");
+									//Log.e("NavitGraphics", "onTouch up (LONG PRESS)");
 									do_longpress_action(touch_now.x, touch_now.y);
 								}
 							}
 							else
 							{
-								Log.e("NavitGraphics", "onTouch move2");
+								//Log.e("NavitGraphics", "onTouch move2");
 
 								// we are dragging, so we can't be holding down on same spot!
 								try
@@ -553,18 +557,18 @@ public class NavitGraphics
 							this.touch_now.set(event.getX(), event.getY());
 							this.touch_prev.set(event.getX(), event.getY());
 
-							Log.e("NavitGraphics", "zoom 2");
+							//Log.e("NavitGraphics", "zoom 2");
 						}
 					}
 					else if (switch_value == _ACTION_POINTER_DOWN_)
 					{
-						Log.e("NavitGraphics", "ACTION_POINTER_DOWN");
+						//Log.e("NavitGraphics", "ACTION_POINTER_DOWN");
 
 						oldDist = spacing(event);
 						if (oldDist > 10f)
 						{
 							touch_mode = ZOOM;
-							Log.e("NavitGraphics", "--> zoom");
+							//Log.e("NavitGraphics", "--> zoom");
 						}
 					}
 					return true;
@@ -698,12 +702,12 @@ public class NavitGraphics
 								{
 									Navit.time_pressed_menu_key = Navit.time_pressed_menu_key
 											+ (System.currentTimeMillis() - Navit.last_pressed_menu_key);
-									Log.e("NavitGraphics", "press time=" + Navit.time_pressed_menu_key);
+									//Log.e("NavitGraphics", "press time=" + Navit.time_pressed_menu_key);
 
 									// on long press let softkeyboard popup
 									if (Navit.time_pressed_menu_key > time_for_long_press)
 									{
-										Log.e("NavitGraphics", "long press menu key!!");
+										//Log.e("NavitGraphics", "long press menu key!!");
 										Navit.show_soft_keyboard = true;
 										Navit.time_pressed_menu_key = 0L;
 										// need to draw to get the keyboard showing
@@ -737,7 +741,7 @@ public class NavitGraphics
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_BACK)
 						{
-							Log.e("NavitGraphics", "KEYCODE_BACK down");
+							//Log.e("NavitGraphics", "KEYCODE_BACK down");
 							s = java.lang.String.valueOf((char) 27);
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_CALL)
@@ -864,7 +868,7 @@ public class NavitGraphics
 							{
 								Navit.show_soft_keyboard_now_showing = false;
 							}
-							Log.e("NavitGraphics", "KEYCODE_BACK up");
+							//Log.e("NavitGraphics", "KEYCODE_BACK up");
 							//s = java.lang.String.valueOf((char) 27);
 							handled = true;
 							return handled;
@@ -906,8 +910,8 @@ public class NavitGraphics
 				@Override
 				public boolean onTrackballEvent(MotionEvent event)
 				{
-					Log.e("NavitGraphics", "onTrackball " + event.getAction() + " " + event.getX() + " "
-							+ event.getY());
+					//Log.e("NavitGraphics", "onTrackball " + event.getAction() + " " + event.getX() + " "
+					//		+ event.getY());
 					String s = null;
 					if (event.getAction() == android.view.MotionEvent.ACTION_DOWN)
 					{
@@ -917,7 +921,7 @@ public class NavitGraphics
 					{
 						trackball_x += event.getX();
 						trackball_y += event.getY();
-						Log.e("NavitGraphics", "trackball " + trackball_x + " " + trackball_y);
+						//Log.e("NavitGraphics", "trackball " + trackball_x + " " + trackball_y);
 						if (trackball_x <= -1)
 						{
 							s = java.lang.String.valueOf((char) 2);
@@ -950,7 +954,7 @@ public class NavitGraphics
 						Rect previouslyFocusedRect)
 				{
 					super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
-					Log.e("NavitGraphics", "FocusChange " + gainFocus);
+					//Log.e("NavitGraphics", "FocusChange " + gainFocus);
 				}
 			};
 			view.setFocusable(true);
