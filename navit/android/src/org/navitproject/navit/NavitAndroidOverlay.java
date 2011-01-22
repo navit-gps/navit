@@ -35,7 +35,7 @@ public class NavitAndroidOverlay extends ImageView
 {
 	public Boolean					draw_bubble							= false;
 	public long						bubble_showing_since				= 0L;
-	public static long			bubble_max_showing_timespan	= 5000L; // 5 secs.
+	public static long			bubble_max_showing_timespan	= 8000L; // 8 secs.
 
 	public static BubbleThread	bubble_thread						= null;
 
@@ -50,7 +50,7 @@ public class NavitAndroidOverlay extends ImageView
 			this.running = true;
 			this.a_overlay = a_ov;
 			this.bubble_showing_since = System.currentTimeMillis();
-			Log.e("Navit", "BubbleThread created");
+			//Log.e("Navit", "BubbleThread created");
 		}
 
 		public void stop_me()
@@ -60,12 +60,12 @@ public class NavitAndroidOverlay extends ImageView
 
 		public void run()
 		{
-			Log.e("Navit", "BubbleThread started");
+			//Log.e("Navit", "BubbleThread started");
 			while (this.running)
 			{
 				if ((System.currentTimeMillis() - this.bubble_showing_since) > bubble_max_showing_timespan)
 				{
-					Log.e("Navit", "BubbleThread: bubble displaying too long, hide it");
+					//Log.e("Navit", "BubbleThread: bubble displaying too long, hide it");
 					// with invalidate we call the onDraw() function, that will take care of it
 					this.a_overlay.postInvalidate();
 					this.running = false;
@@ -82,7 +82,7 @@ public class NavitAndroidOverlay extends ImageView
 					}
 				}
 			}
-			Log.e("Navit", "BubbleThread ended");
+			//Log.e("Navit", "BubbleThread ended");
 		}
 	}
 
@@ -103,7 +103,7 @@ public class NavitAndroidOverlay extends ImageView
 
 	public void show_bubble()
 	{
-		Log.e("Navit", "NavitAndroidOverlay -> show_bubble");
+		//Log.e("Navit", "NavitAndroidOverlay -> show_bubble");
 		if (!this.draw_bubble)
 		{
 			this.draw_bubble = true;
@@ -171,7 +171,7 @@ public class NavitAndroidOverlay extends ImageView
 
 	public void onDraw(Canvas c)
 	{
-		Log.e("Navit", "NavitAndroidOverlay -> onDraw");
+		//Log.e("Navit", "NavitAndroidOverlay -> onDraw");
 
 		Paint paint = new Paint(0);
 		paint.setAntiAlias(false);
@@ -228,7 +228,7 @@ public class NavitAndroidOverlay extends ImageView
 
 		if (this.draw_bubble)
 		{
-			Log.e("Navit", "NavitAndroidOverlay -> onDraw -> bubble");
+			//Log.e("Navit", "NavitAndroidOverlay -> onDraw -> bubble");
 
 			int dx = 20;
 			int dy = -100;
