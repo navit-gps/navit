@@ -110,6 +110,15 @@ public class NavitAndroidOverlay extends ImageView
 			this.bubble_showing_since = System.currentTimeMillis();
 			bubble_thread = new BubbleThread(this);
 			bubble_thread.start();
+
+			// test test DEBUG
+			Message msg = new Message();
+			Bundle b = new Bundle();
+			b.putInt("Callback", 4);
+			b.putInt("x", this.bubble_001.x);
+			b.putInt("y", this.bubble_001.y);
+			msg.setData(b);
+			Navit.N_NavitGraphics.callback_handler.sendMessage(msg);
 		}
 	}
 

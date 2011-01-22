@@ -16,7 +16,71 @@ jobject *android_activity;
 struct callback_list *android_activity_cbl;
 int android_version;
 
+struct navit {
+        struct attr self;
+        GList *mapsets;
+        GList *layouts;
+        struct gui *gui;
+        struct layout *layout_current;
+        struct graphics *gra;
+        struct action *action;
+        struct transformation *trans, *trans_cursor;
+        struct compass *compass;
+        struct route *route;
+        struct navigation *navigation;
+        struct speech *speech;
+        struct tracking *tracking;
+        int ready;
+        struct window *win;
+        struct displaylist *displaylist;
+        int tracking_flag;
+        int orientation;
+        int recentdest_count;
+        int osd_configuration;
+        GList *vehicles;
+        GList *windows_items;
+        struct navit_vehicle *vehicle;
+        struct callback_list *attr_cbl;
+        struct callback *nav_speech_cb, *roadbook_callback, *popup_callback, *route_cb, *progress_cb;
+        struct datawindow *roadbook_window;
+        struct map *former_destination;
+        struct point pressed, last, current;
+        int button_pressed,moved,popped,zoomed;
+        int center_timeout;
+        int autozoom_secs;
+        int autozoom_min;
+        int autozoom_active;
+        struct event_timeout *button_timeout, *motion_timeout;
+        struct callback *motion_timeout_callback;
+        int ignore_button;
+        int ignore_graphics_events;
+        struct log *textfile_debug_log;
+        struct pcoord destination;
+        int destination_valid;
+        int blocked;
+        int w,h;
+        int drag_bitmap;
+        int use_mousewheel;
+        struct messagelist *messages;
+        struct callback *resize_callback,*button_callback,*motion_callback,*predraw_callback;
+        struct vehicleprofile *vehicleprofile;
+        GList *vehicleprofiles;
+        int pitch;
+        int follow_cursor;
+        int prevTs;
+        int graphics_flags;
+        int zoom_min, zoom_max;
+        int radius;
+        struct bookmarks *bookmarks;
+        int flags;
+                 /* 1=No graphics ok */
+                 /* 2=No gui ok */
+        int border;
+};
+
+
 struct navit *global_navit;
+
 
 struct attr attr;
 struct config {
@@ -205,6 +269,46 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 			navit_zoom_out_cursor(global_navit, 2);
 			// navit_zoom_out_cursor(attr.u.navit, 2);
 		}
+		else if (i == 4)
+		{
+			s=(*env)->GetStringUTFChars(env, str, NULL);
+			dbg(0,"*****string=%s\n",s);
+
+			// set destination to (pixel-x#pixel-y)
+			char name[strlen(s)];
+			*name = "Target";
+			char *pstr;
+			// char *stopstring;
+
+		        struct point p;
+			struct coord c;
+			struct pcoord pc;
+
+			// pixel-x
+			pstr = strtok (s,"#");
+			p.x = atoi(pstr);
+			// pixel-y
+			pstr = strtok (NULL, "#");
+			p.y = atoi(pstr);
+
+			dbg(0,"11x=%d\n",p.x);
+			dbg(0,"11y=%d\n",p.y);
+
+		        transform_reverse(global_navit->trans, &p, &c);
+
+
+		        pc.x = c.x;
+		        pc.y = c.y;
+		        pc.pro = transform_get_projection(global_navit->trans);
+
+			dbg(0,"22x=%d\n",pc.x);
+			dbg(0,"22y=%d\n",pc.y);
+
+			// start navigation asynchronous
+			navit_set_destination(global_navit, &pc, &name, 1);
+
+			(*env)->ReleaseStringUTFChars(env, str, s);
+		}
 		else if (i == 3)
 		{
 			s=(*env)->GetStringUTFChars(env, str, NULL);
@@ -236,12 +340,6 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 			pc.x=c.x;
 			pc.y=c.y;
 			pc.pro=projection_mg;
-
-			dbg(0,"c x=%f\n",c.x);
-			dbg(0,"c y=%f\n",c.y);
-
-			dbg(0,"pc x=%f\n",pc.x);
-			dbg(0,"pc y=%f\n",pc.y);
 
 			// start navigation asynchronous
 			navit_set_destination(global_navit, &pc, &name, 1);
