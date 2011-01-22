@@ -848,7 +848,14 @@ public class NavitGraphics
         {
                 CallbackMessageChannel(2,"");
         }
+        else if (msg.getData().getInt("Callback") == 3)
 
+        {
+		String lat=msg.getData().getString("lat");
+		String lon=msg.getData().getString("lon");
+		String q=msg.getData().getString("q");
+                CallbackMessageChannel(3,lat+"#"+lon+"#"+q);
+        }
 															else if (msg.getData().getInt("Callback") == 21)
 															{
 																//Log.e("NavitGraphics","callback_handler -> handleMessage 2");
