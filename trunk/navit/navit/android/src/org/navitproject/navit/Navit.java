@@ -186,7 +186,25 @@ public class Navit extends Activity implements Handler.Callback
 		}
 
 		// Debug.startMethodTracing("calc");
-		NavitMain(this, langu, android.os.Build.VERSION.SDK_INT);
+		
+		// --> dont use!! NavitMain(this, langu, android.os.Build.VERSION.SDK_INT);
+		Log.e("Navit", "android.os.Build.VERSION.SDK_INT="
+				+ Integer.valueOf(android.os.Build.VERSION.SDK));
+		NavitMain(this, langu, Integer.valueOf(android.os.Build.VERSION.SDK));
+		// CAUTION: don't use android.os.Build.VERSION.SDK_INT if <uses-sdk android:minSdkVersion="3" />
+		// You will get exception on all devices with Android 1.5 and lower
+		// because Build.VERSION.SDK_INT is since SDK 4 (Donut 1.6)
+
+		//		Platform Version   API Level
+		//		Android 2.2       8
+		//		Android 2.1       7
+		//		Android 2.0.1     6
+		//		Android 2.0       5
+		//		Android 1.6       4
+		//		Android 1.5       3
+		//		Android 1.1       2
+		//		Android 1.0       1
+
 		NavitActivity(3);
 
 		this.mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -332,7 +350,7 @@ public class Navit extends Activity implements Handler.Callback
 	// define callback id here
 	//static int				N_KeypressCallbackID;
 	//static int				N_MotionCallbackID;
-	static NavitGraphics	N_NavitGraphics	= null;
+	public static NavitGraphics	N_NavitGraphics	= null;
 
 	// callback id gets set here when called from NavitGraphics
 	public static void setKeypressCallback(int kp_cb_id, NavitGraphics ng)
@@ -356,32 +374,32 @@ public class Navit extends Activity implements Handler.Callback
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		// Handle item selection
-		String s=null;
 		switch (item.getItemId())
 		{
 			case 1 :
-				s = java.lang.String.valueOf((char) 17);
-				//N_NavitGraphics.KeypressCallback(N_NavitGraphics.KeypressCallbackID, s);
 				Message msg = new Message();
 				Bundle b = new Bundle();
 				b.putInt("Callback", 1);
-				b.putString("s", s);
 				msg.setData(b);
 				N_NavitGraphics.callback_handler.sendMessage(msg);
-
-				//N_NavitGraphics.MotionCallback(N_MotionCallbackID, 0, 0);
+				// if we zoom, hide the bubble
+				if (N_NavitGraphics.NavitAOverlay != null)
+				{
+					N_NavitGraphics.NavitAOverlay.hide_bubble();
+				}
 				Log.e("Navit", "onOptionsItemSelected -> zoom in");
 				break;
 			case 2 :
-				s = java.lang.String.valueOf((char) 15);
 				msg = new Message();
 				b = new Bundle();
 				b.putInt("Callback", 2);
-				b.putString("s", s);
 				msg.setData(b);
 				N_NavitGraphics.callback_handler.sendMessage(msg);
-				//N_NavitGraphics.KeypressCallback(N_KeypressCallbackID, s);
-				//N_NavitGraphics.MotionCallback(N_MotionCallbackID, 0, 0);
+				// if we zoom, hide the bubble
+				if (N_NavitGraphics.NavitAOverlay != null)
+				{
+					N_NavitGraphics.NavitAOverlay.hide_bubble();
+				}
 				Log.e("Navit", "onOptionsItemSelected -> zoom out");
 				break;
 		}
