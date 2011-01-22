@@ -2058,6 +2058,7 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 	}
 
 	absbegin=str;
+	osd_std_draw(&this->osd_item);
 	if (do_draw && str) {
 		lines=0;
 		next=str;
@@ -2099,7 +2100,6 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 			p.y=(this->osd_item.h-lines*(height+yspacing)-yspacing)/2;
 		}
 
-		osd_std_draw(&this->osd_item);
 		while (str) {
 			next=strstr(str, "\\n");
 			if (next) {
@@ -2128,8 +2128,8 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 					   0);
 			str=next;
 		}
-		graphics_draw_mode(this->osd_item.gr, draw_mode_end);
 	}
+	graphics_draw_mode(this->osd_item.gr, draw_mode_end);
 	g_free(absbegin);
 
 }
