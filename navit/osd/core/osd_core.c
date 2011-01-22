@@ -338,10 +338,10 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   remainder = remainder  % (60);
   int secs  = remainder;
   if(0<days) {
-    time_buffer = g_strdup_printf("%dd %d:%d:%d",days,hours,mins,secs);
+    time_buffer = g_strdup_printf("%02dd %02d:%02d:%02d",days,hours,mins,secs);
   }
   else {
-    time_buffer = g_strdup_printf("%d:%d:%d",hours,mins,secs);
+    time_buffer = g_strdup_printf("%02d:%02d:%02d",hours,mins,secs);
   }
 
   buffer [0] = 0;
