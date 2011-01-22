@@ -149,8 +149,8 @@ public class Navit extends Activity implements Handler.Callback
 		super.onCreate(savedInstanceState);
 		
 		Intent startup_intent=this.getIntent();
-		Log.e("Navit","****A "+startup_intent.getAction());
-		Log.e("Navit","****D "+startup_intent.getDataString());
+		Log.e("Navit","**1**A "+startup_intent.getAction());
+		Log.e("Navit","**1**D "+startup_intent.getDataString());
 		
 		ActivityResults = new NavitActivityResult[16];
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -212,6 +212,65 @@ public class Navit extends Activity implements Handler.Callback
 		Log.e("Navit", "OnResume");
 		//InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		NavitActivity(1);
+
+		Intent startup_intent=this.getIntent();
+		Log.e("Navit","**2**A "+startup_intent.getAction());
+		Log.e("Navit","**2**D "+startup_intent.getDataString());
+
+		String intent_data=startup_intent.getDataString();
+		if (intent_data != null)
+		{
+			// a: google.navigation:ll=48.25676,16.643&q=blabla-strasse
+			// b: google.navigation:q=48.25676,16.643
+			String lat;
+			String lon;
+			String q;
+
+			String temp1=null;
+			String temp2=null;
+			String temp3=null;
+
+			// if b: then remodel the input string
+			if (intent_data.substring(0,20).equals("google.navigation:q="))
+			{
+				intent_data="ll="+intent_data.split("q=",-1)[1]+"&q=Target";
+			}
+
+
+			// now split the parts off
+			temp1=intent_data.split("&q=",-1)[0];
+			try
+			{
+				temp3=temp1.split("ll=",-1)[1];
+				temp2=intent_data.split("&q=",-1)[1];
+			}
+			catch (Exception e)
+			{
+				// java.lang.ArrayIndexOutOfBoundsException most likely
+				// so let's assume we dont have '&q=xxxx'
+				temp3=temp1;
+			}
+
+			if (temp2 == null)
+			{
+				// use some default name
+				temp2 = "Target";
+			}
+
+			lat=temp3.split(",",-1)[0];
+			lon=temp3.split(",",-1)[1];
+			q=temp2;
+
+			Message msg = new Message();
+			Bundle b = new Bundle();
+			b.putInt("Callback", 3);
+			b.putString("lat", lat);
+			b.putString("lon", lon);
+			b.putString("q", q);
+			msg.setData(b);
+			N_NavitGraphics.callback_handler.sendMessage(msg);
+		}
+
 	}
 	@Override
 	public void onPause()
