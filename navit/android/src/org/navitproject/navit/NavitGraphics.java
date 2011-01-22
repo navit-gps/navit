@@ -23,6 +23,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import org.navitproject.navit.NavitAndroidOverlay.NavitAndroidOverlayBubble;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -44,7 +46,7 @@ import android.widget.RelativeLayout;
 public class NavitGraphics
 {
 	private NavitGraphics			parent_graphics;
-	private ArrayList					overlays	= new ArrayList();
+	private ArrayList					overlays										= new ArrayList();
 	int									bitmap_w;
 	int									bitmap_h;
 	int									pos_x;
@@ -57,16 +59,19 @@ public class NavitGraphics
 	NavitCamera							camera;
 	Activity								activity;
 
-	public static Boolean			in_map						= false;
-	private static long				time_for_long_press		= 300L;
-	private static long				interval_for_long_press	= 200L;
-	
+	public static Boolean			in_map										= false;
+	private static long				time_for_long_press						= 300L;
+	private static long				interval_for_long_press					= 200L;
+	private long						last_touch_on_screen						= 0L;
+	private static long				long_press_on_screen_interval			= 1000L;
+	private static float				long_press_on_screen_max_distance	= 8f;
+
 	// Overlay View for Android
 	//
 	// here you can draw all the nice things you want
 	// and get touch events for it (without touching C-code)
-	private NavitAndroidOverlay NavitAOverlay;
-	
+	public NavitAndroidOverlay	NavitAOverlay								= null;
+
 
 	public void SetCamera(int use_camera)
 	{
@@ -78,6 +83,106 @@ public class NavitGraphics
 			relativelayout.bringChildToFront(view);
 		}
 	}
+
+	public static SensorThread	touch_sensor_thread	= null;
+
+	private class SensorThread extends Thread
+	{
+		private Boolean					running;
+		private long						last_down_action	= 0L;
+		private Boolean					is_still_pressing;
+		private View						v						= null;
+		private NavitAndroidOverlay	n_overlay			= null;
+		private float						prev_x;
+		private float						prev_y;
+		private float						x;
+		private float						y;
+
+		SensorThread(long last_touch, View v, NavitAndroidOverlay n_ov, float x, float y)
+		{
+			this.prev_x = x;
+			this.prev_y = y;
+			this.x = x;
+			this.y = y;
+			this.running = true;
+			this.n_overlay = n_ov;
+			this.v = v;
+			this.is_still_pressing = true;
+			last_down_action = last_touch;
+			Log.e("NavitGraphics", "SensorThread created");
+		}
+		
+		public void down()
+		{
+			this.is_still_pressing = true;
+		}
+
+		//		public void up()
+		//		{
+		//			this.is_still_pressing=false;
+		//		}
+
+		public void stop_me()
+		{
+			this.running = false;
+		}
+
+		public void run()
+		{
+			Log.e("NavitGraphics", "SensorThread started");
+			while (this.running)
+			{
+				if ((System.currentTimeMillis() - this.last_down_action) > long_press_on_screen_interval)
+				{
+					// ok, we have counted a long press on screen
+					// do stuff and then stop this thread
+					Log.e("NavitGraphics", "SensorThread: LONG PRESS");
+					try
+					{
+						// find the class, to get the method "do_longpress_action"
+						// and then call the method
+						Class cls = this.v.getClass();
+						Log.e("NavitGraphics", "c=" + String.valueOf(cls));
+						Class partypes[] = new Class[2];
+						partypes[0] = Float.TYPE;
+						partypes[1] = Float.TYPE;
+						Method meth = cls.getMethod("do_longpress_action", partypes);
+						View methobj = this.v;
+						Object arglist[] = new Object[2];
+						arglist[0] = new Float(this.x);
+						arglist[1] = new Float(this.y);
+						Object retobj = meth.invoke(methobj, arglist);
+					}
+					catch (Throwable e)
+					{
+						System.err.println(e);
+					}
+
+					this.running = false;
+				}
+				else if (!this.is_still_pressing)
+				{
+					Log.e("NavitGraphics", "SensorThread: stopped pressing");
+					this.running = false;
+				}
+				else
+				{
+					// Log.e("NavitGraphics", "SensorThread running");
+					try
+					{
+						Thread.sleep(50);
+					}
+					catch (InterruptedException e)
+					{
+						// e.printStackTrace();
+					}
+				}
+			}
+			Log.e("NavitGraphics", "SensorThread ended");
+		}
+	}
+
+
 	public NavitGraphics(Activity activity, NavitGraphics parent, int x, int y, int w, int h,
 			int alpha, int wraparound, int use_camera)
 	{
@@ -95,7 +200,7 @@ public class NavitGraphics
 				static final int	DRAG			= 1;
 				static final int	ZOOM			= 2;
 				static final int	PRESS			= 3;
-			
+
 				@Override
 				protected void onDraw(Canvas canvas)
 				{
@@ -135,9 +240,9 @@ public class NavitGraphics
 								Log.e("NavitGraphics", "view -> SHOW SoftInput");
 								//Log.e("NavitGraphics", "view mgr=" + String.valueOf(Navit.mgr));
 								Navit.mgr.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT);
-								Navit.show_soft_keyboard_now_showing=true;
+								Navit.show_soft_keyboard_now_showing = true;
 								// clear the variable now, keyboard will stay on screen until backbutton pressed
-								Navit.show_soft_keyboard=false;
+								Navit.show_soft_keyboard = false;
 							}
 						}
 					}
@@ -155,6 +260,18 @@ public class NavitGraphics
 					SizeChangedCallback(SizeChangedCallbackID, w, h);
 				}
 
+				public void do_longpress_action(float x, float y)
+				{
+					Log.e("NavitGraphics", "do_longpress_action enter");
+					NavitAndroidOverlayBubble b = new NavitAndroidOverlayBubble();
+					b.x = (int) x;
+					b.y = (int) y;
+					NavitAOverlay.set_bubble(b);
+					NavitAOverlay.show_bubble();
+					this.postInvalidate();
+					NavitAOverlay.invalidate();
+				}
+
 				@Override
 				public boolean onTouchEvent(MotionEvent event)
 				{
@@ -162,6 +279,8 @@ public class NavitGraphics
 					PointF touch_start2 = null;
 					PointF touch_prev2 = null;
 					PointF touch_last_load_tiles2 = null;
+
+					Log.e("NavitGraphics", "onTouchEvent");
 
 					super.onTouchEvent(event);
 					int action = event.getAction();
@@ -236,13 +355,13 @@ public class NavitGraphics
 					}
 
 					// calculate value
-					int switch_value=event.getAction();;
+					int switch_value = event.getAction();;
 					if (_ACTION_MASK_ != -999)
 					{
 						switch_value = (event.getAction() & _ACTION_MASK_);
 					}
-					//Log.e("NavitGraphics", "switch_value=" + switch_value);
-					//Log.e("NavitGraphics", "_ACTION_MASK_=" + _ACTION_MASK_);
+					Log.e("NavitGraphics", "switch_value=" + switch_value);
+					Log.e("NavitGraphics", "_ACTION_MASK_=" + _ACTION_MASK_);
 					// calculate value
 
 					if (switch_value == MotionEvent.ACTION_DOWN)
@@ -250,7 +369,17 @@ public class NavitGraphics
 						this.touch_now.set(event.getX(), event.getY());
 						this.touch_start.set(event.getX(), event.getY());
 						this.touch_prev.set(event.getX(), event.getY());
-						//Log.e("NavitGraphics", "ACTION_DOWN");
+						Log.e("NavitGraphics", "ACTION_DOWN");
+
+						if (in_map)
+						{
+							// remember last press on screen time
+							last_touch_on_screen = System.currentTimeMillis();
+							touch_sensor_thread = new SensorThread(last_touch_on_screen, this,
+									NavitAOverlay, this.touch_now.x, this.touch_now.y);
+							touch_sensor_thread.start();
+						}
+
 						ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
 						touch_mode = DRAG;
 
@@ -261,17 +390,39 @@ public class NavitGraphics
 						this.touch_now.set(event.getX(), event.getY());
 						touch_now2 = touch_now;
 						touch_start2 = touch_start;
-						//Log.e("NavitGraphics", "ACTION_UP");
+						Log.e("NavitGraphics", "ACTION_UP");
+						if (in_map)
+						{
+							try
+							{
+								//touch_sensor_thread.down();
+								touch_sensor_thread.stop_me();
+								touch_sensor_thread.stop();
+							}
+							catch (Exception e)
+							{
 
-						if ((touch_mode == DRAG) && (spacing(touch_start2, touch_now2) < 8f))
+							}
+						}
+
+						if ((touch_mode == DRAG)
+								&& (spacing(touch_start2, touch_now2) < long_press_on_screen_max_distance))
 						{
 							// just a single press down
 							touch_mode = PRESS;
 
-							//Log.e("NavitGraphics", "onTouch up");
-							//ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-							ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
-
+							// was is a long press? or normal quick touch?
+							if ((in_map)
+									&& ((System.currentTimeMillis() - last_touch_on_screen) > long_press_on_screen_interval))
+							{
+								Log.e("NavitGraphics", "onTouch up (LONG PRESS)");
+								do_longpress_action(touch_now.x, touch_now.y);
+							}
+							else
+							{
+								Log.e("NavitGraphics", "onTouch up (quick touch)");
+								ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
+							}
 							touch_mode = NONE;
 						}
 						else
@@ -281,7 +432,23 @@ public class NavitGraphics
 								touch_now2 = touch_now;
 								touch_start2 = touch_start;
 
-								//Log.e("NavitGraphics", "onTouch move");
+								Log.e("NavitGraphics", "onTouch move");
+
+								// we are dragging, so we can't be holding down on same spot!
+								try
+								{
+									//touch_sensor_thread.down();
+									touch_sensor_thread.stop_me();
+									touch_sensor_thread.stop();
+								}
+								catch (Exception e)
+								{
+
+								}
+
+								// if we drag, hide the bubble
+								NavitAOverlay.hide_bubble();
+								
 								MotionCallback(MotionCallbackID, x, y);
 								ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 
@@ -305,44 +472,36 @@ public class NavitGraphics
 									if (scale > 1.3)
 									{
 										// zoom in
-										//String s = java.lang.String.valueOf((char) 17);
-										//KeypressCallback(KeypressCallbackID, s);
-
-
+										CallbackMessageChannel(1, "");
+										
 										// next lines are a hack, without it screen will not get updated anymore!
-										//ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-										//MotionCallback(MotionCallbackID, x+15, y);
-										//MotionCallback(MotionCallbackID, x-15, y);
-										//ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
-										//this.postInvalidate();
-
-										CallbackMessageChannel(1,"");
+										ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+										MotionCallback(MotionCallbackID, x+15, y);
+										MotionCallback(MotionCallbackID, x-15, y);
+										ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
+										this.postInvalidate();
 
 										//Log.e("NavitGraphics", "onTouch zoom in");
 									}
 									else if (scale < 0.8)
 									{
 										// zoom out    
-										//String s = java.lang.String.valueOf((char) 15);
-										//KeypressCallback(KeypressCallbackID, s);
+										CallbackMessageChannel(2, "");
 
 										// next lines are a hack, without it screen will not get updated anymore!
-										//ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-										//MotionCallback(MotionCallbackID, x+15, y);
-										//MotionCallback(MotionCallbackID, x-15, y);
-										//ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
-										//this.postInvalidate();
-
-										CallbackMessageChannel(2,"");
+										ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+										MotionCallback(MotionCallbackID, x+15, y);
+										MotionCallback(MotionCallbackID, x-15, y);
+										ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
+										this.postInvalidate();
 
 										//Log.e("NavitGraphics", "onTouch zoom out");
 									}
-
 									touch_mode = NONE;
 								}
 								else
 								{
-									//Log.d("NavitGraphics", "touch_mode=NONE (END of ZOOM part 2)");
+									Log.d("NavitGraphics", "touch_mode=NONE (END of ZOOM part 2)");
 									touch_mode = NONE;
 								}
 							}
@@ -350,7 +509,7 @@ public class NavitGraphics
 					}
 					else if (switch_value == MotionEvent.ACTION_MOVE)
 					{
-						//Log.e("NavitGraphics", "ACTION_MOVE");
+						Log.e("NavitGraphics", "ACTION_MOVE");
 
 						if (touch_mode == DRAG)
 						{
@@ -360,28 +519,53 @@ public class NavitGraphics
 							touch_prev2 = touch_prev;
 							this.touch_prev.set(event.getX(), event.getY());
 
-							//Log.e("NavitGraphics", "onTouch move2");
-							MotionCallback(MotionCallbackID, x, y);
+							if ((in_map)
+									&& (spacing(touch_start2, touch_now2) < long_press_on_screen_max_distance))
+							{
+								// is it a still ongoing long press?
+								if ((System.currentTimeMillis() - last_touch_on_screen) > long_press_on_screen_interval)
+								{
+									Log.e("NavitGraphics", "onTouch up (LONG PRESS)");
+									do_longpress_action(touch_now.x, touch_now.y);
+								}
+							}
+							else
+							{
+								Log.e("NavitGraphics", "onTouch move2");
+
+								// we are dragging, so we can't be holding down on same spot!
+								try
+								{
+									//touch_sensor_thread.down();
+									touch_sensor_thread.stop_me();
+									touch_sensor_thread.stop();
+								}
+								catch (Exception e)
+								{
+
+								}
+
+								MotionCallback(MotionCallbackID, x, y);
+							}
 						}
 						else if (touch_mode == ZOOM)
 						{
 							this.touch_now.set(event.getX(), event.getY());
 							this.touch_prev.set(event.getX(), event.getY());
 
-							//Log.e("NavitGraphics", "zoom 2");
+							Log.e("NavitGraphics", "zoom 2");
 						}
 					}
 					else if (switch_value == _ACTION_POINTER_DOWN_)
 					{
-						//Log.e("NavitGraphics", "ACTION_POINTER_DOWN");
+						Log.e("NavitGraphics", "ACTION_POINTER_DOWN");
 
 						oldDist = spacing(event);
 						if (oldDist > 10f)
 						{
 							touch_mode = ZOOM;
-							//Log.e("NavitGraphics", "--> zoom");
+							Log.e("NavitGraphics", "--> zoom");
 						}
-						//break;
 					}
 					return true;
 				}
@@ -490,32 +674,6 @@ public class NavitGraphics
 					return FloatMath.sqrt(x * x + y * y);
 				}
 
-				public boolean onTouchEventxxxxx(MotionEvent event)
-				{
-					super.onTouchEvent(event);
-					int action = event.getAction();
-					int x = (int) event.getX();
-					int y = (int) event.getY();
-					if (action == MotionEvent.ACTION_DOWN)
-					{
-						// Log.e("NavitGraphics", "onTouch down");
-						ButtonCallback(ButtonCallbackID, 1, 1, x, y);
-					}
-					if (action == MotionEvent.ACTION_UP)
-					{
-						// Log.e("NavitGraphics", "onTouch up");
-						ButtonCallback(ButtonCallbackID, 0, 1, x, y);
-						// if (++count == 3)
-						//	Debug.stopMethodTracing();
-					}
-					if (action == MotionEvent.ACTION_MOVE)
-					{
-						// Log.e("NavitGraphics", "onTouch move");
-						MotionCallback(MotionCallbackID, x, y);
-					}
-					return true;
-				}
-
 				@Override
 				public boolean onKeyDown(int keyCode, KeyEvent event)
 				{
@@ -541,7 +699,7 @@ public class NavitGraphics
 									Navit.time_pressed_menu_key = Navit.time_pressed_menu_key
 											+ (System.currentTimeMillis() - Navit.last_pressed_menu_key);
 									Log.e("NavitGraphics", "press time=" + Navit.time_pressed_menu_key);
-									
+
 									// on long press let softkeyboard popup
 									if (Navit.time_pressed_menu_key > time_for_long_press)
 									{
@@ -571,7 +729,7 @@ public class NavitGraphics
 								//s = java.lang.String.valueOf((char) 1);
 								handled = false;
 								return handled;
-							}							
+							}
 						}
 						else if (keyCode == android.view.KeyEvent.KEYCODE_SEARCH)
 						{
@@ -675,7 +833,7 @@ public class NavitGraphics
 							if (!in_map)
 							{
 								//s = java.lang.String.valueOf((char) 16);
-								handled=true;
+								handled = true;
 								return handled;
 							}
 							else
@@ -690,7 +848,7 @@ public class NavitGraphics
 							if (!in_map)
 							{
 								//s = java.lang.String.valueOf((char) 14);
-								handled=true;
+								handled = true;
 								return handled;
 							}
 							else
@@ -734,7 +892,7 @@ public class NavitGraphics
 								//s = java.lang.String.valueOf((char) 1);
 								handled = false;
 								return handled;
-							}							
+							}
 						}
 					}
 					if (s != null)
@@ -804,9 +962,9 @@ public class NavitGraphics
 				SetCamera(use_camera);
 			}
 			relativelayout.addView(view);
-			
+
 			// android overlay
-			Log.e("Navit","create android overlay");
+			Log.e("Navit", "create android overlay");
 			NavitAOverlay = new NavitAndroidOverlay(relativelayout.getContext());
 			RelativeLayout.LayoutParams NavitAOverlay_lp = new RelativeLayout.LayoutParams(
 					RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);
@@ -833,42 +991,53 @@ public class NavitGraphics
 	}
 
 	public Handler	callback_handler	= new Handler()
+												{
+													public void handleMessage(Message msg)
 													{
-														public void handleMessage(Message msg)
+														if (msg.getData().getInt("Callback") == 1)
 														{
-															if (msg.getData().getInt("Callback") == 1)
-															{
-																//Log.e("NavitGraphics","callback_handler -> handleMessage 1");
-																//KeypressCallback(KeypressCallbackID, msg.getData()
-																//		.getString("s"));
-		CallbackMessageChannel(1,"");
-															}
-        else if (msg.getData().getInt("Callback") == 2)
-
-        {
-                CallbackMessageChannel(2,"");
-        }
-        else if (msg.getData().getInt("Callback") == 3)
-
-        {
-		String lat=msg.getData().getString("lat");
-		String lon=msg.getData().getString("lon");
-		String q=msg.getData().getString("q");
-                CallbackMessageChannel(3,lat+"#"+lon+"#"+q);
-        }
-															else if (msg.getData().getInt("Callback") == 21)
-															{
-																//Log.e("NavitGraphics","callback_handler -> handleMessage 2");
-																ButtonCallback(ButtonCallbackID, 1, 1, 0, 0); // down
-															}
-															else if (msg.getData().getInt("Callback") == 22)
-															{
-																//Log.e("NavitGraphics","callback_handler -> handleMessage 3");
-																ButtonCallback(ButtonCallbackID, 0, 1, 0, 0); // up
-															}
+															//Log.e("NavitGraphics","callback_handler -> handleMessage 1");
+															//KeypressCallback(KeypressCallbackID, msg.getData()
+															//		.getString("s"));
+															CallbackMessageChannel(1, "");
 														}
-													};
-	
+														else if (msg.getData().getInt("Callback") == 2)
+
+														{
+															CallbackMessageChannel(2, "");
+														}
+														else if (msg.getData().getInt("Callback") == 3)
+
+														{
+															String lat = msg.getData().getString("lat");
+															String lon = msg.getData().getString("lon");
+															String q = msg.getData().getString("q");
+															CallbackMessageChannel(3, lat + "#" + lon + "#" + q);
+														}
+														else if (msg.getData().getInt("Callback") == 21)
+														{
+															//Log.e("NavitGraphics","callback_handler -> handleMessage 2");
+															int x = msg.getData().getInt("x");
+															int y = msg.getData().getInt("y");
+															ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
+														}
+														else if (msg.getData().getInt("Callback") == 22)
+														{
+															//Log.e("NavitGraphics","callback_handler -> handleMessage 3");
+															int x = msg.getData().getInt("x");
+															int y = msg.getData().getInt("y");
+															ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
+														}
+														else if (msg.getData().getInt("Callback") == 23)
+														{
+															//Log.e("NavitGraphics","callback_handler -> handleMessage 3");
+															int x = msg.getData().getInt("x");
+															int y = msg.getData().getInt("y");
+															MotionCallback(MotionCallbackID, x, y);
+														}
+													}
+												};
+
 	public native void SizeChangedCallback(int id, int x, int y);
 	public native void ButtonCallback(int id, int pressed, int button, int x, int y);
 	public native void MotionCallback(int id, int x, int y);
@@ -889,16 +1058,16 @@ public class NavitGraphics
 	public void setMotionCallback(int id)
 	{
 		MotionCallbackID = id;
-		Navit.setMotionCallback(id,this);
+		Navit.setMotionCallback(id, this);
 	}
 
 	public void setKeypressCallback(int id)
 	{
 		KeypressCallbackID = id;
 		// set callback id also in main intent (for menus)
-		Navit.setKeypressCallback(id,this);
+		Navit.setKeypressCallback(id, this);
 	}
-	
+
 
 	protected void draw_polyline(Paint paint, int c[])
 	{
@@ -969,7 +1138,7 @@ public class NavitGraphics
 	{
 		//Log.e("NavitGraphics", "draw_mode mode=" + mode + " parent_graphics="
 		//		+ String.valueOf(parent_graphics));
-		
+
 		if (mode == 2 && parent_graphics == null) view.invalidate();
 		if (mode == 1 || (mode == 0 && parent_graphics != null)) draw_bitmap.eraseColor(0);
 
@@ -984,7 +1153,13 @@ public class NavitGraphics
 	{
 		//Log.e("NavitGraphics","overlay_disable");
 		// assume we are NOT in map view mode!
-		in_map=false;
+		in_map = false;
+
+		// check if overlay has been initialized yet
+		if (NavitAOverlay != null)
+		{
+			NavitAOverlay.hide_bubble();
+		}
 
 		overlay_disabled = disable;
 	}
@@ -995,12 +1170,10 @@ public class NavitGraphics
 		pos_y = y;
 	}
 
-
-
 	/**
-	* generic message channel to C-code
-	*/
-	public native int CallbackMessageChannel(int i,String s);
+	 * generic message channel to C-code
+	 */
+	public native int CallbackMessageChannel(int i, String s);
 
 
 }
