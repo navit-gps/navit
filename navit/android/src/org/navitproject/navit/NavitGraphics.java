@@ -108,7 +108,7 @@ public class NavitGraphics
 			this.n_overlay = n_ov;
 			this.v = v;
 			this.is_still_pressing = true;
-			last_down_action = last_touch;
+			last_down_action = System.currentTimeMillis();
 			Log.e("NavitGraphics", "SensorThread created");
 		}
 		
@@ -1013,6 +1013,13 @@ public class NavitGraphics
 															String lon = msg.getData().getString("lon");
 															String q = msg.getData().getString("q");
 															CallbackMessageChannel(3, lat + "#" + lon + "#" + q);
+														}
+														else if (msg.getData().getInt("Callback") == 4)
+
+														{
+															int x = msg.getData().getInt("x");
+															int y = msg.getData().getInt("y");
+															CallbackMessageChannel(4, "" + x + "#" + y);
 														}
 														else if (msg.getData().getInt("Callback") == 21)
 														{
