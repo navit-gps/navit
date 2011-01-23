@@ -388,13 +388,6 @@ if (XPM2PNG)
    endif(NOT IMAGE_CONVERTER_XPM)
 endif(XPM2PNG)
 
-foreach(PLUMO ${ALL_PLUGINS} ${ALL_MODULES} ${ALL_FEATURES})
-   set(OLDVALUE ${${PLUMO}})
-   OPTION(${PLUMO} "Enable/Disable module/plugin/support" ${${PLUMO}})
-   if ( (OLDVALUE AND NOT ${PLUMO}) OR (${PLUMO} AND NOT OLDVALUE))
-      set(${PLUMO}_REASON "User defined")
-   endif()
-endforeach()
 set(XSLTS ${XSLTS} CACHE STRING "define a semicolon seperated list of XSLTs to process")
 
 # Plugins
