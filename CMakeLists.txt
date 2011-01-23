@@ -302,6 +302,12 @@ if(WIN32 OR WINCE)
    set(ENABLE_NLS TRUE)
    add_plugin(intl_cmake "windows detected" TRUE)
    set(USE_LIBGNUINTL TRUE)
+   
+   CHECK_LIBRARY_EXISTS(ws2_32 WSAStartup "" HAVE_WINSOCK)
+   if(HAVE_WINSOCK)
+      list(APPEND NAVIT_LIBS ws2_32)
+   endif(HAVE_WINSOCK)
+   
 endif()
 if (WIN32)
    set(HAVE_API_WIN32 1)
