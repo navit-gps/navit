@@ -85,6 +85,7 @@ CHECK_INCLUDE_FILES(byteswap.h HAVE_BYTESWAP_H)
 CHECK_LIBRARY_EXISTS(gypsy gypsy_control_get_default "" GYPSY_FOUND)
 CHECK_INCLUDE_FILES(libspeechd.h HAVE_LIBSPEECHD)
 
+CHECK_INCLUDE_FILES(sys/socket.h HAVE_SOCKET)
 ### Configure build
 #Required libraries, supplied with navit
 if (Glib_FOUND)
