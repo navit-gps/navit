@@ -44,6 +44,8 @@
 
 #cmakedefine HAVE_SOCKET 1
 
+#cmakedefine HAVE_WINSOCK 1
+
 #ifdef _MSC_VER
 #define __PRETTY_FUNCTION__ __FILE__":" << __LINE__
 #endif
