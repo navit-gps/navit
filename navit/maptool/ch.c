@@ -229,10 +229,11 @@ ch_process_node(FILE *out, int node, int resolve)
 	int edge_id;
 	struct ch_edge ch_edge;
 	struct item_bin *item_bin;
-	memset(&ch_edge, 0, sizeof(ch_edge));
 	struct edge_hash_item fwd,rev;
+	int oldnode;
+	memset(&ch_edge, 0, sizeof(ch_edge));
 	item_bin=init_item(type_ch_node);
-	int oldnode=GPOINTER_TO_INT(g_hash_table_lookup(newnode_hash, GINT_TO_POINTER(node)));
+	oldnode=GPOINTER_TO_INT(g_hash_table_lookup(newnode_hash, GINT_TO_POINTER(node)));
 #if 0
 	dbg(0,"0x%x,0x%x\n",node_index[oldnode].x,node_index[oldnode].y);
 #endif
@@ -426,12 +427,13 @@ ch_generate_tiles(char *map_suffix, char *suffix, FILE *tilesdir_out, struct zip
 {
 	struct tile_info info;
 	FILE *in,*ref,*ddsg_coords,*ddsg;
+	FILE **graphfiles;
         info.write=0;
         info.maxlen=0;
         info.suffix=suffix;
         info.tiles_list=NULL;
         info.tilesdir_out=tilesdir_out;
-	FILE *graphfiles[ch_levels+1];
+	graphfiles=g_alloca(sizeof(FILE*)*(ch_levels+1));
 
 	ch_create_tempfiles(suffix, graphfiles, ch_levels, 1);
 	in=tempfile(map_suffix,"ways_split",0);
@@ -460,16 +462,17 @@ ch_assemble_map(char *map_suffix, char *suffix, struct zip_info *zip_info)
 {
 	struct tile_info info;
 	struct tile_head *th;
-	FILE *graphfiles[ch_levels+1];
+	FILE **graphfiles=g_alloca(sizeof(FILE*)*(ch_levels+1));
+	FILE *ref;
+	struct item_id id;
+	int nodeid=0;
 
         info.write=1;
         info.maxlen=zip_info->maxnamelen;
         info.suffix=suffix;
         info.tiles_list=NULL;
         info.tilesdir_out=NULL;
-	FILE *ref=tempfile(suffix,"sgr_ref",1);
-	struct item_id id;
-	int nodeid=0;
+	ref=tempfile(suffix,"sgr_ref",1);
 
 	create_tile_hash();
 
