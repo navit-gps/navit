@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <time.h>
+#include <limits.h>
 #include "util.h"
 
 void
@@ -207,11 +208,9 @@ getdelim (char **lineptr, size_t *n, int delimiter, FILE *fp)
       /* Make enough space for len+1 (for final NUL) bytes.  */
       if (cur_len + 1 >= *n)
 	{
-	  size_t needed_max =
-	    SSIZE_MAX < SIZE_MAX ? (size_t) SSIZE_MAX + 1 : SIZE_MAX;
+	  size_t needed_max=SIZE_MAX;
 	  size_t needed = 2 * *n + 1;   /* Be generous. */
 	  char *new_lineptr;
-
 	  if (needed_max < needed)
 	    needed = needed_max;
 	  if (cur_len + 1 >= needed)
