@@ -305,14 +305,20 @@ graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, i
 static void
 graphics_gc_init(struct graphics *this_)
 {
+	struct color color1={ 0xffff, 0xefef, 0xb7b7, 0xffff};
+	struct color color2={ 0xffff, 0xefef, 0xb7b7, 0xffff};
+	struct color color3={ 0x0000, 0x0000, 0x0000, 0xffff };
+	struct color color4={ 0xffff, 0xffff, 0xffff, 0xffff };
+	struct color color5={ 0xffff, 0xffff, 0xffff, 0xffff };
+	struct color color6={ 0x0000, 0x0000, 0x0000, 0xffff };
 	if (!this_->gc[0] || !this_->gc[1] || !this_->gc[2])
 		return;
-	graphics_gc_set_background(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7, 0xffff});
-	graphics_gc_set_foreground(this_->gc[0], &(struct color) { 0xffff, 0xefef, 0xb7b7, 0xffff });
-	graphics_gc_set_background(this_->gc[1], &(struct color) { 0x0000, 0x0000, 0x0000, 0xffff });
-	graphics_gc_set_foreground(this_->gc[1], &(struct color) { 0xffff, 0xffff, 0xffff, 0xffff });
-	graphics_gc_set_background(this_->gc[2], &(struct color) { 0xffff, 0xffff, 0xffff, 0xffff });
-	graphics_gc_set_foreground(this_->gc[2], &(struct color) { 0x0000, 0x0000, 0x0000, 0xffff });
+	graphics_gc_set_background(this_->gc[0], &color1 );
+	graphics_gc_set_foreground(this_->gc[0], &color2 );
+	graphics_gc_set_background(this_->gc[1], &color3 );
+	graphics_gc_set_foreground(this_->gc[1], &color4 );
+	graphics_gc_set_background(this_->gc[2], &color5 );
+	graphics_gc_set_foreground(this_->gc[2], &color6 );
 }
 
 
@@ -642,7 +648,7 @@ void graphics_draw_lines(struct graphics *this_, struct graphics_gc *gc, struct 
 */
 void graphics_draw_circle(struct graphics *this_, struct graphics_gc *gc, struct point *p, int r)
 {
-	struct point pnt[r*4+64];
+	struct point *pnt=g_alloca(sizeof(struct point)*(r*4+64));
 	int i=0;
 
 	if(this_->meth.draw_circle)
@@ -669,7 +675,7 @@ void graphics_draw_rectangle(struct graphics *this_, struct graphics_gc *gc, str
 
 void graphics_draw_rectangle_rounded(struct graphics *this_, struct graphics_gc *gc, struct point *plu, int w, int h, int r, int fill)
 {
-	struct point p[r*4+32];
+	struct point *p=g_alloca(sizeof(struct point)*(r*4+32));
 	struct point pi0={plu->x+r,plu->y+r};
 	struct point pi1={plu->x+w-r,plu->y+r};
 	struct point pi2={plu->x+w-r,plu->y+h-r};
@@ -1227,7 +1233,8 @@ static void
 graphics_draw_polyline_as_polygon(struct graphics *gra, struct graphics_gc *gc, struct point *pnt, int count, int *width, int step)
 {
 	int maxpoints=200;
-	struct point res[maxpoints], pos, poso, neg, nego;
+	struct point *res=g_alloca(sizeof(struct point)*maxpoints);
+	struct point pos, poso, neg, nego;
 	int i, dx=0, dy=0, l=0, dxo=0, dyo=0;
 	struct offset o,oo;
 	int fow=0, fowo=0, delta;
@@ -1418,8 +1425,8 @@ clip_line(struct wpoint *p1, struct wpoint *p2, struct point_rect *r)
 static void
 graphics_draw_polyline_clipped(struct graphics *gra, struct graphics_gc *gc, struct point *pa, int count, int *width, int step, int poly)
 {
-	struct point p[count+1];
-	int w[count*step+1];
+	struct point *p=g_alloca(sizeof(struct point)*(count+1));
+	int *w=g_alloca(sizeof(int)*(count*step+1));
 	struct wpoint p1,p2;
 	int i,code,out=0;
 	int wmax;
@@ -1521,8 +1528,8 @@ graphics_draw_polygon_clipped(struct graphics *gra, struct graphics_gc *gc, stru
 	struct point_rect r=gra->r;
 	struct point *pout,*p,*s,pi,*p1,*p2;
 	int limit=10000;
-	struct point pa1[count_in < limit ? count_in*8+1:0];
-	struct point pa2[count_in < limit ? count_in*8+1:0];
+	struct point *pa1=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
+	struct point *pa2=g_alloca(sizeof(struct point) * (count_in < limit ? count_in*8+1:0));
 	int count_out,edge=3;
 	int i;
 #if 0
@@ -1664,8 +1671,8 @@ limit_count(struct coord *c, int count)
 static void
 displayitem_draw(struct displayitem *di, void *dummy, struct display_context *dc)
 {
-	int width[dc->maxlen];
-	struct point pa[dc->maxlen];
+	int *width=g_alloca(sizeof(int)*dc->maxlen);
+	struct point *pa=g_alloca(sizeof(struct point)*dc->maxlen);
 	struct graphics *gra=dc->gra;
 	struct graphics_gc *gc=dc->gc;
 	struct element *e=dc->e;
@@ -1829,7 +1836,7 @@ graphics_draw_itemgra(struct graphics *gra, struct itemgra *itm, struct transfor
 	GList *es;
 	struct display_context dc;
 	int max_coord=32;
-	char buffer[sizeof(struct displayitem)+max_coord*sizeof(struct coord)];
+	char *buffer=g_alloca(sizeof(struct displayitem)+max_coord*sizeof(struct coord));
 	struct displayitem *di=(struct displayitem *)buffer;
 	es=itm->elements;
 	di->item.type=type_none;
@@ -1957,7 +1964,7 @@ do_draw(struct displaylist *displaylist, int cancel, int flags)
 {
 	struct item *item;
 	int count,max=displaylist->dc.maxlen,workload=0;
-	struct coord ca[max];
+	struct coord *ca=g_alloca(sizeof(struct coord)*max);
 	struct attr attr,attr2;
 	enum projection pro;
 
@@ -2385,7 +2392,7 @@ static int within_dist_polygon(struct point *p, struct point *poly_pnt, int coun
 */
 int graphics_displayitem_within_dist(struct displaylist *displaylist, struct displayitem *di, struct point *p, int dist)
 {
-	struct point pa[displaylist->dc.maxlen];
+	struct point *pa=g_alloca(sizeof(struct point)*displaylist->dc.maxlen);
 	int count;
 
 	count=transform(displaylist->dc.trans, displaylist->dc.pro, di->c, pa, di->count, 1, 0, NULL);
