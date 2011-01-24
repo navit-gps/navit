@@ -543,7 +543,7 @@ osm_protobufdb_timestamp(char *str)
 		return 0;
 	tm.tm_year-=1900;
 	tm.tm_mon-=1;
-#ifdef HAVE_API_WIN32_BASE
+#if defined(HAVE_API_WIN32_BASE) || defined(ANDROID)
 	return 0;
 #else
 	return timegm(&tm);
