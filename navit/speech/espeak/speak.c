@@ -231,10 +231,11 @@ static LRESULT CALLBACK speech_message_handler( HWND hwnd, UINT uMsg, WPARAM wPa
 		break;
 		case MM_WOM_DONE:
 		{
-			dbg(2, "Wave buffer done\n");
 			WAVEHDR *WaveHeader = (WAVEHDR *)lParam;
+			struct speech_priv* sp_priv;
+			dbg(2, "Wave buffer done\n");
 
-			struct speech_priv* sp_priv = (struct speech_priv*)WaveHeader->dwUser;
+			sp_priv = (struct speech_priv*)WaveHeader->dwUser;
 			sp_priv->free_buffers = g_list_append(sp_priv->free_buffers, WaveHeader);
 
 			if ( sp_priv->state != state_speaking_phase_3)
@@ -294,12 +295,13 @@ static void speech_message_dispatcher( struct speech_priv * sp_priv)
 static void create_buffers(struct speech_priv *sp_priv)
 {
 	int buffer_counter;
+	char *buffer_head;
 
 
     SYSTEM_INFO system_info;
     GetSystemInfo (&system_info);
 
-	char *buffer_head = VirtualAlloc(0, system_info.dwPageSize * BUFFERS, MEM_RESERVE, PAGE_NOACCESS);
+	buffer_head = VirtualAlloc(0, system_info.dwPageSize * BUFFERS, MEM_RESERVE, PAGE_NOACCESS);
 
 	for (buffer_counter = 0; buffer_counter < BUFFERS; buffer_counter++)
 	{
@@ -323,6 +325,7 @@ static DWORD startThread( LPVOID sp_priv)
 	TCHAR *g_szClassName  = TEXT("SpeechQueue");
     WNDCLASS wc;
     HWND hwnd;
+	HWND hWndParent;
 
 
 	memset(&wc, 0 , sizeof(WNDCLASS));
@@ -336,7 +339,7 @@ static DWORD startThread( LPVOID sp_priv)
         return 1;
     }
 
-    HWND hWndParent = NULL;
+    hWndParent = NULL;
 #ifndef HAVE_API_WIN32_CE
     hWndParent = HWND_MESSAGE;
 #endif
@@ -382,8 +385,8 @@ static DWORD startThread( LPVOID sp_priv)
 static int
 espeak_say(struct speech_priv *this, const char *text)
 {
-	dbg(1, "Speak: '%s'\n", text);
 	char *phrase = g_strdup(text);
+	dbg(1, "Speak: '%s'\n", text);
 
 	if (!PostMessage(this->h_queue, msg_say, (WPARAM)this, (LPARAM)phrase))
 	{
