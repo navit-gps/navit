@@ -349,12 +349,13 @@ routech_relax(struct map_rect **mr, struct routech_search *curr, struct routech_
 	struct item_id *id;
 	struct item *item;
 	struct attr edge_attr;
+	int opposite_element;
 	
 	if (!pq_delete_min(curr->pq, &id, &val, &element)) {
 		return;
 	}
 	pq_check(curr->pq);
-	int opposite_element=GPOINTER_TO_INT(g_hash_table_lookup(opposite->hash, id));
+	opposite_element=GPOINTER_TO_INT(g_hash_table_lookup(opposite->hash, id));
 	if (opposite_element && pq_is_deleted(opposite->pq, opposite_element)) {
 		int opposite_val;
 		pq_get_key(opposite->pq, opposite_element, &opposite_val);
@@ -370,6 +371,7 @@ routech_relax(struct map_rect **mr, struct routech_search *curr, struct routech_
 	while (item_attr_get(item, attr_ch_edge, &edge_attr)) {
 		struct ch_edge *edge=edge_attr.u.data;
 		struct item_id *target_id=&edge->target;
+		int element;
 		if (routech_edge_valid(edge, curr->dir)) {
 			int index=GPOINTER_TO_INT(g_hash_table_lookup(curr->hash, target_id));
 			if (index && routech_edge_valid(edge, 1-curr->dir)) {
@@ -385,7 +387,7 @@ routech_relax(struct map_rect **mr, struct routech_search *curr, struct routech_
 					return;
 				}
 			}
-			int element=routech_insert_node(curr, &target_id, edge->weight+val);
+			element=routech_insert_node(curr, &target_id, edge->weight+val);
 			if (element) {
 				pq_set_parent(curr->pq, element, id, 0);
 			}
@@ -414,12 +416,13 @@ routech_print_coord(struct coord *c, FILE *out)
 static void
 routech_resolve_route(struct map_rect *mr, struct item_id *id, int flags, int dir)
 {
-        int i,count,max=16384;
+	int i,count,max=16384;
+	struct coord *ca=g_alloca(sizeof(struct coord)*(max));
+	struct item *item;
 	int rev=0;
 	if (!(flags & 8) == dir)
 		rev=1;
-        struct coord ca[max];
-	struct item *item=map_rect_get_item_byid(mr, id->id_hi, id->id_lo);
+	item=map_rect_get_item_byid(mr, id->id_hi, id->id_lo);
 	dbg_assert(item->type >= type_line && item->type < type_area);
 	item->type=type_street_route;
 	
@@ -511,6 +514,8 @@ routech_test(struct navit *navit)
 	struct map_rect *mr[2];
 	int element;
 	int k;
+	int search_id=0;
+	int i;
 
 	navit_get_attr(navit, attr_mapset, &mapset, NULL);
 	routech_find_nearest(mapset.u.mapset, &src, &id[0], &map[0]);
@@ -531,8 +536,6 @@ routech_test(struct navit *navit)
 
 	mr[0]=map_rect_new(map[0], NULL);
 	mr[1]=map_rect_new(map[0], NULL);
-	int search_id=0;
-	int i;
 	for (i=0 ; i < 5000 ; i++) {
 		if (pq_is_empty(search[0]->pq) && pq_is_empty(search[1]->pq)) 
 			break;
