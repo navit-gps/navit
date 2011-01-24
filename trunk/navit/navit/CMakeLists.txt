@@ -114,7 +114,7 @@ ADD_CUSTOM_COMMAND(
 add_custom_target( navit_config_xml ALL DEPENDS navit.xml)
 
 ADD_DEPENDENCIES(${NAVIT_LIBNAME} version)
-if (ENABLE_NLS)
+if (USE_LIBGNUINTL AND NOT HAVE_GLIB)
    ADD_DEPENDENCIES(support_glib intl_cmake)
 endif()
 
