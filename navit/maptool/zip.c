@@ -31,6 +31,7 @@
 #include <openssl/rand.h>
 #endif
 
+#ifdef HAVE_ZLIB
 static int
 compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen, int level)
 {
@@ -60,6 +61,7 @@ compress2_int(Byte *dest, uLongf *destLen, const Bytef *source, uLong sourceLen,
 	err = deflateEnd(&stream);
 	return err;
 }
+#endif
 
 void
 write_zipmember(struct zip_info *zip_info, char *name, int filelen, char *data, int data_size)
