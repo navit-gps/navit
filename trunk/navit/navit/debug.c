@@ -23,8 +23,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <sys/time.h>
 #include <glib.h>
+#ifndef _MSC_VER
+#include <sys/time.h>
+#endif /* _MSC_VER */
 #include "config.h"
 #include "file.h"
 #include "item.h"
@@ -34,7 +36,7 @@
 #include <android/log.h>
 #endif
 
-#ifdef HAVE_API_WIN32_CE
+#if defined HAVE_API_WIN32_CE || defined _MSC_VER
 #include <windows.h>
 #include <windowsx.h>
 #endif
@@ -163,7 +165,7 @@ debug_level_get(const char *name)
 
 static void debug_timestamp(char *buffer)
 {
-#ifdef HAVE_API_WIN32_CE
+#if defined HAVE_API_WIN32_CE || defined _MSC_VER
 	LARGE_INTEGER counter, frequency;
 	double val;
 	QueryPerformanceCounter(&counter);
@@ -190,7 +192,7 @@ static void debug_timestamp(char *buffer)
 void
 debug_vprintf(int level, const char *module, const int mlen, const char *function, const int flen, int prefix, const char *fmt, va_list ap)
 {
-#ifdef HAVE_API_WIN32_CE
+#if defined HAVE_API_WIN32_CE || defined _MSC_VER
 	char buffer[4096];
 #else
 	char buffer[mlen+flen+3];
