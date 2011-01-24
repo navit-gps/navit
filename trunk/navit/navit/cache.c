@@ -191,9 +191,10 @@ cache_remove_lru(struct cache *cache, struct cache_entry_list *list)
 void *
 cache_entry_new(struct cache *cache, void *id, int size)
 {
+	struct cache_entry *ret;
 	size+=cache->entry_size;
 	cache->misses+=size;
-	struct cache_entry *ret=(struct cache_entry *)g_slice_alloc0(size);
+	ret=(struct cache_entry *)g_slice_alloc0(size);
 	ret->size=size;
 	ret->usage=1;
 	memcpy(ret->id, id, cache->id_size*sizeof(int));
@@ -211,9 +212,9 @@ cache_entry_destroy(struct cache *cache, void *data)
 static struct cache_entry *
 cache_trim(struct cache *cache, struct cache_entry *entry)
 {
+	struct cache_entry *new_entry;
 	dbg(1,"trim 0x%x 0x%x 0x%x 0x%x 0x%x\n", entry->id[0], entry->id[1], entry->id[2], entry->id[3], entry->id[4]);
 	dbg(1,"Trim %x from %d -> %d\n", entry->id[0], entry->size, cache->size);
-	struct cache_entry *new_entry;
 	if ( cache->entry_size < entry->size )
 	{
 	    g_hash_table_remove(cache->hash, (gpointer)(entry->id));
