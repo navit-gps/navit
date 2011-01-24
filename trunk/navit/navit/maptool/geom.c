@@ -290,7 +290,7 @@ clip_line_code(struct coord *p1, struct coord *p2, struct rect *r)
 void
 clip_line(struct item_bin *ib, struct rect *r, struct tile_parameter *param, struct item_bin_sink *out)
 {
-	char buffer[ib->len*4+32];
+	char *buffer=g_alloca(sizeof(char)*(ib->len*4+32));
 	struct item_bin *ib_new=(struct item_bin *)buffer;
 	struct coord *pa=(struct coord *)(ib+1);
 	int count=ib->clen/2;
@@ -376,9 +376,9 @@ clip_polygon(struct item_bin *ib, struct rect *r, struct tile_parameter *param, 
 {
 	int count_in=ib->clen/2;
 	struct coord *pin,*p,*s,pi;
-	char buffer1[ib->len*4+ib->clen*7+32];
+	char *buffer1=g_alloca(sizeof(char)*(ib->len*4+ib->clen*7+32));
 	struct item_bin *ib1=(struct item_bin *)buffer1;
-	char buffer2[ib->len*4+ib->clen*7+32];
+	char *buffer2=g_alloca(sizeof(char)*(ib->len*4+ib->clen*7+32));
 	struct item_bin *ib2=(struct item_bin *)buffer2;
 	struct item_bin *ib_in,*ib_out;
 	int edge,i;
