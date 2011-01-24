@@ -320,7 +320,7 @@ static void
 ocean_tile(GHashTable *hash, char *tile, char c, struct item_bin_sink *out)
 {
 	int len=strlen(tile);
-	char tile2[len+1];
+	char *tile2=g_alloca(sizeof(char)*(len+1));
 	struct rect bbox;
 	struct item_bin *ib;
 	struct coord co;
@@ -391,7 +391,7 @@ tile_sibling_edges(GHashTable *hash, char *tile, char c)
 {
 	int len=strlen(tile);
 	int ret;
-	char tile2[len+1];
+	char *tile2=g_alloca(sizeof(char)*(len+1));
 	void *data;
 	strcpy(tile2, tile);
 	tile2[len-1]=c;
@@ -436,14 +436,14 @@ ocean_tile2(struct rect *r, int dx, int dy, int wf, int hf, struct item_bin_sink
 static void
 tile_collector_add_siblings2(char *tile, void *edgesp, struct coastline_tile_data *data)
 {
-	int len=strlen(tile);
-	char tile2[len+1];
-	char t=tile[len-1];
-	strcpy(tile2, tile);
-	tile2[len-1]='\0';
 	int edges=(int)edgesp;
 	int pedges=0;
 	int debug=0;
+	int len=strlen(tile);
+	char *tile2=g_alloca(sizeof(char)*(len+1));
+	char t=tile[len-1];
+	strcpy(tile2, tile);
+	tile2[len-1]='\0';
 #if 0
 	if (!strncmp(tile,"bcacccaadbdcd",10))
 		debug=1;
@@ -482,9 +482,10 @@ tile_collector_finish(struct item_bin_sink_func *tile_collector)
 {
 	struct coastline_tile_data data;
 	int i;
+	GHashTable *hash;
 	data.sink=tile_collector;
 	data.tile_edges=g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-	GHashTable *hash=tile_collector->priv_data[0];
+	hash=tile_collector->priv_data[0];
 	fprintf(stderr,"tile_collector_finish\n");
 	g_hash_table_foreach(hash, (GHFunc) tile_collector_process_tile, &data);
 	fprintf(stderr,"tile_collector_finish foreach done\n");

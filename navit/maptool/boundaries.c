@@ -115,7 +115,7 @@ test(GList *boundaries_list)
 static void
 dump_hierarchy(GList *l, char *prefix)
 {
-	char newprefix[strlen(prefix)+2];
+	char *newprefix=g_alloca(sizeof(char)*(strlen(prefix)+2));
 	strcpy(newprefix, prefix);
 	strcat(newprefix," ");
 	while (l) {
