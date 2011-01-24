@@ -35,9 +35,9 @@
 #endif
 
 
-#define G_LOCK_DEFINE_STATIC(name)    void
-#define G_LOCK(name) void //g_mutex_lock       (&G_LOCK_NAME (name))
-#define G_UNLOCK(name) void //g_mutex_unlock   (&G_LOCK_NAME (name))
+#define G_LOCK_DEFINE_STATIC(name)    //void
+#define G_LOCK(name) //void //g_mutex_lock       (&G_LOCK_NAME (name))
+#define G_UNLOCK(name) //void //g_mutex_unlock   (&G_LOCK_NAME (name))
 
 #define g_thread_supported() TRUE
 
