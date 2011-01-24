@@ -286,48 +286,8 @@ struct element_func {
 	char *parent;
 	int (*func)(struct xmlstate *state);
 	enum attr_type type;
-} elements[] = {
-	{ "config", NULL, NULL, attr_config},
-	{ "announce", "navigation", xmlconfig_announce},
-	{ "speech", "navit", NULL, attr_speech},
-	{ "tracking", "navit", NULL, attr_tracking},
-	{ "route", "navit", NULL, attr_route},
-	{ "mapset", "navit", NULL, attr_mapset},
-	{ "map",  "mapset", NULL, attr_map},
-	{ "debug", "config", NULL, attr_debug},
-	{ "osd", "navit", NULL, attr_osd},
-	{ "navigation", "navit", NULL, attr_navigation},
-	{ "navit", "config", NULL, attr_navit},
-	{ "graphics", "navit", NULL, attr_graphics},
-	{ "gui", "navit", NULL, attr_gui},
-	{ "layout", "navit", NULL, attr_layout},
-	{ "cursor", "layout", NULL, attr_cursor},
-	{ "layer", "layout", NULL, attr_layer},
-	{ "itemgra", "layer", NULL, attr_itemgra},
-	{ "circle", "itemgra", NULL, attr_circle},
-	{ "coord", "circle", NULL, attr_coord},
-	{ "icon", "itemgra", NULL, attr_icon},
-	{ "coord", "icon", NULL, attr_coord},
-	{ "image", "itemgra", NULL, attr_image},
-	{ "text", "itemgra", NULL, attr_text},
-	{ "polygon", "itemgra", NULL, attr_polygon},
-	{ "coord", "polygon", NULL, attr_coord},
-	{ "polyline", "itemgra", NULL, attr_polyline},
-	{ "coord", "polyline", NULL, attr_coord},
-	{ "arrows", "itemgra", NULL, attr_arrows},
-	{ "vehicle", "navit", NULL, attr_vehicle},
-	{ "vehicleprofile", "navit", NULL, attr_vehicleprofile},
-	{ "roadprofile", "vehicleprofile", NULL, attr_roadprofile},
-	{ "announcement", "roadprofile", NULL, attr_announcement},
-	{ "cursor", "vehicle", NULL, attr_cursor},
-	{ "itemgra", "cursor", NULL, attr_itemgra},
-	{ "log", "vehicle", NULL, attr_log},
-	{ "log", "navit", NULL, attr_log},
-	{ "plugins", "config", NULL, attr_plugins},
-	{ "plugin", "plugins", NULL, attr_plugin},
-	{},
 };
-
+struct element_func *elements;
 
 static char *attr_fixme_itemgra[]={
 	"type","item_types",
@@ -359,6 +319,200 @@ static char *element_fixmes[]={
 	"label","text",
 	NULL,NULL,
 };
+
+static void initStatic() {
+	elements=g_new0(struct element_func,40); //39 is a number of elements + ending NULL element
+
+	elements[0].name="config";
+	elements[0].parent=NULL;
+	elements[0].func=NULL;
+	elements[0].type=attr_config;
+
+	elements[1].name="announce";
+	elements[1].parent="navigation";
+	elements[1].func=xmlconfig_announce;
+
+	elements[2].name="speech";
+	elements[2].parent="navit";
+	elements[2].func=NULL;
+	elements[2].type=attr_speech;
+
+	elements[3].name="tracking";
+	elements[3].parent="navit";
+	elements[3].func=NULL;
+	elements[3].type=attr_tracking;
+
+	elements[4].name="route";
+	elements[4].parent="navit";
+	elements[4].func=NULL;
+	elements[4].type=attr_route;
+
+	elements[5].name="mapset";
+	elements[5].parent="navit";
+	elements[5].func=NULL;
+	elements[5].type=attr_mapset;
+
+	elements[6].name="map";
+	elements[6].parent="mapset";
+	elements[6].func=NULL;
+	elements[6].type=attr_map;
+
+	elements[7].name="debug";
+	elements[7].parent="config";
+	elements[7].func=NULL;
+	elements[7].type=attr_debug;
+
+	elements[8].name="osd";
+	elements[8].parent="navit";
+	elements[8].func=NULL;
+	elements[8].type=attr_osd;
+
+	elements[9].name="navigation";
+	elements[9].parent="navit";
+	elements[9].func=NULL;
+	elements[9].type=attr_navigation;
+
+	elements[10].name="navit";
+	elements[10].parent="config";
+	elements[10].func=NULL;
+	elements[10].type=attr_navit;
+
+	elements[11].name="graphics";
+	elements[11].parent="navit";
+	elements[11].func=NULL;
+	elements[11].type=attr_graphics;
+
+	elements[12].name="gui";
+	elements[12].parent="navit";
+	elements[12].func=NULL;
+	elements[12].type=attr_gui;
+
+	elements[13].name="layout";
+	elements[13].parent="navit";
+	elements[13].func=NULL;
+	elements[13].type=attr_layout;
+
+	elements[14].name="cursor";
+	elements[14].parent="layout";
+	elements[14].func=NULL;
+	elements[14].type=attr_cursor;
+
+	elements[15].name="layer";
+	elements[15].parent="layout";
+	elements[15].func=NULL;
+	elements[15].type=attr_layer;
+
+	elements[16].name="itemgra";
+	elements[16].parent="layer";
+	elements[16].func=NULL;
+	elements[16].type=attr_itemgra;
+
+	elements[17].name="circle";
+	elements[17].parent="itemgra";
+	elements[17].func=NULL;
+	elements[17].type=attr_circle;
+
+	elements[18].name="coord";
+	elements[18].parent="circle";
+	elements[18].func=NULL;
+	elements[18].type=attr_coord;
+
+	elements[19].name="icon";
+	elements[19].parent="itemgra";
+	elements[19].func=NULL;
+	elements[19].type=attr_icon;
+
+	elements[20].name="coord";
+	elements[20].parent="icon";
+	elements[20].func=NULL;
+	elements[20].type=attr_coord;
+
+	elements[21].name="image";
+	elements[21].parent="itemgra";
+	elements[21].func=NULL;
+	elements[21].type=attr_image;
+
+	elements[22].name="text";
+	elements[22].parent="itemgra";
+	elements[22].func=NULL;
+	elements[22].type=attr_text;
+
+	elements[23].name="polygon";
+	elements[23].parent="itemgra";
+	elements[23].func=NULL;
+	elements[23].type=attr_polygon;
+
+	elements[24].name="coord";
+	elements[24].parent="polygon";
+	elements[24].func=NULL;
+	elements[24].type=attr_coord;
+
+	elements[25].name="polyline";
+	elements[25].parent="itemgra";
+	elements[25].func=NULL;
+	elements[25].type=attr_polyline;
+
+	elements[26].name="coord";
+	elements[26].parent="polyline";
+	elements[26].func=NULL;
+	elements[26].type=attr_coord;
+
+	elements[27].name="arrows";
+	elements[27].parent="itemgra";
+	elements[27].func=NULL;
+	elements[27].type=attr_arrows;
+
+	elements[28].name="vehicle";
+	elements[28].parent="navit";
+	elements[28].func=NULL;
+	elements[28].type=attr_vehicle;
+
+	elements[29].name="vehicleprofile";
+	elements[29].parent="navit";
+	elements[29].func=NULL;
+	elements[29].type=attr_vehicleprofile;
+
+	elements[30].name="roadprofile";
+	elements[30].parent="vehicleprofile";
+	elements[30].func=NULL;
+	elements[30].type=attr_roadprofile;
+
+	elements[31].name="announcement";
+	elements[31].parent="roadprofile";
+	elements[31].func=NULL;
+	elements[31].type=attr_announcement;
+
+	elements[32].name="cursor";
+	elements[32].parent="vehicle";
+	elements[32].func=NULL;
+	elements[32].type=attr_cursor;
+
+	elements[33].name="itemgra";
+	elements[33].parent="cursor";
+	elements[33].func=NULL;
+	elements[33].type=attr_itemgra;
+
+	elements[34].name="log";
+	elements[34].parent="vehicle";
+	elements[34].func=NULL;
+	elements[34].type=attr_log;
+
+	elements[35].name="log";
+	elements[35].parent="navit";
+	elements[35].func=NULL;
+	elements[35].type=attr_log;
+
+	elements[36].name="plugins";
+	elements[36].parent="config";
+	elements[36].func=NULL;
+	elements[36].type=attr_plugins;
+
+	elements[37].name="plugin";
+	elements[37].parent="plugins";
+	elements[37].func=NULL;
+	elements[37].type=attr_plugin;
+}
+
 /**
  * * Parse the opening tag of a config element
  * *
@@ -1012,6 +1166,8 @@ gboolean config_load(const char *filename, xmlerror **error)
 	struct xmldocument document;
 	struct xmlstate *curr=NULL;
 	gboolean result;
+
+	initStatic();
 
 	dbg(1,"enter filename='%s'\n", filename);
 	memset(&document, 0, sizeof(document));
