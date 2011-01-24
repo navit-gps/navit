@@ -704,7 +704,8 @@ gui_internal_label_render(struct gui_priv *this, struct widget *w)
 	if (w->state & STATE_EDIT)
 		graphics_draw_rectangle(this->gra, this->highlight_background, &pnt, w->w, w->h);
 	if (w->text) {
-		char *text,startext[strlen(w->text)+1];
+		char *text;
+		char *startext=(char*)g_alloca(strlen(w->text)+1);
 		text=w->text;
 		if (w->flags2 & 1) {
 			int i;
@@ -2178,11 +2179,17 @@ get_direction(char *buffer, int angle, int mode)
 	}
 }
 
+static void gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data);
+
+#ifndef _MSC_VER
+//MSVC doesn't supports this style of initialization and i'm not sure
+//how to fix it
 struct selector {
 	char *icon;
 	char *name;
 	enum item_type *types;
-} selectors[]={
+};
+struct selector selectors[]={
 	{"bank","Bank",(enum item_type []){type_poi_bank,type_poi_bank,type_none}},
 	{"fuel","Fuel",(enum item_type []){type_poi_fuel,type_poi_fuel,type_none}},
 	{"hotel","Hotel",(enum item_type []) {
@@ -2249,13 +2256,14 @@ static struct widget *
 gui_internal_cmd_pois_selector(struct gui_priv *this, struct pcoord *c, int pagenb)
 {
 	struct widget *wl,*wb;
+	int nitems,nrows;
 	int i;
 	//wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal|flags_fill);
 	wl=gui_internal_box_new(this, gravity_left_center|orientation_horizontal_vertical|flags_fill);
 	wl->w=this->root.w;
 	wl->cols=this->root.w/this->icon_s;
-	int nitems=sizeof(selectors)/sizeof(struct selector);
-	int nrows=nitems/wl->cols + (nitems%wl->cols>0);
+	nitems=sizeof(selectors)/sizeof(struct selector);
+	nrows=nitems/wl->cols + (nitems%wl->cols>0);
 	wl->h=this->icon_l*nrows;
 	for (i = 0 ; i < nitems ; i++) {
 		union poi_param p;
@@ -2339,8 +2347,6 @@ gui_internal_cmd_pois_item_selected(struct selector *sel, enum item_type type)
 	}
 	return 0;
 }
-
-static void gui_internal_cmd_position(struct gui_priv *this, struct widget *wm, void *data);
 
 struct item_data {
 	int dist;
@@ -2530,6 +2536,7 @@ gui_internal_cmd_pois(struct gui_priv *this, struct widget *wm, void *data)
 	gui_internal_menu_render(this);
 
 }
+#endif /* _MSC_VER */
 
 static void
 gui_internal_cmd_view_on_map(struct gui_priv *this, struct widget *wm, void *data)
@@ -2760,6 +2767,8 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 		wbc->data_free=g_free_func;
 		wbc->c=pc;
 	}
+#ifndef _MSC_VER
+//POIs are not operational under MSVC yet
 	if (flags & 64) {
 		gui_internal_widget_append(w,
 			wbc=gui_internal_button_new_with_callback(this, _("POIs"),
@@ -2767,6 +2776,7 @@ gui_internal_cmd_position_do(struct gui_priv *this, struct pcoord *pc_in, struct
 				gui_internal_cmd_pois, NULL));
 		wbc->c=pc;
 	}
+#endif /* _MSC_VER */
 #if 0
 	gui_internal_widget_append(w,
 		gui_internal_button_new(this, "Add to tour",
@@ -2959,6 +2969,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 	int plen=0,hassub,found=0;
 	struct widget *wb,*w,*wbm;
 	struct coord c;
+	struct widget *tbl, *row;
 
 	if (data)
 		prefix=g_strdup(data);
@@ -3016,8 +3027,7 @@ gui_internal_cmd_bookmarks(struct gui_priv *this, struct widget *wm, void *data)
 		gui_internal_widget_append(w, wbm);
 
 		bookmarks_item_rewind(mattr.u.bookmarks);
-		
-		struct widget *tbl, *row;
+				
 		tbl=gui_internal_widget_table_new(this,gravity_left_top | flags_fill | flags_expand |orientation_vertical,1);
 		gui_internal_widget_append(w,tbl);
 
@@ -3249,9 +3259,10 @@ gui_internal_search_idle(struct gui_priv *this, char *wm_name, struct widget *se
 	}
 
 	if (! res) {
+		struct menu_data *md;
 		gui_internal_search_idle_end(this);
 
-		struct menu_data *md=gui_internal_menu_data(this);
+		md=gui_internal_menu_data(this);
 		if (md && md->keyboard && !(this->flags & 2048)) {
 			GList *lk=md->keyboard->children;
 			graphics_draw_mode(this->gra, draw_mode_begin);
@@ -3359,10 +3370,10 @@ gui_internal_search_changed(struct gui_priv *this, struct widget *wm, void *data
 {
 	GList *l;
 	struct widget *search_list=gui_internal_menu_data(this)->search_list;
-	gui_internal_widget_children_destroy(this, search_list);
-
 	void *param=(void *)3;
 	int minlen=1;
+	gui_internal_widget_children_destroy(this, search_list);
+
 	if (! strcmp(wm->name,"Country"))
 		param=(void *)4;
 	if (! strcmp(wm->name,"Street"))
@@ -4080,6 +4091,7 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 	char *profilename = vapn->profilename;
 	struct attr vehicle_name_attr;
 	char *vehicle_name = NULL;
+	struct attr profilename_attr;
 
 	// Get the vehicle name
 	vehicle_get_attr(v, attr_name, &vehicle_name_attr, NULL);
@@ -4089,7 +4101,8 @@ gui_internal_cmd_set_active_profile(struct gui_priv *this, struct
 			profilename);
 
 	// Change the profile name
-	struct attr profilename_attr = {attr_profilename, {profilename}};
+	profilename_attr.type = attr_profilename;
+	profilename_attr.u.str = profilename;
 	if(!vehicle_set_attr(v, &profilename_attr)) {
 		dbg(0, "Unable to set the vehicle's profile name\n");
 	}
@@ -4173,6 +4186,7 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 	struct attr attr;
 	struct vehicle *v=wm->data;
     struct vehicleprofile *profile = NULL;
+	GList *profiles;
 
 	wb=gui_internal_menu(this, wm->text);
 	w=gui_internal_box_new(this, gravity_top_center|orientation_vertical|flags_expand|flags_fill);
@@ -4201,7 +4215,7 @@ gui_internal_cmd_vehicle_settings(struct gui_priv *this, struct widget *wm, void
 	}
 
     // Add all the possible vehicle profiles to the menu
-	GList *profiles = navit_get_vehicleprofiles(this->nav);
+	profiles = navit_get_vehicleprofiles(this->nav);
     while(profiles) {
         profile = (struct vehicleprofile *)profiles->data;
         gui_internal_add_vehicle_profile(this, w, v, profile);
@@ -5312,7 +5326,7 @@ struct gui_methods gui_internal_methods = {
 	static void
 gui_internal_get_data(struct gui_priv *priv, char *command, struct attr **in, struct attr ***out)
 {
-	struct attr private_data = (struct attr) { attr_private_data, {(void *)&priv->data}};
+	struct attr private_data = { attr_private_data, {(void *)&priv->data}};
 	if (out)
 		*out=attr_generic_add_attr(*out, &private_data);
 }
@@ -5755,10 +5769,11 @@ void gui_internal_table_render(struct gui_priv * this, struct widget * w)
 	 */
 	for(table_data->top_row=cur_row; cur_row; cur_row = g_list_next(cur_row))
 	{
+		int max_height=0;
+		struct widget * cur_row_widget;
 		GList * cur_column=NULL;
 		current_desc = column_desc;
-		struct widget * cur_row_widget = (struct widget*)cur_row->data;
-		int max_height=0;
+		cur_row_widget = (struct widget*)cur_row->data;
 		x =w->p.x+this->spacing;
 		if(cur_row_widget == table_data->button_box )
 		{
@@ -5877,6 +5892,7 @@ gui_internal_cmd2_route_description(struct gui_priv *this, char *function, struc
 
 	struct widget * menu;
 	struct widget * row;
+	struct widget * box;
 
 
 	if(! this->vehicle_cb)
@@ -5902,7 +5918,7 @@ gui_internal_cmd2_route_description(struct gui_priv *this, char *function, struc
 	this->route_data.route_table->spx = this->spacing;
 
 
-	struct widget * box = gui_internal_box_new(this, gravity_left_top| orientation_vertical | flags_fill | flags_expand);
+	box = gui_internal_box_new(this, gravity_left_top| orientation_vertical | flags_fill | flags_expand);
 
 	//	gui_internal_widget_append(box,gui_internal_box_new_with_label(this,"Test"));
 	gui_internal_widget_append(box,this->route_data.route_table);
@@ -6542,6 +6558,10 @@ static struct command_table commands[] = {
 //##############################################################################################################
 static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui)
 {
+	struct color color_white={0xffff,0xffff,0xffff,0x0};
+	struct color color_black={0x0,0x0,0x0,0x0};
+	struct color back2_color={0x4141,0x4141,0x4141,0xffff};
+
 	struct gui_priv *this;
 	struct attr *attr;
 	*meth=gui_internal_methods;
@@ -6619,16 +6639,16 @@ static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods 
 	if( (attr=attr_search(attrs,NULL,attr_background_color)))
 	      this->background_color=*attr->u.color;
 	else
-	      this->background_color=COLOR_BLACK;
+	      this->background_color=color_black;
 	if( (attr=attr_search(attrs,NULL,attr_background_color2)))
 		this->background2_color=*attr->u.color;
 	else
-		this->background2_color=(struct color){0x4141,0x4141,0x4141,0xffff};
+		this->background2_color=back2_color;
 	if( (attr=attr_search(attrs,NULL,attr_text_color)))
 	      this->text_foreground_color=*attr->u.color;
 	else
-	      this->text_foreground_color=COLOR_WHITE;
-	this->text_background_color=COLOR_BLACK;
+	      this->text_foreground_color=color_white;
+	this->text_background_color=color_black;
 	if( (attr=attr_search(attrs,NULL,attr_columns)))
 	      this->cols=attr->u.num;
 	if( (attr=attr_search(attrs,NULL,attr_osd_configuration)))
