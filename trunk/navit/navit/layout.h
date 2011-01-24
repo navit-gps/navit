@@ -29,6 +29,7 @@ struct element {
 	int text_size;
 	union {
 		struct element_point {
+			char stub;
 		} point;
 		struct element_polyline {
 			int width;
@@ -38,6 +39,7 @@ struct element {
 			unsigned char dash_table[4];
 		} polyline;
 		struct element_polygon {
+			char stub;
 		} polygon;
 		struct element_circle {
 			int width;
