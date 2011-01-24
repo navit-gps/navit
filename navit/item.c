@@ -343,7 +343,7 @@ item_dump_filedesc(struct item *item, struct map *map, FILE *out)
 {
 
 	int i,count,max=16384;
-	struct coord ca[max];
+	struct coord *ca=g_alloca(sizeof(struct coord)*max);
 
 	count=item_coord_get(item, ca, item->type < type_line ? 1: max);
 	if (item->type < type_line) 
