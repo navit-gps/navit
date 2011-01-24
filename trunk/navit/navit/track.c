@@ -711,12 +711,12 @@ tracking_update(struct tracking *tr, struct vehicle *v, struct vehicleprofile *v
 		for (i = 0; i < sd->count-1 ; i++) {
 			value=tracking_value(tr,t,i,&lpnt,min,-1);
 			if (value < min) {
+				struct coord lpnt_tmp;
 				int angle_delta=tracking_angle_abs_diff(tr->curr_angle, t->angle[i], 360);
 				tr->curr_line=t;
 				tr->pos=i;
 				tr->curr[0]=sd->c[i];
 				tr->curr[1]=sd->c[i+1];
-				struct coord lpnt_tmp;
 				dbg(1,"lpnt.x=0x%x,lpnt.y=0x%x pos=%d %d+%d+%d+%d=%d\n", lpnt.x, lpnt.y, i, 
 					transform_distance_line_sq(&sd->c[i], &sd->c[i+1], &cin, &lpnt_tmp),
 					tracking_angle_delta(tr, tr->curr_angle, t->angle[i], 0)*tr->angle_pref,
@@ -832,13 +832,24 @@ tracking_destroy(struct tracking *tr)
 struct map *
 tracking_get_map(struct tracking *this_)
 {
+	struct attr *attrs[5];
+	struct attr type,navigation,data,description;
+	type.type=attr_type;
+	type.u.str="tracking";
+	navigation.type=attr_trackingo;
+	navigation.u.tracking=this_;
+	data.type=attr_data;
+	data.u.str="";
+	description.type=attr_description;
+	description.u.str="Tracking";
+
+	attrs[0]=&type;
+	attrs[1]=&navigation;
+	attrs[2]=&data;
+	attrs[3]=&description;
+	attrs[4]=NULL;
 	if (! this_->map)
-		this_->map=map_new(NULL, (struct attr*[]){
-			&(struct attr){attr_type,{"tracking"}},
-			&(struct attr){attr_trackingo,.u.tracking=this_},
-			&(struct attr){attr_data,{""}},
-			&(struct attr){attr_description,{"Tracking"}},
-			NULL});
+		this_->map=map_new(NULL, &attrs);
 	return this_->map;
 }
 
@@ -886,10 +897,10 @@ static int
 tracking_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
 	struct map_rect_priv *this_=priv_data;
-	attr->type=attr_type;
 	struct coord lpnt,*c;
 	struct tracking *tr=this_->tracking;
 	int value;
+	attr->type=attr_type;
 
 	if (this_->str) {
 		g_free(this_->str);
