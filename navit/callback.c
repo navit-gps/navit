@@ -63,7 +63,7 @@ struct callback *
 callback_new_attr_args(void (*func)(void), enum attr_type type, int count, ...)
 {
 	int i;
-	void *p[count];
+	void **p=g_alloca(sizeof(void*)*count);
 	va_list ap;
 	va_start(ap, count);
 	for (i = 0 ; i < count ; i++)
@@ -82,7 +82,7 @@ struct callback *
 callback_new_args(void (*func)(void), int count, ...)
 {
 	int i;
-	void *p[count];
+	void **p=g_alloca(sizeof(void*)*count);
 	va_list ap;
 	va_start(ap, count);
 	for (i = 0 ; i < count ; i++)
@@ -193,7 +193,7 @@ void
 callback_call_args(struct callback *cb, int count, ...)
 {
 	int i;
-	void *p[count];
+	void **p=g_alloca(sizeof(void*)*count);
 	va_list ap;
 	va_start(ap, count);
 	for (i = 0 ; i < count ; i++)
@@ -226,7 +226,7 @@ void
 callback_list_call_attr_args(struct callback_list *cbl, enum attr_type type, int count, ...)
 {
 	int i;
-	void *p[count];
+	void **p=g_alloca(sizeof(void*)*count);
 	va_list ap;
 	va_start(ap, count);
 	for (i = 0 ; i < count ; i++)
@@ -245,7 +245,7 @@ void
 callback_list_call_args(struct callback_list *cbl, int count, ...)
 {
 	int i;
-	void *p[count];
+	void **p=g_alloca(sizeof(void*)*count);
 	va_list ap;
 	va_start(ap, count);
 	for (i = 0 ; i < count ; i++)
