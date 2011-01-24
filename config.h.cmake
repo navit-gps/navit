@@ -52,6 +52,8 @@
 
 #cmakedefine HAVE_VALLOC 1
 
+#cmakedefine HAVE_LC_MESSAGES 1
+
 #define HAVE_SYS_TIME_H 1
 
 #define HAVE_GETOPT_H 1
