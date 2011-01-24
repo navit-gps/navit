@@ -46,13 +46,13 @@ quadtree_find_rect_items(struct quadtree_node* this_, double dXMin, double dXMax
       int i;
       for( i=0;i<4;++i) {
         if(nodes[i] ) {
+            struct quadtree_item*res_tmp = NULL;
           //limit flooding
 	  if(nodes[i]->xmax<dXMin || dXMax<nodes[i]->xmin ||
 	     nodes[i]->ymax<dYMin || dYMax<nodes[i]->ymin
 	    ) {
 	  	continue;
 	  }
-          struct quadtree_item*res_tmp = NULL;
 	  //recurse into subtiles if there is at least one subtile corner within input rectangle
           quadtree_find_rect_items(nodes[i],dXMin,dXMax,dYMin,dYMax,out);
 	} 
@@ -93,8 +93,9 @@ quadtree_find_nearest_flood(struct quadtree_node* this_, struct quadtree_item* i
             res_tmp = quadtree_find_nearest_flood(nodes[i],item,current_max,NULL);
 	  }
 	  if(res_tmp) {
-	    res = res_tmp;
-            double curr_dist_sq = dist_sq(item->longitude,item->latitude,res->longitude,res->latitude);
+          double curr_dist_sq;
+          res = res_tmp;
+          curr_dist_sq = dist_sq(item->longitude,item->latitude,res->longitude,res->latitude);
             if(curr_dist_sq<current_max) {
                 current_max = curr_dist_sq;
             }
@@ -110,11 +111,11 @@ quadtree_find_nearest_flood(struct quadtree_node* this_, struct quadtree_item* i
  */
 struct quadtree_item*
 quadtree_find_nearest(struct quadtree_node* this_, struct quadtree_item* item) {
+    struct quadtree_item*res = NULL;
+    double distance_sq = MAX_DOUBLE;
     if( ! this_ ) {
       return NULL;
     }
-    struct quadtree_item*res = NULL;
-    double distance_sq = MAX_DOUBLE;
     if( this_->is_leaf ) { 
         int i;
         for(i=0;i<this_->node_num;++i) {
@@ -126,13 +127,13 @@ quadtree_find_nearest(struct quadtree_node* this_, struct quadtree_item* item) {
         }
       //go up n levels
 	  if(!res && this_->parent) {
+          struct quadtree_item*res2 = NULL;
 	          struct quadtree_node* anchestor = this_->parent;
                   int cnt = 0;
         	  while (anchestor->parent && cnt<4) {
 	            anchestor = anchestor->parent;
                     ++cnt;
 		  }
-		struct quadtree_item*res2 = NULL;
 	  	res2 = quadtree_find_nearest_flood(anchestor,item,distance_sq,NULL);
 		if(res2) {
 		  res = res2;
