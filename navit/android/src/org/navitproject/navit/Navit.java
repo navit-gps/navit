@@ -45,11 +45,13 @@ public class Navit extends Activity implements Handler.Callback
 	public Handler							handler;
 	private PowerManager.WakeLock		wl;
 	private NavitActivityResult		ActivityResults[];
-	public static InputMethodManager	mgr							= null;
-	public static Boolean				show_soft_keyboard		= false;
-	public static Boolean				show_soft_keyboard_now_showing		= false;
-	public static long					last_pressed_menu_key	= 0L;
-	public static long					time_pressed_menu_key	= 0L;
+	public static InputMethodManager	mgr										= null;
+	public static Boolean				show_soft_keyboard					= false;
+	public static Boolean				show_soft_keyboard_now_showing	= false;
+	public static long					last_pressed_menu_key				= 0L;
+	public static long					time_pressed_menu_key				= 0L;
+	private static Intent				startup_intent							= null;
+	private static long					startup_intent_timestamp			= 0L;
 	
 	private boolean extractRes(String resname, String result)
 	{
@@ -147,11 +149,14 @@ public class Navit extends Activity implements Handler.Callback
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
-		Intent startup_intent=this.getIntent();
+
+		// only take arguments here, in onResume gets called all the time (e.g. when screenblanks, etc.)
+		Navit.startup_intent=this.getIntent();
+		// hack! remeber timstamp, and only allow 4 secs. later in onResume to set target!
+		Navit.startup_intent_timestamp=System.currentTimeMillis();
 		Log.e("Navit","**1**A "+startup_intent.getAction());
 		Log.e("Navit","**1**D "+startup_intent.getDataString());
-		
+
 		ActivityResults = new NavitActivityResult[16];
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -231,15 +236,29 @@ public class Navit extends Activity implements Handler.Callback
 		//InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		NavitActivity(1);
 
-		Intent startup_intent=this.getIntent();
-		Log.e("Navit","**2**A "+startup_intent.getAction());
-		Log.e("Navit","**2**D "+startup_intent.getDataString());
-
-		String intent_data=startup_intent.getDataString();
-		if (intent_data != null)
+		String intent_data = null;
+		if (startup_intent != null)
 		{
+			if (System.currentTimeMillis() <= Navit.startup_intent_timestamp + 4000L)
+			{
+				Log.e("Navit", "**2**A " + startup_intent.getAction());
+				Log.e("Navit", "**2**D " + startup_intent.getDataString());
+				intent_data = startup_intent.getDataString();
+			}
+			else
+			{
+				Log.e("Navit", "timestamp for navigate_to expired! not using data");
+			}
+		}
+
+		if ((intent_data != null) && (intent_data.substring(0, 18).equals("google.navigation:")))
+		{
+			// better use regex later, but for now to test this feature its ok :-)
+			// better use regex later, but for now to test this feature its ok :-)
+			
 			// a: google.navigation:ll=48.25676,16.643&q=blabla-strasse
 			// b: google.navigation:q=48.25676,16.643
+			// c: google.navigation:ll=48.25676,16.643
 			String lat;
 			String lon;
 			String q;
@@ -248,13 +267,20 @@ public class Navit extends Activity implements Handler.Callback
 			String temp2=null;
 			String temp3=null;
 
-			// if b: then remodel the input string
-			if (intent_data.substring(0,20).equals("google.navigation:q="))
+			// if b: then remodel the input string to look like a:
+			if (intent_data.substring(0, 20).equals("google.navigation:q="))
 			{
-				intent_data="ll="+intent_data.split("q=",-1)[1]+"&q=Target";
+				intent_data = "ll=" + intent_data.split("q=", -1)[1] + "&q=Target";
+			}
+			// if b: then remodel the input string to look like a:
+			else if ((intent_data.substring(0, 21).equals("google.navigation:ll="))
+					&& (intent_data.split("&q=").length == 0))
+			{
+				intent_data = intent_data + "&q=Target";
 			}
 
 
+			// now string should be in form --> a:
 			// now split the parts off
 			temp1=intent_data.split("&q=",-1)[0];
 			try
