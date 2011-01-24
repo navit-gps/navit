@@ -17,9 +17,11 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
 #include <glib.h>
@@ -141,6 +143,7 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
     static int current_index = 0;
     const int chunk_size = 1024;
     int rc = 0;
+    int dwBytes;
 
     dbg(1, "enter, *priv='%x', priv->source='%s'\n", priv, priv->source);
 
@@ -164,12 +167,12 @@ static int vehicle_win32_serial_track(struct vehicle_priv *priv)
         memset( buffer, 0 , sizeof( buffer ) );
     }
 
-    int dwBytes = serial_io_read( priv->fd, &buffer[ current_index ], chunk_size );
+    dwBytes = serial_io_read( priv->fd, &buffer[ current_index ], chunk_size );
     if ( dwBytes > 0 )
     {
+        char* return_pos = NULL;
         current_index += dwBytes;
 
-        char* return_pos = NULL;
         while ( ( return_pos = strchr( buffer, '\n' ) ) != NULL )
         {
             char return_buffer[1024];
@@ -334,10 +337,14 @@ vehicle_file_close(struct vehicle_priv *priv)
     else
 #endif
     {
-	if (priv->file)
+	if (priv->file) {
+#ifndef _MSC_VER
 		pclose(priv->file);
-	else if (priv->fd >= 0)
+#endif /* _MSC_VER */
+    }
+	else if (priv->fd >= 0) {
 		close(priv->fd);
+    }
 	priv->file = NULL;
 	priv->fd = -1;
     }
@@ -609,9 +616,9 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 static void
 vehicle_file_io(struct vehicle_priv *priv)
 {
-	dbg(1, "vehicle_file_io : enter\n");
 	int size, rc = 0;
 	char *str, *tok;
+    dbg(1, "vehicle_file_io : enter\n");
 
 	size = read(priv->fd, priv->buffer + priv->buffer_pos, buffer_size - priv->buffer_pos - 1);
 	if (size <= 0) {
@@ -840,12 +847,13 @@ vehicle_file_position_attr_get(struct vehicle_priv *priv,
 static int
 vehicle_file_sat_attr_get(void *priv_data, enum attr_type type, struct attr *attr)
 {
+    struct gps_sat *sat;
 	struct vehicle_priv *priv=priv_data;
 	if (priv->sat_item.id_lo < 1)
 		return 0;
 	if (priv->sat_item.id_lo > priv->current_count)
 		return 0;
-	struct gps_sat *sat=&priv->current[priv->sat_item.id_lo-1];
+	sat=&priv->current[priv->sat_item.id_lo-1];
 	switch (type) {
 	case attr_sat_prn:
 		attr->u.num=sat->prn;
