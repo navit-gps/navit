@@ -47,6 +47,7 @@ add_module(binding/dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/dbus "dbus-glib-1 not found" FALSE)
 add_module(vehicle/gpsd_dbus "dbus-glib-1 not found" FALSE)
 add_module(speech/speech_dispatcher "speech_dispatcher lib not found" FALSE)
+add_feature(ENABLE_NLS "default" TRUE)
 
 INCLUDE (CPack)
 INCLUDE (CheckIncludeFiles)
@@ -85,6 +86,8 @@ CHECK_INCLUDE_FILES(byteswap.h HAVE_BYTESWAP_H)
 CHECK_LIBRARY_EXISTS(gypsy gypsy_control_get_default "" GYPSY_FOUND)
 CHECK_INCLUDE_FILES(libspeechd.h HAVE_LIBSPEECHD)
 CHECK_INCLUDE_FILES(sys/socket.h HAVE_SOCKET)
+CHECK_INCLUDE_FILES(locale.h HAVE_LC_MESSAGES)
+CHECK_INCLUDE_FILES(libintl.h HAVE_LIBINTL)
 
 ### Configure build
 #Required libraries, supplied with navit
@@ -214,6 +217,21 @@ if (HAVE_LIBSPEECHD)
    set_with_reason(speech/speech_dispatcher "speech_dispatcher lib found" TRUE speechd)
 endif(HAVE_LIBSPEECHD)
 
+if (GETTEXT_FOUND)
+   execute_process(COMMAND echo "<test/>" COMMAND xgettext -L glade - RESULT_VARIABLE GETTEXT_RET)
+   if ("${GETTEXT_RET}" STREQUAL "0")
+      set(XGETTEXT_GLADE TRUE)
+   else()
+      set(XGETTEXT_GLADE FALSE)
+   endif()
+endif(GETTEXT_FOUND)
+
+if (NOT HAVE_LIBINTL)
+   add_plugin(intl_cmake "native libintl missing" TRUE)
+   set(USE_LIBGNUINTL TRUE)
+endif(NOT HAVE_LIBINTL)
+
+
 #Independent modules
 add_module(graphics/null "Default" TRUE)
 add_module(osd/core "Default" TRUE)
@@ -299,10 +317,6 @@ if(WIN32 OR WINCE)
    if(MSVC AND support/espeak)
       add_definitions(-DPLATFORM_WINDOWS)
    endif(MSVC AND support/espeak)
-   set(ENABLE_NLS TRUE)
-   add_plugin(intl_cmake "windows detected" TRUE)
-   set(USE_LIBGNUINTL TRUE)
-   
    CHECK_LIBRARY_EXISTS(ws2_32 WSAStartup "" HAVE_WINSOCK)
    if(HAVE_WINSOCK)
       list(APPEND NAVIT_LIBS ws2_32)
@@ -478,12 +492,6 @@ add_subdirectory (navit)
 add_subdirectory (man)
 
 if (GETTEXT_FOUND)
-   execute_process(COMMAND echo "<test/>" COMMAND xgettext -L glade - RESULT_VARIABLE GETTEXT_RET)
-   if ("${GETTEXT_RET}" STREQUAL "0")
-      set(XGETTEXT_GLADE TRUE)
-   else()
-      set(XGETTEXT_GLADE FALSE)
-   endif()
    add_subdirectory (po)
 endif(GETTEXT_FOUND)
 
