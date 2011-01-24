@@ -119,8 +119,8 @@ vehicleprofile_set_attr(struct vehicleprofile *this_, struct attr *attr)
 int
 vehicleprofile_add_attr(struct vehicleprofile *this_, struct attr *attr)
 {
-	this_->attrs=attr_generic_add_attr(this_->attrs, attr);
 	struct attr item_types_attr;
+	this_->attrs=attr_generic_add_attr(this_->attrs, attr);
 	switch (attr->type) {
 	case attr_roadprofile:
 		if (roadprofile_get_attr(attr->u.roadprofile, attr_item_types, &item_types_attr, NULL)) {
