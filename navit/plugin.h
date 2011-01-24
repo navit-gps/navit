@@ -45,20 +45,20 @@ struct popup_item;
 #undef PLUGIN_FUNC3
 #undef PLUGIN_FUNC4
 #undef PLUGIN_TYPE
-#define PLUGIN_PROTO(name,args...) void name(args)
+#define PLUGIN_PROTO(name,...) void name(__VA_ARGS__)
 
 #ifdef PLUGIN_C
-#define PLUGIN_REGISTER(name,args...)						\
+#define PLUGIN_REGISTER(name,...)						\
 void										\
-plugin_register_##name(PLUGIN_PROTO((*func),args))				\
+plugin_register_##name(PLUGIN_PROTO((*func),__VA_ARGS__))				\
 {										\
         plugin_##name##_func=func;						\
 }
 
-#define PLUGIN_CALL(name,args...)						\
+#define PLUGIN_CALL(name,...)						\
 {										\
 	if (plugin_##name##_func)						\
-		(*plugin_##name##_func)(args);					\
+		(*plugin_##name##_func)(__VA_ARGS__);					\
 }										
 
 #define PLUGIN_FUNC1(name,t1,p1)				\
