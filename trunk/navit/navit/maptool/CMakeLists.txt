@@ -1,6 +1,6 @@
 
 if(BUILD_MAPTOOL)
-   add_definitions( -DMODULE=maptool )
+   add_definitions( -DMODULE=maptool ${NAVIT_COMPILE_FLAGS})
    include_directories(${CMAKE_CURRENT_SOURCE_DIR})
    SET(MAPTOOL_SOURCE boundaries.c buffer.c ch.c coastline.c geom.c itembin.c itembin_buffer.c misc.c osm.c sourcesink.c tempfile.c tile.c zip.c osm_xml.c)
    if(NOT MSVC)
@@ -11,7 +11,7 @@ if(BUILD_MAPTOOL)
    if(NOT MSVC)
         SET(NAVIT_LIBS ${NAVIT_LIBS} m)
    endif(NOT MSVC)
-   target_link_libraries(maptool maptool_core navit_core ${NAVIT_LIBS})
+   target_link_libraries(maptool maptool_core ${NAVIT_LIBNAME} ${NAVIT_LIBS})
 
    install(TARGETS maptool
            DESTINATION ${BIN_DIR}
