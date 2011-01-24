@@ -86,13 +86,13 @@ struct fibheap_el {
 static struct fibheap_el *fhe_newelem(void);
 static void fhe_initelem(struct fibheap_el *);
 static void fhe_insertafter(struct fibheap_el *a, struct fibheap_el *b);
-static inline void fhe_insertbefore(struct fibheap_el *a, struct fibheap_el *b);
+static void fhe_insertbefore(struct fibheap_el *a, struct fibheap_el *b);
 static struct fibheap_el *fhe_remove(struct fibheap_el *a);
 #define	fhe_destroy(x)	free((x))
 
 /*
  * general functions
  */
-static inline int ceillog2(unsigned int a);
+static int ceillog2(unsigned int a);
 
 #endif /* _FIBPRIV_H_ */
