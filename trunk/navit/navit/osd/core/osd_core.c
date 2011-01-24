@@ -17,6 +17,9 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#ifdef _MSC_VER
+#define _USE_MATH_DEFINES 1
+#endif /* _MSC_VER */
 #include <math.h>
 #include <stdio.h>
 #include <glib.h>
@@ -50,6 +53,16 @@
 #include "speech.h"
 #include "event.h"
 #include "mapset.h"
+
+#ifdef _MSC_VER
+static double round(double x)
+{
+   if (x >= 0.0)
+      return floor(x + 0.5);
+   else
+      return ceil(x - 0.5);
+}
+#endif /* MSC_VER */
 
 struct odometer;
 
@@ -217,6 +230,8 @@ osd_cmd_odometer_reset(struct navit *this, char *function, struct attr **in, str
 static char* 
 str_replace(char*output, char*input, char*pattern, char*replacement)
 {
+  char *pos;
+  char *pos2;
   if (!output || !input || !pattern || !replacement) {
     return NULL;
   }
@@ -224,8 +239,8 @@ str_replace(char*output, char*input, char*pattern, char*replacement)
     return input;
   }
 
-  char*pos  = &input[0];
-  char*pos2 = &input[0];
+  pos  = &input[0];
+  pos2 = &input[0];
   output[0] = 0;
   while ( (pos2=strstr(pos,pattern)) ) {
     strncat(output,pos,pos2-pos);
@@ -286,6 +301,7 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
 		 struct vehicle *v)
 {
   struct coord curr_coord;
+  struct graphics_gc *curr_color;
 
   char *dist_buffer=0;
   char *spd_buffer=0;
@@ -295,6 +311,15 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   enum projection pro;
   struct vehicle* curr_vehicle = v;
   double spd = 0;
+
+  int remainder;
+  int days;
+  int hours;
+  int mins;
+  int secs;
+
+  char buffer [256+1]="";
+  char buffer2[256+1]="";
 
   if(nav) {
     navit_get_attr(nav, attr_vehicle, &vehicle_attr, NULL);
@@ -325,18 +350,16 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
     this->last_coord = curr_coord;
   }
 
-  char buffer [256+1]="";
-  char buffer2[256+1]="";
   dist_buffer = format_distance(this->sum_dist,"");
   spd_buffer = format_speed(spd,"");
-  int remainder = this->time_all;
-  int days  = remainder  / (24*60*60);
+  remainder = this->time_all;
+  days  = remainder  / (24*60*60);
   remainder = remainder  % (24*60*60);
-  int hours = remainder  / (60*60);
+  hours = remainder  / (60*60);
   remainder = remainder  % (60*60);
-  int mins  = remainder  / (60);
+  mins  = remainder  / (60);
   remainder = remainder  % (60);
-  int secs  = remainder;
+  secs  = remainder;
   if(0<days) {
     time_buffer = g_strdup_printf("%02dd %02d:%02d:%02d",days,hours,mins,secs);
   }
@@ -356,7 +379,7 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   graphics_get_text_bbox(this->osd_item.gr, this->osd_item.font, buffer, 0x10000, 0, bbox, 0);
   p.x=(this->osd_item.w-bbox[2].x)/2;
   p.y = this->osd_item.h-this->osd_item.h/10;
-  struct graphics_gc *curr_color = this->bActive?this->white:this->orange;
+  curr_color = this->bActive?this->white:this->orange;
   graphics_draw_text(this->osd_item.gr, curr_color, NULL, this->osd_item.font, buffer, &p, 0x10000, 0);
   g_free(dist_buffer);
   g_free(spd_buffer);
@@ -467,6 +490,8 @@ osd_odometer_init(struct odometer *this, struct navit *nav)
 static void 
 osd_odometer_destroy(struct navit* nav)
 {
+	GList* list;
+	char* fn;
 	if(!odometers_saved) {
 		odometers_saved = 1;
 		osd_odometer_save(NULL);
@@ -477,8 +502,12 @@ static struct osd_priv *
 osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 		struct attr **attrs)
 {
+	FILE* f;
+	char* fn;
+
 	struct odometer *this = g_new0(struct odometer, 1);
 	struct attr *attr;
+	struct color orange_color={0xffff,0xa5a5,0x0000,0xffff};
 	this->osd_item.p.x = 120;
 	this->osd_item.p.y = 20;
 	this->osd_item.w = 60;
@@ -530,15 +559,14 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
 	attr = attr_search(attrs, NULL, attr_idle_color);
-	this->idle_color=attr ? *attr->u.color : ((struct color) {0xffff,0xa5a5,0x0000,0xffff}); // text idle_color defaults to orange
+	this->idle_color=attr ? *attr->u.color : orange_color; // text idle_color defaults to orange
 
 	this->last_coord.x = -1;
 	this->last_coord.y = -1;
 	this->sum_dist = 0.0;
 
 	//load state from file
-	FILE* f;
-	char* fn = g_strdup_printf("%s/odometer.txt",navit_get_user_data_directory(FALSE));
+	fn = g_strdup_printf("%s/odometer.txt",navit_get_user_data_directory(FALSE));
 	f = fopen(fn,"r+");
 
 	if(f) {
@@ -549,8 +577,8 @@ osd_odometer_new(struct navit *nav, struct osd_methods *meth,
 			char *line;
 			if(fgets(str,128,f)) 
 			{
+				char *tok;
 				line = g_strdup(str);
-				char*tok;
 				tok = strtok(str," ");
 				if(!strcmp(tok,"odometer")) {
 					tok = strtok(NULL," ");
@@ -593,12 +621,15 @@ static void
 osd_stopwatch_draw(struct stopwatch *this, struct navit *nav,
 		struct vehicle *v)
 {
-	osd_std_draw(&this->osd_item);
 
+	struct graphics_gc *curr_color;
 	char buffer[32]="00:00:00";
-	struct point p, bbox[4];
+	struct point p;
+	struct point bbox[4];
 	time_t total_sec,total_min,total_hours,total_days;
 	total_sec = this->sum_time;
+
+	osd_std_draw(&this->osd_item);
 
 	if(this->bActive) {
 		total_sec += time(0)-this->current_base_time;
@@ -619,7 +650,7 @@ osd_stopwatch_draw(struct stopwatch *this, struct navit *nav,
 	p.x=(this->osd_item.w-bbox[2].x)/2;
 	p.y = this->osd_item.h-this->osd_item.h/10;
 
-	struct graphics_gc *curr_color = this->bActive?this->white:this->orange;
+	curr_color = this->bActive?this->white:this->orange;
 	graphics_draw_text(this->osd_item.gr, curr_color, NULL, this->osd_item.font, buffer, &p, 0x10000, 0);
 	graphics_draw_mode(this->osd_item.gr, draw_mode_end);
 }
@@ -692,6 +723,8 @@ osd_stopwatch_new(struct navit *nav, struct osd_methods *meth,
 {
 	struct stopwatch *this = g_new0(struct stopwatch, 1);
 	struct attr *attr;
+	struct color orange_color={0xffff,0xa5a5,0x0000,0xffff};
+
 	this->osd_item.p.x = 120;
 	this->osd_item.p.y = 20;
 	this->osd_item.w = 60;
@@ -709,7 +742,7 @@ osd_stopwatch_new(struct navit *nav, struct osd_methods *meth,
 	attr = attr_search(attrs, NULL, attr_width);
 	this->width=attr ? attr->u.num : 2;
 	attr = attr_search(attrs, NULL, attr_idle_color);
-	this->idle_color=attr ? *attr->u.color : ((struct color) {0xffff,0xa5a5,0x0000,0xffff}); // text idle_color defaults to orange
+	this->idle_color=attr ? *attr->u.color : orange_color; // text idle_color defaults to orange
 	attr = attr_search(attrs, NULL, attr_disable_reset);
 	if (attr)
 		this->bDisableReset = attr->u.num;
@@ -1240,6 +1273,7 @@ osd_nav_toggle_announcer_new(struct navit *nav, struct osd_methods *meth, struct
 	return (struct osd_priv *) this;
 }
 
+enum osd_speed_warner_eAnnounceState {eNoWarn=0,eWarningTold=1};
 enum camera_t {CAM_FIXED=1, CAM_TRAFFIC_LAMP, CAM_RED, CAM_SECTION, CAM_MOBILE, CAM_RAIL, CAM_TRAFFIPAX};
 char*camera_t_strs[] = {"None","Fix","Traffic lamp","Red detect","Section","Mobile","Rail","Traffipax(non persistent)"};
 char*camdir_t_strs[] = {"All dir.","UNI-dir","BI-dir"};
@@ -1254,8 +1288,6 @@ struct osd_speed_cam_entry {
 	int direction;
 };
 
-enum eAnnounceState {eNoWarn=0,eWarningTold=1};
-
 struct osd_speed_cam {
   struct osd_item item;
   int width;
@@ -1264,7 +1296,7 @@ struct osd_speed_cam {
   struct color idle_color; 
 
   int announce_on;
-  enum eAnnounceState announce_state;
+  enum osd_speed_warner_eAnnounceState announce_state;
   char *text;                 //text of label attribute for this osd
 };
 
@@ -1287,30 +1319,6 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
   struct coord curr_coord;
   struct coord cam_coord;
   struct mapset* ms;
-  if(navit) {
-    navit_get_attr(navit, attr_vehicle, &vehicle_attr, NULL);
-  }
-  else {
-    return;
-  }
-  if (vehicle_attr.u.vehicle) {
-    curr_vehicle = vehicle_attr.u.vehicle;
-  }
-
-  if(0==curr_vehicle)
-    return;
-
-  if(!(ms=navit_get_mapset(navit))) {
-    return;
-  }
-  int ret_attr = 0;
-
-  ret_attr = vehicle_get_attr(curr_vehicle, attr_position_coord_geo,&position_attr, NULL);
-  if(0==ret_attr) {
-    return;
-  }
-
-  transform_from_geo(projection_mg, position_attr.u.coord_geo, &curr_coord);
 
   double dCurrDist = -1;
   int dir_idx = -1;
@@ -1327,6 +1335,34 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
   struct mapset_handle *msh;
   struct map *map;
   struct item *item;
+
+  struct attr attr_dir;
+  struct graphics_gc *curr_color;
+  int ret_attr = 0;
+
+  if(navit) {
+    navit_get_attr(navit, attr_vehicle, &vehicle_attr, NULL);
+  }
+  else {
+    return;
+  }
+  if (vehicle_attr.u.vehicle) {
+    curr_vehicle = vehicle_attr.u.vehicle;
+  }
+
+  if(0==curr_vehicle)
+    return;
+
+  if(!(ms=navit_get_mapset(navit))) {
+    return;
+  }
+
+  ret_attr = vehicle_get_attr(curr_vehicle, attr_position_coord_geo,&position_attr, NULL);
+  if(0==ret_attr) {
+    return;
+  }
+
+  transform_from_geo(projection_mg, position_attr.u.coord_geo, &curr_coord);
 
   sel.next=NULL;
   sel.order=18;
@@ -1347,11 +1383,11 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
       if (item->type == type_tec_common && item_coord_get(item, &cn, 1)) {
         int dist=transform_distance_sq(&cn, &curr_coord);
         if (dist < dstsq) {  
+  		  struct attr tec_attr;
           bFound = 1;
           dstsq=dist;
           dCurrDist = sqrt(dist);
           cam_coord = cn;
-          struct attr tec_attr;
           idx = -1;
           if(item_attr_get(item,attr_tec_type,&tec_attr)) {
             idx = tec_attr.u.num;
@@ -1396,14 +1432,14 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
     if(this_->text && 0<=idx ) {
       char buffer [256]="";
       char buffer2[256]="";
+	  char dir_str[16];
+	  char spd_str[16];
       buffer [0] = 0;
       buffer2[0] = 0; 
   
       str_replace(buffer,this_->text,"${distance}",format_distance(dCurrDist,""));
       str_replace(buffer2,buffer,"${camera_type}",(idx<=CAM_TRAFFIPAX)?camera_t_strs[idx]:"");
       str_replace(buffer,buffer2,"${camera_dir}",(0<=dir_idx && dir_idx<=CAMDIR_TWO)?camdir_t_strs[dir_idx]:"");
-      char dir_str[16];
-      char spd_str[16];
       sprintf(dir_str,"%d",dir);
       sprintf(spd_str,"%d",spd);
       str_replace(buffer2,buffer,"${direction}",dir_str);
@@ -1412,8 +1448,7 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
       graphics_get_text_bbox(this_->item.gr, this_->item.font, buffer, 0x10000, 0, bbox, 0);
       p.x=(this_->item.w-bbox[2].x)/2;
       p.y = this_->item.h-this_->item.h/10;
-      struct graphics_gc *curr_color = this_->orange;
-      struct attr attr_dir;
+      curr_color = this_->orange;
       //tolerance is +-20 degrees
       if(
         dir_idx==CAMDIR_ONE && 
@@ -1442,10 +1477,11 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
 static void
 osd_speed_cam_init(struct osd_speed_cam *this, struct navit *nav)
 {
+  struct color red_color={0xffff,0x0000,0x0000,0xffff};
   osd_set_std_graphic(nav, &this->item, (struct osd_priv *)this);
 
   this->red = graphics_gc_new(this->item.gr);
-  graphics_gc_set_foreground(this->red, &(struct color) {0xffff,0x0000,0x0000,0xffff});
+  graphics_gc_set_foreground(this->red, &red_color);
   graphics_gc_set_linewidth(this->red, this->width);
 
   this->orange = graphics_gc_new(this->item.gr);
@@ -1466,6 +1502,9 @@ osd_speed_cam_init(struct osd_speed_cam *this, struct navit *nav)
 static struct osd_priv *
 osd_speed_cam_new(struct navit *nav, struct osd_methods *meth, struct attr **attrs)
 {
+
+  struct color default_color={0xffff,0xa5a5,0x0000,0xffff};
+
   struct osd_speed_cam *this = g_new0(struct osd_speed_cam, 1);
   struct attr *attr;
   this->item.p.x = 120;
@@ -1480,7 +1519,7 @@ osd_speed_cam_new(struct navit *nav, struct osd_methods *meth, struct attr **att
   attr = attr_search(attrs, NULL, attr_width);
   this->width=attr ? attr->u.num : 2;
   attr = attr_search(attrs, NULL, attr_idle_color);
-  this->idle_color=attr ? *attr->u.color : ((struct color) {0xffff,0xa5a5,0x0000,0xffff}); // text idle_color defaults to orange
+  this->idle_color=attr ? *attr->u.color : default_color; // text idle_color defaults to orange
 
   attr = attr_search(attrs, NULL, attr_label);
   if (attr) {
@@ -1500,6 +1539,7 @@ osd_speed_cam_new(struct navit *nav, struct osd_methods *meth, struct attr **att
   navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_cam_init), attr_graphics_ready, this));
   return (struct osd_priv *) this;
 }
+
 struct osd_speed_warner {
 	struct osd_item item;
 	struct graphics_gc *red;
@@ -1513,25 +1553,26 @@ struct osd_speed_warner {
 	double speed_exceed_limit_offset;
 	double speed_exceed_limit_percent;
 	int announce_on;
-	enum eAnnounceState announce_state;
+	enum osd_speed_warner_eAnnounceState announce_state;
 	int bTextOnly;
 };
 
 static void
 osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct vehicle *v)
 {
-	struct point p,bbox[4];
-	char text[16]="0";
-
-	osd_std_draw(&this->item);
-	p.x=this->item.w/2-this->d/4;
-	p.y=this->item.h/2-this->d/4;
-	p.x=this->item.w/2;
-	p.y=this->item.h/2;
-	//graphics_draw_circle(this->item.gr, this->white, &p, this->d/2);
+    struct point p,bbox[4];
+    char text[16]="0";
 
     struct tracking *tracking = NULL;
     struct graphics_gc *osd_color=this->grey;
+
+
+    osd_std_draw(&this->item);
+    p.x=this->item.w/2-this->d/4;
+    p.y=this->item.h/2-this->d/4;
+    p.x=this->item.w/2;
+    p.y=this->item.h/2;
+	//graphics_draw_circle(this->item.gr, this->white, &p, this->d/2);
 
     if (navit) {
         tracking = navit_get_tracking(navit);
@@ -1539,13 +1580,14 @@ osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct
     if (tracking) {
 
         struct attr maxspeed_attr,speed_attr;
-        struct item *item;
-        item=tracking_get_current_item(tracking);
+        int *flags;
         double routespeed = -1;
         double tracking_speed = -1;
 	int osm_data = 0;
+        struct item *item;
+        item=tracking_get_current_item(tracking);
 
-        int *flags=tracking_get_current_flags(tracking);
+        flags=tracking_get_current_flags(tracking);
         if (flags && (*flags & AF_SPEED_LIMIT) && tracking_get_attr(tracking, attr_maxspeed, &maxspeed_attr, NULL)) {
             routespeed = maxspeed_attr.u.num;
 	    osm_data = 1;
@@ -1599,30 +1641,36 @@ osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct
 static void
 osd_speed_warner_init(struct osd_speed_warner *this, struct navit *nav)
 {
+	struct color white_color={0xffff,0xffff,0xffff,0x0000};
+	struct color red_color={0xffff,0,0,0xffff};
+	struct color green_color={0,0xffff,0,0xffff};
+	struct color grey_color={0x8888,0x8888,0x8888,0x8888};
+	struct color black_color={0x1111,0x1111,0x1111,0x9999};
+
 	osd_set_std_graphic(nav, &this->item, (struct osd_priv *)this);
 	navit_add_callback(nav, callback_new_attr_1(callback_cast(osd_speed_warner_draw), attr_position_coord_geo, this));
 
 
 
 	this->white=graphics_gc_new(this->item.gr);
-	graphics_gc_set_foreground(this->white, &(struct color ){0xffff,0xffff,0xffff,0x0000});
+	graphics_gc_set_foreground(this->white, &white_color);
 
 	graphics_gc_set_linewidth(this->white, this->d/2-2 /*-this->width*/ );
 
 	this->red=graphics_gc_new(this->item.gr);
-	graphics_gc_set_foreground(this->red, &(struct color ){0xffff,0,0,0xffff});
+	graphics_gc_set_foreground(this->red, &red_color);
 	graphics_gc_set_linewidth(this->red, this->width);
 
 	this->green=graphics_gc_new(this->item.gr);
-	graphics_gc_set_foreground(this->green, &(struct color ){0,0xffff,0,0xffff});
+	graphics_gc_set_foreground(this->green, &green_color);
 	graphics_gc_set_linewidth(this->green, this->width-2);
 
 	this->grey=graphics_gc_new(this->item.gr);
-	graphics_gc_set_foreground(this->grey, &(struct color ){0x8888,0x8888,0x8888,0x8888});
+	graphics_gc_set_foreground(this->grey, &grey_color);
 	graphics_gc_set_linewidth(this->grey, this->width);
 
 	this->black=graphics_gc_new(this->item.gr);
-	graphics_gc_set_foreground(this->black, &(struct color ){0x1111,0x1111,0x1111,0x9999});
+	graphics_gc_set_foreground(this->black, &black_color);
 	graphics_gc_set_linewidth(this->black, this->width);
 
 	osd_speed_warner_draw(this, nav, NULL);
@@ -2607,6 +2655,8 @@ osd_scale_draw(struct osd_scale *this, struct navit *nav)
 static void
 osd_scale_init(struct osd_scale *this, struct navit *nav)
 {
+	struct color color_white={0xffff,0xffff,0xffff,0x0000};
+	struct color color_black={0x0000,0x0000,0x0000,0x0000};
 	struct graphics *gra = navit_get_graphics(nav);
 	dbg(1, "enter\n");
 	if (this->use_overlay) {
@@ -2616,11 +2666,11 @@ osd_scale_init(struct osd_scale *this, struct navit *nav)
 		this->item.gr=gra;
 		this->item.font = graphics_font_new(this->item.gr, this->item.font_size, 1);
 		this->item.graphic_fg_white=graphics_gc_new(this->item.gr);
-		this->item.color_white=COLOR_WHITE;
+		this->item.color_white=color_white;
 		graphics_gc_set_foreground(this->item.graphic_fg_white, &this->item.color_white);
 	}
 	this->black=graphics_gc_new(this->item.gr);
-	graphics_gc_set_foreground(this->black, &COLOR_BLACK);
+	graphics_gc_set_foreground(this->black, &color_black);
 	graphics_add_callback(gra, this->draw_cb=callback_new_attr_2(callback_cast(osd_scale_draw), attr_postdraw, this, nav));
 	if (navit_get_ready(nav) == 3)
 		osd_scale_draw(this, nav);
