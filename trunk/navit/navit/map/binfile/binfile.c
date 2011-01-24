@@ -1484,7 +1484,7 @@ static struct map_rect_priv *
 map_rect_new_binfile(struct map_priv *map, struct map_selection *sel)
 {
 	struct map_rect_priv *mr=map_rect_new_binfile_int(map, sel);
-	struct tile t={};
+	struct tile t;
 	dbg(1,"zip_members=%d\n", map->zip_members);
 	if (map->url && map->fi && sel && sel->order == 255) {
 		map_download_selection(map, mr, sel);
@@ -1986,7 +1986,7 @@ duplicate(struct map_search_priv *msp, struct item *item, enum attr_type attr_ty
 		return 1;
 	{
 		int len=sizeof(struct  coord)+strlen(attr.u.str)+1;
-		char buffer[len];
+		char *buffer=g_alloca(sizeof(char)*len);
 		struct duplicate *d=(struct duplicate *)buffer;
 		if (!item_coord_get(item, &d->c, 1)) {
 			d->c.x=0;
