@@ -591,7 +591,7 @@ public class NavitGraphics
 					try
 					{
 						Method m_getX = android.view.MotionEvent.class.getMethod("getX", int.class);
-						Method m_getY = android.view.MotionEvent.class.getMethod("getX", int.class);
+						Method m_getY = android.view.MotionEvent.class.getMethod("getY", int.class);
 						float y0 = 0;
 						try
 						{
@@ -651,7 +651,7 @@ public class NavitGraphics
 						float x1 = 0;
 						try
 						{
-							Float xxxx = (java.lang.Float) m_getY.invoke(instance, arg1);
+							Float xxxx = (java.lang.Float) m_getX.invoke(instance, arg1);
 							x1 = xxxx.floatValue();
 						}
 						catch (IllegalArgumentException e)
