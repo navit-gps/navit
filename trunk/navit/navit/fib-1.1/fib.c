@@ -42,7 +42,7 @@
 		} while (0)		\
 
 #define INT_BITS        (sizeof(int) * 8)
-static inline int
+static int
 ceillog2(unsigned int a)
 {
 	int oa;
@@ -606,7 +606,7 @@ fhe_insertafter(struct fibheap_el *a, struct fibheap_el *b)
 	}
 }
 
-static inline void
+static void
 fhe_insertbefore(struct fibheap_el *a, struct fibheap_el *b)
 {
 	fhe_insertafter(a->fhe_left, b);
