@@ -1008,8 +1008,8 @@ route_set_destinations(struct route *this, struct pcoord *dst, int count, int as
 {
 	struct attr route_status;
 	struct route_info *dsti;
-	route_status.type=attr_route_status;
 	int i;
+	route_status.type=attr_route_status;
 
 	profile(0,NULL);
 	route_clear_destinations(this);
@@ -1872,6 +1872,8 @@ route_process_street_graph(struct route_graph *this, struct item *item, struct v
 #else
 	double len=0;
 #endif
+	int segmented = 0;
+	struct roadprofile *roadp;
 	struct route_graph_point *s_pnt,*e_pnt;
 	struct coord c,l;
 	struct attr attr;
@@ -1880,8 +1882,6 @@ route_process_street_graph(struct route_graph *this, struct item *item, struct v
 	data.offset=1;
 	data.maxspeed=-1;
 	data.item=item;
-	int segmented = 0;
-	struct roadprofile *roadp;
 
 	roadp = vehicleprofile_get_roadprofile(profile, item->type);
 	if (!roadp) {
@@ -2559,7 +2559,7 @@ static void
 route_graph_update(struct route *this, struct callback *cb, int async)
 {
 	struct attr route_status;
-	struct coord c[1+g_list_length(this->destinations)];
+	struct coord *c=g_alloca(sizeof(struct coord)*(1+g_list_length(this->destinations)));
 	int i=0;
 	GList *tmp;
 
@@ -3415,13 +3415,25 @@ route_graph_map_new(struct map_methods *meth, struct attr **attrs)
 static struct map *
 route_get_map_helper(struct route *this_, struct map **map, char *type, char *description)
 {
+	struct attr *attrs[5];
+	struct attr a_type,navigation,data,a_description;
+	a_type.type=attr_type;
+	a_type.u.str=type;
+	navigation.type=attr_route;
+	navigation.u.route=this_;
+	data.type=attr_data;
+	data.u.str="";
+	a_description.type=attr_description;
+	a_description.u.str=description;
+
+	attrs[0]=&a_type;
+	attrs[1]=&navigation;
+	attrs[2]=&data;
+	attrs[3]=&a_description;
+	attrs[4]=NULL;
+
 	if (! *map) 
-		*map=map_new(NULL, (struct attr*[]){
-                                &(struct attr){attr_type,{type}},
-                                &(struct attr){attr_route,.u.route=this_},
-                                &(struct attr){attr_data,{""}},
-                                &(struct attr){attr_description,{description}},
-                                NULL});
+		*map=map_new(NULL, &attrs);
  
 	return *map;
 }
