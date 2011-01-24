@@ -28,6 +28,7 @@
 #define __G_LIB_H__
 
 #define __GLIB_H_INSIDE__
+#include <glib/galloca.h>
 #include <glib/gerror.h>
 #include <glib/fake.h>
 #include <glib/ghash.h>
