@@ -844,10 +844,11 @@ calculate_dest_distance(struct navigation *this_, int incr)
 	struct navigation_itm *next,*itm=this_->last;
 	dbg(1, "enter this_=%p, incr=%d\n", this_, incr);
 	if (incr) {
-		if (itm)
+		if (itm) {
 			dbg(2, "old values: (%p) time=%d lenght=%d\n", itm, itm->dest_length, itm->dest_time);
-		else
-			dbg(2, "old values: itm is null\n");
+		}
+		else dbg(2, "old values: itm is null\n");
+		
 		itm=this_->first;
 		next=itm->next;
 		dbg(2, "itm values: time=%d lenght=%d\n", itm->length, itm->time);
