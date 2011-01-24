@@ -371,8 +371,6 @@ if(ANDROID)
    cfg_feature(SHARED_LIBNAVIT "Android detected" TRUE)
    
    add_feature(XPM2PNG "Android detected" TRUE)
-   # todo: fixe undef. ref to timegm (->timegm64)
-   cfg_feature(BUILD_MAPTOOL "Android detected" FALSE)
    set(NAVIT_COMPILE_FLAGS "${NAVIT_COMPILE_FLAGS} -fPIC")
 
 endif(ANDROID)
