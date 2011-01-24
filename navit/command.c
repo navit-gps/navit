@@ -136,7 +136,7 @@ dump(struct result *res)
 static enum attr_type
 command_attr_type(struct result *res)
 {
-	char attrn[res->attrnlen+1];
+	char *attrn=g_alloca(sizeof(char)*(res->attrnlen+1));
 
 	strncpy(attrn, res->attrn, res->attrnlen);
 	attrn[res->attrnlen]='\0';
@@ -368,7 +368,7 @@ static void
 command_call_function(struct context *ctx, struct result *res)
 {
 	struct attr cbl,**list=NULL;
-	char function[res->attrnlen+1];
+	char *function=g_alloca(sizeof(char)*(res->attrnlen+1));
 	if (res->attrn)
 		strncpy(function, res->attrn, res->attrnlen);
 	function[res->attrnlen]='\0';
