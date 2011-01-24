@@ -286,6 +286,7 @@ vehicle_remove_attr(struct vehicle *this_, struct attr *attr)
 void
 vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor)
 {
+	struct point sc;
 	if (this_->animate_callback) {
 		event_remove_timeout(this_->animate_timer);
 		this_->animate_timer=NULL;		// dangling pointer! prevent double freeing.
@@ -303,7 +304,6 @@ vehicle_set_cursor(struct vehicle *this_, struct cursor *cursor)
 		graphics_overlay_resize(this_->gra, &this_->cursor_pnt, cursor->w, cursor->h, 65535, 0);
 	}
 
-	struct point sc;
 	if (cursor) { 
 		sc.x=cursor->w/2;
 		sc.y=cursor->h/2;
@@ -369,22 +369,24 @@ vehicle_get_cursor_data(struct vehicle *this, struct point *pnt, int *angle, int
 static void
 vehicle_draw_do(struct vehicle *this_, int lazy)
 {
-	if (!this_->cursor || !this_->cursor->attrs || !this_->gra)
-		return;
-
 	struct point p;
 	struct cursor *cursor=this_->cursor;
 	int speed=this_->speed;
 	int angle=this_->angle;
 	int sequence=this_->sequence;
+	struct attr **attr;
+	int match=0;
+
+	if (!this_->cursor || !this_->cursor->attrs || !this_->gra)
+		return;
+
 
 	transform_set_yaw(this_->trans, -this_->angle);
 	graphics_draw_mode(this_->gra, draw_mode_begin);
 	p.x=0;
 	p.y=0;
 	graphics_draw_rectangle(this_->gra, this_->bg, &p, cursor->w, cursor->h);
-	struct attr **attr=cursor->attrs;
-	int match=0;
+	attr=cursor->attrs;
 	while (*attr) {
 		if ((*attr)->type == attr_itemgra) {
 			struct itemgra *itm=(*attr)->u.itemgra;
@@ -607,7 +609,7 @@ vehicle_log_binfile(struct vehicle *this_, struct log *log)
 		buffer_new[2]+=2;
 		if (buffer_new[2] > limit) {
 			int count=buffer_new[2]/2;
-			struct coord out[count];
+			struct coord *out=g_alloca(sizeof(struct coord)*(count));
 			struct coord *in=(struct coord *)(buffer_new+3);
 			int count_out=transform_douglas_peucker(in, count, radius, out);
 			memcpy(in, out, count_out*2*sizeof(int));
