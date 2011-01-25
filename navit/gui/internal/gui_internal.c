@@ -4311,7 +4311,7 @@ static const char *
 find_attr(const char **names, const char **values, const char *name)
 {
 	while (*names) {
-		if (!strcasecmp(*names, name))
+		if (!g_strcasecmp(*names, name))
 			return *values;
 		names+=xml_attr_distance;
 		values+=xml_attr_distance;
@@ -4480,7 +4480,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 	struct html *html=&this->html[this->html_depth];
 	const char *cond, *type;
 
-	if (!strcasecmp(tag_name,"text"))
+	if (!g_strcasecmp(tag_name,"text"))
 		return;
 	html->command=NULL;
 	html->name=NULL;
@@ -4494,7 +4494,7 @@ gui_internal_html_start(void *dummy, const char *tag_name, const char **names, c
 	}
 
 	for (i=0 ; i < sizeof(html_tag_map)/sizeof(struct html_tag_map); i++) {
-		if (!strcasecmp(html_tag_map[i].tag_name, tag_name)) {
+		if (!g_strcasecmp(html_tag_map[i].tag_name, tag_name)) {
 			tag=html_tag_map[i].tag;
 			break;
 		}
@@ -4570,7 +4570,7 @@ gui_internal_html_end(void *dummy, const char *tag_name, void *data, void *error
 	struct html *html;
 	struct html *parent=NULL;
 
-	if (!strcasecmp(tag_name,"text"))
+	if (!g_strcasecmp(tag_name,"text"))
 		return;
 	this->html_depth--;
 	html=&this->html[this->html_depth];
