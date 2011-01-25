@@ -241,7 +241,9 @@ add_module(vehicle/null "Default" FALSE)
 add_module(gui/internal "Default" TRUE)
 add_module(map/binfile "Default" TRUE)
 add_module(map/filter "Default" TRUE)
+if(NOT MSVC)
 add_module(map/mg "Default" TRUE)
+endif(NOT MSVC)
 add_module(map/shapefile "Default" TRUE)
 add_module(map/textfile "Default" TRUE)
 add_module(map/csv "Default" TRUE)
@@ -309,7 +311,7 @@ if(WIN32 OR WINCE)
    set(LOCALE_DIR ./)
    set(IMAGE_DIR xpm)
 
-
+   
    if(HAVE_GTK2 AND NOT MSVC)
       #GTK requires special compile flags
       add_definitions("-mms-bitfields")
@@ -321,7 +323,15 @@ if(WIN32 OR WINCE)
    if(HAVE_WINSOCK)
       list(APPEND NAVIT_LIBS ws2_32)
    endif(HAVE_WINSOCK)
-   
+
+   if(MSVC)
+       add_plugin(support/xgetopt "Windows detected" TRUE)
+   else(MSVC)
+       set(ENABLE_NLS TRUE)
+       add_plugin(intl_cmake "windows detected" TRUE)
+   endif(MSVC)
+
+   set(USE_LIBGNUINTL TRUE)
 endif()
 if (WIN32)
    set(HAVE_API_WIN32 1)
