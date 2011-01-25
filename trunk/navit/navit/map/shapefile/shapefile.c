@@ -22,8 +22,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <unistd.h>
 #include "config.h"
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #include "debug.h"
 #include "plugin.h"
 #include "projection.h"
@@ -269,7 +271,7 @@ longest_match_clear(struct longest_match *lm)
 static void
 longest_match_add_key_value(struct longest_match *lm, char *k, char *v)
 {
-	char buffer[strlen(k)+strlen(v)+2];
+	char* buffer=g_alloca(strlen(k)+strlen(v)+2);
 	int idx;
 
 	strcpy(buffer,"*=*");
@@ -324,9 +326,9 @@ longest_match_list_find(struct longest_match *lm, struct longest_match_list *lml
 static void
 build_match(struct longest_match *lm, struct longest_match_list *lml, char *line)
 {
+	struct longest_match_list_item *lmli;
 	char *kvl=NULL,*i=NULL,*p,*kv;
 	dbg(1,"line=%s\n",line);
-	struct longest_match_list_item *lmli;
 	kvl=line;
 	p=strchr(line,'\t');
 	if (p) {
