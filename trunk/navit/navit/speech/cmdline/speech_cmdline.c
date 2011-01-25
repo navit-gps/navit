@@ -18,10 +18,13 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 #include <glib.h>
 #include "config.h"
+#include "debug.h"
 #include "item.h"
 #include "plugin.h"
+#include "file.h"
 #include "speech.h"
 #ifdef HAVE_API_WIN32_BASE
 #include <windows.h>
@@ -33,8 +36,53 @@
 #include <string.h>
 #endif
 
+
+static GList *
+speech_cmdline_search(GList *l, int offset, int suffix_len, const char *s)
+{
+	GList *li=l,*ret=NULL,*tmp;
+	int len=0;
+	while (li) {
+		char *snd=li->data;
+		int snd_len;
+		snd+=offset;
+		snd_len=strlen(snd)-suffix_len;
+		if (!strncasecmp(s, snd, snd_len)) {
+			const char *ss=s+snd_len;
+			while (*ss == ' ' || *ss == ',')
+				ss++;
+			dbg(1,"found %s remaining %s\n",snd,ss);
+			if (*ss) 
+				tmp=speech_cmdline_search(l, offset, suffix_len, ss);
+			else 
+				tmp=NULL;
+			if (!ret || g_list_length(tmp) < len) {
+				g_list_free(ret);
+				ret=tmp;
+				if (!*ss || tmp) 
+					ret=g_list_prepend(ret, snd);
+			} else
+				g_list_free(tmp);
+		}
+		li=g_list_next(li);
+	}
+	return ret;
+}
+#if 0
+
+	r=search(l, strlen(path)+1, suffix_len, argv[1]);
+	while (r) {
+		printf("%s/%s\n",path,r->data);
+		r=g_list_next(r);
+	}
+	return 0;
+#endif
+
 struct speech_priv {
 	char *cmdline;
+	char *sample_dir;
+	char *sample_suffix;
+	GList *samples;
 };
 
 static int 
@@ -92,8 +140,19 @@ speechd_say(struct speech_priv *this, const char *text)
 #else
 	char *cmdline;
 	int ret;
-
-	cmdline=g_strdup_printf(this->cmdline, text);
+	if (this->sample_dir && this->sample_suffix)  {
+		GList *l=speech_cmdline_search(this->samples, strlen(this->sample_dir)+1, strlen(this->sample_suffix), text);
+		char *sep="";
+		cmdline=g_strdup("");
+		while (l) {
+			char *new_cmdline=g_strdup_printf("%s%s\"%s\"",cmdline,sep,(char *)l->data);
+			g_free(cmdline);
+			cmdline=new_cmdline;
+			sep=" ";
+			l=g_list_next(l);
+		}
+	} else
+		cmdline=g_strdup_printf(this->cmdline, text);
 	ret = system(cmdline);
 	g_free(cmdline);
 	return ret;
@@ -115,12 +174,30 @@ static struct speech_methods speechd_meth = {
 static struct speech_priv *
 speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *parent) {
 	struct speech_priv *this;
-	struct attr *data;
-	data=attr_search(attrs, NULL, attr_data);
-	if (! data)
+	struct attr *attr;
+	attr=attr_search(attrs, NULL, attr_data);
+	if (! attr)
 		return NULL;
-	this=g_new(struct speech_priv,1);
-	this->cmdline=g_strdup(data->u.str);
+	this=g_new0(struct speech_priv,1);
+	this->cmdline=g_strdup(attr->u.str);
+	if ((attr=attr_search(attrs, NULL, attr_sample_dir)))
+		this->sample_dir=g_strdup(attr->u.str);
+	if ((attr=attr_search(attrs, NULL, attr_sample_suffix)))
+		this->sample_suffix=g_strdup(attr->u.str);
+	if (this->sample_dir && this->sample_suffix) {
+		void *handle=file_opendir(this->sample_dir);
+		char *name;
+		int suffix_len=strlen(this->sample_suffix);
+		while((name=file_readdir(handle))) {
+			int len=strlen(name);
+			if (len > suffix_len) {
+				if (!strcmp(name+len-suffix_len, this->sample_suffix)) {
+					this->samples=g_list_prepend(this->samples, g_strdup_printf("%s/%s",this->sample_dir,name));
+				}
+			}
+		}
+		file_closedir(handle);
+	}
 	*meth=speechd_meth;
 	return this;
 }
