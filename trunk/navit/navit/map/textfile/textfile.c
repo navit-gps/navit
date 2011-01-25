@@ -177,6 +177,7 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 	mr->item.meth=&methods_textfile;
 	mr->item.priv_data=mr;
 	if (map->is_pipe) {
+#ifdef HAVE_POPEN
 		char *oargs,*args=g_strdup(map->filename),*sep=" ";
 		enum layer_type lay;
 		g_free(mr->args);
@@ -197,6 +198,9 @@ map_rect_new_textfile(struct map_priv *map, struct map_selection *sel)
 		mr->f=popen(mr->args, "r");
 		mr->pos=0;
 		mr->lastlen=0;
+#else
+		dbg(0,"map_rect_new_textfile is unable to work with pipes %s\n",map->filename);
+#endif 
 	} else {
 		mr->f=fopen(map->filename, "r");
 	}
@@ -212,10 +216,14 @@ static void
 map_rect_destroy_textfile(struct map_rect_priv *mr)
 {
 	if (mr->f) {
-		if (mr->m->is_pipe)
+		if (mr->m->is_pipe) {
+#ifdef HAVE_POPEN
 			pclose(mr->f);
-		else
+#endif
+		}
+		else {
 			fclose(mr->f);
+		}
 	}
         g_free(mr);
 }
@@ -245,10 +253,12 @@ map_rect_get_item_textfile(struct map_rect_priv *mr)
 				mr->item.id_hi=1;
 			}
 			if (mr->m->is_pipe) {
+#ifdef HAVE_POPEN
 				pclose(mr->f);
 				mr->f=popen(mr->args, "r");
 				mr->pos=0;
 				mr->lastlen=0;
+#endif
 			} else {
 				fseek(mr->f, 0, SEEK_SET);
 				clearerr(mr->f);
@@ -302,10 +312,12 @@ static struct item *
 map_rect_get_item_byid_textfile(struct map_rect_priv *mr, int id_hi, int id_lo)
 {
 	if (mr->m->is_pipe) {
+#ifndef _MSC_VER
 		pclose(mr->f);
 		mr->f=popen(mr->args, "r");
 		mr->pos=0;
 		mr->lastlen=0;
+#endif /* _MSC_VER */
 	} else
 		fseek(mr->f, id_lo, SEEK_SET);
 	get_line(mr);
