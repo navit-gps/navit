@@ -54,9 +54,9 @@
 
 #cmakedefine HAVE_LC_MESSAGES 1
 
-#define HAVE_SYS_TIME_H 1
+#cmakedefine HAVE_SYS_TIME_H 1
 
-#define HAVE_GETOPT_H 1
+#cmakedefine HAVE_GETOPT_H 1
 
 #ifdef _MSC_VER
 #define __PRETTY_FUNCTION__ __FILE__":" << __LINE__

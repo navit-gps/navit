@@ -88,6 +88,8 @@ CHECK_INCLUDE_FILES(libspeechd.h HAVE_LIBSPEECHD)
 CHECK_INCLUDE_FILES(sys/socket.h HAVE_SOCKET)
 CHECK_INCLUDE_FILES(locale.h HAVE_LC_MESSAGES)
 CHECK_INCLUDE_FILES(libintl.h HAVE_LIBINTL)
+CHECK_INCLUDE_FILES(sys/time.h HAVE_SYS_TIME_H)
+CHECK_INCLUDE_FILES(getopt.h HAVE_GETOPT_H)
 
 ### Configure build
 #Required libraries, supplied with navit
