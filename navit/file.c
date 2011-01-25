@@ -24,9 +24,9 @@
 #include <unistd.h>
 #endif
 #ifdef _MSC_VER
-#include <dirent.h>
-#else
 #include <windows.h>
+#else
+#include <dirent.h>
 #endif /* _MSC_VER */
 #include <string.h>
 #include <fcntl.h>
