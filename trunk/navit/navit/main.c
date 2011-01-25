@@ -20,19 +20,22 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <getopt.h>
 #include <string.h>
 #include <signal.h>
 #include <glib.h>
 #include <sys/types.h>
+
+#include "config.h"
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 #ifndef _WIN32
 #include <sys/wait.h>
 #include <signal.h>
 #endif
 
-#include <unistd.h>
-#include "config.h"
 #include "file.h"
 #include "debug.h"
 #include "main.h"
