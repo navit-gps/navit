@@ -219,6 +219,8 @@ struct graphics_gc_priv
 
 static void create_memory_dc(struct graphics_priv *gr)
 {
+    HDC hdc;
+    BITMAPINFO bOverlayInfo;
 
     if (gr->hMemDC)
     {
@@ -233,7 +235,6 @@ static void create_memory_dc(struct graphics_priv *gr)
     }
 
 
-    HDC hdc;
     hdc = GetDC( gr->wnd_handle );
     // Creates memory DC
     gr->hMemDC = CreateCompatibleDC(hdc);
@@ -241,8 +242,6 @@ static void create_memory_dc(struct graphics_priv *gr)
 
 
 #ifndef  FAST_TRANSPARENCY
-
-    BITMAPINFO bOverlayInfo;
 
     memset(&bOverlayInfo, 0, sizeof(BITMAPINFO));
     bOverlayInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -275,36 +274,42 @@ static void HandleKeyChar(struct graphics_priv *gra_priv, WPARAM wParam)
 {
     TCHAR key = (TCHAR) wParam;
     char *s=NULL;
+    char k[]={0,0};
     dbg(1,"HandleKey %d\n",key);
 	switch (key) {
     default:
-		s=(char []){key, 0};
+		k[0]=key;
+		s=k;
         break;
     }
-    if (s)
+    if (s) 
         callback_list_call_attr_1(gra_priv->cbl, attr_keypress, (void *)s);
 }
 
 static void HandleKeyDown(struct graphics_priv *gra_priv, WPARAM wParam)
 {
     int key = (int) wParam;
-    dbg(1,"HandleKey %d\n",key);
+    char up[]={NAVIT_KEY_UP,0};
+    char down[]={NAVIT_KEY_DOWN,0};
+    char left[]={NAVIT_KEY_LEFT,0};
+    char right[]={NAVIT_KEY_RIGHT,0};
     char *s=NULL;
+    dbg(1,"HandleKey %d\n",key);
 	switch (key) {
     case 37:
-		s=(char []){NAVIT_KEY_LEFT, 0};
+		s=left;
         break;
     case 38:
-		s=(char []){NAVIT_KEY_UP, 0};
+		s=up;
         break;
     case 39:
-		s=(char []){NAVIT_KEY_RIGHT, 0};
+		s=right;
         break;
     case 40:
-		s=(char []){NAVIT_KEY_DOWN, 0};
+		s=down;
         break;
     }
-    if (s)
+    if (s) 
         callback_list_call_attr_1(gra_priv->cbl, attr_keypress, (void *)s);
 }
 
@@ -389,9 +394,12 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
     case WM_PAINT:
         if ( gra_priv && gra_priv->hMemDC)
         {
+    	    struct graphics_priv* overlay;
+            PAINTSTRUCT ps = { 0 };
+            HDC hdc;
             profile(0, NULL);
             dbg(1, "WM_PAINT\n");
-            struct graphics_priv* overlay = gra_priv->overlays;
+            overlay = gra_priv->overlays;
 
 #ifndef FAST_TRANSPARENCY
 			BitBlt( gra_priv->hPrebuildDC, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hMemDC, 0, 0, SRCCOPY);
@@ -403,7 +411,9 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 					 overlay->p.x < gra_priv->width &&
 					 overlay->p.y < gra_priv->height )
 				{
-
+					int x,y;
+					int destPixel, srcPixel;
+                    int h,w;
 #ifdef FAST_TRANSPARENCY
 					if ( !overlay->hPrebuildDC )
 					{
@@ -420,10 +430,8 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 
 					BitBlt( overlay->hPrebuildDC, 0, 0, overlay->width , overlay->height, overlay->hMemDC, 0, 0, SRCCOPY);
 
-					int x,y;
-					int destPixel, srcPixel;
-					int h=overlay->height;
-					int w=overlay->width;
+					h=overlay->height;
+					w=overlay->width;
 					if (w > gra_priv->width-overlay->p.x)
 						w=gra_priv->width-overlay->p.x;
 					if (h > gra_priv->height-overlay->p.y)
@@ -455,11 +463,9 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
 				overlay = overlay->next;
 			}
 
-            PAINTSTRUCT ps = { 0 };
-
 
 #ifndef FAST_TRANSPARENCY
-            HDC hdc = BeginPaint(hwnd, &ps);
+            hdc = BeginPaint(hwnd, &ps);
             BitBlt( hdc, 0, 0, gra_priv->width , gra_priv->height, gra_priv->hPrebuildDC, 0, 0, SRCCOPY );
 #else
             HDC hdc = BeginPaint(hwnd, &ps);
@@ -583,6 +589,7 @@ static const TCHAR g_szClassName[] = {'N','A','V','G','R','A','\0'};
 static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
 {
     int wStyle = WS_VISIBLE;
+    HWND hwnd;
 #ifdef HAVE_API_WIN32_CE
     WNDCLASS wc;
 #else
@@ -590,7 +597,6 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
     wc.cbSize		 = sizeof(WNDCLASSEX);
     wc.hIconSm		 = NULL;
 #endif
-    HWND hwnd;
 
     wc.style	 = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
     wc.lpfnWndProc	= WndProc;
@@ -637,30 +643,31 @@ static HANDLE CreateGraphicsWindows( struct graphics_priv* gr, HMENU hMenu )
         wStyle = WS_OVERLAPPED|WS_VISIBLE;
     }
 
+#ifdef HAVE_API_WIN32_CE
     g_hwnd = hwnd = CreateWindow(g_szClassName,
                                  TEXT("Navit"),
                                  wStyle,
-#ifdef HAVE_API_WIN32_CE
                                  CW_USEDEFAULT,
                                  CW_USEDEFAULT,
                                  CW_USEDEFAULT,
                                  CW_USEDEFAULT,
-
+                                 gr->wnd_parent_handle,
+                                 hMenu,
+                                 GetModuleHandle(NULL),
+                                 NULL);
 #else
+    g_hwnd = hwnd = CreateWindow(g_szClassName,
+                                 TEXT("Navit"),
+                                 wStyle,
                                  0,
                                  0,
                                  gr->width,
                                  gr->height,
-#endif
-#if 1
                                  gr->wnd_parent_handle,
-#else
-                                 NULL,
-#endif
                                  hMenu,
                                  GetModuleHandle(NULL),
                                  NULL);
-
+#endif
     if (hwnd == NULL)
     {
         dbg(0, "Window creation failed: %d\n",  GetLastError());
@@ -788,7 +795,7 @@ static void draw_polygon(struct graphics_priv *gr, struct graphics_gc_priv *gc, 
     HBRUSH holdbrush = SelectObject( gr->hMemDC, gc->hbrush );
     if (sizeof(POINT) != sizeof(struct point)) {
 	    int i;
-	    POINT points[ count ];
+	    POINT* points=g_alloca(sizeof(POINT)*count);
 	    for ( i=0;i< count; i++ )
 	    {
 		points[i].x = p[i].x;
@@ -815,10 +822,10 @@ static void draw_rectangle(struct graphics_priv *gr, struct graphics_gc_priv *gc
 
 static void draw_circle(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *p, int r)
 {
-    r=r/2;
-
     HPEN holdpen = SelectObject( gr->hMemDC, gc->hpen );
     HBRUSH holdbrush = SelectObject( gr->hMemDC, GetStockObject(NULL_BRUSH));
+
+    r=r/2;
 
     Ellipse( gr->hMemDC, p->x - r, p->y -r, p->x + r, p->y + r );
 
@@ -948,10 +955,14 @@ struct graphics_font_priv
 static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, struct graphics_gc_priv *bg, struct graphics_font_priv *font, char *text, struct point *p, int dx, int dy)
 {
     RECT rcClient;
+    int prevBkMode;
+    HFONT hOldFont;
+    double angle;
+
     GetClientRect( gr->wnd_handle, &rcClient );
 
     SetTextColor(gr->hMemDC, fg->fg_color);
-    int prevBkMode = SetBkMode( gr->hMemDC, TRANSPARENT );
+    prevBkMode = SetBkMode( gr->hMemDC, TRANSPARENT );
 
     if ( NULL == font->hfont )
     {
@@ -965,7 +976,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     }
 
 
-    double angle = -atan2( dy, dx ) * 180 / 3.14159 ;
+    angle = -atan2( dy, dx ) * 180 / 3.14159 ;
     if (angle < 0)
         angle += 360;
 
@@ -975,7 +986,7 @@ static void draw_text(struct graphics_priv *gr, struct graphics_gc_priv *fg, str
     DeleteObject (font->hfont) ;
 
     font->hfont = CreateFontIndirect (&font->lf);
-    HFONT hOldFont = SelectObject(gr->hMemDC, font->hfont );
+    hOldFont = SelectObject(gr->hMemDC, font->hfont );
 
     {
         wchar_t utf16[1024];
@@ -1172,6 +1183,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
     if (  gr->AlphaBlend && img->channels == 4 )
     {
         BITMAPINFO pnginfo;
+	HDC dc;
         memset(&pnginfo, 0, sizeof(pnginfo));
         pnginfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
         pnginfo.bmiHeader.biWidth = img->width;
@@ -1179,7 +1191,7 @@ pngdecode(struct graphics_priv *gr, char *name, struct graphics_image_priv *img)
         pnginfo.bmiHeader.biBitCount = 32;
         pnginfo.bmiHeader.biCompression = BI_RGB;
         pnginfo.bmiHeader.biPlanes = 1;
-        HDC dc = CreateCompatibleDC(NULL);
+        dc = CreateCompatibleDC(NULL);
         img->hBitmap = CreateDIBSection(dc, &pnginfo, DIB_RGB_COLORS , (void **)&img->png_pixels, NULL, 0);
         DeleteDC(dc);
 
@@ -1232,13 +1244,15 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0, int
 {
 	if (img->hBitmap)
 	{
+		HDC hdc;
+		HBITMAP oldBitmap;
 		BLENDFUNCTION blendFunction ;
 		blendFunction.BlendOp = AC_SRC_OVER;
 		blendFunction.BlendFlags = 0;
 		blendFunction.SourceConstantAlpha = 255;
 		blendFunction.AlphaFormat = AC_SRC_ALPHA;
-		HDC hdc = CreateCompatibleDC(NULL);
-		HBITMAP oldBitmap = SelectBitmap(hdc, img->hBitmap);
+		hdc = CreateCompatibleDC(NULL);
+		oldBitmap = SelectBitmap(hdc, img->hBitmap);
 		gr->AlphaBlend(gr->hMemDC, x0, y0, img->width, img->height, hdc, 0, 0, img->width, img->height, blendFunction);
 		(void)SelectBitmap(hdc, oldBitmap);
 		DeleteDC(hdc);
@@ -1249,6 +1263,9 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0, int
 		HDC hdc=gr->hMemDC;
 		png_byte *pix_ptr = img->png_pixels;
 		COLORREF *pixeldata;
+		HDC dc;
+		HBITMAP bitmap;
+		HBITMAP oldBitmap;
 
 		BITMAPINFO pnginfo;
 
@@ -1259,9 +1276,9 @@ pngrender(struct graphics_image_priv *img, struct graphics_priv *gr, int x0, int
 		pnginfo.bmiHeader.biBitCount = 32;
 		pnginfo.bmiHeader.biCompression = BI_RGB;
 		pnginfo.bmiHeader.biPlanes = 1;
-		HDC dc = CreateCompatibleDC(NULL);
-		HBITMAP bitmap = CreateDIBSection(hdc, &pnginfo, DIB_RGB_COLORS, (void **)&pixeldata, NULL, 0);
-		HBITMAP oldBitmap = SelectBitmap(dc, bitmap);
+		dc = CreateCompatibleDC(NULL);
+		bitmap = CreateDIBSection(hdc, &pnginfo, DIB_RGB_COLORS, (void **)&pixeldata, NULL, 0);
+		oldBitmap = SelectBitmap(dc, bitmap);
 		BitBlt(dc, 0, 0, img->width, img->height, hdc, x0, y0, SRCCOPY);
 		for (y=0 ; y < img->width ; y++)
 		{
@@ -1413,12 +1430,13 @@ static void overlay_disable(struct graphics_priv *gr, int disable)
 
 static void get_text_bbox(struct graphics_priv *gr, struct graphics_font_priv *font, char *text, int dx, int dy, struct point *ret, int estimate)
 {
-    dbg(2, "Get bbox for %s\n", text);
     int len = g_utf8_strlen(text, -1);
     int xMin = 0;
     int yMin = 0;
     int yMax = 13*font->size/256;
     int xMax = 9*font->size*len/256;
+
+    dbg(2, "Get bbox for %s\n", text);
 
     ret[0].x = xMin;
     ret[0].y = -yMin;
@@ -1625,9 +1643,9 @@ event_win32_remove_timeout(struct event_timeout *to)
 {
     if (to)
     {
-        dbg(1, "Try stopping timer %d\n", to->timer_id);
         GList *l;
         struct event_timeout *t=NULL;
+        dbg(1, "Try stopping timer %d\n", to->timer_id);
         l = timers;
         while (l)
         {
