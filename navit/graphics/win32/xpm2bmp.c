@@ -350,9 +350,10 @@ static int parse_color_values( const char* line, PXPM2BMP pXpm2bmp )
 
 		if ( cchar && chash && qe)
 		{
+			int len;
 			chash++;
 			*qe = 0;
-			int len = strlen( chash );
+			len = strlen( chash );
 
 			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].r = string2hex16( &chash[0] );
 			pXpm2bmp->color_entires[ pXpm2bmp->color_entires_size].g = string2hex16( &chash[len / 3] );
