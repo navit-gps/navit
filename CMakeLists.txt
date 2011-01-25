@@ -328,7 +328,7 @@ if(WIN32 OR WINCE)
 
    if(MSVC)
        add_plugin(support/xgetopt "Windows detected" TRUE)
-       add_plugin(intl_cmake "not yet supported on msvc" FALSE)
+       set(ENABLE_NLS FALSE)
    else(MSVC)
        set(ENABLE_NLS TRUE)
    endif(MSVC)
@@ -444,6 +444,7 @@ CHECK_FUNCTION_EXISTS (memalign HAVE_MEMALIGN)
 CHECK_FUNCTION_EXISTS (valloc HAVE_VALLOC)
 CHECK_FUNCTION_EXISTS (posix_memalign HAVE_POSIX_MEMALIGN)
 CHECK_FUNCTION_EXISTS (popen HAVE_POPEN)
+CHECK_FUNCTION_EXISTS (_atoi64 HAVE__ATOI64)
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
