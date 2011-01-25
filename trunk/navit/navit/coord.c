@@ -351,27 +351,27 @@ void coord_format(float lat,float lng, enum coord_format fmt, char * buffer, int
 
 	case DEGREES_DECIMAL:
 	  if (lat<360)
-	    size_used+=snprintf(buffer+size_used,size-size_used,"%02.6f°%c",lat,lat_c);
+	    size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.6f°%c",lat,lat_c);
 	  if ((lat<360)&&(lng<360))
-	    size_used+=snprintf(buffer+size_used,size-size_used," ");
+	    size_used+=g_snprintf(buffer+size_used,size-size_used," ");
 	  if (lng<360)
-	    size_used+=snprintf(buffer+size_used,size-size_used,"%03.7f°%c",lng,lng_c);
+	    size_used+=g_snprintf(buffer+size_used,size-size_used,"%03.7f°%c",lng,lng_c);
 	  break;
 	case DEGREES_MINUTES:
 	  if (lat<360)
-	    size_used+=snprintf(buffer+size_used,size-size_used,"%02.0f°%07.4f' %c",floor(lat_deg),lat_min,lat_c);
+	    size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.0f°%07.4f' %c",floor(lat_deg),lat_min,lat_c);
 	  if ((lat<360)&&(lng<360))
-	    size_used+=snprintf(buffer+size_used,size-size_used," ");
+	    size_used+=g_snprintf(buffer+size_used,size-size_used," ");
 	  if (lng<360)
-	    size_used+=snprintf(buffer+size_used,size-size_used,"%03.0f°%07.4f' %c",floor(lng_deg),lng_min,lng_c);
+	    size_used+=g_snprintf(buffer+size_used,size-size_used,"%03.0f°%07.4f' %c",floor(lng_deg),lng_min,lng_c);
 	  break;
 	case DEGREES_MINUTES_SECONDS:
 	  if (lat<360)
-	    size_used+=snprintf(buffer+size_used,size-size_used,"%02.0f°%02.0f'%05.2f\" %c",floor(lat_deg),floor(lat_min),lat_sec,lat_c);
+	    size_used+=g_snprintf(buffer+size_used,size-size_used,"%02.0f°%02.0f'%05.2f\" %c",floor(lat_deg),floor(lat_min),lat_sec,lat_c);
 	  if ((lat<360)&&(lng<360))
-	    size_used+=snprintf(buffer+size_used,size-size_used," ");
+	    size_used+=g_snprintf(buffer+size_used,size-size_used," ");
 	  if (lng<360)
-	    size_used+=snprintf(buffer+size_used,size-size_used,"%03.0f°%02.0f'%05.2f\" %c",floor(lng_deg),floor(lng_min),lng_sec,lng_c);
+	    size_used+=g_snprintf(buffer+size_used,size-size_used,"%03.0f°%02.0f'%05.2f\" %c",floor(lng_deg),floor(lng_min),lng_sec,lng_c);
 	  break;
 	  
 	
