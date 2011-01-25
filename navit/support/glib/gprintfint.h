@@ -35,7 +35,11 @@
 #define _g_printf    printf
 #define _g_fprintf   fprintf
 #define _g_sprintf   sprintf
+#ifdef _MSC_VER
+#define _g_snprintf  _snprintf
+#else
 #define _g_snprintf  snprintf
+#endif
 
 #define _g_vprintf   vprintf
 #define _g_vfprintf  vfprintf

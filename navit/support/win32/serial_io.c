@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <windows.h>
+#include <glib.h>
 #include "serial_io.h"
 #include "debug.h"
 
@@ -24,7 +25,7 @@ int serial_io_init( const char* port, const char* strsettings )
     COMMTIMEOUTS sCT;
 
         char strport[16];
-        snprintf( strport, sizeof( strport ), "\\\\.\\%s", port );
+        g_snprintf( strport, sizeof( strport ), "\\\\.\\%s", port );
 
         hCom = CreateFile(
                         strport,
