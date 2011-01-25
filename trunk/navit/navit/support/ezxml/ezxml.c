@@ -27,9 +27,11 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
-#ifndef _MSC_VER
+#include <glib.h>
+#include "config.h"
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif /* _MSC_VER */
+#endif
 #include <sys/types.h>
 #ifndef EZXML_NOMMAP
 #include <sys/mman.h>
@@ -142,7 +144,7 @@ ezxml_t ezxml_err(ezxml_root_t root, char *s, const char *err, ...)
     char *t, fmt[EZXML_ERRL];
     
     for (t = root->s; t < s; t++) if (*t == '\n') line++;
-    snprintf(fmt, EZXML_ERRL, "[error near line %d]: %s", line, err);
+    g_snprintf(fmt, EZXML_ERRL, "[error near line %d]: %s", line, err);
 
     va_start(ap, err);
     vsnprintf(root->err, EZXML_ERRL, fmt, ap);
