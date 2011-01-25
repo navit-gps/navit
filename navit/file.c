@@ -20,12 +20,18 @@
 #define _FILE_OFFSET_BITS 64
 #define _LARGEFILE_SOURCE
 #define _LARGEFILE64_SOURCE
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+#ifdef _MSC_VER
+#include <dirent.h>
+#else
+#include <windows.h>
+#endif /* _MSC_VER */
 #include <string.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <wordexp.h>
@@ -72,12 +78,20 @@ static GHashTable *file_name_hash;
 
 static struct cache *file_cache;
 
+#ifdef _MSC_VER
+#pragma pack(push,1)
+#endif /* _MSC_VER */
 struct file_cache_id {
 	long long offset;
 	int size;
 	int file_name_id;
 	int method;
-} __attribute__ ((packed));
+#ifndef _MSC_VER
+}__attribute__ ((packed));
+#else /* _MSC_VER */
+};
+#pragma pack(pop)
+#endif /* _MSC_VER */
 
 #ifdef HAVE_SOCKET
 static int
@@ -265,14 +279,14 @@ file_size(struct file *file)
 
 int file_mkdir(char *name, int pflag)
 {
-	char buffer[strlen(name)+1];
+	char *buffer=g_alloca(sizeof(char)*(strlen(name)+1));
 	int ret;
 	char *next;
 	dbg(1,"enter %s %d\n",name,pflag);
 	if (!pflag) {
 		if (file_is_dir(name))
 			return 0;
-#ifdef HAVE_API_WIN32_BASE
+#if defined HAVE_API_WIN32_BASE || defined _MSC_VER
 		return mkdir(name);
 #else
 		return mkdir(name, 0777);
@@ -656,12 +670,27 @@ file_unmap(struct file *f)
 #endif
 }
 
+#ifndef _MSC_VER
 void *
 file_opendir(char *dir)
 {
 	return opendir(dir);
 }
+#else 
+void *
+file_opendir(char *dir)
+{
+	WIN32_FIND_DATAA FindFileData;
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+#undef UNICODE         // we need FindFirstFileA() which takes an 8-bit c-string
+	char* fname=g_alloca(sizeof(char)*(strlen(dir)+4));
+	sprintf(fname,"%s\\*",dir);
+	hFind = FindFirstFileA(fname, &FindFileData);
+	return hFind;
+}
+#endif
 
+#ifndef _MSC_VER
 char *
 file_readdir(void *hnd)
 {
@@ -672,17 +701,38 @@ file_readdir(void *hnd)
 		return NULL;
 	return ent->d_name;
 }
+#else
+char *
+file_readdir(void *hnd)
+{
+	WIN32_FIND_DATA FindFileData;
 
+	if (FindNextFile(hnd, &FindFileData) ) {
+		return FindFileData.cFileName;
+	} else {
+		return NULL;
+	}
+}
+#endif /* _MSC_VER */
+
+#ifndef _MSC_VER
 void
 file_closedir(void *hnd)
 {
 	closedir(hnd);
 }
+#else
+void
+file_closedir(void *hnd)
+{
+	FindClose(hnd);
+}
+#endif /* _MSC_VER */
 
 struct file *
 file_create_caseinsensitive(char *name, struct attr **options)
 {
-	char dirname[strlen(name)+1];
+	char *dirname=g_alloca(sizeof(char)*(strlen(name)+1));
 	char *filename;
 	char *p;
 	void *d;
