@@ -23,6 +23,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#ifdef _MSC_VER
+#define __PRETTY_FUNCTION__ __FUNCTION__
+#endif
 #define profile_str2(x) #x
 #define profile_str1(x) profile_str2(x)
 #define profile_module profile_str1(MODULE)
