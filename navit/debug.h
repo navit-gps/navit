@@ -26,6 +26,11 @@ extern "C" {
 
 #include <stdarg.h>
 #include <string.h>
+
+#ifdef _MSC_VER
+#define __PRETTY_FUNCTION__ __FUNCTION__
+#endif
+
 extern int debug_level;
 #define dbg_str2(x) #x
 #define dbg_str1(x) dbg_str2(x)
