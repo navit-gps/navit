@@ -150,13 +150,13 @@ linguistics_next_word(char *str)
 int
 linguistics_search(char *str)
 {
-	if (!strcasecmp(str,"str"))
+	if (!g_strcasecmp(str,"str"))
 		return 0;
-	if (!strcasecmp(str,"str."))
+	if (!g_strcasecmp(str,"str."))
 		return 0;
-	if (!strcasecmp(str,"strasse"))
+	if (!g_strcasecmp(str,"strasse"))
 		return 0;
-	if (!strcasecmp(str,"weg"))
+	if (!g_strcasecmp(str,"weg"))
 		return 0;
 	return 1;
 }

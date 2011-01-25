@@ -400,9 +400,9 @@ static int
 search_match(char *str, char *search, int partial)
 {
 	if (!partial)
-		return (!strcasecmp(str, search));
+		return (!g_strcasecmp(str, search));
 	else
-		return (!strncasecmp(str, search, strlen(search)));
+		return (!g_strncasecmp(str, search, strlen(search)));
 }
 
 static struct pcoord *

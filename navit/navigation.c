@@ -1283,7 +1283,7 @@ contains_suffix(char *name, char *suffix)
 		return 0;
 	if (strlen(name) < strlen(suffix))
 		return 0;
-	return !strcasecmp(name+strlen(name)-strlen(suffix), suffix);
+	return !g_strcasecmp(name+strlen(name)-strlen(suffix), suffix);
 }
 
 static char *
