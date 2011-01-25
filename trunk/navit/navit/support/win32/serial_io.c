@@ -20,6 +20,8 @@
 int serial_io_init( const char* port, const char* strsettings )
 {
     HANDLE hCom = NULL;
+    DCB dcb;
+    COMMTIMEOUTS sCT;
 
         char strport[16];
         snprintf( strport, sizeof( strport ), "\\\\.\\%s", port );
@@ -54,8 +56,6 @@ int serial_io_init( const char* port, const char* strsettings )
                 return -1;
         }
 
-        DCB dcb;
-
         ZeroMemory(&dcb, sizeof(DCB));
 
         GetCommState(hCom, &dcb);
@@ -65,8 +65,6 @@ int serial_io_init( const char* port, const char* strsettings )
         SetupComm(hCom, 4096, 4096);
 
         SetCommState(hCom, &dcb);
-
-        COMMTIMEOUTS sCT;
 
         memset(&sCT, 0, sizeof(sCT));
         sCT.ReadTotalTimeoutConstant = 10;
@@ -94,9 +92,9 @@ int serial_io_init( const char* port, const char* strsettings )
 **/
 int serial_io_read( int fd, char * buffer, int buffer_size )
 {
+        DWORD dwBytesIn = 0;
         dbg(1, "serial_io_read fd = %d buffer_size = %d\n", fd, buffer_size);
 
-        DWORD dwBytesIn = 0;
 
         if (fd <= 0)
         {
@@ -139,9 +137,9 @@ int serial_io_read( int fd, char * buffer, int buffer_size )
 **/
 int serial_io_write(int fd, const char * buffer)
 {
+        DWORD dwBytesOut = 0;
         dbg(1, "serial_io_write fd = %d buffer = '%s'\n",fd, buffer);
 
-        DWORD dwBytesOut = 0;
 
         WriteFile((HANDLE)fd, buffer, strlen(buffer), &dwBytesOut, NULL);
 
