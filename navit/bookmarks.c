@@ -19,7 +19,10 @@
 
 #include <glib.h>
 #include <stdlib.h>
+#include "config.h"
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include "file.h"
 #include "debug.h"
 #include "projection.h"
@@ -31,6 +34,19 @@
 #include "bookmarks.h"
 #include "navit.h"
 #include "navit_nls.h"
+
+/* FIXME: Move this to support directory */
+#ifdef _MSC_VER
+#include <windows.h>
+static int ftruncate(int fd, __int64 length)
+{
+	HANDLE fh = (HANDLE)_get_osfhandle(fd);
+	if (!fh || _lseeki64(fd, length, SEEK_SET)) {
+		return -1;
+	}
+	return SetEndOfFile(fh) ? 0 : -1;
+}
+#endif /* _MSC_VER */
 
 struct bookmarks {
 	//data storage
@@ -648,7 +664,7 @@ bookmarks_append_coord(struct bookmarks *this_, char *file, struct pcoord *c, in
 	const char *prostr;
 
 	if (limit != 0 && (f=fopen(file, "r"))) {
-		int offsets[limit];
+		int *offsets=g_alloca(sizeof(int)*limit);
 		int offset_pos=0;
 		int offset;
 		char buffer[4096];
