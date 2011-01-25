@@ -640,9 +640,9 @@ osd_stopwatch_draw(struct stopwatch *this, struct navit *nav,
 	total_days = total_hours/24;
 
 	if (total_days==0) {
-		snprintf(buffer,32,"%02d:%02d:%02d", (int)total_hours%24, (int)total_min%60, (int)total_sec%60);
+		g_snprintf(buffer,32,"%02d:%02d:%02d", (int)total_hours%24, (int)total_min%60, (int)total_sec%60);
 	} else {
-		snprintf(buffer,32,"%02dd %02d:%02d:%02d",
+		g_snprintf(buffer,32,"%02dd %02d:%02d:%02d",
 		(int)total_days, (int)total_hours%24, (int)total_min%60, (int)total_sec%60); 
 	}
 
@@ -1605,7 +1605,7 @@ osd_speed_warner_draw(struct osd_speed_warner *this, struct navit *navit, struct
         tracking_get_attr(tracking, attr_position_speed, &speed_attr, NULL);
         tracking_speed = *speed_attr.u.numd;
         if( -1 != tracking_speed && -1 != routespeed ) {
-            snprintf(text,16,"%s%.0lf",osm_data ? "" : "~",routespeed);
+            g_snprintf(text,16,"%s%.0lf",osm_data ? "" : "~",routespeed);
             if( this->speed_exceed_limit_offset+routespeed<tracking_speed &&
                 (100.0+this->speed_exceed_limit_percent)/100.0*routespeed<tracking_speed ) {
                 if(this->announce_state==eNoWarn && this->announce_on) {
