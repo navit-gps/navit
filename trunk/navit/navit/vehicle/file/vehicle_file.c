@@ -457,7 +457,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 			lat -= priv->geo.lat * 100;
 			priv->geo.lat += lat / 60;
 
-			if (!strcasecmp(item[3],"S"))
+			if (!g_strcasecmp(item[3],"S"))
 				priv->geo.lat=-priv->geo.lat;
 
 			lng = g_ascii_strtod(item[4], NULL);
@@ -465,7 +465,7 @@ vehicle_file_parse(struct vehicle_priv *priv, char *buffer)
 			lng -= priv->geo.lng * 100;
 			priv->geo.lng += lng / 60;
 
-			if (!strcasecmp(item[5],"W"))
+			if (!g_strcasecmp(item[5],"W"))
 				priv->geo.lng=-priv->geo.lng;
 			priv->valid=attr_position_valid_valid;
             dbg(2, "latitude '%2.4f' longitude %2.4f\n", priv->geo.lat, priv->geo.lng);
@@ -965,9 +965,9 @@ vehicle_file_new_file(struct vehicle_methods
 		ret->checksum_ignore=checksum_ignore->u.num;
 	ret->attrs = attrs;
 	on_eof = attr_search(attrs, NULL, attr_on_eof);
-	if (on_eof && !strcasecmp(on_eof->u.str, "stop"))
+	if (on_eof && !g_strcasecmp(on_eof->u.str, "stop"))
 		ret->on_eof=1;
-	if (on_eof && !strcasecmp(on_eof->u.str, "exit"))
+	if (on_eof && !g_strcasecmp(on_eof->u.str, "exit"))
 		ret->on_eof=2;
 	dbg(0,"on_eof=%d\n", ret->on_eof);
 	*meth = vehicle_file_methods;

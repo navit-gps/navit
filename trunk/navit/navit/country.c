@@ -380,7 +380,7 @@ match(struct country_search *this_, enum attr_type type, const char *name)
 	if (this_->partial)
 		ret=(strncasecmp(this_->search.u.str, name, this_->len) == 0);
 	else
-		ret=(strcasecmp(this_->search.u.str, name) == 0);
+		ret=(g_strcasecmp(this_->search.u.str, name) == 0);
 	return ret;
 	
 }
