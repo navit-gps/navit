@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <glib.h>
 #include "config.h"
-#indef HAVE_GETOPT_H
+#ifdef HAVE_GETOPT_H
 #include <getopt.h>
 #else
 #include <XGetopt.h>
