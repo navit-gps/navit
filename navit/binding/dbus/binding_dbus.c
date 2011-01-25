@@ -762,7 +762,7 @@ request_callback_destroy_do(struct dbus_callback *data)
 static DBusHandlerResult
 request_callback_destroy(DBusConnection *connection, DBusMessage *message)
 {
-	return request_destroy(connection, message, "search_list", NULL, (void (*)(void *)) request_callback_destroy_do);
+	return request_destroy(connection, message, "callback", NULL, (void (*)(void *)) request_callback_destroy_do);
 }
 
 static DBusHandlerResult
