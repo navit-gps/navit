@@ -378,7 +378,7 @@ match(struct country_search *this_, enum attr_type type, const char *name)
 	if (this_->search.type != type && this_->search.type != attr_country_all)
 		return 0;
 	if (this_->partial)
-		ret=(strncasecmp(this_->search.u.str, name, this_->len) == 0);
+		ret=(g_strncasecmp(this_->search.u.str, name, this_->len) == 0);
 	else
 		ret=(g_strcasecmp(this_->search.u.str, name) == 0);
 	return ret;
