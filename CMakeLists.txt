@@ -328,12 +328,11 @@ if(WIN32 OR WINCE)
 
    if(MSVC)
        add_plugin(support/xgetopt "Windows detected" TRUE)
+       add_plugin(intl_cmake "not yet supported on msvc" FALSE)
    else(MSVC)
        set(ENABLE_NLS TRUE)
-       add_plugin(intl_cmake "windows detected" TRUE)
    endif(MSVC)
 
-   set(USE_LIBGNUINTL TRUE)
 endif()
 if (WIN32)
    set(HAVE_API_WIN32 1)
