@@ -20,8 +20,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
-#include <getopt.h>
 #include "config.h"
+#indef HAVE_GETOPT_H
+#include <getopt.h>
+#else
+#include <XGetopt.h>
+#endif
 #include "config_.h"
 #include "version.h"
 #include "item.h"
@@ -56,6 +60,10 @@ print_usage(void)
 }
 
 
+#ifndef USE_PLUGINS
+extern void builtin_init(void);
+#endif /* USE_PLUGINS*/
+
 int main_real(int argc, char **argv)
 {
 	xmlerror *error = NULL;
@@ -80,15 +88,16 @@ int main_real(int argc, char **argv)
 	debug_init(argv[0]);
 
 	cp = getenv("NAVIT_LOGFILE");
-	if (cp)
+	if (cp) {
 		debug_set_logfile(cp);
+	}
 #ifdef HAVE_API_WIN32_CE
-	else
+	else {	
 		debug_set_logfile("/Storage Card/navit.log");
+	}
 #endif
 	file_init();
 #ifndef USE_PLUGINS
-	extern void builtin_init(void);
 	builtin_init();
 #endif
 	route_init();
@@ -97,7 +106,9 @@ int main_real(int argc, char **argv)
 	search_init();
 	linguistics_init();
 	config_file=NULL;
+#ifdef HAVE_GETOPT_H
 	opterr=0;  //don't bomb out on errors.
+#endif /* _MSC_VER */
 	if (argc > 1) {
 		/* DEVELOPPERS : don't forget to update the manpage if you modify theses options */
 		while((opt = getopt(argc, argv, ":hvc:d:")) != -1) {
@@ -117,6 +128,7 @@ int main_real(int argc, char **argv)
 			case 'd':
 				printf("TODO Verbose option is set to `%s'\n", optarg);
 				break;
+#ifndef HAVE_GETOPT_H
 			case ':':
 				fprintf(stderr, "navit: Error - Option `%c' needs a value\n", optopt);
 				print_usage();
@@ -126,6 +138,7 @@ int main_real(int argc, char **argv)
 				fprintf(stderr, "navit: Error - No such option: `%c'\n", optopt);
 				print_usage();
 				exit(1);
+#endif
 			}
 	    }
 	}

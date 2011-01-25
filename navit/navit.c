@@ -17,16 +17,19 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#define _USE_MATH_DEFINES 1
+#include "config.h"
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <glib.h>
 #include <math.h>
 #include <time.h>
-#include "config.h"
 #include "debug.h"
 #include "navit.h"
 #include "callback.h"
@@ -740,9 +743,10 @@ navit_cmd_set_int_var(struct navit *this, char *function, struct attr **in, stru
 
 	if ( (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) &&
 	     (in && in[1] && ATTR_IS_NUMERIC(in[1]->type))) {
+		char*key;
 		struct attr*val = g_new(struct attr,1);
 		attr_dup_content(in[1],val);
-		char*key = g_strdup(in[0]->u.str);
+		key = g_strdup(in[0]->u.str);
 		g_hash_table_insert(cmd_int_var_hash, key, val);
         }
 }
@@ -846,6 +850,7 @@ navit_cmd_pop_int(struct navit *this, char *function, struct attr **in, struct a
 static void
 navit_cmd_int_stack_size(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
 {
+	struct attr **list;
 	struct attr *attr  = g_new0(struct attr  ,1);
 	attr->type  = attr_type_int_begin;
 	if(!cmd_int_var_stack) {
@@ -854,7 +859,7 @@ navit_cmd_int_stack_size(struct navit *this, char *function, struct attr **in, s
 	else {
 		attr->u.num = g_list_length(cmd_int_var_stack); 
 	}
-	struct attr **list = g_new0(struct attr *,2);
+	list = g_new0(struct attr *,2);
 	list[0] = attr;
 	list[1] = NULL;
 	*out = list;
@@ -1072,6 +1077,7 @@ navit_projection_set(struct navit *this_, enum projection pro, int draw)
 void
 navit_set_destination(struct navit *this_, struct pcoord *c, const char *description, int async)
 {
+	char *destination_file;
 	if (c) {
 		this_->destination=*c;
 		this_->destination_valid=1;
@@ -1081,7 +1087,7 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 
 	} else
 		this_->destination_valid=0;
-	char *destination_file = bookmarks_get_destination_file(TRUE);
+	destination_file = bookmarks_get_destination_file(TRUE);
 	bookmarks_append_coord(this_->bookmarks, destination_file, c, 1, "former_destination", description, NULL, this_->recentdest_count);
 	g_free(destination_file);
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
@@ -1104,12 +1110,13 @@ navit_set_destination(struct navit *this_, struct pcoord *c, const char *descrip
 void
 navit_set_destinations(struct navit *this_, struct pcoord *c, int count, const char *description, int async)
 {
+	char *destination_file;
 	if (c && count) {
 		this_->destination=c[count-1];
 		this_->destination_valid=1;
 	} else
 		this_->destination_valid=0;
-	char *destination_file = bookmarks_get_destination_file(TRUE);
+	destination_file = bookmarks_get_destination_file(TRUE);
 	bookmarks_append_coord(this_->bookmarks, destination_file, c, count, "former_itinerary", description, NULL, this_->recentdest_count);
 	g_free(destination_file);
 	callback_list_call_attr_0(this_->attr_cbl, attr_destination);
@@ -1160,14 +1167,30 @@ static void
 navit_add_former_destinations_from_file(struct navit *this_)
 {
 	char *destination_file = bookmarks_get_destination_file(FALSE);
-	struct attr parent={attr_navit, .u.navit=this_};
-	struct attr type={attr_type, {"textfile"}}, data={attr_data, {destination_file}}, flags={attr_flags, {(void *)1}};
-	struct attr *attrs[]={&type, &data, &flags, NULL};
+	struct attr *attrs[4];
 	struct map_rect *mr;
 	struct item *item;
 	int i,valid=0,count=0;
 	struct coord c[16];
 	struct pcoord pc[16];
+	struct attr parent;
+	struct attr type;
+	struct attr data;
+	struct attr flags;
+
+	parent.type=attr_navit;
+	parent.u.navit=this_;
+
+	type.type=attr_type;
+	type.u.str="textfile";
+
+	data.type=attr_data;
+	data.u.str=destination_file;
+
+	flags.type=attr_flags;
+	flags.u.num=1;
+
+	attrs[0]=&type; attrs[1]=&data; attrs[2]=&flags; attrs[3]=NULL;
 
 	this_->former_destination=map_new(&parent, attrs);
 	g_free(destination_file);
@@ -1397,6 +1420,7 @@ navit_init(struct navit *this_)
 	struct mapset *ms;
 	struct map *map;
 	int callback;
+	char *center_file;
 
 	dbg(2,"enter gui %p graphics %p\n",this_->gui,this_->gra);
 
@@ -1443,11 +1467,20 @@ navit_init(struct navit *this_)
 		mapset_close(msh);
 		
 		if (this_->route) {
-			if ((map=route_get_map(this_->route)))
-				mapset_add_attr(ms, &(struct attr){attr_map,.u.map=map});
+			if ((map=route_get_map(this_->route))) {
+				struct attr map_a;
+				map_a.type=attr_map;
+				map_a.u.map=map;
+				mapset_add_attr(ms, &map_a);
+			}
 			if ((map=route_get_graph_map(this_->route))) {
-				mapset_add_attr(ms, &(struct attr){attr_map,.u.map=map});
-				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
+				struct attr map_a,active;
+				map_a.type=attr_map;
+				map_a.u.map=map;
+				active.type=attr_active;
+				active.u.num=0;
+				mapset_add_attr(ms, &map_a);
+				map_set_attr(map, &active);
 			}
 			route_set_mapset(this_->route, ms);
 			route_set_projection(this_->route, transform_get_projection(this_->trans));
@@ -1459,14 +1492,24 @@ navit_init(struct navit *this_)
 		}
 		if (this_->navigation) {
 			if ((map=navigation_get_map(this_->navigation))) {
-				mapset_add_attr(ms, &(struct attr){attr_map,.u.map=map});
-				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
+				struct attr map_a,active;
+				map_a.type=attr_map;
+				map_a.u.map=map;
+				active.type=attr_active;
+				active.u.num=0;
+				mapset_add_attr(ms, &map_a);
+				map_set_attr(map, &active);
 			}
 		}
 		if (this_->tracking) {
 			if ((map=tracking_get_map(this_->tracking))) {
-				mapset_add_attr(ms, &(struct attr){attr_map,.u.map=map});
-				map_set_attr(map, &(struct attr ){attr_active,.u.num=0});
+				struct attr map_a,active;
+				map_a.type=attr_map;
+				map_a.u.map=map;
+				active.type=attr_active;
+				active.u.num=0;
+				mapset_add_attr(ms, &map_a);
+				map_set_attr(map, &active);
 			}
 		}
 		navit_add_former_destinations_from_file(this_);
@@ -1487,7 +1530,7 @@ navit_init(struct navit *this_)
 			navigation_set_route(this_->navigation, this_->route);
 	}
 	dbg(2,"Setting Center\n");
-	char *center_file = bookmarks_get_center_file(FALSE);
+	center_file = bookmarks_get_center_file(FALSE);
 	bookmarks_set_center_from_file(this_->bookmarks, center_file);
 	g_free(center_file);
 #if 0
@@ -1766,8 +1809,10 @@ navit_set_attr_do(struct navit *this_, struct attr *attr, int init)
 	long zoom;
 	GList *l;
 	struct navit_vehicle *nv;
-	struct attr active=(struct attr){attr_active,{(void *)0}};
 	struct layout *lay;
+	struct attr active;
+	active.type=attr_active;
+	active.u.num=0;
 
 	switch (attr->type) {
 	case attr_autozoom:

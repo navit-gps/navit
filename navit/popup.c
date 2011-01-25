@@ -17,11 +17,14 @@
  * Boston, MA  02110-1301, USA.
  */
 
+#include "config.h"
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <glib.h>
 #include "popup.h"
 #include "debug.h"
@@ -178,7 +181,7 @@ popup_break_crossing(struct display_list *l)
 #endif
 
 
-#define popup_printf(menu, type, fmt...) popup_printf_cb(menu, type, NULL, fmt)
+#define popup_printf(menu, type, ...) popup_printf_cb(menu, type, NULL, __VA_ARGS__)
 
 static void *
 popup_printf_cb(void *menu, enum menu_type type, struct callback *cb, const char *fmt, ...)
