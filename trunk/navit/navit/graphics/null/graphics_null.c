@@ -18,8 +18,10 @@
  */
 
 #include <glib.h>
-#include <unistd.h>
 #include "config.h"
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #include "point.h"
 #include "graphics.h"
 #include "color.h"
