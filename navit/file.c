@@ -390,7 +390,11 @@ file_process_headers(struct file *file, char *headers)
 	}
 	cl=g_hash_table_lookup(file->headers, "content-length");
 	if (cl) 
+#ifdef HAVE__ATOI64
+		file->size=_atoi64(cl);
+#else
 		file->size=atoll(cl);
+#endif
 }
 
 static void
