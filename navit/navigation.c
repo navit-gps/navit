@@ -846,9 +846,9 @@ calculate_dest_distance(struct navigation *this_, int incr)
 	if (incr) {
 		if (itm) {
 			dbg(2, "old values: (%p) time=%d lenght=%d\n", itm, itm->dest_length, itm->dest_time);
+		} else {
+			dbg(2, "old values: itm is null\n");
 		}
-		else dbg(2, "old values: itm is null\n");
-		
 		itm=this_->first;
 		next=itm->next;
 		dbg(2, "itm values: time=%d lenght=%d\n", itm->length, itm->time);
@@ -1832,13 +1832,24 @@ navigation_unregister_callback(struct navigation *this_, enum attr_type type, st
 struct map *
 navigation_get_map(struct navigation *this_)
 {
+	struct attr *attrs[5];
+	struct attr type,navigation,data,description;
+	type.type=attr_type;
+	type.u.str="navigation";
+	navigation.type=attr_navigation;
+	navigation.u.navigation=this_;
+	data.type=attr_data;
+	data.u.str="";
+	description.type=attr_description;
+	description.u.str="Navigation";
+	
+	attrs[0]=&type;
+	attrs[1]=&navigation;
+	attrs[2]=&data;
+	attrs[3]=&description;
+	attrs[4]=NULL;
 	if (! this_->map)
-		this_->map=map_new(NULL, (struct attr*[]){
-			&(struct attr){attr_type,{"navigation"}},
-			&(struct attr){attr_navigation,.u.navigation=this_},
-			&(struct attr){attr_data,{""}},
-			&(struct attr){attr_description,{"Navigation"}},
-			NULL});
+		this_->map=map_new(NULL, &attrs);
         return this_->map;
 }
 
@@ -1878,10 +1889,10 @@ static int
 navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct attr *attr)
 {
 	struct map_rect_priv *this_=priv_data;
-	attr->type=attr_type;
 	struct navigation_command *cmd=this_->cmd;
 	struct navigation_itm *itm=this_->itm;
 	struct navigation_itm *prev=itm->prev;
+	attr->type=attr_type;
 
 	if (this_->str) {
 		g_free(this_->str);
