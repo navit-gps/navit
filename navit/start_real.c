@@ -128,7 +128,7 @@ int main_real(int argc, char **argv)
 			case 'd':
 				printf("TODO Verbose option is set to `%s'\n", optarg);
 				break;
-#ifndef HAVE_GETOPT_H
+#ifdef HAVE_GETOPT_H
 			case ':':
 				fprintf(stderr, "navit: Error - Option `%c' needs a value\n", optopt);
 				print_usage();
