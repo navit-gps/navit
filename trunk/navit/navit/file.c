@@ -264,6 +264,9 @@ file_create_url(char *url)
 #ifndef S_ISDIR
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
+#ifndef S_ISREG
+#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#endif
 
 int file_is_dir(char *name)
 {
@@ -273,6 +276,15 @@ int file_is_dir(char *name)
 	}
 	return 0;
 
+}
+
+int file_is_reg(char *name)
+{
+	struct stat buf;
+	if (! stat(name, &buf)) {
+		return S_ISREG(buf.st_mode);
+	}
+	return 0;
 }
 
 long long
