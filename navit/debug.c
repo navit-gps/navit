@@ -328,6 +328,9 @@ debug_malloc(const char *where, int line, const char *func, int size)
 	if (head->next) 
 		head->next->prev=head;
 	head->where=g_strdup_printf("%s:%d %s",where,line,func);
+#if !defined (__GNUC__)
+#define __builtin_return_address(x) NULL
+#endif
 	head->return_address[0]=__builtin_return_address(0);
 	head->return_address[1]=__builtin_return_address(1);
 	head->return_address[2]=__builtin_return_address(2);
