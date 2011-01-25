@@ -853,6 +853,14 @@ AC_CHECK_HEADER(
 		Define to 1 if you have xpm header
 	)
 )
+AC_CHECK_HEADER(
+	getopt.h,
+	AC_DEFINE(
+		[HAVE_GETOPT_H],
+		[],
+		Define to 1 if you have the getopt header
+	)
+)
 if test "x${graphics_gd}" = "xyes" ; then
 	save_CPPFLAGS=$CPPFLAGS
 	save_LIBS=$LIBS
