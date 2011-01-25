@@ -6558,8 +6558,8 @@ static struct command_table commands[] = {
 //##############################################################################################################
 static struct gui_priv * gui_internal_new(struct navit *nav, struct gui_methods *meth, struct attr **attrs, struct gui *gui)
 {
-	struct color color_white={0xffff,0xffff,0xffff,0x0};
-	struct color color_black={0x0,0x0,0x0,0x0};
+	struct color color_white={0xffff,0xffff,0xffff,0xffff};
+	struct color color_black={0x0,0x0,0x0,0xffff};
 	struct color back2_color={0x4141,0x4141,0x4141,0xffff};
 
 	struct gui_priv *this;
