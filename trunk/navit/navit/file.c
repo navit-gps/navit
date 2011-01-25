@@ -261,6 +261,10 @@ file_create_url(char *url)
 }
 #endif
 
+#ifndef S_ISDIR
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#endif
+
 int file_is_dir(char *name)
 {
 	struct stat buf;
