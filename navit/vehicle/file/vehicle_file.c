@@ -231,8 +231,7 @@ vehicle_file_open(struct vehicle_priv *priv)
 		priv->fd = open(name, O_RDONLY | O_NDELAY);
 		if (priv->fd < 0)
 			return 0;
-		stat(name, &st);
-		if (S_ISREG(st.st_mode)) {
+		if (file_is_reg(name)) {
 			priv->file_type = file_type_file;
 		}
 #ifndef _WIN32
