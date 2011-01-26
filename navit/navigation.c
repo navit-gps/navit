@@ -36,6 +36,7 @@
 #include "navit.h"
 #include "callback.h"
 #include "speech.h"
+#include "vehicleprofile.h"
 #include "plugin.h"
 #include "navit_nls.h"
 
@@ -1067,14 +1068,9 @@ static int maneuver_category(enum item_type type)
 static int
 is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode)
 {
-	if (way->dir > 0) {
-		if (way->flags & AF_ONEWAYREV)
-			return 0;
-	} else {
-		if (way->flags & AF_ONEWAY)
-			return 0;
-	}
-	return 1;
+	if (!nav->vehicleprofile)
+		return 1;
+	return (((way->dir >= 0 ? nav->vehicleprofile->flags_forward_mask : nav->vehicleprofile->flags_reverse_mask)) == nav->vehicleprofile->flags);
 }
 
 /**
