@@ -95,7 +95,7 @@ msgstr "In %d,%d Kilometern"
 #, c-format
 msgid "one kilometer"
 msgid_plural "%d kilometers"
-msgstr[0] "ein Kilometer"
+msgstr[0] "einen Kilometer"
 msgstr[1] "%d Kilometer"
 
 #, c-format
@@ -218,7 +218,7 @@ msgstr "dann %3$s %1$s%2$s abbiegen%4$s"
 
 #, c-format
 msgid "You have reached your destination %s"
-msgstr "Sie haben Ihr Ziel %s erreicht"
+msgstr "%s haben Sie ihr Ziel erreicht"
 
 msgid "then you have reached your destination."
 msgstr "dann haben Sie Ihr Ziel erreicht."
