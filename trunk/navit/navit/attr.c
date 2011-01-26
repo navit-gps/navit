@@ -218,7 +218,7 @@ attr_new_from_text(const char *name, const char *value)
 static char *
 flags_to_text(int flags)
 {
-	char *ret=NULL;
+	char *ret=g_strdup_printf("0x%x:",flags);
 	if (flags & AF_ONEWAY) ret=g_strconcat_printf(ret,"%sAF_ONEWAY",ret?"|":"");
 	if (flags & AF_ONEWAYREV) ret=g_strconcat_printf(ret,"%sAF_ONEWAYREV",ret?"|":"");
 	if (flags & AF_SEGMENTED) ret=g_strconcat_printf(ret,"%sAF_SEGMENTED",ret?"|":"");
