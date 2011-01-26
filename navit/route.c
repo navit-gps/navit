@@ -3401,13 +3401,13 @@ route_map_new_helper(struct map_methods *meth, struct attr **attrs, int graph)
 }
 
 static struct map_priv *
-route_map_new(struct map_methods *meth, struct attr **attrs)
+route_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	return route_map_new_helper(meth, attrs, 0);
 }
 
 static struct map_priv *
-route_graph_map_new(struct map_methods *meth, struct attr **attrs)
+route_graph_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	return route_map_new_helper(meth, attrs, 1);
 }
@@ -3433,7 +3433,7 @@ route_get_map_helper(struct route *this_, struct map **map, char *type, char *de
 	attrs[4]=NULL;
 
 	if (! *map) 
-		*map=map_new(NULL, &attrs);
+		*map=map_new(NULL, attrs);
  
 	return *map;
 }
@@ -3577,6 +3577,10 @@ route_get_attr(struct route *this_, enum attr_type type, struct attr *attr, stru
 		attr->u.vehicle=this_->v;
 		ret=(this_->v != NULL);
 		dbg(0,"get vehicle %p\n",this_->v);
+		break;
+	case attr_vehicleprofile:
+		attr->u.vehicleprofile=this_->vehicleprofile;
+		ret=(this_->vehicleprofile != NULL);
 		break;
 	case attr_route_status:
 		attr->u.num=this_->route_status;
