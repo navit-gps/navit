@@ -38,14 +38,13 @@
 
 
 static GList *
-speech_cmdline_search(GList *l, int offset, int suffix_len, const char *s)
+speech_cmdline_search(GList *l, int suffix_len, const char *s)
 {
 	GList *li=l,*ret=NULL,*tmp;
 	int len=0;
 	while (li) {
 		char *snd=li->data;
 		int snd_len;
-		snd+=offset;
 		snd_len=strlen(snd)-suffix_len;
 		if (!strncasecmp(s, snd, snd_len)) {
 			const char *ss=s+snd_len;
@@ -53,7 +52,7 @@ speech_cmdline_search(GList *l, int offset, int suffix_len, const char *s)
 				ss++;
 			dbg(1,"found %s remaining %s\n",snd,ss);
 			if (*ss) 
-				tmp=speech_cmdline_search(l, offset, suffix_len, ss);
+				tmp=speech_cmdline_search(l, suffix_len, ss);
 			else 
 				tmp=NULL;
 			if (!ret || g_list_length(tmp) < len) {
@@ -141,16 +140,22 @@ speechd_say(struct speech_priv *this, const char *text)
 	char *cmdline;
 	int ret;
 	if (this->sample_dir && this->sample_suffix)  {
-		GList *l=speech_cmdline_search(this->samples, strlen(this->sample_dir)+1, strlen(this->sample_suffix), text);
-		char *sep="";
+		GList *l=speech_cmdline_search(this->samples, strlen(this->sample_suffix), text);
+		char *new_cmdline,*sep="";
 		cmdline=g_strdup("");
+		dbg(0,"text '%s'\n",text);
 		while (l) {
-			char *new_cmdline=g_strdup_printf("%s%s\"%s\"",cmdline,sep,(char *)l->data);
+			new_cmdline=g_strdup_printf("%s%s\"%s/%s\"",cmdline,sep,this->sample_dir,(char *)l->data);
+			dbg(0,"fragment '%s'\n",l->data);
 			g_free(cmdline);
 			cmdline=new_cmdline;
 			sep=" ";
 			l=g_list_next(l);
 		}
+		new_cmdline=cmdline;
+		cmdline=g_strdup_printf(this->cmdline, new_cmdline);
+		g_free(new_cmdline);
+		dbg(0,"cmdline='%s'\n",cmdline);
 	} else
 		cmdline=g_strdup_printf(this->cmdline, text);
 	ret = system(cmdline);
@@ -192,7 +197,8 @@ speechd_new(struct speech_methods *meth, struct attr **attrs, struct attr *paren
 			int len=strlen(name);
 			if (len > suffix_len) {
 				if (!strcmp(name+len-suffix_len, this->sample_suffix)) {
-					this->samples=g_list_prepend(this->samples, g_strdup_printf("%s/%s",this->sample_dir,name));
+					dbg(0,"found %s\n",name);
+					this->samples=g_list_prepend(this->samples, g_strdup(name));
 				}
 			}
 		}
