@@ -24,9 +24,13 @@ struct color {
 	int r,g,b,a;
 };
 
-#define COLOR_WHITE ((struct color) {0xffff,0xffff,0xffff,0xffff})
-#define COLOR_BLACK ((struct color) {0x0000,0x0000,0x0000,0xffff})
-#define COLOR_TRANSPARENT ((struct color) {0x0000,0x0000,0x0000,0x0000})
+#define COLOR_WHITE_ 0xffff,0xffff,0xffff,0xffff
+#define COLOR_BLACK_ 0x0000,0x0000,0x0000,0xffff
+#define COLOR_BACKGROUND_ 0xffff, 0xefef, 0xb7b7, 0xffff
+#define COLOR_TRANSPARENT__ 0x0000,0x0000,0x0000,0xffff
+#define COLOR_WHITE ((struct color) {COLOR_WHITE_})
+#define COLOR_BLACK ((struct color) {COLOR_BLACK_})
+#define COLOR_TRANSPARENT ((struct color) {COLOR_TRANSPARENT_})
 #define COLOR_FMT "0x%x,0x%x,0x%x,0x%x"
 #define COLOR_ARGS(c) (c).r,(c).g,(c).b,(c).a
 
