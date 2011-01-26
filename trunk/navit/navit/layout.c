@@ -29,7 +29,7 @@
 struct layout * layout_new(struct attr *parent, struct attr **attrs)
 {
 	struct layout *l;
-	struct color def_color = {0xffff, 0xefef, 0xb7b7, 0xffff};
+	struct color def_color = {COLOR_BACKGROUND_};
 	struct attr *name_attr,*color_attr,*order_delta_attr,*font_attr,*day_attr,*night_attr;
 
 	if (! (name_attr=attr_search(attrs, NULL, attr_name)))
@@ -464,8 +464,8 @@ struct circle *
 circle_new(struct attr *parent, struct attr **attrs)
 {
 	struct element *e;
-	struct color color_black = {0x0000,0x0000,0x0000,0x0000};
-	struct color color_white = {0xFFFF,0xFFFF,0xFFFF,0x0000};
+	struct color color_black = {COLOR_BLACK_};
+	struct color color_white = {COLOR_WHITE_};
 
 	e = g_new0(struct element, 1);
 	e->type=element_circle;
@@ -484,8 +484,8 @@ struct text *
 text_new(struct attr *parent, struct attr **attrs)
 {
 	struct element *e;
-	struct color color_black = {0x0000,0x0000,0x0000,0x0000};
-	struct color color_white = {0xFFFF,0xFFFF,0xFFFF,0x0000};
+	struct color color_black = {COLOR_BLACK_};
+	struct color color_white = {COLOR_WHITE_};
 	
 	e = g_new0(struct element, 1);
 	e->type=element_text;
