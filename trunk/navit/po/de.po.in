@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: navit 0.2.0\n"
+"Project-Id-Version: navit 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-18 13:40+0200\n"
+"POT-Creation-Date: 2011-01-26 16:30+0100\n"
 "PO-Revision-Date: 2010-06-01 22:09+0000\n"
 "Last-Translator: Achim Behrens <Unknown>\n"
 "Language-Team: Martin Schaller <martin-s@sourceforge.net>\n"
@@ -26,6 +26,7 @@ msgstr "Aufruf aus Quellverzeichnis\n"
 msgid "setting '%s' to '%s'\n"
 msgstr "setze '%s' auf '%s'\n"
 
+#. TRANSLATORS: the following counts refer to streets
 msgid "zeroth"
 msgstr "nullte"
 
@@ -47,6 +48,7 @@ msgstr "fünfte"
 msgid "sixth"
 msgstr "sechste"
 
+#. TRANSLATORS: the following counts refer to roundabout exits
 msgid "zeroth exit"
 msgstr "nullten Ausfahrt"
 
@@ -163,8 +165,8 @@ msgstr "unbekannt "
 msgid "When possible, please turn around"
 msgstr "Wenn möglich bitte wenden"
 
-msgid "Enter the roundabout soon and leave it at the %s"
-msgstr "Demnächst in den Kreisverkehr einfahren und an der %s verlassen"
+msgid "Enter the roundabout soon"
+msgstr "Demnächst in den Kreisverkehr einfahren"
 
 #. TRANSLATORS: %s is the distance to the roundabout
 #, c-format
@@ -172,12 +174,12 @@ msgid "In %s, enter the roundabout"
 msgstr "In %s in den Kreisverkehr einfahren"
 
 #, c-format
-msgid "Leave the roundabout at the %s"
-msgstr "Verlassen Sie den Kreisverkehrt an der %s"
+msgid "then leave the roundabout at the %s"
+msgstr "dann verlassen Sie den Kreisverkehr an der %s"
 
 #, c-format
-msgid "then leave the roundabout at the %s"
-msgstr "anschliessend verlassen Sie den Kreisverkehr an der %s"
+msgid "Leave the roundabout at the %s"
+msgstr "Den Kreisverkehr an der %s verlassen"
 
 #, c-format
 msgid "Follow the road for the next %s"
@@ -1329,14 +1331,29 @@ msgstr "Fahrzeug"
 msgid "ZoomOut"
 msgstr "Verkleinern"
 
+msgid "Decrease zoom level"
+msgstr "Verkleinern"
+
 msgid "ZoomIn"
+msgstr "Vergrößern"
+
+msgid "Increase zoom level"
 msgstr "Vergrößern"
 
 msgid "Recalculate"
 msgstr "Neu berechnen"
 
+msgid "Redraw map"
+msgstr "Karte neuzeichnen"
+
 msgid "Info"
 msgstr "Info"
+
+msgid "Set destination"
+msgstr "Als Ziel setzen"
+
+msgid "Opens address search dialog"
+msgstr "Öffnet Adresssuche-Dialog"
 
 msgid "Stop Navigation"
 msgstr "Navigation beenden"
@@ -1347,17 +1364,29 @@ msgstr "Test"
 msgid "_Quit"
 msgstr "_Beenden"
 
-msgid "Cursor"
-msgstr "Positionsmarke"
+msgid "Quit the application"
+msgstr "Die Anwendung beenden"
+
+msgid "Show position cursor"
+msgstr "Positionsmarke zeigen"
 
 msgid "Lock on Road"
 msgstr "Auf Straße zeigen"
 
-msgid "Northing"
-msgstr "Einnorden"
+msgid "Keep orientation to the North"
+msgstr "Nordorientierung"
+
+msgid "Switches map orientation to the north or the vehicle"
+msgstr "Die Kartenorientierung zwischen Norden und Fahrzeugausrichtung wechseln"
+
+msgid "Show/hide route description"
+msgstr "Routenbeschreibung anzeigen/schließen"
 
 msgid "Autozoom"
 msgstr "automatischer Zoom"
+
+msgid "Enable/disable automatic zoom level changing"
+msgstr "Automatischen Zoom einschalten/ausschalten"
 
 msgid "Fullscreen"
 msgstr "Vollbild"
@@ -1423,6 +1452,7 @@ msgstr "Zurück"
 msgid "Add Bookmark"
 msgstr "Lesezeichen hinzufügen"
 
+#. Adds the Bookmark folders
 msgid "Add Bookmark folder"
 msgstr "Lesezeichen-Ordner hinzufügen"
 
@@ -1462,6 +1492,7 @@ msgstr "Lesezeichen einfügen"
 msgid "Delete Bookmark"
 msgstr "Lesezeichen entfernen"
 
+#. Pastes the Bookmark
 msgid "Paste bookmark"
 msgstr "Lesezeichen einfügen"
 
@@ -1519,6 +1550,9 @@ msgstr "Regeln"
 msgid "Lock on road"
 msgstr "Auf Straße zeigen"
 
+msgid "Northing"
+msgstr "Einnorden"
+
 msgid "Map follows Vehicle"
 msgstr "Karte folgt Fahrzeug"
 
@@ -1532,7 +1566,7 @@ msgid "Height Profile"
 msgstr "Höhenprofil"
 
 msgid "Show Locale"
-msgstr ""
+msgstr "Lokalisierung anzeigen"
 
 msgid "About Navit"
 msgstr "Über Navit"
@@ -1547,6 +1581,20 @@ msgstr "Und das ganze Navit Team"
 
 msgid "members and contributors."
 msgstr "Mitglieder und Mitarbeiter"
+
+#. warning told
+msgid "Look out! Camera!"
+msgstr "Achtung Blitzer!"
+
+#. warning told
+msgid "Please decrease your speed"
+msgstr "Du bist zu schnell"
+
+msgid "Map Point"
+msgstr "Kartenpunkt"
+
+msgid "Vehicle Position"
+msgstr "Fahrzeugposition"
 
 msgid "Main menu"
 msgstr "Hauptmenü"
@@ -1589,18 +1637,33 @@ msgstr "Beschreibung"
 msgid "horse"
 msgstr "Pferd"
 
-msgid "Map Point"
-msgstr "Kartenpunkt"
+#. chr:
+#. flags used for a truck: (first flag number is 0)
+#. 8: SIZE_OR_WEIGHT_LIMIT
+#. 21: TRANSPORT_TRUCK
+#. speed setup:
+#. 'speed' data of the atkaction for a car is
+#. reduced about 10 km/h. When the speed was at
+#. 10 km/h, I reduced it to 5 km/h.
+#. 'route_weight' data has been treated in the same way.
+#. If you want to discourage the use of small roads,
+#. just reduce this value.
+#. size and weight setup:
+#. This is an example, you have to use the data of your truck.
+#. bobshaffer's standard truck:
+#. (1 lb = 453.59237 g, 1 foot = .3048 m)
+#. (data has to be in [cm] and [kg] according to 'atkaction.h')
+#. vehicle_width=  9    feet,   274 cm
+#. vehicle_height= 13.5  feet,   411 cm
+#. vehicle_length= 70    feet,  2134 cm
+#. vehicle_weight= 80000 lbs,  36287 kg
+#. vehicle_axle_weight= 34000 lbs,  15422 kg
+#.
+msgid "Truck"
+msgstr "LKW"
 
-msgid "Vehicle Position"
-msgstr "Fahrzeugposition"
+#~ msgid "Cursor"
+#~ msgstr "Positionsmarke"
 
-msgid "Look out! Camera!"
-msgstr "Achtung Blitzer!"
-
-msgid "Please decrease your speed"
-msgstr "Du bist zu schnell"
-
-#, c-format
 #~ msgid "%d.%d kilometer"
 #~ msgstr "%d,%d Kilometer"
