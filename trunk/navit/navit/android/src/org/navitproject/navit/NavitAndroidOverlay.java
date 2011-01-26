@@ -122,6 +122,11 @@ public class NavitAndroidOverlay extends ImageView
 		}
 	}
 
+	public Boolean get_show_bubble()
+	{
+		return this.draw_bubble;
+	}
+	
 	public void hide_bubble()
 	{
 		this.draw_bubble = false;
@@ -129,7 +134,7 @@ public class NavitAndroidOverlay extends ImageView
 		try
 		{
 			bubble_thread.stop_me();
-			bubble_thread.stop();
+			// bubble_thread.stop();
 		}
 		catch (Exception e)
 		{
