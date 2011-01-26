@@ -1235,6 +1235,22 @@ navit_textfile_debug_log(struct navit *this_, const char *fmt, ...)
 }
 
 void
+navit_textfile_debug_log_at(struct navit *this_, struct pcoord *pc, const char *fmt, ...)
+{
+	va_list ap;
+	char *str1,*str2;
+	va_start(ap, fmt);
+	if (this_->textfile_debug_log && this_->vehicle) {
+		str1=g_strdup_vprintf(fmt, ap);
+		str2=g_strdup_printf("0x%x 0x%x%s%s\n", pc->x, pc->y, strlen(str1) ? " " : "", str1);
+		log_write(this_->textfile_debug_log, str2, strlen(str2), 0);
+		g_free(str2);
+		g_free(str1);
+	}
+       	va_end(ap);
+}
+
+void
 navit_say(struct navit *this_, char *text)
 {
 	if(this_->speech) {
