@@ -42,6 +42,9 @@
 
 /* #define DEBUG */
 
+static int roundabout_extra_length=50;
+
+
 struct suffix {
 	char *fullname;
 	char *abbrev;
@@ -1070,7 +1073,7 @@ is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode)
 {
 	if (!nav->vehicleprofile)
 		return 1;
-	return (((way->dir >= 0 ? nav->vehicleprofile->flags_forward_mask : nav->vehicleprofile->flags_reverse_mask)) == nav->vehicleprofile->flags);
+	return ((way->flags & (way->dir >= 0 ? nav->vehicleprofile->flags_forward_mask : nav->vehicleprofile->flags_reverse_mask)) == nav->vehicleprofile->flags);
 }
 
 /**
@@ -1106,9 +1109,9 @@ maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct na
 		if ((old->flags & AF_ROUNDABOUT) && ! (new->flags & AF_ROUNDABOUT)) {
 			r="yes: leaving roundabout";
 			ret=1;
-		} else 	if (!(old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) 
+		} else 	if (!(old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) {
 			r="no: entering roundabout";
-		else if ((old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) 
+		} else if ((old->flags & AF_ROUNDABOUT) && (new->flags & AF_ROUNDABOUT)) 
 			r="no: staying in roundabout";
 	}
 	if (!r && abs(d) > 75) {
@@ -1287,8 +1290,7 @@ command_new(struct navigation *this_, struct navigation_itm *itm, int delta)
 		}
 		dbg(0,"entry %d exit %d\n", entry_angle, exit_angle);
 		ret->roundabout_delta=angle_delta(entry_angle, exit_angle);
-		ret->length=len;
-		
+		ret->length=len+roundabout_extra_length;
 	}
 	if (this_->cmd_last) {
 		this_->cmd_last->next=ret;
@@ -1529,7 +1531,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		}
 		switch (level) {
 		case 2:
-			return g_strdup_printf(_("Enter the roundabout soon and leave it at the %s"), get_exit_count_str(count_roundabout));
+			return g_strdup(_("Enter the roundabout soon"));
 		case 1:
 			d = get_distance(nav, distance, type, 1);
 			/* TRANSLATORS: %s is the distance to the roundabout */
