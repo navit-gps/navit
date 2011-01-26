@@ -3089,7 +3089,7 @@ gui_internal_keynav_highlight_next(struct gui_priv *this, int dx, int dy);
 
 static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 {
-	struct widget *wi,*menu;
+	struct widget *wi,*menu,*search_list;
 	int len=0;
 	char *text=NULL;
 
@@ -3097,12 +3097,11 @@ static void gui_internal_keypress_do(struct gui_priv *this, char *key)
 	wi=gui_internal_find_widget(menu, NULL, STATE_EDIT);
 	if (wi) {
                 /* select first item of the searchlist */
-                if (*key == NAVIT_KEY_RETURN) {
-                        struct widget *search_list=gui_internal_menu_data(this)->search_list;
-                        GList *l=search_list->children;
-                        if (l && l->data)
-                                gui_internal_highlight_do(this, l->data);
-                        return; 
+                if (*key == NAVIT_KEY_RETURN && (search_list=gui_internal_menu_data(this)->search_list)) {
+			GList *l=search_list->children;
+			if (l && l->data)
+				gui_internal_highlight_do(this, l->data);
+                       	return; 
 		} else if (*key == NAVIT_KEY_BACKSPACE) {
 			dbg(0,"backspace\n");
 			if (wi->text && wi->text[0]) {
@@ -4756,15 +4755,13 @@ gui_internal_leave(struct gui_priv *this)
 }
 
 static void
-gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore, char *href)
+gui_internal_enter_setup(struct gui_priv *this, struct point *p)
 {
 	struct transformation *trans;
 	struct coord c;
 	struct coord_geo g;
 	struct attr attr,attrp;
 
-	dbg(1,"enter\n");
-	gui_internal_enter(this, ignore);
 	trans=navit_get_trans(this->nav);
 	attr_free(this->click_coord_geo);
 	this->click_coord_geo=NULL;
@@ -4790,6 +4787,14 @@ gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore, char *
 		this->vehiclep.y=c.y;
 		this->vehicle_valid=1;
 	}
+}
+
+static void
+gui_internal_cmd_menu(struct gui_priv *this, struct point *p, int ignore, char *href)
+{
+	dbg(1,"enter\n");
+	gui_internal_enter(this, ignore);
+	gui_internal_enter_setup(this, p);
 	// draw menu
 	gui_internal_html_load_href(this, href?href:"#Main Menu", 0);
 }
@@ -4817,8 +4822,12 @@ gui_internal_cmd_menu2(struct gui_priv *this, char *function, struct attr **in, 
 static void
 gui_internal_cmd_log_do(struct gui_priv *this, struct widget *widget)
 {
-	if (widget->text && strlen(widget->text))
-		navit_textfile_debug_log(this->nav, "type=log_entry label=\"%s\"",widget->text);
+	if (widget->text && strlen(widget->text)) {
+		if (this->vehicle_valid)
+			navit_textfile_debug_log_at(this->nav, &this->vehiclep, "type=log_entry label=\"%s\"",widget->text);
+		else
+			navit_textfile_debug_log(this->nav, "type=log_entry label=\"%s\"",widget->text);
+	}
 	g_free(widget->text);
 	widget->text=NULL;
 	gui_internal_prune_menu(this, NULL);
@@ -4850,6 +4859,7 @@ gui_internal_cmd_log(struct gui_priv *this)
 {
 	struct widget *w,*wb,*wk,*wl,*we,*wnext;
 	gui_internal_enter(this, 1);
+	gui_internal_enter_setup(this, NULL);
 	wb=gui_internal_menu(this, "Log Message");
 	w=gui_internal_box_new(this, gravity_left_top|orientation_vertical|flags_expand|flags_fill);
 	gui_internal_widget_append(wb, w);
