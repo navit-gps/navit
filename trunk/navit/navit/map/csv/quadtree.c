@@ -1,6 +1,7 @@
 #include "quadtree.h"
 
 #include <stdlib.h>
+#include <glib.h>
 
 #define QUADTREE_NODE_CAPACITY 10
 
@@ -14,7 +15,7 @@ dist_sq(double x1,double y1,double x2,double y2)
 
 struct quadtree_node*
 quadtree_node_new(struct quadtree_node* parent, double xmin, double xmax, double ymin, double ymax ) {
-    struct quadtree_node*ret = calloc(1, sizeof(struct quadtree_node));
+    struct quadtree_node*ret = g_new0(struct quadtree_node,1);
     ret->xmin = xmin;
     ret->xmax = xmax;
     ret->ymin = ymin;
