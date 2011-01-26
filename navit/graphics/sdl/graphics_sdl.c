@@ -2011,8 +2011,9 @@ static gboolean graphics_sdl_idle(void *data)
                     dbg(1, "SDL_USEREVENT call_callback received cbl(%p)\n", cbl);
 		    callback_list_call_0(cbl);
 		}
-		else if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_IDLE_EVENT) 
+		else if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_IDLE_EVENT) {
                     dbg(1, "SDL_USEREVENT idle_event received\n");
+		}
 #ifdef USE_WEBOS_ACCELEROMETER
 		else if(userevent.type==SDL_USEREVENT && userevent.code==SDL_USEREVENT_CODE_ROTATE)
 		{
@@ -2403,8 +2404,9 @@ event_sdl_remove_timeout(struct event_timeout *to)
     if(to!=NULL)
     {
 	int ret = to->id ? SDL_RemoveTimer(to->id) : SDL_TRUE;
-        if (ret == SDL_FALSE)
+        if (ret == SDL_FALSE) {
 	    dbg(0,"SDL_RemoveTimer (%p) failed\n", to->id);
+	}
 	else {
             g_free(to);
             dbg(1,"timer(%p) removed\n", to);
