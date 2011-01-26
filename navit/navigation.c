@@ -78,6 +78,8 @@ struct navigation {
 	int tell_street_name;
 };
 
+int distances[]={1,2,3,4,5,10,25,50,75,100,150,200,250,300,400,500,750,-1};
+
 
 struct navigation_command {
 	struct navigation_itm *itm;
@@ -353,21 +355,64 @@ round_distance(int dist)
 	return dist*10000;
 }
 
-static char *
-get_distance(int dist, enum attr_type type, int is_length)
+static int
+round_for_vocabulary(int vocabulary, int dist, int factor)
 {
+	if (!(vocabulary & 256)) {
+		if (factor != 1) 
+			dist=(dist+factor/2)/factor;
+	} else
+		factor=1;
+	if (!(vocabulary & 255)) {
+		int i=0,d=0,m=0;
+		while (distances[i] > 0) {
+			if (!i || abs(distances[i]-dist) <= d) {
+				d=abs(distances[i]-dist);
+				m=i;
+			}
+			if (distances[i] > dist)
+				break;
+			i++;
+		}
+		dbg(0,"converted %d to %d with factor %d\n",dist,distances[m],factor);	
+		dist=distances[m];
+	}
+	return dist*factor;
+}
+
+static int
+vocabulary_last(int vocabulary)
+{
+	int i=0;
+	if (vocabulary == 65535)
+		return 1000;
+	while (distances[i] > 0) 
+		i++;
+	return distances[i-1];
+}
+
+static char *
+get_distance(struct navigation *nav, int dist, enum attr_type type, int is_length)
+{
+	int vocabulary=65535;
+	struct attr attr;
+
 	if (type == attr_navigation_long) {
 		if (is_length)
 			return g_strdup_printf(_("%d m"), dist);
 		else
 			return g_strdup_printf(_("in %d m"), dist);
 	}
-	if (dist < 1000) {
+	if (nav->speech && speech_get_attr(nav->speech, attr_vocabulary_distances, &attr, NULL))
+		vocabulary=attr.u.num;
+	if (dist < vocabulary_last(vocabulary)) {
+		dist=round_for_vocabulary(vocabulary, dist, 1);
 		if (is_length)
 			return g_strdup_printf(_("%d meters"), dist);
 		else
 			return g_strdup_printf(_("in %d meters"), dist);
 	}
+	dist=round_for_vocabulary(vocabulary, dist, 1000);
 	if (dist < 5000) {
 		int rem=(dist/100)%10;
 		if (rem) {
@@ -1490,7 +1535,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		case 2:
 			return g_strdup_printf(_("Enter the roundabout soon and leave it at the %s"), get_exit_count_str(count_roundabout));
 		case 1:
-			d = get_distance(distance, type, 1);
+			d = get_distance(nav, distance, type, 1);
 			/* TRANSLATORS: %s is the distance to the roundabout */
 			ret = g_strdup_printf(_("In %s, enter the roundabout"), d);
 			g_free(d);
@@ -1504,7 +1549,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 
 	switch(level) {
 	case 3:
-		d=get_distance(distance, type, 1);
+		d=get_distance(nav, distance, type, 1);
 		ret=g_strdup_printf(_("Follow the road for the next %s"), d);
 		g_free(d);
 		return ret;
@@ -1512,7 +1557,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		d=g_strdup(_("soon"));
 		break;
 	case 1:
-		d=get_distance(distance, attr_navigation_short, 0);
+		d=get_distance(nav, distance, attr_navigation_short, 0);
 		break;
 	case 0:
 		skip_roads = count_possible_turns(nav,cmd->prev?cmd->prev->itm:nav->first,cmd->itm,cmd->delta);
