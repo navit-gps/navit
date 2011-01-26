@@ -113,7 +113,7 @@ public class NavitGraphics
 			this.v = v;
 			this.is_still_pressing = true;
 			last_down_action = System.currentTimeMillis();
-			//Log.e("NavitGraphics", "SensorThread created");
+			Log.e("NavitGraphics", "SensorThread created");
 		}
 		
 		public void down()
@@ -133,14 +133,14 @@ public class NavitGraphics
 
 		public void run()
 		{
-			//Log.e("NavitGraphics", "SensorThread started");
+			Log.e("NavitGraphics", "SensorThread started");
 			while (this.running)
 			{
 				if ((System.currentTimeMillis() - this.last_down_action) > long_press_on_screen_interval)
 				{
 					// ok, we have counted a long press on screen
 					// do stuff and then stop this thread
-					//Log.e("NavitGraphics", "SensorThread: LONG PRESS");
+					Log.e("NavitGraphics", "SensorThread: LONG PRESS");
 					try
 					{
 						// find the class, to get the method "do_longpress_action"
@@ -166,7 +166,7 @@ public class NavitGraphics
 				}
 				else if (!this.is_still_pressing)
 				{
-					//Log.e("NavitGraphics", "SensorThread: stopped pressing");
+					Log.e("NavitGraphics", "SensorThread: stopped pressing");
 					this.running = false;
 				}
 				else
@@ -182,7 +182,7 @@ public class NavitGraphics
 					}
 				}
 			}
-			//Log.e("NavitGraphics", "SensorThread ended");
+			Log.e("NavitGraphics", "SensorThread ended");
 		}
 	}
 
@@ -266,7 +266,7 @@ public class NavitGraphics
 
 				public void do_longpress_action(float x, float y)
 				{
-					//Log.e("NavitGraphics", "do_longpress_action enter");
+					Log.e("NavitGraphics", "do_longpress_action enter");
 					NavitAndroidOverlayBubble b = new NavitAndroidOverlayBubble();
 					b.x = (int) x;
 					b.y = (int) y;
@@ -394,19 +394,19 @@ public class NavitGraphics
 						this.touch_now.set(event.getX(), event.getY());
 						touch_now2 = touch_now;
 						touch_start2 = touch_start;
-						//Log.e("NavitGraphics", "ACTION_UP");
-						if (in_map)
-						{
-							try
-							{
-								//touch_sensor_thread.down();
-								touch_sensor_thread.stop_me();
-								touch_sensor_thread.stop();
-							}
-							catch (Exception e)
-							{
+						Log.e("NavitGraphics", "ACTION_UP");
 
-							}
+						Log.e("NavitGraphics", "xxxxxxxxxx");
+						try
+						{
+							Log.e("NavitGraphics", "yyyyyyyyyyyyyy");
+							//touch_sensor_thread.down();
+							touch_sensor_thread.stop_me();
+							// touch_sensor_thread.stop();
+						}
+						catch (Exception e)
+						{
+
 						}
 
 						if ((touch_mode == DRAG)
@@ -415,16 +415,27 @@ public class NavitGraphics
 							// just a single press down
 							touch_mode = PRESS;
 
+							try
+							{
+								//touch_sensor_thread.down();
+								touch_sensor_thread.stop_me();
+								// touch_sensor_thread.stop();
+							}
+							catch (Exception e)
+							{
+
+							}
+							
 							// was is a long press? or normal quick touch?
 							if ((in_map)
 									&& ((System.currentTimeMillis() - last_touch_on_screen) > long_press_on_screen_interval))
 							{
-								//Log.e("NavitGraphics", "onTouch up (LONG PRESS)");
+								Log.e("NavitGraphics", "onTouch up (LONG PRESS)");
 								do_longpress_action(touch_now.x, touch_now.y);
 							}
 							else
 							{
-								//Log.e("NavitGraphics", "onTouch up (quick touch)");
+								Log.e("NavitGraphics", "onTouch up (quick touch)");
 								ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 							}
 							touch_mode = NONE;
@@ -436,14 +447,13 @@ public class NavitGraphics
 								touch_now2 = touch_now;
 								touch_start2 = touch_start;
 
-								//Log.e("NavitGraphics", "onTouch move");
+								Log.e("NavitGraphics", "onTouch move");
 
-								// we are dragging, so we can't be holding down on same spot!
 								try
 								{
 									//touch_sensor_thread.down();
 									touch_sensor_thread.stop_me();
-									touch_sensor_thread.stop();
+									// touch_sensor_thread.stop();
 								}
 								catch (Exception e)
 								{
@@ -523,32 +533,30 @@ public class NavitGraphics
 							touch_prev2 = touch_prev;
 							this.touch_prev.set(event.getX(), event.getY());
 
+							try
+							{
+								//touch_sensor_thread.down();
+								touch_sensor_thread.stop_me();
+								// touch_sensor_thread.stop();
+							}
+							catch (Exception e)
+							{
+
+							}
+
 							if ((in_map)
 									&& (spacing(touch_start2, touch_now2) < long_press_on_screen_max_distance))
 							{
 								// is it a still ongoing long press?
 								if ((System.currentTimeMillis() - last_touch_on_screen) > long_press_on_screen_interval)
 								{
-									//Log.e("NavitGraphics", "onTouch up (LONG PRESS)");
+									Log.e("NavitGraphics", "onTouch up (LONG PRESS)");
 									do_longpress_action(touch_now.x, touch_now.y);
 								}
 							}
 							else
 							{
 								//Log.e("NavitGraphics", "onTouch move2");
-
-								// we are dragging, so we can't be holding down on same spot!
-								try
-								{
-									//touch_sensor_thread.down();
-									touch_sensor_thread.stop_me();
-									touch_sensor_thread.stop();
-								}
-								catch (Exception e)
-								{
-
-								}
-
 								MotionCallback(MotionCallbackID, x, y);
 							}
 						}
