@@ -59,6 +59,7 @@ struct navigation {
 	struct route *route;
 	struct map *map;
 	struct item_hash *hash;
+	struct vehicleprofile *vehicleprofile;
 	struct navigation_itm *first;
 	struct navigation_itm *last;
 	struct navigation_command *cmd_first;
@@ -262,6 +263,8 @@ struct navigation_itm {
 	struct navigation_itm *prev;
 	struct navigation_way *ways;		/**< Pointer to all ways one could drive from here */
 };
+
+static int is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode);
 
 /* 0=N,90=E */
 static int
@@ -791,7 +794,7 @@ navigation_itm_new(struct navigation *this_, struct item *ritem)
  * @return The number of possibilities to turn or -1 on error
  */
 static int
-count_possible_turns(struct navigation_itm *from, struct navigation_itm *to, int direction)
+count_possible_turns(struct navigation *nav, struct navigation_itm *from, struct navigation_itm *to, int direction)
 {
 	int count;
 	struct navigation_itm *curr;
@@ -803,16 +806,18 @@ count_possible_turns(struct navigation_itm *from, struct navigation_itm *to, int
 		w = curr->ways;
 
 		while (w) {
-			if (direction < 0) {
-				if (angle_delta(curr->prev->angle_end, w->angle2) < 0) {
-					count++;
-					break;
+			if (is_way_allowed(nav, w, 4)) {
+				if (direction < 0) {
+					if (angle_delta(curr->prev->angle_end, w->angle2) < 0) {
+						count++;
+						break;
+					}
+				} else {
+					if (angle_delta(curr->prev->angle_end, w->angle2) > 0) {
+						count++;
+						break;
+					}				
 				}
-			} else {
-				if (angle_delta(curr->prev->angle_end, w->angle2) > 0) {
-					count++;
-					break;
-				}				
 			}
 			w = w->next;
 		}
@@ -1015,7 +1020,7 @@ static int maneuver_category(enum item_type type)
 }
 
 static int
-is_way_allowed(struct navigation_way *way)
+is_way_allowed(struct navigation *nav, struct navigation_way *way, int mode)
 {
 	if (way->dir > 0) {
 		if (way->flags & AF_ONEWAYREV)
@@ -1040,7 +1045,7 @@ is_way_allowed(struct navigation_way *way)
  * @return True if navit should guide the user, false otherwise
  */
 static int
-maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *delta, char **reason)
+maneuver_required2(struct navigation *nav, struct navigation_itm *old, struct navigation_itm *new, int *delta, char **reason)
 {
 	int ret=0,d,dw,dlim;
 	char *r=NULL;
@@ -1052,7 +1057,7 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 	if (!new->ways) {
 		/* No announcement necessary */
 		r="no: Only one possibility";
-	} else if (!new->ways->next && new->ways->item.type == type_ramp && !is_way_allowed(new->ways)) {
+	} else if (!new->ways->next && new->ways->item.type == type_ramp && !is_way_allowed(nav,new->ways,1)) {
 		/* If the other way is only a ramp and it is one-way in the wrong direction, no announcement necessary */
 		r="no: Only ramp";
 	}
@@ -1089,7 +1094,7 @@ maneuver_required2(struct navigation_itm *old, struct navigation_itm *new, int *
 			wcat=maneuver_category(w->item.type);
 			/* If any other street has the same name but isn't a highway (a highway might split up temporarily), then
 			   we can't use the same name criterium  */
-			if (is_same_street && is_same_street2(old->name1, old->name2, w->name1, w->name2) && (cat != 7 || wcat != 7) && is_way_allowed(w))
+			if (is_same_street && is_same_street2(old->name1, old->name2, w->name1, w->name2) && (cat != 7 || wcat != 7) && is_way_allowed(nav,w,2))
 				is_same_street=0;
 			/* Even if the ramp has the same name, announce it */
 			if (new->item.type == type_ramp && old->item.type != type_ramp)
@@ -1265,7 +1270,7 @@ make_maneuvers(struct navigation *this_, struct route *route)
 	this_->cmd_first=NULL;
 	while (itm) {
 		if (last) {
-			if (maneuver_required2(last_itm, itm,&delta,NULL)) {
+			if (maneuver_required2(this_, last_itm, itm,&delta,NULL)) {
 				command_new(this_, itm, delta);
 			}
 		} else
@@ -1476,7 +1481,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		cur = cmd->itm->prev;
 		count_roundabout = 0;
 		while (cur && (cur->flags & AF_ROUNDABOUT)) {
-			if (cur->next->ways && is_way_allowed(cur->next->ways)) { // If the next segment has no exit or the exit isn't allowed, don't count it
+			if (cur->next->ways && is_way_allowed(nav,cur->next->ways,3)) { // If the next segment has no exit or the exit isn't allowed, don't count it
 				count_roundabout++;
 			}
 			cur = cur->prev;
@@ -1510,7 +1515,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		d=get_distance(distance, attr_navigation_short, 0);
 		break;
 	case 0:
-		skip_roads = count_possible_turns(cmd->prev?cmd->prev->itm:nav->first,cmd->itm,cmd->delta);
+		skip_roads = count_possible_turns(nav,cmd->prev?cmd->prev->itm:nav->first,cmd->itm,cmd->delta);
 		if (skip_roads > 0) {
 			if (get_count_str(skip_roads+1)) {
 				/* TRANSLATORS: First argument is the how manieth street to take, second the direction */ 
@@ -1524,7 +1529,7 @@ show_maneuver(struct navigation *nav, struct navigation_itm *itm, struct navigat
 		}
 		break;
 	case -2:
-		skip_roads = count_possible_turns(cmd->prev->itm,cmd->itm,cmd->delta);
+		skip_roads = count_possible_turns(nav,cmd->prev->itm,cmd->itm,cmd->delta);
 		if (skip_roads > 0) {
 			/* TRANSLATORS: First argument is the how manieth street to take, second the direction */ 
 			if (get_count_str(skip_roads+1)) {
@@ -1731,6 +1736,7 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 	struct item *sitem;			/* Holds the corresponding item from the actual map */
 	struct attr street_item,street_direction;
 	struct navigation_itm *itm;
+	struct attr vehicleprofile;
 	int mode=0, incr=0, first=1;
 	if (attr->type != attr_route_status)
 		return;
@@ -1749,6 +1755,10 @@ navigation_update(struct navigation *this_, struct route *route, struct attr *at
 	mr=map_rect_new(map, NULL);
 	if (! mr)
 		return;
+	if (route_get_attr(route, attr_vehicleprofile, &vehicleprofile, NULL))
+		this_->vehicleprofile=vehicleprofile.u.vehicleprofile;
+	else
+		this_->vehicleprofile=NULL;
 	dbg(1,"enter\n");
 	while ((ritem=map_rect_get_item(mr))) {
 		if (ritem->type == type_route_start && this_->turn_around > -this_->turn_around_limit+1)
@@ -1849,7 +1859,7 @@ navigation_get_map(struct navigation *this_)
 	attrs[3]=&description;
 	attrs[4]=NULL;
 	if (! this_->map)
-		this_->map=map_new(NULL, &attrs);
+		this_->map=map_new(NULL, attrs);
         return this_->map;
 }
 
@@ -2019,7 +2029,7 @@ navigation_map_item_attr_get(void *priv_data, enum attr_type attr_type, struct a
 			if (prev) {
 				int delta=0;
 				char *reason=NULL;
-				maneuver_required2(prev, itm, &delta, &reason);
+				maneuver_required2(this_->nav, prev, itm, &delta, &reason);
 				this_->str=attr->u.str=g_strdup_printf("reason:%s",reason);
 				return 1;
 			}
@@ -2196,7 +2206,7 @@ static struct map_methods navigation_map_meth = {
 };
 
 static struct map_priv *
-navigation_map_new(struct map_methods *meth, struct attr **attrs)
+navigation_map_new(struct map_methods *meth, struct attr **attrs, struct callback_list *cbl)
 {
 	struct map_priv *ret;
 	struct attr *navigation_attr;
