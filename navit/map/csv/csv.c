@@ -244,9 +244,9 @@ map_new_csv(struct map_methods *meth, struct attr **attrs)
 	  FILE*fp;
 	  if((fp=fopen(data->u.str,"rt"))) {
 		int item_idx = 0;
+		const int max_line_len = 256;
+		char *line=g_alloca(sizeof(char)*max_line_len);
 	  	while(!feof(fp)) {
-			const int max_line_len = 256;
-			char *line=g_alloca(sizeof(char)*max_line_len);
 			if(fgets(line,max_line_len,fp)) {
 				char*line2 = g_strdup(line);
 				//count columns	
