@@ -48,25 +48,25 @@ msgid "sixth"
 msgstr "sechste"
 
 msgid "zeroth exit"
-msgstr "nullte Ausfahrt"
+msgstr "nullten Ausfahrt"
 
 msgid "first exit"
-msgstr "erste Ausfahrt"
+msgstr "ersten Ausfahrt"
 
 msgid "second exit"
-msgstr "zweite Ausfahrt"
+msgstr "zweiten Ausfahrt"
 
 msgid "third exit"
-msgstr "dritte Ausfahrt"
+msgstr "dritten Ausfahrt"
 
 msgid "fourth exit"
-msgstr "vierte Ausfahrt"
+msgstr "vierten Ausfahrt"
 
 msgid "fifth exit"
-msgstr "fünfte Ausfahrt"
+msgstr "fünften Ausfahrt"
 
 msgid "sixth exit"
-msgstr "sechste Ausfahrt"
+msgstr "sechsten Ausfahrt"
 
 #, c-format
 msgid "%d m"
