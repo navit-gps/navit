@@ -305,20 +305,17 @@ graphics_overlay_resize(struct graphics *this_, struct point *p, int w, int h, i
 static void
 graphics_gc_init(struct graphics *this_)
 {
-	struct color color1={ 0xffff, 0xefef, 0xb7b7, 0xffff};
-	struct color color2={ 0xffff, 0xefef, 0xb7b7, 0xffff};
-	struct color color3={ 0x0000, 0x0000, 0x0000, 0xffff };
-	struct color color4={ 0xffff, 0xffff, 0xffff, 0xffff };
-	struct color color5={ 0xffff, 0xffff, 0xffff, 0xffff };
-	struct color color6={ 0x0000, 0x0000, 0x0000, 0xffff };
+	struct color background={ COLOR_BACKGROUND_ };
+	struct color black={ COLOR_BLACK_ };
+	struct color white={ COLOR_WHITE_ };
 	if (!this_->gc[0] || !this_->gc[1] || !this_->gc[2])
 		return;
-	graphics_gc_set_background(this_->gc[0], &color1 );
-	graphics_gc_set_foreground(this_->gc[0], &color2 );
-	graphics_gc_set_background(this_->gc[1], &color3 );
-	graphics_gc_set_foreground(this_->gc[1], &color4 );
-	graphics_gc_set_background(this_->gc[2], &color5 );
-	graphics_gc_set_foreground(this_->gc[2], &color6 );
+	graphics_gc_set_background(this_->gc[0], &background );
+	graphics_gc_set_foreground(this_->gc[0], &background );
+	graphics_gc_set_background(this_->gc[1], &black );
+	graphics_gc_set_foreground(this_->gc[1], &white );
+	graphics_gc_set_background(this_->gc[2], &white );
+	graphics_gc_set_foreground(this_->gc[2], &black );
 }
 
 
