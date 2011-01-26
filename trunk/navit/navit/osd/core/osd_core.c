@@ -1068,6 +1068,7 @@ osd_nav_next_turn_draw(struct nav_next_turn *this, struct navit *navit,
 						      image, this->icon_w,
 						      this->icon_h);
 			if (!gr_image) {
+				dbg(0,"failed to load %s in %dx%d\n",image,this->icon_w,this->icon_h);
 				g_free(image);
 				image = graphics_icon_path("unknown.xpm");
 				gr_image =
