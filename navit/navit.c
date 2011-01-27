@@ -752,6 +752,36 @@ navit_cmd_set_int_var(struct navit *this, char *function, struct attr **in, stru
 }
 
 /**
+ * command to toggle the active state of a named layer of the current layout
+ *
+ * @param navit The navit instance
+ * @param function unused (needed to match command function signiture)
+ * @param in input attribute in[0] is the name of the layer
+ * @param out output unused
+ * @param valid unused 
+ * @returns nothing
+ */
+static void
+navit_cmd_toggle_layer(struct navit *this, char *function, struct attr **in, struct attr ***out, int *valid)
+{
+	if (in && in[0] && ATTR_IS_STRING(in[0]->type) && in[0]->u.str) {
+		if(this->layout_current && this->layout_current->layers) {
+			GList* layers = this->layout_current->layers;
+			while (layers) {
+				struct layer*l=layers->data;
+				if(l && !strcmp(l->name,in[0]->u.str) ) {
+					l->active ^= 1;
+					navit_draw(this);
+					return;
+				}
+				layers=g_list_next(layers);
+			}
+		}
+        }
+}
+
+
+/**
  * Get value given a key string for the command system
  *
  * @param navit The navit instance
@@ -924,6 +954,7 @@ static struct command_table commands[] = {
 	{"push_int",command_cast(navit_cmd_push_int)},
 	{"pop_int",command_cast(navit_cmd_pop_int)},
 	{"int_stack_size",command_cast(navit_cmd_int_stack_size)},
+	{"toggle_layer",command_cast(navit_cmd_toggle_layer)},
 };
 	
 void 
