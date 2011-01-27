@@ -366,8 +366,10 @@ public class Navit extends Activity implements Handler.Callback
 		// change menu items here!
 		menu.clear();
 		// group-id,item-id,sort order number
-		menu.add(1, 1, 10, "zoom in");
-		menu.add(1, 2, 20, "zoom out");
+		menu.add(1, 1, 10, "Zoom in");
+		menu.add(1, 2, 20, "Zoom out");
+
+		menu.add(1, 3, 30, "Exit Navit");
 		return true;
 	}
 
@@ -427,6 +429,9 @@ public class Navit extends Activity implements Handler.Callback
 					N_NavitGraphics.NavitAOverlay.hide_bubble();
 				}
 				Log.e("Navit", "onOptionsItemSelected -> zoom out");
+				break;
+			case 3 :
+				this.exit();
 				break;
 		}
 		return true;
