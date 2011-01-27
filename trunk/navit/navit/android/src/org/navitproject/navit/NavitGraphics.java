@@ -34,6 +34,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -255,7 +256,10 @@ public class NavitGraphics
 				@Override
 				protected void onSizeChanged(int w, int h, int oldw, int oldh)
 				{
-					//Log.e("Navit","NavitGraphics -> onSizeChanged");
+					Log.e("Navit", "NavitGraphics -> onSizeChanged pixels x=" + w + " pixels y=" + h);
+					Log.e("Navit", "NavitGraphics -> onSizeChanged dpi="+Navit.metrics.densityDpi);
+					Log.e("Navit", "NavitGraphics -> onSizeChanged density="+Navit.metrics.density);
+					Log.e("Navit", "NavitGraphics -> onSizeChanged scaledDensity="+Navit.metrics.scaledDensity);
 					super.onSizeChanged(w, h, oldw, oldh);
 					draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 					draw_canvas = new Canvas(draw_bitmap);
