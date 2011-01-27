@@ -34,6 +34,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +47,7 @@ public class Navit extends Activity implements Handler.Callback
 	private PowerManager.WakeLock		wl;
 	private NavitActivityResult		ActivityResults[];
 	public static InputMethodManager	mgr										= null;
+	public static DisplayMetrics		metrics									= null;
 	public static Boolean				show_soft_keyboard					= false;
 	public static Boolean				show_soft_keyboard_now_showing	= false;
 	public static long					last_pressed_menu_key				= 0L;
@@ -191,7 +193,10 @@ public class Navit extends Activity implements Handler.Callback
 		}
 
 		// Debug.startMethodTracing("calc");
-		
+
+		metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
 		// --> dont use!! NavitMain(this, langu, android.os.Build.VERSION.SDK_INT);
 		Log.e("Navit", "android.os.Build.VERSION.SDK_INT="
 				+ Integer.valueOf(android.os.Build.VERSION.SDK));
