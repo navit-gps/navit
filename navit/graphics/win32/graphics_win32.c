@@ -531,11 +531,18 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
         HandleKeyDown( gra_priv, wParam);
         break;
 #ifdef HAVE_API_WIN32_CE
-    case WM_ENABLE:;
-        HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
+    case WM_SETFOCUS:
         if (fullscr) {
+           HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
            // deactivate the SIP button
            ShowWindow(hwndSip, SW_HIDE);
+        }
+        break;
+   case WM_KILLFOCUS:
+        if (fullscr != 1) {
+           HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
+           // active the SIP button
+           ShowWindow(hwndSip, SW_SHOW);
         }
         break;
 #endif
