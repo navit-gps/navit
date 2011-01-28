@@ -70,6 +70,11 @@ struct window_priv
 
 static HWND g_hwnd = NULL;
 
+#ifdef HAVE_API_WIN32_CE
+static int fullscr = 0;
+#endif
+
+
 #ifndef GET_WHEEL_DELTA_WPARAM
 #define GET_WHEEL_DELTA_WPARAM(wParam)  ((short)HIWORD(wParam))
 #endif
@@ -525,6 +530,15 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM l
     case WM_KEYDOWN:
         HandleKeyDown( gra_priv, wParam);
         break;
+#ifdef HAVE_API_WIN32_CE
+    case WM_ENABLE:;
+        HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
+        if (fullscr) {
+           // deactivate the SIP button
+           ShowWindow(hwndSip, SW_HIDE);
+        }
+        break;
+#endif
     default:
         return DefWindowProc(hwnd, Message, wParam, lParam);
     }
@@ -537,6 +551,7 @@ static int fullscreen(struct window *win, int on)
 #ifdef HAVE_API_WIN32_CE
     HWND hwndTaskbar = FindWindow(L"HHTaskBar", NULL);
     HWND hwndSip = FindWindow(L"MS_SIPBUTTON", NULL);
+    fullscr = on;
 	if (on) {
         ShowWindow(hwndTaskbar, SW_HIDE);
         MoveWindow(g_hwnd, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), FALSE);
