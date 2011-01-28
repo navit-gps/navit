@@ -165,9 +165,16 @@ format_time(struct tm *tm, int days)
  * * @returns a pointer to a string containing the formatted speed
  * */
 static char * 
-format_speed(double speed, char *sep)
+format_speed(double speed, char *sep, char *format)
 {
-	return g_strdup_printf("%.0f%skm/h", speed, sep);
+	if (!format || !strcmp(format,"named"))
+		return g_strdup_printf("%.0f%skm/h", speed, sep);
+	else if (!strcmp(format,"value") || !strcmp(format,"unit")) {
+		if (!strcmp(format,"value"))
+			return g_strdup_printf("%.0f", speed);
+		else 
+			return "km/h";
+	} 
 }
 
 /*static char *
@@ -351,7 +358,7 @@ osd_odometer_draw(struct odometer *this, struct navit *nav,
   }
 
   dist_buffer = format_distance(this->sum_dist,"");
-  spd_buffer = format_speed(spd,"");
+  spd_buffer = format_speed(spd,"","");
   remainder = this->time_all;
   days  = remainder  / (24*60*60);
   remainder = remainder  % (24*60*60);
@@ -1765,20 +1772,7 @@ osd_text_format_attr(struct attr *attr, char *format)
 
 	switch (attr->type) {
 	case attr_position_speed:
-		if (!format || !strcmp(format,"named"))
-			return format_speed(*attr->u.numd,"");
-		if (!strcmp(format,"value") || !strcmp(format,"unit")) {
-			char *ret,*tmp=format_speed(*attr->u.numd," ");
-			char *pos=strchr(tmp,' ');
-			if (! pos)
-				return tmp;
-			*pos++='\0';
-			if (!strcmp(format,"value"))
-				return tmp;
-			ret=g_strdup(pos);
-			g_free(tmp);
-			return ret;
-		}
+		return format_speed(*attr->u.numd,"",format);
 	case attr_position_height:
 	case attr_position_direction:
 		return format_float_0(*attr->u.numd);
@@ -2039,7 +2033,6 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 					int *flags=tracking_get_current_flags(tracking);
 					if (flags && (*flags & AF_SPEED_LIMIT) && tracking_get_attr(tracking, attr_maxspeed, &maxspeed_attr, NULL)) {
 						routespeed = maxspeed_attr.u.num;
-						value = format_speed(routespeed, "");
 					}
 
 					if (routespeed == -1) {
@@ -2049,9 +2042,10 @@ osd_text_draw(struct osd_text *this, struct navit *navit, struct vehicle *v)
 							rprof=vehicleprofile_get_roadprofile(prof, item->type);
 						if (rprof) {
 							routespeed=rprof->speed;
-							value=format_speed(routespeed,"");
 						}
 					}
+
+					value = format_speed(routespeed,"", oti->format);
 				} else if (item) {
 					if (tracking_get_attr(tracking, oti->attr_typ, &attr, NULL))
 						value=osd_text_format_attr(&attr, oti->format);
