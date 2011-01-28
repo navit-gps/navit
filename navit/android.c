@@ -269,6 +269,16 @@ Java_org_navitproject_navit_NavitGraphics_CallbackMessageChannel( JNIEnv* env, j
 			navit_zoom_out_cursor(global_navit, 2);
 			// navit_zoom_out_cursor(attr.u.navit, 2);
 		}
+		else if (i==5)
+		{
+			// call a command (like in gui)
+			s=(*env)->GetStringUTFChars(env, str, NULL);
+			dbg(0,"*****string=%s\n",s);
+
+			command_evaluate(global_navit,s);
+
+			(*env)->ReleaseStringUTFChars(env, str, s);
+		}
 		else if (i == 4)
 		{
 			s=(*env)->GetStringUTFChars(env, str, NULL);
