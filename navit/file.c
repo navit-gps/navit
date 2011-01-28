@@ -20,6 +20,7 @@
 #define _FILE_OFFSET_BITS 64
 #define _LARGEFILE_SOURCE
 #define _LARGEFILE64_SOURCE
+#include "config.h"
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -41,7 +42,6 @@
 #include "cache.h"
 #include "file.h"
 #include "atom.h"
-#include "config.h"
 #include "item.h"
 #include "util.h"
 #include "types.h"
