@@ -1,6 +1,6 @@
 /**
  * Navit, a modular navigation system.
- * Copyright (C) 2005-2008 Navit Team
+ * Copyright (C) 2005-2011 Navit Team
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -105,27 +105,30 @@ usage(FILE *f)
 {
 	/* DEVELOPPERS : don't forget to update the manpage if you modify theses options */
 	fprintf(f,"\n");
-	fprintf(f,"maptool - parse osm textfile and converts to NavIt binfile format\n\n");
+	fprintf(f,"maptool - parse osm textfile and converts to Navit binfile format\n\n");
 	fprintf(f,"Usage :\n");
 	fprintf(f,"bzcat planet.osm.bz2 | maptool mymap.bin\n");
 	fprintf(f,"Available switches:\n");
 	fprintf(f,"-h (--help)              : this screen\n");
-	fprintf(f,"-N (--nodes-only)        : process only nodes\n");
-	fprintf(f,"-W (--ways-only)         : process only ways\n");
+	fprintf(f,"-6 (--64bit)             : set zip 64 bit compression\n");
 	fprintf(f,"-a (--attr-debug-level)  : control which data is included in the debug attribute\n");
 	fprintf(f,"-c (--dump-coordinates)  : dump coordinates after phase 1\n");
 #ifdef HAVE_POSTGRESQL
 	fprintf(f,"-d (--db)                : get osm data out of a postgresql database with osm simple scheme and given connect string\n");
 #endif
 	fprintf(f,"-e (--end)               : end at specified phase\n");
+	fprintf(f,"-i (--input-file)        : specify the input file name (OSM), overrules default stdin\n");
 	fprintf(f,"-k (--keep-tmpfiles)     : do not delete tmp files after processing. useful to reuse them\n\n");
+	fprintf(f,"-N (--nodes-only)        : process only nodes\n");
 	fprintf(f,"-o (--coverage)          : map every street to item coverage\n");
 	fprintf(f,"-P (--protobuf)          : input file is protobuf\n");
 	fprintf(f,"-r (--rule-file)         : read mapping rules from specified file\n");
 	fprintf(f,"-s (--start)             : start at specified phase\n");
-	fprintf(f,"-i (--input-file)        : specify the input file name (OSM), overrules default stdin\n");
+	fprintf(f,"-S (--slice-size)        : defines the amount of memory to use, in bytes. Default is 1GB\n");
 	fprintf(f,"-w (--dedupe-ways)       : ensure no duplicate ways or nodes. useful when using several input files\n");
+	fprintf(f,"-W (--ways-only)         : process only ways\n");
 	fprintf(f,"-z (--compression-level) : set the compression level\n");
+	
 	exit(1);
 }
 
