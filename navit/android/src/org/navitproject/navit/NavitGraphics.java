@@ -1037,6 +1037,11 @@ public class NavitGraphics
 															int y = msg.getData().getInt("y");
 															CallbackMessageChannel(4, "" + x + "#" + y);
 														}
+														else if (msg.getData().getInt("Callback") == 5)
+														{
+															String cmd = msg.getData().getString("cmd");
+															CallbackMessageChannel(5, cmd);
+														}
 														else if (msg.getData().getInt("Callback") == 21)
 														{
 															//Log.e("NavitGraphics","callback_handler -> handleMessage 2");
