@@ -12,11 +12,8 @@ maptool parses osm textfile and converts to NavIt binfile format
 \-h (\-\-help)
 display a short help message
 .TP
-\-N (\-\-nodes-only)
-process only nodes
-.TP
-\-W (\-\-ways-only)
-process only ways
+\-6 (-\-64bit)
+set zip 64 bit compression
 .TP
 \-a (\-\-attr-debug-level)
 control which data is included in the debug attribute
@@ -30,17 +27,26 @@ get osm data out of a postgresql database with osm simple scheme and given conne
 \-e (\-\-end) <phase>
 end at specified phase
 .TP
+\-i (\-\-input-file) <file>
+specify the input file name (OSM), overrules default stdin
+.TP
 \-k (\-\-keep-tmpfiles)
 do not delete tmp files after processing. useful to reuse them
+.TP
+\-N (\-\-nodes-only)
+process only nodes
 .TP
 \-s (\-\-start) <phase>
 start at specified phase
 .TP
-\-i (\-\-input-file) <file>
-specify the input file name (OSM), overrules default stdin
+\-S (\-\-slice-size) <phrase>
+defines the amount of memory to use, in bytes. Default is 1GB
 .TP
 \-w (\-\-dedupe-ways)
 ensure no duplicate ways or nodes. useful when using several input files
+.TP
+\-W (\-\-ways-only)
+process only ways
 .TP
 \-z (\-\-compression-level) <level>
 set the compression level
