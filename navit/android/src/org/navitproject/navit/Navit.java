@@ -36,6 +36,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
@@ -159,6 +160,16 @@ public class Navit extends Activity implements Handler.Callback
 		Log.e("Navit","**1**A "+startup_intent.getAction());
 		Log.e("Navit","**1**D "+startup_intent.getDataString());
 
+		Display display_ = getWindowManager().getDefaultDisplay(); 
+		int width_ = display_.getWidth();
+		int height_ = display_.getHeight();
+		metrics = new DisplayMetrics();
+		display_.getMetrics(Navit.metrics);
+		Log.e("Navit", "Navit -> pixels x=" + width_ + " pixels y=" + height_);
+		Log.e("Navit", "Navit -> dpi="+Navit.metrics.densityDpi);
+		Log.e("Navit", "Navit -> density="+Navit.metrics.density);
+		Log.e("Navit", "Navit -> scaledDensity="+Navit.metrics.scaledDensity);
+		
 		ActivityResults = new NavitActivityResult[16];
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -187,20 +198,49 @@ public class Navit extends Activity implements Handler.Callback
 		{
 			Log.e("Navit", "Failed to extract language resource " + langc);
 		}
-		if (!extractRes("navit", "/data/data/org.navitproject.navit/share/navit.xml"))
+
+		String my_display_density="mdpi";
+		// hdpi display
+		if (Navit.metrics.densityDpi == 240)
 		{
-			Log.e("Navit", "Failed to extract navit.xml");
+			my_display_density="hdpi";
+			if (!extractRes("navithdpi", "/data/data/org.navitproject.navit/share/navit.xml"))
+			{
+				Log.e("Navit", "Failed to extract navit.xml for hdpi device(s)");
+			}
 		}
-
+		// mdpi display
+		else if (Navit.metrics.densityDpi == 160)
+		{
+			my_display_density="mdpi";
+			if (!extractRes("navitmdpi", "/data/data/org.navitproject.navit/share/navit.xml"))
+			{
+				Log.e("Navit", "Failed to extract navit.xml for mdpi device(s)");
+			}
+		}
+		// ldpi display
+		else if (Navit.metrics.densityDpi == 120)
+		{
+			my_display_density="ldpi";
+			if (!extractRes("navitldpi", "/data/data/org.navitproject.navit/share/navit.xml"))
+			{
+				Log.e("Navit", "Failed to extract navit.xml for ldpi device(s)");
+			}
+		}
+		else
+		{
+			/* default, meaning we just dont know what display this is */
+			if (!extractRes("navit", "/data/data/org.navitproject.navit/share/navit.xml"))
+			{
+				Log.e("Navit", "Failed to extract navit.xml (default version)");
+			}
+		}
 		// Debug.startMethodTracing("calc");
-
-		metrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
 		// --> dont use!! NavitMain(this, langu, android.os.Build.VERSION.SDK_INT);
 		Log.e("Navit", "android.os.Build.VERSION.SDK_INT="
 				+ Integer.valueOf(android.os.Build.VERSION.SDK));
-		NavitMain(this, langu, Integer.valueOf(android.os.Build.VERSION.SDK));
+		NavitMain(this, langu, Integer.valueOf(android.os.Build.VERSION.SDK), my_display_density);
 		// CAUTION: don't use android.os.Build.VERSION.SDK_INT if <uses-sdk android:minSdkVersion="3" />
 		// You will get exception on all devices with Android 1.5 and lower
 		// because Build.VERSION.SDK_INT is since SDK 4 (Donut 1.6)
@@ -437,6 +477,12 @@ public class Navit extends Activity implements Handler.Callback
 				break;
 			case 3 :
 				this.exit();
+				//				msg = new Message();
+				//				b = new Bundle();
+				//				b.putInt("Callback", 5);
+				//				b.putString("cmd", "quit()");
+				//				msg.setData(b);
+				//				N_NavitGraphics.callback_handler.sendMessage(msg);
 				break;
 		}
 		return true;
@@ -464,7 +510,7 @@ public class Navit extends Activity implements Handler.Callback
 	 * 'hello-jni' native library, which is packaged
 	 * with this application.
 	 */
-	public native void NavitMain(Navit x, String lang, int version);
+	public native void NavitMain(Navit x, String lang, int version, String display_density_string);
 	public native void NavitActivity(int activity);
 
 	/*
