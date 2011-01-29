@@ -872,9 +872,9 @@ route_set_position_from_tracking(struct route *this, struct tracking *tracking, 
 		ret->street=street_data_dup(sd);
 		route_info_distances(ret, pro);
 	}
-	dbg(3,"position 0x%x,0x%x item 0x%x,0x%x direction %d pos %d lenpos %d lenneg %d\n",c->x,c->y,sd->item.id_hi,sd->item.id_lo,ret->street_direction,ret->pos,ret->lenpos,ret->lenneg);
-	dbg(3,"c->x=0x%x, c->y=0x%x pos=%d item=(0x%x,0x%x)\n", c->x, c->y, ret->pos, ret->street->item.id_hi, ret->street->item.id_lo);
-	dbg(3,"street 0=(0x%x,0x%x) %d=(0x%x,0x%x)\n", ret->street->c[0].x, ret->street->c[0].y, ret->street->count-1, ret->street->c[ret->street->count-1].x, ret->street->c[ret->street->count-1].y);
+	dbg(3,"position 0x%x,0x%x item 0x%x,0x%x direction %d pos %d lenpos %d lenneg %d\n",c->x,c->y,sd?sd->item.id_hi:0,sd?sd->item.id_lo:0,ret->street_direction,ret->pos,ret->lenpos,ret->lenneg);
+	dbg(3,"c->x=0x%x, c->y=0x%x pos=%d item=(0x%x,0x%x)\n", c->x, c->y, ret->pos, ret->street?ret->street->item.id_hi:0, ret->street?ret->street->item.id_lo:0);
+	dbg(3,"street 0=(0x%x,0x%x) %d=(0x%x,0x%x)\n", ret->street?ret->street->c[0].x:0, ret->street?ret->street->c[0].y:0, ret->street?ret->street->count-1:0, ret->street?ret->street->c[ret->street->count-1].x:0, ret->street?ret->street->c[ret->street->count-1].y:0);
 	this->pos=ret;
 	if (this->destinations) 
 		route_path_update(this, 0, 1);
