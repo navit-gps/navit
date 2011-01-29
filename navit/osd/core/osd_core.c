@@ -173,8 +173,9 @@ format_speed(double speed, char *sep, char *format)
 		if (!strcmp(format,"value"))
 			return g_strdup_printf("%.0f", speed);
 		else 
-			return "km/h";
+			return g_strdup_printf("km/h");
 	} 
+	return g_strdup_printf("");
 }
 
 /*static char *
