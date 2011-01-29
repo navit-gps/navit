@@ -90,12 +90,32 @@ apkg-all: all android/build.xml navit.xml
 	mkdir -p android/libs/armeabi
 	cp .libs/*.so android/libs/armeabi/libnavit.so
 	for i in */*/.libs/*.so ; do sed 's&lib_data_data_org\.navitproject\.navit_lib_&/data/data/org.navitproject.navit/lib/lib&' <$$i >android/libs/armeabi/$$(basename $$i); done
-	for i in $(shell cd $(srcdir)/xpm && echo *.xpm); do convert $(srcdir)/xpm/$$i android/res/drawable/$${i%.xpm}.png; done 
-	for i in $(shell cd $(srcdir)/xpm && echo *.png); do cp $(srcdir)/xpm/$$i android/res/drawable/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
-	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do cp $(builddir)/xpm/$$i android/res/drawable/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
+
+	mkdir -p android/res/drawable-ldpi
+	mkdir -p android/res/drawable-mdpi
+	mkdir -p android/res/drawable-hdpi
+	for i in $(shell cd $(srcdir)/xpm && echo *.xpm); do convert $(srcdir)/xpm/$$i android/res/drawable-mdpi/$${i%.xpm}.png; done 
+	for i in $(shell cd $(srcdir)/xpm && echo *.xpm); do convert -resize 75% $(srcdir)/xpm/$$i android/res/drawable-ldpi/$${i%.xpm}.png; done 
+	for i in $(shell cd $(srcdir)/xpm && echo *.xpm); do convert -resize 150% $(srcdir)/xpm/$$i android/res/drawable-hdpi/$${i%.xpm}.png; done 
+
+#	for i in $(shell cd $(srcdir)/xpm && echo *.png); do cp $(srcdir)/xpm/$$i android/res/drawable-mdpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
+#	for i in $(shell cd $(srcdir)/xpm && echo *.png); do cp $(srcdir)/xpm/$$i android/res/drawable-ldpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
+#	for i in $(shell cd $(srcdir)/xpm && echo *.png); do cp $(srcdir)/xpm/$$i android/res/drawable-hdpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
+
+	for i in $(shell cd $(srcdir)/xpm && echo *.png); do convert $(srcdir)/xpm/$$i android/res/drawable-mdpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
+	for i in $(shell cd $(srcdir)/xpm && echo *.png); do convert -resize 75% $(srcdir)/xpm/$$i android/res/drawable-ldpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
+	for i in $(shell cd $(srcdir)/xpm && echo *.png); do convert -resize 150% $(srcdir)/xpm/$$i android/res/drawable-hdpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
+
+#	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do cp $(builddir)/xpm/$$i android/res/drawable-mdpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
+#	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do cp $(builddir)/xpm/$$i android/res/drawable-ldpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
+#	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do cp $(builddir)/xpm/$$i android/res/drawable-hdpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
+
 	mkdir -p android/res/raw
 	for i in $(shell cd ../po && echo *.mo); do cp ../po/$$i android/res/raw/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
-	cp navit.xml android/res/raw
+#	cp navit.xml android/res/raw
+	cp navit.xml android/res/raw/navitmdpi.xml
+	cp navit.xml android/res/raw/navitldpi.xml
+	cp navit.xml android/res/raw/navithdpi.xml
 
 apkg: apkg-all
 	cd android && ant debug
