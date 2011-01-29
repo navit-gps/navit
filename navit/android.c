@@ -124,10 +124,11 @@ android_find_static_method(jclass class, char *name, char *args, jmethodID *ret)
 }
 
 JNIEXPORT void JNICALL
-Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity, jobject lang, int version)
+Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject activity, jobject lang, int version, jobject display_density_string)
 {
 	char *strings[]={"/data/data/org.navitproject.navit/bin/navit",NULL};
 	char *langstr;
+	char *displaydensitystr;
 	android_version=version;
 	__android_log_print(ANDROID_LOG_ERROR,"test","called");
 	android_activity_cbl=callback_list_new();
@@ -138,6 +139,11 @@ Java_org_navitproject_navit_Navit_NavitMain( JNIEnv* env, jobject thiz, jobject 
 	dbg(0,"enter env=%p thiz=%p activity=%p lang=%s version=%d\n",env,thiz,activity,langstr,version);
 	setenv("LANG",langstr,1);
 	(*env)->ReleaseStringUTFChars(env, lang, langstr);
+
+	displaydensitystr=(*env)->GetStringUTFChars(env, display_density_string, NULL);
+	dbg(0,"*****displaydensity=%s\n",displaydensitystr);
+	setenv("ANDROID_DENSITY",displaydensitystr,1);
+	(*env)->ReleaseStringUTFChars(env, display_density_string, displaydensitystr);
 	main_real(1, strings);
 }
 
