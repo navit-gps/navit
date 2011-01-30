@@ -135,9 +135,9 @@ apkg-all: all android/build.xml navit.xml
 	mkdir -p android/res/raw
 	for i in $(shell cd ../po && echo *.mo); do cp ../po/$$i android/res/raw/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
 #	cp navit.xml android/res/raw
-	cp navit.xml android/res/raw/navitmdpi.xml
-	cp navit.xml android/res/raw/navitldpi.xml
-	cp navit.xml android/res/raw/navithdpi.xml
+	cp navit_android_mdpi.xml android/res/raw/navitmdpi.xml
+	cp navit_android_ldpi.xml android/res/raw/navitldpi.xml
+	cp navit_android_hdpi.xml android/res/raw/navithdpi.xml
 
 apkg: apkg-all
 	cd android && ant debug
