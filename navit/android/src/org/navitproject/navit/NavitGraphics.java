@@ -34,7 +34,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
-import android.util.DisplayMetrics;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -46,37 +45,36 @@ import android.widget.RelativeLayout;
 
 public class NavitGraphics
 {
-	private NavitGraphics			parent_graphics;
-	private ArrayList					overlays										= new ArrayList();
-	int									bitmap_w;
-	int									bitmap_h;
-	int									pos_x;
-	int									pos_y;
-	int									pos_wraparound;
-	int									overlay_disabled;
-	float									trackball_x, trackball_y;
-	View									view;
-	RelativeLayout						relativelayout;
-	NavitCamera							camera;
-	Activity								activity;
+	private NavitGraphics		parent_graphics;
+	private ArrayList				overlays										= new ArrayList();
+	int								bitmap_w;
+	int								bitmap_h;
+	int								pos_x;
+	int								pos_y;
+	int								pos_wraparound;
+	int								overlay_disabled;
+	float								trackball_x, trackball_y;
+	View								view;
+	RelativeLayout					relativelayout;
+	NavitCamera						camera;
+	Activity							activity;
 
-	public static Boolean			in_map										= false;
+	public static Boolean		in_map										= false;
 
 	// for menu key
-	private static long				time_for_long_press						= 300L;
-	private static long				interval_for_long_press					= 200L;
+	private static long			time_for_long_press						= 300L;
+	private static long			interval_for_long_press					= 200L;
 
 	// for touch screen
-	private long						last_touch_on_screen						= 0L;
-	private static long				long_press_on_screen_interval			= 1500L;
-	private static float				long_press_on_screen_max_distance	= 8f;
+	private long					last_touch_on_screen						= 0L;
+	private static long			long_press_on_screen_interval			= 1500L;
+	private static float			long_press_on_screen_max_distance	= 8f;
 
 	// Overlay View for Android
 	//
 	// here you can draw all the nice things you want
 	// and get touch events for it (without touching C-code)
 	public NavitAndroidOverlay	NavitAOverlay								= null;
-
 
 	public void SetCamera(int use_camera)
 	{
@@ -116,7 +114,7 @@ public class NavitGraphics
 			last_down_action = System.currentTimeMillis();
 			Log.e("NavitGraphics", "SensorThread created");
 		}
-		
+
 		public void down()
 		{
 			this.is_still_pressing = true;
@@ -257,9 +255,10 @@ public class NavitGraphics
 				protected void onSizeChanged(int w, int h, int oldw, int oldh)
 				{
 					Log.e("Navit", "NavitGraphics -> onSizeChanged pixels x=" + w + " pixels y=" + h);
-					Log.e("Navit", "NavitGraphics -> onSizeChanged dpi="+Navit.metrics.densityDpi);
-					Log.e("Navit", "NavitGraphics -> onSizeChanged density="+Navit.metrics.density);
-					Log.e("Navit", "NavitGraphics -> onSizeChanged scaledDensity="+Navit.metrics.scaledDensity);
+					Log.e("Navit", "NavitGraphics -> onSizeChanged dpi=" + Navit.metrics.densityDpi);
+					Log.e("Navit", "NavitGraphics -> onSizeChanged density=" + Navit.metrics.density);
+					Log.e("Navit", "NavitGraphics -> onSizeChanged scaledDensity="
+							+ Navit.metrics.scaledDensity);
 					super.onSizeChanged(w, h, oldw, oldh);
 					draw_bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
 					draw_canvas = new Canvas(draw_bitmap);
@@ -429,7 +428,7 @@ public class NavitGraphics
 							{
 
 							}
-							
+
 							// was is a long press? or normal quick touch?
 							if ((in_map)
 									&& ((System.currentTimeMillis() - last_touch_on_screen) > long_press_on_screen_interval))
@@ -466,7 +465,7 @@ public class NavitGraphics
 
 								// if we drag, hide the bubble
 								NavitAOverlay.hide_bubble();
-								
+
 								MotionCallback(MotionCallbackID, x, y);
 								ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 
@@ -491,11 +490,11 @@ public class NavitGraphics
 									{
 										// zoom in
 										CallbackMessageChannel(1, "");
-										
+
 										// next lines are a hack, without it screen will not get updated anymore!
 										ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-										MotionCallback(MotionCallbackID, x+15, y);
-										MotionCallback(MotionCallbackID, x-15, y);
+										MotionCallback(MotionCallbackID, x + 15, y);
+										MotionCallback(MotionCallbackID, x - 15, y);
 										ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 										this.postInvalidate();
 
@@ -508,8 +507,8 @@ public class NavitGraphics
 
 										// next lines are a hack, without it screen will not get updated anymore!
 										ButtonCallback(ButtonCallbackID, 1, 1, x, y); // down
-										MotionCallback(MotionCallbackID, x+15, y);
-										MotionCallback(MotionCallbackID, x-15, y);
+										MotionCallback(MotionCallbackID, x + 15, y);
+										MotionCallback(MotionCallbackID, x - 15, y);
 										ButtonCallback(ButtonCallbackID, 0, 1, x, y); // up
 										this.postInvalidate();
 
@@ -1097,53 +1096,138 @@ public class NavitGraphics
 	}
 
 
-	protected void draw_polyline(Paint paint, int c[])
+	Path							global_path		= new Path();
+	Rect							global_r			= new Rect();
+	public static Boolean	power_device	= false;
+
+
+
+	private class t_draw_polyline extends Thread
 	{
-		paint.setStyle(Paint.Style.STROKE);
-		Path path = new Path();
-		path.moveTo(c[0], c[1]);
-		for (int i = 2; i < c.length; i += 2)
+		private Boolean	running;
+		private Paint		p		= null;
+		private int			c[]	= null;
+		private Path		pf		= new Path();
+
+		t_draw_polyline(Paint paint, int cc[])
 		{
-			path.lineTo(c[i], c[i + 1]);
+			this.p = paint;
+			this.c = cc;
+			this.running = true;
+			//Log.e("Navit", "t_draw_polyline created");
 		}
-		draw_canvas.drawPath(path, paint);
+
+		public void run()
+		{
+			//Log.e("Navit", "t_draw_polyline started");
+			p.setStyle(Paint.Style.STROKE);
+			//pf.reset();
+			pf.moveTo(c[0], c[1]);
+			for (int i = 2; i < c.length; i += 2)
+			{
+				pf.lineTo(c[i], c[i + 1]);
+			}
+			draw_canvas.drawPath(pf, p);
+			//Log.e("Navit", "t_draw_polyline ended");
+		}
 	}
 
-	protected void draw_polygon(Paint paint, int c[])
+	private class t_draw_polygon extends Thread
 	{
-		paint.setStyle(Paint.Style.FILL);
-		Path path = new Path();
-		path.moveTo(c[0], c[1]);
-		for (int i = 2; i < c.length; i += 2)
+		private Boolean	running;
+		private Paint		p		= null;
+		private int			c[]	= null;
+		private Path		pf		= new Path();
+
+		t_draw_polygon(Paint paint, int cc[])
 		{
-			path.lineTo(c[i], c[i + 1]);
+			this.p = paint;
+			this.c = cc;
+			this.running = true;
 		}
-		draw_canvas.drawPath(path, paint);
+
+		public void run()
+		{
+			p.setStyle(Paint.Style.FILL);
+			//pf.reset();
+			pf.moveTo(c[0], c[1]);
+			for (int i = 2; i < c.length; i += 2)
+			{
+				pf.lineTo(c[i], c[i + 1]);
+			}
+			draw_canvas.drawPath(pf, p);
+		}
+	}
+
+	void draw_polyline(Paint paint, int c[])
+	{
+		if (NavitGraphics.power_device)
+		{
+			t_draw_polyline t = new t_draw_polyline(paint, c);
+			t.start();
+		}
+		else
+		{
+//			//Log.e("NavitGraphics","draw_polyline");
+			paint.setStyle(Paint.Style.STROKE);
+			global_path.reset();
+			global_path.moveTo(c[0], c[1]);
+			for (int i = 2; i < c.length; i += 2)
+			{
+				global_path.lineTo(c[i], c[i + 1]);
+			}
+			global_path.close();
+			draw_canvas.drawPath(global_path, paint);
+		}
+	}
+
+	void draw_polygon(Paint paint, int c[])
+	{
+		if (NavitGraphics.power_device)
+		{
+			t_draw_polygon t = new t_draw_polygon(paint, c);
+			t.start();
+		}
+		else
+		{
+			//Log.e("NavitGraphics","draw_polygon");
+			paint.setStyle(Paint.Style.FILL);
+			global_path.reset();
+			global_path.moveTo(c[0], c[1]);
+			for (int i = 2; i < c.length; i += 2)
+			{
+				global_path.lineTo(c[i], c[i + 1]);
+			}
+			global_path.close();
+			draw_canvas.drawPath(global_path, paint);
+		}
 	}
 	protected void draw_rectangle(Paint paint, int x, int y, int w, int h)
 	{
-		Rect r = new Rect(x, y, x + w, y + h);
+		//Log.e("NavitGraphics","draw_rectangle");
+		global_r.set(x, y, x + w, y + h);
 		paint.setStyle(Paint.Style.FILL);
-		draw_canvas.drawRect(r, paint);
+		draw_canvas.drawRect(global_r, paint);
 	}
 	protected void draw_circle(Paint paint, int x, int y, int r)
 	{
-		float fx = x;
-		float fy = y;
-		float fr = r / 2;
+		//Log.e("NavitGraphics","draw_circle");
+		//		float fx = x;
+		//		float fy = y;
+		//		float fr = r / 2;
 		paint.setStyle(Paint.Style.STROKE);
-		draw_canvas.drawCircle(fx, fy, fr, paint);
+		draw_canvas.drawCircle(x, y, r / 2, paint);
 	}
 	protected void draw_text(Paint paint, int x, int y, String text, int size, int dx, int dy)
 	{
-		float fx = x;
-		float fy = y;
-		// Log.e("NavitGraphics","Text size "+size + " vs " + paint.getTextSize());
-		paint.setTextSize((float) size / 15);
+		//		float fx = x;
+		//		float fy = y;
+		//Log.e("NavitGraphics","Text size "+size + " vs " + paint.getTextSize());
+		paint.setTextSize(size / 15);
 		paint.setStyle(Paint.Style.FILL);
 		if (dx == 0x10000 && dy == 0)
 		{
-			draw_canvas.drawText(text, fx, fy, paint);
+			draw_canvas.drawText(text, x, y, paint);
 		}
 		else
 		{
@@ -1156,11 +1240,10 @@ public class NavitGraphics
 	}
 	protected void draw_image(Paint paint, int x, int y, Bitmap bitmap)
 	{
-		// Log.e("NavitGraphics","draw_image");
-
-		float fx = x;
-		float fy = y;
-		draw_canvas.drawBitmap(bitmap, fx, fy, paint);
+		//Log.e("NavitGraphics","draw_image");
+		//		float fx = x;
+		//		float fy = y;
+		draw_canvas.drawBitmap(bitmap, x, y, paint);
 	}
 	protected void draw_mode(int mode)
 	{

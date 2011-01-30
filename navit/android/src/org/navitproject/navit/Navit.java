@@ -55,6 +55,7 @@ public class Navit extends Activity implements Handler.Callback
 	public static long					time_pressed_menu_key				= 0L;
 	private static Intent				startup_intent							= null;
 	private static long					startup_intent_timestamp			= 0L;
+	public static String					my_display_density					= "mdpi";
 	
 	private boolean extractRes(String resname, String result)
 	{
@@ -199,7 +200,7 @@ public class Navit extends Activity implements Handler.Callback
 			Log.e("Navit", "Failed to extract language resource " + langc);
 		}
 
-		String my_display_density="mdpi";
+		my_display_density="mdpi";
 		// hdpi display
 		if (Navit.metrics.densityDpi == 240)
 		{
