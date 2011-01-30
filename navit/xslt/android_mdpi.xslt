@@ -15,23 +15,33 @@
 				<xsl:when test="string-length($CAR_FACTOR)"><xsl:value-of select="$CAR_FACTOR"/></xsl:when>
 				<xsl:otherwise>1</xsl:otherwise>
 			</xsl:choose>
-		</xsl:variable>	<xsl:include href="default_plugins.xslt"/>
+		</xsl:variable>
+	<!--<xsl:include href="default_plugins.xslt"/>-->
 	<xsl:include href="map_sdcard_navitmap_bin.xslt"/>
 	<xsl:include href="osd_android_minimum.xslt"/>
-        <xsl:template match="/config/plugins/plugin[1]" priority="100">
+        <xsl:template match="/config/plugins" priority="100">
+	<plugins>
+		<xsl:text>&#x0A;        </xsl:text>
 		<plugin path="$NAVIT_PREFIX/lib/libgraphics_android.so" ondemand="no"/>
 		<xsl:text>&#x0A;        </xsl:text>
-		<plugin path="$NAVIT_PREFIX/lib/libvehicle_android.so" ondemand="no"/>
+	        <plugin path="$NAVIT_PREFIX/lib/libvehicle_android.so" ondemand="no"/>
 		<xsl:text>&#x0A;        </xsl:text>
-		<plugin path="$NAVIT_PREFIX/lib/libspeech_android.so" ondemand="no"/>
+	        <plugin path="$NAVIT_PREFIX/lib/libspeech_android.so" ondemand="no"/>
 		<xsl:text>&#x0A;        </xsl:text>
-		<xsl:next-match/>
-        </xsl:template>
-	<!-- after map drag jump to position, initial zoom -->
+	        <plugin path="$NAVIT_PREFIX/lib/libgui_internal.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+	        <plugin path="$NAVIT_PREFIX/lib/libmap_textfile.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+	        <plugin path="$NAVIT_PREFIX/lib/libmap_binfile.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+	        <plugin path="$NAVIT_PREFIX/lib/libosd_core.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+	</plugins>
+        </xsl:template>	<!-- after map drag jump to position, initial zoom -->
         <xsl:template match="/config/navit">
                 <xsl:copy><xsl:copy-of select="@*"/>
-			<xsl:attribute name="timeout">1</xsl:attribute>
-			<xsl:attribute name="zoom">64</xsl:attribute>
+			<!--<xsl:attribute name="timeout">1</xsl:attribute>-->
+			<xsl:attribute name="zoom">32</xsl:attribute>
 		<xsl:apply-templates/></xsl:copy>
 	</xsl:template>
 	<!-- after map drag jump to position, initial zoom -->
