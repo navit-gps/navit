@@ -27,7 +27,6 @@ import android.graphics.RectF;
 import android.graphics.Paint.Style;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
@@ -126,7 +125,7 @@ public class NavitAndroidOverlay extends ImageView
 	{
 		return this.draw_bubble;
 	}
-	
+
 	public void hide_bubble()
 	{
 		this.draw_bubble = false;
@@ -178,9 +177,20 @@ public class NavitAndroidOverlay extends ImageView
 	{
 		//Log.e("Navit", "NavitAndroidOverlay -> onDraw");
 
-		Paint paint = new Paint(0);
-		paint.setAntiAlias(false);
-		paint.setColor(Color.GRAY);
+		float draw_factor = 1.0f;
+		if (Navit.my_display_density.compareTo("mdpi") == 0)
+		{
+			draw_factor = 1.0f;
+		}
+		else if (Navit.my_display_density.compareTo("ldpi") == 0)
+		{
+			draw_factor = 0.7f;
+		}
+		else if (Navit.my_display_density.compareTo("hdpi") == 0)
+		{
+			draw_factor = 1.5f;
+		}
+
 
 		if (this.draw_bubble)
 		{
@@ -235,31 +245,34 @@ public class NavitAndroidOverlay extends ImageView
 		{
 			//Log.e("Navit", "NavitAndroidOverlay -> onDraw -> bubble");
 
-			int dx = 20;
-			int dy = -100;
+			int dx = (int) ((20 / 1.5f) * draw_factor);
+			int dy = (int) ((-100 / 1.5f) * draw_factor);
 			Paint bubble_paint = new Paint(0);
 
+			int bubble_size_x = (int) ((150 / 1.5f) * draw_factor);
+			int bubble_size_y = (int) ((60 / 1.5f) * draw_factor);
+
 			// yellow-ish funny lines
-			int lx = 15;
-			int ly = 15;
+			int lx = (int) ((15 / 1.5f) * draw_factor);
+			int ly = (int) ((15 / 1.5f) * draw_factor);
 			bubble_paint.setStyle(Style.FILL);
 			bubble_paint.setAntiAlias(true);
-			bubble_paint.setStrokeWidth(8);
+			bubble_paint.setStrokeWidth(8 / 1.5f * draw_factor);
 			bubble_paint.setColor(Color.parseColor("#FFF8C6"));
-			c.drawLine(this.bubble_001.x + dx, this.bubble_001.y + dy + 60 - ly, this.bubble_001.x,
-					this.bubble_001.y, bubble_paint);
-			c.drawLine(this.bubble_001.x + dx + lx, this.bubble_001.y + dy + 60, this.bubble_001.x,
-					this.bubble_001.y, bubble_paint);
+			c.drawLine(this.bubble_001.x + dx, this.bubble_001.y + dy + bubble_size_y - ly,
+					this.bubble_001.x, this.bubble_001.y, bubble_paint);
+			c.drawLine(this.bubble_001.x + dx + lx, this.bubble_001.y + dy + bubble_size_y,
+					this.bubble_001.x, this.bubble_001.y, bubble_paint);
 
 			// draw black funny lines to target
 			bubble_paint.setStyle(Style.STROKE);
 			bubble_paint.setAntiAlias(true);
 			bubble_paint.setStrokeWidth(3);
 			bubble_paint.setColor(Color.parseColor("#000000"));
-			c.drawLine(this.bubble_001.x + dx, this.bubble_001.y + dy + 60 - ly, this.bubble_001.x,
-					this.bubble_001.y, bubble_paint);
-			c.drawLine(this.bubble_001.x + dx + lx, this.bubble_001.y + dy + 60, this.bubble_001.x,
-					this.bubble_001.y, bubble_paint);
+			c.drawLine(this.bubble_001.x + dx, this.bubble_001.y + dy + bubble_size_y - ly,
+					this.bubble_001.x, this.bubble_001.y, bubble_paint);
+			c.drawLine(this.bubble_001.x + dx + lx, this.bubble_001.y + dy + bubble_size_y,
+					this.bubble_001.x, this.bubble_001.y, bubble_paint);
 
 
 			// filled rect yellow-ish
@@ -268,9 +281,9 @@ public class NavitAndroidOverlay extends ImageView
 			bubble_paint.setAntiAlias(false);
 			bubble_paint.setColor(Color.parseColor("#FFF8C6"));
 			RectF box_rect = new RectF(this.bubble_001.x + dx, this.bubble_001.y + dy,
-					this.bubble_001.x + 150 + dx, this.bubble_001.y + 60 + dy);
-			int rx = 20;
-			int ry = 20;
+					this.bubble_001.x + bubble_size_x + dx, this.bubble_001.y + bubble_size_y + dy);
+			int rx = (int) (20 / 1.5f * draw_factor);
+			int ry = (int) (20 / 1.5f * draw_factor);
 			c.drawRoundRect(box_rect, rx, ry, bubble_paint);
 
 			// black outlined rect
@@ -280,18 +293,25 @@ public class NavitAndroidOverlay extends ImageView
 			bubble_paint.setColor(Color.parseColor("#000000"));
 			c.drawRoundRect(box_rect, rx, ry, bubble_paint);
 
-			int inner_dx = 30;
-			int inner_dy = 36;
+			int inner_dx = (int) (30 / 1.5f * draw_factor);
+			int inner_dy = (int) (36 / 1.5f * draw_factor);
 			bubble_paint.setAntiAlias(true);
 			bubble_paint.setStyle(Style.FILL);
-			bubble_paint.setTextSize(20);
+			bubble_paint.setTextSize((int) (20 / 1.5f * draw_factor));
 			bubble_paint.setStrokeWidth(3);
 			bubble_paint.setColor(Color.parseColor("#3b3131"));
 			c.drawText("drive here", this.bubble_001.x + dx + inner_dx, this.bubble_001.y + dy
 					+ inner_dy, bubble_paint);
 		}
 
-		// test, draw a grey rectangle on top layer!
-		// c.drawRect(10, 10, 300, 200, paint);
+		//		// test, draw rectangles on top layer!
+		//		Paint paint = new Paint(0);
+		//		paint.setAntiAlias(false);
+		//		paint.setStyle(Style.STROKE);
+		//		paint.setColor(Color.GREEN);
+		//		c.drawRect(0 * draw_factor, 0 * draw_factor, 64 * draw_factor, 64 * draw_factor, paint);
+		//		paint.setColor(Color.RED);
+		//		c.drawRect(0 * draw_factor, (0 + 70) * draw_factor, 64 * draw_factor,
+		//				(64 + 70) * draw_factor, paint);
 	}
 }
