@@ -3,7 +3,19 @@
         <xsl:output method="xml" doctype-system="navit.dtd" cdata-section-elements="gui"/>
         <xsl:variable name="OSD_SIZE">1.33</xsl:variable>
         <xsl:variable name="OSD_FACTOR">1</xsl:variable>
-	<xsl:include href="default_plugins.xslt"/>
+        <xsl:variable name="CAR_FACTOR">2</xsl:variable>
+		<xsl:variable name="OSD_FACTOR_">
+			<xsl:choose>
+				<xsl:when test="string-length($OSD_FACTOR)"><xsl:value-of select="$OSD_FACTOR"/></xsl:when>
+				<xsl:otherwise>1</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="CAR_FACTOR_">
+			<xsl:choose>
+				<xsl:when test="string-length($CAR_FACTOR)"><xsl:value-of select="$CAR_FACTOR"/></xsl:when>
+				<xsl:otherwise>1</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>	<xsl:include href="default_plugins.xslt"/>
 	<xsl:include href="map_sdcard_navitmap_bin.xslt"/>
 	<xsl:include href="osd_android_minimum.xslt"/>
         <xsl:template match="/config/plugins/plugin[1]" priority="100">
@@ -15,10 +27,70 @@
 		<xsl:text>&#x0A;        </xsl:text>
 		<xsl:next-match/>
         </xsl:template>
+	<!-- after map drag jump to position, initial zoom -->
+        <xsl:template match="/config/navit">
+                <xsl:copy><xsl:copy-of select="@*"/>
+			<xsl:attribute name="timeout">1</xsl:attribute>
+			<xsl:attribute name="zoom">64</xsl:attribute>
+		<xsl:apply-templates/></xsl:copy>
+	</xsl:template>
+	<!-- after map drag jump to position, initial zoom -->
         <xsl:template match="/config/navit/graphics">
                 <graphics type="android" />
         </xsl:template>
-        <xsl:template match="/config/navit/vehicle[1]">
+	<!-- make arrow bigger -->
+        <xsl:template match="/config/navit/layout/cursor">
+        <cursor w="{round(30*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" h="{round(32*number($CAR_FACTOR_)*number($OSD_FACTOR_))}">
+                <itemgra speed_range="-2">
+                        <polyline color="#00BC00" radius="{round(0*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" width="{round(3*number($CAR_FACTOR_)*number($OSD_FACTOR_))}">
+                                <coord x="0" y="0"/>
+                        </polyline>
+                        <circle color="#008500" radius="{round(6*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" width="{round(2*number($CAR_FACTOR_)*number($OSD_FACTOR_))}">
+                                <coord x="0" y="0"/>
+                        </circle>
+                        <circle color="#00BC00" radius="{round(9*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" width="{round(2*number($CAR_FACTOR_)*number($OSD_FACTOR_))}">
+                                <coord x="0" y="0"/>
+                        </circle>
+                        <circle color="#008500" radius="{round(13*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" width="{round(2*number($CAR_FACTOR_)*number($OSD_FACTOR_))}">
+                                <coord x="0" y="0"/>
+                        </circle>
+                </itemgra>
+                <itemgra speed_range="3-">
+                        <polygon color="#00000066">
+                                <coord x="{round(-14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" y="{round(-18*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="0" y="{round(8*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="{round(14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" y="{round(-18*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="0" y="{round(-8*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="{round(-14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" y="{round(-18*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                        </polygon>
+                        <polygon color="#008500">
+                                <coord x="{round(-14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" y="{round(-12*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="0" y="{round(14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="0" y="{round(-2*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="{round(-14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" y="{round(-12*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                        </polygon>
+                        <polygon color="#00BC00">
+                                <coord x="{round(14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" y="{round(-12*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="0" y="{round(14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="0" y="{round(-2*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="{round(14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" y="{round(-12*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                        </polygon>
+                        <polyline color="#008500" width="2">
+                                <coord x="{round(-14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" y="{round(-12*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="0" y="{round(14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="0" y="{round(-2*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="{round(-14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" y="{round(-12*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                        </polyline>
+                        <polyline color="#008500" width="2">
+                                <coord x="{round(14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" y="{round(-12*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="0" y="{round(14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="0" y="{round(-2*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                                <coord x="{round(14*number($CAR_FACTOR_)*number($OSD_FACTOR_))}" y="{round(-12*number($CAR_FACTOR_)*number($OSD_FACTOR_))}"/>
+                        </polyline>
+                </itemgra>
+        </cursor>
+	</xsl:template>
+	<!-- make arrow bigger -->        <xsl:template match="/config/navit/vehicle[1]">
                 <xsl:copy><xsl:copy-of select="@*[not(name()='gpsd_query')]"/>
 			<xsl:attribute name="source">android:</xsl:attribute>
 			<xsl:attribute name="follow">1</xsl:attribute>
