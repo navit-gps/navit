@@ -61,13 +61,31 @@ lib@LIBNAVIT@_la_SOURCES = announcement.c atom.c attr.c cache.c callback.c comma
 	navit_nls.h sunriset.c sunriset.h glib_slice.h
 
 XSLTS=@XSLTS@
-navit.xml: navit_shipped.xml  $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(addsuffix .xslt,$(addprefix xslt/,$(xslt))))
+navit.xml: navit_shipped.xml  $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(addsuffix .xslt,$(addprefix xslt/,$(xslt)))) navit_android_xml
 	cp $< navit.xml.new
 	if [ ! -f navit.dtd ]; then cp -f $(top_srcdir)/navit/navit.dtd .; fi
 	for i in $^; do if [ "$${i%.xslt}" != "$$i" ]; then echo "Applying $$i" ; @SAXON@ -snone navit.xml.new $$i >navit.xml.tmp || exit ; mv navit.xml.tmp navit.xml.new || exit ; fi ; done
 	mv navit.xml.new navit.xml
 	rm -f navit.xml.tmp
 	
+navit_android_xml:
+if SUPPORT_ANDROID
+#	new android xml files for (mdpi,ldpi,hdpi)
+	cp navit_shipped.xml navit_android.xml.new
+	if [ ! -f navit.dtd ]; then cp -f $(top_srcdir)/navit/navit.dtd .; fi
+	@SAXON@ -snone navit_android.xml.new xslt/android_mdpi.xslt >navit_android_mdpi.xml.tmp
+	@SAXON@ -snone navit_android.xml.new xslt/android_ldpi.xslt >navit_android_ldpi.xml.tmp
+	@SAXON@ -snone navit_android.xml.new xslt/android_hdpi.xslt >navit_android_hdpi.xml.tmp
+	rm -f navit_android.xml.new
+	mv navit_android_mdpi.xml.tmp navit_android_mdpi.xml
+	mv navit_android_ldpi.xml.tmp navit_android_ldpi.xml
+	mv navit_android_hdpi.xml.tmp navit_android_hdpi.xml
+	rm -f navit_android_mdpi.xml.tmp
+	rm -f navit_android_ldpi.xml.tmp
+	rm -f navit_android_hdpi.xml.tmp
+else
+	echo "no Android support"
+endif
 
 if SUPPORT_ANDROID
   lib@LIBNAVIT@_la_SOURCES += android.c
@@ -109,6 +127,10 @@ apkg-all: all android/build.xml navit.xml
 #	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do cp $(builddir)/xpm/$$i android/res/drawable-mdpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
 #	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do cp $(builddir)/xpm/$$i android/res/drawable-ldpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
 #	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do cp $(builddir)/xpm/$$i android/res/drawable-hdpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
+
+	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do convert $(builddir)/xpm/$$i android/res/drawable-mdpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
+	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do convert -resize 75% $(builddir)/xpm/$$i android/res/drawable-ldpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
+	if [ "$(builddir)" != "$(srcdir)" ]; then for i in $(shell cd $(builddir)/xpm && echo *.png); do convert -resize 150% $(builddir)/xpm/$$i android/res/drawable-hdpi/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done ; fi
 
 	mkdir -p android/res/raw
 	for i in $(shell cd ../po && echo *.mo); do cp ../po/$$i android/res/raw/$$( echo $$i | tr "[A-Z]" "[a-z]") ; done
