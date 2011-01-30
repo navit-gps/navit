@@ -56,7 +56,7 @@ public class Navit extends Activity implements Handler.Callback
 	private static Intent				startup_intent							= null;
 	private static long					startup_intent_timestamp			= 0L;
 	public static String					my_display_density					= "mdpi";
-	
+
 	private boolean extractRes(String resname, String result)
 	{
 		int slash = -1;
@@ -147,7 +147,7 @@ public class Navit extends Activity implements Handler.Callback
 		}
 		return true;
 	}
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -155,22 +155,22 @@ public class Navit extends Activity implements Handler.Callback
 		super.onCreate(savedInstanceState);
 
 		// only take arguments here, in onResume gets called all the time (e.g. when screenblanks, etc.)
-		Navit.startup_intent=this.getIntent();
+		Navit.startup_intent = this.getIntent();
 		// hack! remeber timstamp, and only allow 4 secs. later in onResume to set target!
-		Navit.startup_intent_timestamp=System.currentTimeMillis();
-		Log.e("Navit","**1**A "+startup_intent.getAction());
-		Log.e("Navit","**1**D "+startup_intent.getDataString());
+		Navit.startup_intent_timestamp = System.currentTimeMillis();
+		Log.e("Navit", "**1**A " + startup_intent.getAction());
+		Log.e("Navit", "**1**D " + startup_intent.getDataString());
 
-		Display display_ = getWindowManager().getDefaultDisplay(); 
+		Display display_ = getWindowManager().getDefaultDisplay();
 		int width_ = display_.getWidth();
 		int height_ = display_.getHeight();
 		metrics = new DisplayMetrics();
 		display_.getMetrics(Navit.metrics);
 		Log.e("Navit", "Navit -> pixels x=" + width_ + " pixels y=" + height_);
-		Log.e("Navit", "Navit -> dpi="+Navit.metrics.densityDpi);
-		Log.e("Navit", "Navit -> density="+Navit.metrics.density);
-		Log.e("Navit", "Navit -> scaledDensity="+Navit.metrics.scaledDensity);
-		
+		Log.e("Navit", "Navit -> dpi=" + Navit.metrics.densityDpi);
+		Log.e("Navit", "Navit -> density=" + Navit.metrics.density);
+		Log.e("Navit", "Navit -> scaledDensity=" + Navit.metrics.scaledDensity);
+
 		ActivityResults = new NavitActivityResult[16];
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -200,11 +200,11 @@ public class Navit extends Activity implements Handler.Callback
 			Log.e("Navit", "Failed to extract language resource " + langc);
 		}
 
-		my_display_density="mdpi";
+		my_display_density = "mdpi";
 		// hdpi display
 		if (Navit.metrics.densityDpi == 240)
 		{
-			my_display_density="hdpi";
+			my_display_density = "hdpi";
 			if (!extractRes("navithdpi", "/data/data/org.navitproject.navit/share/navit.xml"))
 			{
 				Log.e("Navit", "Failed to extract navit.xml for hdpi device(s)");
@@ -213,7 +213,7 @@ public class Navit extends Activity implements Handler.Callback
 		// mdpi display
 		else if (Navit.metrics.densityDpi == 160)
 		{
-			my_display_density="mdpi";
+			my_display_density = "mdpi";
 			if (!extractRes("navitmdpi", "/data/data/org.navitproject.navit/share/navit.xml"))
 			{
 				Log.e("Navit", "Failed to extract navit.xml for mdpi device(s)");
@@ -222,7 +222,7 @@ public class Navit extends Activity implements Handler.Callback
 		// ldpi display
 		else if (Navit.metrics.densityDpi == 120)
 		{
-			my_display_density="ldpi";
+			my_display_density = "ldpi";
 			if (!extractRes("navitldpi", "/data/data/org.navitproject.navit/share/navit.xml"))
 			{
 				Log.e("Navit", "Failed to extract navit.xml for ldpi device(s)");
@@ -301,7 +301,7 @@ public class Navit extends Activity implements Handler.Callback
 		{
 			// better use regex later, but for now to test this feature its ok :-)
 			// better use regex later, but for now to test this feature its ok :-)
-			
+
 			// a: google.navigation:ll=48.25676,16.643&q=blabla-strasse
 			// b: google.navigation:q=48.25676,16.643
 			// c: google.navigation:ll=48.25676,16.643
@@ -309,9 +309,9 @@ public class Navit extends Activity implements Handler.Callback
 			String lon;
 			String q;
 
-			String temp1=null;
-			String temp2=null;
-			String temp3=null;
+			String temp1 = null;
+			String temp2 = null;
+			String temp3 = null;
 
 			// if b: then remodel the input string to look like a:
 			if (intent_data.substring(0, 20).equals("google.navigation:q="))
@@ -328,17 +328,17 @@ public class Navit extends Activity implements Handler.Callback
 
 			// now string should be in form --> a:
 			// now split the parts off
-			temp1=intent_data.split("&q=",-1)[0];
+			temp1 = intent_data.split("&q=", -1)[0];
 			try
 			{
-				temp3=temp1.split("ll=",-1)[1];
-				temp2=intent_data.split("&q=",-1)[1];
+				temp3 = temp1.split("ll=", -1)[1];
+				temp2 = intent_data.split("&q=", -1)[1];
 			}
 			catch (Exception e)
 			{
 				// java.lang.ArrayIndexOutOfBoundsException most likely
 				// so let's assume we dont have '&q=xxxx'
-				temp3=temp1;
+				temp3 = temp1;
 			}
 
 			if (temp2 == null)
@@ -347,9 +347,9 @@ public class Navit extends Activity implements Handler.Callback
 				temp2 = "Target";
 			}
 
-			lat=temp3.split(",",-1)[0];
-			lon=temp3.split(",",-1)[1];
-			q=temp2;
+			lat = temp3.split(",", -1)[0];
+			lon = temp3.split(",", -1)[1];
+			q = temp2;
 
 			Message msg = new Message();
 			Bundle b = new Bundle();
@@ -441,7 +441,7 @@ public class Navit extends Activity implements Handler.Callback
 		//N_MotionCallbackID = mo_cb_id;
 		N_NavitGraphics = ng;
 	}
-	
+
 	//public native void KeypressCallback(int id, String s);
 
 	@Override
@@ -488,7 +488,7 @@ public class Navit extends Activity implements Handler.Callback
 		}
 		return true;
 	}
-	
+
 	public void disableSuspend()
 	{
 		wl.acquire();

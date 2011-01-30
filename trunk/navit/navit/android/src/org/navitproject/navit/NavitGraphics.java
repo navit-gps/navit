@@ -1096,118 +1096,39 @@ public class NavitGraphics
 	}
 
 
-	Path							global_path		= new Path();
-	Rect							global_r			= new Rect();
-	public static Boolean	power_device	= false;
-
-
-
-	private class t_draw_polyline extends Thread
+	protected void draw_polyline(Paint paint, int c[])
 	{
-		private Boolean	running;
-		private Paint		p		= null;
-		private int			c[]	= null;
-		private Path		pf		= new Path();
-
-		t_draw_polyline(Paint paint, int cc[])
+		//	Log.e("NavitGraphics","draw_polyline");
+		paint.setStyle(Paint.Style.STROKE);
+		Path path = new Path();
+		path.moveTo(c[0], c[1]);
+		for (int i = 2; i < c.length; i += 2)
 		{
-			this.p = paint;
-			this.c = cc;
-			this.running = true;
-			//Log.e("Navit", "t_draw_polyline created");
+			path.lineTo(c[i], c[i + 1]);
 		}
-
-		public void run()
-		{
-			//Log.e("Navit", "t_draw_polyline started");
-			p.setStyle(Paint.Style.STROKE);
-			//pf.reset();
-			pf.moveTo(c[0], c[1]);
-			for (int i = 2; i < c.length; i += 2)
-			{
-				pf.lineTo(c[i], c[i + 1]);
-			}
-			draw_canvas.drawPath(pf, p);
-			//Log.e("Navit", "t_draw_polyline ended");
-		}
+		//global_path.close();
+		draw_canvas.drawPath(path, paint);
 	}
 
-	private class t_draw_polygon extends Thread
+	protected void draw_polygon(Paint paint, int c[])
 	{
-		private Boolean	running;
-		private Paint		p		= null;
-		private int			c[]	= null;
-		private Path		pf		= new Path();
-
-		t_draw_polygon(Paint paint, int cc[])
+		//Log.e("NavitGraphics","draw_polygon");
+		paint.setStyle(Paint.Style.FILL);
+		Path path = new Path();
+		path.moveTo(c[0], c[1]);
+		for (int i = 2; i < c.length; i += 2)
 		{
-			this.p = paint;
-			this.c = cc;
-			this.running = true;
+			path.lineTo(c[i], c[i + 1]);
 		}
-
-		public void run()
-		{
-			p.setStyle(Paint.Style.FILL);
-			//pf.reset();
-			pf.moveTo(c[0], c[1]);
-			for (int i = 2; i < c.length; i += 2)
-			{
-				pf.lineTo(c[i], c[i + 1]);
-			}
-			draw_canvas.drawPath(pf, p);
-		}
-	}
-
-	void draw_polyline(Paint paint, int c[])
-	{
-		if (NavitGraphics.power_device)
-		{
-			t_draw_polyline t = new t_draw_polyline(paint, c);
-			t.start();
-		}
-		else
-		{
-//			//Log.e("NavitGraphics","draw_polyline");
-			paint.setStyle(Paint.Style.STROKE);
-			global_path.reset();
-			global_path.moveTo(c[0], c[1]);
-			for (int i = 2; i < c.length; i += 2)
-			{
-				global_path.lineTo(c[i], c[i + 1]);
-			}
-			global_path.close();
-			draw_canvas.drawPath(global_path, paint);
-		}
-	}
-
-	void draw_polygon(Paint paint, int c[])
-	{
-		if (NavitGraphics.power_device)
-		{
-			t_draw_polygon t = new t_draw_polygon(paint, c);
-			t.start();
-		}
-		else
-		{
-			//Log.e("NavitGraphics","draw_polygon");
-			paint.setStyle(Paint.Style.FILL);
-			global_path.reset();
-			global_path.moveTo(c[0], c[1]);
-			for (int i = 2; i < c.length; i += 2)
-			{
-				global_path.lineTo(c[i], c[i + 1]);
-			}
-			global_path.close();
-			draw_canvas.drawPath(global_path, paint);
-		}
+		//global_path.close();
+		draw_canvas.drawPath(path, paint);
 	}
 	protected void draw_rectangle(Paint paint, int x, int y, int w, int h)
 	{
 		//Log.e("NavitGraphics","draw_rectangle");
-		global_r.set(x, y, x + w, y + h);
+		Rect r = new Rect(x, y, x + w, y + h);
 		paint.setStyle(Paint.Style.FILL);
-		draw_canvas.drawRect(global_r, paint);
+		draw_canvas.drawRect(r, paint);
 	}
 	protected void draw_circle(Paint paint, int x, int y, int r)
 	{
