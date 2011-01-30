@@ -3,17 +3,27 @@
         <xsl:output method="xml" doctype-system="navit.dtd" cdata-section-elements="gui"/>
         <xsl:variable name="OSD_SIZE">1.33</xsl:variable>
         <xsl:variable name="OSD_FACTOR">0.7</xsl:variable>
-	<xsl:include href="default_plugins.xslt"/>
+	<!--<xsl:include href="default_plugins.xslt"/>-->
 	<xsl:include href="map_sdcard_navitmap_bin.xslt"/>
 	<xsl:include href="osd_android_minimum.xslt"/>
-        <xsl:template match="/config/plugins/plugin[1]" priority="100">
+        <xsl:template match="/config/plugins" priority="100">
+	<plugins>
+		<xsl:text>&#x0A;        </xsl:text>
 		<plugin path="$NAVIT_PREFIX/lib/libgraphics_android.so" ondemand="no"/>
 		<xsl:text>&#x0A;        </xsl:text>
-		<plugin path="$NAVIT_PREFIX/lib/libvehicle_android.so" ondemand="no"/>
+	        <plugin path="$NAVIT_PREFIX/lib/libvehicle_android.so" ondemand="no"/>
 		<xsl:text>&#x0A;        </xsl:text>
-		<plugin path="$NAVIT_PREFIX/lib/libspeech_android.so" ondemand="no"/>
+	        <plugin path="$NAVIT_PREFIX/lib/libspeech_android.so" ondemand="no"/>
 		<xsl:text>&#x0A;        </xsl:text>
-		<xsl:next-match/>
+	        <plugin path="$NAVIT_PREFIX/lib/libgui_internal.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+	        <plugin path="$NAVIT_PREFIX/lib/libmap_textfile.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+	        <plugin path="$NAVIT_PREFIX/lib/libmap_binfile.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+	        <plugin path="$NAVIT_PREFIX/lib/libosd_core.so" ondemand="no"/>
+		<xsl:text>&#x0A;        </xsl:text>
+	</plugins>
         </xsl:template>
         <xsl:template match="/config/navit/graphics">
                 <graphics type="android" />
