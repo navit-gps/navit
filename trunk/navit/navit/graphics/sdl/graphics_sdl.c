@@ -922,6 +922,48 @@ draw_lines(struct graphics_priv *gr, struct graphics_gc_priv *gc, struct point *
     }
 #endif
 }
+
+static void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
+{
+    if(x<0 || y<0 || x>=surface->w || y>=surface->h) {
+	return;
+    }
+    switch(surface->format->BytesPerPixel) {
+	case 2:
+	    {
+		Uint16 *target_pixel = (Uint16 *)((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
+
+		Uint8 r1,g1,b1,a1;
+		Uint8 r2,g2,b2,a2;
+		SDL_GetRGBA(*target_pixel, surface->format, &r1, &g1, &b1, &a1);
+		SDL_GetRGBA(pixel, surface->format, &r2, &g2, &b2, &a2);
+
+		*target_pixel = (Uint16) SDL_MapRGBA(surface->format,
+			(r1*(0xff-a2)/0xff) + (r2*a2/0xff),
+			(g1*(0xff-a2)/0xff) + (g2*a2/0xff),
+			(b1*(0xff-a2)/0xff) + (b2*a2/0xff),
+			a2 + a1*(0xff-a2)/0xff );
+		break;
+	    }
+	case 4:
+	    {
+		Uint32 *target_pixel = (Uint32 *)((Uint8*)surface->pixels + y * surface->pitch + x * surface->format->BytesPerPixel);
+
+		Uint8 r1,g1,b1,a1;
+		Uint8 r2,g2,b2,a2;
+		SDL_GetRGBA(*target_pixel, surface->format, &r1, &g1, &b1, &a1);
+		SDL_GetRGBA(pixel, surface->format, &r2, &g2, &b2, &a2);
+
+		*target_pixel = (Uint32) SDL_MapRGBA(surface->format,
+			(r1*(0xff-a2)/0xff) + (r2*a2/0xff),
+			(g1*(0xff-a2)/0xff) + (g2*a2/0xff),
+			(b1*(0xff-a2)/0xff) + (b2*a2/0xff),
+			a2 + a1*(0xff-a2)/0xff );
+		break;
+	    }
+    }
+}
+
 static void
 display_text_draw(struct font_freetype_text *text,
 		  struct graphics_priv *gr, struct graphics_gc_priv *fg,
@@ -1040,41 +1082,25 @@ display_text_draw(struct font_freetype_text *text,
 		gr->freetype_methods.get_glyph(g, glyph, 32, stride,
 					       &black, &white,
 					       &transparent);
-		//convert ABGR to RGBA
-		int j;
-		unsigned char *pGlyph = glyph;
-		for (j = 0; j < g->w * g->h; ++j) {
-		    unsigned char tmp;
-		    tmp = *(pGlyph + 0);
-		    *(pGlyph + 0) = *(pGlyph + 2);
-		    *(pGlyph + 2) = tmp;
-		    pGlyph += 4;
-		}
-		SDL_Surface *glyph_surface =
-		    SDL_CreateRGBSurfaceFrom(glyph, g->w, g->h, 32,
-		    				stride,
-					     	0x000000ff,0x0000ff00,0x00ff0000,0xff000000);
-		if (glyph_surface) {
-		    SDL_Rect r;
-		    r.x = (x + g->x) >> 6;
-		    r.y = (y + g->y) >> 6;
-		    r.w = g->w;
-		    r.h = g->h;
-
-		    SDL_BlitSurface(glyph_surface, NULL, gr->screen, &r);
-		    SDL_FreeSurface(glyph_surface);
-		}
-
 		int ii, jj;
+		unsigned char* pGlyph = glyph;
 		for (jj = 0; jj < g->h; ++jj) {
 		    for (ii = 0; ii < g->w; ++ii) {
 			int sx = (x + g->x) >> 6;
 			int sy = (y + g->y) >> 6;
 			sx = sx < 0 ? 0 : sx;
 			sy = sy < 0 ? 0 : sy;
-			int poff =
-			    gr->screen->w * ((jj) + sy) + ((ii) + sx);
-			poff *= gr->screen->format->BytesPerPixel;
+
+			if(*(pGlyph+0)>10 || *(pGlyph+1)>10 || *(pGlyph+2)>10 || *(pGlyph+3)>10) {
+                            set_pixel(gr->screen, ii+sx, jj+sy,
+                                 SDL_MapRGBA(gr->screen->format,
+                                      *(pGlyph+2),			// Pixels are in BGRA format
+                                      *(pGlyph+1),
+                                      *(pGlyph+0),
+                                      *(pGlyph+3)
+                                      ));
+                        }
+                        pGlyph += 4;
 		    }
 		}
 		g_free(glyph);
