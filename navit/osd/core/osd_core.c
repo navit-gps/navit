@@ -1420,7 +1420,6 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
   }
   mapset_close(msh);
 
-  osd_std_draw(&this_->item);
   if(bFound) {
     dCurrDist = transform_distance(projection_mg, &curr_coord, &cam_coord);
     ret_attr = vehicle_get_attr(curr_vehicle,attr_position_speed,&speed_attr, NULL);
@@ -1446,6 +1445,8 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
       buffer [0] = 0;
       buffer2[0] = 0; 
   
+      osd_std_draw(&this_->item);
+
       str_replace(buffer,this_->text,"${distance}",format_distance(dCurrDist,""));
       str_replace(buffer2,buffer,"${camera_type}",(idx<=CAM_TRAFFIPAX)?camera_t_strs[idx]:"");
       str_replace(buffer,buffer2,"${camera_dir}",(0<=dir_idx && dir_idx<=CAMDIR_TWO)?camdir_t_strs[dir_idx]:"");
@@ -1478,9 +1479,9 @@ osd_speed_cam_draw(struct osd_speed_cam *this_, struct navit *navit, struct vehi
         curr_color = this_->red;
       }
       graphics_draw_text(this_->item.gr, curr_color, NULL, this_->item.font, buffer, &p, 0x10000, 0);
+      graphics_draw_mode(this_->item.gr, draw_mode_end);
     }
   }
-  graphics_draw_mode(this_->item.gr, draw_mode_end);
 }
 
 static void
