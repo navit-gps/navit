@@ -68,7 +68,7 @@ navit.xml: navit_shipped.xml  $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(ad
 	mv navit.xml.new navit.xml
 	rm -f navit.xml.tmp
 	
-navit_android_xml: navit_shipped.xml xslt/android_mdpi.xslt xslt/android_ldpi.xslt xslt/android_hdpi.xslt
+navit_android_xml: navit_shipped.xml
 if SUPPORT_ANDROID
 #	new android xml files for (mdpi,ldpi,hdpi)
 	cp $(srcdir)/navit_shipped.xml navit_android.xml.new
