@@ -68,14 +68,14 @@ navit.xml: navit_shipped.xml  $(foreach xslt, $(subst $(comma), ,$(XSLTS)), $(ad
 	mv navit.xml.new navit.xml
 	rm -f navit.xml.tmp
 	
-navit_android_xml:
+navit_android_xml: navit_shipped.xml xslt/android_mdpi.xslt xslt/android_ldpi.xslt xslt/android_hdpi.xslt
 if SUPPORT_ANDROID
 #	new android xml files for (mdpi,ldpi,hdpi)
-	cp navit_shipped.xml navit_android.xml.new
+	cp $(srcdir)/navit_shipped.xml navit_android.xml.new
 	if [ ! -f navit.dtd ]; then cp -f $(top_srcdir)/navit/navit.dtd .; fi
-	@SAXON@ -snone navit_android.xml.new xslt/android_mdpi.xslt >navit_android_mdpi.xml.tmp
-	@SAXON@ -snone navit_android.xml.new xslt/android_ldpi.xslt >navit_android_ldpi.xml.tmp
-	@SAXON@ -snone navit_android.xml.new xslt/android_hdpi.xslt >navit_android_hdpi.xml.tmp
+	@SAXON@ -snone navit_android.xml.new $(srcdir)/xslt/android_mdpi.xslt >navit_android_mdpi.xml.tmp
+	@SAXON@ -snone navit_android.xml.new $(srcdir)/xslt/android_ldpi.xslt >navit_android_ldpi.xml.tmp
+	@SAXON@ -snone navit_android.xml.new $(srcdir)/xslt/android_hdpi.xslt >navit_android_hdpi.xml.tmp
 	rm -f navit_android.xml.new
 	mv navit_android_mdpi.xml.tmp navit_android_mdpi.xml
 	mv navit_android_ldpi.xml.tmp navit_android_ldpi.xml
