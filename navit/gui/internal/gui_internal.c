@@ -5468,16 +5468,16 @@ struct widget * gui_internal_widget_table_new(struct gui_priv * this, enum flags
 
 	if (buttons) {
 	data->next_button = gui_internal_button_new_with_callback
-		(this,"Next",image_new_xs(this, "gui_active") ,
-		 gravity_left_center  |orientation_vertical,
+		(this,"Next",image_new_xs(this, "gui_arrow_right") ,
+		 gravity_center  |orientation_vertical,
 		 gui_internal_table_button_next,NULL);
 	data->next_button->data=widget;
 
 
 	data->prev_button =  gui_internal_button_new_with_callback
 		(this,"Prev",
-		 image_new_xs(this, "gui_active")
-		 ,gravity_right_center |orientation_vertical,
+		 image_new_xs(this, "gui_arrow_left")
+		 ,gravity_center |orientation_vertical,
 		 gui_internal_table_button_prev,NULL);
 
 	data->prev_button->data=widget;
