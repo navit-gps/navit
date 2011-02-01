@@ -37,12 +37,18 @@ endmacro()
 macro(add_scale_targets IMAGE_SRC IMAGE_NAME)
    string(REPLACE "," ";" SCALES "${ARGN}")
    foreach (CURRENT_SCALE ${SCALES})
+      if (${CURRENT_SCALE} EQUAL 0)
+         set (IMAGE_DST ${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_NAME}.png)
+      else()
+         set (IMAGE_DST ${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_NAME}_${CURRENT_SCALE}_${CURRENT_SCALE}.png)
+      endif()
+
       convert_to_png(
          ${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_SRC} 
-         ${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_NAME}_${CURRENT_SCALE}_${CURRENT_SCALE}.png 
+         ${IMAGE_DST}
          ${CURRENT_SCALE}
       )
-      list(APPEND IMAGE_TARGETS ${CMAKE_CURRENT_BINARY_DIR}/${IMAGE_NAME}_${CURRENT_SCALE}_${CURRENT_SCALE}.png)
+      list(APPEND IMAGE_TARGETS ${IMAGE_DST})
    endforeach()
 endmacro()
 
@@ -79,20 +85,9 @@ foreach (IMAGE_SRC ${FILES_TO_PNG})
          add_scale_targets(${IMAGE_SRC} ${IMAGE} ${svg2png_scaling_flag})
       elseif( DEFINED svg2png_scaling)
          add_scale_targets(${IMAGE_SRC} ${IMAGE} ${svg2png_scaling})
-         convert_to_png (
-            "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_SRC}"
-            "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE}.png"
-            0
-         )
-         list(APPEND IMAGE_TARGETS "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE}.png")
       endif()
    else()
-      convert_to_png (
-         "${CMAKE_CURRENT_SOURCE_DIR}/${IMAGE_SRC}"
-         "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE}.png"
-         0
-      )
-      list(APPEND IMAGE_TARGETS "${CMAKE_CURRENT_BINARY_DIR}/${IMAGE}.png")
+      add_scale_targets(${IMAGE_SRC} ${IMAGE} 0)
    endif()
       
 endforeach()
