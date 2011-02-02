@@ -67,6 +67,7 @@ find_package(Gettext)
 find_package(PNG)
 find_package(DBusGLib)
 find_package(OpenSSL)
+find_package(Threads)
 libfind_pkg_check_modules(FONTCONFIG fontconfig)
 #Qt detection
 SET(QT_USE_QTSVG TRUE)
@@ -93,6 +94,11 @@ CHECK_INCLUDE_FILES(getopt.h HAVE_GETOPT_H)
 
 ### Configure build
 #Required libraries, supplied with navit
+if (CMAKE_USE_PTHREADS_INIT)
+   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+endif(CMAKE_USE_PTHREADS_INIT)
 if (Glib_FOUND)
    set(HAVE_GLIB 1)
    include_directories(${Glib_INCLUDE_DIRS})
