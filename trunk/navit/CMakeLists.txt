@@ -349,6 +349,7 @@ if(WINCE)
    set(HAVE_API_WIN32_CE 1)
    set(BUILD_MAPTOOL FALSE)
    set_with_reason(vehicle/file "wince: currently broken" FALSE)
+   set_with_reason(vehicle/wince "wince detected" TRUE)
 endif()
 
 set(LOCALEDIR "${LOCALE_DIR}/locale")
