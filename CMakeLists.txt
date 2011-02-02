@@ -338,7 +338,7 @@ if(WIN32 OR WINCE)
    else(MSVC)
        set(ENABLE_NLS TRUE)
    endif(MSVC)
-
+   enable_language(RC)
 endif()
 if (WIN32)
    set(HAVE_API_WIN32 1)
