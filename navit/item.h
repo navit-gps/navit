@@ -136,6 +136,8 @@ int item_range_intersects_range(struct item_range *range1, struct item_range *ra
 int item_range_contains_item(struct item_range *range, enum item_type type);
 void item_dump_attr(struct item *item, struct map *map, FILE *out);
 void item_dump_filedesc(struct item *item, struct map *map, FILE *out);
+void item_cleanup(void);
+
 /* end of prototypes */
 
 
