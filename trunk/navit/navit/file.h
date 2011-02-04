@@ -92,6 +92,7 @@ int file_get_param(struct file *file, struct param_list *param, int count);
 int file_version(struct file *file, int byname);
 void *file_get_os_handle(struct file *file);
 void file_init(void);
+int file_is_reg(char *name);
 /* end of prototypes */
 
 #ifdef __cplusplus
