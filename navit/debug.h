@@ -77,6 +77,7 @@ char *debug_guard(const char *where, int line, const char *func, char *str);
 void debug_free(const char *where, int line, const char *func, void *ptr);
 void debug_free_func(void *ptr);
 void debug_finished(void);
+void *debug_realloc(const char *where, int line, const char *func, void *ptr, int size);
 /* end of prototypes */
 
 #ifdef __cplusplus
